@@ -162,7 +162,7 @@ you want to use a local mailbox file, please see the <link linkend="faq-file-loc
 about file locking</link>.</para>
 
 <para>You will then be presented with
-the <guilabel>Akonadi.Resource</guilabel> window. First, fill in the
+the <guilabel>Akonadi Resource</guilabel> window. First, fill in the
 <guilabel>Account name</guilabel> field to name your account. You can choose any name
 you like.  <guilabel>Username</guilabel>, <guilabel>Password</guilabel>, and
 <guilabel>Incoming mail server</guilabel> should be filled in with the appropriate information
@@ -249,8 +249,7 @@ server. You should carefully test this to make sure it works safely.</para>
 
 <sect3 id="receiving-mail-imap-pop3">
 <title>Options for both <acronym>IMAP</acronym> and POP3</title>
-
-<!-- TODO: move all this, this isn't important for beginners?! -->
+<!-- removed in 4.8
 <para>If you select <guilabel>Store POP password</guilabel> or 
 <guilabel>Store IMAP Password</guilabel> &kmail; will remember 
 your password so you will not have to
@@ -260,7 +259,7 @@ type it every time you start &kmail; and fetch new mail.</para>
 people who can access your configuration files (&eg; system
 administrators) can easily get your password if you select this
 option.</para></warning>
-
+-->
 <para>&kmail; supports encryption via <guilabel>SSL/TLS</guilabel> and
 <guilabel>STARTTLS</guilabel> (<guilabel>SSL/TLS</guilabel> should be preferred
 if it is available).</para>

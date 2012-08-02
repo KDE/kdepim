@@ -32,11 +32,11 @@
 #include <messagecore/attachmentpart.h>
 #include <akonadi/item.h>
 #include <KJob>
-
+#include <KService>
 #include "messagecomposer_export.h"
 
 class KActionCollection;
-
+class QAction;
 namespace Message {
 class AttachmentModel;
 }
@@ -89,9 +89,11 @@ class MESSAGECOMPOSER_EXPORT AttachmentControllerBase : public QObject
     void enableAttachPublicKey( bool enable );
     void enableAttachMyPublicKey( bool enable );
     void byteArrayToRemoteFile(const QByteArray &aData, const KUrl &aURL, bool overwrite = false);
-
+    void openWith(KService::Ptr offer = KService::Ptr());
   private slots:
     void slotPutResult(KJob *job);
+    void slotOpenWithDialog();
+    void slotOpenWithAction(QAction*act);
 
   private:
     class Private;

@@ -150,7 +150,7 @@ Pane::Pane( QAbstractItemModel *model, QItemSelectionModel *selectionModel, QWid
   setTabsClosable( Core::Settings::self()->tabsHaveCloseButton() );
   connect( this, SIGNAL(closeRequest(QWidget*)), SLOT(closeTab(QWidget*)) );
 
-  createNewTab();
+  readConfig();
   setMovable( true );
 
   connect( d->mSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
@@ -175,6 +175,7 @@ Pane::Pane( QAbstractItemModel *model, QItemSelectionModel *selectionModel, QWid
 
 Pane::~Pane()
 {
+  writeConfig();
   delete d;
 }
 
@@ -393,17 +394,17 @@ void Pane::focusQuickSearch()
 
 void Pane::Private::onSelectionChanged( const QItemSelection &selected, const QItemSelection &deselected )
 {
-  Widget *w = static_cast<Widget*>( q->currentWidget() );
-  QItemSelectionModel *s = mWidgetSelectionHash[w];
+  Widget *w = 0;
+  QItemSelectionModel *s = 0;
+  if ( mPreferEmptyTab ) {
+    q->createNewTab();
+  }
+	
+  w = static_cast<Widget*>( q->currentWidget() );
+  s = mWidgetSelectionHash[w];
 
   s->select( mapSelectionToSource( selected ), QItemSelectionModel::Select );
   s->select( mapSelectionToSource( deselected ), QItemSelectionModel::Deselect );
-
-  if ( mPreferEmptyTab ) {
-    q->createNewTab();
-    w = static_cast<Widget*>( q->currentWidget() );
-    s = mWidgetSelectionHash[w];
-  }
 
   QString label;
   QIcon icon = KIcon( QLatin1String( "folder" ) );
@@ -430,6 +431,17 @@ void Pane::Private::onSelectionChanged( const QItemSelection &selected, const QI
   q->setTabText( index, label );
   q->setTabIcon( index, icon );
   q->setTabToolTip( index, toolTip);
+  if ( mPreferEmptyTab ) {
+    disconnect( mSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+              q, SLOT(onSelectionChanged(QItemSelection,QItemSelection)) );
+
+    mSelectionModel->select( mapSelectionFromSource( s->selection() ),
+                            QItemSelectionModel::ClearAndSelect );
+
+    connect( mSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+            q, SLOT(onSelectionChanged(QItemSelection,QItemSelection)) );
+
+  }
 }
 
 void Pane::Private::activateTab()
@@ -922,6 +934,34 @@ void Pane::updateTagComboBox()
   for ( int i=0; i<count(); i++ ) {
     Widget *w = qobject_cast<Widget *>( widget( i ) );
     w->populateStatusFilterCombo();
+  }
+}
+
+void Pane::writeConfig()
+{
+  KConfigGroup conf( MessageList::Core::Settings::self()->config(),"MessageListPane");
+  QList<Akonadi::Collection::Id> collectionId;
+  for ( int i=0; i<count(); i++ ) {
+    Widget *w = qobject_cast<Widget *>( widget( i ) );
+    collectionId.append(w->currentCollection().id());
+  }
+  conf.writeEntry(QLatin1String("tab"),collectionId);
+  conf.writeEntry(QLatin1String("currentIndex"),currentIndex());
+  conf.sync();
+}
+
+void Pane::readConfig()
+{
+  KConfigGroup conf( MessageList::Core::Settings::self()->config(),"MessageListPane");
+  QList<Akonadi::Collection::Id> collectionId = conf.readEntry(QLatin1String("tab"),QList<Akonadi::Collection::Id>());
+  if(collectionId.isEmpty()) {
+    createNewTab();
+  } else {
+    Q_FOREACH(const Akonadi::Collection::Id& id, collectionId) {
+      createNewTab();
+      setCurrentFolder(Akonadi::Collection(id));
+    }
+    setCurrentIndex(conf.readEntry(QLatin1String("currentIndex"),0));
   }
 }
 

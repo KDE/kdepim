@@ -86,6 +86,7 @@ class EVENTVIEWS_EXPORT MonthView : public EventView
   Q_SIGNALS:
     void showIncidencePopupSignal( const Akonadi::Item &item, const QDate &date );
     void showNewEventPopupSignal();
+    void fullViewChanged( bool enabled );
 
   public Q_SLOTS:
     // virtual slots
@@ -95,10 +96,11 @@ class EVENTVIEWS_EXPORT MonthView : public EventView
 
     // non-virtual slots
     void changeIncidenceDisplay( const Akonadi::Item &, int );
-    void moveBackMonth(); /// Shift the view one month back
-    void moveBackWeek();  /// Shift the view one week back
-    void moveFwdWeek();   /// Shift the view one week forward
-    void moveFwdMonth();  /// Shift the view one month forward
+    void changeFullView(); /// Display in full window mode
+    void moveBackMonth();  /// Shift the view one month back
+    void moveBackWeek();   /// Shift the view one week back
+    void moveFwdWeek();    /// Shift the view one week forward
+    void moveFwdMonth();   /// Shift the view one month forward
 
   protected Q_SLOTS:
     virtual void calendarReset();

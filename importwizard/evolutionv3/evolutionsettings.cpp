@@ -31,8 +31,17 @@
 #include <QDomDocument>
 #include <QDomElement>
 
-EvolutionSettings::EvolutionSettings( const QString& filename, ImportWizard *parent )
+EvolutionSettings::EvolutionSettings( ImportWizard *parent )
     :AbstractSettings( parent )
+{
+}
+
+
+EvolutionSettings::~EvolutionSettings()
+{
+}
+
+void EvolutionSettings::loadAccount(const QString& filename)
 {
   //Read gconf file
   QFile file(filename);
@@ -70,8 +79,102 @@ EvolutionSettings::EvolutionSettings( const QString& filename, ImportWizard *par
   }
 }
 
-EvolutionSettings::~EvolutionSettings()
+void EvolutionSettings::loadLdap(const QString& filename)
 {
+  QFile file(filename);
+  if ( !file.open( QIODevice::ReadOnly ) ) {
+    kDebug()<<" We can't open file"<<filename;
+    return;
+  }
+  QDomDocument doc;
+  if ( !EvolutionUtil::loadInDomDocument( &file, doc ) )
+    return;
+  QDomElement ldapConfig = doc.documentElement();
+  for ( QDomElement e = ldapConfig.firstChildElement(); !e.isNull(); e = e.nextSiblingElement() ) {
+    const QString tag = e.tagName();
+    if ( tag == QLatin1String( "entry" ) ) {
+      for ( QDomElement serverConfig = e.firstChildElement(); !serverConfig.isNull(); serverConfig = serverConfig.nextSiblingElement() ) {
+        if(serverConfig.tagName() == QLatin1String("li")) {
+          QDomElement ldapValue = serverConfig.firstChildElement();
+          readLdap(ldapValue.text());
+        }
+      }
+    }
+  }
+}
+
+void EvolutionSettings::readLdap(const QString &ldapStr)
+{
+  qDebug()<<" ldap "<<ldapStr;
+  QDomDocument ldap;
+  if ( !EvolutionUtil::loadInDomDocument( ldapStr, ldap ) )
+    return;
+
+  QDomElement domElement = ldap.documentElement();
+
+  if ( domElement.isNull() ) {
+    kDebug() << "ldap not found";
+    return;
+  }
+  //Ldap server
+  if(domElement.attribute(QLatin1String("base_uri")) == QLatin1String("ldap://")) {
+    for ( QDomElement e = domElement.firstChildElement(); !e.isNull(); e = e.nextSiblingElement() ) {
+      //const QString name = e.attribute( QLatin1String( "name" ) ); We don't use it in kmail
+
+      ldapStruct ldap;
+      const QString relative_uri = e.attribute( QLatin1String( "relative_uri" ) );
+      const QString uri = e.attribute( QLatin1String( "uri" ) );
+      KUrl url(uri);
+      ldap.port = url.port();
+      ldap.ldapUrl = url;
+      qDebug()<<" relative_uri"<<relative_uri;
+
+      QDomElement propertiesElement = e.firstChildElement();
+      if(!propertiesElement.isNull()) {
+        for ( QDomElement property = propertiesElement.firstChildElement(); !property.isNull(); property = property.nextSiblingElement() ) {
+          const QString propertyTag = property.tagName();
+          if(propertyTag == QLatin1String("property")) {
+            if(property.hasAttribute(QLatin1String("name"))) {
+              const QString propertyName = property.attribute(QLatin1String("name"));
+              if(propertyName == QLatin1String("timeout")) {
+                ldap.timeout = property.attribute(QLatin1String("value")).toInt();
+              } else if(propertyName == QLatin1String("ssl")) {
+                const QString value = property.attribute(QLatin1String("value"));
+                if(value == QLatin1String("always")) {
+                  ldap.useSSL = true;
+                } else if(value == QLatin1String("whenever_possible")) {
+                  ldap.useTLS = true;
+                } else {
+                  qDebug()<<" ssl attribute unknown"<<value;
+                }
+              } else if(propertyName == QLatin1String("limit")) {
+                ldap.limit = property.attribute(QLatin1String("value")).toInt();
+              } else if(propertyName == QLatin1String("binddn")) {
+                ldap.dn = property.attribute(QLatin1String("value"));
+              } else if(propertyName == QLatin1String("auth")) {
+                const QString value = property.attribute(QLatin1String("value"));
+                if(value == QLatin1String("ldap/simple-email")) {
+                    //TODO:
+                } else if( value == QLatin1String("none")) {
+                    //TODO:
+                } else if( value == QLatin1String("ldap/simple-binddn")) {
+                    //TODO:
+                } else {
+                    qDebug()<<" Unknown auth value "<<value;
+                }
+                qDebug()<<" auth"<<value;
+              } else {
+                qDebug()<<" property unknown :"<<propertyName;
+              }
+            }
+          } else {
+            qDebug()<<" tag unknown :"<<propertyTag;
+          }
+        }
+        mergeLdap(ldap);
+      }
+    }
+  }
 }
 
 void EvolutionSettings::readSignatures(const QDomElement &account)

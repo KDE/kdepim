@@ -1185,6 +1185,7 @@ void Message::ComposerViewBase::setEditor ( Message::KMeditor* editor )
   m_editor->enableImageActions();
   m_editor->enableEmoticonActions();
   m_editor->enableInsertHtmlActions();
+  m_editor->enableInsertTableActions();
 
   m_editor->document()->setModified( false );
 

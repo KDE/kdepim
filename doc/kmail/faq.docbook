@@ -649,7 +649,7 @@ messages?</para></question>
 <answer><para>The text footer is also called a signature (not to be confused
 with a cryptographic signature). Select
 <menuchoice><guimenu>Settings</guimenu>
-<guimenuitem>Configure &kmail;...</guimenuitem></menuchoice>
+<guimenuitem>Configure &kmail;...</guimenuitem></menuchoice>.
 Look in the <guilabel>Identity</guilabel> page for the <guilabel>Signature</guilabel>
 tab and add your signature there. Then go to the <guilabel>General</guilabel>
 tab on the <guilabel>Composer</guilabel> page and enable

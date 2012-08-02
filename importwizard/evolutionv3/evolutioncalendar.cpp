@@ -25,8 +25,17 @@
 #include <QDomDocument>
 #include <QDomElement>
 
-EvolutionCalendar::EvolutionCalendar(const QString& filename,ImportWizard *parent)
+EvolutionCalendar::EvolutionCalendar(ImportWizard *parent)
   :AbstractCalendar(parent)
+{
+}
+
+EvolutionCalendar::~EvolutionCalendar()
+{
+
+}
+
+void EvolutionCalendar::loadCalendar(const QString& filename)
 {
   //Read gconf file
   QFile file(filename);
@@ -57,11 +66,6 @@ EvolutionCalendar::EvolutionCalendar(const QString& filename,ImportWizard *paren
       }
     }
   }
-}
-
-EvolutionCalendar::~EvolutionCalendar()
-{
-
 }
 
 void EvolutionCalendar::readCalendar(const QDomElement &calendar)

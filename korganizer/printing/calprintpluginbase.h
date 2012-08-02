@@ -367,6 +367,8 @@ class KORGANIZERPRIVATE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin
     /**
       Draw the agenda box for the day print style (the box showing all events of that day).
       Also draws a grid with half-hour spacing of the grid lines.
+      Does NOT draw allday events.  Use drawAllDayBox for allday events.
+
       @param p QPainter of the printout
       @param eventList The list of the events that are supposed to be printed
              inside this box
@@ -390,7 +392,7 @@ class KORGANIZERPRIVATE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin
     */
     void drawAgendaDayBox( QPainter &p, const Akonadi::Item::List &eventList,
                            const QDate &qd, bool expandable,
-                           QTime &fromTime, QTime &toTime,
+                           const QTime &fromTime, const QTime &toTime,
                            const QRect &box,
                            bool includeDescription, bool excludeTime,
                            bool mExcludeConfidential, bool mExcludePrivate,
@@ -408,6 +410,8 @@ class KORGANIZERPRIVATE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin
       @param p QPainter of the printout
       @param qd The date of the currently printed day. All events of the calendar
                 that appear on that day will be printed.
+      @param fromTime Start time of the time range to display
+      @param toTime End time of the time range to display
       @param box coordinates of the day box.
       @param fullDate Whether the title bar of the box should contain the full
                       date string or just a short.
@@ -420,6 +424,7 @@ class KORGANIZERPRIVATE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin
       @param excludePrivate Whether to exclude Incidence marked private.
     */
     void drawDayBox( QPainter &p, const QDate &qd,
+                     const QTime &fromTime, const QTime &toTime,
                      const QRect &box,
                      bool fullDate = false, bool printRecurDaily = true,
                      bool printRecurWeekly = true,
@@ -435,6 +440,8 @@ class KORGANIZERPRIVATE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin
       (typically Saturday and Sunday) only get half the height of the other day boxes.
       @param p QPainter of the printout
       @param qd Arbitrary date within the week to be printed.
+      @param fromTime Start time of the displayed time range
+      @param toTime End time of the displayed time range
       @param box coordinates of the week box.
       @param singleLineLimit Whether Incidence text wraps or truncates.
       @param showNoteLines Whether note lines are printed.
@@ -443,6 +450,7 @@ class KORGANIZERPRIVATE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin
       @param excludePrivate Whether to exclude Incidence marked private.
     */
     void drawWeek( QPainter &p, const QDate &qd,
+                   const QTime &fromTime, const QTime &toTime,
                    const QRect &box, bool singleLineLimit,
                    bool showNoteLines, bool includeDescription,
                    bool excludeConfidential, bool excludePrivate );
@@ -451,6 +459,8 @@ class KORGANIZERPRIVATE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin
       @param p QPainter of the printout
       @param start Start date
       @param end End date
+      @param fromTime Start time of the displayed time range
+      @param toTime End time of the displayed time range
       @param box coordinates of the week box.
       @param singleLineLimit Whether Incidence text wraps or truncates.
       @param showNoteLines Whether note lines are printed.
@@ -459,6 +469,7 @@ class KORGANIZERPRIVATE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin
       @param excludePrivate Whether to exclude Incidence marked private.
     */
     void drawDays( QPainter &p, const QDate &start, const QDate &end,
+                   const QTime &fromTime, const QTime &toTime,
                    const QRect &box, bool singleLineLimit, bool showNoteLines,
                    bool includeDescription, bool excludeConfidential,
                    bool excludePrivate );
@@ -469,10 +480,11 @@ class KORGANIZERPRIVATE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin
       and the events are displayed as boxes (like in korganizer's day/week view).
       The first cell of each column contains the all-day events (using
       drawAllDayBox with expandable=false).
-      The given time range cannot be expanded to include all events.
       @param p QPainter of the printout
       @param fromDate First day to be included in the page
       @param toDate Last day to be included in the page
+      @param expandable If true, the start and end times are adjusted to include
+      the whole range of all events of that day, not just of the given time range.
       @param fromTime Start time of the displayed time range
       @param toTime End time of the displayed time range
       @param box coordinates of the time table.
@@ -482,7 +494,7 @@ class KORGANIZERPRIVATE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin
       @param excludePrivate Whether to exclude Incidence marked private.
     */
     void drawTimeTable( QPainter &p, const QDate &fromDate, const QDate &toDate,
-                        QTime &fromTime, QTime &toTime,
+                        bool expandable, const QTime &fromTime, const QTime &toTime,
                         const QRect &box, bool includeDescription,
                         bool excludeTime, bool excludeConfidential,
                         bool excludePrivate );
@@ -495,9 +507,11 @@ class KORGANIZERPRIVATE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin
       Above the matrix there is a bar showing the weekdays (drawn using drawDaysOfWeek).
       @param p QPainter of the printout
       @param qd Arbitrary date within the month to be printed.
+      @param fromTime Start time of the displayed time range
+      @param toTime End time of the displayed time range
+      @param weeknumbers Whether the week numbers are printed left of each row of the matrix
       @param recurDaily Whether daily recurring incidences should be printed.
       @param recurWeekly Whether weekly recurring incidences should be printed.
-      @param weeknumbers Whether the week numbers are printed left of each row of the matrix
       @param singleLineLimit Whether Incidence text wraps or truncates.
       @param showNoteLines Whether note lines are printed.
       @param includeDescription Whether descriptions are printed.
@@ -505,11 +519,13 @@ class KORGANIZERPRIVATE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin
       @param excludePrivate Whether to exclude Incidence marked private.
       @param box coordinates of the month.
     */
-    void drawMonthTable( QPainter &p, const QDate &qd, bool weeknumbers,
-                    bool recurDaily, bool recurWeekly, bool singleLineLimit,
-                    bool showNoteLines, bool includeDescription,
-                    bool excludeConfidential, bool excludePrivate,
-                    const QRect &box );
+    void drawMonthTable( QPainter &p, const QDate &qd,
+                         const QTime &fromTime, const QTime &toTime,
+                         bool weeknumbers,
+                         bool recurDaily, bool recurWeekly, bool singleLineLimit,
+                         bool showNoteLines, bool includeDescription,
+                         bool excludeConfidential, bool excludePrivate,
+                         const QRect &box );
     /**
       Draw a vertical representation of the month containing the date dt. Each
       day gets one line.

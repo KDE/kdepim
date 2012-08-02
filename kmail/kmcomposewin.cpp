@@ -134,6 +134,7 @@
 #include <krun.h>
 #include <KIO/JobUiDelegate>
 #include <KPrintPreview>
+#include <KFileDialog>
 
 // Qt includes
 #include <QClipboard>
@@ -1099,7 +1100,7 @@ void KMComposeWin::setupActions( void )
 
   } else {
     //default = queue, alternative = send now
-    QAction *action = new KAction( KIcon( "mail-queue" ), i18n("Send &Later"), this );
+    KAction *action = new KAction( KIcon( "mail-queue" ), i18n("Send &Later"), this );
     actionCollection()->addAction( "send_default", action );
     connect( action, SIGNAL(triggered(bool)), SLOT(slotSendLater()) );
     action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_Return ) );
@@ -1140,11 +1141,20 @@ void KMComposeWin::setupActions( void )
 
   KAction *action = new KAction( KIcon( "document-save" ), i18n("Save as &Draft"), this );
   actionCollection()->addAction("save_in_drafts", action );
+  action->setHelpText(i18n("Save email in Draft folder"));
+  action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_S));
   connect( action, SIGNAL(triggered(bool)), SLOT(slotSaveDraft()) );
 
   action = new KAction( KIcon( "document-save" ), i18n("Save as &Template"), this );
+  action->setHelpText(i18n("Save email in Template folder"));
   actionCollection()->addAction( "save_in_templates", action );
   connect( action, SIGNAL(triggered(bool)), SLOT(slotSaveTemplate()) );
+
+  action = new KAction( KIcon( "document-save" ), i18n("Save as &File"), this );
+  action->setHelpText(i18n("Save email as text or html file"));
+  actionCollection()->addAction( "save_as_file", action );
+  connect( action, SIGNAL(triggered(bool)), SLOT(slotSaveAsFile()) );
+
 
   action = new KAction(KIcon("document-open"), i18n("&Insert Text File..."), this);
   actionCollection()->addAction("insert_file", action );
@@ -1160,6 +1170,7 @@ void KMComposeWin::setupActions( void )
   mRecentAction->loadEntries( KMKernel::self()->config()->group( QString() ) );
 
   action = new KAction(KIcon("x-office-address-book"), i18n("&Address Book"), this);
+  action->setHelpText(i18n("Open Address Book"));
   actionCollection()->addAction("addressbook", action );
   if (KStandardDirs::findExe("kaddressbook").isEmpty())
      action->setEnabled(false);
@@ -1297,7 +1308,7 @@ void KMComposeWin::setupActions( void )
   connect( action, SIGNAL(triggered(bool)), mComposerBase->signatureController(), SLOT(insertSignatureAtCursor()) );
 
 
-  action = new KAction( i18n("Insert Special Character"), this );
+  action = new KAction( i18n("Insert Special Character..."), this );
   actionCollection()->addAction( "insert_special_character", action );
   connect( action, SIGNAL(triggered(bool)), this, SLOT(insertSpecialCharacter()) );
 
@@ -1494,6 +1505,13 @@ void KMComposeWin::setCurrentTransport( int transportId )
   mComposerBase->transportComboBox()->setCurrentTransport( transportId );
 }
 
+void KMComposeWin::setCurrentReplyTo(const QString& replyTo)
+{
+  if ( mEdtReplyTo ) {
+    mEdtReplyTo->setText( replyTo );
+  }
+}
+
 //-----------------------------------------------------------------------------
 void KMComposeWin::setMsg( const KMime::Message::Ptr &newMsg, bool mayAutoSign,
                            bool allowDecryption, bool isModified )
@@ -1508,7 +1526,6 @@ void KMComposeWin::setMsg( const KMime::Message::Ptr &newMsg, bool mayAutoSign,
   KPIMIdentities::IdentityManager * im = KMKernel::self()->identityManager();
 
   mEdtFrom->setText( mMsg->from()->asUnicodeString() );
-  mEdtReplyTo->setText( mMsg->replyTo()->asUnicodeString() );
   mEdtSubject->setText( mMsg->subject()->asUnicodeString() );
 
 
@@ -1635,6 +1652,8 @@ void KMComposeWin::setMsg( const KMime::Message::Ptr &newMsg, bool mayAutoSign,
   if ( !stickyDictionary ) {
     mDictionaryCombo->setCurrentByDictionaryName( ident.dictionary() );
   }
+
+  mEdtReplyTo->setText( mMsg->replyTo()->asUnicodeString() );
 
   KMime::Content *msgContent = new KMime::Content;
   msgContent->setContent( mMsg->encodedContent() );
@@ -3346,4 +3365,30 @@ void KMComposeWin::insertSpecialCharacter()
 void KMComposeWin::charSelected(const QChar& c)
 {
   mComposerBase->editor()->insertPlainText(c);
+}
+
+void KMComposeWin::slotSaveAsFile()
+{
+    KFileDialog *dlg = new KFileDialog(KUrl(),QString(),this);
+    dlg->setOperationMode(KFileDialog::Saving);
+    if(mComposerBase->editor()->textMode() == KMeditor::Rich ) {
+      dlg->setFilter( QString::fromLatin1("text/html text/plain") );
+    } else {
+      dlg->setFilter( QString::fromLatin1("text/plain") );
+    }
+
+    if(dlg->exec()) {
+        QFile file( dlg->selectedUrl().path() );
+        if ( !file.open( QIODevice::WriteOnly| QIODevice::Text ) ) {
+          delete dlg;
+          return;
+        }
+        QTextStream out(&file);
+        if(dlg->currentFilter() == QString::fromLatin1("text/html") ) {
+          out<<mComposerBase->editor()->toHtml();
+        } else {
+          out<<mComposerBase->editor()->toPlainText();
+        }
+    }
+    delete dlg;
 }

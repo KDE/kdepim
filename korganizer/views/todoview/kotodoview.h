@@ -88,6 +88,7 @@ class KOTodoView : public BaseView
     virtual void updateConfig();
     virtual void clearSelection();
     void expandIndex( const QModelIndex &index );
+    void expandTree();
 
   protected Q_SLOTS:
     void addQuickTodo( Qt::KeyboardModifiers modifier );
@@ -114,6 +115,7 @@ class KOTodoView : public BaseView
     void setNewPercentage( QAction *action );
     void setNewPriority( QAction *action );
     void changedCategories( QAction *action );
+    void setFullView( bool fullView );
     void setFlatView( bool flatView );
 
   Q_SIGNALS:
@@ -121,6 +123,7 @@ class KOTodoView : public BaseView
     void unSubTodoSignal();
     void unAllSubTodoSignal();
     void configChanged();
+    void fullViewChanged( bool enabled );
 
   private:
     QMenu *createCategoryPopupMenu();
@@ -137,6 +140,7 @@ class KOTodoView : public BaseView
 
     KOTodoViewQuickSearch *mQuickSearch;
     KOTodoViewQuickAddLine *mQuickAdd;
+    QCheckBox *mFullView;
     QCheckBox *mFlatView;
 
     QMenu *mItemPopupMenu;

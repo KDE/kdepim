@@ -78,8 +78,16 @@ KOTodoView::KOTodoView( bool sidebarView, QWidget *parent )
     mQuickSearch->setVisible( KOPrefs::instance()->enableTodoQuickSearch() );
     connect( mQuickSearch, SIGNAL(searchTextChanged(QString)),
              mProxyModel, SLOT(setFilterRegExp(QString)) );
-    connect( mQuickSearch, SIGNAL(searchCategoryChanged(QStringList)),
+    connect( mQuickSearch, SIGNAL(searchTextChanged(QString)),
+             this, SLOT(expandTree()) );
+    connect( mQuickSearch, SIGNAL(filterCategoryChanged(QStringList)),
              mProxyModel, SLOT(setCategoryFilter(QStringList)) );
+    connect( mQuickSearch, SIGNAL(filterCategoryChanged(QStringList)),
+             this, SLOT(expandTree()) );
+    connect( mQuickSearch, SIGNAL(filterPriorityChanged(QStringList)),
+             mProxyModel, SLOT(setPriorityFilter(QStringList)) );
+    connect( mQuickSearch, SIGNAL(filterPriorityChanged(QStringList)),
+             this, SLOT(expandTree()) );
   }
 
   mView = new KOTodoViewView( this );
@@ -127,7 +135,23 @@ KOTodoView::KOTodoView( bool sidebarView, QWidget *parent )
   connect( mQuickAdd, SIGNAL(returnPressed(Qt::KeyboardModifiers)),
            this, SLOT(addQuickTodo(Qt::KeyboardModifiers)) );
 
-  mFlatView = new QCheckBox( i18nc( "Checkbox to display todos not hirarchical",
+  mFullView = 0;
+  if ( !mSidebarView ) {
+    mFullView = new QCheckBox( i18nc( "Checkbox to display this view into the full window",
+                                      "Full Window" ), this );
+    mFullView->setToolTip(
+      i18nc( "@info:tooltip",
+             "Display to-do list in a full window" ) );
+    mFullView->setWhatsThis(
+      i18nc( "@info:whatsthis",
+             "Checking this option will cause the to-do view to use the full window." ) );
+    connect( mFullView, SIGNAL(toggled(bool)),
+             sModel, SLOT(setFullView(bool)) );
+    connect( sModel,SIGNAL(fullViewChanged(bool)),
+             SLOT(setFullView(bool)) );
+  }
+
+  mFlatView = new QCheckBox( i18nc( "Checkbox to display todos not hierarchical",
                                     "Flat View" ), this );
   mFlatView->setToolTip(
     i18nc( "@info:tooltip",
@@ -155,6 +179,9 @@ KOTodoView::KOTodoView( bool sidebarView, QWidget *parent )
   // with the QAbstractItemView's viewport.
   QHBoxLayout *dummyLayout = new QHBoxLayout();
   dummyLayout->setContentsMargins( 0, 0, mView->frameWidth()/*right*/, 0 );
+  if ( !mSidebarView ) {
+    dummyLayout->addWidget( mFullView );
+  }
   dummyLayout->addWidget( mFlatView );
 
   layout->addLayout( dummyLayout, 2, 1 );
@@ -244,7 +271,6 @@ KOTodoView::KOTodoView( bool sidebarView, QWidget *parent )
   mItemPopupMenu->insertMenu( 0, mMovePopupMenu );
 
   mItemPopupMenu->addSeparator();
-
   mItemPopupMenu->addAction( i18nc( "delete completed to-dos", "Pur&ge Completed" ),
                              this, SIGNAL(purgeCompletedSignal()) );
 
@@ -284,6 +310,11 @@ void KOTodoView::expandIndex( const QModelIndex &index )
     mView->expand( realIndex );
     realIndex = mProxyModel->parent( realIndex );
   }
+}
+
+void KOTodoView::expandTree()
+{
+  mView->expandAll();
 }
 
 void KOTodoView::setCalendar( CalendarSupport::Calendar *cal )
@@ -339,7 +370,10 @@ void KOTodoView::saveLayout( KConfig *config, const QString &group ) const
     cfgGroup.writeEntry( "SortColumn", -1 );
   }
 
-  cfgGroup.writeEntry( "FlatView", mFlatView->isChecked() );
+  if ( !mSidebarView ) {
+    KOPrefs::instance()->setFullViewTodo( mFullView->isChecked() );
+  }
+  KOPrefs::instance()->setFlatListTodo( mFlatView->isChecked() );
 }
 
 void KOTodoView::restoreLayout( KConfig *config, const QString &group, bool minimalDefaults )
@@ -390,6 +424,7 @@ void KOTodoView::restoreLayout( KConfig *config, const QString &group, bool mini
   }
 
   mFlatView->setChecked( cfgGroup.readEntry( "FlatView", false ) );
+  mView->expandAll();
 }
 
 void KOTodoView::setIncidenceChanger( CalendarSupport::IncidenceChanger *changer )
@@ -414,6 +449,7 @@ void KOTodoView::showIncidences( const Akonadi::Item::List &incidenceList, const
 void KOTodoView::updateView()
 {
   sModel->reloadTodos();
+  mView->expandAll();
 }
 
 void KOTodoView::updateCategories()
@@ -904,6 +940,23 @@ void KOTodoView::changedCategories( QAction *action )
   }
 }
 
+void KOTodoView::setFullView( bool fullView )
+{
+  if ( !mFullView ) {
+    return;
+  }
+
+  mFullView->blockSignals( true );
+  // We block signals to avoid recursion, we have two KOTodoViews and mFullView is synchronized
+  mFullView->setChecked( fullView );
+  mFullView->blockSignals( false );
+
+  KOPrefs::instance()->setFullViewTodo( fullView );
+  KOPrefs::instance()->writeConfig();
+
+  emit fullViewChanged( fullView );
+}
+
 void KOTodoView::setFlatView( bool flatView )
 {
   mFlatView->blockSignals( true );
@@ -919,6 +972,9 @@ void KOTodoView::setFlatView( bool flatView )
   } else {
     mView->setDragDropMode( QAbstractItemView::DragDrop );
   }
+
+  KOPrefs::instance()->setFlatListTodo( flatView );
+  KOPrefs::instance()->writeConfig();
 }
 
 void KOTodoView::getHighlightMode( bool &highlightEvents,

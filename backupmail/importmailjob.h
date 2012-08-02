@@ -47,11 +47,17 @@ private:
   void restoreNepomuk();
   void importTemplatesConfig(const KArchiveFile* templatesconfiguration, const QString& templatesconfigurationrc, const QString &filename, const QString &prefix);
   void importKmailConfig(const KArchiveFile* kmailsnippet, const QString& kmail2rc, const QString &filename, const QString &prefix);
+  void importArchiveConfig(const KArchiveFile* archiveconfiguration, const QString& archiveconfigurationrc, const QString&filename,const QString& prefix);
   QString createResource( const QString& resources, const QString& name, const QMap<QString, QVariant>& settings );
   void searchAllFiles(const KArchiveDirectory*dir,const QString&prefix);
   void storeMailArchiveResource(const KArchiveDirectory*dir, const QString &prefix);
 
   void copyToFile(const KArchiveFile * file, const QString& dest, const QString&filename,const QString& prefix);
+  void mergeLdapConfig(const KArchiveFile * archivefile, const QString&filename, const QString&prefix);
+  void mergeKmailSnippetConfig(const KArchiveFile * archivefile, const QString&filename, const QString&prefix);
+  void mergeArchiveMailAgentConfig(const KArchiveFile * archivefile, const QString&filename, const QString&prefix);
+  void copyArchiveMailAgentConfigGroup(KSharedConfig::Ptr archiveConfigOrigin, KSharedConfig::Ptr archiveConfigDestination);
+
   Akonadi::Collection::Id convertPathToId(const QString& path);
 
   QHash<QString, QString> mHashMailArchive;

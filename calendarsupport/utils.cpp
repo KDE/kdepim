@@ -702,16 +702,18 @@ void CalendarSupport::scheduleiTIPMethods( KCalCore::iTIPMethod method,
   if ( !incidence ) {
     KMessageBox::sorry(
       parentWidget,
-      i18n( "No item selected." ),
-      "ScheduleNoEventSelected" );
+      i18n( "No item selected." ) );
     return;
   }
 
   if ( incidence->attendeeCount() == 0 && method != iTIPPublish ) {
     KMessageBox::information(
       parentWidget,
-      i18n( "The item has no attendees." ),
-      "ScheduleNoIncidences" );
+      i18n( "The item '%1' has no attendees. "
+            "Therefore no groupware message will be sent.",
+            incidence->summary() ),
+      i18n( "Message Not Sent" ),
+      QLatin1String( "ScheduleNoAttendees" ) );
     return;
   }
 
@@ -748,8 +750,7 @@ void CalendarSupport::saveAttachments( const Akonadi::Item &item, QWidget *paren
   if ( !incidence ) {
     KMessageBox::sorry(
       parentWidget,
-      i18n( "No item selected." ),
-      "SaveAttachments" );
+      i18n( "No item selected." ) );
     return;
   }
 

@@ -140,7 +140,7 @@ standard values.</para>
 <listitem>
 <para>Uses the values from <menuchoice><guimenu>Account Details</guimenu>
 <guimenuitem>Password &amp; User Account</guimenuitem></menuchoice> in the
-&systemsettings; category <guilabel>Application Appearance and Behavior</guilabel>.</para>
+&systemsettings; category <guilabel>Common Appearance and Behavior</guilabel>.</para>
 </listitem>
 </varlistentry>
 
@@ -484,7 +484,7 @@ be shared between several programs, so you get the same
 signature in each mail program you use.</para>
 
 <para>To read the text from a text file you select
-obtain signature text from <guilabel>File</guilabel>. Enter the
+<guilabel>Obtain signature text from</guilabel>-&gt;<guilabel>File</guilabel>. Enter the
 filename in the <guilabel>Specify file</guilabel> edit field or hit
 the button to the right of it to browse your filesystem. If you want
 to edit the file, hit the <guilabel>Edit File</guilabel>
@@ -566,8 +566,8 @@ address book entry.</para>
 <term><guilabel>Input Field Below</guilabel></term>
 <listitem>
 <para>Use this field to enter an arbitrary X-Face string.
-Examples are available at <ulink url="http://www.xs4all.nl/~ace/X-Faces/"
->http://www.xs4all.nl/~ace/X-Faces/</ulink>
+Examples are available at <ulink url="http://ace.home.xs4all.nl/X-Faces/"
+>http://ace.home.xs4all.nl/X-Faces/</ulink>
 </para>
 </listitem>
 </varlistentry>
@@ -728,7 +728,7 @@ the <guilabel>Short folder list</guilabel> with the message preview pane using t
 bottom part of the window.</para>
 <para>If you want to have your favorite folders and a quick search field for folders at
 the top left of the main window select the next two options.</para>
-<!--Favorite folder view + Show folder quick search field-->
+<!--Show Favorite Folders View (Never, As Icons, As List) + Show folder quick search field-->
 
 <!--Folder Tooltips display additional information like the total number of messages, 
 unread messages and storage size when hoovering a folder with the mouse pointer 

@@ -617,7 +617,7 @@ void ImportMailJob::restoreConfig()
     const QString kmailsnippetrc = KStandardDirs::locateLocal( "config",  kmailsnippetrcStr);
     if(QFile(kmailsnippetrc).exists()) {
       //TODO 4.10 allow to merge config.
-      if(KMessageBox::warningYesNo(mParent,i18n("\"%1\" already exists. Do you want to overwrite it ?",kmailsnippetrcStr),i18n("Restore"))== KMessageBox::Yes) {
+      if(KMessageBox::warningYesNo(mParent,i18n("\"%1\" already exists. Do you want to overwrite it?",kmailsnippetrcStr),i18n("Restore"))== KMessageBox::Yes) {
         copyToFile(kmailsnippet, kmailsnippetrc,kmailsnippetrcStr,BackupMailUtil::configsPath());
       }
     } else {
@@ -631,14 +631,34 @@ void ImportMailJob::restoreConfig()
     const KArchiveFile* kabldap= static_cast<const KArchiveFile*>(kabldapentry);
     const QString kabldaprc = KStandardDirs::locateLocal( "config",  labldaprcStr);
     if(QFile(kabldaprc).exists()) {
-      //TODO 4.10 allow to merge config.
-      if(KMessageBox::warningYesNo(mParent,i18n("\"%1\" already exists. Do you want to overwrite it ?",labldaprcStr),i18n("Restore"))== KMessageBox::Yes) {
+      const int result = KMessageBox::warningYesNoCancel(mParent,i18n("\"%1\" already exists. Do you want to overwrite it or merge it?",labldaprcStr),i18n("Restore"),KGuiItem(i18n("Overwrite")),KGuiItem(i18n("Merge")) );
+      if( result == KMessageBox::Yes) {
         copyToFile(kabldap, kabldaprc, labldaprcStr,BackupMailUtil::configsPath());
+      } else if(result == KMessageBox::No) {
+        mergeLdapConfig(kabldap,labldaprcStr,BackupMailUtil::configsPath());
       }
     } else {
       copyToFile(kabldap, kabldaprc, labldaprcStr,BackupMailUtil::configsPath());
     }
   }
+  const QString archiveconfigurationrcStr("akonadi_archivemail_agentrc");
+  const KArchiveEntry* archiveconfigurationentry  = mArchiveDirectory->entry(BackupMailUtil::configsPath() + archiveconfigurationrcStr);
+  if( archiveconfigurationentry &&  archiveconfigurationentry->isFile()) {
+    const KArchiveFile* archiveconfiguration = static_cast<const KArchiveFile*>(archiveconfigurationentry);
+    const QString archiveconfigurationrc = KStandardDirs::locateLocal( "config",  archiveconfigurationrcStr);
+    if(QFile(archiveconfigurationrc).exists()) {
+      const int result = KMessageBox::warningYesNoCancel(mParent,i18n("\"%1\" already exists. Do you want to overwrite it or merge it?",labldaprcStr),i18n("Restore"),KGuiItem(i18n("Overwrite")),KGuiItem(i18n("Merge")) );
+      if( result == KMessageBox::Yes) {
+        importArchiveConfig(archiveconfiguration, archiveconfigurationrc, archiveconfigurationrcStr, BackupMailUtil::configsPath());
+      } else if(result == KMessageBox::No) {
+        mergeArchiveMailAgentConfig(archiveconfiguration,archiveconfigurationrcStr,BackupMailUtil::configsPath());
+      }
+    } else {
+      importArchiveConfig(archiveconfiguration, archiveconfigurationrc, archiveconfigurationrcStr, BackupMailUtil::configsPath());
+    }
+  }
+
+
 
   const QString templatesconfigurationrcStr("templatesconfigurationrc");
   const KArchiveEntry* templatesconfigurationentry  = mArchiveDirectory->entry(BackupMailUtil::configsPath() + templatesconfigurationrcStr);
@@ -647,7 +667,7 @@ void ImportMailJob::restoreConfig()
     const QString templatesconfigurationrc = KStandardDirs::locateLocal( "config",  templatesconfigurationrcStr);
     if(QFile(templatesconfigurationrc).exists()) {
       //TODO 4.10 allow to merge config.
-      if(KMessageBox::warningYesNo(mParent,i18n("\"%1\" already exists. Do you want to overwrite it ?",templatesconfigurationrcStr),i18n("Restore"))== KMessageBox::Yes) {
+      if(KMessageBox::warningYesNo(mParent,i18n("\"%1\" already exists. Do you want to overwrite it?",templatesconfigurationrcStr),i18n("Restore"))== KMessageBox::Yes) {
         importTemplatesConfig(templatesconfiguration, templatesconfigurationrc, templatesconfigurationrcStr, BackupMailUtil::configsPath());
       }
     } else {
@@ -657,14 +677,15 @@ void ImportMailJob::restoreConfig()
 
 
 
+
+
   const QString kmailStr("kmail2rc");
   const KArchiveEntry* kmail2rcentry  = mArchiveDirectory->entry(BackupMailUtil::configsPath() + kmailStr);
   if(kmail2rcentry && kmail2rcentry->isFile()) {
     const KArchiveFile* kmailrc = static_cast<const KArchiveFile*>(kmail2rcentry);
     const QString kmail2rc = KStandardDirs::locateLocal( "config",  kmailStr);
     if(QFile(kmail2rc).exists()) {
-      //TODO 4.10 allow to merge config.
-      if(KMessageBox::warningYesNo(mParent,i18n("\"%1\" already exists. Do you want to overwrite it ?",kmailStr),i18n("Restore"))== KMessageBox::Yes) {
+      if(KMessageBox::warningYesNo(mParent,i18n("\"%1\" already exists. Do you want to overwrite it?",kmailStr),i18n("Restore"))== KMessageBox::Yes) {
         importKmailConfig(kmailrc,kmail2rc,kmailStr,BackupMailUtil::configsPath());
       }
     } else {
@@ -811,6 +832,42 @@ void ImportMailJob::restoreNepomuk()
   Q_EMIT info(i18n("Nepomuk Database restored."));
   Q_EMIT error(i18n("Failed to restore Nepomuk Database."));
   //TODO
+}
+
+
+void ImportMailJob::importArchiveConfig(const KArchiveFile* archiveconfiguration, const QString& archiveconfigurationrc, const QString&filename,const QString& prefix)
+{
+  copyToFile(archiveconfiguration,archiveconfigurationrc,filename,prefix);
+  KSharedConfig::Ptr archiveConfig = KSharedConfig::openConfig(archiveconfigurationrc);
+
+  copyArchiveMailAgentConfigGroup(archiveConfig, archiveConfig);
+  archiveConfig->sync();
+}
+
+
+void ImportMailJob::copyArchiveMailAgentConfigGroup(KSharedConfig::Ptr archiveConfigOrigin, KSharedConfig::Ptr archiveConfigDestination)
+{
+  //adapt id
+  const QString archiveGroupPattern = QLatin1String( "ArchiveMailCollection " );
+  const QStringList archiveList = archiveConfigOrigin->groupList().filter( archiveGroupPattern );
+  Q_FOREACH(const QString& str, archiveList) {
+    const QString path = str.right(str.length()-archiveGroupPattern.length());
+    if(!path.isEmpty())
+    {
+      KConfigGroup oldGroup = archiveConfigOrigin->group(str);
+      const Akonadi::Collection::Id id = convertPathToId(path);
+      if(id!=-1) {
+        KConfigGroup newGroup( archiveConfigDestination, archiveGroupPattern + QString::number(id));
+        oldGroup.copyTo( &newGroup );
+        newGroup.writeEntry(QLatin1String("saveCollectionId"),id);
+        KUrl path = newGroup.readEntry("storePath",KUrl());
+        if(!QDir(path.path()).exists()) {
+          newGroup.writeEntry(QLatin1String("storePath"),KUrl(QDir::homePath()));
+        }
+      }
+      oldGroup.deleteGroup();
+    }
+  }
 }
 
 
@@ -962,4 +1019,93 @@ Akonadi::Collection::Id ImportMailJob::convertPathToId(const QString& path)
     mHashConvertPathCollectionId.insert(path,id);
   }
   return id;
+}
+
+
+void ImportMailJob::mergeLdapConfig(const KArchiveFile * archivefile, const QString&filename, const QString&prefix)
+{
+  QDir dir(mTempDirName);
+  dir.mkdir(prefix);
+
+  const QString copyToDirName(mTempDirName + QLatin1Char('/') + prefix);
+  archivefile->copyTo(copyToDirName);
+
+  KSharedConfig::Ptr existingConfig = KSharedConfig::openConfig(filename);
+  KConfigGroup grpExisting = existingConfig->group(QLatin1String("LDAP"));
+  int existingNumberHosts = grpExisting.readEntry(QLatin1String("NumHosts"),0);
+  int existingNumberSelectedHosts = grpExisting.readEntry(QLatin1String("NumSelectedHosts"),0);
+
+  KSharedConfig::Ptr importingLdapConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + filename);
+  KConfigGroup grpImporting = importingLdapConfig->group(QLatin1String("LDAP"));
+  int importingNumberHosts = grpImporting.readEntry(QLatin1String("NumHosts"),0);
+  int importingNumberSelectedHosts = grpImporting.readEntry(QLatin1String("NumSelectedHosts"),0);
+
+  grpExisting.writeEntry(QLatin1String("NumHosts"),(existingNumberHosts+importingNumberHosts));
+  grpExisting.writeEntry(QLatin1String("NumSelectedHosts"),(existingNumberSelectedHosts+importingNumberSelectedHosts));
+
+  for(int i = 0; i<importingNumberSelectedHosts; ++i ) {
+    const QString auth = grpImporting.readEntry(QString::fromLatin1("SelectedAuth%1").arg(i),QString());
+    grpExisting.writeEntry(QString::fromLatin1("SelectedAuth%1").arg(existingNumberSelectedHosts+i+1),auth);
+    grpExisting.writeEntry(QString::fromLatin1("SelectedBase%1").arg(existingNumberSelectedHosts+i+1),grpImporting.readEntry(QString::fromLatin1("SelectedBase%1").arg(i),QString()));
+    grpExisting.writeEntry(QString::fromLatin1("SelectedBind%1").arg(existingNumberSelectedHosts+i+1),grpImporting.readEntry(QString::fromLatin1("SelectedBind%1").arg(i),QString()));
+    grpExisting.writeEntry(QString::fromLatin1("SelectedHost%1").arg(existingNumberSelectedHosts+i+1),grpImporting.readEntry(QString::fromLatin1("SelectedHost%1").arg(i),QString()));
+    grpExisting.writeEntry(QString::fromLatin1("SelectedMech%1").arg(existingNumberSelectedHosts+i+1),grpImporting.readEntry(QString::fromLatin1("SelectedMech%1").arg(i),QString()));
+    grpExisting.writeEntry(QString::fromLatin1("SelectedPageSize%1").arg(existingNumberSelectedHosts+i+1),grpImporting.readEntry(QString::fromLatin1("SelectedPageSize%1").arg(i),0));
+    grpExisting.writeEntry(QString::fromLatin1("SelectedPort%1").arg(existingNumberSelectedHosts+i+1),grpImporting.readEntry(QString::fromLatin1("SelectedPort%1").arg(i),0));
+    grpExisting.writeEntry(QString::fromLatin1("SelectedPwdBind%1").arg(existingNumberSelectedHosts+i+1),grpImporting.readEntry(QString::fromLatin1("SelectedPwdBind%1").arg(i),QString()));
+    grpExisting.writeEntry(QString::fromLatin1("SelectedSecurity%1").arg(existingNumberSelectedHosts+i+1),grpImporting.readEntry(QString::fromLatin1("SelectedSecurity%1").arg(i),QString()));
+    grpExisting.writeEntry(QString::fromLatin1("SelectedSizeLimit%1").arg(existingNumberSelectedHosts+i+1),grpImporting.readEntry(QString::fromLatin1("SelectedSizeLimit%1").arg(i),0));
+    grpExisting.writeEntry(QString::fromLatin1("SelectedTimeLimit%1").arg(existingNumberSelectedHosts+i+1),grpImporting.readEntry(QString::fromLatin1("SelectedTimeLimit%1").arg(i),0));
+    grpExisting.writeEntry(QString::fromLatin1("SelectedUser%1").arg(existingNumberSelectedHosts+i+1),grpImporting.readEntry(QString::fromLatin1("SelectedUser%1").arg(i),QString()));
+    grpExisting.writeEntry(QString::fromLatin1("SelectedVersion%1").arg(existingNumberSelectedHosts+i+1),grpImporting.readEntry(QString::fromLatin1("SelectedVersion%1").arg(i),0));
+  }
+
+  for(int i = 0; i<importingNumberHosts; ++i ) {
+    grpExisting.writeEntry(QString::fromLatin1("Auth%1").arg(existingNumberHosts+i+1),grpImporting.readEntry(QString::fromLatin1("Auth%1").arg(i),QString()));
+    grpExisting.writeEntry(QString::fromLatin1("Base%1").arg(existingNumberHosts+i+1),grpImporting.readEntry(QString::fromLatin1("Base%1").arg(i),QString()));
+    grpExisting.writeEntry(QString::fromLatin1("Bind%1").arg(existingNumberHosts+i+1),grpImporting.readEntry(QString::fromLatin1("Bind%1").arg(i),QString()));
+    grpExisting.writeEntry(QString::fromLatin1("Host%1").arg(existingNumberHosts+i+1),grpImporting.readEntry(QString::fromLatin1("Host%1").arg(i),QString()));
+    grpExisting.writeEntry(QString::fromLatin1("Mech%1").arg(existingNumberHosts+i+1),grpImporting.readEntry(QString::fromLatin1("Mech%1").arg(i),QString()));
+    grpExisting.writeEntry(QString::fromLatin1("PageSize%1").arg(existingNumberHosts+i+1),grpImporting.readEntry(QString::fromLatin1("PageSize%1").arg(i),0));
+    grpExisting.writeEntry(QString::fromLatin1("Port%1").arg(existingNumberHosts+i+1),grpImporting.readEntry(QString::fromLatin1("Port%1").arg(i),0));
+    grpExisting.writeEntry(QString::fromLatin1("PwdBind%1").arg(existingNumberHosts+i+1),grpImporting.readEntry(QString::fromLatin1("PwdBind%1").arg(i),QString()));
+    grpExisting.writeEntry(QString::fromLatin1("Security%1").arg(existingNumberHosts+i+1),grpImporting.readEntry(QString::fromLatin1("Security%1").arg(i),QString()));
+    grpExisting.writeEntry(QString::fromLatin1("SizeLimit%1").arg(existingNumberHosts+i+1),grpImporting.readEntry(QString::fromLatin1("SizeLimit%1").arg(i),0));
+    grpExisting.writeEntry(QString::fromLatin1("TimeLimit%1").arg(existingNumberHosts+i+1),grpImporting.readEntry(QString::fromLatin1("TimeLimit%1").arg(i),0));
+    grpExisting.writeEntry(QString::fromLatin1("User%1").arg(existingNumberHosts+i+1),grpImporting.readEntry(QString::fromLatin1("User%1").arg(i),QString()));
+    grpExisting.writeEntry(QString::fromLatin1("Version%1").arg(existingNumberHosts+i+1),grpImporting.readEntry(QString::fromLatin1("Version%1").arg(i),0));
+  }
+
+  grpExisting.sync();
+}
+
+void ImportMailJob::mergeKmailSnippetConfig(const KArchiveFile * archivefile, const QString&filename, const QString&prefix)
+{
+  //TODO
+  QDir dir(mTempDirName);
+  dir.mkdir(prefix);
+
+  const QString copyToDirName(mTempDirName + QLatin1Char('/') + prefix);
+  archivefile->copyTo(copyToDirName);
+
+  KSharedConfig::Ptr existingConfig = KSharedConfig::openConfig(filename);
+
+  KSharedConfig::Ptr importingKMailSnipperConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + filename);
+}
+
+
+void ImportMailJob::mergeArchiveMailAgentConfig(const KArchiveFile * archivefile, const QString&filename, const QString&prefix)
+{
+  QDir dir(mTempDirName);
+  dir.mkdir(prefix);
+
+  const QString copyToDirName(mTempDirName + QLatin1Char('/') + prefix);
+  archivefile->copyTo(copyToDirName);
+
+  KSharedConfig::Ptr existingConfig = KSharedConfig::openConfig(filename);
+
+  KSharedConfig::Ptr importingArchiveMailAgentConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + filename);
+
+  copyArchiveMailAgentConfigGroup(importingArchiveMailAgentConfig, existingConfig);
+  existingConfig->sync();
 }

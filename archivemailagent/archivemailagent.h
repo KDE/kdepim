@@ -38,7 +38,7 @@ public:
   void showConfigureDialog(qlonglong windowId = 0);
 
 public Q_SLOTS:
-  virtual void configure( WId windowId );
+  void configure( WId windowId );
   void reload();
   void pause();
   void resume();

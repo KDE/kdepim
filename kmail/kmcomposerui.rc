@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui SYSTEM "kpartgui.dtd" >
-<kpartgui version="418" name="kmcomposer" >
+<kpartgui version="420" name="kmcomposer" >
  <MenuBar>
   <Menu noMerge="1" name="file" >
    <text>&amp;Message</text>
@@ -10,6 +10,8 @@
    <Action name="send_default_via" />
    <Action name="send_alternative" />
    <Action name="send_alternative_via" />
+   <Separator/>
+   <Action name="save_as_file" />
    <Action name="save_in_drafts" />
    <Action name="save_in_templates" />
    <Separator/>
@@ -24,6 +26,7 @@
    <text>&amp;Edit</text>
    <Action name="paste_quoted" append="edit_paste_merge"/>
    <Action name="paste_att" append="edit_paste_merge"/>
+   <Action name="paste_without_formatting" append="edit_paste_merge"/>
    <Action name="clean_spaces" />
    <Separator/>
    <Action name="tools_quote"/>
@@ -95,6 +98,8 @@
   <Action name="send_default_via" />
   <Action name="send_alternative_via" />
   <Separator/>
+  <Action name="spellcheck" />
+  <Separator/> 
   <Action name="attach" />
   <Separator/>
   <Action name="edit_cut" />
@@ -126,6 +131,7 @@
   <Action name="insert_horizontal_rule" />
   <Action name="add_image" />
   <Action name="insert_html" />
+  <Action name="insert_table" />
  </ToolBar>
  <ToolBar noMerge="1" newline="true" hidden="true" enable="0" name="directionToolBar" iconText="icononly" >
   <text>Text Direction Toolbar</text>

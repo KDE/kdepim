@@ -383,7 +383,7 @@ void ViewerPrivate::openAttachment( KMime::Content* node, const QString & name )
   }
   else if ( choice == AttachmentDialog::Open ) { // Open
     if( offer )
-      attachmentOpen( node, offer );
+      attachmentOpenWith( node, offer );
     else
       attachmentOpen( node );
   } else if ( choice == AttachmentDialog::OpenWith ) {
@@ -504,9 +504,8 @@ bool ViewerPrivate::editAttachment( KMime::Content * node, bool showWarning )
   return true;
 }
 
-void ViewerPrivate::createOpenWithMenu( KMenu *topMenu, KMime::Content* node )
+void ViewerPrivate::createOpenWithMenu( KMenu *topMenu, const QString &contentTypeStr )
 {
-  const QString contentTypeStr = node->contentType()->mimeType();
   const KService::List offers = KFileItemActions::associatedApplications(QStringList()<<contentTypeStr, QString() );
   if (!offers.isEmpty()) {
     QMenu* menu = topMenu;
@@ -521,11 +520,11 @@ void ViewerPrivate::createOpenWithMenu( KMenu *topMenu, KMime::Content* node )
     //kDebug() << offers.count() << "offers" << topMenu << menu;
 
     KService::List::ConstIterator it = offers.constBegin();
-    for(; it != offers.constEnd(); it++) {
+    KService::List::ConstIterator end = offers.constEnd();
+    for(; it != end; ++it) {
       KAction* act = MessageViewer::Util::createAppAction(*it,
                                         // no submenu -> prefix single offer
-                                        menu == topMenu, actionGroup,this);
-      mOpenWithActions.append(act);
+                                        menu == topMenu, actionGroup, menu);
       menu->addAction(act);
     }
 
@@ -536,36 +535,34 @@ void ViewerPrivate::createOpenWithMenu( KMenu *topMenu, KMime::Content* node )
     } else {
       openWithActionName = i18nc("@title:menu", "&Open With...");
     }
-    KAction *openWithAct = new KAction(this);
+    KAction *openWithAct = new KAction(menu);
     openWithAct->setText(openWithActionName);
     QObject::connect(openWithAct, SIGNAL(triggered()), this, SLOT(slotOpenWithDialog()));
     menu->addAction(openWithAct);
-    mOpenWithActions.append(openWithAct);
   }
   else { // no app offers -> Open With...
-    KAction *act = new KAction(this);
+    KAction *act = new KAction(topMenu);
     act->setText(i18nc("@title:menu", "&Open With..."));
     QObject::connect(act, SIGNAL(triggered()), this, SLOT(slotOpenWithDialog()));
     topMenu->addAction(act);
-    mOpenWithActions.append(act);
   }
 }
 
 void ViewerPrivate::slotOpenWithDialog()
 {
-  if ( !mCurrentContent )
-    return;
-  attachmentOpenWith( mCurrentContent );
+  KMime::Content::List contents = selectedContents();
+  if(contents.count() == 1) {
+    attachmentOpenWith( contents.first() );
+  }
 }
-
 
 void ViewerPrivate::slotOpenWithAction(QAction *act)
 {
-  if(!mCurrentContent)
-    return;
-
   KService::Ptr app = act->data().value<KService::Ptr>();
-  attachmentOpen( mCurrentContent, app );
+  KMime::Content::List contents = selectedContents();
+  if(contents.count() == 1) {
+    attachmentOpenWith( contents.first(),app );
+  }
 }
 
 
@@ -588,7 +585,7 @@ void ViewerPrivate::showAttachmentPopup( KMime::Content* node, const QString & n
   attachmentMapper->setMapping( action, Viewer::Open );
 
   if(!deletedAttachment)
-    createOpenWithMenu( menu, node );
+    createOpenWithMenu( menu, node->contentType()->mimeType() );
 
   action = menu->addAction(i18nc("to view something", "View") );
   action->setEnabled(!deletedAttachment);
@@ -642,8 +639,6 @@ void ViewerPrivate::showAttachmentPopup( KMime::Content* node, const QString & n
   attachmentMapper->setMapping( action, Viewer::Properties );
   menu->exec( globalPos );
   delete menu;
-  qDeleteAll(mOpenWithActions);
-  mOpenWithActions.clear();
 }
 
 void ViewerPrivate::prepareHandleAttachment( KMime::Content *node, const QString& fileName )
@@ -719,7 +714,7 @@ KMime::Content::List ViewerPrivate::selectedContents()
 }
 
 
-void ViewerPrivate::attachmentOpenWith( KMime::Content *node )
+void ViewerPrivate::attachmentOpenWith( KMime::Content *node, KService::Ptr offer )
 {
   QString name = mNodeHelper->writeNodeToTempFile( node );
   QString linkName = createAtmFileLink( name );
@@ -736,8 +731,14 @@ void ViewerPrivate::attachmentOpenWith( KMime::Content *node )
 
   url.setPath( linkName );
   lst.append( url );
-  if ( (! KRun::displayOpenWithDialog(lst, mMainWindow, autoDelete)) && autoDelete ) {
-    QFile::remove( url.toLocalFile() );
+  if(offer) {
+    if ( (!KRun::run( *offer, lst, 0, autoDelete )) && autoDelete ) {
+      QFile::remove(url.toLocalFile());
+    }
+  } else {
+    if ( (! KRun::displayOpenWithDialog(lst, mMainWindow, autoDelete)) && autoDelete ) {
+      QFile::remove( url.toLocalFile() );
+    }
   }
 }
 
@@ -748,31 +749,8 @@ void ViewerPrivate::attachmentOpen( KMime::Content *node )
     kDebug() << "got no offer";
     return;
   }
-  attachmentOpen( node, offer );
+  attachmentOpenWith( node, offer );
 }
-
-void ViewerPrivate::attachmentOpen( KMime::Content *node, KService::Ptr offer )
-{
-  const QString name = mNodeHelper->writeNodeToTempFile( node );
-  KUrl::List lst;
-  KUrl url;
-  bool autoDelete = true;
-  QString fname = createAtmFileLink( name );
-
-  if ( fname.isNull() ) {
-    autoDelete = false;
-    fname = name;
-  }
-
-  KPIMUtils::checkAndCorrectPermissionsIfPossible( fname, false, true, true );
-
-  url.setPath( fname );
-  lst.append( url );
-  if ( (!KRun::run( *offer, lst, 0, autoDelete )) && autoDelete ) {
-      QFile::remove(url.toLocalFile());
-  }
-}
-
 
 CSSHelper* ViewerPrivate::cssHelper() const
 {
@@ -1805,7 +1783,7 @@ void ViewerPrivate::showContextMenu( KMime::Content* content, const QPoint &pos 
                        this, SLOT(slotAttachmentOpen()) );
 
       if(selectedContents().count() == 1)
-        createOpenWithMenu(&popup,content);
+        createOpenWithMenu(&popup,content->contentType()->mimeType());
       else
         popup.addAction( i18n( "Open With..." ), this, SLOT(slotAttachmentOpenWith()) );
       popup.addAction( i18nc( "to view something", "View" ), this, SLOT(slotAttachmentView()) );
@@ -1836,8 +1814,6 @@ void ViewerPrivate::showContextMenu( KMime::Content* content, const QPoint &pos 
       popup.addAction( i18n( "Properties" ), this, SLOT(slotAttachmentProperties()) );
   }
   popup.exec( mMimePartTree->viewport()->mapToGlobal( pos ) );
-  qDeleteAll(mOpenWithActions);
-  mOpenWithActions.clear();
 #endif
 
 }

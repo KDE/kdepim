@@ -227,8 +227,7 @@ public:
   QString createAtmFileLink( const QString& atmFileName ) const;
   KService::Ptr getServiceOffer( KMime::Content *content);
   KMime::Content::List selectedContents();
-  void attachmentOpenWith( KMime::Content *node );
-  void attachmentOpen( KMime::Content *node, KService::Ptr offer );
+  void attachmentOpenWith( KMime::Content *node, KService::Ptr offer = KService::Ptr() );
   void attachmentOpen( KMime::Content *node );
 
 
@@ -281,7 +280,7 @@ private:
   void initHtmlWidget();
   void saveMimePartTreeConfig();
   void restoreMimePartTreeConfig();
-  void createOpenWithMenu( KMenu *topMenu, KMime::Content* node );
+  void createOpenWithMenu( KMenu *topMenu, const QString &contentTypeStr );
 public:
   /** Event filter */
   bool eventFilter( QObject *obj, QEvent *ev );
@@ -674,7 +673,6 @@ public:
   Akonadi::Monitor mMonitor;
   QString mAppName;
   QSet<AbstractMessageLoadedHandler*> mMessageLoadedHandlers;
-  QList<QAction*> mOpenWithActions;
   Akonadi::Item::Id mPreviouslyViewedItem;
 
   // zoom Factor
