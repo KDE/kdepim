@@ -44,6 +44,7 @@ SnippetVariableDialog::SnippetVariableDialog( const QString &variableName,
   layout->addWidget( label );
 
   mVariableValueText = new KTextEdit;
+  mVariableValueText->setAcceptRichText(false);
   layout->addWidget( mVariableValueText );
 
   mSaveVariable = new QCheckBox;
