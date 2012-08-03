@@ -83,6 +83,7 @@ target_link_libraries(kmail-mobile
     ${KDEPIMLIBS_AKONADI_LIBS}
     ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
     akonadi_next
+    akonadi-calendar
     kdepim
     kdepimmobileui
     kdepimmobileuicalendar

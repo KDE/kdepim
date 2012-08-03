@@ -30,17 +30,13 @@
 #include "listview.h"
 #include "helper.h"
 
-#include <calendarsupport/calendar.h>
+#include <akonadi/calendar/etmcalendar.h>
 #include <akonadi/calendar/incidencechanger.h>
 #include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/utils.h>
 
 #include <KCalUtils/IncidenceFormatter>
-using namespace KCalUtils;
-
 #include <KCalCore/Visitor>
-using namespace KCalCore;
-
 #include <KIconLoader>
 
 #include <QBoxLayout>
@@ -48,6 +44,8 @@ using namespace KCalCore;
 #include <QTreeWidget>
 
 using namespace EventViews;
+using namespace KCalCore;
+using namespace KCalUtils;
 
 enum {
   Summary_Column = 0,
@@ -134,9 +132,11 @@ class ListView::Private
     {
     }
 
-    void addIncidences( CalendarSupport::Calendar *calendar,
-                        const Akonadi::Item::List &incidenceList, const QDate &date );
-    void addIncidence( CalendarSupport::Calendar *calendar,
+    void addIncidences( Akonadi::ETMCalendar *calendar,
+                        const KCalCore::Incidence::List &incidenceList, const QDate &date );
+    void addIncidence( Akonadi::ETMCalendar *calendar,
+                       const KCalCore::Incidence::Ptr &, const QDate &date );
+    void addIncidence( Akonadi::ETMCalendar *calendar,
                        const Akonadi::Item &, const QDate &date );
     ListViewItem *getItemForIncidence( const Akonadi::Item & );
 
@@ -268,7 +268,7 @@ bool ListView::Private::ListItemVisitor::visit( Journal::Ptr j )
   return true;
 }
 
-ListView::ListView( CalendarSupport::Calendar *calendar,
+ListView::ListView( Akonadi::ETMCalendar *calendar,
                     QWidget *parent, bool nonInteractive )
   : EventView( parent ), d( new Private( this ) )
 {
@@ -380,39 +380,52 @@ void ListView::showDates( const QDate &start, const QDate &end, const QDate &pre
 
 void ListView::showAll()
 {
-  const Akonadi::Item::List incidenceList = calendar()->incidences();
-  d->addIncidences( calendar(), incidenceList, QDate() );
+  d->addIncidences( calendar(), calendar()->incidences(), QDate() );
 }
 
-void ListView::Private::addIncidences( CalendarSupport::Calendar *calendar,
-                                       const Akonadi::Item::List &incidenceList,
+void ListView::Private::addIncidences( Akonadi::ETMCalendar *calendar,
+                                       const KCalCore::Incidence::List &incidences,
                                        const QDate &date )
 {
-  Q_FOREACH ( const Akonadi::Item & i, incidenceList ) {
-    addIncidence( calendar, i, date );
+  Q_FOREACH ( const KCalCore::Incidence::Ptr &incidence, incidences ) {
+    addIncidence( calendar, incidence, date );
   }
 }
 
-void ListView::Private::addIncidence( CalendarSupport::Calendar *calendar,
-                                      const Akonadi::Item &aitem, const QDate &date )
+void ListView::Private::addIncidence( Akonadi::ETMCalendar *calendar,
+                                      const Akonadi::Item &item,
+                                      const QDate &date )
 {
-  if ( !CalendarSupport::hasIncidence( aitem ) || mItems.contains( aitem.id() ) ) {
-    return;
-  }
+  Q_ASSERT( calendar );
+  if ( item.isValid() && item.hasPayload<KCalCore::Incidence::Ptr>() ) {
+    addIncidence( calendar, item.payload<KCalCore::Incidence::Ptr>(), date );
+  }  
+}
 
+void ListView::Private::addIncidence( Akonadi::ETMCalendar *calendar,
+                                      const KCalCore::Incidence::Ptr &incidence,
+                                      const QDate &date )
+{
+  
+  if ( !incidence )
+    return;
+
+  Akonadi::Item aitem = calendar->item( incidence->uid() );
+
+  if ( !aitem.isValid() || mItems.contains( aitem.id() ) )
+    return;
   mDateList.insert( aitem.id(), date );
   mItems.insert( aitem.id(), aitem );
-
-  Incidence::Ptr tinc = CalendarSupport::incidence( aitem );
+  Incidence::Ptr tinc = incidence;
 
   if ( tinc->customProperty( "KABC", "BIRTHDAY" ) == "YES" ||
        tinc->customProperty( "KABC", "ANNIVERSARY" ) == "YES" ) {
     const int years = EventViews::yearDiff( tinc->dtStart().date(), mEndDate );
     if ( years > 0 ) {
-      tinc = Incidence::Ptr( tinc->clone() );
+      tinc = Incidence::Ptr( incidence->clone() );
       tinc->setReadOnly( false );
       tinc->setSummary( i18np( "%2 (1 year)", "%2 (%1 years)", years,
-                               cleanSummary( tinc->summary(), KDateTime() ) ) );
+                               cleanSummary( incidence->summary(), KDateTime() ) ) );
       tinc->setReadOnly( true );
     }
   }
@@ -423,7 +436,7 @@ void ListView::Private::addIncidence( CalendarSupport::Calendar *calendar,
     item->setToolTip( col,
                       IncidenceFormatter::toolTipStr(
                         CalendarSupport::displayName( calendar, aitem.parentCollection() ),
-                        CalendarSupport::incidence( aitem ) ) );
+                        incidence ) );
   }
 
   ListItemVisitor v( item, mStartDate );
@@ -434,12 +447,10 @@ void ListView::Private::addIncidence( CalendarSupport::Calendar *calendar,
   item->setData( 0, Qt::UserRole, QVariant( aitem.id() ) );
 }
 
-void ListView::showIncidences( const Akonadi::Item::List &incidenceList, const QDate &date )
+void ListView::showIncidences( const Akonadi::Item::List &itemList, const QDate &date )
 {
   clear();
-
-  d->addIncidences( calendar(), incidenceList, date );
-
+  d->addIncidences( calendar(), CalendarSupport::incidencesFromItems( itemList ), date );
   updateView();
 
   // After new creation of list view no events are selected.

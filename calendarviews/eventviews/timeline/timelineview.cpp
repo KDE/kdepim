@@ -34,7 +34,7 @@
 #include <kdgantt2/kdganttitemdelegate.h>
 #include <kdgantt2/kdganttstyleoptionganttitem.h>
 
-#include <calendarsupport/calendar.h>
+#include <akonadi/calendar/etmcalendar.h>
 #include <calendarsupport/collectionselection.h>
 #include <calendarsupport/utils.h>
 #include <calendarsupport/kcalprefs.h>
@@ -319,7 +319,7 @@ int TimelineView::currentDateCount() const
 void TimelineView::showDates( const QDate &start, const QDate &end, const QDate &preferredMonth )
 {
   Q_UNUSED( preferredMonth );
-  Q_ASSERT_X( calendar(), "showDates()", "set a CalendarSupport::Calendar" );
+  Q_ASSERT_X( calendar(), "showDates()", "set a Akonadi::ETMCalendar" );
   Q_ASSERT_X( start.isValid(), "showDates()", "start date must be valid" );
   Q_ASSERT_X( end.isValid(), "showDates()", "end date must be valid" );
 
@@ -349,7 +349,7 @@ void TimelineView::showDates( const QDate &start, const QDate &end, const QDate 
   uint index = 0;
   // item for every calendar
   TimelineItem *item = 0;
-  CalendarSupport::Calendar *calres = calendar();
+  Akonadi::ETMCalendar *calres = calendar();
   if ( !calres ) {
     item = new TimelineItem( calendar(),
                              index++,
@@ -393,14 +393,15 @@ void TimelineView::showDates( const QDate &start, const QDate &end, const QDate 
   QAbstractItemModel *ganttModel = d->mGantt->model();
   d->mGantt->setModel( 0 );
 
-  Akonadi::Item::List events;
+  KCalCore::Event::List events;
   KDateTime::Spec timeSpec = CalendarSupport::KCalPrefs::instance()->timeSpec();
   for ( QDate day = start; day <= end; day = day.addDays( 1 ) ) {
     events = calendar()->events( day, timeSpec,
-                                 CalendarSupport::EventSortStartDate,
-                                 CalendarSupport::SortDirectionAscending );
-    Q_FOREACH ( const Akonadi::Item &i, events ) {
-      d->insertIncidence( i, day );
+                                 KCalCore::EventSortStartDate,
+                                 KCalCore::SortDirectionAscending );
+    Q_FOREACH ( const KCalCore::Event::Ptr &event, events ) {
+      Akonadi::Item item = calendar()->item( event->uid() );
+      d->insertIncidence( item, day );
     }
   }
   d->mGantt->setModel( ganttModel );

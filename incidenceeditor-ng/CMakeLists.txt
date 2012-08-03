@@ -97,6 +97,7 @@ if(NOT WINCE)
   kde4_add_library(incidenceeditorsng ${LIBRARY_TYPE} ${incidenceeditors_ng_desktop_LIB_SRCS})
 
   target_link_libraries(incidenceeditorsng
+    akonadi-calendar
     ${QT_QTCORE_LIBRARY}
     ${QT_QTGUI_LIBRARY}
     ${KDE4_KDEUI_LIBS}
@@ -140,6 +141,7 @@ endif()
   kde4_add_library(incidenceeditorsngmobile ${LIBRARY_TYPE} ${incidenceeditors_ng_mobile_LIB_SRCS})
 
   target_link_libraries(incidenceeditorsngmobile
+    akonadi-calendar
     ${QT_QTCORE_LIBRARY}
     ${QT_QTGUI_LIBRARY}
     ${KDE4_KDEUI_LIBS}
@@ -169,6 +171,7 @@ if(NOT WINCE)
   kde4_add_executable(kincidenceeditor ${testincidenceeditor_SRCS})
 
   target_link_libraries(kincidenceeditor
+    akonadi-calendar
     ${KDE4_KDEUI_LIBS}
     ${KDEPIMLIBS_AKONADI_LIBS}
     ${KDEPIMLIBS_KCALCORE_LIBS}

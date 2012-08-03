@@ -20,7 +20,7 @@
 #include "monthviewitem.h"
 #include "mainview.h"
 
-#include <calendarsupport/calendar.h>
+#include <akonadi/calendar/etmcalendar.h>
 #include <calendarviews/eventviews/month/monthview.h>
 
 #include <KGlobal>
@@ -72,7 +72,7 @@ QObject* MonthViewItem::calendar() const
 
 void MonthViewItem::setCalendar( QObject* calendarObj )
 {
-  CalendarSupport::Calendar* cal = qobject_cast<CalendarSupport::Calendar*>( calendarObj );
+  Akonadi::ETMCalendar* cal = qobject_cast<Akonadi::ETMCalendar*>( calendarObj );
   kDebug() << calendarObj << cal;
   if ( cal ) {
     mView->setCalendar( cal );

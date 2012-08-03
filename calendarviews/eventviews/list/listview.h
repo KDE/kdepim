@@ -26,8 +26,8 @@
 
 #include "eventview.h"
 
-namespace CalendarSupport {
-  class Calendar;
+namespace Akonadi {
+  class ETMCalendar;
 }
 
 class KConfig;
@@ -51,7 +51,7 @@ class EVENTVIEWS_EXPORT ListView : public EventView
 {
   Q_OBJECT
   public:
-    explicit ListView( CalendarSupport::Calendar *calendar,
+    explicit ListView( Akonadi::ETMCalendar *calendar,
                        QWidget *parent = 0, bool nonInteractive = false );
     ~ListView();
 

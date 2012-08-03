@@ -32,8 +32,8 @@
 #include <QWidget>
 #include <QPointer>
 
-namespace CalendarSupport {
-  class Calendar;
+namespace Akonadi {
+  class ETMCalendar;
 }
 
 namespace EventViews {
@@ -85,7 +85,7 @@ class EVENTVIEWS_EXPORT AgendaItem : public QWidget, public CellItem
     typedef QPointer<AgendaItem> QPtr;
 
     AgendaItem( EventView *eventView,
-                CalendarSupport::Calendar *calendar,
+                Akonadi::ETMCalendar *calendar,
                 const Akonadi::Item &incidence,
                 int itemPos,
                 int itemCount,
@@ -293,7 +293,7 @@ class EVENTVIEWS_EXPORT AgendaItem : public QWidget, public CellItem
     int mCellYTop, mCellYBottom;
 
     EventView *mEventView;
-    CalendarSupport::Calendar *mCalendar;
+    Akonadi::ETMCalendar *mCalendar;
     Akonadi::Item mIncidence;
     QDate mDate;
     bool mValid;

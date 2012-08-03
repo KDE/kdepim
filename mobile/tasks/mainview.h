@@ -25,6 +25,7 @@
 #include "kdeclarativemainview.h"
 
 #include <Akonadi/Entity>
+#include <akonadi/calendar/etmcalendar.h>
 
 #include <calendarviews/eventviews/eventview.h>
 #include <calendarviews/eventviews/prefs.h>
@@ -92,7 +93,7 @@ class MainView : public KDeclarativeMainView
     Akonadi::StandardCalendarActionManager *mStandardActionManager;
     TasksActionManager *mTasksActionManager;
     EventViews::PrefsPtr mCalendarPrefs;
-    CalendarSupport::Calendar *mCalendar;
+    Akonadi::ETMCalendar::Ptr mCalendar;
     Akonadi::IncidenceChanger *mChanger;
 };
 

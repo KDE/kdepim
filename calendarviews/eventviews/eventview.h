@@ -51,13 +51,13 @@ namespace KHolidays {
 }
 
 namespace CalendarSupport {
-  class Calendar;
   class CollectionSelection;
   class KCalPrefs;
 }
 
 namespace Akonadi {
   class IncidenceChanger;
+  class ETMCalendar;
 }
 
 class KCheckableProxyModel;
@@ -137,12 +137,12 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
       BRIGHTNESS_FACTOR = 125
     };
 
-    virtual void setCalendar( CalendarSupport::Calendar *cal );
+    virtual void setCalendar( Akonadi::ETMCalendar *cal );
 
     /**
       Return calendar object of this view.
     */
-    virtual CalendarSupport::Calendar *calendar() const;
+    virtual Akonadi::ETMCalendar *calendar() const;
 
     /*
       update config is called after prefs are set.

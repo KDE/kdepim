@@ -23,14 +23,9 @@
 #include "korganizereditorconfig.h"
 
 #include <calendarsupport/calendar.h>
-#include <calendarsupport/calendarmodel.h>
 #include <calendarsupport/groupware.h>
 #include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/utils.h>
-
-#include <Akonadi/ChangeRecorder>
-#include <Akonadi/ItemFetchScope>
-#include <Akonadi/Session>
 
 #include <KSystemTimeZones>
 
@@ -45,37 +40,17 @@ class GroupwareUiDelegate : public QObject, public CalendarSupport::GroupwareUiD
     {
     }
 
-    void setCalendar( CalendarSupport::Calendar *calendar )
+    void setCalendar( const Akonadi::ETMCalendar::Ptr &calendar )
     {
       mCalendar = calendar;
     }
 
     void createCalendar()
     {
-      Akonadi::Session *session = new Akonadi::Session( "GroupwareIntegration", this );
-      Akonadi::ChangeRecorder *monitor = new Akonadi::ChangeRecorder( this );
-
-      Akonadi::ItemFetchScope scope;
-      scope.fetchFullPayload( true );
-
-      monitor->setSession( session );
-      monitor->setCollectionMonitored( Akonadi::Collection::root() );
-      monitor->fetchCollection( true );
-      monitor->setItemFetchScope( scope );
-      monitor->setMimeTypeMonitored( "text/calendar" );
-      monitor->setMimeTypeMonitored( KCalCore::Event::eventMimeType(), true );
-      monitor->setMimeTypeMonitored( KCalCore::Todo::todoMimeType(), true );
-      monitor->setMimeTypeMonitored( KCalCore::Journal::journalMimeType(), true );
-
-      CalendarSupport::CalendarModel *calendarModel =
-        new CalendarSupport::CalendarModel( monitor, this );
-      calendarModel->setObjectName( "Groupware calendar model" );
-
-      mCalendar = new CalendarSupport::Calendar( calendarModel, calendarModel,
-                                                 KSystemTimeZones::local() );
+      mCalendar = Akonadi::ETMCalendar::Ptr( new Akonadi::ETMCalendar() );
       mCalendar->setObjectName( "Groupware calendar" );
-      mCalendar->setOwner( KCalCore::Person( CalendarSupport::KCalPrefs::instance()->fullName(),
-                                             CalendarSupport::KCalPrefs::instance()->email() ) );
+      mCalendar->setOwner( KCalCore::Person::Ptr( new KCalCore::Person( CalendarSupport::KCalPrefs::instance()->fullName(),
+                                                                        CalendarSupport::KCalPrefs::instance()->email() ) ) );
     }
 
     void requestIncidenceEditor( const Akonadi::Item &item )
@@ -97,7 +72,7 @@ class GroupwareUiDelegate : public QObject, public CalendarSupport::GroupwareUiD
 #endif
     }
 
-    CalendarSupport::Calendar *mCalendar;
+    Akonadi::ETMCalendar::Ptr mCalendar;
 };
 
 }
@@ -111,7 +86,7 @@ bool GroupwareIntegration::isActive()
   return sActivated;
 }
 
-void GroupwareIntegration::activate( CalendarSupport::Calendar *calendar )
+void GroupwareIntegration::activate( const Akonadi::ETMCalendar::Ptr &calendar )
 {
   if ( !sDelegate ) {
     sDelegate = new GroupwareUiDelegate;

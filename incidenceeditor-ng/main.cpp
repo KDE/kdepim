@@ -24,6 +24,7 @@
 #include <KCmdLineArgs>
 
 #include <calendarsupport/kcalprefs.h>
+#include <akonadi/calendar/calendarsettings.h>
 
 #include <Akonadi/Item>
 #include <KCalCore/Event>
@@ -77,7 +78,7 @@ int main( int argc, char **argv )
   //       the incidence is added.
   if ( CalendarSupport::KCalPrefs::instance()->useGroupwareCommunication() ) {
     defaults.setGroupWareDomain(
-      KUrl( CalendarSupport::KCalPrefs::instance()->freeBusyRetrieveUrl() ).host() );
+      KUrl( Akonadi::CalendarSettings::self()->freeBusyRetrieveUrl() ).host() );
   }
 
   if ( args->isSet( "new-event" ) ) {

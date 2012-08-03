@@ -27,8 +27,6 @@ set(calendarsupport_LIB_SRCS
   collectionselection.cpp
   daterangefilterproxymodel.cpp
   eventarchiver.cpp
-  freebusydownloadjob.cpp
-  freebusymanager.cpp
   groupware.cpp
   identitymanager.cpp
   incidenceattachmentmodel.cpp
@@ -39,7 +37,6 @@ set(calendarsupport_LIB_SRCS
   mailclient.cpp
   mailscheduler.cpp
   nepomukcalendar.cpp
-  publishdialog.cpp
   utils.cpp
 
   next/akonadicalendar.cpp
@@ -59,8 +56,6 @@ if(NOT WINCE)
     dndfactory.cpp
   )
 endif()
-
-kde4_add_ui_files(calendarsupport_LIB_SRCS publishdialog_base.ui)
 
 kde4_add_kcfg_files(calendarsupport_LIB_SRCS kcalprefs_base.kcfgc)
 

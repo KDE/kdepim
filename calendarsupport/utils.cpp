@@ -27,13 +27,14 @@
 #include "kcalprefs.h"
 #include "mailclient.h"
 #include "mailscheduler.h"
-#include "publishdialog.h"
 
 #include <Akonadi/Collection>
 #include <Akonadi/CollectionDialog>
 #include <Akonadi/EntityDisplayAttribute>
 #include <Akonadi/EntityTreeModel>
 #include <Akonadi/Item>
+#include <akonadi/calendar/etmcalendar.h>
+#include <akonadi/calendar/publishdialog.h>
 
 #include <KHolidays/Holidays>
 
@@ -70,6 +71,7 @@
 
 using namespace CalendarSupport;
 using namespace KHolidays;
+using namespace KCalCore;
 
 KCalCore::Incidence::Ptr CalendarSupport::incidence( const Akonadi::Item &item )
 {
@@ -494,7 +496,7 @@ QString CalendarSupport::displayName( const Akonadi::Collection &c )
   return ( attr && !attr->displayName().isEmpty() ) ? attr->displayName() : c.name();
 }
 
-QString CalendarSupport::displayName( Calendar *calendar, const Akonadi::Collection &c )
+QString CalendarSupport::displayName( Akonadi::ETMCalendar *calendar, const Akonadi::Collection &c )
 {
   const QString cName = c.name();
 
@@ -614,7 +616,7 @@ void CalendarSupport::sendAsICalendar( const Akonadi::Item &item,
     return;
   }
 
-  QPointer<PublishDialog> publishdlg = new PublishDialog;
+  QPointer<Akonadi::PublishDialog> publishdlg = new Akonadi::PublishDialog;
   if ( publishdlg->exec() == QDialog::Accepted && publishdlg ) {
     const QString recipients = publishdlg->addresses();
     if ( incidence->organizer()->isEmpty() ) {
@@ -648,7 +650,8 @@ void CalendarSupport::sendAsICalendar( const Akonadi::Item &item,
   delete publishdlg;
 }
 
-void  CalendarSupport::publishItemInformation( const Akonadi::Item &item, Calendar *calendar,
+void  CalendarSupport::publishItemInformation( const Akonadi::Item &item,
+                                               const Akonadi::ETMCalendar::Ptr &calendar,
                                                QWidget *parentWidget )
 {
   Incidence::Ptr incidence = CalendarSupport::incidence( item );
@@ -661,7 +664,7 @@ void  CalendarSupport::publishItemInformation( const Akonadi::Item &item, Calend
     return;
   }
 
-  QPointer<PublishDialog> publishdlg = new PublishDialog();
+  QPointer<Akonadi::PublishDialog> publishdlg = new Akonadi::PublishDialog();
   if ( incidence->attendeeCount() > 0 ) {
     Attendee::List attendees = incidence->attendees();
     Attendee::List::ConstIterator it;
@@ -674,7 +677,7 @@ void  CalendarSupport::publishItemInformation( const Akonadi::Item &item, Calend
     Incidence::Ptr inc( incidence->clone() );
     inc->registerObserver( 0 );
     inc->clearAttendees();
-
+/*
     // Send the mail
     CalendarSupport::MailScheduler scheduler( calendar );
     if ( scheduler.publish( incidence, publishdlg->addresses() ) ) {
@@ -687,14 +690,14 @@ void  CalendarSupport::publishItemInformation( const Akonadi::Item &item, Calend
       KMessageBox::error(
         parentWidget,
         i18n( "Unable to publish the item '%1'", incidence->summary() ) );
-    }
+    } */ //TODO_SERGIO
   }
   delete publishdlg;
 }
 
 void CalendarSupport::scheduleiTIPMethods( KCalCore::iTIPMethod method,
                                            const Akonadi::Item &item,
-                                           CalendarSupport::Calendar *calendar,
+                                           const Akonadi::ETMCalendar::Ptr &calendar,
                                            QWidget *parentWidget )
 {
   Incidence::Ptr incidence = CalendarSupport::incidence( item );
@@ -722,6 +725,7 @@ void CalendarSupport::scheduleiTIPMethods( KCalCore::iTIPMethod method,
   inc->clearAttendees();
 
   // Send the mail
+  /* // TODO_SERGIO
   CalendarSupport::MailScheduler scheduler( calendar );
   if ( scheduler.performTransaction( incidence, method ) ) {
     KMessageBox::information(
@@ -740,7 +744,7 @@ void CalendarSupport::scheduleiTIPMethods( KCalCore::iTIPMethod method,
              "Unable to send the item '%1'.\nMethod: %2",
              incidence->summary(),
              ScheduleMessage::methodName( method ) ) );
-  }
+  } */
 }
 
 void CalendarSupport::saveAttachments( const Akonadi::Item &item, QWidget *parentWidget )
@@ -805,5 +809,101 @@ void CalendarSupport::saveAttachments( const Akonadi::Item &item, QWidget *paren
       KMessageBox::error( parentWidget, KIO::NetAccess::lastErrorString() );
     }
   }
-
 }
+
+KCalCore::Incidence::Ptr CalendarSupport::dissociateOccurrence( const Akonadi::Item &item,
+                                                                const QDate &date,
+                                                                const KDateTime::Spec &spec,
+                                                                bool single )
+{
+  if ( !item.isValid() ) {
+    return KCalCore::Incidence::Ptr();
+  }
+
+  const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( item );
+  if ( !incidence || !incidence->recurs() ) {
+    return KCalCore::Incidence::Ptr();
+  }
+
+  KCalCore::Incidence::Ptr newInc = KCalCore::Incidence::Ptr( incidence->clone() );
+  newInc->recreate();
+  // Do not call setRelatedTo() when dissociating recurring to-dos, otherwise the new to-do
+  // will appear as a child.  Originally, we planned to set a relation with reltype SIBLING
+  // when dissociating to-dos, but currently kcal only supports reltype PARENT.
+  // We can uncomment the following line when we support the PARENT reltype.
+  //newInc->setRelatedTo( incidence );
+  KCalCore::Recurrence *recur = newInc->recurrence();
+  if ( single ) {
+    recur->clear();
+  } else {
+    // Adjust the recurrence for the future incidences. In particular adjust
+    // the "end after n occurrences" rules! "No end date" and "end by ..."
+    // don't need to be modified.
+    int duration = recur->duration();
+    if ( duration > 0 ) {
+      int doneduration = recur->durationTo( date.addDays( -1 ) );
+      if ( doneduration >= duration ) {
+        kDebug() << "The dissociated event already occurred more often"
+                 << "than it was supposed to ever occur. ERROR!";
+        recur->clear();
+      } else {
+        recur->setDuration( duration - doneduration );
+      }
+    }
+  }
+  // Adjust the date of the incidence
+  if ( incidence->type() == KCalCore::IncidenceBase::TypeEvent ) {
+    KCalCore::Event::Ptr ev = newInc.staticCast<KCalCore::Event>();
+    KDateTime start( ev->dtStart() );
+    int daysTo = start.toTimeSpec( spec ).date().daysTo( date );
+    ev->setDtStart( start.addDays( daysTo ) );
+    ev->setDtEnd( ev->dtEnd().addDays( daysTo ) );
+  } else if ( incidence->type() == KCalCore::IncidenceBase::TypeTodo ) {
+    KCalCore::Todo::Ptr td = newInc.staticCast<KCalCore::Todo>();
+    bool haveOffset = false;
+    int daysTo = 0;
+    if ( td->hasDueDate() ) {
+      KDateTime due( td->dtDue() );
+      daysTo = due.toTimeSpec( spec ).date().daysTo( date );
+      td->setDtDue( due.addDays( daysTo ), true );
+      haveOffset = true;
+    }
+    if ( td->hasStartDate() ) {
+      KDateTime start( td->dtStart() );
+      if ( !haveOffset ) {
+        daysTo = start.toTimeSpec( spec ).date().daysTo( date );
+      }
+      td->setDtStart( start.addDays( daysTo ) );
+      haveOffset = true;
+    }
+  }
+  recur = incidence->recurrence();
+  if ( recur ) {
+    if ( single ) {
+      recur->addExDate( date );
+    } else {
+      // Make sure the recurrence of the past events ends
+      // at the corresponding day
+      recur->setEndDate( date.addDays(-1) );
+    }
+  }
+  return KCalCore::Incidence::Ptr( newInc );
+}
+
+QStringList CalendarSupport::categories( const KCalCore::Incidence::List &incidences )
+{
+  QStringList cats, thisCats;
+  // @TODO: For now just iterate over all incidences. In the future,
+  // the list of categories should be built when reading the file.
+  Q_FOREACH ( const KCalCore::Incidence::Ptr &incidence, incidences ) {
+    thisCats = incidence->categories();
+    for ( QStringList::ConstIterator si = thisCats.constBegin();
+          si != thisCats.constEnd(); ++si ) {
+      if ( !cats.contains( *si ) ) {
+        cats.append( *si );
+      }
+    }
+  }
+  return cats;
+}
+

@@ -62,7 +62,7 @@ QPixmap *AgendaItem::eventPxmp = 0;
 
 //-----------------------------------------------------------------------------
 
-AgendaItem::AgendaItem( EventView *eventView, CalendarSupport::Calendar *calendar,
+AgendaItem::AgendaItem( EventView *eventView, Akonadi::ETMCalendar *calendar,
                         const Akonadi::Item &item,
                         int itemPos, int itemCount,
                         const QDate &qd, bool isSelected, QWidget *parent )

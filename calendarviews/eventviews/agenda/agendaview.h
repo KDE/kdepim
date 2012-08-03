@@ -134,7 +134,7 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
     bool selectedIsSingleCell() const;
 
     /* reimp from EventView */
-    virtual void setCalendar( CalendarSupport::Calendar *cal );
+    virtual void setCalendar( Akonadi::ETMCalendar *cal );
 
     QSplitter *splitter() const;
 

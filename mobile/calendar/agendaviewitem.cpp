@@ -22,8 +22,8 @@
 #include <KGlobal>
 #include <KGlobalSettings>
 
-#include <calendarsupport/calendar.h>
 #include <calendarviews/eventviews/agenda/agendaview.h>
+#include <akonadi/calendar/etmcalendar.h>
 #include <KLocale>
 
 using namespace EventViews;
@@ -89,7 +89,7 @@ QObject* AgendaViewItem::calendar() const
 
 void AgendaViewItem::setCalendar(QObject* calendarObj)
 {
-  CalendarSupport::Calendar* cal = qobject_cast<CalendarSupport::Calendar*>( calendarObj );
+  Akonadi::ETMCalendar* cal = qobject_cast<Akonadi::ETMCalendar*>( calendarObj );
   kDebug() << calendarObj << cal;
   if ( cal ) {
     m_view->setCalendar( cal );

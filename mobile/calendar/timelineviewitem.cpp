@@ -23,7 +23,7 @@
 #include <KGlobal>
 #include <KGlobalSettings>
 
-#include <calendarsupport/calendar.h>
+#include <akonadi/calendar/etmcalendar.h>
 #include <calendarviews/eventviews/timeline/timelineview.h>
 #include <KLocale>
 #include <QLayout>
@@ -91,7 +91,7 @@ QObject* TimelineViewItem::calendar() const
 
 void TimelineViewItem::setCalendar(QObject* calendarObj)
 {
-  CalendarSupport::Calendar* cal = qobject_cast<CalendarSupport::Calendar*>( calendarObj );
+  Akonadi::ETMCalendar* cal = qobject_cast<Akonadi::ETMCalendar*>( calendarObj );
   kDebug() << calendarObj << cal;
   if ( cal ) {
     m_view->setCalendar( cal );

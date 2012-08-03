@@ -30,7 +30,7 @@
 
 //#include <calendarsupport/calendarsearch.h>
 #include <calendarsupport/collectionselection.h>
-#include <calendarsupport/calendar.h>
+#include <akonadi/calendar/etmcalendar.h>
 #include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/utils.h>
 
@@ -46,7 +46,7 @@ using namespace EventViews;
 
 namespace EventViews {
 
-class MonthViewPrivate : public CalendarSupport::Calendar::CalendarObserver
+class MonthViewPrivate : public Akonadi::ETMCalendar::CalendarObserver
 {
   MonthView *q;
 
@@ -59,7 +59,7 @@ class MonthViewPrivate : public CalendarSupport::Calendar::CalendarObserver
     void triggerDelayedReload( EventView::Change reason );
 
   public:  /// Members
-    // CalendarSupport::CalendarSearch *calendarSearch;
+    // Akonadi::ETMCalendarSearch *calendarSearch;
     QTimer                           reloadTimer;
     MonthScene                      *scene;
     QDate                            selectedItemDate;
@@ -81,7 +81,7 @@ class MonthViewPrivate : public CalendarSupport::Calendar::CalendarObserver
 
 MonthViewPrivate::MonthViewPrivate( MonthView *qq )
   : q( qq ),
-    //calendarSearch( new CalendarSupport::CalendarSearch( qq ) ),
+    //calendarSearch( new Akonadi::ETMCalendarSearch( qq ) ),
     scene( new MonthScene( qq ) ),
     selectedItemId( -1 ),
     view( new MonthGraphicsView( qq ) )
@@ -300,16 +300,16 @@ MonthView::~MonthView()
 void MonthView::updateConfig()
 {
   /*
-  CalendarSupport::CalendarSearch::IncidenceTypes types;
+  Akonadi::ETMCalendarSearch::IncidenceTypes types;
   if ( preferences()->showTodosMonthView() ) {
-    types |= CalendarSupport::CalendarSearch::Todos;
+    types |= Akonadi::ETMCalendarSearch::Todos;
   }
 
   if ( preferences()->showJournalsMonthView() ) {
-    types |= CalendarSupport::CalendarSearch::Journals;
+    types |= Akonadi::ETMCalendarSearch::Journals;
   }
 
-  types |= CalendarSupport::CalendarSearch::Events;
+  types |= Akonadi::ETMCalendarSearch::Events;
   d->calendarSearch->setIncidenceTypes( types );
   */
   d->scene->update();
@@ -545,13 +545,12 @@ void MonthView::reloadIncidences()
 
   // build global event list
   KDateTime::Spec timeSpec = CalendarSupport::KCalPrefs::instance()->timeSpec();
-  const Akonadi::Item::List incidences =
-    calendar()->incidences(); //CalendarSupport::itemsFromModel( d->calendarSearch->model() );
+  const KCalCore::Incidence::List incidences = calendar()->incidences();
 
   const bool colorMonthBusyDays = preferences()->colorMonthBusyDays();
-  foreach ( const Akonadi::Item &aitem, incidences ) {
-    const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( aitem );
+  foreach ( const KCalCore::Incidence::Ptr &incidence, incidences ) {
     const bool isTodo = incidence->type() == KCalCore::Incidence::TypeTodo;
+    Akonadi::Item aitem = calendar()->item( incidence->uid() );
 
     // Remove the two checks when filtering is done through a proxyModel, when using calendar search
     if ( !preferences()->showTodosMonthView() && isTodo ) {
@@ -736,7 +735,7 @@ bool MonthView::isBusyDay( const QDate &day ) const
   return !d->mBusyDays[day].isEmpty();
 }
 
-void MonthView::setCalendar( CalendarSupport::Calendar *cal )
+void MonthView::setCalendar( Akonadi::ETMCalendar *cal )
 {
   Q_ASSERT( cal );
 

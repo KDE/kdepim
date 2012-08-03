@@ -44,6 +44,8 @@
 #include <akonadi/agentactionmanager.h>
 #include <akonadi/calendar/standardcalendaractionmanager.h>
 #include <akonadi/calendar/incidencechanger.h>
+#include <akonadi/calendar/freebusymanager.h>
+#include <akonadi/calendar/calendarsettings.h>
 #include <akonadi/collectionmodel.h>
 #include <akonadi/collectionpropertiesdialog.h>
 #include <akonadi/entitytreemodel.h>
@@ -51,12 +53,9 @@
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/standardactionmanager.h>
 #include <calendarsupport/archivedialog.h>
-#include <calendarsupport/calendar.h>
 #include <calendarsupport/categoryconfig.h>
-#include <calendarsupport/calendarmodel.h>
 #include <calendarsupport/collectiongeneralpage.h>
 #include <calendarsupport/collectionselection.h>
-#include <calendarsupport/freebusymanager.h>
 #include <calendarsupport/identitymanager.h>
 #include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/utils.h>
@@ -148,7 +147,6 @@ EventViews::PrefsPtr MainView::m_calendarPrefs;
 
 MainView::MainView( QWidget* parent )
   : KDeclarativeMainView( "korganizer-mobile", new EventListProxy, parent ),
-    m_calendar( 0 ),
     m_identityManager( 0 ),
     m_changer( 0 ),
     mActionManager( 0 )
@@ -189,9 +187,9 @@ void MainView::doDelayedInit()
   qmlRegisterType<ClockHelper>( "ClockHelper", 4, 5, "ClockHelper" );
   qmlRegisterUncreatableType<EventsGuiStateManager>( "org.kde.akonadi.events", 4, 5, "EventsGuiStateManager", QLatin1String( "This type is only exported for its enums" ) );
 
-  m_calendar = new CalendarSupport::Calendar( entityTreeModel(), itemModel(), KSystemTimeZones::local() );
-  engine()->rootContext()->setContextProperty( "calendarModel", QVariant::fromValue( static_cast<QObject*>( m_calendar ) ) );
-  CalendarSupport::FreeBusyManager::self()->setCalendar( m_calendar );
+  m_calendar = Akonadi::ETMCalendar::Ptr( new Akonadi::ETMCalendar() );
+  engine()->rootContext()->setContextProperty( "calendarModel", QVariant::fromValue( static_cast<QObject*>( m_calendar.data() ) ) );
+  Akonadi::FreeBusyManager::self()->setCalendar( m_calendar );
 
   if ( !IncidenceEditorNG::GroupwareIntegration::isActive() ) {
     IncidenceEditorNG::GroupwareIntegration::setGlobalUiDelegate( new GroupwareUiDelegate );
@@ -322,7 +320,7 @@ void MainView::finishEdit( QObject *editor )
 
 void MainView::showRegularCalendar()
 {
-  m_calendar->setUnfilteredModel( itemModel() );
+  //m_calendar->setUnfilteredModel( itemModel() );
 }
 
 void MainView::setCurrentEventItemId( qint64 id )
@@ -365,7 +363,7 @@ void MainView::newEventWithDate( const QDate &date )
   //       This method should somehow depend on the calendar selected to which
   //       the incidence is added.
   if ( KCalPrefs::instance()->useGroupwareCommunication() )
-    defaults.setGroupWareDomain( KUrl( KCalPrefs::instance()->freeBusyRetrieveUrl() ).host() );
+    defaults.setGroupWareDomain( KUrl( Akonadi::CalendarSettings::self()->freeBusyRetrieveUrl() ).host() );
 
   defaults.setDefaults( event );
 
@@ -612,12 +610,12 @@ bool MainView::useFilterLineEditInCurrentState() const
 
 void MainView::uploadFreeBusy()
 {
-  CalendarSupport::FreeBusyManager::self()->publishFreeBusy( this );
+  Akonadi::FreeBusyManager::self()->publishFreeBusy( this );
 }
 
 void MainView::mailFreeBusy()
 {
-  CalendarSupport::FreeBusyManager::self()->mailFreeBusy( 30, this );
+  Akonadi::FreeBusyManager::self()->mailFreeBusy( 30, this );
 }
 
 void MainView::sendAsICalendar()

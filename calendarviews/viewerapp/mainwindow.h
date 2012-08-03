@@ -28,11 +28,7 @@ namespace Akonadi
 {
   class ChangeRecorder;
   class IncidenceChanger;
-}
-
-namespace CalendarSupport
-{
-  class Calendar;
+  class ETMCalendar;
 }
 
 namespace boost {
@@ -63,7 +59,7 @@ class MainWindow : public QMainWindow
 
     Akonadi::ChangeRecorder *mChangeRecorder;
 
-    CalendarSupport::Calendar *mCalendar;
+    Akonadi::ETMCalendar *mCalendar;
 
     Akonadi::IncidenceChanger *mIncidenceChanger;
 

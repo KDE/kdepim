@@ -54,7 +54,7 @@
 
 using namespace CalendarSupport;
 
-ArchiveDialog::ArchiveDialog( CalendarSupport::Calendar *cal,
+ArchiveDialog::ArchiveDialog( const Akonadi::ETMCalendar::Ptr &cal,
                               Akonadi::IncidenceChanger *changer,
                               QWidget *parent )
   : KDialog (parent)

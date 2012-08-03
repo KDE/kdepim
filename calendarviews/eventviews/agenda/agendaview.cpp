@@ -33,7 +33,7 @@
 #include "timelabels.h"
 #include "timelabelszone.h"
 
-#include <calendarsupport/calendar.h>
+#include <akonadi/calendar/etmcalendar.h>
 #include <calendarsupport/collectionselection.h>
 #include <akonadi/calendar/incidencechanger.h>
 #include <calendarsupport/utils.h>
@@ -171,7 +171,7 @@ void EventIndicator::enableColumn( int column, bool enable )
 ////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////
 
-class AgendaView::Private : public CalendarSupport::Calendar::CalendarObserver
+class AgendaView::Private : public Akonadi::ETMCalendar::CalendarObserver
 {
   AgendaView *const q;
 
@@ -691,7 +691,7 @@ AgendaView::~AgendaView()
   delete d;
 }
 
-void AgendaView::setCalendar( CalendarSupport::Calendar *cal )
+void AgendaView::setCalendar( Akonadi::ETMCalendar *cal )
 {
   if ( calendar() ) {
     calendar()->unregisterObserver( d );
@@ -1532,17 +1532,18 @@ void AgendaView::fillAgenda()
   setChanges( NothingChanged );
 
   bool somethingReselected = false;
-  const Akonadi::Item::List incidences = calendar() ?
-                                         calendar()->incidences() :
-                                         Akonadi::Item::List();
+  const KCalCore::Incidence::List incidences = calendar() ?
+                                               calendar()->incidences() :
+                                               KCalCore::Incidence::List();
 
-  foreach ( const Akonadi::Item &aitem, incidences ) {
+  foreach ( const KCalCore::Incidence::Ptr &incidence, incidences ) {
+    Q_ASSERT( incidence );
+    Akonadi::Item aitem = calendar()->item( incidence->uid() );
     const bool wasSelected = aitem.id() == selectedAgendaId  ||
                              aitem.id() == selectedAllDayAgendaId;
 
-    KCalCore::Incidence::Ptr i = CalendarSupport::incidence( aitem );
-    if ( ( i->allDay() && d->mUpdateAllDayAgenda ) ||
-          ( !i->allDay() && d->mUpdateAgenda ) ) {
+    if ( ( incidence->allDay() && d->mUpdateAllDayAgenda ) ||
+          ( !incidence->allDay() && d->mUpdateAgenda ) ) {
       displayIncidence( aitem, wasSelected );
     }
 
@@ -1725,7 +1726,7 @@ void AgendaView::slotIncidencesDropped( const QList<KUrl> &items, const QPoint &
   newTime.setDateOnly( allDay );
 
   Todo::Ptr todo = CalendarSupport::todo( todoItem );
-  if ( todo &&  dynamic_cast<CalendarSupport::Calendar*>( calendar() ) ) {
+  if ( todo &&  dynamic_cast<Akonadi::ETMCalendar*>( calendar() ) ) {
     const Akonadi::Item existingTodoItem =
       calendar()->itemForIncidence( calendar()->todo( todo->uid() ) );
 
@@ -1771,7 +1772,7 @@ void AgendaView::slotIncidencesDropped( const KCalCore::Incidence::List &inciden
   newTime.setDateOnly( allDay );
 
   Q_FOREACH ( const KCalCore::Incidence::Ptr &incidence, incidences ) {
-    const Akonadi::Item existingItem = calendar()->itemForIncidenceUid( incidence->uid() );
+    const Akonadi::Item existingItem = calendar()->item( incidence->uid() );
     const bool existsInSameCollection = existingItem.isValid() &&
                                                existingItem.storageCollectionId() == collectionId();
 

@@ -28,7 +28,7 @@
 #include "prefs.h"
 #include "prefs_base.h" // Ugly, but needed for the Enums
 
-#include <calendarsupport/calendar.h>
+#include <akonadi/calendar/etmcalendar.h>
 #include <akonadi/calendar/incidencechanger.h>
 #include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/utils.h>
@@ -294,7 +294,7 @@ QList<MonthGraphicsItem *> EventViews::MonthItem::monthGraphicsItems() const
 //-----------------------------------------------------------------
 // INCIDENCEMONTHITEM
 IncidenceMonthItem::IncidenceMonthItem( MonthScene *monthScene,
-                                        CalendarSupport::Calendar *calendar,
+                                        Akonadi::ETMCalendar *calendar,
                                         const Akonadi::Item &aitem,
                                         const QDate &recurStartDate )
   : MonthItem( monthScene ), mCalendar( calendar ),
@@ -386,11 +386,13 @@ bool IncidenceMonthItem::allDay() const
 
 bool IncidenceMonthItem::isMoveable() const
 {
-  return monthScene()->mMonthView->calendar()->hasChangeRights( akonadiItem() );
+  return monthScene()->mMonthView->calendar()->hasRight( akonadiItem(),
+                                                         Akonadi::Collection::CanChangeItem );
 }
 bool IncidenceMonthItem::isResizable() const
 {
-  return mIsEvent && monthScene()->mMonthView->calendar()->hasChangeRights( akonadiItem() );
+  return mIsEvent && monthScene()->mMonthView->calendar()->hasRight( akonadiItem(),
+                                                                     Akonadi::Collection::CanChangeItem );
 }
 
 void IncidenceMonthItem::finalizeMove( const QDate &newStartDate )
@@ -442,8 +444,7 @@ void IncidenceMonthItem::updateDates( int startOffset, int endOffset )
       {
         modify = true;
         KCalCore::Incidence::Ptr oldIncSaved( mIncidence->clone() );
-        KCalCore::Incidence::Ptr newInc(
-          monthScene()->mMonthView->calendar()->dissociateOccurrence(
+        KCalCore::Incidence::Ptr newInc( CalendarSupport::dissociateOccurrence(
             item, startDate(), CalendarSupport::KCalPrefs::instance()->timeSpec() ) );
         if ( newInc ) {
            //TODO check return values
@@ -463,8 +464,7 @@ void IncidenceMonthItem::updateDates( int startOffset, int endOffset )
       {
         modify = true;
         KCalCore::Incidence::Ptr oldIncSaved( mIncidence->clone() );
-        KCalCore::Incidence::Ptr newInc(
-          monthScene()->mMonthView->calendar()->dissociateOccurrence(
+        KCalCore::Incidence::Ptr newInc( CalendarSupport::dissociateOccurrence(
             item, startDate(), CalendarSupport::KCalPrefs::instance()->timeSpec(), false ) );
         if ( newInc ) {
            //TODO check return values
@@ -602,7 +602,7 @@ QList<QPixmap *> IncidenceMonthItem::icons() const
   }
 
   if ( icons.contains( EventView::ReadOnlyIcon ) &&
-       !monthScene()->mMonthView->calendar()->hasChangeRights( item ) &&
+       !monthScene()->mMonthView->calendar()->hasRight( item, Akonadi::Collection::CanChangeItem ) &&
        !specialEvent ) {
     ret << monthScene()->readonlyPixmap();
   }
@@ -701,7 +701,7 @@ QColor IncidenceMonthItem::frameColor() const
 Akonadi::Item IncidenceMonthItem::akonadiItem() const
 {
   if ( mIncidence ) {
-    return monthScene()->mMonthView->calendar()->itemForIncidenceUid( mIncidence->uid() );
+    return monthScene()->mMonthView->calendar()->item( mIncidence->uid() );
   } else {
     return Akonadi::Item();
   }

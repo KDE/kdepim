@@ -28,7 +28,7 @@
 #include "timeline/timelineview.h"
 #include "prefs.h"
 
-#include <calendarsupport/calendar.h>
+#include <akonadi/calendar/etmcalendar.h>
 #include <calendarsupport/calendarmodel.h>
 #include <akonadi/calendar/incidencechanger.h>
 #include <calendarsupport/collectionselection.h>
@@ -144,7 +144,7 @@ void MainWindow::delayedInit()
   filterModel->setSourceModel( calendarModel );
   filterModel->setSortRole( CalendarModel::SortRole );
 
-  mCalendar = new CalendarSupport::Calendar( calendarModel, filterModel, KSystemTimeZones::local() );
+  mCalendar = new Akonadi::ETMCalendar( calendarModel, filterModel, KSystemTimeZones::local() );
 
   mIncidenceChanger = new IncidenceChanger( mCalendar, this, Collection().id() );
 

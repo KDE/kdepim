@@ -25,8 +25,7 @@
 #include "agenda/agendaview.h"
 #include "agenda/timelabelszone.h"
 
-#include <calendarsupport/calendar.h>
-#include <calendarsupport/calendarmodel.h>
+#include <akonadi/calendar/etmcalendar.h>
 #include <calendarsupport/collectionselection.h>
 #include <calendarsupport/utils.h>
 
@@ -208,11 +207,11 @@ MultiAgendaView::MultiAgendaView( QWidget *parent )
   topLevelLayout->addWidget( topSideBox );
 }
 
-void MultiAgendaView::setCalendar( CalendarSupport::Calendar *cal )
+void MultiAgendaView::setCalendar( Akonadi::ETMCalendar *cal )
 {
   EventView::setCalendar( cal );
   Q_FOREACH ( KCheckableProxyModel *const i, d->mCollectionSelectionModels ) {
-    i->setSourceModel( cal->treeModel() );
+    i->setSourceModel( cal->unfilteredModel() );
   }
   recreateViews();
 }
@@ -675,12 +674,12 @@ void MultiAgendaView::doRestoreConfig( const KConfigGroup &configGroup )
     QSortFilterProxyModel *sortProxy = new QSortFilterProxyModel( this );
     sortProxy->setDynamicSortFilter( true );
     if ( calendar() ) {
-      sortProxy->setSourceModel( calendar()->treeModel() );
+      sortProxy->setSourceModel( calendar()->unfilteredModel() );
     }
 
     // Only show the first column
     KColumnFilterProxyModel *columnFilterProxy = new KColumnFilterProxyModel( this );
-    columnFilterProxy->setVisibleColumn( CalendarSupport::CalendarModel::CollectionTitle );
+    columnFilterProxy->setVisibleColumn( Akonadi::ETMCalendar::CollectionTitle );
     columnFilterProxy->setSourceModel( sortProxy );
 
     // Keep track of selection.

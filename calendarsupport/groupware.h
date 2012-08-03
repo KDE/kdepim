@@ -33,7 +33,7 @@
 #include "calendarsupport_export.h"
 #include "incidencechanger.h"
 #include "nepomukcalendar.h"
-
+#include <akonadi/calendar/etmcalendar.h>
 #include <KCalCore/ICalFormat>
 
 namespace Akonadi {
@@ -50,7 +50,7 @@ class CALENDARSUPPORT_EXPORT GroupwareUiDelegate
     virtual ~GroupwareUiDelegate();
     virtual void requestIncidenceEditor( const Akonadi::Item &item ) = 0;
 
-    virtual void setCalendar( CalendarSupport::Calendar *calendar ) = 0;
+    virtual void setCalendar( const Akonadi::ETMCalendar::Ptr &calendar ) = 0;
     virtual void createCalendar() = 0;
 };
 

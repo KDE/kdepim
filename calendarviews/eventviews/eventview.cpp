@@ -27,8 +27,7 @@
 #include "eventview_p.h"
 #include "prefs.h"
 
-#include <calendarsupport/calendar.h>
-#include <calendarsupport/calendarmodel.h>
+#include <akonadi/calendar/etmcalendar.h>
 #include <calendarsupport/collectionselection.h>
 #include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/utils.h>
@@ -166,18 +165,18 @@ int EventView::showMoveRecurDialog( const Incidence::Ptr &inc, const QDate &date
   return KCalUtils::RecurrenceActions::NoOccurrence;
 }
 
-void EventView::setCalendar( CalendarSupport::Calendar *cal )
+void EventView::setCalendar( Akonadi::ETMCalendar *calendar )
 {
   Q_D( EventView );
-  if ( d->calendar != cal ) {
-    d->calendar = cal;
-    if ( cal && d->collectionSelectionModel ) {
-      d->collectionSelectionModel->setSourceModel( cal->model() );
+  if ( d->calendar != calendar ) {
+    d->calendar = calendar;
+    if ( calendar && d->collectionSelectionModel ) {
+      d->collectionSelectionModel->setSourceModel( calendar->filteredModel() );
     }
   }
 }
 
-CalendarSupport::Calendar *EventView::calendar() const
+Akonadi::ETMCalendar *EventView::calendar() const
 {
   Q_D( const EventView );
   return d->calendar;
@@ -546,12 +545,12 @@ void EventView::restoreConfig( const KConfigGroup &configGroup )
       sortProxy->setSortCaseSensitivity( Qt::CaseInsensitive );
 
       if ( d->calendar ) {
-        sortProxy->setSourceModel( d->calendar->treeModel() );
+        sortProxy->setSourceModel( d->calendar->unfilteredModel() );
       }
 
       // Only show the first column.
       KColumnFilterProxyModel *columnFilterProxy = new KColumnFilterProxyModel( this );
-      columnFilterProxy->setVisibleColumn( CalendarSupport::CalendarModel::CollectionTitle );
+      columnFilterProxy->setVisibleColumn( Akonadi::ETMCalendar::CollectionTitle );
       columnFilterProxy->setSourceModel( sortProxy );
 
       // Make the calendar model checkable.

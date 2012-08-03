@@ -28,6 +28,7 @@
 
 #include <Akonadi/Collection>
 #include <Akonadi/Item>
+#include <akonadi/calendar/etmcalendar.h>
 
 #include <KCalCore/Event>
 #include <KCalCore/Incidence>
@@ -47,6 +48,10 @@ namespace KCalCore {
   class CalFilter;
 }
 
+namespace Akonadi {
+  class ETMCalendar;
+}
+
 class QAbstractItemModel;
 class QDrag;
 class QMimeData;
@@ -55,9 +60,7 @@ typedef QList<QModelIndex> QModelIndexList;
 
 namespace CalendarSupport
 {
-
   class Calendar;
-
   /**
    * returns the incidence from an akonadi item, or a null pointer if the item has no such payload
    */
@@ -228,7 +231,7 @@ namespace CalendarSupport
 
   KDE_DEPRECATED CALENDARSUPPORT_EXPORT QString displayName( const Akonadi::Collection &coll );
 
-  CALENDARSUPPORT_EXPORT QString displayName( Calendar *calendar,
+  CALENDARSUPPORT_EXPORT QString displayName( Akonadi::ETMCalendar *calendar,
                                               const Akonadi::Collection &coll );
 
   CALENDARSUPPORT_EXPORT QString subMimeTypeForIncidence(
@@ -249,17 +252,24 @@ namespace CalendarSupport
                                                QWidget *parentWidget = 0 );
 
   CALENDARSUPPORT_EXPORT void publishItemInformation( const Akonadi::Item &item,
-                                                      Calendar *calendar,
+                                                      const Akonadi::ETMCalendar::Ptr &calendar,
                                                       QWidget *parentWidget = 0 );
 
   CALENDARSUPPORT_EXPORT void scheduleiTIPMethods( KCalCore::iTIPMethod method,
                                                    const Akonadi::Item &item,
-                                                   Calendar *calendar,
+                                                   const Akonadi::ETMCalendar::Ptr &calendar,
                                                    QWidget *parentWidget = 0 );
 
   CALENDARSUPPORT_EXPORT void saveAttachments( const Akonadi::Item &item,
                                                QWidget *parentWidget = 0 );
 
+  CALENDARSUPPORT_EXPORT KCalCore::Incidence::Ptr dissociateOccurrence( const Akonadi::Item &item,
+                                                                        const QDate &date,
+                                                                        const KDateTime::Spec &spec,
+                                                                        bool single = true );
+
+
+  CALENDARSUPPORT_EXPORT QStringList categories( const KCalCore::Incidence::List &incidences );
 }
 
 #endif

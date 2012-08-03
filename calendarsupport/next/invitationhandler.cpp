@@ -266,7 +266,7 @@ bool InvitationHandler::receiveInvitation( const QString &receiver,
           attendee->setStatus( KCalCore::Attendee::Accepted );
         } else if ( action.startsWith( QLatin1String( "tentative" ) ) ) {
           attendee->setStatus( KCalCore::Attendee::Tentative );
-        } else if ( KCalPrefs::instance()->outlookCompatCounterProposals() &&
+        } else if ( /*KCalPrefs::instance()->outlookCompatCounterProposals() &&*/
                     action.startsWith( QLatin1String( "counter" ) ) ) {
           attendee->setStatus( KCalCore::Attendee::Tentative );
         } else if ( action.startsWith( QLatin1String( "delegated" ) ) ) {
@@ -275,7 +275,7 @@ bool InvitationHandler::receiveInvitation( const QString &receiver,
         break;
       }
     }
-    if ( KCalPrefs::instance()->outlookCompatCounterProposals() ||
+    if ( /*KCalPrefs::instance()->outlookCompatCounterProposals() ||*/
          !action.startsWith( QLatin1String( "counter" ) ) ) {
       scheduler.acceptTransaction( incidence, method, status, receiver );
     }
@@ -515,7 +515,7 @@ InvitationHandler::sendCounterProposal( const KCalCore::Incidence::Ptr &oldEvent
     return InvitationHandler::ResultNoSendingNeeded;
   }
 
-  if ( KCalPrefs::instance()->outlookCompatCounterProposals() ) {
+  if ( /*KCalPrefs::instance()->outlookCompatCounterProposals() */true) {
     KCalCore::Incidence::Ptr tmp( oldEvent->clone() );
     tmp->setSummary( i18n( "Counter proposal: %1", newEvent->summary() ) );
     tmp->setDescription( newEvent->description() );

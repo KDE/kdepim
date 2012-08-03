@@ -81,7 +81,7 @@ class EVENTVIEWS_EXPORT MonthView : public EventView
 
     bool isBusyDay( const QDate &day ) const;
 
-    void setCalendar( CalendarSupport::Calendar *cal );
+    void setCalendar( Akonadi::ETMCalendar *cal );
 
   Q_SIGNALS:
     void showIncidencePopupSignal( const Akonadi::Item &item, const QDate &date );

@@ -25,6 +25,7 @@
 
 #include "calendarsupport_export.h"
 
+#include <akonadi/calendar/etmcalendar.h>
 #include <KDialog>
 
 class KComboBox;
@@ -38,18 +39,18 @@ class QRadioButton;
 
 namespace Akonadi {
   class IncidenceChanger;
+  class ETMCalendar;
 }
 
 namespace CalendarSupport {
-
-class Calendar;
 
 class CALENDARSUPPORT_EXPORT ArchiveDialog : public KDialog
 {
   Q_OBJECT
   public:
-    explicit ArchiveDialog( CalendarSupport::Calendar *calendar,
-                            Akonadi::IncidenceChanger *changer, QWidget *parent=0 );
+    ArchiveDialog( const Akonadi::ETMCalendar::Ptr &calendar,
+                   Akonadi::IncidenceChanger *changer,
+                   QWidget *parent = 0 );
     ~ArchiveDialog();
 
   signals:
@@ -74,7 +75,7 @@ class CALENDARSUPPORT_EXPORT ArchiveDialog : public KDialog
     QCheckBox *mEvents;
     QCheckBox *mTodos;
     Akonadi::IncidenceChanger *mChanger;
-    CalendarSupport::Calendar *mCalendar;
+    Akonadi::ETMCalendar::Ptr mCalendar;
 };
 
 }

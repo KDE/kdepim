@@ -21,7 +21,6 @@
 #include "incidenceviewer.h"
 #include "incidenceviewer_p.h"
 #include "attachmenthandler.h"
-#include "calendar.h"
 #include "utils.h"
 
 #include "libkdepimdbusinterfaces/urihandler.h"
@@ -29,6 +28,7 @@
 
 #include <Akonadi/CollectionFetchJob>
 #include <Akonadi/ItemFetchScope>
+#include <akonadi/calendar/calendarbase.h>
 
 #include <KCalUtils/IncidenceFormatter>
 
@@ -123,7 +123,7 @@ class IncidenceViewer::Private
       mAttachmentHandler->view( attachmentName, CalendarSupport::incidence( mCurrentItem ) );
     }
 
-    Calendar *mCalendar;
+    Akonadi::ETMCalendar *mCalendar;
     IncidenceViewer *mParent;
     TextBrowser *mBrowser;
     Akonadi::Item mCurrentItem;
@@ -137,7 +137,7 @@ class IncidenceViewer::Private
     AttachmentHandler *mAttachmentHandler;
 };
 
-IncidenceViewer::IncidenceViewer( CalendarSupport::Calendar *calendar, QWidget *parent )
+IncidenceViewer::IncidenceViewer( Akonadi::ETMCalendar *calendar, QWidget *parent )
   : QWidget( parent ), d( new Private( this ) )
 {
   d->mCalendar = calendar;
@@ -173,7 +173,7 @@ IncidenceViewer::~IncidenceViewer()
   delete d;
 }
 
-void IncidenceViewer::setCalendar( Calendar *calendar )
+void IncidenceViewer::setCalendar( Akonadi::ETMCalendar *calendar )
 {
   d->mCalendar = calendar;
 }

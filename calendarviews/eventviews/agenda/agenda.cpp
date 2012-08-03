@@ -32,7 +32,7 @@
 #include "helper.h"
 #include "prefs.h"
 
-#include <calendarsupport/calendar.h>
+#include <akonadi/calendar/etmcalendar.h>
 #include <akonadi/calendar/incidencechanger.h>
 #include <calendarsupport/utils.h>
 
@@ -241,7 +241,7 @@ class Agenda::Private
     double mDesiredGridSpacingY;
 
     // We need the calendar for drag'n'drop and for paint the ResourceColor
-    CalendarSupport::Calendar *mCalendar;
+    Akonadi::ETMCalendar *mCalendar;
     Akonadi::IncidenceChanger *mChanger;
 
     // size of border, where mouse action will resize the AgendaItem
@@ -1174,7 +1174,7 @@ void Agenda::endItemAction()
         multiModify = true;
         d->mChanger->startAtomicOperation( i18n( "Dissociate event from recurrence" ) );
         KCalCore::Incidence::Ptr oldIncSaved( incidence->clone() );
-        KCalCore::Incidence::Ptr newInc( d->mCalendar->dissociateOccurrence(
+        KCalCore::Incidence::Ptr newInc( CalendarSupport::dissociateOccurrence(
           inc, d->mActionItem->itemDate(), d->preferences()->timeSpec() ) );
         if ( newInc ) {
           // don't recreate items, they already have the correct position
@@ -1211,7 +1211,7 @@ void Agenda::endItemAction()
         multiModify = true;
         d->mChanger->startAtomicOperation( i18n( "Split future recurrences" ) );
         KCalCore::Incidence::Ptr oldIncSaved( incidence->clone() );
-        KCalCore::Incidence::Ptr newInc( d->mCalendar->dissociateOccurrence(
+        KCalCore::Incidence::Ptr newInc( CalendarSupport::dissociateOccurrence(
           inc, d->mActionItem->itemDate(), d->preferences()->timeSpec(), false ) );
         if ( newInc ) {
           d->mAgendaView->enableAgendaUpdate( false );
@@ -2220,7 +2220,7 @@ KCalCore::DateList Agenda::dateList() const
   return d->mSelectedDates;
 }
 
-void Agenda::setCalendar( CalendarSupport::Calendar *cal )
+void Agenda::setCalendar( Akonadi::ETMCalendar *cal )
 {
   d->mCalendar = cal;
 }

@@ -32,6 +32,7 @@
 #include "kcalprefs.h"
 #include "mailscheduler.h"
 
+#include <akonadi/calendar/calendarsettings.h>
 #include <KCalUtils/IncidenceFormatter>
 #include <KCalUtils/Stringify>
 
@@ -192,7 +193,7 @@ void Groupware::finishHandlingInvitation()
           (*it)->setStatus( KCalCore::Attendee::Accepted );
         } else if ( action.startsWith( QLatin1String( "tentative" ) ) ) {
           (*it)->setStatus( KCalCore::Attendee::Tentative );
-        } else if ( KCalPrefs::instance()->outlookCompatCounterProposals() &&
+        } else if ( Akonadi::CalendarSettings::self()->outlookCompatCounterProposals() &&
                     action.startsWith( QLatin1String( "counter" ) ) ) {
           (*it)->setStatus( KCalCore::Attendee::Tentative );
         } else if ( action.startsWith( QLatin1String( "delegated" ) ) ) {
@@ -201,7 +202,7 @@ void Groupware::finishHandlingInvitation()
         break;
       }
     }
-    if ( KCalPrefs::instance()->outlookCompatCounterProposals() ||
+    if ( Akonadi::CalendarSettings::self()->outlookCompatCounterProposals() ||
          !action.startsWith( QLatin1String( "counter" ) ) ) {
       scheduler.acceptTransaction( incidence, method, status, receiver );
     }

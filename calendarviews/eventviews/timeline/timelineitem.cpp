@@ -23,7 +23,7 @@
 #include <kdgantt2/kdganttglobal.h>
 
 #include <calendarsupport/kcalprefs.h>
-#include <calendarsupport/calendar.h>
+#include <akonadi/calendar/etmcalendar.h>
 #include <calendarsupport/utils.h>
 
 #include <KCalCore/Incidence>
@@ -33,7 +33,7 @@ using namespace KCalCore;
 using namespace KCalUtils;
 using namespace EventViews;
 
-TimelineItem::TimelineItem( CalendarSupport::Calendar *calendar, uint index,
+TimelineItem::TimelineItem( Akonadi::ETMCalendar *calendar, uint index,
                             QStandardItemModel *model, QObject *parent )
   : QObject( parent ), mCalendar( calendar ), mModel( model ), mIndex( index )
 {
@@ -113,7 +113,7 @@ void TimelineItem::setColor( const QColor &color )
   mColor = color;
 }
 
-TimelineSubItem::TimelineSubItem( CalendarSupport::Calendar *calendar,
+TimelineSubItem::TimelineSubItem( Akonadi::ETMCalendar *calendar,
                                   const Akonadi::Item &incidence, TimelineItem *parent )
   : QStandardItem(), mCalendar( calendar ), mIncidence( incidence ),
     mParent( parent ), mToolTipNeedsUpdate( true )

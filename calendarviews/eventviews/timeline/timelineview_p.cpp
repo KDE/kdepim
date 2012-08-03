@@ -27,7 +27,7 @@
 
 #include <kdgantt2/kdganttgraphicsview.h>
 
-#include <calendarsupport/calendar.h>
+#include <akonadi/calendar/etmcalendar.h>
 #include <calendarsupport/collectionselection.h>
 #include <calendarsupport/utils.h>
 #include <calendarsupport/kcalprefs.h>
@@ -37,7 +37,6 @@
 #include <QResizeEvent>
 #include <QSplitter>
 #include <QTreeWidget>
-#include <QPointer>
 
 using namespace KCalCore;
 using namespace EventViews;
@@ -104,7 +103,7 @@ void TimelineView::Private::newEventWithHint( const QDateTime &dt )
 
 TimelineItem *TimelineView::Private::calendarItemForIncidence( const Akonadi::Item &incidence )
 {
-  CalendarSupport::Calendar *calres = q->calendar();
+  Akonadi::ETMCalendar *calres = q->calendar();
   TimelineItem *item = 0;
   if ( !calres ) {
     item = mCalendarItemMap.value( -1 );
@@ -156,16 +155,16 @@ void TimelineView::Private::insertIncidence( const Akonadi::Item &incidence )
 
   KDateTime::Spec timeSpec = CalendarSupport::KCalPrefs::instance()->timeSpec();
   for ( QDate day = mStartDate; day <= mEndDate; day = day.addDays( 1 ) ) {
-    Akonadi::Item::List events = q->calendar()->events( day,
-                                                        timeSpec,
-                                                        CalendarSupport::EventSortStartDate,
-                                                        CalendarSupport::SortDirectionAscending );
-    if ( events.contains( incidence ) ) {
+    KCalCore::Event::List events = q->calendar()->events( day,
+                                                          timeSpec,
+                                                          KCalCore::EventSortStartDate,
+                                                          KCalCore::SortDirectionAscending );
+    if ( events.contains( event ) ) {
       //PENDING(AKONADI_PORT) check if correct. also check the original if,
       //was inside the for loop (unnecessarily)
-      for ( Akonadi::Item::List::ConstIterator it = events.constBegin();
-            it != events.constEnd(); ++it ) {
-        insertIncidence( *it, day );
+      foreach( const KCalCore::Event::Ptr &i, events ) {
+        Akonadi::Item item = q->calendar()->item( i->uid() );
+        insertIncidence( item, day );
       }
     }
   }

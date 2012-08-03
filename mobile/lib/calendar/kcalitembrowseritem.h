@@ -23,7 +23,7 @@
 #include "declarativeakonadiitem.h"
 
 #include <calendarsupport/next/incidenceviewer.h>
-
+#include <akonadi/calendar/etmcalendar.h>
 #include <QtCore/QAbstractItemModel>
 
 namespace CalendarSupport {
@@ -41,7 +41,7 @@ class ExtendedIncidenceViewer : public IncidenceViewer
   Q_OBJECT
 
   public:
-    explicit ExtendedIncidenceViewer( Calendar *calendar, QWidget *parent = 0 );
+    explicit ExtendedIncidenceViewer( const Akonadi::ETMCalendar::Ptr &calendar, QWidget *parent = 0 );
 
   Q_SIGNALS:
     void incidenceRemoved();

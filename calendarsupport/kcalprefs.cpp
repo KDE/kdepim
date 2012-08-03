@@ -192,17 +192,6 @@ void KCalPrefs::usrWriteConfig()
     generalConfig.writeEntry( "MailTransport", d->mMailTransport );
   }
 
-  if ( !mFreeBusyPublishSavePassword ) {
-    KConfigSkeleton::ItemPassword *i = freeBusyPublishPasswordItem();
-    i->setValue( QString() );
-    i->writeConfig( config() );
-  }
-  if ( !mFreeBusyRetrieveSavePassword ) {
-    KConfigSkeleton::ItemPassword *i = freeBusyRetrievePasswordItem();
-    i->setValue( QString() );
-    i->writeConfig( config() );
-  }
-
   d->mCategoryConfig->setColors( d->mCategoryColors );
 
 #if 0

@@ -23,6 +23,7 @@
 
 #include "kdeclarativemainview.h"
 
+#include <akonadi/calendar/etmcalendar.h>
 #include <Akonadi/Entity>
 #include <KCalCore/ScheduleMessage>
 
@@ -34,10 +35,6 @@
 namespace Akonadi {
 class StandardCalendarActionManager;
 class IncidenceChanger;
-}
-
-namespace CalendarSupport {
-class Calendar;
 }
 
 namespace KPIMIdentities {
@@ -124,7 +121,7 @@ class MainView : public KDeclarativeMainView
     void scheduleiTIPMethod( KCalCore::iTIPMethod method );
 
   private:
-    CalendarSupport::Calendar *m_calendar;
+    Akonadi::ETMCalendar::Ptr m_calendar;
     CalendarInterface* m_calendarIface;
     QHash<QObject*, Akonadi::Entity::Id> m_openItemEditors;
     KPIMIdentities::IdentityManager* m_identityManager;
