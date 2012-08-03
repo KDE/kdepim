@@ -31,6 +31,7 @@
 #include <QtGui/QTabBar>
 #include <QtGui/QToolButton>
 #include <QtGui/QMouseEvent>
+#include <QHeaderView>
 
 #include "storagemodel.h"
 #include "widget.h"
@@ -940,28 +941,47 @@ void Pane::updateTagComboBox()
 void Pane::writeConfig()
 {
   KConfigGroup conf( MessageList::Core::Settings::self()->config(),"MessageListPane");
-  QList<Akonadi::Collection::Id> collectionId;
+
+  //Delete liste before
+  const QStringList list = conf.groupList().filter( QRegExp( QLatin1String("MessageListTab\\d+") ) );
+  foreach ( const QString &group, list ) {
+    conf.deleteGroup( group );
+  }
+
+  conf.writeEntry(QLatin1String("currentIndex"),currentIndex());
+  conf.writeEntry(QLatin1String("tabNumber"),count());
+
   for ( int i=0; i<count(); i++ ) {
     Widget *w = qobject_cast<Widget *>( widget( i ) );
-    collectionId.append(w->currentCollection().id());
+    KConfigGroup grp(MessageList::Core::Settings::self()->config(),QString::fromLatin1("MessageListTab%1").arg(i));
+    grp.writeEntry(QLatin1String("collectionId"),w->currentCollection().id());
+    grp.writeEntry(QLatin1String("HeaderState"), w->view()->header()->saveState());
   }
-  conf.writeEntry(QLatin1String("tab"),collectionId);
-  conf.writeEntry(QLatin1String("currentIndex"),currentIndex());
   conf.sync();
 }
 
 void Pane::readConfig()
 {
-  KConfigGroup conf( MessageList::Core::Settings::self()->config(),"MessageListPane");
-  QList<Akonadi::Collection::Id> collectionId = conf.readEntry(QLatin1String("tab"),QList<Akonadi::Collection::Id>());
-  if(collectionId.isEmpty()) {
-    createNewTab();
-  } else {
-    Q_FOREACH(const Akonadi::Collection::Id& id, collectionId) {
+  if(MessageList::Core::Settings::self()->config()->hasGroup(QLatin1String("MessageListPane"))) {
+    KConfigGroup conf( MessageList::Core::Settings::self()->config(),"MessageListPane");
+    const int numberOfTab = conf.readEntry(QLatin1String("tabNumber"),0);
+    if(numberOfTab == 0) {
       createNewTab();
-      setCurrentFolder(Akonadi::Collection(id));
+    } else {
+      for(int i = 0; i<numberOfTab; ++i)
+      {
+        KConfigGroup grp(MessageList::Core::Settings::self()->config(),QString::fromLatin1("MessageListTab%1").arg(i));
+        Akonadi::Collection::Id id = grp.readEntry(QLatin1String("collectionId"),-1);
+        createNewTab();
+        if(id != -1)
+          setCurrentFolder(Akonadi::Collection(id));
+        Widget *w = qobject_cast<Widget *>( widget( i ) );
+        w->view()->header()->restoreState(grp.readEntry(QLatin1String("HeaderState"),QByteArray()));
+      }
+      setCurrentIndex(conf.readEntry(QLatin1String("currentIndex"),0));
     }
-    setCurrentIndex(conf.readEntry(QLatin1String("currentIndex"),0));
+  } else {
+    createNewTab();
   }
 }
 
