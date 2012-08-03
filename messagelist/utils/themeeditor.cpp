@@ -274,6 +274,7 @@ ThemePreviewWidget::ThemePreviewWidget( QWidget * parent )
   m->setText( 0, QString() );
 
   mGroupHeaderSampleItem->setExpanded( true );
+  header()->setMovable(false);
 }
 
 ThemePreviewWidget::~ThemePreviewWidget()
@@ -288,7 +289,7 @@ QSize ThemePreviewWidget::sizeHint() const
 void ThemePreviewWidget::setReadOnly( bool readOnly )
 {
   mReadOnly = readOnly;
-  header()->setMovable(!readOnly);
+  //header()->setMovable(!readOnly);
 }
 
 void ThemePreviewWidget::applyThemeColumnWidths()
@@ -800,7 +801,7 @@ void ThemePreviewWidget::mouseMoveEvent( QMouseEvent * e )
     return; // ugh.. something weird happened
   }
 
-  // startin a drag
+  // starting a drag
   QMimeData * data = new QMimeData();
   QByteArray arry;
   arry.resize( sizeof( Theme::ContentItem::Type ) );
