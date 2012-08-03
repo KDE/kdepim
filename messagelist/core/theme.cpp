@@ -757,6 +757,13 @@ void Theme::insertColumn( int idx, Column * column )
   mColumns.insert( idx, column );
 }
 
+void Theme::moveColumn(int idx, int newPosition)
+{
+  if ( (newPosition >= mColumns.count()) || newPosition < 0 )
+    return;
+  mColumns.move( idx, newPosition );
+}
+
 void Theme::setGroupHeaderBackgroundMode( GroupHeaderBackgroundMode bm )
 {
   mGroupHeaderBackgroundMode = bm;

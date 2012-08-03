@@ -947,6 +947,8 @@ public:
   Column * column( int idx ) const
     { return mColumns.count() > idx ? mColumns.at( idx ) : 0; };
 
+  void moveColumn(int idx, int newPosition);
+
   /**
    * Removes all columns from this theme
    */
