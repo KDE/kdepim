@@ -569,9 +569,8 @@ void Theme::Column::save( QDataStream &stream ) const
     row->save( stream );
   }
 
-  stream << (int)mMessageRows.count();
-
   cnt = mMessageRows.count();
+  stream << (int)cnt;
 
   for ( int i = 0; i < cnt ; ++i )
   {
@@ -907,9 +906,9 @@ void Theme::save( QDataStream &stream ) const
   stream << (int)mViewHeaderPolicy;
   stream << mIconSize;
 
-  stream << (int)mColumns.count();
-
   const int cnt = mColumns.count();
+  stream << (int)cnt;
+
 
   for ( int i = 0; i < cnt ; i++ )
   {
