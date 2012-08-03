@@ -1,4 +1,13 @@
 
+Friday 03 August 2012
+
+Problems addressed
+------------------
+
+* kolab/issue4711: Alarm of a recurring task doesn't pop up (rt#10116)
+
+
+
 Friday 27 July 2012
 
 Problems addressed
