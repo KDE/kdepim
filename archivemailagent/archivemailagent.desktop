@@ -2,6 +2,7 @@
 Name=Archive Mail Agent
 Name[ca]=Agent d'arxivat de correus
 Name[da]=Agent til mail-arkivering
+Name[de]=Agent zur E-Mail-Archivierung
 Name[el]=Πράκτορας αρχειοθέτησης αλληλογραφίας
 Name[es]=Agente de archivado de correo
 Name[et]=Kirjade arhiveerimise agent
@@ -28,6 +29,7 @@ Name[zh_TW]=歸檔郵件代理程式
 Comment=Archive Mail Agent
 Comment[ca]=Agent d'arxivat de correus
 Comment[da]=Agent til mail-arkivering
+Comment[de]=Agent zur E-Mail-Archivierung
 Comment[el]=Πράκτορας αρχειοθέτησης αλληλογραφίας
 Comment[es]=Agente de archivado de correo
 Comment[et]=Kirjade arhiveerimise agent
