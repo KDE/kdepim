@@ -50,7 +50,6 @@ set(calendarsupport_LIB_SRCS
 )
 
 if(NOT WINCE)
-  add_subdirectory(tests)
   set(calendarsupport_LIB_SRCS
     ${calendarsupport_LIB_SRCS}
     dndfactory.cpp
