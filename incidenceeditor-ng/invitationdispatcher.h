@@ -24,11 +24,8 @@
 #include "incidenceeditors-ng_export.h"
 #include "editoritemmanager.h"
 
+#include <akonadi/calendar/etmcalendar.h>
 #include <QtCore/QObject>
-
-namespace CalendarSupport {
-  class Calendar;
-}
 
 namespace IncidenceEditorNG {
 
@@ -42,7 +39,7 @@ class  INCIDENCEEDITORS_NG_EXPORT InvitationDispatcher : public QObject
 {
   Q_OBJECT
   public:
-    explicit InvitationDispatcher( CalendarSupport::Calendar *calendar, QObject *parent = 0 );
+    explicit InvitationDispatcher( const Akonadi::ETMCalendar::Ptr &calendar, QObject *parent = 0 );
     ~InvitationDispatcher();
 
     void setIsCounterProposal( bool isCounterProposal );

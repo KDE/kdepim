@@ -35,6 +35,7 @@
 #include <KLocalizedString>
 #include <Akonadi/Item>
 #include <Akonadi/ItemCreateJob>
+#include <akonadi/calendar/etmcalendar.h>
 
 #include "declarativeeditors.h"
 
@@ -79,7 +80,7 @@ IncidenceView::IncidenceView( QWidget* parent )
   context->setContextProperty( "_incidenceview", this );
 
   if ( KCalPrefs::instance()->useGroupwareCommunication() ) {
-    mInvitationDispatcher = new InvitationDispatcher( 0, this );
+    mInvitationDispatcher = new InvitationDispatcher( Akonadi::ETMCalendar::Ptr(), this );
     mInvitationDispatcher->setItemManager( mItemManager );
   }
 }

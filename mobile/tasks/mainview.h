@@ -40,7 +40,6 @@ class IncidenceChanger;
 }
 
 namespace CalendarSupport {
-class Calendar;
 class CalendarUtils;
 }
 

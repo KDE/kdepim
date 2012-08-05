@@ -20,7 +20,6 @@
 
 #include "invitationdispatcher.h"
 
-#include <calendarsupport/calendar.h>
 #include <calendarsupport/next/invitationhandler.h>
 #include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/utils.h>
@@ -37,7 +36,7 @@ class InvitationDispatcherPrivate
     bool mIsCounterProposal;
 
   public: /// Functions
-    InvitationDispatcherPrivate( CalendarSupport::Calendar *calendar );
+    InvitationDispatcherPrivate( const Akonadi::ETMCalendar::Ptr &calendar );
     bool myAttendeeStatusChanged( const KCalCore::Incidence::Ptr &oldInc,
                                   const KCalCore::Incidence::Ptr &newInc );
     void processItemSave( IncidenceEditorNG::EditorItemManager::SaveAction action );
@@ -46,8 +45,8 @@ class InvitationDispatcherPrivate
     void resetManager();
 };
 
-InvitationDispatcherPrivate::InvitationDispatcherPrivate( CalendarSupport::Calendar *calendar )
-  : mManager( 0 ), mInvitationHandler( calendar ), mIsCounterProposal( false )
+InvitationDispatcherPrivate::InvitationDispatcherPrivate( const Akonadi::ETMCalendar::Ptr & )
+  : mManager( 0 ), mInvitationHandler( 0 ), mIsCounterProposal( false )
 {
 }
 
@@ -157,7 +156,7 @@ void InvitationDispatcherPrivate::resetManager()
 
 /// InvitationDispatcher
 
-InvitationDispatcher::InvitationDispatcher( CalendarSupport::Calendar *calendar, QObject *parent )
+InvitationDispatcher::InvitationDispatcher( const Akonadi::ETMCalendar::Ptr &calendar, QObject *parent )
   : QObject( parent ), d_ptr( new InvitationDispatcherPrivate( calendar ) )
 {
 }

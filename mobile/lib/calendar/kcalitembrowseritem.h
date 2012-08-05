@@ -28,7 +28,6 @@
 
 namespace CalendarSupport {
 
-class Calendar;
 class Item;
 
 namespace KCal {

@@ -40,6 +40,7 @@
 
 #include <Akonadi/CollectionComboBox>
 #include <Akonadi/Item>
+#include <akonadi/calendar/etmcalendar.h>
 
 #include <KCalCore/ICalFormat>
 #include <KCalCore/MemoryCalendar>
@@ -136,7 +137,7 @@ EventOrTodoDialogPrivate::EventOrTodoDialogPrivate( EventOrTodoDialog *qq )
               SLOT(handleSelectedCollectionChange(Akonadi::Collection)) );
 
   if ( CalendarSupport::KCalPrefs::instance()->useGroupwareCommunication() ) {
-    mInvitationDispatcher = new InvitationDispatcher( 0, q );
+    mInvitationDispatcher = new InvitationDispatcher( Akonadi::ETMCalendar::Ptr(), q );
     mInvitationDispatcher->setItemManager( mItemManager );
   }
 
