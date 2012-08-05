@@ -22,7 +22,6 @@
 #include "incidencedialogfactory.h"
 #include "korganizereditorconfig.h"
 
-#include <calendarsupport/calendar.h>
 #include <calendarsupport/groupware.h>
 #include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/utils.h>
