@@ -24,8 +24,6 @@
 
 #include "eventarchiver.h"
 
-#include "calendar.h"
-#include "calendaradaptor.h"
 #include "kcalprefs.h"
 #include "utils.h"
 
