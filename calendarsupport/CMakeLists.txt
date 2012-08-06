@@ -16,9 +16,6 @@ set(calendarsupport_LIB_SRCS
   attachmenthandler.cpp
   attributeregistrar.cpp
   blockalarmsattribute.cpp
-  calendar.cpp
-  calendaradaptor.cpp
-  calendarmodel.cpp
   # calendarsearch.cpp
   calendarutils.cpp
   calfilterproxymodel.cpp
@@ -27,34 +24,20 @@ set(calendarsupport_LIB_SRCS
   collectionselection.cpp
   daterangefilterproxymodel.cpp
   eventarchiver.cpp
-  groupware.cpp
   identitymanager.cpp
   incidenceattachmentmodel.cpp
-  incidencechanger.cpp
   incidencefilterproxymodel.cpp
+  groupware.cpp
   kcalmodel.cpp
   kcalprefs.cpp
   mailclient.cpp
-  mailscheduler.cpp
-  nepomukcalendar.cpp
   utils.cpp
 
-  next/akonadicalendar.cpp
-  next/history.cpp
-  next/incidencechanger2.cpp
   next/incidencefetchjob.cpp
   next/incidencesearchjob.cpp
   next/incidenceviewer.cpp
-  next/invitationhandler.cpp
-  next/scheduler.cpp
 )
 
-if(NOT WINCE)
-  set(calendarsupport_LIB_SRCS
-    ${calendarsupport_LIB_SRCS}
-    dndfactory.cpp
-  )
-endif()
 
 kde4_add_kcfg_files(calendarsupport_LIB_SRCS kcalprefs_base.kcfgc)
 

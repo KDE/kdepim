@@ -31,7 +31,6 @@
 #include "incidencerecurrence.h"
 #include "incidencesecrecy.h"
 #include "incidencewhatwhere.h"
-#include "invitationdispatcher.h"
 #include "templatemanagementdialog.h"
 #include "ui_eventortododesktop.h"
 
@@ -73,8 +72,6 @@ class EventOrTodoDialogPrivate : public ItemEditorUi
     bool mCloseOnSave;
 
     EditorItemManager *mItemManager;
-    InvitationDispatcher *mInvitationDispatcher;
-
     CombinedIncidenceEditor *mEditor;
     IncidenceDateTime *mIeDateTime;
     IncidenceAttendee *mIeAttendee;
@@ -121,7 +118,6 @@ EventOrTodoDialogPrivate::EventOrTodoDialogPrivate( EventOrTodoDialog *qq )
     mCalSelector( new Akonadi::CollectionComboBox ),
     mCloseOnSave( false ),
     mItemManager( new EditorItemManager( this ) ),
-    mInvitationDispatcher( 0 ),
     mEditor( new CombinedIncidenceEditor ),
     mInitiallyDirty( false )
 {
@@ -135,11 +131,6 @@ EventOrTodoDialogPrivate::EventOrTodoDialogPrivate( EventOrTodoDialog *qq )
 
   q->connect( mCalSelector, SIGNAL(currentChanged(Akonadi::Collection)),
               SLOT(handleSelectedCollectionChange(Akonadi::Collection)) );
-
-  if ( CalendarSupport::KCalPrefs::instance()->useGroupwareCommunication() ) {
-    mInvitationDispatcher = new InvitationDispatcher( Akonadi::ETMCalendar::Ptr(), q );
-    mInvitationDispatcher->setItemManager( mItemManager );
-  }
 
   // Now instantiate the logic of the dialog. These editors update the ui, validate
   // fields and load/store incidences in the ui.
@@ -676,7 +667,7 @@ void EventOrTodoDialog::selectCollection( const Akonadi::Collection &collection 
 void EventOrTodoDialog::setIsCounterProposal( bool isCounterProposal )
 {
   Q_D( EventOrTodoDialog );
-  d->mInvitationDispatcher->setIsCounterProposal( isCounterProposal );
+  //d->mInvitationDispatcher->setIsCounterProposal( isCounterProposal ); TODO_SERGIO
 }
 
 QObject *EventOrTodoDialog::typeAheadReceiver() const

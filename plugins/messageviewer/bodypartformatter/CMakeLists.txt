@@ -34,6 +34,7 @@ endif()
 
 
 target_link_libraries(messageviewer_bodypartformatter_text_calendar
+  akonadi-calendar
   ${KDEPIMLIBS_KPIMUTILS_LIBS}
   ${KDE4_KDECORE_LIBS}
   ${KDEPIMLIBS_KCALCORE_LIBS}

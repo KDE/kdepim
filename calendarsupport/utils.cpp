@@ -23,10 +23,8 @@
 */
 
 #include "utils.h"
-#include "calendar.h"
 #include "kcalprefs.h"
 #include "mailclient.h"
-#include "mailscheduler.h"
 
 #include <Akonadi/Collection>
 #include <Akonadi/CollectionDialog>

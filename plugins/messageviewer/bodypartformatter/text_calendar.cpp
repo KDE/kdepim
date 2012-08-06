@@ -748,7 +748,8 @@ class UrlHandler : public Interface::BodyPartURLHandler
         IncidenceEditorNG::GroupwareIntegration::activate();
       }
 
-      CalendarSupport::Groupware::instance()->handleInvitation( receiver, iCal, type );
+      //TODO_SERGIO
+      //CalendarSupport::Groupware::instance()->handleInvitation( receiver, iCal, type );
       // TODO: catch signal, and do error handling
       return true;
     }

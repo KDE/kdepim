@@ -31,8 +31,6 @@
 #define CALENDARSUPPORT_GROUPWARE_H
 
 #include "calendarsupport_export.h"
-#include "incidencechanger.h"
-#include "nepomukcalendar.h"
 #include <akonadi/calendar/etmcalendar.h>
 #include <KCalCore/ICalFormat>
 
@@ -75,42 +73,10 @@ class CALENDARSUPPORT_EXPORT Groupware : public QObject
 
     ~Groupware();
 
-    /** Send iCal messages after asking the user
-         Returns false if the user cancels the dialog, and true if the
-         user presses Yes or No. ( This last afirmation seems false, i don't see a
-         cancel button, and there's more than one dialog ).
-
-         @param dialogAnswers will contain user answers to all dialogs that
-                were presented.
-
-                If @p reuseDialogAnswers is true, this variable is also read,
-                otherwise only written to.
-
-                This is useful so the user isn't presented with the same dialog
-                twice on the same atomic operations like dissociating occurrences
-                ( which are composed of an "add incidence" and a "change incidence" ).
-
-        @param reuseDialogAnswers, if true, sendICalMessage() will only
-               ask the user if it didn't find the answer in @p dialogResults
-    */
-    bool sendICalMessage( QWidget *parent,
-                          KCalCore::iTIPMethod method,
-                          const KCalCore::Incidence::Ptr &incidence,
-                          IncidenceChanger::HowChanged action,
-                          bool attendeeStatusChanged,
-                          SendICalMessageDialogAnswers &dialogAnswers,
-                          MailScheduler &scheduler,
-                          bool reuseDialogAnswers = false );
-
     // DoNotNotify is a flag indicating that the user does not want
     // updates sent back to the organizer.
     void setDoNotNotify( bool notify ) { mDoNotNotify = notify; }
     bool doNotNotify() { return mDoNotNotify; }
-    void handleInvitation( const QString &receiver,
-                           const QString &iCal,
-                           const QString &type );
-  private Q_SLOTS:
-    void finishHandlingInvitation();
 
     // Frees calendar if it doesn't have jobs running
     void calendarJobFinished( bool success, const QString &errorString );
@@ -131,12 +97,5 @@ class CALENDARSUPPORT_EXPORT Groupware : public QObject
 };
 
 }
-
-//@cond PRIVATE
-inline uint qHash( const QSharedPointer<CalendarSupport::NepomukCalendar> &key )
-{
-  return qHash<CalendarSupport::NepomukCalendar>( key.data() );
-}
-//@endcond
 
 #endif

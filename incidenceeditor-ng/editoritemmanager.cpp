@@ -20,7 +20,6 @@
 
 #include "editoritemmanager.h"
 
-#include <calendarsupport/next/invitationhandler.h>
 #include <calendarsupport/utils.h>
 
 #include <Akonadi/Item>
@@ -339,11 +338,11 @@ void EditorItemManager::save()
   if ( d->mItem.isValid() ) { // A valid item. Means we're modifying.
     Q_ASSERT( d->mItem.parentCollection().isValid() );
 
-    CalendarSupport::InvitationHandler invitationHandler( 0 );
+    //TODO_SERGIO: incidence changere here
     KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( d->mItem );
 
     if ( d->mItem.parentCollection() == d->mItemUi->selectedCollection() ) {
-      const bool modify = invitationHandler.handleIncidenceAboutToBeModified( incidence );
+      const bool modify = true;//invitationHandler.handleIncidenceAboutToBeModified( incidence ); TODO_SERGIO
       if ( modify ) {
         Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( d->mItem );
         connect( modifyJob, SIGNAL(result(KJob*)), SLOT(modifyResult(KJob*)) );
@@ -357,7 +356,7 @@ void EditorItemManager::save()
       Q_ASSERT( d->mItemUi->selectedCollection().isValid() );
 
       if ( d->mItemUi->isDirty() ) {
-        const bool modify = invitationHandler.handleIncidenceAboutToBeModified( incidence );
+        const bool modify = true; // invitationHandler.handleIncidenceAboutToBeModified( incidence ); TODO_SERGIO
         if ( modify ) {
           d->createMoveAndModifyTransactionJob();
         } else {

@@ -25,7 +25,6 @@ set(incidenceeditors_ng_shared_LIB_SRCS
 
   # TODO: Move the next two to akonadi libs when finished
   editoritemmanager.cpp
-  invitationdispatcher.cpp
 
   freebusyurldialog.cpp
 

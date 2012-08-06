@@ -20,11 +20,10 @@
 
 #include "invitationdispatcher.h"
 
-#include <calendarsupport/next/invitationhandler.h>
 #include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/utils.h>
 
-#include <KCalCore/Incidence>
+#include <KCalCore/Incidence> //TODO_SERGIO: delete this
 
 namespace IncidenceEditorNG {
 
