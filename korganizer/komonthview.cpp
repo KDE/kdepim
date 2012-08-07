@@ -1150,7 +1150,7 @@ void KOMonthView::changeIncidenceDisplayAdded( Incidence *incidence, MonthViewCe
         }
       } else {
         // Just check simple recurrence for invalid start dates.
-        if ( incidence->recursOn( mCells[i]->date() ) ) {
+        if ( gdv.startDate() >= mCells[i]->date() && incidence->recursOn( mCells[i]->date() ) ) {
           if ( makesItBusy ) {
             Event::List &busyEvents = mBusyDays[mCells[i]->date()];
             busyEvents.append( static_cast<Event*>( incidence ) );
