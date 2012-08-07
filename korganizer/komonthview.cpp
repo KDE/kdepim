@@ -1136,13 +1136,27 @@ void KOMonthView::changeIncidenceDisplayAdded( Incidence *incidence, MonthViewCe
       // Check for the start dates of recurrences that still happen on the cell's date
       // This is neccessary for multiday events that start before the date of the first cell
       // and to correctly draw recurring events that recur before they are ended.
-      const QValueList<QDateTime> startDates = incidence->startDateTimesForDate( mCells[i]->date() );
-      for ( int j = 0; j < startDates.count(); j++ ){
-        if ( makesItBusy ) {
-          Event::List &busyEvents = mBusyDays[mCells[i+j]->date()];
-          busyEvents.append( static_cast<Event*>( incidence ) );
+      if ( incidence->dtStart().isValid() &&
+           incidence->dtStart() != QDateTime( QDate(1970, 1, 1), QTime(00,59,59) ) ) {
+        // Tasks without a start date and a recurrence return 1.1.1970 - 00:59
+        // as a "valid" start time. (Kolab/issue4852)
+        const QValueList<QDateTime> startDates = incidence->startDateTimesForDate( mCells[i]->date() );
+        for ( int j = 0; j < startDates.count(); j++ ){
+          if ( makesItBusy ) {
+            Event::List &busyEvents = mBusyDays[mCells[i+j]->date()];
+            busyEvents.append( static_cast<Event*>( incidence ) );
+          }
+          mCells[i]->addIncidence( incidence, v, j );
         }
-        mCells[i]->addIncidence( incidence, v, j );
+      } else {
+        // Just check simple recurrence for invalid start dates.
+        if ( incidence->recursOn( mCells[i]->date() ) ) {
+          if ( makesItBusy ) {
+            Event::List &busyEvents = mBusyDays[mCells[i]->date()];
+            busyEvents.append( static_cast<Event*>( incidence ) );
+          }
+          mCells[i]->addIncidence( incidence, v );
+        }
       }
     }
   } else {
