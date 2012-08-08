@@ -372,6 +372,20 @@ void Task::setFields( const KCal::Todo* task )
 {
   Incidence::setFields( task );
 
+  // If there is no alarm set by the base class, check if we
+  // can set an alarm based on the end offset. The rationale
+  // for this is explained in kolab/issue4853
+  if ( !mHasAlarm && task->isAlarmEnabled() ) {
+    const KCal::Alarm::List& alarms = task->alarms();
+    if ( !alarms.isEmpty() ) {
+      const KCal::Alarm* alarm = alarms.first();
+      if ( alarm->hasEndOffset() ) {
+        int dur = alarm->endOffset().asSeconds();
+        setAlarm( (float)dur / 60.0 );
+      }
+    }
+  }
+
   setPriority( task->priority() );
   setPercentCompleted( task->percentComplete() );
   setStatus( task->status() );
