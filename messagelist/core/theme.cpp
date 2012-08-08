@@ -569,9 +569,8 @@ void Theme::Column::save( QDataStream &stream ) const
     row->save( stream );
   }
 
-  stream << (int)mMessageRows.count();
-
   cnt = mMessageRows.count();
+  stream << (int)cnt;
 
   for ( int i = 0; i < cnt ; ++i )
   {
@@ -758,6 +757,13 @@ void Theme::insertColumn( int idx, Column * column )
   mColumns.insert( idx, column );
 }
 
+void Theme::moveColumn(int idx, int newPosition)
+{
+  if ( (newPosition >= mColumns.count()) || newPosition < 0 )
+    return;
+  mColumns.move( idx, newPosition );
+}
+
 void Theme::setGroupHeaderBackgroundMode( GroupHeaderBackgroundMode bm )
 {
   mGroupHeaderBackgroundMode = bm;
@@ -907,9 +913,9 @@ void Theme::save( QDataStream &stream ) const
   stream << (int)mViewHeaderPolicy;
   stream << mIconSize;
 
-  stream << (int)mColumns.count();
-
   const int cnt = mColumns.count();
+  stream << (int)cnt;
+
 
   for ( int i = 0; i < cnt ; i++ )
   {

@@ -36,6 +36,14 @@
 #include <Akonadi/Contact/EmailAddressSelectionDialog>
 
 #include <KPIMUtils/Email>
+#include <KDE/KPIMIdentities/Identity>
+#include <KDE/KPIMIdentities/IdentityCombo>
+#include <KDE/KPIMIdentities/IdentityManager>
+
+#include <KDE/Mailtransport/Transport>
+#include <KDE/Mailtransport/TransportComboBox>
+#include <KDE/Mailtransport/TransportManager>
+
 
 #include <KIconLoader>
 #include <KLocale>
@@ -69,6 +77,8 @@ class RedirectDialog::Private
 
     QString mResentTo;
     RedirectDialog::SendMode mSendMode;
+    KPIMIdentities::IdentityCombo *mComboboxIdentity;
+    MailTransport::TransportComboBox *mTransportCombobox;
 };
 
 void RedirectDialog::Private::slotUser1()
@@ -128,12 +138,10 @@ RedirectDialog::RedirectDialog( SendMode mode, QWidget *parent )
   KHBox *hbox = new KHBox( vbox );
   hbox->setSpacing( 4 );
   d->mEditTo = new MessageComposer::ComposerLineEdit( true, hbox );
-  d->mEditTo->setObjectName( "toLine" );
   d->mEditTo->setRecentAddressConfig( KernelIf->config().data() );
   d->mEditTo->setMinimumWidth( 300 );
 
   d->mBtnTo = new QPushButton( QString(), hbox );
-  d->mBtnTo->setObjectName( "toBtn" );
   d->mBtnTo->setIcon( KIcon( "help-contents" ) );
   d->mBtnTo->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
   d->mBtnTo->setMinimumSize( d->mBtnTo->sizeHint() * 1.2 );
@@ -147,6 +155,16 @@ RedirectDialog::RedirectDialog( SendMode mode, QWidget *parent )
   connect( d->mEditTo, SIGNAL(textChanged(QString)), SLOT(slotAddressChanged(QString)) );
   d->mLabelTo->setBuddy( d->mBtnTo );
   d->mEditTo->setFocus();
+
+  hbox = new KHBox( vbox );
+  QLabel *lab = new QLabel(i18n("Identity:"),hbox);
+  d->mComboboxIdentity = new KPIMIdentities::IdentityCombo(KernelIf->identityManager(),hbox);
+  lab->setBuddy(d->mComboboxIdentity);
+
+  hbox = new KHBox(vbox);
+  lab = new QLabel(i18n("Transport:"),hbox);
+  d->mTransportCombobox = new MailTransport::TransportComboBox( hbox );
+  lab->setBuddy(d->mTransportCombobox);
 
   setButtonGuiItem( User1, KGuiItem( i18n( "&Send Now" ), "mail-send" ) );
   setButtonGuiItem( User2, KGuiItem( i18n( "Send &Later" ), "mail-queue" ) );
@@ -169,6 +187,16 @@ QString RedirectDialog::to() const
 RedirectDialog::SendMode RedirectDialog::sendMode() const
 {
   return d->mSendMode;
+}
+
+int RedirectDialog::transportId() const
+{
+  return d->mTransportCombobox->currentTransportId();
+}
+
+int RedirectDialog::identity() const
+{
+  return d->mComboboxIdentity->currentIdentity();
 }
 
 void RedirectDialog::accept()

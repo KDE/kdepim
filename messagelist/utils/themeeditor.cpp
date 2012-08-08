@@ -274,6 +274,7 @@ ThemePreviewWidget::ThemePreviewWidget( QWidget * parent )
   m->setText( 0, QString() );
 
   mGroupHeaderSampleItem->setExpanded( true );
+  header()->setMovable(false);
 }
 
 ThemePreviewWidget::~ThemePreviewWidget()
@@ -288,7 +289,7 @@ QSize ThemePreviewWidget::sizeHint() const
 void ThemePreviewWidget::setReadOnly( bool readOnly )
 {
   mReadOnly = readOnly;
-  header()->setMovable(!readOnly);
+  //header()->setMovable(!readOnly);
 }
 
 void ThemePreviewWidget::applyThemeColumnWidths()
@@ -800,7 +801,7 @@ void ThemePreviewWidget::mouseMoveEvent( QMouseEvent * e )
     return; // ugh.. something weird happened
   }
 
-  // startin a drag
+  // starting a drag
   QMimeData * data = new QMimeData();
   QByteArray arry;
   arry.resize( sizeof( Theme::ContentItem::Type ) );
@@ -1233,8 +1234,43 @@ void ThemePreviewWidget::slotHeaderContextMenuRequested( const QPoint &pos )
            SLOT(slotDeleteColumn()) );
   act->setEnabled( col > 0 );
 
+  menu.addSeparator();
+
+  act = menu.addAction( i18n( "Move Column to Left"));
+  connect( act, SIGNAL(triggered(bool)),
+           SLOT(slotMoveColumnToLeft()) );
+  act->setEnabled( col > 0 );
+
+
+  act = menu.addAction( i18n( "Move Column to Right"));
+  connect( act, SIGNAL(triggered(bool)),
+           SLOT(slotMoveColumnToRight()) );
+  act->setEnabled( col < mTheme->columns().count()-1 );
+
+
   menu.exec( header()->mapToGlobal( pos ) );
 }
+
+void ThemePreviewWidget::slotMoveColumnToLeft()
+{
+  if ( !mSelectedThemeColumn )
+    return;
+
+  const int columnIndex = mTheme->columns().indexOf( mSelectedThemeColumn );
+  mTheme->moveColumn(columnIndex, columnIndex -1);
+  setTheme( mTheme ); // this will reset theme cache and trigger a global update
+}
+
+void ThemePreviewWidget::slotMoveColumnToRight()
+{
+  if ( !mSelectedThemeColumn )
+    return;
+
+  const int columnIndex = mTheme->columns().indexOf( mSelectedThemeColumn );
+  mTheme->moveColumn(columnIndex, columnIndex +1);
+  setTheme( mTheme ); // this will reset theme cache and trigger a global update
+}
+
 
 void ThemePreviewWidget::slotAddColumn()
 {

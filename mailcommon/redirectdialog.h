@@ -80,6 +80,10 @@ class MAILCOMMON_EXPORT RedirectDialog : public KDialog
      */
     SendMode sendMode() const;
 
+    int transportId() const;
+
+    int identity() const;
+
   protected:
     virtual void accept();
 
