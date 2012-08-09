@@ -134,7 +134,26 @@ bool ResourceKABC::doLoad()
 {
   kdDebug(5800) << "ResourceKABC::load()" << endl;
 
-  mCalendar.close();
+  if ( !mCalendar.rawEvents().isEmpty() ) {
+    // Several bugs were caused by closing the calendar
+    // on load as this deletes all incidences that might be
+    // used at different points in different threads for example
+    // painting.
+
+    // This implementation to delete everything and check
+    // every contact again when the ressource changes is
+    // also bad.
+
+    // Adding to this that the calendar does not repaint the
+    // birthdays when the list here changes we just disable it
+    // and accept that changed Addressbook entries are only loaded
+    // after a restart.
+
+    // This has been fixed by akonadi in the future.
+    kdDebug(5800) << "Not reloading KABC ressource." << endl;
+    return true;
+    //mCalendar.close();
+  }
 
   // import from kabc
   QString summary;
