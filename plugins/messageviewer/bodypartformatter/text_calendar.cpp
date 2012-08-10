@@ -35,8 +35,7 @@
 #include "delegateselector.h"
 #include "memorycalendarmemento.h"
 
-#include <calendarsupport/groupware.h>
-
+#include <akonadi/calendar/invitationhandler.h>
 #include <incidenceeditor-ng/groupwareintegration.h>
 
 #include <messageviewer/globalsettings.h>
@@ -748,8 +747,13 @@ class UrlHandler : public Interface::BodyPartURLHandler
         IncidenceEditorNG::GroupwareIntegration::activate();
       }
 
-      //TODO_SERGIO
-      //CalendarSupport::Groupware::instance()->handleInvitation( receiver, iCal, type );
+      Akonadi::InvitationHandler *handler = new Akonadi::InvitationHandler();
+
+      // We don't have a parent here, so schedule a deleteLater()
+      QObject::connect( handler, SIGNAL(finished(Akonadi::InvitationHandler::Result,QString)),
+                        handler, SLOT(deleteLater()) );
+
+      handler->handleInvitation( receiver, iCal, type );
       // TODO: catch signal, and do error handling
       return true;
     }
