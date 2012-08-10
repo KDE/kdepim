@@ -33,6 +33,7 @@
 #include <Akonadi/Item>
 #include <akonadi/calendar/etmcalendar.h>
 #include <akonadi/calendar/publishdialog.h>
+#include <akonadi/calendar/calendarsettings.h>
 
 #include <KHolidays/Holidays>
 
@@ -625,7 +626,7 @@ void CalendarSupport::sendAsICalendar( const Akonadi::Item &item,
 
     ICalFormat format;
     const QString from = CalendarSupport::KCalPrefs::instance()->email();
-    const bool bccMe = CalendarSupport::KCalPrefs::instance()->mBcc;
+    const bool bccMe = Akonadi::CalendarSettings::self()->bcc();
     const QString messageText = format.createScheduleMessage( incidence, iTIPRequest );
     CalendarSupport::MailClient mailer;
     if ( mailer.mailTo(
