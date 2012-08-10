@@ -1,4 +1,17 @@
 
+Friday 10 August 2012
+
+Problems addressed
+------------------
+
+* kolab/issue4837: Kontact startup crash with korganizerplugin as active plugin (KOAgendaitem::paintEvent
+* kolab/issue4838: Kontact might crash on activating Korganizerplugin
+* kolab/issue4848: Crash when switching to Korganizer part in Kontact (Incidence::categories
+* kolab/issue4852: Monthview Freezes for incidences with invalid startdate and recurrence (RT#10121)
+* kolab/issue4853: kolab.xml of tasks should always contain "alarm" element for alarms (RT#10116)
+
+
+
 Friday 03 August 2012
 
 Problems addressed
