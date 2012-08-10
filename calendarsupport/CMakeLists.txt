@@ -14,11 +14,8 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
 set(calendarsupport_LIB_SRCS
   archivedialog.cpp
   attachmenthandler.cpp
-  attributeregistrar.cpp
-  blockalarmsattribute.cpp
   # calendarsearch.cpp
   calendarutils.cpp
-  calfilterproxymodel.cpp
   categoryconfig.cpp
   collectiongeneralpage.cpp
   collectionselection.cpp
