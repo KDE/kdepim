@@ -72,9 +72,9 @@ class MonthViewPrivate : public Akonadi::ETMCalendar::CalendarObserver
 
   protected:
     /* reimplemented from KCalCore::Calendar::CalendarObserver */
-    void calendarIncidenceAdded( const Akonadi::Item &incidence );
-    void calendarIncidenceChanged( const Akonadi::Item &incidence );
-    void calendarIncidenceDeleted( const Akonadi::Item &incidence );
+    void calendarIncidenceAdded( const KCalCore::Incidence::Ptr &incidence );
+    void calendarIncidenceChanged( const KCalCore::Incidence::Ptr &incidence );
+    void calendarIncidenceDeleted( const KCalCore::Incidence::Ptr &incidence );
 };
 
 }
@@ -159,19 +159,21 @@ void MonthViewPrivate::triggerDelayedReload( EventView::Change reason )
   }
 }
 
-void MonthViewPrivate::calendarIncidenceAdded( const Akonadi::Item & )
+void MonthViewPrivate::calendarIncidenceAdded( const KCalCore::Incidence::Ptr & )
 {
   triggerDelayedReload( MonthView::IncidencesAdded );
 }
 
-void MonthViewPrivate::calendarIncidenceChanged( const Akonadi::Item & )
+void MonthViewPrivate::calendarIncidenceChanged( const KCalCore::Incidence::Ptr & )
 {
   triggerDelayedReload( MonthView::IncidencesEdited );
 }
 
-void MonthViewPrivate::calendarIncidenceDeleted( const Akonadi::Item &incidence )
+void MonthViewPrivate::calendarIncidenceDeleted( const KCalCore::Incidence::Ptr &incidence )
 {
-  scene->removeIncidence( incidence.id() );
+  Akonadi::Item item = q->calendar()->item( incidence->uid() );
+  if  ( item.isValid() )
+    scene->removeIncidence( item.id() );
 }
 
 /// MonthView

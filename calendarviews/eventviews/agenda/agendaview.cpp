@@ -269,9 +269,9 @@ class AgendaView::Private : public Akonadi::ETMCalendar::CalendarObserver
 
   protected:
     /* reimplemented from KCalCore::Calendar::CalendarObserver */
-    void calendarIncidenceAdded( const Akonadi::Item &incidence );
-    void calendarIncidenceChanged( const Akonadi::Item &incidence );
-    void calendarIncidenceDeleted( const Akonadi::Item &incidence );
+    void calendarIncidenceAdded( const KCalCore::Incidence::Ptr &incidence );
+    void calendarIncidenceChanged( const KCalCore::Incidence::Ptr &incidence );
+    void calendarIncidenceDeleted( const KCalCore::Incidence::Ptr &incidence );
 };
 
 void AgendaView::Private::changeColumns( int numColumns )
@@ -305,37 +305,44 @@ QList<QDate> AgendaView::Private::generateDateList( const QDate &start,
   return list;
 }
 
-void AgendaView::Private::calendarIncidenceAdded( const Akonadi::Item &incidence )
+void AgendaView::Private::calendarIncidenceAdded( const KCalCore::Incidence::Ptr &incidence )
 {
-  Q_UNUSED( incidence );
+  Akonadi::Item item = q->calendar()->item( incidence->uid() );
 
-  // No need to call setChanges(), that triggers a fillAgenda()
-  q->displayIncidence( incidence, false );
-  mAgenda->checkScrollBoundaries();
-  q->updateEventIndicators();
+  if ( item.isValid() ) {
+    // No need to call setChanges(), that triggers a fillAgenda()
+    q->displayIncidence( item, false );
+    mAgenda->checkScrollBoundaries();
+    q->updateEventIndicators();
+  }
 }
 
-void AgendaView::Private::calendarIncidenceChanged( const Akonadi::Item &incidence )
+void AgendaView::Private::calendarIncidenceChanged( const KCalCore::Incidence::Ptr &incidence )
 {
-  Q_UNUSED( incidence );
+  Akonadi::Item item = q->calendar()->item( incidence->uid() );
 
-  mAgenda->removeIncidence( incidence );
-  mAllDayAgenda->removeIncidence( incidence );
-  q->displayIncidence( incidence, false );
-  mAgenda->checkScrollBoundaries();
-  q->updateEventIndicators();
-
+  if ( item.isValid() ) {
+    mAgenda->removeIncidence( item );
+    mAllDayAgenda->removeIncidence( item );
+    q->displayIncidence( item, false );
+    mAgenda->checkScrollBoundaries();
+    q->updateEventIndicators();   
+  }
   // No need to call setChanges(), that triggers a fillAgenda()
   // setChanges( q->changes() | IncidencesEdited, CalendarSupport::incidence( incidence ) );
 }
 
-void AgendaView::Private::calendarIncidenceDeleted( const Akonadi::Item &incidence )
+void AgendaView::Private::calendarIncidenceDeleted( const KCalCore::Incidence::Ptr &incidence )
 {
-  // No need to call setChanges(), that triggers a fillAgenda()
-  mAgenda->removeIncidence( incidence );
-  mAllDayAgenda->removeIncidence( incidence );
-  mAgenda->checkScrollBoundaries();
-  q->updateEventIndicators();
+  Akonadi::Item item = q->calendar()->item( incidence->uid() );
+
+  if ( item.isValid() ) {
+    // No need to call setChanges(), that triggers a fillAgenda()
+    mAgenda->removeIncidence( item );
+    mAllDayAgenda->removeIncidence( item );
+    mAgenda->checkScrollBoundaries();
+    q->updateEventIndicators();
+  }
 
   //setChanges( q->changes() | IncidencesDeleted, CalendarSupport::incidence( incidence ) );
 }
