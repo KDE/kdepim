@@ -131,26 +131,6 @@ void MonthViewPrivate::moveStartDate( int weeks, int months )
 #endif
 }
 
-/*
-void MonthViewPrivate::setUpModels()
-{
-  if ( q->customCollectionSelectionProxyModel() ) {
-    calendarSearch->setSelectionModel( q->customCollectionSelectionProxyModel()->selectionModel() );
-  } else {
-    calendarSearch->setSelectionModel( q->globalCollectionSelection()->model() );
-  }
-#if 0
-  QDialog *dlg = new QDialog( q );
-  dlg->setModal( false );
-  QVBoxLayout *layout = new QVBoxLayout( dlg );
-  EntityTreeView *testview = new EntityTreeView( dlg );
-  layout->addWidget( testview );
-  testview->setModel( calendarSearch->model() );
-  dlg->show();
-#endif
-}
-*/
-
 void MonthViewPrivate::triggerDelayedReload( EventView::Change reason )
 {
   q->setChanges( q->changes() | reason );
