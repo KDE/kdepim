@@ -83,6 +83,10 @@ ItemEditorPrivate::ItemEditorPrivate( EditorItemManager *qq )
   qq->connect( mChanger,
               SIGNAL(modifyFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)),
               qq, SLOT(onModifyFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)) );
+
+  qq->connect( mChanger,
+              SIGNAL(createFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)),
+              qq, SLOT(onCreateFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)) );
 }
 
 void ItemEditorPrivate::moveJobFinished( KJob *job )
