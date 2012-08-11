@@ -23,7 +23,7 @@
 #include <KGlobal>
 #include <KGlobalSettings>
 
-#include <akonadi/calendar/etmcalendar.h>
+#include <Akonadi/Calendar/ETMCalendar>
 #include <calendarviews/eventviews/timeline/timelineview.h>
 #include <KLocale>
 #include <QLayout>

@@ -29,8 +29,8 @@
 #include "utils.h"
 
 #include <KCalCore/Incidence>
-#include <akonadi/calendar/etmcalendar.h>
-#include <akonadi/calendar/incidencechanger.h>
+#include <Akonadi/Calendar/ETMCalendar>
+#include <Akonadi/Calendar/IncidenceChanger>
 
 #include <KLocalizedString>
 #include <KMessageBox>

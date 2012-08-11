@@ -33,9 +33,9 @@
 #include "timelabels.h"
 #include "timelabelszone.h"
 
-#include <akonadi/calendar/etmcalendar.h>
+#include <Akonadi/Calendar/ETMCalendar>
 #include <calendarsupport/collectionselection.h>
-#include <akonadi/calendar/incidencechanger.h>
+#include <Akonadi/Calendar/IncidenceChanger>
 #include <calendarsupport/utils.h>
 #include <calendarsupport/kcalprefs.h>
 

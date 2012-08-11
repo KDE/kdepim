@@ -32,8 +32,8 @@
 #include "helper.h"
 #include "prefs.h"
 
-#include <akonadi/calendar/etmcalendar.h>
-#include <akonadi/calendar/incidencechanger.h>
+#include <Akonadi/Calendar/ETMCalendar>
+#include <Akonadi/Calendar/IncidenceChanger>
 #include <calendarsupport/utils.h>
 
 #include <KCalCore/Incidence>

@@ -31,7 +31,7 @@
 #define CALENDARSUPPORT_GROUPWARE_H
 
 #include "calendarsupport_export.h"
-#include <akonadi/calendar/etmcalendar.h>
+#include <Akonadi/Calendar/ETMCalendar>
 #include <KCalCore/ICalFormat>
 
 namespace Akonadi {

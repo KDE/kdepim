@@ -27,7 +27,7 @@
 #include "eventview_p.h"
 #include "prefs.h"
 
-#include <akonadi/calendar/etmcalendar.h>
+#include <Akonadi/Calendar/ETMCalendar>
 #include <calendarsupport/collectionselection.h>
 #include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/utils.h>

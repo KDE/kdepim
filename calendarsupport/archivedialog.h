@@ -25,7 +25,7 @@
 
 #include "calendarsupport_export.h"
 
-#include <akonadi/calendar/etmcalendar.h>
+#include <Akonadi/Calendar/ETMCalendar>
 #include <KDialog>
 
 class KComboBox;

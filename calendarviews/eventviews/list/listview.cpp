@@ -30,8 +30,8 @@
 #include "listview.h"
 #include "helper.h"
 
-#include <akonadi/calendar/etmcalendar.h>
-#include <akonadi/calendar/incidencechanger.h>
+#include <Akonadi/Calendar/ETMCalendar>
+#include <Akonadi/Calendar/IncidenceChanger>
 #include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/utils.h>
 

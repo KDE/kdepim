@@ -19,7 +19,7 @@
 #ifndef TASKSACTIONMANAGER_H
 #define TASKSACTIONMANAGER_H
 
-#include <akonadi/calendar/etmcalendar.h>
+#include <Akonadi/Calendar/ETMCalendar>
 #include <QtCore/QObject>
 
 class KActionCollection;

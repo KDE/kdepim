@@ -20,7 +20,7 @@
 #include "monthviewitem.h"
 #include "mainview.h"
 
-#include <akonadi/calendar/etmcalendar.h>
+#include <Akonadi/Calendar/ETMCalendar>
 #include <calendarviews/eventviews/month/monthview.h>
 
 #include <KGlobal>

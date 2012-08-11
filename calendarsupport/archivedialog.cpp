@@ -27,7 +27,7 @@
 #include "eventarchiver.h"
 #include "kcalprefs.h"
 
-#include <akonadi/calendar/incidencechanger.h>
+#include <Akonadi/Calendar/IncidenceChanger>
 
 #include <KComboBox>
 #include <KDateComboBox>

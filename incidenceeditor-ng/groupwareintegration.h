@@ -20,7 +20,7 @@
 #define INCIDENCEEDITOR_GROUPWAREINTEGRATION_H
 
 #include "incidenceeditors-ng_export.h"
-#include <akonadi/calendar/etmcalendar.h>
+#include <Akonadi/Calendar/ETMCalendar>
 
 namespace CalendarSupport {
   class GroupwareUiDelegate;

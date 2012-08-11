@@ -31,7 +31,7 @@
 #include <Akonadi/EntityDisplayAttribute>
 #include <Akonadi/EntityTreeModel>
 #include <Akonadi/Item>
-#include <akonadi/calendar/etmcalendar.h>
+#include <Akonadi/Calendar/ETMCalendar>
 #include <akonadi/calendar/publishdialog.h>
 #include <akonadi/calendar/calendarsettings.h>
 

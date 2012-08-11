@@ -27,7 +27,7 @@
 #include "kcalprefs.h"
 #include "utils.h"
 
-#include <akonadi/calendar/incidencechanger.h>
+#include <Akonadi/Calendar/IncidenceChanger>
 
 #include <KCalCore/ICalFormat>
 #include <KCalCore/FileStorage>

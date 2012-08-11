@@ -23,7 +23,7 @@
 #include "declarativeakonadiitem.h"
 
 #include <calendarsupport/next/incidenceviewer.h>
-#include <akonadi/calendar/etmcalendar.h>
+#include <Akonadi/Calendar/ETMCalendar>
 #include <QtCore/QAbstractItemModel>
 
 namespace CalendarSupport {

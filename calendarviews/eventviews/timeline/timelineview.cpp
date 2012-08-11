@@ -34,11 +34,11 @@
 #include <kdgantt2/kdganttitemdelegate.h>
 #include <kdgantt2/kdganttstyleoptionganttitem.h>
 
-#include <akonadi/calendar/etmcalendar.h>
+#include <Akonadi/Calendar/ETMCalendar>
 #include <calendarsupport/collectionselection.h>
 #include <calendarsupport/utils.h>
 #include <calendarsupport/kcalprefs.h>
-#include <akonadi/calendar/incidencechanger.h>
+#include <Akonadi/Calendar/IncidenceChanger>
 
 #include <QApplication>
 #include <QPainter>

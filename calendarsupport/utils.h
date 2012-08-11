@@ -28,7 +28,7 @@
 
 #include <Akonadi/Collection>
 #include <Akonadi/Item>
-#include <akonadi/calendar/etmcalendar.h>
+#include <Akonadi/Calendar/ETMCalendar>
 
 #include <KCalCore/Event>
 #include <KCalCore/Incidence>

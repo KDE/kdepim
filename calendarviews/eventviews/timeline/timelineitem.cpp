@@ -23,7 +23,7 @@
 #include <kdgantt2/kdganttglobal.h>
 
 #include <calendarsupport/kcalprefs.h>
-#include <akonadi/calendar/etmcalendar.h>
+#include <Akonadi/Calendar/ETMCalendar>
 #include <calendarsupport/utils.h>
 
 #include <KCalCore/Incidence>

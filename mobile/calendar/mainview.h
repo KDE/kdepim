@@ -23,7 +23,7 @@
 
 #include "kdeclarativemainview.h"
 
-#include <akonadi/calendar/etmcalendar.h>
+#include <Akonadi/Calendar/ETMCalendar>
 #include <Akonadi/Entity>
 #include <KCalCore/ScheduleMessage>
 

@@ -35,7 +35,7 @@
 #include <KLocalizedString>
 #include <Akonadi/Item>
 #include <Akonadi/ItemCreateJob>
-#include <akonadi/calendar/etmcalendar.h>
+#include <Akonadi/Calendar/ETMCalendar>
 
 #include "declarativeeditors.h"
 

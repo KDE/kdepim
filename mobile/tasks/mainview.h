@@ -25,7 +25,7 @@
 #include "kdeclarativemainview.h"
 
 #include <Akonadi/Entity>
-#include <akonadi/calendar/etmcalendar.h>
+#include <Akonadi/Calendar/ETMCalendar>
 
 #include <calendarviews/eventviews/eventview.h>
 #include <calendarviews/eventviews/prefs.h>

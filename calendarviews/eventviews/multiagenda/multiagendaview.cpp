@@ -25,7 +25,7 @@
 #include "agenda/agendaview.h"
 #include "agenda/timelabelszone.h"
 
-#include <akonadi/calendar/etmcalendar.h>
+#include <Akonadi/Calendar/ETMCalendar>
 #include <calendarsupport/collectionselection.h>
 #include <calendarsupport/utils.h>
 

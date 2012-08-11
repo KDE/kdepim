@@ -39,7 +39,7 @@
 
 #include <Akonadi/CollectionComboBox>
 #include <Akonadi/Item>
-#include <akonadi/calendar/etmcalendar.h>
+#include <Akonadi/Calendar/ETMCalendar>
 
 #include <KCalCore/ICalFormat>
 #include <KCalCore/MemoryCalendar>

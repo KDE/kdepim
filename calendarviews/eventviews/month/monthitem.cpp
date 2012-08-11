@@ -28,8 +28,8 @@
 #include "prefs.h"
 #include "prefs_base.h" // Ugly, but needed for the Enums
 
-#include <akonadi/calendar/etmcalendar.h>
-#include <akonadi/calendar/incidencechanger.h>
+#include <Akonadi/Calendar/ETMCalendar>
+#include <Akonadi/Calendar/IncidenceChanger>
 #include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/utils.h>
 
