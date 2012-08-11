@@ -716,7 +716,7 @@ void MonthScene::selectItem( MonthItem *item )
     Another solution would be to have two signals: incidenceSelected() and incidenceClicked()
   */
 
-  IncidenceMonthItem *tmp = qobject_cast<IncidenceMonthItem *>( item );
+  IncidenceMonthItem *tmp = qobject_cast<IncidenceMonthItem*>( item );
 
   if ( !tmp ) {
     mSelectedItem = 0;
@@ -735,11 +735,17 @@ void MonthScene::selectItem( MonthItem *item )
   update();
 }
 
-void MonthScene::removeIncidence( Akonadi::Item::Id id )
+void MonthScene::removeIncidence( const QString &uid )
 {
   foreach ( MonthItem *manager, mManagerList ) {
     IncidenceMonthItem *imi = qobject_cast<IncidenceMonthItem*>( manager );
-    if ( imi && imi->akonadiItemId() == id ) {
+    if ( !imi )
+      return;
+
+    KCalCore::Incidence::Ptr incidence = imi->incidence();
+    if ( !incidence )
+      return;
+    if ( incidence->uid() == uid ) {
       foreach ( MonthGraphicsItem *gitem, imi->monthGraphicsItems() ) {
         removeItem( gitem );
       }

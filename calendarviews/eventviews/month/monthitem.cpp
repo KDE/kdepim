@@ -707,6 +707,11 @@ Akonadi::Item IncidenceMonthItem::akonadiItem() const
   }
 }
 
+KCalCore::Incidence::Ptr IncidenceMonthItem::incidence() const
+{
+  return mIncidence;
+}
+
 Akonadi::Item::Id IncidenceMonthItem::akonadiItemId() const
 {
   return mAkonadiItemId;

@@ -280,6 +280,7 @@ class EVENTVIEWS_EXPORT IncidenceMonthItem : public MonthItem
 
     virtual ~IncidenceMonthItem();
 
+    KCalCore::Incidence::Ptr incidence() const;
     Akonadi::Item akonadiItem() const;
     Akonadi::Item::Id akonadiItemId() const;
 

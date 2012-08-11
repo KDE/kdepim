@@ -161,7 +161,7 @@ class EVENTVIEWS_EXPORT MonthScene : public QGraphicsScene
     /**
        Removes an incidence from the scene
     */
-    void removeIncidence( Akonadi::Item::Id id );
+    void removeIncidence( const QString &uid );
 
   signals:
     void incidenceSelected( const Akonadi::Item &incidence, const QDate & );

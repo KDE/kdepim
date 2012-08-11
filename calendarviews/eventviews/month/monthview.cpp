@@ -151,9 +151,8 @@ void MonthViewPrivate::calendarIncidenceChanged( const KCalCore::Incidence::Ptr 
 
 void MonthViewPrivate::calendarIncidenceDeleted( const KCalCore::Incidence::Ptr &incidence )
 {
-  Akonadi::Item item = q->calendar()->item( incidence->uid() );
-  if  ( item.isValid() )
-    scene->removeIncidence( item.id() );
+  Q_ASSERT( !incidence->uid().isEmpty() );
+  scene->removeIncidence( incidence->uid() );
 }
 
 /// MonthView
