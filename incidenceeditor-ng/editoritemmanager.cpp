@@ -21,17 +21,15 @@
 #include "editoritemmanager.h"
 
 #include <calendarsupport/utils.h>
+#include <calendarsupport/kcalprefs.h>
 
 #include <Akonadi/Item>
-#include <Akonadi/ItemCreateJob>
 #include <Akonadi/ItemDeleteJob>
 #include <Akonadi/ItemFetchJob>
 #include <Akonadi/ItemFetchScope>
-#include <Akonadi/ItemModifyJob>
 #include <Akonadi/ItemMoveJob>
 #include <Akonadi/Monitor>
 #include <Akonadi/Session>
-#include <Akonadi/TransactionSequence>
 
 #include <KJob>
 #include <KLocale>
@@ -56,16 +54,24 @@ class ItemEditorPrivate
     ItemEditorUi *mItemUi;
     bool mIsCounterProposal;
     EditorItemManager::SaveAction currentAction;
+    Akonadi::IncidenceChanger *mChanger;
 
   public:
     ItemEditorPrivate( EditorItemManager *qq );
     void itemChanged( const Akonadi::Item &, const QSet<QByteArray> & );
     void itemFetchResult( KJob *job );
     void itemMoveResult( KJob *job );
-    void modifyResult( KJob *job );
+    void onModifyFinished( int changeId, const Akonadi::Item &item,
+                           Akonadi::IncidenceChanger::ResultCode resultCode,
+                           const QString &errorString );
+
+    void onCreateFinished( int changeId,
+                           const Akonadi::Item &item,
+                           Akonadi::IncidenceChanger::ResultCode resultCode,
+                           const QString &errorString );
+
     void setupMonitor();
-    void createMoveAndModifyTransactionJob();
-    void moveAndModifyTransactionFinished( KJob *job );
+    void moveJobFinished( KJob *job );
 };
 
 ItemEditorPrivate::ItemEditorPrivate( EditorItemManager *qq )
@@ -73,26 +79,20 @@ ItemEditorPrivate::ItemEditorPrivate( EditorItemManager *qq )
 {
   mFetchScope.fetchFullPayload();
   mFetchScope.setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
+  mChanger = new Akonadi::IncidenceChanger( qq );
+  qq->connect( mChanger,
+              SIGNAL(modifyFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)),
+              qq, SLOT(onModifyFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)) );
 }
 
-void ItemEditorPrivate::createMoveAndModifyTransactionJob()
-{
-  Q_Q( EditorItemManager );
-  Akonadi::TransactionSequence *transaction = new Akonadi::TransactionSequence;
-  q->connect( transaction, SIGNAL(result(KJob*)), SLOT(moveAndModifyTransactionFinished(KJob*)) );
-  new Akonadi::ItemModifyJob( mItem, transaction );
-  new Akonadi::ItemMoveJob( mItem, mItemUi->selectedCollection(), transaction );
-}
-
-void ItemEditorPrivate::moveAndModifyTransactionFinished( KJob *job )
+void ItemEditorPrivate::moveJobFinished( KJob *job )
 {
   Q_Q( EditorItemManager );
   if ( job->error() ) {
     kError() << "Error while moving and modifying " << job->errorString();
     mItemUi->reject( ItemEditorUi::ItemMoveFailed, job->errorString() );
   } else {
-    Akonadi::Item item;
-    item.setId( mItem.id() );
+    Akonadi::Item item( mItem.id() );
     currentAction = EditorItemManager::MoveAndModify;
     q->load( item );
   }
@@ -153,33 +153,43 @@ void ItemEditorPrivate::itemMoveResult( KJob *job )
   }
 }
 
-void ItemEditorPrivate::modifyResult( KJob *job )
+void ItemEditorPrivate::onModifyFinished( int, const Akonadi::Item &item,
+                                          Akonadi::IncidenceChanger::ResultCode resultCode,
+                                          const QString &errorString )
 {
-  Q_ASSERT( job );
   Q_Q( EditorItemManager );
-
-  if ( job->error() ) {
-    if ( qobject_cast<Akonadi::ItemModifyJob*>( job ) ) {
-      kError() << "Modify failed " << job->errorString();
-      emit q->itemSaveFailed( EditorItemManager::Modify, job->errorString() );
-    } else {
-      kError() << "Creation failed " << job->errorString();
-      emit q->itemSaveFailed( EditorItemManager::Create, job->errorString() );
+  if ( resultCode == Akonadi::IncidenceChanger::ResultCodeSuccess ) {
+    if ( mItem.parentCollection() == mItemUi->selectedCollection() ) {
+      mItem = item;
+      emit q->itemSaveFinished( EditorItemManager::Modify );
+      setupMonitor();
+    } else { // There's a collection move too.
+      Akonadi::ItemMoveJob *moveJob = new Akonadi::ItemMoveJob( mItem, mItemUi->selectedCollection() );
+      q->connect( moveJob, SIGNAL(result(KJob*)), SLOT(moveJobFinished(KJob*)) );
     }
-    return;
-  }
-
-  if ( Akonadi::ItemModifyJob *modifyJob = qobject_cast<Akonadi::ItemModifyJob*>( job ) ) {
-    mItem = modifyJob->item();
-    emit q->itemSaveFinished( EditorItemManager::Modify );
+  } else if ( resultCode == Akonadi::IncidenceChanger::ResultCodeUserCanceled ) {
+    emit q->itemSaveFailed( EditorItemManager::Modify, QString() );
+    q->load( Akonadi::Item( mItem.id() ) );
   } else {
-    Akonadi::ItemCreateJob *createJob = qobject_cast<Akonadi::ItemCreateJob*>( job );
-    Q_ASSERT( createJob );
-    q->load( createJob->item() );
-    emit q->itemSaveFinished( EditorItemManager::Create );
+    kError() << "Modify failed " << errorString;
+    emit q->itemSaveFailed( EditorItemManager::Modify, errorString );
   }
+}
 
-  setupMonitor();
+void ItemEditorPrivate::onCreateFinished( int,
+                                          const Akonadi::Item &item,
+                                          Akonadi::IncidenceChanger::ResultCode resultCode,
+                                          const QString &errorString )
+{
+  Q_Q( EditorItemManager );
+  if ( resultCode == Akonadi::IncidenceChanger::ResultCodeSuccess ) {
+    q->load( item );
+    emit q->itemSaveFinished( EditorItemManager::Create );
+    setupMonitor();
+  } else {
+    kError() << "Creation failed " << errorString;
+    emit q->itemSaveFailed( EditorItemManager::Create, errorString );
+  }
 }
 
 void ItemEditorPrivate::setupMonitor()
@@ -287,34 +297,6 @@ void EditorItemManager::load( const Akonadi::Item &item )
   }
 }
 
-void EditorItemManager::revertLastSave()
-{
-  Q_D( ItemEditor );
-
-  if ( d->mPrevItem.hasPayload() ) {
-    // Modify
-    Q_ASSERT( d->mItem.isValid() ); // Really, if this isn't true, then fix the logic somewhere else
-    Q_ASSERT( d->mItem.id() == d->mPrevItem.id() ); // managing two different items??
-
-    d->mPrevItem.setRevision( d->mItem.revision() );
-    Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob( d->mPrevItem );
-    if ( !job->exec() ) {
-      kDebug() << "Revert failed, could not delete item." << job->errorText();
-    }
-  } else if ( d->mItem.isValid() ) {
-    // No payload in the previous item and the current item is valid, so the last
-    // call to save created a new item and reverting that means that we have to
-    // delete it.
-    Akonadi::ItemDeleteJob *job = new Akonadi::ItemDeleteJob( d->mItem );
-    if ( !job->exec() ) {
-      kDebug() << "Revert failed, could not delete item." << job->errorText();
-    }
-  }
-
-  // else, the previous item had no payload *and* the current item is not valid,
-  // meaning that no item has been saved yet. Nothing to be done.
-}
-
 void EditorItemManager::save()
 {
   Q_D( ItemEditor );
@@ -331,40 +313,24 @@ void EditorItemManager::save()
     return;
   }
 
+  d->mChanger->setGroupwareCommuniation( CalendarSupport::KCalPrefs::instance()->useGroupwareCommunication() );
+
   Akonadi::Item updateItem = d->mItemUi->save( d->mItem );
   Q_ASSERT( updateItem.id() == d->mItem.id() );
   d->mItem = updateItem;
 
   if ( d->mItem.isValid() ) { // A valid item. Means we're modifying.
     Q_ASSERT( d->mItem.parentCollection().isValid() );
-
-    //TODO_SERGIO: incidence changere here
     KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( d->mItem );
 
+    KCalCore::Incidence::Ptr oldPayload = CalendarSupport::incidence( d->mPrevItem );
     if ( d->mItem.parentCollection() == d->mItemUi->selectedCollection() ) {
-      const bool modify = true;//invitationHandler.handleIncidenceAboutToBeModified( incidence ); TODO_SERGIO
-      if ( modify ) {
-        Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( d->mItem );
-        connect( modifyJob, SIGNAL(result(KJob*)), SLOT(modifyResult(KJob*)) );
-      } else {
-        emit itemSaveFailed( EditorItemManager::Modify, QString() );
-        Akonadi::Item item;
-        item.setId( d->mItem.id() );
-        load( item );
-      }
+      d->mChanger->modifyIncidence( d->mItem, oldPayload );
     } else {
       Q_ASSERT( d->mItemUi->selectedCollection().isValid() );
 
       if ( d->mItemUi->isDirty() ) {
-        const bool modify = true; // invitationHandler.handleIncidenceAboutToBeModified( incidence ); TODO_SERGIO
-        if ( modify ) {
-          d->createMoveAndModifyTransactionJob();
-        } else {
-          emit itemSaveFailed( EditorItemManager::Modify, QString() );
-          Akonadi::Item item;
-          item.setId( d->mItem.id() );
-          load( item );
-        }
+        d->mChanger->modifyIncidence( d->mItem, oldPayload );
       } else {
         Akonadi::ItemMoveJob *itemMoveJob =
           new Akonadi::ItemMoveJob( d->mItem, d->mItemUi->selectedCollection() );
@@ -376,10 +342,8 @@ void EditorItemManager::save()
       emit itemSaveFinished( EditorItemManager::Modify );
     } else {
       Q_ASSERT( d->mItemUi->selectedCollection().isValid() );
-
-      Akonadi::ItemCreateJob *createJob =
-        new Akonadi::ItemCreateJob( d->mItem, d->mItemUi->selectedCollection() );
-      connect( createJob, SIGNAL(result(KJob*)), SLOT(modifyResult(KJob*)) );
+      KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( d->mItem );
+      d->mChanger->createIncidence( incidence, d->mItemUi->selectedCollection() );
     }
   }
 }
