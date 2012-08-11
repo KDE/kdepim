@@ -322,8 +322,8 @@ void AgendaView::Private::calendarIncidenceChanged( const KCalCore::Incidence::P
   Akonadi::Item item = q->calendar()->item( incidence->uid() );
 
   if ( item.isValid() ) {
-    mAgenda->removeIncidence( item );
-    mAllDayAgenda->removeIncidence( item );
+    mAgenda->removeIncidence( incidence->uid() );
+    mAllDayAgenda->removeIncidence( incidence->uid() );
     q->displayIncidence( item, false );
     mAgenda->checkScrollBoundaries();
     q->updateEventIndicators();   
@@ -334,12 +334,10 @@ void AgendaView::Private::calendarIncidenceChanged( const KCalCore::Incidence::P
 
 void AgendaView::Private::calendarIncidenceDeleted( const KCalCore::Incidence::Ptr &incidence )
 {
-  Akonadi::Item item = q->calendar()->item( incidence->uid() );
-
-  if ( item.isValid() ) {
+  if ( !incidence->uid().isEmpty() ) {
     // No need to call setChanges(), that triggers a fillAgenda()
-    mAgenda->removeIncidence( item );
-    mAllDayAgenda->removeIncidence( item );
+    mAgenda->removeIncidence( incidence->uid() );
+    mAllDayAgenda->removeIncidence( incidence->uid() );
     mAgenda->checkScrollBoundaries();
     q->updateEventIndicators();
   }
@@ -1942,10 +1940,10 @@ void AgendaView::deleteSelectedDateTime()
   d->mTimeSpanInAllDay = false;
 }
 
-void AgendaView::removeIncidence( const Akonadi::Item &incidence )
+void AgendaView::removeIncidence( const QString &uid )
 {
-  d->mAgenda->removeIncidence( incidence );
-  d->mAllDayAgenda->removeIncidence( incidence );
+  d->mAgenda->removeIncidence( uid );
+  d->mAllDayAgenda->removeIncidence( uid );
 }
 
 void AgendaView::updateEventIndicators()

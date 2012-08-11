@@ -217,7 +217,7 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
     */
     void setHolidayMasks();
 
-    void removeIncidence( const Akonadi::Item & );
+    void removeIncidence( const QString &uid );
     /**
       Updates the event indicators after a certain incidence was modified or
       removed.

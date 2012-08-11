@@ -135,7 +135,7 @@ class EVENTVIEWS_EXPORT Agenda : public QWidget
       slot deleteItemsToDelete() (called by QTimer::singleShot ).
       @param incidence The pointer to the incidence that should be removed.
     */
-    void removeIncidence( const Akonadi::Item &incidence );
+    void removeIncidence( const QString &uid );
 
     void changeColumns( int columns );
 
@@ -161,7 +161,7 @@ class EVENTVIEWS_EXPORT Agenda : public QWidget
 
     void setIncidenceChanger( Akonadi::IncidenceChanger *changer );
 
-    QList<AgendaItem::QPtr> agendaItems( const Akonadi::Item &item ) const;
+    QList<AgendaItem::QPtr> agendaItems( const QString &uid ) const;
 
   public Q_SLOTS:
     void scrollUp();
