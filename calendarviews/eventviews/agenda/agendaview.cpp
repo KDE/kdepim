@@ -307,6 +307,8 @@ QList<QDate> AgendaView::Private::generateDateList( const QDate &start,
 
 void AgendaView::Private::calendarIncidenceAdded( const KCalCore::Incidence::Ptr &incidence )
 {
+  Q_ASSERT( incidence );
+  Q_ASSERT( !incidence->uid().isEmpty() );
   Akonadi::Item item = q->calendar()->item( incidence->uid() );
 
   if ( item.isValid() ) {
@@ -314,11 +316,15 @@ void AgendaView::Private::calendarIncidenceAdded( const KCalCore::Incidence::Ptr
     q->displayIncidence( item, false );
     mAgenda->checkScrollBoundaries();
     q->updateEventIndicators();
+  } else {
+    kError() << "AgendaView::Private::calendarIncidenceAdded() Invalid item.";
   }
 }
 
 void AgendaView::Private::calendarIncidenceChanged( const KCalCore::Incidence::Ptr &incidence )
 {
+  Q_ASSERT( incidence );
+  Q_ASSERT( !incidence->uid().isEmpty() );
   Akonadi::Item item = q->calendar()->item( incidence->uid() );
 
   if ( item.isValid() ) {
@@ -327,6 +333,8 @@ void AgendaView::Private::calendarIncidenceChanged( const KCalCore::Incidence::P
     q->displayIncidence( item, false );
     mAgenda->checkScrollBoundaries();
     q->updateEventIndicators();   
+  } else {
+    kError() << "AgendaView::Private::calendarIncidenceChanged() Invalid item.";
   }
   // No need to call setChanges(), that triggers a fillAgenda()
   // setChanges( q->changes() | IncidencesEdited, CalendarSupport::incidence( incidence ) );
@@ -334,12 +342,16 @@ void AgendaView::Private::calendarIncidenceChanged( const KCalCore::Incidence::P
 
 void AgendaView::Private::calendarIncidenceDeleted( const KCalCore::Incidence::Ptr &incidence )
 {
+  Q_ASSERT( incidence );
+  Q_ASSERT( !incidence->uid().isEmpty() );
   if ( !incidence->uid().isEmpty() ) {
     // No need to call setChanges(), that triggers a fillAgenda()
     mAgenda->removeIncidence( incidence->uid() );
     mAllDayAgenda->removeIncidence( incidence->uid() );
     mAgenda->checkScrollBoundaries();
     q->updateEventIndicators();
+  } else {
+    kError() << "AgendaView::Private::calendarIncidenceDeleted() Invalid item.";
   }
 
   //setChanges( q->changes() | IncidencesDeleted, CalendarSupport::incidence( incidence ) );
@@ -1592,10 +1604,8 @@ void AgendaView::displayIncidence( const Akonadi::Item &aitem, bool createSelect
   firstVisibleDateTime.setTime( QTime( 0, 0 ) );
   KCalCore::DateTimeList dateTimeList;
 
-  const KDateTime incDtStart =
-    incidence->dtStart().toTimeSpec( timeSpec );
-  const KDateTime incDtEnd =
-    incidence->dateTime( KCalCore::Incidence::RoleEnd ).toTimeSpec( timeSpec );
+  const KDateTime incDtStart = incidence->dtStart().toTimeSpec( timeSpec );
+  const KDateTime incDtEnd = incidence->dateTime( KCalCore::Incidence::RoleEnd ).toTimeSpec( timeSpec );
 
   if ( todo && ( !preferences()->showTodosAgendaView() || !todo->hasDueDate() ) ) {
     return;

@@ -334,6 +334,14 @@ void EditorItemManager::save()
       d->mChanger->modifyIncidence( d->mItem, oldPayload );
     } else {
       Q_ASSERT( d->mItemUi->selectedCollection().isValid() );
+      Q_ASSERT( d->mItem.parentCollection().isValid() );
+
+      // ETM and the KSelectionProxyModel has a bug wrt collections moves, so this is disabled.
+      // To test this, enable the collection combo-box and remove the following assert.
+      kError() << "Moving between collections is disabled for now: "
+               << d->mItemUi->selectedCollection().id()
+               << d->mItem.parentCollection().id();
+      Q_ASSERT_X( false, "save()", "Moving between collections is disabled for now" );
 
       if ( d->mItemUi->isDirty() ) {
         d->mChanger->modifyIncidence( d->mItem, oldPayload );
