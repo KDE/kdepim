@@ -42,7 +42,6 @@ class CollectionComboBox;
 namespace IncidenceEditorNG {
 class IncidenceAttendee;
 class IncidenceDateTime;
-class InvitationDispatcher;
 }
 
 class MobileIncidenceGeneral;
@@ -111,7 +110,7 @@ class IncidenceView : public KDeclarativeFullScreenView, public IncidenceEditorN
     KDateComboBox *mDateWidget;
     KTimeComboBox *mTimeWidget;
 
-    IncidenceEditorNG::InvitationDispatcher *mInvitationDispatcher;
+    //IncidenceEditorNG::InvitationDispatcher *mInvitationDispatcher; //TODO_SERGIO
     IncidenceEditorNG::IncidenceAttendee *mIncidenceAttendee;
 };
 

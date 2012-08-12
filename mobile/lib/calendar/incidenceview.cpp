@@ -53,7 +53,6 @@
 #include <incidenceeditor-ng/incidencewhatwhere.h>
 #include <incidenceeditor-ng/incidencerecurrence.h>
 #include <incidenceeditor-ng/incidencesecrecy.h>
-#include <incidenceeditor-ng/invitationdispatcher.h>
 
 #include <KMessageBox>
 
@@ -72,7 +71,6 @@ IncidenceView::IncidenceView( QWidget* parent )
   , mIncidenceGeneral( 0 )
   , mDateWidget( 0 )
   , mTimeWidget( 0 )
-  , mInvitationDispatcher( 0 )
   , mIncidenceAttendee( 0 )
 {
   setAttribute(Qt::WA_DeleteOnClose);
@@ -80,8 +78,9 @@ IncidenceView::IncidenceView( QWidget* parent )
   context->setContextProperty( "_incidenceview", this );
 
   if ( KCalPrefs::instance()->useGroupwareCommunication() ) {
-    mInvitationDispatcher = new InvitationDispatcher( Akonadi::ETMCalendar::Ptr(), this );
-    mInvitationDispatcher->setItemManager( mItemManager );
+    //TODO_SERGIO
+    //mInvitationDispatcher = new InvitationDispatcher( Akonadi::ETMCalendar::Ptr(), this );
+    //mInvitationDispatcher->setItemManager( mItemManager );
   }
 }
 
@@ -274,7 +273,8 @@ void IncidenceView::setDefaultCollection( const Akonadi::Collection &collection 
 void IncidenceView::setIsCounterProposal( bool isCounterProposal )
 {
   mItemManager->setIsCounterProposal( isCounterProposal );
-  mInvitationDispatcher->setIsCounterProposal( isCounterProposal );
+  //TODO_SERGIO
+  //mInvitationDispatcher->setIsCounterProposal( isCounterProposal );
 }
 
 /// ItemEditorUi methods
