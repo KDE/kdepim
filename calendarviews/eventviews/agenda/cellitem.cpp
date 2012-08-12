@@ -35,8 +35,6 @@ QString CellItem::label() const
 
 QList<CellItem*> CellItem::placeItem( QList<CellItem*> cells, CellItem *placeItem )
 {
-  kDebug(5855) << "Placing" << placeItem->label();
-
   QList<CellItem*> conflictItems;
   int maxSubCells = 0;
   QMultiHash<int,CellItem*> subCellDict;
