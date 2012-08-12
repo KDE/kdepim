@@ -87,7 +87,6 @@ QList<CellItem*> CellItem::placeItem( QList<CellItem*> cells, CellItem *placeIte
     }
     // Todo: Adapt subCells of items conflicting with conflicting items
   } else {
-    kDebug(5855) << "  no conflicts";
     placeItem->setSubCell( 0 );
     placeItem->setSubCells( 1 );
   }
