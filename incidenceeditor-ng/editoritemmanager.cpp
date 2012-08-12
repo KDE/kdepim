@@ -57,7 +57,7 @@ class ItemEditorPrivate
     Akonadi::IncidenceChanger *mChanger;
 
   public:
-    ItemEditorPrivate( EditorItemManager *qq );
+    ItemEditorPrivate( Akonadi::IncidenceChanger *changer, EditorItemManager *qq );
     void itemChanged( const Akonadi::Item &, const QSet<QByteArray> & );
     void itemFetchResult( KJob *job );
     void itemMoveResult( KJob *job );
@@ -74,12 +74,14 @@ class ItemEditorPrivate
     void moveJobFinished( KJob *job );
 };
 
-ItemEditorPrivate::ItemEditorPrivate( EditorItemManager *qq )
+ItemEditorPrivate::ItemEditorPrivate( Akonadi::IncidenceChanger *changer, EditorItemManager *qq )
   : q_ptr( qq ), mItemMonitor( 0 ), mIsCounterProposal( false )
 {
   mFetchScope.fetchFullPayload();
   mFetchScope.setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
-  mChanger = new Akonadi::IncidenceChanger( qq );
+
+  mChanger = changer ? changer : new Akonadi::IncidenceChanger( qq );
+
   qq->connect( mChanger,
               SIGNAL(modifyFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)),
               qq, SLOT(onModifyFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)) );
@@ -245,8 +247,8 @@ void ItemEditorPrivate::itemChanged( const Akonadi::Item &item,
 
 /// ItemEditor
 
-EditorItemManager::EditorItemManager( ItemEditorUi *ui )
-  : d_ptr( new ItemEditorPrivate( this ) )
+EditorItemManager::EditorItemManager( ItemEditorUi *ui, Akonadi::IncidenceChanger *changer )
+  : d_ptr( new ItemEditorPrivate( changer, this ) )
 {
   Q_D( ItemEditor );
   d->mItemUi = ui;

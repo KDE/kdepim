@@ -81,7 +81,7 @@ class EventOrTodoDialogPrivate : public ItemEditorUi
     QString typeToString( const int type ) const;
 
   public:
-    EventOrTodoDialogPrivate( EventOrTodoDialog *qq );
+    EventOrTodoDialogPrivate( Akonadi::IncidenceChanger *changer, EventOrTodoDialog *qq );
     ~EventOrTodoDialogPrivate();
 
     /// General methods
@@ -112,12 +112,13 @@ class EventOrTodoDialogPrivate : public ItemEditorUi
 
 }
 
-EventOrTodoDialogPrivate::EventOrTodoDialogPrivate( EventOrTodoDialog *qq )
+EventOrTodoDialogPrivate::EventOrTodoDialogPrivate( Akonadi::IncidenceChanger *changer,
+                                                    EventOrTodoDialog *qq )
   : q_ptr( qq ),
     mUi( new Ui::EventOrTodoDesktop ),
     mCalSelector( new Akonadi::CollectionComboBox ),
     mCloseOnSave( false ),
-    mItemManager( new EditorItemManager( this ) ),
+    mItemManager( new EditorItemManager( this, changer ) ),
     mEditor( new CombinedIncidenceEditor ),
     mInitiallyDirty( false )
 {
@@ -590,8 +591,9 @@ void EventOrTodoDialogPrivate::reject( RejectReason reason, const QString &error
 
 /// EventOrTodoDialog
 
-EventOrTodoDialog::EventOrTodoDialog( QWidget *parent, Qt::WFlags flags )
-  : IncidenceDialog( parent, flags ), d_ptr( new EventOrTodoDialogPrivate( this ) )
+EventOrTodoDialog::EventOrTodoDialog( Akonadi::IncidenceChanger *changer,
+                                      QWidget *parent, Qt::WFlags flags )
+  : IncidenceDialog( parent, flags ), d_ptr( new EventOrTodoDialogPrivate( changer, this ) )
 {
   Q_D( EventOrTodoDialog );
 
@@ -666,7 +668,7 @@ void EventOrTodoDialog::selectCollection( const Akonadi::Collection &collection 
 
 void EventOrTodoDialog::setIsCounterProposal( bool isCounterProposal )
 {
-  Q_D( EventOrTodoDialog );
+  //Q_D( EventOrTodoDialog );
   //d->mInvitationDispatcher->setIsCounterProposal( isCounterProposal ); TODO_SERGIO
 }
 

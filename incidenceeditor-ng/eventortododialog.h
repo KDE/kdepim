@@ -25,6 +25,10 @@
 #include "editoritemmanager.h"
 #include "incidencedialog.h"
 
+namespace Akonadi {
+  class IncidenceChanger;
+}
+
 namespace IncidenceEditorNG {
 
 class EventOrTodoDialogPrivate;
@@ -33,7 +37,8 @@ class INCIDENCEEDITORS_NG_EXPORT EventOrTodoDialog : public IncidenceDialog
 {
   Q_OBJECT
   public:
-    explicit EventOrTodoDialog( QWidget *parent = 0, Qt::WFlags flags = 0 );
+    explicit EventOrTodoDialog( Akonadi::IncidenceChanger *changer = 0,
+                                QWidget *parent = 0, Qt::WFlags flags = 0 );
     ~EventOrTodoDialog();
 
     /**

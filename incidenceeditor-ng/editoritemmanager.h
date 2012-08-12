@@ -53,8 +53,10 @@ class INCIDENCEEDITORS_NG_EXPORT EditorItemManager : public QObject
   public:
     /**
      * Creates an ItemEditor for a new Item.
+     * Receives an option IncidenceChanger, so you can share the undo/redo stack with your
+     * application.
      */
-    EditorItemManager( ItemEditorUi *ui );
+    EditorItemManager( ItemEditorUi *ui, Akonadi::IncidenceChanger *changer = 0 );
 
     /**
      * Destructs the ItemEditor. Unsaved changes will get lost at this point.
