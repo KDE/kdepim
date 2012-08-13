@@ -319,7 +319,7 @@ void EditorItemManager::save()
     return;
   }
 
-  d->mChanger->setGroupwareCommuniation( CalendarSupport::KCalPrefs::instance()->useGroupwareCommunication() );
+  d->mChanger->setGroupwareCommunication( CalendarSupport::KCalPrefs::instance()->useGroupwareCommunication() );
 
   Akonadi::Item updateItem = d->mItemUi->save( d->mItem );
   Q_ASSERT( updateItem.id() == d->mItem.id() );
