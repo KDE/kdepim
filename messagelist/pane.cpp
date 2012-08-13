@@ -33,6 +33,8 @@
 #include <QtGui/QMouseEvent>
 #include <QHeaderView>
 
+#include <akonadi/etmviewstatesaver.h>
+
 #include "storagemodel.h"
 #include "widget.h"
 #include "core/settings.h"
@@ -643,7 +645,7 @@ void Pane::updateTabIconText( const Akonadi::Collection &collection, const QStri
   }
 }
 
-void Pane::createNewTab()
+QItemSelectionModel *Pane::createNewTab()
 {
   Widget * w = new Widget( this );
   w->setXmlGuiClient( d->mXmlGuiClient );
@@ -670,6 +672,7 @@ void Pane::createNewTab()
   connect( w, SIGNAL(fullSearchRequest()), this, SIGNAL(fullSearchRequest()) );
   d->updateTabControls();
   setCurrentWidget( w );
+  return s;
 }
 
 QItemSelection Pane::Private::mapSelectionToSource( const QItemSelection &selection ) const
@@ -960,6 +963,7 @@ void Pane::writeConfig()
   conf.sync();
 }
 
+
 void Pane::readConfig()
 {
   if(MessageList::Core::Settings::self()->config()->hasGroup(QLatin1String("MessageListPane"))) {
@@ -972,9 +976,17 @@ void Pane::readConfig()
       {
         KConfigGroup grp(MessageList::Core::Settings::self()->config(),QString::fromLatin1("MessageListTab%1").arg(i));
         Akonadi::Collection::Id id = grp.readEntry(QLatin1String("collectionId"),-1);
-        createNewTab();
-        if(id != -1)
-          setCurrentFolder(Akonadi::Collection(id));
+        QItemSelectionModel *selectionModel = createNewTab();
+        ETMViewStateSaver *saver = new ETMViewStateSaver;
+        saver->setSelectionModel(selectionModel);
+
+        if(id != -1) {
+            ETMViewStateSaver *saver = new ETMViewStateSaver;
+            saver->setSelectionModel(selectionModel);
+            saver->restoreState( grp );
+            saver->selectCollections(Akonadi::Collection::List()<<Akonadi::Collection(id));
+        }
+
         Widget *w = qobject_cast<Widget *>( widget( i ) );
         w->view()->header()->restoreState(grp.readEntry(QLatin1String("HeaderState"),QByteArray()));
       }
