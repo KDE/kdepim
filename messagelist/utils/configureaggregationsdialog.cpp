@@ -59,9 +59,9 @@ public:
 
 public:
   Core::Aggregation * aggregation() const
-    { return mAggregation; };
+    { return mAggregation; }
   void forgetAggregation()
-    { mAggregation = 0; };
+    { mAggregation = 0; }
 };
 
 /**
