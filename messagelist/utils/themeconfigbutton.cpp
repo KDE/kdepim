@@ -42,6 +42,22 @@ public:
   void slotConfigureThemes();
 };
 
+void ThemeConfigButtonPrivate::slotConfigureThemes()
+{
+  QString currentThemeID;
+  if ( mThemeComboBox != 0 )
+    currentThemeID = mThemeComboBox->currentTheme();
+
+  ConfigureThemesDialog *dialog = new ConfigureThemesDialog( q->window() );
+  dialog->selectTheme( currentThemeID );
+
+  QObject::connect( dialog, SIGNAL(okClicked()),
+                    q, SIGNAL(configureDialogCompleted()) );
+
+  dialog->show();
+}
+
+
 ThemeConfigButton::ThemeConfigButton( QWidget * parent, const ThemeComboBox * themeComboBox )
 : KPushButton( i18n( "Configure..." ), parent ), d( new ThemeConfigButtonPrivate( this ) )
 {
@@ -60,19 +76,5 @@ ThemeConfigButton::~ThemeConfigButton()
   delete d;
 }
 
-void ThemeConfigButtonPrivate::slotConfigureThemes()
-{
-  QString currentThemeID;
-  if ( mThemeComboBox != 0 )
-    currentThemeID = mThemeComboBox->currentTheme();
-
-  ConfigureThemesDialog *dialog = new ConfigureThemesDialog( q->window() );
-  dialog->selectTheme( currentThemeID );
-
-  QObject::connect( dialog, SIGNAL(okClicked()),
-                    q, SIGNAL(configureDialogCompleted()) );
-
-  dialog->show();
-}
 
 #include "themeconfigbutton.moc"
