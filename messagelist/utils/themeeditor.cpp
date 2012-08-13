@@ -160,7 +160,7 @@ void ThemeContentItemSourceLabel::mouseMoveEvent( QMouseEvent * e )
 {
   if ( e->buttons() & Qt::LeftButton )
   {
-    QPoint diff = mMousePressPoint - e->pos();
+    const QPoint diff = mMousePressPoint - e->pos();
     if ( diff.manhattanLength() > 4 )
       startDrag();
   }
@@ -289,7 +289,6 @@ QSize ThemePreviewWidget::sizeHint() const
 void ThemePreviewWidget::setReadOnly( bool readOnly )
 {
   mReadOnly = readOnly;
-  //header()->setMovable(!readOnly);
 }
 
 void ThemePreviewWidget::applyThemeColumnWidths()
@@ -794,7 +793,7 @@ void ThemePreviewWidget::mouseMoveEvent( QMouseEvent * e )
   }
 
   // starting a drag ?
-  QPoint diff = e->pos() - mMouseDownPoint;
+  const QPoint diff = e->pos() - mMouseDownPoint;
   if ( diff.manhattanLength() <= 4 )
   {
     QTreeWidget::mouseMoveEvent( e );
