@@ -406,7 +406,7 @@ void Pane::Private::onSelectionChanged( const QItemSelection &selected, const QI
   s->select( mapSelectionToSource( deselected ), QItemSelectionModel::Deselect );
 
   QString label;
-  QIcon icon = KIcon( QLatin1String( "folder" ) );
+  QIcon icon;
   QString toolTip;
   foreach ( const QModelIndex &index, s->selectedRows() ) {
     label+= index.data( Qt::DisplayRole ).toString()+QLatin1String( ", " );
@@ -424,6 +424,8 @@ void Pane::Private::onSelectionChanged( const QItemSelection &selected, const QI
       toolTip = idx.data().toString() + QLatin1Char( '/' ) + toolTip;
       idx = idx.parent();
     }
+  } else {
+     icon = KIcon( QLatin1String( "folder" ) );
   }
 
   int index = q->indexOf( w );
