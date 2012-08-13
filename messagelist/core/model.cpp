@@ -211,7 +211,7 @@ public:
       mInvariantIndexList( 0 ),
       mChunkTimeout( chunkTimeout ), mIdleInterval( idleInterval ),
       mMessageCheckCount( messageCheckCount ), mCurrentPass( Pass1Fill ),
-      mDisconnectUI( disconnectUI ) {};
+      mDisconnectUI( disconnectUI ) {}
 
   /**
    * Creates a "View Cleanup" or "View Update" operation job
@@ -221,7 +221,7 @@ public:
       mInvariantIndexList( invariantIndexList ),
       mChunkTimeout( chunkTimeout ), mIdleInterval( idleInterval ),
       mMessageCheckCount( messageCheckCount ), mCurrentPass( pass ),
-      mDisconnectUI( false ) {};
+      mDisconnectUI( false ) {}
 
   ~ViewItemJob()
   {
@@ -229,31 +229,31 @@ public:
   }
 public:
   int startIndex() const
-    { return mStartIndex; };
+    { return mStartIndex; }
   void setStartIndex( int startIndex )
-    { mStartIndex = startIndex; mCurrentIndex = startIndex; };
+    { mStartIndex = startIndex; mCurrentIndex = startIndex; }
   int currentIndex() const
-    { return mCurrentIndex; };
+    { return mCurrentIndex; }
   void setCurrentIndex( int currentIndex )
-    { mCurrentIndex = currentIndex; };
+    { mCurrentIndex = currentIndex; }
   int endIndex() const
-    { return mEndIndex; };
+    { return mEndIndex; }
   void setEndIndex( int endIndex )
-    { mEndIndex = endIndex; };
+    { mEndIndex = endIndex; }
   Pass currentPass() const
-    { return mCurrentPass; };
+    { return mCurrentPass; }
   void setCurrentPass( Pass pass )
-    { mCurrentPass = pass; };
+    { mCurrentPass = pass; }
   int idleInterval() const
-    { return mIdleInterval; };
+    { return mIdleInterval; }
   int chunkTimeout() const
-    { return mChunkTimeout; };
+    { return mChunkTimeout; }
   int messageCheckCount() const
-    { return mMessageCheckCount; };
+    { return mMessageCheckCount; }
   QList< ModelInvariantIndex * > * invariantIndexList() const
-    { return mInvariantIndexList; };
+    { return mInvariantIndexList; }
   bool disconnectUI() const
-    { return mDisconnectUI; };
+    { return mDisconnectUI; }
 };
 
 } // namespace Core
