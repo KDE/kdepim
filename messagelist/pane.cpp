@@ -430,7 +430,7 @@ void Pane::Private::onSelectionChanged( const QItemSelection &selected, const QI
      icon = KIcon( QLatin1String( "folder" ) );
   }
 
-  int index = q->indexOf( w );
+  const int index = q->indexOf( w );
   q->setTabText( index, label );
   q->setTabIcon( index, icon );
   q->setTabToolTip( index, toolTip);
@@ -572,10 +572,10 @@ void Pane::Private::onCurrentTabChanged()
 void Pane::Private::onTabContextMenuRequest( const QPoint &pos )
 {
   QTabBar *bar = q->tabBar();
-  int index = bar->tabAt( bar->mapFrom( q, pos ) );
-  if ( index == -1 ) return;
+  const int indexBar = bar->tabAt( bar->mapFrom( q, pos ) );
+  if ( indexBar == -1 ) return;
 
-  Widget *w = qobject_cast<Widget *>( q->widget( index ) );
+  Widget *w = qobject_cast<Widget *>( q->widget( indexBar ) );
   if ( !w ) return;
 
   KMenu menu( q );
@@ -595,7 +595,7 @@ void Pane::Private::onTabContextMenuRequest( const QPoint &pos )
 
   if ( action == allOther ) { // Close all other tabs
     QList<Widget *> widgets;
-    int index = q->indexOf( w );
+    const int index = q->indexOf( w );
 
     for ( int i=0; i<q->count(); i++ ) {
       if ( i==index) continue; // Skip the current one
