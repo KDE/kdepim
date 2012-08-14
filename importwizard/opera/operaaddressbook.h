@@ -28,6 +28,8 @@ class OperaAddressBook : public AbstractAddressBook
 public:
   explicit OperaAddressBook(const QString &filename, ImportWizard *parent);
   ~OperaAddressBook();
+private:
+  void readContact();
 };
 
 #endif // OPERAADDRESSBOOK_H

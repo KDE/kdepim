@@ -16,14 +16,37 @@
 */
 
 #include "operaaddressbook.h"
+#include <QDebug>
+#include <QFile>
 
 OperaAddressBook::OperaAddressBook(const QString &filename, ImportWizard *parent)
   : AbstractAddressBook( parent )
 {
-    //TODO
+  QFile file(filename);
+  if ( !file.open( QIODevice::ReadOnly ) ) {
+    kDebug()<<" We can't open file"<<filename;
+    return;
+  }
+
+  QTextStream stream(&file);
+  while ( !stream.atEnd() ) {
+    const QString line = stream.readLine();
+    if(line == QLatin1String("#CONTACT")) {
+        readContact();
+    } else if(line == QLatin1String("#FOLDER")) {
+        //TODO
+    } else {
+        qDebug()<<" line :"<<line;
+    }
+  }
 }
 
 OperaAddressBook::~OperaAddressBook()
+{
+
+}
+
+void OperaAddressBook::readContact()
 {
 
 }
