@@ -55,20 +55,35 @@ OperaSettings::~OperaSettings()
 void OperaSettings::readAccount(const KConfigGroup &grp)
 {
   const QString incomingProtocol = grp.readEntry(QLatin1String("Incoming Protocol"));
-  const QString outgoingProtocol = grp.readEntry(QLatin1String("Outgoing Protocol"));
+  QMap<QString, QVariant> settings;
+  if(incomingProtocol == QLatin1String("IMAP")) {
+
+  } else {
+      qDebug()<<" protocol unknown : "<<incomingProtocol;
+  }
   //TODO
 }
 
 void OperaSettings::readTransport(const KConfigGroup &grp)
 {
-  MailTransport::Transport *mt = createTransport();
-  storeTransport( mt, /*( smtp == defaultSmtp )*/true ); //FIXME:
+  const QString outgoingProtocol = grp.readEntry(QLatin1String("Outgoing Protocol"));
+  if(outgoingProtocol == QLatin1String("SMTP")) {
+      MailTransport::Transport *mt = createTransport();
+      storeTransport( mt, /*( smtp == defaultSmtp )*/true ); //FIXME:
+  }
 }
 
 void OperaSettings::readIdentity(const KConfigGroup &grp)
 {
     KPIMIdentities::Identity* newIdentity = createIdentity();
     //TODO
+    const QString cc = grp.readEntry(QLatin1String("Auto CC"));
+    const QString bcc = grp.readEntry(QLatin1String("Auto BCC"));
+    const QString replyTo = grp.readEntry(QLatin1String("Replyto"));
+    const QString realName = grp.readEntry(QLatin1String("Real Name"));
+    const QString email = grp.readEntry(QLatin1String("Real Name"));
+    const QString organization = grp.readEntry(QLatin1String("Organization"));
+
     storeIdentity(newIdentity);
 }
 
