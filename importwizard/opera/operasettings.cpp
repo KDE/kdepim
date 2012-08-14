@@ -16,6 +16,14 @@
 */
 
 #include "operasettings.h"
+
+#include <mailtransport/transportmanager.h>
+#include "mailcommon/mailutil.h"
+
+#include <kpimidentities/identity.h>
+#include <kpimidentities/signature.h>
+
+
 #include <KConfig>
 #include <KConfigGroup>
 #include <QFile>
@@ -33,6 +41,8 @@ OperaSettings::OperaSettings(const QString &filename, ImportWizard *parent)
     {
       KConfigGroup group = config.group( *it );
       readAccount( group );
+      readTransport(group);
+      readIdentity(group);
     }
   }
 }
@@ -49,7 +59,17 @@ void OperaSettings::readAccount(const KConfigGroup &grp)
   //TODO
 }
 
+void OperaSettings::readTransport(const KConfigGroup &grp)
+{
+
+}
+
+void OperaSettings::readIdentity(const KConfigGroup &grp)
+{
+
+}
+
 void OperaSettings::readGlobalAccount(const KConfigGroup &grp)
 {
-    //TODO
+  //TODO
 }

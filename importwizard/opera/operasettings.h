@@ -30,7 +30,9 @@ public:
   ~OperaSettings();
 private:
   void readAccount(const KConfigGroup &grp);
+  void readTransport(const KConfigGroup &grp);
   void readGlobalAccount(const KConfigGroup &grp);
+  void readIdentity(const KConfigGroup &grp);
 };
 
 #endif // OPERASETTINGS_H
