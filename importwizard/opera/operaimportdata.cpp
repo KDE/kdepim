@@ -30,7 +30,7 @@
 OperaImportData::OperaImportData(ImportWizard*parent)
   :AbstractImporter(parent)
 {
-  mPath = MailImporter::FilterOpera::defaultPath();
+  mPath = MailImporter::FilterOpera::defaultPath() + QLatin1String("mail/store/");
 }
 
 OperaImportData::~OperaImportData()
