@@ -33,6 +33,7 @@ evolutionv3/evolutionutil.cpp
 evolutionv2/evolutionv2importdata.cpp
 evolutionv1/evolutionv1importdata.cpp
 opera/operaimportdata.cpp
+opera/operaaddressbook.cpp
 oe/oeimportdata.cpp
 mailapp/mailappimportdata.cpp
 pmail/pmailimportdata.cpp
