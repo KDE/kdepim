@@ -61,12 +61,15 @@ void OperaSettings::readAccount(const KConfigGroup &grp)
 
 void OperaSettings::readTransport(const KConfigGroup &grp)
 {
-
+  MailTransport::Transport *mt = createTransport();
+  storeTransport( mt, /*( smtp == defaultSmtp )*/true ); //FIXME:
 }
 
 void OperaSettings::readIdentity(const KConfigGroup &grp)
 {
-
+    KPIMIdentities::Identity* newIdentity = createIdentity();
+    //TODO
+    storeIdentity(newIdentity);
 }
 
 void OperaSettings::readGlobalAccount(const KConfigGroup &grp)
