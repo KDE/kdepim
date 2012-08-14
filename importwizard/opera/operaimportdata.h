@@ -30,6 +30,9 @@ public:
   bool foundMailer() const;
   
   bool importMails();
+  bool importAddressBook();
+  bool importSettings();
+
   QString name() const;
 
 };

@@ -17,7 +17,7 @@
 
 #include "operaaddressbook.h"
 
-OperaAddressBook::OperaAddressBook(const QDir &dir, ImportWizard *parent)
+OperaAddressBook::OperaAddressBook(const QString &filename, ImportWizard *parent)
   : AbstractAddressBook( parent )
 {
     //TODO

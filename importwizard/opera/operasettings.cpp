@@ -16,13 +16,40 @@
 */
 
 #include "operasettings.h"
+#include <KConfig>
+#include <KConfigGroup>
+#include <QFile>
 
 OperaSettings::OperaSettings(const QString &filename, ImportWizard *parent)
   :AbstractSettings( parent )
 {
+  if(QFile( filename ).exists()) {
+    KConfig config( filename );
+    KConfigGroup grp = config.group(QLatin1String("Accounts"));
+    readGlobalAccount(grp);
+    const QStringList accountList = config.groupList().filter( QRegExp( "Account\\d+" ) );
+    const QStringList::const_iterator end( accountList.constEnd() );
+    for ( QStringList::const_iterator it = accountList.constBegin(); it!=end; ++it )
+    {
+      KConfigGroup group = config.group( *it );
+      readAccount( group );
+    }
+  }
 }
 
 OperaSettings::~OperaSettings()
 {
 
+}
+
+void OperaSettings::readAccount(const KConfigGroup &grp)
+{
+  const QString incomingProtocol = grp.readEntry(QLatin1String("Incoming Protocol"));
+  const QString outgoingProtocol = grp.readEntry(QLatin1String("Outgoing Protocol"));
+  //TODO
+}
+
+void OperaSettings::readGlobalAccount(const KConfigGroup &grp)
+{
+    //TODO
 }

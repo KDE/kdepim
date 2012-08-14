@@ -21,12 +21,16 @@
 #include "abstractsettings.h"
 
 class ImportWizard;
+class KConfigGroup;
 
 class OperaSettings : public AbstractSettings
 {
 public:
   explicit OperaSettings(const QString& filename, ImportWizard *parent);
   ~OperaSettings();
+private:
+  void readAccount(const KConfigGroup &grp);
+  void readGlobalAccount(const KConfigGroup &grp);
 };
 
 #endif // OPERASETTINGS_H

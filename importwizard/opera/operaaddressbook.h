@@ -26,7 +26,7 @@ class QDir;
 class OperaAddressBook : public AbstractAddressBook
 {
 public:
-  explicit OperaAddressBook(const QDir &dir, ImportWizard *parent);
+  explicit OperaAddressBook(const QString &filename, ImportWizard *parent);
   ~OperaAddressBook();
 };
 
