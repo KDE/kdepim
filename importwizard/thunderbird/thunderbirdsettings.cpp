@@ -480,9 +480,6 @@ void ThunderbirdSettings::readIdentity( const QString& account )
   KPIMIdentities::Identity* newIdentity = createIdentity();
   const QString identity = QString::fromLatin1( "mail.identity.%1" ).arg( account );
   
-  const QString fcc = mHashConfig.value( identity + QLatin1String( ".fcc_folder" ) ).toString();
-
-
   const QString smtpServer = mHashConfig.value( identity + QLatin1String( ".smtpServer" ) ).toString();
   if(!smtpServer.isEmpty() && mHashSmtp.contains(smtpServer))
   {
