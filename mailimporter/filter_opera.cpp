@@ -42,7 +42,7 @@ FilterOpera::~FilterOpera()
 
 QString FilterOpera::defaultPath()
 {
-  return QDir::homePath() + QLatin1String("/.opera/mail/store/");;
+  return QDir::homePath() + QLatin1String("/.opera/mail/store/");
 }
 
 
