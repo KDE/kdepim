@@ -75,7 +75,7 @@ public:
    * May be 0.
    */
   Core::Aggregation * editedAggregation() const
-    { return mCurrentAggregation; };
+    { return mCurrentAggregation; }
 
   /**
    * Explicitly commits the changes in the editor to the edited Aggregation, if any.
