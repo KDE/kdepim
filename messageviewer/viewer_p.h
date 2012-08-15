@@ -280,7 +280,7 @@ private:
   void initHtmlWidget();
   void saveMimePartTreeConfig();
   void restoreMimePartTreeConfig();
-  void createOpenWithMenu( KMenu *topMenu, const QString &contentTypeStr );
+  void createOpenWithMenu( KMenu *topMenu, const QString &contentTypeStr, bool fromCurrentContent );
 public:
   /** Event filter */
   bool eventFilter( QObject *obj, QEvent *ev );
@@ -469,8 +469,13 @@ private slots:
   void slotMessageRendered();
   
   void slotOpenWithAction(QAction *act);
+
+  void slotOpenWithActionCurrentContent(QAction* act);
+
   void slotOpenWithDialog();
-  
+
+  void slotOpenWithDialogCurrentContent();
+
 
   void saveSplitterSizes() const;
 
