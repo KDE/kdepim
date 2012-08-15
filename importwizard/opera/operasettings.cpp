@@ -107,11 +107,12 @@ void OperaSettings::readTransport(const KConfigGroup &grp)
 void OperaSettings::readIdentity(const KConfigGroup &grp)
 {
     KPIMIdentities::Identity* newIdentity = createIdentity();
-    //TODO
     const QString cc = grp.readEntry(QLatin1String("Auto CC"));
     newIdentity->setCc( cc );
+
     const QString bcc = grp.readEntry(QLatin1String("Auto BCC"));
     newIdentity->setBcc( bcc );
+
     const QString replyTo = grp.readEntry(QLatin1String("Replyto"));
     if(!replyTo.isEmpty())
       newIdentity->setReplyToAddr( replyTo );
