@@ -74,12 +74,13 @@ class AggregationListWidget : public QListWidget
 public:
   AggregationListWidget( QWidget * parent )
     : QListWidget( parent )
-    {};
+  {
+  }
 public:
 
   // need a larger but shorter QListWidget
   QSize sizeHint() const
-    { return QSize( 450, 128 ); };
+    { return QSize( 450, 128 ); }
 };
 
 } // namespace Utils
@@ -307,7 +308,7 @@ QString ConfigureAggregationsDialog::Private::uniqueNameForAggregation( QString 
   while ( item )
   {
     idx++;
-    ret = QString(QLatin1String( "%1 %2" )).arg( baseName ).arg( idx );
+    ret = QString::fromLatin1( "%1 %2" ).arg( baseName ).arg( idx );
     item = findAggregationItemByName( ret, skipAggregation );
   }
   return ret;
