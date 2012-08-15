@@ -1203,10 +1203,12 @@ bool ObjectTreeParser::processTextHtmlSubtype( KMime::Content * curNode, Process
     if ( mSource->htmlMail() ) {
 
       HTMLQuoteColorer colorer;
+      QString extraHead;
       for ( int i = 0; i < 2; i++ )
         colorer.setQuoteColor( i, cssHelper()->quoteColor( i ) );
-      bodyText = colorer.process( bodyText );
+      bodyText = colorer.process( bodyText, extraHead );
       mNodeHelper->setNodeDisplayedEmbedded( curNode, true );
+      htmlWriter()->extraHead(extraHead);
 
       // Show the "external references" warning (with possibility to load
       // external references only if loading external references is disabled

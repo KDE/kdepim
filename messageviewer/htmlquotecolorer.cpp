@@ -35,7 +35,7 @@ HTMLQuoteColorer::HTMLQuoteColorer()
 {
 }
 
-QString HTMLQuoteColorer::process( const QString &htmlSource )
+QString HTMLQuoteColorer::process( const QString &htmlSource, QString&extraHead )
 {
 #ifndef KDEPIM_NO_WEBKIT
   // Create a DOM Document from the HTML source
@@ -48,7 +48,7 @@ QString HTMLQuoteColorer::process( const QString &htmlSource )
 
   QWebFrame *frame = page.mainFrame();
   frame->setHtml( htmlSource );
-  
+ 
   QString script(
    "mIsQuotedLine = false;\n"
    "mIsFirstTextNodeInLine = true;\n"
@@ -132,7 +132,10 @@ QString HTMLQuoteColorer::process( const QString &htmlSource )
 
   frame->evaluateJavaScript( script );
   const QWebElement body = frame->documentElement().findFirst("body");
-  
+  const QWebElement header = frame->documentElement().findFirst("head");
+
+  extraHead = header.toInnerXml();
+
   return body.toInnerXml();
 #else
   return htmlSource;

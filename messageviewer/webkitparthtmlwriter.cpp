@@ -83,6 +83,10 @@ void WebKitPartHtmlWriter::end() {
   if ( mState != Begun ) {
     kWarning() << "Called on non-begun or queued session!";
   }
+  if(!mExtraHead.isEmpty()) {
+    insertExtraHead();
+    mExtraHead.clear();
+  }
   mHtmlView->setHtml( mHtml, QUrl( "file:///" ) );
   mHtmlView->show();
   mHtml.clear();
@@ -149,5 +153,18 @@ void WebKitPartHtmlWriter::resolveCidUrls()
 #endif
 }
 
+void WebKitPartHtmlWriter::insertExtraHead()
+{
+  const QString headTag("<head>");
+  const int index = mHtml.indexOf(headTag);
+  if(index!=-1) {
+    mHtml.insert(index+headTag.length(),mExtraHead);
+  }
+}
+
+void WebKitPartHtmlWriter::extraHead( const QString& str )
+{
+    mExtraHead = str;
+}
 
 #include "webkitparthtmlwriter.moc"
