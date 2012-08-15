@@ -60,6 +60,10 @@ void OperaSettings::readAccount(const KConfigGroup &grp)
   const QString serverName = grp.readEntry(QLatin1String("Incoming Servername"));
   const QString userName = grp.readEntry(QLatin1String("Incoming Username"));
 
+  const int secure = grp.readEntry(QLatin1String("Secure Connection In"),-1);
+
+  const int authMethod = grp.readEntry(QLatin1String("Incoming Authentication Method"),-1);
+
   QString name; //FIXME
 
   QMap<QString, QVariant> settings;
@@ -69,7 +73,11 @@ void OperaSettings::readAccount(const KConfigGroup &grp)
       if ( port != -1 ) {
         settings.insert( QLatin1String( "ImapPort" ), port );
       }
-
+      if(secure == 1) {
+        settings.insert( QLatin1String( "Safety" ), QLatin1String("STARTTLS") );
+      } else if( secure == 0) {
+        settings.insert( QLatin1String( "Safety" ), QLatin1String("None") );
+      }
       const QString agentIdentifyName = AbstractBase::createResource( "akonadi_imap_resource", name,settings );
       //TODO
       //addCheckMailOnStartup(agentIdentifyName,loginAtStartup);
@@ -80,7 +88,35 @@ void OperaSettings::readAccount(const KConfigGroup &grp)
         settings.insert( QLatin1String( "Port" ), port );
       }
       const int delay = grp.readEntry(QLatin1String("Initial Poll Delay"),-1);
+
+      if(secure == 1)
+        settings.insert( QLatin1String( "UseTLS" ), true );
+
+      //TODO
+      switch(authMethod) {
+      case 0: //NONE
+        settings.insert(QLatin1String( "AuthenticationMethod" ), MailTransport::Transport::EnumAuthenticationType::ANONYMOUS);
+        break;
+      case 1: //Clear Text
+        settings.insert(QLatin1String( "AuthenticationMethod" ), MailTransport::Transport::EnumAuthenticationType::CLEAR); //Verify
+        break;
+      case 6: //APOP
+        settings.insert(QLatin1String( "AuthenticationMethod" ), MailTransport::Transport::EnumAuthenticationType::APOP);
+        break;
+      case 10: //CRAM-MD5
+        settings.insert(QLatin1String( "AuthenticationMethod" ), MailTransport::Transport::EnumAuthenticationType::CRAM_MD5);
+        break;
+      case 31: //Automatic
+          settings.insert(QLatin1String( "AuthenticationMethod" ), MailTransport::Transport::EnumAuthenticationType::APOP); //TODO: verify
+        break;
+      default:
+        qDebug()<<" unknown authentification method :"<<authMethod;
+        break;
+      }
+
       const QString agentIdentifyName = AbstractBase::createResource( "akonadi_pop3_resource", name, settings );
+      //TODO
+      //addCheckMailOnStartup(agentIdentifyName,loginAtStartup);
   } else {
       qDebug()<<" protocol unknown : "<<incomingProtocol;
   }
@@ -91,6 +127,7 @@ void OperaSettings::readTransport(const KConfigGroup &grp)
 {
   const QString outgoingProtocol = grp.readEntry(QLatin1String("Outgoing Protocol"));
   if(outgoingProtocol == QLatin1String("SMTP")) {
+      const int authMethod = grp.readEntry(QLatin1String("Outgoing Authentication Method"),-1);
       MailTransport::Transport *mt = createTransport();
       const int port = grp.readEntry(QLatin1String("Outgoing Port"), -1);
       if ( port > 0 )
@@ -103,10 +140,15 @@ void OperaSettings::readTransport(const KConfigGroup &grp)
       if(!userName.isEmpty())
           mt->setUserName( userName );
 
-      const int authMethod =  grp.readEntry(QLatin1String("Outgoing Authentication Method"),-1);
-      //TODO verify authMethod
-
       const int outgoingTimeOut = grp.readEntry(QLatin1String("Outgoing Timeout"),-1); //TODO ?
+
+      //TODO
+      switch(authMethod) {
+      case 0:
+          break;
+      default:
+          qDebug()<<" authMethod unknown :"<<authMethod;
+      }
 
       storeTransport( mt, /*( smtp == defaultSmtp )*/true ); //FIXME:
   }
