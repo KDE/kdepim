@@ -58,9 +58,6 @@ void ComboBoxUtils::fillIntegerOptionCombo( KComboBox *combo, const QList< QPair
 
 void ComboBoxUtils::setIntegerOptionComboValue( KComboBox *combo, int value )
 {
-  if ( !combo->isEnabled() )
-    return;
-
   if(combo->itemData(combo->currentIndex()).toInt() == value) {
     return;
   }
