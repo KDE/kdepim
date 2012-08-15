@@ -234,7 +234,8 @@ void ConfigureAggregationsDialog::Private::aggregationListCurrentItemChanged( QL
   commitEditor();
 
   AggregationListWidgetItem * item = cur ? dynamic_cast< AggregationListWidgetItem * >( cur ) : 0;
-  mDeleteAggregationButton->setEnabled( item && ( mAggregationList->count() > 1 ) );
+  mDeleteAggregationButton->setEnabled( item && !item->aggregation()->readOnly() && ( mAggregationList->count() > 1 ) );
+
   mCloneAggregationButton->setEnabled( item );
   mEditor->editAggregation( item ? item->aggregation() : 0 );
   if ( item && !item->isSelected() )
@@ -321,6 +322,7 @@ void ConfigureAggregationsDialog::Private::newAggregationButtonClicked()
   AggregationListWidgetItem * item = new AggregationListWidgetItem( mAggregationList, emptyAggregation );
 
   mAggregationList->setCurrentItem( item );
+  mDeleteAggregationButton->setEnabled( item && !item->aggregation()->readOnly() );
 }
 
 void ConfigureAggregationsDialog::Private::cloneAggregationButtonClicked()
@@ -330,11 +332,14 @@ void ConfigureAggregationsDialog::Private::cloneAggregationButtonClicked()
     return;
 
   Aggregation copyAggregation( *( item->aggregation() ) );
+  copyAggregation.setReadOnly( false );
   copyAggregation.generateUniqueId(); // regenerate id so it becomes different
   copyAggregation.setName( uniqueNameForAggregation( item->aggregation()->name() ) );
   item = new AggregationListWidgetItem( mAggregationList, copyAggregation );
 
   mAggregationList->setCurrentItem( item );
+  mDeleteAggregationButton->setEnabled( item && !item->aggregation()->readOnly() );
+
 
 }
 
@@ -349,6 +354,7 @@ void ConfigureAggregationsDialog::Private::deleteAggregationButtonClicked()
   mEditor->editAggregation( 0 ); // forget it
 
   delete item; // this will trigger aggregationListCurrentItemChanged()
+  mDeleteAggregationButton->setEnabled( item && !item->aggregation()->readOnly() );
 }
 
 #include "configureaggregationsdialog.moc"

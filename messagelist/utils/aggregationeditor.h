@@ -100,6 +100,7 @@ private:
   void fillThreadLeaderCombo();
   void fillThreadExpandPolicyCombo();
   void fillFillViewStrategyCombo();
+  void setReadOnly(bool readOnly);
 
 private slots:
 

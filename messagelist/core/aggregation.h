@@ -148,8 +148,8 @@ public:
       Threading threading,
       ThreadLeader threadLeader,
       ThreadExpandPolicy threadExpandPolicy,
-      FillViewStrategy fillViewStrategy
-    );
+      FillViewStrategy fillViewStrategy,
+      bool readOnly );
   static bool compareName( Aggregation *agg1, Aggregation *agg2 )
   {
       return ( agg1->name() < agg2->name() );
