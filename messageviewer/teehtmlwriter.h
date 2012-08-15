@@ -61,6 +61,7 @@ namespace MessageViewer {
     void queue( const QString & str );
     void flush();
     void embedPart( const QByteArray & contentId, const QString & url );
+    void extraHead( const QString& str ); 
 
   private:
     /** We own the HtmlWriters added to us! */

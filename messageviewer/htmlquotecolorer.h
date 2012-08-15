@@ -49,7 +49,7 @@ class HTMLQuoteColorer
      * @param htmlSource the input HTML code
      * @return the modified HTML code, without any <body>, <html> or <head> tags
      */
-    QString process( const QString &htmlSource );
+    QString process(const QString &htmlSource , QString &extraHead);
 
   private:
 
