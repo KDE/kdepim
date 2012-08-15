@@ -55,9 +55,24 @@ OperaSettings::~OperaSettings()
 void OperaSettings::readAccount(const KConfigGroup &grp)
 {
   const QString incomingProtocol = grp.readEntry(QLatin1String("Incoming Protocol"));
+  const int port = grp.readEntry(QLatin1String("Incoming Port"), -1);
+
+  const QString serverName = grp.readEntry(QLatin1String("Incoming Servername"));
+  const QString userName = grp.readEntry(QLatin1String("Incoming Username"));
+
+  QString name; //FIXME
+
   QMap<QString, QVariant> settings;
   if(incomingProtocol == QLatin1String("IMAP")) {
+      settings.insert(QLatin1String("ImapServer"),serverName);
+      settings.insert(QLatin1String("UserName"),userName);
+      if ( port != -1 ) {
+        settings.insert( QLatin1String( "ImapPort" ), port );
+      }
 
+      const QString agentIdentifyName = AbstractBase::createResource( "akonadi_imap_resource", name,settings );
+      //TODO
+      //addCheckMailOnStartup(agentIdentifyName,loginAtStartup);
   } else {
       qDebug()<<" protocol unknown : "<<incomingProtocol;
   }
