@@ -504,13 +504,16 @@ bool ViewerPrivate::editAttachment( KMime::Content * node, bool showWarning )
   return true;
 }
 
-void ViewerPrivate::createOpenWithMenu( KMenu *topMenu, const QString &contentTypeStr )
+void ViewerPrivate::createOpenWithMenu( KMenu *topMenu, const QString &contentTypeStr, bool fromCurrentContent )
 {
   const KService::List offers = KFileItemActions::associatedApplications(QStringList()<<contentTypeStr, QString() );
   if (!offers.isEmpty()) {
     QMenu* menu = topMenu;
     QActionGroup *actionGroup = new QActionGroup( menu );
-    connect( actionGroup, SIGNAL(triggered(QAction*)), this, SLOT(slotOpenWithAction(QAction*)) );
+    if(fromCurrentContent)
+      connect( actionGroup, SIGNAL(triggered(QAction*)), this, SLOT(slotOpenWithActionCurrentContent(QAction*)) );
+    else
+      connect( actionGroup, SIGNAL(triggered(QAction*)), this, SLOT(slotOpenWithAction(QAction*)) );
 
     if (offers.count() > 1) { // submenu 'open with'
       menu = new QMenu(i18nc("@title:menu", "&Open With"), topMenu);
@@ -536,15 +539,27 @@ void ViewerPrivate::createOpenWithMenu( KMenu *topMenu, const QString &contentTy
     }
     KAction *openWithAct = new KAction(menu);
     openWithAct->setText(openWithActionName);
-    QObject::connect(openWithAct, SIGNAL(triggered()), this, SLOT(slotOpenWithDialog()));
+    if(fromCurrentContent)
+      connect(openWithAct, SIGNAL(triggered()), this, SLOT(slotOpenWithDialogCurrentContent()));
+    else
+      connect(openWithAct, SIGNAL(triggered()), this, SLOT(slotOpenWithDialog()));
     menu->addAction(openWithAct);
-  }
-  else { // no app offers -> Open With...
+  } else { // no app offers -> Open With...
     KAction *act = new KAction(topMenu);
     act->setText(i18nc("@title:menu", "&Open With..."));
-    QObject::connect(act, SIGNAL(triggered()), this, SLOT(slotOpenWithDialog()));
+    if(fromCurrentContent)
+      connect(act, SIGNAL(triggered()), this, SLOT(slotOpenWithDialogCurrentContent()));
+    else
+      connect(act, SIGNAL(triggered()), this, SLOT(slotOpenWithDialog()));
     topMenu->addAction(act);
   }
+}
+
+void ViewerPrivate::slotOpenWithDialogCurrentContent()
+{
+  if(!mCurrentContent)
+    return;
+  attachmentOpenWith( mCurrentContent );
 }
 
 void ViewerPrivate::slotOpenWithDialog()
@@ -570,6 +585,14 @@ KAction* ViewerPrivate::createAppAction(const KService::Ptr& service, bool singl
   actionGroup->addAction( act );
   act->setData(QVariant::fromValue(service));
   return act;
+}
+
+void ViewerPrivate::slotOpenWithActionCurrentContent(QAction* act)
+{
+  if(!mCurrentContent)
+    return;
+  KService::Ptr app = act->data().value<KService::Ptr>();
+  attachmentOpen( mCurrentContent,app );
 }
 
 void ViewerPrivate::slotOpenWithAction(QAction *act)
@@ -601,7 +624,7 @@ void ViewerPrivate::showAttachmentPopup( KMime::Content* node, const QString & n
   attachmentMapper->setMapping( action, Viewer::Open );
 
   if(!deletedAttachment)
-    createOpenWithMenu( menu, node->contentType()->mimeType() );
+    createOpenWithMenu( menu, node->contentType()->mimeType(),true );
 
   action = menu->addAction(i18nc("to view something", "View") );
   action->setEnabled(!deletedAttachment);
@@ -1816,7 +1839,7 @@ void ViewerPrivate::showContextMenu( KMime::Content* content, const QPoint &pos 
                        this, SLOT(slotAttachmentOpen()) );
 
       if(selectedContents().count() == 1)
-        createOpenWithMenu(&popup,content->contentType()->mimeType());
+        createOpenWithMenu(&popup,content->contentType()->mimeType(), false);
       else
         popup.addAction( i18n( "Open With..." ), this, SLOT(slotAttachmentOpenWith()) );
       popup.addAction( i18nc( "to view something", "View" ), this, SLOT(slotAttachmentView()) );
