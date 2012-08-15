@@ -84,6 +84,22 @@ void OperaSettings::readTransport(const KConfigGroup &grp)
   const QString outgoingProtocol = grp.readEntry(QLatin1String("Outgoing Protocol"));
   if(outgoingProtocol == QLatin1String("SMTP")) {
       MailTransport::Transport *mt = createTransport();
+      const int port = grp.readEntry(QLatin1String("Outgoing Port"), -1);
+      if ( port > 0 )
+        mt->setPort( port );
+
+      const QString hostName = grp.readEntry(QLatin1String("Outgoing Servername"));
+      mt->setHost( hostName );
+
+      const QString userName = grp.readEntry(QLatin1String("Outgoing Username"));
+      if(!userName.isEmpty())
+          mt->setUserName( userName );
+
+      const int authMethod =  grp.readEntry(QLatin1String("Outgoing Authentication Method"),-1);
+      //TODO verify authMethod
+
+      const int outgoingTimeOut = grp.readEntry(QLatin1String("Outgoing Timeout"),-1); //TODO ?
+
       storeTransport( mt, /*( smtp == defaultSmtp )*/true ); //FIXME:
   }
 }
