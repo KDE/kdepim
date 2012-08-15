@@ -160,13 +160,13 @@ public:
    * Returns the currently set Grouping option.
    */
   Grouping grouping() const
-    { return mGrouping; };
+    { return mGrouping; }
 
   /**
    * Sets the Grouping option.
    */
   void setGrouping( Grouping g )
-    { mGrouping = g; };
+    { mGrouping = g; }
 
   /**
    * Enumerates the available grouping options as a QList of
@@ -179,14 +179,14 @@ public:
    * Returns the current GroupExpandPolicy.
    */
   GroupExpandPolicy groupExpandPolicy() const
-    { return mGroupExpandPolicy; };
+    { return mGroupExpandPolicy; }
 
   /**
    * Sets the GroupExpandPolicy for the groups.
    * Note that this option has no meaning if grouping is set to NoGrouping.
    */
   void setGroupExpandPolicy( GroupExpandPolicy groupExpandPolicy )
-    { mGroupExpandPolicy = groupExpandPolicy; };
+    { mGroupExpandPolicy = groupExpandPolicy; }
 
   /**
    * Enumerates the group sort direction options compatible with the specified Grouping.
@@ -200,13 +200,13 @@ public:
    * Returns the current threading method.
    */
   Threading threading() const
-    { return mThreading; };
+    { return mThreading; }
 
   /**
    * Sets the threading method option.
    */
   void setThreading( Threading t )
-    { mThreading = t; };
+    { mThreading = t; }
 
   /**
    * Enumerates the available threading method options.
@@ -219,7 +219,7 @@ public:
    * Returns the current thread leader determination method.
    */
   ThreadLeader threadLeader() const
-    { return mThreadLeader; };
+    { return mThreadLeader; }
 
   /**
    * Sets the current thread leader determination method.
@@ -227,7 +227,7 @@ public:
    * and by policy should be set to TopmostMessage.
    */
   void setThreadLeader( ThreadLeader tl )
-    { mThreadLeader = tl; };
+    { mThreadLeader = tl; }
 
   /**
    * Enumerates the thread leader determination methods compatible with the specified Threading
@@ -242,7 +242,7 @@ public:
    * Returns the current thread expand policy.
    */
   ThreadExpandPolicy threadExpandPolicy() const
-    { return mThreadExpandPolicy; };
+    { return mThreadExpandPolicy; }
 
   /**
    * Sets the current thread expand policy.
@@ -250,7 +250,7 @@ public:
    * and by policy should be set to NeverExpandThreads.
    */
   void setThreadExpandPolicy( ThreadExpandPolicy threadExpandPolicy )
-    { mThreadExpandPolicy = threadExpandPolicy; };
+    { mThreadExpandPolicy = threadExpandPolicy; }
 
   /**
    * Enumerates the thread expand policies compatible with the specified Threading option.
@@ -264,13 +264,13 @@ public:
    * Returns the current fill view strategy.
    */
   FillViewStrategy fillViewStrategy() const
-    { return mFillViewStrategy; };
+    { return mFillViewStrategy; }
 
   /**
    * Sets the current fill view strategy.
    */
   void setFillViewStrategy( FillViewStrategy fillViewStrategy )
-    { mFillViewStrategy = fillViewStrategy; };
+    { mFillViewStrategy = fillViewStrategy; }
 
   /**
    * Enumerates the fill view strategies.
