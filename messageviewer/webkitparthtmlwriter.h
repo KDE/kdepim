@@ -69,7 +69,6 @@ private:
 private:
   MailWebView * mHtmlView;
   QString mHtml;
-  QString mCss;
   enum State {
     Begun,
     Queued,
