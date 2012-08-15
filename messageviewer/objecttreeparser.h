@@ -489,7 +489,7 @@ private:
       we only check whether @p str contains 'xxx="http[s]:' where xxx is
       not href. Obfuscated external references are ignored on purpose.
   */
-  static bool containsExternalReferences( const QString & str );
+  static bool containsExternalReferences(const QString & str , const QString &extraHead);
 
 public:// (during refactoring)
 
