@@ -37,9 +37,9 @@ Aggregation::Aggregation(
       Threading threading,
       ThreadLeader threadLeader,
       ThreadExpandPolicy threadExpandPolicy,
-      FillViewStrategy fillViewStrategy
+      FillViewStrategy fillViewStrategy, bool readOnly
     )
-  : OptionSet( name, description ),
+  : OptionSet( name, description, readOnly ),
     mGrouping( grouping ),
     mGroupExpandPolicy( groupExpandPolicy ),
     mThreading( threading ),
