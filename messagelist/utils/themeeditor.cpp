@@ -1512,6 +1512,7 @@ ThemeEditor::ThemeEditor( QWidget *parent )
 
   tabg->setColumnStretch( 1, 1 );
   tabg->setRowStretch( 2, 1 );
+  fillViewHeaderPolicyCombo();
 
 }
 
@@ -1535,7 +1536,6 @@ void ThemeEditor::editTheme( Theme *set )
 
   mPreviewWidget->setTheme( set );
 
-  fillViewHeaderPolicyCombo();
   ComboBoxUtils::setIntegerOptionComboValue( mViewHeaderPolicyCombo, (int)mCurrentTheme->viewHeaderPolicy() );
 
   mIconSizeSpinBox->setValue( set->iconSize() );
