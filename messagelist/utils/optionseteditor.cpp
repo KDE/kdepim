@@ -55,6 +55,7 @@ OptionSetEditor::OptionSetEditor( QWidget *parent )
   tabg->addWidget( l, 1, 0 );
 
   mDescriptionEdit = new KTextEdit( tab );
+  mDescriptionEdit->setAcceptRichText(false);
   tabg->addWidget( mDescriptionEdit, 1, 1, 2, 1 );
 
   tabg->setColumnStretch( 1, 1 );
