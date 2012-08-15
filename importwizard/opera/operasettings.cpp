@@ -73,6 +73,14 @@ void OperaSettings::readAccount(const KConfigGroup &grp)
       const QString agentIdentifyName = AbstractBase::createResource( "akonadi_imap_resource", name,settings );
       //TODO
       //addCheckMailOnStartup(agentIdentifyName,loginAtStartup);
+  } else if(incomingProtocol == QLatin1String("POP")) {
+      settings.insert( QLatin1String( "Host" ), serverName );
+      settings.insert( QLatin1String( "Login" ), userName );
+      if ( port != -1 ) {
+        settings.insert( QLatin1String( "Port" ), port );
+      }
+      const int delay = grp.readEntry(QLatin1String("Initial Poll Delay"),-1);
+
   } else {
       qDebug()<<" protocol unknown : "<<incomingProtocol;
   }
