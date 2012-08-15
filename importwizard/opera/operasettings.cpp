@@ -80,7 +80,7 @@ void OperaSettings::readAccount(const KConfigGroup &grp)
         settings.insert( QLatin1String( "Port" ), port );
       }
       const int delay = grp.readEntry(QLatin1String("Initial Poll Delay"),-1);
-
+      const QString agentIdentifyName = AbstractBase::createResource( "akonadi_pop3_resource", name, settings );
   } else {
       qDebug()<<" protocol unknown : "<<incomingProtocol;
   }
