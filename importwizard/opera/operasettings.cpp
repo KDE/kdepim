@@ -109,12 +109,25 @@ void OperaSettings::readIdentity(const KConfigGroup &grp)
     KPIMIdentities::Identity* newIdentity = createIdentity();
     //TODO
     const QString cc = grp.readEntry(QLatin1String("Auto CC"));
+    newIdentity->setCc( cc );
     const QString bcc = grp.readEntry(QLatin1String("Auto BCC"));
+    newIdentity->setBcc( bcc );
     const QString replyTo = grp.readEntry(QLatin1String("Replyto"));
-    const QString realName = grp.readEntry(QLatin1String("Real Name"));
-    const QString email = grp.readEntry(QLatin1String("Real Name"));
-    const QString organization = grp.readEntry(QLatin1String("Organization"));
+    if(!replyTo.isEmpty())
+      newIdentity->setReplyToAddr( replyTo );
 
+    const QString realName = grp.readEntry(QLatin1String("Real Name"));
+    newIdentity->setFullName( realName );
+    newIdentity->setIdentityName( realName );
+
+    const QString email = grp.readEntry(QLatin1String("Real Name"));
+    newIdentity->setPrimaryEmailAddress(email);
+
+    const QString organization = grp.readEntry(QLatin1String("Organization"));
+    if(!organization.isEmpty())
+      newIdentity->setOrganization(organization);
+
+    //TODO look at signature
     storeIdentity(newIdentity);
 }
 
