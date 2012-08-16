@@ -105,6 +105,16 @@ void OperaSettings::readAccount(const KConfigGroup &grp)
         qDebug()<<" leave on server option unknown : "<<leaveOnServer;
       }
 
+      const int removeMailFromSever = grp.readEntry(QLatin1String("Remove From Server Delay Enabled"),-1);
+      if(removeMailFromSever == 1) {
+          int removeDelay = grp.readEntry(QLatin1String("Remove From Server Delay"),-1);
+          if(removeDelay!=-1) {
+            //Opera store delay as second !!! :)
+            removeDelay = removeDelay / (24*60*60);
+            settings.insert(QLatin1String("LeaveOnServerDays"),removeDelay);
+          }
+      } //TODO: else
+
       if ( port != -1 ) {
         settings.insert( QLatin1String( "Port" ), port );
       }
