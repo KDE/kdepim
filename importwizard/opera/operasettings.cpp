@@ -130,6 +130,10 @@ void OperaSettings::readTransport(const KConfigGroup &grp)
       const int authMethod = grp.readEntry(QLatin1String("Outgoing Authentication Method"),-1);
       MailTransport::Transport *mt = createTransport();
       const int port = grp.readEntry(QLatin1String("Outgoing Port"), -1);
+      const int secure = grp.readEntry(QLatin1String("Secure Connection Out"),-1);
+      if(secure == 1) {
+        mt->setEncryption( MailTransport::Transport::EnumEncryption::TLS );
+      }
       if ( port > 0 )
         mt->setPort( port );
 
@@ -142,9 +146,20 @@ void OperaSettings::readTransport(const KConfigGroup &grp)
 
       const int outgoingTimeOut = grp.readEntry(QLatin1String("Outgoing Timeout"),-1); //TODO ?
 
-      //TODO
       switch(authMethod) {
-      case 0:
+      case 0: //NONE
+          break;
+      case 2: //PLAIN
+          mt->setAuthenticationType(MailTransport::Transport::EnumAuthenticationType::PLAIN);
+          break;
+      case 5: //LOGIN
+          mt->setAuthenticationType(MailTransport::Transport::EnumAuthenticationType::LOGIN);
+          break;
+      case 10: //CRAM-MD5
+          mt->setAuthenticationType(MailTransport::Transport::EnumAuthenticationType::CRAM_MD5);
+          break;
+      case 31: //Automatic
+          mt->setAuthenticationType(MailTransport::Transport::EnumAuthenticationType::PLAIN); //Don't know... Verify
           break;
       default:
           qDebug()<<" authMethod unknown :"<<authMethod;
