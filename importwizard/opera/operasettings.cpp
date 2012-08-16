@@ -212,6 +212,25 @@ void OperaSettings::readIdentity(const KConfigGroup &grp)
     if(!organization.isEmpty())
       newIdentity->setOrganization(organization);
 
+
+    const QString signatureFile = grp.readEntry(QLatin1String("Signature File"));
+    if(!signatureFile.isEmpty()) {
+        const int signatureHtml = grp.readEntry(QLatin1String("Signature is HTML"),-1);
+        switch(signatureHtml) {
+        case -1:
+            break;
+        case 0:
+            break;
+        case 1:
+            break;
+        default:
+            qDebug()<<" pb with Signature is HTML "<<signatureHtml;
+            break;
+        }
+
+      //TODO
+    }
+
     //TODO look at signature
     storeIdentity(newIdentity);
 }
