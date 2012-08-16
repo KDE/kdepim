@@ -1400,7 +1400,6 @@ void AgendaView::updateEventDates( AgendaItem *item, bool addIncidence,
     kDebug() << "Collection isValid() = " << collection.isValid();
     result = changer()->createIncidence( incidence, collection, this ) != -1;
   } else {
-    //TODO_SERGIO: check all changer's return values
     result = changer()->modifyIncidence( aitem, oldIncidence, this ) != -1;
   }
 
