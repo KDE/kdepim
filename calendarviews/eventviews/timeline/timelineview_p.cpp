@@ -116,7 +116,7 @@ TimelineItem *TimelineView::Private::calendarItemForIncidence( const Akonadi::It
 void TimelineView::Private::insertIncidence( const Akonadi::Item &aitem, const QDate &day )
 {
   const Incidence::Ptr incidence = CalendarSupport::incidence( aitem );
-  kDebug() << "Item " << aitem.id() << " parentcollection: " << aitem.parentCollection().id();
+  //kDebug() << "Item " << aitem.id() << " parentcollection: " << aitem.parentCollection().id();
   TimelineItem *item = calendarItemForIncidence( aitem );
   if ( !item ) {
     kWarning() << "Help! Something is really wrong here!";
