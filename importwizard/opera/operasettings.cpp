@@ -95,6 +95,16 @@ void OperaSettings::readAccount(const KConfigGroup &grp)
   } else if(incomingProtocol == QLatin1String("POP")) {
       settings.insert( QLatin1String( "Host" ), serverName );
       settings.insert( QLatin1String( "Login" ), userName );
+
+      const int leaveOnServer = grp.readEntry(QLatin1String("Leave On Server"),-1);
+      if(leaveOnServer == 1) {
+        settings.insert(QLatin1String("LeaveOnServer"),true);
+      } else if(leaveOnServer == 0) {
+        settings.insert(QLatin1String("LeaveOnServer"),false);
+      } else {
+        qDebug()<<" leave on server option unknown : "<<leaveOnServer;
+      }
+
       if ( port != -1 ) {
         settings.insert( QLatin1String( "Port" ), port );
       }
