@@ -1149,7 +1149,6 @@ bool ObjectTreeParser::containsExternalReferences( const QString & str, const QS
                          str.contains(QLatin1String("<img src=\"/"),Qt::CaseInsensitive)) ) {
     return true;
   }
-  qDebug()<<" str :"<<str;
   int httpPos = str.indexOf( "\"http:", Qt::CaseInsensitive );
   int httpsPos = str.indexOf( "\"https:", Qt::CaseInsensitive );
 

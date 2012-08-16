@@ -548,8 +548,14 @@ namespace MessageViewer {
   }
 
   QString CSSHelperBase::commonCssDefinitions() const {
+    const QPalette & pal = QApplication::palette();
+    const QString headerFont = QString("  font-family: \"%1\" ! important;\n"
+                                       "  font-size: %2px ! important;\n")
+      .arg( mBodyFont.family() )
+      .arg( pointsToPixel( this->mPaintDevice, mBodyFont.pointSize() ) );
+
     return
-      "div.header {\n"
+      QString::fromLatin1("div.header {\n"
       "  margin-bottom: 10pt ! important;\n"
       "}\n\n"
 
@@ -615,19 +621,26 @@ namespace MessageViewer {
       "}\n\n"
 
       "div.fancy.header table th {\n"
+      "  %3\n"
       "  padding: 0px ! important;\n"
       "  white-space: nowrap ! important;\n"
       "  border-spacing: 0px ! important;\n"
       "  text-align: left ! important;\n"
       "  vertical-align: top ! important;\n"
+      "  background-color: %1 ! important;\n"
+      "  color: %2 ! important;\n"
+
       "}\n\n"
 
       "div.fancy.header table td {\n"
+      "  %3\n"
       "  padding: 0px ! important;\n"
       "  border-spacing: 0px ! important;\n"
       "  text-align: left ! important;\n"
       "  vertical-align: top ! important;\n"
       "  width: 100% ! important;\n"
+      "  background-color: %1 ! important;\n"
+      "  color: %2 ! important;\n"
       "}\n\n"
 
       "span.pimsmileytext {\n"
@@ -643,7 +656,7 @@ namespace MessageViewer {
       "div.quotelevelmark {\n"
       "  position: absolute;\n"
       "  margin-left:-10px;\n"
-      "}\n\n"
+      "}\n\n").arg( pal.color( QPalette::Background ).name() ).arg(pal.color( QPalette::Foreground ).name()).arg(headerFont)
       ;
   }
 
