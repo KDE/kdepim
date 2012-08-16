@@ -212,7 +212,7 @@ void OperaSettings::readIdentity(const KConfigGroup &grp)
     if(!organization.isEmpty())
       newIdentity->setOrganization(organization);
 
-
+    KPIMIdentities::Signature signature;
     const QString signatureFile = grp.readEntry(QLatin1String("Signature File"));
     if(!signatureFile.isEmpty()) {
         const int signatureHtml = grp.readEntry(QLatin1String("Signature is HTML"),-1);
@@ -220,18 +220,23 @@ void OperaSettings::readIdentity(const KConfigGroup &grp)
         case -1:
             break;
         case 0:
+            signature.setInlinedHtml( false );
+            signature.setType( KPIMIdentities::Signature::Inlined );
             break;
         case 1:
+            signature.setInlinedHtml( true );
+            signature.setType( KPIMIdentities::Signature::Inlined );
             break;
         default:
             qDebug()<<" pb with Signature is HTML "<<signatureHtml;
             break;
         }
-
-      //TODO
+        //TODO load file and add text directly.
+        //For the moment we can't add a signature file + html => load and add in signature directly
+        //signature.setText( textSignature );
     }
 
-    //TODO look at signature
+    newIdentity->setSignature( signature );
     storeIdentity(newIdentity);
 }
 
