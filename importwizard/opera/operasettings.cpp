@@ -62,6 +62,9 @@ void OperaSettings::readAccount(const KConfigGroup &grp)
 
   const int secure = grp.readEntry(QLatin1String("Secure Connection In"),-1);
 
+
+  const int pollInterval = grp.readEntry(QLatin1String("Poll Interval"),-1);
+
   const int authMethod = grp.readEntry(QLatin1String("Incoming Authentication Method"),-1);
 
   QString name; //FIXME
@@ -78,6 +81,14 @@ void OperaSettings::readAccount(const KConfigGroup &grp)
       } else if( secure == 0) {
         settings.insert( QLatin1String( "Safety" ), QLatin1String("None") );
       }
+
+      if(pollInterval == 0) {
+        settings.insert(QLatin1String("IntervalCheckEnabled"), false);
+      } else {
+        settings.insert(QLatin1String("IntervalCheckEnabled"), true);
+        settings.insert(QLatin1String("IntervalCheckTime"),pollInterval);
+      }
+
       const QString agentIdentifyName = AbstractBase::createResource( "akonadi_imap_resource", name,settings );
       //TODO
       //addCheckMailOnStartup(agentIdentifyName,loginAtStartup);
@@ -88,6 +99,14 @@ void OperaSettings::readAccount(const KConfigGroup &grp)
         settings.insert( QLatin1String( "Port" ), port );
       }
       const int delay = grp.readEntry(QLatin1String("Initial Poll Delay"),-1);
+
+      if(pollInterval == 0) {
+        settings.insert(QLatin1String("IntervalCheckEnabled"), false);
+      } else {
+        settings.insert(QLatin1String("IntervalCheckEnabled"), true);
+        settings.insert(QLatin1String("IntervalCheckInterval"),pollInterval);
+      }
+
 
       if(secure == 1)
         settings.insert( QLatin1String( "UseTLS" ), true );
