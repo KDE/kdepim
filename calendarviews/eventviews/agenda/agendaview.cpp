@@ -1398,10 +1398,10 @@ void AgendaView::updateEventDates( AgendaItem *item, bool addIncidence,
   if ( addIncidence ) {
     Akonadi::Collection collection = calendar()->collection( collectionId );
     kDebug() << "Collection isValid() = " << collection.isValid();
-    result = changer()->createIncidence( incidence, collection, this );
+    result = changer()->createIncidence( incidence, collection, this ) != -1;
   } else {
     //TODO_SERGIO: check all changer's return values
-    result = changer()->modifyIncidence( aitem, oldIncidence, this );
+    result = changer()->modifyIncidence( aitem, oldIncidence, this ) != -1;
   }
 
   // Update the view correctly if an agenda item move was aborted by

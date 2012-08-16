@@ -447,9 +447,8 @@ void IncidenceMonthItem::updateDates( int startOffset, int endOffset )
         KCalCore::Incidence::Ptr newInc( CalendarSupport::dissociateOccurrence(
             item, startDate(), CalendarSupport::KCalPrefs::instance()->timeSpec() ) );
         if ( newInc ) {
-           //TODO check return values
-          changer->modifyIncidence( item, oldIncSaved );
-          changer->createIncidence( newInc, item.parentCollection(), parentWidget() );
+          if ( changer->modifyIncidence( item, oldIncSaved ) != -1 )
+            changer->createIncidence( newInc, item.parentCollection(), parentWidget() );
         } else {
           KMessageBox::sorry(
             parentWidget(),
@@ -467,11 +466,8 @@ void IncidenceMonthItem::updateDates( int startOffset, int endOffset )
         KCalCore::Incidence::Ptr newInc( CalendarSupport::dissociateOccurrence(
             item, startDate(), CalendarSupport::KCalPrefs::instance()->timeSpec(), false ) );
         if ( newInc ) {
-           //TODO check return values
-           //TODO_SERGIO: test all IncidenceChanger code
-          changer->modifyIncidence( item, oldIncSaved );
-
-          changer->createIncidence( newInc, item.parentCollection(), parentWidget() );
+          if ( changer->modifyIncidence( item, oldIncSaved ) != -1 )
+            changer->createIncidence( newInc, item.parentCollection(), parentWidget() );
         } else {
           KMessageBox::sorry(
             parentWidget(),
