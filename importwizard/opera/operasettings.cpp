@@ -67,7 +67,7 @@ void OperaSettings::readAccount(const KConfigGroup &grp)
 
   const int authMethod = grp.readEntry(QLatin1String("Incoming Authentication Method"),-1);
 
-  QString name; //FIXME
+  const QString name = grp.readEntry(QLatin1String("Account Name"));
 
   QMap<QString, QVariant> settings;
   if(incomingProtocol == QLatin1String("IMAP")) {
@@ -131,7 +131,6 @@ void OperaSettings::readAccount(const KConfigGroup &grp)
       if(secure == 1)
         settings.insert( QLatin1String( "UseTLS" ), true );
 
-      //TODO
       switch(authMethod) {
       case 0: //NONE
         settings.insert(QLatin1String( "AuthenticationMethod" ), MailTransport::Transport::EnumAuthenticationType::ANONYMOUS);
@@ -159,7 +158,6 @@ void OperaSettings::readAccount(const KConfigGroup &grp)
   } else {
       qDebug()<<" protocol unknown : "<<incomingProtocol;
   }
-  //TODO
 }
 
 void OperaSettings::readTransport(const KConfigGroup &grp)
@@ -204,7 +202,8 @@ void OperaSettings::readTransport(const KConfigGroup &grp)
           qDebug()<<" authMethod unknown :"<<authMethod;
       }
 
-      storeTransport( mt, /*( smtp == defaultSmtp )*/true ); //FIXME:
+      //We can't specify a default smtp...
+      storeTransport( mt, true );
   }
 }
 
@@ -232,9 +231,9 @@ void OperaSettings::readIdentity(const KConfigGroup &grp)
     if(!organization.isEmpty())
       newIdentity->setOrganization(organization);
 
-    KPIMIdentities::Signature signature;
     const QString signatureFile = grp.readEntry(QLatin1String("Signature File"));
     if(!signatureFile.isEmpty()) {
+        KPIMIdentities::Signature signature;
         const int signatureHtml = grp.readEntry(QLatin1String("Signature is HTML"),-1);
         switch(signatureHtml) {
         case -1:
@@ -254,9 +253,8 @@ void OperaSettings::readIdentity(const KConfigGroup &grp)
         //TODO load file and add text directly.
         //For the moment we can't add a signature file + html => load and add in signature directly
         //signature.setText( textSignature );
+        newIdentity->setSignature( signature );
     }
-
-    newIdentity->setSignature( signature );
     storeIdentity(newIdentity);
 }
 
