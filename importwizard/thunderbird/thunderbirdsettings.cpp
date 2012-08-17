@@ -294,6 +294,8 @@ void ThunderbirdSettings::readAccount()
 
       const QString agentIdentifyName = AbstractBase::createResource( "akonadi_imap_resource", name,settings );
       addCheckMailOnStartup(agentIdentifyName,loginAtStartup);
+      //Not find a method to disable it in thunderbird
+      addToManualCheck(agentIdentifyName,true);
     } else if( type == QLatin1String("pop3")) {
       QMap<QString, QVariant> settings;
       settings.insert( QLatin1String( "Host" ), host );
@@ -356,6 +358,8 @@ void ThunderbirdSettings::readAccount()
 
       const QString agentIdentifyName = AbstractBase::createResource( "akonadi_pop3_resource", name, settings );
       addCheckMailOnStartup(agentIdentifyName,loginAtStartup);
+      //Not find a method to disable it in thunderbird
+      addToManualCheck(agentIdentifyName,true);
     } else if ( type == QLatin1String( "none" ) ) {
       //FIXME look at if we can implement it
       kDebug()<<" account type none!";
