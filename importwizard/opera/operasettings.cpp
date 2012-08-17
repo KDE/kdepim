@@ -121,6 +121,7 @@ void OperaSettings::readAccount(const KConfigGroup &grp)
       if ( port != -1 ) {
         settings.insert( QLatin1String( "Port" ), port );
       }
+      //TODO:
       const int delay = grp.readEntry(QLatin1String("Initial Poll Delay"),-1);
 
       if(pollInterval == 0) {
