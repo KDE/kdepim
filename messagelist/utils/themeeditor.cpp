@@ -900,9 +900,6 @@ void ThemePreviewWidget::mousePressEvent( QMouseEvent * e )
         act->setChecked( mSelectedThemeContentItem->useCustomFont() );
         grp->addAction( act );
 
-        // We would like the group to be exclusive, but then the "Custom..." action
-        // will not be triggered if activated multiple times in a row... well, we'll have to live with checkboxes instead of radios.
-        grp->setExclusive( false );
 
         connect( childmenu, SIGNAL(triggered(QAction*)),
                  SLOT(slotFontMenuTriggered(QAction*)) );
@@ -927,10 +924,6 @@ void ThemePreviewWidget::mousePressEvent( QMouseEvent * e )
         act->setCheckable( true );
         act->setChecked( mSelectedThemeContentItem->useCustomColor() );
         grp->addAction( act );
-
-        // We would like the group to be exclusive, but then the "Custom..." action
-        // will not be triggered if activated multiple times in a row... well, we'll have to live with checkboxes instead of radios.
-        grp->setExclusive( false );
 
         connect( childmenu, SIGNAL(triggered(QAction*)),
                  SLOT(slotForegroundColorMenuTriggered(QAction*)) );
@@ -998,9 +991,6 @@ void ThemePreviewWidget::mousePressEvent( QMouseEvent * e )
         act->setChecked( mTheme->groupHeaderBackgroundMode() == Theme::CustomColor );
         grp->addAction( act );
 
-        // We would like the group to be exclusive, but then the "Custom..." action
-        // will not be triggered if activated multiple times in a row... well, we'll have to live with checkboxes instead of radios.
-        grp->setExclusive( false );
 
         connect( childmenu, SIGNAL(triggered(QAction*)),
                  SLOT(slotGroupHeaderBackgroundModeMenuTriggered(QAction*)) );
@@ -1011,7 +1001,6 @@ void ThemePreviewWidget::mousePressEvent( QMouseEvent * e )
         childmenu = new KMenu( &menu );
 
         grp = new QActionGroup( childmenu );
-
         QList< QPair< QString, int > > styles = Theme::enumerateGroupHeaderBackgroundStyles();
         QList< QPair< QString, int > >::ConstIterator end( styles.constEnd() );
 
