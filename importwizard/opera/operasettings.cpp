@@ -73,6 +73,9 @@ void OperaSettings::readAccount(const KConfigGroup &grp)
 
   const bool enableManualCheck = (grp.readEntry(QLatin1String("Manual Check Enabled"),0) == 1);
 
+  //TODO
+  const bool markAsSeen = (grp.readEntry(QLatin1String("Mark Read If Seen"),0) == 1);
+
   QMap<QString, QVariant> settings;
   if(incomingProtocol == QLatin1String("IMAP")) {
       settings.insert(QLatin1String("ImapServer"),serverName);
