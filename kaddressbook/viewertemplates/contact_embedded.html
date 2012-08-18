@@ -38,7 +38,7 @@
 
       {% for email in contact.emails %}
         {% with "Email" as title %}
-        {% with email as value %}
+        {% with email|safe as value %}
         {% include "contact_row.html" %}
         {% endwith %}
         {% endwith %}
