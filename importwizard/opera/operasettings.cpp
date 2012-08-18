@@ -268,10 +268,6 @@ void OperaSettings::readIdentity(const KConfigGroup &grp)
                 qDebug()<<" pb with Signature is HTML "<<signatureHtml;
                 break;
             }
-            //TODO load file and add text directly.
-            //For the moment we can't add a signature file + html => load and add in signature directly
-            //signature.setText( textSignature );
-
             newIdentity->setSignature( signature );
           }
        }
