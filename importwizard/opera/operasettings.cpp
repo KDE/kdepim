@@ -93,8 +93,8 @@ void OperaSettings::readAccount(const KConfigGroup &grp)
 
       const QString agentIdentifyName = AbstractBase::createResource( "akonadi_imap_resource", name,settings );
       addToManualCheck(agentIdentifyName,enableManualCheck);
-      //TODO
-      //addCheckMailOnStartup(agentIdentifyName,loginAtStartup);
+      //We have not settings for it => same than manual check
+      addCheckMailOnStartup(agentIdentifyName,enableManualCheck);
   } else if(incomingProtocol == QLatin1String("POP")) {
       settings.insert( QLatin1String( "Host" ), serverName );
       settings.insert( QLatin1String( "Login" ), userName );
@@ -157,8 +157,8 @@ void OperaSettings::readAccount(const KConfigGroup &grp)
       }
 
       const QString agentIdentifyName = AbstractBase::createResource( "akonadi_pop3_resource", name, settings );
-      //TODO
-      //addCheckMailOnStartup(agentIdentifyName,loginAtStartup);
+      //We have not settings for it => same than manual check
+      addCheckMailOnStartup(agentIdentifyName,enableManualCheck);
       addToManualCheck(agentIdentifyName,enableManualCheck);
   } else {
       qDebug()<<" protocol unknown : "<<incomingProtocol;
