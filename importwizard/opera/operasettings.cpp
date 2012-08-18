@@ -17,6 +17,8 @@
 
 #include "operasettings.h"
 
+#include "mailimporter/filter_opera.h"
+
 #include <mailtransport/transportmanager.h>
 #include "mailcommon/mailutil.h"
 
@@ -236,29 +238,43 @@ void OperaSettings::readIdentity(const KConfigGroup &grp)
     if(!organization.isEmpty())
       newIdentity->setOrganization(organization);
 
-    const QString signatureFile = grp.readEntry(QLatin1String("Signature File"));
+    QString signatureFile = grp.readEntry(QLatin1String("Signature File"));
     if(!signatureFile.isEmpty()) {
         KPIMIdentities::Signature signature;
         const int signatureHtml = grp.readEntry(QLatin1String("Signature is HTML"),-1);
-        switch(signatureHtml) {
-        case -1:
-            break;
-        case 0:
-            signature.setInlinedHtml( false );
-            signature.setType( KPIMIdentities::Signature::Inlined );
-            break;
-        case 1:
-            signature.setInlinedHtml( true );
-            signature.setType( KPIMIdentities::Signature::Inlined );
-            break;
-        default:
-            qDebug()<<" pb with Signature is HTML "<<signatureHtml;
-            break;
+        if(signatureFile.contains(QLatin1String("{Preferences}"))) {
+          signatureFile.replace(QLatin1String("{Preferences}"),MailImporter::FilterOpera::defaultPath()+QLatin1String("/"));
         }
-        //TODO load file and add text directly.
-        //For the moment we can't add a signature file + html => load and add in signature directly
-        //signature.setText( textSignature );
-        newIdentity->setSignature( signature );
+
+        QFile file(signatureFile);
+        if(file.exists()) {
+          if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+            QByteArray sigText = file.readAll();
+
+            switch(signatureHtml) {
+            case -1:
+                break;
+            case 0:
+                signature.setInlinedHtml( false );
+                signature.setType( KPIMIdentities::Signature::Inlined );
+                signature.setText(QString(sigText));
+                break;
+            case 1:
+                signature.setInlinedHtml( true );
+                signature.setType( KPIMIdentities::Signature::Inlined );
+                signature.setText(QString(sigText));
+                break;
+            default:
+                qDebug()<<" pb with Signature is HTML "<<signatureHtml;
+                break;
+            }
+            //TODO load file and add text directly.
+            //For the moment we can't add a signature file + html => load and add in signature directly
+            //signature.setText( textSignature );
+
+            newIdentity->setSignature( signature );
+          }
+       }
     }
     storeIdentity(newIdentity);
 }
