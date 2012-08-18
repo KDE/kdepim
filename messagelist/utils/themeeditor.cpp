@@ -1209,7 +1209,7 @@ void ThemePreviewWidget::slotHeaderContextMenuRequested( const QPoint &pos )
 
   QAction * act;
 
-  act = menu.addAction( i18n( "Column Properties" ) );
+  act = menu.addAction( i18n( "Column Properties..." ) );
   connect( act, SIGNAL(triggered(bool)),
            SLOT(slotColumnProperties()) );
 
