@@ -209,7 +209,17 @@ QString GrantleeContactFormatter::toHtml( HtmlForm form ) const
   }
 
   // Emails
-  contactObject.insert( QLatin1String( "emails" ), rawContact.emails() );
+  QStringList emails;
+  foreach ( const QString &email, rawContact.emails() ) {
+    QString type = i18nc( "a contact's email address", "Email" );
+
+    const QString fullEmail = QString::fromLatin1( KUrl::toPercentEncoding( rawContact.fullEmail( email ) ) );
+
+    const QString url = QString::fromLatin1( "<a href=\"mailto:%1\">%2</a>" )
+      .arg( fullEmail, email );
+    emails<<url;
+  }
+  contactObject.insert( QLatin1String( "emails" ), emails);
 
   // Phone numbers
   QVariantList phoneNumbers;
