@@ -415,7 +415,7 @@ bool Session::saslInteract(void* in)
 
   KIO::AuthInfo ai;
   ai.url = m_url;
-  ai.username = m_url.user();
+  ai.username = m_url.userName();
   ai.password = m_url.password();
   ai.keepPassword = true;
   ai.caption = i18n("Sieve Authentication Details");
@@ -426,7 +426,7 @@ bool Session::saslInteract(void* in)
   //window for getting this info
   for ( ; interact->id != SASL_CB_LIST_END; interact++ ) {
     if ( interact->id == SASL_CB_AUTHNAME || interact->id == SASL_CB_PASS ) {
-      if ( m_url.user().isEmpty() || m_url.password().isEmpty()) {
+      if ( ai.username.isEmpty() || ai.password.isEmpty()) {
 
         KPasswordDialog dlg( 0, KPasswordDialog::ShowUsernameLine | KPasswordDialog::ShowKeepPassword );
         dlg.setUsername( ai.username );
@@ -437,16 +437,15 @@ bool Session::saslInteract(void* in)
         dlg.setCaption( ai.caption );
         dlg.addCommentLine( ai.commentLabel, ai.comment );
 
-        if ( dlg.exec() != QDialog::Accepted )
-        {
+        if ( !dlg.exec() ) {
           // calling error() below is wrong for two reasons:
           // - ERR_ABORTED is too harsh
           // - higher layers already call error() and that can't happen twice.
                 //error(ERR_ABORTED, i18n("No authentication details supplied."));
                 return false;
         }
-        m_url.setUserName( ai.username );
-        m_url.setPassword( ai.password );
+        m_url.setUserName( dlg.username() );
+        m_url.setPassword( dlg.password() );
       }
       break;
     }
