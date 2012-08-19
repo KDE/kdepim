@@ -294,6 +294,8 @@ void ThunderbirdSettings::readAccount()
 
       const QString agentIdentifyName = AbstractBase::createResource( "akonadi_imap_resource", name,settings );
       addCheckMailOnStartup(agentIdentifyName,loginAtStartup);
+      //Not find a method to disable it in thunderbird
+      addToManualCheck(agentIdentifyName,true);
     } else if( type == QLatin1String("pop3")) {
       QMap<QString, QVariant> settings;
       settings.insert( QLatin1String( "Host" ), host );
@@ -356,6 +358,8 @@ void ThunderbirdSettings::readAccount()
 
       const QString agentIdentifyName = AbstractBase::createResource( "akonadi_pop3_resource", name, settings );
       addCheckMailOnStartup(agentIdentifyName,loginAtStartup);
+      //Not find a method to disable it in thunderbird
+      addToManualCheck(agentIdentifyName,true);
     } else if ( type == QLatin1String( "none" ) ) {
       //FIXME look at if we can implement it
       kDebug()<<" account type none!";
@@ -480,9 +484,6 @@ void ThunderbirdSettings::readIdentity( const QString& account )
   KPIMIdentities::Identity* newIdentity = createIdentity();
   const QString identity = QString::fromLatin1( "mail.identity.%1" ).arg( account );
   
-  const QString fcc = mHashConfig.value( identity + QLatin1String( ".fcc_folder" ) ).toString();
-
-
   const QString smtpServer = mHashConfig.value( identity + QLatin1String( ".smtpServer" ) ).toString();
   if(!smtpServer.isEmpty() && mHashSmtp.contains(smtpServer))
   {

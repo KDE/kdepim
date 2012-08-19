@@ -1106,7 +1106,9 @@ KMime::Types::Mailbox mailboxFromUnicodeString( const QString &address )
   header.fromUnicodeString( address, "utf-8" );
 
   const KMime::Types::Mailbox::List mailboxes = header.mailboxes();
-  Q_ASSERT( mailboxes.size() == 1 );
+  if( mailboxes.size() > 1 ) {
+    kDebug()<<" mailboxes size > 1 ";
+  }       
   return mailboxes.first();
 }
 
@@ -1123,7 +1125,9 @@ KMime::Types::Mailbox mailboxFrom7BitString( const QByteArray &address )
   header.from7BitString( address );
 
   const KMime::Types::Mailbox::List mailboxes = header.mailboxes();
-  Q_ASSERT( mailboxes.size() == 1 );
+  if( mailboxes.size() > 1 ) {
+    kDebug()<<" mailboxes size > 1 ";
+  }
   return mailboxes.first();
 }
 

@@ -33,6 +33,8 @@
 #include <QtGui/QMouseEvent>
 #include <QHeaderView>
 
+#include <akonadi/etmviewstatesaver.h>
+
 #include "storagemodel.h"
 #include "widget.h"
 #include "core/settings.h"
@@ -395,20 +397,18 @@ void Pane::focusQuickSearch()
 
 void Pane::Private::onSelectionChanged( const QItemSelection &selected, const QItemSelection &deselected )
 {
-  Widget *w = 0;
-  QItemSelectionModel *s = 0;
   if ( mPreferEmptyTab ) {
     q->createNewTab();
   }
-	
-  w = static_cast<Widget*>( q->currentWidget() );
-  s = mWidgetSelectionHash[w];
+
+  Widget *w = static_cast<Widget*>( q->currentWidget() );
+  QItemSelectionModel * s = mWidgetSelectionHash[w];
 
   s->select( mapSelectionToSource( selected ), QItemSelectionModel::Select );
   s->select( mapSelectionToSource( deselected ), QItemSelectionModel::Deselect );
 
   QString label;
-  QIcon icon = KIcon( QLatin1String( "folder" ) );
+  QIcon icon;
   QString toolTip;
   foreach ( const QModelIndex &index, s->selectedRows() ) {
     label+= index.data( Qt::DisplayRole ).toString()+QLatin1String( ", " );
@@ -426,9 +426,11 @@ void Pane::Private::onSelectionChanged( const QItemSelection &selected, const QI
       toolTip = idx.data().toString() + QLatin1Char( '/' ) + toolTip;
       idx = idx.parent();
     }
+  } else {
+     icon = KIcon( QLatin1String( "folder" ) );
   }
 
-  int index = q->indexOf( w );
+  const int index = q->indexOf( w );
   q->setTabText( index, label );
   q->setTabIcon( index, icon );
   q->setTabToolTip( index, toolTip);
@@ -570,10 +572,10 @@ void Pane::Private::onCurrentTabChanged()
 void Pane::Private::onTabContextMenuRequest( const QPoint &pos )
 {
   QTabBar *bar = q->tabBar();
-  int index = bar->tabAt( bar->mapFrom( q, pos ) );
-  if ( index == -1 ) return;
+  const int indexBar = bar->tabAt( bar->mapFrom( q, pos ) );
+  if ( indexBar == -1 ) return;
 
-  Widget *w = qobject_cast<Widget *>( q->widget( index ) );
+  Widget *w = qobject_cast<Widget *>( q->widget( indexBar ) );
   if ( !w ) return;
 
   KMenu menu( q );
@@ -593,7 +595,7 @@ void Pane::Private::onTabContextMenuRequest( const QPoint &pos )
 
   if ( action == allOther ) { // Close all other tabs
     QList<Widget *> widgets;
-    int index = q->indexOf( w );
+    const int index = q->indexOf( w );
 
     for ( int i=0; i<q->count(); i++ ) {
       if ( i==index) continue; // Skip the current one
@@ -643,7 +645,7 @@ void Pane::updateTabIconText( const Akonadi::Collection &collection, const QStri
   }
 }
 
-void Pane::createNewTab()
+QItemSelectionModel *Pane::createNewTab()
 {
   Widget * w = new Widget( this );
   w->setXmlGuiClient( d->mXmlGuiClient );
@@ -670,6 +672,7 @@ void Pane::createNewTab()
   connect( w, SIGNAL(fullSearchRequest()), this, SIGNAL(fullSearchRequest()) );
   d->updateTabControls();
   setCurrentWidget( w );
+  return s;
 }
 
 QItemSelection Pane::Private::mapSelectionToSource( const QItemSelection &selection ) const
@@ -960,6 +963,7 @@ void Pane::writeConfig()
   conf.sync();
 }
 
+
 void Pane::readConfig()
 {
   if(MessageList::Core::Settings::self()->config()->hasGroup(QLatin1String("MessageListPane"))) {
@@ -972,9 +976,17 @@ void Pane::readConfig()
       {
         KConfigGroup grp(MessageList::Core::Settings::self()->config(),QString::fromLatin1("MessageListTab%1").arg(i));
         Akonadi::Collection::Id id = grp.readEntry(QLatin1String("collectionId"),-1);
-        createNewTab();
-        if(id != -1)
-          setCurrentFolder(Akonadi::Collection(id));
+        QItemSelectionModel *selectionModel = createNewTab();
+        ETMViewStateSaver *saver = new ETMViewStateSaver;
+        saver->setSelectionModel(selectionModel);
+
+        if(id != -1) {
+            ETMViewStateSaver *saver = new ETMViewStateSaver;
+            saver->setSelectionModel(selectionModel);
+            saver->restoreState( grp );
+            saver->selectCollections(Akonadi::Collection::List()<<Akonadi::Collection(id));
+        }
+
         Widget *w = qobject_cast<Widget *>( widget( i ) );
         w->view()->header()->restoreState(grp.readEntry(QLatin1String("HeaderState"),QByteArray()));
       }

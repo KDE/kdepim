@@ -104,6 +104,8 @@ namespace MessageViewer {
     mStream << "<!-- embedPart(contentID=" << contentId << ", url=" << url << ") -->" << endl;
     flush();
   }
+  void FileHtmlWriter::extraHead( const QString& ) {
 
+  }
 
 } // namespace KMail

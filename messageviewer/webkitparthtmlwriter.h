@@ -59,17 +59,18 @@ public:
   void queue( const QString & str );
   void flush();
   void embedPart( const QByteArray & contentId, const QString & url );
-
+  void extraHead( const QString& str );
 signals:
   void finished();
 
 private:
   void resolveCidUrls();
+  void insertExtraHead();
 
 private:
   MailWebView * mHtmlView;
   QString mHtml;
-  QString mCss;
+  QString mExtraHead;
   enum State {
     Begun,
     Queued,

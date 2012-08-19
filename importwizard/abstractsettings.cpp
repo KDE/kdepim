@@ -99,6 +99,15 @@ void AbstractSettings::addCheckMailOnStartup(const QString& agentIdentifyName,bo
   addKmailConfig(groupName,QLatin1String("CheckOnStartup"), loginAtStartup);
 }
 
+void AbstractSettings::addToManualCheck(const QString& agentIdentifyName,bool manualCheck)
+{
+  if(agentIdentifyName.isEmpty())
+    return;
+  const QString groupName = QString::fromLatin1("Resource %1").arg(agentIdentifyName);
+  addKmailConfig(groupName,QLatin1String("IncludeInManualChecks"), manualCheck);
+}
+
+
 void AbstractSettings::addComposerHeaderGroup( const QString& groupName, const QString& name, const QString& value )
 {
   KConfigGroup group = mKmailConfig->group(groupName);

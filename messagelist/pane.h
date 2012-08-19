@@ -391,7 +391,7 @@ public slots:
   /**
    * Add a new tab to the Pane and select it.
    */
-  void createNewTab();
+  QItemSelectionModel *createNewTab();
 
 signals:
   /**

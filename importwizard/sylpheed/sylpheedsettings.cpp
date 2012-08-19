@@ -33,12 +33,17 @@ SylpheedSettings::SylpheedSettings( const QString& filename, const QString& path
     :AbstractSettings( parent )
 {
   bool checkMailOnStartup = true;
+  int intervalCheckMail = -1;
   const QString sylpheedrc = path + QLatin1String("/sylpheedrc");
   if(QFile( sylpheedrc ).exists()) {
     KConfig configCommon( sylpheedrc );
     if(configCommon.hasGroup("Common")) {
       KConfigGroup common = configCommon.group("Common");
       checkMailOnStartup = ( common.readEntry("check_on_startup",1) == 1 );
+
+      if(common.readEntry(QLatin1String("autochk_newmail"),1) == 1 ) {
+          intervalCheckMail = common.readEntry(QLatin1String("autochk_interval"),-1);
+      }
       readGlobalSettings(common);
     }
   }
@@ -48,7 +53,7 @@ SylpheedSettings::SylpheedSettings( const QString& filename, const QString& path
   for ( QStringList::const_iterator it = accountList.constBegin(); it!=end; ++it )
   {
     KConfigGroup group = config.group( *it );
-    readAccount( group, checkMailOnStartup );
+    readAccount( group, checkMailOnStartup, intervalCheckMail );
     readIdentity( group );
   }
   const QString customheaderrc = path + QLatin1String("/customheaderrc");
@@ -200,7 +205,7 @@ bool SylpheedSettings::readConfig( const QString& key, const KConfigGroup& accou
   return false;
 }
 
-void SylpheedSettings::readPop3Account( const KConfigGroup& accountConfig, bool checkMailOnStartup )
+void SylpheedSettings::readPop3Account( const KConfigGroup& accountConfig, bool checkMailOnStartup, int intervalCheckMail )
 {
   QMap<QString, QVariant> settings;
   const QString host = accountConfig.readEntry("receive_server");
@@ -250,12 +255,19 @@ void SylpheedSettings::readPop3Account( const KConfigGroup& accountConfig, bool 
       settings.insert(QLatin1String( "AuthenticationMethod" ), MailTransport::Transport::EnumAuthenticationType::APOP);
     }
   }
+  if(intervalCheckMail != -1) {
+    settings.insert(QLatin1String("IntervalCheckEnabled"), true);
+    settings.insert(QLatin1String("IntervalCheckInterval"), intervalCheckMail);
+  }
+
 
   const QString agentIdentifyName = AbstractBase::createResource( "akonadi_pop3_resource", name, settings );
   addCheckMailOnStartup(agentIdentifyName,checkMailOnStartup);
+  const bool enableManualCheck = (accountConfig.readEntry( QLatin1String( "receive_at_get_all" ), 0) ==1 );
+  addToManualCheck(agentIdentifyName,enableManualCheck);
 }
 
-void SylpheedSettings::readImapAccount( const KConfigGroup& accountConfig, bool checkMailOnStartup )
+void SylpheedSettings::readImapAccount( const KConfigGroup& accountConfig, bool checkMailOnStartup, int intervalCheckMail )
 {
   QMap<QString, QVariant> settings;
   const QString name = accountConfig.readEntry( QLatin1String( "name" ) );
@@ -303,15 +315,25 @@ void SylpheedSettings::readImapAccount( const KConfigGroup& accountConfig, bool 
       kDebug()<<" imap auth unknown "<<auth;
       break;
   }
+
+  if(intervalCheckMail != -1) {
+    settings.insert(QLatin1String("IntervalCheckEnabled"), true);
+    settings.insert(QLatin1String("IntervalCheckTime"),intervalCheckMail);
+  }
+
+
   const QString password = accountConfig.readEntry( QLatin1String( "password" ) );
   settings.insert( QLatin1String( "Password" ), password );
 
   const QString agentIdentifyName = AbstractBase::createResource( "akonadi_imap_resource", name,settings );
   addCheckMailOnStartup(agentIdentifyName,checkMailOnStartup);
+
+  const bool enableManualCheck = (accountConfig.readEntry( QLatin1String( "receive_at_get_all" ), 0) ==1 );
+  addToManualCheck(agentIdentifyName,enableManualCheck);
 }
 
 
-void SylpheedSettings::readAccount(const KConfigGroup& accountConfig , bool checkMailOnStartup)
+void SylpheedSettings::readAccount(const KConfigGroup& accountConfig , bool checkMailOnStartup, int intervalCheckMail)
 {
   if ( accountConfig.hasKey( QLatin1String( "protocol" ) ) )
   {
@@ -319,11 +341,11 @@ void SylpheedSettings::readAccount(const KConfigGroup& accountConfig , bool chec
     switch( protocol )
     {
       case 0:
-        readPop3Account( accountConfig, checkMailOnStartup );
+        readPop3Account( accountConfig, checkMailOnStartup, intervalCheckMail );
         break;
       case 3:
         //imap
-        readImapAccount(accountConfig, checkMailOnStartup);
+        readImapAccount(accountConfig, checkMailOnStartup, intervalCheckMail);
         break;
       case 4:
         kDebug()<<" Add it when nntp resource will implemented";

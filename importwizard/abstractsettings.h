@@ -95,6 +95,7 @@ protected:
 
 
   void addCheckMailOnStartup(const QString& agentIdentifyName,bool loginAtStartup);
+  void addToManualCheck(const QString& agentIdentifyName,bool manualCheck);
   int readKmailSettings( const QString&groupName, const QString& key);
 
   void mergeLdap(const ldapStruct &ldap);

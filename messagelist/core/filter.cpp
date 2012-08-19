@@ -153,7 +153,7 @@ void Filter::setSearchString( const QString &search )
   mQueryClient->close();
   bool ok = mQueryClient->query( query );
   if (!ok) {
-    qDebug() << "Cannot start query:" << mQueryClient->errorMessage();
+    kDebug() << "Cannot start query:" << mQueryClient->errorMessage();
   }
 }
 

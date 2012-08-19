@@ -16,6 +16,8 @@
 */
 
 #include "opera/operaimportdata.h"
+#include "opera/operaaddressbook.h"
+#include "opera/operasettings.h"
 #include "mailimporter/filter_opera.h"
 #include "mailimporter/filterinfo.h"
 #include "importfilterinfogui.h"
@@ -58,9 +60,10 @@ bool OperaImportData::importMails()
   MailImporter::FilterOpera opera;
   opera.setFilterInfo( info );
   info->setStatusMessage(i18n("Import in progress"));
-  QDir directory(mPath);
+  const QString mailPath(mPath+ QLatin1String("mail/store/"));
+  QDir directory(mailPath);
   if(directory.exists())
-    opera.importMails(mPath);
+    opera.importMails(mailPath);
   else
     opera.import();
   info->setStatusMessage(i18n("Import finished"));
@@ -69,9 +72,25 @@ bool OperaImportData::importMails()
   return true;
 }
 
+bool OperaImportData::importAddressBook()
+{
+  const QString addressbookFile(mPath+QLatin1String("bookmarks.adr"));
+  OperaAddressBook addressbook(addressbookFile,mImportWizard);
+  return true;
+}
+
+bool OperaImportData::importSettings()
+{
+  const QString settingFile(mPath+QLatin1String("mail/accounts.ini"));
+  OperaSettings settings(settingFile,mImportWizard);
+  return true;
+}
+
 AbstractImporter::TypeSupportedOptions OperaImportData::supportedOption()
 {
   TypeSupportedOptions options;
   options |=AbstractImporter::Mails;
+  options |=AbstractImporter::AddressBooks;
+  options |=AbstractImporter::Settings;
   return options;
 }

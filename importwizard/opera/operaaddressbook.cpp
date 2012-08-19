@@ -1,41 +1,52 @@
 /*
   Copyright (c) 2012 Montel Laurent <montel@kde.org>
-
+  
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
   published by the Free Software Foundation.
-
+  
   This program is distributed in the hope that it will be useful, but
   WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
   General Public License for more details.
-
+  
   You should have received a copy of the GNU General Public License along
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
-#ifndef OperaImportData_H
-#define OperaImportData_H
 
-#include "abstractimporter.h"
-class ImportWizard;
+#include "operaaddressbook.h"
+#include <QDebug>
+#include <QFile>
 
-class OperaImportData : public AbstractImporter
+OperaAddressBook::OperaAddressBook(const QString &filename, ImportWizard *parent)
+  : AbstractAddressBook( parent )
 {
-public:
-  explicit OperaImportData(ImportWizard *parent);
-  ~OperaImportData();
-    
-  TypeSupportedOptions supportedOption();
-  bool foundMailer() const;
-  
-  bool importMails();
-  bool importAddressBook();
-  bool importSettings();
+  QFile file(filename);
+  if ( !file.open( QIODevice::ReadOnly ) ) {
+    kDebug()<<" We can't open file"<<filename;
+    return;
+  }
 
-  QString name() const;
+  QTextStream stream(&file);
+  while ( !stream.atEnd() ) {
+    const QString line = stream.readLine();
+    if(line == QLatin1String("#CONTACT")) {
+        readContact();
+    } else if(line == QLatin1String("#FOLDER")) {
+        //TODO
+    } else {
+        qDebug()<<" line :"<<line;
+    }
+  }
+}
 
-};
+OperaAddressBook::~OperaAddressBook()
+{
 
-#endif /* OperaImportData_H */
+}
 
+void OperaAddressBook::readContact()
+{
+
+}

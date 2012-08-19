@@ -2282,6 +2282,7 @@ void KMMainWidget::slotUpdateMessageTagList( const QString &taglabel )
 void KMMainWidget::refreshMessageListSelection()
 {
   mAkonadiStandardActionManager->setItemSelectionModel( mMessagePane->currentItemSelectionModel() );
+  slotMessageSelected(mMessagePane->currentItem());
 }
 
 //-----------------------------------------------------------------------------
@@ -2413,17 +2414,6 @@ void KMMainWidget::slotCustomForwardMsg( const QString &tmpl )
   command->start();
 }
 
-
-//-----------------------------------------------------------------------------
-void KMMainWidget::slotNoQuoteReplyToMsg()
-{
-  const Akonadi::Item msg = mMessagePane->currentItem();
-  if ( !msg.isValid() )
-    return;
-
-  KMCommand *command = new KMReplyCommand( this, msg, MessageComposer::ReplySmart, QString(), true );
-  command->start();
-}
 
 void KMMainWidget::openFilterDialog(const QByteArray &field, const QString &value)
 {
