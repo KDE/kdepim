@@ -255,11 +255,6 @@ namespace CalendarSupport
                                                       const Akonadi::ETMCalendar::Ptr &calendar,
                                                       QWidget *parentWidget = 0 );
 
-  CALENDARSUPPORT_EXPORT void scheduleiTIPMethods( KCalCore::iTIPMethod method,
-                                                   const Akonadi::Item &item,
-                                                   const Akonadi::ETMCalendar::Ptr &calendar,
-                                                   QWidget *parentWidget = 0 );
-
   CALENDARSUPPORT_EXPORT void saveAttachments( const Akonadi::Item &item,
                                                QWidget *parentWidget = 0 );
 

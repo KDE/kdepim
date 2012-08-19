@@ -44,6 +44,7 @@
 #include <akonadi/agentactionmanager.h>
 #include <akonadi/calendar/standardcalendaractionmanager.h>
 #include <Akonadi/Calendar/IncidenceChanger>
+#include <Akonadi/Calendar/InvitationHandler>
 #include <akonadi/calendar/freebusymanager.h>
 #include <akonadi/calendar/calendarsettings.h>
 #include <akonadi/collectionmodel.h>
@@ -153,6 +154,7 @@ MainView::MainView( QWidget* parent )
 {
   m_calendarPrefs = EventViews::PrefsPtr( new  EventViews::Prefs );
   m_calendarPrefs->readConfig();
+  mInvitationHandler = new Akonadi::InvitationHandler( this );
 
   Akonadi::CollectionPropertiesDialog::registerPage( new CalendarSupport::CollectionGeneralPageFactory );
 }
@@ -192,7 +194,8 @@ void MainView::doDelayedInit()
   Akonadi::FreeBusyManager::self()->setCalendar( m_calendar );
 
   if ( !IncidenceEditorNG::GroupwareIntegration::isActive() ) {
-    IncidenceEditorNG::GroupwareIntegration::setGlobalUiDelegate( new GroupwareUiDelegate );
+    // TODO_SERGIO
+    //IncidenceEditorNG::GroupwareIntegration::setGlobalUiDelegate( new GroupwareUiDelegate );
     IncidenceEditorNG::GroupwareIntegration::activate( m_calendar );
   }
 
@@ -729,7 +732,9 @@ void MainView::fetchForiTIPMethodDone( KJob *job )
   const Akonadi::Item item = static_cast<Akonadi::ItemFetchJob*>( job )->items().first();
 
   const KCalCore::iTIPMethod method = job->property( "iTIPmethod" ).value<KCalCore::iTIPMethod>();
-  CalendarSupport::scheduleiTIPMethods( method, item, m_calendar, this );
+  const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( item );
+  if ( incidence )
+    mInvitationHandler->sendiTIPMessage( method, incidence, this );
 }
 
 void MainView::saveAllAttachments()

@@ -694,58 +694,6 @@ void  CalendarSupport::publishItemInformation( const Akonadi::Item &item,
   delete publishdlg;
 }
 
-void CalendarSupport::scheduleiTIPMethods( KCalCore::iTIPMethod method,
-                                           const Akonadi::Item &item,
-                                           const Akonadi::ETMCalendar::Ptr &calendar,
-                                           QWidget *parentWidget )
-{
-  Incidence::Ptr incidence = CalendarSupport::incidence( item );
-
-  if ( !incidence ) {
-    KMessageBox::sorry(
-      parentWidget,
-      i18n( "No item selected." ) );
-    return;
-  }
-
-  if ( incidence->attendeeCount() == 0 && method != iTIPPublish ) {
-    KMessageBox::information(
-      parentWidget,
-      i18n( "The item '%1' has no attendees. "
-            "Therefore no groupware message will be sent.",
-            incidence->summary() ),
-      i18n( "Message Not Sent" ),
-      QLatin1String( "ScheduleNoAttendees" ) );
-    return;
-  }
-
-  Incidence *inc = incidence->clone();
-  inc->registerObserver( 0 );
-  inc->clearAttendees();
-
-  // Send the mail
-  /* // TODO_SERGIO
-  CalendarSupport::MailScheduler scheduler( calendar );
-  if ( scheduler.performTransaction( incidence, method ) ) {
-    KMessageBox::information(
-      parentWidget,
-      i18n( "The groupware message for item '%1' "
-            "was successfully sent.\nMethod: %2",
-            incidence->summary(),
-            ScheduleMessage::methodName( method ) ),
-      i18n( "Sending Free/Busy" ),
-      "FreeBusyPublishSuccess" );
-  } else {
-    KMessageBox::error(
-      parentWidget,
-      i18nc( "Groupware message sending failed. "
-             "%2 is request/reply/add/cancel/counter/etc.",
-             "Unable to send the item '%1'.\nMethod: %2",
-             incidence->summary(),
-             ScheduleMessage::methodName( method ) ) );
-  } */
-}
-
 void CalendarSupport::saveAttachments( const Akonadi::Item &item, QWidget *parentWidget )
 {
   Incidence::Ptr incidence = CalendarSupport::incidence( item );

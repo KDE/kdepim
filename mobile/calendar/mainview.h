@@ -35,6 +35,7 @@
 namespace Akonadi {
 class StandardCalendarActionManager;
 class IncidenceChanger;
+class InvitationHandler;
 }
 
 namespace KPIMIdentities {
@@ -128,6 +129,7 @@ class MainView : public KDeclarativeMainView
     Akonadi::IncidenceChanger *m_changer;
     static EventViews::PrefsPtr m_calendarPrefs;
     Akonadi::StandardCalendarActionManager *mActionManager;
+    Akonadi::InvitationHandler *mInvitationHandler;
 };
 
 #endif // MAINVIEW_H
