@@ -34,16 +34,44 @@ OperaAddressBook::OperaAddressBook(const QString &filename, ImportWizard *parent
   }
 
   QTextStream stream(&file);
+  bool foundContact = false;
+  KABC::Addressee *contact = 0;
   while ( !stream.atEnd() ) {
-    const QString line = stream.readLine();
+    QString line = stream.readLine();
     if(line == QLatin1String("#CONTACT")) {
-        readContact(stream);
+        appendContact(contact);
+        foundContact = true;
     } else if(line == QLatin1String("#FOLDER")) {
+        appendContact(contact);
+        foundContact = false;
         //TODO
-    } else {
-        qDebug()<<" line :"<<line;
+    } else if( foundContact ) {
+        line = line.trimmed();
+        if(!contact) {
+            contact = new KABC::Addressee;
+        }
+        if(line.startsWith(QLatin1String("ID"))) {
+            //Nothing
+        } else if(line.startsWith(QLatin1String("NAME"))) {
+
+        } else if(line.startsWith(QLatin1String("URL"))) {
+
+        } else if(line.startsWith(QLatin1String("DESCRIPTION"))) {
+
+        } else if(line.startsWith(QLatin1String("PHONE"))) {
+
+        } else if(line.startsWith(QLatin1String("FAX"))) {
+
+        } else if(line.startsWith(QLatin1String("POSTALADDRESS"))) {
+
+        } else if(line.startsWith(QLatin1String("PICTUREURL"))) {
+
+        } else if(line.startsWith(QLatin1String("ICON"))) {
+
+        }
     }
   }
+  appendContact(contact);
 }
 
 OperaAddressBook::~OperaAddressBook()
@@ -51,32 +79,11 @@ OperaAddressBook::~OperaAddressBook()
 
 }
 
-void OperaAddressBook::readContact(QTextStream &stream)
+void OperaAddressBook::appendContact(KABC::Addressee *contact)
 {
-  KABC::Addressee contact;
-  while ( !stream.atEnd() ) {
-      QString line = stream.readLine().trimmed();
-      if(line.startsWith(QLatin1String("ID"))) {
-          //Nothing
-      } else if(line.startsWith(QLatin1String("NAME"))) {
-
-      } else if(line.startsWith(QLatin1String("URL"))) {
-
-      } else if(line.startsWith(QLatin1String("DESCRIPTION"))) {
-
-      } else if(line.startsWith(QLatin1String("PHONE"))) {
-
-      } else if(line.startsWith(QLatin1String("FAX"))) {
-
-      } else if(line.startsWith(QLatin1String("POSTALADDRESS"))) {
-
-      } else if(line.startsWith(QLatin1String("PICTUREURL"))) {
-
-      } else if(line.startsWith(QLatin1String("ICON"))) {
-
-      } else {
-          qDebug() <<" unknown line :"<<line;
-      }
-  }
-  createContact( contact );
+    if(contact) {
+        createContact( *contact );
+        delete contact;
+        contact = 0;
+    }
 }

@@ -29,7 +29,7 @@ public:
   explicit OperaAddressBook(const QString &filename, ImportWizard *parent);
   ~OperaAddressBook();
 private:
-  void readContact(QTextStream &stream);
+  void appendContact(KABC::Addressee *contact);
 };
 
 #endif // OPERAADDRESSBOOK_H
