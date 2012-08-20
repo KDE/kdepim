@@ -57,7 +57,7 @@ OperaAddressBook::OperaAddressBook(const QString &filename, ImportWizard *parent
         } else if(line.startsWith(QLatin1String("URL"))) {
 
         } else if(line.startsWith(QLatin1String("DESCRIPTION"))) {
-
+            contact->setNote(line.remove(QLatin1String("DESCRIPTION=")));
         } else if(line.startsWith(QLatin1String("PHONE"))) {
 
         } else if(line.startsWith(QLatin1String("FAX"))) {
