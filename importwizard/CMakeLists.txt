@@ -39,6 +39,9 @@ oe/oeimportdata.cpp
 mailapp/mailappimportdata.cpp
 pmail/pmailimportdata.cpp
 thebat/thebatimportdata.cpp
+balsa/balsaimportdata.cpp
+balsa/balsasettings.cpp
+balsa/balsaaddressbook.cpp
 )
 
 include_directories(${CMAKE_SOURCE_DIR}/mailimporter 
