@@ -108,8 +108,22 @@ bool ThunderbirdImportData::importMails()
 
 bool ThunderbirdImportData::importFilters()
 {
-  const QString filterPath = mPath + defaultProfile() + QLatin1String("/Mail/Local Folders/msgFilterRules.dat");
-  return addFilters( filterPath, MailCommon::FilterImporterExporter::ThunderBirdFilter );
+  const QString path(mPath + defaultProfile());
+  QDir dir(path);
+  const QStringList subDir = dir.entryList(QDir::AllDirs|QDir::NoDotAndDotDot,QDir::Name);
+  Q_FOREACH( const QString& mailPath, subDir ) {
+    const QString subMailPath(path + QLatin1Char('/') + mailPath);
+    QDir dirMail(subMailPath);
+    const QStringList subDirMail = dirMail.entryList(QDir::AllDirs|QDir::NoDotAndDotDot,QDir::Name);
+    Q_FOREACH( const QString& file, subDirMail ) {
+      const QString filterFile(subMailPath +QLatin1Char('/')+ file + QLatin1String("/msgFilterRules.dat"));
+      if(QFile(filterFile).exists()) {
+          qDebug()<<" filterFile "<<filterFile;
+        addFilters( filterFile, MailCommon::FilterImporterExporter::ThunderBirdFilter );
+      }
+    }
+  }
+  return true;
 }
 
 AbstractImporter::TypeSupportedOptions ThunderbirdImportData::supportedOption()
