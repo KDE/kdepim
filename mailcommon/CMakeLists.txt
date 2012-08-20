@@ -68,6 +68,7 @@ set(libmailcommon_SRCS
   filter/filterimporter/filterimportersylpheed.cpp
   filter/filterimporter/filterimporterthunderbird.cpp
   filter/filterimporter/filterimporterprocmail.cpp
+  filter/filterimporter/filterimporterbalsa.cpp
   filter/filterlog.cpp
   filter/filtermanager.cpp
   filter/filtermodel.cpp

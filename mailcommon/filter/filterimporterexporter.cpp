@@ -36,6 +36,7 @@
 #include "filterimporter/filterimporterevolution_p.h"
 #include "filterimporter/filterimportersylpheed_p.h"
 #include "filterimporter/filterimporterprocmail_p.h"
+#include "filterimporter/filterimporterbalsa_p.h"
 
 #include <messageviewer/autoqpointer.h>
 #include <messageviewer/util.h>
@@ -285,6 +286,10 @@ QList<MailFilter *> FilterImporterExporter::importFilters(
       title = i18n( "Import Procmail Filters" );
       defaultPath = MailCommon::FilterImporterProcmail::defaultPath();
       break;
+    case BalsaFilter:
+      title = i18n( "Import Balsa Filters" );
+      defaultPath = MailCommon::FilterImporterBalsa::defaultPath();
+      break;
     }
 
     fileName = KFileDialog::getOpenFileName(
@@ -347,6 +352,16 @@ QList<MailFilter *> FilterImporterExporter::importFilters(
   {
     MailCommon::FilterImporterProcmail *filter =
       new MailCommon::FilterImporterProcmail( &file );
+
+    imported = filter->importFilter();
+    emptyFilter = filter->emptyFilter();
+    delete filter;
+    break;
+  }
+  case BalsaFilter:
+  {
+    MailCommon::FilterImporterBalsa *filter =
+      new MailCommon::FilterImporterBalsa( &file );
 
     imported = filter->importFilter();
     emptyFilter = filter->emptyFilter();

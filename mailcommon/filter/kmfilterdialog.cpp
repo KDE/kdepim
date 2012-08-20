@@ -328,6 +328,10 @@ KMFilterDialog::KMFilterDialog( const QList<KActionCollection*> &actionCollectio
   act->setData( (int)MailCommon::FilterImporterExporter::ProcmailFilter );
   menu->addAction( act );
 
+  act = new QAction( i18n( "Balsa filters" ), this );
+  act->setData( (int)MailCommon::FilterImporterExporter::BalsaFilter );
+  menu->addAction( act );
+
   connect( menu, SIGNAL(triggered(QAction*)), SLOT(slotImportFilter(QAction*)) );
 
   button( KDialog::User1 )->setMenu( menu );
