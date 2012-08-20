@@ -649,51 +649,6 @@ void CalendarSupport::sendAsICalendar( const Akonadi::Item &item,
   delete publishdlg;
 }
 
-void  CalendarSupport::publishItemInformation( const Akonadi::Item &item,
-                                               const Akonadi::ETMCalendar::Ptr &calendar,
-                                               QWidget *parentWidget )
-{
-  Incidence::Ptr incidence = CalendarSupport::incidence( item );
-
-  if ( !incidence ) {
-    KMessageBox::information(
-      parentWidget,
-      i18n( "No item selected." ),
-      "PublishNoEventSelected" );
-    return;
-  }
-
-  QPointer<Akonadi::PublishDialog> publishdlg = new Akonadi::PublishDialog();
-  if ( incidence->attendeeCount() > 0 ) {
-    Attendee::List attendees = incidence->attendees();
-    Attendee::List::ConstIterator it;
-    Attendee::List::ConstIterator end( attendees.constEnd() );
-    for ( it = attendees.constBegin(); it != end; ++it ) {
-      publishdlg->addAttendee( *it );
-    }
-  }
-  if ( publishdlg->exec() == QDialog::Accepted && publishdlg ) {
-    Incidence::Ptr inc( incidence->clone() );
-    inc->registerObserver( 0 );
-    inc->clearAttendees();
-/*
-    // Send the mail
-    CalendarSupport::MailScheduler scheduler( calendar );
-    if ( scheduler.publish( incidence, publishdlg->addresses() ) ) {
-      KMessageBox::information(
-        parentWidget,
-        i18n( "The item information was successfully sent." ),
-        i18n( "Publishing" ),
-        "IncidencePublishSuccess" );
-    } else {
-      KMessageBox::error(
-        parentWidget,
-        i18n( "Unable to publish the item '%1'", incidence->summary() ) );
-    } */ //TODO_SERGIO
-  }
-  delete publishdlg;
-}
-
 void CalendarSupport::saveAttachments( const Akonadi::Item &item, QWidget *parentWidget )
 {
   Incidence::Ptr incidence = CalendarSupport::incidence( item );

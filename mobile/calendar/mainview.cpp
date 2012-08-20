@@ -676,7 +676,10 @@ void MainView::fetchForPublishItemDone( KJob *job )
 
   const Akonadi::Item item = static_cast<Akonadi::ItemFetchJob*>( job )->items().first();
 
-  CalendarSupport::publishItemInformation( item, m_calendar, this );
+
+  KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( item );
+  if ( incidence )
+    mInvitationHandler->publishInformation( incidence, this );
 }
 
 void MainView::sendInvitation()
