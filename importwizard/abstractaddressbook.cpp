@@ -95,6 +95,16 @@ void AbstractAddressBook::slotStoreDone(KJob*job)
   addAddressBookImportInfo( i18n( "Contact created done" ) );
 }
 
+void AbstractAddressBook::addImportInfo( const QString& log )
+{
+  addAddressBookImportInfo(log);
+}
+
+void AbstractAddressBook::addImportError( const QString& log )
+{
+  addAddressBookImportError(log);
+}
+
 void AbstractAddressBook::addAddressBookImportInfo( const QString& log )
 {
   mImportWizard->importAddressBookPage()->addImportInfo( log );

@@ -18,6 +18,8 @@
 #include "evolutionsettings.h"
 #include "evolutionutil.h"
 #include "mailcommon/mailutil.h"
+#include "importwizardutil.h"
+
 #include <kpimidentities/identity.h>
 
 #include <mailtransport/transportmanager.h>
@@ -171,7 +173,7 @@ void EvolutionSettings::readLdap(const QString &ldapStr)
             qDebug()<<" tag unknown :"<<propertyTag;
           }
         }
-        mergeLdap(ldap);
+        ImportWizardUtil::mergeLdap(ldap);
       }
     }
   }

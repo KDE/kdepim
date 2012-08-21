@@ -18,6 +18,7 @@
 #include "thunderbirdsettings.h"
 #include <mailtransport/transportmanager.h>
 #include "mailcommon/mailutil.h"
+#include "importwizardutil.h"
 
 #include <kpimidentities/identity.h>
 #include <kpimidentities/signature.h>
@@ -108,7 +109,7 @@ void ThunderbirdSettings::readLdapSettings()
         qDebug()<<" Security not implemented :"<<ldap.ldapUrl.scheme();
       }
     }
-    mergeLdap(ldap);
+    ImportWizardUtil::mergeLdap(ldap);
   }
 }
 

@@ -18,6 +18,7 @@ abstractsettings.cpp
 abstractaddressbook.cpp
 abstractcalendar.cpp
 importcalendarpage.cpp
+importwizardutil.cpp
 thunderbird/thunderbirdimportdata.cpp
 thunderbird/thunderbirdsettings.cpp
 thunderbird/thunderbirdaddressbook.cpp

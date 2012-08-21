@@ -59,6 +59,10 @@ void BalsaSettings::readIdentity(const KConfigGroup &grp)
   newIdentity->setEmailAddr(grp.readEntry(QLatin1String("Address")));
   newIdentity->setReplyToAddr(grp.readEntry(QLatin1String("ReplyTo")));
   newIdentity->setBcc(grp.readEntry(QLatin1String("Bcc")));
+  const QString smtp = grp.readEntry(QLatin1String("SmtpServer"));
+  if(!smtp.isEmpty() && mHashSmtp.contains(smtp)) {
+    newIdentity->setTransport(mHashSmtp.value(smtp));
+  }
 
 #if 0
   Address=laurent@kspread
