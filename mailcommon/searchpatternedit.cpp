@@ -133,6 +133,8 @@ void SearchRuleWidget::initWidget()
   mRuleField->setObjectName( "mRuleField" );
   mRuleField->setEditable( true );
   KLineEdit *edit = new KLineEdit;
+  edit->setClickMessage( i18n("Choose or type your own criteria"));
+  mRuleField->setToolTip(i18n("Choose or type your own criteria"));
   edit->setClearButtonShown(true);
   mRuleField->setLineEdit(edit);
   mRuleField->setTrapReturnKey(true);
