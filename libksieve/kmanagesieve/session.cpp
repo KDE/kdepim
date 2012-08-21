@@ -109,10 +109,12 @@ void Session::dataReceived()
 
   while ( m_socket->canReadLine() ) {
     QByteArray line = m_socket->readLine();
-    if ( line.endsWith( "\r\n" ) )
+    if ( line.endsWith( "\r\n" ) ) { //krazy:exclude=strings
       line.chop( 2 );
-    if ( line.isEmpty() )
+    }
+    if ( line.isEmpty() ) {
       continue; // ignore CRLF after data blocks
+    }
     kDebug() << "S: " << line;
     Response r;
     if ( !r.parseResponse( line ) ) {
@@ -428,24 +430,29 @@ bool Session::saslInteract(void* in)
     if ( interact->id == SASL_CB_AUTHNAME || interact->id == SASL_CB_PASS ) {
       if ( ai.username.isEmpty() || ai.password.isEmpty()) {
 
-        KPasswordDialog dlg( 0, KPasswordDialog::ShowUsernameLine | KPasswordDialog::ShowKeepPassword );
-        dlg.setUsername( ai.username );
-        dlg.setPassword( ai.password );
-        dlg.setKeepPassword( ai.keepPassword );
-        dlg.setPrompt( ai.prompt );
-        dlg.setUsernameReadOnly( ai.readOnly );
-        dlg.setCaption( ai.caption );
-        dlg.addCommentLine( ai.commentLabel, ai.comment );
+        QPointer<KPasswordDialog> dlg =
+          new KPasswordDialog(
+            0,
+            KPasswordDialog::ShowUsernameLine | KPasswordDialog::ShowKeepPassword
+            );
+        dlg->setUsername( ai.username );
+        dlg->setPassword( ai.password );
+        dlg->setKeepPassword( ai.keepPassword );
+        dlg->setPrompt( ai.prompt );
+        dlg->setUsernameReadOnly( ai.readOnly );
+        dlg->setCaption( ai.caption );
+        dlg->addCommentLine( ai.commentLabel, ai.comment );
 
-        if ( !dlg.exec() ) {
-          // calling error() below is wrong for two reasons:
-          // - ERR_ABORTED is too harsh
-          // - higher layers already call error() and that can't happen twice.
-                //error(ERR_ABORTED, i18n("No authentication details supplied."));
-                return false;
+        bool gotIt = false;
+        if ( dlg->exec() ) {
+          m_url.setUserName( dlg->username() );
+          m_url.setPassword( dlg->password() );
+          gotIt = true;
         }
-        m_url.setUserName( dlg.username() );
-        m_url.setPassword( dlg.password() );
+        delete dlg;
+        if ( !gotIt ) {
+          return false;
+        }
       }
       break;
     }
