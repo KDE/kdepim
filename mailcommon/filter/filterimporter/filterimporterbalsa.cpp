@@ -58,7 +58,9 @@ void FilterImporterBalsa::addFilter(const KConfigGroup &grp)
 
   const QString condition = grp.readEntry(QLatin1String("Condition"));
   const QString sound = grp.readEntry(QLatin1String("Sound"));
+  //TODO
   const QString popupText = grp.readEntry(QLatin1String("Popup-text"));
+
   const int actionType = grp.readEntry(QLatin1String("Action-type"),-1);
   const QString actionStr = grp.readEntry(QLatin1String("Action-string"));
 
@@ -69,7 +71,6 @@ void FilterImporterBalsa::addFilter(const KConfigGroup &grp)
   }
   parseAction(actionType,actionStr,filter);
   parseCondition(condition,filter);
-  //TODO
 
   appendFilter(filter);
 }
@@ -92,16 +93,22 @@ void FilterImporterBalsa::parseAction(int actionType, const QString& action,Mail
   case 0:
     break;
   case 1:
+      //Copy
     break;
   case 2:
+      //Move
     break;
   case 3:
+      //Print
     break;
   case 4:
+      //Execute
     break;
   case 5:
+      //Move to trash
     break;
   case 6:
+      //Put color
     break;
   default:
     qDebug()<<" unknown parse action type "<<actionType;
