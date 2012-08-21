@@ -18,6 +18,8 @@
     02110-1301, USA.
 */
 
+//krazy:excludeall=null since used by SASL (C library)
+
 #include "session.h"
 #include "response.h"
 #include "sievejob_p.h"
@@ -163,7 +165,7 @@ void Session::processResponse(const KManageSieve::Response& response, const QByt
     case PostTlsCapabilities:
       if ( response.type() == Response::Action ) {
         if ( response.operationSuccessful() ) {
-          kDebug() << "Sieve server ready & awaiting authentication." << endl;
+          kDebug() << "Sieve server ready & awaiting authentication.";
           if ( m_state == PreTlsCapabilities ) {
             if ( !allowUnencrypted() && !QSslSocket::supportsSsl() ) {
               m_errorMsg = KIO::buildErrorString( KIO::ERR_SLAVE_DEFINED, i18n("Can not use TLS since the underlying Qt library does not support it.") );
@@ -194,7 +196,7 @@ void Session::processResponse(const KManageSieve::Response& response, const QByt
             startAuthentication();
           }
         } else {
-          kDebug() << "Unknown action " << response.action() << "." << endl;
+          kDebug() << "Unknown action " << response.action() << ".";
         }
       } else if ( response.key() == "IMPLEMENTATION" ) {
         m_implementation = QString::fromLatin1( response.value() );
@@ -210,7 +212,7 @@ void Session::processResponse(const KManageSieve::Response& response, const QByt
         kDebug() << "Server supports TLS";
         m_supportsStartTls = true;
       } else {
-        kDebug() << "Unrecognised key " << response.key() << endl;
+        kDebug() << "Unrecognised key " << response.key();
       }
       break;
     case StartTls:
