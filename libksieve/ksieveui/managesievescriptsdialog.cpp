@@ -31,7 +31,7 @@ bool ItemRadioButton::mTreeWidgetIsBeingCleared = false;
 ManageSieveScriptsDialog::ManageSieveScriptsDialog( QWidget * parent, const char * name )
   : QDialog( parent ),
     mSieveEditor( 0 ),
-    mIsNewScript( false ), 
+    mIsNewScript( false ),
     mWasActive( false )
 {
   setWindowTitle( i18n( "Manage Sieve Scripts" ) );
@@ -46,7 +46,7 @@ ManageSieveScriptsDialog::ManageSieveScriptsDialog( QWidget * parent, const char
   QVBoxLayout * vlay = new QVBoxLayout( frame );
   vlay->setSpacing( 0 );
   vlay->setMargin( 0 );
-  
+
   mListView = new TreeWidgetWithContextMenu( frame);
   mListView->setHeaderLabel( i18n( "Available Scripts" ) );
   mListView->setRootIsDecorated( true );
@@ -65,14 +65,14 @@ ManageSieveScriptsDialog::ManageSieveScriptsDialog( QWidget * parent, const char
   QHBoxLayout *buttonLayout = new QHBoxLayout;
   vlay->addLayout( buttonLayout );
 
-  mNewScript = new KPushButton( i18n( "New..." ) );
+  mNewScript = new KPushButton( i18nc( "create a new sieve script", "New..." ) );
   connect( mNewScript, SIGNAL(clicked()), SLOT(slotNewScript()) );
   buttonLayout->addWidget( mNewScript );
-  
+
   mEditScript = new KPushButton( i18n( "Edit..." ) );
   connect( mEditScript, SIGNAL(clicked()), SLOT(slotEditScript()) );
   buttonLayout->addWidget( mEditScript );
-  
+
   mDeleteScript = new KPushButton( i18n( "Delete" ) );
   connect( mDeleteScript, SIGNAL(clicked()), SLOT(slotDeleteScript()) );
   buttonLayout->addWidget( mDeleteScript );
@@ -80,11 +80,11 @@ ManageSieveScriptsDialog::ManageSieveScriptsDialog( QWidget * parent, const char
   mDeactivateScript = new KPushButton( i18n( "Deactivate" ) );
   connect( mDeactivateScript, SIGNAL(clicked()), SLOT(slotDeactivateScript()) );
   buttonLayout->addWidget( mDeactivateScript );
-  
+
   KPushButton *mClose = new KPushButton( KStandardGuiItem::close() );
   connect( mClose, SIGNAL(clicked()), this, SLOT(accept()) );
   buttonLayout->addWidget( mClose );
-  
+
   resize( sizeHint().width(), sizeHint().height() );
   slotRefresh();
 }
@@ -452,7 +452,7 @@ void ManageSieveScriptsDialog::slotNewScript()
       }
     }
   }
-  
+
   QTreeWidgetItem *newItem =
     new QTreeWidgetItem( currentItem );
   addRadioButton( newItem, name );
