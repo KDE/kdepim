@@ -32,6 +32,9 @@ private:
   void readAccount(const KConfigGroup &grp);
   void readIdentity(const KConfigGroup &grp);
   void readTransport(const KConfigGroup &grp);
+  void readGlobalSettings(const KConfigGroup &grp);
+
+  QHash<QString, QString> mHashSmtp;
 };
 
 #endif // BalsaSettings_H

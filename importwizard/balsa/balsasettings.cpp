@@ -33,6 +33,12 @@
 BalsaSettings::BalsaSettings(const QString &filename, ImportWizard *parent)
   :AbstractSettings( parent )
 {
+    KConfig config(filename);
+    const QStringList smtpList = config.groupList().filter( QRegExp( "smtp-server-" ) );
+    Q_FOREACH(const QString& smtp,smtpList) {
+      KConfigGroup grp = config.group(smtp);
+      readTransport(grp);
+    }
 }
 
 BalsaSettings::~BalsaSettings()
@@ -51,6 +57,19 @@ void BalsaSettings::readIdentity(const KConfigGroup &grp)
 }
 
 void BalsaSettings::readTransport(const KConfigGroup &grp)
+{
+    //TODO
+/*
+    Server=localhost:25
+    Anonymous=false
+    RememberPasswd=false
+    SSL=false
+    TLSMode=1
+    BigMessage=0
+*/
+}
+
+void BalsaSettings::readGlobalSettings(const KConfigGroup &grp)
 {
 
 }
