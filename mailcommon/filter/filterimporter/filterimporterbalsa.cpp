@@ -81,6 +81,8 @@ void FilterImporterBalsa::parseCondition(const QString& condition,MailCommon::Ma
 
     } else if(condition.startsWith(QLatin1String("AND "))) {
 
+    } else if(condition.startsWith(QLatin1String("NOT "))) {
+
     }
 }
 
