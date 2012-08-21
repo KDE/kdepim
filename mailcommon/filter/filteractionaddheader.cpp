@@ -85,6 +85,7 @@ QWidget* FilterActionAddHeader::createParamWidget( QWidget *parent ) const
 
   KLineEdit *lineEdit = new KLineEdit( widget );
   lineEdit->setObjectName( "ledit" );
+  lineEdit->setTrapReturnKey(true);
   lineEdit->setClearButtonShown( true );
   layout->addWidget( lineEdit, 1 );
 

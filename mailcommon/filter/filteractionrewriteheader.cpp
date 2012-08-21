@@ -117,6 +117,7 @@ QWidget* FilterActionRewriteHeader::createParamWidget( QWidget *parent ) const
   KLineEdit *lineEdit = new KLineEdit( widget );
   lineEdit->setObjectName( "replace" );
   lineEdit->setClearButtonShown( true );
+  lineEdit->setTrapReturnKey(true);
   layout->addWidget( lineEdit, 1 );
 
   setParamWidgetValue( widget );

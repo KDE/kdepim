@@ -27,6 +27,7 @@ using MailCommon::RuleWidgetHandlerManager;
 #include <KDialog>
 #include <KLocale>
 #include <KPushButton>
+#include <KLineEdit>
 
 #include <QButtonGroup>
 #include <QByteArray>
@@ -131,6 +132,11 @@ void SearchRuleWidget::initWidget()
   mRuleField = new MessageViewer::MinimumComboBox( this );
   mRuleField->setObjectName( "mRuleField" );
   mRuleField->setEditable( true );
+  KLineEdit *edit = new KLineEdit;
+  edit->setClearButtonShown(true);
+  mRuleField->setLineEdit(edit);
+  mRuleField->setTrapReturnKey(true);
+
   mRuleField->addItems( mFilterFieldList );
   // don't show sliders when popping up this menu
   mRuleField->setMaxCount( mRuleField->count() );
