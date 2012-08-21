@@ -39,6 +39,7 @@ QWidget* FilterActionWithString::createParamWidget( QWidget *parent ) const
 {
   KLineEdit *lineEdit = new KLineEdit( parent );
   lineEdit->setClearButtonShown( true );
+  lineEdit->setTrapReturnKey(true);
   lineEdit->setText( mParameter );
 
   connect( lineEdit, SIGNAL(textChanged(QString)), this, SIGNAL(filterActionModified()) );

@@ -68,6 +68,7 @@ void RegExpLineEdit::initWidget( const QString &str )
 
   mLineEdit = new KLineEdit( str, this );
   mLineEdit->setClearButtonShown( true );
+  mLineEdit->setTrapReturnKey(true);
   setFocusProxy( mLineEdit );
   hlay->addWidget( mLineEdit );
 
