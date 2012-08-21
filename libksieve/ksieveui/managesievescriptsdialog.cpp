@@ -440,14 +440,15 @@ void ManageSieveScriptsDialog::slotNewScript()
 
   QButtonGroup *buttonGroup = mButtonGroups.value( currentItem );
 
-  if ( buttonGroup )
-  {
+  if ( buttonGroup ) {
     QList<QAbstractButton *> group = buttonGroup->buttons();
     const int numberOfGroup( group.count() );
-    for ( int i = 0; i < numberOfGroup; ++i )
-    {
-      if ( group.at( i )->text().replace( "&","" ) == name ) {
-        KMessageBox::error( this, i18n( "Script name already used \"%1\".", name ), i18n( "New Script" ) );
+    for ( int i = 0; i < numberOfGroup; ++i ) {
+      if ( group.at( i )->text().remove( '&' ) == name ) {
+        KMessageBox::error(
+          this,
+          i18n( "Script name already used \"%1\".", name ),
+          i18n( "New Script" ) );
         return;
       }
     }
