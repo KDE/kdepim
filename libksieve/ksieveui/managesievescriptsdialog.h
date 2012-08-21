@@ -1,6 +1,6 @@
 
-#ifndef KSIEVEUI_MANAGESIEVESCRIPTSDIALOG_H
-#define KSIEVEUI_MANAGESIEVESCRIPTSDIALOG_H
+#ifndef KSIEVE_KSIEVEUI_MANAGESIEVESCRIPTSDIALOG_H
+#define KSIEVE_KSIEVEUI_MANAGESIEVESCRIPTSDIALOG_H
 
 #include "ksieveui_export.h"
 
@@ -90,13 +90,13 @@ class KSIEVEUI_EXPORT ManageSieveScriptsDialog : public QDialog
     void addOkMessage( const QString & logEntry );
     void addMessageEntry( const QString & errorMsg, const QColor& color );
     void updateButtons();
-  
+
   private:
     enum sieveServerStatus
     {
       SIEVE_SERVER_ERROR = Qt::UserRole +1
     };
-      
+
     TreeWidgetWithContextMenu* mListView;
     SieveEditor * mSieveEditor;
     QMap<KManageSieve::SieveJob*,QTreeWidgetItem*> mJobs;
@@ -108,11 +108,11 @@ class KSIEVEUI_EXPORT ManageSieveScriptsDialog : public QDialog
     // Maps the top-level tree widget items (the accounts) to a button group.
     // The button group is used for the radio buttons of the child items.
     QMap<QTreeWidgetItem*,QButtonGroup*> mButtonGroups;
-  
+
     KUrl mCurrentURL;
 
     KPushButton *mNewScript;
-    KPushButton *mEditScript; 
+    KPushButton *mEditScript;
     KPushButton *mDeleteScript;
     KPushButton *mDeactivateScript;
 

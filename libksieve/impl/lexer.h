@@ -32,8 +32,8 @@
     your version.
 */
 
-#ifndef __KSIEVE_IMPL_LEXER_H__
-#define __KSIEVE_IMPL_LEXER_H__
+#ifndef KSIEVE_IMPL_LEXER_H
+#define KSIEVE_IMPL_LEXER_H
 
 #include <ksieve/lexer.h>
 #include <ksieve/error.h>
@@ -88,10 +88,10 @@ namespace KSieve {
 	parsing is successful, cursor is positioned behind the CRLF
 	that ended the comment's line (or past the end). */
     bool parseHashComment( QString & result, bool reallySave=false );
-    
+
     /** Cursor must be positioned after the opening slash-asterisk */
     bool parseBracketComment( QString & result, bool reallySave=false );
-    
+
     /** Cursor must be positioned on the opening '/'or '#' */
     bool parseComment( QString & result, bool reallySave=false );
 
@@ -185,4 +185,4 @@ namespace KSieve {
 
 }
 
-#endif // __KSIEVE_IMPL_LEXER_H__
+#endif

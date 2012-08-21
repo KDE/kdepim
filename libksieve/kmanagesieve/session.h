@@ -18,8 +18,8 @@
     02110-1301, USA.
 */
 
-#ifndef KMANAGESIEVE_SESSION_H
-#define KMANAGESIEVE_SESSION_H
+#ifndef KSIEVE_KMANAGESIEVE_SESSION_H
+#define KSIEVE_KMANAGESIEVE_SESSION_H
 
 #include "response.h"
 #include "sasl-common.h"

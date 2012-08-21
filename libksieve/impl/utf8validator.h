@@ -30,8 +30,8 @@
     your version.
 */
 
-#ifndef __KSIEVE_UTF8VALIDATOR_H__
-#define __KSIEVE_UTF8VALIDATOR_H__
+#ifndef KSIEVE_IMPL_UTF8VALIDATOR_H
+#define KSIEVE_IMPL_UTF8VALIDATOR_H
 
 namespace KSieve {
 
@@ -39,4 +39,4 @@ namespace KSieve {
 
 } // namespace KSieve
 
-#endif // __KSIEVE_ERROR_H__
+#endif

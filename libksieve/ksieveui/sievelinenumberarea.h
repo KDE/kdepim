@@ -16,29 +16,29 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef SIEVELINENUMBERAREA_H
-#define SIEVELINENUMBERAREA_H
+#ifndef KSIEVE_KSIEVEUI_SIEVELINENUMBERAREA_H
+#define KSIEVE_KSIEVEUI_SIEVELINENUMBERAREA_H
 
 #include <QWidget>
 
-
 namespace KSieveUi {
+
 class SieveTextEdit;
 
 class SieveLineNumberArea : public QWidget
 {
-public:
-  explicit SieveLineNumberArea(SieveTextEdit *editor);
-  
-  QSize sizeHint() const;
-  
-protected:
-  void paintEvent(QPaintEvent *event);
-  
-private:
-  SieveTextEdit *m_sieveTextEdit;
+  public:
+    explicit SieveLineNumberArea(SieveTextEdit *editor);
+
+    QSize sizeHint() const;
+
+  protected:
+    void paintEvent(QPaintEvent *event);
+
+  private:
+    SieveTextEdit *m_sieveTextEdit;
 };
+
 }
 
-#endif /* SIEVELINENUMBERAREA_H */
-
+#endif

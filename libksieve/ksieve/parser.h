@@ -30,8 +30,8 @@
     your version.
 */
 
-#ifndef LIBKSIEVE_KSIEVE_PARSER_H
-#define LIBKSIEVE_KSIEVE_PARSER_H
+#ifndef KSIEVE_KSIEVE_PARSER_H
+#define KSIEVE_KSIEVE_PARSER_H
 
 #include "libksieve_export.h"
 
