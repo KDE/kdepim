@@ -77,9 +77,34 @@ void FilterImporterBalsa::addFilter(const KConfigGroup &grp)
 void FilterImporterBalsa::parseCondition(const QString& condition,MailCommon::MailFilter *filter )
 {
     //TODO
+    if(condition.startsWith(QLatin1String("OR "))) {
+
+    } else if(condition.startsWith(QLatin1String("AND "))) {
+
+    }
 }
 
 void FilterImporterBalsa::parseAction(int actionType, const QString& action,MailCommon::MailFilter *filter)
 {
+  switch(actionType) {
+  case 0:
+    break;
+  case 1:
+    break;
+  case 2:
+    break;
+  case 3:
+    break;
+  case 4:
+    break;
+  case 5:
+    break;
+  case 6:
+    break;
+  default:
+    qDebug()<<" unknown parse action type "<<actionType;
+    break;
+  }
+
     //TODO
 }
