@@ -89,23 +89,29 @@ void FilterImporterBalsa::parseCondition(const QString& condition,MailCommon::Ma
 
 void FilterImporterBalsa::parseAction(int actionType, const QString& action,MailCommon::MailFilter *filter)
 {
+  QString actionName;
   switch(actionType) {
   case 0:
     break;
   case 1:
       //Copy
+      actionName = QLatin1String( "copy" );
     break;
   case 2:
       //Move
+      actionName = QLatin1String( "transfer" );
     break;
   case 3:
       //Print
     break;
   case 4:
       //Execute
+      actionName = QLatin1String( "execute" );
     break;
   case 5:
       //Move to trash
+      actionName = QLatin1String( "transfer" );
+      //Special !
     break;
   case 6:
       //Put color
@@ -115,5 +121,7 @@ void FilterImporterBalsa::parseAction(int actionType, const QString& action,Mail
     break;
   }
 
-    //TODO
+  if(!actionName.isEmpty()) {
+    createFilterAction( filter, actionName, action );
+  }
 }
