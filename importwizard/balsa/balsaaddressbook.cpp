@@ -20,16 +20,55 @@
 #include <KABC/Addressee>
 #include <kabc/contactgroup.h>
 
+#include <KConfig>
+#include <KConfigGroup>
 
 #include <QDebug>
-#include <QFile>
 
 BalsaAddressBook::BalsaAddressBook(const QString &filename, ImportWizard *parent)
   : AbstractAddressBook( parent )
 {
+    KConfig config(filename);
+    const QStringList addressBookList = config.groupList().filter( QRegExp( "address-book-\\+d" ) );
+    Q_FOREACH(const QString& addressbook,addressBookList) {
+      KConfigGroup grp = config.group(addressbook);
+      readAddressBook(grp);
+    }
+
 }
 
 BalsaAddressBook::~BalsaAddressBook()
 {
 
+}
+
+void BalsaAddressBook::readAddressBook(const KConfigGroup& grp)
+{
+//TODO
+  const QString type = grp.readEntry(QLatin1String("Type"));
+  if(type.isEmpty()) {
+    return;
+  }
+  const QString name = grp.readEntry(QLatin1String("Name"));
+
+  if(type == QLatin1String("LibBalsaAddressBookLdap")) {
+
+      /*
+      Host=ldap://ldap
+      BaseDN=ss
+      BookDN=ss
+      EnableTLS=true
+      Type=LibBalsaAddressBookLdap
+      Name=tito
+      ExpandAliases=true
+      IsExpensive=true
+      DistListMode=false
+*/
+  } else if(type == QLatin1String("LibBalsaAddressBookGpe")) {
+
+  } else if(type == QLatin1String("LibBalsaAddressBookLdif")) {
+
+  } else {
+      qDebug()<<" unknown addressbook type :"<<type;
+  }
 }

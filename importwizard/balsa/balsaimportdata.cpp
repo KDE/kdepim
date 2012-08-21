@@ -75,8 +75,7 @@ bool BalsaImportData::importMails()
 
 bool BalsaImportData::importAddressBook()
 {
-    //FIXME:
-  const QString addressbookFile(mPath+QLatin1String("bookmarks.adr"));
+  const QString addressbookFile(mPath+QLatin1String("config"));
   BalsaAddressBook addressbook(addressbookFile,mImportWizard);
   return true;
 }

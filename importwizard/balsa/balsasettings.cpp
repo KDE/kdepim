@@ -39,6 +39,7 @@ BalsaSettings::BalsaSettings(const QString &filename, ImportWizard *parent)
       KConfigGroup grp = config.group(smtp);
       readTransport(grp);
     }
+    readGlobalSettings(config);
 }
 
 BalsaSettings::~BalsaSettings()
@@ -53,11 +54,79 @@ void BalsaSettings::readAccount(const KConfigGroup &grp)
 
 void BalsaSettings::readIdentity(const KConfigGroup &grp)
 {
+  KPIMIdentities::Identity* newIdentity = createIdentity();
+  newIdentity->setFullName(grp.readEntry(QLatin1String("FullName")));
+  newIdentity->setEmailAddr(grp.readEntry(QLatin1String("Address")));
+  newIdentity->setReplyToAddr(grp.readEntry(QLatin1String("ReplyTo")));
+  newIdentity->setBcc(grp.readEntry(QLatin1String("Bcc")));
 
+#if 0
+  Address=laurent@kspread
+  ReplyTo=
+  Domain=
+  Bcc=
+  ReplyString=Re :
+  ForwardString=Fwd :
+  SendMultipartAlternative=false
+  SmtpServer=Défaut
+  SignaturePath=
+  SigExecutable=false
+  SigSending=true
+  SigForward=true
+  SigReply=true
+  SigSeparator=true
+  SigPrepend=false
+  FacePath=
+  XFacePath=
+  RequestMDN=false
+  GpgSign=false
+  GpgEncrypt=false
+  GpgTrustAlways=false
+  GpgWarnSendPlain=true
+  CryptProtocol=8
+  ForceKeyID=
+#endif
+
+
+  storeIdentity(newIdentity);
 }
 
 void BalsaSettings::readTransport(const KConfigGroup &grp)
 {
+  MailTransport::Transport *mt = createTransport();
+  const QString smtp = grp.name().remove(QLatin1String("smtp-server-"));
+  const QString server = grp.readEntry(QLatin1String("Server"));
+  mt->setHost(server);
+
+  const int tlsMode = grp.readEntry(QLatin1String("TLSMode"),-1);
+  //TODO
+  switch(tlsMode) {
+  case 0:
+      break;
+  case 1:
+      break;
+  case 2:
+      break;
+  default:
+      break;
+  }
+
+  const QString ssl = grp.readEntry(QLatin1String("SSL"));
+  //TODO
+  if(ssl == QLatin1String("true")) {
+
+  } else if(ssl == QLatin1String("false")) {
+
+  } else {
+      qDebug()<<" unknown ssl value :"<<ssl;
+  }
+
+  const QString anonymous = grp.readEntry(QLatin1String("Anonymous"));
+
+  //TODO
+  storeTransport( mt, /*( smtp == defaultSmtp )*/true ); //FIXME
+  mHashSmtp.insert( smtp, QString::number( mt->id() ) );
+
     //TODO
 /*
     Server=localhost:25
@@ -69,7 +138,9 @@ void BalsaSettings::readTransport(const KConfigGroup &grp)
 */
 }
 
-void BalsaSettings::readGlobalSettings(const KConfigGroup &grp)
+void BalsaSettings::readGlobalSettings(const KConfig &config)
 {
-
+    if(config.hasGroup(QLatin1String("Compose"))) {
+        //TODO
+    }
 }
