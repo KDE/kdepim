@@ -62,7 +62,24 @@ void FilterImporterBalsa::addFilter(const KConfigGroup &grp)
   const int actionType = grp.readEntry(QLatin1String("Action-type"),-1);
   const QString actionStr = grp.readEntry(QLatin1String("Action-string"));
 
+
+  if(!sound.isEmpty()) {
+    const QString actionName = QLatin1String( "play sound" );
+    createFilterAction( filter, actionName, sound );
+  }
+  parseAction(actionType,actionStr,filter);
+  parseCondition(condition,filter);
   //TODO
 
   appendFilter(filter);
+}
+
+void FilterImporterBalsa::parseCondition(const QString& condition,MailCommon::MailFilter *filter )
+{
+    //TODO
+}
+
+void FilterImporterBalsa::parseAction(int actionType, const QString& action,MailCommon::MailFilter *filter)
+{
+    //TODO
 }
