@@ -15,26 +15,18 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef BalsaSettings_H
-#define BalsaSettings_H
+#ifndef SELECTTHUNDERBIRDFILTERFILES_H
+#define SELECTTHUNDERBIRDFILTERFILES_H
 
-#include "abstractsettings.h"
+#include <KDialog>
 
-class ImportWizard;
-class KConfigGroup;
-
-class BalsaSettings : public AbstractSettings
+namespace MailCommon {
+class SelectThunderbirdFilterFiles : public KDialog
 {
 public:
-  explicit BalsaSettings(const QString& filename, ImportWizard *parent);
-  ~BalsaSettings();
-private:
-  void readAccount(const KConfigGroup &grp, bool autoCheck, int autoDelay);
-  void readIdentity(const KConfigGroup &grp);
-  void readTransport(const KConfigGroup &grp);
-  void readGlobalSettings(const KConfig &config);
-
-  QHash<QString, QString> mHashSmtp;
+  explicit SelectThunderbirdFilterFiles(QWidget *parent);
+  ~SelectThunderbirdFilterFiles();
 };
+}
 
-#endif // BalsaSettings_H
+#endif // SELECTTHUNDERBIRDFILTERFILES_H

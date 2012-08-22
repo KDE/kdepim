@@ -18,6 +18,7 @@
 #include "balsa/balsaimportdata.h"
 #include "balsa/balsasettings.h"
 #include "balsa/balsaaddressbook.h"
+#include "mailimporter/filterbalsa.h"
 #include "mailimporter/filterinfo.h"
 #include "importfilterinfogui.h"
 #include "importwizard.h"
@@ -52,26 +53,24 @@ QString BalsaImportData::name() const
   return QLatin1String("Balsa");
 }
 
-#if 0
 bool BalsaImportData::importMails()
 {
   MailImporter::FilterInfo *info = initializeInfo();
 
-  MailImporter::FilterOpera opera;
-  opera.setFilterInfo( info );
+  MailImporter::FilterBalsa balsa;
+  balsa.setFilterInfo( info );
   info->setStatusMessage(i18n("Import in progress"));
-  const QString mailPath(mPath+ QLatin1String("mail/store/"));
+  const QString mailPath(QDir::homePath()+ QLatin1String("mail"));
   QDir directory(mailPath);
   if(directory.exists())
-    opera.importMails(mailPath);
+    balsa.importMails(mailPath);
   else
-    opera.import();
+    balsa.import();
   info->setStatusMessage(i18n("Import finished"));
 
   delete info;
   return true;
 }
-#endif
 
 bool BalsaImportData::importAddressBook()
 {
@@ -90,7 +89,7 @@ bool BalsaImportData::importSettings()
 AbstractImporter::TypeSupportedOptions BalsaImportData::supportedOption()
 {
   TypeSupportedOptions options;
-  //options |=AbstractImporter::Mails;
+  options |=AbstractImporter::Mails;
   options |=AbstractImporter::AddressBooks;
   options |=AbstractImporter::Settings;
   return options;

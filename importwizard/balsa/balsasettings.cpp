@@ -34,6 +34,21 @@ BalsaSettings::BalsaSettings(const QString &filename, ImportWizard *parent)
   :AbstractSettings( parent )
 {
     KConfig config(filename);
+
+    bool autoCheck = false;
+    int autoCheckDelay = -1;
+    if(config.hasGroup(QLatin1String("MailboxChecking"))) {
+      KConfigGroup grp = config.group(QLatin1String("MailboxChecking"));
+      autoCheck = grp.readEntry(QLatin1String("Auto"),false);
+      autoCheckDelay = grp.readEntry(QLatin1String("AutoDelay"),-1);
+    }
+
+    const QStringList mailBoxList = config.groupList().filter( QRegExp( "mailbox-\\+d" ) );
+    Q_FOREACH(const QString& mailBox,mailBoxList) {
+      KConfigGroup grp = config.group(mailBox);
+      readAccount(grp,autoCheck,autoCheckDelay);
+    }
+
     const QStringList smtpList = config.groupList().filter( QRegExp( "smtp-server-" ) );
     Q_FOREACH(const QString& smtp,smtpList) {
       KConfigGroup grp = config.group(smtp);
@@ -47,9 +62,16 @@ BalsaSettings::~BalsaSettings()
 
 }
 
-void BalsaSettings::readAccount(const KConfigGroup &grp)
+void BalsaSettings::readAccount(const KConfigGroup &grp, bool autoCheck, int autoDelay)
 {
-
+  const QString type = grp.readEntry(QLatin1String("Type"));
+  if(type == QLatin1String("LibBalsaMailboxPOP3")) {
+      //TODO
+  } else if(type == QLatin1String("LibBalsaMailboxImap")) {
+      //TODO
+  } else {
+      qDebug()<<" unknown account type :"<<type;
+  }
 }
 
 void BalsaSettings::readIdentity(const KConfigGroup &grp)
@@ -145,7 +167,44 @@ void BalsaSettings::readTransport(const KConfigGroup &grp)
 
 void BalsaSettings::readGlobalSettings(const KConfig &config)
 {
-    if(config.hasGroup(QLatin1String("Compose"))) {
-        //TODO
+  if(config.hasGroup(QLatin1String("Compose"))) {
+    KConfigGroup compose = config.group(QLatin1String("Compose"));
+    if(compose.hasKey(QLatin1String("QuoteString"))) {
+      const QString quote = compose.readEntry(QLatin1String("QuoteString"));
+      if(!quote.isEmpty())
+        addKmailConfig( QLatin1String("TemplateParser"), QLatin1String("QuoteString"), quote);
     }
+  }
+  if(config.hasGroup(QLatin1String("MessageDisplay"))) {
+    KConfigGroup messageDisplay = config.group(QLatin1String("MessageDisplay"));
+    if(messageDisplay.hasKey(QLatin1String("WordWrap"))) {
+      bool wordWrap = messageDisplay.readEntry(QLatin1String("WordWrap"),false);
+      //TODO not implemented in kmail.
+    }
+    if(messageDisplay.hasKey(QLatin1String("WordWrapLength"))) {
+      const int wordWrapLength = messageDisplay.readEntry(QLatin1String("WordWrapLength"),-1);
+      //TODO not implemented in kmail
+    }
+  }
+
+  if(config.hasGroup(QLatin1String("Sending"))) {
+    KConfigGroup sending = config.group(QLatin1String("Sending"));
+    if(sending.hasKey(QLatin1String("WordWrap"))) {
+       const bool wordWrap = sending.readEntry(QLatin1String("WordWrap"),false);
+       addKmailConfig( QLatin1String("Composer"), QLatin1String("word-wrap"), wordWrap);
+    }
+    if(sending.hasKey(QLatin1String("break-at"))) {
+      const int wordWrapLength = sending.readEntry(QLatin1String("break-at"),-1);
+      if(wordWrapLength!=-1) {
+        addKmailConfig( QLatin1String("Composer"), QLatin1String("break-at"),wordWrapLength);
+      }
+    }
+  }
+  if(config.hasGroup(QLatin1String("Global"))) {
+    KConfigGroup global = config.group(QLatin1String("Global"));
+    if(global.hasKey(QLatin1String("EmptyTrash"))) {
+      const bool emptyTrash = global.readEntry(QLatin1String("EmptyTrash"),false);
+      addKmailConfig( QLatin1String("General"), QLatin1String("empty-trash-on-exit"),emptyTrash);
+    }
+  }
 }

@@ -15,26 +15,33 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef BalsaSettings_H
-#define BalsaSettings_H
+#ifndef FILTERBALSA_H
+#define FILTERBALSA_H
 
-#include "abstractsettings.h"
-
-class ImportWizard;
-class KConfigGroup;
-
-class BalsaSettings : public AbstractSettings
+#include "filters.h"
+namespace MailImporter
+{
+class MAILIMPORTER_EXPORT FilterBalsa : public Filter
 {
 public:
-  explicit BalsaSettings(const QString& filename, ImportWizard *parent);
-  ~BalsaSettings();
+  explicit FilterBalsa();
+  ~FilterBalsa();
+
+  void import();
+  void importMails( const QString& maildir );
+  static QString defaultPath();
+
 private:
-  void readAccount(const KConfigGroup &grp, bool autoCheck, int autoDelay);
-  void readIdentity(const KConfigGroup &grp);
-  void readTransport(const KConfigGroup &grp);
-  void readGlobalSettings(const KConfig &config);
+  void importDirContents(const QString&);
+  void importFiles(const QString&);
+  void processDirectory( const QString& path);
 
-  QHash<QString, QString> mHashSmtp;
+  Akonadi::MessageStatus statusFromFile( const QString& filename);
+  int mImportDirDone;
+  int mTotalDir;
+
 };
+}
 
-#endif // BalsaSettings_H
+
+#endif // FILTERBALSA_H

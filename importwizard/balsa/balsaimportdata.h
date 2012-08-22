@@ -29,7 +29,7 @@ public:
   TypeSupportedOptions supportedOption();
   bool foundMailer() const;
   
-  //bool importMails();
+  bool importMails();
   bool importAddressBook();
   bool importSettings();
 
