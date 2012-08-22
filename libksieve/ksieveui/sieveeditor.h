@@ -16,8 +16,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef SIEVEEDITOR_H
-#define SIEVEEDITOR_H
+#ifndef KSIEVE_KSIEVEUI_SIEVEEDITOR_H
+#define KSIEVE_KSIEVEUI_SIEVEEDITOR_H
 
 #include "ksieveui_export.h"
 #include "sievetextedit.h"
@@ -26,40 +26,41 @@
 
 class QLineEdit;
 
-
 namespace KSieveUi {
 
 class SieveFindBar;
 
-class KSIEVEUI_EXPORT SieveEditor : public KDialog {
+class KSIEVEUI_EXPORT SieveEditor : public KDialog
+{
   Q_OBJECT
   Q_PROPERTY( QString script READ script WRITE setScript )
-public:
-  explicit SieveEditor( QWidget * parent=0 );
-  ~SieveEditor();
 
-  QString script() const;
-  void setScript( const QString & script );
-  void setDebugColor( const QColor& col );
-  void setDebugScript( const QString& debug );
-  void setScriptName( const QString&name );
+  public:
+    explicit SieveEditor( QWidget * parent=0 );
+    ~SieveEditor();
 
-private slots:
-  void slotTextChanged();
-  void slotImport();
-  void slotSaveAs();
-  void slotFind();
+    QString script() const;
+    void setScript( const QString & script );
+    void setDebugColor( const QColor& col );
+    void setDebugScript( const QString& debug );
+    void setScriptName( const QString&name );
 
-private:
-  bool saveToFile( const QString&filename );
-  bool loadFromFile( const QString& filename );
-  SieveTextEdit * mTextEdit;
-  QTextEdit *mDebugTextEdit;
-  QLineEdit *mScriptName;
-  SieveFindBar *mFindBar;
+  private slots:
+    void slotTextChanged();
+    void slotImport();
+    void slotSaveAs();
+    void slotFind();
+
+  private:
+    bool saveToFile( const QString&filename );
+    bool loadFromFile( const QString& filename );
+    SieveTextEdit * mTextEdit;
+    QTextEdit *mDebugTextEdit;
+    QLineEdit *mScriptName;
+    SieveFindBar *mFindBar;
 };
+
 }
 
-
-#endif /* SIEVEEDITOR_H */
+#endif
 

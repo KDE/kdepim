@@ -1,6 +1,3 @@
-#ifndef SIEVESYNTAXHIGHLIGHTER_H
-#define SIEVESYNTAXHIGHLIGHTER_H
-
 /* Copyright (C) 2011 Laurent Montel <montel@kde.org>
  *
  * This library is free software; you can redistribute it and/or
@@ -19,11 +16,15 @@
  * Boston, MA 02110-1301, USA.
  */
 
+#ifndef KSIEVE_KSIEVEUI_SIEVESYNTAXHIGHLIGHTER_H
+#define KSIEVE_KSIEVEUI_SIEVESYNTAXHIGHLIGHTER_H
+
 #include "ksieveui_export.h"
 
-#include <QSyntaxHighlighter>
-#include <QRegExp>
 #include <QList>
+#include <QRegExp>
+#include <QSyntaxHighlighter>
+
 class QTextDocument;
 
 namespace KSieveUi {
@@ -31,26 +32,29 @@ namespace KSieveUi {
 class KSIEVEUI_EXPORT SieveSyntaxHighlighter : public QSyntaxHighlighter
 {
   Q_OBJECT
-public:
-  explicit SieveSyntaxHighlighter( QTextDocument* doc );
-  virtual ~SieveSyntaxHighlighter();
-  
-  virtual void highlightBlock(const QString& text);
-private:
-  void init();
 
-  struct Rule {
-    QRegExp pattern;
-    QTextCharFormat format;
+  public:
+    explicit SieveSyntaxHighlighter( QTextDocument* doc );
+    virtual ~SieveSyntaxHighlighter();
 
-    Rule( const QRegExp & r, const QTextCharFormat & f )
-      : pattern(r), format(f) {}
-  };
-  QList<Rule> m_rules;
+    virtual void highlightBlock(const QString& text);
+
+  private:
+    void init();
+
+    struct Rule {
+      QRegExp pattern;
+      QTextCharFormat format;
+
+      Rule( const QRegExp & r, const QTextCharFormat & f )
+        : pattern(r), format(f) {}
+    };
+
+    QList<Rule> m_rules;
 
 };
 
 }
 
-#endif /* SIEVESYNTAXHIGHLIGHTER_H */
+#endif
 

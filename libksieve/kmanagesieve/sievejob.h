@@ -11,8 +11,8 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
-#ifndef KSIEVEUI_SIEVEJOB_H
-#define KSIEVEUI_SIEVEJOB_H
+#ifndef KSIEVE_KMANAGESIEVE_SIEVEJOB_H
+#define KSIEVE_KMANAGESIEVE_SIEVEJOB_H
 
 #include "kmanagesieve_export.h"
 
@@ -34,7 +34,7 @@ class KJob;
 namespace KManageSieve {
 
 class Session;
-  
+
 /**
  * @short A job to manage sieve scripts.
  *

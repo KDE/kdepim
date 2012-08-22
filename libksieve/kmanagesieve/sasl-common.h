@@ -17,9 +17,10 @@
     Boston, MA 02110-1301, USA.
 */
 
-#ifndef _KIOSLAVE_COMMON_H
-#define _KIOSLAVE_COMMON_H
+//krazy:excludeall=null since used by SASL (C library)
 
+#ifndef KSIEVE_KMANAGESIEVE_SASL_COMMON_H
+#define KSIEVE_KMANAGESIEVE_SASL_COMMON_H
 
 #include <stdio.h>
 #include <QFile>
@@ -32,7 +33,7 @@ extern "C" {
 
 inline bool initSASL()
 {
-#ifdef Q_OS_WIN32  //krazy:exclude=cpp
+#ifdef Q_OS_WIN32
   QByteArray libInstallPath( QFile::encodeName(QDir::toNativeSeparators(KGlobal::dirs()->installPath("lib")+QLatin1String("sasl2"))) );
   QByteArray configPath( QFile::encodeName(QDir::toNativeSeparators(KGlobal::dirs()->installPath("config")+QLatin1String("sasl2"))) );
   if ( sasl_set_path(SASL_PATH_TYPE_PLUGIN, libInstallPath.data()) != SASL_OK
@@ -49,6 +50,5 @@ inline bool initSASL()
   }
   return true;
 }
-
 
 #endif

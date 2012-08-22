@@ -1,7 +1,3 @@
-#ifndef SIEVEFINDBARBASE_H
-#define SIEVEFINDBARBASE_H
-
-
 /* Copyright (C) 2012 Laurent Montel <montel@kde.org>
  *
  * This library is free software; you can redistribute it and/or
@@ -20,6 +16,9 @@
  * Boston, MA 02110-1301, USA.
  */
 
+#ifndef KSIEVE_KSIEVEUI_SIEVEFINDBARBASE_H
+#define KSIEVE_KSIEVEUI_SIEVEFINDBARBASE_H
+
 #include <QtGui/QWidget>
 
 class QAction;
@@ -29,21 +28,21 @@ class QPushButton;
 class QMenu;
 class QPlainTextEdit;
 
-namespace KSieveUi
-{
+namespace KSieveUi {
+
 class SieveFindBar : public QWidget
 {
   Q_OBJECT
 
-public:
-  explicit SieveFindBar( QPlainTextEdit * view, QWidget * parent = 0 );
-  ~SieveFindBar();
+  public:
+    explicit SieveFindBar( QPlainTextEdit * view, QWidget * parent = 0 );
+    ~SieveFindBar();
 
-  QString text() const;
-  void setText( const QString&text );
-  
-  void focusAndSetCursor();
-    
+    QString text() const;
+    void setText( const QString&text );
+
+    void focusAndSetCursor();
+
   protected:
     virtual bool event(QEvent* e);
     void clearSelections();
@@ -53,7 +52,7 @@ public:
 
     void setFoundMatch( bool match );
     void messageInfo( bool backward, bool isAutoSearch, bool found );
-  
+
   public slots:
     void findNext();
     void findPrev();
@@ -78,5 +77,5 @@ public:
 
 }
 
-#endif /* SIEVEFINDBARBASE_H */
+#endif
 

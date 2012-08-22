@@ -1,18 +1,18 @@
 /*
-    sievedebugdialog.h
+  sievedebugdialog.h
 
-    Copyright (c) 2005 Martijn Klingens <klingens@kde.org>
+  Copyright (c) 2005 Martijn Klingens <klingens@kde.org>
 
-    This program is free software; you can redistribute it and/or
-    modify it under the terms of the GNU General Public License,
-    version 2.0, as published by the Free Software Foundation.
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software Foundation,
-    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
+  This program is free software; you can redistribute it and/or
+  modify it under the terms of the GNU General Public License,
+  version 2.0, as published by the Free Software Foundation.
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software Foundation,
+  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
-#ifndef KSIEVEUI_SIEVEDEBUGDIALOG_H
-#define KSIEVEUI_SIEVEDEBUGDIALOG_H
+#ifndef KSIEVE_KSIEVEUI_SIEVEDEBUGDIALOG_H
+#define KSIEVE_KSIEVEUI_SIEVEDEBUGDIALOG_H
 
 #include "ksieveui_export.h"
 
@@ -28,8 +28,7 @@ namespace KManageSieve {
   class SieveJob;
 }
 
-namespace KSieveUi
-{
+namespace KSieveUi {
 
 /**
  * Diagnostic info for Sieve. Only compiled when debug is enabled, it is
@@ -37,7 +36,7 @@ namespace KSieveUi
  */
 class KSIEVEUI_EXPORT SieveDebugDialog : public KDialog
 {
-    Q_OBJECT
+  Q_OBJECT
 
   public:
     SieveDebugDialog( QWidget *parent = 0 );

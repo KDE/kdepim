@@ -15,8 +15,8 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef XMLPRINTINGSCRIPTBUILDER_H
-#define XMLPRINTINGSCRIPTBUILDER_H
+#ifndef KSIEVE_KSIEVEUI_XMLPRINTINGSCRIPTBUILDER_H
+#define KSIEVE_KSIEVEUI_XMLPRINTINGSCRIPTBUILDER_H
 
 #include <config-libksieve.h> // SIZEOF_UNSIGNED_LONG
 #include <ksieve/parser.h>
@@ -71,4 +71,4 @@ private:
   }
 };
 
-#endif // XMLPRINTINGSCRIPTBUILDER_H
+#endif

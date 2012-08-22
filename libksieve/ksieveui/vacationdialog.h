@@ -11,8 +11,8 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
-#ifndef KSIEVEUI_VACATIONDIALOG_H
-#define KSIEVEUI_VACATIONDIALOG_H
+#ifndef KSIEVE_KSIEVEUI_VACATIONDIALOG_H
+#define KSIEVE_KSIEVEUI_VACATIONDIALOG_H
 
 #include <kdialog.h>
 

@@ -30,8 +30,8 @@
     your version.
 */
 
-#ifndef __KSIEVE_INTERFACES_SCRIPTBUILDER_H__
-#define __KSIEVE_INTERFACES_SCRIPTBUILDER_H__
+#ifndef KSIEVE_KSIEVE_SCRIPTBUILDER_H
+#define KSIEVE_KSIEVE_SCRIPTBUILDER_H
 
 class QString;
 
@@ -77,4 +77,4 @@ namespace KSieve {
 
 } // namespace KSieve
 
-#endif // __KSIEVE_INTERFACES_SCRIPTBUILDER_H__
+#endif
