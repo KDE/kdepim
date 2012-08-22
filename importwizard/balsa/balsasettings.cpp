@@ -108,6 +108,7 @@ void BalsaSettings::readTransport(const KConfigGroup &grp)
   case 0:
       break;
   case 1:
+      mt->setEncryption( MailTransport::Transport::EnumEncryption::TLS );
       break;
   case 2:
       break;
@@ -118,9 +119,9 @@ void BalsaSettings::readTransport(const KConfigGroup &grp)
   const QString ssl = grp.readEntry(QLatin1String("SSL"));
   //TODO
   if(ssl == QLatin1String("true")) {
-
+      mt->setEncryption( MailTransport::Transport::EnumEncryption::SSL );
   } else if(ssl == QLatin1String("false")) {
-
+      mt->setEncryption( MailTransport::Transport::EnumEncryption::None );
   } else {
       qDebug()<<" unknown ssl value :"<<ssl;
   }
