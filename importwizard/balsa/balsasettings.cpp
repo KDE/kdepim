@@ -65,12 +65,28 @@ BalsaSettings::~BalsaSettings()
 void BalsaSettings::readAccount(const KConfigGroup &grp, bool autoCheck, int autoDelay)
 {
   const QString type = grp.readEntry(QLatin1String("Type"));
+  //TODO
+  bool check = grp.readEntry(QLatin1String("Check"), false);
   if(type == QLatin1String("LibBalsaMailboxPOP3")) {
-      //TODO
+    QMap<QString, QVariant> settings;
+    const QString server = grp.readEntry(QLatin1String("Server"));
+    settings.insert( QLatin1String( "Host" ), server );
+    const QString name = grp.readEntry(QLatin1String("Name"));
+    const QString agentIdentifyName = AbstractBase::createResource( "akonadi_pop3_resource", name,settings );
+
+    addCheckMailOnStartup(agentIdentifyName,autoCheck);
+    addToManualCheck(agentIdentifyName,true);
+
   } else if(type == QLatin1String("LibBalsaMailboxImap")) {
-      //TODO
+    QMap<QString, QVariant> settings;
+    const QString server = grp.readEntry(QLatin1String("Server"));
+    settings.insert(QLatin1String("ImapServer"),server);
+    const QString name = grp.readEntry(QLatin1String("Name"));
+    const QString agentIdentifyName = AbstractBase::createResource( "akonadi_imap_resource", name,settings );
+    addCheckMailOnStartup(agentIdentifyName,autoCheck);
+    addToManualCheck(agentIdentifyName,true);
   } else {
-      qDebug()<<" unknown account type :"<<type;
+    qDebug()<<" unknown account type :"<<type;
   }
 }
 
@@ -87,14 +103,10 @@ void BalsaSettings::readIdentity(const KConfigGroup &grp)
   }
 
 #if 0
-  Address=laurent@kspread
-  ReplyTo=
   Domain=
-  Bcc=
   ReplyString=Re :
   ForwardString=Fwd :
   SendMultipartAlternative=false
-  SmtpServer=Défaut
   SignaturePath=
   SigExecutable=false
   SigSending=true
