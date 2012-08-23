@@ -16,6 +16,7 @@
 */
 
 #include "selectthunderbirdfilterfiles.h"
+#include <KLocale>
 
 #include <QHBoxLayout>
 
