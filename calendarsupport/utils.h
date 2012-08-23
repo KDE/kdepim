@@ -247,14 +247,6 @@ namespace CalendarSupport
    */
   CALENDARSUPPORT_EXPORT QStringList holiday( const QDate &date );
 
-  CALENDARSUPPORT_EXPORT void sendAsICalendar( const Akonadi::Item &item,
-                                               KPIMIdentities::IdentityManager *identityManager,
-                                               QWidget *parentWidget = 0 );
-
-  CALENDARSUPPORT_EXPORT void publishItemInformation( const Akonadi::Item &item,
-                                                      const Akonadi::ETMCalendar::Ptr &calendar,
-                                                      QWidget *parentWidget = 0 );
-
   CALENDARSUPPORT_EXPORT void saveAttachments( const Akonadi::Item &item,
                                                QWidget *parentWidget = 0 );
 

@@ -600,55 +600,6 @@ QStringList CalendarSupport::holiday( const QDate &date )
   return hdays;
 }
 
-void CalendarSupport::sendAsICalendar( const Akonadi::Item &item,
-                                       KPIMIdentities::IdentityManager *identityManager,
-                                       QWidget *parentWidget )
-{
-  Incidence::Ptr incidence = CalendarSupport::incidence( item );
-
-  if ( !incidence ) {
-    KMessageBox::information(
-      parentWidget,
-      i18n( "No item selected." ),
-      i18n( "Forwarding" ),
-      "ForwardNoEventSelected" );
-    return;
-  }
-
-  QPointer<Akonadi::PublishDialog> publishdlg = new Akonadi::PublishDialog;
-  if ( publishdlg->exec() == QDialog::Accepted && publishdlg ) {
-    const QString recipients = publishdlg->addresses();
-    if ( incidence->organizer()->isEmpty() ) {
-      incidence->setOrganizer( Person::Ptr(
-                                 new Person( CalendarSupport::KCalPrefs::instance()->fullName(),
-                                             CalendarSupport::KCalPrefs::instance()->email() ) ) );
-    }
-
-    ICalFormat format;
-    const QString from = CalendarSupport::KCalPrefs::instance()->email();
-    const bool bccMe = Akonadi::CalendarSettings::self()->bcc();
-    const QString messageText = format.createScheduleMessage( incidence, iTIPRequest );
-    CalendarSupport::MailClient mailer;
-    if ( mailer.mailTo(
-           incidence,
-           identityManager->identityForAddress( from ),
-           from, bccMe, recipients, messageText,
-           MailTransport::TransportManager::self()->defaultTransportName() ) ) {
-      KMessageBox::information(
-        parentWidget,
-        i18n( "The item information was successfully sent." ),
-        i18n( "Forwarding" ),
-        "IncidenceForwardSuccess" );
-    } else {
-      KMessageBox::error(
-        parentWidget,
-        i18n( "Unable to forward the item '%1'", incidence->summary() ),
-        i18n( "Forwarding Error" ) );
-    }
-  }
-  delete publishdlg;
-}
-
 void CalendarSupport::saveAttachments( const Akonadi::Item &item, QWidget *parentWidget )
 {
   Incidence::Ptr incidence = CalendarSupport::incidence( item );
