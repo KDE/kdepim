@@ -16,6 +16,7 @@
 */
 
 #include "selectthunderbirdfilterfiles.h"
+#include "selectthunderbirdfilterfileswidget.h"
 #include <KLocale>
 
 #include <QHBoxLayout>
@@ -34,10 +35,9 @@ SelectThunderbirdFilterFiles::SelectThunderbirdFilterFiles(QWidget *parent)
   mainLayout->setSpacing( KDialog::spacingHint() );
   mainLayout->setMargin( KDialog::marginHint() );
   setMainWidget( mainWidget );
-  /*
-  mSelectProfile = new SelectThunderbirdProfileWidget(mainWidget);
-  mainLayout->addWidget(mSelectProfile);
-    */
+
+  mSelectFilterFilesWidget = new SelectThunderbirdFilterFilesWidget(mainWidget);
+  mainLayout->addWidget(mSelectFilterFilesWidget);
 }
 
 SelectThunderbirdFilterFiles::~SelectThunderbirdFilterFiles()

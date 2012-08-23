@@ -20,12 +20,16 @@
 
 #include <KDialog>
 
+class SelectThunderbirdFilterFilesWidget;
+
 namespace MailCommon {
 class SelectThunderbirdFilterFiles : public KDialog
 {
 public:
   explicit SelectThunderbirdFilterFiles(QWidget *parent);
   ~SelectThunderbirdFilterFiles();
+private:
+  SelectThunderbirdFilterFilesWidget *mSelectFilterFilesWidget;
 };
 }
 
