@@ -76,6 +76,7 @@ set(libmailcommon_SRCS
   filter/kmfilterdialog.cpp
   filter/mailfilter.cpp
   filter/selectthunderbirdfilterfiles.cpp
+  filter/selectthunderbirdfilterfileswidget.cpp
   foldercollection.cpp
   foldercollectionmonitor.cpp
   folderjob.cpp
@@ -108,7 +109,7 @@ qt4_add_dbus_interfaces(libmailcommon_SRCS
   ${CMAKE_SOURCE_DIR}/mailfilteragent/org.freedesktop.Akonadi.MailFilterAgent.xml
 )
 
-kde4_add_ui_files(libmailcommon_SRCS filter/filterconfigwidget.ui snippetdialog.ui)
+kde4_add_ui_files(libmailcommon_SRCS filter/filterconfigwidget.ui snippetdialog.ui filter/selectthunderbirdfilterfileswidget.ui)
 
 if(NOT WINCE)
   set(libmailcommon_SRCS ${libmailcommon_SRCS} soundtestwidget.cpp)
