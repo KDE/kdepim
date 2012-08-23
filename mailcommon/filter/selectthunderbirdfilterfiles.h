@@ -28,6 +28,8 @@ class SelectThunderbirdFilterFiles : public KDialog
 public:
   explicit SelectThunderbirdFilterFiles(QWidget *parent);
   ~SelectThunderbirdFilterFiles();
+  QStringList selectedFiles() const;
+
 private:
   SelectThunderbirdFilterFilesWidget *mSelectFilterFilesWidget;
 };

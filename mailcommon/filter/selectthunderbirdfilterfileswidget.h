@@ -32,7 +32,8 @@ class SelectThunderbirdFilterFilesWidget : public QWidget
 public:
     explicit SelectThunderbirdFilterFilesWidget(QWidget *parent = 0);
     ~SelectThunderbirdFilterFilesWidget();
-    
+    QStringList selectedFiles() const;
+
 private Q_SLOTS:
     void slotButtonClicked(QAbstractButton*button);
     void slotProfileChanged(int);

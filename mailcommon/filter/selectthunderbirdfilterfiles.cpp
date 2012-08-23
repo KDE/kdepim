@@ -44,3 +44,8 @@ SelectThunderbirdFilterFiles::~SelectThunderbirdFilterFiles()
 {
 
 }
+
+QStringList SelectThunderbirdFilterFiles::selectedFiles() const
+{
+  return mSelectFilterFilesWidget->selectedFiles();
+}

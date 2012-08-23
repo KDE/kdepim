@@ -44,7 +44,7 @@
     <widget class="KComboBox" name="profiles"/>
    </item>
    <item row="2" column="0" colspan="2">
-    <widget class="QListWidget" name="listFile"/>
+    <widget class="QListWidget" name="listFiles"/>
    </item>
   </layout>
  </widget>

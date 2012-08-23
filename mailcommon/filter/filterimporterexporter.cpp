@@ -37,6 +37,7 @@
 #include "filterimporter/filterimportersylpheed_p.h"
 #include "filterimporter/filterimporterprocmail_p.h"
 #include "filterimporter/filterimporterbalsa_p.h"
+#include "selectthunderbirdfilterfiles.h"
 
 #include <messageviewer/autoqpointer.h>
 #include <messageviewer/util.h>
@@ -262,50 +263,53 @@ QList<MailFilter *> FilterImporterExporter::importFilters(
 {
   QString fileName( filename );
 
-  if ( fileName.isEmpty() ) {
-    QString title;
-    QString defaultPath;
-    switch(type){
-    case KMailFilter:
-      title = i18n( "Import KMail Filters" );
-      defaultPath = QDir::homePath();
-      break;
-    case ThunderBirdFilter:
-      title = i18n( "Import Thunderbird Filters" );
-      defaultPath = MailCommon::FilterImporterThunderbird::defaultPath();
-      break;
-    case EvolutionFilter:
-      title = i18n( "Import Evolution Filters" );
-      defaultPath = MailCommon::FilterImporterEvolution::defaultPath();
-      break;
-    case SylpheedFilter:
-      title = i18n( "Import Sylpheed Filters" );
-      defaultPath = MailCommon::FilterImporterSylpheed::defaultPath();
-      break;
-    case ProcmailFilter:
-      title = i18n( "Import Procmail Filters" );
-      defaultPath = MailCommon::FilterImporterProcmail::defaultPath();
-      break;
-    case BalsaFilter:
-      title = i18n( "Import Balsa Filters" );
-      defaultPath = MailCommon::FilterImporterBalsa::defaultPath();
-      break;
-    }
-
-    fileName = KFileDialog::getOpenFileName(
-      defaultPath, QString(), d->mParent, title );
+  QFile file;
+  if(type != ThunderBirdFilter) {
     if ( fileName.isEmpty() ) {
-      canceled = true;
-      return QList<MailFilter*>(); // cancel
+      QString title;
+      QString defaultPath;
+      switch(type){
+      case KMailFilter:
+        title = i18n( "Import KMail Filters" );
+        defaultPath = QDir::homePath();
+        break;
+      case ThunderBirdFilter:
+        title = i18n( "Import Thunderbird Filters" );
+        defaultPath = MailCommon::FilterImporterThunderbird::defaultPath();
+        break;
+      case EvolutionFilter:
+        title = i18n( "Import Evolution Filters" );
+        defaultPath = MailCommon::FilterImporterEvolution::defaultPath();
+        break;
+      case SylpheedFilter:
+        title = i18n( "Import Sylpheed Filters" );
+        defaultPath = MailCommon::FilterImporterSylpheed::defaultPath();
+        break;
+      case ProcmailFilter:
+        title = i18n( "Import Procmail Filters" );
+        defaultPath = MailCommon::FilterImporterProcmail::defaultPath();
+        break;
+      case BalsaFilter:
+        title = i18n( "Import Balsa Filters" );
+        defaultPath = MailCommon::FilterImporterBalsa::defaultPath();
+        break;
+      }
+
+      fileName = KFileDialog::getOpenFileName(
+         defaultPath, QString(), d->mParent, title );
+      if ( fileName.isEmpty() ) {
+        canceled = true;
+        return QList<MailFilter*>(); // cancel
+      }
     }
-  }
-  QFile file( fileName );
-  if ( !file.open( QIODevice::ReadOnly ) ) {
-    KMessageBox::error(
-      d->mParent,
-      i18n( "The selected file is not readable. "
-            "Your file access permissions might be insufficient." ) );
-    return QList<MailFilter*>();
+    file.setFileName( fileName );
+    if ( !file.open( QIODevice::ReadOnly ) ) {
+      KMessageBox::error(
+        d->mParent,
+        i18n( "The selected file is not readable. "
+              "Your file access permissions might be insufficient." ) );
+      return QList<MailFilter*>();
+    }
   }
 
   QList<MailFilter*> imported;
@@ -320,12 +324,44 @@ QList<MailFilter *> FilterImporterExporter::importFilters(
   }
   case ThunderBirdFilter:
   {
-    MailCommon::FilterImporterThunderbird *thunderBirdFilter =
-      new MailCommon::FilterImporterThunderbird( &file );
+    if(fileName.isEmpty()) {
+      SelectThunderbirdFilterFiles * selectThunderBirdFileDialog = new SelectThunderbirdFilterFiles(d->mParent);
+      selectThunderBirdFileDialog->setWindowTitle(i18n( "Import Evolution Filters" ));
+      if(selectThunderBirdFileDialog->exec()) {
+        Q_FOREACH(const QString& url, selectThunderBirdFileDialog->selectedFiles()) {
+          QFile fileThunderbird(url);
+          if(!fileThunderbird.open( QIODevice::ReadOnly )) {
+            KMessageBox::error(
+              d->mParent,
+              i18n( "The selected file is not readable. "
+                    "Your file access permissions might be insufficient." ) );
+          } else {
 
-    imported = thunderBirdFilter->importFilter();
-    emptyFilter = thunderBirdFilter->emptyFilter();
-    delete thunderBirdFilter;
+            MailCommon::FilterImporterThunderbird *thunderBirdFilter =
+              new MailCommon::FilterImporterThunderbird( &fileThunderbird );
+
+            imported.append(thunderBirdFilter->importFilter());
+            emptyFilter.append(thunderBirdFilter->emptyFilter());
+            delete thunderBirdFilter;
+          }
+        }
+      }
+      delete selectThunderBirdFileDialog;
+    } else {
+      file.setFileName( fileName );
+      if ( !file.open( QIODevice::ReadOnly ) ) {
+        KMessageBox::error(
+          d->mParent,
+          i18n( "The selected file is not readable. "
+                "Your file access permissions might be insufficient." ) );
+        return QList<MailFilter*>();
+      }
+
+      MailCommon::FilterImporterThunderbird *thunderBirdFilter =  new MailCommon::FilterImporterThunderbird( &file );
+      imported = thunderBirdFilter->importFilter();
+      emptyFilter = thunderBirdFilter->emptyFilter();
+      delete thunderBirdFilter;
+    }
     break;
   }
   case EvolutionFilter:
