@@ -19,6 +19,7 @@
 #define SELECTTHUNDERBIRDFILTERFILESWIDGET_H
 
 #include <QWidget>
+class QAbstractButton;
 
 namespace Ui {
 class SelectThunderbirdFilterFilesWidget;
@@ -32,6 +33,9 @@ public:
     explicit SelectThunderbirdFilterFilesWidget(QWidget *parent = 0);
     ~SelectThunderbirdFilterFilesWidget();
     
+private Q_SLOTS:
+    void slotButtonClicked(QAbstractButton*button);
+    void slotProfileChanged(int);
 private:
     Ui::SelectThunderbirdFilterFilesWidget *ui;
 };

@@ -17,17 +17,38 @@
 
 #include "selectthunderbirdfilterfileswidget.h"
 #include "ui_selectthunderbirdfilterfileswidget.h"
+#include <QAbstractButton>
 
 SelectThunderbirdFilterFilesWidget::SelectThunderbirdFilterFilesWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::SelectThunderbirdFilterFilesWidget)
 {
-    ui->setupUi(this);
+  ui->setupUi(this);
+  connect(ui->buttonGroup,SIGNAL(buttonClicked (QAbstractButton*)),SLOT(slotButtonClicked(QAbstractButton*)));
+  connect(ui->profiles,SIGNAL(currentIndexChanged(int)),SLOT(slotProfileChanged(int)));
 }
 
 SelectThunderbirdFilterFilesWidget::~SelectThunderbirdFilterFilesWidget()
 {
-    delete ui;
+  delete ui;
+}
+
+void SelectThunderbirdFilterFilesWidget::slotButtonClicked(QAbstractButton*button)
+{
+  if(button == ui->selectFile) {
+    ui->fileUrl->setEnabled(true);
+    ui->profiles->setEnabled(false);
+    ui->listFile->setEnabled(false);
+  } else {
+    ui->fileUrl->setEnabled(false);
+    ui->profiles->setEnabled(true);
+    ui->listFile->setEnabled(true);
+  }
+}
+
+void SelectThunderbirdFilterFilesWidget::slotProfileChanged(int)
+{
+    //TODO
 }
 
 #include "selectthunderbirdfilterfileswidget.moc"
