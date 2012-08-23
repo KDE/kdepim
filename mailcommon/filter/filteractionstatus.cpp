@@ -109,3 +109,5 @@ QString FilterActionStatus::displayString() const
 {
   return label() + QLatin1String( " \"" ) + mParameter + QLatin1String( "\"" );
 }
+
+#include "filteractionstatus.moc"

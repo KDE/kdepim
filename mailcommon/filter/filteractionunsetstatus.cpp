@@ -51,3 +51,5 @@ SearchRule::RequiredPart FilterActionUnsetStatus::requiredPart() const
 {
     return SearchRule::Envelope;
 }
+
+#include "filteractionunsetstatus.moc"

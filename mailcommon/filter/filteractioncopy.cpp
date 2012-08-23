@@ -55,3 +55,5 @@ FilterAction* FilterActionCopy::newAction()
 {
   return new FilterActionCopy;
 }
+
+#include "filteractioncopy.moc"

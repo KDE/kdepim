@@ -124,3 +124,5 @@ QString FilterActionSendFakeDisposition::displayString() const
   return label() + QLatin1String( " \"" ) + mParameter + QLatin1String( "\"" );
 }
 
+
+#include "filteractionsendfakedisposition.moc"

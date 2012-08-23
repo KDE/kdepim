@@ -59,3 +59,5 @@ SearchRule::RequiredPart FilterActionMove::requiredPart() const
     return SearchRule::Envelope;
 }
 
+
+#include "filteractionmove.moc"

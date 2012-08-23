@@ -29,3 +29,5 @@ SelectThunderbirdFilterFilesWidget::~SelectThunderbirdFilterFilesWidget()
 {
     delete ui;
 }
+
+#include "selectthunderbirdfilterfileswidget.moc"

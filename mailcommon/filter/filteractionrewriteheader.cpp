@@ -221,3 +221,5 @@ void FilterActionRewriteHeader::argsFromString( const QString &argsStr )
 }
 
 
+
+#include "filteractionrewriteheader.moc"

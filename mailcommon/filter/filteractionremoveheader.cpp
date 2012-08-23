@@ -94,3 +94,5 @@ void FilterActionRemoveHeader::setParamWidgetValue( QWidget *paramWidget ) const
   }
 }
 
+
+#include "filteractionremoveheader.moc"

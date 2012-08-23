@@ -43,3 +43,5 @@ SearchRule::RequiredPart FilterActionPipeThrough::requiredPart() const
   return SearchRule::CompleteMessage;
 }
 
+
+#include "filteractionpipethrough.moc"

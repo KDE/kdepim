@@ -63,3 +63,5 @@ FilterAction* FilterActionSendReceipt::newAction()
 {
   return new FilterActionSendReceipt;
 }
+
+#include "filteractionsendreceipt.moc"

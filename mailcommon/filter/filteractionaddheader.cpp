@@ -188,3 +188,4 @@ FilterAction* FilterActionAddHeader::newAction()
 {
   return new FilterActionAddHeader;
 }
+#include "filteractionaddheader.moc"

@@ -233,3 +233,5 @@ void FilterActionAddToAddressBook::argsFromString( const QString &argsStr )
   else
     mCategory = parts[ 2 ];
 }
+
+#include "filteractionaddtoaddressbook.moc"

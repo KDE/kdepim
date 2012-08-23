@@ -239,3 +239,5 @@ QString FilterActionForward::displayString() const
     return i18n( "Forward to %1 with template %2", mParameter, mTemplate );
 }
 
+
+#include "filteractionforward.moc"
