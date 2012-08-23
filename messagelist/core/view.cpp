@@ -1360,6 +1360,9 @@ Item * View::messageItemBefore( Item * referenceItem, MessageTypeFilter messageT
       return 0; // looped and returned back to the first message
     }
 
+    if(!above->parent())
+      return 0;
+
     parentIndex = d->mModel->index( above->parent(), 0 );
     aboveIndex = d->mModel->index( above, 0 );
 
