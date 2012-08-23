@@ -77,19 +77,32 @@ void FilterImporterBalsa::addFilter(const KConfigGroup &grp)
 
 void FilterImporterBalsa::parseCondition(const QString& condition,MailCommon::MailFilter *filter )
 {
-    //TODO
+    QStringList conditionList;
     if(condition.startsWith(QLatin1String("OR "))) {
+        conditionList = condition.split(QLatin1String("OR"));
 
     } else if(condition.startsWith(QLatin1String("AND "))) {
+        conditionList = condition.split(QLatin1String("AND"));
 
-    } else if(condition.startsWith(QLatin1String("NOT "))) {
-
+    } else {
+        //no multi condition
+        conditionList<< condition;
+    }
+    Q_FOREACH(QString cond, conditionList) {
+        cond = cond.trimmed();
+        bool negative = false;
+        if(cond.startsWith(QLatin1String("NOT"))) {
+            cond = cond.right(cond.length()-3);
+            negative = true;
+        }
+        qDebug()<<" cond"<<cond;
     }
 }
 
 void FilterImporterBalsa::parseAction(int actionType, const QString& action,MailCommon::MailFilter *filter)
 {
   QString actionName;
+  QString actionStr(action);
   switch(actionType) {
   case 0:
     break;
@@ -120,8 +133,8 @@ void FilterImporterBalsa::parseAction(int actionType, const QString& action,Mail
     qDebug()<<" unknown parse action type "<<actionType;
     break;
   }
-
   if(!actionName.isEmpty()) {
-    createFilterAction( filter, actionName, action );
+      //TODO adapt actionStr
+    createFilterAction( filter, actionName, actionStr );
   }
 }
