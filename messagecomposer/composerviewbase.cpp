@@ -198,6 +198,12 @@ void Message::ComposerViewBase::send ( MessageSender::SendMethod method, Message
 
   const KPIMIdentities::Identity identity = identityManager()->identityForUoid( m_identityCombo->currentIdentity() );
 
+  if(identity.attachVcard()) {
+    const QString vcardFileName = identity.vCardFile();
+    if(!vcardFileName.isEmpty()) {
+      m_attachmentController->addAttachmentUrlSync(KUrl(vcardFileName));
+    }
+  }
   m_msg->setHeader( new KMime::Headers::Generic( "X-KMail-Transport", m_msg.get(), QString::number(m_transport->currentTransportId()), "utf-8" ) );
  
   m_msg->setHeader( new KMime::Headers::Generic( "X-KMail-Fcc", m_msg.get(), QString::number( m_fccCollection.id() ) , "utf-8" ) );

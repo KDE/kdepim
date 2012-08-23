@@ -74,9 +74,10 @@ class MESSAGECOMPOSER_EXPORT AttachmentControllerBase : public QObject
     /// sets sign, encrypt, shows properties dialog if so configured
     void addAttachment( MessageCore::AttachmentPart::Ptr part );
     void addAttachment( const KUrl &url );
+    void addAttachmentUrlSync(const KUrl &url);
     void addAttachments( const KUrl::List &urls );
     void showAttachPublicKeyDialog();
-    virtual void attachMyPublicKey() {};
+    virtual void attachMyPublicKey() {}
 
   signals:
     void actionsCreated();

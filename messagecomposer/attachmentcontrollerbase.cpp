@@ -794,6 +794,19 @@ void AttachmentControllerBase::addAttachment( AttachmentPart::Ptr part )
   }
 }
 
+void AttachmentControllerBase::addAttachmentUrlSync(const KUrl &url)
+{
+  AttachmentFromUrlBaseJob *ajob = new AttachmentFromUrlJob( url, this );
+  if( MessageComposer::MessageComposerSettings::maximumAttachmentSize() > 0 ) {
+    ajob->setMaximumAllowedSize( MessageComposer::MessageComposerSettings::maximumAttachmentSize() * 1024 * 1024 );
+  }
+  if(ajob->exec()) {
+    AttachmentPart::Ptr part = ajob->attachmentPart();
+    addAttachment( part );
+  }
+
+}
+
 void AttachmentControllerBase::addAttachment( const KUrl &url )
 {
   AttachmentFromUrlBaseJob *ajob = 0;
