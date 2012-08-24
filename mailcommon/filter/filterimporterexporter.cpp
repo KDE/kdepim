@@ -326,7 +326,6 @@ QList<MailFilter *> FilterImporterExporter::importFilters(
   {
     if(fileName.isEmpty()) {
       SelectThunderbirdFilterFiles * selectThunderBirdFileDialog = new SelectThunderbirdFilterFiles(d->mParent);
-      selectThunderBirdFileDialog->setWindowTitle(i18n( "Import Evolution Filters" ));
       if(selectThunderBirdFileDialog->exec()) {
         Q_FOREACH(const QString& url, selectThunderBirdFileDialog->selectedFiles()) {
           QFile fileThunderbird(url);
