@@ -56,20 +56,21 @@ void FilterImporterBalsa::addFilter(const KConfigGroup &grp)
   filter->pattern()->setName( name );
   filter->setToolbarName( name );
 
-  const QString condition = grp.readEntry(QLatin1String("Condition"));
-  const QString sound = grp.readEntry(QLatin1String("Sound"));
   //TODO
   const QString popupText = grp.readEntry(QLatin1String("Popup-text"));
 
-  const int actionType = grp.readEntry(QLatin1String("Action-type"),-1);
-  const QString actionStr = grp.readEntry(QLatin1String("Action-string"));
 
-
+  const QString sound = grp.readEntry(QLatin1String("Sound"));
   if(!sound.isEmpty()) {
     const QString actionName = QLatin1String( "play sound" );
     createFilterAction( filter, actionName, sound );
   }
+
+  const int actionType = grp.readEntry(QLatin1String("Action-type"),-1);
+  const QString actionStr = grp.readEntry(QLatin1String("Action-string"));
   parseAction(actionType,actionStr,filter);
+
+  const QString condition = grp.readEntry(QLatin1String("Condition"));
   parseCondition(condition,filter);
 
   appendFilter(filter);
@@ -80,10 +81,10 @@ void FilterImporterBalsa::parseCondition(const QString& condition,MailCommon::Ma
     QStringList conditionList;
     if(condition.startsWith(QLatin1String("OR "))) {
         conditionList = condition.split(QLatin1String("OR"));
-
+        filter->pattern()->setOp( SearchPattern::OpOr );
     } else if(condition.startsWith(QLatin1String("AND "))) {
         conditionList = condition.split(QLatin1String("AND"));
-
+        filter->pattern()->setOp( SearchPattern::OpAnd );
     } else {
         //no multi condition
         conditionList<< condition;
@@ -96,6 +97,9 @@ void FilterImporterBalsa::parseCondition(const QString& condition,MailCommon::Ma
             negative = true;
         }
         qDebug()<<" cond"<<cond;
+
+        //SearchRule::Ptr rule = SearchRule::createInstance( fieldName, functionName, line );
+        //filter->pattern()->append( rule );
     }
 }
 
