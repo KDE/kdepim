@@ -813,7 +813,7 @@ void AttachmentControllerBase::addAttachmentUrlSync(const KUrl &url)
     addAttachment( part );
   } else {
     if( ajob->error() ) {
-      KMessageBox::sorry( d->wParent, job->errorString(), i18n( "Failed to attach file" ) );
+      KMessageBox::sorry( d->wParent, ajob->errorString(), i18n( "Failed to attach file" ) );
       return;
     }
   }
