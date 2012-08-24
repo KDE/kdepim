@@ -173,6 +173,9 @@ protected slots:
   void slotSoftenActionTriggered( bool );
   void slotGroupHeaderBackgroundModeMenuTriggered( QAction * act );
   void slotGroupHeaderBackgroundStyleMenuTriggered( QAction * act );
+  void slotMoveColumnToLeft();
+  void slotMoveColumnToRight();
+
 };
 
 class ThemeContentItemSourceLabel : public QLabel

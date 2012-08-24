@@ -107,6 +107,7 @@ QWidget* FilterActionAddToAddressBook::createParamWidget( QWidget *parent ) cons
 
   KLineEdit *categoryEdit = new KLineEdit( widget );
   categoryEdit->setObjectName( "CategoryEdit" );
+  categoryEdit->setTrapReturnKey(true);
   layout->addWidget( categoryEdit, 0, 2 );
 
   label = new QLabel( i18n( "in address book" ), widget );
@@ -232,3 +233,5 @@ void FilterActionAddToAddressBook::argsFromString( const QString &argsStr )
   else
     mCategory = parts[ 2 ];
 }
+
+#include "filteractionaddtoaddressbook.moc"

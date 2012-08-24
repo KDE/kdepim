@@ -538,7 +538,7 @@ void KMComposeWin::addAttachmentsAndSend( const KUrl::List &urls, const QString 
   kDebug() << "addAttachment and sending!";
   const int nbUrl = urls.count();
   for( int i =0; i < nbUrl; ++i ) {
-    addAttachment( urls[i], comment );
+    mComposerBase->addAttachmentUrlSync( urls[i], comment );
   }
 
   send( how );
@@ -547,7 +547,6 @@ void KMComposeWin::addAttachmentsAndSend( const KUrl::List &urls, const QString 
 //-----------------------------------------------------------------------------
 void KMComposeWin::addAttachment( const KUrl &url, const QString &comment )
 {
-  Q_UNUSED( comment );
   mComposerBase->addAttachment( url, comment );
 }
 
@@ -2284,8 +2283,22 @@ void KMComposeWin::slotFetchJob(KJob*job)
       if ( item.hasPayload<KABC::Addressee>() ) {
         const KABC::Addressee contact = item.payload<KABC::Addressee>();
         attachmentName = contact.realName() + QLatin1String( ".vcf" );
+        //Workaround about broken kaddressbook fields.
+        QByteArray data = item.payloadData();
+        data.replace("X-messaging/aim-All",("X-AIM"));
+        data.replace("X-messaging/icq-All",("X-ICQ"));
+        data.replace("X-messaging/xmpp-All",("X-JABBER"));
+        data.replace("X-messaging/msn-All",("X-MSN"));
+        data.replace("X-messaging/yahoo-All",("X-YAHOO"));
+        data.replace("X-messaging/gadu-All",("X-GADUGADU"));
+        data.replace("X-messaging/skype-All",("X-SKYPE"));
+        data.replace("X-messaging/groupwise-All",("X-GROUPWISE"));
+        data.replace(("X-messaging/sms-All"),("X-SMS"));
+        data.replace(("X-messaging/meanwhile-All"),("X-MEANWHILE"));
+        addAttachment( attachmentName, KMime::Headers::CEbase64, QString(), data, item.mimeType().toLatin1() );
+      } else {
+        addAttachment( attachmentName, KMime::Headers::CEbase64, QString(), item.payloadData(), item.mimeType().toLatin1() );
       }
-      addAttachment( attachmentName, KMime::Headers::CEbase64, QString(), item.payloadData(), item.mimeType().toLatin1() );
     }
   }
 }
@@ -2636,6 +2649,7 @@ void KMComposeWin::doSend( MessageSender::SendMethod method,
       method = MessageSender::SendLater;
     }
   }
+
 
   if ( saveIn == MessageSender::SaveInNone ) { // don't save as draft or template, send immediately
     if ( KPIMUtils::firstEmailAddress( from() ).isEmpty() ) {
@@ -3005,7 +3019,6 @@ void KMComposeWin::slotIdentityChanged( uint uoid, bool initalChange )
   }
 
   emit identityChanged( identity() );
-
   if ( !ident.fullEmailAddr().isNull() ) {
     mEdtFrom->setText( ident.fullEmailAddr() );
   }

@@ -198,6 +198,12 @@ void Message::ComposerViewBase::send ( MessageSender::SendMethod method, Message
 
   const KPIMIdentities::Identity identity = identityManager()->identityForUoid( m_identityCombo->currentIdentity() );
 
+  if(identity.attachVcard()) {
+    const QString vcardFileName = identity.vCardFile();
+    if(!vcardFileName.isEmpty()) {
+      m_attachmentController->addAttachmentUrlSync(KUrl(vcardFileName));
+    }
+  }
   m_msg->setHeader( new KMime::Headers::Generic( "X-KMail-Transport", m_msg.get(), QString::number(m_transport->currentTransportId()), "utf-8" ) );
  
   m_msg->setHeader( new KMime::Headers::Generic( "X-KMail-Fcc", m_msg.get(), QString::number( m_fccCollection.id() ) , "utf-8" ) );
@@ -975,6 +981,14 @@ void Message::ComposerViewBase::addAttachment ( const KUrl& url, const QString& 
   kDebug() << "adding attachment with url:" << url;
   m_attachmentController->addAttachment( url );
 }
+
+void Message::ComposerViewBase::addAttachmentUrlSync ( const KUrl& url, const QString& comment )
+{
+  Q_UNUSED( comment );
+  kDebug() << "adding attachment with url:" << url;
+  m_attachmentController->addAttachmentUrlSync( url );
+}
+
 
 void Message::ComposerViewBase::addAttachment ( const QString& name, const QString& filename, const QString& charset, const QByteArray& data, const QByteArray& mimeType )
 {

@@ -2282,6 +2282,7 @@ void KMMainWidget::slotUpdateMessageTagList( const QString &taglabel )
 void KMMainWidget::refreshMessageListSelection()
 {
   mAkonadiStandardActionManager->setItemSelectionModel( mMessagePane->currentItemSelectionModel() );
+  slotMessageSelected(mMessagePane->currentItem());
 }
 
 //-----------------------------------------------------------------------------
@@ -2413,17 +2414,6 @@ void KMMainWidget::slotCustomForwardMsg( const QString &tmpl )
   command->start();
 }
 
-
-//-----------------------------------------------------------------------------
-void KMMainWidget::slotNoQuoteReplyToMsg()
-{
-  const Akonadi::Item msg = mMessagePane->currentItem();
-  if ( !msg.isValid() )
-    return;
-
-  KMCommand *command = new KMReplyCommand( this, msg, MessageComposer::ReplySmart, QString(), true );
-  command->start();
-}
 
 void KMMainWidget::openFilterDialog(const QByteArray &field, const QString &value)
 {
@@ -4389,7 +4379,7 @@ void KMMainWidget::slotImportWizard()
 //-----------------------------------------------------------------------------
 void KMMainWidget::slotFilterLogViewer()
 {
-  MailCommon::FilterManager::instance()->showFilterLogDialog(winId());
+  MailCommon::FilterManager::instance()->showFilterLogDialog( (qlonglong)winId() );
 }
 
 //-----------------------------------------------------------------------------
@@ -4659,7 +4649,7 @@ void KMMainWidget::slotConfigureAutomaticArchiving()
 {
   OrgFreedesktopAkonadiArchiveMailAgentInterface archiveMailInterface(QLatin1String("org.freedesktop.Akonadi.ArchiveMailAgent"), QLatin1String("/ArchiveMailAgent"),QDBusConnection::sessionBus(), this);
   if(archiveMailInterface.isValid()) {
-      archiveMailInterface.showConfigureDialog(winId());
+      archiveMailInterface.showConfigureDialog( (qlonglong)winId() );
   } else {
       KMessageBox::error(this,i18n("Archive Mail Agent was not registered."));
   }

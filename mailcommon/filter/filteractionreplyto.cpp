@@ -57,3 +57,5 @@ SearchRule::RequiredPart FilterActionReplyTo::requiredPart() const
   return SearchRule::CompleteMessage;
 }
 
+
+#include "filteractionreplyto.moc"

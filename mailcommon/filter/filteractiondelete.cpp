@@ -58,3 +58,5 @@ FilterAction* FilterActionDelete::newAction()
 {
   return new FilterActionDelete;
 }
+
+#include "filteractiondelete.moc"

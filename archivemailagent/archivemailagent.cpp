@@ -72,7 +72,11 @@ void ArchiveMailAgent::showConfigureDialog(qlonglong windowId)
 {
   ArchiveMailDialog *dialog = new ArchiveMailDialog();
   if(windowId) {
+#ifndef Q_WS_WIN
     KWindowSystem::setMainWindow( dialog, windowId );
+#else
+    KWindowSystem::setMainWindow( dialog, (HWND)windowId );
+#endif
   }
   if(dialog->exec()) {
     mArchiveManager->load();

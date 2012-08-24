@@ -30,8 +30,8 @@
     your version.
 */
 
-#ifndef __KSIEVE_LEXER_H__
-#define __KSIEVE_LEXER_H__
+#ifndef KSIEVE_KSIEVE_LEXER_H
+#define KSIEVE_KSIEVE_LEXER_H
 
 #include "libksieve_export.h"
 
@@ -107,4 +107,4 @@ namespace KSieve {
 
 } // namespace KSieve
 
-#endif // __KSIEVE_LEXER_H__
+#endif

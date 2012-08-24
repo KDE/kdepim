@@ -41,8 +41,8 @@
 
 <!-- Don't change format of date and version of the documentation -->
 
-<date>2011-05-13</date>
-<releaseinfo>2.07.00 (&kde; 4.7)</releaseinfo>
+<date>2012-08-10</date>
+<releaseinfo>2.09.01 (&kde; 4.9)</releaseinfo>
 
 <abstract>
 <para>&kalarm; is a personal alarm message, command and email scheduler for &kde;.</para>
@@ -236,7 +236,8 @@ always shown.</para>
 
 <para>If you use multiple alarm calendars, you can color code alarms
 according to which calendar they belong to, by selecting a different
-background color for each calendar.</para>
+background color for each calendar (see
+<link linkend="using-calendars">Using Calendars</link>).</para>
 
 </sect2>
 
@@ -355,17 +356,18 @@ already filled in with a copy of the selected alarm's details.</para>
 <listitem>
 <para>To create a new alarm which displays an existing email message,
 drag the email from &kmail; onto &kalarm;'s main window or system tray
-icon. This opens the <link linkend="alarm-edit-dlg">Alarm Edit
-dialog</link> with the entire email message (including sender,
-recipient, &etc;) as the alarm text.</para>
+icon. Then select the <guilabel>Display Alarm</guilabel> option. This
+opens the <link linkend="alarm-edit-dlg">Alarm Edit dialog</link> with
+the entire email message (including sender, recipient, &etc;) as the
+alarm text.</para>
 </listitem>
 
 <listitem>
 <para>To create a new email alarm to send a copy of an existing email
 message, drag the email from &kmail; onto &kalarm;'s main window or
-system tray icon. Then select the <guilabel>Email</guilabel> option.
-The <link linkend="alarm-edit-dlg">Alarm Edit dialog</link> is preset
-with the entire email message except sender.</para>
+system tray icon. Then select the <guilabel>Email Alarm</guilabel>
+option. The <link linkend="alarm-edit-dlg">Alarm Edit dialog</link> is
+preset with the entire email message except sender.</para>
 </listitem>
 
 <listitem>
@@ -377,9 +379,11 @@ to-do contents as the alarm text.</para>
 </listitem>
 
 <listitem>
-<para>Dragging any piece of text onto &kalarm;'s main window or system
-tray icon opens the <link linkend="alarm-edit-dlg">Alarm Edit
-dialog</link> and sets the alarm text.</para>
+<para>To create a new command alarm, drag the text of a script
+starting with <quote>#!</quote> onto &kalarm;'s main window or system
+tray icon. Then select the <guilabel>Command Alarm</guilabel> option.
+This opens the <link linkend="alarm-edit-dlg">Alarm Edit dialog</link>
+preset with the script text.</para>
 </listitem>
 
 <listitem>
@@ -394,6 +398,14 @@ file name.</para>
 &kalarm;'s main window or system tray icon. This opens the
 <link linkend="alarm-edit-dlg">Alarm Edit dialog</link> and sets the
 file name.</para>
+</listitem>
+
+<listitem>
+<para>To create a text message alarm, drag any piece of text onto
+&kalarm;'s main window or system tray icon. If prompted, select the
+<guilabel>Display Alarm</guilabel> option. This opens the
+<link linkend="alarm-edit-dlg">Alarm Edit dialog</link> preset with
+the alarm text.</para>
 </listitem>
 
 <listitem>
@@ -538,14 +550,16 @@ the template details:</para>
 <itemizedlist>
 <listitem>
 <para>Select the <menuchoice>
-<guimenu>File</guimenu><guimenuitem>New From Template</guimenuitem>
+<guimenu>File</guimenu><guimenuitem>New</guimenuitem>
+<guimenuitem>New Alarm From Template</guimenuitem>
 </menuchoice> menu item, and then select the desired template.</para>
 </listitem>
 
 <listitem>
 <para><mousebutton>Right</mousebutton> click on the system tray icon
 and choose
-<menuchoice><guimenuitem>New Alarm From Template</guimenuitem></menuchoice>
+<menuchoice><guimenuitem>New Alarm</guimenuitem>
+<guimenuitem>New Alarm From Template</guimenuitem></menuchoice>
 from the context menu. Then select the desired template.</para>
 </listitem>
 
@@ -837,7 +851,7 @@ you have selected the prompt option for new alarms and templates in the
 
 </sect3>
 
-<sect3>
+<sect3 id="using-calendars">
 <title>Using Calendars</title>
 
 <para>You can view and manipulate calendars via the calendar list,
@@ -1318,7 +1332,8 @@ in any of the following circumstances:</para>
 <itemizedlist>
 <listitem><para>When a reminder message is displayed.</para></listitem>
 <listitem><para>When the message is redisplayed after deferring the
-alarm.</para></listitem>
+alarm, unless <guilabel>Execute for deferred alarms</guilabel> is
+checked.</para></listitem>
 <listitem><para>When the message was displaying at the time you logged
 off and is then restored when you log back in.</para></listitem>
 <listitem><para>When a recurring alarm triggers but the alarm message
@@ -1880,7 +1895,9 @@ linkend="create-edit">Creating and Manipulating Alarms</link>. </para>
 
 <para>Press the <guibutton>Try</guibutton> button to test the alarm
 and check whether it works correctly. The alarm is executed just as
-if it had been scheduled in the normal way.</para>
+if it had been scheduled in the normal way. In the case of an audio
+alarm, press the <guibutton>Try</guibutton> button a second time to
+stop playing the sound file.</para>
 
 <para>Press the <guibutton>OK</guibutton> button
 when all details are correct, to add the alarm to the scheduled
@@ -2049,6 +2066,13 @@ a gray icon indicates that alarms are not being monitored. If some
 individual alarms are disabled, a small cross is overlaid on the
 icon.</para>
 
+<para>&kalarm;'s system tray icon is by default automatically hidden
+whenever there are no alarms due in the next 24 hours. You can change
+the auto-hide time limit, or always show the system tray icon, using
+the <link linkend="preferences-view">Configuration dialog</link>. To
+show the icon when it has been automatically hidden, click the arrow
+in the system tray to reveal hidden icons.</para>
+
 <para>If you hover the mouse cursor over the system tray icon, a
 summary of the first few message alarms due in the next 24 hours are
 displayed as a tooltip. You can switch this feature off, or configure
@@ -2076,14 +2100,6 @@ for details.</para>
 <listitem><para><action>After you select the alarm type from the list
 which appears, opens the Alarm Edit dialog to create a new
 alarm.</action></para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><menuchoice><guimenuitem>New Alarm From Template</guimenuitem></menuchoice></term>
-<listitem><para><action>Displays the list of alarm templates in a
-menu. When you select one, the Alarm Edit dialog is opened, preset
-with that template's details.</action></para>
 </listitem>
 </varlistentry>
 
@@ -2131,9 +2147,11 @@ icon and main windows.</action></para>
 <para>You must be running the &kde; desktop or another suitable window
 manager in order to display &kalarm; in the system tray.</para>
 
-<para>To display &kalarm; in the system tray, select <menuchoice>
-<guimenu>View</guimenu><guimenuitem>Show in System Tray</guimenuitem>
-</menuchoice>.</para>
+<para>Select <menuchoice><guimenu>View</guimenu>
+<guimenuitem>Show in System Tray</guimenuitem></menuchoice> to display
+&kalarm; in the system tray according to the preferences set in the
+<link linkend="preferences-view">View</link> tab of the Configuration
+dialog.</para>
 
 <para>To remove &kalarm; from the system tray, deselect
 <menuchoice><guimenu>View</guimenu>
@@ -2730,8 +2748,32 @@ tab:</para>
 <itemizedlist>
 
 <listitem>
-<para><guilabel>Show in system tray</guilabel>: When selected, the
-system tray icon is displayed while &kalarm; is running. In this mode,
+<para><guilabel>Show in system tray</guilabel> group box: When
+selected, the system tray icon is displayed while &kalarm; is running,
+subject to the selected option:</para>
+
+<itemizedlist>
+<listitem>
+<para><guilabel>Always show</guilabel>: The system tray icon is always
+displayed.</para>
+</listitem>
+
+<listitem>
+<para><guilabel>Automatically hide if no active alarms</guilabel>:
+The system tray icon is hidden if there are no active alarms.</para>
+</listitem>
+
+<listitem>
+<para><guilabel>Automatically hide if no alarm due within time period</guilabel>:
+The system tray icon is hidden if no alarm is due within the entered
+time period, starting from now.</para>
+</listitem>
+</itemizedlist>
+
+<para>When the system tray icon is automatically hidden, you can make
+it visible by means of the system tray option to show hidden icons.</para>
+
+<para>When <guilabel>Show in system tray</guilabel> is selected,
 closing the system tray icon closes all &kalarm; main windows, and if
 no message windows are visible, quits the application.</para>
 </listitem>
@@ -3223,9 +3265,9 @@ a red background at 10 p.m. on the 27th of this month are:</para>
 <sect1 id="cmdline-other">
 <title>Other Options</title>
 
-<para>The following options are used to display the
-<link linkend="alarm-edit-dlg">Alarm Edit dialog</link>, or to control
-&kalarm;'s display mode.</para>
+<para>The following options are used to perform various functions,
+including displaying the
+<link linkend="alarm-edit-dlg">Alarm Edit dialog</link>.</para>
 
 <informaltable>
 <tgroup cols="2">
@@ -3269,6 +3311,10 @@ a red background at 10 p.m. on the 27th of this month are:</para>
 <row>
   <entry><option>--tray</option></entry>
   <entry>Display &kalarm; as an icon in the system tray.</entry>
+</row>
+<row>
+  <entry><option>--disable-all</option></entry>
+  <entry>Disable monitoring of all alarms.</entry>
 </row>
 </tbody>
 </tgroup>

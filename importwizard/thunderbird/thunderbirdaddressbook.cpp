@@ -179,6 +179,7 @@ void ThunderBirdAddressBook::readAddressBook( const QString& filename )
                 } else if( column == QLatin1String("WorkAddress" ) ) {
                   workAddr.setStreet(value);
                 } else if( column == QLatin1String("WorkAddress2" ) ) {
+                  qDebug()<<" column "<<column<<" found but not imported. Need to look at how to import it";
                 } else if( column == QLatin1String("WorkCity" ) ) {
                   workAddr.setLocality(value);
                 } else if( column == QLatin1String("WorkState" ) ) {
@@ -206,7 +207,7 @@ void ThunderBirdAddressBook::readAddressBook( const QString& filename )
                 } else if( column == QLatin1String("FamilyName" ) ) {
                   qDebug()<<" column "<<column<<" found but not imported. Need to look at how to import it";
                 } else if( column == QLatin1String("WebPage1" ) ) {
-                  qDebug()<<" column "<<column<<" found but not imported. Need to look at how to import it";
+                  contact.setUrl(KUrl(value));
                 } else if( column == QLatin1String("WebPage2" ) ) {
                   qDebug()<<" column "<<column<<" found but not imported. Need to look at how to import it";
                 } else if( column == QLatin1String("BirthYear" ) ) {

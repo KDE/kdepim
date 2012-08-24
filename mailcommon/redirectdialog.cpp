@@ -138,12 +138,10 @@ RedirectDialog::RedirectDialog( SendMode mode, QWidget *parent )
   KHBox *hbox = new KHBox( vbox );
   hbox->setSpacing( 4 );
   d->mEditTo = new MessageComposer::ComposerLineEdit( true, hbox );
-  d->mEditTo->setObjectName( "toLine" );
   d->mEditTo->setRecentAddressConfig( KernelIf->config().data() );
   d->mEditTo->setMinimumWidth( 300 );
 
   d->mBtnTo = new QPushButton( QString(), hbox );
-  d->mBtnTo->setObjectName( "toBtn" );
   d->mBtnTo->setIcon( KIcon( "help-contents" ) );
   d->mBtnTo->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
   d->mBtnTo->setMinimumSize( d->mBtnTo->sizeHint() * 1.2 );
@@ -159,12 +157,14 @@ RedirectDialog::RedirectDialog( SendMode mode, QWidget *parent )
   d->mEditTo->setFocus();
 
   hbox = new KHBox( vbox );
-  new QLabel(i18n("Identity:"),hbox);
+  QLabel *lab = new QLabel(i18n("Identity:"),hbox);
   d->mComboboxIdentity = new KPIMIdentities::IdentityCombo(KernelIf->identityManager(),hbox);
+  lab->setBuddy(d->mComboboxIdentity);
 
   hbox = new KHBox(vbox);
-  new QLabel(i18n("Transport:"),hbox);
+  lab = new QLabel(i18n("Transport:"),hbox);
   d->mTransportCombobox = new MailTransport::TransportComboBox( hbox );
+  lab->setBuddy(d->mTransportCombobox);
 
   setButtonGuiItem( User1, KGuiItem( i18n( "&Send Now" ), "mail-send" ) );
   setButtonGuiItem( User2, KGuiItem( i18n( "Send &Later" ), "mail-queue" ) );

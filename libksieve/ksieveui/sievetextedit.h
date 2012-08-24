@@ -1,7 +1,3 @@
-#ifndef SIEVETEXTEDIT_H
-#define SIEVETEXTEDIT_H
-
-
 /* Copyright (C) 2011, 2012 Laurent Montel <montel@kde.org>
  *
  * This library is free software; you can redistribute it and/or
@@ -20,44 +16,50 @@
  * Boston, MA 02110-1301, USA.
  */
 
+#ifndef KSIEVE_KSIEVEUI_SIEVETEXTEDIT_H
+#define KSIEVE_KSIEVEUI_SIEVETEXTEDIT_H
+
 #include "ksieveui_export.h"
 
 #include <QPlainTextEdit>
+
 class QCompleter;
 
 namespace KSieveUi {
+
 class SieveLineNumberArea;
 
 class KSIEVEUI_EXPORT SieveTextEdit : public QPlainTextEdit
 {
   Q_OBJECT
-public:
-  explicit SieveTextEdit( QWidget *parent );
-  virtual ~SieveTextEdit();
-  
-  void lineNumberAreaPaintEvent(QPaintEvent *event);
-  int lineNumberAreaWidth();
-  
 
-protected slots:
-  void slotInsertCompletion( const QString& );
-  QString wordUnderCursor();
-  void updateLineNumberAreaWidth(int newBlockCount);
-  void updateLineNumberArea(const QRect &, int);
+  public:
+    explicit SieveTextEdit( QWidget *parent );
+    virtual ~SieveTextEdit();
 
-protected:
-  void initCompleter();
-  void keyPressEvent(QKeyEvent* e);
-  void resizeEvent(QResizeEvent *event);
-  void contextMenuEvent( QContextMenuEvent *event );
-  
-signals:
-  void findText();
-private:
-  QCompleter *m_completer;
-  SieveLineNumberArea *m_sieveLineNumberArea;
+    void lineNumberAreaPaintEvent(QPaintEvent *event);
+    int lineNumberAreaWidth();
+
+  protected slots:
+    void slotInsertCompletion( const QString& );
+    QString wordUnderCursor();
+    void updateLineNumberAreaWidth(int newBlockCount);
+    void updateLineNumberArea(const QRect &, int);
+
+  protected:
+    void initCompleter();
+    void keyPressEvent(QKeyEvent* e);
+    void resizeEvent(QResizeEvent *event);
+    void contextMenuEvent( QContextMenuEvent *event );
+
+  signals:
+    void findText();
+
+  private:
+    QCompleter *m_completer;
+    SieveLineNumberArea *m_sieveLineNumberArea;
 };
 
 }
-#endif /* SIEVETEXTEDIT_H */
+#endif
 

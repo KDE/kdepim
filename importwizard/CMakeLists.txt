@@ -18,6 +18,7 @@ abstractsettings.cpp
 abstractaddressbook.cpp
 abstractcalendar.cpp
 importcalendarpage.cpp
+importwizardutil.cpp
 thunderbird/thunderbirdimportdata.cpp
 thunderbird/thunderbirdsettings.cpp
 thunderbird/thunderbirdaddressbook.cpp
@@ -33,10 +34,15 @@ evolutionv3/evolutionutil.cpp
 evolutionv2/evolutionv2importdata.cpp
 evolutionv1/evolutionv1importdata.cpp
 opera/operaimportdata.cpp
+opera/operaaddressbook.cpp
+opera/operasettings.cpp
 oe/oeimportdata.cpp
 mailapp/mailappimportdata.cpp
 pmail/pmailimportdata.cpp
 thebat/thebatimportdata.cpp
+balsa/balsaimportdata.cpp
+balsa/balsasettings.cpp
+balsa/balsaaddressbook.cpp
 )
 
 include_directories(${CMAKE_SOURCE_DIR}/mailimporter 

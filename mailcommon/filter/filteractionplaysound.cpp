@@ -87,3 +87,5 @@ bool FilterActionPlaySound::argsFromStringInteractive( const QString &argsStr, c
   }
   return needUpdate;
 }
+
+#include "filteractionplaysound.moc"

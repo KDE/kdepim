@@ -20,6 +20,7 @@
 
 #include <QObject>
 #include <Akonadi/Collection>
+#include "abstractbase.h"
 
 class ImportWizard;
 
@@ -30,7 +31,7 @@ namespace KABC {
 
 class KJob;
 
-class AbstractAddressBook: public QObject
+class AbstractAddressBook: public AbstractBase
 {
   Q_OBJECT
 public:
@@ -40,6 +41,10 @@ protected:
   void createGroup(const KABC::ContactGroup& group);
   void createContact( const KABC::Addressee& address );
   
+
+  void addImportInfo( const QString& log );
+  void addImportError( const QString& log );
+
   void addAddressBookImportInfo( const QString& log );
   void addAddressBookImportError( const QString& log );
   void cleanUp();

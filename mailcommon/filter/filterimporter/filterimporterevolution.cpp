@@ -257,7 +257,7 @@ void FilterImporterEvolution::parsePartAction( const QDomElement &ruleFilter,
           } else if ( name == QLatin1String( "set-status" ) ) {
             actionName = QLatin1String( "set status" );
           } else if ( name == QLatin1String( "unset-status" ) ) {
-	    actionName = QLatin1String( "unset status" );
+            actionName = QLatin1String( "unset status" );
           } else if ( name == QLatin1String( "beep" ) ) {
             actionName = QLatin1String( "beep" );
           } else if ( name == QLatin1String( "play-sound" ) ) {

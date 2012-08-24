@@ -73,7 +73,7 @@ FilterAction::ReturnCode FilterActionRewriteHeader::process( ItemContext &contex
   if ( !newheader ) {
     newheader = new KMime::Headers::Generic(param, msg.get(), newValue, "utf-8" );
   } else {
-    header->fromUnicodeString( newValue, "utf-8" );
+    newheader->fromUnicodeString( newValue, "utf-8" );
   }
   msg->setHeader( newheader );
   msg->assemble();
@@ -117,6 +117,7 @@ QWidget* FilterActionRewriteHeader::createParamWidget( QWidget *parent ) const
   KLineEdit *lineEdit = new KLineEdit( widget );
   lineEdit->setObjectName( "replace" );
   lineEdit->setClearButtonShown( true );
+  lineEdit->setTrapReturnKey(true);
   layout->addWidget( lineEdit, 1 );
 
   setParamWidgetValue( widget );
@@ -220,3 +221,5 @@ void FilterActionRewriteHeader::argsFromString( const QString &argsStr )
 }
 
 
+
+#include "filteractionrewriteheader.moc"

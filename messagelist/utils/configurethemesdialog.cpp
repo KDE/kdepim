@@ -71,11 +71,11 @@ class ThemeListWidget : public QListWidget
 public:
   ThemeListWidget( QWidget * parent )
     : QListWidget( parent )
-    {};
+    {}
 public:
   // need a larger but shorter QListWidget
   QSize sizeHint() const
-    { return QSize( 450, 128 ); };
+    { return QSize( 450, 128 ); }
 };
 
 } // namespace Utils

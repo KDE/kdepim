@@ -18,6 +18,7 @@
 #include "thunderbirdsettings.h"
 #include <mailtransport/transportmanager.h>
 #include "mailcommon/mailutil.h"
+#include "importwizardutil.h"
 
 #include <kpimidentities/identity.h>
 #include <kpimidentities/signature.h>
@@ -108,7 +109,7 @@ void ThunderbirdSettings::readLdapSettings()
         qDebug()<<" Security not implemented :"<<ldap.ldapUrl.scheme();
       }
     }
-    mergeLdap(ldap);
+    ImportWizardUtil::mergeLdap(ldap);
   }
 }
 
@@ -294,6 +295,8 @@ void ThunderbirdSettings::readAccount()
 
       const QString agentIdentifyName = AbstractBase::createResource( "akonadi_imap_resource", name,settings );
       addCheckMailOnStartup(agentIdentifyName,loginAtStartup);
+      //Not find a method to disable it in thunderbird
+      addToManualCheck(agentIdentifyName,true);
     } else if( type == QLatin1String("pop3")) {
       QMap<QString, QVariant> settings;
       settings.insert( QLatin1String( "Host" ), host );
@@ -356,6 +359,8 @@ void ThunderbirdSettings::readAccount()
 
       const QString agentIdentifyName = AbstractBase::createResource( "akonadi_pop3_resource", name, settings );
       addCheckMailOnStartup(agentIdentifyName,loginAtStartup);
+      //Not find a method to disable it in thunderbird
+      addToManualCheck(agentIdentifyName,true);
     } else if ( type == QLatin1String( "none" ) ) {
       //FIXME look at if we can implement it
       kDebug()<<" account type none!";
@@ -480,9 +485,6 @@ void ThunderbirdSettings::readIdentity( const QString& account )
   KPIMIdentities::Identity* newIdentity = createIdentity();
   const QString identity = QString::fromLatin1( "mail.identity.%1" ).arg( account );
   
-  const QString fcc = mHashConfig.value( identity + QLatin1String( ".fcc_folder" ) ).toString();
-
-
   const QString smtpServer = mHashConfig.value( identity + QLatin1String( ".smtpServer" ) ).toString();
   if(!smtpServer.isEmpty() && mHashSmtp.contains(smtpServer))
   {
@@ -568,10 +570,9 @@ void ThunderbirdSettings::readIdentity( const QString& account )
   const QString attachVcardStr( identity + QLatin1String( ".attach_vcard" ) );
   if ( mHashConfig.contains( attachVcardStr ) ) {
     const bool attachVcard = mHashConfig.value( attachVcardStr ).toBool();
-    if ( attachVcard ) {
-      const QString vcardContent = mHashConfig.value( identity + QLatin1String( ".escapedVCard" ) ).toString();
-      //TODO: not implemented in kmail
-    }
+    newIdentity->setAttachVcard(attachVcard);
+    const QString vcardContent = mHashConfig.value( identity + QLatin1String( ".escapedVCard" ) ).toString();
+    //TODO: write data in vcard file
   }
   const QString composeHtmlStr( identity + QLatin1String( ".compose_html" ) );
   //TODO: implement it in kmail

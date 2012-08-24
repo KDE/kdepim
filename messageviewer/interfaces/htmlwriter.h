@@ -111,6 +111,8 @@ public:
     * Embed a part with Content-ID @p contentId, using url @p url.
     */
   virtual void embedPart( const QByteArray & contentId, const QString & url ) = 0;
+
+  virtual void extraHead( const QString& str ) = 0;
 };
 
 }

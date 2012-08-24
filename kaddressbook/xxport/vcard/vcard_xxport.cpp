@@ -123,9 +123,9 @@ bool VCardXXPort::exportContacts( const KABC::Addressee::List &contacts ) const
     }
 
     if ( option( "version" ) == "v21" ) {
-      ok = doExport( url, converter.createVCards( list, KABC::VCardConverter::v2_1 ) );
+      ok = doExport( url, converter.exportVCards( list, KABC::VCardConverter::v2_1 ) );
     } else {
-      ok = doExport( url, converter.createVCards( list, KABC::VCardConverter::v3_0 ) );
+      ok = doExport( url, converter.exportVCards( list, KABC::VCardConverter::v3_0 ) );
     }
   } else {
     const int answer =
@@ -154,9 +154,9 @@ bool VCardXXPort::exportContacts( const KABC::Addressee::List &contacts ) const
         bool tmpOk = false;
 
         if ( option( "version" ) == "v21" ) {
-          tmpOk = doExport( url, converter.createVCard( contact, KABC::VCardConverter::v2_1 ) );
+          tmpOk = doExport( url, converter.exportVCard( contact, KABC::VCardConverter::v2_1 ) );
         } else {
-          tmpOk = doExport( url, converter.createVCard( contact, KABC::VCardConverter::v3_0 ) );
+          tmpOk = doExport( url, converter.exportVCard( contact, KABC::VCardConverter::v3_0 ) );
         }
 
         ok = ok && tmpOk;
@@ -172,9 +172,9 @@ bool VCardXXPort::exportContacts( const KABC::Addressee::List &contacts ) const
       }
 
       if ( option( "version" ) == "v21" ) {
-        ok = doExport( url, converter.createVCards( list, KABC::VCardConverter::v2_1 ) );
+        ok = doExport( url, converter.exportVCards( list, KABC::VCardConverter::v2_1 ) );
       } else {
-        ok = doExport( url, converter.createVCards( list, KABC::VCardConverter::v3_0 ) );
+        ok = doExport( url, converter.exportVCards( list, KABC::VCardConverter::v3_0 ) );
       }
     }
     }

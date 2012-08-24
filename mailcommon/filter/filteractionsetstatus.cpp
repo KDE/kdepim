@@ -66,3 +66,5 @@ SearchRule::RequiredPart FilterActionSetStatus::requiredPart() const
 }
 
 
+
+#include "filteractionsetstatus.moc"

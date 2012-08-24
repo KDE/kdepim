@@ -57,6 +57,7 @@ FolderRequester::FolderRequester( QWidget *parent )
 
   edit = new KLineEdit( this );
   edit->setClickMessage( i18n( "Select Folder" ) );
+  edit->setTrapReturnKey(true);
   edit->setReadOnly( true );
   hlay->addWidget( edit );
 

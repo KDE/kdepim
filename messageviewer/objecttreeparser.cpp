@@ -1142,8 +1142,13 @@ return bDecryptionOk;
 }
 
 //static
-bool ObjectTreeParser::containsExternalReferences( const QString & str )
+bool ObjectTreeParser::containsExternalReferences( const QString & str, const QString&extraHead )
 {
+  const bool hasBaseInHeader = extraHead.contains(QLatin1String("<base href=\""),Qt::CaseInsensitive);
+  if(hasBaseInHeader && (str.contains(QLatin1String("href=\"/"),Qt::CaseInsensitive) ||
+                         str.contains(QLatin1String("<img src=\"/"),Qt::CaseInsensitive)) ) {
+    return true;
+  }
   int httpPos = str.indexOf( "\"http:", Qt::CaseInsensitive );
   int httpsPos = str.indexOf( "\"https:", Qt::CaseInsensitive );
 
@@ -1203,10 +1208,12 @@ bool ObjectTreeParser::processTextHtmlSubtype( KMime::Content * curNode, Process
     if ( mSource->htmlMail() ) {
 
       HTMLQuoteColorer colorer;
+      QString extraHead;
       for ( int i = 0; i < 2; i++ )
         colorer.setQuoteColor( i, cssHelper()->quoteColor( i ) );
-      bodyText = colorer.process( bodyText );
+      bodyText = colorer.process( bodyText, extraHead );
       mNodeHelper->setNodeDisplayedEmbedded( curNode, true );
+      htmlWriter()->extraHead(extraHead);
 
       // Show the "external references" warning (with possibility to load
       // external references only if loading external references is disabled
@@ -1215,7 +1222,7 @@ bool ObjectTreeParser::processTextHtmlSubtype( KMime::Content * curNode, Process
       // have an easy way to load them but that shouldn't be a problem
       // because only spam contains obfuscated external references.
       if ( !mSource->htmlLoadExternal() &&
-            containsExternalReferences( bodyText ) ) {
+            containsExternalReferences( bodyText,extraHead ) ) {
         htmlWriter()->queue( "<div class=\"htmlWarn\">\n" );
         htmlWriter()->queue( i18n("<b>Note:</b> This HTML message may contain external "
                                   "references to images etc. For security/privacy reasons "

@@ -200,7 +200,7 @@ Akregator::MainWidget::MainWidget( Part *part, QWidget *parent, ActionManagerImp
     m_articleListView = new ArticleListView( m_articleSplitter );
     connect( m_articleListView, SIGNAL(userActionTakingPlace()),
              this, SLOT(ensureArticleTabVisible()) );
-    
+
     m_selectionController = new SelectionController( this );
     m_selectionController->setArticleLister( m_articleListView );
     m_selectionController->setFeedSelector( m_feedListView );
@@ -235,7 +235,7 @@ Akregator::MainWidget::MainWidget( Part *part, QWidget *parent, ActionManagerImp
 
     m_articleViewer = new ArticleViewer(m_articleSplitter);
     m_actionManager->initArticleViewer(m_articleViewer);
-//    m_articleListView->setFocusProxy(m_articleViewer);
+    m_articleListView->setFocusProxy(m_articleViewer);
     setFocusProxy( m_articleViewer );
 
     connect( m_articleViewer, SIGNAL(signalOpenUrlRequest(Akregator::OpenUrlRequest&)),
@@ -463,7 +463,11 @@ void Akregator::MainWidget::slotDeleteExpiredArticles()
 
 QDomDocument Akregator::MainWidget::feedListToOPML()
 {
-    return m_feedList->toOpml();
+    QDomDocument dom;
+    if ( m_feedList ) {
+        dom = m_feedList->toOpml();
+    }
+    return dom;
 }
 
 void Akregator::MainWidget::addFeedToGroup(const QString& url, const QString& groupName)

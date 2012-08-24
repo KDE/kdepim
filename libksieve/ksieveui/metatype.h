@@ -16,8 +16,9 @@
    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
    Boston, MA 02110-1301, USA.
 */
-#ifndef KSIEVEUI_METATYPE_H
-#define KSIEVEUI_METATYPE_H
+
+#ifndef KSIEVE_KSIEVEUI_METATYPE_H
+#define KSIEVE_KSIEVEUI_METATYPE_H
 
 #include <QtCore/QObject>
 #include <QtCore/QList>
