@@ -982,6 +982,14 @@ void Message::ComposerViewBase::addAttachment ( const KUrl& url, const QString& 
   m_attachmentController->addAttachment( url );
 }
 
+void Message::ComposerViewBase::addAttachmentUrlSync ( const KUrl& url, const QString& comment )
+{
+  Q_UNUSED( comment );
+  kDebug() << "adding attachment with url:" << url;
+  m_attachmentController->addAttachmentUrlSync( url );
+}
+
+
 void Message::ComposerViewBase::addAttachment ( const QString& name, const QString& filename, const QString& charset, const QByteArray& data, const QByteArray& mimeType )
 {
   MessageCore::AttachmentPart::Ptr attachment = MessageCore::AttachmentPart::Ptr( new MessageCore::AttachmentPart() );
