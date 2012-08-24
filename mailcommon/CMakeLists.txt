@@ -75,7 +75,7 @@ set(libmailcommon_SRCS
   filter/itemcontext.cpp
   filter/kmfilterdialog.cpp
   filter/mailfilter.cpp
-  filter/selectthunderbirdfilterfiles.cpp
+  filter/selectthunderbirdfilterfilesdialog.cpp
   filter/selectthunderbirdfilterfileswidget.cpp
   foldercollection.cpp
   foldercollectionmonitor.cpp
