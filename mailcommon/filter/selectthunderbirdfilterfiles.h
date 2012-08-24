@@ -19,7 +19,7 @@
 #define SELECTTHUNDERBIRDFILTERFILES_H
 
 #include <KDialog>
-
+#include <KUrl>
 class SelectThunderbirdFilterFilesWidget;
 
 namespace MailCommon {
@@ -29,6 +29,9 @@ public:
   explicit SelectThunderbirdFilterFiles(QWidget *parent);
   ~SelectThunderbirdFilterFiles();
   QStringList selectedFiles() const;
+
+
+  void setStartDir(const KUrl&);
 
 private:
   SelectThunderbirdFilterFilesWidget *mSelectFilterFilesWidget;

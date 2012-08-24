@@ -99,10 +99,15 @@ QStringList SelectThunderbirdFilterFilesWidget::selectedFiles() const
   } else {
      QList<QListWidgetItem *> list = ui->listFiles->selectedItems();
      Q_FOREACH(QListWidgetItem * item, list) {
-         listFiles<<item->text();
+       listFiles<<item->text();
      }
   }
   return listFiles;
+}
+
+void SelectThunderbirdFilterFilesWidget::setStartDir(const KUrl&url)
+{
+  ui->fileUrl->setStartDir(url);
 }
 
 #include "selectthunderbirdfilterfileswidget.moc"

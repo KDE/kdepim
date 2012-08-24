@@ -49,3 +49,8 @@ QStringList SelectThunderbirdFilterFiles::selectedFiles() const
 {
   return mSelectFilterFilesWidget->selectedFiles();
 }
+
+void SelectThunderbirdFilterFiles::setStartDir(const KUrl& url)
+{
+  mSelectFilterFilesWidget->setStartDir(url);
+}
