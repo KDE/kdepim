@@ -796,15 +796,27 @@ void AttachmentControllerBase::addAttachment( AttachmentPart::Ptr part )
 
 void AttachmentControllerBase::addAttachmentUrlSync(const KUrl &url)
 {
-  AttachmentFromUrlBaseJob *ajob = new AttachmentFromUrlJob( url, this );
+  AttachmentFromUrlBaseJob *ajob = 0;
+  if( KMimeType::findByUrl( url )->name() == QLatin1String( "inode/directory" ) ) {
+    kDebug() << "Creating attachment from folder";
+    ajob = new AttachmentFromFolderJob ( url, this );
+  }
+  else{
+    ajob = new AttachmentFromUrlJob( url, this );
+    kDebug() << "Creating attachment from file";
+  }
   if( MessageComposer::MessageComposerSettings::maximumAttachmentSize() > 0 ) {
     ajob->setMaximumAllowedSize( MessageComposer::MessageComposerSettings::maximumAttachmentSize() * 1024 * 1024 );
   }
   if(ajob->exec()) {
     AttachmentPart::Ptr part = ajob->attachmentPart();
     addAttachment( part );
+  } else {
+    if( ajob->error() ) {
+      KMessageBox::sorry( d->wParent, job->errorString(), i18n( "Failed to attach file" ) );
+      return;
+    }
   }
-
 }
 
 void AttachmentControllerBase::addAttachment( const KUrl &url )
