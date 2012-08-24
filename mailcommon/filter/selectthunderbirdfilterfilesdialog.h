@@ -15,19 +15,19 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef SELECTTHUNDERBIRDFILTERFILES_H
-#define SELECTTHUNDERBIRDFILTERFILES_H
+#ifndef SELECTTHUNDERBIRDFILTERFILESDIALOG_H
+#define SELECTTHUNDERBIRDFILTERFILESDIALOG_H
 
 #include <KDialog>
 #include <KUrl>
 class SelectThunderbirdFilterFilesWidget;
 
 namespace MailCommon {
-class SelectThunderbirdFilterFiles : public KDialog
+class SelectThunderbirdFilterFilesDialog : public KDialog
 {
 public:
-  explicit SelectThunderbirdFilterFiles(QWidget *parent);
-  ~SelectThunderbirdFilterFiles();
+  explicit SelectThunderbirdFilterFilesDialog(QWidget *parent);
+  ~SelectThunderbirdFilterFilesDialog();
   QStringList selectedFiles() const;
 
 
@@ -38,4 +38,4 @@ private:
 };
 }
 
-#endif // SELECTTHUNDERBIRDFILTERFILES_H
+#endif // SELECTTHUNDERBIRDFILTERFILESDIALOG_H

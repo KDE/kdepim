@@ -37,7 +37,7 @@
 #include "filterimporter/filterimportersylpheed_p.h"
 #include "filterimporter/filterimporterprocmail_p.h"
 #include "filterimporter/filterimporterbalsa_p.h"
-#include "selectthunderbirdfilterfiles.h"
+#include "selectthunderbirdfilterfilesdialog.h"
 
 #include <messageviewer/autoqpointer.h>
 #include <messageviewer/util.h>
@@ -325,7 +325,7 @@ QList<MailFilter *> FilterImporterExporter::importFilters(
   case ThunderBirdFilter:
   {
     if(fileName.isEmpty()) {
-      SelectThunderbirdFilterFiles * selectThunderBirdFileDialog = new SelectThunderbirdFilterFiles(d->mParent);
+      SelectThunderbirdFilterFilesDialog * selectThunderBirdFileDialog = new SelectThunderbirdFilterFilesDialog(d->mParent);
       selectThunderBirdFileDialog->setStartDir(KUrl(MailCommon::FilterImporterThunderbird::defaultPath()));
       if(selectThunderBirdFileDialog->exec()) {
         Q_FOREACH(const QString& url, selectThunderBirdFileDialog->selectedFiles()) {

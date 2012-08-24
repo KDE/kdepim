@@ -15,7 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "selectthunderbirdfilterfiles.h"
+#include "selectthunderbirdfilterfilesdialog.h"
 #include "selectthunderbirdfilterfileswidget.h"
 #include <KLocale>
 
@@ -23,7 +23,7 @@
 
 using namespace MailCommon;
 
-SelectThunderbirdFilterFiles::SelectThunderbirdFilterFiles(QWidget *parent)
+SelectThunderbirdFilterFilesDialog::SelectThunderbirdFilterFilesDialog(QWidget *parent)
     :KDialog(parent)
 {
   setCaption( i18n( "Select thunderbird filter files" ) );
@@ -40,17 +40,17 @@ SelectThunderbirdFilterFiles::SelectThunderbirdFilterFiles(QWidget *parent)
   mainLayout->addWidget(mSelectFilterFilesWidget);
 }
 
-SelectThunderbirdFilterFiles::~SelectThunderbirdFilterFiles()
+SelectThunderbirdFilterFilesDialog::~SelectThunderbirdFilterFilesDialog()
 {
 
 }
 
-QStringList SelectThunderbirdFilterFiles::selectedFiles() const
+QStringList SelectThunderbirdFilterFilesDialog::selectedFiles() const
 {
   return mSelectFilterFilesWidget->selectedFiles();
 }
 
-void SelectThunderbirdFilterFiles::setStartDir(const KUrl& url)
+void SelectThunderbirdFilterFilesDialog::setStartDir(const KUrl& url)
 {
   mSelectFilterFilesWidget->setStartDir(url);
 }
