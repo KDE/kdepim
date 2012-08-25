@@ -117,6 +117,7 @@ void MailFilterAgent::initialCollectionFetchingDone( KJob *job )
   Akonadi::CollectionFetchJob *fetchJob = qobject_cast<Akonadi::CollectionFetchJob*>( job );
 
   changeRecorder()->itemFetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
+  changeRecorder()->itemFetchScope().setCacheOnly(false);
   mRequestedPart = m_filterManager->requiredPart();
   if (mRequestedPart == MailCommon::SearchRule::CompleteMessage) {
     changeRecorder()->itemFetchScope().fetchFullPayload();
