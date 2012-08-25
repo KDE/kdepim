@@ -344,6 +344,7 @@ else()
     macro_optional_add_subdirectory(ktnef)
     macro_optional_add_subdirectory(mailimporter)
     macro_optional_add_subdirectory(backupmail)
+    macro_optional_add_subdirectory(kalarm)
 
     if(KDEPIMLIBS_KCAL_LIBRARY)
       macro_optional_add_subdirectory(blogilo)
@@ -354,8 +355,6 @@ else()
     endif()
 
     if(KDEPIMLIBS_KRESOURCES_LIBRARY)
-      macro_optional_add_subdirectory(kalarm)
-
       if(QT_QT3SUPPORT_FOUND)
         macro_optional_add_subdirectory(knode)
       endif()
