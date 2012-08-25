@@ -111,6 +111,7 @@ void MailFilterAgent::initialCollectionFetchingDone( KJob *job )
 
   changeRecorder()->itemFetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
   if (m_filterManager->requiresFullMailBody()) {
+    changeRecorder()->itemFetchScope().setCacheOnly(false);
     changeRecorder()->itemFetchScope().fetchFullPayload();
   } else {
     changeRecorder()->itemFetchScope().fetchPayloadPart( Akonadi::MessagePart::Header, true );
