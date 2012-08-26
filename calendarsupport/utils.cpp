@@ -399,6 +399,7 @@ Akonadi::Collection CalendarSupport::selectCollection( QWidget *parent,
   dlg->setParent( parent );
   dlg->setCaption( i18n( "Select Calendar" ) );
   dlg->setDescription( i18n( "Select the calendar where this item will be stored." ) );
+  dlg->changeCollectionDialogOptions( Akonadi::CollectionDialog::KeepTreeExpanded );
   kDebug() << "selecting collections with mimeType in " << mimeTypes;
 
   dlg->setMimeTypeFilter( mimeTypes );
