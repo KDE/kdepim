@@ -217,6 +217,10 @@ else()
   find_package(NepomukCore)
   macro_log_feature(NepomukCore_FOUND "NepomukCore" "The NepomukCore libraries" "http://www.kde.org" TRUE "" "Nepomuk extends the search and tagging functionalities in KMail and Akonadi")
 
+  find_package(NepomukWidgets)
+  macro_log_feature(NepomukWidgets_FOUND "NepomukWidgets" "The NepomukWidget libraries" "http://www.kde.org" TRUE "" "Nepomuk extends the search and tagging functionalities in AkonadiConsole")
+
+
   find_package(LibXslt)
   macro_log_feature(XSLTPROC_EXECUTABLE "xsltproc" "The command line XSLT processor from libxslt" "http://xmlsoft.org/XSLT/" TRUE "" "Required to generate the D-Bus interfaces.")
 

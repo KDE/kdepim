@@ -59,9 +59,9 @@
 #include <kmessagebox.h>
 #include <kxmlguiwindow.h>
 
-#include <nepomuk/resource.h>
-#include <nepomuk/resourcemanager.h>
-#include <nepomuk/variant.h>
+#include <nepomuk2/resource.h>
+#include <nepomuk2/resourcemanager.h>
+#include <nepomuk2/variant.h>
 
 #include <QSplitter>
 #include <QTextEdit>
@@ -200,7 +200,7 @@ BrowserWidget::BrowserWidget(KXmlGuiWindow *xmlGuiWindow, QWidget * parent) :
   mStdActionManager->setFavoriteSelectionModel( favoritesView->selectionModel() );
   mStdActionManager->createAllActions();
 
-  Nepomuk::ResourceManager::instance()->init();
+  Nepomuk2::ResourceManager::instance()->init();
 
   m_stateMaintainer = new KViewStateMaintainer<ETMViewStateSaver>( KGlobal::config()->group("CollectionViewState"), this );
   m_stateMaintainer->setView( mCollectionView );
@@ -309,7 +309,7 @@ void BrowserWidget::setItem( const Akonadi::Item &item )
   contentUi.attrView->setModel( mAttrModel );
 
   if ( Settings::self()->nepomukEnabled() ) {
-    Nepomuk::Resource res( item.url() );
+    Nepomuk2::Resource res( item.url() );
 
     contentUi.tagWidget->setTaggedResource( res );
     contentUi.ratingWidget->setRating( int( res.rating() ) );
@@ -317,14 +317,14 @@ void BrowserWidget::setItem( const Akonadi::Item &item )
     delete mNepomukModel;
     mNepomukModel = 0;
     if ( res.isValid() ) {
-      contentUi.rdfClassName->setText( res.className() );
-      QHash<QUrl, Nepomuk::Variant> props = res.properties();
+      //PORTING NEPOMUK2 contentUi.rdfClassName->setText( res.className() );
+      QHash<QUrl, Nepomuk2::Variant> props = res.properties();
       mNepomukModel = new QStandardItemModel( props.count(), 2, this );
       QStringList labels;
       labels << i18n( "Property" ) << i18n( "Value" );
       mNepomukModel->setHorizontalHeaderLabels( labels );
       int row = 0;
-      for ( QHash<QUrl, Nepomuk::Variant>::ConstIterator it = props.constBegin(); it != props.constEnd(); ++it, ++row ) {
+      for ( QHash<QUrl, Nepomuk2::Variant>::ConstIterator it = props.constBegin(); it != props.constEnd(); ++it, ++row ) {
         QModelIndex index = mNepomukModel->index( row, 0 );
         Q_ASSERT( index.isValid() );
         mNepomukModel->setData( index, it.key().toString() );
@@ -398,7 +398,7 @@ void BrowserWidget::save()
   connect( store, SIGNAL(result(KJob*)), SLOT(saveResult(KJob*)) );
 
   if ( Settings::self()->nepomukEnabled() ) {
-    Nepomuk::Resource res( item.url() );
+    Nepomuk2::Resource res( item.url() );
     res.setRating( contentUi.ratingWidget->rating() );
   }
 }
