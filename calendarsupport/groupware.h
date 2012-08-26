@@ -40,7 +40,6 @@ namespace Akonadi {
 
 namespace CalendarSupport {
 
-class MailScheduler;
 
 class CALENDARSUPPORT_EXPORT GroupwareUiDelegate
 {

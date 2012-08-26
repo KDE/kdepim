@@ -24,23 +24,28 @@
 #ifndef CALENDARSUPPORT_MAILCLIENT_H
 #define CALENDARSUPPORT_MAILCLIENT_H
 
-#include "calendarsupport_export.h"
-
 #include <KCalCore/IncidenceBase>
 
 #include <QObject>
 
+/**
+ * MailClient is in kdepimlibs/akonadi/calendar now, but it's private API and I don't
+ * feel like making public right now, hence this copy.
+ *
+ * Theres probably non calendaring-specific APIs to send e-mails, so I'd like to keep
+ * MailClient private in kdepimlibs.
+ */
 namespace KPIMIdentities {
   class Identity;
 }
 
-namespace CalendarSupport {
+namespace KOrg {
 
-class CALENDARSUPPORT_EXPORT MailClient : public QObject
+class MailClient : public QObject
 {
   public:
     MailClient();
-    virtual ~MailClient();
+    ~MailClient();
 
     bool mailAttendees( const KCalCore::IncidenceBase::Ptr &,
                         const KPIMIdentities::Identity &identity,

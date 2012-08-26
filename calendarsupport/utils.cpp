@@ -24,7 +24,6 @@
 
 #include "utils.h"
 #include "kcalprefs.h"
-#include "mailclient.h"
 
 #include <Akonadi/Collection>
 #include <Akonadi/CollectionDialog>

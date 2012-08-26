@@ -27,7 +27,6 @@ set(calendarsupport_LIB_SRCS
   groupware.cpp
   kcalmodel.cpp
   kcalprefs.cpp
-  mailclient.cpp
   utils.cpp
 
   next/incidencefetchjob.cpp

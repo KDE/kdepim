@@ -50,7 +50,7 @@
 #include <KProtocolManager>
 #include <KSystemTimeZone>
 
-using namespace CalendarSupport;
+using namespace KOrg;
 
 MailClient::MailClient() : QObject()
 {

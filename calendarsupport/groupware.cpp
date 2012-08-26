@@ -30,7 +30,6 @@
 
 #include "groupware.h"
 #include "kcalprefs.h"
-#include "mailclient.h"
 
 #include <akonadi/calendar/calendarsettings.h>
 #include <KCalUtils/IncidenceFormatter>
