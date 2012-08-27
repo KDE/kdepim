@@ -317,7 +317,7 @@ void BrowserWidget::setItem( const Akonadi::Item &item )
     delete mNepomukModel;
     mNepomukModel = 0;
     if ( res.isValid() ) {
-      //PORTING NEPOMUK2 contentUi.rdfClassName->setText( res.className() );
+      contentUi.rdfClassName->setText( res.type().toString().section( QRegExp( "[#:]" ), -1 ) );
       QHash<QUrl, Nepomuk2::Variant> props = res.properties();
       mNepomukModel = new QStandardItemModel( props.count(), 2, this );
       QStringList labels;
