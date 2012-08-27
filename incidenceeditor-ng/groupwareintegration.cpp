@@ -22,9 +22,10 @@
 #include "incidencedialogfactory.h"
 #include "korganizereditorconfig.h"
 
-#include <calendarsupport/groupware.h>
 #include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/utils.h>
+
+#include <Akonadi/Calendar/InvitationHandler>
 
 #include <KSystemTimeZones>
 
@@ -32,7 +33,7 @@ using namespace IncidenceEditorNG;
 
 namespace IncidenceEditorNG {
 
-class GroupwareUiDelegate : public QObject, public CalendarSupport::GroupwareUiDelegate
+class GroupwareUiDelegate : public QObject, public Akonadi::GroupwareUiDelegate
 {
   public:
     GroupwareUiDelegate()
@@ -76,7 +77,7 @@ class GroupwareUiDelegate : public QObject, public CalendarSupport::GroupwareUiD
 
 }
 
-CalendarSupport::GroupwareUiDelegate *GroupwareIntegration::sDelegate = 0;
+Akonadi::GroupwareUiDelegate *GroupwareIntegration::sDelegate = 0;
 
 bool GroupwareIntegration::sActivated = false;
 
@@ -92,7 +93,7 @@ void GroupwareIntegration::activate( const Akonadi::ETMCalendar::Ptr &calendar )
   }
 
   EditorConfig::setEditorConfig( new KOrganizerEditorConfig );
-  CalendarSupport::Groupware::create( sDelegate );
+  //Akonadi::Groupware::create( sDelegate ); TODO_SERGIO
   if ( calendar ) {
     sDelegate->setCalendar( calendar );
   } else {
@@ -101,7 +102,7 @@ void GroupwareIntegration::activate( const Akonadi::ETMCalendar::Ptr &calendar )
   sActivated = true;
 }
 
-void GroupwareIntegration::setGlobalUiDelegate( CalendarSupport::GroupwareUiDelegate *delegate )
+void GroupwareIntegration::setGlobalUiDelegate( Akonadi::GroupwareUiDelegate *delegate )
 {
   delete sDelegate;
   sDelegate = delegate;

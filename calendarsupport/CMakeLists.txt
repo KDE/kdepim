@@ -24,7 +24,6 @@ set(calendarsupport_LIB_SRCS
   identitymanager.cpp
   incidenceattachmentmodel.cpp
   incidencefilterproxymodel.cpp
-  groupware.cpp
   kcalmodel.cpp
   kcalprefs.cpp
   utils.cpp
