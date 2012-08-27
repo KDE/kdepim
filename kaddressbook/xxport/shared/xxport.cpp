@@ -56,7 +56,7 @@ QWidget *XXPort::parentWidget() const
 QString XXPort::contactFileName( const KABC::Addressee &contact ) const
 {
   if ( !contact.givenName().isEmpty() && !contact.familyName().isEmpty() ) {
-    return QString( "%1_%2" ).arg( contact.givenName() ).arg( contact.familyName() );
+    return QString::fromLatin1( "%1_%2" ).arg( contact.givenName() ).arg( contact.familyName() );
   }
 
   if ( !contact.familyName().isEmpty() ) {
