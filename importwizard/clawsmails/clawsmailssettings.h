@@ -19,22 +19,17 @@
 #define ClawsMailsSettings_H
 
 #include "abstractsettings.h"
+#include "sylpheed/sylpheedsettings.h"
 
 class ImportWizard;
 class KConfigGroup;
 
-class ClawsMailsSettings : public AbstractSettings
+class ClawsMailsSettings : public SylpheedSettings
 {
 public:
-  explicit ClawsMailsSettings(const QString& filename, ImportWizard *parent);
+  explicit ClawsMailsSettings(ImportWizard *parent);
   ~ClawsMailsSettings();
-private:
-  void readAccount(const KConfigGroup &grp, bool autoCheck, int autoDelay);
-  void readIdentity(const KConfigGroup &grp);
-  void readTransport(const KConfigGroup &grp);
-  void readGlobalSettings(const KConfig &config);
-
-  QHash<QString, QString> mHashSmtp;
+  void importSettings(const QString& filename, const QString& path);
 };
 
 #endif // ClawsMailsSettings_H

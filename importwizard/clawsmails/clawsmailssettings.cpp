@@ -28,18 +28,9 @@
 #include <KConfigGroup>
 #include <QFile>
 
-ClawsMailsSettings::ClawsMailsSettings(const QString &filename, ImportWizard *parent)
-  :AbstractSettings( parent )
+ClawsMailsSettings::ClawsMailsSettings(ImportWizard *parent)
+  :SylpheedSettings( parent )
 {
-  KConfig config(filename);
-  const QStringList accountList = config.groupList().filter( QRegExp( "Account: \\d+" ) );
-  const QStringList::const_iterator end( accountList.constEnd() );
-  for ( QStringList::const_iterator it = accountList.constBegin(); it!=end; ++it )
-  {
-    KConfigGroup group = config.group( *it );
-    //readAccount( group, checkMailOnStartup, intervalCheckMail );
-    readIdentity( group );
-  }
 }
 
 ClawsMailsSettings::~ClawsMailsSettings()
@@ -47,23 +38,7 @@ ClawsMailsSettings::~ClawsMailsSettings()
 
 }
 
-void ClawsMailsSettings::readAccount(const KConfigGroup &grp, bool autoCheck, int autoDelay)
+void ClawsMailsSettings::importSettings(const QString& filename, const QString& path)
 {
-}
-
-void ClawsMailsSettings::readIdentity(const KConfigGroup &grp)
-{
-  KPIMIdentities::Identity* newIdentity = createIdentity();
-  storeIdentity(newIdentity);
-}
-
-void ClawsMailsSettings::readTransport(const KConfigGroup &grp)
-{
-  MailTransport::Transport *mt = createTransport();
-  storeTransport( mt, /*( smtp == defaultSmtp )*/true ); //FIXME
-  //TODO mHashSmtp.insert( smtp, QString::number( mt->id() ) );
-}
-
-void ClawsMailsSettings::readGlobalSettings(const KConfig &config)
-{
+    //TODO
 }

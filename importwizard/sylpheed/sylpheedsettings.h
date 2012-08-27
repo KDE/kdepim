@@ -28,8 +28,11 @@ class QFile;
 class SylpheedSettings : public AbstractSettings
 {
 public:
-  explicit SylpheedSettings(const QString& filename, const QString &path, ImportWizard *parent );
+  explicit SylpheedSettings(ImportWizard *parent );
   ~SylpheedSettings();
+  virtual void importSettings(const QString& filename, const QString& path);
+
+
 private:
   void readCustomHeader(QFile *customHeaderFile);
   void readGlobalSettings(const KConfigGroup& group);

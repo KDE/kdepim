@@ -30,8 +30,16 @@
 #include <QStringList>
 #include <QFile>
 
-SylpheedSettings::SylpheedSettings( const QString& filename, const QString& path, ImportWizard *parent )
+SylpheedSettings::SylpheedSettings( ImportWizard *parent )
     :AbstractSettings( parent )
+{
+}
+
+SylpheedSettings::~SylpheedSettings()
+{
+}
+
+void SylpheedSettings::importSettings(const QString& filename, const QString& path)
 {
   bool checkMailOnStartup = true;
   int intervalCheckMail = -1;
@@ -66,10 +74,6 @@ SylpheedSettings::SylpheedSettings( const QString& filename, const QString& path
       readCustomHeader(&customHeaderFile);
     }
   }
-}
-
-SylpheedSettings::~SylpheedSettings()
-{
 }
 
 void SylpheedSettings::readCustomHeader(QFile *customHeaderFile)

@@ -18,21 +18,9 @@
 #include "clawsmailsaddressbook.h"
 #include "importwizardutil.h"
 
-#include <KABC/Addressee>
-#include <kabc/contactgroup.h>
-#include <KABC/LDIFConverter>
-
-#include <KConfig>
-#include <KConfigGroup>
-
-#include <QDebug>
-#include <QFile>
-#include <QFileInfo>
-
-ClawsMailsAddressBook::ClawsMailsAddressBook(const QString &filename, ImportWizard *parent)
-  : AbstractAddressBook( parent )
+ClawsMailsAddressBook::ClawsMailsAddressBook(const QDir& dir, ImportWizard *parent)
+  : SylpheedAddressBook( dir, parent )
 {
-    KConfig config(filename);
 }
 
 ClawsMailsAddressBook::~ClawsMailsAddressBook()

@@ -76,21 +76,26 @@ bool ClawsMailsImportData::importMails()
 
 bool ClawsMailsImportData::importAddressBook()
 {
-  const QString addressbookFile(mPath+QLatin1String("config"));
-  ClawsMailsAddressBook addressbook(addressbookFile,mImportWizard);
+  const QDir addressbookDir(mPath + QLatin1String("addrbook/"));
+  ClawsMailsAddressBook account( addressbookDir, mImportWizard );
   return true;
 }
 
 bool ClawsMailsImportData::importSettings()
 {
-  const QString settingFile(mPath+QLatin1String("config"));
-  ClawsMailsSettings settings(settingFile,mImportWizard);
+  const QString accountFile = mPath + QLatin1String("/accountrc");
+  if ( QFile( accountFile ).exists() ) {
+    ClawsMailsSettings account( mImportWizard );
+    account.importSettings(accountFile, mPath);
+  } else {
+    addImportSettingsInfo(i18n("ClawsMails settings not found."));
+  }
   return true;
 }
 
 bool ClawsMailsImportData::importFilters()
 {
-  const QString filterPath = mPath + QLatin1String("/matcherrc");
+  const QString filterPath(mPath + QLatin1String("matcherrc"));
   return addFilters( filterPath, MailCommon::FilterImporterExporter::ClawsMailsFilter );
 }
 

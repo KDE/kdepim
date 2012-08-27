@@ -18,15 +18,17 @@
 #ifndef ClawsMailsAddressBook_H
 #define ClawsMailsAddressBook_H
 
-#include "abstractaddressbook.h"
+#include "sylpheed/sylpheedaddressbook.h"
+#include <QDir>
 
 class ImportWizard;
 class KConfigGroup;
 
-class ClawsMailsAddressBook : public AbstractAddressBook
+
+class ClawsMailsAddressBook : public SylpheedAddressBook
 {
 public:
-  explicit ClawsMailsAddressBook(const QString &filename, ImportWizard *parent);
+  explicit ClawsMailsAddressBook(const QDir &dir, ImportWizard *parent);
   ~ClawsMailsAddressBook();
 };
 
