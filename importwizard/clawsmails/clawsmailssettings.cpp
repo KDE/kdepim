@@ -31,8 +31,15 @@
 ClawsMailsSettings::ClawsMailsSettings(const QString &filename, ImportWizard *parent)
   :AbstractSettings( parent )
 {
-    KConfig config(filename);
-
+  KConfig config(filename);
+  const QStringList accountList = config.groupList().filter( QRegExp( "Account: \\d+" ) );
+  const QStringList::const_iterator end( accountList.constEnd() );
+  for ( QStringList::const_iterator it = accountList.constBegin(); it!=end; ++it )
+  {
+    KConfigGroup group = config.group( *it );
+    //readAccount( group, checkMailOnStartup, intervalCheckMail );
+    readIdentity( group );
+  }
 }
 
 ClawsMailsSettings::~ClawsMailsSettings()
@@ -54,7 +61,7 @@ void ClawsMailsSettings::readTransport(const KConfigGroup &grp)
 {
   MailTransport::Transport *mt = createTransport();
   storeTransport( mt, /*( smtp == defaultSmtp )*/true ); //FIXME
-  mHashSmtp.insert( smtp, QString::number( mt->id() ) );
+  //TODO mHashSmtp.insert( smtp, QString::number( mt->id() ) );
 }
 
 void ClawsMailsSettings::readGlobalSettings(const KConfig &config)

@@ -17,6 +17,8 @@
 
 #include "clawsmails/clawsmailsimportdata.h"
 #include "clawsmails/clawsmailssettings.h"
+#include "clawsmails/clawsmailsaddressbook.h"
+#include "mailcommon/filter/filterimporter/filterimporterclawsmails_p.h"
 #include "mailimporter/filterinfo.h"
 #include "importfilterinfogui.h"
 #include "importwizard.h"
@@ -75,7 +77,7 @@ bool ClawsMailsImportData::importMails()
 bool ClawsMailsImportData::importAddressBook()
 {
   const QString addressbookFile(mPath+QLatin1String("config"));
-  BalsaAddressBook addressbook(addressbookFile,mImportWizard);
+  ClawsMailsAddressBook addressbook(addressbookFile,mImportWizard);
   return true;
 }
 
@@ -86,11 +88,19 @@ bool ClawsMailsImportData::importSettings()
   return true;
 }
 
+bool ClawsMailsImportData::importFilters()
+{
+  const QString filterPath = mPath + QLatin1String("/matcherrc");
+  return addFilters( filterPath, MailCommon::FilterImporterExporter::ClawsMailsFilter );
+}
+
+
 AbstractImporter::TypeSupportedOptions ClawsMailsImportData::supportedOption()
 {
   TypeSupportedOptions options;
   options |=AbstractImporter::Mails;
   options |=AbstractImporter::AddressBooks;
   options |=AbstractImporter::Settings;
+  options |=AbstractImporter::Filters;
   return options;
 }

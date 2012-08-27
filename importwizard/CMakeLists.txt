@@ -26,6 +26,7 @@ thunderbird/addressbook/MorkParser.cpp
 sylpheed/sylpheedimportdata.cpp
 sylpheed/sylpheedsettings.cpp
 sylpheed/sylpheedaddressbook.cpp
+sylpheed/sylpheedsettingsutils.cpp
 evolutionv3/evolutionv3importdata.cpp
 evolutionv3/evolutionsettings.cpp
 evolutionv3/evolutioncalendar.cpp
@@ -43,10 +44,14 @@ thebat/thebatimportdata.cpp
 balsa/balsaimportdata.cpp
 balsa/balsasettings.cpp
 balsa/balsaaddressbook.cpp
+clawsmails/clawsmailsimportdata.cpp
+clawsmails/clawsmailssettings.cpp
+clawsmails/clawsmailsaddressbook.cpp
 )
 
 include_directories(${CMAKE_SOURCE_DIR}/mailimporter 
                     ${CMAKE_SOURCE_DIR}/mailcommon 
+		    ${CMAKE_SOURCE_DIR}/mailcommon/filter/
                     ${NEPOMUK_CORE_INCLUDE_DIR}
                     ${SOPRANO_INCLUDE_DIR})
 

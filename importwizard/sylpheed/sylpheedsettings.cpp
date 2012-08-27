@@ -16,6 +16,7 @@
 */
 
 #include "sylpheedsettings.h"
+#include "sylpheedsettingsutils.h"
 #include <mailtransport/transportmanager.h>
 #include "mailcommon/mailutil.h"
 
@@ -178,33 +179,6 @@ void SylpheedSettings::readSignature( const KConfigGroup& accountConfig, KPIMIde
   identity->setSignature( signature );
 }
 
-bool SylpheedSettings::readConfig( const QString& key, const KConfigGroup& accountConfig, int& value, bool remove_underscore )
-{
-  QString cleanedKey( key );
-  if ( remove_underscore )
-    cleanedKey.remove( QLatin1Char( '_' ) );
-  const QString useKey = QLatin1String( "set_" )+ cleanedKey;
-  if ( accountConfig.hasKey( useKey ) && ( accountConfig.readEntry( useKey, 0 ) == 1 ) ) {
-    value = accountConfig.readEntry( key,0 );
-    return true;
-  }
-  return false;
-}
-
-
-bool SylpheedSettings::readConfig( const QString& key, const KConfigGroup& accountConfig, QString& value, bool remove_underscore )
-{
-  QString cleanedKey( key );
-  if ( remove_underscore )
-    cleanedKey.remove( QLatin1Char( '_' ) );
-  const QString useKey = QLatin1String( "set_" )+ cleanedKey;
-  if ( accountConfig.hasKey( useKey ) && ( accountConfig.readEntry( useKey, 0 ) == 1 ) ) {
-    value = accountConfig.readEntry( key );
-    return true;
-  }
-  return false;
-}
-
 void SylpheedSettings::readPop3Account( const KConfigGroup& accountConfig, bool checkMailOnStartup, int intervalCheckMail )
 {
   QMap<QString, QVariant> settings;
@@ -215,7 +189,7 @@ void SylpheedSettings::readPop3Account( const KConfigGroup& accountConfig, bool 
   const QString inbox = MailCommon::Util::convertFolderPathToCollectionStr(accountConfig.readEntry(QLatin1String("inbox")));
   settings.insert(QLatin1String("TargetCollection"), inbox);
   int port = 0;
-  if ( readConfig( QLatin1String( "pop_port" ), accountConfig, port, true ) )
+  if ( SylpheedSettingsUtils::readConfig( QLatin1String( "pop_port" ), accountConfig, port, true ) )
     settings.insert( QLatin1String( "Port" ), port );
   if ( accountConfig.hasKey( QLatin1String( "ssl_pop" ) ) ) {
     const int sslPop = accountConfig.readEntry( QLatin1String( "ssl_pop" ), 0 );
@@ -291,11 +265,11 @@ void SylpheedSettings::readImapAccount( const KConfigGroup& accountConfig, bool 
   }
 
   int port = 0;
-  if ( readConfig( QLatin1String( "imap_port" ), accountConfig, port, true ) )
+  if ( SylpheedSettingsUtils::readConfig( QLatin1String( "imap_port" ), accountConfig, port, true ) )
     settings.insert( QLatin1String( "ImapPort" ), port );
 
   QString trashFolder;
-  if ( readConfig( QLatin1String( "trash_folder" ), accountConfig, trashFolder, false ) )
+  if ( SylpheedSettingsUtils::readConfig( QLatin1String( "trash_folder" ), accountConfig, trashFolder, false ) )
     settings.insert( QLatin1String( "TrashCollection" ), MailCommon::Util::convertFolderPathToCollectionId( trashFolder ) );
 
   const int auth = accountConfig.readEntry(QLatin1String("imap_auth_method"),0);
@@ -372,17 +346,17 @@ void SylpheedSettings::readIdentity( const KConfigGroup& accountConfig )
   identity->setPrimaryEmailAddress(email);
 
   QString value;
-  if ( readConfig( QLatin1String("auto_bcc") , accountConfig, value, true ) )
+  if ( SylpheedSettingsUtils::readConfig( QLatin1String("auto_bcc") , accountConfig, value, true ) )
     identity->setBcc(value);
-  if ( readConfig( QLatin1String("auto_cc") , accountConfig, value, true ) )
+  if ( SylpheedSettingsUtils::readConfig( QLatin1String("auto_cc") , accountConfig, value, true ) )
     identity->setCc(value);
-  if ( readConfig( QLatin1String("auto_replyto") , accountConfig, value, true ) )
+  if ( SylpheedSettingsUtils::readConfig( QLatin1String("auto_replyto") , accountConfig, value, true ) )
     identity->setReplyToAddr(value);
   
-  if ( readConfig( QLatin1String("daft_folder") , accountConfig, value, false ) )
+  if ( SylpheedSettingsUtils::readConfig( QLatin1String("daft_folder") , accountConfig, value, false ) )
     identity->setDrafts(MailCommon::Util::convertFolderPathToCollectionStr(value));
 
-  if ( readConfig( QLatin1String("sent_folder") , accountConfig, value, false ) )
+  if ( SylpheedSettingsUtils::readConfig( QLatin1String("sent_folder") , accountConfig, value, false ) )
     identity->setFcc(MailCommon::Util::convertFolderPathToCollectionStr(value));
 
   const QString transportId = readTransport(accountConfig);
@@ -403,7 +377,7 @@ QString SylpheedSettings::readTransport( const KConfigGroup& accountConfig )
     mt->setName( smtpserver );
     mt->setHost(smtpserver);
     int port = 0;
-    if ( readConfig( QLatin1String( "smtp_port" ), accountConfig, port, true ) )
+    if ( SylpheedSettingsUtils::readConfig( QLatin1String( "smtp_port" ), accountConfig, port, true ) )
       mt->setPort( port );
     const QString user = accountConfig.readEntry( QLatin1String( "smtp_user_id" ) );
     
@@ -451,7 +425,7 @@ QString SylpheedSettings::readTransport( const KConfigGroup& accountConfig )
         
     }
     QString domainName;
-    if ( readConfig( QLatin1String( "domain" ), accountConfig, domainName, false ) )
+    if ( SylpheedSettingsUtils::readConfig( QLatin1String( "domain" ), accountConfig, domainName, false ) )
       mt->setLocalHostname( domainName );
 
     storeTransport( mt, true );
