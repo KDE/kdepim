@@ -32,6 +32,8 @@
 #include "messageviewer/interfaces/bodypartformatter.h"
 #include "messageviewer/interfaces/bodyparturlhandler.h"
 #include "messageviewer/interfaces/bodypart.h"
+#include <messageviewer/nodehelper.h>
+
 using MessageViewer::Interface::BodyPart;
 #include "messageviewer/webkitparthtmlwriter.h"
 
@@ -52,6 +54,7 @@ using MessageViewer::Interface::BodyPart;
 #include <KMessageBox>
 #include <KTemporaryFile>
 #include <KIO/NetAccess>
+#include <QDebug>
 
 namespace {
 
@@ -93,15 +96,29 @@ class Formatter : public MessageViewer::Interface::BodyPartFormatter
                      "</h2></div>" );
 
       count = 0;
+      static QString defaultPixmapPath = QLatin1String("file:///") + KIconLoader::global()->iconPath( "user-identity", KIconLoader::Desktop );
+      static QString defaultMapIconPath = QLatin1String("file:///") + KIconLoader::global()->iconPath( "document-open-remote", KIconLoader::Small );
       foreach ( const KABC::Addressee &a, al ) {
         if ( a.isEmpty() ) {
           continue;
-        }
-
+        }        
         Akonadi::StandardContactFormatter formatter;
         formatter.setContact( a );
-
-        writer->queue( formatter.toHtml( Akonadi::StandardContactFormatter::EmbeddableForm ) );
+        QString htmlStr = formatter.toHtml( Akonadi::StandardContactFormatter::EmbeddableForm );
+        KABC::Picture photo = a.photo();
+        htmlStr.replace(QLatin1String("<img src=\"map_icon\""),QString::fromLatin1("<img src=\"%1\"").arg(defaultMapIconPath));
+        if(photo.isEmpty()) {
+          htmlStr.replace(QLatin1String("img src=\"contact_photo\""),QString::fromLatin1("img src=\"%1\"").arg(defaultPixmapPath));
+        } else {
+          QImage img = a.photo().data();
+          const QString dir = bodyPart->nodeHelper()->createTempDir( "vcard-" + a.uid() );
+          const QString filename = dir + QDir::separator() + a.uid();
+	  img.save(filename,"PNG");
+          bodyPart->nodeHelper()->addTempFile( filename );
+          const QString href = QLatin1String("file:") + KUrl::toPercentEncoding( filename );
+          htmlStr.replace(QLatin1String("img src=\"contact_photo\""),QString::fromLatin1("img src=\"%1\"").arg(href));
+        }
+        writer->queue( htmlStr );
 
         QString addToLinkText = i18n( "[Add this contact to the address book]" );
         QString op = QString::fromLatin1( "addToAddressBook:%1" ).arg( count );
