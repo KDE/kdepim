@@ -31,6 +31,14 @@ using namespace MailCommon;
 FilterImporterClawsMails::FilterImporterClawsMails( QFile *file )
   :FilterImporterAbstract()
 {
+  QTextStream stream(file);
+  MailFilter *filter = 0;
+  while ( !stream.atEnd() ) {
+    QString line = stream.readLine();
+    kDebug() << " line :" << line << " filter " << filter;
+    //filter = parseLine( stream, line, filter );
+  }
+  appendFilter(filter);
 }
 
 FilterImporterClawsMails::~FilterImporterClawsMails()
