@@ -59,7 +59,8 @@ class MAILCOMMON_EXPORT FilterImporterExporter
         EvolutionFilter = 2,
         SylpheedFilter = 3, 
         ProcmailFilter = 4,
-        BalsaFilter = 5
+        BalsaFilter = 5,
+        ClawsMailsFilter = 6
     };
 
     /**
