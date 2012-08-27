@@ -3,6 +3,7 @@
   This file is part of KMail, the KDE mail client.
   Copyright (c) 2004 Till Adam <adam@kde.org>
   Copyright (c) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
+  Copyright (c) 2012 Laurent Montel <montel@kde.org>
 
   KMail is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License as published by
@@ -104,6 +105,7 @@ class Formatter : public MessageViewer::Interface::BodyPartFormatter
         }        
         Akonadi::StandardContactFormatter formatter;
         formatter.setContact( a );
+	formatter.setDisplayQRCode(false);
         QString htmlStr = formatter.toHtml( Akonadi::StandardContactFormatter::EmbeddableForm );
         KABC::Picture photo = a.photo();
         htmlStr.replace(QLatin1String("<img src=\"map_icon\""),QString::fromLatin1("<img src=\"%1\"").arg(defaultMapIconPath));
@@ -113,7 +115,7 @@ class Formatter : public MessageViewer::Interface::BodyPartFormatter
           QImage img = a.photo().data();
           const QString dir = bodyPart->nodeHelper()->createTempDir( "vcard-" + a.uid() );
           const QString filename = dir + QDir::separator() + a.uid();
-	  img.save(filename,"PNG");
+          img.save(filename,"PNG");
           bodyPart->nodeHelper()->addTempFile( filename );
           const QString href = QLatin1String("file:") + KUrl::toPercentEncoding( filename );
           htmlStr.replace(QLatin1String("img src=\"contact_photo\""),QString::fromLatin1("img src=\"%1\"").arg(href));
@@ -226,8 +228,13 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
 
     bool saveAsVCard( const KABC::Addressee &a, const QString &vCard ) const
     {
-      QString fileName = a.givenName() + QLatin1Char('_') + a.familyName() + QLatin1String(".vcf");
-
+      QString fileName;
+      const QString givenName(a.givenName());
+      if(givenName.isEmpty()) {
+        fileName = a.familyName() + QLatin1String(".vcf");
+      } else {
+        fileName = givenName + QLatin1Char('_') + a.familyName() + QLatin1String(".vcf");
+      }
       // get the saveas file name
       KUrl saveAsUrl =
         KFileDialog::getSaveUrl( fileName,
