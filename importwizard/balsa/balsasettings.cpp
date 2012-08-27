@@ -17,7 +17,6 @@
 
 #include "balsasettings.h"
 
-#include "mailimporter/filter_opera.h"
 
 #include <mailtransport/transportmanager.h>
 #include "mailcommon/mailutil.h"
