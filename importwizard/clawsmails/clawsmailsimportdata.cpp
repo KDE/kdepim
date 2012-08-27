@@ -30,7 +30,7 @@
 ClawsMailsImportData::ClawsMailsImportData(ImportWizard*parent)
   :AbstractImporter(parent)
 {
-  mPath = QDir::homePath() + QLatin1String("/.balsa/");
+  mPath = QDir::homePath() + QLatin1String("/.claws-mail/");
 }
 
 ClawsMailsImportData::~ClawsMailsImportData()
@@ -48,7 +48,7 @@ bool ClawsMailsImportData::foundMailer() const
 
 QString ClawsMailsImportData::name() const
 {
-  return QLatin1String("Balsa");
+  return QLatin1String("Claws Mails");
 }
 
 bool ClawsMailsImportData::importMails()
@@ -82,7 +82,7 @@ bool ClawsMailsImportData::importAddressBook()
 bool ClawsMailsImportData::importSettings()
 {
   const QString settingFile(mPath+QLatin1String("config"));
-  BalsaSettings settings(settingFile,mImportWizard);
+  ClawsMailsSettings settings(settingFile,mImportWizard);
   return true;
 }
 
