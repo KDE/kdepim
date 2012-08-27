@@ -64,7 +64,6 @@ BalsaSettings::~BalsaSettings()
 void BalsaSettings::readAccount(const KConfigGroup &grp, bool autoCheck, int autoDelay)
 {
   const QString type = grp.readEntry(QLatin1String("Type"));
-  //TODO
   bool check = grp.readEntry(QLatin1String("Check"), false);
   if(type == QLatin1String("LibBalsaMailboxPOP3")) {
     QMap<QString, QVariant> settings;

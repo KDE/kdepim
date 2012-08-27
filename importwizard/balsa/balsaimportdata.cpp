@@ -20,6 +20,7 @@
 #include "balsa/balsaaddressbook.h"
 #include "mailimporter/filterbalsa.h"
 #include "mailimporter/filterinfo.h"
+#include "mailcommon/filter/filterimporter/filterimporterbalsa_p.h"
 #include "importfilterinfogui.h"
 #include "importwizard.h"
 
@@ -86,11 +87,19 @@ bool BalsaImportData::importSettings()
   return true;
 }
 
+bool BalsaImportData::importFilters()
+{
+  const QString filterPath = mPath + QLatin1String("config");
+  return addFilters( filterPath, MailCommon::FilterImporterExporter::BalsaFilter );
+}
+
+
 AbstractImporter::TypeSupportedOptions BalsaImportData::supportedOption()
 {
   TypeSupportedOptions options;
   options |=AbstractImporter::Mails;
   options |=AbstractImporter::AddressBooks;
   options |=AbstractImporter::Settings;
+  options |=AbstractImporter::Filters;
   return options;
 }

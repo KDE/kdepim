@@ -32,7 +32,7 @@ public:
   bool importMails();
   bool importAddressBook();
   bool importSettings();
-
+  bool importFilters();
   QString name() const;
 
 };
