@@ -14,28 +14,29 @@
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
-#ifndef BalsaImportData_H
-#define BalsaImportData_H
 
-#include "abstractimporter.h"
-class ImportWizard;
+#ifndef MAILCOMMON_FILTERIMPORTER_FILTERIMPORTERCLAWSMAILS_P_H
+#define MAILCOMMON_FILTERIMPORTER_FILTERIMPORTERCLAWSMAILS_P_H
 
-class BalsaImportData : public AbstractImporter
+#include "filterimporter/filterimporterabstract_p.h"
+
+#include <QDomElement>
+
+class QFile;
+class KConfigGroup;
+
+namespace MailCommon {
+
+class MailFilter;
+
+class FilterImporterClawsMails : public FilterImporterAbstract
 {
 public:
-  explicit BalsaImportData(ImportWizard *parent);
-  ~BalsaImportData();
-    
-  TypeSupportedOptions supportedOption();
-  bool foundMailer() const;
-  
-  bool importMails();
-  bool importAddressBook();
-  bool importSettings();
-  bool importFilters();
-  QString name() const;
-
+    explicit FilterImporterClawsMails( QFile *file );
+    ~FilterImporterClawsMails();
+    static QString defaultPath();
 };
 
-#endif /* BalsaImportData_H */
+}
 
+#endif // MAILCOMMON_FILTERIMPORTER_FILTERIMPORTERCLAWSMAILS_P_H

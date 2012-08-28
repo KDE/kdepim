@@ -3,8 +3,9 @@ project(akonadiconsole)
 include_directories(
   ${AKONADI_INCLUDE_DIR}
   ${Boost_INCLUDE_DIR}
-  ${NEPOMUK_INCLUDES}
   ${SOPRANO_INCLUDE_DIR}
+  ${NEPOMUK_CORE_INCLUDE_DIR}
+  ${NEPOMUK_WIDGETS_INCLUDE_DIR}
 )
 
 include_directories(BEFORE ${CMAKE_CURRENT_BINARY_DIR})
@@ -104,10 +105,11 @@ target_link_libraries(akonadiconsole_bin
   messageviewer
   ${KDE4_KCMUTILS_LIBS}
   ${KDE4_KIO_LIBS}
-  ${NEPOMUK_LIBRARIES}
   ${QT_QTSQL_LIBRARY}
   ${QT_QTNETWORK_LIBRARY}
   ${AKONADI_COMMON_LIBRARIES}
+  ${NEPOMUK_CORE_LIBRARY}
+  ${NEPOMUK_WIDGETS_LIBRARY}
 )
 
 install(TARGETS akonadiconsole_bin ${INSTALL_TARGETS_DEFAULT_ARGS})

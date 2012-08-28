@@ -14,17 +14,17 @@
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
-#ifndef BalsaImportData_H
-#define BalsaImportData_H
+#ifndef ClawsMailsImportData_H
+#define ClawsMailsImportData_H
 
 #include "abstractimporter.h"
 class ImportWizard;
 
-class BalsaImportData : public AbstractImporter
+class ClawsMailsImportData : public AbstractImporter
 {
 public:
-  explicit BalsaImportData(ImportWizard *parent);
-  ~BalsaImportData();
+  explicit ClawsMailsImportData(ImportWizard *parent);
+  ~ClawsMailsImportData();
     
   TypeSupportedOptions supportedOption();
   bool foundMailer() const;
@@ -33,9 +33,10 @@ public:
   bool importAddressBook();
   bool importSettings();
   bool importFilters();
+
   QString name() const;
 
 };
 
-#endif /* BalsaImportData_H */
+#endif /* ClawsMailsImportData_H */
 

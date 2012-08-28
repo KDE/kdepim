@@ -17,7 +17,6 @@
 
 #include "balsasettings.h"
 
-#include "mailimporter/filter_opera.h"
 
 #include <mailtransport/transportmanager.h>
 #include "mailcommon/mailutil.h"
@@ -65,17 +64,18 @@ BalsaSettings::~BalsaSettings()
 void BalsaSettings::readAccount(const KConfigGroup &grp, bool autoCheck, int autoDelay)
 {
   const QString type = grp.readEntry(QLatin1String("Type"));
-  //TODO
   bool check = grp.readEntry(QLatin1String("Check"), false);
   if(type == QLatin1String("LibBalsaMailboxPOP3")) {
     QMap<QString, QVariant> settings;
     const QString server = grp.readEntry(QLatin1String("Server"));
     settings.insert( QLatin1String( "Host" ), server );
     const QString name = grp.readEntry(QLatin1String("Name"));
+
+    const bool apop = grp.readEntry(QLatin1String("DisableApop"),false);
     const QString agentIdentifyName = AbstractBase::createResource( "akonadi_pop3_resource", name,settings );
 
     addCheckMailOnStartup(agentIdentifyName,autoCheck);
-    addToManualCheck(agentIdentifyName,true);
+    addToManualCheck(agentIdentifyName,check);
 
   } else if(type == QLatin1String("LibBalsaMailboxImap")) {
     QMap<QString, QVariant> settings;
@@ -84,7 +84,7 @@ void BalsaSettings::readAccount(const KConfigGroup &grp, bool autoCheck, int aut
     const QString name = grp.readEntry(QLatin1String("Name"));
     const QString agentIdentifyName = AbstractBase::createResource( "akonadi_imap_resource", name,settings );
     addCheckMailOnStartup(agentIdentifyName,autoCheck);
-    addToManualCheck(agentIdentifyName,true);
+    addToManualCheck(agentIdentifyName,check);
   } else {
     qDebug()<<" unknown account type :"<<type;
   }

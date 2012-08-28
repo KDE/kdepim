@@ -18,7 +18,7 @@
 #ifndef MAILCOMMON_FILTERIMPORTER_FILTERIMPORTERBALSA_P_H
 #define MAILCOMMON_FILTERIMPORTER_FILTERIMPORTERBALSA_P_H
 
-#include "filterimporter/filterimporterabstract_p.h"
+#include "filter/filterimporter/filterimporterabstract_p.h"
 
 #include <QDomElement>
 

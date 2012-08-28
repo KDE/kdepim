@@ -126,7 +126,7 @@ include(KDE4Defaults)
 include(MacroLibrary)
 include(CheckIncludeFiles)
 include(MacroBoolTo01)
-find_package(KdepimLibs 4.9.55 REQUIRED)
+find_package(KdepimLibs 4.9.57 REQUIRED)
 
 ############### Load the CTest options ###############
 
@@ -216,6 +216,10 @@ else()
   macro_log_feature(Nepomuk_FOUND "Nepomuk" "The Nepomuk libraries" "http://www.kde.org" TRUE "" "Nepomuk extends the search and tagging functionalities in KMail and Akonadi")
   find_package(NepomukCore)
   macro_log_feature(NepomukCore_FOUND "NepomukCore" "The NepomukCore libraries" "http://www.kde.org" TRUE "" "Nepomuk extends the search and tagging functionalities in KMail and Akonadi")
+
+  find_package(NepomukWidgets)
+  macro_log_feature(NepomukWidgets_FOUND "NepomukWidgets" "The NepomukWidget libraries" "http://www.kde.org" TRUE "" "Nepomuk extends the search and tagging functionalities in AkonadiConsole")
+
 
   find_package(LibXslt)
   macro_log_feature(XSLTPROC_EXECUTABLE "xsltproc" "The command line XSLT processor from libxslt" "http://xmlsoft.org/XSLT/" TRUE "" "Required to generate the D-Bus interfaces.")
@@ -345,6 +349,7 @@ else()
     macro_optional_add_subdirectory(ktnef)
     macro_optional_add_subdirectory(mailimporter)
     macro_optional_add_subdirectory(backupmail)
+    macro_optional_add_subdirectory(kalarm)
 
     if(KDEPIMLIBS_KCAL_LIBRARY)
       macro_optional_add_subdirectory(blogilo)
@@ -355,8 +360,6 @@ else()
     endif()
 
     if(KDEPIMLIBS_KRESOURCES_LIBRARY)
-      macro_optional_add_subdirectory(kalarm)
-
       if(QT_QT3SUPPORT_FOUND)
         macro_optional_add_subdirectory(knode)
       endif()

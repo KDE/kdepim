@@ -617,6 +617,11 @@ void FolderTreeView::restoreHeaderState( const QByteArray &data )
   mCollectionStatisticsDelegate->setUnreadCountShown( header()->isSectionHidden( 1 ) );
 }
 
+void FolderTreeView::updatePalette()
+{
+  mCollectionStatisticsDelegate->updatePalette();
+}
+
 }
 
 #include "foldertreeview.moc"

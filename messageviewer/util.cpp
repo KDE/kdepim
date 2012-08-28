@@ -107,7 +107,6 @@ QString Util::fileNameForMimetype( const QString &mimeType, int iconSize,
   } else if ( mimeType == QLatin1String( "application/x-vnd.kolab.note" ) ) {
     tMimeType = QLatin1String( "application/x-vnd.akonadi.note" );
   }
-
   KMimeType::Ptr mime = KMimeType::mimeType( tMimeType, KMimeType::ResolveAliases );
   if ( mime ) {
     fileName = mime->iconName();
@@ -117,7 +116,10 @@ QString Util::fileNameForMimetype( const QString &mimeType, int iconSize,
       kWarning() << "unknown mimetype" << tMimeType;
     }
   }
-
+  //WorkAround for #199083
+  if(fileName == QLatin1String("text-vcard")) {
+      fileName = QLatin1String("text-x-vcard");
+  }
   if ( fileName.isEmpty() ) {
     fileName = fallbackFileName1;
     if ( fileName.isEmpty() ) {

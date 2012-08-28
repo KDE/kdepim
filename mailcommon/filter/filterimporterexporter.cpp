@@ -37,6 +37,7 @@
 #include "filterimporter/filterimportersylpheed_p.h"
 #include "filterimporter/filterimporterprocmail_p.h"
 #include "filterimporter/filterimporterbalsa_p.h"
+#include "filterimporter/filterimporterclawsmails_p.h"
 #include "selectthunderbirdfilterfilesdialog.h"
 
 #include <messageviewer/autoqpointer.h>
@@ -293,6 +294,10 @@ QList<MailFilter *> FilterImporterExporter::importFilters(
         title = i18n( "Import Balsa Filters" );
         defaultPath = MailCommon::FilterImporterBalsa::defaultPath();
         break;
+      case ClawsMailsFilter:
+        title = i18n( "Import Claws Mail Filters" );
+        defaultPath = MailCommon::FilterImporterClawsMails::defaultPath();
+        break;
       }
 
       fileName = KFileDialog::getOpenFileName(
@@ -398,6 +403,16 @@ QList<MailFilter *> FilterImporterExporter::importFilters(
   {
     MailCommon::FilterImporterBalsa *filter =
       new MailCommon::FilterImporterBalsa( &file );
+
+    imported = filter->importFilter();
+    emptyFilter = filter->emptyFilter();
+    delete filter;
+    break;
+  }
+  case ClawsMailsFilter:
+  {
+    MailCommon::FilterImporterClawsMails *filter =
+      new MailCommon::FilterImporterClawsMails( &file );
 
     imported = filter->importFilter();
     emptyFilter = filter->emptyFilter();
