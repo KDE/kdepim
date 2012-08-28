@@ -331,7 +331,7 @@ KMFilterDialog::KMFilterDialog( const QList<KActionCollection*> &actionCollectio
   act->setData( (int)MailCommon::FilterImporterExporter::BalsaFilter );
   menu->addAction( act );
 
-  act = new QAction( i18n( "Claws Mails filters" ), this );
+  act = new QAction( i18n( "Claws Mail filters" ), this );
   act->setData( (int)MailCommon::FilterImporterExporter::ClawsMailsFilter );
   menu->addAction( act );
 

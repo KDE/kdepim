@@ -295,7 +295,7 @@ QList<MailFilter *> FilterImporterExporter::importFilters(
         defaultPath = MailCommon::FilterImporterBalsa::defaultPath();
         break;
       case ClawsMailsFilter:
-        title = i18n( "Import Claws Mails Filters" );
+        title = i18n( "Import Claws Mail Filters" );
         defaultPath = MailCommon::FilterImporterClawsMails::defaultPath();
         break;
       }
