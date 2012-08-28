@@ -66,6 +66,7 @@ class MAILCOMMON_EXPORT FolderTreeView : public Akonadi::EntityTreeView
     void disableSaveConfig();
     void readConfig();
 
+    void updatePalette();
   protected:
     enum Move {
       Next = 0,
