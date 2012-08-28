@@ -109,8 +109,6 @@ class IncidenceView : public KDeclarativeFullScreenView, public IncidenceEditorN
 
     KDateComboBox *mDateWidget;
     KTimeComboBox *mTimeWidget;
-
-    //IncidenceEditorNG::InvitationDispatcher *mInvitationDispatcher; //TODO_SERGIO
     IncidenceEditorNG::IncidenceAttendee *mIncidenceAttendee;
 };
 

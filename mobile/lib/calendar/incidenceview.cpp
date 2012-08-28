@@ -76,12 +76,6 @@ IncidenceView::IncidenceView( QWidget* parent )
   setAttribute(Qt::WA_DeleteOnClose);
   QDeclarativeContext *context = engine()->rootContext();
   context->setContextProperty( "_incidenceview", this );
-
-  if ( KCalPrefs::instance()->useGroupwareCommunication() ) {
-    //TODO_SERGIO
-    //mInvitationDispatcher = new InvitationDispatcher( Akonadi::ETMCalendar::Ptr(), this );
-    //mInvitationDispatcher->setItemManager( mItemManager );
-  }
 }
 
 void IncidenceView::doDelayedInit()
