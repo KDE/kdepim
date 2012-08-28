@@ -18,6 +18,7 @@
 #include "clawsmails/clawsmailsimportdata.h"
 #include "clawsmails/clawsmailssettings.h"
 #include "clawsmails/clawsmailsaddressbook.h"
+#include "mailimporter/filter_clawsmails.h"
 #include "mailcommon/filter/filterimporter/filterimporterclawsmails_p.h"
 #include "mailimporter/filterinfo.h"
 #include "importfilterinfogui.h"
@@ -55,22 +56,21 @@ QString ClawsMailsImportData::name() const
 
 bool ClawsMailsImportData::importMails()
 {
-#if 0
   MailImporter::FilterInfo *info = initializeInfo();
 
-  MailImporter::FilterBalsa balsa;
-  balsa.setFilterInfo( info );
+  MailImporter::FilterClawsMails clawsMails;
+  clawsMails.setFilterInfo( info );
   info->setStatusMessage(i18n("Import in progress"));
-  const QString mailPath(QDir::homePath()+ QLatin1String("mail"));
-  QDir directory(mailPath);
+  const QString mailsPath = clawsMails.localMailDirPath();
+  QDir directory(mailsPath);
   if(directory.exists())
-    balsa.importMails(mailPath);
+    clawsMails.importMails(mailsPath);
   else
-    balsa.import();
+    clawsMails.import();
   info->setStatusMessage(i18n("Import finished"));
 
+
   delete info;
-#endif
   return true;
 }
 
