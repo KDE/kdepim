@@ -88,7 +88,7 @@ bool ClawsMailsImportData::importSettings()
     ClawsMailsSettings account( mImportWizard );
     account.importSettings(accountFile, mPath);
   } else {
-    addImportSettingsInfo(i18n("ClawsMails settings not found."));
+    addImportSettingsInfo(i18n("Claws Mail settings not found."));
   }
   return true;
 }
