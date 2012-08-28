@@ -73,7 +73,7 @@ QString FilterClawsMails::localMailDirPath()
       if ( e.tagName() == QLatin1String( "folder" ) ) {
         if ( e.hasAttribute( "type" ) ) {
           if ( e.attribute( "type" ) == QLatin1String( "mh" ) ) {
-            return e.attribute("path" );
+            return QDir::homePath() + QDir::separator() + e.attribute("path" );
           }   
         }
       }
@@ -181,14 +181,14 @@ void FilterClawsMails::importFiles( const QString& dirName)
   const QStringList files = importDir.entryList(QStringList("[^\\.]*"), QDir::Files, QDir::Name);
   int currentFile = 1, numFiles = files.size();
 
-  readMarkFile(dir.filePath(".sylpheed_mark"), msgflags);
+  readMarkFile(dir.filePath(".claws_mark"), msgflags);
 
   QStringList::ConstIterator end( files.constEnd() );
   for ( QStringList::ConstIterator mailFile = files.constBegin(); mailFile != end; ++mailFile, ++currentFile) {
     if(filterInfo()->shouldTerminate())
       return;
     QString _mfile = *mailFile;
-    if (!(_mfile.endsWith(QLatin1String(".sylpheed_cache")) || _mfile.endsWith(QLatin1String(".sylpheed_mark"))
+    if (!(_mfile.endsWith(QLatin1String(".claws_cache")) || _mfile.endsWith(QLatin1String(".claws_mark"))
           || _mfile.endsWith(QLatin1String(".mh_sequences")) )) {
       if(!generatedPath) {
         //FIXME: Why recreate all the time _path ?
