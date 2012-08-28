@@ -17,6 +17,7 @@ set(libmailimporter_SRCS
   filter_thunderbird.cpp
   filter_kmail_maildir.cpp
   filter_sylpheed.cpp
+  filter_clawsmails.cpp
   filter_thebat.cpp
   filter_lnotes.cpp
   filter_kmail_archive.cpp
