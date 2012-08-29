@@ -17,7 +17,7 @@
 
 /* based on filter_sylpheed filter */
 
-#include "filter_clawsmails.h"
+#include "filter_clawsmail.h"
 
 #include <klocale.h>
 #include <kfiledialog.h>
@@ -28,29 +28,29 @@
 using namespace MailImporter;
 
 /** Default constructor. */
-FilterClawsMails::FilterClawsMails() :
-  Filter( i18n( "Import ClawsMAils Maildirs and Folder Structure" ),
+FilterClawsMail::FilterClawsMail() :
+  Filter( i18n( "Import Claws-mail Maildirs and Folder Structure" ),
           "Laurent Montel",
           i18n( "<p><b>Claws-mail import filter</b></p>"
-                "<p>Select the base directory of the Claws-mails mailfolder you want to import "
+                "<p>Select the base directory of the Claws-mail mailfolder you want to import "
                 "(usually: ~/Mail ).</p>"
                 "<p>Since it is possible to recreate the folder structure, the folders "
-                "will be stored under: \"ClawsMails-Import\" in your local folder.</p>"
+                "will be stored under: \"ClawsMail-Import\" in your local folder.</p>"
                 "<p>This filter also recreates the status of message, e.g. new or forwarded.</p>") )
 {
 }
 
 /** Destructor. */
-FilterClawsMails::~FilterClawsMails()
+FilterClawsMail::~FilterClawsMail()
 {
 }
 
-QString FilterClawsMails::defaultPath()
+QString FilterClawsMail::defaultPath()
 {
   return QDir::homePath() + QLatin1String( "/.claws-mail/" );
 }
 
-QString FilterClawsMails::localMailDirPath()
+QString FilterClawsMail::localMailDirPath()
 {
   QFile folderListFile( defaultPath() + QLatin1String( "/folderlist.xml" ) );
   if ( folderListFile.exists() ) {
@@ -83,7 +83,7 @@ QString FilterClawsMails::localMailDirPath()
 }
 
 /** Recursive import of Sylpheed maildir. */
-void FilterClawsMails::import()
+void FilterClawsMail::import()
 {
   QString homeDir = localMailDirPath();
   if ( homeDir.isEmpty() )
@@ -97,7 +97,7 @@ void FilterClawsMails::import()
   importMails( maildir );
 }
 
-void FilterClawsMails::processDirectory( const QString& path)
+void FilterClawsMail::processDirectory( const QString& path)
 {
   QDir dir(path);
   const QStringList rootSubDirs = dir.entryList(QStringList("[^\\.]*"), QDir::Dirs , QDir::Name);
@@ -111,7 +111,7 @@ void FilterClawsMails::processDirectory( const QString& path)
   }
 }
 
-void FilterClawsMails::importMails( const QString &maildir )
+void FilterClawsMail::importMails( const QString &maildir )
 {
   setMailDir(maildir);
   if ( mailDir().isEmpty() ) {
@@ -152,7 +152,7 @@ void FilterClawsMails::importMails( const QString &maildir )
  * @param info Information storage for the operation.
  * @param dirName The name of the directory to import.
  */
-void FilterClawsMails::importDirContents( const QString& dirName)
+void FilterClawsMail::importDirContents( const QString& dirName)
 {
   if(filterInfo()->shouldTerminate()) return;
 
@@ -169,7 +169,7 @@ void FilterClawsMails::importDirContents( const QString& dirName)
  * @param info Information storage for the operation.
  * @param dirName The name of the directory to import.
  */
-void FilterClawsMails::importFiles( const QString& dirName)
+void FilterClawsMail::importFiles( const QString& dirName)
 {
   QDir dir(dirName);
   QString _path;
@@ -193,7 +193,7 @@ void FilterClawsMails::importFiles( const QString& dirName)
       if(!generatedPath) {
         //FIXME: Why recreate all the time _path ?
 
-        _path = i18nc("define folder name where we will import clawsmails mails", "ClawsMails-Import") + QLatin1Char('/');
+        _path = i18nc("define folder name where we will import clawsmail mails", "ClawsMail-Import") + QLatin1Char('/');
         QString _tmp = dir.filePath(*mailFile);
         _tmp = _tmp.remove(_tmp.length() - _mfile.length() -1, _mfile.length()+1);
         _path += _tmp.remove( mailDir(), Qt::CaseSensitive );
@@ -226,7 +226,7 @@ void FilterClawsMails::importFiles( const QString& dirName)
 }
 
 
-void FilterClawsMails::readMarkFile( const QString &path, QHash<QString,unsigned long> &dict )
+void FilterClawsMail::readMarkFile( const QString &path, QHash<QString,unsigned long> &dict )
 {
   /* Each sylpheed mail directory contains a .sylpheed_mark file which
    * contains all the flags for each messages. The layout of this file
@@ -274,7 +274,7 @@ void FilterClawsMails::readMarkFile( const QString &path, QHash<QString,unsigned
   }
 }
 
-Akonadi::MessageStatus FilterClawsMails::msgFlagsToString(unsigned long flags)
+Akonadi::MessageStatus FilterClawsMail::msgFlagsToString(unsigned long flags)
 {
   Akonadi::MessageStatus status;
   /* see sylpheed's procmsg.h */

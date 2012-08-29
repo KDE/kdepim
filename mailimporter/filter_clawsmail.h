@@ -26,12 +26,12 @@
  * @author Danny Kukawka
  */
 namespace MailImporter {
-class MAILIMPORTER_EXPORT FilterClawsMails : public Filter
+class MAILIMPORTER_EXPORT FilterClawsMail : public Filter
 {
 
 public:
-  explicit FilterClawsMails();
-  ~FilterClawsMails();
+  explicit FilterClawsMail();
+  ~FilterClawsMail();
 
   static QString defaultPath();
 

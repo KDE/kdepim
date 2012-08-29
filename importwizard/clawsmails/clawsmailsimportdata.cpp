@@ -18,7 +18,7 @@
 #include "clawsmails/clawsmailsimportdata.h"
 #include "clawsmails/clawsmailssettings.h"
 #include "clawsmails/clawsmailsaddressbook.h"
-#include "mailimporter/filter_clawsmails.h"
+#include "mailimporter/filter_clawsmail.h"
 #include "mailcommon/filter/filterimporter/filterimporterclawsmails_p.h"
 #include "mailimporter/filterinfo.h"
 #include "importfilterinfogui.h"
@@ -58,15 +58,15 @@ bool ClawsMailsImportData::importMails()
 {
   MailImporter::FilterInfo *info = initializeInfo();
 
-  MailImporter::FilterClawsMails clawsMails;
-  clawsMails.setFilterInfo( info );
+  MailImporter::FilterClawsMail clawsMail;
+  clawsMail.setFilterInfo( info );
   info->setStatusMessage(i18n("Import in progress"));
-  const QString mailsPath = clawsMails.localMailDirPath();
+  const QString mailsPath = clawsMail.localMailDirPath();
   QDir directory(mailsPath);
   if(directory.exists())
-    clawsMails.importMails(mailsPath);
+    clawsMail.importMails(mailsPath);
   else
-    clawsMails.import();
+    clawsMail.import();
   info->setStatusMessage(i18n("Import finished"));
 
 
@@ -96,7 +96,7 @@ bool ClawsMailsImportData::importSettings()
 bool ClawsMailsImportData::importFilters()
 {
   const QString filterPath(mPath + QLatin1String("matcherrc"));
-  return addFilters( filterPath, MailCommon::FilterImporterExporter::ClawsMailsFilter );
+  return addFilters( filterPath, MailCommon::FilterImporterExporter::ClawsMailFilter );
 }
 
 
