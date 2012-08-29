@@ -33,7 +33,7 @@ public:
   virtual void importSettings(const QString& filename, const QString& path);
 
 
-private:
+protected:
   void readCustomHeader(QFile *customHeaderFile);
   void readGlobalSettings(const KConfigGroup& group);
   void readAccount(const KConfigGroup& accountConfig, bool checkMailOnStartup , int intervalCheckMail);

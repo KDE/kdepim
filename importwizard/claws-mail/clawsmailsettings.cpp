@@ -40,5 +40,37 @@ ClawsMailSettings::~ClawsMailSettings()
 
 void ClawsMailSettings::importSettings(const QString& filename, const QString& path)
 {
-    //TODO
+    //TODO improve it
+  bool checkMailOnStartup = true;
+  int intervalCheckMail = -1;
+  const QString sylpheedrc = path + QLatin1String("/clawsrc");
+  if(QFile( sylpheedrc ).exists()) {
+    KConfig configCommon( sylpheedrc );
+    if(configCommon.hasGroup("Common")) {
+      KConfigGroup common = configCommon.group("Common");
+      checkMailOnStartup = ( common.readEntry("check_on_startup",1) == 1 );
+         if(common.readEntry(QLatin1String("autochk_newmail"),1) == 1 ) {
+          intervalCheckMail = common.readEntry(QLatin1String("autochk_interval"),-1);
+      }
+      readGlobalSettings(common);
+    }
+  }
+  KConfig config( filename );
+  const QStringList accountList = config.groupList().filter( QRegExp( "Account: \\d+" ) );
+  const QStringList::const_iterator end( accountList.constEnd() );
+  for ( QStringList::const_iterator it = accountList.constBegin(); it!=end; ++it )
+  {
+    KConfigGroup group = config.group( *it );
+    readAccount( group, checkMailOnStartup, intervalCheckMail );
+    readIdentity( group );
+  }
+  const QString customheaderrc = path + QLatin1String("/customheaderrc");
+  QFile customHeaderFile(customheaderrc);
+  if(customHeaderFile.exists()) {
+    if ( !customHeaderFile.open( QIODevice::ReadOnly ) ) {
+      kDebug()<<" We can't open file"<<customheaderrc;
+    } else {
+      readCustomHeader(&customHeaderFile);
+    }
+  }
 }
