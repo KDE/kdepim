@@ -201,6 +201,18 @@ public:
    */
   ComposerViewBase::MissingAttachment checkForMissingAttachments( const QStringList &attachmentKeywords ) ;
 
+  /**
+   * Helper methods to read from config various encryption settings
+   */
+  inline bool encryptToSelf();
+  inline bool showKeyApprovalDialog();
+  inline int encryptKeyNearExpiryWarningThresholdInDays();
+  inline int signingKeyNearExpiryWarningThresholdInDays();
+  inline int encryptRootCertNearExpiryWarningThresholdInDays();
+  inline int signingRootCertNearExpiryWarningThresholdInDays();
+  inline int encryptChainCertNearExpiryWarningThresholdInDays();
+  inline int signingChainCertNearExpiryWarningThresholdInDays();
+
 public slots:
 
   void identityChanged( const KPIMIdentities::Identity &ident, const KPIMIdentities::Identity &oldIdent );
