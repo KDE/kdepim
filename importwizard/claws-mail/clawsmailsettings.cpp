@@ -15,7 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "clawsmailssettings.h"
+#include "clawsmailsettings.h"
 
 #include <mailtransport/transportmanager.h>
 #include "mailcommon/mailutil.h"
@@ -28,17 +28,17 @@
 #include <KConfigGroup>
 #include <QFile>
 
-ClawsMailsSettings::ClawsMailsSettings(ImportWizard *parent)
+ClawsMailSettings::ClawsMailSettings(ImportWizard *parent)
   :SylpheedSettings( parent )
 {
 }
 
-ClawsMailsSettings::~ClawsMailsSettings()
+ClawsMailSettings::~ClawsMailSettings()
 {
 
 }
 
-void ClawsMailsSettings::importSettings(const QString& filename, const QString& path)
+void ClawsMailSettings::importSettings(const QString& filename, const QString& path)
 {
     //TODO
 }

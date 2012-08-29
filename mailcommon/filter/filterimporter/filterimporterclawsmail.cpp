@@ -15,7 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "filterimporterclawsmails_p.h"
+#include "filterimporterclawsmail_p.h"
 #include "filtermanager.h"
 #include "mailfilter.h"
 

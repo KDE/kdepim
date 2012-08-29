@@ -15,21 +15,21 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef ClawsMailsAddressBook_H
-#define ClawsMailsAddressBook_H
+#ifndef ClawsMailSettings_H
+#define ClawsMailSettings_H
 
-#include "sylpheed/sylpheedaddressbook.h"
-#include <QDir>
+#include "abstractsettings.h"
+#include "sylpheed/sylpheedsettings.h"
 
 class ImportWizard;
 class KConfigGroup;
 
-
-class ClawsMailsAddressBook : public SylpheedAddressBook
+class ClawsMailSettings : public SylpheedSettings
 {
 public:
-  explicit ClawsMailsAddressBook(const QDir &dir, ImportWizard *parent);
-  ~ClawsMailsAddressBook();
+  explicit ClawsMailSettings(ImportWizard *parent);
+  ~ClawsMailSettings();
+  void importSettings(const QString& filename, const QString& path);
 };
 
-#endif // ClawsMailsAddressBook_H
+#endif // ClawsMailSettings_H

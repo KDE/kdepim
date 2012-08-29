@@ -15,15 +15,15 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "clawsmailsaddressbook.h"
+#include "clawsmailaddressbook.h"
 #include "importwizardutil.h"
 
-ClawsMailsAddressBook::ClawsMailsAddressBook(const QDir& dir, ImportWizard *parent)
+ClawsMailAddressBook::ClawsMailAddressBook(const QDir& dir, ImportWizard *parent)
   : SylpheedAddressBook( dir, parent )
 {
 }
 
-ClawsMailsAddressBook::~ClawsMailsAddressBook()
+ClawsMailAddressBook::~ClawsMailAddressBook()
 {
 
 }
