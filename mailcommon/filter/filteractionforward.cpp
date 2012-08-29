@@ -44,7 +44,7 @@ FilterAction *FilterActionForward::newAction()
 }
 
 FilterActionForward::FilterActionForward( QObject *parent )
-  : FilterActionWithAddress( "forward", i18n( "Forward To" ), parent )
+  : FilterActionWithAddress( "forward", i18nc( "Forward directly not with a command", "Forward To" ), parent )
 {
 }
 
