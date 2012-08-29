@@ -134,7 +134,7 @@ FilterActionWidget::FilterActionWidget( QWidget *parent )
     d->mActionList.append( action );
 
     // add (i18n-ized) name to combo box
-    d->mComboBox->addItem( (*it)->label );
+    d->mComboBox->addItem( (*it)->label,(*it)->name );
 
     // Register the FilterAction modification signal
     connect( action, SIGNAL(filterActionModified()), this, SIGNAL(filterModified()) );
@@ -192,12 +192,13 @@ void FilterActionWidget::setAction( const FilterAction *action )
 {
   bool found = false;
   const int count = d->mComboBox->count() - 1 ; // last entry is the empty one
-  const QString label = action ? action->label() : QString();
+
+  const QString name = action ? action->name() : QString();
 
   // find the index of typeOf(action) in mComboBox
   // and clear the other widgets on the way.
   for ( int i = 0; i < count; ++i ) {
-    if ( action && d->mComboBox->itemText( i ) == label ) {
+    if ( action && d->mComboBox->itemData( i ) == name ) {
       d->setFilterAction( d->mActionList.at( i )->createParamWidget( this ) );
 
       //...set the parameter widget to the settings
@@ -226,7 +227,7 @@ FilterAction *FilterActionWidget::action() const
   // look up the action description via the label
   // returned by KComboBox::currentText()...
   FilterActionDesc *description =
-    MailCommon::FilterManager::filterActionDict()->value( d->mComboBox->currentText() );
+          MailCommon::FilterManager::filterActionDict()->value( d->mComboBox->itemData(d->mComboBox->currentIndex()).toString() );
 
   if ( description ) {
     // ...create an instance...
