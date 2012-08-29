@@ -37,7 +37,7 @@
 #include "pmail/pmailimportdata.h"
 #include "thebat/thebatimportdata.h"
 #include "balsa/balsaimportdata.h"
-#include "clawsmails/clawsmailsimportdata.h"
+#include "claws-mail/clawsmailsimportdata.h"
 
 #include <kaboutapplicationdialog.h>
 #include <kglobal.h>

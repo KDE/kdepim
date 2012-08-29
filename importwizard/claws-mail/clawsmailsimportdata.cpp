@@ -15,9 +15,9 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "clawsmails/clawsmailsimportdata.h"
-#include "clawsmails/clawsmailssettings.h"
-#include "clawsmails/clawsmailsaddressbook.h"
+#include "claws-mail/clawsmailsimportdata.h"
+#include "claws-mail/clawsmailssettings.h"
+#include "claws-mail/clawsmailsaddressbook.h"
 #include "mailimporter/filter_clawsmail.h"
 #include "mailcommon/filter/filterimporter/filterimporterclawsmails_p.h"
 #include "mailimporter/filterinfo.h"

@@ -44,9 +44,9 @@ thebat/thebatimportdata.cpp
 balsa/balsaimportdata.cpp
 balsa/balsasettings.cpp
 balsa/balsaaddressbook.cpp
-clawsmails/clawsmailsimportdata.cpp
-clawsmails/clawsmailssettings.cpp
-clawsmails/clawsmailsaddressbook.cpp
+claws-mail/clawsmailsimportdata.cpp
+claws-mail/clawsmailssettings.cpp
+claws-mail/clawsmailsaddressbook.cpp
 )
 
 include_directories(${CMAKE_SOURCE_DIR}/mailimporter 
