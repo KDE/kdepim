@@ -196,6 +196,7 @@ QString GrantleeContactFormatter::toHtml( HtmlForm form ) const
   if ( birthday.isValid() ) {
     contactObject.insert( QLatin1String( "birthday" ), KGlobal::locale()->formatDate( birthday ) );
 
+    contactObject.insert( QLatin1String("birthdayi18n"), i18n("Birthday"));
     const int years = ( birthday.daysTo( QDate::currentDate() ) / 365 );
     contactObject.insert( QLatin1String( "age" ), QString::number( years ) );
   }
@@ -206,19 +207,19 @@ QString GrantleeContactFormatter::toHtml( HtmlForm form ) const
   if ( anniversary.isValid() ) {
     contactObject.insert( QLatin1String( "anniversary" ),
                           KGlobal::locale()->formatDate( anniversary ) );
+    contactObject.insert( QLatin1String("anniversaryi18n"), i18n("Anniversary"));
   }
 
   // Emails
   QStringList emails;
   foreach ( const QString &email, rawContact.emails() ) {
-    QString type = i18nc( "a contact's email address", "Email" );
-
     const QString fullEmail = QString::fromLatin1( KUrl::toPercentEncoding( rawContact.fullEmail( email ) ) );
 
     const QString url = QString::fromLatin1( "<a href=\"mailto:%1\">%2</a>" )
       .arg( fullEmail, email );
     emails<<url;
   }
+  contactObject.insert( QLatin1String("emailsi18n"), i18n("Emails"));
   contactObject.insert( QLatin1String( "emails" ), emails);
 
   // Phone numbers
@@ -241,6 +242,7 @@ QString GrantleeContactFormatter::toHtml( HtmlForm form ) const
 
     url = KStringHandler::tagUrls( url );
     contactObject.insert( QLatin1String( "website" ), url );
+    contactObject.insert( QLatin1String( "websitei18n" ), i18n("Website") );
   }
 
   // Blog Feed
@@ -248,6 +250,7 @@ QString GrantleeContactFormatter::toHtml( HtmlForm form ) const
     rawContact.custom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "BlogFeed" ) );
   if ( !blog.isEmpty() ) {
     contactObject.insert( QLatin1String( "blogUrl" ), KStringHandler::tagUrls( blog ) );
+    contactObject.insert( QLatin1String( "blogUrli18n" ), i18n("Blog Feed") );
   }
 
   // Address Book
@@ -255,6 +258,7 @@ QString GrantleeContactFormatter::toHtml( HtmlForm form ) const
     rawContact.custom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "AddressBook" ) );
   if ( !addressBookName.isEmpty() ) {
     contactObject.insert( QLatin1String( "addressBookName" ), addressBookName );
+    contactObject.insert( QLatin1String("addressBookNamei18n"), i18n("Address Book"));
   }
 
   // Addresses
@@ -268,6 +272,7 @@ QString GrantleeContactFormatter::toHtml( HtmlForm form ) const
   if ( !rawContact.note().isEmpty() ) {
     const QString notes = rawContact.note().replace( QLatin1Char( '\n' ), QLatin1String( "<br>" ));
     contactObject.insert( QLatin1String( "note" ), notes );
+    contactObject.insert( QLatin1String("notei18n"),i18n("Note"));
   }
 
   contactObject.insert( QLatin1String( "addresses" ), addresses );
@@ -281,32 +286,38 @@ QString GrantleeContactFormatter::toHtml( HtmlForm form ) const
   setHashField( contactObject, QLatin1String( "organization" ), rawContact.organization() );
 
   setHashField( contactObject, QLatin1String( "department" ), rawContact.department() );
+  contactObject.insert(QLatin1String("departmenti18n"),i18n("Department"));
 
   setHashField( contactObject, QLatin1String( "note" ), rawContact.note() );
 
   setHashField( contactObject, QLatin1String( "profession" ),
                 rawContact.custom( QLatin1String( "KADDRESSBOOK" ),
                                    QLatin1String( "X-Profession" ) ) );
-
+  contactObject.insert(QLatin1String("Professioni18n"),i18n("Profession"));
   setHashField( contactObject, QLatin1String( "office" ),
                 rawContact.custom( QLatin1String( "KADDRESSBOOK" ),
                                    QLatin1String( "X-Office" ) ) );
+  contactObject.insert(QLatin1String("officei18n"),i18n("Office"));
 
   setHashField( contactObject, QLatin1String( "manager" ),
                 rawContact.custom( QLatin1String( "KADDRESSBOOK" ),
                                    QLatin1String( "X-ManagersName" ) ) );
+  contactObject.insert(QLatin1String("manageri18n"),i18n("Manager's Name"));
 
   setHashField( contactObject, QLatin1String( "assistant" ),
                 rawContact.custom( QLatin1String( "KADDRESSBOOK" ),
                                    QLatin1String( "X-AssistantsName" ) ) );
+  contactObject.insert(QLatin1String("assistanti18n"),i18n("Assistant's Name"));
 
   setHashField( contactObject, QLatin1String( "spouse" ),
                 rawContact.custom( QLatin1String( "KADDRESSBOOK" ),
                                    QLatin1String( "X-SpousesName" ) ) );
+  contactObject.insert(QLatin1String("spousei18n"),i18n("Partner's Name"));
 
   setHashField( contactObject, QLatin1String( "imAddress" ),
                 rawContact.custom( QLatin1String( "KADDRESSBOOK" ),
                                    QLatin1String( "X-IMAddress" ) ) );
+  contactObject.insert(QLatin1String("imAddressi18n"), i18n("IM Address"));
 
   // Custom fields
 
