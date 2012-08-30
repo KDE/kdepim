@@ -102,13 +102,27 @@ void BalsaSettings::readIdentity(const KConfigGroup &grp)
     newIdentity->setTransport(mHashSmtp.value(smtp));
   }
 
+  const QString signaturePath = grp.readEntry(QLatin1String("SignaturePath"));
+  if(!signaturePath.isEmpty()) {
+    KPIMIdentities::Signature signature;
+    if(grp.readEntry(QLatin1String("SigExecutable"),false)) {
+      signature.setUrl(signaturePath, true );
+      signature.setType( KPIMIdentities::Signature::FromCommand );
+    } else {
+      signature.setType( KPIMIdentities::Signature::FromFile );
+    }
+    newIdentity->setSignature( signature );
+  }
+
+  const QString xfaceStr = grp.readEntry(QLatin1String("XFacePath"));
+  if(!xfaceStr.isEmpty()) {
+      //TODO
+  }
 #if 0
   Domain=
   ReplyString=Re :
   ForwardString=Fwd :
   SendMultipartAlternative=false
-  SignaturePath=
-  SigExecutable=false
   SigSending=true
   SigForward=true
   SigReply=true

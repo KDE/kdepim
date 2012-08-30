@@ -83,7 +83,7 @@ bool ClawsMailImportData::importAddressBook()
 
 bool ClawsMailImportData::importSettings()
 {
-  const QString accountFile = mPath + QLatin1String("/accountrc");
+  const QString accountFile = mPath + QLatin1String("accountrc");
   if ( QFile( accountFile ).exists() ) {
     ClawsMailSettings account( mImportWizard );
     account.importSettings(accountFile, mPath);
