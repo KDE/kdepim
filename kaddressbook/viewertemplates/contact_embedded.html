@@ -147,6 +147,13 @@
         {% endwith %}
         {% endwith %}
       {% endif %}
+      {% if contact.note %}
+        {% with "Note" as title %}
+        {% with contact.note as value %}
+        {% include "contact_row.html" %}
+        {% endwith %}
+        {% endwith %}
+      {% endif %}
     </table>
     <p align="center">
      <img src="datamatrix" vspace="1">
