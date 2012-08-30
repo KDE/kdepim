@@ -264,6 +264,11 @@ QString GrantleeContactFormatter::toHtml( HtmlForm form ) const
     addresses.append( addressHash( address, counter ) );
     counter++;
   }
+  // Note
+  if ( !rawContact.note().isEmpty() ) {
+    const QString notes = rawContact.note().replace( QLatin1Char( '\n' ), QLatin1String( "<br>" ));
+    contactObject.insert( QLatin1String( "note" ), notes );
+  }
 
   contactObject.insert( QLatin1String( "addresses" ), addresses );
 
