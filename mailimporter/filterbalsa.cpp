@@ -40,15 +40,19 @@ FilterBalsa::~FilterBalsa()
 
 QString FilterBalsa::defaultSettingsPath()
 {
-  return QDir::homePath() + QLatin1String( "/mail/" );
+  return QDir::homePath() + QLatin1String("/.balsa/");
 }
 
+QString FilterBalsa::localMailDirPath()
+{
+  return QDir::homePath() + QLatin1String( "/mail/" );
+}
 
 /** Recursive import of KMail maildir. */
 void FilterBalsa::import()
 {
   setCountDuplicates(0);
-  QString balsaDir = defaultSettingsPath();
+  QString balsaDir = localMailDirPath();
   QDir d( balsaDir );
   if ( !d.exists() ) {
     balsaDir = QDir::homePath();
