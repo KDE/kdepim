@@ -129,6 +129,8 @@ namespace Util {
 
   MAILCOMMON_EXPORT Akonadi::Collection::Id convertFolderPathToCollectionId( const QString& folder);
   MAILCOMMON_EXPORT QString convertFolderPathToCollectionStr( const QString& folder);
+
+  MAILCOMMON_EXPORT bool foundMailer();
 }
 
 }
