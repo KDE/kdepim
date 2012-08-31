@@ -35,7 +35,7 @@
 Evolutionv3ImportData::Evolutionv3ImportData(ImportWizard*parent)
   :AbstractImporter(parent)
 {
-  mPath = MailImporter::FilterEvolution_v3::defaultPath();
+  mPath = MailImporter::FilterEvolution_v3::defaultSettingsPath();
 }
 
 Evolutionv3ImportData::~Evolutionv3ImportData()

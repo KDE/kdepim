@@ -246,7 +246,7 @@ void OperaSettings::readIdentity(const KConfigGroup &grp)
         KPIMIdentities::Signature signature;
         const int signatureHtml = grp.readEntry(QLatin1String("Signature is HTML"),-1);
         if(signatureFile.contains(QLatin1String("{Preferences}"))) {
-          signatureFile.replace(QLatin1String("{Preferences}"),MailImporter::FilterOpera::defaultPath()+QLatin1String("/"));
+          signatureFile.replace(QLatin1String("{Preferences}"),MailImporter::FilterOpera::defaultSettingsPath()+QLatin1String("/"));
         }
 
         QFile file(signatureFile);

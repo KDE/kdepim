@@ -33,7 +33,7 @@
 ClawsMailImportData::ClawsMailImportData(ImportWizard*parent)
   :AbstractImporter(parent)
 {
-  mPath = MailImporter::FilterClawsMail::defaultPath();
+  mPath = MailImporter::FilterClawsMail::defaultSettingsPath();
 }
 
 ClawsMailImportData::~ClawsMailImportData()

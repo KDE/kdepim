@@ -40,7 +40,7 @@ FilterEvolution_v3::~FilterEvolution_v3()
 {
 }
 
-QString FilterEvolution_v3::defaultPath()
+QString FilterEvolution_v3::defaultSettingsPath()
 {
   return QDir::homePath() + QLatin1String( "/.local/share/evolution/mail/local/" );
 }
@@ -50,7 +50,7 @@ QString FilterEvolution_v3::defaultPath()
 void FilterEvolution_v3::import()
 {
   setCountDuplicates(0);
-  QString evolDir = defaultPath();
+  QString evolDir = defaultSettingsPath();
   QDir d( evolDir );
   if ( !d.exists() ) {
     evolDir = QDir::homePath();

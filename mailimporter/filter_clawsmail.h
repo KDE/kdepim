@@ -33,7 +33,7 @@ public:
   explicit FilterClawsMail();
   ~FilterClawsMail();
 
-  static QString defaultPath();
+  static QString defaultSettingsPath();
 
   void import();
   void importMails( const QString& maildir );

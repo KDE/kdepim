@@ -54,7 +54,7 @@ FilterImporterEvolution::~FilterImporterEvolution()
 {
 }
 
-QString FilterImporterEvolution::defaultPath()
+QString FilterImporterEvolution::defaultFiltersSettingsPath()
 {
   return QString::fromLatin1( "%1/.config/evolution/mail/filters.xml" ).arg( QDir::homePath() );
 }

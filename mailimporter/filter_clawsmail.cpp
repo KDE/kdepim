@@ -45,14 +45,14 @@ FilterClawsMail::~FilterClawsMail()
 {
 }
 
-QString FilterClawsMail::defaultPath()
+QString FilterClawsMail::defaultSettingsPath()
 {
   return QDir::homePath() + QLatin1String( "/.claws-mail/" );
 }
 
 QString FilterClawsMail::localMailDirPath()
 {
-  QFile folderListFile( defaultPath() + QLatin1String( "/folderlist.xml" ) );
+  QFile folderListFile( defaultSettingsPath() + QLatin1String( "/folderlist.xml" ) );
   if ( folderListFile.exists() ) {
     QDomDocument doc;
     QString errorMsg;

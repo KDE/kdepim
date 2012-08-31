@@ -45,7 +45,7 @@ FilterThunderbird::~FilterThunderbird()
 }
 
 
-QString FilterThunderbird::defaultPath()
+QString FilterThunderbird::defaultSettingsPath()
 {
   return QDir::homePath() + QLatin1String( "/.thunderbird/" );
 }
@@ -71,7 +71,7 @@ QString FilterThunderbird::defaultProfile(QWidget * parent)
 
 QMap<QString,QString> FilterThunderbird::listProfile(QString&currentProfile)
 {
-  const QString thunderbirdPath = defaultPath() + QLatin1String( "/profiles.ini" );
+  const QString thunderbirdPath = defaultSettingsPath() + QLatin1String( "/profiles.ini" );
   QMap<QString,QString> lstProfile;
   QFile profiles( thunderbirdPath );
   if ( profiles.exists() ) {
@@ -111,7 +111,7 @@ void FilterThunderbird::import()
    * We ask the user to choose Thunderbird's root directory.
    * This should be usually ~/.thunderbird/xxxx.default/Mail/Local Folders/
    */
-  QString thunderDir = defaultPath();
+  QString thunderDir = defaultSettingsPath();
   QDir d( thunderDir );
   if ( !d.exists() ) {
     thunderDir = QDir::homePath();

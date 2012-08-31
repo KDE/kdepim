@@ -32,7 +32,7 @@
 OperaImportData::OperaImportData(ImportWizard*parent)
   :AbstractImporter(parent)
 {
-  mPath = MailImporter::FilterOpera::defaultPath();
+  mPath = MailImporter::FilterOpera::defaultSettingsPath();
 }
 
 OperaImportData::~OperaImportData()

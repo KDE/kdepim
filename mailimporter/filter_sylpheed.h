@@ -34,7 +34,7 @@ public:
   explicit FilterSylpheed();
   ~FilterSylpheed();
 
-  static QString defaultPath();
+  static QString defaultSettingsPath();
 
   void import();
   void importMails( const QString& maildir );

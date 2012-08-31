@@ -38,7 +38,7 @@ FilterBalsa::~FilterBalsa()
 {
 }
 
-QString FilterBalsa::defaultPath()
+QString FilterBalsa::defaultSettingsPath()
 {
   return QDir::homePath() + QLatin1String( "/mail/" );
 }
@@ -48,7 +48,7 @@ QString FilterBalsa::defaultPath()
 void FilterBalsa::import()
 {
   setCountDuplicates(0);
-  QString balsaDir = defaultPath();
+  QString balsaDir = defaultSettingsPath();
   QDir d( balsaDir );
   if ( !d.exists() ) {
     balsaDir = QDir::homePath();

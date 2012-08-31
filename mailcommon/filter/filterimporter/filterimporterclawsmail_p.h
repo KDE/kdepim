@@ -34,7 +34,7 @@ class FilterImporterClawsMails : public FilterImporterAbstract
 public:
     explicit FilterImporterClawsMails( QFile *file );
     ~FilterImporterClawsMails();
-    static QString defaultPath();
+    static QString defaultFiltersSettingsPath();
 };
 
 }
