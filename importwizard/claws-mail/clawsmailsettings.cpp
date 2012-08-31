@@ -74,3 +74,61 @@ void ClawsMailSettings::importSettings(const QString& filename, const QString& p
     }
   }
 }
+
+void ClawsMailSettings::readSettingsColor(const KConfigGroup& group)
+{
+  const bool enableColor = group.readEntry("enable_color", false);
+  if(enableColor) {
+    const QString colorLevel1 = group.readEntry("quote_level1_color");
+    if(!colorLevel1.isEmpty()) {
+        const QColor col = QColor(colorLevel1);
+        if(col.isValid()) {
+          addKmailConfig(QLatin1String("Reader"), QLatin1String("QuotedText1"), writeColor(col));
+        }
+      //[Reader]  QuotedText1
+    }
+    const QString colorLevel2 = group.readEntry("quote_level2_color");
+    if(!colorLevel2.isEmpty()) {
+        const QColor col = QColor(colorLevel2);
+        if(col.isValid()) {
+          addKmailConfig(QLatin1String("Reader"), QLatin1String("QuotedText2"), writeColor(col));
+        }
+      //[Reader]  QuotedText2
+    }
+    const QString colorLevel3 = group.readEntry("quote_level3_color");
+    if(!colorLevel3.isEmpty()) {
+        const QColor col = QColor(colorLevel3);
+        if(col.isValid()) {
+          addKmailConfig(QLatin1String("Reader"), QLatin1String("QuotedText3"), writeColor(col));
+        }
+      //[Reader]  QuotedText3
+    }
+    const QString misspellColor = group.readEntry(QLatin1String("misspelled_color"));
+    if(!misspellColor.isEmpty()) {
+        const QColor col = QColor(misspellColor);
+        if(col.isValid()) {
+          addKmailConfig(QLatin1String("Reader"), QLatin1String("MisspelledColor"), writeColor(col));
+        }
+    }
+  }
+}
+
+QString ClawsMailSettings::writeColor(const QColor& col)
+{
+    QStringList list;
+    list.insert(0, QString::number(col.red()));
+    list.insert(1, QString::number(col.green()));
+    list.insert(2, QString::number(col.blue()));
+    if (col.alpha() != 255)
+        list.insert(3, QString::number(col.alpha()));
+    return list.join(QLatin1String(","));
+}
+
+void ClawsMailSettings::readTemplateFormat(const KConfigGroup& group)
+{
+  SylpheedSettings::readTemplateFormat(group);
+  const QString composerNewMessage = group.readEntry(QLatin1String("compose_body_format"));
+  if(!composerNewMessage.isEmpty()) {
+    addKmailConfig(QLatin1String("TemplateParser"), QLatin1String("TemplateNewMessage"), convertToKmailTemplate(composerNewMessage));
+  }
+}
