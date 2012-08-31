@@ -33,7 +33,7 @@
 BalsaImportData::BalsaImportData(ImportWizard*parent)
   :AbstractImporter(parent)
 {
-  mPath = QDir::homePath() + QLatin1String("/.balsa/");
+  mPath = MailImporter::FilterBalsa::defaultSettingsPath();
 }
 
 BalsaImportData::~BalsaImportData()
@@ -61,10 +61,9 @@ bool BalsaImportData::importMails()
   MailImporter::FilterBalsa balsa;
   balsa.setFilterInfo( info );
   info->setStatusMessage(i18n("Import in progress"));
-  const QString mailPath(QDir::homePath()+ QLatin1String("mail"));
-  QDir directory(mailPath);
+  QDir directory(balsa.localMailDirPath());
   if(directory.exists())
-    balsa.importMails(mailPath);
+    balsa.importMails(directory.absolutePath());
   else
     balsa.import();
   info->setStatusMessage(i18n("Import finished"));
