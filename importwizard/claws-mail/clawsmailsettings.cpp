@@ -132,3 +132,16 @@ void ClawsMailSettings::readTemplateFormat(const KConfigGroup& group)
     addKmailConfig(QLatin1String("TemplateParser"), QLatin1String("TemplateNewMessage"), convertToKmailTemplate(composerNewMessage));
   }
 }
+
+void ClawsMailSettings::readGlobalSettings(const KConfigGroup& group)
+{
+    SylpheedSettings::readGlobalSettings(group);
+    if(!group.readEntry(QLatin1String("check_while_typing"),0) == 1) {
+      addKmailConfig(QLatin1String("Spelling"), QLatin1String("backgroundCheckerEnabled"), true);
+    }
+    const int markAsRead = group.readEntry(QLatin1String("mark_as_read_delay"),-1);
+    if(markAsRead!=-1) {
+      addKmailConfig(QLatin1String("Behaviour"), QLatin1String("DelayedMarkTime"), markAsRead);
+      addKmailConfig(QLatin1String("Behaviour"), QLatin1String("DelayedMarkAsRead"), true);
+    }
+}

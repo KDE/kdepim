@@ -35,7 +35,7 @@ public:
 
 protected:
   void readCustomHeader(QFile *customHeaderFile);
-  void readGlobalSettings(const KConfigGroup& group);
+  virtual void readGlobalSettings(const KConfigGroup& group);
   void readAccount(const KConfigGroup& accountConfig, bool checkMailOnStartup , int intervalCheckMail);
   void readIdentity( const KConfigGroup& accountConfig );
   QString readTransport( const KConfigGroup& accountConfig );

@@ -34,6 +34,8 @@ protected:
   //Reimplement from sylpheed
   void readSettingsColor(const KConfigGroup& group);
   void readTemplateFormat(const KConfigGroup& group);
+  void readGlobalSettings(const KConfigGroup& group);
+
 private:
   QString writeColor(const QColor& col);
 };
