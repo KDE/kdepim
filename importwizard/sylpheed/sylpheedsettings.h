@@ -42,6 +42,11 @@ private:
   bool readConfig( const QString& key, const KConfigGroup& accountConfig, QString& value, bool remove_underscore = false );
   bool readConfig( const QString& key, const KConfigGroup& accountConfig, int& value, bool remove_underscore = false );
 
+  virtual void readSettingsColor(const KConfigGroup& group);
+  virtual void readTemplateFormat(const KConfigGroup& group);
+
+  QString convertToKmailTemplate(const QString& templateStr);
+
 
 
 };
