@@ -33,7 +33,7 @@
 ClawsMailImportData::ClawsMailImportData(ImportWizard*parent)
   :AbstractImporter(parent)
 {
-  mPath = QDir::homePath() + QLatin1String("/.claws-mail/");
+  mPath = MailImporter::FilterClawsMail::defaultPath();
 }
 
 ClawsMailImportData::~ClawsMailImportData()
