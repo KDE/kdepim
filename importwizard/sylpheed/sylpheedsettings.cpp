@@ -138,6 +138,36 @@ void SylpheedSettings::readGlobalSettings(const KConfigGroup& group)
   addKmailConfig(QLatin1String("Composer"), QLatin1String("break-at"), lineWrap);
   addKmailConfig(QLatin1String("Composer"), QLatin1String("word-wrap"), true);
 
+
+  if(group.readEntry(QLatin1String("recycle_quote_colors"), 0)==1) {
+    addKmailConfig(QLatin1String("Reader"), QLatin1String("RecycleQuoteColors"), true);
+  }
+  readSettingsColor(group);
+  readTemplateFormat(group);
+}
+
+void SylpheedSettings::readTemplateFormat(const KConfigGroup& group)
+{
+  const QString replyQuote = group.readEntry(QLatin1String("reply_quote_mark"));
+  if(!replyQuote.isEmpty()) {
+
+  }
+  const QString forwardQuote = group.readEntry(QLatin1String("forward_quote_mark"));
+  if(!forwardQuote.isEmpty()) {
+      //Not implemented in kmail
+  }
+  const QString replyQuoteFormat = group.readEntry(QLatin1String("reply_quote_format"));
+  if(!replyQuoteFormat.isEmpty()) {
+    addKmailConfig(QLatin1String("TemplateParser"), QLatin1String("TemplateReply"), convertToKmailTemplate(replyQuoteFormat));
+  }
+  const QString forwardQuoteFormat = group.readEntry(QLatin1String("forward_quote_format"));
+  if(!forwardQuoteFormat.isEmpty()) {
+    addKmailConfig(QLatin1String("TemplateParser"), QLatin1String("TemplateForward"), convertToKmailTemplate(forwardQuoteFormat));
+  }
+}
+
+void SylpheedSettings::readSettingsColor(const KConfigGroup& group)
+{
   const bool enableColor = group.readEntry("enable_color", false);
   if(enableColor) {
     const int colorLevel1 = group.readEntry("quote_level1_color", -1);
@@ -147,15 +177,18 @@ void SylpheedSettings::readGlobalSettings(const KConfigGroup& group)
     const int colorLevel2 = group.readEntry("quote_level2_color", -1);
     if(colorLevel2!=-1) {
       //[Reader]  QuotedText2
-
     }
     const int colorLevel3 = group.readEntry("quote_level3_color", -1);
     if(colorLevel3!=-1) {
       //[Reader]  QuotedText3
-
     }
-
   }
+}
+
+QString SylpheedSettings::convertToKmailTemplate(const QString& templateStr)
+{
+  //TODO convert it
+  return templateStr;
 }
 
 void SylpheedSettings::readSignature( const KConfigGroup& accountConfig, KPIMIdentities::Identity* identity )

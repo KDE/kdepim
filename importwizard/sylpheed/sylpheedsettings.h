@@ -43,6 +43,11 @@ protected:
   void readImapAccount(const KConfigGroup& accountConfig, bool checkMailOnStartup , int intervalCheckMail);
   void readSignature( const KConfigGroup& accountConfig, KPIMIdentities::Identity* identity );
 
+  virtual void readSettingsColor(const KConfigGroup& group);
+  virtual void readTemplateFormat(const KConfigGroup& group);
+
+  QString convertToKmailTemplate(const QString& templateStr);
+
 
 
 };
