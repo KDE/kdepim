@@ -80,6 +80,7 @@ target_link_libraries(importwizard
   mailcommon
   kdepim
   messagecomposer
+  messageviewer
 )
 
 install(TARGETS importwizard  ${INSTALL_TARGETS_DEFAULT_ARGS} )

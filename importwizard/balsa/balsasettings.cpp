@@ -20,6 +20,7 @@
 
 #include <mailtransport/transportmanager.h>
 #include "mailcommon/mailutil.h"
+#include "messageviewer/kxface.h"
 
 #include <kpimidentities/identity.h>
 #include <kpimidentities/signature.h>
@@ -28,6 +29,7 @@
 #include <KConfig>
 #include <KConfigGroup>
 #include <QFile>
+#include <QImage>
 
 BalsaSettings::BalsaSettings(const QString &filename, ImportWizard *parent)
   :AbstractSettings( parent )
@@ -114,9 +116,11 @@ void BalsaSettings::readIdentity(const KConfigGroup &grp)
     newIdentity->setSignature( signature );
   }
 
-  const QString xfaceStr = grp.readEntry(QLatin1String("XFacePath"));
-  if(!xfaceStr.isEmpty()) {
-      //TODO
+  const QString xfacePathStr = grp.readEntry(QLatin1String("XFacePath"));
+  if(!xfacePathStr.isEmpty()) {
+    newIdentity->setXFaceEnabled(true);
+    MessageViewer::KXFace xf;
+    newIdentity->setXFace(xf.fromImage( QImage( xfacePathStr ) ));
   }
 #if 0
   Domain=
@@ -128,8 +132,6 @@ void BalsaSettings::readIdentity(const KConfigGroup &grp)
   SigReply=true
   SigSeparator=true
   SigPrepend=false
-  FacePath=
-  XFacePath=
   RequestMDN=false
   GpgSign=false
   GpgEncrypt=false
