@@ -187,8 +187,30 @@ void SylpheedSettings::readSettingsColor(const KConfigGroup& group)
 
 QString SylpheedSettings::convertToKmailTemplate(const QString& templateStr)
 {
-  //TODO convert it
-  return templateStr;
+  QString newTemplate = templateStr;
+  newTemplate.replace(QLatin1String("%d"),QLatin1String("%DATE"));
+  newTemplate.replace(QLatin1String("%date"),QLatin1String("%DATE"));
+  newTemplate.replace(QLatin1String("%f"),QLatin1String("%OTONAME"));
+  newTemplate.replace(QLatin1String("%from"),QLatin1String("%OTONAME"));
+  newTemplate.replace(QLatin1String("%t"),QLatin1String("%TONAME"));
+  newTemplate.replace(QLatin1String("%to"),QLatin1String("%TONAME"));
+  newTemplate.replace(QLatin1String("%c"),QLatin1String("%CCNAME"));
+  newTemplate.replace(QLatin1String("%cc"),QLatin1String("%CCNAME"));
+
+  newTemplate.replace(QLatin1String("%email"),QLatin1String("%CCNAME"));
+  newTemplate.replace(QLatin1String("%A"),QLatin1String("%CCNAME"));
+
+  newTemplate.replace(QLatin1String("%cursor"),QLatin1String("%CURSOR"));
+  newTemplate.replace(QLatin1String("%X"),QLatin1String("%CURSOR"));
+
+  newTemplate.replace(QLatin1String("%msg"),QLatin1String("%TEXT"));
+  newTemplate.replace(QLatin1String("%M"),QLatin1String("%TEXT"));
+
+  newTemplate.replace(QLatin1String("%quoted_msg"),QLatin1String("%QUOTE"));
+  newTemplate.replace(QLatin1String("%Q"),QLatin1String("%QUOTE"));
+
+  //TODO add more variable
+  return newTemplate;
 }
 
 void SylpheedSettings::readSignature( const KConfigGroup& accountConfig, KPIMIdentities::Identity* identity )
