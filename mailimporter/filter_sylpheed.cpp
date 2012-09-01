@@ -162,6 +162,15 @@ void FilterSylpheed::importDirContents( const QString& dirName)
   processDirectory( dirName );
 }
 
+bool FilterSylpheed::excludeFile(const QString& file)
+{
+    if(file.endsWith(QLatin1String(".sylpheed_cache")) ||
+       file.endsWith(QLatin1String(".sylpheed_mark")) ||
+       file.endsWith(QLatin1String(".mh_sequences")) ) {
+        return true;
+    }
+    return false;
+}
 
 /**
  * Import the files within a Folder.
@@ -187,8 +196,7 @@ void FilterSylpheed::importFiles( const QString& dirName)
     if(filterInfo()->shouldTerminate())
       return;
     QString _mfile = *mailFile;
-    if (!(_mfile.endsWith(QLatin1String(".sylpheed_cache")) || _mfile.endsWith(QLatin1String(".sylpheed_mark"))
-          || _mfile.endsWith(QLatin1String(".mh_sequences")) )) {
+    if (!excludeFile(_mfile)) {
       if(!generatedPath) {
         //FIXME: Why recreate all the time _path ?
 

@@ -43,6 +43,7 @@ public:
   QString localMailDirPath();
   
 private:
+  bool excludeFile(const QString& file);
   void importDirContents(const QString&);
   void importFiles(const QString&);
   void processDirectory( const QString& path);
