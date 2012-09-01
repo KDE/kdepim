@@ -40,7 +40,7 @@ FilterOpera::~FilterOpera()
 {
 }
 
-QString FilterOpera::defaultPath()
+QString FilterOpera::defaultSettingsPath()
 {
   return QDir::homePath() + QLatin1String("/.opera/");
 }
@@ -151,7 +151,7 @@ void FilterOpera::importBox(const QDir& importDir, const QStringList &files, con
 void FilterOpera::import()
 {
   /** try to go to opera mailfolder in the home of the user */
-  QString startdir = defaultPath() + QLatin1String("mail/store/");
+  QString startdir = defaultSettingsPath() + QLatin1String("mail/store/");
   QDir d( startdir );
   if ( !d.exists() ) {
     startdir = QDir::homePath();

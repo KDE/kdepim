@@ -68,12 +68,16 @@ set(libmailcommon_SRCS
   filter/filterimporter/filterimportersylpheed.cpp
   filter/filterimporter/filterimporterthunderbird.cpp
   filter/filterimporter/filterimporterprocmail.cpp
+  filter/filterimporter/filterimporterbalsa.cpp
+  filter/filterimporter/filterimporterclawsmail.cpp
   filter/filterlog.cpp
   filter/filtermanager.cpp
   filter/filtermodel.cpp
   filter/itemcontext.cpp
   filter/kmfilterdialog.cpp
   filter/mailfilter.cpp
+  filter/selectthunderbirdfilterfilesdialog.cpp
+  filter/selectthunderbirdfilterfileswidget.cpp
   foldercollection.cpp
   foldercollectionmonitor.cpp
   folderjob.cpp
@@ -106,7 +110,7 @@ qt4_add_dbus_interfaces(libmailcommon_SRCS
   ${CMAKE_SOURCE_DIR}/mailfilteragent/org.freedesktop.Akonadi.MailFilterAgent.xml
 )
 
-kde4_add_ui_files(libmailcommon_SRCS filter/filterconfigwidget.ui snippetdialog.ui)
+kde4_add_ui_files(libmailcommon_SRCS filter/filterconfigwidget.ui snippetdialog.ui filter/selectthunderbirdfilterfileswidget.ui)
 
 if(NOT WINCE)
   set(libmailcommon_SRCS ${libmailcommon_SRCS} soundtestwidget.cpp)
@@ -130,7 +134,7 @@ qt4_add_dbus_interfaces(libmailcommon_SRCS
 
 kde4_add_library(mailcommon ${LIBRARY_TYPE} ${libmailcommon_SRCS})
 
-target_link_libraries(mailcommon messageviewer messagecore messagecomposer
+target_link_libraries(mailcommon messageviewer messagecore messagecomposer mailimporter
   templateparser
   kdepim
   akonadi_next

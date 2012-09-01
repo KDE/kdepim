@@ -70,10 +70,6 @@ target_link_libraries(messagecore
   ${NEPOMUK_CORE_LIBRARY}
 )
 
-target_link_libraries(messagecore
-  ${NEPOMUK_LIBRARIES}
-)
-
 target_link_libraries(messagecore LINK_INTERFACE_LIBRARIES
   ${KDEPIMLIBS_KMIME_LIBS}
   ${KDE4_KDEUI_LIBS}

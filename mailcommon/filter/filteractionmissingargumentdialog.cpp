@@ -49,9 +49,11 @@ FilterActionMissingCollectionDialog::FilterActionMissingCollectionDialog(
   showButtonSeparator( true );
   QVBoxLayout *lay = new QVBoxLayout( mainWidget() );
   QLabel *lab = new QLabel( i18n( "Folder path was \"%1\".", argStr ) );
+  lab->setWordWrap(true);
   lay->addWidget( lab );
   if ( !list.isEmpty() ) {
     lab = new QLabel( i18n( "The following folders can be used for this filter:" ) );
+    lab->setWordWrap(true);
     lay->addWidget( lab );
     mListwidget = new QListWidget( this );
     lay->addWidget( mListwidget );
@@ -70,6 +72,7 @@ FilterActionMissingCollectionDialog::FilterActionMissingCollectionDialog(
   }
 
   QLabel *label = new QLabel( this );
+  label->setWordWrap(true);
   if(filtername.isEmpty())
     label->setText( i18n( "Please select a folder" ));
   else
@@ -185,6 +188,7 @@ FilterActionMissingIdentityDialog::FilterActionMissingIdentityDialog( const QStr
   label->setText( i18n( "Filter identity is missing. "
                         "Please select an identity to use with filter \"%1\"",
                         filtername ) );
+  label->setWordWrap(true);
   lay->addWidget( label );
   mComboBoxIdentity = new KPIMIdentities::IdentityCombo( KernelIf->identityManager(), this );
   lay->addWidget( mComboBoxIdentity );
@@ -214,6 +218,7 @@ FilterActionMissingTransportDialog::FilterActionMissingTransportDialog( const QS
   label->setText( i18n( "Filter transport is missing. "
                         "Please select a transport to use with filter \"%1\"",
                         filtername ) );
+  label->setWordWrap(true);
   lay->addWidget( label );
   mComboBoxTransport = new MailTransport::TransportComboBox( this );
   lay->addWidget( mComboBoxTransport );
@@ -243,6 +248,7 @@ FilterActionMissingTemplateDialog::FilterActionMissingTemplateDialog(
   label->setText( i18n( "Filter template is missing. "
                         "Please select a template to use with filter \"%1\"",
                         filtername ) );
+  label->setWordWrap(true);
   lay->addWidget( label );
   mComboBoxTemplate = new KComboBox( this );
   mComboBoxTemplate->addItems( templateList );
@@ -277,6 +283,7 @@ FilterActionMissingAccountDialog::FilterActionMissingAccountDialog( const QStrin
   label->setText( i18n( "Filter account is missing. "
                         "Please select account to use with filter \"%1\"",
                         filtername ) );
+  label->setWordWrap(true);
   lay->addWidget( label );
   mAccountList = new MailCommon::AccountList( this );
   mAccountList->applyOnAccount( lstAccount );
@@ -333,6 +340,7 @@ FilterActionMissingTagDialog::FilterActionMissingTagDialog(
   label->setText( i18n( "Filter tag is missing. "
                         "Please select a tag to use with filter \"%1\"",
                         filtername ) );
+  label->setWordWrap(true);
   lay->addWidget( label );
   mTagList = new QListWidget( this );
   mTagList->addItems( tagList );
@@ -372,6 +380,7 @@ FilterActionMissingSoundUrlDialog::FilterActionMissingSoundUrlDialog( const QStr
     label->setText( i18n( "Sound file is missing. "
                           "Please select a sound to use with filter \"%1\"",
                           filtername ) );
+    label->setWordWrap(true);
     lay->addWidget( label );
     mUrlWidget = new KUrlRequester( this );
     lay->addWidget( mUrlWidget );

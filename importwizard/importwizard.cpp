@@ -36,6 +36,8 @@
 #include "mailapp/mailappimportdata.h"
 #include "pmail/pmailimportdata.h"
 #include "thebat/thebatimportdata.h"
+#include "balsa/balsaimportdata.h"
+#include "claws-mail/clawsmailimportdata.h"
 
 #include <kaboutapplicationdialog.h>
 #include <kglobal.h>
@@ -107,6 +109,9 @@ ImportWizard::ImportWizard(QWidget *parent)
   addImportModule(new PMailImportData(this));
   addImportModule(new TheBatImportData(this));
 #endif
+
+  addImportModule(new BalsaImportData(this));
+  addImportModule(new ClawsMailImportData(this));
 
   // Disable the 'next button to begin with.
   setValid( currentPage(), false );

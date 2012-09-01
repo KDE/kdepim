@@ -34,7 +34,7 @@ public:
   explicit FilterSylpheed();
   ~FilterSylpheed();
 
-  static QString defaultPath();
+  static QString defaultSettingsPath();
 
   void import();
   void importMails( const QString& maildir );
@@ -43,6 +43,7 @@ public:
   QString localMailDirPath();
   
 private:
+  bool excludeFile(const QString& file);
   void importDirContents(const QString&);
   void importFiles(const QString&);
   void processDirectory( const QString& path);

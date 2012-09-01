@@ -66,7 +66,7 @@ void SylpheedAddressBook::readAddressBook( const QString& filename )
 
   QDomElement e = domElement.firstChildElement();
   if(e.isNull()) {
-    addAddressBookImportError( i18n("No contact found in %1").arg(filename) );
+    addAddressBookImportError( i18n("No contact found in %1", filename) );
     return;
   }
 

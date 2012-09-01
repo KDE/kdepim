@@ -18,6 +18,7 @@
 #include "thunderbirdsettings.h"
 #include <mailtransport/transportmanager.h>
 #include "mailcommon/mailutil.h"
+#include "importwizardutil.h"
 
 #include <kpimidentities/identity.h>
 #include <kpimidentities/signature.h>
@@ -108,7 +109,7 @@ void ThunderbirdSettings::readLdapSettings()
         qDebug()<<" Security not implemented :"<<ldap.ldapUrl.scheme();
       }
     }
-    mergeLdap(ldap);
+    ImportWizardUtil::mergeLdap(ldap);
   }
 }
 
@@ -569,10 +570,9 @@ void ThunderbirdSettings::readIdentity( const QString& account )
   const QString attachVcardStr( identity + QLatin1String( ".attach_vcard" ) );
   if ( mHashConfig.contains( attachVcardStr ) ) {
     const bool attachVcard = mHashConfig.value( attachVcardStr ).toBool();
-    if ( attachVcard ) {
-      const QString vcardContent = mHashConfig.value( identity + QLatin1String( ".escapedVCard" ) ).toString();
-      //TODO: not implemented in kmail
-    }
+    newIdentity->setAttachVcard(attachVcard);
+    const QString vcardContent = mHashConfig.value( identity + QLatin1String( ".escapedVCard" ) ).toString();
+    //TODO: write data in vcard file
   }
   const QString composeHtmlStr( identity + QLatin1String( ".compose_html" ) );
   //TODO: implement it in kmail

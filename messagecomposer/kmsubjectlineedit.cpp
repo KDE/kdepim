@@ -55,6 +55,9 @@ KMSubjectLineEdit::KMSubjectLineEdit(QWidget* parent, const QString& configFile)
   d->configFile = configFile;
   
   enableFindReplace(false);
+#ifdef HAVE_SHOWTABACTION
+  showTabAction(false);
+#endif
   setAcceptRichText(false);
   setTabChangesFocus( true );
   // widget may not be resized vertically

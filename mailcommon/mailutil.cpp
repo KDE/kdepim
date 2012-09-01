@@ -47,6 +47,15 @@
 #include "mailkernel.h"
 #include "filter/filteractionmissingargumentdialog.h"
 
+#include "mailimporter/filterbalsa.h"
+#include "mailimporter/filter_evolution.h"
+#include "mailimporter/filter_evolution_v2.h"
+#include "mailimporter/filter_evolution_v3.h"
+#include "mailimporter/filter_clawsmail.h"
+#include "mailimporter/filter_sylpheed.h"
+#include "mailimporter/filter_thunderbird.h"
+#include "mailimporter/filter_opera.h"
+
 #include <incidenceeditor-ng/globalsettings.h>
 #include <incidenceeditor-ng/incidencedialogfactory.h>
 
@@ -627,3 +636,23 @@ QString MailCommon::Util::convertFolderPathToCollectionStr( const QString& folde
   return QString::number(newFolderId);
 }
 
+bool MailCommon::Util::foundMailer()
+{
+  QStringList lst;
+  lst << MailImporter::FilterEvolution::defaultSettingsPath();
+  lst << MailImporter::FilterEvolution_v2::defaultSettingsPath();
+  lst << MailImporter::FilterEvolution_v3::defaultSettingsPath();
+  lst << MailImporter::FilterBalsa::defaultSettingsPath();
+  lst << MailImporter::FilterClawsMail::defaultSettingsPath();
+  lst << MailImporter::FilterOpera::defaultSettingsPath();
+  lst << MailImporter::FilterSylpheed::defaultSettingsPath();
+  lst << MailImporter::FilterThunderbird::defaultSettingsPath();
+
+  Q_FOREACH(const QString& path, lst) {
+    QDir directory( path );
+    if ( directory.exists() ) {
+      return true;
+    }
+  }
+  return false;
+}

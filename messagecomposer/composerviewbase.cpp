@@ -198,6 +198,12 @@ void Message::ComposerViewBase::send ( MessageSender::SendMethod method, Message
 
   const KPIMIdentities::Identity identity = identityManager()->identityForUoid( m_identityCombo->currentIdentity() );
 
+  if(identity.attachVcard()) {
+    const QString vcardFileName = identity.vCardFile();
+    if(!vcardFileName.isEmpty()) {
+      m_attachmentController->addAttachmentUrlSync(KUrl(vcardFileName));
+    }
+  }
   m_msg->setHeader( new KMime::Headers::Generic( "X-KMail-Transport", m_msg.get(), QString::number(m_transport->currentTransportId()), "utf-8" ) );
  
   m_msg->setHeader( new KMime::Headers::Generic( "X-KMail-Fcc", m_msg.get(), QString::number( m_fccCollection.id() ) , "utf-8" ) );
@@ -371,26 +377,16 @@ QList< Message::Composer* > Message::ComposerViewBase::generateCryptoMessages ()
    QList< Message::Composer* > composers;
 
   kDebug() << "filling crypto info";
-/*
-  Kleo::KeyResolver* keyResolver = new Kleo::KeyResolver(  encryptToSelf(), showKeyApprovalDialog(),
-                                                           GlobalSettings::self()->pgpAutoEncrypt(), cryptoMessageFormat(),
+  Kleo::KeyResolver* keyResolver = new Kleo::KeyResolver(  encryptToSelf(),
+                                                           showKeyApprovalDialog(),
+                                                           MessageComposer::MessageComposerSettings::self()->pgpAutoEncrypt(),
+                                                           m_cryptoMessageFormat,
                                                            encryptKeyNearExpiryWarningThresholdInDays(),
                                                            signingKeyNearExpiryWarningThresholdInDays(),
                                                            encryptRootCertNearExpiryWarningThresholdInDays(),
                                                            signingRootCertNearExpiryWarningThresholdInDays(),
                                                            encryptChainCertNearExpiryWarningThresholdInDays(),
-                                                           signingChainCertNearExpiryWarningThresholdInDays());
-  */
-  Kleo::KeyResolver* keyResolver = new Kleo::KeyResolver(  true /*encryptToSelf()*/,
-                                                           false /*showKeyApprovalDialog()*/,
-                                                           false /*GlobalSettings::self()->pgpAutoEncrypt()*/,
-                                                           m_cryptoMessageFormat,
-                                                           -1 /*encryptKeyNearExpiryWarningThresholdInDays()*/,
-                                                           -1 /*signingKeyNearExpiryWarningThresholdInDays()*/,
-                                                           -1 /*encryptRootCertNearExpiryWarningThresholdInDays()*/,
-                                                           -1 /*signingRootCertNearExpiryWarningThresholdInDays()*/,
-                                                           -1 /*encryptChainCertNearExpiryWarningThresholdInDays()*/,
-                                                           -1 /*signingChainCertNearExpiryWarningThresholdInDays()*/ );
+                                                           signingChainCertNearExpiryWarningThresholdInDays() );
 
   const KPIMIdentities::Identity &id = m_identMan->identityForUoidOrDefault( m_identityCombo->currentIdentity() );
 
@@ -976,6 +972,14 @@ void Message::ComposerViewBase::addAttachment ( const KUrl& url, const QString& 
   m_attachmentController->addAttachment( url );
 }
 
+void Message::ComposerViewBase::addAttachmentUrlSync ( const KUrl& url, const QString& comment )
+{
+  Q_UNUSED( comment );
+  kDebug() << "adding attachment with url:" << url;
+  m_attachmentController->addAttachmentUrlSync( url );
+}
+
+
 void Message::ComposerViewBase::addAttachment ( const QString& name, const QString& filename, const QString& charset, const QByteArray& data, const QByteArray& mimeType )
 {
   MessageCore::AttachmentPart::Ptr attachment = MessageCore::AttachmentPart::Ptr( new MessageCore::AttachmentPart() );
@@ -1402,6 +1406,76 @@ Message::ComposerViewBase::MissingAttachment Message::ComposerViewBase::checkFor
   }
 
   return FoundMissingAttachmentAndSending;
+}
+
+
+int Message::ComposerViewBase::encryptKeyNearExpiryWarningThresholdInDays() {
+  if ( ! MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() ) {
+    return -1;
+  }
+  const int num =
+  MessageComposer::MessageComposerSettings::self()->cryptoWarnEncrKeyNearExpiryThresholdDays();
+  return qMax( 1, num );
+}
+
+int Message::ComposerViewBase::signingKeyNearExpiryWarningThresholdInDays()
+{
+  if ( ! MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() ) {
+    return -1;
+  }
+  const int num =
+  MessageComposer::MessageComposerSettings::self()->cryptoWarnSignKeyNearExpiryThresholdDays();
+  return qMax( 1, num );
+}
+
+int Message::ComposerViewBase::encryptRootCertNearExpiryWarningThresholdInDays()
+{
+  if ( ! MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() ) {
+    return -1;
+  }
+  const int num =
+  MessageComposer::MessageComposerSettings::self()->cryptoWarnEncrRootNearExpiryThresholdDays();
+  return qMax( 1, num );
+}
+
+int Message::ComposerViewBase::signingRootCertNearExpiryWarningThresholdInDays() {
+  if ( ! MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() ) {
+    return -1;
+  }
+  const int num =
+  MessageComposer::MessageComposerSettings::self()->cryptoWarnSignRootNearExpiryThresholdDays();
+  return qMax( 1, num );
+}
+
+int Message::ComposerViewBase::encryptChainCertNearExpiryWarningThresholdInDays()
+{
+  if ( ! MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() ) {
+    return -1;
+  }
+  const int num =
+  MessageComposer::MessageComposerSettings::self()->cryptoWarnEncrChaincertNearExpiryThresholdDays();
+  return qMax( 1, num );
+}
+
+int Message::ComposerViewBase::signingChainCertNearExpiryWarningThresholdInDays()
+{
+  if ( ! MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() ) {
+    return -1;
+  }
+  const int num =
+  MessageComposer::MessageComposerSettings::self()->cryptoWarnSignChaincertNearExpiryThresholdDays();;
+  return qMax( 1, num );
+}
+
+bool Message::ComposerViewBase::encryptToSelf()
+{
+  // return !Kpgp::Module::getKpgp() || Kpgp::Module::getKpgp()->encryptToSelf();
+  return MessageComposer::MessageComposerSettings::self()->cryptoEncryptToSelf();
+}
+
+bool Message::ComposerViewBase::showKeyApprovalDialog()
+{
+  return MessageComposer::MessageComposerSettings::self()->cryptoShowKeysForApproval();
 }
 
 

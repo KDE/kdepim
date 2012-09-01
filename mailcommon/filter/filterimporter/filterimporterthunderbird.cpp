@@ -42,7 +42,7 @@ FilterImporterThunderbird::~FilterImporterThunderbird()
 {
 }
 
-QString FilterImporterThunderbird::defaultPath()
+QString FilterImporterThunderbird::defaultFiltersSettingsPath()
 {
   return QString::fromLatin1( "%1/.thunderbird/" ).arg( QDir::homePath() );
 }

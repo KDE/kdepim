@@ -17,8 +17,8 @@
     Boston, MA 02110-1301, USA.
 */
 
-#ifndef KSIEVEUI_EXPORT_H
-#define KSIEVEUI_EXPORT_H
+#ifndef KSIEVE_KSIEVEUI_EXPORT_H
+#define KSIEVE_KSIEVEUI_EXPORT_H
 
 /* needed for KDE_EXPORT and KDE_IMPORT macros */
 #include <kdemacros.h>
@@ -28,10 +28,10 @@
    /* No export/import for static libraries */
 #  define KSIEVEUI_EXPORT
 # elif defined(MAKE_KSIEVEUI_LIB)
-   /* We are building this library */ 
+   /* We are building this library */
 #  define KSIEVEUI_EXPORT KDE_EXPORT
 # else
-   /* We are using this library */ 
+   /* We are using this library */
 #  define KSIEVEUI_EXPORT KDE_IMPORT
 # endif
 #endif

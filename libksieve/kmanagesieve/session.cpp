@@ -18,6 +18,8 @@
     02110-1301, USA.
 */
 
+//krazy:excludeall=null since used by SASL (C library)
+
 #include "session.h"
 #include "response.h"
 #include "sievejob_p.h"
@@ -109,10 +111,12 @@ void Session::dataReceived()
 
   while ( m_socket->canReadLine() ) {
     QByteArray line = m_socket->readLine();
-    if ( line.endsWith( "\r\n" ) )
+    if ( line.endsWith( "\r\n" ) ) { //krazy:exclude=strings
       line.chop( 2 );
-    if ( line.isEmpty() )
+    }
+    if ( line.isEmpty() ) {
       continue; // ignore CRLF after data blocks
+    }
     kDebug() << "S: " << line;
     Response r;
     if ( !r.parseResponse( line ) ) {
@@ -163,7 +167,7 @@ void Session::processResponse(const KManageSieve::Response& response, const QByt
     case PostTlsCapabilities:
       if ( response.type() == Response::Action ) {
         if ( response.operationSuccessful() ) {
-          kDebug() << "Sieve server ready & awaiting authentication." << endl;
+          kDebug() << "Sieve server ready & awaiting authentication.";
           if ( m_state == PreTlsCapabilities ) {
             if ( !allowUnencrypted() && !QSslSocket::supportsSsl() ) {
               m_errorMsg = KIO::buildErrorString( KIO::ERR_SLAVE_DEFINED, i18n("Can not use TLS since the underlying Qt library does not support it.") );
@@ -194,7 +198,7 @@ void Session::processResponse(const KManageSieve::Response& response, const QByt
             startAuthentication();
           }
         } else {
-          kDebug() << "Unknown action " << response.action() << "." << endl;
+          kDebug() << "Unknown action " << response.action() << ".";
         }
       } else if ( response.key() == "IMPLEMENTATION" ) {
         m_implementation = QString::fromLatin1( response.value() );
@@ -210,7 +214,7 @@ void Session::processResponse(const KManageSieve::Response& response, const QByt
         kDebug() << "Server supports TLS";
         m_supportsStartTls = true;
       } else {
-        kDebug() << "Unrecognised key " << response.key() << endl;
+        kDebug() << "Unrecognised key " << response.key();
       }
       break;
     case StartTls:
@@ -415,7 +419,7 @@ bool Session::saslInteract(void* in)
 
   KIO::AuthInfo ai;
   ai.url = m_url;
-  ai.username = m_url.user();
+  ai.username = m_url.userName();
   ai.password = m_url.password();
   ai.keepPassword = true;
   ai.caption = i18n("Sieve Authentication Details");
@@ -426,27 +430,31 @@ bool Session::saslInteract(void* in)
   //window for getting this info
   for ( ; interact->id != SASL_CB_LIST_END; interact++ ) {
     if ( interact->id == SASL_CB_AUTHNAME || interact->id == SASL_CB_PASS ) {
-      if ( m_url.user().isEmpty() || m_url.password().isEmpty()) {
+      if ( ai.username.isEmpty() || ai.password.isEmpty()) {
 
-        KPasswordDialog dlg( 0, KPasswordDialog::ShowUsernameLine | KPasswordDialog::ShowKeepPassword );
-        dlg.setUsername( ai.username );
-        dlg.setPassword( ai.password );
-        dlg.setKeepPassword( ai.keepPassword );
-        dlg.setPrompt( ai.prompt );
-        dlg.setUsernameReadOnly( ai.readOnly );
-        dlg.setCaption( ai.caption );
-        dlg.addCommentLine( ai.commentLabel, ai.comment );
+        QPointer<KPasswordDialog> dlg =
+          new KPasswordDialog(
+            0,
+            KPasswordDialog::ShowUsernameLine | KPasswordDialog::ShowKeepPassword
+            );
+        dlg->setUsername( ai.username );
+        dlg->setPassword( ai.password );
+        dlg->setKeepPassword( ai.keepPassword );
+        dlg->setPrompt( ai.prompt );
+        dlg->setUsernameReadOnly( ai.readOnly );
+        dlg->setCaption( ai.caption );
+        dlg->addCommentLine( ai.commentLabel, ai.comment );
 
-        if ( dlg.exec() != QDialog::Accepted )
-        {
-          // calling error() below is wrong for two reasons:
-          // - ERR_ABORTED is too harsh
-          // - higher layers already call error() and that can't happen twice.
-                //error(ERR_ABORTED, i18n("No authentication details supplied."));
-                return false;
+        bool gotIt = false;
+        if ( dlg->exec() ) {
+          m_url.setUserName( dlg->username() );
+          m_url.setPassword( dlg->password() );
+          gotIt = true;
         }
-        m_url.setUserName( ai.username );
-        m_url.setPassword( ai.password );
+        delete dlg;
+        if ( !gotIt ) {
+          return false;
+        }
       }
       break;
     }

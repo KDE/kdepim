@@ -14,7 +14,7 @@
       <default>993</default>
     </entry>
     <entry name="UserName" type="String">
-      <label>Username</label>
+      <label context="@label username for sieve login">Username</label>
     </entry>
     <entry name="Safety" type="String">
       <label>Defines the encryption type to use</label>

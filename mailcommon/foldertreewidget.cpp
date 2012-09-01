@@ -273,6 +273,7 @@ void FolderTreeWidget::slotGeneralFontChanged()
 void FolderTreeWidget::slotGeneralPaletteChanged()
 {
   d->readableproxy->updatePalette();
+  d->folderTreeView->updatePalette();
 }
 
 void FolderTreeWidget::readConfig()

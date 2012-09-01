@@ -203,14 +203,15 @@ KABC::Addressee::List VCardXXPort::importContacts() const
           i18nc( "@title:window", "Select vCard to Import" ) );
     }
 
-    if ( urls.count() == 0 ) {
+    if ( urls.isEmpty() ) {
       return addrList;
     }
 
     const QString caption( i18nc( "@title:window", "vCard Import Failed" ) );
     bool anyFailures = false;
 
-    for ( int i = 0; i < urls.count(); ++i ) {
+    const int numberOfUrl(urls.count());
+    for ( int i = 0; i < numberOfUrl; ++i ) {
       const KUrl url = urls.at( i );
 
       if ( KIO::NetAccess::download( url, fileName, parentWidget() ) ) {
@@ -220,7 +221,7 @@ KABC::Addressee::List VCardXXPort::importContacts() const
         if ( file.open( QIODevice::ReadOnly ) ) {
           const QByteArray data = file.readAll();
           file.close();
-          if ( data.size() > 0 ) {
+          if ( !data.isEmpty() ) {
             addrList += parseVCard( data );
           }
 
@@ -314,7 +315,8 @@ KABC::Addressee::List VCardXXPort::filterContacts( const KABC::Addressee::List &
   }
 
   KABC::Addressee::List::ConstIterator it;
-  for ( it = addrList.begin(); it != addrList.end(); ++it ) {
+  KABC::Addressee::List::ConstIterator end(addrList.end());
+  for ( it = addrList.begin(); it != end; ++it ) {
     KABC::Addressee addr;
 
     addr.setUid( (*it).uid() );

@@ -148,3 +148,5 @@ QString FilterActionSetTransport::displayString() const
   }
   return label() + QLatin1String( " \"" ) + ( mTransportName.isEmpty() ? Qt::escape( argsAsString() ) : mTransportName ) + QLatin1String( "\"" );
 }
+
+#include "filteractionsettransport.moc"

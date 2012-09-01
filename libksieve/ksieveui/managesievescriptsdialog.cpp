@@ -31,7 +31,7 @@ bool ItemRadioButton::mTreeWidgetIsBeingCleared = false;
 ManageSieveScriptsDialog::ManageSieveScriptsDialog( QWidget * parent, const char * name )
   : QDialog( parent ),
     mSieveEditor( 0 ),
-    mIsNewScript( false ), 
+    mIsNewScript( false ),
     mWasActive( false )
 {
   setWindowTitle( i18n( "Manage Sieve Scripts" ) );
@@ -46,7 +46,7 @@ ManageSieveScriptsDialog::ManageSieveScriptsDialog( QWidget * parent, const char
   QVBoxLayout * vlay = new QVBoxLayout( frame );
   vlay->setSpacing( 0 );
   vlay->setMargin( 0 );
-  
+
   mListView = new TreeWidgetWithContextMenu( frame);
   mListView->setHeaderLabel( i18n( "Available Scripts" ) );
   mListView->setRootIsDecorated( true );
@@ -65,14 +65,14 @@ ManageSieveScriptsDialog::ManageSieveScriptsDialog( QWidget * parent, const char
   QHBoxLayout *buttonLayout = new QHBoxLayout;
   vlay->addLayout( buttonLayout );
 
-  mNewScript = new KPushButton( i18n( "New..." ) );
+  mNewScript = new KPushButton( i18nc( "create a new sieve script", "New..." ) );
   connect( mNewScript, SIGNAL(clicked()), SLOT(slotNewScript()) );
   buttonLayout->addWidget( mNewScript );
-  
+
   mEditScript = new KPushButton( i18n( "Edit..." ) );
   connect( mEditScript, SIGNAL(clicked()), SLOT(slotEditScript()) );
   buttonLayout->addWidget( mEditScript );
-  
+
   mDeleteScript = new KPushButton( i18n( "Delete" ) );
   connect( mDeleteScript, SIGNAL(clicked()), SLOT(slotDeleteScript()) );
   buttonLayout->addWidget( mDeleteScript );
@@ -80,11 +80,11 @@ ManageSieveScriptsDialog::ManageSieveScriptsDialog( QWidget * parent, const char
   mDeactivateScript = new KPushButton( i18n( "Deactivate" ) );
   connect( mDeactivateScript, SIGNAL(clicked()), SLOT(slotDeactivateScript()) );
   buttonLayout->addWidget( mDeactivateScript );
-  
+
   KPushButton *mClose = new KPushButton( KStandardGuiItem::close() );
   connect( mClose, SIGNAL(clicked()), this, SLOT(accept()) );
   buttonLayout->addWidget( mClose );
-  
+
   resize( sizeHint().width(), sizeHint().height() );
   slotRefresh();
 }
@@ -440,19 +440,20 @@ void ManageSieveScriptsDialog::slotNewScript()
 
   QButtonGroup *buttonGroup = mButtonGroups.value( currentItem );
 
-  if ( buttonGroup )
-  {
+  if ( buttonGroup ) {
     QList<QAbstractButton *> group = buttonGroup->buttons();
     const int numberOfGroup( group.count() );
-    for ( int i = 0; i < numberOfGroup; ++i )
-    {
-      if ( group.at( i )->text().replace( "&","" ) == name ) {
-        KMessageBox::error( this, i18n( "Script name already used \"%1\".", name ), i18n( "New Script" ) );
+    for ( int i = 0; i < numberOfGroup; ++i ) {
+      if ( group.at( i )->text().remove( '&' ) == name ) {
+        KMessageBox::error(
+          this,
+          i18n( "Script name already used \"%1\".", name ),
+          i18n( "New Script" ) );
         return;
       }
     }
   }
-  
+
   QTreeWidgetItem *newItem =
     new QTreeWidgetItem( currentItem );
   addRadioButton( newItem, name );

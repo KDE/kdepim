@@ -33,7 +33,7 @@ class FilterImporterProcmail : public FilterImporterAbstract
   public:
     explicit FilterImporterProcmail( QFile *file );
     ~FilterImporterProcmail();
-    static QString defaultPath();
+    static QString defaultFiltersSettingsPath();
 
   private:
   MailCommon::MailFilter *parseLine( QTextStream &stream, QString line, MailCommon::MailFilter *filter );

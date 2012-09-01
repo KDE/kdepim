@@ -16,6 +16,11 @@
 */
 
 #include "operaaddressbook.h"
+
+#include <KABC/Addressee>
+#include <kabc/contactgroup.h>
+
+
 #include <QDebug>
 #include <QFile>
 
@@ -29,16 +34,46 @@ OperaAddressBook::OperaAddressBook(const QString &filename, ImportWizard *parent
   }
 
   QTextStream stream(&file);
+  bool foundContact = false;
+  KABC::Addressee *contact = 0;
   while ( !stream.atEnd() ) {
-    const QString line = stream.readLine();
+    QString line = stream.readLine();
     if(line == QLatin1String("#CONTACT")) {
-        readContact();
+        appendContact(contact);
+        foundContact = true;
     } else if(line == QLatin1String("#FOLDER")) {
+        appendContact(contact);
+        foundContact = false;
         //TODO
-    } else {
-        qDebug()<<" line :"<<line;
+    } else if( foundContact ) {
+        line = line.trimmed();
+        if(!contact) {
+            contact = new KABC::Addressee;
+        }
+        if(line.startsWith(QLatin1String("ID"))) {
+            //Nothing
+        } else if(line.startsWith(QLatin1String("NAME"))) {
+            contact->setName(line.remove(QLatin1String("NAME=")));
+        } else if(line.startsWith(QLatin1String("URL"))) {
+            contact->setUrl(KUrl(line.remove(QLatin1String("URL="))));
+        } else if(line.startsWith(QLatin1String("DESCRIPTION"))) {
+            contact->setNote(line.remove(QLatin1String("DESCRIPTION=")));
+        } else if(line.startsWith(QLatin1String("PHONE"))) {
+            contact->insertPhoneNumber( KABC::PhoneNumber( line.remove(QLatin1String("PHONE=")), KABC::PhoneNumber::Home ) );
+        } else if(line.startsWith(QLatin1String("FAX"))) {
+            contact->insertPhoneNumber( KABC::PhoneNumber( line.remove(QLatin1String("FAX=")), KABC::PhoneNumber::Fax ) );
+        } else if(line.startsWith(QLatin1String("POSTALADDRESS"))) {
+            //TODO
+        } else if(line.startsWith(QLatin1String("PICTUREURL"))) {
+            //TODO
+        } else if(line.startsWith(QLatin1String("ICON"))) {
+            //TODO
+        } else if(line.startsWith(QLatin1String("SHORT NAME"))) {
+            contact->setNickName(line.remove(QLatin1String("SHORT NAME=")));
+        }
     }
   }
+  appendContact(contact);
 }
 
 OperaAddressBook::~OperaAddressBook()
@@ -46,7 +81,11 @@ OperaAddressBook::~OperaAddressBook()
 
 }
 
-void OperaAddressBook::readContact()
+void OperaAddressBook::appendContact(KABC::Addressee *contact)
 {
-
+    if(contact) {
+        createContact( *contact );
+        delete contact;
+        contact = 0;
+    }
 }

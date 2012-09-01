@@ -18,6 +18,7 @@ abstractsettings.cpp
 abstractaddressbook.cpp
 abstractcalendar.cpp
 importcalendarpage.cpp
+importwizardutil.cpp
 thunderbird/thunderbirdimportdata.cpp
 thunderbird/thunderbirdsettings.cpp
 thunderbird/thunderbirdaddressbook.cpp
@@ -25,6 +26,7 @@ thunderbird/addressbook/MorkParser.cpp
 sylpheed/sylpheedimportdata.cpp
 sylpheed/sylpheedsettings.cpp
 sylpheed/sylpheedaddressbook.cpp
+sylpheed/sylpheedsettingsutils.cpp
 evolutionv3/evolutionv3importdata.cpp
 evolutionv3/evolutionsettings.cpp
 evolutionv3/evolutioncalendar.cpp
@@ -39,10 +41,17 @@ oe/oeimportdata.cpp
 mailapp/mailappimportdata.cpp
 pmail/pmailimportdata.cpp
 thebat/thebatimportdata.cpp
+balsa/balsaimportdata.cpp
+balsa/balsasettings.cpp
+balsa/balsaaddressbook.cpp
+claws-mail/clawsmailimportdata.cpp
+claws-mail/clawsmailsettings.cpp
+claws-mail/clawsmailaddressbook.cpp
 )
 
 include_directories(${CMAKE_SOURCE_DIR}/mailimporter 
                     ${CMAKE_SOURCE_DIR}/mailcommon 
+		    ${CMAKE_SOURCE_DIR}/mailcommon/filter/
                     ${NEPOMUK_CORE_INCLUDE_DIR}
                     ${SOPRANO_INCLUDE_DIR})
 
@@ -71,6 +80,7 @@ target_link_libraries(importwizard
   mailcommon
   kdepim
   messagecomposer
+  messageviewer
 )
 
 install(TARGETS importwizard  ${INSTALL_TARGETS_DEFAULT_ARGS} )

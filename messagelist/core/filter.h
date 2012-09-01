@@ -70,13 +70,13 @@ public:
    * Returns the currently set status mask
    */
   Akonadi::MessageStatus status() const
-   { return mStatus; };
+   { return mStatus; }
 
   /**
    * Sets the status mask for this filter.
    */
   void setStatus( const Akonadi::MessageStatus &status )
-   { mStatus = status; };
+   { mStatus = status; }
 
   /**
    * Sets the current folder of this filter.
@@ -87,7 +87,7 @@ public:
    * Returns the currently set search string.
    */
   const QString & searchString() const
-   { return mSearchString; };
+   { return mSearchString; }
 
   /**
    * Sets the search string for this filter.
@@ -98,13 +98,13 @@ public:
    * Returns the currently set MessageItem::Tag id
    */
   const QString & tagId() const
-   { return mTagId; };
+   { return mTagId; }
 
   /**
    * Sets the id of a MessageItem::Tag that the matching messages must contain.
    */
   void setTagId( const QString &tagId )
-   { mTagId = tagId; };
+   { mTagId = tagId; }
 
   /**
    * Clears this filter (sets status to 0, search string and tag id to empty strings)

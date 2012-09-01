@@ -103,6 +103,7 @@ public:
    * Add the given attachment to the message.
    */
   void addAttachment( const KUrl &url, const QString &comment );
+  void addAttachmentUrlSync ( const KUrl& url, const QString& comment );
   void addAttachment ( const QString& name, const QString& filename, const QString& charset, const QByteArray& data, const QByteArray& mimeType );
   void addAttachmentPart( KMime::Content* part );
 
@@ -200,6 +201,18 @@ public:
    *         FoundMissingAttachmentAndCancel, if mail might miss attachment and cancel sending
    */
   ComposerViewBase::MissingAttachment checkForMissingAttachments( const QStringList &attachmentKeywords ) ;
+
+  /**
+   * Helper methods to read from config various encryption settings
+   */
+  inline bool encryptToSelf();
+  inline bool showKeyApprovalDialog();
+  inline int encryptKeyNearExpiryWarningThresholdInDays();
+  inline int signingKeyNearExpiryWarningThresholdInDays();
+  inline int encryptRootCertNearExpiryWarningThresholdInDays();
+  inline int signingRootCertNearExpiryWarningThresholdInDays();
+  inline int encryptChainCertNearExpiryWarningThresholdInDays();
+  inline int signingChainCertNearExpiryWarningThresholdInDays();
 
 public slots:
 

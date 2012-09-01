@@ -41,7 +41,7 @@ FilterEvolution::~FilterEvolution()
 {
 }
 
-QString FilterEvolution::defaultPath()
+QString FilterEvolution::defaultSettingsPath()
 {
   return QDir::homePath() + QLatin1String( "/evolution/local" );
 }
@@ -50,7 +50,7 @@ QString FilterEvolution::defaultPath()
 void FilterEvolution::import()
 {
   // We ask the user to choose Evolution's root directory.
-  QString evolDir = defaultPath();
+  QString evolDir = defaultSettingsPath();
   QDir d( evolDir );
   if ( !d.exists() ) {
     evolDir = QDir::homePath();

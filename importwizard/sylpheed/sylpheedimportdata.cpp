@@ -33,7 +33,7 @@
 SylpheedImportData::SylpheedImportData(ImportWizard*parent)
   :AbstractImporter(parent)
 {
-  mPath = MailImporter::FilterSylpheed::defaultPath();
+  mPath = MailImporter::FilterSylpheed::defaultSettingsPath();
 }
 
 SylpheedImportData::~SylpheedImportData()
@@ -58,7 +58,8 @@ bool SylpheedImportData::importSettings()
 {
   const QString accountFile = mPath + QLatin1String("/accountrc");
   if ( QFile( accountFile ).exists() ) {
-    SylpheedSettings account( accountFile, mPath, mImportWizard );
+    SylpheedSettings account( mImportWizard );
+    account.importSettings(accountFile, mPath);
   } else {
     addImportSettingsInfo(i18n("Sylpheed settings not found."));
   }

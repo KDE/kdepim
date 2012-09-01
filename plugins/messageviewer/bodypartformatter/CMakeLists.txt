@@ -12,7 +12,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
 if(NOT WINCE)
   set(messageviewer_bodypartformatter_text_vcard_PART_SRCS text_vcard.cpp)
   kde4_add_plugin(messageviewer_bodypartformatter_text_vcard ${messageviewer_bodypartformatter_text_vcard_PART_SRCS})
-  target_link_libraries(messageviewer_bodypartformatter_text_vcard ${KDE4_KDECORE_LIBS} ${KDEPIMLIBS_KMIME_LIBS} ${KDEPIMLIBS_KABC_LIBS} kdepim)
+  target_link_libraries(messageviewer_bodypartformatter_text_vcard ${KDE4_KDECORE_LIBS} ${KDEPIMLIBS_KMIME_LIBS} ${KDEPIMLIBS_KABC_LIBS} kdepim messageviewer)
   install(TARGETS messageviewer_bodypartformatter_text_vcard DESTINATION ${PLUGIN_INSTALL_DIR})
 endif()
 

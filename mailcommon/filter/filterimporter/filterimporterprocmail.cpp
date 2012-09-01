@@ -44,7 +44,7 @@ FilterImporterProcmail::~FilterImporterProcmail()
 {
 }
 
-QString FilterImporterProcmail::defaultPath()
+QString FilterImporterProcmail::defaultFiltersSettingsPath()
 {
   return QDir::homePath();
 }

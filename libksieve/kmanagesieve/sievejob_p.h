@@ -12,8 +12,8 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
-#ifndef KMANAGESIEVE_SIEVEJOB_P_H
-#define KMANAGESIEVE_SIEVEJOB_P_H
+#ifndef KSIEVE_KMANAGESIEVE_SIEVEJOB_P_H
+#define KSIEVE_KMANAGESIEVE_SIEVEJOB_P_H
 
 #include "sievejob.h"
 #include "session.h"

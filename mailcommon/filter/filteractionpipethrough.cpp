@@ -29,7 +29,7 @@ FilterAction* FilterActionPipeThrough::newAction()
 }
 
 FilterActionPipeThrough::FilterActionPipeThrough( QObject *parent )
-  : FilterActionWithCommand( "filter app", i18n( "Pipe Through" ), parent )
+  : FilterActionWithCommand( "filter app", i18nc("pipe through with command", "Pipe Through" ), parent )
 {
 }
 
@@ -43,3 +43,5 @@ SearchRule::RequiredPart FilterActionPipeThrough::requiredPart() const
   return SearchRule::CompleteMessage;
 }
 
+
+#include "filteractionpipethrough.moc"

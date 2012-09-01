@@ -36,8 +36,8 @@
 **
 *******************************************************************************/
 
-#ifndef KSIEVEUI_UTIL_H
-#define KSIEVEUI_UTIL_H
+#ifndef KSIEVE_KSIEVEUI_UTIL_H
+#define KSIEVE_KSIEVEUI_UTIL_H
 
 #include "ksieveui_export.h"
 

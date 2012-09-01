@@ -32,8 +32,8 @@
     your version.
 */
 
-#ifndef __KSIEVE_IMPL_PARSER_H__
-#define __KSIEVE_IMPL_PARSER_H__
+#ifndef KSIEVE_IMPL_PARSER_H
+#define KSIEVE_IMPL_PARSER_H
 
 #include <ksieve/parser.h>
 
@@ -115,4 +115,4 @@ namespace KSieve {
 
 }
 
-#endif // __KSIEVE_IMPL_PARSER_H__
+#endif

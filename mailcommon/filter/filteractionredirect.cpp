@@ -69,3 +69,5 @@ SearchRule::RequiredPart FilterActionRedirect::requiredPart() const
 {
   return SearchRule::CompleteMessage;
 }
+
+#include "filteractionredirect.moc"

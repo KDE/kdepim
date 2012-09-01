@@ -331,7 +331,7 @@
         </widget>
        </item>
        <item>
-        <widget class="Nepomuk::TagWidget" name="tagWidget" native="true"/>
+        <widget class="Nepomuk2::TagWidget" name="tagWidget" native="true"/>
        </item>
        <item>
         <widget class="QLabel" name="label_8">
@@ -469,9 +469,9 @@
    <header location="global">messageviewer/viewer.h</header>
   </customwidget>
   <customwidget>
-   <class>Nepomuk::TagWidget</class>
+   <class>Nepomuk2::TagWidget</class>
    <extends>QWidget</extends>
-   <header location="global">nepomuk/kmetadatatagwidget.h</header>
+   <header location="global">nepomuk2/tagwidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
