@@ -51,7 +51,7 @@ QString FilterSylpheed::defaultSettingsPath()
 
 QString FilterSylpheed::localMailDirPath()
 {
-  QFile folderListFile( defaultSettingsPath() + QLatin1String( "/folderlist.xml" ) );
+  QFile folderListFile( FilterSylpheed::defaultSettingsPath() + QLatin1String( "/folderlist.xml" ) );
   if ( folderListFile.exists() ) {
     QDomDocument doc;
     QString errorMsg;

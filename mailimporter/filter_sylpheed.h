@@ -40,10 +40,10 @@ public:
   void importMails( const QString& maildir );
 
   /* return local mail dir from folderlist.xml*/
-  QString localMailDirPath();
-  
+  virtual QString localMailDirPath();
+  virtual bool excludeFile(const QString& file);
 private:
-  bool excludeFile(const QString& file);
+
   void importDirContents(const QString&);
   void importFiles(const QString&);
   void processDirectory( const QString& path);

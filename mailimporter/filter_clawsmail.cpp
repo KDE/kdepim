@@ -52,7 +52,7 @@ QString FilterClawsMail::defaultSettingsPath()
 
 QString FilterClawsMail::localMailDirPath()
 {
-  QFile folderListFile( defaultSettingsPath() + QLatin1String( "/folderlist.xml" ) );
+  QFile folderListFile( FilterClawsMail::defaultSettingsPath() + QLatin1String( "/folderlist.xml" ) );
   if ( folderListFile.exists() ) {
     QDomDocument doc;
     QString errorMsg;
@@ -163,6 +163,16 @@ void FilterClawsMail::importDirContents( const QString& dirName)
   processDirectory( dirName );
 }
 
+bool FilterClawsMail::excludeFile(const QString& file)
+{
+    if(file.endsWith(QLatin1String(".claws_cache")) ||
+       file.endsWith(QLatin1String(".claws_mark")) ||
+       file.endsWith(QLatin1String(".mh_sequences")) ) {
+        return true;
+    }
+    return false;
+}
+
 
 /**
  * Import the files within a Folder.
@@ -188,8 +198,7 @@ void FilterClawsMail::importFiles( const QString& dirName)
     if(filterInfo()->shouldTerminate())
       return;
     QString _mfile = *mailFile;
-    if (!(_mfile.endsWith(QLatin1String(".claws_cache")) || _mfile.endsWith(QLatin1String(".claws_mark"))
-          || _mfile.endsWith(QLatin1String(".mh_sequences")) )) {
+    if (!excludeFile(_mfile)) {
       if(!generatedPath) {
         //FIXME: Why recreate all the time _path ?
 
