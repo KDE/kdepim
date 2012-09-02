@@ -172,6 +172,16 @@ bool FilterSylpheed::excludeFile(const QString& file)
     return false;
 }
 
+QString FilterSylpheed::defaultInstallFolder() const
+{
+  return i18nc("define folder name where we will import sylpheed mails", "Sylpheed-Import") + QLatin1Char('/');
+}
+
+QString FilterSylpheed::markFile() const
+{
+  return QString::fromLatin1(".sylpheed_mark");
+}
+
 /**
  * Import the files within a Folder.
  * @param info Information storage for the operation.
@@ -186,10 +196,12 @@ void FilterSylpheed::importFiles( const QString& dirName)
   QHash<QString,unsigned long> msgflags;
 
   QDir importDir (dirName);
+  const QString defaultInstallPath = defaultInstallFolder();
+
   const QStringList files = importDir.entryList(QStringList("[^\\.]*"), QDir::Files, QDir::Name);
   int currentFile = 1, numFiles = files.size();
 
-  readMarkFile(dir.filePath(".sylpheed_mark"), msgflags);
+  readMarkFile(dir.filePath(markFile()), msgflags);
 
   QStringList::ConstIterator end( files.constEnd() );
   for ( QStringList::ConstIterator mailFile = files.constBegin(); mailFile != end; ++mailFile, ++currentFile) {
@@ -198,9 +210,7 @@ void FilterSylpheed::importFiles( const QString& dirName)
     QString _mfile = *mailFile;
     if (!excludeFile(_mfile)) {
       if(!generatedPath) {
-        //FIXME: Why recreate all the time _path ?
-
-        _path = i18nc("define folder name where we will import sylpheed mails", "Sylpheed-Import") + QLatin1Char('/');
+        _path = defaultInstallPath;
         QString _tmp = dir.filePath(*mailFile);
         _tmp = _tmp.remove(_tmp.length() - _mfile.length() -1, _mfile.length()+1);
         _path += _tmp.remove( mailDir(), Qt::CaseSensitive );

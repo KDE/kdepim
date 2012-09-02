@@ -48,6 +48,11 @@ public:
   QString name() const;
   QString info() const;
 
+  void setAuthor(const QString&);
+  void setName(const QString&);
+  void setInfo(const QString&);
+
+
   void clear();
   void setFilterInfo( MailImporter::FilterInfo* info );
 
