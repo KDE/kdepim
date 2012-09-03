@@ -753,7 +753,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
       QObject::connect( handler, SIGNAL(finished(Akonadi::InvitationHandler::Result,QString)),
                         handler, SLOT(deleteLater()) );
 
-      handler->handleInvitation( receiver, iCal, type );
+      handler->processiTIPMessage( receiver, iCal, type );
       // TODO: catch signal, and do error handling
       return true;
     }
