@@ -315,7 +315,7 @@ AggregationListWidgetItem * ConfigureAggregationsDialog::Private::findAggregatio
 }
 
 
-QString ConfigureAggregationsDialog::Private::uniqueNameForAggregation( QString baseName, Aggregation * skipAggregation )
+QString ConfigureAggregationsDialog::Private::uniqueNameForAggregation( const QString& baseName, Aggregation * skipAggregation )
 {
   QString ret = baseName;
   if( ret.isEmpty() )

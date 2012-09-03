@@ -55,7 +55,7 @@ public:
   // Private implementation
 
   void fillAggregationList();
-  QString uniqueNameForAggregation( QString baseName, Core::Aggregation * skipAggregation = 0 );
+  QString uniqueNameForAggregation( const QString& baseName, Core::Aggregation * skipAggregation = 0 );
   AggregationListWidgetItem * findAggregationItemByName( const QString &name, Core::Aggregation * skipAggregation = 0 );
   AggregationListWidgetItem * findAggregationItemByAggregation( Core::Aggregation * set );
   AggregationListWidgetItem * findAggregationItemById( const QString &aggregationId );
