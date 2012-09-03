@@ -364,16 +364,25 @@ void ConfigureAggregationsDialog::Private::cloneAggregationButtonClicked()
 
 void ConfigureAggregationsDialog::Private::deleteAggregationButtonClicked()
 {
-  AggregationListWidgetItem * item = dynamic_cast< AggregationListWidgetItem * >( mAggregationList->currentItem() );
-  if ( !item )
+  QList<QListWidgetItem *> list = mAggregationList->selectedItems();
+  if(list.isEmpty()) {
     return;
-  if ( mAggregationList->count() < 2 )
-    return; // no way: desperately try to keep at least one option set alive :)
+  }
 
   mEditor->editAggregation( 0 ); // forget it
+  Q_FOREACH(QListWidgetItem * it, list) {
+    AggregationListWidgetItem * item = dynamic_cast< AggregationListWidgetItem * >( it );
+    if ( !item )
+      return;
+    if(!item->aggregation()->readOnly()) {
+      delete item; // this will trigger aggregationListCurrentItemChanged()
+    }
+    if ( mAggregationList->count() < 2 )
+      break; // no way: desperately try to keep at least one option set alive :)
+  }
 
-  delete item; // this will trigger aggregationListCurrentItemChanged()
-  mDeleteAggregationButton->setEnabled( item && !item->aggregation()->readOnly() );
+  AggregationListWidgetItem *newItem = dynamic_cast< AggregationListWidgetItem * >(mAggregationList->currentItem());
+  mDeleteAggregationButton->setEnabled( newItem && !newItem->aggregation()->readOnly() );
 }
 
 void ConfigureAggregationsDialog::Private::importAggregationButtonClicked()
