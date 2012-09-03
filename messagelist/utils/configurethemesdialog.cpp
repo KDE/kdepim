@@ -101,6 +101,7 @@ ConfigureThemesDialog::ConfigureThemesDialog( QWidget *parent )
   QGridLayout * g = new QGridLayout( base );
 
   d->mThemeList = new ThemeListWidget( base );
+  d->mThemeList->setSelectionMode(QAbstractItemView::ExtendedSelection);
   d->mThemeList->setSortingEnabled( true );
   g->addWidget( d->mThemeList, 0, 0, 7, 1 );
 
@@ -255,10 +256,13 @@ void ConfigureThemesDialog::Private::themeListCurrentItemChanged( QListWidgetIte
 {
   commitEditor();
 
+  const int numberOfSelectedItem(mThemeList->selectedItems().count());
+
   ThemeListWidgetItem * item = cur ? dynamic_cast< ThemeListWidgetItem * >( cur ) : 0;
   mDeleteThemeButton->setEnabled( item && !item->theme()->readOnly() );
-  mCloneThemeButton->setEnabled( item );
+  mCloneThemeButton->setEnabled( numberOfSelectedItem == 1 );
   mEditor->editTheme( item ? item->theme() : 0 );
+  mImportThemeButton->setEnabled( numberOfSelectedItem > 0 );
 
   if ( item && !item->isSelected() )
     item->setSelected( true ); // make sure it's true
@@ -340,6 +344,7 @@ QString ConfigureThemesDialog::Private::uniqueNameForTheme( const QString& baseN
 
 void ConfigureThemesDialog::Private::newThemeButtonClicked()
 {
+  const int numberOfSelectedItem(mThemeList->selectedItems().count());
   Theme emptyTheme;
   emptyTheme.setName( uniqueNameForTheme( i18n( "New Theme" ) ) );
   Theme::Column * col = new Theme::Column();
@@ -352,7 +357,8 @@ void ConfigureThemesDialog::Private::newThemeButtonClicked()
 
   mThemeList->setCurrentItem( item );
   mDeleteThemeButton->setEnabled( item && !item->theme()->readOnly() );
-
+  mExportThemeButton->setEnabled( !mThemeList->selectedItems().isEmpty() );
+  mCloneThemeButton->setEnabled(numberOfSelectedItem == 1);
 }
 
 void ConfigureThemesDialog::Private::cloneThemeButtonClicked()
@@ -370,6 +376,7 @@ void ConfigureThemesDialog::Private::cloneThemeButtonClicked()
 
   mThemeList->setCurrentItem( item );
   mDeleteThemeButton->setEnabled( item && !item->theme()->readOnly() );
+  mExportThemeButton->setEnabled( !mThemeList->selectedItems().isEmpty() );
 
 }
 
@@ -386,6 +393,7 @@ void ConfigureThemesDialog::Private::deleteThemeButtonClicked()
   delete item; // this will trigger themeListCurrentItemChanged()
 
   mDeleteThemeButton->setEnabled( item && !item->theme()->readOnly() );
+  mExportThemeButton->setEnabled( !mThemeList->selectedItems().isEmpty() );
 }
 
 void ConfigureThemesDialog::Private::importThemeButtonClicked()
