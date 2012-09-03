@@ -40,7 +40,6 @@ ClawsMailSettings::~ClawsMailSettings()
 
 void ClawsMailSettings::importSettings(const QString& filename, const QString& path)
 {
-    //TODO improve it
   bool checkMailOnStartup = true;
   int intervalCheckMail = -1;
   const QString sylpheedrc = path + QLatin1String("/clawsrc");
@@ -109,6 +108,13 @@ void ClawsMailSettings::readSettingsColor(const KConfigGroup& group)
         if(col.isValid()) {
           addKmailConfig(QLatin1String("Reader"), QLatin1String("MisspelledColor"), writeColor(col));
         }
+    }
+    const QString uriColor = group.readEntry(QLatin1String("uri_color"));
+    if(!uriColor.isEmpty()) {
+      const QColor col(uriColor);
+      if(col.isValid()) {
+        addKmailConfig(QLatin1String("Reader"), QLatin1String("LinkColor"), writeColor(col));
+       }
     }
   }
 }
