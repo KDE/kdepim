@@ -36,7 +36,14 @@ FilterImporterClawsMails::FilterImporterClawsMails( QFile *file )
   while ( !stream.atEnd() ) {
     QString line = stream.readLine();
     kDebug() << " line :" << line << " filter " << filter;
-    //filter = parseLine( stream, line, filter );
+
+    if(line.isEmpty()) {
+
+    } else if(line.startsWith(QLatin1Char('[')) && line.endsWith(QLatin1Char(']'))) {
+
+    } else {
+      filter = parseLine( stream, line, filter );
+    }
   }
   appendFilter(filter);
 }
@@ -52,6 +59,11 @@ QString FilterImporterClawsMails::defaultFiltersSettingsPath()
 
 MailFilter * FilterImporterClawsMails::parseLine(QTextStream& stream, const QString& line, MailFilter *filter)
 {
-    //TODO
-    return filter;
+  appendFilter(filter);
+  filter = new MailFilter();
+  if(line.startsWith(QLatin1String("enabled"))) {
+    filter->setEnabled(true);
+  }
+  //TODO
+  return filter;
 }
