@@ -92,7 +92,7 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
     </entry>
 
     <entry name="MaximumAttachmentSize" type="Int">
-        <label>The maximum size in MB that email attachments are allowed to have (-1 for no limit).</label>
+        <label>The maximum size in bits that email attachments are allowed to have (-1 for no limit).</label>
         <default>-1</default>
     </entry>
     <entry name="OutlookCompatibleAttachments" type="Bool" key="outlook-compatible-attachments">
