@@ -150,7 +150,7 @@ void SylpheedSettings::readTemplateFormat(const KConfigGroup& group)
 {
   const QString replyQuote = group.readEntry(QLatin1String("reply_quote_mark"));
   if(!replyQuote.isEmpty()) {
-
+    addKmailConfig(QLatin1String("TemplateParser"), QLatin1String("QuoteString"), replyQuote);
   }
   const QString forwardQuote = group.readEntry(QLatin1String("forward_quote_mark"));
   if(!forwardQuote.isEmpty()) {
@@ -188,14 +188,14 @@ void SylpheedSettings::readSettingsColor(const KConfigGroup& group)
 QString SylpheedSettings::convertToKmailTemplate(const QString& templateStr)
 {
   QString newTemplate = templateStr;
-  newTemplate.replace(QLatin1String("%d"),QLatin1String("%DATE"));
   newTemplate.replace(QLatin1String("%date"),QLatin1String("%DATE"));
-  newTemplate.replace(QLatin1String("%f"),QLatin1String("%OTONAME"));
+  newTemplate.replace(QLatin1String("%d"),QLatin1String("%DATE"));
   newTemplate.replace(QLatin1String("%from"),QLatin1String("%OTONAME"));
-  newTemplate.replace(QLatin1String("%t"),QLatin1String("%TONAME"));
+  newTemplate.replace(QLatin1String("%f"),QLatin1String("%OTONAME"));
   newTemplate.replace(QLatin1String("%to"),QLatin1String("%TONAME"));
-  newTemplate.replace(QLatin1String("%c"),QLatin1String("%CCNAME"));
+  newTemplate.replace(QLatin1String("%t"),QLatin1String("%TONAME"));
   newTemplate.replace(QLatin1String("%cc"),QLatin1String("%CCNAME"));
+  newTemplate.replace(QLatin1String("%c"),QLatin1String("%CCNAME"));
 
   newTemplate.replace(QLatin1String("%email"),QLatin1String("%CCNAME"));
   newTemplate.replace(QLatin1String("%A"),QLatin1String("%CCNAME"));

@@ -22,7 +22,7 @@
 
 #include <config-kleopatra.h>
 
-#if 0 // We don't have a config.h in ONLY_KLEO, fix if needed
+#if 0 /* We don't have a config.h in ONLY_KLEO, fix if needed */
 #if HAVE_CONFIG_H
 #include <config.h>
 #endif
