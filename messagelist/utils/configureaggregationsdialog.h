@@ -65,6 +65,8 @@ private:
   Q_PRIVATE_SLOT(d, void deleteAggregationButtonClicked())
   Q_PRIVATE_SLOT(d, void editedAggregationNameChanged())
   Q_PRIVATE_SLOT(d, void okButtonClicked())
+  Q_PRIVATE_SLOT(d, void importAggregationButtonClicked())
+  Q_PRIVATE_SLOT(d, void exportAggregationButtonClicked())
 
   class Private;
   Private * const d;

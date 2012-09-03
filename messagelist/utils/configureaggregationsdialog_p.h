@@ -69,6 +69,8 @@ public:
   void deleteAggregationButtonClicked();
   void editedAggregationNameChanged();
   void okButtonClicked();
+  void exportAggregationButtonClicked();
+  void importAggregationButtonClicked();
 
 
   ConfigureAggregationsDialog * const q;
@@ -78,6 +80,8 @@ public:
   QPushButton *mNewAggregationButton;
   QPushButton *mCloneAggregationButton;
   QPushButton *mDeleteAggregationButton;
+  QPushButton *mExportAggregationButton;
+  QPushButton *mImportAggregationButton;
 };
 
 } // namespace Utils

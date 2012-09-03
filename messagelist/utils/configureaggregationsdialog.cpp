@@ -105,7 +105,7 @@ ConfigureAggregationsDialog::ConfigureAggregationsDialog( QWidget *parent )
 
   d->mAggregationList = new AggregationListWidget( base );
   d->mAggregationList->setSortingEnabled( true );
-  g->addWidget( d->mAggregationList, 0, 0, 5, 1 );
+  g->addWidget( d->mAggregationList, 0, 0, 7, 1 );
 
   connect( d->mAggregationList, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
            SLOT(aggregationListCurrentItemChanged(QListWidgetItem*,QListWidgetItem*)) );
@@ -131,22 +131,40 @@ ConfigureAggregationsDialog::ConfigureAggregationsDialog( QWidget *parent )
   f->setMinimumHeight( 24 );
   g->addWidget( f, 2, 1, Qt::AlignVCenter );
 
+  d->mExportAggregationButton = new QPushButton( i18n( "Export Aggregation..." ), base );
+  g->addWidget( d->mExportAggregationButton, 3, 1 );
+
+  connect( d->mExportAggregationButton, SIGNAL(clicked()),
+           SLOT(exportAggregationButtonClicked()) );
+
+  d->mImportAggregationButton = new QPushButton( i18n( "Import Aggregation..." ), base );
+  g->addWidget( d->mImportAggregationButton, 4, 1 );
+  connect( d->mImportAggregationButton, SIGNAL(clicked()),
+           SLOT(importAggregationButtonClicked()) );
+
+
+  f = new QFrame( base );
+  f->setFrameStyle( QFrame::Sunken | QFrame::HLine );
+  f->setMinimumHeight( 24 );
+  g->addWidget( f, 5, 1, Qt::AlignVCenter );
+
+
   d->mDeleteAggregationButton = new QPushButton( i18n( "Delete Aggregation" ), base );
   d->mDeleteAggregationButton->setIcon( KIcon( QLatin1String( "edit-delete" ) ) );
   d->mDeleteAggregationButton->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
-  g->addWidget( d->mDeleteAggregationButton, 3, 1 );
+  g->addWidget( d->mDeleteAggregationButton, 6, 1 );
 
   connect( d->mDeleteAggregationButton, SIGNAL(clicked()),
            SLOT(deleteAggregationButtonClicked()) );
 
   d->mEditor = new AggregationEditor( base );
-  g->addWidget( d->mEditor, 5, 0, 1, 2 );
+  g->addWidget( d->mEditor, 8, 0, 1, 2 );
 
   connect( d->mEditor, SIGNAL(aggregationNameChanged()),
            SLOT(editedAggregationNameChanged()) );
 
   g->setColumnStretch( 0, 1 );
-  g->setRowStretch( 4, 1 );
+  g->setRowStretch( 7, 1 );
 
   connect( this, SIGNAL(okClicked()),
            SLOT(okButtonClicked()) );
@@ -356,5 +374,16 @@ void ConfigureAggregationsDialog::Private::deleteAggregationButtonClicked()
   delete item; // this will trigger aggregationListCurrentItemChanged()
   mDeleteAggregationButton->setEnabled( item && !item->aggregation()->readOnly() );
 }
+
+void ConfigureAggregationsDialog::Private::importAggregationButtonClicked()
+{
+//TODO
+}
+
+void ConfigureAggregationsDialog::Private::exportAggregationButtonClicked()
+{
+//TODO
+}
+
 
 #include "configureaggregationsdialog.moc"
