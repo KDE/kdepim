@@ -388,6 +388,8 @@ void ConfigureThemesDialog::Private::deleteThemeButtonClicked()
   if ( mThemeList->count() < 2 )
     return; // no way: desperately try to keep at least one option set alive :)
 
+  if(item->theme()->readOnly())
+    return;
   mEditor->editTheme( 0 ); // forget it
 
   delete item; // this will trigger themeListCurrentItemChanged()
