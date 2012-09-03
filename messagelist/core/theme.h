@@ -938,13 +938,13 @@ public:
    * Returns the list of columns available in this theme
    */
   const QList< Column * > & columns() const
-    { return mColumns; };
+    { return mColumns; }
 
   /**
    * Returns a pointer to the column at the specified index or 0 if there is no such column
    */
   Column * column( int idx ) const
-    { return mColumns.count() > idx ? mColumns.at( idx ) : 0; };
+    { return mColumns.count() > idx ? mColumns.at( idx ) : 0; }
 
   void moveColumn(int idx, int newPosition);
 
@@ -957,7 +957,7 @@ public:
    * Appends a column to this theme
    */
   void addColumn( Column * column )
-    { mColumns.append( column ); };
+    { mColumns.append( column ); }
 
   /**
    * Inserts a column to this theme at the specified position.
@@ -968,13 +968,13 @@ public:
    * Removes the specified message row. The row is NOT deleted.
    */
   void removeColumn( Column * col )
-    { mColumns.removeAll( col ); };
+    { mColumns.removeAll( col ); }
 
   /**
    * Returns the group header background mode for this theme.
    */
   GroupHeaderBackgroundMode groupHeaderBackgroundMode() const
-    { return mGroupHeaderBackgroundMode; };
+    { return mGroupHeaderBackgroundMode; }
 
   /**
    * Sets the group header background mode for this theme.
@@ -987,14 +987,14 @@ public:
    * This color is used only if groupHeaderBackgroundMode() is set to CustomColor.
    */
   const QColor & groupHeaderBackgroundColor() const
-    { return mGroupHeaderBackgroundColor; };
+    { return mGroupHeaderBackgroundColor; }
 
   /**
    * Sets the group header background color for this theme.
    * This color is used only if groupHeaderBackgroundMode() is set to CustomColor.
    */
   void setGroupHeaderBackgroundColor( const QColor &clr )
-    { mGroupHeaderBackgroundColor = clr; };
+    { mGroupHeaderBackgroundColor = clr; }
 
   /**
    * Returns the group header background style for this theme.
@@ -1002,7 +1002,7 @@ public:
    * set to something different than Transparent.
    */
   GroupHeaderBackgroundStyle groupHeaderBackgroundStyle() const
-    { return mGroupHeaderBackgroundStyle; };
+    { return mGroupHeaderBackgroundStyle; }
 
   /**
    * Sets the group header background style for this theme.
@@ -1010,7 +1010,7 @@ public:
    * set to something different than Transparent.
    */
   void setGroupHeaderBackgroundStyle( GroupHeaderBackgroundStyle groupHeaderBackgroundStyle )
-    { mGroupHeaderBackgroundStyle = groupHeaderBackgroundStyle; };
+    { mGroupHeaderBackgroundStyle = groupHeaderBackgroundStyle; }
 
   /**
    * Enumerates the available group header background styles.
@@ -1023,19 +1023,19 @@ public:
    * Returns the currently set ViewHeaderPolicy
    */
   ViewHeaderPolicy viewHeaderPolicy() const
-    { return mViewHeaderPolicy; };
+    { return mViewHeaderPolicy; }
 
   /**
    * Sets the ViewHeaderPolicy for this theme
    */
   void setViewHeaderPolicy( ViewHeaderPolicy vhp )
-    { mViewHeaderPolicy = vhp; };
+    { mViewHeaderPolicy = vhp; }
 
   /**
    * Returns the currently set icon size
    */
   int iconSize() const
-    { return mIconSize; };
+    { return mIconSize; }
 
   /**
    * Sets the icon size for this theme.
