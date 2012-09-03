@@ -34,6 +34,8 @@
 #include <KLocale>
 #include <KIconLoader>
 #include <KMessageBox>
+#include <KFileDialog>
+#include <KConfigGroup>
 
 namespace MessageList
 {
@@ -100,7 +102,7 @@ ConfigureThemesDialog::ConfigureThemesDialog( QWidget *parent )
 
   d->mThemeList = new ThemeListWidget( base );
   d->mThemeList->setSortingEnabled( true );
-  g->addWidget( d->mThemeList, 0, 0, 5, 1 );
+  g->addWidget( d->mThemeList, 0, 0, 7, 1 );
 
   connect( d->mThemeList, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
            SLOT(themeListCurrentItemChanged(QListWidgetItem*,QListWidgetItem*)) );
@@ -126,16 +128,34 @@ ConfigureThemesDialog::ConfigureThemesDialog( QWidget *parent )
   f->setMinimumHeight( 24 );
   g->addWidget( f, 2, 1, Qt::AlignVCenter );
 
+
+  d->mExportThemeButton = new QPushButton( i18n( "Export Theme..." ), base );
+  g->addWidget( d->mExportThemeButton, 3, 1 );
+
+  connect( d->mExportThemeButton, SIGNAL(clicked()),
+           SLOT(exportThemeButtonClicked()) );
+
+  d->mImportThemeButton = new QPushButton( i18n( "Import Theme..." ), base );
+  g->addWidget( d->mImportThemeButton, 4, 1 );
+  connect( d->mImportThemeButton, SIGNAL(clicked()),
+           SLOT(importThemeButtonClicked()) );
+
+  f = new QFrame( base );
+  f->setFrameStyle( QFrame::Sunken | QFrame::HLine );
+  f->setMinimumHeight( 24 );
+  g->addWidget( f, 5, 1, Qt::AlignVCenter );
+
+
   d->mDeleteThemeButton = new QPushButton( i18n( "Delete Theme" ), base );
   d->mDeleteThemeButton->setIcon( KIcon( QLatin1String( "edit-delete" ) ) );
   d->mDeleteThemeButton->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
-  g->addWidget( d->mDeleteThemeButton, 3, 1 );
+  g->addWidget( d->mDeleteThemeButton, 6, 1 );
 
   connect( d->mDeleteThemeButton, SIGNAL(clicked()),
            SLOT(deleteThemeButtonClicked()) );
 
   d->mEditor = new ThemeEditor( base );
-  g->addWidget( d->mEditor, 5, 0, 1, 2 );
+  g->addWidget( d->mEditor, 8, 0, 1, 2 );
 
   connect( d->mEditor, SIGNAL(themeNameChanged()),
            SLOT(editedThemeNameChanged()) );
@@ -300,7 +320,7 @@ ThemeListWidgetItem * ConfigureThemesDialog::Private::findThemeItemByTheme( Them
 }
 
 
-QString ConfigureThemesDialog::Private::uniqueNameForTheme( QString baseName, Theme * skipTheme )
+QString ConfigureThemesDialog::Private::uniqueNameForTheme( const QString& baseName, Theme * skipTheme )
 {
   QString ret = baseName;
   if( ret.isEmpty() )
@@ -367,5 +387,59 @@ void ConfigureThemesDialog::Private::deleteThemeButtonClicked()
 
   mDeleteThemeButton->setEnabled( item && !item->theme()->readOnly() );
 }
+
+void ConfigureThemesDialog::Private::importThemeButtonClicked()
+{
+  const QString filename = KFileDialog::getOpenFileName(QString(),QString::fromLatin1("*"),q,i18n("Import Theme"));
+  if(!filename.isEmpty()) {
+    KConfig config(filename);
+
+    if(config.hasGroup(QLatin1String("MessageListView::Themes"))) {
+      KConfigGroup grp( &config, QLatin1String("MessageListView::Themes") );
+      const int cnt = grp.readEntry( "Count", 0 );
+      int idx = 0;
+      while ( idx < cnt ) {
+        const QString data = grp.readEntry( QString::fromLatin1( "Set%1" ).arg( idx ), QString() );
+        if ( !data.isEmpty() )
+        {
+          Theme * set = new Theme();
+          if ( set->loadFromString( data ) ) {
+              set->setReadOnly( false );
+              set->detach(); // detach shared data
+              set->generateUniqueId(); // regenerate id so it becomes different
+              set->setName( uniqueNameForTheme( set->name() ) );
+              (void)new ThemeListWidgetItem( mThemeList, *set );
+          } else {
+            delete set;
+          }
+        }
+        ++idx;
+      }
+    }
+  }
+}
+
+void ConfigureThemesDialog::Private::exportThemeButtonClicked()
+{
+  QList<QListWidgetItem *> list = mThemeList->selectedItems();
+  if(list.isEmpty()) {
+    return;
+  }
+  const QString filename = KFileDialog::getSaveFileName(QString(),QString::fromLatin1("*"),q,i18n("Export Theme"));
+  if(!filename.isEmpty()) {
+     KConfig config(filename);
+
+     KConfigGroup grp( &config, QLatin1String("MessageListView::Themes") );
+     grp.writeEntry( "Count", list.count() );
+
+     int idx = 0;
+     Q_FOREACH(QListWidgetItem *item, list) {
+       ThemeListWidgetItem * themeItem = static_cast< ThemeListWidgetItem * >( item );
+       grp.writeEntry( QString::fromLatin1( "Set%1" ).arg( idx ), themeItem->theme()->saveToString() );
+       ++idx;
+     }
+  }
+}
+
 
 #include "configurethemesdialog.moc"

@@ -34,6 +34,7 @@
 #include <KLocale>
 #include <KIconLoader>
 #include <KMessageBox>
+#include <KFileDialog>
 
 namespace MessageList
 {
@@ -377,12 +378,56 @@ void ConfigureAggregationsDialog::Private::deleteAggregationButtonClicked()
 
 void ConfigureAggregationsDialog::Private::importAggregationButtonClicked()
 {
-//TODO
+  const QString filename = KFileDialog::getOpenFileName(QString(),QString::fromLatin1("*"),q,i18n("Import Aggregation"));
+  if(!filename.isEmpty()) {
+    KConfig config(filename);
+
+    if(config.hasGroup(QLatin1String("MessageListView::Aggregations"))) {
+      KConfigGroup grp( &config, QLatin1String("MessageListView::Aggregations") );
+      const int cnt = grp.readEntry("Count",0);
+      int idx = 0;
+      while ( idx < cnt )
+      {
+        const QString data = grp.readEntry( QString::fromLatin1( "Set%1" ).arg( idx ), QString() );
+        if ( !data.isEmpty() )
+        {
+          Aggregation * set = new Aggregation();
+          if ( set->loadFromString( data ) )
+          {
+            set->setReadOnly( false );
+            set->generateUniqueId(); // regenerate id so it becomes different
+            set->setName( uniqueNameForAggregation( set->name() ) );
+            (void)new AggregationListWidgetItem( mAggregationList, *set );
+          } else {
+            delete set; // b0rken
+          }
+        }
+        ++idx;
+      }
+    }
+  }
 }
 
 void ConfigureAggregationsDialog::Private::exportAggregationButtonClicked()
 {
-//TODO
+  QList<QListWidgetItem *> list = mAggregationList->selectedItems();
+  if(list.isEmpty()) {
+    return;
+  }
+  const QString filename = KFileDialog::getSaveFileName(QString(),QString::fromLatin1("*"),q,i18n("Export Aggregation"));
+  if(!filename.isEmpty()) {
+     KConfig config(filename);
+
+     KConfigGroup grp( &config, QLatin1String("MessageListView::Aggregations") );
+     grp.writeEntry( "Count", list.count() );
+
+     int idx = 0;
+     Q_FOREACH(QListWidgetItem *item, list) {
+       AggregationListWidgetItem * themeItem = static_cast< AggregationListWidgetItem * >( item );
+       grp.writeEntry( QString::fromLatin1( "Set%1" ).arg( idx ), themeItem->aggregation()->saveToString() );
+       ++idx;
+    }
+  }
 }
 
 

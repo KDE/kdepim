@@ -47,7 +47,7 @@ public:
     : q( owner ) { }
 
   void fillThemeList();
-  QString uniqueNameForTheme( QString baseName, Core::Theme * skipTheme = 0 );
+  QString uniqueNameForTheme( const QString& baseName, Core::Theme * skipTheme = 0 );
   ThemeListWidgetItem * findThemeItemByName( const QString &name, Core::Theme * skipTheme = 0 );
   ThemeListWidgetItem * findThemeItemByTheme( Core::Theme * set );
   ThemeListWidgetItem * findThemeItemById( const QString &themeId );
@@ -59,6 +59,9 @@ public:
   void deleteThemeButtonClicked();
   void editedThemeNameChanged();
   void okButtonClicked();
+  void exportThemeButtonClicked();
+  void importThemeButtonClicked();
+
 
   ConfigureThemesDialog * const q;
 
@@ -67,6 +70,9 @@ public:
   QPushButton *mNewThemeButton;
   QPushButton *mCloneThemeButton;
   QPushButton *mDeleteThemeButton;
+  QPushButton *mExportThemeButton;
+  QPushButton *mImportThemeButton;
+
 };
 
 } // namespace Utils
