@@ -142,6 +142,20 @@ void SylpheedSettings::readGlobalSettings(const KConfigGroup& group)
   if(group.readEntry(QLatin1String("recycle_quote_colors"), 0)==1) {
     addKmailConfig(QLatin1String("Reader"), QLatin1String("RecycleQuoteColors"), true);
   }
+
+  if(group.readEntry(QLatin1String("auto_signature")) == 0) {
+    addKmailConfig(QLatin1String("Composer"), QLatin1String("signature"), QLatin1String("manual"));
+  }
+
+  if(group.readEntry(QLatin1String("auto_ext_editor"),-1) == 1) {
+    addKmailConfig(QLatin1String("General"), QLatin1String("use-external-editor"), true);
+
+    const QString externalEditor = group.readEntry(QLatin1String("mime_open_command"));
+    if(!externalEditor.isEmpty()) {
+      addKmailConfig(QLatin1String("General"), QLatin1String("external-editor"), externalEditor);
+    }
+  }
+
   readSettingsColor(group);
   readTemplateFormat(group);
 }
@@ -233,6 +247,20 @@ void SylpheedSettings::readSignature( const KConfigGroup& accountConfig, KPIMIde
   default:
     kDebug()<<" signature type unknow :"<<signatureType;
   }
+  const int signatureEnabled = accountConfig.readEntry("auto_signature", -1 );
+  switch(signatureEnabled) {
+  case -1:
+      break;
+  case 0:
+      signature.setEnabledSignature(false);
+      break;
+  case 1:
+      signature.setEnabledSignature(true);
+      break;
+  default:
+      qDebug()<<" auto_signature undefined "<<signatureEnabled;
+  }
+
   //TODO  const bool signatureBeforeQuote = ( accountConfig.readEntry( "signature_before_quote", 0 ) == 1 ); not implemented in kmail
 
   identity->setSignature( signature );
