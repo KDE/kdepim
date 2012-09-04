@@ -150,4 +150,14 @@ void ClawsMailSettings::readGlobalSettings(const KConfigGroup& group)
       addKmailConfig(QLatin1String("Behaviour"), QLatin1String("DelayedMarkTime"), markAsRead);
       addKmailConfig(QLatin1String("Behaviour"), QLatin1String("DelayedMarkAsRead"), true);
     }
+
+    const int warnLargeFileInserting = group.readEntry(QLatin1String("warn_large_insert"),0);
+    if(warnLargeFileInserting == 0) {
+      addKmailConfig(QLatin1String("Composer"), QLatin1String("MaximumAttachmentSize"), -1);
+    } else {
+      const int warnLargeFileSize = group.readEntry(QLatin1String("warn_large_insert_size"),-1);
+      if(warnLargeFileSize > 0) {
+        addKmailConfig(QLatin1String("Composer"), QLatin1String("MaximumAttachmentSize"), warnLargeFileSize*1024);
+      }
+    }
 }
