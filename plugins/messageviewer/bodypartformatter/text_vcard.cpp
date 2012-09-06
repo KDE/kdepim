@@ -105,7 +105,7 @@ class Formatter : public MessageViewer::Interface::BodyPartFormatter
         }        
         Akonadi::StandardContactFormatter formatter;
         formatter.setContact( a );
-	formatter.setDisplayQRCode(false);
+        formatter.setDisplayQRCode(false);
         QString htmlStr = formatter.toHtml( Akonadi::StandardContactFormatter::EmbeddableForm );
         KABC::Picture photo = a.photo();
         htmlStr.replace(QLatin1String("<img src=\"map_icon\""),QString::fromLatin1("<img src=\"%1\"").arg(defaultMapIconPath));
