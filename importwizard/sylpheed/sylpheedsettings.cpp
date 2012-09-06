@@ -218,6 +218,12 @@ QString SylpheedSettings::convertToKmailTemplate(const QString& templateStr)
   newTemplate.replace(QLatin1String("%quoted_msg"),QLatin1String("%QUOTE"));
   newTemplate.replace(QLatin1String("%Q"),QLatin1String("%QUOTE"));
 
+  newTemplate.replace(QLatin1String("%subject"),QLatin1String("%OFULLSUBJECT"));
+  newTemplate.replace(QLatin1String("%s"),QLatin1String("%OFULLSUBJECT"));
+
+  newTemplate.replace(QLatin1String("%messageid"),QLatin1String("%MSGID"));
+  newTemplate.replace(QLatin1String("%i"),QLatin1String("%MSGID"));
+
   //TODO add more variable
   return newTemplate;
 }
