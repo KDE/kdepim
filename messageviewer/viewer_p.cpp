@@ -3161,6 +3161,10 @@ void ViewerPrivate::goOnline()
   emit resumeNetworkJobs();
 }
 
+void ViewerPrivate::goResourceOnline()
+{
+  emit resourceGoOnLine();
+}
 
 
 #include "viewer_p.moc"

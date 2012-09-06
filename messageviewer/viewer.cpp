@@ -57,6 +57,7 @@ Viewer::Viewer( QWidget *aParent, QWidget *mainWindow, KActionCollection *action
            SIGNAL(urlClicked(Akonadi::Item,KUrl)) );
   connect( d_ptr, SIGNAL(requestConfigSync()), SIGNAL(requestConfigSync()) );
   connect( d_ptr, SIGNAL(resumeNetworkJobs()), SIGNAL(resumeNetworkJobs()) );
+  connect( d_ptr, SIGNAL(resourceGoOnLine()),SIGNAL(resourceGoOnLine()));
   connect( d_ptr, SIGNAL(showReader(KMime::Content*,bool,QString)),
            SIGNAL(showReader(KMime::Content*,bool,QString)) );
   connect( d_ptr, SIGNAL(showMessage(KMime::Message::Ptr,QString)), this, SIGNAL(showMessage(KMime::Message::Ptr,QString)) );

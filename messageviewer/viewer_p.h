@@ -446,6 +446,8 @@ public:
 
   void goOnline();
 
+  void goResourceOnline();
+
 private slots:
   void slotAtmDecryptWithChiasmusResult( const GpgME::Error &, const QVariant & );
   void slotAtmDecryptWithChiasmusUploadResult( KJob * );
@@ -594,6 +596,8 @@ signals:
   void showMessage( KMime::Message::Ptr message, const QString& encoding );
   void itemRemoved();
   void resumeNetworkJobs();
+
+  void resourceGoOnLine();
 
 private:
   QString attachmentInjectionHtml() const;

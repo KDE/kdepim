@@ -355,6 +355,7 @@ signals:
 
   void resumeNetworkJobs();
 
+  void resourceGoOnLine();
 public slots:
 
   /**
