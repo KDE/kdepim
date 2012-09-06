@@ -116,6 +116,13 @@ void ClawsMailSettings::readSettingsColor(const KConfigGroup& group)
         addKmailConfig(QLatin1String("Reader"), QLatin1String("LinkColor"), writeColor(col));
        }
     }
+    const QString newColor = group.readEntry(QLatin1String("color_new"));
+    if(!newColor.isEmpty()) {
+      const QColor col(newColor);
+      if(col.isValid()) {
+        addKmailConfig(QLatin1String("MessageListView::Colors"), QLatin1String("UnreadMessageColor"), writeColor(col));
+       }
+    }
   }
 }
 
