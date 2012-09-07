@@ -17,6 +17,7 @@
 
 #include "importmailjob.h"
 #include "akonadidatabase.h"
+#include "archivestorage.h"
 
 #include "mailcommon/filter/filtermanager.h"
 #include "mailcommon/filter/filterimporterexporter.h"
@@ -53,8 +54,9 @@ using namespace Akonadi;
 
 static const QString storeMails = QLatin1String("backupmail/");
 
-ImportMailJob::ImportMailJob(QWidget *parent, BackupMailUtil::BackupTypes typeSelected,const QString& filename, int numberOfStep)
-  :AbstractImportExportJob(parent,filename,typeSelected,numberOfStep), mArchiveDirectory(0)
+ImportMailJob::ImportMailJob(QWidget *parent, BackupMailUtil::BackupTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep)
+  : AbstractImportExportJob(parent,archiveStorage,typeSelected,numberOfStep),
+    mArchiveDirectory(0)
 {
   mTempDir = new KTempDir();
   mTempDirName = mTempDir->name();
@@ -76,9 +78,7 @@ void ImportMailJob::start()
 
 void ImportMailJob::startRestore()
 {
-  if(!openArchive(false /*readonly*/))
-    return;
-  mArchiveDirectory = mArchive->directory();
+  mArchiveDirectory = archive()->directory();
   searchAllFiles(mArchiveDirectory,QString());
   if(!mFileList.isEmpty()|| !mHashMailArchive.isEmpty()) {
     if(mTypeSelected & BackupMailUtil::MailTransport)
@@ -96,7 +96,6 @@ void ImportMailJob::startRestore()
     if(mTypeSelected & BackupMailUtil::Nepomuk)
       restoreNepomuk();
   }
-  closeArchive();
 }
 
 void ImportMailJob::searchAllFiles(const KArchiveDirectory*dir,const QString&prefix)

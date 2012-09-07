@@ -22,6 +22,7 @@
 #include "backupmailkernel.h"
 #include "selectiontypedialog.h"
 #include "backupmailutil.h"
+#include "archivestorage.h"
 
 #include <mailcommon/mailkernel.h>
 
@@ -92,12 +93,22 @@ void BackupMailWindow::slotBackupData()
     delete dialog;
     mBackupMailWidget->clear();
     delete mBackupData;
-    mBackupData = new ExportMailJob(this,typeSelected,filename,numberOfStep);
+
+    ArchiveStorage *archiveStorage = new ArchiveStorage(filename,this);
+    if(!archiveStorage->openArchive(true)) {
+        delete archiveStorage;
+        return;
+    }
+
+    mBackupData = new ExportMailJob(this,typeSelected,archiveStorage,numberOfStep);
     connect(mBackupData,SIGNAL(info(QString)),SLOT(slotAddInfo(QString)));
     connect(mBackupData,SIGNAL(error(QString)),SLOT(slotAddError(QString)));
     mBackupData->start();
     delete mBackupData;
     mBackupData = 0;
+    archiveStorage->closeArchive();
+    delete archiveStorage;
+
   } else {
     delete dialog;
   }
@@ -129,12 +140,21 @@ void BackupMailWindow::slotRestoreData()
     delete dialog;
     mBackupMailWidget->clear();
     delete mRestoreData;
-    mRestoreData = new ImportMailJob(this,typeSelected,filename, numberOfStep);
+
+    ArchiveStorage *archiveStorage = new ArchiveStorage(filename,this);
+    if(!archiveStorage->openArchive(false)) {
+        delete archiveStorage;
+        return;
+    }
+
+    mRestoreData = new ImportMailJob(this,typeSelected,archiveStorage, numberOfStep);
     connect(mRestoreData,SIGNAL(info(QString)),SLOT(slotAddInfo(QString)));
     connect(mRestoreData,SIGNAL(error(QString)),SLOT(slotAddError(QString)));
     mRestoreData->start();
     delete mRestoreData;
     mRestoreData = 0;
+    archiveStorage->closeArchive();
+    delete archiveStorage;
   } else {
     delete dialog;
   }

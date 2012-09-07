@@ -21,6 +21,7 @@
 #include "abstractimportexportjob.h"
 #include <KSharedConfig>
 class KUrl;
+class ArchiveStorage;
 
 namespace Akonadi {
   class AgentInstance;
@@ -29,7 +30,7 @@ namespace Akonadi {
 class ExportMailJob : public AbstractImportExportJob
 {
 public:
-  explicit ExportMailJob(QWidget *parent, BackupMailUtil::BackupTypes typeSelected, const QString& filename, int numberOfStep);
+  explicit ExportMailJob(QWidget *parent, BackupMailUtil::BackupTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep);
   ~ExportMailJob();
   void start();
 
