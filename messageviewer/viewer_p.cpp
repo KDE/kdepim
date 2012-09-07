@@ -3158,12 +3158,12 @@ void ViewerPrivate::slotZoomReset()
 
 void ViewerPrivate::goOnline()
 {
-  emit resumeNetworkJobs();
+  emit makeResourceOnline(Viewer::AllResources);
 }
 
 void ViewerPrivate::goResourceOnline()
 {
-  emit resourceGoOnLine();
+  emit makeResourceOnline(Viewer::SelectedResource);
 }
 
 
