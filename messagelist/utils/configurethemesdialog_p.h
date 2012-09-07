@@ -53,7 +53,7 @@ public:
   ThemeListWidgetItem * findThemeItemById( const QString &themeId );
   void commitEditor();
 
-  void themeListCurrentItemChanged( QListWidgetItem * cur, QListWidgetItem * prev );
+  void themeListItemClicked(QListWidgetItem*);
   void newThemeButtonClicked();
   void cloneThemeButtonClicked();
   void deleteThemeButtonClicked();

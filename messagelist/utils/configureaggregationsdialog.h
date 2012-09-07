@@ -59,7 +59,7 @@ public:
   void selectAggregation( const QString &aggregationId );
 
 private:
-  Q_PRIVATE_SLOT(d, void aggregationListCurrentItemChanged( QListWidgetItem*, QListWidgetItem* ))
+  Q_PRIVATE_SLOT(d, void aggregationListItemClicked(QListWidgetItem* cur))
   Q_PRIVATE_SLOT(d, void newAggregationButtonClicked())
   Q_PRIVATE_SLOT(d, void cloneAggregationButtonClicked())
   Q_PRIVATE_SLOT(d, void deleteAggregationButtonClicked())

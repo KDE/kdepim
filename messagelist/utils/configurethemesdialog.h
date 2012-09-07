@@ -53,7 +53,7 @@ public:
   void selectTheme( const QString &themeId );
 
 private:
-  Q_PRIVATE_SLOT(d, void themeListCurrentItemChanged( QListWidgetItem*, QListWidgetItem* ))
+  Q_PRIVATE_SLOT(d, void themeListItemClicked(QListWidgetItem*))
   Q_PRIVATE_SLOT(d, void newThemeButtonClicked())
   Q_PRIVATE_SLOT(d, void cloneThemeButtonClicked())
   Q_PRIVATE_SLOT(d, void deleteThemeButtonClicked())

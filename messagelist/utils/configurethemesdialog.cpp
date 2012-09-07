@@ -105,8 +105,8 @@ ConfigureThemesDialog::ConfigureThemesDialog( QWidget *parent )
   d->mThemeList->setSortingEnabled( true );
   g->addWidget( d->mThemeList, 0, 0, 7, 1 );
 
-  connect( d->mThemeList, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
-           SLOT(themeListCurrentItemChanged(QListWidgetItem*,QListWidgetItem*)) );
+  connect( d->mThemeList, SIGNAL(itemClicked(QListWidgetItem*)),
+           SLOT(themeListItemClicked(QListWidgetItem*)) );
 
   d->mNewThemeButton = new QPushButton( i18n( "New Theme" ), base );
   d->mNewThemeButton->setIcon( KIcon( QLatin1String( "document-new" ) ) );
@@ -252,7 +252,7 @@ void ConfigureThemesDialog::Private::fillThemeList()
 }
 
 
-void ConfigureThemesDialog::Private::themeListCurrentItemChanged( QListWidgetItem * cur, QListWidgetItem * )
+void ConfigureThemesDialog::Private::themeListItemClicked(QListWidgetItem* cur)
 {
   commitEditor();
 
@@ -262,7 +262,7 @@ void ConfigureThemesDialog::Private::themeListCurrentItemChanged( QListWidgetIte
   mDeleteThemeButton->setEnabled( item && !item->theme()->readOnly() );
   mCloneThemeButton->setEnabled( numberOfSelectedItem == 1 );
   mEditor->editTheme( item ? item->theme() : 0 );
-  mImportThemeButton->setEnabled( numberOfSelectedItem > 0 );
+  mExportThemeButton->setEnabled( numberOfSelectedItem > 0 );
 
   if ( item && !item->isSelected() )
     item->setSelected( true ); // make sure it's true
@@ -357,7 +357,7 @@ void ConfigureThemesDialog::Private::newThemeButtonClicked()
 
   mThemeList->setCurrentItem( item );
   mDeleteThemeButton->setEnabled( item && !item->theme()->readOnly() );
-  mExportThemeButton->setEnabled( !mThemeList->selectedItems().isEmpty() );
+  mExportThemeButton->setEnabled( item );
   mCloneThemeButton->setEnabled(numberOfSelectedItem == 1);
 }
 
@@ -375,27 +375,36 @@ void ConfigureThemesDialog::Private::cloneThemeButtonClicked()
   item = new ThemeListWidgetItem( mThemeList, copyTheme );
 
   mThemeList->setCurrentItem( item );
+  const int numberOfSelectedItem(mThemeList->selectedItems().count());
   mDeleteThemeButton->setEnabled( item && !item->theme()->readOnly() );
-  mExportThemeButton->setEnabled( !mThemeList->selectedItems().isEmpty() );
-
+  mExportThemeButton->setEnabled( item );
+  mCloneThemeButton->setEnabled(numberOfSelectedItem == 1);
 }
 
 void ConfigureThemesDialog::Private::deleteThemeButtonClicked()
 {
-  ThemeListWidgetItem * item = dynamic_cast< ThemeListWidgetItem * >( mThemeList->currentItem() );
-  if ( !item )
+  QList<QListWidgetItem *> list = mThemeList->selectedItems();
+  if(list.isEmpty()) {
     return;
-  if ( mThemeList->count() < 2 )
-    return; // no way: desperately try to keep at least one option set alive :)
+  }
 
-  if(item->theme()->readOnly())
-    return;
   mEditor->editTheme( 0 ); // forget it
+  Q_FOREACH(QListWidgetItem * it, list) {
+    ThemeListWidgetItem * item = dynamic_cast< ThemeListWidgetItem * >( it );
+    if ( !item )
+      return;
+    if(!item->theme()->readOnly()) {
+      delete item;// this will trigger themeListCurrentItemChanged()
+    }
+    if ( mThemeList->count() < 2 )
+      break; // no way: desperately try to keep at least one option set alive :)
+  }
 
-  delete item; // this will trigger themeListCurrentItemChanged()
-
-  mDeleteThemeButton->setEnabled( item && !item->theme()->readOnly() );
-  mExportThemeButton->setEnabled( !mThemeList->selectedItems().isEmpty() );
+  ThemeListWidgetItem *newItem = dynamic_cast< ThemeListWidgetItem * >(mThemeList->currentItem());
+  mDeleteThemeButton->setEnabled( newItem && !newItem->theme()->readOnly() );
+  mExportThemeButton->setEnabled( newItem );
+  const int numberOfSelectedItem(mThemeList->selectedItems().count());
+  mCloneThemeButton->setEnabled(numberOfSelectedItem == 1);
 }
 
 void ConfigureThemesDialog::Private::importThemeButtonClicked()

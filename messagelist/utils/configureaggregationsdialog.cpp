@@ -108,8 +108,8 @@ ConfigureAggregationsDialog::ConfigureAggregationsDialog( QWidget *parent )
   d->mAggregationList->setSortingEnabled( true );
   g->addWidget( d->mAggregationList, 0, 0, 7, 1 );
 
-  connect( d->mAggregationList, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
-           SLOT(aggregationListCurrentItemChanged(QListWidgetItem*,QListWidgetItem*)) );
+  connect( d->mAggregationList, SIGNAL(itemClicked(QListWidgetItem*)),
+           SLOT(aggregationListItemClicked(QListWidgetItem*) ));
 
   d->mNewAggregationButton = new QPushButton( i18n( "New Aggregation" ), base );
   d->mNewAggregationButton->setIcon( KIcon( QLatin1String( "document-new" ) ) );
@@ -248,14 +248,17 @@ void ConfigureAggregationsDialog::Private::fillAggregationList()
     (void)new AggregationListWidgetItem( mAggregationList, *( *it ) );
 }
 
-void ConfigureAggregationsDialog::Private::aggregationListCurrentItemChanged( QListWidgetItem * cur, QListWidgetItem * )
+void ConfigureAggregationsDialog::Private::aggregationListItemClicked(QListWidgetItem* cur)
 {
   commitEditor();
+
+  const int numberOfSelectedItem(mAggregationList->selectedItems().count());
 
   AggregationListWidgetItem * item = cur ? dynamic_cast< AggregationListWidgetItem * >( cur ) : 0;
   mDeleteAggregationButton->setEnabled( item && !item->aggregation()->readOnly() && ( mAggregationList->count() > 1 ) );
 
-  mCloneAggregationButton->setEnabled( item );
+  mCloneAggregationButton->setEnabled( numberOfSelectedItem == 1 );
+  mExportAggregationButton->setEnabled( numberOfSelectedItem > 0 );
   mEditor->editAggregation( item ? item->aggregation() : 0 );
   if ( item && !item->isSelected() )
     item->setSelected( true ); // make sure it's true

@@ -63,7 +63,7 @@ public:
 
   // Private slots
 
-  void aggregationListCurrentItemChanged( QListWidgetItem * cur, QListWidgetItem * prev );
+  void aggregationListItemClicked(QListWidgetItem* cur);
   void newAggregationButtonClicked();
   void cloneAggregationButtonClicked();
   void deleteAggregationButtonClicked();
