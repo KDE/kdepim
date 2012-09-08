@@ -806,7 +806,7 @@ void AttachmentControllerBase::addAttachmentUrlSync(const KUrl &url)
     kDebug() << "Creating attachment from file";
   }
   if( MessageComposer::MessageComposerSettings::maximumAttachmentSize() > 0 ) {
-    ajob->setMaximumAllowedSize( MessageComposer::MessageComposerSettings::maximumAttachmentSize() * 1024 * 1024 );
+    ajob->setMaximumAllowedSize( MessageComposer::MessageComposerSettings::maximumAttachmentSize() );
   }
   if(ajob->exec()) {
     AttachmentPart::Ptr part = ajob->attachmentPart();
@@ -831,7 +831,7 @@ void AttachmentControllerBase::addAttachment( const KUrl &url )
     kDebug() << "Creating attachment from file";
   }
   if( MessageComposer::MessageComposerSettings::maximumAttachmentSize() > 0 ) {
-    ajob->setMaximumAllowedSize( MessageComposer::MessageComposerSettings::maximumAttachmentSize() * 1024 * 1024 );
+    ajob->setMaximumAllowedSize( MessageComposer::MessageComposerSettings::maximumAttachmentSize() );
   }
   connect( ajob, SIGNAL(result(KJob*)), this, SLOT(loadJobResult(KJob*)) );
   ajob->start();

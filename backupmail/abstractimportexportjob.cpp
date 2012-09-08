@@ -16,6 +16,7 @@
 */
 
 #include "abstractimportexportjob.h"
+#include "archivestorage.h"
 
 #include <kpimidentities/identitymanager.h>
 #include <KZip>
@@ -23,10 +24,10 @@
 #include <QWidget>
 #include <QProgressDialog>
 
-AbstractImportExportJob::AbstractImportExportJob( QWidget *parent, const QString &filename,BackupMailUtil::BackupTypes typeSelected, int numberOfStep)
+AbstractImportExportJob::AbstractImportExportJob(QWidget *parent, ArchiveStorage *archiveStorage, BackupMailUtil::BackupTypes typeSelected, int numberOfStep)
   : QObject(parent),
     mTypeSelected(typeSelected),
-    mArchive(new KZip(filename)),
+    mArchiveStorage(archiveStorage),
     mIdentityManager(new KPIMIdentities::IdentityManager( false, this, "mIdentityManager" )),
     mParent(parent),
     mProgressDialog(0),
@@ -36,8 +37,6 @@ AbstractImportExportJob::AbstractImportExportJob( QWidget *parent, const QString
 
 AbstractImportExportJob::~AbstractImportExportJob()
 {
-  closeArchive();
-  delete mArchive;
   delete mIdentityManager;
 }
 
@@ -73,33 +72,17 @@ void AbstractImportExportJob::increaseProgressDialog()
   }
 }
 
-void AbstractImportExportJob::closeArchive()
-{
-  if(mArchive && mArchive->isOpen()) {
-    mArchive->close();
-  }
-}
-
-bool AbstractImportExportJob::openArchive(bool write)
-{
-  bool result = mArchive->open(write ? QIODevice::WriteOnly : QIODevice::ReadOnly);
-  if(!result) {
-    if(write) {
-      Q_EMIT error(i18n("Archive cannot be opened in write mode."));
-    } else {
-      Q_EMIT error(i18n("Archive cannot be opened in read mode."));
-    }
-  }
-  return result;
-}
-
-
 void AbstractImportExportJob::showInfo(const QString&text)
 {
   if(mProgressDialog) {
     mProgressDialog->setLabelText(text);
   }
   Q_EMIT info(text);
+}
+
+KZip *AbstractImportExportJob::archive()
+{
+  return mArchiveStorage->archive();
 }
 
 #include "abstractimportexportjob.moc"

@@ -99,6 +99,7 @@
 #include <akonadi/itemcreatejob.h>
 #include <akonadi/entitymimetypefiltermodel.h>
 #include <akonadi/itemfetchjob.h>
+#include <Akonadi/Contact/ContactEditorDialog>
 #include <kpimutils/email.h>
 #include <kpimidentities/identitymanager.h>
 #include <kpimidentities/identitycombo.h>
@@ -161,22 +162,22 @@ using MailTransport::Transport;
 using KPIM::RecentAddresses;
 using Message::KMeditor;
 
-KMail::Composer *KMail::makeComposer( const KMime::Message::Ptr &msg, Composer::TemplateContext context,
+KMail::Composer *KMail::makeComposer( const KMime::Message::Ptr &msg, bool lastSignState, bool lastEncryptState, Composer::TemplateContext context,
                                       uint identity, const QString & textSelection,
                                       const QString & customTemplate ) {
-  return KMComposeWin::create( msg, context, identity, textSelection, customTemplate );
+  return KMComposeWin::create( msg, lastSignState, lastEncryptState, context, identity, textSelection, customTemplate );
 }
 
-KMail::Composer *KMComposeWin::create( const KMime::Message::Ptr &msg, Composer::TemplateContext context,
+KMail::Composer *KMComposeWin::create( const KMime::Message::Ptr &msg, bool lastSignState, bool lastEncryptState, Composer::TemplateContext context,
                                        uint identity, const QString & textSelection,
                                        const QString & customTemplate ) {
-  return new KMComposeWin( msg, context, identity, textSelection, customTemplate );
+  return new KMComposeWin( msg, lastSignState, lastEncryptState, context, identity, textSelection, customTemplate );
 }
 
 int KMComposeWin::s_composerNumber = 0;
 
 //-----------------------------------------------------------------------------
-KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, Composer::TemplateContext context, uint id,
+KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, bool lastSignState, bool lastEncryptState, Composer::TemplateContext context, uint id,
                             const QString & textSelection, const QString & customTemplate )
   : KMail::Composer( "kmail-composer#" ),
     mDone( false ),
@@ -460,7 +461,7 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, Composer::TemplateC
   }
 
   if ( aMsg ) {
-    setMsg( aMsg );
+    setMessage( aMsg, lastSignState, lastEncryptState );
   }
 
   mComposerBase->recipientsEditor()->setFocus();
@@ -1154,6 +1155,11 @@ void KMComposeWin::setupActions( void )
   actionCollection()->addAction( "save_as_file", action );
   connect( action, SIGNAL(triggered(bool)), SLOT(slotSaveAsFile()) );
 
+  action = new KAction(i18n("New AddressBook Contact..."),this);
+  actionCollection()->addAction("kmail_new_addressbook_contact", action );
+  connect(action, SIGNAL(triggered(bool)), this, SLOT(slotCreateAddressBookContact()));
+
+
 
   action = new KAction(KIcon("document-open"), i18n("&Insert Text File..."), this);
   actionCollection()->addAction("insert_file", action );
@@ -1512,13 +1518,16 @@ void KMComposeWin::setCurrentReplyTo(const QString& replyTo)
 }
 
 //-----------------------------------------------------------------------------
-void KMComposeWin::setMsg( const KMime::Message::Ptr &newMsg, bool mayAutoSign,
+void KMComposeWin::setMessage( const KMime::Message::Ptr &newMsg, bool lastSignState, bool lastEncryptState, bool mayAutoSign,
                            bool allowDecryption, bool isModified )
 {
   if ( !newMsg ) {
     kDebug() << "newMsg == 0!";
     return;
   }
+
+  mLastSignActionState = lastSignState;
+  mLastEncryptActionState = lastEncryptState;
 
   mComposerBase->setMessage( newMsg );
   mMsg = newMsg;
@@ -1861,75 +1870,13 @@ void KMComposeWin::autoSaveMessage(bool force)
   }
 }
 
-
 bool KMComposeWin::encryptToSelf()
 {
   // return !Kpgp::Module::getKpgp() || Kpgp::Module::getKpgp()->encryptToSelf();
-  return GlobalSettings::self()->cryptoEncryptToSelf();
+  return MessageComposer::MessageComposerSettings::self()->cryptoEncryptToSelf();
 }
 
-bool KMComposeWin::showKeyApprovalDialog()
-{
-  return GlobalSettings::self()->cryptoShowKeysForApproval();
-}
 
-int KMComposeWin::encryptKeyNearExpiryWarningThresholdInDays() {
-  if ( ! MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() ) {
-    return -1;
-  }
-  const int num =
-  MessageComposer::MessageComposerSettings::self()->cryptoWarnEncrKeyNearExpiryThresholdDays();
-  return qMax( 1, num );
-}
-
-int KMComposeWin::signingKeyNearExpiryWarningThresholdInDays()
-{
-  if ( ! MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() ) {
-    return -1;
-  }
-  const int num =
-  MessageComposer::MessageComposerSettings::self()->cryptoWarnSignKeyNearExpiryThresholdDays();
-  return qMax( 1, num );
-}
-
-int KMComposeWin::encryptRootCertNearExpiryWarningThresholdInDays()
-{
-  if ( ! MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() ) {
-    return -1;
-  }
-  const int num =
-  MessageComposer::MessageComposerSettings::self()->cryptoWarnEncrRootNearExpiryThresholdDays();
-  return qMax( 1, num );
-}
-
-int KMComposeWin::signingRootCertNearExpiryWarningThresholdInDays() {
-  if ( ! MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() ) {
-    return -1;
-  }
-  const int num =
-  MessageComposer::MessageComposerSettings::self()->cryptoWarnSignRootNearExpiryThresholdDays();
-  return qMax( 1, num );
-}
-
-int KMComposeWin::encryptChainCertNearExpiryWarningThresholdInDays()
-{
-  if ( ! MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() ) {
-    return -1;
-  }
-  const int num =
-  MessageComposer::MessageComposerSettings::self()->cryptoWarnEncrChaincertNearExpiryThresholdDays();
-  return qMax( 1, num );
-}
-
-int KMComposeWin::signingChainCertNearExpiryWarningThresholdInDays()
-{
-  if ( ! MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() ) {
-    return -1;
-  }
-  const int num =
-  MessageComposer::MessageComposerSettings::self()->cryptoWarnSignChaincertNearExpiryThresholdDays();;
-  return qMax( 1, num );
-}
 
 void KMComposeWin::slotSendFailed( const QString& msg )
 {
@@ -2426,7 +2373,7 @@ void KMComposeWin::slotNewComposer()
   KMime::Message::Ptr msg( new KMime::Message );
 
   MessageHelper::initHeader( msg, KMKernel::self()->identityManager() );
-  win = new KMComposeWin( msg );
+  win = new KMComposeWin( msg, false, false );
   win->show();
 }
 
@@ -2557,7 +2504,7 @@ void KMComposeWin::slotWordWrapToggled( bool on )
 //-----------------------------------------------------------------------------
 void KMComposeWin::disableWordWrap()
 {
-  mComposerBase->editor()->setWordWrapMode( QTextOption::NoWrap );
+  mComposerBase->editor()->disableWordWrap();
 }
 
 //-----------------------------------------------------------------------------
@@ -3404,4 +3351,11 @@ void KMComposeWin::slotSaveAsFile()
         }
     }
     delete dlg;
+}
+
+void KMComposeWin::slotCreateAddressBookContact()
+{
+  Akonadi::ContactEditorDialog *dlg = new Akonadi::ContactEditorDialog( Akonadi::ContactEditorDialog::CreateMode, this );
+  dlg->exec();
+  delete dlg;
 }

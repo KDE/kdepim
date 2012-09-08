@@ -15,8 +15,8 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef ClawsMailsSettings_H
-#define ClawsMailsSettings_H
+#ifndef ClawsMailSettings_H
+#define ClawsMailSettings_H
 
 #include "abstractsettings.h"
 #include "sylpheed/sylpheedsettings.h"
@@ -24,12 +24,20 @@
 class ImportWizard;
 class KConfigGroup;
 
-class ClawsMailsSettings : public SylpheedSettings
+class ClawsMailSettings : public SylpheedSettings
 {
 public:
-  explicit ClawsMailsSettings(ImportWizard *parent);
-  ~ClawsMailsSettings();
+  explicit ClawsMailSettings(ImportWizard *parent);
+  ~ClawsMailSettings();
   void importSettings(const QString& filename, const QString& path);
+protected:
+  //Reimplement from sylpheed
+  void readSettingsColor(const KConfigGroup& group);
+  void readTemplateFormat(const KConfigGroup& group);
+  void readGlobalSettings(const KConfigGroup& group);
+
+private:
+  QString writeColor(const QColor& col);
 };
 
-#endif // ClawsMailsSettings_H
+#endif // ClawsMailSettings_H

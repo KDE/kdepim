@@ -332,7 +332,7 @@ KMFilterDialog::KMFilterDialog( const QList<KActionCollection*> &actionCollectio
   menu->addAction( act );
 
   act = new QAction( i18n( "Claws Mail filters" ), this );
-  act->setData( (int)MailCommon::FilterImporterExporter::ClawsMailsFilter );
+  act->setData( (int)MailCommon::FilterImporterExporter::ClawsMailFilter );
   menu->addAction( act );
 
   connect( menu, SIGNAL(triggered(QAction*)), SLOT(slotImportFilter(QAction*)) );
@@ -1534,7 +1534,6 @@ void KMFilterListBox::enableControls()
   mBtnBottom->setEnabled( aFilterIsSelected &&
                           ( ( uniqFilterSelected && !theLast ) ||
                             ( !uniqFilterSelected ) ) && !allItemSelected );
-
   if ( aFilterIsSelected ) {
     mListWidget->scrollToItem( mListWidget->currentItem() );
   }

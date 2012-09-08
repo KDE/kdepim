@@ -43,7 +43,7 @@ FilterImporterBalsa::~FilterImporterBalsa()
 {
 }
 
-QString FilterImporterBalsa::defaultPath()
+QString FilterImporterBalsa::defaultFiltersSettingsPath()
 {
   return QString::fromLatin1( "%1/.balsa/config" ).arg( QDir::homePath() );
 }

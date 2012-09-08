@@ -34,7 +34,7 @@ class FilterImporterBalsa : public FilterImporterAbstract
 public:
     explicit FilterImporterBalsa( QFile *file );
     ~FilterImporterBalsa();
-    static QString defaultPath();
+    static QString defaultFiltersSettingsPath();
 private:
     void addFilter(const KConfigGroup &grp);
     void parseCondition(const QString& condition,MailCommon::MailFilter *filter );

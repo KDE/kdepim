@@ -1,42 +1,43 @@
 /*
   Copyright (c) 2012 Montel Laurent <montel@kde.org>
-
+  
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
   published by the Free Software Foundation.
-
+  
   This program is distributed in the hope that it will be useful, but
   WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
   General Public License for more details.
-
+  
   You should have received a copy of the GNU General Public License along
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef MAILCOMMON_FILTERIMPORTER_FILTERIMPORTERCLAWSMAILS_P_H
-#define MAILCOMMON_FILTERIMPORTER_FILTERIMPORTERCLAWSMAILS_P_H
+#ifndef ARCHIVESTORAGE_H
+#define ARCHIVESTORAGE_H
+#include <QObject>
+class KZip;
 
-#include "filterimporter/filterimporterabstract_p.h"
-
-#include <QDomElement>
-
-class QFile;
-class KConfigGroup;
-
-namespace MailCommon {
-
-class MailFilter;
-
-class FilterImporterClawsMails : public FilterImporterAbstract
+class ArchiveStorage : public QObject
 {
+  Q_OBJECT
 public:
-    explicit FilterImporterClawsMails( QFile *file );
-    ~FilterImporterClawsMails();
-    static QString defaultPath();
+  explicit ArchiveStorage(const QString &filename, QObject*parent = 0);
+  ~ArchiveStorage();
+
+  void closeArchive();
+  bool openArchive(bool write);
+
+  KZip *archive();
+
+Q_SIGNALS:
+  void error(const QString&);
+
+private:
+  KZip *mArchive;
+
 };
 
-}
-
-#endif // MAILCOMMON_FILTERIMPORTER_FILTERIMPORTERCLAWSMAILS_P_H
+#endif // ARCHIVESTORAGE_H

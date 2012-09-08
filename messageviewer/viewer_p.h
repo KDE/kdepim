@@ -444,7 +444,10 @@ public:
 
   void setZoomFactor( qreal zoomFactor );
 
+
   void goOnline();
+  void goResourceOnline();
+
 
 private slots:
   void slotAtmDecryptWithChiasmusResult( const GpgME::Error &, const QVariant & );
@@ -593,7 +596,7 @@ signals:
   void showReader( KMime::Content* aMsgPart, bool aHTML, const QString & encoding );
   void showMessage( KMime::Message::Ptr message, const QString& encoding );
   void itemRemoved();
-  void resumeNetworkJobs();
+  void makeResourceOnline(MessageViewer::Viewer::ResourceOnlineMode mode);
 
 private:
   QString attachmentInjectionHtml() const;

@@ -20,37 +20,26 @@
 
 #include <QHash>
 
-#include "filters.h"
+#include "filter_sylpheed.h"
 /**
  * Imports Sylpheed mail folder with maildir format recursively, recreating the folder structure.
  * @author Danny Kukawka
  */
 namespace MailImporter {
-class MAILIMPORTER_EXPORT FilterClawsMails : public Filter
+class MAILIMPORTER_EXPORT FilterClawsMail : public FilterSylpheed
 {
 
 public:
-  explicit FilterClawsMails();
-  ~FilterClawsMails();
+  explicit FilterClawsMail();
+  ~FilterClawsMail();
 
-  static QString defaultPath();
-
-  void import();
-  void importMails( const QString& maildir );
+  static QString defaultSettingsPath();
 
   /* return local mail dir from folderlist.xml*/
-  QString localMailDirPath();
-  
-private:
-  void importDirContents(const QString&);
-  void importFiles(const QString&);
-  void processDirectory( const QString& path);
-  
-  void readMarkFile( const QString&, QHash<QString,unsigned long>&);
-  Akonadi::MessageStatus msgFlagsToString(unsigned long flags);
-  int mImportDirDone;
-  int mTotalDir;
-
+  virtual QString localMailDirPath();
+  virtual bool excludeFile(const QString& file);
+  virtual QString defaultInstallFolder() const;
+  virtual QString markFile() const;
 };
 }
 

@@ -26,6 +26,7 @@
 class KArchiveDirectory;
 class KArchiveFile;
 class KTempDir;
+class ArchiveStorage;
 namespace MailCommon {
   class CreateResource;
 }
@@ -33,7 +34,7 @@ namespace MailCommon {
 class ImportMailJob : public AbstractImportExportJob
 {
 public:
-  explicit ImportMailJob(QWidget *widget, BackupMailUtil::BackupTypes typeSelected, const QString &filename, int numberOfStep);
+  explicit ImportMailJob(QWidget *widget, BackupMailUtil::BackupTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep);
   ~ImportMailJob();
   void start();
 private:

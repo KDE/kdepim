@@ -73,7 +73,7 @@ void SelectThunderbirdFilterFilesWidget::slotProfileChanged(int index)
   }
 
   QStringList listFilterFiles;
-  const QString path(MailImporter::FilterThunderbird::defaultPath() + ui->profiles->itemData(index).toString());
+  const QString path(MailImporter::FilterThunderbird::defaultSettingsPath() + ui->profiles->itemData(index).toString());
   QDir dir(path);
   const QStringList subDir = dir.entryList(QDir::AllDirs|QDir::NoDotAndDotDot,QDir::Name);
   Q_FOREACH( const QString& mailPath, subDir ) {

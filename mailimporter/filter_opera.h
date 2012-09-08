@@ -33,7 +33,7 @@ public:
 
   void import();
   void importMails( const QString &maildir );
-  static QString defaultPath();
+  static QString defaultSettingsPath();
 
 private:
   void importBox( const QDir & importDir, const QStringList & , const QString & accountName = QString());

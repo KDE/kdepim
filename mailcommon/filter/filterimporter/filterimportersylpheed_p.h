@@ -33,7 +33,7 @@ class FilterImporterSylpheed : public FilterImporterAbstract
   public:
     explicit FilterImporterSylpheed( QFile *file );
     ~FilterImporterSylpheed();
-    static QString defaultPath();
+    static QString defaultFiltersSettingsPath();
   private:
     void parseFilters( const QDomElement &e );
     void parseConditions( const QDomElement &ruleFilter, MailCommon::MailFilter *filter );

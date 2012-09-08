@@ -92,7 +92,7 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
     </entry>
 
     <entry name="MaximumAttachmentSize" type="Int">
-        <label>The maximum size in MB that email attachments are allowed to have (-1 for no limit).</label>
+        <label>The maximum size in bits that email attachments are allowed to have (-1 for no limit).</label>
         <default>-1</default>
     </entry>
     <entry name="OutlookCompatibleAttachments" type="Bool" key="outlook-compatible-attachments">
@@ -150,6 +150,17 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
         <label>The minimum number of days that the root certificate should be valid before issuing a warning</label>
         <default>14</default>
     </entry>
+      <entry name="CryptoEncryptToSelf" type="Bool" key="crypto-encrypt-to-self">
+        <label>When encrypting emails, always also encrypt to the certificate of my own identity</label>
+        <default>true</default>
+      </entry>
+      <entry name="CryptoShowKeysForApproval" type="Bool" key="crypto-show-keys-for-approval">
+        <label>Always show the list of encryption keys to select the one which will be used</label>
+        <default>true</default>
+      </entry>
+      <entry name="PgpAutoEncrypt" type="Bool" key="pgp-auto-encrypt">
+        <default>false</default>
+      </entry>
   </group>
 
   <group name="sending mail">

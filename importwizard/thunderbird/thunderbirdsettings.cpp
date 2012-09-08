@@ -49,7 +49,8 @@ ThunderbirdSettings::ThunderbirdSettings( const QString& filename, ImportWizard 
          line.contains(QLatin1String("mailnews."))||
          line.contains(QLatin1String("mail.compose."))||
          line.contains(QLatin1String("mail.spellcheck")) ||
-         line.contains(QLatin1String("ldap_"))) {
+         line.contains(QLatin1String("ldap_")) ||
+         line.contains(QLatin1String("mail.biff."))) {
         insertIntoMap( line );
       }
     } else {
@@ -178,6 +179,14 @@ void ThunderbirdSettings::readGlobalSettings()
     addKmailConfig(QLatin1String("Spelling"),QLatin1String("backgroundCheckerEnabled"),mailSpellCheckInline);
   } else {
     addKmailConfig(QLatin1String("Spelling"),QLatin1String("backgroundCheckerEnabled"),false);
+  }
+  const QString mailPlaySoundStr = QLatin1String("mail.biff.play_sound");
+  if(mHashConfig.contains(mailPlaySoundStr)) {
+    const bool mailPlaySound = mHashConfig.value(mailPlaySoundStr).toBool();
+    addKmailConfig(QLatin1String("General"),QLatin1String("beep-on-mail"), mailPlaySound);
+  } else {
+    //Default value in thunderbird
+    addKmailConfig(QLatin1String("General"),QLatin1String("beep-on-mail"), true);
   }
 }
 

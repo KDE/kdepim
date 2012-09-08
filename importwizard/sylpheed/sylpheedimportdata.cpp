@@ -33,7 +33,7 @@
 SylpheedImportData::SylpheedImportData(ImportWizard*parent)
   :AbstractImporter(parent)
 {
-  mPath = MailImporter::FilterSylpheed::defaultPath();
+  mPath = MailImporter::FilterSylpheed::defaultSettingsPath();
 }
 
 SylpheedImportData::~SylpheedImportData()

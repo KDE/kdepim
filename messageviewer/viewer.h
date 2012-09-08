@@ -129,6 +129,11 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
     Delayed
   };
 
+  enum ResourceOnlineMode {
+    AllResources = 0,
+    SelectedResource = 1
+  };
+
   /**
    * Set the message that shall be shown.
    * @param msg - the message to be shown. If 0, an empty page is displayed.
@@ -353,8 +358,7 @@ signals:
   /// Emitted when the item, previously set with setMessageItem, has been removed.
   void itemRemoved();
 
-  void resumeNetworkJobs();
-
+  void makeResourceOnline(MessageViewer::Viewer::ResourceOnlineMode mode);
 public slots:
 
   /**

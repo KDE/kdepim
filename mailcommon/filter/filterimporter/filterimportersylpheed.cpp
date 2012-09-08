@@ -53,7 +53,7 @@ FilterImporterSylpheed::~FilterImporterSylpheed()
 {
 }
 
-QString FilterImporterSylpheed::defaultPath()
+QString FilterImporterSylpheed::defaultFiltersSettingsPath()
 {
   return QString::fromLatin1( "%1/.sylpheed-2.0/filter.xml" ).arg( QDir::homePath() );
 }

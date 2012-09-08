@@ -121,6 +121,9 @@
 #include <akonadi/collectiondeletejob.h>
 #include <akonadi/dbusconnectionpool.h>
 #include <Akonadi/CachePolicy>
+#include <Akonadi/Contact/ContactEditorDialog>
+
+
 #include <kpimidentities/identity.h>
 #include <kpimidentities/identitymanager.h>
 #include <kpimutils/email.h>
@@ -312,7 +315,20 @@ K_GLOBAL_STATIC( KMMainWidget::PtrList, theMainWidgetList )
   restoreCollectionFolderViewConfig();
 
   if ( kmkernel->firstStart() ) {
-    KMail::Util::launchAccountWizard( this );
+    if(MailCommon::Util::foundMailer()) {
+      if(KMessageBox::questionYesNo(this,i18n("An other mailer was found on system. Do you want to import data from it?")) == KMessageBox::Yes) {
+        const QString path = KStandardDirs::findExe( QLatin1String("importwizard" ) );
+        if( !QProcess::startDetached( path ) ) {
+          KMessageBox::error( this, i18n( "Could not start the import wizard. "
+                                       "Please check your installation." ),
+                              i18n( "Unable to start import wizard" ) );
+        }
+      } else {
+        KMail::Util::launchAccountWizard( this );
+      }
+    } else {
+      KMail::Util::launchAccountWizard( this );
+    }
   }
   // must be the last line of the constructor:
   mStartupDone = true;
@@ -495,7 +511,6 @@ void KMMainWidget::slotEndCheckFetchCollectionsDone(KJob* job)
 
 void KMMainWidget::slotFolderChanged( const Akonadi::Collection& collection )
 {
-  updateFolderMenu();
   folderSelected( collection );
   if(collection.cachePolicy().syncOnDemand())
       AgentManager::self()->synchronizeCollection( collection, false );
@@ -581,7 +596,11 @@ void KMMainWidget::folderSelected( const Akonadi::Collection & col )
     {
         //mMessageListView->setCurrentFolder( 0 ); <-- useless in the new view: just do nothing
         // FIXME: Use an "offline tab" ?
-        showOfflinePage();
+        if(kmkernel->isOffline())
+            showOfflinePage();
+        else
+            showResourceOfflinePage();
+	updateFolderMenu();
         return;
     }
   }
@@ -612,6 +631,13 @@ void KMMainWidget::slotShowSelectedFolderInPane()
   }
 }
 
+void KMMainWidget::clearViewer()
+{
+  if (mMsgView) {
+      mMsgView->clear( true );
+      mMsgView->displayAboutPage();
+  }
+}
 
 //-----------------------------------------------------------------------------
 void KMMainWidget::readPreConfig()
@@ -1565,13 +1591,13 @@ void KMMainWidget::slotCompose()
       TemplateParser::TemplateParser parser( msg, TemplateParser::TemplateParser::NewMessage );
       parser.setIdentityManager( KMKernel::self()->identityManager() );
       parser.process( msg, mCurrentFolder->collection() );
-      win = KMail::makeComposer( msg, KMail::Composer::New, mCurrentFolder->identity() );
+      win = KMail::makeComposer( msg, false, false, KMail::Composer::New, mCurrentFolder->identity() );
   } else {
       MessageHelper::initHeader( msg, KMKernel::self()->identityManager() );
       TemplateParser::TemplateParser parser( msg, TemplateParser::TemplateParser::NewMessage );
       parser.setIdentityManager( KMKernel::self()->identityManager() );
       parser.process( KMime::Message::Ptr(), Akonadi::Collection() );
-      win = KMail::makeComposer( msg, KMail::Composer::New );
+      win = KMail::makeComposer( msg, false, false, KMail::Composer::New );
   }
 
   win->show();
@@ -2712,6 +2738,14 @@ void KMMainWidget::showOfflinePage()
   mMsgView->displayOfflinePage();
 }
 
+void KMMainWidget::showResourceOfflinePage()
+{
+  if ( !mReaderWindowActive ) return;
+  mShowingOfflineScreen = true;
+
+  mMsgView->displayResourceOfflinePage();
+}
+
 
 //-----------------------------------------------------------------------------
 void KMMainWidget::slotReplaceMsgByUnencryptedVersion()
@@ -2977,6 +3011,13 @@ void KMMainWidget::slotDelayedMessagePopup( KJob *job )
   const Akonadi::ContactSearchJob *searchJob = qobject_cast<Akonadi::ContactSearchJob*>( job );
   const bool contactAlreadyExists = !searchJob->contacts().isEmpty();
 
+  const QList<Akonadi::Item> listContact = searchJob->items();
+  const bool uniqContactFound = (listContact.count() == 1);
+  if(uniqContactFound) {
+      mMsgView->setContactItem(listContact.first());
+  } else {
+      mMsgView->setContactItem(Akonadi::Item());
+  }
 #if 0 //TODO port it
   mMessageListView->activateMessage( &msg ); // make sure that this message is the active one
 
@@ -3005,7 +3046,11 @@ void KMMainWidget::slotDelayedMessagePopup( KJob *job )
       menu->addSeparator();
 
       if ( contactAlreadyExists ) {
-        menu->addAction( mMsgView->openAddrBookAction() );
+        if(uniqContactFound) {
+          menu->addAction( mMsgView->editContactAction() );
+        } else {
+          menu->addAction( mMsgView->openAddrBookAction() );
+        }
       } else {
         menu->addAction( mMsgView->addAddrBookAction() );
       }
@@ -3693,6 +3738,14 @@ void KMMainWidget::setupActions()
       KAction *action = new KAction(KIcon("backup-mail"), i18n("&Export KMail Data..."), this);
       actionCollection()->addAction("kmail_export_data", action );
       connect(action, SIGNAL(triggered(bool)), this, SLOT(slotExportData()));
+  }
+
+  {
+      KAction *action = new KAction(i18n("New AddressBook Contact..."),this);
+      actionCollection()->addAction("kmail_new_addressbook_contact", action );
+      connect(action, SIGNAL(triggered(bool)), this, SLOT(slotCreateAddressBookContact()));
+
+
   }
 
   actionCollection()->addAction(KStandardAction::Undo,  "kmail_undo", this, SLOT(slotUndo()));
@@ -4670,4 +4723,11 @@ void KMMainWidget::slotExportData()
       KMessageBox::error( this, i18n( "Could not start backupmail. "
                                       "Please check your installation." ),
                          i18n( "Unable to start backupmail" ) );
+}
+
+void KMMainWidget::slotCreateAddressBookContact()
+{
+  Akonadi::ContactEditorDialog *dlg = new Akonadi::ContactEditorDialog( Akonadi::ContactEditorDialog::CreateMode, this );
+  dlg->exec();
+  delete dlg;
 }

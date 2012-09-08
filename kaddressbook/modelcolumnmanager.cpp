@@ -206,3 +206,5 @@ void ModelColumnManager::adaptHeaderView()
     view->setDefaultAlignment( mModel->columns().count() == 1 ? Qt::AlignCenter : Qt::AlignLeft );
   }
 }
+
+#include "modelcolumnmanager.moc"

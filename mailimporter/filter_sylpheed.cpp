@@ -44,14 +44,14 @@ FilterSylpheed::~FilterSylpheed()
 {
 }
 
-QString FilterSylpheed::defaultPath()
+QString FilterSylpheed::defaultSettingsPath()
 {
   return QDir::homePath() + QLatin1String( "/.sylpheed-2.0/" );
 }
 
 QString FilterSylpheed::localMailDirPath()
 {
-  QFile folderListFile( defaultPath() + QLatin1String( "/folderlist.xml" ) );
+  QFile folderListFile( FilterSylpheed::defaultSettingsPath() + QLatin1String( "/folderlist.xml" ) );
   if ( folderListFile.exists() ) {
     QDomDocument doc;
     QString errorMsg;
@@ -162,6 +162,25 @@ void FilterSylpheed::importDirContents( const QString& dirName)
   processDirectory( dirName );
 }
 
+bool FilterSylpheed::excludeFile(const QString& file)
+{
+    if(file.endsWith(QLatin1String(".sylpheed_cache")) ||
+       file.endsWith(QLatin1String(".sylpheed_mark")) ||
+       file.endsWith(QLatin1String(".mh_sequences")) ) {
+        return true;
+    }
+    return false;
+}
+
+QString FilterSylpheed::defaultInstallFolder() const
+{
+  return i18nc("define folder name where we will import sylpheed mails", "Sylpheed-Import") + QLatin1Char('/');
+}
+
+QString FilterSylpheed::markFile() const
+{
+  return QString::fromLatin1(".sylpheed_mark");
+}
 
 /**
  * Import the files within a Folder.
@@ -177,22 +196,21 @@ void FilterSylpheed::importFiles( const QString& dirName)
   QHash<QString,unsigned long> msgflags;
 
   QDir importDir (dirName);
+  const QString defaultInstallPath = defaultInstallFolder();
+
   const QStringList files = importDir.entryList(QStringList("[^\\.]*"), QDir::Files, QDir::Name);
   int currentFile = 1, numFiles = files.size();
 
-  readMarkFile(dir.filePath(".sylpheed_mark"), msgflags);
+  readMarkFile(dir.filePath(markFile()), msgflags);
 
   QStringList::ConstIterator end( files.constEnd() );
   for ( QStringList::ConstIterator mailFile = files.constBegin(); mailFile != end; ++mailFile, ++currentFile) {
     if(filterInfo()->shouldTerminate())
       return;
     QString _mfile = *mailFile;
-    if (!(_mfile.endsWith(QLatin1String(".sylpheed_cache")) || _mfile.endsWith(QLatin1String(".sylpheed_mark"))
-          || _mfile.endsWith(QLatin1String(".mh_sequences")) )) {
+    if (!excludeFile(_mfile)) {
       if(!generatedPath) {
-        //FIXME: Why recreate all the time _path ?
-
-        _path = i18nc("define folder name where we will import sylpheed mails", "Sylpheed-Import") + QLatin1Char('/');
+        _path = defaultInstallPath;
         QString _tmp = dir.filePath(*mailFile);
         _tmp = _tmp.remove(_tmp.length() - _mfile.length() -1, _mfile.length()+1);
         _path += _tmp.remove( mailDir(), Qt::CaseSensitive );

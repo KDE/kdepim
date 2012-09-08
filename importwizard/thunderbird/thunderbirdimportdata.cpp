@@ -38,7 +38,7 @@
 ThunderbirdImportData::ThunderbirdImportData(ImportWizard*parent)
     :AbstractImporter(parent)
 {
-  mPath = MailImporter::FilterThunderbird::defaultPath();
+  mPath = MailImporter::FilterThunderbird::defaultSettingsPath();
 }
 
 ThunderbirdImportData::~ThunderbirdImportData()

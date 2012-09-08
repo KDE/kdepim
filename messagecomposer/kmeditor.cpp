@@ -740,6 +740,7 @@ void KMeditor::fillComposerTextPart ( TextPart* textPart ) const
 {
   textPart->setCleanPlainText( toCleanPlainText() );
   textPart->setWrappedPlainText( toWrappedPlainText() );
+  textPart->setWordWrappingEnabled( lineWrapMode() == QTextEdit::FixedColumnWidth );
   if( isFormattingUsed() ) {
     textPart->setCleanHtml( toCleanHtml() );
     textPart->setEmbeddedImages( embeddedImages() );

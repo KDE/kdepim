@@ -44,9 +44,9 @@ thebat/thebatimportdata.cpp
 balsa/balsaimportdata.cpp
 balsa/balsasettings.cpp
 balsa/balsaaddressbook.cpp
-clawsmails/clawsmailsimportdata.cpp
-clawsmails/clawsmailssettings.cpp
-clawsmails/clawsmailsaddressbook.cpp
+claws-mail/clawsmailimportdata.cpp
+claws-mail/clawsmailsettings.cpp
+claws-mail/clawsmailaddressbook.cpp
 )
 
 include_directories(${CMAKE_SOURCE_DIR}/mailimporter 
@@ -80,6 +80,7 @@ target_link_libraries(importwizard
   mailcommon
   kdepim
   messagecomposer
+  messageviewer
 )
 
 install(TARGETS importwizard  ${INSTALL_TARGETS_DEFAULT_ARGS} )

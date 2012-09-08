@@ -37,7 +37,7 @@
 #include "filterimporter/filterimportersylpheed_p.h"
 #include "filterimporter/filterimporterprocmail_p.h"
 #include "filterimporter/filterimporterbalsa_p.h"
-#include "filterimporter/filterimporterclawsmails_p.h"
+#include "filterimporter/filterimporterclawsmail_p.h"
 #include "selectthunderbirdfilterfilesdialog.h"
 
 #include <messageviewer/autoqpointer.h>
@@ -276,27 +276,27 @@ QList<MailFilter *> FilterImporterExporter::importFilters(
         break;
       case ThunderBirdFilter:
         title = i18n( "Import Thunderbird Filters" );
-        defaultPath = MailCommon::FilterImporterThunderbird::defaultPath();
+        defaultPath = MailCommon::FilterImporterThunderbird::defaultFiltersSettingsPath();
         break;
       case EvolutionFilter:
         title = i18n( "Import Evolution Filters" );
-        defaultPath = MailCommon::FilterImporterEvolution::defaultPath();
+        defaultPath = MailCommon::FilterImporterEvolution::defaultFiltersSettingsPath();
         break;
       case SylpheedFilter:
         title = i18n( "Import Sylpheed Filters" );
-        defaultPath = MailCommon::FilterImporterSylpheed::defaultPath();
+        defaultPath = MailCommon::FilterImporterSylpheed::defaultFiltersSettingsPath();
         break;
       case ProcmailFilter:
         title = i18n( "Import Procmail Filters" );
-        defaultPath = MailCommon::FilterImporterProcmail::defaultPath();
+        defaultPath = MailCommon::FilterImporterProcmail::defaultFiltersSettingsPath();
         break;
       case BalsaFilter:
         title = i18n( "Import Balsa Filters" );
-        defaultPath = MailCommon::FilterImporterBalsa::defaultPath();
+        defaultPath = MailCommon::FilterImporterBalsa::defaultFiltersSettingsPath();
         break;
-      case ClawsMailsFilter:
+      case ClawsMailFilter:
         title = i18n( "Import Claws Mail Filters" );
-        defaultPath = MailCommon::FilterImporterClawsMails::defaultPath();
+        defaultPath = MailCommon::FilterImporterClawsMails::defaultFiltersSettingsPath();
         break;
       }
 
@@ -331,7 +331,7 @@ QList<MailFilter *> FilterImporterExporter::importFilters(
   {
     if(fileName.isEmpty()) {
       SelectThunderbirdFilterFilesDialog * selectThunderBirdFileDialog = new SelectThunderbirdFilterFilesDialog(d->mParent);
-      selectThunderBirdFileDialog->setStartDir(KUrl(MailCommon::FilterImporterThunderbird::defaultPath()));
+      selectThunderBirdFileDialog->setStartDir(KUrl(MailCommon::FilterImporterThunderbird::defaultFiltersSettingsPath()));
       if(selectThunderBirdFileDialog->exec()) {
         Q_FOREACH(const QString& url, selectThunderBirdFileDialog->selectedFiles()) {
           QFile fileThunderbird(url);
@@ -409,7 +409,7 @@ QList<MailFilter *> FilterImporterExporter::importFilters(
     delete filter;
     break;
   }
-  case ClawsMailsFilter:
+  case ClawsMailFilter:
   {
     MailCommon::FilterImporterClawsMails *filter =
       new MailCommon::FilterImporterClawsMails( &file );

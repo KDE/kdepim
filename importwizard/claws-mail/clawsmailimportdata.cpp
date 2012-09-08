@@ -15,11 +15,11 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "clawsmails/clawsmailsimportdata.h"
-#include "clawsmails/clawsmailssettings.h"
-#include "clawsmails/clawsmailsaddressbook.h"
-#include "mailimporter/filter_clawsmails.h"
-#include "mailcommon/filter/filterimporter/filterimporterclawsmails_p.h"
+#include "claws-mail/clawsmailimportdata.h"
+#include "claws-mail/clawsmailsettings.h"
+#include "claws-mail/clawsmailaddressbook.h"
+#include "mailimporter/filter_clawsmail.h"
+#include "mailcommon/filter/filterimporter/filterimporterclawsmail_p.h"
 #include "mailimporter/filterinfo.h"
 #include "importfilterinfogui.h"
 #include "importwizard.h"
@@ -30,18 +30,18 @@
 #include <QWidget>
 
 
-ClawsMailsImportData::ClawsMailsImportData(ImportWizard*parent)
+ClawsMailImportData::ClawsMailImportData(ImportWizard*parent)
   :AbstractImporter(parent)
 {
-  mPath = QDir::homePath() + QLatin1String("/.claws-mail/");
+  mPath = MailImporter::FilterClawsMail::defaultSettingsPath();
 }
 
-ClawsMailsImportData::~ClawsMailsImportData()
+ClawsMailImportData::~ClawsMailImportData()
 {
 }
 
 
-bool ClawsMailsImportData::foundMailer() const
+bool ClawsMailImportData::foundMailer() const
 {
   QDir directory( mPath );
   if ( directory.exists() )
@@ -49,24 +49,24 @@ bool ClawsMailsImportData::foundMailer() const
   return false;
 }
 
-QString ClawsMailsImportData::name() const
+QString ClawsMailImportData::name() const
 {
   return QLatin1String("Claws Mails");
 }
 
-bool ClawsMailsImportData::importMails()
+bool ClawsMailImportData::importMails()
 {
   MailImporter::FilterInfo *info = initializeInfo();
 
-  MailImporter::FilterClawsMails clawsMails;
-  clawsMails.setFilterInfo( info );
+  MailImporter::FilterClawsMail clawsMail;
+  clawsMail.setFilterInfo( info );
   info->setStatusMessage(i18n("Import in progress"));
-  const QString mailsPath = clawsMails.localMailDirPath();
+  const QString mailsPath = clawsMail.localMailDirPath();
   QDir directory(mailsPath);
   if(directory.exists())
-    clawsMails.importMails(mailsPath);
+    clawsMail.importMails(mailsPath);
   else
-    clawsMails.import();
+    clawsMail.import();
   info->setStatusMessage(i18n("Import finished"));
 
 
@@ -74,18 +74,18 @@ bool ClawsMailsImportData::importMails()
   return true;
 }
 
-bool ClawsMailsImportData::importAddressBook()
+bool ClawsMailImportData::importAddressBook()
 {
   const QDir addressbookDir(mPath + QLatin1String("addrbook/"));
-  ClawsMailsAddressBook account( addressbookDir, mImportWizard );
+  ClawsMailAddressBook account( addressbookDir, mImportWizard );
   return true;
 }
 
-bool ClawsMailsImportData::importSettings()
+bool ClawsMailImportData::importSettings()
 {
-  const QString accountFile = mPath + QLatin1String("/accountrc");
+  const QString accountFile = mPath + QLatin1String("accountrc");
   if ( QFile( accountFile ).exists() ) {
-    ClawsMailsSettings account( mImportWizard );
+    ClawsMailSettings account( mImportWizard );
     account.importSettings(accountFile, mPath);
   } else {
     addImportSettingsInfo(i18n("Claws Mail settings not found."));
@@ -93,14 +93,14 @@ bool ClawsMailsImportData::importSettings()
   return true;
 }
 
-bool ClawsMailsImportData::importFilters()
+bool ClawsMailImportData::importFilters()
 {
   const QString filterPath(mPath + QLatin1String("matcherrc"));
-  return addFilters( filterPath, MailCommon::FilterImporterExporter::ClawsMailsFilter );
+  return addFilters( filterPath, MailCommon::FilterImporterExporter::ClawsMailFilter );
 }
 
 
-AbstractImporter::TypeSupportedOptions ClawsMailsImportData::supportedOption()
+AbstractImporter::TypeSupportedOptions ClawsMailImportData::supportedOption()
 {
   TypeSupportedOptions options;
   options |=AbstractImporter::Mails;

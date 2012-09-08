@@ -61,6 +61,7 @@ using MessageComposer::MessageFactory;
 
 #include "messagecore/messagehelpers.h"
 
+#include <Akonadi/Contact/ContactEditorDialog>
 
 #include <kde_file.h>
 #include <kdebug.h>
@@ -112,7 +113,7 @@ KMReaderWin::KMReaderWin(QWidget *aParent,
   connect( mViewer, SIGNAL(urlClicked(Akonadi::Item,KUrl)),
            this, SLOT(slotUrlClicked(Akonadi::Item,KUrl)) );
   connect( mViewer, SIGNAL(requestConfigSync()), kmkernel, SLOT(slotRequestConfigSync()), Qt::QueuedConnection ); // happens anyway on shutdown, so we can skip it there with using a queued connection
-  connect( mViewer, SIGNAL(resumeNetworkJobs()), kmkernel, SLOT(resumeNetworkJobs()));
+  connect( mViewer, SIGNAL(makeResourceOnline(MessageViewer::Viewer::ResourceOnlineMode)), kmkernel, SLOT(makeResourceOnline(MessageViewer::Viewer::ResourceOnlineMode)));
   connect( mViewer, SIGNAL(showReader(KMime::Content*,bool,QString)),
            this, SLOT(slotShowReader(KMime::Content*,bool,QString)) );
   connect( mViewer, SIGNAL(showMessage(KMime::Message::Ptr,QString)),
@@ -185,6 +186,13 @@ void KMReaderWin::createActions()
   ac->addAction( "add_bookmarks", mAddBookmarksAction );
   connect( mAddBookmarksAction, SIGNAL(triggered(bool)),
            SLOT(slotAddBookmarks()) );
+
+  mEditContactAction = new KAction( KIcon( "view-pim-contacts" ),
+                                     i18n( "Edit contact..." ), this );
+  mEditContactAction->setShortcutConfigurable( false );
+  ac->addAction( "edit_contact", mOpenAddrBookAction );
+  connect( mEditContactAction, SIGNAL(triggered(bool)),
+           SLOT(slotEditContact()) );
 
   // save URL as
   mUrlSaveAsAction = new KAction( i18n( "Save Link As..." ), this );
@@ -293,7 +301,7 @@ void KMReaderWin::displaySplashPage( const QString &info )
 
 void KMReaderWin::displayBusyPage()
 {
-  QString info =
+  const QString info =
     i18n( "<h2 style='margin-top: 0px;'>Retrieving Folder Contents</h2><p>Please wait . . .</p>&nbsp;" );
 
   displaySplashPage( info );
@@ -301,9 +309,18 @@ void KMReaderWin::displayBusyPage()
 
 void KMReaderWin::displayOfflinePage()
 {
-  QString info =
+  const QString info =
     i18n( "<h2 style='margin-top: 0px;'>Offline</h2><p>KMail is currently in offline mode. "
         "Click <a href=\"kmail:goOnline\">here</a> to go online . . .</p>&nbsp;" );
+
+  displaySplashPage( info );
+}
+
+void KMReaderWin::displayResourceOfflinePage()
+{
+  const QString info =
+    i18n( "<h2 style='margin-top: 0px;'>Offline</h2><p>Account is currently in offline mode. "
+        "Click <a href=\"kmail:goResourceOnline\">here</a> to go online . . .</p>&nbsp;" );
 
   displaySplashPage( info );
 }
@@ -714,6 +731,20 @@ void KMReaderWin::slotPrintComposeResult( KJob *job )
 
 }
 
+void KMReaderWin::setContactItem(const Akonadi::Item& contact)
+{
+  mSearchedContact = contact;
+}
+
+void KMReaderWin::slotEditContact()
+{
+  if( mSearchedContact.isValid() ) {
+    Akonadi::ContactEditorDialog *dlg = new Akonadi::ContactEditorDialog( Akonadi::ContactEditorDialog::EditMode, this );
+    dlg->setContact(mSearchedContact);
+    dlg->exec();
+    delete dlg;
+  }
+}
 
 #include "kmreaderwin.moc"
 

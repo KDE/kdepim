@@ -29,7 +29,7 @@
 Evolutionv2ImportData::Evolutionv2ImportData(ImportWizard*parent)
   :AbstractImporter(parent)
 {
-  mPath = MailImporter::FilterEvolution_v2::defaultPath();
+  mPath = MailImporter::FilterEvolution_v2::defaultSettingsPath();
 }
 
 Evolutionv2ImportData::~Evolutionv2ImportData()

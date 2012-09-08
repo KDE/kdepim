@@ -40,8 +40,8 @@
 #include <QDebug>
 #include <QDir>
 
-ExportMailJob::ExportMailJob(QWidget *parent, BackupMailUtil::BackupTypes typeSelected, const QString &filename,int numberOfStep)
-  :AbstractImportExportJob(parent,filename,typeSelected,numberOfStep)
+ExportMailJob::ExportMailJob(QWidget *parent, BackupMailUtil::BackupTypes typeSelected, ArchiveStorage *archiveStorage,int numberOfStep)
+  :AbstractImportExportJob(parent,archiveStorage,typeSelected,numberOfStep)
 {
 }
 
@@ -56,16 +56,12 @@ void ExportMailJob::start()
 
 void ExportMailJob::startBackup()
 {
-  if(!openArchive(true))
-    return;
-
   createProgressDialog();
 
   if(mTypeSelected & BackupMailUtil::Identity) {
     backupIdentity();
     increaseProgressDialog();
     if(wasCanceled()) {
-      closeArchive();
       return;
     }
   }
@@ -73,7 +69,6 @@ void ExportMailJob::startBackup()
     backupTransports();
     increaseProgressDialog();
     if(wasCanceled()) {
-      closeArchive();
       return;
     }
   }
@@ -81,7 +76,6 @@ void ExportMailJob::startBackup()
     backupMails();
     increaseProgressDialog();
     if(wasCanceled()) {
-      closeArchive();
       return;
     }
   }
@@ -89,7 +83,6 @@ void ExportMailJob::startBackup()
     backupResources();
     increaseProgressDialog();
     if(wasCanceled()) {
-      closeArchive();
       return;
     }
   }
@@ -97,7 +90,6 @@ void ExportMailJob::startBackup()
     backupConfig();
     increaseProgressDialog();
     if(wasCanceled()) {
-      closeArchive();
       return;
     }
   }
@@ -105,7 +97,6 @@ void ExportMailJob::startBackup()
     backupAkonadiDb();
     increaseProgressDialog();
     if(wasCanceled()) {
-      closeArchive();
       return;
     }
   }
@@ -113,11 +104,9 @@ void ExportMailJob::startBackup()
     backupNepomuk();
     increaseProgressDialog();
     if(wasCanceled()) {
-      closeArchive();
       return;
     }
   }
-  closeArchive();
 }
 
 void ExportMailJob::backupTransports()
@@ -138,7 +127,7 @@ void ExportMailJob::backupTransports()
   KConfig *config = mailtransportsConfig->copyTo( tmp.fileName() );
 
   config->sync();
-  const bool fileAdded  = mArchive->addLocalFile(tmp.fileName(), BackupMailUtil::transportsPath() + QLatin1String("mailtransports"));
+  const bool fileAdded  = archive()->addLocalFile(tmp.fileName(), BackupMailUtil::transportsPath() + QLatin1String("mailtransports"));
   if(fileAdded)
     Q_EMIT info(i18n("Transports backup done."));
   else
@@ -182,7 +171,7 @@ void ExportMailJob::backupConfig()
     KUrl url(tmp.fileName());
     MailCommon::FilterImporterExporter exportFilters;
     exportFilters.exportFilters(lstFilter,url, true);
-    const bool fileAdded  = mArchive->addLocalFile(tmp.fileName(), BackupMailUtil::configsPath() + QLatin1String("filters"));
+    const bool fileAdded  = archive()->addLocalFile(tmp.fileName(), BackupMailUtil::configsPath() + QLatin1String("filters"));
     if(fileAdded)
       Q_EMIT info(i18n("Filters backup done."));
     else
@@ -392,7 +381,7 @@ void ExportMailJob::backupIdentity()
   }
 
   identityConfig->sync();
-  const bool fileAdded  = mArchive->addLocalFile(tmp.fileName(), BackupMailUtil::identitiesPath() + QLatin1String("emailidentities"));
+  const bool fileAdded  = archive()->addLocalFile(tmp.fileName(), BackupMailUtil::identitiesPath() + QLatin1String("emailidentities"));
   if(fileAdded)
     Q_EMIT info(i18n("Identity backup done."));
   else
@@ -428,7 +417,7 @@ void ExportMailJob::backupMails()
           KUrl url = resourcePath(agent);
           if(!url.isEmpty()) {
             const QString filename = url.fileName();
-            const bool fileAdded  = mArchive->addLocalFile(url.path(), archivePath + filename);
+            const bool fileAdded  = archive()->addLocalFile(url.path(), archivePath + filename);
             if(fileAdded) {
               storeResources(identifier, archivePath );
               Q_EMIT info(i18n("MBox \"%1\" was backuped.",filename));
@@ -493,7 +482,7 @@ bool ExportMailJob::backupMailData(const KUrl& url,const QString& archivePath)
 
   //TODO: store as an uniq file
   mailArchive->setCompression(KZip::NoCompression);
-  const bool fileAdded = mArchive->addLocalFile(tmp.fileName(), archivePath + filename);
+  const bool fileAdded = archive()->addLocalFile(tmp.fileName(), archivePath + filename);
   mailArchive->setCompression(KZip::DeflateCompression);
   delete mailArchive;
 
@@ -551,7 +540,7 @@ void ExportMailJob::backupAkonadiDb()
     kDebug()<<" Error during dump Database";
     return;
   }
-  const bool fileAdded  = mArchive->addLocalFile(tmp.fileName(), BackupMailUtil::akonadiPath() + QLatin1String("akonadidatabase.sql"));
+  const bool fileAdded  = archive()->addLocalFile(tmp.fileName(), BackupMailUtil::akonadiPath() + QLatin1String("akonadidatabase.sql"));
   if(!fileAdded)
     Q_EMIT error(i18n("Akonadi Database \"%1\" cannot be added to backup file.", QString::fromLatin1("akonadidatabase.sql")));
   else
@@ -589,14 +578,14 @@ void ExportMailJob::storeResources(const QString&identifier, const QString& path
     }
   }
   config->sync();
-  const bool fileAdded  = mArchive->addLocalFile(tmp.fileName(), path + agentFileName);
+  const bool fileAdded  = archive()->addLocalFile(tmp.fileName(), path + agentFileName);
   if(!fileAdded)
     Q_EMIT error(i18n("Resource file \"%1\" cannot be added to backup file.", agentFileName));
 }
 
 void ExportMailJob::backupFile(const QString&filename, const QString& path, const QString&storedName)
 {
-  const bool fileAdded  = mArchive->addLocalFile(filename, path + storedName);
+  const bool fileAdded  = archive()->addLocalFile(filename, path + storedName);
   if(fileAdded)
     Q_EMIT info(i18n("\"%1\" backup done.",storedName));
   else

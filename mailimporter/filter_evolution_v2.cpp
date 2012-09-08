@@ -42,7 +42,7 @@ FilterEvolution_v2::~FilterEvolution_v2()
 }
 
 
-QString FilterEvolution_v2::defaultPath()
+QString FilterEvolution_v2::defaultSettingsPath()
 {
   return QDir::homePath() + QLatin1String( "/.evolution/mail/local" );
 }
@@ -55,7 +55,7 @@ void FilterEvolution_v2::import()
    * We ask the user to choose Evolution's root directory.
    * This should be usually ~/.evolution/mail/local/
    */
-  QString evolDir = defaultPath();
+  QString evolDir = defaultSettingsPath();
   QDir d( evolDir );
   if ( !d.exists() ) {
     evolDir = QDir::homePath();

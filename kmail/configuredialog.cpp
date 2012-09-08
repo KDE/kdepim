@@ -2377,7 +2377,7 @@ ComposerPageGeneralTab::ComposerPageGeneralTab( QWidget * parent )
   label = new QLabel( MessageComposer::MessageComposerSettings::self()->maximumRecipientsItem()->label(), this );
   hlay->addWidget( label );
 
-  mMaximumRecipients = new KIntSpinBox( 0, 500, 1, 1, this );
+  mMaximumRecipients = new KIntSpinBox( 0, 9999, 1, 1, this );
   hlay->addWidget( mMaximumRecipients );
   hlay->addStretch( 1 );
   connect( mMaximumRecipients, SIGNAL(valueChanged(int)),
@@ -3219,6 +3219,23 @@ ComposerPageAttachmentsTab::ComposerPageAttachmentsTab( QWidget * parent )
            this, SLOT(slotEmitChanged()) );
   vlay->addWidget( mMissingAttachmentDetectionCheck );
 
+
+  QHBoxLayout * layAttachment = new QHBoxLayout;
+  label = new QLabel( i18n("Warn when inserting attachments larger than:"), this );
+  label->setAlignment( Qt::AlignLeft );
+  layAttachment->addWidget(label);
+
+  mMaximumAttachmentSize = new KIntNumInput( this );
+  mMaximumAttachmentSize->setRange( -1, 99999 );
+  mMaximumAttachmentSize->setSingleStep( 100 );
+  mMaximumAttachmentSize->setSuffix(i18nc("spinbox suffix: unit for kilobyte", " kB"));
+  connect( mMaximumAttachmentSize, SIGNAL(valueChanged(int)),
+           this, SLOT(slotEmitChanged()) );
+  mMaximumAttachmentSize->setSpecialValueText(i18n("No limit"));
+  layAttachment->addWidget(mMaximumAttachmentSize);
+  vlay->addLayout(layAttachment);
+
+
   // "Attachment key words" label and string list editor
   label = new QLabel( i18n("Recognize any of the following key words as "
                            "intention to attach a file:"), this );
@@ -3253,6 +3270,8 @@ void ComposerPage::AttachmentsTab::doLoadFromGlobalSettings()
 
   const QStringList attachWordsList = GlobalSettings::self()->attachmentKeywords();
   mAttachWordsListEditor->setStringList( attachWordsList );
+  const int maximumAttachmentSize(MessageComposer::MessageComposerSettings::self()->maximumAttachmentSize());
+  mMaximumAttachmentSize->setValue(maximumAttachmentSize == -1 ? -1 : MessageComposer::MessageComposerSettings::self()->maximumAttachmentSize()/1024);
 }
 
 void ComposerPage::AttachmentsTab::save()
@@ -3265,6 +3284,8 @@ void ComposerPage::AttachmentsTab::save()
     mAttachWordsListEditor->stringList() );
 
   KMime::setUseOutlookAttachmentEncoding( mOutlookCompatibleCheck->isChecked() );
+  const int maximumAttachmentSize(mMaximumAttachmentSize->value());
+  MessageComposer::MessageComposerSettings::self()->setMaximumAttachmentSize(maximumAttachmentSize == -1 ? -1 : maximumAttachmentSize*1024);
 
 }
 
@@ -3450,12 +3471,12 @@ void SecurityPage::ComposerCryptoTab::doLoadOther()
 
   mWidget->mAutoSignature->setChecked( GlobalSettings::self()->pgpAutoSign() );
 
-  mWidget->mEncToSelf->setChecked( GlobalSettings::self()->cryptoEncryptToSelf() );
+  mWidget->mEncToSelf->setChecked( MessageComposer::MessageComposerSettings::self()->cryptoEncryptToSelf() );
   mWidget->mShowEncryptionResult->setChecked( false ); //composer.readBoolEntry( "crypto-show-encryption-result", true ) );
   mWidget->mShowEncryptionResult->hide();
-  mWidget->mShowKeyApprovalDlg->setChecked( GlobalSettings::self()->cryptoShowKeysForApproval() );
+  mWidget->mShowKeyApprovalDlg->setChecked( MessageComposer::MessageComposerSettings::self()->cryptoShowKeysForApproval() );
 
-  mWidget->mAutoEncrypt->setChecked( GlobalSettings::self()->pgpAutoEncrypt() ) ;
+  mWidget->mAutoEncrypt->setChecked( MessageComposer::MessageComposerSettings::self()->pgpAutoEncrypt() ) ;
   mWidget->mNeverEncryptWhenSavingInDrafts->setChecked(
       GlobalSettings::self()->neverEncryptDrafts() );
 
@@ -3466,11 +3487,11 @@ void SecurityPage::ComposerCryptoTab::save()
 {
   GlobalSettings::self()->setPgpAutoSign( mWidget->mAutoSignature->isChecked() );
 
-  GlobalSettings::self()->setCryptoEncryptToSelf( mWidget->mEncToSelf->isChecked() );
+  MessageComposer::MessageComposerSettings::self()->setCryptoEncryptToSelf( mWidget->mEncToSelf->isChecked() );
   GlobalSettings::self()->setCryptoShowEncryptionResult( mWidget->mShowEncryptionResult->isChecked() );
-  GlobalSettings::self()->setCryptoShowKeysForApproval( mWidget->mShowKeyApprovalDlg->isChecked() );
+  MessageComposer::MessageComposerSettings::self()->setCryptoShowKeysForApproval( mWidget->mShowKeyApprovalDlg->isChecked() );
 
-  GlobalSettings::self()->setPgpAutoEncrypt( mWidget->mAutoEncrypt->isChecked() );
+  MessageComposer::MessageComposerSettings::self()->setPgpAutoEncrypt( mWidget->mAutoEncrypt->isChecked() );
   GlobalSettings::self()->setNeverEncryptDrafts( mWidget->mNeverEncryptWhenSavingInDrafts->isChecked() );
 
   GlobalSettings::self()->setCryptoStoreEncrypted( mWidget->mStoreEncrypted->isChecked() );
@@ -3480,11 +3501,11 @@ void SecurityPage::ComposerCryptoTab::doLoadFromGlobalSettings()
 {
   mWidget->mAutoSignature->setChecked( GlobalSettings::self()->pgpAutoSign() );
 
-  mWidget->mEncToSelf->setChecked( GlobalSettings::self()->cryptoEncryptToSelf() );
+  mWidget->mEncToSelf->setChecked( MessageComposer::MessageComposerSettings::self()->cryptoEncryptToSelf() );
   mWidget->mShowEncryptionResult->setChecked( GlobalSettings::self()->cryptoShowEncryptionResult() );
-  mWidget->mShowKeyApprovalDlg->setChecked(GlobalSettings::self()->cryptoShowKeysForApproval() );
+  mWidget->mShowKeyApprovalDlg->setChecked(MessageComposer::MessageComposerSettings::self()->cryptoShowKeysForApproval() );
 
-  mWidget->mAutoEncrypt->setChecked(GlobalSettings::self()->pgpAutoEncrypt() );
+  mWidget->mAutoEncrypt->setChecked(MessageComposer::MessageComposerSettings::self()->pgpAutoEncrypt() );
   mWidget->mNeverEncryptWhenSavingInDrafts->setChecked( GlobalSettings::self()->neverEncryptDrafts() );
 
   mWidget->mStoreEncrypted->setChecked(GlobalSettings::self()->cryptoStoreEncrypted() );

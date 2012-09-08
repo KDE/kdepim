@@ -15,7 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "filterimporterclawsmails_p.h"
+#include "filterimporterclawsmail_p.h"
 #include "filtermanager.h"
 #include "mailfilter.h"
 
@@ -36,7 +36,14 @@ FilterImporterClawsMails::FilterImporterClawsMails( QFile *file )
   while ( !stream.atEnd() ) {
     QString line = stream.readLine();
     kDebug() << " line :" << line << " filter " << filter;
-    //filter = parseLine( stream, line, filter );
+
+    if(line.isEmpty()) {
+
+    } else if(line.startsWith(QLatin1Char('[')) && line.endsWith(QLatin1Char(']'))) {
+
+    } else {
+      filter = parseLine( stream, line, filter );
+    }
   }
   appendFilter(filter);
 }
@@ -45,9 +52,18 @@ FilterImporterClawsMails::~FilterImporterClawsMails()
 {
 }
 
-QString FilterImporterClawsMails::defaultPath()
+QString FilterImporterClawsMails::defaultFiltersSettingsPath()
 {
   return QString::fromLatin1( "%1/.claws-mail/matcherrc" ).arg( QDir::homePath() );
 }
 
-
+MailFilter * FilterImporterClawsMails::parseLine(QTextStream& stream, const QString& line, MailFilter *filter)
+{
+  appendFilter(filter);
+  filter = new MailFilter();
+  if(line.startsWith(QLatin1String("enabled"))) {
+    filter->setEnabled(true);
+  }
+  //TODO
+  return filter;
+}

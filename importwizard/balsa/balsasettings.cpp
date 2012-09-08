@@ -20,6 +20,7 @@
 
 #include <mailtransport/transportmanager.h>
 #include "mailcommon/mailutil.h"
+#include "messageviewer/kxface.h"
 
 #include <kpimidentities/identity.h>
 #include <kpimidentities/signature.h>
@@ -28,6 +29,7 @@
 #include <KConfig>
 #include <KConfigGroup>
 #include <QFile>
+#include <QImage>
 
 BalsaSettings::BalsaSettings(const QString &filename, ImportWizard *parent)
   :AbstractSettings( parent )
@@ -102,20 +104,34 @@ void BalsaSettings::readIdentity(const KConfigGroup &grp)
     newIdentity->setTransport(mHashSmtp.value(smtp));
   }
 
+  const QString signaturePath = grp.readEntry(QLatin1String("SignaturePath"));
+  if(!signaturePath.isEmpty()) {
+    KPIMIdentities::Signature signature;
+    if(grp.readEntry(QLatin1String("SigExecutable"),false)) {
+      signature.setUrl(signaturePath, true );
+      signature.setType( KPIMIdentities::Signature::FromCommand );
+    } else {
+      signature.setType( KPIMIdentities::Signature::FromFile );
+    }
+    newIdentity->setSignature( signature );
+  }
+
+  const QString xfacePathStr = grp.readEntry(QLatin1String("XFacePath"));
+  if(!xfacePathStr.isEmpty()) {
+    newIdentity->setXFaceEnabled(true);
+    MessageViewer::KXFace xf;
+    newIdentity->setXFace(xf.fromImage( QImage( xfacePathStr ) ));
+  }
 #if 0
   Domain=
   ReplyString=Re :
   ForwardString=Fwd :
   SendMultipartAlternative=false
-  SignaturePath=
-  SigExecutable=false
   SigSending=true
   SigForward=true
   SigReply=true
   SigSeparator=true
   SigPrepend=false
-  FacePath=
-  XFacePath=
   RequestMDN=false
   GpgSign=false
   GpgEncrypt=false
