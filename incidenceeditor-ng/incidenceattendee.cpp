@@ -81,7 +81,7 @@ IncidenceAttendee::IncidenceAttendee( QWidget *parent, IncidenceDateTime *dateTi
   mUi->mOrganizerStack->setCurrentIndex( 0 );
 
   fillOrganizerCombo();
-  mUi->mSolveButton->setEnabled( true ); // always keep enabled, per bug295118
+  mUi->mSolveButton->setEnabled( false );
   mUi->mOrganizerLabel->setVisible( false );
 
   mConflictResolver = new ConflictResolver( parent, parent );
@@ -422,17 +422,20 @@ void IncidenceAttendee::slotAttendeeChanged( const KCalCore::Attendee::Ptr &oldA
 
 void IncidenceAttendee::slotUpdateConflictLabel( int count )
 {
-  if ( count > 0 ) {
-//    mUi->mSolveButton->setEnabled( true );  always keep enabled, per bug295118
-    QString label( i18ncp( "@label Shows the number of scheduling conflicts",
-                           "%1 conflict",
-                           "%1 conflicts", count ) );
-    mUi->mConflictsLabel->setText( label );
+  if ( mAttendeeEditor->attendees().count() > 0 ) {
+    mUi->mSolveButton->setEnabled( true );
+    if ( count > 0 ) {
+      QString label = i18ncp( "@label Shows the number of scheduling conflicts",
+                              "%1 conflict",
+                              "%1 conflicts", count );
+      mUi->mConflictsLabel->setText( label );
+      mUi->mConflictsLabel->setVisible( true );
+    } else {
+      mUi->mConflictsLabel->setVisible( false );
+    }
   } else {
-//    mUi->mSolveButton->setEnabled( false ); always keep enabled, per bug295118
-    QString label( i18nc( "@label There are no scheduling conflicts.",
-                          "No conflicts" ) );
-    mUi->mConflictsLabel->setText( label );
+    mUi->mSolveButton->setEnabled( false );
+    mUi->mConflictsLabel->setVisible( false );
   }
 }
 
