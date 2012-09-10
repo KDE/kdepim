@@ -16,8 +16,10 @@
 */
 
 #include "exportcalendarjob.h"
+#include <QWidget>
 
-ExportCalendarJob::ExportCalendarJob()
+ExportCalendarJob::ExportCalendarJob(QWidget *parent, ArchiveStorage *archiveStorage)
+  : QObject(parent)
 {
 }
 

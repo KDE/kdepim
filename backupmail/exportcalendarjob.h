@@ -18,10 +18,17 @@
 #ifndef EXPORTCALENDARJOB_H
 #define EXPORTCALENDARJOB_H
 
-class ExportCalendarJob
+#include <QObject>
+
+class QWidget;
+class QProgressDialog;
+class ArchiveStorage;
+
+class ExportCalendarJob : public QObject
 {
+  Q_OBJECT
 public:
-  explicit ExportCalendarJob();
+  explicit ExportCalendarJob(QWidget *parent, ArchiveStorage *archiveStorage);
   ~ExportCalendarJob();
 };
 
