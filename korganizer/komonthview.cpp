@@ -1137,8 +1137,10 @@ void KOMonthView::changeIncidenceDisplayAdded( Incidence *incidence, MonthViewCe
       // This is neccessary for multiday events that start before the date of the first cell
       // and to correctly draw recurring events that recur before they are ended.
       if ( incidence->dtStart().isValid() &&
-           incidence->dtStart() != QDateTime( QDate(1970, 1, 1), QTime(00,59,59) ) ) {
-        // Tasks without a start date and a recurrence return 1.1.1970 - 00:59
+           incidence->dtStart() != QDateTime( QDate( 1970, 1, 1 ), QTime( 00,59,59) ) &&
+           incidence->dtStart() != QDateTime( QDate( 1969, 12, 31 ), QTime( 23,59,59 ) ) ) {
+        // Tasks without a start date, no due time and a recurrence return 1.1.1970 - 00:59
+        // Tasks without a start date, a due time and a recurrence return 31.12.1969 - 23:59
         // as a "valid" start time. (Kolab/issue4852)
         const QValueList<QDateTime> startDates = incidence->startDateTimesForDate( mCells[i]->date() );
         for ( int j = 0; j < startDates.count(); j++ ){
