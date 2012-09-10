@@ -64,5 +64,5 @@ Exec=akonadi_mailfilter_agent
 Icon=view-filter
 
 X-Akonadi-MimeTypes=message/rfc822
-X-Akonadi-Capabilities=Unique,Autostart
+X-Akonadi-Capabilities=Unique,Autostart,NoConfig
 X-Akonadi-Identifier=akonadi_mailfilter_agent
