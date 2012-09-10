@@ -282,6 +282,11 @@ bool Scheduler::acceptRequest( IncidenceBase *incidence,
       // This is supposed to be a new request, not an update - however we want to update
       // the existing one to handle the "clicking more than once on the invitation" case.
       // So check the attendee status of the attendee.
+
+      /*
+       * According to kolab/issue4810 we want also want to update an incidence in a shared
+       * folder instead of creating a new one if that one is already available.
+       *
       const KCal::Attendee::List attendees = i->attendees();
       KCal::Attendee::List::ConstIterator ait;
       for ( ait = attendees.begin(); ait != attendees.end(); ++ait ) {
@@ -292,7 +297,7 @@ bool Scheduler::acceptRequest( IncidenceBase *incidence,
           isUpdate = false;
           break;
         }
-      }
+      }*/
       if ( isUpdate ) {
         if ( i->revision() == inc->revision() &&
              i->lastModified() > inc->lastModified() ) {
