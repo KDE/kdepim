@@ -144,7 +144,7 @@ void SearchRuleWidget::initWidget()
   KCompletion *comp = mRuleField->completionObject();
   comp->setIgnoreCase(true);
   comp->insertItems(mFilterFieldList);
-  comp->setCompletionMode(KGlobalSettings::CompletionAuto);
+  comp->setCompletionMode(KGlobalSettings::CompletionPopupAuto);
 
   // don't show sliders when popping up this menu
   mRuleField->setMaxCount( mRuleField->count() );
