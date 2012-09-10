@@ -112,6 +112,9 @@ void SearchRuleWidget::setHeadersOnly( bool headersOnly )
 
   mRuleField->clear();
   mRuleField->addItems( mFilterFieldList );
+  KCompletion *comp = mRuleField->completionObject();
+  comp->clear();
+  comp->insertItems(mFilterFieldList);
   mRuleField->setMaxCount( mRuleField->count() );
   mRuleField->adjustSize();
 
@@ -138,6 +141,11 @@ void SearchRuleWidget::initWidget()
   mRuleField->setTrapReturnKey(true);
 
   mRuleField->addItems( mFilterFieldList );
+  KCompletion *comp = mRuleField->completionObject();
+  comp->setIgnoreCase(true);
+  comp->insertItems(mFilterFieldList);
+  comp->setCompletionMode(KGlobalSettings::CompletionAuto);
+
   // don't show sliders when popping up this menu
   mRuleField->setMaxCount( mRuleField->count() );
   mRuleField->adjustSize();
