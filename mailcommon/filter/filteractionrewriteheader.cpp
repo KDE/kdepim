@@ -102,6 +102,11 @@ QWidget* FilterActionRewriteHeader::createParamWidget( QWidget *parent ) const
   comboBox->setInsertPolicy( QComboBox::InsertAtBottom );
   layout->addWidget( comboBox, 0 /* stretch */ );
 
+  KCompletion *comp = comboBox->completionObject();
+  comp->setIgnoreCase(true);
+  comp->insertItems(mParameterList);
+  comp->setCompletionMode(KGlobalSettings::CompletionPopupAuto);
+
   QLabel *label = new QLabel( i18n( "Replace:" ), widget );
   label->setFixedWidth( label->sizeHint().width() );
   layout->addWidget( label, 0 );
