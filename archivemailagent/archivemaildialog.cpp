@@ -141,7 +141,7 @@ void ArchiveMailWidget::customContextMenuRequested(const QPoint&)
     return;
   KMenu menu;
   if( listItems.count() == 1) {
-    menu.addAction(i18n("Open Contening Folder..."),this,SLOT(slotOpenFolder()));
+    menu.addAction(i18n("Open Containing Folder..."),this,SLOT(slotOpenFolder()));
     menu.addSeparator();
   }
   menu.addAction(i18n("Delete"),this,SLOT(slotRemoveItem()));
