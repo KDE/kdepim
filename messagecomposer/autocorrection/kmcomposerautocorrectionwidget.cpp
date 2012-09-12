@@ -21,6 +21,8 @@
 
 #include "messagecomposersettings.h"
 
+#include <KCharSelect>
+
 
 KMComposerAutoCorrectionWidget::KMComposerAutoCorrectionWidget(KMComposerAutoCorrection * autoCorrect, QWidget *parent) :
   QWidget(parent),
@@ -44,13 +46,11 @@ KMComposerAutoCorrectionWidget::KMComposerAutoCorrectionWidget(KMComposerAutoCor
   connect(ui->doubleQuote2, SIGNAL(clicked()), this, SLOT(selectDoubleQuoteCharClose()));
   connect(ui->doubleDefault, SIGNAL(clicked()), this, SLOT(setDefaultDoubleQuotes()));
   connect(ui->advancedAutocorrection, SIGNAL(stateChanged(int)), this, SLOT(enableAdvAutocorrection(int)));
-  connect(ui->autoCorrectionWithFormat, SIGNAL(stateChanged(int)), this, SLOT(enableAutocorrectFormat(int)));
   connect(ui->addButton, SIGNAL(clicked()), this, SLOT(addAutocorrectEntry()));
   connect(ui->removeButton, SIGNAL(clicked()), this, SLOT(removeAutocorrectEntry()));
   connect(ui->tableWidget, SIGNAL(cellClicked(int, int)), this, SLOT(setFindReplaceText(int, int)));
   connect(ui->find, SIGNAL(textChanged(const QString &)), this, SLOT(enableAddRemoveButton()));
   connect(ui->replace, SIGNAL(textChanged(const QString &)), this, SLOT(enableAddRemoveButton()));
-  connect(ui->changeFormat, SIGNAL(clicked()), this, SLOT(changeCharFormat()));
   connect(ui->abbreviation, SIGNAL(textChanged(const QString &)), this, SLOT(abbreviationChanged(const QString &)));
   connect(ui->twoUpperLetter, SIGNAL(textChanged(const QString &)), this, SLOT(twoUpperLetterChanged(const QString &)));
   connect(ui->add1, SIGNAL(clicked()), this, SLOT(addAbbreviationEntry()));
@@ -67,16 +67,16 @@ KMComposerAutoCorrectionWidget::~KMComposerAutoCorrectionWidget()
 
 void KMComposerAutoCorrectionWidget::loadConfig()
 {
-    ui->upperCase->setChecked(mAutoCorrection->uppercaseFirstCharOfSentence());
-    ui->upperUpper->setChecked(mAutoCorrection->fixTwoUppercaseChars());
-    ui->ignoreDoubleSpace->setChecked(mAutoCorrection->singleSpaces());
-    ui->autoReplaceNumber->setChecked(mAutoCorrection->autoFractions());
-    ui->capitalizeDaysName->setChecked(mAutoCorrection->capitalizeWeekDays());
-    ui->advancedAutocorrection->setChecked(mAutoCorrection->advancedAutocorrect());
+    ui->upperCase->setChecked(mAutoCorrection->isUppercaseFirstCharOfSentence());
+    ui->upperUpper->setChecked(mAutoCorrection->isFixTwoUppercaseChars());
+    ui->ignoreDoubleSpace->setChecked(mAutoCorrection->isSingleSpaces());
+    ui->autoReplaceNumber->setChecked(mAutoCorrection->isAutoFractions());
+    ui->capitalizeDaysName->setChecked(mAutoCorrection->isCapitalizeWeekDays());
+    ui->advancedAutocorrection->setChecked(mAutoCorrection->isAdvancedAutocorrect());
 
     /* tab 2 - Custom Quotes */
-    ui->typographicDoubleQuotes->setChecked(mAutoCorrection->replaceDoubleQuotes());
-    ui->typographicSingleQuotes->setChecked(mAutoCorrection->replaceSingleQuotes());
+    ui->typographicDoubleQuotes->setChecked(mAutoCorrection->isReplaceDoubleQuotes());
+    ui->typographicSingleQuotes->setChecked(mAutoCorrection->isReplaceSingleQuotes());
     m_singleQuotes = mAutoCorrection->typographicSingleQuotes();
     ui->singleQuote1->setText(m_singleQuotes.begin);
     ui->singleQuote2->setText(m_singleQuotes.end);
@@ -163,9 +163,9 @@ void KMComposerAutoCorrectionWidget::selectSingleQuoteCharClose()
 
 void KMComposerAutoCorrectionWidget::setDefaultSingleQuotes()
 {
-    m_singleQuotes = m_autocorrect->getTypographicDefaultSingleQuotes();
-    ui->singleQuote1->setText(m_singleQuotes.begin);
-    ui->singleQuote2->setText(m_singleQuotes.end);
+  m_singleQuotes = mAutoCorrection->typographicDefaultSingleQuotes();
+  ui->singleQuote1->setText(m_singleQuotes.begin);
+  ui->singleQuote2->setText(m_singleQuotes.end);
 }
 
 void KMComposerAutoCorrectionWidget::selectDoubleQuoteCharOpen()
@@ -192,7 +192,7 @@ void KMComposerAutoCorrectionWidget::selectDoubleQuoteCharClose()
 
 void KMComposerAutoCorrectionWidget::setDefaultDoubleQuotes()
 {
-    m_doubleQuotes = m_autocorrect->getTypographicDefaultDoubleQuotes();
+    m_doubleQuotes = mAutoCorrection->typographicDefaultDoubleQuotes();
     ui->doubleQuote1->setText(m_doubleQuotes.begin);
     ui->doubleQuote2->setText(m_doubleQuotes.end);
 }
@@ -200,7 +200,6 @@ void KMComposerAutoCorrectionWidget::setDefaultDoubleQuotes()
 void KMComposerAutoCorrectionWidget::enableAdvAutocorrection(int state)
 {
     bool enable = state == Qt::Checked;
-    ui->autoCorrectionWithFormat->setEnabled(enable);
     ui->findLabel->setEnabled(enable);
     ui->find->setEnabled(enable);
     ui->specialChar1->setEnabled(enable);
@@ -210,7 +209,8 @@ void KMComposerAutoCorrectionWidget::enableAdvAutocorrection(int state)
     ui->addButton->setEnabled(enable);
     ui->removeButton->setEnabled(enable);
     ui->tableWidget->setEnabled(enable);
-    if (!enable) enableAutocorrectFormat(Qt::Unchecked);
+    if (!enable)
+        enableAutocorrectFormat(Qt::Unchecked);
 }
 
 void KMComposerAutoCorrectionWidget::enableAutocorrectFormat(int state)
@@ -357,6 +357,23 @@ void KMComposerAutoCorrectionWidget::removeTwoUpperLetterEntry()
     delete item;
 }
 
+CharSelectDialog::CharSelectDialog(QWidget *parent)
+  : KDialog(parent)
+{
+  m_charSelect = new KCharSelect(this, 0,
+          KCharSelect::FontCombo | KCharSelect::BlockCombos | KCharSelect::CharacterTable);
+  setMainWidget(m_charSelect);
+  setCaption(i18n("Select Character"));
+}
 
+QChar CharSelectDialog::currentChar() const
+{
+  return m_charSelect->currentChar();
+}
+
+void CharSelectDialog::setCurrentChar(const QChar &c)
+{
+  m_charSelect->setCurrentChar(c);
+}
 
 #include "kmcomposerautocorrectionwidget.moc"

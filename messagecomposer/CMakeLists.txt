@@ -62,7 +62,7 @@ set( messagecomposer_src
      keyresolver.cpp
      kmsubjectlineedit.cpp
      autocorrection/kmcomposerautocorrection.cpp
-     #autocorrection/kmcomposerautocorrectionwidget.cpp
+     autocorrection/kmcomposerautocorrectionwidget.cpp
 )
 
 kde4_add_ui_files(messagecomposer_src

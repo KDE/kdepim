@@ -48,14 +48,14 @@ public:
   void setTwoUpperLetterExceptions(const QSet<QString>& exceptions);
   void setAutocorrectEntries(const QHash<QString, QString>& entries);
 
-  bool uppercaseFirstCharOfSentence() const { return mUppercaseFirstCharOfSentence; }
-  bool fixTwoUppercaseChars() const { return mFixTwoUppercaseChars; }
-  bool singleSpaces() const { return mSingleSpaces; }
-  bool autoFractions() const { return mAutoFractions; }
-  bool capitalizeWeekDays() const { return mCapitalizeWeekDays; }
-  bool replaceDoubleQuotes() const { return mReplaceDoubleQuotes; }
-  bool replaceSingleQuotes() const { return mReplaceSingleQuotes; }
-  bool advancedAutocorrect() const { return mAdvancedAutocorrect; }
+  bool isUppercaseFirstCharOfSentence() const { return mUppercaseFirstCharOfSentence; }
+  bool isFixTwoUppercaseChars() const { return mFixTwoUppercaseChars; }
+  bool isSingleSpaces() const { return mSingleSpaces; }
+  bool isAutoFractions() const { return mAutoFractions; }
+  bool isCapitalizeWeekDays() const { return mCapitalizeWeekDays; }
+  bool isReplaceDoubleQuotes() const { return mReplaceDoubleQuotes; }
+  bool isReplaceSingleQuotes() const { return mReplaceSingleQuotes; }
+  bool isAdvancedAutocorrect() const { return mAdvancedAutocorrect; }
 
   TypographicQuotes typographicSingleQuotes() const { return mTypographicSingleQuotes; }
   TypographicQuotes typographicDoubleQuotes() const { return mTypographicDoubleQuotes; }

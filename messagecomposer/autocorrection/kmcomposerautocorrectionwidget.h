@@ -19,7 +19,10 @@
 #define KMCOMPOSERAUTOCORRECTIONWIDGET_H
 
 #include "messagecomposer_export.h"
+#include "autocorrection/kmcomposerautocorrection.h"
 #include <QWidget>
+#include <KDialog>
+#include <KCharSelect>
 
 namespace Ui {
 class KMComposerAutoCorrectionWidget;
@@ -74,6 +77,18 @@ private:
   QHash<QString, QString> m_autocorrectEntries;
   Ui::KMComposerAutoCorrectionWidget *ui;
   KMComposerAutoCorrection *mAutoCorrection;
+};
+
+class CharSelectDialog : public KDialog
+{
+  Q_OBJECT
+public:
+  explicit CharSelectDialog(QWidget *parent);
+  QChar currentChar() const;
+  void setCurrentChar(const QChar &c);
+
+private:
+  KCharSelect *m_charSelect;
 };
 
 #endif // KMCOMPOSERAUTOCORRECTIONWIDGET_H
