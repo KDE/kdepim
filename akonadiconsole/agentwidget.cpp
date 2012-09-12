@@ -25,6 +25,7 @@
 #include <akonadi/agenttypedialog.h>
 #include <akonadi/agentinstancewidget.h>
 #include <akonadi/agentmanager.h>
+#include <Akonadi/AgentFilterProxyModel>
 #include <akonadi/agentinstancecreatejob.h>
 #include <akonadi/control.h>
 #include <akonadi/private/notificationmessage_p.h>
@@ -35,6 +36,7 @@
 #include <KStandardDirs>
 #include <KStandardGuiItem>
 #include <KTextEdit>
+#include <KLineEdit>
 
 #include <QtCore/QFile>
 #include <QtCore/QPointer>
@@ -114,6 +116,9 @@ AgentWidget::AgentWidget( QWidget *parent )
   connect( ui.abortButton, SIGNAL(clicked()), this, SLOT(abortAgent()) );
   ui.restartButton->setIcon( KIcon( "system-reboot" ) ); //FIXME: Is using system-reboot icon here a good idea?
   connect( ui.restartButton, SIGNAL(clicked()), SLOT(restartAgent()) );
+
+  ui.mFilterAccount->setProxy( ui.instanceWidget->agentFilterProxyModel() );
+  ui.mFilterAccount->lineEdit()->setTrapReturnKey( true );
 
   Control::widgetNeedsAkonadi( this );
 }
