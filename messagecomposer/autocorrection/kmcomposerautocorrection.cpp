@@ -119,6 +119,7 @@ void KMComposerAutoCorrection::readConfig()
   mReplaceDoubleQuotes = MessageComposer::MessageComposerSettings::self()->replaceDoubleQuotes();
   mReplaceSingleQuotes = MessageComposer::MessageComposerSettings::self()->replaceSingleQuotes();
   mEnabled = MessageComposer::MessageComposerSettings::self()->enabled();
+  readAutoCorrectionXmlFile();
 }
 
 void KMComposerAutoCorrection::writeConfig()
@@ -132,6 +133,7 @@ void KMComposerAutoCorrection::writeConfig()
   MessageComposer::MessageComposerSettings::self()->setReplaceDoubleQuotes(mReplaceDoubleQuotes);
   MessageComposer::MessageComposerSettings::self()->setReplaceSingleQuotes(mReplaceSingleQuotes);
   MessageComposer::MessageComposerSettings::self()->setEnabled(mEnabled);
+  writeAutoCorrectionXmlFile();
 }
 
 
@@ -366,6 +368,16 @@ void KMComposerAutoCorrection::advancedAutocorrect()
     mCursor.setPosition(startPos); // also restore the selection
     mCursor.setPosition(startPos + mWord.length(), QTextCursor::KeepAnchor);
   }
+}
+
+void KMComposerAutoCorrection::readAutoCorrectionXmlFile()
+{
+
+}
+
+void KMComposerAutoCorrection::writeAutoCorrectionXmlFile()
+{
+
 }
 
 

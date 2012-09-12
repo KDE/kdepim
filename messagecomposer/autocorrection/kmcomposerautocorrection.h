@@ -78,6 +78,11 @@ private:
 
   void selectWord(QTextCursor &cursor, int cursorPosition);
 
+  void readAutoCorrectionXmlFile();
+  void writeAutoCorrectionXmlFile();
+
+
+
   QTextEdit *mEditor;
 
   bool mSingleSpaces; // suppress double spaces.
