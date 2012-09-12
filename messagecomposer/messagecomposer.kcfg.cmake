@@ -169,4 +169,33 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
     </entry>
   </group>
 
+  <group name="Autocorrect">
+    <entry name="Enabled" type="Bool" key="enabled">
+      <default>false</default>
+    </entry>
+    <entry name="UppercaseFirstCharOfSentence" type="Bool" key="upper-case-first-char-of-sentence">
+      <default>false</default>
+    </entry>
+    <entry name="FixTwoUppercaseChars" type="Bool" key="fix-two-upper-case-chars">
+      <default>false</default>
+    </entry>
+    <entry name="SingleSpaces" type="Bool" key="single-spaces">
+      <default>false</default>
+    </entry>
+    <entry name="AutoFractions" type="Bool" key="auto-fractions">
+      <default>false</default>
+    </entry>
+    <entry name="CapitalizeWeekDays" type="Bool" key="capitalize-week-days">
+      <default>false</default>
+    </entry>
+    <entry name="AdvancedAutocorrect" type="Bool" key="advanced-autocorrect">
+      <default>false</default>
+    </entry>
+    <entry name="ReplaceDoubleQuotes" type="Bool" key="replace-double-quotes">
+      <default>false</default>
+    </entry>
+    <entry name="ReplaceSingleQuotes" type="Bool" key="replace-single-quotes">
+      <default>false</default>
+    </entry>
+  </group>
 </kcfg>

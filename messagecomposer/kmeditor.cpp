@@ -23,6 +23,7 @@
 #include "kmeditor.h"
 #include "textpart.h"
 #include "messageviewer/nodehelper.h"
+#include "autocorrection/kmcomposerautocorrection.h"
 
 #include <KEncodingFileDialog>
 #include <KLocale>
@@ -52,11 +53,14 @@ class KMeditorPrivate
      : q( parent ),
        useExtEditor( false ),
        mExtEditorProcess( 0 ),
-       mExtEditorTempFile( 0 )    {
+       mExtEditorTempFile( 0 ),
+       mAutoCorrection( 0 )
+    {
     }
 
     ~KMeditorPrivate()
     {
+        delete mAutoCorrection;
     }
 
     //
@@ -102,6 +106,7 @@ class KMeditorPrivate
 
     KProcess *mExtEditorProcess;
     KTemporaryFile *mExtEditorTempFile;
+    KMComposerAutoCorrection *mAutoCorrection;
 };
 
 }
@@ -251,6 +256,9 @@ void KMeditor::keyPressEvent ( QKeyEvent *e )
     textCursor().clearSelection();
     emit focusUp();
   } else {
+    if(e->key() == Qt::Key_Space || e->key() == Qt::Key_Enter) {
+      d->mAutoCorrection->autocorrect();
+    }
     TextEdit::keyPressEvent( e );
   }
 }
@@ -280,6 +288,7 @@ KMeditor::~KMeditor()
 
 void KMeditorPrivate::init()
 {
+  mAutoCorrection = new KMComposerAutoCorrection(q);
   QShortcut * insertMode = new QShortcut( QKeySequence( Qt::Key_Insert ), q );
   q->connect( insertMode, SIGNAL(activated()),
               q, SLOT(slotChangeInsertMode()) );
