@@ -209,17 +209,8 @@ void KMComposerAutoCorrectionWidget::enableAdvAutocorrection(int state)
     ui->addButton->setEnabled(enable);
     ui->removeButton->setEnabled(enable);
     ui->tableWidget->setEnabled(enable);
-    if (!enable)
-        enableAutocorrectFormat(Qt::Unchecked);
 }
 
-void KMComposerAutoCorrectionWidget::enableAutocorrectFormat(int state)
-{
-    bool enable = state == Qt::Checked;
-    Q_UNUSED(enable);
-    // ui->changeFormat->setEnabled(enable);
-    // ui->clearFormat->setEnabled(enable);
-}
 
 void KMComposerAutoCorrectionWidget::addAutocorrectEntry()
 {

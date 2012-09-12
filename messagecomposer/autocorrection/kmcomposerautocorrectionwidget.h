@@ -54,7 +54,6 @@ private Q_SLOTS:
 
   /* tab 3 */
   void enableAdvAutocorrection(int state);
-  void enableAutocorrectFormat(int state);
   void addAutocorrectEntry();
   void removeAutocorrectEntry();
   void setFindReplaceText(int row, int column);
