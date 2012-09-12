@@ -27,6 +27,8 @@
 
 #include <KPIMTextEdit/TextEdit>
 
+class KMComposerAutoCorrection;
+
 namespace KPIMIdentities {
   class Signature;
 }
@@ -175,6 +177,8 @@ class MESSAGECOMPOSER_EXPORT KMeditor : public KPIMTextEdit::TextEdit
      * @param textPart The Message::TextPart to fill.
      */
     void fillComposerTextPart( Message::TextPart* textPart ) const;
+
+    KMComposerAutoCorrection* autocorrection() const;
 
   public Q_SLOTS:
 

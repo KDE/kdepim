@@ -756,4 +756,10 @@ void KMeditor::fillComposerTextPart ( TextPart* textPart ) const
   }
 }
 
+KMComposerAutoCorrection* KMeditor::autocorrection() const
+{
+  return d->mAutoCorrection;
+}
+
+
 #include "kmeditor.moc"
