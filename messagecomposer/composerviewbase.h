@@ -202,6 +202,8 @@ public:
    */
   ComposerViewBase::MissingAttachment checkForMissingAttachments( const QStringList &attachmentKeywords ) ;
 
+  bool hasMissingAttachments( const QStringList& attachmentKeywords );
+
   /**
    * Helper methods to read from config various encryption settings
    */
