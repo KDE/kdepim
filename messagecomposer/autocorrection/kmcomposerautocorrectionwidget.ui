@@ -70,16 +70,6 @@
         </widget>
        </item>
        <item>
-        <widget class="QCheckBox" name="autoSuperScript">
-         <property name="enabled">
-          <bool>true</bool>
-         </property>
-         <property name="text">
-          <string>Rep&amp;lace 1st... with 1^st...</string>
-         </property>
-        </widget>
-       </item>
-       <item>
         <widget class="QCheckBox" name="capitalizeDaysName">
          <property name="text">
           <string>Capitalize name of days</string>

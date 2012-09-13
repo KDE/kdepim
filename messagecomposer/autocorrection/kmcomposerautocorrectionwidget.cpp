@@ -37,6 +37,12 @@ KMComposerAutoCorrectionWidget::KMComposerAutoCorrectionWidget(QWidget *parent) 
   ui->add1->setEnabled(false);
   ui->add2->setEnabled(false);
 
+  connect(ui->upperCase,SIGNAL(clicked()),SIGNAL(changed()));
+  connect(ui->upperUpper,SIGNAL(clicked()),SIGNAL(changed()));
+  connect(ui->ignoreDoubleSpace,SIGNAL(clicked()),SIGNAL(changed()));
+  connect(ui->autoReplaceNumber,SIGNAL(clicked()),SIGNAL(changed()));
+  connect(ui->capitalizeDaysName,SIGNAL(clicked()),SIGNAL(changed()));
+  connect(ui->advancedAutocorrection,SIGNAL(clicked()),SIGNAL(changed()));
   connect(ui->enabledAutocorrection,SIGNAL(clicked()),SIGNAL(changed()));
   connect(ui->typographicSingleQuotes, SIGNAL(stateChanged(int)), this, SLOT(enableSingleQuotes(int)));
   connect(ui->typographicDoubleQuotes, SIGNAL(stateChanged(int)), this, SLOT(enableDoubleQuotes(int)));
@@ -121,7 +127,6 @@ void KMComposerAutoCorrectionWidget::writeConfig()
 {
   if(!mAutoCorrection)
     return;
-  qDebug()<<" void KMComposerAutoCorrectionWidget::writeConfig()";
   mAutoCorrection->setEnabledAutoCorrection(ui->enabledAutocorrection->isChecked());
   mAutoCorrection->setUppercaseFirstCharOfSentence(ui->upperCase->isChecked());
   mAutoCorrection->setFixTwoUppercaseChars(ui->upperUpper->isChecked());
