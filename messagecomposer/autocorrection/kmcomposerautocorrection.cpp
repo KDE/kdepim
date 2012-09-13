@@ -23,9 +23,8 @@
 #include <KCalendarSystem>
 #include <QTextBlock>
 
-KMComposerAutoCorrection::KMComposerAutoCorrection(QTextEdit *editor)
-  : mEditor(editor),
-    mSingleSpaces(true),
+KMComposerAutoCorrection::KMComposerAutoCorrection()
+  : mSingleSpaces(true),
     mUppercaseFirstCharOfSentence(false),
     mFixTwoUppercaseChars(false),
     mAutoFractions(true),
@@ -85,12 +84,12 @@ void KMComposerAutoCorrection::selectWord(QTextCursor &cursor, int cursorPositio
 }
 
 
-void KMComposerAutoCorrection::autocorrect()
+void KMComposerAutoCorrection::autocorrect(QTextDocument& document, int position)
 {
   if (!mEnabled)
     return;
-  mCursor =  QTextCursor(mEditor->document());
-  selectWord(mCursor,mCursor.position());
+  mCursor =  QTextCursor(&document);
+  selectWord(mCursor,position);
   mWord = mCursor.selectedText();
   if (mWord.isEmpty())
     return;

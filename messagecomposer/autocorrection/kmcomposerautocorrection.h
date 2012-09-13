@@ -19,10 +19,10 @@
 #define KMCOMPOSERAUTOCORRECTION_H
 
 #include "messagecomposer_export.h"
-#include <QTextEdit>
 #include <QTextCursor>
 #include <QHash>
 #include <QSet>
+
 class MESSAGECOMPOSER_EXPORT KMComposerAutoCorrection
 {
 public:
@@ -31,7 +31,7 @@ public:
     QChar end;
   };
 
-  explicit KMComposerAutoCorrection(QTextEdit *editor);
+  explicit KMComposerAutoCorrection();
   ~KMComposerAutoCorrection();
 
   void setUppercaseFirstCharOfSentence(bool b) { mUppercaseFirstCharOfSentence = b; }
@@ -65,7 +65,7 @@ public:
   QSet<QString> twoUpperLetterExceptions() const;
   QHash<QString, QString> autocorrectEntries() const;
 
-  void autocorrect();
+  void autocorrect(QTextDocument &document, int position);
 private:
   void readConfig();
   void writeConfig();
@@ -81,9 +81,6 @@ private:
   void readAutoCorrectionXmlFile();
   void writeAutoCorrectionXmlFile();
 
-
-
-  QTextEdit *mEditor;
 
   bool mSingleSpaces; // suppress double spaces.
   bool mUppercaseFirstCharOfSentence; // convert first letter of a sentence automaticall to uppercase

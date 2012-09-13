@@ -257,7 +257,8 @@ void KMeditor::keyPressEvent ( QKeyEvent *e )
   } else {
     if(e->key() == Qt::Key_Space || e->key() == Qt::Key_Enter) {
       if(d->mAutoCorrection) {
-        d->mAutoCorrection->autocorrect();
+          //TODO verify
+        d->mAutoCorrection->autocorrect(*document(),textCursor().position());
       }
     }
     TextEdit::keyPressEvent( e );
@@ -289,7 +290,6 @@ KMeditor::~KMeditor()
 
 void KMeditorPrivate::init()
 {
-  mAutoCorrection = new KMComposerAutoCorrection(q);
   QShortcut * insertMode = new QShortcut( QKeySequence( Qt::Key_Insert ), q );
   q->connect( insertMode, SIGNAL(activated()),
               q, SLOT(slotChangeInsertMode()) );
