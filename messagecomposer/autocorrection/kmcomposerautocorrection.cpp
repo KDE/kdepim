@@ -21,7 +21,10 @@
 #include <KLocale>
 #include <KGlobal>
 #include <KCalendarSystem>
+#include <KStandardDirs>
 #include <QTextBlock>
+#include <QDomDocument>
+#include <QFile>
 
 KMComposerAutoCorrection::KMComposerAutoCorrection()
   : mSingleSpaces(true),
@@ -372,6 +375,56 @@ void KMComposerAutoCorrection::advancedAutocorrect()
 
 void KMComposerAutoCorrection::readAutoCorrectionXmlFile()
 {
+    const QString fname = KGlobal::dirs()->findResource("data", QLatin1String("calligra/autocorrect/autocorrect.xml"));
+    if (fname.isEmpty())
+        return;
+
+    QFile xmlFile(fname);
+    if (!xmlFile.open(QIODevice::ReadOnly))
+        return;
+
+    QDomDocument doc;
+    if (!doc.setContent(&xmlFile))
+        return;
+
+    if (doc.doctype().name() != QLatin1String("autocorrection"))
+        return;
+
+    QDomElement de = doc.documentElement();
+
+    QDomElement upper = de.namedItem(QLatin1String("UpperCaseExceptions")).toElement();
+    if (!upper.isNull()) {
+        QDomNodeList nl = upper.childNodes();
+        for (int i = 0; i < nl.count(); i++)
+            mUpperCaseExceptions += nl.item(i).toElement().attribute(QLatin1String("exception"));
+    }
+
+    QDomElement twoUpper = de.namedItem(QLatin1String("TwoUpperLetterExceptions")).toElement();
+    if (!twoUpper.isNull()) {
+        QDomNodeList nl = twoUpper.childNodes();
+        for(int i = 0; i < nl.count(); i++)
+            mTwoUpperLetterExceptions += nl.item(i).toElement().attribute(QLatin1String("exception"));
+    }
+
+    QDomElement superScript = de.namedItem(QLatin1String("SuperScript")).toElement();
+    if (!superScript.isNull()) {
+        QDomNodeList nl = superScript.childNodes();
+        for(int i = 0; i < nl.count() ; ++i)
+            mSuperScriptEntries.insert(nl.item(i).toElement().attribute(QLatin1String("find")), nl.item(i).toElement().attribute(QLatin1String("super")));
+    }
+
+    /* Load advanced autocorrect entry, including the format */
+    QDomElement item = de.namedItem(QLatin1String("items")).toElement();
+    if (!item.isNull())
+    {
+        QDomNodeList nl = item.childNodes();
+        for (int i = 0; i < nl.count(); i++) {
+            QDomElement element = nl.item(i).toElement();
+            QString find = element.attribute(QLatin1String("find"));
+            QString replace = element.attribute(QLatin1String("replace"));
+            mAutocorrectEntries.insert(find, replace);
+        }
+    }
 
 }
 
