@@ -375,7 +375,7 @@ void KMComposerAutoCorrection::advancedAutocorrect()
 
 void KMComposerAutoCorrection::readAutoCorrectionXmlFile()
 {
-    const QString fname = KGlobal::dirs()->findResource("data", QLatin1String("calligra/autocorrect/autocorrect.xml"));
+    const QString fname = KGlobal::dirs()->findResource("data", QLatin1String("kmail2/autocorrect.xml"));
     if (fname.isEmpty())
         return;
 
@@ -430,6 +430,57 @@ void KMComposerAutoCorrection::readAutoCorrectionXmlFile()
 
 void KMComposerAutoCorrection::writeAutoCorrectionXmlFile()
 {
+    const QString fname = KGlobal::dirs()->locateLocal("data", QLatin1String("kmail2/autocorrect.xml"));
+    qDebug()<<" fname "<<fname;
+    QFile file(fname);
+    if( !file.open( QIODevice::WriteOnly | QIODevice::Text ) ) {
+        qDebug()<<"We can't save in file :"<<fname;
+        return;
+    }
+    QDomDocument doc;
+    QDomElement root = doc.createElement(QLatin1String( "autocorrection" ));
+    doc.appendChild(root);
+
+    QDomElement word = doc.createElement(QLatin1String( "Word" ));
+    doc.appendChild(word);
+    QDomElement items = doc.createElement(QLatin1String( "items" ));
+
+    QHashIterator<QString, QString> i(mAutocorrectEntries);
+    while (i.hasNext()) {
+        i.next();
+        QDomElement item = doc.createElement(QLatin1String( "item" ));
+        item.setAttribute(QLatin1String("find"),i.key());
+        item.setAttribute(QLatin1String("replace"),i.value());
+        items.appendChild(item);
+    }
+    word.appendChild(items);
+
+
+    QDomElement upperCaseExceptions = doc.createElement(QLatin1String( "UpperCaseExceptions" ));
+    QSet<QString>::const_iterator upper = mUpperCaseExceptions.constBegin();
+    while (upper != mUpperCaseExceptions.constEnd()) {
+        QDomElement item = doc.createElement(QLatin1String( "word" ));
+        item.setAttribute(QLatin1String("exception"),*upper);
+        upperCaseExceptions.appendChild(item);
+        ++upper;
+    }
+    doc.appendChild(upperCaseExceptions);
+
+    QDomElement twoUpperLetterExceptions = doc.createElement(QLatin1String( "TwoUpperLetterExceptions" ));
+    QSet<QString>::const_iterator twoUpper = mTwoUpperLetterExceptions.constBegin();
+    while (twoUpper != mTwoUpperLetterExceptions.constEnd()) {
+        QDomElement item = doc.createElement(QLatin1String( "word" ));
+        item.setAttribute(QLatin1String("exception"),*twoUpper);
+        upperCaseExceptions.appendChild(item);
+        ++twoUpper;
+    }
+    doc.appendChild(twoUpperLetterExceptions);
+
+
+    QTextStream ts( &file );
+    ts << doc.toString();
+    file.close();
+
 
 }
 
