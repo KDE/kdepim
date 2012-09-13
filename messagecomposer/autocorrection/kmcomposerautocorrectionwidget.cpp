@@ -154,6 +154,7 @@ void KMComposerAutoCorrectionWidget::selectSingleQuoteCharOpen()
     if (dlg->exec()) {
         m_singleQuotes.begin = dlg->currentChar();
         ui->singleQuote1->setText(m_singleQuotes.begin);
+        Q_EMIT changed();
     }
     delete dlg;
 }
@@ -165,6 +166,7 @@ void KMComposerAutoCorrectionWidget::selectSingleQuoteCharClose()
     if (dlg->exec()) {
         m_singleQuotes.end = dlg->currentChar();
         ui->singleQuote2->setText(m_singleQuotes.end);
+        Q_EMIT changed();
     }
     delete dlg;
 }
@@ -183,6 +185,7 @@ void KMComposerAutoCorrectionWidget::selectDoubleQuoteCharOpen()
     if (dlg->exec()) {
         m_doubleQuotes.begin = dlg->currentChar();
         ui->doubleQuote1->setText(m_doubleQuotes.begin);
+        Q_EMIT changed();
     }
     delete dlg;
 }
@@ -194,6 +197,7 @@ void KMComposerAutoCorrectionWidget::selectDoubleQuoteCharClose()
     if (dlg->exec()) {
         m_doubleQuotes.end = dlg->currentChar();
         ui->doubleQuote2->setText(m_doubleQuotes.end);
+        Q_EMIT changed();
     }
     delete dlg;
 }
@@ -257,6 +261,7 @@ void KMComposerAutoCorrectionWidget::removeAutocorrectEntry()
     m_autocorrectEntries.remove(ui->find->text());
     ui->tableWidget->removeRow(ui->tableWidget->currentRow());
     ui->tableWidget->setSortingEnabled(true);
+    Q_EMIT changed();
 }
 
 void KMComposerAutoCorrectionWidget::enableAddRemoveButton()
@@ -300,13 +305,6 @@ void KMComposerAutoCorrectionWidget::setFindReplaceText(int row, int column)
     ui->replace->setText(ui->tableWidget->item(row, 1)->text());
 }
 
-void KMComposerAutoCorrectionWidget::changeCharFormat()
-{
-    /* QTextCharFormat format;
-    KoFontDia *dia = new KoFontDia(format, this);
-    if (dia->exec())
-        ; */
-}
 
 void KMComposerAutoCorrectionWidget::abbreviationChanged(const QString &text)
 {

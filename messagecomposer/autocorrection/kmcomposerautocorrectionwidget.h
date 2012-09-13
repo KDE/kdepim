@@ -59,7 +59,6 @@ private Q_SLOTS:
   void removeAutocorrectEntry();
   void setFindReplaceText(int row, int column);
   void enableAddRemoveButton();
-  void changeCharFormat();
 
   /* tab 4 */
   void abbreviationChanged(const QString &text);
@@ -68,6 +67,9 @@ private Q_SLOTS:
   void removeAbbreviationEntry();
   void addTwoUpperLetterEntry();
   void removeTwoUpperLetterEntry();
+
+Q_SIGNALS:
+  void changed();
 
 private:
   KMComposerAutoCorrection::TypographicQuotes m_singleQuotes;
