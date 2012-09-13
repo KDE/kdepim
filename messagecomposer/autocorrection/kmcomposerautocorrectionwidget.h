@@ -35,8 +35,9 @@ class MESSAGECOMPOSER_EXPORT KMComposerAutoCorrectionWidget : public QWidget
   Q_OBJECT
     
 public:
-  explicit KMComposerAutoCorrectionWidget(KMComposerAutoCorrection * autoCorrect,QWidget *parent = 0);
+  explicit KMComposerAutoCorrectionWidget(QWidget *parent = 0);
   ~KMComposerAutoCorrectionWidget();
+  void setAutoCorrection(KMComposerAutoCorrection * autoCorrect);
   void loadConfig();
   void writeConfig();
   void resetToDefault();

@@ -24,10 +24,10 @@
 #include <KCharSelect>
 
 
-KMComposerAutoCorrectionWidget::KMComposerAutoCorrectionWidget(KMComposerAutoCorrection * autoCorrect, QWidget *parent) :
+KMComposerAutoCorrectionWidget::KMComposerAutoCorrectionWidget(QWidget *parent) :
   QWidget(parent),
   ui(new Ui::KMComposerAutoCorrectionWidget),
-  mAutoCorrection(autoCorrect)
+  mAutoCorrection(0)
 {
   ui->setupUi(this);
 
@@ -65,8 +65,15 @@ KMComposerAutoCorrectionWidget::~KMComposerAutoCorrectionWidget()
   delete ui;
 }
 
+void KMComposerAutoCorrectionWidget::setAutoCorrection(KMComposerAutoCorrection * autoCorrect)
+{
+  mAutoCorrection = autoCorrect;
+}
+
 void KMComposerAutoCorrectionWidget::loadConfig()
 {
+    if(!mAutoCorrection)
+      return;
     ui->upperCase->setChecked(mAutoCorrection->isUppercaseFirstCharOfSentence());
     ui->upperUpper->setChecked(mAutoCorrection->isFixTwoUppercaseChars());
     ui->ignoreDoubleSpace->setChecked(mAutoCorrection->isSingleSpaces());
@@ -109,7 +116,8 @@ void KMComposerAutoCorrectionWidget::loadConfig()
 
 void KMComposerAutoCorrectionWidget::writeConfig()
 {
-
+  if(!mAutoCorrection)
+    return;
 }
 
 void KMComposerAutoCorrectionWidget::resetToDefault()

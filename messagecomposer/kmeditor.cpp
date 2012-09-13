@@ -60,7 +60,6 @@ class KMeditorPrivate
 
     ~KMeditorPrivate()
     {
-        delete mAutoCorrection;
     }
 
     //
@@ -257,7 +256,9 @@ void KMeditor::keyPressEvent ( QKeyEvent *e )
     emit focusUp();
   } else {
     if(e->key() == Qt::Key_Space || e->key() == Qt::Key_Enter) {
-      d->mAutoCorrection->autocorrect();
+      if(d->mAutoCorrection) {
+        d->mAutoCorrection->autocorrect();
+      }
     }
     TextEdit::keyPressEvent( e );
   }
@@ -759,6 +760,11 @@ void KMeditor::fillComposerTextPart ( TextPart* textPart ) const
 KMComposerAutoCorrection* KMeditor::autocorrection() const
 {
   return d->mAutoCorrection;
+}
+
+void KMeditor::setAutocorrection(KMComposerAutoCorrection* autocorrect)
+{
+  d->mAutoCorrection = autocorrect;
 }
 
 
