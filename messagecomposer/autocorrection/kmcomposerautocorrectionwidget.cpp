@@ -118,6 +118,23 @@ void KMComposerAutoCorrectionWidget::writeConfig()
 {
   if(!mAutoCorrection)
     return;
+
+
+  mAutoCorrection->setUppercaseFirstCharOfSentence(ui->upperCase->isChecked());
+  mAutoCorrection->setFixTwoUppercaseChars(ui->upperUpper->isChecked());
+  mAutoCorrection->setSingleSpaces(ui->ignoreDoubleSpace->isChecked());
+  mAutoCorrection->setCapitalizeWeekDays(ui->capitalizeDaysName->isChecked());
+  mAutoCorrection->setAdvancedAutocorrect(ui->advancedAutocorrection->isChecked());
+
+  mAutoCorrection->setAutocorrectEntries(m_autocorrectEntries);
+  mAutoCorrection->setUpperCaseExceptions(m_upperCaseExceptions);
+  mAutoCorrection->setTwoUpperLetterExceptions(m_twoUpperLetterExceptions);
+
+  mAutoCorrection->setReplaceDoubleQuotes(ui->typographicDoubleQuotes->isChecked());
+  mAutoCorrection->setReplaceSingleQuotes(ui->typographicSingleQuotes->isChecked());
+  mAutoCorrection->setTypographicSingleQuotes(m_singleQuotes);
+  mAutoCorrection->setTypographicDoubleQuotes(m_doubleQuotes);
+
 }
 
 void KMComposerAutoCorrectionWidget::resetToDefault()
