@@ -93,6 +93,8 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTime : public IncidenceEditor
     void updateStartTime( const QTime &newTime );
     void updateStartDate( const QDate &newDate );
     void updateStartSpec();
+    void updateStartToolTips();
+    void updateEndToolTips();
 
   private slots: /// Todo specific
     void enableStartEdit( bool enable );
