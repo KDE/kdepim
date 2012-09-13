@@ -69,6 +69,7 @@ public:
 
   void autocorrect(QTextDocument &document, int position);
   void writeConfig();
+
 private:
   void readConfig();
 
@@ -78,6 +79,7 @@ private:
   bool autoFractions();
   void uppercaseFirstCharOfSentence();
   void advancedAutocorrect();
+  void replaceTypographicQuotes();
 
   void selectWord(QTextCursor &cursor, int cursorPosition);
 

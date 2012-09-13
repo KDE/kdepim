@@ -44,8 +44,8 @@ public:
 
 private Q_SLOTS:
   /* tab 2 */
-  void enableSingleQuotes(int state);
-  void enableDoubleQuotes(int state);
+  void enableSingleQuotes(bool state);
+  void enableDoubleQuotes(bool state);
   void selectSingleQuoteCharOpen();
   void selectSingleQuoteCharClose();
   void setDefaultSingleQuotes();
@@ -54,7 +54,7 @@ private Q_SLOTS:
   void setDefaultDoubleQuotes();
 
   /* tab 3 */
-  void enableAdvAutocorrection(int state);
+  void enableAdvAutocorrection(bool state);
   void addAutocorrectEntry();
   void removeAutocorrectEntry();
   void setFindReplaceText(int row, int column);

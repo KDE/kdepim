@@ -98,13 +98,20 @@ void KMComposerAutoCorrection::autocorrect(QTextDocument& document, int position
     return;
 
   bool done = false;
-  if (!done) done = singleSpaces();
-  if (!done) done = autoFractions();
-  if (!done) advancedAutocorrect();
-  if (!done) uppercaseFirstCharOfSentence();
-  if (!done) fixTwoUppercaseChars();
-  if (!done) capitalizeWeekDays();
-  //if (!done) replaceTypographicQuotes();
+  if (!done)
+    done = singleSpaces();
+  if (!done)
+    done = autoFractions();
+  if (!done)
+    advancedAutocorrect();
+  if (!done)
+    uppercaseFirstCharOfSentence();
+  if (!done)
+    fixTwoUppercaseChars();
+  if (!done)
+    capitalizeWeekDays();
+  if (!done)
+    replaceTypographicQuotes();
 
   if (mCursor.selectedText() != mWord)
      mCursor.insertText(mWord);
@@ -373,6 +380,87 @@ void KMComposerAutoCorrection::advancedAutocorrect()
   }
 }
 
+void KMComposerAutoCorrection::replaceTypographicQuotes()
+{
+    /* this method is ported from lib/kotext/KoAutoFormat.cpp KoAutoFormat::doTypographicQuotes
+     * from Calligra 1.x branch */
+
+    if (!(mReplaceDoubleQuotes && mWord.contains(QLatin1Char('"'))) &&
+            !(mReplaceSingleQuotes && mWord.contains(QLatin1Char('\'')))) return;
+
+    // Need to determine if we want a starting or ending quote.
+    // we use a starting quote in three cases:
+    //  1. if the previous character is a space
+    //  2. if the previous character is some kind of opening punctuation (e.g., "(", "[", or "{")
+    //     a. and the character before that is not an opening quote (so that we get quotations of single characters
+    //        right)
+    //  3. if the previous character is an opening quote (so that we get nested quotations right)
+    //     a. and the character before that is not an opening quote (so that we get quotations of single characters
+    //         right)
+    //     b. and the previous quote of a different kind (so that we get empty quotations right)
+
+    bool ending = true;
+    QString::Iterator iter = mWord.end();
+    iter--;
+
+    while (iter != mWord.begin()) {
+        if (*iter == QLatin1Char('"') || *iter == QLatin1Char('\'')) {
+            bool doubleQuotes = *iter == QLatin1Char('"');
+
+            if ((iter - 1) != mWord.begin()) {
+                QChar::Category c1 = (*(iter - 1)).category();
+
+                // case 1 and 2
+                if (c1 == QChar::Separator_Space || c1 == QChar::Separator_Line || c1 == QChar::Separator_Paragraph ||
+                        c1 == QChar::Punctuation_Open || c1 == QChar::Other_Control)
+                    ending = false;
+
+                // case 3
+                if (c1 == QChar::Punctuation_InitialQuote) {
+                    QChar openingQuote;
+
+                    if (doubleQuotes)
+                        openingQuote = mTypographicDoubleQuotes.begin;
+                    else
+                        openingQuote = mTypographicSingleQuotes.begin;
+
+                    // case 3b
+                    if (*(iter - 1) != openingQuote)
+                        ending = false;
+                }
+            }
+
+            // case 2a and 3a
+            if ((iter - 2) != mWord.constBegin() && !ending)
+            {
+                 QChar::Category c2 = (*(iter - 2)).category();
+                 ending = (c2 == QChar::Punctuation_InitialQuote);
+            }
+
+            if (doubleQuotes && mReplaceDoubleQuotes) {
+                if (!ending)
+                    *iter = mTypographicDoubleQuotes.begin;
+                else
+                    *iter = mTypographicDoubleQuotes.end;
+            }
+            else if (mReplaceSingleQuotes) {
+                if (!ending)
+                    *iter = mTypographicSingleQuotes.begin;
+                else
+                    *iter = mTypographicSingleQuotes.end;
+            }
+        }
+        iter--;
+    }
+
+    // first character
+    if (*iter == QLatin1Char('"') && mReplaceDoubleQuotes)
+        *iter = mTypographicDoubleQuotes.begin;
+    else if (*iter == QLatin1Char('\'') && mReplaceSingleQuotes)
+        *iter = mTypographicSingleQuotes.begin;
+}
+
+
 void KMComposerAutoCorrection::readAutoCorrectionXmlFile()
 {
     const QString fname = KGlobal::dirs()->findResource("data", QLatin1String("kmail2/autocorrect.xml"));
@@ -413,10 +501,31 @@ void KMComposerAutoCorrection::readAutoCorrectionXmlFile()
         QDomNodeList nl = item.childNodes();
         for (int i = 0; i < nl.count(); i++) {
             QDomElement element = nl.item(i).toElement();
-            QString find = element.attribute(QLatin1String("find"));
-            QString replace = element.attribute(QLatin1String("replace"));
+            const QString find = element.attribute(QLatin1String("find"));
+            const QString replace = element.attribute(QLatin1String("replace"));
+            qDebug()<<" find :"<<find<<" replace "<<replace;
             mAutocorrectEntries.insert(find, replace);
         }
+    }
+
+    QDomElement doubleQuote = de.namedItem(QLatin1String("DoubleQuote")).toElement();
+    if(doubleQuote.isNull()) {
+      QDomNodeList nl = doubleQuote.childNodes();
+      if(nl.count()==1) {
+        QDomElement element = nl.item(0).toElement();
+        mTypographicDoubleQuotes.begin = element.attribute(QLatin1String("begin")).at(0);
+        mTypographicDoubleQuotes.end = element.attribute(QLatin1String("end")).at(0);
+      }
+    }
+
+    QDomElement singleQuote = de.namedItem(QLatin1String("SimpleQuote")).toElement();
+    if(singleQuote.isNull()) {
+      QDomNodeList nl = singleQuote.childNodes();
+      if(nl.count()==1) {
+        QDomElement element = nl.item(0).toElement();
+        mTypographicSingleQuotes.begin = element.attribute(QLatin1String("begin")).at(0);
+        mTypographicSingleQuotes.end = element.attribute(QLatin1String("end")).at(0);
+      }
     }
 
 }
@@ -467,11 +576,24 @@ void KMComposerAutoCorrection::writeAutoCorrectionXmlFile()
     word.appendChild(twoUpperLetterExceptions);
 
 
+    QDomElement doubleQuote = root.createElement(QLatin1String( "DoubleQuote" ));
+    QDomElement item = root.createElement(QLatin1String( "doublequote" ));
+    item.setAttribute(QLatin1String("begin"),mTypographicDoubleQuotes.begin);
+    item.setAttribute(QLatin1String("end"),mTypographicDoubleQuotes.end);
+    doubleQuote.appendChild(item);
+    word.appendChild(doubleQuote);
+
+    QDomElement singleQuote = root.createElement(QLatin1String( "SimpleQuote" ));
+    item = root.createElement(QLatin1String( "simplequote" ));
+    item.setAttribute(QLatin1String("begin"),mTypographicSingleQuotes.begin);
+    item.setAttribute(QLatin1String("end"),mTypographicSingleQuotes.end);
+    singleQuote.appendChild(item);
+    word.appendChild(singleQuote);
+
+
     QTextStream ts( &file );
     ts << root.toString();
     file.close();
-
-
 }
 
 
