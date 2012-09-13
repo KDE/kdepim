@@ -55,11 +55,11 @@ KMComposerAutoCorrectionWidget::KMComposerAutoCorrectionWidget(QWidget *parent) 
   connect(ui->advancedAutocorrection, SIGNAL(stateChanged(int)), this, SLOT(enableAdvAutocorrection(int)));
   connect(ui->addButton, SIGNAL(clicked()), this, SLOT(addAutocorrectEntry()));
   connect(ui->removeButton, SIGNAL(clicked()), this, SLOT(removeAutocorrectEntry()));
-  connect(ui->tableWidget, SIGNAL(cellClicked(int, int)), this, SLOT(setFindReplaceText(int, int)));
-  connect(ui->find, SIGNAL(textChanged(const QString &)), this, SLOT(enableAddRemoveButton()));
-  connect(ui->replace, SIGNAL(textChanged(const QString &)), this, SLOT(enableAddRemoveButton()));
-  connect(ui->abbreviation, SIGNAL(textChanged(const QString &)), this, SLOT(abbreviationChanged(const QString &)));
-  connect(ui->twoUpperLetter, SIGNAL(textChanged(const QString &)), this, SLOT(twoUpperLetterChanged(const QString &)));
+  connect(ui->tableWidget, SIGNAL(cellClicked(int,int)), this, SLOT(setFindReplaceText(int,int)));
+  connect(ui->find, SIGNAL(textChanged(QString)), this, SLOT(enableAddRemoveButton()));
+  connect(ui->replace, SIGNAL(textChanged(QString)), this, SLOT(enableAddRemoveButton()));
+  connect(ui->abbreviation, SIGNAL(textChanged(QString)), this, SLOT(abbreviationChanged(QString)));
+  connect(ui->twoUpperLetter, SIGNAL(textChanged(QString)), this, SLOT(twoUpperLetterChanged(QString)));
   connect(ui->add1, SIGNAL(clicked()), this, SLOT(addAbbreviationEntry()));
   connect(ui->remove1, SIGNAL(clicked()), this, SLOT(removeAbbreviationEntry()));
   connect(ui->add2, SIGNAL(clicked()), this, SLOT(addTwoUpperLetterEntry()));
