@@ -123,6 +123,7 @@ void KMComposerAutoCorrection::readConfig()
 
 void KMComposerAutoCorrection::writeConfig()
 {
+    qDebug()<<" void KMComposerAutoCorrection::writeConfig()";
   MessageComposer::MessageComposerSettings::self()->setUppercaseFirstCharOfSentence(mUppercaseFirstCharOfSentence);
   MessageComposer::MessageComposerSettings::self()->setFixTwoUppercaseChars(mFixTwoUppercaseChars);
   MessageComposer::MessageComposerSettings::self()->setSingleSpaces(mSingleSpaces);
@@ -132,6 +133,7 @@ void KMComposerAutoCorrection::writeConfig()
   MessageComposer::MessageComposerSettings::self()->setReplaceDoubleQuotes(mReplaceDoubleQuotes);
   MessageComposer::MessageComposerSettings::self()->setReplaceSingleQuotes(mReplaceSingleQuotes);
   MessageComposer::MessageComposerSettings::self()->setEnabled(mEnabled);
+  MessageComposer::MessageComposerSettings::self()->requestSync();
   writeAutoCorrectionXmlFile();
 }
 

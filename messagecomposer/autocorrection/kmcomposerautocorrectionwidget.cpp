@@ -37,6 +37,7 @@ KMComposerAutoCorrectionWidget::KMComposerAutoCorrectionWidget(QWidget *parent) 
   ui->add1->setEnabled(false);
   ui->add2->setEnabled(false);
 
+  connect(ui->enabledAutocorrection,SIGNAL(clicked()),SIGNAL(changed()));
   connect(ui->typographicSingleQuotes, SIGNAL(stateChanged(int)), this, SLOT(enableSingleQuotes(int)));
   connect(ui->typographicDoubleQuotes, SIGNAL(stateChanged(int)), this, SLOT(enableDoubleQuotes(int)));
   connect(ui->singleQuote1, SIGNAL(clicked()), this, SLOT(selectSingleQuoteCharOpen()));
@@ -74,6 +75,8 @@ void KMComposerAutoCorrectionWidget::loadConfig()
 {
     if(!mAutoCorrection)
       return;
+
+    ui->enabledAutocorrection->setChecked(mAutoCorrection->isEnabledAutoCorrection());
     ui->upperCase->setChecked(mAutoCorrection->isUppercaseFirstCharOfSentence());
     ui->upperUpper->setChecked(mAutoCorrection->isFixTwoUppercaseChars());
     ui->ignoreDoubleSpace->setChecked(mAutoCorrection->isSingleSpaces());
@@ -118,8 +121,8 @@ void KMComposerAutoCorrectionWidget::writeConfig()
 {
   if(!mAutoCorrection)
     return;
-
-
+  qDebug()<<" void KMComposerAutoCorrectionWidget::writeConfig()";
+  mAutoCorrection->setEnabledAutoCorrection(ui->enabledAutocorrection->isChecked());
   mAutoCorrection->setUppercaseFirstCharOfSentence(ui->upperCase->isChecked());
   mAutoCorrection->setFixTwoUppercaseChars(ui->upperUpper->isChecked());
   mAutoCorrection->setSingleSpaces(ui->ignoreDoubleSpace->isChecked());
@@ -134,34 +137,35 @@ void KMComposerAutoCorrectionWidget::writeConfig()
   mAutoCorrection->setReplaceSingleQuotes(ui->typographicSingleQuotes->isChecked());
   mAutoCorrection->setTypographicSingleQuotes(m_singleQuotes);
   mAutoCorrection->setTypographicDoubleQuotes(m_doubleQuotes);
+  mAutoCorrection->writeConfig();
 
 }
 
 void KMComposerAutoCorrectionWidget::resetToDefault()
 {
-    ui->upperCase->setChecked(false);
-    ui->upperUpper->setChecked(false);
-    ui->ignoreDoubleSpace->setChecked(false);
-    ui->capitalizeDaysName->setChecked(false);
-    ui->advancedAutocorrection->setChecked(false);
-    ui->typographicDoubleQuotes->setChecked(false);
-    ui->typographicSingleQuotes->setChecked(false);
+  ui->upperCase->setChecked(false);
+  ui->upperUpper->setChecked(false);
+  ui->ignoreDoubleSpace->setChecked(false);
+  ui->capitalizeDaysName->setChecked(false);
+  ui->advancedAutocorrection->setChecked(false);
+  ui->typographicDoubleQuotes->setChecked(false);
+  ui->typographicSingleQuotes->setChecked(false);
 }
 
 void KMComposerAutoCorrectionWidget::enableSingleQuotes(int state)
 {
-    bool enable = state == Qt::Checked;
-    ui->singleQuote1->setEnabled(enable);
-    ui->singleQuote2->setEnabled(enable);
-    ui->singleDefault->setEnabled(enable);
+  bool enable = state == Qt::Checked;
+  ui->singleQuote1->setEnabled(enable);
+  ui->singleQuote2->setEnabled(enable);
+  ui->singleDefault->setEnabled(enable);
 }
 
 void KMComposerAutoCorrectionWidget::enableDoubleQuotes(int state)
 {
-    bool enable = state == Qt::Checked;
-    ui->doubleQuote1->setEnabled(enable);
-    ui->doubleQuote2->setEnabled(enable);
-    ui->doubleDefault->setEnabled(enable);
+  bool enable = state == Qt::Checked;
+  ui->doubleQuote1->setEnabled(enable);
+  ui->doubleQuote2->setEnabled(enable);
+  ui->doubleDefault->setEnabled(enable);
 }
 
 void KMComposerAutoCorrectionWidget::selectSingleQuoteCharOpen()
@@ -178,14 +182,14 @@ void KMComposerAutoCorrectionWidget::selectSingleQuoteCharOpen()
 
 void KMComposerAutoCorrectionWidget::selectSingleQuoteCharClose()
 {
-    CharSelectDialog *dlg = new CharSelectDialog(this);
-    dlg->setCurrentChar(m_singleQuotes.end);
-    if (dlg->exec()) {
-        m_singleQuotes.end = dlg->currentChar();
-        ui->singleQuote2->setText(m_singleQuotes.end);
-        Q_EMIT changed();
-    }
-    delete dlg;
+  CharSelectDialog *dlg = new CharSelectDialog(this);
+  dlg->setCurrentChar(m_singleQuotes.end);
+  if (dlg->exec()) {
+    m_singleQuotes.end = dlg->currentChar();
+    ui->singleQuote2->setText(m_singleQuotes.end);
+    Q_EMIT changed();
+  }
+  delete dlg;
 }
 
 void KMComposerAutoCorrectionWidget::setDefaultSingleQuotes()
@@ -197,14 +201,14 @@ void KMComposerAutoCorrectionWidget::setDefaultSingleQuotes()
 
 void KMComposerAutoCorrectionWidget::selectDoubleQuoteCharOpen()
 {
-    CharSelectDialog *dlg = new CharSelectDialog(this);
-    dlg->setCurrentChar(m_doubleQuotes.begin);
-    if (dlg->exec()) {
-        m_doubleQuotes.begin = dlg->currentChar();
-        ui->doubleQuote1->setText(m_doubleQuotes.begin);
-        Q_EMIT changed();
-    }
-    delete dlg;
+  CharSelectDialog *dlg = new CharSelectDialog(this);
+  dlg->setCurrentChar(m_doubleQuotes.begin);
+  if (dlg->exec()) {
+    m_doubleQuotes.begin = dlg->currentChar();
+    ui->doubleQuote1->setText(m_doubleQuotes.begin);
+    Q_EMIT changed();
+  }
+  delete dlg;
 }
 
 void KMComposerAutoCorrectionWidget::selectDoubleQuoteCharClose()
@@ -221,23 +225,23 @@ void KMComposerAutoCorrectionWidget::selectDoubleQuoteCharClose()
 
 void KMComposerAutoCorrectionWidget::setDefaultDoubleQuotes()
 {
-    m_doubleQuotes = mAutoCorrection->typographicDefaultDoubleQuotes();
-    ui->doubleQuote1->setText(m_doubleQuotes.begin);
-    ui->doubleQuote2->setText(m_doubleQuotes.end);
+  m_doubleQuotes = mAutoCorrection->typographicDefaultDoubleQuotes();
+  ui->doubleQuote1->setText(m_doubleQuotes.begin);
+  ui->doubleQuote2->setText(m_doubleQuotes.end);
 }
 
 void KMComposerAutoCorrectionWidget::enableAdvAutocorrection(int state)
 {
-    bool enable = state == Qt::Checked;
-    ui->findLabel->setEnabled(enable);
-    ui->find->setEnabled(enable);
-    ui->specialChar1->setEnabled(enable);
-    ui->replaceLabel->setEnabled(enable);
-    ui->replace->setEnabled(enable);
-    ui->specialChar2->setEnabled(enable);
-    ui->addButton->setEnabled(enable);
-    ui->removeButton->setEnabled(enable);
-    ui->tableWidget->setEnabled(enable);
+  bool enable = state == Qt::Checked;
+  ui->findLabel->setEnabled(enable);
+  ui->find->setEnabled(enable);
+  ui->specialChar1->setEnabled(enable);
+  ui->replaceLabel->setEnabled(enable);
+  ui->replace->setEnabled(enable);
+  ui->specialChar2->setEnabled(enable);
+  ui->addButton->setEnabled(enable);
+  ui->removeButton->setEnabled(enable);
+  ui->tableWidget->setEnabled(enable);
 }
 
 
@@ -270,15 +274,16 @@ void KMComposerAutoCorrectionWidget::addAutocorrectEntry()
 
     ui->tableWidget->setSortingEnabled(true);
     ui->tableWidget->setCurrentCell(item->row(), 0);
+    Q_EMIT changed();
 }
 
 void KMComposerAutoCorrectionWidget::removeAutocorrectEntry()
 {
-    ui->tableWidget->setSortingEnabled(false);
-    m_autocorrectEntries.remove(ui->find->text());
-    ui->tableWidget->removeRow(ui->tableWidget->currentRow());
-    ui->tableWidget->setSortingEnabled(true);
-    Q_EMIT changed();
+  ui->tableWidget->setSortingEnabled(false);
+  m_autocorrectEntries.remove(ui->find->text());
+  ui->tableWidget->removeRow(ui->tableWidget->currentRow());
+  ui->tableWidget->setSortingEnabled(true);
+  Q_EMIT changed();
 }
 
 void KMComposerAutoCorrectionWidget::enableAddRemoveButton()
@@ -317,58 +322,66 @@ void KMComposerAutoCorrectionWidget::enableAddRemoveButton()
 
 void KMComposerAutoCorrectionWidget::setFindReplaceText(int row, int column)
 {
-    Q_UNUSED(column);
-    ui->find->setText(ui->tableWidget->item(row, 0)->text());
-    ui->replace->setText(ui->tableWidget->item(row, 1)->text());
+  Q_UNUSED(column);
+  ui->find->setText(ui->tableWidget->item(row, 0)->text());
+  ui->replace->setText(ui->tableWidget->item(row, 1)->text());
+  Q_EMIT changed();
 }
 
 
 void KMComposerAutoCorrectionWidget::abbreviationChanged(const QString &text)
 {
-    ui->add1->setEnabled(!text.isEmpty());
+  ui->add1->setEnabled(!text.isEmpty());
+  Q_EMIT changed();
 }
 
 void KMComposerAutoCorrectionWidget::twoUpperLetterChanged(const QString &text)
 {
-    ui->add2->setEnabled(!text.isEmpty());
+  ui->add2->setEnabled(!text.isEmpty());
+  Q_EMIT changed();
 }
 
 void KMComposerAutoCorrectionWidget::addAbbreviationEntry()
 {
-    QString text = ui->abbreviation->text();
-    if (!m_upperCaseExceptions.contains(text)) {
-        m_upperCaseExceptions.insert(text);
-        ui->abbreviationList->addItem(text);
-    }
-    ui->abbreviation->clear();
+  QString text = ui->abbreviation->text();
+  if (!m_upperCaseExceptions.contains(text)) {
+    m_upperCaseExceptions.insert(text);
+    ui->abbreviationList->addItem(text);
+  }
+  ui->abbreviation->clear();
+  Q_EMIT changed();
 }
 
 void KMComposerAutoCorrectionWidget::removeAbbreviationEntry()
 {
-    int currentRow = ui->abbreviationList->currentRow();
-    QListWidgetItem *item = ui->abbreviationList->takeItem(currentRow);
-    Q_ASSERT(item);
-    m_upperCaseExceptions.remove(item->text());
-    delete item;
+  int currentRow = ui->abbreviationList->currentRow();
+  QListWidgetItem *item = ui->abbreviationList->takeItem(currentRow);
+  Q_ASSERT(item);
+  m_upperCaseExceptions.remove(item->text());
+  delete item;
+  Q_EMIT changed();
 }
 
 void KMComposerAutoCorrectionWidget::addTwoUpperLetterEntry()
 {
-    QString text = ui->twoUpperLetter->text();
-    if (!m_twoUpperLetterExceptions.contains(text)) {
-        m_twoUpperLetterExceptions.insert(text);
-        ui->twoUpperLetterList->addItem(text);
-    }
-    ui->twoUpperLetter->clear();
+  QString text = ui->twoUpperLetter->text();
+  if (!m_twoUpperLetterExceptions.contains(text)) {
+    m_twoUpperLetterExceptions.insert(text);
+    ui->twoUpperLetterList->addItem(text);
+    Q_EMIT changed();
+  }
+  ui->twoUpperLetter->clear();
+
 }
 
 void KMComposerAutoCorrectionWidget::removeTwoUpperLetterEntry()
 {
-    int currentRow = ui->twoUpperLetterList->currentRow();
-    QListWidgetItem *item = ui->twoUpperLetterList->takeItem(currentRow);
-    Q_ASSERT(item);
-    m_twoUpperLetterExceptions.remove(item->text());
-    delete item;
+  int currentRow = ui->twoUpperLetterList->currentRow();
+  QListWidgetItem *item = ui->twoUpperLetterList->takeItem(currentRow);
+  Q_ASSERT(item);
+  m_twoUpperLetterExceptions.remove(item->text());
+  delete item;
+  Q_EMIT changed();
 }
 
 CharSelectDialog::CharSelectDialog(QWidget *parent)

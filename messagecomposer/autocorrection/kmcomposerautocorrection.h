@@ -34,6 +34,7 @@ public:
   explicit KMComposerAutoCorrection();
   ~KMComposerAutoCorrection();
 
+  void setEnabledAutoCorrection(bool b) { mEnabled = b; }
   void setUppercaseFirstCharOfSentence(bool b) { mUppercaseFirstCharOfSentence = b; }
   void setFixTwoUppercaseChars(bool b) { mFixTwoUppercaseChars = b; }
   void setSingleSpaces(bool b) { mSingleSpaces = b; }
@@ -48,6 +49,7 @@ public:
   void setTwoUpperLetterExceptions(const QSet<QString>& exceptions);
   void setAutocorrectEntries(const QHash<QString, QString>& entries);
 
+  bool isEnabledAutoCorrection() const { return mEnabled; }
   bool isUppercaseFirstCharOfSentence() const { return mUppercaseFirstCharOfSentence; }
   bool isFixTwoUppercaseChars() const { return mFixTwoUppercaseChars; }
   bool isSingleSpaces() const { return mSingleSpaces; }
@@ -66,9 +68,10 @@ public:
   QHash<QString, QString> autocorrectEntries() const;
 
   void autocorrect(QTextDocument &document, int position);
+  void writeConfig();
 private:
   void readConfig();
-  void writeConfig();
+
   void fixTwoUppercaseChars();
   bool singleSpaces();
   void capitalizeWeekDays();
