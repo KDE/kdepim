@@ -102,7 +102,6 @@ private:
 
   QString m_autocorrectLang;
   QStringList mCacheNameOfDays;
-  QHash<QString, QString> mSuperScriptEntries;
   QSet<QString> mUpperCaseExceptions;
   QSet<QString> mTwoUpperLetterExceptions;
   QHash<QString, QString> mAutocorrectEntries;
