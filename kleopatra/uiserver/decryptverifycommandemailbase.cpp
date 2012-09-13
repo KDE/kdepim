@@ -207,6 +207,9 @@ void DecryptVerifyCommandEMailBase::doCanceled() {
 
 void DecryptVerifyCommandEMailBase::Private::slotProgress( const QString& what, int current, int total )
 {
+    Q_UNUSED( what );
+    Q_UNUSED( current );
+    Q_UNUSED( total );
     // ### FIXME report progress, via sendStatus()
 }
 

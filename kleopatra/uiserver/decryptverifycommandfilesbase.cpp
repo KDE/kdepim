@@ -91,7 +91,7 @@ public Q_SLOTS:
     void verificationResult( const GpgME::VerificationResult & );
     void slotDone() { q->done(); }
     void slotError( int err, const QString & details ) { q->done( err, details ); }
-    
+
 public:
 
 private:
@@ -121,7 +121,7 @@ int DecryptVerifyCommandFilesBase::doStart() {
                       d.get(), SLOT(slotDone()), Qt::QueuedConnection );
     QObject::connect( d->controller.get(), SIGNAL(error(int,QString)),
                       d.get(), SLOT(slotError(int,QString)), Qt::QueuedConnection );
-    QObject::connect( d->controller.get(), SIGNAL(verificationResult(GpgME::VerificationResult)), 
+    QObject::connect( d->controller.get(), SIGNAL(verificationResult(GpgME::VerificationResult)),
                       d.get(), SLOT(verificationResult(GpgME::VerificationResult)), Qt::QueuedConnection );
 
     d->controller->start();
@@ -168,15 +168,18 @@ void DecryptVerifyCommandFilesBase::Private::checkForErrors() const
                            i18n( "DECRYPT/VERIFY_FILES cannot use directories as input" ) );
 
 }
-  
+
 void DecryptVerifyCommandFilesBase::doCanceled() {
     if ( d->controller )
         d->controller->cancel();
 }
 
- 
+
 void DecryptVerifyCommandFilesBase::Private::slotProgress( const QString& what, int current, int total )
 {
+    Q_UNUSED( what );
+    Q_UNUSED( current );
+    Q_UNUSED( total );
     // ### FIXME report progress, via sendStatus()
 }
 
@@ -192,7 +195,7 @@ void DecryptVerifyCommandFilesBase::Private::verificationResult( const Verificat
             q->sendStatusEncoded( "SIGSTATUS",
                                   color + ( ' ' + hexencode( s.toUtf8().constData() ) ) );
         }
-    } catch ( ... ) {}    
+    } catch ( ... ) {}
 }
 
 #include "decryptverifycommandfilesbase.moc"
