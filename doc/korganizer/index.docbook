@@ -3166,14 +3166,14 @@ file for security reasons.</para></warning></listitem>
 <sect3 id="config-main-free-busy-retrieve">
 <title>Retrieve</title>
 
-<para>By retrieving other peoples' free/busy
+<para>By retrieving other people's free/busy
 information, you can take their busy time schedule into account
 when inviting them to an event.</para>
 
 <variablelist>
 
 <varlistentry>
-<term><guilabel>Retrieve other peoples' free/busy information
+<term><guilabel>Retrieve other people's free/busy information
 automatically</guilabel></term>
 <listitem><para>Automate the process for retrieving other users free/busy time.
 Fill in the server information section below to enable this
