@@ -32,6 +32,18 @@
 
 #include "kmailinterface.h"
 
+static KUrl makeAbsoluteUrl( const QString& str )
+{
+    KUrl url( str );
+    if ( url.protocol().isEmpty() ) {
+      const QString newUrl = KCmdLineArgs::cwd() + '/' + url.fileName();
+      return KUrl( newUrl );
+    }
+    else {
+      return url;
+    }
+}
+
 MailerService::MailerService()
                 : mSuccess( false ), mEventLoop( 0 )
 {
@@ -134,7 +146,8 @@ void MailerService::processArgs( KCmdLineArgs *args )
     if (args->isSet("msg"))
     {
         mailto = true;
-        messageFile.setPath( args->getOption("msg") );
+        const QString file = args->getOption("msg");
+        messageFile = makeAbsoluteUrl(file);
     }
 
     if (args->isSet("body"))
@@ -147,20 +160,12 @@ void MailerService::processArgs( KCmdLineArgs *args )
     if (!attachList.isEmpty())
     {
         mailto = true;
-	QStringList::ConstIterator end(attachList.constEnd());
+        QStringList::ConstIterator end(attachList.constEnd());
         for ( QStringList::ConstIterator it = attachList.constBegin() ; it != end ; ++it )
         {
             if ( !(*it).isEmpty() )
             {
-              KUrl url( *it );
-
-              if ( url.protocol().isEmpty() )
-              {
-                const QString newUrl =  QDir::currentPath () + QDir::separator () + url.fileName();
-                attachURLs.append( newUrl );
-              }
-              else
-                attachURLs.append( *it );
+                attachURLs.append( makeAbsoluteUrl( *it ).url() );
             }
         }
     }
