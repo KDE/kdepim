@@ -107,6 +107,7 @@ void KMComposerAutoCorrectionWidget::loadConfig()
 
     /* tab 3 - Advanced Autocorrection */
     m_autocorrectEntries = mAutoCorrection->autocorrectEntries();
+    ui->treeWidget->clear();
     QHash<QString, QString>::const_iterator i = m_autocorrectEntries.constBegin();
     QTreeWidgetItem * item = 0;
     while (i != m_autocorrectEntries.constEnd()) {
@@ -122,6 +123,11 @@ void KMComposerAutoCorrectionWidget::loadConfig()
     /* tab 4 - Exceptions */
     m_upperCaseExceptions = mAutoCorrection->upperCaseExceptions();
     m_twoUpperLetterExceptions = mAutoCorrection->twoUpperLetterExceptions();
+
+    ui->twoUpperLetterList->clear();
+    ui->twoUpperLetterList->addItems(m_twoUpperLetterExceptions.toList());
+
+    ui->abbreviationList->clear();
     ui->abbreviationList->addItems(m_upperCaseExceptions.toList());
 }
 
