@@ -66,7 +66,8 @@ KMComposerAutoCorrectionWidget::KMComposerAutoCorrectionWidget(QWidget *parent) 
   connect(ui->remove2, SIGNAL(clicked()), this, SLOT(removeTwoUpperLetterEntry()));
   connect(ui->typographicDoubleQuotes,SIGNAL(clicked()),SIGNAL(changed()));
   connect(ui->typographicSingleQuotes,SIGNAL(clicked()),SIGNAL(changed()));
-
+  connect(ui->abbreviationList,SIGNAL(itemClicked ( QListWidgetItem *)),SLOT(slotEnableDisableAbreviationList()));
+  slotEnableDisableAbreviationList();
 }
 
 KMComposerAutoCorrectionWidget::~KMComposerAutoCorrectionWidget()
@@ -357,12 +358,15 @@ void KMComposerAutoCorrectionWidget::twoUpperLetterChanged(const QString &text)
 
 void KMComposerAutoCorrectionWidget::addAbbreviationEntry()
 {
-  QString text = ui->abbreviation->text();
+  const QString text = ui->abbreviation->text();
+  if(text.isEmpty())
+    return;
   if (!m_upperCaseExceptions.contains(text)) {
     m_upperCaseExceptions.insert(text);
     ui->abbreviationList->addItem(text);
   }
   ui->abbreviation->clear();
+  slotEnableDisableAbreviationList();
   Q_EMIT changed();
 }
 
@@ -374,12 +378,15 @@ void KMComposerAutoCorrectionWidget::removeAbbreviationEntry()
     return;
   m_upperCaseExceptions.remove(item->text());
   delete item;
+  slotEnableDisableAbreviationList();
   Q_EMIT changed();
 }
 
 void KMComposerAutoCorrectionWidget::addTwoUpperLetterEntry()
 {
   QString text = ui->twoUpperLetter->text();
+  if(text.isEmpty())
+    return;
   if (!m_twoUpperLetterExceptions.contains(text)) {
     m_twoUpperLetterExceptions.insert(text);
     ui->twoUpperLetterList->addItem(text);
@@ -398,6 +405,14 @@ void KMComposerAutoCorrectionWidget::removeTwoUpperLetterEntry()
   m_twoUpperLetterExceptions.remove(item->text());
   delete item;
   Q_EMIT changed();
+}
+
+
+void KMComposerAutoCorrectionWidget::slotEnableDisableAbreviationList()
+{
+    bool enable = (ui->abbreviationList->currentItem() != 0);
+    ui->add1->setEnabled(enable);
+    ui->remove1->setEnabled(enable);
 }
 
 CharSelectDialog::CharSelectDialog(QWidget *parent)

@@ -70,6 +70,8 @@ private Q_SLOTS:
   void addTwoUpperLetterEntry();
   void removeTwoUpperLetterEntry();
 
+  void slotEnableDisableAbreviationList();
+
 Q_SIGNALS:
   void changed();
 
