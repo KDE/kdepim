@@ -44,15 +44,15 @@ KMComposerAutoCorrectionWidget::KMComposerAutoCorrectionWidget(QWidget *parent) 
   connect(ui->capitalizeDaysName,SIGNAL(clicked()),SIGNAL(changed()));
   connect(ui->advancedAutocorrection,SIGNAL(clicked()),SIGNAL(changed()));
   connect(ui->enabledAutocorrection,SIGNAL(clicked()),SIGNAL(changed()));
-  connect(ui->typographicSingleQuotes, SIGNAL(clicked (bool)), this, SLOT(enableSingleQuotes(bool)));
-  connect(ui->typographicDoubleQuotes, SIGNAL(clicked (bool)), this, SLOT(enableDoubleQuotes(bool)));
+  connect(ui->typographicSingleQuotes, SIGNAL(clicked(bool)), this, SLOT(enableSingleQuotes(bool)));
+  connect(ui->typographicDoubleQuotes, SIGNAL(clicked(bool)), this, SLOT(enableDoubleQuotes(bool)));
   connect(ui->singleQuote1, SIGNAL(clicked()), this, SLOT(selectSingleQuoteCharOpen()));
   connect(ui->singleQuote2, SIGNAL(clicked()), this, SLOT(selectSingleQuoteCharClose()));
   connect(ui->singleDefault, SIGNAL(clicked()), this, SLOT(setDefaultSingleQuotes()));
   connect(ui->doubleQuote1, SIGNAL(clicked()), this, SLOT(selectDoubleQuoteCharOpen()));
   connect(ui->doubleQuote2, SIGNAL(clicked()), this, SLOT(selectDoubleQuoteCharClose()));
   connect(ui->doubleDefault, SIGNAL(clicked()), this, SLOT(setDefaultDoubleQuotes()));
-  connect(ui->advancedAutocorrection, SIGNAL(clicked (bool)), this, SLOT(enableAdvAutocorrection(bool)));
+  connect(ui->advancedAutocorrection, SIGNAL(clicked(bool)), this, SLOT(enableAdvAutocorrection(bool)));
   connect(ui->addButton, SIGNAL(clicked()), this, SLOT(addAutocorrectEntry()));
   connect(ui->removeButton, SIGNAL(clicked()), this, SLOT(removeAutocorrectEntry()));
   connect(ui->tableWidget, SIGNAL(cellClicked(int,int)), this, SLOT(setFindReplaceText(int,int)));
