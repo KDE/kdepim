@@ -14,7 +14,7 @@
    <item row="1" column="0">
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="tab_1">
       <attribute name="title">
@@ -261,35 +261,6 @@
          </property>
         </widget>
        </item>
-       <item row="2" column="0">
-        <widget class="QTableWidget" name="tableWidget">
-         <property name="editTriggers">
-          <set>QAbstractItemView::NoEditTriggers</set>
-         </property>
-         <property name="selectionMode">
-          <enum>QAbstractItemView::SingleSelection</enum>
-         </property>
-         <property name="selectionBehavior">
-          <enum>QAbstractItemView::SelectRows</enum>
-         </property>
-         <property name="sortingEnabled">
-          <bool>false</bool>
-         </property>
-         <property name="cornerButtonEnabled">
-          <bool>false</bool>
-         </property>
-         <column>
-          <property name="text">
-           <string>Find</string>
-          </property>
-         </column>
-         <column>
-          <property name="text">
-           <string>Replace</string>
-          </property>
-         </column>
-        </widget>
-       </item>
        <item row="1" column="0">
         <layout class="QHBoxLayout" name="_10">
          <item>
@@ -319,6 +290,32 @@
           <widget class="QLineEdit" name="replace"/>
          </item>
         </layout>
+       </item>
+       <item row="2" column="0">
+        <widget class="QTreeWidget" name="treeWidget">
+         <property name="editTriggers">
+          <set>QAbstractItemView::NoEditTriggers</set>
+         </property>
+         <property name="selectionMode">
+          <enum>QAbstractItemView::SingleSelection</enum>
+         </property>
+         <property name="selectionBehavior">
+          <enum>QAbstractItemView::SelectRows</enum>
+         </property>
+         <property name="rootIsDecorated">
+          <bool>false</bool>
+         </property>
+         <column>
+          <property name="text">
+           <string>Find</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Replace</string>
+          </property>
+         </column>
+        </widget>
        </item>
       </layout>
      </widget>

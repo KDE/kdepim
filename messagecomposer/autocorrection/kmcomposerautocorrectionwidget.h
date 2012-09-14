@@ -24,6 +24,8 @@
 #include <KDialog>
 #include <KCharSelect>
 
+class QTreeWidgetItem;
+
 namespace Ui {
 class KMComposerAutoCorrectionWidget;
 }
@@ -57,7 +59,7 @@ private Q_SLOTS:
   void enableAdvAutocorrection(bool state);
   void addAutocorrectEntry();
   void removeAutocorrectEntry();
-  void setFindReplaceText(int row, int column);
+  void setFindReplaceText(QTreeWidgetItem*,int);
   void enableAddRemoveButton();
 
   /* tab 4 */
