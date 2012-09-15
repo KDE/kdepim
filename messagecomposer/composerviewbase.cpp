@@ -933,20 +933,29 @@ void Message::ComposerViewBase::slotSaveMessage( KJob* job )
   Akonadi::Collection target;
   Akonadi::Item item = job->property( "Akonadi::Item" ).value<Akonadi::Item>();
   if( job->error() ) {
-    if ( mSaveIn == MessageSender::SaveInTemplates ) {
-      target = Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Templates );
-    } else {
-      target = Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Drafts );
-    }
+    target = defaultSpecialTarget();
   } else {
     const Akonadi::CollectionFetchJob *fetchJob = qobject_cast<Akonadi::CollectionFetchJob*>( job );
-    target = fetchJob->collections().first();
+    if(fetchJob->collections().isEmpty())
+      target = defaultSpecialTarget();
+    else
+      target = fetchJob->collections().first();
   }
   Akonadi::ItemCreateJob *create = new Akonadi::ItemCreateJob( item, target, this );
   connect( create, SIGNAL(result(KJob*)), this, SLOT(slotCreateItemResult(KJob*)) );
   m_pendingQueueJobs++;
 }
 
+Akonadi::Collection Message::ComposerViewBase::defaultSpecialTarget() const
+{
+  Akonadi::Collection target;
+  if ( mSaveIn == MessageSender::SaveInTemplates ) {
+    target = Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Templates );
+  } else {
+    target = Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Drafts );
+  }
+  return target;
+}
 
 void Message::ComposerViewBase::slotCreateItemResult( KJob *job )
 {
