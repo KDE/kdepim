@@ -469,9 +469,9 @@ void KMComposerAutoCorrection::readAutoCorrectionXmlFile()
     kdelang.remove(QRegExp(QLatin1String("@.*")));
 
     QString fname;
-    if (!m_autocorrectLang.isEmpty())
-        fname = KGlobal::dirs()->findResource("data", QLatin1String("kmail2/autocorrect/") + m_autocorrectLang + QLatin1String(".xml"));
-    if (m_autocorrectLang != QLatin1String("all_languages")) {
+    if (!mAutoCorectLang.isEmpty())
+        fname = KGlobal::dirs()->findResource("data", QLatin1String("kmail2/autocorrect/") + mAutoCorectLang + QLatin1String(".xml"));
+    if (mAutoCorectLang != QLatin1String("all_languages")) {
         if (fname.isEmpty() && !kdelang.isEmpty())
             fname = KGlobal::dirs()->findResource("data", QLatin1String("kmail2/autocorrect/") + kdelang + QLatin1String(".xml"));
         if (fname.isEmpty() && kdelang.contains(QLatin1String("_"))) {
@@ -481,8 +481,8 @@ void KMComposerAutoCorrection::readAutoCorrectionXmlFile()
         if (fname.isEmpty())
             fname = KGlobal::dirs()->findResource("data", QLatin1String("kmail2/autocorrect/autocorrect.xml"));
     }
-    if (m_autocorrectLang.isEmpty())
-        m_autocorrectLang = kdelang;
+    if (mAutoCorectLang.isEmpty())
+        mAutoCorectLang = kdelang;
 
 
     qDebug()<<" fname :"<<fname;

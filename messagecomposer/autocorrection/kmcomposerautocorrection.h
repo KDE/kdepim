@@ -102,7 +102,7 @@ private:
   QString mWord;
   QTextCursor mCursor;
 
-  QString m_autocorrectLang;
+  QString mAutoCorectLang;
   QStringList mCacheNameOfDays;
   QSet<QString> mUpperCaseExceptions;
   QSet<QString> mTwoUpperLetterExceptions;
