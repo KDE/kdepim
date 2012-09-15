@@ -2597,7 +2597,7 @@ or To-dos. You can always turn-off the reminders in the editor dialogs.</para>
 <varlistentry>
 <term><guilabel>Next x days:</guilabel></term>
 <listitem><para>This option allows you to change the number of days shown by the
-<guimenu>Next x Days</guimenu> menu item in the <guimenu>View</guimenu>
+<guimenu>Next x Days</guimenu> menu item in the <guimenu>Go</guimenu>
 menu.</para></listitem>
 </varlistentry>
 
