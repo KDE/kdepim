@@ -499,6 +499,10 @@ void KMComposerAutoCorrection::readAutoCorrectionXmlFile()
     if (doc.doctype().name() != QLatin1String("autocorrection"))
         return;
 
+    mUpperCaseExceptions.clear();
+    mAutocorrectEntries.clear();
+    mTwoUpperLetterExceptions.clear();
+
     QDomElement de = doc.documentElement();
 
     QDomElement upper = de.namedItem(QLatin1String("UpperCaseExceptions")).toElement();
@@ -510,8 +514,9 @@ void KMComposerAutoCorrection::readAutoCorrectionXmlFile()
 
     QDomElement twoUpper = de.namedItem(QLatin1String("TwoUpperLetterExceptions")).toElement();
     if (!twoUpper.isNull()) {
-        QDomNodeList nl = twoUpper.childNodes();
-        for(int i = 0; i < nl.count(); i++)
+        const QDomNodeList nl = twoUpper.childNodes();
+        const int numberOfElement(nl.count());
+        for(int i = 0; i < numberOfElement; ++i)
             mTwoUpperLetterExceptions += nl.item(i).toElement().attribute(QLatin1String("exception"));
     }
 
@@ -519,33 +524,37 @@ void KMComposerAutoCorrection::readAutoCorrectionXmlFile()
     QDomElement item = de.namedItem(QLatin1String("items")).toElement();
     if (!item.isNull())
     {
-        QDomNodeList nl = item.childNodes();
-        for (int i = 0; i < nl.count(); i++) {
-            QDomElement element = nl.item(i).toElement();
+        const QDomNodeList nl = item.childNodes();
+        const int numberOfElement(nl.count());
+        for (int i = 0; i < numberOfElement; i++) {
+            const QDomElement element = nl.item(i).toElement();
             const QString find = element.attribute(QLatin1String("find"));
             const QString replace = element.attribute(QLatin1String("replace"));
-            qDebug()<<" find :"<<find<<" replace "<<replace;
             mAutocorrectEntries.insert(find, replace);
         }
     }
 
     QDomElement doubleQuote = de.namedItem(QLatin1String("DoubleQuote")).toElement();
     if(doubleQuote.isNull()) {
-      QDomNodeList nl = doubleQuote.childNodes();
+      const QDomNodeList nl = doubleQuote.childNodes();
       if(nl.count()==1) {
-        QDomElement element = nl.item(0).toElement();
+        const QDomElement element = nl.item(0).toElement();
         mTypographicDoubleQuotes.begin = element.attribute(QLatin1String("begin")).at(0);
         mTypographicDoubleQuotes.end = element.attribute(QLatin1String("end")).at(0);
+      } else {
+        kDebug()<<" number of double quote invalid "<<nl.count();
       }
     }
 
-    QDomElement singleQuote = de.namedItem(QLatin1String("SimpleQuote")).toElement();
+    const QDomElement singleQuote = de.namedItem(QLatin1String("SimpleQuote")).toElement();
     if(singleQuote.isNull()) {
-      QDomNodeList nl = singleQuote.childNodes();
+      const QDomNodeList nl = singleQuote.childNodes();
       if(nl.count()==1) {
-        QDomElement element = nl.item(0).toElement();
+        const QDomElement element = nl.item(0).toElement();
         mTypographicSingleQuotes.begin = element.attribute(QLatin1String("begin")).at(0);
         mTypographicSingleQuotes.end = element.attribute(QLatin1String("end")).at(0);
+      } else {
+        kDebug()<<" number of simple quote invalid "<<nl.count();
       }
     }
 
