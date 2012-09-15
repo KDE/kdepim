@@ -463,7 +463,28 @@ void KMComposerAutoCorrection::replaceTypographicQuotes()
 
 void KMComposerAutoCorrection::readAutoCorrectionXmlFile()
 {
-    const QString fname = KGlobal::dirs()->findResource("data", QLatin1String("kmail2/autocorrect.xml"));
+
+    KLocale *locale = KGlobal::locale();
+    QString kdelang = locale->languageList().first();
+    kdelang.remove(QRegExp(QLatin1String("@.*")));
+
+    QString fname;
+    if (!m_autocorrectLang.isEmpty())
+        fname = KGlobal::dirs()->findResource("data", QLatin1String("kmail2/autocorrect/") + m_autocorrectLang + QLatin1String(".xml"));
+    if (m_autocorrectLang != QLatin1String("all_languages")) {
+        if (fname.isEmpty() && !kdelang.isEmpty())
+            fname = KGlobal::dirs()->findResource("data", QLatin1String("kmail2/autocorrect/") + kdelang + QLatin1String(".xml"));
+        if (fname.isEmpty() && kdelang.contains(QLatin1String("_"))) {
+            kdelang.remove( QRegExp( QLatin1String("_.*") ) );
+            fname = KGlobal::dirs()->findResource("data", QLatin1String("kmail2/autocorrect/") + kdelang + QLatin1String(".xml"));
+        }
+        if (fname.isEmpty())
+            fname = KGlobal::dirs()->findResource("data", QLatin1String("kmail2/autocorrect/autocorrect.xml"));
+    }
+    if (m_autocorrectLang.isEmpty())
+        m_autocorrectLang = kdelang;
+
+
     qDebug()<<" fname :"<<fname;
     if (fname.isEmpty())
         return;
