@@ -128,7 +128,7 @@ Dialog {
         }
         KPIM.Button2 {
           id: clockWidgetOk
-          buttonText: KDE.i18n( "Ok" );
+          buttonText: KDE.i18n( "OK" );
           width: 130
           onClicked: {
             clockWidget.collapse()
