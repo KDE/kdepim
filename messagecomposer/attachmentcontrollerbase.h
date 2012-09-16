@@ -59,6 +59,7 @@ class MESSAGECOMPOSER_EXPORT AttachmentControllerBase : public QObject
 
     void setAttachOwnVcard(bool attachVcard);
     bool attachOwnVcard() const;
+    void setIdentityHasOwnVcard(bool state);
 
   public slots:
     /// model sets these

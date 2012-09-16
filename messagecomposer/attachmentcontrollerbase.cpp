@@ -900,5 +900,9 @@ bool AttachmentControllerBase::attachOwnVcard() const
   return  d->addOwnVcardAction->isChecked();
 }
 
+void AttachmentControllerBase::setIdentityHasOwnVcard(bool state)
+{
+  d->addOwnVcardAction->setEnabled(state);
+}
 
 #include "attachmentcontrollerbase.moc"

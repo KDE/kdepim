@@ -1182,6 +1182,8 @@ void Message::ComposerViewBase::identityChanged ( const KPIMIdentities::Identity
   if ( !replaced && (/* msgCleared ||*/ oldSig.rawText().isEmpty() ) ) {
     signatureController()->applySignature( newSig );
   }
+  const QString vcardFileName = ident.vCardFile();
+  attachmentController()->setIdentityHasOwnVcard(!vcardFileName.isEmpty());
   attachmentController()->setAttachOwnVcard(ident.attachVcard());
 
 }
