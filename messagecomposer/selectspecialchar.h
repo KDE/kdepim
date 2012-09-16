@@ -33,6 +33,8 @@ public:
   void setCurrentChar(const QChar &c);
   QChar currentChar() const;
 
+  void setOkButtonText(const QString& text);
+
 private Q_SLOTS:
   void slotInsertChar();
 Q_SIGNALS:

@@ -56,4 +56,9 @@ QChar SelectSpecialChar::currentChar() const
 }
 
 
+void SelectSpecialChar::setOkButtonText(const QString& text)
+{
+  setButtonText(KDialog::User1,text);
+}
+
 #include "selectspecialchar.moc"
