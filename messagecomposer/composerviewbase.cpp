@@ -1267,7 +1267,6 @@ void Message::ComposerViewBase::setFccCombo ( Akonadi::CollectionComboBox* fcc )
 
 Akonadi::CollectionComboBox* Message::ComposerViewBase::fccCombo()
 {
-
   return m_fccCombo;
 }
 
