@@ -198,7 +198,7 @@ void Message::ComposerViewBase::send ( MessageSender::SendMethod method, Message
 
   const KPIMIdentities::Identity identity = identityManager()->identityForUoid( m_identityCombo->currentIdentity() );
 
-  if(identity.attachVcard()) {
+  if(identity.attachVcard() && m_attachmentController->attachOwnVcard()) {
     const QString vcardFileName = identity.vCardFile();
     if(!vcardFileName.isEmpty()) {
       m_attachmentController->addAttachmentUrlSync(KUrl(vcardFileName));
@@ -1182,6 +1182,7 @@ void Message::ComposerViewBase::identityChanged ( const KPIMIdentities::Identity
   if ( !replaced && (/* msgCleared ||*/ oldSig.rawText().isEmpty() ) ) {
     signatureController()->applySignature( newSig );
   }
+  attachmentController()->setAttachOwnVcard(ident.attachVcard());
 
 }
 
