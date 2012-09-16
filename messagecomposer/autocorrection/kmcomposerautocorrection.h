@@ -34,6 +34,7 @@ public:
   explicit KMComposerAutoCorrection();
   ~KMComposerAutoCorrection();
 
+  void setLanguage(const QString& lang);
   void setEnabledAutoCorrection(bool b) { mEnabled = b; }
   void setUppercaseFirstCharOfSentence(bool b) { mUppercaseFirstCharOfSentence = b; }
   void setFixTwoUppercaseChars(bool b) { mFixTwoUppercaseChars = b; }
@@ -59,6 +60,7 @@ public:
   bool isReplaceSingleQuotes() const { return mReplaceSingleQuotes; }
   bool isAdvancedAutocorrect() const { return mAdvancedAutocorrect; }
 
+  QString language() const;
   TypographicQuotes typographicSingleQuotes() const { return mTypographicSingleQuotes; }
   TypographicQuotes typographicDoubleQuotes() const { return mTypographicDoubleQuotes; }
   TypographicQuotes typographicDefaultSingleQuotes();

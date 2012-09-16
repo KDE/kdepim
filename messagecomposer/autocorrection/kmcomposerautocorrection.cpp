@@ -627,3 +627,13 @@ void KMComposerAutoCorrection::writeAutoCorrectionXmlFile()
 }
 
 
+QString KMComposerAutoCorrection::language() const
+{
+  return mAutoCorectLang;
+}
+
+void KMComposerAutoCorrection::setLanguage(const QString &lang)
+{
+  //TODO
+  mAutoCorectLang = lang;
+}
