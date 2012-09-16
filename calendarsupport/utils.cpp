@@ -506,15 +506,8 @@ QString CalendarSupport::displayName( Calendar *calendar, const Akonadi::Collect
 {
   const QString cName = c.name();
 
-  if ( !c.resource().contains( "kolabproxy" ) ) {
-    // Not groupware so the collection is "mine"
-    const Akonadi::EntityDisplayAttribute *attr = c.attribute<Akonadi::EntityDisplayAttribute>();
-    if ( attr && !attr->displayName().isEmpty() ) {
-      return i18n( "My %1", attr->displayName() );
-    } else {
-      return i18n( "My %1", cName );
-    }
-  } else {
+  // Kolab Groupware
+  if ( c.resource().contains( "kolabproxy" ) ) {
     QString typeStr = cName; // contents type: "Calendar", "Tasks", etc
     QString ownerStr;        // folder owner; "fred", "ethel", etc
     QString nameStr;         // folder name: "Public", "Test", etc
@@ -553,6 +546,19 @@ QString CalendarSupport::displayName( Calendar *calendar, const Akonadi::Collect
     } else {
       return typeStr;
     }
+  }
+
+  // Dav Groupware
+  if ( c.resource().contains( "davgroupware" ) ) {
+    return i18nc( "%1 is the folder name", "%1 CalDav Calendar", cName );
+  }
+
+  // Not groupware so the collection is "mine"
+  const Akonadi::EntityDisplayAttribute *attr = c.attribute<Akonadi::EntityDisplayAttribute>();
+  if ( attr && !attr->displayName().isEmpty() ) {
+    return i18n( "My %1", attr->displayName() );
+  } else {
+    return i18n( "My %1", cName );
   }
 }
 
