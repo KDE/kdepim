@@ -42,13 +42,23 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceCategories : public IncidenceEditor
 
     virtual void load( const KCalCore::Incidence::Ptr &incidence );
     virtual void save( const KCalCore::Incidence::Ptr &incidence );
+
+    /**
+     * Sets the currently selected categories.
+     */
+    void setCategories( const QStringList &categories );
+
+    /**
+     * Returns the list of currently selected categories.
+     */
+    QStringList categories() const;
+
     virtual bool isDirty() const;
     /**reimp*/
     void printDebugInfo() const;
 
   private slots:
     void selectCategories();
-    void setCategories( const QStringList &categories );
     void setCategoriesFromCombo();
 
   private:

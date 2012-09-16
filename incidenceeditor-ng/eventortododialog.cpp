@@ -1,6 +1,7 @@
 /*
   Copyright (c) 2010 Bertjan Broeksema <broeksema@kde.org>
   Copyright (c) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
+  Copyright (C) 2012  Allen Winter <winter@kde.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -19,6 +20,7 @@
 */
 
 #include "eventortododialog.h"
+#include "categoryeditdialog.h"
 #include "combinedincidenceeditor.h"
 #include "editorconfig.h"
 #include "incidencealarm.h"
@@ -35,6 +37,7 @@
 #include "templatemanagementdialog.h"
 #include "ui_eventortododesktop.h"
 
+#include <calendarsupport/categoryconfig.h>
 #include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/utils.h>
 
@@ -75,6 +78,7 @@ class EventOrTodoDialogPrivate : public ItemEditorUi
     InvitationDispatcher *mInvitationDispatcher;
 
     CombinedIncidenceEditor *mEditor;
+    IncidenceCategories *mIeCategories;
     IncidenceDateTime *mIeDateTime;
     IncidenceAttendee *mIeAttendee;
     IncidenceRecurrence *mIeRecurrence;
@@ -91,6 +95,7 @@ class EventOrTodoDialogPrivate : public ItemEditorUi
     void handleRecurrenceChange( IncidenceEditorNG::RecurrenceType type );
     void loadTemplate( const QString &templateName );
     void manageTemplates();
+    void manageCategories();
     void saveTemplate( const QString &templateName );
     void storeTemplatesInConfig( const QStringList &newTemplates );
     void updateAttachmentCount( int newCount );
@@ -145,8 +150,8 @@ EventOrTodoDialogPrivate::EventOrTodoDialogPrivate( EventOrTodoDialog *qq )
   IncidenceWhatWhere *ieGeneral = new IncidenceWhatWhere( mUi );
   mEditor->combine( ieGeneral );
 
-  IncidenceCategories *ieCategories = new IncidenceCategories( mUi );
-  mEditor->combine( ieCategories );
+  mIeCategories = new IncidenceCategories( mUi );
+  mEditor->combine( mIeCategories );
 
   mIeDateTime = new IncidenceDateTime( mUi );
   mEditor->combine( mIeDateTime );
@@ -370,6 +375,28 @@ void EventOrTodoDialogPrivate::storeTemplatesInConfig( const QStringList &templa
   // be changed by adding a setTemplates method.
   IncidenceEditorNG::EditorConfig::instance()->templates( mEditor->type() ) = templateNames;
   IncidenceEditorNG::EditorConfig::instance()->config()->writeConfig();
+}
+
+void EventOrTodoDialogPrivate::manageCategories()
+{
+  Q_Q( EventOrTodoDialog );
+
+  CalendarSupport::CategoryConfig cc( EditorConfig::instance()->config() );
+
+  QPointer<CategoryEditDialog> dialog = new CategoryEditDialog( &cc, q );
+
+  dialog->setModal( true );
+  dialog->enableButtonApply( false );
+  dialog->setHelp( "categories-view", "korganizer" );
+
+  if ( dialog->exec() == KDialog::Accepted ) {
+    IncidenceCategories *ieCats = new IncidenceCategories( mUi );
+    ieCats->setCategories( mIeCategories->categories() );
+    mIeCategories->setCategories( QStringList() );
+    mIeCategories = ieCats; //leak
+    mEditor->combine( mIeCategories );
+  }
+  delete dialog;
 }
 
 void EventOrTodoDialogPrivate::updateAttachmentCount( int newCount )
@@ -607,7 +634,7 @@ EventOrTodoDialog::EventOrTodoDialog( QWidget *parent, Qt::WFlags flags )
   d->mUi->mTabWidget->setCurrentIndex( 0 );
   d->mUi->mSummaryEdit->setFocus();
 
-  setButtons( KDialog::Ok | KDialog::Apply | KDialog::Cancel | KDialog::Default );
+  setButtons( KDialog::Ok | KDialog::Apply | KDialog::Cancel | KDialog::Default | KDialog::Reset );
   setButtonToolTip( KDialog::Apply,
                     i18nc( "@info:tooltip", "Save current changes" ) );
   setButtonToolTip( KDialog::Ok,
@@ -617,17 +644,28 @@ EventOrTodoDialog::EventOrTodoDialog( QWidget *parent, Qt::WFlags flags )
   setDefaultButton( Ok );
   enableButton( Apply, false );
 
-  setButtonText( Default, i18nc( "@action:button", "Manage &Templates..." ) );
+  setButtonText( Default, i18nc( "@action:button", "&Templates..." ) );
+  setButtonIcon( Default, KIcon( "project-development-new-template" ) );
   setButtonToolTip( Default,
                     i18nc( "@info:tooltip",
-                           "Apply or create templates for this item" ) );
+                           "Manage templates for this item" ) );
   setButtonWhatsThis( Default,
                       i18nc( "@info:whatsthis",
-                             "Push this button to run a tool that helps "
+                             "Push this button to show a dialog that helps "
                              "you manage a set of templates. Templates "
                              "can make creating new items easier and faster "
                              "by putting your favorite default values into "
                              "the editor automatically." ) );
+
+  setButtonText( Reset, i18nc( "@action:button", "&Categories..." ) );
+  setButtonIcon( Reset, KIcon( "document-properties" ) );
+  setButtonToolTip( Reset,
+                    i18nc( "@info:tooltip",
+                           "Manage categories for this item" ) );
+  setButtonWhatsThis( Default,
+                      i18nc( "@info:whatsthis",
+                             "Push this button to show a dialog that helps "
+                             "you manage your categroies." ) );
 
   setModal( false );
   showButtonSeparator( false );
@@ -727,6 +765,9 @@ void EventOrTodoDialog::slotButtonClicked( int button )
     break;
   case KDialog::Default:
     d->manageTemplates();
+    break;
+  case KDialog::Reset:
+    d->manageCategories();
     break;
   default:
     Q_ASSERT( false ); // Shouldn't happen
