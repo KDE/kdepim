@@ -63,6 +63,7 @@ set( messagecomposer_src
      kmsubjectlineedit.cpp
      autocorrection/kmcomposerautocorrection.cpp
      autocorrection/kmcomposerautocorrectionwidget.cpp
+     selectspecialchar.cpp
 )
 
 kde4_add_ui_files(messagecomposer_src

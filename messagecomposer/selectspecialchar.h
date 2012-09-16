@@ -15,19 +15,25 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef INSERTSPECIALCHAR_H
-#define INSERTSPECIALCHAR_H
+#ifndef SelectSpecialChar_H
+#define SelectSpecialChar_H
+#include "messagecomposer_export.h"
+
 #include <KDialog>
 
 class KCharSelect;
 
-class InsertSpecialChar : public KDialog
+class MESSAGECOMPOSER_EXPORT SelectSpecialChar : public KDialog
 {
   Q_OBJECT
 public:
-  explicit InsertSpecialChar(QWidget *parent);
-  ~InsertSpecialChar();
-public Q_SLOTS:
+  explicit SelectSpecialChar(QWidget *parent);
+  ~SelectSpecialChar();
+
+  void setCurrentChar(const QChar &c);
+  QChar currentChar() const;
+
+private Q_SLOTS:
   void slotInsertChar();
 Q_SIGNALS:
   void charSelected(const QChar&);
@@ -35,4 +41,4 @@ private:
   KCharSelect *mCharSelect;
 };
 
-#endif // INSERTSPECIALCHAR_H
+#endif // SelectSpecialChar_H
