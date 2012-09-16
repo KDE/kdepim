@@ -59,7 +59,7 @@ class INCIDENCEEDITORS_NG_EXPORT CategoryEditDialog : public KDialog
     void add();
     void addSubcategory();
     void remove();
-    void editItem( QTreeWidgetItem *item );
+    void editItem();
     void expandIfToplevel( QTreeWidgetItem *item );
 
   Q_SIGNALS:
