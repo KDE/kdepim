@@ -27,3 +27,8 @@ ExportCalendarJob::~ExportCalendarJob()
 {
 
 }
+
+void ExportCalendarJob::startBackup()
+{
+  //TODO
+}
