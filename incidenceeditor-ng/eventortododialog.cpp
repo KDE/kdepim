@@ -665,7 +665,7 @@ EventOrTodoDialog::EventOrTodoDialog( QWidget *parent, Qt::WFlags flags )
   setButtonWhatsThis( Default,
                       i18nc( "@info:whatsthis",
                              "Push this button to show a dialog that helps "
-                             "you manage your categroies." ) );
+                             "you manage your categories." ) );
 
   setModal( false );
   showButtonSeparator( false );
