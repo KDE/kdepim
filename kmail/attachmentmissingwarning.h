@@ -15,20 +15,22 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "importcalendarjob.h"
-#include "archivestorage.h"
+#ifndef ATTACHMENTMISSINGWARNING_H
+#define ATTACHMENTMISSINGWARNING_H
+#include <KMessageWidget>
 
-ImportCalendarJob::ImportCalendarJob(QWidget *parent, ArchiveStorage *archiveStorage)
+class AttachmentMissingWarning : public KMessageWidget
 {
-}
+  Q_OBJECT
+public:
+  explicit AttachmentMissingWarning(QWidget *parent = 0);
+  ~AttachmentMissingWarning();
+private Q_SLOTS:
+  void explicitlyClosed();
+  void slotAttachFile();
+Q_SIGNALS:
+  void attachMissingFile();
+  void closeAttachMissingFile();
+};
 
-ImportCalendarJob::~ImportCalendarJob()
-{
-
-}
-
-
-void ImportCalendarJob::restoreResources()
-{
-  //TODO
-}
+#endif // ATTACHMENTMISSINGWARNING_H

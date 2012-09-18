@@ -61,7 +61,15 @@ set( messagecomposer_src
 
      keyresolver.cpp
      kmsubjectlineedit.cpp
+     autocorrection/kmcomposerautocorrection.cpp
+     autocorrection/kmcomposerautocorrectionwidget.cpp
+     selectspecialchar.cpp
 )
+
+kde4_add_ui_files(messagecomposer_src
+     autocorrection/kmcomposerautocorrectionwidget.ui
+)
+
 
 if (NOT WINCE)
   # disabled due to no QTreeWidget

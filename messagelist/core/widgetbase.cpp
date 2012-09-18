@@ -915,10 +915,11 @@ void Widget::slotLockSearchClicked( bool locked )
 {
   if ( locked ) {
     d->mLockSearch->setIcon( KIcon( QLatin1String( "object-locked" ) ) );
-    d->mLockSearch->setToolTip( i18nc( "@info:tooltip", "Unlock search" ) );
+    d->mLockSearch->setToolTip( i18nc( "@info:tooltip", "Clear the quick search field when changing folders" ) );
   } else {
     d->mLockSearch->setIcon( KIcon( QLatin1String( "object-unlocked" ) ) );
-    d->mLockSearch->setToolTip( i18nc( "@info:tooltip", "Lock search" ) );
+    d->mLockSearch->setToolTip( i18nc( "@info:tooltip",
+                                       "Prevent the quick search field from being cleared when changing folders" ) );
   }
 }
 

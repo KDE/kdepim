@@ -50,6 +50,7 @@ using KMail::MailServiceImpl;
 #include "messagecomposersettings.h"
 #include "messagecomposer/messagehelper.h"
 #include "messagecomposer/messagecomposersettings.h"
+#include "messagecomposer/autocorrection/kmcomposerautocorrection.h"
 
 #include "templateparser/templateparser.h"
 #include "templateparser/globalsettings_base.h"
@@ -148,6 +149,7 @@ KMKernel::KMKernel (QObject *parent, const char *name) :
   mJobScheduler = new JobScheduler( this );
   mXmlGuiInstance = KComponentData();
 
+  mAutoCorrection = new KMComposerAutoCorrection();
   KMime::setFallbackCharEncoding( MessageCore::GlobalSettings::self()->fallbackCharacterEncoding() );
   KMime::setUseOutlookAttachmentEncoding( MessageComposer::MessageComposerSettings::self()->outlookCompatibleAttachments() );
 
@@ -234,6 +236,7 @@ KMKernel::~KMKernel ()
   stopAgentInstance();
   slotSyncConfig();
 
+  delete mAutoCorrection;
   mySelf = 0;
   kDebug();
 }
@@ -397,7 +400,8 @@ bool KMKernel::handleCommandLine( bool noArgsOpensReader )
   if (args->isSet("msg"))
   {
      mailto = true;
-     messageFile.setPath( args->getOption("msg") );
+     const QString file = args->getOption("msg");
+     messageFile = makeAbsoluteUrl(file);
   }
 
   if (args->isSet("body"))
@@ -1353,10 +1357,11 @@ void KMKernel::action( bool mailto, bool check, const QString &to,
                        const KUrl::List &attachURLs,
                        const QStringList &customHeaders )
 {
-  if ( mailto )
+  if ( mailto ) {
     openComposer( to, cc, bcc, subj, body, 0,
                   messageFile.pathOrUrl(), attachURLs.toStringList(),
                   customHeaders );
+  }
   else
     openReader( check );
 
@@ -2037,6 +2042,11 @@ void KMKernel::makeResourceOnline(MessageViewer::Viewer::ResourceOnlineMode mode
     resourceGoOnLine();
     break;
   }
+}
+
+KMComposerAutoCorrection* KMKernel::composerAutoCorrection()
+{
+  return mAutoCorrection;
 }
 
 #include "kmkernel.moc"

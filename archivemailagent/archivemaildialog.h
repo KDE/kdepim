@@ -55,7 +55,8 @@ private Q_SLOTS:
   void slotModifyItem();
   void slotAddItem();
   void updateButtons();
-
+  void slotOpenFolder();
+  void customContextMenuRequested(const QPoint&);
 private:
   Ui::ArchiveMailWidget *mWidget;
 };

@@ -168,6 +168,7 @@
 #include <ktreewidgetsearchline.h>
 #include <Solid/Networking>
 #include <nepomuk2/resourcemanager.h>
+#include <KRecentFilesAction>
 
 // Qt includes
 #include <QByteArray>
@@ -385,6 +386,10 @@ void KMMainWidget::destruct()
   mCurrentFolder.clear();
   delete mMoveOrCopyToDialog;
   delete mSelectFromAllFoldersDialog;
+
+  KConfigGroup grp = mConfig->group(QLatin1String("Recent Files"));
+  mOpenRecentAction->saveEntries(grp);
+
   mSystemTray = 0;
   mDestructed = true;
 }
@@ -2218,6 +2223,10 @@ void KMMainWidget::copySelectedMessagesToFolder( const Akonadi::Collection& dest
 //
 void KMMainWidget::trashMessageSelected( MessageList::Core::MessageItemSetReference ref )
 {
+  if ( !mCurrentFolder ) {
+    return;
+  }
+
   const QList<Akonadi::Item> select = mMessagePane->itemListFromPersistentSet( ref );
   mMessagePane->markMessageItemsAsAboutToBeRemoved( ref, true );
 
@@ -2648,7 +2657,7 @@ void KMMainWidget::slotSaveMsg()
 //-----------------------------------------------------------------------------
 void KMMainWidget::slotOpenMsg()
 {
-  KMOpenMsgCommand *openCommand = new KMOpenMsgCommand( this, KUrl(), overrideEncoding() );
+  KMOpenMsgCommand *openCommand = new KMOpenMsgCommand( this, KUrl(), overrideEncoding(), this );
 
   openCommand->start();
 }
@@ -2942,6 +2951,11 @@ void KMMainWidget::slotMessageActivated( const Akonadi::Item &msg )
     return;
   }
 
+  bool isImapResourceOnline = false;
+  bool folderIsAnImap = KMKernel::self()->isImapFolder( mCurrentFolder->collection(), isImapResourceOnline );
+  if(folderIsAnImap && !isImapResourceOnline) {
+    return;
+  }
   ItemFetchJob *itemFetchJob = MessageViewer::Viewer::createFetchJob( msg );
   connect( itemFetchJob, SIGNAL(itemsReceived(Akonadi::Item::List)),
            SLOT(slotItemsFetchedForActivation(Akonadi::Item::List)) );
@@ -3190,6 +3204,11 @@ void KMMainWidget::setupActions()
 
   mOpenAction = KStandardAction::open( this, SLOT(slotOpenMsg()),
                                   actionCollection() );
+
+  mOpenRecentAction = KStandardAction::openRecent( this, SLOT(slotOpenRecentMsg(KUrl)),
+                                  actionCollection() );
+  KConfigGroup grp = mConfig->group(QLatin1String("Recent Files"));
+  mOpenRecentAction->loadEntries(grp);
 
   {
     KAction *action = new KAction(i18n("&Expire All Folders"), this);
@@ -3741,7 +3760,7 @@ void KMMainWidget::setupActions()
   }
 
   {
-      KAction *action = new KAction(i18n("New AddressBook Contact..."),this);
+      KAction *action = new KAction(KIcon( QLatin1String( "contact-new" ) ),i18n("New AddressBook Contact..."),this);
       actionCollection()->addAction("kmail_new_addressbook_contact", action );
       connect(action, SIGNAL(triggered(bool)), this, SLOT(slotCreateAddressBookContact()));
 
@@ -4047,7 +4066,7 @@ void KMMainWidget::updateMessageActionsDelayed()
   }
 
   const qint64 nbMsgOutboxCollection = MailCommon::Util::updatedCollection( CommonKernel->outboxCollectionFolder() ).statistics().count();
-  
+
   actionCollection()->action( "send_queued" )->setEnabled( nbMsgOutboxCollection > 0 );
   actionCollection()->action( "send_queued_via" )->setEnabled( nbMsgOutboxCollection > 0 );
 
@@ -4234,7 +4253,7 @@ void KMMainWidget::updateFolderMenu()
   bool imapFolderIsOnline = false;
   if(mCurrentFolder && kmkernel->isImapFolder( mCurrentFolder->collection(),imapFolderIsOnline )) {
     if(imapFolderIsOnline) {
-      actionlist << mServerSideSubscription; 
+      actionlist << mServerSideSubscription;
     }
   }
 
@@ -4730,4 +4749,15 @@ void KMMainWidget::slotCreateAddressBookContact()
   Akonadi::ContactEditorDialog *dlg = new Akonadi::ContactEditorDialog( Akonadi::ContactEditorDialog::CreateMode, this );
   dlg->exec();
   delete dlg;
+}
+
+void KMMainWidget::slotOpenRecentMsg(const KUrl& url)
+{
+  KMOpenMsgCommand *openCommand = new KMOpenMsgCommand( this, url, overrideEncoding(), this );
+  openCommand->start();
+}
+
+void KMMainWidget::addRecentFile(const KUrl& mUrl)
+{
+  mOpenRecentAction->addUrl(mUrl);
 }

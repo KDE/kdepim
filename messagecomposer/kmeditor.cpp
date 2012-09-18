@@ -23,6 +23,7 @@
 #include "kmeditor.h"
 #include "textpart.h"
 #include "messageviewer/nodehelper.h"
+#include "autocorrection/kmcomposerautocorrection.h"
 
 #include <KEncodingFileDialog>
 #include <KLocale>
@@ -52,7 +53,9 @@ class KMeditorPrivate
      : q( parent ),
        useExtEditor( false ),
        mExtEditorProcess( 0 ),
-       mExtEditorTempFile( 0 )    {
+       mExtEditorTempFile( 0 ),
+       mAutoCorrection( 0 )
+    {
     }
 
     ~KMeditorPrivate()
@@ -102,6 +105,7 @@ class KMeditorPrivate
 
     KProcess *mExtEditorProcess;
     KTemporaryFile *mExtEditorTempFile;
+    KMComposerAutoCorrection *mAutoCorrection;
 };
 
 }
@@ -251,6 +255,12 @@ void KMeditor::keyPressEvent ( QKeyEvent *e )
     textCursor().clearSelection();
     emit focusUp();
   } else {
+    if(e->key() == Qt::Key_Space || e->key() == Qt::Key_Enter) {
+      if(d->mAutoCorrection) {
+          //TODO verify
+        d->mAutoCorrection->autocorrect(*document(),textCursor().position());
+      }
+    }
     TextEdit::keyPressEvent( e );
   }
 }
@@ -746,5 +756,16 @@ void KMeditor::fillComposerTextPart ( TextPart* textPart ) const
     textPart->setEmbeddedImages( embeddedImages() );
   }
 }
+
+KMComposerAutoCorrection* KMeditor::autocorrection() const
+{
+  return d->mAutoCorrection;
+}
+
+void KMeditor::setAutocorrection(KMComposerAutoCorrection* autocorrect)
+{
+  d->mAutoCorrection = autocorrect;
+}
+
 
 #include "kmeditor.moc"

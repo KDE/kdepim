@@ -102,7 +102,6 @@ target_link_libraries(messagelist
     ${KDEPIMLIBS_AKONADI_LIBS}
     ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
     ${KDEPIMLIBS_KMIME_LIBS}
-    ${NEPOMUK_LIBRARIES}
     ${SOPRANO_LIBRARIES}
     ${NEPOMUK_CORE_LIBRARY}
     nepomukquery

@@ -725,13 +725,13 @@
          <item>
           <widget class="QPushButton" name="mSolveButton">
            <property name="toolTip">
-            <string comment="@info:tooltip">Reschedule the meeting to resolve conflicts.</string>
+            <string comment="@info:tooltip">Schedule the meeting with your attendees.</string>
            </property>
            <property name="whatsThis">
-            <string comment="@info:whatsthis">Opens the rescheduling dialog, which will assist in picking a time slot that works for all attendees.</string>
+            <string comment="@info:whatsthis">Opens the scheduling dialog, which will assist in picking a time slot that works for all attendees.</string>
            </property>
            <property name="text">
-            <string comment="@action:button">Reschedule...</string>
+            <string comment="@action:button">Schedule...</string>
            </property>
           </widget>
          </item>

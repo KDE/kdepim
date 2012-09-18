@@ -59,6 +59,7 @@ AbstractKeyListSortFilterProxyModel::AbstractKeyListSortFilterProxyModel( QObjec
 AbstractKeyListSortFilterProxyModel::AbstractKeyListSortFilterProxyModel( const AbstractKeyListSortFilterProxyModel & other )
     : QSortFilterProxyModel(), KeyListModelInterface()
 {
+    Q_UNUSED( other );
     init();
 }
 

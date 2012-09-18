@@ -51,7 +51,8 @@
 #include "custommimeheader.h"
 #include <messagecomposer/kmsubjectlineedit.h>
 #include "messageviewer/translator/translatorwidget.h"
-#include "insertspecialchar.h"
+#include "messagecomposer/selectspecialchar.h"
+#include "attachmentmissingwarning.h"
 
 // KDEPIM includes
 #include <libkpgp/kpgpblock.h>
@@ -200,7 +201,7 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, bool lastSignState,
     mDummyComposer( 0 ),
     mLabelWidth( 0 ),
     mComposerBase( 0 ),
-    mInsertSpecialChar( 0 ),
+    mSelectSpecialChar( 0 ),
     mSignatureStateIndicator( 0 ), mEncryptionStateIndicator( 0 ),
     mPreventFccOverwrite( false ),
     mCheckForForgottenAttachments( true ),
@@ -339,9 +340,6 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, bool lastSignState,
     mSignatureStateIndicator = new QLabel( editorAndCryptoStateIndicators );
     mSignatureStateIndicator->setAlignment( Qt::AlignHCenter );
     hbox->addWidget( mSignatureStateIndicator );
-
-    KConfigGroup reader( KMKernel::self()->config(), "Reader" );
-
     // Get the colors for the label
     QPalette p( mSignatureStateIndicator->palette() );
     KColorScheme scheme( QPalette::Active, KColorScheme::View );
@@ -421,6 +419,14 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, bool lastSignState,
 
   mComposerBase->setAttachmentModel( attachmentModel );
   mComposerBase->setAttachmentController( attachmentController );
+
+  mAttachmentMissing = new AttachmentMissingWarning(this);
+  connect(mAttachmentMissing,SIGNAL(attachMissingFile()),this,SLOT(slotAttachMissingFile()));
+  connect(mAttachmentMissing,SIGNAL(closeAttachMissingFile()),this,SLOT(slotCloseAttachMissingFile()));
+  v->addWidget(mAttachmentMissing);
+  m_verifyMissingAttachment = new QTimer(this);
+  m_verifyMissingAttachment->start(1000*30);
+  connect( m_verifyMissingAttachment, SIGNAL(timeout()), this, SLOT(slotVerifyMissingAttachmentTimeout()) );
 
   readConfig();
   setupStatusBar();
@@ -1155,7 +1161,7 @@ void KMComposeWin::setupActions( void )
   actionCollection()->addAction( "save_as_file", action );
   connect( action, SIGNAL(triggered(bool)), SLOT(slotSaveAsFile()) );
 
-  action = new KAction(i18n("New AddressBook Contact..."),this);
+  action = new KAction(KIcon( QLatin1String( "contact-new" ) ), i18n("New AddressBook Contact..."),this);
   actionCollection()->addAction("kmail_new_addressbook_contact", action );
   connect(action, SIGNAL(triggered(bool)), this, SLOT(slotCreateAddressBookContact()));
 
@@ -1526,8 +1532,8 @@ void KMComposeWin::setMessage( const KMime::Message::Ptr &newMsg, bool lastSignS
     return;
   }
 
-  mLastSignActionState = lastSignState;
-  mLastEncryptActionState = lastEncryptState;
+  if( lastSignState )
+    mLastSignActionState = true;
 
   mComposerBase->setMessage( newMsg );
   mMsg = newMsg;
@@ -3315,11 +3321,13 @@ void KMComposeWin::slotTranslatorWasClosed()
 
 void KMComposeWin::insertSpecialCharacter()
 {
-  if(!mInsertSpecialChar) {
-    mInsertSpecialChar = new InsertSpecialChar(this);
-    connect(mInsertSpecialChar,SIGNAL(charSelected(QChar)),this,SLOT(charSelected(QChar)));
+  if(!mSelectSpecialChar) {
+    mSelectSpecialChar = new SelectSpecialChar(this);
+    mSelectSpecialChar->setCaption(i18n("Insert Special Character"));
+    mSelectSpecialChar->setOkButtonText(i18n("Insert"));
+    connect(mSelectSpecialChar,SIGNAL(charSelected(QChar)),this,SLOT(charSelected(QChar)));
   }
-  mInsertSpecialChar->show();
+  mSelectSpecialChar->show();
 }
 
 void KMComposeWin::charSelected(const QChar& c)
@@ -3358,4 +3366,23 @@ void KMComposeWin::slotCreateAddressBookContact()
   Akonadi::ContactEditorDialog *dlg = new Akonadi::ContactEditorDialog( Akonadi::ContactEditorDialog::CreateMode, this );
   dlg->exec();
   delete dlg;
+}
+
+void KMComposeWin::slotAttachMissingFile()
+{
+  mComposerBase->attachmentController()->showAddAttachmentDialog();
+}
+
+void KMComposeWin::slotCloseAttachMissingFile()
+{
+  m_verifyMissingAttachment->stop();
+}
+
+void KMComposeWin::slotVerifyMissingAttachmentTimeout()
+{
+  if( mComposerBase->hasMissingAttachments( GlobalSettings::self()->attachmentKeywords() )) {
+    mAttachmentMissing->setVisible(true);
+  } else {
+    m_verifyMissingAttachment->start();
+  }
 }

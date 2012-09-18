@@ -177,7 +177,7 @@ Dialog {
           }
           KPIM.Button2 {
             id: calendarWidgetOk
-            buttonText: KDE.i18n( "Ok" );
+            buttonText: KDE.i18n( "OK" );
             width: 130
             onClicked: {
               calendarWidget.collapse()

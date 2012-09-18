@@ -15,17 +15,17 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "insertspecialchar.h"
+#include "selectspecialchar.h"
 #include <KCharSelect>
 #include <KLocale>
 #include <QHBoxLayout>
 
-InsertSpecialChar::InsertSpecialChar(QWidget *parent)
+SelectSpecialChar::SelectSpecialChar(QWidget *parent)
   :KDialog(parent)
 {
-  setCaption( i18n("Insert Special Characters") );
+  setCaption( i18n("Select Special Characters") );
   setButtons( Ok|Cancel|User1 );
-  setButtonText(KDialog::User1,i18n("Insert"));
+  setButtonText(KDialog::User1,i18n("Select"));
   QWidget *page = new QWidget( this );
   setMainWidget( page );
   QHBoxLayout *lay = new QHBoxLayout(page);
@@ -35,14 +35,30 @@ InsertSpecialChar::InsertSpecialChar(QWidget *parent)
   connect(this,SIGNAL(user1Clicked()),SLOT(slotInsertChar()));
 }
 
-InsertSpecialChar::~InsertSpecialChar()
+SelectSpecialChar::~SelectSpecialChar()
 {
 }
 
 
-void InsertSpecialChar::slotInsertChar()
+void SelectSpecialChar::slotInsertChar()
 {
   Q_EMIT charSelected(mCharSelect->currentChar());
 }
 
-#include "insertspecialchar.moc"
+void SelectSpecialChar::setCurrentChar(const QChar &c)
+{
+  mCharSelect->setCurrentChar(c);
+}
+
+QChar SelectSpecialChar::currentChar() const
+{
+  return mCharSelect->currentChar();
+}
+
+
+void SelectSpecialChar::setOkButtonText(const QString& text)
+{
+  setButtonText(KDialog::User1,text);
+}
+
+#include "selectspecialchar.moc"
