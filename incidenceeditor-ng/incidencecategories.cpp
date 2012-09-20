@@ -91,7 +91,9 @@ bool IncidenceCategories::isDirty() const
   bool categoriesEqual = mSelectedCategories.isEmpty();
 
   if ( mLoadedIncidence ) { // There was an Incidence loaded
-    categoriesEqual = ( mLoadedIncidence->categories().size() == mSelectedCategories.size() );
+    categoriesEqual =
+      ( mLoadedIncidence->categories().toSet().size() == mSelectedCategories.toSet().size() );
+
     if ( categoriesEqual ) {
       QStringListIterator it( mLoadedIncidence->categories() );
       while ( it.hasNext() && categoriesEqual ) {
