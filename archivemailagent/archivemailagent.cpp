@@ -89,8 +89,7 @@ void ArchiveMailAgent::reload()
 
 void ArchiveMailAgent::configure( WId windowId )
 {
-  Q_UNUSED( windowId );
-  showConfigureDialog();
+  showConfigureDialog(windowId);
 }
 
 void ArchiveMailAgent::pause()
