@@ -30,10 +30,13 @@ namespace MailCommon {
 //=============================================================================
 class FilterActionAddToAddressBook: public FilterActionWithStringList
 {
+  Q_OBJECT
   public:
     FilterActionAddToAddressBook( QObject *parent = 0 );
     virtual ReturnCode process( ItemContext &context ) const;
     static FilterAction* newAction();
+
+    virtual SearchRule::RequiredPart requiredPart() const;
 
     virtual bool isEmpty() const;
 

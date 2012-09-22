@@ -76,10 +76,11 @@ class Composer : public KMail::SecondaryWindow
      * Set the message the composer shall work with. This discards
      * previous messages without calling applyChanges() on them before.
      */
-    virtual void setMsg( const KMime::Message::Ptr &newMsg, bool mayAutoSign=true,
+    virtual void setMessage( const KMime::Message::Ptr &newMsg,  bool lastSignState = false, bool lastEncryptState = false, bool mayAutoSign=true,
                          bool allowDecryption=false, bool isModified=false ) = 0;
     virtual void setCurrentTransport( int transportId ) = 0;
 
+    virtual void setCurrentReplyTo(const QString& replyTo) = 0; 
     virtual void setFcc( const QString &idString ) = 0;
     /**
      * Returns @c true while the message composing is in progress.
@@ -152,7 +153,7 @@ class Composer : public KMail::SecondaryWindow
     virtual void addAttach( KMime::Content *msgPart ) = 0;
 };
 
-Composer *makeComposer( const KMime::Message::Ptr &msg = KMime::Message::Ptr(),
+Composer *makeComposer( const KMime::Message::Ptr &msg = KMime::Message::Ptr(), bool lastSignState = false, bool lastEncryptState = false,
                         Composer::TemplateContext context = Composer::NoTemplate,
                         uint identity = 0, const QString & textSelection = QString(),
                         const QString & customTemplate = QString() );

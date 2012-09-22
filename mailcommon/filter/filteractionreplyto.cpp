@@ -51,3 +51,9 @@ FilterAction::ReturnCode FilterActionReplyTo::process( ItemContext &context ) co
 
   return GoOn;
 }
+
+SearchRule::RequiredPart FilterActionReplyTo::requiredPart() const
+{
+  return SearchRule::CompleteMessage;
+}
+

@@ -21,6 +21,7 @@
 #define MAILCOMMON_ITEMCONTEXT_H
 
 #include "../mailcommon_export.h"
+#include "../searchpattern.h"
 
 #include <Akonadi/Collection>
 #include <Akonadi/Item>
@@ -40,8 +41,9 @@ class MAILCOMMON_EXPORT ItemContext
   public:
     /**
      * Creates an item context for the given @p item.
+     * @p requestedPart the part requested for the item (Envelope, Header or CompleteMessage)
      */
-    ItemContext( const Akonadi::Item &item );
+    ItemContext( const Akonadi::Item &item, SearchRule::RequiredPart requestedPart );
 
     /**
      * Returns the item of the context.
@@ -79,6 +81,10 @@ class MAILCOMMON_EXPORT ItemContext
      */
     bool needsFlagStore() const;
 
+    /** Returns true if the full payload was requested for the item or not.
+     * Full payload is needed to change the headers or the body */
+    bool needsFullPayload() const;
+
     void setDeleteItem();
     bool deleteItem() const;
 
@@ -88,6 +94,7 @@ class MAILCOMMON_EXPORT ItemContext
     bool mNeedsPayloadStore;
     bool mNeedsFlagStore;
     bool mDeleteItem;
+    SearchRule::RequiredPart mRequestedPart;
 };
 
 }

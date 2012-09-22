@@ -432,11 +432,17 @@ AccountsPageReceivingTab::AccountsPageReceivingTab( QWidget * parent )
   mAccountsReceiving.mFilterAccount->setProxy( mAccountsReceiving.mAccountList->agentFilterProxyModel() );
   mAccountsReceiving.mFilterAccount->lineEdit()->setTrapReturnKey( true );
 
+  KConfig specialMailCollection(QLatin1String("specialmailcollectionsrc"));
+  if(specialMailCollection.hasGroup(QLatin1String("SpecialCollections"))) {
+      KConfigGroup grp = specialMailCollection.group(QLatin1String("SpecialCollections"));
+      mSpecialMailCollectionIdentifier = grp.readEntry(QLatin1String("DefaultResourceId"));
+  }
+
   ConfigAgentDelegate *configDelegate = new ConfigAgentDelegate( mAccountsReceiving.mAccountList->view() );
   mAccountsReceiving.mAccountList->view()->setItemDelegate( configDelegate );
   connect( configDelegate, SIGNAL(optionsClicked(QString,QPoint)), this, SLOT(slotShowMailCheckMenu(QString,QPoint)) );
 
-  connect( mAccountsReceiving.mAccountList, SIGNAL(currentChanged(Akonadi::AgentInstance,Akonadi::AgentInstance)),
+  connect( mAccountsReceiving.mAccountList, SIGNAL(clicked(Akonadi::AgentInstance)),
            SLOT(slotAccountSelected(Akonadi::AgentInstance)) );
   connect( mAccountsReceiving.mAccountList, SIGNAL(doubleClicked(Akonadi::AgentInstance)),
            this, SLOT(slotModifySelectedAccount()) );
@@ -578,7 +584,7 @@ void AccountsPage::ReceivingTab::slotAccountSelected(const Akonadi::AgentInstanc
     mAccountsReceiving.mRestartAccountButton->setEnabled( false );
   } else {
     mAccountsReceiving.mModifyAccountButton->setEnabled( !current.type().capabilities().contains( QLatin1String( "NoConfig" ) ) );
-    mAccountsReceiving.mRemoveAccountButton->setEnabled( true );
+    mAccountsReceiving.mRemoveAccountButton->setEnabled( mSpecialMailCollectionIdentifier != current.identifier() );
     // Restarting an agent is not possible if it's in Running status... (see AgentProcessInstance::restartWhenIdle)
     mAccountsReceiving.mRestartAccountButton->setEnabled( ( current.status() != 1 ) );
   }
@@ -2371,7 +2377,7 @@ ComposerPageGeneralTab::ComposerPageGeneralTab( QWidget * parent )
   label = new QLabel( MessageComposer::MessageComposerSettings::self()->maximumRecipientsItem()->label(), this );
   hlay->addWidget( label );
 
-  mMaximumRecipients = new KIntSpinBox( 0, 500, 1, 1, this );
+  mMaximumRecipients = new KIntSpinBox( 0, 9999, 1, 1, this );
   hlay->addWidget( mMaximumRecipients );
   hlay->addStretch( 1 );
   connect( mMaximumRecipients, SIGNAL(valueChanged(int)),
@@ -3444,12 +3450,12 @@ void SecurityPage::ComposerCryptoTab::doLoadOther()
 
   mWidget->mAutoSignature->setChecked( GlobalSettings::self()->pgpAutoSign() );
 
-  mWidget->mEncToSelf->setChecked( GlobalSettings::self()->cryptoEncryptToSelf() );
+  mWidget->mEncToSelf->setChecked( MessageComposer::MessageComposerSettings::self()->cryptoEncryptToSelf() );
   mWidget->mShowEncryptionResult->setChecked( false ); //composer.readBoolEntry( "crypto-show-encryption-result", true ) );
   mWidget->mShowEncryptionResult->hide();
-  mWidget->mShowKeyApprovalDlg->setChecked( GlobalSettings::self()->cryptoShowKeysForApproval() );
+  mWidget->mShowKeyApprovalDlg->setChecked( MessageComposer::MessageComposerSettings::self()->cryptoShowKeysForApproval() );
 
-  mWidget->mAutoEncrypt->setChecked( GlobalSettings::self()->pgpAutoEncrypt() ) ;
+  mWidget->mAutoEncrypt->setChecked( MessageComposer::MessageComposerSettings::self()->pgpAutoEncrypt() ) ;
   mWidget->mNeverEncryptWhenSavingInDrafts->setChecked(
       GlobalSettings::self()->neverEncryptDrafts() );
 
@@ -3460,11 +3466,11 @@ void SecurityPage::ComposerCryptoTab::save()
 {
   GlobalSettings::self()->setPgpAutoSign( mWidget->mAutoSignature->isChecked() );
 
-  GlobalSettings::self()->setCryptoEncryptToSelf( mWidget->mEncToSelf->isChecked() );
+  MessageComposer::MessageComposerSettings::self()->setCryptoEncryptToSelf( mWidget->mEncToSelf->isChecked() );
   GlobalSettings::self()->setCryptoShowEncryptionResult( mWidget->mShowEncryptionResult->isChecked() );
-  GlobalSettings::self()->setCryptoShowKeysForApproval( mWidget->mShowKeyApprovalDlg->isChecked() );
+  MessageComposer::MessageComposerSettings::self()->setCryptoShowKeysForApproval( mWidget->mShowKeyApprovalDlg->isChecked() );
 
-  GlobalSettings::self()->setPgpAutoEncrypt( mWidget->mAutoEncrypt->isChecked() );
+  MessageComposer::MessageComposerSettings::self()->setPgpAutoEncrypt( mWidget->mAutoEncrypt->isChecked() );
   GlobalSettings::self()->setNeverEncryptDrafts( mWidget->mNeverEncryptWhenSavingInDrafts->isChecked() );
 
   GlobalSettings::self()->setCryptoStoreEncrypted( mWidget->mStoreEncrypted->isChecked() );
@@ -3474,11 +3480,11 @@ void SecurityPage::ComposerCryptoTab::doLoadFromGlobalSettings()
 {
   mWidget->mAutoSignature->setChecked( GlobalSettings::self()->pgpAutoSign() );
 
-  mWidget->mEncToSelf->setChecked( GlobalSettings::self()->cryptoEncryptToSelf() );
+  mWidget->mEncToSelf->setChecked( MessageComposer::MessageComposerSettings::self()->cryptoEncryptToSelf() );
   mWidget->mShowEncryptionResult->setChecked( GlobalSettings::self()->cryptoShowEncryptionResult() );
-  mWidget->mShowKeyApprovalDlg->setChecked(GlobalSettings::self()->cryptoShowKeysForApproval() );
+  mWidget->mShowKeyApprovalDlg->setChecked(MessageComposer::MessageComposerSettings::self()->cryptoShowKeysForApproval() );
 
-  mWidget->mAutoEncrypt->setChecked(GlobalSettings::self()->pgpAutoEncrypt() );
+  mWidget->mAutoEncrypt->setChecked(MessageComposer::MessageComposerSettings::self()->pgpAutoEncrypt() );
   mWidget->mNeverEncryptWhenSavingInDrafts->setChecked( GlobalSettings::self()->neverEncryptDrafts() );
 
   mWidget->mStoreEncrypted->setChecked(GlobalSettings::self()->cryptoStoreEncrypted() );

@@ -19,8 +19,8 @@
 
 #include "filteractionremoveheader.h"
 
+#include "messageviewer/minimumcombobox.h"
 
-#include <messageviewer/minimumcombobox.h>
 #include <KDE/KLocale>
 
 using namespace MailCommon;
@@ -71,6 +71,11 @@ FilterAction::ReturnCode FilterActionRemoveHeader::process( ItemContext &context
   context.setNeedsPayloadStore();
 
   return GoOn;
+}
+
+SearchRule::RequiredPart FilterActionRemoveHeader::requiredPart() const
+{
+  return SearchRule::CompleteMessage;
 }
 
 void FilterActionRemoveHeader::setParamWidgetValue( QWidget *paramWidget ) const

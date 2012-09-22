@@ -33,6 +33,7 @@ public:
   ~ImportCalendarPage();
   void addImportInfo( const QString& log );
   void addImportError( const QString& log );
+  void setImportButtonEnabled(bool enabled);
 Q_SIGNALS:
   void importCalendarClicked();
 private:

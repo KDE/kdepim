@@ -21,6 +21,7 @@ importcalendarpage.cpp
 thunderbird/thunderbirdimportdata.cpp
 thunderbird/thunderbirdsettings.cpp
 thunderbird/thunderbirdaddressbook.cpp
+thunderbird/addressbook/MorkParser.cpp
 sylpheed/sylpheedimportdata.cpp
 sylpheed/sylpheedsettings.cpp
 sylpheed/sylpheedaddressbook.cpp

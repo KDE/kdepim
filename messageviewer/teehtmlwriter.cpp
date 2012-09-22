@@ -93,5 +93,5 @@ namespace MessageViewer {
     for ( QList<HtmlWriter*>::Iterator it = mWriters.begin(); it != mWriters.end(); ++it )
       (*it)->embedPart( contentId, url );
   }
-
+  void TeeHtmlWriter::extraHead( const QString& ) {}
 } // namespace KMail

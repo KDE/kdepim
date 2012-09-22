@@ -35,6 +35,13 @@ FilterAction::ReturnCode FilterActionBeep::process( ItemContext &/*context*/ ) c
   return GoOn;
 }
 
+
+SearchRule::RequiredPart FilterActionBeep::requiredPart() const
+{
+  return SearchRule::Envelope;
+}
+
+
 FilterAction* FilterActionBeep::newAction()
 {
   return new FilterActionBeep;

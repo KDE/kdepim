@@ -44,7 +44,8 @@ EmailAddressResolveJob::~EmailAddressResolveJob()
 
 static inline bool containsAliases( const QString &address )
 {
-  return !address.contains( QLatin1Char( '@' ) );
+  // an valid email is defined as foo@foo.extension
+  return !(address.contains( QLatin1Char( '@' ) ) && address.contains( QLatin1Char( '.' ) ) );
 }
 
 static bool containsAliases( const QStringList &addresses )
@@ -67,7 +68,6 @@ void EmailAddressResolveJob::start()
     connect( job, SIGNAL(result(KJob*)), SLOT(slotAliasExpansionDone(KJob*)) );
     jobs << job;
   }
-
   if ( containsAliases( mTo ) ) {
     AliasesExpandJob *job = new AliasesExpandJob( mTo.join( QLatin1String( ", " ) ), MessageComposerSettings::defaultDomain(), this );
     job->setProperty( "id", QLatin1String( "infoPartTo" ) );

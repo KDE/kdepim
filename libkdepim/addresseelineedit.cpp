@@ -89,6 +89,11 @@ class AddresseeLineEditStatic
 #endif
         nepomukCompletionSource( 0 )
     {
+#ifndef KDEPIM_NO_NEPOMUK
+      KConfig config( QLatin1String( "kpimcompletionorder" ) );
+      const KConfigGroup group( &config, QLatin1String( "General" ) );
+      useNepomukCompletion = group.readEntry( "UseNepomuk", false );
+#endif
     }
 
     ~AddresseeLineEditStatic()
@@ -164,6 +169,7 @@ class AddresseeLineEditStatic
     Akonadi::Item::List akonadiPendingItems;
 #ifndef KDEPIM_NO_NEPOMUK
     Nepomuk::Query::QueryServiceClient* nepomukSearchClient;
+  bool useNepomukCompletion;
 #endif
     int nepomukCompletionSource;
 };
@@ -359,7 +365,7 @@ void AddresseeLineEdit::Private::startNepomukSearch()
   // We do a word boundary substring search, which will easily yield hundreds
   // of hits. Since the nepomuk search is mostly an auxiliary measure,
   // we limit it to substrings of size 3 or larger.
-  if ( m_searchString.size() <= 2 ) {
+  if ( m_searchString.size() <= 2 || !s_static->useNepomukCompletion ) {
     return;
   }
   const QString query = QString::fromLatin1( sparqlquery ).arg( m_searchString );

@@ -33,12 +33,17 @@ SylpheedSettings::SylpheedSettings( const QString& filename, const QString& path
     :AbstractSettings( parent )
 {
   bool checkMailOnStartup = true;
+  int intervalCheckMail = -1;
   const QString sylpheedrc = path + QLatin1String("/sylpheedrc");
   if(QFile( sylpheedrc ).exists()) {
     KConfig configCommon( sylpheedrc );
     if(configCommon.hasGroup("Common")) {
       KConfigGroup common = configCommon.group("Common");
       checkMailOnStartup = ( common.readEntry("check_on_startup",1) == 1 );
+
+      if(common.readEntry(QLatin1String("autochk_newmail"),1) == 1 ) {
+          intervalCheckMail = common.readEntry(QLatin1String("autochk_interval"),-1);
+      }
       readGlobalSettings(common);
     }
   }
@@ -48,7 +53,7 @@ SylpheedSettings::SylpheedSettings( const QString& filename, const QString& path
   for ( QStringList::const_iterator it = accountList.constBegin(); it!=end; ++it )
   {
     KConfigGroup group = config.group( *it );
-    readAccount( group, checkMailOnStartup );
+    readAccount( group, checkMailOnStartup, intervalCheckMail );
     readIdentity( group );
   }
   const QString customheaderrc = path + QLatin1String("/customheaderrc");
@@ -74,7 +79,7 @@ void SylpheedSettings::readCustomHeader(QFile *customHeaderFile)
   QMap<QString, QString> header;
   while ( !stream.atEnd() ) {
     const QString line = stream.readLine();
-    QStringList lst = line.split(QLatin1Char(':'));
+    const QStringList lst = line.split(QLatin1Char(':'));
     if(lst.count() == 3) {
       QString str = lst.at(2);
       str.remove(0,1);
@@ -88,13 +93,12 @@ void SylpheedSettings::readCustomHeader(QFile *customHeaderFile)
        newValue+=oldValue;
     }
     addKmailConfig( QLatin1String("General"),QLatin1String("mime-header-count"), newValue);
-    int currentHeader = (oldValue>0) ? oldValue-1 : 0;
+    int currentHeader = (oldValue>0) ? oldValue : 0;
     for (QMapIterator<QString, QString> it(header);  it.hasNext();  )
     {
         it.next();
-        addKmailConfig( QString::fromLatin1("Mime #%1").arg(currentHeader),QLatin1String("name"), (it).key());
-        addKmailConfig( QString::fromLatin1("Mime #%1").arg(currentHeader),QLatin1String("value"), (it).value());
-        currentHeader++;
+        addComposerHeaderGroup(QString::fromLatin1("Mime #%1").arg(currentHeader), (it).key(), (it).value());
+        ++currentHeader;
     }
   }
 }
@@ -129,6 +133,50 @@ void SylpheedSettings::readGlobalSettings(const KConfigGroup& group)
   addKmailConfig(QLatin1String("Composer"), QLatin1String("break-at"), lineWrap);
   addKmailConfig(QLatin1String("Composer"), QLatin1String("word-wrap"), true);
 
+
+  if(group.readEntry(QLatin1String("recycle_quote_colors"), 0)==1) {
+    addKmailConfig(QLatin1String("Reader"), QLatin1String("RecycleQuoteColors"), true);
+  }
+
+  if(group.readEntry(QLatin1String("auto_signature")) == 0) {
+    addKmailConfig(QLatin1String("Composer"), QLatin1String("signature"), QLatin1String("manual"));
+  }
+
+  if(group.readEntry(QLatin1String("auto_ext_editor"),-1) == 1) {
+    addKmailConfig(QLatin1String("General"), QLatin1String("use-external-editor"), true);
+
+    const QString externalEditor = group.readEntry(QLatin1String("mime_open_command"));
+    if(!externalEditor.isEmpty()) {
+      addKmailConfig(QLatin1String("General"), QLatin1String("external-editor"), externalEditor);
+    }
+  }
+
+  readSettingsColor(group);
+  readTemplateFormat(group);
+}
+
+void SylpheedSettings::readTemplateFormat(const KConfigGroup& group)
+{
+  const QString replyQuote = group.readEntry(QLatin1String("reply_quote_mark"));
+  if(!replyQuote.isEmpty()) {
+    addKmailConfig(QLatin1String("TemplateParser"), QLatin1String("QuoteString"), replyQuote);
+  }
+  const QString forwardQuote = group.readEntry(QLatin1String("forward_quote_mark"));
+  if(!forwardQuote.isEmpty()) {
+      //Not implemented in kmail
+  }
+  const QString replyQuoteFormat = group.readEntry(QLatin1String("reply_quote_format"));
+  if(!replyQuoteFormat.isEmpty()) {
+    addKmailConfig(QLatin1String("TemplateParser"), QLatin1String("TemplateReply"), convertToKmailTemplate(replyQuoteFormat));
+  }
+  const QString forwardQuoteFormat = group.readEntry(QLatin1String("forward_quote_format"));
+  if(!forwardQuoteFormat.isEmpty()) {
+    addKmailConfig(QLatin1String("TemplateParser"), QLatin1String("TemplateForward"), convertToKmailTemplate(forwardQuoteFormat));
+  }
+}
+
+void SylpheedSettings::readSettingsColor(const KConfigGroup& group)
+{
   const bool enableColor = group.readEntry("enable_color", false);
   if(enableColor) {
     const int colorLevel1 = group.readEntry("quote_level1_color", -1);
@@ -138,15 +186,46 @@ void SylpheedSettings::readGlobalSettings(const KConfigGroup& group)
     const int colorLevel2 = group.readEntry("quote_level2_color", -1);
     if(colorLevel2!=-1) {
       //[Reader]  QuotedText2
-
     }
     const int colorLevel3 = group.readEntry("quote_level3_color", -1);
     if(colorLevel3!=-1) {
       //[Reader]  QuotedText3
-
     }
-
   }
+}
+
+QString SylpheedSettings::convertToKmailTemplate(const QString& templateStr)
+{
+  QString newTemplate = templateStr;
+  newTemplate.replace(QLatin1String("%date"),QLatin1String("%DATE"));
+  newTemplate.replace(QLatin1String("%d"),QLatin1String("%DATE"));
+  newTemplate.replace(QLatin1String("%from"),QLatin1String("%OTONAME"));
+  newTemplate.replace(QLatin1String("%f"),QLatin1String("%OTONAME"));
+  newTemplate.replace(QLatin1String("%to"),QLatin1String("%TONAME"));
+  newTemplate.replace(QLatin1String("%t"),QLatin1String("%TONAME"));
+  newTemplate.replace(QLatin1String("%cc"),QLatin1String("%CCNAME"));
+  newTemplate.replace(QLatin1String("%c"),QLatin1String("%CCNAME"));
+
+  newTemplate.replace(QLatin1String("%email"),QLatin1String("%CCNAME"));
+  newTemplate.replace(QLatin1String("%A"),QLatin1String("%CCNAME"));
+
+  newTemplate.replace(QLatin1String("%cursor"),QLatin1String("%CURSOR"));
+  newTemplate.replace(QLatin1String("%X"),QLatin1String("%CURSOR"));
+
+  newTemplate.replace(QLatin1String("%msg"),QLatin1String("%TEXT"));
+  newTemplate.replace(QLatin1String("%M"),QLatin1String("%TEXT"));
+
+  newTemplate.replace(QLatin1String("%quoted_msg"),QLatin1String("%QUOTE"));
+  newTemplate.replace(QLatin1String("%Q"),QLatin1String("%QUOTE"));
+
+  newTemplate.replace(QLatin1String("%subject"),QLatin1String("%OFULLSUBJECT"));
+  newTemplate.replace(QLatin1String("%s"),QLatin1String("%OFULLSUBJECT"));
+
+  newTemplate.replace(QLatin1String("%messageid"),QLatin1String("%MSGID"));
+  newTemplate.replace(QLatin1String("%i"),QLatin1String("%MSGID"));
+
+  //TODO add more variable
+  return newTemplate;
 }
 
 void SylpheedSettings::readSignature( const KConfigGroup& accountConfig, KPIMIdentities::Identity* identity )
@@ -169,6 +248,20 @@ void SylpheedSettings::readSignature( const KConfigGroup& accountConfig, KPIMIde
   default:
     kDebug()<<" signature type unknow :"<<signatureType;
   }
+  const int signatureEnabled = accountConfig.readEntry("auto_signature", -1 );
+  switch(signatureEnabled) {
+  case -1:
+      break;
+  case 0:
+      signature.setEnabledSignature(false);
+      break;
+  case 1:
+      signature.setEnabledSignature(true);
+      break;
+  default:
+      qDebug()<<" auto_signature undefined "<<signatureEnabled;
+  }
+
   //TODO  const bool signatureBeforeQuote = ( accountConfig.readEntry( "signature_before_quote", 0 ) == 1 ); not implemented in kmail
 
   identity->setSignature( signature );
@@ -201,7 +294,7 @@ bool SylpheedSettings::readConfig( const QString& key, const KConfigGroup& accou
   return false;
 }
 
-void SylpheedSettings::readPop3Account( const KConfigGroup& accountConfig, bool checkMailOnStartup )
+void SylpheedSettings::readPop3Account( const KConfigGroup& accountConfig, bool checkMailOnStartup, int intervalCheckMail )
 {
   QMap<QString, QVariant> settings;
   const QString host = accountConfig.readEntry("receive_server");
@@ -227,6 +320,7 @@ void SylpheedSettings::readPop3Account( const KConfigGroup& accountConfig, bool 
         break;
       default:
         kDebug()<<" unknown ssl_pop value "<<sslPop;
+        break;
     }
   }
   if ( accountConfig.hasKey( QLatin1String( "remove_mail" ) ) ){
@@ -250,12 +344,19 @@ void SylpheedSettings::readPop3Account( const KConfigGroup& accountConfig, bool 
       settings.insert(QLatin1String( "AuthenticationMethod" ), MailTransport::Transport::EnumAuthenticationType::APOP);
     }
   }
+  if(intervalCheckMail != -1) {
+    settings.insert(QLatin1String("IntervalCheckEnabled"), true);
+    settings.insert(QLatin1String("IntervalCheckInterval"), intervalCheckMail);
+  }
+
 
   const QString agentIdentifyName = AbstractBase::createResource( "akonadi_pop3_resource", name, settings );
   addCheckMailOnStartup(agentIdentifyName,checkMailOnStartup);
+  const bool enableManualCheck = (accountConfig.readEntry( QLatin1String( "receive_at_get_all" ), 0) ==1 );
+  addToManualCheck(agentIdentifyName,enableManualCheck);
 }
 
-void SylpheedSettings::readImapAccount( const KConfigGroup& accountConfig, bool checkMailOnStartup )
+void SylpheedSettings::readImapAccount( const KConfigGroup& accountConfig, bool checkMailOnStartup, int intervalCheckMail )
 {
   QMap<QString, QVariant> settings;
   const QString name = accountConfig.readEntry( QLatin1String( "name" ) );
@@ -270,8 +371,9 @@ void SylpheedSettings::readImapAccount( const KConfigGroup& accountConfig, bool 
     settings.insert( QLatin1String( "Safety" ), QLatin1String( "SSL" ) );
     break;
   case 2:
-    settings.insert( QLatin1String( "Safety" ), QLatin1String( "STARTTLS" ) );
     //TLS
+    settings.insert( QLatin1String( "Safety" ), QLatin1String( "STARTTLS" ) );
+    break;
   default:
     kDebug()<<" sslimap unknown "<<sslimap;
     break;
@@ -297,19 +399,30 @@ void SylpheedSettings::readImapAccount( const KConfigGroup& accountConfig, bool 
       break;
     case 4: //Plain
       settings.insert(QLatin1String("Authentication"),MailTransport::Transport::EnumAuthenticationType::PLAIN);
+      break;
     default:
       kDebug()<<" imap auth unknown "<<auth;
       break;
   }
+
+  if(intervalCheckMail != -1) {
+    settings.insert(QLatin1String("IntervalCheckEnabled"), true);
+    settings.insert(QLatin1String("IntervalCheckTime"),intervalCheckMail);
+  }
+
+
   const QString password = accountConfig.readEntry( QLatin1String( "password" ) );
   settings.insert( QLatin1String( "Password" ), password );
 
   const QString agentIdentifyName = AbstractBase::createResource( "akonadi_imap_resource", name,settings );
   addCheckMailOnStartup(agentIdentifyName,checkMailOnStartup);
+
+  const bool enableManualCheck = (accountConfig.readEntry( QLatin1String( "receive_at_get_all" ), 0) ==1 );
+  addToManualCheck(agentIdentifyName,enableManualCheck);
 }
 
 
-void SylpheedSettings::readAccount(const KConfigGroup& accountConfig , bool checkMailOnStartup)
+void SylpheedSettings::readAccount(const KConfigGroup& accountConfig , bool checkMailOnStartup, int intervalCheckMail)
 {
   if ( accountConfig.hasKey( QLatin1String( "protocol" ) ) )
   {
@@ -317,11 +430,11 @@ void SylpheedSettings::readAccount(const KConfigGroup& accountConfig , bool chec
     switch( protocol )
     {
       case 0:
-        readPop3Account( accountConfig, checkMailOnStartup );
+        readPop3Account( accountConfig, checkMailOnStartup, intervalCheckMail );
         break;
       case 3:
         //imap
-        readImapAccount(accountConfig, checkMailOnStartup);
+        readImapAccount(accountConfig, checkMailOnStartup, intervalCheckMail);
         break;
       case 4:
         kDebug()<<" Add it when nntp resource will implemented";

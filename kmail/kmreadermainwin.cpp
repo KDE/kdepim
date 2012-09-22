@@ -139,13 +139,15 @@ void KMReaderMainWin::showMessage( const QString & encoding, const Akonadi::Item
   mReaderWin->setMessage( msg, MessageViewer::Viewer::Force );
   KMime::Message::Ptr message = MessageCore::Util::message( msg );
   QString caption;
-  if(mParentCollection.isValid()) {
-    caption = MailCommon::Util::fullCollectionPath( mParentCollection );
-    caption += QLatin1String(" - ");
-  }
   if ( message ) {
-    caption += message->subject()->asUnicodeString();
-    setCaption( caption );
+    caption = message->subject()->asUnicodeString();
+  }
+  if(mParentCollection.isValid()) {
+    caption += QLatin1String(" - ");
+    caption += MailCommon::Util::fullCollectionPath( mParentCollection );
+  }
+  if(!caption.isEmpty()) {
+    setCaption(caption);
   }
   mMsg = msg;
   mMsgActions->setCurrentMessage( msg );
@@ -367,12 +369,12 @@ void KMReaderMainWin::setupAccel()
 }
 
 //-----------------------------------------------------------------------------
-KAction *KMReaderMainWin::copyActionMenu()
+KAction *KMReaderMainWin::copyActionMenu(QMenu *menu)
 {
   KMMainWidget* mainwin = kmkernel->getKMMainWidget();
   if ( mainwin )
   {
-    KActionMenu *action = new KActionMenu( this );
+    KActionMenu *action = new KActionMenu( menu );
     action->setIcon( KIcon( "edit-copy") );
     action->setText( i18n("Copy Item To...") );
     mainwin->standardMailActionManager()->standardActionManager()->createActionFolderMenu( action->menu(), Akonadi::StandardActionManager::CopyItemToMenu );
@@ -429,7 +431,6 @@ void KMReaderMainWin::slotDelayedMessagePopup( KJob *job )
 {
   const Akonadi::ContactSearchJob *searchJob = qobject_cast<Akonadi::ContactSearchJob*>( job );
   const bool contactAlreadyExists = !searchJob->contacts().isEmpty();
-
   const QPoint aPoint = job->property( "point" ).toPoint();
   const KUrl iUrl = job->property("imageUrl").value<KUrl>();
   const KUrl url = job->property("url").value<KUrl>();
@@ -510,9 +511,16 @@ void KMReaderMainWin::slotDelayedMessagePopup( KJob *job )
         menu->addAction( mMsgActions->forwardMenu() );
         menu->addSeparator();
     }
-    menu->addAction( copyActionMenu() );
+    menu->addAction( copyActionMenu(menu) );
 
     menu->addSeparator();
+    if(!iUrl.isEmpty()) {
+      menu->addSeparator();
+      menu->addAction( mReaderWin->copyImageLocation());
+      menu->addAction( mReaderWin->downloadImageToDiskAction());
+      menu->addSeparator();
+    }
+
     menu->addAction( mViewSourceAction );
     menu->addAction( mReaderWin->toggleFixFontAction() );
     menu->addAction( mReaderWin->toggleMimePartTreeAction() );

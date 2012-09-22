@@ -71,24 +71,24 @@ void SylpheedAddressBook::readAddressBook( const QString& filename )
       
     const QString tag = e.tagName();
     if ( tag == QLatin1String( "person" ) ) {
-      KABC::Addressee address;
+      KABC::Addressee contact;
 //uid="333304265" first-name="dd" last-name="ccc" nick-name="" cn="laurent"
       QString uidPerson;
       if ( e.hasAttribute( QLatin1String( "uid" ) ) ) {
           uidPerson = e.attribute( QLatin1String( "uid" ) );
       }
       if ( e.hasAttribute( QLatin1String( "first-name" ) ) ) {
-        address.setName( e.attribute( QLatin1String( "first-name" ) ) );
+        contact.setName( e.attribute( QLatin1String( "first-name" ) ) );
       }
       if ( e.hasAttribute( QLatin1String( "last-name" ) ) ) {
-        address.setFamilyName( e.attribute( QLatin1String( "last-name" ) ) );
+        contact.setFamilyName( e.attribute( QLatin1String( "last-name" ) ) );
         
       }
       if ( e.hasAttribute( QLatin1String( "nick-name" ) ) ) {
-        address.setNickName( e.attribute(QLatin1String( "nick-name" )) );
+        contact.setNickName( e.attribute(QLatin1String( "nick-name" )) );
       }
       if ( e.hasAttribute( QLatin1String( "cn" ) ) ) {
-        address.setFormattedName(e.attribute(QLatin1String( "cn" )));
+        contact.setFormattedName(e.attribute(QLatin1String( "cn" )));
       }
       QStringList uidAddress;
       for ( QDomElement addressElement = e.firstChildElement(); !addressElement.isNull(); addressElement = addressElement.nextSiblingElement() ) {
@@ -110,7 +110,7 @@ void SylpheedAddressBook::readAddressBook( const QString& filename )
             }
           }
           if ( !emails.isEmpty() ) {
-            address.setEmails( emails );
+            contact.setEmails( emails );
           }
             
         } else if ( addressTag == QLatin1String( "attribute-list" ) ) {
@@ -120,7 +120,7 @@ void SylpheedAddressBook::readAddressBook( const QString& filename )
                 if(attributelist.hasAttribute(QLatin1String("name"))) {
                   const QString name = attributelist.attribute(QLatin1String("name"));
                   const QString value = attributelist.text();
-                  address.insertCustom( QLatin1String( "KADDRESSBOOK" ), name, value );
+                  contact.insertCustom( QLatin1String( "KADDRESSBOOK" ), name, value );
                 }
             } else {
               kDebug()<<"tagAttributeList not implemented "<<tagAttributeList;
@@ -134,9 +134,9 @@ void SylpheedAddressBook::readAddressBook( const QString& filename )
       if(!mAddressBookUid.contains(uidPerson)) {
         mAddressBookUid.insert(uidPerson,uidAddress);
       } else {
-        qDebug()<<" problem uidPerson already stored"<<uidPerson;
+        kDebug()<<" problem uidPerson already stored"<<uidPerson;
       }
-      createContact( address );
+      createContact( contact );
     } else if(tag == QLatin1String("group")) {
       QString name;
       if ( e.hasAttribute( QLatin1String( "name" ) ) ) {

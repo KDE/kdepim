@@ -33,6 +33,11 @@ FilterAction::ReturnCode FilterActionExec::process( ItemContext &context ) const
   return FilterActionWithCommand::genericProcess( context, false ); // ignore output
 }
 
+SearchRule::RequiredPart FilterActionExec::requiredPart() const
+{
+  return SearchRule::CompleteMessage;
+}
+
 FilterAction* FilterActionExec::newAction()
 {
   return new FilterActionExec();

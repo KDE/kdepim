@@ -200,6 +200,38 @@ void ExportMailJob::backupConfig()
     backupFile(kmailsnippetrc, BackupMailUtil::configsPath(), kmailsnippetrcStr);
   }
 
+  const QString archiveMailAgentConfigurationStr("akonadi_archivemail_agentrc");
+  const QString archiveMailAgentconfigurationrc = KStandardDirs::locateLocal( "config", archiveMailAgentConfigurationStr );
+  if(QFile(archiveMailAgentconfigurationrc).exists()) {
+    KSharedConfigPtr archivemailrc = KSharedConfig::openConfig(archiveMailAgentConfigurationStr);
+
+    KTemporaryFile tmp;
+    tmp.open();
+
+    KConfig *archiveConfig = archivemailrc->copyTo( tmp.fileName() );
+    const QStringList archiveList = archiveConfig->groupList().filter( QRegExp( "ArchiveMailCollection \\d+" ) );
+    const QString archiveGroupPattern = QLatin1String( "ArchiveMailCollection " );
+
+    Q_FOREACH(const QString& str, archiveList) {
+      bool found = false;
+      const int collectionId = str.right(str.length()-archiveGroupPattern.length()).toInt(&found);
+      if(found) {
+        KConfigGroup oldGroup = archiveConfig->group(str);
+        const QString realPath = MailCommon::Util::fullCollectionPath(Akonadi::Collection( collectionId ));
+        if(!realPath.isEmpty()) {
+          const QString collectionPath(archiveGroupPattern + realPath);
+          KConfigGroup newGroup( archiveConfig, collectionPath);
+          oldGroup.copyTo( &newGroup );
+          newGroup.writeEntry(QLatin1String("saveCollectionId"),collectionPath);
+        }
+        oldGroup.deleteGroup();
+      }
+    }
+    archiveConfig->sync();
+
+    backupFile(tmp.fileName(), BackupMailUtil::configsPath(), archiveMailAgentConfigurationStr);
+  }
+
   const QString templatesconfigurationrcStr("templatesconfigurationrc");
   const QString templatesconfigurationrc = KStandardDirs::locateLocal( "config",  templatesconfigurationrcStr);
   if(QFile(templatesconfigurationrc).exists()) {

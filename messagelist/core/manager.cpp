@@ -329,7 +329,8 @@ void Manager::createDefaultAggregations()
           Aggregation::PerfectReferencesAndSubject,
           Aggregation::MostRecentMessage,
           Aggregation::ExpandThreadsWithUnreadOrImportantMessages,
-          Aggregation::FavorInteractivity
+          Aggregation::FavorInteractivity,
+          true
        )
     );
 
@@ -345,7 +346,8 @@ void Manager::createDefaultAggregations()
           Aggregation::NoThreading,
           Aggregation::MostRecentMessage,
           Aggregation::NeverExpandThreads,
-          Aggregation::FavorInteractivity
+          Aggregation::FavorInteractivity,
+          true
        )
     );
 
@@ -362,7 +364,8 @@ void Manager::createDefaultAggregations()
           Aggregation::PerfectReferencesAndSubject,
           Aggregation::MostRecentMessage,
           Aggregation::ExpandThreadsWithUnreadOrImportantMessages,
-          Aggregation::FavorInteractivity
+          Aggregation::FavorInteractivity,
+          true
        )
     );
 
@@ -378,7 +381,8 @@ void Manager::createDefaultAggregations()
           Aggregation::NoThreading,
           Aggregation::MostRecentMessage,
           Aggregation::NeverExpandThreads,
-          Aggregation::FavorInteractivity
+          Aggregation::FavorInteractivity,
+          true
        )
     );
 
@@ -391,7 +395,8 @@ void Manager::createDefaultAggregations()
           Aggregation::PerfectReferencesAndSubject,
           Aggregation::TopmostMessage,
           Aggregation::ExpandThreadsWithUnreadOrImportantMessages,
-          Aggregation::FavorInteractivity
+          Aggregation::FavorInteractivity,
+          true
        )
     );
 
@@ -405,7 +410,9 @@ void Manager::createDefaultAggregations()
           Aggregation::NoThreading,
           Aggregation::TopmostMessage,
           Aggregation::NeverExpandThreads,
-          Aggregation::FavorInteractivity
+          Aggregation::FavorInteractivity,
+          true
+
         )
     );
 
@@ -421,7 +428,8 @@ void Manager::createDefaultAggregations()
           Aggregation::NoThreading,
           Aggregation::TopmostMessage,
           Aggregation::NeverExpandThreads,
-          Aggregation::FavorSpeed
+          Aggregation::FavorSpeed,
+          true
         )
     );
 
@@ -434,7 +442,8 @@ void Manager::createDefaultAggregations()
           Aggregation::PerfectReferencesAndSubject,
           Aggregation::TopmostMessage,
           Aggregation::NeverExpandThreads,
-          Aggregation::FavorSpeed
+          Aggregation::FavorSpeed,
+          true
         )
     );
 

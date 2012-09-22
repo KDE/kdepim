@@ -41,5 +41,9 @@ void ImportSettingPage::addImportError( const QString& log )
   ui->logSettings->addErrorLogEntry( log );
 }
 
+void ImportSettingPage::setImportButtonEnabled(bool enabled)
+{
+  ui->importSettings->setEnabled(enabled);
+}
 
 #include "importsettingpage.moc"

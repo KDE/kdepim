@@ -93,6 +93,7 @@ void ArchiveJob::slotBackupDone(const QString& info)
                         KNotification::CloseOnTimeout,
                         KGlobal::mainComponent());
   mManager->backupDone(mInfo);
+  deleteLater();
 }
 
 void ArchiveJob::kill()

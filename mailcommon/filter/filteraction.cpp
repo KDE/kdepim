@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 1996-1998 Stefan Taferner <taferner@kde.org>
+ * Copyright (C) 2012 Andras Mantia <amantia@kde.org>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,6 +22,7 @@
 
 #include "../mailkernel.h"
 #include "../mdnadvicedialog.h"
+#include "../mailutil.h"
 
 #include <messagecomposer/messagefactory.h>
 #include <messagecomposer/messagesender.h>
@@ -48,11 +50,6 @@ QString FilterAction::label() const
 QString FilterAction::name() const
 {
   return mName;
-}
-
-bool FilterAction::requiresBody() const
-{
-  return true;
 }
 
 bool FilterAction::isEmpty() const
@@ -106,11 +103,17 @@ void FilterAction::sendMDN( const Akonadi::Item &item, KMime::MDN::DispositionTy
   if ( !msg )
     return;
 
+
+
   const QPair<bool, KMime::MDN::SendingMode> mdnSend = MDNAdviceHelper::instance()->checkAndSetMDNInfo( item, type, true );
   if ( mdnSend.first ) {
     const int quote =  MessageViewer::GlobalSettings::self()->quoteMessage();
+    QString receiptTo =  msg->headerByType("Disposition-Notification-To") ? msg->headerByType("Disposition-Notification-To")->asUnicodeString() : QString();
+    if( receiptTo.isEmpty() ) 
+      return;
     MessageComposer::MessageFactory factory( msg, Akonadi::Item().id() );
     factory.setIdentityManager( KernelIf->identityManager() );
+    factory.setFolderIdentity( MailCommon::Util::folderIdentity( item ) );
 
     const KMime::Message::Ptr mdn = factory.createMDN( KMime::MDN::AutomaticAction, type, mdnSend.second, quote, modifiers );
     if ( mdn ) {

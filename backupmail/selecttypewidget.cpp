@@ -29,6 +29,9 @@ SelectTypeWidget::SelectTypeWidget(QWidget *parent) :
   connect(ui->identity,SIGNAL(clicked(bool)),SLOT(slotTypeClicked()));
   connect(ui->mails,SIGNAL(clicked(bool)),SLOT(slotTypeClicked()));
   connect(ui->akonadi,SIGNAL(clicked(bool)),SLOT(slotTypeClicked()));
+  connect(ui->nepomuk,SIGNAL(clicked(bool)),SLOT(slotTypeClicked()));
+  //TODO: implement it for 4.10
+  ui->nepomuk->hide();
 }
 
 SelectTypeWidget::~SelectTypeWidget()
@@ -43,7 +46,8 @@ void SelectTypeWidget::slotTypeClicked()
                          ui->config->isChecked() ||
                          ui->identity->isChecked() ||
                          ui->mails->isChecked() ||
-                         ui->akonadi->isChecked());
+                         ui->akonadi->isChecked() ||
+                         ui->nepomuk->isChecked() );
   Q_EMIT itemSelected(selected);
 }
 
@@ -79,6 +83,11 @@ BackupMailUtil::BackupTypes SelectTypeWidget::backupTypesSelected(int & numberOf
   if(ui->akonadi->isChecked())
   {
     types|= BackupMailUtil::AkonadiDb;
+    numberOfStep++;
+  }
+  if(ui->nepomuk->isChecked())
+  {
+    types|= BackupMailUtil::Nepomuk;
     numberOfStep++;
   }
   return types;

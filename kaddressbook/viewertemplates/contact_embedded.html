@@ -38,7 +38,7 @@
 
       {% for email in contact.emails %}
         {% with "Email" as title %}
-        {% with email as value %}
+        {% with email|safe as value %}
         {% include "contact_row.html" %}
         {% endwith %}
         {% endwith %}
@@ -147,5 +147,16 @@
         {% endwith %}
         {% endwith %}
       {% endif %}
+      {% if contact.note %}
+        {% with "Note" as title %}
+        {% with contact.note as value %}
+        {% include "contact_row.html" %}
+        {% endwith %}
+        {% endwith %}
+      {% endif %}
     </table>
+    <p align="center">
+     <img src="datamatrix" vspace="1">
+     <img src="qrcode" vspace="1">
+    </p>
   </div>

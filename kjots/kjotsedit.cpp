@@ -53,7 +53,9 @@
 #include "kjotslockattribute.h"
 
 
+#ifndef KDE_USE_FINAL
 Q_DECLARE_METATYPE(QTextDocument*)
+#endif
 Q_DECLARE_METATYPE(QTextCursor)
 
 using namespace Akonadi;

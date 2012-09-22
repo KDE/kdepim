@@ -89,6 +89,12 @@ AggregationEditor::AggregationEditor( QWidget *parent )
 
   tabg->setColumnStretch( 1, 1 );
   tabg->setRowStretch( 1, 1 );
+  fillGroupingCombo();
+  fillGroupExpandPolicyCombo();
+  fillThreadingCombo();
+  fillThreadLeaderCombo();
+  fillThreadExpandPolicyCombo();
+  fillFillViewStrategyCombo();
 }
 
 AggregationEditor::~AggregationEditor()
@@ -110,23 +116,31 @@ void AggregationEditor::editAggregation( Aggregation *set )
   nameEdit()->setText( set->name() );
   descriptionEdit()->setText( set->description() );
 
-  fillGroupingCombo();
   ComboBoxUtils::setIntegerOptionComboValue( mGroupingCombo, (int)mCurrentAggregation->grouping() );
-  fillGroupExpandPolicyCombo();
   ComboBoxUtils::setIntegerOptionComboValue( mGroupExpandPolicyCombo,
                                              (int)mCurrentAggregation->groupExpandPolicy() );
-  fillThreadingCombo();
   ComboBoxUtils::setIntegerOptionComboValue( mThreadingCombo,
                                              (int)mCurrentAggregation->threading() );
-  fillThreadLeaderCombo();
   ComboBoxUtils::setIntegerOptionComboValue( mThreadLeaderCombo,
                                              (int)mCurrentAggregation->threadLeader() );
-  fillThreadExpandPolicyCombo();
   ComboBoxUtils::setIntegerOptionComboValue( mThreadExpandPolicyCombo,
                                              (int)mCurrentAggregation->threadExpandPolicy() );
-  fillFillViewStrategyCombo();
   ComboBoxUtils::setIntegerOptionComboValue( mFillViewStrategyCombo,
                                              (int)mCurrentAggregation->fillViewStrategy() );
+
+  setReadOnly( mCurrentAggregation->readOnly() );
+}
+
+void AggregationEditor::setReadOnly(bool readOnly)
+{
+  mGroupingCombo->setEnabled(!readOnly);
+  mGroupExpandPolicyCombo->setEnabled(!readOnly);
+  mThreadingCombo->setEnabled(!readOnly);
+  mThreadLeaderCombo->setEnabled(!readOnly);
+  mThreadExpandPolicyCombo->setEnabled(!readOnly);
+  mFillViewStrategyCombo->setEnabled(!readOnly);
+
+  OptionSetEditor::setReadOnly(readOnly);
 }
 
 void AggregationEditor::commit()

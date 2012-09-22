@@ -67,10 +67,11 @@ FilterAction::ReturnCode FilterActionPlaySound::process( ItemContext& ) const
   return GoOn;
 }
 
-bool FilterActionPlaySound::requiresBody() const
+SearchRule::RequiredPart FilterActionPlaySound::requiredPart() const
 {
-  return false;
+    return SearchRule::Envelope;
 }
+
 
 bool FilterActionPlaySound::argsFromStringInteractive( const QString &argsStr, const QString &filterName )
 {

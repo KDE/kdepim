@@ -20,7 +20,7 @@
 
 #include "abstractbase.h"
 #include <KSharedConfig>
-
+#include <KUrl>
 #include <QObject>
 #include <QMap>
 
@@ -35,6 +35,32 @@ namespace KPIMIdentities {
 namespace MailTransport {
   class Transport;
 }
+
+struct ldapStruct
+{
+  ldapStruct()
+    : maxHint(-1),
+      port(-1),
+      limit(-1),
+      timeout(-1),
+      useSSL(false),
+      useTLS(false)
+  {
+  }
+
+  KUrl ldapUrl;
+  QString dn;
+  QString saslMech;
+  QString fileName;
+  QString description;
+  int maxHint;
+  int port;
+  int limit;
+  int timeout;
+  bool useSSL;
+  bool useTLS;
+
+};
 
 class AbstractSettings : public AbstractBase
 {
@@ -62,12 +88,17 @@ protected:
   void addKmailConfig( const QString& groupName, const QString& key, bool value);
   void addKmailConfig( const QString& groupName, const QString& key, int value);
 
+  void addComposerHeaderGroup( const QString& groupName, const QString& name, const QString& value );
+
   void addKNodeConfig(const QString& groupName, const QString& key, bool value);
   void addAkregatorConfig(const QString& groupName, const QString& key, bool value);
 
 
   void addCheckMailOnStartup(const QString& agentIdentifyName,bool loginAtStartup);
+  void addToManualCheck(const QString& agentIdentifyName,bool manualCheck);
   int readKmailSettings( const QString&groupName, const QString& key);
+
+  void mergeLdap(const ldapStruct &ldap);
 
   ImportWizard *mImportWizard;
   KPIMIdentities::IdentityManager *mManager;

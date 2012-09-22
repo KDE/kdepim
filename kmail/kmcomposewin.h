@@ -116,13 +116,13 @@ class KMComposeWin : public KMail::Composer
   friend class ::KMComposerEditor;
 
   private: // mailserviceimpl, kmkernel, kmcommands, callback, kmmainwidget
-    explicit KMComposeWin( const KMime::Message::Ptr &msg = KMime::Message::Ptr(), TemplateContext context = NoTemplate,
+    explicit KMComposeWin(const KMime::Message::Ptr &msg, bool lastSignState, bool lastEncryptState, TemplateContext context = NoTemplate,
                            uint identity = 0, const QString & textSelection = QString(),
                            const QString & customTemplate = QString() );
     ~KMComposeWin();
 
   public:
-    static Composer *create( const KMime::Message::Ptr &msg = KMime::Message::Ptr(), TemplateContext context = NoTemplate,
+    static Composer *create( const KMime::Message::Ptr &msg, bool lastSignState, bool lastEncryptState, TemplateContext context = NoTemplate,
                              uint identity = 0, const QString & textSelection = QString(),
                              const QString & customTemplate = QString() );
 
@@ -164,8 +164,8 @@ class KMComposeWin : public KMail::Composer
      * Set the message the composer shall work with. This discards
      * previous messages without calling applyChanges() on them before.
      */
-    void setMsg( const KMime::Message::Ptr &newMsg, bool mayAutoSign=true,
-                 bool allowDecryption=false, bool isModified=false );
+    void setMessage( const KMime::Message::Ptr &newMsg, bool lastSignState = false, bool lastEncryptState = false,
+                 bool mayAutoSign=true, bool allowDecryption=false, bool isModified=false );
 
     void setCurrentTransport( int transportId );
 
@@ -230,6 +230,7 @@ class KMComposeWin : public KMail::Composer
 
   bool insertFromMimeData( const QMimeData *source, bool forceAttachment = false );
 
+     void setCurrentReplyTo(const QString&);
   private:
   /**
    * Write settings to app's config file.
@@ -534,10 +535,7 @@ class KMComposeWin : public KMail::Composer
      */
     void setSigning( bool sign, bool setByUser = false );
 
-    /**
-      Returns true if the user forgot to attach something.
-    */
-    bool userForgotAttachment();
+    Message::ComposerViewBase::MissingAttachment userForgotAttachment();
 
     /**
      * Decrypt an OpenPGP block or strip off the OpenPGP envelope of a text
@@ -581,18 +579,7 @@ class KMComposeWin : public KMail::Composer
       of setAutomaticFields(), see below, is still required. */
     void initHeader( KMime::Message *message, uint identity=0 );
 
-    /**
-     * Helper methods to read from config various encryption settings
-     */
     inline bool encryptToSelf();
-    inline bool showKeyApprovalDialog();
-    inline int encryptKeyNearExpiryWarningThresholdInDays();
-    inline int signingKeyNearExpiryWarningThresholdInDays();
-    inline int encryptRootCertNearExpiryWarningThresholdInDays();
-    inline int signingRootCertNearExpiryWarningThresholdInDays();
-    inline int encryptChainCertNearExpiryWarningThresholdInDays();
-    inline int signingChainCertNearExpiryWarningThresholdInDays();
-
 
   private:
     QWidget   *mMainWidget;

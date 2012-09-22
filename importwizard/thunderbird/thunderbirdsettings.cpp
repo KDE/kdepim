@@ -48,7 +48,8 @@ ThunderbirdSettings::ThunderbirdSettings( const QString& filename, ImportWizard 
          line.contains(QLatin1String("mailnews."))||
          line.contains(QLatin1String("mail.compose."))||
          line.contains(QLatin1String("mail.spellcheck")) ||
-         line.contains(QLatin1String("ldap_"))) {
+         line.contains(QLatin1String("ldap_")) ||
+         line.contains(QLatin1String("mail.biff."))) {
         insertIntoMap( line );
       }
     } else {
@@ -69,31 +70,47 @@ ThunderbirdSettings::~ThunderbirdSettings()
 {
 }
 
+
 void ThunderbirdSettings::readLdapSettings()
 {
-  //TODO: verify others variable
   //qDebug()<<" mLdapAccountList:"<<mLdapAccountList;
   Q_FOREACH(const QString& ldapAccountName, mLdapAccountList) {
+    ldapStruct ldap;
     const QString ldapDescription = QString::fromLatin1("%1.description").arg(ldapAccountName);
     if(mHashConfig.contains(ldapDescription)) {
+      ldap.description = mHashConfig.value(ldapDescription).toString();
     }
     const QString ldapAuthDn = QString::fromLatin1("%1.auth.dn").arg(ldapAccountName);
     if(mHashConfig.contains(ldapAuthDn)) {
+      ldap.dn = mHashConfig.value(ldapAuthDn).toString();
     }
     const QString ldapAuthSaslMech = QString::fromLatin1("%1.auth.saslmech").arg(ldapAccountName);
     if(mHashConfig.contains(ldapAuthSaslMech)) {
+      ldap.saslMech = mHashConfig.value(ldapAuthSaslMech).toString();
     }
     const QString ldapFilename = QString::fromLatin1("%1.filename").arg(ldapAccountName);
     if(mHashConfig.contains(ldapFilename)) {
+      ldap.fileName = mHashConfig.value(ldapFilename).toString();
     }
     const QString ldapMaxHits = QString::fromLatin1("%1.maxHits").arg(ldapAccountName);
     if(mHashConfig.contains(ldapMaxHits)) {
+      ldap.fileName = mHashConfig.value(ldapMaxHits).toInt();
     }
     const QString ldapUri = QString::fromLatin1("%1.uri").arg(ldapAccountName);
     if(mHashConfig.contains(ldapUri)) {
-    }
-  }
+      ldap.ldapUrl = KUrl(mHashConfig.value(ldapUri).toString());
+      ldap.port = ldap.ldapUrl.port();
 
+      if(ldap.ldapUrl.scheme() == QLatin1String("ldaps")) {
+        ldap.useSSL = true;
+      } else if(ldap.ldapUrl.scheme() == QLatin1String("ldap")) {
+        ldap.useSSL = false;
+      } else {
+        qDebug()<<" Security not implemented :"<<ldap.ldapUrl.scheme();
+      }
+    }
+    mergeLdap(ldap);
+  }
 }
 
 void ThunderbirdSettings::readGlobalSettings()
@@ -161,6 +178,14 @@ void ThunderbirdSettings::readGlobalSettings()
     addKmailConfig(QLatin1String("Spelling"),QLatin1String("backgroundCheckerEnabled"),mailSpellCheckInline);
   } else {
     addKmailConfig(QLatin1String("Spelling"),QLatin1String("backgroundCheckerEnabled"),false);
+  }
+  const QString mailPlaySoundStr = QLatin1String("mail.biff.play_sound");
+  if(mHashConfig.contains(mailPlaySoundStr)) {
+    const bool mailPlaySound = mHashConfig.value(mailPlaySoundStr).toBool();
+    addKmailConfig(QLatin1String("General"),QLatin1String("beep-on-mail"), mailPlaySound);
+  } else {
+    //Default value in thunderbird
+    addKmailConfig(QLatin1String("General"),QLatin1String("beep-on-mail"), true);
   }
 }
 
@@ -249,6 +274,7 @@ void ThunderbirdSettings::readAccount()
           case 3:
             //SSL/TLS
             settings.insert( QLatin1String( "Safety" ), QLatin1String("SSL") );
+            break;
           default:
             kDebug()<<" socketType "<<socketType;
         }
@@ -277,6 +303,8 @@ void ThunderbirdSettings::readAccount()
 
       const QString agentIdentifyName = AbstractBase::createResource( "akonadi_imap_resource", name,settings );
       addCheckMailOnStartup(agentIdentifyName,loginAtStartup);
+      //Not find a method to disable it in thunderbird
+      addToManualCheck(agentIdentifyName,true);
     } else if( type == QLatin1String("pop3")) {
       QMap<QString, QVariant> settings;
       settings.insert( QLatin1String( "Host" ), host );
@@ -314,6 +342,7 @@ void ThunderbirdSettings::readAccount()
           case 3:
             //SSL/TLS
             settings.insert( QLatin1String( "UseSSL" ), true );
+            break;
           default:
             kDebug()<<" socketType "<<socketType;
         }
@@ -338,6 +367,8 @@ void ThunderbirdSettings::readAccount()
 
       const QString agentIdentifyName = AbstractBase::createResource( "akonadi_pop3_resource", name, settings );
       addCheckMailOnStartup(agentIdentifyName,loginAtStartup);
+      //Not find a method to disable it in thunderbird
+      addToManualCheck(agentIdentifyName,true);
     } else if ( type == QLatin1String( "none" ) ) {
       //FIXME look at if we can implement it
       kDebug()<<" account type none!";
@@ -448,13 +479,20 @@ void ThunderbirdSettings::readTransport()
   }
 }
 
+QString convertThunderbirdPath(const QString& path)
+{
+  QString newPath;
+  KUrl url(path);
+  newPath = url.path();
+  newPath.remove(0,1);
+  return MailCommon::Util::convertFolderPathToCollectionStr(newPath);
+}
+
 void ThunderbirdSettings::readIdentity( const QString& account )
 {
   KPIMIdentities::Identity* newIdentity = createIdentity();
   const QString identity = QString::fromLatin1( "mail.identity.%1" ).arg( account );
   
-  const QString fcc = mHashConfig.value( identity + QLatin1String( ".fcc_folder" ) ).toString();
-
   const QString smtpServer = mHashConfig.value( identity + QLatin1String( ".smtpServer" ) ).toString();
   if(!smtpServer.isEmpty() && mHashSmtp.contains(smtpServer))
   {
@@ -482,8 +520,6 @@ void ThunderbirdSettings::readIdentity( const QString& account )
     const QString cc = mHashConfig.value(identity + QLatin1String(".doCcList")).toString();
     newIdentity->setCc( cc );
   }
-  const QString draft = MailCommon::Util::convertFolderPathToCollectionStr(mHashConfig.value(identity + QLatin1String(".draft_folder")).toString());
-  newIdentity->setDrafts(draft);
 
   const QString replyTo = mHashConfig.value(identity + QLatin1String( ".reply_to")).toString();
   newIdentity->setReplyToAddr( replyTo );
@@ -512,17 +548,28 @@ void ThunderbirdSettings::readIdentity( const QString& account )
     const int useSpecificDraftFolder = mHashConfig.value(  identity + QLatin1String( ".drafts_folder_picker_mode" ) ).toInt();
     if ( useSpecificDraftFolder == 1 )
     {
-      const QString draftFolder = MailCommon::Util::convertFolderPathToCollectionStr( mHashConfig.value( identity + QLatin1String( ".draft_folder" ) ).toString() );
+      const QString draftFolder = convertThunderbirdPath( mHashConfig.value( identity + QLatin1String( ".draft_folder" ) ).toString() );
       newIdentity->setDrafts( draftFolder );
     }
   }
 
+  //fcc_reply_follows_parent not implemented in kmail
   if ( mHashConfig.contains( identity + QLatin1String( ".fcc_folder_picker_mode" ) ) )
   {
-    const int useSpecificTemplateFolder = mHashConfig.value(  identity + QLatin1String( ".fcc_folder_picker_mode" ) ).toInt();
+    const int useSpecificFccFolder = mHashConfig.value(  identity + QLatin1String( ".fcc_folder_picker_mode" ) ).toInt();
+    if ( useSpecificFccFolder == 1 )
+    {
+      const QString fccFolder = convertThunderbirdPath( mHashConfig.value( identity + QLatin1String( ".fcc_folder" ) ).toString() );
+      newIdentity->setFcc( fccFolder );
+    }
+  }
+
+  if ( mHashConfig.contains( identity + QLatin1String( ".tmpl_folder_picker_mode" ) ) )
+  {
+    const int useSpecificTemplateFolder = mHashConfig.value(  identity + QLatin1String( ".tmpl_folder_picker_mode" ) ).toInt();
     if ( useSpecificTemplateFolder == 1 )
     {
-      const QString templateFolder = MailCommon::Util::convertFolderPathToCollectionStr( mHashConfig.value( identity + QLatin1String( ".fcc_folder" ) ).toString() );
+      const QString templateFolder = convertThunderbirdPath( mHashConfig.value( identity + QLatin1String( ".stationery_folder" ) ).toString() );
       newIdentity->setTemplates( templateFolder );
     }
   }
@@ -533,10 +580,12 @@ void ThunderbirdSettings::readIdentity( const QString& account )
     const bool attachVcard = mHashConfig.value( attachVcardStr ).toBool();
     if ( attachVcard ) {
       const QString vcardContent = mHashConfig.value( identity + QLatin1String( ".escapedVCard" ) ).toString();
-      //TODO not implemented in kmail
+      //TODO: not implemented in kmail
     }
   }
-    
+  const QString composeHtmlStr( identity + QLatin1String( ".compose_html" ) );
+  //TODO: implement it in kmail
+
   newIdentity->setSignature( signature );
 
   storeIdentity(newIdentity);

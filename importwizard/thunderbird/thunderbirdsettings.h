@@ -21,6 +21,7 @@
 #include "abstractsettings.h"
 #include <QHash>
 #include <QStringList>
+#include <KUrl>
 
 class ImportWizard;
 class KConfigGroup;
@@ -39,7 +40,6 @@ private:
   void insertIntoMap( const QString& line );
 
   void addAuth(QMap<QString, QVariant>& settings, const QString & argument, const QString &accountName );
-  
   
   QHash<QString, QVariant> mHashConfig;
   QHash<QString, QString> mHashSmtp;

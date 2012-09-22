@@ -85,6 +85,12 @@ FilterAction::ReturnCode FilterActionSendFakeDisposition::process( ItemContext &
   return GoOn;
 }
 
+SearchRule::RequiredPart FilterActionSendFakeDisposition::requiredPart() const
+{
+  return SearchRule::CompleteMessage;
+}
+
+
 void FilterActionSendFakeDisposition::argsFromString( const QString &argsStr )
 {
   if ( argsStr.length() == 1 ) {
@@ -115,6 +121,6 @@ QString FilterActionSendFakeDisposition::argsAsString() const
 
 QString FilterActionSendFakeDisposition::displayString() const
 {
-  return label() + QLatin1String( " \"" ) + Qt::escape( argsAsString() ) + QLatin1String( "\"" );
+  return label() + QLatin1String( " \"" ) + mParameter + QLatin1String( "\"" );
 }
 

@@ -686,6 +686,7 @@ Theme::Theme()
   mGroupHeaderBackgroundMode = AutoColor;
   mViewHeaderPolicy = ShowHeaderAlways;
   mIconSize = gThemeDefaultIconSize;
+  mGroupHeaderBackgroundStyle = StyledJoinedRect;
 }
 
 Theme::Theme( const QString &name, const QString &description, bool readOnly )

@@ -84,6 +84,12 @@ SearchDialog::~SearchDialog()
 {
 }
 
+void SearchDialog::showEvent( QShowEvent *event )
+{
+  Q_UNUSED( event );
+  mSearchEdit->setFocus();
+}
+
 void SearchDialog::searchTextChanged( const QString &_text )
 {
   enableButton( KDialog::User1, !_text.isEmpty() );
@@ -112,7 +118,8 @@ void SearchDialog::doSearch()
     KMessageBox::information(
       this,
       i18n( "No items were found that match your search pattern." ),
-      "NoSearchResults" );
+      QString(), //TODO: add a caption when string freeze is off
+      QLatin1String( "NoSearchResults" ) );
   } else {
     mNumItems->setText( i18np( "%1 item","%1 items", mMatchedEvents.count() ) );
   }

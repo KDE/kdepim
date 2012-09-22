@@ -523,6 +523,11 @@ void MonthView::reloadIncidences()
       dateTimeList = incidence->recurrence()->timesInInterval(
         actualStartDateTime(), actualEndDateTime() );
 
+      // Check for multi day events that "leak in" this month from outside
+      if ( !incidence->recursOn( actualStartDateTime().date(), timeSpec ) ) {
+        dateTimeList.append( incidence->startDateTimesForDate( actualStartDateTime().date(), timeSpec) );
+      }
+
       if ( isTodo ) {
         KCalCore::Todo::Ptr todo = CalendarSupport::todo( aitem );
         removeFilteredOccurrences( todo, dateTimeList );

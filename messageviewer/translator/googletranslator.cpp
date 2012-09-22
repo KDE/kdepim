@@ -126,6 +126,8 @@ void GoogleTranslator::translate()
   mResult.clear();  
   delete mWebView;
   mWebView = new QWebView;
+  mWebView->page()->settings()->setAttribute( QWebSettings::JavaEnabled, false );
+  mWebView->page()->settings()->setAttribute( QWebSettings::PluginsEnabled, false );
 #ifdef DEBUG_TRANSLATOR
   mWebView->show();
 #else

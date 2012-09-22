@@ -9,3 +9,7 @@ Import data from *rss* when akregator2 will ported, same for KNode.
 
 Add support for Lightning for mozilla (calendar mozilla)
 
+
+NEED TO FIX:
+- Import addressbook from Thunderbird.
+- Fix import filters.

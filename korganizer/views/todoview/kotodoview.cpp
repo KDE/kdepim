@@ -78,8 +78,12 @@ KOTodoView::KOTodoView( bool sidebarView, QWidget *parent )
     mQuickSearch->setVisible( KOPrefs::instance()->enableTodoQuickSearch() );
     connect( mQuickSearch, SIGNAL(searchTextChanged(QString)),
              mProxyModel, SLOT(setFilterRegExp(QString)) );
+    connect( mQuickSearch, SIGNAL(searchTextChanged(QString)),
+             this, SLOT(expandTree()) );
     connect( mQuickSearch, SIGNAL(searchCategoryChanged(QStringList)),
              mProxyModel, SLOT(setCategoryFilter(QStringList)) );
+    connect( mQuickSearch, SIGNAL(searchCategoryChanged(QStringList)),
+             this, SLOT(expandTree()) );
   }
 
   mView = new KOTodoViewView( this );
@@ -286,6 +290,11 @@ void KOTodoView::expandIndex( const QModelIndex &index )
   }
 }
 
+void KOTodoView::expandTree()
+{
+  mView->expandAll();
+}
+
 void KOTodoView::setCalendar( CalendarSupport::Calendar *cal )
 {
   BaseView::setCalendar( cal );
@@ -390,6 +399,7 @@ void KOTodoView::restoreLayout( KConfig *config, const QString &group, bool mini
   }
 
   mFlatView->setChecked( cfgGroup.readEntry( "FlatView", false ) );
+  mView->expandAll();
 }
 
 void KOTodoView::setIncidenceChanger( CalendarSupport::IncidenceChanger *changer )
@@ -414,6 +424,7 @@ void KOTodoView::showIncidences( const Akonadi::Item::List &incidenceList, const
 void KOTodoView::updateView()
 {
   sModel->reloadTodos();
+  mView->expandAll();
 }
 
 void KOTodoView::updateCategories()

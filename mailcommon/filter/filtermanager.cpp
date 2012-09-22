@@ -142,9 +142,9 @@ void FilterManager::filter( const Akonadi::Item &item, const QString &identifier
   d->mMailFilterAgentInterface->filter( item.id(), identifier, 0 /*FilterManager::FilterRequires::Unknown*/ );
 }
 
-void FilterManager::filter(const qlonglong &id, const QString &identifier , FilterRequires requires) const
+void FilterManager::filter(const qlonglong& id, const QString& identifier, SearchRule::RequiredPart requiredPart) const
 {
-  d->mMailFilterAgentInterface->filter( id, identifier, static_cast<int>(requires) );
+  d->mMailFilterAgentInterface->filter( id, identifier, static_cast<int>(requiredPart) );
 }
 
 void FilterManager::filter( const Akonadi::Item &item, FilterSet set, bool account, const QString &resourceId ) const
@@ -163,13 +163,13 @@ void FilterManager::filter( const Akonadi::Item::List &messages, FilterSet set )
 }
 
 
-void FilterManager::filter(const Akonadi::Item::List &messages, FilterRequires requires, const QStringList& listFilters) const
+void FilterManager::filter(const Akonadi::Item::List& messages, SearchRule::RequiredPart requiredPart, const QStringList& listFilters) const
 {
     QVector<qlonglong> itemIds;
 
     foreach ( const Akonadi::Item &item, messages )
       itemIds << item.id();
-    d->mMailFilterAgentInterface->applySpecificFilters( itemIds, static_cast<int>(requires), listFilters);
+    d->mMailFilterAgentInterface->applySpecificFilters( itemIds, static_cast<int>(requiredPart), listFilters);
 }
 
 

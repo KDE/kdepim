@@ -339,13 +339,17 @@ void StorageModel::updateMessageItemData( MessageList::Core::MessageItem *mi,
   mi->setAkonadiItem( item );
   mi->setStatus( stat );
 
-  mi->setEncryptionState( Core::MessageItem::EncryptionStateUnknown );
+
   if ( stat.isEncrypted() )
     mi->setEncryptionState( Core::MessageItem::FullyEncrypted );
+  else
+    mi->setEncryptionState( Core::MessageItem::EncryptionStateUnknown );
 
-  mi->setSignatureState( Core::MessageItem::SignatureStateUnknown );
+
   if ( stat.isSigned() )
     mi->setSignatureState( Core::MessageItem::FullySigned );
+  else
+    mi->setSignatureState( Core::MessageItem::SignatureStateUnknown );
 
   mi->invalidateTagCache();
   mi->invalidateAnnotationCache();

@@ -32,14 +32,23 @@ FilterActionCopy::FilterActionCopy( QObject *parent )
 FilterAction::ReturnCode FilterActionCopy::process( ItemContext &context ) const
 {
   // copy the message 1:1
-  new Akonadi::ItemCopyJob( context.item(), mFolder, 0 ); // TODO handle error
+  Akonadi::ItemCopyJob *job = new Akonadi::ItemCopyJob( context.item(), mFolder, 0 );
+  connect(job, SIGNAL(result(KJob*)), this, SLOT(jobFinished(KJob*)));
 
   return GoOn;
 }
 
-bool FilterActionCopy::requiresBody() const
+void FilterActionCopy::jobFinished(KJob* job)
 {
-  return false;
+  if (job->error()) {
+    kError() << "Error while moving mail: " << job->errorString();
+  }
+}
+
+
+SearchRule::RequiredPart FilterActionCopy::requiredPart() const
+{
+    return SearchRule::Envelope;
 }
 
 FilterAction* FilterActionCopy::newAction()

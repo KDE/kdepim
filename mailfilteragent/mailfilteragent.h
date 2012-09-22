@@ -22,6 +22,8 @@
 
 #include <akonadi/agentbase.h>
 
+#include "mailcommon/searchpattern.h"
+
 namespace Akonadi {
 class Monitor;
 }
@@ -62,6 +64,7 @@ class MailFilterAgent : public Akonadi::AgentBase, public Akonadi::AgentBase::Ob
     FilterManager *m_filterManager;
 
     FilterLogDialog *m_filterLogDialog;
+    MailCommon::SearchRule::RequiredPart mRequestedPart;
 };
 
 #endif

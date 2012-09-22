@@ -332,7 +332,7 @@ bool Filter::doAddMessage( const QString& folderName,
     const QByteArray msgText =
       KPIMUtils::kFileToByteArray( msgUrl.toLocalFile(), true, false );
     if( msgText.isEmpty() ) {
-      d->filterInfo->addInfoLogEntry( i18n( "Error: failed to read temporary file at %1", msgPath ) );
+      d->filterInfo->addErrorLogEntry( i18n( "Error: failed to read temporary file at %1", msgPath ) );
       return false;
     }
 

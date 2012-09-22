@@ -181,6 +181,12 @@ void Kernel::createDefaultCollectionDone( KJob *job )
   if ( !( col.rights() & Akonadi::Collection::AllRights ) ) {
     emergencyExit( i18n( "You do not have read/write permission to your inbox folder." ) );
   }
+  Akonadi::SpecialMailCollections::self()->verifyI18nDefaultCollection( Akonadi::SpecialMailCollections::Inbox );
+  Akonadi::SpecialMailCollections::self()->verifyI18nDefaultCollection( Akonadi::SpecialMailCollections::Outbox );
+  Akonadi::SpecialMailCollections::self()->verifyI18nDefaultCollection( Akonadi::SpecialMailCollections::SentMail );
+  Akonadi::SpecialMailCollections::self()->verifyI18nDefaultCollection( Akonadi::SpecialMailCollections::Drafts );
+  Akonadi::SpecialMailCollections::self()->verifyI18nDefaultCollection( Akonadi::SpecialMailCollections::Trash );
+  Akonadi::SpecialMailCollections::self()->verifyI18nDefaultCollection( Akonadi::SpecialMailCollections::Templates );
 
   connect( Akonadi::SpecialMailCollections::self(), SIGNAL(defaultCollectionsChanged()),
            this, SLOT(slotDefaultCollectionsChanged()), Qt::UniqueConnection );

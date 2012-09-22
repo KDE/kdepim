@@ -18,6 +18,7 @@
 #include "thunderbirdimportdata.h"
 #include "importfilterinfogui.h"
 #include "thunderbirdsettings.h"
+#include "thunderbirdaddressbook.h"
 
 #include "mailimporter/filter_thunderbird.h"
 #include "mailimporter/filterinfo.h"
@@ -60,6 +61,13 @@ bool ThunderbirdImportData::foundMailer() const
   return false;
 }
 
+bool ThunderbirdImportData::importAddressBook()
+{
+  const QDir addressbookDir(mPath+defaultProfile());
+  ThunderBirdAddressBook account( addressbookDir, mImportWizard );
+  return true;
+}
+
 QString ThunderbirdImportData::name() const
 {
   return QLatin1String("Thunderbird");
@@ -100,8 +108,25 @@ bool ThunderbirdImportData::importMails()
 
 bool ThunderbirdImportData::importFilters()
 {
-  const QString filterPath = mPath + defaultProfile() + QLatin1String("/Mail/Local Folders/msgFilterRules.dat");
-  return addFilters( filterPath, MailCommon::FilterImporterExporter::ThunderBirdFilter );
+  const QString path(mPath + defaultProfile());
+  QDir dir(path);
+  bool filtersAdded = false;
+  const QStringList subDir = dir.entryList(QDir::AllDirs|QDir::NoDotAndDotDot,QDir::Name);
+  Q_FOREACH( const QString& mailPath, subDir ) {
+    const QString subMailPath(path + QLatin1Char('/') + mailPath);
+    QDir dirMail(subMailPath);
+    const QStringList subDirMail = dirMail.entryList(QDir::AllDirs|QDir::NoDotAndDotDot,QDir::Name);
+    Q_FOREACH( const QString& file, subDirMail ) {
+      const QString filterFile(subMailPath +QLatin1Char('/')+ file + QLatin1String("/msgFilterRules.dat"));
+      if(QFile(filterFile).exists()) {
+        const bool added = addFilters( filterFile, MailCommon::FilterImporterExporter::ThunderBirdFilter );
+        if(!filtersAdded && added) {
+          filtersAdded = true;
+        }
+      }
+    }
+  }
+  return filtersAdded;
 }
 
 AbstractImporter::TypeSupportedOptions ThunderbirdImportData::supportedOption()
@@ -110,5 +135,6 @@ AbstractImporter::TypeSupportedOptions ThunderbirdImportData::supportedOption()
   options |=AbstractImporter::Mails;
   options |=AbstractImporter::Filters;
   options |=AbstractImporter::Settings;
+  options |=AbstractImporter::AddressBooks;
   return options;
 }

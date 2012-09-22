@@ -108,14 +108,14 @@ endif()
 #    3.2 alpha1
 
 # Do NOT add quote
-set(KDEPIM_DEV_VERSION rc1)
+set(KDEPIM_DEV_VERSION )
 
 # add an extra space
 if(DEFINED KDEPIM_DEV_VERSION)
   set(KDEPIM_DEV_VERSION " ${KDEPIM_DEV_VERSION}")
 endif()
 
-set(KDEPIM_VERSION "4.9${KDEPIM_DEV_VERSION}")
+set(KDEPIM_VERSION "4.9.1")
 
 configure_file(kdepim-version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/kdepim-version.h @ONLY)
 
@@ -131,7 +131,7 @@ include(KDE4Defaults)
 include(MacroLibrary)
 include(CheckIncludeFiles)
 include(MacroBoolTo01)
-find_package(KdepimLibs 4.8.43 REQUIRED)
+find_package(KdepimLibs 4.9.1 REQUIRED)
 
 ############### Load the CTest options ###############
 
@@ -191,7 +191,7 @@ else()
 
 # Otherwise...
 ############### Find the stuff we need ###############
-  set(AKONADI_MIN_VERSION 1.7.90)
+  set(AKONADI_MIN_VERSION 1.8.0)
   find_package(Akonadi QUIET NO_MODULE ${AKONADI_MIN_VERSION})
   macro_log_feature(Akonadi_FOUND "Akonadi" "Akonadi server libraries" "http://pim.kde.org/akonadi" TRUE "${AKONADI_MIN_VERSION}" "Akonadi is required to build KDEPIM")
 
@@ -349,6 +349,7 @@ else()
     macro_optional_add_subdirectory(ktnef)
     macro_optional_add_subdirectory(mailimporter)
     macro_optional_add_subdirectory(backupmail)
+    macro_optional_add_subdirectory(kalarm)
 
     if(KDEPIMLIBS_KCAL_LIBRARY)
       macro_optional_add_subdirectory(blogilo)
@@ -359,8 +360,6 @@ else()
     endif()
 
     if(KDEPIMLIBS_KRESOURCES_LIBRARY)
-      macro_optional_add_subdirectory(kalarm)
-
       if(QT_QT3SUPPORT_FOUND)
         macro_optional_add_subdirectory(knode)
       endif()

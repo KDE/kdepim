@@ -199,13 +199,22 @@ void Widget::focusQuickSearch()
 
 void Widget::fillMessageTagCombo( KComboBox * combo )
 {
+  KConfigGroup conf( MessageList::Core::Settings::self()->config(),"MessageListView");
+  QString tagSelected= conf.readEntry(QLatin1String("TagSelected"));
+  if(tagSelected.isEmpty()) {
+    return;
+  }
+  const QStringList tagSelectedLst = tagSelected.split(QLatin1String(","));
   foreach( const Nepomuk::Tag &nepomukTag, Nepomuk::Tag::allTags() ) {
-    QString iconName = QLatin1String( "mail-tagged" );
-    const QString label = nepomukTag.label();
-    if ( !nepomukTag.symbols().isEmpty() )
-      iconName = nepomukTag.symbols().first();
     const QString id = nepomukTag.resourceUri().toString();
-    combo->addItem( SmallIcon( iconName ), label, QVariant( id ) );
+    if(tagSelectedLst.contains(id)) {
+      QString iconName = QLatin1String( "mail-tagged" );
+      const QString label = nepomukTag.label();
+      if ( !nepomukTag.symbols().isEmpty() )
+        iconName = nepomukTag.symbols().first();
+      const QString id = nepomukTag.resourceUri().toString();
+      combo->addItem( SmallIcon( iconName ), label, QVariant( id ) );
+    }
   }
 }
 

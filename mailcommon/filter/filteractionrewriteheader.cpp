@@ -73,7 +73,7 @@ FilterAction::ReturnCode FilterActionRewriteHeader::process( ItemContext &contex
   if ( !newheader ) {
     newheader = new KMime::Headers::Generic(param, msg.get(), newValue, "utf-8" );
   } else {
-    header->fromUnicodeString( newValue, "utf-8" );
+    newheader->fromUnicodeString( newValue, "utf-8" );
   }
   msg->setHeader( newheader );
   msg->assemble();
@@ -82,6 +82,12 @@ FilterAction::ReturnCode FilterActionRewriteHeader::process( ItemContext &contex
 
   return GoOn;
 }
+
+SearchRule::RequiredPart FilterActionRewriteHeader::requiredPart() const
+{
+  return SearchRule::CompleteMessage;
+}
+
 
 QWidget* FilterActionRewriteHeader::createParamWidget( QWidget *parent ) const
 {
@@ -95,6 +101,11 @@ QWidget* FilterActionRewriteHeader::createParamWidget( QWidget *parent ) const
   comboBox->setObjectName( "combo" );
   comboBox->setInsertPolicy( QComboBox::InsertAtBottom );
   layout->addWidget( comboBox, 0 /* stretch */ );
+
+  KCompletion *comp = comboBox->completionObject();
+  comp->setIgnoreCase(true);
+  comp->insertItems(mParameterList);
+  comp->setCompletionMode(KGlobalSettings::CompletionPopupAuto);
 
   QLabel *label = new QLabel( i18n( "Replace:" ), widget );
   label->setFixedWidth( label->sizeHint().width() );
@@ -111,6 +122,7 @@ QWidget* FilterActionRewriteHeader::createParamWidget( QWidget *parent ) const
   KLineEdit *lineEdit = new KLineEdit( widget );
   lineEdit->setObjectName( "replace" );
   lineEdit->setClearButtonShown( true );
+  lineEdit->setTrapReturnKey(true);
   layout->addWidget( lineEdit, 1 );
 
   setParamWidgetValue( widget );

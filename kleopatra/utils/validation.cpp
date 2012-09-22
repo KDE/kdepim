@@ -71,17 +71,19 @@ namespace {
             QString domain = str.mid( atIdx + 1 ).toLower();
             const int dotIndex = domain.lastIndexOf( '.' );
             const bool needsOrgAdded = domain.endsWith( '.' );
-            const bool needsDotOrgAdded = !needsOrgAdded && ( dotIndex < 0 || dotIndex == domain.size() - 2 ) ; // yeah, foo.s also disrupts fromAce...
+            // during typing, the domain might end with '-', which is okay
+            // yeah, foo.s also disrupts fromAce, during typing this is okay
+            const bool needsDotOrgAdded = !needsOrgAdded && ( dotIndex < 0 || dotIndex == domain.size() - 2 || domain.endsWith( '-' ) );
             if ( needsOrgAdded )
                 domain += "org";
             if ( needsDotOrgAdded )
-                domain += ".org";
+                domain += "tmp.org";
             const QByteArray domainEncoded = QUrl::toAce( domain );
             const QString domainRestored = QUrl::fromAce( domainEncoded );
             QString encoded = str.left( atIdx ) + '@' + QString::fromLatin1( domainEncoded );
             if ( needsDotOrgAdded ) {
-                assert( encoded.endsWith( QLatin1String( ".org" ) ) );
-                encoded.chop( 4 );
+                assert( encoded.endsWith( QLatin1String( "tmp.org" ) ) );
+                encoded.chop( 7 );
             }
             if ( needsOrgAdded ) {
                 assert( encoded.endsWith( QLatin1String( ".org" ) ) );

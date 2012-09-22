@@ -104,9 +104,10 @@ public:
   */
   ReturnCode execActions( ItemContext &context, bool& stopIt ) const ;
 
-  /** Determines if the filter depends on the body of the message
-  */
-  bool requiresBody();
+  /**
+    * Returns the required part from the item that is needed for the filter to
+    * operate. See @ref SearchRule::RequiredPart */
+  SearchRule::RequiredPart requiredPart() const;
 
   /** Write contents to given config group. */
   void writeConfig( KConfigGroup& config, bool exportFilter ) const;

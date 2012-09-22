@@ -17,6 +17,7 @@
 */
 
 #include "filteractionunsetstatus.h"
+
 #include <KDE/KLocale>
 using namespace MailCommon;
 
@@ -29,8 +30,6 @@ FilterActionUnsetStatus::FilterActionUnsetStatus( QObject *parent )
   : FilterActionStatus( "unset status", i18nc( "action: to unset the status", "Unset Status" ), parent )
 {
 }
-
-
 
 FilterAction::ReturnCode FilterActionUnsetStatus::process( ItemContext &context ) const
 {
@@ -48,3 +47,7 @@ FilterAction::ReturnCode FilterActionUnsetStatus::process( ItemContext &context 
   return GoOn;
 }
 
+SearchRule::RequiredPart FilterActionUnsetStatus::requiredPart() const
+{
+    return SearchRule::Envelope;
+}

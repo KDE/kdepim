@@ -30,9 +30,11 @@ namespace MailCommon {
 //=============================================================================
 class FilterActionSetTransport: public FilterAction
 {
+  Q_OBJECT
   public:
     FilterActionSetTransport( QObject *parent = 0 );
     virtual ReturnCode process( ItemContext &context ) const;
+    virtual SearchRule::RequiredPart requiredPart() const;
     static FilterAction *newAction();
     virtual QWidget *createParamWidget( QWidget *parent ) const;
     /**

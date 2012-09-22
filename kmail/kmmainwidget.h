@@ -191,6 +191,8 @@ class KMAIL_EXPORT KMMainWidget : public QWidget
     }
     void savePaneSelection();
 
+    void updatePaneTagComboBox();
+
   public slots:
     // Moving messages around
     /**
@@ -294,7 +296,7 @@ class KMAIL_EXPORT KMMainWidget : public QWidget
     void captionChangeRequest( const QString &caption );
 
   protected:
-    void restoreCollectionFolderViewConfig();
+    void restoreCollectionFolderViewConfig(Akonadi::Collection::Id id = -1);
     void setupActions();
     void createWidgets();
     void deleteWidgets();
@@ -427,7 +429,6 @@ class KMAIL_EXPORT KMMainWidget : public QWidget
     void slotForwardAttachedMsg();
     void slotRedirectMsg();
     void slotCustomForwardMsg( const QString &tmpl );
-    void slotNoQuoteReplyToMsg();
     void slotSubjectFilter();
     void slotFromFilter();
     void slotToFilter();
@@ -526,6 +527,8 @@ class KMAIL_EXPORT KMMainWidget : public QWidget
      */
     void refreshFavoriteFoldersViewProperties();
     bool excludeSpecialFolder( const Akonadi::Collection &collection );
+
+    void openFilterDialog(const QByteArray &field, const QString &value);
 
   private slots:
     /**

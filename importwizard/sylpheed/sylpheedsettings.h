@@ -33,14 +33,19 @@ public:
 private:
   void readCustomHeader(QFile *customHeaderFile);
   void readGlobalSettings(const KConfigGroup& group);
-  void readAccount( const KConfigGroup& accountConfig, bool checkMailOnStartup );
+  void readAccount(const KConfigGroup& accountConfig, bool checkMailOnStartup , int intervalCheckMail);
   void readIdentity( const KConfigGroup& accountConfig );
   QString readTransport( const KConfigGroup& accountConfig );
-  void readPop3Account( const KConfigGroup& accountConfig, bool checkMailOnStartup );
-  void readImapAccount( const KConfigGroup& accountConfig, bool checkMailOnStartup );
+  void readPop3Account(const KConfigGroup& accountConfig, bool checkMailOnStartup , int intervalCheckMail);
+  void readImapAccount(const KConfigGroup& accountConfig, bool checkMailOnStartup , int intervalCheckMail);
   void readSignature( const KConfigGroup& accountConfig, KPIMIdentities::Identity* identity );
   bool readConfig( const QString& key, const KConfigGroup& accountConfig, QString& value, bool remove_underscore = false );
   bool readConfig( const QString& key, const KConfigGroup& accountConfig, int& value, bool remove_underscore = false );
+
+  virtual void readSettingsColor(const KConfigGroup& group);
+  virtual void readTemplateFormat(const KConfigGroup& group);
+
+  QString convertToKmailTemplate(const QString& templateStr);
 
 
 

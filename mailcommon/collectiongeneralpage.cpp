@@ -76,11 +76,11 @@ static QString incidencesForToString( CollectionGeneralPage::IncidencesFor type 
 {
   switch ( type ) {
   case CollectionGeneralPage::IncForNobody:
-    return "nobody";
+    return QLatin1String("nobody");
   case CollectionGeneralPage::IncForAdmins:
-    return "admins";
+    return QLatin1String("admins");
   case CollectionGeneralPage::IncForReaders:
-    return "readers";
+    return QLatin1String("readers");
   }
 
   return QString(); // can't happen
@@ -88,13 +88,13 @@ static QString incidencesForToString( CollectionGeneralPage::IncidencesFor type 
 
 static CollectionGeneralPage::IncidencesFor incidencesForFromString( const QString &string )
 {
-  if ( string == "nobody" ) {
+  if ( string == QLatin1String("nobody") ) {
     return CollectionGeneralPage::IncForNobody;
   }
-  if ( string == "admins" ) {
+  else if ( string == QLatin1String("admins") ) {
     return CollectionGeneralPage::IncForAdmins;
   }
-  if ( string == "readers" ) {
+  else if ( string == QLatin1String("readers") ) {
     return CollectionGeneralPage::IncForReaders;
   }
 
@@ -480,19 +480,24 @@ void CollectionGeneralPage::save( Collection &collection )
 {
   if ( mNameEdit ) {
     if ( !mIsLocalSystemFolder ) {
+      const QString nameFolder(mNameEdit->text().trimmed());
+      bool canRenameFolder =  !(nameFolder.startsWith( QLatin1Char('.') ) ||
+                               nameFolder.endsWith( QLatin1Char('.') ) ||
+                               nameFolder.contains( QLatin1Char( '/' ) ) ||
+                               nameFolder.isEmpty());
+
       if ( mIsResourceFolder && collection.resource().contains( IMAP_RESOURCE_IDENTIFIER ) ) {
-        collection.setName( mNameEdit->text() );
+        collection.setName( nameFolder );
         Akonadi::AgentInstance instance =
           Akonadi::AgentManager::self()->instance( collection.resource() );
-
-        instance.setName( mNameEdit->text() );
-      } else {
+        instance.setName( nameFolder );
+      } else if(canRenameFolder) {
         if ( collection.hasAttribute<Akonadi::EntityDisplayAttribute>() &&
              !collection.attribute<Akonadi::EntityDisplayAttribute>()->displayName().isEmpty() ) {
           collection.attribute<Akonadi::EntityDisplayAttribute>()->setDisplayName(
-            mNameEdit->text() );
-        } else if( !mNameEdit->text().isEmpty() ) {
-          collection.setName( mNameEdit->text() );
+            nameFolder );
+        } else if( !nameFolder.isEmpty() ) {
+          collection.setName( nameFolder );
         }
       }
     }
@@ -590,15 +595,20 @@ void CollectionGeneralPage::slotFolderContentsSelectionChanged( int )
 
 void CollectionGeneralPage::slotNameChanged( const QString &name )
 {
-  QString styleSheet;
-  if ( name.contains( QLatin1Char( '/' ) ) || name.isEmpty() ) {
-    const KColorScheme::BackgroundRole bgColorScheme( KColorScheme::NegativeBackground );
-    KStatefulBrush bgBrush( KColorScheme::View, bgColorScheme );
-    styleSheet = QString( "QLineEdit{ background-color:%1 }" ).
-                   arg( bgBrush.brush( this ).color().name() );
-  }
-
 #ifndef QT_NO_STYLE_STYLESHEET
+  QString styleSheet;
+  if ( name.startsWith( QLatin1Char('.') ) ||
+       name.endsWith( QLatin1Char('.') ) ||
+       name.contains( QLatin1Char( '/' ) ) ||
+       name.isEmpty() ) {
+    if(mColorName.isEmpty()) {
+      const KColorScheme::BackgroundRole bgColorScheme( KColorScheme::NegativeBackground );
+      KStatefulBrush bgBrush( KColorScheme::View, bgColorScheme );
+      mColorName = bgBrush.brush( this ).color().name();
+    }
+    styleSheet = QString::fromLatin1( "QLineEdit{ background-color:%1 }" ).
+                   arg( mColorName );
+  }
   setStyleSheet(styleSheet);
 #endif
 }

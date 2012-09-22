@@ -19,14 +19,17 @@
 #define THUNDERBIRDADDRESSBOOK_H
 
 #include "abstractaddressbook.h"
+#include <QDir>
 
 class ImportWizard;
 
 class ThunderBirdAddressBook: public AbstractAddressBook
 {
 public:
-  explicit ThunderBirdAddressBook(ImportWizard *parent);
+  explicit ThunderBirdAddressBook(const QDir &dir, ImportWizard *parent);
   ~ThunderBirdAddressBook();
+private:
+  void readAddressBook( const QString& filename );
 };
 
 #endif // THUNDERBIRDADDRESSBOOK_H

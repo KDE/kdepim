@@ -33,7 +33,7 @@ class FilterActionAddTag: public FilterActionWithStringList
   public:
     FilterActionAddTag( QObject *parent = 0 );
     virtual ReturnCode process( ItemContext &context ) const;
-    virtual bool requiresBody() const;
+    SearchRule::RequiredPart requiredPart() const;
 
     static FilterAction* newAction();
 

@@ -67,6 +67,8 @@ class FindBarBase : public QWidget
     void slotClearSearch();
 
   protected:
+    QString mPositiveBackground;
+    QString mNegativeBackground;
     QString mLastSearchStr;
     KLineEdit * m_search;
     QAction * m_caseSensitiveAct;

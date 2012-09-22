@@ -159,22 +159,22 @@ using MailTransport::Transport;
 using KPIM::RecentAddresses;
 using Message::KMeditor;
 
-KMail::Composer *KMail::makeComposer( const KMime::Message::Ptr &msg, Composer::TemplateContext context,
+KMail::Composer *KMail::makeComposer( const KMime::Message::Ptr &msg, bool lastSignState, bool lastEncryptState, Composer::TemplateContext context,
                                       uint identity, const QString & textSelection,
                                       const QString & customTemplate ) {
-  return KMComposeWin::create( msg, context, identity, textSelection, customTemplate );
+  return KMComposeWin::create( msg, lastSignState, lastEncryptState, context, identity, textSelection, customTemplate );
 }
 
-KMail::Composer *KMComposeWin::create( const KMime::Message::Ptr &msg, Composer::TemplateContext context,
+KMail::Composer *KMComposeWin::create( const KMime::Message::Ptr &msg, bool lastSignState, bool lastEncryptState, Composer::TemplateContext context,
                                        uint identity, const QString & textSelection,
                                        const QString & customTemplate ) {
-  return new KMComposeWin( msg, context, identity, textSelection, customTemplate );
+  return new KMComposeWin( msg, lastSignState, lastEncryptState, context, identity, textSelection, customTemplate );
 }
 
 int KMComposeWin::s_composerNumber = 0;
 
 //-----------------------------------------------------------------------------
-KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, Composer::TemplateContext context, uint id,
+KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, bool lastSignState, bool lastEncryptState, Composer::TemplateContext context, uint id,
                             const QString & textSelection, const QString & customTemplate )
   : KMail::Composer( "kmail-composer#" ),
     mDone( false ),
@@ -335,9 +335,6 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, Composer::TemplateC
     mSignatureStateIndicator = new QLabel( editorAndCryptoStateIndicators );
     mSignatureStateIndicator->setAlignment( Qt::AlignHCenter );
     hbox->addWidget( mSignatureStateIndicator );
-
-    KConfigGroup reader( KMKernel::self()->config(), "Reader" );
-
     // Get the colors for the label
     QPalette p( mSignatureStateIndicator->palette() );
     KColorScheme scheme( QPalette::Active, KColorScheme::View );
@@ -457,7 +454,7 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, Composer::TemplateC
   }
 
   if ( aMsg ) {
-    setMsg( aMsg );
+    setMessage( aMsg, lastSignState, lastEncryptState );
   }
 
   mComposerBase->recipientsEditor()->setFocus();
@@ -1097,7 +1094,7 @@ void KMComposeWin::setupActions( void )
 
   } else {
     //default = queue, alternative = send now
-    QAction *action = new KAction( KIcon( "mail-queue" ), i18n("Send &Later"), this );
+    KAction *action = new KAction( KIcon( "mail-queue" ), i18n("Send &Later"), this );
     actionCollection()->addAction( "send_default", action );
     connect( action, SIGNAL(triggered(bool)), SLOT(slotSendLater()) );
     action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_Return ) );
@@ -1138,6 +1135,7 @@ void KMComposeWin::setupActions( void )
 
   KAction *action = new KAction( KIcon( "document-save" ), i18n("Save as &Draft"), this );
   actionCollection()->addAction("save_in_drafts", action );
+  action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_S));
   connect( action, SIGNAL(triggered(bool)), SLOT(slotSaveDraft()) );
 
   action = new KAction( KIcon( "document-save" ), i18n("Save as &Template"), this );
@@ -1486,8 +1484,15 @@ void KMComposeWin::setCurrentTransport( int transportId )
   mComposerBase->transportComboBox()->setCurrentTransport( transportId );
 }
 
+void KMComposeWin::setCurrentReplyTo(const QString& replyTo)
+{
+  if ( mEdtReplyTo ) {
+    mEdtReplyTo->setText( replyTo );
+  }
+}
+
 //-----------------------------------------------------------------------------
-void KMComposeWin::setMsg( const KMime::Message::Ptr &newMsg, bool mayAutoSign,
+void KMComposeWin::setMessage( const KMime::Message::Ptr &newMsg, bool lastSignState, bool lastEncryptState, bool mayAutoSign,
                            bool allowDecryption, bool isModified )
 {
   if ( !newMsg ) {
@@ -1495,12 +1500,14 @@ void KMComposeWin::setMsg( const KMime::Message::Ptr &newMsg, bool mayAutoSign,
     return;
   }
 
+  if( lastSignState )
+    mLastSignActionState = true;
+
   mComposerBase->setMessage( newMsg );
   mMsg = newMsg;
   KPIMIdentities::IdentityManager * im = KMKernel::self()->identityManager();
 
   mEdtFrom->setText( mMsg->from()->asUnicodeString() );
-  mEdtReplyTo->setText( mMsg->replyTo()->asUnicodeString() );
   mEdtSubject->setText( mMsg->subject()->asUnicodeString() );
 
 
@@ -1627,6 +1634,8 @@ void KMComposeWin::setMsg( const KMime::Message::Ptr &newMsg, bool mayAutoSign,
   if ( !stickyDictionary ) {
     mDictionaryCombo->setCurrentByDictionaryName( ident.dictionary() );
   }
+
+  mEdtReplyTo->setText( mMsg->replyTo()->asUnicodeString() );
 
   KMime::Content *msgContent = new KMime::Content;
   msgContent->setContent( mMsg->encodedContent() );
@@ -1803,15 +1812,15 @@ bool KMComposeWin::queryClose ()
 }
 
 //-----------------------------------------------------------------------------
-bool KMComposeWin::userForgotAttachment()
+Message::ComposerViewBase::MissingAttachment KMComposeWin::userForgotAttachment()
 {
   bool checkForForgottenAttachments = mCheckForForgottenAttachments && GlobalSettings::self()->showForgottenAttachmentWarning();
 
   if ( !checkForForgottenAttachments )
-    return false;
+    return Message::ComposerViewBase::NoMissingAttachmentFound;
 
   mComposerBase->setSubject( subject() ); //be sure the composer knows the subject
-  bool missingAttachments = mComposerBase->checkForMissingAttachments( GlobalSettings::self()->attachmentKeywords() );
+  Message::ComposerViewBase::MissingAttachment missingAttachments = mComposerBase->checkForMissingAttachments( GlobalSettings::self()->attachmentKeywords() );
 
   return missingAttachments;
 }
@@ -1835,75 +1844,13 @@ void KMComposeWin::autoSaveMessage(bool force)
   }
 }
 
-
 bool KMComposeWin::encryptToSelf()
 {
   // return !Kpgp::Module::getKpgp() || Kpgp::Module::getKpgp()->encryptToSelf();
-  return GlobalSettings::self()->cryptoEncryptToSelf();
+  return MessageComposer::MessageComposerSettings::self()->cryptoEncryptToSelf();
 }
 
-bool KMComposeWin::showKeyApprovalDialog()
-{
-  return GlobalSettings::self()->cryptoShowKeysForApproval();
-}
 
-int KMComposeWin::encryptKeyNearExpiryWarningThresholdInDays() {
-  if ( ! MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() ) {
-    return -1;
-  }
-  const int num =
-  MessageComposer::MessageComposerSettings::self()->cryptoWarnEncrKeyNearExpiryThresholdDays();
-  return qMax( 1, num );
-}
-
-int KMComposeWin::signingKeyNearExpiryWarningThresholdInDays()
-{
-  if ( ! MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() ) {
-    return -1;
-  }
-  const int num =
-  MessageComposer::MessageComposerSettings::self()->cryptoWarnSignKeyNearExpiryThresholdDays();
-  return qMax( 1, num );
-}
-
-int KMComposeWin::encryptRootCertNearExpiryWarningThresholdInDays()
-{
-  if ( ! MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() ) {
-    return -1;
-  }
-  const int num =
-  MessageComposer::MessageComposerSettings::self()->cryptoWarnEncrRootNearExpiryThresholdDays();
-  return qMax( 1, num );
-}
-
-int KMComposeWin::signingRootCertNearExpiryWarningThresholdInDays() {
-  if ( ! MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() ) {
-    return -1;
-  }
-  const int num =
-  MessageComposer::MessageComposerSettings::self()->cryptoWarnSignRootNearExpiryThresholdDays();
-  return qMax( 1, num );
-}
-
-int KMComposeWin::encryptChainCertNearExpiryWarningThresholdInDays()
-{
-  if ( ! MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() ) {
-    return -1;
-  }
-  const int num =
-  MessageComposer::MessageComposerSettings::self()->cryptoWarnEncrChaincertNearExpiryThresholdDays();
-  return qMax( 1, num );
-}
-
-int KMComposeWin::signingChainCertNearExpiryWarningThresholdInDays()
-{
-  if ( ! MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() ) {
-    return -1;
-  }
-  const int num =
-  MessageComposer::MessageComposerSettings::self()->cryptoWarnSignChaincertNearExpiryThresholdDays();;
-  return qMax( 1, num );
-}
 
 void KMComposeWin::slotSendFailed( const QString& msg )
 {
@@ -2257,8 +2204,22 @@ void KMComposeWin::slotFetchJob(KJob*job)
       if ( item.hasPayload<KABC::Addressee>() ) {
         const KABC::Addressee contact = item.payload<KABC::Addressee>();
         attachmentName = contact.realName() + QLatin1String( ".vcf" );
+        //Workaround about broken kaddressbook fields.
+        QByteArray data = item.payloadData();
+        data.replace("X-messaging/aim-All",("X-AIM"));
+        data.replace("X-messaging/icq-All",("X-ICQ"));
+        data.replace("X-messaging/xmpp-All",("X-JABBER"));
+        data.replace("X-messaging/msn-All",("X-MSN"));
+        data.replace("X-messaging/yahoo-All",("X-YAHOO"));
+        data.replace("X-messaging/gadu-All",("X-GADUGADU"));
+        data.replace("X-messaging/skype-All",("X-SKYPE"));
+        data.replace("X-messaging/groupwise-All",("X-GROUPWISE"));
+        data.replace(("X-messaging/sms-All"),("X-SMS"));
+        data.replace(("X-messaging/meanwhile-All"),("X-MEANWHILE"));
+        addAttachment( attachmentName, KMime::Headers::CEbase64, QString(), data, item.mimeType().toLatin1() );
+      } else {
+        addAttachment( attachmentName, KMime::Headers::CEbase64, QString(), item.payloadData(), item.mimeType().toLatin1() );
       }
-      addAttachment( attachmentName, KMime::Headers::CEbase64, QString(), item.payloadData(), item.mimeType().toLatin1() );
     }
   }
 }
@@ -2386,7 +2347,7 @@ void KMComposeWin::slotNewComposer()
   KMime::Message::Ptr msg( new KMime::Message );
 
   MessageHelper::initHeader( msg, KMKernel::self()->identityManager() );
-  win = new KMComposeWin( msg );
+  win = new KMComposeWin( msg, false, false );
   win->show();
 }
 
@@ -2517,7 +2478,7 @@ void KMComposeWin::slotWordWrapToggled( bool on )
 //-----------------------------------------------------------------------------
 void KMComposeWin::disableWordWrap()
 {
-  mComposerBase->editor()->setWordWrapMode( QTextOption::NoWrap );
+  mComposerBase->editor()->disableWordWrap();
 }
 
 //-----------------------------------------------------------------------------
@@ -2660,7 +2621,9 @@ void KMComposeWin::doSend( MessageSender::SendMethod method,
       }
     }
 
-    if ( userForgotAttachment() ) {
+    const Message::ComposerViewBase::MissingAttachment forgotAttachment = userForgotAttachment();
+    if ( (forgotAttachment == Message::ComposerViewBase::FoundMissingAttachmentAndAddedAttachment) ||
+         (forgotAttachment == Message::ComposerViewBase::FoundMissingAttachmentAndCancel) ) {
       return;
     }
 

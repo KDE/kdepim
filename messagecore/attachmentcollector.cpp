@@ -37,12 +37,12 @@
 #include <kdebug.h>
 #include <kmime/kmime_content.h>
 
-static bool isInSkipList( KMime::Content* )
+static bool isInSkipMimeContentList( KMime::Content* )
 {
   return false;
 }
 
-static bool isInExclusionList( KMime::Content * node )
+static bool isInExclusionFileTypeList( KMime::Content * node )
 {
   if ( !node )
     return true;
@@ -92,12 +92,12 @@ void MessageCore::AttachmentCollector::collectAttachmentsFrom( KMime::Content *n
       continue;
     }
 
-    if ( isInSkipList( node ) ) {
+    if ( isInSkipMimeContentList( node ) ) {
       node = MessageCore::NodeHelper::next( node, false ); // skip even the children
       continue;
     }
 
-    if ( isInExclusionList( node ) ) {
+    if ( isInExclusionFileTypeList( node ) ) {
       node = MessageCore::NodeHelper::next( node );
       continue;
     }

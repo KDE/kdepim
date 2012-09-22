@@ -66,7 +66,6 @@ FilterLogDialog::FilterLogDialog( QWidget * parent )
   mTextEdit->setReadOnly( true );
   mTextEdit->setLineWrapMode ( KTextEdit::NoWrap );
 
-  QString text;
   const QStringList logEntries = FilterLog::instance()->logEntries();
   QStringList::ConstIterator end( logEntries.constEnd() ); 
   for ( QStringList::ConstIterator it = logEntries.constBegin();
@@ -309,7 +308,7 @@ void FilterLogDialog::slotUser2()
   {
     const QString fileName = fdlg->selectedFile();
 
-    if ( !FilterLog::instance()->saveToFile( fileName ) )
+    if ( !fileName.isEmpty() && !FilterLog::instance()->saveToFile( fileName ) )
     {
       KMessageBox::error( this,
                           i18n( "Could not write the file %1:\n"

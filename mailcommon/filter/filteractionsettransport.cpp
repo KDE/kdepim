@@ -90,6 +90,12 @@ FilterAction::ReturnCode FilterActionSetTransport::process( ItemContext &context
   return GoOn;
 }
 
+SearchRule::RequiredPart FilterActionSetTransport::requiredPart() const
+{
+  return SearchRule::CompleteMessage;
+}
+
+
 void FilterActionSetTransport::applyParamWidgetValue( QWidget *paramWidget )
 {
   const MailTransport::TransportComboBox *comboBox = dynamic_cast<MailTransport::TransportComboBox*>( paramWidget );

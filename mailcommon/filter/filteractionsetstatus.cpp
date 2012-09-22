@@ -60,3 +60,9 @@ FilterAction::ReturnCode FilterActionSetStatus::process( ItemContext &context ) 
 }
 
 
+SearchRule::RequiredPart FilterActionSetStatus::requiredPart() const
+{
+    return SearchRule::Envelope;
+}
+
+

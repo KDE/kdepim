@@ -371,26 +371,16 @@ QList< Message::Composer* > Message::ComposerViewBase::generateCryptoMessages ()
    QList< Message::Composer* > composers;
 
   kDebug() << "filling crypto info";
-/*
-  Kleo::KeyResolver* keyResolver = new Kleo::KeyResolver(  encryptToSelf(), showKeyApprovalDialog(),
-                                                           GlobalSettings::self()->pgpAutoEncrypt(), cryptoMessageFormat(),
+  Kleo::KeyResolver* keyResolver = new Kleo::KeyResolver(  encryptToSelf(),
+                                                           showKeyApprovalDialog(),
+                                                           MessageComposer::MessageComposerSettings::self()->pgpAutoEncrypt(),
+                                                           m_cryptoMessageFormat,
                                                            encryptKeyNearExpiryWarningThresholdInDays(),
                                                            signingKeyNearExpiryWarningThresholdInDays(),
                                                            encryptRootCertNearExpiryWarningThresholdInDays(),
                                                            signingRootCertNearExpiryWarningThresholdInDays(),
                                                            encryptChainCertNearExpiryWarningThresholdInDays(),
-                                                           signingChainCertNearExpiryWarningThresholdInDays());
-  */
-  Kleo::KeyResolver* keyResolver = new Kleo::KeyResolver(  true /*encryptToSelf()*/,
-                                                           false /*showKeyApprovalDialog()*/,
-                                                           false /*GlobalSettings::self()->pgpAutoEncrypt()*/,
-                                                           m_cryptoMessageFormat,
-                                                           -1 /*encryptKeyNearExpiryWarningThresholdInDays()*/,
-                                                           -1 /*signingKeyNearExpiryWarningThresholdInDays()*/,
-                                                           -1 /*encryptRootCertNearExpiryWarningThresholdInDays()*/,
-                                                           -1 /*signingRootCertNearExpiryWarningThresholdInDays()*/,
-                                                           -1 /*encryptChainCertNearExpiryWarningThresholdInDays()*/,
-                                                           -1 /*signingChainCertNearExpiryWarningThresholdInDays()*/ );
+                                                           signingChainCertNearExpiryWarningThresholdInDays() );
 
   const KPIMIdentities::Identity &id = m_identMan->identityForUoidOrDefault( m_identityCombo->currentIdentity() );
 
@@ -937,20 +927,29 @@ void Message::ComposerViewBase::slotSaveMessage( KJob* job )
   Akonadi::Collection target;
   Akonadi::Item item = job->property( "Akonadi::Item" ).value<Akonadi::Item>();
   if( job->error() ) {
-    if ( mSaveIn == MessageSender::SaveInTemplates ) {
-      target = Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Templates );
-    } else {
-      target = Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Drafts );
-    }
+    target = defaultSpecialTarget();
   } else {
     const Akonadi::CollectionFetchJob *fetchJob = qobject_cast<Akonadi::CollectionFetchJob*>( job );
-    target = fetchJob->collections().first();
+    if(fetchJob->collections().isEmpty())
+      target = defaultSpecialTarget();
+    else
+      target = fetchJob->collections().first();
   }
   Akonadi::ItemCreateJob *create = new Akonadi::ItemCreateJob( item, target, this );
   connect( create, SIGNAL(result(KJob*)), this, SLOT(slotCreateItemResult(KJob*)) );
   m_pendingQueueJobs++;
 }
 
+Akonadi::Collection Message::ComposerViewBase::defaultSpecialTarget() const
+{
+  Akonadi::Collection target;
+  if ( mSaveIn == MessageSender::SaveInTemplates ) {
+    target = Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Templates );
+  } else {
+    target = Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Drafts );
+  }
+  return target;
+}
 
 void Message::ComposerViewBase::slotCreateItemResult( KJob *job )
 {
@@ -1344,12 +1343,12 @@ bool Message::ComposerViewBase::inlineSigningEncryptionSelected()
   return m_cryptoMessageFormat == Kleo::InlineOpenPGPFormat;
 }
 
-bool Message::ComposerViewBase::checkForMissingAttachments( const QStringList& attachmentKeywords )
+Message::ComposerViewBase::MissingAttachment Message::ComposerViewBase::checkForMissingAttachments( const QStringList& attachmentKeywords )
 {
   if ( attachmentKeywords.isEmpty() )
-    return false;
+    return NoMissingAttachmentFound;
   if ( m_attachmentModel->rowCount() > 0 ) {
-    return false;
+    return NoMissingAttachmentFound;
   }
 
   QStringList attachWordsList = attachmentKeywords;
@@ -1383,7 +1382,7 @@ bool Message::ComposerViewBase::checkForMissingAttachments( const QStringList& a
   }
 
   if ( !gotMatch )
-    return false;
+    return NoMissingAttachmentFound;
 
   int rc = KMessageBox::warningYesNoCancel( m_editor,
                                             i18n("The message you have composed seems to refer to an "
@@ -1393,12 +1392,83 @@ bool Message::ComposerViewBase::checkForMissingAttachments( const QStringList& a
                                             KGuiItem(i18n("&Attach File...")),
                                             KGuiItem(i18n("&Send as Is")) );
   if ( rc == KMessageBox::Cancel )
-    return true;
+    return FoundMissingAttachmentAndCancel;
   if ( rc == KMessageBox::Yes ) {
     m_attachmentController->showAddAttachmentDialog();
+    return FoundMissingAttachmentAndAddedAttachment;
   }
 
-  return false;
+  return FoundMissingAttachmentAndSending;
+}
+
+
+int Message::ComposerViewBase::encryptKeyNearExpiryWarningThresholdInDays() {
+  if ( ! MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() ) {
+    return -1;
+  }
+  const int num =
+  MessageComposer::MessageComposerSettings::self()->cryptoWarnEncrKeyNearExpiryThresholdDays();
+  return qMax( 1, num );
+}
+
+int Message::ComposerViewBase::signingKeyNearExpiryWarningThresholdInDays()
+{
+  if ( ! MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() ) {
+    return -1;
+  }
+  const int num =
+  MessageComposer::MessageComposerSettings::self()->cryptoWarnSignKeyNearExpiryThresholdDays();
+  return qMax( 1, num );
+}
+
+int Message::ComposerViewBase::encryptRootCertNearExpiryWarningThresholdInDays()
+{
+  if ( ! MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() ) {
+    return -1;
+  }
+  const int num =
+  MessageComposer::MessageComposerSettings::self()->cryptoWarnEncrRootNearExpiryThresholdDays();
+  return qMax( 1, num );
+}
+
+int Message::ComposerViewBase::signingRootCertNearExpiryWarningThresholdInDays() {
+  if ( ! MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() ) {
+    return -1;
+  }
+  const int num =
+  MessageComposer::MessageComposerSettings::self()->cryptoWarnSignRootNearExpiryThresholdDays();
+  return qMax( 1, num );
+}
+
+int Message::ComposerViewBase::encryptChainCertNearExpiryWarningThresholdInDays()
+{
+  if ( ! MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() ) {
+    return -1;
+  }
+  const int num =
+  MessageComposer::MessageComposerSettings::self()->cryptoWarnEncrChaincertNearExpiryThresholdDays();
+  return qMax( 1, num );
+}
+
+int Message::ComposerViewBase::signingChainCertNearExpiryWarningThresholdInDays()
+{
+  if ( ! MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() ) {
+    return -1;
+  }
+  const int num =
+  MessageComposer::MessageComposerSettings::self()->cryptoWarnSignChaincertNearExpiryThresholdDays();;
+  return qMax( 1, num );
+}
+
+bool Message::ComposerViewBase::encryptToSelf()
+{
+  // return !Kpgp::Module::getKpgp() || Kpgp::Module::getKpgp()->encryptToSelf();
+  return MessageComposer::MessageComposerSettings::self()->cryptoEncryptToSelf();
+}
+
+bool Message::ComposerViewBase::showKeyApprovalDialog()
+{
+  return MessageComposer::MessageComposerSettings::self()->cryptoShowKeysForApproval();
 }
 
 

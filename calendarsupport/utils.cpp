@@ -690,8 +690,7 @@ void CalendarSupport::scheduleiTIPMethods( KCalCore::iTIPMethod method,
   if ( !incidence ) {
     KMessageBox::sorry(
       parentWidget,
-      i18n( "No item selected." ),
-      "ScheduleNoEventSelected" );
+      i18n( "No item selected." ) );
     return;
   }
 
@@ -699,7 +698,8 @@ void CalendarSupport::scheduleiTIPMethods( KCalCore::iTIPMethod method,
     KMessageBox::information(
       parentWidget,
       i18n( "The item has no attendees." ),
-      "ScheduleNoIncidences" );
+      QString(), //TODO: add a caption when string freeze is off
+      QLatin1String( "ScheduleNoIncidences" ) );
     return;
   }
 
@@ -736,8 +736,7 @@ void CalendarSupport::saveAttachments( const Akonadi::Item &item, QWidget *paren
   if ( !incidence ) {
     KMessageBox::sorry(
       parentWidget,
-      i18n( "No item selected." ),
-      "SaveAttachments" );
+      i18n( "No item selected." ) );
     return;
   }
 

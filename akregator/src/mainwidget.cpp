@@ -200,7 +200,7 @@ Akregator::MainWidget::MainWidget( Part *part, QWidget *parent, ActionManagerImp
     m_articleListView = new ArticleListView( m_articleSplitter );
     connect( m_articleListView, SIGNAL(userActionTakingPlace()),
              this, SLOT(ensureArticleTabVisible()) );
-    
+
     m_selectionController = new SelectionController( this );
     m_selectionController->setArticleLister( m_articleListView );
     m_selectionController->setFeedSelector( m_feedListView );
@@ -463,7 +463,11 @@ void Akregator::MainWidget::slotDeleteExpiredArticles()
 
 QDomDocument Akregator::MainWidget::feedListToOPML()
 {
-    return m_feedList->toOpml();
+    QDomDocument dom;
+    if ( m_feedList ) {
+        dom = m_feedList->toOpml();
+    }
+    return dom;
 }
 
 void Akregator::MainWidget::addFeedToGroup(const QString& url, const QString& groupName)
@@ -824,6 +828,9 @@ void Akregator::MainWidget::slotArticleSelected(const Akregator::Article& articl
     maai->setChecked( article.keep() );
 
     m_articleViewer->showArticle( article );
+    if (m_selectionController->selectedArticles().count() == 0) {
+        m_articleListView->setCurrentIndex(m_selectionController->currentArticleIndex());
+    }
 
     if ( article.isNull() || article.status() == Akregator::Read )
         return;

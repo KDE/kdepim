@@ -25,8 +25,17 @@
 #include <QDomDocument>
 #include <QDomElement>
 
-EvolutionCalendar::EvolutionCalendar(const QString& filename,ImportWizard *parent)
+EvolutionCalendar::EvolutionCalendar(ImportWizard *parent)
   :AbstractCalendar(parent)
+{
+}
+
+EvolutionCalendar::~EvolutionCalendar()
+{
+
+}
+
+void EvolutionCalendar::loadCalendar(const QString& filename)
 {
   //Read gconf file
   QFile file(filename);
@@ -59,11 +68,6 @@ EvolutionCalendar::EvolutionCalendar(const QString& filename,ImportWizard *paren
   }
 }
 
-EvolutionCalendar::~EvolutionCalendar()
-{
-
-}
-
 void EvolutionCalendar::readCalendar(const QDomElement &calendar)
 {
   for ( QDomElement calendarConfig = calendar.firstChildElement(); !calendarConfig.isNull(); calendarConfig = calendarConfig.nextSiblingElement() ) {
@@ -76,7 +80,7 @@ void EvolutionCalendar::readCalendar(const QDomElement &calendar)
 
 void EvolutionCalendar::extractCalendarInfo(const QString& info)
 {
-  kDebug()<<" info "<<info;
+  //kDebug()<<" info "<<info;
   //Read QDomElement
   QDomDocument cal;
   if ( !EvolutionUtil::loadInDomDocument( info, cal ) )
@@ -110,7 +114,7 @@ void EvolutionCalendar::extractCalendarInfo(const QString& info)
         if(e.hasAttribute(QLatin1String("color_spec"))) {
           const QString color = e.attribute(QLatin1String("color_spec"));
           //Need id.
-          //TODO
+          //TODO: Need to get id for collection to add color.
         }
         QDomElement propertiesElement = e.firstChildElement();
         if(!propertiesElement.isNull()) {

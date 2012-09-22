@@ -274,6 +274,7 @@ ThemePreviewWidget::ThemePreviewWidget( QWidget * parent )
   m->setText( 0, QString() );
 
   mGroupHeaderSampleItem->setExpanded( true );
+  header()->setMovable(false);
 }
 
 ThemePreviewWidget::~ThemePreviewWidget()
@@ -288,7 +289,7 @@ QSize ThemePreviewWidget::sizeHint() const
 void ThemePreviewWidget::setReadOnly( bool readOnly )
 {
   mReadOnly = readOnly;
-  header()->setMovable(!readOnly);
+  //header()->setMovable(!readOnly);
 }
 
 void ThemePreviewWidget::applyThemeColumnWidths()
@@ -800,7 +801,7 @@ void ThemePreviewWidget::mouseMoveEvent( QMouseEvent * e )
     return; // ugh.. something weird happened
   }
 
-  // startin a drag
+  // starting a drag
   QMimeData * data = new QMimeData();
   QByteArray arry;
   arry.resize( sizeof( Theme::ContentItem::Type ) );
@@ -899,9 +900,6 @@ void ThemePreviewWidget::mousePressEvent( QMouseEvent * e )
         act->setChecked( mSelectedThemeContentItem->useCustomFont() );
         grp->addAction( act );
 
-        // We would like the group to be exclusive, but then the "Custom..." action
-        // will not be triggered if activated multiple times in a row... well, we'll have to live with checkboxes instead of radios.
-        grp->setExclusive( false );
 
         connect( childmenu, SIGNAL(triggered(QAction*)),
                  SLOT(slotFontMenuTriggered(QAction*)) );
@@ -926,10 +924,6 @@ void ThemePreviewWidget::mousePressEvent( QMouseEvent * e )
         act->setCheckable( true );
         act->setChecked( mSelectedThemeContentItem->useCustomColor() );
         grp->addAction( act );
-
-        // We would like the group to be exclusive, but then the "Custom..." action
-        // will not be triggered if activated multiple times in a row... well, we'll have to live with checkboxes instead of radios.
-        grp->setExclusive( false );
 
         connect( childmenu, SIGNAL(triggered(QAction*)),
                  SLOT(slotForegroundColorMenuTriggered(QAction*)) );
@@ -997,9 +991,6 @@ void ThemePreviewWidget::mousePressEvent( QMouseEvent * e )
         act->setChecked( mTheme->groupHeaderBackgroundMode() == Theme::CustomColor );
         grp->addAction( act );
 
-        // We would like the group to be exclusive, but then the "Custom..." action
-        // will not be triggered if activated multiple times in a row... well, we'll have to live with checkboxes instead of radios.
-        grp->setExclusive( false );
 
         connect( childmenu, SIGNAL(triggered(QAction*)),
                  SLOT(slotGroupHeaderBackgroundModeMenuTriggered(QAction*)) );
@@ -1010,7 +1001,6 @@ void ThemePreviewWidget::mousePressEvent( QMouseEvent * e )
         childmenu = new KMenu( &menu );
 
         grp = new QActionGroup( childmenu );
-
         QList< QPair< QString, int > > styles = Theme::enumerateGroupHeaderBackgroundStyles();
         QList< QPair< QString, int > >::ConstIterator end( styles.constEnd() );
 
@@ -1511,6 +1501,7 @@ ThemeEditor::ThemeEditor( QWidget *parent )
 
   tabg->setColumnStretch( 1, 1 );
   tabg->setRowStretch( 2, 1 );
+  fillViewHeaderPolicyCombo();
 
 }
 
@@ -1534,7 +1525,6 @@ void ThemeEditor::editTheme( Theme *set )
 
   mPreviewWidget->setTheme( set );
 
-  fillViewHeaderPolicyCombo();
   ComboBoxUtils::setIntegerOptionComboValue( mViewHeaderPolicyCombo, (int)mCurrentTheme->viewHeaderPolicy() );
 
   mIconSizeSpinBox->setValue( set->iconSize() );

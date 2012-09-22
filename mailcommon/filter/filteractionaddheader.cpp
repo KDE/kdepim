@@ -77,6 +77,13 @@ QWidget* FilterActionAddHeader::createParamWidget( QWidget *parent ) const
   comboBox->setObjectName( "combo" );
   comboBox->setEditable( true );
   comboBox->setInsertPolicy( QComboBox::InsertAtBottom );
+
+  KCompletion *comp = comboBox->completionObject();
+  comp->setIgnoreCase(true);
+  comp->insertItems(mParameterList);
+  comp->setCompletionMode(KGlobalSettings::CompletionPopupAuto);
+
+
   layout->addWidget( comboBox, 0 /* stretch */ );
 
   QLabel *label = new QLabel( i18n( "With value:" ), widget );
@@ -85,6 +92,7 @@ QWidget* FilterActionAddHeader::createParamWidget( QWidget *parent ) const
 
   KLineEdit *lineEdit = new KLineEdit( widget );
   lineEdit->setObjectName( "ledit" );
+  lineEdit->setTrapReturnKey(true);
   lineEdit->setClearButtonShown( true );
   layout->addWidget( lineEdit, 1 );
 
@@ -141,6 +149,12 @@ void FilterActionAddHeader::clearParamWidget( QWidget *paramWidget ) const
   Q_ASSERT( lineEdit );
   lineEdit->clear();
 }
+
+SearchRule::RequiredPart FilterActionAddHeader::requiredPart() const
+{
+    return SearchRule::CompleteMessage;
+}
+
 
 QString FilterActionAddHeader::argsAsString() const
 {

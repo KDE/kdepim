@@ -27,8 +27,10 @@ class ImportWizard;
 class EvolutionCalendar : public AbstractCalendar
 {
 public:
-  explicit EvolutionCalendar(const QString &file, ImportWizard *parent);
+  explicit EvolutionCalendar(ImportWizard *parent);
   ~EvolutionCalendar();
+
+  void loadCalendar(const QString& filename);
 private:
   void readCalendar(const QDomElement &calendar);
   void extractCalendarInfo(const QString& info);

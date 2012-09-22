@@ -44,7 +44,7 @@ DistributionListExpandJob::~DistributionListExpandJob()
 
 void DistributionListExpandJob::start()
 {
-  if ( mListName.isEmpty() ) {
+  if ( mListName.isEmpty() || mListName.contains(QLatin1Char('@')) ) { // speedup: assume list names don't contain '@'
     emitResult();
     return;
   }

@@ -22,6 +22,8 @@
 
 #include "filteractionwithfolder.h"
 
+class KJob;
+
 namespace MailCommon {
 
 //=============================================================================
@@ -30,11 +32,15 @@ namespace MailCommon {
 //=============================================================================
 class FilterActionCopy: public FilterActionWithFolder
 {
+  Q_OBJECT
   public:
     FilterActionCopy( QObject *parent = 0 );
     virtual ReturnCode process( ItemContext &context ) const;
-    virtual bool requiresBody() const;
+    virtual SearchRule::RequiredPart requiredPart() const;
     static FilterAction* newAction();
+
+  protected Q_SLOTS:
+    void jobFinished(KJob* job);
 };
 
 }

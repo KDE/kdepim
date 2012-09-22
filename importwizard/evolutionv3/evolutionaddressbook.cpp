@@ -36,7 +36,7 @@ void EvolutionAddressBook::exportEvolutionAddressBook()
 {
   KMessageBox::information(mImportWizard,i18n("Evolution address book will be exported as vcard. Import vcard in KAddressBook."),i18n("Export Evolution Address Book"));
 
-  const QString directory = KFileDialog::getExistingDirectory( KUrl(), mImportWizard, i18n("Select directory where vcards will stored."));
+  const QString directory = KFileDialog::getExistingDirectory( KUrl(), mImportWizard, i18n("Select the directory where vCards will be stored."));
   if(directory.isEmpty()) {
     return;
   }
@@ -59,7 +59,7 @@ void EvolutionAddressBook::exportEvolutionAddressBook()
     QByteArray result = proc.readAll();
     proc.close();
     if(!result.isEmpty()) {
-      result = result.replace('\n',",");
+        result = result.replace('\n',',');
       const QString value(result.trimmed());
       const QStringList listAddressBook = value.split(QLatin1Char(','));
       //qDebug()<<" listAddressBook"<<listAddressBook;

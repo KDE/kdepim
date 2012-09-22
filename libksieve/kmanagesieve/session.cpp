@@ -109,10 +109,12 @@ void Session::dataReceived()
 
   while ( m_socket->canReadLine() ) {
     QByteArray line = m_socket->readLine();
-    if ( line.endsWith( "\r\n" ) )
+    if ( line.endsWith( "\r\n" ) ) { //krazy:exclude=strings
       line.chop( 2 );
-    if ( line.isEmpty() )
+    }
+    if ( line.isEmpty() ) {
       continue; // ignore CRLF after data blocks
+    }
     kDebug() << "S: " << line;
     Response r;
     if ( !r.parseResponse( line ) ) {
@@ -415,7 +417,7 @@ bool Session::saslInteract(void* in)
 
   KIO::AuthInfo ai;
   ai.url = m_url;
-  ai.username = m_url.user();
+  ai.username = m_url.userName();
   ai.password = m_url.password();
   ai.keepPassword = true;
   ai.caption = i18n("Sieve Authentication Details");
@@ -426,27 +428,31 @@ bool Session::saslInteract(void* in)
   //window for getting this info
   for ( ; interact->id != SASL_CB_LIST_END; interact++ ) {
     if ( interact->id == SASL_CB_AUTHNAME || interact->id == SASL_CB_PASS ) {
-      if ( m_url.user().isEmpty() || m_url.password().isEmpty()) {
+      if ( ai.username.isEmpty() || ai.password.isEmpty()) {
 
-        KPasswordDialog dlg( 0, KPasswordDialog::ShowUsernameLine | KPasswordDialog::ShowKeepPassword );
-        dlg.setUsername( ai.username );
-        dlg.setPassword( ai.password );
-        dlg.setKeepPassword( ai.keepPassword );
-        dlg.setPrompt( ai.prompt );
-        dlg.setUsernameReadOnly( ai.readOnly );
-        dlg.setCaption( ai.caption );
-        dlg.addCommentLine( ai.commentLabel, ai.comment );
+        QPointer<KPasswordDialog> dlg =
+          new KPasswordDialog(
+            0,
+            KPasswordDialog::ShowUsernameLine | KPasswordDialog::ShowKeepPassword
+            );
+        dlg->setUsername( ai.username );
+        dlg->setPassword( ai.password );
+        dlg->setKeepPassword( ai.keepPassword );
+        dlg->setPrompt( ai.prompt );
+        dlg->setUsernameReadOnly( ai.readOnly );
+        dlg->setCaption( ai.caption );
+        dlg->addCommentLine( ai.commentLabel, ai.comment );
 
-        if ( dlg.exec() != QDialog::Accepted )
-        {
-          // calling error() below is wrong for two reasons:
-          // - ERR_ABORTED is too harsh
-          // - higher layers already call error() and that can't happen twice.
-                //error(ERR_ABORTED, i18n("No authentication details supplied."));
-                return false;
+        bool gotIt = false;
+        if ( dlg->exec() ) {
+          m_url.setUserName( dlg->username() );
+          m_url.setPassword( dlg->password() );
+          gotIt = true;
         }
-        m_url.setUserName( ai.username );
-        m_url.setPassword( ai.password );
+        delete dlg;
+        if ( !gotIt ) {
+          return false;
+        }
       }
       break;
     }
@@ -482,8 +488,14 @@ bool Session::saslClientStep(const QByteArray& challenge)
   const char *out = NULL;
   uint outlen;
 
+  const QByteArray challenge_decoded = QByteArray::fromBase64( challenge );
   do {
-    result = sasl_client_step( m_sasl_conn, challenge.isEmpty() ? 0 : challenge.data(), challenge.size(), &m_sasl_client_interact, &out, &outlen );
+    result =
+      sasl_client_step( m_sasl_conn,
+                        challenge_decoded.isEmpty() ? 0 : challenge_decoded.data(),
+                        challenge_decoded.size(),
+                        &m_sasl_client_interact,
+                        &out, &outlen );
     if ( result == SASL_INTERACT ) {
       if ( !saslInteract( m_sasl_client_interact ) ) {
         sasl_dispose( &m_sasl_conn );

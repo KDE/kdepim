@@ -73,8 +73,6 @@ using KMail::MailServiceImpl;
 
 #include <kmime/kmime_message.h>
 #include <kmime/kmime_util.h>
-#include <Akonadi/KMime/SpecialMailCollections>
-#include <Akonadi/KMime/SpecialMailCollectionsRequestJob>
 #include <Akonadi/Collection>
 #include <Akonadi/CollectionFetchJob>
 #include <Akonadi/ChangeRecorder>
@@ -280,11 +278,11 @@ void KMKernel::migrateFromKMail1()
       if ( choice == KMessageBox::Cancel )
         exit( 1 );
 
-      // we only will make one attempt at this
-      migrationCfg.writeEntry( "Version", targetVersion );
-      migrationCfg.sync();
+      if ( choice != KMessageBox::Yes ) {  // user skipped migration
+        // we only will make one attempt at this
+        migrationCfg.writeEntry( "Version", targetVersion );
+        migrationCfg.sync();
 
-      if ( choice != KMessageBox::Yes ) {
         return;
       }
 
@@ -399,7 +397,8 @@ bool KMKernel::handleCommandLine( bool noArgsOpensReader )
   if (args->isSet("msg"))
   {
      mailto = true;
-     messageFile.setPath( args->getOption("msg") );
+     const QString file = args->getOption("msg");
+     messageFile = makeAbsoluteUrl(file);
   }
 
   if (args->isSet("body"))
@@ -653,7 +652,7 @@ int KMKernel::openComposer( const QString &to, const QString &cc,
       }
   }
 
-  KMail::Composer * cWin = KMail::makeComposer( msg, context );
+  KMail::Composer * cWin = KMail::makeComposer( msg, false, false, context );
   if (!to.isEmpty())
     cWin->setFocusToSubject();
   KUrl::List attachURLs = KUrl::List( attachmentPaths );
@@ -751,8 +750,8 @@ int KMKernel::openComposer (const QString &to, const QString &cc,
     }
   }
 
-  KMail::Composer * cWin = KMail::makeComposer( KMime::Message::Ptr(), context );
-  cWin->setMsg( msg, !isICalInvitation /* mayAutoSign */ );
+  KMail::Composer * cWin = KMail::makeComposer( KMime::Message::Ptr(), false, false,context );
+  cWin->setMessage( msg, false, false, !isICalInvitation /* mayAutoSign */ );
   cWin->setSigningAndEncryptionDisabled( isICalInvitation
       && MessageViewer::GlobalSettings::self()->legacyBodyInvites() );
   if ( noWordWrap )
@@ -805,7 +804,7 @@ QDBusObjectPath KMKernel::openComposer( const QString &to, const QString &cc,
 
   const KMail::Composer::TemplateContext context = body.isEmpty() ? KMail::Composer::New :
                                                    KMail::Composer::NoTemplate;
-  KMail::Composer * cWin = KMail::makeComposer( msg, context );
+  KMail::Composer * cWin = KMail::makeComposer( msg, false, false, context );
   if ( !hidden ) {
     cWin->show();
     // Activate window - doing this instead of KWindowSystem::activateWindow(cWin->winId());
@@ -852,7 +851,7 @@ QDBusObjectPath KMKernel::newMessage( const QString &to,
   parser.setIdentityManager( identityManager() );
   parser.process( msg, folder ? folder->collection() : Akonadi::Collection() );
 
-  KMail::Composer *win = makeComposer( msg, KMail::Composer::New, id );
+  KMail::Composer *win = makeComposer( msg, false, false, KMail::Composer::New, id );
 
   //Add the attachment if we have one
   if ( !attachURL.isEmpty() && attachURL.isValid() ) {
@@ -1148,7 +1147,7 @@ void KMKernel::recoverDeadLetters()
 
       // Show the a new composer dialog for the message
       KMail::Composer * autoSaveWin = KMail::makeComposer();
-      autoSaveWin->setMsg( autoSaveMessage, false );
+      autoSaveWin->setMessage( autoSaveMessage, false, false, false );
       autoSaveWin->setAutoSaveFileName( filename );
       autoSaveWin->show();
       autoSaveFile.close();
@@ -1280,6 +1279,14 @@ void KMKernel::closeAllKMailWindows()
 
 void KMKernel::cleanup(void)
 {
+  disconnect( Akonadi::AgentManager::self(), SIGNAL(instanceStatusChanged(Akonadi::AgentInstance)));
+  disconnect( Akonadi::AgentManager::self(), SIGNAL(instanceError(Akonadi::AgentInstance,QString)));
+  disconnect( Akonadi::AgentManager::self(), SIGNAL(instanceWarning(Akonadi::AgentInstance,QString)));
+  disconnect( Akonadi::AgentManager::self(), SIGNAL(instanceRemoved(Akonadi::AgentInstance)));
+  disconnect ( Solid::Networking::notifier(), SIGNAL(statusChanged(Solid::Networking::Status)));
+  disconnect( KPIM::ProgressManager::instance(), SIGNAL(progressItemCompleted(KPIM::ProgressItem*)));
+  disconnect( KPIM::ProgressManager::instance(), SIGNAL(progressItemCanceled(KPIM::ProgressItem*)));
+
   dumpDeadLetters();
   the_shuttingDown = true;
   closeAllKMailWindows();
@@ -1343,10 +1350,11 @@ void KMKernel::action( bool mailto, bool check, const QString &to,
                        const KUrl::List &attachURLs,
                        const QStringList &customHeaders )
 {
-  if ( mailto )
+  if ( mailto ) {
     openComposer( to, cc, bcc, subj, body, 0,
                   messageFile.pathOrUrl(), attachURLs.toStringList(),
                   customHeaders );
+  }
   else
     openReader( check );
 
@@ -1877,11 +1885,14 @@ void KMKernel::openFilterDialog(bool createDummyFilter)
     mFilterEditDialog->setObjectName( "filterdialog" );
   }
   mFilterEditDialog->show();
+  mFilterEditDialog->raise();
+  mFilterEditDialog->activateWindow();
 }
 
 void KMKernel::createFilter(const QByteArray& field, const QString& value)
 {
   mFilterEditDialog->createFilter( field, value );
+
 }
 
 
@@ -1990,6 +2001,14 @@ void KMKernel::savePaneSelection()
   KMMainWidget *widget = getKMMainWidget();
   if ( widget  ) {
     widget->savePaneSelection();
+  }
+}
+
+void KMKernel::updatePaneTagComboBox()
+{
+  KMMainWidget *widget = getKMMainWidget();
+  if ( widget  ) {
+    widget->updatePaneTagComboBox();
   }
 }
 

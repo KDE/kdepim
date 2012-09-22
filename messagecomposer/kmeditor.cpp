@@ -153,12 +153,20 @@ void KMeditorPrivate::startExternalEditor()
           arg.clear();
           break;
         }
+        //Example emacs --parent-id=<number>
+        if(!arg.isEmpty()) {
+         command<<arg;
+         arg.clear();
+        }
         i++; //look at next char
-        if( commandLine.at(i) == QLatin1Char('f') ) {
+        const QChar nextChar(commandLine.at(i));
+        if( nextChar == QLatin1Char('f') ) {
           filenameAdded = true;
           command<<mExtEditorTempFile->fileName();
-        } else if(  commandLine.at(i) == QLatin1Char('l') ) {
+        } else if( nextChar == QLatin1Char('l') ) {
           command<<QString::number(q->textCursor().blockNumber() + 1);  // line number
+        } else if( nextChar == QLatin1Char('w') ) { //Window id
+          command<<QString::number(q->winId());
         } else {
           arg.append( letter );
           arg.append( commandLine.at(i) );
@@ -178,7 +186,6 @@ void KMeditorPrivate::startExternalEditor()
   if ( !arg.isEmpty() )
     command<<arg;
   ( *mExtEditorProcess ) << command;
-
   if ( !filenameAdded ) { // no %f in the editor command
     ( *mExtEditorProcess ) << mExtEditorTempFile->fileName();
   }
@@ -721,6 +728,7 @@ void KMeditor::fillComposerTextPart ( TextPart* textPart ) const
 {
   textPart->setCleanPlainText( toCleanPlainText() );
   textPart->setWrappedPlainText( toWrappedPlainText() );
+  textPart->setWordWrappingEnabled( lineWrapMode() == QTextEdit::FixedColumnWidth );
   if( isFormattingUsed() ) {
     textPart->setCleanHtml( toCleanHtml() );
     textPart->setEmbeddedImages( embeddedImages() );

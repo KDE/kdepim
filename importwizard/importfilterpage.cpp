@@ -40,4 +40,9 @@ void ImportFilterPage::addImportError( const QString& log )
   ui->logFilters->addErrorLogEntry( log );
 }
 
+void ImportFilterPage::setImportButtonEnabled(bool enabled)
+{
+  ui->importFilters->setEnabled(enabled);
+}
+
 #include "importfilterpage.moc"

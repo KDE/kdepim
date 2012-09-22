@@ -62,6 +62,7 @@ using MailCommon::FilterImporterExporter;
 #include <QTreeWidget>
 #include <QVBoxLayout>
 #include <QShortcut>
+#include <QSplitter>
 
 using namespace MailCommon;
 
@@ -304,8 +305,6 @@ KMFilterDialog::KMFilterDialog( const QList<KActionCollection*> &actionCollectio
   setHelp( "filters", "kmail" );
   setButtonText( User1, i18n( "Import..." ) );
   setButtonText( User2, i18n( "Export..." ) );
-  /*connect( this, SIGNAL(user1Clicked()),
-           this, SLOT(slotImportFilters()) );*/
   QMenu *menu = new QMenu();
 
   QAction *act = new QAction( i18n( "KMail filters" ), this );
@@ -345,33 +344,30 @@ KMFilterDialog::KMFilterDialog( const QList<KActionCollection*> &actionCollectio
   topLayout->setMargin( 0 );
   QHBoxLayout *hbl = topLayout;
   QVBoxLayout *vbl2 = 0;
-  QWidget *page1 = 0;
-  QWidget *page2 = 0;
 
-  mFilterList = new KMFilterListBox( i18n( "Available Filters" ), w );
-  topLayout->addWidget( mFilterList, 1/*stretch*/ );
+  QSplitter *splitter = new QSplitter;
+  splitter->setChildrenCollapsible(false);
+  topLayout->addWidget(splitter);
 
-  KTabWidget *tabWidget = new KTabWidget( w );
-  tabWidget->setObjectName( "kmfd_tab" );
-  topLayout->addWidget( tabWidget );
+  mFilterList = new KMFilterListBox( i18n( "Available Filters" ) );
+  splitter->addWidget(mFilterList);
+  KTabWidget *tabWidget = new KTabWidget;
+  splitter->addWidget(tabWidget);
 
-  page1 = new QWidget( tabWidget );
+  QWidget *page1 = new QWidget( tabWidget );
   tabWidget->addTab( page1, i18nc( "General mail filter settings.", "General" ) );
   hbl = new QHBoxLayout( page1 );
-  hbl->setObjectName( "kmfd_hbl" );
   hbl->setSpacing( spacingHint() );
   hbl->setMargin( marginHint() );
 
-  page2 = new QWidget( tabWidget );
+  QWidget *page2 = new QWidget( tabWidget );
   tabWidget->addTab( page2, i18nc( "Advanced mail filter settings.","Advanced" ) );
   vbl2 = new QVBoxLayout( page2 );
-  vbl2->setObjectName( "kmfd_vbl2" );
   vbl2->setSpacing( spacingHint() );
   vbl2->setMargin( marginHint() );
 
   QVBoxLayout *vbl = new QVBoxLayout();
   hbl->addLayout( vbl );
-  vbl->setObjectName( "kmfd_vbl" );
   vbl->setSpacing( spacingHint() );
   hbl->setStretchFactor( vbl, 2 );
 
@@ -397,7 +393,6 @@ KMFilterDialog::KMFilterDialog( const QList<KActionCollection*> &actionCollectio
     QGridLayout *gl = new QGridLayout();
     QVBoxLayout *vbl3 = new QVBoxLayout();
     gl->addLayout( vbl3, 0, 0 );
-    vbl3->setObjectName( "vbl3" );
     vbl3->setSpacing( spacingHint() );
     vbl3->addStretch( 1 );
 
@@ -405,7 +400,6 @@ KMFilterDialog::KMFilterDialog( const QList<KActionCollection*> &actionCollectio
     vbl3->addWidget( mApplyOnIn );
 
     QButtonGroup *bg = new QButtonGroup( mAdvOptsGroup );
-    bg->setObjectName( "bg" );
 
     mApplyOnForAll = new QRadioButton( i18n( "from all accounts" ), mAdvOptsGroup );
     bg->addButton( mApplyOnForAll );
@@ -641,8 +635,8 @@ void KMFilterDialog::slotRunFilters()
         i18n( "Filters changed." ) );
       return;
   }
-  bool requiresBody = false;
-  const QStringList selectedFiltersId = mFilterList->selectedFilterId(requiresBody);
+  SearchRule::RequiredPart requiredPart = SearchRule::Envelope;
+  const QStringList selectedFiltersId = mFilterList->selectedFilterId( requiredPart );
   if ( selectedFiltersId.isEmpty() ) {
     KMessageBox::information(
       this,
@@ -652,7 +646,7 @@ void KMFilterDialog::slotRunFilters()
     return;
   }
   Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( mFolderRequester->collection(), this );
-  job->setProperty( "requiresBody", QVariant::fromValue( requiresBody ) );
+  job->setProperty( "requiredPart", QVariant::fromValue( requiredPart ) );
   job->setProperty( "listFilters", QVariant::fromValue( selectedFiltersId ) );
 
   connect( job, SIGNAL(result(KJob*)),
@@ -671,18 +665,13 @@ void KMFilterDialog::slotFetchItemsForFolderDone( KJob *job )
     filtersId = fjob->property( "listFilters" ).toStringList();
   }
 
-  MailCommon::FilterManager::FilterRequires requires = MailCommon::FilterManager::Unknown;
-  if ( fjob->property( "requiresBody" ).isValid() ) {
-    bool requiresBody = fjob->property( "requiresBody" ).toBool();
-    if ( requiresBody ) {
-      requires = MailCommon::FilterManager::FullMessage;
-    } else {
-      requires = MailCommon::FilterManager::HeaderMessage;
-    }
+  SearchRule::RequiredPart requiredPart = SearchRule::Envelope;
+  if ( fjob->property( "requiredPart" ).isValid() ) {
+        requiredPart = fjob->property( "requiredPart" ).value<SearchRule::RequiredPart>();
   }
   Akonadi::Item::List items = fjob->items();
   mRunNow->setEnabled( true );
-  MailCommon::FilterManager::instance()->filter( items, requires, filtersId );
+  MailCommon::FilterManager::instance()->filter( items, requiredPart, filtersId );
 }
 
 void KMFilterDialog::slotSaveSize() {
@@ -1352,20 +1341,18 @@ QList<QListWidgetItem*> KMFilterListBox::selectedFilter()
   return listWidgetItem;
 }
 
-QStringList KMFilterListBox::selectedFilterId( bool &requiresBody ) const
+QStringList KMFilterListBox::selectedFilterId( SearchRule::RequiredPart &requiredPart ) const
 {
   QStringList listFilterId;
-  requiresBody = false;
+  requiredPart = SearchRule::Envelope;
   const int numberOfFilters = mListWidget->count();
   for ( int i = 0; i <numberOfFilters; ++i ) {
     if ( mListWidget->item(i)->isSelected() && !mListWidget->item(i)->isHidden() ) {
       const QString id =
         static_cast<QListWidgetFilterItem*>( mListWidget->item( i ) )->filter()->identifier();
       listFilterId << id;
-      if ( !requiresBody ) {
-        requiresBody =
-          static_cast<QListWidgetFilterItem*>( mListWidget->item( i ) )->filter()->requiresBody();
-      }
+      requiredPart = qMax(requiredPart,
+          static_cast<QListWidgetFilterItem*>( mListWidget->item( i ) )->filter()->requiredPart());
     }
   }
   return listFilterId;

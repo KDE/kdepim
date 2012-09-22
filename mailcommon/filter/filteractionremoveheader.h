@@ -30,9 +30,11 @@ namespace MailCommon {
 //=============================================================================
 class FilterActionRemoveHeader: public FilterActionWithStringList
 {
+  Q_OBJECT
   public:
     FilterActionRemoveHeader( QObject *parent = 0 );
     virtual ReturnCode process( ItemContext &context ) const;
+    virtual SearchRule::RequiredPart requiredPart() const;
     virtual QWidget* createParamWidget( QWidget *parent ) const;
     virtual void setParamWidgetValue( QWidget *paramWidget ) const;
 

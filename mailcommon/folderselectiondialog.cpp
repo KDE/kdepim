@@ -119,7 +119,7 @@ FolderSelectionDialog::FolderSelectionDialog( QWidget *parent, SelectionFolderOp
 
   connect( d->folderTreeWidget->folderTreeView(),
            SIGNAL(doubleClicked(QModelIndex)),
-           this, SLOT(accept()) );
+           this, SLOT(slotDoubleClick(QModelIndex)) );
 
   d->mUseGlobalSettings = !( options & NotUseGlobalSettings );
   readConfig();
@@ -130,6 +130,15 @@ FolderSelectionDialog::~FolderSelectionDialog()
 {
   writeConfig();
   delete d;
+}
+
+void FolderSelectionDialog::slotDoubleClick(const QModelIndex& index)
+{
+  const bool hasSelectedCollection =
+    ( d->folderTreeWidget->selectionModel()->selectedIndexes().count() > 0 );
+  if(hasSelectedCollection) {
+     accept();
+  }
 }
 
 void FolderSelectionDialog::focusTreeView()

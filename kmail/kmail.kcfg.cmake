@@ -232,9 +232,6 @@
       <entry name="PgpAutoSign" type="Bool" key="pgp-auto-sign">
         <default>false</default>
       </entry>
-      <entry name="PgpAutoEncrypt" type="Bool" key="pgp-auto-encrypt">
-        <default>false</default>
-      </entry>
       <entry name="NeverEncryptDrafts" type="Bool" key="never-encrypt-drafts">
         <default>true</default>
       </entry>
@@ -275,10 +272,6 @@
         <whatsthis>A backup copy of the text in the composer window can be created regularly. The interval used to create the backups is set here. You can disable autosaving by setting it to the value 0.</whatsthis>
         <default>2</default>
       </entry>
-      <entry name="QuoteSelectionOnly" type="Bool">
-        <label>Only quote selected text when replying</label>
-        <default>true</default>
-      </entry>
 
       <entry name="CustomTemplates" type="StringList" key="CustomTemplates" />
 
@@ -293,16 +286,8 @@
           <default>false</default>
       </entry>
 
-      <entry name="CryptoEncryptToSelf" type="Bool" key="crypto-encrypt-to-self">
-        <label>When encrypting emails, always also encrypt to the certificate of my own identity</label>
-        <default>true</default>
-      </entry>
       <entry name="CryptoShowEncryptionResult" type="Bool" key="crypto-show-encryption-result">
         <label>Show signed/encrypted text after composing</label>
-        <default>true</default>
-      </entry>
-      <entry name="CryptoShowKeysForApproval" type="Bool" key="crypto-show-keys-for-approval">
-        <label>Always show the list of encryption keys to select the one which will be used</label>
         <default>true</default>
       </entry>
       <entry name="CryptoStoreEncrypted" type="Bool" key="crypto-store-encrypted">
