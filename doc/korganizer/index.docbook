@@ -279,13 +279,13 @@ go to the date of the event that you want to reschedule.</para></step>
 
 <step><para>You should choose an appropriate <link
 linkend="reference-menus-view">view</link> before beginning this operation.
-Only the <link linkend="agenda-view"><guilabel>agenda view</guilabel>
-</link> (day, work week and week views) shows individual hours and are suitable
+Only the <link linkend="agenda-view"><guilabel>Agenda</guilabel> view
+</link> (Day, Work Week and Week views) shows individual hours and are suitable
 for rescheduling exactly-timed events (appointments), while the Month view
 only shows days. Therefore the Month view is most suitable for long-term
 events like holidays.</para></step>
 
-<step><para>To display the week view select the agenda view, press the
+<step><para>To display the Week view select the Agenda view, press the
 <inlinemediaobject><imageobject>
 <imagedata fileref="view-calendar-week.png" format="PNG"/></imageobject>
 </inlinemediaobject><guibutton>Week</guibutton> view toolbar button,
@@ -312,10 +312,10 @@ linkend="reference-menus-view">view</link> before beginning this operation.
 Only the <link linkend="todo-view"><inlinemediaobject><imageobject>
 <imagedata fileref="view-calendar-tasks.png" format="PNG"/></imageobject>
 </inlinemediaobject><guilabel>To-do List</guilabel> view
-</link> and <link linkend="description-view">the to-do view sidebar component
+</link> and <link linkend="description-view">the To-do View sidebar component
 </link> show to-dos which do not have a due date.</para>
 
-<para>To display the to-do list view, press the
+<para>To display the To-do List view, press the
 <inlinemediaobject><imageobject>
 <imagedata fileref="view-calendar-tasks.png" format="PNG"/></imageobject>
 </inlinemediaobject><guibutton>To-do List</guibutton> view toolbar button,
@@ -328,7 +328,7 @@ This will bring up a context menu.  Choose the <guimenuitem>Copy to</guimenuitem
 <guimenuitem>Move to</guimenuitem> menu items and select the new date from the calendar
 now appearing. The to-do is now copied or moved to the selected date.
 Alternatively, if the main panel holds a <guilabel>To-do List</guilabel> view,
-just right click the column <guilabel>Due Date/Time</guilabel>. A calender will
+just right click the column <guilabel>Due Date/Time</guilabel>. A calendar will
 appear instantly, allowing you to set the new due date.</para>
 
 <para>To <link linkend="entering-data-to-do">edit a to-do</link>, right click it and choose the
@@ -351,7 +351,7 @@ should at least skip through the <link linkend="faq">&FAQ;</link>.</para>
 <chapter id="managing-data"> <!-- updated to 4.6/7 except managing-resources-->
 <title>Importing, Exporting, and Managing Calendars</title>
 
-<para>&korganizer; can store (and retrieve) events, journals entries
+<para>&korganizer; can store (and retrieve) events, journal entries
 and to-dos using various methods, and to different locations.
 Each of these locations is called a <firstterm>calendar resource</firstterm>.
 </para>
@@ -895,7 +895,7 @@ the items you do not want to export.</para></step>
 manually or use the Calendar Widget.</para></step>
 <step><para>If you want to export to-dos, check the <guilabel>Export
 to-do list</guilabel> box.</para></step>
-<step><para>If you want to export the items displayed in the month view, check the
+<step><para>If you want to export the items displayed in the Month view, check the
 <guilabel>Export in month view</guilabel> box.</para></step>
 <step><para>If you want to export events formatted as a list of events, check the
 <guilabel>Export events as list</guilabel> box.</para></step>
@@ -1005,13 +1005,13 @@ overview of how to browse your personal data using &korganizer;.</para>
 
 <para>The &korganizer; window can be divided into two main areas: the
 main window and the sidebar. The main window displays the main views and the
-sidebar displays the date navigator, the
-to-do view, the item viewer and the calendar manager view. To show or hide the
+sidebar displays the Date Navigator, the
+To-do View, the Item Viewer and the Calendar Manager View. To show or hide the
 sidebar components, check or uncheck the menu items under the
 <menuchoice><guimenu>Settings</guimenu>
 <guisubmenu>Sidebar</guisubmenu></menuchoice> submenu.</para>
 
-<para>The date navigator is provided to browse and select dates. Today's date
+<para>The Date Navigator is provided to browse and select dates. Today's date
 will be outlined with a small box, dates which have events scheduled on them
 will be bold (daily or weekly recurring events may not be marked as bold,
 <link linkend="config-main-views">depending on the view configuration</link>),
@@ -1020,19 +1020,19 @@ on it. Hold down the mouse to select multiple contiguous dates at once.
 The <guilabel>What's Next</guilabel>,
 <guilabel>List</guilabel>, <guilabel>Agenda</guilabel> and
 <guilabel>Journal</guilabel> views will only show events, to-dos or
-journals items from the dates selected in the date navigator. The
+journals items from the dates selected in the Date Navigator. The
 <guilabel>Month</guilabel> view will show events or to-dos from the first
-month shown in the date navigator (the selected days in the month won't change
-the month view, only month changes).</para>
+month shown in the Date Navigator (the selected days in the month won't change
+the Month view, only month changes).</para>
 
-<para>The to-do view sidebar component lists your to-dos, just like the
+<para>The To-do View sidebar component lists your to-dos, just like the
 <link linkend="todo-view">To-do view</link>. It is useful if you want
 to see your to-dos while using the other views.</para>
 
-<para>The item viewer sidebar component shows details of the currently selected
+<para>The Item Viewer sidebar component shows details of the currently selected
 events, to-dos or journal entries.</para>
 
-<para>Finally, calendar manager viewer sidebar component allow you to enable or
+<para>Finally, Calendar Manager Viewer sidebar component allow you to enable or
 disable the resources on the list, by checking or unchecking the resource
 box, and to manage your resources. For more information, please check
 <xref linkend="managing-resources" />.</para>
@@ -1072,7 +1072,7 @@ menu item.</para>
 <sect2 id="list-view">
 <title>Event List View</title>
 <para>This view displays all your to-dos, events and journal entries for
-the dates selected in the date navigator as a list. Open to-dos that are
+the dates selected in the Date Navigator as a list. Open to-dos that are
 not due on the selected dates are not shown. This view is good for displaying
 many different items in a compact fashion. It is also useful if your
 events are spread out over a long time period that would not be displayed
@@ -1097,16 +1097,16 @@ menu item.</para>
 
 <!--TODO: add agenda view options, color of resources and categories-->
 
-<para>The agenda view presents your events or due to-dos for one or more days,
+<para>The Agenda view presents your events or due to-dos for one or more days,
 sorted chronologically. You can also see the length of each event in the day
-timetable. To enable the agenda views choose the <menuchoice><guimenu>View</guimenu>
+timetable. To enable the Agenda view choose the <menuchoice><guimenu>View</guimenu>
 <guimenuitem>Agenda</guimenuitem></menuchoice> menu item or press the
 <inlinemediaobject><imageobject><imagedata fileref="view-calendar-agenda.png"
 format="PNG"/></imageobject></inlinemediaobject>toolbar button.</para>
 <para>The <guilabel>Day</guilabel>, <guilabel>Work Week</guilabel> and
-<guilabel>Week</guilabel> views are variations of the agenda view.
-In fact, you can set the days shown in the agenda view at any time by selecting
-them in the date navigator.</para>
+<guilabel>Week</guilabel> views are variations of the Agenda view.
+In fact, you can set the days shown in the Agenda view at any time by selecting
+them in the Date Navigator.</para>
 <!--check bell + chasing-arrows icon here-->
 <para>Time is indicated by a time bar on the left side of the view. A scrollbar
 on the right is provided when the whole day cannot be displayed on a single
@@ -1131,9 +1131,9 @@ upper or lower border of the event to the new time.</para>
 <para>Any event can be rescheduled with your mouse. Move the mouse pointer over
 the event, and drag it to a new time location. This also works in the Week and
 Work Week views. Events can be moved to other, presently non-visible dates.
-Move the mouse pointer over the event, and drag it to the date navigator.</para>
+Move the mouse pointer over the event, and drag it to the Date Navigator.</para>
 
-<para>Since the agenda view cannot contain the whole day on most screens, you
+<para>Since the Agenda view cannot contain the whole day on most screens, you
 will have to scroll up and down to see the whole day. There is a useful hint that
 tells you if there are any currently invisible events above or below your current
 view; it is a small down-pointing arrow at the bottom  of each day view or
@@ -1150,7 +1150,7 @@ half-hour increments, rounding off to the closest half hour from where you
 clicked.</para></listitem>
 <listitem><para>Select any open region of time, and double click it or start
 writing the title of the event.  &korganizer; will automatically set the
-duration and start time as defined by the selection area in the agenda
+duration and start time as defined by the selection area in the Agenda
 view.</para></listitem>
 </itemizedlist>
 </para></tip>
@@ -1165,7 +1165,7 @@ will be able to quickly identify the type of event by its color.
 </para>
 
 <para>
-The agenda view can display events from all your calendars merged into one view or
+The Agenda view can display events from all your calendars merged into one view or
 show a view per calendar. Having both views available via tabs is also possible and
 can be <link linkend="config-main-views">customized in the preferences dialog</link>.
 </para>
@@ -1173,10 +1173,10 @@ can be <link linkend="config-main-views">customized in the preferences dialog</l
 <sect3 id="day-view">
 <title>Day View</title>
 
-<para>This view presents the <link linkend="agenda-view">agenda view</link> for
+<para>This view presents the <link linkend="agenda-view">Agenda view</link> for
 a single day.</para>
 
-<para>Switch the display to the day view by choosing the
+<para>Switch the display to the Day view by choosing the
 <menuchoice><guimenu>Go</guimenu>
 <guimenuitem>Day</guimenuitem></menuchoice>
 menu item or pressing the <inlinemediaobject><imageobject><imagedata fileref="view-calendar-day.png"
@@ -1188,7 +1188,7 @@ in the toolbar.</para>
 <sect3 id="next-x-days-view">
 <title>Next X Days View</title>
 
-<para>This view presents the <link linkend="agenda-view">agenda view</link> for
+<para>This view presents the <link linkend="agenda-view">Agenda view</link> for
 the next days, starting from today. You can change the number of days to be
 displayed in the <link linkend="config-main-views">&korganizer; view
 configuration</link>. The default value is 3.</para>
@@ -1204,10 +1204,10 @@ menu item, (X represents the number of days, usually 3).</para>
 <sect3 id="week-view">
 <title>Week View</title>
 
-<para>The week view provides a view similar to the day view. Events for seven
+<para>The Week view provides a view similar to the Day view. Events for seven
 days are shown next to each other.</para>
 
-<para>Switch the display to the week view by choosing the
+<para>Switch the display to the Week view by choosing the
 <menuchoice><guimenu>Go</guimenu>
 <guimenuitem>Week</guimenuitem></menuchoice>
 menu item or pressing the <inlinemediaobject><imageobject><imagedata fileref="view-calendar-week.png"
@@ -1219,10 +1219,10 @@ in the toolbar.</para>
 <sect3 id="workweek-view">
 <title>Work Week View</title>
 
-<para>This is the same as the week view, except that it shows only the working
+<para>This is the same as the Week view, except that it shows only the working
 days of the week.</para>
 
-<para>Switch the display to the work week view by choosing the
+<para>Switch the display to the Work Week view by choosing the
 <menuchoice><guimenu>Go</guimenu>
 <guimenuitem>Work Week</guimenuitem></menuchoice>
 menu item.</para>
@@ -1237,7 +1237,7 @@ menu item.</para>
 
 <!--TODO: add month view options-->
 
-<para>The month view shows all the events and due to-dos for the current
+<para>The Month view shows all the events and due to-dos for the current
 month in a familiar month calendar layout. Each cell in the view
 represents a day, and each day contains all of the events that can fit in the
 area provided (maximizing the window will enable you to see more appointments).
@@ -1245,7 +1245,7 @@ Information on repeating and reminder status is indicated through
 <guiicon>bell</guiicon> and <guiicon>chasing arrows</guiicon> icons, just as
 in other views.</para>
 
-<para>Navigate the month view using the date navigator arrows,
+<para>Navigate the Month view using the Date Navigator arrows,
 or the items and toolbar buttons from the <guilabel>Go</guilabel> menu.
 Since the visible area of a day cell may not contain all events and
 to-dos, you can use the keyboard to browse the items, or you
@@ -1264,7 +1264,7 @@ view configuration</link>. Therefore, if you assign
 you can identify the type of event (or resource) by its color.
 </para>
 
-<para>Switch the display to the month view by choosing the
+<para>Switch the display to the Month view by choosing the
 <menuchoice><guimenu>View</guimenu>
 <guimenuitem>Month View</guimenuitem></menuchoice>
 menu item or pressing the <inlinemediaobject><imageobject><imagedata fileref="view-calendar-month.png"
@@ -1278,7 +1278,7 @@ in the toolbar.</para>
 <sect2 id="timeline-view">
 <title>Timeline View</title>
 
-<para> The timeline view shows all events for the selected timespan in a gantt
+<para> The Timeline view shows all events for the selected timespan in a gantt
 view. Every calendar is displayed in a separate line. </para>
 
 <para>Hover your mouse over any calendar item to display a tooltip with the
@@ -1290,8 +1290,8 @@ click any calendar item to edit it.</para>
 <sect2 id="todo-view">
 <title>To-do List</title>
 
-<para>The to-do list provides a place for you to jot down quick (or long-term)
-notes about things that need to be done. The to-do view sidebar
+<para>The To-do List provides a place for you to jot down quick (or long-term)
+notes about things that need to be done. The To-do View sidebar
 component appears right below the Date Navigator. You can also display it in the
 main panel if you click the <inlinemediaobject><imageobject>
 <imagedata fileref="view-calendar-tasks.png" format="PNG"/></imageobject>
@@ -1306,8 +1306,8 @@ date when the to-do should be finished.</para>
 sorted in order of priority.  The lower the number, the higher the priority,
 except that zero (0) is defined as <quote>no priority.</quote></para>
 
-<para>To make a new to-do entry, right click the to-do view sidebar component,
-or the to-do list view, and choose the <guimenuitem>New To-do</guimenuitem> menu
+<para>To make a new to-do entry, right click the To-do View sidebar component,
+or the To-do List view, and choose the <guimenuitem>New To-do</guimenuitem> menu
 item. If you right click an already existing to-do, you will get more
 choices: you can <guimenuitem>Show</guimenuitem> the summary,
 <guimenuitem>Edit...</guimenuitem> the to-do details,
@@ -1338,8 +1338,8 @@ available drag-and-drop operations.</para>
 
 <sect2 id="journal-view">
 <title>Journal View</title>
-<para>The journal view provides a place for you to record your reflections,
-occurrences or experiences. You can display the journal view in the main
+<para>The Journal view provides a place for you to record your reflections,
+occurrences or experiences. You can display the Journal view in the main
 panel if you press the <inlinemediaobject><imageobject>
 <imagedata fileref="view-calendar-journal.png" format="PNG"/></imageobject>
 </inlinemediaobject><guilabel>Journal View</guilabel> toolbar button or if you choose the
@@ -1378,7 +1378,7 @@ one category for each item.</para>
 </menuchoice> menu item to open the <guilabel>Edit Categories</guilabel> dialog.
 If you assign <link linkend="config-main-colors">different colors to categories</link>,
 you will be able to quickly identify the type of event by its color, either in
-the agenda view or in the month view (depending on the
+the Agenda view or in the Month view (depending on the
 <link linkend="config-main-views">&korganizer; view configuration</link>).
 </para>
 
@@ -1956,7 +1956,7 @@ five tabs at the bottom will appear.</para>
 </screenshot>
 
 <para>This tab shares a lot of options with the <guilabel>Edit Events</guilabel> dialog, 
-but has some additional items for To-dos:</para>
+but has some additional items for to-dos:</para>
 
 <variablelist>
 <varlistentry>
@@ -2094,7 +2094,7 @@ are acting as the event organizer. To add attendees, use the
 <link linkend="entering-data-events-attendees">
 attendee tab</link>, in the <guilabel>Edit Event</guilabel>, or
 <guilabel>Edit To-do</guilabel> dialog. In the
-<link linkend="agenda-view">agenda view</link>, a little icon
+<link linkend="agenda-view">Agenda view</link>, a little icon
 <inlinemediaobject>
 <imageobject>
 <imagedata fileref="organizer.png" format="PNG"/>
@@ -2165,7 +2165,7 @@ is added to your calendar. If it is an event, a little icon
 <phrase>Attendee Icon</phrase>
 </textobject>
 </inlinemediaobject>
-is placed in the event in the <link linkend="agenda-view">agenda
+is placed in the event in the <link linkend="agenda-view">Agenda
 view</link>.</para>
 
 <sect2 id="reply">
@@ -2517,7 +2517,7 @@ It could be the time when you usually get up, or the time when you start
 working. This setting does not prevent you from adding or viewing items before
 this time, it just sets the time that will be displayed by default on the top
 of the calendar view. Use the scrollbar to display earlier or later events
-in the agenda view.</para></listitem>
+in the Agenda view.</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -2576,9 +2576,9 @@ Select a <guilabel>Default reminder time</guilabel> to determine how long before
 the actual event's scheduled time the reminder will activate.</para>
 <para>Set a file to be used as the default sound file for new reminders. You can 
 always specify another file in the Advanced Reminder accessible from the 
-Event or To-do editors.</para>
-<para>Check the next two boxes if you want to enable reminders for all newly created Events
-or To-dos. You can always turn-off the reminders in the editor dialogs.</para>
+event or to-do editors.</para>
+<para>Check the next two boxes if you want to enable reminders for all newly created events
+or to-dos. You can always turn-off the reminders in the editor dialogs.</para>
 </listitem>
 </varlistentry>
 
@@ -2646,20 +2646,20 @@ events are shown in bold typeface in the Date Navigator.</para></listitem>
 <varlistentry>
 <term><guilabel>Show to-dos instead of events when in Todo View</guilabel></term>
 <listitem><para>Check this box to show the days containing to-dos in bold typeface in the 
-Date Navigator when in to-do view.</para></listitem>
+Date Navigator when in To-do view.</para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><guilabel>Show journals instead of events when in Journal View</guilabel></term>
 <listitem><para>Check this box to show the days containing journals in bold typeface in the 
-Date Navigator when in journal view.</para></listitem>
+Date Navigator when in Journal view.</para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><guilabel>Week numbers select a work week when in work week mode</guilabel></term>
 <listitem><para>If the <guilabel>Week numbers select a work week when in work
 week mode</guilabel> box is checked, clicking on the week numbers along the 
-side of the date navigator will navigate through work weeks rather than
+side of the Date Navigator will navigate through work weeks rather than
 through normal 7-day weeks.</para></listitem>
 </varlistentry>
 
@@ -2676,26 +2676,26 @@ through normal 7-day weeks.</para></listitem>
 <varlistentry>
 <term><guilabel>Hour size:</guilabel></term>
 <listitem><para>By using this you can control the height of the rows
-in the agenda view.</para></listitem>
+in the Agenda view.</para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><guilabel>Show icons in agenda view items</guilabel></term>
 <listitem><para>Check this box to display icons (reminder, recursion &etc;)
-in agenda view items</para></listitem>
+in Agenda view items</para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><guilabel>Show to-dos</guilabel></term>
-<listitem><para>This check box toggles the display of to-dos in the day, week
-and month views in the agenda views. If you have
+<listitem><para>This check box toggles the display of to-dos in the Day, Week
+and Month views in the Agenda view. If you have
 too many to-dos which have a due date associated, you may want to turn them
 off to avoid clutter.</para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><guilabel>Show current-time (Marcus Bains) line</guilabel></term>
-<listitem><para>This check box toggles on or off a red line in the day or week
+<listitem><para>This check box toggles on or off a red line in the Day or Week
 view indicating the current time (Marcus Bains line). This line gives
 you an indication of how much time is left &eg; until a meeting takes
 place.</para></listitem>
@@ -2739,7 +2739,7 @@ configuration page for setting these colors.</para>
 
 <varlistentry>
 <term><guilabel>Color busy days with a different background color</guilabel></term>
-<listitem><para>Check this box if you want agenda's background to be filled with a
+<listitem><para>Check this box if you want Agenda view's background to be filled with a
 different color on days which have at least one all day event marked as busy.</para>
 <para>Please look in the Colors configuration area to select the Agenda view background
 busy color of your choosing.</para></listitem>
@@ -2748,8 +2748,8 @@ busy color of your choosing.</para></listitem>
 <varlistentry>
 <term><guilabel>Multiple Calendar Display</guilabel></term>
 <listitem><para>
-Select if all calendars should be merged into one agenda view, each calendar should
-be displayed in its own agenda view or if each view should be available via tabs.
+Select if all calendars should be merged into one Agenda view, each calendar should
+be displayed in its own Agenda view or if each view should be available via tabs.
 The side by side view can be customized with <guimenuitem>Configure View</guimenuitem> 
 from the context menu.
 </para></listitem>
@@ -2775,19 +2775,19 @@ not in 4.6.0 -->
 <term><guilabel>Display Options</guilabel></term>
 <listitem><para>Use the first four check boxes to display the time, icons
 (reminder, recursion &etc;),
-to-dos or journals in month view.</para></listitem>
+to-dos or journals in Month view.</para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><guilabel>Month view uses full window</guilabel></term>
-<listitem><para>If you check this box, the month view will be displayed
+<listitem><para>If you check this box, the Month view will be displayed
 in the whole &korganizer; window instead of sharing the window with the sidebar
-(the date navigator, the to-dos and the calendar resources).</para></listitem>
+(the Date Navigator, the to-dos and the calendar resources).</para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><guilabel>Color busy days with a different background color</guilabel></term>
-<listitem><para>Check this box if you the want month view's background to be filled with a
+<listitem><para>Check this box if you the want Month view's background to be filled with a
 different color on days which have at least one all day event marked as busy.</para>
 <para>Please look in the Colors configuration area to select the Agenda/Month view background
 busy color of your choosing.</para></listitem>
@@ -2796,7 +2796,7 @@ busy color of your choosing.</para></listitem>
 <varlistentry>
 <term><guilabel>Color Usage</guilabel></term>
 <listitem>
-<para>Configure the colors for the month view as in <link linkend="config-main-views-agenda">Agenda View</link>.</para></listitem>
+<para>Configure the colors for the Month view as in <link linkend="config-main-views-agenda">Agenda view</link>.</para></listitem>
 </varlistentry>
 
 <!--not in 4.6.0-->
@@ -2835,14 +2835,14 @@ is to use the same color for all resources.</para></listitem>
 <varlistentry>
 <term><guilabel>Always display completed to-dos at the bottom of the list</guilabel></term>
 <listitem><para>If you enable this option, all completed to-dos will be always 
-grouped at the bottom of the to-do list.</para></listitem>
+grouped at the bottom of the To-do List.</para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><guilabel>To-do list view uses full window</guilabel></term>
 <listitem><para>Enable this option to use the full &korganizer; window when displaying 
-the to-do list view. You will gain some space for the to-do list view, but other widgets, 
-such as the date navigator, the to-do details and the calendars list, will not be displayed.
+the To-do List view. You will gain some space for the To-do List view, but other widgets,
+such as the Date Navigator, the to-do details and the calendars list, will not be displayed.
 </para></listitem>
 </varlistentry>
 
@@ -2874,8 +2874,8 @@ preferences.</link></para>
 <term><guilabel>Holiday color</guilabel></term>
 <listitem><para>This button opens the <guilabel>Select Color</guilabel> dialog,
 allowing you to select the holiday color. The holiday color will be used for the
-holiday name in the month view and the holiday date in the date
-navigator.</para></listitem>
+holiday name in the Month view and the holiday date in the Date
+Navigator.</para></listitem>
 </varlistentry>
 <!--not in 4.6.0-->
 <!--varlistentry>
@@ -2898,13 +2898,13 @@ category below.</para></listitem>
 <varlistentry>
 <term><guilabel>Agenda view background color</guilabel></term>
 <listitem><para>This button opens the <guilabel>Select Color</guilabel> dialog,
-allowing you to select the agenda view background color.</para></listitem>
+allowing you to select the Agenda view background color.</para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><guilabel>Busy days background color</guilabel></term>
 <listitem><para>This button opens the <guilabel>Select Color</guilabel> dialog,
-allowing you to select the agenda or month view background busy color.
+allowing you to select the Agenda or Month view background busy color.
 This color is only used when the option for drawing busy days with a
 different color is set in either of these views.</para></listitem>
 </varlistentry>
@@ -2918,7 +2918,7 @@ allowing you to select a color for the current-time (Marcus Bains) line.</para><
 <varlistentry>
 <term><guilabel>Working hours color</guilabel></term>
 <listitem><para>This button opens the <guilabel>Select Color</guilabel> dialog,
-allowing you to select the color of the working hours background in the agenda view.</para></listitem>
+allowing you to select the color of the working hours background in the Agenda view.</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -2940,7 +2940,7 @@ a category in the drop down list, and press the button to open the
 <guilabel>Select Color</guilabel> dialog, allowing you to select the color for
 that category. <link linkend="config-main-views">Depending on the view
 preferences</link>, this color will be used to mark events and to-dos which
-belong to this category in your agenda and in the month view.</para></listitem>
+belong to this category in the Agenda and Month views.</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -2950,8 +2950,7 @@ a resource in the drop down list, and press the button to open the
 <guilabel>Select Color</guilabel> dialog, allowing you to select the color for
 that resource. <link linkend="config-main-views">Depending on the view
 preferences</link>, this color will be used to mark events and to-dos which are
-stored using this resource in your agenda and in the month
-view.</para></listitem>
+stored using this resource in the Agenda and Month views.</para></listitem>
 </varlistentry>
 
 </variablelist>
@@ -2972,19 +2971,19 @@ time bar.</para></listitem>
 <varlistentry>
 <term><guilabel>Month view</guilabel></term>
 <listitem><para>Press this button to pick the font, font style and size for the
-month view.</para></listitem>
+Month view.</para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><guilabel>Agenda view</guilabel></term>
 <listitem><para>Press this button to pick the font, font style and size for the
-agenda view (day, week and work week views).</para></listitem>
+Agenda view (Day, Week and Work Week views).</para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><guilabel>Current-time line</guilabel></term>
 <listitem><para>Press this button to pick the font, font style and size for the
-Marcus Bains line (a colored line in the agenda view indicating the current
+Marcus Bains line (a colored line in the Agenda view indicating the current
 time).</para></listitem>
 </varlistentry>
 
@@ -3404,7 +3403,7 @@ Configure &korganizer;</guimenuitem></menuchoice> and click the
 <sect2 id="date-numbers-plugin">
 <title>Date Numbers Plugin for Calendars</title>
 <para>
-This plugin adds the number of the day in the year to the agenda view. For
+This plugin adds the number of the day in the year to the Agenda view. For
 instance, February 1 is day number 32.
 </para>
 </sect2>
@@ -3996,7 +3995,7 @@ format="PNG"/></imageobject></inlinemediaobject><menuchoice>
 <guimenu>View</guimenu>
  <guimenuitem>To-do List</guimenuitem></menuchoice>
  </term>
-<listitem><para><action>Switch the display to the to-do list view.</action></para>
+<listitem><para><action>Switch the display to the To-do List view.</action></para>
 <para>For more information about this action, please refer to
 <xref linkend="todo-view" />.</para>
 </listitem>
@@ -4038,7 +4037,7 @@ format="PNG"/></imageobject></inlinemediaobject><menuchoice>
 <guimenuitem>Journal</guimenuitem>
 </menuchoice>
 </term>
-<listitem><para><action>Switch the display to the journal view.</action></para>
+<listitem><para><action>Switch the display to the Journal view.</action></para>
 <para>For more information about this action, please refer to
 <xref linkend="journal-view" />.</para></listitem>
 </varlistentry>
@@ -4058,7 +4057,7 @@ format="PNG"/></imageobject></inlinemediaobject><menuchoice>
 <guimenu>View</guimenu><guisubmenu>Zoom</guisubmenu></menuchoice></term>
 <listitem><para><action>Use this submenu to adjust the current view to show
 more or less data.</action></para>
-<para>In the agenda view (day(s) or week view), you can use the zoom actions to
+<para>In the Agenda view (Day(s) or Week view), you can use the zoom actions to
 show more or less days (<menuchoice><guisubmenu>Zoom</guisubmenu>
 <guimenuitem>In Horizontally</guimenuitem></menuchoice> and <menuchoice>
 <guisubmenu>Zoom</guisubmenu><guimenuitem>Out Horizontally</guimenuitem></menuchoice>), 
@@ -4126,7 +4125,7 @@ Go</guimenu><guimenuitem>To Today</guimenuitem></menuchoice>
 <guimenu>
 Go</guimenu><guimenuitem>Day</guimenuitem></menuchoice>
 </term>
-<listitem><para><action>Switch the display to the day view.</action></para>
+<listitem><para><action>Switch the display to the Day view.</action></para>
 <para>For more information about this action, please refer to
 <xref linkend="agenda-view" />.</para>
 </listitem>
@@ -4138,7 +4137,7 @@ Go</guimenu><guimenuitem>Day</guimenuitem></menuchoice>
 <guimenu>
 Go</guimenu><guimenuitem>Next x Days</guimenuitem></menuchoice>
 </term>
-<listitem><para><action>Switch the display to the next x day view, where x is
+<listitem><para><action>Switch the display to the Next x Day view, where x is
 defined in &korganizer; main configuration.</action></para>
 <para>For more information about this action, please refer to
 <xref linkend="agenda-view" />.</para>
@@ -4152,9 +4151,9 @@ format="PNG"/></imageobject></inlinemediaobject><menuchoice>
 <guimenu>Go</guimenu><guimenuitem>Work
 Week</guimenuitem></menuchoice>
 </term>
-<listitem><para><action>Switch the display to the work week
+<listitem><para><action>Switch the display to the Work Week
 view.</action></para>
-<para>This is the same as the week view, except only the working days of the
+<para>This is the same as the Week view, except only the working days of the
 week are shown.</para>
 <para>For more information about this action, please refer to
 <xref linkend="agenda-view" />.</para>
@@ -4167,10 +4166,10 @@ week are shown.</para>
 <guimenu>
 Go</guimenu> <guimenuitem>Week</guimenuitem></menuchoice>
 </term>
-<listitem><para><action>Switch the display to the week view.</action></para>
-<para>The week view provides a view similar to the day view. Events for seven
-days are shown next to each other.  All of the functions available for the day
-view are available in the week view, too.</para>
+<listitem><para><action>Switch the display to the Week view.</action></para>
+<para>The Week view provides a view similar to the Day view. Events for seven
+days are shown next to each other.  All of the functions available for the Day
+view are available in the Week view, too.</para>
 <para>For more information about this action, please refer to
 <xref linkend="agenda-view" />.</para></listitem>
 </varlistentry>
@@ -4784,8 +4783,8 @@ Day, Week and Work Week views.</para></listitem>
 the mouse pointer over the event, and drag it to the Date Navigator on the left
 side of the current calendar, or to the Date Navigator of a different
 calendar.</para>
-<tip><para>However, you cannot drag from agenda view in one calendar to
-agenda view in another calendar.</para></tip></listitem>
+<tip><para>However, you cannot drag from Agenda view in one calendar to
+Agenda view in another calendar.</para></tip></listitem>
 <listitem><para>Toolbars can be dragged on the screen. Move the mouse pointer
 over the toolbar's handle, and drag it to a new location on your
 screen.</para></listitem>
@@ -4965,9 +4964,9 @@ Preferences</link> section.</para>
 <glossterm>Main panel</glossterm>
 <glossdef>
 <para>Normally the largest part of the screen, to the right of the Date
-Navigator. It displays the View of the day, workdays, week or month, the List
-View or the to-do list view.</para>
-<para>The right mouse button can be used in the List view and to-do list view
+Navigator. It displays the View of the Day, Workdays, Week or Month, the List
+View or the To-do List view.</para>
+<para>The right mouse button can be used in the List view and To-do List view
 only. It displays a local menu. The left mouse button can be used in any
 view.</para>
 </glossdef>
