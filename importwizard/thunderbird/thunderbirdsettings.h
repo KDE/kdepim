@@ -19,7 +19,9 @@
 #define THUNDERBIRDSETTINGS_H
 
 #include "abstractsettings.h"
+#include "importwizardutil.h"
 #include <QHash>
+#include <QColor>
 #include <QStringList>
 #include <KUrl>
 
@@ -37,6 +39,8 @@ private:
   void readTransport();
   void readGlobalSettings();
   void readLdapSettings();
+  void readTagSettings();
+
   void insertIntoMap( const QString& line );
 
   void addAuth(QMap<QString, QVariant>& settings, const QString & argument, const QString &accountName );
@@ -45,6 +49,8 @@ private:
   QHash<QString, QString> mHashSmtp;
   QStringList mAccountList;
   QStringList mLdapAccountList;
+
+  QHash<QString, tagStruct> mHashTag;
 };
 
 #endif /* THUNDERBIRDSETTINGS_H */

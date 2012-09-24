@@ -70,3 +70,8 @@ void ImportWizardUtil::mergeLdap(const ldapStruct &ldap)
   }
   grp.sync();
 }
+
+void ImportWizardUtil::addNepomukTag(const QList<tagStruct>& tagList)
+{
+    //TODO
+}
