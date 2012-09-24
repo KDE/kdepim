@@ -27,6 +27,7 @@
 #include <Akonadi/CollectionFetchJob>
 #include <Akonadi/CollectionFetchScope>
 #include <Akonadi/Collection>
+#include <Akonadi/Contact/ContactEditorDialog>
 
 #include <KABC/Addressee>
 #include <KLocale>
@@ -98,13 +99,14 @@ class AddEmailAddressJob::Private
 
       Akonadi::Collection addressBook;
 
-      if ( canCreateItemCollections.size() == 0 ) {
+      const int nbItemCollection(canCreateItemCollections.size());
+      if ( nbItemCollection == 0 ) {
         KMessageBox::information ( mParentWidget, i18n( "Please create an address book before adding a contact." ), i18n( "No Address Book Available" ) );
         q->setError( UserDefinedError );
         q->emitResult();
         return;
       }
-      else if ( canCreateItemCollections.size() == 1 ) {
+      else if ( nbItemCollection == 1 ) {
         addressBook = canCreateItemCollections[0];
       }
       else {
@@ -154,10 +156,13 @@ class AddEmailAddressJob::Private
       mItem = createJob->item();
 
       const QString text = i18n( "<qt>The email address <b>%1</b> was added to your "
-                                 "address book; you can add more information to this "
-                                 "entry by opening the address book.</qt>", mCompleteAddress );
-      KMessageBox::information( mParentWidget, text, QString(), QLatin1String("addedtokabc") );
+                                 "address book; Do you want to edit it? .</qt>", mCompleteAddress );
 
+      if(KMessageBox::questionYesNo(mParentWidget, text, QString(), KStandardGuiItem::yes(),KStandardGuiItem::no(),QLatin1String("addedtokabc")) == KMessageBox::Yes) {
+        Akonadi::ContactEditorDialog dlg( Akonadi::ContactEditorDialog::EditMode, mParentWidget );
+        dlg.setContact(mItem);
+        dlg.exec();
+      }
       q->emitResult();
     }
 
