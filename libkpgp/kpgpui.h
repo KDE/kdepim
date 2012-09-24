@@ -25,10 +25,10 @@
 
 #include <QtCore/QString>     // is a member in KeyRequester
 #include <QtCore/QVector>     // used in KeyApprovalDialog
-#include <QtGui/QWidget>      // base class of Config
-#include <QtGui/QCheckBox>    // used in inlined methods
-#include <QtGui/QPixmap>
-#include <QtGui/QLabel>
+#include <QWidget>      // base class of Config
+#include <QCheckBox>    // used in inlined methods
+#include <QPixmap>
+#include <QLabel>
 
 #include <kdebug.h>       // used in inlined methods
 #include <kdialog.h>      // base class of all dialogs here

@@ -31,8 +31,8 @@
 #include <KABC/Addressee>
 #include <KABC/ContactGroup>
 
-#include <QtGui/QCompleter>
-#include <QtGui/QSortFilterProxyModel>
+#include <QCompleter>
+#include <QSortFilterProxyModel>
 
 class Recipient
 {

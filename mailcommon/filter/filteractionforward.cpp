@@ -34,7 +34,7 @@
 #include <KDE/KLocale>
 #include <KDE/KLineEdit>
 
-#include <QtGui/QHBoxLayout>
+#include <QHBoxLayout>
 
 using namespace MailCommon;
 

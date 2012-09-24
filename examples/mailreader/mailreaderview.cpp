@@ -12,7 +12,7 @@
 #include <KConfigDialog>
 
 #include <klocale.h>
-#include <QtGui/QLabel>
+#include <QLabel>
 #include <QHBoxLayout>
 #include <KDebug>
 #include <KApplication>

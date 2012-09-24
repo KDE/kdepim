@@ -22,7 +22,7 @@
 
 #include <messageviewer/mimetreemodel.h>
 
-#include <QtGui/QSortFilterProxyModel>
+#include <QSortFilterProxyModel>
 
 namespace MessageViewer {
   class NodeHelper;

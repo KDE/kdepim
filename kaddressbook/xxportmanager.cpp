@@ -33,9 +33,9 @@
 
 #include <QtCore/QPointer>
 #include <QtCore/QSignalMapper>
-#include <QtGui/QAction>
-#include <QtGui/QItemSelectionModel>
-#include <QtGui/QWidget>
+#include <QAction>
+#include <QItemSelectionModel>
+#include <QWidget>
 
 XXPortManager::XXPortManager( QWidget *parent )
   : QObject( parent ), mSelectionModel( 0 ),

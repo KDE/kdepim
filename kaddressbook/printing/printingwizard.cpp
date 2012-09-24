@@ -44,8 +44,8 @@
 #include <KGlobal>
 #include <KLocale>
 
-#include <QtGui/QPushButton>
-#include <QtGui/QPrinter>
+#include <QPushButton>
+#include <QPrinter>
 
 using namespace KABPrinting;
 

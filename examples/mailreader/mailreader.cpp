@@ -22,8 +22,8 @@
 #include <KDE/KStandardAction>
 #include <KDE/KStatusBar>
 
-#include <QtGui/QDockWidget>
-#include <QtGui/QSortFilterProxyModel>
+#include <QDockWidget>
+#include <QSortFilterProxyModel>
 
 #include <messagelist/pane.h>
 

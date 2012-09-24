@@ -24,7 +24,7 @@
 
 #include <KSharedConfig>
 
-#include <QtGui/QStringListModel>
+#include <QStringListModel>
 
 class FavoritesListModel : public QStringListModel
 {

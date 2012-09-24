@@ -29,7 +29,7 @@
 
 #include "mobileui_export.h"
 
-#include <QtGui/QComboBox>
+#include <QComboBox>
 #include <QtCore/QList>
 
 namespace KPIM {

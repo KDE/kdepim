@@ -25,7 +25,7 @@
 #include "mobileui_export.h"
 
 #include <QtCore/QSignalTransition>
-#include <QtGui/QItemSelectionModel>
+#include <QItemSelectionModel>
 
 class ModelSelectionTransitionPrivate;
 

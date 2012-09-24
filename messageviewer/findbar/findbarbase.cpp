@@ -23,10 +23,10 @@
 
 // qt/kde includes
 #include <QtCore/QTimer>
-#include <QtGui/QLabel>
-#include <QtGui/QLayout>
-#include <QtGui/QMenu>
-#include <QtGui/QToolButton>
+#include <QLabel>
+#include <QLayout>
+#include <QMenu>
+#include <QToolButton>
 #include <QEvent>
 #include <QKeyEvent>
 #include <kicon.h>

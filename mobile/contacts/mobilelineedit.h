@@ -20,7 +20,7 @@
 #ifndef MOBILELINEEDIT_H
 #define MOBILELINEEDIT_H
 
-#include <QtGui/QWidget>
+#include <QWidget>
 
 class QCompleter;
 

@@ -22,7 +22,7 @@
 
 #include "namepartseditwidget.h"
 
-#include <QtGui/QFormLayout>
+#include <QFormLayout>
 
 #include <kcombobox.h>
 #include <klineedit.h>

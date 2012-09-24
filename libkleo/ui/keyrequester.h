@@ -52,8 +52,8 @@
 #include "kleo/kleo_export.h"
 #include "kleo/cryptobackend.h"
 
-#include <QtGui/QWidget>
-#include <QtGui/QLabel>
+#include <QWidget>
+#include <QLabel>
 
 #include <vector>
 

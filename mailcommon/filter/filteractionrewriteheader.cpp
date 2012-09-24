@@ -25,9 +25,9 @@
 #include <KDE/KLineEdit>
 #include <KDE/KLocale>
 
-#include <QtGui/QHBoxLayout>
-#include <QtGui/QLabel>
-#include <QtGui/QTextDocument>
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QTextDocument>
 
 using namespace MailCommon;
 

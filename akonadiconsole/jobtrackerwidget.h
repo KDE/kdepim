@@ -22,7 +22,7 @@
 #ifndef AKONADICONSOLE_JOBTRACKERWIDGET_H
 #define AKONADICONSOLE_JOBTRACKERWIDGET_H
 
-#include <QtGui/QWidget>
+#include <QWidget>
 
 class JobTrackerWidget : public QWidget
 {

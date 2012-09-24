@@ -23,7 +23,7 @@
 #include <akonadi/entitytreemodel.h>
 #include <akonadi/collectionquotaattribute.h>
 
-#include <QtGui/QColor>
+#include <QColor>
 
 using namespace Akonadi;
 

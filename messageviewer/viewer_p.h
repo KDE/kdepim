@@ -34,7 +34,7 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QTimer>
-#include <QtGui/QMouseEvent>
+#include <QMouseEvent>
 
 namespace GpgME { class Error; }
 namespace KIO { class Job; }

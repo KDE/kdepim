@@ -22,7 +22,7 @@
 #define COMPOSERAUTORESIZER_H
 
 #include <QtDeclarative/QDeclarativeItem>
-#include <QtGui/QTextEdit>
+#include <QTextEdit>
 
 class ComposerAutoResizer : public QObject
 {

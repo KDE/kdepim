@@ -22,7 +22,7 @@
 #ifndef AKONADICONSOLE_CONNECTIONPAGE_H
 #define AKONADICONSOLE_CONNECTIONPAGE_H
 
-#include <QtGui/QWidget>
+#include <QWidget>
 
 class KTextEdit;
 

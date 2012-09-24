@@ -23,9 +23,9 @@
 #include <klineedit.h>
 #include <klocale.h>
 
-#include <QtGui/QHBoxLayout>
-#include <QtGui/QPushButton>
-#include <QtGui/QTreeView>
+#include <QHBoxLayout>
+#include <QPushButton>
+#include <QTreeView>
 
 using namespace MessageCore;
 

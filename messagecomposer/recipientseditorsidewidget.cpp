@@ -33,7 +33,7 @@
 
 #include <QLabel>
 #include <QBoxLayout>
-#include <QtGui/QTextDocument>
+#include <QTextDocument>
 
 using namespace MessageComposer;
 

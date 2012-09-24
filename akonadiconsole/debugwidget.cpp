@@ -31,10 +31,10 @@
 #include <KTabWidget>
 #include <KTextEdit>
 
-#include <QtGui/QPushButton>
-#include <QtGui/QSplitter>
-#include <QtGui/QVBoxLayout>
-#include <QtGui/QCheckBox>
+#include <QPushButton>
+#include <QSplitter>
+#include <QVBoxLayout>
+#include <QCheckBox>
 
 using org::freedesktop::Akonadi::DebugInterface;
 

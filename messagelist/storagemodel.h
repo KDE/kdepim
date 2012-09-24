@@ -24,8 +24,8 @@
 #include <akonadi/collection.h>
 #include <akonadi/item.h>
 
-#include <QtGui/QColor>
-#include <QtGui/QFont>
+#include <QColor>
+#include <QFont>
 
 #include <kmime/kmime_message.h>
 

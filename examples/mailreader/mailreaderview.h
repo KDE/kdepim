@@ -6,7 +6,7 @@
 #ifndef MAILREADERVIEW_H
 #define MAILREADERVIEW_H
 
-#include <QtGui/QWidget>
+#include <QWidget>
 
 #include "ui_mailreaderview.h"
 

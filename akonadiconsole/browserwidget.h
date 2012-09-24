@@ -27,7 +27,7 @@
 #include <akonadi/item.h>
 #include <akonadi/etmviewstatesaver.h>
 
-#include <QtGui/QWidget>
+#include <QWidget>
 
 class QModelIndex;
 class QItemSelectionModel;

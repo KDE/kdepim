@@ -20,7 +20,7 @@
 #ifndef EDITORBASE_H
 #define EDITORBASE_H
 
-#include <QtGui/QWidget>
+#include <QWidget>
 
 namespace KABC
 {

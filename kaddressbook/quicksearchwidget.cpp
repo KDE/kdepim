@@ -25,8 +25,8 @@
 #include <KLocale>
 
 #include <QtCore/QTimer>
-#include <QtGui/QKeyEvent>
-#include <QtGui/QVBoxLayout>
+#include <QKeyEvent>
+#include <QVBoxLayout>
 
 QuickSearchWidget::QuickSearchWidget( QWidget *parent )
   : QWidget( parent )

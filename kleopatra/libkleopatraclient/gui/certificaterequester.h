@@ -24,7 +24,7 @@
 
 #include <libkleopatraclient/kleopatraclient_export.h>
 
-#include <QtGui/QWidget>
+#include <QWidget>
 
 namespace KLEOPATRACLIENT_NAMESPACE {
 namespace Gui {

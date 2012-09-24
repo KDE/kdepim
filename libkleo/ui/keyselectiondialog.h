@@ -44,7 +44,7 @@
 
 #include <kdialog.h>
 
-#include <QtGui/QPixmap>
+#include <QPixmap>
 
 #include <vector>
 

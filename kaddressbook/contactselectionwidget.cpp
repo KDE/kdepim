@@ -27,14 +27,14 @@
 
 #include <KLocale>
 
-#include <QtGui/QButtonGroup>
-#include <QtGui/QCheckBox>
-#include <QtGui/QGridLayout>
-#include <QtGui/QGroupBox>
-#include <QtGui/QItemSelectionModel>
-#include <QtGui/QLabel>
-#include <QtGui/QRadioButton>
-#include <QtGui/QVBoxLayout>
+#include <QButtonGroup>
+#include <QCheckBox>
+#include <QGridLayout>
+#include <QGroupBox>
+#include <QItemSelectionModel>
+#include <QLabel>
+#include <QRadioButton>
+#include <QVBoxLayout>
 
 ContactSelectionWidget::ContactSelectionWidget( QItemSelectionModel *selectionModel,
                                                 QWidget *parent )

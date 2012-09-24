@@ -34,8 +34,8 @@
 #include <QtCore/QFile>
 #include <QtCore/QTextStream>
 #include <QTimer>
-#include <QtGui/QTextEdit>
-#include <QtGui/QLabel>
+#include <QTextEdit>
+#include <QLabel>
 
 const KAboutData &createAboutData()
 {

@@ -35,9 +35,9 @@
 
 #include <QtCore/QDir>
 #include <QtCore/QTimer>
-#include <QtGui/QApplication>
-#include <QtGui/QLabel>
-#include <QtGui/QResizeEvent>
+#include <QApplication>
+#include <QLabel>
+#include <QResizeEvent>
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusMessage>
 #include <QtDeclarative/QDeclarativeContext>

@@ -20,7 +20,7 @@
 #ifndef AKONADI_EVENTSFILTERPROXYMODEL_H
 #define AKONADI_EVENTSFILTERPROXYMODEL_H
 
-#include <QtGui/QSortFilterProxyModel>
+#include <QSortFilterProxyModel>
 
 namespace Akonadi {
 

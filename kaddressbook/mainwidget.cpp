@@ -70,16 +70,16 @@
 #include <KXmlGuiWindow>
 #include <KCMultiDialog>
 
-#include <QtGui/QAction>
-#include <QtGui/QActionGroup>
-#include <QtGui/QHBoxLayout>
-#include <QtGui/QHeaderView>
-#include <QtGui/QListView>
-#include <QtGui/QPrinter>
-#include <QtGui/QPrintDialog>
-#include <QtGui/QSortFilterProxyModel>
-#include <QtGui/QSplitter>
-#include <QtGui/QStackedWidget>
+#include <QAction>
+#include <QActionGroup>
+#include <QHBoxLayout>
+#include <QHeaderView>
+#include <QListView>
+#include <QPrinter>
+#include <QPrintDialog>
+#include <QSortFilterProxyModel>
+#include <QSplitter>
+#include <QStackedWidget>
 
 namespace {
 static bool isStructuralCollection( const Akonadi::Collection &collection )

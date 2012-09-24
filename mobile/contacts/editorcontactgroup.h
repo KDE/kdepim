@@ -20,7 +20,7 @@
 #ifndef EDITORCONTACTGROUP_H
 #define EDITORCONTACTGROUP_H
 
-#include <QtGui/QWidget>
+#include <QWidget>
 
 namespace Akonadi
 {

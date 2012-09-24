@@ -21,7 +21,7 @@
 
 #include <KDE/KLineEdit>
 
-#include <QtGui/QTextDocument>
+#include <QTextDocument>
 
 using namespace MailCommon;
 

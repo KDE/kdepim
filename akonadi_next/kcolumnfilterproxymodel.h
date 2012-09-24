@@ -25,7 +25,7 @@
 
 #include "akonadi_next_export.h"
 
-#include <QtGui/QSortFilterProxyModel>
+#include <QSortFilterProxyModel>
 
 template <class T> class QVector;
 

@@ -20,7 +20,7 @@
 #ifndef AKONADI_NOTESFILTERPROXYMODEL_H
 #define AKONADI_NOTESFILTERPROXYMODEL_H
 
-#include <QtGui/QSortFilterProxyModel>
+#include <QSortFilterProxyModel>
 
 namespace Akonadi {
 

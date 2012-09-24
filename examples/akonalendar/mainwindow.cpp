@@ -22,9 +22,9 @@
 #include "mainwindow.h"
 #include "mainwidget.h"
 
-#include <QtGui/QGridLayout>
-#include <QtGui/QToolBar>
-#include <QtGui/QDialog>
+#include <QGridLayout>
+#include <QToolBar>
+#include <QDialog>
 
 #include <KCModuleLoader>
 

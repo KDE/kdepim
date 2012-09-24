@@ -26,7 +26,7 @@
 
 #include <kmime/kmime_message.h>
 
-#include <QtGui/QWidget>
+#include <QWidget>
 
 namespace Akonadi {
 class Item;

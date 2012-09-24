@@ -22,7 +22,7 @@
 #include <KDE/KLocale>
 #include <KDE/KColorScheme>
 
-#include <QtGui/QLabel>
+#include <QLabel>
 
 using namespace MailCommon;
 

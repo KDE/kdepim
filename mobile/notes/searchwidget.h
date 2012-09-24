@@ -22,8 +22,8 @@
 
 #include "ui_searchwidget.h"
 
-#include <QtGui/QGraphicsProxyWidget>
-#include <QtGui/QWidget>
+#include <QGraphicsProxyWidget>
+#include <QWidget>
 
 class SearchWidget : public QWidget
 {

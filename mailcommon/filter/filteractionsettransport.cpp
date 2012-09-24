@@ -26,7 +26,7 @@
 #include <KDE/Mailtransport/TransportComboBox>
 #include <KDE/Mailtransport/TransportManager>
 
-#include <QtGui/QTextDocument>
+#include <QTextDocument>
 
 using namespace MailCommon;
 

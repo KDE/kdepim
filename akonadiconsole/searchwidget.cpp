@@ -31,11 +31,11 @@
 #include <KTextBrowser>
 #include <KTextEdit>
 
-#include <QtGui/QGridLayout>
-#include <QtGui/QLabel>
-#include <QtGui/QListView>
-#include <QtGui/QPushButton>
-#include <QtGui/QStringListModel>
+#include <QGridLayout>
+#include <QLabel>
+#include <QListView>
+#include <QPushButton>
+#include <QStringListModel>
 
 #include <QtCore/QDebug>
 

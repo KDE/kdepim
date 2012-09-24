@@ -24,11 +24,11 @@
 
 #include "stylepage.h"
 
-#include <QtGui/QGridLayout>
-#include <QtGui/QGroupBox>
-#include <QtGui/QLabel>
-#include <QtGui/QPixmap>
-#include <QtGui/QVBoxLayout>
+#include <QGridLayout>
+#include <QGroupBox>
+#include <QLabel>
+#include <QPixmap>
+#include <QVBoxLayout>
 
 #include <KComboBox>
 #include <KDialog>

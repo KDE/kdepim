@@ -20,8 +20,8 @@
 #ifndef CONFIGWIDGET_H
 #define CONFIGWIDGET_H
 
-#include <QtGui/QGraphicsProxyWidget>
-#include <QtGui/QWidget>
+#include <QGraphicsProxyWidget>
+#include <QWidget>
 
 class KCModuleProxy;
 class KComboBox;

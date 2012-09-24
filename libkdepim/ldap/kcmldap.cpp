@@ -22,13 +22,13 @@
 #include "kcmldap_p.h"
 
 #include <QtCore/QString>
-#include <QtGui/QGroupBox>
-#include <QtGui/QLabel>
-#include <QtGui/QListWidget>
-#include <QtGui/QListWidgetItem>
-#include <QtGui/QPushButton>
-#include <QtGui/QToolButton>
-#include <QtGui/QVBoxLayout>
+#include <QGroupBox>
+#include <QLabel>
+#include <QListWidget>
+#include <QListWidgetItem>
+#include <QPushButton>
+#include <QToolButton>
+#include <QVBoxLayout>
 
 #include <kaboutdata.h>
 #include <kapplication.h>

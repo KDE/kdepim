@@ -22,7 +22,7 @@
 
 #include "calendarsupport_export.h"
 
-#include <QtGui/QSortFilterProxyModel>
+#include <QSortFilterProxyModel>
 
 namespace KCalCore {
   class CalFilter;

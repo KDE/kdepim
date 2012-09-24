@@ -22,7 +22,7 @@
 #ifndef MAINWIDGET_H
 #define MAINWIDGET_H
 
-#include <QtGui/QTreeView>
+#include <QTreeView>
 #include <QSplitter>
 #include <QHBoxLayout>
 

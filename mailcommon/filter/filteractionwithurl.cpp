@@ -21,7 +21,7 @@
 
 #include <KDE/KUrlRequester>
 
-#include <QtGui/QTextDocument>
+#include <QTextDocument>
 
 using namespace MailCommon;
 

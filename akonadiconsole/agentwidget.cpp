@@ -40,9 +40,9 @@
 
 #include <QtCore/QFile>
 #include <QtCore/QPointer>
-#include <QtGui/QGridLayout>
-#include <QtGui/QMenu>
-#include <QtGui/QPushButton>
+#include <QGridLayout>
+#include <QMenu>
+#include <QPushButton>
 #include <QDBusInterface>
 #include <QDBusMessage>
 #include <QDBusReply>

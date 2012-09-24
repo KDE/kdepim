@@ -20,7 +20,7 @@
 #ifndef EMAILSFILTERPROXYMODEL_H
 #define EMAILSFILTERPROXYMODEL_H
 
-#include <QtGui/QSortFilterProxyModel>
+#include <QSortFilterProxyModel>
 
 namespace Akonadi {
 
