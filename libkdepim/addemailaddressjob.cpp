@@ -99,7 +99,7 @@ class AddEmailAddressJob::Private
       Akonadi::Collection addressBook;
 
       if ( canCreateItemCollections.size() == 0 ) {
-        KMessageBox::information ( 0, i18n( "Please create an address book before adding a contact." ), i18n( "No Address Book Available" ) );
+        KMessageBox::information ( mParentWidget, i18n( "Please create an address book before adding a contact." ), i18n( "No Address Book Available" ) );
         q->setError( UserDefinedError );
         q->emitResult();
         return;
