@@ -68,7 +68,9 @@ KMComposerAutoCorrectionWidget::KMComposerAutoCorrectionWidget(QWidget *parent) 
   connect(ui->typographicDoubleQuotes,SIGNAL(clicked()),SIGNAL(changed()));
   connect(ui->typographicSingleQuotes,SIGNAL(clicked()),SIGNAL(changed()));
   connect(ui->abbreviationList,SIGNAL(itemClicked ( QListWidgetItem *)),SLOT(slotEnableDisableAbreviationList()));
+  connect(ui->twoUpperLetterList,SIGNAL(itemClicked ( QListWidgetItem *)),SLOT(slotEnableDisableTwoUpperEntry()));
   slotEnableDisableAbreviationList();
+  slotEnableDisableTwoUpperEntry();
 }
 
 KMComposerAutoCorrectionWidget::~KMComposerAutoCorrectionWidget()
@@ -259,13 +261,11 @@ void KMComposerAutoCorrectionWidget::enableAdvAutocorrection(bool state)
 void KMComposerAutoCorrectionWidget::addAutocorrectEntry()
 {
     QTreeWidgetItem *item = ui->treeWidget->currentItem ();
-    if(!item)
-        return;
     QString find = ui->find->text();
     bool modify = false;
 
     // Modify actually, not add, so we want to remove item from hash
-    if (find == item->text(0)) {
+    if (item && (find == item->text(0))) {
         m_autocorrectEntries.remove(find);
         modify = true;
     }
@@ -391,7 +391,7 @@ void KMComposerAutoCorrectionWidget::removeAbbreviationEntry()
 
 void KMComposerAutoCorrectionWidget::addTwoUpperLetterEntry()
 {
-  QString text = ui->twoUpperLetter->text();
+  const QString text = ui->twoUpperLetter->text();
   if(text.isEmpty())
     return;
   if (!m_twoUpperLetterExceptions.contains(text)) {
@@ -399,27 +399,36 @@ void KMComposerAutoCorrectionWidget::addTwoUpperLetterEntry()
     ui->twoUpperLetterList->addItem(text);
     Q_EMIT changed();
   }
+  slotEnableDisableTwoUpperEntry();
   ui->twoUpperLetter->clear();
 
 }
 
 void KMComposerAutoCorrectionWidget::removeTwoUpperLetterEntry()
 {
-  int currentRow = ui->twoUpperLetterList->currentRow();
+  const int currentRow = ui->twoUpperLetterList->currentRow();
   QListWidgetItem *item = ui->twoUpperLetterList->takeItem(currentRow);
   if(!item)
     return;
   m_twoUpperLetterExceptions.remove(item->text());
   delete item;
+  slotEnableDisableTwoUpperEntry();
   Q_EMIT changed();
 }
 
 
 void KMComposerAutoCorrectionWidget::slotEnableDisableAbreviationList()
 {
-    bool enable = (ui->abbreviationList->currentItem() != 0);
-    ui->add1->setEnabled(enable);
+    const bool enable = (ui->abbreviationList->currentItem() != 0);
+    ui->add1->setEnabled(enable && !ui->abbreviation->text().isEmpty());
     ui->remove1->setEnabled(enable);
+}
+
+void KMComposerAutoCorrectionWidget::slotEnableDisableTwoUpperEntry()
+{
+    const bool enable = (ui->twoUpperLetterList->currentItem() != 0);
+    ui->add2->setEnabled(enable && !ui->twoUpperLetter->text().isEmpty());
+    ui->remove2->setEnabled(enable);
 }
 
 #include "kmcomposerautocorrectionwidget.moc"

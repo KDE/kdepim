@@ -634,6 +634,9 @@ QString KMComposerAutoCorrection::language() const
 
 void KMComposerAutoCorrection::setLanguage(const QString &lang)
 {
-  //TODO
-  mAutoCorectLang = lang;
+  if(mAutoCorectLang != lang) {
+    mAutoCorectLang = lang;
+    //Re-read xml file
+    readAutoCorrectionXmlFile();
+  }
 }
