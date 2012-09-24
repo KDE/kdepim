@@ -93,9 +93,6 @@ class AddEmailAddressJob::Private
         }
       }
 
-      KABC::Addressee contact;
-      contact.setNameFromString( mName );
-      contact.insertEmail( mEmail, true );
 
       Akonadi::Collection addressBook;
 
@@ -132,6 +129,9 @@ class AddEmailAddressJob::Private
         q->emitResult();
         return;
       }
+      KABC::Addressee contact;
+      contact.setNameFromString( mName );
+      contact.insertEmail( mEmail, true );
 
       // create the new item
       Akonadi::Item item;
