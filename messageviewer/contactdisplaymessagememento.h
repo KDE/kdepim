@@ -38,11 +38,6 @@ Q_OBJECT
 public:
   explicit ContactDisplayMessageMemento( const QString &emailAddress );
   ~ContactDisplayMessageMemento();
-  enum ForceDisplayTo {
-    Unknown = 0,
-    Text = 1,
-    Html = 2
-  };
   void processAddress( const KABC::Addressee& addressee );
   bool allowToRemoteContent() const;
   bool forceToHtml() const;
@@ -56,6 +51,7 @@ public:
 signals:
   // TODO: Factor our update and detach into base class
   void update( MessageViewer::Viewer::UpdateMode );
+  void changeDisplayMail(Viewer::ForceDisplayTo displayAsHtml, bool remoteContent);
 
 private Q_SLOTS:
   void slotSearchJobFinished( KJob *job );
@@ -63,7 +59,7 @@ private Q_SLOTS:
 private:
   bool mFinished;
   bool mMailAllowToRemoteContent;
-  ForceDisplayTo mForceDisplayTo;
+  Viewer::ForceDisplayTo mForceDisplayTo;
   KABC::Picture mPhoto;
 };
 
