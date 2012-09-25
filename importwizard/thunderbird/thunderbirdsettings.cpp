@@ -645,6 +645,6 @@ void ThunderbirdSettings::insertIntoMap( const QString& line )
         tag.name = mHashConfig.value(key).toString();
       }
       mHashTag.insert(name,tag);
-      qDebug()<<" tag :"<<name<<" tag.name"<<tag.name<<" color :"<<tag.color;
+      kDebug()<<" tag :"<<name<<" tag.name"<<tag.name<<" color :"<<tag.color;
   }
 }
