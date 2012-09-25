@@ -571,7 +571,7 @@ void KMComposerAutoCorrection::writeAutoCorrectionXmlFile()
     const QString fname = KGlobal::dirs()->locateLocal("data", QLatin1String("autocorrect/autocorrect.xml"));
     QFile file(fname);
     if( !file.open( QIODevice::WriteOnly | QIODevice::Text ) ) {
-        qDebug()<<"We can't save in file :"<<fname;
+        kDebug()<<"We can't save in file :"<<fname;
         return;
     }
     QDomDocument root(QLatin1String("autocorrection"));
