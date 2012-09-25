@@ -156,7 +156,7 @@ class AddEmailAddressJob::Private
       mItem = createJob->item();
 
       const QString text = i18n( "<qt>The email address <b>%1</b> was added to your "
-                                 "address book; Do you want to edit it? .</qt>", mCompleteAddress );
+                                 "address book. Do you want to edit it?</qt>", mCompleteAddress );
 
       if(KMessageBox::questionYesNo(mParentWidget, text, QString(), KStandardGuiItem::yes(),KStandardGuiItem::no(),QLatin1String("addedtokabc")) == KMessageBox::Yes) {
         Akonadi::ContactEditorDialog dlg( Akonadi::ContactEditorDialog::EditMode, mParentWidget );
