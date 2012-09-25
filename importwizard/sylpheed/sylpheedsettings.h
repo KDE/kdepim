@@ -46,6 +46,8 @@ protected:
   virtual void readSettingsColor(const KConfigGroup& group);
   virtual void readTemplateFormat(const KConfigGroup& group);
 
+  virtual void readTagColor(const KConfigGroup& group);
+
   QString convertToKmailTemplate(const QString& templateStr);
 
 
