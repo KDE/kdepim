@@ -593,7 +593,7 @@ signals:
   void showMessage( KMime::Message::Ptr message, const QString& encoding );
   void itemRemoved();
   void resumeNetworkJobs();
-
+  void changeDisplayMail(Viewer::ForceDisplayTo,bool);
 private:
   QString attachmentInjectionHtml() const;
   QString recipientsQuickListLinkHtml( bool, const QString & ) const;

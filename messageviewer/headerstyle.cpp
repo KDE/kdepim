@@ -509,6 +509,9 @@ QString FancyHeaderStyle::format( KMime::Message *message ) const {
       nodeHelper()->setBodyPartMemento( message, "contactphoto", photoMemento );
       QObject::connect( photoMemento, SIGNAL(update(MessageViewer::Viewer::UpdateMode)),
                         sourceObject(), SLOT(update(MessageViewer::Viewer::UpdateMode)) );
+
+      QObject::connect( photoMemento, SIGNAL(changeDisplayMail(Viewer::ForceDisplayTo,bool)),
+                        sourceObject(), SIGNAL(changeDisplayMail(Viewer::ForceDisplayTo,bool)) );
     }
 
     if ( photoMemento->finished() ) {

@@ -106,6 +106,12 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
    */
   Akonadi::Item messageItem() const;
 
+  enum ForceDisplayTo {
+    Unknown = 0,
+    Text = 1,
+    Html = 2
+  };
+
   enum AttachmentAction
   {
     Open = 1,
@@ -318,6 +324,7 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
   QString selectedText() const;
 
 signals:
+  void changeDisplayMail(Viewer::ForceDisplayTo,bool);
 
   /**
    * Emitted when a status bar message is shown. Note that the status bar message is also set to
@@ -377,6 +384,7 @@ public slots:
   void slotZoomIn();
   void slotZoomOut();
   void slotZoomReset();
+  void slotChangeDisplayMail(Viewer::ForceDisplayTo,bool);
 protected:
   /** Some necessary event handling. */
   virtual void closeEvent(QCloseEvent *);

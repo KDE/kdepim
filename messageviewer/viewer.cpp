@@ -64,6 +64,7 @@ Viewer::Viewer( QWidget *aParent, QWidget *mainWindow, KActionCollection *action
            this, SIGNAL(showStatusBarMessage(QString)) );
   connect( d_ptr, SIGNAL(itemRemoved()),
            this, SIGNAL(itemRemoved()) );
+  connect( d_ptr, SIGNAL(changeDisplayMail(Viewer::ForceDisplayTo,bool)), SLOT(slotChangeDisplayMail(Viewer::ForceDisplayTo,bool)) );
 
   setMessage( KMime::Message::Ptr(), Delayed );
 }
@@ -592,7 +593,22 @@ bool Viewer::zoomTextOnly() const
   return d->mZoomTextOnly;
 }
 
-
+void Viewer::slotChangeDisplayMail(Viewer::ForceDisplayTo mode,bool loadExternal)
+{
+    qDebug()<<"void Viewer::slotChangeDisplayMail(Viewer::ForceDisplayTo mode,bool loadExternal)"<<loadExternal;
+    setHtmlLoadExtOverride(loadExternal);
+    switch(mode) {
+    case Viewer::Html:
+        setHtmlOverride(true);
+        break;
+    case Viewer::Text:
+        setHtmlOverride(false);
+        break;
+    default:
+        break;
+    }
+    update(Viewer::Force);
+}
 }
 
 #include "viewer.moc"
