@@ -17,17 +17,57 @@
  */
 #include "contactdisplaymessagememento.h"
 
+#include <Akonadi/Contact/ContactSearchJob>
+
 using namespace MessageViewer;
 
 ContactDisplayMessageMemento::ContactDisplayMessageMemento( const QString &emailAddress )
-  : ContactAbstractMemento( emailAddress ),
+  : QObject( 0 ),
+    mFinished( false ),
     mMailAllowToRemoteContent( false ),
     mForceDisplayTo( Unknown )
 {
+    Akonadi::ContactSearchJob *searchJob = new Akonadi::ContactSearchJob();
+    searchJob->setQuery( Akonadi::ContactSearchJob::Email, emailAddress );
+    connect( searchJob, SIGNAL(result(KJob*)),
+             this, SLOT(slotSearchJobFinished(KJob*)) );
 }
 
 ContactDisplayMessageMemento::~ContactDisplayMessageMemento()
 {
+}
+
+
+void ContactDisplayMessageMemento::slotSearchJobFinished( KJob *job )
+{
+  mFinished = true;
+  Akonadi::ContactSearchJob *searchJob = static_cast<Akonadi::ContactSearchJob*>( job );
+  if ( searchJob->error() ) {
+    kWarning() << "Unable to fetch contact:" << searchJob->errorText();
+    return;
+  }
+
+  const int contactSize( searchJob->contacts().size() );
+  if ( contactSize == 1 ) {
+
+    KABC::Addressee addressee = searchJob->contacts().first();
+    processAddress( addressee );
+    emit update( Viewer::Delayed );
+
+  } else if ( contactSize > 1 ) {
+    kDebug()<<" more than 1 contact was found";
+    // TODO: Figure out something here...
+  }
+}
+
+bool ContactDisplayMessageMemento::finished() const
+{
+  return mFinished;
+}
+
+void ContactDisplayMessageMemento::detach()
+{
+  disconnect( this, SIGNAL(update(MessageViewer::Viewer::UpdateMode)), 0, 0 );
 }
 
 bool ContactDisplayMessageMemento::allowToRemoteContent() const
@@ -47,6 +87,7 @@ bool ContactDisplayMessageMemento::forceToText() const
 
 void ContactDisplayMessageMemento::processAddress( const KABC::Addressee& addressee )
 {
+  mPhoto = addressee.photo();
   const QStringList customs = addressee.customs();
   Q_FOREACH( const QString& custom, customs )
   {
@@ -65,5 +106,11 @@ void ContactDisplayMessageMemento::processAddress( const KABC::Addressee& addres
     }
   }
 }
+
+KABC::Picture ContactDisplayMessageMemento::photo() const
+{
+  return mPhoto;
+}
+
 
 #include "contactdisplaymessagememento.moc"

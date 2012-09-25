@@ -19,12 +19,20 @@
 #ifndef CONTACTDISPLAYMESSAGEMEMENTO_H
 #define CONTACTDISPLAYMESSAGEMEMENTO_H
 
-#include "contactabstractmemento.h"
+#include "interfaces/bodypart.h"
+#include "viewer.h"
+
+#include <KABC/Picture>
+#include <KABC/Addressee>
+
+#include <QObject>
+
+class KJob;
 
 namespace MessageViewer
 {
 
-class ContactDisplayMessageMemento : public ContactAbstractMemento 
+class ContactDisplayMessageMemento : public QObject, public Interface::BodyPartMemento
 {
 Q_OBJECT
 public:
@@ -39,10 +47,24 @@ public:
   bool allowToRemoteContent() const;
   bool forceToHtml() const;
   bool forceToText() const;
+  KABC::Picture photo() const;
+
+  bool finished() const;
+
+  void detach();
+
+signals:
+  // TODO: Factor our update and detach into base class
+  void update( MessageViewer::Viewer::UpdateMode );
+
+private Q_SLOTS:
+  void slotSearchJobFinished( KJob *job );
 
 private:
+  bool mFinished;
   bool mMailAllowToRemoteContent;
   ForceDisplayTo mForceDisplayTo;
+  KABC::Picture mPhoto;
 };
 
 }

@@ -184,6 +184,7 @@ void TranslatorWidget::init()
   layout->addLayout( hboxLayout );
 
   QSplitter *splitter = new QSplitter;
+  splitter->setChildrenCollapsible( false );
   d->inputText = new KTextEdit;
   d->inputText->setAcceptRichText(false);
   d->inputText->setClickMessage(i18n("Drag text that you want to translate."));
