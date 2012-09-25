@@ -146,6 +146,12 @@ void KMComposerAutoCorrection::writeConfig()
   writeAutoCorrectionXmlFile();
 }
 
+void KMComposerAutoCorrection::addAutoCorrect(const QString &currentWord, const QString &replaceWord)
+{
+  mAutocorrectEntries.insert(currentWord, replaceWord);
+  writeAutoCorrectionXmlFile();
+}
+
 
 void KMComposerAutoCorrection::setUpperCaseExceptions(const QSet<QString>& exceptions)
 {
@@ -640,3 +646,4 @@ void KMComposerAutoCorrection::setLanguage(const QString &lang)
     readAutoCorrectionXmlFile();
   }
 }
+

@@ -96,6 +96,7 @@ class KMeditorPrivate
      */
     QList< QPair<int,int> > signaturePositions( const KPIMIdentities::Signature &sig ) const;
 
+    void slotAddAutoCorrect(const QString&, const QString&);
     // Data members
     QString extEditorPath;
     KMeditor *q;
@@ -111,6 +112,13 @@ class KMeditorPrivate
 }
 
 using namespace Message;
+
+void KMeditorPrivate::slotAddAutoCorrect(const QString&currentWord, const QString&replaceWord)
+{
+  if(mAutoCorrection) {
+    mAutoCorrection->addAutoCorrect(currentWord,replaceWord);
+  }
+}
 
 void KMeditorPrivate::startExternalEditor()
 {
@@ -290,9 +298,13 @@ KMeditor::~KMeditor()
 
 void KMeditorPrivate::init()
 {
+#ifdef HAVE_AUTOCORRECTFEATURE
+  q->showAutoCorrectButton(true);
+#endif
   QShortcut * insertMode = new QShortcut( QKeySequence( Qt::Key_Insert ), q );
   q->connect( insertMode, SIGNAL(activated()),
               q, SLOT(slotChangeInsertMode()) );
+  q->connect(q,SIGNAL(spellCheckerAutoCorrect(QString,QString)),q, SLOT(slotAddAutoCorrect(QString,QString)));
 }
 
 void KMeditor::slotChangeInsertMode()

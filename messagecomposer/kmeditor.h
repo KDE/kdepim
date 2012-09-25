@@ -218,6 +218,7 @@ class MESSAGECOMPOSER_EXPORT KMeditor : public KPIMTextEdit::TextEdit
     friend class KMeditorPrivate;
     Q_PRIVATE_SLOT( d, void ensureCursorVisibleDelayed() )
     Q_PRIVATE_SLOT( d, void slotEditorFinished( int, QProcess::ExitStatus ) )
+    Q_PRIVATE_SLOT( d, void slotAddAutoCorrect( QString, QString ) )
 };
 
 }
