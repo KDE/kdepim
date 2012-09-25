@@ -637,8 +637,6 @@ void ThunderbirdSettings::insertIntoMap( const QString& line )
       if(mHashTag.contains(name)) {
         tag = mHashTag.value(name);
         mHashTag.remove(name);
-      } else {
-        tag.name = name;
       }
       if(key.endsWith(QLatin1String(".color"))) {
         tag.color = QColor(mHashConfig.value(key).toString());
@@ -646,6 +644,6 @@ void ThunderbirdSettings::insertIntoMap( const QString& line )
         tag.name = mHashConfig.value(key).toString();
       }
       mHashTag.insert(name,tag);
-      qDebug()<<" tag :"<<tag.name<<" color :"<<tag.color;
+      qDebug()<<" tag :"<<name<<" tag.name"<<tag.name<<" color :"<<tag.color;
   }
 }
