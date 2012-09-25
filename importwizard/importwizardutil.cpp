@@ -18,7 +18,10 @@
 #include "importwizardutil.h"
 #include <KSharedConfig>
 #include <KConfigGroup>
-
+#include <QColor>
+#include <Nepomuk2/Tag>
+#include <Nepomuk2/Variant>
+#include "messagetag.h"
 #include <QDebug>
 
 void ImportWizardUtil::mergeLdap(const ldapStruct &ldap)
@@ -73,5 +76,13 @@ void ImportWizardUtil::mergeLdap(const ldapStruct &ldap)
 
 void ImportWizardUtil::addNepomukTag(const QList<tagStruct>& tagList)
 {
-    //TODO
+  const int listSize(tagList.size());
+  for(int i = 0; i<listSize; ++i) {
+    Nepomuk2::Tag nepomukTag( tagList.at(i).name );
+    nepomukTag.setLabel( tagList.at(i).name );
+    if ( tagList.at(i).color.isValid() ) {
+      const QString colorName = tagList.at(i).color.name();
+      nepomukTag.setProperty( Vocabulary::MessageTag::textColor(), colorName );
+    }
+  }
 }

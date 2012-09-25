@@ -66,6 +66,7 @@ ThunderbirdSettings::ThunderbirdSettings( const QString& filename, ImportWizard 
   readAccount();
   readGlobalSettings();
   readLdapSettings();
+  readTagSettings();
 }
 
 ThunderbirdSettings::~ThunderbirdSettings()
