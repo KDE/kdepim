@@ -85,7 +85,7 @@
 
 #include <string.h>
 #include <assert.h>
-#include <QtGui/qscrollbar.h>
+#include <qscrollbar.h>
 
 static bool checkKeyUsage( const GpgME::Key & key, unsigned int keyUsage ) {
 

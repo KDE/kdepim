@@ -20,7 +20,7 @@
 
 #include "composerautoresizer.h"
 
-#include <QtGui/QGraphicsProxyWidget>
+#include <QGraphicsProxyWidget>
 
 ComposerAutoResizer::ComposerAutoResizer( QTextEdit* parent )
   : QObject( parent ),

@@ -23,7 +23,7 @@
 #ifndef MAILACTIONMANAGER_H
 #define MAILACTIONMANAGER_H
 
-#include <QtGui/QItemSelectionModel>
+#include <QItemSelectionModel>
 
 #include "kactioncollection.h"
 

@@ -29,10 +29,10 @@
 #include <QtCore/QAbstractTableModel>
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
-#include <QtGui/QLabel>
-#include <QtGui/QListView>
-#include <QtGui/QMouseEvent>
-#include <QtGui/QStyledItemDelegate>
+#include <QLabel>
+#include <QListView>
+#include <QMouseEvent>
+#include <QStyledItemDelegate>
 
 typedef struct {
   QString displayName;

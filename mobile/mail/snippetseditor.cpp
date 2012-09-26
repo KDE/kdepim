@@ -26,7 +26,7 @@
 #include <mailcommon/snippetsmanager.h>
 
 #include <QtCore/QAbstractItemModel>
-#include <QtGui/QItemSelectionModel>
+#include <QItemSelectionModel>
 
 SnippetsEditor::SnippetsEditor( KActionCollection *actionCollection, QObject *parent )
   : QObject( parent ), mSnippetsManager( new MailCommon::SnippetsManager( actionCollection, this ) )

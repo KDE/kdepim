@@ -18,11 +18,17 @@
 #ifndef IMPORTCALENDARJOB_H
 #define IMPORTCALENDARJOB_H
 
+class ArchiveStorage;
+class QWidget;
+
 class ImportCalendarJob
 {
 public:
-  explicit ImportCalendarJob();
+  explicit ImportCalendarJob(QWidget *parent, ArchiveStorage *archiveStorage);
   ~ImportCalendarJob();
+
+
+  void restoreResources();
 };
 
 #endif // IMPORTCALENDARJOB_H

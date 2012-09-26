@@ -5,15 +5,15 @@
 
 #include <klocale.h>
 
-#include <QtGui/QCheckBox>
-#include <QtGui/QDateEdit>
-#include <QtGui/QDateTimeEdit>
-#include <QtGui/QGridLayout>
-#include <QtGui/QLabel>
-#include <QtGui/QLineEdit>
-#include <QtGui/QSpinBox>
-#include <QtGui/QTimeEdit>
-#include <QtGui/QToolButton>
+#include <QCheckBox>
+#include <QDateEdit>
+#include <QDateTimeEdit>
+#include <QGridLayout>
+#include <QLabel>
+#include <QLineEdit>
+#include <QSpinBox>
+#include <QTimeEdit>
+#include <QToolButton>
 
 CustomFieldEditWidget::CustomFieldEditWidget( QWidget *parent )
   : QWidget( parent ), mEditor( 0 )

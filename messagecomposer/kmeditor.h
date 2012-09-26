@@ -27,6 +27,8 @@
 
 #include <KPIMTextEdit/TextEdit>
 
+class KMComposerAutoCorrection;
+
 namespace KPIMIdentities {
   class Signature;
 }
@@ -176,6 +178,9 @@ class MESSAGECOMPOSER_EXPORT KMeditor : public KPIMTextEdit::TextEdit
      */
     void fillComposerTextPart( Message::TextPart* textPart ) const;
 
+    KMComposerAutoCorrection* autocorrection() const;
+
+    void setAutocorrection(KMComposerAutoCorrection* autocorrect);
   public Q_SLOTS:
 
     void slotAddQuotes();
@@ -213,6 +218,7 @@ class MESSAGECOMPOSER_EXPORT KMeditor : public KPIMTextEdit::TextEdit
     friend class KMeditorPrivate;
     Q_PRIVATE_SLOT( d, void ensureCursorVisibleDelayed() )
     Q_PRIVATE_SLOT( d, void slotEditorFinished( int, QProcess::ExitStatus ) )
+    Q_PRIVATE_SLOT( d, void slotAddAutoCorrect( QString, QString ) )
 };
 
 }

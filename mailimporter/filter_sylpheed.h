@@ -36,14 +36,16 @@ public:
 
   static QString defaultSettingsPath();
 
-  void import();
-  void importMails( const QString& maildir );
+  virtual void import();
+  virtual void importMails( const QString& maildir );
 
   /* return local mail dir from folderlist.xml*/
-  QString localMailDirPath();
-  
+  virtual QString localMailDirPath();
+  virtual bool excludeFile(const QString& file);
+  virtual QString defaultInstallFolder() const;
+  virtual QString markFile() const;
 private:
-  bool excludeFile(const QString& file);
+
   void importDirContents(const QString&);
   void importFiles(const QString&);
   void processDirectory( const QString& path);

@@ -20,7 +20,7 @@
 #define QMLDATEEDIT_H
 
 #include <QtCore/QDate>
-#include <QtGui/QDateEdit>
+#include <QDateEdit>
 #include "declarativewidgetwrapper.h"
 
 

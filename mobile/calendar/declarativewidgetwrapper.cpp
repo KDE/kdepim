@@ -19,7 +19,7 @@
 
 #include "declarativewidgetwrapper.h"
 
-#include <QtGui/QGraphicsProxyWidget>
+#include <QGraphicsProxyWidget>
 
 using namespace Qt;
 

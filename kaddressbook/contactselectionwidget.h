@@ -22,7 +22,7 @@
 
 #include <KABC/Addressee>
 
-#include <QtGui/QWidget>
+#include <QWidget>
 
 class QCheckBox;
 class QItemSelectionModel;

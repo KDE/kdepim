@@ -42,8 +42,8 @@
 #include <QtCore/QFile>
 #include <QtCore/QTextStream>
 #include <QTimer>
-#include <QtGui/QTextEdit>
-#include <QtGui/QLabel>
+#include <QTextEdit>
+#include <QLabel>
 #include "kjotswidget.h"
 
 const KAboutData &createAboutData()

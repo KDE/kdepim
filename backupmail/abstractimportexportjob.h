@@ -23,6 +23,7 @@
 class KZip;
 class QWidget;
 class QProgressDialog;
+class ArchiveStorage;
 namespace KPIMIdentities {
   class Identity;
   class IdentityManager;
@@ -32,7 +33,7 @@ class AbstractImportExportJob : public QObject
 {
   Q_OBJECT
 public:
-  explicit AbstractImportExportJob(QWidget *parent, const QString& filename, BackupMailUtil::BackupTypes typeSelected, int numberOfStep);
+  explicit AbstractImportExportJob(QWidget *parent, ArchiveStorage *archiveStorage, BackupMailUtil::BackupTypes typeSelected, int numberOfStep);
   ~AbstractImportExportJob();
 
   virtual void start() = 0;
@@ -43,11 +44,10 @@ public:
 Q_SIGNALS:
   void info(const QString&);
   void error(const QString&);
-protected:
-  void closeArchive();
-  bool openArchive(bool write);
 
 protected:
+  KZip *archive();
+
   QProgressDialog *progressDialog();
   void increaseProgressDialog();
   void createProgressDialog();
@@ -55,7 +55,7 @@ protected:
   void showInfo(const QString&text);
 
   BackupMailUtil::BackupTypes mTypeSelected;
-  KZip *mArchive;
+  ArchiveStorage *mArchiveStorage;
   KPIMIdentities::IdentityManager *mIdentityManager;
   QWidget *mParent;
   QProgressDialog *mProgressDialog;

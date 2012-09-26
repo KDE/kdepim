@@ -53,7 +53,7 @@
 #include <QtCore/QAbstractItemModel>
 #include <QtCore/QAtomicInt>
 #include <QtCore/QScopedPointer>
-#include <QtGui/QItemSelectionModel>
+#include <QItemSelectionModel>
 #include <QtCore/QMimeData>
 #include <QtCore/QCryptographicHash>
 

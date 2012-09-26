@@ -198,7 +198,7 @@ void Message::ComposerViewBase::send ( MessageSender::SendMethod method, Message
 
   const KPIMIdentities::Identity identity = identityManager()->identityForUoid( m_identityCombo->currentIdentity() );
 
-  if(identity.attachVcard()) {
+  if(identity.attachVcard() && m_attachmentController->attachOwnVcard()) {
     const QString vcardFileName = identity.vCardFile();
     if(!vcardFileName.isEmpty()) {
       m_attachmentController->addAttachmentUrlSync(KUrl(vcardFileName));
@@ -933,20 +933,29 @@ void Message::ComposerViewBase::slotSaveMessage( KJob* job )
   Akonadi::Collection target;
   Akonadi::Item item = job->property( "Akonadi::Item" ).value<Akonadi::Item>();
   if( job->error() ) {
-    if ( mSaveIn == MessageSender::SaveInTemplates ) {
-      target = Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Templates );
-    } else {
-      target = Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Drafts );
-    }
+    target = defaultSpecialTarget();
   } else {
     const Akonadi::CollectionFetchJob *fetchJob = qobject_cast<Akonadi::CollectionFetchJob*>( job );
-    target = fetchJob->collections().first();
+    if(fetchJob->collections().isEmpty())
+      target = defaultSpecialTarget();
+    else
+      target = fetchJob->collections().first();
   }
   Akonadi::ItemCreateJob *create = new Akonadi::ItemCreateJob( item, target, this );
   connect( create, SIGNAL(result(KJob*)), this, SLOT(slotCreateItemResult(KJob*)) );
   m_pendingQueueJobs++;
 }
 
+Akonadi::Collection Message::ComposerViewBase::defaultSpecialTarget() const
+{
+  Akonadi::Collection target;
+  if ( mSaveIn == MessageSender::SaveInTemplates ) {
+    target = Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Templates );
+  } else {
+    target = Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Drafts );
+  }
+  return target;
+}
 
 void Message::ComposerViewBase::slotCreateItemResult( KJob *job )
 {
@@ -1173,6 +1182,9 @@ void Message::ComposerViewBase::identityChanged ( const KPIMIdentities::Identity
   if ( !replaced && (/* msgCleared ||*/ oldSig.rawText().isEmpty() ) ) {
     signatureController()->applySignature( newSig );
   }
+  const QString vcardFileName = ident.vCardFile();
+  attachmentController()->setIdentityHasOwnVcard(!vcardFileName.isEmpty());
+  attachmentController()->setAttachOwnVcard(ident.attachVcard());
 
 }
 
@@ -1255,7 +1267,6 @@ void Message::ComposerViewBase::setFccCombo ( Akonadi::CollectionComboBox* fcc )
 
 Akonadi::CollectionComboBox* Message::ComposerViewBase::fccCombo()
 {
-
   return m_fccCombo;
 }
 
@@ -1350,12 +1361,12 @@ bool Message::ComposerViewBase::inlineSigningEncryptionSelected()
   return m_cryptoMessageFormat == Kleo::InlineOpenPGPFormat;
 }
 
-Message::ComposerViewBase::MissingAttachment Message::ComposerViewBase::checkForMissingAttachments( const QStringList& attachmentKeywords )
+bool Message::ComposerViewBase::hasMissingAttachments( const QStringList& attachmentKeywords )
 {
   if ( attachmentKeywords.isEmpty() )
-    return NoMissingAttachmentFound;
+    return false;
   if ( m_attachmentModel->rowCount() > 0 ) {
-    return NoMissingAttachmentFound;
+    return false;
   }
 
   QStringList attachWordsList = attachmentKeywords;
@@ -1389,8 +1400,15 @@ Message::ComposerViewBase::MissingAttachment Message::ComposerViewBase::checkFor
   }
 
   if ( !gotMatch )
-    return NoMissingAttachmentFound;
+    return false;
+  return true;
+}
 
+Message::ComposerViewBase::MissingAttachment Message::ComposerViewBase::checkForMissingAttachments( const QStringList& attachmentKeywords )
+{
+  if(!hasMissingAttachments( attachmentKeywords )) {
+    return NoMissingAttachmentFound;
+  }
   int rc = KMessageBox::warningYesNoCancel( m_editor,
                                             i18n("The message you have composed seems to refer to an "
                                                 "attached file but you have not attached anything.\n"

@@ -40,12 +40,12 @@
 #include <kwindowsystem.h>
 
 #include <QtCore/QRegExp>
-#include <QtGui/QApplication>
-#include <QtGui/QIcon>
-#include <QtGui/QPushButton>
-#include <QtGui/QShortcut>
-#include <QtGui/QTabBar>
-#include <QtGui/QVBoxLayout>
+#include <QApplication>
+#include <QIcon>
+#include <QPushButton>
+#include <QShortcut>
+#include <QTabBar>
+#include <QVBoxLayout>
 #include <QContextMenuEvent>
 #include <QDebug>
 #include <QMenu>

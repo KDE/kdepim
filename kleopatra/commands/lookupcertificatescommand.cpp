@@ -300,6 +300,7 @@ void LookupCertificatesCommand::Private::slotImportRequested( const std::vector<
 
 
 void LookupCertificatesCommand::Private::slotSaveAsRequested( const std::vector<Key> & keys ) {
+    Q_UNUSED( keys );
     kDebug() << "not implemented";
 }
 

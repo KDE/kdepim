@@ -21,11 +21,11 @@
 
 #include <KConfigGroup>
 
-#include <QtGui/QComboBox>
-#include <QtGui/QHeaderView>
-#include <QtGui/QSplitter>
-#include <QtGui/QTabWidget>
-#include <QtGui/QTreeView>
+#include <QComboBox>
+#include <QHeaderView>
+#include <QSplitter>
+#include <QTabWidget>
+#include <QTreeView>
 
 using namespace KPIM;
 

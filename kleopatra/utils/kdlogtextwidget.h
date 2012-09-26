@@ -25,7 +25,7 @@
 
 #include <utils/kdtoolsglobal.h>
 #include <utils/pimpl_ptr.h>
-#include <QtGui/QAbstractScrollArea>
+#include <QAbstractScrollArea>
 
 class QString;
 class QStringList;

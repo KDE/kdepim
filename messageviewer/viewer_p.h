@@ -34,7 +34,7 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QTimer>
-#include <QtGui/QMouseEvent>
+#include <QMouseEvent>
 
 namespace GpgME { class Error; }
 namespace KIO { class Job; }
@@ -444,7 +444,10 @@ public:
 
   void setZoomFactor( qreal zoomFactor );
 
+
   void goOnline();
+  void goResourceOnline();
+
 
 private slots:
   void slotAtmDecryptWithChiasmusResult( const GpgME::Error &, const QVariant & );
@@ -593,8 +596,9 @@ signals:
   void showReader( KMime::Content* aMsgPart, bool aHTML, const QString & encoding );
   void showMessage( KMime::Message::Ptr message, const QString& encoding );
   void itemRemoved();
-  void resumeNetworkJobs();
+  void makeResourceOnline(MessageViewer::Viewer::ResourceOnlineMode mode);
 
+  void changeDisplayMail(Viewer::ForceDisplayTo,bool);
 private:
   QString attachmentInjectionHtml() const;
   QString recipientsQuickListLinkHtml( bool, const QString & ) const;

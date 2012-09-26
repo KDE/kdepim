@@ -24,7 +24,7 @@
 
 #include <kabc/addressee.h>
 
-#include <QtGui/QWidget>
+#include <QWidget>
 
 class KLineEdit;
 class KComboBox;

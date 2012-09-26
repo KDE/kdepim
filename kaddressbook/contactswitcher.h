@@ -20,7 +20,7 @@
 #ifndef CONTACTSWITCHER_H
 #define CONTACTSWITCHER_H
 
-#include <QtGui/QWidget>
+#include <QWidget>
 
 class QAbstractItemView;
 class QLabel;

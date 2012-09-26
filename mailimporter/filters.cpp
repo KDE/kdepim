@@ -174,6 +174,21 @@ QString Filter::info() const
 }
 
 
+void Filter::setAuthor(const QString &_author)
+{
+  d->author = _author;
+}
+
+void Filter::setName(const QString& _name)
+{
+  d->name = _name;
+}
+void Filter::setInfo(const QString& _info)
+{
+  d->info = _info;
+}
+
+
 
 Akonadi::Collection Filter::parseFolderString(const QString& folderParseString)
 {

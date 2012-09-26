@@ -23,10 +23,10 @@
 #include <QtCore/QMetaMethod>
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusInterface>
-#include <QtGui/QLabel>
-#include <QtGui/QPainter>
-#include <QtGui/QGraphicsLinearLayout>
-#include <QtGui/QGraphicsSceneResizeEvent>
+#include <QLabel>
+#include <QPainter>
+#include <QGraphicsLinearLayout>
+#include <QGraphicsSceneResizeEvent>
 
 #include <KJob>
 #include <KLineEdit>

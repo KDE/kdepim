@@ -93,11 +93,12 @@ namespace KMail {
 
   private slots:
     void slotDelayedButtonClicked( KJob* );
-void slotEditVcard();
+    void slotEditVcard();
   private:
     bool checkFolderExists( const QString & folder, const QString & msg );
     bool validateAddresses( const QString & addresses );
-
+    void updateVcardButton();
+    void editVcard(const QString& filename);
   protected:
     // "general" tab:
     KLineEdit                    *mNameEdit;
@@ -123,6 +124,7 @@ void slotEditVcard();
     MailTransport::TransportComboBox *mTransportCombo;
     QCheckBox                        *mAttachMyVCard;
     QString                          mVcardFilename;
+    KPushButton                      *mEditVCard;
     // "templates" tab:
     TemplateParser::TemplatesConfiguration *mWidget;
     QCheckBox                    *mCustom;

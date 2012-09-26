@@ -55,7 +55,7 @@ public:
   // Private implementation
 
   void fillAggregationList();
-  QString uniqueNameForAggregation( QString baseName, Core::Aggregation * skipAggregation = 0 );
+  QString uniqueNameForAggregation( const QString& baseName, Core::Aggregation * skipAggregation = 0 );
   AggregationListWidgetItem * findAggregationItemByName( const QString &name, Core::Aggregation * skipAggregation = 0 );
   AggregationListWidgetItem * findAggregationItemByAggregation( Core::Aggregation * set );
   AggregationListWidgetItem * findAggregationItemById( const QString &aggregationId );
@@ -63,12 +63,14 @@ public:
 
   // Private slots
 
-  void aggregationListCurrentItemChanged( QListWidgetItem * cur, QListWidgetItem * prev );
+  void aggregationListItemClicked(QListWidgetItem* cur);
   void newAggregationButtonClicked();
   void cloneAggregationButtonClicked();
   void deleteAggregationButtonClicked();
   void editedAggregationNameChanged();
   void okButtonClicked();
+  void exportAggregationButtonClicked();
+  void importAggregationButtonClicked();
 
 
   ConfigureAggregationsDialog * const q;
@@ -78,6 +80,8 @@ public:
   QPushButton *mNewAggregationButton;
   QPushButton *mCloneAggregationButton;
   QPushButton *mDeleteAggregationButton;
+  QPushButton *mExportAggregationButton;
+  QPushButton *mImportAggregationButton;
 };
 
 } // namespace Utils

@@ -25,7 +25,7 @@
 #include <libkleopatraclient/kleopatraclient_export.h>
 
 #include <QtCore/QObject>
-#include <QtGui/QWidget> // only for WId, doesn't prevent linking against QtCore-only
+#include <QWidget> // only for WId, doesn't prevent linking against QtCore-only
 
 class QString;
 class QByteArray;

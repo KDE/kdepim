@@ -23,6 +23,9 @@
 #include <KLocale>
 #include <KMessageBox>
 #include <QHBoxLayout>
+#include <KMenu>
+#include <KRun>
+#include <KAction>
 
 static QString archiveMailCollectionPattern = QLatin1String( "ArchiveMailCollection \\d+" );
 
@@ -111,6 +114,12 @@ ArchiveMailWidget::ArchiveMailWidget( QWidget *parent )
   mWidget->treeWidget->setSortingEnabled(true);
   mWidget->treeWidget->setRootIsDecorated(false);
   mWidget->treeWidget->setSelectionMode(QAbstractItemView::ExtendedSelection);
+  mWidget->treeWidget->setContextMenuPolicy(Qt::CustomContextMenu);
+
+  connect(mWidget->treeWidget, SIGNAL(customContextMenuRequested(QPoint)),
+          this, SLOT(customContextMenuRequested(QPoint)));
+
+
   load();
   connect(mWidget->removeItem,SIGNAL(clicked(bool)),SLOT(slotRemoveItem()));
   connect(mWidget->modifyItem,SIGNAL(clicked(bool)),SLOT(slotModifyItem()));
@@ -123,6 +132,20 @@ ArchiveMailWidget::ArchiveMailWidget( QWidget *parent )
 ArchiveMailWidget::~ArchiveMailWidget()
 {
   delete mWidget;
+}
+
+void ArchiveMailWidget::customContextMenuRequested(const QPoint&)
+{
+  const QList<QTreeWidgetItem *> listItems = mWidget->treeWidget->selectedItems();
+  if(listItems.isEmpty())
+    return;
+  KMenu menu;
+  if( listItems.count() == 1) {
+    menu.addAction(i18n("Open Containing Folder..."),this,SLOT(slotOpenFolder()));
+    menu.addSeparator();
+  }
+  menu.addAction(i18n("Delete"),this,SLOT(slotRemoveItem()));
+  menu.exec(QCursor::pos());
 }
 
 void ArchiveMailWidget::restoreTreeWidgetHeader(const QByteArray& data)
@@ -252,13 +275,31 @@ bool ArchiveMailWidget::verifyExistingArchive(ArchiveMailInfo *info) const
   const int numberOfItem(mWidget->treeWidget->topLevelItemCount());
   for(int i = 0; i < numberOfItem; ++i) {
     ArchiveMailItem *mailItem = static_cast<ArchiveMailItem *>(mWidget->treeWidget->topLevelItem(i));
-    if(mailItem->info()) {
-      if(info->saveCollectionId() == mailItem->info()->saveCollectionId()) {
+    ArchiveMailInfo *archiveItemInfo = mailItem->info();
+    if(archiveItemInfo) {
+      if(info->saveCollectionId() == archiveItemInfo->saveCollectionId()) {
         return true;
       }
     }
   }
   return false;
+}
+
+void ArchiveMailWidget::slotOpenFolder()
+{
+  const QList<QTreeWidgetItem *> listItems = mWidget->treeWidget->selectedItems();
+  if(listItems.count()==1) {
+    QTreeWidgetItem *item = listItems.at(0);
+    if(!item)
+      return;
+    ArchiveMailItem *archiveItem = static_cast<ArchiveMailItem*>(item);
+    ArchiveMailInfo *archiveItemInfo = archiveItem->info();
+    if(archiveItemInfo) {
+      const KUrl url = archiveItemInfo->url();
+      KRun *runner = new KRun( url, this ); // will delete itself
+      runner->setRunExecutables( false );
+    }
+  }
 }
 
 #include "archivemaildialog.moc"

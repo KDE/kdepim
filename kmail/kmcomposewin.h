@@ -66,7 +66,8 @@ class KToggleAction;
 class KUrl;
 class KRecentFilesAction;
 class SnippetWidget;
-class InsertSpecialChar;
+class SelectSpecialChar;
+class AttachmentMissingWarning;
 
 namespace boost {
   template <typename T> class shared_ptr;
@@ -117,13 +118,13 @@ class KMComposeWin : public KMail::Composer
   friend class ::KMComposerEditor;
 
   private: // mailserviceimpl, kmkernel, kmcommands, callback, kmmainwidget
-    explicit KMComposeWin( const KMime::Message::Ptr &msg = KMime::Message::Ptr(), TemplateContext context = NoTemplate,
+    explicit KMComposeWin(const KMime::Message::Ptr &msg, bool lastSignState, bool lastEncryptState, TemplateContext context = NoTemplate,
                            uint identity = 0, const QString & textSelection = QString(),
                            const QString & customTemplate = QString() );
     ~KMComposeWin();
 
   public:
-    static Composer *create( const KMime::Message::Ptr &msg = KMime::Message::Ptr(), TemplateContext context = NoTemplate,
+    static Composer *create( const KMime::Message::Ptr &msg, bool lastSignState, bool lastEncryptState, TemplateContext context = NoTemplate,
                              uint identity = 0, const QString & textSelection = QString(),
                              const QString & customTemplate = QString() );
 
@@ -165,8 +166,8 @@ class KMComposeWin : public KMail::Composer
      * Set the message the composer shall work with. This discards
      * previous messages without calling applyChanges() on them before.
      */
-    void setMsg( const KMime::Message::Ptr &newMsg, bool mayAutoSign=true,
-                 bool allowDecryption=false, bool isModified=false );
+    void setMessage( const KMime::Message::Ptr &newMsg, bool lastSignState = false, bool lastEncryptState = false,
+                 bool mayAutoSign=true, bool allowDecryption=false, bool isModified=false );
 
     void setCurrentTransport( int transportId );
 
@@ -434,7 +435,11 @@ class KMComposeWin : public KMail::Composer
     void insertSpecialCharacter();
     void charSelected(const QChar& c);
     void slotSaveAsFile();
+    void slotCreateAddressBookContact();
 
+    void slotAttachMissingFile();
+    void slotCloseAttachMissingFile();
+    void slotVerifyMissingAttachmentTimeout();
   public: // kmcommand
     // FIXME we need to remove these, but they're pure virtual in Composer.
     void addAttach( KMime::Content *msgPart );
@@ -504,7 +509,7 @@ class KMComposeWin : public KMail::Composer
      * Initialization methods
      */
     void setupActions();
-    void setupStatusBar();
+    void setupStatusBar(QWidget *w);
     void setupEditor();
 
     /**
@@ -659,7 +664,9 @@ class KMComposeWin : public KMail::Composer
 
     SnippetWidget *mSnippetWidget;
     MessageViewer::TranslatorWidget *mTranslatorWidget;
-    QPointer<InsertSpecialChar> mInsertSpecialChar;
+    QPointer<SelectSpecialChar> mSelectSpecialChar;
+    AttachmentMissingWarning *mAttachmentMissing;
+    QTimer *m_verifyMissingAttachment;
     QLabel *mSignatureStateIndicator;
   QLabel *mEncryptionStateIndicator;
   MailCommon::FolderRequester *mFccFolder;

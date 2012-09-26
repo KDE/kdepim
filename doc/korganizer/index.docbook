@@ -159,7 +159,7 @@ agenda, use &kmail; to send and receive invitations, &etc;</para>
 <listitem><para>Create To-dos, schedule events, and write journal entries.</para></listitem>
 <listitem><para>Organize your events and to-dos by grouping the related items in categories.</para></listitem>
 <listitem><para>Highlight categories with colors.</para></listitem>
-<listitem><para>Open multiple calendars, and seamless view and edit them.</para></listitem>
+<listitem><para>Open multiple calendars, and seamlessly view and edit them.</para></listitem>
 <listitem><para>Reschedule your events by drag-and-drop.</para></listitem>
 <listitem><para>Generate recurring events easily.</para></listitem>
 <listitem><para>Organize or attend events using the group scheduling features.</para></listitem>
@@ -184,7 +184,7 @@ linkend="managing-data">the documentation</link>!</para>
 <title>Five-minute Fly-over Course of &korganizer;</title>
 <subtitle> (for the experienced and for the impatient)</subtitle>
 
-<para>Pressed for time? Let's kick you started with a fast, hands-on overview
+<para>Pressed for time? Let's get you kick-started with a fast, hands-on overview
 of &korganizer;!</para>
 
 <para>If you ever worked with a personal information program before, you'll be
@@ -279,13 +279,13 @@ go to the date of the event that you want to reschedule.</para></step>
 
 <step><para>You should choose an appropriate <link
 linkend="reference-menus-view">view</link> before beginning this operation.
-Only the <link linkend="agenda-view"><guilabel>agenda view</guilabel>
-</link> (day, work week and week views) shows individual hours and are suitable
+Only the <link linkend="agenda-view"><guilabel>Agenda</guilabel> view
+</link> (Day, Work Week and Week views) shows individual hours and are suitable
 for rescheduling exactly-timed events (appointments), while the Month view
-only shows days. Therefore the Month view is most suitable for long-time
+only shows days. Therefore the Month view is most suitable for long-term
 events like holidays.</para></step>
 
-<step><para>To display the week view select the agenda view, press the
+<step><para>To display the Week view select the Agenda view, press the
 <inlinemediaobject><imageobject>
 <imagedata fileref="view-calendar-week.png" format="PNG"/></imageobject>
 </inlinemediaobject><guibutton>Week</guibutton> view toolbar button,
@@ -312,10 +312,10 @@ linkend="reference-menus-view">view</link> before beginning this operation.
 Only the <link linkend="todo-view"><inlinemediaobject><imageobject>
 <imagedata fileref="view-calendar-tasks.png" format="PNG"/></imageobject>
 </inlinemediaobject><guilabel>To-do List</guilabel> view
-</link> and <link linkend="description-view">the to-do view sidebar component
+</link> and <link linkend="description-view">the To-do View sidebar component
 </link> show to-dos which do not have a due date.</para>
 
-<para>To display the to-do list view, press the
+<para>To display the To-do List view, press the
 <inlinemediaobject><imageobject>
 <imagedata fileref="view-calendar-tasks.png" format="PNG"/></imageobject>
 </inlinemediaobject><guibutton>To-do List</guibutton> view toolbar button,
@@ -328,7 +328,7 @@ This will bring up a context menu.  Choose the <guimenuitem>Copy to</guimenuitem
 <guimenuitem>Move to</guimenuitem> menu items and select the new date from the calendar
 now appearing. The to-do is now copied or moved to the selected date.
 Alternatively, if the main panel holds a <guilabel>To-do List</guilabel> view,
-just right click the column <guilabel>Due Date/Time</guilabel>. A calender will
+just right click the column <guilabel>Due Date/Time</guilabel>. A calendar will
 appear instantly, allowing you to set the new due date.</para>
 
 <para>To <link linkend="entering-data-to-do">edit a to-do</link>, right click it and choose the
@@ -351,7 +351,7 @@ should at least skip through the <link linkend="faq">&FAQ;</link>.</para>
 <chapter id="managing-data"> <!-- updated to 4.6/7 except managing-resources-->
 <title>Importing, Exporting, and Managing Calendars</title>
 
-<para>&korganizer; can store (and retrieve) events, journals entries
+<para>&korganizer; can store (and retrieve) events, journal entries
 and to-dos using various methods, and to different locations.
 Each of these locations is called a <firstterm>calendar resource</firstterm>.
 </para>
@@ -364,8 +364,8 @@ window too. Importing files in the format used by the old
 
 <para>You can export your data as a web page, as an iCalendar or
 vCalendar file. These files are supported by most scheduling applications.
-The web page can be used to publish your calendar and to-dos list in the
-web or in the local network.</para>
+The web page can be used to publish your calendar and to-do list on the
+web or on the local network.</para>
 
 <!-- not in 4.5 para>If you have a calendar containing events of public interest, such as
 a conference or championship schedule, you can upload it using the
@@ -395,7 +395,7 @@ want to use another resource, especially if you use a supported groupware
 server. Please ask the server administrator for the information required to
 configure the groupware resource, including free/busy information publishing
 and retrieving. Access to free/busy information allows an event organizer to
-take the attendee's calendar in consideration when adding him to the event's
+take the attendee's calendar into consideration when adding him to the event's
 attendee list.</para>
 
 <note><para>Besides calendar storage, groupware servers typically offer contacts,
@@ -562,8 +562,8 @@ information. Bugzilla is an open source bug tracking system.</para>
 
 <para>If you are a developer working on a project that uses bugzilla, you can
 use this resource to view as to-dos the open bugs of the applications or
-libraries you are interested in (they are called <quote>products</quote> and / 
-or <quote>components</quote> in bugzilla). This resource is available as part of
+libraries you are interested in (they are called <quote>products</quote> and/or
+<quote>components</quote> in bugzilla). This resource is available as part of
 the &kde; Software Development kit.
 </para></listitem>
 </varlistentry>
@@ -619,7 +619,7 @@ open &kmail; automatically, and use it to access your data. The
 of contacts, so you may want to add the &kaddressbook; resource too.</para>
 
 <para>Most IMAP servers can be used to hold calendar and address book resources,
-allowing you to use access your data from just anywhere! If you are a user
+allowing you to access your data from just anywhere! If you are a user
 looking for a simple way to access and manage your groupware information,
 this is a simple and very efficient solution.</para>
 
@@ -717,7 +717,7 @@ to</guilabel> location, just a <guilabel>Download
 from</guilabel> location for the remote file. If you plan to use a
 writable remote resource, you will have to supply both locations. The reason
 to have separate  locations, is that some servers may have an upload queue,
-a place where you need to put the upload file, different from where it will be.
+a place where you need to put the upload file, different from its final location.
 In most cases, if you have write access to the remote file, the <guilabel>Upload
 to</guilabel> and <guilabel>Download from</guilabel> file locations should be
 the same.
@@ -751,8 +751,8 @@ and do not reload the file at regular intervals.</para>
 <para>A related, but opposite problem, is that two users cannot safely edit
 the same remote file at the same time, because the remote file resource does not
 offer a conflict resolution mechanism. For instance, if someone else changes
-(and saves) the remote file, after you loaded it, and a some time later you save
-the file, his changes will be lost.
+(and saves) the remote file, after you loaded it, and at some later time you
+save the file, his changes will be lost.
 </para></warning>
 
 </listitem>
@@ -815,14 +815,14 @@ copies, or import items from your old calendar program.</para>
 <sect2 id="managing-import">
 <title>Importing Calendars</title>
 
-<para>If you have a iCalendar or vCalendar file, and you
+<para>If you have an iCalendar or vCalendar file, and you
 would like to import it, choose the <menuchoice><guimenu>File</guimenu>
 <guisubmenu>Import</guisubmenu><guimenuitem>Import Calendar...</guimenuitem>
-</menuchoice>. &korganizer; will ask you if you want to <guilabel>Add as new
+</menuchoice> menu item. &korganizer; will ask you if you want to <guilabel>Add as new
 calendar</guilabel>, which adds the calendar file as a new local file resource,
 <guilabel>Merge into existing calendar</guilabel>, which merges the calendar
 items into an existing resource or <guilabel>Open in separate window</guilabel>,
-which will allow you to view and edit the calendar, but will not add to
+which will allow you to view and edit the calendar, but will not add it to
 its default view.</para>
 
 <para>A good time to do this would be if you received a
@@ -835,7 +835,7 @@ formats above, or use a tool to convert from the application's native format.</p
 older calendar program for &UNIX;, you may wish to <action>import your events,
 journal entries, and to-dos</action> directly to &korganizer;. To do so, choose the
 <menuchoice><guimenu>File</guimenu><guisubmenu>Import</guisubmenu>
-<guimenuitem>Import From &UNIX; Ical Tool</guimenuitem></menuchoice>.
+<guimenuitem>Import From &UNIX; Ical Tool</guimenuitem></menuchoice> menu item.
 This action will read the <filename class="extension">.calendar</filename> file from your home
 folder and merge any entries it contains into your current calendar.
 If any errors or suspicious things occur during the process, you will be
@@ -850,14 +850,14 @@ KDE-Files.org KOrganizer Calendars-->
 
 <para>You can export your data as a web page, or as an iCalendar or
 vCalendar file, which are supported by most scheduling applications.
-The web page can be used to publish your calendar and to-dos list on the
+The web page can be used to publish your calendar and to-do list on the
 web or on the local network. Either way, &korganizer; will export all calendar
 items from the enabled (checked) resources which are
 <link linkend="filters-view">not filtered out</link> (let's call these items
 <quote>active</quote> items). In other words, if you cannot see a calendar
 item, it won't be in the exported file. To filter out the undesired items
 before exporting them, you can create
-<link linkend="filters-view">filters</link>. Filters even are more effective
+<link linkend="filters-view">filters</link>. Filters are even more effective
 if you classify your events and to-dos in
 <link linkend="categories-view">categories</link>. To enable and disable
 resources, check or uncheck the resource box in the
@@ -874,8 +874,8 @@ data as a new vCalendar file choose the <menuchoice><guimenu>File</guimenu>
 Enter the file name and location for the new file to complete the export
 action.</para>
 
-<para>You can export your calendar or a part of it as a &HTML;
-file, suitable for publishing in the web. Anyone with access to this file,
+<para>You can export your calendar or a part of it as an &HTML;
+file, suitable for publishing on the web. Anyone with access to this file,
 using a web browser, will be able to view it. This is an easy way to share
 calendar information with your colleagues and friends.</para>
 
@@ -895,12 +895,12 @@ the items you do not want to export.</para></step>
 manually or use the Calendar Widget.</para></step>
 <step><para>If you want to export to-dos, check the <guilabel>Export
 to-do list</guilabel> box.</para></step>
-<step><para>If you want to export the items displayed in the month view, check the
+<step><para>If you want to export the items displayed in the Month view, check the
 <guilabel>Export in month view</guilabel> box.</para></step>
 <step><para>If you want to export events formatted as a list of events, check the
 <guilabel>Export events as list</guilabel> box.</para></step>
 <step><para>Specify the web output file in the <guilabel>Output filename</guilabel>
-field. If set another location, press the <inlinemediaobject>
+field. If you want to set another location, press the <inlinemediaobject>
 <imageobject><imagedata fileref="document-open.png" format="PNG"/></imageobject>
 </inlinemediaobject><guibutton>Open file dialog</guibutton> button to find it.</para></step>
 </substeps></step>
@@ -924,7 +924,7 @@ items, follow the procedure below:</para>
 
 <procedure>
 <step><para>Choose the <menuchoice><guimenu>File</guimenu><guimenuitem>Archive
-Old Entries...</guimenuitem></menuchoice>.</para></step>
+Old Entries...</guimenuitem></menuchoice> menu item.</para></step>
 <step><para>Fill in the date in <guilabel>Archive now items older than</guilabel> field or
 use the Calendar Widget to choose the date. Alternatively, you can automatically
 archive all items older than a certain period of time.</para></step>
@@ -940,7 +940,7 @@ to-dos. But if you do not want to keep completed to-dos at all, choose the
 <menuchoice><guimenu>File</guimenu><guimenuitem>Purge Completed To-dos</guimenuitem>
 </menuchoice> menu item to remove all the completed to-dos from your
 active resources. If you want to keep your completed to-dos, but
-do not wish to view in the to-do lists, consider
+do not wish to view them in the to-do lists, consider
 <link linkend="filters-view">filtering them out</link> instead of purging them.
 </para>
 
@@ -984,14 +984,14 @@ choose the <menuchoice><guimenu>File</guimenu><guisubmenu>Export</guisubmenu>
 
 <title>Views and Filters</title>
 
-<para>While calendars (resources) can hold events, to-dos and / or journal
+<para>While calendars (resources) can hold events, to-dos and/or journal
 entries, these items are very different in nature. To-dos may have no
 date associated with them, so a schedule view is not suitable to them.
 Journal entries are a collection your reflections, occurrences or experiences.
 They require their own view mode, as they are not related
-with the list upcoming events or the list of to-dos, &etc;</para>
+with the list of upcoming events or the list of to-dos, &etc;</para>
 
-<para>To solve the challenge of displaying your information in an useful and
+<para>To solve the challenge of displaying your information in a useful and
 intuitive fashion, &korganizer; offers different views, filters and search
 capabilities. You can also assign related events and to-dos to
 categories, which will help you to view them later, using filters or
@@ -1003,15 +1003,15 @@ colors.</para>
 <para>In this section, we describe the different view modes, and present an
 overview of how to browse your personal data using &korganizer;.</para>
 
-<para>The &korganizer; window can be divided in two main areas: the
+<para>The &korganizer; window can be divided into two main areas: the
 main window and the sidebar. The main window displays the main views and the
-sidebar displays the date navigator, the
-to-do view, the item viewer and the calendar manager view. To show or hide the
+sidebar displays the Date Navigator, the
+To-do View, the Item Viewer and the Calendar Manager View. To show or hide the
 sidebar components, check or uncheck the menu items under the
 <menuchoice><guimenu>Settings</guimenu>
 <guisubmenu>Sidebar</guisubmenu></menuchoice> submenu.</para>
 
-<para>The date navigator is provided to browse and select dates. Today's date
+<para>The Date Navigator is provided to browse and select dates. Today's date
 will be outlined with a small box, dates which have events scheduled on them
 will be bold (daily or weekly recurring events may not be marked as bold,
 <link linkend="config-main-views">depending on the view configuration</link>),
@@ -1020,24 +1020,24 @@ on it. Hold down the mouse to select multiple contiguous dates at once.
 The <guilabel>What's Next</guilabel>,
 <guilabel>List</guilabel>, <guilabel>Agenda</guilabel> and
 <guilabel>Journal</guilabel> views will only show events, to-dos or
-journals items from the dates selected in the date navigator. The
+journals items from the dates selected in the Date Navigator. The
 <guilabel>Month</guilabel> view will show events or to-dos from the first
-month shown in the date navigator (the selected days in the month won't change
-the month view, only month changes).</para>
+month shown in the Date Navigator (the selected days in the month won't change
+the Month view, only month changes).</para>
 
-<para>The to-do view sidebar component lists your to-dos, just like the
+<para>The To-do View sidebar component lists your to-dos, just like the
 <link linkend="todo-view">To-do view</link>. It is useful if you want
 to see your to-dos while using the other views.</para>
 
-<para>The item viewer sidebar component shows details of the currently selected
+<para>The Item Viewer sidebar component shows details of the currently selected
 events, to-dos or journal entries.</para>
 
-<para>Finally, calendar manager viewer sidebar component allow you to enable or
+<para>Finally, Calendar Manager Viewer sidebar component allow you to enable or
 disable the resources on the list, by checking or unchecking the resource
 box, and to manage your resources. For more information, please check
 <xref linkend="managing-resources" />.</para>
 
-<para>You can also browse your calendar view choosing
+<para>You can also browse your calendar view by choosing
 the <menuchoice><guimenu>Go</guimenu>
 <guimenuitem>Backward</guimenuitem></menuchoice> menu item (or pressing the
 <inlinemediaobject><imageobject><imagedata fileref="go-previous.png"
@@ -1047,7 +1047,7 @@ Go</guimenu><guimenuitem>Forward</guimenuitem></menuchoice> menu item (or
 pressing the <inlinemediaobject><imageobject>
 <imagedata fileref="go-next.png"  format="PNG"/></imageobject>
 </inlinemediaobject>toolbar button), which goes to
-the next day, week, month or year (depending on the view), and choosing the
+the next day, week, month or year (depending on the view), or choosing the
 <menuchoice><guimenu>Go</guimenu><guimenuitem>To Today</guimenuitem>
 </menuchoice> menu item (or pressing the <inlinemediaobject><imageobject>
 <imagedata fileref="go-jump-today.png" format="PNG"/></imageobject>
@@ -1072,7 +1072,7 @@ menu item.</para>
 <sect2 id="list-view">
 <title>Event List View</title>
 <para>This view displays all your to-dos, events and journal entries for
-the dates selected in the date navigator as a list. Open to-dos that are
+the dates selected in the Date Navigator as a list. Open to-dos that are
 not due on the selected dates are not shown. This view is good for displaying
 many different items in a compact fashion. It is also useful if your
 events are spread out over a long time period that would not be displayed
@@ -1097,16 +1097,16 @@ menu item.</para>
 
 <!--TODO: add agenda view options, color of resources and categories-->
 
-<para>The agenda view presents your events or due to-dos for one or more days,
+<para>The Agenda view presents your events or due to-dos for one or more days,
 sorted chronologically. You can also see the length of each event in the day
-timetable. To enable the agenda views choose the <menuchoice><guimenu>View</guimenu>
+timetable. To enable the Agenda view choose the <menuchoice><guimenu>View</guimenu>
 <guimenuitem>Agenda</guimenuitem></menuchoice> menu item or press the
 <inlinemediaobject><imageobject><imagedata fileref="view-calendar-agenda.png"
 format="PNG"/></imageobject></inlinemediaobject>toolbar button.</para>
 <para>The <guilabel>Day</guilabel>, <guilabel>Work Week</guilabel> and
-<guilabel>Week</guilabel> views are variations of the agenda view.
-In fact, you can set the days shown in the agenda view at any time by selecting
-them in the date navigator.</para>
+<guilabel>Week</guilabel> views are variations of the Agenda view.
+In fact, you can set the days shown in the Agenda view at any time by selecting
+them in the Date Navigator.</para>
 <!--check bell + chasing-arrows icon here-->
 <para>Time is indicated by a time bar on the left side of the view. A scrollbar
 on the right is provided when the whole day cannot be displayed on a single
@@ -1131,15 +1131,15 @@ upper or lower border of the event to the new time.</para>
 <para>Any event can be rescheduled with your mouse. Move the mouse pointer over
 the event, and drag it to a new time location. This also works in the Week and
 Work Week views. Events can be moved to other, presently non-visible dates.
-Move the mouse pointer over the event, and drag it to the date navigator.</para>
+Move the mouse pointer over the event, and drag it to the Date Navigator.</para>
 
-<para>Since the agenda view cannot contain the whole day on most screens, you
+<para>Since the Agenda view cannot contain the whole day on most screens, you
 will have to scroll up and down to see the whole day. There is a useful hint that
 tells you if there are any currently invisible events above or below your current
-view; it is a small down-pointing at the bottom  of each day view or
+view; it is a small down-pointing arrow at the bottom  of each day view or
 up-pointing arrow at the top.</para>
 
-<tip><para>There are a useful shortcut for adding events:
+<tip><para>There are two useful shortcuts for adding events:
 
 <itemizedlist>
 <listitem><para>Double-click any
@@ -1150,7 +1150,7 @@ half-hour increments, rounding off to the closest half hour from where you
 clicked.</para></listitem>
 <listitem><para>Select any open region of time, and double click it or start
 writing the title of the event.  &korganizer; will automatically set the
-duration and start time as defined by the selection area in the agenda
+duration and start time as defined by the selection area in the Agenda
 view.</para></listitem>
 </itemizedlist>
 </para></tip>
@@ -1165,7 +1165,7 @@ will be able to quickly identify the type of event by its color.
 </para>
 
 <para>
-The agenda view can display events from all your calendars merged into one view or
+The Agenda view can display events from all your calendars merged into one view or
 show a view per calendar. Having both views available via tabs is also possible and
 can be <link linkend="config-main-views">customized in the preferences dialog</link>.
 </para>
@@ -1173,10 +1173,10 @@ can be <link linkend="config-main-views">customized in the preferences dialog</l
 <sect3 id="day-view">
 <title>Day View</title>
 
-<para>This view presents the <link linkend="agenda-view">agenda view</link> for
+<para>This view presents the <link linkend="agenda-view">Agenda view</link> for
 a single day.</para>
 
-<para>Switch the display to the day view by choosing the
+<para>Switch the display to the Day view by choosing the
 <menuchoice><guimenu>Go</guimenu>
 <guimenuitem>Day</guimenuitem></menuchoice>
 menu item or pressing the <inlinemediaobject><imageobject><imagedata fileref="view-calendar-day.png"
@@ -1188,7 +1188,7 @@ in the toolbar.</para>
 <sect3 id="next-x-days-view">
 <title>Next X Days View</title>
 
-<para>This view presents the <link linkend="agenda-view">agenda view</link> for
+<para>This view presents the <link linkend="agenda-view">Agenda view</link> for
 the next days, starting from today. You can change the number of days to be
 displayed in the <link linkend="config-main-views">&korganizer; view
 configuration</link>. The default value is 3.</para>
@@ -1204,10 +1204,10 @@ menu item, (X represents the number of days, usually 3).</para>
 <sect3 id="week-view">
 <title>Week View</title>
 
-<para>The week view provides a view similar to the day view. Events for seven
+<para>The Week view provides a view similar to the Day view. Events for seven
 days are shown next to each other.</para>
 
-<para>Switch the display to the week view by choosing the
+<para>Switch the display to the Week view by choosing the
 <menuchoice><guimenu>Go</guimenu>
 <guimenuitem>Week</guimenuitem></menuchoice>
 menu item or pressing the <inlinemediaobject><imageobject><imagedata fileref="view-calendar-week.png"
@@ -1219,10 +1219,10 @@ in the toolbar.</para>
 <sect3 id="workweek-view">
 <title>Work Week View</title>
 
-<para>This is the same as the week view, except that it shows only the working
+<para>This is the same as the Week view, except that it shows only the working
 days of the week.</para>
 
-<para>Switch the display to the work week view by choosing the
+<para>Switch the display to the Work Week view by choosing the
 <menuchoice><guimenu>Go</guimenu>
 <guimenuitem>Work Week</guimenuitem></menuchoice>
 menu item.</para>
@@ -1237,15 +1237,15 @@ menu item.</para>
 
 <!--TODO: add month view options-->
 
-<para>The month view shows all the events and due to-dos for the current
+<para>The Month view shows all the events and due to-dos for the current
 month in a familiar month calendar layout. Each cell in the view
 represents a day, and each day contains all of the events that can fit in the
 area provided (maximizing the window will enable you to see more appointments).
 Information on repeating and reminder status is indicated through
-<guiicon>bell</guiicon> and <guiicon>chasing arrows</guiicon> icons, just like
+<guiicon>bell</guiicon> and <guiicon>chasing arrows</guiicon> icons, just as
 in other views.</para>
 
-<para>Navigate the month view using the date navigator arrows,
+<para>Navigate the Month view using the Date Navigator arrows,
 or the items and toolbar buttons from the <guilabel>Go</guilabel> menu.
 Since the visible area of a day cell may not contain all events and
 to-dos, you can use the keyboard to browse the items, or you
@@ -1264,7 +1264,7 @@ view configuration</link>. Therefore, if you assign
 you can identify the type of event (or resource) by its color.
 </para>
 
-<para>Switch the display to the month view by choosing the
+<para>Switch the display to the Month view by choosing the
 <menuchoice><guimenu>View</guimenu>
 <guimenuitem>Month View</guimenuitem></menuchoice>
 menu item or pressing the <inlinemediaobject><imageobject><imagedata fileref="view-calendar-month.png"
@@ -1278,7 +1278,7 @@ in the toolbar.</para>
 <sect2 id="timeline-view">
 <title>Timeline View</title>
 
-<para> The timeline view shows all events for the selected timespan in a gantt
+<para> The Timeline view shows all events for the selected timespan in a gantt
 view. Every calendar is displayed in a separate line. </para>
 
 <para>Hover your mouse over any calendar item to display a tooltip with the
@@ -1290,8 +1290,8 @@ click any calendar item to edit it.</para>
 <sect2 id="todo-view">
 <title>To-do List</title>
 
-<para>The to-do list provides a place for you to jot down quick (or long-term)
-notes about things that need to be done. The to-do view sidebar
+<para>The To-do List provides a place for you to jot down quick (or long-term)
+notes about things that need to be done. The To-do View sidebar
 component appears right below the Date Navigator. You can also display it in the
 main panel if you click the <inlinemediaobject><imageobject>
 <imagedata fileref="view-calendar-tasks.png" format="PNG"/></imageobject>
@@ -1306,8 +1306,8 @@ date when the to-do should be finished.</para>
 sorted in order of priority.  The lower the number, the higher the priority,
 except that zero (0) is defined as <quote>no priority.</quote></para>
 
-<para>To make a new to-do entry, right click the to-do view sidebar component,
-or the to-do list view, and choose the <guimenuitem>New To-do</guimenuitem> menu
+<para>To make a new to-do entry, right click the To-do View sidebar component,
+or the To-do List view, and choose the <guimenuitem>New To-do</guimenuitem> menu
 item. If you right click an already existing to-do, you will get more
 choices: you can <guimenuitem>Show</guimenuitem> the summary,
 <guimenuitem>Edit...</guimenuitem> the to-do details,
@@ -1330,7 +1330,7 @@ description, you will be able to edit all its details.</para>
 Completed</link> from the <mousebutton>right</mousebutton> mouse button menu to
 delete all to-do entries that you have marked completed.</para> 
 
-<para>To-dos can also dragged around with the mouse to rearrange the
+<para>To-dos can also be dragged around with the mouse to rearrange the
 hierarchy or to exchange to-dos with other calendar windows. You can also
 read an <link linkend="other-features-drag-and-drop">overview</link> of all
 available drag-and-drop operations.</para>
@@ -1338,8 +1338,8 @@ available drag-and-drop operations.</para>
 
 <sect2 id="journal-view">
 <title>Journal View</title>
-<para>The journal view provides a place for you to record your reflections,
-occurrences or experiences. You can display the journal view in the main
+<para>The Journal view provides a place for you to record your reflections,
+occurrences or experiences. You can display the Journal view in the main
 panel if you press the <inlinemediaobject><imageobject>
 <imagedata fileref="view-calendar-journal.png" format="PNG"/></imageobject>
 </inlinemediaobject><guilabel>Journal View</guilabel> toolbar button or if you choose the
@@ -1347,7 +1347,7 @@ panel if you press the <inlinemediaobject><imageobject>
 </menuchoice> menu item.</para>
 
 <para>When you click the <guilabel>add journal entry</guilabel> link, a new journal
-entry will be created. If you want to edit an journal entry, just click the
+entry will be created. If you want to edit a journal entry, just click the
 text box and edit it! To remove a journal entry, press the <inlinemediaobject>
 <imageobject><imagedata fileref="edit-delete.png" format="PNG"/>
 </imageobject></inlinemediaobject>delete button next to the
@@ -1378,7 +1378,7 @@ one category for each item.</para>
 </menuchoice> menu item to open the <guilabel>Edit Categories</guilabel> dialog.
 If you assign <link linkend="config-main-colors">different colors to categories</link>,
 you will be able to quickly identify the type of event by its color, either in
-the agenda view or in the month view (depending on the
+the Agenda view or in the Month view (depending on the
 <link linkend="config-main-views">&korganizer; view configuration</link>).
 </para>
 
@@ -1430,7 +1430,7 @@ entries) according to title, description, and/or categories.
 The find action will only search the specified fields.</para>
 
 <tip><para>You can use wildcards if you do not remember the exact summary. If
-you do not know single character of the summary, put <userinput>?</userinput>
+you do not know a single character of the summary, put <userinput>?</userinput>
 instead of the missing character. If you do not know more characters, use
 <userinput>*</userinput>. For instance if you know that the event or to-do has
 <emphasis>meeting</emphasis> in the beginning and <emphasis>product</emphasis>
@@ -1580,8 +1580,8 @@ linkend="entering-data-to-do">to-do</link></para></tip></listitem>
 to keep the event private or confidential. Currently, this choice correctly
 sets the <quote>CLASS</quote> attribute of the events to
 <quote>PUBLIC</quote>, <quote>PRIVATE</quote> or <quote>CONFIDENTIAL</quote>.
-However, if these settings are really used to restrict the access of the information
-depends on the client and / or groupware server implementation.</para>
+However, whether these settings are really used to restrict the access of the
+information depends on the client and/or groupware server implementation.</para>
 <warning><para>Currently, &korganizer; <emphasis>will</emphasis> display
 items owned by other people and marked as confidential. Other
 clients may treat them differently, but be careful when publishing private or
@@ -1619,8 +1619,8 @@ drop down box.</para></listitem>
 <varlistentry>
 <term><guilabel>Meeting Organizer:</guilabel></term>
 <listitem><para>Sets the identity corresponding to the organizer of this to-do
-or event. If &korganizer; is configured to send invitation mails, the identity
-selected on this combo box will be used when sending these mails. The default
+or event. If &korganizer; is configured to send invitation emails, the identity
+selected on this combo box will be used when sending these emails. The default
 identity can be set in the <guilabel>Personal</guilabel> section of the
 &korganizer; configuration, other identities in the <guilabel>Account Details</guilabel>-&gt;
 <guilabel>Password &amp; User Account</guilabel> module 
@@ -1669,7 +1669,7 @@ manually.</para></listitem>
 this attendee should respond to your schedule plan. Consequently the attendee
 will be emailed with the event schedule information. A small envelope will
 appear in the details list to indicate this. This feature is specially useful
-when groupware scheduling is enabled, as the attendees status are updated 
+when groupware scheduling is enabled, as the attendee's status is updated
 automatically.</para></listitem>
 </varlistentry>
 
@@ -1771,7 +1771,7 @@ reflect events that occur bi-annually, every four years, and so on.</para>
 
 <para>By default, events which repeat will do so forever; there is no
 <quote>end</quote> to the repetition. This may or may not be desirable,
-so you are provided to terminate the repetition by selecting an end date
+so you are able to terminate the repetition by selecting an end date
 or a number of occurrences.</para>
 
 </sect3>
@@ -1956,7 +1956,7 @@ five tabs at the bottom will appear.</para>
 </screenshot>
 
 <para>This tab shares a lot of options with the <guilabel>Edit Events</guilabel> dialog, 
-but has some additional items for To-dos:</para>
+but has some additional items for to-dos:</para>
 
 <variablelist>
 <varlistentry>
@@ -2094,7 +2094,7 @@ are acting as the event organizer. To add attendees, use the
 <link linkend="entering-data-events-attendees">
 attendee tab</link>, in the <guilabel>Edit Event</guilabel>, or
 <guilabel>Edit To-do</guilabel> dialog. In the
-<link linkend="agenda-view">agenda view</link>, a little icon
+<link linkend="agenda-view">Agenda view</link>, a little icon
 <inlinemediaobject>
 <imageobject>
 <imagedata fileref="organizer.png" format="PNG"/>
@@ -2115,7 +2115,7 @@ date for all people involved.</para>
 
 <para>To organize an event or to-do,
 <link linkend="entering-data-events">create it</link> in
-&korganizer; and add all people that should attend using the
+&korganizer; and add all the people that should attend using the
 attendees tab. &korganizer; can send invitations to the
 attendees, either automatically (depending on
 <link linkend="config-main-groupscheduling">&korganizer; group
@@ -2165,7 +2165,7 @@ is added to your calendar. If it is an event, a little icon
 <phrase>Attendee Icon</phrase>
 </textobject>
 </inlinemediaobject>
-is placed in the event in the <link linkend="agenda-view">agenda
+is placed in the event in the <link linkend="agenda-view">Agenda
 view</link>.</para>
 
 <sect2 id="reply">
@@ -2174,7 +2174,7 @@ view</link>.</para>
 <para>If you have an invitation in your &kmail; inbox you can either press
 <guibutton>Reject</guibutton> to ignore the request, or press
 <guibutton>Accept</guibutton> or <guibutton>Accept Cond.</guibutton>. The
-last two actions will insert the item to your calendar. In any case, &kmail; will
+last two actions will insert the item into your calendar. In any case, &kmail; will
 send your response to the organizer automatically.</para>
 
 <para>You can also <guibutton>Delegate</guibutton> or <guibutton>Forward</guibutton>
@@ -2242,7 +2242,7 @@ email addresses you want to send the information to in the dialog and press
 your free busy information, so that other users can access your data, and
 you can access other user's free busy schedule. You can configure
 &korganizer; to upload and download free busy information automatically,
-using the <link linkend="config-main-views">Free Busy preferences</link>,
+using the <link linkend="config-main-free-busy">Free Busy preferences</link>,
 in the &korganizer; <guilabel>Configure</guilabel> dialog.</para>
 
 <para>To upload your free/busy information to the server set in &korganizer;
@@ -2329,7 +2329,7 @@ Krzinski &#060;pkrzinski@thiscompany.com&#062;</userinput>.</para></step>
 </substeps>
 </step>
 
-<step><para>If you have configured &korganizer; use groupware communication,
+<step><para>If you have configured &korganizer; to use groupware communication,
 you will be asked if you want to send an email to the attendees, with details
 of the event and asking for a response if the
 <guilabel>Request response</guilabel> box from the
@@ -2368,7 +2368,7 @@ about all the configure options and possibilities in
 linkend="config-toolbars">configure toolbars detailed description</link>.</para>
 
 <para>To move toolbars around the screen, point your mouse over
-the toolbar handle and drag the toolbar to a new position on your the
+the toolbar handle and drag the toolbar to a new position on the
 &korganizer; window.</para>
 
 <para>Localization information like date and time formats can be
@@ -2429,8 +2429,8 @@ will not be able to modify it because it will be read-only.</para></listitem>
 <varlistentry>
 <term><guilabel>Default email attachment method</guilabel></term>
 <listitem><para>This option allows you to select the way an email is attached to
-an event. You can attach an email the complete email including attachments, the email
-excluding attachments or only a link to the email.</para>
+an event. You can attach an email as the complete email including attachments,
+the email excluding attachments or only a link to the email.</para>
 <para>Note that attaching an email without attachments might invalidate its signature.
 </para></listitem>
 </varlistentry>
@@ -2446,7 +2446,7 @@ excluding attachments or only a link to the email.</para>
 <varlistentry>
 <term><guilabel>Export to &HTML; periodically</guilabel></term>
 <listitem><para>By checking this option, you can order &korganizer; to export
-your calendar and to-do list to an &HTML; file in your home folder at an export interval
+your calendar and to-do list to an &HTML; file in your home folder at an interval
 which defaults to 10 minutes.</para></listitem>
 </varlistentry>
 
@@ -2512,17 +2512,17 @@ down. If your city is not listed, select one that shares the same time zone.
 
 <varlistentry>
 <term><guilabel>Day begins at</guilabel></term>
-<listitem><para>Select the time you start your day from the list on the drop
-down. It could be the time when you usually get up, or the time when you start
-working. This setting does not prevent you to set or view items before
+<listitem><para>Select the time you start your day from the drop down list.
+It could be the time when you usually get up, or the time when you start
+working. This setting does not prevent you from adding or viewing items before
 this time, it just sets the time that will be displayed by default on the top
 of the calendar view. Use the scrollbar to display earlier or later events
-in the agenda view.</para></listitem>
+in the Agenda view.</para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><guilabel>Use holiday region</guilabel></term>
-<listitem><para>Select your country from the list on the drop down, or if
+<listitem><para>Select your country from the drop down list, or if
 it is not listed, select <guilabel>(None)</guilabel>.
 If your country is selected, &korganizer; will recognize and display
 its important dates and holidays in the calendar view.</para></listitem> 
@@ -2532,14 +2532,14 @@ its important dates and holidays in the calendar view.</para></listitem>
 <term><guilabel>Working Period</guilabel></term>
 <listitem><para>The options <guilabel>Daily starting hour</guilabel> and
 <guilabel>Daily ending hour</guilabel> let you specify when your working day starts
-and when it ends. &korganizer; set the working hours apart by marking them
+and when it ends. &korganizer; sets the working hours apart by marking them
 with a different color from the non working hours, holidays and non working
 days.</para>
-<para>Additionally, you have check boxes labeled after the days of the week.
+<para>Additionally, you have check boxes beside each day of the week.
 Check the week days that are working days for you, in order to mark the working
-hours in these days. Check <guilabel>Exclude holidays</guilabel>
-prevent &korganizer; from marking the working hours for the holiday region
-defined in the <guilabel>Use holiday region</guilabel> drop down above.</para>
+hours in these days. Checking <guilabel>Exclude holidays</guilabel>
+prevents &korganizer; from marking the working hours for the holiday days in the
+region defined in the <guilabel>Use holiday region</guilabel> drop down above.</para>
 </listitem>
 </varlistentry>
 </variablelist>
@@ -2551,8 +2551,8 @@ defined in the <guilabel>Use holiday region</guilabel> drop down above.</para>
 <variablelist>
 <varlistentry>
 <term><guilabel>Default appointment time</guilabel></term>
-<listitem><para>Select the default start time for events from the list on
-the drop down. When you choose <link linkend="menu-actions-new-event">New
+<listitem><para>Select the default start time for events from the drop down list.
+When you choose <link linkend="menu-actions-new-event">New
 Event</link> from the <link linkend="entering-data-events">Action Menu</link>, or
 create an event in some other manner such that &korganizer; cannot guess
 when you would like your event to start, &korganizer; will put this hour
@@ -2576,9 +2576,9 @@ Select a <guilabel>Default reminder time</guilabel> to determine how long before
 the actual event's scheduled time the reminder will activate.</para>
 <para>Set a file to be used as the default sound file for new reminders. You can 
 always specify another file in the Advanced Reminder accessible from the 
-Event or To-do editors.</para>
-<para>Check the next two boxes if you want to enable reminders for all newly created Events
-or To-dos. You can always turn-off the reminders in the editor dialogs.</para>
+event or to-do editors.</para>
+<para>Check the next two boxes if you want to enable reminders for all newly created events
+or to-dos. You can always turn-off the reminders in the editor dialogs.</para>
 </listitem>
 </varlistentry>
 
@@ -2596,8 +2596,8 @@ or To-dos. You can always turn-off the reminders in the editor dialogs.</para>
 <variablelist>
 <varlistentry>
 <term><guilabel>Next x days:</guilabel></term>
-<listitem><para>This option allows you to change the amount of days of the
-<guimenu>Next x Days</guimenu> menu item in the <guimenu>View</guimenu>
+<listitem><para>This option allows you to change the number of days shown by the
+<guimenu>Next x Days</guimenu> menu item in the <guimenu>Go</guimenu>
 menu.</para></listitem>
 </varlistentry>
 
@@ -2606,7 +2606,7 @@ menu.</para></listitem>
 <listitem><para>If your summary for an event is longer than would fit in the
 current View, the remaining characters are not displayed. Check <guilabel>Enable
 tooltips for displaying summaries</guilabel> if you want the full summary
-displayed when the hovering the mouse pointer over the appointment for a few
+displayed when hovering the mouse pointer over the appointment for a few
 seconds.</para></listitem>
 </varlistentry>
 
@@ -2631,35 +2631,35 @@ off to avoid clutter.</para></listitem>
 
 <varlistentry>
 <term><guilabel>Show items that recur daily</guilabel></term>
-<listitem><para>If the <guilabel>Show items that recur daily</guilabel> in date
-navigator box is checked, the days containing daily recurring
-events are shown in bold typeface in the date navigator.</para></listitem>
+<listitem><para>If the <guilabel>Show items that recur daily</guilabel>
+box is checked, the days containing daily recurring
+events are shown in bold typeface in the Date Navigator.</para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><guilabel>Show items that recur weekly</guilabel></term>
-<listitem><para>If the <guilabel>Show items that recur weekly</guilabel> in date
-navigator box is checked, the days containing weekly recurring
-events are shown in bold typeface in the date navigator.</para></listitem>
+<listitem><para>If the <guilabel>Show items that recur weekly</guilabel>
+box is checked, the days containing weekly recurring
+events are shown in bold typeface in the Date Navigator.</para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><guilabel>Show to-dos instead of events when in Todo View</guilabel></term>
 <listitem><para>Check this box to show the days containing to-dos in bold typeface in the 
-Date Navigator when in to-do view.</para></listitem>
+Date Navigator when in To-do view.</para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><guilabel>Show journals instead of events when in Journal View</guilabel></term>
 <listitem><para>Check this box to show the days containing journals in bold typeface in the 
-Date Navigator when in journal view.</para></listitem>
+Date Navigator when in Journal view.</para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><guilabel>Week numbers select a work week when in work week mode</guilabel></term>
 <listitem><para>If the <guilabel>Week numbers select a work week when in work
 week mode</guilabel> box is checked, clicking on the week numbers along the 
-side of the date navigator will navigate through work weeks rather than
+side of the Date Navigator will navigate through work weeks rather than
 through normal 7-day weeks.</para></listitem>
 </varlistentry>
 
@@ -2675,36 +2675,36 @@ through normal 7-day weeks.</para></listitem>
 
 <varlistentry>
 <term><guilabel>Hour size:</guilabel></term>
-<listitem><para>By using this slider you can control the height of the rows
-in the agenda view.</para></listitem>
+<listitem><para>By using this you can control the height of the rows
+in the Agenda view.</para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><guilabel>Show icons in agenda view items</guilabel></term>
 <listitem><para>Check this box to display icons (reminder, recursion &etc;)
-in agenda view items</para></listitem>
+in Agenda view items</para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><guilabel>Show to-dos</guilabel></term>
-<listitem><para>This check box toggles the display of to-dos in the day, week
-and month views in the agenda views. If you have
-too many to-dos which have due date associated, you may want to turn them
+<listitem><para>This check box toggles the display of to-dos in the Day, Week
+and Month views in the Agenda view. If you have
+too many to-dos which have a due date associated, you may want to turn them
 off to avoid clutter.</para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><guilabel>Show current-time (Marcus Bains) line</guilabel></term>
-<listitem><para>This check box toggles a red line in the day or week view
-indicating the current time (Marcus Bains line) on and off. This line gives
-you an indication how much time is left &eg; until a meeting takes
+<listitem><para>This check box toggles on or off a red line in the Day or Week
+view indicating the current time (Marcus Bains line). This line gives
+you an indication of how much time is left &eg; until a meeting takes
 place.</para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><guilabel>Show seconds on current-time (Marcus Bains) line</guilabel></term>
-<listitem><para>This check box toggles the seconds on the current-time
-line (Marcus Bains line) on and off.</para></listitem>
+<listitem><para>This check box toggles on or off the seconds on the current-time
+line (Marcus Bains line).</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -2739,7 +2739,7 @@ configuration page for setting these colors.</para>
 
 <varlistentry>
 <term><guilabel>Color busy days with a different background color</guilabel></term>
-<listitem><para>Check this box if you want agenda's background to be filled with a
+<listitem><para>Check this box if you want Agenda view's background to be filled with a
 different color on days which have at least one all day event marked as busy.</para>
 <para>Please look in the Colors configuration area to select the Agenda view background
 busy color of your choosing.</para></listitem>
@@ -2748,8 +2748,8 @@ busy color of your choosing.</para></listitem>
 <varlistentry>
 <term><guilabel>Multiple Calendar Display</guilabel></term>
 <listitem><para>
-Select if all calendars should be merged into one agenda view, each calendar should
-be displayed in its own agenda view or if both view should be available via tabs.
+Select if all calendars should be merged into one Agenda view, each calendar should
+be displayed in its own Agenda view or if each view should be available via tabs.
 The side by side view can be customized with <guimenuitem>Configure View</guimenuitem> 
 from the context menu.
 </para></listitem>
@@ -2775,19 +2775,19 @@ not in 4.6.0 -->
 <term><guilabel>Display Options</guilabel></term>
 <listitem><para>Use the first four check boxes to display the time, icons
 (reminder, recursion &etc;),
-to-dos or journals in month view.</para></listitem>
+to-dos or journals in Month view.</para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><guilabel>Month view uses full window</guilabel></term>
-<listitem><para>If you check this box, the month view will be displayed
+<listitem><para>If you check this box, the Month view will be displayed
 in the whole &korganizer; window instead of sharing the window with the sidebar
-(the date navigator, the to-dos and the calendar resources).</para></listitem>
+(the Date Navigator, the to-dos and the calendar resources).</para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><guilabel>Color busy days with a different background color</guilabel></term>
-<listitem><para>Check this box if you want month view's background to be filled with a
+<listitem><para>Check this box if you the want Month view's background to be filled with a
 different color on days which have at least one all day event marked as busy.</para>
 <para>Please look in the Colors configuration area to select the Agenda/Month view background
 busy color of your choosing.</para></listitem>
@@ -2796,7 +2796,7 @@ busy color of your choosing.</para></listitem>
 <varlistentry>
 <term><guilabel>Color Usage</guilabel></term>
 <listitem>
-<para>Configure the colors for the month view like in <link linkend="config-main-views-agenda">Agenda View</link>.</para></listitem>
+<para>Configure the colors for the Month view as in <link linkend="config-main-views-agenda">Agenda view</link>.</para></listitem>
 </varlistentry>
 
 <!--not in 4.6.0-->
@@ -2835,21 +2835,21 @@ is to use the same color for all resources.</para></listitem>
 <varlistentry>
 <term><guilabel>Always display completed to-dos at the bottom of the list</guilabel></term>
 <listitem><para>If you enable this option, all completed to-dos will be always 
-grouped at the bottom of the to-do list.</para></listitem>
+grouped at the bottom of the To-do List.</para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><guilabel>To-do list view uses full window</guilabel></term>
 <listitem><para>Enable this option to use the full &korganizer; window when displaying 
-the to-do list view. You will gain some space for the to-do list view, but other widgets, 
-such as the date navigator, the to-do details and the calendars list, will not be displayed.
+the To-do List view. You will gain some space for the To-do List view, but other widgets,
+such as the Date Navigator, the to-do details and the calendars list, will not be displayed.
 </para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><guilabel>Record completed to-dos in journal entries</guilabel></term>
 <listitem><para>If you check this box, &korganizer; will automatically add
-a journal entry for every completed to-dos.</para></listitem>
+a journal entry for every completed to-do.</para></listitem>
 </varlistentry>
 
 </variablelist>
@@ -2865,7 +2865,7 @@ a journal entry for every completed to-dos.</para></listitem>
 <para>Choose the color used for holidays, for highlighting, and for specific
 event categories. You can choose a different color for each category. Of course
 too many colors may be confusing, so use common sense. The use of color
-depend also on the <link linkend="config-main-views">view
+depends also on the <link linkend="config-main-views">view
 preferences.</link></para>
 
 <variablelist>
@@ -2874,8 +2874,8 @@ preferences.</link></para>
 <term><guilabel>Holiday color</guilabel></term>
 <listitem><para>This button opens the <guilabel>Select Color</guilabel> dialog,
 allowing you to select the holiday color. The holiday color will be used for the
-holiday name in the month view and the holiday number in the date
-navigator.</para></listitem>
+holiday name in the Month view and the holiday date in the Date
+Navigator.</para></listitem>
 </varlistentry>
 <!--not in 4.6.0-->
 <!--varlistentry>
@@ -2898,13 +2898,13 @@ category below.</para></listitem>
 <varlistentry>
 <term><guilabel>Agenda view background color</guilabel></term>
 <listitem><para>This button opens the <guilabel>Select Color</guilabel> dialog,
-allowing you to select the agenda view background color.</para></listitem>
+allowing you to select the Agenda view background color.</para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><guilabel>Busy days background color</guilabel></term>
 <listitem><para>This button opens the <guilabel>Select Color</guilabel> dialog,
-allowing you to select the agenda or month view background busy color.
+allowing you to select the Agenda or Month view background busy color.
 This color is only used when the option for drawing busy days with a
 different color is set in either of these views.</para></listitem>
 </varlistentry>
@@ -2918,7 +2918,7 @@ allowing you to select a color for the current-time (Marcus Bains) line.</para><
 <varlistentry>
 <term><guilabel>Working hours color</guilabel></term>
 <listitem><para>This button opens the <guilabel>Select Color</guilabel> dialog,
-allowing you to select the color of the working hours background in the agenda view.</para></listitem>
+allowing you to select the color of the working hours background in the Agenda view.</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -2940,7 +2940,7 @@ a category in the drop down list, and press the button to open the
 <guilabel>Select Color</guilabel> dialog, allowing you to select the color for
 that category. <link linkend="config-main-views">Depending on the view
 preferences</link>, this color will be used to mark events and to-dos which
-belong to this category in your agenda and in the month view.</para></listitem>
+belong to this category in the Agenda and Month views.</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -2950,8 +2950,7 @@ a resource in the drop down list, and press the button to open the
 <guilabel>Select Color</guilabel> dialog, allowing you to select the color for
 that resource. <link linkend="config-main-views">Depending on the view
 preferences</link>, this color will be used to mark events and to-dos which are
-stored using this resource in your agenda and in the month
-view.</para></listitem>
+stored using this resource in the Agenda and Month views.</para></listitem>
 </varlistentry>
 
 </variablelist>
@@ -2972,19 +2971,19 @@ time bar.</para></listitem>
 <varlistentry>
 <term><guilabel>Month view</guilabel></term>
 <listitem><para>Press this button to pick the font, font style and size for the
-month view.</para></listitem>
+Month view.</para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><guilabel>Agenda view</guilabel></term>
 <listitem><para>Press this button to pick the font, font style and size for the
-agenda view (day, week and work week views).</para></listitem>
+Agenda view (Day, Week and Work Week views).</para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><guilabel>Current-time line</guilabel></term>
 <listitem><para>Press this button to pick the font, font style and size for the
-Marcus Bains line (a colored line in the agenda view indicating the current
+Marcus Bains line (a colored line in the Agenda view indicating the current
 time).</para></listitem>
 </varlistentry>
 
@@ -3001,11 +3000,11 @@ time).</para></listitem>
 
 <varlistentry>
 <term><guilabel>Use Groupware Communication</guilabel></term>
-<listitem><para>Check this box to automatically send mails when creating,
-updating or deleting events or to-dos which involve others. This mail can be
+<listitem><para>Check this box to automatically send emails when creating,
+updating or deleting events or to-dos which involve others. This email can be
 an invitation to attendees of an event you created, a cancellation of an event
 you created, an answer or an update on your invitation status, an event change
-request, &etc; Check this option if you you want to use the groupware
+request, &etc; Check this option if you want to use the groupware
 functionality (&eg; Configuring &kontact; as a &kde;
 <guilabel>Kolab</guilabel> client).</para></listitem>
 </varlistentry>
@@ -3026,12 +3025,12 @@ installed on your system in order to work).</para></listitem>
 
 <varlistentry>
 <term><guilabel>Additional email addresses</guilabel></term>
-<listitem><para>This tells &korganizer; what further email addresses you have.
-You can add, edit or remove additional emails addresses. These email addresses
+<listitem><para>This tells &korganizer; which further email addresses you have.
+You can add, edit or remove additional email addresses. These email addresses
 are the ones you have in addition to the one set in
 <link linkend="config-main-general-personal">personal preferences</link>.
-If you get an invitation to an event, but use another email address there, you
-need to list this address here so &korganizer; can recognize it as yours, and
+If you get an invitation to an event through another email address, you
+need to list the address here so that &korganizer; can recognize it as yours, and
 add the item to your calendar.
 </para></listitem>
 </varlistentry>
@@ -3116,8 +3115,8 @@ it from other users.</para>
 
 <varlistentry>
 <term><guilabel>Minimum time between uploads (in minutes)</guilabel></term>
-<listitem><para>In case you choose to publish your information automatically,
-you may configure the interval of time in minutes between each upload.</para>
+<listitem><para>If you choose to publish your information automatically,
+you can configure the interval of time in minutes between each upload.</para>
 </listitem>
 </varlistentry>
 
@@ -3130,7 +3129,7 @@ and available to others</para></listitem>
 <varlistentry>
 <term><guilabel>Server &URL;</guilabel></term>
 <listitem><para>Enter the &URL; for the server on which your Free/Busy information
-shall be published. Ask the server administrator for this information.</para>
+will be published. Ask the server administrator for this information.</para>
 <para>Kolab2 server example:
 <userinput>webdavs://kolab2.com/freebusy/joe@kolab2.com.ifb</userinput>
 </para></listitem>
@@ -3139,21 +3138,21 @@ shall be published. Ask the server administrator for this information.</para>
 <varlistentry>
 <term><guilabel>Username</guilabel></term>
 <listitem><para>Enter the login information relative to your account on the server</para>
-<para>Kolab2 server specificity: Registered your UID (Unique IDentifier), by
-default your UID would be similar to your email address on the Kolab2 server
-but it may also be different. In the last case enter your UID. Ask about your
-UID to the server administrator if you do not know it.</para></listitem>
+<para>Kolab2 server specificity: your registered UID (Unique IDentifier), by
+default, would be similar to your email address on the Kolab2 server
+but it may be different. In this case enter your UID. Ask the server administrator
+about your UID if you do not know it.</para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><guilabel>Password</guilabel></term>
-<listitem><para>Enter here your password (server login password).</para></listitem>
+<listitem><para>Enter your password (server login password) here.</para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><guilabel>Remember password</guilabel></term>
 <listitem><para>Check this option if you want &korganizer; to remember your
-password and skip asking you each time it upload your Free/Busy
+password and skip asking you each time it uploads your Free/Busy
 information.</para>
 <warning><para>It is not recommended to store your password in the configuration
 file for security reasons.</para></warning></listitem>
@@ -3166,14 +3165,14 @@ file for security reasons.</para></warning></listitem>
 <sect3 id="config-main-free-busy-retrieve">
 <title>Retrieve</title>
 
-<para>By retrieving other peoples' free/busy
+<para>By retrieving other people's free/busy
 information, you can take their busy time schedule into account
 when inviting them to an event.</para>
 
 <variablelist>
 
 <varlistentry>
-<term><guilabel>Retrieve other peoples' free/busy information
+<term><guilabel>Retrieve other people's free/busy information
 automatically</guilabel></term>
 <listitem><para>Automate the process for retrieving other users free/busy time.
 Fill in the server information section below to enable this
@@ -3185,7 +3184,7 @@ option.</para></listitem>
 <listitem><para>This setting lets you change the name of the file which will be
 fetched from the server. If you check this option, it will download a free/busy
 file called <userinput>user@domain.ifb</userinput>, else it will fetch
-<userinput>user.ifb</userinput>. Ask the server Administrator if you are not
+<userinput>user.ifb</userinput>. Ask the server administrator if you are not
 sure about how to configure this option.</para>
 <para><guilabel>Kolab2 server specificity:</guilabel> If you are configuring
 &korganizer; as a component to a <guilabel>&kde; Kolab client
@@ -3194,8 +3193,8 @@ sure about how to configure this option.</para>
 
 <varlistentry>
 <term><guilabel>Server &URL;</guilabel></term>
-<listitem><para>Enter the &URL; for the server on which your Free/Busy information
-shall be fetched. Ask the server administrator for this information.</para>
+<listitem><para>Enter the &URL; for the server from which your Free/Busy information
+will be fetched. Ask the server administrator for this information.</para>
 <para><guilabel>Kolab2 server example:
 </guilabel><userinput>webdavs://kolab2.com/freebusy/</userinput>
 </para></listitem>
@@ -3210,7 +3209,7 @@ server.</para>
 
 <varlistentry>
 <term><guilabel>Password</guilabel></term>
-<listitem><para>Enter here your password (server login password).
+<listitem><para>Enter your password (server login password) here.
 </para></listitem>
 </varlistentry>
 
@@ -3256,7 +3255,7 @@ values into &korganizer;.</para>
 <guiicon>Views</guiicon> toolbar (for selecting between
 <guiicon>Agenda</guiicon>, <guiicon>Month View</guiicon>,
 <guiicon>Timeline</guiicon>, <guiicon>To-do List</guiicon> and <guiicon>Journal</guiicon>
-buttons), a Schedule toolbar (with <guiicon>Publish Item Information</guiicon>,
+views), a Schedule toolbar (with <guiicon>Publish Item Information</guiicon>,
 <guiicon>Send Invitations to Attendees</guiicon>, <guiicon>Send
 Status Update</guiicon> and <guiicon>Address Book</guiicon> buttons) and a
 Filters toolbar, which allows you to choose a filter for the &korganizer; views
@@ -3314,7 +3313,7 @@ actions</guilabel> and <guilabel>Current actions</guilabel>. Using the left and
 right arrows (located between the rectangles) you can move icons from the
 <guilabel>Available actions</guilabel> group to the <guilabel>Current actions</guilabel> group. The
 toolbar will have every icon that is in the <guilabel>Current actions</guilabel>
-box. The up and down arrows allow you reposition an icon.</para>
+box. The up and down arrows allow you to reposition an icon.</para>
 
 <para>The buttons below the <guilabel>Current actions</guilabel> list allows you 
 to change the icon and the text of a button. In the <guilabel>Change Text</guilabel>
@@ -3361,7 +3360,7 @@ medium, large and huge icons.</para>
 <sect3 id="config-toolbars-lock-toolbar-position">
 <title>Lock Toolbar Position</title>
 
-<para>If you unlock a toolbar, you can move the toolbar at the top, bottom, 
+<para>If you unlock a toolbar, you can move the toolbar to the top, bottom,
 left, right side or even outside the main &korganizer; window.</para>
 </sect3>
 
@@ -3388,7 +3387,7 @@ left, right side or even outside the main &korganizer; window.</para>
 <title>Plugins</title>
 
 <para>
-&korganizer; provides you the possibility of extending the application with plugins.
+&korganizer; provides you with the possibility of extending the application with plugins.
 </para>
 
 <para>
@@ -3404,8 +3403,8 @@ Configure &korganizer;</guimenuitem></menuchoice> and click the
 <sect2 id="date-numbers-plugin">
 <title>Date Numbers Plugin for Calendars</title>
 <para>
-This plugin adds the day number of day in the year to the agenda view. For
-instance, February 1 is the day number 32.
+This plugin adds the number of the day in the year to the Agenda view. For
+instance, February 1 is day number 32.
 </para>
 </sect2>
 
@@ -3426,24 +3425,24 @@ This plugin provides the Wikipedia <quote>Picture of the Day</quote>.
 <sect2 id="jewish-calendar-plugin">
 <title>Jewish Calendar Plugin</title>
 <para>
-The plugin provides you Jewish calendar dates in addition to the
+This plugin provides Jewish calendar dates in addition to the
 Gregorian calendar dates. In the configuration dialog of the plugin, you can
-choose if you want to display Israeli holidays, weekly prasha, day of Omer and /
-or Chol HaMoed.
+choose if you want to display Israeli holidays, weekly prasha, day of Omer and/or
+Chol HaMoed.
 </para>
 </sect2>
 
 <sect2 id="journal-print-plugin">
 <title>Journal Print Style</title>
 <para>
-The plugin allows you to print out journal entries (diary entries).
+This plugin allows you to print out journal entries (diary entries).
 </para>
 </sect2>
 
 <sect2 id="yearly-print-plugin">
 <title>Yearly Print Style</title>
 <para>
-The plugin allows you to print out a yearly calendar.
+This plugin allows you to print out a yearly calendar.
 </para>
 </sect2>
 
@@ -3601,7 +3600,7 @@ File</guimenu> <guimenuitem>Print</guimenuitem></menuchoice>
 <listitem><para>Choose <guimenuitem>Print</guimenuitem> or click the
 <guilabel>Print</guilabel> icon to <action>print the current
 calendar</action>. You can specify the range of dates to be printed (either
-manually or with Calendar Widget) and the Print Style (Day, Week, Month or
+manually or with the Calendar Widget) and the Print Style (Day, Week, Month or
 To-dos and Journal).</para></listitem>
 </varlistentry>
 
@@ -3618,7 +3617,7 @@ printed on your screen, instead of on your printer</action>. Use this
 feature to check if the printout will be correct before you start
 printing.</para> 
 <para>You can specify the range of dates to be printed (either manually or with
-Calendar Widget) and the View Type (Day, Week, Month or To-do).</para>
+the Calendar Widget) and the View Type (Day, Week, Month or To-do).</para>
 </listitem>
 </varlistentry>
 
@@ -3689,7 +3688,7 @@ file, suitable for publishing on the World Wide Web.</action></para>
 <guimenuitem>Export as iCalendar</guimenuitem>
 </menuchoice></term>
 <listitem><para>This action will export all your active events, to-dos and
-journal entries (independent of to what resource they belong) as a new iCalendar
+journal entries (independent of to which resource they belong) as a new iCalendar
 file.</para>
 <para>For more information about this action, please refer to
 <xref linkend="managing-export" />.</para>
@@ -3703,7 +3702,7 @@ file.</para>
 <guimenuitem>Export as vCalendar</guimenuitem>
 </menuchoice></term>
 <listitem><para>This action will export all your active events, to-dos and
-journal entries (independent of to what resource they belong) as a new vCalendar
+journal entries (independent of to which resource they belong) as a new vCalendar
 file.</para>
 <para>For more information about this action, please refer to
 <xref linkend="managing-export" />.</para>
@@ -3821,7 +3820,7 @@ to-dos.</para>
 <guimenuitem>Paste</guimenuitem> menu items behave in the same fashion as in
  other
 &kde; applications. With the <guimenuitem>Find</guimenuitem> menu item you can
-find event and to-dos across the current calendar.</para>
+find events and to-dos across the current calendar.</para>
 
 <variablelist>
 
@@ -3890,7 +3889,7 @@ Edit</guimenu> <guimenuitem>Paste</guimenuitem></menuchoice>
 </term>
 <listitem><para><guimenuitem>Paste</guimenuitem> <action>inserts the
 contents of the clipboard into your calendar</action>. The clipboard must
-contain a valid vCalendar or iCalendar, provided either by a previous Cut/Copy
+contain a valid vCalendar or iCalendar item, provided either by a previous Cut/Copy
 operation or from a selection made outside of &korganizer;. You will be warned
 if the contents of the clipboard cannot be understood.</para>
 <tip><para>However, you can safely use <keycombo action="simul">&Ctrl;
@@ -3996,7 +3995,7 @@ format="PNG"/></imageobject></inlinemediaobject><menuchoice>
 <guimenu>View</guimenu>
  <guimenuitem>To-do List</guimenuitem></menuchoice>
  </term>
-<listitem><para><action>Switch the display to the to-do list view.</action></para>
+<listitem><para><action>Switch the display to the To-do List view.</action></para>
 <para>For more information about this action, please refer to
 <xref linkend="todo-view" />.</para>
 </listitem>
@@ -4038,7 +4037,7 @@ format="PNG"/></imageobject></inlinemediaobject><menuchoice>
 <guimenuitem>Journal</guimenuitem>
 </menuchoice>
 </term>
-<listitem><para><action>Switch the display to the journal view.</action></para>
+<listitem><para><action>Switch the display to the Journal view.</action></para>
 <para>For more information about this action, please refer to
 <xref linkend="journal-view" />.</para></listitem>
 </varlistentry>
@@ -4058,7 +4057,7 @@ format="PNG"/></imageobject></inlinemediaobject><menuchoice>
 <guimenu>View</guimenu><guisubmenu>Zoom</guisubmenu></menuchoice></term>
 <listitem><para><action>Use this submenu to adjust the current view to show
 more or less data.</action></para>
-<para>In the agenda view (day(s) or week view), you can use the zoom actions to
+<para>In the Agenda view (Day(s) or Week view), you can use the zoom actions to
 show more or less days (<menuchoice><guisubmenu>Zoom</guisubmenu>
 <guimenuitem>In Horizontally</guimenuitem></menuchoice> and <menuchoice>
 <guisubmenu>Zoom</guisubmenu><guimenuitem>Out Horizontally</guimenuitem></menuchoice>), 
@@ -4126,7 +4125,7 @@ Go</guimenu><guimenuitem>To Today</guimenuitem></menuchoice>
 <guimenu>
 Go</guimenu><guimenuitem>Day</guimenuitem></menuchoice>
 </term>
-<listitem><para><action>Switch the display to the day view.</action></para>
+<listitem><para><action>Switch the display to the Day view.</action></para>
 <para>For more information about this action, please refer to
 <xref linkend="agenda-view" />.</para>
 </listitem>
@@ -4138,8 +4137,8 @@ Go</guimenu><guimenuitem>Day</guimenuitem></menuchoice>
 <guimenu>
 Go</guimenu><guimenuitem>Next x Days</guimenuitem></menuchoice>
 </term>
-<listitem><para><action>Switch the display to the next x day view, where x is
-defined in &korganizer; main configurations.</action></para>
+<listitem><para><action>Switch the display to the Next x Day view, where x is
+defined in &korganizer; main configuration.</action></para>
 <para>For more information about this action, please refer to
 <xref linkend="agenda-view" />.</para>
 </listitem>
@@ -4152,9 +4151,9 @@ format="PNG"/></imageobject></inlinemediaobject><menuchoice>
 <guimenu>Go</guimenu><guimenuitem>Work
 Week</guimenuitem></menuchoice>
 </term>
-<listitem><para><action>Switch the display to the work week
+<listitem><para><action>Switch the display to the Work Week
 view.</action></para>
-<para>This is the same as the week view, except only the working days of the
+<para>This is the same as the Week view, except only the working days of the
 week are shown.</para>
 <para>For more information about this action, please refer to
 <xref linkend="agenda-view" />.</para>
@@ -4167,10 +4166,10 @@ week are shown.</para>
 <guimenu>
 Go</guimenu> <guimenuitem>Week</guimenuitem></menuchoice>
 </term>
-<listitem><para><action>Switch the display to the week view.</action></para>
-<para>The week view provides a view similar to the day view. Events for seven
-days are shown next to each other.  All of the functions available for the day
-view are available in the week view, too.</para>
+<listitem><para><action>Switch the display to the Week view.</action></para>
+<para>The Week view provides a view similar to the Day view. Events for seven
+days are shown next to each other.  All of the functions available for the Day
+view are available in the Week view, too.</para>
 <para>For more information about this action, please refer to
 <xref linkend="agenda-view" />.</para></listitem>
 </varlistentry>
@@ -4707,10 +4706,10 @@ the handbook.</para>
 <sect1 id="reference-action-buttons"> <!--has to be updated to 4.5-->
 <title>Action Buttons</title>
 
-<para>Many windows contain buttons <guibutton>Default</guibutton>,
+<para>Many windows contain <guibutton>Default</guibutton>,
 <guibutton>Delete</guibutton>, <guibutton>OK</guibutton>,
-<guibutton>Apply</guibutton>, and <guibutton>Cancel</guibutton>. With these
-buttons you will decide whether the data that you entered into the window will
+<guibutton>Apply</guibutton>, and <guibutton>Cancel</guibutton> buttons. With these
+buttons you can decide whether the data that you entered into the window will
 be saved or forgotten.</para>  
 
 <variablelist>
@@ -4723,7 +4722,7 @@ default values.</para></listitem>
 <varlistentry>
 <term><guibutton>Delete</guibutton></term>
 <listitem><para>Click <guibutton>Delete</guibutton> to completely remove the
-event or event that you are editing from the calendar.</para></listitem> 
+event or data that you are editing from the calendar.</para></listitem>
 </varlistentry>
 <varlistentry>
 <term><guibutton>OK</guibutton></term>
@@ -4734,7 +4733,7 @@ changes will be remembered and &korganizer; will close the
 <varlistentry>
 <term><guibutton>Apply</guibutton></term>
 <listitem><para>When you click the <guibutton>Apply</guibutton> button, your
-changes will be remembered, and the window will remain on screen for further
+changes will be remembered, and the window will remain on-screen for further
 editing.</para></listitem>
 </varlistentry>
 <varlistentry>
@@ -4752,7 +4751,7 @@ editing will be forgotten, and &korganizer; will close the
 <chapter id="other-features">  <!--updated to 4.7-->
 <title>Other Features</title>
 
-<para>In this chapter, you'll learn other useful features of
+<para>In this chapter, you'll learn of other useful features of
 &korganizer;: what tricks you can do with a click
 of your mouse and what interaction between &korganizer; and &konqueror; is
 possible.</para>
@@ -4784,8 +4783,8 @@ Day, Week and Work Week views.</para></listitem>
 the mouse pointer over the event, and drag it to the Date Navigator on the left
 side of the current calendar, or to the Date Navigator of a different
 calendar.</para>
-<tip><para>However, you cannot drag from agenda view in one calendar to
-agenda view in other calendar.</para></tip></listitem>
+<tip><para>However, you cannot drag from Agenda view in one calendar to
+Agenda view in another calendar.</para></tip></listitem>
 <listitem><para>Toolbars can be dragged on the screen. Move the mouse pointer
 over the toolbar's handle, and drag it to a new location on your
 screen.</para></listitem>
@@ -4824,7 +4823,7 @@ linkend="menu-file-import-ical">Import From &UNIX; Ical section</link>.</para>
 <question>
 <para>Can I use freebusy-time with &korganizer;?</para>
 </question>
-<answer><para>yes, follow the instructions in <link
+<answer><para>Yes, follow the instructions in <link
 linkend="config-main-free-busy">Free/Busy</link>.</para>
 </answer>
 </qandaentry>
@@ -4897,8 +4896,8 @@ administrator of your system has moved it to some other place.</para>
 <glossterm>Calendar Widget</glossterm>
 <glossdef>
 
-<para>A tool for choosing the date inside certain entry windows, like event
-editing window. It is displayed as a small button to the right of the date
+<para>A tool for choosing the date inside certain entry windows, such as the
+event editing window. It is displayed as a small button to the right of the date
 field. When you click the button, you will see a month calendar. Use the arrows
 to go to a desired date, or click the month name or year number to go
 directly to the desired month or year.</para>
@@ -4913,13 +4912,13 @@ directly to the desired month or year.</para>
 <para>The calendar that is in the upper-left corner of the &korganizer; window.
 It is the main way provided to navigate among dates, and to select from them.
 The single-arrow icons move forwards and backwards in time by increments of a
-month, while the double-arrows allow moving by years at a time. Today's date
+month, while the double-arrows allow moving by a year at a time. Today's date
 will be outlined with a small box. Dates which have events scheduled on them
 will be bold. If you want to select a date, simply click it. Hold down the
-&Ctrl; key and click the dates if you wish to select multiple neighbor dates at
-once. The dates will be displayed in the main panel.</para>
+&Ctrl; key and click the dates if you wish to select multiple neighboring dates
+at once. The dates will be displayed in the main panel.</para>
 
-<para>Recurring events are not always displayed. You can forbid the display of
+<para>Recurring events are not always displayed. You can prevent the display of
 recurring appointments in the Date Navigator. Get more information in the <link
 linkend="config-main-views">Views chapter</link>.</para>
 
@@ -4965,9 +4964,9 @@ Preferences</link> section.</para>
 <glossterm>Main panel</glossterm>
 <glossdef>
 <para>Normally the largest part of the screen, to the right of the Date
-Navigator. It displays the View of the day, workdays, week or month, the List
-View or the to-do list view.</para>
-<para>The right mouse button can be used in the List view and to-do list view
+Navigator. It displays the View of the Day, Workdays, Week or Month, the List
+View or the To-do List view.</para>
+<para>The right mouse button can be used in the List view and To-do List view
 only. It displays a local menu. The left mouse button can be used in any
 view.</para>
 </glossdef>
@@ -4982,7 +4981,7 @@ arranging appointments for these periods. Note that only the times are published
 not the event titles, descriptions or attendees. In other words, the
 free/busy information is the availability schedule.</para>
 <para>When adding attendees to your event, you need to know if they are
-busy or free in that particular time before sending the invitations.
+busy or free at that particular time before sending the invitations.
 If the attendees make their free/busy information available, &korganizer;
 can retrieve this information and display it in the
 <guilabel>Free/Busy</guilabel> tab of the <guilabel>Edit Event</guilabel>

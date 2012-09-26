@@ -26,8 +26,8 @@
 
 #include <Akonadi/EntityTreeModel>
 
-#include <QtGui/QItemSelectionModel>
-#include <QtGui/QSortFilterProxyModel>
+#include <QItemSelectionModel>
+#include <QSortFilterProxyModel>
 
 class ThreadGrouperModelPrivate;
 

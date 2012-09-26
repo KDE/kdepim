@@ -29,8 +29,8 @@
 #include <kmessagebox.h>
 
 #include <QtCore/QAbstractItemModel>
-#include <QtGui/QAction>
-#include <QtGui/QItemSelectionModel>
+#include <QAction>
+#include <QItemSelectionModel>
 
 static const char * const sFavoritePrefix = "Favorite_";
 static const int sFavoritePrefixLength = 9;

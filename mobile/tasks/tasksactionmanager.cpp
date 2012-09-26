@@ -28,7 +28,7 @@
 #include <KActionCollection>
 #include <KLocalizedString>
 
-#include <QtGui/QItemSelectionModel>
+#include <QItemSelectionModel>
 
 TasksActionManager::TasksActionManager( KActionCollection *actionCollection, QObject *parent)
   : QObject( parent )

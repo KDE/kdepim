@@ -22,7 +22,7 @@
 
 #include "ui_mainwindow.h"
 
-#include <QtGui/QMainWindow>
+#include <QMainWindow>
 
 namespace Akonadi
 {

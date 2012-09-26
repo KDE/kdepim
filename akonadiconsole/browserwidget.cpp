@@ -67,7 +67,7 @@
 #include <QTextEdit>
 #include <QVBoxLayout>
 #include <QStackedWidget>
-#include <QtGui/QSortFilterProxyModel>
+#include <QSortFilterProxyModel>
 #include <QStandardItemModel>
 #include <QSqlError>
 #include <QSqlQuery>

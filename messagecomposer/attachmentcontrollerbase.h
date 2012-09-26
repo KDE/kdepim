@@ -57,6 +57,10 @@ class MESSAGECOMPOSER_EXPORT AttachmentControllerBase : public QObject
 
     void setSelectedParts( const MessageCore::AttachmentPart::List &selectedParts );
 
+    void setAttachOwnVcard(bool attachVcard);
+    bool attachOwnVcard() const;
+    void setIdentityHasOwnVcard(bool state);
+
   public slots:
     /// model sets these
     void setEncryptEnabled( bool enabled );
@@ -84,6 +88,7 @@ class MESSAGECOMPOSER_EXPORT AttachmentControllerBase : public QObject
     void refreshSelection();
     void showAttachment( KMime::Content *content, const QByteArray &charset );
     void selectedAllAttachment();
+    void addOwnVcard(bool);
 
   protected:
     void exportPublicKey( const QString &fingerprint );

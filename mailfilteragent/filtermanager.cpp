@@ -44,7 +44,7 @@
 #include <mailcommon/mailutil.h>
 
 #include <QtCore/QTimer>
-#include <QtGui/QApplication>
+#include <QApplication>
 
 // other headers
 #include <algorithm>

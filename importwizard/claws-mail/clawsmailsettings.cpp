@@ -16,6 +16,7 @@
 */
 
 #include "clawsmailsettings.h"
+#include "importwizardutil.h"
 
 #include <mailtransport/transportmanager.h>
 #include "mailcommon/mailutil.h"
@@ -40,7 +41,6 @@ ClawsMailSettings::~ClawsMailSettings()
 
 void ClawsMailSettings::importSettings(const QString& filename, const QString& path)
 {
-    //TODO improve it
   bool checkMailOnStartup = true;
   int intervalCheckMail = -1;
   const QString sylpheedrc = path + QLatin1String("/clawsrc");
@@ -110,6 +110,20 @@ void ClawsMailSettings::readSettingsColor(const KConfigGroup& group)
           addKmailConfig(QLatin1String("Reader"), QLatin1String("MisspelledColor"), writeColor(col));
         }
     }
+    const QString uriColor = group.readEntry(QLatin1String("uri_color"));
+    if(!uriColor.isEmpty()) {
+      const QColor col(uriColor);
+      if(col.isValid()) {
+        addKmailConfig(QLatin1String("Reader"), QLatin1String("LinkColor"), writeColor(col));
+       }
+    }
+    const QString newColor = group.readEntry(QLatin1String("color_new"));
+    if(!newColor.isEmpty()) {
+      const QColor col(newColor);
+      if(col.isValid()) {
+        addKmailConfig(QLatin1String("MessageListView::Colors"), QLatin1String("UnreadMessageColor"), writeColor(col));
+       }
+    }
   }
 }
 
@@ -144,4 +158,37 @@ void ClawsMailSettings::readGlobalSettings(const KConfigGroup& group)
       addKmailConfig(QLatin1String("Behaviour"), QLatin1String("DelayedMarkTime"), markAsRead);
       addKmailConfig(QLatin1String("Behaviour"), QLatin1String("DelayedMarkAsRead"), true);
     }
+
+    const int warnLargeFileInserting = group.readEntry(QLatin1String("warn_large_insert"),0);
+    if(warnLargeFileInserting == 0) {
+      addKmailConfig(QLatin1String("Composer"), QLatin1String("MaximumAttachmentSize"), -1);
+    } else {
+      const int warnLargeFileSize = group.readEntry(QLatin1String("warn_large_insert_size"),-1);
+      if(warnLargeFileSize > 0) {
+        addKmailConfig(QLatin1String("Composer"), QLatin1String("MaximumAttachmentSize"), warnLargeFileSize*1024);
+      }
+    }
+}
+
+void ClawsMailSettings::readTagColor(const KConfigGroup &group)
+{
+  const QString customColorPattern(QLatin1String("custom_color%1"));
+  const QString customColorLabelPattern(QLatin1String("custom_colorlabel%1"));
+  QList<tagStruct> listTag;
+  for(int i = 1; i<=15; ++i) {
+    if(group.hasKey(customColorPattern.arg(i))
+      && group.hasKey(customColorLabelPattern.arg(i))) {
+      tagStruct tag;
+      const QString colorStr = group.readEntry(customColorPattern.arg(i));
+      const QString labelStr = group.readEntry(customColorLabelPattern.arg(i));
+      if(!colorStr.isEmpty()&& !labelStr.isEmpty()) {
+        tag.color = QColor(colorStr).name();
+        tag.name = labelStr;
+        listTag<<tag;
+      }
+    }
+  }
+  if(!listTag.isEmpty()) {
+    ImportWizardUtil::addNepomukTag(listTag);
+  }
 }

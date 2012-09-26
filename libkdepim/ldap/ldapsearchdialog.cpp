@@ -26,17 +26,17 @@
 #include "ldapclient.h"
 
 #include <QtCore/QPair>
-#include <QtGui/QApplication>
-#include <QtGui/QCheckBox>
-#include <QtGui/QCloseEvent>
-#include <QtGui/QFrame>
-#include <QtGui/QGridLayout>
-#include <QtGui/QGroupBox>
-#include <QtGui/QHeaderView>
-#include <QtGui/QLabel>
-#include <QtGui/QPushButton>
-#include <QtGui/QTableView>
-#include <QtGui/QVBoxLayout>
+#include <QApplication>
+#include <QCheckBox>
+#include <QCloseEvent>
+#include <QFrame>
+#include <QGridLayout>
+#include <QGroupBox>
+#include <QHeaderView>
+#include <QLabel>
+#include <QPushButton>
+#include <QTableView>
+#include <QVBoxLayout>
 
 #include <akonadi/collection.h>
 #include <akonadi/itemcreatejob.h>

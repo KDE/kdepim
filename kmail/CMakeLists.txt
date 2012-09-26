@@ -113,8 +113,9 @@ if (NOT WINCE AND KDEPIM_BUILD_DESKTOP)
      kmknotify.cpp
      tagselectdialog.cpp
      accountconfigorderdialog.cpp
-     insertspecialchar.cpp
      identityeditvcarddialog.cpp
+     identityaddvcarddialog.cpp
+     attachmentmissingwarning.cpp
   )
 
   soprano_add_ontology(kmailprivate_LIB_SRCS

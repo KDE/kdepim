@@ -31,8 +31,8 @@
 #include <KGlobal>
 #include <KLocale>
 
-#include <QtGui/QPrinter>
-#include <QtGui/QTextDocument>
+#include <QPrinter>
+#include <QTextDocument>
 
 using namespace KABPrinting;
 

@@ -21,7 +21,7 @@
 
 #include "kdeclarativefullscreenview.h"
 
-#include <QtGui/QItemSelectionModel>
+#include <QItemSelectionModel>
 
 class ExportHandlerBase;
 class GuiStateManager;

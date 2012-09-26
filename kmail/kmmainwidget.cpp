@@ -121,6 +121,9 @@
 #include <akonadi/collectiondeletejob.h>
 #include <akonadi/dbusconnectionpool.h>
 #include <Akonadi/CachePolicy>
+#include <Akonadi/Contact/ContactEditorDialog>
+
+
 #include <kpimidentities/identity.h>
 #include <kpimidentities/identitymanager.h>
 #include <kpimutils/email.h>
@@ -165,6 +168,7 @@
 #include <ktreewidgetsearchline.h>
 #include <Solid/Networking>
 #include <nepomuk2/resourcemanager.h>
+#include <KRecentFilesAction>
 
 // Qt includes
 #include <QByteArray>
@@ -243,7 +247,7 @@ K_GLOBAL_STATIC( KMMainWidget::PtrList, theMainWidgetList )
   mPreferHtmlAction = 0;
   mPreferHtmlLoadExtAction = 0;
   Akonadi::Control::widgetNeedsAkonadi( this );
-
+  mFavoritesModel = 0;
 
   // FIXME This should become a line separator as soon as the API
   // is extended in kdelibs.
@@ -382,6 +386,10 @@ void KMMainWidget::destruct()
   mCurrentFolder.clear();
   delete mMoveOrCopyToDialog;
   delete mSelectFromAllFoldersDialog;
+
+  KConfigGroup grp = mConfig->group(QLatin1String("Recent Files"));
+  mOpenRecentAction->saveEntries(grp);
+
   mSystemTray = 0;
   mDestructed = true;
 }
@@ -508,7 +516,6 @@ void KMMainWidget::slotEndCheckFetchCollectionsDone(KJob* job)
 
 void KMMainWidget::slotFolderChanged( const Akonadi::Collection& collection )
 {
-  updateFolderMenu();
   folderSelected( collection );
   if(collection.cachePolicy().syncOnDemand())
       AgentManager::self()->synchronizeCollection( collection, false );
@@ -594,7 +601,11 @@ void KMMainWidget::folderSelected( const Akonadi::Collection & col )
     {
         //mMessageListView->setCurrentFolder( 0 ); <-- useless in the new view: just do nothing
         // FIXME: Use an "offline tab" ?
-        showOfflinePage();
+        if(kmkernel->isOffline())
+            showOfflinePage();
+        else
+            showResourceOfflinePage();
+	updateFolderMenu();
         return;
     }
   }
@@ -625,6 +636,13 @@ void KMMainWidget::slotShowSelectedFolderInPane()
   }
 }
 
+void KMMainWidget::clearViewer()
+{
+  if (mMsgView) {
+      mMsgView->clear( true );
+      mMsgView->displayAboutPage();
+  }
+}
 
 //-----------------------------------------------------------------------------
 void KMMainWidget::readPreConfig()
@@ -1023,6 +1041,7 @@ void KMMainWidget::deleteWidgets()
   mFavoriteCollectionsView = 0;
   mSplitter1 = 0;
   mSplitter2 = 0;
+  mFavoritesModel = 0;
 }
 
 //-----------------------------------------------------------------------------
@@ -1150,6 +1169,7 @@ void KMMainWidget::createWidgets()
     mAkonadiStandardActionManager->setFavoriteCollectionsModel( mFavoritesModel );
     mAkonadiStandardActionManager->setFavoriteSelectionModel( mFavoriteCollectionsView->selectionModel() );
   }
+
   //mAkonadiStandardActionManager->createAllActions();
   //Don't use mMailActionManager->createAllActions() to save memory by not
   //creating actions that doesn't make sense.
@@ -1163,9 +1183,6 @@ void KMMainWidget::createWidgets()
                   << StandardActionManager::Paste
                   << StandardActionManager::DeleteItems
                   << StandardActionManager::ManageLocalSubscriptions
-                  << StandardActionManager::AddToFavoriteCollections
-                  << StandardActionManager::RemoveFromFavoriteCollections
-                  << StandardActionManager::RenameFavoriteCollection
                   << StandardActionManager::CopyCollectionToMenu
                   << StandardActionManager::CopyItemToMenu
                   << StandardActionManager::MoveItemToMenu
@@ -1177,11 +1194,22 @@ void KMMainWidget::createWidgets()
                   << StandardActionManager::ResourceProperties
                   << StandardActionManager::SynchronizeResources
                   << StandardActionManager::ToggleWorkOffline
-                  << StandardActionManager::SynchronizeCollectionsRecursive
-                  << StandardActionManager::SynchronizeFavoriteCollections;
+                  << StandardActionManager::SynchronizeCollectionsRecursive;
 
   Q_FOREACH( StandardActionManager::Type standardAction, standardActions ) {
     mAkonadiStandardActionManager->createAction( standardAction );
+  }
+
+
+  if(mEnableFavoriteFolderView) {
+    QList<StandardActionManager::Type> favoriteActions;
+    favoriteActions << StandardActionManager::AddToFavoriteCollections
+                    << StandardActionManager::RemoveFromFavoriteCollections
+                    << StandardActionManager::RenameFavoriteCollection
+                    << StandardActionManager::SynchronizeFavoriteCollections;
+    Q_FOREACH( StandardActionManager::Type favoriteAction, favoriteActions) {
+      mAkonadiStandardActionManager->createAction( favoriteAction );
+    }
   }
 
   QList<StandardMailActionManager::Type> mailActions;
@@ -1191,7 +1219,7 @@ void KMMainWidget::createWidgets()
               << StandardMailActionManager::RemoveDuplicates
               << StandardMailActionManager::EmptyAllTrash
               << StandardMailActionManager::MarkMailAsRead
-	      << StandardMailActionManager::MarkMailAsUnread
+              << StandardMailActionManager::MarkMailAsUnread
               << StandardMailActionManager::MarkMailAsImportant
               << StandardMailActionManager::MarkMailAsActionItem;
 
@@ -1578,13 +1606,13 @@ void KMMainWidget::slotCompose()
       TemplateParser::TemplateParser parser( msg, TemplateParser::TemplateParser::NewMessage );
       parser.setIdentityManager( KMKernel::self()->identityManager() );
       parser.process( msg, mCurrentFolder->collection() );
-      win = KMail::makeComposer( msg, KMail::Composer::New, mCurrentFolder->identity() );
+      win = KMail::makeComposer( msg, false, false, KMail::Composer::New, mCurrentFolder->identity() );
   } else {
       MessageHelper::initHeader( msg, KMKernel::self()->identityManager() );
       TemplateParser::TemplateParser parser( msg, TemplateParser::TemplateParser::NewMessage );
       parser.setIdentityManager( KMKernel::self()->identityManager() );
       parser.process( KMime::Message::Ptr(), Akonadi::Collection() );
-      win = KMail::makeComposer( msg, KMail::Composer::New );
+      win = KMail::makeComposer( msg, false, false, KMail::Composer::New );
   }
 
   win->show();
@@ -2205,6 +2233,10 @@ void KMMainWidget::copySelectedMessagesToFolder( const Akonadi::Collection& dest
 //
 void KMMainWidget::trashMessageSelected( MessageList::Core::MessageItemSetReference ref )
 {
+  if ( !mCurrentFolder ) {
+    return;
+  }
+
   const QList<Akonadi::Item> select = mMessagePane->itemListFromPersistentSet( ref );
   mMessagePane->markMessageItemsAsAboutToBeRemoved( ref, true );
 
@@ -2635,7 +2667,7 @@ void KMMainWidget::slotSaveMsg()
 //-----------------------------------------------------------------------------
 void KMMainWidget::slotOpenMsg()
 {
-  KMOpenMsgCommand *openCommand = new KMOpenMsgCommand( this, KUrl(), overrideEncoding() );
+  KMOpenMsgCommand *openCommand = new KMOpenMsgCommand( this, KUrl(), overrideEncoding(), this );
 
   openCommand->start();
 }
@@ -2723,6 +2755,14 @@ void KMMainWidget::showOfflinePage()
   mShowingOfflineScreen = true;
 
   mMsgView->displayOfflinePage();
+}
+
+void KMMainWidget::showResourceOfflinePage()
+{
+  if ( !mReaderWindowActive ) return;
+  mShowingOfflineScreen = true;
+
+  mMsgView->displayResourceOfflinePage();
 }
 
 
@@ -2921,6 +2961,11 @@ void KMMainWidget::slotMessageActivated( const Akonadi::Item &msg )
     return;
   }
 
+  bool isImapResourceOnline = false;
+  bool folderIsAnImap = KMKernel::self()->isImapFolder( mCurrentFolder->collection(), isImapResourceOnline );
+  if(folderIsAnImap && !isImapResourceOnline) {
+    return;
+  }
   ItemFetchJob *itemFetchJob = MessageViewer::Viewer::createFetchJob( msg );
   connect( itemFetchJob, SIGNAL(itemsReceived(Akonadi::Item::List)),
            SLOT(slotItemsFetchedForActivation(Akonadi::Item::List)) );
@@ -2990,6 +3035,13 @@ void KMMainWidget::slotDelayedMessagePopup( KJob *job )
   const Akonadi::ContactSearchJob *searchJob = qobject_cast<Akonadi::ContactSearchJob*>( job );
   const bool contactAlreadyExists = !searchJob->contacts().isEmpty();
 
+  const QList<Akonadi::Item> listContact = searchJob->items();
+  const bool uniqContactFound = (listContact.count() == 1);
+  if(uniqContactFound) {
+      mMsgView->setContactItem(listContact.first());
+  } else {
+      mMsgView->setContactItem(Akonadi::Item());
+  }
 #if 0 //TODO port it
   mMessageListView->activateMessage( &msg ); // make sure that this message is the active one
 
@@ -3018,7 +3070,11 @@ void KMMainWidget::slotDelayedMessagePopup( KJob *job )
       menu->addSeparator();
 
       if ( contactAlreadyExists ) {
-        menu->addAction( mMsgView->openAddrBookAction() );
+        if(uniqContactFound) {
+          menu->addAction( mMsgView->editContactAction() );
+        } else {
+          menu->addAction( mMsgView->openAddrBookAction() );
+        }
       } else {
         menu->addAction( mMsgView->addAddrBookAction() );
       }
@@ -3158,6 +3214,11 @@ void KMMainWidget::setupActions()
 
   mOpenAction = KStandardAction::open( this, SLOT(slotOpenMsg()),
                                   actionCollection() );
+
+  mOpenRecentAction = KStandardAction::openRecent( this, SLOT(slotOpenRecentMsg(KUrl)),
+                                  actionCollection() );
+  KConfigGroup grp = mConfig->group(QLatin1String("Recent Files"));
+  mOpenRecentAction->loadEntries(grp);
 
   {
     KAction *action = new KAction(i18n("&Expire All Folders"), this);
@@ -3708,6 +3769,14 @@ void KMMainWidget::setupActions()
       connect(action, SIGNAL(triggered(bool)), this, SLOT(slotExportData()));
   }
 
+  {
+      KAction *action = new KAction(KIcon( QLatin1String( "contact-new" ) ),i18n("New AddressBook Contact..."),this);
+      actionCollection()->addAction("kmail_new_addressbook_contact", action );
+      connect(action, SIGNAL(triggered(bool)), this, SLOT(slotCreateAddressBookContact()));
+
+
+  }
+
   actionCollection()->addAction(KStandardAction::Undo,  "kmail_undo", this, SLOT(slotUndo()));
 
   KStandardAction::tipOfDay( this, SLOT(slotShowTip()), actionCollection() );
@@ -3729,6 +3798,8 @@ void KMMainWidget::setupActions()
 
 void KMMainWidget::slotAddFavoriteFolder()
 {
+  if(!mFavoritesModel)
+    return;
   selectFromAllFoldersDialog()->setCaption( i18n("Add Favorite Folder") );
   if ( selectFromAllFoldersDialog()->exec() && selectFromAllFoldersDialog() ) {
     const Akonadi::Collection collection = selectFromAllFoldersDialog()->selectedCollection();
@@ -3840,7 +3911,6 @@ void KMMainWidget::updateMessageActions( bool fast )
   Akonadi::Item::List selectedItems;
   Akonadi::Item::List selectedVisibleItems;
   bool allSelectedBelongToSameThread = false;
-  Akonadi::Item currentMessage;
   if (mCurrentFolder && mCurrentFolder->isValid() &&
        mMessagePane->getSelectionStats( selectedItems, selectedVisibleItems, &allSelectedBelongToSameThread )
      )
@@ -4007,7 +4077,7 @@ void KMMainWidget::updateMessageActionsDelayed()
   }
 
   const qint64 nbMsgOutboxCollection = MailCommon::Util::updatedCollection( CommonKernel->outboxCollectionFolder() ).statistics().count();
-  
+
   actionCollection()->action( "send_queued" )->setEnabled( nbMsgOutboxCollection > 0 );
   actionCollection()->action( "send_queued_via" )->setEnabled( nbMsgOutboxCollection > 0 );
 
@@ -4194,7 +4264,7 @@ void KMMainWidget::updateFolderMenu()
   bool imapFolderIsOnline = false;
   if(mCurrentFolder && kmkernel->isImapFolder( mCurrentFolder->collection(),imapFolderIsOnline )) {
     if(imapFolderIsOnline) {
-      actionlist << mServerSideSubscription; 
+      actionlist << mServerSideSubscription;
     }
   }
 
@@ -4683,4 +4753,21 @@ void KMMainWidget::slotExportData()
       KMessageBox::error( this, i18n( "Could not start backupmail. "
                                       "Please check your installation." ),
                          i18n( "Unable to start backupmail" ) );
+}
+
+void KMMainWidget::slotCreateAddressBookContact()
+{
+  Akonadi::ContactEditorDialog dlg( Akonadi::ContactEditorDialog::CreateMode, this );
+  dlg.exec();
+}
+
+void KMMainWidget::slotOpenRecentMsg(const KUrl& url)
+{
+  KMOpenMsgCommand *openCommand = new KMOpenMsgCommand( this, url, overrideEncoding(), this );
+  openCommand->start();
+}
+
+void KMMainWidget::addRecentFile(const KUrl& mUrl)
+{
+  mOpenRecentAction->addUrl(mUrl);
 }

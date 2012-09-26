@@ -85,13 +85,20 @@ void IncidenceCategories::save( const KCalCore::Incidence::Ptr &incidence )
   incidence->setCategories( mSelectedCategories );
 }
 
+QStringList IncidenceCategories::categories() const
+{
+  return mSelectedCategories;
+}
+
 bool IncidenceCategories::isDirty() const
 {
   // If no Incidence was loaded, mSelectedCategories should be empty.
   bool categoriesEqual = mSelectedCategories.isEmpty();
 
   if ( mLoadedIncidence ) { // There was an Incidence loaded
-    categoriesEqual = ( mLoadedIncidence->categories().size() == mSelectedCategories.size() );
+    categoriesEqual =
+      ( mLoadedIncidence->categories().toSet().size() == mSelectedCategories.toSet().size() );
+
     if ( categoriesEqual ) {
       QStringListIterator it( mLoadedIncidence->categories() );
       while ( it.hasNext() && categoriesEqual ) {
@@ -121,6 +128,7 @@ void IncidenceCategories::setCategories( const QStringList &categories )
 #ifdef KDEPIM_MOBILE_UI
   mUi->mCategoriesLabel->setText( mSelectedCategories.join( QLatin1String( "," ) ) );
 #endif
+
   checkDirtyStatus();
 }
 

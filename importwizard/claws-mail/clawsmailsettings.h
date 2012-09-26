@@ -35,6 +35,8 @@ protected:
   void readSettingsColor(const KConfigGroup& group);
   void readTemplateFormat(const KConfigGroup& group);
   void readGlobalSettings(const KConfigGroup& group);
+  void readTagColor(const KConfigGroup& group);
+
 
 private:
   QString writeColor(const QColor& col);

@@ -21,7 +21,7 @@
 #ifndef PHONETYPECOMBO_H
 #define PHONETYPECOMBO_H
 
-#include <QtGui/QComboBox>
+#include <QComboBox>
 
 #include <KABC/PhoneNumber>
 

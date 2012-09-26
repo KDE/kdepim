@@ -32,7 +32,7 @@
 
 #include <kcheckableproxymodel.h> //krazy:exclude=camelcase TODO wait for kdelibs4.8
 
-#include <QtGui/QApplication>
+#include <QApplication>
 
 using namespace EventViews;
 

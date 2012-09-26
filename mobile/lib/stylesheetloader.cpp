@@ -23,8 +23,8 @@
 #include <KGlobal>
 #include <KStandardDirs>
 #include <QFile>
-#include <QtGui/QWidget>
-#include <QtGui/QApplication>
+#include <QWidget>
+#include <QApplication>
 
 class StyleSheetLoaderPrivate
 {

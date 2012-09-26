@@ -202,6 +202,8 @@ public:
    */
   ComposerViewBase::MissingAttachment checkForMissingAttachments( const QStringList &attachmentKeywords ) ;
 
+  bool hasMissingAttachments( const QStringList& attachmentKeywords );
+
   /**
    * Helper methods to read from config various encryption settings
    */
@@ -257,6 +259,7 @@ private slots:
   void slotSaveMessage( KJob *job );
 
 private:
+  Akonadi::Collection defaultSpecialTarget() const;
   /**
   * Searches the mime tree, where root is the root node, for embedded images,
   * extracts them froom the body and adds them to the editor.

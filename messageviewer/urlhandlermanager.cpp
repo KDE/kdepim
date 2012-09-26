@@ -447,6 +447,10 @@ namespace {
         w->goOnline();
         return true;
       }
+      else if ( urlPath == QLatin1String( "goResourceOnline" ) ) {
+        w->goResourceOnline();
+        return true;
+      }
       else if ( urlPath == QLatin1String( "loadExternal" ) ) {
         w->setHtmlLoadExtOverride( !w->htmlLoadExtOverride() );
         w->update( Viewer::Force );
@@ -516,6 +520,8 @@ namespace {
         return i18n("Load external references from the Internet for this message.");
       else if ( urlPath == QLatin1String( "goOnline" ) )
         return i18n("Work online.");
+      else if ( urlPath == QLatin1String( "goResourceOnline" ) )
+        return i18n("Make account online.");
       else if ( urlPath == QLatin1String( "decryptMessage" ) )
         return i18n("Decrypt message.");
       else if ( urlPath == QLatin1String( "showSignatureDetails" ) )

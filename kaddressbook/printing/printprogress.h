@@ -24,7 +24,7 @@
 #ifndef PRINTPROGRESS_H
 #define PRINTPROGRESS_H
 
-#include <QtGui/QWidget>
+#include <QWidget>
 
 class QProgressBar;
 class QString;

@@ -49,6 +49,7 @@
 #include <KRun>
 #include <KTemporaryFile>
 #include <KFileItemActions>
+#include <KActionMenu>
 
 #include <kpimutils/kfileio.h>
 
@@ -116,6 +117,8 @@ class Message::AttachmentControllerBase::Private
     QAction *addAction;
     QAction *addContextAction;
     QAction *selectAllAction;
+    KActionMenu *attachmentMenu;
+    QAction *addOwnVcardAction;
 
     // If part p is compressed, uncompressedParts[p] is the uncompressed part.
     QHash<AttachmentPart::Ptr, AttachmentPart::Ptr> uncompressedParts;
@@ -142,6 +145,8 @@ AttachmentControllerBase::Private::Private( AttachmentControllerBase *qq )
   , addAction( 0 )
   , addContextAction( 0 )
   , selectAllAction( 0 )
+  , attachmentMenu( 0 )
+  , addOwnVcardAction( 0 )
 {
 }
 
@@ -422,12 +427,24 @@ void AttachmentControllerBase::createActions()
   d->attachMyPublicKeyAction = new KAction( i18n( "Attach &My Public Key" ), this );
   connect( d->attachMyPublicKeyAction, SIGNAL(triggered(bool)), this, SLOT(attachMyPublicKey()) );
 
+  d->attachmentMenu = new KActionMenu(i18n("Attach"),this);
+  d->attachmentMenu->setDelayed(false);
+
   d->addAction = new KAction( KIcon( QLatin1String( "mail-attachment" ) ), i18n( "&Attach File..." ), this );
   d->addAction->setIconText( i18n( "Attach" ) );
   d->addContextAction = new KAction( KIcon( QLatin1String( "mail-attachment" ) ),
       i18n( "Add Attachment..." ), this );
   connect( d->addAction, SIGNAL(triggered(bool)), this, SLOT(showAddAttachmentDialog()) );
   connect( d->addContextAction, SIGNAL(triggered(bool)), this, SLOT(showAddAttachmentDialog()) );
+
+  d->addOwnVcardAction = new KAction( i18n("Attach Own Vcard"),this );
+  d->addOwnVcardAction->setIconText( i18n( "Own Vcard" ) );
+  d->addOwnVcardAction->setCheckable(true);
+  connect(d->addOwnVcardAction, SIGNAL(triggered(bool)), this, SIGNAL(addOwnVcard(bool)));
+
+  d->attachmentMenu->addAction(d->addAction);
+  d->attachmentMenu->addSeparator();
+  d->attachmentMenu->addAction(d->addOwnVcardAction);
 
   d->removeAction = new KAction( KIcon(QLatin1String("edit-delete")), i18n( "&Remove Attachment" ), this );
   d->removeContextAction = new KAction( KIcon(QLatin1String("edit-delete")), i18n( "Remove" ), this ); // FIXME need two texts. is there a better way?
@@ -475,7 +492,8 @@ void AttachmentControllerBase::createActions()
   collection->addAction( QLatin1String( "attach_save" ), d->saveAsAction );
   collection->addAction( QLatin1String( "attach_properties" ), d->propertiesAction );
   collection->addAction( QLatin1String( "select_all_attachment"), d->selectAllAction);
-  
+  collection->addAction( QLatin1String( "attach_menu"), d->attachmentMenu );
+  collection->addAction( QLatin1String( "attach_own_vcard"), d->addOwnVcardAction );
 
   setSelectedParts( AttachmentPart::List());
   emit actionsCreated();
@@ -806,7 +824,7 @@ void AttachmentControllerBase::addAttachmentUrlSync(const KUrl &url)
     kDebug() << "Creating attachment from file";
   }
   if( MessageComposer::MessageComposerSettings::maximumAttachmentSize() > 0 ) {
-    ajob->setMaximumAllowedSize( MessageComposer::MessageComposerSettings::maximumAttachmentSize() * 1024 * 1024 );
+    ajob->setMaximumAllowedSize( MessageComposer::MessageComposerSettings::maximumAttachmentSize() );
   }
   if(ajob->exec()) {
     AttachmentPart::Ptr part = ajob->attachmentPart();
@@ -831,7 +849,7 @@ void AttachmentControllerBase::addAttachment( const KUrl &url )
     kDebug() << "Creating attachment from file";
   }
   if( MessageComposer::MessageComposerSettings::maximumAttachmentSize() > 0 ) {
-    ajob->setMaximumAllowedSize( MessageComposer::MessageComposerSettings::maximumAttachmentSize() * 1024 * 1024 );
+    ajob->setMaximumAllowedSize( MessageComposer::MessageComposerSettings::maximumAttachmentSize() );
   }
   connect( ajob, SIGNAL(result(KJob*)), this, SLOT(loadJobResult(KJob*)) );
   ajob->start();
@@ -870,6 +888,21 @@ void AttachmentControllerBase::enableAttachPublicKey( bool enable )
 void AttachmentControllerBase::enableAttachMyPublicKey( bool enable )
 {
   d->attachMyPublicKeyAction->setEnabled( enable );
+}
+
+void AttachmentControllerBase::setAttachOwnVcard(bool attachVcard)
+{
+  d->addOwnVcardAction->setChecked(attachVcard);
+}
+
+bool AttachmentControllerBase::attachOwnVcard() const
+{
+  return  d->addOwnVcardAction->isChecked();
+}
+
+void AttachmentControllerBase::setIdentityHasOwnVcard(bool state)
+{
+  d->addOwnVcardAction->setEnabled(state);
 }
 
 #include "attachmentcontrollerbase.moc"

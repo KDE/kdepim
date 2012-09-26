@@ -42,7 +42,7 @@
 #ifndef KLEO_QWIZARD_H
 #define KLEO_QWIZARD_H
 
-#include <QtGui/qdialog.h>
+#include <qdialog.h>
 
 class QWizardPage;
 class QAbstractButton;

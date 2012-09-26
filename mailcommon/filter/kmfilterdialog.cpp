@@ -1534,7 +1534,6 @@ void KMFilterListBox::enableControls()
   mBtnBottom->setEnabled( aFilterIsSelected &&
                           ( ( uniqFilterSelected && !theLast ) ||
                             ( !uniqFilterSelected ) ) && !allItemSelected );
-
   if ( aFilterIsSelected ) {
     mListWidget->scrollToItem( mListWidget->currentItem() );
   }

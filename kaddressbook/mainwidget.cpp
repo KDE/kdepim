@@ -70,16 +70,16 @@
 #include <KXmlGuiWindow>
 #include <KCMultiDialog>
 
-#include <QtGui/QAction>
-#include <QtGui/QActionGroup>
-#include <QtGui/QHBoxLayout>
-#include <QtGui/QHeaderView>
-#include <QtGui/QListView>
-#include <QtGui/QPrinter>
-#include <QtGui/QPrintDialog>
-#include <QtGui/QSortFilterProxyModel>
-#include <QtGui/QSplitter>
-#include <QtGui/QStackedWidget>
+#include <QAction>
+#include <QActionGroup>
+#include <QHBoxLayout>
+#include <QHeaderView>
+#include <QListView>
+#include <QPrinter>
+#include <QPrintDialog>
+#include <QSortFilterProxyModel>
+#include <QSplitter>
+#include <QStackedWidget>
 
 namespace {
 static bool isStructuralCollection( const Akonadi::Collection &collection )
@@ -229,7 +229,37 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   mActionManager = new Akonadi::StandardContactActionManager( guiClient->actionCollection(), this );
   mActionManager->setCollectionSelectionModel( mCollectionView->selectionModel() );
   mActionManager->setItemSelectionModel( mItemView->selectionModel() );
-  mActionManager->createAllActions();
+
+  QList<Akonadi::StandardActionManager::Type> standardActions;
+  standardActions << Akonadi::StandardActionManager::CreateCollection
+                  << Akonadi::StandardActionManager::CopyCollections
+                  << Akonadi::StandardActionManager::DeleteCollections
+                  << Akonadi::StandardActionManager::SynchronizeCollections
+                  << Akonadi::StandardActionManager::CollectionProperties
+                  << Akonadi::StandardActionManager::CopyItems
+                  << Akonadi::StandardActionManager::Paste
+                  << Akonadi::StandardActionManager::DeleteItems
+                  << Akonadi::StandardActionManager::CutItems
+                  << Akonadi::StandardActionManager::CutCollections
+                  << Akonadi::StandardActionManager::CreateResource
+                  << Akonadi::StandardActionManager::DeleteResources
+                  << Akonadi::StandardActionManager::ResourceProperties
+                  << Akonadi::StandardActionManager::SynchronizeResources
+                  << Akonadi::StandardActionManager::SynchronizeCollectionsRecursive;
+
+  Q_FOREACH( Akonadi::StandardActionManager::Type standardAction, standardActions ) {
+    mActionManager->createAction( standardAction );
+  }
+
+  QList<Akonadi::StandardContactActionManager::Type> contactActions;
+  contactActions <<Akonadi::StandardContactActionManager::CreateContact
+                 <<Akonadi::StandardContactActionManager::CreateContactGroup
+                 <<Akonadi::StandardContactActionManager::EditItem;
+
+  Q_FOREACH( Akonadi::StandardContactActionManager::Type contactAction, contactActions ) {
+    mActionManager->createAction( contactAction );
+  }
+
   const QStringList pages =
       QStringList() << QLatin1String( "Akonadi::CollectionGeneralPropertiesPage" )
                     << QLatin1String( "Akonadi::CachePolicyPage" );
@@ -733,7 +763,7 @@ void MainWidget::saveSplitterStates() const
   if ( currentMode == 1 )
     return;
 
-  QString groupName = QString( "UiState_MainWidgetSplitter_%1" ).arg( currentMode );
+  QString groupName = QString::fromLatin1( "UiState_MainWidgetSplitter_%1" ).arg( currentMode );
   //kDebug() << "saving to group" << groupName;
   KConfigGroup group( Settings::self()->config(), groupName );
   KPIM::UiStateSaver::saveState( mMainWidgetSplitter1, group );
@@ -748,7 +778,7 @@ void MainWidget::restoreSplitterStates()
   if ( currentMode == 1 )
     return;
 
-  QString groupName = QString( "UiState_MainWidgetSplitter_%1" ).arg( currentMode );
+  QString groupName = QString::fromLatin1( "UiState_MainWidgetSplitter_%1" ).arg( currentMode );
   //kDebug() << "restoring from group" << groupName;
   KConfigGroup group( Settings::self()->config(), groupName );
   KPIM::UiStateSaver::restoreState( mMainWidgetSplitter1, group );

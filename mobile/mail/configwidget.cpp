@@ -33,7 +33,7 @@
 #include <libkdepim/ldap/ldapclient.h>
 #include <libkdepim/recentaddresses.h>
 
-#include <QtGui/QLineEdit>
+#include <QLineEdit>
 
 using namespace MessageComposer;
 

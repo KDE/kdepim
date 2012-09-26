@@ -37,6 +37,7 @@
 #include <QRegExp>
 #include <QToolButton>
 #include <QKeyEvent>
+#include <QSplitter>
 
 using namespace MessageViewer;
 
@@ -182,18 +183,19 @@ void TranslatorWidget::init()
    
   layout->addLayout( hboxLayout );
 
-  hboxLayout = new QHBoxLayout;
+  QSplitter *splitter = new QSplitter;
+  splitter->setChildrenCollapsible( false );
   d->inputText = new KTextEdit;
   d->inputText->setAcceptRichText(false);
   d->inputText->setClickMessage(i18n("Drag text that you want to translate."));
   connect( d->inputText, SIGNAL(textChanged()), SLOT(slotTextChanged()) );
 
-  hboxLayout->addWidget( d->inputText );
+  splitter->addWidget( d->inputText );
   d->translatedText = new KTextEdit;
   d->translatedText->setReadOnly( true );
-  hboxLayout->addWidget( d->translatedText );
+  splitter->addWidget( d->translatedText );
 
-  layout->addLayout( hboxLayout );
+  layout->addWidget( splitter );
    
   d->initLanguage();
   connect( d->from, SIGNAL(currentIndexChanged(int)), SLOT(slotFromLanguageChanged(int)) );

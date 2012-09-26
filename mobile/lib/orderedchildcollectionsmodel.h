@@ -23,7 +23,7 @@
 #define ORDEREDCHILDCOLLECTIONSMODEL_H
 
 #include <QtCore/QVector>
-#include <QtGui/QSortFilterProxyModel>
+#include <QSortFilterProxyModel>
 
 class OrderedChildCollectionsModel : public QSortFilterProxyModel
 {

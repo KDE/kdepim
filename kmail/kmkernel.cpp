@@ -50,6 +50,7 @@ using KMail::MailServiceImpl;
 #include "messagecomposersettings.h"
 #include "messagecomposer/messagehelper.h"
 #include "messagecomposer/messagecomposersettings.h"
+#include "messagecomposer/autocorrection/kmcomposerautocorrection.h"
 
 #include "templateparser/templateparser.h"
 #include "templateparser/globalsettings_base.h"
@@ -148,6 +149,7 @@ KMKernel::KMKernel (QObject *parent, const char *name) :
   mJobScheduler = new JobScheduler( this );
   mXmlGuiInstance = KComponentData();
 
+  mAutoCorrection = new KMComposerAutoCorrection();
   KMime::setFallbackCharEncoding( MessageCore::GlobalSettings::self()->fallbackCharacterEncoding() );
   KMime::setUseOutlookAttachmentEncoding( MessageComposer::MessageComposerSettings::self()->outlookCompatibleAttachments() );
 
@@ -234,6 +236,7 @@ KMKernel::~KMKernel ()
   stopAgentInstance();
   slotSyncConfig();
 
+  delete mAutoCorrection;
   mySelf = 0;
   kDebug();
 }
@@ -397,7 +400,8 @@ bool KMKernel::handleCommandLine( bool noArgsOpensReader )
   if (args->isSet("msg"))
   {
      mailto = true;
-     messageFile.setPath( args->getOption("msg") );
+     const QString file = args->getOption("msg");
+     messageFile = makeAbsoluteUrl(file);
   }
 
   if (args->isSet("body"))
@@ -651,7 +655,7 @@ int KMKernel::openComposer( const QString &to, const QString &cc,
       }
   }
 
-  KMail::Composer * cWin = KMail::makeComposer( msg, context );
+  KMail::Composer * cWin = KMail::makeComposer( msg, false, false, context );
   if (!to.isEmpty())
     cWin->setFocusToSubject();
   KUrl::List attachURLs = KUrl::List( attachmentPaths );
@@ -749,8 +753,8 @@ int KMKernel::openComposer (const QString &to, const QString &cc,
     }
   }
 
-  KMail::Composer * cWin = KMail::makeComposer( KMime::Message::Ptr(), context );
-  cWin->setMsg( msg, !isICalInvitation /* mayAutoSign */ );
+  KMail::Composer * cWin = KMail::makeComposer( KMime::Message::Ptr(), false, false,context );
+  cWin->setMessage( msg, false, false, !isICalInvitation /* mayAutoSign */ );
   cWin->setSigningAndEncryptionDisabled( isICalInvitation
       && MessageViewer::GlobalSettings::self()->legacyBodyInvites() );
   if ( noWordWrap )
@@ -803,7 +807,7 @@ QDBusObjectPath KMKernel::openComposer( const QString &to, const QString &cc,
 
   const KMail::Composer::TemplateContext context = body.isEmpty() ? KMail::Composer::New :
                                                    KMail::Composer::NoTemplate;
-  KMail::Composer * cWin = KMail::makeComposer( msg, context );
+  KMail::Composer * cWin = KMail::makeComposer( msg, false, false, context );
   if ( !hidden ) {
     cWin->show();
     // Activate window - doing this instead of KWindowSystem::activateWindow(cWin->winId());
@@ -850,7 +854,7 @@ QDBusObjectPath KMKernel::newMessage( const QString &to,
   parser.setIdentityManager( identityManager() );
   parser.process( msg, folder ? folder->collection() : Akonadi::Collection() );
 
-  KMail::Composer *win = makeComposer( msg, KMail::Composer::New, id );
+  KMail::Composer *win = makeComposer( msg, false, false, KMail::Composer::New, id );
 
   //Add the attachment if we have one
   if ( !attachURL.isEmpty() && attachURL.isValid() ) {
@@ -976,6 +980,10 @@ void KMKernel::resumeNetworkJobs()
   }
   GlobalSettings::setNetworkState( GlobalSettings::EnumNetworkState::Online );
   emit onlineStatusChanged( (GlobalSettings::EnumNetworkState::type)GlobalSettings::networkState() );
+  KMMainWidget *widget = getKMMainWidget();
+  if ( widget  ) {
+    widget->clearViewer();
+  }
 }
 
 bool KMKernel::isOffline()
@@ -1146,7 +1154,7 @@ void KMKernel::recoverDeadLetters()
 
       // Show the a new composer dialog for the message
       KMail::Composer * autoSaveWin = KMail::makeComposer();
-      autoSaveWin->setMsg( autoSaveMessage, false );
+      autoSaveWin->setMessage( autoSaveMessage, false, false, false );
       autoSaveWin->setAutoSaveFileName( filename );
       autoSaveWin->show();
       autoSaveFile.close();
@@ -1349,10 +1357,11 @@ void KMKernel::action( bool mailto, bool check, const QString &to,
                        const KUrl::List &attachURLs,
                        const QStringList &customHeaders )
 {
-  if ( mailto )
+  if ( mailto ) {
     openComposer( to, cc, bcc, subj, body, 0,
                   messageFile.pathOrUrl(), attachURLs.toStringList(),
                   customHeaders );
+  }
   else
     openReader( check );
 
@@ -2008,6 +2017,36 @@ void KMKernel::updatePaneTagComboBox()
   if ( widget  ) {
     widget->updatePaneTagComboBox();
   }
+}
+
+void KMKernel::resourceGoOnLine()
+{
+  KMMainWidget *widget = getKMMainWidget();
+  if ( widget  ) {
+    if(widget->currentFolder()) {
+      Akonadi::Collection collection = widget->currentFolder()->collection();
+      Akonadi::AgentInstance instance = Akonadi::AgentManager::self()->instance( collection.resource() );
+      instance.setIsOnline( true );
+      widget->clearViewer();
+    }
+  }
+}
+
+void KMKernel::makeResourceOnline(MessageViewer::Viewer::ResourceOnlineMode mode)
+{
+  switch(mode) {
+  case MessageViewer::Viewer::AllResources:
+    resumeNetworkJobs();
+    break;
+  case MessageViewer::Viewer::SelectedResource:
+    resourceGoOnLine();
+    break;
+  }
+}
+
+KMComposerAutoCorrection* KMKernel::composerAutoCorrection()
+{
+  return mAutoCorrection;
 }
 
 #include "kmkernel.moc"

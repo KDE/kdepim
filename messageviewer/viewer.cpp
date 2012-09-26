@@ -56,7 +56,7 @@ Viewer::Viewer( QWidget *aParent, QWidget *mainWindow, KActionCollection *action
   connect( d_ptr, SIGNAL(urlClicked(Akonadi::Item,KUrl)),
            SIGNAL(urlClicked(Akonadi::Item,KUrl)) );
   connect( d_ptr, SIGNAL(requestConfigSync()), SIGNAL(requestConfigSync()) );
-  connect( d_ptr, SIGNAL(resumeNetworkJobs()), SIGNAL(resumeNetworkJobs()) );
+  connect( d_ptr, SIGNAL(makeResourceOnline(MessageViewer::Viewer::ResourceOnlineMode)), SIGNAL(makeResourceOnline(MessageViewer::Viewer::ResourceOnlineMode)) );
   connect( d_ptr, SIGNAL(showReader(KMime::Content*,bool,QString)),
            SIGNAL(showReader(KMime::Content*,bool,QString)) );
   connect( d_ptr, SIGNAL(showMessage(KMime::Message::Ptr,QString)), this, SIGNAL(showMessage(KMime::Message::Ptr,QString)) );
@@ -64,6 +64,7 @@ Viewer::Viewer( QWidget *aParent, QWidget *mainWindow, KActionCollection *action
            this, SIGNAL(showStatusBarMessage(QString)) );
   connect( d_ptr, SIGNAL(itemRemoved()),
            this, SIGNAL(itemRemoved()) );
+  connect( d_ptr, SIGNAL(changeDisplayMail(Viewer::ForceDisplayTo,bool)), SLOT(slotChangeDisplayMail(Viewer::ForceDisplayTo,bool)) );
 
   setMessage( KMime::Message::Ptr(), Delayed );
 }
@@ -592,7 +593,22 @@ bool Viewer::zoomTextOnly() const
   return d->mZoomTextOnly;
 }
 
-
+void Viewer::slotChangeDisplayMail(Viewer::ForceDisplayTo mode,bool loadExternal)
+{
+    qDebug()<<"void Viewer::slotChangeDisplayMail(Viewer::ForceDisplayTo mode,bool loadExternal)"<<loadExternal;
+    setHtmlLoadExtOverride(loadExternal);
+    switch(mode) {
+    case Viewer::Html:
+        setHtmlOverride(true);
+        break;
+    case Viewer::Text:
+        setHtmlOverride(false);
+        break;
+    default:
+        break;
+    }
+    update(Viewer::Force);
+}
 }
 
 #include "viewer.moc"

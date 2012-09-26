@@ -30,7 +30,8 @@ namespace BackupMailUtil {
     Resources = 8,
     Config = 16,
     AkonadiDb = 32,
-    Nepomuk = 64 //TODO
+    Nepomuk = 64,
+    Calendar = 128
   };
   Q_DECLARE_FLAGS(BackupTypes, BackupType )
 

@@ -29,8 +29,8 @@
 #include <messagecomposer/attachmentmodel.h>
 
 #include <QtCore/QAbstractItemModel>
-#include <QtGui/QAction>
-#include <QtGui/QItemSelectionModel>
+#include <QAction>
+#include <QItemSelectionModel>
 
 AttachmentEditor::AttachmentEditor( KActionCollection *actionCollection, Message::AttachmentModel *model,
                                     Message::AttachmentControllerBase *controller, QObject *parent )

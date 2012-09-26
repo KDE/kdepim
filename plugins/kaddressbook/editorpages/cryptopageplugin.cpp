@@ -24,12 +24,12 @@
 #include "cryptopageplugin.h"
 
 #include <QtCore/qplugin.h>
-#include <QtGui/QCheckBox>
-#include <QtGui/QGridLayout>
-#include <QtGui/QGroupBox>
-#include <QtGui/QLabel>
-#include <QtGui/QLayout>
-#include <QtGui/QPushButton>
+#include <QCheckBox>
+#include <QGridLayout>
+#include <QGroupBox>
+#include <QLabel>
+#include <QLayout>
+#include <QPushButton>
 
 #include <kabc/addressee.h>
 #include <kcombobox.h>

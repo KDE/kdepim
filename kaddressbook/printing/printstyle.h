@@ -30,8 +30,8 @@
 
 #include <QtCore/QHash>
 #include <QtCore/QStringList>
-#include <QtGui/QPixmap>
-#include <QtGui/QWidget>
+#include <QPixmap>
+#include <QWidget>
 
 class KPageWidgetItem;
 

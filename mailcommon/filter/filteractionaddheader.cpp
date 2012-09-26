@@ -24,10 +24,10 @@
 #include <KLineEdit>
 #include <KLocale>
 
-#include <QtGui/QComboBox>
-#include <QtGui/QHBoxLayout>
-#include <QtGui/QLabel>
-#include <QtGui/QTextDocument>
+#include <QComboBox>
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QTextDocument>
 
 using namespace MailCommon;
 
@@ -77,6 +77,13 @@ QWidget* FilterActionAddHeader::createParamWidget( QWidget *parent ) const
   comboBox->setObjectName( "combo" );
   comboBox->setEditable( true );
   comboBox->setInsertPolicy( QComboBox::InsertAtBottom );
+
+  KCompletion *comp = comboBox->completionObject();
+  comp->setIgnoreCase(true);
+  comp->insertItems(mParameterList);
+  comp->setCompletionMode(KGlobalSettings::CompletionPopupAuto);
+
+
   layout->addWidget( comboBox, 0 /* stretch */ );
 
   QLabel *label = new QLabel( i18n( "With value:" ), widget );

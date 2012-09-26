@@ -27,10 +27,10 @@
 
 #include <QtCore/QEvent>
 #include <QtCore/QTimer>
-#include <QtGui/QContextMenuEvent>
-#include <QtGui/QHeaderView>
-#include <QtGui/QMenu>
-#include <QtGui/QWidget>
+#include <QContextMenuEvent>
+#include <QHeaderView>
+#include <QMenu>
+#include <QWidget>
 
 ModelColumnManager::ModelColumnManager( Akonadi::ContactsTreeModel *model, QObject *parent )
   : QObject( parent ), mModel( model ), mWidget( 0 )
@@ -206,3 +206,5 @@ void ModelColumnManager::adaptHeaderView()
     view->setDefaultAlignment( mModel->columns().count() == 1 ? Qt::AlignCenter : Qt::AlignLeft );
   }
 }
+
+#include "modelcolumnmanager.moc"

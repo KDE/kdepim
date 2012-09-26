@@ -32,6 +32,7 @@
 //#endif
 
 #include <KCalCore/ICalTimeZones>
+#include <KCalUtils/IncidenceFormatter>
 
 #include <KDebug>
 #include <KSystemTimeZone>
@@ -69,6 +70,15 @@ IncidenceDateTime::IncidenceDateTime( Ui::EventOrTodoDesktop *ui )
   connect( mUi->mFreeBusyCheck, SIGNAL(toggled(bool)), SLOT(checkDirtyStatus()) );
   connect( mUi->mWholeDayCheck, SIGNAL(toggled(bool)), SLOT(enableTimeEdits()) );
   connect( mUi->mWholeDayCheck, SIGNAL(toggled(bool)), SLOT(checkDirtyStatus()) );
+
+  connect( this, SIGNAL(startDateChanged(QDate)), SLOT(updateStartToolTips()) );
+  connect( this, SIGNAL(startTimeChanged(QTime)), SLOT(updateStartToolTips()) );
+  connect( this, SIGNAL(endDateChanged(QDate)), SLOT(updateEndToolTips()) );
+  connect( this, SIGNAL(endTimeChanged(QTime)), SLOT(updateEndToolTips()) );
+  connect( mUi->mWholeDayCheck, SIGNAL(toggled(bool)), SLOT(updateStartToolTips()) );
+  connect( mUi->mWholeDayCheck, SIGNAL(toggled(bool)), SLOT(updateEndToolTips()) );
+  connect( mUi->mStartCheck, SIGNAL(toggled(bool)), SLOT(updateStartToolTips()) );
+  connect( mUi->mEndCheck, SIGNAL(toggled(bool)), SLOT(updateEndToolTips()) );
 }
 
 IncidenceDateTime::~IncidenceDateTime()
@@ -778,6 +788,50 @@ void IncidenceDateTime::setDateTimes( const KDateTime &start, const KDateTime &e
   emit startTimeChanged( start.time() );
   emit endDateChanged( end.date() );
   emit endTimeChanged( end.time() );
+}
+
+void IncidenceDateTime::updateStartToolTips()
+{
+  if ( mUi->mStartCheck->isChecked() ) {
+    QString datetimeStr =
+      KCalUtils::IncidenceFormatter::dateTimeToString(
+        currentStartDateTime(),
+        mUi->mWholeDayCheck->isChecked(),
+        false,
+        KSystemTimeZones::local() );
+    mUi->mStartDateEdit->setToolTip( i18n( "Starts: %1", datetimeStr ) );
+    mUi->mStartTimeEdit->setToolTip( i18n( "Starts: %1", datetimeStr ) );
+  } else {
+    mUi->mStartDateEdit->setToolTip( i18n( "Starting Date" ) );
+    mUi->mStartTimeEdit->setToolTip( i18n( "Starting Time" ) );
+  }
+}
+
+void IncidenceDateTime::updateEndToolTips()
+{
+  if ( mUi->mStartCheck->isChecked() ) {
+    QString datetimeStr =
+      KCalUtils::IncidenceFormatter::dateTimeToString(
+        currentEndDateTime(),
+        mUi->mWholeDayCheck->isChecked(),
+        false,
+        KSystemTimeZones::local() );
+    if ( mLoadedIncidence->type() == KCalCore::Incidence::TypeTodo ) {
+      mUi->mEndDateEdit->setToolTip( i18n( "Due on: %1", datetimeStr ) );
+      mUi->mEndTimeEdit->setToolTip( i18n( "Due on: %1", datetimeStr ) );
+    } else {
+      mUi->mEndDateEdit->setToolTip( i18n( "Ends: %1", datetimeStr ) );
+      mUi->mEndTimeEdit->setToolTip( i18n( "Ends: %1", datetimeStr ) );
+    }
+  } else {
+    if ( mLoadedIncidence->type() == KCalCore::Incidence::TypeTodo ) {
+      mUi->mEndDateEdit->setToolTip( i18n( "Due Date" ) );
+      mUi->mEndTimeEdit->setToolTip( i18n( "Due Time" ) );
+    } else {
+      mUi->mEndDateEdit->setToolTip( i18n( "Ending Date" ) );
+      mUi->mEndTimeEdit->setToolTip( i18n( "Ending Time" ) );
+    }
+  }
 }
 
 void IncidenceDateTime::setTimes( const KDateTime &start, const KDateTime &end )

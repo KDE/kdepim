@@ -16,12 +16,19 @@
 */
 
 #include "importcalendarjob.h"
+#include "archivestorage.h"
 
-ImportCalendarJob::ImportCalendarJob()
+ImportCalendarJob::ImportCalendarJob(QWidget *parent, ArchiveStorage *archiveStorage)
 {
 }
 
 ImportCalendarJob::~ImportCalendarJob()
 {
 
+}
+
+
+void ImportCalendarJob::restoreResources()
+{
+  //TODO
 }

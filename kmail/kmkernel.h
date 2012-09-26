@@ -17,6 +17,7 @@
 #include "globalsettings.h"
 #include <kcomponentdata.h>
 #include <akonadi/servermanager.h>
+#include "messageviewer/viewer.h"
 
 #define kmkernel KMKernel::self()
 #define kmconfig KMKernel::config()
@@ -42,6 +43,7 @@ namespace KPIM {
 }
 
 class MessageSender;
+class KMComposerAutoCorrection;
 
 class KJob;
 /** The KMail namespace contains classes used for KMail.
@@ -142,6 +144,8 @@ public Q_SLOTS:
   Q_SCRIPTABLE void resumeNetworkJobs();
 
   Q_SCRIPTABLE QStringList accounts();
+
+  Q_SCRIPTABLE void makeResourceOnline(MessageViewer::Viewer::ResourceOnlineMode mode);
 
   /**
    * Checks the account with the specified name for new mail.
@@ -414,6 +418,9 @@ public:
 
   void updatePaneTagComboBox();
 
+
+  KMComposerAutoCorrection* composerAutoCorrection();
+
 protected:
   void agentInstanceBroken( const Akonadi::AgentInstance& instance );
 
@@ -476,6 +483,7 @@ private slots:
   void slotSystemNetworkStatusChanged( Solid::Networking::Status );
   
 private:
+  void resourceGoOnLine();
   void migrateFromKMail1();
   void openReader( bool onlyCheck );
   QSharedPointer<MailCommon::FolderCollection> currentFolderCollection();
@@ -521,6 +529,7 @@ private:
   int mWrapCol;
 
   QPointer<MailCommon::KMFilterDialog> mFilterEditDialog;
+  KMComposerAutoCorrection *mAutoCorrection;
 };
 
 #endif // _KMKERNEL_H

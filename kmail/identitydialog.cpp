@@ -31,6 +31,9 @@
 
 #include "identitydialog.h"
 #include "identityeditvcarddialog.h"
+#include "identityaddvcarddialog.h"
+
+#include <kpimidentities/identitymanager.h>
 
 // other KMail headers:
 #ifndef KDEPIM_MOBILE_UI
@@ -85,6 +88,7 @@ using MailTransport::TransportManager;
 #include <QCheckBox>
 #include <QVBoxLayout>
 #include <QGridLayout>
+#include <QFile>
 
 // other headers:
 #include <gpgme++/key.h>
@@ -475,9 +479,9 @@ namespace KMail {
     ++row;
     mAttachMyVCard = new QCheckBox(i18n("Attach my vcard to message"), tab);
     glay->addWidget( mAttachMyVCard, row, 0 );
-    KPushButton *editVCard = new KPushButton(i18n("Edit..."),tab);
-    connect(editVCard,SIGNAL(clicked()),SLOT(slotEditVcard()));
-    glay->addWidget( editVCard, row, 1 );
+    mEditVCard = new KPushButton(i18n("Create..."),tab);
+    connect(mEditVCard,SIGNAL(clicked()),SLOT(slotEditVcard()));
+    glay->addWidget( mEditVCard, row, 1 );
     // the last row is a spacer
 
     //
@@ -802,8 +806,8 @@ namespace KMail {
       mTemplatesCombo->setCollection( Akonadi::Collection( ident.templates().toLongLong() ) );
 
     mVcardFilename = ident.vCardFile();
+    updateVcardButton();
     if(mVcardFilename.isEmpty()) {
-      //Store in default place.
       mVcardFilename = KStandardDirs::locateLocal("appdata",ident.identityName() + QLatin1String(".vcf"));
     }
     mAttachMyVCard->setChecked(ident.attachVcard());
@@ -876,6 +880,7 @@ namespace KMail {
     else
       ident.setTemplates( QString() );
     ident.setVCardFile(mVcardFilename);
+    updateVcardButton();
     ident.setAttachVcard(mAttachMyVCard->isChecked());
 
     // "Templates" tab:
@@ -899,13 +904,55 @@ namespace KMail {
   }
   void IdentityDialog::slotEditVcard()
   {
-    IdentityEditVcardDialog *dlg = new IdentityEditVcardDialog(this);
-    dlg->loadVcard(mVcardFilename);
-    if(dlg->exec()) {
-       mVcardFilename = dlg->saveVcard();
+    if(QFile(mVcardFilename).exists()) {
+      editVcard(mVcardFilename);
+    } else {
+      if ( !MailCommon::Kernel::self()->kernelIsRegistered() ) {
+        return;
+      }
+      KPIMIdentities::IdentityManager *manager = KernelIf->identityManager();
+
+      IdentityAddVcardDialog dlg(manager, this);
+      if(dlg.exec()) {
+        IdentityAddVcardDialog::DuplicateMode mode = dlg.duplicateMode();
+        switch(mode) {
+        case IdentityAddVcardDialog::Empty: {
+          editVcard(mVcardFilename);
+        }
+        break;
+        case IdentityAddVcardDialog::ExistingEntry: {
+           KPIMIdentities::Identity ident = manager->modifyIdentityForName( dlg.duplicateVcardFromIdentity() );
+           const QString filename = ident.vCardFile();
+           if(!filename.isEmpty()) {
+             QFile::copy(filename,mVcardFilename);
+           }
+           editVcard(mVcardFilename);
+        }
+        break;
+        }
+      }
     }
-    delete dlg;
   }
+
+  void IdentityDialog::editVcard(const QString& filename)
+  {
+    IdentityEditVcardDialog dlg(this);
+    dlg.loadVcard(filename);
+    if(dlg.exec()) {
+       mVcardFilename = dlg.saveVcard();
+       updateVcardButton();
+    }
+  }
+
+  void IdentityDialog::updateVcardButton()
+  {
+    if(!QFile(mVcardFilename).exists()) {
+      mEditVCard->setText(i18n("Create..."));
+    } else {
+      mEditVCard->setText(i18n("Edit..."));
+    }
+  }
+
 }
 
 #include "identitydialog.moc"

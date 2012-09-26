@@ -21,7 +21,7 @@
 
 #include "messagecore_export.h"
 
-#include <QtGui/QWidget>
+#include <QWidget>
 
 class KLineEdit;
 

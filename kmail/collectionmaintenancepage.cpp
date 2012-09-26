@@ -30,13 +30,17 @@
 #include <Nepomuk2/ResourceManager>
 #include <nepomuk2/datamanagement.h>
 
+#include <QDBusInterface>
+#include <QDBusConnectionInterface>
+
 #include <QLabel>
 #include <KDialog>
 #include <QGroupBox>
 #include <KLocale>
+#include <KPushButton>
 #include <QFormLayout>
 #include <kio/global.h>
-#include <QtGui/QCheckBox>
+#include <QCheckBox>
 #include <akonadi/indexpolicyattribute.h>
 
 using namespace Akonadi;
@@ -93,10 +97,18 @@ void CollectionMaintenancePage::init(const Akonadi::Collection & col)
   indexingLayout->addWidget( mIndexingEnabled );
 
   mLastIndexed = new QLabel( i18n( "Still not indexed." ) );
-  if(!Nepomuk2::ResourceManager::instance()->initialized())
-    mLastIndexed->hide();
 
   indexingLayout->addWidget( mLastIndexed );
+
+  mForceReindex = new KPushButton(i18n("Force reindexing"));
+  indexingLayout->addWidget( mForceReindex );
+
+  if(!Nepomuk2::ResourceManager::instance()->initialized()) {
+    mLastIndexed->hide();
+    mForceReindex->setEnabled(false);
+  } else {
+    connect(mForceReindex,SIGNAL(clicked()),SLOT(slotReindexing()));
+  }
 
   topLayout->addWidget( indexingGroup );
 
@@ -154,5 +166,14 @@ void CollectionMaintenancePage::updateCollectionStatistic(Akonadi::Collection::I
   }
 }
 
+void CollectionMaintenancePage::slotReindexing()
+{
+  //Be sure to remove collection resources before to reindex.
+  Nepomuk2::removeResources( QList <QUrl>() << mCurrentCollection.url() );
+  QDBusInterface interfaceNepomukFeeder( "org.freedesktop.Akonadi.Agent.akonadi_nepomuk_feeder", "/" );
+  if(interfaceNepomukFeeder.isValid()) {
+    interfaceNepomukFeeder.asyncCall(QLatin1String("forceReindexCollection"),(qlonglong)mCurrentCollection.id());
+  }
+}
 
 #include "collectionmaintenancepage.moc"

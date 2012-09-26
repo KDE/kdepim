@@ -25,7 +25,7 @@
 #include <akonadi/recursiveitemfetchjob.h>
 #include <kmessagebox.h>
 
-#include <QtGui/QItemSelectionModel>
+#include <QItemSelectionModel>
 
 ExportHandlerBase::ExportHandlerBase( QObject *parent )
   : QObject( parent ),

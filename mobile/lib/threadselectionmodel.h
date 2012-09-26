@@ -22,7 +22,7 @@
 #ifndef THREADSELECTIONMODEL_H
 #define THREADSELECTIONMODEL_H
 
-#include <QtGui/QItemSelectionModel>
+#include <QItemSelectionModel>
 
 #include "mobileui_export.h"
 

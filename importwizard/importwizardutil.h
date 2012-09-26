@@ -18,6 +18,9 @@
 #ifndef IMPORTWIZARDUTIL_H
 #define IMPORTWIZARDUTIL_H
 #include <KUrl>
+#include <QList>
+#include <QColor>
+#include <QString>
 
 struct ldapStruct
 {
@@ -45,8 +48,15 @@ struct ldapStruct
 
 };
 
+struct tagStruct {
+    QString name;
+    QColor color;
+};
+
+
 namespace ImportWizardUtil {
   void mergeLdap(const ldapStruct &ldap);
+  void addNepomukTag(const QList<tagStruct> &tagList);
 }
 
 #endif // IMPORTWIZARDUTIL_H

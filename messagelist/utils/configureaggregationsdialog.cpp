@@ -34,6 +34,7 @@
 #include <KLocale>
 #include <KIconLoader>
 #include <KMessageBox>
+#include <KFileDialog>
 
 namespace MessageList
 {
@@ -105,10 +106,10 @@ ConfigureAggregationsDialog::ConfigureAggregationsDialog( QWidget *parent )
 
   d->mAggregationList = new AggregationListWidget( base );
   d->mAggregationList->setSortingEnabled( true );
-  g->addWidget( d->mAggregationList, 0, 0, 5, 1 );
+  g->addWidget( d->mAggregationList, 0, 0, 7, 1 );
 
-  connect( d->mAggregationList, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
-           SLOT(aggregationListCurrentItemChanged(QListWidgetItem*,QListWidgetItem*)) );
+  connect( d->mAggregationList, SIGNAL(itemClicked(QListWidgetItem*)),
+           SLOT(aggregationListItemClicked(QListWidgetItem*)));
 
   d->mNewAggregationButton = new QPushButton( i18n( "New Aggregation" ), base );
   d->mNewAggregationButton->setIcon( KIcon( QLatin1String( "document-new" ) ) );
@@ -131,22 +132,40 @@ ConfigureAggregationsDialog::ConfigureAggregationsDialog( QWidget *parent )
   f->setMinimumHeight( 24 );
   g->addWidget( f, 2, 1, Qt::AlignVCenter );
 
+  d->mExportAggregationButton = new QPushButton( i18n( "Export Aggregation..." ), base );
+  g->addWidget( d->mExportAggregationButton, 3, 1 );
+
+  connect( d->mExportAggregationButton, SIGNAL(clicked()),
+           SLOT(exportAggregationButtonClicked()) );
+
+  d->mImportAggregationButton = new QPushButton( i18n( "Import Aggregation..." ), base );
+  g->addWidget( d->mImportAggregationButton, 4, 1 );
+  connect( d->mImportAggregationButton, SIGNAL(clicked()),
+           SLOT(importAggregationButtonClicked()) );
+
+
+  f = new QFrame( base );
+  f->setFrameStyle( QFrame::Sunken | QFrame::HLine );
+  f->setMinimumHeight( 24 );
+  g->addWidget( f, 5, 1, Qt::AlignVCenter );
+
+
   d->mDeleteAggregationButton = new QPushButton( i18n( "Delete Aggregation" ), base );
   d->mDeleteAggregationButton->setIcon( KIcon( QLatin1String( "edit-delete" ) ) );
   d->mDeleteAggregationButton->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
-  g->addWidget( d->mDeleteAggregationButton, 3, 1 );
+  g->addWidget( d->mDeleteAggregationButton, 6, 1 );
 
   connect( d->mDeleteAggregationButton, SIGNAL(clicked()),
            SLOT(deleteAggregationButtonClicked()) );
 
   d->mEditor = new AggregationEditor( base );
-  g->addWidget( d->mEditor, 5, 0, 1, 2 );
+  g->addWidget( d->mEditor, 8, 0, 1, 2 );
 
   connect( d->mEditor, SIGNAL(aggregationNameChanged()),
            SLOT(editedAggregationNameChanged()) );
 
   g->setColumnStretch( 0, 1 );
-  g->setRowStretch( 4, 1 );
+  g->setRowStretch( 7, 1 );
 
   connect( this, SIGNAL(okClicked()),
            SLOT(okButtonClicked()) );
@@ -229,14 +248,17 @@ void ConfigureAggregationsDialog::Private::fillAggregationList()
     (void)new AggregationListWidgetItem( mAggregationList, *( *it ) );
 }
 
-void ConfigureAggregationsDialog::Private::aggregationListCurrentItemChanged( QListWidgetItem * cur, QListWidgetItem * )
+void ConfigureAggregationsDialog::Private::aggregationListItemClicked(QListWidgetItem* cur)
 {
   commitEditor();
+
+  const int numberOfSelectedItem(mAggregationList->selectedItems().count());
 
   AggregationListWidgetItem * item = cur ? dynamic_cast< AggregationListWidgetItem * >( cur ) : 0;
   mDeleteAggregationButton->setEnabled( item && !item->aggregation()->readOnly() && ( mAggregationList->count() > 1 ) );
 
-  mCloneAggregationButton->setEnabled( item );
+  mCloneAggregationButton->setEnabled( numberOfSelectedItem == 1 );
+  mExportAggregationButton->setEnabled( numberOfSelectedItem > 0 );
   mEditor->editAggregation( item ? item->aggregation() : 0 );
   if ( item && !item->isSelected() )
     item->setSelected( true ); // make sure it's true
@@ -297,7 +319,7 @@ AggregationListWidgetItem * ConfigureAggregationsDialog::Private::findAggregatio
 }
 
 
-QString ConfigureAggregationsDialog::Private::uniqueNameForAggregation( QString baseName, Aggregation * skipAggregation )
+QString ConfigureAggregationsDialog::Private::uniqueNameForAggregation( const QString& baseName, Aggregation * skipAggregation )
 {
   QString ret = baseName;
   if( ret.isEmpty() )
@@ -345,16 +367,80 @@ void ConfigureAggregationsDialog::Private::cloneAggregationButtonClicked()
 
 void ConfigureAggregationsDialog::Private::deleteAggregationButtonClicked()
 {
-  AggregationListWidgetItem * item = dynamic_cast< AggregationListWidgetItem * >( mAggregationList->currentItem() );
-  if ( !item )
+  QList<QListWidgetItem *> list = mAggregationList->selectedItems();
+  if(list.isEmpty()) {
     return;
-  if ( mAggregationList->count() < 2 )
-    return; // no way: desperately try to keep at least one option set alive :)
+  }
 
   mEditor->editAggregation( 0 ); // forget it
+  Q_FOREACH(QListWidgetItem * it, list) {
+    AggregationListWidgetItem * item = dynamic_cast< AggregationListWidgetItem * >( it );
+    if ( !item )
+      return;
+    if(!item->aggregation()->readOnly()) {
+      delete item; // this will trigger aggregationListCurrentItemChanged()
+    }
+    if ( mAggregationList->count() < 2 )
+      break; // no way: desperately try to keep at least one option set alive :)
+  }
 
-  delete item; // this will trigger aggregationListCurrentItemChanged()
-  mDeleteAggregationButton->setEnabled( item && !item->aggregation()->readOnly() );
+  AggregationListWidgetItem *newItem = dynamic_cast< AggregationListWidgetItem * >(mAggregationList->currentItem());
+  mDeleteAggregationButton->setEnabled( newItem && !newItem->aggregation()->readOnly() );
 }
+
+void ConfigureAggregationsDialog::Private::importAggregationButtonClicked()
+{
+  const QString filename = KFileDialog::getOpenFileName(QString(),QString::fromLatin1("*"),q,i18n("Import Aggregation"));
+  if(!filename.isEmpty()) {
+    KConfig config(filename);
+
+    if(config.hasGroup(QLatin1String("MessageListView::Aggregations"))) {
+      KConfigGroup grp( &config, QLatin1String("MessageListView::Aggregations") );
+      const int cnt = grp.readEntry("Count",0);
+      int idx = 0;
+      while ( idx < cnt )
+      {
+        const QString data = grp.readEntry( QString::fromLatin1( "Set%1" ).arg( idx ), QString() );
+        if ( !data.isEmpty() )
+        {
+          Aggregation * set = new Aggregation();
+          if ( set->loadFromString( data ) )
+          {
+            set->setReadOnly( false );
+            set->generateUniqueId(); // regenerate id so it becomes different
+            set->setName( uniqueNameForAggregation( set->name() ) );
+            (void)new AggregationListWidgetItem( mAggregationList, *set );
+          } else {
+            delete set; // b0rken
+          }
+        }
+        ++idx;
+      }
+    }
+  }
+}
+
+void ConfigureAggregationsDialog::Private::exportAggregationButtonClicked()
+{
+  QList<QListWidgetItem *> list = mAggregationList->selectedItems();
+  if(list.isEmpty()) {
+    return;
+  }
+  const QString filename = KFileDialog::getSaveFileName(QString(),QString::fromLatin1("*"),q,i18n("Export Aggregation"));
+  if(!filename.isEmpty()) {
+     KConfig config(filename);
+
+     KConfigGroup grp( &config, QLatin1String("MessageListView::Aggregations") );
+     grp.writeEntry( "Count", list.count() );
+
+     int idx = 0;
+     Q_FOREACH(QListWidgetItem *item, list) {
+       AggregationListWidgetItem * themeItem = static_cast< AggregationListWidgetItem * >( item );
+       grp.writeEntry( QString::fromLatin1( "Set%1" ).arg( idx ), themeItem->aggregation()->saveToString() );
+       ++idx;
+    }
+  }
+}
+
 
 #include "configureaggregationsdialog.moc"

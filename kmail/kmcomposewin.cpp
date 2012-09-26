@@ -51,7 +51,8 @@
 #include "custommimeheader.h"
 #include <messagecomposer/kmsubjectlineedit.h>
 #include "messageviewer/translator/translatorwidget.h"
-#include "insertspecialchar.h"
+#include "messagecomposer/selectspecialchar.h"
+#include "attachmentmissingwarning.h"
 
 // KDEPIM includes
 #include <libkpgp/kpgpblock.h>
@@ -99,6 +100,7 @@
 #include <akonadi/itemcreatejob.h>
 #include <akonadi/entitymimetypefiltermodel.h>
 #include <akonadi/itemfetchjob.h>
+#include <Akonadi/Contact/ContactEditorDialog>
 #include <kpimutils/email.h>
 #include <kpimidentities/identitymanager.h>
 #include <kpimidentities/identitycombo.h>
@@ -161,22 +163,22 @@ using MailTransport::Transport;
 using KPIM::RecentAddresses;
 using Message::KMeditor;
 
-KMail::Composer *KMail::makeComposer( const KMime::Message::Ptr &msg, Composer::TemplateContext context,
+KMail::Composer *KMail::makeComposer( const KMime::Message::Ptr &msg, bool lastSignState, bool lastEncryptState, Composer::TemplateContext context,
                                       uint identity, const QString & textSelection,
                                       const QString & customTemplate ) {
-  return KMComposeWin::create( msg, context, identity, textSelection, customTemplate );
+  return KMComposeWin::create( msg, lastSignState, lastEncryptState, context, identity, textSelection, customTemplate );
 }
 
-KMail::Composer *KMComposeWin::create( const KMime::Message::Ptr &msg, Composer::TemplateContext context,
+KMail::Composer *KMComposeWin::create( const KMime::Message::Ptr &msg, bool lastSignState, bool lastEncryptState, Composer::TemplateContext context,
                                        uint identity, const QString & textSelection,
                                        const QString & customTemplate ) {
-  return new KMComposeWin( msg, context, identity, textSelection, customTemplate );
+  return new KMComposeWin( msg, lastSignState, lastEncryptState, context, identity, textSelection, customTemplate );
 }
 
 int KMComposeWin::s_composerNumber = 0;
 
 //-----------------------------------------------------------------------------
-KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, Composer::TemplateContext context, uint id,
+KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, bool lastSignState, bool lastEncryptState, Composer::TemplateContext context, uint id,
                             const QString & textSelection, const QString & customTemplate )
   : KMail::Composer( "kmail-composer#" ),
     mDone( false ),
@@ -199,7 +201,7 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, Composer::TemplateC
     mDummyComposer( 0 ),
     mLabelWidth( 0 ),
     mComposerBase( 0 ),
-    mInsertSpecialChar( 0 ),
+    mSelectSpecialChar( 0 ),
     mSignatureStateIndicator( 0 ), mEncryptionStateIndicator( 0 ),
     mPreventFccOverwrite( false ),
     mCheckForForgottenAttachments( true ),
@@ -338,9 +340,6 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, Composer::TemplateC
     mSignatureStateIndicator = new QLabel( editorAndCryptoStateIndicators );
     mSignatureStateIndicator->setAlignment( Qt::AlignHCenter );
     hbox->addWidget( mSignatureStateIndicator );
-
-    KConfigGroup reader( KMKernel::self()->config(), "Reader" );
-
     // Get the colors for the label
     QPalette p( mSignatureStateIndicator->palette() );
     KColorScheme scheme( QPalette::Active, KColorScheme::View );
@@ -421,8 +420,16 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, Composer::TemplateC
   mComposerBase->setAttachmentModel( attachmentModel );
   mComposerBase->setAttachmentController( attachmentController );
 
+  mAttachmentMissing = new AttachmentMissingWarning(this);
+  connect(mAttachmentMissing,SIGNAL(attachMissingFile()),this,SLOT(slotAttachMissingFile()));
+  connect(mAttachmentMissing,SIGNAL(closeAttachMissingFile()),this,SLOT(slotCloseAttachMissingFile()));
+  v->addWidget(mAttachmentMissing);
+  m_verifyMissingAttachment = new QTimer(this);
+  m_verifyMissingAttachment->start(1000*30);
+  connect( m_verifyMissingAttachment, SIGNAL(timeout()), this, SLOT(slotVerifyMissingAttachmentTimeout()) );
+
   readConfig();
-  setupStatusBar();
+  setupStatusBar(attachmentView->toolButton());
   setupActions();
   setupEditor();
   rethinkFields();
@@ -460,7 +467,7 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, Composer::TemplateC
   }
 
   if ( aMsg ) {
-    setMsg( aMsg );
+    setMessage( aMsg, lastSignState, lastEncryptState );
   }
 
   mComposerBase->recipientsEditor()->setFocus();
@@ -1154,6 +1161,11 @@ void KMComposeWin::setupActions( void )
   actionCollection()->addAction( "save_as_file", action );
   connect( action, SIGNAL(triggered(bool)), SLOT(slotSaveAsFile()) );
 
+  action = new KAction(KIcon( QLatin1String( "contact-new" ) ), i18n("New AddressBook Contact..."),this);
+  actionCollection()->addAction("kmail_new_addressbook_contact", action );
+  connect(action, SIGNAL(triggered(bool)), this, SLOT(slotCreateAddressBookContact()));
+
+
 
   action = new KAction(KIcon("document-open"), i18n("&Insert Text File..."), this);
   actionCollection()->addAction("insert_file", action );
@@ -1420,8 +1432,9 @@ void KMComposeWin::changeCryptoAction()
 }
 
 //-----------------------------------------------------------------------------
-void KMComposeWin::setupStatusBar( void )
+void KMComposeWin::setupStatusBar( QWidget *w )
 {
+  statusBar()->addWidget(w);
   statusBar()->insertItem( "", 0, 1 );
   statusBar()->setItemAlignment( 0, Qt::AlignLeft | Qt::AlignVCenter );
   statusBar()->insertPermanentItem( overwriteModeStr(), 4,0 );
@@ -1512,13 +1525,16 @@ void KMComposeWin::setCurrentReplyTo(const QString& replyTo)
 }
 
 //-----------------------------------------------------------------------------
-void KMComposeWin::setMsg( const KMime::Message::Ptr &newMsg, bool mayAutoSign,
+void KMComposeWin::setMessage( const KMime::Message::Ptr &newMsg, bool lastSignState, bool lastEncryptState, bool mayAutoSign,
                            bool allowDecryption, bool isModified )
 {
   if ( !newMsg ) {
     kDebug() << "newMsg == 0!";
     return;
   }
+
+  if( lastSignState )
+    mLastSignActionState = true;
 
   mComposerBase->setMessage( newMsg );
   mMsg = newMsg;
@@ -2233,6 +2249,7 @@ void KMComposeWin::slotFetchJob(KJob*job)
         data.replace("X-messaging/groupwise-All",("X-GROUPWISE"));
         data.replace(("X-messaging/sms-All"),("X-SMS"));
         data.replace(("X-messaging/meanwhile-All"),("X-MEANWHILE"));
+        data.replace(("X-messaging/irc-All"),("X-IRC"));
         addAttachment( attachmentName, KMime::Headers::CEbase64, QString(), data, item.mimeType().toLatin1() );
       } else {
         addAttachment( attachmentName, KMime::Headers::CEbase64, QString(), item.payloadData(), item.mimeType().toLatin1() );
@@ -2364,7 +2381,7 @@ void KMComposeWin::slotNewComposer()
   KMime::Message::Ptr msg( new KMime::Message );
 
   MessageHelper::initHeader( msg, KMKernel::self()->identityManager() );
-  win = new KMComposeWin( msg );
+  win = new KMComposeWin( msg, false, false );
   win->show();
 }
 
@@ -2495,7 +2512,7 @@ void KMComposeWin::slotWordWrapToggled( bool on )
 //-----------------------------------------------------------------------------
 void KMComposeWin::disableWordWrap()
 {
-  mComposerBase->editor()->setWordWrapMode( QTextOption::NoWrap );
+  mComposerBase->editor()->disableWordWrap();
 }
 
 //-----------------------------------------------------------------------------
@@ -3306,11 +3323,13 @@ void KMComposeWin::slotTranslatorWasClosed()
 
 void KMComposeWin::insertSpecialCharacter()
 {
-  if(!mInsertSpecialChar) {
-    mInsertSpecialChar = new InsertSpecialChar(this);
-    connect(mInsertSpecialChar,SIGNAL(charSelected(QChar)),this,SLOT(charSelected(QChar)));
+  if(!mSelectSpecialChar) {
+    mSelectSpecialChar = new SelectSpecialChar(this);
+    mSelectSpecialChar->setCaption(i18n("Insert Special Character"));
+    mSelectSpecialChar->setOkButtonText(i18n("Insert"));
+    connect(mSelectSpecialChar,SIGNAL(charSelected(QChar)),this,SLOT(charSelected(QChar)));
   }
-  mInsertSpecialChar->show();
+  mSelectSpecialChar->show();
 }
 
 void KMComposeWin::charSelected(const QChar& c)
@@ -3342,4 +3361,31 @@ void KMComposeWin::slotSaveAsFile()
         }
     }
     delete dlg;
+}
+
+void KMComposeWin::slotCreateAddressBookContact()
+{
+  Akonadi::ContactEditorDialog dlg( Akonadi::ContactEditorDialog::CreateMode, this );
+  dlg.exec();
+}
+
+void KMComposeWin::slotAttachMissingFile()
+{
+  mComposerBase->attachmentController()->showAddAttachmentDialog();
+}
+
+void KMComposeWin::slotCloseAttachMissingFile()
+{
+  m_verifyMissingAttachment->stop();
+  delete m_verifyMissingAttachment;
+  m_verifyMissingAttachment = 0;
+}
+
+void KMComposeWin::slotVerifyMissingAttachmentTimeout()
+{
+  if( mComposerBase->hasMissingAttachments( GlobalSettings::self()->attachmentKeywords() )) {
+    mAttachmentMissing->setVisible(true);
+  } else {
+    m_verifyMissingAttachment->start();
+  }
 }

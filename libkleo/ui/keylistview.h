@@ -38,8 +38,8 @@
 #include <gpgme++/key.h>
 
 #include <QtCore/QByteArray>
-#include <QtGui/QTreeWidget>
-#include <QtGui/QHeaderView>
+#include <QTreeWidget>
+#include <QHeaderView>
 #include <KIcon>
 
 class QPainter;

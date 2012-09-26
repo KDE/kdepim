@@ -41,7 +41,7 @@
 #include <QLabel>
 #include <QLayout>
 #include <QPushButton>
-#include <QtGui/QTreeView>
+#include <QTreeView>
 #include <QToolButton>
 #include <QVBoxLayout>
 

@@ -64,13 +64,13 @@ public:
    * The id can't be set. It's either automatically generated or loaded from configuration.
    */
   const QString &id() const
-    { return mId; };
+    { return mId; }
 
   /**
    * Returns the name of this OptionSet
    */
   const QString &name() const
-    { return mName; };
+    { return mName; }
 
   /**
    * Sets the name of this OptionSet. You must take care
@@ -78,7 +78,7 @@ public:
    * store the sets properly.
    */
   void setName( const QString &name )
-    { mName = name; };
+    { mName = name; }
 
   /**
    * Returns a description of this option set. Ideally it should contain
@@ -86,13 +86,13 @@ public:
    * whatever the user will put in here.
    */
   const QString &description() const
-    { return mDescription; };
+    { return mDescription; }
 
   /**
    * Sets the description for this option set.
    */
   void setDescription( const QString &description )
-    { mDescription = description; };
+    { mDescription = description; }
 
   /**
    * Packs this configuration object into a string suitable for storing

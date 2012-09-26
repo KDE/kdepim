@@ -29,7 +29,7 @@
 
 #include <KGlobalSettings>
 
-#include <QtGui/QWidget>
+#include <QWidget>
 #include <QSharedPointer>
 
 namespace KPIM {

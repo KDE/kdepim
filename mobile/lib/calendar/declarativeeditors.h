@@ -25,7 +25,7 @@
 
 #include <Akonadi/CollectionComboBox>
 
-#include <QtGui/QStackedWidget>
+#include <QStackedWidget>
 
 namespace Ui
 {

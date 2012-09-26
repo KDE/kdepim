@@ -16,12 +16,19 @@
 */
 
 #include "exportcalendarjob.h"
+#include <QWidget>
 
-ExportCalendarJob::ExportCalendarJob()
+ExportCalendarJob::ExportCalendarJob(QWidget *parent, ArchiveStorage *archiveStorage)
+  : QObject(parent)
 {
 }
 
 ExportCalendarJob::~ExportCalendarJob()
 {
 
+}
+
+void ExportCalendarJob::startBackup()
+{
+  //TODO
 }

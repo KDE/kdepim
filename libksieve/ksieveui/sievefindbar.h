@@ -19,7 +19,7 @@
 #ifndef KSIEVE_KSIEVEUI_SIEVEFINDBARBASE_H
 #define KSIEVE_KSIEVEUI_SIEVEFINDBARBASE_H
 
-#include <QtGui/QWidget>
+#include <QWidget>
 
 class QAction;
 class KLineEdit;

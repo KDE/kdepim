@@ -728,3 +728,5 @@ void MonthView::setCalendar( Akonadi::ETMCalendar *cal )
   calendar()->registerObserver( d );
 }
 
+
+#include "monthview.moc"

@@ -26,8 +26,8 @@
 #include <kactioncollection.h>
 
 #include <QtCore/QAbstractItemModel>
-#include <QtGui/QAction>
-#include <QtGui/QItemSelectionModel>
+#include <QAction>
+#include <QItemSelectionModel>
 
 FavoritesEditor::FavoritesEditor( KActionCollection *actionCollection, const KSharedConfig::Ptr &config, QObject *parent )
   : QObject( parent )

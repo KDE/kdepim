@@ -31,7 +31,7 @@
 #include <KAction>
 #include <KActionCollection>
 
-#include <QtGui/QVBoxLayout>
+#include <QVBoxLayout>
 
 K_PLUGIN_FACTORY( KAddressBookFactory, registerPlugin<KAddressBookPart>(); )
 K_EXPORT_PLUGIN( KAddressBookFactory( AboutData() ) )
@@ -89,3 +89,5 @@ void KAddressBookPart::guiActivateEvent( KParts::GUIActivateEvent *e )
    kDebug();
    KParts::ReadOnlyPart::guiActivateEvent( e );
 }
+
+#include "kaddressbookpart.moc"

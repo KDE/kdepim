@@ -59,6 +59,7 @@ class KMMetaFilterActionCommand;
 class CollectionPane;
 class KMCommand;
 class KMMoveCommand;
+class KRecentFilesAction;
 
 template <typename T, typename S> class QMap;
 
@@ -106,19 +107,19 @@ class KMAIL_EXPORT KMMainWidget : public QWidget
     void destruct();
 
     /** Read configuration options before widgets are created. */
-    virtual void readPreConfig();
+    void readPreConfig();
 
     /** Read configuration for current folder. */
-    virtual void readFolderConfig();
+    void readFolderConfig();
 
     /** Write configuration for current folder. */
-    virtual void writeFolderConfig();
+    void writeFolderConfig();
 
     /** Read configuration options after widgets are created. */
-    virtual void readConfig();
+    void readConfig();
 
     /** Write configuration options. */
-    virtual void writeConfig(bool force = true);
+    void writeConfig(bool force = true);
 
     void writeReaderConfig();
 
@@ -130,32 +131,13 @@ class KMAIL_EXPORT KMMainWidget : public QWidget
     QSharedPointer<MailCommon::FolderCollection> currentFolder() const;
 
     static void cleanup();
-
     QAction *action( const char *name ) { return mActionCollection->action( name ); }
     KActionMenu *filterMenu() const { return mFilterMenu; }
     KActionMenu *mailingListActionMenu() const { return mMsgActions->mailingListActionMenu(); }
-    KAction *deleteAction() const { return mDeleteAction; }
-    KAction *trashThreadAction() const { return mTrashThreadAction; }
-    KAction *deleteThreadAction() const { return mDeleteThreadAction; }
-    KAction *saveAsAction() const { return mSaveAsAction; }
     KAction *editAction() const { return mMsgActions->editAction(); }
-    KAction *useAction() const { return mUseAction; }
     KAction *sendAgainAction() const { return mSendAgainAction; }
-    KAction *applyAllFiltersAction() const { return mApplyAllFiltersAction; }
-    KAction *findInMessageAction() const { return mFindInMessageAction; }
-    KAction *saveAttachmentsAction() const { return mSaveAttachmentsAction; }
-    KAction *openAction() const { return mOpenAction; }
     KAction *viewSourceAction() const { return mViewSourceAction; }
     KMail::MessageActions *messageActions() const { return mMsgActions; }
-
-    KActionMenu *threadStatusMenu() const { return mThreadStatusMenu; }
-    KAction *moveActionMenu() const{ return mMoveActionMenu; }
-    KAction *mopyActionMenu() const { return mCopyActionMenu; }
-    KActionMenu *applyFilterActionsMenu() const { return mApplyFilterActionsMenu; }
-
-    KToggleAction *watchThreadAction() const { return mWatchThreadAction; }
-    KToggleAction *ignoreThreadAction() const { return mIgnoreThreadAction; }
-
 
     void toggleSystemTray();
 
@@ -193,6 +175,9 @@ class KMAIL_EXPORT KMMainWidget : public QWidget
 
     void updatePaneTagComboBox();
 
+    void clearViewer();
+
+    void addRecentFile(const KUrl& mUrl);
   public slots:
     // Moving messages around
     /**
@@ -444,7 +429,7 @@ class KMAIL_EXPORT KMMainWidget : public QWidget
       an online folder is selected.
     */
     void showOfflinePage();
-
+    void showResourceOfflinePage();
     void updateVacationScriptStatus( bool active );
 
 
@@ -460,6 +445,8 @@ class KMAIL_EXPORT KMMainWidget : public QWidget
     void slotShowNotification();
     void slotConfigureAutomaticArchiving();
     void slotExportData();
+    void slotCreateAddressBookContact();
+    void slotOpenRecentMsg(const KUrl& url);
   private:
     void updateHtmlMenuEntry();
 
@@ -656,6 +643,7 @@ private:
     MailCommon::FolderSelectionDialog* mMoveOrCopyToDialog;
     MailCommon::FolderSelectionDialog* mSelectFromAllFoldersDialog;
     KAction *mServerSideSubscription;
+    KRecentFilesAction *mOpenRecentAction;
 };
 
 #endif

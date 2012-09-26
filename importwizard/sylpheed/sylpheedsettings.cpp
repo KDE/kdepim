@@ -142,15 +142,30 @@ void SylpheedSettings::readGlobalSettings(const KConfigGroup& group)
   if(group.readEntry(QLatin1String("recycle_quote_colors"), 0)==1) {
     addKmailConfig(QLatin1String("Reader"), QLatin1String("RecycleQuoteColors"), true);
   }
+
+  if(group.readEntry(QLatin1String("auto_signature")) == 0) {
+    addKmailConfig(QLatin1String("Composer"), QLatin1String("signature"), QLatin1String("manual"));
+  }
+
+  if(group.readEntry(QLatin1String("auto_ext_editor"),-1) == 1) {
+    addKmailConfig(QLatin1String("General"), QLatin1String("use-external-editor"), true);
+
+    const QString externalEditor = group.readEntry(QLatin1String("mime_open_command"));
+    if(!externalEditor.isEmpty()) {
+      addKmailConfig(QLatin1String("General"), QLatin1String("external-editor"), externalEditor);
+    }
+  }
+
   readSettingsColor(group);
   readTemplateFormat(group);
+  readTagColor(group);
 }
 
 void SylpheedSettings::readTemplateFormat(const KConfigGroup& group)
 {
   const QString replyQuote = group.readEntry(QLatin1String("reply_quote_mark"));
   if(!replyQuote.isEmpty()) {
-
+    addKmailConfig(QLatin1String("TemplateParser"), QLatin1String("QuoteString"), replyQuote);
   }
   const QString forwardQuote = group.readEntry(QLatin1String("forward_quote_mark"));
   if(!forwardQuote.isEmpty()) {
@@ -164,6 +179,11 @@ void SylpheedSettings::readTemplateFormat(const KConfigGroup& group)
   if(!forwardQuoteFormat.isEmpty()) {
     addKmailConfig(QLatin1String("TemplateParser"), QLatin1String("TemplateForward"), convertToKmailTemplate(forwardQuoteFormat));
   }
+}
+
+void SylpheedSettings::readTagColor(const KConfigGroup& group)
+{
+  //TODO
 }
 
 void SylpheedSettings::readSettingsColor(const KConfigGroup& group)
@@ -188,14 +208,14 @@ void SylpheedSettings::readSettingsColor(const KConfigGroup& group)
 QString SylpheedSettings::convertToKmailTemplate(const QString& templateStr)
 {
   QString newTemplate = templateStr;
-  newTemplate.replace(QLatin1String("%d"),QLatin1String("%DATE"));
   newTemplate.replace(QLatin1String("%date"),QLatin1String("%DATE"));
-  newTemplate.replace(QLatin1String("%f"),QLatin1String("%OTONAME"));
+  newTemplate.replace(QLatin1String("%d"),QLatin1String("%DATE"));
   newTemplate.replace(QLatin1String("%from"),QLatin1String("%OTONAME"));
-  newTemplate.replace(QLatin1String("%t"),QLatin1String("%TONAME"));
+  newTemplate.replace(QLatin1String("%f"),QLatin1String("%OTONAME"));
   newTemplate.replace(QLatin1String("%to"),QLatin1String("%TONAME"));
-  newTemplate.replace(QLatin1String("%c"),QLatin1String("%CCNAME"));
+  newTemplate.replace(QLatin1String("%t"),QLatin1String("%TONAME"));
   newTemplate.replace(QLatin1String("%cc"),QLatin1String("%CCNAME"));
+  newTemplate.replace(QLatin1String("%c"),QLatin1String("%CCNAME"));
 
   newTemplate.replace(QLatin1String("%email"),QLatin1String("%CCNAME"));
   newTemplate.replace(QLatin1String("%A"),QLatin1String("%CCNAME"));
@@ -208,6 +228,12 @@ QString SylpheedSettings::convertToKmailTemplate(const QString& templateStr)
 
   newTemplate.replace(QLatin1String("%quoted_msg"),QLatin1String("%QUOTE"));
   newTemplate.replace(QLatin1String("%Q"),QLatin1String("%QUOTE"));
+
+  newTemplate.replace(QLatin1String("%subject"),QLatin1String("%OFULLSUBJECT"));
+  newTemplate.replace(QLatin1String("%s"),QLatin1String("%OFULLSUBJECT"));
+
+  newTemplate.replace(QLatin1String("%messageid"),QLatin1String("%MSGID"));
+  newTemplate.replace(QLatin1String("%i"),QLatin1String("%MSGID"));
 
   //TODO add more variable
   return newTemplate;
@@ -233,6 +259,20 @@ void SylpheedSettings::readSignature( const KConfigGroup& accountConfig, KPIMIde
   default:
     kDebug()<<" signature type unknow :"<<signatureType;
   }
+  const int signatureEnabled = accountConfig.readEntry("auto_signature", -1 );
+  switch(signatureEnabled) {
+  case -1:
+      break;
+  case 0:
+      signature.setEnabledSignature(false);
+      break;
+  case 1:
+      signature.setEnabledSignature(true);
+      break;
+  default:
+      qDebug()<<" auto_signature undefined "<<signatureEnabled;
+  }
+
   //TODO  const bool signatureBeforeQuote = ( accountConfig.readEntry( "signature_before_quote", 0 ) == 1 ); not implemented in kmail
 
   identity->setSignature( signature );

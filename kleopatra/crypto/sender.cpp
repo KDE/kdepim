@@ -63,6 +63,7 @@ static bool operator==( const Mailbox & lhs, const Mailbox & rhs ) {
 }
 
 static bool determine_ambiguous( const Mailbox & mb, const std::vector<Key> & keys ) {
+    Q_UNUSED( mb );
     // ### really do check when we don't only show matching keys
     return keys.size() != 1 ;
 }

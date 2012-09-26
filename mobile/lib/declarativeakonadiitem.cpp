@@ -3,8 +3,8 @@
 #include <KDebug>
 
 #include <QtCore/QTimer>
-#include <QtGui/QGraphicsProxyWidget>
-#include <QtGui/QGraphicsSceneMouseEvent>
+#include <QGraphicsProxyWidget>
+#include <QGraphicsSceneMouseEvent>
 #include <qabstractscrollarea.h>
 #include <qscrollbar.h>
 #include <QCoreApplication>

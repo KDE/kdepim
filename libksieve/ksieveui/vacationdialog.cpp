@@ -24,10 +24,10 @@
 #include <kwindowsystem.h>
 
 #include <QtCore/QByteArray>
-#include <QtGui/QApplication>
-#include <QtGui/QCheckBox>
-#include <QtGui/QGridLayout>
-#include <QtGui/QLabel>
+#include <QApplication>
+#include <QCheckBox>
+#include <QGridLayout>
+#include <QLabel>
 
 using KMime::Types::AddrSpecList;
 using KMime::Types::AddressList;

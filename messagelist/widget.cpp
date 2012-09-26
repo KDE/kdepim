@@ -31,11 +31,11 @@
 #include <core/settings.h>
 
 #include <QtCore/QTimer>
-#include <QtGui/QAction>
-#include <QtGui/QApplication>
-#include <QtGui/QDrag>
-#include <QtGui/QDragMoveEvent>
-#include <QtGui/QDropEvent>
+#include <QAction>
+#include <QApplication>
+#include <QDrag>
+#include <QDragMoveEvent>
+#include <QDropEvent>
 
 #include <KDE/KActionCollection>
 #include <KDE/KComboBox>

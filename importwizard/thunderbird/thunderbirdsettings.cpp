@@ -49,7 +49,9 @@ ThunderbirdSettings::ThunderbirdSettings( const QString& filename, ImportWizard 
          line.contains(QLatin1String("mailnews."))||
          line.contains(QLatin1String("mail.compose."))||
          line.contains(QLatin1String("mail.spellcheck")) ||
-         line.contains(QLatin1String("ldap_"))) {
+         line.contains(QLatin1String("ldap_")) ||
+         line.contains(QLatin1String("mail.biff.")) ||
+         line.contains(QLatin1String("mailnews.tags."))) {
         insertIntoMap( line );
       }
     } else {
@@ -64,12 +66,17 @@ ThunderbirdSettings::ThunderbirdSettings( const QString& filename, ImportWizard 
   readAccount();
   readGlobalSettings();
   readLdapSettings();
+  readTagSettings();
 }
 
 ThunderbirdSettings::~ThunderbirdSettings()
 {
 }
 
+void ThunderbirdSettings::readTagSettings()
+{
+    ImportWizardUtil::addNepomukTag(mHashTag.values());
+}
 
 void ThunderbirdSettings::readLdapSettings()
 {
@@ -178,6 +185,14 @@ void ThunderbirdSettings::readGlobalSettings()
     addKmailConfig(QLatin1String("Spelling"),QLatin1String("backgroundCheckerEnabled"),mailSpellCheckInline);
   } else {
     addKmailConfig(QLatin1String("Spelling"),QLatin1String("backgroundCheckerEnabled"),false);
+  }
+  const QString mailPlaySoundStr = QLatin1String("mail.biff.play_sound");
+  if(mHashConfig.contains(mailPlaySoundStr)) {
+    const bool mailPlaySound = mHashConfig.value(mailPlaySoundStr).toBool();
+    addKmailConfig(QLatin1String("General"),QLatin1String("beep-on-mail"), mailPlaySound);
+  } else {
+    //Default value in thunderbird
+    addKmailConfig(QLatin1String("General"),QLatin1String("beep-on-mail"), true);
   }
 }
 
@@ -612,5 +627,24 @@ void ThunderbirdSettings::insertIntoMap( const QString& line )
   if(key.contains(QLatin1String("ldap_")) && key.endsWith(QLatin1String(".description"))) {
     QString ldapAccountName = key;
     mLdapAccountList.append(ldapAccountName.remove(QLatin1String(".description")));
+  }
+  if(key.contains(QLatin1String("mailnews.tags.")) &&
+          (key.endsWith(QLatin1String(".color")) || key.endsWith(QLatin1String(".tag")))) {
+      QString name = key;
+      name.remove(QLatin1String("mailnews.tags."));
+      name.remove(QLatin1String(".color"));
+      name.remove(QLatin1String(".tag"));
+      tagStruct tag;
+      if(mHashTag.contains(name)) {
+        tag = mHashTag.value(name);
+        mHashTag.remove(name);
+      }
+      if(key.endsWith(QLatin1String(".color"))) {
+        tag.color = QColor(mHashConfig.value(key).toString());
+      } else {
+        tag.name = mHashConfig.value(key).toString();
+      }
+      mHashTag.insert(name,tag);
+      kDebug()<<" tag :"<<name<<" tag.name"<<tag.name<<" color :"<<tag.color;
   }
 }

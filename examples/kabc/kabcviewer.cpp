@@ -21,7 +21,7 @@
 
 #include "kabcviewer.h"
 
-#include <QtGui/QVBoxLayout>
+#include <QVBoxLayout>
 
 #include <kapplication.h>
 #include <kcmdlineargs.h>

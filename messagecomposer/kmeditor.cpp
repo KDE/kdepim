@@ -23,6 +23,7 @@
 #include "kmeditor.h"
 #include "textpart.h"
 #include "messageviewer/nodehelper.h"
+#include "autocorrection/kmcomposerautocorrection.h"
 
 #include <KEncodingFileDialog>
 #include <KLocale>
@@ -52,7 +53,9 @@ class KMeditorPrivate
      : q( parent ),
        useExtEditor( false ),
        mExtEditorProcess( 0 ),
-       mExtEditorTempFile( 0 )    {
+       mExtEditorTempFile( 0 ),
+       mAutoCorrection( 0 )
+    {
     }
 
     ~KMeditorPrivate()
@@ -93,6 +96,7 @@ class KMeditorPrivate
      */
     QList< QPair<int,int> > signaturePositions( const KPIMIdentities::Signature &sig ) const;
 
+    void slotAddAutoCorrect(const QString&, const QString&);
     // Data members
     QString extEditorPath;
     KMeditor *q;
@@ -102,11 +106,19 @@ class KMeditorPrivate
 
     KProcess *mExtEditorProcess;
     KTemporaryFile *mExtEditorTempFile;
+    KMComposerAutoCorrection *mAutoCorrection;
 };
 
 }
 
 using namespace Message;
+
+void KMeditorPrivate::slotAddAutoCorrect(const QString&currentWord, const QString&replaceWord)
+{
+  if(mAutoCorrection) {
+    mAutoCorrection->addAutoCorrect(currentWord,replaceWord);
+  }
+}
 
 void KMeditorPrivate::startExternalEditor()
 {
@@ -251,6 +263,12 @@ void KMeditor::keyPressEvent ( QKeyEvent *e )
     textCursor().clearSelection();
     emit focusUp();
   } else {
+    if(e->key() == Qt::Key_Space || e->key() == Qt::Key_Enter) {
+      if(d->mAutoCorrection) {
+          //TODO verify
+        d->mAutoCorrection->autocorrect(*document(),textCursor().position());
+      }
+    }
     TextEdit::keyPressEvent( e );
   }
 }
@@ -280,9 +298,13 @@ KMeditor::~KMeditor()
 
 void KMeditorPrivate::init()
 {
+#ifdef HAVE_AUTOCORRECTFEATURE
+  q->showAutoCorrectButton(true);
+#endif
   QShortcut * insertMode = new QShortcut( QKeySequence( Qt::Key_Insert ), q );
   q->connect( insertMode, SIGNAL(activated()),
               q, SLOT(slotChangeInsertMode()) );
+  q->connect(q,SIGNAL(spellCheckerAutoCorrect(QString,QString)),q, SLOT(slotAddAutoCorrect(QString,QString)));
 }
 
 void KMeditor::slotChangeInsertMode()
@@ -740,10 +762,22 @@ void KMeditor::fillComposerTextPart ( TextPart* textPart ) const
 {
   textPart->setCleanPlainText( toCleanPlainText() );
   textPart->setWrappedPlainText( toWrappedPlainText() );
+  textPart->setWordWrappingEnabled( lineWrapMode() == QTextEdit::FixedColumnWidth );
   if( isFormattingUsed() ) {
     textPart->setCleanHtml( toCleanHtml() );
     textPart->setEmbeddedImages( embeddedImages() );
   }
 }
+
+KMComposerAutoCorrection* KMeditor::autocorrection() const
+{
+  return d->mAutoCorrection;
+}
+
+void KMeditor::setAutocorrection(KMComposerAutoCorrection* autocorrect)
+{
+  d->mAutoCorrection = autocorrect;
+}
+
 
 #include "kmeditor.moc"

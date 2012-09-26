@@ -34,8 +34,8 @@
 #include <kviewstatemaintainer.h>
 #include <klineedit.h>
 
-#include <QtGui/QItemSelectionModel>
-#include <QtGui/QStringListModel>
+#include <QItemSelectionModel>
+#include <QStringListModel>
 #include <QPointer>
 
 class AgentStatusMonitor;

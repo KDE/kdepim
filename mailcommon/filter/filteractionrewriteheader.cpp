@@ -25,9 +25,9 @@
 #include <KDE/KLineEdit>
 #include <KDE/KLocale>
 
-#include <QtGui/QHBoxLayout>
-#include <QtGui/QLabel>
-#include <QtGui/QTextDocument>
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QTextDocument>
 
 using namespace MailCommon;
 
@@ -101,6 +101,11 @@ QWidget* FilterActionRewriteHeader::createParamWidget( QWidget *parent ) const
   comboBox->setObjectName( "combo" );
   comboBox->setInsertPolicy( QComboBox::InsertAtBottom );
   layout->addWidget( comboBox, 0 /* stretch */ );
+
+  KCompletion *comp = comboBox->completionObject();
+  comp->setIgnoreCase(true);
+  comp->insertItems(mParameterList);
+  comp->setCompletionMode(KGlobalSettings::CompletionPopupAuto);
 
   QLabel *label = new QLabel( i18n( "Replace:" ), widget );
   label->setFixedWidth( label->sizeHint().width() );

@@ -21,7 +21,7 @@
 #ifndef AKONADI_PLASMA_TREEVIEW_H
 #define AKONADI_PLASMA_TREEVIEW_H
 
-#include <QtGui/QGraphicsProxyWidget>
+#include <QGraphicsProxyWidget>
 
 class QAbstractItemModel;
 

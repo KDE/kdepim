@@ -83,7 +83,7 @@
 #include <QtDBus/QDBusConnection>
 #include <QtDeclarative/QDeclarativeEngine>
 #include <QtDeclarative/QDeclarativeContext>
-#include <QtGui/QGraphicsItem>
+#include <QGraphicsItem>
 
 #ifdef Q_OS_WINCE
 class WinCEColorDialog : public KDialog
