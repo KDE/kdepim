@@ -229,7 +229,38 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   mActionManager = new Akonadi::StandardContactActionManager( guiClient->actionCollection(), this );
   mActionManager->setCollectionSelectionModel( mCollectionView->selectionModel() );
   mActionManager->setItemSelectionModel( mItemView->selectionModel() );
-  mActionManager->createAllActions();
+  //mActionManager->createAllActions();
+
+  QList<Akonadi::StandardActionManager::Type> standardActions;
+  standardActions << Akonadi::StandardActionManager::CreateCollection
+                  << Akonadi::StandardActionManager::CopyCollections
+                  << Akonadi::StandardActionManager::DeleteCollections
+                  << Akonadi::StandardActionManager::SynchronizeCollections
+                  << Akonadi::StandardActionManager::CollectionProperties
+                  << Akonadi::StandardActionManager::CopyItems
+                  << Akonadi::StandardActionManager::Paste
+                  << Akonadi::StandardActionManager::DeleteItems
+                  << Akonadi::StandardActionManager::CutItems
+                  << Akonadi::StandardActionManager::CutCollections
+                  << Akonadi::StandardActionManager::CreateResource
+                  << Akonadi::StandardActionManager::DeleteResources
+                  << Akonadi::StandardActionManager::ResourceProperties
+                  << Akonadi::StandardActionManager::SynchronizeResources
+                  << Akonadi::StandardActionManager::SynchronizeCollectionsRecursive;
+
+  Q_FOREACH( Akonadi::StandardActionManager::Type standardAction, standardActions ) {
+    mActionManager->createAction( standardAction );
+  }
+
+  QList<Akonadi::StandardContactActionManager::Type> contactActions;
+  contactActions <<Akonadi::StandardContactActionManager::CreateContact
+                 <<Akonadi::StandardContactActionManager::CreateContactGroup
+                 <<Akonadi::StandardContactActionManager::EditItem;
+
+  Q_FOREACH( Akonadi::StandardContactActionManager::Type contactAction, contactActions ) {
+    mActionManager->createAction( contactAction );
+  }
+
   const QStringList pages =
       QStringList() << QLatin1String( "Akonadi::CollectionGeneralPropertiesPage" )
                     << QLatin1String( "Akonadi::CachePolicyPage" );
