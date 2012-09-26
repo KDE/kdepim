@@ -229,7 +229,6 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   mActionManager = new Akonadi::StandardContactActionManager( guiClient->actionCollection(), this );
   mActionManager->setCollectionSelectionModel( mCollectionView->selectionModel() );
   mActionManager->setItemSelectionModel( mItemView->selectionModel() );
-  //mActionManager->createAllActions();
 
   QList<Akonadi::StandardActionManager::Type> standardActions;
   standardActions << Akonadi::StandardActionManager::CreateCollection
