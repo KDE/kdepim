@@ -52,7 +52,7 @@ public:
     explicit AddFeedListDialog( QWidget* parent );
 
 private Q_SLOTS:
-    void slotButtonClicked( int button );
+    void slotOkClicked();
 
 Q_SIGNALS:
     void agentTypeSelected( const Akonadi::AgentType& );

@@ -61,13 +61,13 @@ AddFeedListDialog::AddFeedListDialog( QWidget *parent )
     connect( this, SIGNAL(okClicked()), this, SLOT(slotOkClicked()) );
 }
 
-void AddFeedListDialog::slotButtonClicked( int button )
+void AddFeedListDialog::slotOkClicked()
 {
     const Akonadi::AgentType type = m_agentTypeWidget->currentAgentType();
-    if ( button == Ok && type.isValid() )
+    if ( type.isValid() )
         emit agentTypeSelected( type );
 
-    KDialog::slotButtonClicked( button );
+    accept();
 }
 
 KCMAkregator2FeedListsConfig::KCMAkregator2FeedListsConfig( QWidget* parent, const QVariantList& args )
