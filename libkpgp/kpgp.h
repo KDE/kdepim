@@ -24,13 +24,13 @@
 
 #include <QtCore/QByteArray>
 #include <QtCore/QString>
-#include <QtGui/QWidget>
-#include <QtGui/QComboBox>
-#include <QtGui/QLayout>
-#include <QtGui/QPushButton>
-#include <QtGui/QRadioButton>
-#include <QtGui/QCheckBox>
-#include <QtGui/QGridLayout>
+#include <QWidget>
+#include <QComboBox>
+#include <QLayout>
+#include <QPushButton>
+#include <QRadioButton>
+#include <QCheckBox>
+#include <QGridLayout>
 
 #include <stdio.h>
 

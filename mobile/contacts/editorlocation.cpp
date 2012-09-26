@@ -25,9 +25,9 @@
 #include <KDE/KABC/Addressee>
 #include <KDE/KMessageBox>
 
-#include <QtGui/QCheckBox>
-#include <QtGui/QDataWidgetMapper>
-#include <QtGui/QGroupBox>
+#include <QCheckBox>
+#include <QDataWidgetMapper>
+#include <QGroupBox>
 
 class AddressTypeDialog : public KDialog
 {

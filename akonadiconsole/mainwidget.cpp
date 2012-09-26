@@ -44,7 +44,7 @@
 #include <KTabWidget>
 #include <KXmlGuiWindow>
 
-#include <QtGui/QVBoxLayout>
+#include <QVBoxLayout>
 
 MainWidget::MainWidget( KXmlGuiWindow *parent )
   : QWidget( parent )

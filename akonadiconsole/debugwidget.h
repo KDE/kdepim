@@ -25,7 +25,7 @@
 #include "debuginterface.h"
 
 #include <QtCore/QHash>
-#include <QtGui/QWidget>
+#include <QWidget>
 
 class KTabWidget;
 class KTextEdit;

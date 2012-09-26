@@ -26,9 +26,9 @@
 #include <calendarsupport/utils.h>
 #include <calendarsupport/kcalprefs.h>
 
-#include <QtGui/QMessageBox>
-#include <QtGui/QDateEdit>
-#include <QtGui/QTimeEdit>
+#include <QMessageBox>
+#include <QDateEdit>
+#include <QTimeEdit>
 
 #include <KDebug>
 #include <KDialog>

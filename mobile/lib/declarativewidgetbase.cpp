@@ -21,8 +21,8 @@
 
 #include "stylesheetloader.h"
 
-#include <QtGui/QGraphicsScene>
-#include <QtGui/QWidget>
+#include <QGraphicsScene>
+#include <QWidget>
 
 #ifdef _WIN32_WCE
 bool DeclarativeWidgetBaseHelper::eventFilter( QObject *object, QEvent *event )

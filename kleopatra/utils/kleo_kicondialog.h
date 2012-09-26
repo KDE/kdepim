@@ -15,7 +15,7 @@
 #define __KLEO_KICONDIALOG_H__
 
 #include <QtCore/QStringList>
-#include <QtGui/QPushButton>
+#include <QPushButton>
 
 #include <kdialog.h>
 #include <klistwidget.h>

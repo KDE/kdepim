@@ -19,7 +19,7 @@
 
 #include "filteractionwithuoid.h"
 
-#include <QtGui/QTextDocument>
+#include <QTextDocument>
 
 using namespace MailCommon;
 

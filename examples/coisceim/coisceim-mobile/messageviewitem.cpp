@@ -22,9 +22,9 @@
 #include <math.h>
 
 #include <QtCore/QAbstractItemModel>
-#include <QtGui/QApplication>
-#include <QtGui/QGraphicsProxyWidget>
-#include <QtGui/QGraphicsSceneMouseEvent>
+#include <QApplication>
+#include <QGraphicsProxyWidget>
+#include <QGraphicsSceneMouseEvent>
 
 #include <kdescendantsproxymodel.h>
 

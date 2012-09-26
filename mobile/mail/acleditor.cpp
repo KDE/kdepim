@@ -28,7 +28,7 @@
 #include <mailcommon/imapaclattribute.h>
 
 #include <QtCore/QAbstractItemModel>
-#include <QtGui/QItemSelectionModel>
+#include <QItemSelectionModel>
 
 AclEditor::AclEditor( KActionCollection *actionCollection, QObject *parent )
   : QObject( parent ), mAclManager( new MailCommon::AclManager( this ) )

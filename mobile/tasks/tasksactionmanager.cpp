@@ -29,7 +29,7 @@
 #include <KActionCollection>
 #include <KLocalizedString>
 
-#include <QtGui/QItemSelectionModel>
+#include <QItemSelectionModel>
 
 using namespace CalendarSupport;
 

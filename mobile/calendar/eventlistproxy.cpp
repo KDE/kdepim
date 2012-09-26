@@ -29,7 +29,7 @@
 #include <KLocale>
 #include <KSystemTimeZones>
 
-#include <QtGui/QItemSelection>
+#include <QItemSelection>
 
 EventListProxy::EventListProxy(QObject* parent) : ListProxy(parent)
 {

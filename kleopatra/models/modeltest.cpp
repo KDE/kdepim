@@ -23,7 +23,7 @@
 
 #include <config-kleopatra.h>
 
-#include <QtGui/QtGui>
+#include <QtGui>
 
 #include "modeltest.h"
 

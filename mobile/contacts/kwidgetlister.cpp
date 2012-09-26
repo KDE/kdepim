@@ -1,7 +1,7 @@
 
 #include "kwidgetlister.h"
 
-#include <QtGui/QBoxLayout>
+#include <QBoxLayout>
 
 class KWidgetLister::Private
 {

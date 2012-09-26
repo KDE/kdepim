@@ -22,7 +22,7 @@
 
 #include "mobileui_export.h"
 
-#include <QtGui/QGraphicsProxyWidget>
+#include <QGraphicsProxyWidget>
 
 #include <boost/function.hpp>
 

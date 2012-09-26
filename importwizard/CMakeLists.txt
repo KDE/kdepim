@@ -67,6 +67,14 @@ kde4_add_ui_files(importwizard_SRCS
 		  ui/importfinishpage.ui 
 		  ui/importcalendarpage.ui)
 
+soprano_add_ontology(importwizard_SRCS
+    ${CMAKE_SOURCE_DIR}/messagecore/messagetag.trig
+    "MessageTag"
+    "Vocabulary"
+    "trig"
+  )
+
+
 kde4_add_executable(importwizard ${importwizard_SRCS})
 
 target_link_libraries(importwizard
@@ -81,6 +89,7 @@ target_link_libraries(importwizard
   kdepim
   messagecomposer
   messageviewer
+  ${NEPOMUK_CORE_LIBRARY}
 )
 
 install(TARGETS importwizard  ${INSTALL_TARGETS_DEFAULT_ARGS} )

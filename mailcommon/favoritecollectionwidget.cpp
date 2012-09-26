@@ -25,7 +25,7 @@
 #include <KDE/KLocale>
 #include <KDE/KXMLGUIClient>
 
-#include <QtGui/QPainter>
+#include <QPainter>
 
 using namespace MailCommon;
 

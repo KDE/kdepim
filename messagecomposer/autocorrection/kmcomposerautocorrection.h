@@ -72,6 +72,8 @@ public:
   void autocorrect(QTextDocument &document, int position);
   void writeConfig();
 
+  void addAutoCorrect(const QString& currentWord, const QString& replaceWord);
+
 private:
   void readConfig();
 

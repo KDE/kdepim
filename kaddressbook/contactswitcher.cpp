@@ -21,10 +21,10 @@
 
 #include <KLocale>
 
-#include <QtGui/QAbstractItemView>
-#include <QtGui/QHBoxLayout>
-#include <QtGui/QLabel>
-#include <QtGui/QPushButton>
+#include <QAbstractItemView>
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QPushButton>
 
 ContactSwitcher::ContactSwitcher( QWidget *parent )
   : QWidget( parent ), mView( 0 )

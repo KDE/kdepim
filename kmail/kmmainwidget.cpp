@@ -1168,6 +1168,7 @@ void KMMainWidget::createWidgets()
     mAkonadiStandardActionManager->setFavoriteCollectionsModel( mFavoritesModel );
     mAkonadiStandardActionManager->setFavoriteSelectionModel( mFavoriteCollectionsView->selectionModel() );
   }
+
   //mAkonadiStandardActionManager->createAllActions();
   //Don't use mMailActionManager->createAllActions() to save memory by not
   //creating actions that doesn't make sense.
@@ -1200,6 +1201,16 @@ void KMMainWidget::createWidgets()
 
   Q_FOREACH( StandardActionManager::Type standardAction, standardActions ) {
     mAkonadiStandardActionManager->createAction( standardAction );
+  }
+
+  QList<StandardActionManager::Type> favoriteActions;
+  favoriteActions << StandardActionManager::AddToFavoriteCollections
+                  << StandardActionManager::RemoveFromFavoriteCollections
+                  << StandardActionManager::RenameFavoriteCollection
+                  << StandardActionManager::SynchronizeFavoriteCollections;
+
+  Q_FOREACH( StandardActionManager::Type favoriteAction, favoriteActions) {
+    mAkonadiStandardActionManager->action( favoriteAction )->setEnabled( mEnableFavoriteFolderView );
   }
 
   QList<StandardMailActionManager::Type> mailActions;
@@ -3899,7 +3910,6 @@ void KMMainWidget::updateMessageActions( bool fast )
   Akonadi::Item::List selectedItems;
   Akonadi::Item::List selectedVisibleItems;
   bool allSelectedBelongToSameThread = false;
-  Akonadi::Item currentMessage;
   if (mCurrentFolder && mCurrentFolder->isValid() &&
        mMessagePane->getSelectionStats( selectedItems, selectedVisibleItems, &allSelectedBelongToSameThread )
      )
@@ -4746,9 +4756,8 @@ void KMMainWidget::slotExportData()
 
 void KMMainWidget::slotCreateAddressBookContact()
 {
-  Akonadi::ContactEditorDialog *dlg = new Akonadi::ContactEditorDialog( Akonadi::ContactEditorDialog::CreateMode, this );
-  dlg->exec();
-  delete dlg;
+  Akonadi::ContactEditorDialog dlg( Akonadi::ContactEditorDialog::CreateMode, this );
+  dlg.exec();
 }
 
 void KMMainWidget::slotOpenRecentMsg(const KUrl& url)

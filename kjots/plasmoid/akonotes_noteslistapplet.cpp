@@ -19,7 +19,7 @@
 
 #include "akonotes_noteslistapplet.h"
 
-#include <QtGui/QGraphicsLinearLayout>
+#include <QGraphicsLinearLayout>
 
 #include <KConfigDialog>
 

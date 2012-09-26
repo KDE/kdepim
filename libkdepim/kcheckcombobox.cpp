@@ -28,10 +28,10 @@
 #include <KLineEdit>
 #include <KDebug>
 
-#include <QtGui/QAbstractItemView>
-#include <QtGui/QKeyEvent>
-#include <QtGui/QLineEdit>
-#include <QtGui/QStandardItemModel>
+#include <QAbstractItemView>
+#include <QKeyEvent>
+#include <QLineEdit>
+#include <QStandardItemModel>
 
 using namespace KPIM;
 

@@ -22,7 +22,7 @@
 #ifndef AKONADICONSOLE_MAINWIDGET_H
 #define AKONADICONSOLE_MAINWIDGET_H
 
-#include <QtGui/QWidget>
+#include <QWidget>
 
 class KXmlGuiWindow;
 

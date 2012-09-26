@@ -429,7 +429,7 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, bool lastSignState,
   connect( m_verifyMissingAttachment, SIGNAL(timeout()), this, SLOT(slotVerifyMissingAttachmentTimeout()) );
 
   readConfig();
-  setupStatusBar();
+  setupStatusBar(attachmentView->toolButton());
   setupActions();
   setupEditor();
   rethinkFields();
@@ -1432,8 +1432,9 @@ void KMComposeWin::changeCryptoAction()
 }
 
 //-----------------------------------------------------------------------------
-void KMComposeWin::setupStatusBar( void )
+void KMComposeWin::setupStatusBar( QWidget *w )
 {
+  statusBar()->addWidget(w);
   statusBar()->insertItem( "", 0, 1 );
   statusBar()->setItemAlignment( 0, Qt::AlignLeft | Qt::AlignVCenter );
   statusBar()->insertPermanentItem( overwriteModeStr(), 4,0 );
@@ -2248,6 +2249,7 @@ void KMComposeWin::slotFetchJob(KJob*job)
         data.replace("X-messaging/groupwise-All",("X-GROUPWISE"));
         data.replace(("X-messaging/sms-All"),("X-SMS"));
         data.replace(("X-messaging/meanwhile-All"),("X-MEANWHILE"));
+        data.replace(("X-messaging/irc-All"),("X-IRC"));
         addAttachment( attachmentName, KMime::Headers::CEbase64, QString(), data, item.mimeType().toLatin1() );
       } else {
         addAttachment( attachmentName, KMime::Headers::CEbase64, QString(), item.payloadData(), item.mimeType().toLatin1() );
@@ -3363,9 +3365,8 @@ void KMComposeWin::slotSaveAsFile()
 
 void KMComposeWin::slotCreateAddressBookContact()
 {
-  Akonadi::ContactEditorDialog *dlg = new Akonadi::ContactEditorDialog( Akonadi::ContactEditorDialog::CreateMode, this );
-  dlg->exec();
-  delete dlg;
+  Akonadi::ContactEditorDialog dlg( Akonadi::ContactEditorDialog::CreateMode, this );
+  dlg.exec();
 }
 
 void KMComposeWin::slotAttachMissingFile()
@@ -3376,6 +3377,8 @@ void KMComposeWin::slotAttachMissingFile()
 void KMComposeWin::slotCloseAttachMissingFile()
 {
   m_verifyMissingAttachment->stop();
+  delete m_verifyMissingAttachment;
+  m_verifyMissingAttachment = 0;
 }
 
 void KMComposeWin::slotVerifyMissingAttachmentTimeout()

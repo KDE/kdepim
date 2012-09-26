@@ -16,6 +16,7 @@
 */
 
 #include "clawsmailsettings.h"
+#include "importwizardutil.h"
 
 #include <mailtransport/transportmanager.h>
 #include "mailcommon/mailutil.h"
@@ -167,4 +168,27 @@ void ClawsMailSettings::readGlobalSettings(const KConfigGroup& group)
         addKmailConfig(QLatin1String("Composer"), QLatin1String("MaximumAttachmentSize"), warnLargeFileSize*1024);
       }
     }
+}
+
+void ClawsMailSettings::readTagColor(const KConfigGroup &group)
+{
+  const QString customColorPattern(QLatin1String("custom_color%1"));
+  const QString customColorLabelPattern(QLatin1String("custom_colorlabel%1"));
+  QList<tagStruct> listTag;
+  for(int i = 1; i<=15; ++i) {
+    if(group.hasKey(customColorPattern.arg(i))
+      && group.hasKey(customColorLabelPattern.arg(i))) {
+      tagStruct tag;
+      const QString colorStr = group.readEntry(customColorPattern.arg(i));
+      const QString labelStr = group.readEntry(customColorLabelPattern.arg(i));
+      if(!colorStr.isEmpty()&& !labelStr.isEmpty()) {
+        tag.color = QColor(colorStr).name();
+        tag.name = labelStr;
+        listTag<<tag;
+      }
+    }
+  }
+  if(!listTag.isEmpty()) {
+    ImportWizardUtil::addNepomukTag(listTag);
+  }
 }

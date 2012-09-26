@@ -29,8 +29,8 @@
 #include <KLocale>
 #include <KTextBrowser>
 
-#include <QtGui/QGridLayout>
-#include <QtGui/QProgressBar>
+#include <QGridLayout>
+#include <QProgressBar>
 
 using namespace KABPrinting;
 

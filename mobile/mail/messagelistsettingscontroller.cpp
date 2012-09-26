@@ -26,7 +26,7 @@
 #include <kdialog.h>
 #include <klocale.h>
 
-#include <QtGui/QAction>
+#include <QAction>
 
 MessageListSettingsController::MessageListSettingsController( QObject *parent )
   : QObject( parent )

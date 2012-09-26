@@ -75,8 +75,8 @@
 #include <QtDeclarative/QDeclarativeContext>
 #include <QtDeclarative/QDeclarativeEngine>
 #include <QtDeclarative/QDeclarativeImageProvider>
-#include <QtGui/QApplication>
-#include <QtGui/QTreeView>
+#include <QApplication>
+#include <QTreeView>
 
 #include <QtDeclarative/QDeclarativeItem>
 

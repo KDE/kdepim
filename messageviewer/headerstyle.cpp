@@ -39,7 +39,7 @@ using KPIMUtils::LinkLocator;
 #include "spamheaderanalyzer.h"
 #include "globalsettings.h"
 #include "nodehelper.h"
-#include "contactphotomemento.h"
+#include "contactdisplaymessagememento.h"
 
 #include <kpimutils/email.h>
 #include "kxface.h"
@@ -501,14 +501,17 @@ QString FancyHeaderStyle::format( KMime::Message *message ) const {
     Q_ASSERT( nodeHelper() );
     Q_ASSERT( sourceObject() );
 
-    ContactPhotoMemento *photoMemento =
-        dynamic_cast<ContactPhotoMemento*>( nodeHelper()->bodyPartMemento( message, "contactphoto" ) );
+    ContactDisplayMessageMemento *photoMemento =
+        dynamic_cast<ContactDisplayMessageMemento*>( nodeHelper()->bodyPartMemento( message, "contactphoto" ) );
     if ( !photoMemento ) {
       const QString email = KPIMUtils::firstEmailAddress( message->from()->asUnicodeString() );
-      photoMemento = new ContactPhotoMemento( email );
+      photoMemento = new ContactDisplayMessageMemento( email );
       nodeHelper()->setBodyPartMemento( message, "contactphoto", photoMemento );
       QObject::connect( photoMemento, SIGNAL(update(MessageViewer::Viewer::UpdateMode)),
                         sourceObject(), SLOT(update(MessageViewer::Viewer::UpdateMode)) );
+
+      QObject::connect( photoMemento, SIGNAL(changeDisplayMail(Viewer::ForceDisplayTo,bool)),
+                        sourceObject(), SIGNAL(changeDisplayMail(Viewer::ForceDisplayTo,bool)) );
     }
 
     if ( photoMemento->finished() ) {
@@ -601,6 +604,7 @@ QString FancyHeaderStyle::format( KMime::Message *message ) const {
     userHTML = QString("<div class=\"senderpic\">") + userHTML + "</div>";
   }
 
+  qDebug()<<" photoURL"<<photoURL;
   // the subject line and box below for details
   if ( strategy->showHeader( "subject" ) ) {
     const int flags = LinkLocator::PreserveSpaces |

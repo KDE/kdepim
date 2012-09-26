@@ -21,8 +21,8 @@
 
 #include "addhostdialog_p.h"
 
-#include <QtGui/QHBoxLayout>
-#include <QtGui/QPushButton>
+#include <QHBoxLayout>
+#include <QPushButton>
 
 #include <kacceleratormanager.h>
 #include <kldap/ldapserver.h>

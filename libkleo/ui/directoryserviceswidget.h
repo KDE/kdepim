@@ -35,7 +35,7 @@
 
 #include "kleo/kleo_export.h"
 #include <kurl.h>
-#include <QtGui/QWidget>
+#include <QWidget>
 
 namespace Kleo {
 

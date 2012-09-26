@@ -26,7 +26,7 @@
 
 #include <kmime/kmime_message.h>
 
-#include <QtGui/QWidget>
+#include <QWidget>
 
 namespace Akonadi {
 class Item;
@@ -105,6 +105,12 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
    * Returns the current message item displayed in the viewer.
    */
   Akonadi::Item messageItem() const;
+
+  enum ForceDisplayTo {
+    Unknown = 0,
+    Text = 1,
+    Html = 2
+  };
 
   enum AttachmentAction
   {
@@ -323,6 +329,7 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
   QString selectedText() const;
 
 signals:
+  void changeDisplayMail(Viewer::ForceDisplayTo,bool);
 
   /**
    * Emitted when a status bar message is shown. Note that the status bar message is also set to
@@ -381,6 +388,7 @@ public slots:
   void slotZoomIn();
   void slotZoomOut();
   void slotZoomReset();
+  void slotChangeDisplayMail(Viewer::ForceDisplayTo,bool);
 protected:
   /** Some necessary event handling. */
   virtual void closeEvent(QCloseEvent *);

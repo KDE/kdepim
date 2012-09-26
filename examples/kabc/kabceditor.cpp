@@ -21,10 +21,10 @@
 
 #include "kabceditor.h"
 
-#include <QtGui/QGridLayout>
-#include <QtGui/QLabel>
-#include <QtGui/QLineEdit>
-#include <QtGui/QPushButton>
+#include <QGridLayout>
+#include <QLabel>
+#include <QLineEdit>
+#include <QPushButton>
 
 #include <akonadi/contact/contacteditor.h>
 #include <akonadi/item.h>

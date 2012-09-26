@@ -26,11 +26,11 @@
 #include <KDE/KXMLGUIClient>
 
 #include <QtCore/QAbstractItemModel>
-#include <QtGui/QAbstractProxyModel>
-#include <QtGui/QItemSelectionModel>
-#include <QtGui/QTabBar>
-#include <QtGui/QToolButton>
-#include <QtGui/QMouseEvent>
+#include <QAbstractProxyModel>
+#include <QItemSelectionModel>
+#include <QTabBar>
+#include <QToolButton>
+#include <QMouseEvent>
 #include <QHeaderView>
 
 #include <akonadi/etmviewstatesaver.h>

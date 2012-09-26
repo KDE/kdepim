@@ -27,8 +27,8 @@
 #include <KDebug>
 #include <KStandardDirs>
 
-#include <QtGui/QPixmap>
-#include <QtGui/QWidget>
+#include <QPixmap>
+#include <QWidget>
 
 using namespace KABPrinting;
 

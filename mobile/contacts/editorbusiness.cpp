@@ -23,7 +23,7 @@
 
 #include <KABC/Addressee>
 
-#include <QtGui/QAbstractTextDocumentLayout>
+#include <QAbstractTextDocumentLayout>
 
 class EditorBusiness::Private
 {

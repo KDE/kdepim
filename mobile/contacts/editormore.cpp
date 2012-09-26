@@ -43,7 +43,7 @@
 #include <QtCore/QBuffer>
 #include <QtCore/QSignalMapper>
 #include <QtCore/QUuid>
-#include <QtGui/QLabel>
+#include <QLabel>
 
 class EditorMore::Private
 {

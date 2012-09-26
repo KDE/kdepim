@@ -158,6 +158,7 @@ void SylpheedSettings::readGlobalSettings(const KConfigGroup& group)
 
   readSettingsColor(group);
   readTemplateFormat(group);
+  readTagColor(group);
 }
 
 void SylpheedSettings::readTemplateFormat(const KConfigGroup& group)
@@ -178,6 +179,11 @@ void SylpheedSettings::readTemplateFormat(const KConfigGroup& group)
   if(!forwardQuoteFormat.isEmpty()) {
     addKmailConfig(QLatin1String("TemplateParser"), QLatin1String("TemplateForward"), convertToKmailTemplate(forwardQuoteFormat));
   }
+}
+
+void SylpheedSettings::readTagColor(const KConfigGroup& group)
+{
+  //TODO
 }
 
 void SylpheedSettings::readSettingsColor(const KConfigGroup& group)

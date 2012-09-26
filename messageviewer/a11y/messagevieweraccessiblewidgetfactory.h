@@ -18,8 +18,8 @@
 #ifndef KDEPIMACCESSIBLEWIDGETFACTORY_H
 #define KDEPIMACCESSIBLEWIDGETFACTORY_H
 
-#include <QtGui/qaccessible.h>
-#include <QtGui/QAccessiblePlugin>
+#include <qaccessible.h>
+#include <QAccessiblePlugin>
 
 class MessageViewerAccessibleWidgetFactory: public QAccessiblePlugin {
 public:

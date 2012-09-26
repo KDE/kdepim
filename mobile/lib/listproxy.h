@@ -20,7 +20,7 @@
 #ifndef LISTPROXY_H
 #define LISTPROXY_H
 
-#include <QtGui/QSortFilterProxyModel>
+#include <QSortFilterProxyModel>
 
 #include "mobileui_export.h"
 

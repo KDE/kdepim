@@ -24,7 +24,7 @@
 #include <nepomuk2/tag.h>
 #include <Nepomuk2/Resource>
 
-#include <QtGui/QTextDocument>
+#include <QTextDocument>
 
 using namespace MailCommon;
 

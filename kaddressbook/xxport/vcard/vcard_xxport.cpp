@@ -43,13 +43,13 @@
 
 #include <QtCore/QFile>
 #include <QtCore/QPointer>
-#include <QtGui/QCheckBox>
-#include <QtGui/QFont>
-#include <QtGui/QFrame>
-#include <QtGui/QLabel>
-#include <QtGui/QPushButton>
-#include <QtGui/QVBoxLayout>
-#include <QtGui/QGroupBox>
+#include <QCheckBox>
+#include <QFont>
+#include <QFrame>
+#include <QLabel>
+#include <QPushButton>
+#include <QVBoxLayout>
+#include <QGroupBox>
 
 class VCardViewerDialog : public KDialog
 {

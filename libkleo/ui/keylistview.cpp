@@ -49,7 +49,7 @@
 #include <map>
 
 #include <assert.h>
-#include <QtGui/QKeyEvent>
+#include <QKeyEvent>
 
 static const int updateDelayMilliSecs = 500;
 

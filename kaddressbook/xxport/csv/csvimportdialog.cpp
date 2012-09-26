@@ -39,17 +39,17 @@
 #include <QtCore/QTextCodec>
 #include <QtCore/QThread>
 #include <QtCore/QUuid>
-#include <QtGui/QButtonGroup>
-#include <QtGui/QCheckBox>
-#include <QtGui/QGridLayout>
-#include <QtGui/QGroupBox>
-#include <QtGui/QHBoxLayout>
-#include <QtGui/QHeaderView>
-#include <QtGui/QLabel>
-#include <QtGui/QPushButton>
-#include <QtGui/QRadioButton>
-#include <QtGui/QStyledItemDelegate>
-#include <QtGui/QTableView>
+#include <QButtonGroup>
+#include <QCheckBox>
+#include <QGridLayout>
+#include <QGroupBox>
+#include <QHBoxLayout>
+#include <QHeaderView>
+#include <QLabel>
+#include <QPushButton>
+#include <QRadioButton>
+#include <QStyledItemDelegate>
+#include <QTableView>
 
 enum {
   Local = 0,

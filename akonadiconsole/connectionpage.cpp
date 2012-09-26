@@ -24,7 +24,7 @@
 #include <KGlobalSettings>
 #include <KTextEdit>
 
-#include <QtGui/QVBoxLayout>
+#include <QVBoxLayout>
 
 #include "tracernotificationinterface.h"
 

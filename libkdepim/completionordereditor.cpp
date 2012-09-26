@@ -51,8 +51,8 @@
 #include <KDE/KVBox>
 
 #include <QtDBus/QDBusConnection>
-#include <QtGui/QToolButton>
-#include <QtGui/QTreeWidget>
+#include <QToolButton>
+#include <QTreeWidget>
 
 using namespace KPIM;
 

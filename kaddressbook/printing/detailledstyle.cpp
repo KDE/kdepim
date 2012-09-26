@@ -38,9 +38,9 @@
 #include <KLocale>
 #include <KStandardDirs>
 
-#include <QtGui/QCheckBox>
-#include <QtGui/QPrinter>
-#include <QtGui/QTextDocument>
+#include <QCheckBox>
+#include <QPrinter>
+#include <QTextDocument>
 
 using namespace KABPrinting;
 

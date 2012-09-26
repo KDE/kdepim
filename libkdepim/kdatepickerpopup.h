@@ -24,7 +24,7 @@
 #include "kdepim_export.h"
 
 #include <QtCore/QDate>
-#include <QtGui/QMenu>
+#include <QMenu>
 
 class KDatePicker;
 

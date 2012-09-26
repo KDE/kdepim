@@ -29,8 +29,8 @@
 #include <KDE/KLocale>
 #include <KDE/KPIMUtils/Email>
 
-#include <QtGui/QGridLayout>
-#include <QtGui/QLabel>
+#include <QGridLayout>
+#include <QLabel>
 
 using namespace MailCommon;
 

@@ -24,7 +24,7 @@
 #include <kpimidentities/identity.h>
 #include <kpimidentities/identitymanager.h>
 
-#include <QtGui/QWidget>
+#include <QWidget>
 
 using namespace KPIMIdentities;
 

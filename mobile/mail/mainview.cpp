@@ -112,9 +112,9 @@
 #include <QtCore/QTimer>
 #include <QtDBus/QDBusConnection>
 #include <QtDeclarative/QDeclarativeContext>
-#include <QtGui/QLabel>
-#include <QtGui/QItemSelectionModel>
-#include <QtGui/QTreeView>
+#include <QLabel>
+#include <QItemSelectionModel>
+#include <QTreeView>
 
 #ifdef _WIN32_WCE
 #include <identitypage.h>

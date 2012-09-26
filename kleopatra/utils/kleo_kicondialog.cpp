@@ -22,15 +22,15 @@
 #include <kstandarddirs.h>
 #include <kiconloader.h>
 
-#include <QtGui/QLayout>
-#include <QtGui/QLabel>
-#include <QtGui/QComboBox>
+#include <QLayout>
+#include <QLabel>
+#include <QComboBox>
 #include <QtCore/QTimer>
-#include <QtGui/QRadioButton>
+#include <QRadioButton>
 #include <QtCore/QFileInfo>
-#include <QtGui/QProgressBar>
-#include <QtGui/QPainter>
-#include <QtGui/QFileDialog>
+#include <QProgressBar>
+#include <QPainter>
+#include <QFileDialog>
 #include <QtSvg/QSvgRenderer>
 
 using namespace Kleo::KioAvoidance;

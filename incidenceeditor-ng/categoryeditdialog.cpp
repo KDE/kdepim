@@ -2,6 +2,7 @@
   Copyright (c) 2000, 2001, 2002 Cornelius Schumacher <schumacher@kde.org>
   Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
   Copyright (c) 2005 Rafal Rzepecki <divide@users.sourceforge.net>
+  Copyright (c) 2012 Allen Winter <winter@kde.org>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
@@ -48,7 +49,11 @@ CategoryEditDialog::CategoryEditDialog( CategoryConfig *categoryConfig,
 
   mWidgets->mCategories->header()->hide();
   mWidgets->mButtonAdd->setIcon( KIcon( "list-add" ) );
+
+  mWidgets->mButtonAddSubcategory->setEnabled( false );
   mWidgets->mButtonAddSubcategory->setIcon( KIcon( "list-add" ) );
+
+  mWidgets->mButtonRemove->setEnabled( false );
   mWidgets->mButtonRemove->setIcon( KIcon( "list-remove" ) );
 
 #ifndef KDEPIM_MOBILE_UI
@@ -76,8 +81,8 @@ CategoryEditDialog::CategoryEditDialog( CategoryConfig *categoryConfig,
 
   mWidgets->mCategories->setFocus();
 
-  connect( mWidgets->mCategories, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)),
-           SLOT(editItem(QTreeWidgetItem*)) );
+  connect( mWidgets->mCategories, SIGNAL(itemSelectionChanged()),
+           SLOT(editItem()) );
   connect( mWidgets->mCategories, SIGNAL(itemSelectionChanged()),
            SLOT(slotSelectionChanged()) );
   connect( mWidgets->mCategories, SIGNAL(itemCollapsed(QTreeWidgetItem*)),
@@ -104,9 +109,6 @@ void CategoryEditDialog::fillList()
 {
   IncidenceEditorNG::CategoryHierarchyReaderQTreeWidget(
     mWidgets->mCategories ).read( mCategoryConfig->customCategories() );
-
-  mWidgets->mButtonRemove->setEnabled( mWidgets->mCategories->topLevelItemCount() > 0 );
-  mWidgets->mButtonAddSubcategory->setEnabled( mWidgets->mCategories->topLevelItemCount() > 0 );
 }
 
 void CategoryEditDialog::slotTextChanged( const QString &text )
@@ -119,26 +121,24 @@ void CategoryEditDialog::slotTextChanged( const QString &text )
 
 void CategoryEditDialog::slotSelectionChanged()
 {
-  QTreeWidgetItemIterator it( mWidgets->mCategories, QTreeWidgetItemIterator::Selected );
-  mWidgets->mButtonRemove->setEnabled( *it );
+  bool enable = ( mWidgets->mCategories->selectedItems().count() > 0 );
+  mWidgets->mButtonAddSubcategory->setEnabled( enable );
+  mWidgets->mButtonRemove->setEnabled( enable );
 }
 
 void CategoryEditDialog::add()
 {
-  if ( !mWidgets->mEdit->text().isEmpty() ) {
-    QTreeWidgetItem *newItem =
-      new QTreeWidgetItem( mWidgets->mCategories,
-                           QStringList( i18n( "New category" ) ) );
-    newItem->setExpanded( true );
+  QTreeWidgetItem *newItem =
+    new QTreeWidgetItem( mWidgets->mCategories,
+                         QStringList( i18n( "New category" ) ) );
+  newItem->setExpanded( true );
 
-    mWidgets->mCategories->setCurrentItem( newItem );
-    mWidgets->mCategories->clearSelection();
-    newItem->setSelected( true );
-    mWidgets->mCategories->scrollToItem( newItem );
-    mWidgets->mButtonRemove->setEnabled( mWidgets->mCategories->topLevelItemCount() > 0 );
-    mWidgets->mButtonAddSubcategory->setEnabled( mWidgets->mCategories->topLevelItemCount() > 0 );
-    mWidgets->mEdit->setFocus();
-  }
+  mWidgets->mCategories->setCurrentItem( newItem );
+  mWidgets->mCategories->clearSelection();
+  newItem->setSelected( true );
+  mWidgets->mCategories->scrollToItem( newItem );
+  mWidgets->mEdit->setFocus();
+  mWidgets->mEdit->selectAll();
 }
 
 void CategoryEditDialog::addSubcategory()
@@ -154,6 +154,7 @@ void CategoryEditDialog::addSubcategory()
     newItem->setSelected( true );
     mWidgets->mCategories->scrollToItem( newItem );
     mWidgets->mEdit->setFocus();
+    mWidgets->mEdit->selectAll();
   }
 }
 
@@ -164,8 +165,6 @@ void CategoryEditDialog::remove()
     deleteItem( to_remove.takeFirst(), to_remove );
   }
 
-  mWidgets->mButtonRemove->setEnabled( mWidgets->mCategories->topLevelItemCount() > 0 );
-  mWidgets->mButtonAddSubcategory->setEnabled( mWidgets->mCategories->topLevelItemCount() > 0 );
   if ( mWidgets->mCategories->currentItem() ) {
     mWidgets->mCategories->currentItem()->setSelected( true );
   }
@@ -215,10 +214,14 @@ void CategoryEditDialog::slotCancel()
   reload();
 }
 
-void CategoryEditDialog::editItem( QTreeWidgetItem *item )
+void CategoryEditDialog::editItem()
 {
-  if ( item ) {
-    mWidgets->mEdit->setText( item->text( 0 ) );
+  QList<QTreeWidgetItem*> to_edit = mWidgets->mCategories->selectedItems();
+  if ( !to_edit.isEmpty() ) {
+    QTreeWidgetItem *item = to_edit.first();
+    if ( item ) {
+      mWidgets->mEdit->setText( item->text( 0 ) );
+    }
   }
 }
 
@@ -229,6 +232,7 @@ void CategoryEditDialog::reload()
 
 void CategoryEditDialog::show()
 {
+/*
   QTreeWidgetItem *first = 0;
   if ( mWidgets->mCategories->topLevelItemCount() ) {
     first = mWidgets->mCategories->topLevelItem( 0 );
@@ -239,6 +243,7 @@ void CategoryEditDialog::show()
     first->setSelected( true );
     editItem( first );
   }
+*/
   KDialog::show();
 }
 

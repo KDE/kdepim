@@ -18,8 +18,8 @@
 #ifndef ACCESSIBLEMAILWEBVIEW_H
 #define ACCESSIBLEMAILWEBVIEW_H
 
-#include <QtGui/QAccessibleTextInterface>
-#include <QtGui/QAccessibleWidget>
+#include <QAccessibleTextInterface>
+#include <QAccessibleWidget>
 
 namespace MessageViewer {
   class MailWebView;

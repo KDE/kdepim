@@ -30,7 +30,7 @@
 #include "multiplyingline.h"
 
 #include <KGlobalSettings>
-#include <QtGui/QWidget>
+#include <QWidget>
 #include <QObject>
 
 namespace KPIM {

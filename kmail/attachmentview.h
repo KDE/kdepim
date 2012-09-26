@@ -1,5 +1,6 @@
 /*
  * This file is part of KMail.
+ * Copyright (c) 2012 Laurent Montel <montel@kde.org>
  * Copyright (c) 2009 Constantin Berzan <exit3219@gmail.com>
  *
  * Parts based on KMail code by:
@@ -24,9 +25,10 @@
 #ifndef KMAIL_ATTACHMENTVIEW_H
 #define KMAIL_ATTACHMENTVIEW_H
 
-#include <QtGui/QTreeView>
+#include <QTreeView>
 
 class QContextMenuEvent;
+class QToolButton;
 
 namespace Message {
 class AttachmentModel;
@@ -42,6 +44,7 @@ class AttachmentView : public QTreeView
     /// can't change model afterwards.
     explicit AttachmentView( Message::AttachmentModel *model, QWidget *parent = 0 );
     ~AttachmentView();
+    QToolButton *toolButton();
 
   public slots:
     /// model sets these

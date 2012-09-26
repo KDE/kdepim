@@ -22,7 +22,7 @@
 #include "mainwindow.h"
 #include "mainwidget.h"
 
-#include <QtGui/QToolBar>
+#include <QToolBar>
 
 #include <akonadi/control.h>
 

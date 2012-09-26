@@ -22,7 +22,7 @@
 #ifndef AKONADICONSOLE_SEARCHWIDGET_H
 #define AKONADICONSOLE_SEARCHWIDGET_H
 
-#include <QtGui/QWidget>
+#include <QWidget>
 
 class KComboBox;
 class KJob;

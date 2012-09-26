@@ -34,7 +34,7 @@
 #define __KLEO_PROGRESSBAR_H__
 
 #include "kleo/kleo_export.h"
-#include <QtGui/QProgressBar>
+#include <QProgressBar>
 class QTimer;
 
 namespace Kleo {

@@ -34,7 +34,7 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QTimer>
-#include <QtGui/QMouseEvent>
+#include <QMouseEvent>
 
 namespace GpgME { class Error; }
 namespace KIO { class Job; }
@@ -598,6 +598,7 @@ signals:
   void itemRemoved();
   void makeResourceOnline(MessageViewer::Viewer::ResourceOnlineMode mode);
 
+  void changeDisplayMail(Viewer::ForceDisplayTo,bool);
 private:
   QString attachmentInjectionHtml() const;
   QString recipientsQuickListLinkHtml( bool, const QString & ) const;

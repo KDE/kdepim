@@ -2,7 +2,7 @@
 #ifndef CUSTOMFIELDEDITWIDGET_H
 #define CUSTOMFIELDEDITWIDGET_H
 
-#include <QtGui/QWidget>
+#include <QWidget>
 
 #include "customfields_p.h"
 

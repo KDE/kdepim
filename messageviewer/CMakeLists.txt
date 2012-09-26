@@ -48,9 +48,7 @@ set(libmessageviewer_SRCS
   bodypartformatterfactory.cpp
   chiasmuskeyselector.cpp
   configurewidget.cpp
-  contactphotomemento.cpp
   contactdisplaymessagememento.cpp
-  contactabstractmemento.cpp
   csshelper.cpp
   csshelperbase.cpp
   editorwatcher.cpp

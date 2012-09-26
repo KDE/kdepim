@@ -23,9 +23,9 @@
 
 #include <kicon.h>
 
-#include <QtGui/QHBoxLayout>
-#include <QtGui/QLineEdit>
-#include <QtGui/QPushButton>
+#include <QHBoxLayout>
+#include <QLineEdit>
+#include <QPushButton>
 
 class MobileLineEdit::Private
 {

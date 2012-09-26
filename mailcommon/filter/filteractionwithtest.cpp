@@ -23,7 +23,7 @@
 #include "soundtestwidget.h"
 #endif
 
-#include <QtGui/QTextDocument>
+#include <QTextDocument>
 
 using namespace MailCommon;
 

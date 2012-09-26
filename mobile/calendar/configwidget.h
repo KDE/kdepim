@@ -26,8 +26,8 @@
 #include "calendarviews/eventviews/eventview.h"
 #include "calendarviews/eventviews/prefs.h"
 
-#include <QtGui/QGraphicsProxyWidget>
-#include <QtGui/QWidget>
+#include <QGraphicsProxyWidget>
+#include <QWidget>
 
 class KComboBox;
 class KConfigDialogManager;

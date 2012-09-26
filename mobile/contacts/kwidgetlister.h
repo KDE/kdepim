@@ -2,7 +2,7 @@
 #ifndef KWIDGETLISTER_H
 #define KWIDGETLISTER_H
 
-#include <QtGui/QWidget>
+#include <QWidget>
 
 class KWidgetLister : public QWidget
 {

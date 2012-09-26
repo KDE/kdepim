@@ -15,31 +15,30 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef ClawsMailSettings_H
-#define ClawsMailSettings_H
+#ifndef IDENTITYADDVCARDDIALOG_H
+#define IDENTITYADDVCARDDIALOG_H
+#include <KDialog>
+class QButtonGroup;
+class KComboBox;
 
-#include "abstractsettings.h"
-#include "sylpheed/sylpheedsettings.h"
+namespace KPIMIdentities {
+  class IdentityManager;
+}
 
-class ImportWizard;
-class KConfigGroup;
-
-class ClawsMailSettings : public SylpheedSettings
+class IdentityAddVcardDialog: public KDialog
 {
+  Q_OBJECT
 public:
-  explicit ClawsMailSettings(ImportWizard *parent);
-  ~ClawsMailSettings();
-  void importSettings(const QString& filename, const QString& path);
-protected:
-  //Reimplement from sylpheed
-  void readSettingsColor(const KConfigGroup& group);
-  void readTemplateFormat(const KConfigGroup& group);
-  void readGlobalSettings(const KConfigGroup& group);
-  void readTagColor(const KConfigGroup& group);
+  enum DuplicateMode { Empty, ExistingEntry };
+  explicit IdentityAddVcardDialog(KPIMIdentities::IdentityManager *manager, QWidget *parent = 0);
+  ~IdentityAddVcardDialog();
 
+  DuplicateMode duplicateMode() const;
+  QString duplicateVcardFromIdentity() const;
 
 private:
-  QString writeColor(const QColor& col);
+  QButtonGroup *mButtonGroup;
+  KComboBox *mComboBox;
 };
 
-#endif // ClawsMailSettings_H
+#endif // IDENTITYADDVCARDDIALOG_H

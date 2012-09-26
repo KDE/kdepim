@@ -27,7 +27,7 @@
 #ifndef STYLEPAGE_H
 #define STYLEPAGE_H
 
-#include <QtGui/QWidget>
+#include <QWidget>
 #include "contactfields.h"
 
 class QLabel;

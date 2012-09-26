@@ -26,8 +26,8 @@
 #include "declarativewidgetbase.h"
 #include "mainview.h"
 
-#include <QtGui/QGraphicsProxyWidget>
-#include <QtGui/QWidget>
+#include <QGraphicsProxyWidget>
+#include <QWidget>
 
 class KConfigDialogManager;
 

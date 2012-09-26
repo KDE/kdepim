@@ -22,7 +22,7 @@
 #include "mainwidget.h"
 #include "mainwindow.h"
 
-#include <QtGui/QSortFilterProxyModel>
+#include <QSortFilterProxyModel>
 
 MainWidget::MainWidget( MainWindow* parent )
     : QWidget( parent ), mMainWindow( parent )

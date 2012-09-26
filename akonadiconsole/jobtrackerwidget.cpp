@@ -28,9 +28,9 @@
 
 #include <KLocale>
 
-#include <QtGui/QTreeView>
-#include <QtGui/QHeaderView>
-#include <QtGui/QVBoxLayout>
+#include <QTreeView>
+#include <QHeaderView>
+#include <QVBoxLayout>
 #include <QMenu>
 
 

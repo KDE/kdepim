@@ -24,10 +24,10 @@
 #include <KLineEdit>
 #include <KLocale>
 
-#include <QtGui/QComboBox>
-#include <QtGui/QHBoxLayout>
-#include <QtGui/QLabel>
-#include <QtGui/QTextDocument>
+#include <QComboBox>
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QTextDocument>
 
 using namespace MailCommon;
 

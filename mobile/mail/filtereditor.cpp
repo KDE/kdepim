@@ -25,7 +25,7 @@
 #include <mailcommon/filter/filtercontroller.h>
 
 #include <QtCore/QAbstractItemModel>
-#include <QtGui/QItemSelectionModel>
+#include <QItemSelectionModel>
 
 FilterEditor::FilterEditor( KActionCollection *actionCollection, QObject *parent )
   : QObject( parent ), mFilterController( new MailCommon::FilterController( this ) )
