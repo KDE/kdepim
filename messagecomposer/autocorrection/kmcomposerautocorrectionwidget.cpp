@@ -188,6 +188,7 @@ void KMComposerAutoCorrectionWidget::selectSingleQuoteCharOpen()
 {
   SelectSpecialChar *dlg = new SelectSpecialChar(this);
   dlg->setCurrentChar(m_singleQuotes.begin);
+  dlg->showSelectButton(false);
   if (dlg->exec()) {
     m_singleQuotes.begin = dlg->currentChar();
     ui->singleQuote1->setText(m_singleQuotes.begin);
@@ -199,6 +200,7 @@ void KMComposerAutoCorrectionWidget::selectSingleQuoteCharOpen()
 void KMComposerAutoCorrectionWidget::selectSingleQuoteCharClose()
 {
   SelectSpecialChar *dlg = new SelectSpecialChar(this);
+  dlg->showSelectButton(false);
   dlg->setCurrentChar(m_singleQuotes.end);
   if (dlg->exec()) {
     m_singleQuotes.end = dlg->currentChar();
@@ -218,6 +220,7 @@ void KMComposerAutoCorrectionWidget::setDefaultSingleQuotes()
 void KMComposerAutoCorrectionWidget::selectDoubleQuoteCharOpen()
 {
   SelectSpecialChar *dlg = new SelectSpecialChar(this);
+  dlg->showSelectButton(false);
   dlg->setCurrentChar(m_doubleQuotes.begin);
   if (dlg->exec()) {
     m_doubleQuotes.begin = dlg->currentChar();
@@ -230,6 +233,7 @@ void KMComposerAutoCorrectionWidget::selectDoubleQuoteCharOpen()
 void KMComposerAutoCorrectionWidget::selectDoubleQuoteCharClose()
 {
   SelectSpecialChar *dlg = new SelectSpecialChar(this);
+  dlg->showSelectButton(false);
   dlg->setCurrentChar(m_doubleQuotes.end);
   if (dlg->exec()) {
     m_doubleQuotes.end = dlg->currentChar();

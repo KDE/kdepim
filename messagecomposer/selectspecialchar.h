@@ -35,6 +35,8 @@ public:
 
   void setOkButtonText(const QString& text);
 
+  void showSelectButton(bool show);
+
 private Q_SLOTS:
   void slotInsertChar();
 Q_SIGNALS:
