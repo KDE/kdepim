@@ -347,7 +347,6 @@ void KMComposerAutoCorrectionWidget::setFindReplaceText(QTreeWidgetItem*item ,in
   Q_UNUSED(column);
   ui->find->setText(item->text(0));
   ui->replace->setText(item->text(1));
-  Q_EMIT changed();
 }
 
 
