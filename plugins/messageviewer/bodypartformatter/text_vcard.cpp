@@ -72,12 +72,12 @@ class Formatter : public MessageViewer::Interface::BodyPartFormatter
         return AsIcon;
       }
 
-      KABC::VCardConverter vcc;
       const QString vCard = bodyPart->asText();
       if ( vCard.isEmpty() ) {
         return AsIcon;
       }
 
+      KABC::VCardConverter vcc;
       KABC::Addressee::List al = vcc.parseVCards( vCard.toUtf8() );
 
       // Pre-count the number of non-empty addressees
