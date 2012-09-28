@@ -21,6 +21,7 @@
 
 #include <Akonadi/CollectionStatisticsDelegate>
 #include <Akonadi/EntityTreeModel>
+#include <akonadi/etmviewstatesaver.h>
 
 #include <KConfigGroup>
 #include <KLocalizedString>
@@ -187,6 +188,10 @@ void FeedListView::Private::loadHeaderSettings()
 {
     if ( !configGroup.isValid() )
         return;
+    ETMViewStateSaver *saver = new ETMViewStateSaver;
+    saver->setView( q );
+    saver->restoreState( configGroup );
+
     headerState = QByteArray::fromBase64( configGroup.readEntry( "FeedListHeaders" ).toAscii() );
     q->header()->restoreState( headerState );        // needed, even with Qt 4.5
 }
@@ -195,8 +200,12 @@ void FeedListView::Private::saveHeaderSettings()
 {
     if ( q->model() )
         headerState = q->header()->saveState();
-    if ( configGroup.isValid() )
+    if ( configGroup.isValid() ) {
         configGroup.writeEntry( "FeedListHeaders", headerState.toBase64() );
+        ETMViewStateSaver saver;
+        saver.setView( q );
+        saver.saveState( configGroup );
+    }
 }
 
 FeedListView::FeedListView( QWidget *parent )
@@ -222,7 +231,6 @@ FeedListView::FeedListView( QWidget *parent )
     connect( this, SIGNAL(activated(QModelIndex)),
              this, SLOT(slotActivated(QModelIndex)) );
 
-    d->loadHeaderSettings();
 }
 
 KConfigGroup FeedListView::configGroup() const {

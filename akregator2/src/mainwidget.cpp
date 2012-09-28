@@ -150,8 +150,6 @@ Akregator2::MainWidget::MainWidget( Part *part, QWidget *parent, ActionManagerIm
     lt->addWidget(m_horizontalSplitter);
 
     m_feedListView = new KRss::FeedListView( m_horizontalSplitter );
-    const KConfigGroup group( Settings::self()->config(), "General" );
-    m_feedListView->setConfigGroup( group );
     m_actionManager->initFeedListView( m_feedListView );
 
 #if 0
@@ -308,6 +306,8 @@ Akregator2::MainWidget::MainWidget( Part *part, QWidget *parent, ActionManagerIm
         m_searchBar->slotSetStatus( Settings::statusFilter() );
         m_searchBar->slotSetText( Settings::textFilter() );
     }
+    const KConfigGroup group( Settings::self()->config(), "General" );
+    m_feedListView->setConfigGroup( group );
 }
 
 void Akregator2::MainWidget::slotOnShutdown()
