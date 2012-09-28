@@ -27,6 +27,7 @@
 #include <KDE/Mailtransport/TransportManager>
 
 #include <QTextDocument>
+#include <QPointer>
 
 using namespace MailCommon;
 
@@ -57,7 +58,7 @@ bool FilterActionSetTransport::argsFromStringInteractive( const QString &argsStr
   argsFromString( argsStr );
   if ( !MailTransport::TransportManager::self()->transportById( mParameter,false ) )
   {
-    FilterActionMissingTransportDialog *dlg = new FilterActionMissingTransportDialog( filterName );
+    QPointer<FilterActionMissingTransportDialog> dlg = new FilterActionMissingTransportDialog( filterName );
     if ( dlg->exec() ) {
       mParameter = dlg->selectedTransport();
       needUpdate = true;

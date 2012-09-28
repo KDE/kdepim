@@ -25,6 +25,7 @@
 #include <Nepomuk2/Resource>
 
 #include <QTextDocument>
+#include <QPointer>
 
 using namespace MailCommon;
 
@@ -60,7 +61,7 @@ bool FilterActionAddTag::argsFromStringInteractive( const QString &argsStr, cons
     return false;
   const int index = mParameterList.indexOf( mParameter );
   if ( index == -1 ) {
-    FilterActionMissingTagDialog *dlg = new FilterActionMissingTagDialog( mParameterList, filterName, argsStr );
+    QPointer<FilterActionMissingTagDialog> dlg = new FilterActionMissingTagDialog( mParameterList, filterName, argsStr );
     if ( dlg->exec() ) {
       mParameter = dlg->selectedTag();
       needUpdate = true;
