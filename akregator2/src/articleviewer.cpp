@@ -109,17 +109,17 @@ ArticleViewer::ArticleViewer(QWidget *parent)
     m_part->setStatusMessagesEnabled(false);
 
     // change the cursor when loading stuff...
-    connect( m_part, SIGNAL(started(KIO::Job *)),
-             this, SLOT(slotStarted(KIO::Job *)));
+    connect( m_part, SIGNAL(started(KIO::Job*)),
+             this, SLOT(slotStarted(KIO::Job*)));
     connect( m_part, SIGNAL(completed()),
              this, SLOT(slotCompleted()));
 
     KParts::BrowserExtension* ext = m_part->browserExtension();
-    connect(ext, SIGNAL(popupMenu (QPoint, KUrl, mode_t, KParts::OpenUrlArguments, KParts::BrowserArguments, KParts::BrowserExtension::PopupFlags, KParts::BrowserExtension::ActionGroupMap)),
-             this, SLOT(slotPopupMenu(QPoint, KUrl, mode_t, KParts::OpenUrlArguments, KParts::BrowserArguments, KParts::BrowserExtension::PopupFlags))); // ActionGroupMap argument removed, unused by slot
+    connect(ext, SIGNAL(popupMenu(QPoint,KUrl,mode_t,KParts::OpenUrlArguments,KParts::BrowserArguments,KParts::BrowserExtension::PopupFlags,KParts::BrowserExtension::ActionGroupMap)),
+             this, SLOT(slotPopupMenu(QPoint,KUrl,mode_t,KParts::OpenUrlArguments,KParts::BrowserArguments,KParts::BrowserExtension::PopupFlags))); // ActionGroupMap argument removed, unused by slot
 
-    connect( ext, SIGNAL(openUrlRequestDelayed(KUrl, KParts::OpenUrlArguments, KParts::BrowserArguments)),
-             this, SLOT(slotOpenUrlRequestDelayed(KUrl, KParts::OpenUrlArguments, KParts::BrowserArguments)) );
+    connect( ext, SIGNAL(openUrlRequestDelayed(KUrl,KParts::OpenUrlArguments,KParts::BrowserArguments)),
+             this, SLOT(slotOpenUrlRequestDelayed(KUrl,KParts::OpenUrlArguments,KParts::BrowserArguments)) );
 
     connect(ext, SIGNAL(createNewWindow(KUrl,
             KParts::OpenUrlArguments,
@@ -153,11 +153,11 @@ ArticleViewer::ArticleViewer(QWidget *parent)
 
     action = m_part->actionCollection()->addAction("copylinkaddress");
     action->setText(i18n("Copy &Link Address"));
-    connect(action, SIGNAL(triggered(bool) ), SLOT(slotCopyLinkAddress()));
+    connect(action, SIGNAL(triggered(bool)), SLOT(slotCopyLinkAddress()));
 
     action = m_part->actionCollection()->addAction("savelinkas");
     action->setText(i18n("&Save Link As..."));
-    connect(action, SIGNAL(triggered(bool) ), SLOT(slotSaveLinkAs()));
+    connect(action, SIGNAL(triggered(bool)), SLOT(slotSaveLinkAs()));
 
     action = m_part->actionCollection()->addAction("articleviewer_scroll_up");
     action->setText(i18n("&Scroll Up"));
@@ -265,8 +265,8 @@ void ArticleViewer::slotPopupMenu(const QPoint& p, const KUrl& kurl, mode_t, con
 
     if (isLink && !isSelection)
     {
-        popup.addAction( createOpenLinkInNewTabAction( kurl, this, SLOT( slotOpenLinkInForegroundTab() ), &popup ) );
-        popup.addAction( createOpenLinkInExternalBrowserAction( kurl, this, SLOT( slotOpenLinkInBrowser() ), &popup ) );
+        popup.addAction( createOpenLinkInNewTabAction( kurl, this, SLOT(slotOpenLinkInForegroundTab()), &popup ) );
+        popup.addAction( createOpenLinkInExternalBrowserAction( kurl, this, SLOT(slotOpenLinkInBrowser()), &popup ) );
         popup.addSeparator();
         popup.addAction( m_part->action("savelinkas") );
         popup.addAction( m_part->action("copylinkaddress") );
@@ -420,15 +420,15 @@ void ArticleViewer::connectToNode(TreeNode* node)
     {
         if (m_viewMode == CombinedView)
         {
-            connect( node, SIGNAL(signalChanged(Akregator2::TreeNode*)), this, SLOT(slotUpdateCombinedView() ) );
-            connect( node, SIGNAL(signalArticlesAdded(Akregator2::TreeNode*, QList<Akregator2::Article>)), this, SLOT(slotArticlesAdded(Akregator2::TreeNode*, QList<Akregator2::Article>)));
-            connect( node, SIGNAL(signalArticlesRemoved(Akregator2::TreeNode*, QList<Akregator2::Article>)), this, SLOT(slotArticlesRemoved(Akregator2::TreeNode*, QList<Akregator2::Article>)));
-            connect( node, SIGNAL(signalArticlesUpdated(Akregator2::TreeNode*, QList<Akregator2::Article>)), this, SLOT(slotArticlesUpdated(Akregator2::TreeNode*, QList<Akregator2::Article>)));
+            connect( node, SIGNAL(signalChanged(Akregator2::TreeNode*)), this, SLOT(slotUpdateCombinedView()) );
+            connect( node, SIGNAL(signalArticlesAdded(Akregator2::TreeNode*,QList<Akregator2::Article>)), this, SLOT(slotArticlesAdded(Akregator2::TreeNode*,QList<Akregator2::Article>)));
+            connect( node, SIGNAL(signalArticlesRemoved(Akregator2::TreeNode*,QList<Akregator2::Article>)), this, SLOT(slotArticlesRemoved(Akregator2::TreeNode*,QList<Akregator2::Article>)));
+            connect( node, SIGNAL(signalArticlesUpdated(Akregator2::TreeNode*,QList<Akregator2::Article>)), this, SLOT(slotArticlesUpdated(Akregator2::TreeNode*,QList<Akregator2::Article>)));
         }
         if (m_viewMode == SummaryView)
-            connect( node, SIGNAL(signalChanged(Akregator2::TreeNode*)), this, SLOT(slotShowSummary(Akregator2::TreeNode*) ) );
+            connect( node, SIGNAL(signalChanged(Akregator2::TreeNode*)), this, SLOT(slotShowSummary(Akregator2::TreeNode*)) );
 
-        connect( node, SIGNAL(signalDestroyed(Akregator2::TreeNode*)), this, SLOT(slotClear() ) );
+        connect( node, SIGNAL(signalDestroyed(Akregator2::TreeNode*)), this, SLOT(slotClear()) );
     }
 }
 

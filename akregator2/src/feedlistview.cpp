@@ -220,7 +220,7 @@ FeedListView::FeedListView( QWidget *parent )
     connect( this, SIGNAL(clicked(QModelIndex)),
              this, SLOT(slotClicked(QModelIndex)) );
     connect( this, SIGNAL(activated(QModelIndex)),
-             this, SLOT( slotActivated(QModelIndex)) );
+             this, SLOT(slotActivated(QModelIndex)) );
 
     d->loadHeaderSettings();
 }

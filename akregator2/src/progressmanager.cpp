@@ -81,10 +81,10 @@ void ProgressManager::setFeedList( const shared_ptr<KRss::FeedList>& feedList )
         Q_FOREACH( const KRss::Feed::Id& id, d->feedList->feedIds() )
             slotFeedAdded( id );
 
-        connect( feedList.get(), SIGNAL( feedAdded( const KRss::Feed::Id&) ),
-                 this, SLOT( slotFeedAdded( const KRss::Feed::Id& ) ) );
-        connect( feedList.get(), SIGNAL( feedRemoved( const KRss::Feed::Id&) ),
-                 this, SLOT( slotFeedRemoved( const KRss::Feed::Id& ) ) );    }
+        connect( feedList.get(), SIGNAL(feedAdded(KRss::Feed::Id)),
+                 this, SLOT(slotFeedAdded(KRss::Feed::Id)) );
+        connect( feedList.get(), SIGNAL(feedRemoved(KRss::Feed::Id)),
+                 this, SLOT(slotFeedRemoved(KRss::Feed::Id)) );    }
 }
 
 void ProgressManager::addJob( KJob *job )
@@ -121,16 +121,16 @@ class FetchProgressItemHandler::FetchProgressItemHandlerPrivate
 FetchProgressItemHandler::FetchProgressItemHandler( const shared_ptr<const KRss::Feed>& feed )
     : d( new FetchProgressItemHandlerPrivate( feed ) )
 {
-    connect( feed.get(), SIGNAL( fetchStarted( const KRss::Feed::Id& ) ),
-             this, SLOT( slotFetchStarted( const KRss::Feed::Id& ) ) );
-    connect( feed.get(), SIGNAL( fetchPercent( const KRss::Feed::Id&, uint ) ),
-             this, SLOT( slotFetchPercent( const KRss::Feed::Id&, uint ) ) );
-    connect( feed.get(), SIGNAL( fetchFinished( const KRss::Feed::Id& ) ),
-             this, SLOT( slotFetchFinished( const KRss::Feed::Id& ) ) );
-    connect( feed.get(), SIGNAL( fetchFailed( const KRss::Feed::Id&, const QString& ) ),
-             this, SLOT( slotFetchFailed( const KRss::Feed::Id&, const QString& ) ) );
-    connect( feed.get(), SIGNAL( fetchAborted( const KRss::Feed::Id& ) ),
-             this, SLOT( slotFetchAborted( const KRss::Feed::Id& ) ) );
+    connect( feed.get(), SIGNAL(fetchStarted(KRss::Feed::Id)),
+             this, SLOT(slotFetchStarted(KRss::Feed::Id)) );
+    connect( feed.get(), SIGNAL(fetchPercent(KRss::Feed::Id,uint)),
+             this, SLOT(slotFetchPercent(KRss::Feed::Id,uint)) );
+    connect( feed.get(), SIGNAL(fetchFinished(KRss::Feed::Id)),
+             this, SLOT(slotFetchFinished(KRss::Feed::Id)) );
+    connect( feed.get(), SIGNAL(fetchFailed(KRss::Feed::Id,QString)),
+             this, SLOT(slotFetchFailed(KRss::Feed::Id,QString)) );
+    connect( feed.get(), SIGNAL(fetchAborted(KRss::Feed::Id)),
+             this, SLOT(slotFetchAborted(KRss::Feed::Id)) );
 }
 
 FetchProgressItemHandler::~FetchProgressItemHandler()
@@ -156,8 +156,8 @@ void FetchProgressItemHandler::slotFetchStarted( const KRss::Feed::Id& id )
     d->progressItem = KPIM::ProgressManager::createProgressItem( KPIM::ProgressManager::getUniqueID(),
                                                                  d->feed->title() );
 
-    connect( d->progressItem, SIGNAL( progressItemCanceled( KPIM::ProgressItem* ) ),
-             d->feed.get(), SLOT( abortFetch() ) );
+    connect( d->progressItem, SIGNAL(progressItemCanceled(KPIM::ProgressItem*)),
+             d->feed.get(), SLOT(abortFetch()) );
 }
 
 void FetchProgressItemHandler::slotFetchPercent( const KRss::Feed::Id& id, uint percentage )
@@ -211,12 +211,12 @@ class JobProgressItemHandler::JobProgressItemHandlerPrivate
 JobProgressItemHandler::JobProgressItemHandler( const KJob *job )
     : d( new JobProgressItemHandlerPrivate( job ) )
 {
-    connect( d->job, SIGNAL( result( KJob* ) ),
-             this, SLOT( slotJobResult( KJob* ) ) );
+    connect( d->job, SIGNAL(result(KJob*)),
+             this, SLOT(slotJobResult(KJob*)) );
     connect( d->job, SIGNAL(destroyed(QObject*)),
              this, SLOT(slotJobDestroyed()) );
-    connect( d->job, SIGNAL( percent( KJob*, unsigned long ) ),
-             this, SLOT( slotJobPercent( KJob*, unsigned long ) ) );
+    connect( d->job, SIGNAL(percent(KJob*,ulong)),
+             this, SLOT(slotJobPercent(KJob*,ulong)) );
 
     d->progressItem = KPIM::ProgressManager::createProgressItem( KPIM::ProgressManager::getUniqueID(),
                                                                  i18n( "Item Loading" ), QString(),

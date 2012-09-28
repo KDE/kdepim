@@ -120,10 +120,10 @@ Part::Part( QWidget *parentWidget, QObject *parent, const QVariantList& )
 
     m_mainWidget = new MainWidget( this, m_parentWidget, m_actionManager );
 
-    connect(m_mainWidget->frameManager(), SIGNAL(signalCaptionChanged(const QString&)), this, SIGNAL(setWindowCaption(const QString&)));
-    connect(m_mainWidget->frameManager(), SIGNAL(signalStatusText(const QString&)), this, SLOT(slotSetStatusText(const QString&)));
+    connect(m_mainWidget->frameManager(), SIGNAL(signalCaptionChanged(QString)), this, SIGNAL(setWindowCaption(QString)));
+    connect(m_mainWidget->frameManager(), SIGNAL(signalStatusText(QString)), this, SLOT(slotSetStatusText(QString)));
     connect(m_mainWidget->frameManager(), SIGNAL(signalLoadingProgress(int)), m_extension, SIGNAL(loadingProgress(int)));
-    connect(m_mainWidget->frameManager(), SIGNAL(signalCanceled(const QString&)), this, SIGNAL(canceled(const QString&)));
+    connect(m_mainWidget->frameManager(), SIGNAL(signalCanceled(QString)), this, SIGNAL(canceled(QString)));
     connect(m_mainWidget->frameManager(), SIGNAL(signalStarted()), this, SLOT(slotStarted()));
     connect(m_mainWidget->frameManager(), SIGNAL(signalCompleted()), this, SIGNAL(completed()));
 

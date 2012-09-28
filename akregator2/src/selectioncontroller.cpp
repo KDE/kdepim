@@ -210,7 +210,7 @@ void Akregator2::SelectionController::init() {
     filterProxy2->setSourceModel( selectionProxy );
 
     m_articleLister->setItemModel( filterProxy2 );
-    connect( m_articleLister->articleSelectionModel(), SIGNAL(selectionChanged(QItemSelection, QItemSelection)),
+    connect( m_articleLister->articleSelectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
                 this, SLOT(itemSelectionChanged()) );
     connect( m_articleLister->itemView(), SIGNAL(doubleClicked(QModelIndex)),
              this, SLOT(itemIndexDoubleClicked(QModelIndex))  );

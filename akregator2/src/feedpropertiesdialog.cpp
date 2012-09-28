@@ -39,10 +39,10 @@ FeedPropertiesDialog::FeedPropertiesDialog( QWidget *parent )
     QWidget *widget = new QWidget( this );
     d->m_ui.setupUi( widget );
 
-    connect( d->m_ui.updateCheck, SIGNAL( toggled( bool ) ),
-             d->m_ui.updateLabel, SLOT( setEnabled( bool ) ) );
-    connect( d->m_ui.updateCheck, SIGNAL( toggled( bool ) ),
-             d->m_ui.updateInput, SLOT( setEnabled( bool ) ) );
+    connect( d->m_ui.updateCheck, SIGNAL(toggled(bool)),
+             d->m_ui.updateLabel, SLOT(setEnabled(bool)) );
+    connect( d->m_ui.updateCheck, SIGNAL(toggled(bool)),
+             d->m_ui.updateInput, SLOT(setEnabled(bool)) );
 
     setMainWidget( widget );
     setCaption( i18n( "Feed Properties" ) );

@@ -89,8 +89,8 @@ MainWindow::MainWindow( QWidget* parent, Qt::WindowFlags f )
     autoReadProperties();
 
 #ifdef WITH_LIBKDEPIM
-    connect( KPIM::BroadcastStatus::instance(), SIGNAL( statusMsg( const QString& ) ),
-             this, SLOT( slotSetStatusBarText(const QString&) ) );
+    connect( KPIM::BroadcastStatus::instance(), SIGNAL(statusMsg(QString)),
+             this, SLOT(slotSetStatusBarText(QString)) );
 #endif
 }
 

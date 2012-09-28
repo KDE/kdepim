@@ -40,8 +40,8 @@ SettingsAdvanced::SettingsAdvanced(QWidget* parent, const char* name) : QWidget(
     setObjectName(name);
     setupUi(this);
 
-    connect( kcfg_UseMarkReadDelay, SIGNAL( toggled( bool ) ),
-             kcfg_MarkReadDelay, SLOT( setEnabled( bool ) ) );
+    connect( kcfg_UseMarkReadDelay, SIGNAL(toggled(bool)),
+             kcfg_MarkReadDelay, SLOT(setEnabled(bool)) );
 }
 
 #include "settings_advanced.moc"

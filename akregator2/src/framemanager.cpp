@@ -62,23 +62,23 @@ void FrameManager::slotAddFrame(Frame* frame)
 {
     m_frames.insert(frame->id(), frame);
 
-    connect(frame, SIGNAL(signalCanceled(Akregator2::Frame*, const QString&)), this, SLOT(slotSetCanceled(Akregator2::Frame*, const QString&)) );
+    connect(frame, SIGNAL(signalCanceled(Akregator2::Frame*,QString)), this, SLOT(slotSetCanceled(Akregator2::Frame*,QString)) );
     connect(frame, SIGNAL(signalStarted(Akregator2::Frame*)), this, SLOT(slotSetStarted(Akregator2::Frame*)) );
-    connect(frame, SIGNAL(signalCaptionChanged(Akregator2::Frame*, const QString&)), this, SLOT(slotSetCaption(Akregator2::Frame*, const QString&)));
-    connect(frame, SIGNAL(signalLoadingProgress(Akregator2::Frame*, int)), this, SLOT(slotSetProgress(Akregator2::Frame*, int)));
+    connect(frame, SIGNAL(signalCaptionChanged(Akregator2::Frame*,QString)), this, SLOT(slotSetCaption(Akregator2::Frame*,QString)));
+    connect(frame, SIGNAL(signalLoadingProgress(Akregator2::Frame*,int)), this, SLOT(slotSetProgress(Akregator2::Frame*,int)));
     connect(frame, SIGNAL(signalCompleted(Akregator2::Frame*)), this, SLOT(slotSetCompleted(Akregator2::Frame*)));
-    connect(frame, SIGNAL(signalTitleChanged(Akregator2::Frame*, const QString&)), this, SLOT(slotSetTitle(Akregator2::Frame*, const QString&)) );
-    connect(frame, SIGNAL(signalStatusText(Akregator2::Frame*, const QString&)), this, SLOT(slotSetStatusText(Akregator2::Frame*, const QString&))
+    connect(frame, SIGNAL(signalTitleChanged(Akregator2::Frame*,QString)), this, SLOT(slotSetTitle(Akregator2::Frame*,QString)) );
+    connect(frame, SIGNAL(signalStatusText(Akregator2::Frame*,QString)), this, SLOT(slotSetStatusText(Akregator2::Frame*,QString))
 );
 
     connect(frame, SIGNAL(signalOpenUrlRequest(Akregator2::OpenUrlRequest&)), this, SLOT(slotOpenUrlRequest(Akregator2::OpenUrlRequest&)) );
 
-    connect(frame, SIGNAL( signalCanGoBackToggled(Akregator2::Frame*, bool)), this, SLOT(slotCanGoBackToggled(Akregator2::Frame*, bool)) );
-    connect(frame, SIGNAL( signalCanGoForwardToggled(Akregator2::Frame*, bool)), this, SLOT(slotCanGoForwardToggled(Akregator2::Frame*, bool)) );
-    connect(frame, SIGNAL( signalIsReloadableToggled(Akregator2::Frame*, bool)), this, SLOT(slotIsReloadableToggled(Akregator2::Frame*, bool))
+    connect(frame, SIGNAL(signalCanGoBackToggled(Akregator2::Frame*,bool)), this, SLOT(slotCanGoBackToggled(Akregator2::Frame*,bool)) );
+    connect(frame, SIGNAL(signalCanGoForwardToggled(Akregator2::Frame*,bool)), this, SLOT(slotCanGoForwardToggled(Akregator2::Frame*,bool)) );
+    connect(frame, SIGNAL(signalIsReloadableToggled(Akregator2::Frame*,bool)), this, SLOT(slotIsReloadableToggled(Akregator2::Frame*,bool))
 );
 
-    connect(frame, SIGNAL( signalIsLoadingToggled(Akregator2::Frame*, bool)), this, SLOT(slotIsLoadingToggled(Akregator2::Frame*, bool)) );
+    connect(frame, SIGNAL(signalIsLoadingToggled(Akregator2::Frame*,bool)), this, SLOT(slotIsLoadingToggled(Akregator2::Frame*,bool)) );
 
     emit signalFrameAdded(frame);
 
