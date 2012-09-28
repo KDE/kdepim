@@ -98,6 +98,11 @@ MailFilterAgent::MailFilterAgent( const QString &id )
   }
 }
 
+MailFilterAgent::~MailFilterAgent()
+{
+  delete m_filterLogDialog;	
+}
+
 void MailFilterAgent::initializeCollections()
 {
   m_filterManager->readConfig();

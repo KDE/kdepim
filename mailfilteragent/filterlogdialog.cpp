@@ -190,6 +190,21 @@ void FilterLogDialog::readConfig()
     FilterLog::instance()->setContentTypeEnabled( FilterLog::AppliedAction,isLogAppliedAction ); 
   if ( FilterLog::instance()->maxLogSize() != maxLogSize )
     FilterLog::instance()->setMaxLogSize( maxLogSize );  
+
+  KConfigGroup geometryGroup( config, "Geometry" );
+  const QSize size = geometryGroup.readEntry( "filterLogSize", QSize() );
+  if ( size != QSize() ) {
+    resize( size );
+  } else {
+    adjustSize();
+  }
+}
+
+FilterLogDialog::~FilterLogDialog()
+{
+  KConfigGroup myGroup( KGlobal::config(), "Geometry" );
+  myGroup.writeEntry( "filterLogSize", size() );
+  myGroup.sync();
 }
 
 void FilterLogDialog::writeConfig()
