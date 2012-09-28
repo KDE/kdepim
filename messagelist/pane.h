@@ -377,6 +377,8 @@ public:
 
   void updateTagComboBox();
 
+  bool searchEditHasFocus() const;
+
 public slots:
   /**
    * Selects all the items in the current folder.

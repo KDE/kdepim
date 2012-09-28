@@ -1178,4 +1178,12 @@ void Widget::setCurrentFolder( const Akonadi::Collection &collection )
   d->mCurrentFolderUrl = collection.url( Akonadi::Collection::UrlShort );
 }
 
+bool Widget::searchEditHasFocus() const
+{
+  if(d->mSearchEdit) {
+    return d->mSearchEdit->hasFocus();
+  }
+  return false;
+}
+
 #include "widgetbase.moc"
