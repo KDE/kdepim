@@ -71,6 +71,11 @@ SetUpAkonadiCommand::SetUpAkonadiCommand( QObject* parent ) : d( new Private( th
     setShowErrorDialog( true );
 }
 
+SetUpAkonadiCommand::~SetUpAkonadiCommand()
+{
+    delete d;
+}
+
 void SetUpAkonadiCommand::doStart() {
     Akonadi::AttributeFactory::registerAttribute<KRss::FeedPropertiesCollectionAttribute>();
     emitResult();

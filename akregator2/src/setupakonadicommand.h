@@ -33,6 +33,7 @@ class SetUpAkonadiCommand : public Command {
     Q_OBJECT
 public:
     explicit SetUpAkonadiCommand( QObject* parent=0 );
+    ~SetUpAkonadiCommand();
 
     enum Error {
         SetupFailed=UserDefinedCommandError

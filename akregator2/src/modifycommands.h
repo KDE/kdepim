@@ -39,6 +39,7 @@ class MarkAsReadCommand : public Command {
     Q_OBJECT
 public:
     explicit MarkAsReadCommand( QObject* parent=0 );
+    ~MarkAsReadCommand();
 
     void setCollections( const Akonadi::Collection::List& c );
     void setSession( Akonadi::Session* s );

@@ -62,6 +62,11 @@ MarkAsReadCommand::MarkAsReadCommand( QObject* parent )
     setUserVisible( false );
 }
 
+MarkAsReadCommand::~MarkAsReadCommand()
+{
+    delete d;
+}
+
 void MarkAsReadCommand::setCollections( const Collection::List& c ) {
     d->collections = c;
 }
