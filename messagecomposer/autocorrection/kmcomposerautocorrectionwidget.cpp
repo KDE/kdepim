@@ -378,12 +378,13 @@ void KMComposerAutoCorrectionWidget::addAbbreviationEntry()
 
 void KMComposerAutoCorrectionWidget::removeAbbreviationEntry()
 {
-  const int currentRow = ui->abbreviationList->currentRow();
-  QListWidgetItem *item = ui->abbreviationList->takeItem(currentRow);
-  if(!item)
+  QList<QListWidgetItem *> listItem = ui->abbreviationList->selectedItems ();
+  if(listItem.isEmpty())
     return;
-  m_upperCaseExceptions.remove(item->text());
-  delete item;
+  Q_FOREACH( QListWidgetItem *item, listItem ) {
+      m_upperCaseExceptions.remove(item->text());
+      delete item;
+  }
   slotEnableDisableAbreviationList();
   Q_EMIT changed();
 }
@@ -405,12 +406,13 @@ void KMComposerAutoCorrectionWidget::addTwoUpperLetterEntry()
 
 void KMComposerAutoCorrectionWidget::removeTwoUpperLetterEntry()
 {
-  const int currentRow = ui->twoUpperLetterList->currentRow();
-  QListWidgetItem *item = ui->twoUpperLetterList->takeItem(currentRow);
-  if(!item)
+  QList<QListWidgetItem *> listItem = ui->twoUpperLetterList->selectedItems ();
+  if(listItem.isEmpty())
     return;
-  m_twoUpperLetterExceptions.remove(item->text());
-  delete item;
+  Q_FOREACH( QListWidgetItem *item, listItem ) {
+      m_twoUpperLetterExceptions.remove(item->text());
+      delete item;
+  }
   slotEnableDisableTwoUpperEntry();
   Q_EMIT changed();
 }
