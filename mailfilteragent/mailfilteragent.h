@@ -37,7 +37,8 @@ class MailFilterAgent : public Akonadi::AgentBase, public Akonadi::AgentBase::Ob
   Q_OBJECT
 
   public:
-    MailFilterAgent( const QString &id );
+    explicit MailFilterAgent( const QString &id );
+    ~MailFilterAgent();
 
     void itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection );
 

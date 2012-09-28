@@ -132,6 +132,8 @@ public:
 
   void saveCurrentSelection();
 
+  bool searchEditHasFocus() const;
+
 public slots:
 
   /**

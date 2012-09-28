@@ -677,7 +677,6 @@ MessageList::Core::MessageItemSetReference Widget::selectionAsPersistentSet( boo
 
 MessageList::Core::MessageItemSetReference Widget::currentThreadAsPersistentSet() const
 {
-  QList<Item> lstMiPtr;
   QList<Core::MessageItem *> lstMi = view()->currentThreadAsMessageItemList();
   if ( lstMi.isEmpty() ) {
     return -1;
