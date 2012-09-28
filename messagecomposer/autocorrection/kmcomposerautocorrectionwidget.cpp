@@ -420,15 +420,15 @@ void KMComposerAutoCorrectionWidget::removeTwoUpperLetterEntry()
 
 void KMComposerAutoCorrectionWidget::slotEnableDisableAbreviationList()
 {
-    const bool enable = (ui->abbreviationList->currentItem() != 0);
-    ui->add1->setEnabled(enable && !ui->abbreviation->text().isEmpty());
+    const bool enable = (!ui->abbreviationList->selectedItems ().isEmpty());
+    ui->add1->setEnabled(!ui->abbreviation->text().isEmpty());
     ui->remove1->setEnabled(enable);
 }
 
 void KMComposerAutoCorrectionWidget::slotEnableDisableTwoUpperEntry()
 {
-    const bool enable = (ui->twoUpperLetterList->currentItem() != 0);
-    ui->add2->setEnabled(enable && !ui->twoUpperLetter->text().isEmpty());
+    const bool enable = (!ui->twoUpperLetterList->selectedItems ().isEmpty());
+    ui->add2->setEnabled( !ui->twoUpperLetter->text().isEmpty());
     ui->remove2->setEnabled(enable);
 }
 
