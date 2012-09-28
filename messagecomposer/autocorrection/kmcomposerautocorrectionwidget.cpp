@@ -186,26 +186,26 @@ void KMComposerAutoCorrectionWidget::enableDoubleQuotes(bool state)
 
 void KMComposerAutoCorrectionWidget::selectSingleQuoteCharOpen()
 {
-  SelectSpecialChar *dlg = new SelectSpecialChar(this);
-  dlg->setCurrentChar(m_singleQuotes.begin);
-  if (dlg->exec()) {
-    m_singleQuotes.begin = dlg->currentChar();
+  SelectSpecialChar dlg(this);
+  dlg.setCurrentChar(m_singleQuotes.begin);
+  dlg.showSelectButton(false);
+  if (dlg.exec()) {
+    m_singleQuotes.begin = dlg.currentChar();
     ui->singleQuote1->setText(m_singleQuotes.begin);
     Q_EMIT changed();
   }
-  delete dlg;
 }
 
 void KMComposerAutoCorrectionWidget::selectSingleQuoteCharClose()
 {
-  SelectSpecialChar *dlg = new SelectSpecialChar(this);
-  dlg->setCurrentChar(m_singleQuotes.end);
-  if (dlg->exec()) {
-    m_singleQuotes.end = dlg->currentChar();
+  SelectSpecialChar dlg(this);
+  dlg.showSelectButton(false);
+  dlg.setCurrentChar(m_singleQuotes.end);
+  if (dlg.exec()) {
+    m_singleQuotes.end = dlg.currentChar();
     ui->singleQuote2->setText(m_singleQuotes.end);
     Q_EMIT changed();
   }
-  delete dlg;
 }
 
 void KMComposerAutoCorrectionWidget::setDefaultSingleQuotes()
@@ -217,26 +217,26 @@ void KMComposerAutoCorrectionWidget::setDefaultSingleQuotes()
 
 void KMComposerAutoCorrectionWidget::selectDoubleQuoteCharOpen()
 {
-  SelectSpecialChar *dlg = new SelectSpecialChar(this);
-  dlg->setCurrentChar(m_doubleQuotes.begin);
-  if (dlg->exec()) {
-    m_doubleQuotes.begin = dlg->currentChar();
+  SelectSpecialChar dlg(this);
+  dlg.showSelectButton(false);
+  dlg.setCurrentChar(m_doubleQuotes.begin);
+  if (dlg.exec()) {
+    m_doubleQuotes.begin = dlg.currentChar();
     ui->doubleQuote1->setText(m_doubleQuotes.begin);
     Q_EMIT changed();
   }
-  delete dlg;
 }
 
 void KMComposerAutoCorrectionWidget::selectDoubleQuoteCharClose()
 {
-  SelectSpecialChar *dlg = new SelectSpecialChar(this);
-  dlg->setCurrentChar(m_doubleQuotes.end);
-  if (dlg->exec()) {
-    m_doubleQuotes.end = dlg->currentChar();
+  SelectSpecialChar dlg(this);
+  dlg.showSelectButton(false);
+  dlg.setCurrentChar(m_doubleQuotes.end);
+  if (dlg.exec()) {
+    m_doubleQuotes.end = dlg.currentChar();
     ui->doubleQuote2->setText(m_doubleQuotes.end);
     Q_EMIT changed();
   }
-  delete dlg;
 }
 
 void KMComposerAutoCorrectionWidget::setDefaultDoubleQuotes()
@@ -347,7 +347,6 @@ void KMComposerAutoCorrectionWidget::setFindReplaceText(QTreeWidgetItem*item ,in
   Q_UNUSED(column);
   ui->find->setText(item->text(0));
   ui->replace->setText(item->text(1));
-  Q_EMIT changed();
 }
 
 
@@ -379,12 +378,13 @@ void KMComposerAutoCorrectionWidget::addAbbreviationEntry()
 
 void KMComposerAutoCorrectionWidget::removeAbbreviationEntry()
 {
-  const int currentRow = ui->abbreviationList->currentRow();
-  QListWidgetItem *item = ui->abbreviationList->takeItem(currentRow);
-  if(!item)
+  QList<QListWidgetItem *> listItem = ui->abbreviationList->selectedItems ();
+  if(listItem.isEmpty())
     return;
-  m_upperCaseExceptions.remove(item->text());
-  delete item;
+  Q_FOREACH( QListWidgetItem *item, listItem ) {
+      m_upperCaseExceptions.remove(item->text());
+      delete item;
+  }
   slotEnableDisableAbreviationList();
   Q_EMIT changed();
 }
@@ -406,12 +406,13 @@ void KMComposerAutoCorrectionWidget::addTwoUpperLetterEntry()
 
 void KMComposerAutoCorrectionWidget::removeTwoUpperLetterEntry()
 {
-  const int currentRow = ui->twoUpperLetterList->currentRow();
-  QListWidgetItem *item = ui->twoUpperLetterList->takeItem(currentRow);
-  if(!item)
+  QList<QListWidgetItem *> listItem = ui->twoUpperLetterList->selectedItems ();
+  if(listItem.isEmpty())
     return;
-  m_twoUpperLetterExceptions.remove(item->text());
-  delete item;
+  Q_FOREACH( QListWidgetItem *item, listItem ) {
+      m_twoUpperLetterExceptions.remove(item->text());
+      delete item;
+  }
   slotEnableDisableTwoUpperEntry();
   Q_EMIT changed();
 }

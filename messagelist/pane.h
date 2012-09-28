@@ -381,6 +381,7 @@ public:
 
   void readConfig();
 
+  bool searchEditHasFocus() const;
 
 public slots:
   /**

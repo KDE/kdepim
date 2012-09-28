@@ -999,4 +999,13 @@ void Pane::readConfig()
 }
 
 
+bool Pane::searchEditHasFocus() const
+{
+  Widget *w = static_cast<Widget*>( currentWidget() );
+  if ( w )
+    return w->searchEditHasFocus();
+  return false;
+}
+
+
 #include "pane.moc"

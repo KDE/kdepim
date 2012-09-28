@@ -39,6 +39,13 @@ SelectSpecialChar::~SelectSpecialChar()
 {
 }
 
+void SelectSpecialChar::showSelectButton(bool show)
+{
+  if(show)
+    setButtons( Ok|Cancel|User1 );
+  else
+    setButtons( Ok|Cancel );
+}
 
 void SelectSpecialChar::slotInsertChar()
 {

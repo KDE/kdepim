@@ -255,10 +255,17 @@ bool FilterManager::Private::isMatching( const Akonadi::Item &item, const MailCo
   return result;
 }
 
-bool FilterManager::Private::beginFiltering( const Akonadi::Item &/*item*/ ) const
+bool FilterManager::Private::beginFiltering( const Akonadi::Item &item ) const
 {
   if ( FilterLog::instance()->isLogging() ) {
     FilterLog::instance()->addSeparator();
+    KMime::Message::Ptr msg = item.payload<KMime::Message::Ptr>();
+    const QString subject = msg->subject()->asUnicodeString();
+    const QString from = msg->from()->asUnicodeString();
+    const QString date = msg->date()->asUnicodeString();
+    const QString logText( i18n( "<b>Begin filtering on message \"%1\" from \"%2\" at \"%3\" :</b>",
+                       subject, from, date ) );
+    FilterLog::instance()->add( logText, FilterLog::PatternDescription );
   }
 
   return true;

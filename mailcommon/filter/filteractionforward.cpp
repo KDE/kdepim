@@ -215,7 +215,7 @@ bool FilterActionForward::argsFromStringInteractive( const QString &argsStr, con
         currentTemplateList << templateName;
       }
     }
-    FilterActionMissingTemplateDialog *dlg = new FilterActionMissingTemplateDialog( currentTemplateList, filterName );
+    QPointer<FilterActionMissingTemplateDialog> dlg = new FilterActionMissingTemplateDialog( currentTemplateList, filterName );
     if ( dlg->exec() ) {
       mTemplate = dlg->selectedTemplate();
       needUpdate = true;
