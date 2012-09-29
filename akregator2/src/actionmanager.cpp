@@ -54,3 +54,5 @@ ActionManager::~ActionManager()
 }
 
 } // namespace Akregator2
+
+#include "actionmanager.moc"

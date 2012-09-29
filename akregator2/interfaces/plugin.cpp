@@ -69,3 +69,5 @@ void Plugin::insertGuiClients( KXMLGUIClient* ) {}
 void Plugin::removeGuiClients( KXMLGUIClient* ) {}
 
 }
+
+#include "plugin.moc"
