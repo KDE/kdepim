@@ -30,9 +30,11 @@
 #include <Akonadi/Contact/ContactEditorDialog>
 
 #include <KABC/Addressee>
+
 #include <KLocale>
 #include <KMessageBox>
 
+#include <QPointer>
 
 using namespace KPIM;
 
@@ -115,21 +117,26 @@ class AddEmailAddressJob::Private
       else {
         // ask user in which address book the new contact shall be stored
         const QStringList mimeTypes( KABC::Addressee::mimeType() );
-        Akonadi::CollectionDialog dlg;
-        dlg.setMimeTypeFilter( mimeTypes );
-        dlg.setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
-        dlg.setCaption( i18nc( "@title:window", "Select Address Book" ) );
-        dlg.setDescription(
+        QPointer<Akonadi::CollectionDialog> dlg = new Akonadi::CollectionDialog;
+        dlg->setMimeTypeFilter( mimeTypes );
+        dlg->setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
+        dlg->setCaption( i18nc( "@title:window", "Select Address Book" ) );
+        dlg->setDescription(
           i18nc( "@info",
                  "Select the address book where the contact will be saved:" ) );
 
-        if ( !dlg.exec() ) {
+        bool gotIt = true;
+        if ( !dlg->exec() ) {
           q->setError( UserDefinedError );
           q->emitResult();
+          gotIt = false;
+        } else {
+          addressBook = dlg->selectedCollection();
+        }
+        delete dlg;
+        if ( !gotIt ) {
           return;
         }
-
-        addressBook = dlg.selectedCollection();
       }
 
       if ( !addressBook.isValid() ) {
@@ -170,10 +177,19 @@ class AddEmailAddressJob::Private
                "<para>Do you want to edit this new contact now?</para>",
                mCompleteAddress );
 
-      if(KMessageBox::questionYesNo(mParentWidget, text, QString(), KStandardGuiItem::yes(),KStandardGuiItem::no(),QLatin1String("addedtokabc")) == KMessageBox::Yes) {
-        Akonadi::ContactEditorDialog dlg( Akonadi::ContactEditorDialog::EditMode, mParentWidget );
-        dlg.setContact(mItem);
-        dlg.exec();
+      if ( KMessageBox::questionYesNo(
+             mParentWidget,
+             text,
+             QString(),
+             KStandardGuiItem::yes(),
+             KStandardGuiItem::no(),
+             QLatin1String( "addedtokabc" ) ) == KMessageBox::Yes ) {
+        QPointer<Akonadi::ContactEditorDialog> dlg =
+          new Akonadi::ContactEditorDialog( Akonadi::ContactEditorDialog::EditMode,
+                                            mParentWidget );
+        dlg->setContact( mItem );
+        dlg->exec();
+        delete dlg;
       }
       q->emitResult();
     }
