@@ -23,7 +23,7 @@
 */
 
 #include "openurlrequest.h"
-
+#include "akregator2config.h"
 
 namespace Akregator2 {
 
@@ -84,6 +84,14 @@ void OpenUrlRequest::setBrowserArgs(const KParts::BrowserArguments& args)
 
 OpenUrlRequest::Options OpenUrlRequest::options() const
 {
+    if (m_options == None && m_browserArgs.frameName == "_blank")
+    {
+        if (Settings::newWindowInTab())
+            return (NewTab);
+        else
+            return (ExternalBrowser);
+    }
+
     return m_options;
 }
 
