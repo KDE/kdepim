@@ -20,6 +20,7 @@
 #include "messagecomposersettings.h"
 #include <KLocale>
 #include <KGlobal>
+#include <KColorScheme>
 #include <KCalendarSystem>
 #include <KStandardDirs>
 #include <QTextBlock>
@@ -219,9 +220,12 @@ bool KMComposerAutoCorrection::autoFormatURLs()
     mCursor.setPosition(startPos + trimmed.length(), QTextCursor::KeepAnchor);
 
     QTextCharFormat format;
-    format.setAnchor(true);
     format.setAnchorHref(link);
-    format.setFontItalic(true); // TODO: formatting
+    format.setFontItalic(true);
+    format.setAnchor(true);
+    format.setUnderlineStyle(QTextCharFormat::SingleUnderline);
+    format.setUnderlineColor(KColorScheme(QPalette::Active, KColorScheme::View).foreground(KColorScheme::LinkText).color());
+    format.setForeground(KColorScheme(QPalette::Active, KColorScheme::View).foreground(KColorScheme::LinkText).color());
     mCursor.mergeCharFormat(format);
 
     mWord = mCursor.selectedText();

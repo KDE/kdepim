@@ -140,6 +140,7 @@ void KMComposerAutoCorrectionWidget::writeConfig()
 {
   if(!mAutoCorrection)
     return;
+  mAutoCorrection->setAutoFormatUrl(ui->autoFormatUrl->isChecked());
   mAutoCorrection->setEnabledAutoCorrection(ui->enabledAutocorrection->isChecked());
   mAutoCorrection->setUppercaseFirstCharOfSentence(ui->upperCase->isChecked());
   mAutoCorrection->setFixTwoUppercaseChars(ui->upperUpper->isChecked());
