@@ -265,8 +265,7 @@ void KMeditor::keyPressEvent ( QKeyEvent *e )
   } else {
     if(e->key() == Qt::Key_Space || e->key() == Qt::Key_Enter) {
       if(d->mAutoCorrection) {
-          //TODO verify
-        d->mAutoCorrection->autocorrect(*document(),textCursor().position());
+        d->mAutoCorrection->autocorrect((textMode() == KRichTextEdit::Rich), *document(),textCursor().position());
       }
     }
     TextEdit::keyPressEvent( e );

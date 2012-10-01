@@ -68,14 +68,10 @@ void ComposerLineEdit::keyPressEvent(QKeyEvent *e)
     emit focusDown();
     AddresseeLineEdit::keyPressEvent(e);
     return;
-  }
-  if (e->key() == Qt::Key_Up)
-  {
+  } else if (e->key() == Qt::Key_Up) {
     emit focusUp();
     return;
-  }
-  if (e->key() == Qt::Key_Down)
-  {
+  } else if (e->key() == Qt::Key_Down) {
     emit focusDown();
     return;
   }

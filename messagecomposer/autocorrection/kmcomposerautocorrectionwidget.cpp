@@ -38,6 +38,8 @@ KMComposerAutoCorrectionWidget::KMComposerAutoCorrectionWidget(QWidget *parent) 
   ui->add1->setEnabled(false);
   ui->add2->setEnabled(false);
 
+  connect(ui->autoChangeFormat,SIGNAL(clicked()),SIGNAL(changed()));
+  connect(ui->autoFormatUrl,SIGNAL(clicked()),SIGNAL(changed()));
   connect(ui->upperCase,SIGNAL(clicked()),SIGNAL(changed()));
   connect(ui->upperUpper,SIGNAL(clicked()),SIGNAL(changed()));
   connect(ui->ignoreDoubleSpace,SIGNAL(clicked()),SIGNAL(changed()));
@@ -88,6 +90,8 @@ void KMComposerAutoCorrectionWidget::loadConfig()
     if(!mAutoCorrection)
       return;
 
+    ui->autoChangeFormat->setChecked(mAutoCorrection->isAutoBoldUnderline());
+    ui->autoFormatUrl->setChecked(mAutoCorrection->isAutoFormatUrl());
     ui->enabledAutocorrection->setChecked(mAutoCorrection->isEnabledAutoCorrection());
     ui->upperCase->setChecked(mAutoCorrection->isUppercaseFirstCharOfSentence());
     ui->upperUpper->setChecked(mAutoCorrection->isFixTwoUppercaseChars());
@@ -138,6 +142,8 @@ void KMComposerAutoCorrectionWidget::writeConfig()
 {
   if(!mAutoCorrection)
     return;
+  mAutoCorrection->setAutoBoldUnderline(ui->autoChangeFormat->isChecked());
+  mAutoCorrection->setAutoFormatUrl(ui->autoFormatUrl->isChecked());
   mAutoCorrection->setEnabledAutoCorrection(ui->enabledAutocorrection->isChecked());
   mAutoCorrection->setUppercaseFirstCharOfSentence(ui->upperCase->isChecked());
   mAutoCorrection->setFixTwoUppercaseChars(ui->upperUpper->isChecked());
@@ -161,6 +167,8 @@ void KMComposerAutoCorrectionWidget::writeConfig()
 
 void KMComposerAutoCorrectionWidget::resetToDefault()
 {
+  ui->autoChangeFormat->setChecked(false);
+  ui->autoFormatUrl->setChecked(false);
   ui->upperCase->setChecked(false);
   ui->upperUpper->setChecked(false);
   ui->ignoreDoubleSpace->setChecked(false);
@@ -288,25 +296,28 @@ void KMComposerAutoCorrectionWidget::addAutocorrectEntry()
 
 void KMComposerAutoCorrectionWidget::removeAutocorrectEntry()
 {
-  QTreeWidgetItem *item = ui->treeWidget->currentItem();
-  if ( !item ) {
-    return;
-  }
-  QTreeWidgetItem *below = ui->treeWidget->itemBelow( item );
+  QList<QTreeWidgetItem *> 	listItems = ui->treeWidget->selectedItems ();
+  if(listItems.isEmpty())
+      return;
+  Q_FOREACH(QTreeWidgetItem *item, listItems) {
+      QTreeWidgetItem *below = ui->treeWidget->itemBelow( item );
 
-  if ( below ) {
-    kDebug() << "below";
-    ui->treeWidget->setCurrentItem( below );
-    delete item;
-    item = 0;
-  } else if ( ui->treeWidget->topLevelItemCount() > 0 ) {
-    delete item;
-    item = 0;
-    ui->treeWidget->setCurrentItem(ui->treeWidget->topLevelItem( ui->treeWidget->topLevelItemCount() - 1 )
-    );
+      QString findStr;
+      if ( below ) {
+        kDebug() << "below";
+        findStr = item->text(0);
+        delete item;
+        item = 0;
+      } else if ( ui->treeWidget->topLevelItemCount() > 0 ) {
+        findStr = item->text(0);
+        delete item;
+        item = 0;
+      }
+      if(!findStr.isEmpty())
+        m_autocorrectEntries.remove(findStr);
   }
   ui->treeWidget->setSortingEnabled(false);
-  m_autocorrectEntries.remove(ui->find->text());
+
   Q_EMIT changed();
 }
 
