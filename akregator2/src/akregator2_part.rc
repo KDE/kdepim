@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
-<kpartgui name="akregator2_part" version="418">
+<kpartgui name="akregator2_part" version="419">
   <MenuBar>
     <Menu name="file">
       <Action name="file_import"/>
@@ -23,6 +23,9 @@
       <Action name="normal_view"/>
       <Action name="widescreen_view"/>
       <Action name="combined_view"/>
+      <Separator/>
+      <Action name="inc_font_sizes"/>
+      <Action name="dec_font_sizes"/>
     </Menu>
 
     <Menu name="go">

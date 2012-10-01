@@ -80,6 +80,8 @@ class BrowserFrame : public Frame, public virtual FaviconListener
         void slotPaletteOrFontChanged();
         void slotOpenLinkInBrowser();
         void slotOpenLinkInNewTab();
+        void slotZoomIn(int);
+        void slotZoomOut(int);
 
     private slots:
 

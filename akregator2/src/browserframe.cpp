@@ -47,6 +47,7 @@
 #include <kxmlguiclient.h>
 #include <kparts/browserextension.h>
 #include <kparts/part.h>
+#include <khtml_part.h>
 
 #include <cassert>
 
@@ -130,6 +131,48 @@ void BrowserFrame::slotOpenLinkInNewTab()
     req.setOptions( OpenUrlRequest::NewTab );
     emit signalOpenUrlRequest( req );
 }
+
+void BrowserFrame::slotZoomIn(int zoomid)
+{
+    if ( zoomid != id() )
+        return;
+
+    if ( !d->part )
+        return;
+
+    if ( KHTMLPart * const khtml_part = qobject_cast<KHTMLPart *>( d->part ) ) {
+        int zf = khtml_part->fontScaleFactor();
+        if (zf < 100) {
+            zf = zf - (zf % 20) + 20;
+            khtml_part->setFontScaleFactor(zf);
+        } else {
+            zf = zf - (zf % 50) + 50;
+            khtml_part->setFontScaleFactor(zf < 300 ? zf : 300);
+        }
+    }
+}
+
+void BrowserFrame::slotZoomOut(int zoomid)
+{
+    if ( zoomid != id() )
+        return;
+
+    if ( !d->part )
+        return;
+
+    if (  KHTMLPart * const khtml_part = qobject_cast<KHTMLPart *>( d->part ) ) {
+        int zf = khtml_part->fontScaleFactor();
+        if (zf <= 100) {
+            zf = zf - (zf % 20) - 20;
+            khtml_part->setFontScaleFactor(zf > 20 ? zf : 20);
+        } else {
+            zf = zf - (zf % 50) - 50;
+            khtml_part->setFontScaleFactor(zf);
+        }
+    }
+}
+
+
 
 namespace {
 

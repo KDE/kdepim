@@ -139,18 +139,6 @@ ArticleViewer::ArticleViewer(QWidget *parent)
     action = KStandardAction::copy(this, SLOT(slotCopy()), m_part->actionCollection());
     m_part->actionCollection()->addAction("viewer_copy", action);
 
-    action = m_part->actionCollection()->addAction("incFontSizes");
-    action->setIcon(KIcon("zoom-in"));
-    action->setText(i18n("&Increase Font Sizes"));
-    connect(action, SIGNAL(triggered(bool)), SLOT(slotZoomIn()));
-    action->setShortcut( QKeySequence( Qt::CTRL+Qt::Key_Plus ) );
-
-    action = m_part->actionCollection()->addAction("decFontSizes");
-    action->setIcon(KIcon("zoom-out"));
-    action->setText(i18n("&Decrease Font Sizes"));
-    connect(action, SIGNAL(triggered(bool)), SLOT(slotZoomOut()));
-    action->setShortcut( QKeySequence(  Qt::CTRL + Qt::Key_Minus ) );
-
     action = m_part->actionCollection()->addAction("copylinkaddress");
     action->setText(i18n("Copy &Link Address"));
     connect(action, SIGNAL(triggered(bool)), SLOT(slotCopyLinkAddress()));
@@ -370,8 +358,10 @@ void ArticleViewer::slotScrollDown()
     m_part->view()->scrollBy(0,10);
 }
 
-void ArticleViewer::slotZoomIn()
+void ArticleViewer::slotZoomIn(int id)
 {
+    if (id != 0)
+      return;	
     int zf = m_part->zoomFactor();
     if (zf < 100)
     {
@@ -385,8 +375,11 @@ void ArticleViewer::slotZoomIn()
     }
 }
 
-void ArticleViewer::slotZoomOut()
+void ArticleViewer::slotZoomOut(int id)
 {
+    if (id != 0)
+     return;
+
     int zf = m_part->zoomFactor();
     if (zf <= 100)
     {

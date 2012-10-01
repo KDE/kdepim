@@ -369,6 +369,8 @@ void ActionManagerImpl::initArticleViewer(ArticleViewer* articleViewer)
         return;
     else
         d->articleViewer = articleViewer;
+    connect(d->tabWidget, SIGNAL(signalZoomInFrame(int)), d->articleViewer, SLOT(slotZoomIn(int)));
+    connect(d->tabWidget, SIGNAL(signalZoomOutFrame(int)), d->articleViewer, SLOT(slotZoomOut(int)));
 }
 
 void ActionManagerImpl::initArticleListView(ArticleListView* articleList)
@@ -454,6 +456,19 @@ void ActionManagerImpl::initTabWidget(TabWidget* tabWidget)
     action->setText(i18n("&Close Tab"));
     connect(action, SIGNAL(triggered(bool)), d->tabWidget, SLOT(slotCloseTab()));
     action->setShortcuts(KStandardShortcut::close());
+
+    action = coll->addAction("inc_font_sizes");
+    action->setIcon(KIcon("format-font-size-more"));
+    action->setText(i18n("Enlarge Font"));
+    connect(action, SIGNAL(triggered(bool)), d->tabWidget, SLOT(slotFrameZoomIn()));
+    action->setShortcut( QKeySequence::ZoomIn );
+
+    action = coll->addAction("dec_font_sizes");
+    action->setIcon(KIcon("format-font-size-less"));
+    action->setText(i18n("Shrink Font"));
+    connect(action, SIGNAL(triggered(bool)), d->tabWidget, SLOT(slotFrameZoomOut()));
+    action->setShortcut( QKeySequence::ZoomOut );
+
 }
 
 void ActionManagerImpl::initFrameManager(FrameManager* frameManager)
