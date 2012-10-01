@@ -130,17 +130,23 @@ Part::Part( QWidget *parentWidget, QObject *parent, const QVariantList& )
     // notify the part that this is our internal widget
     setWidget(m_mainWidget);
 
-    TrayIcon* trayIcon = new TrayIcon( m_mainWidget->window() );
-    TrayIcon::setInstance(trayIcon);
-    m_actionManager->initTrayIcon(trayIcon);
-    connect( trayIcon, SIGNAL(quitSelected()),
-             kapp, SLOT(quit()) );
+    if ( Settings::showTrayIcon() && !TrayIcon::getInstance() )
+    {
+        TrayIcon* trayIcon = new TrayIcon( m_mainWidget->window() );
+        TrayIcon::setInstance(trayIcon);
+        m_actionManager->setTrayIcon(trayIcon);
 
-    connect( m_mainWidget, SIGNAL(signalUnreadCountChanged(int)),
-             trayIcon, SLOT(slotSetUnread(int)) );
+        if ( isTrayIconEnabled() )
+            trayIcon->setStatus( KStatusNotifierItem::Active );
 
-    if ( isTrayIconEnabled() )
-        trayIcon->show();
+        QWidget* const notificationParent = isTrayIconEnabled() ? m_mainWidget->window() : 0;
+        NotificationManager::self()->setWidget(notificationParent, componentData());
+
+        connect( m_mainWidget, SIGNAL(signalUnreadCountChanged(int)), trayIcon, SLOT(slotSetUnread(int)) );
+        connect( m_mainWidget, SIGNAL(signalArticlesSelected(QList<Akregator::Article>)),
+                this, SIGNAL(signalArticlesSelected(QList<Akregator::Article>)) );
+    }
+
 
     QWidget* const notificationParent = isTrayIconEnabled() ? m_mainWidget->window() : 0;
     NotificationManager::self()->setWidget(notificationParent, componentData());
@@ -204,6 +210,28 @@ void Part::slotSettingsChanged()
     fonts.append(Settings::standardFont());
     fonts.append("0");
     Settings::setFonts(fonts);
+    if ( Settings::showTrayIcon() && !TrayIcon::getInstance() )
+    {
+        TrayIcon* trayIcon = new TrayIcon( m_mainWidget->window() );
+        TrayIcon::setInstance(trayIcon);
+        m_actionManager->setTrayIcon(trayIcon);
+
+        if ( isTrayIconEnabled() )
+            trayIcon->setStatus( KStatusNotifierItem::Active );
+
+        connect( m_mainWidget, SIGNAL(signalUnreadCountChanged(int)), trayIcon, SLOT(slotSetUnread(int)) );
+        connect( m_mainWidget, SIGNAL(signalArticlesSelected(QList<Akregator::Article>)),
+                this, SIGNAL(signalArticlesSelected(QList<Akregator::Article>)) );
+
+        //PORTING m_mainWidget->slotSetTotalUnread();
+    }
+    if ( !Settings::showTrayIcon() )
+    {
+        TrayIcon::getInstance()->disconnect();
+        delete TrayIcon::getInstance();
+        TrayIcon::setInstance(0);
+        m_actionManager->setTrayIcon(0);
+    }
 
     if (Settings::minimumFontSize() > Settings::mediumFontSize())
         Settings::setMediumFontSize(Settings::minimumFontSize());

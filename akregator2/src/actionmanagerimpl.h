@@ -69,7 +69,7 @@ class ActionManagerImpl : public ActionManager
         virtual QWidget* container(const char* name);
 
         void initMainWidget(MainWidget* mainWidget);
-        void initTrayIcon(TrayIcon* trayIcon);
+	void setTrayIcon(TrayIcon* trayIcon);
         void initArticleViewer(ArticleViewer* articleViewer);
         void initArticleListView(ArticleListView* articleList);
         void initFeedListView( KRss::FeedListView* feedListView );

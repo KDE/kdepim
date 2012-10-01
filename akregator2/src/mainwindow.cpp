@@ -86,7 +86,6 @@ MainWindow::MainWindow( QWidget* parent, Qt::WindowFlags f )
     KStandardAction::showMenubar( menuBar(), SLOT(setVisible(bool)), actionCollection());
     setStandardToolBarMenuEnabled(true);
     createStandardStatusBarAction();
-    autoReadProperties();
 
 #ifdef WITH_LIBKDEPIM
     connect( KPIM::BroadcastStatus::instance(), SIGNAL(statusMsg(QString)),
@@ -194,7 +193,6 @@ bool MainWindow::queryExit()
 {
     if ( !kapp->sessionSaving() )
     {
-        autoSaveProperties();
         delete m_part; // delete that here instead of dtor to ensure nested khtmlparts are deleted before singleton objects like KHTMLPageCache
     }
     return KMainWindow::queryExit();
@@ -202,37 +200,14 @@ bool MainWindow::queryExit()
 
 void MainWindow::slotQuit()
 {
-    if (TrayIcon::getInstance())
-        TrayIcon::getInstance()->hide();
-    autoSaveProperties();
     kapp->quit();
 }
 
 bool MainWindow::queryClose()
 {
-    if (kapp->sessionSaving())
+    if ( kapp->sessionSaving() || !TrayIcon::getInstance() )
         return true;
-    else if (TrayIcon::getInstance() == 0 || !TrayIcon::getInstance()->isVisible() )
-    {
-        autoSaveProperties();
-        return true;
-    }
-
-    const QPixmap shot = TrayIcon::getInstance()->takeScreenshot();
-    KTemporaryFile tmp;
-    QString tmpFileName;
-    if ( tmp.open() ) {
-        tmpFileName = tmp.fileName();
-        shot.save( &tmp, "PNG" );
-        tmp.close();
-    }
-
-    const QString imgTag = !tmpFileName.isEmpty() ? QString::fromLatin1( "<img src=\"%1\"/>" ).arg( tmpFileName ) : QString();
-
-    QPointer<QObject> that( this );
-    KMessageBox::information(this, i18n( "<qt><p>Closing the main window will keep Akregator2 running in the system tray. Use 'Quit' from the 'File' menu to quit the application.</p><p><center>%1</center></p></qt>", imgTag ), i18n( "Docking in System Tray" ), "hideOnCloseInfo");
-    if ( that )
-        hide();
+    hide();
     return false;
 }
 
@@ -244,28 +219,6 @@ void MainWindow::slotClearStatusText()
 void MainWindow::slotSetStatusBarText( const QString & text )
 {
     m_statusLabel->setText(text);
-}
-
-void MainWindow::autoSaveProperties()
-{
-    KConfig config("autosaved", KConfig::SimpleConfig,
-        "appdata");
-    KConfigGroup configGroup(&config, "MainWindow");
-    configGroup.deleteGroup();
-
-    saveProperties(configGroup);
-}
-
-void MainWindow::autoReadProperties()
-{
-    if(kapp->isSessionRestored())
-        return;
-
-    KConfig config("autosaved", KConfig::SimpleConfig,
-        "appdata");
-    KConfigGroup configGroup(&config, "MainWindow");
-
-    readProperties(configGroup);
 }
 
 #include "mainwindow.moc"

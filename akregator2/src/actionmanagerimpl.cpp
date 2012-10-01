@@ -135,8 +135,13 @@ ActionManagerImpl::~ActionManagerImpl()
     d = 0;
 }
 
-void ActionManagerImpl::initTrayIcon(TrayIcon* trayIcon)
+void ActionManagerImpl::setTrayIcon(TrayIcon* trayIcon)
 {
+    if (trayIcon == 0)
+    {
+        d->trayIcon = 0;
+        return;
+    }
     if (d->trayIcon)
         return;
     else d->trayIcon = trayIcon;
@@ -148,6 +153,7 @@ void ActionManagerImpl::initTrayIcon(TrayIcon* trayIcon)
     if (actionCollection()->action("options_configure"))
         traypop->addAction(actionCollection()->action("options_configure"));
 }
+
 
 void ActionManagerImpl::initPart()
 {

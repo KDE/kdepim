@@ -125,6 +125,16 @@
    <whatsthis>Mark all feeds as read on startup.</whatsthis>
    <default>false</default>
   </entry>
+  <entry key="Use Interval Fetch" type="Bool" >
+   <label>Use interval fetching</label>
+   <whatsthis>Fetch all feeds every %1 minutes.</whatsthis>
+   <default>true</default>
+  </entry>
+  <entry key="Auto Fetch Interval" type="Int" >
+   <label>Interval for autofetching</label>
+   <whatsthis>Interval for autofetching in minutes.</whatsthis>
+   <default>30</default>
+  </entry>
   <entry key="Use Notifications" type="Bool" >
    <label>Use notifications</label>
    <whatsthis>Specifies if the balloon notifications are used or not.</whatsthis>
@@ -133,6 +143,11 @@
   <entry key="Show Tray Icon" type="Bool" >
    <label>Show tray icon</label>
    <whatsthis>Specifies if the tray icon is shown or not.</whatsthis>
+   <default>true</default>
+  </entry>
+  <entry key="Enable Tray Icon Unread Article Count" type="Bool" >
+   <label>Display an unread article count in the tray icon</label>
+   <whatsthis>Whether or not to show the number of unread articles in the tray icon. Disable this if you find the unread article count distracting.</whatsthis>
    <default>true</default>
   </entry>
  </group>
@@ -150,7 +165,7 @@
   <entry key="New Window In Tab" type="Bool">
     <label>Open links in new tab instead of in new window</label>
     <whatsthis>Open a link which would normally open in a new window (external browser) in a new tab instead</whatsthis>
-    <default>false</default>
+    <default>false</default>   
   </entry>
   <entry key="External Browser Use Kde Default" type="Bool" >
    <label>Use default KDE web browser</label>
