@@ -29,11 +29,11 @@ class QAction;
 class QObject;
 
 class KUrl;
-
+#include "akregator2_export.h"
 namespace Akregator2 {
 
-QAction* createOpenLinkInNewTabAction( const KUrl& url, QObject* receiver=0, const char* slot=0, QObject* parent = 0 );
-QAction* createOpenLinkInExternalBrowserAction( const KUrl& url, QObject* receiver=0, const char* slot=0, QObject* parent = 0 );
+AKREGATOR2_EXPORT QAction* createOpenLinkInNewTabAction( const KUrl& url, QObject* receiver=0, const char* slot=0, QObject* parent = 0 );
+AKREGATOR2_EXPORT QAction* createOpenLinkInExternalBrowserAction( const KUrl& url, QObject* receiver=0, const char* slot=0, QObject* parent = 0 );
     
 }
 

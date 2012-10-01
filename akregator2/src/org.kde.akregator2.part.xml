@@ -2,8 +2,9 @@
 "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
 <node>
   <interface name="org.kde.akregator2.part">
+    <method name="fetchAllFeeds" />
+    <method name="saveSettings" />
     <method name="openStandardFeedList"/>
     <method name="addFeed" />
-    <method name="saveSettings" />
   </interface>
 </node>

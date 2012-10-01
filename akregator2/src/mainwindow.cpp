@@ -87,10 +87,8 @@ MainWindow::MainWindow( QWidget* parent, Qt::WindowFlags f )
     setStandardToolBarMenuEnabled(true);
     createStandardStatusBarAction();
 
-#ifdef WITH_LIBKDEPIM
     connect( KPIM::BroadcastStatus::instance(), SIGNAL(statusMsg(QString)),
              this, SLOT(slotSetStatusBarText(QString)) );
-#endif
 }
 
 bool MainWindow::loadPart()
@@ -103,7 +101,7 @@ bool MainWindow::loadPart()
     KPluginLoader loader("akregator2part");
     KPluginFactory* const factory = loader.factory();
     if (!factory) {
-        KMessageBox::error(this, i18n("Could not find the Akregator2 part; please check your installation."));
+        KMessageBox::error(this, i18n("Could not find the Akregator2 part; please check your installation.\n%1", loader.errorString()));
         return false;
     }
 
@@ -116,7 +114,6 @@ bool MainWindow::loadPart()
     setCentralWidget(m_part->widget());
 
     connect(m_part, SIGNAL(setWindowCaption(QString)), this, SLOT(setCaption(QString)) );
-    connect(TrayIcon::getInstance(), SIGNAL(quitSelected()), this, SLOT(slotQuit()));
 
     createGUI(m_part);
     browserExtension(m_part)->setBrowserInterface(m_browserIface);

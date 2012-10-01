@@ -104,11 +104,11 @@ public:
     explicit Private( MainWidget* qq ) : q( qq ) {}
     void setUpAndStart( Command* cmd ) {
         cmd->setParentWidget( q );
-#ifdef WITH_LIBKDEPIM
+#ifdef WITH_LIBKDEPIM	
         if ( cmd->isUserVisible() )
-            ProgressManager::self()->addJob( cmd );
-#endif
+            KPIM::ProgressManager::self()->addJob( cmd );
         cmd->start();
+#endif	
     }
 };
 

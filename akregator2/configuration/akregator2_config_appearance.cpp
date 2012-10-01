@@ -65,7 +65,7 @@ KCMAkregator2AppearanceConfig::KCMAkregator2AppearanceConfig( QWidget* parent, c
     KAboutData *about = new KAboutData( I18N_NOOP( "kcmakrappearanceconfig" ), 0,
                                         ki18n( "Configure Feed Reader Appearance" ),
                                         0, KLocalizedString(), KAboutData::License_GPL,
-                                        ki18n( "(c), 2004 - 2008 Frank Osterfeld" ) );
+                                        ki18n( "(c), 2004 - 2012 Frank Osterfeld" ) );
 
     about->addAuthor( ki18n( "Frank Osterfeld" ), KLocalizedString(), "osterfeld@kde.org" );
     setAboutData( about );

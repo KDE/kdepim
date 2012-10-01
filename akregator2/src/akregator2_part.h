@@ -86,6 +86,8 @@ class Part : public KParts::ReadOnlyPart
         void openStandardFeedList();
 
         void addFeed();
+        /** Fetch all feeds in the feed tree */
+        void fetchAllFeeds();
 
         /**
             This method is called when this app is restored.  The KConfig

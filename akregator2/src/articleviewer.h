@@ -77,6 +77,7 @@ class ArticleViewer : public QWidget
          *
          *  @param node The node to observe */
         void showNode( QAbstractItemModel* );
+        QSize sizeHint() const;
 
     public slots:
 

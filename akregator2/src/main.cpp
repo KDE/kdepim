@@ -33,6 +33,7 @@
 
 #include <QDateTime>
 #include <QStringList>
+#include <KDebug>
 
 namespace Akregator2 {
 
@@ -96,6 +97,10 @@ int main(int argc, char **argv)
     KCmdLineArgs::init(argc, argv, &about);
     KCmdLineArgs::addCmdLineOptions( Akregator2::akregator2_options() );
     KUniqueApplication::addCmdLineOptions();
+    if ( !Akregator2::Application::start() ) {
+        kWarning() << "akregator2 is already running, exiting.";
+        exit( 0 );
+    }
 
     Akregator2::Application app;
 

@@ -28,8 +28,6 @@
 #include "akregator2_export.h"
 #include <kaboutdata.h>
 
-#define AKREGATOR2_VERSION "1.5.50"
-
 namespace Akregator2 {
 /**
 @author Teemu Rytilahti

@@ -82,7 +82,7 @@ set(akregator2part_PART_SRCS
    importfeedlistcommand.cpp
 #   importitemsjob.cpp
    tabwidget.cpp
-#   progressmanager.cpp
+   #   progressmanager.cpp
    modifycommands.cpp
    akregator2_part.cpp
    mainwidget.cpp

@@ -27,6 +27,8 @@
 
 #include <qobject.h>
 
+#include "akregator2_export.h"
+
 class QAction;
 
 class QWidget;
@@ -39,7 +41,7 @@ namespace Akregator2 {
  * (Extracted from the implementation to avoid dependencies
  *  between widgets and  Akregator2::Part).
  */
-class ActionManager : public QObject
+class AKREGATOR2_EXPORT ActionManager : public QObject
 {
     Q_OBJECT
 

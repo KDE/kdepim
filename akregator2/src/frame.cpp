@@ -34,9 +34,7 @@
 #include <kparts/browserextension.h>
 #include <kparts/part.h>
 
-#ifdef WITH_LIBKDEPIM
 #include <libkdepim/progressmanager.h>
-#endif
 
 namespace Akregator2 {
 
@@ -57,9 +55,7 @@ bool Frame::isLoading() const
 
 void Frame::slotSetCaption(const QString &s)
 {
-#ifdef WITH_LIBKDEPIM
     if(m_progressItem) m_progressItem->setLabel(s);
-#endif
     m_caption=s;
     emit signalCaptionChanged(this, s);
 }
@@ -73,11 +69,9 @@ void Frame::slotSetStatusText(const QString &s)
 
 void Frame::slotSetProgress(int a)
 {
-#ifdef WITH_LIBKDEPIM
     if(m_progressItem) {
         m_progressItem->setProgress((int)a);
     }
-#endif
     m_progress=a;
     emit signalLoadingProgress(this, a);
 }
@@ -132,12 +126,10 @@ bool Frame::isRemovable() const
 
 Frame::~Frame()
 {
-#ifdef WITH_LIBKDEPIM
     if(m_progressItem)
     {
         m_progressItem->setComplete();
     }
-#endif
 }
 
 
@@ -164,12 +156,10 @@ QString Frame::statusText() const
 void Frame::slotSetStarted()
 {
     m_loading = true;
-#ifdef WITH_LIBKDEPIM
     if(m_progressId.isNull() || m_progressId.isEmpty()) m_progressId = KPIM::ProgressManager::getUniqueID();
     m_progressItem = KPIM::ProgressManager::createProgressItem(m_progressId, title(), QString(), false);
     m_progressItem->setStatus(i18n("Loading..."));
     //connect(m_progressItem, SIGNAL(progressItemCanceled(KPIM::ProgressItem*)), SLOT(slotAbortFetch()));
-#endif
     m_state=Started;
     emit signalStarted(this);
     emit signalIsLoadingToggled(this, m_loading);
@@ -187,14 +177,12 @@ void Frame::slotStop()
 void Frame::slotSetCanceled(const QString &s)
 {
     m_loading = false;
-#ifdef WITH_LIBKDEPIM
     if(m_progressItem) 
     {
         m_progressItem->setStatus(i18n("Loading canceled"));
         m_progressItem->setComplete();
         m_progressItem = 0;
     }
-#endif
     m_state=Canceled;
     emit signalCanceled(this, s);
     emit signalIsLoadingToggled(this, m_loading);
@@ -203,14 +191,12 @@ void Frame::slotSetCanceled(const QString &s)
 void Frame::slotSetCompleted()
 {
     m_loading = false; 
-#ifdef WITH_LIBKDEPIM
     if(m_progressItem)
     {
         m_progressItem->setStatus(i18n("Loading completed"));
         m_progressItem->setComplete();
         m_progressItem = 0;
     }
-#endif
     m_state=Completed;
     emit signalCompleted(this);
     emit signalIsLoadingToggled(this, m_loading);

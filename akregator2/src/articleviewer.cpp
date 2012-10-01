@@ -64,6 +64,7 @@
 #include <kparts/browserextension.h>
 #include <kparts/browserrun.h>
 #include <KDateTime>
+#include "kdepim-version.h"
 
 #include <QClipboard>
 #include <QKeySequence>
@@ -190,7 +191,8 @@ void ArticleViewer::slotOpenUrlRequestDelayed(const KUrl& url, const KParts::Ope
     OpenUrlRequest req(url);
     req.setArgs(args);
     req.setBrowserArgs(browserArgs);
-    req.setOptions(OpenUrlRequest::NewTab);
+    if (req.options() == OpenUrlRequest::None)		// no explicit new window,
+        req.setOptions(OpenUrlRequest::NewTab);		// so must open new tab
 
     if (m_part->button() == Qt::LeftButton)
     {
@@ -263,13 +265,18 @@ void ArticleViewer::slotPopupMenu(const QPoint& p, const KUrl& kurl, mode_t, con
     {
         if (isSelection)
         {
-            popup.addAction( m_part->action("viewer_copy") );
+            popup.addAction( ActionManager::getInstance()->action("viewer_copy") );
+
             popup.addSeparator();
         }
         popup.addAction( m_part->action("viewer_print") );
        //KAction *ac = action("setEncoding");
        //if (ac)
        //     ac->plug(&popup);
+        popup.addSeparator();
+        popup.addAction( ActionManager::getInstance()->action("inc_font_sizes") );
+        popup.addAction( ActionManager::getInstance()->action("dec_font_sizes") );
+
     }
     popup.exec(p);
 }
@@ -297,7 +304,7 @@ void ArticleViewer::slotCopyLinkAddress()
 
 void ArticleViewer::slotSelectionChanged()
 {
-    m_part->action("viewer_copy")->setEnabled(!m_part->selectedText().isEmpty());
+    ActionManager::getInstance()->action("viewer_copy")->setEnabled(!m_part->selectedText().isEmpty());
 }
 
 void ArticleViewer::slotOpenLinkInternal()
@@ -362,16 +369,16 @@ void ArticleViewer::slotZoomIn(int id)
 {
     if (id != 0)
       return;	
-    int zf = m_part->zoomFactor();
+    int zf = m_part->fontScaleFactor();
     if (zf < 100)
     {
         zf = zf - (zf % 20) + 20;
-        m_part->setZoomFactor(zf);
+        m_part->setFontScaleFactor(zf);
     }
     else
     {
         zf = zf - (zf % 50) + 50;
-        m_part->setZoomFactor(zf < 300 ? zf : 300);
+        m_part->setFontScaleFactor(zf < 300 ? zf : 300);
     }
 }
 
@@ -380,22 +387,22 @@ void ArticleViewer::slotZoomOut(int id)
     if (id != 0)
      return;
 
-    int zf = m_part->zoomFactor();
+    int zf = m_part->fontScaleFactor();
     if (zf <= 100)
     {
         zf = zf - (zf % 20) - 20;
-        m_part->setZoomFactor(zf > 20 ? zf : 20);
+        m_part->setFontScaleFactor(zf > 20 ? zf : 20);
     }
     else
     {
         zf = zf - (zf % 50) - 50;
-        m_part->setZoomFactor(zf);
+        m_part->setFontScaleFactor(zf);
     }
 }
 
 void ArticleViewer::slotSetZoomFactor(int percent)
 {
-    m_part->setZoomFactor(percent);
+    m_part->setFontScaleFactor(percent);
 }
 
 // some code taken from KDevelop (lib/widgets/kdevhtmlpart.cpp)
@@ -670,6 +677,14 @@ void ArticleViewer::reload()
     endWriting();
 }
 
+QSize ArticleViewer::sizeHint() const
+{
+    // Increase height a bit so that we can (roughly) read 25 lines of text
+    QSize sh = QWidget::sizeHint();
+    sh.setHeight(qMax(sh.height(), 25 * fontMetrics().height()));
+    return sh;
+}
+
 void ArticleViewer::displayAboutPage()
 {
     QString location = KStandardDirs::locate("data", "akregator2/about/main.html");
@@ -690,7 +705,7 @@ void ArticleViewer::displayAboutPage()
             "<p>We hope that you will enjoy Akregator2.</p>\n"
             "<p>Thank you,</p>\n"
             "<p style='margin-bottom: 0px'>&nbsp; &nbsp; The Akregator2 Team</p>\n",
-    AKREGATOR2_VERSION, // Akregator2 version
+    KDEPIM_VERSION, // Akregator2 version
     "http://akregator2.kde.org/"); // Akregator2 homepage URL
 
     QString fontSize = QString::number( pointsToPixel( Settings::mediumFontSize() ));

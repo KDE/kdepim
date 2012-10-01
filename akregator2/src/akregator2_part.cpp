@@ -287,6 +287,11 @@ bool Part::openUrl(const KUrl& url)
     return openFile();
 }
 
+void Part::fetchAllFeeds()
+{
+    m_mainWidget->slotFetchAllFeeds();
+}
+
 void Part::openStandardFeedList()
 {
     SetUpAkonadiCommand* cmd = new SetUpAkonadiCommand;

@@ -65,6 +65,7 @@ AddFeedDialog::AddFeedDialog(QWidget *parent)
     setCaption(i18n("Add Feed"));
     setButtons(KDialog::Ok|KDialog::Cancel);
     setDefaultButton(KDialog::Ok);
+    widget->urlEdit->setFocus();
     connect(widget->urlEdit, SIGNAL(textChanged(QString)), this, SLOT(textChanged(QString)));
     enableButtonOk(false);
     setMainWidget(widget);

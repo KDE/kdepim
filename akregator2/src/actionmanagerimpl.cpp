@@ -54,6 +54,7 @@
 
 #include <QHash>
 #include <QWidget>
+#include <QApplication>
 
 #include <boost/shared_ptr.hpp>
 
@@ -491,16 +492,18 @@ void ActionManagerImpl::initFrameManager(FrameManager* frameManager)
 
     d->frameManager = frameManager;
 
-    KToolBarPopupAction* forward = new KToolBarPopupAction(KIcon("go-next"), i18nc("Go forward in browser history", "Forward"), this);
+    bool isRTL = QApplication::isRightToLeft();
+
+    KToolBarPopupAction* forward = new KToolBarPopupAction(KIcon(isRTL ? "go-previous" : "go-next"), i18nc("Go forward in browser history", "Forward"), this);
     d->actionCollection->addAction("browser_forward", forward);
-    forward->setShortcuts(KShortcut("Alt+Right"));
+    forward->setShortcuts(KShortcut(isRTL ? "Alt+Left" : "Alt+Right"));
     connect(forward, SIGNAL(triggered()), frameManager, SLOT(slotBrowserForward()));
 
     connect(forward->menu(), SIGNAL(aboutToShow()), frameManager, SLOT(slotBrowserForwardAboutToShow()));
 
-    KToolBarPopupAction* back = new KToolBarPopupAction(KIcon("go-previous"), i18nc("Go back in browser history", "Back"), this);
+    KToolBarPopupAction* back = new KToolBarPopupAction(KIcon(isRTL ? "go-next" : "go-previous"), i18nc("Go back in browser history", "Back"), this);
     d->actionCollection->addAction("browser_back", back);
-    back->setShortcuts(KShortcut("Alt+Left"));
+    back->setShortcuts(KShortcut(isRTL ?  "Alt+Right" : "Alt+Left"));
     connect(back, SIGNAL(triggered()), frameManager, SLOT(slotBrowserBack()));
 
     connect(back->menu(), SIGNAL(aboutToShow()), frameManager, SLOT(slotBrowserBackAboutToShow()));

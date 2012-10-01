@@ -26,13 +26,13 @@
 
 #include <klocale.h>
 
-
+#include "kdepim-version.h"
 
 
 namespace Akregator2 {
 
 AboutData::AboutData()
-    : KAboutData("akregator2", 0, ki18n("Akregator2"), AKREGATOR2_VERSION, ki18n("A KDE Feed Reader"),
+    : KAboutData("akregator2", 0, ki18n("Akregator2"), KDEPIM_VERSION, ki18n("A KDE Feed Reader"),
                  License_GPL, ki18n("(C) 2004-2012 Akregator2 developers"), KLocalizedString(),
                      "http://akregator2.kde.org/")
 {

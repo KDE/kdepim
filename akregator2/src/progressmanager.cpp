@@ -31,9 +31,7 @@
 
 #include <KLocale>
 #include <KGlobal>
-#ifdef WITH_LIBKDEPIM
 #include <libkdepim/progressmanager.h>
-#endif
 
 #include <boost/shared_ptr.hpp>
 

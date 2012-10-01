@@ -33,6 +33,7 @@ template <typename T> class shared_ptr;
 
 namespace KRss {
 class FeedList;
+class Feed;
 }
 
 namespace Akregator2
