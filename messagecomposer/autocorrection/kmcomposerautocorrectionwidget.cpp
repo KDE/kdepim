@@ -296,25 +296,28 @@ void KMComposerAutoCorrectionWidget::addAutocorrectEntry()
 
 void KMComposerAutoCorrectionWidget::removeAutocorrectEntry()
 {
-  QTreeWidgetItem *item = ui->treeWidget->currentItem();
-  if ( !item ) {
-    return;
-  }
-  QTreeWidgetItem *below = ui->treeWidget->itemBelow( item );
+  QList<QTreeWidgetItem *> 	listItems = ui->treeWidget->selectedItems ();
+  if(listItems.isEmpty())
+      return;
+  Q_FOREACH(QTreeWidgetItem *item, listItems) {
+      QTreeWidgetItem *below = ui->treeWidget->itemBelow( item );
 
-  if ( below ) {
-    kDebug() << "below";
-    ui->treeWidget->setCurrentItem( below );
-    delete item;
-    item = 0;
-  } else if ( ui->treeWidget->topLevelItemCount() > 0 ) {
-    delete item;
-    item = 0;
-    ui->treeWidget->setCurrentItem(ui->treeWidget->topLevelItem( ui->treeWidget->topLevelItemCount() - 1 )
-    );
+      QString findStr;
+      if ( below ) {
+        kDebug() << "below";
+        findStr = item->text(0);
+        delete item;
+        item = 0;
+      } else if ( ui->treeWidget->topLevelItemCount() > 0 ) {
+        findStr = item->text(0);
+        delete item;
+        item = 0;
+      }
+      if(!findStr.isEmpty())
+        m_autocorrectEntries.remove(findStr);
   }
   ui->treeWidget->setSortingEnabled(false);
-  m_autocorrectEntries.remove(ui->find->text());
+
   Q_EMIT changed();
 }
 
