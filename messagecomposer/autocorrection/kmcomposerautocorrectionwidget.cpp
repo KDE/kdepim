@@ -38,6 +38,7 @@ KMComposerAutoCorrectionWidget::KMComposerAutoCorrectionWidget(QWidget *parent) 
   ui->add1->setEnabled(false);
   ui->add2->setEnabled(false);
 
+  connect(ui->autoChangeFormat,SIGNAL(clicked()),SIGNAL(changed()));
   connect(ui->autoFormatUrl,SIGNAL(clicked()),SIGNAL(changed()));
   connect(ui->upperCase,SIGNAL(clicked()),SIGNAL(changed()));
   connect(ui->upperUpper,SIGNAL(clicked()),SIGNAL(changed()));
@@ -89,6 +90,7 @@ void KMComposerAutoCorrectionWidget::loadConfig()
     if(!mAutoCorrection)
       return;
 
+    ui->autoChangeFormat->setChecked(mAutoCorrection->isAutoBoldUnderline());
     ui->autoFormatUrl->setChecked(mAutoCorrection->isAutoFormatUrl());
     ui->enabledAutocorrection->setChecked(mAutoCorrection->isEnabledAutoCorrection());
     ui->upperCase->setChecked(mAutoCorrection->isUppercaseFirstCharOfSentence());
@@ -140,6 +142,7 @@ void KMComposerAutoCorrectionWidget::writeConfig()
 {
   if(!mAutoCorrection)
     return;
+  mAutoCorrection->setAutoBoldUnderline(ui->autoChangeFormat->isChecked());
   mAutoCorrection->setAutoFormatUrl(ui->autoFormatUrl->isChecked());
   mAutoCorrection->setEnabledAutoCorrection(ui->enabledAutocorrection->isChecked());
   mAutoCorrection->setUppercaseFirstCharOfSentence(ui->upperCase->isChecked());
@@ -164,6 +167,8 @@ void KMComposerAutoCorrectionWidget::writeConfig()
 
 void KMComposerAutoCorrectionWidget::resetToDefault()
 {
+  ui->autoChangeFormat->setChecked(false);
+  ui->autoFormatUrl->setChecked(false);
   ui->upperCase->setChecked(false);
   ui->upperUpper->setChecked(false);
   ui->ignoreDoubleSpace->setChecked(false);

@@ -99,8 +99,12 @@ void KMComposerAutoCorrection::autocorrect(bool htmlMode, QTextDocument& documen
     return;
 
   bool done = false;
-  if (htmlMode)
+  if (htmlMode) {
      done = autoFormatURLs();
+     if(!done) {
+         done = autoBoldUnderline();
+     }
+  }
   if (!done)
     done = singleSpaces();
   if (!done)
@@ -122,6 +126,7 @@ void KMComposerAutoCorrection::autocorrect(bool htmlMode, QTextDocument& documen
 
 void KMComposerAutoCorrection::readConfig()
 {
+  mAutoBoldUnderline = MessageComposer::MessageComposerSettings::self()->autoBoldUnderline();
   mAutoFormatUrl = MessageComposer::MessageComposerSettings::self()->autoFormatUrl();
   mUppercaseFirstCharOfSentence = MessageComposer::MessageComposerSettings::self()->uppercaseFirstCharOfSentence();
   mFixTwoUppercaseChars = MessageComposer::MessageComposerSettings::self()->fixTwoUppercaseChars();
@@ -137,6 +142,7 @@ void KMComposerAutoCorrection::readConfig()
 
 void KMComposerAutoCorrection::writeConfig()
 {
+  MessageComposer::MessageComposerSettings::self()->setAutoBoldUnderline(mAutoBoldUnderline);
   MessageComposer::MessageComposerSettings::self()->setAutoFormatUrl(mAutoFormatUrl);
   MessageComposer::MessageComposerSettings::self()->setUppercaseFirstCharOfSentence(mUppercaseFirstCharOfSentence);
   MessageComposer::MessageComposerSettings::self()->setFixTwoUppercaseChars(mFixTwoUppercaseChars);
@@ -203,6 +209,66 @@ QSet<QString> KMComposerAutoCorrection::twoUpperLetterExceptions() const
 QHash<QString, QString> KMComposerAutoCorrection::autocorrectEntries() const
 {
   return mAutocorrectEntries;
+}
+
+
+bool KMComposerAutoCorrection::autoBoldUnderline()
+{
+    if (!mAutoBoldUnderline)
+        return false;
+
+    QString trimmed = mWord.trimmed();
+
+    if (trimmed.length() < 3)
+        return false;
+
+    bool underline = (trimmed.at(0) == QLatin1Char('_') && trimmed.at(trimmed.length() - 1) == QLatin1Char('_'));
+    bool bold = (trimmed.at(0) == QLatin1Char('*') && trimmed.at(trimmed.length() - 1) == QLatin1Char('*'));
+
+    if (underline || bold) {
+        int startPos = mCursor.selectionStart();
+        QString replacement = trimmed.mid(1, trimmed.length() - 2);
+        bool foundLetterNumber = false;
+
+        QString::ConstIterator constIter = replacement.constBegin();
+        while (constIter != replacement.constEnd()) {
+            if (constIter->isLetterOrNumber()) {
+                foundLetterNumber = true;
+                break;
+            }
+            constIter++;
+        }
+
+        // if no letter/number found, don't apply autocorrection like in OOo 2.x
+        if (!foundLetterNumber)
+            return false;
+
+        mCursor.setPosition(startPos);
+        mCursor.setPosition(startPos + trimmed.length(), QTextCursor::KeepAnchor);
+        mCursor.insertText(replacement);
+        mCursor.setPosition(startPos);
+        mCursor.setPosition(startPos + replacement.length(), QTextCursor::KeepAnchor);
+
+        QTextCharFormat format;
+        format.setFontUnderline(underline ? true : mCursor.charFormat().fontUnderline());
+        format.setFontWeight(bold ? QFont::Bold : mCursor.charFormat().fontWeight());
+        mCursor.mergeCharFormat(format);
+
+        // to avoid the selection being replaced by mWord
+        mWord = mCursor.selectedText();
+
+        // don't do this again if the text is already underlined and bold
+        if(mCursor.charFormat().fontUnderline()
+            && mCursor.charFormat().fontWeight() == QFont::Bold) {
+            return true;
+        } else {
+            return autoBoldUnderline();
+        }
+    }
+    else
+        return false;
+
+    return true;
 }
 
 bool KMComposerAutoCorrection::autoFormatURLs()

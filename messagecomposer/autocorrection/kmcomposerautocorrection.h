@@ -50,6 +50,7 @@ public:
   void setTwoUpperLetterExceptions(const QSet<QString>& exceptions);
   void setAutocorrectEntries(const QHash<QString, QString>& entries);
   void setAutoFormatUrl(bool b) { mAutoFormatUrl = b; }
+  void setAutoBoldUnderline(bool b) { mAutoBoldUnderline = b; }
 
   bool isEnabledAutoCorrection() const { return mEnabled; }
   bool isUppercaseFirstCharOfSentence() const { return mUppercaseFirstCharOfSentence; }
@@ -61,6 +62,8 @@ public:
   bool isReplaceSingleQuotes() const { return mReplaceSingleQuotes; }
   bool isAdvancedAutocorrect() const { return mAdvancedAutocorrect; }
   bool isAutoFormatUrl() const { return mAutoFormatUrl; }
+  bool isAutoBoldUnderline() const { return mAutoBoldUnderline; }
+
 
   QString language() const;
   TypographicQuotes typographicSingleQuotes() const { return mTypographicSingleQuotes; }
@@ -90,6 +93,8 @@ private:
   void selectWord(QTextCursor &cursor, int cursorPosition);
 
   bool autoFormatURLs();
+  bool autoBoldUnderline();
+
   QString autoDetectURL(const QString &_word) const;
   void readAutoCorrectionXmlFile();
   void writeAutoCorrectionXmlFile();
@@ -106,6 +111,7 @@ private:
   bool mReplaceSingleQuotes;  // replace single quotes with typographical quotes
 
   bool mAutoFormatUrl;
+  bool mAutoBoldUnderline;
   bool mEnabled;
 
   QString mWord;

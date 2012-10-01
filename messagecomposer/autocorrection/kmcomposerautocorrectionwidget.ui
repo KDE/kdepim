@@ -84,6 +84,16 @@
         </widget>
        </item>
        <item>
+        <widget class="QCheckBox" name="autoChangeFormat">
+         <property name="whatsThis">
+          <string>When you use _underline_ or *bold*, the text between the underscores or asterisks will be converted to underlined or bold text.</string>
+         </property>
+         <property name="text">
+          <string>Automatically do &amp;bold and underline formatting (HTML mode)</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <spacer>
          <property name="orientation">
           <enum>Qt::Vertical</enum>
