@@ -68,6 +68,13 @@ class BrowserFrame : public Frame, public virtual FaviconListener
 
         void loadConfig( const KConfigGroup& config, const QString& prefix);
         void saveConfig( KConfigGroup& config, const QString& prefix);
+
+        bool hasZoom() const;
+        int  getZoomFactor() const;
+        void setZoomFactor(int);
+
+
+
     public slots:
 
         void slotHistoryForward();
