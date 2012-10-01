@@ -68,6 +68,7 @@ class NotificationManager : public QObject
 
     private:
         NotificationManager();
+        NotificationManager(const NotificationManager&) : QObject(){}
 
         int m_checkInterval;
         int m_intervalsLapsed;
