@@ -49,6 +49,8 @@ class AddFeedDialog : public KDialog
         explicit AddFeedDialog(QWidget *parent = 0);
         ~AddFeedDialog();
 
+        QSize sizeHint() const;
+
         void setUrl( const QString& url );
         QString url() const;
 
