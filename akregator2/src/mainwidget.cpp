@@ -1103,4 +1103,12 @@ void Akregator2::MainWidget::slotJobFinished( KJob *job )
     }
 }
 
+void Akregator2::MainWidget::slotReloadAllTabs()
+{
+    m_tabWidget->slotReloadAllTabs();
+}
+
+
+
+
 #include "mainwidget.moc"
