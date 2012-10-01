@@ -197,5 +197,9 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
     <entry name="ReplaceSingleQuotes" type="Bool" key="replace-single-quotes">
       <default>false</default>
     </entry>
+    <entry name="AutoFormatUrl" type="Bool" key="autoformat-url">
+      <default>false</default>
+    </entry>
+ 
   </group>
 </kcfg>

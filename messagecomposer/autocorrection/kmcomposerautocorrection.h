@@ -49,6 +49,7 @@ public:
   void setUpperCaseExceptions(const QSet<QString>& exceptions);
   void setTwoUpperLetterExceptions(const QSet<QString>& exceptions);
   void setAutocorrectEntries(const QHash<QString, QString>& entries);
+  void setAutoFormatUrl(bool b) { mAutoFormatUrl = b; }
 
   bool isEnabledAutoCorrection() const { return mEnabled; }
   bool isUppercaseFirstCharOfSentence() const { return mUppercaseFirstCharOfSentence; }
@@ -59,6 +60,7 @@ public:
   bool isReplaceDoubleQuotes() const { return mReplaceDoubleQuotes; }
   bool isReplaceSingleQuotes() const { return mReplaceSingleQuotes; }
   bool isAdvancedAutocorrect() const { return mAdvancedAutocorrect; }
+  bool isAutoFormatUrl() const { return mAutoFormatUrl; }
 
   QString language() const;
   TypographicQuotes typographicSingleQuotes() const { return mTypographicSingleQuotes; }
@@ -69,7 +71,7 @@ public:
   QSet<QString> twoUpperLetterExceptions() const;
   QHash<QString, QString> autocorrectEntries() const;
 
-  void autocorrect(QTextDocument &document, int position);
+  void autocorrect(bool htmlMode, QTextDocument &document, int position);
   void writeConfig();
 
   void addAutoCorrect(const QString& currentWord, const QString& replaceWord);
@@ -87,6 +89,8 @@ private:
 
   void selectWord(QTextCursor &cursor, int cursorPosition);
 
+  bool autoFormatURLs();
+  QString autoDetectURL(const QString &_word) const;
   void readAutoCorrectionXmlFile();
   void writeAutoCorrectionXmlFile();
 
@@ -101,6 +105,7 @@ private:
   bool mReplaceDoubleQuotes;  // replace double quotes with typographical quotes
   bool mReplaceSingleQuotes;  // replace single quotes with typographical quotes
 
+  bool mAutoFormatUrl;
   bool mEnabled;
 
   QString mWord;

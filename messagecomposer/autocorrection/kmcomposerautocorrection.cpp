@@ -87,7 +87,7 @@ void KMComposerAutoCorrection::selectWord(QTextCursor &cursor, int cursorPositio
 }
 
 
-void KMComposerAutoCorrection::autocorrect(QTextDocument& document, int position)
+void KMComposerAutoCorrection::autocorrect(bool htmlMode, QTextDocument& document, int position)
 {
   if (!mEnabled)
     return;
@@ -98,6 +98,8 @@ void KMComposerAutoCorrection::autocorrect(QTextDocument& document, int position
     return;
 
   bool done = false;
+  if (htmlMode)
+     done = autoFormatURLs();
   if (!done)
     done = singleSpaces();
   if (!done)
@@ -119,6 +121,7 @@ void KMComposerAutoCorrection::autocorrect(QTextDocument& document, int position
 
 void KMComposerAutoCorrection::readConfig()
 {
+  mAutoFormatUrl = MessageComposer::MessageComposerSettings::self()->autoFormatUrl();
   mUppercaseFirstCharOfSentence = MessageComposer::MessageComposerSettings::self()->uppercaseFirstCharOfSentence();
   mFixTwoUppercaseChars = MessageComposer::MessageComposerSettings::self()->fixTwoUppercaseChars();
   mSingleSpaces = MessageComposer::MessageComposerSettings::self()->singleSpaces();
@@ -133,6 +136,7 @@ void KMComposerAutoCorrection::readConfig()
 
 void KMComposerAutoCorrection::writeConfig()
 {
+  MessageComposer::MessageComposerSettings::self()->setAutoFormatUrl(mAutoFormatUrl);
   MessageComposer::MessageComposerSettings::self()->setUppercaseFirstCharOfSentence(mUppercaseFirstCharOfSentence);
   MessageComposer::MessageComposerSettings::self()->setFixTwoUppercaseChars(mFixTwoUppercaseChars);
   MessageComposer::MessageComposerSettings::self()->setSingleSpaces(mSingleSpaces);
@@ -200,6 +204,103 @@ QHash<QString, QString> KMComposerAutoCorrection::autocorrectEntries() const
   return mAutocorrectEntries;
 }
 
+bool KMComposerAutoCorrection::autoFormatURLs()
+{
+    if (!mAutoFormatUrl)
+        return false;
+
+    QString link = autoDetectURL(mWord);
+    if (link.isNull())
+        return false;
+
+    QString trimmed = mWord.trimmed();
+    int startPos = mCursor.selectionStart();
+    mCursor.setPosition(startPos);
+    mCursor.setPosition(startPos + trimmed.length(), QTextCursor::KeepAnchor);
+
+    QTextCharFormat format;
+    format.setAnchor(true);
+    format.setAnchorHref(link);
+    format.setFontItalic(true); // TODO: formatting
+    mCursor.mergeCharFormat(format);
+
+    mWord = mCursor.selectedText();
+    return true;
+}
+
+QString KMComposerAutoCorrection::autoDetectURL(const QString &_word) const
+{
+    QString word = _word;
+
+    /* this method is ported from lib/kotext/KoAutoFormat.cpp KoAutoFormat::doAutoDetectUrl
+     * from Calligra 1.x branch */
+    // kDebug() <<"link:" << word;
+
+    char link_type = 0;
+    int pos = word.indexOf(QLatin1String("http://"));
+    int tmp_pos = word.indexOf(QLatin1String("https://"));
+
+    if (tmp_pos < pos && tmp_pos != -1)
+          pos = tmp_pos;
+    tmp_pos = word.indexOf(QLatin1String("mailto:/"));
+    if ((tmp_pos < pos || pos == -1) && tmp_pos != -1)
+          pos = tmp_pos;
+    tmp_pos = word.indexOf(QLatin1String("ftp://"));
+    if ((tmp_pos < pos || pos == -1) && tmp_pos != -1)
+          pos = tmp_pos;
+    tmp_pos = word.indexOf(QLatin1String("ftp."));
+    if ((tmp_pos < pos || pos == -1) && tmp_pos != -1) {
+          pos = tmp_pos;
+          link_type = 3;
+    }
+    tmp_pos = word.indexOf(QLatin1String("file:/"));
+    if ((tmp_pos < pos || pos == -1) && tmp_pos != -1)
+          pos = tmp_pos;
+    tmp_pos = word.indexOf(QLatin1String("news:"));
+    if ((tmp_pos < pos || pos == -1) && tmp_pos != -1)
+          pos = tmp_pos;
+    tmp_pos = word.indexOf(QLatin1String("www."));
+    if ((tmp_pos < pos || pos == -1) && tmp_pos != -1 && word.indexOf(QLatin1Char('.'), tmp_pos+4) != -1 ) {
+          pos = tmp_pos;
+          link_type = 2;
+    }
+    tmp_pos = word.indexOf(QLatin1Char('@'));
+    if (pos == -1 && tmp_pos != -1) {
+        pos = tmp_pos-1;
+        QChar c;
+
+        while (pos >= 0) {
+            c = word.at(pos);
+            if (c.isPunct() && c != QLatin1Char('.') && c != QLatin1Char('_')) break;
+            else --pos;
+        }
+        if (pos == tmp_pos - 1) // not a valid address
+            pos = -1;
+        else
+            ++pos;
+        link_type = 1;
+    }
+
+    if (pos != -1) {
+        // A URL inside e.g. quotes (like "http://www.calligra.org" with the quotes) shouldn't include the quote in the URL.
+        while (!word.at(word.length()-1).isLetter() &&  !word.at(word.length()-1).isDigit() && word.at(word.length()-1) != QLatin1Char('/'))
+            word.truncate(word.length() - 1);
+        word.remove(0, pos);
+        QString newWord = word;
+
+        if (link_type == 1)
+            newWord = QLatin1String("mailto:") + word;
+        else if (link_type == 2)
+            newWord = QLatin1String("http://") + word;
+        else if (link_type == 3)
+            newWord = QLatin1String("ftp://") + word;
+
+        kDebug() <<"newWord:" << newWord;
+        return newWord;
+    }
+
+    return QString();
+}
 
 void KMComposerAutoCorrection::fixTwoUppercaseChars()
 {

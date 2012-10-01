@@ -20,7 +20,7 @@
       <attribute name="title">
        <string>Si&amp;mple Autocorrection</string>
       </attribute>
-      <layout class="QVBoxLayout">
+      <layout class="QVBoxLayout" name="verticalLayout_3">
        <item>
         <widget class="QCheckBox" name="upperCase">
          <property name="whatsThis">
@@ -70,6 +70,16 @@
         <widget class="QCheckBox" name="capitalizeDaysName">
          <property name="text">
           <string>Capitalize name of days</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="autoFormatUrl">
+         <property name="whatsThis">
+          <string>Detect when a URL (Uniform Resource Locator) is typed and provide formatting that matches the way an Internet browser would show a URL.</string>
+         </property>
+         <property name="text">
+          <string>Autoformat &amp;URLs (HTML mode)</string>
          </property>
         </widget>
        </item>
