@@ -111,6 +111,7 @@ target_link_libraries(akregator2part
                       ${KDEPIMLIBS_KPIMUTILS_LIBS}
                       ${KDE4_KDE3SUPPORT_LIBS}
                       ${KDEPIMLIBS_KRSS_LIBS}
+		      ${KDEPIMLIBS_SYNDICATION_LIBS}
 		      /opt/kde4/lib64/libkrss.so
 ${KDE4_AKONADI_LIBS})
 

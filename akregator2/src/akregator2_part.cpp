@@ -37,6 +37,7 @@
 #include "trayicon.h"
 
 #include <libkdepim/broadcaststatus.h>
+#include "kdepim-version.h"
 
 #include <knotifyconfigwidget.h>
 #include <kaboutdata.h>
@@ -65,6 +66,7 @@
 #include <QWidget>
 #include <QDomDocument>
 #include "partadaptor.h"
+#include <syndication/dataretriever.h>
 
 #include <memory>
 
@@ -147,6 +149,13 @@ Part::Part( QWidget *parentWidget, QObject *parent, const QVariantList& )
                 this, SIGNAL(signalArticlesSelected(QList<Akregator::Article>)) );
     }
 
+    QString useragent = QString( "Akregator/%1; syndication" ).arg( KDEPIM_VERSION );
+
+    if( !Settings::customUserAgent().isEmpty() )
+        useragent = Settings::customUserAgent();
+
+    Syndication::FileRetriever::setUserAgent( useragent );
+
 
     QWidget* const notificationParent = isTrayIconEnabled() ? m_mainWidget->window() : 0;
     NotificationManager::self()->setWidget(notificationParent, componentData());
@@ -201,6 +210,7 @@ void Part::slotSettingsChanged()
 {
     NotificationManager::self()->setWidget(isTrayIconEnabled() ? m_mainWidget->window() : 0, componentData());
 
+    Syndication::FileRetriever::setUseCache(Settings::useHTMLCache());
     QStringList fonts;
     fonts.append(Settings::standardFont());
     fonts.append(Settings::fixedFont());
