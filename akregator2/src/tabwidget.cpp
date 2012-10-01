@@ -87,20 +87,21 @@ public:
 
 void TabWidget::Private::updateTabBarVisibility()
 {
-    q->setTabBarHidden( ( q->count() <= 1 ) && !Settings::alwaysShowTabBar() );
+    if (q->count() >= 1 && Settings::closeButtonOnTabs())
+        q->tabBar()->tabButton(0, QTabBar::RightSide)->hide();
 }
 
 TabWidget::TabWidget(QWidget * parent)
     :KTabWidget(parent), d(new Private( this ) )
 {
     setMinimumSize(250,150);
-    setTabReorderingEnabled(false);
+    setMovable(false);
+    setDocumentMode(true);
     connect( this, SIGNAL(currentChanged(int)),
              this, SLOT(slotTabChanged(int)) );
     connect(this, SIGNAL(closeRequest(QWidget*)),
             this, SLOT(slotCloseRequest(QWidget*)));
     setTabsClosable(Settings::closeButtonOnTabs());
-    setDocumentMode(true);
 
     d->tabsClose = new QToolButton(this);
     connect( d->tabsClose, SIGNAL(clicked()), this,
@@ -237,10 +238,9 @@ void TabWidget::slotRemoveFrame(int frameId)
 // copied wholesale from KonqFrameTabs
 uint TabWidget::Private::tabBarWidthForMaxChars( int maxLength )
 {
-    int hframe, overlap;
+    int hframe;
     QStyleOption o;
     hframe = q->tabBar()->style()->pixelMetric( QStyle::PM_TabBarTabHSpace, &o, q );
-    overlap = q->tabBar()->style()->pixelMetric( QStyle::PM_TabBarTabOverlap, &o, q );
 
     QFontMetrics fm = q->tabBar()->fontMetrics();
     int x = 0;
