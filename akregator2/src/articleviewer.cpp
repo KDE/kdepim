@@ -269,7 +269,7 @@ void ArticleViewer::slotPopupMenu(const QPoint& p, const KUrl& kurl, mode_t, con
 
             popup.addSeparator();
         }
-        popup.addAction( m_part->action("viewer_print") );
+        popup.addAction( ActionManager::getInstance()->action("viewer_print") );
        //KAction *ac = action("setEncoding");
        //if (ac)
        //     ac->plug(&popup);
