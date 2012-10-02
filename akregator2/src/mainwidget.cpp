@@ -308,6 +308,15 @@ Akregator2::MainWidget::MainWidget( Part *part, QWidget *parent, ActionManagerIm
     }
     const KConfigGroup group( Settings::self()->config(), "General" );
     m_feedListView->setConfigGroup( group );
+
+    //Check network status
+    if(Solid::Networking::status() == Solid::Networking::Connected ||Solid::Networking::status() == Solid::Networking::Unknown)
+        this->m_networkAvailable=true;
+    else if(Solid::Networking::status() == Solid::Networking::Unconnected)
+        this->m_networkAvailable=false;
+
+
+
 }
 
 void Akregator2::MainWidget::slotOnShutdown()
@@ -681,20 +690,28 @@ void Akregator2::MainWidget::slotMarkFeedRead()
 
 void Akregator2::MainWidget::slotFetchCurrentFeed()
 {
-    const Akonadi::Collection c = m_selectionController->selectedCollection();
-    if ( !c.isValid() )
-        return;
+    if(isNetworkAvailable()) {
+        const Akonadi::Collection c = m_selectionController->selectedCollection();
+        if ( !c.isValid() )
+            return;
 
-    Akonadi::AgentManager::self()->synchronizeCollection( c );
+        Akonadi::AgentManager::self()->synchronizeCollection( c );
+    } else {
+        m_mainFrame->slotSetStatusText(i18n("Networking is not available."));
+    }
 }
 
 void Akregator2::MainWidget::slotFetchAllFeeds()
 {
-    const Akonadi::Collection::List l = m_selectionController->resourceRootCollections();
-    if ( l.isEmpty() )
-        return;
-    Q_FOREACH( const Akonadi::Collection& i, l )
-        Akonadi::AgentManager::self()->synchronizeCollection( i, true );
+    if(isNetworkAvailable()) {
+        const Akonadi::Collection::List l = m_selectionController->resourceRootCollections();
+        if ( l.isEmpty() )
+            return;
+        Q_FOREACH( const Akonadi::Collection& i, l )
+            Akonadi::AgentManager::self()->synchronizeCollection( i, true );
+    } else {
+        m_mainFrame->slotSetStatusText(i18n("Networking is not available."));
+    }
 
 }
 
@@ -1108,7 +1125,25 @@ void Akregator2::MainWidget::slotReloadAllTabs()
     m_tabWidget->slotReloadAllTabs();
 }
 
+bool Akregator2::MainWidget::isNetworkAvailable() const
+{
+  return m_networkAvailable;
+}
 
+void Akregator2::MainWidget::slotNetworkStatusChanged(Solid::Networking::Status status)
+{
+  if(status==Solid::Networking::Connected || Solid::Networking::status() == Solid::Networking::Unknown)
+  {
+    m_networkAvailable=true;
+    m_mainFrame->slotSetStatusText(i18n("Networking is available now."));
+    this->slotFetchAllFeeds();
+  }
+  else if(Solid::Networking::Unconnected)
+  {
+    m_networkAvailable=false;
+    m_mainFrame->slotSetStatusText(i18n("Networking is not available."));
+  }
+}
 
 
 #include "mainwidget.moc"

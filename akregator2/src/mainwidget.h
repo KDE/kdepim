@@ -32,6 +32,7 @@
 //#include <krss/ui/feedlistview.h>
 
 #include <kurl.h>
+#include <solid/networking.h>
 
 #include <QPixmap>
 #include <QPointer>
@@ -108,6 +109,8 @@ class AKREGATOR2PART_EXPORT MainWidget : public QWidget
         void readProperties(const KConfigGroup & config);
         void saveProperties(KConfigGroup & config);
 
+        //Returns true if networking is available
+        bool isNetworkAvailable() const;
 
         enum ViewMode { NormalView=0,
                         WidescreenView,
@@ -207,6 +210,7 @@ class AKREGATOR2PART_EXPORT MainWidget : public QWidget
         void slotSendLink() { sendArticle(); }
         void slotSendFile() { sendArticle(true); }
 
+        void slotNetworkStatusChanged(Solid::Networking::Status status);
     protected:
 
         void sendArticle(bool attach=false);
@@ -253,6 +257,7 @@ class AKREGATOR2PART_EXPORT MainWidget : public QWidget
 
         bool m_shuttingDown;
         bool m_displayingAboutPage;
+        bool m_networkAvailable;
 
         ActionManagerImpl* m_actionManager;
         FrameManager* m_frameManager;
