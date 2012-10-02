@@ -159,6 +159,7 @@ void SylpheedSettings::readGlobalSettings(const KConfigGroup& group)
   readSettingsColor(group);
   readTemplateFormat(group);
   readTagColor(group);
+  readDateFormat(group);
 }
 
 void SylpheedSettings::readTemplateFormat(const KConfigGroup& group)
@@ -178,6 +179,14 @@ void SylpheedSettings::readTemplateFormat(const KConfigGroup& group)
   const QString forwardQuoteFormat = group.readEntry(QLatin1String("forward_quote_format"));
   if(!forwardQuoteFormat.isEmpty()) {
     addKmailConfig(QLatin1String("TemplateParser"), QLatin1String("TemplateForward"), convertToKmailTemplate(forwardQuoteFormat));
+  }
+}
+
+void SylpheedSettings::readDateFormat(const KConfigGroup& group)
+{
+  const QString dateFormat = group.readEntry(QLatin1String("date_format"));
+  if(!dateFormat.isEmpty()) {
+    addKmailConfig(QLatin1String("General"), QLatin1String("customDateFormat"), dateFormat);
   }
 }
 

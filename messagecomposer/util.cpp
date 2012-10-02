@@ -255,7 +255,7 @@ QStringList Message::Util::AttachmentKeywords()
 {
   return i18nc(
     "comma-separated list of keywords that are used to detect whether "
-    "the user forgot to attach his attachment",
+    "the user forgot to attach his attachment. Do not add space between words.",
     "attachment,attached" ).split( QLatin1Char( ',' ) );
 }
 

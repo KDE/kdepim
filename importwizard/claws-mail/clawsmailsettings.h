@@ -37,7 +37,6 @@ protected:
   void readGlobalSettings(const KConfigGroup& group);
   void readTagColor(const KConfigGroup& group);
 
-
 private:
   QString writeColor(const QColor& col);
 };
