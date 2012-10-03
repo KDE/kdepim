@@ -233,6 +233,9 @@ void Widget::changeQuicksearchVisibility(bool show)
   else {
     // on show: we focus the lineedit for fast filtering
     lineEdit->setFocus( Qt::OtherFocusReason );
+    if ( d->mFilter ) {
+      resetFilter();
+    }
   }
   lineEdit->setVisible( show );
   comboBox->setVisible( show );
@@ -413,7 +416,7 @@ void Widget::setStorageModel( StorageModel * storageModel, PreSelectionMode preS
           d->mSearchTimer = 0;
       }
 
-      d->mSearchEdit->setText( QString() );
+      d->mSearchEdit->clear();
 
       if ( d->mFilter ) {
           resetFilter();
