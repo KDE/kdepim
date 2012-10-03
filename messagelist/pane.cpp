@@ -74,7 +74,7 @@ public:
   void moveTabRight();
   void moveTabBackward();
   void moveTabForward();
-  void changeQuicksearchVisibility();
+  void changeQuicksearchVisibility(bool);
   QItemSelection mapSelectionToSource( const QItemSelection &selection ) const;
   QItemSelection mapSelectionFromSource( const QItemSelection &selection ) const;
   void updateTabControls();
@@ -194,7 +194,7 @@ void Pane::setXmlGuiClient( KXMLGUIClient *xmlGuiClient )
   showHideQuicksearch->setChecked( Core::Settings::showQuickSearch() );
 
   d->mXmlGuiClient->actionCollection()->addAction( QLatin1String( "show_quick_search" ), showHideQuicksearch );
-  connect( showHideQuicksearch, SIGNAL(triggered(bool)), this, SLOT(changeQuicksearchVisibility()) );
+  connect( showHideQuicksearch, SIGNAL(triggered(bool)), this, SLOT(changeQuicksearchVisibility(bool)) );
 
 
   for ( int i=0; i<count(); i++ ) {
@@ -552,11 +552,11 @@ void Pane::Private::closeTab( QWidget *w )
 }
 
 
-void Pane::Private::changeQuicksearchVisibility()
+void Pane::Private::changeQuicksearchVisibility(bool show)
 {
     for ( int i=0; i<q->count(); i++ ) {
       Widget *w = qobject_cast<Widget *>( q->widget( i ) );
-      w->changeQuicksearchVisibility();
+      w->changeQuicksearchVisibility(show);
     }
 }
 
