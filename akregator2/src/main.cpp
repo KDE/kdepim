@@ -62,6 +62,7 @@ int Application::newInstance()
       mMainWindow->setupProgressWidgets();
       if (!args->isSet("hide-mainwindow"))
         mMainWindow->show();
+      akr.call( "openStandardFeedList");
     }
 
     QString addFeedGroup = !args->getOption("group").isEmpty() ?

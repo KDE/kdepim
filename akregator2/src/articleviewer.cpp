@@ -100,6 +100,7 @@ ArticleViewer::ArticleViewer(QWidget *parent)
 
     setFocusProxy( m_part->widget() );
 
+    m_part->setFontScaleFactor(100);
     m_part->setZoomFactor(100);
     m_part->setJScriptEnabled(false);
     m_part->setJavaEnabled(false);
@@ -108,6 +109,8 @@ ArticleViewer::ArticleViewer(QWidget *parent)
     m_part->setDNDEnabled(true);
     m_part->setAutoloadImages(true);
     m_part->setStatusMessagesEnabled(false);
+    m_part->view()->setAttribute(Qt::WA_InputMethodEnabled, true); //workaround to fix 216878
+    m_part->view()->setFrameStyle( QFrame::StyledPanel|QFrame::Sunken );
 
     // change the cursor when loading stuff...
     connect( m_part, SIGNAL(started(KIO::Job*)),
@@ -133,7 +136,7 @@ ArticleViewer::ArticleViewer(QWidget *parent)
                          KParts::WindowArgs,
                          KParts::ReadOnlyPart**)));
 
-    QAction* action = 0;
+    KAction* action = 0;
     action = KStandardAction::print(this, SLOT(slotPrint()), m_part->actionCollection());
     m_part->actionCollection()->addAction("viewer_print", action);
 
