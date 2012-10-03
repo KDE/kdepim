@@ -247,6 +247,9 @@
         <layout class="QVBoxLayout" name="_11">
          <item>
           <widget class="QPushButton" name="addButton">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="text">
             <string>&amp;Add</string>
            </property>
@@ -254,6 +257,9 @@
          </item>
          <item>
           <widget class="QPushButton" name="removeButton">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="text">
             <string>Remove</string>
            </property>
