@@ -450,6 +450,7 @@ private:
   Q_PRIVATE_SLOT(d, void onCurrentTabChanged())
   Q_PRIVATE_SLOT(d, void onTabContextMenuRequest( const QPoint& ))
   Q_PRIVATE_SLOT(d, void updateTabControls())
+  Q_PRIVATE_SLOT(d, void changeQuicksearchVisibility())
 
   bool eventFilter( QObject *obj, QEvent *event );
 
