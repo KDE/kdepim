@@ -93,15 +93,6 @@ Widget::~Widget()
 void Widget::setXmlGuiClient( KXMLGUIClient *xmlGuiClient )
 {
   d->mXmlGuiClient = xmlGuiClient;
-
-  if ( d->mXmlGuiClient ) {
-    KToggleAction * const showHideQuicksearch = new KToggleAction( i18n( "Show Quick Search Bar" ), this );
-    showHideQuicksearch->setShortcut( Qt::CTRL + Qt::Key_H );
-    showHideQuicksearch->setChecked( Core::Settings::showQuickSearch() );
-
-    d->mXmlGuiClient->actionCollection()->addAction( QLatin1String( "show_quick_search" ), showHideQuicksearch );
-    connect( showHideQuicksearch, SIGNAL(triggered(bool)), this, SLOT(changeQuicksearchVisibility()) );
-  }
 }
 
 bool Widget::canAcceptDrag( const QDropEvent * e )
