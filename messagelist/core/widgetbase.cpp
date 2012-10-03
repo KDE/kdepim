@@ -216,34 +216,29 @@ Widget::~Widget()
   delete d;
 }
 
-void Widget::changeQuicksearchVisibility()
+void Widget::changeQuicksearchVisibility(bool show)
 {
   KLineEdit * const lineEdit = d->mSearchEdit;
   QWidget * const comboBox = d->mStatusFilterCombo;
   QWidget * const fullSearchButton = d->mOpenFullSearchButton;
-  if ( lineEdit ) {
-    const bool visible = lineEdit->isVisible() &&
-                         comboBox->isVisible() &&
-                         fullSearchButton->isVisible();
-    if ( visible ) {
-      //if we hide it we do not want to apply the filter,
-      //otherwise someone is maybe stuck with x new emails
-      //and cannot read it because of filter
-      lineEdit->clear();
+  if ( !show ) {
+    //if we hide it we do not want to apply the filter,
+    //otherwise someone is maybe stuck with x new emails
+    //and cannot read it because of filter
+    lineEdit->clear();
 
-      //we focus the message list if we hide the searchbar
-      d->mView->setFocus( Qt::OtherFocusReason );
-    }
-    else {
-      // on show: we focus the lineedit for fast filtering
-      lineEdit->setFocus( Qt::OtherFocusReason );
-    }
-    lineEdit->setVisible( !visible );
-    comboBox->setVisible( !visible );
-    fullSearchButton->setVisible( !visible );
-    d->mLockSearch->setVisible( !visible );
-    Settings::self()->setShowQuickSearch( !visible );
+    //we focus the message list if we hide the searchbar
+    d->mView->setFocus( Qt::OtherFocusReason );
   }
+  else {
+    // on show: we focus the lineedit for fast filtering
+    lineEdit->setFocus( Qt::OtherFocusReason );
+  }
+  lineEdit->setVisible( show );
+  comboBox->setVisible( show );
+  fullSearchButton->setVisible( show );
+  d->mLockSearch->setVisible( show );
+  Settings::self()->setShowQuickSearch( show );
 }
 
 void Widget::populateStatusFilterCombo()
@@ -1158,10 +1153,7 @@ void Widget::viewMessageStatusChangeRequest( MessageItem *msg, const Akonadi::Me
 
 void Widget::focusQuickSearch()
 {
-  if ( d->mSearchEdit )
-  {
-    d->mSearchEdit->setFocus();
-  }
+  d->mSearchEdit->setFocus();
 }
 
 bool Widget::isThreaded() const
@@ -1181,10 +1173,7 @@ void Widget::setCurrentFolder( const Akonadi::Collection &collection )
 
 bool Widget::searchEditHasFocus() const
 {
-  if(d->mSearchEdit) {
-    return d->mSearchEdit->hasFocus();
-  }
-  return false;
+  return d->mSearchEdit->hasFocus();
 }
 
 #include "widgetbase.moc"

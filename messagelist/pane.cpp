@@ -25,6 +25,8 @@
 #include <KDE/KMenu>
 #include <KDE/KXMLGUIClient>
 
+#include <KToggleAction>
+
 #include <QtCore/QAbstractItemModel>
 #include <QAbstractProxyModel>
 #include <QItemSelectionModel>
@@ -72,6 +74,7 @@ public:
   void moveTabRight();
   void moveTabBackward();
   void moveTabForward();
+  void changeQuicksearchVisibility(bool);
   QItemSelection mapSelectionToSource( const QItemSelection &selection ) const;
   QItemSelection mapSelectionFromSource( const QItemSelection &selection ) const;
   void updateTabControls();
@@ -185,6 +188,14 @@ Pane::~Pane()
 void Pane::setXmlGuiClient( KXMLGUIClient *xmlGuiClient )
 {
   d->mXmlGuiClient = xmlGuiClient;
+
+  KToggleAction * const showHideQuicksearch = new KToggleAction( i18n( "Show Quick Search Bar" ), this );
+  showHideQuicksearch->setShortcut( Qt::CTRL + Qt::Key_H );
+  showHideQuicksearch->setChecked( Core::Settings::showQuickSearch() );
+
+  d->mXmlGuiClient->actionCollection()->addAction( QLatin1String( "show_quick_search" ), showHideQuicksearch );
+  connect( showHideQuicksearch, SIGNAL(triggered(bool)), this, SLOT(changeQuicksearchVisibility(bool)) );
+
 
   for ( int i=0; i<count(); i++ ) {
     Widget *w = qobject_cast<Widget *>( widget( i ) );
@@ -539,6 +550,16 @@ void Pane::Private::closeTab( QWidget *w )
   delete w;
   updateTabControls();
 }
+
+
+void Pane::Private::changeQuicksearchVisibility(bool show)
+{
+    for ( int i=0; i<q->count(); i++ ) {
+      Widget *w = qobject_cast<Widget *>( q->widget( i ) );
+      w->changeQuicksearchVisibility(show);
+    }
+}
+
 
 bool Pane::eventFilter( QObject *object, QEvent *event )
 {
@@ -1006,6 +1027,5 @@ bool Pane::searchEditHasFocus() const
     return w->searchEditHasFocus();
   return false;
 }
-
 
 #include "pane.moc"

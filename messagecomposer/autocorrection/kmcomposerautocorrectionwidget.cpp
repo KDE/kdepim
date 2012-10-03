@@ -260,8 +260,12 @@ void KMComposerAutoCorrectionWidget::enableAdvAutocorrection(bool state)
   ui->find->setEnabled(state);
   ui->replaceLabel->setEnabled(state);
   ui->replace->setEnabled(state);
-  ui->addButton->setEnabled(state);
-  ui->removeButton->setEnabled(state);
+
+  const QString find = ui->find->text();
+  const QString replace = ui->replace->text();
+
+  ui->addButton->setEnabled(state && !find.isEmpty() && !replace.isEmpty());
+  ui->removeButton->setEnabled(state && ui->treeWidget->currentItem ());
   ui->treeWidget->setEnabled(state);
 }
 
@@ -323,9 +327,8 @@ void KMComposerAutoCorrectionWidget::removeAutocorrectEntry()
 
 void KMComposerAutoCorrectionWidget::enableAddRemoveButton()
 {
-    QString find = ui->find->text();
-    QString replace = ui->replace->text();
-    int currentRow = -1;
+    const QString find = ui->find->text();
+    const QString replace = ui->replace->text();
 
     QTreeWidgetItem *item = 0;
     if (m_autocorrectEntries.contains(find)) {
@@ -333,7 +336,7 @@ void KMComposerAutoCorrectionWidget::enableAddRemoveButton()
 
     }
     bool enable = false;
-    if ( !currentRow || find.isEmpty() || replace.isEmpty()) // disable if no text in find/replace
+    if ( find.isEmpty() || replace.isEmpty()) // disable if no text in find/replace
         enable = !(find.isEmpty() || replace.isEmpty());
     else if (item && find == item->text(0)) {
         // We disable add / remove button if no text for the replacement
