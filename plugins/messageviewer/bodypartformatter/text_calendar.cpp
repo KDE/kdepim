@@ -3,7 +3,7 @@
 
   Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
   Copyright (c) 2007 Volker Krause <vkrause@kde.org>
-  Copyright (c) 2010 Klar‰lvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
+  Copyright (c) 2010 Klar√§lvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License as published by

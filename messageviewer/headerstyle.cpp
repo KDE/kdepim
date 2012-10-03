@@ -604,7 +604,6 @@ QString FancyHeaderStyle::format( KMime::Message *message ) const {
     userHTML = QString("<div class=\"senderpic\">") + userHTML + "</div>";
   }
 
-  qDebug()<<" photoURL"<<photoURL;
   // the subject line and box below for details
   if ( strategy->showHeader( "subject" ) ) {
     const int flags = LinkLocator::PreserveSpaces |
