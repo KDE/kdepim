@@ -2,7 +2,7 @@
 
   This file is part of KMail, the KDE mail client.
   Copyright (c) 2004 Till Adam <adam@kde.org>
-  Copyright (c) 2010 Klar‰lvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
+  Copyright (c) 2010 Klar√§lvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
   Copyright (c) 2012 Laurent Montel <montel@kde.org>
 
   KMail is free software; you can redistribute it and/or modify it
