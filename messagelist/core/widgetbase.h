@@ -144,7 +144,7 @@ public slots:
   /**
    * Shows or hides the quicksearch field, the filter combobox and the toolbutton for advanced search.
    */
-  void changeQuicksearchVisibility();
+  void changeQuicksearchVisibility(bool);
 
 protected:
   /**
