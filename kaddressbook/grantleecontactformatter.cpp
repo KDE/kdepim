@@ -161,6 +161,16 @@ static QVariantHash addressHash( const KABC::Address &address, int counter )
   return addressObject;
 }
 
+static int contactAge( const QDate &date )
+{
+  QDate now = QDate::currentDate();
+  int age = now.year() - date.year();
+  if ( date > now.addYears( -age ) ) {
+    age--;
+  }
+  return age;
+}
+
 QString GrantleeContactFormatter::toHtml( HtmlForm form ) const
 {
   if ( !d->mErrorMessage.isEmpty() ) {
@@ -196,7 +206,7 @@ QString GrantleeContactFormatter::toHtml( HtmlForm form ) const
   if ( birthday.isValid() ) {
     contactObject.insert( QLatin1String( "birthday" ), KGlobal::locale()->formatDate( birthday ) );
 
-    const int years = ( birthday.daysTo( QDate::currentDate() ) / 365 );
+    const int years = contactAge( birthday );
     contactObject.insert( QLatin1String( "age" ), QString::number( years ) );
   }
 
