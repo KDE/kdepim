@@ -1155,10 +1155,7 @@ void Widget::viewMessageStatusChangeRequest( MessageItem *msg, const Akonadi::Me
 
 void Widget::focusQuickSearch()
 {
-  if ( d->mSearchEdit )
-  {
-    d->mSearchEdit->setFocus();
-  }
+  d->mSearchEdit->setFocus();
 }
 
 bool Widget::isThreaded() const
@@ -1178,10 +1175,7 @@ void Widget::setCurrentFolder( const Akonadi::Collection &collection )
 
 bool Widget::searchEditHasFocus() const
 {
-  if(d->mSearchEdit) {
-    return d->mSearchEdit->hasFocus();
-  }
-  return false;
+  return d->mSearchEdit->hasFocus();
 }
 
 #include "widgetbase.moc"
