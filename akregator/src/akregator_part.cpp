@@ -75,7 +75,6 @@
 #include <QWidget>
 #include <QDomDocument>
 #include "partadaptor.h"
-#include <dataretriever.h>
 
 #include <memory>
 
