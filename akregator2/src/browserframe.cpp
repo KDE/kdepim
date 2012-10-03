@@ -230,7 +230,7 @@ void BrowserFrame::slotPopupMenu(
 
     bool isFirst = true;
 
-    QPointer<KMenu> popup( new KMenu( d->part->widget() ) );
+    QPointer<KMenu> popup( new KMenu() );
 
     if (showNavigationItems)
     {
