@@ -221,26 +221,24 @@ void Widget::changeQuicksearchVisibility(bool show)
   KLineEdit * const lineEdit = d->mSearchEdit;
   QWidget * const comboBox = d->mStatusFilterCombo;
   QWidget * const fullSearchButton = d->mOpenFullSearchButton;
-  if ( lineEdit ) {
-    if ( !show ) {
-      //if we hide it we do not want to apply the filter,
-      //otherwise someone is maybe stuck with x new emails
-      //and cannot read it because of filter
-      lineEdit->clear();
+  if ( !show ) {
+    //if we hide it we do not want to apply the filter,
+    //otherwise someone is maybe stuck with x new emails
+    //and cannot read it because of filter
+    lineEdit->clear();
 
-      //we focus the message list if we hide the searchbar
-      d->mView->setFocus( Qt::OtherFocusReason );
-    }
-    else {
-      // on show: we focus the lineedit for fast filtering
-      lineEdit->setFocus( Qt::OtherFocusReason );
-    }
-    lineEdit->setVisible( show );
-    comboBox->setVisible( show );
-    fullSearchButton->setVisible( show );
-    d->mLockSearch->setVisible( show );
-    Settings::self()->setShowQuickSearch( show );
+    //we focus the message list if we hide the searchbar
+    d->mView->setFocus( Qt::OtherFocusReason );
   }
+  else {
+    // on show: we focus the lineedit for fast filtering
+    lineEdit->setFocus( Qt::OtherFocusReason );
+  }
+  lineEdit->setVisible( show );
+  comboBox->setVisible( show );
+  fullSearchButton->setVisible( show );
+  d->mLockSearch->setVisible( show );
+  Settings::self()->setShowQuickSearch( show );
 }
 
 void Widget::populateStatusFilterCombo()
