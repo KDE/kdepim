@@ -228,6 +228,10 @@ void Widget::changeQuicksearchVisibility(bool show)
       //and cannot read it because of filter
       lineEdit->clear();
 
+      if ( d->mFilter ) {
+        resetFilter();
+      }
+
       //we focus the message list if we hide the searchbar
       d->mView->setFocus( Qt::OtherFocusReason );
     }
@@ -415,7 +419,7 @@ void Widget::setStorageModel( StorageModel * storageModel, PreSelectionMode preS
           d->mSearchTimer = 0;
       }
 
-      d->mSearchEdit->setText( QString() );
+      d->mSearchEdit->clear();
 
       if ( d->mFilter ) {
           resetFilter();
