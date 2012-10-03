@@ -424,6 +424,11 @@ void TabWidget::slotCloseRequest(QWidget* widget)
         emit signalRemoveFrameRequest(d->frames.value(widget)->id());
 }
 
+void TabWidget::slotActivateTab()
+{
+    setCurrentIndex( sender()->objectName().right( 2 ).toInt() -1 );
+}
+
 } // namespace Akregator2
 
 #include "tabwidget.moc"

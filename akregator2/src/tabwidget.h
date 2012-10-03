@@ -57,6 +57,7 @@ class TabWidget : public KTabWidget
         void slotFrameZoomIn();
         void slotFrameZoomOut();
         void slotReloadAllTabs();
+        void slotActivateTab();
 
     Q_SIGNALS:
         void signalCurrentFrameChanged(int);
