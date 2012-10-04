@@ -136,6 +136,7 @@ class AKREGATOR2PART_EXPORT MainWidget : public QWidget
 
         /** opens current article in new tab, background/foreground depends on settings TODO: use selected instead of current? */
         void slotOpenSelectedArticles();
+        void slotOpenSelectedArticlesInBackground();
 
         void slotOnShutdown();
 
@@ -232,6 +233,8 @@ class AKREGATOR2PART_EXPORT MainWidget : public QWidget
         Private* const d;
 
         void addFeed(const QString& url, bool autoExec );
+        /** opens current article in new tab, background/foreground depends on settings TODO: use selected instead of current? */
+        void openSelectedArticles(bool openInBackground);
 
         SelectionController* m_selectionController;
 

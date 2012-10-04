@@ -281,7 +281,7 @@ void FrameManager::openInExternalBrowser(const OpenUrlRequest& request)
         KRun::runUrl(url, request.args().mimeType(), 0 /*window*/, false, false);
 }
 
-void FrameManager::slotOpenUrlRequest(OpenUrlRequest& request)
+void FrameManager::slotOpenUrlRequest(OpenUrlRequest& request, bool useOpenInBackgroundSetting)
 {
     kDebug() <<"FrameManager::slotOpenUrlRequest():" << request.debugInfo();
 
@@ -290,14 +290,16 @@ void FrameManager::slotOpenUrlRequest(OpenUrlRequest& request)
         openInExternalBrowser(request);
         return;
     }
-    // Honour user's preference for foreground/background tabs
-    if (request.options() == OpenUrlRequest::NewTab ||
-            request.browserArgs().newTab())
-    {
-        request.setOpenInBackground(Settings::lMBBehaviour() ==
-                                    Settings::EnumLMBBehaviour::OpenInBackground);
-    }
-    // if no service type is set, determine it using BrowserRun.
+   if( useOpenInBackgroundSetting ) {
+       // Honour user's preference for foreground/background tabs
+       if (request.options() == OpenUrlRequest::NewTab ||
+               request.browserArgs().newTab())
+       {
+           request.setOpenInBackground(Settings::lMBBehaviour() ==
+                                       Settings::EnumLMBBehaviour::OpenInBackground);
+       }
+   }
+   // if no service type is set, determine it using BrowserRun.
     if (request.args().mimeType().isEmpty())
     {
         BrowserRun* run = new BrowserRun(request, m_mainWin);

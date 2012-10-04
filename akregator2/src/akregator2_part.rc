@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
-<kpartgui name="akregator2_part" version="419">
+<kpartgui name="akregator2_part" version="420">
   <MenuBar>
     <Menu name="file">
       <Action name="file_import"/>
@@ -57,6 +57,7 @@
     <Menu name ="article">
       <text>&amp;Article</text>
       <Action name="article_open"/>
+      <Action name="article_open_in_background" />
       <Action name="article_open_external" />
       <Separator/>
       <Action name="article_set_status_important"/>
@@ -115,6 +116,7 @@
     <Action name="feedstree_move_up"/>
     <Action name="feedstree_move_down"/>
     <Action name="article_open_in_tab"/>
+    <Action name="article_open_in_background" />
     <Action name="article_open"/>
     <Action name="select_previous_tab"/>
     <Action name="select_next_tab"/>
@@ -144,6 +146,7 @@
 
   <Menu name="article_popup">
     <Action name="article_open"/>
+    <Action name="article_open_in_background" />
     <Action name="article_open_external" />
     <Action name="article_copy_link_address" />
     <Separator/>
