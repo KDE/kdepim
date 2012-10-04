@@ -112,9 +112,6 @@ public:
     void setScrollBarPositions( const QPoint& p );
 
     //impl ArticleLister
-    void setFilters( const std::vector<boost::shared_ptr<const Akregator2::Filters::AbstractMatcher> >& );
-
-    //impl ArticleLister
     void forceFilterUpdate();
 
     void setIsAggregation( bool isAggregation );
@@ -128,8 +125,11 @@ signals:
     void signalMouseButtonPressed( int, const KUrl );
 
 public Q_SLOTS:
+    
 
     void slotClear();
+    
+    void setFilters( const std::vector<boost::shared_ptr<const Akregator2::Filters::AbstractMatcher> >& );
 
     void slotPreviousArticle();
 

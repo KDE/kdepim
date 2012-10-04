@@ -751,6 +751,10 @@ void Akregator2::MainWidget::slotItemSelected( const KRss::Item& item )
     assert( maai );
     maai->setChecked( item.isImportant() );
 
+
+    const QList<KRss::Item> items = m_selectionController->selectedItems();
+    emit signalItemsSelected( items );
+
     m_articleViewer->showItem( item );
 
     if ( item.isNull() || item.isRead() )

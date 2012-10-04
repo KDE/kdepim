@@ -123,6 +123,8 @@ class AKREGATOR2PART_EXPORT MainWidget : public QWidget
         /** emitted when the unread count of "All Feeds" was changed */
         void signalUnreadCountChanged(int);
 
+	void signalItemsSelected( const QList<KRss::Item>& );
+
     public slots:
 
         void slotImportFeedList();

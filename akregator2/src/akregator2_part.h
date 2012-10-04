@@ -29,7 +29,7 @@
 #include <kurl.h>
 #include <kparts/browserextension.h>
 #include <kparts/part.h>
-
+#include <krss/item.h>
 #include <boost/shared_ptr.hpp>
 
 class KConfigGroup;
@@ -112,7 +112,7 @@ class Part : public KParts::ReadOnlyPart
 
     signals:
         void signalSettingsChanged();
-
+        void signalArticlesSelected(const QList<KRss::Item>&);
 
     private:
 
