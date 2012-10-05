@@ -21,8 +21,19 @@
 #include "messageviewer_export.h"
 #include <QWidget>
 #include <kio/job.h>
+#include <KTextEdit>
 
 namespace MessageViewer {
+
+class TranslatorTextEdit : public KTextEdit
+{
+    Q_OBJECT
+public:
+    explicit TranslatorTextEdit(QWidget *parent = 0);
+protected:
+    void dropEvent( QDropEvent * );
+};
+
 class MESSAGEVIEWER_EXPORT TranslatorWidget : public QWidget
 {
   Q_OBJECT

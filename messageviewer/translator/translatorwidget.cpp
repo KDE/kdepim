@@ -59,7 +59,7 @@ public:
   
   QMap<QString, QMap<QString, QString> > listLanguage;
   QByteArray data;
-  KTextEdit *inputText;
+  TranslatorTextEdit *inputText;
   KTextEdit *translatedText;
   MinimumComboBox *from;
   MinimumComboBox *to;
@@ -87,6 +87,27 @@ void TranslatorWidget::TranslatorWidgetPrivate::initLanguage()
   listLanguage = abstractTranslator->initListLanguage(from);
 }
 
+
+TranslatorTextEdit::TranslatorTextEdit(QWidget *parent)
+  :KTextEdit(parent)
+{
+}
+
+void TranslatorTextEdit::dropEvent( QDropEvent *event )
+{
+  if(event->source() != this ) {
+    if( event->mimeData()->hasText() ) {
+      QTextCursor cursor = textCursor();
+      cursor.beginEditBlock();
+      cursor.insertText(event->mimeData()->text());
+      cursor.endEditBlock();
+      event->setDropAction(Qt::CopyAction);
+      event->accept();
+      return;
+    }
+  }
+  QTextEdit::dropEvent(event);
+}
 
 
 TranslatorWidget::TranslatorWidget( QWidget* parent )
@@ -185,7 +206,7 @@ void TranslatorWidget::init()
 
   QSplitter *splitter = new QSplitter;
   splitter->setChildrenCollapsible( false );
-  d->inputText = new KTextEdit;
+  d->inputText = new TranslatorTextEdit;
   d->inputText->setAcceptRichText(false);
   d->inputText->setClickMessage(i18n("Drag text that you want to translate."));
   connect( d->inputText, SIGNAL(textChanged()), SLOT(slotTextChanged()) );
