@@ -35,6 +35,8 @@
 #include "messageviewer/interfaces/bodypart.h"
 #include <messageviewer/nodehelper.h>
 
+#include "vcardmemento.h"
+
 using MessageViewer::Interface::BodyPart;
 #include "messageviewer/webkitparthtmlwriter.h"
 
@@ -66,7 +68,12 @@ class Formatter : public MessageViewer::Interface::BodyPartFormatter
     {
     }
 
-    Result format( BodyPart *bodyPart, MessageViewer::HtmlWriter *writer ) const
+    Result format( BodyPart * part, MessageViewer::HtmlWriter * writer ) const
+    {
+      return format ( part, writer, 0 );
+    }
+
+    Result format( BodyPart *bodyPart, MessageViewer::HtmlWriter *writer, QObject* asyncResultObserver ) const
     {
       if ( !writer ) {
         return AsIcon;
@@ -78,13 +85,19 @@ class Formatter : public MessageViewer::Interface::BodyPartFormatter
       }
 
       KABC::VCardConverter vcc;
-      KABC::Addressee::List al = vcc.parseVCards( vCard.toUtf8() );
+      const KABC::Addressee::List al = vcc.parseVCards( vCard.toUtf8() );
+
+      MessageViewer::VcardMemento *memento = dynamic_cast<MessageViewer::VcardMemento*>( bodyPart->memento() );
+      QStringList lst;
 
       // Pre-count the number of non-empty addressees
       int count = 0;
       foreach ( const KABC::Addressee &a, al ) {
         if ( a.isEmpty() ) {
           continue;
+        }
+        if(!memento) {
+          lst.append(a.emails().first());
         }
         count++;
       }
@@ -99,6 +112,19 @@ class Formatter : public MessageViewer::Interface::BodyPartFormatter
       count = 0;
       static QString defaultPixmapPath = QLatin1String("file:///") + KIconLoader::global()->iconPath( "user-identity", KIconLoader::Desktop );
       static QString defaultMapIconPath = QLatin1String("file:///") + KIconLoader::global()->iconPath( "document-open-remote", KIconLoader::Small );
+
+
+      if ( !memento ) {
+        MessageViewer::VcardMemento *memento = new MessageViewer::VcardMemento(lst);
+        bodyPart->setBodyPartMemento( memento );
+
+        if ( asyncResultObserver ) {
+          QObject::connect( memento, SIGNAL(update(MessageViewer::Viewer::UpdateMode)),
+                            asyncResultObserver, SLOT(update(MessageViewer::Viewer::UpdateMode)) );
+        }
+      }
+
+
       foreach ( const KABC::Addressee &a, al ) {
         if ( a.isEmpty() ) {
           continue;
@@ -107,7 +133,7 @@ class Formatter : public MessageViewer::Interface::BodyPartFormatter
         formatter.setContact( a );
         formatter.setDisplayQRCode(false);
         QString htmlStr = formatter.toHtml( Akonadi::StandardContactFormatter::EmbeddableForm );
-        KABC::Picture photo = a.photo();
+        const KABC::Picture photo = a.photo();
         htmlStr.replace(QLatin1String("<img src=\"map_icon\""),QString::fromLatin1("<img src=\"%1\"").arg(defaultMapIconPath));
         if(photo.isEmpty()) {
           htmlStr.replace(QLatin1String("img src=\"contact_photo\""),QString::fromLatin1("img src=\"%1\"").arg(defaultPixmapPath));
@@ -122,13 +148,36 @@ class Formatter : public MessageViewer::Interface::BodyPartFormatter
         }
         writer->queue( htmlStr );
 
-        QString addToLinkText = i18n( "[Add this contact to the address book]" );
-        QString op = QString::fromLatin1( "addToAddressBook:%1" ).arg( count );
-        writer->queue( "<div align=\"center\"><a href=\"" +
-                       bodyPart->makeLink( op ) +
-                       "\">" +
-                       addToLinkText +
-                       "</a></div><br><br>" );
+        if(!memento ||
+                (memento && !memento->finished()) ||
+                (memento && memento->finished() && !memento->vcardExist(count)) ) {
+          const QString addToLinkText = i18n( "[Add this contact to the address book]" );
+          QString op = QString::fromLatin1( "addToAddressBook:%1" ).arg( count );
+          writer->queue( "<div align=\"center\"><a href=\"" +
+                         bodyPart->makeLink( op ) +
+                         "\">" +
+                         addToLinkText +
+                         "</a></div><br><br>" );
+        } else {
+#if 0
+            if(memento->address(count) != a) {
+              const QString addToLinkText = i18n( "[Update this contact to the address book]" );
+              QString op = QString::fromLatin1( "updateToAddressBook:%1" ).arg( count );
+              writer->queue( "<div align=\"center\"><a href=\"" +
+                             bodyPart->makeLink( op ) +
+                             "\">" +
+                             addToLinkText +
+                            "</a></div><br><br>" );
+            } else {
+#endif
+                const QString addToLinkText = i18n( "[This contact is already in addressbook]" );
+                writer->queue( "<div align=\"center\">" +
+                               addToLinkText +
+                              "</a></div><br><br>" );
+#if 0
+            }
+#endif
+        }
         count++;
       }
 
@@ -150,12 +199,12 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       }
       if(path.startsWith(QLatin1String("addToAddressBook"))) {
         KABC::VCardConverter vcc;
-        KABC::Addressee::List al = vcc.parseVCards( vCard.toUtf8() );
-        int index = path.right( path.length() - path.lastIndexOf( ":" ) - 1 ).toInt();
+        const KABC::Addressee::List al = vcc.parseVCards( vCard.toUtf8() );
+        const int index = path.right( path.length() - path.lastIndexOf( ":" ) - 1 ).toInt();
         if ( index == -1 || index >= al.count() ) {
           return true;
         }
-        KABC::Addressee a = al[index];
+        const KABC::Addressee a = al.at(index);
         if ( a.isEmpty() ) {
           return true;
         }
@@ -171,10 +220,10 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       const QString vCard = part->asText();
       if ( !vCard.isEmpty() ) {
         KABC::VCardConverter vcc;
-        KABC::Addressee::List al = vcc.parseVCards( vCard.toUtf8() );
+        const KABC::Addressee::List al = vcc.parseVCards( vCard.toUtf8() );
         const int index = path.right( path.length() - path.lastIndexOf( ":" ) - 1 ).toInt();
         if ( index >= 0 && index < al.count() ) {
-          return al[index];
+          return al.at(index);
         }
       }
       return KABC::Addressee();

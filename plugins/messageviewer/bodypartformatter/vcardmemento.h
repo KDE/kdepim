@@ -24,8 +24,22 @@
 #include <messageviewer/viewer.h>
 
 #include <QObject>
+#include <QMap>
+#include <KABC/Addressee>
+
+class KJob;
 
 namespace MessageViewer {
+
+struct VCard {
+    VCard(const QString& str, bool b)
+        : email(str), found(b)
+    {
+    }
+    KABC::Addressee address;
+    QString email;
+    bool found;
+};
 
 class VcardMemento : public QObject, public Interface::BodyPartMemento
 {
@@ -38,11 +52,22 @@ public:
 
    virtual void detach();
 
+   bool vcardExist(int index) const;
+
+   KABC::Addressee address( int index ) const;
+
+private Q_SLOTS:
+   void slotSearchJobFinished( KJob *job );
+
+
 Q_SIGNALS:
   // TODO: Factor our update and detach into base class
   void update( MessageViewer::Viewer::UpdateMode );
 
 private:
+  void checkEmail();
+  QList<VCard> mVCardList;
+  int mIndex;
   bool mFinished;
 };
 }
