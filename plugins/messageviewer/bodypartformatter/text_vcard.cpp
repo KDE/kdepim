@@ -148,20 +148,21 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       if ( vCard.isEmpty() ) {
         return true;
       }
-      KABC::VCardConverter vcc;
-      KABC::Addressee::List al = vcc.parseVCards( vCard.toUtf8() );
-      int index = path.right( path.length() - path.lastIndexOf( ":" ) - 1 ).toInt();
-      if ( index == -1 || index >= al.count() ) {
-        return true;
-      }
-      KABC::Addressee a = al[index];
-      if ( a.isEmpty() ) {
-        return true;
-      }
+      if(path.startsWith(QLatin1String("addToAddressBook"))) {
+        KABC::VCardConverter vcc;
+        KABC::Addressee::List al = vcc.parseVCards( vCard.toUtf8() );
+        int index = path.right( path.length() - path.lastIndexOf( ":" ) - 1 ).toInt();
+        if ( index == -1 || index >= al.count() ) {
+          return true;
+        }
+        KABC::Addressee a = al[index];
+        if ( a.isEmpty() ) {
+          return true;
+        }
 
-      KPIM::AddContactJob *job = new KPIM::AddContactJob( a, 0 );
-      job->start();
-
+        KPIM::AddContactJob *job = new KPIM::AddContactJob( a, 0 );
+        job->start();
+      }
       return true;
     }
 
