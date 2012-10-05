@@ -291,7 +291,7 @@ void DistributionListDialog::slotContactGroupCreateJobResult( KJob *job )
 
 void DistributionListDialog::slotTitleChanged( const QString& text )
 {
-  enableButton( KDialog::User1, !text.isEmpty() );
+  enableButton( KDialog::User1, !text.trimmed().isEmpty() );
 }
 
 
