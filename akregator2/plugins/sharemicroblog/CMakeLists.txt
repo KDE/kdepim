@@ -20,7 +20,6 @@ target_link_libraries(akregator2_sharemicroblog_plugin
   ${KDE4_KIO_LIBS}
   ${KDE4_KPARTS_LIBS}
   ${KDEPIMLIBS_KRSS_LIBS}
-  /opt/kde4/lib64/libkrss.so
 )
 
 install(FILES akregator2_sharemicroblog_plugin.desktop DESTINATION ${SERVICES_INSTALL_DIR})
