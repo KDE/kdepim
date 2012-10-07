@@ -304,7 +304,8 @@ KMime::Content * ViewerPrivate::nodeFromUrl( const KUrl & url )
         node = c->content( idx );
       }
     } else {
-      node= mMessage->content( KMime::ContentIndex( path ) );
+      if( mMessage )
+         node= mMessage->content( KMime::ContentIndex( path ) );
     }
   } else {
     QString path = url.toLocalFile();
