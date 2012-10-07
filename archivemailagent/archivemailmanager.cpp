@@ -22,6 +22,7 @@
 #include "archivemailagentutil.h"
 
 #include <mailcommon/mailkernel.h>
+#include <mailcommon/mailutil.h>
 
 #include <Akonadi/Collection>
 
@@ -30,6 +31,8 @@
 #include <KGlobal>
 
 #include <QDate>
+#include <QFile>
+#include <QDir>
 
 static QString archivePattern = QLatin1String("ArchiveMailCollection %1");
 
@@ -105,6 +108,18 @@ void ArchiveMailManager::backupDone(ArchiveMailInfo *info)
   if(config->hasGroup(groupname)) {
     KConfigGroup group = config->group(groupname);
     info->writeConfig(group);
+  }
+  Akonadi::Collection collection(info->saveCollectionId());
+  const QString realPath = MailCommon::Util::fullCollectionPath(collection);
+  const QStringList lst = info->listOfArchive(realPath);
+
+  if(lst.count() > info->maximumArchiveCount()) {
+    const int diff = (lst.count() - info->maximumArchiveCount());
+    for(int i = 0; i < diff; ++i) {
+      const QString fileToRemove(info->url().path() + QDir::separator() + lst.at(i));
+      qDebug()<<" file to remove "<<fileToRemove;
+      QFile::remove(fileToRemove);
+    }
   }
   mListArchiveInfo.removeAll(info);
 }

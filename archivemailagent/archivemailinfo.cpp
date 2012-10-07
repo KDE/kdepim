@@ -47,6 +47,17 @@ ArchiveMailInfo::~ArchiveMailInfo()
 {
 }
 
+QString ArchiveMailInfo::dirArchive() const
+{
+  const QDir dir(url().path());
+  QString dirPath = url().path();
+  if(!dir.exists()) {
+    dirPath = QDir::homePath();
+    qDebug()<<" Path doesn't exist"<<dir.path();
+  }
+  return dirPath;
+}
+
 KUrl ArchiveMailInfo::realUrl(const QString& foldername) const
 {
   const int numExtensions = 4;
@@ -54,12 +65,7 @@ KUrl ArchiveMailInfo::realUrl(const QString& foldername) const
   const char *extensions[numExtensions] = { ".zip", ".tar", ".tar.bz2", ".tar.gz" };
   QString adaptFolderName(foldername);
   adaptFolderName.replace(QLatin1Char('/'),QLatin1Char('_'));
-  const QDir dir(url().path());
-  QString dirPath = url().path();
-  if(!dir.exists()) {
-    dirPath = QDir::homePath();
-    qDebug()<<" Path doesn't exist"<<dir.path();
-  }
+  QString dirPath = dirArchive();
   const QString path = dirPath + QLatin1Char( '/' ) + i18nc( "Start of the filename for a mail archive file" , "Archive" )
       + QLatin1Char( '_' ) + adaptFolderName + QLatin1Char( '_' )
       + QDate::currentDate().toString( Qt::ISODate ) + extensions[mArchiveType];
@@ -67,6 +73,21 @@ KUrl ArchiveMailInfo::realUrl(const QString& foldername) const
   return real;
 }
 
+QStringList ArchiveMailInfo::listOfArchive(const QString& foldername)
+{
+  const QString dirPath = dirArchive();
+  QDir dir(dirPath);
+  const int numExtensions = 4;
+  // The extensions here are also sorted, like the enum order of BackupJob::ArchiveType
+  const char *extensions[numExtensions] = { ".zip", ".tar", ".tar.bz2", ".tar.gz" };
+  QString adaptFolderName(foldername);
+  adaptFolderName.replace(QLatin1Char('/'),QLatin1Char('_'));
+
+  QStringList nameFilters;
+  nameFilters << i18nc( "Start of the filename for a mail archive file" , "Archive" ) + QLatin1Char( '_' ) + adaptFolderName + QLatin1Char( '_' ) + QLatin1String("*") + extensions[mArchiveType];
+  const QStringList lst = dir.entryList ( nameFilters, QDir::Files|QDir::NoDotAndDotDot, QDir::Time|QDir::Reversed );
+  return lst;
+}
 
 bool ArchiveMailInfo::isEmpty() const
 {

@@ -69,7 +69,10 @@ public:
   int maximumArchiveCount() const;
   void setMaximumArchiveCount( int max );
 
+  QStringList listOfArchive(const QString& foldername);
+
 private:
+  QString dirArchive() const;
   QDate mLastDateSaved;
   int mArchiveAge;
   MailCommon::BackupJob::ArchiveType mArchiveType;
