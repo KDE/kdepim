@@ -30,6 +30,7 @@ endif()
 
 if(BUILD_akregator)
   add_subdirectory(akregator)
+  add_subdirectory(akregator2)
 endif()
 
 if(BUILD_ktimetracker)
