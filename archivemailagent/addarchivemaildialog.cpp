@@ -22,6 +22,7 @@
 #include <KLocale>
 #include <KComboBox>
 #include <KUrlRequester>
+#include <KIntSpinBox>
 
 #include <QGridLayout>
 #include <QLabel>
@@ -109,6 +110,15 @@ AddArchiveMailDialog::AddArchiveMailDialog(ArchiveMailInfo* info,QWidget *parent
   mainLayout->addLayout(hlayout, row, 1);
   row++;
 
+  QLabel *maxCountlabel = new QLabel( i18n( "Maximum number of archive:" ), mainWidget );
+  mainLayout->addWidget( maxCountlabel, row, 0 );
+  mMaximumArchive = new KIntSpinBox( mainWidget );
+  mMaximumArchive->setMinimum(0);
+  mMaximumArchive->setSpecialValueText(i18n("unlimited"));
+  maxCountlabel->setBuddy( mMaximumArchive );
+  mainLayout->addWidget( mMaximumArchive, row, 1 );
+  row++;
+
   mainLayout->setColumnStretch( 1, 1 );
   mainLayout->addItem( new QSpacerItem( 1, 1, QSizePolicy::Expanding, QSizePolicy::Expanding ), row, 0 );
 
@@ -135,7 +145,7 @@ void AddArchiveMailDialog::load(ArchiveMailInfo* info)
   mFormatComboBox->setCurrentIndex(static_cast<int>(info->archiveType()));
   mDays->setValue(info->archiveAge());
   mUnits->setCurrentIndex(static_cast<int>(info->archiveUnit()));
-
+  mMaximumArchive->setValue(info->maximumArchiveCount());
   slotUpdateOkButton();
 }
 
@@ -150,6 +160,7 @@ ArchiveMailInfo* AddArchiveMailDialog::info()
   mInfo->setUrl(mPath->url());
   mInfo->setArchiveAge(mDays->value());
   mInfo->setArchiveUnit(static_cast<ArchiveMailInfo::ArchiveUnit>(mUnits->currentIndex()));
+  mInfo->setMaximumArchiveCount(mMaximumArchive->value());
   return mInfo;
 }
 
@@ -203,6 +214,16 @@ KUrl AddArchiveMailDialog::path() const
 void AddArchiveMailDialog::setPath(const KUrl&url)
 {
   mPath->setUrl(url);
+}
+
+void AddArchiveMailDialog::setMaximumArchiveCount(int max)
+{
+  mMaximumArchive->setValue(max);
+}
+
+int AddArchiveMailDialog::maximumArchiveCount() const
+{
+  return mMaximumArchive->value();
 }
 
 

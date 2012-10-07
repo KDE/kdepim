@@ -66,6 +66,9 @@ public:
   void setLastDateSaved( const QDate& date );
   QDate lastDateSaved() const;
 
+  int maximumArchiveCount() const;
+  void setMaximumArchiveCount( int max );
+
 private:
   QDate mLastDateSaved;
   int mArchiveAge;
@@ -73,6 +76,7 @@ private:
   ArchiveUnit mArchiveUnit;
   Akonadi::Collection::Id mSaveCollectionId;
   KUrl mPath;
+  int mMaximumArchiveCount;
   bool mSaveSubCollection;
 };
 

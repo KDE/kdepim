@@ -25,6 +25,7 @@ ArchiveMailInfo::ArchiveMailInfo()
   , mArchiveType( MailCommon::BackupJob::Zip )
   , mArchiveUnit( ArchiveMailInfo::ArchiveDays ) 
   , mSaveCollectionId(-1) 
+  , mMaximumArchiveCount(0)
   , mSaveSubCollection(false)
 {
 }
@@ -35,6 +36,7 @@ ArchiveMailInfo::ArchiveMailInfo(const KConfigGroup& config)
   , mArchiveType( MailCommon::BackupJob::Zip ) 
   , mArchiveUnit( ArchiveMailInfo::ArchiveDays ) 
   , mSaveCollectionId(-1)
+  , mMaximumArchiveCount(0)
   , mSaveSubCollection(false)
 {
   readConfig(config);
@@ -121,6 +123,7 @@ void ArchiveMailInfo::readConfig(const KConfigGroup& config)
   mArchiveUnit = static_cast<ArchiveUnit>( config.readEntry( "archiveUnit", ( int )ArchiveDays ) );
   Akonadi::Collection::Id tId = config.readEntry("saveCollectionId",mSaveCollectionId);
   mArchiveAge = config.readEntry("archiveAge",1);
+  mMaximumArchiveCount = config.readEntry("maximumArchiveCount",0);
   if ( tId >= 0 ) {
     mSaveCollectionId = tId;
   }
@@ -135,6 +138,7 @@ void ArchiveMailInfo::writeConfig(KConfigGroup & config )
   config.writeEntry("archiveUnit", ( int )mArchiveUnit );
   config.writeEntry("saveCollectionId",mSaveCollectionId);
   config.writeEntry("archiveAge",mArchiveAge);
+  config.writeEntry("maximumArchiveCount",mMaximumArchiveCount);
   config.sync();
 }
 
@@ -166,4 +170,14 @@ void ArchiveMailInfo::setSaveCollectionId(Akonadi::Collection::Id collectionId)
 Akonadi::Collection::Id ArchiveMailInfo::saveCollectionId() const
 {
   return mSaveCollectionId;
+}
+
+int ArchiveMailInfo::maximumArchiveCount() const
+{
+  return mMaximumArchiveCount;
+}
+
+void ArchiveMailInfo::setMaximumArchiveCount( int max )
+{
+  mMaximumArchiveCount = max;
 }
