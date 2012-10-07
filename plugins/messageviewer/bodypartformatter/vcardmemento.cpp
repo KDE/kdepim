@@ -51,6 +51,7 @@ void VcardMemento::slotSearchJobFinished( KJob *job )
   if ( searchJob->error() ) {
     kWarning() << "Unable to fetch contact:" << searchJob->errorText();
     mIndex++;
+    continueToCheckEmail();
     return;
   }
 
@@ -65,7 +66,11 @@ void VcardMemento::slotSearchJobFinished( KJob *job )
     // TODO: Figure out something here...
   }
   mIndex++;
+  continueToCheckEmail();
+}
 
+void VcardMemento::continueToCheckEmail()
+{
   if(mIndex == mVCardList.count()) {
     mFinished = true;
     emit update( Viewer::Delayed );
@@ -73,7 +78,6 @@ void VcardMemento::slotSearchJobFinished( KJob *job )
     checkEmail();
   }
 }
-
 
 
 bool VcardMemento::finished() const
