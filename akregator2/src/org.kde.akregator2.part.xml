@@ -6,5 +6,8 @@
     <method name="saveSettings" />
     <method name="openStandardFeedList"/>
     <method name="addFeed" />
+    <method name="handleCommandLine">
+      <arg name="result" type="b" direction="out"/>
+    </method>
   </interface>
 </node>

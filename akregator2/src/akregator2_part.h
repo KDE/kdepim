@@ -102,6 +102,18 @@ class Part : public KParts::ReadOnlyPart
             Calls Akregator2 MainWidget's saveProperties. */
         virtual void saveProperties(KConfigGroup & config);
 
+        /**
+            Add a feed to a group.
+            @param url The URL of the feed to add.
+            @param group The name of the folder into which the feed is added.
+            If the group does not exist, it is created.  The feed is added as the last member
+            of the group.
+            */
+        void addFeedsToGroup(const QStringList& urls, const QString& group);
+
+
+        bool handleCommandLine();
+
     public slots:
         /** Used to save settings after changing them from configuration dialog. Calls Akregator2Part's saveSettings. */
         void saveSettings();

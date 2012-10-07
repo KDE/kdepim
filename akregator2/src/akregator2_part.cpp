@@ -39,6 +39,7 @@
 #include <libkdepim/broadcaststatus.h>
 #include "kdepim-version.h"
 
+#include <KCmdLineArgs>
 #include <knotifyconfigwidget.h>
 #include <kaboutdata.h>
 #include <kapplication.h>
@@ -421,6 +422,31 @@ void Part::initFonts()
     }
 
 }
+
+bool Part::handleCommandLine() {
+    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+    QString addFeedGroup = !args->getOption("group").isEmpty() ?
+         args->getOption("group")
+         : i18n("Imported Folder");
+
+    QStringList feedsToAdd = args->getOptionList("addfeed");
+
+    if (feedsToAdd.isEmpty() && args->count() > 0) {
+        const QString url = args->url(0).url();
+        if(!url.isEmpty())
+            feedsToAdd.append(url);
+    }
+
+    if (!feedsToAdd.isEmpty())
+        addFeedsToGroup( feedsToAdd, addFeedGroup );
+    return true;
+}
+
+void Part::addFeedsToGroup(const QStringList& urls, const QString& group)
+{
+    //TODO
+}
+
 
 } // namespace Akregator2
 
