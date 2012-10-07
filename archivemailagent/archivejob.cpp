@@ -83,7 +83,6 @@ void ArchiveJob::slotError(const QString& error)
 
 void ArchiveJob::slotBackupDone(const QString& info)
 {
-  Akonadi::Collection collection(mInfo->saveCollectionId());
   const QPixmap pixmap = KIcon( "kmail" ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
 
   KNotification::event( QLatin1String("archivemailfinished"),

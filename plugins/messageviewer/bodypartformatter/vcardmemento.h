@@ -66,6 +66,7 @@ Q_SIGNALS:
 
 private:
   void checkEmail();
+  void continueToCheckEmail();
   QList<VCard> mVCardList;
   int mIndex;
   bool mFinished;

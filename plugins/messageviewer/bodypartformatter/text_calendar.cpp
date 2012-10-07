@@ -1189,7 +1189,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
     {
       // filter out known paths that don't belong to this type of urlmanager.
       // kolab/issue4054 msg27201
-      if ( path.contains( "addToAddressBook:" ) ) {
+      if ( path.contains( "addToAddressBook:" ) || path.contains(QLatin1String("updateToAddressBook")) ) {
         return false;
       }
 
