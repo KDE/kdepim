@@ -34,7 +34,7 @@
 #include "messageviewer/interfaces/bodyparturlhandler.h"
 #include "messageviewer/interfaces/bodypart.h"
 #include <messageviewer/nodehelper.h>
-
+#include "updatecontactjob.h"
 #include "vcardmemento.h"
 
 using MessageViewer::Interface::BodyPart;
@@ -159,7 +159,6 @@ class Formatter : public MessageViewer::Interface::BodyPartFormatter
                          addToLinkText +
                          "</a></div><br><br>" );
         } else {
-#if 0
             if(memento->address(count) != a) {
               const QString addToLinkText = i18n( "[Update this contact to the address book]" );
               QString op = QString::fromLatin1( "updateToAddressBook:%1" ).arg( count );
@@ -169,14 +168,11 @@ class Formatter : public MessageViewer::Interface::BodyPartFormatter
                              addToLinkText +
                             "</a></div><br><br>" );
             } else {
-#endif
                 const QString addToLinkText = i18n( "[This contact is already in addressbook]" );
                 writer->queue( "<div align=\"center\">" +
                                addToLinkText +
                               "</a></div><br><br>" );
-#if 0
             }
-#endif
         }
         count++;
       }
@@ -197,21 +193,26 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       if ( vCard.isEmpty() ) {
         return true;
       }
+      KABC::VCardConverter vcc;
+      const KABC::Addressee::List al = vcc.parseVCards( vCard.toUtf8() );
+      const int index = path.right( path.length() - path.lastIndexOf( ":" ) - 1 ).toInt();
+      if ( index == -1 || index >= al.count() ) {
+        return true;
+      }
+      const KABC::Addressee a = al.at(index);
+      if ( a.isEmpty() ) {
+        return true;
+      }
+
       if(path.startsWith(QLatin1String("addToAddressBook"))) {
-        KABC::VCardConverter vcc;
-        const KABC::Addressee::List al = vcc.parseVCards( vCard.toUtf8() );
-        const int index = path.right( path.length() - path.lastIndexOf( ":" ) - 1 ).toInt();
-        if ( index == -1 || index >= al.count() ) {
-          return true;
-        }
-        const KABC::Addressee a = al.at(index);
-        if ( a.isEmpty() ) {
-          return true;
-        }
 
         KPIM::AddContactJob *job = new KPIM::AddContactJob( a, 0 );
         job->start();
+      } else if( path.startsWith(QLatin1String("updateToAddressBook"))) {
+        UpdateContactJob *job = new UpdateContactJob(a.emails().first(), a, 0);
+        job->start();
       }
+
       return true;
     }
 
@@ -259,10 +260,11 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
     QString statusBarMessage( BodyPart *part, const QString &path ) const
     {
       KABC::Addressee a = findAddressee( part, path );
+      const bool addToAddressBook = path.startsWith(QLatin1String("addToAddressBook"));
       if ( a.realName().isEmpty() ) {
-        return i18n( "Add this contact to the address book." );
+        return addToAddressBook ? i18n( "Add this contact to the address book." ) : i18n("Update this contact to the address book.");
       } else {
-        return i18n( "Add \"%1\" to the address book.", a.realName() );
+        return addToAddressBook ? i18n( "Add \"%1\" to the address book.", a.realName() ) : i18n("Update \"%1\" to the address book.", a.realName());
      }
     }
 
