@@ -99,3 +99,5 @@ KABC::Addressee VcardMemento::address( int index ) const
 {
   return mVCardList.at(index).address;
 }
+
+#include "vcardmemento.moc"
