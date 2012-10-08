@@ -378,6 +378,17 @@ void ExportMailJob::backupIdentity()
     if(group.hasKey(templates)) {
       group.writeEntry(templates,MailCommon::Util::fullCollectionPath(Akonadi::Collection(group.readEntry(templates).toLongLong())));
     }
+    const QString vcard = QLatin1String("VCardFile");
+    if(group.hasKey(vcard)) {
+      const QString vcardFileName = group.readEntry(vcard);
+      if(!vcardFileName.isEmpty()) {
+        const int uoid = group.readEntry(QLatin1String("uoid"),-1);
+        QFile file(vcardFileName);
+        const bool fileAdded  = archive()->addLocalFile(vcardFileName, BackupMailUtil::identitiesPath() + QString::number(uoid) + QDir::separator() + file.fileName());
+        if(fileAdded)
+          Q_EMIT error(i18n("vcard file \"%1\" can not saved.",file.fileName()));
+      }
+    }
   }
 
   identityConfig->sync();
