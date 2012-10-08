@@ -76,7 +76,7 @@ class Formatter : public MessageViewer::Interface::BodyPartFormatter
     Result format( BodyPart *bodyPart, MessageViewer::HtmlWriter *writer, QObject* asyncResultObserver ) const
     {
       if ( !writer ) {
-        return AsIcon;
+        return Ok;
       }
 
       const QString vCard = bodyPart->asText();
