@@ -40,7 +40,8 @@ KMailCVT::KMailCVT(QWidget *parent)
   : KAssistantDialog(parent) {
   setModal(true);
   setWindowTitle( i18n( "KMailCVT Import Tool" ) );
-
+  KGlobal::locale()->insertCatalog( "libmailimporter" );
+  KGlobal::locale()->insertCatalog( "libmailcommon" );
   KMailCVTKernel *kernel = new KMailCVTKernel( this );
   CommonKernel->registerKernelIf( kernel ); //register KernelIf early, it is used by the Filter classes
   CommonKernel->registerSettingsIf( kernel ); //SettingsIf is used in FolderTreeWidget
