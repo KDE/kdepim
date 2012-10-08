@@ -50,6 +50,8 @@ ImportWizard::ImportWizard(QWidget *parent)
 {
   setModal(true);
   setWindowTitle( i18n( "PIM Import Tool" ) );
+  KGlobal::locale()->insertCatalog( "libmailimporter" );
+  KGlobal::locale()->insertCatalog( "libmailcommon" );
 
   ImportWizardKernel *kernel = new ImportWizardKernel( this );
   CommonKernel->registerKernelIf( kernel ); //register KernelIf early, it is used by the Filter classes
