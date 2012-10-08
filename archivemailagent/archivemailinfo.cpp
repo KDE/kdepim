@@ -47,6 +47,13 @@ ArchiveMailInfo::~ArchiveMailInfo()
 {
 }
 
+QString normalizeFolderName(const QString& folderName)
+{
+  QString adaptFolderName(folderName);
+  adaptFolderName.replace(QLatin1Char('/'),QLatin1Char('_'));
+  return adaptFolderName;
+}
+
 QString ArchiveMailInfo::dirArchive() const
 {
   const QDir dir(url().path());
@@ -58,33 +65,32 @@ QString ArchiveMailInfo::dirArchive() const
   return dirPath;
 }
 
-KUrl ArchiveMailInfo::realUrl(const QString& foldername) const
+KUrl ArchiveMailInfo::realUrl(const QString& folderName) const
 {
   const int numExtensions = 4;
   // The extensions here are also sorted, like the enum order of BackupJob::ArchiveType
   const char *extensions[numExtensions] = { ".zip", ".tar", ".tar.bz2", ".tar.gz" };
-  QString adaptFolderName(foldername);
-  adaptFolderName.replace(QLatin1Char('/'),QLatin1Char('_'));
   QString dirPath = dirArchive();
+
   const QString path = dirPath + QLatin1Char( '/' ) + i18nc( "Start of the filename for a mail archive file" , "Archive" )
-      + QLatin1Char( '_' ) + adaptFolderName + QLatin1Char( '_' )
+      + QLatin1Char( '_' ) + normalizeFolderName(folderName) + QLatin1Char( '_' )
       + QDate::currentDate().toString( Qt::ISODate ) + extensions[mArchiveType];
   KUrl real(path);
   return real;
 }
 
-QStringList ArchiveMailInfo::listOfArchive(const QString& foldername)
+QStringList ArchiveMailInfo::listOfArchive(const QString& folderName) const
 {
-  const QString dirPath = dirArchive();
-  QDir dir(dirPath);
   const int numExtensions = 4;
   // The extensions here are also sorted, like the enum order of BackupJob::ArchiveType
   const char *extensions[numExtensions] = { ".zip", ".tar", ".tar.bz2", ".tar.gz" };
-  QString adaptFolderName(foldername);
-  adaptFolderName.replace(QLatin1Char('/'),QLatin1Char('_'));
+  const QString dirPath = dirArchive();
+
+  QDir dir(dirPath);
 
   QStringList nameFilters;
-  nameFilters << i18nc( "Start of the filename for a mail archive file" , "Archive" ) + QLatin1Char( '_' ) + adaptFolderName + QLatin1Char( '_' ) + QLatin1String("*") + extensions[mArchiveType];
+  nameFilters << i18nc( "Start of the filename for a mail archive file" , "Archive" ) + QLatin1Char( '_' ) +
+                 normalizeFolderName(folderName) + QLatin1Char( '_' ) + QLatin1String("*") + extensions[mArchiveType];
   const QStringList lst = dir.entryList ( nameFilters, QDir::Files|QDir::NoDotAndDotDot, QDir::Time|QDir::Reversed );
   return lst;
 }
