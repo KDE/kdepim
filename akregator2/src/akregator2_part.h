@@ -29,8 +29,10 @@
 #include <kurl.h>
 #include <kparts/browserextension.h>
 #include <kparts/part.h>
-#include <krss/item.h>
 #include <boost/shared_ptr.hpp>
+
+#include <KRss/Item>
+#include <Akonadi/Item>
 
 class KConfigGroup;
 class KUrl;
@@ -124,7 +126,7 @@ class Part : public KParts::ReadOnlyPart
 
     signals:
         void signalSettingsChanged();
-        void signalArticlesSelected(const QList<KRss::Item>&);
+        void signalArticlesSelected(const Akonadi::Item::List&);
 
     private:
 

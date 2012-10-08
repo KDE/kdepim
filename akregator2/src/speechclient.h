@@ -28,12 +28,10 @@
 #include "kspeechinterface.h"
 #include <QObject>
 
+#include <Akonadi/Item>
+
 class QString;
 template <class T> class QList;
-
-namespace KRss {
-    class Item;
-}
 
 namespace Akregator2
 {
@@ -52,8 +50,8 @@ class SpeechClient : public QObject
     public slots:
 
         void slotSpeak(const QString& text, const QString& language);
-        void slotSpeak(const KRss::Item& item);
-        void slotSpeak(const QList<KRss::Item>& items);
+        void slotSpeak(const Akonadi::Item& item);
+        void slotSpeak(const Akonadi::Item::List& items);
         void slotAbortJobs();
         void textRemoved(const QString &appId, int jobNum, int state);
   private slots:

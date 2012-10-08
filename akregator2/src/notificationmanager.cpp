@@ -35,7 +35,6 @@
 #include <QList>
 
 using namespace Akregator2;
-using namespace KRss;
 using namespace boost;
 
 NotificationManager::NotificationManager() : QObject()
@@ -60,7 +59,7 @@ void NotificationManager::setWidget(QWidget* widget, const KComponentData &inst)
     m_instance = inst.isValid() ? inst : KGlobal::mainComponent();
 }
 
-void NotificationManager::slotNotifyArticle(const KRss::Item& item)
+void NotificationManager::slotNotifyArticle(const Akonadi::Item& item)
 {
     m_items.append(item);
     m_addedInLastInterval = true;
@@ -90,11 +89,15 @@ void NotificationManager::slotNotifyFeeds(const QStringList& feeds)
     }
 }
 
+#ifdef KRSS_PORT_DISABLED
+
 namespace {
     static bool lessThanByFeedId( const Item& lhs, const Item& rhs ) {
         return lhs.sourceFeedId() < rhs.sourceFeedId();
     }
 }
+
+#endif
 
 void NotificationManager::doNotify()
 {

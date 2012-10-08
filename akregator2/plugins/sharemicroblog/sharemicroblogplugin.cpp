@@ -33,7 +33,8 @@
 #include <KXMLGUIClient>
 #include <Plasma/DataEngineManager>
 #include <Plasma/ServiceJob>
-
+#include <Akonadi/Item>
+#include <KRss/Item>
 
 K_PLUGIN_FACTORY(SharePluginFactory, registerPlugin<SharePluginIface>();)
 K_EXPORT_PLUGIN(SharePluginFactory("akregator2_sharemicroblog_plugin"))
@@ -50,8 +51,8 @@ SharePluginIface::~SharePluginIface()
 
 void SharePluginIface::doInitialize()
 {
-    connect(parent(), SIGNAL(signalArticlesSelected(QList<KRss::Item>)),
-            m_impl, SLOT(articlesSelected(QList<KRss::Item>)));
+    connect(parent(), SIGNAL(signalArticlesSelected(QList<Akonadi::Item>)),
+            m_impl, SLOT(articlesSelected(QList<Akonadi::Item>)));
 }
 
 void SharePluginIface::insertGuiClients( KXMLGUIClient* parent )
@@ -127,7 +128,7 @@ void SharePlugin::refreshConfig()
     }
 }
 
-void SharePlugin::articlesSelected(const QList<KRss::Item>&articles)
+void SharePlugin::articlesSelected(const QList<Akonadi::Item>&articles)
 {
     m_articles = articles;
     if (m_shareMenu) m_shareMenu->setEnabled(true);
@@ -150,9 +151,10 @@ void SharePlugin::shareArticles()
 
     // setup the service and create the status message
     KConfigGroup cg = m_service->operationDescription("update");
-    foreach(const KRss::Item& article, m_articles) {
-        QString status = QString("%1 - %2 #share").arg(article.title(),
-                                                       article.link());
+    foreach(const Akonadi::Item& article, m_articles) {
+        const KRss::Item item = article.payload<KRss::Item>();
+        QString status = QString("%1 - %2 #share").arg(item.title(),
+                                                       item.link());
         cg.writeEntry("status", status);
         m_service->startOperationCall(cg);
     }

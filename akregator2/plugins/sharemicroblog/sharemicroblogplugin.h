@@ -29,7 +29,10 @@
 #include <kparts/plugin.h>
 #include <KPluginFactory>
 #include <Plasma/DataEngine>
-#include <krss/item.h>
+
+namespace Akonadi {
+    class Item;
+}
 
 class KActionMenu;
 
@@ -49,7 +52,7 @@ public slots:
     void dataUpdated(const QString &source, const Plasma::DataEngine::Data &data);
 
 protected slots:
-    void articlesSelected( const QList<KRss::Item> &articles );
+    void articlesSelected( const QList<Akonadi::Item> &articles );
     void slotServiceFinished(Plasma::ServiceJob *job);
     void shareArticles();
 
@@ -60,7 +63,7 @@ private:
     KActionMenu *m_sharePopupMenu;
     QString m_username;
     QString m_serviceUrl;
-    QList<KRss::Item> m_articles;
+    QList<Akonadi::Item> m_articles;
     Plasma::DataEngine* m_engine;
     Plasma::Service* m_service;
 };

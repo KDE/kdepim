@@ -151,33 +151,34 @@ void Criterion::readConfig(KConfigGroup* config)
     }
 }
 
-static ArticleStatus convertStatus( Item::Status s ) {
-    if ( s & Item::Unread )
+static ArticleStatus convertStatus( const Akonadi::Item& item ) {
+    if ( KRss::Item::isUnread( item ) )
         return Akregator2::Unread;
     else
         return Akregator2::Read;
 }
 
-bool Criterion::satisfiedBy( const Item& item ) const
+bool Criterion::satisfiedBy( const Akonadi::Item& item ) const
 {
     QVariant concreteSubject;
+    const Item rssitem = item.payload<Item>();
 
     switch ( m_subject ) {
         case Title:
-            concreteSubject = QVariant(item.title());
+            concreteSubject = QVariant(rssitem.title());
             break;
         case Description:
-            concreteSubject = QVariant(item.description());
+            concreteSubject = QVariant(rssitem.description());
             break;
         case Link:
             // ### Maybe use prettyUrl here?
-            concreteSubject = QVariant(item.link());
+            concreteSubject = QVariant(rssitem.link());
             break;
         case Status:
-            concreteSubject = QVariant(convertStatus(item.status()));
+            concreteSubject = QVariant(convertStatus(item));
             break;
         case KeepFlag:
-            concreteSubject = QVariant(item.isImportant());
+            concreteSubject = QVariant(Item::isImportant(item));
         default:
             break;
     }
@@ -242,7 +243,7 @@ ArticleMatcher::ArticleMatcher( const QList<Criterion> &criteria, Association as
 {
 }
 
-bool ArticleMatcher::matches( const Item& item ) const
+bool ArticleMatcher::matches( const Akonadi::Item& item ) const
 {
     switch ( m_association ) {
         case LogicalOr:
@@ -305,7 +306,7 @@ bool ArticleMatcher::operator!=(const AbstractMatcher& other) const
     return !(*this == other);
 }
 
-bool ArticleMatcher::anyCriterionMatches( const Item& item ) const
+bool ArticleMatcher::anyCriterionMatches( const Akonadi::Item& item ) const
 {
     if (m_criteria.count()==0)
         return true;
@@ -319,7 +320,7 @@ bool ArticleMatcher::anyCriterionMatches( const Item& item ) const
     return false;
 }
 
-bool ArticleMatcher::allCriteriaMatch( const Item& item ) const
+bool ArticleMatcher::allCriteriaMatch( const Akonadi::Item& item ) const
 {
     if (m_criteria.count()==0)
         return true;

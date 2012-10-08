@@ -27,7 +27,7 @@
 
 #include <krss/feedcollection.h>
 #include <krss/feeditemmodel.h>
-#include <krss/rssitem.h>
+#include <krss/item.h>
 
 #include <Akonadi/ChangeRecorder>
 #include <Akonadi/CollectionFetchScope>
@@ -110,17 +110,16 @@ void TotalUnreadCountWatcher::updateUnreadCount() {
     emit unreadCountChanged( count );
 }
 
-static KRss::Item itemForIndex( const QModelIndex& index )
+static Akonadi::Item itemForIndex( const QModelIndex& index )
 {
-    return KRss::Item( index.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>() );
+    return index.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
 }
 
-static QList<KRss::Item> itemsForIndexes( const QModelIndexList& indexes )
+static Akonadi::Item::List itemsForIndexes( const QModelIndexList& indexes )
 {
-    QList<KRss::Item> items;
+    Akonadi::Item::List items;
     Q_FOREACH ( const QModelIndex& i, indexes )
         items.append( itemForIndex( i ) );
-
     return items;
 }
 
@@ -246,12 +245,12 @@ void Akregator2::SelectionController::setSingleArticleDisplay( Akregator2::Singl
     m_singleDisplay = display;
 }
 
-KRss::Item Akregator2::SelectionController::currentItem() const
+Akonadi::Item Akregator2::SelectionController::currentItem() const
 {
     return ::itemForIndex( m_articleLister->articleSelectionModel()->currentIndex() );
 }
 
-QList<KRss::Item> Akregator2::SelectionController::selectedItems() const
+Akonadi::Item::List Akregator2::SelectionController::selectedItems() const
 {
     return ::itemsForIndexes( m_articleLister->articleSelectionModel()->selectedRows() );
 }
@@ -333,18 +332,17 @@ void Akregator2::SelectionController::fullItemFetched( KJob* j )
     Q_ASSERT( job->items().size() == 1 );
 
     const Akonadi::Item aitem = job->items().first();
-    if ( !aitem.hasPayload<KRss::RssItem>() )
+    if ( !aitem.hasPayload<KRss::Item>() )
         return;
-    const KRss::Item item( aitem );
     if ( m_singleDisplay )
-        m_singleDisplay->showItem( item );
+        m_singleDisplay->showItem( aitem );
 
-    emit currentItemChanged( item );
+    emit currentItemChanged( aitem );
 }
 
 void Akregator2::SelectionController::itemIndexDoubleClicked( const QModelIndex& index )
 {
-    const KRss::Item item = ::itemForIndex( index );
+    const Akonadi::Item item = ::itemForIndex( index );
     emit itemDoubleClicked( item );
 }
 

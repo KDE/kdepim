@@ -33,7 +33,7 @@
 #include <Akonadi/Session>
 
 #include <krss/feedcollection.h>
-#include <krss/item.h>
+#include <KRss/Item>
 
 #include <KLocalizedString>
 #include <KRandom>

@@ -27,7 +27,7 @@
 #include <kstandarddirs.h>
 #include "utils.h"
 
-#include <krss/item.h>
+#include <KRss/Item>
 
 #include <kcharsets.h>
 #include <klocale.h>
@@ -89,32 +89,34 @@ void SpeechClient::slotSpeak(const QString& text, const QString& language)
     }
 }
 
-void SpeechClient::slotSpeak(const KRss::Item& item)
+void SpeechClient::slotSpeak(const Akonadi::Item& aitem)
 {
-    if (!isTextToSpeechInstalled() || item.isNull())
+    if (!isTextToSpeechInstalled() || !aitem.isValid())
         return;
 
+    const KRss::Item item = aitem.payload<KRss::Item>();
     QString speakMe;
     speakMe += KCharsets::resolveEntities(Utils::stripTags(item.title()))
     + ". . . . "
-    + KCharsets::resolveEntities(Utils::stripTags(item.content()));
+    + KCharsets::resolveEntities(Utils::stripTags(item.contentWithDescriptionAsFallback()));
     slotSpeak(speakMe, "en");
 }
 
-void SpeechClient::slotSpeak(const QList<KRss::Item>& items)
+void SpeechClient::slotSpeak(const Akonadi::Item::List& items)
 {
     if (!isTextToSpeechInstalled() || items.isEmpty())
         return;
 
     QString speakMe;
 
-    Q_FOREACH( const KRss::Item& i, items)
+    Q_FOREACH( const Akonadi::Item& i, items)
     {
+        const KRss::Item item = i.payload<KRss::Item>();
         if (!speakMe.isEmpty())
             speakMe += ". . . . . . " + i18n("Next Article: ");
-        speakMe += KCharsets::resolveEntities(Utils::stripTags(i.title()))
+        speakMe += KCharsets::resolveEntities(Utils::stripTags(item.title()))
         + ". . . . "
-        + KCharsets::resolveEntities(Utils::stripTags(i.content()));
+        + KCharsets::resolveEntities(Utils::stripTags(item.contentWithDescriptionAsFallback()));
     }
 
     SpeechClient::self()->slotSpeak(speakMe, "en");

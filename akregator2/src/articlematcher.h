@@ -33,11 +33,9 @@
 #include <QString>
 #include <QVariant>
 
-class KConfigGroup;
+#include <Akonadi/Item>
 
-namespace KRss {
-    class Item;
-}
+class KConfigGroup;
 
 namespace Akregator2 {
 
@@ -55,7 +53,7 @@ class AKREGATOR2PART_EXPORT AbstractMatcher
     public:
         virtual ~AbstractMatcher();
 
-        virtual bool matches(const KRss::Item& item) const = 0;
+        virtual bool matches(const Akonadi::Item& item) const = 0;
 
         virtual void writeConfig(KConfigGroup* config) const = 0;
         virtual void readConfig(KConfigGroup* config) = 0;
@@ -88,7 +86,7 @@ class AKREGATOR2PART_EXPORT ArticleMatcher : public AbstractMatcher
         
         ~ArticleMatcher();
 
-        bool matches(const KRss::Item &article) const;
+        bool matches(const Akonadi::Item &article) const;
         bool operator==(const AbstractMatcher &other) const;
         bool operator!=(const AbstractMatcher &other) const;
         
@@ -100,8 +98,8 @@ class AKREGATOR2PART_EXPORT ArticleMatcher : public AbstractMatcher
         static Association stringToAssociation(const QString& assocStr);
         static QString associationToString(Association association);
 
-        bool anyCriterionMatches( const KRss::Item &a ) const;
-        bool allCriteriaMatch( const KRss::Item &a ) const;
+        bool anyCriterionMatches( const Akonadi::Item &a ) const;
+        bool allCriteriaMatch( const Akonadi::Item &a ) const;
 
         QList<Criterion> m_criteria;
         Association m_association;
@@ -134,7 +132,7 @@ class AKREGATOR2PART_EXPORT Criterion
         Criterion();
         Criterion( Subject subject, Predicate predicate, const QVariant &object );
         virtual ~Criterion(){} 
-        bool satisfiedBy( const KRss::Item &item ) const;
+        bool satisfiedBy( const Akonadi::Item &item ) const;
 
         virtual void writeConfig(KConfigGroup* config) const;
         virtual void readConfig(KConfigGroup* config);

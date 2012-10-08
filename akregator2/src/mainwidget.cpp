@@ -60,7 +60,7 @@
 #include <Akonadi/Session>
 
 #include <krss/feedcollection.h>
-#include <krss/item.h>
+#include <KRss/Item>
 
 #include <solid/networking.h>
 
@@ -228,11 +228,11 @@ Akregator2::MainWidget::MainWidget( Part *part, QWidget *parent, ActionManagerIm
     connect( m_selectionController, SIGNAL(currentCollectionChanged(Akonadi::Collection)),
              this, SLOT(slotNodeSelected(Akonadi::Collection)) );
 
-    connect( m_selectionController, SIGNAL(currentItemChanged(KRss::Item)),
-             this, SLOT(slotItemSelected(KRss::Item)) );
+    connect( m_selectionController, SIGNAL(currentItemChanged(Akonadi::Item)),
+             this, SLOT(slotItemSelected(Akonadi::Item)) );
 
-    connect( m_selectionController, SIGNAL(itemDoubleClicked(KRss::Item)),
-             this, SLOT(slotOpenItemInBrowser(KRss::Item)) );
+    connect( m_selectionController, SIGNAL(itemDoubleClicked(Akonadi::Item)),
+             this, SLOT(slotOpenItemInBrowser(Akonadi::Item)) );
 
     m_actionManager->initArticleListView(m_articleListView);
 
@@ -378,8 +378,9 @@ void Akregator2::MainWidget::sendArticle(bool attach)
         title = frame->title();
     }
     else { // nah, we're in articlelist..
-         const KRss::Item item = m_selectionController->currentItem();
-         if(!item.isNull()) {
+         const Akonadi::Item aitem = m_selectionController->currentItem();
+         if(aitem.isValid()) {
+             const KRss::Item item = aitem.payload<KRss::Item>();
              text = KUrl( item.link() ).prettyUrl().toLatin1();
              title = item.title();
          }
@@ -485,10 +486,10 @@ void Akregator2::MainWidget::slotNormalView()
     {
         m_articleListView->show();
 
-        const KRss::Item item = m_selectionController->currentItem();
+        const Akonadi::Item aitem = m_selectionController->currentItem();
 
-        if ( !item.isNull() )
-            m_articleViewer->showItem( item );
+        if ( aitem.isValid() )
+            m_articleViewer->showItem( aitem );
         else
             m_articleViewer->slotShowSummary( m_selectionController->selectedCollection(),
                                               m_selectionController->selectedCollectionIndex().data( Akonadi::EntityTreeModel::UnreadCountRole ).toInt() );
@@ -509,9 +510,9 @@ void Akregator2::MainWidget::slotWidescreenView()
     {
         m_articleListView->show();
 
-        const KRss::Item item = m_selectionController->currentItem();
+        const Akonadi::Item item = m_selectionController->currentItem();
 
-        if ( !item.isNull() )
+        if ( item.isValid() )
             m_articleViewer->showItem( item );
         else
             m_articleViewer->slotShowSummary( m_selectionController->selectedCollection(),
@@ -740,7 +741,7 @@ void Akregator2::MainWidget::slotFetchQueueFinished()
     m_actionManager->action( "feed_fetch_all" )->setEnabled( true );
 }
 
-void Akregator2::MainWidget::slotItemSelected( const KRss::Item& item )
+void Akregator2::MainWidget::slotItemSelected( const Akonadi::Item& item )
 {
     if (m_viewMode == CombinedView)
         return;
@@ -749,15 +750,15 @@ void Akregator2::MainWidget::slotItemSelected( const KRss::Item& item )
 
     KToggleAction* const maai = qobject_cast<KToggleAction*>( m_actionManager->action( "article_set_status_important" ) );
     assert( maai );
-    maai->setChecked( item.isImportant() );
+    maai->setChecked( KRss::Item::isImportant( item ) );
 
 
-    const QList<KRss::Item> items = m_selectionController->selectedItems();
+    const Akonadi::Item::List items = m_selectionController->selectedItems();
     emit signalItemsSelected( items );
 
     m_articleViewer->showItem( item );
 
-    if ( item.isNull() || item.isRead() )
+    if ( !item.isValid() || KRss::Item::isRead( item ) )
         return;
 
     if ( !Settings::useMarkReadDelay() )
@@ -771,9 +772,9 @@ void Akregator2::MainWidget::slotItemSelected( const KRss::Item& item )
     }
     else
     {
-        KRss::Item modifiedItem = item;
-        modifiedItem.setStatus( item.status() & ~KRss::Item::Unread );
-        Akonadi::ItemModifyJob* job = new Akonadi::ItemModifyJob( modifiedItem.akonadiItem(), m_session );
+        Akonadi::Item modifiedItem = item;
+        modifiedItem.setFlag( KRss::Item::flagRead() );
+        Akonadi::ItemModifyJob* job = new Akonadi::ItemModifyJob( modifiedItem, m_session );
         connect( job, SIGNAL(finished(KJob*)), this, SLOT(slotJobFinished(KJob*)) );
         job->setIgnorePayload( true );
         job->start();
@@ -824,14 +825,18 @@ void Akregator2::MainWidget::slotOpenHomepage()
 
 void Akregator2::MainWidget::slotOpenSelectedArticlesInBrowser()
 {
-    const QList<KRss::Item> items = m_selectionController->selectedItems();
+    const Akonadi::Item::List items = m_selectionController->selectedItems();
 
-    Q_FOREACH( const KRss::Item& i, items )
+    Q_FOREACH( const Akonadi::Item& i, items )
         slotOpenItemInBrowser( i );
 }
 
-void Akregator2::MainWidget::slotOpenItemInBrowser( const KRss::Item& item )
+void Akregator2::MainWidget::slotOpenItemInBrowser( const Akonadi::Item& aitem )
 {
+    if ( !aitem.isValid() )
+        return;
+    const KRss::Item item = aitem.payload<KRss::Item>();
+
     const KUrl link( item.link() );
     if ( !link.isValid() )
         return;
@@ -844,10 +849,16 @@ void Akregator2::MainWidget::slotOpenItemInBrowser( const KRss::Item& item )
 
 void Akregator2::MainWidget::openSelectedArticles(bool openInBackground)
 {
-    const QList<KRss::Item> items = m_selectionController->selectedItems();
+    const Akonadi::Item::List aitems = m_selectionController->selectedItems();
 
-    Q_FOREACH( const KRss::Item& item, items )
+    Q_FOREACH( const Akonadi::Item& aitem, aitems )
     {
+        Q_ASSERT( aitem.isValid() );
+        if ( !aitem.isValid() )
+            continue;
+
+        const KRss::Item item = aitem.payload<KRss::Item>();
+
         const KUrl url( item.link() );
         if ( !url.isValid() )
           continue;
@@ -860,17 +871,17 @@ void Akregator2::MainWidget::openSelectedArticles(bool openInBackground)
         } else {
             m_frameManager->slotOpenUrlRequest( req );
         }
-
     }
-
 }
 
 void Akregator2::MainWidget::slotCopyLinkAddress()
 {
-    const KRss::Item item =  m_selectionController->currentItem();
+    const Akonadi::Item aitem = m_selectionController->currentItem();
 
-    if(item.isNull())
+    if( !aitem.isValid() )
        return;
+
+    const KRss::Item item = aitem.payload<KRss::Item>();
 
     if ( KUrl( item.link() ).isValid() )
     {
@@ -914,7 +925,7 @@ void Akregator2::MainWidget::slotArticleDelete()
     if ( m_viewMode == CombinedView )
         return;
 
-    const QList<KRss::Item> items = m_selectionController->selectedItems();
+    const Akonadi::Item::List items = m_selectionController->selectedItems();
 
     QString msg;
     switch (items.count())
@@ -922,7 +933,7 @@ void Akregator2::MainWidget::slotArticleDelete()
         case 0:
             return;
         case 1:
-            msg = i18n("<qt>Are you sure you want to delete article <b>%1</b>?</qt>", Qt::escape(items.first().title()));
+            msg = i18n("<qt>Are you sure you want to delete article <b>%1</b>?</qt>", Qt::escape(items.first().payload<KRss::Item>().title()));
             break;
         default:
             msg = i18np("<qt>Are you sure you want to delete the selected article?</qt>", "<qt>Are you sure you want to delete the %1 selected articles?</qt>", items.count());
@@ -935,11 +946,12 @@ void Akregator2::MainWidget::slotArticleDelete()
                                              "Disable delete article confirmation" ) != KMessageBox::Continue )
         return;
 
-    Q_FOREACH( const KRss::Item& i, m_selectionController->selectedItems() )
+    Q_FOREACH( const Akonadi::Item& i, m_selectionController->selectedItems() )
     {
-        KRss::Item modifiedItem = i;
-        modifiedItem.setStatus( ( i.status() | KRss::Item::Deleted ) & ~KRss::Item::Unread );
-        Akonadi::ItemModifyJob* job = new Akonadi::ItemModifyJob( modifiedItem.akonadiItem(), m_session );
+        Akonadi::Item modifiedItem = i;
+        modifiedItem.setFlag( KRss::Item::flagRead() );
+        modifiedItem.setFlag( KRss::Item::flagDeleted() );
+        Akonadi::ItemModifyJob* job = new Akonadi::ItemModifyJob( modifiedItem, m_session );
         connect( job, SIGNAL(finished(KJob*)), this, SLOT(slotJobFinished(KJob*)) );
         job->setIgnorePayload( true );
         job->start();
@@ -950,15 +962,15 @@ void Akregator2::MainWidget::slotArticleDelete()
 
 void Akregator2::MainWidget::slotArticleToggleKeepFlag( bool )
 {
-    const QList<KRss::Item> items = m_selectionController->selectedItems();
+    const Akonadi::Item::List items = m_selectionController->selectedItems();
 
-    if (items.isEmpty())
+    if ( items.isEmpty() )
         return;
 
     bool allFlagsSet = true;
-    Q_FOREACH ( const KRss::Item& i, items )
+    Q_FOREACH ( const Akonadi::Item& i, items )
     {
-        allFlagsSet = allFlagsSet && i.isImportant();
+        allFlagsSet = allFlagsSet && KRss::Item::isImportant( i );
         if ( !allFlagsSet )
             break;
     }
@@ -966,16 +978,15 @@ void Akregator2::MainWidget::slotArticleToggleKeepFlag( bool )
 
     QList<Akonadi::Item> aitems;
 
-
-    Q_FOREACH ( const KRss::Item& i, items )
+    Q_FOREACH ( const Akonadi::Item& i, items )
     {
-        if ( !allFlagsSet && !i.isImportant() ) {
-            Akonadi::Item modifiedItem( i.id() );
-            KRss::Item::setStatus( modifiedItem, i.status() | KRss::Item::Important );
+        if ( !allFlagsSet && !KRss::Item::isImportant( i ) ) {
+            Akonadi::Item modifiedItem = i;
+            modifiedItem.setFlag( KRss::Item::flagImportant() );
             aitems.append( modifiedItem );
-        } else if ( allFlagsSet && i.isImportant() ) {
-            Akonadi::Item modifiedItem( i.id() );
-            KRss::Item::setStatus( modifiedItem, i.status() & ~KRss::Item::Important );
+        } else if ( allFlagsSet && KRss::Item::isImportant( i ) ) {
+            Akonadi::Item modifiedItem = i;
+            modifiedItem.clearFlag( KRss::Item::flagImportant() );
             aitems.append( modifiedItem );
         }
     }
@@ -994,36 +1005,37 @@ namespace {
 
 static void setSelectedArticleStatus( Akonadi::Session* session, QObject* rec, const Akregator2::AbstractSelectionController* controller, Akregator2::ArticleStatus status )
 {
-    QList<KRss::Item> items = controller->selectedItems();
+    Akonadi::Item::List items = controller->selectedItems();
 
-    if (items.isEmpty())
+    if ( items.isEmpty() )
         return;
 
-    QList<Akonadi::Item> aitems;
+    Akonadi::Item::List changedItems;
 
-    Q_FOREACH ( const KRss::Item& i, items )
+    Q_FOREACH ( const Akonadi::Item& i, items )
     {
-        Akonadi::Item aitem( i.akonadiItem().id() );
         switch ( status ) {
         case Akregator2::Read:
-            if ( !i.isRead() ) {
-                KRss::Item::setStatus( aitem, i.status() & ~KRss::Item::Unread );
-                aitems.append( aitem );
+            if ( KRss::Item::isUnread( i ) ) {
+                Akonadi::Item modifiedItem = i;
+                modifiedItem.setFlag( KRss::Item::flagRead() );
+                changedItems.append( modifiedItem );
             }
             break;
         case Akregator2::Unread:
-            if ( i.isRead() ) {
-                KRss::Item::setStatus( aitem, i.status() | KRss::Item::Unread );
-                aitems.append( aitem );
+            if ( KRss::Item::isRead( i ) ) {
+                Akonadi::Item modifiedItem = i;
+                modifiedItem.clearFlag( KRss::Item::flagRead() );
+                changedItems.append( modifiedItem );
             }
             break;
         }
     }
 
-    if ( aitems.isEmpty() )
+    if ( changedItems.isEmpty() )
         return;
 
-    Akonadi::ItemModifyJob* job = new Akonadi::ItemModifyJob( aitems, session );
+    Akonadi::ItemModifyJob* job = new Akonadi::ItemModifyJob( changedItems, session );
     rec->connect( job, SIGNAL(finished(KJob*)), rec, SLOT(slotJobFinished(KJob*)) );
     job->setIgnorePayload( true );
     job->start();
@@ -1068,13 +1080,13 @@ void Akregator2::MainWidget::slotSetSelectedArticleUnread()
 
 void Akregator2::MainWidget::slotSetCurrentArticleReadDelayed()
 {
-    KRss::Item item =  m_selectionController->currentItem();
+    Akonadi::Item item = m_selectionController->currentItem();
 
-    if ( item.isNull() )
+    if ( !item.isValid() )
         return;
 
-    item.setStatus( item.status() & ~KRss::Item::Unread );
-    Akonadi::ItemModifyJob* job = new Akonadi::ItemModifyJob( item.akonadiItem(), m_session );
+    item.setFlag( KRss::Item::flagRead() );
+    Akonadi::ItemModifyJob* job = new Akonadi::ItemModifyJob( item, m_session );
     connect( job, SIGNAL(finished(KJob*)), this, SLOT(slotJobFinished(KJob*)) );
     job->setIgnorePayload( true );
     job->start();

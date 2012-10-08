@@ -25,7 +25,7 @@
 #ifndef AKREGATOR2_NOTIFICATIONMANAGER_H
 #define AKREGATOR2_NOTIFICATIONMANAGER_H
 
-#include <krss/item.h>
+#include <Akonadi/Item>
 
 #include <kcomponentdata.h>
 
@@ -33,6 +33,10 @@
 #include <QObject>
 
 #include <boost/weak_ptr.hpp>
+
+namespace Akonadi {
+    class Item;
+}
 
 namespace Akregator2
 {
@@ -53,7 +57,7 @@ class NotificationManager : public QObject
 
         /** notifies an article. Note that articles are not notified separately, but
         "collected" and notified all together */
-        void slotNotifyArticle(const KRss::Item& i);
+        void slotNotifyArticle(const Akonadi::Item& i);
 
         /** notifies the addition of feeds (used when added via DCOP or command line) */
         void slotNotifyFeeds(const QStringList& feeds);
@@ -78,7 +82,7 @@ class NotificationManager : public QObject
         bool m_addedInLastInterval;
         QWidget* m_widget;
         KComponentData m_instance;
-        QList<KRss::Item> m_items;
+        Akonadi::Item::List m_items;
 
         static NotificationManager* m_self;
 };

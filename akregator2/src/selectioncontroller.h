@@ -26,8 +26,6 @@
 
 #include "abstractselectioncontroller.h"
 
-#include <Akonadi/Collection>
-
 #include <QtCore/QMap>
 #include <QtCore/QPointer>
 
@@ -88,10 +86,10 @@ public:
     void setArticleLister( Akregator2::ArticleLister* lister );
 
     //impl
-    KRss::Item currentItem() const;
+    Akonadi::Item currentItem() const;
 
     //impl
-    QList<KRss::Item> selectedItems() const;
+    Akonadi::Item::List selectedItems() const;
 
     //impl
     void setSingleArticleDisplay( Akregator2::SingleArticleDisplay* display );

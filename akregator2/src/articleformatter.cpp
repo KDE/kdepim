@@ -184,8 +184,10 @@ static QString formatCollectionSummary( const Collection& c, int unread, const K
         return formatFeedSummary( fc, unread, imageDir );
 }
 
-QString DefaultNormalViewFormatter::formatItem( const KRss::Item& item, IconOption icon) const
+QString DefaultNormalViewFormatter::formatItem( const Akonadi::Item& aitem, IconOption icon) const
 {
+    const KRss::Item item = aitem.payload<KRss::Item>();
+
     QString text;
     text = QString("<div class=\"headerbox\" dir=\"%1\">\n").arg(QApplication::isRightToLeft() ? "rtl" : "ltr");
     const QString enc = formatEnclosures( item.enclosures() );
@@ -236,7 +238,7 @@ QString DefaultNormalViewFormatter::formatItem( const KRss::Item& item, IconOpti
     }
 #endif
 
-    const QString content = item.content();
+    const QString content = item.contentWithDescriptionAsFallback();
 
     if (!content.isEmpty())
     {
@@ -362,8 +364,10 @@ DefaultNormalViewFormatter::~DefaultNormalViewFormatter()
 {
 }
 
-QString DefaultCombinedViewFormatter::formatItem( const KRss::Item& item, IconOption icon ) const
+QString DefaultCombinedViewFormatter::formatItem( const Akonadi::Item& aitem, IconOption icon ) const
 {
+    const KRss::Item item = aitem.payload<KRss::Item>();
+
     QString text;
     const QString enc = formatEnclosures( item.enclosures() );
     text = QString("<div class=\"headerbox\" dir=\"%1\">\n").arg(QApplication::isRightToLeft() ? "rtl" : "ltr");
@@ -413,7 +417,7 @@ QString DefaultCombinedViewFormatter::formatItem( const KRss::Item& item, IconOp
     }
 #endif
 
-    const QString content = item.content();
+    const QString content = item.contentWithDescriptionAsFallback();
     if (!content.isEmpty())
     {
         text += QString("<div dir=\"%1\">").arg(Utils::directionOf(Utils::stripTags(content)) );

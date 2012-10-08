@@ -20,6 +20,7 @@ target_link_libraries(akregator2_sharemicroblog_plugin
   ${KDE4_KIO_LIBS}
   ${KDE4_KPARTS_LIBS}
   ${KDEPIMLIBS_KRSS_LIBS}
+  ${KDEPIMLIBS_AKONADI_LIBS}
 )
 
 install(FILES akregator2_sharemicroblog_plugin.desktop DESTINATION ${SERVICES_INSTALL_DIR})

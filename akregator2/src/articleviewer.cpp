@@ -522,14 +522,15 @@ public:
 };
 #endif
 
-void ArticleViewer::showItem( const KRss::Item& item )
+void ArticleViewer::showItem( const Akonadi::Item& aitem )
 {
-    if ( item.isNull() || item.isDeleted() )
+    if ( !aitem.isValid() || KRss::Item::isDeleted( aitem ) )
     {
         slotClear();
         return;
     }
 
+    const KRss::Item item = aitem.payload<KRss::Item>();
     m_viewMode = NormalView;
 #ifdef KRSS_PORT_DISABLED
     disconnectFromNode(m_node);
@@ -547,7 +548,7 @@ void ArticleViewer::showItem( const KRss::Item& item )
     else
 #endif // KRSS_PORT_DISABLED
 
-        renderContent( m_normalViewFormatter->formatItem( item, ArticleFormatter::ShowIcon ) );
+        renderContent( m_normalViewFormatter->formatItem( aitem, ArticleFormatter::ShowIcon ) );
 
     setArticleActionsEnabled(true);
 }
@@ -574,18 +575,18 @@ void ArticleViewer::slotUpdateCombinedView()
         return;
 
 
-   QVector<KRss::Item> items;
+   Akonadi::Item::List items;
 
    const int rows = m_model->rowCount();
    items.reserve( rows );
    for ( int i = 0; i < rows; ++i ) {
-       KRss::Item item( m_model->index( i, 0 ).data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>() );
+       const Akonadi::Item item = m_model->index( i, 0 ).data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
        items.append( item );
    }
 
    QString text;
-   Q_FOREACH( const Item& i, items )
-       text += "<p><div class=\"article\">"+m_combinedViewFormatter->formatItem( i, ArticleFormatter::NoIcon)+"</div><p>";
+   Q_FOREACH( const Akonadi::Item& i, items )
+       text += "<p><div class=\"article\">"+m_combinedViewFormatter->formatItem( i, ArticleFormatter::NoIcon )+"</div><p>";
 
    renderContent(text);
 }

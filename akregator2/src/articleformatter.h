@@ -32,12 +32,9 @@
 class QPaintDevice;
 class QString;
 
-namespace KRss {
-    class Item;
-}
-
 namespace Akonadi {
     class Collection;
+    class Item;
 }
 
 namespace Akregator2 {
@@ -57,7 +54,7 @@ class ArticleFormatter
 
         void setPaintDevice(QPaintDevice* device);
 
-        virtual QString formatItem( const KRss::Item& item, IconOption icon ) const = 0;
+        virtual QString formatItem( const Akonadi::Item& item, IconOption icon ) const = 0;
 
         virtual QString formatSummary( const Akonadi::Collection& collection, int unread ) const = 0;
 
@@ -80,7 +77,7 @@ class DefaultNormalViewFormatter : public ArticleFormatter
         explicit DefaultNormalViewFormatter( const KUrl& imageDir, QPaintDevice* device = 0 );
         ~DefaultNormalViewFormatter();
 
-        QString formatItem( const KRss::Item& item, IconOption option ) const;
+        QString formatItem( const Akonadi::Item& item, IconOption option ) const;
 
         /* reimp */ QString formatSummary( const Akonadi::Collection& collection, int unread ) const;
 
@@ -101,7 +98,7 @@ class DefaultCombinedViewFormatter : public ArticleFormatter
 
         explicit DefaultCombinedViewFormatter( const KUrl& imageDir, QPaintDevice* device = 0 );
 
-        QString formatItem( const KRss::Item& item, IconOption option ) const;
+        QString formatItem( const Akonadi::Item& item, IconOption option ) const;
 
         /* reimp */ QString formatSummary( const Akonadi::Collection& collection, int unread ) const;
 

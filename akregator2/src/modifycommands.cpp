@@ -25,8 +25,7 @@
 #include "modifycommands.h"
 
 #include <krss/feedcollection.h>
-#include <krss/item.h>
-#include <KRss/RssItem>
+#include <KRss/Item>
 
 #include <Akonadi/Collection>
 #include <Akonadi/CollectionFetchJob>
@@ -119,7 +118,7 @@ void MarkAsReadCommand::collectionsFetched( KJob* j ) {
 
 struct ItemIsRead {
     bool operator()( const Akonadi::Item& item ) const {
-        return !KRss::RssItem::isUnread( item );
+        return !KRss::Item::isUnread( item );
     }
 };
 
@@ -140,7 +139,7 @@ void MarkAsReadCommand::itemsFetched( KJob* j ) {
         if ( !items.isEmpty() ) {
             Akonadi::Item::List::Iterator it = items.begin();
             for ( ; it != items.end(); ++it )
-                KRss::Item::setStatus( *it, KRss::Item::status( *it ) & ~KRss::Item::Unread );
+                it->setFlag( KRss::Item::flagRead() );
             ItemModifyJob* mjob = new ItemModifyJob( items, d->session );
             mjob->setIgnorePayload( true );
             connect( mjob, SIGNAL(finished(KJob*)), this, SLOT(itemsModified(KJob*)) );

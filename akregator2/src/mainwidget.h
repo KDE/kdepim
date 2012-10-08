@@ -38,6 +38,8 @@
 #include <QPointer>
 #include <QWidget>
 
+#include <Akonadi/Item>
+
 class KConfig;
 class KFileItem;
 class KConfigGroup;
@@ -48,7 +50,6 @@ class QSplitter;
 
 namespace KRss {
     class FeedListView;
-    class Item;
 }
 
 namespace Akonadi {
@@ -123,7 +124,7 @@ class AKREGATOR2PART_EXPORT MainWidget : public QWidget
         /** emitted when the unread count of "All Feeds" was changed */
         void signalUnreadCountChanged(int);
 
-	void signalItemsSelected( const QList<KRss::Item>& );
+    void signalItemsSelected( const Akonadi::Item::List & );
 
     public slots:
 
@@ -146,7 +147,7 @@ class AKREGATOR2PART_EXPORT MainWidget : public QWidget
         void slotNodeSelected( const Akonadi::Collection& c );
 
         /** the item selection has changed */
-        void slotItemSelected( const KRss::Item& item );
+        void slotItemSelected( const Akonadi::Item& item );
 
         /** copies the link of current article to clipboard
         */
@@ -224,7 +225,7 @@ class AKREGATOR2PART_EXPORT MainWidget : public QWidget
         void slotMouseButtonPressed(int button, const KUrl&);
 
         /** opens the link of an item in the external browser */
-        void slotOpenItemInBrowser( const KRss::Item& item );
+        void slotOpenItemInBrowser( const Akonadi::Item& item );
 
         void slotFetchQueueStarted();
         void slotFetchQueueFinished();

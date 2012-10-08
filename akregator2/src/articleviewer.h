@@ -25,11 +25,10 @@
 #ifndef AKREGATOR2_ARTICLEVIEWER_H
 #define AKREGATOR2_ARTICLEVIEWER_H
 
-#include <krss/item.h>
-
 #include <khtml_part.h>
 
 #include <Akonadi/Collection>
+#include <Akonadi/Item>
 
 #include <QPointer>
 #include <QTimer>
@@ -70,7 +69,7 @@ class ArticleViewer : public QWidget
 
         void setCombinedViewFormatter(const boost::shared_ptr<ArticleFormatter>& formatter);
 
-        void showItem( const KRss::Item& item );
+        void showItem( const Akonadi::Item& item );
 
         /** Shows the articles of the tree node @c node (combined view).
          * Changes in the node will update the view automatically.

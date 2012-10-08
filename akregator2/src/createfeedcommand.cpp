@@ -35,7 +35,7 @@
 #include <Akonadi/Item>
 
 #include <krss/feedcollection.h>
-#include <krss/item.h>
+#include <KRss/Item>
 
 #include <KDebug>
 #include <KInputDialog>

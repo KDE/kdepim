@@ -26,6 +26,7 @@
 
 #include <QObject>
 #include <Akonadi/Collection>
+#include <Akonadi/Item>
 
 #include <boost/shared_ptr.hpp>
 #include <vector>
@@ -35,10 +36,6 @@ class QAbstractItemView;
 class QItemSelectionModel;
 class QModelIndex;
 class QPoint;
-
-namespace KRss {
-    class Item;
-}
 
 namespace Akonadi {
     class Collection;
@@ -81,7 +78,7 @@ class SingleArticleDisplay
 public:
     virtual ~SingleArticleDisplay() {}
 
-    virtual void showItem( const KRss::Item& article ) = 0;
+    virtual void showItem( const Akonadi::Item& article ) = 0;
 };
 
 class AbstractSelectionController : public QObject
@@ -100,9 +97,9 @@ public:
 
     virtual void setSingleArticleDisplay( Akregator2::SingleArticleDisplay* display ) = 0;
 
-    virtual KRss::Item currentItem() const = 0;
+    virtual Akonadi::Item currentItem() const = 0;
 
-    virtual QList<KRss::Item> selectedItems() const = 0;
+    virtual Akonadi::Item::List selectedItems() const = 0;
 
     virtual QModelIndex selectedCollectionIndex() const = 0;
 
@@ -119,9 +116,9 @@ public Q_SLOTS:
 Q_SIGNALS:
     void currentCollectionChanged( const Akonadi::Collection& );
 
-    void currentItemChanged( const KRss::Item& );
+    void currentItemChanged( const Akonadi::Item& );
 
-    void itemDoubleClicked( const KRss::Item& );
+    void itemDoubleClicked( const Akonadi::Item& );
 };
 
 } // namespace Akregator2

@@ -75,7 +75,7 @@ bool SortColorizeProxyModel::filterAcceptsRow ( int source_row, const QModelInde
 
     for ( uint i = 0; i < m_matchers.size(); ++i )
     {
-        const KRss::Item item = KRss::Item( sourceModel()->index( source_row, 0, source_parent ).data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>() );
+        const Akonadi::Item item = sourceModel()->index( source_row, 0, source_parent ).data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
         if ( !m_matchers[i]->matches( item ) )
             return false;
     }

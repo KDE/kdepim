@@ -146,8 +146,8 @@ Part::Part( QWidget *parentWidget, QObject *parent, const QVariantList& )
         NotificationManager::self()->setWidget(notificationParent, componentData());
 
         connect( m_mainWidget, SIGNAL(signalUnreadCountChanged(int)), trayIcon, SLOT(slotSetUnread(int)) );
-        connect( m_mainWidget, SIGNAL(signalItemsSelected(QList<KRss::Item>)),
-                this, SIGNAL(signalArticlesSelected(QList<KRss::Item>)) );
+        connect( m_mainWidget, SIGNAL(signalItemsSelected(Akonadi::Item::List)),
+                this, SIGNAL(signalArticlesSelected(Akonadi::Item::List)) );
     }
 
     QString useragent = QString( "Akregator/%1; syndication" ).arg( KDEPIM_VERSION );
@@ -231,8 +231,8 @@ void Part::slotSettingsChanged()
             trayIcon->setStatus( KStatusNotifierItem::Active );
 
         connect( m_mainWidget, SIGNAL(signalUnreadCountChanged(int)), trayIcon, SLOT(slotSetUnread(int)) );
-        connect( m_mainWidget, SIGNAL(signalItemsSelected(QList<KRss::Item>)),
-                this, SIGNAL(signalArticlesSelected(QList<KRss::Item>)) );
+        connect( m_mainWidget, SIGNAL(signalItemsSelected(Akonadi::Item::List)),
+                this, SIGNAL(signalArticlesSelected(Akonadi::Item::List)) );
 
         //PORTING m_mainWidget->slotSetTotalUnread();
     }
