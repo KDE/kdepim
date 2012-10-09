@@ -26,12 +26,10 @@
 
 MessagePropertyDialog::MessagePropertyDialog( QWidget *parent, KTNEFMessage *msg )
   : KDialog( parent )
-//PORTME:	: KDialog( parent, "MessagePropertyDialog", true, i18n( "Message Properties" ),
-//PORTME:                   KDialog::Close | KDialog::User1, KDialog::Close, false,
-//PORTME:                   KStandardGuiItem::save() )
 {
   mMessage = msg;
 
+  setCaption(i18n( "Message Properties" ));
   mListView = new QTreeWidget( this );
   const QStringList headerLabels =
     ( QStringList( i18nc( "@title:column property name", "Name" ) )
@@ -42,7 +40,7 @@ MessagePropertyDialog::MessagePropertyDialog( QWidget *parent, KTNEFMessage *msg
   mListView->setAllColumnsShowFocus( true );
   mListView->setRootIsDecorated( false );
   setMainWidget( mListView );
-
+  setButtonGuiItem(KDialog::User1,KStandardGuiItem::save());
   formatPropertySet( mMessage, mListView );
 }
 

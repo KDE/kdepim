@@ -228,7 +228,7 @@ void KTNEFMain::viewFile()
     KUrl url( "file:" + extractTemp( attach ) );
     QString mimename( attach->mimeTag() );
 
-    if ( mimename.isEmpty() || mimename == "application/octet-stream" ) {
+    if ( mimename.isEmpty() || mimename == QLatin1String("application/octet-stream") ) {
       kDebug() << "No mime type found in attachment object, trying to guess...";
       mimename = KMimeType::findByUrl( url, 0, true )->name();
       kDebug() << "Detected mime type: " << mimename;
@@ -327,7 +327,7 @@ void KTNEFMain::optionDefaultDir()
 
 void KTNEFMain::viewSelectionChanged()
 {
-  QList<KTNEFAttach *> list = mView->getSelection();
+  const QList<KTNEFAttach *> list = mView->getSelection();
   bool on1 = ( list.count() == 1 );
   bool on2 = ( list.count() > 0 );
 
