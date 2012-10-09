@@ -23,8 +23,10 @@
 class KImportPage : public QWidget  {
   Q_OBJECT
 public:
-  KImportPage(QWidget *parent=0);
+  explicit KImportPage(QWidget *parent=0);
   ~KImportPage();
+    Ui::KImportPageDlg *widget();
+private:
   Ui::KImportPageDlg *mWidget;
 };
 
