@@ -474,7 +474,7 @@ void ActionManagerImpl::initTabWidget(TabWidget* tabWidget)
 
     action = coll->addAction("tab_remove");
     action->setIcon(KIcon("tab-close"));
-    action->setText(i18n("&Close Tab"));
+    action->setText(i18n("Close Tab"));
     connect(action, SIGNAL(triggered(bool)), d->tabWidget, SLOT(slotCloseTab()));
     action->setShortcuts(KStandardShortcut::close());
 

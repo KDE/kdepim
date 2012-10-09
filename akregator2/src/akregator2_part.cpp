@@ -35,6 +35,7 @@
 #include "pluginmanager.h"
 #include "setupakonadicommand.h"
 #include "trayicon.h"
+#include "kernel.h"
 
 #include <libkdepim/broadcaststatus.h>
 #include "kdepim-version.h"
@@ -123,12 +124,12 @@ Part::Part( QWidget *parentWidget, QObject *parent, const QVariantList& )
 
     m_mainWidget = new MainWidget( this, m_parentWidget, m_actionManager );
 
-    connect(m_mainWidget->frameManager(), SIGNAL(signalCaptionChanged(QString)), this, SIGNAL(setWindowCaption(QString)));
-    connect(m_mainWidget->frameManager(), SIGNAL(signalStatusText(QString)), this, SLOT(slotSetStatusText(QString)));
-    connect(m_mainWidget->frameManager(), SIGNAL(signalLoadingProgress(int)), m_extension, SIGNAL(loadingProgress(int)));
-    connect(m_mainWidget->frameManager(), SIGNAL(signalCanceled(QString)), this, SIGNAL(canceled(QString)));
-    connect(m_mainWidget->frameManager(), SIGNAL(signalStarted()), this, SLOT(slotStarted()));
-    connect(m_mainWidget->frameManager(), SIGNAL(signalCompleted()), this, SIGNAL(completed()));
+    connect(Kernel::self()->frameManager(), SIGNAL(signalCaptionChanged(QString)), this, SIGNAL(setWindowCaption(QString)));
+    connect(Kernel::self()->frameManager(), SIGNAL(signalStatusText(QString)), this, SLOT(slotSetStatusText(QString)));
+    connect(Kernel::self()->frameManager(), SIGNAL(signalLoadingProgress(int)), m_extension, SIGNAL(loadingProgress(int)));
+    connect(Kernel::self()->frameManager(), SIGNAL(signalCanceled(QString)), this, SIGNAL(canceled(QString)));
+    connect(Kernel::self()->frameManager(), SIGNAL(signalStarted()), this, SLOT(slotStarted()));
+    connect(Kernel::self()->frameManager(), SIGNAL(signalCompleted()), this, SIGNAL(completed()));
 
     // notify the part that this is our internal widget
     setWidget(m_mainWidget);

@@ -51,6 +51,7 @@ set( akregator2_utils_SRCS
 
 set(akregator2part_PART_SRCS
    ${akregator2_utils_SRCS}
+   kernel.cpp
    abstractselectioncontroller.cpp
    articlematcher.cpp #PENDING(frank) remove/port/move to krss
    command_p.cpp

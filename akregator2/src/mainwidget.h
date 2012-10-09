@@ -95,8 +95,6 @@ class AKREGATOR2PART_EXPORT MainWidget : public QWidget
         /** saves settings. Make sure that the Settings singleton is not destroyed yet when saveSettings is called */
         void saveSettings();
 
-        FrameManager* frameManager() const;
-
         /**
          * Add a feed to a group.
          * @param url The URL of the feed to add.
@@ -266,7 +264,6 @@ class AKREGATOR2PART_EXPORT MainWidget : public QWidget
         bool m_networkAvailable;
 
         ActionManagerImpl* m_actionManager;
-        FrameManager* m_frameManager;
 };
 
 } // namespace Akregator2
