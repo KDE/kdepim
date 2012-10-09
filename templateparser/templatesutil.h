@@ -21,15 +21,17 @@
 #include "templateparser_export.h"
 
 class QString;
-
+class QStringList;
 namespace TemplateParser {
 
 namespace Util {
 
 TEMPLATEPARSER_EXPORT void deleteTemplate( const QString &id );
 
-}
+TEMPLATEPARSER_EXPORT QStringList keywords();
+TEMPLATEPARSER_EXPORT QStringList keywordsWithArgs();
 
+}
 }
 
 #endif
