@@ -745,10 +745,30 @@ void ImportMailJob::restoreIdentity()
         else
           group.deleteEntry(templates);
       }
+      if(oldUid != -1) {
+        const QString vcard = QLatin1String("VCardFile");
+        if(group.hasKey(vcard)) {
+          const QString vcardFileName = group.readEntry(vcard);
+          if(!vcardFileName.isEmpty()) {
+            QFile file(vcardFileName);
+
+            const KArchiveEntry* vcardEntry = mArchiveDirectory->entry(BackupMailUtil::identitiesPath() + QString::number(oldUid) + QDir::separator() + file.fileName());
+            if(vcardEntry && vcardEntry->isFile()) {
+              const KArchiveFile* vcardFile = static_cast<const KArchiveFile*>(vcardEntry);
+              const QString vcardFilePath = KStandardDirs::locateLocal("appdata",file.fileName() );
+
+              vcardFile->copyTo(vcardFilePath);
+              group.writeEntry(vcard, vcardFilePath);
+            }
+          }
+        }
+      }
+
       group.sync();
       KPIMIdentities::Identity* identity = &mIdentityManager->newFromScratch( QString() );
 
       identity->readConfig(group);
+
       if(oldUid != -1) {
         mHashIdentity.insert(oldUid,identity->uoid());
         if(oldUid == defaultIdentity) {
