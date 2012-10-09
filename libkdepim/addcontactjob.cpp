@@ -58,9 +58,11 @@ class AddContactJob::Private
       const KABC::Addressee::List contacts = searchJob->contacts();
 
       if ( !contacts.isEmpty() ) { // contact is already part of the address book...
-        const QString text = i18n( "The VCard's primary email address is already in "
-                                   "your address book; however, you may save the VCard "
-                                   "into a file and import it into the address book manually." );
+        const QString text =
+          i18nc( "@info",
+                 "The VCard's primary email address is already in "
+                 "your address book; however, you may save the VCard into "
+                 "a file and import it into the address book manually." );
         KMessageBox::information( mParentWidget, text );
         q->setError( UserDefinedError );
         q->emitResult();
@@ -73,19 +75,24 @@ class AddContactJob::Private
         QPointer<Akonadi::CollectionDialog> dlg = new Akonadi::CollectionDialog( mParentWidget );
         dlg->setMimeTypeFilter( mimeTypes );
         dlg->setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
-        dlg->setCaption( i18n( "Select Address Book" ) );
-        dlg->setDescription( i18n( "Select the address book the new contact shall be saved in:" ) );
+        dlg->setCaption( i18nc( "@title:window", "Select Address Book" ) );
+        dlg->setDescription(
+          i18nc( "@info",
+                 "Select the address book where the contact will be saved:" ) );
+        dlg->changeCollectionDialogOptions( Akonadi::CollectionDialog::KeepTreeExpanded );
 
-        if ( dlg->exec() == QDialog::Accepted ) {
-          mCollection = dlg->selectedCollection();
-        } else {
+        bool gotIt = true;
+        if ( !dlg->exec() ) {
           q->setError( UserDefinedError );
           q->emitResult();
-          delete dlg;
+          gotIt = false;
+        } else {
+          mCollection = dlg->selectedCollection();
+        }
+        delete dlg;
+        if ( !gotIt ) {
           return;
         }
-
-        delete dlg;
       }
 
       if ( mCollection.isValid() ) {
@@ -112,10 +119,16 @@ class AddContactJob::Private
         return;
       }
 
-      const QString text = i18n( "The VCard was added to your address book; "
-                                 "you can add more information to this "
-                                 "entry by opening the address book." );
-      KMessageBox::information( mParentWidget, text, QString(), QLatin1String("addedtokabc") );
+      const QString text =
+        i18nc( "@info",
+               "The VCard was added to your address book; "
+               "you can add more information to this "
+               "entry by opening the address book." );
+      KMessageBox::information(
+        mParentWidget,
+        text,
+        QString(),
+        QLatin1String("addedtokabc") );
 
       q->emitResult();
     }

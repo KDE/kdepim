@@ -38,7 +38,7 @@ public:
     ArchiveMaxUnits
   };
 
-  KUrl realUrl(const QString &filename) const;
+  KUrl realUrl(const QString &folderName) const;
 
   bool isEmpty() const;
 
@@ -69,7 +69,7 @@ public:
   int maximumArchiveCount() const;
   void setMaximumArchiveCount( int max );
 
-  QStringList listOfArchive(const QString& foldername);
+  QStringList listOfArchive(const QString& foldername) const;
 
 private:
   QString dirArchive() const;

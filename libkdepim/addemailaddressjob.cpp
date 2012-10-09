@@ -129,6 +129,7 @@ class AddEmailAddressJob::Private
         dlg->setDescription(
           i18nc( "@info",
                  "Select the address book where the contact will be saved:" ) );
+        dlg->changeCollectionDialogOptions( Akonadi::CollectionDialog::KeepTreeExpanded );
 
         bool gotIt = true;
         if ( !dlg->exec() ) {

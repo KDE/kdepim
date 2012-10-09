@@ -113,12 +113,14 @@ void ArchiveMailManager::backupDone(ArchiveMailInfo *info)
   const QString realPath = MailCommon::Util::fullCollectionPath(collection);
   const QStringList lst = info->listOfArchive(realPath);
 
-  if(lst.count() > info->maximumArchiveCount()) {
-    const int diff = (lst.count() - info->maximumArchiveCount());
-    for(int i = 0; i < diff; ++i) {
-      const QString fileToRemove(info->url().path() + QDir::separator() + lst.at(i));
-      qDebug()<<" file to remove "<<fileToRemove;
-      QFile::remove(fileToRemove);
+  if(info->maximumArchiveCount() != 0) {
+    if(lst.count() > info->maximumArchiveCount()) {
+      const int diff = (lst.count() - info->maximumArchiveCount());
+      for(int i = 0; i < diff; ++i) {
+        const QString fileToRemove(info->url().path() + QDir::separator() + lst.at(i));
+        qDebug()<<" file to remove "<<fileToRemove;
+        QFile::remove(fileToRemove);
+      }
     }
   }
   mListArchiveInfo.removeAll(info);
