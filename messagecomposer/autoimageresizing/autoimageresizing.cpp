@@ -25,3 +25,5 @@ AutoImageResizing::~AutoImageResizing()
 {
 }
 
+
+#include "autoimageresizing.moc"
