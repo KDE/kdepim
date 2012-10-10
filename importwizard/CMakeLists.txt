@@ -40,6 +40,7 @@ opera/operasettings.cpp
 oe/oeimportdata.cpp
 mailapp/mailappimportdata.cpp
 pmail/pmailimportdata.cpp
+pmail/pmailsettings.cpp
 thebat/thebatimportdata.cpp
 balsa/balsaimportdata.cpp
 balsa/balsasettings.cpp
