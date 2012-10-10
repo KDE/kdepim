@@ -68,7 +68,7 @@ protected Q_SLOTS:
 
 private:
     void initAction();
-    KJotsWidget *component;
+    KJotsWidget *mComponent;
     KParts::StatusBarExtension *mStatusBar;
 };
 
