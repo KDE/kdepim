@@ -63,6 +63,7 @@ set( messagecomposer_src
      kmsubjectlineedit.cpp
      autocorrection/kmcomposerautocorrection.cpp
      autocorrection/kmcomposerautocorrectionwidget.cpp
+     autocorrection/kmcomposerautocorrectionlistwidget.cpp
      selectspecialchar.cpp
 )
 

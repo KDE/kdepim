@@ -30,6 +30,8 @@ namespace Ui {
 class KMComposerAutoCorrectionWidget;
 }
 
+namespace MessageComposer {
+
 class KMComposerAutoCorrection;
 
 class MESSAGECOMPOSER_EXPORT KMComposerAutoCorrectionWidget : public QWidget
@@ -39,7 +41,7 @@ class MESSAGECOMPOSER_EXPORT KMComposerAutoCorrectionWidget : public QWidget
 public:
   explicit KMComposerAutoCorrectionWidget(QWidget *parent = 0);
   ~KMComposerAutoCorrectionWidget();
-  void setAutoCorrection(KMComposerAutoCorrection * autoCorrect);
+  void setAutoCorrection(MessageComposer::KMComposerAutoCorrection * autoCorrect);
   void loadConfig();
   void writeConfig();
   void resetToDefault();
@@ -85,5 +87,7 @@ private:
   Ui::KMComposerAutoCorrectionWidget *ui;
   KMComposerAutoCorrection *mAutoCorrection;
 };
+
+}
 
 #endif // KMCOMPOSERAUTOCORRECTIONWIDGET_H

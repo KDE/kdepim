@@ -23,6 +23,8 @@
 #include <QHash>
 #include <QSet>
 
+namespace MessageComposer {
+
 class MESSAGECOMPOSER_EXPORT KMComposerAutoCorrection
 {
 public:
@@ -125,5 +127,6 @@ private:
   TypographicQuotes mTypographicSingleQuotes;
   TypographicQuotes mTypographicDoubleQuotes;
 };
+}
 
 #endif // KMCOMPOSERAUTOCORRECTION_H

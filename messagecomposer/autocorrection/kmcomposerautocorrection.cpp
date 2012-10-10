@@ -27,6 +27,8 @@
 #include <QDomDocument>
 #include <QFile>
 
+using namespace MessageComposer;
+
 KMComposerAutoCorrection::KMComposerAutoCorrection()
   : mSingleSpaces(true),
     mUppercaseFirstCharOfSentence(false),
@@ -640,7 +642,6 @@ void KMComposerAutoCorrection::replaceTypographicQuotes()
 
 void KMComposerAutoCorrection::readAutoCorrectionXmlFile()
 {
-
     KLocale *locale = KGlobal::locale();
     QString kdelang = locale->languageList().first();
     kdelang.remove(QRegExp(QLatin1String("@.*")));
