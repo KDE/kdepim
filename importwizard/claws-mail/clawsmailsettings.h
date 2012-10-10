@@ -18,7 +18,6 @@
 #ifndef ClawsMailSettings_H
 #define ClawsMailSettings_H
 
-#include "abstractsettings.h"
 #include "sylpheed/sylpheedsettings.h"
 
 class ImportWizard;
