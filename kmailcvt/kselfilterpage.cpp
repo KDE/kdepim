@@ -118,5 +118,10 @@ Filter * KSelFilterPage::getSelectedFilter(void)
   return mFilterList.at(mWidget->mFilterCombo->currentIndex());
 }
 
+Ui::KSelFilterPageDlg *KSelFilterPage::widget()
+{
+  return mWidget;
+}
+
 #include "kselfilterpage.moc"
 

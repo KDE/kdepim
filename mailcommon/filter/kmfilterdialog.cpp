@@ -1043,7 +1043,7 @@ void KMFilterListBox::createFilter( const QByteArray &field, const QString &valu
 
   MailFilter *newFilter = new MailFilter();
   newFilter->pattern()->append( newRule );
-  newFilter->pattern()->setName( QString::fromLatin1( "<%1>:%2" ).
+  newFilter->pattern()->setName( QString::fromLatin1( "<%1>: %2" ).
                                    arg( QString::fromLatin1( field ) ).
                                    arg( value ) );
 

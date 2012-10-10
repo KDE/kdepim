@@ -32,12 +32,16 @@ public:
   void  addFilter(MailImporter::Filter *f);
   MailImporter::Filter *getSelectedFilter(void);
   bool removeDupMsg_checked() const;
-  Ui::KSelFilterPageDlg *mWidget;  
+
+  Ui::KSelFilterPageDlg *widget();
+
+private Q_SLOTS:
+  void filterSelected(int i);
+
 private:
+  Ui::KSelFilterPageDlg *mWidget;
   QList<MailImporter::Filter*> mFilterList;
   
-private slots:
-  void filterSelected(int i);
 };
 
 #endif

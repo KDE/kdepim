@@ -32,7 +32,7 @@ class KTNEFView : public QTreeWidget
     KTNEFView( QWidget *parent = 0 );
     ~KTNEFView();
 
-    void setAttachments( QList<KTNEFAttach *> list );
+    void setAttachments(const QList<KTNEFAttach *> &list );
     QList<KTNEFAttach *> getSelection();
 
   signals:
