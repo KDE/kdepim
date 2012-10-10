@@ -95,8 +95,19 @@ void FilterImporterBalsa::parseCondition(const QString& condition,MailCommon::Ma
         if(cond.startsWith(QLatin1String("NOT"))) {
             cond = cond.right(cond.length()-3);
             negative = true;
+            cond = cond.trimmed();
         }
         qDebug()<<" cond"<<cond;
+
+        //Date between
+        QByteArray fieldName;
+        if(cond.startsWith(QLatin1String("DATE"))) {
+            fieldName = "<date>";
+            cond = cond.right(cond.length()-4);
+            cond = cond.trimmed();
+            QStringList splitDate = cond.split(QLatin1Char(' '));
+            qDebug()<<" splitDate "<<splitDate;
+        }
 
         //SearchRule::Ptr rule = SearchRule::createInstance( fieldName, functionName, line );
         //filter->pattern()->append( rule );
