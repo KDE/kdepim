@@ -62,11 +62,11 @@ KJotsPart::KJotsPart( QWidget *parentWidget, QObject *parent, const QVariantList
     setComponentData( KJotsPartFactory::componentData() );
 
     // this should be your custom internal widget
-    component = new KJotsWidget(parentWidget, this);
+    mComponent = new KJotsWidget(parentWidget, this);
 
     mStatusBar = new KParts::StatusBarExtension(this);
     // notify the part that this is our internal widget
-    setWidget(component);
+    setWidget(mComponent);
     initAction();
 
     // set our XML-UI resource file
@@ -77,14 +77,14 @@ KJotsPart::KJotsPart( QWidget *parentWidget, QObject *parent, const QVariantList
 
 KJotsPart::~KJotsPart()
 {
-// 	component->queryClose();
+    mComponent->queryClose();
 }
 
 void KJotsPart::initAction()
 {
   KAction *action = new KAction( KIcon( "configure" ), i18n( "&Configure KJots..." ), this );
   actionCollection()->addAction( "kjots_configure", action );
-  connect( action, SIGNAL(triggered(bool)), component,
+  connect( action, SIGNAL(triggered(bool)), mComponent,
            SLOT(configure()) );
 }
 
@@ -95,7 +95,7 @@ bool KJotsPart::openFile()
 
 void KJotsPart::delayedInitialization()
 {
-    connect(component, SIGNAL(activeAnchorChanged(QString,QString)),
+    connect(mComponent, SIGNAL(activeAnchorChanged(QString,QString)),
             SLOT(activeAnchorChanged(QString,QString)));
 }
 
