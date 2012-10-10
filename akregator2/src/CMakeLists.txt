@@ -69,7 +69,7 @@ set(akregator2part_PART_SRCS
    actions.cpp
    actionmanagerimpl.cpp
    createfeedcommand.cpp
-   createtagcommand.cpp
+   createfoldercommand.cpp
    editfeedcommand.cpp
    frame.cpp
    framemanager.cpp

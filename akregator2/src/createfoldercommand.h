@@ -22,8 +22,8 @@
     without including the source code for Qt in the source distribution.
 */
 
-#ifndef AKREGATOR2_CREATETAGCOMMAND_H
-#define AKREGATOR2_CREATETAGCOMMAND_H
+#ifndef AKREGATOR2_CREATEFOLDERCOMMAND_H
+#define AKREGATOR2_CREATEFOLDERCOMMAND_H
 
 #include "command.h"
 
@@ -62,4 +62,4 @@ private:
 
 }
 
-#endif // AKREGATOR2_CREATETAGCOMMAND_H
+#endif // AKREGATOR2_CREATEFOLDERCOMMAND_H

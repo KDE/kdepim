@@ -33,7 +33,7 @@
 #include "akregator2_part.h"
 #include "browserframe.h"
 #include "createfeedcommand.h"
-#include "createtagcommand.h"
+#include "createfoldercommand.h"
 #include "modifycommands.h"
 #include "deletesubscriptioncommand.h"
 #include "editfeedcommand.h"

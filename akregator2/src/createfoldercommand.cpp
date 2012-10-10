@@ -22,7 +22,7 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include "createtagcommand.h"
+#include "createfoldercommand.h"
 #include "command_p.h"
 #include "feedlistview.h"
 
@@ -128,4 +128,4 @@ void CreateFolderCommand::doStart()
     job->start();
 }
 
-#include "createtagcommand.moc"
+#include "createfoldercommand.moc"
