@@ -107,6 +107,12 @@ void FilterImporterBalsa::parseCondition(const QString& condition,MailCommon::Ma
             cond = cond.trimmed();
             QStringList splitDate = cond.split(QLatin1Char(' '));
             qDebug()<<" splitDate "<<splitDate;
+        } else if(cond.startsWith(QLatin1String("FLAG"))) {
+            qDebug()<<" FLAG :";
+        } else if(cond.startsWith(QLatin1String("STRING"))) {
+            qDebug()<<" STRING";
+        } else {
+            qDebug()<<" condition not implemented :"<<cond;
         }
 
         //SearchRule::Ptr rule = SearchRule::createInstance( fieldName, functionName, line );
