@@ -109,8 +109,8 @@ public:
 #ifdef WITH_LIBKDEPIM	
         if ( cmd->isUserVisible() )
             KPIM::ProgressManager::self()->addJob( cmd );
+#endif
         cmd->start();
-#endif	
     }
 };
 
