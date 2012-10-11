@@ -564,6 +564,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
       }
       msg->to()->fromUnicodeString( to, "utf-8" );
       msg->from()->fromUnicodeString( receiver, "utf-8" );
+      msg->date()->setDateTime( KDateTime::currentLocalDateTime() );
 
       if ( !GlobalSettings::self()->legacyBodyInvites() ) {
         msg->contentType()->from7BitString( "text/calendar; method=reply; charset=\"utf-8\"" );
