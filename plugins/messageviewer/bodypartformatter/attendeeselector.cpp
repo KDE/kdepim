@@ -84,7 +84,7 @@ void AttendeeSelector::textChanged( const QString &text )
 
 void AttendeeSelector::selectionChanged()
 {
-  ui.removeButton->setEnabled( ui.attendeeList->currentItem() >= 0 );
+  ui.removeButton->setEnabled( ui.attendeeList->currentItem() );
 }
 
 #include "attendeeselector.moc"

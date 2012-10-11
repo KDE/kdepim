@@ -39,6 +39,7 @@ class MESSAGECOMPOSER_EXPORT KMComposerAutoCorrectionWidget : public QWidget
   Q_OBJECT
     
 public:
+  enum ImportFileType { LibreOffice, KMail };
   explicit KMComposerAutoCorrectionWidget(QWidget *parent = 0);
   ~KMComposerAutoCorrectionWidget();
   void setAutoCorrection(MessageComposer::KMComposerAutoCorrection * autoCorrect);
@@ -75,6 +76,7 @@ private Q_SLOTS:
   void slotEnableDisableAbreviationList();
   void slotEnableDisableTwoUpperEntry();
 
+  void slotImportFilter(QAction* act);
 Q_SIGNALS:
   void changed();
 

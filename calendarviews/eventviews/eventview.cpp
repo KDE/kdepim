@@ -60,7 +60,7 @@ using namespace KCalCore;
 using namespace EventViews;
 using namespace Akonadi;
 
-static const KCatalogLoader loader( "libeventviews" );
+static const KCatalogLoader loaderCatalog( "libeventviews" );
 
 CalendarSupport::CollectionSelection *EventViewPrivate::sGlobalCollectionSelection = 0;
 

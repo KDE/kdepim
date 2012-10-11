@@ -15,15 +15,20 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef IMPORTLIBREOFFICEAUTOCORRECTION_H
-#define IMPORTLIBREOFFICEAUTOCORRECTION_H
-class QFile;
+#ifndef IMPORTKMAILAUTOCORRECTION_H
+#define IMPORTKMAILAUTOCORRECTION_H
 
-class ImportLibreOfficeAutocorrection
+#include "importabstractautocorrection.h"
+#include "autocorrection/kmcomposerautocorrection.h"
+
+namespace MessageComposer {
+class ImportKMailAutocorrection : public ImportAbstractAutocorrection
 {
 public:
-  explicit ImportLibreOfficeAutocorrection(QFile *file);
-  ~ImportLibreOfficeAutocorrection();
+  explicit ImportKMailAutocorrection(QWidget *parent = 0);
+  ~ImportKMailAutocorrection();
+  bool import(const QString& fileName);
 };
+}
 
-#endif // IMPORTLIBREOFFICEAUTOCORRECTION_H
+#endif // IMPORTKMAILAUTOCORRECTION_H

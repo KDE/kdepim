@@ -21,7 +21,6 @@
 
 #include "instanceselector.h"
 #include "ui_instanceselector.h"
-#include "mainwindow.h"
 
 #include <KDebug>
 
@@ -32,8 +31,11 @@
 #include <QDBusConnectionInterface>
 #include <QStandardItemModel>
 
-InstanceSelector::InstanceSelector( const QString& remoteHost, QWidget* parent, Qt::WFlags flags ):
-  KDialog( parent, flags ), ui( new Ui::InstanceSelector ), m_remoteHost( remoteHost )
+InstanceSelector::InstanceSelector( const QString& remoteHost, QWidget* parent, Qt::WFlags flags )
+  : KDialog( parent, flags ),
+    ui( new Ui::InstanceSelector ),
+    m_remoteHost( remoteHost ),
+    mWindow( 0 )
 {
   ui->setupUi(mainWidget());
 
@@ -63,6 +65,7 @@ InstanceSelector::InstanceSelector( const QString& remoteHost, QWidget* parent, 
 
 InstanceSelector::~InstanceSelector()
 {
+  delete mWindow;
 }
 
 void InstanceSelector::accept()
@@ -76,12 +79,12 @@ void InstanceSelector::accept()
   QDialog::accept();
 
   qputenv( "AKONADI_INSTANCE", m_instance.toUtf8() );
-  MainWindow *window = new MainWindow;
+  MainWindow *mWindow = new MainWindow;
   if ( !m_remoteHost.isEmpty() )
-    window->setWindowTitle( i18n( "Remote Akonadi Console (%1)", m_remoteHost ) );
+    mWindow->setWindowTitle( i18n( "Remote Akonadi Console (%1)", m_remoteHost ) );
   else if ( !m_instance.isEmpty() )
-    window->setWindowTitle( i18n( "Akonadi Console (Instance: %1)", m_instance ) );
-  window->show();
+    mWindow->setWindowTitle( i18n( "Akonadi Console (Instance: %1)", m_instance ) );
+  mWindow->show();
 }
 
 void InstanceSelector::reject()

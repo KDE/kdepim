@@ -22,6 +22,8 @@
 #ifndef INSTANCESELECTOR_H
 #define INSTANCESELECTOR_H
 
+#include "mainwindow.h"
+
 #include <KDialog>
 
 namespace Ui {
@@ -47,6 +49,7 @@ class InstanceSelector : public KDialog
     QScopedPointer<Ui::InstanceSelector> ui;
     QString m_remoteHost;
     QString m_instance;
+    MainWindow *mWindow;
 };
 
 #endif // INSTANCESELECTOR_H

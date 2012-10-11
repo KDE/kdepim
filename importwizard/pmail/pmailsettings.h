@@ -15,8 +15,8 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef ClawsMailSettings_H
-#define ClawsMailSettings_H
+#ifndef PMailSettings_H
+#define PMailSettings_H
 
 #include "abstractsettings.h"
 

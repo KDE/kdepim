@@ -1,3 +1,4 @@
+KDE4_NO_ENABLE_FINAL(calendarsupport)
 # Commented because it uses your real calendar. You can loose data.
 # I'll uncomment this when tests use testrunner.
 # add_subdirectory(next/tests)

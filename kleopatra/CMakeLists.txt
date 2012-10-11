@@ -1,3 +1,4 @@
+KDE4_NO_ENABLE_FINAL(kleopatra)
 project(kleopatra)
 
 option( KLEO_STATIC_KCMODULES "Build Kleopatra's KCMs into Kleopatra; don't install plugins" WINCE )

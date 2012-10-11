@@ -18,12 +18,14 @@
 #include "kmcomposerautocorrectionwidget.h"
 #include "kmcomposerautocorrection.h"
 #include "ui_kmcomposerautocorrectionwidget.h"
+#include "import/importlibreofficeautocorrection.h"
 
 #include "messagecomposersettings.h"
 #include "selectspecialchar.h"
 
 #include <KCharSelect>
 #include <QTreeWidgetItem>
+#include <QMenu>
 
 using namespace MessageComposer;
 
@@ -78,6 +80,20 @@ KMComposerAutoCorrectionWidget::KMComposerAutoCorrectionWidget(QWidget *parent) 
   connect(ui->twoUpperLetterList,SIGNAL(deleteSelectedItems()),SLOT(removeTwoUpperLetterEntry()));
   slotEnableDisableAbreviationList();
   slotEnableDisableTwoUpperEntry();
+
+  QMenu *menu = new QMenu();
+  ui->importAutoCorrection->setMenu( menu );
+
+  QAction *act = new QAction( i18n( "LibreOffice Autocorrection" ), this );
+  act->setData( (int)KMComposerAutoCorrectionWidget::LibreOffice );
+  menu->addAction( act );
+
+  act = new QAction( i18n( "KMail Autocorrection" ), this );
+  act->setData( (int)KMComposerAutoCorrectionWidget::KMail );
+  menu->addAction( act );
+
+  connect( menu, SIGNAL(triggered(QAction*)), SLOT(slotImportFilter(QAction*)) );
+
 }
 
 KMComposerAutoCorrectionWidget::~KMComposerAutoCorrectionWidget()
@@ -449,6 +465,13 @@ void KMComposerAutoCorrectionWidget::slotEnableDisableTwoUpperEntry()
     const bool enable = (!ui->twoUpperLetterList->selectedItems ().isEmpty());
     ui->add2->setEnabled( !ui->twoUpperLetter->text().isEmpty());
     ui->remove2->setEnabled(enable);
+}
+
+void KMComposerAutoCorrectionWidget::slotImportFilter(QAction* act)
+{
+  if ( act ) {
+    //importFilters( ( KMComposerAutoCorrectionWidget::ImportFileType )act->data().toInt() );
+  }
 }
 
 #include "kmcomposerautocorrectionwidget.moc"
