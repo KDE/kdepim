@@ -24,6 +24,7 @@
 class KZip;
 class QDomDocument;
 class QFile;
+class KArchiveDirectory;
 
 namespace MessageComposer {
 
@@ -34,7 +35,10 @@ public:
   ~ImportLibreOfficeAutocorrection();
   void importAutoCorrectionFile();
 private:
+  enum Type {DOCUMENT, SENTENCE, WORD };
+
   bool loadDomElement( QDomDocument &doc, QFile *file );
+  bool importFile(Type type, const KArchiveDirectory* archiveDirectory);
   QSet<QString> mUpperCaseExceptions;
   QSet<QString> mTwoUpperLetterExceptions;
   QHash<QString, QString> mAutocorrectEntries;

@@ -47,9 +47,32 @@ ImportLibreOfficeAutocorrection::~ImportLibreOfficeAutocorrection()
 
 void ImportLibreOfficeAutocorrection::importAutoCorrectionFile()
 {
-  const KArchiveDirectory* mArchiveDirectory = mArchive->directory();
+  const KArchiveDirectory* archiveDirectory = mArchive->directory();
   //Replace word
-  const KArchiveEntry* documentList = mArchiveDirectory->entry(QLatin1String("DocumentList.xml"));
+  importFile(DOCUMENT, archiveDirectory);
+
+  //No tread as end of line
+  importFile(SENTENCE, archiveDirectory);
+
+  //Two upper letter
+  importFile(WORD, archiveDirectory);
+}
+
+bool ImportLibreOfficeAutocorrection::importFile(Type type, const KArchiveDirectory* archiveDirectory)
+{
+  const KArchiveEntry* documentList = 0;
+  switch( type) {
+  case DOCUMENT:
+      documentList = archiveDirectory->entry(QLatin1String("DocumentList.xml"));
+      break;
+  case SENTENCE:
+      documentList = archiveDirectory->entry(QLatin1String("SentenceExceptList.xml"));
+      break;
+  case WORD:
+      documentList = archiveDirectory->entry(QLatin1String("WordExceptList.xml"));
+      break;
+  }
+
   if (documentList && documentList->isFile()) {
     const KArchiveFile* archiveFile = static_cast<const KArchiveFile*>(documentList);
     KTemporaryFile tmpFile;
@@ -57,39 +80,15 @@ void ImportLibreOfficeAutocorrection::importAutoCorrectionFile()
     QFile file(tmpFile.fileName());
     QDomDocument doc;
     if (loadDomElement( doc, &file )) {
-
+      QDomElement list = doc.documentElement();
+      if ( list.isNull() ) {
+        kDebug() << "No list defined";
+      } else {
+      }
     }
   }
-
-  //No tread as end of line
-  const KArchiveEntry* sentenceExceptList = mArchiveDirectory->entry(QLatin1String("SentenceExceptList.xml"));
-  if (sentenceExceptList && sentenceExceptList->isFile()) {
-    const KArchiveFile* archiveFile = static_cast<const KArchiveFile*>(sentenceExceptList);
-    KTemporaryFile tmpFile;
-    archiveFile->copyTo(tmpFile.fileName());
-    QFile file(tmpFile.fileName());
-    QDomDocument doc;
-    if (loadDomElement( doc, &file )) {
-
-    }
-
-  }
-
-  //Two upper letter
-  const KArchiveEntry* wordExceptList = mArchiveDirectory->entry(QLatin1String("WordExceptList.xml"));
-  if (wordExceptList && wordExceptList->isFile()) {
-    const KArchiveFile* archiveFile = static_cast<const KArchiveFile*>(wordExceptList);
-    KTemporaryFile tmpFile;
-    archiveFile->copyTo(tmpFile.fileName());
-    QFile file(tmpFile.fileName());
-    QDomDocument doc;
-    if (loadDomElement( doc, &file )) {
-
-    }
-
-  }
+  return true;
 }
-
 
 bool ImportLibreOfficeAutocorrection::loadDomElement( QDomDocument &doc, QFile *file )
 {
