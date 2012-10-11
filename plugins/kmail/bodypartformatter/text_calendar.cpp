@@ -607,8 +607,10 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       if ( status == Attendee::Delegated ) {
         incidence = icalToString( iCal );
         myself = findMyself( incidence, receiver );
-        myself->setStatus( status );
-        myself->setDelegate( delegateString );
+        if ( myself ) {
+          myself->setStatus( status );
+          myself->setDelegate( delegateString );
+        }
         QString name, email;
         KPIM::getNameAndMail( delegateString, name, email );
         Attendee *delegate = new Attendee( name, email, true );
