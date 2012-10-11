@@ -26,14 +26,14 @@
 
 using namespace MessageComposer;
 
-ImportLibreOfficeAutocorrection::ImportLibreOfficeAutocorrection(const QString& fileName)
-    : mArchive(new KZip(fileName))
+ImportLibreOfficeAutocorrection::ImportLibreOfficeAutocorrection(const QString& fileName, QWidget *parent)
+    : mArchive(new KZip(fileName)), mParent(parent)
 {
   const bool result = mArchive->open(QIODevice::ReadOnly);
   if(result) {
     importAutoCorrectionFile();
   } else {
-    KMessageBox::error(0,i18n("Archive cannot be opened in read mode."),i18n("Import LibreOffice Autocorrection File"));
+    KMessageBox::error(mParent,i18n("Archive cannot be opened in read mode."),i18n("Import LibreOffice Autocorrection File"));
   }
 }
 

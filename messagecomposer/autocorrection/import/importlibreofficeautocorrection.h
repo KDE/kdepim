@@ -31,7 +31,7 @@ namespace MessageComposer {
 class ImportLibreOfficeAutocorrection
 {
 public:
-  explicit ImportLibreOfficeAutocorrection(const QString &fileName);
+  explicit ImportLibreOfficeAutocorrection(const QString &fileName, QWidget *parent = 0);
   ~ImportLibreOfficeAutocorrection();
   void importAutoCorrectionFile();
 
@@ -48,6 +48,7 @@ private:
   QSet<QString> mTwoUpperLetterExceptions;
   QHash<QString, QString> mAutocorrectEntries;
   KZip *mArchive;
+  QWidget *mParent;
 };
 
 }
