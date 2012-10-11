@@ -17,13 +17,26 @@
 
 #ifndef IMPORTLIBREOFFICEAUTOCORRECTION_H
 #define IMPORTLIBREOFFICEAUTOCORRECTION_H
+
+#include <QString>
+#include <QSet>
+
 class QFile;
+
+namespace MessageComposer {
 
 class ImportLibreOfficeAutocorrection
 {
 public:
   explicit ImportLibreOfficeAutocorrection(QFile *file);
   ~ImportLibreOfficeAutocorrection();
+  void importAutoCorrectionFile();
+private:
+  QSet<QString> mUpperCaseExceptions;
+  QSet<QString> mTwoUpperLetterExceptions;
+  QHash<QString, QString> mAutocorrectEntries;
 };
+
+}
 
 #endif // IMPORTLIBREOFFICEAUTOCORRECTION_H

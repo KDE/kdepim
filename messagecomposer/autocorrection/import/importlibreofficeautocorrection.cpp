@@ -17,6 +17,9 @@
 
 #include "importlibreofficeautocorrection.h"
 #include <QFile>
+#include <KZip>
+
+using namespace MessageComposer;
 
 ImportLibreOfficeAutocorrection::ImportLibreOfficeAutocorrection(QFile *file)
 {
@@ -24,4 +27,9 @@ ImportLibreOfficeAutocorrection::ImportLibreOfficeAutocorrection(QFile *file)
 
 ImportLibreOfficeAutocorrection::~ImportLibreOfficeAutocorrection()
 {
+}
+
+void ImportLibreOfficeAutocorrection::importAutoCorrectionFile()
+{
+
 }
