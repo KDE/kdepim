@@ -27,15 +27,16 @@ ImportLibreOfficeAutocorrection::ImportLibreOfficeAutocorrection(const QString& 
     : mArchive(new KZip(fileName))
 {
   const bool result = mArchive->open(QIODevice::ReadOnly);
-  if(!result) {
+  if(result) {
+    importAutoCorrectionFile();
+  } else {
     KMessageBox::error(0,i18n("Archive cannot be opened in read mode."),i18n("Import LibreOffice Autocorrection File"));
   }
-  importAutoCorrectionFile();
 }
 
 ImportLibreOfficeAutocorrection::~ImportLibreOfficeAutocorrection()
 {
-  if(mArchive && mArchive->isOpen()) {
+  if (mArchive && mArchive->isOpen()) {
     mArchive->close();
   }
   delete mArchive;
@@ -43,5 +44,25 @@ ImportLibreOfficeAutocorrection::~ImportLibreOfficeAutocorrection()
 
 void ImportLibreOfficeAutocorrection::importAutoCorrectionFile()
 {
+  const KArchiveDirectory* mArchiveDirectory = mArchive->directory();
+  //Replace word
+  const KArchiveEntry* documentList = mArchiveDirectory->entry(QLatin1String("DocumentList.xml"));
+  if (documentList && documentList->isFile()) {
+    const KArchiveFile* file = static_cast<const KArchiveFile*>(documentList);
 
+  }
+
+  //No tread as end of line
+  const KArchiveEntry* sentenceExceptList = mArchiveDirectory->entry(QLatin1String("SentenceExceptList.xml"));
+  if (sentenceExceptList && sentenceExceptList->isFile()) {
+    const KArchiveFile* file = static_cast<const KArchiveFile*>(sentenceExceptList);
+
+  }
+
+  //Two upper letter
+  const KArchiveEntry* wordExceptList = mArchiveDirectory->entry(QLatin1String("WordExceptList.xml"));
+  if (wordExceptList && wordExceptList->isFile()) {
+    const KArchiveFile* file = static_cast<const KArchiveFile*>(wordExceptList);
+
+  }
 }
