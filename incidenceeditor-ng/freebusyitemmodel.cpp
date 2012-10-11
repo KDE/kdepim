@@ -251,6 +251,9 @@ void FreeBusyItemModel::addItem( const IncidenceEditorNG::FreeBusyItem::Ptr &fre
 void FreeBusyItemModel::setFreeBusyPeriods( const QModelIndex &parent,
                                             const KCalCore::FreeBusyPeriod::List &list )
 {
+  if(!parent.isValid())
+    return;
+
   ItemPrivateData *parentData = static_cast<ItemPrivateData*>( parent.internalPointer() );
   QModelIndex first = index( 0, 0, parent );
   QModelIndex last = index( parentData->childCount() - 1, 0, parent );
