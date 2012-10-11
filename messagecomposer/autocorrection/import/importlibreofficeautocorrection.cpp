@@ -61,7 +61,7 @@ void ImportLibreOfficeAutocorrection::importAutoCorrectionFile()
 bool ImportLibreOfficeAutocorrection::importFile(Type type, const KArchiveDirectory* archiveDirectory)
 {
   const KArchiveEntry* documentList = 0;
-  switch( type) {
+  switch (type) {
   case DOCUMENT:
       documentList = archiveDirectory->entry(QLatin1String("DocumentList.xml"));
       break;
@@ -82,10 +82,20 @@ bool ImportLibreOfficeAutocorrection::importFile(Type type, const KArchiveDirect
     if (loadDomElement( doc, &file )) {
       QDomElement list = doc.documentElement();
       if ( list.isNull() ) {
-        kDebug() << "No list defined";
+        kDebug() << "No list defined in "<<type;
       } else {
+          for ( QDomElement e = list.firstChildElement(); !e.isNull(); e = e.nextSiblingElement() ) {
+            const QString tag = e.tagName();
+            qDebug()<<" tag :"<<tag;
+            if ( tag == QLatin1String( "block-list:block" ) ) {
+            } else {
+              kDebug() << " unknown tag " << tag;
+            }
+          }
       }
     }
+  } else {
+      return false;
   }
   return true;
 }
@@ -101,4 +111,19 @@ bool ImportLibreOfficeAutocorrection::loadDomElement( QDomDocument &doc, QFile *
     return false;
   }
   return true;
+}
+
+QSet<QString> ImportLibreOfficeAutocorrection::upperCaseExceptions() const
+{
+  return mUpperCaseExceptions;
+}
+
+QSet<QString> ImportLibreOfficeAutocorrection::twoUpperLetterExceptions() const
+{
+  return mTwoUpperLetterExceptions;
+}
+
+QHash<QString, QString> ImportLibreOfficeAutocorrection::autocorrectEntries() const
+{
+  return mAutocorrectEntries;
 }

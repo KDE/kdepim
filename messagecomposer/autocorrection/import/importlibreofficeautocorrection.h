@@ -34,6 +34,11 @@ public:
   explicit ImportLibreOfficeAutocorrection(const QString &fileName);
   ~ImportLibreOfficeAutocorrection();
   void importAutoCorrectionFile();
+
+  QSet<QString> upperCaseExceptions() const;
+  QSet<QString> twoUpperLetterExceptions() const;
+  QHash<QString, QString> autocorrectEntries() const;
+
 private:
   enum Type {DOCUMENT, SENTENCE, WORD };
 
