@@ -37,7 +37,9 @@
 #include <QMouseEvent>
 
 namespace GpgME { class Error; }
-namespace KIO { class Job; }
+namespace KIO { 
+  class Job; 
+}
 
 namespace Kleo { class SpecialJob; }
 

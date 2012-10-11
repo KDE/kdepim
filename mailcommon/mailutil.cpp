@@ -508,13 +508,13 @@ static QModelIndex indexBelow( QAbstractItemModel *model, const QModelIndex &cur
   return QModelIndex(); // nothing found -> end of tree
 }
 
-static QModelIndex lastChildOf( QAbstractItemModel *model, const QModelIndex &current )
+static QModelIndex lastChildOfModel( QAbstractItemModel *model, const QModelIndex &current )
 {
   if ( model->rowCount( current ) == 0 ) {
     return current;
   }
 
-  return lastChildOf( model, model->index( model->rowCount( current ) - 1, 0, current ) );
+  return lastChildOfModel( model, model->index( model->rowCount( current ) - 1, 0, current ) );
 }
 
 static QModelIndex indexAbove( QAbstractItemModel *model, const QModelIndex &current )
@@ -531,7 +531,7 @@ static QModelIndex indexAbove( QAbstractItemModel *model, const QModelIndex &cur
 
   // the item above us is the last child (or grandchild, or grandgrandchild... etc)
   // of our previous sibling
-  return lastChildOf( model, previousSibling );
+  return lastChildOfModel( model, previousSibling );
 }
 
 QModelIndex MailCommon::Util::nextUnreadCollection( QAbstractItemModel *model,

@@ -850,7 +850,7 @@ namespace {
     KMime::Content *node = nodeForUrl( url, w );
     if ( !node )
       return QString();
-    const QString name = NodeHelper::fileName( node );
+    const QString name = MessageViewer::NodeHelper::fileName( node );
     if ( !name.isEmpty() )
       return i18n( "Attachment: %1", name );
     else if ( dynamic_cast<KMime::Message*>( node ) ) {

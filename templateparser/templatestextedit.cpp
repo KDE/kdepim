@@ -48,8 +48,8 @@ TemplatesTextEdit::~TemplatesTextEdit()
 void TemplatesTextEdit::initCompleter()
 {
   QStringList listWord;
-  listWord <<TemplateParser::Util::keywords();
-  listWord <<TemplateParser::Util::keywordsWithArgs();
+  listWord <<Util::keywords();
+  listWord <<Util::keywordsWithArgs();
 
   m_completer = new QCompleter( this );
   m_completer->setModel( new QStringListModel( listWord, m_completer ) );
