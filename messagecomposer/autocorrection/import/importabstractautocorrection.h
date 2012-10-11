@@ -22,6 +22,8 @@
 #include <QString>
 #include <QHash>
 
+#include "autocorrection/kmcomposerautocorrection.h"
+
 namespace MessageComposer {
 class ImportAbstractAutocorrection
 {
@@ -33,14 +35,16 @@ public:
   QSet<QString> twoUpperLetterExceptions() const;
   QHash<QString, QString> autocorrectEntries() const;
 
-protected:
-  QWidget *mParent;
+  KMComposerAutoCorrection::TypographicQuotes typographicSingleQuotes() const;
+  KMComposerAutoCorrection::TypographicQuotes typographicDoubleQuotes() const;
 
-private:
+protected:
   QSet<QString> mUpperCaseExceptions;
   QSet<QString> mTwoUpperLetterExceptions;
   QHash<QString, QString> mAutocorrectEntries;
-
+  KMComposerAutoCorrection::TypographicQuotes mTypographicSingleQuotes;
+  KMComposerAutoCorrection::TypographicQuotes mTypographicDoubleQuotes;
+  QWidget *mParent;
 };
 }
 

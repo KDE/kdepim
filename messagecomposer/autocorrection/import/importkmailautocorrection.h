@@ -19,13 +19,15 @@
 #define IMPORTKMAILAUTOCORRECTION_H
 
 #include "importabstractautocorrection.h"
+#include "autocorrection/kmcomposerautocorrection.h"
 
 namespace MessageComposer {
 class ImportKMailAutocorrection : public ImportAbstractAutocorrection
 {
 public:
-  explicit ImportKMailAutocorrection(QWidget *parent);
+  explicit ImportKMailAutocorrection(QWidget *parent = 0);
   ~ImportKMailAutocorrection();
+  bool import(const QString& fileName);
 };
 }
 

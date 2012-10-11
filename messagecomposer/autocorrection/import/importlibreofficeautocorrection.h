@@ -32,13 +32,16 @@ namespace MessageComposer {
 class ImportLibreOfficeAutocorrection : public ImportAbstractAutocorrection
 {
 public:
-  explicit ImportLibreOfficeAutocorrection(const QString &fileName, QWidget *parent = 0);
+  explicit ImportLibreOfficeAutocorrection(QWidget *parent = 0);
   ~ImportLibreOfficeAutocorrection();
-  void importAutoCorrectionFile();
+
+  bool import(const QString& fileName);
 
 private:
   enum Type {DOCUMENT, SENTENCE, WORD };
 
+  void importAutoCorrectionFile();
+  void closeArchive();
   bool loadDomElement( QDomDocument &doc, QFile *file );
   bool importFile(Type type, const KArchiveDirectory* archiveDirectory);
   KZip *mArchive;
