@@ -20,6 +20,9 @@
 #include <KZip>
 #include <KLocale>
 #include <KMessageBox>
+#include <KTemporaryFile>
+#include <KDebug>
+#include <QDomDocument>
 
 using namespace MessageComposer;
 
@@ -48,21 +51,55 @@ void ImportLibreOfficeAutocorrection::importAutoCorrectionFile()
   //Replace word
   const KArchiveEntry* documentList = mArchiveDirectory->entry(QLatin1String("DocumentList.xml"));
   if (documentList && documentList->isFile()) {
-    const KArchiveFile* file = static_cast<const KArchiveFile*>(documentList);
+    const KArchiveFile* archiveFile = static_cast<const KArchiveFile*>(documentList);
+    KTemporaryFile tmpFile;
+    archiveFile->copyTo(tmpFile.fileName());
+    QFile file(tmpFile.fileName());
+    QDomDocument doc;
+    if (loadDomElement( doc, &file )) {
 
+    }
   }
 
   //No tread as end of line
   const KArchiveEntry* sentenceExceptList = mArchiveDirectory->entry(QLatin1String("SentenceExceptList.xml"));
   if (sentenceExceptList && sentenceExceptList->isFile()) {
-    const KArchiveFile* file = static_cast<const KArchiveFile*>(sentenceExceptList);
+    const KArchiveFile* archiveFile = static_cast<const KArchiveFile*>(sentenceExceptList);
+    KTemporaryFile tmpFile;
+    archiveFile->copyTo(tmpFile.fileName());
+    QFile file(tmpFile.fileName());
+    QDomDocument doc;
+    if (loadDomElement( doc, &file )) {
+
+    }
 
   }
 
   //Two upper letter
   const KArchiveEntry* wordExceptList = mArchiveDirectory->entry(QLatin1String("WordExceptList.xml"));
   if (wordExceptList && wordExceptList->isFile()) {
-    const KArchiveFile* file = static_cast<const KArchiveFile*>(wordExceptList);
+    const KArchiveFile* archiveFile = static_cast<const KArchiveFile*>(wordExceptList);
+    KTemporaryFile tmpFile;
+    archiveFile->copyTo(tmpFile.fileName());
+    QFile file(tmpFile.fileName());
+    QDomDocument doc;
+    if (loadDomElement( doc, &file )) {
+
+    }
 
   }
+}
+
+
+bool ImportLibreOfficeAutocorrection::loadDomElement( QDomDocument &doc, QFile *file )
+{
+  QString errorMsg;
+  int errorRow;
+  int errorCol;
+  if ( !doc.setContent( file, &errorMsg, &errorRow, &errorCol ) ) {
+    kDebug() << "Unable to load document.Parse error in line " << errorRow
+             << ", col " << errorCol << ": " << errorMsg;
+    return false;
+  }
+  return true;
 }

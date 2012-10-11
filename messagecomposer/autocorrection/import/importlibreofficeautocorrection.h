@@ -22,6 +22,8 @@
 #include <QSet>
 
 class KZip;
+class QDomDocument;
+class QFile;
 
 namespace MessageComposer {
 
@@ -32,6 +34,7 @@ public:
   ~ImportLibreOfficeAutocorrection();
   void importAutoCorrectionFile();
 private:
+  bool loadDomElement( QDomDocument &doc, QFile *file );
   QSet<QString> mUpperCaseExceptions;
   QSet<QString> mTwoUpperLetterExceptions;
   QHash<QString, QString> mAutocorrectEntries;
