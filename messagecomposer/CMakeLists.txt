@@ -64,6 +64,7 @@ set( messagecomposer_src
      autocorrection/kmcomposerautocorrection.cpp
      autocorrection/kmcomposerautocorrectionwidget.cpp
      autocorrection/kmcomposerautocorrectionlistwidget.cpp
+     autocorrection/import/importlibreofficeautocorrection.cpp
      selectspecialchar.cpp
 )
 
