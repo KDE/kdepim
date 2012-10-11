@@ -15,35 +15,30 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef IMPORTLIBREOFFICEAUTOCORRECTION_H
-#define IMPORTLIBREOFFICEAUTOCORRECTION_H
-
-#include <QString>
-#include <QSet>
 #include "importabstractautocorrection.h"
 
-class KZip;
-class QDomDocument;
-class QFile;
-class KArchiveDirectory;
+using namespace MessageComposer;
 
-namespace MessageComposer {
-
-class ImportLibreOfficeAutocorrection : public ImportAbstractAutocorrection
+ImportAbstractAutocorrection::ImportAbstractAutocorrection(QWidget *parent)
+  : mParent(parent)
 {
-public:
-  explicit ImportLibreOfficeAutocorrection(const QString &fileName, QWidget *parent = 0);
-  ~ImportLibreOfficeAutocorrection();
-  void importAutoCorrectionFile();
-
-private:
-  enum Type {DOCUMENT, SENTENCE, WORD };
-
-  bool loadDomElement( QDomDocument &doc, QFile *file );
-  bool importFile(Type type, const KArchiveDirectory* archiveDirectory);
-  KZip *mArchive;
-};
-
 }
 
-#endif // IMPORTLIBREOFFICEAUTOCORRECTION_H
+ImportAbstractAutocorrection::~ImportAbstractAutocorrection()
+{
+}
+
+QSet<QString> ImportAbstractAutocorrection::upperCaseExceptions() const
+{
+  return mUpperCaseExceptions;
+}
+
+QSet<QString> ImportAbstractAutocorrection::twoUpperLetterExceptions() const
+{
+  return mTwoUpperLetterExceptions;
+}
+
+QHash<QString, QString> ImportAbstractAutocorrection::autocorrectEntries() const
+{
+  return mAutocorrectEntries;
+}

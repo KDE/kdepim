@@ -18,6 +18,7 @@
 #include "kmcomposerautocorrectionwidget.h"
 #include "kmcomposerautocorrection.h"
 #include "ui_kmcomposerautocorrectionwidget.h"
+#include "import/importlibreofficeautocorrection.h"
 
 #include "messagecomposersettings.h"
 #include "selectspecialchar.h"

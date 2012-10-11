@@ -27,7 +27,7 @@
 using namespace MessageComposer;
 
 ImportLibreOfficeAutocorrection::ImportLibreOfficeAutocorrection(const QString& fileName, QWidget *parent)
-    : mArchive(new KZip(fileName)), mParent(parent)
+    : ImportAbstractAutocorrection(parent), mArchive(new KZip(fileName))
 {
   const bool result = mArchive->open(QIODevice::ReadOnly);
   if(result) {
@@ -111,19 +111,4 @@ bool ImportLibreOfficeAutocorrection::loadDomElement( QDomDocument &doc, QFile *
     return false;
   }
   return true;
-}
-
-QSet<QString> ImportLibreOfficeAutocorrection::upperCaseExceptions() const
-{
-  return mUpperCaseExceptions;
-}
-
-QSet<QString> ImportLibreOfficeAutocorrection::twoUpperLetterExceptions() const
-{
-  return mTwoUpperLetterExceptions;
-}
-
-QHash<QString, QString> ImportLibreOfficeAutocorrection::autocorrectEntries() const
-{
-  return mAutocorrectEntries;
 }
