@@ -18,15 +18,27 @@
 #include "importlibreofficeautocorrection.h"
 #include <QFile>
 #include <KZip>
+#include <KLocale>
+#include <KMessageBox>
 
 using namespace MessageComposer;
 
-ImportLibreOfficeAutocorrection::ImportLibreOfficeAutocorrection(QFile *file)
+ImportLibreOfficeAutocorrection::ImportLibreOfficeAutocorrection(const QString& fileName)
+    : mArchive(new KZip(fileName))
 {
+  const bool result = mArchive->open(QIODevice::ReadOnly);
+  if(!result) {
+    KMessageBox::error(0,i18n("Archive cannot be opened in read mode."),i18n("Import LibreOffice Autocorrection File"));
+  }
+  importAutoCorrectionFile();
 }
 
 ImportLibreOfficeAutocorrection::~ImportLibreOfficeAutocorrection()
 {
+  if(mArchive && mArchive->isOpen()) {
+    mArchive->close();
+  }
+  delete mArchive;
 }
 
 void ImportLibreOfficeAutocorrection::importAutoCorrectionFile()

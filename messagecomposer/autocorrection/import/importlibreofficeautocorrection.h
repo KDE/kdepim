@@ -21,20 +21,21 @@
 #include <QString>
 #include <QSet>
 
-class QFile;
+class KZip;
 
 namespace MessageComposer {
 
 class ImportLibreOfficeAutocorrection
 {
 public:
-  explicit ImportLibreOfficeAutocorrection(QFile *file);
+  explicit ImportLibreOfficeAutocorrection(const QString &fileName);
   ~ImportLibreOfficeAutocorrection();
   void importAutoCorrectionFile();
 private:
   QSet<QString> mUpperCaseExceptions;
   QSet<QString> mTwoUpperLetterExceptions;
   QHash<QString, QString> mAutocorrectEntries;
+  KZip *mArchive;
 };
 
 }
