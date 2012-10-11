@@ -329,8 +329,9 @@ FilterActionMissingTagDialog::FilterActionMissingTagDialog(
 {
   setModal( true );
   setCaption( i18n( "Select Tag" ) );
-  setButtons( Ok | Cancel );
+  setButtons( Ok | User1 | Cancel );
   setDefaultButton( Ok );
+  setButtonText(KDialog::User1, i18n("Add Tag..."));
   showButtonSeparator( true );
   QVBoxLayout *lay = new QVBoxLayout( mainWidget() );
   QLabel *label = new QLabel( i18n( "Tag was \"%1\".", argsStr ) );
@@ -344,6 +345,7 @@ FilterActionMissingTagDialog::FilterActionMissingTagDialog(
   lay->addWidget( label );
   mTagList = new QListWidget( this );
   mTagList->addItems( tagList );
+  connect(this,SIGNAL(user1Clicked()),SLOT(slotAddTag()));
   connect( mTagList, SIGNAL(itemDoubleClicked(QListWidgetItem*)),
            this, SLOT(accept()) );
   lay->addWidget( mTagList );
@@ -360,6 +362,11 @@ QString FilterActionMissingTagDialog::selectedTag() const
     return mTagList->currentItem()->text();
   }
   return QString();
+}
+
+void FilterActionMissingTagDialog::slotAddTag()
+{
+
 }
 
 FilterActionMissingSoundUrlDialog::FilterActionMissingSoundUrlDialog( const QString &filtername,
