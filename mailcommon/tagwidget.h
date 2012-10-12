@@ -15,21 +15,51 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef TAGWIDGET_H
-#define TAGWIDGET_H
+#ifndef MAILCOMMON_TAGWIDGET_H
+#define MAILCOMMON_TAGWIDGET_H
+
+#include "mailcommon_export.h"
 
 #include <QWidget>
 
+class KLineEdit;
+class KColorCombo;
+class KFontRequester;
+class KIconButton;
+class KKeySequenceWidget;
+class QCheckBox;
+class KActionCollection;
+
 namespace MailCommon {
 
-class TagWidget : public QWidget
+class MAILCOMMON_EXPORT TagWidget : public QWidget
 {
-    Q_OBJECT
+  Q_OBJECT
 public:
-    explicit TagWidget(QWidget *parent = 0);
-    ~TagWidget();
-    
+  explicit TagWidget(const QList<KActionCollection *> &actionCollections, QWidget *parent = 0);
+  ~TagWidget();
+
+Q_SIGNALS:
+  void changed();
+
+private Q_SLOTS:
+  void slotEmitChangeCheck();
+
+
+private:
+  KLineEdit *mTagNameLineEdit;
+
+  QCheckBox *mTextColorCheck, *mBackgroundColorCheck,
+            *mTextFontCheck, *mInToolbarCheck;
+
+  KColorCombo *mTextColorCombo, *mBackgroundColorCombo;
+
+  KFontRequester *mFontRequester;
+
+  KIconButton *mIconButton;
+
+  KKeySequenceWidget *mKeySequenceWidget;
 };
 }
 
-#endif // TAGWIDGET_H
+#endif // MAILCOMMON_TAGWIDGET_H
