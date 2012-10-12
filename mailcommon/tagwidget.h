@@ -56,9 +56,11 @@ public:
 
 Q_SIGNALS:
   void changed();
+  void iconNameChanged(const QString&);
 
 private Q_SLOTS:
   void slotEmitChangeCheck();
+
 
 
 private:

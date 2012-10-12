@@ -34,7 +34,7 @@ using namespace MailCommon;
 TagWidget::TagWidget(const QList<KActionCollection*>& actionCollections, QWidget *parent)
  : QWidget(parent)
 {
-    QGridLayout *settings = new QGridLayout( this );
+    QGridLayout *settings = new QGridLayout;
     settings->setMargin( KDialog::marginHint() );
     settings->setSpacing( KDialog::spacingHint() );
     setLayout(settings);
@@ -107,7 +107,7 @@ TagWidget::TagWidget(const QList<KActionCollection*>& actionCollections, QWidget
     mIconButton->setIconType( KIconLoader::NoGroup, KIconLoader::Action );
     settings->addWidget( mIconButton, 5, 1 );
     connect( mIconButton, SIGNAL(iconChanged(QString)),
-             SLOT(slotIconNameChanged(QString)) );
+             SIGNAL(iconNameChanged(QString)) );
 
     QLabel *iconlabel = new QLabel( i18n("Message tag &icon:"),
                                     this );
