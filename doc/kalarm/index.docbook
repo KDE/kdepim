@@ -8,9 +8,9 @@
 
 <!-- The language must NOT be changed here. -->
 
-<book lang="&language;">
+<book id="kalarm" lang="&language;">
 
-<bookinfo>
+<book id="kalarm"info>
 <title>The &kalarm; Handbook</title>
 
 <authorgroup>

@@ -7,9 +7,9 @@
   <!ENTITY % English "INCLUDE">
 ]>
 
-<book lang="&language;">
+<book id="akregator" lang="&language;">
 
-<bookinfo>
+<book id="akregator"info>
 <title>The &akregator; Handbook</title>
 
 <authorgroup>
