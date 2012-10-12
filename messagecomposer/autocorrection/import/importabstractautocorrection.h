@@ -29,7 +29,9 @@ class ImportAbstractAutocorrection
 {
 public:
   explicit ImportAbstractAutocorrection(QWidget *parent);
-  ~ImportAbstractAutocorrection();
+  virtual ~ImportAbstractAutocorrection();
+
+  virtual bool import(const QString& fileName) = 0;
 
   QSet<QString> upperCaseExceptions() const;
   QSet<QString> twoUpperLetterExceptions() const;

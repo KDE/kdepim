@@ -33,6 +33,7 @@ SelectSpecialChar::SelectSpecialChar(QWidget *parent)
   connect(mCharSelect,SIGNAL(charSelected(QChar)),this,SIGNAL(charSelected(QChar)));
   lay->addWidget(mCharSelect);
   connect(this,SIGNAL(user1Clicked()),SLOT(slotInsertChar()));
+  connect(this,SIGNAL(okClicked()),SLOT(slotInsertChar()));
 }
 
 SelectSpecialChar::~SelectSpecialChar()

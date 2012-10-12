@@ -213,6 +213,12 @@ void BalsaSettings::readGlobalSettings(const KConfig &config)
       const int wordWrapLength = messageDisplay.readEntry(QLatin1String("WordWrapLength"),-1);
       //TODO not implemented in kmail
     }
+    if(messageDisplay.hasKey(QLatin1String("DateFormat"))) {
+      const QString dateFormat = messageDisplay.readEntry(QLatin1String("DateFormat"));
+      if(!dateFormat.isEmpty()) {
+        addKmailConfig(QLatin1String("General"), QLatin1String("customDateFormat"), dateFormat);
+      }
+    }
   }
 
   if(config.hasGroup(QLatin1String("Sending"))) {
@@ -233,6 +239,18 @@ void BalsaSettings::readGlobalSettings(const KConfig &config)
     if(global.hasKey(QLatin1String("EmptyTrash"))) {
       const bool emptyTrash = global.readEntry(QLatin1String("EmptyTrash"),false);
       addKmailConfig( QLatin1String("General"), QLatin1String("empty-trash-on-exit"),emptyTrash);
+    }
+  }
+  if(config.hasGroup(QLatin1String("Spelling"))) {
+    KConfigGroup spellChecking = config.group(QLatin1String("Spelling"));
+    if(spellChecking.hasKey(QLatin1String("SpellCheckActive"))) {
+      const bool active = spellChecking.readEntry(QLatin1String("SpellCheckActive"),false);
+      addKmailConfig( QLatin1String("Spelling"), QLatin1String("backgroundCheckerEnabled"),active);
+      addKmailConfig( QLatin1String("Spelling"), QLatin1String("checkerEnabledByDefault"),active);
+    }
+    if(spellChecking.hasKey(QLatin1String("SpellCheckLanguage"))) {
+      const QString spellCheck = spellChecking.readEntry(QLatin1String("defaultLanguage"));
+      addKmailConfig( QLatin1String("Spelling"), QLatin1String("defaultLanguage"),spellCheck);
     }
   }
 }

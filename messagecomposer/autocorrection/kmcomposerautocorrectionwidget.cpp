@@ -19,10 +19,13 @@
 #include "kmcomposerautocorrection.h"
 #include "ui_kmcomposerautocorrectionwidget.h"
 #include "import/importlibreofficeautocorrection.h"
+#include "import/importkmailautocorrection.h"
+#include "import/importabstractautocorrection.h"
 
 #include "messagecomposersettings.h"
 #include "selectspecialchar.h"
 
+#include <KFileDialog>
 #include <KCharSelect>
 #include <QTreeWidgetItem>
 #include <QMenu>
@@ -135,17 +138,7 @@ void KMComposerAutoCorrectionWidget::loadConfig()
 
     /* tab 3 - Advanced Autocorrection */
     m_autocorrectEntries = mAutoCorrection->autocorrectEntries();
-    ui->treeWidget->clear();
-    QHash<QString, QString>::const_iterator i = m_autocorrectEntries.constBegin();
-    QTreeWidgetItem * item = 0;
-    while (i != m_autocorrectEntries.constEnd()) {
-        item = new QTreeWidgetItem( ui->treeWidget, item );
-        item->setText( 0, i.key() );
-        item->setText( 1, i.value() );
-        i++;
-    }
-    ui->treeWidget->setSortingEnabled(true);
-    ui->treeWidget->sortByColumn(0, Qt::AscendingOrder);
+    addAutoCorrectEntries();
 
     enableAdvAutocorrection(ui->advancedAutocorrection->isChecked());
     /* tab 4 - Exceptions */
@@ -157,6 +150,21 @@ void KMComposerAutoCorrectionWidget::loadConfig()
 
     ui->abbreviationList->clear();
     ui->abbreviationList->addItems(m_upperCaseExceptions.toList());
+}
+
+void KMComposerAutoCorrectionWidget::addAutoCorrectEntries()
+{
+  ui->treeWidget->clear();
+  QHash<QString, QString>::const_iterator i = m_autocorrectEntries.constBegin();
+  QTreeWidgetItem * item = 0;
+  while (i != m_autocorrectEntries.constEnd()) {
+      item = new QTreeWidgetItem( ui->treeWidget, item );
+      item->setText( 0, i.key() );
+      item->setText( 1, i.value() );
+      i++;
+  }
+  ui->treeWidget->setSortingEnabled(true);
+  ui->treeWidget->sortByColumn(0, Qt::AscendingOrder);
 }
 
 void KMComposerAutoCorrectionWidget::writeConfig()
@@ -470,7 +478,46 @@ void KMComposerAutoCorrectionWidget::slotEnableDisableTwoUpperEntry()
 void KMComposerAutoCorrectionWidget::slotImportFilter(QAction* act)
 {
   if ( act ) {
-    //importFilters( ( KMComposerAutoCorrectionWidget::ImportFileType )act->data().toInt() );
+    KMComposerAutoCorrectionWidget::ImportFileType type = ( KMComposerAutoCorrectionWidget::ImportFileType )(act->data().toInt());
+    QString title;
+    switch(type) {
+    case KMComposerAutoCorrectionWidget::LibreOffice:
+       title = i18n("Import LibreOffice Autocorrection");
+       break;
+    case KMComposerAutoCorrectionWidget::KMail:
+       title = i18n("Import KMail Autocorrection");
+       break;
+    }
+    const QString fileName = KFileDialog::getOpenFileName( QString(), QString(), this, title );
+    if ( !fileName.isEmpty() ) {
+      MessageComposer::ImportAbstractAutocorrection *importAutoCorrection = 0;
+      switch(type) {
+      case KMComposerAutoCorrectionWidget::LibreOffice:
+         importAutoCorrection = new MessageComposer::ImportLibreOfficeAutocorrection(this);
+         break;
+      case KMComposerAutoCorrectionWidget::KMail:
+         importAutoCorrection = new MessageComposer::ImportKMailAutocorrection(this);
+         break;
+      default:
+          return;
+      }
+      importAutoCorrection->import(fileName);
+
+      m_autocorrectEntries = importAutoCorrection->autocorrectEntries();
+      addAutoCorrectEntries();
+
+      enableAdvAutocorrection(ui->advancedAutocorrection->isChecked());
+
+      m_upperCaseExceptions = importAutoCorrection->upperCaseExceptions();
+      m_twoUpperLetterExceptions = importAutoCorrection->twoUpperLetterExceptions();
+
+      ui->twoUpperLetterList->clear();
+      ui->twoUpperLetterList->addItems(m_twoUpperLetterExceptions.toList());
+
+      ui->abbreviationList->clear();
+      ui->abbreviationList->addItems(m_upperCaseExceptions.toList());
+      delete importAutoCorrection;
+    }
   }
 }
 

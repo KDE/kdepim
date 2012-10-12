@@ -51,6 +51,7 @@ ThunderbirdSettings::ThunderbirdSettings( const QString& filename, ImportWizard 
          line.contains(QLatin1String("mail.compose."))||
          line.contains(QLatin1String("mail.spellcheck")) ||
          line.contains(QLatin1String("mail.SpellCheckBeforeSend")) ||
+         line.contains(QLatin1String("spellchecker.dictionary")) ||
          line.contains(QLatin1String("ldap_")) ||
          line.contains(QLatin1String("mail.biff.")) ||
          line.contains(QLatin1String("mailnews.tags."))) {
@@ -202,6 +203,13 @@ void ThunderbirdSettings::readGlobalSettings()
     addKmailConfig(QLatin1String("Composer"),QLatin1String("check-spelling-before-send"), mailSpellCheckBeforeSend);
   } else {
     addKmailConfig(QLatin1String("Composer"),QLatin1String("check-spelling-before-send"), false);
+  }
+
+  const QString mailSpellCheckLanguageStr = QLatin1String("spellchecker.dictionary");
+  if(mHashConfig.contains(mailSpellCheckLanguageStr)) {
+    const QString mailSpellCheckLanguage = mHashConfig.value(mailSpellCheckLanguageStr).toString();
+    addKmailConfig(QLatin1String("Spelling"), QLatin1String("defaultLanguage"),mailSpellCheckLanguage);
+    //TODO create map to convert thunderbird name to aspell name
   }
 }
 
