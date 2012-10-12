@@ -21,13 +21,15 @@
 #include <KLocale>
 #include <KMessageBox>
 #include <KTemporaryFile>
+#include <KTempDir>
 #include <KDebug>
 #include <QDomDocument>
+#include <QDir>
 
 using namespace MessageComposer;
 
 ImportLibreOfficeAutocorrection::ImportLibreOfficeAutocorrection(QWidget *parent)
-    : ImportAbstractAutocorrection(parent), mArchive(0)
+    : ImportAbstractAutocorrection(parent), mArchive(0), mTempDir(0)
 {
 }
 
@@ -42,6 +44,7 @@ void ImportLibreOfficeAutocorrection::closeArchive()
     mArchive->close();
   }
   delete mArchive;
+  delete mTempDir;
 }
 
 bool ImportLibreOfficeAutocorrection::import(const QString& fileName)
@@ -60,6 +63,7 @@ bool ImportLibreOfficeAutocorrection::import(const QString& fileName)
 
 void ImportLibreOfficeAutocorrection::importAutoCorrectionFile()
 {
+  mTempDir = new KTempDir();
   const KArchiveDirectory* archiveDirectory = mArchive->directory();
   //Replace word
   importFile(DOCUMENT, archiveDirectory);
@@ -74,23 +78,26 @@ void ImportLibreOfficeAutocorrection::importAutoCorrectionFile()
 bool ImportLibreOfficeAutocorrection::importFile(Type type, const KArchiveDirectory* archiveDirectory)
 {
   const KArchiveEntry* documentList = 0;
+
+  QString archiveFileName;
   switch (type) {
   case DOCUMENT:
-      documentList = archiveDirectory->entry(QLatin1String("DocumentList.xml"));
+      archiveFileName = QLatin1String("DocumentList.xml");
       break;
   case SENTENCE:
-      documentList = archiveDirectory->entry(QLatin1String("SentenceExceptList.xml"));
+      archiveFileName = QLatin1String("SentenceExceptList.xml");
       break;
   case WORD:
-      documentList = archiveDirectory->entry(QLatin1String("WordExceptList.xml"));
+      archiveFileName = QLatin1String("WordExceptList.xml");
       break;
+  default:
+      return false;
   }
-
+  documentList = archiveDirectory->entry(archiveFileName);
   if (documentList && documentList->isFile()) {
     const KArchiveFile* archiveFile = static_cast<const KArchiveFile*>(documentList);
-    KTemporaryFile tmpFile;
-    archiveFile->copyTo(tmpFile.fileName());
-    QFile file(tmpFile.fileName());
+    archiveFile->copyTo(mTempDir->name());
+    QFile file(mTempDir->name() + QDir::separator() + archiveFileName );
     QDomDocument doc;
     if (loadDomElement( doc, &file )) {
       QDomElement list = doc.documentElement();
@@ -99,8 +106,26 @@ bool ImportLibreOfficeAutocorrection::importFile(Type type, const KArchiveDirect
       } else {
           for ( QDomElement e = list.firstChildElement(); !e.isNull(); e = e.nextSiblingElement() ) {
             const QString tag = e.tagName();
-            qDebug()<<" tag :"<<tag;
             if ( tag == QLatin1String( "block-list:block" ) ) {
+                switch (type) {
+                case DOCUMENT:
+                    if(e.hasAttribute(QLatin1String("block-list:abbreviated-name")) && e.hasAttribute(QLatin1String("block-list:name"))) {
+                        mAutocorrectEntries.insert(e.attribute(QLatin1String("block-list:abbreviated-name")),e.attribute(QLatin1String("block-list:name")));
+                    }
+                    break;
+                case SENTENCE:
+                    if(e.hasAttribute(QLatin1String("block-list:abbreviated-name"))) {
+                        mTwoUpperLetterExceptions.insert(e.attribute(QLatin1String("block-list:abbreviated-name")));
+                    }
+
+                    break;
+                case WORD:
+                    if(e.hasAttribute(QLatin1String("block-list:abbreviated-name"))) {
+                        mUpperCaseExceptions.insert(e.attribute(QLatin1String("block-list:abbreviated-name")));
+                    }
+                    break;
+
+                }
             } else {
               kDebug() << " unknown tag " << tag;
             }

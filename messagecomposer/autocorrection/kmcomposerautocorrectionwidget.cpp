@@ -497,7 +497,30 @@ void KMComposerAutoCorrectionWidget::slotImportFilter(QAction* act)
           return;
       }
       importAutoCorrection->import(fileName);
-      //TODO import it.
+
+      m_autocorrectEntries = importAutoCorrection->autocorrectEntries();
+      ui->treeWidget->clear();
+      QHash<QString, QString>::const_iterator i = m_autocorrectEntries.constBegin();
+      QTreeWidgetItem * item = 0;
+      while (i != m_autocorrectEntries.constEnd()) {
+          item = new QTreeWidgetItem( ui->treeWidget, item );
+          item->setText( 0, i.key() );
+          item->setText( 1, i.value() );
+          i++;
+      }
+      ui->treeWidget->setSortingEnabled(true);
+      ui->treeWidget->sortByColumn(0, Qt::AscendingOrder);
+
+      enableAdvAutocorrection(ui->advancedAutocorrection->isChecked());
+
+      m_upperCaseExceptions = importAutoCorrection->upperCaseExceptions();
+      m_twoUpperLetterExceptions = importAutoCorrection->twoUpperLetterExceptions();
+
+      ui->twoUpperLetterList->clear();
+      ui->twoUpperLetterList->addItems(m_twoUpperLetterExceptions.toList());
+
+      ui->abbreviationList->clear();
+      ui->abbreviationList->addItems(m_upperCaseExceptions.toList());
       delete importAutoCorrection;
     }
   }
