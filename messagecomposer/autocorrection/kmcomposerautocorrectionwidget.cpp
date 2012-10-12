@@ -19,10 +19,13 @@
 #include "kmcomposerautocorrection.h"
 #include "ui_kmcomposerautocorrectionwidget.h"
 #include "import/importlibreofficeautocorrection.h"
+#include "import/importkmailautocorrection.h"
+#include "import/importabstractautocorrection.h"
 
 #include "messagecomposersettings.h"
 #include "selectspecialchar.h"
 
+#include <KFileDialog>
 #include <KCharSelect>
 #include <QTreeWidgetItem>
 #include <QMenu>
@@ -470,7 +473,33 @@ void KMComposerAutoCorrectionWidget::slotEnableDisableTwoUpperEntry()
 void KMComposerAutoCorrectionWidget::slotImportFilter(QAction* act)
 {
   if ( act ) {
-    //importFilters( ( KMComposerAutoCorrectionWidget::ImportFileType )act->data().toInt() );
+    KMComposerAutoCorrectionWidget::ImportFileType type = ( KMComposerAutoCorrectionWidget::ImportFileType )(act->data().toInt());
+    QString title;
+    switch(type) {
+    case KMComposerAutoCorrectionWidget::LibreOffice:
+       title = i18n("Import LibreOffice Autocorrection");
+       break;
+    case KMComposerAutoCorrectionWidget::KMail:
+       title = i18n("Import KMail Autocorrection");
+       break;
+    }
+    const QString fileName = KFileDialog::getOpenFileName( QString(), QString(), this, title );
+    if ( !fileName.isEmpty() ) {
+      MessageComposer::ImportAbstractAutocorrection *importAutoCorrection = 0;
+      switch(type) {
+      case KMComposerAutoCorrectionWidget::LibreOffice:
+         importAutoCorrection = new MessageComposer::ImportLibreOfficeAutocorrection(this);
+         break;
+      case KMComposerAutoCorrectionWidget::KMail:
+         importAutoCorrection = new MessageComposer::ImportKMailAutocorrection(this);
+         break;
+      default:
+          return;
+      }
+      importAutoCorrection->import(fileName);
+      //TODO import it.
+      delete importAutoCorrection;
+    }
   }
 }
 
