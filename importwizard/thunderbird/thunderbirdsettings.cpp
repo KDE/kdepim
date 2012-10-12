@@ -207,7 +207,7 @@ void ThunderbirdSettings::readGlobalSettings()
 
   const QString mailSpellCheckLanguageStr = QLatin1String("spellchecker.dictionary");
   if(mHashConfig.contains(mailSpellCheckLanguageStr)) {
-    const bool mailSpellCheckLanguage = mHashConfig.value(mailSpellCheckLanguageStr).toString();
+    const QString mailSpellCheckLanguage = mHashConfig.value(mailSpellCheckLanguageStr).toString();
     addKmailConfig(QLatin1String("Spelling"), QLatin1String("defaultLanguage"),mailSpellCheckLanguage);
     //TODO create map to convert thunderbird name to aspell name
   }
