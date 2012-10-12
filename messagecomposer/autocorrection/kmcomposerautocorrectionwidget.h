@@ -81,6 +81,7 @@ Q_SIGNALS:
   void changed();
 
 private:
+  void addAutoCorrectEntries();
   KMComposerAutoCorrection::TypographicQuotes m_singleQuotes;
   KMComposerAutoCorrection::TypographicQuotes m_doubleQuotes;
   QSet<QString> m_upperCaseExceptions;

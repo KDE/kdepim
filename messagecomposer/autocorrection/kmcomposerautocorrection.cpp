@@ -684,6 +684,7 @@ void KMComposerAutoCorrection::readAutoCorrectionXmlFile()
 
 void KMComposerAutoCorrection::writeAutoCorrectionXmlFile()
 {
+    //TODO use mAutoCorectLang
     const QString fname = KGlobal::dirs()->locateLocal("data", QLatin1String("autocorrect/autocorrect.xml"));
     QFile file(fname);
     if( !file.open( QIODevice::WriteOnly | QIODevice::Text ) ) {

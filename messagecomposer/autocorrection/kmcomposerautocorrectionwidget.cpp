@@ -138,17 +138,7 @@ void KMComposerAutoCorrectionWidget::loadConfig()
 
     /* tab 3 - Advanced Autocorrection */
     m_autocorrectEntries = mAutoCorrection->autocorrectEntries();
-    ui->treeWidget->clear();
-    QHash<QString, QString>::const_iterator i = m_autocorrectEntries.constBegin();
-    QTreeWidgetItem * item = 0;
-    while (i != m_autocorrectEntries.constEnd()) {
-        item = new QTreeWidgetItem( ui->treeWidget, item );
-        item->setText( 0, i.key() );
-        item->setText( 1, i.value() );
-        i++;
-    }
-    ui->treeWidget->setSortingEnabled(true);
-    ui->treeWidget->sortByColumn(0, Qt::AscendingOrder);
+    addAutoCorrectEntries();
 
     enableAdvAutocorrection(ui->advancedAutocorrection->isChecked());
     /* tab 4 - Exceptions */
@@ -160,6 +150,21 @@ void KMComposerAutoCorrectionWidget::loadConfig()
 
     ui->abbreviationList->clear();
     ui->abbreviationList->addItems(m_upperCaseExceptions.toList());
+}
+
+void KMComposerAutoCorrectionWidget::addAutoCorrectEntries()
+{
+  ui->treeWidget->clear();
+  QHash<QString, QString>::const_iterator i = m_autocorrectEntries.constBegin();
+  QTreeWidgetItem * item = 0;
+  while (i != m_autocorrectEntries.constEnd()) {
+      item = new QTreeWidgetItem( ui->treeWidget, item );
+      item->setText( 0, i.key() );
+      item->setText( 1, i.value() );
+      i++;
+  }
+  ui->treeWidget->setSortingEnabled(true);
+  ui->treeWidget->sortByColumn(0, Qt::AscendingOrder);
 }
 
 void KMComposerAutoCorrectionWidget::writeConfig()
@@ -499,17 +504,7 @@ void KMComposerAutoCorrectionWidget::slotImportFilter(QAction* act)
       importAutoCorrection->import(fileName);
 
       m_autocorrectEntries = importAutoCorrection->autocorrectEntries();
-      ui->treeWidget->clear();
-      QHash<QString, QString>::const_iterator i = m_autocorrectEntries.constBegin();
-      QTreeWidgetItem * item = 0;
-      while (i != m_autocorrectEntries.constEnd()) {
-          item = new QTreeWidgetItem( ui->treeWidget, item );
-          item->setText( 0, i.key() );
-          item->setText( 1, i.value() );
-          i++;
-      }
-      ui->treeWidget->setSortingEnabled(true);
-      ui->treeWidget->sortByColumn(0, Qt::AscendingOrder);
+      addAutoCorrectEntries();
 
       enableAdvAutocorrection(ui->advancedAutocorrection->isChecked());
 
