@@ -21,13 +21,13 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QCheckBox>
-#include <KLineEdit>
 #include <KDialog>
 #include <KColorCombo>
 #include <KFontRequester>
 #include <KIconButton>
 #include <KKeySequenceWidget>
 #include <KActionCollection>
+#include <KLineEdit>
 #include <KLocale>
 using namespace MailCommon;
 
@@ -37,6 +37,7 @@ TagWidget::TagWidget(const QList<KActionCollection*>& actionCollections, QWidget
     QGridLayout *settings = new QGridLayout( this );
     settings->setMargin( KDialog::marginHint() );
     settings->setSpacing( KDialog::spacingHint() );
+    setLayout(settings);
 
     //Stretcher layout for adding some space after the label
     QVBoxLayout *spacer = new QVBoxLayout();
@@ -155,3 +156,5 @@ void TagWidget::slotEmitChangeCheck()
   Q_EMIT changed();
 }
 
+
+#include "tagwidget.moc"

@@ -39,6 +39,21 @@ public:
   explicit TagWidget(const QList<KActionCollection *> &actionCollections, QWidget *parent = 0);
   ~TagWidget();
 
+  KLineEdit *tagNameLineEdit() { return mTagNameLineEdit; }
+  QCheckBox *textColorCheck() { return mTextColorCheck; }
+  QCheckBox *textFontCheck() { return mTextFontCheck; }
+  QCheckBox *backgroundColorCheck() { return mBackgroundColorCheck; }
+  QCheckBox *inToolBarCheck() { return mInToolbarCheck; }
+
+  KColorCombo *textColorCombo() { return mTextColorCombo; }
+  KColorCombo *backgroundColorCombo() { return mBackgroundColorCombo; }
+
+  KFontRequester *fontRequester() { return mFontRequester; }
+
+  KIconButton *iconButton() { return mIconButton; }
+
+  KKeySequenceWidget *keySequenceWidget() { return mKeySequenceWidget; }
+
 Q_SIGNALS:
   void changed();
 
