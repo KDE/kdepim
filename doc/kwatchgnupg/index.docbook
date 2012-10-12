@@ -10,9 +10,9 @@
   <!ENTITY % English "INCLUDE">
 ]>
 
-<book lang="&language;">
+<book id="kwatchgnupg" lang="&language;">
 
-<bookinfo>
+<book id="kwatchgnupg"info>
 <title>The &kwatchgnupg; Handbook</title>
 
 <authorgroup>

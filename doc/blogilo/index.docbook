@@ -9,9 +9,9 @@
   <!ENTITY % addindex "IGNORE">
   <!ENTITY % English "INCLUDE"> 
 ]>
-<book lang="&language;">
+<book id="blogilo" lang="&language;">
 
-<bookinfo>
+<book id="blogilo"info>
 <title>The &kapplication; Handbook</title>
 
 <authorgroup>
