@@ -21,6 +21,7 @@
 #include "folderrequester.h"
 #include "mailkernel.h"
 #include "mailutil.h"
+#include "filter/addtagdialog.h"
 
 #include <Akonadi/EntityMimeTypeFilterModel>
 
@@ -366,7 +367,9 @@ QString FilterActionMissingTagDialog::selectedTag() const
 
 void FilterActionMissingTagDialog::slotAddTag()
 {
-
+  AddTagDialog *dlg = new AddTagDialog(this);
+  dlg->exec();
+  delete dlg;
 }
 
 FilterActionMissingSoundUrlDialog::FilterActionMissingSoundUrlDialog( const QString &filtername,

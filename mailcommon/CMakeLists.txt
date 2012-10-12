@@ -103,6 +103,7 @@ set(libmailcommon_SRCS
   snippetvariabledialog.cpp
   createresource.cpp
   tagwidget.cpp
+  filter/addtagdialog.cpp
 )
 
 set_source_files_properties(${CMAKE_SOURCE_DIR}/mailfilteragent/org.freedesktop.Akonadi.MailFilterAgent.xml PROPERTIES INCLUDE "../mailfilteragent/dbusoperators.h")
