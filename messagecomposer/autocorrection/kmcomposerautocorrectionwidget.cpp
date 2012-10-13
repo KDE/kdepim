@@ -32,6 +32,7 @@
 
 using namespace MessageComposer;
 
+Q_DECLARE_METATYPE(KMComposerAutoCorrectionWidget::ImportFileType)
 
 KMComposerAutoCorrectionWidget::KMComposerAutoCorrectionWidget(QWidget *parent) :
   QWidget(parent),
@@ -88,11 +89,11 @@ KMComposerAutoCorrectionWidget::KMComposerAutoCorrectionWidget(QWidget *parent) 
   ui->importAutoCorrection->setMenu( menu );
 
   QAction *act = new QAction( i18n( "LibreOffice Autocorrection" ), this );
-  act->setData( (int)KMComposerAutoCorrectionWidget::LibreOffice );
+  act->setData( QVariant::fromValue( KMComposerAutoCorrectionWidget::LibreOffice ) );
   menu->addAction( act );
 
   act = new QAction( i18n( "KMail Autocorrection" ), this );
-  act->setData( (int)KMComposerAutoCorrectionWidget::KMail );
+  act->setData( QVariant::fromValue( KMComposerAutoCorrectionWidget::KMail ) );
   menu->addAction( act );
 
   connect( menu, SIGNAL(triggered(QAction*)), SLOT(slotImportFilter(QAction*)) );
@@ -478,7 +479,7 @@ void KMComposerAutoCorrectionWidget::slotEnableDisableTwoUpperEntry()
 void KMComposerAutoCorrectionWidget::slotImportFilter(QAction* act)
 {
   if ( act ) {
-    KMComposerAutoCorrectionWidget::ImportFileType type = ( KMComposerAutoCorrectionWidget::ImportFileType )(act->data().toInt());
+    KMComposerAutoCorrectionWidget::ImportFileType type = act->data().value<KMComposerAutoCorrectionWidget::ImportFileType>();
     QString title;
     switch(type) {
     case KMComposerAutoCorrectionWidget::LibreOffice:
