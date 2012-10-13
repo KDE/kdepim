@@ -346,7 +346,12 @@ bool Kernel::folderIsInbox( const Akonadi::Collection &collection, bool withoutP
     return true;
   }
   //Fix order. Remoteid is not "inbox" when translated
-  if( collection == Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Inbox ) ) {
+  if ( collection == Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Inbox ) ) {
+    return true;
+  }
+
+  //MBOX is one folder only, treat as inbox
+  if ( collection.resource().contains(MBOX_RESOURCE_IDENTIFIER) ) {
     return true;
   }
 
