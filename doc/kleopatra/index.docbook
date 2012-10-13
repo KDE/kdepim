@@ -35,7 +35,7 @@
 
 <book id="kleopatra" lang="&language;">
 
-<book id="kleopatra"info>
+<bookinfo>
 <title>The &kleopatra; Handbook</title>
 
 <authorgroup>

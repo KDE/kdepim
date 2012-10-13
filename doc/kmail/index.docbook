@@ -25,7 +25,7 @@
   <!ENTITY kolab "<acronym>Kolab</acronym>">
 ]>
 <book id="kmail" lang="&language;">
-<book id="kmail"info>
+<bookinfo>
 <title>The &kmail; Handbook</title>
 
  <!-- Note:
