@@ -378,7 +378,6 @@ void Message::ComposerViewBase::slotEmailAddressResolved ( KJob* job )
 
 QList< Message::Composer* > Message::ComposerViewBase::generateCryptoMessages ()
 {
-   QList< Message::Composer* > composers;
 
   kDebug() << "filling crypto info";
   Kleo::KeyResolver* keyResolver = new Kleo::KeyResolver(  encryptToSelf(),
@@ -413,8 +412,7 @@ QList< Message::Composer* > Message::ComposerViewBase::generateCryptoMessages ()
   }
 
   if( !signSomething && !encryptSomething ) {
-    composers.append( new Message::Composer() );
-    return composers;
+    return QList< Message::Composer* >() << new Message::Composer();
   }
 
   if( encryptSomething ) {
@@ -424,7 +422,7 @@ QList< Message::Composer* > Message::ComposerViewBase::generateCryptoMessages ()
       encryptToSelfKeys.push_back( QLatin1String( id.smimeEncryptionKey() ) );
     if ( keyResolver->setEncryptToSelfKeys( encryptToSelfKeys ) != Kpgp::Ok ) {
       kDebug() << "Failed to set encryptoToSelf keys!";
-      return composers;
+      return QList< Message::Composer* >();
     }
   }
 
@@ -435,7 +433,7 @@ QList< Message::Composer* > Message::ComposerViewBase::generateCryptoMessages ()
       signKeys.push_back( QLatin1String( id.smimeSigningKey() ) );
     if ( keyResolver->setSigningKeys( signKeys ) != Kpgp::Ok ) {
       kDebug() << "Failed to set signing keys!";
-      return composers;
+      return QList< Message::Composer* >();
     }
   }
 
@@ -449,9 +447,11 @@ QList< Message::Composer* > Message::ComposerViewBase::generateCryptoMessages ()
     /// TODO handle failure
     kDebug() << "failed to resolve keys! oh noes";
     emit failed( i18n( "Failed to resolve keys. Please report a bug." ) );
-    return composers;
+    return QList< Message::Composer*>();
   }
   kDebug() << "done resolving keys:";
+
+  QList< Message::Composer* > composers;
 
   Kleo::CryptoMessageFormat concreteEncryptFormat = Kleo::AutoFormat;
   if( encryptSomething ) {
