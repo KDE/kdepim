@@ -341,6 +341,10 @@ void Message::ComposerViewBase::slotEmailAddressResolved ( KJob* job )
     m_msg->setHeader( new KMime::Headers::Generic( "X-KMail-UnExpanded-BCC", m_msg.get(), unExpandedBcc.join( QLatin1String( ", " ) ).toLatin1() ) );
   }
 
+  Q_ASSERT(m_composers.isEmpty()); //composers should be empty. The caller of this function
+                                   //checks for emptyness before calling it
+                                   //so just ensure it actually is empty
+                                   //and document it
   // we first figure out if we need to create multiple messages with different crypto formats
   // if so, we create a composer per format
   // if we aren't signing or encrypting, this just returns a single empty message
