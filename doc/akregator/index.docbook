@@ -9,7 +9,7 @@
 
 <book id="akregator" lang="&language;">
 
-<book id="akregator"info>
+<bookinfo id="akregatorinfo">
 <title>The &akregator; Handbook</title>
 
 <authorgroup>
