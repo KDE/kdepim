@@ -71,7 +71,7 @@ class AttachmentModel;
 class SignatureController;
 
 /**
- * 
+ *
  */
 class MESSAGECOMPOSER_EXPORT ComposerViewBase : public QObject
 {
@@ -203,18 +203,6 @@ public:
   ComposerViewBase::MissingAttachment checkForMissingAttachments( const QStringList &attachmentKeywords ) ;
 
   bool hasMissingAttachments( const QStringList& attachmentKeywords );
-
-  /**
-   * Helper methods to read from config various encryption settings
-   */
-  inline bool encryptToSelf();
-  inline bool showKeyApprovalDialog();
-  inline int encryptKeyNearExpiryWarningThresholdInDays();
-  inline int signingKeyNearExpiryWarningThresholdInDays();
-  inline int encryptRootCertNearExpiryWarningThresholdInDays();
-  inline int signingRootCertNearExpiryWarningThresholdInDays();
-  inline int encryptChainCertNearExpiryWarningThresholdInDays();
-  inline int signingChainCertNearExpiryWarningThresholdInDays();
 
 public slots:
 

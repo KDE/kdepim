@@ -376,6 +376,81 @@ void Message::ComposerViewBase::slotEmailAddressResolved ( KJob* job )
    }
 }
 
+namespace {
+
+ // helper methods for reading encryption settings
+
+inline int encryptKeyNearExpiryWarningThresholdInDays() {
+  if ( ! MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() ) {
+    return -1;
+  }
+  const int num =
+  MessageComposer::MessageComposerSettings::self()->cryptoWarnEncrKeyNearExpiryThresholdDays();
+  return qMax( 1, num );
+}
+
+inline int signingKeyNearExpiryWarningThresholdInDays()
+{
+  if ( ! MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() ) {
+    return -1;
+  }
+  const int num =
+  MessageComposer::MessageComposerSettings::self()->cryptoWarnSignKeyNearExpiryThresholdDays();
+  return qMax( 1, num );
+}
+
+inline int encryptRootCertNearExpiryWarningThresholdInDays()
+{
+  if ( ! MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() ) {
+    return -1;
+  }
+  const int num =
+  MessageComposer::MessageComposerSettings::self()->cryptoWarnEncrRootNearExpiryThresholdDays();
+  return qMax( 1, num );
+}
+
+inline int signingRootCertNearExpiryWarningThresholdInDays() {
+  if ( ! MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() ) {
+    return -1;
+  }
+  const int num =
+  MessageComposer::MessageComposerSettings::self()->cryptoWarnSignRootNearExpiryThresholdDays();
+  return qMax( 1, num );
+}
+
+inline int encryptChainCertNearExpiryWarningThresholdInDays()
+{
+  if ( ! MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() ) {
+    return -1;
+  }
+  const int num =
+  MessageComposer::MessageComposerSettings::self()->cryptoWarnEncrChaincertNearExpiryThresholdDays();
+  return qMax( 1, num );
+}
+
+inline int signingChainCertNearExpiryWarningThresholdInDays()
+{
+  if ( ! MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() ) {
+    return -1;
+  }
+  const int num =
+  MessageComposer::MessageComposerSettings::self()->cryptoWarnSignChaincertNearExpiryThresholdDays();;
+  return qMax( 1, num );
+}
+
+inline bool encryptToSelf()
+{
+  // return !Kpgp::Module::getKpgp() || Kpgp::Module::getKpgp()->encryptToSelf();
+  return MessageComposer::MessageComposerSettings::self()->cryptoEncryptToSelf();
+}
+
+inline bool showKeyApprovalDialog()
+{
+  return MessageComposer::MessageComposerSettings::self()->cryptoShowKeysForApproval();
+}
+
+} // nameless namespace
+
 QList< Message::Composer* > Message::ComposerViewBase::generateCryptoMessages ()
 {
 
@@ -1434,75 +1509,6 @@ Message::ComposerViewBase::MissingAttachment Message::ComposerViewBase::checkFor
   return FoundMissingAttachmentAndSending;
 }
 
-
-int Message::ComposerViewBase::encryptKeyNearExpiryWarningThresholdInDays() {
-  if ( ! MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() ) {
-    return -1;
-  }
-  const int num =
-  MessageComposer::MessageComposerSettings::self()->cryptoWarnEncrKeyNearExpiryThresholdDays();
-  return qMax( 1, num );
-}
-
-int Message::ComposerViewBase::signingKeyNearExpiryWarningThresholdInDays()
-{
-  if ( ! MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() ) {
-    return -1;
-  }
-  const int num =
-  MessageComposer::MessageComposerSettings::self()->cryptoWarnSignKeyNearExpiryThresholdDays();
-  return qMax( 1, num );
-}
-
-int Message::ComposerViewBase::encryptRootCertNearExpiryWarningThresholdInDays()
-{
-  if ( ! MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() ) {
-    return -1;
-  }
-  const int num =
-  MessageComposer::MessageComposerSettings::self()->cryptoWarnEncrRootNearExpiryThresholdDays();
-  return qMax( 1, num );
-}
-
-int Message::ComposerViewBase::signingRootCertNearExpiryWarningThresholdInDays() {
-  if ( ! MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() ) {
-    return -1;
-  }
-  const int num =
-  MessageComposer::MessageComposerSettings::self()->cryptoWarnSignRootNearExpiryThresholdDays();
-  return qMax( 1, num );
-}
-
-int Message::ComposerViewBase::encryptChainCertNearExpiryWarningThresholdInDays()
-{
-  if ( ! MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() ) {
-    return -1;
-  }
-  const int num =
-  MessageComposer::MessageComposerSettings::self()->cryptoWarnEncrChaincertNearExpiryThresholdDays();
-  return qMax( 1, num );
-}
-
-int Message::ComposerViewBase::signingChainCertNearExpiryWarningThresholdInDays()
-{
-  if ( ! MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() ) {
-    return -1;
-  }
-  const int num =
-  MessageComposer::MessageComposerSettings::self()->cryptoWarnSignChaincertNearExpiryThresholdDays();;
-  return qMax( 1, num );
-}
-
-bool Message::ComposerViewBase::encryptToSelf()
-{
-  // return !Kpgp::Module::getKpgp() || Kpgp::Module::getKpgp()->encryptToSelf();
-  return MessageComposer::MessageComposerSettings::self()->cryptoEncryptToSelf();
-}
-
-bool Message::ComposerViewBase::showKeyApprovalDialog()
-{
-  return MessageComposer::MessageComposerSettings::self()->cryptoShowKeysForApproval();
-}
 
 
 #include "composerviewbase.moc"
