@@ -395,16 +395,20 @@ QList< Message::Composer* > Message::ComposerViewBase::generateCryptoMessages ()
 
   bool signSomething = m_sign;
   foreach( MessageCore::AttachmentPart::Ptr attachment, m_attachmentModel->attachments() ) {
-    if( attachment->isSigned() )
+    if( attachment->isSigned() ) {
       signSomething = true;
+      break;
+    }
   }
   bool encryptSomething = m_encrypt;
   foreach( MessageCore::AttachmentPart::Ptr attachment, m_attachmentModel->attachments() ) {
-    if( attachment->isEncrypted() )
+    if( attachment->isEncrypted() ) {
       encryptSomething = true;
+      break;
+    }
   }
 
-   if( !signSomething && !encryptSomething ) {
+  if( !signSomething && !encryptSomething ) {
     composers.append( new Message::Composer() );
     return composers;
   }
