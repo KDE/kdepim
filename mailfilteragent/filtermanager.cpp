@@ -454,6 +454,7 @@ bool FilterManager::processContextItem( ItemContext context, bool emitSignal, in
         connect( modifyJob, SIGNAL(result(KJob*)), SLOT(modifyJobResult(KJob*)));
     } else if ( context.needsFlagStore() ) {
         Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( context.item(), this );
+        modifyJob->disableRevisionCheck();
         //The below is a safety check to ignore modifying payloads if it was not requested,
         //as in that case we might change the payload to an invalid one
         modifyJob->setIgnorePayload( !context.needsFullPayload() );
