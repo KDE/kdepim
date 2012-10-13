@@ -98,7 +98,7 @@ public:
    * Returns true if there is at least one composer job running.
    */
   bool isComposing() const;
-  
+
   /**
    * Add the given attachment to the message.
    */
@@ -108,7 +108,7 @@ public:
   void addAttachmentPart( KMime::Content* part );
 
   Composer* createSimpleComposer();
-  
+
   /**
     * Header fields in recipients editor.
     */
@@ -128,19 +128,19 @@ public:
 
   void setAttachmentController( AttachmentControllerBase* controller );
   AttachmentControllerBase* attachmentController();
-  
+
   void setRecipientsEditor( MessageComposer::RecipientsEditor* recEditor );
   MessageComposer::RecipientsEditor* recipientsEditor();
 
   void setSignatureController( SignatureController* sigController );
   SignatureController* signatureController();
-  
+
   void setIdentityCombo( KPIMIdentities::IdentityCombo* identCombo );
   KPIMIdentities::IdentityCombo* identityCombo();
 
   void setIdentityManager( KPIMIdentities::IdentityManager* identMan );
   KPIMIdentities::IdentityManager* identityManager();
-  
+
   void setEditor( Message::KMeditor* editor );
   Message::KMeditor* editor();
 
@@ -158,7 +158,7 @@ public:
   void setFrom( const QString& from );
   void setReplyTo( const QString& replyTo );
   void setSubject( const QString& subject );
-  
+
   /**
    * The following are various settings the user can modify when composing a message. If they are not set,
    *  the default values will be used.
@@ -188,7 +188,7 @@ public:
     * Stop autosaving and delete the autosaved message.
     */
   void cleanupAutoSave();
-  
+
   void setParentWidgetForGui( QWidget* );
 
   /**
@@ -219,12 +219,12 @@ public:
 public slots:
 
   void identityChanged( const KPIMIdentities::Identity &ident, const KPIMIdentities::Identity &oldIdent );
-  
+
   /**
    * Save the message.
    */
   void autoSaveMessage();
-  
+
 signals:
   /**
    * Message sending completed successfully.
@@ -240,7 +240,7 @@ signals:
    *  when, for example, and autosaved message was recovered.
    */
   void modified( bool isModified );
-  
+
   /**
    * Enabling or disabling HTML in the editor is affected
    *  by various client options, so when that would otherwise happen,
@@ -248,7 +248,7 @@ signals:
    */
   void disableHtml( Message::ComposerViewBase::Confirmation );
   void enableHtml();
-  
+
 private slots:
   void slotEmailAddressResolved( KJob* );
   void slotSendComposeResult( KJob* );
@@ -301,7 +301,7 @@ private:
     */
   void initAutoSave();
 
-  
+
   KMime::Message::Ptr m_msg;
   AttachmentControllerBase* m_attachmentController;
   AttachmentModel* m_attachmentModel;
@@ -314,7 +314,7 @@ private:
   Akonadi::CollectionComboBox* m_fccCombo;
   Akonadi::Collection m_fccCollection;
   QWidget* m_parentWidget;
-  
+
   // List of active composer jobs. For example, saving as draft, autosaving and printing
   // all create a composer, which is added to this list as long as it is active.
   // Used mainly to prevent closing the window if a composer is active
@@ -338,6 +338,6 @@ private:
   MessageSender::SaveIn mSaveIn;
 };
 
-} // namespace 
+} // namespace
 
 #endif

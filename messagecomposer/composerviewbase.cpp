@@ -205,7 +205,7 @@ void Message::ComposerViewBase::send ( MessageSender::SendMethod method, Message
     }
   }
   m_msg->setHeader( new KMime::Headers::Generic( "X-KMail-Transport", m_msg.get(), QString::number(m_transport->currentTransportId()), "utf-8" ) );
- 
+
   m_msg->setHeader( new KMime::Headers::Generic( "X-KMail-Fcc", m_msg.get(), QString::number( m_fccCollection.id() ) , "utf-8" ) );
   m_msg->setHeader( new KMime::Headers::Generic( "X-KMail-Identity", m_msg.get(), QString::number( identity.uoid() ), "utf-8" ));
 
@@ -1145,14 +1145,14 @@ void Message::ComposerViewBase::updateRecipients( const KPIMIdentities::Identity
   if ( type == MessageComposer::Recipient::Bcc ) {
     oldIdentList = oldIdent.bcc();
     newIdentList = ident.bcc();
-    
+
   } else if ( type == MessageComposer::Recipient::Cc ) {
     oldIdentList = oldIdent.cc();
     newIdentList = ident.cc();
   } else {
     return;
   }
-    
+
   if ( oldIdentList != newIdentList ) {
     const KMime::Types::Mailbox::List oldRecipients = MessageCore::StringUtil::mailboxListFromUnicodeString( oldIdentList );
     foreach ( const KMime::Types::Mailbox &recipient, oldRecipients ) {
