@@ -129,14 +129,18 @@ class FilterManager: public QObject
      */
     MailCommon::SearchRule::RequiredPart requiredPart() const;
 
-
     void mailCollectionRemoved( const Akonadi::Collection& collection );
+
+    /** Signal or not progress while filtering. By default percent and processMessage signals are emitted. */
+    void reportProgress(bool report);
+
 #ifndef NDEBUG
     /**
      * Outputs all filter rules to console. Used for debugging.
      */
     void dump() const;
 #endif
+
 protected:
     bool processContextItem(MailCommon::ItemContext context, bool emitSignal, int &result );
 
@@ -151,10 +155,13 @@ protected:
      */
     void itemNotMoved( const Akonadi::Item &item );
 
+    void percent(int progress);
+    void progressMessage(const QString& message);
+
   private:
     //@cond PRIVATE
     class Private;
-    Private* const d;
+    Private* d;
 
     Q_PRIVATE_SLOT( d, void itemsFetchJobForFilterDone( KJob* ) )
     Q_PRIVATE_SLOT( d, void itemFetchJobForFilterDone( KJob* ) )

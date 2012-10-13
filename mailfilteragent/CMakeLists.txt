@@ -35,7 +35,6 @@ target_link_libraries(akonadi_mailfilter_agent
   mailcommon
   messagecore
   messagecomposer
-  kdepim
   ${KDE4_KDEUI_LIBRARY}
   ${KDE4_KDECORE_LIBS}
   ${KDEPIMLIBS_AKONADI_LIBS}
@@ -44,6 +43,7 @@ target_link_libraries(akonadi_mailfilter_agent
   ${QT_QTCORE_LIBRARY}
   ${QT_QTDBUS_LIBRARY}
   ${KDEPIMLIBS_KMIME_LIBS}
+  ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
 )
 
 install(TARGETS akonadi_mailfilter_agent ${INSTALL_TARGETS_DEFAULT_ARGS})

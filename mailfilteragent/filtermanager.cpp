@@ -36,8 +36,6 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <kmime/kmime_message.h>
-#include <libkdepim/progressmanager.h>
-#include <libkdepim/broadcaststatus.h>
 #include <mailcommon/filter/filterimporterexporter.h>
 #include <mailcommon/filter/filterlog.h>
 #include <mailcommon/filter/mailfilter.h>
@@ -59,7 +57,8 @@ class FilterManager::Private
   public:
     Private( FilterManager *qq )
       : q( qq ),
-        mRequiredPart( SearchRule::Envelope ), mInboundFiltersExist( false )
+        mRequiredPart( SearchRule::Envelope ), mInboundFiltersExist( false ), mTotalProgressCount( 0 ),
+        mCurrentProgressCount( 0 ), mReportProgress( true )
     {
     }
 
@@ -82,17 +81,13 @@ class FilterManager::Private
     QList<MailCommon::MailFilter *> mFilters;
     SearchRule::RequiredPart mRequiredPart;
     bool mInboundFiltersExist;
+    int mTotalProgressCount;
+    int mCurrentProgressCount;
+    bool mReportProgress;
 };
 
 void FilterManager::Private::slotItemsFetchedForFilter( const Akonadi::Item::List &items )
 {
-  KPIM::ProgressItem* progressItem = 0;
-  if ( q->sender()->property( "progressItem" ).value< QObject*>() ) {
-    progressItem = qobject_cast<KPIM::ProgressItem*>( q->sender()->property( "progressItem" ).value<QObject*>() );
-  } else {
-    kWarning() << "Got invalid progress item for slotItemsFetchedFromFilter! Something went wrong...";
-  }
-
   FilterManager::FilterSet filterSet = FilterManager::Inbound;
   if ( q->sender()->property( "filterSet" ).isValid() ) {
       filterSet = static_cast<FilterManager::FilterSet>(q->sender()->property( "filterSet" ).toInt());
@@ -117,28 +112,37 @@ void FilterManager::Private::slotItemsFetchedForFilter( const Akonadi::Item::Lis
 
   SearchRule::RequiredPart requestedPart = q->sender()->property( "requiredPart" ).value<SearchRule::RequiredPart>();
 
+  bool reportProgress = mReportProgress;
+  mReportProgress = false; //disable progress report from process()
+
   foreach ( const Akonadi::Item &item, items ) {
-    if ( progressItem ) {
-      progressItem->incCompletedItems();
+    mCurrentProgressCount++;
 
-      const bool lessThanTenLeft = (progressItem->totalItems() - progressItem->completedItems() < 10);
-      const bool aTenthItem = !(progressItem->completedItems() % 10);
-      const bool lessThanTenAtAll = (progressItem->completedItems() <= 10);
-
-      if ( lessThanTenLeft || aTenthItem || lessThanTenAtAll ) {
-        progressItem->updateProgress();
-        const QString statusMsg = i18n( "Filtering message %1 of %2", progressItem->completedItems(),
-                                        progressItem->totalItems() );
-        KPIM::BroadcastStatus::instance()->setStatusMsg( statusMsg );
+    if (reportProgress) {
+      if (mCurrentProgressCount != mTotalProgressCount) {
+          const QString statusMsg = i18n( "Filtering message %1 of %2", mCurrentProgressCount,
+                                        mTotalProgressCount );
+          emit q->progressMessage(statusMsg);
+          emit q->percent(mCurrentProgressCount * 100 / mTotalProgressCount);
+      } else {
+          emit q->percent(0);
       }
     }
 
     const int filterResult = q->process( listMailFilters, item, requestedPart, filterSet );
+
+    if (mCurrentProgressCount == mTotalProgressCount) {
+      mTotalProgressCount = 0;
+      mCurrentProgressCount = 0;
+    }
+
     if ( filterResult == 2 ) {
       // something went horribly wrong (out of space?)
       //CommonKernel->emergencyExit( i18n( "Unable to process messages: " ) + QString::fromLocal8Bit( strerror( errno ) ) );
     }
   }
+
+  mReportProgress = reportProgress;
 }
 
 void FilterManager::Private::itemsFetchJobForFilterDone( KJob *job )
@@ -146,10 +150,6 @@ void FilterManager::Private::itemsFetchJobForFilterDone( KJob *job )
   if ( job->error() ) {
     kError() << "Error while fetching items. " << job->error() << job->errorString();
   }
-  KPIM::BroadcastStatus::instance()->setStatusMsg( QString() );
-
-  KPIM::ProgressItem *progressItem = qobject_cast<KPIM::ProgressItem*>( job->property( "progressItem" ).value<QObject*>() );
-  progressItem->setComplete();
 }
 
 void FilterManager::Private::itemFetchJobForFilterDone( KJob *job )
@@ -514,9 +514,19 @@ int FilterManager::process(const QList<MailCommon::MailFilter*>& mailFilters, co
 
     ItemContext context( item, requestedPart );
     QList<MailCommon::MailFilter*>::const_iterator end( mailFilters.constEnd() );
+    if (d->mReportProgress){
+      emit percent(0);
+      emit progressMessage(i18n("Applying filters"));
+    }
+    int filterCount = mailFilters.count();
+    int current = 0;
     for ( QList<MailCommon::MailFilter*>::const_iterator it = mailFilters.constBegin();
           !stopIt && it != end ; ++it ) {
       if ( ( *it )->isEnabled() ) {
+        current++;
+        if (d->mReportProgress) {
+          emit percent( current * 100 / filterCount );
+        }
         const bool inboundOk = ((set & Inbound) && (*it)->applyOnInbound());
         const bool outboundOk = ((set & Outbound) && (*it)->applyOnOutbound());
         const bool beforeOutboundOk = ((set & BeforeOutbound) && (*it)->applyBeforeOutbound());
@@ -529,6 +539,9 @@ int FilterManager::process(const QList<MailCommon::MailFilter*>& mailFilters, co
           if ( d->isMatching( context.item(), *it ) ) {
             // execute actions:
             if ( (*it)->execActions( context, stopIt ) == MailCommon::MailFilter::CriticalError ) {
+              if (d->mReportProgress) {
+                emit percent(0);
+              }
               return 2;
             }
           }
@@ -536,6 +549,9 @@ int FilterManager::process(const QList<MailCommon::MailFilter*>& mailFilters, co
       }
     }
 
+    if (d->mReportProgress) {
+      emit percent(0);
+    }
     d->endFiltering( item );
     int result = 1;
     if( processContextItem( context, true /*emit signal*/, result ))
@@ -599,12 +615,9 @@ void FilterManager::applySpecificFilters(const QList< Akonadi::Item >& selectedM
 {
     const int msgCountToFilter = selectedMessages.size();
 
-    KPIM::ProgressItem *progressItem = KPIM::ProgressManager::createProgressItem(
-        "filter" + KPIM::ProgressManager::getUniqueID(),
-        i18n( "Filtering messages" )
-      );
-
-    progressItem->setTotalItems( msgCountToFilter );
+    emit progressMessage( i18n( "Filtering messages" ) );
+    d->mTotalProgressCount = msgCountToFilter;
+    d->mCurrentProgressCount = 0;
 
     Akonadi::ItemFetchJob *itemFetchJob = new Akonadi::ItemFetchJob( selectedMessages, this );
     if( requiredPart == SearchRule::CompleteMessage ) {
@@ -616,7 +629,6 @@ void FilterManager::applySpecificFilters(const QList< Akonadi::Item >& selectedM
     }
 
     itemFetchJob->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
-    itemFetchJob->setProperty( "progressItem", QVariant::fromValue( static_cast<QObject*>( progressItem ) ) );
     itemFetchJob->setProperty( "listFilters", QVariant::fromValue( listFilters ) );
     itemFetchJob->setProperty( "requestedPart", QVariant::fromValue(requiredPart) );
 
@@ -630,12 +642,9 @@ void FilterManager::applyFilters( const QList<Akonadi::Item> &selectedMessages, 
 {
   const int msgCountToFilter = selectedMessages.size();
 
-  KPIM::ProgressItem *progressItem = KPIM::ProgressManager::createProgressItem(
-      "filter" + KPIM::ProgressManager::getUniqueID(),
-      i18n( "Filtering messages" )
-    );
-
-  progressItem->setTotalItems( msgCountToFilter );
+  emit progressMessage( i18n( "Filtering messages" ) );
+  d->mTotalProgressCount = msgCountToFilter;
+  d->mCurrentProgressCount = 0;
 
   Akonadi::ItemFetchJob *itemFetchJob = new Akonadi::ItemFetchJob( selectedMessages, this );
   if ( d->mRequiredPart == SearchRule::CompleteMessage )
@@ -646,7 +655,6 @@ void FilterManager::applyFilters( const QList<Akonadi::Item> &selectedMessages, 
     itemFetchJob->fetchScope().fetchPayloadPart( Akonadi::MessagePart::Envelope, true );
 
   itemFetchJob->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
-  itemFetchJob->setProperty( "progressItem", QVariant::fromValue( static_cast<QObject*>( progressItem ) ) );
   itemFetchJob->setProperty( "filterSet", QVariant::fromValue( static_cast<int>( filterSet ) ) );
   itemFetchJob->setProperty( "requestedPart", QVariant::fromValue(d->mRequiredPart) );
 
@@ -654,6 +662,11 @@ void FilterManager::applyFilters( const QList<Akonadi::Item> &selectedMessages, 
            this, SLOT(slotItemsFetchedForFilter(Akonadi::Item::List)) );
   connect( itemFetchJob, SIGNAL(result(KJob*)),
            SLOT(itemsFetchJobForFilterDone(KJob*)) );
+}
+
+void FilterManager::reportProgress (bool report)
+{
+  d->mReportProgress = report;
 }
 
 #include "filtermanager.moc"

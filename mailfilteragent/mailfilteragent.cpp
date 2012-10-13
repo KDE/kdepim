@@ -59,6 +59,9 @@ MailFilterAgent::MailFilterAgent( const QString &id )
 
   m_filterManager = new FilterManager( this );
 
+  connect(m_filterManager, SIGNAL(percent(int)), this, SLOT(emitProgress(int)));
+  connect(m_filterManager, SIGNAL(progressMessage(QString)), this, SLOT(emitProgressMessage(QString)));
+
   m_collectionMonitor = new Akonadi::Monitor( this );
   m_collectionMonitor->fetchCollection( true );
   m_collectionMonitor->ignoreSession( Akonadi::Session::defaultSession() );
@@ -101,7 +104,7 @@ MailFilterAgent::MailFilterAgent( const QString &id )
 
 MailFilterAgent::~MailFilterAgent()
 {
-  delete m_filterLogDialog;	
+  delete m_filterLogDialog;
 }
 
 void MailFilterAgent::initializeCollections()
@@ -139,6 +142,7 @@ void MailFilterAgent::initialCollectionFetchingDone( KJob *job )
     if ( isFilterableCollection( collection ) )
       changeRecorder()->setCollectionMonitored( collection, true );
   }
+  emit status(AgentBase::Idle, "" );
 }
 
 void MailFilterAgent::itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection )
@@ -236,6 +240,20 @@ void MailFilterAgent::showFilterLogDialog(qlonglong windowId)
   m_filterLogDialog->activateWindow();
   m_filterLogDialog->setModal(false);
 }
+
+void MailFilterAgent::emitProgress(int p)
+{
+  if ( p == 0 ) {
+    emit status(AgentBase::Idle, "" );
+  }
+  emit percent(p);
+}
+
+void MailFilterAgent::emitProgressMessage (const QString& message)
+{
+  emit status(AgentBase::Running, message);
+}
+
 
 AKONADI_AGENT_MAIN( MailFilterAgent )
 
