@@ -131,9 +131,6 @@ class FilterManager: public QObject
 
     void mailCollectionRemoved( const Akonadi::Collection& collection );
 
-    /** Signal or not progress while filtering. By default percent and processMessage signals are emitted. */
-    void reportProgress(bool report);
-
 #ifndef NDEBUG
     /**
      * Outputs all filter rules to console. Used for debugging.

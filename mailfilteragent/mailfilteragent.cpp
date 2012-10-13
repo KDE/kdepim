@@ -38,6 +38,7 @@
 #include <KMime/Message>
 #include <KNotification>
 #include <KWindowSystem>
+#include <Akonadi/AgentManager>
 
 #include <QtCore/QVector>
 #include <QtCore/QTimer>
@@ -100,6 +101,10 @@ MailFilterAgent::MailFilterAgent( const QString &id )
       }
     }
   }
+
+  mProgressCounter = 0;
+  mProgressTimer = new QTimer( this );
+  connect(mProgressTimer, SIGNAL(timeout()), this, SLOT(emitProgress()));
 }
 
 MailFilterAgent::~MailFilterAgent()
@@ -164,7 +169,12 @@ void MailFilterAgent::itemAdded( const Akonadi::Item &item, const Akonadi::Colle
   if ( status.isRead() || status.isSpam() || status.isIgnored() )
     return;
 
+  emitProgressMessage(i18n("Filtering in %1",Akonadi::AgentManager::self()->instance(collection.resource()).name()) );
   m_filterManager->process( item, mRequestedPart, FilterManager::Inbound, true, collection.resource() );
+
+  emitProgress( ++mProgressCounter );
+
+  mProgressTimer->start(1000);
 }
 
 void MailFilterAgent::mailCollectionAdded( const Akonadi::Collection &collection, const Akonadi::Collection& )
@@ -250,6 +260,7 @@ void MailFilterAgent::emitProgress(int p)
   if ( p == 0 ) {
     emit status(AgentBase::Idle, "" );
   }
+  mProgressCounter = p;
   emit percent(p);
 }
 

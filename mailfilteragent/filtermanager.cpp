@@ -58,7 +58,7 @@ class FilterManager::Private
     Private( FilterManager *qq )
       : q( qq ),
         mRequiredPart( SearchRule::Envelope ), mInboundFiltersExist( false ), mTotalProgressCount( 0 ),
-        mCurrentProgressCount( 0 ), mReportProgress( true )
+        mCurrentProgressCount( 0 )
     {
     }
 
@@ -83,7 +83,6 @@ class FilterManager::Private
     bool mInboundFiltersExist;
     int mTotalProgressCount;
     int mCurrentProgressCount;
-    bool mReportProgress;
 };
 
 void FilterManager::Private::slotItemsFetchedForFilter( const Akonadi::Item::List &items )
@@ -112,21 +111,16 @@ void FilterManager::Private::slotItemsFetchedForFilter( const Akonadi::Item::Lis
 
   SearchRule::RequiredPart requestedPart = q->sender()->property( "requiredPart" ).value<SearchRule::RequiredPart>();
 
-  bool reportProgress = mReportProgress;
-  mReportProgress = false; //disable progress report from process()
-
   foreach ( const Akonadi::Item &item, items ) {
     mCurrentProgressCount++;
 
-    if (reportProgress) {
-      if (mCurrentProgressCount != mTotalProgressCount) {
-          const QString statusMsg = i18n( "Filtering message %1 of %2", mCurrentProgressCount,
-                                        mTotalProgressCount );
-          emit q->progressMessage(statusMsg);
-          emit q->percent(mCurrentProgressCount * 100 / mTotalProgressCount);
-      } else {
-          emit q->percent(0);
-      }
+    if (mCurrentProgressCount != mTotalProgressCount) {
+        const QString statusMsg = i18n( "Filtering message %1 of %2", mCurrentProgressCount,
+                                      mTotalProgressCount );
+        emit q->progressMessage(statusMsg);
+        emit q->percent(mCurrentProgressCount * 100 / mTotalProgressCount);
+    } else {
+        emit q->percent(0);
     }
 
     const int filterResult = q->process( listMailFilters, item, requestedPart, filterSet );
@@ -141,8 +135,6 @@ void FilterManager::Private::slotItemsFetchedForFilter( const Akonadi::Item::Lis
       //CommonKernel->emergencyExit( i18n( "Unable to process messages: " ) + QString::fromLocal8Bit( strerror( errno ) ) );
     }
   }
-
-  mReportProgress = reportProgress;
 }
 
 void FilterManager::Private::itemsFetchJobForFilterDone( KJob *job )
@@ -511,19 +503,11 @@ int FilterManager::process(const QList<MailCommon::MailFilter*>& mailFilters, co
 
     ItemContext context( item, requestedPart );
     QList<MailCommon::MailFilter*>::const_iterator end( mailFilters.constEnd() );
-    if (d->mReportProgress){
-      emit percent(0);
-      emit progressMessage(i18n("Applying filters"));
-    }
-    int filterCount = mailFilters.count();
-    int current = 0;
+
     for ( QList<MailCommon::MailFilter*>::const_iterator it = mailFilters.constBegin();
           !stopIt && it != end ; ++it ) {
       if ( ( *it )->isEnabled() ) {
-        current++;
-        if (d->mReportProgress) {
-          emit percent( current * 100 / filterCount );
-        }
+
         const bool inboundOk = ((set & Inbound) && (*it)->applyOnInbound());
         const bool outboundOk = ((set & Outbound) && (*it)->applyOnOutbound());
         const bool beforeOutboundOk = ((set & BeforeOutbound) && (*it)->applyBeforeOutbound());
@@ -536,9 +520,6 @@ int FilterManager::process(const QList<MailCommon::MailFilter*>& mailFilters, co
           if ( d->isMatching( context.item(), *it ) ) {
             // execute actions:
             if ( (*it)->execActions( context, stopIt ) == MailCommon::MailFilter::CriticalError ) {
-              if (d->mReportProgress) {
-                emit percent(0);
-              }
               return 2;
             }
           }
@@ -546,9 +527,6 @@ int FilterManager::process(const QList<MailCommon::MailFilter*>& mailFilters, co
       }
     }
 
-    if (d->mReportProgress) {
-      emit percent(0);
-    }
     d->endFiltering( item );
     int result = 1;
     if( processContextItem( context, true /*emit signal*/, result ))
@@ -659,11 +637,6 @@ void FilterManager::applyFilters( const QList<Akonadi::Item> &selectedMessages, 
            this, SLOT(slotItemsFetchedForFilter(Akonadi::Item::List)) );
   connect( itemFetchJob, SIGNAL(result(KJob*)),
            SLOT(itemsFetchJobForFilterDone(KJob*)) );
-}
-
-void FilterManager::reportProgress (bool report)
-{
-  d->mReportProgress = report;
 }
 
 #include "filtermanager.moc"
