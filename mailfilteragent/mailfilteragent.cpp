@@ -222,7 +222,11 @@ void MailFilterAgent::filter(qlonglong item, const QString &filterIdentifier , i
 
 void MailFilterAgent::reload()
 {
-  m_filterManager->readConfig();
+  Akonadi::Collection::List collections = changeRecorder()->collectionsMonitored();
+  foreach( const Akonadi::Collection &collection, collections) {
+    changeRecorder()->setCollectionMonitored( collection, false );
+  }
+  initializeCollections();
 }
 
 void MailFilterAgent::showFilterLogDialog(qlonglong windowId)
