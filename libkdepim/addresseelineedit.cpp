@@ -618,7 +618,7 @@ void AddresseeLineEdit::Private::akonadiPerformSearch()
   if ( !Nepomuk2::ResourceManager::instance()->initialized() ) {
     akonadiPerformDbSearch();
     return;
-  } 
+  }
 
   kDebug() << "searching akonadi with:" << m_searchString;
   Akonadi::ContactSearchJob *contactJob = new Akonadi::ContactSearchJob();
