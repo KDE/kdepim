@@ -85,7 +85,8 @@ class AddresseeLineEditStatic
         ldapSearch( 0 ),
         ldapLineEdit( 0 ),
         nepomukSearchClient( 0 ),
-        nepomukCompletionSource( 0 )
+        nepomukCompletionSource( 0 ),
+        contactsListed( false )
     {
       KConfig config( QLatin1String( "kpimcompletionorder" ) );
       const KConfigGroup group( &config, QLatin1String( "General" ) );
@@ -164,6 +165,7 @@ class AddresseeLineEditStatic
     Nepomuk2::Query::QueryServiceClient* nepomukSearchClient;
     bool useNepomukCompletion;
     int nepomukCompletionSource;
+    bool contactsListed;
 };
 
 K_GLOBAL_STATIC( AddresseeLineEditStatic, s_static )
@@ -617,23 +619,34 @@ void AddresseeLineEdit::Private::updateSearchString()
 void AddresseeLineEdit::Private::startSearches()
 {
     if ( Nepomuk2::ResourceManager::instance()->initialized() ) {
-        // If Nepomuk is running, we send a ContactSearch job to
-        // Akonadi, which will forward the query to Nepomuk, be
-        // notified of matching items and return those to us.
+      // If Nepomuk is running, we send a ContactSearch job to
+      // Akonadi, which will forward the query to Nepomuk, be
+      // notified of matching items and return those to us.
       akonadiPerformSearch();
+      // additionally, we ask Nepomuk directly, to get hits that
+      // did not come in through Akonadi
+      startNepomukSearch();
     } else {
-        // If Nepomuk is not available, we instead simply fetch
-        // all contacts from Akonadi and filter them ourselves.
-        // This is slower, but a reasonable fallback.
-      akonadiListAllContacts();
+      // If Nepomuk is not available, we instead simply fetch
+      // all contacts from Akonadi and filter them ourselves.
+      // This is slower, but a reasonable fallback. We only do this
+      // once, since it returns the same contacts (all of them)
+      // every time. If one is added or removed during the lifetime
+      // of the widget, we miss that update, but that's better than
+      // doing useless repeat queries for every typed letter. We could
+      // monitor, but that doesn't seem worth the bother, for fallback
+      // code.
+      if ( !s_static->contactsListed ) {
+        akonadiListAllContacts();
+        s_static->contactsListed = true;
+      } else {
+        doCompletion( true );
+      }
     }
-    startNepomukSearch();
 }
 
 void AddresseeLineEdit::Private::akonadiPerformSearch()
 {
-
-
   kDebug() << "searching akonadi with:" << m_searchString;
   Akonadi::ContactSearchJob *contactJob = new Akonadi::ContactSearchJob();
   Akonadi::ContactGroupSearchJob *groupJob = new Akonadi::ContactGroupSearchJob();
