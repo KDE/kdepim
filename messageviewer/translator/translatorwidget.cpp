@@ -177,17 +177,18 @@ void TranslatorWidget::init()
   hboxLayout->addWidget( closeBtn );
   connect( closeBtn, SIGNAL(clicked()), this, SLOT(slotCloseWidget()) );
 
-  QLabel *label = new QLabel( i18n( "From:" ) );
+  QLabel *label = new QLabel( i18nc( "Translate from language", "From:" ) );
   hboxLayout->addWidget( label );
   d->from = new MinimumComboBox;
   hboxLayout->addWidget( d->from );
 
-  label = new QLabel( i18n( "To:" ) );
+  label = new QLabel( i18nc( "Translate to language", "To:" ) );
   hboxLayout->addWidget( label );
   d->to = new MinimumComboBox;
   hboxLayout->addWidget( d->to );
 
-  KPushButton *invert = new KPushButton(i18n("Invert"),this);
+  KPushButton *invert = new KPushButton(
+    i18nc("Invert language choices so that from becomes to and to becomes from", "Invert"),this);
   connect(invert,SIGNAL(clicked()),this,SLOT(slotInvertLanguage()));
   hboxLayout->addWidget(invert);
 
