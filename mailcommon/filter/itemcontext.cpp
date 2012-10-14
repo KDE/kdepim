@@ -21,9 +21,9 @@
 
 using namespace MailCommon;
 
-ItemContext::ItemContext( const Akonadi::Item& item, SearchRule::RequiredPart requestedPart )
+ItemContext::ItemContext( const Akonadi::Item& item, bool needsFullPayload )
     : mItem( item ), mNeedsPayloadStore( false ), mNeedsFlagStore( false ), mDeleteItem( false ),
-    mRequestedPart( requestedPart )
+    mNeedsFullPayload( needsFullPayload )
 {
 }
 
@@ -75,5 +75,5 @@ bool ItemContext::deleteItem() const
 
 bool ItemContext::needsFullPayload() const
 {
-  return mRequestedPart != SearchRule::Envelope;
+  return mNeedsFullPayload;
 }

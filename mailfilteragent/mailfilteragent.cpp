@@ -39,6 +39,7 @@
 #include <KNotification>
 #include <KWindowSystem>
 #include <Akonadi/AgentManager>
+#include <Akonadi/ItemFetchJob>
 
 #include <QtCore/QVector>
 #include <QtCore/QTimer>
@@ -79,7 +80,7 @@ MailFilterAgent::MailFilterAgent( const QString &id )
 
   QTimer::singleShot( 0, this, SLOT(initializeCollections()) );
 
-  qDBusRegisterMetaType<QVector<qlonglong> >();
+  qDBusRegisterMetaType<QList<qint64> >();
 
   new MailFilterAgentAdaptor( this );
 
@@ -101,6 +102,11 @@ MailFilterAgent::MailFilterAgent( const QString &id )
       }
     }
   }
+
+  changeRecorder()->itemFetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
+  changeRecorder()->itemFetchScope().setCacheOnly(true);
+  changeRecorder()->fetchCollection( true );
+  changeRecorder()->setChangeRecordingEnabled( false );
 
   mProgressCounter = 0;
   mProgressTimer = new QTimer( this );
@@ -130,24 +136,11 @@ void MailFilterAgent::initialCollectionFetchingDone( KJob *job )
 
   Akonadi::CollectionFetchJob *fetchJob = qobject_cast<Akonadi::CollectionFetchJob*>( job );
 
-  changeRecorder()->itemFetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
-  changeRecorder()->itemFetchScope().setCacheOnly(false);
-  mRequestedPart = m_filterManager->requiredPart();
-  if (mRequestedPart == MailCommon::SearchRule::CompleteMessage) {
-    changeRecorder()->itemFetchScope().fetchFullPayload();
-  } else if (mRequestedPart == MailCommon::SearchRule::Header) {
-    changeRecorder()->itemFetchScope().fetchPayloadPart( Akonadi::MessagePart::Header, true );
-  } else {
-    changeRecorder()->itemFetchScope().fetchPayloadPart( Akonadi::MessagePart::Envelope, true );
-  }
-  changeRecorder()->fetchCollection( true );
-  changeRecorder()->setChangeRecordingEnabled( false );
-
   foreach ( const Akonadi::Collection &collection, fetchJob->collections() ) {
     if ( isFilterableCollection( collection ) )
       changeRecorder()->setCollectionMonitored( collection, true );
   }
-  emit status(AgentBase::Idle, "" );
+  emit status(AgentBase::Idle, i18n("Ready") );
 }
 
 void MailFilterAgent::itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection )
@@ -158,6 +151,30 @@ void MailFilterAgent::itemAdded( const Akonadi::Item &item, const Akonadi::Colle
   if ( item.mimeType() != KMime::Message::mimeType() )
     return;
 
+  MailCommon::SearchRule::RequiredPart requiredPart = m_filterManager->requiredPart(collection.resource());
+
+  Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob(item);
+  connect( job, SIGNAL(itemsReceived(Akonadi::Item::List)),
+           this, SLOT(itemsReceiviedForFiltering(Akonadi::Item::List)) );
+  if (requiredPart == MailCommon::SearchRule::CompleteMessage) {
+    job->fetchScope().fetchFullPayload();
+  } else if (requiredPart == MailCommon::SearchRule::Header) {
+    job->fetchScope().fetchPayloadPart( Akonadi::MessagePart::Header, true );
+  } else {
+    job->fetchScope().fetchPayloadPart( Akonadi::MessagePart::Envelope, true );
+  }
+  job->fetchScope().setAncestorRetrieval(Akonadi::ItemFetchScope::Parent);
+  job->setProperty( "resource", collection.resource() );
+
+  //TODO: Error handling?
+}
+
+void MailFilterAgent::itemsReceiviedForFiltering (const Akonadi::Item::List& items)
+{
+  if (items.isEmpty())
+    return;
+
+  Akonadi::Item item = items.first();
   /*
    * happens when item no longer exists etc, and queue compression didn't happen yet
    */
@@ -169,8 +186,9 @@ void MailFilterAgent::itemAdded( const Akonadi::Item &item, const Akonadi::Colle
   if ( status.isRead() || status.isSpam() || status.isIgnored() )
     return;
 
-  emitProgressMessage(i18n("Filtering in %1",Akonadi::AgentManager::self()->instance(collection.resource()).name()) );
-  m_filterManager->process( item, mRequestedPart, FilterManager::Inbound, true, collection.resource() );
+  const QString resource = sender()->property("resource").toString();
+  emitProgressMessage(i18n("Filtering in %1",Akonadi::AgentManager::self()->instance(resource).name()) );
+  m_filterManager->process( item, m_filterManager->requiredPart(resource), FilterManager::Inbound, true, resource );
 
   emitProgress( ++mProgressCounter );
 
@@ -199,35 +217,35 @@ QString MailFilterAgent::createUniqueName( const QString &nameTemplate )
   return m_filterManager->createUniqueName( nameTemplate );
 }
 
-void MailFilterAgent::filterItems( const QVector<qlonglong> &itemIds, int filterSet )
+void MailFilterAgent::filterItems( const QList< qint64 >& itemIds, int filterSet )
 {
-  QList<Akonadi::Item> items;
-  foreach ( qlonglong id, itemIds ) {
-    items << Akonadi::Item( id );
-  }
+   QList<Akonadi::Item> items;
+   foreach ( qint64 id, itemIds ) {
+      items << Akonadi::Item( id );
+    }
 
-  m_filterManager->applyFilters( items, static_cast<FilterManager::FilterSet>(filterSet) );
+    m_filterManager->applyFilters( items, static_cast<FilterManager::FilterSet>(filterSet) );
 }
 
-void MailFilterAgent::applySpecificFilters( const QVector<qlonglong> &itemIds, int requires, const QStringList& listFilters )
+void MailFilterAgent::applySpecificFilters( const QList< qint64 >& itemIds, int requires, const QStringList& listFilters )
 {
-  QList<Akonadi::Item> items;
-  foreach ( qlonglong id, itemIds ) {
-    items << Akonadi::Item( id );
-  }
+   QList<Akonadi::Item> items;
+    foreach ( qint64 id, itemIds ) {
+      items << Akonadi::Item( id );
+    }
 
-  m_filterManager->applySpecificFilters( items, static_cast<MailCommon::SearchRule::RequiredPart>(requires),listFilters );
+    m_filterManager->applySpecificFilters( items, static_cast<MailCommon::SearchRule::RequiredPart>(requires),listFilters );
 }
 
 
-void MailFilterAgent::filterItem( qlonglong item, int filterSet, const QString &resourceId )
+void MailFilterAgent::filterItem( qint64 item, int filterSet, const QString& resourceId )
 {
-  m_filterManager->filter( item, static_cast<FilterManager::FilterSet>( filterSet ), resourceId );
+  m_filterManager->filter( Akonadi::Item( item ), static_cast<FilterManager::FilterSet>( filterSet ), resourceId );
 }
 
-void MailFilterAgent::filter(qlonglong item, const QString &filterIdentifier , int requires)
+void MailFilterAgent::filter(qint64 item, const QString& filterIdentifier, const QString& resourceId)
 {
-  m_filterManager->filter( item, filterIdentifier, static_cast<MailCommon::SearchRule::RequiredPart>(requires) );
+  m_filterManager->filter( Akonadi::Item( item ), filterIdentifier, resourceId );
 }
 
 void MailFilterAgent::reload()

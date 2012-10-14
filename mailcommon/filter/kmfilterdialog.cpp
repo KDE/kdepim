@@ -647,7 +647,7 @@ void KMFilterDialog::slotRunFilters()
       return;
   }
   SearchRule::RequiredPart requiredPart = SearchRule::Envelope;
-  const QStringList selectedFiltersId = mFilterList->selectedFilterId( requiredPart );
+  const QStringList selectedFiltersId = mFilterList->selectedFilterId( requiredPart, mFolderRequester->collection().resource() );
   if ( selectedFiltersId.isEmpty() ) {
     KMessageBox::information(
       this,
@@ -1352,7 +1352,7 @@ QList<QListWidgetItem*> KMFilterListBox::selectedFilter()
   return listWidgetItem;
 }
 
-QStringList KMFilterListBox::selectedFilterId( SearchRule::RequiredPart &requiredPart ) const
+QStringList KMFilterListBox::selectedFilterId( SearchRule::RequiredPart& requiredPart, const QString& resource ) const
 {
   QStringList listFilterId;
   requiredPart = SearchRule::Envelope;
@@ -1363,7 +1363,7 @@ QStringList KMFilterListBox::selectedFilterId( SearchRule::RequiredPart &require
         static_cast<QListWidgetFilterItem*>( mListWidget->item( i ) )->filter()->identifier();
       listFilterId << id;
       requiredPart = qMax(requiredPart,
-          static_cast<QListWidgetFilterItem*>( mListWidget->item( i ) )->filter()->requiredPart());
+          static_cast<QListWidgetFilterItem*>( mListWidget->item( i ) )->filter()->requiredPart(resource));
     }
   }
   return listFilterId;

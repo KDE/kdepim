@@ -88,10 +88,7 @@ class MAILCOMMON_EXPORT FilterManager : public QObject
      * Applies filter with the given @p identifier on the message @p item.
      * @return @c true on success, @c false otherwise.
      */
-    void filter( const Akonadi::Item &item, const QString &identifier ) const;
-
-    void filter( const qlonglong &id, const QString &identifier,
-                 SearchRule::RequiredPart requiredPart ) const;
+    void filter( const Akonadi::Item &item, const QString &identifier, const QString &resourceId ) const;
 
     /**
      * Process given message item by applying the filter rules one by
@@ -115,8 +112,6 @@ class MAILCOMMON_EXPORT FilterManager : public QObject
      * @param set Select the filter set to use.
      */
     void filter( const Akonadi::Item::List &messages, FilterSet set = Explicit ) const;
-
-    void filter( const QVector<qlonglong> &itemIds, FilterSet set = Explicit ) const;
 
     void filter( const Akonadi::Item::List &messages, SearchRule::RequiredPart requiredPart,
                  const QStringList &listFilters ) const;

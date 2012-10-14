@@ -98,12 +98,12 @@ class FilterManager: public QObject
      *          0 otherwise. If the caller does not any longer own the message
      *                       he *must* not delete the message or do similar stupid things. ;-)
      */
-    int process( const Akonadi::Item &item, MailCommon::SearchRule::RequiredPart requestedPart,
+    int process( const Akonadi::Item &item, bool needsFullPayload,
                  FilterSet set = Inbound,
                  bool account = false, const QString &accountId = QString() );
 
     int process( const QList<MailCommon::MailFilter*>& mailFilters, const Akonadi::Item &item,
-                 MailCommon::SearchRule::RequiredPart requestedPart, FilterSet set = Inbound,
+                 bool needsFullPayload, FilterSet set = Inbound,
                  bool account = false, const QString &accountId = QString() );
 
     /**
@@ -112,10 +112,10 @@ class FilterManager: public QObject
      * Applies @p filter to message @p item.
      * Return codes are as with the above method.
      */
-    int process( const Akonadi::Item &item, MailCommon::SearchRule::RequiredPart requiredPart, const MailCommon::MailFilter *filter );
+    int process( const Akonadi::Item &item, bool needsFullPayload, const MailCommon::MailFilter *filter );
 
-    void filter( qlonglong itemId, FilterSet set, const QString &accountId );
-    void filter( qlonglong itemId, const QString &filterId, MailCommon::SearchRule::RequiredPart requiredPart );
+    void filter( const Akonadi::Item& item, FilterManager::FilterSet set, const QString& resourceId );
+    void filter( const Akonadi::Item &item, const QString& filterId, const QString& resourceId );
 
     void applySpecificFilters(const QList<Akonadi::Item> &selectedMessages, MailCommon::SearchRule::RequiredPart requiredPart, const QStringList& listFilters );
 
@@ -127,7 +127,7 @@ class FilterManager: public QObject
     /**
      * Returns whether the configured filters need the full mail content.
      */
-    MailCommon::SearchRule::RequiredPart requiredPart() const;
+    MailCommon::SearchRule::RequiredPart requiredPart(const QString& id) const;
 
     void mailCollectionRemoved( const Akonadi::Collection& collection );
 

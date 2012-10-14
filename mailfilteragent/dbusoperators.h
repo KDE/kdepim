@@ -1,8 +1,8 @@
 #ifndef MAILFILTER_DBUSOPERATORS_H
 #define MAILFILTER_DBUSOPERATORS_H
 
-#include <QtCore/QVector>
+#include <QList>
 
-Q_DECLARE_METATYPE(QVector<qlonglong>)
+Q_DECLARE_METATYPE(QList<qint64>)
 
 #endif
