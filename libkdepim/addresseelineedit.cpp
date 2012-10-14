@@ -230,6 +230,7 @@ class AddresseeLineEdit::Private
                             const QStringList *keyWords = 0 );
     const QStringList adjustedCompletionItems( bool fullSearch );
     void updateSearchString();
+    void startSearches();
     void akonadiPerformSearch();
     void akonadiPerformDbSearch();
     void akonadiHandlePending();
@@ -612,13 +613,25 @@ void AddresseeLineEdit::Private::updateSearchString()
   }
 }
 
+void AddresseeLineEdit::Private::startSearches()
+{
+    if ( Nepomuk2::ResourceManager::instance()->initialized() ) {
+        // If Nepomuk is running, we send a ContactSearch job to
+        // Akonadi, which will forward the query to Nepomuk, be
+        // notified of matching items and return those to us.
+      akonadiPerformSearch();
+    } else {
+        // If Nepomuk is not available, we instead simply fetch
+        // all contacts from Akonadi and filter them ourselves.
+        // This is slower, but a reasonable fallback.
+      akonadiPerformDbSearch();
+    }
+    startNepomukSearch();
+}
+
 void AddresseeLineEdit::Private::akonadiPerformSearch()
 {
-  // If nepomuk not running, directly look in akonadi db
-  if ( !Nepomuk2::ResourceManager::instance()->initialized() ) {
-    akonadiPerformDbSearch();
-    return;
-  }
+
 
   kDebug() << "searching akonadi with:" << m_searchString;
   Akonadi::ContactSearchJob *contactJob = new Akonadi::ContactSearchJob();
@@ -799,8 +812,7 @@ void AddresseeLineEdit::Private::slotCompletion()
     q->completionBox()->setCancelledText( m_searchString );
   }
 
-  akonadiPerformSearch();
-  startNepomukSearch();
+  startSearches();
   doCompletion( false );
 }
 
@@ -1072,8 +1084,7 @@ void AddresseeLineEdit::keyPressEvent( QKeyEvent *event )
   if ( KStandardShortcut::shortcut( KStandardShortcut::SubstringCompletion ).contains( key ) ) {
     //TODO: add LDAP substring lookup, when it becomes available in KPIM::LDAPSearch
     d->updateSearchString();
-    d->akonadiPerformSearch();
-    d->startNepomukSearch();
+    d->startSearches();
     d->doCompletion( true );
     accept = true;
   } else if ( KStandardShortcut::shortcut( KStandardShortcut::TextCompletion ).contains( key ) ) {
@@ -1081,8 +1092,7 @@ void AddresseeLineEdit::keyPressEvent( QKeyEvent *event )
 
     if ( len == cursorPosition() ) { // at End?
       d->updateSearchString();
-      d->akonadiPerformSearch();
-      d->startNepomukSearch();
+      d->startSearches();
       d->doCompletion( true );
       accept = true;
     }
@@ -1600,6 +1610,8 @@ void AddresseeLineEdit::emitTextCompleted()
 {
     emit textCompleted();
 }
+
+
 
 
 #include "addresseelineedit.moc"
