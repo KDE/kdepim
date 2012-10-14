@@ -940,8 +940,7 @@ void AddresseeLineEdit::Private::slotAkonadiSearchResult( KJob *job )
     }
   }
 
-  if ( ( contactJob && contactJob->contacts().size() > 0 ) ||
-       ( groupJob && groupJob->contactGroups().size() > 0 ) ) {
+ if ( !items.isEmpty() ) {
     const QListWidgetItem *current = q->completionBox()->currentItem();
     if ( !current || m_searchString.trimmed() != current->text().trimmed() ) {
       doCompletion( m_lastSearchMode );
