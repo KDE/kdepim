@@ -36,6 +36,8 @@
 #include <Akonadi/EntityDisplayAttribute>
 #include <Akonadi/ItemFetchScope>
 #include <Akonadi/RecursiveItemFetchJob>
+#include <Akonadi/Session>
+#include <Akonadi/Job>
 
 #include <Nepomuk2/Query/Query>
 #include <Nepomuk2/Query/QueryServiceClient>
@@ -85,6 +87,7 @@ class AddresseeLineEditStatic
         ldapSearch( 0 ),
         ldapLineEdit( 0 ),
         nepomukSearchClient( 0 ),
+        akonadiSession( new Akonadi::Session("contactsCompletionSession") ),
         nepomukCompletionSource( 0 ),
         contactsListed( false )
     {
@@ -163,6 +166,8 @@ class AddresseeLineEditStatic
     // a list of akonadi items (contacts) that have not had their collection fetched yet
     Akonadi::Item::List akonadiPendingItems;
     Nepomuk2::Query::QueryServiceClient* nepomukSearchClient;
+    Akonadi::Session *akonadiSession;
+    QSet<Akonadi::Job*> akonadiJobsInFlight;
     bool useNepomukCompletion;
     int nepomukCompletionSource;
     bool contactsListed;
@@ -648,8 +653,16 @@ void AddresseeLineEdit::Private::startSearches()
 void AddresseeLineEdit::Private::akonadiPerformSearch()
 {
   kDebug() << "searching akonadi with:" << m_searchString;
-  Akonadi::ContactSearchJob *contactJob = new Akonadi::ContactSearchJob();
-  Akonadi::ContactGroupSearchJob *groupJob = new Akonadi::ContactGroupSearchJob();
+
+  // first, kill all job still in flight, they are no longer current
+  Q_FOREACH( Akonadi::Job* job, s_static->akonadiJobsInFlight ) {
+      job->kill();
+  }
+  s_static->akonadiJobsInFlight.clear();
+
+  // now start new jobs
+  Akonadi::ContactSearchJob *contactJob = new Akonadi::ContactSearchJob( s_static->akonadiSession );
+  Akonadi::ContactGroupSearchJob *groupJob = new Akonadi::ContactGroupSearchJob( s_static->akonadiSession );
   contactJob->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
   groupJob->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
   contactJob->setQuery( Akonadi::ContactSearchJob::NameOrEmail, m_searchString,
@@ -663,6 +676,8 @@ void AddresseeLineEdit::Private::akonadiPerformSearch()
               q, SLOT(slotAkonadiSearchResult(KJob*)) );
   q->connect( groupJob, SIGNAL(result(KJob*)),
               q, SLOT(slotAkonadiSearchResult(KJob*)) );
+  s_static->akonadiJobsInFlight.insert( contactJob );
+  s_static->akonadiJobsInFlight.insert( groupJob );
   akonadiHandlePending();
 }
 
@@ -671,7 +686,8 @@ void AddresseeLineEdit::Private::akonadiListAllContacts()
   kDebug() << "listing all contacts in Akonadi";
   Akonadi::RecursiveItemFetchJob *job =
            new Akonadi::RecursiveItemFetchJob( Akonadi::Collection::root(),
-                                               QStringList() << KABC::Addressee::mimeType() );
+                                               QStringList() << KABC::Addressee::mimeType(),
+                                               s_static->akonadiSession );
   job->fetchScope().fetchFullPayload();
   job->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
   q->connect( job, SIGNAL(result(KJob*)),
@@ -936,7 +952,8 @@ void AddresseeLineEdit::Private::akonadiHandleItems( const Akonadi::Item::List &
         // the collection isn't there, start the fetch job.
         Akonadi::CollectionFetchJob *collectionJob =
           new Akonadi::CollectionFetchJob( item.parentCollection(),
-                                           Akonadi::CollectionFetchJob::Base, q );
+                                           Akonadi::CollectionFetchJob::Base,
+                                           s_static->akonadiSession );
         connect( collectionJob, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
                  q, SLOT(slotAkonadiCollectionsReceived(Akonadi::Collection::List)) );
         /* we don't want to start multiple fetch jobs for the same collection,
@@ -962,6 +979,7 @@ void AddresseeLineEdit::Private::akonadiHandleItems( const Akonadi::Item::List &
 
 void AddresseeLineEdit::Private::slotAkonadiSearchResult( KJob *job )
 {
+  s_static->akonadiJobsInFlight.remove( qobject_cast<Akonadi::Job*>( job ) );
   const Akonadi::ContactSearchJob *contactJob =
     qobject_cast<Akonadi::ContactSearchJob*>( job );
   const Akonadi::ContactGroupSearchJob *groupJob =
