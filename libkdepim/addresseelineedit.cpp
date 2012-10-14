@@ -232,7 +232,7 @@ class AddresseeLineEdit::Private
     void updateSearchString();
     void startSearches();
     void akonadiPerformSearch();
-    void akonadiPerformDbSearch();
+    void akonadiListAllContacts();
     void akonadiHandlePending();
     void akonadiHandleItems( const Akonadi::Item::List &items );
     void doCompletion( bool ctrlT );
@@ -625,7 +625,7 @@ void AddresseeLineEdit::Private::startSearches()
         // If Nepomuk is not available, we instead simply fetch
         // all contacts from Akonadi and filter them ourselves.
         // This is slower, but a reasonable fallback.
-      akonadiPerformDbSearch();
+      akonadiListAllContacts();
     }
     startNepomukSearch();
 }
@@ -653,9 +653,9 @@ void AddresseeLineEdit::Private::akonadiPerformSearch()
   akonadiHandlePending();
 }
 
-void AddresseeLineEdit::Private::akonadiPerformDbSearch()
+void AddresseeLineEdit::Private::akonadiListAllContacts()
 {
-  kDebug() << "searching akonadi db with:" << m_searchString;
+  kDebug() << "listing all contacts in Akonadi";
   Akonadi::RecursiveItemFetchJob *job =
            new Akonadi::RecursiveItemFetchJob( Akonadi::Collection::root(),
                                                QStringList() << KABC::Addressee::mimeType() );
