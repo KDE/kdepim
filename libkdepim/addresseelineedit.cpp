@@ -234,6 +234,7 @@ class AddresseeLineEdit::Private
     void akonadiPerformSearch();
     void akonadiPerformDbSearch();
     void akonadiHandlePending();
+    void akonadiHandleItems( const Akonadi::Item::List &items );
     void doCompletion( bool ctrlT );
 
     void slotCompletion();
@@ -908,6 +909,44 @@ void AddresseeLineEdit::Private::slotUserCancelled( const QString &cancelText )
   q->userCancelled( m_previousAddresses + cancelText ); // in KLineEdit
 }
 
+void AddresseeLineEdit::Private::akonadiHandleItems( const Akonadi::Item::List &items )
+{
+    /* We have to fetch the collections of the items, so that
+       the source name can be correctly labeled.*/
+    foreach ( const Akonadi::Item &item, items ) {
+
+      // check the local cache of collections
+      const int sourceIndex =
+        s_static->akonadiCollectionToCompletionSourceMap.value( item.parentCollection().id(), -1 );
+      if ( sourceIndex == -1 ) {
+        kDebug() << "Fetching New collection: " << item.parentCollection().id();
+        // the collection isn't there, start the fetch job.
+        Akonadi::CollectionFetchJob *collectionJob =
+          new Akonadi::CollectionFetchJob( item.parentCollection(),
+                                           Akonadi::CollectionFetchJob::Base, q );
+        connect( collectionJob, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
+                 q, SLOT(slotAkonadiCollectionsReceived(Akonadi::Collection::List)) );
+        /* we don't want to start multiple fetch jobs for the same collection,
+           so insert the collection with an index value of -2 */
+        s_static->akonadiCollectionToCompletionSourceMap.insert( item.parentCollection().id(), -2 );
+        s_static->akonadiPendingItems.append( item );
+      } else if ( sourceIndex == -2 ) {
+        /* fetch job already started, don't need to start another one,
+           so just append the item as pending */
+        s_static->akonadiPendingItems.append( item );
+      } else {
+        q->addItem( item, 1, sourceIndex );
+      }
+    }
+
+   if ( !items.isEmpty() ) {
+      const QListWidgetItem *current = q->completionBox()->currentItem();
+      if ( !current || m_searchString.trimmed() != current->text().trimmed() ) {
+        doCompletion( m_lastSearchMode );
+      }
+    }
+}
+
 void AddresseeLineEdit::Private::slotAkonadiSearchResult( KJob *job )
 {
   const Akonadi::ContactSearchJob *contactJob =
@@ -915,49 +954,15 @@ void AddresseeLineEdit::Private::slotAkonadiSearchResult( KJob *job )
   const Akonadi::ContactGroupSearchJob *groupJob =
     qobject_cast<Akonadi::ContactGroupSearchJob*>( job );
 
+  Akonadi::Item::List items;
   if ( contactJob ) {
+    items += contactJob->items();
     kDebug() << "Found" << contactJob->contacts().size() << "contacts";
   } else if ( groupJob ) {
+    items += groupJob->items();
     kDebug() << "Found" << groupJob->contactGroups().size() << "groups";
   }
-
-  /* We have to fetch the collections of the items, so that
-     the source name can be correctly labeled.*/
-  Akonadi::Item::List items;
-  if ( contactJob ) items += contactJob->items();
-  if ( groupJob ) items += groupJob->items();
-  foreach ( const Akonadi::Item &item, items ) {
-
-    // check the local cache of collections
-    const int sourceIndex =
-      s_static->akonadiCollectionToCompletionSourceMap.value( item.parentCollection().id(), -1 );
-    if ( sourceIndex == -1 ) {
-      kDebug() << "Fetching New collection: " << item.parentCollection().id();
-      // the collection isn't there, start the fetch job.
-      Akonadi::CollectionFetchJob *collectionJob =
-        new Akonadi::CollectionFetchJob( item.parentCollection(),
-                                         Akonadi::CollectionFetchJob::Base, q );
-      connect( collectionJob, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
-               q, SLOT(slotAkonadiCollectionsReceived(Akonadi::Collection::List)) );
-      /* we don't want to start multiple fetch jobs for the same collection,
-         so insert the collection with an index value of -2 */
-      s_static->akonadiCollectionToCompletionSourceMap.insert( item.parentCollection().id(), -2 );
-      s_static->akonadiPendingItems.append( item );
-    } else if ( sourceIndex == -2 ) {
-      /* fetch job already started, don't need to start another one,
-         so just append the item as pending */
-      s_static->akonadiPendingItems.append( item );
-    } else {
-      q->addItem( item, 1, sourceIndex );
-    }
-  }
-
- if ( !items.isEmpty() ) {
-    const QListWidgetItem *current = q->completionBox()->currentItem();
-    if ( !current || m_searchString.trimmed() != current->text().trimmed() ) {
-      doCompletion( m_lastSearchMode );
-    }
-  }
+  akonadiHandleItems( items );
 }
 
 void AddresseeLineEdit::Private::slotAkonadiSearchDbResult( KJob *job )
@@ -965,38 +970,11 @@ void AddresseeLineEdit::Private::slotAkonadiSearchDbResult( KJob *job )
   const Akonadi::RecursiveItemFetchJob *contactJob =
     qobject_cast<Akonadi::RecursiveItemFetchJob*>( job );
   Akonadi::Item::List items;
-  if ( contactJob ) items += contactJob->items();
-  foreach ( const Akonadi::Item &item, items ) {
-    // check the local cache of collections
-    const int sourceIndex =
-      s_static->akonadiCollectionToCompletionSourceMap.value( item.parentCollection().id(), -1 );
-    if ( sourceIndex == -1 ) {
-      kDebug() << "Fetching New collection: " << item.parentCollection().id();
-      // the collection isn't there, start the fetch job.
-      Akonadi::CollectionFetchJob *collectionJob =
-        new Akonadi::CollectionFetchJob( item.parentCollection(),
-                                         Akonadi::CollectionFetchJob::Base, q );
-      connect( collectionJob, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
-               q, SLOT(slotAkonadiCollectionsReceived(Akonadi::Collection::List)) );
-      /* we don't want to start multiple fetch jobs for the same collection,
-         so insert the collection with an index value of -2 */
-      s_static->akonadiCollectionToCompletionSourceMap.insert( item.parentCollection().id(), -2 );
-      s_static->akonadiPendingItems.append( item );
-    } else if ( sourceIndex == -2 ) {
-      /* fetch job already started, don't need to start another one,
-         so just append the item as pending */
-      s_static->akonadiPendingItems.append( item );
-    } else {
-      q->addItem( item, 1, sourceIndex );
-    }
+  if ( contactJob ) {
+      items += contactJob->items();
+      kDebug() << "Found in DB directly:" << contactJob->items().size() << "contacts";
   }
-
- if ( !items.isEmpty() ) {
-    const QListWidgetItem *current = q->completionBox()->currentItem();
-    if ( !current || m_searchString.trimmed() != current->text().trimmed() ) {
-      doCompletion( m_lastSearchMode );
-    }
-  }
+  akonadiHandleItems( items );
 }
 
 void AddresseeLineEdit::Private::slotAkonadiCollectionsReceived(
