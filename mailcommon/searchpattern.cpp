@@ -1213,12 +1213,14 @@ void SearchRuleStatus::addTagTerm( Nepomuk2::Query::GroupTerm &groupTerm,
 {
   // TODO handle function() == NOT
   const Nepomuk2::Tag tag( tagId );
-  addAndNegateTerm(
-    Nepomuk2::Query::ComparisonTerm(
-      Soprano::Vocabulary::NAO::hasTag(),
-      Nepomuk2::Query::ResourceTerm( tag.uri() ),
-      Nepomuk2::Query::ComparisonTerm::Equal ),
-    groupTerm );
+  if(tag.exists()) {
+    addAndNegateTerm(
+      Nepomuk2::Query::ComparisonTerm(
+        Soprano::Vocabulary::NAO::hasTag(),
+        Nepomuk2::Query::ResourceTerm( tag.uri() ),
+        Nepomuk2::Query::ComparisonTerm::Equal ),
+      groupTerm );
+  }
 }
 
 void SearchRuleStatus::addQueryTerms( Nepomuk2::Query::GroupTerm &groupTerm ) const
@@ -1230,13 +1232,21 @@ void SearchRuleStatus::addQueryTerms( Nepomuk2::Query::GroupTerm &groupTerm ) co
   } else if ( mStatus.isWatched() ) {
     addTagTerm( groupTerm, "watched" );
   } else if ( mStatus.isDeleted() ) {
+    addTagTerm( groupTerm, "deleted" );
   } else if ( mStatus.isSpam() ) {
+    addTagTerm( groupTerm, "spam" );
   } else if ( mStatus.isReplied() ) {
+    addTagTerm( groupTerm, "replied" );
   } else if ( mStatus.isIgnored() ) {
+    addTagTerm( groupTerm, "ignored" );
   } else if ( mStatus.isForwarded() ) {
+    addTagTerm( groupTerm, "forwarded" );
   } else if ( mStatus.isSent() ) {
+    addTagTerm( groupTerm, "sent" );
   } else if ( mStatus.isQueued() ) {
+    addTagTerm( groupTerm, "queued" );
   } else if ( mStatus.isHam() ) {
+    addTagTerm( groupTerm, "ham" );
   } else {
       bool read = false;
       if ( function() == FuncContains || function() == FuncEquals ) {
