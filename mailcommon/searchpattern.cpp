@@ -1235,6 +1235,14 @@ void SearchRuleStatus::addQueryTerms( Nepomuk::Query::GroupTerm &groupTerm ) con
     addTagTerm( groupTerm, "todo" );
   } else if ( mStatus.isWatched() ) {
     addTagTerm( groupTerm, "watched" );
+  } else if ( mStatus.isDeleted() ) {
+  } else if ( mStatus.isSpam() ) {
+  } else if ( mStatus.isReplied() ) {
+  } else if ( mStatus.isIgnored() ) {
+  } else if ( mStatus.isForwarded() ) {
+  } else if ( mStatus.isSent() ) {
+  } else if ( mStatus.isQueued() ) {
+  } else if ( mStatus.isHam() ) {
   } else {
       bool read = false;
       if ( function() == FuncContains || function() == FuncEquals ) {
@@ -1245,10 +1253,10 @@ void SearchRuleStatus::addQueryTerms( Nepomuk::Query::GroupTerm &groupTerm ) con
         read = !read;
       }
       groupTerm.addSubTerm(
-        Nepomuk2::Query::ComparisonTerm(
+        Nepomuk::Query::ComparisonTerm(
           Vocabulary::NMO::isRead(),
-          Nepomuk2::Query::LiteralTerm( read ),
-          Nepomuk2::Query::ComparisonTerm::Equal ) );
+          Nepomuk::Query::LiteralTerm( read ),
+          Nepomuk::Query::ComparisonTerm::Equal ) );
 
   }
 
