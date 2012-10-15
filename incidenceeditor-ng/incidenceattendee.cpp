@@ -222,18 +222,18 @@ bool IncidenceAttendee::isDirty() const
     }
   }
 
-  const KCalCore::Attendee::List origList = mLoadedIncidence->attendees();
+  const KCalCore::Attendee::List originalList = mLoadedIncidence->attendees();
   AttendeeData::List newList = mAttendeeEditor->attendees();
 
   // The lists sizes *must* be the same. When the organizer is attending the
   // event as well, he should be in the attendees list as well.
-  if ( origList.size() != newList.size() ) {
+  if ( originalList.size() != newList.size() ) {
     return true;
   }
 
   // Okay, again not the most efficient algorithm, but I'm assuming that in the
   // bulk of the use cases, the number of attendees is not much higher than 10 or so.
-  foreach ( const KCalCore::Attendee::Ptr &attendee, origList ) {
+  foreach ( const KCalCore::Attendee::Ptr &attendee, originalList ) {
     bool found = false;
     for ( int i = 0; i < newList.size(); ++i ) {
       if ( *newList.at( i )->attendee() == *attendee ) {
