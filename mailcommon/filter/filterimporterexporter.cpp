@@ -432,7 +432,7 @@ QList<MailFilter *> FilterImporterExporter::importFilters(
   if ( dlg.exec() == QDialog::Accepted ) {
     return dlg.selectedFilters();
   }
-
+  canceled = true;
   return QList<MailFilter*>();
 }
 

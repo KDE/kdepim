@@ -481,15 +481,17 @@ void KMComposerAutoCorrectionWidget::slotImportFilter(QAction* act)
   if ( act ) {
     KMComposerAutoCorrectionWidget::ImportFileType type = act->data().value<KMComposerAutoCorrectionWidget::ImportFileType>();
     QString title;
+    QString filter;
     switch(type) {
     case KMComposerAutoCorrectionWidget::LibreOffice:
        title = i18n("Import LibreOffice Autocorrection");
        break;
     case KMComposerAutoCorrectionWidget::KMail:
        title = i18n("Import KMail Autocorrection");
+       filter = QLatin1String("*.xml");
        break;
     }
-    const QString fileName = KFileDialog::getOpenFileName( QString(), QString(), this, title );
+    const QString fileName = KFileDialog::getOpenFileName( QString(), filter, this, title );
     if ( !fileName.isEmpty() ) {
       MessageComposer::ImportAbstractAutocorrection *importAutoCorrection = 0;
       switch(type) {
