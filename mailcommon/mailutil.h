@@ -58,6 +58,7 @@ class QString;
 
 #define IMAP_RESOURCE_IDENTIFIER "akonadi_imap_resource"
 #define POP3_RESOURCE_IDENTIFIER "akonadi_pop3_resource"
+#define MBOX_RESOURCE_IDENTIFIER "akonadi_mbox_resource"
 
 namespace MailCommon {
 

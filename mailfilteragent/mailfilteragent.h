@@ -59,6 +59,8 @@ class MailFilterAgent : public Akonadi::AgentBase, public Akonadi::AgentBase::Ob
     void mailCollectionAdded( const Akonadi::Collection &collection, const Akonadi::Collection &parent );
     void mailCollectionChanged( const Akonadi::Collection &collection );
     void mailCollectionRemoved( const Akonadi::Collection& collection );
+    void emitProgress(int percent = 0);
+    void emitProgressMessage(const QString &message);
 
   private:
     Akonadi::Monitor *m_collectionMonitor;
@@ -66,6 +68,8 @@ class MailFilterAgent : public Akonadi::AgentBase, public Akonadi::AgentBase::Ob
 
     FilterLogDialog *m_filterLogDialog;
     MailCommon::SearchRule::RequiredPart mRequestedPart;
+    QTimer *mProgressTimer;
+    int mProgressCounter;
 };
 
 #endif

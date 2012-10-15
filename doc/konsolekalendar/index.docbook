@@ -12,7 +12,7 @@
 
 <book id="konsolekalendar" lang="&language;">
 
-<book id="konsolekalendar"info>
+<bookinfo id="konsolekalendarinfo">
 
 <title>The &konsolekalendar; Handbook</title>
 

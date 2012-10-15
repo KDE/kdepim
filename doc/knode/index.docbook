@@ -23,7 +23,7 @@
     After that set version to 0.7.1 -->
 <book id="knode" lang="&language;">
 
-<book id="knode"info>
+<bookinfo id="knodeinfo">
 <title>The &knode; Handbook</title>
 
 <authorgroup>

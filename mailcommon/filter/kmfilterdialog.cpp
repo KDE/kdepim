@@ -64,6 +64,7 @@ using MailCommon::FilterImporterExporter;
 #include <QShortcut>
 #include <QSplitter>
 
+Q_DECLARE_METATYPE(MailCommon::FilterImporterExporter::FilterType)
 using namespace MailCommon;
 
 namespace MailCommon {
@@ -287,6 +288,8 @@ I18N_NOOP( "<qt><p>Check this button to force the confirmation dialog to be "
 //
 //=============================================================================
 
+
+
 KMFilterDialog::KMFilterDialog( const QList<KActionCollection*> &actionCollection,
                                 QWidget *parent, bool createDummyFilter )
   : KDialog( parent ),
@@ -308,31 +311,31 @@ KMFilterDialog::KMFilterDialog( const QList<KActionCollection*> &actionCollectio
   QMenu *menu = new QMenu();
 
   QAction *act = new QAction( i18n( "KMail filters" ), this );
-  act->setData( (int)MailCommon::FilterImporterExporter::KMailFilter );
+  act->setData( QVariant::fromValue(MailCommon::FilterImporterExporter::KMailFilter) );
   menu->addAction( act );
 
   act = new QAction( i18n( "Thunderbird filters" ), this );
-  act->setData( (int)MailCommon::FilterImporterExporter::ThunderBirdFilter );
+  act->setData( QVariant::fromValue(MailCommon::FilterImporterExporter::ThunderBirdFilter) );
   menu->addAction( act );
 
   act = new QAction( i18n( "Evolution filters" ), this );
-  act->setData( (int)MailCommon::FilterImporterExporter::EvolutionFilter );
+  act->setData( QVariant::fromValue(MailCommon::FilterImporterExporter::EvolutionFilter) );
   menu->addAction( act );
 
   act = new QAction( i18n( "Sylpheed filters" ), this );
-  act->setData( (int)MailCommon::FilterImporterExporter::SylpheedFilter );
+  act->setData( QVariant::fromValue(MailCommon::FilterImporterExporter::SylpheedFilter) );
   menu->addAction( act );
 
   act = new QAction( i18n( "Procmail filters" ), this );
-  act->setData( (int)MailCommon::FilterImporterExporter::ProcmailFilter );
+  act->setData( QVariant::fromValue(MailCommon::FilterImporterExporter::ProcmailFilter) );
   menu->addAction( act );
 
   act = new QAction( i18n( "Balsa filters" ), this );
-  act->setData( (int)MailCommon::FilterImporterExporter::BalsaFilter );
+  act->setData( QVariant::fromValue(MailCommon::FilterImporterExporter::BalsaFilter) );
   menu->addAction( act );
 
   act = new QAction( i18n( "Claws Mail filters" ), this );
-  act->setData( (int)MailCommon::FilterImporterExporter::ClawsMailFilter );
+  act->setData( QVariant::fromValue(MailCommon::FilterImporterExporter::ClawsMailFilter) );
   menu->addAction( act );
 
   connect( menu, SIGNAL(triggered(QAction*)), SLOT(slotImportFilter(QAction*)) );
@@ -1625,7 +1628,7 @@ void KMFilterListBox::swapNeighbouringFilters( int untouchedOne, int movedOne )
 void KMFilterDialog::slotImportFilter( QAction *act )
 {
   if ( act ) {
-    importFilters( ( FilterImporterExporter::FilterType )act->data().toInt() );
+    importFilters( act->data().value<MailCommon::FilterImporterExporter::FilterType>() );
   }
 }
 

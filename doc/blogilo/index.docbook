@@ -11,7 +11,7 @@
 ]>
 <book id="blogilo" lang="&language;">
 
-<book id="blogilo"info>
+<bookinfo id="blogiloinfo">
 <title>The &kapplication; Handbook</title>
 
 <authorgroup>

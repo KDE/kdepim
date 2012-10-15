@@ -10,7 +10,7 @@
 
 <book id="kalarm" lang="&language;">
 
-<book id="kalarm"info>
+<bookinfo id="kalarminfo">
 <title>The &kalarm; Handbook</title>
 
 <authorgroup>

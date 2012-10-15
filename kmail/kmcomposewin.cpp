@@ -44,7 +44,6 @@
 #include "messagecore/attachmentcollector.h"
 #include "util.h"
 #include "snippetwidget.h"
-#include <messagecomposer/keyresolver.h>
 #include "templatesconfiguration_kfg.h"
 #include "foldercollectionmonitor.h"
 #include "mailkernel.h"
@@ -3052,11 +3051,9 @@ void KMComposeWin::slotIdentityChanged( uint uoid, bool initalChange )
   }
 
   // if unmodified, apply new template, if one is set
-  bool msgCleared = false;
   if ( !isModified() && !( ident.templates().isEmpty() && mCustomTemplate.isEmpty() ) &&
        !initalChange ) {
     applyTemplate( uoid );
-    msgCleared = true;
   }
 
 

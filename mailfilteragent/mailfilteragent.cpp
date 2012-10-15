@@ -38,6 +38,7 @@
 #include <KMime/Message>
 #include <KNotification>
 #include <KWindowSystem>
+#include <Akonadi/AgentManager>
 
 #include <QtCore/QVector>
 #include <QtCore/QTimer>
@@ -58,6 +59,9 @@ MailFilterAgent::MailFilterAgent( const QString &id )
   CommonKernel->registerSettingsIf( kernel ); //SettingsIf is used in FolderTreeWidget
 
   m_filterManager = new FilterManager( this );
+
+  connect(m_filterManager, SIGNAL(percent(int)), this, SLOT(emitProgress(int)));
+  connect(m_filterManager, SIGNAL(progressMessage(QString)), this, SLOT(emitProgressMessage(QString)));
 
   m_collectionMonitor = new Akonadi::Monitor( this );
   m_collectionMonitor->fetchCollection( true );
@@ -97,11 +101,15 @@ MailFilterAgent::MailFilterAgent( const QString &id )
       }
     }
   }
+
+  mProgressCounter = 0;
+  mProgressTimer = new QTimer( this );
+  connect(mProgressTimer, SIGNAL(timeout()), this, SLOT(emitProgress()));
 }
 
 MailFilterAgent::~MailFilterAgent()
 {
-  delete m_filterLogDialog;	
+  delete m_filterLogDialog;
 }
 
 void MailFilterAgent::initializeCollections()
@@ -139,6 +147,7 @@ void MailFilterAgent::initialCollectionFetchingDone( KJob *job )
     if ( isFilterableCollection( collection ) )
       changeRecorder()->setCollectionMonitored( collection, true );
   }
+  emit status(AgentBase::Idle, "" );
 }
 
 void MailFilterAgent::itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection )
@@ -160,7 +169,12 @@ void MailFilterAgent::itemAdded( const Akonadi::Item &item, const Akonadi::Colle
   if ( status.isRead() || status.isSpam() || status.isIgnored() )
     return;
 
+  emitProgressMessage(i18n("Filtering in %1",Akonadi::AgentManager::self()->instance(collection.resource()).name()) );
   m_filterManager->process( item, mRequestedPart, FilterManager::Inbound, true, collection.resource() );
+
+  emitProgress( ++mProgressCounter );
+
+  mProgressTimer->start(1000);
 }
 
 void MailFilterAgent::mailCollectionAdded( const Akonadi::Collection &collection, const Akonadi::Collection& )
@@ -218,7 +232,11 @@ void MailFilterAgent::filter(qlonglong item, const QString &filterIdentifier , i
 
 void MailFilterAgent::reload()
 {
-  m_filterManager->readConfig();
+  Akonadi::Collection::List collections = changeRecorder()->collectionsMonitored();
+  foreach( const Akonadi::Collection &collection, collections) {
+    changeRecorder()->setCollectionMonitored( collection, false );
+  }
+  initializeCollections();
 }
 
 void MailFilterAgent::showFilterLogDialog(qlonglong windowId)
@@ -236,6 +254,21 @@ void MailFilterAgent::showFilterLogDialog(qlonglong windowId)
   m_filterLogDialog->activateWindow();
   m_filterLogDialog->setModal(false);
 }
+
+void MailFilterAgent::emitProgress(int p)
+{
+  if ( p == 0 ) {
+    emit status(AgentBase::Idle, "" );
+  }
+  mProgressCounter = p;
+  emit percent(p);
+}
+
+void MailFilterAgent::emitProgressMessage (const QString& message)
+{
+  emit status(AgentBase::Running, message);
+}
+
 
 AKONADI_AGENT_MAIN( MailFilterAgent )
 

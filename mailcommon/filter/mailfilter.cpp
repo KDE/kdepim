@@ -245,6 +245,9 @@ SearchRule::RequiredPart MailFilter::requiredPart() const
   //Makes the assumption that  Envelope < Header < CompleteMessage
   int requiredPart = SearchRule::Envelope;
 
+  if (!bEnabled)
+    return SearchRule::Envelope;
+
   if (pattern())
     requiredPart = qMax( requiredPart, (int)pattern()->requiredPart() ) ; // no pattern means always matches?
 

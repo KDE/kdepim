@@ -22,6 +22,15 @@
 
 #include "filteractionwithstringlist.h"
 
+namespace Nepomuk2
+{
+namespace Query
+{
+class Result;
+class QueryServiceClient;
+}
+}
+
 namespace MailCommon {
 
 //=============================================================================
@@ -30,6 +39,7 @@ namespace MailCommon {
 //=============================================================================
 class FilterActionAddTag: public FilterActionWithStringList
 {
+  Q_OBJECT
   public:
     FilterActionAddTag( QObject *parent = 0 );
     virtual ReturnCode process( ItemContext &context ) const;
@@ -44,9 +54,14 @@ class FilterActionAddTag: public FilterActionWithStringList
     virtual QString displayString() const;
     virtual bool argsFromStringInteractive( const QString &argsStr, const QString& filterName );
 
+  private Q_SLOTS:
+    void newTagEntries(const QList<Nepomuk2::Query::Result>& results);
+    void finishedTagListing();
+
   private:
     void initializeTagList();
     QStringList mLabelList;
+    Nepomuk2::Query::QueryServiceClient *mTagQueryClient;
 };
 
 }

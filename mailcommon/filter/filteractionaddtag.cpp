@@ -21,8 +21,12 @@
 
 #include "filteractionmissingargumentdialog.h"
 
-#include <nepomuk2/tag.h>
+#include <Nepomuk2/Tag>
 #include <Nepomuk2/Resource>
+#include <Nepomuk2/Query/ResourceTypeTerm>
+#include <Nepomuk2/Query/QueryServiceClient>
+#include <Nepomuk2/Query/Result>
+#include <Soprano/Vocabulary/NAO>
 
 #include <QTextDocument>
 #include <QPointer>
@@ -47,11 +51,32 @@ bool FilterActionAddTag::isEmpty() const
 
 void FilterActionAddTag::initializeTagList()
 {
-  foreach( const Nepomuk2::Tag &tag, Nepomuk2::Tag::allTags() ) {
-    mParameterList.append( tag.label() );
-    mLabelList.append( tag.uri().toString() );
+  mTagQueryClient = new Nepomuk2::Query::QueryServiceClient(this);
+  connect( mTagQueryClient, SIGNAL(newEntries(QList<Nepomuk2::Query::Result>)),
+           this, SLOT(newTagEntries(QList<Nepomuk2::Query::Result>)) );
+  connect( mTagQueryClient, SIGNAL(finishedListing()),
+           this, SLOT(finishedTagListing()) );
+
+  Nepomuk2::Query::ResourceTypeTerm term( Soprano::Vocabulary::NAO::Tag() );
+  Nepomuk2::Query::Query query( term );
+  mTagQueryClient->query(query);
+ }
+
+void FilterActionAddTag::newTagEntries( const QList<Nepomuk2::Query::Result> &results )
+{
+  foreach(const Nepomuk2::Query::Result &result, results ) {
+    Nepomuk2::Resource resource = result.resource();
+    mParameterList.append( resource.label() );
+    mLabelList.append( resource.uri().toString( ));
   }
 }
+
+void FilterActionAddTag::finishedTagListing()
+{
+  mTagQueryClient->deleteLater();
+  mTagQueryClient = 0;
+}
+
 
 bool FilterActionAddTag::argsFromStringInteractive( const QString &argsStr, const QString& filterName )
 {

@@ -350,6 +350,10 @@ QList<MailFilter *> FilterImporterExporter::importFilters(
             delete thunderBirdFilter;
           }
         }
+      } else {
+        canceled = true;
+        delete selectThunderBirdFileDialog;
+        return QList<MailFilter*>();
       }
       delete selectThunderBirdFileDialog;
     } else {

@@ -205,7 +205,7 @@ void Message::ComposerViewBase::send ( MessageSender::SendMethod method, Message
     }
   }
   m_msg->setHeader( new KMime::Headers::Generic( "X-KMail-Transport", m_msg.get(), QString::number(m_transport->currentTransportId()), "utf-8" ) );
- 
+
   m_msg->setHeader( new KMime::Headers::Generic( "X-KMail-Fcc", m_msg.get(), QString::number( m_fccCollection.id() ) , "utf-8" ) );
   m_msg->setHeader( new KMime::Headers::Generic( "X-KMail-Identity", m_msg.get(), QString::number( identity.uoid() ), "utf-8" ));
 
@@ -341,6 +341,10 @@ void Message::ComposerViewBase::slotEmailAddressResolved ( KJob* job )
     m_msg->setHeader( new KMime::Headers::Generic( "X-KMail-UnExpanded-BCC", m_msg.get(), unExpandedBcc.join( QLatin1String( ", " ) ).toLatin1() ) );
   }
 
+  Q_ASSERT(m_composers.isEmpty()); //composers should be empty. The caller of this function
+                                   //checks for emptyness before calling it
+                                   //so just ensure it actually is empty
+                                   //and document it
   // we first figure out if we need to create multiple messages with different crypto formats
   // if so, we create a composer per format
   // if we aren't signing or encrypting, this just returns a single empty message
@@ -372,9 +376,83 @@ void Message::ComposerViewBase::slotEmailAddressResolved ( KJob* job )
    }
 }
 
+namespace {
+
+ // helper methods for reading encryption settings
+
+inline int encryptKeyNearExpiryWarningThresholdInDays() {
+  if ( ! MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() ) {
+    return -1;
+  }
+  const int num =
+  MessageComposer::MessageComposerSettings::self()->cryptoWarnEncrKeyNearExpiryThresholdDays();
+  return qMax( 1, num );
+}
+
+inline int signingKeyNearExpiryWarningThresholdInDays()
+{
+  if ( ! MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() ) {
+    return -1;
+  }
+  const int num =
+  MessageComposer::MessageComposerSettings::self()->cryptoWarnSignKeyNearExpiryThresholdDays();
+  return qMax( 1, num );
+}
+
+inline int encryptRootCertNearExpiryWarningThresholdInDays()
+{
+  if ( ! MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() ) {
+    return -1;
+  }
+  const int num =
+  MessageComposer::MessageComposerSettings::self()->cryptoWarnEncrRootNearExpiryThresholdDays();
+  return qMax( 1, num );
+}
+
+inline int signingRootCertNearExpiryWarningThresholdInDays() {
+  if ( ! MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() ) {
+    return -1;
+  }
+  const int num =
+  MessageComposer::MessageComposerSettings::self()->cryptoWarnSignRootNearExpiryThresholdDays();
+  return qMax( 1, num );
+}
+
+inline int encryptChainCertNearExpiryWarningThresholdInDays()
+{
+  if ( ! MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() ) {
+    return -1;
+  }
+  const int num =
+  MessageComposer::MessageComposerSettings::self()->cryptoWarnEncrChaincertNearExpiryThresholdDays();
+  return qMax( 1, num );
+}
+
+inline int signingChainCertNearExpiryWarningThresholdInDays()
+{
+  if ( ! MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() ) {
+    return -1;
+  }
+  const int num =
+  MessageComposer::MessageComposerSettings::self()->cryptoWarnSignChaincertNearExpiryThresholdDays();;
+  return qMax( 1, num );
+}
+
+inline bool encryptToSelf()
+{
+  // return !Kpgp::Module::getKpgp() || Kpgp::Module::getKpgp()->encryptToSelf();
+  return MessageComposer::MessageComposerSettings::self()->cryptoEncryptToSelf();
+}
+
+inline bool showKeyApprovalDialog()
+{
+  return MessageComposer::MessageComposerSettings::self()->cryptoShowKeysForApproval();
+}
+
+} // nameless namespace
+
 QList< Message::Composer* > Message::ComposerViewBase::generateCryptoMessages ()
 {
-   QList< Message::Composer* > composers;
 
   kDebug() << "filling crypto info";
   Kleo::KeyResolver* keyResolver = new Kleo::KeyResolver(  encryptToSelf(),
@@ -395,18 +473,21 @@ QList< Message::Composer* > Message::ComposerViewBase::generateCryptoMessages ()
 
   bool signSomething = m_sign;
   foreach( MessageCore::AttachmentPart::Ptr attachment, m_attachmentModel->attachments() ) {
-    if( attachment->isSigned() )
+    if( attachment->isSigned() ) {
       signSomething = true;
+      break;
+    }
   }
   bool encryptSomething = m_encrypt;
   foreach( MessageCore::AttachmentPart::Ptr attachment, m_attachmentModel->attachments() ) {
-    if( attachment->isEncrypted() )
+    if( attachment->isEncrypted() ) {
       encryptSomething = true;
+      break;
+    }
   }
 
-   if( !signSomething && !encryptSomething ) {
-    composers.append( new Message::Composer() );
-    return composers;
+  if( !signSomething && !encryptSomething ) {
+    return QList< Message::Composer* >() << new Message::Composer();
   }
 
   if( encryptSomething ) {
@@ -416,7 +497,7 @@ QList< Message::Composer* > Message::ComposerViewBase::generateCryptoMessages ()
       encryptToSelfKeys.push_back( QLatin1String( id.smimeEncryptionKey() ) );
     if ( keyResolver->setEncryptToSelfKeys( encryptToSelfKeys ) != Kpgp::Ok ) {
       kDebug() << "Failed to set encryptoToSelf keys!";
-      return composers;
+      return QList< Message::Composer* >();
     }
   }
 
@@ -427,7 +508,7 @@ QList< Message::Composer* > Message::ComposerViewBase::generateCryptoMessages ()
       signKeys.push_back( QLatin1String( id.smimeSigningKey() ) );
     if ( keyResolver->setSigningKeys( signKeys ) != Kpgp::Ok ) {
       kDebug() << "Failed to set signing keys!";
-      return composers;
+      return QList< Message::Composer* >();
     }
   }
 
@@ -441,9 +522,11 @@ QList< Message::Composer* > Message::ComposerViewBase::generateCryptoMessages ()
     /// TODO handle failure
     kDebug() << "failed to resolve keys! oh noes";
     emit failed( i18n( "Failed to resolve keys. Please report a bug." ) );
-    return composers;
+    return QList< Message::Composer*>();
   }
   kDebug() << "done resolving keys:";
+
+  QList< Message::Composer* > composers;
 
   Kleo::CryptoMessageFormat concreteEncryptFormat = Kleo::AutoFormat;
   if( encryptSomething ) {
@@ -1141,14 +1224,14 @@ void Message::ComposerViewBase::updateRecipients( const KPIMIdentities::Identity
   if ( type == MessageComposer::Recipient::Bcc ) {
     oldIdentList = oldIdent.bcc();
     newIdentList = ident.bcc();
-    
+
   } else if ( type == MessageComposer::Recipient::Cc ) {
     oldIdentList = oldIdent.cc();
     newIdentList = ident.cc();
   } else {
     return;
   }
-    
+
   if ( oldIdentList != newIdentList ) {
     const KMime::Types::Mailbox::List oldRecipients = MessageCore::StringUtil::mailboxListFromUnicodeString( oldIdentList );
     foreach ( const KMime::Types::Mailbox &recipient, oldRecipients ) {
@@ -1426,75 +1509,6 @@ Message::ComposerViewBase::MissingAttachment Message::ComposerViewBase::checkFor
   return FoundMissingAttachmentAndSending;
 }
 
-
-int Message::ComposerViewBase::encryptKeyNearExpiryWarningThresholdInDays() {
-  if ( ! MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() ) {
-    return -1;
-  }
-  const int num =
-  MessageComposer::MessageComposerSettings::self()->cryptoWarnEncrKeyNearExpiryThresholdDays();
-  return qMax( 1, num );
-}
-
-int Message::ComposerViewBase::signingKeyNearExpiryWarningThresholdInDays()
-{
-  if ( ! MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() ) {
-    return -1;
-  }
-  const int num =
-  MessageComposer::MessageComposerSettings::self()->cryptoWarnSignKeyNearExpiryThresholdDays();
-  return qMax( 1, num );
-}
-
-int Message::ComposerViewBase::encryptRootCertNearExpiryWarningThresholdInDays()
-{
-  if ( ! MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() ) {
-    return -1;
-  }
-  const int num =
-  MessageComposer::MessageComposerSettings::self()->cryptoWarnEncrRootNearExpiryThresholdDays();
-  return qMax( 1, num );
-}
-
-int Message::ComposerViewBase::signingRootCertNearExpiryWarningThresholdInDays() {
-  if ( ! MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() ) {
-    return -1;
-  }
-  const int num =
-  MessageComposer::MessageComposerSettings::self()->cryptoWarnSignRootNearExpiryThresholdDays();
-  return qMax( 1, num );
-}
-
-int Message::ComposerViewBase::encryptChainCertNearExpiryWarningThresholdInDays()
-{
-  if ( ! MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() ) {
-    return -1;
-  }
-  const int num =
-  MessageComposer::MessageComposerSettings::self()->cryptoWarnEncrChaincertNearExpiryThresholdDays();
-  return qMax( 1, num );
-}
-
-int Message::ComposerViewBase::signingChainCertNearExpiryWarningThresholdInDays()
-{
-  if ( ! MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() ) {
-    return -1;
-  }
-  const int num =
-  MessageComposer::MessageComposerSettings::self()->cryptoWarnSignChaincertNearExpiryThresholdDays();;
-  return qMax( 1, num );
-}
-
-bool Message::ComposerViewBase::encryptToSelf()
-{
-  // return !Kpgp::Module::getKpgp() || Kpgp::Module::getKpgp()->encryptToSelf();
-  return MessageComposer::MessageComposerSettings::self()->cryptoEncryptToSelf();
-}
-
-bool Message::ComposerViewBase::showKeyApprovalDialog()
-{
-  return MessageComposer::MessageComposerSettings::self()->cryptoShowKeysForApproval();
-}
 
 
 #include "composerviewbase.moc"
