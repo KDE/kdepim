@@ -1247,10 +1247,10 @@ void SearchRuleStatus::addQueryTerms( Nepomuk2::Query::GroupTerm &groupTerm ) co
         read = !read;
       }
       groupTerm.addSubTerm(
-        Nepomuk::Query::ComparisonTerm(
+        Nepomuk2::Query::ComparisonTerm(
           Vocabulary::NMO::isRead(),
-          Nepomuk::Query::LiteralTerm( read ),
-          Nepomuk::Query::ComparisonTerm::Equal ) );
+          Nepomuk2::Query::LiteralTerm( read ),
+          Nepomuk2::Query::ComparisonTerm::Equal ) );
 
   }
 
