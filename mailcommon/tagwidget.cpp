@@ -140,10 +140,6 @@ TagWidget::TagWidget(const QList<KActionCollection*>& actionCollections, QWidget
     connect( mInToolbarCheck, SIGNAL(stateChanged(int)),
              this, SLOT(slotEmitChangeCheck()) );
 
-
-    //Other Connections
-    connect( mTagNameLineEdit, SIGNAL(textChanged(QString)),
-             this, SLOT(slotNameLineTextChanged(QString)) );
 }
 
 TagWidget::~TagWidget()
