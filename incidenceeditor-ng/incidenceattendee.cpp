@@ -574,7 +574,20 @@ void IncidenceAttendee::printDebugInfo() const
     }
 
     if ( !found ) {
-      kDebug() << "Found a different one";
+      kDebug() << "Attendee not found: " << attendee->email()
+               << attendee->status()
+               << attendee->RSVP()
+               << attendee->role()
+               << attendee->uid()
+               << "; we have:";
+      for ( int i = 0; i < newList.count(); ++i ) {
+        KCalCore::Attendee::Ptr attendee = newList.at( i )->attendee();
+        kDebug() << "Attendee: " << attendee->email() << attendee->status()
+                 << attendee->RSVP()
+                 << attendee->role()
+                 << attendee->uid();
+      }
+
       return;
     }
   }
