@@ -696,7 +696,14 @@ void SearchRuleString::addQueryTerms( Nepomuk2::Query::GroupTerm &groupTerm ) co
   if ( kasciistricmp( field(), "<tag>" ) == 0 ) {
     const Nepomuk2::Tag tag( contents() );
     if ( tag.exists() ) {
-      addAndNegateTerm(Nepomuk2::Query::ComparisonTerm(Soprano::Vocabulary::NAO::hasTag(),Nepomuk2::Query::ResourceTerm( tag ), Nepomuk2::Query::ComparisonTerm::Equal ),groupTerm );
+       addAndNegateTerm(Nepomuk2::Query::ComparisonTerm(Soprano::Vocabulary::NAO::hasTag(),Nepomuk2::Query::ResourceTerm( tag ), Nepomuk2::Query::ComparisonTerm::Equal ),groupTerm );
+    } else {
+      foreach ( const Nepomuk2::Tag &tag, Nepomuk2::Tag::allTags() ) {
+        if(tag.label() == contents()) {
+            addAndNegateTerm(Nepomuk2::Query::ComparisonTerm(Soprano::Vocabulary::NAO::hasTag(),Nepomuk2::Query::ResourceTerm( tag ), Nepomuk2::Query::ComparisonTerm::Equal ),groupTerm );
+            break;
+        }
+      }
     }
   }
 
