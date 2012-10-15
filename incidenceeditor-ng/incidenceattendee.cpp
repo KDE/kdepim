@@ -542,3 +542,40 @@ void IncidenceAttendee::slotOrganizerChanged( const QString &newOrganizer )
   mOrganizer = newOrganizer;
 }
 
+void IncidenceAttendee::printDebugInfo() const
+{
+  kDebug() << "I'm organizer   : " << iAmOrganizer();
+  kDebug() << "Loaded organizer: "<< mLoadedIncidence->organizer()->email();
+
+  if ( iAmOrganizer() ) {
+    KCalCore::Event tmp;
+    tmp.setOrganizer( mUi->mOrganizerCombo->currentText() );
+    kDebug() << "Organizer combo: " << tmp.organizer()->email();
+  }
+
+  const KCalCore::Attendee::List originalList = mLoadedIncidence->attendees();
+  AttendeeData::List newList = mAttendeeEditor->attendees();
+  kDebug() << "List sizes: " << originalList.count() << newList.count();
+
+  if ( originalList.count() != newList.count() ) {
+    return;
+  }
+
+  // Okay, again not the most efficient algorithm, but I'm assuming that in the
+  // bulk of the use cases, the number of attendees is not much higher than 10 or so.
+  foreach ( const KCalCore::Attendee::Ptr &attendee, originalList ) {
+    bool found = false;
+    for ( int i = 0; i < newList.count(); ++i ) {
+      if ( *newList.at( i )->attendee() == *attendee ) {
+        newList.removeAt( i );
+        found = true;
+        break;
+      }
+    }
+
+    if ( !found ) {
+      kDebug() << "Found a different one";
+      return;
+    }
+  }
+}
