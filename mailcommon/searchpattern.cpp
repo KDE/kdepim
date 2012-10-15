@@ -1229,29 +1229,27 @@ void SearchRuleStatus::addTagTerm( Nepomuk::Query::GroupTerm &groupTerm,
 
 void SearchRuleStatus::addQueryTerms( Nepomuk::Query::GroupTerm &groupTerm ) const
 {
-  bool read = false;
-  if ( function() == FuncContains || function() == FuncEquals ) {
-    read = true;
-  }
-
-  if ( !mStatus.isRead() ) {
-    read = !read;
-  }
-
-  groupTerm.addSubTerm(
-    Nepomuk::Query::ComparisonTerm(
-      Vocabulary::NMO::isRead(),
-      Nepomuk::Query::LiteralTerm( read ),
-      Nepomuk::Query::ComparisonTerm::Equal ) );
-
   if ( mStatus.isImportant() ) {
     addTagTerm( groupTerm, "important" );
-  }
-  if ( mStatus.isToAct() ) {
+  } else if ( mStatus.isToAct() ) {
     addTagTerm( groupTerm, "todo" );
-  }
-  if ( mStatus.isWatched() ) {
+  } else if ( mStatus.isWatched() ) {
     addTagTerm( groupTerm, "watched" );
+  } else {
+      bool read = false;
+      if ( function() == FuncContains || function() == FuncEquals ) {
+        read = true;
+      }
+
+      if ( !mStatus.isRead() ) {
+        read = !read;
+      }
+      groupTerm.addSubTerm(
+        Nepomuk2::Query::ComparisonTerm(
+          Vocabulary::NMO::isRead(),
+          Nepomuk2::Query::LiteralTerm( read ),
+          Nepomuk2::Query::ComparisonTerm::Equal ) );
+
   }
 
   // TODO
