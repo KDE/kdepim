@@ -199,10 +199,10 @@ void Widget::fillMessageTagCombo( KComboBox * combo )
   foreach( const Nepomuk2::Tag &nepomukTag, Nepomuk2::Tag::allTags() ) {
     const QString id = nepomukTag.uri().toString();
     if(tagSelectedLst.contains(id)) {
-      QString iconName = QLatin1String( "mail-tagged" );
+      QString iconName = nepomukTag.genericIcon(); 
+      if(iconName.isEmpty()) 
+        iconName = QLatin1String( "mail-tagged" ); 
       const QString label = nepomukTag.label();
-      if ( !nepomukTag.symbols().isEmpty() )
-        iconName = nepomukTag.symbols().first();
       const QString id = nepomukTag.uri().toString();
       combo->addItem( SmallIcon( iconName ), label, QVariant( id ) );
     }

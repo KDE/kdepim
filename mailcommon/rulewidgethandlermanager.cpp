@@ -1487,10 +1487,9 @@ QWidget *TagRuleWidgetHandler::createValueWidget( int number,
     valueCombo->setEditable( true );
     valueCombo->addItem( QString() ); // empty entry for user input
     foreach ( const Nepomuk2::Tag &tag, Nepomuk2::Tag::allTags() ) {
-      QString iconName( "mail-tagged" );
-      if ( !tag.symbols().isEmpty() ) {
-        iconName = tag.symbols().first();
-      }
+      QString iconName = tag.genericIcon();
+      if ( iconName.isEmpty() )
+        iconName = "mail-tagged";
       valueCombo->addItem( KIcon( iconName ), tag.label(), tag.uri() );
     }
     valueCombo->adjustSize();
