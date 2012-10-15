@@ -76,5 +76,6 @@ AbstractImporter::TypeSupportedOptions PMailImportData::supportedOption()
 {
   TypeSupportedOptions options;
   options |=AbstractImporter::Mails;
+  //options |=AbstractImporter::Settings;
   return options;
 }
