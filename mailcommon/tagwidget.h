@@ -54,6 +54,10 @@ public:
 
   KKeySequenceWidget *keySequenceWidget() { return mKeySequenceWidget; }
 
+  void setTagTextColor(const QColor& color);
+  void setTagBackgroundColor(const QColor& color);
+  void setTagTextFont(const QFont& font);
+
 Q_SIGNALS:
   void changed();
   void iconNameChanged(const QString&);
