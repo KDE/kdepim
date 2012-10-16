@@ -1018,4 +1018,51 @@ QListViewItem* KOEditorFreeBusy::hasExampleAttendee() const
   return 0;
 }
 
+void KOEditorFreeBusy::setOrganizer(const QString &newOrganizer)
+{
+  if (newOrganizer==mCurrentOrganizer) return;
+
+  QString name;
+  QString email;
+  bool success = KPIM::getNameAndMail( newOrganizer, name, email );
+
+  if (!success) return;
+
+  int found = 0;
+  for ( int i = 0 ; i < mOrganizerCombo->count(); ++i ) {
+    if ( mOrganizerCombo->text( i ) == newOrganizer ) {
+      found = i;
+      mOrganizerCombo->setCurrentItem( i );
+      kdDebug(5850) << "Set organizer to: " << newOrganizer << endl;
+      break;
+    }
+  }
+
+  Attendee *currentOrganizerAttendee = 0;
+  Attendee *newOrganizerAttendee = 0;
+
+  FreeBusyItem *anItem =
+    static_cast<FreeBusyItem *>( mGanttView->firstChild() );
+  while( anItem ) {
+    Attendee *attendee = anItem->attendee();
+    if( attendee->fullName() == mCurrentOrganizer )
+      currentOrganizerAttendee = attendee;
+
+    if( attendee->fullName() == newOrganizer )
+      newOrganizerAttendee = attendee;
+
+    anItem = static_cast<FreeBusyItem *>( anItem->nextSibling() );
+  }
+  if (currentOrganizerAttendee) {
+    removeAttendee( currentOrganizerAttendee );
+  }
+  if (!newOrganizerAttendee) {
+    Attendee *a = new Attendee( name, email, true );
+    insertAttendee( a, false );
+    mnewAttendees.append( a );
+    updateAttendee();
+  }
+  mCurrentOrganizer = newOrganizer;
+}
+
 #include "koeditorfreebusy.moc"

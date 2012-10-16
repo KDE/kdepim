@@ -42,15 +42,20 @@
 #include <libkdepim/designerfields.h>
 #include <libkdepim/embeddedurlpage.h>
 
+#include <libkpimidentities/identitymanager.h>
+#include <libkpimidentities/identity.h>
+
 #include <libkcal/calendarlocal.h>
 #include <libkcal/incidence.h>
 #include <libkcal/icalformat.h>
 #include <libkcal/resourcecalendar.h>
 
+#include "kocore.h"
 #include "koprefs.h"
 #include "koglobals.h"
 #include "koeditordetails.h"
 #include "koeditoralarms.h"
+#include "koeditorfreebusy.h"
 #include "urihandler.h"
 #include "koincidenceeditor.h"
 #include "templatemanagementdialog.h"
@@ -374,12 +379,26 @@ void KOIncidenceEditor::addAttendees( const QStringList &attendees )
 
 void KOIncidenceEditor::setResource( ResourceCalendar *res, const QString &subRes )
 {
-  QString label;
   if ( res ) {
-    if ( !res->subresources().isEmpty() && !subRes.isEmpty() ) {
-      label = res->labelForSubresource( subRes );
-    } else {
-      label = res->resourceName();
+    // This implements kolab issue4796
+    if ( subRes.contains( "/kmail/dimap/" ) ) {
+      // Now we know it's a dimap calendar >:)
+      QString folderID = QStringList::split( "/kmail/dimap/", subRes ).last();
+
+      KConfig kmConfig( "kmailrc", true );
+      if ( kmConfig.hasGroup( QString( "Folder-%1" ).arg( folderID ) ) ) {
+        kmConfig.setGroup( QString( "Folder-%1" ).arg( folderID ) );
+        uint identityID = kmConfig.readUnsignedNumEntry( "Identity", 0 );
+        if ( identityID ) {
+          const QString identityMail = KOCore::self()->identityManager()->identityForUoid(
+              identityID ).fullEmailAddr();
+          kdDebug(5850) << "Default identity found for subresource " << identityMail << endl;
+          KOEditorFreeBusy * fbEditor = dynamic_cast<KOEditorFreeBusy*>( mAttendeeEditor );
+          if ( mAttendeeEditor ) {
+            fbEditor->setOrganizer( identityMail );
+          }
+        }
+      }
     }
   }
 
