@@ -162,6 +162,7 @@ void TagWidget::setTagTextColor(const QColor& color)
     mTextColorCheck->setChecked( false );
     mTextColorCombo->setColor( Qt::white );
   }
+  mTextColorCombo->setEnabled(mTextColorCheck->isChecked());
 }
 
 void TagWidget::setTagBackgroundColor(const QColor& color)
@@ -174,6 +175,7 @@ void TagWidget::setTagBackgroundColor(const QColor& color)
     mBackgroundColorCheck->setChecked( false );
     mBackgroundColorCombo->setColor( Qt::white );
   }
+  mBackgroundColorCombo->setEnabled( mBackgroundColorCheck->isChecked() );
 }
 
 void TagWidget::setTagTextFont(const QFont& font)
@@ -181,6 +183,7 @@ void TagWidget::setTagTextFont(const QFont& font)
   mTextFontCheck->setEnabled( true );
   mTextFontCheck->setChecked( ( font != QFont() ) );
   mFontRequester->setFont( font );
+  mFontRequester->setEnabled( mTextFontCheck->isChecked() );
 }
 
 
