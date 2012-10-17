@@ -16,6 +16,7 @@
 */
 
 #include "pmail/pmailimportdata.h"
+#include "pmail/pmailsettings.h"
 #include "mailimporter/filter_pmail.h"
 #include "mailimporter/filterinfo.h"
 #include "importfilterinfogui.h"
@@ -68,6 +69,14 @@ bool PMailImportData::importMails()
   info->setStatusMessage(i18n("Import finished"));
 
   delete info;
+  return true;
+}
+
+bool PMailImportData::importSettings()
+{
+  //TODO verify path
+  const QString settingFile(mPath+QLatin1String("pmail.ini"));
+  PMailSettings settings(settingFile,mImportWizard);
   return true;
 }
 
