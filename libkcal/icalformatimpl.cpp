@@ -325,12 +325,14 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
     icalcomponent_add_property(parent,p);
   }
 
-  if ( incidence->schedulingID() != incidence->uid() )
+  if ( incidence->schedulingID() != incidence->uid() ) {
     // We need to store the UID in here. The rawSchedulingID will
     // go into the iCal UID component
-    incidence->setCustomProperty( "LIBKCAL", "ID", incidence->uid() );
-  else
-    incidence->removeCustomProperty( "LIBKCAL", "ID" );
+    icalproperty *p = 0;
+    p = icalproperty_new_x( incidence->uid().utf8() );
+    icalproperty_set_x_name( p, "X-KDE-LIBKCAL-ID" );
+    icalcomponent_add_property( parent, p );
+  }
 
   writeIncidenceBase(parent,incidence);
 
@@ -1487,6 +1489,7 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent, icaltimezone *tz, Inci
     // with other iCal applications
     incidence->setSchedulingID( incidence->uid() );
     incidence->setUid( uid );
+    incidence->removeCustomProperty( "LIBKCAL", "ID" );
   }
 
   // Now that recurrence and exception stuff is completely set up,
