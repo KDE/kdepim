@@ -29,10 +29,20 @@
 #include <KConfigGroup>
 #include <QFile>
 
-PMailSettings::PMailSettings(ImportWizard *parent)
+PMailSettings::PMailSettings(const QString& filename,ImportWizard *parent)
   :AbstractSettings( parent )
 {
-    //TODO
+  if(QFile( filename ).exists()) {
+    KConfig config( filename );
+
+    const QStringList accountList = config.groupList().filter( QRegExp( "WinPMail Identity - *" ) );
+    const QStringList::const_iterator end( accountList.constEnd() );
+    for ( QStringList::const_iterator it = accountList.constBegin(); it!=end; ++it )
+    {
+      KConfigGroup group = config.group( *it );
+      readIdentity( group );
+    }
+  }
 }
 
 PMailSettings::~PMailSettings()
@@ -40,3 +50,19 @@ PMailSettings::~PMailSettings()
 
 }
 
+void PMailSettings::readIdentity( const KConfigGroup& group )
+{
+    KPIMIdentities::Identity* newIdentity = createIdentity();
+    const QString personalNameStr = QLatin1String("Personal name                             ");
+    if(group.hasKey(personalNameStr)) {
+        const QString personalName = group.readEntry(personalNameStr);
+        newIdentity->setFullName( personalName );
+        newIdentity->setIdentityName( personalName );
+    }
+    const QString emailStr = QLatin1String("Internet E-mail Address                   ");
+    if(group.hasKey(emailStr)) {
+        const QString email = group.readEntry(emailStr);
+        newIdentity->setPrimaryEmailAddress(email);
+    }
+    storeIdentity(newIdentity);
+}
