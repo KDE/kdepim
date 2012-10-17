@@ -37,6 +37,7 @@ messagecore           <kmail maintainer>
 messagelist           <kmail maintainer>
 messageviewer         <kmail maintainer>
 ontologies            ?
+pimcommon             Laurent Montel <montel@kde.org>
 plugins               ?
 strigi-analyzer       ?
 templateparser        <kmail maintainer>

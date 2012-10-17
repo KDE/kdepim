@@ -20,7 +20,7 @@
 #ifndef MAILCOMMON_ACLMANAGER_H
 #define MAILCOMMON_ACLMANAGER_H
 
-#include "mailcommon_export.h"
+#include "pimcommon_export.h"
 
 #include <Akonadi/Collection>
 
@@ -30,9 +30,9 @@ class QAbstractItemModel;
 class QAction;
 class QItemSelectionModel;
 
-namespace MailCommon {
+namespace PimCommon {
 
-class MAILCOMMON_EXPORT AclManager : public QObject
+class PIMCOMMON_EXPORT AclManager : public QObject
 {
   Q_OBJECT
 

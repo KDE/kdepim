@@ -21,7 +21,7 @@
 
 #include <KLocale>
 
-using namespace MailCommon;
+using namespace PimCommon;
 
 static const struct {
   KIMAP::Acl::Rights permissions;

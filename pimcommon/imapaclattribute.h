@@ -20,7 +20,7 @@
 #ifndef MAILCOMMON_IMAPACLATTRIBUTE_H
 #define MAILCOMMON_IMAPACLATTRIBUTE_H
 
-#include "mailcommon_export.h"
+#include "pimcommon_export.h"
 
 #include <Akonadi/Attribute>
 
@@ -28,9 +28,9 @@
 
 #include <QMap>
 
-namespace MailCommon {
+namespace PimCommon {
 
-class MAILCOMMON_EXPORT ImapAclAttribute : public Akonadi::Attribute
+class PIMCOMMON_EXPORT ImapAclAttribute : public Akonadi::Attribute
 {
   public:
     ImapAclAttribute();

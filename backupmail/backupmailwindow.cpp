@@ -40,6 +40,9 @@
 BackupMailWindow::BackupMailWindow(QWidget *parent)
   : KXmlGuiWindow(parent),mBackupData(0),mRestoreData(0)
 {
+  KGlobal::locale()->insertCatalog( "libmailcommon" );
+  KGlobal::locale()->insertCatalog( "libpimcommon" );
+
   BackupMailKernel *kernel = new BackupMailKernel( this );
   CommonKernel->registerKernelIf( kernel ); //register KernelIf early, it is used by the Filter classes
   CommonKernel->registerSettingsIf( kernel ); //SettingsIf is used in FolderTreeWidget

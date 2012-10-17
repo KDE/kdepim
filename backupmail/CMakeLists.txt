@@ -42,6 +42,7 @@ target_link_libraries(backupmail
   ${AKONADI_COMMON_LIBRARIES}
   mailimporter
   mailcommon
+  pimcommon
   kdepim
   messagecomposer
 )

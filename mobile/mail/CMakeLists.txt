@@ -90,6 +90,7 @@ target_link_libraries(kmail-mobile
     ksieveui
     kleo
     mailcommon
+    pimcommon
     messagecomposer
     messagecore
     messageviewer

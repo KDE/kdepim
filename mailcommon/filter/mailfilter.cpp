@@ -26,10 +26,11 @@
 #include "filteraction.h"
 #include "filteractiondict.h"
 #include "filtermanager.h"
-#include "mailutil.h"
 #include "filterlog.h"
 #include "filteractionmissingargumentdialog.h"
 using MailCommon::FilterLog;
+
+#include "pimcommon/pimutil.h"
 
 // KDEPIMLIBS headers
 #include <Akonadi/AgentManager>

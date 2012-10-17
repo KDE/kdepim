@@ -24,7 +24,7 @@
 
 #include <KDialog>
 
-namespace MailCommon {
+namespace PimCommon {
 
 /**
  * @short A dialog for editing an IMAP ACL entry.

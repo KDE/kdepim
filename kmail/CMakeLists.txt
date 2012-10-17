@@ -30,6 +30,8 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/messagecore
   ${CMAKE_SOURCE_DIR}/mailcommon
   ${CMAKE_BINARY_DIR}/mailcommon
+  ${CMAKE_SOURCE_DIR}/pimcommon
+  ${CMAKE_BINARY_DIR}/pimcommon
   ${CMAKE_SOURCE_DIR}/korganizer
   ${GPGME_INCLUDES}
   ${Boost_INCLUDE_DIR}
@@ -62,7 +64,6 @@ if (NOT WINCE AND KDEPIM_BUILD_DESKTOP)
      collectionviewpage.cpp
      collectionquotapage.cpp
      collectionquotapage_p.cpp
-     collectionaclpage.cpp
      colorlistbox.cpp
      kmmainwin.cpp
      configagentdelegate.cpp
@@ -184,6 +185,7 @@ if (NOT WINCE AND KDEPIM_BUILD_DESKTOP)
     messagecore
     messagecomposer
     messagelist
+    pimcommon
     mailcommon
     templateparser
     ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}

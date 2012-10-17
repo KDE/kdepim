@@ -234,7 +234,7 @@ void OperaSettings::readIdentity(const KConfigGroup &grp)
     newIdentity->setFullName( realName );
     newIdentity->setIdentityName( realName );
 
-    const QString email = grp.readEntry(QLatin1String("Real Name"));
+    const QString email = grp.readEntry(QLatin1String("Email"));
     newIdentity->setPrimaryEmailAddress(email);
 
     const QString organization = grp.readEntry(QLatin1String("Organization"));

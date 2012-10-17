@@ -27,7 +27,7 @@ class KArchiveDirectory;
 class KArchiveFile;
 class KTempDir;
 class ArchiveStorage;
-namespace MailCommon {
+namespace PimCommon {
   class CreateResource;
 }
 
@@ -70,7 +70,7 @@ private:
   QString mTempDirName;
   const KArchiveDirectory* mArchiveDirectory;
   KTempDir *mTempDir;
-  MailCommon::CreateResource *mCreateResource;
+  PimCommon::CreateResource *mCreateResource;
 };
 
 #endif // ImportMailJob_H

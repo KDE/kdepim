@@ -21,7 +21,7 @@
 
 #include <QByteArray>
 
-using namespace MailCommon;
+using namespace PimCommon;
 
 ImapAclAttribute::ImapAclAttribute()
 {
