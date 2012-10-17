@@ -126,14 +126,15 @@ void FilterManager::Private::slotItemsFetchedForFilter( const Akonadi::Item::Lis
         emit q->percent(0);
     }
 
-    const int filterResult = q->process( listMailFilters, item, needsFullPayload, filterSet );
+    const bool filterResult = q->process( listMailFilters, item, needsFullPayload, filterSet );
 
     if (mCurrentProgressCount == mTotalProgressCount) {
       mTotalProgressCount = 0;
       mCurrentProgressCount = 0;
     }
 
-    if ( filterResult == 2 ) {
+    if ( !filterResult ) {
+      emit q->filteringFailed( item );
       // something went horribly wrong (out of space?)
       //CommonKernel->emergencyExit( i18n( "Unable to process messages: " ) + QString::fromLocal8Bit( strerror( errno ) ) );
     }
@@ -182,11 +183,15 @@ void FilterManager::Private::itemFetchJobForFilterDone( KJob *job )
       return;
     }
 
-    q->process( items.first(), needsFullPayload, wantedFilter );
+    if ( !q->process( items.first(), needsFullPayload, wantedFilter )) {
+      emit q->filteringFailed( items.first() );
+    }
   } else {
     const FilterManager::FilterSet set = static_cast<FilterManager::FilterSet>( job->property( "filterSet" ).toInt() );
 
-    q->process( items.first(), needsFullPayload, set, !resourceId.isEmpty(), resourceId );
+    if ( !q->process( items.first(), needsFullPayload, set, !resourceId.isEmpty(), resourceId )) {
+      emit q->filteringFailed( items.first() );
+    }
   }
 }
 
@@ -218,14 +223,6 @@ void FilterManager::Private::modifyJobResult( KJob *job )
   if ( job->error() ) {
     kError() << "Error while modifying items. " << job->error() << job->errorString();
     KMessageBox::error(qApp->activeWindow(), job->errorString(), i18n("Error applying mail filter modifications"));
-  } else {
-    Akonadi::ItemModifyJob *modifyJob = qobject_cast<Akonadi::ItemModifyJob*>( job );
-
-    const Akonadi::Collection collection = job->property( "moveTargetCollection" ).value<Akonadi::Collection>();
-    if ( collection.isValid() ) {
-      Akonadi::ItemMoveJob *moveJob = new Akonadi::ItemMoveJob( modifyJob->item(), collection, q );
-      q->connect( moveJob, SIGNAL(result(KJob*)), SLOT(moveJobResult(KJob*)) );
-    }
   }
 }
 
@@ -405,114 +402,100 @@ void FilterManager::filter(const Akonadi::Item& item, const QString& filterId, c
   connect( job, SIGNAL(result(KJob*)), SLOT(itemFetchJobForFilterDone(KJob*)) );
 }
 
-int FilterManager::process( const Akonadi::Item& item, bool needsFullPayload, const MailFilter* filter )
+bool FilterManager::process( const Akonadi::Item& item, bool needsFullPayload, const MailFilter* filter )
 {
   if ( !filter->isEnabled() ) {
-    return 1;
+    return true;
   }
 
   if ( !filter || !item.hasPayload<KMime::Message::Ptr>() ) {
     kError() << "Filter is null or item doesn't have correct payload.";
-    return 1;
+    return false;
   }
 
   bool stopIt = false;
-  int result = 1;
   if ( d->isMatching( item, filter ) ) {
     // do the actual filtering stuff
     if ( !d->beginFiltering( item ) ) {
-      return 1;
+      return false;
     }
 
     ItemContext context( item, needsFullPayload );
 
     if ( filter->execActions( context, stopIt ) == MailCommon::MailFilter::CriticalError ) {
-      return 2;
+      return false;
     }
 
     d->endFiltering( item );
 
-    if( processContextItem( context, false/*don't emit signal*/, result ))
-        return result;
+    if( !processContextItem( context ))
+        return false;
 
-    if ( context.moveTargetCollection().isValid() ) {
-       result = 0;
-     }
-  } else {
-    result = 1;
   }
 
-  return result;
+  return true;
 }
 
-bool FilterManager::processContextItem( ItemContext context, bool emitSignal, int &result )
+bool FilterManager::processContextItem( ItemContext context )
 {
     const KMime::Message::Ptr msg = context.item().payload<KMime::Message::Ptr>();
     msg->assemble();
 
     const bool itemCanDelete = (MailCommon::Util::updatedCollection(context.item().parentCollection()).rights() & Akonadi::Collection::CanDeleteItem);
     if ( context.deleteItem() ) {
-      if(itemCanDelete){
-        Akonadi::ItemDeleteJob *deleteJob = new Akonadi::ItemDeleteJob( context.item(), this );
-        connect( deleteJob, SIGNAL(result(KJob*)), SLOT(deleteJobResult(KJob*)));
-      }
-    } else if ( context.needsPayloadStore() ) {
-        Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( context.item(), this );
-        //The below is a safety check to ignore modifying payloads if it was not requested,
-        //as in that case we might change the payload to an invalid one
-        modifyJob->setIgnorePayload( !context.needsFullPayload() );
-        if(itemCanDelete) {
-          modifyJob->setProperty( "moveTargetCollection", QVariant::fromValue( context.moveTargetCollection() ) );
+        if ( itemCanDelete ){
+          Akonadi::ItemDeleteJob *deleteJob = new Akonadi::ItemDeleteJob( context.item(), this );
+          connect( deleteJob, SIGNAL(result(KJob*)), SLOT(deleteJobResult(KJob*)));
+        } else {
+          return false;
         }
-        connect( modifyJob, SIGNAL(result(KJob*)), SLOT(modifyJobResult(KJob*)));
-    } else if ( context.needsFlagStore() ) {
-        Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( context.item(), this );
-        modifyJob->disableRevisionCheck();
-        //The below is a safety check to ignore modifying payloads if it was not requested,
-        //as in that case we might change the payload to an invalid one
-        modifyJob->setIgnorePayload( !context.needsFullPayload() );
-        if(itemCanDelete) {
-          modifyJob->setProperty( "moveTargetCollection", QVariant::fromValue( context.moveTargetCollection() ) );
-          modifyJob->setIgnorePayload( true );
-        }
-        connect( modifyJob, SIGNAL(result(KJob*)), SLOT(modifyJobResult(KJob*)));
     } else {
-        if ( context.moveTargetCollection().isValid() ) {
-            if( context.item().storageCollectionId() != context.moveTargetCollection().id() && itemCanDelete ) {
-                Akonadi::ItemMoveJob *moveJob = new Akonadi::ItemMoveJob( context.item(), context.moveTargetCollection(), this );
-                connect( moveJob, SIGNAL(result(KJob*)), SLOT(moveJobResult(KJob*)) );
-            }
-            else {
-                if( emitSignal )
-                    emit itemNotMoved( context.item() );
-                result = 1;
-                return true;
-            }
-        }
+      if ( context.moveTargetCollection().isValid() && context.item().storageCollectionId() != context.moveTargetCollection().id() ) {
+          if ( itemCanDelete  ) {
+            Akonadi::ItemMoveJob *moveJob = new Akonadi::ItemMoveJob( context.item(), context.moveTargetCollection(), this );
+            connect( moveJob, SIGNAL(result(KJob*)), SLOT(moveJobResult(KJob*)) );
+          } else {
+            return false;
+          }
+      }
+      if ( context.needsPayloadStore() || context.needsFlagStore() ) {
+          Akonadi::Item item = context.item();
+          //the item might be in a new collection with a different remote id, so don't try to force on it
+          //the previous remote id. Example: move to another collection on another resource => new remoteId, but our context.item()
+          //remoteid still holds the old one. Without clearing it, we try to enforce that on the new location, which is
+          //anything but good (and the server replies with "NO Only resources can modify remote identifiers"
+          item.setRemoteId(QString()); 
+          Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( item, this );
+          if ( !context.needsPayloadStore() ) {
+            modifyJob->disableRevisionCheck(); //no conflict handling for flags is needed
+          }
+          //The below is a safety check to ignore modifying payloads if it was not requested,
+          //as in that case we might change the payload to an invalid one
+          modifyJob->setIgnorePayload( !context.needsFullPayload() );
+          connect( modifyJob, SIGNAL(result(KJob*)), SLOT(modifyJobResult(KJob*)));
+      }
     }
 
-    return false;
+    return true;
 }
 
 
-int FilterManager::process(const QList<MailCommon::MailFilter*>& mailFilters, const Akonadi::Item& item, bool needsFullPayload, FilterManager::FilterSet set, bool account, const QString& accountId )
+bool FilterManager::process(const QList< MailFilter* >& mailFilters, const Akonadi::Item& item, bool needsFullPayload, FilterManager::FilterSet set, bool account, const QString& accountId )
 {
     if ( set == NoSet ) {
       kDebug() << "FilterManager: process() called with not filter set selected";
-      emit itemNotMoved( item );
-      return 1;
+      return false;
     }
 
     if ( !item.hasPayload<KMime::Message::Ptr>() ) {
       kError() << "Filter is null or item doesn't have correct payload.";
-      return 1;
+      return false;
     }
 
     bool stopIt = false;
 
     if ( !d->beginFiltering( item ) ) {
-      emit itemNotMoved( item );
-      return 1;
+      return false;
     }
 
     ItemContext context( item, needsFullPayload );
@@ -534,7 +517,7 @@ int FilterManager::process(const QList<MailCommon::MailFilter*>& mailFilters, co
           if ( d->isMatching( context.item(), *it ) ) {
             // execute actions:
             if ( (*it)->execActions( context, stopIt ) == MailCommon::MailFilter::CriticalError ) {
-              return 2;
+              return false;
             }
           }
         }
@@ -542,24 +525,17 @@ int FilterManager::process(const QList<MailCommon::MailFilter*>& mailFilters, co
     }
 
     d->endFiltering( item );
-    int result = 1;
-    if( processContextItem( context, true /*emit signal*/, result ))
-        return result;
+    if( !processContextItem( context ) )
+        return false;
 
-    if ( context.moveTargetCollection().isValid() ) {
-      return 0;
-    }
-
-    emit itemNotMoved( context.item() );
-
-    return 1;
+    return true;
 }
 
 
-int FilterManager::process( const Akonadi::Item &item,  bool needsFullPayload,
+bool FilterManager::process( const Akonadi::Item &item,  bool needsFullPayload,
                             FilterSet set, bool account, const QString &accountId )
 {
-  return process( d->mFilters, item, needsFullPayload, set, account, accountId );
+  return  process( d->mFilters, item, needsFullPayload, set, account, accountId );
 }
 
 QString FilterManager::createUniqueName( const QString &name ) const
