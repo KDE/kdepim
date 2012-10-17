@@ -99,7 +99,6 @@ set(libmailcommon_SRCS
   snippetsmanager.cpp
   snippetsmodel.cpp
   snippetvariabledialog.cpp
-  createresource.cpp
   tagwidget.cpp
   filter/addtagdialog.cpp
 )

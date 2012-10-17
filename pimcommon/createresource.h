@@ -15,16 +15,16 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef CREATERESOURCE_H
-#define CREATERESOURCE_H
+#ifndef PIMCOMMONCREATERESOURCE_H
+#define PIMCOMMONCREATERESOURCE_H
 
-#include "mailcommon_export.h"
+#include "pimcommon_export.h"
 #include <QObject>
 #include <QVariant>
 #include <QMap>
 
-namespace MailCommon {
-class MAILCOMMON_EXPORT CreateResource  : public QObject
+namespace PimCommon {
+class PIMCOMMON_EXPORT CreateResource  : public QObject
 {
   Q_OBJECT
 public:

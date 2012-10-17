@@ -30,7 +30,7 @@
 
 using namespace Akonadi;
 
-using namespace MailCommon;
+using namespace PimCommon;
 
 CreateResource::CreateResource()
 {

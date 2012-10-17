@@ -22,7 +22,7 @@
 #include "mailcommon/filter/filtermanager.h"
 #include "mailcommon/filter/filterimporterexporter.h"
 #include "mailcommon/mailutil.h"
-#include "mailcommon/createresource.h"
+#include "pimcommon/createresource.h"
 
 #include "messageviewer/kcursorsaver.h"
 
@@ -60,7 +60,7 @@ ImportMailJob::ImportMailJob(QWidget *parent, BackupMailUtil::BackupTypes typeSe
 {
   mTempDir = new KTempDir();
   mTempDirName = mTempDir->name();
-  mCreateResource = new MailCommon::CreateResource();
+  mCreateResource = new PimCommon::CreateResource();
   connect(mCreateResource,SIGNAL(createResourceInfo(QString)),SIGNAL(info(QString)));
   connect(mCreateResource,SIGNAL(createResourceError(QString)),SIGNAL(error(QString)));
 }

@@ -16,7 +16,7 @@
 */
 
 #include "abstractbase.h"
-#include "mailcommon/createresource.h"
+#include "pimcommon/createresource.h"
 
 #include <KLocale>
 #include <KDebug>
@@ -34,7 +34,7 @@ using namespace Akonadi;
 
 AbstractBase::AbstractBase()
 {
-  mCreateResource = new MailCommon::CreateResource();
+  mCreateResource = new PimCommon::CreateResource();
   connect(mCreateResource,SIGNAL(createResourceInfo(QString)),SLOT(slotCreateResourceInfo(QString)));
   connect(mCreateResource,SIGNAL(createResourceError(QString)),SLOT(slotCreateResourceError(QString)));
 }

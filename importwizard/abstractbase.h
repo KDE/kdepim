@@ -23,7 +23,7 @@
 #include <QMap>
 #include <QVariant>
 
-namespace MailCommon {
+namespace PimCommon {
   class CreateResource;
 }
 
@@ -41,7 +41,7 @@ protected:
   virtual void addImportInfo( const QString& log ) = 0;
   virtual void addImportError( const QString& log ) = 0;
 private:
-  MailCommon::CreateResource *mCreateResource;
+  PimCommon::CreateResource *mCreateResource;
 };
 
 #endif // ABSTRACTBASE_H

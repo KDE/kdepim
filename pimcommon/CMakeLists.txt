@@ -9,6 +9,7 @@ set(libpimcommon_SRCS
   aclmanager.cpp
   aclutils.cpp
   collectionaclpage.cpp
+  createresource.cpp
   imapaclattribute.cpp
   pimutil.cpp
 )
