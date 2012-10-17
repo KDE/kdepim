@@ -30,13 +30,13 @@
  */
 
 #include "collectionaclpage.h"
+#include "aclmanager.h"
+#include "imapaclattribute.h"
 
 #include <akonadi/collection.h>
 #include <kdialog.h>
 #include <klocale.h>
 #include <kvbox.h>
-#include <mailcommon/aclmanager.h>
-#include <mailcommon/imapaclattribute.h>
 
 #include <QAction>
 #include <QActionEvent>
@@ -44,6 +44,7 @@
 #include <QListView>
 #include <QPushButton>
 
+using namespace MailCommon;
 /**
  * Unfortunately QPushButton doesn't support to plug in
  * a QAction like QToolButton does, so we have to reimplement it :(
@@ -96,7 +97,7 @@ CollectionAclPage::CollectionAclPage( QWidget *parent )
     mAclManager( new MailCommon::AclManager( this ) ),
     mChanged( false )
 {
-  setObjectName( QLatin1String( "KMail::CollectionAclPage" ) );
+  setObjectName( QLatin1String( "MailCommon::CollectionAclPage" ) );
 
   setPageTitle( i18n( "Access Control" ) );
   init();

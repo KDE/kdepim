@@ -16,6 +16,7 @@ set(libmailcommon_SRCS
   aclentrydialog.cpp
   aclmanager.cpp
   aclutils.cpp
+  collectionaclpage.cpp
   attributeregistrar.cpp
   backupjob.cpp
   collectionannotationsattribute.cpp

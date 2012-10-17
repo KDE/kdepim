@@ -33,19 +33,19 @@
 #define COLLECTIONACLPAGE_H
 
 #include <akonadi/collectionpropertiespage.h>
-
-namespace MailCommon {
-class AclManager;
-}
+#include "mailcommon_export.h"
 
 class KPushButton;
 class KHBox;
 
+namespace MailCommon {
+class AclManager;
+
+
 /**
  * "Access Control" tab in the folder dialog
- * Internal class, only used by KMFolderDialog
  */
-class CollectionAclPage : public Akonadi::CollectionPropertiesPage
+class MAILCOMMON_EXPORT CollectionAclPage : public Akonadi::CollectionPropertiesPage
 {
   Q_OBJECT
 
@@ -71,7 +71,7 @@ class CollectionAclPage : public Akonadi::CollectionPropertiesPage
 
     bool mChanged;
 };
-
 AKONADI_COLLECTION_PROPERTIES_PAGE_FACTORY( CollectionAclPageFactory, CollectionAclPage )
+}
 
 #endif
