@@ -152,5 +152,39 @@ void TagWidget::slotEmitChangeCheck()
   Q_EMIT changed();
 }
 
+void TagWidget::setTagTextColor(const QColor& color)
+{
+  mTextColorCheck->setEnabled( true );
+  if ( color.isValid() ) {
+    mTextColorCheck->setChecked( true );
+    mTextColorCombo->setColor( color );
+  } else {
+    mTextColorCheck->setChecked( false );
+    mTextColorCombo->setColor( Qt::white );
+  }
+  mTextColorCombo->setEnabled(mTextColorCheck->isChecked());
+}
+
+void TagWidget::setTagBackgroundColor(const QColor& color)
+{
+  mBackgroundColorCheck->setEnabled( true );
+  if ( color.isValid() ) {
+    mBackgroundColorCheck->setChecked( true );
+    mBackgroundColorCombo->setColor( color );
+  } else {
+    mBackgroundColorCheck->setChecked( false );
+    mBackgroundColorCombo->setColor( Qt::white );
+  }
+  mBackgroundColorCombo->setEnabled( mBackgroundColorCheck->isChecked() );
+}
+
+void TagWidget::setTagTextFont(const QFont& font)
+{
+  mTextFontCheck->setEnabled( true );
+  mTextFontCheck->setChecked( ( font != QFont() ) );
+  mFontRequester->setFont( font );
+  mFontRequester->setEnabled( mTextFontCheck->isChecked() );
+}
+
 
 #include "tagwidget.moc"

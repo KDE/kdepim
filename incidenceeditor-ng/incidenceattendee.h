@@ -58,6 +58,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceAttendee : public IncidenceEditor
     virtual void load( const KCalCore::Incidence::Ptr &incidence );
     virtual void save( const KCalCore::Incidence::Ptr &incidence );
     virtual bool isDirty() const;
+    virtual void printDebugInfo() const;
 
   signals:
     void attendeeCountChanged( int );

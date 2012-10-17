@@ -28,6 +28,7 @@
 
 #include "tagselectdialog.h"
 #include "tag.h"
+#include "kmkernel.h"
 
 #include <KListWidgetSearchLine>
 
@@ -73,7 +74,7 @@ TagSelectDialog::TagSelectDialog( QWidget * parent, int numberOfSelectedMessages
   foreach( const Tag::Ptr &tag, tagList ) {
     if(tag->tagStatus)
       continue;
-    QListWidgetItem *item = new QListWidgetItem( tag->tagName, mListTag );
+    QListWidgetItem *item = new QListWidgetItem(KIcon(tag->iconName), tag->tagName, mListTag );
     item->setFlags( Qt::ItemIsUserCheckable | Qt::ItemIsEnabled | Qt::ItemIsSelectable );
     item->setCheckState( Qt::Unchecked );
     mListTag->addItem( item );
@@ -85,11 +86,22 @@ TagSelectDialog::TagSelectDialog( QWidget * parent, int numberOfSelectedMessages
       item->setCheckState( Qt::Unchecked );
     }    
   }
+
+  KConfigGroup group( KMKernel::self()->config(), "TagSelectDialog" );
+  const QSize size = group.readEntry( "Size", QSize() );
+  if ( size.isValid() ) {
+    resize( size );
+  } else {
+    resize( 500, 300 );
+  }
+
 }
 
 TagSelectDialog::~TagSelectDialog()
 {
-  
+  KConfigGroup group( KMKernel::self()->config(), "TagSelectDialog" );
+  group.writeEntry( "Size", size() );
+
 }
 
 QList<QString> TagSelectDialog::selectedTag() const

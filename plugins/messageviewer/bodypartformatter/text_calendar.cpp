@@ -1014,8 +1014,10 @@ class UrlHandler : public Interface::BodyPartURLHandler
       if ( status == Attendee::Delegated ) {
         incidence = stringToIncidence( iCal );
         myself = findMyself( incidence, receiver );
-        myself->setStatus( status );
-        myself->setDelegate( delegateString );
+        if ( myself ) {
+          myself->setStatus( status );
+          myself->setDelegate( delegateString );
+        }
         QString name, email;
         KPIMUtils::extractEmailAddressAndName( delegateString, email, name );
         Attendee::Ptr delegate( new Attendee( name, email, true ) );

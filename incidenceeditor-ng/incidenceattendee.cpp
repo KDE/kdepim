@@ -222,18 +222,18 @@ bool IncidenceAttendee::isDirty() const
     }
   }
 
-  const KCalCore::Attendee::List origList = mLoadedIncidence->attendees();
+  const KCalCore::Attendee::List originalList = mLoadedIncidence->attendees();
   AttendeeData::List newList = mAttendeeEditor->attendees();
 
   // The lists sizes *must* be the same. When the organizer is attending the
   // event as well, he should be in the attendees list as well.
-  if ( origList.size() != newList.size() ) {
+  if ( originalList.size() != newList.size() ) {
     return true;
   }
 
   // Okay, again not the most efficient algorithm, but I'm assuming that in the
   // bulk of the use cases, the number of attendees is not much higher than 10 or so.
-  foreach ( const KCalCore::Attendee::Ptr &attendee, origList ) {
+  foreach ( const KCalCore::Attendee::Ptr &attendee, originalList ) {
     bool found = false;
     for ( int i = 0; i < newList.size(); ++i ) {
       if ( *newList.at( i )->attendee() == *attendee ) {
@@ -542,3 +542,53 @@ void IncidenceAttendee::slotOrganizerChanged( const QString &newOrganizer )
   mOrganizer = newOrganizer;
 }
 
+void IncidenceAttendee::printDebugInfo() const
+{
+  kDebug() << "I'm organizer   : " << iAmOrganizer();
+  kDebug() << "Loaded organizer: "<< mLoadedIncidence->organizer()->email();
+
+  if ( iAmOrganizer() ) {
+    KCalCore::Event tmp;
+    tmp.setOrganizer( mUi->mOrganizerCombo->currentText() );
+    kDebug() << "Organizer combo: " << tmp.organizer()->email();
+  }
+
+  const KCalCore::Attendee::List originalList = mLoadedIncidence->attendees();
+  AttendeeData::List newList = mAttendeeEditor->attendees();
+  kDebug() << "List sizes: " << originalList.count() << newList.count();
+
+  if ( originalList.count() != newList.count() ) {
+    return;
+  }
+
+  // Okay, again not the most efficient algorithm, but I'm assuming that in the
+  // bulk of the use cases, the number of attendees is not much higher than 10 or so.
+  foreach ( const KCalCore::Attendee::Ptr &attendee, originalList ) {
+    bool found = false;
+    for ( int i = 0; i < newList.count(); ++i ) {
+      if ( *newList.at( i )->attendee() == *attendee ) {
+        newList.removeAt( i );
+        found = true;
+        break;
+      }
+    }
+
+    if ( !found ) {
+      kDebug() << "Attendee not found: " << attendee->email()
+               << attendee->status()
+               << attendee->RSVP()
+               << attendee->role()
+               << attendee->uid()
+               << "; we have:";
+      for ( int i = 0; i < newList.count(); ++i ) {
+        KCalCore::Attendee::Ptr attendee = newList.at( i )->attendee();
+        kDebug() << "Attendee: " << attendee->email() << attendee->status()
+                 << attendee->RSVP()
+                 << attendee->role()
+                 << attendee->uid();
+      }
+
+      return;
+    }
+  }
+}

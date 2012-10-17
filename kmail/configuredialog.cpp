@@ -1593,6 +1593,14 @@ AppearancePageSystemTrayTab::AppearancePageSystemTrayTab( QWidget * parent )
   connect( mSystemTrayCheck, SIGNAL(stateChanged(int)),
            this, SLOT(slotEmitChanged()) );
 
+  mSystemTrayShowUnreadMail = new QCheckBox( i18n("Show unread mail in tray icon"), this );
+  vlay->addWidget( mSystemTrayShowUnreadMail );
+  connect( mSystemTrayShowUnreadMail, SIGNAL(stateChanged(int)),
+           this, SLOT(slotEmitChanged()) );
+  connect( mSystemTrayCheck, SIGNAL(toggled(bool)),
+           mSystemTrayShowUnreadMail, SLOT(setEnabled(bool)) );
+
+
   // System tray modes
   mSystemTrayGroup = new KButtonGroup( this );
   mSystemTrayGroup->setTitle( i18n("System Tray Mode" ) );
@@ -1614,6 +1622,7 @@ AppearancePageSystemTrayTab::AppearancePageSystemTrayTab( QWidget * parent )
 void AppearancePage::SystemTrayTab::doLoadFromGlobalSettings()
 {
   mSystemTrayCheck->setChecked( GlobalSettings::self()->systemTrayEnabled() );
+  mSystemTrayShowUnreadMail->setChecked( GlobalSettings::self()->systemTrayShowUnread() );
   mSystemTrayGroup->setSelected( GlobalSettings::self()->systemTrayPolicy() );
   mSystemTrayGroup->setEnabled( mSystemTrayCheck->isChecked() );
 }
@@ -1622,6 +1631,7 @@ void AppearancePage::SystemTrayTab::save()
 {
   GlobalSettings::self()->setSystemTrayEnabled( mSystemTrayCheck->isChecked() );
   GlobalSettings::self()->setSystemTrayPolicy( mSystemTrayGroup->selected() );
+  GlobalSettings::self()->setSystemTrayShowUnread( mSystemTrayShowUnreadMail->isChecked() );
   GlobalSettings::self()->writeConfig();
 }
 
@@ -1913,30 +1923,11 @@ void AppearancePage::MessageTagTab::slotUpdateTagSettingWidgets( int aIndex )
            this, SLOT(slotNameLineTextChanged(QString)) );
 
 
-  QColor tmp_color = tmp_desc->textColor;
-  mTagWidget->textColorCheck()->setEnabled( true );
-  if ( tmp_color.isValid() ) {
-    mTagWidget->textColorCheck()->setChecked( true );
-    mTagWidget->textColorCombo()->setColor( tmp_color );
-  } else {
-    mTagWidget->textColorCheck()->setChecked( false );
-    mTagWidget->textColorCombo()->setColor( Qt::white );
-  }
+  mTagWidget->setTagTextColor(tmp_desc->textColor);
 
-  tmp_color = tmp_desc->backgroundColor;
-  mTagWidget->backgroundColorCheck()->setEnabled( true );
-  if ( tmp_color.isValid() ) {
-    mTagWidget->backgroundColorCheck()->setChecked( true );
-    mTagWidget->backgroundColorCombo()->setColor( tmp_color );
-  } else {
-    mTagWidget->backgroundColorCheck()->setChecked( false );
-    mTagWidget->backgroundColorCombo()->setColor( Qt::white );
-  }
+  mTagWidget->setTagBackgroundColor(tmp_desc->backgroundColor);
 
-  QFont tmp_font = tmp_desc->textFont;
-  mTagWidget->textFontCheck()->setEnabled( true );
-  mTagWidget->textFontCheck()->setChecked( ( tmp_font != QFont() ) );
-  mTagWidget->fontRequester()->setFont( tmp_font );
+  mTagWidget->setTagTextFont(tmp_desc->textFont);
 
   mTagWidget->iconButton()->setEnabled( !tmp_desc->tagStatus );
   mTagWidget->iconButton()->setIcon( tmp_desc->iconName );
