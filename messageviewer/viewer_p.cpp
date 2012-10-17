@@ -2624,8 +2624,8 @@ void ViewerPrivate::slotAttachmentEditDone( EditorWatcher* editorWatcher )
       file.close();
 
       mMessageItem.setPayloadFromData( mMessage->encodedContent() );
-      /*Akonadi::ItemModifyJob *job = */new Akonadi::ItemModifyJob( mMessageItem );
-      // FIXME: Check for errors in the job
+      Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob( mMessageItem );
+      connect( job, SIGNAL(result(KJob*)), SLOT(itemModifiedResult(KJob*)) );
     }
   }
   mEditorWatchers.remove( editorWatcher );
