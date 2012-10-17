@@ -64,5 +64,10 @@ void PMailSettings::readIdentity( const KConfigGroup& group )
         const QString email = group.readEntry(emailStr);
         newIdentity->setPrimaryEmailAddress(email);
     }
+    const QString replytoStr = QLatin1String("Default reply-to address                  ");
+    if(group.hasKey(replytoStr)) {
+        const QString reply = group.readEntry(replytoStr);
+        newIdentity->setReplyToAddr(reply);
+    }
     storeIdentity(newIdentity);
 }
