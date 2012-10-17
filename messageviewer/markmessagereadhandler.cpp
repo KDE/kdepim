@@ -53,6 +53,7 @@ void MarkMessageReadHandler::Private::handleMessages()
   item.setFlag( Akonadi::MessageFlags::Seen );
   
   Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( item, q );
+  modifyJob->disableRevisionCheck();
   modifyJob->setIgnorePayload( true );
   sListItem->removeAll(item);
 }
