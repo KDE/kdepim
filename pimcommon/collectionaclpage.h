@@ -33,19 +33,19 @@
 #define COLLECTIONACLPAGE_H
 
 #include <akonadi/collectionpropertiespage.h>
-#include "mailcommon_export.h"
+#include "pimcommon_export.h"
 
 class KPushButton;
 class KHBox;
 
-namespace MailCommon {
+namespace PimCommon {
 class AclManager;
 
 
 /**
  * "Access Control" tab in the folder dialog
  */
-class MAILCOMMON_EXPORT CollectionAclPage : public Akonadi::CollectionPropertiesPage
+class PIMCOMMON_EXPORT CollectionAclPage : public Akonadi::CollectionPropertiesPage
 {
   Q_OBJECT
 
@@ -61,7 +61,7 @@ class MAILCOMMON_EXPORT CollectionAclPage : public Akonadi::CollectionProperties
     void init();
 
   private:
-    MailCommon::AclManager *mAclManager;
+    PimCommon::AclManager *mAclManager;
     // The widget containing the ACL widgets (listview and buttons)
     KHBox* mACLWidget;
 

@@ -318,6 +318,7 @@ else()
   set(MESSAGEVIEWER_SUPPORTED TRUE)
   add_subdirectory(messageviewer)
   macro_optional_add_subdirectory(messagecomposer)
+  add_subdirectory(pimcommon)
   add_subdirectory(mailcommon) # TODO: does this make sense?!?
   add_subdirectory(mailfilteragent)
   macro_optional_add_subdirectory(kmail)

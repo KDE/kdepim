@@ -43,7 +43,6 @@
 #include "expirejob.h"
 #include "foldercollection.h"
 #include "pop3settings.h"
-#include "imapsettings.h"
 #include "mailkernel.h"
 #include "filter/filteractionmissingargumentdialog.h"
 
@@ -89,14 +88,6 @@
 #include <KStandardDirs>
 #include <KTemporaryFile>
 #include <KIO/JobUiDelegate>
-
-OrgKdeAkonadiImapSettingsInterface *MailCommon::Util::createImapSettingsInterface(
-  const QString &ident )
-{
-  return
-    new OrgKdeAkonadiImapSettingsInterface(
-      "org.freedesktop.Akonadi.Resource." + ident, "/Settings", QDBusConnection::sessionBus() );
-}
 
 OrgKdeAkonadiPOP3SettingsInterface *MailCommon::Util::createPop3SettingsInterface(
   const QString &ident )

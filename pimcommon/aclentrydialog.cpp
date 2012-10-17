@@ -33,7 +33,7 @@
 #include <QRadioButton>
 #include <QVBoxLayout>
 
-using namespace MailCommon;
+using namespace PimCommon;
 
 class AclEntryDialog::Private
 {

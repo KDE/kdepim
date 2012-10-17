@@ -20,9 +20,11 @@
 #include "entitycollectionorderproxymodel.h"
 #include "foldertreeview.h"
 #include "foldertreewidgetproxymodel.h"
-#include "imapaclattribute.h"
 #include "mailkernel.h"
 #include "mailutil.h"
+
+#include "pimcommon/imapaclattribute.h"
+#include "pimcommon/pimutil.h"
 
 #include <akonadi_next/quotacolorproxymodel.h>
 
@@ -87,7 +89,7 @@ FolderTreeWidget::FolderTreeWidget(
   FolderTreeWidgetProxyModel::FolderTreeWidgetProxyModelOptions optReadableProxy )
   : QWidget( parent ), d( new FolderTreeWidgetPrivate() )
 {
-  Akonadi::AttributeFactory::registerAttribute<MailCommon::ImapAclAttribute>();
+  Akonadi::AttributeFactory::registerAttribute<PimCommon::ImapAclAttribute>();
 
   d->folderTreeView = new FolderTreeView( xmlGuiClient, this, options & ShowUnreadCount );
   d->folderTreeView->showStatisticAnimation( options & ShowCollectionStatisticAnimation );

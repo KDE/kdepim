@@ -23,7 +23,7 @@
 #include "aclutils_p.h"
 #include "imapaclattribute.h"
 #include "imapsettings.h"
-#include "mailutil.h"
+#include "pimutil.h"
 
 #include <Akonadi/Collection>
 #include <Akonadi/CollectionFetchJob>
@@ -40,7 +40,7 @@
 #include <QAction>
 #include <QItemSelectionModel>
 
-using namespace MailCommon;
+using namespace PimCommon;
 
 class AclModel : public QAbstractListModel
 {
@@ -173,7 +173,7 @@ class AclModel : public QAbstractListModel
     QVector<QPair<QByteArray, KIMAP::Acl::Rights> > mRights;
 };
 
-class MailCommon::AclManager::Private
+class PimCommon::AclManager::Private
 {
   public:
     Private( AclManager *qq )
@@ -319,12 +319,12 @@ class MailCommon::AclManager::Private
       mCollection = collection;
       mChanged = false;
 
-      const MailCommon::ImapAclAttribute *attribute =
-        collection.attribute<MailCommon::ImapAclAttribute>();
+      const PimCommon::ImapAclAttribute *attribute =
+        collection.attribute<PimCommon::ImapAclAttribute>();
       const QMap<QByteArray, KIMAP::Acl::Rights> rights = attribute->rights();
 
       OrgKdeAkonadiImapSettingsInterface *imapSettingsInterface =
-        MailCommon::Util::createImapSettingsInterface( collection.resource() );
+        PimCommon::Util::createImapSettingsInterface( collection.resource() );
 
       QString loginName;
       QString serverName;
@@ -436,8 +436,8 @@ void AclManager::save()
 
   d->mChanged = false;
 
-  MailCommon::ImapAclAttribute *attribute =
-    d->mCollection.attribute<MailCommon::ImapAclAttribute>();
+  PimCommon::ImapAclAttribute *attribute =
+    d->mCollection.attribute<PimCommon::ImapAclAttribute>();
 
   QMap<QByteArray, KIMAP::Acl::Rights> newRights;
 

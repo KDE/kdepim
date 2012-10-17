@@ -22,7 +22,7 @@
 
 #include <KIMAP/Acl>
 
-namespace MailCommon {
+namespace PimCommon {
 
 namespace AclUtils {
 

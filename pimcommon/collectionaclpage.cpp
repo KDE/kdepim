@@ -44,7 +44,7 @@
 #include <QListView>
 #include <QPushButton>
 
-using namespace MailCommon;
+using namespace PimCommon;
 /**
  * Unfortunately QPushButton doesn't support to plug in
  * a QAction like QToolButton does, so we have to reimplement it :(
@@ -94,10 +94,10 @@ class ActionButton : public QPushButton
 
 CollectionAclPage::CollectionAclPage( QWidget *parent )
   : CollectionPropertiesPage( parent ),
-    mAclManager( new MailCommon::AclManager( this ) ),
+    mAclManager( new PimCommon::AclManager( this ) ),
     mChanged( false )
 {
-  setObjectName( QLatin1String( "MailCommon::CollectionAclPage" ) );
+  setObjectName( QLatin1String( "PimCommon::CollectionAclPage" ) );
 
   setPageTitle( i18n( "Access Control" ) );
   init();
@@ -133,7 +133,7 @@ void CollectionAclPage::init()
 
 bool CollectionAclPage::canHandle( const Akonadi::Collection &collection ) const
 {
-  return collection.hasAttribute<MailCommon::ImapAclAttribute>();
+  return collection.hasAttribute<PimCommon::ImapAclAttribute>();
 }
 
 void CollectionAclPage::load( const Akonadi::Collection &collection )
@@ -147,7 +147,7 @@ void CollectionAclPage::save( Akonadi::Collection &collection )
 
   // The collection dialog expects the changed collection to run
   // its own ItemModifyJob, so make him happy...
-  MailCommon::ImapAclAttribute *attribute = mAclManager->collection().attribute<MailCommon::ImapAclAttribute>();
+  PimCommon::ImapAclAttribute *attribute = mAclManager->collection().attribute<PimCommon::ImapAclAttribute>();
   collection.addAttribute( attribute->clone() ); ;
 }
 
