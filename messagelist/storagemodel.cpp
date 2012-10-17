@@ -363,6 +363,7 @@ void StorageModel::setMessageItemStatus( MessageList::Core::MessageItem *mi,
   Item item = itemForRow( row );
   item.setFlags( status.statusFlags() );
   ItemModifyJob *job = new ItemModifyJob( item, this );
+  job->disableRevisionCheck();
   job->setIgnorePayload( true );
 }
 
