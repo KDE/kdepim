@@ -34,6 +34,9 @@
 
 #include "libkdepim/uistatesaver.h"
 
+#include <pimcommon/collectionaclpage.h>
+#include <pimcommon/imapaclattribute.h>
+
 #include <Akonadi/ETMViewStateSaver>
 #include <Akonadi/CollectionFilterProxyModel>
 #include <Akonadi/CollectionModel>
@@ -42,6 +45,8 @@
 #include <Akonadi/EntityTreeView>
 #include <Akonadi/ItemView>
 #include <Akonadi/MimeTypeChecker>
+#include <Akonadi/AttributeFactory>
+#include <Akonadi/CollectionPropertiesDialog>
 #include <Akonadi/Contact/ContactDefaultActions>
 #include <Akonadi/Contact/ContactEditorDialog>
 #include <Akonadi/Contact/ContactGroupEditorDialog>
@@ -127,6 +132,7 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   : QWidget( parent ), mAllContactsModel( 0 ), mXmlGuiClient( guiClient )
 {
   mXXPortManager = new XXPortManager( this );
+  Akonadi::AttributeFactory::registerAttribute<PimCommon::ImapAclAttribute>();
 
   setupGui();
   setupActions( guiClient->actionCollection() );
@@ -259,10 +265,17 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   Q_FOREACH( Akonadi::StandardContactActionManager::Type contactAction, contactActions ) {
     mActionManager->createAction( contactAction );
   }
+    static bool pageRegistered = false;
+
+  if ( !pageRegistered ) {
+    Akonadi::CollectionPropertiesDialog::registerPage( new PimCommon::CollectionAclPageFactory );
+    pageRegistered = true;
+  }
 
   const QStringList pages =
       QStringList() << QLatin1String( "Akonadi::CollectionGeneralPropertiesPage" )
-                    << QLatin1String( "Akonadi::CachePolicyPage" );
+                    << QLatin1String( "Akonadi::CachePolicyPage" )
+                    << QLatin1String( "PimCommon::CollectionAclPage" );
 
   mActionManager->setCollectionPropertiesPageNames( pages );
 

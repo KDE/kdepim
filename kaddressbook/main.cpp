@@ -46,7 +46,7 @@ int main( int argc, char **argv )
   KGlobal::locale()->insertCatalog( "libakonadi" );
   KGlobal::locale()->insertCatalog( "kabcakonadi" );
   KGlobal::locale()->insertCatalog( "akonadicontact" );
-
+  KGlobal::locale()->insertCatalog( "libpimcommon" );
   MainWindow *window = new MainWindow;
   window->show();
 
