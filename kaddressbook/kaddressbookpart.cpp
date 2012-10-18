@@ -47,6 +47,7 @@ KAddressBookPart::KAddressBookPart( QWidget *parentWidget, QObject *parent,
   KGlobal::locale()->insertCatalog( "libakonadi" );
   KGlobal::locale()->insertCatalog( "kabcakonadi" );
   KGlobal::locale()->insertCatalog( "akonadicontact" );
+  KGlobal::locale()->insertCatalog( "libpimcommon" );
 
   KIconLoader::global()->addAppDir( "kaddressbook" );
   // create a canvas to insert our widget
