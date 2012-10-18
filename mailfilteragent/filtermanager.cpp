@@ -223,14 +223,6 @@ void FilterManager::Private::modifyJobResult( KJob *job )
   if ( job->error() ) {
     kError() << "Error while modifying items. " << job->error() << job->errorString();
     KMessageBox::error(qApp->activeWindow(), job->errorString(), i18n("Error applying mail filter modifications"));
-  } else {
-    Akonadi::ItemModifyJob *modifyJob = qobject_cast<Akonadi::ItemModifyJob*>( job );
-
-    const Akonadi::Collection collection = job->property( "moveTargetCollection" ).value<Akonadi::Collection>();
-    if ( collection.isValid() ) {
-      Akonadi::ItemMoveJob *moveJob = new Akonadi::ItemMoveJob( modifyJob->item(), collection, q );
-      q->connect( moveJob, SIGNAL(result(KJob*)), SLOT(moveJobResult(KJob*)) );
-    }
   }
 }
 
@@ -443,43 +435,39 @@ bool FilterManager::processContextItem( ItemContext context, bool emitSignal, in
 
     const bool itemCanDelete = (MailCommon::Util::updatedCollection(context.item().parentCollection()).rights() & Akonadi::Collection::CanDeleteItem);
     if ( context.deleteItem() ) {
-      if(itemCanDelete){
+      if ( itemCanDelete ){
         Akonadi::ItemDeleteJob *deleteJob = new Akonadi::ItemDeleteJob( context.item(), this );
         connect( deleteJob, SIGNAL(result(KJob*)), SLOT(deleteJobResult(KJob*)));
+      } else {
+        return false;
       }
-    } else if ( context.needsPayloadStore() ) {
-        Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( context.item(), this );
-        //The below is a safety check to ignore modifying payloads if it was not requested,
-        //as in that case we might change the payload to an invalid one
-        modifyJob->setIgnorePayload( !context.needsFullPayload() );
-        if(itemCanDelete) {
-          modifyJob->setProperty( "moveTargetCollection", QVariant::fromValue( context.moveTargetCollection() ) );
-        }
-        connect( modifyJob, SIGNAL(result(KJob*)), SLOT(modifyJobResult(KJob*)));
-    } else if ( context.needsFlagStore() ) {
-        Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( context.item(), this );
-        modifyJob->disableRevisionCheck();
-        //The below is a safety check to ignore modifying payloads if it was not requested,
-        //as in that case we might change the payload to an invalid one
-        modifyJob->setIgnorePayload( !context.needsFullPayload() );
-        if(itemCanDelete) {
-          modifyJob->setProperty( "moveTargetCollection", QVariant::fromValue( context.moveTargetCollection() ) );
-          modifyJob->setIgnorePayload( true );
-        }
-        connect( modifyJob, SIGNAL(result(KJob*)), SLOT(modifyJobResult(KJob*)));
     } else {
-        if ( context.moveTargetCollection().isValid() ) {
-            if( context.item().storageCollectionId() != context.moveTargetCollection().id() && itemCanDelete ) {
-                Akonadi::ItemMoveJob *moveJob = new Akonadi::ItemMoveJob( context.item(), context.moveTargetCollection(), this );
-                connect( moveJob, SIGNAL(result(KJob*)), SLOT(moveJobResult(KJob*)) );
-            }
-            else {
-                if( emitSignal )
-                    emit itemNotMoved( context.item() );
-                result = 1;
-                return true;
-            }
-        }
+      if ( context.moveTargetCollection().isValid() && context.item().storageCollectionId() != context.moveTargetCollection().id() ) {
+          if ( itemCanDelete  ) {
+            Akonadi::ItemMoveJob *moveJob = new Akonadi::ItemMoveJob( context.item(), context.moveTargetCollection(), this );
+            connect( moveJob, SIGNAL(result(KJob*)), SLOT(moveJobResult(KJob*)) );
+          } else {
+            if ( emitSignal )
+              emit itemNotMoved( context.item() );
+            return false;
+          }
+      }
+      if ( context.needsPayloadStore() || context.needsFlagStore() ) {
+          Akonadi::Item item = context.item();
+          //the item might be in a new collection with a different remote id, so don't try to force on it
+          //the previous remote id. Example: move to another collection on another resource => new remoteId, but our context.item()
+          //remoteid still holds the old one. Without clearing it, we try to enforce that on the new location, which is
+          //anything but good (and the server replies with "NO Only resources can modify remote identifiers"
+          item.setRemoteId(QString());
+          Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( item, this );
+          if ( !context.needsPayloadStore() ) {
+            modifyJob->disableRevisionCheck(); //no conflict handling for flags is needed
+          }
+          //The below is a safety check to ignore modifying payloads if it was not requested,
+          //as in that case we might change the payload to an invalid one
+          modifyJob->setIgnorePayload( !context.needsFullPayload() );
+          connect( modifyJob, SIGNAL(result(KJob*)), SLOT(modifyJobResult(KJob*)));
+      }
     }
 
     return false;
