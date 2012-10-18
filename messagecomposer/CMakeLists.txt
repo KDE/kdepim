@@ -69,6 +69,7 @@ set( messagecomposer_src
      autocorrection/import/importkmailautocorrection.cpp
      autocorrection/import/importabstractautocorrection.cpp
      selectspecialchar.cpp
+     autoimageresizing/autoimageresizing.cpp
 )
 
 kde4_add_ui_files(messagecomposer_src

@@ -18,14 +18,21 @@
 #ifndef AUTOIMAGERESIZING_H
 #define AUTOIMAGERESIZING_H
 
-#include <QObject>
+#include <KDialog>
 
-class AutoImageResizing
+namespace MessageComposer {
+
+class AutoImageResizing : public KDialog
 {
   Q_OBJECT
 public:
-  explicit AutoImageResizing();
+  explicit AutoImageResizing(QWidget *parent);
   ~AutoImageResizing();
+
+private Q_SLOTS:
+  void slotUser1();
+
 };
+}
 
 #endif // AUTOIMAGERESIZING_H

@@ -16,14 +16,28 @@
 */
 
 #include "autoimageresizing.h"
+#include <KLocale>
 
-AutoImageResizing::AutoImageResizing()
+using namespace MessageComposer;
+
+AutoImageResizing::AutoImageResizing(QWidget *parent)
+    :KDialog(parent)
 {
+  setCaption( i18nc("@title:window", "Resize Image") );
+  setButtons( User1 | Cancel );
+  setDefaultButton( User1 );
+  setModal( false );
+  setButtonText( User1, i18nc("@action:button","Resize") );
+  connect( this, SIGNAL(user1Clicked()), this, SLOT(slotUser1()) );
 }
 
 AutoImageResizing::~AutoImageResizing()
 {
 }
 
+void AutoImageResizing::slotUser1()
+{
+
+}
 
 #include "autoimageresizing.moc"
