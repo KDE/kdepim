@@ -1007,6 +1007,7 @@ void MainView::markImportant( bool checked )
   item.setFlags( status.statusFlags() );
 
   ItemModifyJob *job = new ItemModifyJob( item );
+  job->disableRevisionCheck();
   job->setIgnorePayload( true );
   connect( job, SIGNAL(result(KJob*)), SLOT(modifyDone(KJob*)) );
 }
@@ -1030,6 +1031,7 @@ void MainView::markMailTask( bool checked )
   item.setFlags( status.statusFlags() );
 
   ItemModifyJob *job = new ItemModifyJob( item );
+  job->disableRevisionCheck();
   job->setIgnorePayload( true );
   connect( job, SIGNAL(result(KJob*)), SLOT(modifyDone(KJob*)) );
 }

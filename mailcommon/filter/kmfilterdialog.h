@@ -138,7 +138,7 @@ class MAILCOMMON_EXPORT KMFilterListBox : public QGroupBox
      */
     QList<MailCommon::MailFilter *> filtersForSaving( bool closeAfterSaving ) const;
 
-    QStringList selectedFilterId( SearchRule::RequiredPart &requiredPart ) const;
+    QStringList selectedFilterId( SearchRule::RequiredPart &requiredPart, const QString& resource ) const;
 
   signals:
     /**

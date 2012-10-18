@@ -262,7 +262,15 @@ void Calendar::Private::updateItem( const Akonadi::Item &item, UpdateMode mode )
   const Akonadi::Item::Id id = item.id();
 
   const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( item );
-  Q_ASSERT( incidence );
+
+  if ( !incidence ) {
+    kError() << "Incidence is null. id=" << item.id()
+             << "; hasPayload()=" << item.hasPayload()
+             << "; has incidence=" << item.hasPayload<KCalCore::Incidence::Ptr>()
+             << "; mime type="    << item.mimeType();
+    Q_ASSERT( false );
+    return;
+  }
 
   if ( m_uidToItemId.contains( incidence->uid() ) && !alreadyExisted ) {
     // We only allow duplicate UIDs if they have the same item id, for example

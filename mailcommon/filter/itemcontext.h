@@ -43,7 +43,7 @@ class MAILCOMMON_EXPORT ItemContext
      * Creates an item context for the given @p item.
      * @p requestedPart the part requested for the item (Envelope, Header or CompleteMessage)
      */
-    ItemContext( const Akonadi::Item &item, SearchRule::RequiredPart requestedPart );
+    ItemContext( const Akonadi::Item &item, bool needsFullPayload );
 
     /**
      * Returns the item of the context.
@@ -94,7 +94,7 @@ class MAILCOMMON_EXPORT ItemContext
     bool mNeedsPayloadStore;
     bool mNeedsFlagStore;
     bool mDeleteItem;
-    SearchRule::RequiredPart mRequestedPart;
+    bool mNeedsFullPayload;
 };
 
 }

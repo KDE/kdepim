@@ -104,7 +104,7 @@ FilterActionDict* FilterManager::filterActionDict()
 FilterManager::FilterManager()
   : d( new Private( this ) )
 {
-  qDBusRegisterMetaType<QVector<qlonglong> >();
+  qDBusRegisterMetaType<QList<qint64> >();
   Akonadi::ServerManager::State state = Akonadi::ServerManager::self()->state();
   if(state == Akonadi::ServerManager::Running) {
     d->readConfig();
@@ -137,14 +137,9 @@ void FilterManager::showFilterLogDialog(qlonglong windowId)
   d->mMailFilterAgentInterface->showFilterLogDialog(windowId);
 }
 
-void FilterManager::filter( const Akonadi::Item &item, const QString &identifier ) const
+void FilterManager::filter( const Akonadi::Item &item, const QString &identifier, const QString &resourceId ) const
 {
-  d->mMailFilterAgentInterface->filter( item.id(), identifier, 0 /*FilterManager::FilterRequires::Unknown*/ );
-}
-
-void FilterManager::filter(const qlonglong& id, const QString& identifier, SearchRule::RequiredPart requiredPart) const
-{
-  d->mMailFilterAgentInterface->filter( id, identifier, static_cast<int>(requiredPart) );
+  d->mMailFilterAgentInterface->filter( item.id(), identifier, resourceId );
 }
 
 void FilterManager::filter( const Akonadi::Item &item, FilterSet set, bool account, const QString &resourceId ) const
@@ -152,9 +147,9 @@ void FilterManager::filter( const Akonadi::Item &item, FilterSet set, bool accou
   d->mMailFilterAgentInterface->filterItem( item.id(), static_cast<int>(set), account ? resourceId : QString() );
 }
 
-void FilterManager::filter( const Akonadi::Item::List &messages, FilterSet set ) const
+void FilterManager::filter( const Akonadi::Item::List& messages, FilterManager::FilterSet set ) const
 {
-  QVector<qlonglong> itemIds;
+  QList<qint64> itemIds;
 
   foreach ( const Akonadi::Item &item, messages )
     itemIds << item.id();
@@ -165,17 +160,11 @@ void FilterManager::filter( const Akonadi::Item::List &messages, FilterSet set )
 
 void FilterManager::filter(const Akonadi::Item::List& messages, SearchRule::RequiredPart requiredPart, const QStringList& listFilters) const
 {
-    QVector<qlonglong> itemIds;
+    QList<qint64> itemIds;
 
     foreach ( const Akonadi::Item &item, messages )
       itemIds << item.id();
     d->mMailFilterAgentInterface->applySpecificFilters( itemIds, static_cast<int>(requiredPart), listFilters);
-}
-
-
-void FilterManager::filter( const QVector<qlonglong> &itemIds, FilterSet set ) const
-{
-  d->mMailFilterAgentInterface->filterItems( itemIds, static_cast<int>(set) );
 }
 
 void FilterManager::setFilters( const QList<MailCommon::MailFilter*> &filters )

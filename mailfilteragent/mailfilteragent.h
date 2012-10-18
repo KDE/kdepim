@@ -23,6 +23,8 @@
 #include <akonadi/agentbase.h>
 
 #include "mailcommon/searchpattern.h"
+#include <Akonadi/Collection>
+#include <akonadi/item.h>
 
 namespace Akonadi {
 class Monitor;
@@ -43,11 +45,11 @@ class MailFilterAgent : public Akonadi::AgentBase, public Akonadi::AgentBase::Ob
     void itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection );
 
     QString createUniqueName( const QString &nameTemplate );
-    void filterItems( const QVector<qlonglong> &items, int filterSet );
+    void filterItems( const QList< qint64 >& itemIds, int filterSet );
 
-    void filterItem( qlonglong item, int filterSet, const QString &resourceId );
-    void filter( qlonglong item, const QString &filterIdentifier, int requires );
-    void applySpecificFilters( const QVector<qlonglong> &itemIds, int requires, const QStringList& listFilters );
+    void filterItem( qint64 item, int filterSet, const QString &resourceId );
+    void filter( qint64 item, const QString &filterIdentifier, const QString &resourceId );
+    void applySpecificFilters( const QList< qint64 >& itemIds, int requires, const QStringList& listFilters );
 
     void reload();
 
@@ -61,13 +63,13 @@ class MailFilterAgent : public Akonadi::AgentBase, public Akonadi::AgentBase::Ob
     void mailCollectionRemoved( const Akonadi::Collection& collection );
     void emitProgress(int percent = 0);
     void emitProgressMessage(const QString &message);
+    void itemsReceiviedForFiltering( const Akonadi::Item::List &items );
 
   private:
     Akonadi::Monitor *m_collectionMonitor;
     FilterManager *m_filterManager;
 
     FilterLogDialog *m_filterLogDialog;
-    MailCommon::SearchRule::RequiredPart mRequestedPart;
     QTimer *mProgressTimer;
     int mProgressCounter;
 };

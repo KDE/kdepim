@@ -93,7 +93,7 @@ KMComposerAutoCorrectionWidget::KMComposerAutoCorrectionWidget(QWidget *parent) 
   act->setData( QVariant::fromValue( KMComposerAutoCorrectionWidget::LibreOffice ) );
   menu->addAction( act );
 
-  act = new QAction( i18n( "KMail Autocorrection" ), this );
+  act = new QAction( i18n( "KMail/Calligra Autocorrection" ), this );
   act->setData( QVariant::fromValue( KMComposerAutoCorrectionWidget::KMail ) );
   menu->addAction( act );
 
