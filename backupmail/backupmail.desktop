@@ -30,7 +30,6 @@ Name[x-test]=xxBackup Mailxx
 Name[zh_TW]=備份郵件
 Exec=backupmail
 Type=Application
-NoDisplay=true
 Comment=Backup Mail allows to save all data from kmail and restore them in other system.
 Comment[ca]=La còpia de seguretat de correu us permet desar totes les dades del KMail i restaura-les en un altre sistema.
 Comment[da]=Backup af e-mails lader dig gemme alle data fra KMail og genskabe dem på et andet system.
