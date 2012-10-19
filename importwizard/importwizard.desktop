@@ -31,7 +31,6 @@ Name[x-test]=xxImport Wizardxx
 Name[zh_TW]=匯入精靈
 Exec=importwizard
 Type=Application
-NoDisplay=true
 Icon=kontact-import-wizard
 Comment=Launch the import wizard to migrate data from mailer as thunderbird/evolution etc.
 Comment[ca]=Engega l'assistent d'importació per migrar les dades dels agents de correus com el Thunderbird/Evolution etc.

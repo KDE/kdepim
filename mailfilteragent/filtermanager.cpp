@@ -455,6 +455,8 @@ bool FilterManager::processContextItem( ItemContext context )
             Akonadi::ItemMoveJob *moveJob = new Akonadi::ItemMoveJob( context.item(), context.moveTargetCollection(), this );
             connect( moveJob, SIGNAL(result(KJob*)), SLOT(moveJobResult(KJob*)) );
           } else {
+            if ( emitSignal )
+              emit itemNotMoved( context.item() );
             return false;
           }
       }
