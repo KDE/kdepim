@@ -1,4 +1,17 @@
 
+Friday 19 October 2012
+
+Problems addressed
+------------------
+
+* kolab/issue4796: Use folder-specific sender-identity as organizer-identity for new events/to-dos (rt#10104)
+* kolab/issue4810: Event is displayed twice after attendee accepts invitation (rt#10106)
+* kolab/issue4852: Monthview Freezes for incidences with invalid startdate and recurrence (RT#10121)
+* kolab/issue4855: Korganizer crashes on archive old entries (KCal::ResourceKolab::deleteIncidence) (rt#10176)
+* kolab/issue4856: Kontact crashed after delegate by not-attendee user (rt#10173)
+
+
+
 Friday 10 August 2012
 
 Problems addressed
