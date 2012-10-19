@@ -672,9 +672,9 @@ void AddresseeLineEdit::Private::akonadiPerformSearch()
   // FIXME: ContainsMatch is broken, even though it creates the correct SPARQL query, so use
   //        StartsWith for now
                       //Akonadi::ContactGroupSearchJob::ContainsMatch );
-  q->connect( contactJob, SIGNAL(result(KJob*)),
+  q->connect( contactJob, SIGNAL(finished(KJob*)),
               q, SLOT(slotAkonadiSearchResult(KJob*)) );
-  q->connect( groupJob, SIGNAL(result(KJob*)),
+  q->connect( groupJob, SIGNAL(finished(KJob*)),
               q, SLOT(slotAkonadiSearchResult(KJob*)) );
   s_static->akonadiJobsInFlight.insert( contactJob );
   s_static->akonadiJobsInFlight.insert( groupJob );
