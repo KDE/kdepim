@@ -11,6 +11,9 @@ add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
 
 add_subdirectory( tests )
+if(Grantlee_FOUND)
+  add_definitions(-DGRANTLEE_FOUND)
+endif()
 
 set( messagecomposer_src
 
@@ -101,6 +104,11 @@ kde4_add_kcfg_files(messagecomposer_src
 kde4_add_library( messagecomposer ${LIBRARY_TYPE} ${messagecomposer_src} )
 target_link_libraries( messagecomposer ${KDE4_KIO_LIBS} ${KDEPIMLIBS_KMIME_LIBS} ${KDEPIMLIBS_AKONADI_KMIME_LIBS} ${KDEPIMLIBS_AKONADI_LIBS} ${KDEPIMLIBS_MAILTRANSPORT_LIBS} ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS} ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
  messagecore messageviewer templateparser kleo kdepim ${QGPGME_LIBRARIES} )
+
+if(Grantlee_FOUND)
+target_link_libraries( messagecomposer ${Grantlee_GUI_LIBRARIES})
+endif()
+
 set_target_properties( messagecomposer PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 
 install( TARGETS messagecomposer ${INSTALL_TARGETS_DEFAULT_ARGS} )
