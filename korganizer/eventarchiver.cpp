@@ -162,8 +162,15 @@ void EventArchiver::deleteIncidences( Calendar* calendar, const QDate& limitDate
     if (result != KMessageBox::Continue)
       return;
   }
+  // Delete events from calendar
+  QValueList<Incidence*> deletedIncidences; /* Possible fix for issue4855 */
   for( it = incidences.begin(); it != incidences.end(); ++it ) {
-    calendar->deleteIncidence( *it );
+    if ( !deletedIncidences.contains( *it ) ) {
+      calendar->deleteIncidence( *it );
+      deletedIncidences << *it;
+    } else {
+      kdWarning(5850) << "EventArchiver::deleteIncidences(): Tried to delete the same incidence twice!" << endl;
+    }
   }
   emit eventsDeleted();
 }
@@ -243,8 +250,14 @@ void EventArchiver::archiveIncidences( Calendar* calendar, const QDate& /*limitD
   KIO::NetAccess::removeTempFile(archiveFile);
 
   // Delete archived events from calendar
+  QValueList<Incidence*> deletedIncidences; /* Possible fix for issue4855 */
   for( it = incidences.begin(); it != incidences.end(); ++it ) {
-    calendar->deleteIncidence( *it );
+    if ( !deletedIncidences.contains( *it ) ) {
+      calendar->deleteIncidence( *it );
+      deletedIncidences << *it;
+    } else {
+      kdWarning(5850) << "EventArchiver::archiveEvents(): Tried to delete the same incidence twice!" << endl;
+    }
   }
   emit eventsDeleted();
 }
