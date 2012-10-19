@@ -553,6 +553,9 @@ void ResourceKolab::resolveConflict( KCal::Incidence *remoteIncidence,
     } else if ( chosenIncidence == 0 ) { // Take Both
       addedIncidence->setSummary( i18n("Copy of: %1").arg( addedIncidence->summary() ) );
       addedIncidence->setUid( CalFormat::createUniqueId() );
+      mUidsPendingDeletion.append( origUid );
+      sendKMailUpdate( addedIncidence, subresource, sernum, /*force=*/true, /*uidChanged=*/true );
+      return;
     }
 
     mUidsPendingDeletion.append( origUid );
@@ -579,7 +582,7 @@ void ResourceKolab::addIncidence( const char* mimetype, const QString& data,
 
 
 bool ResourceKolab::sendKMailUpdate( KCal::IncidenceBase* incidencebase, const QString& subresource,
-                                     Q_UINT32 sernum, bool forceTellKMail )
+                                     Q_UINT32 sernum, bool forceTellKMail, bool uidChanged )
 {
   const QString& type = incidencebase->type();
   const char* mimetype = 0;
@@ -660,9 +663,23 @@ bool ResourceKolab::sendKMailUpdate( KCal::IncidenceBase* incidencebase, const Q
   QString subject = incidencebase->uid();
   if ( !isXMLStorageFormat ) subject.prepend( "iCal " ); // conform to the old style
 
+  if ( mOriginalUID2fakeUID.contains( qMakePair( incidence->schedulingID(), subresource ) ) ) {
+    // When we dance the internal UID Tango the UID differs from the subject until the next update
+    kdDebug(5006) << "Updating fake uid: " << incidence->uid() << endl
+                  << "For incidence: " << incidence->schedulingID() << endl;
+    uidChanged = true;
+  }
+
   // behold, sernum is an in-parameter
   //kdDebug() << "DEBUG with " << subject << incidence->uid() << incidence->schedulingID()
   //          << endl;
+
+  if ( uidChanged ) {
+    // XXX This is a hack to avoid changing the dcop interface to kmail. We piggy back on the
+    // headers to tell Kmail that we actually want to change the UID with this update to
+    // avoid a false positive on the subject <> uid safety check.
+    customHeaders.insert( "X-KDE-internal-uidChanged", "true" );
+  }
 
   const bool rc = kmailUpdate( forceTellKMail, subresource, sernum, data, mimetype, subject,
                                customHeaders, attURLs, attMimeTypes, attNames, deletedAtts );

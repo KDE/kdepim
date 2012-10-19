@@ -217,7 +217,7 @@ private:
   Kolab::ResourceMap* subResourceMap( const QString& contentsType );
 
   bool sendKMailUpdate( KCal::IncidenceBase* incidence, const QString& _subresource,
-                        Q_UINT32 sernum, bool forceTellKMail = false );
+                        Q_UINT32 sernum, bool forceTellKMail = false, bool uidChanged = false);
 
 
   KCal::CalendarLocal mCalendar;

@@ -847,9 +847,16 @@ Q_UINT32 KMailICalIfaceImpl::update( const QString& resource,
 
   f->open( "ifaceupdate" );
 
+  bool checkSubject = true;
+
+  if (  customHeaders.contains( "X-KDE-internal-uidChanged" ) ) {
+    // We use the customHeaders for IPC...
+    checkSubject = false;
+  }
+
   KMMessage* msg = 0;
   if ( sernum != 0 ) {
-    if ( storageFormat( f ) == StorageXML ) {
+    if ( storageFormat( f ) == StorageXML && checkSubject ) {
       msg = findMessageBySerNum( sernum, f, subject );
     } else {
       msg = findMessageBySerNum( sernum, f );
@@ -860,8 +867,10 @@ Q_UINT32 KMailICalIfaceImpl::update( const QString& resource,
     newMsg->setSubject( subject );
     QMap<QCString, QString>::ConstIterator ith = customHeaders.begin();
     const QMap<QCString, QString>::ConstIterator ithEnd = customHeaders.begin();
-    for ( ; ith != ithEnd ; ++ith )
-      newMsg->setHeaderField( ith.key(), ith.data() );
+    for ( ; ith != ithEnd ; ++ith ) {
+      if ( checkSubject == false && ith.key() != "X-KDE-internal-uidChanged" )
+        newMsg->setHeaderField( ith.key(), ith.data() );
+    }
     newMsg->setParent( 0 ); // workaround strange line in KMMsgBase::assign. newMsg is not in any folder yet.
     // Note that plainTextBody isn't used in this branch. We assume it's still valid from when the mail was created.
 
@@ -1389,8 +1398,10 @@ KMMessage *KMailICalIfaceImpl::findMessageBySerNum( Q_UINT32 serNum, KMFolder* f
   } else {
     if( aFolder )
       message = aFolder->getMsg( index );
-    if (!message)
+    if (!message) {
       kdWarning(5006) << "findMessageBySerNum( " << serNum << " ) invalid serial number\n" << endl;
+      return 0;
+    }
   }
 
   // The Following code is aimed to avoid incidence loss where the
@@ -1420,10 +1431,15 @@ KMMessage *KMailICalIfaceImpl::findMessageBySerNum( Q_UINT32 serNum, KMFolder* f
           // This can't happen,..
           kdWarning(5006) << "Folder is not a cached IMAP folder" << endl;
         }
+        if ( corruptionDialogShown ) {
+          // Only cry once
+          return 0;
+        }
         const QString errMsg = i18n("<qt>Kontact has detected a corruption in the folder: <br/> %1 <br/>"
                                     "Your current changes could not be saved.<br/><br/>"
                                     "It is <b>strongly</b> recommended that you restart Kontact now.<br/>"
                                     "Quit now?</qt>").arg(folder->prettyURL());
+        corruptionDialogShown = true;
         if ( KMessageBox::warningYesNo( 0, errMsg, i18n("Invalid state detected") ) == KMessageBox::Yes ) {
           qApp->quit();
         } else {

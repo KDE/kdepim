@@ -84,6 +84,8 @@ public:
 
 }
 
+static bool corruptionDialogShown = false;
+
 /** The implementation of the interface. */
 class KMailICalIfaceImpl : public QObject, virtual public KMailICalIface {
   Q_OBJECT
