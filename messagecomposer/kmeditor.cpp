@@ -763,7 +763,7 @@ bool KMeditor::replaceSignature( const KPIMIdentities::Signature &oldSig,
 
 void KMeditor::fillComposerTextPart ( TextPart* textPart ) const
 {
-#ifdef 0//GRANTLEE_FOUND
+#if 0//GRANTLEE_FOUND
   if( isFormattingUsed() ) {
     Grantlee::PlainTextMarkupBuilder *pb = new Grantlee::PlainTextMarkupBuilder();
 
