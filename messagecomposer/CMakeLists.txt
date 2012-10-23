@@ -13,6 +13,7 @@ add_definitions( -DQT_NO_CAST_TO_ASCII )
 add_subdirectory( tests )
 if(Grantlee_FOUND)
   add_definitions(-DGRANTLEE_FOUND)
+  include_directories(${Grantlee_INCLUDE_DIRS})
 endif()
 
 set( messagecomposer_src
