@@ -57,7 +57,7 @@ QML.Rectangle {
     anchors.topMargin: 20
     anchors.right: parent.right
     width: 150
-    buttonText: KDE.i18n( "Ok" )
+    buttonText: KDE.i18n( "OK" )
     onClicked: {
       configWidget.save();
       guiStateManager.popState()
