@@ -211,6 +211,7 @@ K_GLOBAL_STATIC( KMMainWidget::PtrList, theMainWidgetList )
   KMMainWidget::KMMainWidget( QWidget *parent, KXMLGUIClient *aGUIClient,
                               KActionCollection *actionCollection, KSharedConfig::Ptr config ) :
     QWidget( parent ),
+    mMoveMsgToFolderAction(0),
     mCollectionProperties( 0 ),
     mFavoriteCollectionsView( 0 ),
     mMsgView( 0 ),
@@ -256,8 +257,8 @@ K_GLOBAL_STATIC( KMMainWidget::PtrList, theMainWidgetList )
 
   readPreConfig();
   createWidgets();
-
   setupActions();
+
 
   readConfig();
 
@@ -1099,25 +1100,6 @@ void KMMainWidget::createWidgets()
   connect( mMessagePane, SIGNAL(statusMessage(QString)),
            BroadcastStatus::instance(), SLOT(setStatusMsg(QString)) );
 
-  {
-    KAction *action = new KAction( i18n("Set Focus to Quick Search"), this );
-    action->setShortcut( QKeySequence( Qt::ALT + Qt::Key_Q ) );
-    actionCollection()->addAction( "focus_to_quickseach", action );
-    connect( action, SIGNAL(triggered(bool)),
-             SLOT(slotFocusQuickSearch()) );
-  }
-
-  mPreviousMessageAction = new KAction( i18n( "Extend Selection to Previous Message" ), this );
-  mPreviousMessageAction->setShortcut( QKeySequence( Qt::SHIFT + Qt::Key_Left ) );
-  actionCollection()->addAction( "previous_message", mPreviousMessageAction );
-  connect( mPreviousMessageAction, SIGNAL(triggered(bool)),
-           this, SLOT(slotExtendSelectionToPreviousMessage()) );
-
-  mNextMessageAction = new KAction( i18n( "Extend Selection to Next Message" ), this );
-  mNextMessageAction->setShortcut( QKeySequence( Qt::SHIFT + Qt::Key_Right ) );
-  actionCollection()->addAction( "next_message", mNextMessageAction );
-  connect( mNextMessageAction, SIGNAL(triggered(bool)),
-           this, SLOT(slotExtendSelectionToNextMessage()) );
 
   //
   // Create the reader window
@@ -1240,10 +1222,6 @@ void KMMainWidget::createWidgets()
     mAkonadiStandardActionManager->createAction( mailAction );
   }
 
-
-
-
-
   mAkonadiStandardActionManager->interceptAction( Akonadi::StandardActionManager::CollectionProperties );
   connect( mAkonadiStandardActionManager->action( Akonadi::StandardActionManager::CollectionProperties ), SIGNAL(triggered(bool)), this, SLOT(slotCollectionProperties()) );
 
@@ -1254,77 +1232,6 @@ void KMMainWidget::createWidgets()
   mAkonadiStandardActionManager->action( Akonadi::StandardMailActionManager::RemoveDuplicates )->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_Asterisk ) );
   {
     mCollectionProperties = mAkonadiStandardActionManager->action( Akonadi::StandardActionManager::CollectionProperties );
-  }
-  {
-    mMoveMsgToFolderAction = new KAction( i18n("Move Message to Folder"), this );
-    mMoveMsgToFolderAction->setShortcut( QKeySequence( Qt::Key_M ) );
-    actionCollection()->addAction( "move_message_to_folder", mMoveMsgToFolderAction );
-    connect( mMoveMsgToFolderAction, SIGNAL(triggered(bool)),
-             SLOT(slotMoveSelectedMessageToFolder()) );
-  }
-  {
-    KAction *action = new KAction( i18n("Copy Message to Folder"), this );
-    actionCollection()->addAction( "copy_message_to_folder", action );
-    connect( action, SIGNAL(triggered(bool)),
-             SLOT(slotCopySelectedMessagesToFolder()) );
-    action->setShortcut( QKeySequence( Qt::Key_C ) );
-  }
-  {
-    KAction *action = new KAction( i18n("Jump to Folder..."), this );
-    actionCollection()->addAction( "jump_to_folder", action );
-    connect( action, SIGNAL(triggered(bool)),
-             SLOT(slotJumpToFolder()) );
-    action->setShortcut( QKeySequence( Qt::Key_J ) );
-  }
-  {
-    KAction *action = new KAction(i18n("Abort Current Operation"), this);
-    actionCollection()->addAction("cancel", action );
-    connect( action, SIGNAL(triggered(bool)),
-             ProgressManager::instance(), SLOT(slotAbortAll()) );
-    action->setShortcut( QKeySequence( Qt::Key_Escape ) );
-  }
-  {
-    KAction *action = new KAction(i18n("Focus on Next Folder"), this);
-    actionCollection()->addAction("inc_current_folder", action );
-    connect( action, SIGNAL(triggered(bool)),
-             mFolderTreeWidget->folderTreeView(), SLOT(slotFocusNextFolder()) );
-    action->setShortcut( QKeySequence( Qt::CTRL+Qt::Key_Right ) );
-  }
-  {
-    KAction *action = new KAction(i18n("Focus on Previous Folder"), this);
-    actionCollection()->addAction("dec_current_folder", action );
-    connect( action, SIGNAL(triggered(bool)),
-             mFolderTreeWidget->folderTreeView(), SLOT(slotFocusPrevFolder()) );
-    action->setShortcut( QKeySequence( Qt::CTRL+Qt::Key_Left ) );
-  }
-  {
-    KAction *action = new KAction(i18n("Select Folder with Focus"), this);
-    actionCollection()->addAction("select_current_folder", action );
-
-    connect( action, SIGNAL(triggered(bool)),
-             mFolderTreeWidget->folderTreeView(), SLOT(slotSelectFocusFolder()) );
-    action->setShortcut( QKeySequence( Qt::CTRL+Qt::Key_Space ) );
-  }
-  {
-    KAction *action = new KAction(i18n("Focus on Next Message"), this);
-    actionCollection()->addAction("inc_current_message", action );
-    connect( action, SIGNAL(triggered(bool)),
-             this, SLOT(slotFocusOnNextMessage()) );
-    action->setShortcut( QKeySequence( Qt::ALT+Qt::Key_Right ) );
-  }
-  {
-    KAction *action = new KAction(i18n("Focus on Previous Message"), this);
-    actionCollection()->addAction("dec_current_message", action );
-    connect( action, SIGNAL(triggered(bool)),
-             this, SLOT(slotFocusOnPrevMessage()) );
-    action->setShortcut( QKeySequence( Qt::ALT+Qt::Key_Left ) );
-  }
-  {
-    KAction *action = new KAction(i18n("Select Message with Focus"), this);
-    actionCollection()->addAction( "select_current_message", action );
-    connect( action, SIGNAL(triggered(bool)),
-             this, SLOT(slotSelectFocusedMessage()) );
-    action->setShortcut( QKeySequence( Qt::ALT+Qt::Key_Space ) );
   }
   connect( kmkernel->folderCollectionMonitor(), SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection)),
            SLOT(slotItemAdded(Akonadi::Item,Akonadi::Collection)) );
@@ -3749,9 +3656,9 @@ void KMMainWidget::setupActions()
   }
 
   {
-    mAddFavoriteFolder = new KAction( KIcon( "bookmark-new" ), i18n( "Add Favorite Folder..." ), this );
-    actionCollection()->addAction( "add_favorite_folder", mAddFavoriteFolder );
-    connect( mAddFavoriteFolder, SIGNAL(triggered(bool)), this, SLOT(slotAddFavoriteFolder()) );
+    KAction *action = new KAction( KIcon( "bookmark-new" ), i18n( "Add Favorite Folder..." ), this );
+    actionCollection()->addAction( "add_favorite_folder", action );
+    connect( action, SIGNAL(triggered(bool)), this, SLOT(slotAddFavoriteFolder()) );
   }
 
   {
@@ -3799,6 +3706,101 @@ void KMMainWidget::setupActions()
   mTagActionManager = new KMail::TagActionManager( this, actionCollection(), mMsgActions,
                                                    mGUIClient );
   mFolderShortcutActionManager = new KMail::FolderShortcutActionManager( this, actionCollection() );
+
+  {
+    KAction *action = new KAction( i18n("Copy Message to Folder"), this );
+    actionCollection()->addAction( "copy_message_to_folder", action );
+    connect( action, SIGNAL(triggered(bool)),
+             SLOT(slotCopySelectedMessagesToFolder()) );
+    action->setShortcut( QKeySequence( Qt::Key_C ) );
+  }
+  {
+    KAction *action = new KAction( i18n("Jump to Folder..."), this );
+    actionCollection()->addAction( "jump_to_folder", action );
+    connect( action, SIGNAL(triggered(bool)),
+             SLOT(slotJumpToFolder()) );
+    action->setShortcut( QKeySequence( Qt::Key_J ) );
+  }
+  {
+    KAction *action = new KAction(i18n("Abort Current Operation"), this);
+    actionCollection()->addAction("cancel", action );
+    connect( action, SIGNAL(triggered(bool)),
+             ProgressManager::instance(), SLOT(slotAbortAll()) );
+    action->setShortcut( QKeySequence( Qt::Key_Escape ) );
+  }
+  {
+    KAction *action = new KAction(i18n("Focus on Next Folder"), this);
+    actionCollection()->addAction("inc_current_folder", action );
+    connect( action, SIGNAL(triggered(bool)),
+             mFolderTreeWidget->folderTreeView(), SLOT(slotFocusNextFolder()) );
+    action->setShortcut( QKeySequence( Qt::CTRL+Qt::Key_Right ) );
+  }
+  {
+    KAction *action = new KAction(i18n("Focus on Previous Folder"), this);
+    actionCollection()->addAction("dec_current_folder", action );
+    connect( action, SIGNAL(triggered(bool)),
+             mFolderTreeWidget->folderTreeView(), SLOT(slotFocusPrevFolder()) );
+    action->setShortcut( QKeySequence( Qt::CTRL+Qt::Key_Left ) );
+  }
+  {
+    KAction *action = new KAction(i18n("Select Folder with Focus"), this);
+    actionCollection()->addAction("select_current_folder", action );
+
+    connect( action, SIGNAL(triggered(bool)),
+             mFolderTreeWidget->folderTreeView(), SLOT(slotSelectFocusFolder()) );
+    action->setShortcut( QKeySequence( Qt::CTRL+Qt::Key_Space ) );
+  }
+  {
+    KAction *action = new KAction(i18n("Focus on Next Message"), this);
+    actionCollection()->addAction("inc_current_message", action );
+    connect( action, SIGNAL(triggered(bool)),
+             this, SLOT(slotFocusOnNextMessage()) );
+    action->setShortcut( QKeySequence( Qt::ALT+Qt::Key_Right ) );
+  }
+  {
+    KAction *action = new KAction(i18n("Focus on Previous Message"), this);
+    actionCollection()->addAction("dec_current_message", action );
+    connect( action, SIGNAL(triggered(bool)),
+             this, SLOT(slotFocusOnPrevMessage()) );
+    action->setShortcut( QKeySequence( Qt::ALT+Qt::Key_Left ) );
+  }
+  {
+    KAction *action = new KAction(i18n("Select Message with Focus"), this);
+    actionCollection()->addAction( "select_current_message", action );
+    connect( action, SIGNAL(triggered(bool)),
+             this, SLOT(slotSelectFocusedMessage()) );
+    action->setShortcut( QKeySequence( Qt::ALT+Qt::Key_Space ) );
+  }
+
+  {
+    KAction *action = new KAction( i18n("Set Focus to Quick Search"), this );
+    action->setShortcut( QKeySequence( Qt::ALT + Qt::Key_Q ) );
+    actionCollection()->addAction( "focus_to_quickseach", action );
+    connect( action, SIGNAL(triggered(bool)),
+             SLOT(slotFocusQuickSearch()) );
+  }
+  {
+    KAction *action = new KAction( i18n( "Extend Selection to Previous Message" ), this );
+    action->setShortcut( QKeySequence( Qt::SHIFT + Qt::Key_Left ) );
+    actionCollection()->addAction( "previous_message", action );
+    connect( action, SIGNAL(triggered(bool)),
+             this, SLOT(slotExtendSelectionToPreviousMessage()) );
+  }
+  {
+    KAction *action = new KAction( i18n( "Extend Selection to Next Message" ), this );
+    action->setShortcut( QKeySequence( Qt::SHIFT + Qt::Key_Right ) );
+    actionCollection()->addAction( "next_message", action );
+    connect( action, SIGNAL(triggered(bool)),
+             this, SLOT(slotExtendSelectionToNextMessage()) );
+  }
+
+  {
+    mMoveMsgToFolderAction = new KAction( i18n("Move Message to Folder"), this );
+    mMoveMsgToFolderAction->setShortcut( QKeySequence( Qt::Key_M ) );
+    actionCollection()->addAction( "move_message_to_folder", mMoveMsgToFolderAction );
+    connect( mMoveMsgToFolderAction, SIGNAL(triggered(bool)),
+             SLOT(slotMoveSelectedMessageToFolder()) );
+  }
 
 }
 
@@ -4025,7 +4027,8 @@ void KMMainWidget::updateMessageActionsDelayed()
   }
 
   mMoveActionMenu->setEnabled( mass_actions && canDeleteMessages );
-  mMoveMsgToFolderAction->setEnabled( mass_actions && canDeleteMessages );
+  if(mMoveMsgToFolderAction)
+    mMoveMsgToFolderAction->setEnabled( mass_actions && canDeleteMessages );
   //mCopyActionMenu->setEnabled( mass_actions );
 
   mDeleteAction->setEnabled( mass_actions && canDeleteMessages );

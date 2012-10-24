@@ -25,6 +25,10 @@
 #include "messageviewer/nodehelper.h"
 #include "autocorrection/kmcomposerautocorrection.h"
 
+#ifdef GRANTLEE_FOUND
+#include "grantlee/plaintextmarkupbuilder.h"
+#endif
+
 #include <KEncodingFileDialog>
 #include <KLocale>
 #include <KMessageBox>
@@ -759,8 +763,28 @@ bool KMeditor::replaceSignature( const KPIMIdentities::Signature &oldSig,
 
 void KMeditor::fillComposerTextPart ( TextPart* textPart ) const
 {
+#if 0//GRANTLEE_FOUND
+  if( isFormattingUsed() ) {
+    Grantlee::PlainTextMarkupBuilder *pb = new Grantlee::PlainTextMarkupBuilder();
+
+    Grantlee::MarkupDirector *pmd = new Grantlee::MarkupDirector( pb );
+    pmd->processDocument( document() );
+    const QString plainText = pb->getResult();
+    //qDebug()<<" plainText :"<<plainText;
+    textPart->setCleanPlainText( toCleanPlainText(plainText) );
+    QTextDocument *doc = new QTextDocument(plainText);
+    textPart->setWrappedPlainText(toWrappedPlainText(doc));
+    delete doc;
+    delete pmd;
+    delete pb;
+  } else {
+    textPart->setCleanPlainText( toCleanPlainText() );
+    textPart->setWrappedPlainText( toWrappedPlainText() );
+  }
+#else
   textPart->setCleanPlainText( toCleanPlainText() );
   textPart->setWrappedPlainText( toWrappedPlainText() );
+#endif
   textPart->setWordWrappingEnabled( lineWrapMode() == QTextEdit::FixedColumnWidth );
   if( isFormattingUsed() ) {
     textPart->setCleanHtml( toCleanHtml() );

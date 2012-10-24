@@ -466,9 +466,7 @@ bool FilterManager::processContextItem( ItemContext context )
           //anything but good (and the server replies with "NO Only resources can modify remote identifiers"
           item.setRemoteId(QString()); 
           Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( item, this );
-          if ( !context.needsPayloadStore() ) {
-            modifyJob->disableRevisionCheck(); //no conflict handling for flags is needed
-          }
+          modifyJob->disableRevisionCheck(); //no conflict handling for mails as no other process could change the mail body and we don't care about flag conflicts
           //The below is a safety check to ignore modifying payloads if it was not requested,
           //as in that case we might change the payload to an invalid one
           modifyJob->setIgnorePayload( !context.needsFullPayload() );
