@@ -2734,10 +2734,6 @@ void ViewerPrivate::slotUrlCopy()
 
 void ViewerPrivate::slotSaveMessage()
 {
-  if ( !mMessageItem.isValid() ) {
-    return;
-  }
-
   if ( !mMessageItem.hasPayload<KMime::Message::Ptr>() ) {
     if ( mMessageItem.isValid() ) {
       kWarning() << "Payload is not a MessagePtr!";
