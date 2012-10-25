@@ -70,7 +70,6 @@ void ArchiveJob::execute()
 
 void ArchiveJob::slotError(const QString& error)
 {
-  Akonadi::Collection collection(mInfo->saveCollectionId());
   const QPixmap pixmap = KIcon( "kmail" ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
 
   KNotification::event( QLatin1String("archivemailerror"),
@@ -79,6 +78,8 @@ void ArchiveJob::slotError(const QString& error)
                         0,
                         KNotification::CloseOnTimeout,
                         KGlobal::mainComponent());
+  mManager->backupDone(mInfo);
+  deleteLater();
 }
 
 void ArchiveJob::slotBackupDone(const QString& info)
