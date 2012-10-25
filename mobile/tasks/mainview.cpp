@@ -66,7 +66,7 @@
 #include <libkdepimdbusinterfaces/reminderclient.h>
 
 #include <QtCore/QPointer>
-#include <QtDeclarative/QDeclarativeEngine>
+#include <QDeclarativeEngine>
 
 using namespace Akonadi;
 

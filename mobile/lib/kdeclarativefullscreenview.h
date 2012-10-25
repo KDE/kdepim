@@ -20,7 +20,7 @@
 #ifndef KDECLARATIVEFULLSCREENVIEW_H
 #define KDECLARATIVEFULLSCREENVIEW_H
 
-#include <QtDeclarative/QDeclarativeView>
+#include <QDeclarativeView>
 
 #include <qplatformdefs.h>
 

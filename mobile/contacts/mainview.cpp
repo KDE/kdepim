@@ -56,7 +56,7 @@
 #include <QtCore/QProcess>
 #include <QtDBus/QDBusInterface>
 #include <QtDBus/QDBusServiceWatcher>
-#include <QtDeclarative/QDeclarativeEngine>
+#include <QDeclarativeEngine>
 
 QML_DECLARE_TYPE( Akonadi::Contact::ContactViewItem )
 QML_DECLARE_TYPE( Akonadi::Contact::ContactGroupViewItem )

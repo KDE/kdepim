@@ -44,9 +44,9 @@
 #include <KMime/KMimeMessage>
 #include <KStandardDirs>
 
-#include <QtDeclarative/QDeclarativeContext>
-#include <QtDeclarative/QDeclarativeEngine>
-#include <QtDeclarative/QDeclarativeItem>
+#include <QDeclarativeContext>
+#include <QDeclarativeEngine>
+#include <QDeclarativeItem>
 
 #include <QGraphicsObject>
 

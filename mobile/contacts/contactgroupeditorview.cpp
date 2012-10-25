@@ -30,7 +30,7 @@
 #include <KABC/ContactGroup>
 #include <KLocalizedString>
 
-#include <QtDeclarative/QDeclarativeItem>
+#include <QDeclarativeItem>
 
 using namespace Akonadi;
 

@@ -24,7 +24,7 @@
 
 #include <QtCore/qobject.h>
 #include <QtCore/qscopedpointer.h>
-#include <QtDeclarative/qdeclarative.h>
+#include <qdeclarative.h>
 #include <QPoint>
 
 class ClockHelper : public QObject
