@@ -408,6 +408,12 @@ void Viewer::setHeaderStyleAndStrategy( HeaderStyle * style,
   d->setHeaderStyleAndStrategy( style, strategy );
 }
 
+KAction *Viewer::viewSourceAction()
+{
+  Q_D( Viewer );
+  return d->mViewSourceAction;
+}
+
 KAction *Viewer::copyURLAction()
 {
   Q_D( Viewer );
