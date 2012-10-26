@@ -16,10 +16,17 @@
 */
 
 #include "exportcalendarjob.h"
+
+#include "messageviewer/kcursorsaver.h"
+
+
+#include <KLocale>
+
 #include <QWidget>
 
+
 ExportCalendarJob::ExportCalendarJob(QWidget *parent, ArchiveStorage *archiveStorage)
-  : QObject(parent)
+  :AbstractImportExportJob(parent,archiveStorage,/*typeSelected,numberOfStep*/0,0 /*TODO fix it*/)
 {
 }
 
@@ -31,4 +38,13 @@ ExportCalendarJob::~ExportCalendarJob()
 void ExportCalendarJob::startBackup()
 {
   //TODO
+}
+
+
+void ExportCalendarJob::backupResources()
+{
+  showInfo(i18n("Backing up resources..."));
+  MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+  //TODO backup calendar
+  Q_EMIT info(i18n("Resources backup done."));
 }

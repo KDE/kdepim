@@ -21,7 +21,7 @@
 #ifndef COMPOSERAUTORESIZER_H
 #define COMPOSERAUTORESIZER_H
 
-#include <QtDeclarative/QDeclarativeItem>
+#include <QDeclarativeItem>
 #include <QTextEdit>
 
 class ComposerAutoResizer : public QObject

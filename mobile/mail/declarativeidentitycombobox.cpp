@@ -21,7 +21,7 @@
 
 #include <kpimidentities/identitymanager.h>
 
-#include <QtDeclarative/QDeclarativeItem>
+#include <QDeclarativeItem>
 
 DeclarativeIdentityComboBox::DeclarativeIdentityComboBox ( QDeclarativeItem* parent ) :
   DeclarativeWidgetBase< KPIMIdentities::IdentityCombo, ComposerView, &ComposerView::setIdentityCombo>

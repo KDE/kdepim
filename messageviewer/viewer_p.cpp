@@ -1778,6 +1778,10 @@ void ViewerPrivate::createActions()
   connect( mTranslateAction, SIGNAL(triggered(bool)),
            SLOT(slotTranslate()) );
 
+  mFindInMessageAction = new KAction(KIcon("edit-find"), i18n("&Find in Message..."), this);
+  ac->addAction("find_in_messages", mFindInMessageAction );
+  connect(mFindInMessageAction, SIGNAL(triggered(bool)), SLOT(slotFind()));
+  mFindInMessageAction->setShortcut(KStandardShortcut::find());
 }
 
 
@@ -2734,10 +2738,6 @@ void ViewerPrivate::slotUrlCopy()
 
 void ViewerPrivate::slotSaveMessage()
 {
-  if ( !mMessageItem.isValid() ) {
-    return;
-  }
-
   if ( !mMessageItem.hasPayload<KMime::Message::Ptr>() ) {
     if ( mMessageItem.isValid() ) {
       kWarning() << "Payload is not a MessagePtr!";

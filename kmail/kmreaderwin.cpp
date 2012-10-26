@@ -71,6 +71,7 @@ using MessageComposer::MessageFactory;
 #include <kcodecs.h>
 #include <ktoggleaction.h>
 #include <kservice.h>
+#include <KActionCollection>
 
 #include <QClipboard>
 
@@ -592,6 +593,17 @@ KAction *KMReaderWin::copyAction()
 {
   return mViewer->copyAction();
 }
+
+KAction *KMReaderWin::viewSourceAction()
+{
+  return mViewer->viewSourceAction();
+}
+
+KAction *KMReaderWin::findInMessageAction()
+{
+  return mViewer->findInMessageAction();
+}
+
 KAction *KMReaderWin::urlOpenAction()
 {
   return mViewer->urlOpenAction();

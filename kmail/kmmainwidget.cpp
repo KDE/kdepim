@@ -184,6 +184,8 @@
 #include <QMenu>
 #include <QtDBus/QDBusInterface>
 #include <QtDBus/QDBusReply>
+#include <QLabel>
+
 
 
 // System includes
@@ -3053,15 +3055,14 @@ void KMMainWidget::slotDelayedMessagePopup( KJob *job )
 
     menu->addAction( mMsgActions->messageStatusMenu() );
     menu->addSeparator();
-    if(!iUrl.isEmpty()) {
-      menu->addSeparator();
-      menu->addAction( mMsgView->copyImageLocation());
-      menu->addAction( mMsgView->downloadImageToDiskAction());
-      menu->addSeparator();
-    }
-
-    menu->addAction( viewSourceAction() );
     if ( mMsgView ) {
+      if (!iUrl.isEmpty()) {
+        menu->addSeparator();
+        menu->addAction( mMsgView->copyImageLocation());
+        menu->addAction( mMsgView->downloadImageToDiskAction());
+        menu->addSeparator();
+      }
+      menu->addAction( mMsgView->viewSourceAction() );
       menu->addAction( mMsgView->toggleFixFontAction() );
       menu->addAction( mMsgView->toggleMimePartTreeAction() );
     }
@@ -3292,12 +3293,6 @@ void KMMainWidget::setupActions()
     connect(action, SIGNAL(triggered(bool)), SLOT(slotRequestFullSearchFromQuickSearch()));
     action->setShortcut(QKeySequence(Qt::Key_S));
   }
-
-  mFindInMessageAction = new KAction(KIcon("edit-find"), i18n("&Find in Message..."), this);
-  actionCollection()->addAction("find_in_messages", mFindInMessageAction );
-  connect(mFindInMessageAction, SIGNAL(triggered(bool)), SLOT(slotFind()));
-  mFindInMessageAction->setShortcut(KStandardShortcut::find());
-
   {
     KAction *action = new KAction(i18n("Select &All Messages"), this);
     actionCollection()->addAction("mark_all_messages", action );
@@ -3421,21 +3416,25 @@ void KMMainWidget::setupActions()
   actionCollection()->addAction("create_filter", mFilterMenu );
   connect( mFilterMenu, SIGNAL(triggered(bool)), this,
            SLOT(slotFilter()) );
-  mSubjectFilterAction = new KAction(i18n("Filter on &Subject..."), this);
-  actionCollection()->addAction("subject_filter", mSubjectFilterAction );
-  connect(mSubjectFilterAction, SIGNAL(triggered(bool)), SLOT(slotSubjectFilter()));
-  mFilterMenu->addAction( mSubjectFilterAction );
+  {
+    KAction *action = new KAction(i18n("Filter on &Subject..."), this);
+    actionCollection()->addAction("subject_filter", action );
+    connect(action, SIGNAL(triggered(bool)), SLOT(slotSubjectFilter()));
+    mFilterMenu->addAction( action );
+  }
 
-  mFromFilterAction = new KAction(i18n("Filter on &From..."), this);
-  actionCollection()->addAction("from_filter", mFromFilterAction );
-  connect(mFromFilterAction, SIGNAL(triggered(bool)), SLOT(slotFromFilter()));
-  mFilterMenu->addAction( mFromFilterAction );
-
-  mToFilterAction = new KAction(i18n("Filter on &To..."), this);
-  actionCollection()->addAction("to_filter", mToFilterAction );
-  connect(mToFilterAction, SIGNAL(triggered(bool)), SLOT(slotToFilter()));
-  mFilterMenu->addAction( mToFilterAction );
-
+  {
+    KAction *action = new KAction(i18n("Filter on &From..."), this);
+    actionCollection()->addAction("from_filter", action );
+    connect(action, SIGNAL(triggered(bool)), SLOT(slotFromFilter()));
+    mFilterMenu->addAction( action );
+  }
+  {
+    KAction *action = new KAction(i18n("Filter on &To..."), this);
+    actionCollection()->addAction("to_filter", action );
+    connect(action, SIGNAL(triggered(bool)), SLOT(slotToFilter()));
+    mFilterMenu->addAction( action );
+  }
   mFilterMenu->addAction( mMsgActions->listFilterAction() );
 
   mUseAction = new KAction( KIcon("document-new"), i18n("New Message From &Template"), this );
@@ -3534,11 +3533,6 @@ void KMMainWidget::setupActions()
     connect(action, SIGNAL(triggered(bool)), SLOT(slotCollapseAllThreads()));
   }
 
-
-  mViewSourceAction = new KAction(i18n("&View Source"), this);
-  actionCollection()->addAction("view_source", mViewSourceAction );
-  connect(mViewSourceAction, SIGNAL(triggered(bool)), SLOT(slotShowMsgSrc()));
-  mViewSourceAction->setShortcut(QKeySequence(Qt::Key_V));
 
   KAction *dukeOfMonmoth = new KAction(i18n("&Display Message"), this);
   actionCollection()->addAction("display_message", dukeOfMonmoth );
@@ -4035,7 +4029,9 @@ void KMMainWidget::updateMessageActionsDelayed()
 
   mExpireConfigAction->setEnabled( canDeleteMessages );
 
-  mFindInMessageAction->setEnabled( mass_actions && !CommonKernel->folderIsTemplates( mCurrentFolder->collection() ) && mMsgView);
+  if ( mMsgView ) {
+    mMsgView->findInMessageAction()->setEnabled( mass_actions && !CommonKernel->folderIsTemplates( mCurrentFolder->collection() ) );
+  }
   mMsgActions->forwardInlineAction()->setEnabled( mass_actions && !CommonKernel->folderIsTemplates( mCurrentFolder->collection() ) );
   mMsgActions->forwardAttachedAction()->setEnabled( mass_actions && !CommonKernel->folderIsTemplates( mCurrentFolder->collection() ) );
   mMsgActions->forwardMenu()->setEnabled( mass_actions && !CommonKernel->folderIsTemplates( mCurrentFolder->collection() ) );
@@ -4060,8 +4056,9 @@ void KMMainWidget::updateMessageActionsDelayed()
     printPreviewAction->setEnabled( singleVisibleMessageSelected );
 
   // "View Source" will act on the current message: it will ignore any hidden selection
-  viewSourceAction()->setEnabled( singleVisibleMessageSelected && mMsgView);
-
+  if(mMsgView) {
+    mMsgView->viewSourceAction()->setEnabled( singleVisibleMessageSelected );
+  }
   MessageStatus status;
   status.setStatusFromFlags( currentMessage.flags() );
 

@@ -112,7 +112,7 @@
 #include <QtCore/QSignalMapper>
 #include <QtCore/QTimer>
 #include <QtDBus/QDBusConnection>
-#include <QtDeclarative/QDeclarativeContext>
+#include <QDeclarativeContext>
 #include <QLabel>
 #include <QItemSelectionModel>
 #include <QTreeView>

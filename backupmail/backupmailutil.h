@@ -32,6 +32,7 @@ namespace BackupMailUtil {
     AkonadiDb = 32,
     Nepomuk = 64,
     Calendar = 128
+      //TODO add more type to import/export
   };
   Q_DECLARE_FLAGS(BackupTypes, BackupType )
 

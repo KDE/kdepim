@@ -24,7 +24,7 @@
 #include "listproxy.h"
 
 #include <akonadi/entitytreemodel.h>
-#include <QtDeclarative/QDeclarativeImageProvider>
+#include <QDeclarativeImageProvider>
 
 class ContactImageProvider : public QDeclarativeImageProvider
 {

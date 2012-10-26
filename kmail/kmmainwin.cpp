@@ -40,7 +40,9 @@
 #include <kdebug.h>
 #include <ktip.h>
 #include <kicon.h>
+#include <kaction.h>
 
+#include <QLabel>
 #include "messagecomposer/messagesender.h"
 
 

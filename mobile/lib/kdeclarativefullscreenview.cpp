@@ -40,9 +40,9 @@
 #include <QResizeEvent>
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusMessage>
-#include <QtDeclarative/QDeclarativeContext>
-#include <QtDeclarative/QDeclarativeEngine>
-#include <QtDeclarative/QDeclarativeError>
+#include <QDeclarativeContext>
+#include <QDeclarativeEngine>
+#include <QDeclarativeError>
 #include <qplatformdefs.h>
 
 #include <boost/bind.hpp>

@@ -27,15 +27,11 @@
 
 #include "foldertreewidget.h"
 
-#include <kurl.h>
 #include <kxmlguiclient.h>
 #include "messageactions.h"
-#include <kaction.h>
 #include <kactioncollection.h>
 #include <foldercollection.h>
 
-#include <QList>
-#include <QLabel>
 #include <QPointer>
 #include <QTimer>
 #include <akonadi/kmime/standardmailactionmanager.h>
@@ -48,11 +44,13 @@ namespace Akonadi {
 namespace KMime {
   class Message;
 }
-
+class KUrl;
+class QLabel;
 class QVBoxLayout;
 class QSplitter;
 
 class QMenu;
+class KAction;
 class KActionMenu;
 class KToggleAction;
 class KMMetaFilterActionCommand;
@@ -60,7 +58,6 @@ class CollectionPane;
 class KMCommand;
 class KMMoveCommand;
 class KRecentFilesAction;
-
 template <typename T, typename S> class QMap;
 
 namespace KIO {
@@ -135,7 +132,6 @@ class KMAIL_EXPORT KMMainWidget : public QWidget
     KActionMenu *mailingListActionMenu() const { return mMsgActions->mailingListActionMenu(); }
     KAction *editAction() const { return mMsgActions->editAction(); }
     KAction *sendAgainAction() const { return mSendAgainAction; }
-    KAction *viewSourceAction() const { return mViewSourceAction; }
     KMail::MessageActions *messageActions() const { return mMsgActions; }
 
     /**
@@ -544,13 +540,11 @@ private:
     // Message actions
     KAction *mDeleteAction, *mTrashThreadAction,
       *mDeleteThreadAction, *mSaveAsAction, *mUseAction,
-      *mSendAgainAction, *mApplyAllFiltersAction, *mFindInMessageAction,
-      *mSaveAttachmentsAction, *mOpenAction, *mViewSourceAction,
+      *mSendAgainAction, *mApplyAllFiltersAction,
+      *mSaveAttachmentsAction, *mOpenAction,
       *mMoveMsgToFolderAction, *mCollectionProperties, *mSendQueued;
     // Filter actions
     KActionMenu *mFilterMenu;
-    KAction *mSubjectFilterAction, *mFromFilterAction, *mToFilterAction,
-        *mListFilterAction;
     KAction *mExpireConfigAction;
     KAction *mApplyFiltersOnFolder;
     // Custom template actions menu
@@ -591,7 +585,6 @@ private:
       *mArchiveFolderAction,
       *mPostToMailinglistAction;
     KToggleAction *mPreferHtmlAction, *mPreferHtmlLoadExtAction;
-    KToggleAction *mFolderAction, *mHeaderAction, *mMimeAction;
 
     QTimer *menutimer;
     QTimer *mShowBusySplashTimer;
