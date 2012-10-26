@@ -578,10 +578,8 @@ void FilterManager::dump() const
 
 void FilterManager::applySpecificFilters(const QList< Akonadi::Item >& selectedMessages, SearchRule::RequiredPart requiredPart, const QStringList& listFilters )
 {
-    const int msgCountToFilter = selectedMessages.size();
-
     emit progressMessage( i18n( "Filtering messages" ) );
-    d->mTotalProgressCount = msgCountToFilter;
+    d->mTotalProgressCount = selectedMessages.size();
     d->mCurrentProgressCount = 0;
 
     Akonadi::ItemFetchJob *itemFetchJob = new Akonadi::ItemFetchJob( selectedMessages, this );
@@ -605,10 +603,8 @@ void FilterManager::applySpecificFilters(const QList< Akonadi::Item >& selectedM
 
 void FilterManager::applyFilters( const QList<Akonadi::Item> &selectedMessages, FilterSet filterSet )
 {
-  const int msgCountToFilter = selectedMessages.size();
-
   emit progressMessage( i18n( "Filtering messages" ) );
-  d->mTotalProgressCount = msgCountToFilter;
+  d->mTotalProgressCount = selectedMessages.size();
   d->mCurrentProgressCount = 0;
 
   Akonadi::ItemFetchJob *itemFetchJob = new Akonadi::ItemFetchJob( selectedMessages, this );
