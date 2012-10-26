@@ -167,7 +167,7 @@ class AddresseeLineEditStatic
     Akonadi::Item::List akonadiPendingItems;
     Nepomuk2::Query::QueryServiceClient* nepomukSearchClient;
     Akonadi::Session *akonadiSession;
-    QSet<Akonadi::Job*> akonadiJobsInFlight;
+    QVector<QWeakPointer<Akonadi::Job> > akonadiJobsInFlight;
     bool useNepomukCompletion;
     int nepomukCompletionSource;
     bool contactsListed;
@@ -655,8 +655,10 @@ void AddresseeLineEdit::Private::akonadiPerformSearch()
   kDebug() << "searching akonadi with:" << m_searchString;
 
   // first, kill all job still in flight, they are no longer current
-  Q_FOREACH( Akonadi::Job* job, s_static->akonadiJobsInFlight ) {
-      job->kill();
+  Q_FOREACH( QWeakPointer<Akonadi::Job> job, s_static->akonadiJobsInFlight ) {
+      if ( !job.isNull() ) {
+        job.data()->kill();
+      }
   }
   s_static->akonadiJobsInFlight.clear();
 
@@ -676,8 +678,8 @@ void AddresseeLineEdit::Private::akonadiPerformSearch()
               q, SLOT(slotAkonadiSearchResult(KJob*)) );
   q->connect( groupJob, SIGNAL(finished(KJob*)),
               q, SLOT(slotAkonadiSearchResult(KJob*)) );
-  s_static->akonadiJobsInFlight.insert( contactJob );
-  s_static->akonadiJobsInFlight.insert( groupJob );
+  s_static->akonadiJobsInFlight.append( contactJob );
+  s_static->akonadiJobsInFlight.append( groupJob );
   akonadiHandlePending();
 }
 
@@ -979,7 +981,7 @@ void AddresseeLineEdit::Private::akonadiHandleItems( const Akonadi::Item::List &
 
 void AddresseeLineEdit::Private::slotAkonadiSearchResult( KJob *job )
 {
-  s_static->akonadiJobsInFlight.remove( qobject_cast<Akonadi::Job*>( job ) );
+  s_static->akonadiJobsInFlight.remove( s_static->akonadiJobsInFlight.indexOf( qobject_cast<Akonadi::Job*>( job ) ) );
   const Akonadi::ContactSearchJob *contactJob =
     qobject_cast<Akonadi::ContactSearchJob*>( job );
   const Akonadi::ContactGroupSearchJob *groupJob =
