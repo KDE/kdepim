@@ -599,6 +599,12 @@ bool Viewer::zoomTextOnly() const
   return d->mZoomTextOnly;
 }
 
+KAction *Viewer::findInMessageAction()
+{
+  Q_D( Viewer );
+  return d->mFindInMessageAction;
+}
+
 void Viewer::slotChangeDisplayMail(Viewer::ForceDisplayTo mode,bool loadExternal)
 {
     qDebug()<<"void Viewer::slotChangeDisplayMail(Viewer::ForceDisplayTo mode,bool loadExternal)"<<loadExternal;
