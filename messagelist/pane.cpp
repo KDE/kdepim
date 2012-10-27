@@ -209,8 +209,7 @@ void Pane::setXmlGuiClient( KXMLGUIClient *xmlGuiClient )
     }
     d->mActionMenu = new KActionMenu( KIcon(), i18n( "Message List" ), this );
     d->mXmlGuiClient->actionCollection()->addAction( QLatin1String( "view_message_list" ), d->mActionMenu );
-    const Widget * const w = static_cast<Widget*>( currentWidget() );
-    w->view()->fillViewMenu( d->mActionMenu->menu() );
+    MessageList::Util::fillViewMenu( d->mActionMenu->menu(), this );
 
     KAction *action = new KAction( i18n("Create new tab"), this );
     action->setShortcut( QKeySequence( Qt::ALT + Qt::Key_T ) );
@@ -1027,5 +1026,34 @@ bool Pane::searchEditHasFocus() const
     return w->searchEditHasFocus();
   return false;
 }
+
+
+void Pane::sortOrderMenuAboutToShow()
+{
+  KMenu * menu = dynamic_cast< KMenu * >( sender() );
+  if ( !menu )
+    return;
+  const Widget * const w = static_cast<Widget*>( currentWidget() );
+  w->view()->sortOrderMenuAboutToShow(menu);
+}
+
+void Pane::aggregationMenuAboutToShow()
+{
+  KMenu * menu = dynamic_cast< KMenu * >( sender() );
+  if ( !menu )
+   return;
+  const Widget * const w = static_cast<Widget*>( currentWidget() );
+  w->view()->aggregationMenuAboutToShow(menu);
+}
+
+void Pane::themeMenuAboutToShow()
+{
+  KMenu * menu = dynamic_cast< KMenu * >( sender() );
+  if ( !menu )
+    return;
+  const Widget * const w = static_cast<Widget*>( currentWidget() );
+  w->view()->themeMenuAboutToShow(menu);
+}
+
 
 #include "pane.moc"

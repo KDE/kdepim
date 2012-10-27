@@ -42,12 +42,6 @@ qint64 ListProxy::itemId( int row ) const
 void ListProxy::setSourceModel(QAbstractItemModel* sourceModel)
 {
   QSortFilterProxyModel::setSourceModel(sourceModel);
-#if QT_VERSION < 0x040701
-  disconnect(sourceModel, SIGNAL(layoutChanged()), this, SLOT(_q_sourceLayoutAboutToBeChanged()));
-  disconnect(sourceModel, SIGNAL(layoutChanged()), this, SLOT(_q_sourceLayoutChanged()));
-  connect(sourceModel, SIGNAL(layoutAboutToBeChanged()), SLOT(_q_sourceAboutToBeReset()));
-  connect(sourceModel, SIGNAL(layoutChanged()), SLOT(_q_sourceReset()));
-#endif
 }
 
 

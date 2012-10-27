@@ -790,7 +790,7 @@ void View::slotHeaderContextMenuRequested( const QPoint &pnt )
     );
 
   menu.addSeparator();
-  fillViewMenu( &menu );
+  MessageList::Util::fillViewMenu( &menu, d->mWidget );
 
   menu.exec( header()->mapToGlobal( pnt ) );
 }
@@ -1610,27 +1610,6 @@ void View::selectFocusedMessageItem( bool centerItem )
 
   if ( centerItem )
     scrollTo( idx, QAbstractItemView::PositionAtCenter );
-}
-
-void View::fillViewMenu( KMenu * menu )
-{
-  KMenu* sortingMenu = new KMenu( i18n( "Sorting" ), menu );
-  sortingMenu->setIcon( KIcon( QLatin1String( "view-sort-ascending" ) ) );
-  menu->addMenu( sortingMenu );
-  connect( sortingMenu, SIGNAL(aboutToShow()),
-           d->mWidget, SLOT(sortOrderMenuAboutToShow()) );
-
-  KMenu* aggregationMenu = new KMenu( i18n( "Aggregation" ), menu );
-  aggregationMenu->setIcon( KIcon( QLatin1String( "view-process-tree" ) ) );
-  menu->addMenu( aggregationMenu );
-  connect( aggregationMenu, SIGNAL(aboutToShow()),
-           d->mWidget, SLOT(aggregationMenuAboutToShow()) );
-
-  KMenu* themeMenu = new KMenu( i18n( "Theme" ), menu );
-  themeMenu->setIcon( KIcon( QLatin1String( "preferences-desktop-theme" ) ) );
-  menu->addMenu( themeMenu );
-  connect( themeMenu, SIGNAL(aboutToShow()),
-           d->mWidget, SLOT(themeMenuAboutToShow()) );
 }
 
 bool View::selectFirstMessageItem( MessageTypeFilter messageTypeFilter, bool centerItem )
@@ -2745,5 +2724,21 @@ void View::setRowHidden( int row, const QModelIndex & parent, bool hide )
 
   QTreeView::setRowHidden( row, parent, hide );
 }
+
+void View::sortOrderMenuAboutToShow(KMenu *menu)
+{
+  d->mWidget->sortOrderMenuAboutToShow(menu);
+}
+
+void View::aggregationMenuAboutToShow(KMenu *menu)
+{
+  d->mWidget->aggregationMenuAboutToShow(menu);
+}
+
+void View::themeMenuAboutToShow(KMenu *menu)
+{
+  d->mWidget->themeMenuAboutToShow(menu);
+}
+
 
 #include "view.moc"

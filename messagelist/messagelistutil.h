@@ -22,6 +22,7 @@
 #include <messagelist/messagelist_export.h>
 #include <QString>
 #include <QColor>
+class KMenu;
 
 namespace MessageList
 {
@@ -40,6 +41,7 @@ namespace Util {
   MESSAGELIST_EXPORT QColor unreadDefaultMessageColor();
   MESSAGELIST_EXPORT QColor importantDefaultMessageColor();
   MESSAGELIST_EXPORT QColor todoDefaultMessageColor();
+  MESSAGELIST_EXPORT void fillViewMenu( KMenu * menu, QObject *receiver );
 
 }
 }

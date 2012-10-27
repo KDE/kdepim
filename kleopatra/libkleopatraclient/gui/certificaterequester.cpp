@@ -71,11 +71,7 @@ private:
         cmd->setSelectedCertificates( selectedCertificates );
 
         if ( const QWidget * const window = q->window() )
-#if QT_VERSION < 0x040400
-            cmd->setParentWId( window->winId() );
-#else
             cmd->setParentWId( window->effectiveWinId() );
-#endif
 
         connect( cmd.get(), SIGNAL(finished()), q, SLOT(slotCommandFinished()) );
 
