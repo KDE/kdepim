@@ -431,11 +431,7 @@ void KDLogTextWidget::Private::updateCache() const {
         const QFontMetrics & fm = q->fontMetrics();
         cache.fontMetrics.lineSpacing = fm.lineSpacing();
         cache.fontMetrics.ascent = fm.ascent();
-#if QT_VERSION < 0x040200
-        cache.fontMetrics.averageCharWidth = fm.width( QLatin1Char( 'M' ) );
-#else
         cache.fontMetrics.averageCharWidth = fm.averageCharWidth();
-#endif
 
         QVector<int> & lw = cache.fontMetrics.lineWidths;
         lw.clear();
