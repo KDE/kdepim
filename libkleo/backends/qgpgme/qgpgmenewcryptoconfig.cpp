@@ -188,9 +188,7 @@ QString QGpgMENewCryptoConfigComponent::description() const
 QStringList QGpgMENewCryptoConfigComponent::groupList() const
 {
     QStringList result;
-#if QT_VERSION >= 0x040700
     result.reserve( m_groupsByName.size() );
-#endif
     std::transform( m_groupsByName.begin(), m_groupsByName.end(),
                     std::back_inserter( result ),
                     mem_fn( &QGpgMENewCryptoConfigGroup::name ) );
