@@ -394,6 +394,13 @@ public slots:
    */
   QItemSelectionModel *createNewTab();
 
+  void sortOrderMenuAboutToShow();
+
+  void aggregationMenuAboutToShow();
+
+  void themeMenuAboutToShow();
+
+
 signals:
   /**
    * Emitted when a message is selected (that is, single clicked and thus made current in the view)

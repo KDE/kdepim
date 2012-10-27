@@ -458,7 +458,11 @@ void Widget::themeMenuAboutToShow()
   KMenu * menu = dynamic_cast< KMenu * >( sender() );
   if ( !menu )
     return;
+  themeMenuAboutToShow(menu);
+}
 
+void Widget::themeMenuAboutToShow(KMenu *menu)
+{
   menu->clear();
 
   menu->addTitle( i18n( "Theme" ) );
@@ -545,7 +549,11 @@ void Widget::aggregationMenuAboutToShow()
   KMenu * menu = dynamic_cast< KMenu * >( sender() );
   if ( !menu )
     return;
+  aggregationMenuAboutToShow(menu);
+}
 
+void Widget::aggregationMenuAboutToShow(KMenu *menu)
+{
   menu->clear();
 
   menu->addTitle( i18n( "Aggregation" ) );
@@ -626,7 +634,11 @@ void Widget::sortOrderMenuAboutToShow()
   KMenu * menu = dynamic_cast< KMenu * >( sender() );
   if ( !menu )
     return;
+  sortOrderMenuAboutToShow(menu);
+}
 
+void Widget::sortOrderMenuAboutToShow(KMenu *menu)
+{
   menu->clear();
 
   menu->addTitle( i18n( "Message Sort Order" ) );
