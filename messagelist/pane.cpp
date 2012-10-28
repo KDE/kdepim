@@ -592,6 +592,8 @@ void Pane::Private::onCurrentTabChanged()
 void Pane::Private::onTabContextMenuRequest( const QPoint &pos )
 {
   QTabBar *bar = q->tabBar();
+  if ( q->count() <= 1 ) return;
+
   const int indexBar = bar->tabAt( bar->mapFrom( q, pos ) );
   if ( indexBar == -1 ) return;
 
