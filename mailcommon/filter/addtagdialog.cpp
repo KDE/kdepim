@@ -44,3 +44,5 @@ void AddTagDialog::slotOk()
 {
   //TODO
 }
+
+#include "addtagdialog.moc"
