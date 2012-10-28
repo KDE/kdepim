@@ -48,3 +48,5 @@ void ExportCalendarJob::backupResources()
   //TODO backup calendar
   Q_EMIT info(i18n("Resources backup done."));
 }
+
+#include "exportcalendarjob.moc"
