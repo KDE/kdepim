@@ -180,7 +180,7 @@ void ConfigureThemesDialog::selectTheme( const QString &themeId )
   ThemeListWidgetItem * item = d->findThemeItemById( themeId );
   if ( item ) {
     d->mThemeList->setCurrentItem( item );
-    d->mEditor->editTheme( item->theme() );
+    d->themeListItemClicked(item);
   }
 }
 
