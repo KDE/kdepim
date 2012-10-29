@@ -504,7 +504,9 @@ void IncidenceDateTime::load( const KCalCore::Event::Ptr &event )
   mUi->mEndCheck->setChecked( true ); // Set to checked so we can reuse enableTimeEdits.
 
   // Start time
-  connect( mUi->mStartTimeEdit, SIGNAL(timeChanged(QTime)),
+  connect( mUi->mStartTimeEdit, SIGNAL(timeChanged(QTime)), // when editing with mouse, or up/down arrows
+           SLOT(updateStartTime(QTime)) );
+  connect( mUi->mStartTimeEdit, SIGNAL(timeEdited(QTime)), // When editing with any key except up/down
            SLOT(updateStartTime(QTime)) );
   connect( mUi->mStartDateEdit, SIGNAL(dateChanged(QDate)),
            SLOT(updateStartDate(QDate)) );
@@ -513,9 +515,13 @@ void IncidenceDateTime::load( const KCalCore::Event::Ptr &event )
   // End time
   connect( mUi->mEndTimeEdit, SIGNAL(timeChanged(QTime)),
            SLOT(checkDirtyStatus()) );
+  connect( mUi->mEndTimeEdit, SIGNAL(timeEdited(QTime)),
+           SLOT(checkDirtyStatus()) );
   connect( mUi->mEndDateEdit, SIGNAL(dateChanged(QDate)),
            SLOT(checkDirtyStatus()) );
   connect( mUi->mEndTimeEdit, SIGNAL(timeChanged(QTime)),
+           SIGNAL(endTimeChanged(QTime)) );
+  connect( mUi->mEndTimeEdit, SIGNAL(timeEdited(QTime)),
            SIGNAL(endTimeChanged(QTime)) );
   connect( mUi->mEndDateEdit, SIGNAL(dateChanged(QDate)),
            SIGNAL(endDateChanged(QDate)) );
