@@ -33,16 +33,11 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <KLineEdit>
+#include <KPushButton>
 
-#include <QBoxLayout>
-#include <QFormLayout>
-#include <QHBoxLayout>
 #include <QKeyEvent>
-#include <QLabel>
-#include <QLayout>
-#include <QPushButton>
 #include <QTreeView>
-#include <QToolButton>
+#include <QLayout>
 #include <QVBoxLayout>
 
 using namespace MessageComposer;
@@ -82,27 +77,13 @@ RecipientsPicker::RecipientsPicker( QWidget *parent )
   if ( !numHosts )
      mSearchLDAPButton->setVisible( false );
 
-  QBoxLayout *buttonLayout = new QHBoxLayout();
-  topLayout->addItem( buttonLayout );
-
-  buttonLayout->addStretch( 1 );  // right align buttons
-  buttonLayout->setSpacing( KDialog::spacingHint() );
-
-  mToButton = new QPushButton( i18n("Add as &To"), mainWidget() );
-  buttonLayout->addWidget( mToButton );
-  connect( mToButton, SIGNAL(clicked()), SLOT(slotToClicked()) );
-
-  mCcButton = new QPushButton( i18n("Add as CC"), mainWidget() );
-  buttonLayout->addWidget( mCcButton );
-  connect( mCcButton, SIGNAL(clicked()), SLOT(slotCcClicked()) );
-
-  mBccButton = new QPushButton( i18n("Add as &BCC"), mainWidget() );
-  buttonLayout->addWidget( mBccButton );
-  connect( mBccButton, SIGNAL(clicked()), SLOT(slotBccClicked()) );
-
-  QPushButton *closeButton = new QPushButton( i18n("&Cancel"), mainWidget() );
-  buttonLayout->addWidget( closeButton );
-  connect( closeButton, SIGNAL(clicked()), SLOT(close()) );
+  setButtons( Cancel|User1|User2|User3 );
+  setButtonText( User3, i18n("Add as &To") );
+  setButtonText( User2, i18n("Add as CC") );
+  setButtonText( User1, i18n("Add as &BCC") );
+  connect(this,SIGNAL(user1Clicked()),this,SLOT(slotBccClicked()));
+  connect(this,SIGNAL(user2Clicked()),this,SLOT(slotCcClicked()));
+  connect(this,SIGNAL(user3Clicked()),this,SLOT(slotToClicked()));
 
   mView->searchLineEdit()->setFocus();
 
@@ -119,9 +100,9 @@ RecipientsPicker::~RecipientsPicker()
 void RecipientsPicker::slotSelectionChanged()
 {
   const bool hasSelection = !mView->selectedAddresses().isEmpty();
-  mToButton->setEnabled( hasSelection );
-  mBccButton->setEnabled( hasSelection );
-  mCcButton->setEnabled( hasSelection );
+  enableButton(User1, hasSelection );
+  enableButton(User2, hasSelection );
+  enableButton(User3, hasSelection );
 }
 
 void RecipientsPicker::setRecipients( const Recipient::List& )
@@ -132,9 +113,9 @@ void RecipientsPicker::setRecipients( const Recipient::List& )
 void RecipientsPicker::setDefaultType( Recipient::Type type )
 {
   mDefaultType = type;
-  mToButton->setDefault( type == Recipient::To );
-  mCcButton->setDefault( type == Recipient::Cc );
-  mBccButton->setDefault( type == Recipient::Bcc );
+  button(User3)->setDefault( type == Recipient::To );
+  button(User2)->setDefault( type == Recipient::Cc );
+  button(User1)->setDefault( type == Recipient::Bcc );
 }
 
 void RecipientsPicker::slotToClicked()
