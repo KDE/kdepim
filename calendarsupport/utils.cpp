@@ -396,7 +396,7 @@ Akonadi::Collection CalendarSupport::selectCollection( QWidget *parent,
                                                        const Akonadi::Collection &defCollection )
 {
   Akonadi::CollectionDialog* dlg = collectionDialog();
-  dlg->setParent( parent );
+  dlg->setParent( parent, Qt::Dialog );
   dlg->setCaption( i18n( "Select Calendar" ) );
   dlg->setDescription( i18n( "Select the calendar where this item will be stored." ) );
   dlg->changeCollectionDialogOptions( Akonadi::CollectionDialog::KeepTreeExpanded );
