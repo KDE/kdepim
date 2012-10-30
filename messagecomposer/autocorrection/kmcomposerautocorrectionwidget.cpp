@@ -532,9 +532,13 @@ void KMComposerAutoCorrectionWidget::slotImportAutoCorrection(QAction* act)
   }
 }
 
-void KMComposerAutoCorrectionWidget::changeLanguage(int)
+void KMComposerAutoCorrectionWidget::changeLanguage(int index)
 {
-   //TODO
+  if(index == -1)
+    return;
+  const QString lang = ui->autocorrectionLanguage->itemData (index).toString();
+  mAutoCorrection->setLanguage(lang);
+  loadAutoCorrectionAndException();
 }
 
 #include "kmcomposerautocorrectionwidget.moc"
