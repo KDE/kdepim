@@ -73,9 +73,9 @@ using namespace KHolidays;
 
 K_GLOBAL_STATIC( Akonadi::CollectionDialog, globalCollectionDialog )
 
-static Akonadi::CollectionDialog* collectionDialog()
+static Akonadi::CollectionDialog *collectionDialog()
 {
-    return globalCollectionDialog;
+  return globalCollectionDialog;
 }
 
 KCalCore::Incidence::Ptr CalendarSupport::incidence( const Akonadi::Item &item )
@@ -91,8 +91,9 @@ KCalCore::Event::Ptr CalendarSupport::event( const Akonadi::Item &item )
 {
   try {
     KCalCore::Incidence::Ptr incidence = item.payload<KCalCore::Incidence::Ptr>();
-    if ( incidence && incidence->type() == KCalCore::Incidence::TypeEvent )
+    if ( incidence && incidence->type() == KCalCore::Incidence::TypeEvent ) {
       return item.payload<KCalCore::Event::Ptr>();
+    }
   } catch( Akonadi::PayloadException ) {
     return KCalCore::Event::Ptr();
   }
@@ -125,8 +126,9 @@ KCalCore::Todo::Ptr CalendarSupport::todo( const Akonadi::Item &item )
 {
   try {
     KCalCore::Incidence::Ptr incidence = item.payload<KCalCore::Incidence::Ptr>();
-    if ( incidence && incidence->type() == KCalCore::Incidence::TypeTodo )
+    if ( incidence && incidence->type() == KCalCore::Incidence::TypeTodo ) {
       return item.payload<KCalCore::Todo::Ptr>();
+    }
   } catch( Akonadi::PayloadException ) {
     return KCalCore::Todo::Ptr();
   }
@@ -137,8 +139,9 @@ KCalCore::Journal::Ptr CalendarSupport::journal( const Akonadi::Item &item )
 {
   try {
     KCalCore::Incidence::Ptr incidence = item.payload<KCalCore::Incidence::Ptr>();
-    if ( incidence && incidence->type() == KCalCore::Incidence::TypeJournal )
+    if ( incidence && incidence->type() == KCalCore::Incidence::TypeJournal ) {
       return item.payload<KCalCore::Journal::Ptr>();
+    }
   } catch( Akonadi::PayloadException ) {
     return KCalCore::Journal::Ptr();
   }
@@ -395,7 +398,7 @@ Akonadi::Collection CalendarSupport::selectCollection( QWidget *parent,
                                                        const QStringList &mimeTypes,
                                                        const Akonadi::Collection &defCollection )
 {
-  Akonadi::CollectionDialog* dlg = collectionDialog();
+  QPointer<Akonadi::CollectionDialog> dlg = new Akonadi::CollectionDialog();
   dlg->setParent( parent, Qt::Dialog );
   dlg->setCaption( i18n( "Select Calendar" ) );
   dlg->setDescription( i18n( "Select the calendar where this item will be stored." ) );
@@ -418,6 +421,7 @@ Akonadi::Collection CalendarSupport::selectCollection( QWidget *parent,
       kWarning() << "An invalid collection was selected!";
     }
   }
+  delete dlg;
 
   return collection;
 }
