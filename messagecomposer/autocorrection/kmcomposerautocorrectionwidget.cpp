@@ -94,6 +94,10 @@ KMComposerAutoCorrectionWidget::KMComposerAutoCorrectionWidget(QWidget *parent) 
       ui->autocorrectionLanguage->addItem ( locale->languageCodeToName(lang) , lang );
     }
   }
+  const QString defaultLang = locale->languageList().first();
+  const int index = ui->autocorrectionLanguage->findData(defaultLang);
+  ui->autocorrectionLanguage->setCurrentIndex(index);
+
   QMenu *menu = new QMenu();
   ui->importAutoCorrection->setMenu( menu );
 
