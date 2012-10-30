@@ -83,6 +83,7 @@ KMComposerAutoCorrectionWidget::KMComposerAutoCorrectionWidget(QWidget *parent) 
   connect(ui->abbreviationList,SIGNAL(deleteSelectedItems()),SLOT(removeAbbreviationEntry()));
   connect(ui->twoUpperLetterList,SIGNAL(itemClicked ( QListWidgetItem *)),SLOT(slotEnableDisableTwoUpperEntry()));
   connect(ui->twoUpperLetterList,SIGNAL(deleteSelectedItems()),SLOT(removeTwoUpperLetterEntry()));
+  connect(ui->autocorrectionLanguage,SIGNAL(activated(int)),SLOT(changeLanguage(int)));
   slotEnableDisableAbreviationList();
   slotEnableDisableTwoUpperEntry();
 
@@ -97,7 +98,7 @@ KMComposerAutoCorrectionWidget::KMComposerAutoCorrectionWidget(QWidget *parent) 
   act->setData( QVariant::fromValue( KMComposerAutoCorrectionWidget::KMail ) );
   menu->addAction( act );
 
-  connect( menu, SIGNAL(triggered(QAction*)), SLOT(slotImportFilter(QAction*)) );
+  connect( menu, SIGNAL(triggered(QAction*)), SLOT(slotImportAutoCorrection(QAction*)) );
 
 }
 
@@ -477,7 +478,7 @@ void KMComposerAutoCorrectionWidget::slotEnableDisableTwoUpperEntry()
     ui->remove2->setEnabled(enable);
 }
 
-void KMComposerAutoCorrectionWidget::slotImportFilter(QAction* act)
+void KMComposerAutoCorrectionWidget::slotImportAutoCorrection(QAction* act)
 {
   if ( act ) {
     KMComposerAutoCorrectionWidget::ImportFileType type = act->data().value<KMComposerAutoCorrectionWidget::ImportFileType>();
@@ -523,6 +524,11 @@ void KMComposerAutoCorrectionWidget::slotImportFilter(QAction* act)
       delete importAutoCorrection;
     }
   }
+}
+
+void KMComposerAutoCorrectionWidget::changeLanguage(int)
+{
+   //TODO
 }
 
 #include "kmcomposerautocorrectionwidget.moc"

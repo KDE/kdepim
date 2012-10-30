@@ -76,7 +76,9 @@ private Q_SLOTS:
   void slotEnableDisableAbreviationList();
   void slotEnableDisableTwoUpperEntry();
 
-  void slotImportFilter(QAction* act);
+  void slotImportAutoCorrection(QAction* act);
+
+  void changeLanguage(int);
 Q_SIGNALS:
   void changed();
 
