@@ -28,7 +28,7 @@
       </widget>
      </item>
      <item>
-      <widget class="KComboBox" name="autocorrectionLanguage"/>
+      <widget class="MessageComposer::KMComposerAutoCorrectionLanguage" name="autocorrectionLanguage"/>
      </item>
     </layout>
    </item>
@@ -577,6 +577,12 @@
    <extends>QTreeWidget</extends>
    <header>autocorrection/kmcomposerautocorrectiontreewidget.h</header>
   </customwidget>
+  <customwidget>
+   <class>MessageComposer::KMComposerAutoCorrectionLanguage</class>
+   <extends>KComboBox</extends>
+   <header>autocorrection/kmcomposerautocorrectionlanguage.h</header>
+  </customwidget>
+
  </customwidgets>
  <resources/>
  <connections/>

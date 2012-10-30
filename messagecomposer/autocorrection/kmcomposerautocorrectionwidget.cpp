@@ -86,18 +86,6 @@ KMComposerAutoCorrectionWidget::KMComposerAutoCorrectionWidget(QWidget *parent) 
   slotEnableDisableAbreviationList();
   slotEnableDisableTwoUpperEntry();
 
-  KLocale *locale = KGlobal::locale();
-  QStringList lstLang = locale->allLanguagesList();
-  lstLang.sort();
-  Q_FOREACH(const QString& lang, lstLang) {
-    if(lang != QLatin1String("x-test")) {
-      ui->autocorrectionLanguage->addItem ( locale->languageCodeToName(lang) , lang );
-    }
-  }
-  const QString defaultLang = locale->languageList().first();
-  const int index = ui->autocorrectionLanguage->findData(defaultLang);
-  ui->autocorrectionLanguage->setCurrentIndex(index);
-
   QMenu *menu = new QMenu();
   ui->importAutoCorrection->setMenu( menu );
 
