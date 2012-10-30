@@ -398,7 +398,7 @@ Akonadi::Collection CalendarSupport::selectCollection( QWidget *parent,
                                                        const QStringList &mimeTypes,
                                                        const Akonadi::Collection &defCollection )
 {
-  QPointer<Akonadi::CollectionDialog> dlg = new Akonadi::CollectionDialog();
+  Akonadi::CollectionDialog *dlg = collectionDialog(); //krazy:exclude=crashy
   dlg->setParent( parent, Qt::Dialog );
   dlg->setCaption( i18n( "Select Calendar" ) );
   dlg->setDescription( i18n( "Select the calendar where this item will be stored." ) );
@@ -421,8 +421,6 @@ Akonadi::Collection CalendarSupport::selectCollection( QWidget *parent,
       kWarning() << "An invalid collection was selected!";
     }
   }
-  delete dlg;
-
   return collection;
 }
 
