@@ -37,7 +37,7 @@ AutoImageResizing::~AutoImageResizing()
 
 void AutoImageResizing::slotUser1()
 {
-
+  close();
 }
 
 #include "autoimageresizing.moc"
