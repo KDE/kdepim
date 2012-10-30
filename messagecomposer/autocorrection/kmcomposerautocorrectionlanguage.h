@@ -31,6 +31,7 @@ public:
 
   QString language() const;
 
+  void setLanguage(const QString &language);
 };
 
 }

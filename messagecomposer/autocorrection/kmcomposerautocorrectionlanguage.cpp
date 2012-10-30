@@ -48,3 +48,9 @@ QString KMComposerAutoCorrectionLanguage::language() const
 {
   return itemData ( currentIndex() ).toString();
 }
+
+void KMComposerAutoCorrectionLanguage::setLanguage(const QString &language)
+{
+  const int index = findData(language);
+  setCurrentIndex(index);
+}
