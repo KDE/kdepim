@@ -127,6 +127,11 @@ void KMComposerAutoCorrectionWidget::loadConfig()
     ui->capitalizeDaysName->setChecked(mAutoCorrection->isCapitalizeWeekDays());
     ui->advancedAutocorrection->setChecked(mAutoCorrection->isAdvancedAutocorrect());
 
+    loadAutoCorrectionAndException();
+}
+
+void KMComposerAutoCorrectionWidget::loadAutoCorrectionAndException()
+{
     /* tab 2 - Custom Quotes */
     ui->typographicDoubleQuotes->setChecked(mAutoCorrection->isReplaceDoubleQuotes());
     ui->typographicSingleQuotes->setChecked(mAutoCorrection->isReplaceSingleQuotes());
@@ -153,6 +158,7 @@ void KMComposerAutoCorrectionWidget::loadConfig()
 
     ui->abbreviationList->clear();
     ui->abbreviationList->addItems(m_upperCaseExceptions.toList());
+
 }
 
 void KMComposerAutoCorrectionWidget::addAutoCorrectEntries()
