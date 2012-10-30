@@ -1269,6 +1269,7 @@ void Message::ComposerViewBase::identityChanged ( const KPIMIdentities::Identity
   attachmentController()->setIdentityHasOwnVcard(!vcardFileName.isEmpty());
   attachmentController()->setAttachOwnVcard(ident.attachVcard());
 
+  m_editor->setAutocorrectionLanguage(ident.autocorrectionLanguage());
 }
 
 void Message::ComposerViewBase::setEditor ( Message::KMeditor* editor )

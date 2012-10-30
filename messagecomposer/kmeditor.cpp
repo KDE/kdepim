@@ -802,5 +802,10 @@ void KMeditor::setAutocorrection(MessageComposer::KMComposerAutoCorrection* auto
   d->mAutoCorrection = autocorrect;
 }
 
+void KMeditor::setAutocorrectionLanguage(const QString& lang)
+{
+  d->mAutoCorrection->setLanguage(lang);
+}
+
 
 #include "kmeditor.moc"
