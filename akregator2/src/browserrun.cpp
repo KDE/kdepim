@@ -34,6 +34,7 @@ BrowserRun::BrowserRun(const OpenUrlRequest& request, QWidget* parent)
     : KParts::BrowserRun(request.url(), request.args(), request.browserArgs(), 0L, parent, /*removeReferrer=*/false, /*trustedSource=*/false, /*hideErrorDialog=*/true), m_request(request)
 {
     setEnableExternalBrowser(false);
+    m_window = parent; // remove member and use KRun::window() instead once we can depend on kdelibs >= 4.10
 }
 
 BrowserRun::~BrowserRun()
@@ -50,14 +51,19 @@ void BrowserRun::foundMimeType(const QString& type)
 
     if ( m_request.wasHandled() ) {
         setFinished(true);
-        timer().start();
         return;
     }
 
-    if ( handleNonEmbeddable(type) == KParts::BrowserRun::NotHandled )
-        KRun::foundMimeType( type );
-
-
+    KService::Ptr selectedService;
+    if ( handleNonEmbeddable( type, &selectedService ) == KParts::BrowserRun::NotHandled ) {
+        if ( selectedService ) {
+            KRun::setPreferredService( selectedService->desktopEntryName() );
+            KRun::foundMimeType( type );
+        } else {
+            KRun::displayOpenWithDialog( url(), m_window, false, suggestedFileName() );
+            setFinished(true);
+        }
+    }
 }
 
 } // namespace Akregator2
