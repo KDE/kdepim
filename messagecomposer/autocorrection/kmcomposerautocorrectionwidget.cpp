@@ -83,6 +83,7 @@ KMComposerAutoCorrectionWidget::KMComposerAutoCorrectionWidget(QWidget *parent) 
   connect(ui->abbreviationList,SIGNAL(deleteSelectedItems()),SLOT(removeAbbreviationEntry()));
   connect(ui->twoUpperLetterList,SIGNAL(itemClicked ( QListWidgetItem *)),SLOT(slotEnableDisableTwoUpperEntry()));
   connect(ui->twoUpperLetterList,SIGNAL(deleteSelectedItems()),SLOT(removeTwoUpperLetterEntry()));
+  connect(ui->autocorrectionLanguage,SIGNAL(activated(int)),SLOT(changeLanguage(int)));
   slotEnableDisableAbreviationList();
   slotEnableDisableTwoUpperEntry();
 
@@ -97,7 +98,7 @@ KMComposerAutoCorrectionWidget::KMComposerAutoCorrectionWidget(QWidget *parent) 
   act->setData( QVariant::fromValue( KMComposerAutoCorrectionWidget::KMail ) );
   menu->addAction( act );
 
-  connect( menu, SIGNAL(triggered(QAction*)), SLOT(slotImportFilter(QAction*)) );
+  connect( menu, SIGNAL(triggered(QAction*)), SLOT(slotImportAutoCorrection(QAction*)) );
 
 }
 
@@ -126,6 +127,11 @@ void KMComposerAutoCorrectionWidget::loadConfig()
     ui->capitalizeDaysName->setChecked(mAutoCorrection->isCapitalizeWeekDays());
     ui->advancedAutocorrection->setChecked(mAutoCorrection->isAdvancedAutocorrect());
 
+    loadAutoCorrectionAndException();
+}
+
+void KMComposerAutoCorrectionWidget::loadAutoCorrectionAndException()
+{
     /* tab 2 - Custom Quotes */
     ui->typographicDoubleQuotes->setChecked(mAutoCorrection->isReplaceDoubleQuotes());
     ui->typographicSingleQuotes->setChecked(mAutoCorrection->isReplaceSingleQuotes());
@@ -152,6 +158,7 @@ void KMComposerAutoCorrectionWidget::loadConfig()
 
     ui->abbreviationList->clear();
     ui->abbreviationList->addItems(m_upperCaseExceptions.toList());
+
 }
 
 void KMComposerAutoCorrectionWidget::addAutoCorrectEntries()
@@ -339,7 +346,7 @@ void KMComposerAutoCorrectionWidget::removeAutocorrectEntry()
 
       QString findStr;
       if ( below ) {
-        kDebug() << "below";
+        //kDebug() << "below";
         findStr = item->text(0);
         delete item;
         item = 0;
@@ -477,7 +484,7 @@ void KMComposerAutoCorrectionWidget::slotEnableDisableTwoUpperEntry()
     ui->remove2->setEnabled(enable);
 }
 
-void KMComposerAutoCorrectionWidget::slotImportFilter(QAction* act)
+void KMComposerAutoCorrectionWidget::slotImportAutoCorrection(QAction* act)
 {
   if ( act ) {
     KMComposerAutoCorrectionWidget::ImportFileType type = act->data().value<KMComposerAutoCorrectionWidget::ImportFileType>();
@@ -523,6 +530,15 @@ void KMComposerAutoCorrectionWidget::slotImportFilter(QAction* act)
       delete importAutoCorrection;
     }
   }
+}
+
+void KMComposerAutoCorrectionWidget::changeLanguage(int index)
+{
+  if(index == -1)
+    return;
+  const QString lang = ui->autocorrectionLanguage->itemData (index).toString();
+  mAutoCorrection->setLanguage(lang);
+  loadAutoCorrectionAndException();
 }
 
 #include "kmcomposerautocorrectionwidget.moc"

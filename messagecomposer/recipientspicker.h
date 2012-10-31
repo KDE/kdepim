@@ -72,10 +72,6 @@ class MESSAGECOMPOSER_EXPORT RecipientsPicker : public KDialog
   private:
     Akonadi::EmailAddressSelectionWidget *mView;
 
-    QPushButton *mToButton;
-    QPushButton *mCcButton;
-    QPushButton *mBccButton;
-
     QPushButton *mSearchLDAPButton;
     KLDAP::LdapSearchDialog *mLdapSearchDialog;
 

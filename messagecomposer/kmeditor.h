@@ -183,6 +183,9 @@ class MESSAGECOMPOSER_EXPORT KMeditor : public KPIMTextEdit::TextEdit
     MessageComposer::KMComposerAutoCorrection* autocorrection() const;
 
     void setAutocorrection(MessageComposer::KMComposerAutoCorrection* autocorrect);
+
+    void setAutocorrectionLanguage(const QString& lang);
+
   public Q_SLOTS:
 
     void slotAddQuotes();

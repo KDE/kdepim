@@ -15,29 +15,24 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "autoimageresizing.h"
-#include <KLocale>
+#ifndef KMCOMPOSERAUTOCORRECTIONLANGUAGE_H
+#define KMCOMPOSERAUTOCORRECTIONLANGUAGE_H
 
-using namespace MessageComposer;
+#include "messagecomposer_export.h"
+#include <KComboBox>
 
-AutoImageResizing::AutoImageResizing(QWidget *parent)
-    :KDialog(parent)
+namespace MessageComposer {
+
+class MESSAGECOMPOSER_EXPORT KMComposerAutoCorrectionLanguage : public KComboBox
 {
-  setCaption( i18nc("@title:window", "Resize Image") );
-  setButtons( User1 | Cancel );
-  setDefaultButton( User1 );
-  setModal( false );
-  setButtonText( User1, i18nc("@action:button","Resize") );
-  connect( this, SIGNAL(user1Clicked()), this, SLOT(slotUser1()) );
-}
+public:
+  explicit KMComposerAutoCorrectionLanguage(QWidget *parent);
+  ~KMComposerAutoCorrectionLanguage();
 
-AutoImageResizing::~AutoImageResizing()
-{
-}
+  QString language() const;
 
-void AutoImageResizing::slotUser1()
-{
-  close();
-}
+  void setLanguage(const QString &language);
+};
 
-#include "autoimageresizing.moc"
+}
+#endif // KMCOMPOSERAUTOCORRECTIONLANGUAGE_H

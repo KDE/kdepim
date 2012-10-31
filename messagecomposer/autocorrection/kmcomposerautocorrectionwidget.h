@@ -76,12 +76,15 @@ private Q_SLOTS:
   void slotEnableDisableAbreviationList();
   void slotEnableDisableTwoUpperEntry();
 
-  void slotImportFilter(QAction* act);
+  void slotImportAutoCorrection(QAction* act);
+
+  void changeLanguage(int);
 Q_SIGNALS:
   void changed();
 
 private:
   void addAutoCorrectEntries();
+  void loadAutoCorrectionAndException();
   KMComposerAutoCorrection::TypographicQuotes m_singleQuotes;
   KMComposerAutoCorrection::TypographicQuotes m_doubleQuotes;
   QSet<QString> m_upperCaseExceptions;

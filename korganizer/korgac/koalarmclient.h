@@ -1,7 +1,5 @@
 /*
-  KOrganizer Alarm Daemon Client.
-
-  This file is part of KOrganizer.
+  This file is part of the KDE reminder agent.
 
   Copyright (c) 2002,2003 Cornelius Schumacher <schumacher@kde.org>
 
@@ -23,10 +21,10 @@
   with any edition of Qt, and distribute the resulting executable,
   without including the source code for Qt in the source distribution.
 */
-#ifndef KOALARMCLIENT_H
-#define KOALARMCLIENT_H
+#ifndef KORGAC_KOALARMCLIENT_H
+#define KORGAC_KOALARMCLIENT_H
 
-#ifndef _WIN32_WCE
+#if !defined(Q_WS_WINCE)
 #include <KSessionManager>
 #endif
 
@@ -38,13 +36,14 @@ class AlarmDockWindow;
 
 namespace CalendarSupport {
   class Calendar;
+  class CalendarModel;
 }
 
 namespace Akonadi {
   class Item;
 }
 
-#ifndef _WIN32_WCE
+#if !defined(Q_WS_WINCE)
 class KOAlarmClient : public QObject, public KSessionManager
 #else
 class KOAlarmClient : public QObject
@@ -55,7 +54,7 @@ class KOAlarmClient : public QObject
     KOAlarmClient( QObject *parent = 0 );
     ~KOAlarmClient();
 
-#ifndef _WIN32_WCE
+#if !defined(Q_WS_WINCE)
     bool commitData( QSessionManager & );
 #endif
 
@@ -87,6 +86,7 @@ class KOAlarmClient : public QObject
 
     AlarmDockWindow *mDocker;  // the panel icon
     CalendarSupport::Calendar *mCalendar;
+    CalendarSupport::CalendarModel *mCalendarModel;
 
     QDateTime mLastChecked;
     QTimer mCheckTimer;
