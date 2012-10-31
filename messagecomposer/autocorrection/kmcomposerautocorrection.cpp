@@ -647,6 +647,7 @@ void KMComposerAutoCorrection::readAutoCorrectionXmlFile()
     QString kdelang = locale->languageList().first();
     kdelang.remove(QRegExp(QLatin1String("@.*")));
 
+    qDebug()<<"void KMComposerAutoCorrection::readAutoCorrectionXmlFile() "<<mAutoCorectLang;
     QString fname;
     if (!mAutoCorectLang.isEmpty()) {
         fname = KGlobal::dirs()->findResource("data", QLatin1String("autocorrect/") + mAutoCorectLang + QLatin1String(".xml"));
@@ -664,15 +665,19 @@ void KMComposerAutoCorrection::readAutoCorrectionXmlFile()
         mAutoCorectLang = kdelang;
 
 
+    mUpperCaseExceptions.clear();
+    mAutocorrectEntries.clear();
+    mTwoUpperLetterExceptions.clear();
+
     qDebug()<<" fname :"<<fname;
-    if (fname.isEmpty())
+    if (fname.isEmpty()) {
+        mTypographicSingleQuotes = typographicDefaultSingleQuotes();
+        mTypographicDoubleQuotes = typographicDefaultDoubleQuotes();
         return;
+    }
 
     ImportKMailAutocorrection import;
     if (import.import(fname)) {
-        mUpperCaseExceptions.clear();
-        mAutocorrectEntries.clear();
-        mTwoUpperLetterExceptions.clear();
 
         mUpperCaseExceptions = import.upperCaseExceptions();
         mTwoUpperLetterExceptions = import.twoUpperLetterExceptions();
@@ -684,8 +689,7 @@ void KMComposerAutoCorrection::readAutoCorrectionXmlFile()
 
 void KMComposerAutoCorrection::writeAutoCorrectionXmlFile()
 {
-    //TODO use mAutoCorectLang
-    const QString fname = KGlobal::dirs()->locateLocal("data", QLatin1String("autocorrect/autocorrect.xml"));
+    const QString fname = KGlobal::dirs()->locateLocal("data", QLatin1String("autocorrect/") + mAutoCorectLang + QLatin1String(".xml"));
     QFile file(fname);
     if( !file.open( QIODevice::WriteOnly | QIODevice::Text ) ) {
         kDebug()<<"We can't save in file :"<<fname;

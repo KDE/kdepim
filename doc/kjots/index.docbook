@@ -128,7 +128,7 @@ This is the third page and is an example for KJots.</screen>
 <para>Remember that the dialog where you are prompted for a filename is 
 a standard &kde; dialog. That means it is just as easy to store the file 
 on your local hard disk as it is to save it on a web server, ftp server 
-or USB memory stick. So you can export as html and save it on a webserver, 
+or USB memory stick. So you can export as html and save it on a webserver;
 this way you always have your notes available to you.</para>
 </sect1>
 
@@ -154,12 +154,12 @@ writing a note, you can use  <keycombo action="simul">&Ctrl;&Shift;<keycap>I
 should) be given a name. This can be done in the way you are used to: 
 double click the page you want to rename.
 You are then able to rename the page. Of course there is also a keyboard 
-shortcut, you can use that at any time while writing a note. The shortcut 
+shortcut you can use at any time while writing a note. The shortcut
 is: <keycombo action="simul">&Ctrl;<keycap>M</keycap></keycombo>.</para>
 
-<para>An other way of renaming the page is by selecting a part of your note 
-and then press <keycombo action="simul">&Ctrl;<keycap>T</keycap></keycombo>, 
-the selected text will instantly become the title of the page.</para>
+<para>Another way of renaming the page is by selecting a part of your note
+and then press <keycombo action="simul">&Ctrl;<keycap>T</keycap></keycombo>.
+The selected text will instantly become the title of the page.</para>
 
 <para>Writing or editing your notes you can use the actions from <guimenu>Format</guimenu>
 menu or from the toolbar to format your text.
