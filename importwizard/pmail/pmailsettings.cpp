@@ -55,18 +55,21 @@ void PMailSettings::readIdentity( const KConfigGroup& group )
     KPIMIdentities::Identity* newIdentity = createIdentity();
     const QString personalNameStr = QLatin1String("Personal name                             ");
     if(group.hasKey(personalNameStr)) {
-        const QString personalName = group.readEntry(personalNameStr);
+        QString personalName = group.readEntry(personalNameStr);
+        personalName.remove(0,1); //Remove first space
         newIdentity->setFullName( personalName );
         newIdentity->setIdentityName( personalName );
     }
     const QString emailStr = QLatin1String("Internet E-mail Address                   ");
     if(group.hasKey(emailStr)) {
-        const QString email = group.readEntry(emailStr);
+        QString email = group.readEntry(emailStr);
+        email.remove(0,1); //Remove first space
         newIdentity->setPrimaryEmailAddress(email);
     }
     const QString replytoStr = QLatin1String("Default reply-to address                  ");
     if(group.hasKey(replytoStr)) {
-        const QString reply = group.readEntry(replytoStr);
+        QString reply = group.readEntry(replytoStr);
+        reply.remove(0,1); //Remove first space
         newIdentity->setReplyToAddr(reply);
     }
     storeIdentity(newIdentity);
