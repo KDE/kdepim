@@ -549,6 +549,7 @@ void KMComposerAutoCorrectionWidget::changeLanguage(int index)
   const QString lang = ui->autocorrectionLanguage->itemData (index).toString();
   mAutoCorrection->setLanguage(lang);
   loadAutoCorrectionAndException();
+  mWasChanged = false;
 }
 
 
