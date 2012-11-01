@@ -38,6 +38,7 @@
 #include <KLocalizedString>
 #include <kstandardguiitem.h>
 #include <kwindowsystem.h>
+#include <kglobalsettings.h>
 
 #include <QtCore/QRegExp>
 #include <QtGui/QApplication>
@@ -57,7 +58,8 @@ MailSourceViewTextBrowserWidget::MailSourceViewTextBrowserWidget( QWidget *paren
   :QWidget( parent )
 {
   QVBoxLayout *lay = new QVBoxLayout;
-  setLayout( lay );  
+  setLayout( lay );
+  lay->setMargin( 0 );
   mTextBrowser = new MailSourceViewTextBrowser();
   mTextBrowser->setLineWrapMode( QPlainTextEdit::NoWrap );
   mTextBrowser->setTextInteractionFlags( Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard );
@@ -86,6 +88,11 @@ void MailSourceViewTextBrowserWidget::setText( const QString& text )
 void MailSourceViewTextBrowserWidget::setPlainText( const QString& text )
 {
   mTextBrowser->setPlainText( text );
+}
+
+void MailSourceViewTextBrowserWidget::setFixedFont()
+{
+  mTextBrowser->setFont( KGlobalSettings::fixedFont() );
 }
 
 MessageViewer::MailSourceViewTextBrowser *MailSourceViewTextBrowserWidget::textBrowser() const
@@ -233,23 +240,26 @@ MailSourceViewer::MailSourceViewer( QWidget *parent )
 
   QVBoxLayout *layout = new QVBoxLayout( mainWidget() );
   layout->setMargin( 0 );
-  mTabWidget = new KTabWidget;
-  layout->addWidget( mTabWidget );
-
   connect( this, SIGNAL(closeClicked()), SLOT(close()) );
 
   mRawBrowser = new MailSourceViewTextBrowserWidget();
+
+#ifndef NDEBUG
+  mTabWidget = new KTabWidget;
+  layout->addWidget( mTabWidget );
+
   mTabWidget->addTab( mRawBrowser, i18nc( "Unchanged mail message", "Raw Source" ) );
   mTabWidget->setTabToolTip( 0, i18n( "Raw, unmodified mail as it is stored on the filesystem or on the server" ) );
 
-#ifndef NDEBUG
   mHtmlBrowser = new MailSourceViewTextBrowserWidget();
   mTabWidget->addTab( mHtmlBrowser, i18nc( "Mail message as shown, in HTML format", "HTML Source" ) );
   mTabWidget->setTabToolTip( 1, i18n( "HTML code for displaying the message to the user" ) );
   mHtmlSourceHighLighter = new HTMLSourceHighlighter( mHtmlBrowser->textBrowser()->document() );
-#endif
 
   mTabWidget->setCurrentIndex( 0 );
+#else
+  layout->addWidget( mRawBrowser );
+#endif
 
   // combining the shortcuts in one qkeysequence() did not work...  
   QShortcut* shortcut = new QShortcut( this );
@@ -283,6 +293,14 @@ void MailSourceViewer::setDisplayedSource( const QString &source )
   mHtmlBrowser->setPlainText( HTMLPrettyFormatter::reformat( source ) );
 #else
   Q_UNUSED( source );
+#endif
+}
+
+void MailSourceViewer::setFixedFont()
+{
+  mRawBrowser->setFixedFont();
+#ifndef NDEBUG
+  mHtmlBrowser->setFixedFont();
 #endif
 }
   

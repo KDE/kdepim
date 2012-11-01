@@ -2197,7 +2197,7 @@ void ViewerPrivate::slotShowMessageSource()
   viewer->setRawSource( rawMessage );
   viewer->setDisplayedSource( htmlSource );
   if( mUseFixedFont ) {
-    viewer->setFont( KGlobalSettings::fixedFont() );
+    viewer->setFixedFont();
   }
 
   // Well, there is no widget to be seen here, so we have to use QCursor::pos()
