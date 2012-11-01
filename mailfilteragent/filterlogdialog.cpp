@@ -52,6 +52,7 @@ using namespace MailCommon;
 FilterLogDialog::FilterLogDialog( QWidget * parent )
   : KDialog( parent ), mIsInitialized( false )
 {
+  KGlobal::locale()->insertCatalog(QLatin1String("akonadi_mailfilter_agent"));
   setCaption( i18n( "Filter Log Viewer" ) );
   setButtons( User1|User2|Close );
   setObjectName( "FilterLogDlg" );
