@@ -27,6 +27,8 @@
 
 #include <KFileDialog>
 #include <KCharSelect>
+#include <KMessageBox>
+
 #include <QTreeWidgetItem>
 #include <QMenu>
 
@@ -538,6 +540,12 @@ void KMComposerAutoCorrectionWidget::changeLanguage(int index)
 {
   if(index == -1)
     return;
+  if(mWasChanged) {
+    const int rc = KMessageBox::warningYesNo( this,i18n("Language was changed, do you want to save config for previous language?"),i18n( "Save config" ) );
+    if ( rc == KMessageBox::Yes ) {
+      writeConfig();
+    }
+  }
   const QString lang = ui->autocorrectionLanguage->itemData (index).toString();
   mAutoCorrection->setLanguage(lang);
   loadAutoCorrectionAndException();
