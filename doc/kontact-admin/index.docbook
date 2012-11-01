@@ -167,7 +167,7 @@ The invitation will be sent as an attachment with name <filename>ical.ics</filen
 <para>When the user provides comments when responding to invitations, send the
 comment in a form that Microsoft Outlook(tm) understands. If this option is not
 enabled, the response comments will not be seen in Outlook.</para>
-<para>Details: When answering the invititation comments will be sent as a
+<para>Details: When answering the invitation comments will be sent as a
 DESCRIPTION iCal property instead of the COMMENT iCal property
 (in violation of RFC2446).</para>
 </listitem>
