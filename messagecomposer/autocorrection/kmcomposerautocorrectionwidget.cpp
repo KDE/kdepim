@@ -37,7 +37,8 @@ Q_DECLARE_METATYPE(KMComposerAutoCorrectionWidget::ImportFileType)
 KMComposerAutoCorrectionWidget::KMComposerAutoCorrectionWidget(QWidget *parent) :
   QWidget(parent),
   ui(new Ui::KMComposerAutoCorrectionWidget),
-  mAutoCorrection(0)
+  mAutoCorrection(0),
+  mWasChanged(false)
 {
   ui->setupUi(this);
 
@@ -128,6 +129,7 @@ void KMComposerAutoCorrectionWidget::loadConfig()
     ui->advancedAutocorrection->setChecked(mAutoCorrection->isAdvancedAutocorrect());
 
     loadAutoCorrectionAndException();
+    mWasChanged = false;
 }
 
 void KMComposerAutoCorrectionWidget::loadAutoCorrectionAndException()
@@ -238,7 +240,7 @@ void KMComposerAutoCorrectionWidget::selectSingleQuoteCharOpen()
   if (dlg.exec()) {
     m_singleQuotes.begin = dlg.currentChar();
     ui->singleQuote1->setText(m_singleQuotes.begin);
-    Q_EMIT changed();
+    emitChanged();
   }
 }
 
@@ -250,7 +252,7 @@ void KMComposerAutoCorrectionWidget::selectSingleQuoteCharClose()
   if (dlg.exec()) {
     m_singleQuotes.end = dlg.currentChar();
     ui->singleQuote2->setText(m_singleQuotes.end);
-    Q_EMIT changed();
+    emitChanged();
   }
 }
 
@@ -269,7 +271,7 @@ void KMComposerAutoCorrectionWidget::selectDoubleQuoteCharOpen()
   if (dlg.exec()) {
     m_doubleQuotes.begin = dlg.currentChar();
     ui->doubleQuote1->setText(m_doubleQuotes.begin);
-    Q_EMIT changed();
+    emitChanged();
   }
 }
 
@@ -281,7 +283,7 @@ void KMComposerAutoCorrectionWidget::selectDoubleQuoteCharClose()
   if (dlg.exec()) {
     m_doubleQuotes.end = dlg.currentChar();
     ui->doubleQuote2->setText(m_doubleQuotes.end);
-    Q_EMIT changed();
+    emitChanged();
   }
 }
 
@@ -333,7 +335,7 @@ void KMComposerAutoCorrectionWidget::addAutocorrectEntry()
 
     ui->treeWidget->setSortingEnabled(true);
     ui->treeWidget->setCurrentItem(item);
-    Q_EMIT changed();
+    emitChanged();
 }
 
 void KMComposerAutoCorrectionWidget::removeAutocorrectEntry()
@@ -360,7 +362,7 @@ void KMComposerAutoCorrectionWidget::removeAutocorrectEntry()
   }
   ui->treeWidget->setSortingEnabled(false);
 
-  Q_EMIT changed();
+  emitChanged();
 }
 
 void KMComposerAutoCorrectionWidget::enableAddRemoveButton()
@@ -405,13 +407,13 @@ void KMComposerAutoCorrectionWidget::setFindReplaceText(QTreeWidgetItem*item ,in
 void KMComposerAutoCorrectionWidget::abbreviationChanged(const QString &text)
 {
   ui->add1->setEnabled(!text.isEmpty());
-  Q_EMIT changed();
+  emitChanged();
 }
 
 void KMComposerAutoCorrectionWidget::twoUpperLetterChanged(const QString &text)
 {
   ui->add2->setEnabled(!text.isEmpty());
-  Q_EMIT changed();
+  emitChanged();
 }
 
 void KMComposerAutoCorrectionWidget::addAbbreviationEntry()
@@ -425,7 +427,7 @@ void KMComposerAutoCorrectionWidget::addAbbreviationEntry()
   }
   ui->abbreviation->clear();
   slotEnableDisableAbreviationList();
-  Q_EMIT changed();
+  emitChanged();
 }
 
 void KMComposerAutoCorrectionWidget::removeAbbreviationEntry()
@@ -438,7 +440,7 @@ void KMComposerAutoCorrectionWidget::removeAbbreviationEntry()
       delete item;
   }
   slotEnableDisableAbreviationList();
-  Q_EMIT changed();
+  emitChanged();
 }
 
 void KMComposerAutoCorrectionWidget::addTwoUpperLetterEntry()
@@ -449,7 +451,7 @@ void KMComposerAutoCorrectionWidget::addTwoUpperLetterEntry()
   if (!m_twoUpperLetterExceptions.contains(text)) {
     m_twoUpperLetterExceptions.insert(text);
     ui->twoUpperLetterList->addItem(text);
-    Q_EMIT changed();
+    emitChanged();
   }
   slotEnableDisableTwoUpperEntry();
   ui->twoUpperLetter->clear();
@@ -466,7 +468,7 @@ void KMComposerAutoCorrectionWidget::removeTwoUpperLetterEntry()
       delete item;
   }
   slotEnableDisableTwoUpperEntry();
-  Q_EMIT changed();
+  emitChanged();
 }
 
 
@@ -539,6 +541,13 @@ void KMComposerAutoCorrectionWidget::changeLanguage(int index)
   const QString lang = ui->autocorrectionLanguage->itemData (index).toString();
   mAutoCorrection->setLanguage(lang);
   loadAutoCorrectionAndException();
+}
+
+
+void KMComposerAutoCorrectionWidget::emitChanged()
+{
+    mWasChanged = true;
+    Q_EMIT changed();
 }
 
 #include "kmcomposerautocorrectionwidget.moc"
