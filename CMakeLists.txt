@@ -115,7 +115,7 @@ if(DEFINED KDEPIM_DEV_VERSION)
   set(KDEPIM_DEV_VERSION " ${KDEPIM_DEV_VERSION}")
 endif()
 
-set(KDEPIM_VERSION "4.9.2")
+set(KDEPIM_VERSION "4.9.3")
 
 configure_file(kdepim-version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/kdepim-version.h @ONLY)
 
