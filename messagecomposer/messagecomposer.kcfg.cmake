@@ -100,16 +100,16 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
       <whatsthis>Turn this option on to make Outlook &#8482; understand attachment names containing non-English characters</whatsthis>
       <default>false</default>
     </entry>
-      <entry name="WordWrap" type="Bool" key="word-wrap">
-        <label>Word &amp;wrap at column:</label>
-        <default>true</default>
-      </entry>
-      <entry name="LineWrapWidth" type="Int" key="break-at">
-        <label></label>
-        <default>78</default>
-        <min>30</min>
-        <max>998</max>
-      </entry>
+    <entry name="WordWrap" type="Bool" key="word-wrap">
+      <label>Word &amp;wrap at column:</label>
+      <default>true</default>
+    </entry>
+    <entry name="LineWrapWidth" type="Int" key="break-at">
+      <label></label>
+      <default>78</default>
+      <min>30</min>
+      <max>998</max>
+    </entry>
     <entry name="CryptoWarningUnencrypted" type="Bool" key="crypto-warning-unencrypted">
         <label>Warn before sending unencrypted messages.</label>
         <default>false</default>
