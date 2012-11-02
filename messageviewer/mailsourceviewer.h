@@ -80,6 +80,7 @@ public:
 
   void setText( const QString& text );
   void setPlainText( const QString& text );
+  void setFixedFont();
   MessageViewer::MailSourceViewTextBrowser *textBrowser() const;
 private slots:
   void slotFind();
@@ -136,11 +137,12 @@ public:
 
   void setRawSource( const QString &source );
   void setDisplayedSource( const QString &source );
+  void setFixedFont();
 private:
-  KTabWidget *mTabWidget;
   MailSourceViewTextBrowserWidget *mRawBrowser;
   FindBarSourceView *mFindBar;
 #ifndef NDEBUG
+  KTabWidget *mTabWidget;
   MailSourceViewTextBrowserWidget *mHtmlBrowser;
   HTMLSourceHighlighter *mHtmlSourceHighLighter;
 #endif

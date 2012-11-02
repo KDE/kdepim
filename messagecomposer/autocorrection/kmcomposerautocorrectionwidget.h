@@ -83,6 +83,7 @@ Q_SIGNALS:
   void changed();
 
 private:
+  void emitChanged();
   void addAutoCorrectEntries();
   void loadAutoCorrectionAndException();
   KMComposerAutoCorrection::TypographicQuotes m_singleQuotes;
@@ -92,6 +93,7 @@ private:
   QHash<QString, QString> m_autocorrectEntries;
   Ui::KMComposerAutoCorrectionWidget *ui;
   KMComposerAutoCorrection *mAutoCorrection;
+  bool mWasChanged;
 };
 
 }

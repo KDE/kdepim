@@ -18,8 +18,6 @@
 #ifndef IMPORTLIBREOFFICEAUTOCORRECTION_H
 #define IMPORTLIBREOFFICEAUTOCORRECTION_H
 
-#include <QString>
-#include <QSet>
 #include "importabstractautocorrection.h"
 
 class KTempDir;

@@ -21,7 +21,7 @@
 using namespace MessageComposer;
 
 AutoImageResizing::AutoImageResizing(QWidget *parent)
-    :KDialog(parent)
+  :KDialog(parent)
 {
   setCaption( i18nc("@title:window", "Resize Image") );
   setButtons( User1 | Cancel );

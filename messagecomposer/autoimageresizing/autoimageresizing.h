@@ -26,7 +26,7 @@ class AutoImageResizing : public KDialog
 {
   Q_OBJECT
 public:
-  explicit AutoImageResizing(QWidget *parent);
+  explicit AutoImageResizing(QWidget *parent = 0);
   ~AutoImageResizing();
 
 private Q_SLOTS:
