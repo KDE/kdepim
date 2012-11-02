@@ -110,6 +110,9 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
       <min>30</min>
       <max>998</max>
     </entry>
+    <entry name="ImprovePlainTextOfHtmlMessage" type="Bool" key="improve-plain-text-html-message">
+      <default>true</default>
+    </entry>
     <entry name="CryptoWarningUnencrypted" type="Bool" key="crypto-warning-unencrypted">
         <label>Warn before sending unencrypted messages.</label>
         <default>false</default>

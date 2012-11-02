@@ -24,9 +24,11 @@
 #include "textpart.h"
 #include "messageviewer/nodehelper.h"
 #include "autocorrection/kmcomposerautocorrection.h"
+#include "messagecomposersettings.h"
+
 
 #ifdef GRANTLEE_GREATER_0_2
-#include "grantlee/plaintextmarkupbuilder.h"
+#include <grantlee/plaintextmarkupbuilder.h>
 #endif
 
 #include <KEncodingFileDialog>
@@ -764,7 +766,7 @@ bool KMeditor::replaceSignature( const KPIMIdentities::Signature &oldSig,
 void KMeditor::fillComposerTextPart ( TextPart* textPart ) const
 {
 #ifdef GRANTLEE_GREATER_0_2 
-  if( isFormattingUsed() ) {
+  if( isFormattingUsed() && MessageComposer::MessageComposerSettings::self()->improvePlainTextOfHtmlMessage() ) {
     Grantlee::PlainTextMarkupBuilder *pb = new Grantlee::PlainTextMarkupBuilder();
 
     Grantlee::MarkupDirector *pmd = new Grantlee::MarkupDirector( pb );
