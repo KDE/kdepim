@@ -20,6 +20,8 @@ add_subdirectory( tests )
 if(GRANTLEE_GREATER_0_2)
   add_definitions(-DGRANTLEE_GREATER_0_2)
   include_directories(${Grantlee_INCLUDE_DIRS})
+else(GRANTLEE_GREATER_0_2) 
+  MESSAGE(STATUS "Grantlee > 0.2 was not found. We need Grantlee == 0.3 to improve Plain-text version of HTML messages")
 endif()
 
 set( messagecomposer_src
