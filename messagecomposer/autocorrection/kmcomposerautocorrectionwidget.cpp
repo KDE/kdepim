@@ -516,21 +516,22 @@ void KMComposerAutoCorrectionWidget::slotImportAutoCorrection(QAction* act)
       default:
           return;
       }
-      importAutoCorrection->import(fileName);
+      if(importAutoCorrection->import(fileName))
+      {
+        m_autocorrectEntries = importAutoCorrection->autocorrectEntries();
+        addAutoCorrectEntries();
 
-      m_autocorrectEntries = importAutoCorrection->autocorrectEntries();
-      addAutoCorrectEntries();
+        enableAdvAutocorrection(ui->advancedAutocorrection->isChecked());
 
-      enableAdvAutocorrection(ui->advancedAutocorrection->isChecked());
+        m_upperCaseExceptions = importAutoCorrection->upperCaseExceptions();
+        m_twoUpperLetterExceptions = importAutoCorrection->twoUpperLetterExceptions();
 
-      m_upperCaseExceptions = importAutoCorrection->upperCaseExceptions();
-      m_twoUpperLetterExceptions = importAutoCorrection->twoUpperLetterExceptions();
+        ui->twoUpperLetterList->clear();
+        ui->twoUpperLetterList->addItems(m_twoUpperLetterExceptions.toList());
 
-      ui->twoUpperLetterList->clear();
-      ui->twoUpperLetterList->addItems(m_twoUpperLetterExceptions.toList());
-
-      ui->abbreviationList->clear();
-      ui->abbreviationList->addItems(m_upperCaseExceptions.toList());
+        ui->abbreviationList->clear();
+        ui->abbreviationList->addItems(m_upperCaseExceptions.toList());
+      }
       delete importAutoCorrection;
     }
   }
