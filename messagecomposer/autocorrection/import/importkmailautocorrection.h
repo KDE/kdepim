@@ -19,7 +19,6 @@
 #define IMPORTKMAILAUTOCORRECTION_H
 
 #include "importabstractautocorrection.h"
-#include "autocorrection/kmcomposerautocorrection.h"
 
 namespace MessageComposer {
 class ImportKMailAutocorrection : public ImportAbstractAutocorrection
