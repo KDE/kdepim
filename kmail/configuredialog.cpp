@@ -2204,7 +2204,6 @@ ComposerPageGeneralTab::ComposerPageGeneralTab( QWidget * parent )
   QGroupBox   *group;
   QLabel      *label;
   KHBox       *hbox;
-  QString      msg;
 
   vlay = new QVBoxLayout( this );
   vlay->setSpacing( KDialog::spacingHint() );
@@ -2252,6 +2251,19 @@ ComposerPageGeneralTab::ComposerPageGeneralTab( QWidget * parent )
   vlay->addWidget( mReplyUsingHtml );
   connect( mReplyUsingHtml, SIGNAL(stateChanged(int)),
            this, SLOT(slotEmitChanged()) );
+
+
+  mImprovePlainTextOfHtmlMessage = new QCheckBox( MessageComposer::MessageComposerSettings::self()->improvePlainTextOfHtmlMessageItem()->label(), this );
+  vlay->addWidget( mImprovePlainTextOfHtmlMessage );
+#ifdef GRANTLEE_GREATER_0_2
+  connect( mImprovePlainTextOfHtmlMessage, SIGNAL(stateChanged(int)),
+           this, SLOT(slotEmitChanged()) );
+#else
+  mImprovePlainTextOfHtmlMessage->setWhatsThis(
+                 i18n( "To support improving the plain text of HTML messages, KMail must be compiled "
+                       "with Grantlee 0.3 or greater." ) );
+  mImprovePlainTextOfHtmlMessage->setEnabled(false);
+#endif
 
   mQuoteSelectionOnlyCheck = new QCheckBox( MessageComposer::MessageComposerSettings::self()->quoteSelectionOnlyItem()->label(),
                                             this );
@@ -2462,6 +2474,7 @@ void ComposerPage::GeneralTab::doResetToDefaultsOther()
   const int wrapColumn = MessageComposer::MessageComposerSettings::self()->lineWrapWidth();
   const bool showRecentAddress = MessageComposer::MessageComposerSettings::self()->showRecentAddressesInComposer();
   const int maximumRecipient = MessageComposer::MessageComposerSettings::self()->maximumRecipients();
+  const bool improvePlainText = MessageComposer::MessageComposerSettings::self()->improvePlainTextOfHtmlMessage();
 
   MessageComposer::MessageComposerSettings::self()->useDefaults( bUseDefaults );
 
@@ -2473,6 +2486,7 @@ void ComposerPage::GeneralTab::doResetToDefaultsOther()
   mWrapColumnSpin->setValue( wrapColumn );
   mMaximumRecipients->setValue( maximumRecipient );
   mShowRecentAddressesInComposer->setChecked( showRecentAddress );
+  mImprovePlainTextOfHtmlMessage->setChecked(improvePlainText);
 
 }
 
@@ -2494,6 +2508,7 @@ void ComposerPage::GeneralTab::doLoadFromGlobalSettings()
   mMaximumRecipients->setValue( MessageComposer::MessageComposerSettings::self()->maximumRecipients() );
   mAutoSave->setValue( GlobalSettings::self()->autosaveInterval() );
   mShowRecentAddressesInComposer->setChecked( MessageComposer::MessageComposerSettings::self()->showRecentAddressesInComposer() );
+  mImprovePlainTextOfHtmlMessage->setChecked(MessageComposer::MessageComposerSettings::self()->improvePlainTextOfHtmlMessage());
 
 #ifdef KDEPIM_ENTERPRISE_BUILD
   mRecipientCheck->setChecked( GlobalSettings::self()->tooManyRecipients() );
@@ -2524,7 +2539,7 @@ void ComposerPage::GeneralTab::save() {
   MessageComposer::MessageComposerSettings::self()->setMaximumRecipients( mMaximumRecipients->value() );
   GlobalSettings::self()->setAutosaveInterval( mAutoSave->value() );
   MessageComposer::MessageComposerSettings::self()->setShowRecentAddressesInComposer( mShowRecentAddressesInComposer->isChecked() );
-
+  MessageComposer::MessageComposerSettings::self()->setImprovePlainTextOfHtmlMessage( mImprovePlainTextOfHtmlMessage->isChecked() );
 #ifdef KDEPIM_ENTERPRISE_BUILD
   GlobalSettings::self()->setTooManyRecipients( mRecipientCheck->isChecked() );
   GlobalSettings::self()->setRecipientThreshold( mRecipientSpin->value() );

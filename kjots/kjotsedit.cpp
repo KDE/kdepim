@@ -67,6 +67,7 @@ KJotsEdit::KJotsEdit ( QItemSelectionModel *selectionModel, QWidget *parent )
 {
     setAcceptRichText(true);
     setWordWrapMode(QTextOption::WordWrap);
+    setCheckSpellingEnabled(true);
     setRichTextSupport( FullTextFormattingSupport
             | FullListSupport
             | SupportAlignment

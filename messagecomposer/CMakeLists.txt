@@ -10,12 +10,6 @@ include_directories(
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
 
-set(GRANTLEE_GREATER_0_2)
-if(${Grantlee_VERSION} VERSION_GREATER "0.2.0" )
-   set(GRANTLEE_GREATER_0_2 true)
-endif()
-
-
 add_subdirectory( tests )
 if(GRANTLEE_GREATER_0_2)
   add_definitions(-DGRANTLEE_GREATER_0_2)
