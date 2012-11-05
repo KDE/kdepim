@@ -52,6 +52,7 @@ using MailCommon::FilterImporterExporter;
 #include <KWindowSystem>
 
 #include <QApplication>
+#include <QHeaderView>
 #include <QButtonGroup>
 #include <QCheckBox>
 #include <QGridLayout>
