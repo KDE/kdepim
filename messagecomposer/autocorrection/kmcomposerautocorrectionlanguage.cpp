@@ -26,8 +26,6 @@ KMComposerAutoCorrectionLanguage::KMComposerAutoCorrectionLanguage(QWidget *pare
 {
   KLocale *locale = KGlobal::locale();
   QStringList lstLang = locale->allLanguagesList();
-  lstLang.sort();
-
   Q_FOREACH(const QString& lang, lstLang) {
     if(lang != QLatin1String("x-test")) {
       addItem ( locale->languageCodeToName(lang) , lang );
@@ -36,6 +34,8 @@ KMComposerAutoCorrectionLanguage::KMComposerAutoCorrectionLanguage(QWidget *pare
   const QString defaultLang = locale->languageList().first();
   const int index = findData(defaultLang);
   setCurrentIndex(index);
+  model()->sort(0);
+
 }
 
 KMComposerAutoCorrectionLanguage::~KMComposerAutoCorrectionLanguage()

@@ -650,7 +650,11 @@ void KMComposerAutoCorrection::readAutoCorrectionXmlFile()
     qDebug()<<"void KMComposerAutoCorrection::readAutoCorrectionXmlFile() "<<mAutoCorectLang;
     QString fname;
     if (!mAutoCorectLang.isEmpty()) {
-        fname = KGlobal::dirs()->findResource("data", QLatin1String("autocorrect/") + mAutoCorectLang + QLatin1String(".xml"));
+        if(mAutoCorectLang == QLatin1String("en_US")) {
+          fname = KGlobal::dirs()->findResource("data", QLatin1String("autocorrect/autocorrect.xml"));
+        } else {
+          fname = KGlobal::dirs()->findResource("data", QLatin1String("autocorrect/") + mAutoCorectLang + QLatin1String(".xml"));
+        }
     } else {
         if (fname.isEmpty() && !kdelang.isEmpty())
             fname = KGlobal::dirs()->findResource("data", QLatin1String("autocorrect/") + kdelang + QLatin1String(".xml"));
@@ -689,7 +693,7 @@ void KMComposerAutoCorrection::readAutoCorrectionXmlFile()
 
 void KMComposerAutoCorrection::writeAutoCorrectionXmlFile()
 {
-    const QString fname = KGlobal::dirs()->locateLocal("data", QLatin1String("autocorrect/") + mAutoCorectLang + QLatin1String(".xml"));
+    const QString fname = KGlobal::dirs()->locateLocal("data", QLatin1String("autocorrect/") + (mAutoCorectLang == QLatin1String("en_US") ? QLatin1String("autocorrect") : mAutoCorectLang) + QLatin1String(".xml"));
     QFile file(fname);
     if( !file.open( QIODevice::WriteOnly | QIODevice::Text ) ) {
         kDebug()<<"We can't save in file :"<<fname;

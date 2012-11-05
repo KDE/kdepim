@@ -52,7 +52,7 @@ public:
 public slots:
   void displayStatusMsg(const QString&);
   void slotEditToolbars();
-  void slotUpdateToolbars();
+  void slotUpdateGui();
   void setupStatusBar();
 
 protected:
@@ -73,7 +73,6 @@ private:
   KMMainWidget *mKMMainWidget;
   StatusbarProgressWidget *mLittleProgress;
   ProgressDialog *mProgressDialog;
-  int mMessageStatusId;
   bool mReallyClose;
 };
 

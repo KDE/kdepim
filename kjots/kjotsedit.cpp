@@ -84,6 +84,7 @@ KJotsEdit::~KJotsEdit()
 {
 }
 
+#ifndef HAVE_MOUSEPOPUPMENUIMPLEMENTATION
 void KJotsEdit::contextMenuEvent( QContextMenuEvent *event )
 {
     QMenu *popup = createStandardContextMenu();
@@ -105,6 +106,31 @@ void KJotsEdit::contextMenuEvent( QContextMenuEvent *event )
     }
     popup->exec( event->globalPos() );
     delete popup;
+}
+#endif
+
+void KJotsEdit::mousePopupMenuImplementation(const QPoint& pos)
+{
+   QMenu *popup = mousePopupMenu();
+   if ( popup ) {
+        popup->addSeparator();
+    QAction * act = actionCollection->action("copyIntoTitle");
+    popup->addAction(act);
+    act = actionCollection->action("insert_checkmark");
+    act->setEnabled( !isReadOnly() );
+    popup->addAction(act);
+
+    if (!KApplication::kApplication()->clipboard()->text().isEmpty())
+    {
+      act = actionCollection->action("paste_plain_text");
+      act->setEnabled( !isReadOnly() );
+      popup->addAction( act );
+    }
+ 
+     aboutToShowContextMenu(popup);
+     popup->exec( pos );
+     delete popup;
+   }
 }
 
 void KJotsEdit::delayedInitialization ( KActionCollection *collection )
