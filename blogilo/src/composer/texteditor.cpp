@@ -120,6 +120,7 @@ void WebView::contextMenuEvent(QContextMenuEvent* event)
         menu->addAction(actRemoveLink);
     }
     QAction *res = menu->exec(event->globalPos());
+    delete menu;
     if(res == actEditImage){
         QMap<QString, QString> img;
         img.insert("url", elm.attribute("src"));

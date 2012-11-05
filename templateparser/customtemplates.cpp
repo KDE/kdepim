@@ -46,6 +46,7 @@ CustomTemplates::CustomTemplates( const QList<KActionCollection*> &actionCollect
   mUi->mList->setColumnWidth( 0, 100 );
   mUi->mList->header()->setStretchLastSection( true );
   mUi->mList->setItemDelegate( new CustomTemplateItemDelegate( this ) );
+  mUi->mList->header()->setMovable( false );
   mUi->mEditFrame->setEnabled( false );
 
   mUi->mName->setTrapReturnKey( true );

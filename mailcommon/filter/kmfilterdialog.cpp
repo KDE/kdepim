@@ -81,6 +81,9 @@ AccountList::AccountList( QWidget *parent )
     setFrameStyle( QFrame::WinPanel + QFrame::Sunken );
     setSortingEnabled( false );
     setRootIsDecorated( false );
+    setSortingEnabled( true );
+    sortByColumn( 0, Qt::AscendingOrder );
+    header()->setMovable( false );
 }
 
 AccountList::~AccountList()
