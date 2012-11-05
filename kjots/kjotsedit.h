@@ -44,8 +44,9 @@ public:
     virtual void insertFromMimeData ( const QMimeData *);
 
 protected:
+#ifndef HAVE_MOUSEPOPUPMENUIMPLEMENTATION
     virtual void contextMenuEvent( QContextMenuEvent* );
-
+#endif
     /** Override to make ctrl+click follow links */
     virtual void mouseReleaseEvent(QMouseEvent *);
 
@@ -54,6 +55,7 @@ protected:
     virtual bool event( QEvent *event );
 
 protected slots:
+    void mousePopupMenuImplementation(const QPoint& pos);
     void selectionChanged(const QItemSelection &selected, const QItemSelection &deselected);
     void tryDisableEditing();
     void onBookshelfSelection ( void );
