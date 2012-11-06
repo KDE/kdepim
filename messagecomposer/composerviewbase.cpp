@@ -583,10 +583,18 @@ QList< Message::Composer* > Message::ComposerViewBase::generateCryptoMessages ()
 
       composers.append( composer );
     }
+  } else if( !signSomething && !encryptSomething ) {
+     Message::Composer* composer =  new Message::Composer;
+     composers.append( composer );
+     //If we canceled sign or encrypt be sure to change status in attachment.
+     markAllAttachmentsForSigning(false);
+     markAllAttachmentsForSigning(false);
   }
+
 
   if( composers.isEmpty() && ( signSomething || encryptSomething ) )
     Q_ASSERT_X( false, "ComposerViewBase::fillCryptoInfo" , "No concrete sign or encrypt method selected");
+
 
   return composers;
 }
@@ -1510,6 +1518,25 @@ Message::ComposerViewBase::MissingAttachment Message::ComposerViewBase::checkFor
   return FoundMissingAttachmentAndSending;
 }
 
+
+
+void Message::ComposerViewBase::markAllAttachmentsForSigning(bool sign)
+{
+  foreach( MessageCore::AttachmentPart::Ptr attachment, m_attachmentModel->attachments() ) {
+    if( attachment->isSigned() ) {
+       attachment->setSigned(sign);
+    }
+  }
+}
+
+void Message::ComposerViewBase::markAllAttachmentsForEncryption(bool encrypt)
+{
+  foreach( MessageCore::AttachmentPart::Ptr attachment, m_attachmentModel->attachments() ) {
+    if( attachment->isEncrypted() ) {
+        attachment->setEncrypted(encrypt);
+    }
+  }
+}
 
 
 #include "composerviewbase.moc"
