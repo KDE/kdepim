@@ -281,6 +281,8 @@ private:
   void saveRecentAddresses( KMime::Message::Ptr ptr );
   void updateRecipients( const KPIMIdentities::Identity &ident, const KPIMIdentities::Identity &oldIdent, MessageComposer::Recipient::Type type );
 
+  void markAllAttachmentsForSigning(bool sign);
+  void markAllAttachmentsForEncryption(bool encrypt);
   /**
   * Writes out autosave data to the disk from the KMime::Message message.
   * Also appends the msgNum to the filename as a message can have a number of
