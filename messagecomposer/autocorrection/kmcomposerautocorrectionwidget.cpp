@@ -218,6 +218,7 @@ void KMComposerAutoCorrectionWidget::resetToDefault()
   ui->advancedAutocorrection->setChecked(false);
   ui->typographicDoubleQuotes->setChecked(false);
   ui->typographicSingleQuotes->setChecked(false);
+  loadGlobalAutoCorrectionAndException();
 }
 
 void KMComposerAutoCorrectionWidget::enableSingleQuotes(bool state)
@@ -558,6 +559,11 @@ void KMComposerAutoCorrectionWidget::emitChanged()
 {
     mWasChanged = true;
     Q_EMIT changed();
+}
+
+void KMComposerAutoCorrectionWidget::loadGlobalAutoCorrectionAndException()
+{
+
 }
 
 #include "kmcomposerautocorrectionwidget.moc"
