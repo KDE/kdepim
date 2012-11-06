@@ -86,6 +86,7 @@ private:
   void emitChanged();
   void addAutoCorrectEntries();
   void loadAutoCorrectionAndException();
+  void loadGlobalAutoCorrectionAndException();
   KMComposerAutoCorrection::TypographicQuotes m_singleQuotes;
   KMComposerAutoCorrection::TypographicQuotes m_doubleQuotes;
   QSet<QString> m_upperCaseExceptions;

@@ -444,7 +444,11 @@ KAction *Viewer::translateAction()
   return d->mTranslateAction;
 }
 
-
+KAction *Viewer::saveAsAction()
+{
+  Q_D( Viewer );
+  return d->mSaveMessageAction;
+}
 
 KAction *Viewer::urlOpenAction()
 {

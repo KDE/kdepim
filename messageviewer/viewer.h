@@ -278,6 +278,7 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
   KAction *translateAction();
   KAction *viewSourceAction();
   KAction *findInMessageAction();
+  KAction *saveAsAction();
 
   const HeaderStrategy * headerStrategy() const;
 

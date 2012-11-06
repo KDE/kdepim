@@ -324,9 +324,6 @@ void KMReaderMainWin::setupAccel()
            this, SLOT(slotReplyOrForwardFinished()) );
 
   //----- File Menu
-  mSaveAsAction = KStandardAction::saveAs( mReaderWin->viewer(), SLOT(slotSaveMessage()),
-                                           actionCollection() );
-  mSaveAsAction->setShortcut( KStandardShortcut::shortcut( KStandardShortcut::Save ) );
 
   mSaveAtmAction  = new KAction(KIcon("mail-attachment"), i18n("Save A&ttachments..."), actionCollection() );
   connect( mSaveAtmAction, SIGNAL(triggered(bool)), mReaderWin->viewer(), SLOT(slotAttachmentSaveAll()) );
@@ -343,23 +340,17 @@ void KMReaderMainWin::setupAccel()
   closeShortcut.setAlternate( QKeySequence(Qt::Key_Escape));
   closeAction->setShortcuts(closeShortcut);
 
-  //----- View Menu
-  mViewSourceAction  = new KAction(i18n("&View Source"), this);
-  actionCollection()->addAction("view_source", mViewSourceAction );
-  connect(mViewSourceAction, SIGNAL(triggered(bool)), mReaderWin->viewer(), SLOT(slotShowMessageSource()));
-  mViewSourceAction->setShortcut(QKeySequence(Qt::Key_V));
-
   //----- Message Menu
 
-  fontAction = new KFontAction( i18n("Select Font"), this );
-  actionCollection()->addAction( "text_font", fontAction );
-  fontAction->setFont( mReaderWin->cssHelper()->bodyFont().family() );
-  connect( fontAction, SIGNAL(triggered(QString)),
+  mFontAction = new KFontAction( i18n("Select Font"), this );
+  actionCollection()->addAction( "text_font", mFontAction );
+  mFontAction->setFont( mReaderWin->cssHelper()->bodyFont().family() );
+  connect( mFontAction, SIGNAL(triggered(QString)),
            SLOT(slotFontAction(QString)) );
-  fontSizeAction = new KFontSizeAction( i18n( "Select Size" ), this );
-  fontSizeAction->setFontSize( mReaderWin->cssHelper()->bodyFont().pointSize() );
-  actionCollection()->addAction( "text_size", fontSizeAction );
-  connect( fontSizeAction, SIGNAL(fontSizeChanged(int)),
+  mFontSizeAction = new KFontSizeAction( i18n( "Select Size" ), this );
+  mFontSizeAction->setFontSize( mReaderWin->cssHelper()->bodyFont().pointSize() );
+  actionCollection()->addAction( "text_size", mFontSizeAction );
+  connect( mFontSizeAction, SIGNAL(fontSizeChanged(int)),
            SLOT(slotSizeAction(int)) );
 
 
@@ -522,12 +513,12 @@ void KMReaderMainWin::slotDelayedMessagePopup( KJob *job )
       menu->addSeparator();
     }
 
-    menu->addAction( mViewSourceAction );
+    menu->addAction( mReaderWin->viewSourceAction() );
     menu->addAction( mReaderWin->toggleFixFontAction() );
     menu->addAction( mReaderWin->toggleMimePartTreeAction() );
     menu->addSeparator();
     menu->addAction( mMsgActions->printAction() );
-    menu->addAction( mSaveAsAction );
+    menu->addAction( mReaderWin->saveAsAction() );
     menu->addAction( mSaveAtmAction );
     if ( mMsg.isValid() ) {
       menu->addSeparator();

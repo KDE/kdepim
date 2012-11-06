@@ -1714,7 +1714,7 @@ void ViewerPrivate::createActions()
   connect(mViewSourceAction, SIGNAL(triggered(bool)), SLOT(slotShowMessageSource()));
   mViewSourceAction->setShortcut(QKeySequence(Qt::Key_V));
 
-  mSaveMessageAction = new KAction(i18n("&Save message"), this);
+  mSaveMessageAction = new KAction(KIcon("document-save-as"), i18n("&Save message..."), this);
   ac->addAction("save_message", mSaveMessageAction);
   connect(mSaveMessageAction, SIGNAL(triggered(bool)), SLOT(slotSaveMessage()));
   //Laurent: conflict with kmail shortcut

@@ -303,3 +303,22 @@ bool Message::Util::sendMailDispatcherIsOnline( QWidget *parent )
   return false;
 }
   
+QString Message::Util::rot13(const QString &s)
+{
+  QString r(s);
+
+  for (int i=0; i<r.length(); i++) {
+    if ( ( r[i] >= QLatin1Char('A') && r[i] <= QLatin1Char('M') ) ||
+         ( r[i] >= QLatin1Char('a') && r[i] <= QLatin1Char('m') ) ) {
+      r[i] = (char)((int)QChar(r[i]).toLatin1() + 13);
+    } else {
+      if  ( ( r[i] >= QLatin1Char('N') && r[i] <= QLatin1Char('Z') ) ||
+            ( r[i] >= QLatin1Char('n') && r[i] <= QLatin1Char('z') ) ) {
+        r[i] = (char)((int)QChar(r[i]).toLatin1() - 13);
+      }
+    }
+  }
+
+  return r;
+}
+

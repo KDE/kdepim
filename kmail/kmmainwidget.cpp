@@ -4482,15 +4482,6 @@ QString KMMainWidget::overrideEncoding() const
     return MessageCore::GlobalSettings::self()->overrideCharacterEncoding();
 }
 
-void KMMainWidget::slotCreateTodo()
-{
-  const Akonadi::Item msg = mMessagePane->currentItem();
-  if ( !msg.isValid() )
-    return;
-
-  MailCommon::Util::createTodoFromMail( msg );
-}
-
 void KMMainWidget::showEvent( QShowEvent *event )
 {
   QWidget::showEvent( event );
@@ -4602,6 +4593,7 @@ void KMMainWidget::itemsReceived(const Akonadi::Item::List &list )
   mMsgView->setHtmlOverride(mFolderHtmlPref);
   mMsgView->setHtmlLoadExtOverride(mFolderHtmlLoadExtPref);
   mMsgView->setDecryptMessageOverwrite( false );
+  mMsgActions->setCurrentMessage( item );
 }
 
 void KMMainWidget::itemsFetchDone( KJob *job )
