@@ -528,8 +528,8 @@ QList< Message::Composer* > Message::ComposerViewBase::generateCryptoMessages ()
 
   QList< Message::Composer* > composers;
 
-  Kleo::CryptoMessageFormat concreteEncryptFormat = Kleo::AutoFormat;
   if( encryptSomething ) {
+    Kleo::CryptoMessageFormat concreteEncryptFormat = Kleo::AutoFormat;
     for ( unsigned int i = 0 ; i < numConcreteCryptoMessageFormats ; ++i ) {
       if ( keyResolver->encryptionItems( concreteCryptoMessageFormats[i] ).empty() )
         continue;
