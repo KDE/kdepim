@@ -26,6 +26,7 @@
 #include <KPIMTextEdit/EMailQuoteHighlighter>
 #include <KConfigGroup>
 #include <QApplication>
+#include <messagecomposer/util.h>
 
 KNComposerEditor::KNComposerEditor( QWidget *parent)
  :KMeditor(parent)
@@ -56,7 +57,7 @@ void KNComposerEditor::slotRot13()
 {
   QTextCursor cursor = textCursor();
   if ( cursor.hasSelection() )
-    insertPlainText( Utils::rot13( cursor.selectedText() ) );
+    insertPlainText( Message::Util::rot13( cursor.selectedText() ) );
   //FIXME: breaks HTML formatting
 }
 
