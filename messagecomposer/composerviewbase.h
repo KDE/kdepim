@@ -60,6 +60,11 @@ namespace MessageComposer
   class RecipientsEditor;
 }
 
+namespace Kleo
+{
+  class KeyResolver;
+}
+
 namespace Message {
 
 class InfoPart;
@@ -274,6 +279,9 @@ private:
 
   void markAllAttachmentsForSigning(bool sign);
   void markAllAttachmentsForEncryption(bool encrypt);
+  bool determineWhetherToSign(bool doSignCompletely , Kleo::KeyResolver *keyResolver, bool signSomething, bool & result);
+  bool determineWhetherToEncrypt(bool doEncryptCompletely , Kleo::KeyResolver *keyResolver, bool encryptSomething, bool signSomething, bool & result);
+
   /**
   * Writes out autosave data to the disk from the KMime::Message message.
   * Also appends the msgNum to the filename as a message can have a number of
