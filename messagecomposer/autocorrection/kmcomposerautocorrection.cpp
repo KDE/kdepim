@@ -38,7 +38,8 @@ KMComposerAutoCorrection::KMComposerAutoCorrection()
     mCapitalizeWeekDays(false),
     mReplaceDoubleQuotes(false),
     mReplaceSingleQuotes(false),
-    mEnabled(false)
+    mEnabled(false),
+    mSuperScriptAppendix(false)
 {
   // default double quote open 0x201c
   // default double quote close 0x201d
@@ -107,6 +108,9 @@ void KMComposerAutoCorrection::autocorrect(bool htmlMode, QTextDocument& documen
      if(!done) {
          done = autoBoldUnderline();
      }
+     if(!done) {
+         superscriptAppendix();
+     }
   }
   if (!done)
     done = singleSpaces();
@@ -140,6 +144,7 @@ void KMComposerAutoCorrection::readConfig()
   mReplaceDoubleQuotes = MessageComposer::MessageComposerSettings::self()->replaceDoubleQuotes();
   mReplaceSingleQuotes = MessageComposer::MessageComposerSettings::self()->replaceSingleQuotes();
   mEnabled = MessageComposer::MessageComposerSettings::self()->enabled();
+  mSuperScriptAppendix = MessageComposer::MessageComposerSettings::self()->superScript();
   readAutoCorrectionXmlFile();
 }
 
@@ -156,6 +161,7 @@ void KMComposerAutoCorrection::writeConfig()
   MessageComposer::MessageComposerSettings::self()->setReplaceDoubleQuotes(mReplaceDoubleQuotes);
   MessageComposer::MessageComposerSettings::self()->setReplaceSingleQuotes(mReplaceSingleQuotes);
   MessageComposer::MessageComposerSettings::self()->setEnabled(mEnabled);
+  MessageComposer::MessageComposerSettings::self()->setSuperScript(mSuperScriptAppendix);
   MessageComposer::MessageComposerSettings::self()->requestSync();
   writeAutoCorrectionXmlFile();
 }
@@ -214,6 +220,60 @@ QHash<QString, QString> KMComposerAutoCorrection::autocorrectEntries() const
   return mAutocorrectEntries;
 }
 
+void KMComposerAutoCorrection::superscriptAppendix()
+{
+    if (!mSuperScriptAppendix) return;
+
+    QString trimmed = mWord.trimmed();
+    int startPos = -1;
+    int endPos = -1;
+
+    QHash<QString, QString>::const_iterator i = mSuperScriptEntries.constBegin();
+    while (i != mSuperScriptEntries.constEnd()) {
+        if (i.key() == trimmed) {
+            startPos = mCursor.selectionStart() + 1;
+            endPos = startPos - 1 + trimmed.length();
+            break;
+        }
+        else if (i.key() == QLatin1String("othernb")) {
+            int pos = trimmed.indexOf(i.value());
+            if (pos > 0) {
+                QString number = trimmed.left(pos);
+                QString::ConstIterator constIter = number.constBegin();
+                bool found = true;
+                // don't apply superscript to 1th, 2th and 3th
+                if (number.length() == 1 &&
+                        (*constIter == QLatin1Char('1') || *constIter == QLatin1Char('2') || *constIter == QLatin1Char('3')))
+                    found = false;
+                if (found) {
+                    while (constIter != number.constEnd()) {
+                        if (!constIter->isNumber()) {
+                            found = false;
+                            break;
+                        }
+                        ++constIter;
+                    }
+                }
+                if (found && number.length() + i.value().length() == trimmed.length()) {
+                    startPos = mCursor.selectionStart() + pos;
+                    endPos = startPos - pos + trimmed.length();
+                    break;
+                }
+            }
+        }
+        ++i;
+    }
+
+    if (startPos != -1 && endPos != -1) {
+        QTextCursor cursor(mCursor);
+        cursor.setPosition(startPos);
+        cursor.setPosition(endPos, QTextCursor::KeepAnchor);
+
+        QTextCharFormat format;
+        format.setVerticalAlignment(QTextCharFormat::AlignSuperScript);
+        cursor.mergeCharFormat(format);
+    }
+}
 
 bool KMComposerAutoCorrection::autoBoldUnderline()
 {

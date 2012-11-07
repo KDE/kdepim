@@ -91,6 +91,7 @@ private:
   void uppercaseFirstCharOfSentence();
   void advancedAutocorrect();
   void replaceTypographicQuotes();
+  void superscriptAppendix();
 
   void selectWord(QTextCursor &cursor, int cursorPosition);
 
@@ -115,6 +116,7 @@ private:
   bool mAutoFormatUrl;
   bool mAutoBoldUnderline;
   bool mEnabled;
+  bool mSuperScriptAppendix;
 
   QString mWord;
   QTextCursor mCursor;
