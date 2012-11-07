@@ -1089,7 +1089,6 @@ Kpgp::Result Kleo::KeyResolver::resolveAllKeys( bool& signingRequested, bool& en
     else {
       result = resolveSigningKeysForSigningOnly();
       if ( result == Kpgp::Failure ) {
-	      qDebug()<<" xXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX1111111111111";
         signingRequested = false;
         return Kpgp::Ok;
       }
@@ -1354,7 +1353,6 @@ Kpgp::Result Kleo::KeyResolver::resolveSigningKeysForSigningOnly() {
                                            KStandardGuiItem::cont() )
        == KMessageBox::Continue ) {
     d->mFormatInfoMap[OpenPGPMIMEFormat].splitInfos.push_back( SplitInfo( allRecipients() ) );
-    qDebug()<<" XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
     return Kpgp::Failure; // means "Ok, but without signing"
   }
   return Kpgp::Canceled;
