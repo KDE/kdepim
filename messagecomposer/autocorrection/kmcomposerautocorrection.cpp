@@ -731,7 +731,7 @@ void KMComposerAutoCorrection::writeAutoCorrectionXmlFile()
     while (twoUpper != mTwoUpperLetterExceptions.constEnd()) {
         QDomElement item = root.createElement(QLatin1String( "word" ));
         item.setAttribute(QLatin1String("exception"),*twoUpper);
-        upperCaseExceptions.appendChild(item);
+        twoUpperLetterExceptions.appendChild(item);
         ++twoUpper;
     }
     word.appendChild(twoUpperLetterExceptions);
