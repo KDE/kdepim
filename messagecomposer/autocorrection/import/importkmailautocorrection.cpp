@@ -100,6 +100,14 @@ bool ImportKMailAutocorrection::import(const QString& fileName)
         kDebug()<<" number of simple quote invalid "<<nl.count();
       }
     }
+
+    QDomElement superScript = de.namedItem(QLatin1String("SuperScript")).toElement();
+    if (!superScript.isNull()) {
+      QDomNodeList nl = superScript.childNodes();
+      for(int i = 0; i < nl.count() ; i++)
+        mSuperScriptEntries.insert(nl.item(i).toElement().attribute(QLatin1String("find")), nl.item(i).toElement().attribute(QLatin1String("super")));
+    }
+
     return true;
 }
 

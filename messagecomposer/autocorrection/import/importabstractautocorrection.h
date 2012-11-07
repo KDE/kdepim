@@ -36,6 +36,7 @@ public:
   QSet<QString> upperCaseExceptions() const;
   QSet<QString> twoUpperLetterExceptions() const;
   QHash<QString, QString> autocorrectEntries() const;
+  QHash<QString, QString> superScriptEntries() const;
 
   KMComposerAutoCorrection::TypographicQuotes typographicSingleQuotes() const;
   KMComposerAutoCorrection::TypographicQuotes typographicDoubleQuotes() const;
@@ -44,6 +45,7 @@ protected:
   QSet<QString> mUpperCaseExceptions;
   QSet<QString> mTwoUpperLetterExceptions;
   QHash<QString, QString> mAutocorrectEntries;
+  QHash<QString, QString> mSuperScriptEntries;
   KMComposerAutoCorrection::TypographicQuotes mTypographicSingleQuotes;
   KMComposerAutoCorrection::TypographicQuotes mTypographicDoubleQuotes;
   QWidget *mParent;

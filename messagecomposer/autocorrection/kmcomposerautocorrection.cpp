@@ -672,6 +672,7 @@ void KMComposerAutoCorrection::readAutoCorrectionXmlFile()
     mUpperCaseExceptions.clear();
     mAutocorrectEntries.clear();
     mTwoUpperLetterExceptions.clear();
+    mSuperScriptEntries.clear();
 
     qDebug()<<" fname :"<<fname;
     if (fname.isEmpty()) {
@@ -682,12 +683,12 @@ void KMComposerAutoCorrection::readAutoCorrectionXmlFile()
 
     ImportKMailAutocorrection import;
     if (import.import(fname)) {
-
         mUpperCaseExceptions = import.upperCaseExceptions();
         mTwoUpperLetterExceptions = import.twoUpperLetterExceptions();
         mAutocorrectEntries = import.autocorrectEntries();
         mTypographicSingleQuotes = import.typographicSingleQuotes();
         mTypographicDoubleQuotes = import.typographicDoubleQuotes();
+        mSuperScriptEntries = import.superScriptEntries();
     }
 }
 
@@ -736,6 +737,16 @@ void KMComposerAutoCorrection::writeAutoCorrectionXmlFile()
     }
     word.appendChild(twoUpperLetterExceptions);
 
+    QDomElement supperscript = root.createElement(QLatin1String( "SuperScript" ));
+    QHashIterator<QString, QString> j(mSuperScriptEntries);
+    while (j.hasNext()) {
+        j.next();
+        QDomElement item = root.createElement(QLatin1String( "superscript" ));
+        item.setAttribute(QLatin1String("find"), j.key());
+        item.setAttribute(QLatin1String("super"), j.value());
+        item.appendChild(item);
+    }
+    word.appendChild(supperscript);
 
     QDomElement doubleQuote = root.createElement(QLatin1String( "DoubleQuote" ));
     QDomElement item = root.createElement(QLatin1String( "doublequote" ));

@@ -124,6 +124,7 @@ private:
   QSet<QString> mUpperCaseExceptions;
   QSet<QString> mTwoUpperLetterExceptions;
   QHash<QString, QString> mAutocorrectEntries;
+  QHash<QString, QString> mSuperScriptEntries;
   TypographicQuotes mTypographicSingleQuotes;
   TypographicQuotes mTypographicDoubleQuotes;
 };
