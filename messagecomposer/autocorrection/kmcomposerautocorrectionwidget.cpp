@@ -206,7 +206,7 @@ void KMComposerAutoCorrectionWidget::writeConfig()
   mAutoCorrection->setTypographicSingleQuotes(m_singleQuotes);
   mAutoCorrection->setTypographicDoubleQuotes(m_doubleQuotes);
   mAutoCorrection->writeConfig();
-
+  mWasChanged = false;
 }
 
 void KMComposerAutoCorrectionWidget::resetToDefault()
@@ -223,6 +223,7 @@ void KMComposerAutoCorrectionWidget::resetToDefault()
   ui->autoSuperScript->setChecked(false);
 
   loadGlobalAutoCorrectionAndException();
+  mWasChanged = false;
 }
 
 void KMComposerAutoCorrectionWidget::enableSingleQuotes(bool state)
@@ -557,7 +558,6 @@ void KMComposerAutoCorrectionWidget::changeLanguage(int index)
   loadAutoCorrectionAndException();
   mWasChanged = false;
 }
-
 
 void KMComposerAutoCorrectionWidget::emitChanged()
 {
