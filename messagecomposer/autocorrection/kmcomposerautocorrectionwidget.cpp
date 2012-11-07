@@ -61,6 +61,7 @@ KMComposerAutoCorrectionWidget::KMComposerAutoCorrectionWidget(QWidget *parent) 
   connect(ui->enabledAutocorrection,SIGNAL(clicked()),SIGNAL(changed()));
   connect(ui->typographicSingleQuotes, SIGNAL(clicked(bool)), this, SLOT(enableSingleQuotes(bool)));
   connect(ui->typographicDoubleQuotes, SIGNAL(clicked(bool)), this, SLOT(enableDoubleQuotes(bool)));
+  connect(ui->autoSuperScript,SIGNAL(clicked()),SIGNAL(changed()));
   connect(ui->singleQuote1, SIGNAL(clicked()), this, SLOT(selectSingleQuoteCharOpen()));
   connect(ui->singleQuote2, SIGNAL(clicked()), this, SLOT(selectSingleQuoteCharClose()));
   connect(ui->singleDefault, SIGNAL(clicked()), this, SLOT(setDefaultSingleQuotes()));
@@ -129,7 +130,7 @@ void KMComposerAutoCorrectionWidget::loadConfig()
     ui->autoReplaceNumber->setChecked(mAutoCorrection->isAutoFractions());
     ui->capitalizeDaysName->setChecked(mAutoCorrection->isCapitalizeWeekDays());
     ui->advancedAutocorrection->setChecked(mAutoCorrection->isAdvancedAutocorrect());
-
+    ui->autoSuperScript->setChecked(mAutoCorrection->isSuperScript());
     loadAutoCorrectionAndException();
     mWasChanged = false;
 }
@@ -192,6 +193,7 @@ void KMComposerAutoCorrectionWidget::writeConfig()
   mAutoCorrection->setSingleSpaces(ui->ignoreDoubleSpace->isChecked());
   mAutoCorrection->setCapitalizeWeekDays(ui->capitalizeDaysName->isChecked());
   mAutoCorrection->setAdvancedAutocorrect(ui->advancedAutocorrection->isChecked());
+  mAutoCorrection->setSuperScript(ui->autoSuperScript->isChecked());
 
   mAutoCorrection->setAutoFractions(ui->autoReplaceNumber->isChecked());
 
@@ -218,6 +220,8 @@ void KMComposerAutoCorrectionWidget::resetToDefault()
   ui->advancedAutocorrection->setChecked(false);
   ui->typographicDoubleQuotes->setChecked(false);
   ui->typographicSingleQuotes->setChecked(false);
+  ui->autoSuperScript->setChecked(false);
+
   loadGlobalAutoCorrectionAndException();
 }
 
