@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=PIM Setting Exporter
+Exec=pimsettingexporter
+Type=Application
+Comment=PIM Setting Exporter allows to save all data from PIM apps and restore them in other system.
+Terminal=false
