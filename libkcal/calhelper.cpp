@@ -140,6 +140,45 @@ bool CalHelper::hasMyWritableEventsFolders( const QString &family,
   return false;
 }
 
+bool CalHelper::hasWritableEventsFolders( const QString &family,
+                                          CalendarResourceManager *manager )
+{
+  Q_ASSERT( manager );
+  QString myfamily = family;
+  if ( family.isEmpty() ) {
+    myfamily = "calendar";
+  }
+
+  CalendarResourceManager::ActiveIterator it;
+
+  for ( it=manager->activeBegin(); it != manager->activeEnd(); ++it ) {
+    if ( (*it)->readOnly() ) {
+      continue;
+    }
+
+    const QStringList subResources = (*it)->subresources();
+    if ( subResources.isEmpty() ) {
+      return true;
+    }
+
+    QStringList::ConstIterator subIt;
+    for ( subIt=subResources.begin(); subIt != subResources.end(); ++subIt ) {
+      if ( !(*it)->subresourceActive( (*subIt) ) ) {
+        continue;
+      }
+      if ( (*it)->type() == "imap" || (*it)->type() == "kolab" ) {
+        if ( (*it)->subresourceType( ( *subIt ) ) == "todo" ||
+             (*it)->subresourceType( ( *subIt ) ) == "journal" ||
+             !(*it)->subresourceWritable( *subIt ) ) {
+          continue;
+        }
+      }
+      return true;
+    }
+  }
+  return false;
+}
+
 ResourceCalendar *CalHelper::incResourceCalendar( Calendar *calendar, Incidence *incidence )
 {
   CalendarResources *cal = dynamic_cast<CalendarResources*>( calendar );

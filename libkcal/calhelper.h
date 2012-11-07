@@ -102,6 +102,15 @@ namespace CalHelper {
   bool hasMyWritableEventsFolders( const QString &family, CalendarResourceManager *manager );
 
   /**
+    Determines if the Calendar has any writable folders with Events content.
+    @param family is the resource family name or "calendar" if empty.
+    @param manager An existing calendar manager here
+
+    @return true if the any such writable folders are found; false otherwise.
+  */
+  bool hasWritableEventsFolders( const QString &family, CalendarResourceManager *manager );
+
+  /**
     Returns the ResourceCalendar where the Incidence is stored, if any.
     @param calendar is a pointer to a valid Calendar object.
     @param incidence is a pointer to an Incidence object.
