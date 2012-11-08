@@ -53,6 +53,7 @@ public:
   void setAutocorrectEntries(const QHash<QString, QString>& entries);
   void setAutoFormatUrl(bool b) { mAutoFormatUrl = b; }
   void setAutoBoldUnderline(bool b) { mAutoBoldUnderline = b; }
+  void setSuperScript(bool b) { mSuperScriptAppendix = b; }
 
   bool isEnabledAutoCorrection() const { return mEnabled; }
   bool isUppercaseFirstCharOfSentence() const { return mUppercaseFirstCharOfSentence; }
@@ -65,7 +66,7 @@ public:
   bool isAdvancedAutocorrect() const { return mAdvancedAutocorrect; }
   bool isAutoFormatUrl() const { return mAutoFormatUrl; }
   bool isAutoBoldUnderline() const { return mAutoBoldUnderline; }
-
+  bool isSuperScript() const { return mSuperScriptAppendix; }
 
   QString language() const;
   TypographicQuotes typographicSingleQuotes() const { return mTypographicSingleQuotes; }
@@ -91,6 +92,7 @@ private:
   void uppercaseFirstCharOfSentence();
   void advancedAutocorrect();
   void replaceTypographicQuotes();
+  void superscriptAppendix();
 
   void selectWord(QTextCursor &cursor, int cursorPosition);
 
@@ -115,15 +117,17 @@ private:
   bool mAutoFormatUrl;
   bool mAutoBoldUnderline;
   bool mEnabled;
+  bool mSuperScriptAppendix;
 
   QString mWord;
   QTextCursor mCursor;
 
-  QString mAutoCorectLang;
+  QString mAutoCorrectLang;
   QStringList mCacheNameOfDays;
   QSet<QString> mUpperCaseExceptions;
   QSet<QString> mTwoUpperLetterExceptions;
   QHash<QString, QString> mAutocorrectEntries;
+  QHash<QString, QString> mSuperScriptEntries;
   TypographicQuotes mTypographicSingleQuotes;
   TypographicQuotes mTypographicDoubleQuotes;
 };

@@ -38,7 +38,8 @@ KMComposerAutoCorrection::KMComposerAutoCorrection()
     mCapitalizeWeekDays(false),
     mReplaceDoubleQuotes(false),
     mReplaceSingleQuotes(false),
-    mEnabled(false)
+    mEnabled(false),
+    mSuperScriptAppendix(false)
 {
   // default double quote open 0x201c
   // default double quote close 0x201d
@@ -107,6 +108,9 @@ void KMComposerAutoCorrection::autocorrect(bool htmlMode, QTextDocument& documen
      if(!done) {
          done = autoBoldUnderline();
      }
+     if(!done) {
+         superscriptAppendix();
+     }
   }
   if (!done)
     done = singleSpaces();
@@ -140,6 +144,7 @@ void KMComposerAutoCorrection::readConfig()
   mReplaceDoubleQuotes = MessageComposer::MessageComposerSettings::self()->replaceDoubleQuotes();
   mReplaceSingleQuotes = MessageComposer::MessageComposerSettings::self()->replaceSingleQuotes();
   mEnabled = MessageComposer::MessageComposerSettings::self()->enabled();
+  mSuperScriptAppendix = MessageComposer::MessageComposerSettings::self()->superScript();
   readAutoCorrectionXmlFile();
 }
 
@@ -156,6 +161,7 @@ void KMComposerAutoCorrection::writeConfig()
   MessageComposer::MessageComposerSettings::self()->setReplaceDoubleQuotes(mReplaceDoubleQuotes);
   MessageComposer::MessageComposerSettings::self()->setReplaceSingleQuotes(mReplaceSingleQuotes);
   MessageComposer::MessageComposerSettings::self()->setEnabled(mEnabled);
+  MessageComposer::MessageComposerSettings::self()->setSuperScript(mSuperScriptAppendix);
   MessageComposer::MessageComposerSettings::self()->requestSync();
   writeAutoCorrectionXmlFile();
 }
@@ -214,6 +220,60 @@ QHash<QString, QString> KMComposerAutoCorrection::autocorrectEntries() const
   return mAutocorrectEntries;
 }
 
+void KMComposerAutoCorrection::superscriptAppendix()
+{
+    if (!mSuperScriptAppendix) return;
+
+    QString trimmed = mWord.trimmed();
+    int startPos = -1;
+    int endPos = -1;
+
+    QHash<QString, QString>::const_iterator i = mSuperScriptEntries.constBegin();
+    while (i != mSuperScriptEntries.constEnd()) {
+        if (i.key() == trimmed) {
+            startPos = mCursor.selectionStart() + 1;
+            endPos = startPos - 1 + trimmed.length();
+            break;
+        }
+        else if (i.key() == QLatin1String("othernb")) {
+            int pos = trimmed.indexOf(i.value());
+            if (pos > 0) {
+                QString number = trimmed.left(pos);
+                QString::ConstIterator constIter = number.constBegin();
+                bool found = true;
+                // don't apply superscript to 1th, 2th and 3th
+                if (number.length() == 1 &&
+                        (*constIter == QLatin1Char('1') || *constIter == QLatin1Char('2') || *constIter == QLatin1Char('3')))
+                    found = false;
+                if (found) {
+                    while (constIter != number.constEnd()) {
+                        if (!constIter->isNumber()) {
+                            found = false;
+                            break;
+                        }
+                        ++constIter;
+                    }
+                }
+                if (found && number.length() + i.value().length() == trimmed.length()) {
+                    startPos = mCursor.selectionStart() + pos;
+                    endPos = startPos - pos + trimmed.length();
+                    break;
+                }
+            }
+        }
+        ++i;
+    }
+
+    if (startPos != -1 && endPos != -1) {
+        QTextCursor cursor(mCursor);
+        cursor.setPosition(startPos);
+        cursor.setPosition(endPos, QTextCursor::KeepAnchor);
+
+        QTextCharFormat format;
+        format.setVerticalAlignment(QTextCharFormat::AlignSuperScript);
+        cursor.mergeCharFormat(format);
+    }
+}
 
 bool KMComposerAutoCorrection::autoBoldUnderline()
 {
@@ -647,13 +707,33 @@ void KMComposerAutoCorrection::readAutoCorrectionXmlFile()
     QString kdelang = locale->languageList().first();
     kdelang.remove(QRegExp(QLatin1String("@.*")));
 
-    qDebug()<<"void KMComposerAutoCorrection::readAutoCorrectionXmlFile() "<<mAutoCorectLang;
+    qDebug()<<"void KMComposerAutoCorrection::readAutoCorrectionXmlFile() "<<mAutoCorrectLang;
+
+    mUpperCaseExceptions.clear();
+    mAutocorrectEntries.clear();
+    mTwoUpperLetterExceptions.clear();
+    mSuperScriptEntries.clear();
+
+
+    QString LocalFile;
+    //Look at local file:
+    if (!mAutoCorrectLang.isEmpty()) {
+        LocalFile = KGlobal::dirs()->findResource("data", QLatin1String("autocorrect/custom-") + mAutoCorrectLang + QLatin1String(".xml"));
+    } else {
+        if(!kdelang.isEmpty())
+            LocalFile = KGlobal::dirs()->findResource("data", QLatin1String("autocorrect/custom-") + kdelang + QLatin1String(".xml"));
+        if (LocalFile.isEmpty() && kdelang.contains(QLatin1String("_"))) {
+            kdelang.remove( QRegExp( QLatin1String("_.*") ) );
+            LocalFile = KGlobal::dirs()->findResource("data", QLatin1String("autocorrect/custom-") + kdelang + QLatin1String(".xml"));
+        }
+    }
     QString fname;
-    if (!mAutoCorectLang.isEmpty()) {
-        if(mAutoCorectLang == QLatin1String("en_US")) {
+    //Load Global directly
+    if (!mAutoCorrectLang.isEmpty()) {
+        if(mAutoCorrectLang == QLatin1String("en_US")) {
           fname = KGlobal::dirs()->findResource("data", QLatin1String("autocorrect/autocorrect.xml"));
         } else {
-          fname = KGlobal::dirs()->findResource("data", QLatin1String("autocorrect/") + mAutoCorectLang + QLatin1String(".xml"));
+          fname = KGlobal::dirs()->findResource("data", QLatin1String("autocorrect/") + mAutoCorrectLang + QLatin1String(".xml"));
         }
     } else {
         if (fname.isEmpty() && !kdelang.isEmpty())
@@ -662,38 +742,52 @@ void KMComposerAutoCorrection::readAutoCorrectionXmlFile()
             kdelang.remove( QRegExp( QLatin1String("_.*") ) );
             fname = KGlobal::dirs()->findResource("data", QLatin1String("autocorrect/") + kdelang + QLatin1String(".xml"));
         }
-        if (fname.isEmpty())
-            fname = KGlobal::dirs()->findResource("data", QLatin1String("autocorrect/autocorrect.xml"));
     }
-    if (mAutoCorectLang.isEmpty())
-        mAutoCorectLang = kdelang;
+    if (fname.isEmpty())
+        fname = KGlobal::dirs()->findResource("data", QLatin1String("autocorrect/autocorrect.xml"));
 
 
-    mUpperCaseExceptions.clear();
-    mAutocorrectEntries.clear();
-    mTwoUpperLetterExceptions.clear();
-
+    if (mAutoCorrectLang.isEmpty())
+        mAutoCorrectLang = kdelang;
     qDebug()<<" fname :"<<fname;
-    if (fname.isEmpty()) {
-        mTypographicSingleQuotes = typographicDefaultSingleQuotes();
-        mTypographicDoubleQuotes = typographicDefaultDoubleQuotes();
-        return;
-    }
+    qDebug()<<" LocalFile:"<<LocalFile;
 
-    ImportKMailAutocorrection import;
-    if (import.import(fname)) {
-
-        mUpperCaseExceptions = import.upperCaseExceptions();
-        mTwoUpperLetterExceptions = import.twoUpperLetterExceptions();
-        mAutocorrectEntries = import.autocorrectEntries();
-        mTypographicSingleQuotes = import.typographicSingleQuotes();
-        mTypographicDoubleQuotes = import.typographicDoubleQuotes();
+    if(LocalFile.isEmpty()) {
+        if(fname.isEmpty()) {
+            mTypographicSingleQuotes = typographicDefaultSingleQuotes();
+            mTypographicDoubleQuotes = typographicDefaultDoubleQuotes();
+        } else {
+            ImportKMailAutocorrection import;
+            if (import.import(fname,ImportAbstractAutocorrection::All)) {
+                mUpperCaseExceptions = import.upperCaseExceptions();
+                mTwoUpperLetterExceptions = import.twoUpperLetterExceptions();
+                mAutocorrectEntries = import.autocorrectEntries();
+                mTypographicSingleQuotes = import.typographicSingleQuotes();
+                mTypographicDoubleQuotes = import.typographicDoubleQuotes();
+                mSuperScriptEntries = import.superScriptEntries();
+            }
+        }
+    } else {
+        ImportKMailAutocorrection import;
+        if (import.import(LocalFile,ImportAbstractAutocorrection::All)) {
+            mUpperCaseExceptions = import.upperCaseExceptions();
+            mTwoUpperLetterExceptions = import.twoUpperLetterExceptions();
+            mAutocorrectEntries = import.autocorrectEntries();
+            mTypographicSingleQuotes = import.typographicSingleQuotes();
+            mTypographicDoubleQuotes = import.typographicDoubleQuotes();
+            //Don't import it in local
+            //mSuperScriptEntries = import.superScriptEntries();
+        }
+        if (!fname.isEmpty() && import.import(fname,ImportAbstractAutocorrection::SuperScript)) {
+            mSuperScriptEntries = import.superScriptEntries();
+        }
+        qDebug()<<" mSuperScriptEntries"<<mSuperScriptEntries;
     }
 }
 
 void KMComposerAutoCorrection::writeAutoCorrectionXmlFile()
 {
-    const QString fname = KGlobal::dirs()->locateLocal("data", QLatin1String("autocorrect/") + (mAutoCorectLang == QLatin1String("en_US") ? QLatin1String("autocorrect") : mAutoCorectLang) + QLatin1String(".xml"));
+    const QString fname = KGlobal::dirs()->locateLocal("data", QLatin1String("autocorrect/custom-") + (mAutoCorrectLang == QLatin1String("en_US") ? QLatin1String("autocorrect") : mAutoCorrectLang) + QLatin1String(".xml"));
     QFile file(fname);
     if( !file.open( QIODevice::WriteOnly | QIODevice::Text ) ) {
         kDebug()<<"We can't save in file :"<<fname;
@@ -731,11 +825,24 @@ void KMComposerAutoCorrection::writeAutoCorrectionXmlFile()
     while (twoUpper != mTwoUpperLetterExceptions.constEnd()) {
         QDomElement item = root.createElement(QLatin1String( "word" ));
         item.setAttribute(QLatin1String("exception"),*twoUpper);
-        upperCaseExceptions.appendChild(item);
+        twoUpperLetterExceptions.appendChild(item);
         ++twoUpper;
     }
     word.appendChild(twoUpperLetterExceptions);
 
+    //Don't save it as  discussed with Calligra dev
+    /*
+    QDomElement supperscript = root.createElement(QLatin1String( "SuperScript" ));
+    QHashIterator<QString, QString> j(mSuperScriptEntries);
+    while (j.hasNext()) {
+        j.next();
+        QDomElement item = root.createElement(QLatin1String( "superscript" ));
+        item.setAttribute(QLatin1String("find"), j.key());
+        item.setAttribute(QLatin1String("super"), j.value());
+        supperscript.appendChild(item);
+    }
+    word.appendChild(supperscript);
+*/
 
     QDomElement doubleQuote = root.createElement(QLatin1String( "DoubleQuote" ));
     QDomElement item = root.createElement(QLatin1String( "doublequote" ));
@@ -760,14 +867,14 @@ void KMComposerAutoCorrection::writeAutoCorrectionXmlFile()
 
 QString KMComposerAutoCorrection::language() const
 {
-  return mAutoCorectLang;
+  return mAutoCorrectLang;
 }
 
 void KMComposerAutoCorrection::setLanguage(const QString &lang)
 {
   qDebug()<<" setLanguage :"<<lang;
-  if(mAutoCorectLang != lang) {
-    mAutoCorectLang = lang;
+  if(mAutoCorrectLang != lang) {
+    mAutoCorrectLang = lang;
     //Re-read xml file
     readAutoCorrectionXmlFile();
   }

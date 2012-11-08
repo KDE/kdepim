@@ -27,11 +27,11 @@
 
 int main(int argc, char *argv[])
 {
-  KLocale::setMainCatalog("backupmail");
+  KLocale::setMainCatalog("pimsettingexporter");
 
-  KAboutData aboutData( "backupmail", 0, ki18n("backupmail"),
-    KDEPIM_VERSION, ki18n("PIM Backup Mail"), KAboutData::License_GPL_V2,
-    ki18n("Copyright © 2012 backupmail authors"));
+  KAboutData aboutData( "pimsettingexporter", 0, ki18n("PIM Setting Exporter"),
+    KDEPIM_VERSION, ki18n("PIM Setting Exporter"), KAboutData::License_GPL_V2,
+    ki18n("Copyright © 2012 pimsettingexporter authors"));
   aboutData.addAuthor(ki18n("Laurent Montel"), ki18n("Maintainer"), "montel@kde.org");
   //aboutData.setProgramIconName("kontact-import-wizard");
   KCmdLineArgs::init( argc, argv, &aboutData );
@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
 
   if (!KUniqueApplication::start())
   {
-    kDebug() << "backupmail is already running!";
+    kDebug() << "pimsettingexporter is already running!";
     return (0);
   }
   KUniqueApplication a;

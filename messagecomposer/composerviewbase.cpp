@@ -472,17 +472,19 @@ QList< Message::Composer* > Message::ComposerViewBase::generateCryptoMessages ()
   QStringList signKeys;
 
   bool signSomething = m_sign;
+  bool doSignCompletely = m_sign;
+  bool encryptSomething = m_encrypt;
+  bool doEncryptCompletely = m_encrypt;
   foreach( MessageCore::AttachmentPart::Ptr attachment, m_attachmentModel->attachments() ) {
     if( attachment->isSigned() ) {
       signSomething = true;
-      break;
+    } else {
+      doEncryptCompletely = false;
     }
-  }
-  bool encryptSomething = m_encrypt;
-  foreach( MessageCore::AttachmentPart::Ptr attachment, m_attachmentModel->attachments() ) {
     if( attachment->isEncrypted() ) {
       encryptSomething = true;
-      break;
+    } else {
+      doSignCompletely = false;
     }
   }
 
@@ -517,6 +519,23 @@ QList< Message::Composer* > Message::ComposerViewBase::generateCryptoMessages ()
 
   keyResolver->setPrimaryRecipients( recipients );
   keyResolver->setSecondaryRecipients( bcc );
+
+  bool result = true;
+  signSomething = determineWhetherToSign( doSignCompletely, keyResolver,signSomething, result );
+  if(!result) {
+      /// TODO handle failure
+      kDebug() << "failed to resolve keys! oh noes";
+      emit failed( i18n( "Failed to resolve keys. Please report a bug." ) );
+      return QList< Message::Composer*>();
+  }
+
+  encryptSomething = determineWhetherToEncrypt( doEncryptCompletely,keyResolver,encryptSomething, signSomething, result );
+  if(!result) {
+      /// TODO handle failure
+      kDebug() << "failed to resolve keys! oh noes";
+      emit failed( i18n( "Failed to resolve keys. Please report a bug." ) );
+      return QList< Message::Composer*>();
+  }
 
   if ( keyResolver->resolveAllKeys( signSomething, encryptSomething ) != Kpgp::Ok ) {
     /// TODO handle failure
@@ -1538,5 +1557,259 @@ void Message::ComposerViewBase::markAllAttachmentsForEncryption(bool encrypt)
   }
 }
 
+bool Message::ComposerViewBase::determineWhetherToSign( bool doSignCompletely, Kleo::KeyResolver* keyResolver, bool signSomething, bool & result )
+{
+    bool sign = false;
+    switch ( keyResolver->checkSigningPreferences( signSomething ) ) {
+    case Kleo::DoIt:
+        if ( !signSomething ) {
+            markAllAttachmentsForSigning( true );
+            return true;
+        }
+        sign = true;
+        break;
+    case Kleo::DontDoIt:
+        sign = false;
+        break;
+    case Kleo::AskOpportunistic:
+        assert( 0 );
+    case Kleo::Ask:
+    {
+        // the user wants to be asked or has to be asked
+#ifndef QT_NO_CURSOR
+        MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+#endif
+        const QString msg = i18n("Examination of the recipient's signing preferences "
+                                 "yielded that you be asked whether or not to sign "
+                                 "this message.\n"
+                                 "Sign this message?");
+        switch ( KMessageBox::questionYesNoCancel( m_parentWidget, msg,
+                                                   i18n("Sign Message?"),
+                                                   KGuiItem( i18nc("to sign","&Sign") ),
+                                                   KGuiItem( i18n("Do &Not Sign") ) ) ) {
+        case KMessageBox::Cancel:
+            result = false;
+            return false;
+        case KMessageBox::Yes:
+            markAllAttachmentsForSigning( true );
+            return true;
+        case KMessageBox::No:
+            markAllAttachmentsForSigning( false );
+            return false;
+        }
+    }
+        break;
+    case Kleo::Conflict:
+    {
+        // warn the user that there are conflicting signing preferences
+#ifndef QT_NO_CURSOR
+        MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+#endif
+        const QString msg = i18n("There are conflicting signing preferences "
+                                 "for these recipients.\n"
+                                 "Sign this message?");
+        switch ( KMessageBox::warningYesNoCancel( m_parentWidget, msg,
+                                                  i18n("Sign Message?"),
+                                                  KGuiItem( i18nc("to sign","&Sign") ),
+                                                  KGuiItem( i18n("Do &Not Sign") ) ) ) {
+        case KMessageBox::Cancel:
+            result = false;
+            return false;
+        case KMessageBox::Yes:
+            markAllAttachmentsForSigning( true );
+            return true;
+        case KMessageBox::No:
+            markAllAttachmentsForSigning( false );
+            return false;
+        }
+    }
+        break;
+    case Kleo::Impossible:
+    {
+#ifndef QT_NO_CURSOR
+        MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+#endif
+        const QString msg = i18n("You have requested to sign this message, "
+                                 "but no valid signing keys have been configured "
+                                 "for this identity.");
+        if ( KMessageBox::warningContinueCancel( m_parentWidget, msg,
+                                                 i18n("Send Unsigned?"),
+                                                 KGuiItem( i18n("Send &Unsigned") ) )
+             == KMessageBox::Cancel ) {
+            result = false;
+            return false;
+        } else {
+            markAllAttachmentsForSigning( false );
+            return false;
+        }
+    }
+    }
+
+    if ( !sign || !doSignCompletely ) {
+        if ( MessageComposer::MessageComposerSettings::self()->cryptoWarningUnsigned() ) {
+#ifndef QT_NO_CURSOR
+        MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+#endif
+            const QString msg = sign && !doSignCompletely ?
+                        i18n("Some parts of this message will not be signed.\n"
+                             "Sending only partially signed messages might violate site policy.\n"
+                             "Sign all parts instead?") // oh, I hate this...
+                      : i18n("This message will not be signed.\n"
+                             "Sending unsigned message might violate site policy.\n"
+                             "Sign message instead?"); // oh, I hate this...
+            const QString buttonText = sign && !doSignCompletely
+                    ? i18n("&Sign All Parts") : i18n("&Sign");
+            switch ( KMessageBox::warningYesNoCancel( m_parentWidget, msg,
+                                                      i18n("Unsigned-Message Warning"),
+                                                      KGuiItem( buttonText ),
+                                                      KGuiItem( i18n("Send &As Is") ) ) ) {
+            case KMessageBox::Cancel:
+                result = false;
+                return false;
+            case KMessageBox::Yes:
+                markAllAttachmentsForSigning( true );
+                return true;
+            case KMessageBox::No:
+                return sign || doSignCompletely;
+            }
+        }
+    }
+    return sign || doSignCompletely;
+}
+
+bool Message::ComposerViewBase::determineWhetherToEncrypt( bool doEncryptCompletely, Kleo::KeyResolver* keyResolver, bool encryptSomething, bool signSomething, bool & result )
+{
+    bool encrypt = false;
+    bool opportunistic = false;
+    switch ( keyResolver->checkEncryptionPreferences( encryptSomething ) ) {
+    case Kleo::DoIt:
+        if ( !encryptSomething ) {
+            markAllAttachmentsForEncryption( true );
+            return true;
+        }
+        encrypt = true;
+        break;
+    case Kleo::DontDoIt:
+        encrypt = false;
+        break;
+    case Kleo::AskOpportunistic:
+        opportunistic = true;
+        // fall through...
+    case Kleo::Ask:
+    {
+        // the user wants to be asked or has to be asked
+#ifndef QT_NO_CURSOR
+        MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+#endif
+        const QString msg = opportunistic
+                ? i18n("Valid trusted encryption keys were found for all recipients.\n"
+                       "Encrypt this message?")
+                : i18n("Examination of the recipient's encryption preferences "
+                       "yielded that you be asked whether or not to encrypt "
+                       "this message.\n"
+                       "Encrypt this message?");
+        switch ( KMessageBox::questionYesNoCancel( m_parentWidget, msg,
+                                                   i18n("Encrypt Message?"),
+                                                   KGuiItem( signSomething
+                                                             ? i18n("Sign && &Encrypt")
+                                                             : i18n("&Encrypt") ),
+                                                   KGuiItem( signSomething
+                                                             ? i18n("&Sign Only")
+                                                             : i18n("&Send As-Is") ) ) ) {
+        case KMessageBox::Cancel:
+            result = false;
+            return false;
+        case KMessageBox::Yes:
+            markAllAttachmentsForEncryption( true );
+            return true;
+        case KMessageBox::No:
+            markAllAttachmentsForEncryption( false );
+            return false;
+        }
+    }
+        break;
+    case Kleo::Conflict:
+    {
+        // warn the user that there are conflicting encryption preferences
+#ifndef QT_NO_CURSOR
+        MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+#endif
+        const QString msg = i18n("There are conflicting encryption preferences "
+                                 "for these recipients.\n"
+                                 "Encrypt this message?");
+        switch ( KMessageBox::warningYesNoCancel( m_parentWidget, msg,
+                                                  i18n("Encrypt Message?"),
+                                                  KGuiItem( i18n("&Encrypt") ),
+                                                  KGuiItem( i18n("Do &Not Encrypt")) ) ) {
+        case KMessageBox::Cancel:
+            result = false;
+            return false;
+        case KMessageBox::Yes:
+            markAllAttachmentsForEncryption( true );
+            return true;
+        case KMessageBox::No:
+            markAllAttachmentsForEncryption( false );
+            return false;
+        }
+    }
+        break;
+    case Kleo::Impossible:
+    {
+#ifndef QT_NO_CURSOR
+        MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+#endif
+        const QString msg = i18n("You have requested to encrypt this message, "
+                                 "and to encrypt a copy to yourself, "
+                                 "but no valid trusted encryption keys have been "
+                                 "configured for this identity.");
+        if ( KMessageBox::warningContinueCancel( m_parentWidget, msg,
+                                                 i18n("Send Unencrypted?"),
+                                                 KGuiItem( i18n("Send &Unencrypted") ) )
+             == KMessageBox::Cancel ) {
+            result = false;
+            return false;
+        } else {
+            markAllAttachmentsForEncryption( false );
+            return false;
+        }
+    }
+    }
+
+    if ( !encrypt || !doEncryptCompletely ) {
+        if ( MessageComposer::MessageComposerSettings::self()->cryptoWarningUnencrypted() ) {
+#ifndef QT_NO_CURSOR
+            MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+#endif
+            const QString msg = !doEncryptCompletely ?
+                        i18n("Some parts of this message will not be encrypted.\n"
+                             "Sending only partially encrypted messages might violate "
+                             "site policy and/or leak sensitive information.\n"
+                             "Encrypt all parts instead?") // oh, I hate this...
+                      : i18n("This message will not be encrypted.\n"
+                             "Sending unencrypted messages might violate site policy and/or "
+                             "leak sensitive information.\n"
+                             "Encrypt messages instead?"); // oh, I hate this...
+            const QString buttonText = !doEncryptCompletely
+                    ? i18n("&Encrypt All Parts") : i18n("&Encrypt");
+            switch ( KMessageBox::warningYesNoCancel( m_parentWidget, msg,
+                                                      i18n("Unencrypted Message Warning"),
+                                                      KGuiItem( buttonText ),
+                                                      KGuiItem( signSomething
+                                                                ? i18n("&Sign Only")
+                                                                : i18n("&Send As-Is")) ) ) {
+            case KMessageBox::Cancel:
+                result = false;
+                return false;
+            case KMessageBox::Yes:
+                markAllAttachmentsForEncryption( true );
+                return true;
+            case KMessageBox::No:
+                return encrypt || doEncryptCompletely;
+            }
+        }
+    }
+
+    return encrypt || doEncryptCompletely;
+}
 
 #include "composerviewbase.moc"

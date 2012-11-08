@@ -49,7 +49,7 @@ BackupMailWindow::BackupMailWindow(QWidget *parent)
 
   bool canZipFile = canZip();
   setupActions(canZipFile);
-  setupGUI(Keys | StatusBar | Save | Create,"backupmail.rc");
+  setupGUI(Keys | StatusBar | Save | Create,"pimsettingexporter.rc");
   mBackupMailWidget = new BackupMailWidget(this);
 
   setCentralWidget(mBackupMailWidget);
@@ -132,7 +132,7 @@ void BackupMailWindow::slotRestoreData()
 {
   if(KMessageBox::warningYesNo(this,i18n("Before to restore data, close all kdepim applications. Do you want to continue?"),i18n("Backup"))== KMessageBox::No)
     return;
-  const QString filename = KFileDialog::getOpenFileName(KUrl("kfiledialog:///backupMail"),QLatin1String("*.zip"),this,i18n("Restore backup"));
+  const QString filename = KFileDialog::getOpenFileName(KUrl("kfiledialog:///pimsettingexporter"),QLatin1String("*.zip"),this,i18n("Restore backup"));
   if(filename.isEmpty())
     return;
 

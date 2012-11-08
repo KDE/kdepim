@@ -1,4 +1,4 @@
-project(backupmail)
+project(pimsettingexporter)
 
 include_directories(${AKONADI_INCLUDE_DIR} 
                     ${SOPRANO_INCLUDE_DIR} 
@@ -9,7 +9,7 @@ include_directories(${AKONADI_INCLUDE_DIR}
 
 ########### next target ###############
 
-set(backupmail_SRCS
+set(pimsettingexporter_SRCS
   main.cpp
   abstractimportexportjob.cpp
   backupmailwindow.cpp
@@ -28,11 +28,11 @@ set(backupmail_SRCS
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
-kde4_add_ui_files(backupmail_SRCS ui/selecttypewidget.ui )
+kde4_add_ui_files(pimsettingexporter_SRCS ui/selecttypewidget.ui )
 
-kde4_add_executable(backupmail ${backupmail_SRCS})
+kde4_add_executable(pimsettingexporter ${pimsettingexporter_SRCS})
 
-target_link_libraries(backupmail
+target_link_libraries(pimsettingexporter
   ${KDE4_KIO_LIBS}
   ${KDEPIMLIBS_AKONADI_LIBS}
   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
@@ -47,11 +47,11 @@ target_link_libraries(backupmail
   messagecomposer
 )
 
-install(TARGETS backupmail ${INSTALL_TARGETS_DEFAULT_ARGS} )
+install(TARGETS pimsettingexporter ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 install(FILES
-    backupmail.rc
-    DESTINATION ${DATA_INSTALL_DIR}/backupmail
+    pimsettingexporter.rc
+    DESTINATION ${DATA_INSTALL_DIR}/pimsettingexporter
 )
 
 

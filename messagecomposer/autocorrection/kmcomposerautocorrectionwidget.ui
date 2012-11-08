@@ -115,6 +115,13 @@
         </widget>
        </item>
        <item>
+        <widget class="QCheckBox" name="autoSuperScript">
+         <property name="text">
+          <string>Replace 1st... with 1^st... (HTML mode)</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <spacer>
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -582,7 +589,6 @@
    <extends>KComboBox</extends>
    <header>autocorrection/kmcomposerautocorrectionlanguage.h</header>
   </customwidget>
-
  </customwidgets>
  <resources/>
  <connections/>

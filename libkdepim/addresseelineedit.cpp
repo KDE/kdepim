@@ -981,7 +981,9 @@ void AddresseeLineEdit::Private::akonadiHandleItems( const Akonadi::Item::List &
 
 void AddresseeLineEdit::Private::slotAkonadiSearchResult( KJob *job )
 {
-  s_static->akonadiJobsInFlight.remove( s_static->akonadiJobsInFlight.indexOf( qobject_cast<Akonadi::Job*>( job ) ) );
+  const int index = s_static->akonadiJobsInFlight.indexOf( qobject_cast<Akonadi::Job*>( job ) );
+  if( index != -1 )
+    s_static->akonadiJobsInFlight.remove( s_static->akonadiJobsInFlight.indexOf( qobject_cast<Akonadi::Job*>( job ) ) );
   const Akonadi::ContactSearchJob *contactJob =
     qobject_cast<Akonadi::ContactSearchJob*>( job );
   const Akonadi::ContactGroupSearchJob *groupJob =

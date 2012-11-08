@@ -353,7 +353,7 @@ else()
     macro_optional_add_subdirectory(ksendemail)
     macro_optional_add_subdirectory(ktnef)
     macro_optional_add_subdirectory(mailimporter)
-    macro_optional_add_subdirectory(backupmail)
+    macro_optional_add_subdirectory(pimsettingexporter)
     macro_optional_add_subdirectory(kalarm)
 
     if(KDEPIMLIBS_KCAL_LIBRARY)

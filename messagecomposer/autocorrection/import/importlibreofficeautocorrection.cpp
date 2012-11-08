@@ -47,8 +47,12 @@ void ImportLibreOfficeAutocorrection::closeArchive()
   delete mTempDir;
 }
 
-bool ImportLibreOfficeAutocorrection::import(const QString& fileName)
+bool ImportLibreOfficeAutocorrection::import(const QString& fileName, LoadAttribute loadAttribute)
 {
+    //We Don't have it in LibreOffice
+    if(loadAttribute == SuperScript) {
+        return false;
+    }
     closeArchive();
     mArchive = new KZip(fileName);
     const bool result = mArchive->open(QIODevice::ReadOnly);

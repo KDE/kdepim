@@ -90,18 +90,16 @@ void AttachmentPropertiesDialog::Private::polishUi()
     ui.name->setReadOnly( true );
     ui.description->setReadOnly( true );
     ui.encoding->setEnabled( false );
-    ui.autoDisplay->setEnabled( false );
-    ui.encrypt->setEnabled( false );
-    ui.sign->setEnabled( false );
-
+    ui.sign->hide();
+    ui.autoDisplay->hide();
+    ui.encrypt->hide();
     q->setButtons( Close | Help );
   } else {
-    populateEncodings();
     populateMimeTypes();
 
     q->setButtons( Ok | Cancel | Help );
   }
-
+  populateEncodings();
   q->setDefaultButton( Ok );
   populateWhatsThis();
 }
@@ -199,9 +197,6 @@ void AttachmentPropertiesDialog::Private::populateEncodings()
 
 void AttachmentPropertiesDialog::Private::populateMimeTypes()
 {
-  // TODO these are what the old KMMsgPartDialog used.
-  // Should we use KMimeType::allMimeTypes()?
-
   QStringList list;
   list << QString::fromLatin1( "text/html" )
        << QString::fromLatin1( "text/plain" )

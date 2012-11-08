@@ -28,14 +28,21 @@ namespace MessageComposer {
 class ImportAbstractAutocorrection
 {
 public:
+  enum LoadAttribute {
+      All = 0,
+      SuperScript
+  };
+
+
   explicit ImportAbstractAutocorrection(QWidget *parent);
   virtual ~ImportAbstractAutocorrection();
 
-  virtual bool import(const QString& fileName) = 0;
+  virtual bool import(const QString& fileName, ImportAbstractAutocorrection::LoadAttribute loadAttribute = All ) = 0;
 
   QSet<QString> upperCaseExceptions() const;
   QSet<QString> twoUpperLetterExceptions() const;
   QHash<QString, QString> autocorrectEntries() const;
+  QHash<QString, QString> superScriptEntries() const;
 
   KMComposerAutoCorrection::TypographicQuotes typographicSingleQuotes() const;
   KMComposerAutoCorrection::TypographicQuotes typographicDoubleQuotes() const;
@@ -44,6 +51,7 @@ protected:
   QSet<QString> mUpperCaseExceptions;
   QSet<QString> mTwoUpperLetterExceptions;
   QHash<QString, QString> mAutocorrectEntries;
+  QHash<QString, QString> mSuperScriptEntries;
   KMComposerAutoCorrection::TypographicQuotes mTypographicSingleQuotes;
   KMComposerAutoCorrection::TypographicQuotes mTypographicDoubleQuotes;
   QWidget *mParent;
