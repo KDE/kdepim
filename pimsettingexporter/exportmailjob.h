@@ -35,7 +35,6 @@ public:
   void start();
 
 private:
-  void startBackup();
 
   KUrl subdirPath(const KUrl &url ) const;
 

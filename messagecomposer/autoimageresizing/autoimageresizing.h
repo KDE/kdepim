@@ -26,6 +26,10 @@ class AutoImageResizing : public KDialog
 {
   Q_OBJECT
 public:
+  enum ImageType {
+      JPEG = 0,
+      PNG
+  };
   explicit AutoImageResizing(QWidget *parent = 0);
   ~AutoImageResizing();
 

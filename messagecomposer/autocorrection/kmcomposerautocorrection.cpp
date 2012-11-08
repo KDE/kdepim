@@ -60,7 +60,6 @@ KMComposerAutoCorrection::KMComposerAutoCorrection()
 
 KMComposerAutoCorrection::~KMComposerAutoCorrection()
 {
-  writeConfig();
 }
 
 

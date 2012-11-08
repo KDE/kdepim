@@ -35,7 +35,7 @@ ExportCalendarJob::~ExportCalendarJob()
 
 }
 
-void ExportCalendarJob::startBackup()
+void ExportCalendarJob::start()
 {
   //TODO
 }

@@ -28,17 +28,19 @@
 #include <KDE/KUrl>
 
 #include <KPIMIdentities/Identity>
-
 #include <messagecore/attachmentpart.h>
 #include <akonadi/item.h>
 #include <KJob>
 #include <KService>
 #include "messagecomposer_export.h"
-
 class KActionCollection;
 class QAction;
 namespace Message {
 class AttachmentModel;
+}
+
+namespace MessageCore {
+class AttachmentFromUrlBaseJob;
 }
 
 namespace Message {
@@ -96,6 +98,8 @@ class MESSAGECOMPOSER_EXPORT AttachmentControllerBase : public QObject
     void enableAttachMyPublicKey( bool enable );
     void byteArrayToRemoteFile(const QByteArray &aData, const KUrl &aURL, bool overwrite = false);
     void openWith(KService::Ptr offer = KService::Ptr());
+  private:
+    MessageCore::AttachmentFromUrlBaseJob * createAttachmentJob(const KUrl &url);
   private slots:
     void slotPutResult(KJob *job);
     void slotOpenWithDialog();

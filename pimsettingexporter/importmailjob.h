@@ -38,7 +38,6 @@ public:
   ~ImportMailJob();
   void start();
 private:
-  void startRestore();
   void restoreTransports();
   void restoreResources();
   void restoreMails();
