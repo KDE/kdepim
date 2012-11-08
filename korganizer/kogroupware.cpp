@@ -591,7 +591,7 @@ bool KOGroupware::sendICalMessage( QWidget* parent,
             KGuiItem( i18n( "Send Update" ) ), KGuiItem( i18n( "Do Not Send" ) ) );
           setDoNotNotify( rc == KMessageBox::No );
         }
-        return ( rc == KMessageBox::Yes );
+        return true;
       } else {
         if ( useLastDialogAnswer ) {
           rc = lastUsedDialogAnswer;
@@ -665,7 +665,7 @@ bool KOGroupware::sendICalMessage( QWidget* parent,
             KGuiItem( i18n( "Send Update" ) ), KGuiItem( i18n( "Do Not Send" ) ) );
           setDoNotNotify( rc == KMessageBox::No );
         }
-        return ( rc == KMessageBox::Yes );
+        return true;
       } else {
         if ( useLastDialogAnswer ) {
           rc = lastUsedDialogAnswer;
