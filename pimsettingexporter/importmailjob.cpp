@@ -73,11 +73,6 @@ ImportMailJob::~ImportMailJob()
 
 void ImportMailJob::start()
 {
-  startRestore();
-}
-
-void ImportMailJob::startRestore()
-{
   mArchiveDirectory = archive()->directory();
   searchAllFiles(mArchiveDirectory,QString());
   if(!mFileList.isEmpty()|| !mHashMailArchive.isEmpty()) {

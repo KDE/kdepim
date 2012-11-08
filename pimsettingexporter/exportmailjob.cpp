@@ -51,11 +51,6 @@ ExportMailJob::~ExportMailJob()
 
 void ExportMailJob::start()
 {
-  startBackup();
-}
-
-void ExportMailJob::startBackup()
-{
   createProgressDialog();
 
   if(mTypeSelected & BackupMailUtil::Identity) {

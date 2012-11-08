@@ -30,7 +30,7 @@ class ExportCalendarJob : public AbstractImportExportJob
 public:
   explicit ExportCalendarJob(QWidget *parent, ArchiveStorage *archiveStorage);
   ~ExportCalendarJob();
-  void startBackup();
+  void start();
 private:
   void backupResources();
 };
