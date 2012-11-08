@@ -199,9 +199,6 @@ void AttachmentPropertiesDialog::Private::populateEncodings()
 
 void AttachmentPropertiesDialog::Private::populateMimeTypes()
 {
-  // TODO these are what the old KMMsgPartDialog used.
-  // Should we use KMimeType::allMimeTypes()?
-
   QStringList list;
   list << QString::fromLatin1( "text/html" )
        << QString::fromLatin1( "text/plain" )
