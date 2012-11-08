@@ -522,7 +522,7 @@ void KMComposerAutoCorrectionWidget::slotImportAutoCorrection(QAction* act)
       default:
           return;
       }
-      if(importAutoCorrection->import(fileName))
+      if(importAutoCorrection->import(fileName,ImportAbstractAutocorrection::All))
       {
         m_autocorrectEntries = importAutoCorrection->autocorrectEntries();
         addAutoCorrectEntries();

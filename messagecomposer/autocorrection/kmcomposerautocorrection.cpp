@@ -707,13 +707,33 @@ void KMComposerAutoCorrection::readAutoCorrectionXmlFile()
     QString kdelang = locale->languageList().first();
     kdelang.remove(QRegExp(QLatin1String("@.*")));
 
-    qDebug()<<"void KMComposerAutoCorrection::readAutoCorrectionXmlFile() "<<mAutoCorectLang;
+    qDebug()<<"void KMComposerAutoCorrection::readAutoCorrectionXmlFile() "<<mAutoCorrectLang;
+
+    mUpperCaseExceptions.clear();
+    mAutocorrectEntries.clear();
+    mTwoUpperLetterExceptions.clear();
+    mSuperScriptEntries.clear();
+
+
+    QString LocalFile;
+    //Look at local file:
+    if (!mAutoCorrectLang.isEmpty()) {
+        LocalFile = KGlobal::dirs()->findResource("data", QLatin1String("autocorrect/custom-") + mAutoCorrectLang + QLatin1String(".xml"));
+    } else {
+        if(!kdelang.isEmpty())
+            LocalFile = KGlobal::dirs()->findResource("data", QLatin1String("autocorrect/custom-") + kdelang + QLatin1String(".xml"));
+        if (LocalFile.isEmpty() && kdelang.contains(QLatin1String("_"))) {
+            kdelang.remove( QRegExp( QLatin1String("_.*") ) );
+            LocalFile = KGlobal::dirs()->findResource("data", QLatin1String("autocorrect/custom-") + kdelang + QLatin1String(".xml"));
+        }
+    }
     QString fname;
-    if (!mAutoCorectLang.isEmpty()) {
-        if(mAutoCorectLang == QLatin1String("en_US")) {
+    //Load Global directly
+    if (!mAutoCorrectLang.isEmpty()) {
+        if(mAutoCorrectLang == QLatin1String("en_US")) {
           fname = KGlobal::dirs()->findResource("data", QLatin1String("autocorrect/autocorrect.xml"));
         } else {
-          fname = KGlobal::dirs()->findResource("data", QLatin1String("autocorrect/") + mAutoCorectLang + QLatin1String(".xml"));
+          fname = KGlobal::dirs()->findResource("data", QLatin1String("autocorrect/") + mAutoCorrectLang + QLatin1String(".xml"));
         }
     } else {
         if (fname.isEmpty() && !kdelang.isEmpty())
@@ -722,39 +742,52 @@ void KMComposerAutoCorrection::readAutoCorrectionXmlFile()
             kdelang.remove( QRegExp( QLatin1String("_.*") ) );
             fname = KGlobal::dirs()->findResource("data", QLatin1String("autocorrect/") + kdelang + QLatin1String(".xml"));
         }
-        if (fname.isEmpty())
-            fname = KGlobal::dirs()->findResource("data", QLatin1String("autocorrect/autocorrect.xml"));
     }
-    if (mAutoCorectLang.isEmpty())
-        mAutoCorectLang = kdelang;
+    if (fname.isEmpty())
+        fname = KGlobal::dirs()->findResource("data", QLatin1String("autocorrect/autocorrect.xml"));
 
 
-    mUpperCaseExceptions.clear();
-    mAutocorrectEntries.clear();
-    mTwoUpperLetterExceptions.clear();
-    mSuperScriptEntries.clear();
-
+    if (mAutoCorrectLang.isEmpty())
+        mAutoCorrectLang = kdelang;
     qDebug()<<" fname :"<<fname;
-    if (fname.isEmpty()) {
-        mTypographicSingleQuotes = typographicDefaultSingleQuotes();
-        mTypographicDoubleQuotes = typographicDefaultDoubleQuotes();
-        return;
-    }
+    qDebug()<<" LocalFile:"<<LocalFile;
 
-    ImportKMailAutocorrection import;
-    if (import.import(fname)) {
-        mUpperCaseExceptions = import.upperCaseExceptions();
-        mTwoUpperLetterExceptions = import.twoUpperLetterExceptions();
-        mAutocorrectEntries = import.autocorrectEntries();
-        mTypographicSingleQuotes = import.typographicSingleQuotes();
-        mTypographicDoubleQuotes = import.typographicDoubleQuotes();
-        mSuperScriptEntries = import.superScriptEntries();
+    if(LocalFile.isEmpty()) {
+        if(fname.isEmpty()) {
+            mTypographicSingleQuotes = typographicDefaultSingleQuotes();
+            mTypographicDoubleQuotes = typographicDefaultDoubleQuotes();
+        } else {
+            ImportKMailAutocorrection import;
+            if (import.import(fname,ImportAbstractAutocorrection::All)) {
+                mUpperCaseExceptions = import.upperCaseExceptions();
+                mTwoUpperLetterExceptions = import.twoUpperLetterExceptions();
+                mAutocorrectEntries = import.autocorrectEntries();
+                mTypographicSingleQuotes = import.typographicSingleQuotes();
+                mTypographicDoubleQuotes = import.typographicDoubleQuotes();
+                mSuperScriptEntries = import.superScriptEntries();
+            }
+        }
+    } else {
+        ImportKMailAutocorrection import;
+        if (import.import(LocalFile,ImportAbstractAutocorrection::All)) {
+            mUpperCaseExceptions = import.upperCaseExceptions();
+            mTwoUpperLetterExceptions = import.twoUpperLetterExceptions();
+            mAutocorrectEntries = import.autocorrectEntries();
+            mTypographicSingleQuotes = import.typographicSingleQuotes();
+            mTypographicDoubleQuotes = import.typographicDoubleQuotes();
+            //Don't import it in local
+            //mSuperScriptEntries = import.superScriptEntries();
+        }
+        if (!fname.isEmpty() && import.import(fname,ImportAbstractAutocorrection::SuperScript)) {
+            mSuperScriptEntries = import.superScriptEntries();
+        }
+        qDebug()<<" mSuperScriptEntries"<<mSuperScriptEntries;
     }
 }
 
 void KMComposerAutoCorrection::writeAutoCorrectionXmlFile()
 {
-    const QString fname = KGlobal::dirs()->locateLocal("data", QLatin1String("autocorrect/") + (mAutoCorectLang == QLatin1String("en_US") ? QLatin1String("autocorrect") : mAutoCorectLang) + QLatin1String(".xml"));
+    const QString fname = KGlobal::dirs()->locateLocal("data", QLatin1String("autocorrect/custom-") + (mAutoCorrectLang == QLatin1String("en_US") ? QLatin1String("autocorrect") : mAutoCorrectLang) + QLatin1String(".xml"));
     QFile file(fname);
     if( !file.open( QIODevice::WriteOnly | QIODevice::Text ) ) {
         kDebug()<<"We can't save in file :"<<fname;
@@ -797,6 +830,8 @@ void KMComposerAutoCorrection::writeAutoCorrectionXmlFile()
     }
     word.appendChild(twoUpperLetterExceptions);
 
+    //Don't save it as  discussed with Calligra dev
+    /*
     QDomElement supperscript = root.createElement(QLatin1String( "SuperScript" ));
     QHashIterator<QString, QString> j(mSuperScriptEntries);
     while (j.hasNext()) {
@@ -807,6 +842,7 @@ void KMComposerAutoCorrection::writeAutoCorrectionXmlFile()
         supperscript.appendChild(item);
     }
     word.appendChild(supperscript);
+*/
 
     QDomElement doubleQuote = root.createElement(QLatin1String( "DoubleQuote" ));
     QDomElement item = root.createElement(QLatin1String( "doublequote" ));
@@ -831,14 +867,14 @@ void KMComposerAutoCorrection::writeAutoCorrectionXmlFile()
 
 QString KMComposerAutoCorrection::language() const
 {
-  return mAutoCorectLang;
+  return mAutoCorrectLang;
 }
 
 void KMComposerAutoCorrection::setLanguage(const QString &lang)
 {
   qDebug()<<" setLanguage :"<<lang;
-  if(mAutoCorectLang != lang) {
-    mAutoCorectLang = lang;
+  if(mAutoCorrectLang != lang) {
+    mAutoCorrectLang = lang;
     //Re-read xml file
     readAutoCorrectionXmlFile();
   }

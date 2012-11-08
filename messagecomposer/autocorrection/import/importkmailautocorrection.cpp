@@ -34,7 +34,7 @@ ImportKMailAutocorrection::~ImportKMailAutocorrection()
 }
 
 
-bool ImportKMailAutocorrection::import(const QString& fileName)
+bool ImportKMailAutocorrection::import(const QString& fileName, LoadAttribute loadAttribute)
 {
     QFile xmlFile(fileName);
     if (!xmlFile.open(QIODevice::ReadOnly))
@@ -48,64 +48,68 @@ bool ImportKMailAutocorrection::import(const QString& fileName)
 
     QDomElement de = doc.documentElement();
 
-    QDomElement upper = de.namedItem(QLatin1String("UpperCaseExceptions")).toElement();
-    if (!upper.isNull()) {
-        const QDomNodeList nl = upper.childNodes();
-        for (int i = 0; i < nl.count(); i++)
-            mUpperCaseExceptions += nl.item(i).toElement().attribute(QLatin1String("exception"));
-    }
-
-    QDomElement twoUpper = de.namedItem(QLatin1String("TwoUpperLetterExceptions")).toElement();
-    if (!twoUpper.isNull()) {
-        const QDomNodeList nl = twoUpper.childNodes();
-        const int numberOfElement(nl.count());
-        for(int i = 0; i < numberOfElement; ++i)
-            mTwoUpperLetterExceptions += nl.item(i).toElement().attribute(QLatin1String("exception"));
-    }
-
-    /* Load advanced autocorrect entry, including the format */
-    QDomElement item = de.namedItem(QLatin1String("items")).toElement();
-    if (!item.isNull())
-    {
-        const QDomNodeList nl = item.childNodes();
-        const int numberOfElement(nl.count());
-        for (int i = 0; i < numberOfElement; i++) {
-            const QDomElement element = nl.item(i).toElement();
-            const QString find = element.attribute(QLatin1String("find"));
-            const QString replace = element.attribute(QLatin1String("replace"));
-            mAutocorrectEntries.insert(find, replace);
+    if(loadAttribute == All) {
+        QDomElement upper = de.namedItem(QLatin1String("UpperCaseExceptions")).toElement();
+        if (!upper.isNull()) {
+            const QDomNodeList nl = upper.childNodes();
+            for (int i = 0; i < nl.count(); i++)
+                mUpperCaseExceptions += nl.item(i).toElement().attribute(QLatin1String("exception"));
         }
-    }
 
-    QDomElement doubleQuote = de.namedItem(QLatin1String("DoubleQuote")).toElement();
-    if(doubleQuote.isNull()) {
-      const QDomNodeList nl = doubleQuote.childNodes();
-      if(nl.count()==1) {
-        const QDomElement element = nl.item(0).toElement();
-        mTypographicDoubleQuotes.begin = element.attribute(QLatin1String("begin")).at(0);
-        mTypographicDoubleQuotes.end = element.attribute(QLatin1String("end")).at(0);
-      } else {
-        kDebug()<<" number of double quote invalid "<<nl.count();
-      }
-    }
+        QDomElement twoUpper = de.namedItem(QLatin1String("TwoUpperLetterExceptions")).toElement();
+        if (!twoUpper.isNull()) {
+            const QDomNodeList nl = twoUpper.childNodes();
+            const int numberOfElement(nl.count());
+            for(int i = 0; i < numberOfElement; ++i)
+                mTwoUpperLetterExceptions += nl.item(i).toElement().attribute(QLatin1String("exception"));
+        }
 
-    const QDomElement singleQuote = de.namedItem(QLatin1String("SimpleQuote")).toElement();
-    if(singleQuote.isNull()) {
-      const QDomNodeList nl = singleQuote.childNodes();
-      if(nl.count()==1) {
-        const QDomElement element = nl.item(0).toElement();
-        mTypographicSingleQuotes.begin = element.attribute(QLatin1String("begin")).at(0);
-        mTypographicSingleQuotes.end = element.attribute(QLatin1String("end")).at(0);
-      } else {
-        kDebug()<<" number of simple quote invalid "<<nl.count();
-      }
-    }
+        /* Load advanced autocorrect entry, including the format */
+        QDomElement item = de.namedItem(QLatin1String("items")).toElement();
+        if (!item.isNull())
+        {
+            const QDomNodeList nl = item.childNodes();
+            const int numberOfElement(nl.count());
+            for (int i = 0; i < numberOfElement; i++) {
+                const QDomElement element = nl.item(i).toElement();
+                const QString find = element.attribute(QLatin1String("find"));
+                const QString replace = element.attribute(QLatin1String("replace"));
+                mAutocorrectEntries.insert(find, replace);
+            }
+        }
 
-    QDomElement superScript = de.namedItem(QLatin1String("SuperScript")).toElement();
-    if (!superScript.isNull()) {
-      QDomNodeList nl = superScript.childNodes();
-      for(int i = 0; i < nl.count() ; i++)
-        mSuperScriptEntries.insert(nl.item(i).toElement().attribute(QLatin1String("find")), nl.item(i).toElement().attribute(QLatin1String("super")));
+        QDomElement doubleQuote = de.namedItem(QLatin1String("DoubleQuote")).toElement();
+        if(doubleQuote.isNull()) {
+            const QDomNodeList nl = doubleQuote.childNodes();
+            if(nl.count()==1) {
+                const QDomElement element = nl.item(0).toElement();
+                mTypographicDoubleQuotes.begin = element.attribute(QLatin1String("begin")).at(0);
+                mTypographicDoubleQuotes.end = element.attribute(QLatin1String("end")).at(0);
+            } else {
+                kDebug()<<" number of double quote invalid "<<nl.count();
+            }
+        }
+
+        const QDomElement singleQuote = de.namedItem(QLatin1String("SimpleQuote")).toElement();
+        if(singleQuote.isNull()) {
+            const QDomNodeList nl = singleQuote.childNodes();
+            if(nl.count()==1) {
+                const QDomElement element = nl.item(0).toElement();
+                mTypographicSingleQuotes.begin = element.attribute(QLatin1String("begin")).at(0);
+                mTypographicSingleQuotes.end = element.attribute(QLatin1String("end")).at(0);
+            } else {
+                kDebug()<<" number of simple quote invalid "<<nl.count();
+            }
+        }
+
+    }
+    if(loadAttribute == All || loadAttribute == SuperScript) {
+        QDomElement superScript = de.namedItem(QLatin1String("SuperScript")).toElement();
+        if (!superScript.isNull()) {
+            QDomNodeList nl = superScript.childNodes();
+            for(int i = 0; i < nl.count() ; i++)
+                mSuperScriptEntries.insert(nl.item(i).toElement().attribute(QLatin1String("find")), nl.item(i).toElement().attribute(QLatin1String("super")));
+        }
     }
 
     return true;
