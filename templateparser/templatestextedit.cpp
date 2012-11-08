@@ -187,7 +187,9 @@ QString TemplatesTextEdit::wordUnderCursor()
       // vHanda: I don't understand why the cursor seems to give a pos 1 past
       // the last char instead of just the last char.
       int pos = tc.position() - 1;
-      if ( pos < 0 || eow.contains( document()->characterAt(pos) ) ) {
+      if ( pos < 0 || eow.contains( document()->characterAt(pos) ) 
+		   || document()->characterAt(pos) == QChar(QChar::LineSeparator) 
+		   || document()->characterAt(pos) == QChar(QChar::ParagraphSeparator)) {
         break;
       }
       tc.movePosition( QTextCursor::Left, QTextCursor::KeepAnchor );
