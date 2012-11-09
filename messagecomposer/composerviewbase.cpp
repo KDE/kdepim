@@ -488,10 +488,6 @@ QList< Message::Composer* > Message::ComposerViewBase::generateCryptoMessages ()
     }
   }
 
-  if( !signSomething && !encryptSomething ) {
-    return QList< Message::Composer* >() << new Message::Composer();
-  }
-
   if( encryptSomething ) {
     if ( !id.pgpEncryptionKey().isEmpty() )
       encryptToSelfKeys.push_back( QLatin1String( id.pgpEncryptionKey() ) );
@@ -536,6 +532,11 @@ QList< Message::Composer* > Message::ComposerViewBase::generateCryptoMessages ()
       emit failed( i18n( "Failed to resolve keys. Please report a bug." ) );
       return QList< Message::Composer*>();
   }
+
+  if( !signSomething && !encryptSomething ) {
+    return QList< Message::Composer* >() << new Message::Composer();
+  }
+
 
   if ( keyResolver->resolveAllKeys( signSomething, encryptSomething ) != Kpgp::Ok ) {
     /// TODO handle failure
