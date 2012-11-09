@@ -156,8 +156,6 @@ void Message::ComposerViewBase::setMessage ( const KMime::Message::Ptr& msg )
   MessageViewer::ObjectTreeParser otp( &emptySource );//All default are ok
   otp.parseObjectTree( msgContent );
 
-  m_editor->setPlainText( otp.plainTextContent() );
-
   // Load the attachments
   MessageCore::AttachmentCollector ac;
   ac.collectAttachmentsFrom( msgContent );
@@ -180,6 +178,8 @@ void Message::ComposerViewBase::setMessage ( const KMime::Message::Ptr& msg )
     m_editor->setHtml( otp.htmlContent() );
     emit enableHtml();
     collectImages( m_msg.get() );
+  } else {
+    m_editor->setPlainText( otp.plainTextContent() );
   }
 
   if ( m_msg->headerByType( "X-KMail-CursorPos" ) ) {
