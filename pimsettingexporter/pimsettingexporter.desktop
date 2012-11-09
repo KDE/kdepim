@@ -1,6 +1,18 @@
 [Desktop Entry]
 Name=PIM Setting Exporter
+Name[ia]=PIM Setting Explorer (Exportator de preferentias de PIM)
+Name[pt]=Exportação das Definições PIM
+Name[pt_BR]=Exportação das Definições PIM
+Name[sk]=Exportovač nastavenia PIM
+Name[uk]=Інструмент експортування параметрів
+Name[x-test]=xxPIM Setting Exporterxx
 Exec=pimsettingexporter
 Type=Application
 Comment=PIM Setting Exporter allows to save all data from PIM apps and restore them in other system.
+Comment[ia]=PIM Setting Exporter (Exportator de preferentias de PIM) permitte de salveguardar tote datos ex apps de PIM  e restabili los in altere systema.
+Comment[pt]=A Exportação das Definições PIM permite-lhe guardar todos os dados do KMail e repô-los noutro sistema.
+Comment[pt_BR]=A Exportação das Definições PIM permite-lhe salvar todos os dados de aplicativos de gerenciamento de informações pessoais e restaurá-los em outro sistema.
+Comment[sk]=Exportovač nastavenia PIM umožní uložiť všetky dáta z PIM aplikácií a obnoviť ich na inom systéme.
+Comment[uk]=За допомогою програми для експортування параметрів системи особистих даних ви зможете зберегти всі параметри програм для роботи з особистими даним, а потім відновити їх у іншій системі.
+Comment[x-test]=xxPIM Setting Exporter allows to save all data from PIM apps and restore them in other system.xx
 Terminal=false
