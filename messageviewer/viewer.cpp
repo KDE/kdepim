@@ -611,7 +611,6 @@ KAction *Viewer::findInMessageAction()
 
 void Viewer::slotChangeDisplayMail(Viewer::ForceDisplayTo mode,bool loadExternal)
 {
-    qDebug()<<"void Viewer::slotChangeDisplayMail(Viewer::ForceDisplayTo mode,bool loadExternal)"<<loadExternal;
     setHtmlLoadExtOverride(loadExternal);
     switch(mode) {
     case Viewer::Html:
