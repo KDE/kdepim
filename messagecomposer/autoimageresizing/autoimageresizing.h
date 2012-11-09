@@ -33,6 +33,9 @@ public:
   explicit AutoImageResizing(QWidget *parent = 0);
   ~AutoImageResizing();
 
+  void setImageFromData(const QByteArray& data, ImageType type);
+  QByteArray imageData() const;
+
 private Q_SLOTS:
   void slotUser1();
 
