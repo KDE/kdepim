@@ -2434,7 +2434,7 @@ bool View::event( QEvent *e )
         }
       }
 
-      QString content = mi->contentSummary();
+      QString content = Qt::escape(mi->contentSummary());
       if ( !content.isEmpty() ) {
         if ( textIsLeftToRight ) {
           tip += htmlCodeForStandardRow.arg( i18n( "Preview" ) ).arg( content.replace( QLatin1Char( '\n' ), QLatin1String( "<br>" ) ) );
