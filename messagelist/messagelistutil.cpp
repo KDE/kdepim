@@ -21,6 +21,10 @@
 #include <KMenu>
 #include <KIcon>
 #include <KLocale>
+#include <nepomuk2/nmo.h>
+#include <Nepomuk2/Resource>
+#include <Nepomuk2/Variant>
+
 
 using namespace MessageList::Core;
 
@@ -135,3 +139,27 @@ void MessageList::Util::fillViewMenu( KMenu * menu, QObject *receiver )
   QObject::connect( themeMenu, SIGNAL(aboutToShow()),
            receiver, SLOT(themeMenuAboutToShow()) );
 }
+
+QString MessageList::Util::contentSummary( const KUrl& url )
+{
+  Nepomuk2::Resource mail( url );
+  const QString content =
+      mail.property( Nepomuk2::Vocabulary::NMO::plainTextMessageContent() ).toString();
+  // Extract the first 5 non-empty, non-quoted lines from the content and return it
+  int numLines = 0;
+  const int maxLines = 5;
+  const QStringList lines = content.split( QLatin1Char( '\n' ) );
+  QString ret;
+  foreach( const QString &line, lines ) {
+    const QString lineTrimmed = line.trimmed();
+    const bool isQuoted = lineTrimmed.startsWith( QLatin1Char( '>' ) ) || lineTrimmed.startsWith( QLatin1Char( '|' ) );
+    if ( !isQuoted && !lineTrimmed.isEmpty() ) {
+      ret += line + QLatin1Char( '\n' );
+      numLines++;
+      if ( numLines >= maxLines )
+        break;
+    }
+  }
+  return ret;
+}
+

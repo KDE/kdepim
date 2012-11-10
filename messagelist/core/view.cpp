@@ -30,11 +30,13 @@
 #include "core/settings.h"
 #include "core/storagemodelbase.h"
 #include "core/widgetbase.h"
+#include "messagelistutil.h"
 
 #include "messagecore/stringutil.h"
 
 #include <kmime/kmime_dateformatter.h> // kdepimlibs
 
+#include <Akonadi/Item>
 #include <QHelpEvent>
 #include <QToolTip>
 #include <QHeaderView>
@@ -2413,7 +2415,7 @@ bool View::event( QEvent *e )
         }
       }
 
-      QString content = Qt::escape(mi->contentSummary());
+      QString content = Qt::escape(MessageList::Util::contentSummary(mi->akonadiItem().url()));
       if ( !content.isEmpty() ) {
         if ( textIsLeftToRight ) {
           tip += htmlCodeForStandardRow.arg( i18n( "Preview" ) ).arg( content.replace( QLatin1Char( '\n' ), QLatin1String( "<br>" ) ) );
