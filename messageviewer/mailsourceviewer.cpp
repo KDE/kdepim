@@ -233,7 +233,7 @@ const QString HTMLPrettyFormatter::reformat( const QString &src )
 }
 
 MailSourceViewer::MailSourceViewer( QWidget *parent )
-  : KDialog( parent ), mRawSourceHighLighter( 0 )
+  : KDialog( parent )
 {
   setAttribute( Qt::WA_DeleteOnClose );
   setButtons( Close );
@@ -254,7 +254,7 @@ MailSourceViewer::MailSourceViewer( QWidget *parent )
   mHtmlBrowser = new MailSourceViewTextBrowserWidget();
   mTabWidget->addTab( mHtmlBrowser, i18nc( "Mail message as shown, in HTML format", "HTML Source" ) );
   mTabWidget->setTabToolTip( 1, i18n( "HTML code for displaying the message to the user" ) );
-  mHtmlSourceHighLighter = new HTMLSourceHighlighter( mHtmlBrowser->textBrowser()->document() );
+  new HTMLSourceHighlighter( mHtmlBrowser->textBrowser()->document() );
 
   mTabWidget->setCurrentIndex( 0 );
 #else
@@ -274,7 +274,7 @@ MailSourceViewer::MailSourceViewer( QWidget *parent )
                   IconSize( KIconLoader::Desktop ) ),
                   qApp->windowIcon().pixmap( IconSize( KIconLoader::Small ),
                   IconSize( KIconLoader::Small ) ) );
-  mRawSourceHighLighter = new MailSourceHighlighter( mRawBrowser->textBrowser()->document() );
+  new MailSourceHighlighter( mRawBrowser->textBrowser()->document() );
   mRawBrowser->textBrowser()->setFocus();
 }
 

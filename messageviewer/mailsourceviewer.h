@@ -144,9 +144,7 @@ private:
 #ifndef NDEBUG
   KTabWidget *mTabWidget;
   MailSourceViewTextBrowserWidget *mHtmlBrowser;
-  HTMLSourceHighlighter *mHtmlSourceHighLighter;
 #endif
-  MailSourceHighlighter *mRawSourceHighLighter;
 };
 
 }
