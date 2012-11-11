@@ -212,7 +212,7 @@ else()
   find_package(Grantlee QUIET NO_MODULE)
   macro_log_feature(Grantlee_FOUND "Grantlee" "The Grantlee Template System" "http://www.gitorious.org/grantlee/pages/Home" FALSE "" "Templating and theming for KJots and KaddressBook." )
 
-  if(${Grantlee_VERSION} VERSION_GREATER "0.2.0" )
+  if(${Grantlee_FOUND} AND ("${Grantlee_VERSION}" VERSION_GREATER "0.2.0"))
      set(GRANTLEE_GREATER_0_2 TRUE)
   endif()
 
