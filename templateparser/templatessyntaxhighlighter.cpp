@@ -52,7 +52,7 @@ void TemplatesSyntaxHighlighter::init()
   keywordFormat.setForeground( palette.link() );
 
   QStringList keywords;
-  keywords <<Util::keywords();
+  keywords << Util::keywords();
 
   Q_FOREACH ( const QString & s, keywords ) {
     const QRegExp regex( s, Qt::CaseInsensitive );
@@ -62,7 +62,7 @@ void TemplatesSyntaxHighlighter::init()
   QTextCharFormat keywordWithArgsFormat;
   keywordWithArgsFormat.setForeground( palette.link() );
   QStringList keywordsWithArgs;
-  keywordsWithArgs <<Util::keywordsWithArgs();
+  keywordsWithArgs << Util::keywordsWithArgs();
 
   Q_FOREACH ( const QString & s, keywordsWithArgs ) {
     const QRegExp regex( s, Qt::CaseInsensitive );
