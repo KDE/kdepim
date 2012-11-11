@@ -431,7 +431,9 @@ KMime::Message::Ptr MessageFactoryTest::createPlainTestMessage()
 KMime::Message::Ptr MessageFactoryTest::loadMessageFromFile(QString filename)
 {
   QFile file( QLatin1String( MAIL_DATA_DIR "/" + filename.toLatin1() ) );
-  Q_ASSERT( file.open( QIODevice::ReadOnly ) );
+  const bool opened = file.open( QIODevice::ReadOnly );
+  Q_ASSERT( opened );
+  Q_UNUSED( opened );
   const QByteArray data = KMime::CRLFtoLF( file.readAll() );
   Q_ASSERT( !data.isEmpty() );
   KMime::Message::Ptr msg( new KMime::Message );
