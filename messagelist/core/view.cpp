@@ -2339,7 +2339,6 @@ bool View::event( QEvent *e )
   QString darkerColorName = darkerColor.name();
   const bool textIsLeftToRight = ( QApplication::layoutDirection() == Qt::LeftToRight );
   const QString textDirection =  textIsLeftToRight ? QLatin1String( "left" ) : QLatin1String( "right" );
-  const QString firstColumnWidth =  textIsLeftToRight ? QLatin1String( "45" ) : QLatin1String( "55" );
 
   QString tip = QString::fromLatin1(
       "<table width=\"100%\" border=\"0\" cellpadding=\"2\" cellspacing=\"0\">"
@@ -2391,7 +2390,7 @@ bool View::event( QEvent *e )
       }
 
       QString status = mi->statusDescription();
-      QString tags = mi->tagListDescription();
+      const QString tags = mi->tagListDescription();
       if ( !tags.isEmpty () )
       {
         if ( !status.isEmpty() )
@@ -2415,7 +2414,7 @@ bool View::event( QEvent *e )
         }
       }
 
-      QString content = Qt::escape(MessageList::Util::contentSummary(mi->akonadiItem().url()));
+      QString content = MessageList::Util::contentSummary(mi->akonadiItem().url());
       if ( !content.isEmpty() ) {
         if ( textIsLeftToRight ) {
           tip += htmlCodeForStandardRow.arg( i18n( "Preview" ) ).arg( content.replace( QLatin1Char( '\n' ), QLatin1String( "<br>" ) ) );

@@ -17,6 +17,8 @@
 */
 #include "messagelistutil.h"
 #include "core/settings.h"
+#include <QTextDocument>
+
 #include <KConfigGroup>
 #include <KMenu>
 #include <KIcon>
@@ -160,6 +162,6 @@ QString MessageList::Util::contentSummary( const KUrl& url )
         break;
     }
   }
-  return ret;
+  return Qt::escape(ret);
 }
 
