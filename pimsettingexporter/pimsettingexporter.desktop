@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=PIM Setting Exporter
+Name[el]=Εξαγωγέας ρυθμίσεων PIM
 Name[ia]=PIM Setting Explorer (Exportator de preferentias de PIM)
 Name[pt]=Exportação das Definições PIM
 Name[pt_BR]=Exportação das Definições PIM
@@ -9,6 +10,7 @@ Name[x-test]=xxPIM Setting Exporterxx
 Exec=pimsettingexporter
 Type=Application
 Comment=PIM Setting Exporter allows to save all data from PIM apps and restore them in other system.
+Comment[el]=Ο εξαγωγέας ρυθμίσεων του PIM σάς επιτρέπει την αποθήκευση όλων των δεδομένων από τις εφαρμογές PIM και την επαναφορά τους σε άλλο σύστημα.
 Comment[ia]=PIM Setting Exporter (Exportator de preferentias de PIM) permitte de salveguardar tote datos ex apps de PIM  e restabili los in altere systema.
 Comment[pt]=A Exportação das Definições PIM permite-lhe guardar todos os dados do KMail e repô-los noutro sistema.
 Comment[pt_BR]=A Exportação das Definições PIM permite-lhe salvar todos os dados de aplicativos de gerenciamento de informações pessoais e restaurá-los em outro sistema.
