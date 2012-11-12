@@ -40,7 +40,7 @@ QString HTMLQuoteColorer::process( const QString &htmlSource, QString&extraHead 
 #ifndef KDEPIM_NO_WEBKIT
   // Create a DOM Document from the HTML source
   QWebPage page(0);
-  page.settings()->setAttribute( QWebSettings::JavascriptEnabled, false );
+  page.settings()->setAttribute( QWebSettings::JavascriptEnabled, true );
   page.settings()->setAttribute( QWebSettings::JavaEnabled, false );
   page.settings()->setAttribute( QWebSettings::PluginsEnabled, false );
 
@@ -91,7 +91,6 @@ QString HTMLQuoteColorer::process( const QString &htmlSource, QString&extraHead 
   "  for( i = 0; i < lineBreakNodes.length; lineBreakNodes++) {\n"
   "    if ( lineBreakNodes[i] == nodeName ) {\n"
   "      mIsFirstTextNodeInLine = true;\n"
-  "      break;\n"
   "    }\n"
   "  }\n"
 
@@ -123,7 +122,7 @@ QString HTMLQuoteColorer::process( const QString &htmlSource, QString&extraHead 
 
   "function quoteLength( line )\n"
   "{\n"
-  "  line = line.replace(  \"\\s\", \"\" ).replace( '|', '>' );\n"
+  "  line = line.replace(  / /g, \"\" ).replace( '|', '>' );\n"
   "  if ( line.substr( 0, 3 ) == \">>>\" ) return 3;\n"
   "  if ( line.substr( 0, 2 ) == \">>\" ) return 2;\n"
   "  if ( line.substr( 0, 1 ) == '>' ) return 1;\n"
@@ -135,7 +134,6 @@ QString HTMLQuoteColorer::process( const QString &htmlSource, QString&extraHead 
   const QWebElement header = frame->documentElement().findFirst("head");
 
   extraHead = header.toInnerXml();
-
   return body.toInnerXml();
 #else
   return htmlSource;
