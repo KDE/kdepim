@@ -221,6 +221,7 @@ void KMComposerAutoCorrectionWidget::resetToDefault()
   ui->typographicDoubleQuotes->setChecked(false);
   ui->typographicSingleQuotes->setChecked(false);
   ui->autoSuperScript->setChecked(false);
+  ui->autoReplaceNumber->setChecked(false);
 
   loadGlobalAutoCorrectionAndException();
   mWasChanged = false;

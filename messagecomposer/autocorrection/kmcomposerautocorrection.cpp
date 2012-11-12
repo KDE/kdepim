@@ -706,7 +706,7 @@ void KMComposerAutoCorrection::readAutoCorrectionXmlFile( bool forceGlobal )
     QString kdelang = locale->languageList().first();
     kdelang.remove(QRegExp(QLatin1String("@.*")));
 
-    qDebug()<<"void KMComposerAutoCorrection::readAutoCorrectionXmlFile() "<<mAutoCorrectLang;
+    //qDebug()<<"void KMComposerAutoCorrection::readAutoCorrectionXmlFile() "<<mAutoCorrectLang;
 
     mUpperCaseExceptions.clear();
     mAutocorrectEntries.clear();
