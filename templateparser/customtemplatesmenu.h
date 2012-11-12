@@ -41,9 +41,9 @@ class TEMPLATEPARSER_EXPORT CustomTemplatesMenu : public QObject
     CustomTemplatesMenu( QWidget *parent, KActionCollection *ac );
     ~CustomTemplatesMenu();
 
-    KActionMenu *replyActionMenu() const { return (mCustomReplyActionMenu); }
-    KActionMenu *replyAllActionMenu() const { return (mCustomReplyAllActionMenu); }
-    KActionMenu *forwardActionMenu() const { return (mCustomForwardActionMenu); }
+    KActionMenu *replyActionMenu() const { return mCustomReplyActionMenu; }
+    KActionMenu *replyAllActionMenu() const { return mCustomReplyAllActionMenu; }
+    KActionMenu *forwardActionMenu() const { return mCustomForwardActionMenu; }
 
   public Q_SLOTS:
     void update();

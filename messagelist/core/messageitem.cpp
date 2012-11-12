@@ -309,29 +309,6 @@ void MessageItem::editAnnotation()
     d->mAnnotationStateChecked = false;
 }
 
-QString MessageItem::contentSummary() const
-{
-  Q_D( const MessageItem );
-  Nepomuk2::Resource mail( d->mAkonadiItem.url() );
-  const QString content =
-      mail.property( Nepomuk2::Vocabulary::NMO::plainTextMessageContent() ).toString();
-  // Extract the first 5 non-empty, non-quoted lines from the content and return it
-  int numLines = 0;
-  const int maxLines = 5;
-  const QStringList lines = content.split( QLatin1Char( '\n' ) );
-  QString ret;
-  foreach( const QString &line, lines ) {
-    const bool isQuoted = line.trimmed().startsWith( QLatin1Char( '>' ) ) || line.trimmed().startsWith( QLatin1Char( '|' ) );
-    if ( !line.trimmed().isEmpty() && !isQuoted ) {
-      ret += line + QLatin1Char( '\n' );
-      numLines++;
-      if ( numLines >= maxLines )
-        break;
-    }
-  }
-  return ret;
-}
-
 const MessageItem::Tag * MessageItemPrivate::findTagInternal( const QString &szTagId ) const
 {
   foreach( const MessageItem::Tag *tag, getTagList() ) {

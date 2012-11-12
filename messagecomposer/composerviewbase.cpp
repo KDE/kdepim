@@ -156,8 +156,6 @@ void Message::ComposerViewBase::setMessage ( const KMime::Message::Ptr& msg )
   MessageViewer::ObjectTreeParser otp( &emptySource );//All default are ok
   otp.parseObjectTree( msgContent );
 
-  m_editor->setPlainText( otp.plainTextContent() );
-
   // Load the attachments
   MessageCore::AttachmentCollector ac;
   ac.collectAttachmentsFrom( msgContent );
@@ -180,6 +178,8 @@ void Message::ComposerViewBase::setMessage ( const KMime::Message::Ptr& msg )
     m_editor->setHtml( otp.htmlContent() );
     emit enableHtml();
     collectImages( m_msg.get() );
+  } else {
+    m_editor->setPlainText( otp.plainTextContent() );
   }
 
   if ( m_msg->headerByType( "X-KMail-CursorPos" ) ) {
@@ -488,10 +488,6 @@ QList< Message::Composer* > Message::ComposerViewBase::generateCryptoMessages ()
     }
   }
 
-  if( !signSomething && !encryptSomething ) {
-    return QList< Message::Composer* >() << new Message::Composer();
-  }
-
   if( encryptSomething ) {
     if ( !id.pgpEncryptionKey().isEmpty() )
       encryptToSelfKeys.push_back( QLatin1String( id.pgpEncryptionKey() ) );
@@ -536,6 +532,11 @@ QList< Message::Composer* > Message::ComposerViewBase::generateCryptoMessages ()
       emit failed( i18n( "Failed to resolve keys. Please report a bug." ) );
       return QList< Message::Composer*>();
   }
+
+  if( !signSomething && !encryptSomething ) {
+    return QList< Message::Composer* >() << new Message::Composer();
+  }
+
 
   if ( keyResolver->resolveAllKeys( signSomething, encryptSomething ) != Kpgp::Ok ) {
     /// TODO handle failure

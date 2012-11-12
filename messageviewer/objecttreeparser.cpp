@@ -1149,6 +1149,12 @@ bool ObjectTreeParser::containsExternalReferences( const QString & str, const QS
                          str.contains(QLatin1String("<img src=\"/"),Qt::CaseInsensitive)) ) {
     return true;
   }
+  /*
+  //Laurent: workaround for local ref cid
+  if(str.contains(QLatin1String("<img src=\"cid:"),Qt::CaseInsensitive)) {
+    return true;
+  }
+  */
   int httpPos = str.indexOf( "\"http:", Qt::CaseInsensitive );
   int httpsPos = str.indexOf( "\"https:", Qt::CaseInsensitive );
 

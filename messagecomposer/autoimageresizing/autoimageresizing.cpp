@@ -35,6 +35,17 @@ AutoImageResizing::~AutoImageResizing()
 {
 }
 
+void AutoImageResizing::setImageFromData(const QByteArray& data, ImageType type)
+{
+    //TODO
+}
+
+QByteArray AutoImageResizing::imageData() const
+{
+    //TODO
+    return QByteArray();
+}
+
 void AutoImageResizing::slotUser1()
 {
   close();
