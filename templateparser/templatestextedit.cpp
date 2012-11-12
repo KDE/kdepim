@@ -65,10 +65,10 @@ void TemplatesTextEdit::initCompleter()
 void TemplatesTextEdit::slotInsertCompletion( const QString &completion )
 {
   QTextCursor tc = textCursor();
-  int extra = completion.length() - m_completer->completionPrefix().length();
-  tc.movePosition( QTextCursor::Left );
-  tc.movePosition( QTextCursor::EndOfWord );
-  tc.insertText( completion.right( extra ) );
+  tc.movePosition( QTextCursor::StartOfWord );
+  tc.movePosition( QTextCursor::EndOfWord, QTextCursor::KeepAnchor );
+  tc.removeSelectedText();
+  tc.insertText( completion.right( completion.length()-1 ) );
   setTextCursor( tc );
 
 }
