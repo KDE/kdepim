@@ -567,7 +567,10 @@ void KMComposerAutoCorrectionWidget::emitChanged()
 
 void KMComposerAutoCorrectionWidget::loadGlobalAutoCorrectionAndException()
 {
-
+    const QString lang = ui->autocorrectionLanguage->itemData (ui->autocorrectionLanguage->currentIndex()).toString();
+    mAutoCorrection->setLanguage(lang,true);
+    loadAutoCorrectionAndException();
+    mWasChanged = false;
 }
 
 #include "kmcomposerautocorrectionwidget.moc"
