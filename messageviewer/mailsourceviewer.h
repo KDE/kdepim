@@ -132,7 +132,7 @@ class MailSourceViewer : public KDialog
 {
 Q_OBJECT
 public:
-  MailSourceViewer( QWidget *parent = 0 );
+  explicit MailSourceViewer( QWidget *parent = 0 );
   ~MailSourceViewer();
 
   void setRawSource( const QString &source );
