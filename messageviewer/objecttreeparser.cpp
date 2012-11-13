@@ -1209,7 +1209,7 @@ bool ObjectTreeParser::processTextHtmlSubtype( KMime::Content * curNode, Process
 
       HTMLQuoteColorer colorer;
       QString extraHead;
-      for ( int i = 0; i < 2; i++ )
+      for ( int i = 0; i < 3; i++ )
         colorer.setQuoteColor( i, cssHelper()->quoteColor( i ) );
       bodyText = colorer.process( bodyText, extraHead );
       mNodeHelper->setNodeDisplayedEmbedded( curNode, true );
