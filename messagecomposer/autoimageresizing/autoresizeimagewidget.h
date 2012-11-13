@@ -19,12 +19,19 @@
 #define AUTORESIZEIMAGEWIDGET_H
 #include <QWidget>
 
+namespace Ui {
+class AutoResizeImageWidget;
+}
+
+
 namespace MessageComposer {
 class AutoResizeImageWidget : public QWidget
 {
 public:
     explicit AutoResizeImageWidget(QWidget *parent = 0);
     ~AutoResizeImageWidget();
+private:
+    Ui::AutoResizeImageWidget *ui;
 };
 }
 

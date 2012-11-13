@@ -16,15 +16,18 @@
 */
 
 #include "autoresizeimagewidget.h"
+#include "ui_autoresizeimagewidget.h"
 
 using namespace MessageComposer;
 
 AutoResizeImageWidget::AutoResizeImageWidget(QWidget *parent)
-  :QWidget(parent)
+  :QWidget(parent),
+    ui(new Ui::AutoResizeImageWidget)
 {
+  ui->setupUi(this);
 }
 
 AutoResizeImageWidget::~AutoResizeImageWidget()
 {
-
+  delete ui;
 }
