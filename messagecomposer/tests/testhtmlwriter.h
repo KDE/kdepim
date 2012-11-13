@@ -38,7 +38,7 @@ class TestHtmlWriter : public MessageViewer::HtmlWriter {
     virtual void queue( const QString & ) {}
     virtual void flush() {}
     virtual void embedPart( const QByteArray &, const QString & ) {}
-    virtual void extraHead( const QString& str ) {}
+    virtual void extraHead( const QString& ) {}
     
 };
 
