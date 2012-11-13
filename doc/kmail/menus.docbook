@@ -91,7 +91,7 @@ and attachments.</para>
 <para>
 Starts up <application>kmailcvt</application> (which is
 part of kdepim). This application lets you import
-messages from several email clients &kmail;.
+messages from several email clients into &kmail;.
 </para>
 </listitem>
 </varlistentry>
@@ -105,7 +105,7 @@ messages from several email clients &kmail;.
 </menuchoice>
 </term>
 <listitem>
-<para>Display a dialog that lets you prints the currently displayed message.</para>
+<para>Display a dialog that lets you print the currently displayed message.</para>
 </listitem>
 </varlistentry>
 <!-- NOT IN 4.4.0

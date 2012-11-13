@@ -51,8 +51,8 @@ in many ways. You can reach it via
 
 <para>It is divided into six
 pages, each of them represented by one of the
-icons in the list on the left hand side of the dialog. Below the pages
-will be described in detail.</para>
+icons in the list on the left hand side of the dialog. The pages
+will be described in detail below.</para>
 
 <para>The dialog has several buttons:</para>
 
@@ -183,7 +183,7 @@ the correct value here.</para>
 <para>Enter your email address here, &ie; something like
 <userinput>joe@example.com</userinput>.</para>
 <example>
-<title>Example</title>
+<title>Email address</title>
 <para>So if your address is <replaceable>Joe User
 &lt;joe@example.com&gt;</replaceable>, you should enter <userinput>Joe
 User</userinput> into the <guilabel>Your name</guilabel> field and
@@ -198,7 +198,7 @@ address</guilabel> field.</para></example>
 considered as belonging to this identity (as opposed to representing 
 a different identity).</para>
 <example>
-<title>Example</title>
+<title>Email aliases</title>
 <para>Primary address: first.last@example.org</para>
 <para>Aliases: first@example.org and last@example.org</para>
 </example>
@@ -312,7 +312,7 @@ a different identity).</para>
 	  <listitem>
 	    <para>
 	      Here you can select the certificate to &smime;-encrypt
-	      messages to when this identity and <xref
+	      messages when this identity and <xref
 	      linkend="configure-security-composing-encrypt-to-self"/>
 	      are in effect.
 	    </para>
@@ -388,7 +388,7 @@ rare cases.</para></note>
 <varlistentry>
 <term><guilabel>BCC addresses</guilabel></term>
 <listitem>
-<para>Optionally enter addresses separated by comma to which blind copies of your messages
+<para>Optionally enter addresses separated by a comma to which blind copies of your messages
 should be sent to. When you compose a message with this identity, the <guilabel>BCC</guilabel>
 field is filled with these addresses. If you want to send a BCC regardless
 of this setting, you should look at the <guilabel>Headers</guilabel> tab of the
@@ -404,7 +404,7 @@ of this setting, you should look at the <guilabel>Headers</guilabel> tab of the
 <para>Select the folder into which messages should be filed after sending
 when using this identity. <acronym>IMAP</acronym> users should consider changing this to an
 <acronym>IMAP</acronym> folder, so their sent-mail is stored on a server instead of being
-stored in a local folder. This way they can access these messages at a
+stored in a local folder. This way they can access these messages from a
 different location.</para>
 
 <tip><para>You can exercise more fine-grained control over where to
@@ -483,11 +483,11 @@ traditional way on Unix is to read the text from a file called
 be shared between several programs, so you get the same
 signature in each mail program you use.</para>
 
-<para>To read the text from a text file you select
+<para>To read the signature from a text file you select
 <guilabel>Obtain signature text from</guilabel>-&gt;<guilabel>File</guilabel>. Enter the
-filename in the <guilabel>Specify file</guilabel> edit field or hit
+filename in the <guilabel>Specify file</guilabel> edit field or click
 the button to the right of it to browse your filesystem. If you want
-to edit the file, hit the <guilabel>Edit File</guilabel>
+to edit the file, click the <guilabel>Edit File</guilabel>
 button.</para>
 
 <para>&kmail; can also read the signature text from the output of a
@@ -505,7 +505,7 @@ the <guilabel>Specify command</guilabel> edit field.</para>
 <para>As a third option, you can enter the signature text directly in
 &kmail;'s configuration dialog. To do this, select <guilabel>Input 
 Field Below</guilabel> and enter the text
-into the appearing text box.</para>
+into the resultant text box.</para>
 
 <note><para>On the Internet, signatures are by convention separated
 from the body of the message by a line containing only the three
@@ -839,13 +839,13 @@ threading.
 <variablelist>
 <varlistentry>
 <term>Fancy</term>
-<listitem><para>A fancy multiline and multi item theme
+<listitem><para>A fancy multiline and multi-item theme
 </para>
 </listitem>
 </varlistentry>
 <varlistentry>
 <term>Fancy with Clickable Status</term>
-<listitem><para>A fancy multiline and multi item theme with a clickable status column
+<listitem><para>A fancy multiline and multi-item theme with a clickable status column
 </para>
 </listitem>
 </varlistentry>
@@ -880,7 +880,7 @@ message preview pane.</para>
 <para><guilabel>Show HTML status bar</guilabel> activates a bar at the left side of the reader
 pane that tells you if a message is &html; or not. This is important because
 &html; messages might imitate the look of a signed and encrypted message, so
-you should be aware of the fact that you are reading a &html; message. The &html;
+you should be aware of the fact that you are reading an &html; message. The &html;
 status bar itself cannot be influenced by the &html; code of the message.</para>
 
  <!-- Show spam status in fancy headers missing -->
@@ -2266,7 +2266,7 @@ Exchange understands. The invitation will be sent as an attachment with name <fi
 <varlistentry>
 <term><guilabel>Outlook compatible invitation reply comments</guilabel></term>
 <listitem>
-<para>When the user provides comments when responding to invitations, send the comment in way that <application><trademark class="trade">Microsoft Outlook</trademark></application> understands. If this option is not enabled, the response comments will not be seen in Outlook.</para>
+<para>When the user provides comments when responding to invitations, send the comment in a way that <application><trademark class="trade">Microsoft Outlook</trademark></application> understands. If this option is not enabled, the response comments will not be seen in Outlook.</para>
 </listitem>
 </varlistentry>
 <varlistentry>
@@ -2496,8 +2496,8 @@ To enable this feature, add a line reading (under [General] section):
 <term><guilabel>AutoLostFoundMove</guilabel></term>
 <listitem><para>Activate this option to automate the handling of not yet uploaded messages in disconnected IMAP
 folders that cannot be uploaded. This can happen if the folder was removed from the server or your access
-rights have been restricted. Such messages will automatically moved to a newly created lost+found folder if
-this option is enabled, you will be ask how to proceed every time otherwise.
+rights have been restricted. Such messages will automatically be moved to a newly created lost+found folder if
+this option is enabled; you will be asked how to proceed every time otherwise.
 </para>
 </listitem>
 </varlistentry>
