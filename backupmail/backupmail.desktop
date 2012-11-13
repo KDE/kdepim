@@ -61,3 +61,4 @@ Comment[uk]=За допомогою програми з резервного к�
 Comment[x-test]=xxBackup Mail allows to save all data from kmail and restore them in other system.xx
 Comment[zh_TW]=備份郵件可以將 KMail 裡的資料儲存到其他系統中。
 Terminal=false
+Categories=Qt;KDE;Office;Network;Email;
