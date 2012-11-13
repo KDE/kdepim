@@ -88,9 +88,10 @@ QString HTMLQuoteColorer::process( const QString &htmlSource, QString&extraHead 
   "  lineBreakNodes[4] = \"ol\"\n"
   "  lineBreakNodes[5] = \"li\"\n"
 
-  "  for( i = 0; i < lineBreakNodes.length; lineBreakNodes++) {\n"
+  "  for( i = 0; i < lineBreakNodes.length; i++) {\n"
   "    if ( lineBreakNodes[i] == nodeName ) {\n"
   "      mIsFirstTextNodeInLine = true;\n"
+  "      break;\n"
   "    }\n"
   "  }\n"
 

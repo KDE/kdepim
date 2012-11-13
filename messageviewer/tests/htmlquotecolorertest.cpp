@@ -72,4 +72,8 @@ void HTMLQuoteColorerTester::test_QuoteColor_data()
                          "<font color=\"#00ff00\">&gt; &gt; Level 2 Quote</font><br>"
                          "<font color=\"#ff0000\">&gt; Level 1 Quote</font><br>"
                          "No Quote<br>";
+
+  QTest::newRow("") << "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;\">&gt; &gt; &gt; Sdf sdfqsdf fqs dfq sfsdfsqfqs</p>"
+	            << "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;\"><font color=\"#0000ff\">&gt; &gt; &gt; Sdf sdfqsdf fqs dfq sfsdfsqfqs</font></p>";
+	 
 }
