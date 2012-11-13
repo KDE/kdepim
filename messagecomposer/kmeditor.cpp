@@ -112,7 +112,7 @@ class KMeditorPrivate
 
     KProcess *mExtEditorProcess;
     KTemporaryFile *mExtEditorTempFile;
-    MessageComposer::KMComposerAutoCorrection *mAutoCorrection;
+    MessageComposer::ComposerAutoCorrection *mAutoCorrection;
 };
 
 }
@@ -794,12 +794,12 @@ void KMeditor::fillComposerTextPart ( TextPart* textPart ) const
   }
 }
 
-MessageComposer::KMComposerAutoCorrection* KMeditor::autocorrection() const
+MessageComposer::ComposerAutoCorrection* KMeditor::autocorrection() const
 {
   return d->mAutoCorrection;
 }
 
-void KMeditor::setAutocorrection(MessageComposer::KMComposerAutoCorrection* autocorrect)
+void KMeditor::setAutocorrection(MessageComposer::ComposerAutoCorrection* autocorrect)
 {
   d->mAutoCorrection = autocorrect;
 }

@@ -549,7 +549,7 @@ namespace MessageViewer {
 
   QString CSSHelperBase::commonCssDefinitions() const {
     const QPalette & pal = QApplication::palette();
-    const QString headerFont = QString("  font-family: \"%1\" ! important;\n"
+    const QString headerFont = QString("font-family: \"%1\" ! important;\n"
                                        "  font-size: %2px ! important;\n")
       .arg( mBodyFont.family() )
       .arg( pointsToPixel( this->mPaintDevice, mBodyFont.pointSize() ) );

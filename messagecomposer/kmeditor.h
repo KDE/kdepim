@@ -28,7 +28,7 @@
 #include <KPIMTextEdit/TextEdit>
 
 namespace MessageComposer {
-  class KMComposerAutoCorrection;
+  class ComposerAutoCorrection;
 }
 
 namespace KPIMIdentities {
@@ -180,9 +180,9 @@ class MESSAGECOMPOSER_EXPORT KMeditor : public KPIMTextEdit::TextEdit
      */
     void fillComposerTextPart( Message::TextPart* textPart ) const;
 
-    MessageComposer::KMComposerAutoCorrection* autocorrection() const;
+    MessageComposer::ComposerAutoCorrection* autocorrection() const;
 
-    void setAutocorrection(MessageComposer::KMComposerAutoCorrection* autocorrect);
+    void setAutocorrection(MessageComposer::ComposerAutoCorrection* autocorrect);
 
     void setAutocorrectionLanguage(const QString& lang);
 

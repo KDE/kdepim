@@ -22,17 +22,17 @@
 using namespace MessageComposer;
 
 
-KMComposerAutoCorrectionListWidget::KMComposerAutoCorrectionListWidget(QWidget *parent)
+ComposerAutoCorrectionListWidget::ComposerAutoCorrectionListWidget(QWidget *parent)
   : QListWidget(parent)
 {
 }
 
-KMComposerAutoCorrectionListWidget::~KMComposerAutoCorrectionListWidget()
+ComposerAutoCorrectionListWidget::~ComposerAutoCorrectionListWidget()
 {
 
 }
 
-void KMComposerAutoCorrectionListWidget::keyPressEvent( QKeyEvent *event )
+void ComposerAutoCorrectionListWidget::keyPressEvent( QKeyEvent *event )
 {
   if( event->key() == Qt::Key_Delete ) {
     Q_EMIT deleteSelectedItems();

@@ -15,8 +15,8 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef AUTOIMAGERESIZING_H
-#define AUTOIMAGERESIZING_H
+#ifndef AUTOIMAGERESIZEDIALOG_H
+#define AUTOIMAGERESIZEDIALOG_H
 
 #include <KDialog>
 class QCheckBox;
@@ -24,7 +24,7 @@ class QSpinBox;
 
 namespace MessageComposer {
 
-class AutoImageResizing : public KDialog
+class AutoImageResizeDialog : public KDialog
 {
   Q_OBJECT
 public:
@@ -32,8 +32,8 @@ public:
       JPEG = 0,
       PNG
   };
-  explicit AutoImageResizing(QWidget *parent = 0);
-  ~AutoImageResizing();
+  explicit AutoImageResizeDialog(QWidget *parent = 0);
+  ~AutoImageResizeDialog();
 
   void setImageFromData(const QByteArray& data, ImageType type);
   QByteArray imageData() const;
@@ -53,4 +53,4 @@ private:
 };
 }
 
-#endif // AUTOIMAGERESIZING_H
+#endif // AUTOIMAGERESIZEDIALOG_H

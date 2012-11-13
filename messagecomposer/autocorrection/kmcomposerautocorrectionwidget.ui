@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>KMComposerAutoCorrectionWidget</class>
- <widget class="QWidget" name="KMComposerAutoCorrectionWidget">
+ <class>ComposerAutoCorrectionWidget</class>
+ <widget class="QWidget" name="ComposerAutoCorrectionWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -28,7 +28,7 @@
       </widget>
      </item>
      <item>
-      <widget class="MessageComposer::KMComposerAutoCorrectionLanguage" name="autocorrectionLanguage"/>
+      <widget class="MessageComposer::ComposerAutoCorrectionLanguage" name="autocorrectionLanguage"/>
      </item>
     </layout>
    </item>
@@ -360,7 +360,7 @@
         </layout>
        </item>
        <item row="2" column="0">
-        <widget class="MessageComposer::KMComposerAutoCorrectionTreeWidget" name="treeWidget">
+        <widget class="MessageComposer::ComposerAutoCorrectionTreeWidget" name="treeWidget">
          <property name="editTriggers">
           <set>QAbstractItemView::NoEditTriggers</set>
          </property>
@@ -443,7 +443,7 @@
           </layout>
          </item>
          <item row="2" column="0">
-          <widget class="MessageComposer::KMComposerAutoCorrectionListWidget" name="abbreviationList">
+          <widget class="MessageComposer::ComposerAutoCorrectionListWidget" name="abbreviationList">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
              <horstretch>0</horstretch>
@@ -482,7 +482,7 @@
             </widget>
            </item>
            <item>
-            <widget class="MessageComposer::KMComposerAutoCorrectionListWidget" name="twoUpperLetterList">
+            <widget class="MessageComposer::ComposerAutoCorrectionListWidget" name="twoUpperLetterList">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
                <horstretch>0</horstretch>
@@ -575,17 +575,17 @@
    <header>kpushbutton.h</header>
   </customwidget>
   <customwidget>
-   <class>MessageComposer::KMComposerAutoCorrectionListWidget</class>
+   <class>MessageComposer::ComposerAutoCorrectionListWidget</class>
    <extends>QListWidget</extends>
    <header>autocorrection/kmcomposerautocorrectionlistwidget.h</header>
   </customwidget>
   <customwidget>
-   <class>MessageComposer::KMComposerAutoCorrectionTreeWidget</class>
+   <class>MessageComposer::ComposerAutoCorrectionTreeWidget</class>
    <extends>QTreeWidget</extends>
    <header>autocorrection/kmcomposerautocorrectiontreewidget.h</header>
   </customwidget>
   <customwidget>
-   <class>MessageComposer::KMComposerAutoCorrectionLanguage</class>
+   <class>MessageComposer::ComposerAutoCorrectionLanguage</class>
    <extends>KComboBox</extends>
    <header>autocorrection/kmcomposerautocorrectionlanguage.h</header>
   </customwidget>

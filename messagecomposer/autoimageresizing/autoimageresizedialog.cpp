@@ -15,7 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "autoimageresizing.h"
+#include "autoimageresizedialog.h"
 #include <KLocale>
 
 #include <QLabel>
@@ -25,7 +25,7 @@
 
 using namespace MessageComposer;
 
-AutoImageResizing::AutoImageResizing(QWidget *parent)
+AutoImageResizeDialog::AutoImageResizeDialog(QWidget *parent)
   :KDialog(parent), mImageRatio(-1)
 {
   setCaption( i18nc("@title:window", "Resize Image") );
@@ -83,54 +83,54 @@ AutoImageResizing::AutoImageResizing(QWidget *parent)
   connect( this, SIGNAL(user1Clicked()), this, SLOT(slotUser1()) );
 }
 
-AutoImageResizing::~AutoImageResizing()
+AutoImageResizeDialog::~AutoImageResizeDialog()
 {
 }
 
-void AutoImageResizing::setImageFromData(const QByteArray& data, ImageType type)
+void AutoImageResizeDialog::setImageFromData(const QByteArray& data, ImageType type)
 {
     //TODO
 }
 
-QByteArray AutoImageResizing::imageData() const
+QByteArray AutoImageResizeDialog::imageData() const
 {
     //TODO
     return QByteArray();
 }
 
-void AutoImageResizing::slotUser1()
+void AutoImageResizeDialog::slotUser1()
 {
   close();
 }
 
-void AutoImageResizing::slotKeepOriginalSizeClicked(bool)
+void AutoImageResizeDialog::slotKeepOriginalSizeClicked(bool checked)
 {
-
+  mHeight->setEnabled( !checked );
+  mWidth->setEnabled( !checked );
+  mKeepImageRatio->setEnabled( !checked );
 }
 
-void AutoImageResizing::slotImageWidthChanged(int value)
+void AutoImageResizeDialog::slotImageWidthChanged(int value)
 {
-    if ( mKeepImageRatio->isChecked() && !mKeepOriginalSize->isChecked() ) {
-      if ( mImageRatio != -1 ) {
-        mHeight->blockSignals( true );
-        mHeight->setValue( value * mImageRatio );
-        mHeight->blockSignals( false );
-      }
+  if ( mKeepImageRatio->isChecked() && !mKeepOriginalSize->isChecked() ) {
+    if ( mImageRatio != -1 ) {
+      mHeight->blockSignals( true );
+      mHeight->setValue( value * mImageRatio );
+      mHeight->blockSignals( false );
     }
-
+  }
 }
 
-void AutoImageResizing::slotImageHeightChanged(int value)
+void AutoImageResizeDialog::slotImageHeightChanged(int value)
 {
-    if ( mKeepImageRatio->isChecked()&& !mKeepOriginalSize->isChecked() ) {
-      if ( mImageRatio != -1 ) {
-       mWidth->blockSignals( true );
-       mWidth->setValue( value / mImageRatio );
-       mWidth->blockSignals( false );
-      }
+  if ( mKeepImageRatio->isChecked()&& !mKeepOriginalSize->isChecked() ) {
+    if ( mImageRatio != -1 ) {
+      mWidth->blockSignals( true );
+      mWidth->setValue( value / mImageRatio );
+      mWidth->blockSignals( false );
     }
-
+  }
 }
 
 
-#include "autoimageresizing.moc"
+#include "autoimageresizedialog.moc"
