@@ -77,10 +77,12 @@ set( messagecomposer_src
      autocorrection/import/importabstractautocorrection.cpp
      selectspecialchar.cpp
      autoimageresizing/autoimageresizing.cpp
+     autoimageresizing/autoresizeimagewidget.cpp
 )
 
 kde4_add_ui_files(messagecomposer_src
      autocorrection/kmcomposerautocorrectionwidget.ui
+     autoimageresizing/autoresizeimagewidget.ui
 )
 
 

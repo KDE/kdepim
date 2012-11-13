@@ -103,33 +103,33 @@ void AutoImageResizing::slotUser1()
   close();
 }
 
-void AutoImageResizing::slotKeepOriginalSizeClicked(bool)
+void AutoImageResizing::slotKeepOriginalSizeClicked(bool checked)
 {
-
+  mHeight->setEnabled( !checked );
+  mWidth->setEnabled( !checked );
+  mKeepImageRatio->setEnabled( !checked );
 }
 
 void AutoImageResizing::slotImageWidthChanged(int value)
 {
-    if ( mKeepImageRatio->isChecked() && !mKeepOriginalSize->isChecked() ) {
-      if ( mImageRatio != -1 ) {
-        mHeight->blockSignals( true );
-        mHeight->setValue( value * mImageRatio );
-        mHeight->blockSignals( false );
-      }
+  if ( mKeepImageRatio->isChecked() && !mKeepOriginalSize->isChecked() ) {
+    if ( mImageRatio != -1 ) {
+      mHeight->blockSignals( true );
+      mHeight->setValue( value * mImageRatio );
+      mHeight->blockSignals( false );
     }
-
+  }
 }
 
 void AutoImageResizing::slotImageHeightChanged(int value)
 {
-    if ( mKeepImageRatio->isChecked()&& !mKeepOriginalSize->isChecked() ) {
-      if ( mImageRatio != -1 ) {
-       mWidth->blockSignals( true );
-       mWidth->setValue( value / mImageRatio );
-       mWidth->blockSignals( false );
-      }
+  if ( mKeepImageRatio->isChecked()&& !mKeepOriginalSize->isChecked() ) {
+    if ( mImageRatio != -1 ) {
+      mWidth->blockSignals( true );
+      mWidth->setValue( value / mImageRatio );
+      mWidth->blockSignals( false );
     }
-
+  }
 }
 
 
