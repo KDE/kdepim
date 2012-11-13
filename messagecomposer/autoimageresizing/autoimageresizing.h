@@ -19,6 +19,8 @@
 #define AUTOIMAGERESIZING_H
 
 #include <KDialog>
+class QCheckBox;
+class QSpinBox;
 
 namespace MessageComposer {
 
@@ -38,7 +40,16 @@ public:
 
 private Q_SLOTS:
   void slotUser1();
+  void slotKeepOriginalSizeClicked(bool);
+  void slotImageWidthChanged(int);
+  void slotImageHeightChanged(int);
 
+private:
+  qreal mImageRatio;
+  QCheckBox *mKeepOriginalSize;
+  QCheckBox *mKeepImageRatio;
+  QSpinBox *mWidth;
+  QSpinBox *mHeight;
 };
 }
 

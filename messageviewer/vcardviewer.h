@@ -34,8 +34,8 @@ class VCardViewer : public KDialog
 {
     Q_OBJECT
     public:
-      VCardViewer(QWidget *parent, const QByteArray& vCard);
-      virtual ~VCardViewer();
+      explicit VCardViewer(QWidget *parent, const QByteArray& vCard);
+      ~VCardViewer();
 
     private Q_SLOTS:
       void slotUser1();

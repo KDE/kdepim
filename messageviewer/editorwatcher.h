@@ -53,7 +53,7 @@ class MESSAGEVIEWER_EXPORT EditorWatcher : public QObject
 
     bool start();
     bool fileChanged() const { return mFileModified; }
-    KUrl url() { return mUrl;}
+    KUrl url() const { return mUrl;}
   signals:
     void editDone( MessageViewer::EditorWatcher* watcher );
 
@@ -81,7 +81,6 @@ class MESSAGEVIEWER_EXPORT EditorWatcher : public QObject
     QTimer mTimer;
     QTime mEditTime;
 
-    bool mError;
     bool mDone;
 };
 

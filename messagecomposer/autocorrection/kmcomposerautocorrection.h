@@ -36,7 +36,7 @@ public:
   explicit KMComposerAutoCorrection();
   ~KMComposerAutoCorrection();
 
-  void setLanguage(const QString& lang);
+  void setLanguage(const QString& lang, bool forceGlobal = false);
   void setEnabledAutoCorrection(bool b) { mEnabled = b; }
   void setUppercaseFirstCharOfSentence(bool b) { mUppercaseFirstCharOfSentence = b; }
   void setFixTwoUppercaseChars(bool b) { mFixTwoUppercaseChars = b; }
@@ -100,7 +100,7 @@ private:
   bool autoBoldUnderline();
 
   QString autoDetectURL(const QString &_word) const;
-  void readAutoCorrectionXmlFile();
+  void readAutoCorrectionXmlFile(bool forceGlobal = false);
   void writeAutoCorrectionXmlFile();
 
 

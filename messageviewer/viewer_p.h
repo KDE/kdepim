@@ -638,7 +638,6 @@ public:
   CSSHelper * mCSSHelper;
   bool mUseFixedFont;
   bool mPrinting;
-  //bool mShowCompleteMessage;
   QString mIdOfLastViewedMessage;
   QWidget *mMainWindow;
   KActionCollection *mActionCollection;

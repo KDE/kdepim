@@ -700,13 +700,13 @@ void KMComposerAutoCorrection::replaceTypographicQuotes()
 }
 
 
-void KMComposerAutoCorrection::readAutoCorrectionXmlFile()
+void KMComposerAutoCorrection::readAutoCorrectionXmlFile( bool forceGlobal )
 {
     KLocale *locale = KGlobal::locale();
     QString kdelang = locale->languageList().first();
     kdelang.remove(QRegExp(QLatin1String("@.*")));
 
-    qDebug()<<"void KMComposerAutoCorrection::readAutoCorrectionXmlFile() "<<mAutoCorrectLang;
+    //qDebug()<<"void KMComposerAutoCorrection::readAutoCorrectionXmlFile() "<<mAutoCorrectLang;
 
     mUpperCaseExceptions.clear();
     mAutocorrectEntries.clear();
@@ -716,14 +716,16 @@ void KMComposerAutoCorrection::readAutoCorrectionXmlFile()
 
     QString LocalFile;
     //Look at local file:
-    if (!mAutoCorrectLang.isEmpty()) {
-        LocalFile = KGlobal::dirs()->findResource("data", QLatin1String("autocorrect/custom-") + mAutoCorrectLang + QLatin1String(".xml"));
-    } else {
-        if(!kdelang.isEmpty())
-            LocalFile = KGlobal::dirs()->findResource("data", QLatin1String("autocorrect/custom-") + kdelang + QLatin1String(".xml"));
-        if (LocalFile.isEmpty() && kdelang.contains(QLatin1String("_"))) {
-            kdelang.remove( QRegExp( QLatin1String("_.*") ) );
-            LocalFile = KGlobal::dirs()->findResource("data", QLatin1String("autocorrect/custom-") + kdelang + QLatin1String(".xml"));
+    if(!forceGlobal) {
+        if (!mAutoCorrectLang.isEmpty()) {
+            LocalFile = KGlobal::dirs()->findResource("data", QLatin1String("autocorrect/custom-") + mAutoCorrectLang + QLatin1String(".xml"));
+        } else {
+            if(!kdelang.isEmpty())
+                LocalFile = KGlobal::dirs()->findResource("data", QLatin1String("autocorrect/custom-") + kdelang + QLatin1String(".xml"));
+            if (LocalFile.isEmpty() && kdelang.contains(QLatin1String("_"))) {
+                kdelang.remove( QRegExp( QLatin1String("_.*") ) );
+                LocalFile = KGlobal::dirs()->findResource("data", QLatin1String("autocorrect/custom-") + kdelang + QLatin1String(".xml"));
+            }
         }
     }
     QString fname;
@@ -869,13 +871,12 @@ QString KMComposerAutoCorrection::language() const
   return mAutoCorrectLang;
 }
 
-void KMComposerAutoCorrection::setLanguage(const QString &lang)
+void KMComposerAutoCorrection::setLanguage(const QString &lang, bool forceGlobal)
 {
-  qDebug()<<" setLanguage :"<<lang;
-  if(mAutoCorrectLang != lang) {
+  if(mAutoCorrectLang != lang || forceGlobal) {
     mAutoCorrectLang = lang;
     //Re-read xml file
-    readAutoCorrectionXmlFile();
+    readAutoCorrectionXmlFile(forceGlobal);
   }
 }
 

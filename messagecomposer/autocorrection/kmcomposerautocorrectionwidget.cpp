@@ -221,6 +221,7 @@ void KMComposerAutoCorrectionWidget::resetToDefault()
   ui->typographicDoubleQuotes->setChecked(false);
   ui->typographicSingleQuotes->setChecked(false);
   ui->autoSuperScript->setChecked(false);
+  ui->autoReplaceNumber->setChecked(false);
 
   loadGlobalAutoCorrectionAndException();
   mWasChanged = false;
@@ -567,7 +568,11 @@ void KMComposerAutoCorrectionWidget::emitChanged()
 
 void KMComposerAutoCorrectionWidget::loadGlobalAutoCorrectionAndException()
 {
-
+    const QString lang = ui->autocorrectionLanguage->itemData (ui->autocorrectionLanguage->currentIndex()).toString();
+    mAutoCorrection->setLanguage(lang,true);
+    loadAutoCorrectionAndException();
+    mWasChanged = true;
+    Q_EMIT changed();
 }
 
 #include "kmcomposerautocorrectionwidget.moc"

@@ -524,7 +524,7 @@ namespace MessageViewer {
 
     public:
       KXFace();
-      virtual ~KXFace();
+      ~KXFace();
 
       /**
        * generates the xface string from @p image
