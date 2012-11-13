@@ -81,6 +81,7 @@ class RenderTest : public QObject
       otp.parseObjectTree( msg.get() );
       fileWriter.queue("</body></html>");
       fileWriter.flush();
+      fileWriter.end();
 
       QVERIFY( QFile::exists( outFileName ) );
 
