@@ -18,6 +18,7 @@
 #ifndef AUTORESIZEIMAGEWIDGET_H
 #define AUTORESIZEIMAGEWIDGET_H
 #include <QWidget>
+#include "messagecomposer_export.h"
 
 namespace Ui {
 class AutoResizeImageWidget;
@@ -25,13 +26,22 @@ class AutoResizeImageWidget;
 
 
 namespace MessageComposer {
-class AutoResizeImageWidget : public QWidget
+class MESSAGECOMPOSER_EXPORT AutoResizeImageWidget : public QWidget
 {
 public:
-    explicit AutoResizeImageWidget(QWidget *parent = 0);
-    ~AutoResizeImageWidget();
+  explicit AutoResizeImageWidget(QWidget *parent = 0);
+  ~AutoResizeImageWidget();
+
+  void loadConfig();
+  void writeConfig();
+  void resetToDefault();
+
+Q_SIGNALS:
+  void changed();
+
 private:
-    Ui::AutoResizeImageWidget *ui;
+  Ui::AutoResizeImageWidget *ui;
+  bool mWasChanged;
 };
 }
 

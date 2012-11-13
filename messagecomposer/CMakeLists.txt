@@ -76,7 +76,7 @@ set( messagecomposer_src
      autocorrection/import/importkmailautocorrection.cpp
      autocorrection/import/importabstractautocorrection.cpp
      selectspecialchar.cpp
-     autoimageresizing/autoimageresizing.cpp
+     autoimageresizing/autoimageresizedialog.cpp
      autoimageresizing/autoresizeimagewidget.cpp
 )
 

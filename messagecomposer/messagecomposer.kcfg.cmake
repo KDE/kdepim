@@ -211,4 +211,37 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
       <default>false</default>
     </entry>
   </group>
+
+  <group name="AutoResizeImage">
+    <entry name="AutoResizeImageEnabled" type="Bool" key="auto-resize-image-enabled">
+      <default>false</default>
+    </entry>
+    <entry name="KeepImageRatio" type="Bool" key="keep-image-ratio">
+      <default>false</default>
+    </entry>
+    <entry name="AskBeforeResizing" type="Bool" key="ask-before-resizing">
+      <default>false</default>
+    </entry>
+    <entry name="ReduceImageToMaximum" type="Bool" key="reduce-image-to-maximum">
+      <default>false</default>
+    </entry>
+    <entry name="EnlargeImageToMinimum" type="Bool" key="enlarge-image-to-minimum">
+      <default>false</default>
+    </entry>
+    <entry name="CustomMinimumHeight" type="int" key="custom-minimum-height">
+      <default>520</default>
+    </entry>
+    <entry name="CustomMinimumWidth" type="int" key="custom-minimum-width">
+      <default>520</default>
+    </entry>
+    <entry name="CustomMaximumHeight" type="int" key="custom-maximum-height">
+      <default>520</default>
+    </entry>
+    <entry name="CustomMaximumWidth" type="int" key="custom-maximum-width">
+      <default>520</default>
+    </entry>
+
+
+  </group>
 </kcfg>
+
