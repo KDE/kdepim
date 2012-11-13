@@ -18,3 +18,4 @@ Comment[sk]=Exportovač nastavenia PIM umožní uložiť všetky dáta z PIM apl
 Comment[uk]=За допомогою програми для експортування параметрів системи особистих даних ви зможете зберегти всі параметри програм для роботи з особистими даним, а потім відновити їх у іншій системі.
 Comment[x-test]=xxPIM Setting Exporter allows to save all data from PIM apps and restore them in other system.xx
 Terminal=false
+Categories=Qt;KDE;Office;Network;Email;
