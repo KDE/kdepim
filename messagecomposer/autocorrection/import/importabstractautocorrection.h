@@ -44,16 +44,16 @@ public:
   QHash<QString, QString> autocorrectEntries() const;
   QHash<QString, QString> superScriptEntries() const;
 
-  KMComposerAutoCorrection::TypographicQuotes typographicSingleQuotes() const;
-  KMComposerAutoCorrection::TypographicQuotes typographicDoubleQuotes() const;
+  ComposerAutoCorrection::TypographicQuotes typographicSingleQuotes() const;
+  ComposerAutoCorrection::TypographicQuotes typographicDoubleQuotes() const;
 
 protected:
   QSet<QString> mUpperCaseExceptions;
   QSet<QString> mTwoUpperLetterExceptions;
   QHash<QString, QString> mAutocorrectEntries;
   QHash<QString, QString> mSuperScriptEntries;
-  KMComposerAutoCorrection::TypographicQuotes mTypographicSingleQuotes;
-  KMComposerAutoCorrection::TypographicQuotes mTypographicDoubleQuotes;
+  ComposerAutoCorrection::TypographicQuotes mTypographicSingleQuotes;
+  ComposerAutoCorrection::TypographicQuotes mTypographicDoubleQuotes;
   QWidget *mParent;
 };
 }

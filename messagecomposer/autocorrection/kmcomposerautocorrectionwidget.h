@@ -15,8 +15,8 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef KMCOMPOSERAUTOCORRECTIONWIDGET_H
-#define KMCOMPOSERAUTOCORRECTIONWIDGET_H
+#ifndef COMPOSERAUTOCORRECTIONWIDGET_H
+#define COMPOSERAUTOCORRECTIONWIDGET_H
 
 #include "messagecomposer_export.h"
 #include "autocorrection/kmcomposerautocorrection.h"
@@ -27,22 +27,22 @@
 class QTreeWidgetItem;
 
 namespace Ui {
-class KMComposerAutoCorrectionWidget;
+class ComposerAutoCorrectionWidget;
 }
 
 namespace MessageComposer {
 
-class KMComposerAutoCorrection;
+class ComposerAutoCorrection;
 
-class MESSAGECOMPOSER_EXPORT KMComposerAutoCorrectionWidget : public QWidget
+class MESSAGECOMPOSER_EXPORT ComposerAutoCorrectionWidget : public QWidget
 {
   Q_OBJECT
     
 public:
   enum ImportFileType { LibreOffice, KMail };
-  explicit KMComposerAutoCorrectionWidget(QWidget *parent = 0);
-  ~KMComposerAutoCorrectionWidget();
-  void setAutoCorrection(MessageComposer::KMComposerAutoCorrection * autoCorrect);
+  explicit ComposerAutoCorrectionWidget(QWidget *parent = 0);
+  ~ComposerAutoCorrectionWidget();
+  void setAutoCorrection(MessageComposer::ComposerAutoCorrection * autoCorrect);
   void loadConfig();
   void writeConfig();
   void resetToDefault();
@@ -87,16 +87,16 @@ private:
   void addAutoCorrectEntries();
   void loadAutoCorrectionAndException();
   void loadGlobalAutoCorrectionAndException();
-  KMComposerAutoCorrection::TypographicQuotes m_singleQuotes;
-  KMComposerAutoCorrection::TypographicQuotes m_doubleQuotes;
+  ComposerAutoCorrection::TypographicQuotes m_singleQuotes;
+  ComposerAutoCorrection::TypographicQuotes m_doubleQuotes;
   QSet<QString> m_upperCaseExceptions;
   QSet<QString> m_twoUpperLetterExceptions;
   QHash<QString, QString> m_autocorrectEntries;
-  Ui::KMComposerAutoCorrectionWidget *ui;
-  KMComposerAutoCorrection *mAutoCorrection;
+  Ui::ComposerAutoCorrectionWidget *ui;
+  ComposerAutoCorrection *mAutoCorrection;
   bool mWasChanged;
 };
 
 }
 
-#endif // KMCOMPOSERAUTOCORRECTIONWIDGET_H
+#endif // COMPOSERAUTOCORRECTIONWIDGET_H

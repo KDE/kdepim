@@ -15,19 +15,19 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef KMCOMPOSERAUTOCORRECTIONLANGUAGE_H
-#define KMCOMPOSERAUTOCORRECTIONLANGUAGE_H
+#ifndef COMPOSERAUTOCORRECTIONLANGUAGE_H
+#define COMPOSERAUTOCORRECTIONLANGUAGE_H
 
 #include "messagecomposer_export.h"
 #include <KComboBox>
 
 namespace MessageComposer {
 
-class MESSAGECOMPOSER_EXPORT KMComposerAutoCorrectionLanguage : public KComboBox
+class MESSAGECOMPOSER_EXPORT ComposerAutoCorrectionLanguage : public KComboBox
 {
 public:
-  explicit KMComposerAutoCorrectionLanguage(QWidget *parent);
-  ~KMComposerAutoCorrectionLanguage();
+  explicit ComposerAutoCorrectionLanguage(QWidget *parent);
+  ~ComposerAutoCorrectionLanguage();
 
   QString language() const;
 
@@ -35,4 +35,4 @@ public:
 };
 
 }
-#endif // KMCOMPOSERAUTOCORRECTIONLANGUAGE_H
+#endif // COMPOSERAUTOCORRECTIONLANGUAGE_H

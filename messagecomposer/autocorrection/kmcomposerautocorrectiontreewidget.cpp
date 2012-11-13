@@ -22,17 +22,17 @@
 using namespace MessageComposer;
 
 
-KMComposerAutoCorrectionTreeWidget::KMComposerAutoCorrectionTreeWidget(QWidget *parent)
+ComposerAutoCorrectionTreeWidget::ComposerAutoCorrectionTreeWidget(QWidget *parent)
   : QTreeWidget(parent)
 {
 }
 
-KMComposerAutoCorrectionTreeWidget::~KMComposerAutoCorrectionTreeWidget()
+ComposerAutoCorrectionTreeWidget::~ComposerAutoCorrectionTreeWidget()
 {
 
 }
 
-void KMComposerAutoCorrectionTreeWidget::keyPressEvent( QKeyEvent *event )
+void ComposerAutoCorrectionTreeWidget::keyPressEvent( QKeyEvent *event )
 {
   if( event->key() == Qt::Key_Delete ) {
     Q_EMIT deleteSelectedItems();

@@ -15,8 +15,8 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef KMCOMPOSERAUTOCORRECTION_H
-#define KMCOMPOSERAUTOCORRECTION_H
+#ifndef COMPOSERAUTOCORRECTION_H
+#define COMPOSERAUTOCORRECTION_H
 
 #include "messagecomposer_export.h"
 #include <QTextCursor>
@@ -25,7 +25,7 @@
 
 namespace MessageComposer {
 
-class MESSAGECOMPOSER_EXPORT KMComposerAutoCorrection
+class MESSAGECOMPOSER_EXPORT ComposerAutoCorrection
 {
 public:
   struct TypographicQuotes {
@@ -33,8 +33,8 @@ public:
     QChar end;
   };
 
-  explicit KMComposerAutoCorrection();
-  ~KMComposerAutoCorrection();
+  explicit ComposerAutoCorrection();
+  ~ComposerAutoCorrection();
 
   void setLanguage(const QString& lang, bool forceGlobal = false);
   void setEnabledAutoCorrection(bool b) { mEnabled = b; }
@@ -133,4 +133,4 @@ private:
 };
 }
 
-#endif // KMCOMPOSERAUTOCORRECTION_H
+#endif // COMPOSERAUTOCORRECTION_H

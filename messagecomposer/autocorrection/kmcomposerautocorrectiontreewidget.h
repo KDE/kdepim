@@ -15,19 +15,19 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef KMCOMPOSERAUTOCORRECTIONTREEWIDGET_H
-#define KMCOMPOSERAUTOCORRECTIONTREEWIDGET_H
+#ifndef COMPOSERAUTOCORRECTIONTREEWIDGET_H
+#define COMPOSERAUTOCORRECTIONTREEWIDGET_H
 
 #include <QTreeWidget>
 
 namespace MessageComposer {
 
-class KMComposerAutoCorrectionTreeWidget : public QTreeWidget
+class ComposerAutoCorrectionTreeWidget : public QTreeWidget
 {
     Q_OBJECT
 public:
-  explicit KMComposerAutoCorrectionTreeWidget(QWidget *parent = 0);
-  ~KMComposerAutoCorrectionTreeWidget();
+  explicit ComposerAutoCorrectionTreeWidget(QWidget *parent = 0);
+  ~ComposerAutoCorrectionTreeWidget();
 protected:
   void keyPressEvent( QKeyEvent *event );
 Q_SIGNALS:
@@ -36,4 +36,4 @@ Q_SIGNALS:
 
 }
 
-#endif // KMCOMPOSERAUTOCORRECTIONTREEWIDGET_H
+#endif // COMPOSERAUTOCORRECTIONTREEWIDGET_H

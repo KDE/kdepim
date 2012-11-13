@@ -21,7 +21,7 @@
 
 using namespace MessageComposer;
 
-KMComposerAutoCorrectionLanguage::KMComposerAutoCorrectionLanguage(QWidget *parent)
+ComposerAutoCorrectionLanguage::ComposerAutoCorrectionLanguage(QWidget *parent)
   : KComboBox(parent)
 {
   KLocale *locale = KGlobal::locale();
@@ -38,18 +38,18 @@ KMComposerAutoCorrectionLanguage::KMComposerAutoCorrectionLanguage(QWidget *pare
 
 }
 
-KMComposerAutoCorrectionLanguage::~KMComposerAutoCorrectionLanguage()
+ComposerAutoCorrectionLanguage::~ComposerAutoCorrectionLanguage()
 {
 
 }
 
 
-QString KMComposerAutoCorrectionLanguage::language() const
+QString ComposerAutoCorrectionLanguage::language() const
 {
   return itemData ( currentIndex() ).toString();
 }
 
-void KMComposerAutoCorrectionLanguage::setLanguage(const QString &language)
+void ComposerAutoCorrectionLanguage::setLanguage(const QString &language)
 {
   const int index = findData(language);
   setCurrentIndex(index);
