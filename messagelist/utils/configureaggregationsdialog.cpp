@@ -180,7 +180,6 @@ ConfigureAggregationsDialog::~ConfigureAggregationsDialog()
 
 void ConfigureAggregationsDialog::selectAggregation( const QString &aggregationId )
 {
-    qDebug()<<" void ConfigureAggregationsDialog::selectAggregation( const QString &aggregationId )";
   AggregationListWidgetItem *item = d->findAggregationItemById( aggregationId );
   if ( item ) {
     d->mAggregationList->setCurrentItem( item );
@@ -363,9 +362,7 @@ void ConfigureAggregationsDialog::Private::cloneAggregationButtonClicked()
   item = new AggregationListWidgetItem( mAggregationList, copyAggregation );
 
   mAggregationList->setCurrentItem( item );
-  mDeleteAggregationButton->setEnabled( item && !item->aggregation()->readOnly() );
-
-
+  aggregationListItemClicked(item);
 }
 
 void ConfigureAggregationsDialog::Private::deleteAggregationButtonClicked()
