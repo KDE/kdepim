@@ -880,6 +880,18 @@ bool IncidenceDateTime::endDateTimeEnabled() const
 
 bool IncidenceDateTime::isValid() const
 {
+  if ( startDateTimeEnabled() && !currentStartDateTime().isValid() ) {
+    //TODO: Add strings
+    qWarning() << "Start date is invalid";
+    return false;
+  }
+
+  if ( endDateTimeEnabled() && !currentEndDateTime().isValid() ) {
+    //TODO: Add strings
+    qWarning() << "End date is invalid";
+    return false;
+  }
+
   if ( startDateTimeEnabled() && endDateTimeEnabled() &&
        currentStartDateTime() > currentEndDateTime() ) {
     if ( mLoadedIncidence->type() == KCalCore::Incidence::TypeEvent ) {

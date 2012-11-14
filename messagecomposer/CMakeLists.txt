@@ -67,11 +67,12 @@ set( messagecomposer_src
 
      keyresolver.cpp
      kmsubjectlineedit.cpp
-     autocorrection/kmcomposerautocorrection.cpp
-     autocorrection/kmcomposerautocorrectionwidget.cpp
-     autocorrection/kmcomposerautocorrectionlistwidget.cpp
-     autocorrection/kmcomposerautocorrectiontreewidget.cpp
-     autocorrection/kmcomposerautocorrectionlanguage.cpp
+     autocorrection/composerautocorrection.cpp
+     autocorrection/composerautocorrectionwidget.cpp
+     autocorrection/composerautocorrectionlistwidget.cpp
+     autoimageresizing/autoresizeimagejob.cpp
+     autocorrection/composerautocorrectiontreewidget.cpp
+     autocorrection/composerautocorrectionlanguage.cpp
      autocorrection/import/importlibreofficeautocorrection.cpp
      autocorrection/import/importkmailautocorrection.cpp
      autocorrection/import/importabstractautocorrection.cpp
@@ -81,7 +82,7 @@ set( messagecomposer_src
 )
 
 kde4_add_ui_files(messagecomposer_src
-     autocorrection/kmcomposerautocorrectionwidget.ui
+     autocorrection/composerautocorrectionwidget.ui
      autoimageresizing/autoresizeimagewidget.ui
 )
 

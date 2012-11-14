@@ -58,7 +58,8 @@ using KPIM::RecentAddresses;
 #include "messagelist/utils/themecombobox.h"
 #include "messagelist/utils/themeconfigbutton.h"
 
-#include "messagecomposer/autocorrection/kmcomposerautocorrectionwidget.h"
+#include "messagecomposer/autocorrection/composerautocorrectionwidget.h"
+#include "messagecomposer/autoimageresizing/autoresizeimagewidget.h"
 
 #include "messageviewer/autoqpointer.h"
 #include "messageviewer/nodehelper.h"
@@ -537,11 +538,15 @@ void AccountsPageReceivingTab::slotShowMailCheckMenu( const QString &ident, cons
     connect( manualMailCheck, SIGNAL(toggled(bool)), this, SLOT(slotIncludeInCheckChanged(bool)) );
   }
 
-  QAction *switchOffline = new QAction( i18nc( "Label to a checkbox, so is either checked/unchecked", "Switch offline on KMail Shutdown" ), menu );
-  switchOffline->setCheckable( true );
-  switchOffline->setChecked( OfflineOnShutdown );
-  switchOffline->setData( ident );
-  menu->addAction( switchOffline );
+  if( !MailCommon::Util::isLocalCollection( ident ) ) {
+    QAction *switchOffline = new QAction( i18nc( "Label to a checkbox, so is either checked/unchecked", "Switch offline on KMail Shutdown" ), menu );
+    switchOffline->setCheckable( true );
+    switchOffline->setChecked( OfflineOnShutdown );
+    switchOffline->setData( ident );
+    menu->addAction( switchOffline );
+    connect( switchOffline, SIGNAL(toggled(bool)), this, SLOT(slotOfflineOnShutdownChanged(bool)) );
+  }
+
 
   QAction *checkOnStartup = new QAction( i18n( "Check mail on startup" ), menu );
   checkOnStartup->setCheckable( true );
@@ -549,7 +554,6 @@ void AccountsPageReceivingTab::slotShowMailCheckMenu( const QString &ident, cons
   checkOnStartup->setData( ident );
   menu->addAction( checkOnStartup );
 
-  connect( switchOffline, SIGNAL(toggled(bool)), this, SLOT(slotOfflineOnShutdownChanged(bool)) );
   connect( checkOnStartup, SIGNAL(toggled(bool)), this, SLOT(slotCheckOnStatupChanged(bool)) );
 
   menu->exec(  mAccountsReceiving.mAccountList->view()->mapToGlobal( pos ) );
@@ -2189,6 +2193,12 @@ ComposerPage::ComposerPage( const KComponentData &instance, QWidget *parent )
   mAutoCorrectionTab = new AutoCorrectionTab();
   addTab( mAutoCorrectionTab, i18n("Autocorrection") );
 
+  //
+  // "autoresize" tab:
+  //
+  mAutoImageResizeTab = new AutoImageResizeTab();
+  addTab( mAutoImageResizeTab, i18n("Auto Resize Image") );
+
 }
 
 QString ComposerPage::GeneralTab::helpAnchor() const
@@ -3289,6 +3299,40 @@ void ComposerPageAutoCorrectionTab::doLoadFromGlobalSettings()
 void ComposerPageAutoCorrectionTab::doResetToDefaultsOther()
 {
   autocorrectionWidget->resetToDefault();
+}
+
+
+ComposerPageAutoImageResizeTab::ComposerPageAutoImageResizeTab(QWidget *parent)
+  : ConfigModuleTab(parent)
+{
+  QVBoxLayout *vlay = new QVBoxLayout( this );
+  vlay->setSpacing( 0 );
+  vlay->setMargin( 0 );
+  autoResizeWidget = new MessageComposer::AutoResizeImageWidget(this);
+  vlay->addWidget(autoResizeWidget);
+  setLayout(vlay);
+  connect( autoResizeWidget, SIGNAL(changed()), this, SLOT(slotEmitChanged()) );
+
+}
+
+QString ComposerPageAutoImageResizeTab::helpAnchor() const
+{
+  return QString::fromLatin1("configure-image-resize");
+}
+
+void ComposerPageAutoImageResizeTab::save()
+{
+  autoResizeWidget->writeConfig();
+}
+
+void ComposerPageAutoImageResizeTab::doLoadFromGlobalSettings()
+{
+  autoResizeWidget->loadConfig();
+}
+
+void ComposerPageAutoImageResizeTab::doResetToDefaultsOther()
+{
+  autoResizeWidget->resetToDefault();
 }
 
 

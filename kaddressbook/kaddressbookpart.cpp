@@ -21,6 +21,7 @@
 #include "kaddressbookpart.h"
 #include "aboutdata.h"
 #include "mainwidget.h"
+#include "startup.h"
 
 #include <KComponentData>
 #include <KDebug>
@@ -42,12 +43,7 @@ KAddressBookPart::KAddressBookPart( QWidget *parentWidget, QObject *parent,
 {
   setComponentData( KAddressBookFactory::componentData() );
 
-  KGlobal::locale()->insertCatalog( "libkdepim" );
-  KGlobal::locale()->insertCatalog( "kabc" );
-  KGlobal::locale()->insertCatalog( "libakonadi" );
-  KGlobal::locale()->insertCatalog( "kabcakonadi" );
-  KGlobal::locale()->insertCatalog( "akonadicontact" );
-  KGlobal::locale()->insertCatalog( "libpimcommon" );
+  KAddressBook::insertLibraryCatalogues();
 
   KIconLoader::global()->addAppDir( "kaddressbook" );
   // create a canvas to insert our widget

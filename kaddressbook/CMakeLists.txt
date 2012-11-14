@@ -56,6 +56,7 @@ set(kaddressbook_xxport_SRCS
 )
 
 set(kaddressbook_LIB_SRCS
+  startup.cpp
   aboutdata.cpp
   contactfields.cpp
   contactselectiondialog.cpp

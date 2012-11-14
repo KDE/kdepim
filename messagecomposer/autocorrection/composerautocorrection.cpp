@@ -16,7 +16,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "kmcomposerautocorrection.h"
+#include "composerautocorrection.h"
 #include "messagecomposersettings.h"
 #include "import/importkmailautocorrection.h"
 #include <KLocale>

@@ -15,9 +15,9 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "kmcomposerautocorrectionwidget.h"
-#include "kmcomposerautocorrection.h"
-#include "ui_kmcomposerautocorrectionwidget.h"
+#include "composerautocorrectionwidget.h"
+#include "composerautocorrection.h"
+#include "ui_composerautocorrectionwidget.h"
 #include "import/importlibreofficeautocorrection.h"
 #include "import/importkmailautocorrection.h"
 #include "import/importabstractautocorrection.h"
@@ -83,9 +83,9 @@ ComposerAutoCorrectionWidget::ComposerAutoCorrectionWidget(QWidget *parent) :
   connect(ui->remove2, SIGNAL(clicked()), this, SLOT(removeTwoUpperLetterEntry()));
   connect(ui->typographicDoubleQuotes,SIGNAL(clicked()),SIGNAL(changed()));
   connect(ui->typographicSingleQuotes,SIGNAL(clicked()),SIGNAL(changed()));
-  connect(ui->abbreviationList,SIGNAL(itemClicked ( QListWidgetItem *)),SLOT(slotEnableDisableAbreviationList()));
+  connect(ui->abbreviationList,SIGNAL(itemClicked(QListWidgetItem*)),SLOT(slotEnableDisableAbreviationList()));
   connect(ui->abbreviationList,SIGNAL(deleteSelectedItems()),SLOT(removeAbbreviationEntry()));
-  connect(ui->twoUpperLetterList,SIGNAL(itemClicked ( QListWidgetItem *)),SLOT(slotEnableDisableTwoUpperEntry()));
+  connect(ui->twoUpperLetterList,SIGNAL(itemClicked(QListWidgetItem*)),SLOT(slotEnableDisableTwoUpperEntry()));
   connect(ui->twoUpperLetterList,SIGNAL(deleteSelectedItems()),SLOT(removeTwoUpperLetterEntry()));
   connect(ui->autocorrectionLanguage,SIGNAL(activated(int)),SLOT(changeLanguage(int)));
   slotEnableDisableAbreviationList();
@@ -575,4 +575,4 @@ void ComposerAutoCorrectionWidget::loadGlobalAutoCorrectionAndException()
     Q_EMIT changed();
 }
 
-#include "kmcomposerautocorrectionwidget.moc"
+#include "composerautocorrectionwidget.moc"

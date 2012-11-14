@@ -127,6 +127,7 @@ namespace Util {
   MAILCOMMON_EXPORT QString convertFolderPathToCollectionStr( const QString& folder);
 
   MAILCOMMON_EXPORT bool foundMailer();
+  MAILCOMMON_EXPORT bool isLocalCollection( const QString &resource );
 }
 
 }

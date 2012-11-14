@@ -577,17 +577,17 @@
   <customwidget>
    <class>MessageComposer::ComposerAutoCorrectionListWidget</class>
    <extends>QListWidget</extends>
-   <header>autocorrection/kmcomposerautocorrectionlistwidget.h</header>
+   <header>autocorrection/composerautocorrectionlistwidget.h</header>
   </customwidget>
   <customwidget>
    <class>MessageComposer::ComposerAutoCorrectionTreeWidget</class>
    <extends>QTreeWidget</extends>
-   <header>autocorrection/kmcomposerautocorrectiontreewidget.h</header>
+   <header>autocorrection/composerautocorrectiontreewidget.h</header>
   </customwidget>
   <customwidget>
    <class>MessageComposer::ComposerAutoCorrectionLanguage</class>
    <extends>KComboBox</extends>
-   <header>autocorrection/kmcomposerautocorrectionlanguage.h</header>
+   <header>autocorrection/composerautocorrectionlanguage.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

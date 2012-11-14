@@ -20,6 +20,7 @@
 
 #include "aboutdata.h"
 #include "mainwindow.h"
+#include "startup.h"
 
 #include <KCmdLineArgs>
 #include <KDebug>
@@ -41,12 +42,7 @@ int main( int argc, char **argv )
   }
 
   KUniqueApplication app;
-  KGlobal::locale()->insertCatalog( "libkdepim" );
-  KGlobal::locale()->insertCatalog( "kabc" );
-  KGlobal::locale()->insertCatalog( "libakonadi" );
-  KGlobal::locale()->insertCatalog( "kabcakonadi" );
-  KGlobal::locale()->insertCatalog( "akonadicontact" );
-  KGlobal::locale()->insertCatalog( "libpimcommon" );
+  KAddressBook::insertLibraryCatalogues();
   MainWindow *window = new MainWindow;
   window->show();
 
