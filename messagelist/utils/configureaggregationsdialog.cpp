@@ -180,7 +180,6 @@ ConfigureAggregationsDialog::~ConfigureAggregationsDialog()
 
 void ConfigureAggregationsDialog::selectAggregation( const QString &aggregationId )
 {
-    qDebug()<<" void ConfigureAggregationsDialog::selectAggregation( const QString &aggregationId )";
   AggregationListWidgetItem *item = d->findAggregationItemById( aggregationId );
   if ( item ) {
     d->mAggregationList->setCurrentItem( item );
