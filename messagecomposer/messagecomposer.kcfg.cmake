@@ -241,6 +241,18 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
       <default>520</default>
     </entry>
 
+    <entry name="MaximumHeight" type="int" key="maximum-height">
+      <default>0</default>
+    </entry>
+    <entry name="MaximumWidth" type="int" key="maximum-width">
+      <default>0</default>
+    </entry>
+    <entry name="MinimumHeight" type="int" key="minimum-height">
+      <default>0</default>
+    </entry>
+    <entry name="MinimumWidth" type="int" key="minimum-width">
+      <default>0</default>
+    </entry>
 
   </group>
 </kcfg>

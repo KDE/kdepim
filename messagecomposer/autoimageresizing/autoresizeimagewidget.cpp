@@ -70,8 +70,8 @@ void AutoResizeImageWidget::slotComboboxChanged(const QString& text)
     } else if(combo == ui->CBMinimumHeight) {
       ui->customMinimumHeight->setEnabled(isCustom);
     }
+    Q_EMIT changed();
   }
-  Q_EMIT changed();
 }
 
 void AutoResizeImageWidget::initComboBox(KComboBox *combo)
@@ -104,6 +104,13 @@ void AutoResizeImageWidget::loadConfig()
   ui->customMaximumHeight->setValue(MessageComposer::MessageComposerSettings::self()->customMaximumHeight());
   ui->customMinimumWidth->setValue(MessageComposer::MessageComposerSettings::self()->customMinimumWidth());
   ui->customMinimumHeight->setValue(MessageComposer::MessageComposerSettings::self()->customMinimumHeight());
+
+
+  ui->CBMaximumWidth->setCurrentIndex(MessageComposer::MessageComposerSettings::self()->maximumWidth());
+  ui->CBMaximumHeight->setCurrentIndex(MessageComposer::MessageComposerSettings::self()->maximumHeight());
+  ui->CBMinimumWidth->setCurrentIndex(MessageComposer::MessageComposerSettings::self()->minimumWidth());
+  ui->CBMinimumHeight->setCurrentIndex(MessageComposer::MessageComposerSettings::self()->minimumHeight());
+
   mWasChanged = false;
 }
 
@@ -119,6 +126,12 @@ void AutoResizeImageWidget::writeConfig()
   MessageComposer::MessageComposerSettings::self()->setCustomMaximumHeight(ui->customMaximumHeight->value());
   MessageComposer::MessageComposerSettings::self()->setCustomMinimumWidth(ui->customMinimumWidth->value());
   MessageComposer::MessageComposerSettings::self()->setCustomMinimumHeight(ui->customMinimumHeight->value());
+
+  MessageComposer::MessageComposerSettings::self()->setMaximumWidth(ui->CBMaximumWidth->currentIndex());
+  MessageComposer::MessageComposerSettings::self()->setMaximumHeight(ui->CBMaximumHeight->currentIndex());
+  MessageComposer::MessageComposerSettings::self()->setMinimumWidth(ui->CBMinimumWidth->currentIndex());
+  MessageComposer::MessageComposerSettings::self()->setMinimumHeight(ui->CBMinimumHeight->currentIndex());
+
 
   mWasChanged = false;
 }
