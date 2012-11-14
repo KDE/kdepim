@@ -20,7 +20,7 @@
 
 #include "abstracttranslator.h"
 
-class QWebView;
+class QWebPage;
 class KComboBox;
 
 namespace MessageViewer {
@@ -36,7 +36,7 @@ public:
 protected Q_SLOTS:
   void slotLoadFinished(bool result);
 private:
-  QWebView *mWebView;
+  QWebPage *mWebPage;
 };
 }
 

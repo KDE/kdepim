@@ -274,7 +274,7 @@ void TranslatorWidget::slotTranslate()
 void TranslatorWidget::slotTranslateDone()
 {
   d->translate->setEnabled( true );
-  d->translatedText->setHtml(d->abstractTranslator->resultTranslate());
+  d->translatedText->setPlainText(d->abstractTranslator->resultTranslate());
 }
 
 void TranslatorWidget::slotTranslateFailed()

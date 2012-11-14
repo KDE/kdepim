@@ -18,24 +18,22 @@
 #include "googletranslator.h"
 #include "translatorutil.h"
 
-#include <QWebView>
+#include <QWebPage>
 #include <QWebElement>
 #include <QWebFrame>
 #include <QDebug>
 
-//#define DEBUG_TRANSLATOR 1
-
 using namespace MessageViewer;
 
 GoogleTranslator::GoogleTranslator()
-  :AbstractTranslator(), mWebView(0)
+  :AbstractTranslator(), mWebPage(0)
 {
 }
 
 GoogleTranslator::~GoogleTranslator()
 {
-  delete mWebView;
-  mWebView = 0;
+  delete mWebPage;
+  mWebPage = 0;
 }
 
 
@@ -124,26 +122,21 @@ QMap<QString, QMap<QString, QString> > GoogleTranslator::initListLanguage(KCombo
 void GoogleTranslator::translate()
 {
   mResult.clear();  
-  delete mWebView;
-  mWebView = new QWebView;
-  mWebView->page()->settings()->setAttribute( QWebSettings::JavaEnabled, false );
-  mWebView->page()->settings()->setAttribute( QWebSettings::PluginsEnabled, false );
-#ifdef DEBUG_TRANSLATOR
-  mWebView->show();
-#else
-  mWebView->hide();
-#endif
-  connect(mWebView,SIGNAL(loadFinished(bool)),SLOT(slotLoadFinished(bool)));
+  delete mWebPage;
+  mWebPage = new QWebPage;
+  mWebPage->settings()->setAttribute( QWebSettings::JavaEnabled, false );
+  mWebPage->settings()->setAttribute( QWebSettings::PluginsEnabled, false );
+  connect(mWebPage,SIGNAL(loadFinished(bool)),SLOT(slotLoadFinished(bool)));
 
 
   QString url = QString::fromLatin1("http://translate.google.com/#%1|%2|%3").arg(mFrom, mTo,mInputText);
-  mWebView->load(QUrl(url));
+  mWebPage->mainFrame()->load(QUrl(url));
 }
 
 void GoogleTranslator::slotLoadFinished(bool result)
 {
   if(result) {
-    QWebElement e = mWebView->page()->mainFrame()->findFirstElement("span#result_box");
+    QWebElement e = mWebPage->mainFrame()->findFirstElement("span#result_box");
     if(e.isNull()) {
       Q_EMIT translateFailed();
     } else {
