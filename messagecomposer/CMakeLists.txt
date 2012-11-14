@@ -70,6 +70,7 @@ set( messagecomposer_src
      autocorrection/composerautocorrection.cpp
      autocorrection/composerautocorrectionwidget.cpp
      autocorrection/composerautocorrectionlistwidget.cpp
+     autoimageresizing/autoresizeimagejob.cpp
      autocorrection/composerautocorrectiontreewidget.cpp
      autocorrection/composerautocorrectionlanguage.cpp
      autocorrection/import/importlibreofficeautocorrection.cpp
