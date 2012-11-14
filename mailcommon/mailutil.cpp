@@ -112,6 +112,14 @@ bool MailCommon::Util::isVirtualCollection( const QString &resource )
       resource == QLatin1String( "akonadi_search_resource" ) );
 }
 
+bool MailCommon::Util::isLocalCollection( const QString &resource )
+{
+  return resource.contains(QLatin1String("akonadi_mbox_resource")) ||
+         resource.contains(QLatin1String("akonadi_maildir_resource")) ||
+         resource.contains(QLatin1String("akonadi_mixedmaildir_resource"));
+}
+
+
 QString MailCommon::Util::fullCollectionPath( const Akonadi::Collection &collection )
 {
   QString fullPath;
