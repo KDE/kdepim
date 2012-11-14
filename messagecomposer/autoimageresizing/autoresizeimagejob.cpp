@@ -3,3 +3,8 @@
 AutoResizeImageJob::AutoResizeImageJob()
 {
 }
+
+AutoResizeImageJob::~AutoResizeImageJob()
+{
+
+}

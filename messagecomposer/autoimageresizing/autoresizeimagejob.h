@@ -4,7 +4,8 @@
 class AutoResizeImageJob
 {
 public:
-    AutoResizeImageJob();
+    explicit AutoResizeImageJob();
+    ~AutoResizeImageJob();
 };
 
 #endif // AUTORESIZEIMAGEJOB_H
