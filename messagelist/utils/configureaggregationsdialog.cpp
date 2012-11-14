@@ -338,9 +338,7 @@ void ConfigureAggregationsDialog::Private::cloneAggregationButtonClicked()
   item = new AggregationListWidgetItem( mAggregationList, copyAggregation );
 
   mAggregationList->setCurrentItem( item );
-  mDeleteAggregationButton->setEnabled( item && !item->aggregation()->readOnly() );
-
-
+  aggregationListItemClicked(item);
 }
 
 void ConfigureAggregationsDialog::Private::deleteAggregationButtonClicked()
