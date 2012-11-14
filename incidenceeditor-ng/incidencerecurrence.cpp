@@ -424,16 +424,20 @@ bool IncidenceRecurrence::isValid() const
     const KDateTime referenceDate = incidence->dateTime( KCalCore::Incidence::RoleRecurrenceStart );
 
     if ( referenceDate.isValid() ) {
-      if ( incidence->recurrence()->recursOn( referenceDate.date(), referenceDate.timeSpec() ) ||
-           incidence->recurrence()->getNextDateTime( referenceDate ).isValid() ) {
-        return true;
-      } else {
+      if ( !( incidence->recurrence()->recursOn( referenceDate.date(), referenceDate.timeSpec() ) ||
+           incidence->recurrence()->getNextDateTime( referenceDate ).isValid() ) ) {
         mLastErrorString = i18n( "A recurring event or to-do must occur at least once. "
                                  "Adjust the recurring parameters." );
         return false;
       }
     } else {
       mLastErrorString = i18n( "The event's start date or the to-do's due date is invalid." );
+      return false;
+    }
+
+    if ( mUi->mRecurrenceEndCombo->currentIndex() == RecurrenceEndOn &&
+         !mUi->mRecurrenceEndDate->date().isValid() ) {
+      qWarning() << "Recurrence end date is invalid."; // TODO: strings after freeze
       return false;
     }
   }
