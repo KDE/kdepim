@@ -59,3 +59,4 @@ X-KDE-ServiceTypes=KParts/ReadOnlyPart
 X-KDE-Library=akregator2part
 Type=Service
 Icon=akregator2
+MimeType=application/atom+xml;application/rss+xml;application/rdf+xml;

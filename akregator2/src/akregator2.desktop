@@ -59,6 +59,7 @@ Name[zh_TW]=Akregator2
 Exec=akregator2 %i -caption "%c"
 Icon=akregator2
 Type=Application
+MimeType=application/atom+xml;application/rss+xml;application/rdf+xml;
 X-DocPath=akregator2/index.html
 GenericName=Feed Reader
 GenericName[ar]=قارئ التلقيمات
