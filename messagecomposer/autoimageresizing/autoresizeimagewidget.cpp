@@ -19,6 +19,9 @@
 #include "ui_autoresizeimagewidget.h"
 #include "messagecomposersettings.h"
 
+#include <KComboBox>
+#include <KLocale>
+
 using namespace MessageComposer;
 
 AutoResizeImageWidget::AutoResizeImageWidget(QWidget *parent)
@@ -27,6 +30,11 @@ AutoResizeImageWidget::AutoResizeImageWidget(QWidget *parent)
     mWasChanged(false)
 {
   ui->setupUi(this);
+  initComboBox(ui->CBMaximumWidth);
+  initComboBox(ui->CBMaximumHeight);
+  initComboBox(ui->CBMinimumWidth);
+  initComboBox(ui->CBMinimumHeight);
+
   connect(ui->enabledAutoResize,SIGNAL(clicked()),SIGNAL(changed()));
   connect(ui->KeepImageRatio,SIGNAL(clicked()),SIGNAL(changed()));
   connect(ui->AskBeforeResizing,SIGNAL(clicked()),SIGNAL(changed()));
@@ -36,15 +44,52 @@ AutoResizeImageWidget::AutoResizeImageWidget(QWidget *parent)
   connect(ui->customMaximumHeight,SIGNAL(valueChanged(int)),SIGNAL(changed()));
   connect(ui->customMinimumWidth,SIGNAL(valueChanged(int)),SIGNAL(changed()));
   connect(ui->customMinimumHeight,SIGNAL(valueChanged(int)),SIGNAL(changed()));
-  connect(ui->CBMaximumWidth,SIGNAL(activated(int)),SIGNAL(changed()));
-  connect(ui->CBMaximumHeight,SIGNAL(activated(int)),SIGNAL(changed()));
-  connect(ui->CBMinimumWidth,SIGNAL(activated(int)),SIGNAL(changed()));
-  connect(ui->CBMinimumHeight,SIGNAL(activated(int)),SIGNAL(changed()));
+
+  connect(ui->CBMaximumWidth,SIGNAL(activated(QString)),SLOT(slotComboboxChanged(QString)));
+  connect(ui->CBMaximumHeight,SIGNAL(activated(QString)),SLOT(slotComboboxChanged(QString)));
+  connect(ui->CBMinimumWidth,SIGNAL(activated(QString)),SLOT(slotComboboxChanged(QString)));
+  connect(ui->CBMinimumHeight,SIGNAL(activated(QString)),SLOT(slotComboboxChanged(QString)));
 }
 
 AutoResizeImageWidget::~AutoResizeImageWidget()
 {
   delete ui;
+}
+
+void AutoResizeImageWidget::slotComboboxChanged(const QString& text)
+{
+  const bool isCustom = (text == i18n("Custom"));
+  KComboBox* combo = qobject_cast< KComboBox* >( sender() );
+  if(combo) {
+    if(combo == ui->CBMaximumWidth) {
+      ui->customMaximumWidth->setEnabled(isCustom);
+    } else if(combo == ui->CBMaximumHeight) {
+      ui->customMaximumHeight->setEnabled(isCustom);
+    } else if(combo == ui->CBMinimumWidth) {
+      ui->customMinimumWidth->setEnabled(isCustom);
+    } else if(combo == ui->CBMinimumHeight) {
+      ui->customMinimumHeight->setEnabled(isCustom);
+    }
+  }
+  Q_EMIT changed();
+}
+
+void AutoResizeImageWidget::initComboBox(KComboBox *combo)
+{
+  QList<int> size;
+  size <<240
+       <<320
+       <<512
+       <<640
+       <<800
+       <<1024
+       <<1600
+       <<2048;
+  Q_FOREACH(int val, size)
+  {
+     combo->addItem(QString::number(val));
+  }
+  combo->addItem(i18n("Custom"));
 }
 
 void AutoResizeImageWidget::loadConfig()
@@ -82,3 +127,5 @@ void AutoResizeImageWidget::resetToDefault()
 {
   mWasChanged = false;
 }
+
+#include "autoresizeimagewidget.moc"

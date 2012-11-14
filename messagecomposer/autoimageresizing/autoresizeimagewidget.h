@@ -20,6 +20,7 @@
 #include <QWidget>
 #include "messagecomposer_export.h"
 
+class KComboBox;
 namespace Ui {
 class AutoResizeImageWidget;
 }
@@ -28,6 +29,7 @@ class AutoResizeImageWidget;
 namespace MessageComposer {
 class MESSAGECOMPOSER_EXPORT AutoResizeImageWidget : public QWidget
 {
+  Q_OBJECT
 public:
   explicit AutoResizeImageWidget(QWidget *parent = 0);
   ~AutoResizeImageWidget();
@@ -39,7 +41,11 @@ public:
 Q_SIGNALS:
   void changed();
 
+private Q_SLOTS:
+  void slotComboboxChanged(const QString&);
+
 private:
+  void initComboBox(KComboBox *combo);
   Ui::AutoResizeImageWidget *ui;
   bool mWasChanged;
 };
