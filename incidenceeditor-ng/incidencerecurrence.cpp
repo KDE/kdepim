@@ -444,6 +444,11 @@ bool IncidenceRecurrence::isValid() const
 void IncidenceRecurrence::addException()
 {
   const QDate date = mUi->mExceptionDateEdit->date();
+  if ( !date.isValid() ) {
+    qWarning() << "Refusing to add invalid date";
+    return;
+  }
+
   const QString dateStr = KGlobal::locale()->formatDate( date );
   if( mUi->mExceptionList->findItems( dateStr, Qt::MatchExactly ).isEmpty() ) {
     mExceptionDates.append( date );
