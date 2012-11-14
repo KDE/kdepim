@@ -19,7 +19,7 @@
 #define COMPOSERAUTOCORRECTIONWIDGET_H
 
 #include "messagecomposer_export.h"
-#include "autocorrection/kmcomposerautocorrection.h"
+#include "autocorrection/composerautocorrection.h"
 #include <QWidget>
 #include <KDialog>
 #include <KCharSelect>

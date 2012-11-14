@@ -22,7 +22,7 @@
 #include <QString>
 #include <QHash>
 
-#include "autocorrection/kmcomposerautocorrection.h"
+#include "autocorrection/composerautocorrection.h"
 
 namespace MessageComposer {
 class ImportAbstractAutocorrection
