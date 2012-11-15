@@ -105,6 +105,7 @@ ConfigureAggregationsDialog::ConfigureAggregationsDialog( QWidget *parent )
   QGridLayout * g = new QGridLayout( base );
 
   d->mAggregationList = new AggregationListWidget( base );
+  d->mAggregationList->setSelectionMode(QAbstractItemView::ExtendedSelection);
   d->mAggregationList->setSortingEnabled( true );
   g->addWidget( d->mAggregationList, 0, 0, 7, 1 );
 
@@ -354,7 +355,7 @@ void ConfigureAggregationsDialog::Private::cloneAggregationButtonClicked()
   AggregationListWidgetItem * item = dynamic_cast< AggregationListWidgetItem * >( mAggregationList->currentItem() );
   if ( !item )
     return;
-
+  item->setSelected(false);
   Aggregation copyAggregation( *( item->aggregation() ) );
   copyAggregation.setReadOnly( false );
   copyAggregation.generateUniqueId(); // regenerate id so it becomes different
