@@ -94,7 +94,7 @@ void applyIdentity( const KMime::Message::Ptr &message, const KPIMIdentities::Id
   if ( ident.replyToAddr().isEmpty() )
     message->replyTo()->clear();
   else {
-    message->replyTo()->addAddress(ident.replyToAddr().toUtf8(), ident.fullName());
+    message->replyTo()->addAddress(ident.replyToAddr().toUtf8());
   }
 
   if ( ident.bcc().isEmpty() )
