@@ -254,7 +254,11 @@ void ConfigureAggregationsDialog::Private::fillAggregationList()
 void ConfigureAggregationsDialog::Private::aggregationListItemClicked(QListWidgetItem* cur)
 {
   commitEditor();
+  updateButton(cur);
+}
 
+void ConfigureAggregationsDialog::Private::updateButton(QListWidgetItem* cur)
+{
   const int numberOfSelectedItem(mAggregationList->selectedItems().count());
 
   AggregationListWidgetItem * item = cur ? dynamic_cast< AggregationListWidgetItem * >( cur ) : 0;
@@ -356,6 +360,7 @@ void ConfigureAggregationsDialog::Private::cloneAggregationButtonClicked()
   if ( !item )
     return;
   item->setSelected(false);
+  commitEditor();
   Aggregation copyAggregation( *( item->aggregation() ) );
   copyAggregation.setReadOnly( false );
   copyAggregation.generateUniqueId(); // regenerate id so it becomes different
@@ -386,7 +391,7 @@ void ConfigureAggregationsDialog::Private::deleteAggregationButtonClicked()
   }
 
   AggregationListWidgetItem *newItem = dynamic_cast< AggregationListWidgetItem * >(mAggregationList->currentItem());
-  mDeleteAggregationButton->setEnabled( newItem && !newItem->aggregation()->readOnly() );
+  updateButton(newItem);
 }
 
 void ConfigureAggregationsDialog::Private::importAggregationButtonClicked()
