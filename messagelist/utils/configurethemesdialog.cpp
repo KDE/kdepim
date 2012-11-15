@@ -370,7 +370,7 @@ void ConfigureThemesDialog::Private::cloneThemeButtonClicked()
   ThemeListWidgetItem * item = dynamic_cast< ThemeListWidgetItem * >( mThemeList->currentItem() );
   if ( !item )
     return;
-
+  commitEditor();
   item->setSelected(false);
   Theme copyTheme( *( item->theme() ) );
   copyTheme.setReadOnly( false );
