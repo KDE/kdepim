@@ -330,7 +330,7 @@ void ConfigureAggregationsDialog::Private::cloneAggregationButtonClicked()
   AggregationListWidgetItem * item = dynamic_cast< AggregationListWidgetItem * >( mAggregationList->currentItem() );
   if ( !item )
     return;
-
+  commitEditor();
   Aggregation copyAggregation( *( item->aggregation() ) );
   copyAggregation.setReadOnly( false );
   copyAggregation.generateUniqueId(); // regenerate id so it becomes different
