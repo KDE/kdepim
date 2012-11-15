@@ -341,6 +341,7 @@ void ConfigureThemesDialog::Private::cloneThemeButtonClicked()
   if ( !item )
     return;
 
+  item->setSelected(false);
   Theme copyTheme( *( item->theme() ) );
   copyTheme.setReadOnly( false );
   copyTheme.detach(); // detach shared data
