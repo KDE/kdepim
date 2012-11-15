@@ -105,6 +105,7 @@ ConfigureAggregationsDialog::ConfigureAggregationsDialog( QWidget *parent )
   QGridLayout * g = new QGridLayout( base );
 
   d->mAggregationList = new AggregationListWidget( base );
+  d->mAggregationList->setSelectionMode(QAbstractItemView::ExtendedSelection);
   d->mAggregationList->setSortingEnabled( true );
   g->addWidget( d->mAggregationList, 0, 0, 7, 1 );
 
@@ -253,7 +254,11 @@ void ConfigureAggregationsDialog::Private::fillAggregationList()
 void ConfigureAggregationsDialog::Private::aggregationListItemClicked(QListWidgetItem* cur)
 {
   commitEditor();
+  updateButton(cur);
+}
 
+void ConfigureAggregationsDialog::Private::updateButton(QListWidgetItem* cur)
+{
   const int numberOfSelectedItem(mAggregationList->selectedItems().count());
 
   AggregationListWidgetItem * item = cur ? dynamic_cast< AggregationListWidgetItem * >( cur ) : 0;
@@ -354,7 +359,8 @@ void ConfigureAggregationsDialog::Private::cloneAggregationButtonClicked()
   AggregationListWidgetItem * item = dynamic_cast< AggregationListWidgetItem * >( mAggregationList->currentItem() );
   if ( !item )
     return;
-
+  commitEditor();
+  item->setSelected(false);
   Aggregation copyAggregation( *( item->aggregation() ) );
   copyAggregation.setReadOnly( false );
   copyAggregation.generateUniqueId(); // regenerate id so it becomes different
@@ -362,7 +368,7 @@ void ConfigureAggregationsDialog::Private::cloneAggregationButtonClicked()
   item = new AggregationListWidgetItem( mAggregationList, copyAggregation );
 
   mAggregationList->setCurrentItem( item );
-  aggregationListItemClicked(item);
+  aggregationListItemClicked( item );
 }
 
 void ConfigureAggregationsDialog::Private::deleteAggregationButtonClicked()
@@ -385,7 +391,7 @@ void ConfigureAggregationsDialog::Private::deleteAggregationButtonClicked()
   }
 
   AggregationListWidgetItem *newItem = dynamic_cast< AggregationListWidgetItem * >(mAggregationList->currentItem());
-  mDeleteAggregationButton->setEnabled( newItem && !newItem->aggregation()->readOnly() );
+  updateButton(newItem);
 }
 
 void ConfigureAggregationsDialog::Private::importAggregationButtonClicked()

@@ -233,6 +233,8 @@ class KMComposeWin : public KMail::Composer
   bool insertFromMimeData( const QMimeData *source, bool forceAttachment = false );
 
      void setCurrentReplyTo(const QString&);
+     void setCollectionForNewMessage( const Akonadi::Collection& folder);
+
   private:
   /**
    * Write settings to app's config file.
@@ -416,7 +418,7 @@ class KMComposeWin : public KMail::Composer
     
     //void slotEncryptChiasmusToggled( bool );
 
-    void slotSendFailed( const QString& msg );
+    void slotSendFailed(const QString& msg , Message::ComposerViewBase::FailedType type);
     void slotSendSuccessful();
 
     /**
@@ -462,6 +464,7 @@ class KMComposeWin : public KMail::Composer
     void ignoreStickyFields();
 
   private:
+    void updateSignature(uint uoid, uint uOldId);
     Kleo::CryptoMessageFormat cryptoMessageFormat() const;
     QString overwriteModeStr() const;
     void printComposeResult( KJob *job, bool preview );
@@ -492,7 +495,7 @@ class KMComposeWin : public KMail::Composer
     /**
      * Apply template to new or unmodified message.
      */
-    void applyTemplate( uint uoid );
+    void applyTemplate(uint uoid , uint uOldId);
 
     /**
      * Set the quote prefix according to identity.
@@ -606,13 +609,10 @@ class KMComposeWin : public KMail::Composer
     QGridLayout *mGrid;
     QString mTextSelection;
     QString mCustomTemplate;
-    QAction *mOpenId, *mViewId, *mRemoveId, *mSaveAsId, *mPropertiesId,
-            *mEditAction, *mEditWithAction;
     bool mLastSignActionState, mLastEncryptActionState, mSigningAndEncryptionExplicitlyDisabled;
     bool mLastIdentityHasSigningKey, mLastIdentityHasEncryptionKey;
     Akonadi::Collection mFolder;
     long mShowHeaders;
-    bool mConfirmSend;
     bool mForceDisableHtml;     // Completely disable any HTML. Useful when sending invitations in the
                                 // mail body.
     int mNumHeaders;
@@ -675,7 +675,7 @@ class KMComposeWin : public KMail::Composer
     bool mCheckForForgottenAttachments;
     bool mIgnoreStickyFields;
   bool mWasModified;
-
+  Akonadi::Collection mCollectionForNewMessage;
 };
 
 #endif

@@ -88,11 +88,15 @@ public:
   enum Confirmation { LetUserConfirm, NoConfirmationNeeded };
   enum MissingAttachment { NoMissingAttachmentFound, FoundMissingAttachmentAndSending, FoundMissingAttachmentAndAddedAttachment, FoundMissingAttachmentAndCancel };
 
+  enum FailedType { Sending, AutoSave };
+
   /**
    * Set the message to be opened in the composer window, and set the internal data structures to
    *  keep track of it.
    */
   void setMessage( const KMime::Message::Ptr& newMsg );
+
+  void updateTemplate ( const KMime::Message::Ptr& msg );
 
   /**
    * Send the message with the specified method, saving it in the specified folder.
@@ -211,7 +215,7 @@ public:
 
 public slots:
 
-  void identityChanged( const KPIMIdentities::Identity &ident, const KPIMIdentities::Identity &oldIdent );
+  void identityChanged( const KPIMIdentities::Identity &ident, const KPIMIdentities::Identity &oldIdent, bool msgCleared = false);
 
   /**
    * Save the message.
@@ -226,7 +230,7 @@ signals:
   /**
    * Message sending failed with given error message.
    */
-  void failed( const QString& errorMessage );
+  void failed( const QString& errorMessage, Message::ComposerViewBase::FailedType type = Sending );
 
   /**
    * The composer was modified. This can happen behind the users' back

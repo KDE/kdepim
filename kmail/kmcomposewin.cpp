@@ -216,7 +216,7 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, bool lastSignState,
 
   connect( mComposerBase, SIGNAL(enableHtml()),
            this, SLOT(enableHtml()) );
-  connect( mComposerBase, SIGNAL(failed(QString)), this, SLOT(slotSendFailed(QString)) );
+  connect( mComposerBase, SIGNAL(failed(QString,Message::ComposerViewBase::FailedType)), this, SLOT(slotSendFailed(QString,Message::ComposerViewBase::FailedType)) );
   connect( mComposerBase, SIGNAL(sentSuccessfully()), this, SLOT(slotSendSuccessful()) );
   connect( mComposerBase, SIGNAL(modified(bool)), this, SLOT(setModified(bool)) );
 
@@ -415,8 +415,8 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, bool lastSignState,
 
   Message::AttachmentModel* attachmentModel = new Message::AttachmentModel( this );
   KMail::AttachmentView *attachmentView = new KMail::AttachmentView( attachmentModel, mSplitter );
-  connect(attachmentView,SIGNAL(modified(bool)),SLOT(setModified(bool)));
   attachmentView->hideIfEmpty();
+  connect(attachmentView,SIGNAL(modified(bool)),SLOT(setModified(bool)));
   KMail::AttachmentController* attachmentController = new KMail::AttachmentController( attachmentModel, attachmentView, this );
 
   mComposerBase->setAttachmentModel( attachmentModel );
@@ -968,7 +968,7 @@ void KMComposeWin::rethinkHeaderLine( int aValue, int aMask, int &aRow,
 }
 
 //-----------------------------------------------------------------------------
-void KMComposeWin::applyTemplate( uint uoid )
+void KMComposeWin::applyTemplate( uint uoid, uint uOldId )
 {
   const KPIMIdentities::Identity &ident = kmkernel->identityManager()->identityForUoid( uoid );
   if ( ident.isNull() )
@@ -1000,10 +1000,11 @@ void KMComposeWin::applyTemplate( uint uoid )
     parser.setAllowDecryption( MessageViewer::GlobalSettings::self()->automaticDecrypt() );
     parser.setIdentityManager( KMKernel::self()->identityManager() );
     if ( !mCustomTemplate.isEmpty() )
-      parser.process( mCustomTemplate, KMime::Message::Ptr() );
+      parser.process( mCustomTemplate, mMsg, mCollectionForNewMessage );
     else
-      parser.processWithIdentity( uoid, KMime::Message::Ptr() );
-
+      parser.processWithIdentity( uoid, mMsg, mCollectionForNewMessage );
+    mComposerBase->updateTemplate( mMsg );
+    updateSignature(uoid, uOldId);
     return;
   }
 
@@ -1018,6 +1019,7 @@ void KMComposeWin::applyTemplate( uint uoid )
     job->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
     job->setProperty( "mode", (int)mode );
     job->setProperty( "uoid", uoid );
+    job->setProperty( "uOldid", uOldId );
     connect( job, SIGNAL(result(KJob*)), SLOT(slotDelayedApplyTemplate(KJob*)) );
   }
 }
@@ -1029,6 +1031,7 @@ void KMComposeWin::slotDelayedApplyTemplate( KJob *job )
 
   const TemplateParser::TemplateParser::Mode mode = static_cast<TemplateParser::TemplateParser::Mode>( fetchJob->property( "mode" ).toInt() );
   const uint uoid = fetchJob->property( "uoid" ).toUInt();
+  const uint uOldId = fetchJob->property( "uOldid" ).toUInt();
 
   TemplateParser::TemplateParser parser( mMsg, mode );
   parser.setSelection( mTextSelection );
@@ -1041,7 +1044,21 @@ void KMComposeWin::slotDelayedApplyTemplate( KJob *job )
     else
       parser.processWithIdentity( uoid, MessageCore::Util::message( item ) );
   }
+  mComposerBase->updateTemplate( mMsg );
+  updateSignature(uoid, uOldId);
 
+}
+
+void KMComposeWin::updateSignature(uint uoid, uint uOldId)
+{
+    const KPIMIdentities::Identity &ident = kmkernel->identityManager()->identityForUoid( uoid );
+    const KPIMIdentities::Identity &oldIdentity = kmkernel->identityManager()->identityForUoid( uOldId  );
+    mComposerBase->identityChanged( ident, oldIdentity, true );
+}
+
+void KMComposeWin::setCollectionForNewMessage( const Akonadi::Collection& folder)
+{
+    mCollectionForNewMessage = folder;
 }
 
 void KMComposeWin::setQuotePrefix( uint uoid )
@@ -1376,9 +1393,9 @@ void KMComposeWin::setupActions( void )
 
   changeCryptoAction();
 
-  connect( mEncryptAction, SIGNAL(toggled(bool)),
+  connect( mEncryptAction, SIGNAL(triggered(bool)),
            SLOT(slotEncryptToggled(bool)) );
-  connect( mSignAction, SIGNAL(toggled(bool)),
+  connect( mSignAction, SIGNAL(triggered(bool)),
            SLOT(slotSignToggled(bool)) );
 
   QStringList l;
@@ -1889,12 +1906,12 @@ bool KMComposeWin::encryptToSelf()
 
 
 
-void KMComposeWin::slotSendFailed( const QString& msg )
+void KMComposeWin::slotSendFailed( const QString& msg,Message::ComposerViewBase::FailedType type)
 {
   //   setModified( false );
   setEnabled( true );
   KMessageBox::sorry( mMainWidget, msg,
-                      i18n( "Sending Message Failed" ) );
+                      (type == Message::ComposerViewBase::AutoSave) ? i18n( "Autosave Message Failed" ) : i18n( "Sending Message Failed" ) );
 }
 
 void KMComposeWin::slotSendSuccessful()
@@ -2450,7 +2467,9 @@ void KMComposeWin::setEncryption( bool encrypt, bool setByUser )
 
   // make sure the mEncryptAction is in the right state
   mEncryptAction->setChecked( encrypt );
-
+  if(!setByUser) {
+    slotUpdateSignatureAndEncrypionStateIndicators();
+  }
   // show the appropriate icon
   if ( encrypt ) {
     mEncryptAction->setIcon( KIcon( "document-encrypt" ) );
@@ -2502,6 +2521,9 @@ void KMComposeWin::setSigning( bool sign, bool setByUser )
   // make sure the mSignAction is in the right state
   mSignAction->setChecked( sign );
 
+  if(!setByUser) {
+    slotUpdateSignatureAndEncrypionStateIndicators();
+  }
   // mark the attachments for (no) signing
   if ( canSignEncryptAttachments() ) {
     mComposerBase->attachmentModel()->setSignSelected( sign );
@@ -2993,7 +3015,7 @@ void KMComposeWin::slotIdentityChanged( uint uoid, bool initalChange )
   if ( ident.isNull() ) {
     return;
   }
-
+  bool wasModified(isModified());
   emit identityChanged( identity() );
   if ( !ident.fullEmailAddr().isNull() ) {
     mEdtFrom->setText( ident.fullEmailAddr() );
@@ -3011,7 +3033,6 @@ void KMComposeWin::slotIdentityChanged( uint uoid, bool initalChange )
   const KPIMIdentities::Identity &oldIdentity =
       KMKernel::self()->identityManager()->identityForUoidOrDefault( mId );
 
-  mComposerBase->identityChanged( ident, oldIdentity );
 
   if ( ident.organization().isEmpty() ) {
     mMsg->organization()->clear();
@@ -3057,9 +3078,11 @@ void KMComposeWin::slotIdentityChanged( uint uoid, bool initalChange )
   }
 
   // if unmodified, apply new template, if one is set
-  if ( !isModified() && !( ident.templates().isEmpty() && mCustomTemplate.isEmpty() ) &&
+  if ( !wasModified && !( ident.templates().isEmpty() && mCustomTemplate.isEmpty() ) &&
        !initalChange ) {
-    applyTemplate( uoid );
+    applyTemplate( uoid, mId );
+  } else {
+    mComposerBase->identityChanged( ident, oldIdentity, false );
   }
 
 
@@ -3095,6 +3118,7 @@ void KMComposeWin::slotIdentityChanged( uint uoid, bool initalChange )
   changeCryptoAction();
   // make sure the From and BCC fields are shown if necessary
   rethinkFields( false );
+  setModified(wasModified);
 }
 
 //-----------------------------------------------------------------------------
