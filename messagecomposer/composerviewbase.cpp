@@ -187,6 +187,31 @@ void Message::ComposerViewBase::setMessage ( const KMime::Message::Ptr& msg )
   }
 }
 
+void Message::ComposerViewBase::updateTemplate ( const KMime::Message::Ptr& msg )
+{
+  // First, we copy the message and then parse it to the object tree parser.
+  // The otp gets the message text out of it, in textualContent(), and also decrypts
+  // the message if necessary.
+  KMime::Content *msgContent = new KMime::Content;
+  msgContent->setContent( msg->encodedContent() );
+  msgContent->parse();
+  MessageViewer::EmptySource emptySource;
+  MessageViewer::ObjectTreeParser otp( &emptySource );//All default are ok
+  otp.parseObjectTree( msgContent );
+  // Set the HTML text and collect HTML images
+  if ( !otp.htmlContent().isEmpty() ) {
+    m_editor->setHtml( otp.htmlContent() );
+    emit enableHtml();
+    collectImages( msg.get() );
+  } else {
+    m_editor->setPlainText( otp.plainTextContent() );
+  }
+
+  if ( msg->headerByType( "X-KMail-CursorPos" ) ) {
+    m_editor->setCursorPositionFromStart( m_msg->headerByType( "X-KMail-CursorPos" )->asUnicodeString().toInt() );
+  }
+}
+
 void Message::ComposerViewBase::send ( MessageSender::SendMethod method, MessageSender::SaveIn saveIn )
 {
   mSendMethod = method;
@@ -1276,7 +1301,7 @@ void Message::ComposerViewBase::updateRecipients( const KPIMIdentities::Identity
   }
 }
 
-void Message::ComposerViewBase::identityChanged ( const KPIMIdentities::Identity &ident, const KPIMIdentities::Identity &oldIdent )
+void Message::ComposerViewBase::identityChanged ( const KPIMIdentities::Identity &ident, const KPIMIdentities::Identity &oldIdent, bool msgCleared )
 {
   updateRecipients( ident, oldIdent, MessageComposer::Recipient::Bcc );
   updateRecipients( ident, oldIdent, MessageComposer::Recipient::Cc );
@@ -1285,12 +1310,10 @@ void Message::ComposerViewBase::identityChanged ( const KPIMIdentities::Identity
                                                ( oldIdent ).signature();
   KPIMIdentities::Signature newSig = const_cast<KPIMIdentities::Identity&>
                                                ( ident ).signature();
-
   //replace existing signatures
   const bool replaced = editor()->replaceSignature( oldSig, newSig );
-
   // Just append the signature if there was no old signature
-  if ( !replaced && (/* msgCleared ||*/ oldSig.rawText().isEmpty() ) ) {
+  if ( !replaced && ( msgCleared || oldSig.rawText().isEmpty() ) ) {
     signatureController()->applySignature( newSig );
   }
   const QString vcardFileName = ident.vCardFile();

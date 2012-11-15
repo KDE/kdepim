@@ -94,6 +94,8 @@ public:
    */
   void setMessage( const KMime::Message::Ptr& newMsg );
 
+  void updateTemplate ( const KMime::Message::Ptr& msg );
+
   /**
    * Send the message with the specified method, saving it in the specified folder.
    */
@@ -211,7 +213,7 @@ public:
 
 public slots:
 
-  void identityChanged( const KPIMIdentities::Identity &ident, const KPIMIdentities::Identity &oldIdent );
+  void identityChanged( const KPIMIdentities::Identity &ident, const KPIMIdentities::Identity &oldIdent, bool msgCleared = false);
 
   /**
    * Save the message.
