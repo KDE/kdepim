@@ -973,10 +973,10 @@ void Message::ComposerViewBase::slotAutoSaveComposeResult( KJob *job )
     // The job warned the user about something, and the user chose to return
     // to the message.  Nothing to do.
     kDebug() << "UserCancelledError.";
-    emit failed( i18n( "Job cancelled by the user" ) );
+    emit failed( i18n( "Job cancelled by the user" ), AutoSave );
   } else {
     kDebug() << "other Error.";
-    emit failed( i18n( "Could not autosave message: %1", job->errorString() ) );
+    emit failed( i18n( "Could not autosave message: %1", job->errorString() ), AutoSave );
   }
 
   m_composers.removeAll( composer );

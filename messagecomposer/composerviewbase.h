@@ -88,6 +88,8 @@ public:
   enum Confirmation { LetUserConfirm, NoConfirmationNeeded };
   enum MissingAttachment { NoMissingAttachmentFound, FoundMissingAttachmentAndSending, FoundMissingAttachmentAndAddedAttachment, FoundMissingAttachmentAndCancel };
 
+  enum FailedType { Sending, AutoSave };
+
   /**
    * Set the message to be opened in the composer window, and set the internal data structures to
    *  keep track of it.
@@ -228,7 +230,7 @@ signals:
   /**
    * Message sending failed with given error message.
    */
-  void failed( const QString& errorMessage );
+  void failed( const QString& errorMessage, Message::ComposerViewBase::FailedType type = Sending );
 
   /**
    * The composer was modified. This can happen behind the users' back
