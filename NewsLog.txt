@@ -7,6 +7,7 @@ Problems addressed
 * kolab/issue4751: Event with start/end time "00:00" is not visible in monthview and summary (rt#10011)
 * kolab/issue4857: Can't accept invitations when no calendar folder in the inbox is active (RT#10182)
 * kolab/issue4858: Deleting an Event where you are an attendee cancels event (RT #10187
+* kolab/issue4859: Pop up Windows for Loading Contacts / Calendar should be removed
 
 
 
