@@ -17,6 +17,7 @@
 #include "autoresizeimagejob.h"
 #include "messagecomposersettings.h"
 
+#include <QBuffer>
 #include <QImage>
 
 AutoResizeImageJob::AutoResizeImageJob(QObject *parent)
@@ -43,7 +44,11 @@ bool AutoResizeImageJob::resizeImage()
      return false;
   const int width = mImage.width();
   const int height = mImage.height();
+  const qreal imageRatio = (double)( (double)height / (double)width );
+  int newWidth = -1;
+  int newHeight = -1;
   if(MessageComposer::MessageComposerSettings::self()->reduceImageToMaximum()) {
+
       int maximumWidth = MessageComposer::MessageComposerSettings::self()->maximumWidth();
       if (maximumWidth == -1) {
           maximumWidth =  MessageComposer::MessageComposerSettings::self()->customMaximumWidth();
@@ -52,12 +57,33 @@ bool AutoResizeImageJob::resizeImage()
       if (maximumHeight == -1) {
           maximumHeight = MessageComposer::MessageComposerSettings::self()->customMaximumHeight();
       }
-      if((width < maximumWidth) && (height < maximumHeight)) {
-          return true;
+
+      if(MessageComposer::MessageComposerSettings::self()->keepImageRatio()) {
+          if(imageRatio>1) {
+
+          } else {
+
+          }
+         //TODO
+      } else {
+          if( width > maximumWidth ) {
+              newWidth = maximumWidth;
+          } else {
+              newWidth = width;
+          }
+          if(height > maximumHeight) {
+              newHeight = maximumHeight;
+          } else {
+              newHeight = height;
+          }
       }
+  } else {
+      newHeight = height;
+      newWidth = width;
   }
 
   if(MessageComposer::MessageComposerSettings::self()->enlargeImageToMinimum()) {
+
       int minimumWidth = MessageComposer::MessageComposerSettings::self()->minimumWidth();
       if (minimumWidth == -1) {
           minimumWidth =  MessageComposer::MessageComposerSettings::self()->customMinimumWidth();
@@ -67,10 +93,30 @@ bool AutoResizeImageJob::resizeImage()
       if (minimumHeight == -1) {
           minimumHeight = MessageComposer::MessageComposerSettings::self()->customMinimumHeight();
       }
-      if((width > minimumWidth) && (height > minimumHeight)) {
-          return true;
-      }
 
+      if(MessageComposer::MessageComposerSettings::self()->keepImageRatio()) {
+          if(imageRatio>1) {
+
+          } else {
+
+          }
+          //TODO
+      } else {
+          if(newWidth < minimumWidth) {
+              newWidth = minimumWidth;
+          }
+          if(newHeight < minimumHeight) {
+              newHeight = minimumHeight;
+          }
+      }
+  }
+  if((newHeight != height) || (newWidth != width)) {
+      QBuffer buff;
+      mImage = mImage.scaled(newWidth,newHeight);
+      bool result = mImage.save(&buff,MessageComposer::MessageComposerSettings::self()->writeFormat().toLocal8Bit());
+      return result;
+  } else {
+      return false;
   }
   /*
   ui->KeepImageRatio->setChecked(MessageComposer::MessageComposerSettings::self()->keepImageRatio());

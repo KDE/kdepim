@@ -22,6 +22,8 @@
 #include <KComboBox>
 #include <KLocale>
 
+#include <QImageWriter>
+
 using namespace MessageComposer;
 
 AutoResizeImageWidget::AutoResizeImageWidget(QWidget *parent)
@@ -35,6 +37,7 @@ AutoResizeImageWidget::AutoResizeImageWidget(QWidget *parent)
   initComboBox(ui->CBMinimumWidth);
   initComboBox(ui->CBMinimumHeight);
 
+  initWriteImageFormat();
   connect(ui->enabledAutoResize,SIGNAL(clicked()),SIGNAL(changed()));
   connect(ui->KeepImageRatio,SIGNAL(clicked()),SIGNAL(changed()));
   connect(ui->AskBeforeResizing,SIGNAL(clicked()),SIGNAL(changed()));
@@ -92,6 +95,18 @@ void AutoResizeImageWidget::initComboBox(KComboBox *combo)
   combo->addItem(i18n("Custom"), -1);
 }
 
+void AutoResizeImageWidget::initWriteImageFormat()
+{
+    /* Too many format :)
+    QList<QByteArray> listWriteFormat = QImageWriter::supportedImageFormats();
+    Q_FOREACH(const QByteArray& format, listWriteFormat) {
+        ui->WriteToImageFormat->addItem(QString::fromLatin1(format));
+    }
+    */
+    ui->WriteToImageFormat->addItem(QString::fromLatin1("JPG"));
+    ui->WriteToImageFormat->addItem(QString::fromLatin1("PNG"));
+}
+
 void AutoResizeImageWidget::loadConfig()
 {
   ui->enabledAutoResize->setChecked(MessageComposer::MessageComposerSettings::self()->autoResizeImageEnabled());
@@ -111,6 +126,12 @@ void AutoResizeImageWidget::loadConfig()
   ui->CBMinimumWidth->setCurrentIndex(ui->CBMinimumWidth->findData(MessageComposer::MessageComposerSettings::self()->minimumWidth()));
   ui->CBMinimumHeight->setCurrentIndex(ui->CBMinimumHeight->findData(MessageComposer::MessageComposerSettings::self()->minimumHeight()));
 
+  const int index = ui->WriteToImageFormat->findData(MessageComposer::MessageComposerSettings::self()->writeFormat());
+  if(index == -1) {
+      ui->WriteToImageFormat->setCurrentIndex(0);
+  } else {
+      ui->WriteToImageFormat->setCurrentIndex(index);
+  }
   mWasChanged = false;
 }
 
@@ -132,6 +153,7 @@ void AutoResizeImageWidget::writeConfig()
   MessageComposer::MessageComposerSettings::self()->setMinimumWidth(ui->CBMinimumWidth->itemData(ui->CBMinimumWidth->currentIndex()).toInt());
   MessageComposer::MessageComposerSettings::self()->setMinimumHeight(ui->CBMinimumHeight->itemData(ui->CBMinimumHeight->currentIndex()).toInt());
 
+  MessageComposer::MessageComposerSettings::self()->setWriteFormat(ui->WriteToImageFormat->currentText());
 
   mWasChanged = false;
 }

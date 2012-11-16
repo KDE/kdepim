@@ -253,7 +253,9 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
     <entry name="MinimumWidth" type="int" key="minimum-width">
       <default>0</default>
     </entry>
-
+    <entry name="WriteFormat" type="String" key="write-format">
+      <default></default>
+    </entry>
   </group>
 </kcfg>
 

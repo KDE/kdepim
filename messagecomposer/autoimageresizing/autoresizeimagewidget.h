@@ -46,6 +46,7 @@ private Q_SLOTS:
 
 private:
   void initComboBox(KComboBox *combo);
+  void initWriteImageFormat();
   Ui::AutoResizeImageWidget *ui;
   bool mWasChanged;
 };
