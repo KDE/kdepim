@@ -399,7 +399,7 @@ sub issueString {
     if ($#summary > 0) {
       ($issue_pr) = split(' ',$summary[0]);
       $rt_pr = "";
-      if ($summary[0] =~ m/([Rr][Tt]#\d{3,})/) {
+      if ($summary[0] =~ m/([Rr][Tt]\s*#\d{3,})/) {
          $rt_pr = "($1)";
       }
       $summ_pr = $summary[0];
