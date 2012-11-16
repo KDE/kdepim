@@ -772,9 +772,10 @@ void KMeditor::fillComposerTextPart ( TextPart* textPart ) const
     Grantlee::MarkupDirector *pmd = new Grantlee::MarkupDirector( pb );
     pmd->processDocument( document() );
     const QString plainText = pb->getResult();
-    //qDebug()<<" plainText :"<<plainText;
     textPart->setCleanPlainText( toCleanPlainText(plainText) );
     QTextDocument *doc = new QTextDocument(plainText);
+    doc->adjustSize();
+    
     textPart->setWrappedPlainText(toWrappedPlainText(doc));
     delete doc;
     delete pmd;
