@@ -17,8 +17,6 @@
 #include "autoresizeimagejob.h"
 #include "messagecomposersettings.h"
 
-#include <KLocale>
-
 #include <QImage>
 
 AutoResizeImageJob::AutoResizeImageJob(QObject *parent)
@@ -31,13 +29,42 @@ AutoResizeImageJob::~AutoResizeImageJob()
 
 }
 
-void AutoResizeImageJob::setImageFromData(const QByteArray& data)
+bool AutoResizeImageJob::loadImageFromData(const QByteArray& data)
 {
-    QImage image;
-    if(!image.loadFromData(data)) {
-        emit failed(i18n("Unable to load image."));
-        return;
-    }
+  if(!mImage.loadFromData(data)) {
+    return false;
+  }
+  return true;
+}
+
+bool AutoResizeImageJob::resizeImage()
+{
+  if(mImage.isNull())
+     return false;
+  const int width = mImage.width();
+  const int height = mImage.height();
+  /*
+  if(MessageComposer::MessageComposerSettings::self()->reduceImageToMaximum()) {
+      if(width < )
+  }
+  ui->KeepImageRatio->setChecked(MessageComposer::MessageComposerSettings::self()->keepImageRatio());
+  ui->AskBeforeResizing->setChecked(MessageComposer::MessageComposerSettings::self()->askBeforeResizing());
+  ui->EnlargeImageToMinimum->setChecked(MessageComposer::MessageComposerSettings::self()->enlargeImageToMinimum());
+  ui->ReduceImageToMaximum->setChecked(MessageComposer::MessageComposerSettings::self()->reduceImageToMaximum());
+
+  ui->customMaximumWidth->setValue(MessageComposer::MessageComposerSettings::self()->customMaximumWidth());
+  ui->customMaximumHeight->setValue(MessageComposer::MessageComposerSettings::self()->customMaximumHeight());
+  ui->customMinimumWidth->setValue(MessageComposer::MessageComposerSettings::self()->customMinimumWidth());
+  ui->customMinimumHeight->setValue(MessageComposer::MessageComposerSettings::self()->customMinimumHeight());
+
+
+  ui->CBMaximumWidth->setCurrentIndex(MessageComposer::MessageComposerSettings::self()->maximumWidth());
+  ui->CBMaximumHeight->setCurrentIndex(MessageComposer::MessageComposerSettings::self()->maximumHeight());
+  ui->CBMinimumWidth->setCurrentIndex(MessageComposer::MessageComposerSettings::self()->minimumWidth());
+  ui->CBMinimumHeight->setCurrentIndex(MessageComposer::MessageComposerSettings::self()->minimumHeight());
+  */
+  return true;
+
 }
 
 #include "autoresizeimagejob.moc"

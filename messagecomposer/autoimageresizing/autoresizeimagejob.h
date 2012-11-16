@@ -19,6 +19,7 @@
 
 #include <QByteArray>
 #include <QObject>
+#include <QImage>
 
 class AutoResizeImageJob : public QObject
 {
@@ -26,9 +27,10 @@ class AutoResizeImageJob : public QObject
 public:
     explicit AutoResizeImageJob(QObject *parent);
     ~AutoResizeImageJob();
-    void setImageFromData(const QByteArray& data);
-Q_SIGNALS:
-    void failed(const QString&);
+    bool loadImageFromData(const QByteArray& data);
+    bool resizeImage();
+private:
+    QImage mImage;
 };
 
 #endif // AUTORESIZEIMAGEJOB_H
