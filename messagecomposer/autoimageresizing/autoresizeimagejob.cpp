@@ -43,25 +43,38 @@ bool AutoResizeImageJob::resizeImage()
      return false;
   const int width = mImage.width();
   const int height = mImage.height();
-  /*
   if(MessageComposer::MessageComposerSettings::self()->reduceImageToMaximum()) {
-      if(width < )
+      int maximumWidth = MessageComposer::MessageComposerSettings::self()->maximumWidth();
+      if (maximumWidth == -1) {
+          maximumWidth =  MessageComposer::MessageComposerSettings::self()->customMaximumWidth();
+      }
+      int maximumHeight = MessageComposer::MessageComposerSettings::self()->maximumHeight();
+      if (maximumHeight == -1) {
+          maximumHeight = MessageComposer::MessageComposerSettings::self()->customMaximumHeight();
+      }
+      if((width < maximumWidth) && (height < maximumHeight)) {
+          return true;
+      }
   }
+
+  if(MessageComposer::MessageComposerSettings::self()->enlargeImageToMinimum()) {
+      int minimumWidth = MessageComposer::MessageComposerSettings::self()->minimumWidth();
+      if (minimumWidth == -1) {
+          minimumWidth =  MessageComposer::MessageComposerSettings::self()->customMinimumWidth();
+      }
+
+      int minimumHeight = MessageComposer::MessageComposerSettings::self()->minimumHeight();
+      if (minimumHeight == -1) {
+          minimumHeight = MessageComposer::MessageComposerSettings::self()->customMinimumHeight();
+      }
+      if((width > minimumWidth) && (height > minimumHeight)) {
+          return true;
+      }
+
+  }
+  /*
   ui->KeepImageRatio->setChecked(MessageComposer::MessageComposerSettings::self()->keepImageRatio());
   ui->AskBeforeResizing->setChecked(MessageComposer::MessageComposerSettings::self()->askBeforeResizing());
-  ui->EnlargeImageToMinimum->setChecked(MessageComposer::MessageComposerSettings::self()->enlargeImageToMinimum());
-  ui->ReduceImageToMaximum->setChecked(MessageComposer::MessageComposerSettings::self()->reduceImageToMaximum());
-
-  ui->customMaximumWidth->setValue(MessageComposer::MessageComposerSettings::self()->customMaximumWidth());
-  ui->customMaximumHeight->setValue(MessageComposer::MessageComposerSettings::self()->customMaximumHeight());
-  ui->customMinimumWidth->setValue(MessageComposer::MessageComposerSettings::self()->customMinimumWidth());
-  ui->customMinimumHeight->setValue(MessageComposer::MessageComposerSettings::self()->customMinimumHeight());
-
-
-  ui->CBMaximumWidth->setCurrentIndex(MessageComposer::MessageComposerSettings::self()->maximumWidth());
-  ui->CBMaximumHeight->setCurrentIndex(MessageComposer::MessageComposerSettings::self()->maximumHeight());
-  ui->CBMinimumWidth->setCurrentIndex(MessageComposer::MessageComposerSettings::self()->minimumWidth());
-  ui->CBMinimumHeight->setCurrentIndex(MessageComposer::MessageComposerSettings::self()->minimumHeight());
   */
   return true;
 
