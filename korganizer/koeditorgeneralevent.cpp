@@ -357,6 +357,9 @@ void KOEditorGeneralEvent::readEvent( Event *event, Calendar *calendar, const QD
       }
     }
     // the rest is for the events only
+    if ( event->doesFloat() ) {
+      endDT.setTime(QTime(23,59,59));
+    }
     setDateTimes( startDT, endDT );
   }
 
