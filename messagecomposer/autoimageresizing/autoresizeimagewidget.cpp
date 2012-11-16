@@ -87,9 +87,9 @@ void AutoResizeImageWidget::initComboBox(KComboBox *combo)
        <<2048;
   Q_FOREACH(int val, size)
   {
-     combo->addItem(QString::number(val));
+     combo->addItem(QString::number(val), val);
   }
-  combo->addItem(i18n("Custom"));
+  combo->addItem(i18n("Custom"), -1);
 }
 
 void AutoResizeImageWidget::loadConfig()
@@ -106,10 +106,10 @@ void AutoResizeImageWidget::loadConfig()
   ui->customMinimumHeight->setValue(MessageComposer::MessageComposerSettings::self()->customMinimumHeight());
 
 
-  ui->CBMaximumWidth->setCurrentIndex(MessageComposer::MessageComposerSettings::self()->maximumWidth());
-  ui->CBMaximumHeight->setCurrentIndex(MessageComposer::MessageComposerSettings::self()->maximumHeight());
-  ui->CBMinimumWidth->setCurrentIndex(MessageComposer::MessageComposerSettings::self()->minimumWidth());
-  ui->CBMinimumHeight->setCurrentIndex(MessageComposer::MessageComposerSettings::self()->minimumHeight());
+  ui->CBMaximumWidth->setCurrentIndex(ui->CBMaximumWidth->findData(MessageComposer::MessageComposerSettings::self()->maximumWidth()));
+  ui->CBMaximumHeight->setCurrentIndex(ui->CBMaximumHeight->findData(MessageComposer::MessageComposerSettings::self()->maximumHeight()));
+  ui->CBMinimumWidth->setCurrentIndex(ui->CBMinimumWidth->findData(MessageComposer::MessageComposerSettings::self()->minimumWidth()));
+  ui->CBMinimumHeight->setCurrentIndex(ui->CBMinimumHeight->findData(MessageComposer::MessageComposerSettings::self()->minimumHeight()));
 
   mWasChanged = false;
 }
@@ -127,10 +127,10 @@ void AutoResizeImageWidget::writeConfig()
   MessageComposer::MessageComposerSettings::self()->setCustomMinimumWidth(ui->customMinimumWidth->value());
   MessageComposer::MessageComposerSettings::self()->setCustomMinimumHeight(ui->customMinimumHeight->value());
 
-  MessageComposer::MessageComposerSettings::self()->setMaximumWidth(ui->CBMaximumWidth->currentIndex());
-  MessageComposer::MessageComposerSettings::self()->setMaximumHeight(ui->CBMaximumHeight->currentIndex());
-  MessageComposer::MessageComposerSettings::self()->setMinimumWidth(ui->CBMinimumWidth->currentIndex());
-  MessageComposer::MessageComposerSettings::self()->setMinimumHeight(ui->CBMinimumHeight->currentIndex());
+  MessageComposer::MessageComposerSettings::self()->setMaximumWidth(ui->CBMaximumWidth->itemData(ui->CBMaximumWidth->currentIndex()).toInt());
+  MessageComposer::MessageComposerSettings::self()->setMaximumHeight(ui->CBMaximumHeight->itemData(ui->CBMaximumHeight->currentIndex()).toInt());
+  MessageComposer::MessageComposerSettings::self()->setMinimumWidth(ui->CBMinimumWidth->itemData(ui->CBMinimumWidth->currentIndex()).toInt());
+  MessageComposer::MessageComposerSettings::self()->setMinimumHeight(ui->CBMinimumHeight->itemData(ui->CBMinimumHeight->currentIndex()).toInt());
 
 
   mWasChanged = false;
