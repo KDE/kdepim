@@ -39,3 +39,5 @@ void AutoResizeImageJob::setImageFromData(const QByteArray& data)
         return;
     }
 }
+
+#include "autoresizeimagejob.moc"
