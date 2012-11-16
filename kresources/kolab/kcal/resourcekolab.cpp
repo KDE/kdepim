@@ -38,8 +38,6 @@
 #include "journal.h"
 #include "conflictpreventer.h"
 
-#include <kio/observer.h>
-#include <kio/uiserver_stub.h>
 #include <kapplication.h>
 #include <dcopclient.h>
 #include <libkdepim/kincidencechooser.h>
@@ -55,6 +53,7 @@
 #include <qobject.h>
 #include <qtimer.h>
 #include <qapplication.h>
+#include <qcursor.h>
 
 #include <assert.h>
 
@@ -137,8 +136,6 @@ bool ResourceKolab::doOpen()
   mOpen = true;
 
   KConfig config( configFile() );
-  config.setGroup( "General" );
-  mProgressDialogIncidenceLimit = config.readNumEntry("ProgressDialogIncidenceLimit", 200);
 
   return openResource( config, kmailCalendarContentsType, mEventSubResources )
     && openResource( config, kmailTodoContentsType, mTodoSubResources )
@@ -167,61 +164,26 @@ void ResourceKolab::doClose()
 bool ResourceKolab::loadSubResource( const QString& subResource,
                                      const char* mimetype )
 {
-  int count = 0;
-  if ( !kmailIncidencesCount( count, mimetype, subResource ) ) {
+  const QString labelTxt = !strcmp(mimetype, "application/x-vnd.kolab.task") ? i18n( "Loading tasks..." )
+    : !strcmp(mimetype, "application/x-vnd.kolab.journal") ? i18n( "Loading journals..." )
+    : i18n( "Loading events..." );
+
+  QMap<Q_UINT32, QString> lst;
+  QApplication::setOverrideCursor( QCursor(QCursor::WaitCursor) );
+  if ( !kmailIncidences( lst, mimetype, subResource, 0, -1) ) {
     kdError(5650) << "Communication problem in ResourceKolab::load()\n";
+    QApplication::restoreOverrideCursor();
     return false;
   }
 
-  if ( !count )
-    return true;
-
-  const int nbMessages = 200; // read 200 mails at a time (see kabc resource)
-
-  const QString labelTxt = !strcmp(mimetype, "application/x-vnd.kolab.task") ? i18n( "Loading tasks..." )
-                           : !strcmp(mimetype, "application/x-vnd.kolab.journal") ? i18n( "Loading journals..." )
-                           : i18n( "Loading events..." );
-  const bool useProgress = qApp && qApp->type() != QApplication::Tty && count > mProgressDialogIncidenceLimit;
-  if ( useProgress )
-    (void)::Observer::self(); // ensure kio_uiserver is running
-  UIServer_stub uiserver( "kio_uiserver", "UIServer" );
-  int progressId = 0;
-  if ( useProgress ) {
-    progressId = uiserver.newJob( kapp->dcopClient()->appId(), true );
-    uiserver.totalFiles( progressId, count );
-    uiserver.infoMessage( progressId, labelTxt );
-    uiserver.transferring( progressId, labelTxt );
+  { // for RAII scoping below
+    TemporarySilencer t( this );
+    conflictThisSync = false;
+    for( QMap<Q_UINT32, QString>::ConstIterator it = lst.begin(); it != lst.end(); ++it ) {
+      addIncidence( mimetype, it.data(), subResource, it.key() );
+    }
   }
-
-  for ( int startIndex = 0; startIndex < count; startIndex += nbMessages ) {
-    QMap<Q_UINT32, QString> lst;
-    if ( !kmailIncidences( lst, mimetype, subResource, startIndex, nbMessages ) ) {
-      kdError(5650) << "Communication problem in ResourceKolab::load()\n";
-      if ( progressId )
-        uiserver.jobFinished( progressId );
-      return false;
-    }
-
-    { // for RAII scoping below
-      TemporarySilencer t( this );
-      conflictThisSync = false;
-      for( QMap<Q_UINT32, QString>::ConstIterator it = lst.begin(); it != lst.end(); ++it ) {
-        addIncidence( mimetype, it.data(), subResource, it.key() );
-      }
-    }
-    if ( progressId ) {
-      uiserver.processedFiles( progressId, startIndex );
-      uiserver.percent( progressId, 100 * startIndex / count );
-    }
-
-//    if ( progress.wasCanceled() ) {
-//      uiserver.jobFinished( progressId );
-//      return false;
-//    }
-  }
-
-  if ( progressId )
-    uiserver.jobFinished( progressId );
+  QApplication::restoreOverrideCursor();
   return true;
 }
 

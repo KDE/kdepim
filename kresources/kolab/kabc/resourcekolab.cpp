@@ -38,8 +38,6 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <ktempfile.h>
-#include <kio/observer.h>
-#include <kio/uiserver_stub.h>
 #include <kabc/vcardconverter.h>
 #include <kmainwindow.h>
 #include <kapplication.h>
@@ -50,6 +48,7 @@
 #include <qstring.h>
 #include <qfile.h>
 #include <qapplication.h>
+#include <qcursor.h>
 
 #include <assert.h>
 
@@ -185,66 +184,29 @@ static const struct { const char* mimetype; KMailICalIface::StorageFormat format
 
 bool KABC::ResourceKolab::loadSubResource( const QString& subResource )
 {
-  int count = 0;
-  if ( !kmailIncidencesCount( count, QString::null, subResource ) ) {
-    kdError() << "Communication problem in KABC::ResourceKolab::loadSubResource()\n";
-    return false;
-  }
-  if ( !count )
-    return true;
+  QApplication::setOverrideCursor( QCursor(QCursor::WaitCursor) );
 
-  // Read that many contacts at a time.
-  // If this number is too small we lose time in kmail.
-  // If it's too big the progressbar is jumpy.
-  const int nbMessages = 200;
+  // TODO it would be faster to pass the s_formats array to kmail and let it load
+  // all events - to avoid loading each mail 3 times. But then we need to extend the returned
+  // QMap to also tell us the StorageFormat of each found contact...
+  for ( int indexFormat = 0; indexFormat < 3; ++indexFormat ) {
+    const char* mimetype = s_formats[indexFormat].mimetype;
+    KMailICalIface::StorageFormat format = s_formats[indexFormat].format;
+    QMap<Q_UINT32, QString> lst;
 
-  (void)Observer::self(); // ensure kio_uiserver is running
-  UIServer_stub uiserver( "kio_uiserver", "UIServer" );
-  int progressId = 0;
-  if ( count > 200 ) {
-    progressId = uiserver.newJob( kapp->dcopClient()->appId(), true );
-    uiserver.totalFiles( progressId, count );
-    uiserver.infoMessage( progressId, i18n( "Loading contacts..." ) );
-    uiserver.transferring( progressId, "Contacts" );
-  }
-
-  for ( int startIndex = 0; startIndex < count; startIndex += nbMessages ) {
-
-    // TODO it would be faster to pass the s_formats array to kmail and let it load
-    // all events - to avoid loading each mail 3 times. But then we need to extend the returned
-    // QMap to also tell us the StorageFormat of each found contact...
-    for ( int indexFormat = 0; indexFormat < 3; ++indexFormat ) {
-      const char* mimetype = s_formats[indexFormat].mimetype;
-      KMailICalIface::StorageFormat format = s_formats[indexFormat].format;
-      QMap<Q_UINT32, QString> lst;
-      if ( !kmailIncidences( lst, mimetype, subResource, startIndex, nbMessages ) ) {
-        kdError() << "Communication problem in KABC::ResourceKolab::loadSubResource()\n";
-        if ( progressId )
-          uiserver.jobFinished( progressId );
-        return false;
-      }
-
-      for( QMap<Q_UINT32, QString>::ConstIterator it = lst.begin(); it != lst.end(); ++it ) {
-        loadContact( it.data(), subResource, it.key(), format );
-      }
-
-    }
-    if ( progressId ) {
-      uiserver.processedFiles( progressId, startIndex );
-      uiserver.percent( progressId, 100 * startIndex / count );
+    if ( !kmailIncidences( lst, mimetype, subResource, 0, -1 ) ) {
+      kdError() << "Communication problem in KABC::ResourceKolab::loadSubResource()\n";
+      QApplication::restoreOverrideCursor();
+      return false;
     }
 
-//    if ( progress.wasCanceled() ) {
-//      uiserver.jobFinished( progressId );
-//      return false;
-//    }
-
+    for( QMap<Q_UINT32, QString>::ConstIterator it = lst.begin(); it != lst.end(); ++it ) {
+      loadContact( it.data(), subResource, it.key(), format );
+    }
+    kdDebug(5650) << "Contacts kolab resource: got " << lst.size() << " " << mimetype << "" << subResource << endl;
   }
+  QApplication::restoreOverrideCursor();
 
-  kdDebug(5650) << "Contacts kolab resource: got " << count << " contacts in " << subResource << endl;
-
-  if ( progressId )
-    uiserver.jobFinished( progressId );
   return true;
 }
 
