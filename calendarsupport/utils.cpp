@@ -71,13 +71,6 @@
 using namespace CalendarSupport;
 using namespace KHolidays;
 
-K_GLOBAL_STATIC( Akonadi::CollectionDialog, globalCollectionDialog )
-
-static Akonadi::CollectionDialog *collectionDialog()
-{
-  return globalCollectionDialog;
-}
-
 KCalCore::Incidence::Ptr CalendarSupport::incidence( const Akonadi::Item &item )
 {
   try {
@@ -398,8 +391,7 @@ Akonadi::Collection CalendarSupport::selectCollection( QWidget *parent,
                                                        const QStringList &mimeTypes,
                                                        const Akonadi::Collection &defCollection )
 {
-  Akonadi::CollectionDialog *dlg = collectionDialog(); //krazy:exclude=crashy
-  dlg->setParent( parent, Qt::Dialog );
+  QPointer<Akonadi::CollectionDialog> dlg( new Akonadi::CollectionDialog( parent ) );
   dlg->setCaption( i18n( "Select Calendar" ) );
   dlg->setDescription( i18n( "Select the calendar where this item will be stored." ) );
   dlg->changeCollectionDialogOptions( Akonadi::CollectionDialog::KeepTreeExpanded );
@@ -414,13 +406,14 @@ Akonadi::Collection CalendarSupport::selectCollection( QWidget *parent,
 
   // FIXME: don't use exec.
   dialogCode = dlg->exec();
-  if ( dialogCode == QDialog::Accepted ) {
+  if ( dlg && dialogCode == QDialog::Accepted ) {
     collection = dlg->selectedCollection();
 
     if ( !collection.isValid() ) {
       kWarning() << "An invalid collection was selected!";
     }
   }
+  delete dlg;
   return collection;
 }
 
