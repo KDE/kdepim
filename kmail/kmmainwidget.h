@@ -88,14 +88,6 @@ class KMAIL_EXPORT KMMainWidget : public QWidget
   public:
     typedef QList<KMMainWidget*> PtrList;
 
-    enum PropsPage
-    {
-      PropsGeneral,
-      PropsShortcut,
-      PropsMailingList,
-      PropsExpire
-    };
-
     KMMainWidget(QWidget *parent, KXMLGUIClient *aGUIClient,
                  KActionCollection *actionCollection,
                  KSharedConfig::Ptr config = KMKernel::self()->config() );
@@ -603,7 +595,7 @@ private:
     KActionCollection *mActionCollection;
     QAction *mToolbarActionSeparator;
     QVBoxLayout *mTopLayout;
-    bool mDestructed, mForceJumpToUnread, mShowingOfflineScreen;
+    bool mDestructed, mShowingOfflineScreen;
     QList<QAction*> mFilterMenuActions;
     QList<QAction*> mFilterTBarActions;
     QList<KMMetaFilterActionCommand*> mFilterCommands;
