@@ -46,16 +46,8 @@ MailWebView::MailWebView( QWidget *parent )
   settings()->setAttribute( QWebSettings::JavascriptEnabled, false );
   settings()->setAttribute( QWebSettings::JavaEnabled, false );
   settings()->setAttribute( QWebSettings::PluginsEnabled, false );
-
   connect( page(), SIGNAL(linkHovered(QString,QString,QString)),
            this,   SIGNAL(linkHovered(QString,QString,QString)) );
-  //Fixed in qtwebkit-2.1  the   2010-08-25
-  // workaround for https://bugs.webkit.org/show_bug.cgi?id=44252
-  disconnect( page(), SIGNAL(selectionChanged()),
-              this,   SIGNAL(selectionChanged()) );
-  connect( page(), SIGNAL(selectionChanged()),
-           this,   SIGNAL(selectionChanged()) );
-  // end workaround for https://bugs.webkit.org/show_bug.cgi?id=44252
 }
 
 MailWebView::~MailWebView() {}
