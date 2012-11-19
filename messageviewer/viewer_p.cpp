@@ -3178,7 +3178,6 @@ void ViewerPrivate::slotToggleCaretBrowsing(bool toggle)
 {
 #ifndef KDEPIM_NO_WEBKIT
 #if QTWEBKIT_VERSION >= QTWEBKIT_VERSION_CHECK(2, 3, 0)
-    ss
   mViewer->settings()->setAttribute(QWebSettings::CaretBrowsingEnabled, toggle);
 #endif
 #endif
