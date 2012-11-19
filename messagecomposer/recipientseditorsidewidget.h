@@ -39,7 +39,7 @@ class RecipientsEditorSideWidget : public QWidget
 {
     Q_OBJECT
   public:
-    RecipientsEditorSideWidget( RecipientsEditor *editor, QWidget *parent );
+    explicit RecipientsEditorSideWidget( RecipientsEditor *editor, QWidget *parent );
     ~RecipientsEditorSideWidget();
 
     MessageComposer::RecipientsPicker* picker() const;
