@@ -491,7 +491,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
           receiver.clear();
         }
       }
-
+      delete im;
       return receiver;
     }
 
