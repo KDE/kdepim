@@ -36,6 +36,7 @@
 #include <boost/function.hpp>
 
 class QAction;
+class QLabel;
 
 namespace MessageViewer {
 
@@ -116,6 +117,28 @@ protected:
 #endif
     /// Reimplemented to catch context menu events and emit popupMenu()
     virtual bool event( QEvent *event );
+    virtual void keyReleaseEvent(QKeyEvent*);
+    virtual void keyPressEvent(QKeyEvent*);
+    virtual void wheelEvent (QWheelEvent* e);
+
+private Q_SLOTS:
+    void hideAccessKeys();
+
+private:
+#ifndef KDEPIM_NO_WEBKIT
+    bool checkForAccessKey(QKeyEvent *event);
+    void showAccessKeys();
+    void makeAccessKeyLabel(const QChar &accessKey, const QWebElement &element);
+    enum AccessKeyState {
+        NotActivated,
+        PreActivated,
+        Activated
+    };
+    AccessKeyState m_accessKeyActivated;
+    QList<QLabel*> m_accessKeyLabels;
+    QHash<QChar, QWebElement> m_accessKeyNodes;
+    QHash<QString, QChar> m_duplicateLinkElements;
+#endif
 };
 
 }
