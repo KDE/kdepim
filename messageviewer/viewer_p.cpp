@@ -216,6 +216,7 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
   mHtmlLoadExtOverride = false;
   mHtmlLoadExternal = false;
   mZoomTextOnly = false;
+  mCaretBrowsing = 0;
 
   mUpdateReaderWinTimer.setObjectName( "mUpdateReaderWinTimer" );
   mResizeTimer.setObjectName( "mResizeTimer" );
@@ -1782,6 +1783,14 @@ void ViewerPrivate::createActions()
   ac->addAction("find_in_messages", mFindInMessageAction );
   connect(mFindInMessageAction, SIGNAL(triggered(bool)), SLOT(slotFind()));
   mFindInMessageAction->setShortcut(KStandardShortcut::find());
+
+#if QTWEBKIT_VERSION >= QTWEBKIT_VERSION_CHECK(2, 3, 0)
+  mCaretBrowsing = new KToggleAction(i18n("Toggle Caret Browsing"), this);
+  mCaretBrowsing->setShortcut(Qt::Key_F7);
+  ac->addAction( "toggle_caret_browsing", mCaretBrowsing );
+  connect( mCaretBrowsing, SIGNAL(triggered(bool)), SLOT(slotToggleCaretBrowsing(bool)) );
+  mCaretBrowsing->setChecked(false);
+#endif
 }
 
 
@@ -3163,6 +3172,16 @@ void ViewerPrivate::goOnline()
 void ViewerPrivate::goResourceOnline()
 {
   emit makeResourceOnline(Viewer::SelectedResource);
+}
+
+void ViewerPrivate::slotToggleCaretBrowsing(bool toggle)
+{
+#ifndef KDEPIM_NO_WEBKIT
+#if QTWEBKIT_VERSION >= QTWEBKIT_VERSION_CHECK(2, 3, 0)
+    ss
+  mViewer->settings()->setAttribute(QWebSettings::CaretBrowsingEnabled, toggle);
+#endif
+#endif
 }
 
 

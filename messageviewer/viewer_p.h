@@ -452,6 +452,7 @@ public:
 
 
 private slots:
+  void slotToggleCaretBrowsing(bool);
   void slotAtmDecryptWithChiasmusResult( const GpgME::Error &, const QVariant & );
   void slotAtmDecryptWithChiasmusUploadResult( KJob * );
 
@@ -647,7 +648,7 @@ public:
       *mViewSourceAction, *mSaveMessageAction, *mFindInMessageAction;
   KToggleAction *mHeaderOnlyAttachmentsAction;
   KSelectAction *mSelectEncodingAction;
-  KToggleAction *mToggleFixFontAction, *mToggleDisplayModeAction;
+  KToggleAction *mToggleFixFontAction, *mToggleDisplayModeAction, *mCaretBrowsing;
   KAction *mZoomTextOnlyAction, *mZoomInAction, *mZoomOutAction, *mZoomResetAction;
   KToggleAction *mToggleMimePartTreeAction;
   KAction *mSpeakTextAction;
