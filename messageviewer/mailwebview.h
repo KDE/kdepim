@@ -117,6 +117,7 @@ protected:
 #endif
     /// Reimplemented to catch context menu events and emit popupMenu()
     virtual bool event( QEvent *event );
+    /// Reimplement for access key
     virtual void keyReleaseEvent(QKeyEvent*);
     virtual void keyPressEvent(QKeyEvent*);
     virtual void wheelEvent (QWheelEvent* e);
@@ -134,10 +135,10 @@ private:
         PreActivated,
         Activated
     };
-    AccessKeyState m_accessKeyActivated;
-    QList<QLabel*> m_accessKeyLabels;
-    QHash<QChar, QWebElement> m_accessKeyNodes;
-    QHash<QString, QChar> m_duplicateLinkElements;
+    AccessKeyState mAccessKeyActivated;
+    QList<QLabel*> mAccessKeyLabels;
+    QHash<QChar, QWebElement> mAccessKeyNodes;
+    QHash<QString, QChar> mDuplicateLinkElements;
 #endif
 };
 

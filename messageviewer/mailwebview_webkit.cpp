@@ -409,13 +409,13 @@ void MailWebView::clearFindSelection()
 
 void MailWebView::keyReleaseEvent(QKeyEvent*e)
 {
-  if (GlobalSettings::self()->accessKeyEnabled() && m_accessKeyActivated == PreActivated) {
+  if (GlobalSettings::self()->accessKeyEnabled() && mAccessKeyActivated == PreActivated) {
     // Activate only when the CTRL key is pressed and released by itself.
     if (e->key() == Qt::Key_Control && e->modifiers() == Qt::NoModifier) {
       showAccessKeys();
-      m_accessKeyActivated = Activated;
+      mAccessKeyActivated = Activated;
     } else {
-      m_accessKeyActivated = NotActivated;
+      mAccessKeyActivated = NotActivated;
     }
   }
   SuperClass::keyReleaseEvent(e);
@@ -425,7 +425,7 @@ void MailWebView::keyPressEvent(QKeyEvent*e)
 {
   if (e && hasFocus()) {
     if (GlobalSettings::self()->accessKeyEnabled()) {
-       if (m_accessKeyActivated == Activated) {
+       if (mAccessKeyActivated == Activated) {
           if (checkForAccessKey(e)) {
              hideAccessKeys();
              e->accept();
@@ -433,7 +433,7 @@ void MailWebView::keyPressEvent(QKeyEvent*e)
           }
           hideAccessKeys();
        } else if (e->key() == Qt::Key_Control && e->modifiers() == Qt::ControlModifier && !isEditableElement(page())) {
-          m_accessKeyActivated = PreActivated; // Only preactive here, it will be actually activated in key release.
+          mAccessKeyActivated = PreActivated; // Only preactive here, it will be actually activated in key release.
        }
      }
   }
@@ -442,23 +442,23 @@ void MailWebView::keyPressEvent(QKeyEvent*e)
 
 void MailWebView::wheelEvent(QWheelEvent* e)
 {
-  if (GlobalSettings::self()->accessKeyEnabled() && m_accessKeyActivated == PreActivated && (e->modifiers() & Qt::ControlModifier)) {
-    m_accessKeyActivated = NotActivated;
+  if (GlobalSettings::self()->accessKeyEnabled() && mAccessKeyActivated == PreActivated && (e->modifiers() & Qt::ControlModifier)) {
+    mAccessKeyActivated = NotActivated;
   }
   SuperClass::wheelEvent(e);
 }
 
 bool MailWebView::checkForAccessKey(QKeyEvent *event)
 {
-  if (m_accessKeyLabels.isEmpty())
+  if (mAccessKeyLabels.isEmpty())
     return false;
   QString text = event->text();
   if (text.isEmpty())
      return false;
   QChar key = text.at(0).toUpper();
   bool handled = false;
-  if (m_accessKeyNodes.contains(key)) {
-    QWebElement element = m_accessKeyNodes[key];
+  if (mAccessKeyNodes.contains(key)) {
+    QWebElement element = mAccessKeyNodes[key];
     QPoint p = element.geometry().center();
     QWebFrame *frame = element.webFrame();
     Q_ASSERT(frame);
@@ -477,16 +477,16 @@ bool MailWebView::checkForAccessKey(QKeyEvent *event)
 
 void MailWebView::hideAccessKeys()
 {
-  if (!m_accessKeyLabels.isEmpty()) {
-    for (int i = 0, count = m_accessKeyLabels.count(); i < count; ++i) {
-      QLabel *label = m_accessKeyLabels[i];
+  if (!mAccessKeyLabels.isEmpty()) {
+    for (int i = 0, count = mAccessKeyLabels.count(); i < count; ++i) {
+      QLabel *label = mAccessKeyLabels[i];
       label->hide();
       label->deleteLater();
     }
-    m_accessKeyLabels.clear();
-    m_accessKeyNodes.clear();
-    m_duplicateLinkElements.clear();
-    m_accessKeyActivated = NotActivated;
+    mAccessKeyLabels.clear();
+    mAccessKeyNodes.clear();
+    mDuplicateLinkElements.clear();
+    mAccessKeyActivated = NotActivated;
     update();
   }
 }
@@ -539,7 +539,7 @@ void MailWebView::showAccessKeys()
             continue;
         }
 
-        handleDuplicateLinkElements(element, &m_duplicateLinkElements, &accessKey);
+        handleDuplicateLinkElements(element, &mDuplicateLinkElements, &accessKey);
         if (!accessKey.isNull()) {
             unusedKeys.removeOne(accessKey);
             makeAccessKeyLabel(accessKey, element);
@@ -567,14 +567,14 @@ void MailWebView::showAccessKeys()
         if (accessKey.isNull())
             accessKey = unusedKeys.takeFirst();
 
-        handleDuplicateLinkElements(element, &m_duplicateLinkElements, &accessKey);
+        handleDuplicateLinkElements(element, &mDuplicateLinkElements, &accessKey);
         if (!accessKey.isNull()) {
             unusedKeys.removeOne(accessKey);
             makeAccessKeyLabel(accessKey, element);
         }
     }
 
-    m_accessKeyActivated = (m_accessKeyLabels.isEmpty() ? Activated : NotActivated);
+    mAccessKeyActivated = (mAccessKeyLabels.isEmpty() ? Activated : NotActivated);
 }
 
 void MailWebView::makeAccessKeyLabel(const QChar &accessKey, const QWebElement &element)
@@ -593,8 +593,8 @@ void MailWebView::makeAccessKeyLabel(const QChar &accessKey, const QWebElement &
     label->show();
     point.setX(point.x() - label->width() / 2);
     label->move(point);
-    m_accessKeyLabels.append(label);
-    m_accessKeyNodes.insertMulti(accessKey, element);
+    mAccessKeyLabels.append(label);
+    mAccessKeyNodes.insertMulti(accessKey, element);
 }
 
 
