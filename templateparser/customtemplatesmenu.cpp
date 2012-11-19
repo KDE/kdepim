@@ -109,11 +109,15 @@ void CustomTemplatesMenu::update()
     mCustomTemplates.append( *it );
     QString nameAction( *it );
     nameAction.replace( '&', "&&" );
+
+    const QString nameActionName = nameAction.replace(' ', '_');
+
     KAction *action;
     switch ( t.type() ) {
     case CustomTemplates::TReply:
       action = new KAction( nameAction, mOwnerActionCollection ); //krazy:exclude=tipsandthis
       action->setShortcut( t.shortcut() );
+      mOwnerActionCollection->addAction(nameActionName,action);
       connect( action, SIGNAL(triggered(bool)), mCustomReplyMapper, SLOT(map()) );
       mCustomReplyMapper->setMapping( action, idx );
       mCustomReplyActionMenu->addAction( action );
@@ -124,6 +128,7 @@ void CustomTemplatesMenu::update()
     case CustomTemplates::TReplyAll:
       action = new KAction( nameAction, mOwnerActionCollection ); //krazy:exclude=tipsandthis
       action->setShortcut( t.shortcut() );
+      mOwnerActionCollection->addAction(nameActionName,action);
       connect( action, SIGNAL(triggered(bool)), mCustomReplyAllMapper, SLOT(map()) );
       mCustomReplyAllMapper->setMapping( action, idx );
       mCustomReplyAllActionMenu->addAction( action );
@@ -133,6 +138,7 @@ void CustomTemplatesMenu::update()
 
     case CustomTemplates::TForward:
       action = new KAction( nameAction, mOwnerActionCollection ); //krazy:exclude=tipsandthis
+      mOwnerActionCollection->addAction(nameActionName,action);
       action->setShortcut( t.shortcut() );
       connect( action, SIGNAL(triggered(bool)), mCustomForwardMapper, SLOT(map()) );
       mCustomForwardMapper->setMapping( action, idx );
@@ -143,6 +149,8 @@ void CustomTemplatesMenu::update()
 
     case CustomTemplates::TUniversal:
       action = new KAction( nameAction, mOwnerActionCollection ); //krazy:exclude=tipsandthis
+      mOwnerActionCollection->addAction(nameActionName,action);
+
       connect( action, SIGNAL(triggered(bool)), mCustomReplyMapper, SLOT(map()) );
       mCustomReplyMapper->setMapping( action, idx );
       mCustomReplyActionMenu->addAction( action );
