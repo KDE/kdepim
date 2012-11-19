@@ -73,8 +73,6 @@
 #include <kleo/cryptobackendfactory.h>
 #include <kleo/cryptobackend.h>
 
-#include <QWebElement>
-
 #include <mailtransport/errorattribute.h>
 
 //Qt includes
@@ -216,7 +214,6 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
   mHtmlLoadExtOverride = false;
   mHtmlLoadExternal = false;
   mZoomTextOnly = false;
-  mCaretBrowsing = 0;
 
   mUpdateReaderWinTimer.setObjectName( "mUpdateReaderWinTimer" );
   mResizeTimer.setObjectName( "mResizeTimer" );

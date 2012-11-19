@@ -35,6 +35,7 @@
 #include <QtCore/QObject>
 #include <QtCore/QTimer>
 #include <QMouseEvent>
+#include <QWebElement>
 
 namespace GpgME { class Error; }
 namespace KIO { 
@@ -648,7 +649,12 @@ public:
       *mViewSourceAction, *mSaveMessageAction, *mFindInMessageAction;
   KToggleAction *mHeaderOnlyAttachmentsAction;
   KSelectAction *mSelectEncodingAction;
-  KToggleAction *mToggleFixFontAction, *mToggleDisplayModeAction, *mCaretBrowsing;
+  KToggleAction *mToggleFixFontAction, *mToggleDisplayModeAction;
+#ifndef KDEPIM_NO_WEBKIT
+#if QTWEBKIT_VERSION >= QTWEBKIT_VERSION_CHECK(2, 3, 0)
+  KToggleAction *mCaretBrowsing;
+#endif
+#endif
   KAction *mZoomTextOnlyAction, *mZoomInAction, *mZoomOutAction, *mZoomResetAction;
   KToggleAction *mToggleMimePartTreeAction;
   KAction *mSpeakTextAction;
