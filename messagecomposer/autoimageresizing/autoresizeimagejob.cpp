@@ -111,19 +111,21 @@ bool AutoResizeImageJob::resizeImage()
       }
   }
   if((newHeight != height) || (newWidth != width)) {
-      QBuffer buff;
+      mBuffer.open(QIODevice::WriteOnly);
       mImage = mImage.scaled(newWidth,newHeight);
-      bool result = mImage.save(&buff,MessageComposer::MessageComposerSettings::self()->writeFormat().toLocal8Bit());
+      bool result = mImage.save(&mBuffer,MessageComposer::MessageComposerSettings::self()->writeFormat().toLocal8Bit());
+      mBuffer.close();
       return result;
   } else {
       return false;
   }
-  /*
-  ui->KeepImageRatio->setChecked(MessageComposer::MessageComposerSettings::self()->keepImageRatio());
-  ui->AskBeforeResizing->setChecked(MessageComposer::MessageComposerSettings::self()->askBeforeResizing());
-  */
   return true;
 
+}
+
+QByteArray AutoResizeImageJob::imageArray() const
+{
+    return mBuffer.data();
 }
 
 #include "autoresizeimagejob.moc"
