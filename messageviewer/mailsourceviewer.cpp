@@ -34,6 +34,7 @@
 #include "mailsourceviewer.h"
 #include "util.h"
 #include "findbar/findbarsourceview.h"
+#include "kpimtextedit/htmlhighlighter.h"
 #include <kiconloader.h>
 #include <KLocalizedString>
 #include <kstandardguiitem.h>
@@ -166,16 +167,6 @@ void MailSourceHighlighter::highlightBlock ( const QString & text ) {
   }
 }
 
-void HTMLSourceHighlighter::highlightBlock ( const QString & text ) {
-  int pos = 0;
-  if( ( pos = HTMLPrettyFormatter::htmlTagRegExp.indexIn( text ) ) != -1 )
-  {
-    QFont font = document()->defaultFont();
-    font.setBold( true );
-    setFormat( pos, HTMLPrettyFormatter::htmlTagRegExp.matchedLength(), font );
-  }
-}
-
 const QString HTMLPrettyFormatter::reformat( const QString &src )
 {
   const QRegExp cleanLeadingWhitespace( "(?:\\n)+\\w*" );
@@ -254,7 +245,7 @@ MailSourceViewer::MailSourceViewer( QWidget *parent )
   mHtmlBrowser = new MailSourceViewTextBrowserWidget();
   mTabWidget->addTab( mHtmlBrowser, i18nc( "Mail message as shown, in HTML format", "HTML Source" ) );
   mTabWidget->setTabToolTip( 1, i18n( "HTML code for displaying the message to the user" ) );
-  new HTMLSourceHighlighter( mHtmlBrowser->textBrowser()->document() );
+  new KPIMTextEdit::HtmlHighlighter( mHtmlBrowser->textBrowser()->document() );
 
   mTabWidget->setCurrentIndex( 0 );
 #else
