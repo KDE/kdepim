@@ -57,6 +57,9 @@ public:
     KToggleAction *action_align_justify;
     KToggleAction *action_direction_ltr;
     KToggleAction *action_direction_rtl;
+    KAction *action_insert_horizontal_rule;
+    KAction *action_list_indent;
+
     bool richTextEnabled;
 };
 
@@ -161,6 +164,18 @@ void ComposerEditor::createActions(KActionCollection *actionCollection)
     directionGroup->addAction(d->action_direction_ltr);
     directionGroup->addAction(d->action_direction_rtl);
 
+
+    //indent
+    d->action_list_indent = new KAction(KIcon("format-indent-more"), i18nc("@action", "Increase Indent"), actionCollection);
+    d->richTextActionList.append((d->action_list_indent));
+    actionCollection->addAction("htmleditor_format_list_indent_more", d->action_list_indent);
+    FORWARD_ACTION(d->action_list_indent, QWebPage::Indent);
+
+    //horizontal line
+    d->action_insert_horizontal_rule = new KAction(KIcon("insert-horizontal-rule"), i18nc("@action", "Insert Rule Line"), actionCollection);
+    d->richTextActionList.append((d->action_insert_horizontal_rule));
+    actionCollection->addAction("htmleditor_insert_horizontal_rule", d->action_insert_horizontal_rule);
+    FORWARD_ACTION(d->action_insert_horizontal_rule, QWebPage::InsertLineSeparator); //Verify
 
 }
 
