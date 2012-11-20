@@ -98,6 +98,7 @@ Message::ComposerViewBase::ComposerViewBase ( QObject* parent, QWidget *parentGu
  , m_cryptoMessageFormat( Kleo::AutoFormat )
  , m_pendingQueueJobs( 0 )
  , m_autoSaveTimer( 0 )
+ , m_autoSaveErrorShown( false )
  , m_autoSaveInterval( 1 * 1000 * 60 ) // default of 1 min
 {
   m_charsets << "utf-8"; // default, so we have a backup in case client code forgot to set.

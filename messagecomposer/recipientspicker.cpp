@@ -67,15 +67,15 @@ RecipientsPicker::RecipientsPicker( QWidget *parent )
   connect( mView->view(), SIGNAL(doubleClicked(QModelIndex)),
            SLOT(slotPicked()) );
 
-  mSearchLDAPButton = new QPushButton( i18n("Search &Directory Service"), mainWidget() );
-  connect( mSearchLDAPButton, SIGNAL(clicked()), SLOT(slotSearchLDAP()) );
-  topLayout->addWidget( mSearchLDAPButton );
+  QPushButton *searchLDAPButton = new QPushButton( i18n("Search &Directory Service"), mainWidget() );
+  connect( searchLDAPButton, SIGNAL(clicked()), SLOT(slotSearchLDAP()) );
+  topLayout->addWidget( searchLDAPButton );
 
   KConfig config( QLatin1String("kabldaprc") );
   KConfigGroup group = config.group( "LDAP" );
   int numHosts = group.readEntry( "NumSelectedHosts", 0 );
   if ( !numHosts )
-     mSearchLDAPButton->setVisible( false );
+     searchLDAPButton->setVisible( false );
 
   setButtons( Cancel|User1|User2|User3 );
   setButtonText( User3, i18n("Add as &To") );

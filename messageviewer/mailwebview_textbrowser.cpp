@@ -302,5 +302,23 @@ void MailWebView::clearFindSelection()
   // not supported
 }
 
+void MailWebView::keyReleaseEvent(QKeyEvent*)
+{
+  QTextBrowser::keyReleaseEvent(e);
+}
+
+void MailWebView::keyPressEvent(QKeyEvent*)
+{
+  QTextBrowser::keyPressEvent(e);
+}
+
+void MailWebView::wheelEvent (QWheelEvent* e)
+{
+  QTextBrowser::wheelEvent(e);
+}
+
+void MailWebView::hideAccessKeys()
+{
+}
 
 #include "mailwebview.moc"

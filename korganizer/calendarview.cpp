@@ -984,38 +984,40 @@ void CalendarView::edit_paste()
 // If in agenda and month view, use the selected time and date from there.
 // In all other cases, use the navigator's selected date.
 
-  QDate date;          // null dates are invalid, that's what we want
-  bool timeSet = false;// flag denoting if the time has been set.
-  QTime time;          // null dates are valid, so rely on the timeSet flag
-  QDateTime endDT;     // null datetimes are invalid, that's what we want
+  QDateTime endDT;
+  KDateTime finalDateTime;
   bool useEndTime = false;
+  KCalUtils::DndFactory::PasteFlags pasteFlags = 0;
 
   KOrg::BaseView *curView = mViewManager->currentView();
-
   KOAgendaView *agendaView = mViewManager->agendaView();
   MonthView *monthView = mViewManager->monthView();
 
   if ( !curView ) {
+    kWarning() << "No view is selected, can't paste";
     return;
   }
 
   if ( curView == agendaView && agendaView->selectionStart().isValid() ) {
-    date = agendaView->selectionStart().date();
+    const QDate date = agendaView->selectionStart().date();
     endDT = agendaView->selectionEnd();
     useEndTime = !agendaView->selectedIsSingleCell();
-    if ( !agendaView->selectedIsAllDay() ) {
-      time = agendaView->selectionStart().time();
-      timeSet = true;
+    if ( agendaView->selectedIsAllDay() ) {
+      finalDateTime = KDateTime( date );
+    } else {
+      finalDateTime = KDateTime( date, agendaView->selectionStart().time() );
     }
   } else if ( curView == monthView && monthView->selectionStart().isValid() ) {
-    date = monthView->selectionStart().date();
+    finalDateTime = KDateTime( monthView->selectionStart().date() );
+    pasteFlags = KCalUtils::DndFactory::FlagPasteAtOriginalTime;
   } else if ( !mDateNavigator->selectedDates().isEmpty() &&
               curView->supportsDateNavigation() ) {
     // default to the selected date from the navigator
-    date = mDateNavigator->selectedDates().first();
+    finalDateTime = KDateTime( mDateNavigator->selectedDates().first() );
+    pasteFlags = KCalUtils::DndFactory::FlagPasteAtOriginalTime;
   }
 
-  if ( !date.isValid() && curView->supportsDateNavigation() ) {
+  if ( !finalDateTime.isValid() && curView->supportsDateNavigation() ) {
     KMessageBox::sorry(
       this,
       i18n( "Paste failed: unable to determine a valid target date." ) );
@@ -1027,12 +1029,7 @@ void CalendarView::edit_paste()
 
   CalendarSupport::DndFactory factory( cal );
 
-  Incidence::List pastedIncidences;
-  if ( timeSet && time.isValid() ) {
-    pastedIncidences = factory.pasteIncidences( KDateTime( date, time ) );
-  } else {
-    pastedIncidences = factory.pasteIncidences( KDateTime( date ) );
-  }
+  Incidence::List pastedIncidences = factory.pasteIncidences( finalDateTime, pasteFlags );
   Akonadi::Collection col;
   Incidence::List::Iterator it;
   Akonadi::Collection selectedCollection;

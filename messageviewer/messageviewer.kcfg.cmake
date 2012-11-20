@@ -143,6 +143,10 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
       <label>Specifies whether to reuse the quote color, beyond the 3rd level</label>
       <default>false</default>
     </entry>
+    <entry name="AccessKeyEnabled" type="Bool">
+      <label>Activate Access Key</label>
+      <default>true</default>
+    </entry>
   </group>
 
   <group name="TextIndex">
