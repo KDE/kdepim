@@ -22,6 +22,7 @@
 #include <KAction>
 #include <KToggleAction>
 #include <KLocale>
+#include <KSelectAction>
 
 #include <QtWebKit/QWebFrame>
 #include <QtWebKit/QWebPage>
@@ -31,8 +32,10 @@
 namespace ComposerEditorNG {
 
 #define FORWARD_ACTION(action1, action2) \
-    connect(action1, SIGNAL(triggered()), getAction(action2), SLOT(trigger()));\
-    connect(getAction(action2), SIGNAL(changed()), SLOT(_k_slotAdjustActions()));
+    connect(action1, SIGNAL(triggered()), d->getAction(action2), SLOT(trigger()));\
+    connect(d->getAction(action2), SIGNAL(changed()), SLOT(_k_slotAdjustActions()));
+
+#define FOLLOW_CHECK(a1, a2) a1->setChecked(d->getAction(a2)->isChecked())
 
 class ComposerEditorPrivate
 {
@@ -45,6 +48,12 @@ public:
     }
 
     void _k_slotAdjustActions();
+    void _k_setListStyle(int);
+
+    QAction* getAction ( QWebPage::WebAction action ) const;
+    void execCommand(const QString &cmd);
+    void execCommand(const QString &cmd, const QString &arg);
+
     QList<KAction*> richTextActionList;
     ComposerEditor *q;
     KToggleAction *action_text_bold;
@@ -62,13 +71,47 @@ public:
     KAction *action_insert_horizontal_rule;
     KAction *action_list_indent;
     KAction *action_list_dedent;
-
+    KSelectAction *action_list_style;
+    KSelectAction *action_format_type;
     bool richTextEnabled;
 };
+
+QAction* ComposerEditorPrivate::getAction ( QWebPage::WebAction action ) const
+{
+    if ( action >= 0 && action <= 66 )
+        return q->page()->action( static_cast<QWebPage::WebAction>( action ));
+    else
+        return 0;
+}
+
+void ComposerEditorPrivate::_k_setListStyle(int style)
+{
+//TODO
+}
 
 void ComposerEditorPrivate::_k_slotAdjustActions()
 {
     //TODO
+    FOLLOW_CHECK(action_text_bold, QWebPage::ToggleBold);
+    FOLLOW_CHECK(action_text_italic, QWebPage::ToggleItalic);
+    FOLLOW_CHECK(action_text_strikeout, QWebPage::ToggleStrikethrough);
+    FOLLOW_CHECK(action_text_underline, QWebPage::ToggleUnderline);
+    FOLLOW_CHECK(action_text_subscript, QWebPage::ToggleSubscript);
+    FOLLOW_CHECK(action_text_superscript, QWebPage::ToggleSuperscript);
+}
+
+void ComposerEditorPrivate::execCommand(const QString &cmd)
+{
+    QWebFrame *frame = q->page()->mainFrame();
+    const QString js = QString::fromLatin1("document.execCommand(\"%1\", false, null)").arg(cmd);
+    frame->evaluateJavaScript(js);
+}
+
+void ComposerEditorPrivate::execCommand(const QString &cmd, const QString &arg)
+{
+    QWebFrame *frame = q->page()->mainFrame();
+    const QString js = QString::fromLatin1("document.execCommand(\"%1\", false, \"%2\")").arg(cmd).arg(arg);
+    frame->evaluateJavaScript(js);
 }
 
 ComposerEditor::ComposerEditor(QWidget *parent)
@@ -198,6 +241,24 @@ void ComposerEditor::createActions(KActionCollection *actionCollection)
     actionCollection->addAction("htmleditor_format_text_superscript", d->action_text_superscript);
     FORWARD_ACTION(d->action_insert_horizontal_rule, QWebPage::ToggleSuperscript);
 
+    d->action_list_style = new KSelectAction(KIcon("format-list-unordered"), i18nc("@title:menu", "List Style"), actionCollection);
+    QStringList listStyles;
+    listStyles      << i18nc("@item:inmenu no list style", "None")
+                    << i18nc("@item:inmenu disc list style", "Disc")
+                    << i18nc("@item:inmenu circle list style", "Circle")
+                    << i18nc("@item:inmenu square list style", "Square")
+                    << i18nc("@item:inmenu numbered lists", "123")
+                    << i18nc("@item:inmenu lowercase abc lists", "abc")
+                    << i18nc("@item:inmenu uppercase abc lists", "ABC")
+                    << i18nc("@item:inmenu lower case roman numerals", "i ii iii")
+                    << i18nc("@item:inmenu upper case roman numerals", "I II III");
+
+    d->action_list_style->setItems(listStyles);
+    d->action_list_style->setCurrentItem(0);
+    d->richTextActionList.append((d->action_list_style));
+    actionCollection->addAction("htmleditor_format_list_style", d->action_list_style);
+    connect(d->action_list_style, SIGNAL(triggered(int)),
+            this, SLOT(_k_setListStyle(int)));
 
 }
 
@@ -225,6 +286,8 @@ void ComposerEditor::setActionsEnabled(bool enabled)
     }
     d->richTextEnabled = enabled;
 }
+
+
 
 
 }

@@ -51,6 +51,7 @@ private:
     friend class ComposerEditorPrivate;
     ComposerEditorPrivate * const d;
     Q_PRIVATE_SLOT( d, void _k_slotAdjustActions() )
+    Q_PRIVATE_SLOT( d, void _k_setListStyle(int) )
 };
 }
 
