@@ -810,5 +810,24 @@ void KMeditor::setAutocorrectionLanguage(const QString& lang)
   d->mAutoCorrection->setLanguage(lang);
 }
 
+void KMeditor::insertPlainTextImplementation()
+{
+#ifdef GRANTLEE_GREATER_0_2
+  if(MessageComposer::MessageComposerSettings::self()->improvePlainTextOfHtmlMessage()) {
+    Grantlee::PlainTextMarkupBuilder *pb = new Grantlee::PlainTextMarkupBuilder();
+
+    Grantlee::MarkupDirector *pmd = new Grantlee::MarkupDirector( pb );
+    pmd->processDocument( document() );
+    const QString plainText = pb->getResult();
+    document()->setPlainText(plainText);
+    delete pmd;
+    delete pb;
+  } else {
+    document()->setPlainText(document()->toPlainText());
+  }
+#else
+  document()->setPlainText(document()->toPlainText()); 
+#endif
+}
 
 #include "kmeditor.moc"

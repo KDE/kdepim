@@ -62,16 +62,6 @@ protected:
   virtual void highlightBlock ( const QString & text );
 };
 
-class HTMLSourceHighlighter : public QSyntaxHighlighter
-{
-public:
-  HTMLSourceHighlighter( QTextDocument * textdocument )
-    : QSyntaxHighlighter( textdocument )
-  {}
-protected:
-  virtual void highlightBlock ( const QString & text );
-};
-
 class MailSourceViewTextBrowserWidget : public QWidget
 {
   Q_OBJECT

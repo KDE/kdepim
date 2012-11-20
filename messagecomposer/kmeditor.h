@@ -193,7 +193,7 @@ class MESSAGECOMPOSER_EXPORT KMeditor : public KPIMTextEdit::TextEdit
     void slotRemoveQuotes();
     void slotPasteWithoutFormatting();
     void slotChangeInsertMode();
-
+    void insertPlainTextImplementation();
   Q_SIGNALS:
 
     /**
