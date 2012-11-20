@@ -185,6 +185,7 @@ void TranslatorWidget::init()
   label = new QLabel( i18n( "To:" ) );
   hboxLayout->addWidget( label );
   d->to = new MinimumComboBox;
+  connect( d->to, SIGNAL(currentIndexChanged(int)), SLOT(slotTranslate()) );
   hboxLayout->addWidget( d->to );
 
   KPushButton *invert = new KPushButton(i18n("Invert"),this);
@@ -244,6 +245,7 @@ void TranslatorWidget::slotFromLanguageChanged( int index )
   if ( indexTo != -1 ) {
     d->to->setCurrentIndex( indexTo );
   }
+  slotTranslate();
 }
 
 void TranslatorWidget::setTextToTranslate( const QString& text)
