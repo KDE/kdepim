@@ -49,6 +49,7 @@ public:
 
     void _k_slotAdjustActions();
     void _k_setListStyle(int);
+    void _k_setFormatType(const QString &formatText);
 
     QAction* getAction ( QWebPage::WebAction action ) const;
     void execCommand(const QString &cmd);
@@ -87,6 +88,28 @@ QAction* ComposerEditorPrivate::getAction ( QWebPage::WebAction action ) const
 void ComposerEditorPrivate::_k_setListStyle(int style)
 {
 //TODO
+}
+
+void ComposerEditorPrivate::_k_setFormatType(const QString & formatText)
+{
+    if(formatText == i18n("Paragraph")){
+        execCommand ( "formatBlock", "p" );
+    } else if (formatText == i18n("Heading 1")){
+        execCommand ( "formatBlock", "h1" );
+    } else if (formatText == i18n("Heading 2")){
+        execCommand ( "formatBlock", "h2" );
+    } else if (formatText == i18n("Heading 3")){
+        execCommand ( "formatBlock", "h3" );
+    } else if (formatText == i18n("Heading 4")){
+        execCommand ( "formatBlock", "h4" );
+    } else if (formatText == i18n("Heading 5")){
+        execCommand ( "formatBlock", "h5" );
+    } else if (formatText == i18n("Heading 6")){
+        execCommand ( "formatBlock", "h6" );
+    } else if (formatText == i18n("Pre Formatted")){
+        execCommand ( "formatBlock", "pre" );
+    }
+
 }
 
 void ComposerEditorPrivate::_k_slotAdjustActions()
@@ -259,6 +282,23 @@ void ComposerEditor::createActions(KActionCollection *actionCollection)
     actionCollection->addAction("htmleditor_format_list_style", d->action_list_style);
     connect(d->action_list_style, SIGNAL(triggered(int)),
             this, SLOT(_k_setListStyle(int)));
+
+    d->action_format_type = new KSelectAction(KIcon("format-list-unordered"), i18nc("@title:menu", "List Style"), actionCollection);
+    QStringList formatTypes;
+    formatTypes << i18n( "Paragraph" );
+    formatTypes << i18n( "Heading 1" );
+    formatTypes << i18n( "Heading 2" );
+    formatTypes << i18n( "Heading 3" );
+    formatTypes << i18n( "Heading 4" );
+    formatTypes << i18n( "Heading 5" );
+    formatTypes << i18n( "Heading 6" );
+    formatTypes << i18n( "Pre Formatted" );
+    d->action_format_type->setItems( formatTypes );
+    d->action_format_type->setCurrentItem(0);
+    d->richTextActionList.append(d->action_format_type);
+    actionCollection->addAction("htmleditor_format_type", d->action_format_type);
+    connect(d->action_format_type, SIGNAL(triggered(QString)),
+            this, SLOT(_k_setFormatType(QString)));
 
 }
 
