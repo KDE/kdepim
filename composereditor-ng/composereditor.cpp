@@ -57,8 +57,11 @@ public:
     KToggleAction *action_align_justify;
     KToggleAction *action_direction_ltr;
     KToggleAction *action_direction_rtl;
+    KToggleAction *action_text_subscript;
+    KToggleAction *action_text_superscript;
     KAction *action_insert_horizontal_rule;
     KAction *action_list_indent;
+    KAction *action_list_dedent;
 
     bool richTextEnabled;
 };
@@ -71,6 +74,7 @@ void ComposerEditorPrivate::_k_slotAdjustActions()
 ComposerEditor::ComposerEditor(QWidget *parent)
     : KWebView(parent), d(new ComposerEditorPrivate)
 {
+    page()->setContentEditable(true);
 }
 
 ComposerEditor::~ComposerEditor()
@@ -171,11 +175,29 @@ void ComposerEditor::createActions(KActionCollection *actionCollection)
     actionCollection->addAction("htmleditor_format_list_indent_more", d->action_list_indent);
     FORWARD_ACTION(d->action_list_indent, QWebPage::Indent);
 
+    d->action_list_dedent = new KAction(KIcon("format-indent-less"), i18nc("@action", "Decrease Indent"), actionCollection);
+    d->richTextActionList.append(d->action_list_dedent);
+    actionCollection->addAction("htmleditor_format_list_indent_less", d->action_list_dedent);
+    FORWARD_ACTION(d->action_list_indent, QWebPage::Outdent);
+
     //horizontal line
     d->action_insert_horizontal_rule = new KAction(KIcon("insert-horizontal-rule"), i18nc("@action", "Insert Rule Line"), actionCollection);
     d->richTextActionList.append((d->action_insert_horizontal_rule));
     actionCollection->addAction("htmleditor_insert_horizontal_rule", d->action_insert_horizontal_rule);
     FORWARD_ACTION(d->action_insert_horizontal_rule, QWebPage::InsertLineSeparator); //Verify
+
+
+    //Superscript/subScript
+    d->action_text_subscript = new KToggleAction(KIcon("format-text-subscript"), i18nc("@action", "Subscript"), actionCollection);
+    d->richTextActionList.append((d->action_text_subscript));
+    actionCollection->addAction("htmleditor_format_text_subscript", d->action_text_subscript);
+    FORWARD_ACTION(d->action_insert_horizontal_rule, QWebPage::ToggleSubscript);
+
+    d->action_text_superscript = new KToggleAction(KIcon("format-text-superscript"), i18nc("@action", "Superscript"), actionCollection);
+    d->richTextActionList.append((d->action_text_superscript));
+    actionCollection->addAction("htmleditor_format_text_superscript", d->action_text_superscript);
+    FORWARD_ACTION(d->action_insert_horizontal_rule, QWebPage::ToggleSuperscript);
+
 
 }
 
