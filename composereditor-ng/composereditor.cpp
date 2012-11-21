@@ -81,6 +81,9 @@ public:
     void _k_setFormatType(QAction* action);
     void _k_slotAddEmoticon(const QString&);
     void _k_slotInsertHtml();
+    void _k_slotAddImage();
+    void _k_setTextForegroundColor();
+    void _k_setTextBackgroundColor();
 
     QAction* getAction ( QWebPage::WebAction action ) const;
     void execCommand(const QString &cmd);
@@ -107,6 +110,9 @@ public:
     KSelectAction *action_format_type;
     KPIMTextEdit::EmoticonTextEditAction *action_add_emoticon;
     KAction *action_insert_html;
+    KAction *action_insert_image;
+    KAction *action_text_foreground_color;
+    KAction *action_text_background_color;
     bool richTextEnabled;
 };
 }
@@ -206,6 +212,21 @@ void ComposerEditorPrivate::_k_slotInsertHtml()
       }
     }
     delete dialog;
+}
+
+void ComposerEditorPrivate::_k_setTextBackgroundColor()
+{
+    //TODO
+}
+
+void ComposerEditorPrivate::_k_setTextForegroundColor()
+{
+    //TODO
+}
+
+void ComposerEditorPrivate::_k_slotAddImage()
+{
+    //TODO
 }
 
 void ComposerEditorPrivate::_k_slotAdjustActions()
@@ -407,6 +428,22 @@ void ComposerEditor::createActions(KActionCollection *actionCollection)
     d->action_format_type->setCurrentItem(0);
     d->richTextActionList.append(d->action_format_type);
 
+    //Color
+    //Foreground Color
+    d->action_text_foreground_color = new KAction(KIcon("format-stroke-color"), i18nc("@action", "Text &Color..."), actionCollection);
+    d->action_text_foreground_color->setIconText(i18nc("@label stroke color", "Color"));
+    d->richTextActionList.append((d->action_text_foreground_color));
+    actionCollection->addAction("htmleditor_format_text_foreground_color", d->action_text_foreground_color);
+    connect(d->action_text_foreground_color, SIGNAL(triggered()), this, SLOT(_k_setTextForegroundColor()));
+
+    //Background Color
+    d->action_text_background_color = new KAction(KIcon("format-fill-color"), i18nc("@action", "Text &Highlight..."), actionCollection);
+    d->richTextActionList.append((d->action_text_background_color));
+    actionCollection->addAction("htmleditor_format_text_background_color", d->action_text_background_color);
+    connect(d->action_text_background_color, SIGNAL(triggered()), this, SLOT(_k_setTextBackgroundColor()));
+
+
+
     actionCollection->addAction("htmleditor_format_type", d->action_format_type);
     connect(d->action_format_type, SIGNAL(triggered(QAction*)),
             this, SLOT(_k_setFormatType(QAction*)));
@@ -419,6 +456,12 @@ void ComposerEditor::createActions(KActionCollection *actionCollection)
     d->action_insert_html = new KAction( i18n( "Insert HTML" ), this );
     actionCollection->addAction( QLatin1String( "htmleditor_insert_html" ), d->action_insert_html );
     connect( d->action_insert_html, SIGNAL(triggered(bool)), SLOT(_k_slotInsertHtml()) );
+
+    d->action_insert_image = new KAction( KIcon( QLatin1String( "insert-image" ) ), i18n( "Add Image" ), this );
+    actionCollection->addAction( QLatin1String( "htmleditor_add_image" ), d->action_insert_image );
+    connect( d->action_insert_image, SIGNAL(triggered(bool)), SLOT(_k_slotAddImage()) );
+
+
 }
 
 
@@ -445,9 +488,6 @@ void ComposerEditor::setActionsEnabled(bool enabled)
     }
     d->richTextEnabled = enabled;
 }
-
-
-
 
 }
 
