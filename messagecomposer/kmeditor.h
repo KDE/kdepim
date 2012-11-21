@@ -186,6 +186,8 @@ class MESSAGECOMPOSER_EXPORT KMeditor : public KPIMTextEdit::TextEdit
 
     void setAutocorrectionLanguage(const QString& lang);
 
+    void forcePlainTextMarkup(bool force);
+
   public Q_SLOTS:
 
     void slotAddQuotes();
