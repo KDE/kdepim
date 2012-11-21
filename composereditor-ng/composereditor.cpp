@@ -28,6 +28,7 @@
 #include <KLocale>
 #include <KSelectAction>
 #include <KActionCollection>
+#include <KColorDialog>
 
 #include <QtWebKit/QWebFrame>
 #include <QtWebKit/QWebPage>
@@ -84,6 +85,7 @@ public:
     void _k_slotAddImage();
     void _k_setTextForegroundColor();
     void _k_setTextBackgroundColor();
+    void _k_slotFormatReset();
 
     QAction* getAction ( QWebPage::WebAction action ) const;
     void execCommand(const QString &cmd);
@@ -113,6 +115,7 @@ public:
     KAction *action_insert_image;
     KAction *action_text_foreground_color;
     KAction *action_text_background_color;
+    KAction *action_format_reset;
     bool richTextEnabled;
 };
 }
@@ -217,14 +220,32 @@ void ComposerEditorPrivate::_k_slotInsertHtml()
 void ComposerEditorPrivate::_k_setTextBackgroundColor()
 {
     //TODO
+#if 0
+    const int result = KColorDialog::getColor(currentTextBackgroundColor, KColorScheme(QPalette::Active, KColorScheme::View).foreground().color() , q);
+    if (!currentTextBackgroundColor.isValid())
+        currentTextBackgroundColor = KColorScheme(QPalette::Active, KColorScheme::View).foreground().color() ;
+    if (result != QDialog::Accepted)
+        return;
+
+    q->setTextBackgroundColor(currentTextBackgroundColor);
+    execCommand("hiliteColor", color.name());
+#endif
 }
 
 void ComposerEditorPrivate::_k_setTextForegroundColor()
 {
+#if 0
     //TODO
+    execCommand("foreColor", color.name());
+#endif
 }
 
 void ComposerEditorPrivate::_k_slotAddImage()
+{
+    //TODO
+}
+
+void ComposerEditorPrivate::_k_slotFormatReset()
 {
     //TODO
 }
@@ -295,13 +316,13 @@ void ComposerEditor::createActions(KActionCollection *actionCollection)
     d->richTextActionList.append((d->action_text_underline));
     actionCollection->addAction("htmleditor_format_text_underline", d->action_text_underline);
     d->action_text_underline->setShortcut(KShortcut(Qt::CTRL + Qt::Key_U));
-    FORWARD_ACTION(d->action_text_italic, QWebPage::ToggleUnderline);
+    FORWARD_ACTION(d->action_text_underline, QWebPage::ToggleUnderline);
 
     d->action_text_strikeout = new KToggleAction(KIcon("format-text-strikethrough"), i18nc("@action", "&Strike Out"), actionCollection);
     d->richTextActionList.append((d->action_text_strikeout));
     actionCollection->addAction("htmleditor_format_text_strikeout", d->action_text_strikeout);
     d->action_text_strikeout->setShortcut(KShortcut(Qt::CTRL + Qt::Key_L));
-    FORWARD_ACTION(d->action_text_italic, QWebPage::ToggleStrikethrough);
+    FORWARD_ACTION(d->action_text_strikeout, QWebPage::ToggleStrikethrough);
 
     //Alignment
     d->action_align_left = new KToggleAction(KIcon("format-justify-left"), i18nc("@action", "Align &Left"), actionCollection);
@@ -461,7 +482,9 @@ void ComposerEditor::createActions(KActionCollection *actionCollection)
     actionCollection->addAction( QLatin1String( "htmleditor_add_image" ), d->action_insert_image );
     connect( d->action_insert_image, SIGNAL(triggered(bool)), SLOT(_k_slotAddImage()) );
 
-
+    d->action_format_reset = new KAction( KIcon( "draw-eraser" ), i18n("Reset Font Settings"), this );
+    actionCollection->addAction( "htmleditor_format_reset", d->action_format_reset );
+    connect( d->action_format_reset, SIGNAL(triggered(bool)), SLOT(_k_slotFormatReset()) );
 }
 
 
