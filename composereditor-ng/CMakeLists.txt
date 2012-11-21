@@ -9,7 +9,7 @@ set(libcomposereditor_ng_SRCS
 kde4_add_library(composereditorng ${LIBRARY_TYPE} ${libcomposereditor_ng_SRCS})
 
 target_link_libraries(composereditorng 
-    ${KDE4_KDEWEBKIT_LIBRARY} ${QT_QTWEBKIT_LIBRARY}
+  ${KDE4_KDEWEBKIT_LIBRARY} ${QT_QTWEBKIT_LIBRARY} ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS}
 )
 
 

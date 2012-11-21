@@ -79,6 +79,7 @@ public:
     void _k_slotAdjustActions();
     void _k_setListStyle(QAction *act);
     void _k_setFormatType(QAction* action);
+    void _k_slotAddEmoticon(const QString&);
 
     QAction* getAction ( QWebPage::WebAction action ) const;
     void execCommand(const QString &cmd);
@@ -103,6 +104,7 @@ public:
     KAction *action_list_dedent;
     KSelectAction *action_list_style;
     KSelectAction *action_format_type;
+    KPIMTextEdit::EmoticonTextEditAction *action_add_emoticon;
     bool richTextEnabled;
 };
 }
@@ -185,6 +187,11 @@ void ComposerEditorPrivate::_k_setFormatType(QAction *act)
         break;
     }
     execCommand ( "formatBlock", command );
+}
+
+void ComposerEditorPrivate::_k_slotAddEmoticon(const QString& emoticon)
+{
+    execCommand("insertHTML", emoticon);
 }
 
 void ComposerEditorPrivate::_k_slotAdjustActions()
@@ -390,6 +397,10 @@ void ComposerEditor::createActions(KActionCollection *actionCollection)
     connect(d->action_format_type, SIGNAL(triggered(QAction*)),
             this, SLOT(_k_setFormatType(QAction*)));
 
+    d->action_add_emoticon = new KPIMTextEdit::EmoticonTextEditAction(actionCollection);
+    actionCollection->addAction("htmleditor_add_emoticon", d->action_add_emoticon);
+    connect( d->action_add_emoticon, SIGNAL(emoticonActivated(QString)),
+             this, SLOT(_k_slotAddEmoticon(QString)) );
 }
 
 

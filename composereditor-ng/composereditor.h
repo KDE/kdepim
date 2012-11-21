@@ -55,6 +55,7 @@ private:
     Q_PRIVATE_SLOT( d, void _k_slotAdjustActions() )
     Q_PRIVATE_SLOT( d, void _k_setListStyle(QAction *) )
     Q_PRIVATE_SLOT( d, void _k_setFormatType(QAction *) )
+    Q_PRIVATE_SLOT( d, void _k_slotAddEmoticon(const QString&) )
 };
 }
 
