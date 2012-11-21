@@ -23,6 +23,7 @@
 #include <KToggleAction>
 #include <KLocale>
 #include <KSelectAction>
+#include <KActionCollection>
 
 #include <QtWebKit/QWebFrame>
 #include <QtWebKit/QWebPage>
@@ -35,7 +36,7 @@ namespace ComposerEditorNG {
     connect(action1, SIGNAL(triggered()), d->getAction(action2), SLOT(trigger()));\
     connect(d->getAction(action2), SIGNAL(changed()), SLOT(_k_slotAdjustActions()));
 
-#define FOLLOW_CHECK(a1, a2) a1->setChecked(d->getAction(a2)->isChecked())
+#define FOLLOW_CHECK(a1, a2) a1->setChecked(getAction(a2)->isChecked())
 
 class ComposerEditorPrivate
 {
@@ -88,8 +89,10 @@ public:
     KSelectAction *action_format_type;
     bool richTextEnabled;
 };
+}
 Q_DECLARE_METATYPE(ComposerEditorNG::ComposerEditorPrivate::FormatType)
 
+namespace ComposerEditorNG {
 QAction* ComposerEditorPrivate::getAction ( QWebPage::WebAction action ) const
 {
     if ( action >= 0 && action <= 66 )
@@ -168,7 +171,7 @@ void ComposerEditorPrivate::execCommand(const QString &cmd, const QString &arg)
 }
 
 ComposerEditor::ComposerEditor(QWidget *parent)
-    : KWebView(parent), d(new ComposerEditorPrivate)
+    : KWebView(parent), d(new ComposerEditorPrivate(this))
 {
     page()->setContentEditable(true);
 }
@@ -370,3 +373,5 @@ void ComposerEditor::setActionsEnabled(bool enabled)
 
 
 }
+
+#include "composereditor.moc"

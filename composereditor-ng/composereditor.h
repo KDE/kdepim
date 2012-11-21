@@ -44,6 +44,8 @@ public:
 
     bool enableRichText() const;
 
+    void setActionsEnabled(bool enabled);
+
 public Q_SLOTS:
     void setEnableRichText(bool richTextEnabled);
 
