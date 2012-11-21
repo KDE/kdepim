@@ -47,9 +47,21 @@ public:
 
     }
 
+    enum FormatType {
+        Paragraph,
+        Header1,
+        Header2,
+        Header3,
+        Header4,
+        Header5,
+        Header6,
+        Pre,
+        Address
+    };
+
     void _k_slotAdjustActions();
     void _k_setListStyle(int);
-    void _k_setFormatType(const QString &formatText);
+    void _k_setFormatType(QAction* action);
 
     QAction* getAction ( QWebPage::WebAction action ) const;
     void execCommand(const QString &cmd);
@@ -76,6 +88,7 @@ public:
     KSelectAction *action_format_type;
     bool richTextEnabled;
 };
+Q_DECLARE_METATYPE(ComposerEditorNG::ComposerEditorPrivate::FormatType)
 
 QAction* ComposerEditorPrivate::getAction ( QWebPage::WebAction action ) const
 {
@@ -90,26 +103,43 @@ void ComposerEditorPrivate::_k_setListStyle(int style)
 //TODO
 }
 
-void ComposerEditorPrivate::_k_setFormatType(const QString & formatText)
+void ComposerEditorPrivate::_k_setFormatType(QAction *act)
 {
-    if(formatText == i18n("Paragraph")){
-        execCommand ( "formatBlock", "p" );
-    } else if (formatText == i18n("Heading 1")){
-        execCommand ( "formatBlock", "h1" );
-    } else if (formatText == i18n("Heading 2")){
-        execCommand ( "formatBlock", "h2" );
-    } else if (formatText == i18n("Heading 3")){
-        execCommand ( "formatBlock", "h3" );
-    } else if (formatText == i18n("Heading 4")){
-        execCommand ( "formatBlock", "h4" );
-    } else if (formatText == i18n("Heading 5")){
-        execCommand ( "formatBlock", "h5" );
-    } else if (formatText == i18n("Heading 6")){
-        execCommand ( "formatBlock", "h6" );
-    } else if (formatText == i18n("Pre Formatted")){
-        execCommand ( "formatBlock", "pre" );
+    if(!act) {
+        return;
     }
-
+    QString command;
+    switch(act->data().value<ComposerEditorNG::ComposerEditorPrivate::FormatType>())
+    {
+    case Paragraph:
+        command = QLatin1String("p");
+        break;
+    case Header1:
+        command = QLatin1String("h1");
+        break;
+    case Header2:
+        command = QLatin1String("h2");
+        break;
+    case Header3:
+        command = QLatin1String("h3");
+        break;
+    case Header4:
+        command = QLatin1String("h4");
+        break;
+    case Header5:
+        command = QLatin1String("h5");
+        break;
+    case Header6:
+        command = QLatin1String("h6");
+        break;
+    case Pre:
+        command = QLatin1String("pre");
+        break;
+    case Address:
+        command = QLatin1String("address");
+        break;
+    }
+    execCommand ( "formatBlock", command );
 }
 
 void ComposerEditorPrivate::_k_slotAdjustActions()
@@ -284,21 +314,35 @@ void ComposerEditor::createActions(KActionCollection *actionCollection)
             this, SLOT(_k_setListStyle(int)));
 
     d->action_format_type = new KSelectAction(KIcon("format-list-unordered"), i18nc("@title:menu", "List Style"), actionCollection);
-    QStringList formatTypes;
-    formatTypes << i18n( "Paragraph" );
-    formatTypes << i18n( "Heading 1" );
-    formatTypes << i18n( "Heading 2" );
-    formatTypes << i18n( "Heading 3" );
-    formatTypes << i18n( "Heading 4" );
-    formatTypes << i18n( "Heading 5" );
-    formatTypes << i18n( "Heading 6" );
-    formatTypes << i18n( "Pre Formatted" );
-    d->action_format_type->setItems( formatTypes );
+    KAction *act = d->action_format_type->addAction(i18n( "Paragraph" ));
+    act->setData(ComposerEditorPrivate::Paragraph);
+    act = d->action_format_type->addAction(i18n( "Heading 1" ));
+    act->setData(ComposerEditorPrivate::Header1);
+    act = d->action_format_type->addAction(i18n( "Heading 2" ));
+    act->setData(ComposerEditorPrivate::Header2);
+
+    act = d->action_format_type->addAction(i18n( "Heading 3" ));
+    act->setData(ComposerEditorPrivate::Header3);
+
+    act = d->action_format_type->addAction(i18n( "Heading 4" ));
+    act->setData(ComposerEditorPrivate::Header4);
+
+    act = d->action_format_type->addAction(i18n( "Heading 5" ));
+    act->setData(ComposerEditorPrivate::Header5);
+
+    act = d->action_format_type->addAction(i18n( "Heading 6" ));
+    act->setData(ComposerEditorPrivate::Header6);
+
+    act = d->action_format_type->addAction(i18n( "Pre" ));
+    act->setData(ComposerEditorPrivate::Pre);
+
+    act = d->action_format_type->addAction(i18n( "Address" ));
+    act->setData(ComposerEditorPrivate::Address);
     d->action_format_type->setCurrentItem(0);
     d->richTextActionList.append(d->action_format_type);
     actionCollection->addAction("htmleditor_format_type", d->action_format_type);
-    connect(d->action_format_type, SIGNAL(triggered(QString)),
-            this, SLOT(_k_setFormatType(QString)));
+    connect(d->action_format_type, SIGNAL(triggered(QAction)),
+            this, SLOT(_k_setFormatType(QAction)));
 
 }
 
