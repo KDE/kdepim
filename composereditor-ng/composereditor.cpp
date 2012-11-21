@@ -320,26 +320,21 @@ void ComposerEditor::createActions(KActionCollection *actionCollection)
     act->setData(ComposerEditorPrivate::Header1);
     act = d->action_format_type->addAction(i18n( "Heading 2" ));
     act->setData(ComposerEditorPrivate::Header2);
-
     act = d->action_format_type->addAction(i18n( "Heading 3" ));
     act->setData(ComposerEditorPrivate::Header3);
-
     act = d->action_format_type->addAction(i18n( "Heading 4" ));
     act->setData(ComposerEditorPrivate::Header4);
-
     act = d->action_format_type->addAction(i18n( "Heading 5" ));
     act->setData(ComposerEditorPrivate::Header5);
-
     act = d->action_format_type->addAction(i18n( "Heading 6" ));
     act->setData(ComposerEditorPrivate::Header6);
-
     act = d->action_format_type->addAction(i18n( "Pre" ));
     act->setData(ComposerEditorPrivate::Pre);
-
     act = d->action_format_type->addAction(i18n( "Address" ));
     act->setData(ComposerEditorPrivate::Address);
     d->action_format_type->setCurrentItem(0);
     d->richTextActionList.append(d->action_format_type);
+
     actionCollection->addAction("htmleditor_format_type", d->action_format_type);
     connect(d->action_format_type, SIGNAL(triggered(QAction)),
             this, SLOT(_k_setFormatType(QAction)));
