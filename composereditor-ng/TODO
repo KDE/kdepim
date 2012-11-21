@@ -1,0 +1,15 @@
+- Add default html actions
+- Add background spell checking (qt-webkit-2.3)
+- Add hightlighting
+- Add support for signature
+- Add support for images
+- Add support for table
+- Add support for link
+- Add support for horizontal line
+- Add support for emoticon
+- Add support for autocorrection
+- Add support for font
+- Add support for list
+- Add support for style
+- Add support for text/background color
+

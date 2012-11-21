@@ -19,6 +19,10 @@
 */
 
 #include "composereditor.h"
+
+#include <kpimtextedit/emoticontexteditaction.h>
+
+
 #include <KAction>
 #include <KToggleAction>
 #include <KLocale>
