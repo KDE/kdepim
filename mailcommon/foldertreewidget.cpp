@@ -333,8 +333,8 @@ void FolderTreeWidget::readQuotaConfig()
   if ( !MessageCore::GlobalSettings::self()->useDefaultColors() ) {
     KConfigGroup readerConfig( KernelIf->config(), "Reader" );
     quotaColor = readerConfig.readEntry( "CloseToQuotaColor", quotaColor );
-    threshold = SettingsIf->closeToQuotaThreshold();
   }
+  threshold = SettingsIf->closeToQuotaThreshold();
   quotaWarningParameters( quotaColor, threshold );
 }
 
