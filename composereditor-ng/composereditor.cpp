@@ -32,7 +32,7 @@
 
 #include <QtWebKit/QWebFrame>
 #include <QtWebKit/QWebPage>
-
+#include <QDebug>
 
 
 namespace ComposerEditorNG {
@@ -89,6 +89,7 @@ public:
     QAction* getAction ( QWebPage::WebAction action ) const;
     void execCommand(const QString &cmd);
     void execCommand(const QString &cmd, const QString &arg);
+    bool queryCommandState(const QString &cmd);
 
     QList<KAction*> richTextActionList;
     ComposerEditor *q;
@@ -269,6 +270,16 @@ void ComposerEditorPrivate::execCommand(const QString &cmd, const QString &arg)
     frame->evaluateJavaScript(js);
 }
 
+
+bool ComposerEditorPrivate::queryCommandState(const QString &cmd)
+{
+    QWebFrame *frame = q->page()->mainFrame();
+    QString js = QString::fromLatin1("document.queryCommandState(\"%1\", false, null)").arg(cmd);
+    const QVariant result = frame->evaluateJavaScript(js);
+    return result.toString().simplified().toLower() == QLatin1String("true");
+}
+
+
 ComposerEditor::ComposerEditor(QWidget *parent)
     : KWebView(parent), d(new ComposerEditorPrivate(this))
 {
@@ -398,23 +409,23 @@ void ComposerEditor::createActions(KActionCollection *actionCollection)
 
     d->action_list_style = new KSelectAction(KIcon("format-list-unordered"), i18nc("@title:menu", "List Style"), actionCollection);
     KAction *act = d->action_list_style->addAction(i18nc("@item:inmenu no list style", "None"));
-    act->setData(ComposerEditorPrivate::None);
+    act->setData(QVariant::fromValue(ComposerEditorPrivate::None));
     act = d->action_list_style->addAction(i18nc("@item:inmenu disc list style", "Disc"));
-    act->setData(ComposerEditorPrivate::Disc);
+    act->setData(QVariant::fromValue(ComposerEditorPrivate::Disc));
     act = d->action_list_style->addAction(i18nc("@item:inmenu circle list style", "Circle"));
-    act->setData(ComposerEditorPrivate::Circle);
+    act->setData(QVariant::fromValue(ComposerEditorPrivate::Circle));
     act = d->action_list_style->addAction(i18nc("@item:inmenu square list style", "Square"));
-    act->setData(ComposerEditorPrivate::Square);
+    act->setData(QVariant::fromValue(ComposerEditorPrivate::Square));
     act = d->action_list_style->addAction(i18nc("@item:inmenu numbered lists", "123"));
-    act->setData(ComposerEditorPrivate::Decimal);
+    act->setData(QVariant::fromValue(ComposerEditorPrivate::Decimal));
     act = d->action_list_style->addAction(i18nc("@item:inmenu lowercase abc lists", "abc"));
-    act->setData(ComposerEditorPrivate::LowerAlpha);
+    act->setData(QVariant::fromValue(ComposerEditorPrivate::LowerAlpha));
     act = d->action_list_style->addAction(i18nc("@item:inmenu uppercase abc lists", "ABC"));
-    act->setData(ComposerEditorPrivate::UpperAlpha);
+    act->setData(QVariant::fromValue(ComposerEditorPrivate::UpperAlpha));
     act = d->action_list_style->addAction(i18nc("@item:inmenu lower case roman numerals", "i ii iii"));
-    act->setData(ComposerEditorPrivate::LowerRoman);
+    act->setData(QVariant::fromValue(ComposerEditorPrivate::LowerRoman));
     act = d->action_list_style->addAction(i18nc("@item:inmenu upper case roman numerals", "I II III"));
-    act->setData(ComposerEditorPrivate::UpperRoman);
+    act->setData(QVariant::fromValue(ComposerEditorPrivate::UpperRoman));
     d->action_list_style->setCurrentItem(0);
     d->richTextActionList.append((d->action_list_style));
     actionCollection->addAction("htmleditor_format_list_style", d->action_list_style);
@@ -423,23 +434,23 @@ void ComposerEditor::createActions(KActionCollection *actionCollection)
 
     d->action_format_type = new KSelectAction(KIcon("format-list-unordered"), i18nc("@title:menu", "List Style"), actionCollection);
     act = d->action_format_type->addAction(i18n( "Paragraph" ));
-    act->setData(ComposerEditorPrivate::Paragraph);
+    act->setData(QVariant::fromValue(ComposerEditorPrivate::Paragraph));
     act = d->action_format_type->addAction(i18n( "Heading 1" ));
-    act->setData(ComposerEditorPrivate::Header1);
+    act->setData(QVariant::fromValue(ComposerEditorPrivate::Header1));
     act = d->action_format_type->addAction(i18n( "Heading 2" ));
-    act->setData(ComposerEditorPrivate::Header2);
+    act->setData(QVariant::fromValue(ComposerEditorPrivate::Header2));
     act = d->action_format_type->addAction(i18n( "Heading 3" ));
-    act->setData(ComposerEditorPrivate::Header3);
+    act->setData(QVariant::fromValue(ComposerEditorPrivate::Header3));
     act = d->action_format_type->addAction(i18n( "Heading 4" ));
-    act->setData(ComposerEditorPrivate::Header4);
+    act->setData(QVariant::fromValue(ComposerEditorPrivate::Header4));
     act = d->action_format_type->addAction(i18n( "Heading 5" ));
-    act->setData(ComposerEditorPrivate::Header5);
+    act->setData(QVariant::fromValue(ComposerEditorPrivate::Header5));
     act = d->action_format_type->addAction(i18n( "Heading 6" ));
-    act->setData(ComposerEditorPrivate::Header6);
+    act->setData(QVariant::fromValue(ComposerEditorPrivate::Header6));
     act = d->action_format_type->addAction(i18n( "Pre" ));
-    act->setData(ComposerEditorPrivate::Pre);
+    act->setData(QVariant::fromValue(ComposerEditorPrivate::Pre));
     act = d->action_format_type->addAction(i18n( "Address" ));
-    act->setData(ComposerEditorPrivate::Address);
+    act->setData(QVariant::fromValue(ComposerEditorPrivate::Address));
     d->action_format_type->setCurrentItem(0);
     d->richTextActionList.append(d->action_format_type);
     actionCollection->addAction("htmleditor_format_type", d->action_format_type);

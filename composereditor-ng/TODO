@@ -11,5 +11,8 @@
 - Add support for font
 - Add support for list
 - Add support for style (DONE)
+- Add support for remove format/style
+- Add supportf for insert html code (DONE)
 - Add support for text/background color
 - Add hmlmode on/off support
+- Add speak support
