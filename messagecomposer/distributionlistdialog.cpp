@@ -39,6 +39,7 @@
 #include <QTreeWidgetItem>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
+#include <QHeaderView>
 
 using namespace MessageComposer;
 
@@ -130,11 +131,18 @@ DistributionListDialog::DistributionListDialog( QWidget *parent )
                                    << i18nc( "@title:column Email of the recipient", "Email" )
                                   );
   mRecipientsList->setRootIsDecorated( false );
+  mRecipientsList->header()->setMovable(false);
   topLayout->addWidget( mRecipientsList );
   connect( this, SIGNAL(user1Clicked()),
            this, SLOT(slotUser1()) );
   connect( mTitleEdit, SIGNAL(textChanged(QString)),
            this, SLOT(slotTitleChanged(QString)) );
+  readConfig();
+}
+
+DistributionListDialog::~DistributionListDialog()
+{
+  writeConfig();
 }
 
 void DistributionListDialog::setRecipients( const Recipient::List &recipients )
@@ -292,6 +300,25 @@ void DistributionListDialog::slotContactGroupCreateJobResult( KJob *job )
 void DistributionListDialog::slotTitleChanged( const QString& text )
 {
   enableButton( KDialog::User1, !text.trimmed().isEmpty() );
+}
+
+void DistributionListDialog::readConfig()
+{
+  KSharedConfig::Ptr cfg = KGlobal::config();
+  KConfigGroup group( cfg, "DistributionListDialog" );
+  const QSize size = group.readEntry( "Size", QSize() );
+  if ( !size.isEmpty() ) {
+    resize( size );
+  }
+  mRecipientsList->header()->restoreState(group.readEntry("Header", QByteArray()));
+}
+
+void DistributionListDialog::writeConfig()
+{
+  KSharedConfig::Ptr cfg = KGlobal::config();
+  KConfigGroup group( cfg, "DistributionListDialog" );
+  group.writeEntry( "Size", size() );
+  group.writeEntry( "Header", mRecipientsList->header()->saveState() );
 }
 
 

@@ -9,12 +9,12 @@ set(libcomposereditor_ng_SRCS
 kde4_add_library(composereditorng ${LIBRARY_TYPE} ${libcomposereditor_ng_SRCS})
 
 target_link_libraries(composereditorng 
-    ${KDE4_KDEWEBKIT_LIBRARY} ${QT_QTWEBKIT_LIBRARY}
+  ${KDE4_KDEWEBKIT_LIBRARY} ${QT_QTWEBKIT_LIBRARY} ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS}
 )
 
 
 set_target_properties( composereditorng PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
-install(TARGET composereditorng ${INSTALL_TARGETS_DEFAULT_ARGS} )
+install(TARGETS composereditorng ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 #install( FILES
 #         composereditor_export.h

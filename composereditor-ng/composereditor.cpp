@@ -19,20 +19,29 @@
 */
 
 #include "composereditor.h"
+
+#include <kpimtextedit/emoticontexteditaction.h>
+#include <kpimtextedit/inserthtmldialog.h>
+
 #include <KAction>
 #include <KToggleAction>
 #include <KLocale>
+#include <KSelectAction>
+#include <KActionCollection>
+#include <KColorDialog>
 
 #include <QtWebKit/QWebFrame>
 #include <QtWebKit/QWebPage>
-
+#include <QDebug>
 
 
 namespace ComposerEditorNG {
 
 #define FORWARD_ACTION(action1, action2) \
-    connect(action1, SIGNAL(triggered()), getAction(action2), SLOT(trigger()));\
-    connect(getAction(action2), SIGNAL(changed()), SLOT(_k_slotAdjustActions()));
+    connect(action1, SIGNAL(triggered()), d->getAction(action2), SLOT(trigger()));\
+    connect(d->getAction(action2), SIGNAL(changed()), SLOT(_k_slotAdjustActions()));
+
+#define FOLLOW_CHECK(a1, a2) a1->setChecked(getAction(a2)->isChecked())
 
 class ComposerEditorPrivate
 {
@@ -44,7 +53,44 @@ public:
 
     }
 
+    enum FormatType {
+        Paragraph,
+        Header1,
+        Header2,
+        Header3,
+        Header4,
+        Header5,
+        Header6,
+        Pre,
+        Address
+    };
+
+    enum ListType {
+        None,
+        Disc,
+        Circle,
+        Square,
+        Decimal,
+        LowerAlpha,
+        UpperAlpha,
+        LowerRoman,
+        UpperRoman
+    };
+
     void _k_slotAdjustActions();
+    void _k_setListStyle(QAction *act);
+    void _k_setFormatType(QAction* action);
+    void _k_slotAddEmoticon(const QString&);
+    void _k_slotInsertHtml();
+    void _k_slotAddImage();
+    void _k_setTextForegroundColor();
+    void _k_setTextBackgroundColor();
+
+    QAction* getAction ( QWebPage::WebAction action ) const;
+    void execCommand(const QString &cmd);
+    void execCommand(const QString &cmd, const QString &arg);
+    bool queryCommandState(const QString &cmd);
+
     QList<KAction*> richTextActionList;
     ComposerEditor *q;
     KToggleAction *action_text_bold;
@@ -57,17 +103,187 @@ public:
     KToggleAction *action_align_justify;
     KToggleAction *action_direction_ltr;
     KToggleAction *action_direction_rtl;
+    KToggleAction *action_text_subscript;
+    KToggleAction *action_text_superscript;
+    KAction *action_insert_horizontal_rule;
+    KAction *action_list_indent;
+    KAction *action_list_dedent;
+    KSelectAction *action_list_style;
+    KSelectAction *action_format_type;
+    KPIMTextEdit::EmoticonTextEditAction *action_add_emoticon;
+    KAction *action_insert_html;
+    KAction *action_insert_image;
+    KAction *action_text_foreground_color;
+    KAction *action_text_background_color;
+    KAction *action_format_reset;
     bool richTextEnabled;
 };
+}
+Q_DECLARE_METATYPE(ComposerEditorNG::ComposerEditorPrivate::FormatType)
+Q_DECLARE_METATYPE(ComposerEditorNG::ComposerEditorPrivate::ListType)
 
-void ComposerEditorPrivate::_k_slotAdjustActions()
+namespace ComposerEditorNG {
+QAction* ComposerEditorPrivate::getAction ( QWebPage::WebAction action ) const
+{
+    if ( action >= 0 && action <= 66 )
+        return q->page()->action( static_cast<QWebPage::WebAction>( action ));
+    else
+        return 0;
+}
+
+void ComposerEditorPrivate::_k_setListStyle(QAction *act)
+{
+    if(!act) {
+        return;
+    }
+    QString command;
+    switch(act->data().value<ComposerEditorNG::ComposerEditorPrivate::ListType>())
+    {
+    case None:
+        break;
+    case Disc:
+        break;
+    case Circle:
+        break;
+    case Square:
+        break;
+    case Decimal:
+        break;
+    case LowerAlpha:
+        break;
+    case UpperAlpha:
+        break;
+    case LowerRoman:
+        break;
+    case UpperRoman:
+    break;
+
+    }
+}
+
+void ComposerEditorPrivate::_k_setFormatType(QAction *act)
+{
+    if(!act) {
+        return;
+    }
+    QString command;
+    switch(act->data().value<ComposerEditorNG::ComposerEditorPrivate::FormatType>())
+    {
+    case Paragraph:
+        command = QLatin1String("p");
+        break;
+    case Header1:
+        command = QLatin1String("h1");
+        break;
+    case Header2:
+        command = QLatin1String("h2");
+        break;
+    case Header3:
+        command = QLatin1String("h3");
+        break;
+    case Header4:
+        command = QLatin1String("h4");
+        break;
+    case Header5:
+        command = QLatin1String("h5");
+        break;
+    case Header6:
+        command = QLatin1String("h6");
+        break;
+    case Pre:
+        command = QLatin1String("pre");
+        break;
+    case Address:
+        command = QLatin1String("address");
+        break;
+    }
+    execCommand ( "formatBlock", command );
+}
+
+void ComposerEditorPrivate::_k_slotAddEmoticon(const QString& emoticon)
+{
+    execCommand("insertHTML", emoticon);
+}
+
+void ComposerEditorPrivate::_k_slotInsertHtml()
+{
+    KPIMTextEdit::InsertHtmlDialog *dialog = new KPIMTextEdit::InsertHtmlDialog( q );
+    if ( dialog->exec() ) {
+      const QString str = dialog->html();
+      if ( !str.isEmpty() ) {
+          execCommand("insertHTML", str);
+      }
+    }
+    delete dialog;
+}
+
+void ComposerEditorPrivate::_k_setTextBackgroundColor()
+{
+    //TODO
+#if 0
+    const int result = KColorDialog::getColor(currentTextBackgroundColor, KColorScheme(QPalette::Active, KColorScheme::View).foreground().color() , q);
+    if (!currentTextBackgroundColor.isValid())
+        currentTextBackgroundColor = KColorScheme(QPalette::Active, KColorScheme::View).foreground().color() ;
+    if (result != QDialog::Accepted)
+        return;
+
+    q->setTextBackgroundColor(currentTextBackgroundColor);
+    execCommand("hiliteColor", color.name());
+#endif
+}
+
+void ComposerEditorPrivate::_k_setTextForegroundColor()
+{
+#if 0
+    //TODO
+    execCommand("foreColor", color.name());
+#endif
+}
+
+void ComposerEditorPrivate::_k_slotAddImage()
 {
     //TODO
 }
 
-ComposerEditor::ComposerEditor(QWidget *parent)
-    : KWebView(parent), d(new ComposerEditorPrivate)
+void ComposerEditorPrivate::_k_slotAdjustActions()
 {
+    //TODO
+    FOLLOW_CHECK(action_text_bold, QWebPage::ToggleBold);
+    FOLLOW_CHECK(action_text_italic, QWebPage::ToggleItalic);
+    FOLLOW_CHECK(action_text_strikeout, QWebPage::ToggleStrikethrough);
+    FOLLOW_CHECK(action_text_underline, QWebPage::ToggleUnderline);
+    FOLLOW_CHECK(action_text_subscript, QWebPage::ToggleSubscript);
+    FOLLOW_CHECK(action_text_superscript, QWebPage::ToggleSuperscript);
+}
+
+void ComposerEditorPrivate::execCommand(const QString &cmd)
+{
+    QWebFrame *frame = q->page()->mainFrame();
+    const QString js = QString::fromLatin1("document.execCommand(\"%1\", false, null)").arg(cmd);
+    frame->evaluateJavaScript(js);
+}
+
+void ComposerEditorPrivate::execCommand(const QString &cmd, const QString &arg)
+{
+    QWebFrame *frame = q->page()->mainFrame();
+    const QString js = QString::fromLatin1("document.execCommand(\"%1\", false, \"%2\")").arg(cmd).arg(arg);
+    frame->evaluateJavaScript(js);
+}
+
+
+bool ComposerEditorPrivate::queryCommandState(const QString &cmd)
+{
+    QWebFrame *frame = q->page()->mainFrame();
+    QString js = QString::fromLatin1("document.queryCommandState(\"%1\", false, null)").arg(cmd);
+    const QVariant result = frame->evaluateJavaScript(js);
+    return result.toString().simplified().toLower() == QLatin1String("true");
+}
+
+
+ComposerEditor::ComposerEditor(QWidget *parent)
+    : KWebView(parent), d(new ComposerEditorPrivate(this))
+{
+    page()->setContentEditable(true);
 }
 
 ComposerEditor::~ComposerEditor()
@@ -105,13 +321,13 @@ void ComposerEditor::createActions(KActionCollection *actionCollection)
     d->richTextActionList.append((d->action_text_underline));
     actionCollection->addAction("htmleditor_format_text_underline", d->action_text_underline);
     d->action_text_underline->setShortcut(KShortcut(Qt::CTRL + Qt::Key_U));
-    FORWARD_ACTION(d->action_text_italic, QWebPage::ToggleUnderline);
+    FORWARD_ACTION(d->action_text_underline, QWebPage::ToggleUnderline);
 
     d->action_text_strikeout = new KToggleAction(KIcon("format-text-strikethrough"), i18nc("@action", "&Strike Out"), actionCollection);
     d->richTextActionList.append((d->action_text_strikeout));
     actionCollection->addAction("htmleditor_format_text_strikeout", d->action_text_strikeout);
     d->action_text_strikeout->setShortcut(KShortcut(Qt::CTRL + Qt::Key_L));
-    FORWARD_ACTION(d->action_text_italic, QWebPage::ToggleStrikethrough);
+    FORWARD_ACTION(d->action_text_strikeout, QWebPage::ToggleStrikethrough);
 
     //Alignment
     d->action_align_left = new KToggleAction(KIcon("format-justify-left"), i18nc("@action", "Align &Left"), actionCollection);
@@ -162,6 +378,118 @@ void ComposerEditor::createActions(KActionCollection *actionCollection)
     directionGroup->addAction(d->action_direction_rtl);
 
 
+    //indent
+    d->action_list_indent = new KAction(KIcon("format-indent-more"), i18nc("@action", "Increase Indent"), actionCollection);
+    d->richTextActionList.append((d->action_list_indent));
+    actionCollection->addAction("htmleditor_format_list_indent_more", d->action_list_indent);
+    FORWARD_ACTION(d->action_list_indent, QWebPage::Indent);
+
+    d->action_list_dedent = new KAction(KIcon("format-indent-less"), i18nc("@action", "Decrease Indent"), actionCollection);
+    d->richTextActionList.append(d->action_list_dedent);
+    actionCollection->addAction("htmleditor_format_list_indent_less", d->action_list_dedent);
+    FORWARD_ACTION(d->action_list_dedent, QWebPage::Outdent);
+
+    //horizontal line
+    d->action_insert_horizontal_rule = new KAction(KIcon("insert-horizontal-rule"), i18nc("@action", "Insert Rule Line"), actionCollection);
+    d->richTextActionList.append((d->action_insert_horizontal_rule));
+    actionCollection->addAction("htmleditor_insert_horizontal_rule", d->action_insert_horizontal_rule);
+    FORWARD_ACTION(d->action_insert_horizontal_rule, QWebPage::InsertLineSeparator); //Verify
+
+
+    //Superscript/subScript
+    d->action_text_subscript = new KToggleAction(KIcon("format-text-subscript"), i18nc("@action", "Subscript"), actionCollection);
+    d->richTextActionList.append((d->action_text_subscript));
+    actionCollection->addAction("htmleditor_format_text_subscript", d->action_text_subscript);
+    FORWARD_ACTION(d->action_insert_horizontal_rule, QWebPage::ToggleSubscript);
+
+    d->action_text_superscript = new KToggleAction(KIcon("format-text-superscript"), i18nc("@action", "Superscript"), actionCollection);
+    d->richTextActionList.append((d->action_text_superscript));
+    actionCollection->addAction("htmleditor_format_text_superscript", d->action_text_superscript);
+    FORWARD_ACTION(d->action_insert_horizontal_rule, QWebPage::ToggleSuperscript);
+
+    d->action_list_style = new KSelectAction(KIcon("format-list-unordered"), i18nc("@title:menu", "List Style"), actionCollection);
+    KAction *act = d->action_list_style->addAction(i18nc("@item:inmenu no list style", "None"));
+    act->setData(QVariant::fromValue(ComposerEditorPrivate::None));
+    act = d->action_list_style->addAction(i18nc("@item:inmenu disc list style", "Disc"));
+    act->setData(QVariant::fromValue(ComposerEditorPrivate::Disc));
+    act = d->action_list_style->addAction(i18nc("@item:inmenu circle list style", "Circle"));
+    act->setData(QVariant::fromValue(ComposerEditorPrivate::Circle));
+    act = d->action_list_style->addAction(i18nc("@item:inmenu square list style", "Square"));
+    act->setData(QVariant::fromValue(ComposerEditorPrivate::Square));
+    act = d->action_list_style->addAction(i18nc("@item:inmenu numbered lists", "123"));
+    act->setData(QVariant::fromValue(ComposerEditorPrivate::Decimal));
+    act = d->action_list_style->addAction(i18nc("@item:inmenu lowercase abc lists", "abc"));
+    act->setData(QVariant::fromValue(ComposerEditorPrivate::LowerAlpha));
+    act = d->action_list_style->addAction(i18nc("@item:inmenu uppercase abc lists", "ABC"));
+    act->setData(QVariant::fromValue(ComposerEditorPrivate::UpperAlpha));
+    act = d->action_list_style->addAction(i18nc("@item:inmenu lower case roman numerals", "i ii iii"));
+    act->setData(QVariant::fromValue(ComposerEditorPrivate::LowerRoman));
+    act = d->action_list_style->addAction(i18nc("@item:inmenu upper case roman numerals", "I II III"));
+    act->setData(QVariant::fromValue(ComposerEditorPrivate::UpperRoman));
+    d->action_list_style->setCurrentItem(0);
+    d->richTextActionList.append((d->action_list_style));
+    actionCollection->addAction("htmleditor_format_list_style", d->action_list_style);
+    connect(d->action_list_style, SIGNAL(triggered(QAction*)),
+            this, SLOT(_k_setListStyle(QAction*)));
+
+    d->action_format_type = new KSelectAction(KIcon("format-list-unordered"), i18nc("@title:menu", "List Style"), actionCollection);
+    act = d->action_format_type->addAction(i18n( "Paragraph" ));
+    act->setData(QVariant::fromValue(ComposerEditorPrivate::Paragraph));
+    act = d->action_format_type->addAction(i18n( "Heading 1" ));
+    act->setData(QVariant::fromValue(ComposerEditorPrivate::Header1));
+    act = d->action_format_type->addAction(i18n( "Heading 2" ));
+    act->setData(QVariant::fromValue(ComposerEditorPrivate::Header2));
+    act = d->action_format_type->addAction(i18n( "Heading 3" ));
+    act->setData(QVariant::fromValue(ComposerEditorPrivate::Header3));
+    act = d->action_format_type->addAction(i18n( "Heading 4" ));
+    act->setData(QVariant::fromValue(ComposerEditorPrivate::Header4));
+    act = d->action_format_type->addAction(i18n( "Heading 5" ));
+    act->setData(QVariant::fromValue(ComposerEditorPrivate::Header5));
+    act = d->action_format_type->addAction(i18n( "Heading 6" ));
+    act->setData(QVariant::fromValue(ComposerEditorPrivate::Header6));
+    act = d->action_format_type->addAction(i18n( "Pre" ));
+    act->setData(QVariant::fromValue(ComposerEditorPrivate::Pre));
+    act = d->action_format_type->addAction(i18n( "Address" ));
+    act->setData(QVariant::fromValue(ComposerEditorPrivate::Address));
+    d->action_format_type->setCurrentItem(0);
+    d->richTextActionList.append(d->action_format_type);
+    actionCollection->addAction("htmleditor_format_type", d->action_format_type);
+    connect(d->action_format_type, SIGNAL(triggered(QAction*)),
+            this, SLOT(_k_setFormatType(QAction*)));
+
+    //Color
+    //Foreground Color
+    d->action_text_foreground_color = new KAction(KIcon("format-stroke-color"), i18nc("@action", "Text &Color..."), actionCollection);
+    d->action_text_foreground_color->setIconText(i18nc("@label stroke color", "Color"));
+    d->richTextActionList.append((d->action_text_foreground_color));
+    actionCollection->addAction("htmleditor_format_text_foreground_color", d->action_text_foreground_color);
+    connect(d->action_text_foreground_color, SIGNAL(triggered()), this, SLOT(_k_setTextForegroundColor()));
+
+    //Background Color
+    d->action_text_background_color = new KAction(KIcon("format-fill-color"), i18nc("@action", "Text &Highlight..."), actionCollection);
+    d->richTextActionList.append((d->action_text_background_color));
+    actionCollection->addAction("htmleditor_format_text_background_color", d->action_text_background_color);
+    connect(d->action_text_background_color, SIGNAL(triggered()), this, SLOT(_k_setTextBackgroundColor()));
+
+
+
+
+    d->action_add_emoticon = new KPIMTextEdit::EmoticonTextEditAction(actionCollection);
+    actionCollection->addAction("htmleditor_add_emoticon", d->action_add_emoticon);
+    connect( d->action_add_emoticon, SIGNAL(emoticonActivated(QString)),
+             this, SLOT(_k_slotAddEmoticon(QString)) );
+
+    d->action_insert_html = new KAction( i18n( "Insert HTML" ), this );
+    actionCollection->addAction( QLatin1String( "htmleditor_insert_html" ), d->action_insert_html );
+    connect( d->action_insert_html, SIGNAL(triggered(bool)), SLOT(_k_slotInsertHtml()) );
+
+    d->action_insert_image = new KAction( KIcon( QLatin1String( "insert-image" ) ), i18n( "Add Image" ), this );
+    actionCollection->addAction( QLatin1String( "htmleditor_add_image" ), d->action_insert_image );
+    connect( d->action_insert_image, SIGNAL(triggered(bool)), SLOT(_k_slotAddImage()) );
+
+    d->action_format_reset = new KAction( KIcon( "draw-eraser" ), i18n("Reset Font Settings"), this );
+    actionCollection->addAction( "htmleditor_format_reset", d->action_format_reset );
+    FORWARD_ACTION(d->action_format_reset, QWebPage::RemoveFormat);
 }
 
 
@@ -189,5 +517,6 @@ void ComposerEditor::setActionsEnabled(bool enabled)
     d->richTextEnabled = enabled;
 }
 
-
 }
+
+#include "composereditor.moc"

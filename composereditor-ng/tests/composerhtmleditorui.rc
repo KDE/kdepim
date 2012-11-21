@@ -1,0 +1,61 @@
+<!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
+<kpartgui name="composerhtmleditor" version="13">
+
+<MenuBar>
+  <Menu noMerge="1" name="format"><text>F&amp;ormat</text>
+    <Action name="htmleditor_format_text_bold"/>
+    <Action name="htmleditor_format_text_italic"/>
+    <Action name="htmleditor_format_text_underline"/>
+    <Action name="htmleditor_format_text_strikeout"/>
+    <Action name="htmleditor_format_text_foreground_color"/>
+    <Action name="htmleditor_format_text_background_color"/>
+    <Separator/>
+    <Menu name="alignment"><text>&amp;Alignment</text>
+       <Action name="htmleditor_format_align_left"/>
+       <Action name="htmleditor_format_align_center"/>
+       <Action name="htmleditor_format_align_right"/>
+       <Action name="htmleditor_format_align_justify"/>
+    </Menu>
+  <Separator lineSeparator="true"/>
+  <Action name="htmleditor_format_list_style"/>
+  <Action name="htmleditor_format_list_indent_more"/>
+  <Action name="htmleditor_format_list_indent_less"/>
+  <Separator lineSeparator="true"/>
+  <Action name="htmleditor_insert_horizontal_rule"/>
+  </Menu>
+</MenuBar>
+
+<ToolBar name="textToolBar" iconText="icononly"><text>Text Toolbar</text>
+  <Action name="htmleditor_format_text_bold"/>
+  <Action name="htmleditor_format_text_italic"/>
+  <Action name="htmleditor_format_text_underline"/>
+  <Action name="htmleditor_format_text_strikeout"/>
+  <Action name="htmleditor_format_text_foreground_color"/>
+  <Action name="htmleditor_format_text_background_color"/>
+  <Separator lineSeparator="true"/>
+  <Action name="htmleditor_format_font_family"/>
+  <Action name="htmleditor_format_font_size"/>
+  <Separator lineSeparator="true"/>
+  <Action name="htmleditor_format_reset"/>
+  <Separator lineSeparator="true"/>
+  <Action name="htmleditor_insert_html"/>
+  <Separator lineSeparator="true"/>
+  <Action name="htmleditor_format_type"/>
+</ToolBar>
+<ToolBar name="formatToolBar" iconText="icononly"><text>Format Toolbar</text>
+  <Action name="htmleditor_format_align_left"/>
+  <Action name="htmleditor_format_align_center"/>
+  <Action name="htmleditor_format_align_right"/>
+  <Action name="htmleditor_format_align_justify"/>
+  <Separator lineSeparator="true"/>
+  <Action name="htmleditor_format_list_style"/>
+  <Action name="htmleditor_format_list_indent_more"/>
+  <Action name="htmleditor_format_list_indent_less"/>
+  <Separator lineSeparator="true"/>
+  <Action name="htmleditor_insert_horizontal_rule"/>
+  <Action name="htmleditor_format_painter"/>
+  <Action name="htmleditor_action_to_plain_text"/>
+</ToolBar>
+
+</kpartgui>
+

@@ -58,6 +58,7 @@ class KMeditorPrivate
     KMeditorPrivate( KMeditor *parent )
      : q( parent ),
        useExtEditor( false ),
+       forcePlainTextMarkup( false ),
        mExtEditorProcess( 0 ),
        mExtEditorTempFile( 0 ),
        mAutoCorrection( 0 )
@@ -107,7 +108,7 @@ class KMeditorPrivate
     QString extEditorPath;
     KMeditor *q;
     bool useExtEditor;
-    
+    bool forcePlainTextMarkup;
     QString quotePrefix;
 
     KProcess *mExtEditorProcess;
@@ -212,7 +213,7 @@ void KMeditorPrivate::startExternalEditor()
                     q, SLOT(slotEditorFinished(int,QProcess::ExitStatus)) );
   mExtEditorProcess->start();
   if ( !mExtEditorProcess->waitForStarted() ) {
-    KMessageBox::error(q->topLevelWidget(),i18n("External editor can not started. Please verify command \"%1\"",commandLine));
+    KMessageBox::error(q->topLevelWidget(),i18n("External editor can not be started. Please verify command \"%1\"",commandLine));
     mExtEditorProcess->deleteLater();
     mExtEditorProcess = 0;
     delete mExtEditorTempFile;
@@ -810,10 +811,15 @@ void KMeditor::setAutocorrectionLanguage(const QString& lang)
   d->mAutoCorrection->setLanguage(lang);
 }
 
+void KMeditor::forcePlainTextMarkup(bool force)
+{
+  d->forcePlainTextMarkup = force;
+}
+
 void KMeditor::insertPlainTextImplementation()
 {
 #ifdef GRANTLEE_GREATER_0_2
-  if(MessageComposer::MessageComposerSettings::self()->improvePlainTextOfHtmlMessage()) {
+  if( d->forcePlainTextMarkup ) {
     Grantlee::PlainTextMarkupBuilder *pb = new Grantlee::PlainTextMarkupBuilder();
 
     Grantlee::MarkupDirector *pmd = new Grantlee::MarkupDirector( pb );

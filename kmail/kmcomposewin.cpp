@@ -1409,11 +1409,6 @@ void KMComposeWin::setupActions( void )
   mCryptoModuleAction->setItems( l );
   mCryptoModuleAction->setToolTip( i18n( "Select a cryptographic format for this message" ) );
 
-  actionFormatReset = new KAction( KIcon( "draw-eraser" ), i18n("Reset Font Settings"), this );
-  actionFormatReset->setIconText( i18n("Reset Font") );
-  actionCollection()->addAction( "format_reset", actionFormatReset );
-  connect( actionFormatReset, SIGNAL(triggered(bool)), SLOT(slotFormatReset()) );
-
   mComposerBase->editor()->createActions( actionCollection() );
 
   createGUI( "kmcomposerui.rc" );
@@ -2915,7 +2910,6 @@ void KMComposeWin::enableHtml()
   if ( !markupAction->isChecked() )
     markupAction->setChecked( true );
 
-  mSaveFont = mComposerBase->editor()->currentFont();
   mComposerBase->editor()->updateActionStates();
   mComposerBase->editor()->setActionsEnabled( true );
 }
@@ -2925,6 +2919,26 @@ void KMComposeWin::enableHtml()
 //-----------------------------------------------------------------------------
 void KMComposeWin::disableHtml( Message::ComposerViewBase::Confirmation confirmation )
 {
+  bool forcePlainTextMarkup = false;
+#ifdef GRANTLEE_GREATER_0_2
+  if ( confirmation == Message::ComposerViewBase::LetUserConfirm && mComposerBase->editor()->isFormattingUsed() && !mForceDisableHtml ) {
+    int choice = KMessageBox::warningYesNoCancel( this, i18n( "Turning HTML mode off "
+        "will cause the text to lose the formatting. Are you sure?" ),
+        i18n( "Lose the formatting?" ), KGuiItem( i18n( "Lose Formatting" ) ), KGuiItem( i18n( "Add Markup Plain Text" ) ) , KStandardGuiItem::cancel(),
+              "LoseFormattingWarning" );
+
+    switch(choice) {
+    case KMessageBox::Cancel:
+        enableHtml();
+        return;
+    case KMessageBox::No:
+        forcePlainTextMarkup = true;
+        break;
+    case KMessageBox::Yes:
+        break;
+    }
+  }
+#else
   if ( confirmation == Message::ComposerViewBase::LetUserConfirm && mComposerBase->editor()->isFormattingUsed() && !mForceDisableHtml ) {
     int choice = KMessageBox::warningContinueCancel( this, i18n( "Turning HTML mode off "
         "will cause the text to lose the formatting. Are you sure?" ),
@@ -2935,7 +2949,9 @@ void KMComposeWin::disableHtml( Message::ComposerViewBase::Confirmation confirma
       return;
     }
   }
+#endif
 
+  mComposerBase->editor()->forcePlainTextMarkup(forcePlainTextMarkup);
   mComposerBase->editor()->switchToPlainText();
   mComposerBase->editor()->setActionsEnabled( false );
 
@@ -3197,11 +3213,6 @@ void KMComposeWin::slotFolderRemoved( const Akonadi::Collection & col )
   }
 }
 
-void KMComposeWin::slotFormatReset()
-{
-  mComposerBase->editor()->setTextForegroundColor( palette().text().color() );
-  mComposerBase->editor()->setFont( mSaveFont );
-}
 
 void KMComposeWin::slotOverwriteModeChanged()
 {
