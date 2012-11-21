@@ -60,8 +60,20 @@ public:
         Address
     };
 
+    enum ListType {
+        None,
+        Disc,
+        Circle,
+        Square,
+        Decimal,
+        LowerAlpha,
+        UpperAlpha,
+        LowerRoman,
+        UpperRoman
+    };
+
     void _k_slotAdjustActions();
-    void _k_setListStyle(int);
+    void _k_setListStyle(QAction *act);
     void _k_setFormatType(QAction* action);
 
     QAction* getAction ( QWebPage::WebAction action ) const;
@@ -91,6 +103,7 @@ public:
 };
 }
 Q_DECLARE_METATYPE(ComposerEditorNG::ComposerEditorPrivate::FormatType)
+Q_DECLARE_METATYPE(ComposerEditorNG::ComposerEditorPrivate::ListType)
 
 namespace ComposerEditorNG {
 QAction* ComposerEditorPrivate::getAction ( QWebPage::WebAction action ) const
@@ -101,9 +114,34 @@ QAction* ComposerEditorPrivate::getAction ( QWebPage::WebAction action ) const
         return 0;
 }
 
-void ComposerEditorPrivate::_k_setListStyle(int style)
+void ComposerEditorPrivate::_k_setListStyle(QAction *act)
 {
-//TODO
+    if(!act) {
+        return;
+    }
+    QString command;
+    switch(act->data().value<ComposerEditorNG::ComposerEditorPrivate::ListType>())
+    {
+    case None:
+        break;
+    case Disc:
+        break;
+    case Circle:
+        break;
+    case Square:
+        break;
+    case Decimal:
+        break;
+    case LowerAlpha:
+        break;
+    case UpperAlpha:
+        break;
+    case LowerRoman:
+        break;
+    case UpperRoman:
+    break;
+
+    }
 }
 
 void ComposerEditorPrivate::_k_setFormatType(QAction *act)
@@ -298,26 +336,32 @@ void ComposerEditor::createActions(KActionCollection *actionCollection)
     FORWARD_ACTION(d->action_insert_horizontal_rule, QWebPage::ToggleSuperscript);
 
     d->action_list_style = new KSelectAction(KIcon("format-list-unordered"), i18nc("@title:menu", "List Style"), actionCollection);
-    QStringList listStyles;
-    listStyles      << i18nc("@item:inmenu no list style", "None")
-                    << i18nc("@item:inmenu disc list style", "Disc")
-                    << i18nc("@item:inmenu circle list style", "Circle")
-                    << i18nc("@item:inmenu square list style", "Square")
-                    << i18nc("@item:inmenu numbered lists", "123")
-                    << i18nc("@item:inmenu lowercase abc lists", "abc")
-                    << i18nc("@item:inmenu uppercase abc lists", "ABC")
-                    << i18nc("@item:inmenu lower case roman numerals", "i ii iii")
-                    << i18nc("@item:inmenu upper case roman numerals", "I II III");
-
-    d->action_list_style->setItems(listStyles);
+    KAction *act = d->action_list_style->addAction(i18nc("@item:inmenu no list style", "None"));
+    act->setData(ComposerEditorPrivate::None);
+    act = d->action_list_style->addAction(i18nc("@item:inmenu disc list style", "Disc"));
+    act->setData(ComposerEditorPrivate::Disc);
+    act = d->action_list_style->addAction(i18nc("@item:inmenu circle list style", "Circle"));
+    act->setData(ComposerEditorPrivate::Circle);
+    act = d->action_list_style->addAction(i18nc("@item:inmenu square list style", "Square"));
+    act->setData(ComposerEditorPrivate::Square);
+    act = d->action_list_style->addAction(i18nc("@item:inmenu numbered lists", "123"));
+    act->setData(ComposerEditorPrivate::Decimal);
+    act = d->action_list_style->addAction(i18nc("@item:inmenu lowercase abc lists", "abc"));
+    act->setData(ComposerEditorPrivate::LowerAlpha);
+    act = d->action_list_style->addAction(i18nc("@item:inmenu uppercase abc lists", "ABC"));
+    act->setData(ComposerEditorPrivate::UpperAlpha);
+    act = d->action_list_style->addAction(i18nc("@item:inmenu lower case roman numerals", "i ii iii"));
+    act->setData(ComposerEditorPrivate::LowerRoman);
+    act = d->action_list_style->addAction(i18nc("@item:inmenu upper case roman numerals", "I II III"));
+    act->setData(ComposerEditorPrivate::UpperRoman);
     d->action_list_style->setCurrentItem(0);
     d->richTextActionList.append((d->action_list_style));
     actionCollection->addAction("htmleditor_format_list_style", d->action_list_style);
-    connect(d->action_list_style, SIGNAL(triggered(int)),
-            this, SLOT(_k_setListStyle(int)));
+    connect(d->action_list_style, SIGNAL(triggered(QAction*)),
+            this, SLOT(_k_setListStyle(QAction*)));
 
     d->action_format_type = new KSelectAction(KIcon("format-list-unordered"), i18nc("@title:menu", "List Style"), actionCollection);
-    KAction *act = d->action_format_type->addAction(i18n( "Paragraph" ));
+    act = d->action_format_type->addAction(i18n( "Paragraph" ));
     act->setData(ComposerEditorPrivate::Paragraph);
     act = d->action_format_type->addAction(i18n( "Heading 1" ));
     act->setData(ComposerEditorPrivate::Header1);
@@ -339,8 +383,8 @@ void ComposerEditor::createActions(KActionCollection *actionCollection)
     d->richTextActionList.append(d->action_format_type);
 
     actionCollection->addAction("htmleditor_format_type", d->action_format_type);
-    connect(d->action_format_type, SIGNAL(triggered(QAction)),
-            this, SLOT(_k_setFormatType(QAction)));
+    connect(d->action_format_type, SIGNAL(triggered(QAction*)),
+            this, SLOT(_k_setFormatType(QAction*)));
 
 }
 
