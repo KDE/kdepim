@@ -85,7 +85,6 @@ public:
     void _k_slotAddImage();
     void _k_setTextForegroundColor();
     void _k_setTextBackgroundColor();
-    void _k_slotFormatReset();
 
     QAction* getAction ( QWebPage::WebAction action ) const;
     void execCommand(const QString &cmd);
@@ -245,11 +244,6 @@ void ComposerEditorPrivate::_k_slotAddImage()
     //TODO
 }
 
-void ComposerEditorPrivate::_k_slotFormatReset()
-{
-    //TODO
-}
-
 void ComposerEditorPrivate::_k_slotAdjustActions()
 {
     //TODO
@@ -382,7 +376,7 @@ void ComposerEditor::createActions(KActionCollection *actionCollection)
     d->action_list_dedent = new KAction(KIcon("format-indent-less"), i18nc("@action", "Decrease Indent"), actionCollection);
     d->richTextActionList.append(d->action_list_dedent);
     actionCollection->addAction("htmleditor_format_list_indent_less", d->action_list_dedent);
-    FORWARD_ACTION(d->action_list_indent, QWebPage::Outdent);
+    FORWARD_ACTION(d->action_list_dedent, QWebPage::Outdent);
 
     //horizontal line
     d->action_insert_horizontal_rule = new KAction(KIcon("insert-horizontal-rule"), i18nc("@action", "Insert Rule Line"), actionCollection);
@@ -448,6 +442,9 @@ void ComposerEditor::createActions(KActionCollection *actionCollection)
     act->setData(ComposerEditorPrivate::Address);
     d->action_format_type->setCurrentItem(0);
     d->richTextActionList.append(d->action_format_type);
+    actionCollection->addAction("htmleditor_format_type", d->action_format_type);
+    connect(d->action_format_type, SIGNAL(triggered(QAction*)),
+            this, SLOT(_k_setFormatType(QAction*)));
 
     //Color
     //Foreground Color
@@ -465,9 +462,6 @@ void ComposerEditor::createActions(KActionCollection *actionCollection)
 
 
 
-    actionCollection->addAction("htmleditor_format_type", d->action_format_type);
-    connect(d->action_format_type, SIGNAL(triggered(QAction*)),
-            this, SLOT(_k_setFormatType(QAction*)));
 
     d->action_add_emoticon = new KPIMTextEdit::EmoticonTextEditAction(actionCollection);
     actionCollection->addAction("htmleditor_add_emoticon", d->action_add_emoticon);
@@ -484,7 +478,7 @@ void ComposerEditor::createActions(KActionCollection *actionCollection)
 
     d->action_format_reset = new KAction( KIcon( "draw-eraser" ), i18n("Reset Font Settings"), this );
     actionCollection->addAction( "htmleditor_format_reset", d->action_format_reset );
-    connect( d->action_format_reset, SIGNAL(triggered(bool)), SLOT(_k_slotFormatReset()) );
+    FORWARD_ACTION(d->action_format_reset, QWebPage::RemoveFormat);
 }
 
 
