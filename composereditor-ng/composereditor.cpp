@@ -21,7 +21,7 @@
 #include "composereditor.h"
 
 #include <kpimtextedit/emoticontexteditaction.h>
-
+#include <kpimtextedit/inserthtmldialog.h>
 
 #include <KAction>
 #include <KToggleAction>
@@ -80,6 +80,7 @@ public:
     void _k_setListStyle(QAction *act);
     void _k_setFormatType(QAction* action);
     void _k_slotAddEmoticon(const QString&);
+    void _k_slotInsertHtml();
 
     QAction* getAction ( QWebPage::WebAction action ) const;
     void execCommand(const QString &cmd);
@@ -105,6 +106,7 @@ public:
     KSelectAction *action_list_style;
     KSelectAction *action_format_type;
     KPIMTextEdit::EmoticonTextEditAction *action_add_emoticon;
+    KAction *action_insert_html;
     bool richTextEnabled;
 };
 }
@@ -192,6 +194,18 @@ void ComposerEditorPrivate::_k_setFormatType(QAction *act)
 void ComposerEditorPrivate::_k_slotAddEmoticon(const QString& emoticon)
 {
     execCommand("insertHTML", emoticon);
+}
+
+void ComposerEditorPrivate::_k_slotInsertHtml()
+{
+    KPIMTextEdit::InsertHtmlDialog *dialog = new KPIMTextEdit::InsertHtmlDialog( q );
+    if ( dialog->exec() ) {
+      const QString str = dialog->html();
+      if ( !str.isEmpty() ) {
+          execCommand("insertHTML", str);
+      }
+    }
+    delete dialog;
 }
 
 void ComposerEditorPrivate::_k_slotAdjustActions()
@@ -401,6 +415,10 @@ void ComposerEditor::createActions(KActionCollection *actionCollection)
     actionCollection->addAction("htmleditor_add_emoticon", d->action_add_emoticon);
     connect( d->action_add_emoticon, SIGNAL(emoticonActivated(QString)),
              this, SLOT(_k_slotAddEmoticon(QString)) );
+
+    d->action_insert_html = new KAction( i18n( "Insert HTML" ), this );
+    actionCollection->addAction( QLatin1String( "htmleditor_insert_html" ), d->action_insert_html );
+    connect( d->action_insert_html, SIGNAL(triggered(bool)), SLOT(_k_slotInsertHtml()) );
 }
 
 
