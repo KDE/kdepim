@@ -400,12 +400,12 @@ void ComposerEditor::createActions(KActionCollection *actionCollection)
     d->action_text_subscript = new KToggleAction(KIcon("format-text-subscript"), i18nc("@action", "Subscript"), actionCollection);
     d->richTextActionList.append((d->action_text_subscript));
     actionCollection->addAction("htmleditor_format_text_subscript", d->action_text_subscript);
-    FORWARD_ACTION(d->action_insert_horizontal_rule, QWebPage::ToggleSubscript);
+    FORWARD_ACTION(d->action_text_subscript, QWebPage::ToggleSubscript);
 
     d->action_text_superscript = new KToggleAction(KIcon("format-text-superscript"), i18nc("@action", "Superscript"), actionCollection);
     d->richTextActionList.append((d->action_text_superscript));
     actionCollection->addAction("htmleditor_format_text_superscript", d->action_text_superscript);
-    FORWARD_ACTION(d->action_insert_horizontal_rule, QWebPage::ToggleSuperscript);
+    FORWARD_ACTION(d->action_text_superscript, QWebPage::ToggleSuperscript);
 
     d->action_list_style = new KSelectAction(KIcon("format-list-unordered"), i18nc("@title:menu", "List Style"), actionCollection);
     KAction *act = d->action_list_style->addAction(i18nc("@item:inmenu no list style", "None"));
