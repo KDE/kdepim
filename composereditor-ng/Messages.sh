@@ -1,2 +1,3 @@
 #! /bin/sh
-$XGETTEXT *.h *.cpp -o $podir/libcomposereditorng.pot
+#Laurent reactivate it in 4.11
+#$XGETTEXT *.h *.cpp -o $podir/libcomposereditorng.pot
