@@ -16,3 +16,6 @@
 - Add support for text/background color
 - Add hmlmode on/off support
 - Add speak support
+- Add support for find/replace
+- Restore default font when switch out of html mode
+- Create a real popup menu

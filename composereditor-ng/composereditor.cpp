@@ -307,6 +307,7 @@ ComposerEditor::ComposerEditor(QWidget *parent)
     : KWebView(parent), d(new ComposerEditorPrivate(this))
 {
     page()->setContentEditable(true);
+    page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
 }
 
 ComposerEditor::~ComposerEditor()
