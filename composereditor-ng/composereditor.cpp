@@ -30,11 +30,15 @@
 #include <KSelectAction>
 #include <KActionCollection>
 #include <KColorDialog>
+#include <KMessageBox>
+#include <KStandardDirs>
+#include <KDebug>
 
 #include <QWebFrame>
 #include <QWebPage>
 #include <QDebug>
 #include <QPointer>
+#include <QFile>
 
 
 namespace ComposerEditorNG {
@@ -254,9 +258,9 @@ void ComposerEditorPrivate::_k_slotAddImage()
             imageWidth = dlg->imageWidth();
             imageHeight = dlg->imageHeight();
         }
-        QString imageHtml = QString::fromLatin1("<img %1 %2 %3 >").arg((imageWidth>0) ? QString::fromLatin1("width=\"%2\"").arg(imageWidth) : QString())
-                .arg((imageHeight>0) ? QString::fromLatin1("height=\"%1\"").arg(imageHeight) : QString())
-                .arg(url.isEmpty() ? QString() : QString::fromLatin1("src=\"file://%1\"").arg(url.path()));
+        QString imageHtml = QString::fromLatin1("<img %1 %2 %3 />").arg((imageWidth>0) ? QString::fromLatin1("width=%1").arg(imageWidth) : QString())
+                .arg((imageHeight>0) ? QString::fromLatin1("height=%1").arg(imageHeight) : QString())
+                .arg(url.isEmpty() ? QString() : QString::fromLatin1("src='file://%1'").arg(url.path()));
         qDebug()<<" imageHtml"<<imageHtml;
         execCommand("insertHTML", imageHtml);
     }
@@ -306,6 +310,13 @@ bool ComposerEditorPrivate::queryCommandState(const QString &cmd)
 ComposerEditor::ComposerEditor(QWidget *parent)
     : KWebView(parent), d(new ComposerEditorPrivate(this))
 {
+    QFile file ( KStandardDirs::locate ( "data", "composereditor/composereditorinitialhtml" ) );
+    kDebug() <<file.fileName();
+    if ( !file.open ( QIODevice::ReadOnly ) )
+        KMessageBox::error(this, i18n ( "Cannot open template file." ), i18n ( "composer editor" ));
+    else
+        setContent ( file.readAll());//, "application/xhtml+xml" );
+
     page()->setContentEditable(true);
     page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
 }
