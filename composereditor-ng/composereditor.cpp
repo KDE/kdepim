@@ -33,6 +33,7 @@
 #include <KMessageBox>
 #include <KStandardDirs>
 #include <KDebug>
+#include <KFontAction>
 
 #include <QWebFrame>
 #include <QWebPage>
@@ -93,6 +94,9 @@ public:
     void _k_setTextBackgroundColor();
     void _k_slotInsertHorizontalRule();
     void _k_insertLink();
+    void _k_setFontSize(int);
+    void _k_setFontFamily(const QString&);
+    void _k_adjustActions();
 
     QAction* getAction ( QWebPage::WebAction action ) const;
     void execCommand(const QString &cmd);
@@ -118,6 +122,8 @@ public:
     KAction *action_list_dedent;
     KSelectAction *action_list_style;
     KSelectAction *action_format_type;
+    KSelectAction *action_font_size;
+    KFontAction *action_font_family;
     KPIMTextEdit::EmoticonTextEditAction *action_add_emoticon;
     KAction *action_insert_html;
     KAction *action_insert_image;
@@ -168,6 +174,8 @@ void ComposerEditorPrivate::_k_setListStyle(QAction *act)
     break;
 
     }
+    //execCommand(QLatin1String("insertOrderedList"), QLatin1String("newsL"));
+    execCommand(QLatin1String("insertHTML"), QLatin1String("<li> </li>"));
 }
 
 void ComposerEditorPrivate::_k_setFormatType(QAction *act)
@@ -249,6 +257,11 @@ void ComposerEditorPrivate::_k_setTextForegroundColor()
 #endif
 }
 
+void ComposerEditorPrivate::_k_adjustActions()
+{
+    //TODO
+}
+
 void ComposerEditorPrivate::_k_slotAddImage()
 {
     QPointer<KPIMTextEdit::InsertImageDialog> dlg = new KPIMTextEdit::InsertImageDialog( q );
@@ -277,6 +290,16 @@ void ComposerEditorPrivate::_k_slotInsertHorizontalRule()
 void ComposerEditorPrivate::_k_insertLink()
 {
     //TODO
+}
+
+void ComposerEditorPrivate::_k_setFontSize(int fontSize)
+{
+    execCommand(QLatin1String("fontSize"), QString::number(fontSize+1)); //Verify
+}
+
+void ComposerEditorPrivate::_k_setFontFamily(const QString& family)
+{
+    execCommand(QLatin1String("fontName"), family);
 }
 
 void ComposerEditorPrivate::_k_slotAdjustActions()
@@ -326,11 +349,14 @@ ComposerEditor::ComposerEditor(QWidget *parent)
 
     page()->setContentEditable(true);
     page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
+    connect( page(), SIGNAL (selectionChanged()), this, SLOT(_k_adjustActions()) );
 }
 
 ComposerEditor::~ComposerEditor()
 {
-  delete d;
+    QString content = page()->mainFrame()->toHtml();
+    qDebug()<<"content "<<content;
+    delete d;
 }
 
 void ComposerEditor::createActions(KActionCollection *actionCollection)
@@ -540,6 +566,27 @@ void ComposerEditor::createActions(KActionCollection *actionCollection)
     actionCollection->addAction(QLatin1String("htmleditor_insert_link"), d->action_insert_link);
     connect(d->action_insert_link, SIGNAL(triggered(bool)), this, SLOT(_k_insertLink()));
 
+    //Font
+    d->action_font_size = new KSelectAction(i18nc("@action", "Font &Size"), actionCollection);
+    d->richTextActionList.append(d->action_font_size);
+    QStringList sizes;
+    sizes << QLatin1String("xx-small");
+    sizes << QLatin1String("x-small");
+    sizes << QLatin1String("small");
+    sizes << QLatin1String("medium");
+    sizes << QLatin1String("large");
+    sizes << QLatin1String("x-large");
+    sizes << QLatin1String("xx-large");
+    d->action_font_size->setItems(sizes);
+    d->action_font_size->setCurrentItem(0);
+    actionCollection->addAction(QLatin1String("htmleditor_format_font_size"), d->action_font_size);
+    connect(d->action_font_size, SIGNAL(triggered(int)), this, SLOT(_k_setFontSize(int)));
+
+    d->action_font_family = new KFontAction(i18nc("@action", "&Font"), actionCollection);
+    d->richTextActionList.append((d->action_font_family));
+    actionCollection->addAction(QLatin1String("htmleditor_format_font_family"), d->action_font_family);
+    connect(d->action_font_family, SIGNAL(triggered(QString)), this, SLOT(_k_setFontFamily(QString)));
+
 }
 
 
@@ -565,6 +612,12 @@ void ComposerEditor::setActionsEnabled(bool enabled)
         action->setEnabled(enabled);
     }
     d->richTextEnabled = enabled;
+}
+
+void ComposerEditor::contextMenuEvent(QContextMenuEvent* event)
+{
+    //TODO
+    KWebView::contextMenuEvent(event);
 }
 
 }

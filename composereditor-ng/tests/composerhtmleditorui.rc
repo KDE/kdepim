@@ -32,6 +32,8 @@
   <Action name="htmleditor_format_text_strikeout"/>
   <Action name="htmleditor_format_text_foreground_color"/>
   <Action name="htmleditor_format_text_background_color"/>
+  <Action name="htmleditor_format_font_size"/>
+  <Action name="htmleditor_format_font_family"/>
   <Separator lineSeparator="true"/>
   <Action name="htmleditor_format_font_family"/>
   <Action name="htmleditor_format_font_size"/>
