@@ -22,6 +22,7 @@
 
 #include <kpimtextedit/emoticontexteditaction.h>
 #include <kpimtextedit/inserthtmldialog.h>
+#include <kpimtextedit/insertimagedialog.h>
 
 #include <KAction>
 #include <KToggleAction>
@@ -30,9 +31,10 @@
 #include <KActionCollection>
 #include <KColorDialog>
 
-#include <QtWebKit/QWebFrame>
-#include <QtWebKit/QWebPage>
+#include <QWebFrame>
+#include <QWebPage>
 #include <QDebug>
+#include <QPointer>
 
 
 namespace ComposerEditorNG {
@@ -85,6 +87,7 @@ public:
     void _k_slotAddImage();
     void _k_setTextForegroundColor();
     void _k_setTextBackgroundColor();
+    void _k_slotInsertHorizontalRule();
 
     QAction* getAction ( QWebPage::WebAction action ) const;
     void execCommand(const QString &cmd);
@@ -207,7 +210,7 @@ void ComposerEditorPrivate::_k_slotAddEmoticon(const QString& emoticon)
 
 void ComposerEditorPrivate::_k_slotInsertHtml()
 {
-    KPIMTextEdit::InsertHtmlDialog *dialog = new KPIMTextEdit::InsertHtmlDialog( q );
+    QPointer<KPIMTextEdit::InsertHtmlDialog> dialog = new KPIMTextEdit::InsertHtmlDialog( q );
     if ( dialog->exec() ) {
       const QString str = dialog->html();
       if ( !str.isEmpty() ) {
@@ -242,7 +245,27 @@ void ComposerEditorPrivate::_k_setTextForegroundColor()
 
 void ComposerEditorPrivate::_k_slotAddImage()
 {
-    //TODO
+    QPointer<KPIMTextEdit::InsertImageDialog> dlg = new KPIMTextEdit::InsertImageDialog( q );
+    if ( dlg->exec() == KDialog::Accepted ) {
+        const KUrl url = dlg->imageUrl();
+        int imageWidth = -1;
+        int imageHeight = -1;
+        if ( !dlg->keepOriginalSize() ) {
+            imageWidth = dlg->imageWidth();
+            imageHeight = dlg->imageHeight();
+        }
+        QString imageHtml = QString::fromLatin1("<img %1 %2 %3 >").arg((imageWidth>0) ? QString::fromLatin1("width=\"%2\"").arg(imageWidth) : QString())
+                .arg((imageHeight>0) ? QString::fromLatin1("height=\"%1\"").arg(imageHeight) : QString())
+                .arg(url.isEmpty() ? QString() : QString::fromLatin1("src=\"file://%1\"").arg(url.path()));
+        qDebug()<<" imageHtml"<<imageHtml;
+        execCommand("insertHTML", imageHtml);
+    }
+    delete dlg;
+}
+
+void ComposerEditorPrivate::_k_slotInsertHorizontalRule()
+{
+    execCommand("insertHTML", QLatin1String("<hr>"));
 }
 
 void ComposerEditorPrivate::_k_slotAdjustActions()
@@ -393,7 +416,7 @@ void ComposerEditor::createActions(KActionCollection *actionCollection)
     d->action_insert_horizontal_rule = new KAction(KIcon("insert-horizontal-rule"), i18nc("@action", "Insert Rule Line"), actionCollection);
     d->richTextActionList.append((d->action_insert_horizontal_rule));
     actionCollection->addAction("htmleditor_insert_horizontal_rule", d->action_insert_horizontal_rule);
-    FORWARD_ACTION(d->action_insert_horizontal_rule, QWebPage::InsertLineSeparator); //Verify
+    connect( d->action_insert_horizontal_rule, SIGNAL(triggered(bool)), SLOT(_k_slotInsertHorizontalRule()) );
 
 
     //Superscript/subScript
