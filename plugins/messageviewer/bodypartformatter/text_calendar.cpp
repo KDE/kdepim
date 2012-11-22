@@ -457,7 +457,6 @@ class UrlHandler : public Interface::BodyPartURLHandler
           receiver = (*it).address();
         }
       }
-
       if ( found != 1 ) {
         QStringList possibleAddrs;
         bool ok;
@@ -590,8 +589,6 @@ class UrlHandler : public Interface::BodyPartURLHandler
         KPIMIdentities::IdentityManager().identityForAddress(
           findReceiver( viewerInstance->message().get() ) );
 
-      kDebug() << "Full email: " << identity.fullEmailAddr();
-
       const bool nullIdentity = ( identity == KPIMIdentities::Identity::null() );
 
       if ( !nullIdentity ) {
@@ -602,21 +599,20 @@ class UrlHandler : public Interface::BodyPartURLHandler
       }
 
       const bool identityHasTransport = !identity.transport().isEmpty();
-      QString transportName;
+      int transportId = -1;
       if ( !nullIdentity && identityHasTransport ) {
-          transportName = identity.transport();
+          transportId = identity.transport().toInt();
       } else if ( !nullIdentity && identity.isDefault() ) {
-          transportName = TransportManager::self()->defaultTransportName();
+          transportId = TransportManager::self()->defaultTransportId();
       } else {
-          transportName = TransportManager::self()->defaultTransportName();
+          transportId = TransportManager::self()->defaultTransportId();
       }
-
-      if(transportName.isEmpty()) {
+      if(transportId == -1) {
         if ( !TransportManager::self()->showTransportCreationDialog( 0, TransportManager::IfNoTransportExists ) )
           return false;
-        transportName = TransportManager::self()->defaultTransportName();
+        transportId = TransportManager::self()->defaultTransportId();
       }
-      msg->setHeader( new KMime::Headers::Generic( "X-KMail-Transport", msg.get(), transportName, "utf-8" ) );
+      msg->setHeader( new KMime::Headers::Generic( "X-KMail-Transport", msg.get(), QString::number(transportId), "utf-8" ) );
 
       // Outlook will only understand the reply if the From: header is the
       // same as the To: header of the invitation message.
@@ -660,7 +656,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
       }
 #else
       msg->assemble();
-      MailTransport::Transport *transport = MailTransport::TransportManager::self()->transportByName( transportName );
+      MailTransport::Transport *transport = MailTransport::TransportManager::self()->transportById( transportId );
 
 
       MailTransport::MessageQueueJob *job = new MailTransport::MessageQueueJob;
