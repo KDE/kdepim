@@ -92,6 +92,7 @@ public:
     void _k_setTextForegroundColor();
     void _k_setTextBackgroundColor();
     void _k_slotInsertHorizontalRule();
+    void _k_insertLink();
 
     QAction* getAction ( QWebPage::WebAction action ) const;
     void execCommand(const QString &cmd);
@@ -123,6 +124,7 @@ public:
     KAction *action_text_foreground_color;
     KAction *action_text_background_color;
     KAction *action_format_reset;
+    KAction *action_insert_link;
     bool richTextEnabled;
 };
 }
@@ -270,6 +272,11 @@ void ComposerEditorPrivate::_k_slotAddImage()
 void ComposerEditorPrivate::_k_slotInsertHorizontalRule()
 {
     execCommand(QLatin1String("insertHTML"), QLatin1String("<hr>"));
+}
+
+void ComposerEditorPrivate::_k_insertLink()
+{
+    //TODO
 }
 
 void ComposerEditorPrivate::_k_slotAdjustActions()
@@ -518,13 +525,21 @@ void ComposerEditor::createActions(KActionCollection *actionCollection)
     actionCollection->addAction( QLatin1String( "htmleditor_insert_html" ), d->action_insert_html );
     connect( d->action_insert_html, SIGNAL(triggered(bool)), SLOT(_k_slotInsertHtml()) );
 
-    d->action_insert_image = new KAction( KIcon( QLatin1String( "insert-image" ) ), i18n( "Add Image" ), this );
+    d->action_insert_image = new KAction( KIcon( QLatin1String( "insert-image" ) ), i18n( "Add Image" ), actionCollection );
     actionCollection->addAction( QLatin1String( "htmleditor_add_image" ), d->action_insert_image );
     connect( d->action_insert_image, SIGNAL(triggered(bool)), SLOT(_k_slotAddImage()) );
 
-    d->action_format_reset = new KAction( KIcon( QLatin1String("draw-eraser") ), i18n("Reset Font Settings"), this );
+    d->action_format_reset = new KAction( KIcon( QLatin1String("draw-eraser") ), i18n("Reset Font Settings"), actionCollection );
     actionCollection->addAction( QLatin1String("htmleditor_format_reset"), d->action_format_reset );
     FORWARD_ACTION(d->action_format_reset, QWebPage::RemoveFormat);
+
+
+    //link
+    d->action_insert_link = new KAction(KIcon(QLatin1String("insert-link")), i18nc("@action", "Link"), actionCollection);
+    d->richTextActionList.append(d->action_insert_link);
+    actionCollection->addAction(QLatin1String("htmleditor_insert_link"), d->action_insert_link);
+    connect(d->action_insert_link, SIGNAL(triggered(bool)), this, SLOT(_k_insertLink()));
+
 }
 
 

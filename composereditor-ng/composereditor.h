@@ -61,6 +61,7 @@ private:
     Q_PRIVATE_SLOT( d, void _k_setTextForegroundColor() )
     Q_PRIVATE_SLOT( d, void _k_setTextBackgroundColor() )
     Q_PRIVATE_SLOT( d, void _k_slotInsertHorizontalRule() )
+    Q_PRIVATE_SLOT( d, void _k_insertLink() )
 };
 }
 
