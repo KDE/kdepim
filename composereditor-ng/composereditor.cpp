@@ -98,6 +98,7 @@ public:
 
     QList<KAction*> richTextActionList;
     ComposerEditor *q;
+
     KToggleAction *action_text_bold;
     KToggleAction *action_text_italic;
     KToggleAction *action_text_underline;
@@ -588,6 +589,16 @@ void ComposerEditor::contextMenuEvent(QContextMenuEvent* event)
     KMenu *menu = new KMenu;
     const QString selectedText = plainTextContent().simplified();
     const bool emptyDocument = selectedText.isEmpty();
+
+    menu->addAction(page()->action(QWebPage::Undo));
+    menu->addAction(page()->action(QWebPage::Redo));
+    menu->addSeparator();
+    menu->addAction(page()->action(QWebPage::Cut));
+    menu->addAction(page()->action(QWebPage::Copy));
+    menu->addAction(page()->action(QWebPage::Paste));
+    menu->addSeparator();
+    menu->addAction(page()->action(QWebPage::SelectAll));
+    menu->addSeparator();
 
     QAction *speakAction = menu->addAction(i18n("Speak Text"));
     speakAction->setIcon(KIcon(QLatin1String("preferences-desktop-text-to-speech")));
