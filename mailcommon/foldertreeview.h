@@ -90,6 +90,8 @@ class MAILCOMMON_EXPORT FolderTreeView : public Akonadi::EntityTreeView
     void slotFocusNextFolder();
     void slotFocusPrevFolder();
     void slotSelectFocusFolder();
+    void slotFocusFirstFolder();
+    void slotFocusLastFolder();
 
   protected slots:
     void slotHeaderContextMenuRequested( const QPoint & );
