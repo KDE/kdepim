@@ -1640,6 +1640,32 @@ bool View::selectFirstMessageItem( MessageTypeFilter messageTypeFilter, bool cen
   return true;
 }
 
+bool View::selectLastMessageItem( MessageTypeFilter messageTypeFilter, bool centerItem )
+{
+  if ( !storageModel() )
+      return false;
+
+  Item * it = lastMessageItem( messageTypeFilter );
+  if ( !it )
+    return false;
+
+  Q_ASSERT( it != d->mModel->rootItem() );
+
+  setFocus();
+  ensureDisplayedWithParentsExpanded( it );
+
+  QModelIndex idx = d->mModel->index( it, 0 );
+
+  Q_ASSERT( idx.isValid() );
+
+  setCurrentIndex( idx );
+
+  if ( centerItem )
+    scrollTo( idx, QAbstractItemView::PositionAtCenter );
+
+  return true;
+}
+
 void View::modelFinishedLoading()
 {
   Q_ASSERT( storageModel() );

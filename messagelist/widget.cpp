@@ -161,6 +161,11 @@ bool Widget::selectFirstMessageItem( MessageList::Core::MessageTypeFilter messag
   return view()->selectFirstMessageItem( messageTypeFilter, centerItem );
 }
 
+bool Widget::selectLastMessageItem( Core::MessageTypeFilter messageTypeFilter, bool centerItem )
+{
+  return view()->selectLastMessageItem( messageTypeFilter, centerItem );
+}
+
 void Widget::selectAll()
 {
   view()->setAllGroupsExpanded( true );
