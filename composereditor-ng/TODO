@@ -1,4 +1,5 @@
 - Add default html actions (in progress)
+- Add spell checking
 - Add background spell checking (qt-webkit-2.3)
 - Add hightlighting
 - Add support for signature
@@ -14,8 +15,8 @@
 - Add support for remove format/style (DONE)
 - Add supportf for insert html code (DONE)
 - Add support for text/background color (in progress)
-- Add hmlmode on/off support
+- Add hmlmode on/off support (in progress)
 - Add speak support (DONE)
 - Add support for find/replace
 - Restore default font when switch out of html mode
-- Create a real popup menu
+- Create a real popup menu (In progress)

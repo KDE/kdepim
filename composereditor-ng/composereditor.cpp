@@ -199,25 +199,22 @@ void ComposerEditorPrivate::_k_slotInsertHtml()
 
 void ComposerEditorPrivate::_k_setTextBackgroundColor()
 {
-    //TODO
-#if 0
-    const int result = KColorDialog::getColor(currentTextBackgroundColor, KColorScheme(QPalette::Active, KColorScheme::View).foreground().color() , q);
-    if (!currentTextBackgroundColor.isValid())
-        currentTextBackgroundColor = KColorScheme(QPalette::Active, KColorScheme::View).foreground().color() ;
-    if (result != QDialog::Accepted)
-        return;
-
-    q->setTextBackgroundColor(currentTextBackgroundColor);
-    execCommand("hiliteColor", color.name());
-#endif
+    //TODO get previous color
+    QColor newColor;
+    const int result = KColorDialog::getColor(newColor,q);
+    if(result == QDialog::Accepted) {
+        execCommand(QLatin1String("hiliteColor"), newColor.name());
+    }
 }
 
 void ComposerEditorPrivate::_k_setTextForegroundColor()
 {
-#if 0
-    //TODO
-    execCommand("foreColor", color.name());
-#endif
+    //TODO get previous color
+    QColor newColor;
+    const int result = KColorDialog::getColor(newColor,q);
+    if(result == QDialog::Accepted) {
+        execCommand(QLatin1String("foreColor"), newColor.name());
+    }
 }
 
 void ComposerEditorPrivate::_k_adjustActions()
