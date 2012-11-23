@@ -359,6 +359,8 @@ public:
   /** View message part of type message/RFC822 in extra viewer window. */
   void atmViewMsg( KMime::Message::Ptr message );
 
+  void setExternalWindow( bool b );
+
   void adjustLayout();
   void createWidgets();
   void createActions();

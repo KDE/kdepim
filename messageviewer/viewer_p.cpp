@@ -210,7 +210,7 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
     mZoomFactor( 100 )
 {
   if ( !mainWindow )
-    mainWindow = aParent;
+    mMainWindow = aParent;
 
   mHtmlOverride = false;
   mHtmlLoadExtOverride = false;
@@ -220,7 +220,7 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
   mUpdateReaderWinTimer.setObjectName( "mUpdateReaderWinTimer" );
   mResizeTimer.setObjectName( "mResizeTimer" );
 
-  mExternalWindow  = ( aParent == mainWindow );
+  mExternalWindow  = false;
   mPrinting = false;
 
   createWidgets();
@@ -2846,6 +2846,12 @@ void ViewerPrivate::setShowAttachmentQuicklist( bool showAttachmentQuicklist  )
 {
   mShowAttachmentQuicklist = showAttachmentQuicklist;
 }
+
+void ViewerPrivate::setExternalWindow( bool b )
+{
+  mExternalWindow = b;
+}
+
 
 void ViewerPrivate::scrollToAttachment( KMime::Content *node )
 {

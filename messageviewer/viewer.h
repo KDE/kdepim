@@ -324,6 +324,8 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
 
   QString selectedText() const;
 
+  void setExternalWindow( bool b );
+
 signals:
   void changeDisplayMail(Viewer::ForceDisplayTo,bool);
 
