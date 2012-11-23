@@ -609,6 +609,32 @@ void ComposerEditor::contextMenuEvent(QContextMenuEvent* event)
     delete menu;
 }
 
+void ComposerEditor::paste()
+{
+    page()->triggerAction(QWebPage::Paste);
+}
+
+void ComposerEditor::cut()
+{
+    page()->triggerAction(QWebPage::Cut);
+}
+
+void ComposerEditor::copy()
+{
+    page()->triggerAction(QWebPage::Copy);
+}
+
+void ComposerEditor::undo()
+{
+    page()->triggerAction(QWebPage::Undo);
+}
+
+void ComposerEditor::redo()
+{
+    page()->triggerAction(QWebPage::Redo);
+}
+
+
 }
 
 #include "composereditor.moc"

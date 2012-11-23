@@ -48,6 +48,11 @@ public:
 
 public Q_SLOTS:
     void setEnableRichText(bool richTextEnabled);
+    void paste();
+    void cut();
+    void copy();
+    void undo();
+    void redo();
 
 protected:
     void contextMenuEvent(QContextMenuEvent* event);
