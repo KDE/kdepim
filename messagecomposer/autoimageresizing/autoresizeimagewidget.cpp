@@ -121,12 +121,16 @@ void AutoResizeImageWidget::loadConfig()
   ui->customMinimumHeight->setValue(MessageComposer::MessageComposerSettings::self()->customMinimumHeight());
 
 
-  ui->CBMaximumWidth->setCurrentIndex(ui->CBMaximumWidth->findData(MessageComposer::MessageComposerSettings::self()->maximumWidth()));
-  ui->CBMaximumHeight->setCurrentIndex(ui->CBMaximumHeight->findData(MessageComposer::MessageComposerSettings::self()->maximumHeight()));
-  ui->CBMinimumWidth->setCurrentIndex(ui->CBMinimumWidth->findData(MessageComposer::MessageComposerSettings::self()->minimumWidth()));
-  ui->CBMinimumHeight->setCurrentIndex(ui->CBMinimumHeight->findData(MessageComposer::MessageComposerSettings::self()->minimumHeight()));
+  int index = ui->CBMaximumWidth->findData(MessageComposer::MessageComposerSettings::self()->maximumWidth());
+  ui->CBMaximumWidth->setCurrentIndex((index == -1) ? 0 : index);
+  index = ui->CBMaximumHeight->findData(MessageComposer::MessageComposerSettings::self()->maximumHeight());
+  ui->CBMaximumHeight->setCurrentIndex((index == -1) ? 0 : index);
+  index = ui->CBMinimumWidth->findData(MessageComposer::MessageComposerSettings::self()->minimumWidth());
+  ui->CBMinimumWidth->setCurrentIndex((index == -1) ? 0 : index);
+  index = ui->CBMinimumHeight->findData(MessageComposer::MessageComposerSettings::self()->minimumHeight());
+  ui->CBMinimumHeight->setCurrentIndex((index == -1) ? 0 : index);
 
-  const int index = ui->WriteToImageFormat->findData(MessageComposer::MessageComposerSettings::self()->writeFormat());
+  index = ui->WriteToImageFormat->findData(MessageComposer::MessageComposerSettings::self()->writeFormat());
   if(index == -1) {
       ui->WriteToImageFormat->setCurrentIndex(0);
   } else {
