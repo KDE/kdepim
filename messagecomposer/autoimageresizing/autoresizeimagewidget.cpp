@@ -48,10 +48,10 @@ AutoResizeImageWidget::AutoResizeImageWidget(QWidget *parent)
   connect(ui->customMinimumWidth,SIGNAL(valueChanged(int)),SIGNAL(changed()));
   connect(ui->customMinimumHeight,SIGNAL(valueChanged(int)),SIGNAL(changed()));
 
-  connect(ui->CBMaximumWidth,SIGNAL(activated(QString)),SLOT(slotComboboxChanged(QString)));
-  connect(ui->CBMaximumHeight,SIGNAL(activated(QString)),SLOT(slotComboboxChanged(QString)));
-  connect(ui->CBMinimumWidth,SIGNAL(activated(QString)),SLOT(slotComboboxChanged(QString)));
-  connect(ui->CBMinimumHeight,SIGNAL(activated(QString)),SLOT(slotComboboxChanged(QString)));
+  connect(ui->CBMaximumWidth,SIGNAL(currentIndexChanged(int)),SLOT(slotComboboxChanged(int)));
+  connect(ui->CBMaximumHeight,SIGNAL(currentIndexChanged(int)),SLOT(slotComboboxChanged(int)));
+  connect(ui->CBMinimumWidth,SIGNAL(currentIndexChanged(int)),SLOT(slotComboboxChanged(int)));
+  connect(ui->CBMinimumHeight,SIGNAL(currentIndexChanged(int)),SLOT(slotComboboxChanged(int)));
 }
 
 AutoResizeImageWidget::~AutoResizeImageWidget()
@@ -59,11 +59,11 @@ AutoResizeImageWidget::~AutoResizeImageWidget()
   delete ui;
 }
 
-void AutoResizeImageWidget::slotComboboxChanged(const QString& text)
+void AutoResizeImageWidget::slotComboboxChanged(int index)
 {
-  const bool isCustom = (text == i18n("Custom"));
   KComboBox* combo = qobject_cast< KComboBox* >( sender() );
   if(combo) {
+    const bool isCustom = combo->itemData(index) == -1;
     if(combo == ui->CBMaximumWidth) {
       ui->customMaximumWidth->setEnabled(isCustom);
     } else if(combo == ui->CBMaximumHeight) {

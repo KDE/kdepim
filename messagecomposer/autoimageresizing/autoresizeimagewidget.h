@@ -42,7 +42,7 @@ Q_SIGNALS:
   void changed();
 
 private Q_SLOTS:
-  void slotComboboxChanged(const QString&);
+  void slotComboboxChanged(int index);
 
 private:
   void initComboBox(KComboBox *combo);
