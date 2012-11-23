@@ -104,7 +104,18 @@ void WebView::contextMenuEvent(QContextMenuEvent* event)
     QWebHitTestResult hitTest = page()->mainFrame()->hitTestContent(event->pos());
     QWebElement elm = hitTest.element();
     QWebElement linkElm = hitTest.linkElement();
-    QMenu *menu = page()->createStandardContextMenu();
+
+    KMenu *menu = new KMenu;
+    menu->addAction(page()->action(QWebPage::Undo));
+    menu->addAction(page()->action(QWebPage::Redo));
+    menu->addSeparator();
+    menu->addAction(page()->action(QWebPage::Cut));
+    menu->addAction(page()->action(QWebPage::Copy));
+    menu->addAction(page()->action(QWebPage::Paste));
+    menu->addSeparator();
+    menu->addAction(page()->action(QWebPage::SelectAll));
+    menu->addSeparator();
+
     KAction* actEditImage = new KAction(KIcon(""), i18n("Edit Image"), menu);//TODO we need an icon
     KAction* actRemoveImage = new KAction(KIcon("edit-delete"), i18n("Remove Image"), menu);
     KAction* actEditLink = new KAction(KIcon("insert-link"), i18n("Edit Hyperlink"), menu);
