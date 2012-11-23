@@ -49,6 +49,10 @@ public:
 public Q_SLOTS:
     void setEnableRichText(bool richTextEnabled);
 
+protected:
+    void contextMenuEvent(QContextMenuEvent* event);
+
+
 private:
     friend class ComposerEditorPrivate;
     ComposerEditorPrivate * const d;
@@ -60,6 +64,11 @@ private:
     Q_PRIVATE_SLOT( d, void _k_slotAddImage() )
     Q_PRIVATE_SLOT( d, void _k_setTextForegroundColor() )
     Q_PRIVATE_SLOT( d, void _k_setTextBackgroundColor() )
+    Q_PRIVATE_SLOT( d, void _k_slotInsertHorizontalRule() )
+    Q_PRIVATE_SLOT( d, void _k_insertLink() )
+    Q_PRIVATE_SLOT( d, void _k_setFontSize(int) )
+    Q_PRIVATE_SLOT( d, void _k_setFontFamily(const QString&) )
+    Q_PRIVATE_SLOT( d, void _k_adjustActions() )
 };
 }
 

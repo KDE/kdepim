@@ -1,5 +1,9 @@
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
+add_definitions( -DQT_NO_CAST_FROM_ASCII )
+add_definitions( -DQT_NO_CAST_TO_ASCII )
+
+
 add_subdirectory(tests)
 
 set(libcomposereditor_ng_SRCS 
@@ -15,6 +19,7 @@ target_link_libraries(composereditorng
 
 set_target_properties( composereditorng PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS composereditorng ${INSTALL_TARGETS_DEFAULT_ARGS} )
+install( FILES composereditorinitialhtml DESTINATION  ${DATA_INSTALL_DIR}/composereditor )
 
 #install( FILES
 #         composereditor_export.h

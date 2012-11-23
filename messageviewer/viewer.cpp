@@ -74,7 +74,6 @@ Viewer::~Viewer()
   //the d_ptr is automatically deleted
 }
 
-
 void Viewer::setMessage(KMime::Message::Ptr message, UpdateMode updateMode )
 {
   Q_D(Viewer);
@@ -406,6 +405,12 @@ void Viewer::setHeaderStyleAndStrategy( HeaderStyle * style,
 {
   Q_D( Viewer );
   d->setHeaderStyleAndStrategy( style, strategy );
+}
+
+void Viewer::setExternalWindow( bool b )
+{
+  Q_D( Viewer );
+  d->setExternalWindow( b );
 }
 
 KAction *Viewer::viewSourceAction()

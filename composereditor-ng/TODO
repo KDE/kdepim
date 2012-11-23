@@ -1,18 +1,21 @@
-- Add default html actions
+- Add default html actions (in progress)
 - Add background spell checking (qt-webkit-2.3)
 - Add hightlighting
 - Add support for signature
-- Add support for images
+- Add support for images (in progress)
 - Add support for table
-- Add support for link
-- Add support for horizontal line
+- Add support for link (in progress)
+- Add support for horizontal line (DONE)
 - Add support for emoticon (DONE)
 - Add support for autocorrection
-- Add support for font
-- Add support for list
+- Add support for font (DONE)
+- Add support for list (In progress)
 - Add support for style (DONE)
-- Add support for remove format/style
+- Add support for remove format/style (DONE)
 - Add supportf for insert html code (DONE)
-- Add support for text/background color
+- Add support for text/background color (in progress)
 - Add hmlmode on/off support
 - Add speak support
+- Add support for find/replace
+- Restore default font when switch out of html mode
+- Create a real popup menu
