@@ -37,6 +37,9 @@
 #include <KToolInvocation>
 #include <KMenu>
 
+#include <Sonnet/Dialog>
+#include <sonnet/backgroundchecker.h>
+
 #include <QWebFrame>
 #include <QWebPage>
 #include <QDebug>
@@ -45,7 +48,7 @@
 #include <QDBusInterface>
 #include <QDBusConnectionInterface>
 #include <QContextMenuEvent>
-
+#include <QWebElement>
 
 namespace ComposerEditorNG {
 
@@ -90,11 +93,21 @@ public:
     void _k_setFontFamily(const QString&);
     void _k_adjustActions();
     void _k_slotSpeakText();
+    void _k_slotSpellCheck();
+    void _k_spellCheckerCorrected(const QString& original, int pos, const QString& replacement);
+    void _k_spellCheckerMisspelling(const QString& , int);
+    void _k_slotSpellCheckDone(const QString&);
 
     QAction* getAction ( QWebPage::WebAction action ) const;
     void execCommand(const QString &cmd);
     void execCommand(const QString &cmd, const QString &arg);
     bool queryCommandState(const QString &cmd);
+
+    QWebHitTestResult contextMenuResult;
+
+
+    int spellTextSelectionStart;
+    int spellTextSelectionEnd;
 
     QList<KAction*> htmlEditorActionList;
     ComposerEditor *q;
@@ -126,6 +139,7 @@ public:
     KAction *action_text_background_color;
     KAction *action_format_reset;
     KAction *action_insert_link;
+    KAction *action_spell_check;
     bool richTextEnabled;
 };
 }
@@ -138,6 +152,13 @@ QAction* ComposerEditorPrivate::getAction ( QWebPage::WebAction action ) const
         return q->page()->action( static_cast<QWebPage::WebAction>( action ));
     else
         return 0;
+}
+
+static QVariant execJScript(QWebElement element, const QString& script)
+{
+    if (element.isNull())
+        return QVariant();
+    return element.evaluateJavaScript(script);
 }
 
 
@@ -280,6 +301,88 @@ void ComposerEditorPrivate::_k_slotSpeakText()
         text = q->plainTextContent();
     ktts.asyncCall(QLatin1String("say"), text, 0);
 }
+
+void ComposerEditorPrivate::_k_slotSpellCheck()
+{
+    QString text(execJScript(contextMenuResult.element(), QLatin1String("this.value")).toString());
+    if (contextMenuResult.isContentSelected())
+    {
+        spellTextSelectionStart = qMax(0, execJScript(contextMenuResult.element(), QLatin1String("this.selectionStart")).toInt());
+        spellTextSelectionEnd = qMax(0, execJScript(contextMenuResult.element(), QLatin1String("this.selectionEnd")).toInt());
+        text = text.mid(spellTextSelectionStart, (spellTextSelectionEnd - spellTextSelectionStart));
+    }
+    else
+    {
+        spellTextSelectionStart = 0;
+        spellTextSelectionEnd = 0;
+    }
+    if (text.isEmpty())
+    {
+        return;
+    }
+
+    Sonnet::BackgroundChecker *backgroundSpellCheck = new Sonnet::BackgroundChecker;
+    Sonnet::Dialog* spellDialog = new Sonnet::Dialog(backgroundSpellCheck, q);
+    backgroundSpellCheck->setParent(spellDialog);
+    spellDialog->setAttribute(Qt::WA_DeleteOnClose, true);
+
+    spellDialog->showSpellCheckCompletionMessage(true);
+    q->connect(spellDialog, SIGNAL(replace(QString, int, QString)), q, SLOT(_k_spellCheckerCorrected(QString, int, QString)));
+    q->connect(spellDialog, SIGNAL(misspelling(QString, int)), q, SLOT(_k_spellCheckerMisspelling(QString, int)));
+    if (contextMenuResult.isContentSelected())
+        q->connect(spellDialog, SIGNAL(done(QString)), q, SLOT(_k_slotSpellCheckDone(QString)));
+    spellDialog->setBuffer(text);
+    spellDialog->show();
+}
+
+void ComposerEditorPrivate::_k_spellCheckerCorrected(const QString& original, int pos, const QString& replacement)
+{
+    // Adjust the selection end...
+    if (spellTextSelectionEnd > 0)
+    {
+        spellTextSelectionEnd += qMax(0, (replacement.length() - original.length()));
+    }
+
+    const int index = pos + spellTextSelectionStart;
+    QString script(QLatin1String("this.value=this.value.substring(0,"));
+    script += QString::number(index);
+    script += QLatin1String(") + \"");
+    script +=  replacement;
+    script += QLatin1String("\" + this.value.substring(");
+    script += QString::number(index + original.length());
+    script += QLatin1String(")");
+
+    //kDebug() << "**** script:" << script;
+    execJScript(contextMenuResult.element(), script);
+}
+
+void ComposerEditorPrivate::_k_spellCheckerMisspelling(const QString& text, int pos)
+{
+    // kDebug() << text << pos;
+    QString selectionScript(QLatin1String("this.setSelectionRange("));
+    selectionScript += QString::number(pos + spellTextSelectionStart);
+    selectionScript += QLatin1Char(',');
+    selectionScript += QString::number(pos + text.length() + spellTextSelectionStart);
+    selectionScript += QLatin1Char(')');
+    execJScript(contextMenuResult.element(), selectionScript);
+}
+
+void ComposerEditorPrivate::_k_slotSpellCheckDone(const QString&)
+{
+    // Restore the text selection if one was present before we started the
+    // spell check.
+    if (spellTextSelectionStart > 0 || spellTextSelectionEnd > 0)
+    {
+        QString script(QLatin1String("; this.setSelectionRange("));
+        script += QString::number(spellTextSelectionStart);
+        script += QLatin1Char(',');
+        script += QString::number(spellTextSelectionEnd);
+        script += QLatin1Char(')');
+        execJScript(contextMenuResult.element(), script);
+    }
+}
+
+
 
 void ComposerEditorPrivate::_k_slotAdjustActions()
 {
@@ -555,6 +658,12 @@ void ComposerEditor::createActions(KActionCollection *actionCollection)
     actionCollection->addAction(QLatin1String("htmleditor_format_font_family"), d->action_font_family);
     connect(d->action_font_family, SIGNAL(triggered(QString)), this, SLOT(_k_setFontFamily(QString)));
 
+    //Spell Checking
+    d->action_spell_check = new KAction(KIcon(QLatin1String("tools-check-spelling")), i18n("Check Spelling..."), actionCollection);
+    d->htmlEditorActionList.append(d->action_spell_check);
+    actionCollection->addAction(QLatin1String("htmleditor_spell_check"), d->action_spell_check);
+    connect(d->action_spell_check, SIGNAL(triggered(bool)), this, SLOT(_k_slotSpellCheck()));
+
 }
 
 
@@ -584,6 +693,7 @@ void ComposerEditor::setActionsEnabled(bool enabled)
 
 void ComposerEditor::contextMenuEvent(QContextMenuEvent* event)
 {
+    d->contextMenuResult = page()->mainFrame()->hitTestContent(event->pos());
     KMenu *menu = new KMenu;
     const QString selectedText = plainTextContent().simplified();
     const bool emptyDocument = selectedText.isEmpty();
@@ -596,6 +706,8 @@ void ComposerEditor::contextMenuEvent(QContextMenuEvent* event)
     menu->addAction(page()->action(QWebPage::Paste));
     menu->addSeparator();
     menu->addAction(page()->action(QWebPage::SelectAll));
+    menu->addSeparator();
+    menu->addAction(d->action_spell_check);
     menu->addSeparator();
 
     QAction *speakAction = menu->addAction(i18n("Speak Text"));
