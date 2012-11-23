@@ -72,20 +72,7 @@ public:
         Address
     };
 
-    enum ListType {
-        None,
-        Disc,
-        Circle,
-        Square,
-        Decimal,
-        LowerAlpha,
-        UpperAlpha,
-        LowerRoman,
-        UpperRoman
-    };
-
     void _k_slotAdjustActions();
-    void _k_setListStyle(QAction *act);
     void _k_setFormatType(QAction* action);
     void _k_slotAddEmoticon(const QString&);
     void _k_slotInsertHtml();
@@ -120,7 +107,8 @@ public:
     KAction *action_insert_horizontal_rule;
     KAction *action_list_indent;
     KAction *action_list_dedent;
-    KSelectAction *action_list_style;
+    KAction *action_ordered_list;
+    KAction *action_unordered_list;
     KSelectAction *action_format_type;
     KSelectAction *action_font_size;
     KFontAction *action_font_family;
@@ -135,7 +123,6 @@ public:
 };
 }
 Q_DECLARE_METATYPE(ComposerEditorNG::ComposerEditorPrivate::FormatType)
-Q_DECLARE_METATYPE(ComposerEditorNG::ComposerEditorPrivate::ListType)
 
 namespace ComposerEditorNG {
 QAction* ComposerEditorPrivate::getAction ( QWebPage::WebAction action ) const
@@ -146,37 +133,6 @@ QAction* ComposerEditorPrivate::getAction ( QWebPage::WebAction action ) const
         return 0;
 }
 
-void ComposerEditorPrivate::_k_setListStyle(QAction *act)
-{
-    if(!act) {
-        return;
-    }
-    QString command;
-    switch(act->data().value<ComposerEditorNG::ComposerEditorPrivate::ListType>())
-    {
-    case None:
-        break;
-    case Disc:
-        break;
-    case Circle:
-        break;
-    case Square:
-        break;
-    case Decimal:
-        break;
-    case LowerAlpha:
-        break;
-    case UpperAlpha:
-        break;
-    case LowerRoman:
-        break;
-    case UpperRoman:
-    break;
-
-    }
-    //execCommand(QLatin1String("insertOrderedList"), QLatin1String("newsL"));
-    execCommand(QLatin1String("insertHTML"), QLatin1String("<li> </li>"));
-}
 
 void ComposerEditorPrivate::_k_setFormatType(QAction *act)
 {
@@ -475,33 +431,21 @@ void ComposerEditor::createActions(KActionCollection *actionCollection)
     actionCollection->addAction(QLatin1String("htmleditor_format_text_superscript"), d->action_text_superscript);
     FORWARD_ACTION(d->action_text_superscript, QWebPage::ToggleSuperscript);
 
-    d->action_list_style = new KSelectAction(KIcon(QLatin1String("format-list-unordered")), i18nc("@title:menu", "List Style"), actionCollection);
-    KAction *act = d->action_list_style->addAction(i18nc("@item:inmenu no list style", "None"));
-    act->setData(QVariant::fromValue(ComposerEditorPrivate::None));
-    act = d->action_list_style->addAction(i18nc("@item:inmenu disc list style", "Disc"));
-    act->setData(QVariant::fromValue(ComposerEditorPrivate::Disc));
-    act = d->action_list_style->addAction(i18nc("@item:inmenu circle list style", "Circle"));
-    act->setData(QVariant::fromValue(ComposerEditorPrivate::Circle));
-    act = d->action_list_style->addAction(i18nc("@item:inmenu square list style", "Square"));
-    act->setData(QVariant::fromValue(ComposerEditorPrivate::Square));
-    act = d->action_list_style->addAction(i18nc("@item:inmenu numbered lists", "123"));
-    act->setData(QVariant::fromValue(ComposerEditorPrivate::Decimal));
-    act = d->action_list_style->addAction(i18nc("@item:inmenu lowercase abc lists", "abc"));
-    act->setData(QVariant::fromValue(ComposerEditorPrivate::LowerAlpha));
-    act = d->action_list_style->addAction(i18nc("@item:inmenu uppercase abc lists", "ABC"));
-    act->setData(QVariant::fromValue(ComposerEditorPrivate::UpperAlpha));
-    act = d->action_list_style->addAction(i18nc("@item:inmenu lower case roman numerals", "i ii iii"));
-    act->setData(QVariant::fromValue(ComposerEditorPrivate::LowerRoman));
-    act = d->action_list_style->addAction(i18nc("@item:inmenu upper case roman numerals", "I II III"));
-    act->setData(QVariant::fromValue(ComposerEditorPrivate::UpperRoman));
-    d->action_list_style->setCurrentItem(0);
-    d->richTextActionList.append((d->action_list_style));
-    actionCollection->addAction(QLatin1String("htmleditor_format_list_style"), d->action_list_style);
-    connect(d->action_list_style, SIGNAL(triggered(QAction*)),
-            this, SLOT(_k_setListStyle(QAction*)));
+    d->action_ordered_list = new KAction(KIcon(QLatin1String("format-list-ordered")), i18n("Ordered Style"), actionCollection);
+    d->richTextActionList.append(d->action_ordered_list);
+    actionCollection->addAction(QLatin1String("htmleditor_format_list_ordered"), d->action_ordered_list);
+    FORWARD_ACTION(d->action_ordered_list, QWebPage::InsertOrderedList);
+
+
+    d->action_unordered_list = new KAction( KIcon( QLatin1String("format-list-unordered" )), i18n( "Unordered List" ), actionCollection );
+    d->richTextActionList.append(d->action_unordered_list);
+    actionCollection->addAction(QLatin1String("htmleditor_format_list_unordered"), d->action_unordered_list);
+    FORWARD_ACTION(d->action_unordered_list, QWebPage::InsertUnorderedList);
+
+
 
     d->action_format_type = new KSelectAction(KIcon(QLatin1String("format-list-unordered")), i18nc("@title:menu", "List Style"), actionCollection);
-    act = d->action_format_type->addAction(i18n( "Paragraph" ));
+    KAction *act = d->action_format_type->addAction(i18n( "Paragraph" ));
     act->setData(QVariant::fromValue(ComposerEditorPrivate::Paragraph));
     act = d->action_format_type->addAction(i18n( "Heading 1" ));
     act->setData(QVariant::fromValue(ComposerEditorPrivate::Header1));
