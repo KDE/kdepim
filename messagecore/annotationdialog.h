@@ -51,7 +51,9 @@ class MESSAGECORE_EXPORT AnnotationEditDialog : public KDialog
 
   protected:
     /// Reimplemented to handle button clicks
-    virtual void slotButtonClicked( int button );
+    void slotButtonClicked( int button );
+    void readConfig();
+    void writeConfig();
 
   private:
     //@cond PRIVATE
