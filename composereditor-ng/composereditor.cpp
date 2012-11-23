@@ -34,12 +34,17 @@
 #include <KStandardDirs>
 #include <KDebug>
 #include <KFontAction>
+#include <KToolInvocation>
+#include <KMenu>
 
 #include <QWebFrame>
 #include <QWebPage>
 #include <QDebug>
 #include <QPointer>
 #include <QFile>
+#include <QDBusInterface>
+#include <QDBusConnectionInterface>
+#include <QContextMenuEvent>
 
 
 namespace ComposerEditorNG {
@@ -84,6 +89,7 @@ public:
     void _k_setFontSize(int);
     void _k_setFontFamily(const QString&);
     void _k_adjustActions();
+    void _k_slotSpeakText();
 
     QAction* getAction ( QWebPage::WebAction action ) const;
     void execCommand(const QString &cmd);
@@ -256,6 +262,25 @@ void ComposerEditorPrivate::_k_setFontSize(int fontSize)
 void ComposerEditorPrivate::_k_setFontFamily(const QString& family)
 {
     execCommand(QLatin1String("fontName"), family);
+}
+
+void ComposerEditorPrivate::_k_slotSpeakText()
+{
+    // If KTTSD not running, start it.
+    if (!QDBusConnection::sessionBus().interface()->isServiceRegistered(QLatin1String("org.kde.kttsd")))
+    {
+        QString error;
+        if (KToolInvocation::startServiceByDesktopName(QLatin1String("kttsd"), QStringList(), &error))
+        {
+            KMessageBox::error(q, i18n( "Starting Jovie Text-to-Speech Service Failed"), error );
+            return;
+        }
+    }
+    QDBusInterface ktts(QLatin1String("org.kde.kttsd"), QLatin1String("/KSpeech"), QLatin1String("org.kde.KSpeech"));
+    QString text = q->selectedText();
+    if(text.isEmpty())
+        text = q->plainTextContent();
+    ktts.asyncCall(QLatin1String("say"), text, 0);
 }
 
 void ComposerEditorPrivate::_k_slotAdjustActions()
@@ -560,8 +585,16 @@ void ComposerEditor::setActionsEnabled(bool enabled)
 
 void ComposerEditor::contextMenuEvent(QContextMenuEvent* event)
 {
-    //TODO
-    KWebView::contextMenuEvent(event);
+    KMenu *menu = new KMenu;
+    const QString selectedText = plainTextContent().simplified();
+    const bool emptyDocument = selectedText.isEmpty();
+
+    QAction *speakAction = menu->addAction(i18n("Speak Text"));
+    speakAction->setIcon(KIcon(QLatin1String("preferences-desktop-text-to-speech")));
+    speakAction->setEnabled(!emptyDocument );
+    connect( speakAction, SIGNAL(triggered(bool)), this, SLOT(_k_slotSpeakText()) );
+    menu->exec(event->globalPos());
+    delete menu;
 }
 
 }

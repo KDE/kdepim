@@ -68,6 +68,7 @@ private:
     Q_PRIVATE_SLOT( d, void _k_setFontSize(int) )
     Q_PRIVATE_SLOT( d, void _k_setFontFamily(const QString&) )
     Q_PRIVATE_SLOT( d, void _k_adjustActions() )
+    Q_PRIVATE_SLOT( d, void _k_slotSpeakText() )
 };
 }
 
