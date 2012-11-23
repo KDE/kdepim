@@ -71,10 +71,12 @@ AnnotationEditDialog::AnnotationEditDialog( const QUrl &uri, QWidget *parent )
   if ( d->mHasAnnotation ) {
     d->mTextEdit->setPlainText( resource.description() );
   }
+  readConfig();
 }
 
 AnnotationEditDialog::~AnnotationEditDialog()
 {
+  writeConfig();
   delete d;
 }
 
@@ -104,5 +106,24 @@ void AnnotationEditDialog::slotButtonClicked( int button )
     }
   }
 }
+
+void AnnotationEditDialog::readConfig()
+{
+  KSharedConfig::Ptr cfg = KGlobal::config();
+  KConfigGroup group( cfg, "AnnotationEditDialog" );
+  QSize size = group.readEntry( "Size", QSize() );
+  if ( !size.isEmpty() ) {
+    resize( size );
+  }
+}
+
+void AnnotationEditDialog::writeConfig()
+{
+  KSharedConfig::Ptr cfg = KGlobal::config();
+  KConfigGroup group( cfg, "AnnotationEditDialog" );
+  group.writeEntry( "Size", size() );
+}
+
+
 
 #include "annotationdialog.moc"
