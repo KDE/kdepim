@@ -530,20 +530,20 @@ void MainWidget::setupActions( KActionCollection *collection )
   KAction *act = new KAction( i18nc( "@action:inmenu", "Simple (one column)" ), mViewModeGroup );
   act->setCheckable( true );
   act->setData( 1 );
-  act->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_1 ) );
+  act->setShortcut( QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_1 ) );
   act->setWhatsThis( i18n( "Show a simple mode of the address book view." ) );
   collection->addAction( "view_mode_simple", act );
 
   act = new KAction( i18nc( "@action:inmenu", "Two Columns" ), mViewModeGroup );
   act->setCheckable( true );
   act->setData( 2 );
-  act->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_2 ) );
+  act->setShortcut( QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_2 ) );
   collection->addAction( "view_mode_2columns", act );
 
   act = new KAction( i18nc( "@action:inmenu", "Three Columns" ), mViewModeGroup );
   act->setCheckable( true );
   act->setData( 3 );
-  act->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_3 ) );
+  act->setShortcut( QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_3 ) );
   collection->addAction( "view_mode_3columns", act );
 
   connect( mViewModeGroup, SIGNAL(triggered(QAction*)), SLOT(setViewMode(QAction*)) );
