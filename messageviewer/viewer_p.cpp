@@ -3181,6 +3181,11 @@ void ViewerPrivate::slotToggleCaretBrowsing(bool toggle)
 {
 #ifndef KDEPIM_NO_WEBKIT
 #if QTWEBKIT_VERSION >= QTWEBKIT_VERSION_CHECK(2, 3, 0)
+  if( toggle ) {
+    KMessageBox::information( mMainWindow,
+        i18n("Caret Browsing will be activated. Switch off with F7 shortcut."),
+        i18n("Activate Caret Browsing") );
+  }
   mViewer->settings()->setAttribute(QWebSettings::CaretBrowsingEnabled, toggle);
 #endif
 #endif
