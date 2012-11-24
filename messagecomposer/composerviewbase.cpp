@@ -387,6 +387,17 @@ void Message::ComposerViewBase::slotEmailAddressResolved ( KJob* job )
     return;
   }
 
+  if(MessageComposer::MessageComposerSettings::self()->autoResizeImageEnabled()) {
+    if(MessageComposer::MessageComposerSettings::self()->askBeforeResizing()) {
+#if 0
+       const int rc = KMessageBox::warningYesNo( parent,i18n("Do you want to resize images?"),
+                                                 i18n("Auto Resize Images"), KStandardGuiItem::yes(), KStandardGuiItem::no());
+       if(rc == KMessageBox::Yes) {
+         //TODO
+       }
+#endif
+    }
+  }
   // Compose each message and prepare it for queueing, sending, or storing
   foreach( Message::Composer* composer, m_composers ) {
     fillGlobalPart( composer->globalPart() );
