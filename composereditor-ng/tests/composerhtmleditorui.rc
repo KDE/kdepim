@@ -17,7 +17,8 @@
        <Action name="htmleditor_format_align_justify"/>
     </Menu>
   <Separator lineSeparator="true"/>
-  <Action name="htmleditor_format_list_style"/>
+  <Action name="htmleditor_format_list_unordered"/>
+  <Action name="htmleditor_format_list_ordered"/>
   <Action name="htmleditor_format_list_indent_more"/>
   <Action name="htmleditor_format_list_indent_less"/>
   <Separator lineSeparator="true"/>
@@ -51,7 +52,8 @@
   <Action name="htmleditor_format_align_right"/>
   <Action name="htmleditor_format_align_justify"/>
   <Separator lineSeparator="true"/>
-  <Action name="htmleditor_format_list_style"/>
+  <Action name="htmleditor_format_list_unordered"/>
+  <Action name="htmleditor_format_list_ordered"/>
   <Action name="htmleditor_format_list_indent_more"/>
   <Action name="htmleditor_format_list_indent_less"/>
   <Separator lineSeparator="true"/>

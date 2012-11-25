@@ -504,7 +504,7 @@ QString CalendarSupport::displayName( Calendar *calendar, const Akonadi::Collect
   // Kolab Groupware
   if ( c.resource().contains( "kolabproxy" ) ) {
     QString typeStr = cName; // contents type: "Calendar", "Tasks", etc
-    QString ownerStr;        // folder owner; "fred", "ethel", etc
+    QString ownerStr;        // folder owner: "fred", "ethel", etc
     QString nameStr;         // folder name: "Public", "Test", etc
     if ( calendar ) {
       Akonadi::Collection p = c.parentCollection();
@@ -529,24 +529,75 @@ QString CalendarSupport::displayName( Calendar *calendar, const Akonadi::Collect
       if ( ownerStr.toUpper() != QString( "INBOX" ) ) {
         if ( nameStr.isEmpty() ) {
           return i18nc( "%1 is folder owner name, %2 is folder contents",
-                        "%1's %2", ownerStr, typeStr );
+                        "%1's Kolab %2", ownerStr, typeStr );
         } else {
           return i18nc( "%1 is folder owner name, %2 is folder name, %3 is folder contents",
-                        "%1's %2 %3", ownerStr, nameStr, typeStr );
+                        "%1's %2 Kolab %3", ownerStr, nameStr, typeStr );
         }
       } else {
         return i18nc( "%1 is folder contents",
-                      "My Shared %1", typeStr );
+                      "My Kolab %1", typeStr );
       }
     } else {
-      return typeStr;
+      return i18nc( "%1 is folder contents",
+                    "Kolab %1", typeStr );
     }
-  }
+  } //end kolab section
 
   // Dav Groupware
   if ( c.resource().contains( "davgroupware" ) ) {
     return i18nc( "%1 is the folder name", "%1 CalDav Calendar", cName );
-  }
+  } //end caldav section
+
+  // Google
+  if ( c.resource().contains( "google" ) ) {
+    QString ownerStr;        // folder owner: "user@gmail.com"
+    if ( calendar ) {
+      Akonadi::Collection p = c.parentCollection();
+      Akonadi::EntityDisplayAttribute *pattr =
+        calendar->collection( p.id() ).attribute<Akonadi::EntityDisplayAttribute>();
+      if ( pattr && !pattr->displayName().isEmpty() ) {
+        ownerStr = pattr->displayName();
+      }
+    }
+
+    const Akonadi::EntityDisplayAttribute *attr = c.attribute<Akonadi::EntityDisplayAttribute>();
+    QString nameStr;         // folder name: can be anything
+    if ( attr && !attr->displayName().isEmpty() ) {
+      nameStr = attr->displayName();
+    } else {
+      nameStr = cName;
+    }
+
+    QString typeStr;
+    const QString mimeStr = c.contentMimeTypes().join( "," );
+    if ( mimeStr.contains( ".event" ) ) {
+      typeStr = i18n( "Calendar" );
+    } else if ( mimeStr.contains( ".todo" ) ) {
+      typeStr = i18n( "Tasks" );
+    } else if ( mimeStr.contains( ".journal" ) ) {
+      typeStr = i18n( "Journal" );
+    } else if ( mimeStr.contains( ".note" ) ) {
+      typeStr = i18n( "Notes" );
+    } else {
+      typeStr = mimeStr;
+    }
+
+    if ( !ownerStr.isEmpty() ) {
+      const int atChar = ownerStr.lastIndexOf( '@' );
+      ownerStr = ownerStr.left( atChar );
+      if ( nameStr.isEmpty() ) {
+        return i18nc( "%1 is folder owner name, %2 is folder contents",
+                      "%1's Google %2", ownerStr, typeStr );
+      } else {
+        return i18nc( "%1 is folder owner name, %2 is folder name",
+                      "%1's %2", ownerStr, nameStr );
+      }
+    } else {
+      return i18nc( "%1 is folder contents",
+                    "Google %1", typeStr );
+    }
+  } //end google section
 
   // Not groupware so the collection is "mine"
   const Akonadi::EntityDisplayAttribute *attr = c.attribute<Akonadi::EntityDisplayAttribute>();

@@ -48,10 +48,10 @@ AutoResizeImageWidget::AutoResizeImageWidget(QWidget *parent)
   connect(ui->customMinimumWidth,SIGNAL(valueChanged(int)),SIGNAL(changed()));
   connect(ui->customMinimumHeight,SIGNAL(valueChanged(int)),SIGNAL(changed()));
 
-  connect(ui->CBMaximumWidth,SIGNAL(activated(QString)),SLOT(slotComboboxChanged(QString)));
-  connect(ui->CBMaximumHeight,SIGNAL(activated(QString)),SLOT(slotComboboxChanged(QString)));
-  connect(ui->CBMinimumWidth,SIGNAL(activated(QString)),SLOT(slotComboboxChanged(QString)));
-  connect(ui->CBMinimumHeight,SIGNAL(activated(QString)),SLOT(slotComboboxChanged(QString)));
+  connect(ui->CBMaximumWidth,SIGNAL(currentIndexChanged(int)),SLOT(slotComboboxChanged(int)));
+  connect(ui->CBMaximumHeight,SIGNAL(currentIndexChanged(int)),SLOT(slotComboboxChanged(int)));
+  connect(ui->CBMinimumWidth,SIGNAL(currentIndexChanged(int)),SLOT(slotComboboxChanged(int)));
+  connect(ui->CBMinimumHeight,SIGNAL(currentIndexChanged(int)),SLOT(slotComboboxChanged(int)));
 }
 
 AutoResizeImageWidget::~AutoResizeImageWidget()
@@ -59,11 +59,11 @@ AutoResizeImageWidget::~AutoResizeImageWidget()
   delete ui;
 }
 
-void AutoResizeImageWidget::slotComboboxChanged(const QString& text)
+void AutoResizeImageWidget::slotComboboxChanged(int index)
 {
-  const bool isCustom = (text == i18n("Custom"));
   KComboBox* combo = qobject_cast< KComboBox* >( sender() );
   if(combo) {
+    const bool isCustom = combo->itemData(index) == -1;
     if(combo == ui->CBMaximumWidth) {
       ui->customMaximumWidth->setEnabled(isCustom);
     } else if(combo == ui->CBMaximumHeight) {
@@ -120,13 +120,23 @@ void AutoResizeImageWidget::loadConfig()
   ui->customMinimumWidth->setValue(MessageComposer::MessageComposerSettings::self()->customMinimumWidth());
   ui->customMinimumHeight->setValue(MessageComposer::MessageComposerSettings::self()->customMinimumHeight());
 
+  int index = qMax(0, ui->CBMaximumWidth->findData(MessageComposer::MessageComposerSettings::self()->maximumWidth()));
+  ui->CBMaximumWidth->setCurrentIndex(index);
+  ui->customMaximumWidth->setEnabled(ui->CBMaximumWidth->itemData(index) == -1);
 
-  ui->CBMaximumWidth->setCurrentIndex(ui->CBMaximumWidth->findData(MessageComposer::MessageComposerSettings::self()->maximumWidth()));
-  ui->CBMaximumHeight->setCurrentIndex(ui->CBMaximumHeight->findData(MessageComposer::MessageComposerSettings::self()->maximumHeight()));
-  ui->CBMinimumWidth->setCurrentIndex(ui->CBMinimumWidth->findData(MessageComposer::MessageComposerSettings::self()->minimumWidth()));
-  ui->CBMinimumHeight->setCurrentIndex(ui->CBMinimumHeight->findData(MessageComposer::MessageComposerSettings::self()->minimumHeight()));
+  index = qMax(0, ui->CBMaximumHeight->findData(MessageComposer::MessageComposerSettings::self()->maximumHeight()));
+  ui->CBMaximumHeight->setCurrentIndex(index);
+  ui->customMaximumHeight->setEnabled(ui->CBMaximumHeight->itemData(index) == -1);
 
-  const int index = ui->WriteToImageFormat->findData(MessageComposer::MessageComposerSettings::self()->writeFormat());
+  index = qMax(0, ui->CBMinimumWidth->findData(MessageComposer::MessageComposerSettings::self()->minimumWidth()));
+  ui->CBMinimumWidth->setCurrentIndex(index);
+  ui->customMinimumWidth->setEnabled(ui->CBMinimumWidth->itemData(index) == -1);
+
+  index = qMax(0, ui->CBMinimumHeight->findData(MessageComposer::MessageComposerSettings::self()->minimumHeight()));
+  ui->CBMinimumHeight->setCurrentIndex(index);
+  ui->customMinimumHeight->setEnabled(ui->CBMinimumHeight->itemData(index) == -1);
+
+  index = ui->WriteToImageFormat->findData(MessageComposer::MessageComposerSettings::self()->writeFormat());
   if(index == -1) {
       ui->WriteToImageFormat->setCurrentIndex(0);
   } else {

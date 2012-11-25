@@ -97,9 +97,11 @@ class Formatter : public MessageViewer::Interface::BodyPartFormatter
           continue;
         }
         if(!memento) {
-          lst.append(a.emails().first());
+	  if(!a.emails().isEmpty()) {
+            lst.append(a.emails().first());
+	    count++;
+	  }
         }
-        count++;
       }
       if ( !count ) {
         return AsIcon;
