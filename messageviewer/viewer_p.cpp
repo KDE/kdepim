@@ -208,7 +208,7 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
     mZoomFactor( 100 )
 {
   if ( !mainWindow )
-    mainWindow = aParent;
+    mMainWindow = aParent;
 
   mHtmlOverride = false;
   mHtmlLoadExtOverride = false;
@@ -218,7 +218,7 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
   mUpdateReaderWinTimer.setObjectName( "mUpdateReaderWinTimer" );
   mResizeTimer.setObjectName( "mResizeTimer" );
 
-  mExternalWindow  = ( aParent == mainWindow );
+  mExternalWindow  = false;
   mPrinting = false;
 
   createWidgets();
@@ -2818,6 +2818,12 @@ void ViewerPrivate::setShowAttachmentQuicklist( bool showAttachmentQuicklist  )
   mShowAttachmentQuicklist = showAttachmentQuicklist;
 }
 
+void ViewerPrivate::setExternalWindow( bool b )
+{
+  mExternalWindow = b;
+}
+
+
 void ViewerPrivate::scrollToAttachment( KMime::Content *node )
 {
   const QString indexStr = node->index().toString();
@@ -3175,6 +3181,11 @@ void ViewerPrivate::slotToggleCaretBrowsing(bool toggle)
 {
 #ifndef KDEPIM_NO_WEBKIT
 #if QTWEBKIT_VERSION >= QTWEBKIT_VERSION_CHECK(2, 3, 0)
+  if( toggle ) {
+    KMessageBox::information( mMainWindow,
+        i18n("Caret Browsing will be activated. Switch off with F7 shortcut."),
+        i18n("Activate Caret Browsing") );
+  }
   mViewer->settings()->setAttribute(QWebSettings::CaretBrowsingEnabled, toggle);
 #endif
 #endif
