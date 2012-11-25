@@ -192,7 +192,7 @@ MonthView::MonthView( NavButtonsVisibility visibility, QWidget *parent )
     rightLayout->addStretch( 1 );
 
     d->fullView = new QToolButton( this );
-    d->fullView->setIcon( KIcon( "arrow-left-double" ) );
+    d->fullView->setIcon( KIcon( "view-fullscreen" ) );
     d->fullView->setAutoRaise( true );
     d->fullView->setCheckable( true );
     d->fullView->setChecked( preferences()->fullViewMonth() );
@@ -446,12 +446,15 @@ void MonthView::changeFullView()
 {
   bool fullView = d->fullView->isChecked();
 
-  fullView ?
+  if( fullView ) {
+    d->fullView->setIcon( KIcon( "view-restore" ) );
     d->fullView->setToolTip( i18nc( "@info:tooltip",
-                                    "Display calendar in a normal size" ) ) :
+                                    "Display calendar in a normal size" ) );
+  } else {
+    d->fullView->setIcon( KIcon( "view-fullscreen" ) );
     d->fullView->setToolTip( i18nc( "@info:tooltip",
                                     "Display calendar in a full window" ) );
-
+  }
   preferences()->setFullViewMonth( fullView );
   preferences()->writeConfig();
 
