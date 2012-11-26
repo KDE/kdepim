@@ -97,6 +97,8 @@ public:
     void _k_spellCheckerCorrected(const QString& original, int pos, const QString& replacement);
     void _k_spellCheckerMisspelling(const QString& , int);
     void _k_slotSpellCheckDone(const QString&);
+    void _k_slotFind();
+    void _k_slotReplace();
 
     QAction* getAction ( QWebPage::WebAction action ) const;
     void execCommand(const QString &cmd);
@@ -141,6 +143,8 @@ public:
     KAction *action_format_reset;
     KAction *action_insert_link;
     KAction *action_spell_check;
+    KAction *action_find;
+    KAction *action_replace;
     bool richTextEnabled;
 };
 }
@@ -392,7 +396,15 @@ void ComposerEditorPrivate::_k_slotSpellCheckDone(const QString&)
     }
 }
 
+void ComposerEditorPrivate::_k_slotFind()
+{
+    //TODO
+}
 
+void ComposerEditorPrivate::_k_slotReplace()
+{
+    //TODO
+}
 
 void ComposerEditorPrivate::_k_slotAdjustActions()
 {
@@ -673,6 +685,13 @@ void ComposerEditor::createActions(KActionCollection *actionCollection)
     d->htmlEditorActionList.append(d->action_spell_check);
     actionCollection->addAction(QLatin1String("htmleditor_spell_check"), d->action_spell_check);
     connect(d->action_spell_check, SIGNAL(triggered(bool)), this, SLOT(_k_slotSpellCheck()));
+
+    //Find
+    d->action_find = KStandardAction::find(this, SLOT(_k_slotFind()), actionCollection);
+    actionCollection->addAction(QLatin1String("htmleditor_find"), d->action_find);
+
+    d->action_replace = KStandardAction::replace(this, SLOT(_k_slotReplace()), actionCollection);
+    actionCollection->addAction(QLatin1String("htmleditor_replace"), d->action_replace);
 
 }
 

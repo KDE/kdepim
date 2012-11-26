@@ -75,6 +75,8 @@ private:
     Q_PRIVATE_SLOT( d, void _k_spellCheckerCorrected(const QString& original, int pos, const QString& replacement) )
     Q_PRIVATE_SLOT( d, void _k_spellCheckerMisspelling(const QString&, int) )
     Q_PRIVATE_SLOT( d, void _k_slotSpellCheckDone(const QString&) )
+    Q_PRIVATE_SLOT( d, void _k_slotFind() )
+    Q_PRIVATE_SLOT( d, void _k_slotReplace() )
 };
 }
 
