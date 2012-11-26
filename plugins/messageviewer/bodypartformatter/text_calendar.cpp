@@ -602,8 +602,6 @@ class UrlHandler : public Interface::BodyPartURLHandler
       int transportId = -1;
       if ( !nullIdentity && identityHasTransport ) {
           transportId = identity.transport().toInt();
-      } else if ( !nullIdentity && identity.isDefault() ) {
-          transportId = TransportManager::self()->defaultTransportId();
       } else {
           transportId = TransportManager::self()->defaultTransportId();
       }
@@ -665,7 +663,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
                                        KPIMUtils::normalizeAddressesAndEncodeIdn( to ) ) );
       job->transportAttribute().setTransportId(transport->id());
 
-      if ( transport && transport->specifySenderOverwriteAddress() ) {
+      if ( transport->specifySenderOverwriteAddress() ) {
         job->addressAttribute().setFrom(
           KPIMUtils::extractEmailAddress(
             KPIMUtils::normalizeAddressesAndEncodeIdn( transport->senderOverwriteAddress() ) ) );
