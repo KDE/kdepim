@@ -45,7 +45,6 @@ QDeclarativeItem *ComposerAutoResizer::findFlickable( QGraphicsItem *parent ) co
     if ( item ) {
       if ( !flickableClassName.compare( item->metaObject()->className() ) ) {
         return item;
-        break;
       }
     }
     parent = parent->parentItem();
