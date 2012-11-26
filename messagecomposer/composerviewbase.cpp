@@ -270,7 +270,7 @@ void Message::ComposerViewBase::send ( MessageSender::SendMethod method, Message
     }
     if ( KMessageBox::No == ret ) {
       m_encrypt = false;
-      m_encrypt = false;
+      m_sign = false;
     } else {
       emit disableHtml( NoConfirmationNeeded );
     }
