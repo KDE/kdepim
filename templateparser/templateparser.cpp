@@ -1500,12 +1500,13 @@ QString TemplateParser::findTemplate()
 QString TemplateParser::pipe( const QString &cmd, const QString &buf )
 {
   KProcess process;
-  bool success, finished;
+  bool success;
 
   process.setOutputChannelMode( KProcess::SeparateChannels );
   process.setShellCommand( cmd );
   process.start();
   if ( process.waitForStarted( PipeTimeout ) ) {
+    bool finished = false;
     if ( !buf.isEmpty() ) {
       process.write( buf.toAscii() );
     }
