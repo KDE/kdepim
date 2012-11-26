@@ -102,6 +102,7 @@ public:
     void execCommand(const QString &cmd);
     void execCommand(const QString &cmd, const QString &arg);
     bool queryCommandState(const QString &cmd);
+    void setActionsEnabled(bool enabled);
 
     QWebHitTestResult contextMenuResult;
 
@@ -159,6 +160,15 @@ static QVariant execJScript(QWebElement element, const QString& script)
     if (element.isNull())
         return QVariant();
     return element.evaluateJavaScript(script);
+}
+
+void ComposerEditorPrivate::setActionsEnabled(bool enabled)
+{
+    foreach(QAction* action, htmlEditorActionList)
+    {
+        action->setEnabled(enabled);
+    }
+    richTextEnabled = enabled;
 }
 
 
@@ -674,7 +684,10 @@ QString ComposerEditor::plainTextContent() const
 
 void ComposerEditor::setEnableRichText(bool richTextEnabled)
 {
-    d->richTextEnabled = richTextEnabled;
+    if(d->richTextEnabled != richTextEnabled) {
+        d->richTextEnabled = richTextEnabled;
+        d->setActionsEnabled(d->richTextEnabled);
+    }
 }
 
 bool ComposerEditor::enableRichText() const
@@ -682,21 +695,11 @@ bool ComposerEditor::enableRichText() const
     return d->richTextEnabled;
 }
 
-void ComposerEditor::setActionsEnabled(bool enabled)
-{
-    foreach(QAction* action, d->htmlEditorActionList)
-    {
-        action->setEnabled(enabled);
-    }
-    d->richTextEnabled = enabled;
-}
-
 void ComposerEditor::contextMenuEvent(QContextMenuEvent* event)
 {
     d->contextMenuResult = page()->mainFrame()->hitTestContent(event->pos());
-    const QWebElement elm = d->contextMenuResult.element();
     const bool linkSelected = !d->contextMenuResult.linkElement().isNull();
-    const bool imageSelected = !elm.isNull() && (elm.tagName().toLower() == QLatin1String("img"));
+    const bool imageSelected = !d->contextMenuResult.imageUrl().isEmpty();
 
     KMenu *menu = new KMenu;
     const QString selectedText = plainTextContent().simplified();
@@ -710,6 +713,12 @@ void ComposerEditor::contextMenuEvent(QContextMenuEvent* event)
     menu->addAction(page()->action(QWebPage::Paste));
     menu->addSeparator();
     menu->addAction(page()->action(QWebPage::SelectAll));
+    menu->addSeparator();
+    if(imageSelected) {
+        //TODO
+    } else if(linkSelected) {
+        //TODO
+    }
     menu->addSeparator();
     menu->addAction(d->action_spell_check);
     menu->addSeparator();
