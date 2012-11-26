@@ -694,6 +694,10 @@ void ComposerEditor::setActionsEnabled(bool enabled)
 void ComposerEditor::contextMenuEvent(QContextMenuEvent* event)
 {
     d->contextMenuResult = page()->mainFrame()->hitTestContent(event->pos());
+    const QWebElement elm = d->contextMenuResult.element();
+    const bool linkSelected = !d->contextMenuResult.linkElement().isNull();
+    const bool imageSelected = !elm.isNull() && (elm.tagName().toLower() == QLatin1String("img"));
+
     KMenu *menu = new KMenu;
     const QString selectedText = plainTextContent().simplified();
     const bool emptyDocument = selectedText.isEmpty();
