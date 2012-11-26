@@ -54,9 +54,8 @@ void InsertTextFileJob::slotGetJobFinished( KJob* job )
   }
 
   if ( mEditor ) {
-    const QTextCodec *fileCodec = 0;
     if ( !mEncoding.isEmpty() ) {
-      fileCodec = KGlobal::charsets()->codecForName( mEncoding );
+      const QTextCodec *fileCodec = KGlobal::charsets()->codecForName( mEncoding );
       if ( fileCodec ) {
         mEditor->textCursor().insertText( fileCodec->toUnicode( mFileData.data() ) );
       } else {
