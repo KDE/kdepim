@@ -27,19 +27,19 @@
 <para>&kmail; offers an import tool for the messages and address books of some
 other email clients. You can access it using <menuchoice><guimenu>File</guimenu>
 <guimenuitem>Import Messages</guimenuitem></menuchoice>. Please make sure that you 
-compact your folders in the other email client, no matter if you are going to use
-the import utility or if you are going to copy files manually.
+compact your folders in the other email client, whether you are going to use
+the import utility or you are going to copy files manually.
 You only need to read this chapter if this tool does not work for you.</para>
 
-<para>This section is for all of the users who need to move email messages
-from their previous email client over to &kmail;. &kmail; can store its
+<para>This section is for all users who need to move email messages
+from their previous email client over to &kmail;. &kmail; can store
 messages using <quote>mbox</quote> or <quote>maildir</quote> formats, which
 are the most widely-used mailbox formats on &UNIX; systems. Mbox mailboxes
 store messages in one file, identifying where messages start and end with a
-<literal>From</literal> line (do not mix this up with the
+<literal>From</literal> line (do not confuse this with the
 <literal>From:</literal> header that contains the message's sender); 
 Maildir uses one file per message.  For many &UNIX; email clients, all you
-must do is move your mailboxes to <filename
+need do is move your mailboxes to <filename
 class="directory">~/Mail</filename> (or make <filename
 class="symlink">Mail</filename> a symbolic link to the folder containing
 your mailboxes), make sure they are writable by your user, and launch
@@ -84,7 +84,7 @@ feeds.</para>
 <term><application>Mailsmith</application></term>
 <listitem>
 <para><application>Mailsmith</application> runs on &Mac; and uses its own database
-format; however it is  possible to export mail into mbox format using
+format; however, it is  possible to export mail into mbox format using
 <menuchoice><guimenu>File</guimenu><guimenuitem>Export
 Mail</guimenuitem></menuchoice> on a 
 selected mailbox or on selected messages.  Once the messages have been exported, translate 
