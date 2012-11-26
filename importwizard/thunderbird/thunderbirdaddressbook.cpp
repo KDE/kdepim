@@ -55,9 +55,9 @@ void ThunderBirdAddressBook::readAddressBook( const QString& filename )
       return;
   }
   MorkTableMap *tables = mork.getTables(0x80);
-  MorkTableMap::iterator tableIterEnd(tables->end());
-  MorkRowMap *rows = 0;
-  if ( tables ) {
+  if( tables ) {
+    MorkTableMap::iterator tableIterEnd(tables->end());
+    MorkRowMap *rows = 0;
     for ( MorkTableMap::iterator tableIter = tables->begin(); tableIter != tableIterEnd; ++tableIter ) {
       if ( tableIter.key() != 0 ) {
         rows = mork.getRows( 0x80, &tableIter.value() );

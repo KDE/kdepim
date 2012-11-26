@@ -62,7 +62,7 @@ KNLineEdit::KNLineEdit( View *parent, bool useCompletion )
 }
 
 KNLineEdit::KNLineEdit( QWidget *parent, bool useCompletion )
-  : KABC::AddressLineEdit( parent, useCompletion )
+  : KABC::AddressLineEdit( parent, useCompletion ), composerView(0)
 {
 }
 

@@ -203,10 +203,9 @@ QString stripSignature( const QString &msg )
     QString prefix; // the current prefix
     QString line; // the line to check if is part of the SB
     int posNewLine = -1;
-    int posSignatureBlock = -1;
 
     // Look for the SB beginning
-    posSignatureBlock = res.indexOf( '-', posDeletingStart );
+    int posSignatureBlock = res.indexOf( '-', posDeletingStart );
     // The prefix before "-- "$
     if ( res[posDeletingStart] == '\n' )
       ++posDeletingStart;

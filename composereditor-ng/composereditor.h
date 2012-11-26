@@ -44,8 +44,6 @@ public:
 
     bool enableRichText() const;
 
-    void setActionsEnabled(bool enabled);
-
 public Q_SLOTS:
     void setEnableRichText(bool richTextEnabled);
     void paste();
@@ -56,7 +54,6 @@ public Q_SLOTS:
 
 protected:
     void contextMenuEvent(QContextMenuEvent* event);
-
 
 private:
     friend class ComposerEditorPrivate;

@@ -138,14 +138,13 @@ void MailSourceViewTextBrowser::slotSpeakText()
 void MailSourceHighlighter::highlightBlock ( const QString & text ) {
   // all visible ascii except space and :
   const QRegExp regexp( "^([\\x21-9;-\\x7E]+:\\s)" );
-  const int headersState = -1; // Also the initial State
-  const int bodyState = 0;
 
   // keep the previous state
   setCurrentBlockState( previousBlockState() );
   // If a header is found
   if( regexp.indexIn( text ) != -1 )
   {
+    const int headersState = -1; // Also the initial State
     // Content- header starts a new mime part, and therefore new headers
     // If a Content-* header is found, change State to headers until a blank line is found.
     if ( text.startsWith( QLatin1String( "Content-" ) ) )
@@ -163,6 +162,7 @@ void MailSourceHighlighter::highlightBlock ( const QString & text ) {
   // Change to body state
   else if ( text.isEmpty() )
   {
+    const int bodyState = 0;
     setCurrentBlockState( bodyState );
   }
 }

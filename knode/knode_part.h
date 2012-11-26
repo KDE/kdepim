@@ -53,7 +53,6 @@ class KNodePart: public KParts::ReadOnlyPart
     virtual void guiActivateEvent(KParts::GUIActivateEvent *e);
 
   private:
-    ActionManager *mActionManager;
     QWidget *mParentWidget;
     KNMainWidget *mainWidget;
 };
