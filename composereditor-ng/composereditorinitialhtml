@@ -2,6 +2,7 @@
 <head>
 <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
 
+<body id="editableArea"></body>
 </head>
 
 </html>

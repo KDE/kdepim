@@ -19,6 +19,7 @@
 */
 
 #include "composereditor.h"
+#include "managelink.h"
 
 #include <kpimtextedit/emoticontexteditaction.h>
 #include <kpimtextedit/inserthtmldialog.h>
@@ -161,10 +162,45 @@ QAction* ComposerEditorPrivate::getAction ( QWebPage::WebAction action ) const
 
 static QVariant execJScript(QWebElement element, const QString& script)
 {
+    qDebug()<<" element.isNull()"<<element.isNull();
     if (element.isNull())
         return QVariant();
     return element.evaluateJavaScript(script);
 }
+
+static QUrl guessUrlFromString(const QString &string)
+{
+    QString urlStr = string.trimmed();
+    QRegExp test(QLatin1String("^[a-zA-Z]+\\:.*"));
+
+    // Check if it looks like a qualified URL. Try parsing it and see.
+    bool hasSchema = test.exactMatch(urlStr);
+    if (hasSchema) {
+        QUrl url(urlStr, QUrl::TolerantMode);
+        if (url.isValid())
+            return url;
+    }
+
+    // Might be a file.
+    if (QFile::exists(urlStr))
+        return QUrl::fromLocalFile(urlStr);
+
+    // Might be a shorturl - try to detect the schema.
+    if (!hasSchema) {
+        int dotIndex = urlStr.indexOf(QLatin1Char('.'));
+        if (dotIndex != -1) {
+            QString prefix = urlStr.left(dotIndex).toLower();
+            QString schema = (prefix == QLatin1String("ftp")) ? prefix : QLatin1String("http");
+            QUrl url(schema + QLatin1String("://") + urlStr, QUrl::TolerantMode);
+            if (url.isValid())
+                return url;
+        }
+    }
+
+    // Fall back to QUrl's own tolerant parser.
+    return QUrl(string, QUrl::TolerantMode);
+}
+
 
 void ComposerEditorPrivate::setActionsEnabled(bool enabled)
 {
@@ -284,7 +320,16 @@ void ComposerEditorPrivate::_k_slotInsertHorizontalRule()
 
 void ComposerEditorPrivate::_k_insertLink()
 {
-    //TODO
+    QPointer<ComposerEditorNG::ManageLink> dlg = new ComposerEditorNG::ManageLink( q );
+    if( dlg->exec() == KDialog::Accepted ) {
+        const QUrl url = guessUrlFromString(dlg->linkLocation());
+        if(url.isValid()){
+            const QString html = QString::fromLatin1( "<a href=\'%1\'>%2</a>" ).arg ( url.toString() ).arg ( dlg->linkText() );
+            qDebug()<<html;
+            execCommand ( QLatin1String("insertHTML"), html );
+        }
+    }
+    delete dlg;
 }
 
 void ComposerEditorPrivate::_k_setFontSize(int fontSize)
@@ -318,7 +363,8 @@ void ComposerEditorPrivate::_k_slotSpeakText()
 
 void ComposerEditorPrivate::_k_slotSpellCheck()
 {
-    QString text(execJScript(contextMenuResult.element(), QLatin1String("this.value")).toString());
+    QString text(execJScript(contextMenuResult.element(), QLatin1String(/*"this.value"*/"window.value")).toString());
+    qDebug()<<" text "<<text;
     if (contextMenuResult.isContentSelected())
     {
         spellTextSelectionStart = qMax(0, execJScript(contextMenuResult.element(), QLatin1String("this.selectionStart")).toInt());
@@ -712,6 +758,11 @@ void ComposerEditor::setEnableRichText(bool richTextEnabled)
 bool ComposerEditor::enableRichText() const
 {
     return d->richTextEnabled;
+}
+
+bool ComposerEditor::isModified() const
+{
+    return page()->isModified();
 }
 
 void ComposerEditor::contextMenuEvent(QContextMenuEvent* event)

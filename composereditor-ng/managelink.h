@@ -21,6 +21,7 @@
 #ifndef MANAGELINK_H
 #define MANAGELINK_H
 #include <KDialog>
+class KLineEdit;
 
 namespace ComposerEditorNG
 {
@@ -30,6 +31,16 @@ class ManageLink : public KDialog
 public:
     explicit ManageLink(QWidget *parent);
     ~ManageLink();
+
+    void setLinkText(const QString& link);
+    QString linkText() const;
+
+    void setLinkLocation(const QString& location);
+    QString linkLocation() const;
+
+private:
+    KLineEdit *mLinkText;
+    KLineEdit *mLinkLocation;
 };
 }
 

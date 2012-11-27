@@ -19,15 +19,55 @@
 */
 
 #include "managelink.h"
+#include <QVBoxLayout>
+#include <QLabel>
+#include <KLineEdit>
+#include <KLocale>
 
 using namespace ComposerEditorNG;
 
 ManageLink::ManageLink(QWidget *parent)
     :KDialog(parent)
 {
+    setCaption( i18n( "Link" ) );
+    setButtons( Ok | Cancel );
+
+    QVBoxLayout *layout = new QVBoxLayout( mainWidget() );
+
+    QLabel *label = new QLabel(i18n("Enter text to display for the link:"));
+    layout->addWidget( label );
+
+    mLinkText = new KLineEdit;
+    layout->addWidget( mLinkText );
+
+    label = new QLabel(i18n("Enter the location:"));
+    layout->addWidget( label );
+    mLinkLocation = new KLineEdit;
+    layout->addWidget( mLinkLocation );
 }
 
 ManageLink::~ManageLink()
 {
 
 }
+
+void ManageLink::setLinkText(const QString& link)
+{
+    mLinkText->setText(link);
+}
+
+QString ManageLink::linkText() const
+{
+    return mLinkText->text();
+}
+
+void ManageLink::setLinkLocation(const QString &location)
+{
+    mLinkLocation->setText(location);
+}
+
+QString ManageLink::linkLocation() const
+{
+    return mLinkLocation->text();
+}
+
