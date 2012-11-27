@@ -665,9 +665,9 @@ static QUrl guessUrlFromString(const QString &string)
 
 void TextEditor::slotAddLink()
 {
-    QString selection = webView->selectedText();
-    if(selection.isEmpty())
-        return;
+    //QString selection = webView->selectedText();
+    //if(selection.isEmpty())
+        //return;
     QPointer<AddEditLink> addLinkDlg = new AddEditLink(this);
     if( addLinkDlg->exec() ){
         Link lnk = addLinkDlg->result();
