@@ -131,7 +131,7 @@ class MAILCOMMON_EXPORT FolderRequester: public QWidget
 
   protected:
     Akonadi::Collection mCollection;
-    KLineEdit *edit;
+    KLineEdit *mEdit;
     bool mMustBeReadWrite;
     bool mShowOutbox;
     bool mNotCreateNewFolder;

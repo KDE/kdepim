@@ -55,11 +55,11 @@ FolderRequester::FolderRequester( QWidget *parent )
   hlay->setSpacing( KDialog::spacingHint() );
   hlay->setContentsMargins( 0, 0, 0, 0 );
 
-  edit = new KLineEdit( this );
-  edit->setClickMessage( i18n( "Select Folder" ) );
-  edit->setTrapReturnKey(true);
-  edit->setReadOnly( true );
-  hlay->addWidget( edit );
+  mEdit = new KLineEdit( this );
+  mEdit->setClickMessage( i18n( "Select Folder" ) );
+  mEdit->setTrapReturnKey(true);
+  mEdit->setReadOnly( true );
+  hlay->addWidget( mEdit );
 
   QToolButton *button = new QToolButton( this );
   button->setIcon( KIcon( "folder" ) );
@@ -110,9 +110,9 @@ Akonadi::Collection FolderRequester::collection() const
 void FolderRequester::setCollectionFullPath( const Akonadi::Collection &col )
 {
   if ( KernelIf->collectionModel() ) {
-    edit->setText( Util::fullCollectionPath( col ) );
+    mEdit->setText( Util::fullCollectionPath( col ) );
   } else {
-    edit->clear();
+    mEdit->clear();
   }
 }
 
@@ -131,7 +131,7 @@ void FolderRequester::setCollection( const Akonadi::Collection &collection, bool
         setCollectionFullPath( mCollection );
     }
   } else if ( !mMustBeReadWrite ) { // the Local Folders root node was selected
-    edit->setText( i18n( "Local Folders" ) );
+    mEdit->setText( i18n( "Local Folders" ) );
   }
 
   emit folderChanged( mCollection );
@@ -141,7 +141,7 @@ void FolderRequester::slotCollectionsReceived( KJob *job )
 {
   if ( job->error() ) {
     mCollection = Akonadi::Collection();
-    edit->setText( i18n( "Please select a folder" ) );
+    mEdit->setText( i18n( "Please select a folder" ) );
     return;
   }
 
@@ -158,7 +158,7 @@ void FolderRequester::slotCollectionsReceived( KJob *job )
   } else {
     // the requested collection doesn't exists anymore
     mCollection = Akonadi::Collection();
-    edit->setText( i18n( "Please select a folder" ) );
+    mEdit->setText( i18n( "Please select a folder" ) );
   }
 }
 
