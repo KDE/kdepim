@@ -80,14 +80,14 @@ void FindReplaceBarPrivate::_k_slotHighlightAllChanged(bool highLight)
 {
     bool found = false;
     if ( highLight ) {
-      QWebPage::FindFlags searchOptions = QWebPage::FindWrapsAroundDocument;
-      if ( caseSensitiveAct->isChecked() )
-        searchOptions |= QWebPage::FindCaseSensitively;
-      searchOptions |= QWebPage::HighlightAllOccurrences;
-      found = webView->findText(mLastSearchStr, searchOptions);
+        QWebPage::FindFlags searchOptions = QWebPage::FindWrapsAroundDocument;
+        if ( caseSensitiveAct->isChecked() )
+            searchOptions |= QWebPage::FindCaseSensitively;
+        searchOptions |= QWebPage::HighlightAllOccurrences;
+        found = webView->findText(mLastSearchStr, searchOptions);
     }
     else
-      found = webView->findText(QString(), QWebPage::HighlightAllOccurrences);
+        found = webView->findText(QString(), QWebPage::HighlightAllOccurrences);
     setFoundMatch( found );
 
 }
@@ -107,28 +107,28 @@ void FindReplaceBarPrivate::_k_slotClearSearch()
 
 void FindReplaceBarPrivate::clearSelections()
 {
-  setFoundMatch( false );
-  webView->findText(QString(), QWebPage::HighlightAllOccurrences);
+    setFoundMatch( false );
+    webView->findText(QString(), QWebPage::HighlightAllOccurrences);
 }
 
 void FindReplaceBarPrivate::setFoundMatch( bool match )
 {
 #ifndef QT_NO_STYLE_STYLESHEET
-  QString styleSheet;
+    QString styleSheet;
 
-  if (!search->text().isEmpty()) {
-    if(mNegativeBackground.isEmpty()) {
-      KStatefulBrush bgBrush(KColorScheme::View, KColorScheme::PositiveBackground);
-      mPositiveBackground = QString::fromLatin1("QLineEdit{ background-color:%1 }").arg(bgBrush.brush(search).color().name());
-      bgBrush = KStatefulBrush(KColorScheme::View, KColorScheme::NegativeBackground);
-      mNegativeBackground = QString::fromLatin1("QLineEdit{ background-color:%1 }").arg(bgBrush.brush(search).color().name());
+    if (!search->text().isEmpty()) {
+        if(mNegativeBackground.isEmpty()) {
+            KStatefulBrush bgBrush(KColorScheme::View, KColorScheme::PositiveBackground);
+            mPositiveBackground = QString::fromLatin1("QLineEdit{ background-color:%1 }").arg(bgBrush.brush(search).color().name());
+            bgBrush = KStatefulBrush(KColorScheme::View, KColorScheme::NegativeBackground);
+            mNegativeBackground = QString::fromLatin1("QLineEdit{ background-color:%1 }").arg(bgBrush.brush(search).color().name());
+        }
+        if (match)
+            styleSheet = mPositiveBackground;
+        else
+            styleSheet = mNegativeBackground;
     }
-    if (match)
-      styleSheet = mPositiveBackground;
-    else
-      styleSheet = mNegativeBackground;
-  }
-  search->setStyleSheet(styleSheet);
+    search->setStyleSheet(styleSheet);
 #endif
 }
 
@@ -163,38 +163,38 @@ void FindReplaceBarPrivate::_k_slotSearchText(bool backward, bool isAutoSearch)
 
 void FindReplaceBarPrivate::searchText( bool backward, bool isAutoSearch )
 {
-  QWebPage::FindFlags searchOptions = QWebPage::FindWrapsAroundDocument;
+    QWebPage::FindFlags searchOptions = QWebPage::FindWrapsAroundDocument;
 
-  if ( backward )
-    searchOptions |= QWebPage::FindBackward;
-  if ( caseSensitiveAct->isChecked() )
-    searchOptions |= QWebPage::FindCaseSensitively;
-  if ( highlightAll->isChecked() )
-    searchOptions |= QWebPage::HighlightAllOccurrences;
+    if ( backward )
+        searchOptions |= QWebPage::FindBackward;
+    if ( caseSensitiveAct->isChecked() )
+        searchOptions |= QWebPage::FindCaseSensitively;
+    if ( highlightAll->isChecked() )
+        searchOptions |= QWebPage::HighlightAllOccurrences;
 
-  const QString searchWord( search->text() );
-  if( !isAutoSearch && !mLastSearchStr.contains( searchWord, Qt::CaseSensitive ) )
-  {
-    clearSelections();
-  }
-  webView->findText(QString(), QWebPage::HighlightAllOccurrences); //Clear an existing highligh
+    const QString searchWord( search->text() );
+    if( !isAutoSearch && !mLastSearchStr.contains( searchWord, Qt::CaseSensitive ) )
+    {
+        clearSelections();
+    }
+    webView->findText(QString(), QWebPage::HighlightAllOccurrences); //Clear an existing highligh
 
-  mLastSearchStr = searchWord;
-  const bool found = webView->findText( mLastSearchStr, searchOptions );
+    mLastSearchStr = searchWord;
+    const bool found = webView->findText( mLastSearchStr, searchOptions );
 
-  setFoundMatch( found );
-  messageInfo( backward, isAutoSearch, found );
+    setFoundMatch( found );
+    messageInfo( backward, isAutoSearch, found );
 }
 
 void FindReplaceBarPrivate::messageInfo( bool backward, bool isAutoSearch, bool found )
 {
-  if ( !found && !isAutoSearch ) {
-    if ( backward ) {
-      KMessageBox::information( q, i18n( "Beginning of message reached.\nPhrase '%1' could not be found." ,mLastSearchStr ) );
-    } else {
-      KMessageBox::information( q, i18n( "End of message reached.\nPhrase '%1' could not be found.", mLastSearchStr ) );
+    if ( !found && !isAutoSearch ) {
+        if ( backward ) {
+            KMessageBox::information( q, i18n( "Beginning of message reached.\nPhrase '%1' could not be found." ,mLastSearchStr ) );
+        } else {
+            KMessageBox::information( q, i18n( "End of message reached.\nPhrase '%1' could not be found.", mLastSearchStr ) );
+        }
     }
-  }
 }
 
 void FindReplaceBarPrivate::_k_slotFindNext()
@@ -295,15 +295,15 @@ bool FindReplaceBar::event(QEvent* e)
         }
         else if ( kev->key() == Qt::Key_Enter ||
                   kev->key() == Qt::Key_Return ) {
-          e->accept();
-          if( shortCutOverride ) {
-              return true;
-          }
-          if ( kev->modifiers() & Qt::ShiftModifier )
-            d->_k_slotFindPrev();
-          else if ( kev->modifiers() == Qt::NoModifier )
-            d->_k_slotFindNext();
-          return true;
+            e->accept();
+            if( shortCutOverride ) {
+                return true;
+            }
+            if ( kev->modifiers() & Qt::ShiftModifier )
+                d->_k_slotFindPrev();
+            else if ( kev->modifiers() == Qt::NoModifier )
+                d->_k_slotFindNext();
+            return true;
         }
     }
     return QWidget::event(e);
