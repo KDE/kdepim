@@ -23,7 +23,7 @@
 
 #include "composereditor_export.h"
 
-#include <KWebView>
+#include <QWidget>
 
 class KActionCollection;
 
@@ -31,7 +31,7 @@ namespace ComposerEditorNG
 {
 class ComposerEditorPrivate;
 
-class COMPOSEREDITORNG_EXPORT ComposerEditor : public KWebView
+class COMPOSEREDITORNG_EXPORT ComposerEditor : public QWidget
 {
     Q_OBJECT
 public:
@@ -43,6 +43,8 @@ public:
     QString plainTextContent() const;
 
     bool enableRichText() const;
+
+    bool isModified() const;
 
 public Q_SLOTS:
     void setEnableRichText(bool richTextEnabled);
@@ -75,6 +77,8 @@ private:
     Q_PRIVATE_SLOT( d, void _k_spellCheckerCorrected(const QString& original, int pos, const QString& replacement) )
     Q_PRIVATE_SLOT( d, void _k_spellCheckerMisspelling(const QString&, int) )
     Q_PRIVATE_SLOT( d, void _k_slotSpellCheckDone(const QString&) )
+    Q_PRIVATE_SLOT( d, void _k_slotFind() )
+    Q_PRIVATE_SLOT( d, void _k_slotReplace() )
 };
 }
 

@@ -510,18 +510,21 @@ AttachmentPart::List Composer::attachmentParts() const
   return d->attachmentParts;
 }
 
-void Composer::addAttachmentPart( AttachmentPart::Ptr part )
+void Composer::addAttachmentPart( AttachmentPart::Ptr part, bool autoresizeImage )
 {
   Q_D( Composer );
   Q_ASSERT( !d->started );
   Q_ASSERT( !d->attachmentParts.contains( part ) );
+  if( autoresizeImage ) {
+      //TODO
+  }
   d->attachmentParts.append( part );
 }
 
-void Composer::addAttachmentParts( const AttachmentPart::List &parts )
+void Composer::addAttachmentParts(const AttachmentPart::List &parts , bool autoresizeImage)
 {
   foreach( AttachmentPart::Ptr part, parts ) {
-    addAttachmentPart( part );
+    addAttachmentPart( part, autoresizeImage );
   }
 }
 

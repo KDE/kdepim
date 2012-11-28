@@ -665,22 +665,20 @@ static QUrl guessUrlFromString(const QString &string)
 
 void TextEditor::slotAddLink()
 {
-    QString selection = webView->selectedText();
-    if(selection.isEmpty())
-        return;
+    const QString selection = webView->selectedText();
     QPointer<AddEditLink> addLinkDlg = new AddEditLink(this);
     if( addLinkDlg->exec() ){
         Link lnk = addLinkDlg->result();
         QUrl url = guessUrlFromString(lnk.address);
         if(url.isValid()){
-            execCommand( "createLink", url.toString() );
+            //execCommand( "createLink", url.toString() );
             ///=====
-//             QString target = lnk.target.isEmpty() ? QString() : QString("target=\"%1\"").arg(lnk.target);
-//             QString title = lnk.title.isEmpty() ? QString() : QString( "title=\"%1\"").arg(lnk.title);
-//             QString html = QString ( "<a href=\"%1\" %2 %3>%4</a>" )
-//                                 .arg ( url.toString() ).arg ( target ).arg( title ).arg ( selection );
-//             kDebug()<<html;
-//             execCommand ( "insertHTML", html );//FIXME Can't understand why do this code doesn't work!? :|
+             QString target = lnk.target.isEmpty() ? QString() : QString("target=\'%1\'").arg(lnk.target);
+             QString title = lnk.title.isEmpty() ? QString() : QString( "title=\'%1\'").arg(lnk.title);
+             QString html = QString ( "<a href=\'%1\' %2 %3>%4</a>" )
+                                 .arg ( url.toString() ).arg ( target ).arg( title ).arg ( selection.isEmpty() ? url.toString() : selection );
+             //kDebug()<<html;
+             execCommand ( "insertHTML", html );
             ///=====
 //             kDebug();
 //             execCommand( QString("insertLink(%1, %2, %3)").arg(url.toString()).arg(lnk.target).arg(lnk.title) );

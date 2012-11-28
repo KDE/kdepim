@@ -249,7 +249,7 @@ void ExpireJob::slotExpireDone( KJob *job )
   }
 
   QString msg;
-  int error = job->error();
+  const int error = job->error();
   bool mustDeleteExpirationAttribute = false;
 
   MailCommon::ExpireCollectionAttribute *expirationAttribute =

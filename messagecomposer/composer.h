@@ -62,8 +62,8 @@ class MESSAGECOMPOSER_EXPORT Composer : public JobBase
     InfoPart *infoPart() const;
     TextPart *textPart() const;
     MessageCore::AttachmentPart::List attachmentParts() const;
-    void addAttachmentPart( MessageCore::AttachmentPart::Ptr part );
-    void addAttachmentParts( const MessageCore::AttachmentPart::List &parts );
+    void addAttachmentPart(MessageCore::AttachmentPart::Ptr part , bool autoresizeImage = false);
+    void addAttachmentParts( const MessageCore::AttachmentPart::List &parts, bool autoresizeImage = false );
     void removeAttachmentPart( MessageCore::AttachmentPart::Ptr part );
 
     // if the message and attachments should not be encrypted regardless of settings

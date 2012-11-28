@@ -750,8 +750,8 @@ void ComposerAutoCorrection::readAutoCorrectionXmlFile( bool forceGlobal )
 
     if (mAutoCorrectLang.isEmpty())
         mAutoCorrectLang = kdelang;
-    qDebug()<<" fname :"<<fname;
-    qDebug()<<" LocalFile:"<<LocalFile;
+    //qDebug()<<" fname :"<<fname;
+    //qDebug()<<" LocalFile:"<<LocalFile;
 
     if(LocalFile.isEmpty()) {
         if(fname.isEmpty()) {
@@ -766,6 +766,12 @@ void ComposerAutoCorrection::readAutoCorrectionXmlFile( bool forceGlobal )
                 mTypographicSingleQuotes = import.typographicSingleQuotes();
                 mTypographicDoubleQuotes = import.typographicDoubleQuotes();
                 mSuperScriptEntries = import.superScriptEntries();
+		if( forceGlobal ) {
+                   mTypographicSingleQuotes = typographicDefaultSingleQuotes();
+		   mTypographicDoubleQuotes = typographicDefaultDoubleQuotes();
+
+		}
+
             }
         }
     } else {
@@ -782,7 +788,6 @@ void ComposerAutoCorrection::readAutoCorrectionXmlFile( bool forceGlobal )
         if (!fname.isEmpty() && import.import(fname,ImportAbstractAutocorrection::SuperScript)) {
             mSuperScriptEntries = import.superScriptEntries();
         }
-        qDebug()<<" mSuperScriptEntries"<<mSuperScriptEntries;
     }
 }
 

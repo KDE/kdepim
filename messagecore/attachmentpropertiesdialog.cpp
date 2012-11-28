@@ -261,6 +261,7 @@ AttachmentPropertiesDialog::AttachmentPropertiesDialog( const AttachmentPart::Pt
     d( new Private( this ) )
 {
   d->init( part, readOnly );
+  setWindowTitle(i18n("Attachment Properties"));
 }
 
 AttachmentPropertiesDialog::AttachmentPropertiesDialog( const KMime::Content *content,
@@ -276,6 +277,7 @@ AttachmentPropertiesDialog::AttachmentPropertiesDialog( const KMime::Content *co
 
   const AttachmentPart::Ptr part = job->attachmentPart();
   d->init( part, true );
+  setWindowTitle(i18n("Attachment Properties"));
 }
 
 AttachmentPropertiesDialog::~AttachmentPropertiesDialog()
