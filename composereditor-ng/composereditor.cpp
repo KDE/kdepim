@@ -66,6 +66,16 @@ public:
         : q(qq),
           richTextEnabled(true)
     {
+        QFile file ( KStandardDirs::locate ( "data", QLatin1String("composereditor/composereditorinitialhtml") ) );
+        kDebug() <<file.fileName();
+        if ( !file.open ( QIODevice::ReadOnly ) )
+            KMessageBox::error(q, i18n ( "Cannot open template file." ), i18n ( "composer editor" ));
+        else
+            q->setContent ( file.readAll());//, "application/xhtml+xml" );
+
+        q->page()->setContentEditable(true);
+        q->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
+        q->connect( q->page(), SIGNAL (selectionChanged()), q, SLOT(_k_adjustActions()) );
 
     }
 
@@ -490,16 +500,7 @@ bool ComposerEditorPrivate::queryCommandState(const QString &cmd)
 ComposerEditor::ComposerEditor(QWidget *parent)
     : KWebView(parent), d(new ComposerEditorPrivate(this))
 {
-    QFile file ( KStandardDirs::locate ( "data", QLatin1String("composereditor/composereditorinitialhtml") ) );
-    kDebug() <<file.fileName();
-    if ( !file.open ( QIODevice::ReadOnly ) )
-        KMessageBox::error(this, i18n ( "Cannot open template file." ), i18n ( "composer editor" ));
-    else
-        setContent ( file.readAll());//, "application/xhtml+xml" );
 
-    page()->setContentEditable(true);
-    page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
-    connect( page(), SIGNAL (selectionChanged()), this, SLOT(_k_adjustActions()) );
 }
 
 ComposerEditor::~ComposerEditor()
