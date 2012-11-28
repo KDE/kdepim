@@ -42,6 +42,10 @@ private:
     FindReplaceBarPrivate * const d;
     Q_PRIVATE_SLOT( d, void _k_closeBar() )
     Q_PRIVATE_SLOT( d, void _k_slotHighlightAllChanged(bool) )
+    Q_PRIVATE_SLOT( d, void _k_caseSensitivityChanged(bool) )
+    Q_PRIVATE_SLOT( d, void _k_slotClearSearch() )
+    Q_PRIVATE_SLOT( d, void _k_slotAutoSearch(const QString&) )
+    Q_PRIVATE_SLOT( d, void _k_slotSearchText() )
 };
 }
 

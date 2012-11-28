@@ -23,6 +23,7 @@
 #include <KIcon>
 #include <KLocale>
 #include <KColorScheme>
+#include <KMessageBox>
 
 #include <QHBoxLayout>
 #include <QToolButton>
@@ -33,6 +34,7 @@
 #include <QMenu>
 #include <QEvent>
 #include <QKeyEvent>
+#include <QTimer>
 
 namespace ComposerEditorNG {
 
@@ -46,9 +48,15 @@ public:
     }
     void _k_closeBar();
     void _k_slotHighlightAllChanged(bool highLight);
+    void _k_caseSensitivityChanged(bool sensitivity);
+    void _k_slotClearSearch();
+    void _k_slotAutoSearch(const QString&);
+    void _k_slotSearchText(bool backward = false, bool isAutoSearch = true);
 
     void clearSelections();
     void setFoundMatch( bool match );
+    void searchText( bool backward, bool isAutoSearch );
+    void messageInfo( bool backward, bool isAutoSearch, bool found );
 
     FindReplaceBar *q;
     QString mPositiveBackground;
@@ -89,6 +97,11 @@ void FindReplaceBarPrivate::_k_closeBar()
     q->hide();
 }
 
+void FindReplaceBarPrivate::_k_slotClearSearch()
+{
+    clearSelections();
+}
+
 void FindReplaceBarPrivate::clearSelections()
 {
   setFoundMatch( false );
@@ -114,6 +127,71 @@ void FindReplaceBarPrivate::setFoundMatch( bool match )
   }
   search->setStyleSheet(styleSheet);
 #endif
+}
+
+void FindReplaceBarPrivate::_k_caseSensitivityChanged(bool sensitivity)
+{
+    QWebPage::FindFlags searchOptions = QWebPage::FindWrapsAroundDocument;
+    if ( sensitivity ) {
+        searchOptions |= QWebPage::FindCaseSensitively;
+        webView->findText(QString(), QWebPage::HighlightAllOccurrences); //Clear an existing highligh
+    }
+    if ( highlightAll->isChecked() )
+        searchOptions |= QWebPage::HighlightAllOccurrences;
+    const bool found = webView->findText(mLastSearchStr, searchOptions);
+    setFoundMatch( found );
+}
+
+void FindReplaceBarPrivate::_k_slotAutoSearch(const QString& str)
+{
+    const bool isNotEmpty = ( !str.isEmpty() );
+    findPreviousButton->setEnabled( isNotEmpty );
+    findNextButton->setEnabled( isNotEmpty );
+    if ( isNotEmpty )
+        QTimer::singleShot( 0, q, SLOT(_k_slotSearchText()) );
+    else
+        clearSelections();
+}
+
+void FindReplaceBarPrivate::_k_slotSearchText(bool backward, bool isAutoSearch)
+{
+    searchText( backward, isAutoSearch );
+}
+
+void FindReplaceBarPrivate::searchText( bool backward, bool isAutoSearch )
+{
+  QWebPage::FindFlags searchOptions = QWebPage::FindWrapsAroundDocument;
+
+  if ( backward )
+    searchOptions |= QWebPage::FindBackward;
+  if ( caseSensitiveAct->isChecked() )
+    searchOptions |= QWebPage::FindCaseSensitively;
+  if ( highlightAll->isChecked() )
+    searchOptions |= QWebPage::HighlightAllOccurrences;
+
+  const QString searchWord( search->text() );
+  if( !isAutoSearch && !mLastSearchStr.contains( searchWord, Qt::CaseSensitive ) )
+  {
+    clearSelections();
+  }
+  webView->findText(QString(), QWebPage::HighlightAllOccurrences); //Clear an existing highligh
+
+  mLastSearchStr = searchWord;
+  const bool found = webView->findText( mLastSearchStr, searchOptions );
+
+  setFoundMatch( found );
+  messageInfo( backward, isAutoSearch, found );
+}
+
+void FindReplaceBarPrivate::messageInfo( bool backward, bool isAutoSearch, bool found )
+{
+  if ( !found && !isAutoSearch ) {
+    if ( backward ) {
+      KMessageBox::information( q, i18n( "Beginning of message reached.\nPhrase '%1' could not be found." ,mLastSearchStr ) );
+    } else {
+      KMessageBox::information( q, i18n( "End of message reached.\nPhrase '%1' could not be found.", mLastSearchStr ) );
+    }
+  }
 }
 
 
@@ -169,14 +247,14 @@ FindReplaceBar::FindReplaceBar(KWebView *parent)
     lay->addWidget( optionsBtn );
 
     connect( closeBtn, SIGNAL(clicked()), this, SLOT(_k_closeBar()) );
-
+    connect( d->caseSensitiveAct, SIGNAL(toggled(bool)), this, SLOT(_k_caseSensitivityChanged(bool)) );
+    connect( d->search, SIGNAL(clearButtonClicked()), this, SLOT(_k_slotClearSearch()) );
+    connect( d->search, SIGNAL(textChanged(QString)), this, SLOT(_k_slotAutoSearch(QString)) );
     /*
-
     connect( d->findNextButton, SIGNAL(clicked()), this, SLOT(findNext()) );
     connect( d->findPreviousButton, SIGNAL(clicked()), this, SLOT(findPrev()) );
-    connect( d->caseSensitiveAct, SIGNAL(toggled(bool)), this, SLOT(caseSensitivityChanged(bool)) );
-    connect( d->search, SIGNAL(textChanged(QString)), this, SLOT(autoSearch(QString)) );
-    connect( d->search, SIGNAL(clearButtonClicked()), this, SLOT(slotClearSearch()) );
+
+
     */
     setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed ) );
     hide();
