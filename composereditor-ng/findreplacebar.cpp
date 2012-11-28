@@ -22,6 +22,7 @@
 
 #include <KIcon>
 #include <KLocale>
+#include <KColorScheme>
 
 #include <QHBoxLayout>
 #include <QToolButton>
@@ -30,6 +31,8 @@
 #include <QPushButton>
 #include <QAction>
 #include <QMenu>
+#include <QEvent>
+#include <QKeyEvent>
 
 namespace ComposerEditorNG {
 
@@ -41,6 +44,11 @@ public:
     {
 
     }
+    void _k_closeBar();
+
+    void clearSelections();
+    void setFoundMatch( bool match );
+
     FindReplaceBar *q;
     QString mPositiveBackground;
     QString mNegativeBackground;
@@ -54,6 +62,41 @@ public:
     QMenu *optionsMenu;
 
 };
+
+void FindReplaceBarPrivate::_k_closeBar()
+{
+    // Make sure that all old searches are cleared
+    search->setText( QString() );
+    clearSelections();
+    q->hide();
+}
+
+void FindReplaceBarPrivate::clearSelections()
+{
+  setFoundMatch( false );
+  //TODO Clear view.
+}
+
+void FindReplaceBarPrivate::setFoundMatch( bool match )
+{
+#ifndef QT_NO_STYLE_STYLESHEET
+  QString styleSheet;
+
+  if (!search->text().isEmpty()) {
+    if(mNegativeBackground.isEmpty()) {
+      KStatefulBrush bgBrush(KColorScheme::View, KColorScheme::PositiveBackground);
+      mPositiveBackground = QString::fromLatin1("QLineEdit{ background-color:%1 }").arg(bgBrush.brush(search).color().name());
+      bgBrush = KStatefulBrush(KColorScheme::View, KColorScheme::NegativeBackground);
+      mNegativeBackground = QString::fromLatin1("QLineEdit{ background-color:%1 }").arg(bgBrush.brush(search).color().name());
+    }
+    if (match)
+      styleSheet = mPositiveBackground;
+    else
+      styleSheet = mNegativeBackground;
+  }
+  search->setStyleSheet(styleSheet);
+#endif
+}
 
 
 FindReplaceBar::FindReplaceBar(QWidget *parent)
@@ -103,8 +146,10 @@ FindReplaceBar::FindReplaceBar(QWidget *parent)
     optionsBtn->setMenu( d->optionsMenu );
     lay->addWidget( optionsBtn );
 
+    connect( closeBtn, SIGNAL(clicked()), this, SLOT(_k_closeBar()) );
+
     /*
-    connect( closeBtn, SIGNAL(clicked()), this, SLOT(closeBar()) );
+
     connect( d->findNextButton, SIGNAL(clicked()), this, SLOT(findNext()) );
     connect( d->findPreviousButton, SIGNAL(clicked()), this, SLOT(findPrev()) );
     connect( d->caseSensitiveAct, SIGNAL(toggled(bool)), this, SLOT(caseSensitivityChanged(bool)) );
@@ -121,5 +166,42 @@ FindReplaceBar::~FindReplaceBar()
     delete d;
 }
 
+bool FindReplaceBar::event(QEvent* e)
+{
+    // Close the bar when pressing Escape.
+    // Not using a QShortcut for this because it could conflict with
+    // window-global actions (e.g. Emil Sedgh binds Esc to "close tab").
+    // With a shortcut override we can catch this before it gets to kactions.
+    const bool shortCutOverride = (e->type() == QEvent::ShortcutOverride);
+    if ( shortCutOverride || e->type() == QEvent::KeyPress ) {
+        QKeyEvent* kev = static_cast<QKeyEvent* >(e);
+        if (kev->key() == Qt::Key_Escape) {
+            if( shortCutOverride ) {
+                e->accept();
+                return true;
+            }
+            e->accept();
+            d->_k_closeBar();
+            return true;
+        }
+        else if ( kev->key() == Qt::Key_Enter ||
+                  kev->key() == Qt::Key_Return ) {
+          e->accept();
+          if( shortCutOverride ) {
+              return true;
+          }
+          /*
+           TODO !!!!!!!!!!!
+          if ( kev->modifiers() & Qt::ShiftModifier )
+            findPrev();
+          else if ( kev->modifiers() == Qt::NoModifier )
+            findNext();
+          return true;
+          */
+        }
+    }
+    return QWidget::event(e);
+}
 
 }
+#include "findreplacebar.moc"

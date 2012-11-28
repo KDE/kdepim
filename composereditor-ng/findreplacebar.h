@@ -33,9 +33,14 @@ class FindReplaceBar : public QWidget
 public:
     explicit FindReplaceBar(QWidget *parent);
     ~FindReplaceBar();
+
+protected:
+    bool event(QEvent* e);
+
 private:
     friend class FindReplaceBarPrivate;
     FindReplaceBarPrivate * const d;
+    Q_PRIVATE_SLOT( d, void _k_closeBar() )
 };
 }
 
