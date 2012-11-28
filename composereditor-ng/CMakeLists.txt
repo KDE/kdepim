@@ -10,6 +10,7 @@ set(libcomposereditor_ng_SRCS
     composereditor.cpp
     managelink.cpp
     findreplacebar.cpp
+    composerview.cpp
 )
 
 kde4_add_library(composereditorng ${LIBRARY_TYPE} ${libcomposereditor_ng_SRCS})

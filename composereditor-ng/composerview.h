@@ -18,38 +18,33 @@
 
 */
 
-#ifndef FINDREPLACEBAR_H
-#define FINDREPLACEBAR_H
+#ifndef COMPOSERVIEW_H
+#define COMPOSERVIEW_H
 
 #include <KWebView>
 
 namespace ComposerEditorNG
 {
-class FindReplaceBarPrivate;
+class ComposerViewPrivate;
+class ComposerEditor;
 
-class FindReplaceBar : public QWidget
+class ComposerView : public KWebView
 {
     Q_OBJECT
 public:
-    explicit FindReplaceBar(KWebView *parent);
-    ~FindReplaceBar();
-    void showAndFocus();
+    explicit ComposerView(ComposerEditor *editor, QWidget * parent = 0);
+    ~ComposerView();
+
+    QWebHitTestResult hitTestResult() const;
 
 protected:
-    bool event(QEvent* e);
+    void contextMenuEvent(QContextMenuEvent* event);
 
 private:
-    friend class FindReplaceBarPrivate;
-    FindReplaceBarPrivate * const d;
-    Q_PRIVATE_SLOT( d, void _k_closeBar() )
-    Q_PRIVATE_SLOT( d, void _k_slotHighlightAllChanged(bool) )
-    Q_PRIVATE_SLOT( d, void _k_slotCaseSensitivityChanged(bool) )
-    Q_PRIVATE_SLOT( d, void _k_slotClearSearch() )
-    Q_PRIVATE_SLOT( d, void _k_slotAutoSearch(const QString&) )
-    Q_PRIVATE_SLOT( d, void _k_slotSearchText() )
-    Q_PRIVATE_SLOT( d, void _k_slotFindNext() )
-    Q_PRIVATE_SLOT( d, void _k_slotFindPrevious() )
+    friend class ComposerViewPrivate;
+    ComposerViewPrivate * const d;
+    Q_PRIVATE_SLOT(d, void _k_slotSpeakText())
 };
 }
 
-#endif // FINDREPLACEBAR_H
+#endif // COMPOSERVIEW_H
