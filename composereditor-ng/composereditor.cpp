@@ -20,6 +20,7 @@
 
 #include "composereditor.h"
 #include "managelink.h"
+#include "findreplacebar.h"
 
 #include <kpimtextedit/emoticontexteditaction.h>
 #include <kpimtextedit/inserthtmldialog.h>
@@ -37,6 +38,7 @@
 #include <KFontAction>
 #include <KToolInvocation>
 #include <KMenu>
+#include <KWebView>
 
 #include <Sonnet/Dialog>
 #include <sonnet/backgroundchecker.h>
@@ -50,6 +52,7 @@
 #include <QDBusConnectionInterface>
 #include <QContextMenuEvent>
 #include <QWebElement>
+#include <QVBoxLayout>
 
 namespace ComposerEditorNG {
 
@@ -66,17 +69,6 @@ public:
         : q(qq),
           richTextEnabled(true)
     {
-        QFile file ( KStandardDirs::locate ( "data", QLatin1String("composereditor/composereditorinitialhtml") ) );
-        kDebug() <<file.fileName();
-        if ( !file.open ( QIODevice::ReadOnly ) )
-            KMessageBox::error(q, i18n ( "Cannot open template file." ), i18n ( "composer editor" ));
-        else
-            q->setContent ( file.readAll());//, "application/xhtml+xml" );
-
-        q->page()->setContentEditable(true);
-        q->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
-        q->connect( q->page(), SIGNAL (selectionChanged()), q, SLOT(_k_adjustActions()) );
-
     }
 
     enum FormatType {
@@ -111,6 +103,7 @@ public:
     void _k_slotFind();
     void _k_slotReplace();
 
+    void initView();
     QAction* getAction ( QWebPage::WebAction action ) const;
     void execCommand(const QString &cmd);
     void execCommand(const QString &cmd, const QString &arg);
@@ -126,6 +119,8 @@ public:
     QList<KAction*> htmlEditorActionList;
     ComposerEditor *q;
 
+    KWebView *view;
+    FindReplaceBar *findReplaceBar;
     KToggleAction *action_text_bold;
     KToggleAction *action_text_italic;
     KToggleAction *action_text_underline;
@@ -165,9 +160,23 @@ namespace ComposerEditorNG {
 QAction* ComposerEditorPrivate::getAction ( QWebPage::WebAction action ) const
 {
     if ( action >= 0 && action <= 66 )
-        return q->page()->action( static_cast<QWebPage::WebAction>( action ));
+        return view->page()->action( static_cast<QWebPage::WebAction>( action ));
     else
         return 0;
+}
+
+void ComposerEditorPrivate::initView()
+{
+    QFile file ( KStandardDirs::locate ( "data", QLatin1String("composereditor/composereditorinitialhtml") ) );
+    kDebug() <<file.fileName();
+    if ( !file.open ( QIODevice::ReadOnly ) )
+        KMessageBox::error(q, i18n ( "Cannot open template file." ), i18n ( "composer editor" ));
+    else
+        view->setContent ( file.readAll());//, "application/xhtml+xml" );
+
+    view->page()->setContentEditable(true);
+    view->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
+    q->connect( view->page(), SIGNAL (selectionChanged()), q, SLOT(_k_adjustActions()) );
 }
 
 static QVariant execJScript(QWebElement element, const QString& script)
@@ -365,7 +374,7 @@ void ComposerEditorPrivate::_k_slotSpeakText()
         }
     }
     QDBusInterface ktts(QLatin1String("org.kde.kttsd"), QLatin1String("/KSpeech"), QLatin1String("org.kde.KSpeech"));
-    QString text = q->selectedText();
+    QString text = view->selectedText();
     if(text.isEmpty())
         text = q->plainTextContent();
     ktts.asyncCall(QLatin1String("say"), text, 0);
@@ -454,7 +463,7 @@ void ComposerEditorPrivate::_k_slotSpellCheckDone(const QString&)
 
 void ComposerEditorPrivate::_k_slotFind()
 {
-    //TODO
+    findReplaceBar->show();
 }
 
 void ComposerEditorPrivate::_k_slotReplace()
@@ -475,14 +484,14 @@ void ComposerEditorPrivate::_k_slotAdjustActions()
 
 void ComposerEditorPrivate::execCommand(const QString &cmd)
 {
-    QWebFrame *frame = q->page()->mainFrame();
+    QWebFrame *frame = view->page()->mainFrame();
     const QString js = QString::fromLatin1("document.execCommand(\"%1\", false, null)").arg(cmd);
     frame->evaluateJavaScript(js);
 }
 
 void ComposerEditorPrivate::execCommand(const QString &cmd, const QString &arg)
 {
-    QWebFrame *frame = q->page()->mainFrame();
+    QWebFrame *frame = view->page()->mainFrame();
     const QString js = QString::fromLatin1("document.execCommand(\"%1\", false, \"%2\")").arg(cmd).arg(arg);
     frame->evaluateJavaScript(js);
 }
@@ -490,7 +499,7 @@ void ComposerEditorPrivate::execCommand(const QString &cmd, const QString &arg)
 
 bool ComposerEditorPrivate::queryCommandState(const QString &cmd)
 {
-    QWebFrame *frame = q->page()->mainFrame();
+    QWebFrame *frame = view->page()->mainFrame();
     QString js = QString::fromLatin1("document.queryCommandState(\"%1\", false, null)").arg(cmd);
     const QVariant result = frame->evaluateJavaScript(js);
     return result.toString().simplified().toLower() == QLatin1String("true");
@@ -498,14 +507,20 @@ bool ComposerEditorPrivate::queryCommandState(const QString &cmd)
 
 
 ComposerEditor::ComposerEditor(QWidget *parent)
-    : KWebView(parent), d(new ComposerEditorPrivate(this))
+    : QWidget(parent), d(new ComposerEditorPrivate(this))
 {
-
+    QVBoxLayout * vlay = new QVBoxLayout;
+    d->view = new KWebView;
+    vlay->addWidget(d->view);
+    d->findReplaceBar = new FindReplaceBar(d->view);
+    vlay->addWidget(d->findReplaceBar);
+    setLayout(vlay);
+    d->initView();
 }
 
 ComposerEditor::~ComposerEditor()
 {
-    QString content = page()->mainFrame()->toHtml();
+    QString content = d->view->page()->mainFrame()->toHtml();
     qDebug()<<"content "<<content;
     delete d;
 }
@@ -746,7 +761,7 @@ void ComposerEditor::createActions(KActionCollection *actionCollection)
 
 QString ComposerEditor::plainTextContent() const
 {
-    return page()->mainFrame()->toPlainText();
+    return d->view->page()->mainFrame()->toPlainText();
 }
 
 void ComposerEditor::setEnableRichText(bool richTextEnabled)
@@ -764,12 +779,12 @@ bool ComposerEditor::enableRichText() const
 
 bool ComposerEditor::isModified() const
 {
-    return page()->isModified();
+    return d->view->page()->isModified();
 }
 
 void ComposerEditor::contextMenuEvent(QContextMenuEvent* event)
 {
-    d->contextMenuResult = page()->mainFrame()->hitTestContent(event->pos());
+    d->contextMenuResult = d->view->page()->mainFrame()->hitTestContent(event->pos());
 
     const bool linkSelected = !d->contextMenuResult.linkElement().isNull();
     const bool imageSelected = !d->contextMenuResult.imageUrl().isEmpty();
@@ -778,14 +793,14 @@ void ComposerEditor::contextMenuEvent(QContextMenuEvent* event)
     const QString selectedText = plainTextContent().simplified();
     const bool emptyDocument = selectedText.isEmpty();
 
-    menu->addAction(page()->action(QWebPage::Undo));
-    menu->addAction(page()->action(QWebPage::Redo));
+    menu->addAction(d->view->page()->action(QWebPage::Undo));
+    menu->addAction(d->view->page()->action(QWebPage::Redo));
     menu->addSeparator();
-    menu->addAction(page()->action(QWebPage::Cut));
-    menu->addAction(page()->action(QWebPage::Copy));
-    menu->addAction(page()->action(QWebPage::Paste));
+    menu->addAction(d->view->page()->action(QWebPage::Cut));
+    menu->addAction(d->view->page()->action(QWebPage::Copy));
+    menu->addAction(d->view->page()->action(QWebPage::Paste));
     menu->addSeparator();
-    menu->addAction(page()->action(QWebPage::SelectAll));
+    menu->addAction(d->view->page()->action(QWebPage::SelectAll));
     menu->addSeparator();
     if(imageSelected) {
         //TODO
@@ -806,27 +821,27 @@ void ComposerEditor::contextMenuEvent(QContextMenuEvent* event)
 
 void ComposerEditor::paste()
 {
-    page()->triggerAction(QWebPage::Paste);
+    d->view->page()->triggerAction(QWebPage::Paste);
 }
 
 void ComposerEditor::cut()
 {
-    page()->triggerAction(QWebPage::Cut);
+    d->view->page()->triggerAction(QWebPage::Cut);
 }
 
 void ComposerEditor::copy()
 {
-    page()->triggerAction(QWebPage::Copy);
+    d->view->page()->triggerAction(QWebPage::Copy);
 }
 
 void ComposerEditor::undo()
 {
-    page()->triggerAction(QWebPage::Undo);
+    d->view->page()->triggerAction(QWebPage::Undo);
 }
 
 void ComposerEditor::redo()
 {
-    page()->triggerAction(QWebPage::Redo);
+    d->view->page()->triggerAction(QWebPage::Redo);
 }
 
 

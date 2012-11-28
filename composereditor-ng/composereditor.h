@@ -23,7 +23,7 @@
 
 #include "composereditor_export.h"
 
-#include <KWebView>
+#include <QWidget>
 
 class KActionCollection;
 
@@ -31,7 +31,7 @@ namespace ComposerEditorNG
 {
 class ComposerEditorPrivate;
 
-class COMPOSEREDITORNG_EXPORT ComposerEditor : public KWebView
+class COMPOSEREDITORNG_EXPORT ComposerEditor : public QWidget
 {
     Q_OBJECT
 public:
