@@ -736,6 +736,7 @@ void ComposerEditor::createActions(KActionCollection *actionCollection)
     d->action_find = KStandardAction::find(this, SLOT(_k_slotFind()), actionCollection);
     actionCollection->addAction(QLatin1String("htmleditor_find"), d->action_find);
 
+    //Replace
     d->action_replace = KStandardAction::replace(this, SLOT(_k_slotReplace()), actionCollection);
     actionCollection->addAction(QLatin1String("htmleditor_replace"), d->action_replace);
 
@@ -768,6 +769,7 @@ bool ComposerEditor::isModified() const
 void ComposerEditor::contextMenuEvent(QContextMenuEvent* event)
 {
     d->contextMenuResult = page()->mainFrame()->hitTestContent(event->pos());
+
     const bool linkSelected = !d->contextMenuResult.linkElement().isNull();
     const bool imageSelected = !d->contextMenuResult.imageUrl().isEmpty();
 
