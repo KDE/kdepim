@@ -39,12 +39,13 @@ namespace ComposerEditorNG {
 class FindReplaceBarPrivate
 {
 public:
-    FindReplaceBarPrivate(FindReplaceBar *qq)
-        :q(qq)
+    FindReplaceBarPrivate(FindReplaceBar *qq, KWebView *view)
+        :q(qq), webView(view)
     {
 
     }
     void _k_closeBar();
+    void _k_slotHighlightAllChanged(bool highLight);
 
     void clearSelections();
     void setFoundMatch( bool match );
@@ -54,14 +55,31 @@ public:
     QString mNegativeBackground;
     QString mLastSearchStr;
 
-    KLineEdit * search;
-    QAction * caseSensitiveAct;
+    KLineEdit *search;
+    QAction *caseSensitiveAct;
+    QAction *highlightAll;
 
     QPushButton *findPreviousButton;
     QPushButton *findNextButton;
     QMenu *optionsMenu;
-
+    KWebView *webView;
 };
+
+void FindReplaceBarPrivate::_k_slotHighlightAllChanged(bool highLight)
+{
+    bool found = false;
+    if ( highLight ) {
+      QWebPage::FindFlags searchOptions = QWebPage::FindWrapsAroundDocument;
+      if ( caseSensitiveAct->isChecked() )
+        searchOptions |= QWebPage::FindCaseSensitively;
+      searchOptions |= QWebPage::HighlightAllOccurrences;
+      found = webView->findText(mLastSearchStr, searchOptions);
+    }
+    else
+      found = webView->findText(QString(), QWebPage::HighlightAllOccurrences);
+    setFoundMatch( found );
+
+}
 
 void FindReplaceBarPrivate::_k_closeBar()
 {
@@ -74,7 +92,7 @@ void FindReplaceBarPrivate::_k_closeBar()
 void FindReplaceBarPrivate::clearSelections()
 {
   setFoundMatch( false );
-  //TODO Clear view.
+  webView->findText(QString(), QWebPage::HighlightAllOccurrences);
 }
 
 void FindReplaceBarPrivate::setFoundMatch( bool match )
@@ -99,8 +117,8 @@ void FindReplaceBarPrivate::setFoundMatch( bool match )
 }
 
 
-FindReplaceBar::FindReplaceBar(QWidget *parent)
-    : QWidget(parent), d(new FindReplaceBarPrivate(this))
+FindReplaceBar::FindReplaceBar(KWebView *parent)
+    : QWidget(parent), d(new FindReplaceBarPrivate(this, parent))
 {
     QHBoxLayout * lay = new QHBoxLayout( this );
     lay->setMargin( 2 );
@@ -142,6 +160,10 @@ FindReplaceBar::FindReplaceBar(QWidget *parent)
     d->optionsMenu = new QMenu( optionsBtn );
     d->caseSensitiveAct = d->optionsMenu->addAction( i18n( "Case sensitive" ) );
     d->caseSensitiveAct->setCheckable( true );
+
+    d->highlightAll = d->optionsMenu->addAction( i18n( "Highlight all matches" ) );
+    d->highlightAll->setCheckable( true );
+    connect( d->highlightAll, SIGNAL(toggled(bool)), this, SLOT(_k_slotHighlightAllChanged(bool)) );
 
     optionsBtn->setMenu( d->optionsMenu );
     lay->addWidget( optionsBtn );

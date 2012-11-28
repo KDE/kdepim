@@ -21,7 +21,7 @@
 #ifndef FINDREPLACEBAR_H
 #define FINDREPLACEBAR_H
 
-#include <QWidget>
+#include <KWebView>
 
 namespace ComposerEditorNG
 {
@@ -31,7 +31,7 @@ class FindReplaceBar : public QWidget
 {
     Q_OBJECT
 public:
-    explicit FindReplaceBar(QWidget *parent);
+    explicit FindReplaceBar(KWebView *parent);
     ~FindReplaceBar();
 
 protected:
@@ -41,6 +41,7 @@ private:
     friend class FindReplaceBarPrivate;
     FindReplaceBarPrivate * const d;
     Q_PRIVATE_SLOT( d, void _k_closeBar() )
+    Q_PRIVATE_SLOT( d, void _k_slotHighlightAllChanged(bool) )
 };
 }
 
