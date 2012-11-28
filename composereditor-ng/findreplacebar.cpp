@@ -48,10 +48,13 @@ public:
     }
     void _k_closeBar();
     void _k_slotHighlightAllChanged(bool highLight);
-    void _k_caseSensitivityChanged(bool sensitivity);
+    void _k_slotCaseSensitivityChanged(bool sensitivity);
     void _k_slotClearSearch();
     void _k_slotAutoSearch(const QString&);
     void _k_slotSearchText(bool backward = false, bool isAutoSearch = true);
+    void _k_slotFindNext();
+    void _k_slotFindPrev();
+
 
     void clearSelections();
     void setFoundMatch( bool match );
@@ -129,7 +132,7 @@ void FindReplaceBarPrivate::setFoundMatch( bool match )
 #endif
 }
 
-void FindReplaceBarPrivate::_k_caseSensitivityChanged(bool sensitivity)
+void FindReplaceBarPrivate::_k_slotCaseSensitivityChanged(bool sensitivity)
 {
     QWebPage::FindFlags searchOptions = QWebPage::FindWrapsAroundDocument;
     if ( sensitivity ) {
@@ -194,6 +197,16 @@ void FindReplaceBarPrivate::messageInfo( bool backward, bool isAutoSearch, bool 
   }
 }
 
+void FindReplaceBarPrivate::_k_slotFindNext()
+{
+    searchText( false, false );
+}
+
+void FindReplaceBarPrivate::_k_slotFindPrev()
+{
+    searchText( true, false );
+}
+
 
 FindReplaceBar::FindReplaceBar(KWebView *parent)
     : QWidget(parent), d(new FindReplaceBarPrivate(this, parent))
@@ -247,15 +260,11 @@ FindReplaceBar::FindReplaceBar(KWebView *parent)
     lay->addWidget( optionsBtn );
 
     connect( closeBtn, SIGNAL(clicked()), this, SLOT(_k_closeBar()) );
-    connect( d->caseSensitiveAct, SIGNAL(toggled(bool)), this, SLOT(_k_caseSensitivityChanged(bool)) );
+    connect( d->caseSensitiveAct, SIGNAL(toggled(bool)), this, SLOT(_k_slotCaseSensitivityChanged(bool)) );
     connect( d->search, SIGNAL(clearButtonClicked()), this, SLOT(_k_slotClearSearch()) );
     connect( d->search, SIGNAL(textChanged(QString)), this, SLOT(_k_slotAutoSearch(QString)) );
-    /*
-    connect( d->findNextButton, SIGNAL(clicked()), this, SLOT(findNext()) );
-    connect( d->findPreviousButton, SIGNAL(clicked()), this, SLOT(findPrev()) );
-
-
-    */
+    connect( d->findNextButton, SIGNAL(clicked()), this, SLOT(_k_slotFindNext()) );
+    connect( d->findPreviousButton, SIGNAL(clicked()), this, SLOT(_k_slotFindPrev()) );
     setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed ) );
     hide();
 
