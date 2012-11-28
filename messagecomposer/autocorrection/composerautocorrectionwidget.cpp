@@ -272,6 +272,7 @@ void ComposerAutoCorrectionWidget::setDefaultSingleQuotes()
   m_singleQuotes = mAutoCorrection->typographicDefaultSingleQuotes();
   ui->singleQuote1->setText(m_singleQuotes.begin);
   ui->singleQuote2->setText(m_singleQuotes.end);
+  emitChanged();
 }
 
 void ComposerAutoCorrectionWidget::selectDoubleQuoteCharOpen()
@@ -303,6 +304,7 @@ void ComposerAutoCorrectionWidget::setDefaultDoubleQuotes()
   m_doubleQuotes = mAutoCorrection->typographicDefaultDoubleQuotes();
   ui->doubleQuote1->setText(m_doubleQuotes.begin);
   ui->doubleQuote2->setText(m_doubleQuotes.end);
+  emitChanged();
 }
 
 void ComposerAutoCorrectionWidget::enableAdvAutocorrection(bool state)
