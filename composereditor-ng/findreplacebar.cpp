@@ -299,14 +299,11 @@ bool FindReplaceBar::event(QEvent* e)
           if( shortCutOverride ) {
               return true;
           }
-          /*
-           TODO !!!!!!!!!!!
           if ( kev->modifiers() & Qt::ShiftModifier )
-            findPrev();
+            d->_k_slotFindPrev();
           else if ( kev->modifiers() == Qt::NoModifier )
-            findNext();
+            d->_k_slotFindNext();
           return true;
-          */
         }
     }
     return QWidget::event(e);
