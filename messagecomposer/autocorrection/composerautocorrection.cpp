@@ -766,6 +766,12 @@ void ComposerAutoCorrection::readAutoCorrectionXmlFile( bool forceGlobal )
                 mTypographicSingleQuotes = import.typographicSingleQuotes();
                 mTypographicDoubleQuotes = import.typographicDoubleQuotes();
                 mSuperScriptEntries = import.superScriptEntries();
+		if( forceGlobal ) {
+                   mTypographicSingleQuotes = typographicDefaultSingleQuotes();
+		   mTypographicDoubleQuotes = typographicDefaultDoubleQuotes();
+
+		}
+
             }
         }
     } else {

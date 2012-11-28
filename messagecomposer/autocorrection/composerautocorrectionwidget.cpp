@@ -131,6 +131,8 @@ void ComposerAutoCorrectionWidget::loadConfig()
     ui->capitalizeDaysName->setChecked(mAutoCorrection->isCapitalizeWeekDays());
     ui->advancedAutocorrection->setChecked(mAutoCorrection->isAdvancedAutocorrect());
     ui->autoSuperScript->setChecked(mAutoCorrection->isSuperScript());
+    ui->typographicDoubleQuotes->setChecked(mAutoCorrection->isReplaceDoubleQuotes());
+    ui->typographicSingleQuotes->setChecked(mAutoCorrection->isReplaceSingleQuotes());
     loadAutoCorrectionAndException();
     mWasChanged = false;
 }
