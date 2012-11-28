@@ -138,8 +138,6 @@ void ComposerAutoCorrectionWidget::loadConfig()
 void ComposerAutoCorrectionWidget::loadAutoCorrectionAndException()
 {
     /* tab 2 - Custom Quotes */
-    ui->typographicDoubleQuotes->setChecked(mAutoCorrection->isReplaceDoubleQuotes());
-    ui->typographicSingleQuotes->setChecked(mAutoCorrection->isReplaceSingleQuotes());
     m_singleQuotes = mAutoCorrection->typographicSingleQuotes();
     ui->singleQuote1->setText(m_singleQuotes.begin);
     ui->singleQuote2->setText(m_singleQuotes.end);
@@ -222,6 +220,8 @@ void ComposerAutoCorrectionWidget::resetToDefault()
   ui->typographicSingleQuotes->setChecked(false);
   ui->autoSuperScript->setChecked(false);
   ui->autoReplaceNumber->setChecked(false);
+  ui->typographicDoubleQuotes->setChecked(false);
+  ui->typographicSingleQuotes->setChecked(false);
 
   loadGlobalAutoCorrectionAndException();
   mWasChanged = false;
