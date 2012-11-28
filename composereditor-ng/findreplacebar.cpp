@@ -53,7 +53,7 @@ public:
     void _k_slotAutoSearch(const QString&);
     void _k_slotSearchText(bool backward = false, bool isAutoSearch = true);
     void _k_slotFindNext();
-    void _k_slotFindPrev();
+    void _k_slotFindPrevious();
 
 
     void clearSelections();
@@ -62,9 +62,9 @@ public:
     void messageInfo( bool backward, bool isAutoSearch, bool found );
 
     FindReplaceBar *q;
-    QString mPositiveBackground;
-    QString mNegativeBackground;
-    QString mLastSearchStr;
+    QString positiveBackground;
+    QString negativeBackground;
+    QString lastSearchStr;
 
     KLineEdit *search;
     QAction *caseSensitiveAct;
@@ -84,7 +84,7 @@ void FindReplaceBarPrivate::_k_slotHighlightAllChanged(bool highLight)
         if ( caseSensitiveAct->isChecked() )
             searchOptions |= QWebPage::FindCaseSensitively;
         searchOptions |= QWebPage::HighlightAllOccurrences;
-        found = webView->findText(mLastSearchStr, searchOptions);
+        found = webView->findText(lastSearchStr, searchOptions);
     }
     else
         found = webView->findText(QString(), QWebPage::HighlightAllOccurrences);
@@ -117,16 +117,16 @@ void FindReplaceBarPrivate::setFoundMatch( bool match )
     QString styleSheet;
 
     if (!search->text().isEmpty()) {
-        if(mNegativeBackground.isEmpty()) {
+        if(negativeBackground.isEmpty()) {
             KStatefulBrush bgBrush(KColorScheme::View, KColorScheme::PositiveBackground);
-            mPositiveBackground = QString::fromLatin1("QLineEdit{ background-color:%1 }").arg(bgBrush.brush(search).color().name());
+            positiveBackground = QString::fromLatin1("QLineEdit{ background-color:%1 }").arg(bgBrush.brush(search).color().name());
             bgBrush = KStatefulBrush(KColorScheme::View, KColorScheme::NegativeBackground);
-            mNegativeBackground = QString::fromLatin1("QLineEdit{ background-color:%1 }").arg(bgBrush.brush(search).color().name());
+            negativeBackground = QString::fromLatin1("QLineEdit{ background-color:%1 }").arg(bgBrush.brush(search).color().name());
         }
         if (match)
-            styleSheet = mPositiveBackground;
+            styleSheet = positiveBackground;
         else
-            styleSheet = mNegativeBackground;
+            styleSheet = negativeBackground;
     }
     search->setStyleSheet(styleSheet);
 #endif
@@ -141,7 +141,7 @@ void FindReplaceBarPrivate::_k_slotCaseSensitivityChanged(bool sensitivity)
     }
     if ( highlightAll->isChecked() )
         searchOptions |= QWebPage::HighlightAllOccurrences;
-    const bool found = webView->findText(mLastSearchStr, searchOptions);
+    const bool found = webView->findText(lastSearchStr, searchOptions);
     setFoundMatch( found );
 }
 
@@ -173,14 +173,14 @@ void FindReplaceBarPrivate::searchText( bool backward, bool isAutoSearch )
         searchOptions |= QWebPage::HighlightAllOccurrences;
 
     const QString searchWord( search->text() );
-    if( !isAutoSearch && !mLastSearchStr.contains( searchWord, Qt::CaseSensitive ) )
+    if( !isAutoSearch && !lastSearchStr.contains( searchWord, Qt::CaseSensitive ) )
     {
         clearSelections();
     }
     webView->findText(QString(), QWebPage::HighlightAllOccurrences); //Clear an existing highligh
 
-    mLastSearchStr = searchWord;
-    const bool found = webView->findText( mLastSearchStr, searchOptions );
+    lastSearchStr = searchWord;
+    const bool found = webView->findText( lastSearchStr, searchOptions );
 
     setFoundMatch( found );
     messageInfo( backward, isAutoSearch, found );
@@ -190,9 +190,9 @@ void FindReplaceBarPrivate::messageInfo( bool backward, bool isAutoSearch, bool 
 {
     if ( !found && !isAutoSearch ) {
         if ( backward ) {
-            KMessageBox::information( q, i18n( "Beginning of message reached.\nPhrase '%1' could not be found." ,mLastSearchStr ) );
+            KMessageBox::information( q, i18n( "Beginning of message reached.\nPhrase '%1' could not be found." ,lastSearchStr ) );
         } else {
-            KMessageBox::information( q, i18n( "End of message reached.\nPhrase '%1' could not be found.", mLastSearchStr ) );
+            KMessageBox::information( q, i18n( "End of message reached.\nPhrase '%1' could not be found.", lastSearchStr ) );
         }
     }
 }
@@ -202,7 +202,7 @@ void FindReplaceBarPrivate::_k_slotFindNext()
     searchText( false, false );
 }
 
-void FindReplaceBarPrivate::_k_slotFindPrev()
+void FindReplaceBarPrivate::_k_slotFindPrevious()
 {
     searchText( true, false );
 }
@@ -264,7 +264,7 @@ FindReplaceBar::FindReplaceBar(KWebView *parent)
     connect( d->search, SIGNAL(clearButtonClicked()), this, SLOT(_k_slotClearSearch()) );
     connect( d->search, SIGNAL(textChanged(QString)), this, SLOT(_k_slotAutoSearch(QString)) );
     connect( d->findNextButton, SIGNAL(clicked()), this, SLOT(_k_slotFindNext()) );
-    connect( d->findPreviousButton, SIGNAL(clicked()), this, SLOT(_k_slotFindPrev()) );
+    connect( d->findPreviousButton, SIGNAL(clicked()), this, SLOT(_k_slotFindPrevious()) );
     setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed ) );
     hide();
 
@@ -300,13 +300,21 @@ bool FindReplaceBar::event(QEvent* e)
                 return true;
             }
             if ( kev->modifiers() & Qt::ShiftModifier )
-                d->_k_slotFindPrev();
+                d->_k_slotFindPrevious();
             else if ( kev->modifiers() == Qt::NoModifier )
                 d->_k_slotFindNext();
             return true;
         }
     }
     return QWidget::event(e);
+}
+
+void FindReplaceBar::showAndFocus()
+{
+    show();
+    setFocus();
+    d->search->selectAll();
+    d->search->setFocus();
 }
 
 }
