@@ -320,7 +320,11 @@ void ComposerViewPrivate::_k_slotAddImage()
 
 void ComposerViewPrivate::_k_slotInsertTable()
 {
-    //TODO
+    QPointer<KPIMTextEdit::InsertTableDialog> dlg = new KPIMTextEdit::InsertTableDialog( q );
+    if( dlg->exec() == KDialog::Accepted ) {
+        //TODO
+    }
+    delete dlg;
 }
 
 void ComposerViewPrivate::_k_slotInsertHorizontalRule()
@@ -779,6 +783,8 @@ void ComposerView::contextMenuEvent(QContextMenuEvent* event)
     menu->addAction(page()->action(QWebPage::Paste));
     menu->addSeparator();
     menu->addAction(page()->action(QWebPage::SelectAll));
+    menu->addSeparator();
+    menu->addAction(d->action_find);
     menu->addSeparator();
     if(imageSelected) {
         //TODO
