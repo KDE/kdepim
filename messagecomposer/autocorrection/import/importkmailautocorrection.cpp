@@ -79,7 +79,7 @@ bool ImportKMailAutocorrection::import(const QString& fileName, LoadAttribute lo
         }
 
         QDomElement doubleQuote = de.namedItem(QLatin1String("DoubleQuote")).toElement();
-        if(doubleQuote.isNull()) {
+        if(!doubleQuote.isNull()) {
             const QDomNodeList nl = doubleQuote.childNodes();
             if(nl.count()==1) {
                 const QDomElement element = nl.item(0).toElement();
@@ -91,7 +91,7 @@ bool ImportKMailAutocorrection::import(const QString& fileName, LoadAttribute lo
         }
 
         const QDomElement singleQuote = de.namedItem(QLatin1String("SimpleQuote")).toElement();
-        if(singleQuote.isNull()) {
+        if(!singleQuote.isNull()) {
             const QDomNodeList nl = singleQuote.childNodes();
             if(nl.count()==1) {
                 const QDomElement element = nl.item(0).toElement();
@@ -101,7 +101,6 @@ bool ImportKMailAutocorrection::import(const QString& fileName, LoadAttribute lo
                 kDebug()<<" number of simple quote invalid "<<nl.count();
             }
         }
-
     }
     if(loadAttribute == All || loadAttribute == SuperScript) {
         QDomElement superScript = de.namedItem(QLatin1String("SuperScript")).toElement();
