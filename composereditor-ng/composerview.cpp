@@ -784,8 +784,10 @@ void ComposerView::contextMenuEvent(QContextMenuEvent* event)
     menu->addSeparator();
     menu->addAction(page()->action(QWebPage::SelectAll));
     menu->addSeparator();
-    menu->addAction(d->action_find);
-    menu->addSeparator();
+    if(!emptyDocument) {
+        menu->addAction(d->action_find);
+        menu->addSeparator();
+    }
     if(imageSelected) {
         //TODO
     } else if(linkSelected) {
