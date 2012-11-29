@@ -46,6 +46,7 @@
   <Action name="htmleditor_format_type"/>
   <Action name="htmleditor_add_image"/>
   <Action name="htmleditor_insert_link"/>
+  <Action name="htmleditor_insert_new_table"/>
 </ToolBar>
 <ToolBar name="formatToolBar" iconText="icononly"><text>Format Toolbar</text>
   <Action name="htmleditor_format_align_left"/>

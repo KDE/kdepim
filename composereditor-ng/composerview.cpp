@@ -24,6 +24,7 @@
 #include <kpimtextedit/emoticontexteditaction.h>
 #include <kpimtextedit/inserthtmldialog.h>
 #include <kpimtextedit/insertimagedialog.h>
+#include <kpimtextedit/inserttabledialog.h>
 
 #include <Sonnet/Dialog>
 #include <sonnet/backgroundchecker.h>
@@ -92,6 +93,7 @@ public:
     void _k_setFormatType(QAction* action);
     void _k_slotAddEmoticon(const QString&);
     void _k_slotInsertHtml();
+    void _k_slotInsertTable();
     void _k_slotAddImage();
     void _k_setTextForegroundColor();
     void _k_setTextBackgroundColor();
@@ -141,6 +143,7 @@ public:
     KPIMTextEdit::EmoticonTextEditAction *action_add_emoticon;
     KAction *action_insert_html;
     KAction *action_insert_image;
+    KAction *action_insert_table;
     KAction *action_text_foreground_color;
     KAction *action_text_background_color;
     KAction *action_format_reset;
@@ -148,6 +151,7 @@ public:
     KAction *action_spell_check;
     KAction *action_find;
     KAction *action_replace;
+
 
     ComposerView *q;
 };
@@ -312,6 +316,11 @@ void ComposerViewPrivate::_k_slotAddImage()
         execCommand(QLatin1String("insertHTML"), imageHtml);
     }
     delete dlg;
+}
+
+void ComposerViewPrivate::_k_slotInsertTable()
+{
+    //TODO
 }
 
 void ComposerViewPrivate::_k_slotInsertHorizontalRule()
@@ -734,11 +743,19 @@ void ComposerView::createActions(KActionCollection *actionCollection)
 
     //Find
     d->action_find = KStandardAction::find(this, SLOT(_k_slotFind()), actionCollection);
+    d->htmlEditorActionList.append(d->action_find);
     actionCollection->addAction(QLatin1String("htmleditor_find"), d->action_find);
 
     //Replace
     d->action_replace = KStandardAction::replace(this, SLOT(_k_slotReplace()), actionCollection);
+    d->htmlEditorActionList.append(d->action_replace);
     actionCollection->addAction(QLatin1String("htmleditor_replace"), d->action_replace);
+
+    //Table
+    d->action_insert_table = new KAction( i18n( "Table..." ), this );
+    d->htmlEditorActionList.append(d->action_insert_table);
+    actionCollection->addAction( QLatin1String( "htmleditor_insert_new_table" ), d->action_insert_table );
+    connect( d->action_insert_table, SIGNAL(triggered(bool)), SLOT(_k_slotInsertTable()) );
 
 }
 
