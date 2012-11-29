@@ -110,7 +110,6 @@ public:
     void _k_slotReplace();
     void _k_slotSpeakText();
 
-    void initView();
     QAction* getAction ( QWebPage::WebAction action ) const;
     void execCommand(const QString &cmd);
     void execCommand(const QString &cmd, const QString &arg);
@@ -169,9 +168,6 @@ QAction* ComposerViewPrivate::getAction ( QWebPage::WebAction action ) const
         return 0;
 }
 
-void ComposerViewPrivate::initView()
-{
-}
 
 static QVariant execJScript(QWebElement element, const QString& script)
 {
@@ -358,7 +354,7 @@ void ComposerViewPrivate::_k_setFontFamily(const QString& family)
 
 void ComposerViewPrivate::_k_slotSpellCheck()
 {
-    QString text(execJScript(contextMenuResult.element(), QLatin1String(/*"this.value"*/"window.value")).toString());
+    QString text(execJScript(contextMenuResult.element(), QLatin1String("this.value")).toString());
     qDebug()<<" text "<<text;
     if (contextMenuResult.isContentSelected())
     {

@@ -1,7 +1,39 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
+<script type="text/javascript">
+
+function getUserSelection()
+{
+   var userSelection;
+   if (window.getSelection)
+   {
+      userSelection = window.getSelection();
+   }
+   else
+   {
+      return null;
+   }
+
+   return userSelection;
+}
+
+function deleteSelectedText()
+{
+   var userSelection;
+   if (window.getSelection)
+   {
+      if (window.getSelection().empty) {
+         window.getSelection().empty();
+      }
+   } else if (document.selection) {  // IE?
+     document.selection.empty(); 
+   }
+   alert("Select something");
+}
+</script>
+
 </head>
-<body id="editableArea"></body>
+<body id="editableArea" contenteditable="true" onMouseDown="javaScript:mouseEventHandler(event);"></body>
 
 </html>
