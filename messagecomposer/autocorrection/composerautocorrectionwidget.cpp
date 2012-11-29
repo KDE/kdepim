@@ -175,7 +175,7 @@ void ComposerAutoCorrectionWidget::addAutoCorrectEntries()
       item = new QTreeWidgetItem( ui->treeWidget, item );
       item->setText( 0, i.key() );
       item->setText( 1, i.value() );
-      i++;
+      ++i;
   }
   ui->treeWidget->setSortingEnabled(true);
   ui->treeWidget->sortByColumn(0, Qt::AscendingOrder);

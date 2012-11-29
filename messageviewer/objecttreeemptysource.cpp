@@ -28,6 +28,7 @@ namespace MessageViewer {
 
 EmptySource::EmptySource() : ObjectTreeSourceIf()
 {
+  mAllowDecryption = false;
 }
 
 EmptySource::~EmptySource()

@@ -40,7 +40,7 @@ VcardMemento::~VcardMemento()
 void VcardMemento::checkEmail()
 {
   Akonadi::ContactSearchJob *searchJob = new Akonadi::ContactSearchJob();
-  searchJob->setQuery( Akonadi::ContactSearchJob::Email, mVCardList.at(mIndex).email );
+  searchJob->setQuery( Akonadi::ContactSearchJob::Email, mVCardList.at(mIndex).email.toLower() );
   connect( searchJob, SIGNAL(result(KJob*)),
            this, SLOT(slotSearchJobFinished(KJob*)) );
 }

@@ -357,7 +357,6 @@ KMFilterDialog::KMFilterDialog( const QList<KActionCollection*> &actionCollectio
   topVLayout->addLayout( topLayout );
   topLayout->setSpacing( spacingHint() );
   topLayout->setMargin( 0 );
-  QHBoxLayout *hbl = topLayout;
   QVBoxLayout *vbl2 = 0;
 
   QSplitter *splitter = new QSplitter;
@@ -371,7 +370,7 @@ KMFilterDialog::KMFilterDialog( const QList<KActionCollection*> &actionCollectio
 
   QWidget *page1 = new QWidget( tabWidget );
   tabWidget->addTab( page1, i18nc( "General mail filter settings.", "General" ) );
-  hbl = new QHBoxLayout( page1 );
+  QHBoxLayout * hbl = new QHBoxLayout( page1 );
   hbl->setSpacing( spacingHint() );
   hbl->setMargin( marginHint() );
 

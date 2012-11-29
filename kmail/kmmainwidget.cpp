@@ -1836,10 +1836,8 @@ void KMMainWidget::slotDeletionCollectionResult(KJob* job)
 //-----------------------------------------------------------------------------
 void KMMainWidget::slotExpireAll()
 {
-  int ret = 0;
-
   if ( GlobalSettings::self()->warnBeforeExpire() ) {
-    ret = KMessageBox::warningContinueCancel(KMainWindow::memberList().first(),
+    const int ret = KMessageBox::warningContinueCancel(KMainWindow::memberList().first(),
                          i18n("Are you sure you want to expire all old messages?"),
                          i18n("Expire Old Messages?"), KGuiItem(i18n("Expire")));
     if (ret != KMessageBox::Continue) {
@@ -2939,7 +2937,7 @@ void KMMainWidget::slotMessagePopup(const Akonadi::Item&msg ,const KUrl&aUrl,con
 {
   updateMessageMenu();
 
-  const QString email =  KPIMUtils::firstEmailAddress( aUrl.path() );
+  const QString email =  KPIMUtils::firstEmailAddress( aUrl.path() ).toLower();
   if ( aUrl.protocol() == "mailto" && !email.isEmpty()) {
     Akonadi::ContactSearchJob *job = new Akonadi::ContactSearchJob( this );
     job->setLimit( 1 );
@@ -3204,11 +3202,12 @@ void KMMainWidget::setupActions()
     KAction *action = new KAction(KIcon("pgp-keys"), i18n("GnuPG Log Viewer"), this);
     actionCollection()->addAction("tools_start_kwatchgnupg", action );
     connect(action, SIGNAL(triggered(bool)), SLOT(slotStartWatchGnuPG()));
-    // disable action if no kwatchgnupg binary is around
-    bool usableKWatchGnupg = !KStandardDirs::findExe("kwatchgnupg").isEmpty();
 #ifdef Q_OS_WIN32
     // not ported yet, underlying infrastructure missing on Windows
-    usableKWatchGnupg = false;
+    const bool usableKWatchGnupg = false;
+#else
+    // disable action if no kwatchgnupg binary is around
+    bool usableKWatchGnupg = !KStandardDirs::findExe("kwatchgnupg").isEmpty();
 #endif
     action->setEnabled(usableKWatchGnupg);
   }

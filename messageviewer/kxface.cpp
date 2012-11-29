@@ -332,16 +332,16 @@ QByteArray KXFace::WriteFace()
 {
   register char *s;
   register int i, j, bits, digits, words;
-  int digsperword = DIGSPERWORD;
-  int wordsperline = WORDSPERLINE;
+  //int digsperword = DIGSPERWORD;
+  //int wordsperline = WORDSPERLINE;
   QByteArray t( "#define noname_width 48\n#define noname_height 48\nstatic char noname_bits[] = {\n " );
   j = t.length() - 1;
 
   s = F;
   bits = digits = words = i = 0;
   t.resize( MAX_XFACE_LENGTH );
-  digsperword = 2;
-  wordsperline = 15;
+  int digsperword = 2;
+  int wordsperline = 15;
   while ( s < F + PIXELS )
   {
     if ( ( bits == 0 ) && ( digits == 0 ) )
