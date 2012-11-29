@@ -109,6 +109,7 @@ using namespace MessageList;
 Pane::Pane( QAbstractItemModel *model, QItemSelectionModel *selectionModel, QWidget *parent )
   : KTabWidget( parent ), d( new Private( this ) )
 {
+  setDocumentMode( true );
   d->mModel = model;
   d->mSelectionModel = selectionModel;
 
