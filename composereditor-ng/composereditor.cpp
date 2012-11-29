@@ -22,17 +22,9 @@
 #include "findreplacebar.h"
 #include "composerview.h"
 
-
-#include <KWebView>
-
-
-#include <QWebFrame>
-#include <QWebPage>
 #include <QDebug>
-#include <QFile>
-#include <QContextMenuEvent>
-#include <QWebElement>
 #include <QVBoxLayout>
+#include <QWebFrame>
 
 namespace ComposerEditorNG {
 
