@@ -71,8 +71,8 @@ public:
   QString language() const;
   TypographicQuotes typographicSingleQuotes() const { return mTypographicSingleQuotes; }
   TypographicQuotes typographicDoubleQuotes() const { return mTypographicDoubleQuotes; }
-  TypographicQuotes typographicDefaultSingleQuotes();
-  TypographicQuotes typographicDefaultDoubleQuotes();
+  TypographicQuotes typographicDefaultSingleQuotes() const;
+  TypographicQuotes typographicDefaultDoubleQuotes() const;
   QSet<QString> upperCaseExceptions() const;
   QSet<QString> twoUpperLetterExceptions() const;
   QHash<QString, QString> autocorrectEntries() const;

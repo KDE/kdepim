@@ -63,6 +63,10 @@ QChar SelectSpecialChar::currentChar() const
   return mCharSelect->currentChar();
 }
 
+void SelectSpecialChar::autoInsertChar()
+{
+  connect(mCharSelect,SIGNAL(charSelected(QChar)),SLOT(accept()));
+}
 
 void SelectSpecialChar::setOkButtonText(const QString& text)
 {
