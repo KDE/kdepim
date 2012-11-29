@@ -47,8 +47,6 @@ public:
 
     bool isModified() const;
 
-    KAction *actionSpellCheck() const;
-
 public Q_SLOTS:
     void setEnableRichText(bool richTextEnabled);
     void paste();
@@ -61,24 +59,6 @@ public Q_SLOTS:
 private:
     friend class ComposerEditorPrivate;
     ComposerEditorPrivate * const d;
-    Q_PRIVATE_SLOT( d, void _k_slotAdjustActions() )
-    Q_PRIVATE_SLOT( d, void _k_setFormatType(QAction *) )
-    Q_PRIVATE_SLOT( d, void _k_slotAddEmoticon(const QString&) )
-    Q_PRIVATE_SLOT( d, void _k_slotInsertHtml() )
-    Q_PRIVATE_SLOT( d, void _k_slotAddImage() )
-    Q_PRIVATE_SLOT( d, void _k_setTextForegroundColor() )
-    Q_PRIVATE_SLOT( d, void _k_setTextBackgroundColor() )
-    Q_PRIVATE_SLOT( d, void _k_slotInsertHorizontalRule() )
-    Q_PRIVATE_SLOT( d, void _k_insertLink() )
-    Q_PRIVATE_SLOT( d, void _k_setFontSize(int) )
-    Q_PRIVATE_SLOT( d, void _k_setFontFamily(const QString&) )
-    Q_PRIVATE_SLOT( d, void _k_adjustActions() )
-    Q_PRIVATE_SLOT( d, void _k_slotSpellCheck() )
-    Q_PRIVATE_SLOT( d, void _k_spellCheckerCorrected(const QString& original, int pos, const QString& replacement) )
-    Q_PRIVATE_SLOT( d, void _k_spellCheckerMisspelling(const QString&, int) )
-    Q_PRIVATE_SLOT( d, void _k_slotSpellCheckDone(const QString&) )
-    Q_PRIVATE_SLOT( d, void _k_slotFind() )
-    Q_PRIVATE_SLOT( d, void _k_slotReplace() )
 };
 }
 

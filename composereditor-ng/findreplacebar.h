@@ -33,6 +33,8 @@ class FindReplaceBar : public QWidget
 public:
     explicit FindReplaceBar(KWebView *parent);
     ~FindReplaceBar();
+
+public Q_SLOTS:
     void showAndFocus();
 
 protected:
