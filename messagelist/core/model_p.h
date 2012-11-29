@@ -114,7 +114,8 @@ public:
     DateChanged = 1,
     MaxDateChanged = (1 << 1),
     ActionItemStatusChanged = (1 << 2),
-    UnreadStatusChanged = (1 << 3)
+    UnreadStatusChanged = (1 << 3),
+    ImportantStatusChanged = (1 << 4)
   };
 
   /**
