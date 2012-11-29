@@ -68,6 +68,7 @@ private:
     Q_PRIVATE_SLOT( d, void _k_slotSpellCheckDone(const QString&) )
     Q_PRIVATE_SLOT( d, void _k_slotFind() )
     Q_PRIVATE_SLOT( d, void _k_slotReplace() )
+    Q_PRIVATE_SLOT( d, void _k_slotDeleteText() )
 
 };
 }

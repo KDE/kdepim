@@ -109,6 +109,7 @@ public:
     void _k_slotFind();
     void _k_slotReplace();
     void _k_slotSpeakText();
+    void _k_slotDeleteText();
 
     QAction* getAction ( QWebPage::WebAction action ) const;
     void execCommand(const QString &cmd);
@@ -279,6 +280,11 @@ void ComposerViewPrivate::_k_setTextBackgroundColor()
     }
 }
 
+void ComposerViewPrivate::_k_slotDeleteText()
+{
+    q->page()->mainFrame()->evaluateJavaScript(QLatin1String("setDeleteSelectedText()"));
+}
+
 void ComposerViewPrivate::_k_setTextForegroundColor()
 {
     //TODO get previous color
@@ -318,7 +324,20 @@ void ComposerViewPrivate::_k_slotInsertTable()
 {
     QPointer<KPIMTextEdit::InsertTableDialog> dlg = new KPIMTextEdit::InsertTableDialog( q );
     if( dlg->exec() == KDialog::Accepted ) {
-        //TODO
+
+        const int numberOfColumns( dlg->columns() );
+        const int numberRow( dlg->rows() );
+
+        QString htmlTable = QString::fromLatin1("<table border='%1'>").arg(dlg->border());
+        for(int i = 0; i <numberRow; ++i) {
+            htmlTable += QLatin1String("<tr>");
+            for(int j = 0; j <numberOfColumns; ++j) {
+                htmlTable += QLatin1String("<td> </td>");
+            }
+            htmlTable += QLatin1String("</tr>");
+        }
+        htmlTable += QLatin1String("</table>");
+        execCommand(QLatin1String("insertHTML"), htmlTable);
     }
     delete dlg;
 }
@@ -766,6 +785,9 @@ void ComposerView::contextMenuEvent(QContextMenuEvent* event)
 
     const bool linkSelected = !d->contextMenuResult.linkElement().isNull();
     const bool imageSelected = !d->contextMenuResult.imageUrl().isEmpty();
+
+    const QWebElement elm = d->contextMenuResult.element();
+    qDebug()<<" elm.tagName().toLower() "<<elm.tagName().toLower();
 
     KMenu *menu = new KMenu;
     const QString selectedText = page()->mainFrame()->toPlainText().simplified();

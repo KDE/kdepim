@@ -18,19 +18,21 @@ function getUserSelection()
    return userSelection;
 }
 
-function deleteSelectedText()
+function setDeleteSelectedText()
 {
-   var userSelection;
-   if (window.getSelection)
-   {
-      if (window.getSelection().empty) {
-         window.getSelection().empty();
+  var selObj = getUserSelection();
+
+  if( selObj != null ) {
+    if(selObj.rangeCount > 1) {
+      for(var i = 1; i < selObj.rangeCount; i++) {
+        selObj.removeRange(selObj.getRangeAt(i));
       }
-   } else if (document.selection) {  // IE?
-     document.selection.empty(); 
-   }
-   alert("Select something");
+    } else if( selObj.rangeCount == 1) {
+      selObj.deleteFromDocument();
+    }
+  }
 }
+
 </script>
 
 </head>
