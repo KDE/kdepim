@@ -468,7 +468,6 @@ void ComposerViewPrivate::_k_slotAdjustActions()
     FOLLOW_CHECK(action_text_superscript, QWebPage::ToggleSuperscript);
     FOLLOW_CHECK(action_ordered_list, QWebPage::InsertOrderedList);
     FOLLOW_CHECK(action_unordered_list, QWebPage::InsertUnorderedList);
-
 }
 
 void ComposerViewPrivate::execCommand(const QString &cmd)
@@ -527,6 +526,7 @@ ComposerView::ComposerView(QWidget *parent)
     page()->setContentEditable(true);
     page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
     connect( page(), SIGNAL (selectionChanged()), this, SLOT(_k_slotAdjustActions()) );
+    setWindowModified(false);
 
 }
 

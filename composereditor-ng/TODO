@@ -21,3 +21,7 @@
 - Add support for replace (in progress)
 - Restore default font when switch out of html mode
 - Create a real popup menu (In progress)
+- Add quote support
+- Add change text support
+- Add extra html setting for table/image/link etc.
+- Add support for anchor
