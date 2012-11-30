@@ -248,6 +248,7 @@ void ComposerAutoCorrectionWidget::selectSingleQuoteCharOpen()
   SelectSpecialChar dlg(this);
   dlg.setCurrentChar(m_singleQuotes.begin);
   dlg.showSelectButton(false);
+  dlg.autoInsertChar();
   if (dlg.exec()) {
     m_singleQuotes.begin = dlg.currentChar();
     ui->singleQuote1->setText(m_singleQuotes.begin);
@@ -260,6 +261,7 @@ void ComposerAutoCorrectionWidget::selectSingleQuoteCharClose()
   SelectSpecialChar dlg(this);
   dlg.showSelectButton(false);
   dlg.setCurrentChar(m_singleQuotes.end);
+  dlg.autoInsertChar();
   if (dlg.exec()) {
     m_singleQuotes.end = dlg.currentChar();
     ui->singleQuote2->setText(m_singleQuotes.end);
@@ -280,6 +282,7 @@ void ComposerAutoCorrectionWidget::selectDoubleQuoteCharOpen()
   SelectSpecialChar dlg(this);
   dlg.showSelectButton(false);
   dlg.setCurrentChar(m_doubleQuotes.begin);
+  dlg.autoInsertChar();
   if (dlg.exec()) {
     m_doubleQuotes.begin = dlg.currentChar();
     ui->doubleQuote1->setText(m_doubleQuotes.begin);
@@ -292,6 +295,7 @@ void ComposerAutoCorrectionWidget::selectDoubleQuoteCharClose()
   SelectSpecialChar dlg(this);
   dlg.showSelectButton(false);
   dlg.setCurrentChar(m_doubleQuotes.end);
+  dlg.autoInsertChar();
   if (dlg.exec()) {
     m_doubleQuotes.end = dlg.currentChar();
     ui->doubleQuote2->setText(m_doubleQuotes.end);

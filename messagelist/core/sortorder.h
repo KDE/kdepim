@@ -86,7 +86,8 @@ class SortOrder
       SortMessagesBySubject,               ///< Sort the messages by subject
       SortMessagesBySize,                  ///< Sort the messages by size
       SortMessagesByActionItemStatus,      ///< Sort the messages by the "Action Item" flag of status
-      SortMessagesByUnreadStatus        ///< Sort the messages by the "Unread" flags of status
+      SortMessagesByUnreadStatus,        ///< Sort the messages by the "Unread" flags of status
+      SortMessagesByImportantStatus        /// Sort the messages By "Important" flags of status
       // Warning: Never add enum entries in the middle: always add them at the end (numeric values are stored in configuration)
     };
 
@@ -96,7 +97,7 @@ class SortOrder
     * Returns the GroupSorting
     */
     GroupSorting groupSorting() const
-      { return mGroupSorting; };
+      { return mGroupSorting; }
 
     /**
     * Sets the GroupSorting option.
@@ -104,45 +105,45 @@ class SortOrder
     * is used in.
     */
     void setGroupSorting( GroupSorting gs )
-      { mGroupSorting = gs; };
+      { mGroupSorting = gs; }
 
     /**
     * Returns the current group SortDirection.
     */
     SortDirection groupSortDirection() const
-      { return mGroupSortDirection; };
+      { return mGroupSortDirection; }
 
     /**
     * Sets the SortDirection for the groups.
     * Note that this option has no meaning if group sorting is set to NoGroupSorting.
     */
     void setGroupSortDirection( SortDirection groupSortDirection )
-      { mGroupSortDirection = groupSortDirection; };
+      { mGroupSortDirection = groupSortDirection; }
 
    /**
     * Returns the current message sorting option
     */
     MessageSorting messageSorting() const
-      { return mMessageSorting; };
+      { return mMessageSorting; }
 
    /**
     * Sets the current message sorting option
     */
     void setMessageSorting( MessageSorting ms )
-      { mMessageSorting = ms; };
+      { mMessageSorting = ms; }
 
    /**
     * Returns the current message SortDirection.
     */
     SortDirection messageSortDirection() const
-      { return mMessageSortDirection; };
+      { return mMessageSortDirection; }
 
    /**
     * Sets the SortDirection for the message.
     * Note that this option has no meaning if message sorting is set to NoMessageSorting.
     */
     void setMessageSortDirection( SortDirection messageSortDirection )
-      { mMessageSortDirection = messageSortDirection; };
+      { mMessageSortDirection = messageSortDirection; }
 
     /**
     * Enumerates the message sorting options compatible with the specified Threading setting.

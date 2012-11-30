@@ -49,6 +49,7 @@ QList< QPair< QString, int > > SortOrder::enumerateMessageSortingOptions( Aggreg
   ret.append( QPair< QString, int >( i18n( "By Size" ), SortOrder::SortMessagesBySize ) );
   ret.append( QPair< QString, int >( i18n( "By Action Item Status" ), SortOrder::SortMessagesByActionItemStatus ) );
   ret.append( QPair< QString, int >( i18n( "By Unread Status" ), SortOrder::SortMessagesByUnreadStatus ) );
+  ret.append( QPair< QString, int >( i18n( "By Important Status" ), SortOrder::SortMessagesByImportantStatus ) );
   return ret;
 }
 
@@ -276,6 +277,7 @@ bool SortOrder::isValidMessageSorting( SortOrder::MessageSorting ms )
     case SortOrder::SortMessagesBySize:
     case SortOrder::SortMessagesByActionItemStatus:
     case SortOrder::SortMessagesByUnreadStatus:
+    case SortOrder::SortMessagesByImportantStatus:
       // ok
     break;
     default:

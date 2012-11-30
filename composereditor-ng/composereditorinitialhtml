@@ -1,8 +1,41 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
+<script type="text/javascript">
 
-<body id="editableArea"></body>
+function getUserSelection()
+{
+   var userSelection;
+   if (window.getSelection)
+   {
+      userSelection = window.getSelection();
+   }
+   else
+   {
+      return null;
+   }
+
+   return userSelection;
+}
+
+function setDeleteSelectedText()
+{
+  var selObj = getUserSelection();
+
+  if( selObj != null ) {
+    if(selObj.rangeCount > 1) {
+      for(var i = 1; i < selObj.rangeCount; i++) {
+        selObj.removeRange(selObj.getRangeAt(i));
+      }
+    } else if( selObj.rangeCount == 1) {
+      selObj.deleteFromDocument();
+    }
+  }
+}
+
+</script>
+
 </head>
+<body id="editableArea" contenteditable="true" onMouseDown="javaScript:mouseEventHandler(event);"></body>
 
 </html>

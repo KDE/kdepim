@@ -220,7 +220,7 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
       <default>false</default>
     </entry>
     <entry name="AskBeforeResizing" type="Bool" key="ask-before-resizing">
-      <default>false</default>
+      <default>true</default>
     </entry>
     <entry name="ReduceImageToMaximum" type="Bool" key="reduce-image-to-maximum">
       <default>false</default>
