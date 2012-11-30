@@ -18,13 +18,17 @@
 
 */
 
-#include "pagecolorbackgrounddialog.h"
+#include "pagecolorbackgroundwidget.h"
+#include "ui_pagecolorbackgroundwidget.h"
 
-PageColorBackgroundDialog::PageColorBackgroundDialog(QWidget *parent) :
-    KDialog(parent)
+PageColorBackgroundWidget::PageColorBackgroundWidget(QWidget *parent) :
+    QWidget(parent),
+    ui(new Ui::PageColorBackgroundWidget)
 {
+    ui->setupUi(this);
 }
 
-PageColorBackgroundDialog::~PageColorBackgroundDialog()
+PageColorBackgroundWidget::~PageColorBackgroundWidget()
 {
+    delete ui;
 }

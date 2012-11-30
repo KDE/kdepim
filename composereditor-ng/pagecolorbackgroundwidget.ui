@@ -2,8 +2,8 @@
  <author/>
  <comment/>
  <exportmacro/>
- <class>PageColorBackgroundDialog</class>
- <widget class="QWidget" name="PageColorBackgroundDialog">
+ <class>PageColorBackgroundWidget</class>
+ <widget class="QWidget" name="PageColorBackgroundWidget">
   <property name="geometry">
    <rect>
     <x>0</x>

@@ -18,13 +18,25 @@
 
 */
 
-#include "pagecolorbackgrounddialog.h"
+#ifndef PAGECOLORBACKGROUNDWIDGET_H
+#define PAGECOLORBACKGROUNDWIDGET_H
 
-PageColorBackgroundDialog::PageColorBackgroundDialog(QWidget *parent) :
-    KDialog(parent)
-{
+#include <QWidget>
+
+namespace Ui {
+class PageColorBackgroundWidget;
 }
 
-PageColorBackgroundDialog::~PageColorBackgroundDialog()
+class PageColorBackgroundWidget : public QWidget
 {
-}
+    Q_OBJECT
+    
+public:
+    explicit PageColorBackgroundWidget(QWidget *parent = 0);
+    ~PageColorBackgroundWidget();
+    
+private:
+    Ui::PageColorBackgroundWidget *ui;
+};
+
+#endif // PAGECOLORBACKGROUNDWIDGET_H
