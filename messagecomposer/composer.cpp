@@ -33,6 +33,8 @@
 #include "signencryptjob.h"
 #include "skeletonmessagejob.h"
 #include "transparentjob.h"
+#include "autoimageresizing/autoresizeimagejob.h"
+
 
 #include <QTimer>
 
@@ -516,7 +518,17 @@ void Composer::addAttachmentPart( AttachmentPart::Ptr part, bool autoresizeImage
   Q_ASSERT( !d->started );
   Q_ASSERT( !d->attachmentParts.contains( part ) );
   if( autoresizeImage ) {
-      //TODO
+      if(part->mimeType() == "image/gif" ||
+              part->mimeType() == "image/jpeg" ||
+              part->mimeType() == "image/png" ) {
+          AutoResizeImageJob *autoResizeJob = new AutoResizeImageJob(this);
+          if(autoResizeJob->loadImageFromData(part->data())) {
+            if(autoResizeJob->resizeImage()) {
+              part->setData(autoResizeJob->imageArray());
+            }
+          }
+          delete autoResizeJob;
+      }
   }
   d->attachmentParts.append( part );
 }
