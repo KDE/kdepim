@@ -38,13 +38,13 @@ function setDeleteSelectedText()
   }
 }
 
-function getForegroundColor()
+function getTextForegroundColor()
 {
    var node = getUserSelection().anchorNode.parentNode;
    return getCurrentStyle(node, "color");
 }
 
-function getBackgroundColor()
+function getTextBackgroundColor()
 {
    var node = getUserSelection().anchorNode.parentNode;
    return getCurrentStyle(node, "background-color");

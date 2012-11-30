@@ -284,7 +284,7 @@ void ComposerViewPrivate::_k_slotInsertHtml()
 
 void ComposerViewPrivate::_k_setTextBackgroundColor()
 {
-    QColor newColor = convertRgbToQColor(evaluateJavascript(QLatin1String("getBackgroundColor()")).toString());
+    QColor newColor = convertRgbToQColor(evaluateJavascript(QLatin1String("getTextBackgroundColor()")).toString());
     const int result = KColorDialog::getColor(newColor,q);
     if(result == QDialog::Accepted) {
         execCommand(QLatin1String("hiliteColor"), newColor.name());
@@ -298,12 +298,12 @@ QVariant ComposerViewPrivate::evaluateJavascript(const QString& command)
 
 void ComposerViewPrivate::_k_slotDeleteText()
 {
-    q->page()->mainFrame()->evaluateJavaScript(QLatin1String("setDeleteSelectedText()"));
+    evaluateJavascript(QLatin1String("setDeleteSelectedText()"));
 }
 
 void ComposerViewPrivate::_k_setTextForegroundColor()
 {
-    QColor newColor = convertRgbToQColor(evaluateJavascript(QLatin1String("getForegroundColor()")).toString());
+    QColor newColor = convertRgbToQColor(evaluateJavascript(QLatin1String("getTextForegroundColor()")).toString());
     const int result = KColorDialog::getColor(newColor,q);
     if(result == QDialog::Accepted) {
         execCommand(QLatin1String("foreColor"), newColor.name());
@@ -324,7 +324,6 @@ void ComposerViewPrivate::_k_slotAddImage()
         QString imageHtml = QString::fromLatin1("<img %1 %2 %3 />").arg((imageWidth>0) ? QString::fromLatin1("width=%1").arg(imageWidth) : QString())
                 .arg((imageHeight>0) ? QString::fromLatin1("height=%1").arg(imageHeight) : QString())
                 .arg(url.isEmpty() ? QString() : QString::fromLatin1("src='file://%1'").arg(url.path()));
-        qDebug()<<" imageHtml"<<imageHtml;
         execCommand(QLatin1String("insertHTML"), imageHtml);
     }
     delete dlg;
@@ -384,7 +383,6 @@ void ComposerViewPrivate::_k_setFontFamily(const QString& family)
 void ComposerViewPrivate::_k_slotSpellCheck()
 {
     QString text(execJScript(contextMenuResult.element(), QLatin1String("this.value")).toString());
-    qDebug()<<" text "<<text;
     if (contextMenuResult.isContentSelected())
     {
         spellTextSelectionStart = qMax(0, execJScript(contextMenuResult.element(), QLatin1String("this.selectionStart")).toInt());
