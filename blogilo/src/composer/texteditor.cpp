@@ -34,6 +34,7 @@
 #include <KDebug>
 #include <ktoolbar.h>
 #include <KSelectAction>
+#include <KToggleAction>
 #include <klocalizedstring.h>
 #include <KColorDialog>
 #include "composer/dialogs/addeditimage.h"
@@ -424,11 +425,11 @@ void TextEditor::createActions()
 
     barVisual->addSeparator();
 
-    actOrderedList = new KAction( KIcon( "format-list-ordered" ), i18n( "Ordered List" ), this );
+    actOrderedList = new KToggleAction( KIcon( "format-list-ordered" ), i18n( "Ordered List" ), this );
     FORWARD_ACTION(actOrderedList, QWebPage::InsertOrderedList);
     barVisual->addAction( actOrderedList );
 
-    actUnorderedList = new KAction( KIcon( "format-list-unordered" ), i18n( "Unordered List" ), this );
+    actUnorderedList = new KToggleAction( KIcon( "format-list-unordered" ), i18n( "Unordered List" ), this );
     FORWARD_ACTION(actUnorderedList, QWebPage::InsertUnorderedList);
     barVisual->addAction( actUnorderedList );
 

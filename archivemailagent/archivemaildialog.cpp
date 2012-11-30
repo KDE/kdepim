@@ -124,7 +124,7 @@ ArchiveMailWidget::ArchiveMailWidget( QWidget *parent )
   connect(mWidget->removeItem,SIGNAL(clicked(bool)),SLOT(slotRemoveItem()));
   connect(mWidget->modifyItem,SIGNAL(clicked(bool)),SLOT(slotModifyItem()));
   connect(mWidget->addItem,SIGNAL(clicked(bool)),SLOT(slotAddItem()));
-  connect(mWidget->treeWidget,SIGNAL(itemClicked(QTreeWidgetItem*,int)),SLOT(updateButtons()));
+  connect(mWidget->treeWidget,SIGNAL(itemSelectionChanged()),SLOT(updateButtons()));
   connect(mWidget->treeWidget,SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),SLOT(slotModifyItem()));
   updateButtons();
 }
