@@ -23,7 +23,8 @@
 
 #include <KDialog>
 
-
+namespace ComposerEditorNG
+{
 class PageColorBackgroundDialog : public KDialog
 {
     Q_OBJECT
@@ -32,5 +33,6 @@ public:
     explicit PageColorBackgroundDialog(QWidget *parent = 0);
     ~PageColorBackgroundDialog();
 };
+}
 
 #endif // PAGECOLORBACKGROUNDDIALOG_H

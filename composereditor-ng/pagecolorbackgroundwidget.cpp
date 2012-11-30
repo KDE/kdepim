@@ -32,3 +32,5 @@ PageColorBackgroundWidget::~PageColorBackgroundWidget()
 {
     delete ui;
 }
+
+#include "pagecolorbackgroundwidget.moc"

@@ -20,6 +20,8 @@
 
 #include "pagecolorbackgrounddialog.h"
 
+using namespace ComposerEditorNG;
+
 PageColorBackgroundDialog::PageColorBackgroundDialog(QWidget *parent) :
     KDialog(parent)
 {
@@ -28,3 +30,5 @@ PageColorBackgroundDialog::PageColorBackgroundDialog(QWidget *parent) :
 PageColorBackgroundDialog::~PageColorBackgroundDialog()
 {
 }
+
+#include "pagecolorbackgrounddialog.moc"

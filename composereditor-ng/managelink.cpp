@@ -71,3 +71,5 @@ QString ManageLink::linkLocation() const
     return mLinkLocation->text();
 }
 
+
+#include "managelink.moc"
