@@ -42,7 +42,7 @@ class TextEditor;
 class KSelectAction;
 class KAction;
 class KToolBar;
-
+class KToggleAction;
 class WebView : public KWebView {
     Q_OBJECT
 
@@ -165,8 +165,8 @@ private:
     KAction *actColorSelect;
     KAction *actAddImage;
 //     KAction *actAddMedia;
-    KAction *actOrderedList;
-    KAction *actUnorderedList;
+    KToggleAction *actOrderedList;
+    KToggleAction *actUnorderedList;
     KAction *actBlockQuote;
     KAction *actSplitPost;
     KAction *actCheckSpelling;
