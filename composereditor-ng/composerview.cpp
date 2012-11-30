@@ -135,8 +135,8 @@ public:
     KAction *action_insert_horizontal_rule;
     KAction *action_list_indent;
     KAction *action_list_dedent;
-    KAction *action_ordered_list;
-    KAction *action_unordered_list;
+    KToggleAction *action_ordered_list;
+    KToggleAction *action_unordered_list;
     KSelectAction *action_format_type;
     KSelectAction *action_font_size;
     KFontAction *action_font_family;
@@ -466,6 +466,9 @@ void ComposerViewPrivate::_k_slotAdjustActions()
     FOLLOW_CHECK(action_text_underline, QWebPage::ToggleUnderline);
     FOLLOW_CHECK(action_text_subscript, QWebPage::ToggleSubscript);
     FOLLOW_CHECK(action_text_superscript, QWebPage::ToggleSuperscript);
+    FOLLOW_CHECK(action_ordered_list, QWebPage::InsertOrderedList);
+    FOLLOW_CHECK(action_unordered_list, QWebPage::InsertUnorderedList);
+
 }
 
 void ComposerViewPrivate::execCommand(const QString &cmd)
@@ -649,13 +652,13 @@ void ComposerView::createActions(KActionCollection *actionCollection)
     actionCollection->addAction(QLatin1String("htmleditor_format_text_superscript"), d->action_text_superscript);
     FORWARD_ACTION(d->action_text_superscript, QWebPage::ToggleSuperscript);
 
-    d->action_ordered_list = new KAction(KIcon(QLatin1String("format-list-ordered")), i18n("Ordered Style"), actionCollection);
+    d->action_ordered_list = new KToggleAction(KIcon(QLatin1String("format-list-ordered")), i18n("Ordered Style"), actionCollection);
     d->htmlEditorActionList.append(d->action_ordered_list);
     actionCollection->addAction(QLatin1String("htmleditor_format_list_ordered"), d->action_ordered_list);
     FORWARD_ACTION(d->action_ordered_list, QWebPage::InsertOrderedList);
 
 
-    d->action_unordered_list = new KAction( KIcon( QLatin1String("format-list-unordered" )), i18n( "Unordered List" ), actionCollection );
+    d->action_unordered_list = new KToggleAction( KIcon( QLatin1String("format-list-unordered" )), i18n( "Unordered List" ), actionCollection );
     d->htmlEditorActionList.append(d->action_unordered_list);
     actionCollection->addAction(QLatin1String("htmleditor_format_list_unordered"), d->action_unordered_list);
     FORWARD_ACTION(d->action_unordered_list, QWebPage::InsertUnorderedList);
