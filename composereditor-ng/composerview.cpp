@@ -212,7 +212,18 @@ static QUrl guessUrlFromString(const QString &string)
     return QUrl(string, QUrl::TolerantMode);
 }
 
-
+static QColor convertRgbToQColor(QString rgb)
+{
+    rgb.chop(1);
+    rgb.remove(QLatin1String("rgb("));
+    rgb = rgb.simplified();
+    const QStringList colorLst = rgb.split(QLatin1String(","));
+    if(colorLst.count() == 3) {
+        QColor col(colorLst.at(0).toInt(),colorLst.at(1).toInt(),colorLst.at(2).toInt());
+        return col;
+    }
+    return QColor();
+}
 
 
 void ComposerViewPrivate::_k_setFormatType(QAction *act)
@@ -273,8 +284,7 @@ void ComposerViewPrivate::_k_slotInsertHtml()
 
 void ComposerViewPrivate::_k_setTextBackgroundColor()
 {
-    //TODO get previous color
-    QColor newColor;
+    QColor newColor = convertRgbToQColor(evaluateJavascript(QLatin1String("getBackgroundColor()")).toString());
     const int result = KColorDialog::getColor(newColor,q);
     if(result == QDialog::Accepted) {
         execCommand(QLatin1String("hiliteColor"), newColor.name());
@@ -293,8 +303,7 @@ void ComposerViewPrivate::_k_slotDeleteText()
 
 void ComposerViewPrivate::_k_setTextForegroundColor()
 {
-    //TODO get previous color
-    QColor newColor;
+    QColor newColor = convertRgbToQColor(evaluateJavascript(QLatin1String("getForegroundColor()")).toString());
     const int result = KColorDialog::getColor(newColor,q);
     if(result == QDialog::Accepted) {
         execCommand(QLatin1String("foreColor"), newColor.name());
