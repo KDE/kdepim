@@ -295,11 +295,6 @@ void ComposerViewPrivate::_k_setTextForegroundColor()
     }
 }
 
-void ComposerViewPrivate::_k_adjustActions()
-{
-    //TODO
-}
-
 void ComposerViewPrivate::_k_slotAddImage()
 {
     QPointer<KPIMTextEdit::InsertImageDialog> dlg = new KPIMTextEdit::InsertImageDialog( q );
@@ -332,7 +327,7 @@ void ComposerViewPrivate::_k_slotInsertTable()
         for(int i = 0; i <numberRow; ++i) {
             htmlTable += QLatin1String("<tr>");
             for(int j = 0; j <numberOfColumns; ++j) {
-                htmlTable += QLatin1String("<td> </td>");
+                htmlTable += QLatin1String("<td></td>");
             }
             htmlTable += QLatin1String("</tr>");
         }
@@ -528,7 +523,7 @@ ComposerView::ComposerView(QWidget *parent)
 
     page()->setContentEditable(true);
     page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
-    connect( page(), SIGNAL (selectionChanged()), this, SLOT(_k_adjustActions()) );
+    connect( page(), SIGNAL (selectionChanged()), this, SLOT(_k_slotAdjustActions()) );
 
 }
 
