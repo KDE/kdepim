@@ -50,6 +50,8 @@
   <Action name="htmleditor_insert_link"/>
   <Action name="htmleditor_insert_new_table"/>
   <Action name="htmleditor_add_emoticon"/>
+  <Action name="htmleditor_direction_rtl"/>
+  <Action name="htmleditor_direction_ltr"/>
 </ToolBar>
 <ToolBar name="formatToolBar" iconText="icononly"><text>Format Toolbar</text>
   <Action name="htmleditor_format_align_left"/>

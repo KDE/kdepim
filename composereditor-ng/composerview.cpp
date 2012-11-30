@@ -112,6 +112,7 @@ public:
     void _k_slotDeleteText();
 
     QAction* getAction ( QWebPage::WebAction action ) const;
+    QVariant evaluateJavascript(const QString& command);
     void execCommand(const QString &cmd);
     void execCommand(const QString &cmd, const QString &arg);
     bool queryCommandState(const QString &cmd);
@@ -278,6 +279,11 @@ void ComposerViewPrivate::_k_setTextBackgroundColor()
     if(result == QDialog::Accepted) {
         execCommand(QLatin1String("hiliteColor"), newColor.name());
     }
+}
+
+QVariant ComposerViewPrivate::evaluateJavascript(const QString& command)
+{
+    return q->page()->mainFrame()->evaluateJavaScript( command );
 }
 
 void ComposerViewPrivate::_k_slotDeleteText()
@@ -459,7 +465,6 @@ void ComposerViewPrivate::_k_slotReplace()
 
 void ComposerViewPrivate::_k_slotAdjustActions()
 {
-    //TODO
     FOLLOW_CHECK(action_text_bold, QWebPage::ToggleBold);
     FOLLOW_CHECK(action_text_italic, QWebPage::ToggleItalic);
     FOLLOW_CHECK(action_text_strikeout, QWebPage::ToggleStrikethrough);
@@ -468,6 +473,20 @@ void ComposerViewPrivate::_k_slotAdjustActions()
     FOLLOW_CHECK(action_text_superscript, QWebPage::ToggleSuperscript);
     FOLLOW_CHECK(action_ordered_list, QWebPage::InsertOrderedList);
     FOLLOW_CHECK(action_unordered_list, QWebPage::InsertUnorderedList);
+    FOLLOW_CHECK(action_direction_ltr, QWebPage::SetTextDirectionLeftToRight);
+    FOLLOW_CHECK(action_direction_rtl, QWebPage::SetTextDirectionRightToLeft);
+
+    const QString alignment = evaluateJavascript(QLatin1String("getAlignment()")).toString();
+    if(alignment == QLatin1String("left")) {
+        action_align_left->setChecked(true);
+    } else if(alignment == QLatin1String("right")) {
+        action_align_right->setChecked(true);
+    } else if(alignment == QLatin1String("center")) {
+        action_align_center->setChecked(true);
+    } else if(alignment == QLatin1String("-webkit-auto")) {
+        action_align_justify->setChecked(true);
+    }
+
 }
 
 void ComposerViewPrivate::execCommand(const QString &cmd)
@@ -621,7 +640,6 @@ void ComposerView::createActions(KActionCollection *actionCollection)
     QActionGroup *directionGroup = new QActionGroup(this);
     directionGroup->addAction(d->action_direction_ltr);
     directionGroup->addAction(d->action_direction_rtl);
-
 
     //indent
     d->action_list_indent = new KAction(KIcon(QLatin1String("format-indent-more")), i18nc("@action", "Increase Indent"), actionCollection);
