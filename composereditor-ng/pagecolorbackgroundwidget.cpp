@@ -21,6 +21,8 @@
 #include "pagecolorbackgroundwidget.h"
 #include "ui_pagecolorbackgroundwidget.h"
 
+using namespace ComposerEditorNG;
+
 PageColorBackgroundWidget::PageColorBackgroundWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::PageColorBackgroundWidget)

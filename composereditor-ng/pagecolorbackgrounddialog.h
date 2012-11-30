@@ -25,6 +25,8 @@
 
 namespace ComposerEditorNG
 {
+class PageColorBackgroundWidget;
+
 class PageColorBackgroundDialog : public KDialog
 {
     Q_OBJECT
@@ -32,6 +34,8 @@ class PageColorBackgroundDialog : public KDialog
 public:
     explicit PageColorBackgroundDialog(QWidget *parent = 0);
     ~PageColorBackgroundDialog();
+private:
+    PageColorBackgroundWidget *mPageColorWidget;
 };
 }
 

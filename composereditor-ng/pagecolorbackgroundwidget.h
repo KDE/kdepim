@@ -27,6 +27,8 @@ namespace Ui {
 class PageColorBackgroundWidget;
 }
 
+namespace ComposerEditorNG
+{
 class PageColorBackgroundWidget : public QWidget
 {
     Q_OBJECT
@@ -38,5 +40,6 @@ public:
 private:
     Ui::PageColorBackgroundWidget *ui;
 };
+}
 
 #endif // PAGECOLORBACKGROUNDWIDGET_H
