@@ -4,7 +4,7 @@
 - Add hightlighting
 - Add support for signature
 - Add support for images (in progress)
-- Add support for table
+- Add support for table (in progress)
 - Add support for link (in progress)
 - Add support for horizontal line (DONE)
 - Add support for emoticon (DONE)
@@ -14,9 +14,14 @@
 - Add support for style (DONE)
 - Add support for remove format/style (DONE)
 - Add supportf for insert html code (DONE)
-- Add support for text/background color (in progress)
+- Add support for text/background color (DONE)
 - Add hmlmode on/off support (in progress)
 - Add speak support (DONE)
-- Add support for find/replace
+- Add support for find (DONE)
+- Add support for replace (in progress)
 - Restore default font when switch out of html mode
 - Create a real popup menu (In progress)
+- Add quote support
+- Add change text support
+- Add extra html setting for table/image/link etc.
+- Add support for anchor

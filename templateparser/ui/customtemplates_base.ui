@@ -86,10 +86,10 @@
          <item>
           <widget class="KPushButton" name="mDuplicate">
            <property name="toolTip">
-            <string comment="@info:tooltip">Remove the selected custom template</string>
+            <string comment="@info:tooltip">Duplicate the selected custom template</string>
            </property>
            <property name="whatsThis">
-            <string comment="@info:whatsthis">Press this button if you want to remove the currently selected custom template</string>
+            <string comment="@info:whatsthis">Press this button if you want to duplicate the currently selected custom template</string>
            </property>
           </widget>
          </item>

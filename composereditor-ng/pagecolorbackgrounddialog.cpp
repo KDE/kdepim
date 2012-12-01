@@ -18,48 +18,28 @@
 
 */
 
-#ifndef COMPOSEREDITOR_H
-#define COMPOSEREDITOR_H
+#include "pagecolorbackgrounddialog.h"
+#include "pagecolorbackgroundwidget.h"
 
-#include "composereditor_export.h"
+#include <KLocale>
 
-#include <QWidget>
+#include <QVBoxLayout>
 
-class KActionCollection;
-class KAction;
+using namespace ComposerEditorNG;
 
-namespace ComposerEditorNG
+PageColorBackgroundDialog::PageColorBackgroundDialog(QWidget *parent) :
+    KDialog(parent)
 {
-class ComposerEditorPrivate;
+    setCaption( i18n( "Page Color and Background" ) );
+    setButtons( Ok | Cancel );
 
-class COMPOSEREDITORNG_EXPORT ComposerEditor : public QWidget
-{
-    Q_OBJECT
-public:
-    explicit ComposerEditor(QWidget *parent);
-    ~ComposerEditor();
-
-    virtual void createActions(KActionCollection *actionCollection);
-
-    QString plainTextContent() const;
-
-    bool enableRichText() const;
-
-    bool isModified() const;
-
-public Q_SLOTS:
-    void setEnableRichText(bool richTextEnabled);
-    void paste();
-    void cut();
-    void copy();
-    void undo();
-    void redo();
-
-
-private:
-    friend class ComposerEditorPrivate;
-    ComposerEditorPrivate * const d;
-};
+    QVBoxLayout *layout = new QVBoxLayout( mainWidget() );
+    mPageColorWidget = new PageColorBackgroundWidget;
+    layout->addWidget(mPageColorWidget);
 }
 
-#endif // COMPOSEREDITOR_H
+PageColorBackgroundDialog::~PageColorBackgroundDialog()
+{
+}
+
+#include "pagecolorbackgrounddialog.moc"

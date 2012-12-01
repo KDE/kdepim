@@ -124,7 +124,7 @@ ArchiveMailWidget::ArchiveMailWidget( QWidget *parent )
   connect(mWidget->removeItem,SIGNAL(clicked(bool)),SLOT(slotRemoveItem()));
   connect(mWidget->modifyItem,SIGNAL(clicked(bool)),SLOT(slotModifyItem()));
   connect(mWidget->addItem,SIGNAL(clicked(bool)),SLOT(slotAddItem()));
-  connect(mWidget->treeWidget,SIGNAL(itemClicked(QTreeWidgetItem*,int)),SLOT(updateButtons()));
+  connect(mWidget->treeWidget,SIGNAL(itemSelectionChanged()),SLOT(updateButtons()));
   connect(mWidget->treeWidget,SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),SLOT(slotModifyItem()));
   updateButtons();
 }
@@ -137,14 +137,15 @@ ArchiveMailWidget::~ArchiveMailWidget()
 void ArchiveMailWidget::customContextMenuRequested(const QPoint&)
 {
   const QList<QTreeWidgetItem *> listItems = mWidget->treeWidget->selectedItems();
-  if(listItems.isEmpty())
-    return;
   KMenu menu;
-  if( listItems.count() == 1) {
-    menu.addAction(i18n("Open Containing Folder..."),this,SLOT(slotOpenFolder()));
+  menu.addAction(i18n("Add..."),this,SLOT(slotOpenFolder()));
+  if( !listItems.isEmpty() ) {
+   if( listItems.count() == 1) {
+      menu.addAction(i18n("Open Containing Folder..."),this,SLOT(slotOpenFolder()));
+    }
     menu.addSeparator();
+    menu.addAction(i18n("Delete"),this,SLOT(slotRemoveItem()));
   }
-  menu.addAction(i18n("Delete"),this,SLOT(slotRemoveItem()));
   menu.exec(QCursor::pos());
 }
 

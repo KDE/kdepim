@@ -113,7 +113,7 @@ bool AutoResizeImageJob::resizeImage()
   if((newHeight != height) || (newWidth != width)) {
       mBuffer.open(QIODevice::WriteOnly);
       mImage = mImage.scaled(newWidth,newHeight);
-      bool result = mImage.save(&mBuffer,MessageComposer::MessageComposerSettings::self()->writeFormat().toLocal8Bit());
+      const bool result = mImage.save(&mBuffer,MessageComposer::MessageComposerSettings::self()->writeFormat().toLocal8Bit());
       mBuffer.close();
       return result;
   } else {

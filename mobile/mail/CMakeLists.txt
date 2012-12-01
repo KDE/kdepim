@@ -1,6 +1,6 @@
-project( kmail-mobile )
+project(kmail-mobile)
 
-set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
 
 add_subdirectory(docs)
 add_subdirectory(tests)
@@ -57,53 +57,62 @@ qt4_wrap_ui(kmail_mobile_srcs configwidget.ui messagelistsettingseditor.ui searc
 
 if(KDEPIM_ENTERPRISE_BUILD)
   set(WARN_TOOMANY_RECIPIENTS_DEFAULT true)
-else(KDEPIM_ENTERPRISE_BUILD)
+else()
   set(WARN_TOOMANY_RECIPIENTS_DEFAULT false)
-endif(KDEPIM_ENTERPRISE_BUILD)
+endif()
 
 configure_file(settings.kcfg.cmake ${CMAKE_CURRENT_BINARY_DIR}/settings.kcfg)
 kde4_add_kcfg_files(kmail_mobile_srcs settings.kcfgc)
 
-if (RUNTIME_PLUGINS_STATIC)
+if(RUNTIME_PLUGINS_STATIC)
   add_definitions(-DMAIL_SERIALIZER_PLUGIN_STATIC)
-endif (RUNTIME_PLUGINS_STATIC)
+endif()
 
 kde4_add_app_icon(kmail_mobile_srcs "${CMAKE_CURRENT_SOURCE_DIR}/hi*-apps-kmail-mobile.png")
 
-kde4_add_executable(kmail-mobile ${kmail_mobile_srcs} )
-if (WINCE)
-  SET_TARGET_PROPERTIES(kmail-mobile PROPERTIES LINK_FLAGS " /FIXED:NO")
-endif (WINCE)
+kde4_add_executable(kmail-mobile ${kmail_mobile_srcs})
+if(WINCE)
+  set_target_properties(kmail-mobile PROPERTIES LINK_FLAGS " /FIXED:NO")
+endif()
 
 target_link_libraries(kmail-mobile
-    ${QT_QTDECLARATIVE_LIBRARY}
-    ${KDE4_KCMUTILS_LIBS}
-    ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
-    ${KDEPIMLIBS_KMIME_LIBS}
-    ${KDEPIMLIBS_AKONADI_LIBS}
-    ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
-    akonadi_next
-    kdepim
-    kdepimmobileui
-    kdepimmobileuicalendar
-    kmbox
-    ksieveui
-    kleo
-    mailcommon
-    pimcommon
-    messagecomposer
-    messagecore
-    messageviewer
-    templateparser
+  ${QT_QTDECLARATIVE_LIBRARY}
+  ${KDE4_KCMUTILS_LIBS}
+  ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
+  ${KDEPIMLIBS_KMIME_LIBS}
+  ${KDEPIMLIBS_AKONADI_LIBS}
+  ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
+  ${KDEPIMLIBS_KMBOX_LIBS}
+  akonadi_next
+  kdepim
+  kdepimmobileui
+  kdepimmobileuicalendar
+  ksieveui
+  kleo
+  mailcommon
+  pimcommon
+  messagecomposer
+  messagecore
+  messageviewer
+  templateparser
 )
 
-if (RUNTIME_PLUGINS_STATIC)
-  target_link_libraries(kmail-mobile akonadi_serializer_mail akonadi_serializer_addressee akonadi_serializer_contactgroup akonadi_serializer_kcalcore)
-endif (RUNTIME_PLUGINS_STATIC)
+if(RUNTIME_PLUGINS_STATIC)
+  target_link_libraries(kmail-mobile
+    akonadi_serializer_mail
+    akonadi_serializer_addressee
+    akonadi_serializer_contactgroup
+    akonadi_serializer_kcalcore
+  )
+endif()
 
-if (WINCE)
-  target_link_libraries(kmail-mobile kcm_kpimidentities messageviewer_bodypartformatter_text_calendar incidenceeditorsngmobile)
-endif(WINCE)
+if(WINCE)
+  target_link_libraries(kmail-mobile
+    kcm_kpimidentities
+    messageviewer_bodypartformatter_text_calendar
+    incidenceeditorsngmobile
+  )
+endif()
 
 install(TARGETS kmail-mobile ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(PROGRAMS kmail-mobile.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
@@ -136,5 +145,5 @@ install(FILES
   DESTINATION ${DATA_INSTALL_DIR}/kmail-mobile
 )
 
-kde4_install_icons( ${ICON_INSTALL_DIR} )
+kde4_install_icons(${ICON_INSTALL_DIR})
 

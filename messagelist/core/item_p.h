@@ -438,6 +438,30 @@ public:
   }
 };
 
+/**
+ * A helper class used with MessageList::Item::childItemNeedsReSorting() and
+ * MessageList::Item::insertChildItem().
+ */
+class ItemImportantStatusComparator
+{
+public:
+  static inline bool firstGreaterOrEqual( Item * first, Item * second )
+  {
+    if ( !first->status().isImportant() )
+    {
+      // fist is unread
+      if ( !second->status().isImportant() )
+        return first->date() >= second->date(); // both are unread
+      // unread comes always first with respect to non-unread
+      return true;
+    }
+    if ( !second->status().isImportant() )
+      return false;
+    // both are read
+    return first->date() >= second->date();
+  }
+};
+
 } // namespace Core
 
 } // namespace MessageList

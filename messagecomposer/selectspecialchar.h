@@ -37,10 +37,17 @@ public:
 
   void showSelectButton(bool show);
 
+  /*
+   * When we double click we call accept
+   */
+  void autoInsertChar();
+
 private Q_SLOTS:
   void slotInsertChar();
+
 Q_SIGNALS:
   void charSelected(const QChar&);
+
 private:
   KCharSelect *mCharSelect;
 };

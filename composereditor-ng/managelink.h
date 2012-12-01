@@ -18,48 +18,30 @@
 
 */
 
-#ifndef COMPOSEREDITOR_H
-#define COMPOSEREDITOR_H
-
-#include "composereditor_export.h"
-
-#include <QWidget>
-
-class KActionCollection;
-class KAction;
+#ifndef MANAGELINK_H
+#define MANAGELINK_H
+#include <KDialog>
+class KLineEdit;
 
 namespace ComposerEditorNG
 {
-class ComposerEditorPrivate;
-
-class COMPOSEREDITORNG_EXPORT ComposerEditor : public QWidget
+class ManageLink : public KDialog
 {
     Q_OBJECT
 public:
-    explicit ComposerEditor(QWidget *parent);
-    ~ComposerEditor();
+    explicit ManageLink(QWidget *parent);
+    ~ManageLink();
 
-    virtual void createActions(KActionCollection *actionCollection);
+    void setLinkText(const QString& link);
+    QString linkText() const;
 
-    QString plainTextContent() const;
-
-    bool enableRichText() const;
-
-    bool isModified() const;
-
-public Q_SLOTS:
-    void setEnableRichText(bool richTextEnabled);
-    void paste();
-    void cut();
-    void copy();
-    void undo();
-    void redo();
-
+    void setLinkLocation(const QString& location);
+    QString linkLocation() const;
 
 private:
-    friend class ComposerEditorPrivate;
-    ComposerEditorPrivate * const d;
+    KLineEdit *mLinkText;
+    KLineEdit *mLinkLocation;
 };
 }
 
-#endif // COMPOSEREDITOR_H
+#endif // MANAGELINK_H

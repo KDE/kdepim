@@ -18,48 +18,40 @@
 
 */
 
-#ifndef COMPOSEREDITOR_H
-#define COMPOSEREDITOR_H
+#ifndef FINDREPLACEBAR_H
+#define FINDREPLACEBAR_H
 
-#include "composereditor_export.h"
-
-#include <QWidget>
-
-class KActionCollection;
-class KAction;
+#include <KWebView>
 
 namespace ComposerEditorNG
 {
-class ComposerEditorPrivate;
+class FindReplaceBarPrivate;
 
-class COMPOSEREDITORNG_EXPORT ComposerEditor : public QWidget
+class FindReplaceBar : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ComposerEditor(QWidget *parent);
-    ~ComposerEditor();
-
-    virtual void createActions(KActionCollection *actionCollection);
-
-    QString plainTextContent() const;
-
-    bool enableRichText() const;
-
-    bool isModified() const;
+    explicit FindReplaceBar(KWebView *parent);
+    ~FindReplaceBar();
 
 public Q_SLOTS:
-    void setEnableRichText(bool richTextEnabled);
-    void paste();
-    void cut();
-    void copy();
-    void undo();
-    void redo();
+    void showAndFocus();
 
+protected:
+    bool event(QEvent* e);
 
 private:
-    friend class ComposerEditorPrivate;
-    ComposerEditorPrivate * const d;
+    friend class FindReplaceBarPrivate;
+    FindReplaceBarPrivate * const d;
+    Q_PRIVATE_SLOT( d, void _k_closeBar() )
+    Q_PRIVATE_SLOT( d, void _k_slotHighlightAllChanged(bool) )
+    Q_PRIVATE_SLOT( d, void _k_slotCaseSensitivityChanged(bool) )
+    Q_PRIVATE_SLOT( d, void _k_slotClearSearch() )
+    Q_PRIVATE_SLOT( d, void _k_slotAutoSearch(const QString&) )
+    Q_PRIVATE_SLOT( d, void _k_slotSearchText() )
+    Q_PRIVATE_SLOT( d, void _k_slotFindNext() )
+    Q_PRIVATE_SLOT( d, void _k_slotFindPrevious() )
 };
 }
 
-#endif // COMPOSEREDITOR_H
+#endif // FINDREPLACEBAR_H

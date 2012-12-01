@@ -1833,7 +1833,14 @@ bool ModelPrivate::handleItemPropertyChanges( int propertyChangeMask, Item * par
             if ( messageItemNeedsReSorting< ItemUnreadStatusComparator >( mSortOrder->messageSortDirection(), parent->d_ptr, static_cast< MessageItem * >( item ) ) )
               attachMessageToParent( parent, static_cast< MessageItem * >( item ) );
           } // else new/unread status changed, but it doesn't match sorting order: no need to re-sort
-    break;
+        break;
+        case SortOrder::SortMessagesByImportantStatus:
+          if ( propertyChangeMask & ImportantStatusChanged ) // important status changed
+          {
+            if ( messageItemNeedsReSorting< ItemImportantStatusComparator >( mSortOrder->messageSortDirection(), parent->d_ptr, static_cast< MessageItem * >( item ) ) )
+              attachMessageToParent( parent, static_cast< MessageItem * >( item ) );
+          } // else new/unread status changed, but it doesn't match sorting order: no need to re-sort
+        break;
         default:
           // this kind of message sorting isn't affected by the property changes: nothing to do.
         break;
@@ -1908,6 +1915,13 @@ bool ModelPrivate::handleItemPropertyChanges( int propertyChangeMask, Item * par
         if ( messageItemNeedsReSorting< ItemUnreadStatusComparator >( mSortOrder->messageSortDirection(), parent->d_ptr, static_cast< MessageItem * >( item ) ) )
           attachMessageToParent( parent, static_cast< MessageItem * >( item ) );
       } // else new/unread status changed, but it doesn't match sorting order: no need to re-sort
+    break;
+    case SortOrder::SortMessagesByImportantStatus:
+      if ( propertyChangeMask & ImportantStatusChanged ) // important status changed
+      {
+        if ( messageItemNeedsReSorting< ItemImportantStatusComparator >( mSortOrder->messageSortDirection(), parent->d_ptr, static_cast< MessageItem * >( item ) ) )
+          attachMessageToParent( parent, static_cast< MessageItem * >( item ) );
+      } // else important status changed, but it doesn't match sorting order: no need to re-sort
     break;
     default:
       // this kind of message sorting isn't affected by property changes: nothing to do.
@@ -2183,6 +2197,9 @@ void ModelPrivate::attachMessageToParent( Item *pParent, MessageItem *mi )
     break;
     case SortOrder::SortMessagesByUnreadStatus:
       INSERT_MESSAGE_WITH_COMPARATOR( ItemUnreadStatusComparator )
+    break;
+    case SortOrder::SortMessagesByImportantStatus:
+      INSERT_MESSAGE_WITH_COMPARATOR( ItemImportantStatusComparator )
     break;
     case SortOrder::NoMessageSorting:
       pParent->appendChildItem( mModelForItemFunctions, mi );
@@ -3254,6 +3271,7 @@ ModelPrivate::ViewItemJobResult ModelPrivate::viewItemJobStepInternalForJobPass1
     time_t prevMaxDate = message->maxDate();
     bool toDoStatus = message->status().isToAct();
     bool prevUnreadStatus = !message->status().isRead();
+    bool prevImportantStatus = message->status().isImportant();
 
     // The subject based threading cache is sorted by date: we must remove
     // the item and re-insert it since updateMessageItemData() may change the date too.
@@ -3280,6 +3298,8 @@ ModelPrivate::ViewItemJobResult ModelPrivate::viewItemJobStepInternalForJobPass1
        propertyChangeMask |= ActionItemStatusChanged;
     if ( prevUnreadStatus != ( !message->status().isRead() ) )
        propertyChangeMask |= UnreadStatusChanged;
+    if ( prevImportantStatus != ( !message->status().isImportant() ) )
+       propertyChangeMask |= ImportantStatusChanged;
 
     if ( propertyChangeMask )
     {

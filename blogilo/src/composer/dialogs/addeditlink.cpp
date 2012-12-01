@@ -72,6 +72,7 @@ AddEditLink::~AddEditLink()
     d->confGroup->writeEntry( "Size", size() );
     d->confGroup->sync();
     delete d->confGroup;
+    delete d;
 }
 
 void AddEditLink::initUi()

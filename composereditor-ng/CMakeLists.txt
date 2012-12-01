@@ -8,7 +8,15 @@ add_subdirectory(tests)
 
 set(libcomposereditor_ng_SRCS 
     composereditor.cpp
+    managelink.cpp
+    findreplacebar.cpp
+    composerview.cpp
+    pagecolorbackgrounddialog.cpp
+    pagecolorbackgroundwidget.cpp
 )
+
+kde4_add_ui_files(libcomposereditor_ng_SRCS pagecolorbackgroundwidget.ui )
+
 
 kde4_add_library(composereditorng ${LIBRARY_TYPE} ${libcomposereditor_ng_SRCS})
 

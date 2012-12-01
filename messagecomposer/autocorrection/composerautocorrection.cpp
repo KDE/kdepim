@@ -188,7 +188,7 @@ void ComposerAutoCorrection::setAutocorrectEntries(const QHash<QString, QString>
 }
 
 
-ComposerAutoCorrection::TypographicQuotes ComposerAutoCorrection::typographicDefaultSingleQuotes()
+ComposerAutoCorrection::TypographicQuotes ComposerAutoCorrection::typographicDefaultSingleQuotes() const
 {
   ComposerAutoCorrection::TypographicQuotes quote;
   quote.begin = QChar(0x2018);
@@ -196,7 +196,7 @@ ComposerAutoCorrection::TypographicQuotes ComposerAutoCorrection::typographicDef
   return quote;
 }
 
-ComposerAutoCorrection::TypographicQuotes ComposerAutoCorrection::typographicDefaultDoubleQuotes()
+ComposerAutoCorrection::TypographicQuotes ComposerAutoCorrection::typographicDefaultDoubleQuotes() const
 {
   ComposerAutoCorrection::TypographicQuotes quote;
   quote.begin = QChar(0x201c);
@@ -221,7 +221,8 @@ QHash<QString, QString> ComposerAutoCorrection::autocorrectEntries() const
 
 void ComposerAutoCorrection::superscriptAppendix()
 {
-    if (!mSuperScriptAppendix) return;
+    if (!mSuperScriptAppendix)
+        return;
 
     QString trimmed = mWord.trimmed();
     int startPos = -1;
@@ -750,8 +751,8 @@ void ComposerAutoCorrection::readAutoCorrectionXmlFile( bool forceGlobal )
 
     if (mAutoCorrectLang.isEmpty())
         mAutoCorrectLang = kdelang;
-    qDebug()<<" fname :"<<fname;
-    qDebug()<<" LocalFile:"<<LocalFile;
+    //qDebug()<<" fname :"<<fname;
+    //qDebug()<<" LocalFile:"<<LocalFile;
 
     if(LocalFile.isEmpty()) {
         if(fname.isEmpty()) {
@@ -766,6 +767,12 @@ void ComposerAutoCorrection::readAutoCorrectionXmlFile( bool forceGlobal )
                 mTypographicSingleQuotes = import.typographicSingleQuotes();
                 mTypographicDoubleQuotes = import.typographicDoubleQuotes();
                 mSuperScriptEntries = import.superScriptEntries();
+		if( forceGlobal ) {
+                   mTypographicSingleQuotes = typographicDefaultSingleQuotes();
+		   mTypographicDoubleQuotes = typographicDefaultDoubleQuotes();
+
+		}
+
             }
         }
     } else {
@@ -782,7 +789,6 @@ void ComposerAutoCorrection::readAutoCorrectionXmlFile( bool forceGlobal )
         if (!fname.isEmpty() && import.import(fname,ImportAbstractAutocorrection::SuperScript)) {
             mSuperScriptEntries = import.superScriptEntries();
         }
-        qDebug()<<" mSuperScriptEntries"<<mSuperScriptEntries;
     }
 }
 

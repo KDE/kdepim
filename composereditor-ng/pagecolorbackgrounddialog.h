@@ -18,48 +18,25 @@
 
 */
 
-#ifndef COMPOSEREDITOR_H
-#define COMPOSEREDITOR_H
+#ifndef PAGECOLORBACKGROUNDDIALOG_H
+#define PAGECOLORBACKGROUNDDIALOG_H
 
-#include "composereditor_export.h"
-
-#include <QWidget>
-
-class KActionCollection;
-class KAction;
+#include <KDialog>
 
 namespace ComposerEditorNG
 {
-class ComposerEditorPrivate;
+class PageColorBackgroundWidget;
 
-class COMPOSEREDITORNG_EXPORT ComposerEditor : public QWidget
+class PageColorBackgroundDialog : public KDialog
 {
     Q_OBJECT
+    
 public:
-    explicit ComposerEditor(QWidget *parent);
-    ~ComposerEditor();
-
-    virtual void createActions(KActionCollection *actionCollection);
-
-    QString plainTextContent() const;
-
-    bool enableRichText() const;
-
-    bool isModified() const;
-
-public Q_SLOTS:
-    void setEnableRichText(bool richTextEnabled);
-    void paste();
-    void cut();
-    void copy();
-    void undo();
-    void redo();
-
-
+    explicit PageColorBackgroundDialog(QWidget *parent = 0);
+    ~PageColorBackgroundDialog();
 private:
-    friend class ComposerEditorPrivate;
-    ComposerEditorPrivate * const d;
+    PageColorBackgroundWidget *mPageColorWidget;
 };
 }
 
-#endif // COMPOSEREDITOR_H
+#endif // PAGECOLORBACKGROUNDDIALOG_H

@@ -439,7 +439,7 @@ void KMeditor::slotAddQuotes()
 QString KMeditorPrivate::addQuotesToText( const QString &inputText )
 {
   QString answer = QString( inputText );
-  QString indentStr = q->defaultQuoteSign();
+  const QString indentStr = q->defaultQuoteSign();
   answer.replace( QLatin1Char( '\n' ), QLatin1Char( '\n' ) + indentStr );
   //cursor.selectText() as QChar::ParagraphSeparator as paragraph separator.
   answer.replace( QChar::ParagraphSeparator, QLatin1Char( '\n' ) + indentStr );

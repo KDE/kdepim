@@ -132,11 +132,6 @@ class KMAIL_EXPORT KMMainWidget : public QWidget
     */
     static const PtrList *mainWidgetList();
 
-    /**
-      Return the list of all action, in order to check shortcuts conflicts against them.
-    */
-    QList<QAction*> actionList();
-
     QLabel* vacationScriptIndicator() const;
     void updateVacationScriptStatus() { updateVacationScriptStatus( mVacationIndicatorActive ); }
 
@@ -532,6 +527,7 @@ class KMAIL_EXPORT KMMainWidget : public QWidget
     void itemsFetchDone( KJob *job );
 
     void slotCollectionPropertiesContinued( KJob* job );
+    void slotCollectionPropertiesFinished( KJob *job );
     void slotDeletionCollectionResult(KJob* job);
     void slotServerSideSubscription();
     void slotFetchItemsForFolderDone(KJob*job);
