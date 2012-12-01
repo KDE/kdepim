@@ -1,27 +1,28 @@
-KDE4_NO_ENABLE_FINAL(kleopatra)
+kde4_no_enable_final(kleopatra)
 project(kleopatra)
 
-option( KLEO_STATIC_KCMODULES "Build Kleopatra's KCMs into Kleopatra; don't install plugins" WINCE )
+option(KLEO_STATIC_KCMODULES "Build Kleopatra's KCMs into Kleopatra; don't install plugins" WINCE)
 
 include(MacroOptionalAddSubdirectory)
 
-set( kleopatra_version 2.1.1 )
-set( kleopatra_release FALSE )
+set(kleopatra_version 2.1.1)
+set(kleopatra_release FALSE)
 
-if (NOT kleopatra_release)
-if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.svn")
-  if ( NOT KdeSubversion_FOUND )
-    find_package( KdeSubversion )
-  endif ( NOT KdeSubversion_FOUND )
-  if ( KdeSubversion_FOUND )
-    KdeSubversion_WC_INFO( ${PROJECT_SOURCE_DIR} Kleopatra )
-    string( SUBSTRING "${Kleopatra_WC_LAST_CHANGED_DATE}" 0 10 Kleopatra_WC_LAST_CHANGED_DATE )
-    set( kleopatra_version "${kleopatra_version}-svn${Kleopatra_WC_REVISION} (${Kleopatra_WC_LAST_CHANGED_DATE})" )
-  endif ( KdeSubversion_FOUND )
-endif (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.svn")
-endif (NOT kleopatra_release)
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/version-kleopatra.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/version-kleopatra.h )
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config-kleopatra.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kleopatra.h )
+if(NOT kleopatra_release)
+  if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.svn")
+    if(NOT KdeSubversion_FOUND)
+      find_package(KdeSubversion)
+    endif()
+    if(KdeSubversion_FOUND)
+      kdesubversion_wc_info(${PROJECT_SOURCE_DIR} Kleopatra)
+      string(SUBSTRING "${Kleopatra_WC_LAST_CHANGED_DATE}" 0 10 Kleopatra_WC_LAST_CHANGED_DATE)
+      set(kleopatra_version "${kleopatra_version}-svn${Kleopatra_WC_REVISION} (${Kleopatra_WC_LAST_CHANGED_DATE})")
+    endif()
+  endif()
+endif()
+
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/version-kleopatra.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/version-kleopatra.h)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config-kleopatra.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kleopatra.h)
 
 include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}
@@ -30,64 +31,59 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/mobile/lib
   ${Boost_INCLUDE_DIR}
   ${QGPGME_INCLUDES}
-  ${GPGME_INCLUDES} )
-if (USABLE_ASSUAN_FOUND)
-  if (ASSUAN2_FOUND)
+  ${GPGME_INCLUDES}
+)
+
+if(USABLE_ASSUAN_FOUND)
+  if(ASSUAN2_FOUND)
     include_directories(${ASSUAN2_INCLUDES})
-  else (ASSUAN2_FOUND)
+  else()
     include_directories(${ASSUAN_INCLUDES})
-  endif(ASSUAN2_FOUND)
-endif(USABLE_ASSUAN_FOUND)
-add_definitions ( -D_ASSUAN_ONLY_GPG_ERRORS )
+  endif()
+endif()
+
+add_definitions(-D_ASSUAN_ONLY_GPG_ERRORS)
+
 if(NOT WINCE)
-add_definitions ( -DQT_STL )
-remove_definitions ( -DQT_NO_STL )
-endif(NOT WINCE)
+  add_definitions(-DQT_STL)
+  remove_definitions(-DQT_NO_STL)
+endif()
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
-if (GCC_IS_NEWER_THAN_4_3)
-  if (CMAKE_COMPILER_IS_GNUCXX)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-missing-braces -Wno-parentheses -Wno-ignored-qualifiers" )
-  endif (CMAKE_COMPILER_IS_GNUCXX)
-endif (GCC_IS_NEWER_THAN_4_3)
+if(GCC_IS_NEWER_THAN_4_3)
+  if(CMAKE_COMPILER_IS_GNUCXX)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-missing-braces -Wno-parentheses -Wno-ignored-qualifiers")
+  endif()
+endif()
 
-add_subdirectory( pics )
-add_subdirectory( conf )
-if ( USABLE_ASSUAN_FOUND AND BUILD_libkleopatraclient )
+add_subdirectory(pics)
+add_subdirectory(conf)
+
+if(USABLE_ASSUAN_FOUND AND BUILD_libkleopatraclient)
   # can't use macro_optional_add_subdirectory here, since it's split
   # off into ConfigureChecks.cmake..
-  add_subdirectory( libkleopatraclient )
-endif ( USABLE_ASSUAN_FOUND AND BUILD_libkleopatraclient )
+  add_subdirectory(libkleopatraclient)
+endif()
+
 if(NOT WINCE)
-add_subdirectory( kgpgconf )
-add_subdirectory( kwatchgnupg )
-add_subdirectory( tests )
-endif(NOT WINCE)
+  add_subdirectory(kgpgconf)
+  add_subdirectory(kwatchgnupg)
+  add_subdirectory(tests)
+endif()
 
-if ( WIN32 )
-  set( _kleopatra_extra_uiserver_SRCS
-    uiserver/uiserver_win.cpp
-    )
-    set( _kleopatra_extra_SRCS
-      utils/gnupg-registry.c
-    )
-  if (NOT WINCE)
-  set( _kleopatra_extra_SRCS
-      ${_kleopatra_extra_SRCS}
-    selftest/registrycheck.cpp
-    )
-  endif (NOT WINCE)
-else ( WIN32 )
-  set( _kleopatra_extra_uiserver_SRCS
-    uiserver/uiserver_unix.cpp
-    )
-  set( _kleopatra_extra_SRCS
-    )
-endif ( WIN32 )
+if(WIN32)
+  set(_kleopatra_extra_uiserver_SRCS uiserver/uiserver_win.cpp)
+  set(_kleopatra_extra_SRCS utils/gnupg-registry.c)
+  if(NOT WINCE)
+    set(_kleopatra_extra_SRCS ${_kleopatra_extra_SRCS} selftest/registrycheck.cpp)
+  endif()
+else()
+  set(_kleopatra_extra_uiserver_SRCS uiserver/uiserver_unix.cpp)
+  set(_kleopatra_extra_SRCS)
+endif()
 
-
-if ( USABLE_ASSUAN_FOUND )
-  add_definitions ( -DKLEOPATRACLIENT_NAMESPACE=KleopatraClientCopy -DKLEOPATRACLIENTCORE_EXPORT= )
+if(USABLE_ASSUAN_FOUND)
+  add_definitions(-DKLEOPATRACLIENT_NAMESPACE=KleopatraClientCopy -DKLEOPATRACLIENTCORE_EXPORT=)
   set(_kleopatra_uiserver_SRCS
     uiserver/sessiondata.cpp
     uiserver/uiserver.cpp
@@ -108,33 +104,31 @@ if ( USABLE_ASSUAN_FOUND )
 
     libkleopatraclient/core/command.cpp
     selftest/uiservercheck.cpp
-    )
+  )
 
-  if ( ASSUAN2_FOUND )
-    set( _kleopatra_uiserver_extra_libs ${ASSUAN2_LIBRARIES} )
-  else ( ASSUAN2_FOUND )
-    if ( WIN32 )
-      set( _kleopatra_uiserver_extra_libs ${ASSUAN_VANILLA_LIBRARIES} )
-    else ( WIN32 )
-      set( _kleopatra_uiserver_extra_libs ${ASSUAN_PTHREAD_LIBRARIES} )
-    endif( WIN32 )
-  endif ( ASSUAN2_FOUND )
+  if(ASSUAN2_FOUND)
+    set(_kleopatra_uiserver_extra_libs ${ASSUAN2_LIBRARIES})
+  else()
+    if(WIN32)
+      set(_kleopatra_uiserver_extra_libs ${ASSUAN_VANILLA_LIBRARIES})
+    else()
+      set(_kleopatra_uiserver_extra_libs ${ASSUAN_PTHREAD_LIBRARIES})
+    endif()
+  endif()
 
-  if ( HAVE_GPG_ERR_SOURCE_KLEO )
-    add_definitions( -DGPG_ERR_SOURCE_DEFAULT=GPG_ERR_SOURCE_KLEO )
-  else( HAVE_GPG_ERR_SOURCE_KLEO )
-    add_definitions( -DGPG_ERR_SOURCE_DEFAULT=GPG_ERR_SOURCE_USER_1 )
-  endif( HAVE_GPG_ERR_SOURCE_KLEO )
+  if(HAVE_GPG_ERR_SOURCE_KLEO)
+    add_definitions(-DGPG_ERR_SOURCE_DEFAULT=GPG_ERR_SOURCE_KLEO)
+  else()
+    add_definitions(-DGPG_ERR_SOURCE_DEFAULT=GPG_ERR_SOURCE_USER_1)
+  endif()
 
-else ( USABLE_ASSUAN_FOUND )
+else(USABLE_ASSUAN_FOUND)
   set(_kleopatra_uiserver_SRCS)
-endif ( USABLE_ASSUAN_FOUND )
+endif(USABLE_ASSUAN_FOUND)
 
-kde4_add_ui_files( _kleopatra_uiserver_SRCS 
-                   crypto/gui/signingcertificateselectionwidget.ui)
+kde4_add_ui_files(_kleopatra_uiserver_SRCS crypto/gui/signingcertificateselectionwidget.ui)
 
-
-set( _kleopatra_SRCS
+set(_kleopatra_SRCS
   utils/gnupg-helper.cpp
   utils/filesystemwatcher.cpp
   utils/filedialog.cpp
@@ -273,7 +267,7 @@ set( _kleopatra_SRCS
   commands/exportopenpgpcertstoservercommand.cpp
   commands/adduseridcommand.cpp
   commands/newcertificatecommand.cpp
-  
+
   ${_kleopatra_uiserver_files}
 
   conf/configuredialog.cpp
@@ -284,40 +278,41 @@ set( _kleopatra_SRCS
   aboutdata.cpp
   systrayicon.cpp
   kleopatraapplication.cpp
-  main.cpp )
-  
- if(NOT WINCE)
-   set(_kleopatra_SRCS
+  main.cpp
+)
+
+if(NOT WINCE)
+  set(_kleopatra_SRCS
     ${_kleopatra_SRCS}
     smartcard/readerstatus.cpp
 
-  commands/setinitialpincommand.cpp
-  commands/learncardkeyscommand.cpp
-  commands/checksumcreatefilescommand.cpp
-  commands/checksumverifyfilescommand.cpp
+    commands/setinitialpincommand.cpp
+    commands/learncardkeyscommand.cpp
+    commands/checksumcreatefilescommand.cpp
+    commands/checksumverifyfilescommand.cpp
   )
- endif(NOT WINCE)
-  
+endif()
+
 if(WINCE)
   set(_kleopatra_SRCS
     ${_kleopatra_SRCS}
     utils/qwizard.cpp
   )
-endif(WINCE)
+endif()
 
-if ( KLEO_STATIC_KCMODULES )
-  add_definitions( -DKLEO_STATIC_KCMODULES )
+if(KLEO_STATIC_KCMODULES)
+  add_definitions(-DKLEO_STATIC_KCMODULES)
   set(_kleopatra_extra_libs kcm_kleopatra)
-else ( KLEO_STATIC_KCMODULES )
+else()
   set(_kleopatra_extra_libs)
-endif ( KLEO_STATIC_KCMODULES )
+endif()
 
-if ( KLEO_MODEL_TEST )
- add_definitions( -DKLEO_MODEL_TEST )
- set( _kleopatra_SRCS ${_kleopatra_SRCS} models/modeltest.cpp )
-endif ( KLEO_MODEL_TEST )
+if(KLEO_MODEL_TEST)
+  add_definitions(-DKLEO_MODEL_TEST)
+  set(_kleopatra_SRCS ${_kleopatra_SRCS} models/modeltest.cpp)
+endif()
 
-kde4_add_ui_files( _kleopatra_SRCS
+kde4_add_ui_files(_kleopatra_SRCS
   dialogs/certificationoptionswidget.ui
   dialogs/expirydialog.ui
   dialogs/lookupcertificatesdialog.ui
@@ -335,71 +330,83 @@ kde4_add_ui_files( _kleopatra_SRCS
   newcertificatewizard/keycreationpage.ui
   newcertificatewizard/resultpage.ui
   newcertificatewizard/advancedsettingsdialog.ui
-  )
-kde4_add_kcfg_files( _kleopatra_SRCS
+)
+
+kde4_add_kcfg_files(_kleopatra_SRCS
   kcfg/tooltippreferences.kcfgc
   kcfg/emailoperationspreferences.kcfgc
   kcfg/smimevalidationpreferences.kcfgc
-  )
+)
 
-
-if (KDEPIM_ONLY_KLEO)
-  add_definitions( -DKDEPIM_ONLY_KLEO -DKDEPIM_EXPORT= )
-  set( _kleopatra_libkdepim_SRCS
+if(KDEPIM_ONLY_KLEO)
+  add_definitions(-DKDEPIM_ONLY_KLEO -DKDEPIM_EXPORT=)
+  set(_kleopatra_libkdepim_SRCS
     ../libkdepim/progressmanager.cpp
     ../libkdepim/progressdialog.cpp
     ../libkdepim/overlaywidget.cpp
     ../libkdepim/ssllabel.cpp
     ../libkdepim/statusbarprogresswidget.cpp
-    )
-  set( _kleopatra_libkdepim_LIBS )
-else(KDEPIM_ONLY_KLEO)
-  set( _kleopatra_libkdepim_SRCS )
-  set( _kleopatra_libkdepim_LIBS kdepim )
-endif(KDEPIM_ONLY_KLEO)
+  )
+  set(_kleopatra_libkdepim_LIBS)
+else()
+  set(_kleopatra_libkdepim_SRCS)
+  set(_kleopatra_libkdepim_LIBS kdepim)
+endif()
 
-if (KDEPIM_MOBILE_UI)
-   set( _kleopatra_uiserver_extra_libs ${_kleopatra_uiserver_extra_libs} kdepimmobileui )
-   set( _kleopatra_mainwindow_SRCS mainwindow_mobile.cpp )
-else(KDEPIM_MOBILE_UI)
-   set( _kleopatra_mainwindow_SRCS mainwindow_desktop.cpp )
-endif(KDEPIM_MOBILE_UI)
+if(KDEPIM_MOBILE_UI)
+  set(_kleopatra_uiserver_extra_libs ${_kleopatra_uiserver_extra_libs} kdepimmobileui)
+  set(_kleopatra_mainwindow_SRCS mainwindow_mobile.cpp)
+else()
+  set(_kleopatra_mainwindow_SRCS mainwindow_desktop.cpp)
+endif()
 
-add_definitions ( -DKDE_DEFAULT_DEBUG_AREA=5151 )
-
+add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5151)
 
 kde4_add_app_icon(_kleopatra_mainwindow_SRCS "hi*-app-kleopatra.png")
-kde4_add_executable(kleopatra_bin ${_kleopatra_SRCS} ${_kleopatra_mainwindow_SRCS} ${_kleopatra_uiserver_SRCS} ${_kleopatra_libkdepim_SRCS} )
-set_target_properties(kleopatra_bin  PROPERTIES OUTPUT_NAME kleopatra)
 
-target_link_libraries(kleopatra_bin ${_kleopatra_extra_libs} kleo ${QGPGME_LIBRARIES} ${KDE4_KDEUI_LIBS} ${KDEPIMLIBS_KMIME_LIBS} ${KDE4_KCMUTILS_LIBS} ${_kleopatra_uiserver_extra_libs} ${_kleopatra_libkdepim_LIBS})
-if (KDEPIM_MOBILE_UI)
+kde4_add_executable(kleopatra_bin ${_kleopatra_SRCS} ${_kleopatra_mainwindow_SRCS} ${_kleopatra_uiserver_SRCS} ${_kleopatra_libkdepim_SRCS})
+set_target_properties(kleopatra_bin PROPERTIES OUTPUT_NAME kleopatra)
+
+target_link_libraries(kleopatra_bin
+  ${_kleopatra_extra_libs}
+  kleo
+  ${QGPGME_LIBRARIES}
+  ${KDE4_KDEUI_LIBS}
+  ${KDEPIMLIBS_KMIME_LIBS}
+  ${KDE4_KCMUTILS_LIBS}
+  ${_kleopatra_uiserver_extra_libs}
+  ${_kleopatra_libkdepim_LIBS}
+)
+
+if(KDEPIM_MOBILE_UI)
   target_link_libraries(kleopatra_bin ${QT_QTDECLARATIVE_LIBRARY})
-endif(KDEPIM_MOBILE_UI)
+endif()
 
-if ( USABLE_ASSUAN_FOUND )
-  target_link_libraries(kleopatra_bin ${QT_QTNETWORK_LIBRARY}) 
-ENDIF ( USABLE_ASSUAN_FOUND )
+if(USABLE_ASSUAN_FOUND)
+  target_link_libraries(kleopatra_bin ${QT_QTNETWORK_LIBRARY})
+endif()
 
 install(TARGETS kleopatra_bin ${INSTALL_TARGETS_DEFAULT_ARGS})
 
+install(
+  PROGRAMS kleopatra.desktop kleopatra_import.desktop
+  DESTINATION ${XDG_APPS_INSTALL_DIR}
+)
+install(
+  FILES kleopatra_signencryptfiles.desktop
+        kleopatra_signencryptfolders.desktop
+        kleopatra_decryptverifyfiles.desktop
+        kleopatra_decryptverifyfolders.desktop
+  DESTINATION ${SERVICES_INSTALL_DIR}
+)
 
-########### install files ###############
+install(FILES kleopatra.rc DESTINATION ${DATA_INSTALL_DIR}/kleopatra)
 
-install( PROGRAMS kleopatra.desktop
-               kleopatra_import.desktop
-         DESTINATION ${XDG_APPS_INSTALL_DIR} )
+if(KDEPIM_MOBILE_UI)
+  install(
+    FILES qml/kleopatra-mobile.qml qml/KleopatraActions.qml
+    DESTINATION ${DATA_INSTALL_DIR}/kleopatra
+  )
+endif()
 
-install( FILES kleopatra_signencryptfiles.desktop
-               kleopatra_signencryptfolders.desktop
-               kleopatra_decryptverifyfiles.desktop
-               kleopatra_decryptverifyfolders.desktop
-         DESTINATION ${SERVICES_INSTALL_DIR} )
-
-install( FILES kleopatra.rc DESTINATION ${DATA_INSTALL_DIR}/kleopatra )
-
-if ( KDEPIM_MOBILE_UI )
-   install( FILES qml/kleopatra-mobile.qml qml/KleopatraActions.qml DESTINATION ${DATA_INSTALL_DIR}/kleopatra )
-endif ( KDEPIM_MOBILE_UI )
-
-kde4_install_icons( ${ICON_INSTALL_DIR} )
+kde4_install_icons(${ICON_INSTALL_DIR})
