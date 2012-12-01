@@ -29,6 +29,8 @@
 
 #include "korganizer/baseview.h"
 
+#include <QPointer>
+
 class KOTodoCategoriesDelegate;
 class KOTodoModel;
 class KOTodoViewQuickAddLine;
@@ -38,6 +40,10 @@ class KOTodoViewView;
 
 namespace KPIM {
   class KDatePickerPopup;
+}
+
+namespace Akonadi {
+  class ETMViewStateSaver;
 }
 
 class QCheckBox;
@@ -52,6 +58,7 @@ using namespace KOrg;
 class KOTodoView : public BaseView
 {
   Q_OBJECT
+  friend class ModelStack;
 
   public:
     KOTodoView( bool sidebarView, QWidget *parent );
@@ -122,6 +129,8 @@ class KOTodoView : public BaseView
     void changedCategories( QAction *action );
     void setFullView( bool fullView );
     void setFlatView( bool flatView );
+    void restoreViewState();
+    void saveViewState();
 
   Q_SIGNALS:
     void purgeCompletedSignal();
@@ -132,6 +141,7 @@ class KOTodoView : public BaseView
 
   private:
     QMenu *createCategoryPopupMenu();
+    QString stateSaverGroup() const;
     void printTodo( bool preview );
 
     /** Creates a new todo with the given text as summary under the given parent */
@@ -145,11 +155,7 @@ class KOTodoView : public BaseView
 
     KOTodoViewQuickSearch *mQuickSearch;
     KOTodoViewQuickAddLine *mQuickAdd;
-    QToolButton *mExpandView;
-    QToolButton *mExpandAtView;
-    QToolButton *mCollapseView;
-    QToolButton *mCollapseAtView;
-    QCheckBox *mFullView;
+    QToolButton *mFullViewButton;
     QCheckBox *mFlatView;
 
     QMenu *mItemPopupMenu;
@@ -163,20 +169,22 @@ class KOTodoView : public BaseView
     QAction *mMakeTodoIndependent;
     QAction *mMakeSubtodosIndependent;
 
+    QPointer<Akonadi::ETMViewStateSaver> mTreeStateRestorer;
+
     QMap<QAction *,int> mPercentage;
     QMap<QAction *,int> mPriority;
     QMap<QAction *,QString> mCategory;
     bool mSidebarView;
 
-  enum {
-      eSummaryColumn = 0,
-      eRecurColumn = 1,
-      ePriorityColumn = 2,
-      ePercentColumn = 3,
-      eDueDateColumn = 4,
-      eCategoriesColumn = 5,
-      eDescriptionColumn = 6
-    };
+    enum {
+        eSummaryColumn = 0,
+        eRecurColumn = 1,
+        ePriorityColumn = 2,
+        ePercentColumn = 3,
+        eDueDateColumn = 4,
+        eCategoriesColumn = 5,
+        eDescriptionColumn = 6
+      };
 };
 
 #endif /*KOTODOVIEW_H*/
