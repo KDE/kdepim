@@ -35,4 +35,27 @@ PageColorBackgroundWidget::~PageColorBackgroundWidget()
     delete ui;
 }
 
+QColor PageColorBackgroundWidget::pageBackgroundColor() const
+{
+    return ui->backgroundColor->color();
+}
+
+void PageColorBackgroundWidget::setPageBackgroundColor(const QColor &col)
+{
+    ui->backgroundColor->setColor(col);
+}
+
+void PageColorBackgroundWidget::setUseDefaultColor(bool b)
+{
+    if(b)
+        ui->defaultColor->setChecked(true);
+    else
+        ui->customColors->setChecked(true);
+}
+
+bool PageColorBackgroundWidget::useDefaultColor() const
+{
+    return ui->defaultColor->isChecked();
+}
+
 #include "pagecolorbackgroundwidget.moc"

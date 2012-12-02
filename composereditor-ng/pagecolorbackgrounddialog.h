@@ -31,10 +31,16 @@ class PageColorBackgroundWidget;
 class PageColorBackgroundDialog : public KDialog
 {
     Q_OBJECT
-    
 public:
     explicit PageColorBackgroundDialog(QWebFrame *frame, QWidget *parent = 0);
     ~PageColorBackgroundDialog();
+
+private Q_SLOTS:
+    void slotOkClicked();
+
+private:
+    void initSettings();
+
 private:
     PageColorBackgroundWidget *mPageColorWidget;
     QWebFrame *mFrame;

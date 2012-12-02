@@ -25,6 +25,7 @@
 
 #include <QVBoxLayout>
 #include <QWebFrame>
+#include <QWebElement>
 
 using namespace ComposerEditorNG;
 
@@ -37,10 +38,42 @@ PageColorBackgroundDialog::PageColorBackgroundDialog(QWebFrame *frame, QWidget *
     QVBoxLayout *layout = new QVBoxLayout( mainWidget() );
     mPageColorWidget = new PageColorBackgroundWidget;
     layout->addWidget(mPageColorWidget);
+    initSettings();
+    connect(this,SIGNAL(okClicked()),this,SLOT(slotOkClicked()));
 }
 
 PageColorBackgroundDialog::~PageColorBackgroundDialog()
 {
 }
+
+void PageColorBackgroundDialog::slotOkClicked()
+{
+    if(mFrame) {
+        const QWebElement element = mFrame->findFirstElement(QLatin1String("body"));
+        if(!element.isNull()) {
+            //TODO
+        }
+    }
+    accept();
+}
+
+void PageColorBackgroundDialog::initSettings()
+{
+    if(mFrame) {
+        const QWebElement element = mFrame->findFirstElement(QLatin1String("body"));
+        if(!element.isNull()) {
+            if(element.hasAttributes()) {
+                mPageColorWidget->setUseDefaultColor(false);
+                if(element.hasAttribute(QLatin1String("bgcolor"))) {
+                    mPageColorWidget->setPageBackgroundColor(QColor(element.attribute(QLatin1String("bgcolor"))));
+                }
+            } else {
+                mPageColorWidget->setUseDefaultColor(true);
+            }
+        }
+    }
+}
+
+
 
 #include "pagecolorbackgrounddialog.moc"

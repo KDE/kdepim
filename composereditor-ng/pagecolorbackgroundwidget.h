@@ -37,6 +37,12 @@ public:
     explicit PageColorBackgroundWidget(QWidget *parent = 0);
     ~PageColorBackgroundWidget();
     
+    QColor pageBackgroundColor() const;
+    void setPageBackgroundColor(const QColor &);
+
+    void setUseDefaultColor(bool b);
+    bool useDefaultColor() const;
+
 private:
     Ui::PageColorBackgroundWidget *ui;
 };
