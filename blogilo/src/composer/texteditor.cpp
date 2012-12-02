@@ -596,7 +596,7 @@ void TextEditor::slotToggleSpellChecking(bool )
 
 void TextEditor::formatTextColor()
 {
-    QColor color;
+    QColor color = rgbToColor(evaluateJavaScript(QLatin1String("getForegroundColor()"),false).toString());
     int res = KColorDialog::getColor(color, this);
     if (res == KColorDialog::Accepted)
         execCommand("foreColor", color.name());
@@ -782,13 +782,15 @@ void TextEditor::adjustFontSizes()
 
 QColor TextEditor::rgbToColor ( QString rgb ) const
 {
-    rgb.chop ( 1 );
-    rgb.remove ( 0, 4 );
-    QStringList list = rgb.split ( ',' );
-    if ( list.size() == 3 )
-        return QColor ( list[0].toInt(), list[1].toInt(), list[2].toInt() );
-    else
-        return QColor();
+    rgb.chop(1);
+    rgb.remove(QLatin1String("rgb("));
+    rgb = rgb.simplified();
+    const QStringList colorLst = rgb.split(QLatin1String(","));
+    if(colorLst.count() == 3) {
+        QColor col(colorLst.at(0).toInt(),colorLst.at(1).toInt(),colorLst.at(2).toInt());
+        return col;
+    }
+    return QColor();
 }
 
 QString TextEditor::getHtml() const
