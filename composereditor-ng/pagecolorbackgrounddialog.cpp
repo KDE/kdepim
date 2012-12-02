@@ -24,11 +24,12 @@
 #include <KLocale>
 
 #include <QVBoxLayout>
+#include <QWebFrame>
 
 using namespace ComposerEditorNG;
 
-PageColorBackgroundDialog::PageColorBackgroundDialog(QWidget *parent) :
-    KDialog(parent)
+PageColorBackgroundDialog::PageColorBackgroundDialog(QWebFrame *frame, QWidget *parent) :
+    KDialog(parent), mFrame(frame)
 {
     setCaption( i18n( "Page Color and Background" ) );
     setButtons( Ok | Cancel );

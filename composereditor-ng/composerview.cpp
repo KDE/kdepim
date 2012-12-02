@@ -20,6 +20,7 @@
 
 #include "composerview.h"
 #include "managelink.h"
+#include "pagecolorbackgrounddialog.h"
 
 #include <kpimtextedit/emoticontexteditaction.h>
 #include <kpimtextedit/inserthtmldialog.h>
@@ -110,6 +111,7 @@ public:
     void _k_slotReplace();
     void _k_slotSpeakText();
     void _k_slotDeleteText();
+    void _k_slotChangePageColorAndBackground();
 
     QAction* getAction ( QWebPage::WebAction action ) const;
     QVariant evaluateJavascript(const QString& command);
@@ -152,7 +154,7 @@ public:
     KAction *action_spell_check;
     KAction *action_find;
     KAction *action_replace;
-
+    KAction *action_page_color;
 
     ComposerView *q;
 };
@@ -468,6 +470,15 @@ void ComposerViewPrivate::_k_slotFind()
 void ComposerViewPrivate::_k_slotReplace()
 {
     //TODO
+}
+
+void ComposerViewPrivate::_k_slotChangePageColorAndBackground()
+{
+    QPointer<PageColorBackgroundDialog> dlg = new PageColorBackgroundDialog(q->page()->mainFrame(), q);
+    if(dlg->exec()) {
+
+    }
+    delete dlg;
 }
 
 void ComposerViewPrivate::_k_slotAdjustActions()
@@ -799,6 +810,11 @@ void ComposerView::createActions(KActionCollection *actionCollection)
     actionCollection->addAction( QLatin1String( "htmleditor_insert_new_table" ), d->action_insert_table );
     connect( d->action_insert_table, SIGNAL(triggered(bool)), SLOT(_k_slotInsertTable()) );
 
+    //Page Color
+    d->action_page_color = new KAction( i18n( "Page Color and Background..." ), this );
+    d->htmlEditorActionList.append(d->action_page_color);
+    actionCollection->addAction( QLatin1String( "htmleditor_page_color_and_background" ), d->action_page_color );
+    connect( d->action_page_color, SIGNAL(triggered(bool)), SLOT(_k_slotChangePageColorAndBackground()) );
 }
 
 

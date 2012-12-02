@@ -68,7 +68,7 @@ private:
     Q_PRIVATE_SLOT( d, void _k_slotFind() )
     Q_PRIVATE_SLOT( d, void _k_slotReplace() )
     Q_PRIVATE_SLOT( d, void _k_slotDeleteText() )
-
+    Q_PRIVATE_SLOT( d, void _k_slotChangePageColorAndBackground() )
 };
 }
 

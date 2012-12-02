@@ -22,6 +22,7 @@
 #define PAGECOLORBACKGROUNDDIALOG_H
 
 #include <KDialog>
+class QWebFrame;
 
 namespace ComposerEditorNG
 {
@@ -32,10 +33,11 @@ class PageColorBackgroundDialog : public KDialog
     Q_OBJECT
     
 public:
-    explicit PageColorBackgroundDialog(QWidget *parent = 0);
+    explicit PageColorBackgroundDialog(QWebFrame *frame, QWidget *parent = 0);
     ~PageColorBackgroundDialog();
 private:
     PageColorBackgroundWidget *mPageColorWidget;
+    QWebFrame *mFrame;
 };
 }
 
