@@ -52,6 +52,7 @@
   <Action name="htmleditor_add_emoticon"/>
   <Action name="htmleditor_direction_rtl"/>
   <Action name="htmleditor_direction_ltr"/>
+  <Action name="htmleditor_page_color_and_background"/>
 </ToolBar>
 <ToolBar name="formatToolBar" iconText="icononly"><text>Format Toolbar</text>
   <Action name="htmleditor_format_align_left"/>

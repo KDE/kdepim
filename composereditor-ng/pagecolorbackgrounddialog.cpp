@@ -49,9 +49,13 @@ PageColorBackgroundDialog::~PageColorBackgroundDialog()
 void PageColorBackgroundDialog::slotOkClicked()
 {
     if(mFrame) {
-        const QWebElement element = mFrame->findFirstElement(QLatin1String("body"));
+        QWebElement element = mFrame->findFirstElement(QLatin1String("body"));
         if(!element.isNull()) {
-            //TODO
+            if(mPageColorWidget->useDefaultColor()) {
+                element.removeAttribute(QLatin1String("bgcolor"));
+            } else {
+                element.setAttribute(QLatin1String("bgcolor"),mPageColorWidget->pageBackgroundColor().name());
+            }
         }
     }
     accept();
