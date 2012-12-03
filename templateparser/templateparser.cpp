@@ -1595,6 +1595,7 @@ QString TemplateParser::htmlMessageText( bool aStripSignature, AllowSelection is
   page.settings()->setAttribute( QWebSettings::JavascriptEnabled, false );
   page.settings()->setAttribute( QWebSettings::JavaEnabled, false );
   page.settings()->setAttribute( QWebSettings::PluginsEnabled, false );
+  page.settings()->setAttribute( QWebSettings::AutoLoadImages, false );
 
   page.currentFrame()->setHtml( htmlElement );
 
