@@ -100,6 +100,7 @@ public:
     void _k_setTextBackgroundColor();
     void _k_slotInsertHorizontalRule();
     void _k_insertLink();
+    void _k_slotEditLink();
     void _k_setFontSize(int);
     void _k_setFontFamily(const QString&);
     void _k_adjustActions();
@@ -370,6 +371,11 @@ void ComposerViewPrivate::_k_insertLink()
         }
     }
     delete dlg;
+}
+
+void ComposerViewPrivate::_k_slotEditLink()
+{
+    //TODO
 }
 
 void ComposerViewPrivate::_k_setFontSize(int fontSize)
@@ -845,7 +851,9 @@ void ComposerView::contextMenuEvent(QContextMenuEvent* event)
     if(imageSelected) {
         //TODO
     } else if(linkSelected) {
-        //TODO
+        QAction *editLinkAction = menu->addAction(i18n("Edit Link"));
+        editLinkAction->setEnabled(!emptyDocument );
+        connect( editLinkAction, SIGNAL(triggered(bool)), this, SLOT(_k_slotEditLink()) );
     }
     menu->addSeparator();
     menu->addAction(d->action_spell_check);
