@@ -52,6 +52,7 @@ AutoResizeImageWidget::AutoResizeImageWidget(QWidget *parent)
   connect(ui->CBMaximumHeight,SIGNAL(currentIndexChanged(int)),SLOT(slotComboboxChanged(int)));
   connect(ui->CBMinimumWidth,SIGNAL(currentIndexChanged(int)),SLOT(slotComboboxChanged(int)));
   connect(ui->CBMinimumHeight,SIGNAL(currentIndexChanged(int)),SLOT(slotComboboxChanged(int)));
+  connect(ui->WriteToImageFormat,SIGNAL(activated(int)),SIGNAL(changed()));
 }
 
 AutoResizeImageWidget::~AutoResizeImageWidget()
