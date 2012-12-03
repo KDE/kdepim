@@ -521,7 +521,7 @@ void Composer::addAttachmentPart( AttachmentPart::Ptr part, bool autoresizeImage
       if(part->mimeType() == "image/gif" ||
               part->mimeType() == "image/jpeg" ||
               part->mimeType() == "image/png" ) {
-          AutoResizeImageJob *autoResizeJob = new AutoResizeImageJob(this);
+          MessageComposer::AutoResizeImageJob *autoResizeJob = new MessageComposer::AutoResizeImageJob(this);
           if(autoResizeJob->loadImageFromData(part->data())) {
             if(autoResizeJob->resizeImage()) {
               part->setData(autoResizeJob->imageArray());

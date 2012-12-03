@@ -22,19 +22,42 @@
 #include <QImage>
 #include <QBuffer>
 
+namespace MessageComposer {
 class AutoResizeImageJob : public QObject
 {
     Q_OBJECT
 public:
     explicit AutoResizeImageJob(QObject *parent);
     ~AutoResizeImageJob();
+
+    /**
+     * @brief loadImageFromData
+     * @param data
+     * @return true if we can load image.
+     */
     bool loadImageFromData(const QByteArray& data);
+
+    /**
+     * @brief resizeImage
+     * @return true if we are able to resize image
+     */
     bool resizeImage();
+
+    /**
+     * @brief imageArray
+     * @return data from image after saving
+     */
     QByteArray imageArray() const;
+
+    /**
+     * @brief mimetype
+     * @return new image mimetype after saving.
+     */
     QByteArray mimetype() const;
 private:
     QImage mImage;
     QBuffer mBuffer;
 };
+}
 
 #endif // AUTORESIZEIMAGEJOB_H
