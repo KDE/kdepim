@@ -170,7 +170,47 @@ void AutoResizeImageWidget::writeConfig()
 
 void AutoResizeImageWidget::resetToDefault()
 {
-  mWasChanged = false;
+   const bool bUseDefaults = MessageComposer::MessageComposerSettings::self()->useDefaults( true );
+
+   ui->enabledAutoResize->setChecked(MessageComposer::MessageComposerSettings::self()->autoResizeImageEnabled());
+   ui->KeepImageRatio->setChecked(MessageComposer::MessageComposerSettings::self()->keepImageRatio());
+   ui->AskBeforeResizing->setChecked(MessageComposer::MessageComposerSettings::self()->askBeforeResizing());
+   ui->EnlargeImageToMinimum->setChecked(MessageComposer::MessageComposerSettings::self()->enlargeImageToMinimum());
+   ui->ReduceImageToMaximum->setChecked(MessageComposer::MessageComposerSettings::self()->reduceImageToMaximum());
+
+   ui->customMaximumWidth->setValue(MessageComposer::MessageComposerSettings::self()->customMaximumWidth());
+   ui->customMaximumHeight->setValue(MessageComposer::MessageComposerSettings::self()->customMaximumHeight());
+   ui->customMinimumWidth->setValue(MessageComposer::MessageComposerSettings::self()->customMinimumWidth());
+   ui->customMinimumHeight->setValue(MessageComposer::MessageComposerSettings::self()->customMinimumHeight());
+
+   int index = qMax(0, ui->CBMaximumWidth->findData(MessageComposer::MessageComposerSettings::self()->maximumWidth()));
+   ui->CBMaximumWidth->setCurrentIndex(index);
+   ui->customMaximumWidth->setEnabled(ui->CBMaximumWidth->itemData(index) == -1);
+
+   index = qMax(0, ui->CBMaximumHeight->findData(MessageComposer::MessageComposerSettings::self()->maximumHeight()));
+   ui->CBMaximumHeight->setCurrentIndex(index);
+   ui->customMaximumHeight->setEnabled(ui->CBMaximumHeight->itemData(index) == -1);
+
+   index = qMax(0, ui->CBMinimumWidth->findData(MessageComposer::MessageComposerSettings::self()->minimumWidth()));
+   ui->CBMinimumWidth->setCurrentIndex(index);
+   ui->customMinimumWidth->setEnabled(ui->CBMinimumWidth->itemData(index) == -1);
+
+   index = qMax(0, ui->CBMinimumHeight->findData(MessageComposer::MessageComposerSettings::self()->minimumHeight()));
+   ui->CBMinimumHeight->setCurrentIndex(index);
+   ui->customMinimumHeight->setEnabled(ui->CBMinimumHeight->itemData(index) == -1);
+
+   index = ui->WriteToImageFormat->findData(MessageComposer::MessageComposerSettings::self()->writeFormat());
+   if(index == -1) {
+      ui->WriteToImageFormat->setCurrentIndex(0);
+   } else {
+      ui->WriteToImageFormat->setCurrentIndex(index);
+   }
+
+
+   MessageComposer::MessageComposerSettings::self()->useDefaults( bUseDefaults );
+
+
+   mWasChanged = false;
 }
 
 #include "autoresizeimagewidget.moc"
