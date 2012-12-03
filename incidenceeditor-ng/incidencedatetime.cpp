@@ -905,6 +905,7 @@ bool IncidenceDateTime::isValid() const
                                 "Please correct dates and times." );
 
     }
+    kDebug() << mLastErrorString;
     return false;
   } else {
     mLastErrorString.clear();

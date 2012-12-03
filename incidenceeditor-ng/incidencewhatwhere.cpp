@@ -80,6 +80,7 @@ bool IncidenceWhatWhere::isDirty() const
 bool IncidenceWhatWhere::isValid() const
 {
   if ( mUi->mSummaryEdit->text().isEmpty() ) {
+    kDebug() << "Specify a title";
     mLastErrorString = i18nc( "@info", "Please specify a title." );
     return false;
   } else {
