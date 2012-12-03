@@ -525,6 +525,7 @@ void Composer::addAttachmentPart( AttachmentPart::Ptr part, bool autoresizeImage
           if(autoResizeJob->loadImageFromData(part->data())) {
             if(autoResizeJob->resizeImage()) {
               part->setData(autoResizeJob->imageArray());
+              part->setMimeType(autoResizeJob->mimetype());
             }
           }
           delete autoResizeJob;

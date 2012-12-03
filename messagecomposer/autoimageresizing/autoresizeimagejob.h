@@ -31,6 +31,7 @@ public:
     bool loadImageFromData(const QByteArray& data);
     bool resizeImage();
     QByteArray imageArray() const;
+    QByteArray mimetype() const;
 private:
     QImage mImage;
     QBuffer mBuffer;

@@ -126,6 +126,17 @@ bool AutoResizeImageJob::resizeImage()
 
 }
 
+QByteArray AutoResizeImageJob::mimetype() const
+{
+    const QString type = MessageComposer::MessageComposerSettings::self()->writeFormat();
+    if(type == QLatin1String("JPG")) {
+        return "image/jpeg";
+    } else if(type == QLatin1String("PNG")) {
+        return "image/png";
+    }
+    return QByteArray();
+}
+
 QByteArray AutoResizeImageJob::imageArray() const
 {
     return mBuffer.data();
