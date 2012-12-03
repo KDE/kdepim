@@ -239,8 +239,6 @@ On pages with this RSS icon<inlinemediaobject>
 </mediaobject>
 </screenshot>
 </para>
-<note><para>For integration into &konqueror; you need the &akregator; plugin
-from the &kde; Extragear module.</para></note>
 </sect1>
 
 <sect1 id="creating-folder">
@@ -383,6 +381,9 @@ aggregators not using caching increases the costs for providers and may decrease
 </variablelist>
 
 </sect1>
+
+ <!--FIXME Share Services Tab missing-->
+ 
 <sect1 id="archive-tab">
 <title>Archive</title>
 <para>Archiving articles means storing the links of articles. Here you can limit the
@@ -973,6 +974,7 @@ in the mail.</para></listitem>
 in the mail.
 </para></listitem>
 </varlistentry>
+<!--FIXME Share Article missing-->
 </variablelist>
 
 </sect2>
