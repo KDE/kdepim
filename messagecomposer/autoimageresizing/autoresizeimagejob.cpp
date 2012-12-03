@@ -44,7 +44,7 @@ bool AutoResizeImageJob::resizeImage()
      return false;
   const int width = mImage.width();
   const int height = mImage.height();
-  const qreal imageRatio = (double)( (double)height / (double)width );
+  //const qreal imageRatio = (double)( (double)height / (double)width );
   int newWidth = -1;
   int newHeight = -1;
   if(MessageComposer::MessageComposerSettings::self()->reduceImageToMaximum()) {
@@ -58,6 +58,7 @@ bool AutoResizeImageJob::resizeImage()
           maximumHeight = MessageComposer::MessageComposerSettings::self()->customMaximumHeight();
       }
 
+      /*
       if(MessageComposer::MessageComposerSettings::self()->keepImageRatio()) {
           if(imageRatio>1) {
 
@@ -66,6 +67,7 @@ bool AutoResizeImageJob::resizeImage()
           }
          //TODO
       } else {
+      */
           if( width > maximumWidth ) {
               newWidth = maximumWidth;
           } else {
@@ -76,7 +78,7 @@ bool AutoResizeImageJob::resizeImage()
           } else {
               newHeight = height;
           }
-      }
+      //}
   } else {
       newHeight = height;
       newWidth = width;
@@ -93,7 +95,7 @@ bool AutoResizeImageJob::resizeImage()
       if (minimumHeight == -1) {
           minimumHeight = MessageComposer::MessageComposerSettings::self()->customMinimumHeight();
       }
-
+/*
       if(MessageComposer::MessageComposerSettings::self()->keepImageRatio()) {
           if(imageRatio>1) {
 
@@ -102,17 +104,18 @@ bool AutoResizeImageJob::resizeImage()
           }
           //TODO
       } else {
+      */
           if(newWidth < minimumWidth) {
               newWidth = minimumWidth;
           }
           if(newHeight < minimumHeight) {
               newHeight = minimumHeight;
           }
-      }
+      //}
   }
   if((newHeight != height) || (newWidth != width)) {
       mBuffer.open(QIODevice::WriteOnly);
-      mImage = mImage.scaled(newWidth,newHeight);
+      mImage = mImage.scaled(newWidth,newHeight, MessageComposer::MessageComposerSettings::self()->keepImageRatio() ? Qt::KeepAspectRatio : Qt::IgnoreAspectRatio);
       const bool result = mImage.save(&mBuffer,MessageComposer::MessageComposerSettings::self()->writeFormat().toLocal8Bit());
       mBuffer.close();
       return result;
