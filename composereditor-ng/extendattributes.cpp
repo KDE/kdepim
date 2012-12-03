@@ -20,6 +20,13 @@
 
 #include "extendattributes.h"
 
+using namespace ComposerEditorNG;
+
 ExtendAttributes::ExtendAttributes()
 {
+}
+
+ExtendAttributes::~ExtendAttributes()
+{
+
 }

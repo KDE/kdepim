@@ -507,7 +507,10 @@ void ComposerViewPrivate::_k_slotAdjustActions()
     } else if(alignment == QLatin1String("-webkit-auto")) {
         action_align_justify->setChecked(true);
     }
-
+    const QString font = evaluateJavascript(QLatin1String("getFontFamily()")).toString();
+    if(!font.isEmpty()) {
+      action_font_family->setFont(font);
+    }
 }
 
 void ComposerViewPrivate::execCommand(const QString &cmd)

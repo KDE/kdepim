@@ -21,10 +21,14 @@
 #ifndef EXTENDATTRIBUTES_H
 #define EXTENDATTRIBUTES_H
 
+namespace ComposerEditorNG
+{
 class ExtendAttributes
 {
 public:
     ExtendAttributes();
+    ~ExtendAttributes();
 };
+}
 
 #endif // EXTENDATTRIBUTES_H

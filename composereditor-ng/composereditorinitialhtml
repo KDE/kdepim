@@ -62,6 +62,12 @@ function getAlignment()
    return getCurrentStyle(node, "text-align");
 }
 
+function getFontFamily()
+{
+   var node = getUserSelection().anchorNode.parentNode;
+   return getCurrentStyle(node, "font-family");
+}
+
 </script>
 
 </head>
