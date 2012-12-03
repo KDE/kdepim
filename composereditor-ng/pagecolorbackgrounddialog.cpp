@@ -66,11 +66,9 @@ void PageColorBackgroundDialog::initSettings()
     if(mFrame) {
         const QWebElement element = mFrame->findFirstElement(QLatin1String("body"));
         if(!element.isNull()) {
-            if(element.hasAttributes()) {
+            if(element.hasAttribute(QLatin1String("bgcolor"))) {
                 mPageColorWidget->setUseDefaultColor(false);
-                if(element.hasAttribute(QLatin1String("bgcolor"))) {
-                    mPageColorWidget->setPageBackgroundColor(QColor(element.attribute(QLatin1String("bgcolor"))));
-                }
+                mPageColorWidget->setPageBackgroundColor(QColor(element.attribute(QLatin1String("bgcolor"))));
             } else {
                 mPageColorWidget->setUseDefaultColor(true);
             }
