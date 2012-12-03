@@ -323,7 +323,7 @@ void ComposerViewPrivate::_k_slotAddImage()
             imageWidth = dlg->imageWidth();
             imageHeight = dlg->imageHeight();
         }
-        QString imageHtml = QString::fromLatin1("<img %1 %2 %3 />").arg((imageWidth>0) ? QString::fromLatin1("width=%1").arg(imageWidth) : QString())
+        const QString imageHtml = QString::fromLatin1("<img %1 %2 %3 />").arg((imageWidth>0) ? QString::fromLatin1("width=%1").arg(imageWidth) : QString())
                 .arg((imageHeight>0) ? QString::fromLatin1("height=%1").arg(imageHeight) : QString())
                 .arg(url.isEmpty() ? QString() : QString::fromLatin1("src='file://%1'").arg(url.path()));
         execCommand(QLatin1String("insertHTML"), imageHtml);
@@ -474,11 +474,8 @@ void ComposerViewPrivate::_k_slotReplace()
 
 void ComposerViewPrivate::_k_slotChangePageColorAndBackground()
 {
-    QPointer<PageColorBackgroundDialog> dlg = new PageColorBackgroundDialog(q->page()->mainFrame(), q);
-    if(dlg->exec()) {
-
-    }
-    delete dlg;
+    PageColorBackgroundDialog dlg(q->page()->mainFrame(), q);
+    dlg.exec();
 }
 
 void ComposerViewPrivate::_k_slotAdjustActions()
