@@ -113,6 +113,7 @@ public:
     void _k_slotSpeakText();
     void _k_slotDeleteText();
     void _k_slotChangePageColorAndBackground();
+    void _k_slotToggleBlockQuote();
 
     QAction* getAction ( QWebPage::WebAction action ) const;
     QVariant evaluateJavascript(const QString& command);
@@ -156,6 +157,7 @@ public:
     KAction *action_find;
     KAction *action_replace;
     KAction *action_page_color;
+    KAction *action_block_quote;
 
     ComposerView *q;
 };
@@ -266,6 +268,11 @@ void ComposerViewPrivate::_k_setFormatType(QAction *act)
         break;
     }
     execCommand ( QLatin1String("formatBlock"), command );
+}
+
+void ComposerViewPrivate::_k_slotToggleBlockQuote()
+{
+    execCommand( QLatin1String("formatBlock"), QLatin1String("BLOCKQUOTE"));
 }
 
 void ComposerViewPrivate::_k_slotAddEmoticon(const QString& emoticon)
@@ -731,6 +738,13 @@ void ComposerView::createActions(KActionCollection *actionCollection)
     actionCollection->addAction(QLatin1String("htmleditor_format_type"), d->action_format_type);
     connect(d->action_format_type, SIGNAL(triggered(QAction*)),
             this, SLOT(_k_setFormatType(QAction*)));
+
+    //BlockQuote
+    d->action_block_quote = new KAction(KIcon(QLatin1String("format-text-blockquote")), i18n( "Blockquote" ), this );
+    d->htmlEditorActionList.append(d->action_block_quote);
+    actionCollection->addAction(QLatin1String("htmleditor_block_quote"), d->action_block_quote);
+    connect( d->action_block_quote, SIGNAL(triggered()), this, SLOT(_k_slotToggleBlockQuote()) );
+
 
     //Color
     //Foreground Color

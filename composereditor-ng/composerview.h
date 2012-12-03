@@ -70,6 +70,7 @@ private:
     Q_PRIVATE_SLOT( d, void _k_slotDeleteText() )
     Q_PRIVATE_SLOT( d, void _k_slotChangePageColorAndBackground() )
     Q_PRIVATE_SLOT( d, void _k_slotEditLink() )
+    Q_PRIVATE_SLOT( d, void _k_slotToggleBlockQuote() )
 };
 }
 
