@@ -390,12 +390,11 @@ void Message::ComposerViewBase::slotEmailAddressResolved ( KJob* job )
   bool autoresizeImage = false;
   if(MessageComposer::MessageComposerSettings::self()->autoResizeImageEnabled()) {
     if(MessageComposer::MessageComposerSettings::self()->askBeforeResizing()) {
-#if 0
-       const int rc = KMessageBox::warningYesNo( parent,i18n("Do you want to resize images?"),
+#if 1
+       const int rc = KMessageBox::warningYesNo( m_parentWidget,i18n("Do you want to resize images?"),
                                                  i18n("Auto Resize Images"), KStandardGuiItem::yes(), KStandardGuiItem::no());
        if(rc == KMessageBox::Yes) {
            autoresizeImage = true;
-         //TODO
        }
 #endif
     }
