@@ -20,6 +20,8 @@
 #include <QBuffer>
 #include <QImage>
 
+using namespace MessageComposer;
+
 AutoResizeImageJob::AutoResizeImageJob(QObject *parent)
     :QObject(parent)
 {
@@ -44,7 +46,6 @@ bool AutoResizeImageJob::resizeImage()
      return false;
   const int width = mImage.width();
   const int height = mImage.height();
-  const qreal imageRatio = (double)( (double)height / (double)width );
   int newWidth = -1;
   int newHeight = -1;
   if(MessageComposer::MessageComposerSettings::self()->reduceImageToMaximum()) {
@@ -57,25 +58,15 @@ bool AutoResizeImageJob::resizeImage()
       if (maximumHeight == -1) {
           maximumHeight = MessageComposer::MessageComposerSettings::self()->customMaximumHeight();
       }
-
-      if(MessageComposer::MessageComposerSettings::self()->keepImageRatio()) {
-          if(imageRatio>1) {
-
-          } else {
-
-          }
-         //TODO
+      if( width > maximumWidth ) {
+          newWidth = maximumWidth;
       } else {
-          if( width > maximumWidth ) {
-              newWidth = maximumWidth;
-          } else {
-              newWidth = width;
-          }
-          if(height > maximumHeight) {
-              newHeight = maximumHeight;
-          } else {
-              newHeight = height;
-          }
+          newWidth = width;
+      }
+      if(height > maximumHeight) {
+          newHeight = maximumHeight;
+      } else {
+          newHeight = height;
       }
   } else {
       newHeight = height;
@@ -93,26 +84,16 @@ bool AutoResizeImageJob::resizeImage()
       if (minimumHeight == -1) {
           minimumHeight = MessageComposer::MessageComposerSettings::self()->customMinimumHeight();
       }
-
-      if(MessageComposer::MessageComposerSettings::self()->keepImageRatio()) {
-          if(imageRatio>1) {
-
-          } else {
-
-          }
-          //TODO
-      } else {
-          if(newWidth < minimumWidth) {
-              newWidth = minimumWidth;
-          }
-          if(newHeight < minimumHeight) {
-              newHeight = minimumHeight;
-          }
+      if(newWidth < minimumWidth) {
+          newWidth = minimumWidth;
+      }
+      if(newHeight < minimumHeight) {
+          newHeight = minimumHeight;
       }
   }
   if((newHeight != height) || (newWidth != width)) {
       mBuffer.open(QIODevice::WriteOnly);
-      mImage = mImage.scaled(newWidth,newHeight);
+      mImage = mImage.scaled(newWidth,newHeight, MessageComposer::MessageComposerSettings::self()->keepImageRatio() ? Qt::KeepAspectRatio : Qt::IgnoreAspectRatio);
       const bool result = mImage.save(&mBuffer,MessageComposer::MessageComposerSettings::self()->writeFormat().toLocal8Bit());
       mBuffer.close();
       return result;
@@ -121,6 +102,18 @@ bool AutoResizeImageJob::resizeImage()
   }
   return true;
 
+}
+
+QByteArray AutoResizeImageJob::mimetype() const
+{
+    //Add more mimetype if a day we add more saving format.
+    const QString type = MessageComposer::MessageComposerSettings::self()->writeFormat();
+    if(type == QLatin1String("JPG")) {
+        return "image/jpeg";
+    } else if(type == QLatin1String("PNG")) {
+        return "image/png";
+    }
+    return QByteArray();
 }
 
 QByteArray AutoResizeImageJob::imageArray() const

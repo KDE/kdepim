@@ -61,7 +61,6 @@ private:
     Q_PRIVATE_SLOT( d, void _k_insertLink() )
     Q_PRIVATE_SLOT( d, void _k_setFontSize(int) )
     Q_PRIVATE_SLOT( d, void _k_setFontFamily(const QString&) )
-    Q_PRIVATE_SLOT( d, void _k_adjustActions() )
     Q_PRIVATE_SLOT( d, void _k_slotSpellCheck() )
     Q_PRIVATE_SLOT( d, void _k_spellCheckerCorrected(const QString& original, int pos, const QString& replacement) )
     Q_PRIVATE_SLOT( d, void _k_spellCheckerMisspelling(const QString&, int) )
@@ -69,7 +68,9 @@ private:
     Q_PRIVATE_SLOT( d, void _k_slotFind() )
     Q_PRIVATE_SLOT( d, void _k_slotReplace() )
     Q_PRIVATE_SLOT( d, void _k_slotDeleteText() )
-
+    Q_PRIVATE_SLOT( d, void _k_slotChangePageColorAndBackground() )
+    Q_PRIVATE_SLOT( d, void _k_slotEditLink() )
+    Q_PRIVATE_SLOT( d, void _k_slotToggleBlockQuote() )
 };
 }
 

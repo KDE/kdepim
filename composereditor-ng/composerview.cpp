@@ -20,6 +20,7 @@
 
 #include "composerview.h"
 #include "managelink.h"
+#include "pagecolorbackgrounddialog.h"
 
 #include <kpimtextedit/emoticontexteditaction.h>
 #include <kpimtextedit/inserthtmldialog.h>
@@ -99,6 +100,7 @@ public:
     void _k_setTextBackgroundColor();
     void _k_slotInsertHorizontalRule();
     void _k_insertLink();
+    void _k_slotEditLink();
     void _k_setFontSize(int);
     void _k_setFontFamily(const QString&);
     void _k_adjustActions();
@@ -110,8 +112,11 @@ public:
     void _k_slotReplace();
     void _k_slotSpeakText();
     void _k_slotDeleteText();
+    void _k_slotChangePageColorAndBackground();
+    void _k_slotToggleBlockQuote();
 
     QAction* getAction ( QWebPage::WebAction action ) const;
+    QVariant evaluateJavascript(const QString& command);
     void execCommand(const QString &cmd);
     void execCommand(const QString &cmd, const QString &arg);
     bool queryCommandState(const QString &cmd);
@@ -135,8 +140,8 @@ public:
     KAction *action_insert_horizontal_rule;
     KAction *action_list_indent;
     KAction *action_list_dedent;
-    KAction *action_ordered_list;
-    KAction *action_unordered_list;
+    KToggleAction *action_ordered_list;
+    KToggleAction *action_unordered_list;
     KSelectAction *action_format_type;
     KSelectAction *action_font_size;
     KFontAction *action_font_family;
@@ -151,7 +156,8 @@ public:
     KAction *action_spell_check;
     KAction *action_find;
     KAction *action_replace;
-
+    KAction *action_page_color;
+    KAction *action_block_quote;
 
     ComposerView *q;
 };
@@ -211,7 +217,18 @@ static QUrl guessUrlFromString(const QString &string)
     return QUrl(string, QUrl::TolerantMode);
 }
 
-
+static QColor convertRgbToQColor(QString rgb)
+{
+    rgb.chop(1);
+    rgb.remove(QLatin1String("rgb("));
+    rgb = rgb.simplified();
+    const QStringList colorLst = rgb.split(QLatin1String(","));
+    if(colorLst.count() == 3) {
+        QColor col(colorLst.at(0).toInt(),colorLst.at(1).toInt(),colorLst.at(2).toInt());
+        return col;
+    }
+    return QColor();
+}
 
 
 void ComposerViewPrivate::_k_setFormatType(QAction *act)
@@ -253,6 +270,11 @@ void ComposerViewPrivate::_k_setFormatType(QAction *act)
     execCommand ( QLatin1String("formatBlock"), command );
 }
 
+void ComposerViewPrivate::_k_slotToggleBlockQuote()
+{
+    execCommand( QLatin1String("formatBlock"), QLatin1String("BLOCKQUOTE"));
+}
+
 void ComposerViewPrivate::_k_slotAddEmoticon(const QString& emoticon)
 {
     execCommand(QLatin1String("insertHTML"), emoticon);
@@ -272,32 +294,30 @@ void ComposerViewPrivate::_k_slotInsertHtml()
 
 void ComposerViewPrivate::_k_setTextBackgroundColor()
 {
-    //TODO get previous color
-    QColor newColor;
+    QColor newColor = convertRgbToQColor(evaluateJavascript(QLatin1String("getTextBackgroundColor()")).toString());
     const int result = KColorDialog::getColor(newColor,q);
     if(result == QDialog::Accepted) {
         execCommand(QLatin1String("hiliteColor"), newColor.name());
     }
 }
 
+QVariant ComposerViewPrivate::evaluateJavascript(const QString& command)
+{
+    return q->page()->mainFrame()->evaluateJavaScript( command );
+}
+
 void ComposerViewPrivate::_k_slotDeleteText()
 {
-    q->page()->mainFrame()->evaluateJavaScript(QLatin1String("setDeleteSelectedText()"));
+    evaluateJavascript(QLatin1String("setDeleteSelectedText()"));
 }
 
 void ComposerViewPrivate::_k_setTextForegroundColor()
 {
-    //TODO get previous color
-    QColor newColor;
+    QColor newColor = convertRgbToQColor(evaluateJavascript(QLatin1String("getTextForegroundColor()")).toString());
     const int result = KColorDialog::getColor(newColor,q);
     if(result == QDialog::Accepted) {
         execCommand(QLatin1String("foreColor"), newColor.name());
     }
-}
-
-void ComposerViewPrivate::_k_adjustActions()
-{
-    //TODO
 }
 
 void ComposerViewPrivate::_k_slotAddImage()
@@ -311,10 +331,9 @@ void ComposerViewPrivate::_k_slotAddImage()
             imageWidth = dlg->imageWidth();
             imageHeight = dlg->imageHeight();
         }
-        QString imageHtml = QString::fromLatin1("<img %1 %2 %3 />").arg((imageWidth>0) ? QString::fromLatin1("width=%1").arg(imageWidth) : QString())
+        const QString imageHtml = QString::fromLatin1("<img %1 %2 %3 />").arg((imageWidth>0) ? QString::fromLatin1("width=%1").arg(imageWidth) : QString())
                 .arg((imageHeight>0) ? QString::fromLatin1("height=%1").arg(imageHeight) : QString())
                 .arg(url.isEmpty() ? QString() : QString::fromLatin1("src='file://%1'").arg(url.path()));
-        qDebug()<<" imageHtml"<<imageHtml;
         execCommand(QLatin1String("insertHTML"), imageHtml);
     }
     delete dlg;
@@ -332,7 +351,7 @@ void ComposerViewPrivate::_k_slotInsertTable()
         for(int i = 0; i <numberRow; ++i) {
             htmlTable += QLatin1String("<tr>");
             for(int j = 0; j <numberOfColumns; ++j) {
-                htmlTable += QLatin1String("<td> </td>");
+                htmlTable += QLatin1String("<td></td>");
             }
             htmlTable += QLatin1String("</tr>");
         }
@@ -361,6 +380,11 @@ void ComposerViewPrivate::_k_insertLink()
     delete dlg;
 }
 
+void ComposerViewPrivate::_k_slotEditLink()
+{
+    //TODO
+}
+
 void ComposerViewPrivate::_k_setFontSize(int fontSize)
 {
     execCommand(QLatin1String("fontSize"), QString::number(fontSize+1)); //Verify
@@ -374,7 +398,6 @@ void ComposerViewPrivate::_k_setFontFamily(const QString& family)
 void ComposerViewPrivate::_k_slotSpellCheck()
 {
     QString text(execJScript(contextMenuResult.element(), QLatin1String("this.value")).toString());
-    qDebug()<<" text "<<text;
     if (contextMenuResult.isContentSelected())
     {
         spellTextSelectionStart = qMax(0, execJScript(contextMenuResult.element(), QLatin1String("this.selectionStart")).toInt());
@@ -462,15 +485,39 @@ void ComposerViewPrivate::_k_slotReplace()
     //TODO
 }
 
+void ComposerViewPrivate::_k_slotChangePageColorAndBackground()
+{
+    PageColorBackgroundDialog dlg(q->page()->mainFrame(), q);
+    dlg.exec();
+}
+
 void ComposerViewPrivate::_k_slotAdjustActions()
 {
-    //TODO
     FOLLOW_CHECK(action_text_bold, QWebPage::ToggleBold);
     FOLLOW_CHECK(action_text_italic, QWebPage::ToggleItalic);
     FOLLOW_CHECK(action_text_strikeout, QWebPage::ToggleStrikethrough);
     FOLLOW_CHECK(action_text_underline, QWebPage::ToggleUnderline);
     FOLLOW_CHECK(action_text_subscript, QWebPage::ToggleSubscript);
     FOLLOW_CHECK(action_text_superscript, QWebPage::ToggleSuperscript);
+    FOLLOW_CHECK(action_ordered_list, QWebPage::InsertOrderedList);
+    FOLLOW_CHECK(action_unordered_list, QWebPage::InsertUnorderedList);
+    FOLLOW_CHECK(action_direction_ltr, QWebPage::SetTextDirectionLeftToRight);
+    FOLLOW_CHECK(action_direction_rtl, QWebPage::SetTextDirectionRightToLeft);
+
+    const QString alignment = evaluateJavascript(QLatin1String("getAlignment()")).toString();
+    if(alignment == QLatin1String("left")) {
+        action_align_left->setChecked(true);
+    } else if(alignment == QLatin1String("right")) {
+        action_align_right->setChecked(true);
+    } else if(alignment == QLatin1String("center")) {
+        action_align_center->setChecked(true);
+    } else if(alignment == QLatin1String("-webkit-auto")) {
+        action_align_justify->setChecked(true);
+    }
+    const QString font = evaluateJavascript(QLatin1String("getFontFamily()")).toString();
+    if(!font.isEmpty()) {
+      action_font_family->setFont(font);
+    }
 }
 
 void ComposerViewPrivate::execCommand(const QString &cmd)
@@ -528,7 +575,8 @@ ComposerView::ComposerView(QWidget *parent)
 
     page()->setContentEditable(true);
     page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
-    connect( page(), SIGNAL (selectionChanged()), this, SLOT(_k_adjustActions()) );
+    connect( page(), SIGNAL (selectionChanged()), this, SLOT(_k_slotAdjustActions()) );
+    setWindowModified(false);
 
 }
 
@@ -624,7 +672,6 @@ void ComposerView::createActions(KActionCollection *actionCollection)
     directionGroup->addAction(d->action_direction_ltr);
     directionGroup->addAction(d->action_direction_rtl);
 
-
     //indent
     d->action_list_indent = new KAction(KIcon(QLatin1String("format-indent-more")), i18nc("@action", "Increase Indent"), actionCollection);
     d->htmlEditorActionList.append((d->action_list_indent));
@@ -654,13 +701,13 @@ void ComposerView::createActions(KActionCollection *actionCollection)
     actionCollection->addAction(QLatin1String("htmleditor_format_text_superscript"), d->action_text_superscript);
     FORWARD_ACTION(d->action_text_superscript, QWebPage::ToggleSuperscript);
 
-    d->action_ordered_list = new KAction(KIcon(QLatin1String("format-list-ordered")), i18n("Ordered Style"), actionCollection);
+    d->action_ordered_list = new KToggleAction(KIcon(QLatin1String("format-list-ordered")), i18n("Ordered Style"), actionCollection);
     d->htmlEditorActionList.append(d->action_ordered_list);
     actionCollection->addAction(QLatin1String("htmleditor_format_list_ordered"), d->action_ordered_list);
     FORWARD_ACTION(d->action_ordered_list, QWebPage::InsertOrderedList);
 
 
-    d->action_unordered_list = new KAction( KIcon( QLatin1String("format-list-unordered" )), i18n( "Unordered List" ), actionCollection );
+    d->action_unordered_list = new KToggleAction( KIcon( QLatin1String("format-list-unordered" )), i18n( "Unordered List" ), actionCollection );
     d->htmlEditorActionList.append(d->action_unordered_list);
     actionCollection->addAction(QLatin1String("htmleditor_format_list_unordered"), d->action_unordered_list);
     FORWARD_ACTION(d->action_unordered_list, QWebPage::InsertUnorderedList);
@@ -691,6 +738,13 @@ void ComposerView::createActions(KActionCollection *actionCollection)
     actionCollection->addAction(QLatin1String("htmleditor_format_type"), d->action_format_type);
     connect(d->action_format_type, SIGNAL(triggered(QAction*)),
             this, SLOT(_k_setFormatType(QAction*)));
+
+    //BlockQuote
+    d->action_block_quote = new KAction(KIcon(QLatin1String("format-text-blockquote")), i18n( "Blockquote" ), this );
+    d->htmlEditorActionList.append(d->action_block_quote);
+    actionCollection->addAction(QLatin1String("htmleditor_block_quote"), d->action_block_quote);
+    connect( d->action_block_quote, SIGNAL(triggered()), this, SLOT(_k_slotToggleBlockQuote()) );
+
 
     //Color
     //Foreground Color
@@ -776,6 +830,11 @@ void ComposerView::createActions(KActionCollection *actionCollection)
     actionCollection->addAction( QLatin1String( "htmleditor_insert_new_table" ), d->action_insert_table );
     connect( d->action_insert_table, SIGNAL(triggered(bool)), SLOT(_k_slotInsertTable()) );
 
+    //Page Color
+    d->action_page_color = new KAction( i18n( "Page Color and Background..." ), this );
+    d->htmlEditorActionList.append(d->action_page_color);
+    actionCollection->addAction( QLatin1String( "htmleditor_page_color_and_background" ), d->action_page_color );
+    connect( d->action_page_color, SIGNAL(triggered(bool)), SLOT(_k_slotChangePageColorAndBackground()) );
 }
 
 
@@ -809,7 +868,9 @@ void ComposerView::contextMenuEvent(QContextMenuEvent* event)
     if(imageSelected) {
         //TODO
     } else if(linkSelected) {
-        //TODO
+        QAction *editLinkAction = menu->addAction(i18n("Edit Link"));
+        editLinkAction->setEnabled(!emptyDocument );
+        connect( editLinkAction, SIGNAL(triggered(bool)), this, SLOT(_k_slotEditLink()) );
     }
     menu->addSeparator();
     menu->addAction(d->action_spell_check);

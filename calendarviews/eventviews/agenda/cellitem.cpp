@@ -35,7 +35,7 @@ QString CellItem::label() const
 
 QList<CellItem*> CellItem::placeItem( QList<CellItem*> cells, CellItem *placeItem )
 {
-  kDebug(5855) << "Placing" << placeItem->label();
+  //kDebug(5855) << "Placing" << placeItem->label();
 
   QList<CellItem*> conflictItems;
   int maxSubCells = 0;
@@ -89,7 +89,7 @@ QList<CellItem*> CellItem::placeItem( QList<CellItem*> cells, CellItem *placeIte
     }
     // Todo: Adapt subCells of items conflicting with conflicting items
   } else {
-    kDebug(5855) << "  no conflicts";
+    //kDebug(5855) << "  no conflicts";
     placeItem->setSubCell( 0 );
     placeItem->setSubCells( 1 );
   }

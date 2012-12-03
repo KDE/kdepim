@@ -34,6 +34,7 @@
 #include <KDebug>
 #include <ktoolbar.h>
 #include <KSelectAction>
+#include <KToggleAction>
 #include <klocalizedstring.h>
 #include <KColorDialog>
 #include "composer/dialogs/addeditimage.h"
@@ -366,7 +367,7 @@ void TextEditor::createActions()
     barVisual->addAction( actRemoveFormatting );
 
     actBlockQuote = new KAction( KIcon( "format-text-blockquote" ), i18n( "Blockquote" ), this );
-    actBlockQuote->setCheckable( true );
+    //actBlockQuote->setCheckable( true );
     connect( actBlockQuote, SIGNAL(triggered(bool)), this, SLOT(slotToggleBlockQuote(bool)) );
     barVisual->addAction( actBlockQuote );
 
@@ -424,11 +425,11 @@ void TextEditor::createActions()
 
     barVisual->addSeparator();
 
-    actOrderedList = new KAction( KIcon( "format-list-ordered" ), i18n( "Ordered List" ), this );
+    actOrderedList = new KToggleAction( KIcon( "format-list-ordered" ), i18n( "Ordered List" ), this );
     FORWARD_ACTION(actOrderedList, QWebPage::InsertOrderedList);
     barVisual->addAction( actOrderedList );
 
-    actUnorderedList = new KAction( KIcon( "format-list-unordered" ), i18n( "Unordered List" ), this );
+    actUnorderedList = new KToggleAction( KIcon( "format-list-unordered" ), i18n( "Unordered List" ), this );
     FORWARD_ACTION(actUnorderedList, QWebPage::InsertUnorderedList);
     barVisual->addAction( actUnorderedList );
 
@@ -595,7 +596,7 @@ void TextEditor::slotToggleSpellChecking(bool )
 
 void TextEditor::formatTextColor()
 {
-    QColor color;
+    QColor color = rgbToColor(evaluateJavaScript(QLatin1String("getForegroundColor()"),false).toString());
     int res = KColorDialog::getColor(color, this);
     if (res == KColorDialog::Accepted)
         execCommand("foreColor", color.name());
@@ -781,13 +782,15 @@ void TextEditor::adjustFontSizes()
 
 QColor TextEditor::rgbToColor ( QString rgb ) const
 {
-    rgb.chop ( 1 );
-    rgb.remove ( 0, 4 );
-    QStringList list = rgb.split ( ',' );
-    if ( list.size() == 3 )
-        return QColor ( list[0].toInt(), list[1].toInt(), list[2].toInt() );
-    else
-        return QColor();
+    rgb.chop(1);
+    rgb.remove(QLatin1String("rgb("));
+    rgb = rgb.simplified();
+    const QStringList colorLst = rgb.split(QLatin1String(","));
+    if(colorLst.count() == 3) {
+        QColor col(colorLst.at(0).toInt(),colorLst.at(1).toInt(),colorLst.at(2).toInt());
+        return col;
+    }
+    return QColor();
 }
 
 QString TextEditor::getHtml() const

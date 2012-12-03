@@ -173,8 +173,7 @@ void FindReplaceBarPrivate::searchText( bool backward, bool isAutoSearch )
         searchOptions |= QWebPage::HighlightAllOccurrences;
 
     const QString searchWord( search->text() );
-    if( !isAutoSearch && !lastSearchStr.contains( searchWord, Qt::CaseSensitive ) )
-    {
+    if( !isAutoSearch && !lastSearchStr.contains( searchWord, Qt::CaseSensitive ) ) {
         clearSelections();
     }
     webView->findText(QString(), QWebPage::HighlightAllOccurrences); //Clear an existing highligh

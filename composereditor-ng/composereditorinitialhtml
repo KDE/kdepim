@@ -3,6 +3,11 @@
 <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
 <script type="text/javascript">
 
+function getCurrentStyle(node, prop)
+{
+   return document.defaultView.getComputedStyle(node, null).getPropertyValue(prop);
+}
+
 function getUserSelection()
 {
    var userSelection;
@@ -31,6 +36,36 @@ function setDeleteSelectedText()
       selObj.deleteFromDocument();
     }
   }
+}
+
+function getTextForegroundColor()
+{
+   var node = getUserSelection().anchorNode.parentNode;
+   return getCurrentStyle(node, "color");
+}
+
+function getTextBackgroundColor()
+{
+   var node = getUserSelection().anchorNode.parentNode;
+   return getCurrentStyle(node, "background-color");
+}
+
+function getTextDirection()
+{
+   var node = getUserSelection().anchorNode.parentNode;
+   return getCurrentStyle(node, "direction");
+}
+
+function getAlignment()
+{
+   var node = getUserSelection().anchorNode.parentNode;
+   return getCurrentStyle(node, "text-align");
+}
+
+function getFontFamily()
+{
+   var node = getUserSelection().anchorNode.parentNode;
+   return getCurrentStyle(node, "font-family");
 }
 
 </script>
