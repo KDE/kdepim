@@ -367,7 +367,7 @@ void TextEditor::createActions()
     barVisual->addAction( actRemoveFormatting );
 
     actBlockQuote = new KAction( KIcon( "format-text-blockquote" ), i18n( "Blockquote" ), this );
-    actBlockQuote->setCheckable( true );
+    //actBlockQuote->setCheckable( true );
     connect( actBlockQuote, SIGNAL(triggered(bool)), this, SLOT(slotToggleBlockQuote(bool)) );
     barVisual->addAction( actBlockQuote );
 
