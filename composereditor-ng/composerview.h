@@ -44,11 +44,12 @@ protected:
 
 Q_SIGNALS:
     void showFindBar();
+    void openLink(const QUrl&);
 
 private:
     friend class ComposerViewPrivate;
     ComposerViewPrivate * const d;
-    Q_PRIVATE_SLOT(d, void _k_slotSpeakText())
+    Q_PRIVATE_SLOT( d, void _k_slotSpeakText() )
     Q_PRIVATE_SLOT( d, void _k_slotAdjustActions() )
     Q_PRIVATE_SLOT( d, void _k_setFormatType(QAction *) )
     Q_PRIVATE_SLOT( d, void _k_slotAddEmoticon(const QString&) )

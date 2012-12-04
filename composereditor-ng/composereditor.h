@@ -24,6 +24,7 @@
 #include "composereditor_export.h"
 
 #include <QWidget>
+#include <QWebPage>
 
 class KActionCollection;
 class KAction;
@@ -36,6 +37,8 @@ class COMPOSEREDITORNG_EXPORT ComposerEditor : public QWidget
 {
     Q_OBJECT
 public:
+    Q_PROPERTY(bool enableRichText READ enableRichText WRITE setEnableRichText)
+
     explicit ComposerEditor(QWidget *parent);
     ~ComposerEditor();
 
@@ -45,7 +48,18 @@ public:
 
     bool enableRichText() const;
 
+    /**
+     * @brief isModified
+     * @return true if document is modify.
+     */
     bool isModified() const;
+
+    /**
+     * @brief action
+     * @param action is the enim from QWebPage to define specific action
+     * @return a QAction from QWebPage
+     */
+    QAction* action(QWebPage::WebAction action);
 
 public Q_SLOTS:
     void setEnableRichText(bool richTextEnabled);
@@ -55,6 +69,8 @@ public Q_SLOTS:
     void undo();
     void redo();
 
+Q_SIGNALS:
+    void openLink(const QUrl&);
 
 private:
     friend class ComposerEditorPrivate;

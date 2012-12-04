@@ -21,6 +21,8 @@
 #include "composerview.h"
 #include "managelink.h"
 #include "pagecolorbackgrounddialog.h"
+#include "composereditorutil_p.h"
+
 
 #include <kpimtextedit/emoticontexteditaction.h>
 #include <kpimtextedit/inserthtmldialog.h>
@@ -184,53 +186,6 @@ static QVariant execJScript(QWebElement element, const QString& script)
     return element.evaluateJavaScript(script);
 }
 
-static QUrl guessUrlFromString(const QString &string)
-{
-    QString urlStr = string.trimmed();
-    QRegExp test(QLatin1String("^[a-zA-Z]+\\:.*"));
-
-    // Check if it looks like a qualified URL. Try parsing it and see.
-    bool hasSchema = test.exactMatch(urlStr);
-    if (hasSchema) {
-        QUrl url(urlStr, QUrl::TolerantMode);
-        if (url.isValid())
-            return url;
-    }
-
-    // Might be a file.
-    if (QFile::exists(urlStr))
-        return QUrl::fromLocalFile(urlStr);
-
-    // Might be a shorturl - try to detect the schema.
-    if (!hasSchema) {
-        int dotIndex = urlStr.indexOf(QLatin1Char('.'));
-        if (dotIndex != -1) {
-            QString prefix = urlStr.left(dotIndex).toLower();
-            QString schema = (prefix == QLatin1String("ftp")) ? prefix : QLatin1String("http");
-            QUrl url(schema + QLatin1String("://") + urlStr, QUrl::TolerantMode);
-            if (url.isValid())
-                return url;
-        }
-    }
-
-    // Fall back to QUrl's own tolerant parser.
-    return QUrl(string, QUrl::TolerantMode);
-}
-
-static QColor convertRgbToQColor(QString rgb)
-{
-    rgb.chop(1);
-    rgb.remove(QLatin1String("rgb("));
-    rgb = rgb.simplified();
-    const QStringList colorLst = rgb.split(QLatin1String(","));
-    if(colorLst.count() == 3) {
-        QColor col(colorLst.at(0).toInt(),colorLst.at(1).toInt(),colorLst.at(2).toInt());
-        return col;
-    }
-    return QColor();
-}
-
-
 void ComposerViewPrivate::_k_setFormatType(QAction *act)
 {
     if(!act) {
@@ -294,7 +249,7 @@ void ComposerViewPrivate::_k_slotInsertHtml()
 
 void ComposerViewPrivate::_k_setTextBackgroundColor()
 {
-    QColor newColor = convertRgbToQColor(evaluateJavascript(QLatin1String("getTextBackgroundColor()")).toString());
+    QColor newColor = ComposerEditorNG::Util::convertRgbToQColor(evaluateJavascript(QLatin1String("getTextBackgroundColor()")).toString());
     const int result = KColorDialog::getColor(newColor,q);
     if(result == QDialog::Accepted) {
         execCommand(QLatin1String("hiliteColor"), newColor.name());
@@ -313,7 +268,7 @@ void ComposerViewPrivate::_k_slotDeleteText()
 
 void ComposerViewPrivate::_k_setTextForegroundColor()
 {
-    QColor newColor = convertRgbToQColor(evaluateJavascript(QLatin1String("getTextForegroundColor()")).toString());
+    QColor newColor = ComposerEditorNG::Util::convertRgbToQColor(evaluateJavascript(QLatin1String("getTextForegroundColor()")).toString());
     const int result = KColorDialog::getColor(newColor,q);
     if(result == QDialog::Accepted) {
         execCommand(QLatin1String("foreColor"), newColor.name());
@@ -370,10 +325,9 @@ void ComposerViewPrivate::_k_insertLink()
 {
     QPointer<ComposerEditorNG::ManageLink> dlg = new ComposerEditorNG::ManageLink( q );
     if( dlg->exec() == KDialog::Accepted ) {
-        const QUrl url = guessUrlFromString(dlg->linkLocation());
+        const QUrl url = ComposerEditorNG::Util::guessUrlFromString(dlg->linkLocation());
         if(url.isValid()){
             const QString html = QString::fromLatin1( "<a href=\'%1\'>%2</a>" ).arg ( url.toString() ).arg ( dlg->linkText() );
-            qDebug()<<html;
             execCommand ( QLatin1String("insertHTML"), html );
         }
     }
@@ -575,7 +529,9 @@ ComposerView::ComposerView(QWidget *parent)
 
     page()->setContentEditable(true);
     page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
+    connect(this, SIGNAL(linkClicked(QUrl)), SIGNAL(openLink(QUrl)));
     connect( page(), SIGNAL (selectionChanged()), this, SLOT(_k_slotAdjustActions()) );
+
     setWindowModified(false);
 
 }
