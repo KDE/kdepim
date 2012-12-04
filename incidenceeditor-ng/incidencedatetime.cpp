@@ -875,7 +875,8 @@ bool IncidenceDateTime::startDateTimeEnabled() const
 
 bool IncidenceDateTime::endDateTimeEnabled() const
 {
-  return mUi->mEndCheck->isChecked();
+  // For journals, it isn't visible
+  return mUi->mEndCheck->isChecked() && mUi->mEndCheck->isVisible();
 }
 
 bool IncidenceDateTime::isValid() const
