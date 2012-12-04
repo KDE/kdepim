@@ -40,6 +40,9 @@ public:
     QColor pageBackgroundColor() const;
     void setPageBackgroundColor(const QColor &);
 
+    QColor textColor() const;
+    void setTextColor(const QColor &);
+
     void setUseDefaultColor(bool b);
     bool useDefaultColor() const;
 

@@ -45,6 +45,17 @@ void PageColorBackgroundWidget::setPageBackgroundColor(const QColor &col)
     ui->backgroundColor->setColor(col);
 }
 
+QColor PageColorBackgroundWidget::textColor() const
+{
+    return ui->textColor->color();
+}
+
+void PageColorBackgroundWidget::setTextColor(const QColor &col)
+{
+    ui->textColor->setColor(col);
+}
+
+
 void PageColorBackgroundWidget::setUseDefaultColor(bool b)
 {
     if(b)

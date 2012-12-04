@@ -53,8 +53,10 @@ void PageColorBackgroundDialog::slotOkClicked()
         if(!element.isNull()) {
             if(mPageColorWidget->useDefaultColor()) {
                 element.removeAttribute(QLatin1String("bgcolor"));
+                element.removeAttribute(QLatin1String("text"));
             } else {
                 element.setAttribute(QLatin1String("bgcolor"),mPageColorWidget->pageBackgroundColor().name());
+                element.setAttribute(QLatin1String("text"),mPageColorWidget->textColor().name());
             }
         }
     }
@@ -66,9 +68,11 @@ void PageColorBackgroundDialog::initSettings()
     if(mFrame) {
         const QWebElement element = mFrame->findFirstElement(QLatin1String("body"));
         if(!element.isNull()) {
-            if(element.hasAttribute(QLatin1String("bgcolor"))) {
+            if(element.hasAttribute(QLatin1String("bgcolor"))||
+                    element.hasAttribute(QLatin1String("text"))) {
                 mPageColorWidget->setUseDefaultColor(false);
                 mPageColorWidget->setPageBackgroundColor(QColor(element.attribute(QLatin1String("bgcolor"))));
+                mPageColorWidget->setTextColor(QColor(element.attribute(QLatin1String("text"))));
             } else {
                 mPageColorWidget->setUseDefaultColor(true);
             }
