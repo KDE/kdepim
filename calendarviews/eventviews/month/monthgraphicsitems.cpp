@@ -229,7 +229,7 @@ void MonthGraphicsItem::paint( QPainter *p, const QStyleOptionGraphicsItem *, QW
 
   p->setRenderHint( QPainter::Antialiasing );
 
-  int textMargin = 10;
+  int textMargin = 7;
 
   QColor bgColor = mMonthItem->bgColor();
   bgColor = mMonthItem->selected() ?
