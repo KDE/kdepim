@@ -69,4 +69,14 @@ bool PageColorBackgroundWidget::useDefaultColor() const
     return ui->defaultColor->isChecked();
 }
 
+KUrl PageColorBackgroundWidget::backgroundImageUrl() const
+{
+    return ui->backgroundImage->url();
+}
+
+void PageColorBackgroundWidget::setBackgroundImageUrl(const KUrl& url)
+{
+    ui->backgroundImage->setUrl(url);
+}
+
 #include "pagecolorbackgroundwidget.moc"

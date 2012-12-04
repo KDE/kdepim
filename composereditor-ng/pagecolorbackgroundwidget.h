@@ -22,6 +22,7 @@
 #define PAGECOLORBACKGROUNDWIDGET_H
 
 #include <QWidget>
+class KUrl;
 
 namespace Ui {
 class PageColorBackgroundWidget;
@@ -46,6 +47,8 @@ public:
     void setUseDefaultColor(bool b);
     bool useDefaultColor() const;
 
+    KUrl backgroundImageUrl() const;
+    void setBackgroundImageUrl(const KUrl& url);
 private:
     Ui::PageColorBackgroundWidget *ui;
 };
