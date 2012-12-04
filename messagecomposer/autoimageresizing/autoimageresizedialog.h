@@ -19,6 +19,7 @@
 #define AUTOIMAGERESIZEDIALOG_H
 
 #include <KDialog>
+#include <QBuffer>
 class QCheckBox;
 class QSpinBox;
 
@@ -28,15 +29,12 @@ class AutoImageResizeDialog : public KDialog
 {
   Q_OBJECT
 public:
-  enum ImageType {
-      JPEG = 0,
-      PNG
-  };
   explicit AutoImageResizeDialog(QWidget *parent = 0);
   ~AutoImageResizeDialog();
 
-  void setImageFromData(const QByteArray& data, ImageType type);
-  QByteArray imageData() const;
+  void setImageFromData(const QByteArray& data);
+  QByteArray imageData();
+  QByteArray mimetype() const;
 
 private Q_SLOTS:
   void slotUser1();
@@ -46,6 +44,8 @@ private Q_SLOTS:
 
 private:
   qreal mImageRatio;
+  QImage mImage;
+  QBuffer mBuffer;
   QCheckBox *mKeepOriginalSize;
   QCheckBox *mKeepImageRatio;
   QSpinBox *mWidth;
