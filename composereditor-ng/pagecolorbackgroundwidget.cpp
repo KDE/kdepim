@@ -21,7 +21,8 @@
 #include "pagecolorbackgroundwidget.h"
 #include "ui_pagecolorbackgroundwidget.h"
 
-#include <QImageReader>
+#include <KImageIO>
+#include <KFileDialog>
 
 using namespace ComposerEditorNG;
 
@@ -30,16 +31,9 @@ PageColorBackgroundWidget::PageColorBackgroundWidget(QWidget *parent) :
     ui(new Ui::PageColorBackgroundWidget)
 {
     ui->setupUi(this);
-    QString imageFormat;
-    QList<QByteArray> listReaderFormat = QImageReader::supportedImageFormats();
-    Q_FOREACH(const QByteArray& format, listReaderFormat) {
-        if(imageFormat.isEmpty()) {
-            imageFormat = QString::fromLatin1("*.%1").arg(QString::fromLatin1(format));
-        } else {
-            imageFormat += QString::fromLatin1(" *.%1").arg(QString::fromLatin1(format));
-        }
-    }
-    ui->backgroundImage->setFilter(imageFormat);
+
+    const QStringList mimetypes = KImageIO::mimeTypes( KImageIO::Reading );
+    ui->backgroundImage->fileDialog()->setFilter(mimetypes.join( QLatin1String( " " ) ));
 }
 
 PageColorBackgroundWidget::~PageColorBackgroundWidget()
