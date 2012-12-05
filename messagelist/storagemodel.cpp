@@ -40,7 +40,6 @@
 
 
 #include <KDE/KLocale>
-#include <Nepomuk/ResourceManager>
 #include <Soprano/Statement>
 #include <soprano/signalcachemodel.h>
 #include <soprano/nao.h>
