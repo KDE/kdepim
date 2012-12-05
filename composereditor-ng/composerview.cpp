@@ -329,6 +329,10 @@ void ComposerViewPrivate::_k_slotInsertHorizontalRule()
 void ComposerViewPrivate::_k_insertLink()
 {
     QPointer<ComposerEditorNG::ManageLink> dlg = new ComposerEditorNG::ManageLink( q );
+    const QString selectedText = q->selectedText();
+    if(!selectedText.isEmpty()) {
+        dlg->setLinkText(selectedText);
+    }
     if( dlg->exec() == KDialog::Accepted ) {
         const QUrl url = ComposerEditorNG::Util::guessUrlFromString(dlg->linkLocation());
         if(url.isValid()){
