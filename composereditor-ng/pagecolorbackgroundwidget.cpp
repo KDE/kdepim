@@ -21,6 +21,8 @@
 #include "pagecolorbackgroundwidget.h"
 #include "ui_pagecolorbackgroundwidget.h"
 
+#include <QImageReader>
+
 using namespace ComposerEditorNG;
 
 PageColorBackgroundWidget::PageColorBackgroundWidget(QWidget *parent) :
@@ -28,6 +30,16 @@ PageColorBackgroundWidget::PageColorBackgroundWidget(QWidget *parent) :
     ui(new Ui::PageColorBackgroundWidget)
 {
     ui->setupUi(this);
+    QString imageFormat;
+    QList<QByteArray> listReaderFormat = QImageReader::supportedImageFormats();
+    Q_FOREACH(const QByteArray& format, listReaderFormat) {
+        if(imageFormat.isEmpty()) {
+            imageFormat = QString::fromLatin1("*.%1").arg(QString::fromLatin1(format));
+        } else {
+            imageFormat += QString::fromLatin1(" *.%1").arg(QString::fromLatin1(format));
+        }
+    }
+    ui->backgroundImage->setFilter(imageFormat);
 }
 
 PageColorBackgroundWidget::~PageColorBackgroundWidget()
