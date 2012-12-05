@@ -61,6 +61,7 @@ ComposerEditor::ComposerEditor(QWidget *parent)
     vlay->addWidget(d->findReplaceBar);
     setLayout(vlay);
     connect(d->view,SIGNAL(showFindBar()),d->findReplaceBar,SLOT(showAndFocus()));
+    connect(d->view,SIGNAL(openLink(QUrl)),SIGNAL(openLink(QUrl)));
 }
 
 ComposerEditor::~ComposerEditor()
@@ -125,7 +126,10 @@ void ComposerEditor::redo()
     d->view->page()->triggerAction(QWebPage::Redo);
 }
 
-
+QAction* ComposerEditor::action(QWebPage::WebAction action)
+{
+    return d->view->page()->action(action);
+}
 }
 
 #include "composereditor.moc"

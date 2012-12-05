@@ -521,7 +521,7 @@ void IncidenceMonthItem::updateSelection( const Akonadi::Item &incidence, const 
 QString IncidenceMonthItem::text( bool end ) const
 {
   QString ret = mIncidence->summary();
-  if ( !allDay() && monthScene()->monthView()->preferences()->showTimeInMonthView() ) {
+  if ( !allDay() && !mIsJournal && monthScene()->monthView()->preferences()->showTimeInMonthView() ) {
     // Prepend the time str to the text
     QString timeStr;
     if ( mIsTodo ) {

@@ -18,40 +18,21 @@
 
 */
 
-#ifndef PAGECOLORBACKGROUNDWIDGET_H
-#define PAGECOLORBACKGROUNDWIDGET_H
+#ifndef COMPOSEREDITORUTIL_P_H
+#define COMPOSEREDITORUTIL_P_H
 
-#include <QWidget>
-class KUrl;
-
-namespace Ui {
-class PageColorBackgroundWidget;
-}
+#include <QColor>
+#include <QString>
+#include <QUrl>
 
 namespace ComposerEditorNG
 {
-class PageColorBackgroundWidget : public QWidget
-{
-    Q_OBJECT
-    
-public:
-    explicit PageColorBackgroundWidget(QWidget *parent = 0);
-    ~PageColorBackgroundWidget();
-    
-    QColor pageBackgroundColor() const;
-    void setPageBackgroundColor(const QColor &);
 
-    QColor textColor() const;
-    void setTextColor(const QColor &);
-
-    void setUseDefaultColor(bool b);
-    bool useDefaultColor() const;
-
-    KUrl backgroundImageUrl() const;
-    void setBackgroundImageUrl(const KUrl& url);
-private:
-    Ui::PageColorBackgroundWidget *ui;
-};
+namespace Util {
+QColor convertRgbToQColor(QString rgb);
+QUrl guessUrlFromString(const QString &string);
 }
 
-#endif // PAGECOLORBACKGROUNDWIDGET_H
+}
+
+#endif // COMPOSEREDITORUTIL_P_H

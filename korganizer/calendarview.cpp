@@ -50,6 +50,7 @@
 #include "views/monthview/monthview.h"
 #include "views/multiagendaview/multiagendaview.h"
 #include "views/todoview/kotodoview.h"
+#include "kocheckableproxymodel.h"
 
 #include <calendarsupport/calendaradaptor.h>
 #include <calendarsupport/categoryconfig.h>
@@ -102,7 +103,8 @@ CalendarView::CalendarView( QWidget *parent )
     mHistory( 0 ),
     mCalendar( 0 ),
     mChanger( 0 ),
-    mSplitterSizesValid( false )
+    mSplitterSizesValid( false ),
+    mCheckableProxyModel( 0 )
 {
   Akonadi::Control::widgetNeedsAkonadi( this );
   Akonadi::AttributeFactory::registerAttribute<PimCommon::ImapAclAttribute>();
@@ -1299,6 +1301,16 @@ void CalendarView::newJournal( const Akonadi::Collection &collection )
 {
   IncidenceEditorNG::IncidenceDefaults defaults =
     IncidenceEditorNG::IncidenceDefaults::minimalIncidenceDefaults();
+
+  bool allDay = true;
+  if ( mViewManager->currentView()->isEventView() ) {
+    QDateTime startDt;
+    QDateTime endDt;
+    dateTimesForNewEvent( startDt, endDt, allDay );
+
+    defaults.setStartDateTime( KDateTime( startDt ) );
+    defaults.setEndDateTime( KDateTime( endDt ) );
+  }
 
   Journal::Ptr journal( new Journal );
   defaults.setDefaults( journal );
@@ -3021,6 +3033,39 @@ IncidenceEditorNG::IncidenceDialog *CalendarView::createIncidenceEditor(
   }
 
   return dialog;
+}
+
+void CalendarView::setCheckableProxyModel( KOCheckableProxyModel *model )
+{
+  if ( mCheckableProxyModel )
+    mCheckableProxyModel->disconnect( this );
+
+  mCheckableProxyModel = model;
+  connect( model, SIGNAL(aboutToToggle(bool)), SLOT(onCheckableProxyAboutToToggle(bool)) );
+  connect( model, SIGNAL(toggled(bool)), SLOT(onCheckableProxyToggled(bool)) );
+
+}
+
+void CalendarView::onCheckableProxyAboutToToggle( bool newState )
+{
+  // Someone unchecked a collection, save the view state now.
+  if ( !newState ) {
+    mTodoList->saveViewState();
+    KOTodoView *todoView = mViewManager->todoView();
+    if ( todoView )
+      todoView->saveViewState();
+  }
+}
+
+void CalendarView::onCheckableProxyToggled( bool newState )
+{
+  // Someone checked a collection, restore the view state now.
+  if ( newState ) {
+    mTodoList->restoreViewState();
+    KOTodoView *todoView =  mViewManager->todoView();
+    if ( todoView )
+      todoView->restoreViewState();
+  }
 }
 
 #include "calendarview.moc"

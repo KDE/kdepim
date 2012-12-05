@@ -127,7 +127,7 @@
            <item row="0" column="1">
             <widget class="KIntSpinBox" name="customMinimumWidth">
              <property name="suffix">
-              <string>pt</string>
+              <string> pt</string>
              </property>
              <property name="minimum">
               <number>1</number>
@@ -140,7 +140,7 @@
            <item row="2" column="1">
             <widget class="KIntSpinBox" name="customMinimumHeight">
              <property name="suffix">
-              <string>pt</string>
+              <string> pt</string>
              </property>
              <property name="minimum">
               <number>1</number>
@@ -208,7 +208,7 @@
            <item row="0" column="1">
             <widget class="KIntSpinBox" name="customMaximumWidth">
              <property name="suffix">
-              <string>pt</string>
+              <string> pt</string>
              </property>
              <property name="minimum">
               <number>1</number>
@@ -221,7 +221,7 @@
            <item row="2" column="1">
             <widget class="KIntSpinBox" name="customMaximumHeight">
              <property name="suffix">
-              <string>pt</string>
+              <string> pt</string>
              </property>
              <property name="minimum">
               <number>1</number>

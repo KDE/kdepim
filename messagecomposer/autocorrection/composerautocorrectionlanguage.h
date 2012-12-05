@@ -26,12 +26,20 @@ namespace MessageComposer {
 class MESSAGECOMPOSER_EXPORT ComposerAutoCorrectionLanguage : public KComboBox
 {
 public:
-  explicit ComposerAutoCorrectionLanguage(QWidget *parent);
-  ~ComposerAutoCorrectionLanguage();
+    explicit ComposerAutoCorrectionLanguage(QWidget *parent);
+    ~ComposerAutoCorrectionLanguage();
 
-  QString language() const;
+    /**
+    * @brief language
+    * @return specified language
+    */
+    QString language() const;
 
-  void setLanguage(const QString &language);
+    /**
+     * @brief setLanguage
+     * @param language define specified language
+     */
+    void setLanguage(const QString &language);
 };
 
 }
