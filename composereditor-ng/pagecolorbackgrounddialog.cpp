@@ -61,7 +61,8 @@ void PageColorBackgroundDialog::slotOkClicked()
             if(mPageColorWidget->backgroundImageUrl().isEmpty()) {
                 element.removeAttribute(QLatin1String("background"));
             } else {
-                //TODO
+                //FIX IT
+                element.setAttribute(QLatin1String("background"),QString::fromLatin1("file://%1").arg(mPageColorWidget->backgroundImageUrl().path()));
             }
         }
     }
@@ -82,7 +83,7 @@ void PageColorBackgroundDialog::initSettings()
                 mPageColorWidget->setUseDefaultColor(true);
             }
             if(element.hasAttribute(QLatin1String("background"))) {
-                //mPageColorWidget->setBackgroundImageUrl();
+                mPageColorWidget->setBackgroundImageUrl(KUrl(element.attribute(QLatin1String("background"))));
             }
         }
     }
