@@ -28,6 +28,13 @@
 
 #include <QObject>
 
+namespace Nepomuk2 {
+class Resource;
+namespace Query {
+class Result;
+}
+}
+
 namespace MailCommon {
 
 class FilterActionDict;
@@ -153,14 +160,23 @@ class MAILCOMMON_EXPORT FilterManager : public QObject
      */
     void endUpdate();
 
+    QStringList tagList() const;
+
   private Q_SLOTS:
     void slotServerStateChanged(Akonadi::ServerManager::State);
+    void slotFinishedTagListing();
+    void slotNewTagEntries(const QList<Nepomuk2::Query::Result>&);
+    void slotReadConfig();
+    void slotResourceCreated(const Nepomuk2::Resource& resource);
+    void slotResourceRemoved(const QUrl&,const QList<QUrl>&);
 
   Q_SIGNALS:
     /**
      * This signal is emitted whenever the filter list has been updated.
      */
     void filtersChanged();
+
+    void tagListingFinished();
 
   private:
     FilterManager();
