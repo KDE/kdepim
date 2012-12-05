@@ -81,8 +81,10 @@ void FilterEditDialog::setFilter( const Filter &filter )
 
   if ( filter.matchRule() == Filter::Matching )
     mMatchRuleGroup->setButton( 0 );
-  else
+  else if ( filter.matchRule() == Filter::MatchingAll )
     mMatchRuleGroup->setButton( 1 );
+  else
+    mMatchRuleGroup->setButton( 2 );
 }
 
 Filter FilterEditDialog::filter()
@@ -104,6 +106,8 @@ Filter FilterEditDialog::filter()
 
   if ( mMatchRuleGroup->find( 0 )->isOn() )
     filter.setMatchRule( Filter::Matching );
+  else if ( mMatchRuleGroup->find( 1 )->isOn() )
+    filter.setMatchRule( Filter::MatchingAll );
   else
     filter.setMatchRule( Filter::NotMatching );
 
@@ -139,8 +143,12 @@ void FilterEditDialog::initGUI()
   gbLayout->setSpacing( KDialog::spacingHint() );
   gbLayout->setMargin( KDialog::marginHint() );
 
-  QRadioButton *radio = new QRadioButton( i18n( "Show only contacts matching the selected categories" ), mMatchRuleGroup );
+  QRadioButton *radio = new QRadioButton( i18n( "Show only contacts matching any of the selected categories" ), mMatchRuleGroup );
   radio->setChecked( true );
+  mMatchRuleGroup->insert( radio );
+  gbLayout->addWidget( radio );
+
+  radio = new QRadioButton( i18n( "Show only contacts matching all of the selected categories" ), mMatchRuleGroup );
   mMatchRuleGroup->insert( radio );
   gbLayout->addWidget( radio );
 

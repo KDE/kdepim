@@ -79,7 +79,7 @@ bool Filter::filterAddressee( const KABC::Addressee &a ) const
   // empty filter always matches
 
   if ( iter == mCategoryList.end() ) {
-    if ( mMatchRule == Matching )
+    if ( mMatchRule == Matching || mMatchRule == MatchingAll )
       return true;
     else {
       if ( a.categories().empty() )
@@ -89,12 +89,20 @@ bool Filter::filterAddressee( const KABC::Addressee &a ) const
     }
   }
 
-  for ( ; iter != mCategoryList.end(); ++iter ) {
-    if ( a.hasCategory( *iter ) )
-      return ( mMatchRule == Matching );
+  if ( mMatchRule == Matching ) {
+    for ( ; iter != mCategoryList.end(); ++iter ) {
+      if ( a.hasCategory( *iter ) )
+        return true;
+    }
+  } else if ( mMatchRule == MatchingAll ) {
+    for ( ; iter != mCategoryList.end(); ++iter ) {
+      if ( !a.hasCategory( *iter ) )
+        return false;
+    }
+    return true;
   }
 
-  return !( mMatchRule == Matching );
+  return ( mMatchRule == NotMatching );
 }
 
 void Filter::setEnabled( bool on )

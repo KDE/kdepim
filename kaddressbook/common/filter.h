@@ -41,7 +41,7 @@ class Filter
   public:
     typedef QValueList<Filter> List;
 
-    enum MatchRule { Matching = 0, NotMatching = 1 };
+    enum MatchRule { Matching = 0, NotMatching = 1, MatchingAll = 2};
 
     Filter();
     Filter( const QString& name );
