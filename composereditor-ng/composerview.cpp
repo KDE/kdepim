@@ -116,6 +116,7 @@ public:
     void _k_slotDeleteText();
     void _k_slotChangePageColorAndBackground();
     void _k_slotToggleBlockQuote();
+    void _k_slotEditImage();
 
     QAction* getAction ( QWebPage::WebAction action ) const;
     QVariant evaluateJavascript(const QString& command);
@@ -291,6 +292,11 @@ void ComposerViewPrivate::_k_slotAddImage()
         execCommand(QLatin1String("insertHTML"), imageHtml);
     }
     delete dlg;
+}
+
+void ComposerViewPrivate::_k_slotEditImage()
+{
+    //TODO
 }
 
 void ComposerViewPrivate::_k_slotInsertTable()
@@ -821,10 +827,10 @@ void ComposerView::contextMenuEvent(QContextMenuEvent* event)
         menu->addSeparator();
     }
     if(imageSelected) {
-        //TODO
+        QAction *editImageAction = menu->addAction(i18n("Edit Image..."));
+        connect( editImageAction, SIGNAL(triggered(bool)), this, SLOT(_k_slotEditImage()) );
     } else if(linkSelected) {
-        QAction *editLinkAction = menu->addAction(i18n("Edit Link"));
-        editLinkAction->setEnabled(!emptyDocument );
+        QAction *editLinkAction = menu->addAction(i18n("Edit Link..."));
         connect( editLinkAction, SIGNAL(triggered(bool)), this, SLOT(_k_slotEditLink()) );
     }
     menu->addSeparator();
