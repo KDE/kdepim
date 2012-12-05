@@ -17,7 +17,7 @@ set(libcomposereditor_ng_SRCS
     composereditorutil.cpp
 )
 
-kde4_add_ui_files(libcomposereditor_ng_SRCS pagecolorbackgroundwidget.ui )
+kde4_add_ui_files(libcomposereditor_ng_SRCS ui/pagecolorbackgroundwidget.ui )
 
 
 kde4_add_library(composereditorng ${LIBRARY_TYPE} ${libcomposereditor_ng_SRCS})
