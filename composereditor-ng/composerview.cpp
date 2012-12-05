@@ -345,7 +345,8 @@ void ComposerViewPrivate::_k_insertLink()
 
 void ComposerViewPrivate::_k_slotEditLink()
 {
-    //TODO
+    ComposerEditorNG::ManageLink dlg( contextMenuResult.linkElement(), q );
+    dlg.exec();
 }
 
 void ComposerViewPrivate::_k_setFontSize(int fontSize)

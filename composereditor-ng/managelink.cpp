@@ -19,17 +19,38 @@
 */
 
 #include "managelink.h"
-#include <QVBoxLayout>
-#include <QLabel>
 #include <KLineEdit>
 #include <KLocale>
+
+#include <QVBoxLayout>
+#include <QLabel>
 
 using namespace ComposerEditorNG;
 
 ManageLink::ManageLink(QWidget *parent)
-    :KDialog(parent)
+    : KDialog(parent)
 {
-    setCaption( i18n( "Link" ) );
+    setCaption( i18n( "Create Link" ) );
+    initialize();
+}
+
+ManageLink::ManageLink(const QWebElement& element, QWidget *parent)
+    : KDialog(parent),
+      mWebElement(element)
+{
+    setCaption( i18n( "Edit Link" ) );
+    initialize();
+    mLinkLocation->setText(mWebElement.attribute(QLatin1String("href")));
+    mLinkText->setText(mWebElement.toInnerXml());
+}
+
+ManageLink::~ManageLink()
+{
+}
+
+void ManageLink::initialize()
+{
+
     setButtons( Ok | Cancel );
 
     QVBoxLayout *layout = new QVBoxLayout( mainWidget() );
@@ -38,17 +59,16 @@ ManageLink::ManageLink(QWidget *parent)
     layout->addWidget( label );
 
     mLinkText = new KLineEdit;
+    mLinkText->setReadOnly(!mWebElement.isNull());
+    mLinkText->setClearButtonShown(true);
     layout->addWidget( mLinkText );
 
     label = new QLabel(i18n("Enter the location:"));
     layout->addWidget( label );
     mLinkLocation = new KLineEdit;
+    mLinkLocation->setClearButtonShown(true);
     layout->addWidget( mLinkLocation );
-}
-
-ManageLink::~ManageLink()
-{
-
+    connect(this,SIGNAL(okClicked()),this,SLOT(slotOkClicked()));
 }
 
 void ManageLink::setLinkText(const QString& link)
@@ -71,5 +91,16 @@ QString ManageLink::linkLocation() const
     return mLinkLocation->text();
 }
 
+void ManageLink::slotOkClicked()
+{
+    if(!mWebElement.isNull()) {
+        if(mLinkLocation->text().isEmpty()) {
+            mWebElement.removeAttribute(QLatin1String("href"));
+        } else {
+            mWebElement.setAttribute(QLatin1String("href"), mLinkLocation->text());
+        }
+    }
+    accept();
+}
 
 #include "managelink.moc"
