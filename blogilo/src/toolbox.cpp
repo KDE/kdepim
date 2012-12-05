@@ -541,7 +541,7 @@ void Toolbox::setDateTimeNow()
 void Toolbox::requestEntriesListContextMenu( const QPoint & pos )
 {
     Q_UNUSED(pos);
-    KMenu *entriesContextMenu = new KMenu( this );
+    KMenu *entriesContextMenu = new KMenu;
     KAction *actEntriesOpenInBrowser = new KAction( KIcon("applications-internet"),
                                                     i18n("Open in browser"), entriesContextMenu );
     connect( actEntriesOpenInBrowser, SIGNAL(triggered()), this, SLOT(openPostInBrowser()) );
@@ -555,6 +555,7 @@ void Toolbox::requestEntriesListContextMenu( const QPoint & pos )
     entriesContextMenu->addAction( actEntriesCopyUrl );
     entriesContextMenu->addAction( actEntriesCopyTitle );
     entriesContextMenu->exec( QCursor::pos() );
+    delete entriesContextMenu;
 }
 
 void Toolbox::openPostInBrowser()
