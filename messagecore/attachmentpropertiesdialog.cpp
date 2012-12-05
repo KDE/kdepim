@@ -216,7 +216,7 @@ void AttachmentPropertiesDialog::Private::loadFromPart()
 
   ui.mimeType->setCurrentItem( mPart->mimeType(), true );
   ui.size->setText( KGlobal::locale()->formatByteSize( mPart->size() ) );
-  ui.name->setText( mPart->name() );
+  ui.name->setText( mPart->name().isEmpty() ? mPart->fileName() : mPart->name()  );
   ui.description->setText( mPart->description() );
   ui.encoding->setCurrentIndex( int( mPart->encoding() ) );
   ui.autoDisplay->setChecked( mPart->isInline() );
