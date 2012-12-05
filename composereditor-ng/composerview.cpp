@@ -180,7 +180,6 @@ QAction* ComposerViewPrivate::getAction ( QWebPage::WebAction action ) const
 
 static QVariant execJScript(QWebElement element, const QString& script)
 {
-    qDebug()<<" element.isNull()"<<element.isNull();
     if (element.isNull())
         return QVariant();
     return element.evaluateJavaScript(script);
