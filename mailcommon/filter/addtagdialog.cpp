@@ -19,6 +19,9 @@
 #include "mailcommon/tagwidget.h"
 
 #include <KLocale>
+#include <KLineEdit>
+
+#include <Nepomuk2/Tag>
 
 #include <QVBoxLayout>
 
@@ -42,7 +45,13 @@ AddTagDialog::~AddTagDialog()
 
 void AddTagDialog::slotOk()
 {
-  //TODO
+  //TODO save result
+    const QString name(mTagWidget->tagNameLineEdit()->text());
+  Nepomuk2::Tag nepomukTag(name);
+  nepomukTag.setLabel(name);
+
+
+
 }
 
 #include "addtagdialog.moc"

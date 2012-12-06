@@ -23,10 +23,7 @@
 
 #include <Nepomuk2/Tag>
 #include <Nepomuk2/Resource>
-#include <Nepomuk2/Query/ResourceTypeTerm>
-#include <Nepomuk2/Query/QueryServiceClient>
-#include <Nepomuk2/Query/Result>
-#include <Soprano/Vocabulary/NAO>
+#include <Nepomuk2/ResourceManager>
 
 #include <QTextDocument>
 #include <QPointer>
@@ -62,13 +59,15 @@ bool FilterActionAddTag::argsFromStringInteractive( const QString &argsStr, cons
   if( mParameterList.isEmpty() )
     return false;
   const int index = mParameterList.indexOf( mParameter );
-  if ( index == -1 ) {
-    QPointer<FilterActionMissingTagDialog> dlg = new FilterActionMissingTagDialog( mParameterList, filterName, argsStr );
-    if ( dlg->exec() ) {
-      mParameter = dlg->selectedTag();
-      needUpdate = true;
+  if ( Nepomuk2::ResourceManager::instance()->initialized() ) {
+    if ( index == -1 ) {
+      QPointer<FilterActionMissingTagDialog> dlg = new FilterActionMissingTagDialog( mParameterList, filterName, argsStr );
+      if ( dlg->exec() ) {
+        mParameter = dlg->selectedTag();
+        needUpdate = true;
+      }
+      delete dlg;
     }
-    delete dlg;
   }
   return needUpdate;
 }
