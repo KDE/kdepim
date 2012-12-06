@@ -27,6 +27,7 @@
 #include <KDE/KPIMIdentities/IdentityManager>
 
 #include <KDE/KLocale>
+#include <QPointer>
 
 using namespace MailCommon;
 
@@ -47,7 +48,7 @@ bool FilterActionSetIdentity::argsFromStringInteractive( const QString &argsStr,
   argsFromString( argsStr );
   if ( KernelIf->identityManager()->identityForUoid( mParameter ).isNull() )
   {
-    FilterActionMissingIdentityDialog *dlg = new FilterActionMissingIdentityDialog( filterName );
+    QPointer<FilterActionMissingIdentityDialog> dlg = new FilterActionMissingIdentityDialog( filterName );
     if ( dlg->exec() ) {
       mParameter = dlg->selectedIdentity();
       needUpdate = true;
