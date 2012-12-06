@@ -46,10 +46,10 @@ AddTagDialog::~AddTagDialog()
 void AddTagDialog::slotOk()
 {
   //TODO save result
-    const QString name(mTagWidget->tagNameLineEdit()->text());
+  const QString name(mTagWidget->tagNameLineEdit()->text());
   Nepomuk2::Tag nepomukTag(name);
   nepomukTag.setLabel(name);
-
+  accept();
 
 
 }
