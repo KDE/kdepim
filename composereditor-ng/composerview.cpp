@@ -22,6 +22,7 @@
 #include "managelink.h"
 #include "pagecolorbackgrounddialog.h"
 #include "composereditorutil_p.h"
+#include "composerimagedialog.h"
 
 
 #include <kpimtextedit/emoticontexteditaction.h>
@@ -277,26 +278,17 @@ void ComposerViewPrivate::_k_setTextForegroundColor()
 
 void ComposerViewPrivate::_k_slotAddImage()
 {
-    QPointer<KPIMTextEdit::InsertImageDialog> dlg = new KPIMTextEdit::InsertImageDialog( q );
+    QPointer<ComposerImageDialog> dlg = new ComposerImageDialog( q );
     if ( dlg->exec() == KDialog::Accepted ) {
-        const KUrl url = dlg->imageUrl();
-        int imageWidth = -1;
-        int imageHeight = -1;
-        if ( !dlg->keepOriginalSize() ) {
-            imageWidth = dlg->imageWidth();
-            imageHeight = dlg->imageHeight();
-        }
-        const QString imageHtml = QString::fromLatin1("<img %1 %2 %3 />").arg((imageWidth>0) ? QString::fromLatin1("width=%1").arg(imageWidth) : QString())
-                .arg((imageHeight>0) ? QString::fromLatin1("height=%1").arg(imageHeight) : QString())
-                .arg(url.isEmpty() ? QString() : QString::fromLatin1("src='file://%1'").arg(url.path()));
-        execCommand(QLatin1String("insertHTML"), imageHtml);
+        execCommand(QLatin1String("insertHTML"), dlg->html());
     }
     delete dlg;
 }
 
 void ComposerViewPrivate::_k_slotEditImage()
 {
-    //TODO
+    ComposerImageDialog dlg( contextMenuResult.element(),q );
+    dlg.exec();
 }
 
 void ComposerViewPrivate::_k_slotInsertTable()
@@ -328,17 +320,12 @@ void ComposerViewPrivate::_k_slotInsertHorizontalRule()
 
 void ComposerViewPrivate::_k_insertLink()
 {
-    QPointer<ComposerEditorNG::ManageLink> dlg = new ComposerEditorNG::ManageLink( q );
     const QString selectedText = q->selectedText();
-    if(!selectedText.isEmpty()) {
-        dlg->setLinkText(selectedText);
-    }
+    QPointer<ComposerEditorNG::ManageLink> dlg = new ComposerEditorNG::ManageLink( selectedText, q );
     if( dlg->exec() == KDialog::Accepted ) {
-        const QUrl url = ComposerEditorNG::Util::guessUrlFromString(dlg->linkLocation());
-        if(url.isValid()){
-            const QString html = QString::fromLatin1( "<a href=\'%1\'>%2</a>" ).arg ( url.toString() ).arg ( dlg->linkText() );
+        const QString html(dlg->html());
+        if(!html.isEmpty())
             execCommand ( QLatin1String("insertHTML"), html );
-        }
     }
     delete dlg;
 }

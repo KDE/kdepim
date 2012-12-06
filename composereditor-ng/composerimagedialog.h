@@ -29,10 +29,21 @@ namespace ComposerEditorNG
 class ComposerImageDialogPrivate;
 class ComposerImageDialog : public KDialog
 {
+    Q_OBJECT
 public:
     explicit ComposerImageDialog(QWidget *parent);
     explicit ComposerImageDialog(const QWebElement& element, QWidget *parent);
     ~ComposerImageDialog();
+
+    /**
+     * @brief html
+     * @return string which represents html code
+     */
+    QString html() const;
+
+private Q_SLOTS:
+    void slotOkClicked();
+
 private:
     friend class ComposerImageDialogPrivate;
     ComposerImageDialogPrivate * const d;

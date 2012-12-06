@@ -32,15 +32,11 @@ class ManageLink : public KDialog
 {
     Q_OBJECT
 public:
-    explicit ManageLink(QWidget *parent);
+    explicit ManageLink(const QString &selectedText, QWidget *parent);
     explicit ManageLink(const QWebElement& element, QWidget *parent);
     ~ManageLink();
 
-    void setLinkText(const QString& link);
-    QString linkText() const;
-
-    void setLinkLocation(const QString& location);
-    QString linkLocation() const;
+    QString html() const;
 
 public Q_SLOTS:
     void slotOkClicked();

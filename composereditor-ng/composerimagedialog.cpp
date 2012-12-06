@@ -36,11 +36,38 @@ public:
 
     void initialize();
 
+    QString html() const;
+
+    void updateImageHtml();
+
     QWebElement webElement;
 
     KPIMTextEdit::InsertImageWidget *imageWidget;
     ComposerImageDialog *q;
 };
+
+void ComposerImageDialogPrivate::updateImageHtml()
+{
+    int imageWidth = -1;
+    int imageHeight = -1;
+    if ( !imageWidget->keepOriginalSize() ) {
+        imageWidth = imageWidget->imageWidth();
+        imageHeight = imageWidget->imageHeight();
+    }
+    if(imageWidth == -1 ) {
+        webElement.removeAttribute(QLatin1String("width"));
+    } else {
+        webElement.setAttribute(QLatin1String("width"), QString::number(imageWidth));
+    }
+
+    if(imageHeight == -1 ) {
+        webElement.removeAttribute(QLatin1String("height"));
+    } else {
+        webElement.setAttribute(QLatin1String("height"), QString::number(imageHeight));
+    }
+
+    webElement.setAttribute(QLatin1String("src"), imageWidget->imageUrl().url());
+}
 
 void ComposerImageDialogPrivate::initialize()
 {
@@ -49,8 +76,29 @@ void ComposerImageDialogPrivate::initialize()
     q->setButtonText( KDialog::Ok, i18n( "Insert" ) );
     imageWidget = new KPIMTextEdit::InsertImageWidget(q);
     q->connect(imageWidget,SIGNAL(enableButtonOk(bool)),q,SLOT(enableButtonOk(bool)));
+    q->connect(q,SIGNAL(okClicked()),q,SLOT(slotOkClicked()));
     q->setMainWidget( imageWidget );
     q->enableButtonOk( false );
+    if(!webElement.isNull()) {
+        imageWidget->setImageUrl(webElement.attribute(QLatin1String("src")));
+        //TODO add height/width
+
+    }
+}
+
+QString ComposerImageDialogPrivate::html() const
+{
+    const KUrl url = imageWidget->imageUrl();
+    int imageWidth = -1;
+    int imageHeight = -1;
+    if ( !imageWidget->keepOriginalSize() ) {
+        imageWidth = imageWidget->imageWidth();
+        imageHeight = imageWidget->imageHeight();
+    }
+    const QString imageHtml = QString::fromLatin1("<img %1 %2 %3 />").arg((imageWidth>0) ? QString::fromLatin1("width=%1").arg(imageWidth) : QString())
+            .arg((imageHeight>0) ? QString::fromLatin1("height=%1").arg(imageHeight) : QString())
+            .arg(url.isEmpty() ? QString() : QString::fromLatin1("src='file://%1'").arg(url.path()));
+    return imageHtml;
 }
 
 ComposerImageDialog::ComposerImageDialog(QWidget *parent)
@@ -70,4 +118,19 @@ ComposerImageDialog::~ComposerImageDialog()
 {
     delete d;
 }
+
+QString ComposerImageDialog::html() const
+{
+    return d->html();
 }
+
+void ComposerImageDialog::slotOkClicked()
+{
+    if(!d->webElement.isNull()) {
+        d->updateImageHtml();
+    }
+    accept();
+}
+}
+
+#include "composerimagedialog.moc"

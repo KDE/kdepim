@@ -21,12 +21,14 @@
 #ifndef EXTENDATTRIBUTES_H
 #define EXTENDATTRIBUTES_H
 
+#include <QWidget>
+
 namespace ComposerEditorNG
 {
 class ExtendAttributes
 {
 public:
-    ExtendAttributes();
+    explicit ExtendAttributes(QWidget *parent);
     ~ExtendAttributes();
 };
 }

@@ -19,6 +19,8 @@
 */
 
 #include "managelink.h"
+#include "composereditorutil_p.h"
+
 #include <KLineEdit>
 #include <KLocale>
 
@@ -27,11 +29,12 @@
 
 using namespace ComposerEditorNG;
 
-ManageLink::ManageLink(QWidget *parent)
+ManageLink::ManageLink(const QString& selectedText, QWidget *parent)
     : KDialog(parent)
 {
     setCaption( i18n( "Create Link" ) );
     initialize();
+    mLinkText->setText(selectedText);
 }
 
 ManageLink::ManageLink(const QWebElement& element, QWidget *parent)
@@ -71,26 +74,6 @@ void ManageLink::initialize()
     connect(this,SIGNAL(okClicked()),this,SLOT(slotOkClicked()));
 }
 
-void ManageLink::setLinkText(const QString& link)
-{
-    mLinkText->setText(link);
-}
-
-QString ManageLink::linkText() const
-{
-    return mLinkText->text();
-}
-
-void ManageLink::setLinkLocation(const QString &location)
-{
-    mLinkLocation->setText(location);
-}
-
-QString ManageLink::linkLocation() const
-{
-    return mLinkLocation->text();
-}
-
 void ManageLink::slotOkClicked()
 {
     if(!mWebElement.isNull()) {
@@ -102,5 +85,16 @@ void ManageLink::slotOkClicked()
     }
     accept();
 }
+
+QString ManageLink::html() const
+{
+    const QUrl url = ComposerEditorNG::Util::guessUrlFromString(mLinkLocation->text());
+    if(url.isValid()){
+        const QString html = QString::fromLatin1( "<a href=\'%1\'>%2</a>" ).arg ( url.toString() ).arg ( mLinkText->text() );
+        return html;
+    }
+    return QString();
+}
+
 
 #include "managelink.moc"

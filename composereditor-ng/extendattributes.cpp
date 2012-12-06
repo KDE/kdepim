@@ -22,7 +22,7 @@
 
 using namespace ComposerEditorNG;
 
-ExtendAttributes::ExtendAttributes()
+ExtendAttributes::ExtendAttributes(QWidget *parent)
 {
 }
 
