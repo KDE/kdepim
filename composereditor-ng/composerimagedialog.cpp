@@ -22,6 +22,8 @@
 
 #include "kpimtextedit/insertimagewidget.h"
 
+#include <KLocale>
+
 namespace ComposerEditorNG {
 
 class ComposerImageDialogPrivate
@@ -30,7 +32,6 @@ public:
     ComposerImageDialogPrivate(ComposerImageDialog *qq)
         :q(qq)
     {
-        initialize();
     }
 
     void initialize();
@@ -43,18 +44,26 @@ public:
 
 void ComposerImageDialogPrivate::initialize()
 {
-
+    q->setCaption( webElement.isNull() ? i18n( "Insert Image" ) : i18n( "Edit Image" ));
+    q->setButtons( KDialog::Ok|KDialog::Cancel );
+    q->setButtonText( KDialog::Ok, i18n( "Insert" ) );
+    imageWidget = new KPIMTextEdit::InsertImageWidget(q);
+    q->connect(imageWidget,SIGNAL(enableButtonOk(bool)),q,SLOT(enableButtonOk(bool)));
+    q->setMainWidget( imageWidget );
+    q->enableButtonOk( false );
 }
 
 ComposerImageDialog::ComposerImageDialog(QWidget *parent)
     : KDialog(parent), d(new ComposerImageDialogPrivate(this))
 {
+    d->initialize();
 }
 
 ComposerImageDialog::ComposerImageDialog(const QWebElement& element, QWidget *parent)
     : KDialog(parent), d(new ComposerImageDialogPrivate(this))
 {
     d->webElement = element;
+    d->initialize();
 }
 
 ComposerImageDialog::~ComposerImageDialog()
