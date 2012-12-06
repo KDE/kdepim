@@ -81,6 +81,7 @@ FilterAction::ReturnCode FilterActionAddToAddressBook::process( ItemContext &con
       contact.insertCategory( mCategory );
 
     KPIM::AddContactJob *job = new KPIM::AddContactJob( contact, Akonadi::Collection( mCollectionId ) );
+    job->showMessageBox(false);
     job->start();    
   }
 
