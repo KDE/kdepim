@@ -28,6 +28,7 @@ class KLineEdit;
 
 namespace ComposerEditorNG
 {
+class ManagerLinkDialogPrivate;
 class ManageLink : public KDialog
 {
     Q_OBJECT
@@ -42,10 +43,8 @@ public Q_SLOTS:
     void slotOkClicked();
 
 private:
-    void initialize();
-    QWebElement mWebElement;
-    KLineEdit *mLinkText;
-    KLineEdit *mLinkLocation;
+    friend class ManagerLinkDialogPrivate;
+    ManagerLinkDialogPrivate * const d;
 };
 }
 

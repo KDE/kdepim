@@ -27,74 +27,106 @@
 #include <QVBoxLayout>
 #include <QLabel>
 
-using namespace ComposerEditorNG;
-
-ManageLink::ManageLink(const QString& selectedText, QWidget *parent)
-    : KDialog(parent)
+namespace ComposerEditorNG {
+class ManagerLinkDialogPrivate
 {
-    setCaption( i18n( "Create Link" ) );
-    initialize();
-    mLinkText->setText(selectedText);
-}
+public:
+    ManagerLinkDialogPrivate(ManageLink *qq)
+        :q(qq)
+    {
+    }
 
-ManageLink::ManageLink(const QWebElement& element, QWidget *parent)
-    : KDialog(parent),
-      mWebElement(element)
+    void initialize();
+
+    QString html() const;
+
+    void updateLinkHtml();
+
+    QWebElement webElement;
+    KLineEdit *linkText;
+    KLineEdit *linkLocation;
+    ManageLink *q;
+};
+
+void ManagerLinkDialogPrivate::initialize()
 {
-    setCaption( i18n( "Edit Link" ) );
-    initialize();
-    mLinkLocation->setText(mWebElement.attribute(QLatin1String("href")));
-    mLinkText->setText(mWebElement.toInnerXml());
-}
+    q->setButtons( KDialog::Ok | KDialog::Cancel );
 
-ManageLink::~ManageLink()
-{
-}
-
-void ManageLink::initialize()
-{
-
-    setButtons( Ok | Cancel );
-
-    QVBoxLayout *layout = new QVBoxLayout( mainWidget() );
+    QVBoxLayout *layout = new QVBoxLayout( q->mainWidget() );
 
     QLabel *label = new QLabel(i18n("Enter text to display for the link:"));
     layout->addWidget( label );
 
-    mLinkText = new KLineEdit;
-    mLinkText->setReadOnly(!mWebElement.isNull());
-    mLinkText->setClearButtonShown(true);
-    layout->addWidget( mLinkText );
+    linkText = new KLineEdit;
+    linkText->setReadOnly(!webElement.isNull());
+    linkText->setClearButtonShown(true);
+    layout->addWidget( linkText );
 
     label = new QLabel(i18n("Enter the location:"));
     layout->addWidget( label );
-    mLinkLocation = new KLineEdit;
-    mLinkLocation->setClearButtonShown(true);
-    layout->addWidget( mLinkLocation );
-    connect(this,SIGNAL(okClicked()),this,SLOT(slotOkClicked()));
+    linkLocation = new KLineEdit;
+    linkLocation->setClearButtonShown(true);
+    layout->addWidget( linkLocation );
+    q->connect(q,SIGNAL(okClicked()),q,SLOT(slotOkClicked()));
+
+}
+
+QString ManagerLinkDialogPrivate::html() const
+{
+    const QUrl url = ComposerEditorNG::Util::guessUrlFromString(linkLocation->text());
+    if(url.isValid()){
+        const QString html = QString::fromLatin1( "<a href=\'%1\'>%2</a>" ).arg ( url.toString() ).arg ( linkText->text() );
+        return html;
+    }
+    return QString();
+}
+
+void ManagerLinkDialogPrivate::updateLinkHtml()
+{
+    if(linkLocation->text().isEmpty()) {
+        webElement.removeAttribute(QLatin1String("href"));
+    } else {
+        webElement.setAttribute(QLatin1String("href"), linkLocation->text());
+    }
+}
+
+
+ManageLink::ManageLink(const QString& selectedText, QWidget *parent)
+    : KDialog(parent), d(new ManagerLinkDialogPrivate(this))
+{
+    setCaption( i18n( "Create Link" ) );
+    d->initialize();
+    d->linkText->setText(selectedText);
+}
+
+ManageLink::ManageLink(const QWebElement& element, QWidget *parent)
+    : KDialog(parent),d(new ManagerLinkDialogPrivate(this))
+{
+    setCaption( i18n( "Edit Link" ) );
+    d->initialize();
+    d->webElement = element;
+    d->linkLocation->setText(d->webElement.attribute(QLatin1String("href")));
+    d->linkText->setText(d->webElement.toInnerXml());
+}
+
+ManageLink::~ManageLink()
+{
+    delete d;
 }
 
 void ManageLink::slotOkClicked()
 {
-    if(!mWebElement.isNull()) {
-        if(mLinkLocation->text().isEmpty()) {
-            mWebElement.removeAttribute(QLatin1String("href"));
-        } else {
-            mWebElement.setAttribute(QLatin1String("href"), mLinkLocation->text());
-        }
+    if(!d->webElement.isNull()) {
+        d->updateLinkHtml();
     }
     accept();
 }
 
 QString ManageLink::html() const
 {
-    const QUrl url = ComposerEditorNG::Util::guessUrlFromString(mLinkLocation->text());
-    if(url.isValid()){
-        const QString html = QString::fromLatin1( "<a href=\'%1\'>%2</a>" ).arg ( url.toString() ).arg ( mLinkText->text() );
-        return html;
-    }
-    return QString();
+    return d->html();
 }
 
+}
 
 #include "managelink.moc"
