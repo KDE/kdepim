@@ -8,7 +8,7 @@ add_subdirectory(tests)
 
 set(libcomposereditor_ng_SRCS 
     composereditor.cpp
-    managelink.cpp
+    composerlinkdialog.cpp
     findreplacebar.cpp
     composerview.cpp
     pagecolorbackgrounddialog.cpp

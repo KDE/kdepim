@@ -18,8 +18,8 @@
 
 */
 
-#ifndef MANAGELINK_H
-#define MANAGELINK_H
+#ifndef ComposerLinkDialog_H
+#define ComposerLinkDialog_H
 #include <KDialog>
 
 #include <QWebElement>
@@ -28,14 +28,14 @@ class KLineEdit;
 
 namespace ComposerEditorNG
 {
-class ManagerLinkDialogPrivate;
-class ManageLink : public KDialog
+class ComposerLinkDialogPrivate;
+class ComposerLinkDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit ManageLink(const QString &selectedText, QWidget *parent);
-    explicit ManageLink(const QWebElement& element, QWidget *parent);
-    ~ManageLink();
+    explicit ComposerLinkDialog(const QString &selectedText, QWidget *parent);
+    explicit ComposerLinkDialog(const QWebElement& element, QWidget *parent);
+    ~ComposerLinkDialog();
 
     QString html() const;
 
@@ -43,9 +43,9 @@ public Q_SLOTS:
     void slotOkClicked();
 
 private:
-    friend class ManagerLinkDialogPrivate;
-    ManagerLinkDialogPrivate * const d;
+    friend class ComposerLinkDialogPrivate;
+    ComposerLinkDialogPrivate * const d;
 };
 }
 
-#endif // MANAGELINK_H
+#endif // ComposerLinkDialog_H

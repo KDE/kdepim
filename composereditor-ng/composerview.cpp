@@ -19,7 +19,7 @@
 */
 
 #include "composerview.h"
-#include "managelink.h"
+#include "composerlinkdialog.h"
 #include "pagecolorbackgrounddialog.h"
 #include "composereditorutil_p.h"
 #include "composerimagedialog.h"
@@ -321,7 +321,7 @@ void ComposerViewPrivate::_k_slotInsertHorizontalRule()
 void ComposerViewPrivate::_k_insertLink()
 {
     const QString selectedText = q->selectedText();
-    QPointer<ComposerEditorNG::ManageLink> dlg = new ComposerEditorNG::ManageLink( selectedText, q );
+    QPointer<ComposerEditorNG::ComposerLinkDialog> dlg = new ComposerEditorNG::ComposerLinkDialog( selectedText, q );
     if( dlg->exec() == KDialog::Accepted ) {
         const QString html(dlg->html());
         if(!html.isEmpty())
@@ -332,7 +332,7 @@ void ComposerViewPrivate::_k_insertLink()
 
 void ComposerViewPrivate::_k_slotEditLink()
 {
-    ComposerEditorNG::ManageLink dlg( contextMenuResult.linkElement(), q );
+    ComposerEditorNG::ComposerLinkDialog dlg( contextMenuResult.linkElement(), q );
     dlg.exec();
 }
 

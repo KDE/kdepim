@@ -23,6 +23,7 @@
 #include "kpimtextedit/insertimagewidget.h"
 
 #include <KLocale>
+#include <KLineEdit>
 
 namespace ComposerEditorNG {
 
@@ -43,6 +44,9 @@ public:
     QWebElement webElement;
 
     KPIMTextEdit::InsertImageWidget *imageWidget;
+    //TODO
+    KLineEdit *title;
+    KLineEdit *alternateTitle;
     ComposerImageDialog *q;
 };
 
@@ -81,8 +85,11 @@ void ComposerImageDialogPrivate::initialize()
     q->enableButtonOk( false );
     if(!webElement.isNull()) {
         imageWidget->setImageUrl(webElement.attribute(QLatin1String("src")));
-        //TODO add height/width
-
+        if(webElement.hasAttribute(QLatin1String("height")) && webElement.hasAttribute(QLatin1String("width"))) {
+            imageWidget->setImageWidth(webElement.attribute(QLatin1String("width")).toInt());
+            imageWidget->setImageHeight(webElement.attribute(QLatin1String("height")).toInt());
+        }
+        //TODO verify keep Ratio
     }
 }
 

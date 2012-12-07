@@ -18,7 +18,7 @@
 
 */
 
-#include "managelink.h"
+#include "composerlinkdialog.h"
 #include "composereditorutil_p.h"
 
 #include <KLineEdit>
@@ -28,10 +28,10 @@
 #include <QLabel>
 
 namespace ComposerEditorNG {
-class ManagerLinkDialogPrivate
+class ComposerLinkDialogPrivate
 {
 public:
-    ManagerLinkDialogPrivate(ManageLink *qq)
+    ComposerLinkDialogPrivate(ComposerLinkDialog *qq)
         :q(qq)
     {
     }
@@ -45,10 +45,10 @@ public:
     QWebElement webElement;
     KLineEdit *linkText;
     KLineEdit *linkLocation;
-    ManageLink *q;
+    ComposerLinkDialog *q;
 };
 
-void ManagerLinkDialogPrivate::initialize()
+void ComposerLinkDialogPrivate::initialize()
 {
     q->setButtons( KDialog::Ok | KDialog::Cancel );
 
@@ -71,7 +71,7 @@ void ManagerLinkDialogPrivate::initialize()
 
 }
 
-QString ManagerLinkDialogPrivate::html() const
+QString ComposerLinkDialogPrivate::html() const
 {
     const QUrl url = ComposerEditorNG::Util::guessUrlFromString(linkLocation->text());
     if(url.isValid()){
@@ -81,7 +81,7 @@ QString ManagerLinkDialogPrivate::html() const
     return QString();
 }
 
-void ManagerLinkDialogPrivate::updateLinkHtml()
+void ComposerLinkDialogPrivate::updateLinkHtml()
 {
     if(linkLocation->text().isEmpty()) {
         webElement.removeAttribute(QLatin1String("href"));
@@ -91,16 +91,16 @@ void ManagerLinkDialogPrivate::updateLinkHtml()
 }
 
 
-ManageLink::ManageLink(const QString& selectedText, QWidget *parent)
-    : KDialog(parent), d(new ManagerLinkDialogPrivate(this))
+ComposerLinkDialog::ComposerLinkDialog(const QString& selectedText, QWidget *parent)
+    : KDialog(parent), d(new ComposerLinkDialogPrivate(this))
 {
     setCaption( i18n( "Create Link" ) );
     d->initialize();
     d->linkText->setText(selectedText);
 }
 
-ManageLink::ManageLink(const QWebElement& element, QWidget *parent)
-    : KDialog(parent),d(new ManagerLinkDialogPrivate(this))
+ComposerLinkDialog::ComposerLinkDialog(const QWebElement& element, QWidget *parent)
+    : KDialog(parent),d(new ComposerLinkDialogPrivate(this))
 {
     setCaption( i18n( "Edit Link" ) );
     d->initialize();
@@ -109,12 +109,12 @@ ManageLink::ManageLink(const QWebElement& element, QWidget *parent)
     d->linkText->setText(d->webElement.toInnerXml());
 }
 
-ManageLink::~ManageLink()
+ComposerLinkDialog::~ComposerLinkDialog()
 {
     delete d;
 }
 
-void ManageLink::slotOkClicked()
+void ComposerLinkDialog::slotOkClicked()
 {
     if(!d->webElement.isNull()) {
         d->updateLinkHtml();
@@ -122,11 +122,11 @@ void ManageLink::slotOkClicked()
     accept();
 }
 
-QString ManageLink::html() const
+QString ComposerLinkDialog::html() const
 {
     return d->html();
 }
 
 }
 
-#include "managelink.moc"
+#include "composerlinkdialog.moc"
