@@ -1,4 +1,5 @@
 [Global]
+IconName=kmail
 Comment=Archive Mail Agent
 Comment[ca]=Agent d'arxivat de correus
 Comment[da]=Agent til mail-arkivering
