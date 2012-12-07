@@ -33,6 +33,8 @@
 #include <kdebug.h>
 #include <KMenu>
 #include <KLocale>
+#include <KAction>
+#include <KActionMenu>
 #include <KActionCollection>
 
 #include <QPainter>
@@ -70,7 +72,6 @@ KMSystemTray::KMSystemTray(QObject *parent)
   setIconByName( "kmail" );
   mIcon = KIcon( "mail-unread-new" );
 
-#ifdef Q_WS_X11
   KMMainWidget * mainWidget = kmkernel->getKMMainWidget();
   if ( mainWidget ) {
     QWidget * mainWin = mainWidget->window();
@@ -79,7 +80,6 @@ KMSystemTray::KMSystemTray(QObject *parent)
                                             NET::WMDesktop ).desktop();
     }
   }
-#endif
 
 
   connect( this, SIGNAL(activateRequested(bool,QPoint)),
@@ -116,10 +116,11 @@ void KMSystemTray::buildPopupMenu()
     contextMenu()->addAction( action );
   if ( ( action = mainWidget->action("check_mail_in") ) )
     contextMenu()->addAction( action );
-  if ( ( mSendQueued = mainWidget->action("send_queued") ) )
-    contextMenu()->addAction( mSendQueued );
-  if ( ( action = mainWidget->action("send_queued_via") ) )
-    contextMenu()->addAction( action );
+
+  mSendQueued = mainWidget->sendQueuedAction();
+  contextMenu()->addAction( mSendQueued );
+  contextMenu()->addAction( mainWidget->sendQueueViaMenu() );
+
   contextMenu()->addSeparator();
   if ( ( action = mainWidget->action("new_message") ) )
     contextMenu()->addAction( action );
@@ -239,7 +240,7 @@ void KMSystemTray::slotActivated()
   if ( !mainWidget )
     return ;
 
-  QWidget *mainWin = kmkernel->getKMMainWidget()->window();
+  QWidget *mainWin = mainWidget->window();
   if ( !mainWin )
     return ;
 
@@ -322,18 +323,17 @@ void KMSystemTray::fillFoldersMenu( QMenu *menu, const QAbstractItemModel *model
 
 void KMSystemTray::hideKMail()
 {
-  if (!kmkernel->getKMMainWidget())
+  KMMainWidget * mainWidget = kmkernel->getKMMainWidget();
+  if (!mainWidget)
     return;
-  QWidget *mainWin = kmkernel->getKMMainWidget()->window();
+  QWidget *mainWin = mainWidget->window();
   Q_ASSERT(mainWin);
   if(mainWin)
   {
-#ifdef Q_WS_X11
     mDesktopOfMainWin = KWindowSystem::windowInfo( mainWin->winId(),
                                           NET::WMDesktop ).desktop();
     // iconifying is unnecessary, but it looks cooler
     KWindowSystem::minimizeWindow( mainWin->winId() );
-#endif
     mainWin->hide();
   }
 }
@@ -402,7 +402,7 @@ void KMSystemTray::slotSelectCollection(QAction*act)
   KMMainWidget * mainWidget = kmkernel->getKMMainWidget();
   if ( !mainWidget )
     return ;
-  QWidget *mainWin = kmkernel->getKMMainWidget()->window();
+  QWidget *mainWin = mainWidget->window();
   if( mainWin && !mainWin->isVisible() )
     activate();
 }

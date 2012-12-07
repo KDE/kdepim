@@ -564,3 +564,16 @@ KAction* Util::createAppAction(const KService::Ptr& service, bool singleOffer, Q
   act->setData(QVariant::fromValue(service));
   return act;
 }
+
+
+KMimeType::Ptr Util::mimetype(const QString& name)
+{
+  // consider the filename if mimetype cannot be found by content-type
+  KMimeType::Ptr mimeType = KMimeType::findByPath( name, 0, true /* no disk access */  );
+  if ( mimeType->name() == "application/octet-stream" ) {
+     // consider the attachment's contents if neither the Content-Type header
+     // nor the filename give us a clue
+     mimeType = KMimeType::findByFileContent( name );
+  }
+  return mimeType;
+}

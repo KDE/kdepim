@@ -40,6 +40,7 @@
 
 #include "messageviewer_export.h"
 #include "kmime/kmime_content.h"
+#include <KMimeType>
 #include <QString>
 #include <KService>
 
@@ -126,6 +127,11 @@ namespace Util {
 
     bool MESSAGEVIEWER_EXPORT speakSelectedText( const QString& text, QWidget *parent);
     MESSAGEVIEWER_EXPORT KAction* createAppAction(const KService::Ptr& service, bool singleOffer, QActionGroup *actionGroup, QObject *parent );
+
+    /**
+     * Search mimetype from filename when mimetype is empty or application/octet-stream
+     **/
+    MESSAGEVIEWER_EXPORT KMimeType::Ptr mimetype(const QString& name);
 }
 
 }

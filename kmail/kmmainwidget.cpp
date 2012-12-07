@@ -1295,8 +1295,8 @@ void KMMainWidget::slotCollectionStatisticsChanged( const Akonadi::Collection::I
 {
   if ( id == CommonKernel->outboxCollectionFolder().id() ) {
     const qint64 nbMsgOutboxCollection = statistic.count();
-    actionCollection()->action( "send_queued" )->setEnabled( nbMsgOutboxCollection > 0 );
-    actionCollection()->action( "send_queued_via" )->setEnabled( nbMsgOutboxCollection > 0 );
+    mSendQueued->setEnabled( nbMsgOutboxCollection > 0 );
+    mSendActionMenu->setEnabled( nbMsgOutboxCollection > 0 );
   } else if ( mCurrentFolder && ( id == mCurrentFolder->collection().id() ) ) {
     updateMoveAction( statistic );
     updateAllToTrashAction(statistic.count());
@@ -1625,10 +1625,11 @@ void KMMainWidget::newFromTemplate( const Akonadi::Item &msg )
 void KMMainWidget::slotPostToML()
 {
   if ( mCurrentFolder && mCurrentFolder->isMailingListEnabled() ) {
-    KMail::Util::mailingListPost( mCurrentFolder );
+    if(KMail::Util::mailingListPost( mCurrentFolder )) {
+        return;
+    }
   }
-  else
-    slotCompose();
+  slotCompose();
 }
 
 //-----------------------------------------------------------------------------
@@ -3160,11 +3161,9 @@ void KMMainWidget::setupActions()
           SLOT(slotCheckOneAccount(QAction*)));
   connect(mActMenu, SIGNAL(aboutToShow()), SLOT(getAccountMenu()));
 
-  {
-    mSendQueued = new KAction(KIcon("mail-send"), i18n("&Send Queued Messages"), this);
-    actionCollection()->addAction("send_queued", mSendQueued );
-    connect(mSendQueued, SIGNAL(triggered(bool)), SLOT(slotSendQueued()));
-  }
+  mSendQueued = new KAction(KIcon("mail-send"), i18n("&Send Queued Messages"), this);
+  actionCollection()->addAction("send_queued", mSendQueued );
+  connect(mSendQueued, SIGNAL(triggered(bool)), SLOT(slotSendQueued()));
   {
 
     KAction * action = mAkonadiStandardActionManager->action( Akonadi::StandardActionManager::ToggleWorkOffline );
@@ -3174,11 +3173,11 @@ void KMMainWidget::setupActions()
     action->setText( i18n("Online status (unknown)") );
   }
 
-  KActionMenu *sendActionMenu = new KActionMenu(KIcon("mail-send-via"), i18n("Send Queued Messages Via"), this);
-  actionCollection()->addAction("send_queued_via", sendActionMenu );
-  sendActionMenu->setDelayed(true);
+  mSendActionMenu = new KActionMenu(KIcon("mail-send-via"), i18n("Send Queued Messages Via"), this);
+  actionCollection()->addAction("send_queued_via", mSendActionMenu );
+  mSendActionMenu->setDelayed(true);
 
-  mSendMenu = sendActionMenu->menu();
+  mSendMenu = mSendActionMenu->menu();
   connect(mSendMenu,SIGNAL(triggered(QAction*)), SLOT(slotSendQueuedVia(QAction*)));
   connect(mSendMenu,SIGNAL(aboutToShow()),SLOT(getTransportMenu()));
 
@@ -3403,15 +3402,13 @@ void KMMainWidget::setupActions()
   connect( mTemplateMenu->menu(), SIGNAL(triggered(QAction*)), this,
            SLOT(slotNewFromTemplate(QAction*)) );
 
-  {
-    KAction *action = new KAction( KIcon( "mail-message-new-list" ),
+  mMessageNewList = new KAction( KIcon( "mail-message-new-list" ),
                                           i18n( "New Message t&o Mailing-List..." ),
                                           this );
-    actionCollection()->addAction("post_message", action );
-    connect( action, SIGNAL(triggered(bool)),
-             SLOT(slotPostToML()) );
-    action->setShortcut( QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_N ) );
-  }
+  actionCollection()->addAction("post_message",  mMessageNewList);
+  connect( mMessageNewList, SIGNAL(triggered(bool)),
+           SLOT(slotPostToML()) );
+  mMessageNewList->setShortcut( QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_N ) );
 
   mSendAgainAction = new KAction(i18n("Send A&gain..."), this);
   actionCollection()->addAction("send_again", mSendAgainAction );
@@ -4082,8 +4079,11 @@ void KMMainWidget::updateMessageActionsDelayed()
 
   const qint64 nbMsgOutboxCollection = MailCommon::Util::updatedCollection( CommonKernel->outboxCollectionFolder() ).statistics().count();
 
-  actionCollection()->action( "send_queued" )->setEnabled( nbMsgOutboxCollection > 0 );
-  actionCollection()->action( "send_queued_via" )->setEnabled( nbMsgOutboxCollection > 0 );
+  mSendQueued->setEnabled( nbMsgOutboxCollection > 0 );
+  mSendActionMenu->setEnabled( nbMsgOutboxCollection > 0 );
+
+  const bool newPostToMailingList = mCurrentFolder && mCurrentFolder->isMailingListEnabled();
+  mMessageNewList->setEnabled(newPostToMailingList);
 
   slotUpdateOnlineStatus( static_cast<GlobalSettingsBase::EnumNetworkState::type>( GlobalSettings::self()->networkState() ) );
   if (action( "kmail_undo" ))
