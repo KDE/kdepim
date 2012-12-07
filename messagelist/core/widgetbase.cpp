@@ -133,8 +133,8 @@ Widget::Widget( QWidget *pParent )
   setObjectName( QLatin1String( "messagelistwidget" ) );
 
   QGridLayout * g = new QGridLayout( this );
-  g->setMargin( 2 ); // use a smaller default
-  g->setSpacing( 2 );
+  g->setMargin( 0 );
+  g->setSpacing( 0 );
 
   d->mLockSearch = new QToolButton( this );
   d->mLockSearch->setCheckable( true );
@@ -185,6 +185,7 @@ Widget::Widget( QWidget *pParent )
 
 
   d->mView = new View( this );
+  d->mView->setFrameStyle( QFrame::NoFrame );
   d->mView->setSortOrder( &d->mSortOrder );
   d->mView->setObjectName( QLatin1String( "messagealistview" ) );
   g->addWidget( d->mView, 1, 0, 1, 6 );

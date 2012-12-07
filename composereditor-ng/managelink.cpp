@@ -19,17 +19,41 @@
 */
 
 #include "managelink.h"
-#include <QVBoxLayout>
-#include <QLabel>
+#include "composereditorutil_p.h"
+
 #include <KLineEdit>
 #include <KLocale>
 
+#include <QVBoxLayout>
+#include <QLabel>
+
 using namespace ComposerEditorNG;
 
-ManageLink::ManageLink(QWidget *parent)
-    :KDialog(parent)
+ManageLink::ManageLink(const QString& selectedText, QWidget *parent)
+    : KDialog(parent)
 {
-    setCaption( i18n( "Link" ) );
+    setCaption( i18n( "Create Link" ) );
+    initialize();
+    mLinkText->setText(selectedText);
+}
+
+ManageLink::ManageLink(const QWebElement& element, QWidget *parent)
+    : KDialog(parent),
+      mWebElement(element)
+{
+    setCaption( i18n( "Edit Link" ) );
+    initialize();
+    mLinkLocation->setText(mWebElement.attribute(QLatin1String("href")));
+    mLinkText->setText(mWebElement.toInnerXml());
+}
+
+ManageLink::~ManageLink()
+{
+}
+
+void ManageLink::initialize()
+{
+
     setButtons( Ok | Cancel );
 
     QVBoxLayout *layout = new QVBoxLayout( mainWidget() );
@@ -38,37 +62,38 @@ ManageLink::ManageLink(QWidget *parent)
     layout->addWidget( label );
 
     mLinkText = new KLineEdit;
+    mLinkText->setReadOnly(!mWebElement.isNull());
+    mLinkText->setClearButtonShown(true);
     layout->addWidget( mLinkText );
 
     label = new QLabel(i18n("Enter the location:"));
     layout->addWidget( label );
     mLinkLocation = new KLineEdit;
+    mLinkLocation->setClearButtonShown(true);
     layout->addWidget( mLinkLocation );
+    connect(this,SIGNAL(okClicked()),this,SLOT(slotOkClicked()));
 }
 
-ManageLink::~ManageLink()
+void ManageLink::slotOkClicked()
 {
-
+    if(!mWebElement.isNull()) {
+        if(mLinkLocation->text().isEmpty()) {
+            mWebElement.removeAttribute(QLatin1String("href"));
+        } else {
+            mWebElement.setAttribute(QLatin1String("href"), mLinkLocation->text());
+        }
+    }
+    accept();
 }
 
-void ManageLink::setLinkText(const QString& link)
+QString ManageLink::html() const
 {
-    mLinkText->setText(link);
-}
-
-QString ManageLink::linkText() const
-{
-    return mLinkText->text();
-}
-
-void ManageLink::setLinkLocation(const QString &location)
-{
-    mLinkLocation->setText(location);
-}
-
-QString ManageLink::linkLocation() const
-{
-    return mLinkLocation->text();
+    const QUrl url = ComposerEditorNG::Util::guessUrlFromString(mLinkLocation->text());
+    if(url.isValid()){
+        const QString html = QString::fromLatin1( "<a href=\'%1\'>%2</a>" ).arg ( url.toString() ).arg ( mLinkText->text() );
+        return html;
+    }
+    return QString();
 }
 
 

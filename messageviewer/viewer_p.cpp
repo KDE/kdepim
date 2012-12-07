@@ -80,7 +80,6 @@
 #include <QClipboard>
 #include <QDesktopWidget>
 #include <QFileInfo>
-#include <QImageReader>
 #include <QItemSelectionModel>
 #include <QSignalMapper>
 #include <QSplitter>

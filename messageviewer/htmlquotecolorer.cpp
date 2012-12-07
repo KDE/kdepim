@@ -40,7 +40,7 @@ QString HTMLQuoteColorer::process( const QString &htmlSource, QString&extraHead 
 #ifndef KDEPIM_NO_WEBKIT
   // Create a DOM Document from the HTML source
   QWebPage page(0);
-  page.settings()->setAttribute( QWebSettings::JavascriptEnabled, true );
+  page.settings()->setAttribute( QWebSettings::JavascriptEnabled, false );
   page.settings()->setAttribute( QWebSettings::JavaEnabled, false );
   page.settings()->setAttribute( QWebSettings::PluginsEnabled, false );
 
@@ -130,7 +130,10 @@ QString HTMLQuoteColorer::process( const QString &htmlSource, QString&extraHead 
   "  return 0;\n"
   "}\n");
 
+  page.settings()->setAttribute( QWebSettings::JavascriptEnabled, true );
   frame->evaluateJavaScript( script );
+  page.settings()->setAttribute( QWebSettings::JavascriptEnabled, false );
+
   const QWebElement body = frame->documentElement().findFirst("body");
   const QWebElement header = frame->documentElement().findFirst("head");
 

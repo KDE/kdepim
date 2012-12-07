@@ -18,15 +18,36 @@
 
 */
 
-#include "extendattributes.h"
+#ifndef COMPOSERIMAGEDIALOG_H
+#define COMPOSERIMAGEDIALOG_H
 
-using namespace ComposerEditorNG;
+#include <KDialog>
+#include <QWebElement>
 
-ExtendAttributes::ExtendAttributes(QWidget *parent)
+namespace ComposerEditorNG
 {
+class ComposerImageDialogPrivate;
+class ComposerImageDialog : public KDialog
+{
+    Q_OBJECT
+public:
+    explicit ComposerImageDialog(QWidget *parent);
+    explicit ComposerImageDialog(const QWebElement& element, QWidget *parent);
+    ~ComposerImageDialog();
+
+    /**
+     * @brief html
+     * @return string which represents html code
+     */
+    QString html() const;
+
+private Q_SLOTS:
+    void slotOkClicked();
+
+private:
+    friend class ComposerImageDialogPrivate;
+    ComposerImageDialogPrivate * const d;
+};
 }
 
-ExtendAttributes::~ExtendAttributes()
-{
-
-}
+#endif // COMPOSERIMAGEDIALOG_H

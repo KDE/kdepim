@@ -875,8 +875,7 @@ bool IncidenceDateTime::startDateTimeEnabled() const
 
 bool IncidenceDateTime::endDateTimeEnabled() const
 {
-  // For journals, it isn't visible
-  return mUi->mEndCheck->isChecked() && mUi->mEndCheck->isVisible();
+  return mUi->mEndCheck->isChecked();
 }
 
 bool IncidenceDateTime::isValid() const
@@ -905,7 +904,10 @@ bool IncidenceDateTime::isValid() const
                                 "The to-do is due before it starts.\n"
                                 "Please correct dates and times." );
 
+    } else if ( mLoadedIncidence->type() == KCalCore::Incidence::TypeJournal ) {
+      return true;
     }
+
     kDebug() << mLastErrorString;
     return false;
   } else {

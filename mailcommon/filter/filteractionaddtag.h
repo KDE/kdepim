@@ -55,13 +55,10 @@ class FilterActionAddTag: public FilterActionWithStringList
     virtual bool argsFromStringInteractive( const QString &argsStr, const QString& filterName );
 
   private Q_SLOTS:
-    void newTagEntries(const QList<Nepomuk2::Query::Result>& results);
-    void finishedTagListing();
+    void slotTagListingFinished();
 
   private:
     void initializeTagList();
-    QStringList mLabelList;
-    Nepomuk2::Query::QueryServiceClient *mTagQueryClient;
 };
 
 }

@@ -367,9 +367,8 @@ QString FilterActionMissingTagDialog::selectedTag() const
 
 void FilterActionMissingTagDialog::slotAddTag()
 {
-  AddTagDialog *dlg = new AddTagDialog(this);
-  dlg->exec();
-  delete dlg;
+  AddTagDialog dlg(this);
+  dlg.exec();
 }
 
 FilterActionMissingSoundUrlDialog::FilterActionMissingSoundUrlDialog( const QString &filtername,
