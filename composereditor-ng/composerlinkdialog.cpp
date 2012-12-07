@@ -36,7 +36,7 @@ public:
     {
     }
 
-    void initialize();
+    void initialize(const QWebElement& element = QWebElement() );
 
     QString html() const;
 
@@ -48,9 +48,12 @@ public:
     ComposerLinkDialog *q;
 };
 
-void ComposerLinkDialogPrivate::initialize()
+void ComposerLinkDialogPrivate::initialize(const QWebElement &element)
 {
     q->setButtons( KDialog::Ok | KDialog::Cancel );
+    webElement = element;
+
+    q->setCaption( webElement.isNull() ? i18n( "Create Link" ) : i18n( "Edit Link" ) );
 
     QVBoxLayout *layout = new QVBoxLayout( q->mainWidget() );
 
@@ -94,7 +97,7 @@ void ComposerLinkDialogPrivate::updateLinkHtml()
 ComposerLinkDialog::ComposerLinkDialog(const QString& selectedText, QWidget *parent)
     : KDialog(parent), d(new ComposerLinkDialogPrivate(this))
 {
-    setCaption( i18n( "Create Link" ) );
+
     d->initialize();
     d->linkText->setText(selectedText);
 }
@@ -102,9 +105,7 @@ ComposerLinkDialog::ComposerLinkDialog(const QString& selectedText, QWidget *par
 ComposerLinkDialog::ComposerLinkDialog(const QWebElement& element, QWidget *parent)
     : KDialog(parent),d(new ComposerLinkDialogPrivate(this))
 {
-    setCaption( i18n( "Edit Link" ) );
-    d->initialize();
-    d->webElement = element;
+    d->initialize(element);
     d->linkLocation->setText(d->webElement.attribute(QLatin1String("href")));
     d->linkText->setText(d->webElement.toInnerXml());
 }

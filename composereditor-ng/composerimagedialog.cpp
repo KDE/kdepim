@@ -25,6 +25,11 @@
 #include <KLocale>
 #include <KLineEdit>
 
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QLabel>
+
+
 namespace ComposerEditorNG {
 
 class ComposerImageDialogPrivate
@@ -44,7 +49,6 @@ public:
     QWebElement webElement;
 
     KPIMTextEdit::InsertImageWidget *imageWidget;
-    //TODO
     KLineEdit *title;
     KLineEdit *alternateTitle;
     ComposerImageDialog *q;
@@ -70,6 +74,20 @@ void ComposerImageDialogPrivate::updateImageHtml()
         webElement.setAttribute(QLatin1String("height"), QString::number(imageHeight));
     }
 
+    QString str(title->text());
+    if(str.isEmpty()) {
+        webElement.removeAttribute(QLatin1String("title"));
+    } else {
+        webElement.setAttribute(QLatin1String("title"), str);
+    }
+
+    str = alternateTitle->text();
+    if(str.isEmpty()) {
+        webElement.removeAttribute(QLatin1String("alt"));
+    } else {
+        webElement.setAttribute(QLatin1String("alt"), str);
+    }
+
     webElement.setAttribute(QLatin1String("src"), imageWidget->imageUrl().url());
 }
 
@@ -78,18 +96,49 @@ void ComposerImageDialogPrivate::initialize()
     q->setCaption( webElement.isNull() ? i18n( "Insert Image" ) : i18n( "Edit Image" ));
     q->setButtons( KDialog::Ok|KDialog::Cancel );
     q->setButtonText( KDialog::Ok, i18n( "Insert" ) );
+
+    QWidget *w = new QWidget;
+
+
+
+    QVBoxLayout *lay = new QVBoxLayout;
+    lay->setMargin(0);
+    lay->setSpacing(0);
+    w->setLayout(lay);
+
     imageWidget = new KPIMTextEdit::InsertImageWidget(q);
+    lay->addWidget(imageWidget);
+
+    //ToolTip
+    QHBoxLayout *hbox = new QHBoxLayout;
+    QLabel *lab = new QLabel(i18n("Tooltip:"));
+    hbox->addWidget(lab);
+    title = new KLineEdit;
+    hbox->addWidget(title);
+    lay->addLayout(hbox);
+
+    //Alternate text
+    hbox = new QHBoxLayout;
+    lab = new QLabel(i18n("Alternate text:"));
+    hbox->addWidget(lab);
+    alternateTitle = new KLineEdit;
+    hbox->addWidget(alternateTitle);
+    lay->addLayout(hbox);
+
+
     q->connect(imageWidget,SIGNAL(enableButtonOk(bool)),q,SLOT(enableButtonOk(bool)));
     q->connect(q,SIGNAL(okClicked()),q,SLOT(slotOkClicked()));
-    q->setMainWidget( imageWidget );
+    q->setMainWidget(w);
     q->enableButtonOk( false );
+
     if(!webElement.isNull()) {
         imageWidget->setImageUrl(webElement.attribute(QLatin1String("src")));
         if(webElement.hasAttribute(QLatin1String("height")) && webElement.hasAttribute(QLatin1String("width"))) {
             imageWidget->setImageWidth(webElement.attribute(QLatin1String("width")).toInt());
             imageWidget->setImageHeight(webElement.attribute(QLatin1String("height")).toInt());
         }
-        //TODO verify keep Ratio
+        alternateTitle->setText(webElement.attribute(QLatin1String("alt")));
+        title->setText(webElement.attribute(QLatin1String("title")));
     }
 }
 
@@ -102,9 +151,25 @@ QString ComposerImageDialogPrivate::html() const
         imageWidth = imageWidget->imageWidth();
         imageHeight = imageWidget->imageHeight();
     }
-    const QString imageHtml = QString::fromLatin1("<img %1 %2 %3 />").arg((imageWidth>0) ? QString::fromLatin1("width=%1").arg(imageWidth) : QString())
-            .arg((imageHeight>0) ? QString::fromLatin1("height=%1").arg(imageHeight) : QString())
-            .arg(url.isEmpty() ? QString() : QString::fromLatin1("src='file://%1'").arg(url.path()));
+    QString imageHtml = QString::fromLatin1("<img");
+    if(imageWidth>0) {
+        imageHtml += QString::fromLatin1(" width=%1").arg(imageWidth);
+    }
+    if(imageHeight>0) {
+        imageHtml += QString::fromLatin1(" height=%1").arg(imageHeight);
+    }
+    if(!url.isEmpty()) {
+        imageHtml += QString::fromLatin1(" src='file://%1'").arg(url.path());
+    }
+    QString str = title->text();
+    if(!str.isEmpty()) {
+        imageHtml += QString::fromLatin1(" title='%1'").arg(str);
+    }
+    str = alternateTitle->text();
+    if(!str.isEmpty()) {
+        imageHtml += QString::fromLatin1(" alt='%1'").arg(str);
+    }
+    imageHtml += QString::fromLatin1(" />");
     return imageHtml;
 }
 
