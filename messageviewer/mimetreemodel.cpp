@@ -19,6 +19,7 @@
 
 #include <config-messageviewer.h>
 
+#include "util.h"
 #include "mimetreemodel.h"
 
 #include "nodehelper.h"
@@ -102,6 +103,10 @@ class MimeTreeModel::Private
       if ( content->contentType( false ) )
       {
         KMimeType::Ptr mimeType = KMimeType::mimeType( QString::fromLatin1( content->contentType()->mimeType() ) );
+        if ( mimeType.isNull() || mimeType->name() == "application/octet-stream" ) {
+            const QString name = descriptionForContent(content);
+            mimeType = MessageViewer::Util::mimetype(name);
+        }
         if ( mimeType.isNull() || mimeType->iconName().isEmpty() )
           return KIcon();
         if( mimeType->name().startsWith( QLatin1String( "multipart/" ) ) )

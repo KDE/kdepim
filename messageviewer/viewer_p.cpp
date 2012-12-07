@@ -358,16 +358,8 @@ void ViewerPrivate::openAttachment( KMime::Content* node, const QString & name )
     return;
 
   if ( mimetype.isNull() || mimetype->name() == "application/octet-stream" ) {
-    // consider the filename if mimetype cannot be found by content-type
-    mimetype = KMimeType::findByPath( name, 0, true /* no disk access */  );
-
+      mimetype = Util::mimetype(name);
   }
-  if ( mimetype->name() == "application/octet-stream" ) {
-    // consider the attachment's contents if neither the Content-Type header
-    // nor the filename give us a clue
-    mimetype = KMimeType::findByFileContent( name );
-  }
-
   KService::Ptr offer =
       KMimeTypeTrader::self()->preferredService( mimetype->name(), "Application" );
 
@@ -692,7 +684,7 @@ QString ViewerPrivate::createAtmFileLink( const QString& atmFileName ) const
 
 KService::Ptr ViewerPrivate::getServiceOffer( KMime::Content *content)
 {
-  QString fileName = mNodeHelper->writeNodeToTempFile( content );
+  const QString fileName = mNodeHelper->writeNodeToTempFile( content );
 
   const QString contentTypeStr = content->contentType()->mimeType();
 
@@ -706,15 +698,9 @@ KService::Ptr ViewerPrivate::getServiceOffer( KMime::Content *content)
     return KService::Ptr( 0 );
   }
 
-  if ( mimetype.isNull() ) {
-    // consider the filename if mimetype cannot be found by content-type
-    mimetype = KMimeType::findByPath( fileName, 0, true /* no disk access */ );
-  }
-  if ( ( mimetype->name() == "application/octet-stream" )
-    /*TODO(Andris) port when on-demand loading is done   && msgPart.isComplete() */) {
-    // consider the attachment's contents if neither the Content-Type header
-    // nor the filename give us a clue
-    mimetype = KMimeType::findByFileContent( fileName );
+  if ( mimetype.isNull() || mimetype->name() == "application/octet-stream"  ) {
+      /*TODO(Andris) port when on-demand loading is done   && msgPart.isComplete() */
+      mimetype = MessageViewer::Util::mimetype(fileName);
   }
   return KMimeTypeTrader::self()->preferredService( mimetype->name(), "Application" );
 }
