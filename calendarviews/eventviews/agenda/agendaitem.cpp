@@ -934,19 +934,9 @@ void AgendaItem::paintEvent( QPaintEvent *ev )
   QString shortH;
   QString longH;
   if ( !isMultiItem() ) {
-    // TODO: When we depend on kdepimlibs 4.7, replace with: shortH
-    // KGlobal::locale()->formatTime(incidence->dateTime( KCalCore::Incidence::RoleDisplayStart ).
-    //   toTimeSpec( mEventView->preferences()->timeSpec() ).time() )
-    if ( incidence->type() == Incidence::TypeEvent ) {
-      shortH = KGlobal::locale()->formatTime(
-        incidence->dtStart().toTimeSpec( mEventView->preferences()->timeSpec() ).time() );
-    } else if ( incidence->type() == Incidence::TypeTodo ) {
-      Todo::Ptr todo = CalendarSupport::todo( mIncidence );
-      if ( todo ) {
-        shortH = KGlobal::locale()->formatTime(
-          todo->dtDue().toTimeSpec( mEventView->preferences()->timeSpec() ).time() );
-      }
-    }
+    shortH = KGlobal::locale()->formatTime(incidence->dateTime( KCalCore::Incidence::RoleDisplayStart ).
+             toTimeSpec( mEventView->preferences()->timeSpec() ).time() );
+
     if ( CalendarSupport::hasEvent( mIncidence ) ) {
       longH = i18n( "%1 - %2",
                     shortH,
