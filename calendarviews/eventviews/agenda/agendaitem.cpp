@@ -1088,7 +1088,7 @@ void AgendaItem::paintEvent( QPaintEvent *ev )
     x += visRect.left();
     eventX = x;
     txtWidth = visRect.right() - margin - x;
-    paintIcons( &p, x, margin, ft );
+    paintIcons( &p, x, margin / 2, ft );
     hTxtWidth = visRect.right() - margin - x;
   } else {
     // paint headline
