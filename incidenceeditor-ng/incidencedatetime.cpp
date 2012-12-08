@@ -67,6 +67,15 @@ IncidenceDateTime::IncidenceDateTime( Ui::EventOrTodoDesktop *ui )
            SLOT(toggleTimeZoneVisibility()) );
 #endif
 
+  QList<QLineEdit*> lineEdits;
+  lineEdits << mUi->mStartDateEdit->lineEdit() << mUi->mEndDateEdit->lineEdit()
+            << mUi->mStartTimeEdit->lineEdit() << mUi->mEndTimeEdit->lineEdit();
+  foreach( QLineEdit *lineEdit, lineEdits ) {
+    KLineEdit *klineEdit = qobject_cast<KLineEdit*>( lineEdit );
+    if ( klineEdit )
+        klineEdit->setClearButtonShown( false );
+  }
+
   connect( mUi->mFreeBusyCheck, SIGNAL(toggled(bool)), SLOT(checkDirtyStatus()) );
   connect( mUi->mWholeDayCheck, SIGNAL(toggled(bool)), SLOT(enableTimeEdits()) );
   connect( mUi->mWholeDayCheck, SIGNAL(toggled(bool)), SLOT(checkDirtyStatus()) );
