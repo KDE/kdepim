@@ -116,7 +116,6 @@ void ComposerImageResizeWidget::mousePressEvent( QMouseEvent * event )
 void ComposerImageResizeWidget::mouseReleaseEvent( QMouseEvent * event )
 {
     d->mousePressed = false;
-
 }
 
 void ComposerImageResizeWidget::paintEvent( QPaintEvent * )
@@ -125,7 +124,7 @@ void ComposerImageResizeWidget::paintEvent( QPaintEvent * )
         return;
 
     QPainter painter(this);
-    painter.drawRect(rect());
+    painter.drawRect(d->imageElement.geometry());
 }
 
 

@@ -41,6 +41,7 @@ public:
 
 protected:
     void contextMenuEvent(QContextMenuEvent* event);
+    void mousePressEvent(QMouseEvent * event);
 
 Q_SIGNALS:
     void showFindBar();

@@ -23,6 +23,7 @@
 #include "pagecolorbackgrounddialog.h"
 #include "composereditorutil_p.h"
 #include "composerimagedialog.h"
+#include "composerimageresizewidget.h"
 
 
 #include <kpimtextedit/emoticontexteditaction.h>
@@ -75,7 +76,8 @@ class ComposerViewPrivate
 {
 public:
     ComposerViewPrivate( ComposerView *qq)
-        : q(qq)
+        : q(qq),
+          imageResizeWidget(0)
     {
     }
 
@@ -163,7 +165,9 @@ public:
     KAction *action_page_color;
     KAction *action_block_quote;
 
+
     ComposerView *q;
+    ComposerImageResizeWidget *imageResizeWidget;
 };
 }
 
@@ -793,6 +797,8 @@ void ComposerView::createActions(KActionCollection *actionCollection)
 
 void ComposerView::contextMenuEvent(QContextMenuEvent* event)
 {
+    delete d->imageResizeWidget;
+    d->imageResizeWidget = 0;
     d->contextMenuResult = page()->mainFrame()->hitTestContent(event->pos());
 
     const bool linkSelected = !d->contextMenuResult.linkElement().isNull();
@@ -843,6 +849,26 @@ void ComposerView::setActionsEnabled(bool enabled)
     {
         action->setEnabled(enabled);
     }
+}
+
+void ComposerView::mousePressEvent(QMouseEvent * event)
+{
+    if(event->button() == Qt::LeftButton) {
+        const QWebHitTestResult result = page()->mainFrame()->hitTestContent(event->pos());
+        const bool imageSelected = !result.imageUrl().isEmpty();
+        if(imageSelected) {
+            qDebug()<<" image selected ";
+            if(!d->imageResizeWidget) {
+                d->imageResizeWidget = new ComposerImageResizeWidget(result.element(),this);
+                d->imageResizeWidget->move(result.element().geometry().topLeft());
+                d->imageResizeWidget->show();
+            }
+        }
+    } else {
+        delete d->imageResizeWidget;
+        d->imageResizeWidget = 0;
+    }
+    KWebView::mousePressEvent(event);
 }
 
 }
