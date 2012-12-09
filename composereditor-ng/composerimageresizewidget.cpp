@@ -124,7 +124,7 @@ void ComposerImageResizeWidget::paintEvent( QPaintEvent * )
         return;
 
     QPainter painter(this);
-    painter.drawRect(d->imageElement.geometry());
+    painter.drawRect(QRect(0,0,d->imageElement.geometry().width(),d->imageElement.geometry().height()));
 }
 
 

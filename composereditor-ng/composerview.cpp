@@ -127,6 +127,9 @@ public:
     void execCommand(const QString &cmd, const QString &arg);
     bool queryCommandState(const QString &cmd);
 
+    void hideImageResizeWidget();
+
+
     int spellTextSelectionStart;
     int spellTextSelectionEnd;
 
@@ -181,6 +184,12 @@ QAction* ComposerViewPrivate::getAction ( QWebPage::WebAction action ) const
         return q->page()->action( static_cast<QWebPage::WebAction>( action ));
     else
         return 0;
+}
+
+void ComposerViewPrivate::hideImageResizeWidget()
+{
+    delete imageResizeWidget;
+    imageResizeWidget = 0;
 }
 
 
@@ -857,7 +866,6 @@ void ComposerView::mousePressEvent(QMouseEvent * event)
         const QWebHitTestResult result = page()->mainFrame()->hitTestContent(event->pos());
         const bool imageSelected = !result.imageUrl().isEmpty();
         if(imageSelected) {
-            qDebug()<<" image selected ";
             if(!d->imageResizeWidget) {
                 d->imageResizeWidget = new ComposerImageResizeWidget(result.element(),this);
                 d->imageResizeWidget->move(result.element().geometry().topLeft());
@@ -865,10 +873,21 @@ void ComposerView::mousePressEvent(QMouseEvent * event)
             }
         }
     } else {
-        delete d->imageResizeWidget;
-        d->imageResizeWidget = 0;
+        d->hideImageResizeWidget();
     }
     KWebView::mousePressEvent(event);
+}
+
+void ComposerView::keyPressEvent(QKeyEvent * event)
+{
+    d->hideImageResizeWidget();
+    KWebView::keyPressEvent(event);
+}
+
+void ComposerView::wheelEvent(QWheelEvent * event)
+{
+    d->hideImageResizeWidget();
+    KWebView::wheelEvent(event);
 }
 
 }
