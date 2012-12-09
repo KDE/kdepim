@@ -16,6 +16,7 @@ set(libcomposereditor_ng_SRCS
     extendattributes.cpp
     composereditorutil.cpp
     composerimagedialog.cpp
+    composerimageresizewidget.cpp
 )
 
 kde4_add_ui_files(libcomposereditor_ng_SRCS ui/pagecolorbackgroundwidget.ui )

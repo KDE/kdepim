@@ -20,16 +20,51 @@
 
 #include "composerimageresizewidget.h"
 
+#include <QMouseEvent>
+#include <QPaintEvent>
 
 namespace ComposerEditorNG
 {
 
-ComposerImageResizeWidget::ComposerImageResizeWidget(QWidget *parent)
+class ComposerImageResizeWidgetPrivate
+{
+public:
+    ComposerImageResizeWidgetPrivate(ComposerImageResizeWidget *qq, const QWebElement& element)
+        : q(qq), imageElement(element)
+    {
+    }
+    ComposerImageResizeWidget *q;
+    QWebElement imageElement;
+};
+
+ComposerImageResizeWidget::ComposerImageResizeWidget(const QWebElement &element, QWidget *parent)
+    : QWidget(parent), d(new ComposerImageResizeWidgetPrivate(this,element))
 {
 }
 
 ComposerImageResizeWidget::~ComposerImageResizeWidget()
 {
+    delete d;
 }
+
+void ComposerImageResizeWidget::mouseMoveEvent( QMouseEvent * event )
+{
+
+}
+
+void ComposerImageResizeWidget::mousePressEvent( QMouseEvent * event )
+{
+
+}
+
+void ComposerImageResizeWidget::mouseReleaseEvent( QMouseEvent * event )
+{
+
+}
+void ComposerImageResizeWidget::paintEvent( QPaintEvent * )
+{
+
+}
+
 
 }
