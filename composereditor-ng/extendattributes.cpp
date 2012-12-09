@@ -20,13 +20,25 @@
 
 #include "extendattributes.h"
 
-using namespace ComposerEditorNG;
+namespace ComposerEditorNG {
+
+class ExtendAttributesPrivate
+{
+public:
+    ExtendAttributesPrivate()
+    {
+    }
+};
+
 
 ExtendAttributes::ExtendAttributes(QWidget *parent)
+    : d(new ExtendAttributesPrivate)
 {
 }
 
 ExtendAttributes::~ExtendAttributes()
 {
+    delete d;
+}
 
 }

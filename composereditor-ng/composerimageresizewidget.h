@@ -24,9 +24,13 @@ namespace ComposerEditorNG
 {
 class ComposerImageResizeWidget
 {
+    Q_OBJECT
 public:
     explicit ComposerImageResizeWidget(QWidget *parent);
     ~ComposerImageResizeWidget();
+
+protected:
+
 };
 }
 

@@ -25,11 +25,15 @@
 
 namespace ComposerEditorNG
 {
+class ExtendAttributesPrivate;
 class ExtendAttributes
 {
 public:
     explicit ExtendAttributes(QWidget *parent);
     ~ExtendAttributes();
+private:
+    friend class ExtendAttributesPrivate;
+    ExtendAttributesPrivate * const d;
 };
 }
 
