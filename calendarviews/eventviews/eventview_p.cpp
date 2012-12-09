@@ -30,7 +30,7 @@
 #include <calendarsupport/collectionselection.h>
 #include <calendarsupport/kcalprefs.h>
 
-#include <kcheckableproxymodel.h> //krazy:exclude=camelcase TODO wait for kdelibs4.8
+#include <KCheckableProxyModel>
 
 #include <QApplication>
 

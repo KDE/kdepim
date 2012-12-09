@@ -37,11 +37,11 @@ using namespace Future;
 
 #include <KCalCore/Event>
 
-#include <kcheckableproxymodel.h> //krazy:exclude=camelcase TODO wait for kdelibs4.8
+#include <KCheckableProxyModel>
 #include <KGlobalSettings>
 #include <KLocale>
 #include <KVBox>
-#include <kviewstatemaintainer.h> //krazy:exclude=camelcase TODO wait for kdelibs4.8
+#include <KViewStateMaintainer>
 
 #include <QHBoxLayout>
 #include <QItemSelectionModel>

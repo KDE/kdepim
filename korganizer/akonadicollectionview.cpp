@@ -42,12 +42,13 @@
 #include <Akonadi/CollectionFilterProxyModel>
 #include <Akonadi/EntityDisplayAttribute>
 #include <Akonadi/EntityTreeView>
+#include <Akonadi/EntityTreeModel>
 #include <Akonadi/ETMViewStateSaver>
 #include <Akonadi/Calendar/StandardCalendarActionManager>
 
 #include <KAction>
 #include <KActionCollection>
-#include <kcheckableproxymodel.h> //krazy:exclude=camelcase TODO wait for kdelibs4.8
+#include <KCheckableProxyModel>
 #include <KColorDialog>
 #include <KMessageBox>
 #include <krecursivefilterproxymodel.h> //krazy:exclude=camelcase TODO wait for kdelibs4.9
@@ -597,6 +598,38 @@ bool AkonadiCollectionView::isStructuralCollection( const Akonadi::Collection &c
     }
   }
   return true;
+}
+
+Akonadi::Collection AkonadiCollectionView::selectedCollection() const
+{
+  Akonadi::Collection collection;
+  QItemSelectionModel *selectionModel = mCollectionview->selectionModel();
+  if ( !selectionModel )
+    return collection;
+  QModelIndexList indexes = selectionModel->selectedIndexes();
+  if ( !indexes.isEmpty() ) {
+    collection = indexes.first().data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
+  }
+  return collection;
+}
+
+Akonadi::Collection::List AkonadiCollectionView::checkedCollections() const
+{
+  Akonadi::Collection::List collections;
+  if ( !mSelectionProxyModel )
+    return collections;
+  QItemSelectionModel *selectionModel = mSelectionProxyModel->selectionModel();
+  if ( !selectionModel )
+    return collections;
+  QModelIndexList indexes = selectionModel->selectedIndexes();
+  foreach( const QModelIndex &index, indexes ) {
+    if ( index.isValid() ) {
+      Akonadi::Collection collection = index.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
+      if ( collection.isValid() )
+        collections << collection;
+    }
+  }
+  return collections;
 }
 
 #include "akonadicollectionview.moc" // for EntityModelStateSaver Q_PRIVATE_SLOT

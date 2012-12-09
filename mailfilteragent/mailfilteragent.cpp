@@ -276,6 +276,7 @@ void MailFilterAgent::showFilterLogDialog(qlonglong windowId)
 void MailFilterAgent::emitProgress(int p)
 {
   if ( p == 0 ) {
+    mProgressTimer->stop();
     emit status(AgentBase::Idle, "" );
   }
   mProgressCounter = p;

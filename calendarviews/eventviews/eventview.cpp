@@ -46,11 +46,11 @@ using namespace Future;
 
 #include <KHolidays/Holidays>
 
-#include <kcheckableproxymodel.h> //krazy:exclude=camelcase TODO wait for kdelibs4.8
+#include <KCheckableProxyModel>
 #include <KGuiItem>
 #include <KGlobal>
 #include <KLocale>
-#include <kviewstatemaintainer.h> //krazy:exclude=camelcase TODO wait for kdelibs4.8
+#include <KViewStateMaintainer>
 
 #include <QApplication>
 #include <QKeyEvent>

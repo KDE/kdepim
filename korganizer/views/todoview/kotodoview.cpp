@@ -95,6 +95,7 @@ struct ModelStack
       foreach ( KOTodoView *view, views ) {
         // In flatview dropping confuses users and it's very easy to drop into a child item
         view->mView->setDragDropMode( QAbstractItemView::DragOnly );
+        view->setFlatView( flat, /**propagate=*/false ); // So other views update their toggle icon
 
         if ( todoTreeModel ) {
           view->saveViewState(); // Save the tree state before it's gone
@@ -118,6 +119,7 @@ struct ModelStack
         QObject::connect( todoTreeModel, SIGNAL(batchInsertionFinished()),
                           view, SLOT(restoreViewState()) );
         view->mView->setDragDropMode( QAbstractItemView::DragDrop );
+        view->setFlatView( flat, /**propagate=*/false ); // So other views update their toggle icon
       }
       todoTreeModel->setSourceModel( calendar ? calendar->model() : 0 );
       todoModel->setSourceModel( todoTreeModel );
@@ -126,10 +128,10 @@ struct ModelStack
     }
 
     foreach ( KOTodoView *view, views ) {
-      view->mFlatView->blockSignals( true );
-      // We block signals to avoid recursion, we have two KOTodoViews and mFlatView is synchronized
-      view->mFlatView->setChecked( flat );
-      view->mFlatView->blockSignals( false );
+      view->mFlatViewButton->blockSignals( true );
+      // We block signals to avoid recursion, we have two KOTodoViews and mFlatViewButton is synchronized
+      view->mFlatViewButton->setChecked( flat );
+      view->mFlatViewButton->blockSignals( false );
       view->mView->setRootIsDecorated( !flat );
       view->restoreViewState();
     }
@@ -255,19 +257,19 @@ KOTodoView::KOTodoView( bool sidebarView, QWidget *parent )
       i18nc( "@info:whatsthis",
              "Checking this option will cause the to-do view to use the full window." ) );
   }
-
-  mFlatView = new QCheckBox(
-    i18nc( "@option:check Checkbox to display todos not hierarchical",
-           "Flat View" ), this );
-  mFlatView->setToolTip(
+  mFlatViewButton = new QToolButton( this );
+  mFlatViewButton->setAutoRaise( true );
+  mFlatViewButton->setCheckable( true );
+  mFlatViewButton->setToolTip(
     i18nc( "@info:tooltip",
            "Display to-dos in flat list instead of a tree" ) );
-  mFlatView->setWhatsThis(
+  mFlatViewButton->setWhatsThis(
     i18nc( "@info:whatsthis",
            "Checking this option will cause the to-dos to be displayed as a "
            "flat list instead of a hierarchical tree; the parental "
            "relationships are removed in the display." ) );
-  connect( mFlatView, SIGNAL(toggled(bool)), SLOT(setFlatView(bool)) );
+
+  connect( mFlatViewButton, SIGNAL(toggled(bool)), SLOT(setFlatView(bool)) );
   if ( mFullViewButton ) {
     connect( mFullViewButton, SIGNAL(toggled(bool)), SLOT(setFullView(bool)) );
   }
@@ -292,7 +294,7 @@ KOTodoView::KOTodoView( bool sidebarView, QWidget *parent )
     dummyLayout->addWidget( f );
     dummyLayout->addWidget( mFullViewButton );
   }
-  dummyLayout->addWidget( mFlatView );
+  dummyLayout->addWidget( mFlatViewButton );
 
   layout->addLayout( dummyLayout, 2, 1 );
   setLayout( layout );
@@ -513,7 +515,7 @@ void KOTodoView::saveLayout( KConfig *config, const QString &group ) const
   if ( !mSidebarView ) {
     KOPrefs::instance()->setFullViewTodo( mFullViewButton->isChecked() );
   }
-  KOPrefs::instance()->setFlatListTodo( mFlatView->isChecked() );
+  KOPrefs::instance()->setFlatListTodo( mFlatViewButton->isChecked() );
 }
 
 void KOTodoView::restoreLayout( KConfig *config, const QString &group, bool minimalDefaults )
@@ -563,7 +565,7 @@ void KOTodoView::restoreLayout( KConfig *config, const QString &group, bool mini
     mView->sortByColumn( sortColumn, (Qt::SortOrder)sortOrder );
   }
 
-  mFlatView->setChecked( cfgGroup.readEntry( "FlatView", false ) );
+  mFlatViewButton->setChecked( cfgGroup.readEntry( "FlatView", false ) );
 }
 
 void KOTodoView::setIncidenceChanger( CalendarSupport::IncidenceChanger *changer )
@@ -1105,9 +1107,17 @@ void KOTodoView::setFullView( bool fullView )
   emit fullViewChanged( fullView );
 }
 
-void KOTodoView::setFlatView( bool flatView )
+void KOTodoView::setFlatView( bool flatView, bool notifyOtherViews )
 {
-  sModels->setFlatView( flatView );
+  if ( flatView ) {
+    mFlatViewButton->setIcon( KIcon( "view-list-tree" ) );
+  } else {
+    mFlatViewButton->setIcon( KIcon( "view-list-details" ) );
+  }
+
+  if ( notifyOtherViews ) {
+    sModels->setFlatView( flatView );
+  }
 }
 
 void KOTodoView::getHighlightMode( bool &highlightEvents,

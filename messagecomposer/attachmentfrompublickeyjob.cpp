@@ -26,7 +26,7 @@
 #include <boost/shared_ptr.hpp>
 
 #include <KDebug>
-#include <kdialogjobuidelegate.h> // FIXME add CamelCase header in kdelibs/kdeui
+#include <kdialogjobuidelegate.h> //krazy:exclude=camelcase TODO wait for kdelibs4.10
 #include <KLocalizedString>
 
 #include <kleo/cryptobackendfactory.h>
