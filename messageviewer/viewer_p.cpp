@@ -2547,8 +2547,10 @@ void ViewerPrivate::attachmentProperties( KMime::Content *content )
 
 void ViewerPrivate::slotAttachmentCopy()
 {
+#ifndef QT_NO_CLIPBOARD
   KMime::Content::List contents = selectedContents();
   attachmentCopy( contents );
+#endif
 }
 
 void ViewerPrivate::attachmentCopy( const KMime::Content::List & contents )
