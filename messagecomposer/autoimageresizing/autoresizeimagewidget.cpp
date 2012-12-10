@@ -21,6 +21,7 @@
 
 #include <KComboBox>
 #include <KLocale>
+#include <KMessageBox>
 
 #include <QImageWriter>
 
@@ -148,6 +149,13 @@ void AutoResizeImageWidget::loadConfig()
 
 void AutoResizeImageWidget::writeConfig()
 {
+  if(ui->EnlargeImageToMinimum->isChecked() && ui->ReduceImageToMaximum->isChecked()) {
+    if((ui->customMinimumWidth->value()>=ui->customMaximumWidth->value()) ||
+       (ui->customMinimumHeight->value()>=ui->customMaximumHeight->value())) {
+        KMessageBox::error(this, i18n("Please verify minimum and maximum values."), i18n("Error in minimum Maximum value"));
+        return;
+    }
+  }
   MessageComposer::MessageComposerSettings::self()->setAutoResizeImageEnabled(ui->enabledAutoResize->isChecked());
   MessageComposer::MessageComposerSettings::self()->setKeepImageRatio(ui->KeepImageRatio->isChecked());
   MessageComposer::MessageComposerSettings::self()->setAskBeforeResizing(ui->AskBeforeResizing->isChecked());
