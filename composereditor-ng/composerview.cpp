@@ -51,6 +51,7 @@
 #include <KDebug>
 #include <KFontAction>
 #include <KMenu>
+#include <KFileDialog>
 
 
 #include <QAction>
@@ -120,6 +121,7 @@ public:
     void _k_slotChangePageColorAndBackground();
     void _k_slotToggleBlockQuote();
     void _k_slotEditImage();
+    void _k_slotSaveAs();
 
     QAction* getAction ( QWebPage::WebAction action ) const;
     QVariant evaluateJavascript(const QString& command);
@@ -447,6 +449,27 @@ void ComposerViewPrivate::_k_slotFind()
 void ComposerViewPrivate::_k_slotReplace()
 {
     //TODO
+}
+
+void ComposerViewPrivate::_k_slotSaveAs()
+{
+    QString fn = KFileDialog::getSaveFileName(QString(),i18n("HTML-Files (*.htm *.html);;All Files (*)") ,q,i18n("Save as..."));
+    //TODO add KMessageBox
+    if (fn.isEmpty())
+        return;
+    if (!(fn.endsWith(QLatin1String(".htm"), Qt::CaseInsensitive) ||
+          fn.endsWith(QLatin1String(".html"), Qt::CaseInsensitive))) {
+        fn += QLatin1String(".htm");
+    }
+    QFile file(fn);
+    bool success = file.open(QIODevice::WriteOnly);
+    if (success) {
+        // FIXME: here we always use UTF-8 encoding
+        const QString content = q->page()->mainFrame()->toHtml();
+        QByteArray data = content.toUtf8();
+        const qint64 c = file.write(data);
+        success = (c >= data.length());
+    }
 }
 
 void ComposerViewPrivate::_k_slotChangePageColorAndBackground()

@@ -27,6 +27,8 @@
 namespace ComposerEditorNG
 {
 
+static const int resizeSquareSize = 7;
+
 class ComposerImageResizeWidgetPrivate
 {
 public:
@@ -91,23 +93,23 @@ ComposerImageResizeWidgetPrivate::ResizeDirection ComposerImageResizeWidgetPriva
 {
     ResizeDirection dir;
     const QRect r(imageElement.geometry());
-    if(QRect(r.x(),r.top(),3,3).contains(pos)) {
+    if(QRect(r.x(),r.top(),resizeSquareSize,resizeSquareSize).contains(pos)) {
         dir = TopLeft;
-    } else if(QRect(r.x(),r.bottom(),3,3).contains(pos)) {
+    } else if(QRect(r.x(),r.height()-resizeSquareSize,resizeSquareSize,resizeSquareSize).contains(pos)) {
         dir = BottomLeft;
-    } else if(QRect(r.right(),r.bottom(),3,3).contains(pos)) {
+    } else if(QRect(r.right(),r.height(),resizeSquareSize,resizeSquareSize).contains(pos)) {
         dir = BottomRight;
-    } else if(QRect(r.right(),r.top(),3,3).contains(pos)) {
+    } else if(QRect(r.right(),r.x(),resizeSquareSize,resizeSquareSize).contains(pos)) {
         dir = TopRight;
-    } else if(QRect(r.x(),r.y(),r.width(),3).contains(pos)) {
+    } else if(QRect(r.x(),r.y(),r.width(),resizeSquareSize).contains(pos)) {
         dir = Top;
-    } else if(QRect(r.x(),r.bottom(),r.width(),3).contains(pos)) {
+    } else if(QRect(r.x(),r.height(),r.width(),resizeSquareSize).contains(pos)) {
         dir = Bottom;
-    } else if(QRect(r.x(),r.y(),3,r.height()).contains(pos)) {
+    } else if(QRect(r.x(),r.y(),resizeSquareSize,r.height()).contains(pos)) {
         dir = Left;
-    } else if(QRect(r.right(),r.y(),3,r.height()).contains(pos)) {
+    } else if(QRect(r.right(),r.y(),resizeSquareSize,r.height()).contains(pos)) {
         dir = Right;
-    } else if(QRect(r.right(),r.y(),3,3).contains(pos)) {
+    } else if(QRect(r.right(),r.y(),resizeSquareSize,resizeSquareSize).contains(pos)) {
         dir = TopLeft;
     } else {
         dir = None;
@@ -155,8 +157,22 @@ void ComposerImageResizeWidget::paintEvent( QPaintEvent * )
     if(d->imageElement.isNull())
         return;
 
+
+    const int width = d->imageElement.geometry().width();
+    const int height = d->imageElement.geometry().height();
     QPainter painter(this);
-    painter.drawRect(QRect(0,0,d->imageElement.geometry().width(),d->imageElement.geometry().height()));
+
+    painter.drawRect(QRect(0,0,width,height));
+    painter.fillRect(QRect(0,0,resizeSquareSize,resizeSquareSize),Qt::white);
+    painter.fillRect(QRect(width-resizeSquareSize,0,resizeSquareSize,resizeSquareSize),Qt::white);
+    painter.fillRect(QRect(0,height-resizeSquareSize,resizeSquareSize,resizeSquareSize),Qt::white);
+    painter.fillRect(QRect(width-resizeSquareSize,height-resizeSquareSize,resizeSquareSize,resizeSquareSize),Qt::white);
+
+    painter.fillRect(QRect((width-resizeSquareSize)/2,0,resizeSquareSize,resizeSquareSize),Qt::white);
+    painter.fillRect(QRect((width-resizeSquareSize)/2,height-resizeSquareSize,resizeSquareSize,resizeSquareSize),Qt::white);
+
+    painter.fillRect(QRect(0,(height-resizeSquareSize)/2,resizeSquareSize,resizeSquareSize),Qt::white);
+    painter.fillRect(QRect(width-resizeSquareSize,(height-resizeSquareSize)/2,resizeSquareSize,resizeSquareSize),Qt::white);
 }
 
 
