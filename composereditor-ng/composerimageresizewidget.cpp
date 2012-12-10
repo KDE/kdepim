@@ -22,6 +22,7 @@
 
 #include <QMouseEvent>
 #include <QPainter>
+#include <QDebug>
 
 namespace ComposerEditorNG
 {
@@ -47,6 +48,7 @@ public:
           direction(None),
           mousePressed(false)
     {
+        q->resize(imageElement.geometry().size());
     }
 
     void setResizeDirectionCursor(const QPoint& pos);
@@ -86,8 +88,31 @@ void ComposerImageResizeWidgetPrivate::setResizeDirectionCursor(const QPoint& po
 
 ComposerImageResizeWidgetPrivate::ResizeDirection ComposerImageResizeWidgetPrivate::resizeDirection(const QPoint& pos)
 {
-    //TODO
-    return ComposerImageResizeWidgetPrivate::None;
+    ResizeDirection dir;
+    const QRect r(imageElement.geometry());
+    if(QRect(r.x(),r.top(),3,3).contains(pos)) {
+        dir = TopLeft;
+    } else if(QRect(r.x(),r.bottom(),3,3).contains(pos)) {
+        dir = BottomLeft;
+    } else if(QRect(r.right(),r.bottom(),3,3).contains(pos)) {
+        dir = BottomRight;
+    } else if(QRect(r.right(),r.top(),3,3).contains(pos)) {
+        dir = TopRight;
+    } else if(QRect(r.x(),r.y(),r.width(),3).contains(pos)) {
+        dir = Top;
+    } else if(QRect(r.x(),r.bottom(),r.width(),3).contains(pos)) {
+        dir = Bottom;
+    } else if(QRect(r.x(),r.y(),3,r.height()).contains(pos)) {
+        dir = Left;
+    } else if(QRect(r.right(),r.y(),3,r.height()).contains(pos)) {
+        dir = Right;
+    } else if(QRect(r.right(),r.y(),3,3).contains(pos)) {
+        dir = TopLeft;
+    } else {
+        dir = None;
+    }
+    qDebug()<<" dir  "<<dir;
+    return dir;
 }
 
 ComposerImageResizeWidget::ComposerImageResizeWidget(const QWebElement &element, QWidget *parent)

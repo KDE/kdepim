@@ -25,3 +25,5 @@
 - Add change text support
 - Add extra html setting for table/image/link etc.
 - Add support for anchor
+- Add support for resize directly image with mouse. (In progress)
+
