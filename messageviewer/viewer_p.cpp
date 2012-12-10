@@ -200,6 +200,7 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
     mShowRawToltecMail( false ),
     mRecursionCountForDisplayMessage( 0 ),
     mCurrentContent( 0 ),
+    mMessagePartNode( 0 ),
     mJob( 0 ),
     q( aParent ),
     mShowFullToAddressList( true ),
@@ -1296,6 +1297,7 @@ void ViewerPrivate::resetStateForNewMessage()
   enableMessageDisplay(); // just to make sure it's on
   mMessage.reset();
   mNodeHelper->clear();
+  mMessagePartNode = 0;
   delete mMimePartModel->root();
   mMimePartModel->setRoot( 0 );
   mSavedRelativePosition = 0;
@@ -1363,6 +1365,7 @@ void ViewerPrivate::setMessagePart( KMime::Content * node )
   mUpdateReaderWinTimer.stop();
 
   if ( node ) {
+    mMessagePartNode = node;
     if ( node->bodyIsMessage() ) {
       mMainWindow->setWindowTitle( node->bodyAsMessage()->subject()->asUnicodeString() );
     } else {
@@ -2207,6 +2210,8 @@ void ViewerPrivate::updateReaderWin()
       mColorBar->hide();
     }
     displayMessage();
+  } else if( mMessagePartNode ) {
+    setMessagePart( mMessagePartNode );
   } else {
     mColorBar->hide();
 #ifndef QT_NO_TREEVIEW
