@@ -57,6 +57,7 @@ public:
     ComposerImageResizeWidget *q;
     QWebElement imageElement;
     ResizeDirection direction;
+    QPoint firstPosition;
     bool mousePressed;
 };
 
@@ -138,6 +139,7 @@ void ComposerImageResizeWidget::mouseMoveEvent( QMouseEvent * event )
 void ComposerImageResizeWidget::mousePressEvent( QMouseEvent * event )
 {
     d->mousePressed = true;
+    d->firstPosition = event->pos();
 }
 
 void ComposerImageResizeWidget::mouseReleaseEvent( QMouseEvent * event )
