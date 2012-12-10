@@ -49,6 +49,11 @@ void AddTagDialog::slotOk()
   const QString name(mTagWidget->tagNameLineEdit()->text());
   Nepomuk2::Tag nepomukTag(name);
   nepomukTag.setLabel(name);
+  //TODO
+  /*
+  MailCommon::Tag::SaveFlags saveFlags = mTagWidget->saveFlags();
+  nepomukTag->saveToNepomuk( saveFlags );
+    */
   accept();
 
 
