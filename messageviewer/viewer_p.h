@@ -669,6 +669,7 @@ public:
   bool mZoomTextOnly;
   int mRecursionCountForDisplayMessage;
   KMime::Content *mCurrentContent;
+  KMime::Content *mMessagePartNode;
   QString mCurrentFileName;
   QString mMessagePath;
   QMap<EditorWatcher*, KMime::Content*> mEditorWatchers;
