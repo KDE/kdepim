@@ -505,9 +505,11 @@ void MailWebView::showAccessKeys()
         KAction *a = qobject_cast<KAction*>(act);
         if(a) {
             const KShortcut shortCut = a->shortcut();
-            Q_FOREACH(const QChar& c, unusedKeys) {
-                if(shortCut.conflictsWith(QKeySequence(c))) {
-                    unusedKeys.removeOne(c);
+            if(!shortCut.isEmpty()) {
+                Q_FOREACH(const QChar& c, unusedKeys) {
+                    if(shortCut.conflictsWith(QKeySequence(c))) {
+                        unusedKeys.removeOne(c);
+                    }
                 }
             }
         }
