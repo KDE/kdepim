@@ -186,5 +186,17 @@ void TagWidget::setTagTextFont(const QFont& font)
   mFontRequester->setEnabled( mTextFontCheck->isChecked() );
 }
 
+MailCommon::Tag::SaveFlags TagWidget::saveFlags() const
+{
+  MailCommon::Tag::SaveFlags saveFlags = 0;
+  if ( mTextColorCheck->isChecked() )
+    saveFlags |= MailCommon::Tag::TextColor;
+  if ( mBackgroundColorCheck->isChecked() )
+    saveFlags |= MailCommon::Tag::BackgroundColor;
+  if ( mTextFontCheck->isChecked() )
+    saveFlags |= MailCommon::Tag::Font;
+
+  return saveFlags;
+}
 
 #include "tagwidget.moc"
