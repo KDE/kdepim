@@ -571,7 +571,7 @@ void MailWebView::showAccessKeys()
             || !viewport.contains(geometry.topLeft()))
             continue;
         QChar accessKey;
-        QString text = element.toPlainText().toUpper();
+        const QString text = element.toPlainText().toUpper();
         for (int i = 0; i < text.count(); ++i) {
             const QChar &c = text.at(i);
             if (unusedKeys.contains(c)) {
