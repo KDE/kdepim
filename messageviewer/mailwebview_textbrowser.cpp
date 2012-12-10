@@ -21,6 +21,7 @@
 #include "mailwebview.h"
 
 #include <KDebug>
+#include <KActionCollection>
 
 #include <QContextMenuEvent>
 #include <QTextCursor>
@@ -33,8 +34,9 @@
 using namespace boost;
 using namespace MessageViewer;
 
-MailWebView::MailWebView( QWidget *parent )
-  : QTextBrowser( parent ) // krazy:exclude=qclasses
+MailWebView::MailWebView( KActionCollection *actionCollection, QWidget *parent )
+  : QTextBrowser( parent ), // krazy:exclude=qclasses
+    mActionCollection(actionCollection)
 {
   setOpenLinks( false );
 

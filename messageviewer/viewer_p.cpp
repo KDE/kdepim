@@ -1496,7 +1496,7 @@ void ViewerPrivate::createWidgets() {
   mColorBar->setObjectName( "mColorBar" );
   mColorBar->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Expanding );
 
-  mViewer = new MailWebView( readerBox );
+  mViewer = new MailWebView( mActionCollection, readerBox );
   mViewer->setObjectName( "mViewer" );
 
   mFindBar = new FindBarMailWebView( mViewer, readerBox );

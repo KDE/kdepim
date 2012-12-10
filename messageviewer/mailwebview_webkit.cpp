@@ -19,6 +19,7 @@
 #include "mailwebview.h"
 
 #include <KDebug>
+#include <KActionCollection>
 
 #include <QCoreApplication>
 #include <QContextMenuEvent>
@@ -117,8 +118,8 @@ static void handleDuplicateLinkElements(const QWebElement& element, QHash<QStrin
 }
 
 
-MailWebView::MailWebView( QWidget *parent )
-  : SuperClass( parent )
+MailWebView::MailWebView( KActionCollection *actionCollection, QWidget *parent )
+    : SuperClass( parent ), mActionCollection(actionCollection)
 {
   page()->setLinkDelegationPolicy( QWebPage::DelegateAllLinks );
   settings()->setAttribute( QWebSettings::JavascriptEnabled, false );
@@ -493,10 +494,12 @@ void MailWebView::hideAccessKeys()
 void MailWebView::showAccessKeys()
 {
     QList<QChar> unusedKeys;
-    for (char c = 'A'; c <= 'Z'; ++c)
+    for (char c = 'A'; c <= 'Z'; ++c) {
         unusedKeys << QLatin1Char(c);
-    for (char c = '0'; c <= '9'; ++c)
+    }
+    for (char c = '0'; c <= '9'; ++c) {
         unusedKeys << QLatin1Char(c);
+    }
 
     QList<QWebElement> unLabeledElements;
     QRect viewport = QRect(page()->mainFrame()->scrollPosition(), page()->viewportSize());
