@@ -20,6 +20,7 @@
 
 #include <KDebug>
 #include <KActionCollection>
+#include <KAction>
 
 #include <QCoreApplication>
 #include <QContextMenuEvent>
@@ -499,6 +500,17 @@ void MailWebView::showAccessKeys()
     }
     for (char c = '0'; c <= '9'; ++c) {
         unusedKeys << QLatin1Char(c);
+    }
+    Q_FOREACH(QAction*act, mActionCollection->actions()) {
+        KAction *a = qobject_cast<KAction*>(act);
+        if(a) {
+            const KShortcut shortCut = a->shortcut();
+            Q_FOREACH(const QChar& c, unusedKeys) {
+                if(shortCut.conflictsWith(QKeySequence(c))) {
+                    unusedKeys.removeOne(c);
+                }
+            }
+        }
     }
 
     QList<QWebElement> unLabeledElements;
