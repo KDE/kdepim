@@ -499,7 +499,13 @@ QString CalendarSupport::displayName( const Akonadi::Collection &c )
 
 QString CalendarSupport::displayName( Calendar *calendar, const Akonadi::Collection &c )
 {
-  const QString cName = c.name();
+  QString cName = c.name();
+  if ( cName.isEmpty() && calendar ) {
+    Akonadi::Collection realCollection = calendar->collection( c.id() );
+    if ( realCollection.isValid() ) {
+      cName = realCollection.name();
+    }
+  }
 
   // Kolab Groupware
   if ( c.resource().contains( "kolabproxy" ) ) {
