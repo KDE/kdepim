@@ -117,11 +117,9 @@ namespace KMail {
       void newTagEntries(const QList<Nepomuk2::Query::Result>& results);
       void finishedTagListing();
       void tagsChanged();
-      void slotNepomukStarted();
-      void slotNepomukStopped();
 
     private:
-      void createTagAction( const KMail::Tag::Ptr &tag, bool addToMenu );
+      void createTagAction( const MailCommon::Tag::Ptr &tag, bool addToMenu );
       void createTagActions();
 
       KActionCollection *mActionCollection;
@@ -140,7 +138,7 @@ namespace KMail {
       QList<QAction*> mToolbarActions;
 
       // Cache of the tags to avoid expensive Nepomuk queries
-      QList<Tag::Ptr> mTags;
+      QList<MailCommon::Tag::Ptr> mTags;
 
       Nepomuk2::Query::QueryServiceClient *mTagQueryClient;
  };

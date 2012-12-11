@@ -23,6 +23,7 @@
 #include "pagecolorbackgrounddialog.h"
 #include "composereditorutil_p.h"
 #include "composerimagedialog.h"
+#include "composerimageresizewidget.h"
 
 
 #include <kpimtextedit/emoticontexteditaction.h>
@@ -50,6 +51,7 @@
 #include <KDebug>
 #include <KFontAction>
 #include <KMenu>
+#include <KFileDialog>
 
 
 #include <QAction>
@@ -75,7 +77,8 @@ class ComposerViewPrivate
 {
 public:
     ComposerViewPrivate( ComposerView *qq)
-        : q(qq)
+        : q(qq),
+          imageResizeWidget(0)
     {
     }
 
@@ -118,12 +121,17 @@ public:
     void _k_slotChangePageColorAndBackground();
     void _k_slotToggleBlockQuote();
     void _k_slotEditImage();
+    void _k_slotSaveAs();
 
     QAction* getAction ( QWebPage::WebAction action ) const;
     QVariant evaluateJavascript(const QString& command);
     void execCommand(const QString &cmd);
     void execCommand(const QString &cmd, const QString &arg);
     bool queryCommandState(const QString &cmd);
+
+    void hideImageResizeWidget();
+    void showImageResizeWidget();
+
 
     int spellTextSelectionStart;
     int spellTextSelectionEnd;
@@ -163,7 +171,9 @@ public:
     KAction *action_page_color;
     KAction *action_block_quote;
 
+
     ComposerView *q;
+    ComposerImageResizeWidget *imageResizeWidget;
 };
 }
 
@@ -177,6 +187,21 @@ QAction* ComposerViewPrivate::getAction ( QWebPage::WebAction action ) const
         return q->page()->action( static_cast<QWebPage::WebAction>( action ));
     else
         return 0;
+}
+
+void ComposerViewPrivate::hideImageResizeWidget()
+{
+    delete imageResizeWidget;
+    imageResizeWidget = 0;
+}
+
+void ComposerViewPrivate::showImageResizeWidget()
+{
+    if(!imageResizeWidget) {
+        imageResizeWidget = new ComposerImageResizeWidget(contextMenuResult.element(),q);
+        imageResizeWidget->move(contextMenuResult.element().geometry().topLeft());
+        imageResizeWidget->show();
+    }
 }
 
 
@@ -287,6 +312,7 @@ void ComposerViewPrivate::_k_slotAddImage()
 
 void ComposerViewPrivate::_k_slotEditImage()
 {
+    showImageResizeWidget();
     ComposerImageDialog dlg( contextMenuResult.element(),q );
     dlg.exec();
 }
@@ -299,11 +325,13 @@ void ComposerViewPrivate::_k_slotInsertTable()
         const int numberOfColumns( dlg->columns() );
         const int numberRow( dlg->rows() );
 
-        QString htmlTable = QString::fromLatin1("<table border='%1'>").arg(dlg->border());
+        QString htmlTable = QString::fromLatin1("<table border='%1'").arg(dlg->border());
+        htmlTable += QString::fromLatin1(" width='%1%2'").arg(dlg->length()).arg(dlg->typeOfLength() == QTextLength::PercentageLength ? QLatin1String("%") : QString());
+        htmlTable += QString::fromLatin1(">");
         for(int i = 0; i <numberRow; ++i) {
             htmlTable += QLatin1String("<tr>");
             for(int j = 0; j <numberOfColumns; ++j) {
-                htmlTable += QLatin1String("<td></td>");
+                htmlTable += QLatin1String("<td><br></td>");
             }
             htmlTable += QLatin1String("</tr>");
         }
@@ -434,6 +462,27 @@ void ComposerViewPrivate::_k_slotFind()
 void ComposerViewPrivate::_k_slotReplace()
 {
     //TODO
+}
+
+void ComposerViewPrivate::_k_slotSaveAs()
+{
+    QString fn = KFileDialog::getSaveFileName(QString(),i18n("HTML-Files (*.htm *.html);;All Files (*)") ,q,i18n("Save as..."));
+    //TODO add KMessageBox
+    if (fn.isEmpty())
+        return;
+    if (!(fn.endsWith(QLatin1String(".htm"), Qt::CaseInsensitive) ||
+          fn.endsWith(QLatin1String(".html"), Qt::CaseInsensitive))) {
+        fn += QLatin1String(".htm");
+    }
+    QFile file(fn);
+    bool success = file.open(QIODevice::WriteOnly);
+    if (success) {
+        // FIXME: here we always use UTF-8 encoding
+        const QString content = q->page()->mainFrame()->toHtml();
+        QByteArray data = content.toUtf8();
+        const qint64 c = file.write(data);
+        success = (c >= data.length());
+    }
 }
 
 void ComposerViewPrivate::_k_slotChangePageColorAndBackground()
@@ -790,9 +839,9 @@ void ComposerView::createActions(KActionCollection *actionCollection)
     connect( d->action_page_color, SIGNAL(triggered(bool)), SLOT(_k_slotChangePageColorAndBackground()) );
 }
 
-
 void ComposerView::contextMenuEvent(QContextMenuEvent* event)
 {
+    d->hideImageResizeWidget();
     d->contextMenuResult = page()->mainFrame()->hitTestContent(event->pos());
 
     const bool linkSelected = !d->contextMenuResult.linkElement().isNull();
@@ -839,10 +888,52 @@ void ComposerView::contextMenuEvent(QContextMenuEvent* event)
 
 void ComposerView::setActionsEnabled(bool enabled)
 {
-    foreach(QAction* action, d->htmlEditorActionList)
-    {
+    Q_FOREACH(QAction* action, d->htmlEditorActionList) {
         action->setEnabled(enabled);
     }
+}
+
+void ComposerView::mousePressEvent(QMouseEvent * event)
+{
+    if(event->button() == Qt::LeftButton) {
+        d->contextMenuResult = page()->mainFrame()->hitTestContent(event->pos());
+        const bool imageSelected = !d->contextMenuResult.imageUrl().isEmpty();
+        if(imageSelected) {
+            d->showImageResizeWidget();
+        }
+    } else {
+        d->hideImageResizeWidget();
+    }
+    KWebView::mousePressEvent(event);
+}
+
+void ComposerView::keyPressEvent(QKeyEvent * event)
+{
+    d->hideImageResizeWidget();
+    KWebView::keyPressEvent(event);
+}
+
+void ComposerView::wheelEvent(QWheelEvent * event)
+{
+    d->hideImageResizeWidget();
+    KWebView::wheelEvent(event);
+}
+
+void ComposerView::mouseDoubleClickEvent(QMouseEvent * event)
+{
+    //TODO
+    qDebug()<<" void ComposerView::mouseDoubleClickEvent(QMouseEvent * event)";
+    if(event->button() == Qt::LeftButton) {
+        d->contextMenuResult = page()->mainFrame()->hitTestContent(event->pos());
+        const bool imageSelected = !d->contextMenuResult.imageUrl().isEmpty();
+        if(imageSelected) {
+            d->showImageResizeWidget();
+            d->_k_slotEditImage();
+        }
+    } else {
+        d->hideImageResizeWidget();
+    }
+    KWebView::mouseDoubleClickEvent(event);
 }
 
 }

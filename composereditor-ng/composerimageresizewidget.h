@@ -17,24 +17,36 @@
   02110-1301, USA.
 
 */
-
-#ifndef EXTENDATTRIBUTES_H
-#define EXTENDATTRIBUTES_H
+#ifndef COMPOSERIMAGERESIZEWIDGET_H
+#define COMPOSERIMAGERESIZEWIDGET_H
 
 #include <QWidget>
+#include <QWebElement>
+
+class QPaintEvent;
+class QMouseEvent;
 
 namespace ComposerEditorNG
 {
-class ExtendAttributesPrivate;
-class ExtendAttributes
+class ComposerImageResizeWidgetPrivate;
+class ComposerImageResizeWidget : public QWidget
 {
+    Q_OBJECT
 public:
-    explicit ExtendAttributes(QWidget *parent);
-    ~ExtendAttributes();
+    explicit ComposerImageResizeWidget(const QWebElement& element, QWidget *parent = 0);
+    ~ComposerImageResizeWidget();
+
+protected:
+    void mouseMoveEvent( QMouseEvent * event );
+    void mousePressEvent( QMouseEvent * event );
+    void mouseReleaseEvent( QMouseEvent * event );
+    void paintEvent( QPaintEvent * event );
+
+
 private:
-    friend class ExtendAttributesPrivate;
-    ExtendAttributesPrivate * const d;
+    friend class ComposerImageResizeWidgetPrivate;
+    ComposerImageResizeWidgetPrivate * const d;
 };
 }
 
-#endif // EXTENDATTRIBUTES_H
+#endif // COMPOSERIMAGERESIZEWIDGET_H

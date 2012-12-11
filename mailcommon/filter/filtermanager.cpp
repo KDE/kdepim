@@ -41,7 +41,7 @@ class FilterManager::Private
 {
   public:
     Private( FilterManager *qq )
-      : q( qq )
+      : q( qq ), mMailFilterAgentInterface(0), mTagQueryClient(0)
     {
       mMailFilterAgentInterface = new org::freedesktop::Akonadi::MailFilterAgent( QLatin1String( "org.freedesktop.Akonadi.MailFilterAgent" ),
                                                                                   QLatin1String( "/MailFilterAgent" ),
@@ -117,22 +117,14 @@ FilterActionDict* FilterManager::filterActionDict()
 FilterManager::FilterManager()
   : d( new Private( this ) )
 {
-  d->mTagQueryClient = new Nepomuk2::Query::QueryServiceClient(this);
-  connect( d->mTagQueryClient, SIGNAL(newEntries(QList<Nepomuk2::Query::Result>)),
-           this, SLOT(slotNewTagEntries(QList<Nepomuk2::Query::Result>)) );
-  connect( d->mTagQueryClient, SIGNAL(finishedListing()),
-           this, SLOT(slotFinishedTagListing()) );
-
-  Nepomuk2::Query::ResourceTypeTerm term( Soprano::Vocabulary::NAO::Tag() );
-  Nepomuk2::Query::Query query( term );
-  d->mTagQueryClient->query(query);
+  updateTagList();
 
   Nepomuk2::ResourceWatcher *watcher = new Nepomuk2::ResourceWatcher(this);
-  watcher->addProperty(Nepomuk2::Types::Property(Soprano::Vocabulary::NAO::hasTag()));
+  watcher->addType(Soprano::Vocabulary::NAO::Tag());
   connect(watcher, SIGNAL(resourceCreated(Nepomuk2::Resource,QList<QUrl>)),
-          this, SLOT(slotResourceCreated(Nepomuk2::Resource)));
+          this, SLOT(updateTagList()));
   connect(watcher, SIGNAL(resourceRemoved(QUrl,QList<QUrl>)),
-          this, SLOT(slotResourceRemoved(QUrl,QList<QUrl>)));
+          this, SLOT(updateTagList()));
   watcher->start();
 
   qDBusRegisterMetaType<QList<qint64> >();
@@ -153,6 +145,21 @@ void FilterManager::slotServerStateChanged(Akonadi::ServerManager::State state)
   }
 }
 
+void FilterManager::updateTagList()
+{
+  if( d->mTagQueryClient )
+      return;
+  d->mTagQueryClient = new Nepomuk2::Query::QueryServiceClient(this);
+  connect( d->mTagQueryClient, SIGNAL(newEntries(QList<Nepomuk2::Query::Result>)),
+           this, SLOT(slotNewTagEntries(QList<Nepomuk2::Query::Result>)) );
+  connect( d->mTagQueryClient, SIGNAL(finishedListing()),
+           this, SLOT(slotFinishedTagListing()) );
+
+  Nepomuk2::Query::ResourceTypeTerm term( Soprano::Vocabulary::NAO::Tag() );
+  Nepomuk2::Query::Query query( term );
+  d->mTagQueryClient->query(query);	
+}
+
 void FilterManager::slotReadConfig()
 {
     d->readConfig();
@@ -168,6 +175,7 @@ void FilterManager::slotFinishedTagListing()
 
 void FilterManager::slotNewTagEntries(const QList<Nepomuk2::Query::Result>& results)
 {
+  d->mTagList.clear();
   Q_FOREACH(const Nepomuk2::Query::Result &result, results ) {
     Nepomuk2::Resource resource = result.resource();
     d->mTagList.append( resource.label() );
@@ -178,16 +186,6 @@ void FilterManager::slotNewTagEntries(const QList<Nepomuk2::Query::Result>& resu
 QStringList FilterManager::tagList() const
 {
   return d->mTagList;
-}
-
-void FilterManager::slotResourceCreated(const Nepomuk2::Resource& resource)
-{
-    qDebug()<<" void FilterManager::slotResourceCreated(const Nepomuk2::Resource& resource)"<<resource.label();
-}
-
-void FilterManager::slotResourceRemoved(const QUrl&,const QList<QUrl>&)
-{
-    qDebug()<<"void FilterManager::slotResourceRemoved(const QUrl&,const QList<QUrl>&)";
 }
 
 bool FilterManager::isValid() const

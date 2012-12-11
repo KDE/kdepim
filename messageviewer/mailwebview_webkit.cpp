@@ -16,11 +16,11 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include <config-messageviewer.h>
-
 #include "mailwebview.h"
 
 #include <KDebug>
+#include <KActionCollection>
+#include <KAction>
 
 #include <QCoreApplication>
 #include <QContextMenuEvent>
@@ -119,8 +119,8 @@ static void handleDuplicateLinkElements(const QWebElement& element, QHash<QStrin
 }
 
 
-MailWebView::MailWebView( QWidget *parent )
-  : SuperClass( parent )
+MailWebView::MailWebView( KActionCollection *actionCollection, QWidget *parent )
+    : SuperClass( parent ), mActionCollection(actionCollection)
 {
   page()->setLinkDelegationPolicy( QWebPage::DelegateAllLinks );
   settings()->setAttribute( QWebSettings::JavascriptEnabled, false );
@@ -495,10 +495,25 @@ void MailWebView::hideAccessKeys()
 void MailWebView::showAccessKeys()
 {
     QList<QChar> unusedKeys;
-    for (char c = 'A'; c <= 'Z'; ++c)
+    for (char c = 'A'; c <= 'Z'; ++c) {
         unusedKeys << QLatin1Char(c);
-    for (char c = '0'; c <= '9'; ++c)
+    }
+    for (char c = '0'; c <= '9'; ++c) {
         unusedKeys << QLatin1Char(c);
+    }
+    Q_FOREACH(QAction*act, mActionCollection->actions()) {
+        KAction *a = qobject_cast<KAction*>(act);
+        if(a) {
+            const KShortcut shortCut = a->shortcut();
+            if(!shortCut.isEmpty()) {
+                Q_FOREACH(const QChar& c, unusedKeys) {
+                    if(shortCut.conflictsWith(QKeySequence(c))) {
+                        unusedKeys.removeOne(c);
+                    }
+                }
+            }
+        }
+    }
 
     QList<QWebElement> unLabeledElements;
     QRect viewport = QRect(page()->mainFrame()->scrollPosition(), page()->viewportSize());
@@ -556,7 +571,7 @@ void MailWebView::showAccessKeys()
             || !viewport.contains(geometry.topLeft()))
             continue;
         QChar accessKey;
-        QString text = element.toPlainText().toUpper();
+        const QString text = element.toPlainText().toUpper();
         for (int i = 0; i < text.count(); ++i) {
             const QChar &c = text.at(i);
             if (unusedKeys.contains(c)) {

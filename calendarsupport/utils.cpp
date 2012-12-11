@@ -511,10 +511,31 @@ QString CalendarSupport::displayName( Calendar *calendar, const Akonadi::Collect
       while ( p != Akonadi::Collection::root() ) {
         Akonadi::Collection tCol = calendar->collection( p.id() );
         const QString tName = tCol.name();
-        if ( tName != i18n( "Calendar" ) &&
-             tName != i18n( "Tasks" ) &&
-             tName != i18n( "Journal" ) &&
-             tName != i18n( "Notes" ) ) {
+        if ( tName.toLower().startsWith( QLatin1String( "shared.cal" ) ) ) {
+          ownerStr = "Shared";
+          nameStr = cName;
+          typeStr = "Calendar";
+          break;
+        } else if ( tName.toLower().startsWith( QLatin1String( "shared.tasks" ) ) ||
+                    tName.toLower().startsWith( QLatin1String( "shared.todo" ) ) ) {
+          ownerStr = "Shared";
+          nameStr = cName;
+          typeStr = "Tasks";
+          break;
+        } else if ( tName.toLower().startsWith( QLatin1String( "shared.journal" ) ) ) {
+          ownerStr = "Shared";
+          nameStr = cName;
+          typeStr = "Journal";
+          break;
+        } else if ( tName.toLower().startsWith( QLatin1String( "shared.notes" ) ) ) {
+          ownerStr = "Shared";
+          nameStr = cName;
+          typeStr = "Notes";
+          break;
+        } else if ( tName != i18n( "Calendar" ) &&
+                    tName != i18n( "Tasks" ) &&
+                    tName != i18n( "Journal" ) &&
+                    tName != i18n( "Notes" ) ) {
           ownerStr = tName;
           break;
         } else {
@@ -526,7 +547,13 @@ QString CalendarSupport::displayName( Calendar *calendar, const Akonadi::Collect
     }
 
     if ( !ownerStr.isEmpty() ) {
-      if ( ownerStr.toUpper() != QString( "INBOX" ) ) {
+      if ( ownerStr.toUpper() == QString( "INBOX" ) ) {
+        return i18nc( "%1 is folder contents",
+                      "My Kolab %1", typeStr );
+      } else if ( ownerStr.toUpper() == QString( "SHARED" ) ) {
+        return i18nc( "%1 is folder name, %2 is folder contents",
+                      "Shared Kolab %1 %2", nameStr, typeStr );
+      } else {
         if ( nameStr.isEmpty() ) {
           return i18nc( "%1 is folder owner name, %2 is folder contents",
                         "%1's Kolab %2", ownerStr, typeStr );
@@ -534,9 +561,6 @@ QString CalendarSupport::displayName( Calendar *calendar, const Akonadi::Collect
           return i18nc( "%1 is folder owner name, %2 is folder name, %3 is folder contents",
                         "%1's %2 Kolab %3", ownerStr, nameStr, typeStr );
         }
-      } else {
-        return i18nc( "%1 is folder contents",
-                      "My Kolab %1", typeStr );
       }
     } else {
       return i18nc( "%1 is folder contents",
@@ -601,10 +625,16 @@ QString CalendarSupport::displayName( Calendar *calendar, const Akonadi::Collect
 
   // Not groupware so the collection is "mine"
   const Akonadi::EntityDisplayAttribute *attr = c.attribute<Akonadi::EntityDisplayAttribute>();
+  QString dName;
   if ( attr && !attr->displayName().isEmpty() ) {
-    return i18n( "My %1", attr->displayName() );
+    dName = attr->displayName();
   } else {
-    return i18n( "My %1", cName );
+    dName = cName;
+  }
+  if ( !dName.isEmpty() ) {
+    return i18n( "My %1", dName );
+  } else {
+    return i18nc( "unknown resource", "Unknown" );
   }
 }
 

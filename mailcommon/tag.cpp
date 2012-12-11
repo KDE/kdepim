@@ -25,7 +25,8 @@
 #include <Nepomuk2/Tag>
 #include <Nepomuk2/Variant>
 #include <QDebug>
-using namespace KMail;
+
+using namespace MailCommon;
 
 Tag::Ptr Tag::fromNepomuk( const Nepomuk2::Tag& nepomukTag )
 {

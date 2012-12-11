@@ -100,8 +100,17 @@ set(libmailcommon_SRCS
   snippetsmodel.cpp
   snippetvariabledialog.cpp
   tagwidget.cpp
+  tag.cpp
   filter/addtagdialog.cpp
 )
+
+soprano_add_ontology(libmailcommon_SRCS
+  ${CMAKE_SOURCE_DIR}/messagecore/messagetag.trig
+  "MessageTag"
+  "Vocabulary"
+  "trig"
+)
+
 
 set_source_files_properties(${CMAKE_SOURCE_DIR}/mailfilteragent/org.freedesktop.Akonadi.MailFilterAgent.xml PROPERTIES INCLUDE "../mailfilteragent/dbusoperators.h")
 

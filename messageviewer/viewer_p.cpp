@@ -83,12 +83,8 @@
 #include <QItemSelectionModel>
 #include <QSignalMapper>
 #include <QSplitter>
-#include <QStyle>
-#include <QTextDocument>
 #include <QTreeView>
 #include <QVBoxLayout>
-#include <QScrollBar>
-#include <QScrollArea>
 #include <QPrinter>
 #include <QPrintDialog>
 #include <QHeaderView>
@@ -200,6 +196,7 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
     mShowRawToltecMail( false ),
     mRecursionCountForDisplayMessage( 0 ),
     mCurrentContent( 0 ),
+    mMessagePartNode( 0 ),
     mJob( 0 ),
     q( aParent ),
     mShowFullToAddressList( true ),
@@ -1055,27 +1052,7 @@ void ViewerPrivate::initHtmlWidget()
     mHtmlWriter = mPartHtmlWriter;
 #endif
   }
-#if 0
-  // We do a queued connection below, and for that we need to register the meta types of the
-  // parameters.
-  //
-  // Why do we do a queued connection instead of a direct one? slotUrlOpen() handles those clicks,
-  // and can end up in the click handler for accepting invitations. That handler can pop up a dialog
-  // asking the user for a comment on the invitation reply. This dialog is started with exec(), i.e.
-  // executes a sub-eventloop. This sub-eventloop then eventually re-enters the KHTML event handler,
-  // which then thinks we started a drag, and therefore adds a silly drag object to the cursor, with
-  // urls like x-kmail-whatever/43/8/accept, and we don't want that drag object.
-  //
-  // Therefore, use queued connections to avoid the reentry of the KHTML event loop, so we don't
-  // get the drag object.
-  static bool metaTypesRegistered = false;
-  if ( !metaTypesRegistered ) {
-    qRegisterMetaType<KParts::OpenUrlArguments>( "KParts::OpenUrlArguments" );
-    qRegisterMetaType<KParts::BrowserArguments>( "KParts::BrowserArguments" );
-    qRegisterMetaType<KParts::WindowArgs>( "KParts::WindowArgs" );
-    metaTypesRegistered = true;
-  }
-#endif
+
   connect( mViewer, SIGNAL(linkHovered(QString,QString,QString)),
            this, SLOT(slotUrlOn(QString,QString,QString)) );
   connect( mViewer, SIGNAL(linkClicked(QUrl)),
@@ -1296,6 +1273,7 @@ void ViewerPrivate::resetStateForNewMessage()
   enableMessageDisplay(); // just to make sure it's on
   mMessage.reset();
   mNodeHelper->clear();
+  mMessagePartNode = 0;
   delete mMimePartModel->root();
   mMimePartModel->setRoot( 0 );
   mSavedRelativePosition = 0;
@@ -1363,6 +1341,7 @@ void ViewerPrivate::setMessagePart( KMime::Content * node )
   mUpdateReaderWinTimer.stop();
 
   if ( node ) {
+    mMessagePartNode = node;
     if ( node->bodyIsMessage() ) {
       mMainWindow->setWindowTitle( node->bodyAsMessage()->subject()->asUnicodeString() );
     } else {
@@ -1496,7 +1475,7 @@ void ViewerPrivate::createWidgets() {
   mColorBar->setObjectName( "mColorBar" );
   mColorBar->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Expanding );
 
-  mViewer = new MailWebView( readerBox );
+  mViewer = new MailWebView( mActionCollection, readerBox );
   mViewer->setObjectName( "mViewer" );
 
   mFindBar = new FindBarMailWebView( mViewer, readerBox );
@@ -2207,6 +2186,8 @@ void ViewerPrivate::updateReaderWin()
       mColorBar->hide();
     }
     displayMessage();
+  } else if( mMessagePartNode ) {
+    setMessagePart( mMessagePartNode );
   } else {
     mColorBar->hide();
 #ifndef QT_NO_TREEVIEW
@@ -2543,12 +2524,12 @@ void ViewerPrivate::attachmentProperties( KMime::Content *content )
   dialog->show();
 }
 
-
-
 void ViewerPrivate::slotAttachmentCopy()
 {
+#ifndef QT_NO_CLIPBOARD
   KMime::Content::List contents = selectedContents();
   attachmentCopy( contents );
+#endif
 }
 
 void ViewerPrivate::attachmentCopy( const KMime::Content::List & contents )

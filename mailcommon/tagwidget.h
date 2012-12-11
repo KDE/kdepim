@@ -20,6 +20,8 @@
 
 #include "mailcommon_export.h"
 
+#include "tag.h"
+
 #include <QWidget>
 
 class KLineEdit;
@@ -38,6 +40,10 @@ class MAILCOMMON_EXPORT TagWidget : public QWidget
 public:
   explicit TagWidget(const QList<KActionCollection *> &actionCollections, QWidget *parent = 0);
   ~TagWidget();
+
+  MailCommon::Tag::SaveFlags saveFlags() const;
+  void recordTagSettings( MailCommon::Tag::Ptr tag);
+
 
   KLineEdit *tagNameLineEdit() { return mTagNameLineEdit; }
   QCheckBox *textColorCheck() { return mTextColorCheck; }

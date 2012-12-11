@@ -33,9 +33,9 @@ if(BUILD_akregator)
   add_subdirectory(akregator2)
 endif()
 
-if(BUILD_ktimetracker)
-  add_subdirectory(ktimetracker)
-endif()
+#if(BUILD_ktimetracker)
+#  add_subdirectory(ktimetracker)
+#endif()
 
 if(BUILD_kaddressbook)
   add_subdirectory(kaddressbook)

@@ -17,24 +17,26 @@
   02110-1301, USA.
 
 */
+#ifndef COMPOSERTABLEDIALOG_H
+#define COMPOSERTABLEDIALOG_H
 
-#ifndef EXTENDATTRIBUTES_H
-#define EXTENDATTRIBUTES_H
-
-#include <QWidget>
+#include <KDialog>
 
 namespace ComposerEditorNG
 {
-class ExtendAttributesPrivate;
-class ExtendAttributes
+class ComposerTableDialogPrivate;
+
+class ComposerTableDialog : public KDialog
 {
+    Q_OBJECT
 public:
-    explicit ExtendAttributes(QWidget *parent);
-    ~ExtendAttributes();
+    explicit ComposerTableDialog(QWidget *parent);
+    ~ComposerTableDialog();
+
 private:
-    friend class ExtendAttributesPrivate;
-    ExtendAttributesPrivate * const d;
+    friend class ComposerTableDialogPrivate;
+    ComposerTableDialogPrivate * const d;
 };
 }
 
-#endif // EXTENDATTRIBUTES_H
+#endif // COMPOSERTABLEDIALOG_H

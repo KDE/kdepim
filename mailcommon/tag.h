@@ -16,8 +16,10 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef TAG_H
-#define TAG_H
+#ifndef MAILCOMMONTAG_H
+#define MAILCOMMONTAG_H
+
+#include "mailcommon_export.h"
 
 #include <KShortcut>
 
@@ -30,13 +32,13 @@ namespace Nepomuk2 {
   class Tag;
 }
 
-namespace KMail {
+namespace MailCommon {
 
   // Our own copy of the tag data normally attached to a Nepomuk2::Tag.
   // Useful in the config dialog, because the user might cancel his changes,
   // in which case we don't write them back to the Nepomuk2::Tag.
   // Also used as a convenience class in the TagActionManager.
-  class Tag
+  class MAILCOMMON_EXPORT Tag
   {
     Q_GADGET
     public:

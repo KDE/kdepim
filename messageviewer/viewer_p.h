@@ -53,15 +53,8 @@ class KMenu;
 
 class QPoint;
 class QSplitter;
-class QStyle;
 class QModelIndex;
 class QTreeView;
-class QActionGroup;
-
-namespace KParts {
-  struct BrowserArguments;
-  class OpenUrlArguments;
-}
 
 namespace MessageViewer {
 
@@ -682,6 +675,7 @@ public:
   bool mZoomTextOnly;
   int mRecursionCountForDisplayMessage;
   KMime::Content *mCurrentContent;
+  KMime::Content *mMessagePartNode;
   QString mCurrentFileName;
   QString mMessagePath;
   QMap<EditorWatcher*, KMime::Content*> mEditorWatchers;

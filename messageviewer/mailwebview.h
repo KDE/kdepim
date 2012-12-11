@@ -37,6 +37,7 @@
 
 class QAction;
 class QLabel;
+class KActionCollection;
 
 namespace MessageViewer {
 
@@ -54,7 +55,7 @@ class MESSAGEVIEWER_EXPORT MailWebView : public KWebView
   Q_OBJECT
 public:
 
-    explicit MailWebView( QWidget *parent=0 );
+    explicit MailWebView(KActionCollection *actionCollection = 0, QWidget *parent=0 );
     ~MailWebView();
 
     enum FindFlag {
@@ -140,6 +141,7 @@ private:
     QHash<QChar, QWebElement> mAccessKeyNodes;
     QHash<QString, QChar> mDuplicateLinkElements;
 #endif
+    KActionCollection *mActionCollection;
 };
 
 }
