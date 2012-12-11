@@ -167,9 +167,7 @@ class MAILCOMMON_EXPORT FilterManager : public QObject
     void slotFinishedTagListing();
     void slotNewTagEntries(const QList<Nepomuk2::Query::Result>&);
     void slotReadConfig();
-    void slotResourceCreated(const Nepomuk2::Resource& resource);
-    void slotResourceRemoved(const QUrl&,const QList<QUrl>&);
-
+    void updateTagList();
   Q_SIGNALS:
     /**
      * This signal is emitted whenever the filter list has been updated.
