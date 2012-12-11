@@ -53,15 +53,8 @@ class KMenu;
 
 class QPoint;
 class QSplitter;
-class QStyle;
 class QModelIndex;
 class QTreeView;
-class QActionGroup;
-
-namespace KParts {
-  struct BrowserArguments;
-  class OpenUrlArguments;
-}
 
 namespace MessageViewer {
 

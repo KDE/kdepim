@@ -1052,27 +1052,7 @@ void ViewerPrivate::initHtmlWidget()
     mHtmlWriter = mPartHtmlWriter;
 #endif
   }
-#if 0
-  // We do a queued connection below, and for that we need to register the meta types of the
-  // parameters.
-  //
-  // Why do we do a queued connection instead of a direct one? slotUrlOpen() handles those clicks,
-  // and can end up in the click handler for accepting invitations. That handler can pop up a dialog
-  // asking the user for a comment on the invitation reply. This dialog is started with exec(), i.e.
-  // executes a sub-eventloop. This sub-eventloop then eventually re-enters the KHTML event handler,
-  // which then thinks we started a drag, and therefore adds a silly drag object to the cursor, with
-  // urls like x-kmail-whatever/43/8/accept, and we don't want that drag object.
-  //
-  // Therefore, use queued connections to avoid the reentry of the KHTML event loop, so we don't
-  // get the drag object.
-  static bool metaTypesRegistered = false;
-  if ( !metaTypesRegistered ) {
-    qRegisterMetaType<KParts::OpenUrlArguments>( "KParts::OpenUrlArguments" );
-    qRegisterMetaType<KParts::BrowserArguments>( "KParts::BrowserArguments" );
-    qRegisterMetaType<KParts::WindowArgs>( "KParts::WindowArgs" );
-    metaTypesRegistered = true;
-  }
-#endif
+
   connect( mViewer, SIGNAL(linkHovered(QString,QString,QString)),
            this, SLOT(slotUrlOn(QString,QString,QString)) );
   connect( mViewer, SIGNAL(linkClicked(QUrl)),
@@ -2543,8 +2523,6 @@ void ViewerPrivate::attachmentProperties( KMime::Content *content )
   dialog->setAttribute( Qt::WA_DeleteOnClose );
   dialog->show();
 }
-
-
 
 void ViewerPrivate::slotAttachmentCopy()
 {
