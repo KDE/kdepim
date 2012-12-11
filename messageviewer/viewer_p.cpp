@@ -83,12 +83,8 @@
 #include <QItemSelectionModel>
 #include <QSignalMapper>
 #include <QSplitter>
-#include <QStyle>
-#include <QTextDocument>
 #include <QTreeView>
 #include <QVBoxLayout>
-#include <QScrollBar>
-#include <QScrollArea>
 #include <QPrinter>
 #include <QPrintDialog>
 #include <QHeaderView>
