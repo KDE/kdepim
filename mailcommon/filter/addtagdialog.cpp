@@ -45,15 +45,13 @@ AddTagDialog::~AddTagDialog()
 
 void AddTagDialog::slotOk()
 {
-  //TODO save result
   const QString name(mTagWidget->tagNameLineEdit()->text());
-  Nepomuk2::Tag nepomukTag(name);
-  nepomukTag.setLabel(name);
-  //TODO
-  /*
+  Nepomuk2::Tag nepomukTag( name );
+  nepomukTag.setLabel( name );
+
+  MailCommon::Tag::Ptr tag = MailCommon::Tag::fromNepomuk( nepomukTag );
   MailCommon::Tag::SaveFlags saveFlags = mTagWidget->saveFlags();
-  nepomukTag->saveToNepomuk( saveFlags );
-    */
+  tag->saveToNepomuk( saveFlags );
   accept();
 
 
