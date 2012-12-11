@@ -130,6 +130,7 @@ public:
     bool queryCommandState(const QString &cmd);
 
     void hideImageResizeWidget();
+    void showImageResizeWidget();
 
 
     int spellTextSelectionStart;
@@ -192,6 +193,15 @@ void ComposerViewPrivate::hideImageResizeWidget()
 {
     delete imageResizeWidget;
     imageResizeWidget = 0;
+}
+
+void ComposerViewPrivate::showImageResizeWidget()
+{
+    if(!imageResizeWidget) {
+        imageResizeWidget = new ComposerImageResizeWidget(contextMenuResult.element(),q);
+        imageResizeWidget->move(contextMenuResult.element().geometry().topLeft());
+        imageResizeWidget->show();
+    }
 }
 
 
@@ -302,6 +312,7 @@ void ComposerViewPrivate::_k_slotAddImage()
 
 void ComposerViewPrivate::_k_slotEditImage()
 {
+    showImageResizeWidget();
     ComposerImageDialog dlg( contextMenuResult.element(),q );
     dlg.exec();
 }
@@ -314,11 +325,13 @@ void ComposerViewPrivate::_k_slotInsertTable()
         const int numberOfColumns( dlg->columns() );
         const int numberRow( dlg->rows() );
 
-        QString htmlTable = QString::fromLatin1("<table border='%1'>").arg(dlg->border());
+        QString htmlTable = QString::fromLatin1("<table border='%1'").arg(dlg->border());
+        htmlTable += QString::fromLatin1(" width='%1%2'").arg(dlg->length()).arg(dlg->typeOfLength() == QTextLength::PercentageLength ? QLatin1String("%") : QString());
+        htmlTable += QString::fromLatin1(">");
         for(int i = 0; i <numberRow; ++i) {
             htmlTable += QLatin1String("<tr>");
             for(int j = 0; j <numberOfColumns; ++j) {
-                htmlTable += QLatin1String("<td></td>");
+                htmlTable += QLatin1String("<td><br></td>");
             }
             htmlTable += QLatin1String("</tr>");
         }
@@ -826,11 +839,9 @@ void ComposerView::createActions(KActionCollection *actionCollection)
     connect( d->action_page_color, SIGNAL(triggered(bool)), SLOT(_k_slotChangePageColorAndBackground()) );
 }
 
-
 void ComposerView::contextMenuEvent(QContextMenuEvent* event)
 {
-    delete d->imageResizeWidget;
-    d->imageResizeWidget = 0;
+    d->hideImageResizeWidget();
     d->contextMenuResult = page()->mainFrame()->hitTestContent(event->pos());
 
     const bool linkSelected = !d->contextMenuResult.linkElement().isNull();
@@ -877,8 +888,7 @@ void ComposerView::contextMenuEvent(QContextMenuEvent* event)
 
 void ComposerView::setActionsEnabled(bool enabled)
 {
-    foreach(QAction* action, d->htmlEditorActionList)
-    {
+    Q_FOREACH(QAction* action, d->htmlEditorActionList) {
         action->setEnabled(enabled);
     }
 }
@@ -886,14 +896,10 @@ void ComposerView::setActionsEnabled(bool enabled)
 void ComposerView::mousePressEvent(QMouseEvent * event)
 {
     if(event->button() == Qt::LeftButton) {
-        const QWebHitTestResult result = page()->mainFrame()->hitTestContent(event->pos());
-        const bool imageSelected = !result.imageUrl().isEmpty();
+        d->contextMenuResult = page()->mainFrame()->hitTestContent(event->pos());
+        const bool imageSelected = !d->contextMenuResult.imageUrl().isEmpty();
         if(imageSelected) {
-            if(!d->imageResizeWidget) {
-                d->imageResizeWidget = new ComposerImageResizeWidget(result.element(),this);
-                d->imageResizeWidget->move(result.element().geometry().topLeft());
-                d->imageResizeWidget->show();
-            }
+            d->showImageResizeWidget();
         }
     } else {
         d->hideImageResizeWidget();
@@ -911,6 +917,23 @@ void ComposerView::wheelEvent(QWheelEvent * event)
 {
     d->hideImageResizeWidget();
     KWebView::wheelEvent(event);
+}
+
+void ComposerView::mouseDoubleClickEvent(QMouseEvent * event)
+{
+    //TODO
+    qDebug()<<" void ComposerView::mouseDoubleClickEvent(QMouseEvent * event)";
+    if(event->button() == Qt::LeftButton) {
+        d->contextMenuResult = page()->mainFrame()->hitTestContent(event->pos());
+        const bool imageSelected = !d->contextMenuResult.imageUrl().isEmpty();
+        if(imageSelected) {
+            d->showImageResizeWidget();
+            d->_k_slotEditImage();
+        }
+    } else {
+        d->hideImageResizeWidget();
+    }
+    KWebView::mouseDoubleClickEvent(event);
 }
 
 }

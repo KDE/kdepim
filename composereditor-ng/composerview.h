@@ -44,6 +44,7 @@ protected:
     void mousePressEvent(QMouseEvent * event);
     void keyPressEvent(QKeyEvent * event);
     void wheelEvent(QWheelEvent * event);
+    void mouseDoubleClickEvent(QMouseEvent *);
 
 Q_SIGNALS:
     void showFindBar();
