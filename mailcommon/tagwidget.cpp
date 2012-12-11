@@ -125,13 +125,14 @@ TagWidget::TagWidget(const QList<KActionCollection*>& actionCollections, QWidget
     QLabel *sclabel = new QLabel( i18n("Shortc&ut:") , this );
     sclabel->setBuddy( mKeySequenceWidget );
     settings->addWidget( sclabel, 6, 0 );
-    if( !actionCollections.isEmpty() )
+    if( !actionCollections.isEmpty() ) {
       mKeySequenceWidget->setCheckActionCollections( actionCollections );
+      connect( mKeySequenceWidget, SIGNAL(keySequenceChanged(QKeySequence)),
+               this, SLOT(slotEmitChangeCheck()) );
+    }
     else
       mKeySequenceWidget->setEnabled(false);
 
-    connect( mKeySequenceWidget, SIGNAL(keySequenceChanged(QKeySequence)),
-             this, SLOT(slotEmitChangeCheck()) );
 
     //Seventh for Toolbar checkbox
     mInToolbarCheck = new QCheckBox( i18n("Enable &toolbar button"),
@@ -197,6 +198,23 @@ MailCommon::Tag::SaveFlags TagWidget::saveFlags() const
     saveFlags |= MailCommon::Tag::Font;
 
   return saveFlags;
+}
+
+void TagWidget::recordTagSettings( MailCommon::Tag::Ptr tag)
+{
+  tag->textColor = mTextColorCheck->isChecked() ? mTextColorCombo->color() : QColor();
+
+  tag->backgroundColor = mBackgroundColorCheck->isChecked() ? mBackgroundColorCombo->color() : QColor();
+
+  tag->textFont = mTextFontCheck->isChecked() ? mFontRequester->font() : QFont();
+
+  tag->iconName = iconButton()->icon();
+  if(mKeySequenceWidget->isEnabled()) {
+    mKeySequenceWidget->applyStealShortcut();
+    tag->shortcut = KShortcut( mKeySequenceWidget->keySequence() );
+  }
+
+  tag->inToolbar = mInToolbarCheck->isChecked();
 }
 
 #include "tagwidget.moc"

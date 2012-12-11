@@ -42,6 +42,8 @@ public:
   ~TagWidget();
 
   MailCommon::Tag::SaveFlags saveFlags() const;
+  void recordTagSettings( MailCommon::Tag::Ptr tag);
+
 
   KLineEdit *tagNameLineEdit() { return mTagNameLineEdit; }
   QCheckBox *textColorCheck() { return mTextColorCheck; }

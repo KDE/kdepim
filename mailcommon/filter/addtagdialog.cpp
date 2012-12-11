@@ -50,6 +50,7 @@ void AddTagDialog::slotOk()
   nepomukTag.setLabel( name );
 
   MailCommon::Tag::Ptr tag = MailCommon::Tag::fromNepomuk( nepomukTag );
+  mTagWidget->recordTagSettings(tag);
   MailCommon::Tag::SaveFlags saveFlags = mTagWidget->saveFlags();
   tag->saveToNepomuk( saveFlags );
   accept();
