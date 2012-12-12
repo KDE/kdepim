@@ -44,6 +44,16 @@ public:
     QColor textColor() const;
     void setTextColor(const QColor &);
 
+    QColor linkColor() const;
+    void setLinkColor(const QColor &col);
+
+    QColor activeLinkColor() const;
+    void setActiveLinkColor(const QColor &col);
+
+    QColor visitedLinkColor() const;
+    void setVisitedLinkColor(const QColor &col);
+
+
     void setUseDefaultColor(bool b);
     bool useDefaultColor() const;
 

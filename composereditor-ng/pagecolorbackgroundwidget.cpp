@@ -61,7 +61,6 @@ void PageColorBackgroundWidget::setTextColor(const QColor &col)
     ui->textColor->setColor(col);
 }
 
-
 void PageColorBackgroundWidget::setUseDefaultColor(bool b)
 {
     if(b)
@@ -83,6 +82,36 @@ KUrl PageColorBackgroundWidget::backgroundImageUrl() const
 void PageColorBackgroundWidget::setBackgroundImageUrl(const KUrl& url)
 {
     ui->backgroundImage->setUrl(url);
+}
+
+QColor PageColorBackgroundWidget::linkColor() const
+{
+    return ui->linkColor->color();
+}
+
+void PageColorBackgroundWidget::setLinkColor(const QColor &col)
+{
+    ui->linkColor->setColor(col);
+}
+
+QColor PageColorBackgroundWidget::activeLinkColor() const
+{
+    return ui->activeLinkColor->color();
+}
+
+void PageColorBackgroundWidget::setActiveLinkColor(const QColor &col)
+{
+    ui->activeLinkColor->setColor(col);
+}
+
+QColor PageColorBackgroundWidget::visitedLinkColor() const
+{
+    return ui->visitedLinkColor->color();
+}
+
+void PageColorBackgroundWidget::setVisitedLinkColor(const QColor &col)
+{
+    ui->visitedLinkColor->setColor(col);
 }
 
 #include "pagecolorbackgroundwidget.moc"
