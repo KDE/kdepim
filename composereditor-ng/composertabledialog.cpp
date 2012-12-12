@@ -40,10 +40,17 @@ public:
 
     void initialize( const QWebElement& element = QWebElement() );
 
+    void updateTableHtml();
+
     QWebElement webElement;
     KPIMTextEdit::InsertTableWidget *insertTableWidget;
     ComposerTableDialog *q;
 };
+
+void ComposerTableDialogPrivate::updateTableHtml()
+{
+    //TODO
+}
 
 QString ComposerTableDialogPrivate::html() const
 {
@@ -72,6 +79,7 @@ void ComposerTableDialogPrivate::initialize(const QWebElement &element)
     q->setButtonText( KDialog::Ok, i18n( "Insert" ) );
     insertTableWidget = new KPIMTextEdit::InsertTableWidget( q );
     q->setMainWidget( insertTableWidget );
+    q->connect(q,SIGNAL(okClicked()),q,SLOT(slotOkClicked()));
 }
 
 ComposerTableDialog::ComposerTableDialog(QWidget *parent)
@@ -95,6 +103,15 @@ QString ComposerTableDialog::html() const
 {
     return d->html();
 }
+
+void ComposerTableDialog::slotOkClicked()
+{
+    if(!d->webElement.isNull()) {
+        d->updateTableHtml();
+    }
+    accept();
+}
+
 
 }
 
