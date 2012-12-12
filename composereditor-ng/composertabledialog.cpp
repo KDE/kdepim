@@ -36,6 +36,8 @@ public:
     {
     }
 
+    QString html() const;
+
     void initialize( const QWebElement& element = QWebElement() );
 
     QWebElement webElement;
@@ -43,8 +45,28 @@ public:
     ComposerTableDialog *q;
 };
 
+QString ComposerTableDialogPrivate::html() const
+{
+    const int numberOfColumns( insertTableWidget->columns() );
+    const int numberRow( insertTableWidget->rows() );
+
+    QString htmlTable = QString::fromLatin1("<table border='%1'").arg(insertTableWidget->border());
+    htmlTable += QString::fromLatin1(" width='%1%2'").arg(insertTableWidget->length()).arg(insertTableWidget->typeOfLength() == QTextLength::PercentageLength ? QLatin1String("%") : QString());
+    htmlTable += QString::fromLatin1(">");
+    for(int i = 0; i <numberRow; ++i) {
+        htmlTable += QLatin1String("<tr>");
+        for(int j = 0; j <numberOfColumns; ++j) {
+            htmlTable += QLatin1String("<td><br></td>");
+        }
+        htmlTable += QLatin1String("</tr>");
+    }
+    htmlTable += QLatin1String("</table>");
+    return htmlTable;
+}
+
 void ComposerTableDialogPrivate::initialize(const QWebElement &element)
 {
+    webElement = element;
     q->setCaption( element.isNull() ? i18n( "Insert Table" ) : i18n( "Edit Table" ) );
     q->setButtons( KDialog::Ok|KDialog::Cancel );
     q->setButtonText( KDialog::Ok, i18n( "Insert" ) );
@@ -58,9 +80,22 @@ ComposerTableDialog::ComposerTableDialog(QWidget *parent)
     d->initialize();
 }
 
+ComposerTableDialog::ComposerTableDialog(const QWebElement& element, QWidget *parent)
+    : KDialog(parent), d(new ComposerTableDialogPrivate(this))
+{
+    d->initialize(element);
+}
+
 ComposerTableDialog::~ComposerTableDialog()
 {
     delete d;
 }
 
+QString ComposerTableDialog::html() const
+{
+    return d->html();
 }
+
+}
+
+#include "composertabledialog.moc"

@@ -22,7 +22,8 @@
 #define COMPOSERIMAGEDIALOG_H
 
 #include <KDialog>
-#include <QWebElement>
+
+class QWebElement;
 
 namespace ComposerEditorNG
 {

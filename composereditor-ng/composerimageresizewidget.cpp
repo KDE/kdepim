@@ -219,3 +219,5 @@ void ComposerImageResizeWidget::paintEvent( QPaintEvent * )
 
 
 }
+
+#include "composerimageresizewidget.moc"

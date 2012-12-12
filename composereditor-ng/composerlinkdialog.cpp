@@ -26,6 +26,7 @@
 
 #include <QVBoxLayout>
 #include <QLabel>
+#include <QWebElement>
 
 namespace ComposerEditorNG {
 class ComposerLinkDialogPrivate

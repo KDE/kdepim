@@ -21,7 +21,7 @@
 #define COMPOSERTABLEDIALOG_H
 
 #include <KDialog>
-
+class QWebElement;
 namespace ComposerEditorNG
 {
 class ComposerTableDialogPrivate;
@@ -31,7 +31,10 @@ class ComposerTableDialog : public KDialog
     Q_OBJECT
 public:
     explicit ComposerTableDialog(QWidget *parent);
+    explicit ComposerTableDialog(const QWebElement& element, QWidget *parent);
     ~ComposerTableDialog();
+
+    QString html() const;
 
 private:
     friend class ComposerTableDialogPrivate;

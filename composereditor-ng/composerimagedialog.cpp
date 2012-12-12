@@ -28,7 +28,7 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QLabel>
-
+#include <QWebElement>
 
 namespace ComposerEditorNG {
 
