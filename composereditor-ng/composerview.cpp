@@ -904,8 +904,6 @@ void ComposerView::wheelEvent(QWheelEvent * event)
 
 void ComposerView::mouseDoubleClickEvent(QMouseEvent * event)
 {
-    //TODO
-    qDebug()<<" void ComposerView::mouseDoubleClickEvent(QMouseEvent * event)";
     if(event->button() == Qt::LeftButton) {
         d->contextMenuResult = page()->mainFrame()->hitTestContent(event->pos());
         const bool imageSelected = !d->contextMenuResult.imageUrl().isEmpty();

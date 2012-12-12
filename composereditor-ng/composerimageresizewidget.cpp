@@ -180,6 +180,8 @@ void ComposerImageResizeWidget::mousePressEvent( QMouseEvent * event )
     if(d->direction!=ComposerImageResizeWidgetPrivate::None) {
         d->mousePressed = true;
         d->firstPosition = event->pos();
+    } else {
+        event->ignore();
     }
 
 }
@@ -191,7 +193,6 @@ void ComposerImageResizeWidget::mouseReleaseEvent( QMouseEvent * event )
         d->mousePressed = false;
         d->direction = ComposerImageResizeWidgetPrivate::None;
     }
-
 }
 
 void ComposerImageResizeWidget::paintEvent( QPaintEvent * )
