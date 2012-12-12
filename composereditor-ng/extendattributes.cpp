@@ -32,7 +32,7 @@ public:
 
 
 ExtendAttributes::ExtendAttributes(QWidget *parent)
-    : d(new ExtendAttributesPrivate)
+    : KDialog(parent), d(new ExtendAttributesPrivate)
 {
 }
 

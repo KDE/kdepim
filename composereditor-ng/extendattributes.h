@@ -21,12 +21,12 @@
 #ifndef EXTENDATTRIBUTES_H
 #define EXTENDATTRIBUTES_H
 
-#include <QWidget>
+#include <KDialog>
 
 namespace ComposerEditorNG
 {
 class ExtendAttributesPrivate;
-class ExtendAttributes
+class ExtendAttributes : public KDialog
 {
 public:
     explicit ExtendAttributes(QWidget *parent);

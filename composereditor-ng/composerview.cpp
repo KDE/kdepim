@@ -120,6 +120,7 @@ public:
     void _k_slotToggleBlockQuote();
     void _k_slotEditImage();
     void _k_slotSaveAs();
+    void _k_slotEditTable();
 
     QAction* getAction ( QWebPage::WebAction action ) const;
     QVariant evaluateJavascript(const QString& command);
@@ -322,6 +323,12 @@ void ComposerViewPrivate::_k_slotInsertTable()
         execCommand(QLatin1String("insertHTML"), dlg->html());
     }
     delete dlg;
+}
+
+void ComposerViewPrivate::_k_slotEditTable()
+{
+    ComposerTableDialog dlg( contextMenuResult.element(),q );
+    dlg.exec();
 }
 
 void ComposerViewPrivate::_k_slotInsertHorizontalRule()
@@ -831,6 +838,7 @@ void ComposerView::contextMenuEvent(QContextMenuEvent* event)
     const bool imageSelected = !d->contextMenuResult.imageUrl().isEmpty();
 
     const QWebElement elm = d->contextMenuResult.element();
+    const bool tableSelected = (elm.tagName().toLower() == QLatin1String("table"));
     qDebug()<<" elm.tagName().toLower() "<<elm.tagName().toLower();
 
     KMenu *menu = new KMenu;
@@ -856,6 +864,9 @@ void ComposerView::contextMenuEvent(QContextMenuEvent* event)
     } else if(linkSelected) {
         QAction *editLinkAction = menu->addAction(i18n("Edit Link..."));
         connect( editLinkAction, SIGNAL(triggered(bool)), this, SLOT(_k_slotEditLink()) );
+    } else if(tableSelected) {
+        QAction *editTableAction = menu->addAction(i18n("Edit Table..."));
+        connect( editTableAction, SIGNAL(triggered(bool)), this, SLOT(_k_slotEditTable()) );
     }
     menu->addSeparator();
     menu->addAction(d->action_spell_check);

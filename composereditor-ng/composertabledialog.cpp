@@ -49,7 +49,12 @@ public:
 
 void ComposerTableDialogPrivate::updateTableHtml()
 {
-    //TODO
+    if(!webElement.isNull()) {
+        webElement.setAttribute(QLatin1String("border"),QString::number(insertTableWidget->border()));
+        const QString width = QString::fromLatin1("%1%2").arg(insertTableWidget->length()).arg(insertTableWidget->typeOfLength() == QTextLength::PercentageLength ? QLatin1String("%") : QString());
+        webElement.setAttribute(QLatin1String("width"),width);
+        //TODO update column/row
+    }
 }
 
 QString ComposerTableDialogPrivate::html() const
@@ -80,6 +85,21 @@ void ComposerTableDialogPrivate::initialize(const QWebElement &element)
     insertTableWidget = new KPIMTextEdit::InsertTableWidget( q );
     q->setMainWidget( insertTableWidget );
     q->connect(q,SIGNAL(okClicked()),q,SLOT(slotOkClicked()));
+    if(!webElement.isNull()) {
+        if(webElement.hasAttribute(QLatin1String("border"))) {
+            insertTableWidget->setBorder(webElement.attribute(QLatin1String("border")).toInt());
+        }
+        if(webElement.hasAttribute(QLatin1String("width"))) {
+            const QString width = webElement.attribute(QLatin1String("border"));
+            if(width.endsWith(QLatin1Char('%'))) {
+                //insertTableWidget->setTypeOfLength(QTextLength::PercentageLength);
+            } else {
+                //insertTableWidget->setTypeOfLength(QTextLength::FixedLength);
+                //TODO
+                //insertTableWidget->set(QTextLength::FixedLength);
+            }
+        }
+    }
 }
 
 ComposerTableDialog::ComposerTableDialog(QWidget *parent)
