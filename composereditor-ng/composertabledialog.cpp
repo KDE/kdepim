@@ -36,20 +36,70 @@ public:
     {
     }
 
+    QString html() const;
+
     void initialize( const QWebElement& element = QWebElement() );
+
+    void updateTableHtml();
 
     QWebElement webElement;
     KPIMTextEdit::InsertTableWidget *insertTableWidget;
     ComposerTableDialog *q;
 };
 
+void ComposerTableDialogPrivate::updateTableHtml()
+{
+    if(!webElement.isNull()) {
+        webElement.setAttribute(QLatin1String("border"),QString::number(insertTableWidget->border()));
+        const QString width = QString::fromLatin1("%1%2").arg(insertTableWidget->length()).arg(insertTableWidget->typeOfLength() == QTextLength::PercentageLength ? QLatin1String("%") : QString());
+        webElement.setAttribute(QLatin1String("width"),width);
+        //TODO update column/row
+    }
+}
+
+QString ComposerTableDialogPrivate::html() const
+{
+    const int numberOfColumns( insertTableWidget->columns() );
+    const int numberRow( insertTableWidget->rows() );
+
+    QString htmlTable = QString::fromLatin1("<table border='%1'").arg(insertTableWidget->border());
+    htmlTable += QString::fromLatin1(" width='%1%2'").arg(insertTableWidget->length()).arg(insertTableWidget->typeOfLength() == QTextLength::PercentageLength ? QLatin1String("%") : QString());
+    htmlTable += QString::fromLatin1(">");
+    for(int i = 0; i <numberRow; ++i) {
+        htmlTable += QLatin1String("<tr>");
+        for(int j = 0; j <numberOfColumns; ++j) {
+            htmlTable += QLatin1String("<td><br></td>");
+        }
+        htmlTable += QLatin1String("</tr>");
+    }
+    htmlTable += QLatin1String("</table>");
+    return htmlTable;
+}
+
 void ComposerTableDialogPrivate::initialize(const QWebElement &element)
 {
+    webElement = element;
     q->setCaption( element.isNull() ? i18n( "Insert Table" ) : i18n( "Edit Table" ) );
     q->setButtons( KDialog::Ok|KDialog::Cancel );
     q->setButtonText( KDialog::Ok, i18n( "Insert" ) );
     insertTableWidget = new KPIMTextEdit::InsertTableWidget( q );
     q->setMainWidget( insertTableWidget );
+    q->connect(q,SIGNAL(okClicked()),q,SLOT(slotOkClicked()));
+    if(!webElement.isNull()) {
+        if(webElement.hasAttribute(QLatin1String("border"))) {
+            insertTableWidget->setBorder(webElement.attribute(QLatin1String("border")).toInt());
+        }
+        if(webElement.hasAttribute(QLatin1String("width"))) {
+            const QString width = webElement.attribute(QLatin1String("border"));
+            if(width.endsWith(QLatin1Char('%'))) {
+                //insertTableWidget->setTypeOfLength(QTextLength::PercentageLength);
+            } else {
+                //insertTableWidget->setTypeOfLength(QTextLength::FixedLength);
+                //TODO
+                //insertTableWidget->set(QTextLength::FixedLength);
+            }
+        }
+    }
 }
 
 ComposerTableDialog::ComposerTableDialog(QWidget *parent)
@@ -58,9 +108,31 @@ ComposerTableDialog::ComposerTableDialog(QWidget *parent)
     d->initialize();
 }
 
+ComposerTableDialog::ComposerTableDialog(const QWebElement& element, QWidget *parent)
+    : KDialog(parent), d(new ComposerTableDialogPrivate(this))
+{
+    d->initialize(element);
+}
+
 ComposerTableDialog::~ComposerTableDialog()
 {
     delete d;
 }
 
+QString ComposerTableDialog::html() const
+{
+    return d->html();
 }
+
+void ComposerTableDialog::slotOkClicked()
+{
+    if(!d->webElement.isNull()) {
+        d->updateTableHtml();
+    }
+    accept();
+}
+
+
+}
+
+#include "composertabledialog.moc"

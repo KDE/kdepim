@@ -24,12 +24,10 @@
 #include "composereditorutil_p.h"
 #include "composerimagedialog.h"
 #include "composerimageresizewidget.h"
-
+#include "composertabledialog.h"
 
 #include <kpimtextedit/emoticontexteditaction.h>
 #include <kpimtextedit/inserthtmldialog.h>
-#include <kpimtextedit/insertimagedialog.h>
-#include <kpimtextedit/inserttabledialog.h>
 
 #include <Sonnet/Dialog>
 #include <sonnet/backgroundchecker.h>
@@ -122,6 +120,7 @@ public:
     void _k_slotToggleBlockQuote();
     void _k_slotEditImage();
     void _k_slotSaveAs();
+    void _k_slotEditTable();
 
     QAction* getAction ( QWebPage::WebAction action ) const;
     QVariant evaluateJavascript(const QString& command);
@@ -319,26 +318,17 @@ void ComposerViewPrivate::_k_slotEditImage()
 
 void ComposerViewPrivate::_k_slotInsertTable()
 {
-    QPointer<KPIMTextEdit::InsertTableDialog> dlg = new KPIMTextEdit::InsertTableDialog( q );
+    QPointer<ComposerTableDialog> dlg = new ComposerTableDialog( q );
     if( dlg->exec() == KDialog::Accepted ) {
-
-        const int numberOfColumns( dlg->columns() );
-        const int numberRow( dlg->rows() );
-
-        QString htmlTable = QString::fromLatin1("<table border='%1'").arg(dlg->border());
-        htmlTable += QString::fromLatin1(" width='%1%2'").arg(dlg->length()).arg(dlg->typeOfLength() == QTextLength::PercentageLength ? QLatin1String("%") : QString());
-        htmlTable += QString::fromLatin1(">");
-        for(int i = 0; i <numberRow; ++i) {
-            htmlTable += QLatin1String("<tr>");
-            for(int j = 0; j <numberOfColumns; ++j) {
-                htmlTable += QLatin1String("<td><br></td>");
-            }
-            htmlTable += QLatin1String("</tr>");
-        }
-        htmlTable += QLatin1String("</table>");
-        execCommand(QLatin1String("insertHTML"), htmlTable);
+        execCommand(QLatin1String("insertHTML"), dlg->html());
     }
     delete dlg;
+}
+
+void ComposerViewPrivate::_k_slotEditTable()
+{
+    ComposerTableDialog dlg( contextMenuResult.element(),q );
+    dlg.exec();
 }
 
 void ComposerViewPrivate::_k_slotInsertHorizontalRule()
@@ -848,6 +838,7 @@ void ComposerView::contextMenuEvent(QContextMenuEvent* event)
     const bool imageSelected = !d->contextMenuResult.imageUrl().isEmpty();
 
     const QWebElement elm = d->contextMenuResult.element();
+    const bool tableSelected = (elm.tagName().toLower() == QLatin1String("table"));
     qDebug()<<" elm.tagName().toLower() "<<elm.tagName().toLower();
 
     KMenu *menu = new KMenu;
@@ -873,6 +864,9 @@ void ComposerView::contextMenuEvent(QContextMenuEvent* event)
     } else if(linkSelected) {
         QAction *editLinkAction = menu->addAction(i18n("Edit Link..."));
         connect( editLinkAction, SIGNAL(triggered(bool)), this, SLOT(_k_slotEditLink()) );
+    } else if(tableSelected) {
+        QAction *editTableAction = menu->addAction(i18n("Edit Table..."));
+        connect( editTableAction, SIGNAL(triggered(bool)), this, SLOT(_k_slotEditTable()) );
     }
     menu->addSeparator();
     menu->addAction(d->action_spell_check);
@@ -921,8 +915,6 @@ void ComposerView::wheelEvent(QWheelEvent * event)
 
 void ComposerView::mouseDoubleClickEvent(QMouseEvent * event)
 {
-    //TODO
-    qDebug()<<" void ComposerView::mouseDoubleClickEvent(QMouseEvent * event)";
     if(event->button() == Qt::LeftButton) {
         d->contextMenuResult = page()->mainFrame()->hitTestContent(event->pos());
         const bool imageSelected = !d->contextMenuResult.imageUrl().isEmpty();

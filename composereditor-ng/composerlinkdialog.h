@@ -22,8 +22,7 @@
 #define ComposerLinkDialog_H
 #include <KDialog>
 
-#include <QWebElement>
-
+class QWebElement;
 class KLineEdit;
 
 namespace ComposerEditorNG

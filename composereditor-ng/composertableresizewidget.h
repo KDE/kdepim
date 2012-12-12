@@ -17,32 +17,25 @@
   02110-1301, USA.
 
 */
-#ifndef COMPOSERTABLEDIALOG_H
-#define COMPOSERTABLEDIALOG_H
+#ifndef COMPOSERTABLERESIZEWIDGET_H
+#define COMPOSERTABLERESIZEWIDGET_H
 
-#include <KDialog>
-class QWebElement;
+#include <QWidget>
+
 namespace ComposerEditorNG
 {
-class ComposerTableDialogPrivate;
-
-class ComposerTableDialog : public KDialog
+class ComposerTableResizeWidgetPrivate;
+class ComposerTableResizeWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ComposerTableDialog(QWidget *parent);
-    explicit ComposerTableDialog(const QWebElement& element, QWidget *parent);
-    ~ComposerTableDialog();
-
-    QString html() const;
-
-private Q_SLOTS:
-    void slotOkClicked();
+    explicit ComposerTableResizeWidget(QWidget *parent);
+    ~ComposerTableResizeWidget();
 
 private:
-    friend class ComposerTableDialogPrivate;
-    ComposerTableDialogPrivate * const d;
+    friend class ComposerTableResizeWidgetPrivate;
+    ComposerTableResizeWidgetPrivate * const d;
 };
 }
 
-#endif // COMPOSERTABLEDIALOG_H
+#endif // COMPOSERTABLERESIZEWIDGET_H

@@ -28,7 +28,7 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QLabel>
-
+#include <QWebElement>
 
 namespace ComposerEditorNG {
 
@@ -98,9 +98,6 @@ void ComposerImageDialogPrivate::initialize()
     q->setButtonText( KDialog::Ok, i18n( "Insert" ) );
 
     QWidget *w = new QWidget;
-
-
-
     QVBoxLayout *lay = new QVBoxLayout;
     lay->setMargin(0);
     lay->setSpacing(0);
