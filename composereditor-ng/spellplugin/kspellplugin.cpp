@@ -29,8 +29,6 @@
 #include "kspellplugin.h"
 #include <QTextBoundaryFinder>
 
-#include "rekonq.h"
-
 #define methodDebug() kDebug("KWebSpellChecker: %s", __FUNCTION__)
 
 /////////////////////////////
@@ -49,12 +47,12 @@ KWebSpellChecker::~KWebSpellChecker()
 
 bool KWebSpellChecker::isContinousSpellCheckingEnabled() const
 {
-    return ReKonfig::automaticSpellChecking();
+    return true;
 }
 
 void KWebSpellChecker::toggleContinousSpellChecking()
 {
-    ReKonfig::setAutomaticSpellChecking(! ReKonfig::automaticSpellChecking());
+    //TODO
 }
 
 void KWebSpellChecker::learnWord(const QString& word)
@@ -142,7 +140,7 @@ QString KWebSpellChecker::autoCorrectSuggestionForMisspelledWord(const QString& 
     */
 
 
-    return QString("");
+    return QString();
 }
 
 void KWebSpellChecker::guessesForWord(const QString& word, const QString& context, QStringList& guesses)
@@ -193,6 +191,6 @@ QObject* KWebKitPlatformPlugin::createExtension(Extension ext) const
     return NULL;
 }
 
-Q_EXPORT_PLUGIN2(kwebspellchecker, KWebKitPlatformPlugin);
+Q_EXPORT_PLUGIN2(kwebspellchecker, KWebKitPlatformPlugin)
 Q_IMPORT_PLUGIN(kwebspellchecker)
 
