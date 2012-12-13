@@ -132,12 +132,12 @@ class AddEmailAddressJob::Private
         dlg->changeCollectionDialogOptions( Akonadi::CollectionDialog::KeepTreeExpanded );
 
         bool gotIt = true;
-        if ( !dlg->exec() ) {
+        if ( dlg->exec() ) {
+	  addressBook = dlg->selectedCollection();
+	} else {
           q->setError( UserDefinedError );
           q->emitResult();
           gotIt = false;
-        } else {
-          addressBook = dlg->selectedCollection();
         }
         delete dlg;
         if ( !gotIt ) {
