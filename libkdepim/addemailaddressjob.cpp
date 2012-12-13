@@ -28,8 +28,13 @@
 #include <Akonadi/CollectionFetchScope>
 #include <Akonadi/Collection>
 #include <Akonadi/Contact/ContactEditorDialog>
+#include <Akonadi/AgentTypeDialog>
+#include <Akonadi/AgentType>
+#include <Akonadi/AgentFilterProxyModel>
+#include <Akonadi/AgentInstanceCreateJob>
 
 #include <KABC/Addressee>
+#include <KABC/ContactGroup>
 
 #include <KLocale>
 #include <KMessageBox>
@@ -46,6 +51,18 @@ class AddEmailAddressJob::Private
     {
       KABC::Addressee::parseEmailAddress( emailString, mName, mEmail );
     }
+
+    void slotResourceCreationDone( KJob* job )
+    {
+        if ( job->error() ) {
+          q->setError( job->error() );
+          q->setErrorText( job->errorText() );
+          q->emitResult();
+          return;
+        }
+        q->emitResult();
+    }
+
 
     void slotSearchDone( KJob *job )
     {
@@ -109,14 +126,33 @@ class AddEmailAddressJob::Private
 
       const int nbItemCollection( canCreateItemCollections.size() );
       if ( nbItemCollection == 0 ) {
-        KMessageBox::information (
+        if(KMessageBox::questionYesNo(
           mParentWidget,
           i18nc( "@info",
-                 "You must create an address book before adding a contact." ),
-          i18nc( "@title:window", "No Address Book Available" ) );
-        q->setError( UserDefinedError );
-        q->emitResult();
-        return;
+                 "You must create an address book before adding a contact. Do you want to create an address book?" ),
+          i18nc( "@title:window", "No Address Book Available" ) ) == KMessageBox::Yes) {
+            Akonadi::AgentTypeDialog dlg( mParentWidget );
+            dlg.setCaption( i18n("Add Address Book") );
+            dlg.agentFilterProxyModel()->addMimeTypeFilter(KABC::Addressee::mimeType());
+            dlg.agentFilterProxyModel()->addMimeTypeFilter(KABC::ContactGroup::mimeType());
+            dlg.agentFilterProxyModel()->addCapabilityFilter( QLatin1String( "Resource" ) );
+
+            if ( dlg.exec() ) {
+              const Akonadi::AgentType agentType = dlg.agentType();
+
+              if ( agentType.isValid() ) {
+                Akonadi::AgentInstanceCreateJob *job = new Akonadi::AgentInstanceCreateJob( agentType, q );
+                q->connect( job, SIGNAL(result(KJob*)), SLOT(slotResourceCreationDone(KJob*)) );
+                job->configure( mParentWidget );
+                job->start();
+              }
+            }
+            return;
+        } else {
+          q->setError( UserDefinedError );
+          q->emitResult();
+          return;
+        }
       } else if ( nbItemCollection == 1 ) {
         addressBook = canCreateItemCollections[0];
       } else {
@@ -133,8 +169,8 @@ class AddEmailAddressJob::Private
 
         bool gotIt = true;
         if ( dlg->exec() ) {
-	  addressBook = dlg->selectedCollection();
-	} else {
+          addressBook = dlg->selectedCollection();
+        } else {
           q->setError( UserDefinedError );
           q->emitResult();
           gotIt = false;
