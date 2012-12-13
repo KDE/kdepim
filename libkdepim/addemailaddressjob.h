@@ -74,6 +74,7 @@ class KDEPIM_EXPORT AddEmailAddressJob : public KJob
     Q_PRIVATE_SLOT( d, void slotSearchDone( KJob* ) )
     Q_PRIVATE_SLOT( d, void slotAddContactDone( KJob* ) )
     Q_PRIVATE_SLOT( d, void slotCollectionsFetched( KJob* ) )
+    Q_PRIVATE_SLOT( d, void slotResourceCreationDone( KJob* ) )
     //@endcond
 };
 

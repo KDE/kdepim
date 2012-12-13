@@ -80,12 +80,12 @@ QString OptionSet::saveToString() const
     s << gOptionSetFinalMarker;
   }
 
-  return QString::fromAscii( raw.toHex() );
+  return QString::fromLatin1( raw.toHex() );
 }
 
 bool OptionSet::loadFromString(const QString &data )
 {
-  QByteArray raw = QByteArray::fromHex( data.toAscii() );
+  QByteArray raw = QByteArray::fromHex( data.toLatin1() );
 
   QDataStream s( &raw, QIODevice::ReadOnly );
 

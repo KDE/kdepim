@@ -32,7 +32,7 @@ using namespace KCalCore;
 
 IncidenceDialog *IncidenceDialogFactory::create( bool needsSaving,
                                                  KCalCore::IncidenceBase::IncidenceType type,
-                                                 QWidget *parent, Qt::WFlags flags )
+                                                 QWidget *parent, Qt::WindowFlags flags )
 {
   switch ( type ) {
   case KCalCore::IncidenceBase::TypeEvent: // Fall through
@@ -61,7 +61,7 @@ IncidenceDialog * IncidenceDialogFactory::createTodoEditor( const QString &summa
                                                             bool inlineAttachment,
                                                             Akonadi::Collection defaultCollection,
                                                             bool cleanupAttachmentTempFiles,
-                                                            QWidget *parent, Qt::WFlags flags )
+                                                            QWidget *parent, Qt::WindowFlags flags )
 {
   IncidenceDefaults defaults =
     IncidenceDefaults::minimalIncidenceDefaults( cleanupAttachmentTempFiles );
@@ -102,7 +102,7 @@ IncidenceDialog * IncidenceDialogFactory::createEventEditor( const QString &summ
                                                              bool inlineAttachment,
                                                              Akonadi::Collection defaultCollection,
                                                              bool cleanupAttachmentTempFiles,
-                                                             QWidget *parent, Qt::WFlags flags )
+                                                             QWidget *parent, Qt::WindowFlags flags )
 {
   IncidenceDefaults defaults =
     IncidenceDefaults::minimalIncidenceDefaults( cleanupAttachmentTempFiles );

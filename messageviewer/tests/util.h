@@ -42,9 +42,9 @@ class TestCSSHelper : public MessageViewer::CSSHelper {
     TestCSSHelper() : MessageViewer::CSSHelper( 0 ) {}
     virtual ~TestCSSHelper() {}
 
-    QString nonQuotedFontTag() const { return QString::fromAscii( "<" ); }
+    QString nonQuotedFontTag() const { return QString::fromLatin1( "<" ); }
 
-    QString quoteFontTag( int ) const { return QString::fromAscii( "<" ); }
+    QString quoteFontTag( int ) const { return QString::fromLatin1( "<" ); }
 };
 
 KMime::Message::Ptr readAndParseMail( const QString &mailFile );

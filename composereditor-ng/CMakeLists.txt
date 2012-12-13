@@ -6,6 +6,9 @@ add_definitions( -DQT_NO_CAST_TO_ASCII )
 
 add_subdirectory(tests)
 
+add_definitions(-DQT_STATICPLUGIN)
+qt4_wrap_cpp(wk_HEADERS_MOC spellplugin/qwebkitplatformplugin.h)
+
 set(libcomposereditor_ng_SRCS 
     composereditor.cpp
     composerlinkdialog.cpp
@@ -19,6 +22,9 @@ set(libcomposereditor_ng_SRCS
     composerimageresizewidget.cpp
     composertabledialog.cpp
     composertableresizewidget.cpp
+    composertableformatdialog.cpp
+    spellplugin/kspellplugin.cpp  
+    ${wk_HEADERS_MOC}
 )
 
 kde4_add_ui_files(libcomposereditor_ng_SRCS ui/pagecolorbackgroundwidget.ui )

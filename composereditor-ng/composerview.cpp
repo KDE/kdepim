@@ -25,6 +25,7 @@
 #include "composerimagedialog.h"
 #include "composerimageresizewidget.h"
 #include "composertabledialog.h"
+#include "composertableformatdialog.h"
 
 #include <kpimtextedit/emoticontexteditaction.h>
 #include <kpimtextedit/inserthtmldialog.h>
@@ -327,7 +328,7 @@ void ComposerViewPrivate::_k_slotInsertTable()
 
 void ComposerViewPrivate::_k_slotEditTable()
 {
-    ComposerTableDialog dlg( contextMenuResult.element(),q );
+    ComposerTableFormatDialog dlg( contextMenuResult.element(),q );
     dlg.exec();
 }
 

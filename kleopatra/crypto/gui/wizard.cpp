@@ -199,7 +199,7 @@ void Wizard::Private::updateHeader()
     q->resize( q->sizeHint().expandedTo( q->size() ) );
 }
 
-Wizard::Wizard( QWidget * parent, Qt::WFlags f )
+Wizard::Wizard( QWidget * parent, Qt::WindowFlags f )
   : QDialog( parent, f ), d( new Private( this ) )
 {
     

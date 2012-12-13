@@ -79,7 +79,7 @@ static const struct {
 static const int numSignalReplacements = sizeof signalReplacements / sizeof *signalReplacements;
 
 
-Kleo::KeyListView::KeyListView( const ColumnStrategy * columnStrategy, const DisplayStrategy * displayStrategy, QWidget * parent, Qt::WFlags f )
+Kleo::KeyListView::KeyListView( const ColumnStrategy * columnStrategy, const DisplayStrategy * displayStrategy, QWidget * parent, Qt::WindowFlags f )
   : QTreeWidget( parent ),
     mColumnStrategy( columnStrategy ),
     mDisplayStrategy ( displayStrategy  ),

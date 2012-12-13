@@ -49,7 +49,7 @@ namespace Gui {
     class SigningCertificateSelectionDialog : public KDialog {
         Q_OBJECT
     public:
-        explicit SigningCertificateSelectionDialog( QWidget * parent=0, Qt::WFlags f=0 );
+        explicit SigningCertificateSelectionDialog( QWidget * parent=0, Qt::WindowFlags f=0 );
         ~SigningCertificateSelectionDialog();
 
         void setAllowedProtocols( const QVector<GpgME::Protocol>& allowedProtocols );

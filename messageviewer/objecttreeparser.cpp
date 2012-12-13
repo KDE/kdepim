@@ -2157,7 +2157,7 @@ bool ObjectTreeParser::decryptChiasmus( const QByteArray& data, QByteArray& body
   const QByteArray body = bOkDecrypt ? decryptedBody : data;
   const QString chiasmusCharset = curNode->contentType()->parameter("chiasmus-charset");
   const QTextCodec* aCodec = chiasmusCharset.isEmpty() ? codecFor( curNode )
-                              : NodeHelper::codecForName( chiasmusCharset.toAscii() );
+                              : NodeHelper::codecForName( chiasmusCharset.toLatin1() );
   htmlWriter()->queue( quotedHTML( aCodec->toUnicode( body ), false /*decorate*/ ) );
   result.setInlineEncryptionState( KMMsgFullyEncrypted );
   if ( htmlWriter() )

@@ -65,7 +65,7 @@ WizardPage::Private::Private( WizardPage * qq )
 WizardPage::Private::~Private() {}
 
 
-WizardPage::WizardPage( QWidget * parent, Qt::WFlags f )
+WizardPage::WizardPage( QWidget * parent, Qt::WindowFlags f )
   : QWidget( parent, f ), d( new Private( this ) )
 {
     

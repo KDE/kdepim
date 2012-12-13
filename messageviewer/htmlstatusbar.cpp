@@ -49,7 +49,7 @@
 
 using namespace MessageViewer;
 
-HtmlStatusBar::HtmlStatusBar( QWidget * parent, const char * name, Qt::WFlags f )
+HtmlStatusBar::HtmlStatusBar( QWidget * parent, const char * name, Qt::WindowFlags f )
   : QLabel( parent, f ),
     mMode( Util::Normal )
 {

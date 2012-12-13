@@ -1508,7 +1508,7 @@ QString TemplateParser::pipe( const QString &cmd, const QString &buf )
   if ( process.waitForStarted( PipeTimeout ) ) {
     bool finished = false;
     if ( !buf.isEmpty() ) {
-      process.write( buf.toAscii() );
+      process.write( buf.toLatin1() );
     }
     if ( buf.isEmpty() || process.waitForBytesWritten( PipeTimeout ) ) {
       if ( !buf.isEmpty() ) {

@@ -49,7 +49,7 @@
 #include <QApplication>
 #include <QPaintEvent>
 
-KDHorizontalLine::KDHorizontalLine( QWidget * parent, const char * name, Qt::WFlags f )
+KDHorizontalLine::KDHorizontalLine( QWidget * parent, const char * name, Qt::WindowFlags f )
   : QFrame( parent, f ),
     mAlign( Qt::AlignLeft ),
     mLenVisible( 0 )
@@ -58,7 +58,7 @@ KDHorizontalLine::KDHorizontalLine( QWidget * parent, const char * name, Qt::WFl
   QFrame::setFrameStyle( HLine | Sunken );
 }
 
-KDHorizontalLine::KDHorizontalLine( const QString & title, QWidget * parent, const char * name, Qt::WFlags f )
+KDHorizontalLine::KDHorizontalLine( const QString & title, QWidget * parent, const char * name, Qt::WindowFlags f )
   : QFrame( parent, f ),
     mAlign( Qt::AlignLeft ),
     mLenVisible( 0 )

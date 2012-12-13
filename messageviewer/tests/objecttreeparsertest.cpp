@@ -37,7 +37,7 @@ void ObjectTreeParserTester::initTestCase()
 {
   setenv("GNUPGHOME", KDESRCDIR "../../messagecore/tests/gnupg_home" , 1 );
   setenv("LC_ALL", "C", 1);
-  setenv( "KDEHOME", QFile::encodeName(  QDir::homePath() + QString::fromAscii(  "/.kde-unit-test" ) ), 1 );
+  setenv( "KDEHOME", QFile::encodeName(  QDir::homePath() + QString::fromLatin1(  "/.kde-unit-test" ) ), 1 );
 }
 
 void ObjectTreeParserTester::test_parsePlainMessage()
@@ -65,7 +65,7 @@ void ObjectTreeParserTester::test_parsePlainMessage()
 
   // Check that the textual content and the charset have the expected values
   QCOMPARE( otp.plainTextContent(), QString( "This is the message text." ) );
-  QCOMPARE( otp.convertedTextContent().toAscii().data(), "This is the message text." );
+  QCOMPARE( otp.convertedTextContent().toLatin1().data(), "This is the message text." );
   QVERIFY( otp.htmlContent().isEmpty() );
   QCOMPARE( otp.plainTextContentCharset().toLower(), QByteArray( "iso-8859-15" ) );
 
@@ -138,7 +138,7 @@ void ObjectTreeParserTester::test_missingContentTypeHeader()
   ObjectTreeParser otp( &emptySource, &nodeHelper );
   otp.parseObjectTree( msg.get() );
 
-  QCOMPARE( otp.plainTextContent().toAscii().data(), "asdfasdf" );
+  QCOMPARE( otp.plainTextContent().toLatin1().data(), "asdfasdf" );
   QVERIFY( otp.htmlContent().isEmpty() );
 }
 
@@ -168,8 +168,8 @@ void ObjectTreeParserTester::test_inlinePGPDecryption()
   otp.parseObjectTree( msg.get() );
   qInstallMsgHandler(0);
 
-  QCOMPARE( otp.plainTextContent().toAscii().data(), "some random text" );
-  QCOMPARE( otp.convertedTextContent().toAscii().data(), "some random text" );
+  QCOMPARE( otp.plainTextContent().toLatin1().data(), "some random text" );
+  QCOMPARE( otp.convertedTextContent().toLatin1().data(), "some random text" );
   QVERIFY( otp.htmlContent().isEmpty() );
 }
 
@@ -185,7 +185,7 @@ void ObjectTreeParserTester::test_HTML()
 
   otp.parseObjectTree( msg.get() );
 
-  QCOMPARE( otp.plainTextContent().toAscii().data(), "Some HTML text" );
+  QCOMPARE( otp.plainTextContent().toLatin1().data(), "Some HTML text" );
   QVERIFY( otp.htmlContent().contains( "Some <span style=\" font-weight:600;\">HTML</span> text" ) );
   QCOMPARE( otp.htmlContentCharset().data(), "windows-1252" );
 }
@@ -204,7 +204,7 @@ void ObjectTreeParserTester::test_HTMLOnly()
 
   QVERIFY( otp.plainTextContent().isEmpty() );
   QVERIFY( otp.htmlContent().contains( "<b>SOME</b> HTML text." ) );
-  QCOMPARE( otp.convertedTextContent().toAscii().data(), "SOME HTML text." );
+  QCOMPARE( otp.convertedTextContent().toLatin1().data(), "SOME HTML text." );
 }
 
 

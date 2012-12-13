@@ -174,7 +174,7 @@ void SignEncryptFilesWizard::Private::operationSelected()
     q->setCommitPage( encrypt ? SignEncryptWizard::ResolveRecipientsPage : SignEncryptWizard::ObjectsPage );
 }
 
-SignEncryptFilesWizard::SignEncryptFilesWizard( QWidget * parent, Qt::WFlags f )
+SignEncryptFilesWizard::SignEncryptFilesWizard( QWidget * parent, Qt::WindowFlags f )
   : SignEncryptWizard( parent, f ), d( new Private( this ) )
 {
 }

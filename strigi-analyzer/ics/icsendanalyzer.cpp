@@ -120,7 +120,7 @@ STRIGI_ENDANALYZER_RETVAL IcsEndAnalyzer::analyze( Strigi::AnalysisResult &index
   index.addValue( m_factory->todosCompletedField, static_cast<quint32>( completed ) );
   index.addValue( m_factory->todosOverdueField, static_cast<quint32>( overdue ) );
 
-  const QUrl url( QString::fromAscii( index.path().data(), index.path().size() ) );
+  const QUrl url( QString::fromLatin1( index.path().data(), index.path().size() ) );
   if ( url.scheme() == QLatin1String( "akonadi" ) && url.hasQueryItem( "collection" ) )
     index.addValue( m_factory->isPartOfField, url.queryItemValue( "collection" ).toUtf8().data() );
 

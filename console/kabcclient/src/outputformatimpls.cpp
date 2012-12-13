@@ -144,7 +144,7 @@ QString VCardOutput::optionUsage() const
 {
     QString usage =
         i18n("Optionally use a different vCard version (default is %1)",
-             QString::fromAscii("3.0"));
+             QString::fromLatin1("3.0"));
 
     usage += '\n';
 
@@ -162,7 +162,7 @@ bool VCardOutput::setCodec(QTextCodec* codec)
 
     m_codec = codec;
 
-    QString codecName = QString::fromAscii(m_codec->name());
+    QString codecName = QString::fromLatin1(m_codec->name());
 
     if (codecName != QString::fromUtf8("UTF-8"))
     {

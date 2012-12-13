@@ -472,7 +472,7 @@ void KNCollectionView::startDrag( Qt::DropActions supportedActions )
   }
 
   QMimeData *mimeData = new QMimeData();
-  const QByteArray id( QString::number( folder->id() ).toAscii() );
+  const QByteArray id( QString::number( folder->id() ).toLatin1() );
   mimeData->setData( "x-knode-drag/folder", id );
 
   QDrag *drag = new QDrag( this );

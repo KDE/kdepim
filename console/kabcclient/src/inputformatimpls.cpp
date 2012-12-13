@@ -127,7 +127,7 @@ bool VCardInput::setCodec(QTextCodec* codec)
 
     m_codec = codec;
 
-    QString codecName = QString::fromAscii(m_codec->name());
+    QString codecName = QString::fromLatin1(m_codec->name());
 
     if (codecName != QString::fromUtf8("UTF-8"))
     {

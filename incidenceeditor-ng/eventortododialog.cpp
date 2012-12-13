@@ -625,7 +625,7 @@ void EventOrTodoDialogPrivate::reject( RejectReason reason, const QString &error
 
 /// EventOrTodoDialog
 
-EventOrTodoDialog::EventOrTodoDialog( QWidget *parent, Qt::WFlags flags )
+EventOrTodoDialog::EventOrTodoDialog( QWidget *parent, Qt::WindowFlags flags )
   : IncidenceDialog( parent, flags ), d_ptr( new EventOrTodoDialogPrivate( this ) )
 {
   Q_D( EventOrTodoDialog );

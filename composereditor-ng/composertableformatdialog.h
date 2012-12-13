@@ -1,6 +1,5 @@
 /*
-  Copyright (C) 2009 Klaralvdalens Datakonsult AB, a KDAB Group company, info@kdab.net
-  Copyright (c) 2009 Leo Franchi <lfranchi@kde.org>
+  Copyright (c) 2012 Montel Laurent <montel@kde.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -16,22 +15,33 @@
   along with this library; see the file COPYING.LIB.  If not, write to the
   Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
   02110-1301, USA.
-  */
 
-#ifndef TEST_CSS_HELPER_H
-#define TEST_CSS_HELPER_H
+*/
 
-#include <messageviewer/csshelper.h>
+#ifndef COMPOSERTABLEFORMATDIALOG_H
+#define COMPOSERTABLEFORMATDIALOG_H
 
-// Objecttreeparser needs a valid css helper othewise it crashes
-class TestCSSHelper : public MessageViewer::CSSHelper {
-  public:
-    TestCSSHelper() : MessageViewer::CSSHelper( 0 ) {}
-    virtual ~TestCSSHelper() {}
+#include <KDialog>
 
-    QString nonQuotedFontTag() const { return QString::fromLatin1( "<" ); }
+class QWebElement;
+namespace ComposerEditorNG
+{
+class ComposerTableFormatDialogPrivate;
 
-    QString quoteFontTag( int ) const { return QString::fromLatin1( "<" ); }
+class ComposerTableFormatDialog : public KDialog
+{
+    Q_OBJECT
+public:
+    explicit ComposerTableFormatDialog(const QWebElement& element, QWidget *parent);
+    ~ComposerTableFormatDialog();
+
+private Q_SLOTS:
+    void slotOkClicked();
+
+private:
+    friend class ComposerTableFormatDialogPrivate;
+    ComposerTableFormatDialogPrivate * const d;
 };
+}
 
-#endif
+#endif // COMPOSERTABLEFORMATDIALOG_H
