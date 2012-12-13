@@ -44,7 +44,7 @@ namespace Gui {
     class SignEMailWizard : public SignEncryptWizard {
         Q_OBJECT
     public:
-        explicit SignEMailWizard( QWidget * parent=0, Qt::WFlags f=0 );
+        explicit SignEMailWizard( QWidget * parent=0, Qt::WindowFlags f=0 );
         ~SignEMailWizard();
 
         bool quickMode() const;

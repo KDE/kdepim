@@ -129,7 +129,7 @@ namespace Kleo {
 
     KeyListView( const ColumnStrategy * strategy,
 		 const DisplayStrategy * display=0,
-		 QWidget * parent=0, Qt::WFlags f=0 );
+		 QWidget * parent=0, Qt::WindowFlags f=0 );
 
     ~KeyListView();
 

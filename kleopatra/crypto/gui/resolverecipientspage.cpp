@@ -349,7 +349,7 @@ Key ResolveRecipientsPage::ItemWidget::selectedCertificate() const
     return KeyCache::instance()->findByKeyIDOrFingerprint( m_certCombo->itemData( m_certCombo->currentIndex(), ListWidget::IdRole ).toString().toStdString() );
 #else
     const QString tmpStr = m_certCombo->itemData( m_certCombo->currentIndex(), ListWidget::IdRole ).toString();
-    const QByteArray asc = tmpStr.toAscii();
+    const QByteArray asc = tmpStr.toLatin1();
     std::string tmpstdstring = std::string(asc.constData(), asc.length());
     return KeyCache::instance()->findByKeyIDOrFingerprint( tmpstdstring );
 #endif
@@ -369,7 +369,7 @@ std::vector<Key> ResolveRecipientsPage::ItemWidget::certificates() const
         certs.push_back( KeyCache::instance()->findByKeyIDOrFingerprint( m_certCombo->itemData( i, ListWidget::IdRole ).toString().toStdString() ) );
 #else
         const QString tmpStr = m_certCombo->itemData( i, ListWidget::IdRole ).toString();
-        const QByteArray asc = tmpStr.toAscii();
+        const QByteArray asc = tmpStr.toLatin1();
         std::string tmpstdstring = std::string(asc.constData(), asc.length());
         certs.push_back( KeyCache::instance()->findByKeyIDOrFingerprint( tmpstdstring ) );
 #endif

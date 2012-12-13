@@ -88,7 +88,7 @@ namespace {
   }
 }
 
-CertListView::CertListView( QWidget * parent, Qt::WFlags f )
+CertListView::CertListView( QWidget * parent, Qt::WindowFlags f )
   : Kleo::KeyListView( new TestColumnStrategy(), 0, parent, f )
 {
   setHierarchical( true );

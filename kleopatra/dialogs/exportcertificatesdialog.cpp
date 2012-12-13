@@ -87,7 +87,7 @@ ExportCertificatesDialog::Private::~Private() {}
 
 
 
-ExportCertificatesDialog::ExportCertificatesDialog( QWidget * parent, Qt::WFlags f )
+ExportCertificatesDialog::ExportCertificatesDialog( QWidget * parent, Qt::WindowFlags f )
   : KDialog( parent, f ), d( new Private( this ) )
 {
     

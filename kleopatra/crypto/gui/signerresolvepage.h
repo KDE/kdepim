@@ -57,7 +57,7 @@ namespace Gui {
     class SignerResolvePage : public WizardPage {
         Q_OBJECT
     public:
-        explicit SignerResolvePage( QWidget * parent=0, Qt::WFlags f=0 );
+        explicit SignerResolvePage( QWidget * parent=0, Qt::WindowFlags f=0 );
         ~SignerResolvePage();
 
         void setSignersAndCandidates( const std::vector<KMime::Types::Mailbox> & signers,

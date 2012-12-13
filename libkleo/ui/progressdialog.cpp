@@ -46,7 +46,7 @@
 #include <assert.h>
 
 Kleo::ProgressDialog::ProgressDialog( Job * job, const QString & baseText,
-				      QWidget * creator, Qt::WFlags f )
+				      QWidget * creator, Qt::WindowFlags f )
   : QProgressDialog( creator, f ), mBaseText( baseText )
 {
   assert( job );

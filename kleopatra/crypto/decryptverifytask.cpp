@@ -226,7 +226,7 @@ static QString formatValidSignatureWithTrustLevel( const UserID & id ) {
 static QString renderFingerprint( const char * fpr ) {
     if ( !fpr )
         return QString();
-    return QString( "0x%1" ).arg( QString::fromAscii( fpr ).toUpper() );
+    return QString( "0x%1" ).arg( QString::fromLatin1( fpr ).toUpper() );
 }
 
 static QString renderKeyLink( const QString & fpr, const QString & text ) {

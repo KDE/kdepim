@@ -472,7 +472,7 @@ QDateTime CSVTemplate::parseDate(const QString& text) const
     int month = 0;
     int day   = 0;
 
-    QByteArray pattern = m_datePattern.toAscii();
+    QByteArray pattern = m_datePattern.toLatin1();
     bool ok = true;
     int pos = 0;
     for (int i = 0; ok && i < pattern.length(); ++i)
@@ -571,7 +571,7 @@ QDateTime CSVTemplate::parseDate(const QString& text) const
 
 void CSVTemplate::createDateFormat()
 {
-    QByteArray datePattern = m_datePattern.toAscii();
+    QByteArray datePattern = m_datePattern.toLatin1();
 
     for (int i = 0; i < datePattern.length(); ++i)
     {
@@ -602,7 +602,7 @@ void CSVTemplate::createDateFormat()
                 break;
 
             default:
-                m_dateFormat.append(QChar::fromAscii(datePattern[i]));
+                m_dateFormat.append(QChar::fromLatin1(datePattern[i]));
                 break;
         }
     }

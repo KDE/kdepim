@@ -31,7 +31,7 @@
 #include <QDBusConnectionInterface>
 #include <QStandardItemModel>
 
-InstanceSelector::InstanceSelector( const QString& remoteHost, QWidget* parent, Qt::WFlags flags )
+InstanceSelector::InstanceSelector( const QString& remoteHost, QWidget* parent, Qt::WindowFlags flags )
   : KDialog( parent, flags ),
     ui( new Ui::InstanceSelector ),
     m_remoteHost( remoteHost ),

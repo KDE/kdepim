@@ -111,7 +111,7 @@ SearchBar::Private::Private( SearchBar * qq )
 
 SearchBar::Private::~Private() {}
 
-SearchBar::SearchBar( QWidget * parent, Qt::WFlags f )
+SearchBar::SearchBar( QWidget * parent, Qt::WindowFlags f )
     : QWidget( parent, f ), d( new Private( this ) )
 {
     

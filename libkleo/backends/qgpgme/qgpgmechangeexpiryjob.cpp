@@ -63,7 +63,7 @@ static QGpgMEChangeExpiryJob::result_type change_expiry( Context * ctx, const Ke
 #ifndef QT_NO_STL
           ? new GpgSetExpiryTimeEditInteractor( expiry.date().toString( Qt::ISODate ).toStdString() )
 #else
-          ? new GpgSetExpiryTimeEditInteractor( std::string( expiry.date().toString( Qt::ISODate ).toAscii().constData() ) )
+          ? new GpgSetExpiryTimeEditInteractor( std::string( expiry.date().toString( Qt::ISODate ).toLatin1().constData() ) )
 #endif
           : new GpgSetExpiryTimeEditInteractor() );
 

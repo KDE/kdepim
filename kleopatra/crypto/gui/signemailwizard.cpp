@@ -133,7 +133,7 @@ SignEMailWizard::Private::Private( SignEMailWizard * qq )
 
 SignEMailWizard::Private::~Private() {}
 
-SignEMailWizard::SignEMailWizard( QWidget * parent, Qt::WFlags f )
+SignEMailWizard::SignEMailWizard( QWidget * parent, Qt::WindowFlags f )
   : SignEncryptWizard( parent, f ), d( new Private( this ) )
 {
 }

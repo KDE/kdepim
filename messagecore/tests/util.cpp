@@ -32,7 +32,7 @@ std::vector< GpgME::Key, std::allocator< GpgME::Key > > MessageCore::Test::getKe
 {
   setenv("GNUPGHOME", KDESRCDIR "../../messagecore/tests/gnupg_home" , 1 );
   setenv("LC_ALL", "C", 1);
-  setenv("KDEHOME", QFile::encodeName( QDir::homePath() + QString::fromAscii( "/.kde-unit-test" ) ), 1);
+  setenv("KDEHOME", QFile::encodeName( QDir::homePath() + QString::fromLatin1( "/.kde-unit-test" ) ), 1);
 
   Kleo::KeyListJob * job = 0;
 

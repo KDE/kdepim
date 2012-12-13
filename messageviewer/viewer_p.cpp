@@ -2125,7 +2125,7 @@ void ViewerPrivate::slotShowMessageSource()
   if( !mMessage )
     return;
   mNodeHelper->messageWithExtraContent( mMessage.get() );
-  const QString rawMessage = QString::fromAscii(  mMessage->encodedContent() );
+  const QString rawMessage = QString::fromLatin1(  mMessage->encodedContent() );
   const QString htmlSource = mViewer->htmlSource();
 
   MailSourceViewer *viewer = new MailSourceViewer(); // deletes itself upon close

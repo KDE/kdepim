@@ -1019,7 +1019,7 @@ bool KeySelectionDialog::checkKeys( const QList<QTreeWidgetItem*>& keys ) const
        ++it ) {
     kDebug( 5326 ) <<"Checking key 0x" << getKeyId( *it ) <<"...";
     pProgressDlg->setLabelText( i18n("Checking key 0x%1...",
-                              QString::fromAscii( getKeyId( *it ) ) ) );
+                              QString::fromLatin1( getKeyId( *it ) ) ) );
     qApp->processEvents();
     keysAllowed = keysAllowed && ( -1 != keyAdmissibility( *it, AllowExpensiveTrustCheck ) );
     pProgressDlg->progressBar()->setValue( pProgressDlg->progressBar()->value() + 1 );

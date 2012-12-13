@@ -759,7 +759,7 @@ void TextEditor::slotIncreaseFontSize()
 
 QVariant TextEditor::evaluateJavaScript ( const QString &cmd, bool itIsEditting )
 {
-//   qDebug("TextEditor::evaluateJavaScript: %s", cmd.toAscii().constData());
+//   qDebug("TextEditor::evaluateJavaScript: %s", cmd.toLatin1().constData());
     QVariant returnValue = webView -> page() -> mainFrame() -> evaluateJavaScript ( cmd );
     if ( itIsEditting )
         somethingEdittedSlot();

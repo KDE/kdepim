@@ -83,7 +83,7 @@ class SearchPatternTest : public QObject
       blackListenEntries << "any-of-tags";
 
       if ( blackListenEntries.contains( entry.toLower() ) )
-        QEXPECT_FAIL( entry.toAscii(), "Test needs running Nepomuk server in unit test env", Continue );
+        QEXPECT_FAIL( entry.toLatin1(), "Test needs running Nepomuk server in unit test env", Continue );
       QCOMPARE( actualSparql, expectedSparql );
     }
 };

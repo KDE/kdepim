@@ -57,7 +57,7 @@ KMime::Content* Message::Util::composeHeadersAndBody( KMime::Content* orig, QByt
 
     if( format & Kleo::SMIMEOpaqueFormat ) {
       result->contentDisposition()->setDisposition( KMime::Headers::CDattachment );
-      result->contentDisposition()->setFilename( QString::fromAscii( "smime.p7m" ) );
+      result->contentDisposition()->setFilename( QString::fromLatin1( "smime.p7m" ) );
     }
 
     if( !makeMultiMime( format, sign ) && format & Kleo::AnySMIME ) {
@@ -139,20 +139,20 @@ void Message::Util::makeToplevelContentType( KMime::Content* content, Kleo::Cryp
     case Kleo::OpenPGPMIMEFormat:
       if( sign ) {
         content->contentType()->setMimeType( QByteArray( "multipart/signed" ) );
-        content->contentType()->setParameter( QString::fromAscii( "protocol" ), QString::fromAscii( "application/pgp-signature" ) );
-        content->contentType()->setParameter( QString::fromAscii( "micalg" ), QString::fromAscii( "pgp-" + hashAlgo ).toLower() );
+        content->contentType()->setParameter( QString::fromLatin1( "protocol" ), QString::fromAscii( "application/pgp-signature" ) );
+        content->contentType()->setParameter( QString::fromLatin1( "micalg" ), QString::fromAscii( "pgp-" + hashAlgo ).toLower() );
 
       } else {
         content->contentType()->setMimeType( QByteArray( "multipart/encrypted" ) );
-        content->contentType()->setParameter( QString::fromAscii( "protocol" ), QString::fromAscii( "application/pgp-encrypted" ) );
+        content->contentType()->setParameter( QString::fromLatin1( "protocol" ), QString::fromAscii( "application/pgp-encrypted" ) );
       }
       return;
     case Kleo::SMIMEFormat:
       if ( sign ) {
         kDebug() << "setting headers for SMIME";
         content->contentType()->setMimeType( QByteArray( "multipart/signed" ) );
-        content->contentType()->setParameter( QString::fromAscii( "protocol" ), QString::fromAscii( "application/pkcs7-signature" ) );
-        content->contentType()->setParameter( QString::fromAscii( "micalg" ), QString::fromAscii( hashAlgo ).toLower() );
+        content->contentType()->setParameter( QString::fromLatin1( "protocol" ), QString::fromAscii( "application/pkcs7-signature" ) );
+        content->contentType()->setParameter( QString::fromLatin1( "micalg" ), QString::fromAscii( hashAlgo ).toLower() );
         return;
       }
       // fall through (for encryption, there's no difference between
@@ -164,11 +164,11 @@ void Message::Util::makeToplevelContentType( KMime::Content* content, Kleo::Cryp
       content->contentType()->setMimeType( QByteArray( "application/pkcs7-mime" ) );
 
       if( sign ) {
-        content->contentType()->setParameter( QString::fromAscii( "smime-type" ), QString::fromAscii( "signed-data" ) );
+        content->contentType()->setParameter( QString::fromLatin1( "smime-type" ), QString::fromAscii( "signed-data" ) );
       } else {
-        content->contentType()->setParameter( QString::fromAscii( "smime-type" ), QString::fromAscii( "enveloped-data" ) );
+        content->contentType()->setParameter( QString::fromLatin1( "smime-type" ), QString::fromAscii( "enveloped-data" ) );
       }
-      content->contentType()->setParameter( QString::fromAscii( "name" ), QString::fromAscii( "smime.p7m" ) );
+      content->contentType()->setParameter( QString::fromLatin1( "name" ), QString::fromAscii( "smime.p7m" ) );
   }
 }
 
@@ -179,7 +179,7 @@ void Message::Util::setNestedContentType( KMime::Content* content, Kleo::CryptoM
     case Kleo::OpenPGPMIMEFormat:
       if( sign ) {
         content->contentType()->setMimeType( QByteArray( "application/pgp-signature" ) );
-        content->contentType()->setParameter( QString::fromAscii( "name" ), QString::fromAscii( "signature.asc" ) );
+        content->contentType()->setParameter( QString::fromLatin1( "name" ), QString::fromAscii( "signature.asc" ) );
         content->contentDescription()->from7BitString( "This is a digitally signed message part." );
       } else {
         content->contentType()->setMimeType( QByteArray( "application/octet-stream" ) );
@@ -188,7 +188,7 @@ void Message::Util::setNestedContentType( KMime::Content* content, Kleo::CryptoM
     case Kleo::SMIMEFormat:
       if ( sign ) {
         content->contentType()->setMimeType( QByteArray( "application/pkcs7-signature" ) );
-        content->contentType()->setParameter( QString::fromAscii( "name" ), QString::fromAscii( "smime.p7s" ) );
+        content->contentType()->setParameter( QString::fromLatin1( "name" ), QString::fromAscii( "smime.p7s" ) );
         return;
       }
       // fall through:
@@ -204,10 +204,10 @@ void Message::Util::setNestedContentDisposition( KMime::Content* content, Kleo::
 {
   if ( !sign && format & Kleo::OpenPGPMIMEFormat ) {
     content->contentDisposition()->setDisposition( KMime::Headers::CDinline );
-    content->contentDisposition()->setFilename( QString::fromAscii( "msg.asc" ) );
+    content->contentDisposition()->setFilename( QString::fromLatin1( "msg.asc" ) );
   } else if ( sign && format & Kleo::SMIMEFormat ) {
     content->contentDisposition()->setDisposition( KMime::Headers::CDattachment );
-    content->contentDisposition()->setFilename( QString::fromAscii( "smime.p7s" ) );
+    content->contentDisposition()->setFilename( QString::fromLatin1( "smime.p7s" ) );
   }
 }
 

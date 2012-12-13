@@ -119,7 +119,7 @@ void SearchRuleWidget::setHeadersOnly( bool headersOnly )
   mRuleField->adjustSize();
 
   if ( ( currentText != "<message>") && ( currentText != "<body>" ) ) {
-    mRuleField->setItemText( 0, QString::fromAscii( currentText ) );
+    mRuleField->setItemText( 0, QString::fromLatin1( currentText ) );
   } else {
     mRuleField->setItemText( 0, QString() );
   }
