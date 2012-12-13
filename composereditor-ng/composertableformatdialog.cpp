@@ -69,13 +69,14 @@ void ComposerTableFormatDialogPrivate::initialize(const QWebElement &element)
             insertTableWidget->setBorder(webElement.attribute(QLatin1String("border")).toInt());
         }
         if(webElement.hasAttribute(QLatin1String("width"))) {
-            const QString width = webElement.attribute(QLatin1String("border"));
+            QString width = webElement.attribute(QLatin1String("border"));
             if(width.endsWith(QLatin1Char('%'))) {
-                //insertTableWidget->setTypeOfLength(QTextLength::PercentageLength);
+                insertTableWidget->setTypeOfLength(QTextLength::PercentageLength);
+                width.chop(1);
+                insertTableWidget->setLength(width.toInt());
             } else {
-                //insertTableWidget->setTypeOfLength(QTextLength::FixedLength);
-                //TODO
-                //insertTableWidget->set(QTextLength::FixedLength);
+                insertTableWidget->setTypeOfLength(QTextLength::FixedLength);
+                insertTableWidget->setLength(width.toInt());
             }
         }
     }
