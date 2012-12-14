@@ -57,7 +57,7 @@ class CALENDARSUPPORT_EXPORT InvitationHandler : public QObject
 {
   Q_OBJECT
   public:
-    InvitationHandler( CalendarSupport::Calendar *cal );
+    explicit InvitationHandler( CalendarSupport::Calendar *cal );
     ~InvitationHandler();
 
     enum SendResult {

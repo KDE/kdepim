@@ -35,8 +35,7 @@ namespace Akonadi {
   class Item;
 }
 
-namespace CalendarSupport
-{
+namespace CalendarSupport {
 class IncidenceAttachmentModelPrivate;
 
 class CALENDARSUPPORT_EXPORT IncidenceAttachmentModel : public QAbstractListModel

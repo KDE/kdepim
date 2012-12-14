@@ -210,7 +210,7 @@ KABC::Addressee::List VCardXXPort::importContacts() const
     const QString caption( i18nc( "@title:window", "vCard Import Failed" ) );
     bool anyFailures = false;
 
-    const int numberOfUrl(urls.count());
+    const int numberOfUrl( urls.count() );
     for ( int i = 0; i < numberOfUrl; ++i ) {
       const KUrl url = urls.at( i );
 
@@ -315,7 +315,7 @@ KABC::Addressee::List VCardXXPort::filterContacts( const KABC::Addressee::List &
   }
 
   KABC::Addressee::List::ConstIterator it;
-  KABC::Addressee::List::ConstIterator end(addrList.end());
+  KABC::Addressee::List::ConstIterator end( addrList.end() );
   for ( it = addrList.begin(); it != end; ++it ) {
     KABC::Addressee addr;
 

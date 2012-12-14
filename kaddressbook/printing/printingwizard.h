@@ -38,8 +38,7 @@ class StylePage;
 class QItemSelectionModel;
 class QPrinter;
 
-namespace Akonadi
-{
+namespace Akonadi {
   class Collection;
 }
 
