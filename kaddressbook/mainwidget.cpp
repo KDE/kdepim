@@ -258,14 +258,14 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   }
 
   QList<Akonadi::StandardContactActionManager::Type> contactActions;
-  contactActions <<Akonadi::StandardContactActionManager::CreateContact
-                 <<Akonadi::StandardContactActionManager::CreateContactGroup
-                 <<Akonadi::StandardContactActionManager::EditItem;
+  contactActions << Akonadi::StandardContactActionManager::CreateContact
+                 << Akonadi::StandardContactActionManager::CreateContactGroup
+                 << Akonadi::StandardContactActionManager::EditItem;
 
   Q_FOREACH( Akonadi::StandardContactActionManager::Type contactAction, contactActions ) {
     mActionManager->createAction( contactAction );
   }
-    static bool pageRegistered = false;
+  static bool pageRegistered = false;
 
   if ( !pageRegistered ) {
     Akonadi::CollectionPropertiesDialog::registerPage( new PimCommon::CollectionAclPageFactory );
@@ -737,11 +737,11 @@ void MainWidget::setViewMode( int mode )
   //kDebug() << "cur" << currentMode << "new" << mode;
   if ( mode == currentMode ) return;			// nothing to do
 
-  if ( mode == 0)
-      mode = currentMode;				// initialisation, no save
-  else
+  if ( mode == 0 ) {
+      mode = currentMode;// initialisation, no save
+  } else {
       saveSplitterStates();				// for 2- or 3-column mode
-
+  }
   if ( mode == 1 ) {					// simple mode
     mMainWidgetSplitter2->setVisible( false );
     mDetailsPane->setVisible( true );
@@ -751,10 +751,10 @@ void MainWidget::setViewMode( int mode )
     mMainWidgetSplitter2->setVisible( true );
     mContactSwitcher->setVisible( false );
 
-    if ( mode == 2) {					// 2 columns
+    if ( mode == 2 ) {					// 2 columns
         mMainWidgetSplitter2->setOrientation( Qt::Vertical );
     }
-    else if ( mode == 3) {				// 3 columns
+    else if ( mode == 3 ) {				// 3 columns
         mMainWidgetSplitter2->setOrientation( Qt::Horizontal );
     }
   }
