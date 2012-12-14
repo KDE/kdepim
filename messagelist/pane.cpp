@@ -198,7 +198,7 @@ void Pane::setXmlGuiClient( KXMLGUIClient *xmlGuiClient )
   connect( showHideQuicksearch, SIGNAL(triggered(bool)), this, SLOT(changeQuicksearchVisibility(bool)) );
 
 
-  for ( int i=0; i<count(); i++ ) {
+  for ( int i=0; i<count(); ++i ) {
     Widget *w = qobject_cast<Widget *>( widget( i ) );
     w->setXmlGuiClient( d->mXmlGuiClient );
   }
@@ -995,8 +995,7 @@ void Pane::readConfig()
     if(numberOfTab == 0) {
       createNewTab();
     } else {
-      for(int i = 0; i<numberOfTab; ++i)
-      {
+      for(int i = 0; i<numberOfTab; ++i) {
         KConfigGroup grp(MessageList::Core::Settings::self()->config(),QString::fromLatin1("MessageListTab%1").arg(i));
         QItemSelectionModel *selectionModel = createNewTab();
 #if 0
