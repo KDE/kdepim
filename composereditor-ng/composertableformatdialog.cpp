@@ -84,7 +84,6 @@ void ComposerTableFormatDialogPrivate::initialize(const QWebElement &element)
         insertTableWidget->setRows(allRows.count());
         QWebElementCollection allCol = webElement.findAll(QLatin1String("td"));
         insertTableWidget->setColumns(allCol.count()/allRows.count());
-
     }
 }
 

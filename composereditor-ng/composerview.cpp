@@ -123,6 +123,7 @@ public:
     void _k_slotSaveAs();
     void _k_slotEditTable();
 
+    QWebElement tableWebElement(const QWebElement&element);
     QAction* getAction ( QWebPage::WebAction action ) const;
     QVariant evaluateJavascript(const QString& command);
     void execCommand(const QString &cmd);
@@ -326,9 +327,22 @@ void ComposerViewPrivate::_k_slotInsertTable()
     delete dlg;
 }
 
+QWebElement ComposerViewPrivate::tableWebElement(const QWebElement&element)
+{
+    if(element.tagName().toLower() == QLatin1String("table")) {
+        return element;
+    } else {
+        QWebElement e = element;
+        do {
+            e = e.parent();
+        } while(e.tagName().toLower() != QLatin1String("table"));
+        return e;
+    }
+}
+
 void ComposerViewPrivate::_k_slotEditTable()
 {
-    ComposerTableFormatDialog dlg( contextMenuResult.element(),q );
+    ComposerTableFormatDialog dlg( tableWebElement(contextMenuResult.element()),q );
     dlg.exec();
 }
 
@@ -839,7 +853,8 @@ void ComposerView::contextMenuEvent(QContextMenuEvent* event)
     const bool imageSelected = !d->contextMenuResult.imageUrl().isEmpty();
 
     const QWebElement elm = d->contextMenuResult.element();
-    const bool tableSelected = (elm.tagName().toLower() == QLatin1String("table"));
+    const bool tableSelected = (elm.tagName().toLower() == QLatin1String("table") ||
+                                elm.tagName().toLower() == QLatin1String("td") );
     qDebug()<<" elm.tagName().toLower() "<<elm.tagName().toLower();
 
     KMenu *menu = new KMenu;
