@@ -38,24 +38,12 @@ public:
 
     QString html() const;
 
-    void initialize( const QWebElement& element = QWebElement() );
+    void initialize();
 
-    void updateTableHtml();
-
-    QWebElement webElement;
     KPIMTextEdit::InsertTableWidget *insertTableWidget;
     ComposerTableDialog *q;
 };
 
-void ComposerTableDialogPrivate::updateTableHtml()
-{
-    if(!webElement.isNull()) {
-        webElement.setAttribute(QLatin1String("border"),QString::number(insertTableWidget->border()));
-        const QString width = QString::fromLatin1("%1%2").arg(insertTableWidget->length()).arg(insertTableWidget->typeOfLength() == QTextLength::PercentageLength ? QLatin1String("%") : QString());
-        webElement.setAttribute(QLatin1String("width"),width);
-        //TODO update column/row
-    }
-}
 
 QString ComposerTableDialogPrivate::html() const
 {
@@ -76,30 +64,14 @@ QString ComposerTableDialogPrivate::html() const
     return htmlTable;
 }
 
-void ComposerTableDialogPrivate::initialize(const QWebElement &element)
+void ComposerTableDialogPrivate::initialize()
 {
-    webElement = element;
-    q->setCaption( element.isNull() ? i18n( "Insert Table" ) : i18n( "Edit Table" ) );
+    q->setCaption( i18n( "Insert Table" ) );
     q->setButtons( KDialog::Ok|KDialog::Cancel );
     q->setButtonText( KDialog::Ok, i18n( "Insert" ) );
     insertTableWidget = new KPIMTextEdit::InsertTableWidget( q );
     q->setMainWidget( insertTableWidget );
     q->connect(q,SIGNAL(okClicked()),q,SLOT(slotOkClicked()));
-    if(!webElement.isNull()) {
-        if(webElement.hasAttribute(QLatin1String("border"))) {
-            insertTableWidget->setBorder(webElement.attribute(QLatin1String("border")).toInt());
-        }
-        if(webElement.hasAttribute(QLatin1String("width"))) {
-            const QString width = webElement.attribute(QLatin1String("border"));
-            if(width.endsWith(QLatin1Char('%'))) {
-                //insertTableWidget->setTypeOfLength(QTextLength::PercentageLength);
-            } else {
-                //insertTableWidget->setTypeOfLength(QTextLength::FixedLength);
-                //TODO
-                //insertTableWidget->set(QTextLength::FixedLength);
-            }
-        }
-    }
 }
 
 ComposerTableDialog::ComposerTableDialog(QWidget *parent)
@@ -108,11 +80,6 @@ ComposerTableDialog::ComposerTableDialog(QWidget *parent)
     d->initialize();
 }
 
-ComposerTableDialog::ComposerTableDialog(const QWebElement& element, QWidget *parent)
-    : KDialog(parent), d(new ComposerTableDialogPrivate(this))
-{
-    d->initialize(element);
-}
 
 ComposerTableDialog::~ComposerTableDialog()
 {
@@ -126,9 +93,6 @@ QString ComposerTableDialog::html() const
 
 void ComposerTableDialog::slotOkClicked()
 {
-    if(!d->webElement.isNull()) {
-        d->updateTableHtml();
-    }
     accept();
 }
 
