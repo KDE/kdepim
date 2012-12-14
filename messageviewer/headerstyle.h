@@ -37,7 +37,6 @@
 #include <akonadi/kmime/messagestatus.h>
 #include <KMime/Message>
 
-class QByteArray;
 class QString;
 class KDateTime;
 

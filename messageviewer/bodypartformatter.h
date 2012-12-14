@@ -32,9 +32,6 @@
 #ifndef __MESSAGEVIEWER_BODYPARTFORMATTER_H__
 #define __MESSAGEVIEWER_BODYPARTFORMATTER_H__
 
-namespace Akonadi {
-  class Item;
-}
 
 namespace KMime {
   class Content;

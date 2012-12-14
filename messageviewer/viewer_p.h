@@ -67,7 +67,6 @@ namespace MessageViewer {
   class HeaderStyle;
   class FindBarMailWebView;
   class MimeTreeModel;
-  class ConfigureWidget;
   class WebKitPartHtmlWriter;
   class HtmlStatusBar;
   class MailWebView;

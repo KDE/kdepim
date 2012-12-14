@@ -26,7 +26,6 @@ namespace Akonadi {
   class ContactViewer;
 }
 
-class KJob;
 
 namespace MessageViewer {
 
