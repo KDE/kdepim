@@ -23,7 +23,6 @@
 #include <KDialog>
 
 class QWebElement;
-class KLineEdit;
 
 namespace ComposerEditorNG
 {
