@@ -49,7 +49,7 @@ public:
      * @param parent is needed for QDialog constructor, which is the parent class of
      * AddMediaDialog.
      */
-    AddMediaDialog( QWidget *parent = 0 );
+    explicit AddMediaDialog( QWidget *parent = 0 );
 
     /// AddMediaDialog destructor.
     ~AddMediaDialog();

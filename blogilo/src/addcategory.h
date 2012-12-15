@@ -32,7 +32,7 @@ class AddCategory: public KDialog
 {
     Q_OBJECT
 public:
-    AddCategory( QWidget *parent = 0 );
+    explicit AddCategory( QWidget *parent = 0 );
 
 private:
     Ui::AddCategoryBase ui;
