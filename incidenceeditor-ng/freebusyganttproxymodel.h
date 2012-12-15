@@ -46,7 +46,7 @@ namespace IncidenceEditorNG {
 class INCIDENCEEDITORS_NG_EXPORT FreeBusyGanttProxyModel : public QSortFilterProxyModel
 {
   public:
-    FreeBusyGanttProxyModel( QObject *parent = 0 );
+    explicit FreeBusyGanttProxyModel( QObject *parent = 0 );
     QVariant data( const QModelIndex &index, int role = Qt::DisplayRole ) const;
     QString tooltipify( const KCalCore::FreeBusyPeriod &period,
                         const KDateTime::Spec &timeSpec ) const;

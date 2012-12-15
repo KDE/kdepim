@@ -97,7 +97,7 @@ public:
     *
     * @see csvhandling
     */
-    CSVTemplate(KConfigBase* config);
+    explicit CSVTemplate(KConfigBase* config);
 
     /**
     * @brief Returns the number of CSV columns
@@ -283,7 +283,7 @@ private:
     * This is used internally to create the default template.
     * Calls createDateFormat()
     */
-    CSVTemplate(const QString& datePattern);
+    explicit CSVTemplate(const QString& datePattern);
 
     /**
     * @brief Formats a given date according to the template's date pattern

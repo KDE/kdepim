@@ -96,7 +96,7 @@ class INCIDENCEEDITORS_NG_EXPORT AttendeeLine : public KPIM::MultiplyingLine
       TodoActions
     };
 
-    AttendeeLine( QWidget *parent );
+    explicit AttendeeLine( QWidget *parent );
     virtual ~AttendeeLine(){}
 
     virtual void activate();

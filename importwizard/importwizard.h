@@ -37,7 +37,7 @@ class AbstractImporter;
 class ImportWizard : public KAssistantDialog {
   Q_OBJECT
 public:
-  ImportWizard( QWidget* parent=0);
+  explicit ImportWizard( QWidget* parent=0);
   ~ImportWizard();
 
   void next();

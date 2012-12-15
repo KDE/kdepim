@@ -40,7 +40,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceWhatWhere : public IncidenceEditor
 {
   Q_OBJECT
   public:
-    IncidenceWhatWhere( Ui::EventOrTodoDesktop *ui );
+    explicit IncidenceWhatWhere( Ui::EventOrTodoDesktop *ui );
 
     virtual void load( const KCalCore::Incidence::Ptr &incidence );
     virtual void save( const KCalCore::Incidence::Ptr &incidence );

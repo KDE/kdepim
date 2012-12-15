@@ -47,7 +47,7 @@ class EVENTVIEWS_EXPORT Element : public QObject
   public:
     typedef QList<Element *> List;
 
-    Element( const QString &id );
+    explicit Element( const QString &id );
     virtual ~Element();
 
     /**
@@ -113,7 +113,7 @@ class EVENTVIEWS_EXPORT Element : public QObject
 class EVENTVIEWS_EXPORT StoredElement : public Element
 {
   public:
-    StoredElement( const QString &id );
+    explicit StoredElement( const QString &id );
     StoredElement( const QString &id, const QString &shortText );
     StoredElement( const QString &id, const QString &shortText,
                    const QString &longText );
