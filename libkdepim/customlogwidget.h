@@ -23,7 +23,6 @@
 #include <QListWidget>
 
 class QTextDocument;
-class QListWidgetItem;
 
 namespace KPIM {
 class LogItemDelegate : public QStyledItemDelegate
