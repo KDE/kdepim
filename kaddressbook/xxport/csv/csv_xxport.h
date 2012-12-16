@@ -27,7 +27,7 @@ class QFile;
 class CsvXXPort : public XXPort
 {
   public:
-    CsvXXPort( QWidget *parent = 0 );
+    explicit CsvXXPort( QWidget *parent = 0 );
 
     bool exportContacts( const KABC::Addressee::List &contacts ) const;
     KABC::Addressee::List importContacts() const;

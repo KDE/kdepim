@@ -37,7 +37,7 @@ class GrantleeContactFormatter : public AbstractContactFormatter
     /**
      * Creates a new grantlee contact formatter.
      */
-    GrantleeContactFormatter( const QString &templatePath );
+    explicit GrantleeContactFormatter( const QString &templatePath );
 
     /**
      * Destroys the grantlee contact formatter.

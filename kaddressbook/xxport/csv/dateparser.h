@@ -41,7 +41,7 @@
 class DateParser
 {
   public:
-    DateParser( const QString &pattern );
+    explicit DateParser( const QString &pattern );
     ~DateParser();
 
     QDateTime parse( const QString &dateStr ) const;

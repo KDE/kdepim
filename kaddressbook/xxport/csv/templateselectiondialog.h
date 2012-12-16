@@ -30,7 +30,7 @@ class TemplateSelectionDialog : public KDialog
   Q_OBJECT
 
   public:
-    TemplateSelectionDialog( QWidget *parent = 0 );
+    explicit TemplateSelectionDialog( QWidget *parent = 0 );
 
     bool templatesAvailable() const;
 

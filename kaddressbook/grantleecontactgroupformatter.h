@@ -37,7 +37,7 @@ class GrantleeContactGroupFormatter : public AbstractContactGroupFormatter
     /**
      * Creates a new grantlee contact group formatter.
      */
-    GrantleeContactGroupFormatter( const QString &templatePath );
+    explicit GrantleeContactGroupFormatter( const QString &templatePath );
 
     /**
      * Destroys the grantlee contact group formatter.
