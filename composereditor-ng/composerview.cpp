@@ -123,7 +123,6 @@ public:
     void _k_slotSaveAs();
     void _k_slotEditTable();
 
-    QWebElement tableWebElement(const QWebElement&element);
     QAction* getAction ( QWebPage::WebAction action ) const;
     QVariant evaluateJavascript(const QString& command);
     void execCommand(const QString &cmd);
@@ -327,22 +326,9 @@ void ComposerViewPrivate::_k_slotInsertTable()
     delete dlg;
 }
 
-QWebElement ComposerViewPrivate::tableWebElement(const QWebElement&element)
-{
-    if(element.tagName().toLower() == QLatin1String("table")) {
-        return element;
-    } else {
-        QWebElement e = element;
-        do {
-            e = e.parent();
-        } while(e.tagName().toLower() != QLatin1String("table"));
-        return e;
-    }
-}
-
 void ComposerViewPrivate::_k_slotEditTable()
 {
-    ComposerTableFormatDialog dlg( tableWebElement(contextMenuResult.element()),q );
+    ComposerTableFormatDialog dlg( Util::tableWebElement(contextMenuResult.element()),q );
     dlg.exec();
 }
 

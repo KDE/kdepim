@@ -68,3 +68,16 @@ QUrl ComposerEditorNG::Util::guessUrlFromString(const QString &string)
     // Fall back to QUrl's own tolerant parser.
     return QUrl(string, QUrl::TolerantMode);
 }
+
+QWebElement ComposerEditorNG::Util::tableWebElement(const QWebElement&element)
+{
+    if(element.tagName().toLower() == QLatin1String("table")) {
+        return element;
+    } else {
+        QWebElement e = element;
+        do {
+            e = e.parent();
+        } while(e.tagName().toLower() != QLatin1String("table"));
+        return e;
+    }
+}
