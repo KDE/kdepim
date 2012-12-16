@@ -30,7 +30,7 @@ class KNConfigManager : QObject {
   Q_OBJECT
 
   public:
-    KNConfigManager( QObject *parent = 0 );
+    explicit KNConfigManager( QObject *parent = 0 );
     ~KNConfigManager();
 
     KNode::Appearance*           appearance()const          { return a_ppearance; }
@@ -61,7 +61,7 @@ class KNConfigDialog : public KCMultiDialog
     /** Create a new configuration dialog.
      * @param parent The parent widget.
      */
-    KNConfigDialog( QWidget *parent = 0 );
+    explicit KNConfigDialog( QWidget *parent = 0 );
 
   protected slots:
     /** Update and reload configuration settings. */

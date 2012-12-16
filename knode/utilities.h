@@ -56,7 +56,7 @@ class KNLoadHelper {
 
 public:
 
-  KNLoadHelper(QWidget *parent);
+  explicit KNLoadHelper(QWidget *parent);
   ~KNLoadHelper();
 
   /** opens a file dialog and returns a file open for reading */

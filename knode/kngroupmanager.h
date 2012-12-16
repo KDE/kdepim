@@ -86,7 +86,7 @@ class KNGroupManager : public QObject , public KNJobConsumer {
 
   public:
 
-    KNGroupManager( QObject * parent = 0 );
+    explicit KNGroupManager( QObject * parent = 0 );
     ~KNGroupManager();
 
     // group access

@@ -57,7 +57,7 @@ class StatusFilterWidget : public QWidget
   Q_OBJECT
 
   public:
-    StatusFilterWidget( QWidget *parent );
+    explicit StatusFilterWidget( QWidget *parent );
     ~StatusFilterWidget();
 
     StatusFilter filter();
@@ -71,7 +71,7 @@ class StatusFilterWidget : public QWidget
     class TFCombo : public QComboBox {
 
       public:
-        TFCombo(QWidget *parent);
+        explicit TFCombo(QWidget *parent);
         ~TFCombo();
         void setValue(bool b) { if(b) setCurrentIndex(0); else setCurrentIndex(1); }
         bool value() const         { return (currentIndex()==0); }

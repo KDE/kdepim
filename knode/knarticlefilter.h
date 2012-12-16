@@ -37,7 +37,7 @@ class KNArticleFilter {
   friend class KNode::SearchDialog;
 
   public:
-    KNArticleFilter(int id=-1);
+    explicit KNArticleFilter(int id=-1);
     /// Copy constructor
     KNArticleFilter(const KNArticleFilter& org);
     ~KNArticleFilter();

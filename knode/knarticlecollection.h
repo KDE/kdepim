@@ -86,7 +86,7 @@ class KNArticleCollection : public KNCollection {
     typedef QList<KNArticleCollection::Ptr> List;
 
 
-    KNArticleCollection( KNCollection::Ptr p = KNCollection::Ptr() );
+    explicit KNArticleCollection( KNCollection::Ptr p = KNCollection::Ptr() );
     ~KNArticleCollection();
 
     /** Returns true if this collection doesn't contain any article. */
