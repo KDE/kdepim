@@ -170,6 +170,7 @@ public:
     KAction *action_replace;
     KAction *action_page_color;
     KAction *action_block_quote;
+    KAction *action_save_as;
 
 
     ComposerView *q;
@@ -828,6 +829,10 @@ void ComposerView::createActions(KActionCollection *actionCollection)
     d->htmlEditorActionList.append(d->action_page_color);
     actionCollection->addAction( QLatin1String( "htmleditor_page_color_and_background" ), d->action_page_color );
     connect( d->action_page_color, SIGNAL(triggered(bool)), SLOT(_k_slotChangePageColorAndBackground()) );
+
+    //Save As
+    d->action_save_as = KStandardAction::saveAs(this,SLOT(_k_slotSaveAs()),this);
+    d->htmlEditorActionList.append(d->action_save_as);
 }
 
 void ComposerView::contextMenuEvent(QContextMenuEvent* event)
