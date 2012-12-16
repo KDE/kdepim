@@ -41,7 +41,7 @@ class KWatchGnuPGMainWindow;
 class KWatchGnuPGTray : public KSystemTrayIcon {
   Q_OBJECT
 public:
-  KWatchGnuPGTray( KWatchGnuPGMainWindow* mainwin );
+  explicit KWatchGnuPGTray( KWatchGnuPGMainWindow* mainwin );
   virtual ~KWatchGnuPGTray();
 
 public slots:
