@@ -122,26 +122,36 @@ void ComposerImageResizeWidgetPrivate::resizeImage(const QPoint& pos)
 {
     int width = -1;
     int height = -1;
-    qDebug()<<" imageElement.geometry().size()"<<imageElement.geometry().size();
     switch(direction) {
     case None:
         break;
     case Top:
+        height = imageElement.attribute(QLatin1String("height")).toInt() - pos.y() - firstPosition.y();
         break;
     case Bottom:
         height = imageElement.attribute(QLatin1String("height")).toInt() + pos.y() - firstPosition.y();
         break;
     case Left:
+        width = imageElement.attribute(QLatin1String("width")).toInt() - pos.x() - firstPosition.x();
         break;
     case Right:
+        width = imageElement.attribute(QLatin1String("width")).toInt() + pos.x() - firstPosition.x();
         break;
     case TopLeft:
+        width = imageElement.attribute(QLatin1String("width")).toInt() - pos.x() - firstPosition.x();
+        height = imageElement.attribute(QLatin1String("height")).toInt() - pos.y() - firstPosition.y();
         break;
     case BottomRight:
+        width = imageElement.attribute(QLatin1String("width")).toInt() + pos.x() - firstPosition.x();
+        height = imageElement.attribute(QLatin1String("height")).toInt() + pos.y() - firstPosition.y();
         break;
     case TopRight:
+        height = imageElement.attribute(QLatin1String("height")).toInt() - pos.y() - firstPosition.y();
+        width = imageElement.attribute(QLatin1String("width")).toInt() + pos.x() - firstPosition.x();
         break;
     case BottomLeft:
+        height = imageElement.attribute(QLatin1String("height")).toInt() + pos.y() - firstPosition.y();
+        width = imageElement.attribute(QLatin1String("width")).toInt() - pos.x() - firstPosition.x();
         break;
     }
     if(width != -1) {
@@ -150,8 +160,7 @@ void ComposerImageResizeWidgetPrivate::resizeImage(const QPoint& pos)
     if(height != -1) {
         imageElement.setAttribute(QLatin1String("height"),QString::number(height));
     }
-    q->resize(imageElement.geometry().size());
-    qDebug()<<" AFTER :"<<imageElement.geometry().size();
+    q->resize(QSize(width,height));
 }
 
 ComposerImageResizeWidget::ComposerImageResizeWidget(const QWebElement &element, QWidget *parent)

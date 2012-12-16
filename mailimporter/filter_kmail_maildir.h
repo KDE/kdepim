@@ -20,7 +20,6 @@
 #define MAILIMPORTER_FILTER_KMAIL_MAILDIR_HXX
 
 #include "filters.h"
-class QDir;
 /**
  * Imports KMail mail folder with maildir format recursively, recreating the folder structure.
  * @author Danny Kukawka

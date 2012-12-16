@@ -25,6 +25,7 @@
 #include <KLocale>
 
 #include <QWebElement>
+#include <QDebug>
 
 namespace ComposerEditorNG
 {
@@ -69,7 +70,7 @@ void ComposerTableFormatDialogPrivate::initialize(const QWebElement &element)
             insertTableWidget->setBorder(webElement.attribute(QLatin1String("border")).toInt());
         }
         if(webElement.hasAttribute(QLatin1String("width"))) {
-            QString width = webElement.attribute(QLatin1String("border"));
+            QString width = webElement.attribute(QLatin1String("width"));
             if(width.endsWith(QLatin1Char('%'))) {
                 insertTableWidget->setTypeOfLength(QTextLength::PercentageLength);
                 width.chop(1);
@@ -79,6 +80,10 @@ void ComposerTableFormatDialogPrivate::initialize(const QWebElement &element)
                 insertTableWidget->setLength(width.toInt());
             }
         }
+        QWebElementCollection allRows = webElement.findAll(QLatin1String("tr"));
+        insertTableWidget->setRows(allRows.count());
+        QWebElementCollection allCol = webElement.findAll(QLatin1String("td"));
+        insertTableWidget->setColumns(allCol.count()/allRows.count());
     }
 }
 

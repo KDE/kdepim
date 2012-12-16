@@ -30,7 +30,6 @@
 
 #include <QtCore/QAbstractListModel>
 
-class QAbstractItemModel;
 
 namespace Akonadi {
   class Item;

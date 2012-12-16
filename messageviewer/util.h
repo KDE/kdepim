@@ -46,7 +46,6 @@
 
 class KUrl;
 class QWidget;
-class QStringList;
 class QActionGroup;
 class KAction;
 

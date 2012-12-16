@@ -39,7 +39,6 @@
 typedef int CallId;
 
 namespace KCalCore {
-  class ICalFormat;
   class FreeBusyCache;
 }
 

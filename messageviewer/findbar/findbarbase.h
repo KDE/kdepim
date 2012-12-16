@@ -24,9 +24,7 @@
 #include <QWidget>
 
 class QAction;
-class QWebView;
 class KLineEdit;
-class SearchLineWidget;
 class QPushButton;
 class QMenu;
 

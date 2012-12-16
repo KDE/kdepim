@@ -24,6 +24,7 @@
 #include <QColor>
 #include <QString>
 #include <QUrl>
+#include <QWebElement>
 
 namespace ComposerEditorNG
 {
@@ -31,6 +32,7 @@ namespace ComposerEditorNG
 namespace Util {
 QColor convertRgbToQColor(QString rgb);
 QUrl guessUrlFromString(const QString &string);
+QWebElement tableWebElement(const QWebElement&element);
 }
 
 }

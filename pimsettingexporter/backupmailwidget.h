@@ -19,7 +19,6 @@
 #define BACKUPMAILWIDGET_H
 
 #include <QWidget>
-class QListWidget;
 
 namespace KPIM {
   class CustomLogWidget;

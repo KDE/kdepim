@@ -35,7 +35,6 @@
 #include <KDialog>
 #include <QStringList>
 class KConfig;
-class KEditListBox;
 class KEditListWidget;
 class KPushButton;
 class QListWidget;

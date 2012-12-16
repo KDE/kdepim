@@ -38,7 +38,6 @@
 #include <KDialog>
 class QString;
 class QWidget;
-class QShowEvent;
 
 namespace MessageViewer {
 class FindBarSourceView;

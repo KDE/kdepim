@@ -34,6 +34,8 @@ PageColorBackgroundWidget::PageColorBackgroundWidget(QWidget *parent) :
 
     const QStringList mimetypes = KImageIO::mimeTypes( KImageIO::Reading );
     ui->backgroundImage->fileDialog()->setFilter(mimetypes.join( QLatin1String( " " ) ));
+    ui->groupBox->setEnabled(false);
+    connect(ui->customColors,SIGNAL(toggled(bool)),ui->groupBox,SLOT(setEnabled(bool)));
 }
 
 PageColorBackgroundWidget::~PageColorBackgroundWidget()

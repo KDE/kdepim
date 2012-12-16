@@ -21,7 +21,6 @@
 #include "abstractimportexportjob.h"
 
 class QWidget;
-class QProgressDialog;
 class ArchiveStorage;
 
 class ExportCalendarJob : public AbstractImportExportJob

@@ -21,7 +21,6 @@
 #include "abstractaddressbook.h"
 
 class ImportWizard;
-class QDir;
 
 class OperaAddressBook : public AbstractAddressBook
 {

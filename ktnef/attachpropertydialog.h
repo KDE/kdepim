@@ -33,7 +33,6 @@ using namespace KTnef;
 class QTreeWidget;
 class QTreeWidgetItem;
 
-class Ui_AttachPropertyDialogBase;
 
 class AttachPropertyDialog : public QDialog
 {

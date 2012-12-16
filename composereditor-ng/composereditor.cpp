@@ -33,7 +33,9 @@ class ComposerEditorPrivate
 {
 public:
     ComposerEditorPrivate(ComposerEditor *qq)
-        : q(qq),
+        : findReplaceBar(0),
+          q(qq),
+          view(0),
           richTextEnabled(true)
     {
     }

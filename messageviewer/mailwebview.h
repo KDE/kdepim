@@ -35,7 +35,6 @@
 
 #include <boost/function.hpp>
 
-class QAction;
 class QLabel;
 class KActionCollection;
 

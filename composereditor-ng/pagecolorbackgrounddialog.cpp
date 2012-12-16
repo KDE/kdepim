@@ -38,8 +38,9 @@ PageColorBackgroundDialog::PageColorBackgroundDialog(QWebFrame *frame, QWidget *
     QVBoxLayout *layout = new QVBoxLayout( mainWidget() );
     mPageColorWidget = new PageColorBackgroundWidget;
     layout->addWidget(mPageColorWidget);
-    initSettings();
     connect(this,SIGNAL(okClicked()),this,SLOT(slotOkClicked()));
+
+    initSettings();
 }
 
 PageColorBackgroundDialog::~PageColorBackgroundDialog()

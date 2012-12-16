@@ -18,32 +18,29 @@
 
 */
 
-#ifndef ComposerLinkDialog_H
-#define ComposerLinkDialog_H
-#include <KDialog>
+#ifndef COMPOSERTABLECELLFORMATDIALOG_H
+#define COMPOSERTABLECELLFORMATDIALOG_H
 
+#include <KDialog>
 class QWebElement;
 
 namespace ComposerEditorNG
 {
-class ComposerLinkDialogPrivate;
-class ComposerLinkDialog : public KDialog
+class ComposerTableCellFormatDialogPrivate;
+class ComposerTableCellFormatDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit ComposerLinkDialog(const QString &selectedText, QWidget *parent);
-    explicit ComposerLinkDialog(const QWebElement& element, QWidget *parent);
-    ~ComposerLinkDialog();
-
-    QString html() const;
-
-public Q_SLOTS:
-    void slotOkClicked();
+    explicit ComposerTableCellFormatDialog(const QWebElement &element, QWidget *parent);
+    ~ComposerTableCellFormatDialog();
 
 private:
-    friend class ComposerLinkDialogPrivate;
-    ComposerLinkDialogPrivate * const d;
+    friend class ComposerTableCellFormatDialogPrivate;
+    ComposerTableCellFormatDialogPrivate * const d;
+
+    Q_PRIVATE_SLOT( d, void _k_slotOkClicked() )
+
 };
 }
 
-#endif // ComposerLinkDialog_H
+#endif // COMPOSERTABLECELLFORMATDIALOG_H
