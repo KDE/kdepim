@@ -31,10 +31,6 @@
 
 class KJob;
 
-namespace CalendarSupport {
-  class IncidenceFetchJob;
-}
-
 namespace MessageViewer {
 
 class MemoryCalendarMemento : public QObject, public Interface::BodyPartMemento
