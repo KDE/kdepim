@@ -30,7 +30,6 @@
 class KJob;
 class KProgressDialog;
 
-class QAbstractItemModel;
 class QAction;
 class QItemSelectionModel;
 class QSignalMapper;

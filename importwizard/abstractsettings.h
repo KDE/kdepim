@@ -25,7 +25,6 @@
 #include <QMap>
 
 class ImportWizard;
-class KJob;
 
 namespace KPIMIdentities {
   class Identity;

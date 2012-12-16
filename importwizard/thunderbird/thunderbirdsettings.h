@@ -26,7 +26,6 @@
 #include <KUrl>
 
 class ImportWizard;
-class KConfigGroup;
 
 class ThunderbirdSettings : public AbstractSettings
 {
