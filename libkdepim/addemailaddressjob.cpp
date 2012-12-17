@@ -145,9 +145,17 @@ class AddEmailAddressJob::Private
                 q->connect( job, SIGNAL(result(KJob*)), SLOT(slotResourceCreationDone(KJob*)) );
                 job->configure( mParentWidget );
                 job->start();
+                return;
+              } else { //if agent is not valid => return error and finish job
+                q->setError( UserDefinedError );
+                q->emitResult();
+                return;
               }
+            } else { //Canceled create agent => return error and finish job
+              q->setError( UserDefinedError );
+              q->emitResult();
+              return;
             }
-            return;
         } else {
           q->setError( UserDefinedError );
           q->emitResult();
