@@ -427,7 +427,7 @@ void AttachmentControllerBase::createActions()
   d->attachMyPublicKeyAction = new KAction( i18n( "Attach &My Public Key" ), this );
   connect( d->attachMyPublicKeyAction, SIGNAL(triggered(bool)), this, SLOT(attachMyPublicKey()) );
 
-  d->attachmentMenu = new KActionMenu(i18n("Attach"),this);
+  d->attachmentMenu = new KActionMenu( KIcon( QLatin1String( "mail-attachment" ) ), i18n( "Attach" ), this );
   connect( d->attachmentMenu, SIGNAL(triggered(bool)), this, SLOT(showAddAttachmentDialog()) );
 
   d->attachmentMenu->setDelayed(true);
