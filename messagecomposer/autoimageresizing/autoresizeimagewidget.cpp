@@ -48,6 +48,8 @@ AutoResizeImageWidget::AutoResizeImageWidget(QWidget *parent)
   connect(ui->customMaximumHeight,SIGNAL(valueChanged(int)),SIGNAL(changed()));
   connect(ui->customMinimumWidth,SIGNAL(valueChanged(int)),SIGNAL(changed()));
   connect(ui->customMinimumHeight,SIGNAL(valueChanged(int)),SIGNAL(changed()));
+  connect(ui->skipImageSizeLower,SIGNAL(clicked()),SIGNAL(changed()));
+  connect(ui->imageSize,SIGNAL(valueChanged(int)),SIGNAL(changed()));
 
   connect(ui->CBMaximumWidth,SIGNAL(currentIndexChanged(int)),SLOT(slotComboboxChanged(int)));
   connect(ui->CBMaximumHeight,SIGNAL(currentIndexChanged(int)),SLOT(slotComboboxChanged(int)));
@@ -116,6 +118,8 @@ void AutoResizeImageWidget::loadConfig()
   ui->AskBeforeResizing->setChecked(MessageComposer::MessageComposerSettings::self()->askBeforeResizing());
   ui->EnlargeImageToMinimum->setChecked(MessageComposer::MessageComposerSettings::self()->enlargeImageToMinimum());
   ui->ReduceImageToMaximum->setChecked(MessageComposer::MessageComposerSettings::self()->reduceImageToMaximum());
+  ui->skipImageSizeLower->setChecked(MessageComposer::MessageComposerSettings::self()->skipImageLowerSizeEnabled());
+  ui->imageSize->setValue(MessageComposer::MessageComposerSettings::self()->skipImageLowerSize());
 
   ui->customMaximumWidth->setValue(MessageComposer::MessageComposerSettings::self()->customMaximumWidth());
   ui->customMaximumHeight->setValue(MessageComposer::MessageComposerSettings::self()->customMaximumHeight());
@@ -173,6 +177,8 @@ void AutoResizeImageWidget::writeConfig()
   MessageComposer::MessageComposerSettings::self()->setMinimumHeight(ui->CBMinimumHeight->itemData(ui->CBMinimumHeight->currentIndex()).toInt());
 
   MessageComposer::MessageComposerSettings::self()->setWriteFormat(ui->WriteToImageFormat->currentText());
+  MessageComposer::MessageComposerSettings::self()->setSkipImageLowerSizeEnabled(ui->skipImageSizeLower->isChecked());
+  MessageComposer::MessageComposerSettings::self()->setSkipImageLowerSize(ui->imageSize->value());
 
   mWasChanged = false;
 }
@@ -191,6 +197,10 @@ void AutoResizeImageWidget::resetToDefault()
    ui->customMaximumHeight->setValue(MessageComposer::MessageComposerSettings::self()->customMaximumHeight());
    ui->customMinimumWidth->setValue(MessageComposer::MessageComposerSettings::self()->customMinimumWidth());
    ui->customMinimumHeight->setValue(MessageComposer::MessageComposerSettings::self()->customMinimumHeight());
+
+   ui->skipImageSizeLower->setChecked(MessageComposer::MessageComposerSettings::self()->skipImageLowerSizeEnabled());
+   ui->imageSize->setValue(MessageComposer::MessageComposerSettings::self()->skipImageLowerSize());
+
 
    int index = qMax(0, ui->CBMaximumWidth->findData(MessageComposer::MessageComposerSettings::self()->maximumWidth()));
    ui->CBMaximumWidth->setCurrentIndex(index);

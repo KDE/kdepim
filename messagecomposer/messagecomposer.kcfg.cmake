@@ -256,6 +256,13 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
     <entry name="WriteFormat" type="String" key="write-format">
       <default></default>
     </entry>
+    <entry name="SkipImageLowerSizeEnabled" type="Bool" key="skip-image-lower-size-enabled">
+      <default>false</default>
+    </entry>
+    <entry name="SkipImageLowerSize" type="int" key="skip-image-lower-size">
+      <default>220</default>
+    </entry>
+
   </group>
 </kcfg>
 
