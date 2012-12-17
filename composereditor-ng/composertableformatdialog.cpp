@@ -23,8 +23,12 @@
 #include <KPIMTextEdit/InsertTableWidget>
 
 #include <KLocale>
+#include <KColorButton>
 
 #include <QWebElement>
+#include <QVBoxLayout>
+#include <QCheckBox>
+#include <QLabel>
 #include <QDebug>
 
 namespace ComposerEditorNG
@@ -42,6 +46,8 @@ public:
     void updateTableHtml();
 
     QWebElement webElement;
+    KColorButton *backgroundColor;
+    QCheckBox *useBackgroundColor;
     KPIMTextEdit::InsertTableWidget *insertTableWidget;
     ComposerTableFormatDialog *q;
 };
@@ -52,6 +58,14 @@ void ComposerTableFormatDialogPrivate::updateTableHtml()
         webElement.setAttribute(QLatin1String("border"),QString::number(insertTableWidget->border()));
         const QString width = QString::fromLatin1("%1%2").arg(insertTableWidget->length()).arg(insertTableWidget->typeOfLength() == QTextLength::PercentageLength ? QLatin1String("%") : QString());
         webElement.setAttribute(QLatin1String("width"),width);
+        if(useBackgroundColor->isChecked()) {
+            const QColor col = backgroundColor->color();
+            if(col.isValid()) {
+                webElement.setAttribute(QLatin1String("bgcolor"),backgroundColor->color().name());
+            }
+        } else {
+            webElement.removeAttribute(QLatin1String("bgcolor"));
+        }
         //TODO update column/row
     }
 }
@@ -62,9 +76,24 @@ void ComposerTableFormatDialogPrivate::initialize(const QWebElement &element)
     q->setCaption( i18n( "Table Format" ) );
     q->setButtons( KDialog::Ok|KDialog::Cancel );
     q->setButtonText( KDialog::Ok, i18n( "Edit" ) );
+    QWidget *page = new QWidget( q );
+    q->setMainWidget( page );
+
+    QVBoxLayout *lay = new QVBoxLayout( page );
     insertTableWidget = new KPIMTextEdit::InsertTableWidget( q );
-    q->setMainWidget( insertTableWidget );
+    lay->addWidget(insertTableWidget);
+
+    QHBoxLayout *hbox = new QHBoxLayout;
+    useBackgroundColor = new QCheckBox( i18n( "Background Color:" ) );
+    hbox->addWidget(useBackgroundColor);
+    backgroundColor = new KColorButton;
+    backgroundColor->setEnabled(false);
+    hbox->addWidget(backgroundColor);
+
+    lay->addLayout(hbox);
+
     q->connect(q,SIGNAL(okClicked()),q,SLOT(slotOkClicked()));
+    q->connect(useBackgroundColor,SIGNAL(toggled(bool)),backgroundColor,SLOT(setEnabled(bool)));
     if(!webElement.isNull()) {
         if(webElement.hasAttribute(QLatin1String("border"))) {
             insertTableWidget->setBorder(webElement.attribute(QLatin1String("border")).toInt());
@@ -79,6 +108,11 @@ void ComposerTableFormatDialogPrivate::initialize(const QWebElement &element)
                 insertTableWidget->setTypeOfLength(QTextLength::FixedLength);
                 insertTableWidget->setLength(width.toInt());
             }
+        }
+        if(webElement.hasAttribute(QLatin1String("bgcolor"))) {
+            useBackgroundColor->setChecked(true);
+            const QColor color = QColor(webElement.attribute(QLatin1String("bgcolor")));
+            backgroundColor->setColor(color);
         }
         QWebElementCollection allRows = webElement.findAll(QLatin1String("tr"));
         insertTableWidget->setRows(allRows.count());

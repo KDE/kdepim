@@ -29,6 +29,13 @@ class ExtendAttributesPrivate;
 class ExtendAttributes : public KDialog
 {
 public:
+    enum ExtendType {
+        Image,
+        Table,
+        Cell,
+        Link
+    };
+
     explicit ExtendAttributes(QWidget *parent);
     ~ExtendAttributes();
 private:

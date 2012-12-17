@@ -21,9 +21,11 @@
 #include "composertablecellformatdialog.h"
 
 #include <KLocale>
+#include <KColorButton>
 
 #include <QWebElement>
 #include <QVBoxLayout>
+#include <QCheckBox>
 
 namespace ComposerEditorNG {
 
@@ -47,6 +49,10 @@ public:
     void _k_slotOkClicked();
 
     QWebElement webElement;
+    //TODO
+    KColorButton *backgroundColor;
+    QCheckBox *useBackgroundColor;
+
     ComposerTableCellFormatDialog *q;
 };
 
