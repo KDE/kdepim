@@ -26,6 +26,7 @@
 #include "composerimageresizewidget.h"
 #include "composertabledialog.h"
 #include "composertableformatdialog.h"
+#include "composertablecellformatdialog.h"
 
 #include <kpimtextedit/emoticontexteditaction.h>
 #include <kpimtextedit/inserthtmldialog.h>
@@ -122,6 +123,7 @@ public:
     void _k_slotEditImage();
     void _k_slotSaveAs();
     void _k_slotEditTable();
+    void _k_slotEditTableCell();
 
     QAction* getAction ( QWebPage::WebAction action ) const;
     QVariant evaluateJavascript(const QString& command);
@@ -330,6 +332,12 @@ void ComposerViewPrivate::_k_slotInsertTable()
 void ComposerViewPrivate::_k_slotEditTable()
 {
     ComposerTableFormatDialog dlg( Util::tableWebElement(contextMenuResult.element()),q );
+    dlg.exec();
+}
+
+void ComposerViewPrivate::_k_slotEditTableCell()
+{
+    ComposerTableCellFormatDialog dlg( contextMenuResult.element(),q );
     dlg.exec();
 }
 
@@ -844,8 +852,10 @@ void ComposerView::contextMenuEvent(QContextMenuEvent* event)
     const bool imageSelected = !d->contextMenuResult.imageUrl().isEmpty();
 
     const QWebElement elm = d->contextMenuResult.element();
+    const bool tableCellSelected = (elm.tagName().toLower() == QLatin1String("td"));
     const bool tableSelected = (elm.tagName().toLower() == QLatin1String("table") ||
-                                elm.tagName().toLower() == QLatin1String("td") );
+                                tableCellSelected );
+
     qDebug()<<" elm.tagName().toLower() "<<elm.tagName().toLower();
 
     KMenu *menu = new KMenu;
@@ -874,6 +884,10 @@ void ComposerView::contextMenuEvent(QContextMenuEvent* event)
     } else if(tableSelected) {
         QAction *editTableAction = menu->addAction(i18n("Edit Table..."));
         connect( editTableAction, SIGNAL(triggered(bool)), this, SLOT(_k_slotEditTable()) );
+        if(tableCellSelected) {
+            QAction *editTableCellAction = menu->addAction(i18n("Edit Cell..."));
+            connect( editTableCellAction, SIGNAL(triggered(bool)), this, SLOT(_k_slotEditTableCell()) );
+        }
     }
     menu->addSeparator();
     menu->addAction(d->action_spell_check);

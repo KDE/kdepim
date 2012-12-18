@@ -45,6 +45,8 @@ public:
 
     void updateTableHtml();
 
+    void _k_slotOkClicked();
+
     QWebElement webElement;
     KColorButton *backgroundColor;
     QCheckBox *useBackgroundColor;
@@ -92,7 +94,8 @@ void ComposerTableFormatDialogPrivate::initialize(const QWebElement &element)
 
     lay->addLayout(hbox);
 
-    q->connect(q,SIGNAL(okClicked()),q,SLOT(slotOkClicked()));
+    q->connect(q,SIGNAL(okClicked()),q,SLOT(_k_slotOkClicked()));
+
     q->connect(useBackgroundColor,SIGNAL(toggled(bool)),backgroundColor,SLOT(setEnabled(bool)));
     if(!webElement.isNull()) {
         if(webElement.hasAttribute(QLatin1String("border"))) {
@@ -121,6 +124,15 @@ void ComposerTableFormatDialogPrivate::initialize(const QWebElement &element)
     }
 }
 
+void ComposerTableFormatDialogPrivate::_k_slotOkClicked()
+{
+    if(!webElement.isNull()) {
+        updateTableHtml();
+    }
+    q->accept();
+}
+
+
 ComposerTableFormatDialog::ComposerTableFormatDialog(const QWebElement& element, QWidget *parent)
     : KDialog(parent), d(new ComposerTableFormatDialogPrivate(this))
 {
@@ -132,14 +144,6 @@ ComposerTableFormatDialog::~ComposerTableFormatDialog()
     delete d;
 }
 
-
-void ComposerTableFormatDialog::slotOkClicked()
-{
-    if(!d->webElement.isNull()) {
-        d->updateTableHtml();
-    }
-    accept();
-}
 
 }
 

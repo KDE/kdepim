@@ -41,15 +41,30 @@ public:
 
         QVBoxLayout *layout = new QVBoxLayout( q->mainWidget() );
 
-        //layout->addWidget( linkLocation );
+        QHBoxLayout *hbox = new QHBoxLayout;
+        useBackgroundColor = new QCheckBox( i18n( "Background Color:" ) );
+        hbox->addWidget(useBackgroundColor);
+        backgroundColor = new KColorButton;
+        backgroundColor->setEnabled(false);
+        hbox->addWidget(backgroundColor);
+
+        layout->addLayout(hbox);
+        q->connect(useBackgroundColor,SIGNAL(toggled(bool)),backgroundColor,SLOT(setEnabled(bool)));
+
         q->connect(q,SIGNAL(okClicked()),q,SLOT(_k_slotOkClicked()));
 
+        if(!webElement.isNull()) {
+            if(webElement.hasAttribute(QLatin1String("bgcolor"))) {
+                useBackgroundColor->setChecked(true);
+                const QColor color = QColor(webElement.attribute(QLatin1String("bgcolor")));
+                backgroundColor->setColor(color);
+            }
+        }
     }
 
     void _k_slotOkClicked();
 
     QWebElement webElement;
-    //TODO
     KColorButton *backgroundColor;
     QCheckBox *useBackgroundColor;
 
@@ -59,7 +74,11 @@ public:
 void ComposerTableCellFormatDialogPrivate::_k_slotOkClicked()
 {
     if(!webElement.isNull()) {
-        //TODO
+        if(useBackgroundColor->isChecked()) {
+            webElement.setAttribute(QLatin1String("bgcolor"),backgroundColor->color().name());
+        } else {
+            webElement.removeAttribute(QLatin1String("bgcolor"));
+        }
     }
     q->accept();
 }
