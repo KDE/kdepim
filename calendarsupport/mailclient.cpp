@@ -249,9 +249,9 @@ bool MailClient::send( const KPIMIdentities::Identity &identity,
   KConfigGroup configGroup( &config, QLatin1String( "Invitations" ) );
   const bool outlookConformInvitation = configGroup.readEntry( "LegacyBodyInvites",
 #ifdef KDEPIM_ENTERPRISE_BUILD
-	true
+                                                               true
 #else
-	false
+                                                               false
 #endif
                                                              );
 
