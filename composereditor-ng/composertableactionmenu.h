@@ -22,8 +22,7 @@
 #define COMPOSERTABLEACTIONMENU_H
 
 #include <KActionMenu>
-
-class KActionCollection;
+class QWebElement;
 
 namespace ComposerEditorNG
 {
@@ -32,12 +31,22 @@ class ComposerTableActionMenu : public KActionMenu
 {
     Q_OBJECT
 public:
-    explicit ComposerTableActionMenu(KActionCollection *ac, QWidget *parent);
+    explicit ComposerTableActionMenu(const QWebElement &element, QObject *parent, QWidget *view);
     ~ComposerTableActionMenu();
+
+Q_SIGNALS:
+    /**
+     * @brief insertNewTable, send signal to insert new table
+     */
+    void insertNewTable();
+
 
 private:
     friend class ComposerTableActionMenuPrivate;
     ComposerTableActionMenuPrivate * const d;
+    Q_PRIVATE_SLOT( d, void _k_slotInsertRowBelow() )
+    Q_PRIVATE_SLOT( d, void _k_slotTableFormat() )
+    Q_PRIVATE_SLOT( d, void _k_slotTableCellFormat() )
 };
 }
 
