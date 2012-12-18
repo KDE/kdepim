@@ -22,6 +22,7 @@
 
 #include <KLocale>
 #include <KColorButton>
+#include <KComboBox>
 
 #include <QWebElement>
 #include <QVBoxLayout>
@@ -42,6 +43,20 @@ public:
         QVBoxLayout *layout = new QVBoxLayout( q->mainWidget() );
 
         QHBoxLayout *hbox = new QHBoxLayout;
+        useVerticalAlignment = new QCheckBox( i18n("Vertical Alignment:") );
+        hbox->addWidget(useVerticalAlignment);
+        verticalAlignment = new KComboBox;
+        verticalAlignment->addItem( i18n( "Top" ), QLatin1String("top") );
+        verticalAlignment->addItem( i18n( "Middle" ), QLatin1String("middle") );
+        verticalAlignment->addItem( i18n( "Bottom" ), QLatin1String("bottom") );
+        verticalAlignment->addItem( i18n( "BaseLine" ), QLatin1String("baseline") );
+        verticalAlignment->setEnabled(false);
+        hbox->addWidget(verticalAlignment);
+        layout->addLayout(hbox);
+        q->connect(useVerticalAlignment,SIGNAL(toggled(bool)),verticalAlignment,SLOT(setEnabled(bool)));
+
+
+        hbox = new QHBoxLayout;
         useBackgroundColor = new QCheckBox( i18n( "Background Color:" ) );
         hbox->addWidget(useBackgroundColor);
         backgroundColor = new KColorButton;
@@ -59,6 +74,11 @@ public:
                 const QColor color = QColor(webElement.attribute(QLatin1String("bgcolor")));
                 backgroundColor->setColor(color);
             }
+            if(webElement.hasAttribute(QLatin1String("valign"))) {
+                useVerticalAlignment->setChecked(true);
+                const QString valign = webElement.attribute(QLatin1String("valign"));
+                verticalAlignment->setCurrentIndex( verticalAlignment->findData( valign ) );
+            }
         }
     }
 
@@ -66,7 +86,9 @@ public:
 
     QWebElement webElement;
     KColorButton *backgroundColor;
+    KComboBox *verticalAlignment;
     QCheckBox *useBackgroundColor;
+    QCheckBox *useVerticalAlignment;
 
     ComposerTableCellFormatDialog *q;
 };
@@ -78,6 +100,11 @@ void ComposerTableCellFormatDialogPrivate::_k_slotOkClicked()
             webElement.setAttribute(QLatin1String("bgcolor"),backgroundColor->color().name());
         } else {
             webElement.removeAttribute(QLatin1String("bgcolor"));
+        }
+        if(useVerticalAlignment->isChecked()) {
+            webElement.setAttribute(QLatin1String("valign"), verticalAlignment->itemData( verticalAlignment->currentIndex () ).toString());
+        } else {
+            webElement.removeAttribute(QLatin1String("valign"));
         }
     }
     q->accept();
