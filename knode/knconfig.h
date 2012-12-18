@@ -107,7 +107,7 @@ class KNODE_EXPORT XHeader
     /** Create a new XHeader object from the given string representation.
      * @param s String representation of a MIME header (i.e. "Name: Value").
      */
-    XHeader( const QString &s );
+    explicit XHeader( const QString &s );
 
     /// A list of additional headers.
     typedef QList<XHeader> List;
@@ -135,7 +135,7 @@ class KNODE_EXPORT Cleanup : public ConfigBase {
   friend class GroupCleanupWidget;
 
   public:
-    Cleanup( bool global = true );
+    explicit Cleanup( bool global = true );
     ~Cleanup() {}
 
     void loadConfig( const KConfigGroup &conf );

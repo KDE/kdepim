@@ -47,8 +47,7 @@ const char *WithEMail = "WithEMail";
 const char *FirstColor = "FirstColor";
 const char *SecondColor = "SecondColor";
 
-namespace KABPrinting
-{
+namespace KABPrinting {
 
 class CompactStyleForm : public QWidget, public Ui::CompactStyleForm_Base
 {

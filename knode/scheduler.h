@@ -47,7 +47,7 @@ class Scheduler : public QObject  {
     /** Create a new Scheduler object
      * @param parent The parent QObject.
      */
-    Scheduler( QObject *parent = 0 );
+    explicit Scheduler( QObject *parent = 0 );
     ~Scheduler();
 
     /** Adds a new job to the scheduler queue.

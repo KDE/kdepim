@@ -149,7 +149,7 @@ class KDEPIM_EXPORT MailListMimeData : public QMimeData
      *            This object takes ownership of src and deletes it in the
      *            destructor.
      */
-    MailListMimeData( MailTextSource *src = 0 );
+    explicit MailListMimeData( MailTextSource *src = 0 );
 
     ~MailListMimeData();
 

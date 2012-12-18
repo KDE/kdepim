@@ -339,6 +339,13 @@ public:
   bool selectFirstMessageItem( MessageTypeFilter messageTypeFilter, bool centerItem );
 
   /**
+   * Selects the last message item in the view that matches messageTypeFilter.
+   * If centerItem is true then the specified item will be positioned
+   * at the center of the view, if possible.
+   */
+  bool selectLastMessageItem( MessageTypeFilter messageTypeFilter, bool centerItem );
+
+  /**
    * Sets the focus on the quick search line of the currently active tab.
    */
   void focusQuickSearch();

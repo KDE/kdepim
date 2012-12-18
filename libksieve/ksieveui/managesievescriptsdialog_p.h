@@ -16,7 +16,7 @@ class TreeWidgetWithContextMenu : public QTreeWidget
 
   public:
 
-    TreeWidgetWithContextMenu( QWidget *parent )
+    explicit TreeWidgetWithContextMenu( QWidget *parent )
       : QTreeWidget( parent )
     {}
 #ifndef QT_NO_CONTEXTMENU
@@ -48,7 +48,7 @@ class ItemRadioButton : public QRadioButton
 {
   public:
 
-    ItemRadioButton( QTreeWidgetItem *item )
+    explicit ItemRadioButton( QTreeWidgetItem *item )
         : QRadioButton(), mItem( item )
     {}
 

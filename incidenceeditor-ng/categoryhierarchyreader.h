@@ -66,7 +66,7 @@ class INCIDENCEEDITORS_NG_EXPORT CategoryHierarchyReaderQComboBox : public Categ
 class INCIDENCEEDITORS_NG_EXPORT CategoryHierarchyReaderQTreeWidget : public CategoryHierarchyReader
 {
   public:
-    CategoryHierarchyReaderQTreeWidget( QTreeWidget *tree )
+    explicit CategoryHierarchyReaderQTreeWidget( QTreeWidget *tree )
       : mTree( tree ), mItem( 0 ), mCurrentDepth( 0 ) {}
     virtual ~CategoryHierarchyReaderQTreeWidget() {}
 

@@ -358,6 +358,20 @@ bool Pane::selectFirstMessageItem( MessageList::Core::MessageTypeFilter messageT
   }
 }
 
+bool Pane::selectLastMessageItem(Core::MessageTypeFilter messageTypeFilter, bool centerItem)
+{
+  Widget *w = static_cast<Widget*>( currentWidget() );
+
+  if ( w ) {
+    if ( w->view()->model()->isLoading() )
+      return true;
+
+    return w->selectLastMessageItem( messageTypeFilter, centerItem );
+  } else {
+    return false;
+  }
+}
+
 void Pane::selectAll()
 {
   Widget *w = static_cast<Widget*>( currentWidget() );

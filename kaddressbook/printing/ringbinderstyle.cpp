@@ -124,8 +124,7 @@ static QString contactsToHtml( const KABC::Addressee::List &contacts, int fields
   return content;
 }
 
-namespace KABPrinting
-{
+namespace KABPrinting {
 
 class RingBinderStyleAppearanceForm : public QWidget, public Ui::RingBinderStyleAppearanceForm_Base
 {

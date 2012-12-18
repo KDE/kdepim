@@ -41,7 +41,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTime : public IncidenceEditor
 {
   Q_OBJECT
   public:
-    IncidenceDateTime( Ui::EventOrTodoDesktop *ui );
+    explicit IncidenceDateTime( Ui::EventOrTodoDesktop *ui );
     ~IncidenceDateTime();
 
     virtual void load( const KCalCore::Incidence::Ptr &incidence );

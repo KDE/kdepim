@@ -30,7 +30,7 @@ class KJotsSortProxyModel : public QSortFilterProxyModel
 {
   Q_OBJECT
 public:
-  KJotsSortProxyModel(QObject* parent = 0);
+  explicit KJotsSortProxyModel(QObject* parent = 0);
   ~KJotsSortProxyModel();
 
   void sortChildrenAlphabetically( const QModelIndex &parent );

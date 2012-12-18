@@ -751,5 +751,4 @@ void MonthView::setCalendar( CalendarSupport::Calendar *cal )
   calendar()->registerObserver( d );
 }
 
-
 #include "monthview.moc"

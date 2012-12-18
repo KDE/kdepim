@@ -56,7 +56,7 @@ class KCAL_RESOURCEBLOG_EXPORT ResourceBlog : public ResourceCached
 
       @param group The configuration information.
     */
-    ResourceBlog( const KConfigGroup &group );
+    explicit ResourceBlog( const KConfigGroup &group );
 
     /**
       Destroy the blog resource.

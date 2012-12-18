@@ -309,7 +309,7 @@ private:
 class CSVOutput : public OutputFormat
 {
 public:
-    CSVOutput(CSVTemplateFactory* templateFactory);
+    explicit CSVOutput(CSVTemplateFactory* templateFactory);
     virtual ~CSVOutput();
 
     virtual QString description() const;

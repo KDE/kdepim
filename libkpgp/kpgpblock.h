@@ -90,7 +90,7 @@ class KPGP_EXPORT Block
 {
  public:
 
-  Block( const QByteArray& str = QByteArray() );
+  explicit Block( const QByteArray& str = QByteArray() );
   ~Block();
 
   QByteArray text() const;

@@ -34,7 +34,7 @@ class UploadMediaDialog : public KDialog
 {
 Q_OBJECT
 public:
-    UploadMediaDialog( QWidget *parent=0 );
+    explicit UploadMediaDialog( QWidget *parent=0 );
     ~UploadMediaDialog();
     enum UploadType{BlogAPI=0, FTP};
     void init( const BilboBlog* currentBlog );

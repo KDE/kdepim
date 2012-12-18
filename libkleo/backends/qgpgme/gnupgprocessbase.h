@@ -49,7 +49,7 @@ namespace Kleo {
   class KLEO_EXPORT GnuPGProcessBase : public KProcess {
     Q_OBJECT
   public:
-    GnuPGProcessBase( QObject * parent=0 );
+    explicit GnuPGProcessBase( QObject * parent=0 );
     ~GnuPGProcessBase();
 
     void setUseStatusFD( bool use );

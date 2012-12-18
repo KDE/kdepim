@@ -29,7 +29,7 @@ class KTextEdit;
 class SearchDialog : public KDialog
 {
   public:
-    SearchDialog( QWidget *parent = 0 );
+    explicit SearchDialog( QWidget *parent = 0 );
     ~SearchDialog();
 
     QString searchName() const;

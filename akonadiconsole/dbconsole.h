@@ -28,7 +28,7 @@ class DbConsole : public QWidget
 {
   Q_OBJECT
   public:
-    DbConsole( QWidget *parent = 0 );
+    explicit DbConsole( QWidget *parent = 0 );
 
   private slots:
     void execClicked();

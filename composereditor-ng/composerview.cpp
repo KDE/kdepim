@@ -26,6 +26,8 @@
 #include "composerimageresizewidget.h"
 #include "composertabledialog.h"
 #include "composertableformatdialog.h"
+#include "composertablecellformatdialog.h"
+#include "composertableactionmenu.h"
 
 #include <kpimtextedit/emoticontexteditaction.h>
 #include <kpimtextedit/inserthtmldialog.h>
@@ -121,7 +123,6 @@ public:
     void _k_slotToggleBlockQuote();
     void _k_slotEditImage();
     void _k_slotSaveAs();
-    void _k_slotEditTable();
 
     QAction* getAction ( QWebPage::WebAction action ) const;
     QVariant evaluateJavascript(const QString& command);
@@ -325,12 +326,6 @@ void ComposerViewPrivate::_k_slotInsertTable()
         execCommand(QLatin1String("insertHTML"), dlg->html());
     }
     delete dlg;
-}
-
-void ComposerViewPrivate::_k_slotEditTable()
-{
-    ComposerTableFormatDialog dlg( Util::tableWebElement(contextMenuResult.element()),q );
-    dlg.exec();
 }
 
 void ComposerViewPrivate::_k_slotInsertHorizontalRule()
@@ -844,8 +839,10 @@ void ComposerView::contextMenuEvent(QContextMenuEvent* event)
     const bool imageSelected = !d->contextMenuResult.imageUrl().isEmpty();
 
     const QWebElement elm = d->contextMenuResult.element();
+    const bool tableCellSelected = (elm.tagName().toLower() == QLatin1String("td"));
     const bool tableSelected = (elm.tagName().toLower() == QLatin1String("table") ||
-                                elm.tagName().toLower() == QLatin1String("td") );
+                                tableCellSelected );
+
     qDebug()<<" elm.tagName().toLower() "<<elm.tagName().toLower();
 
     KMenu *menu = new KMenu;
@@ -872,12 +869,15 @@ void ComposerView::contextMenuEvent(QContextMenuEvent* event)
         QAction *editLinkAction = menu->addAction(i18n("Edit Link..."));
         connect( editLinkAction, SIGNAL(triggered(bool)), this, SLOT(_k_slotEditLink()) );
     } else if(tableSelected) {
-        QAction *editTableAction = menu->addAction(i18n("Edit Table..."));
-        connect( editTableAction, SIGNAL(triggered(bool)), this, SLOT(_k_slotEditTable()) );
+        ComposerTableActionMenu * tableActionMenu = new ComposerTableActionMenu(elm,menu,this);
+        connect(tableActionMenu,SIGNAL(insertNewTable()),SLOT(_k_slotInsertTable()));
+        menu->addAction(tableActionMenu);
     }
     menu->addSeparator();
-    menu->addAction(d->action_spell_check);
-    menu->addSeparator();
+    if(!emptyDocument) {
+        menu->addAction(d->action_spell_check);
+        menu->addSeparator();
+    }
 
     QAction *speakAction = menu->addAction(i18n("Speak Text"));
     speakAction->setIcon(KIcon(QLatin1String("preferences-desktop-text-to-speech")));

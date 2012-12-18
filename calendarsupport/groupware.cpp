@@ -95,7 +95,7 @@ void Groupware::handleInvitation( const QString &receiver,
       0,
       i18n( "Unable to create the calendar information for this invitation. "
             "Therefore this invitation cannot be handled." ),
-      i18n( "Invitation Handling Error")
+      i18n( "Invitation Handling Error" )
     );
     return;
   }

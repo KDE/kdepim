@@ -38,7 +38,7 @@ class MikesStyle : public PrintStyle
   Q_OBJECT
 
   public:
-    MikesStyle( PrintingWizard *parent );
+    explicit MikesStyle( PrintingWizard *parent );
     ~MikesStyle();
 
     void print( const KABC::Addressee::List &, PrintProgress * );

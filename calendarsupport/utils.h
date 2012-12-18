@@ -53,8 +53,7 @@ class QMimeData;
 
 typedef QList<QModelIndex> QModelIndexList;
 
-namespace CalendarSupport
-{
+namespace CalendarSupport {
 
   class Calendar;
 

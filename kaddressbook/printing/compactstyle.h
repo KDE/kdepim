@@ -35,7 +35,7 @@ class CompactStyle : public PrintStyle
   Q_OBJECT
 
   public:
-    CompactStyle( PrintingWizard *parent );
+    explicit CompactStyle( PrintingWizard *parent );
     ~CompactStyle();
 
     /**

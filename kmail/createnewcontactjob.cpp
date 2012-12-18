@@ -21,6 +21,8 @@
 #include "createnewcontactjob.h"
 #include "util.h"
 
+#include <KLocale>
+
 #include <KABC/Addressee>
 #include <KABC/ContactGroup>
 
@@ -72,7 +74,7 @@ void CreateNewContactJob::slotCollectionsFetched(KJob*job)
     }
     if ( canCreateItemCollections.isEmpty() ) {
         Akonadi::AgentTypeDialog dlg( mParentWidget );
-        //TODO add caption
+        dlg.setCaption( i18n("Add address book") );
         dlg.agentFilterProxyModel()->addMimeTypeFilter(KABC::Addressee::mimeType());
         dlg.agentFilterProxyModel()->addMimeTypeFilter(KABC::ContactGroup::mimeType());
         dlg.agentFilterProxyModel()->addCapabilityFilter( QLatin1String( "Resource" ) );
@@ -85,9 +87,17 @@ void CreateNewContactJob::slotCollectionsFetched(KJob*job)
                 connect( job, SIGNAL(result(KJob*)), SLOT(slotResourceCreationDone(KJob*)) );
                 job->configure( mParentWidget );
                 job->start();
+                return;
+            } else { //if agent is not valid => return error and finish job
+                setError( UserDefinedError );
+                emitResult();
+                return;
             }
+        } else { //dialog canceled => return error and finish job
+            setError( UserDefinedError );
+            emitResult();
+            return;
         }
-        return;
     }
     createContact();
     emitResult();

@@ -35,9 +35,9 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceCategories : public IncidenceEditor
   Q_OBJECT
   public:
 #ifdef KDEPIM_MOBILE_UI
-    IncidenceCategories( Ui::EventOrTodoMore *ui );
+    explicit IncidenceCategories( Ui::EventOrTodoMore *ui );
 #else
-    IncidenceCategories( Ui::EventOrTodoDesktop *ui );
+    explicit IncidenceCategories( Ui::EventOrTodoDesktop *ui );
 #endif
 
     virtual void load( const KCalCore::Incidence::Ptr &incidence );

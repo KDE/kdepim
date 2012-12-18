@@ -37,7 +37,7 @@ class QTreeWidgetItem;
 class AttachPropertyDialog : public QDialog
 {
   public:
-    AttachPropertyDialog( QWidget *parent = 0 );
+    explicit AttachPropertyDialog( QWidget *parent = 0 );
     ~AttachPropertyDialog();
 
     void setAttachment( KTNEFAttach *attach );

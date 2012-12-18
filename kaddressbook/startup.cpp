@@ -15,11 +15,10 @@ void insertLibraryCatalogues()
     };
 
     KLocale * l = KGlobal::locale();
-    for ( unsigned int i = 0 ; i < sizeof catalogs / sizeof *catalogs ; ++i ) {
+    for ( unsigned int i = 0 ; i < sizeof catalogs / sizeof *catalogs; ++i ) {
       l->insertCatalog( catalogs[i] );
     }
 }
 
 }
-
 

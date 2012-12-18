@@ -24,7 +24,7 @@ namespace KNode {
 class CSSHelper : public MessageViewer::CSSHelperBase
 {
   public:
-    CSSHelper( const QPaintDevice *pd );
+    explicit CSSHelper( const QPaintDevice *pd );
 
 };
 

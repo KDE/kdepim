@@ -45,7 +45,7 @@ class EVENTVIEWS_EXPORT ScrollIndicator : public QGraphicsItem
       DownArrow
     };
 
-    ScrollIndicator( ArrowDirection direction );
+    explicit ScrollIndicator( ArrowDirection direction );
 
     QRectF boundingRect() const;
     void paint( QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget );
@@ -120,7 +120,7 @@ class EVENTVIEWS_EXPORT MonthGraphicsItem : public QObject, public QGraphicsItem
   public:
     typedef QList<MonthGraphicsItem *> List;
 
-    MonthGraphicsItem( MonthItem *manager );
+    explicit MonthGraphicsItem( MonthItem *manager );
     ~MonthGraphicsItem();
 
     /**

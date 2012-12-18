@@ -31,7 +31,7 @@ class FilterActionSetStatus: public FilterActionStatus
 {
   Q_OBJECT
   public:
-    FilterActionSetStatus( QObject *parent = 0 );
+    explicit FilterActionSetStatus( QObject *parent = 0 );
     virtual ReturnCode process( ItemContext &context ) const;
     virtual SearchRule::RequiredPart requiredPart() const;
 

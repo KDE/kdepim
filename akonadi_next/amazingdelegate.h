@@ -29,7 +29,7 @@ class AKONADI_NEXT_EXPORT AmazingContactItemDelegate : public QStyledItemDelegat
 {
   Q_OBJECT
 public:
-  AmazingContactItemDelegate(QObject* parent = 0);
+  explicit AmazingContactItemDelegate(QObject* parent = 0);
 
   void paint( QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index ) const;
 

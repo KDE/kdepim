@@ -30,7 +30,7 @@ class KNFolderManager : public QObject
   Q_OBJECT
 
   public:
-    KNFolderManager(KNArticleManager *a);
+    explicit KNFolderManager(KNArticleManager *a);
     ~KNFolderManager();
 
     //folder access

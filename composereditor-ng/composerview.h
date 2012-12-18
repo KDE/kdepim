@@ -77,7 +77,6 @@ private:
     Q_PRIVATE_SLOT( d, void _k_slotEditLink() )
     Q_PRIVATE_SLOT( d, void _k_slotToggleBlockQuote() )
     Q_PRIVATE_SLOT( d, void _k_slotEditImage() )
-    Q_PRIVATE_SLOT( d, void _k_slotEditTable() )
     Q_PRIVATE_SLOT( d, void _k_slotSaveAs() )
 };
 }

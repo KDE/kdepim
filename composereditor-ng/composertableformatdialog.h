@@ -35,12 +35,12 @@ public:
     explicit ComposerTableFormatDialog(const QWebElement& element, QWidget *parent);
     ~ComposerTableFormatDialog();
 
-private Q_SLOTS:
-    void slotOkClicked();
-
 private:
     friend class ComposerTableFormatDialogPrivate;
     ComposerTableFormatDialogPrivate * const d;
+
+    Q_PRIVATE_SLOT( d, void _k_slotOkClicked() )
+
 };
 }
 
