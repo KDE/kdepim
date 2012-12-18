@@ -46,7 +46,7 @@ class KDEPIM_EXPORT MultiplyingLineFactory : public QObject
 {
   Q_OBJECT
   public:
-    MultiplyingLineFactory( QObject* parent ) : QObject( parent ) {}
+    explicit MultiplyingLineFactory( QObject* parent ) : QObject( parent ) {}
     virtual ~MultiplyingLineFactory() {}
     virtual MultiplyingLine* newLine(  QWidget *parent ) = 0;
 };

@@ -39,7 +39,7 @@ class KSIEVEUI_EXPORT SieveDebugDialog : public KDialog
   Q_OBJECT
 
   public:
-    SieveDebugDialog( QWidget *parent = 0 );
+    explicit SieveDebugDialog( QWidget *parent = 0 );
     virtual ~SieveDebugDialog();
 
   protected:
