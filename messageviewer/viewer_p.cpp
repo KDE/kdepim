@@ -3157,6 +3157,7 @@ void ViewerPrivate::slotToggleCaretBrowsing(bool toggle)
   mViewer->settings()->setAttribute(QWebSettings::CaretBrowsingEnabled, toggle);
 #endif
 #endif
+Q_UNUSED( toggle );
 }
 
 
