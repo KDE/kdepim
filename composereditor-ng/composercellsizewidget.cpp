@@ -21,6 +21,7 @@
 
 #include <KComboBox>
 #include <KLocale>
+#include <KDebug>
 
 #include <QSpinBox>
 #include <QHBoxLayout>
@@ -59,11 +60,71 @@ public:
         q->setLayout(layout);
 
     }
+
+    void slotTypeOfLengthChanged(int index);
+    void setValue(const QString&);
+    void setType(TypeSize type);
+    QString value() const;
+
     QSpinBox *size;
     KComboBox *typeSize;
     QCheckBox *check;
     ComposerCellSizeWidget *q;
 };
+
+void ComposerCellSizeWidgetPrivate::setValue(const QString& val)
+{
+    if(val.isEmpty()) {
+        check->setChecked(false);
+    } else {
+        check->setChecked(true);
+        QString valStr(val);
+        if(valStr.endsWith(QLatin1Char('%'))) {
+            setType(Percentage);
+            valStr.chop(1);
+            size->setValue(valStr.toInt());
+        } else {
+            setType(Fixed);
+            size->setValue(valStr.toInt());
+        }
+    }
+}
+
+void ComposerCellSizeWidgetPrivate::setType(TypeSize type)
+{
+  const int index = typeSize->findData(QVariant(type));
+  typeSize->setCurrentIndex(index);
+  slotTypeOfLengthChanged(index);
+}
+
+
+void ComposerCellSizeWidgetPrivate::slotTypeOfLengthChanged(int index)
+{
+    switch ( index ) {
+    case 0:
+        size->setMaximum( 100 );
+        size->setValue( qMin( size->value(), 100 ) );
+        break;
+    case 1:
+        size->setMaximum( 9999 );
+        break;
+    default:
+        kDebug() << " index not defined " << index;
+        break;
+    }
+}
+
+QString ComposerCellSizeWidgetPrivate::value() const
+{
+    if(check->isChecked()) {
+        if((TypeSize)typeSize->itemData( typeSize->currentIndex() ).toInt() == Percentage) {
+            return QString::fromLatin1("%1%").arg(size->value());
+        }
+        return QString::number(size->value());
+    } else {
+        return QString();
+    }
+}
 
 ComposerCellSizeWidget::ComposerCellSizeWidget(QWidget *parent)
     :QWidget(parent), d(new ComposerCellSizeWidgetPrivate(this))
@@ -75,6 +136,15 @@ ComposerCellSizeWidget::~ComposerCellSizeWidget()
     delete d;
 }
 
+void ComposerCellSizeWidget::setValue(const QString& val)
+{
+    d->setValue(val);
+}
+
+QString ComposerCellSizeWidget::value() const
+{
+    return d->value();
+}
 
 }
 
