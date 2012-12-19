@@ -83,9 +83,9 @@ ComposerAutoCorrectionWidget::ComposerAutoCorrectionWidget(QWidget *parent) :
   connect(ui->remove2, SIGNAL(clicked()), this, SLOT(removeTwoUpperLetterEntry()));
   connect(ui->typographicDoubleQuotes,SIGNAL(clicked()),SIGNAL(changed()));
   connect(ui->typographicSingleQuotes,SIGNAL(clicked()),SIGNAL(changed()));
-  connect(ui->abbreviationList,SIGNAL(itemClicked(QListWidgetItem*)),SLOT(slotEnableDisableAbreviationList()));
+  connect(ui->abbreviationList,SIGNAL(itemSelectionChanged()),SLOT(slotEnableDisableAbreviationList()));
   connect(ui->abbreviationList,SIGNAL(deleteSelectedItems()),SLOT(removeAbbreviationEntry()));
-  connect(ui->twoUpperLetterList,SIGNAL(itemClicked(QListWidgetItem*)),SLOT(slotEnableDisableTwoUpperEntry()));
+  connect(ui->twoUpperLetterList,SIGNAL(itemSelectionChanged()),SLOT(slotEnableDisableTwoUpperEntry()));
   connect(ui->twoUpperLetterList,SIGNAL(deleteSelectedItems()),SLOT(removeTwoUpperLetterEntry()));
   connect(ui->autocorrectionLanguage,SIGNAL(activated(int)),SLOT(changeLanguage(int)));
   slotEnableDisableAbreviationList();
