@@ -23,6 +23,7 @@
 #include <KLocale>
 #include <KColorButton>
 #include <KComboBox>
+#include <KSeparator>
 
 #include <QWebElement>
 #include <QVBoxLayout>
@@ -78,6 +79,11 @@ public:
         hbox->addWidget(backgroundColor);
 
         layout->addLayout(hbox);
+
+        KSeparator *sep = new KSeparator;
+        layout->addWidget( sep );
+
+
         q->connect(useBackgroundColor,SIGNAL(toggled(bool)),backgroundColor,SLOT(setEnabled(bool)));
 
         q->connect(q,SIGNAL(okClicked()),q,SLOT(_k_slotOkClicked()));

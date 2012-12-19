@@ -23,8 +23,10 @@
 #include <KPIMTextEdit/InsertTableWidget>
 
 #include <KLocale>
+#include <KSeparator>
 
 #include <QWebElement>
+#include <QVBoxLayout>
 
 namespace ComposerEditorNG
 {
@@ -69,8 +71,18 @@ void ComposerTableDialogPrivate::initialize()
     q->setCaption( i18n( "Insert Table" ) );
     q->setButtons( KDialog::Ok|KDialog::Cancel );
     q->setButtonText( KDialog::Ok, i18n( "Insert" ) );
+
+    QWidget *page = new QWidget;
+    QVBoxLayout *lay = new QVBoxLayout;
+    page->setLayout(lay);
+
     insertTableWidget = new KPIMTextEdit::InsertTableWidget( q );
-    q->setMainWidget( insertTableWidget );
+    lay->addWidget( insertTableWidget );
+
+    KSeparator *sep = new KSeparator;
+    lay->addWidget( sep );
+
+    q->setMainWidget( page );
     q->connect(q,SIGNAL(okClicked()),q,SLOT(slotOkClicked()));
 }
 
