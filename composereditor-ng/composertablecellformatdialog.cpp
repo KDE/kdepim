@@ -19,6 +19,7 @@
 */
 
 #include "composertablecellformatdialog.h"
+#include "composercellsizewidget.h"
 
 #include <KLocale>
 #include <KColorButton>
@@ -42,6 +43,14 @@ public:
         q->setCaption( i18n( "Edit Cell Format" ) );
 
         QVBoxLayout *layout = new QVBoxLayout( q->mainWidget() );
+
+        width = new ComposerCellSizeWidget;
+        width->setLabel( i18n("Width:") );
+        layout->addWidget(width);
+
+        height = new ComposerCellSizeWidget;
+        height->setLabel( i18n("Height:") );
+        layout->addWidget(height);
 
         QHBoxLayout *hbox = new QHBoxLayout;
 
@@ -104,6 +113,14 @@ public:
                 const QString align = webElement.attribute(QLatin1String("align"));
                 horizontalAlignment->setCurrentIndex( horizontalAlignment->findData( align ) );
             }
+            if(webElement.hasAttribute(QLatin1String("width"))) {
+                const QString widthVal = webElement.attribute(QLatin1String("width"));
+                width->setValue(widthVal);
+            }
+            if(webElement.hasAttribute(QLatin1String("height"))) {
+                const QString heightVal = webElement.attribute(QLatin1String("height"));
+                height->setValue(heightVal);
+            }
         }
     }
 
@@ -119,6 +136,8 @@ public:
     QCheckBox *useVerticalAlignment;
     QCheckBox *useHorizontalAlignment;
 
+    ComposerCellSizeWidget *width;
+    ComposerCellSizeWidget *height;
     ComposerTableCellFormatDialog *q;
 };
 
@@ -139,6 +158,18 @@ void ComposerTableCellFormatDialogPrivate::_k_slotOkClicked()
             webElement.setAttribute(QLatin1String("align"), horizontalAlignment->itemData( horizontalAlignment->currentIndex () ).toString());
         } else {
             webElement.removeAttribute(QLatin1String("align"));
+        }
+        const QString widthStr = width->value();
+        if(widthStr.isEmpty()) {
+            webElement.removeAttribute(QLatin1String("width"));
+        } else {
+            webElement.setAttribute(QLatin1String("width"), widthStr);
+        }
+        const QString heightStr = height->value();
+        if(heightStr.isEmpty()) {
+            webElement.removeAttribute(QLatin1String("height"));
+        } else {
+            webElement.setAttribute(QLatin1String("height"), heightStr);
         }
     }
     q->accept();

@@ -55,10 +55,15 @@ public:
 
         typeSize = new KComboBox;
         q->connect( typeSize, SIGNAL(activated(int)),q,SLOT(slotTypeChanged(int)) );
+
         // xgettext: no-c-format
         typeSize->addItem( i18n( "% of windows" ), Percentage );
         typeSize->addItem( i18n( "pixels" ), Fixed );
         layout->addWidget(typeSize);
+
+        q->connect(check,SIGNAL(toggled(bool)),typeSize,SLOT(setEnabled(bool)));
+        q->connect(check,SIGNAL(toggled(bool)),size,SLOT(setEnabled(bool)));
+        check->setChecked(false);
         q->setLayout(layout);
 
     }
