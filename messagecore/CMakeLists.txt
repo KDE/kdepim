@@ -53,6 +53,7 @@ kde4_add_kcfg_files(messagecore_LIB_SRCS
 
 kde4_add_ui_files(messagecore_LIB_SRCS
   attachmentpropertiesdialog.ui
+  attachmentpropertiesdialog_readonly.ui
 )
 
 kde4_add_library(messagecore ${LIBRARY_TYPE} ${messagecore_LIB_SRCS})
