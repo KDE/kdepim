@@ -37,7 +37,7 @@ class MESSAGECOMPOSER_EXPORT MessagePart : public QObject
   Q_OBJECT
 
   public:
-    MessagePart( QObject *parent = 0 );
+    explicit MessagePart( QObject *parent = 0 );
     virtual ~MessagePart();
 
   private:

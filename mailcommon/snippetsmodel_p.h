@@ -38,7 +38,7 @@ class SnippetsModel : public QAbstractItemModel
       KeySequenceRole                 ///< The key sequence to activate a snippet
     };
 
-    SnippetsModel( QObject *parent = 0 );
+    explicit SnippetsModel( QObject *parent = 0 );
     ~SnippetsModel();
 
     virtual bool setData( const QModelIndex &index, const QVariant &value,

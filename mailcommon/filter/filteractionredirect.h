@@ -32,7 +32,7 @@ class FilterActionRedirect: public FilterActionWithAddress
 {
   Q_OBJECT
   public:
-    FilterActionRedirect( QObject *parent = 0 );
+    explicit FilterActionRedirect( QObject *parent = 0 );
     virtual ReturnCode process( ItemContext &context ) const;
     virtual SearchRule::RequiredPart requiredPart() const;
     static FilterAction* newAction();

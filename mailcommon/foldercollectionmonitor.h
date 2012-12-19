@@ -40,7 +40,7 @@ class MAILCOMMON_EXPORT FolderCollectionMonitor : public QObject
   Q_OBJECT
 
   public:
-    FolderCollectionMonitor( QObject *parent = 0 );
+    explicit FolderCollectionMonitor( QObject *parent = 0 );
     ~FolderCollectionMonitor();
 
     Akonadi::ChangeRecorder * monitor() const;

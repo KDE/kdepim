@@ -44,7 +44,7 @@ class MESSAGECOMPOSER_EXPORT SinglepartJob : public ContentJobBase
   Q_OBJECT
 
   public:
-    SinglepartJob( QObject *parent = 0 );
+    explicit SinglepartJob( QObject *parent = 0 );
     virtual ~SinglepartJob();
 
     QByteArray data() const;

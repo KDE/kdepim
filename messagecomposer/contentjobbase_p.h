@@ -30,7 +30,7 @@ namespace Message {
 class ContentJobBasePrivate : public JobBasePrivate
 {
   public:
-    ContentJobBasePrivate( ContentJobBase *qq )
+    explicit ContentJobBasePrivate( ContentJobBase *qq )
       : JobBasePrivate( qq )
       , resultContent( 0 )
     {

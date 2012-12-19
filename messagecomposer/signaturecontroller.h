@@ -47,7 +47,7 @@ class MESSAGECOMPOSER_EXPORT SignatureController : public QObject
 {
   Q_OBJECT
   public:
-    SignatureController( QObject* parent = 0 );
+    explicit SignatureController( QObject* parent = 0 );
 
     void setEditor( KMeditor* editor );
     void setIdentityCombo( KPIMIdentities::IdentityCombo* combo );

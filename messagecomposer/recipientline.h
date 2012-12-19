@@ -64,7 +64,7 @@ class RecipientLineNG : public KPIM::MultiplyingLine
 {
     Q_OBJECT
   public:
-    RecipientLineNG( QWidget* parent );
+    explicit RecipientLineNG( QWidget* parent );
     virtual ~RecipientLineNG(){}
 
     virtual void activate();

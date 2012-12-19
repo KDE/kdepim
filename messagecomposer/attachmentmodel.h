@@ -71,7 +71,7 @@ class MESSAGECOMPOSER_EXPORT AttachmentModel : public QAbstractItemModel
       LastColumn ///< @internal
     };
 
-    AttachmentModel( QObject *parent );
+    explicit AttachmentModel( QObject *parent );
     ~AttachmentModel();
 
     virtual bool dropMimeData( const QMimeData *data, Qt::DropAction action,
