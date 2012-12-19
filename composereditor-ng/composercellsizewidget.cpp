@@ -19,16 +19,49 @@
 */
 #include "composercellsizewidget.h"
 
+#include <KComboBox>
+#include <KLocale>
+
+#include <QSpinBox>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
+#include <QCheckBox>
+#include <QGridLayout>
+
 namespace ComposerEditorNG
 {
 
 class ComposerCellSizeWidgetPrivate
 {
 public:
+    enum TypeSize {
+        Percentage,
+        Fixed
+    };
     ComposerCellSizeWidgetPrivate(ComposerCellSizeWidget *qq)
         :q(qq)
     {
+        QHBoxLayout *layout = new QHBoxLayout;
+        check = new QCheckBox;
+        layout->addWidget(check);
+
+        size = new QSpinBox;
+        size->setMinimum( 1 );
+        size->setMaximum( 100 );
+        layout->addWidget(size);
+
+        typeSize = new KComboBox;
+        q->connect( typeSize, SIGNAL(activated(int)),q,SLOT(slotTypeChanged(int)) );
+        // xgettext: no-c-format
+        typeSize->addItem( i18n( "% of windows" ), Percentage );
+        typeSize->addItem( i18n( "pixels" ), Fixed );
+        layout->addWidget(typeSize);
+        q->setLayout(layout);
+
     }
+    QSpinBox *size;
+    KComboBox *typeSize;
+    QCheckBox *check;
     ComposerCellSizeWidget *q;
 };
 
