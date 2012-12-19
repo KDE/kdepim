@@ -52,6 +52,9 @@ public:
         height->setLabel( i18n("Height:") );
         layout->addWidget(height);
 
+        KSeparator *sep = new KSeparator;
+        layout->addWidget( sep );
+
         QHBoxLayout *hbox = new QHBoxLayout;
 
         useHorizontalAlignment = new QCheckBox( i18n("Horizontal Alignment:") );
@@ -80,6 +83,9 @@ public:
         layout->addLayout(hbox);
         q->connect(useVerticalAlignment,SIGNAL(toggled(bool)),verticalAlignment,SLOT(setEnabled(bool)));
 
+        sep = new KSeparator;
+        layout->addWidget( sep );
+
         hbox = new QHBoxLayout;
         useBackgroundColor = new QCheckBox( i18n( "Background Color:" ) );
         hbox->addWidget(useBackgroundColor);
@@ -89,7 +95,7 @@ public:
 
         layout->addLayout(hbox);
 
-        KSeparator *sep = new KSeparator;
+        sep = new KSeparator;
         layout->addWidget( sep );
 
 

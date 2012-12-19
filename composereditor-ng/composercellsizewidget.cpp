@@ -64,11 +64,13 @@ public:
         q->connect(check,SIGNAL(toggled(bool)),typeSize,SLOT(setEnabled(bool)));
         q->connect(check,SIGNAL(toggled(bool)),size,SLOT(setEnabled(bool)));
         check->setChecked(false);
+        size->setEnabled(false);
+        typeSize->setEnabled(false);
         q->setLayout(layout);
 
     }
 
-    void slotTypeOfLengthChanged(int index);
+    void slotTypeChanged(int index);
     void setValue(const QString&);
     void setType(TypeSize type);
     QString value() const;
@@ -107,11 +109,11 @@ void ComposerCellSizeWidgetPrivate::setType(TypeSize type)
 {
   const int index = typeSize->findData(QVariant(type));
   typeSize->setCurrentIndex(index);
-  slotTypeOfLengthChanged(index);
+  slotTypeChanged(index);
 }
 
 
-void ComposerCellSizeWidgetPrivate::slotTypeOfLengthChanged(int index)
+void ComposerCellSizeWidgetPrivate::slotTypeChanged(int index)
 {
     switch ( index ) {
     case 0:

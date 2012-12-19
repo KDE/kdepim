@@ -26,6 +26,7 @@
 #include <KLocale>
 
 #include <QWebElement>
+#include <QDebug>
 
 namespace ComposerEditorNG
 {
@@ -39,16 +40,30 @@ public:
     void _k_slotInsertRowBelow();
     void _k_slotTableFormat();
     void _k_slotTableCellFormat();
+    void _k_slotRemoveCellContents();
+    void _k_slotRemoveCell();
 
     void updateActions();
     KAction *action_insert_table;
     KAction *action_insert_row_below;
     KAction *action_table_format;
     KAction *action_table_cell_format;
+    KAction *action_remove_cell_contents;
+    KAction *action_remove_cell;
     ComposerTableActionMenu *q;
     QWebElement webElement;
     QWidget *parentWidget;
 };
+
+void ComposerTableActionMenuPrivate::_k_slotRemoveCellContents()
+{
+    webElement.setInnerXml(QString());
+}
+
+void ComposerTableActionMenuPrivate::_k_slotRemoveCell()
+{
+    webElement.removeFromDocument();
+}
 
 void ComposerTableActionMenuPrivate::updateActions()
 {
@@ -89,6 +104,19 @@ ComposerTableActionMenu::ComposerTableActionMenu(const QWebElement& element,QObj
     insertMenu->addAction( d->action_insert_row_below );
     connect( d->action_insert_row_below, SIGNAL(triggered(bool)), SLOT(_k_slotInsertRowBelow()) );
 
+    KActionMenu *removeMenu = new KActionMenu( i18n( "Delete" ), this );
+    addAction( removeMenu );
+
+    d->action_remove_cell = new KAction( i18n( "Cell" ), this );
+    removeMenu->addAction( d->action_remove_cell );
+    connect( d->action_remove_cell, SIGNAL(triggered(bool)), SLOT(_k_slotRemoveCell()) );
+
+
+    d->action_remove_cell_contents = new KAction( i18n( "Cell Contents" ), this );
+    removeMenu->addAction( d->action_remove_cell_contents );
+    connect( d->action_remove_cell_contents, SIGNAL(triggered(bool)), SLOT(_k_slotRemoveCellContents()) );
+
+
     d->action_table_format = new KAction( i18n( "Table Format..." ), this );
     connect( d->action_table_format, SIGNAL(triggered(bool)), SLOT(_k_slotTableFormat()) );
     addAction( d->action_table_format );
@@ -96,6 +124,8 @@ ComposerTableActionMenu::ComposerTableActionMenu(const QWebElement& element,QObj
     d->action_table_cell_format = new KAction( i18n( "Table Cell Format..." ), this );
     connect( d->action_table_cell_format, SIGNAL(triggered(bool)), SLOT(_k_slotTableCellFormat()) );
     addAction( d->action_table_cell_format );
+
+
 
     d->updateActions();
 }

@@ -42,7 +42,7 @@ public:
 private:
     friend class ComposerCellSizeWidgetPrivate;
     ComposerCellSizeWidgetPrivate * const d;
-    Q_PRIVATE_SLOT(d, void slotTypeOfLengthChanged(int) )
+    Q_PRIVATE_SLOT(d, void slotTypeChanged(int) )
 };
 }
 

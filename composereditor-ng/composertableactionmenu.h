@@ -47,6 +47,8 @@ private:
     Q_PRIVATE_SLOT( d, void _k_slotInsertRowBelow() )
     Q_PRIVATE_SLOT( d, void _k_slotTableFormat() )
     Q_PRIVATE_SLOT( d, void _k_slotTableCellFormat() )
+    Q_PRIVATE_SLOT( d, void _k_slotRemoveCellContents() )
+    Q_PRIVATE_SLOT( d, void _k_slotRemoveCell() )
 };
 }
 
