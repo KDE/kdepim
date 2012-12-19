@@ -25,6 +25,7 @@ set(libcomposereditor_ng_SRCS
     composertableformatdialog.cpp
     composertablecellformatdialog.cpp
     composertableactionmenu.cpp
+    composercellsizewidget.cpp
     spellplugin/kspellplugin.cpp  
     ${wk_HEADERS_MOC}
 )
