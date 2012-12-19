@@ -297,7 +297,7 @@ bool AttachmentPropertiesDialog::isEncryptEnabled() const
 
 void AttachmentPropertiesDialog::setEncryptEnabled( bool enabled )
 {
-  return d->ui.encrypt->setEnabled( enabled );
+  d->ui.encrypt->setEnabled( enabled );
 }
 
 bool AttachmentPropertiesDialog::isSignEnabled() const
@@ -307,7 +307,7 @@ bool AttachmentPropertiesDialog::isSignEnabled() const
 
 void AttachmentPropertiesDialog::setSignEnabled( bool enabled )
 {
-  return d->ui.sign->setEnabled( enabled );
+  d->ui.sign->setEnabled( enabled );
 }
 
 void AttachmentPropertiesDialog::accept()
