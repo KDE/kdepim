@@ -43,6 +43,8 @@ public:
         :q(qq)
     {
         QHBoxLayout *layout = new QHBoxLayout;
+        layout->setMargin(0);
+        layout->setSpacing(0);
         check = new QCheckBox;
         layout->addWidget(check);
 
@@ -65,12 +67,18 @@ public:
     void setValue(const QString&);
     void setType(TypeSize type);
     QString value() const;
+    void setLabel(const QString&);
 
     QSpinBox *size;
     KComboBox *typeSize;
     QCheckBox *check;
     ComposerCellSizeWidget *q;
 };
+
+void ComposerCellSizeWidgetPrivate::setLabel(const QString& str)
+{
+    check->setText(str);
+}
 
 void ComposerCellSizeWidgetPrivate::setValue(const QString& val)
 {
@@ -144,6 +152,11 @@ void ComposerCellSizeWidget::setValue(const QString& val)
 QString ComposerCellSizeWidget::value() const
 {
     return d->value();
+}
+
+void ComposerCellSizeWidget::setLabel(const QString& str)
+{
+    d->setLabel(str);
 }
 
 }
