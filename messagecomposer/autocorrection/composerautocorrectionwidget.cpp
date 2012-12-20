@@ -73,6 +73,7 @@ ComposerAutoCorrectionWidget::ComposerAutoCorrectionWidget(QWidget *parent) :
   connect(ui->removeButton, SIGNAL(clicked()), this, SLOT(removeAutocorrectEntry()));
   connect(ui->treeWidget, SIGNAL(itemClicked(QTreeWidgetItem*,int)), this, SLOT(setFindReplaceText(QTreeWidgetItem*,int)));
   connect(ui->treeWidget,SIGNAL(deleteSelectedItems()),SLOT(removeAutocorrectEntry()));
+  connect(ui->treeWidget,SIGNAL(itemSelectionChanged ()),SLOT(updateAddRemoveButton()));
   connect(ui->find, SIGNAL(textChanged(QString)), this, SLOT(enableAddRemoveButton()));
   connect(ui->replace, SIGNAL(textChanged(QString)), this, SLOT(enableAddRemoveButton()));
   connect(ui->abbreviation, SIGNAL(textChanged(QString)), this, SLOT(abbreviationChanged(QString)));
@@ -357,7 +358,7 @@ void ComposerAutoCorrectionWidget::addAutocorrectEntry()
 
 void ComposerAutoCorrectionWidget::removeAutocorrectEntry()
 {
-  QList<QTreeWidgetItem *> 	listItems = ui->treeWidget->selectedItems ();
+  QList<QTreeWidgetItem *> listItems = ui->treeWidget->selectedItems ();
   if(listItems.isEmpty())
       return;
   Q_FOREACH(QTreeWidgetItem *item, listItems) {
@@ -380,6 +381,12 @@ void ComposerAutoCorrectionWidget::removeAutocorrectEntry()
   ui->treeWidget->setSortingEnabled(false);
 
   emitChanged();
+}
+
+void ComposerAutoCorrectionWidget::updateAddRemoveButton()
+{
+    QList<QTreeWidgetItem *> listItems = ui->treeWidget->selectedItems ();
+    ui->removeButton->setEnabled(!listItems.isEmpty());
 }
 
 void ComposerAutoCorrectionWidget::enableAddRemoveButton()
