@@ -186,7 +186,7 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
    */
   void printMessage( const Akonadi::Item &msg );
 
-  void printPreviousMessage( const Akonadi::Item &message );
+  void printPreviewMessage( const Akonadi::Item &message );
 
   /** Print the currently displayed message */
   void print();
