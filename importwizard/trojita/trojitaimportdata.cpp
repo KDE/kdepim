@@ -30,7 +30,7 @@
 TrojitaImportData::TrojitaImportData(ImportWizard*parent)
   :AbstractImporter(parent)
 {
-  mPath = QDir::homePath();
+  mPath = QDir::homePath() + QLatin1String(".config/flaska.net/trojita.conf");
 }
 
 TrojitaImportData::~TrojitaImportData()
@@ -67,6 +67,6 @@ AbstractImporter::TypeSupportedOptions TrojitaImportData::supportedOption()
 {
   TypeSupportedOptions options;
   options |=AbstractImporter::Mails;
-  //options |=AbstractImporter::Settings;
+  options |=AbstractImporter::Settings;
   return options;
 }
