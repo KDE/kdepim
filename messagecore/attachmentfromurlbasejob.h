@@ -26,7 +26,7 @@
 
 #include <KUrl>
 
-using namespace MessageCore;
+namespace MessageCore {
 
 class MESSAGECORE_EXPORT AttachmentFromUrlBaseJob : public AttachmentLoadJob
 {
@@ -64,5 +64,5 @@ class MESSAGECORE_EXPORT AttachmentFromUrlBaseJob : public AttachmentLoadJob
     class Private;
     Private *const d;
 };
-
+}
 #endif // ATTACHMENTFROMURLBASE_H

@@ -31,7 +31,7 @@ class QStringList;
 class PluginMetaData
 {
   public:
-    PluginMetaData() {}
+    PluginMetaData() : loaded(false) {}
     PluginMetaData( const QString & lib, const QString & name,
                     const QString & comment )
       : library( lib ), nameLabel( name ),

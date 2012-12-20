@@ -71,13 +71,6 @@ using namespace CalendarSupport;
 using namespace KHolidays;
 using namespace KCalCore;
 
-K_GLOBAL_STATIC( Akonadi::CollectionDialog, globalCollectionDialog )
-
-static Akonadi::CollectionDialog* collectionDialog()
-{
-    return globalCollectionDialog;
-}
-
 KCalCore::Incidence::Ptr CalendarSupport::incidence( const Akonadi::Item &item )
 {
   try {
@@ -91,8 +84,9 @@ KCalCore::Event::Ptr CalendarSupport::event( const Akonadi::Item &item )
 {
   try {
     KCalCore::Incidence::Ptr incidence = item.payload<KCalCore::Incidence::Ptr>();
-    if ( incidence && incidence->type() == KCalCore::Incidence::TypeEvent )
+    if ( incidence && incidence->type() == KCalCore::Incidence::TypeEvent ) {
       return item.payload<KCalCore::Event::Ptr>();
+    }
   } catch( Akonadi::PayloadException ) {
     return KCalCore::Event::Ptr();
   }
@@ -125,8 +119,9 @@ KCalCore::Todo::Ptr CalendarSupport::todo( const Akonadi::Item &item )
 {
   try {
     KCalCore::Incidence::Ptr incidence = item.payload<KCalCore::Incidence::Ptr>();
-    if ( incidence && incidence->type() == KCalCore::Incidence::TypeTodo )
+    if ( incidence && incidence->type() == KCalCore::Incidence::TypeTodo ) {
       return item.payload<KCalCore::Todo::Ptr>();
+    }
   } catch( Akonadi::PayloadException ) {
     return KCalCore::Todo::Ptr();
   }
@@ -137,8 +132,9 @@ KCalCore::Journal::Ptr CalendarSupport::journal( const Akonadi::Item &item )
 {
   try {
     KCalCore::Incidence::Ptr incidence = item.payload<KCalCore::Incidence::Ptr>();
-    if ( incidence && incidence->type() == KCalCore::Incidence::TypeJournal )
+    if ( incidence && incidence->type() == KCalCore::Incidence::TypeJournal ) {
       return item.payload<KCalCore::Journal::Ptr>();
+    }
   } catch( Akonadi::PayloadException ) {
     return KCalCore::Journal::Ptr();
   }
@@ -395,8 +391,7 @@ Akonadi::Collection CalendarSupport::selectCollection( QWidget *parent,
                                                        const QStringList &mimeTypes,
                                                        const Akonadi::Collection &defCollection )
 {
-  Akonadi::CollectionDialog* dlg = collectionDialog();
-  dlg->setParent( parent );
+  QPointer<Akonadi::CollectionDialog> dlg( new Akonadi::CollectionDialog( parent ) );
   dlg->setCaption( i18n( "Select Calendar" ) );
   dlg->setDescription( i18n( "Select the calendar where this item will be stored." ) );
   dlg->changeCollectionDialogOptions( Akonadi::CollectionDialog::KeepTreeExpanded );
@@ -411,14 +406,14 @@ Akonadi::Collection CalendarSupport::selectCollection( QWidget *parent,
 
   // FIXME: don't use exec.
   dialogCode = dlg->exec();
-  if ( dialogCode == QDialog::Accepted ) {
+  if ( dlg && dialogCode == QDialog::Accepted ) {
     collection = dlg->selectedCollection();
 
     if ( !collection.isValid() ) {
       kWarning() << "An invalid collection was selected!";
     }
   }
-
+  delete dlg;
   return collection;
 }
 
@@ -504,22 +499,49 @@ QString CalendarSupport::displayName( const Akonadi::Collection &c )
 
 QString CalendarSupport::displayName( Akonadi::ETMCalendar *calendar, const Akonadi::Collection &c )
 {
-  const QString cName = c.name();
+  QString cName = c.name();
+  if ( cName.isEmpty() && calendar ) {
+    Akonadi::Collection realCollection = calendar->collection( c.id() );
+    if ( realCollection.isValid() ) {
+      cName = realCollection.name();
+    }
+  }
 
   // Kolab Groupware
   if ( c.resource().contains( "kolabproxy" ) ) {
     QString typeStr = cName; // contents type: "Calendar", "Tasks", etc
-    QString ownerStr;        // folder owner; "fred", "ethel", etc
+    QString ownerStr;        // folder owner: "fred", "ethel", etc
     QString nameStr;         // folder name: "Public", "Test", etc
     if ( calendar ) {
       Akonadi::Collection p = c.parentCollection();
       while ( p != Akonadi::Collection::root() ) {
         Akonadi::Collection tCol = calendar->collection( p.id() );
         const QString tName = tCol.name();
-        if ( tName != i18n( "Calendar" ) &&
-             tName != i18n( "Tasks" ) &&
-             tName != i18n( "Journal" ) &&
-             tName != i18n( "Notes" ) ) {
+        if ( tName.toLower().startsWith( QLatin1String( "shared.cal" ) ) ) {
+          ownerStr = "Shared";
+          nameStr = cName;
+          typeStr = "Calendar";
+          break;
+        } else if ( tName.toLower().startsWith( QLatin1String( "shared.tasks" ) ) ||
+                    tName.toLower().startsWith( QLatin1String( "shared.todo" ) ) ) {
+          ownerStr = "Shared";
+          nameStr = cName;
+          typeStr = "Tasks";
+          break;
+        } else if ( tName.toLower().startsWith( QLatin1String( "shared.journal" ) ) ) {
+          ownerStr = "Shared";
+          nameStr = cName;
+          typeStr = "Journal";
+          break;
+        } else if ( tName.toLower().startsWith( QLatin1String( "shared.notes" ) ) ) {
+          ownerStr = "Shared";
+          nameStr = cName;
+          typeStr = "Notes";
+          break;
+        } else if ( tName != i18n( "Calendar" ) &&
+                    tName != i18n( "Tasks" ) &&
+                    tName != i18n( "Journal" ) &&
+                    tName != i18n( "Notes" ) ) {
           ownerStr = tName;
           break;
         } else {
@@ -531,34 +553,94 @@ QString CalendarSupport::displayName( Akonadi::ETMCalendar *calendar, const Akon
     }
 
     if ( !ownerStr.isEmpty() ) {
-      if ( ownerStr.toUpper() != QString( "INBOX" ) ) {
+      if ( ownerStr.toUpper() == QString( "INBOX" ) ) {
+        return i18nc( "%1 is folder contents",
+                      "My Kolab %1", typeStr );
+      } else if ( ownerStr.toUpper() == QString( "SHARED" ) ) {
+        return i18nc( "%1 is folder name, %2 is folder contents",
+                      "Shared Kolab %1 %2", nameStr, typeStr );
+      } else {
         if ( nameStr.isEmpty() ) {
           return i18nc( "%1 is folder owner name, %2 is folder contents",
-                        "%1's %2", ownerStr, typeStr );
+                        "%1's Kolab %2", ownerStr, typeStr );
         } else {
           return i18nc( "%1 is folder owner name, %2 is folder name, %3 is folder contents",
-                        "%1's %2 %3", ownerStr, nameStr, typeStr );
+                        "%1's %2 Kolab %3", ownerStr, nameStr, typeStr );
         }
-      } else {
-        return i18nc( "%1 is folder contents",
-                      "My Shared %1", typeStr );
       }
     } else {
-      return typeStr;
+      return i18nc( "%1 is folder contents",
+                    "Kolab %1", typeStr );
     }
-  }
+  } //end kolab section
 
   // Dav Groupware
   if ( c.resource().contains( "davgroupware" ) ) {
     return i18nc( "%1 is the folder name", "%1 CalDav Calendar", cName );
-  }
+  } //end caldav section
+
+  // Google
+  if ( c.resource().contains( "google" ) ) {
+    QString ownerStr;        // folder owner: "user@gmail.com"
+    if ( calendar ) {
+      Akonadi::Collection p = c.parentCollection();
+      Akonadi::EntityDisplayAttribute *pattr =
+        calendar->collection( p.id() ).attribute<Akonadi::EntityDisplayAttribute>();
+      if ( pattr && !pattr->displayName().isEmpty() ) {
+        ownerStr = pattr->displayName();
+      }
+    }
+
+    const Akonadi::EntityDisplayAttribute *attr = c.attribute<Akonadi::EntityDisplayAttribute>();
+    QString nameStr;         // folder name: can be anything
+    if ( attr && !attr->displayName().isEmpty() ) {
+      nameStr = attr->displayName();
+    } else {
+      nameStr = cName;
+    }
+
+    QString typeStr;
+    const QString mimeStr = c.contentMimeTypes().join( "," );
+    if ( mimeStr.contains( ".event" ) ) {
+      typeStr = i18n( "Calendar" );
+    } else if ( mimeStr.contains( ".todo" ) ) {
+      typeStr = i18n( "Tasks" );
+    } else if ( mimeStr.contains( ".journal" ) ) {
+      typeStr = i18n( "Journal" );
+    } else if ( mimeStr.contains( ".note" ) ) {
+      typeStr = i18n( "Notes" );
+    } else {
+      typeStr = mimeStr;
+    }
+
+    if ( !ownerStr.isEmpty() ) {
+      const int atChar = ownerStr.lastIndexOf( '@' );
+      ownerStr = ownerStr.left( atChar );
+      if ( nameStr.isEmpty() ) {
+        return i18nc( "%1 is folder owner name, %2 is folder contents",
+                      "%1's Google %2", ownerStr, typeStr );
+      } else {
+        return i18nc( "%1 is folder owner name, %2 is folder name",
+                      "%1's %2", ownerStr, nameStr );
+      }
+    } else {
+      return i18nc( "%1 is folder contents",
+                    "Google %1", typeStr );
+    }
+  } //end google section
 
   // Not groupware so the collection is "mine"
   const Akonadi::EntityDisplayAttribute *attr = c.attribute<Akonadi::EntityDisplayAttribute>();
+  QString dName;
   if ( attr && !attr->displayName().isEmpty() ) {
-    return i18n( "My %1", attr->displayName() );
+    dName = attr->displayName();
   } else {
-    return i18n( "My %1", cName );
+    dName = cName;
+  }
+  if ( !dName.isEmpty() ) {
+    return i18n( "My %1", dName );
+  } else {
+    return i18nc( "unknown resource", "Unknown" );
   }
 }
 

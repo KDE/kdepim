@@ -33,12 +33,20 @@ SelectSpecialChar::SelectSpecialChar(QWidget *parent)
   connect(mCharSelect,SIGNAL(charSelected(QChar)),this,SIGNAL(charSelected(QChar)));
   lay->addWidget(mCharSelect);
   connect(this,SIGNAL(user1Clicked()),SLOT(slotInsertChar()));
+  connect(this,SIGNAL(okClicked()),SLOT(slotInsertChar()));
 }
 
 SelectSpecialChar::~SelectSpecialChar()
 {
 }
 
+void SelectSpecialChar::showSelectButton(bool show)
+{
+  if(show)
+    setButtons( Ok|Cancel|User1 );
+  else
+    setButtons( Ok|Cancel );
+}
 
 void SelectSpecialChar::slotInsertChar()
 {
@@ -55,6 +63,10 @@ QChar SelectSpecialChar::currentChar() const
   return mCharSelect->currentChar();
 }
 
+void SelectSpecialChar::autoInsertChar()
+{
+  connect(mCharSelect,SIGNAL(charSelected(QChar)),SLOT(accept()));
+}
 
 void SelectSpecialChar::setOkButtonText(const QString& text)
 {

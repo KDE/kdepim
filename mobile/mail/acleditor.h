@@ -26,7 +26,7 @@
 
 #include <QtCore/QObject>
 
-namespace MailCommon {
+namespace PimCommon {
 class AclManager;
 }
 
@@ -108,7 +108,7 @@ class AclEditor : public QObject
     void collectionChanged( const Akonadi::Collection &collection );
 
   private:
-    MailCommon::AclManager *mAclManager;
+    PimCommon::AclManager *mAclManager;
     Akonadi::Collection mCollection;
     QAction *mEditAction;
 };

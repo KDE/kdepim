@@ -178,8 +178,10 @@ ConfigureThemesDialog::~ConfigureThemesDialog()
 void ConfigureThemesDialog::selectTheme( const QString &themeId )
 {
   ThemeListWidgetItem * item = d->findThemeItemById( themeId );
-  if ( item )
+  if ( item ) {
     d->mThemeList->setCurrentItem( item );
+    d->themeListItemClicked(item);
+  }
 }
 
 void ConfigureThemesDialog::Private::okButtonClicked()
@@ -356,6 +358,8 @@ void ConfigureThemesDialog::Private::newThemeButtonClicked()
   ThemeListWidgetItem * item = new ThemeListWidgetItem( mThemeList, emptyTheme );
 
   mThemeList->setCurrentItem( item );
+  mEditor->editTheme( item->theme() );
+
   mDeleteThemeButton->setEnabled( item && !item->theme()->readOnly() );
   mExportThemeButton->setEnabled( item );
   mCloneThemeButton->setEnabled(numberOfSelectedItem == 1);
@@ -366,7 +370,8 @@ void ConfigureThemesDialog::Private::cloneThemeButtonClicked()
   ThemeListWidgetItem * item = dynamic_cast< ThemeListWidgetItem * >( mThemeList->currentItem() );
   if ( !item )
     return;
-
+  commitEditor();
+  item->setSelected(false);
   Theme copyTheme( *( item->theme() ) );
   copyTheme.setReadOnly( false );
   copyTheme.detach(); // detach shared data
@@ -375,6 +380,8 @@ void ConfigureThemesDialog::Private::cloneThemeButtonClicked()
   item = new ThemeListWidgetItem( mThemeList, copyTheme );
 
   mThemeList->setCurrentItem( item );
+  mEditor->editTheme( item->theme() );
+
   const int numberOfSelectedItem(mThemeList->selectedItems().count());
   mDeleteThemeButton->setEnabled( item && !item->theme()->readOnly() );
   mExportThemeButton->setEnabled( item );

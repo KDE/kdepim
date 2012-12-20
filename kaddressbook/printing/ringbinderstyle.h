@@ -28,8 +28,7 @@
 
 #include "printstyle.h"
 
-namespace KABPrinting
-{
+namespace KABPrinting {
 
 class RingBinderStyleAppearanceForm;
 

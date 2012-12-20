@@ -22,7 +22,6 @@
 #include "mainwidget.h"
 
 #include "agentwidget.h"
-#include "browserwidget.h"
 #include "dbbrowser.h"
 #include "dbconsole.h"
 #include "debugwidget.h"
@@ -56,8 +55,8 @@ MainWidget::MainWidget( KXmlGuiWindow *parent )
   layout->addWidget( tabWidget );
 
   tabWidget->addTab( new AgentWidget( tabWidget ), "Agents" );
-  BrowserWidget *browser = new BrowserWidget( parent, tabWidget );
-  tabWidget->addTab( browser, "Browser" );
+  mBrowser = new BrowserWidget( parent, tabWidget );
+  tabWidget->addTab( mBrowser, "Browser" );
   tabWidget->addTab( new DebugWidget( tabWidget ), "Debugger" );
   tabWidget->addTab( new RawSocketConsole( tabWidget ), "Raw Socket" );
   tabWidget->addTab( new DbBrowser( tabWidget ), "DB Browser" );
@@ -73,11 +72,11 @@ MainWidget::MainWidget( KXmlGuiWindow *parent )
 
   action = parent->actionCollection()->addAction( "akonadiconsole_akonadi2xml" );
   action->setText( "Dump to XML..." );
-  connect( action, SIGNAL(triggered()), browser, SLOT(dumpToXml()) );
+  connect( action, SIGNAL(triggered()), mBrowser, SLOT(dumpToXml()) );
 
   action = parent->actionCollection()->addAction( "akonadiconsole_clearcache" );
   action->setText( "Clear Akonadi Cache" );
-  connect( action, SIGNAL(triggered()), browser, SLOT(clearCache()) );
+  connect( action, SIGNAL(triggered()), mBrowser, SLOT(clearCache()) );
 
   action = parent->actionCollection()->addAction( "akonadiserver_start" );
   action->setText( "Start Server" );
@@ -95,6 +94,11 @@ MainWidget::MainWidget( KXmlGuiWindow *parent )
   action->setText( "Configure Server..." );
   action->setIcon( KIcon("configure") );
   connect( action, SIGNAL(triggered()), SLOT(configureServer()) );
+}
+
+MainWidget::~MainWidget()
+{
+  delete mBrowser;
 }
 
 void MainWidget::createSearch()

@@ -1149,6 +1149,12 @@ bool ObjectTreeParser::containsExternalReferences( const QString & str, const QS
                          str.contains(QLatin1String("<img src=\"/"),Qt::CaseInsensitive)) ) {
     return true;
   }
+  /*
+  //Laurent: workaround for local ref cid
+  if(str.contains(QLatin1String("<img src=\"cid:"),Qt::CaseInsensitive)) {
+    return true;
+  }
+  */
   int httpPos = str.indexOf( "\"http:", Qt::CaseInsensitive );
   int httpsPos = str.indexOf( "\"https:", Qt::CaseInsensitive );
 
@@ -1209,7 +1215,7 @@ bool ObjectTreeParser::processTextHtmlSubtype( KMime::Content * curNode, Process
 
       HTMLQuoteColorer colorer;
       QString extraHead;
-      for ( int i = 0; i < 2; i++ )
+      for ( int i = 0; i < 3; i++ )
         colorer.setQuoteColor( i, cssHelper()->quoteColor( i ) );
       bodyText = colorer.process( bodyText, extraHead );
       mNodeHelper->setNodeDisplayedEmbedded( curNode, true );
@@ -2151,7 +2157,7 @@ bool ObjectTreeParser::decryptChiasmus( const QByteArray& data, QByteArray& body
   const QByteArray body = bOkDecrypt ? decryptedBody : data;
   const QString chiasmusCharset = curNode->contentType()->parameter("chiasmus-charset");
   const QTextCodec* aCodec = chiasmusCharset.isEmpty() ? codecFor( curNode )
-                              : NodeHelper::codecForName( chiasmusCharset.toAscii() );
+                              : NodeHelper::codecForName( chiasmusCharset.toLatin1() );
   htmlWriter()->queue( quotedHTML( aCodec->toUnicode( body ), false /*decorate*/ ) );
   result.setInlineEncryptionState( KMMsgFullyEncrypted );
   if ( htmlWriter() )

@@ -427,8 +427,10 @@ void AttachmentControllerBase::createActions()
   d->attachMyPublicKeyAction = new KAction( i18n( "Attach &My Public Key" ), this );
   connect( d->attachMyPublicKeyAction, SIGNAL(triggered(bool)), this, SLOT(attachMyPublicKey()) );
 
-  d->attachmentMenu = new KActionMenu(i18n("Attach"),this);
-  d->attachmentMenu->setDelayed(false);
+  d->attachmentMenu = new KActionMenu( KIcon( QLatin1String( "mail-attachment" ) ), i18n( "Attach" ), this );
+  connect( d->attachmentMenu, SIGNAL(triggered(bool)), this, SLOT(showAddAttachmentDialog()) );
+
+  d->attachmentMenu->setDelayed(true);
 
   d->addAction = new KAction( KIcon( QLatin1String( "mail-attachment" ) ), i18n( "&Attach File..." ), this );
   d->addAction->setIconText( i18n( "Attach" ) );
@@ -812,45 +814,38 @@ void AttachmentControllerBase::addAttachment( AttachmentPart::Ptr part )
   }
 }
 
-void AttachmentControllerBase::addAttachmentUrlSync(const KUrl &url)
+MessageCore::AttachmentFromUrlBaseJob * AttachmentControllerBase::createAttachmentJob(const KUrl &url)
 {
-  AttachmentFromUrlBaseJob *ajob = 0;
+  MessageCore::AttachmentFromUrlBaseJob *ajob = 0;
   if( KMimeType::findByUrl( url )->name() == QLatin1String( "inode/directory" ) ) {
     kDebug() << "Creating attachment from folder";
     ajob = new AttachmentFromFolderJob ( url, this );
-  }
-  else{
+  } else {
     ajob = new AttachmentFromUrlJob( url, this );
     kDebug() << "Creating attachment from file";
   }
   if( MessageComposer::MessageComposerSettings::maximumAttachmentSize() > 0 ) {
     ajob->setMaximumAllowedSize( MessageComposer::MessageComposerSettings::maximumAttachmentSize() );
   }
+  return ajob;
+}
+
+void AttachmentControllerBase::addAttachmentUrlSync(const KUrl &url)
+{
+  MessageCore::AttachmentFromUrlBaseJob *ajob = createAttachmentJob(url);
   if(ajob->exec()) {
     AttachmentPart::Ptr part = ajob->attachmentPart();
     addAttachment( part );
   } else {
     if( ajob->error() ) {
       KMessageBox::sorry( d->wParent, ajob->errorString(), i18n( "Failed to attach file" ) );
-      return;
     }
   }
 }
 
 void AttachmentControllerBase::addAttachment( const KUrl &url )
 {
-  AttachmentFromUrlBaseJob *ajob = 0;
-  if( KMimeType::findByUrl( url )->name() == QLatin1String( "inode/directory" ) ) {
-    kDebug() << "Creating attachment from folder";
-     ajob = new AttachmentFromFolderJob ( url, this );
-  }
-  else{
-    ajob = new AttachmentFromUrlJob( url, this );
-    kDebug() << "Creating attachment from file";
-  }
-  if( MessageComposer::MessageComposerSettings::maximumAttachmentSize() > 0 ) {
-    ajob->setMaximumAllowedSize( MessageComposer::MessageComposerSettings::maximumAttachmentSize() );
-  }
+  MessageCore::AttachmentFromUrlBaseJob *ajob = createAttachmentJob(url);
   connect( ajob, SIGNAL(result(KJob*)), this, SLOT(loadJobResult(KJob*)) );
   ajob->start();
 }

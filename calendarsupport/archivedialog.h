@@ -34,7 +34,6 @@ class KIntNumInput;
 class KUrlRequester;
 
 class QCheckBox;
-class QLabel;
 class QRadioButton;
 
 namespace Akonadi {

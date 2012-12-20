@@ -40,7 +40,9 @@
 #include <kdebug.h>
 #include <ktip.h>
 #include <kicon.h>
+#include <kaction.h>
 
+#include <QLabel>
 #include "messagecomposer/messagesender.h"
 
 
@@ -63,6 +65,7 @@ KMMainWin::KMMainWin(QWidget *)
   resize( 700, 500 ); // The default size
 
   mKMMainWidget = new KMMainWidget( this, this, actionCollection() );
+  connect(mKMMainWidget,SIGNAL(recreateGui()),this,SLOT(slotUpdateGui()));
   setCentralWidget( mKMMainWidget );
   setupStatusBar();
   if ( kmkernel->xmlGuiInstance().isValid() )
@@ -132,7 +135,7 @@ void KMMainWin::displayStatusMsg( const QString& aText )
 //  text.replace("<", "&lt;");
 //  text.replace(">", "&gt;");
 
-  statusBar()->changeItem( text, mMessageStatusId );
+  statusBar()->changeItem( text, 1 );
 }
 
 //-----------------------------------------------------------------------------
@@ -149,15 +152,13 @@ void KMMainWin::slotNewMailReader()
 void KMMainWin::slotEditToolbars()
 {
   saveMainWindowSettings(KMKernel::self()->config()->group( "Main Window") );
-  KEditToolBar dlg(actionCollection(), this);
-  dlg.setResourceFile( "kmmainwin.rc" );
-
-  connect( &dlg, SIGNAL(newToolBarConfig()), SLOT(slotUpdateToolbars()) );
+  KEditToolBar dlg(guiFactory(), this);
+  connect( &dlg, SIGNAL(newToolBarConfig()), SLOT(slotUpdateGui()) );
 
   dlg.exec();
 }
 
-void KMMainWin::slotUpdateToolbars()
+void KMMainWin::slotUpdateGui()
 {
   // remove dynamically created actions before editing
   mKMMainWidget->clearFilterActions();
@@ -173,8 +174,6 @@ void KMMainWin::slotUpdateToolbars()
 
 void KMMainWin::setupStatusBar()
 {
-  mMessageStatusId = 1;
-
   /* Create a progress dialog and hide it. */
   mProgressDialog = new KPIM::ProgressDialog( statusBar(), this );
   mProgressDialog->hide();
@@ -227,4 +226,3 @@ void KMMainWin::slotShowTipOnStart()
 {
   KTipDialog::showTip( this );
 }
-

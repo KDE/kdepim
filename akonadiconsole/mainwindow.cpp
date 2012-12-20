@@ -21,7 +21,6 @@
 
 #include "mainwindow.h"
 
-#include "mainwidget.h"
 #include <libkdepim/uistatesaver.h>
 
 #include <KActionCollection>
@@ -34,7 +33,8 @@
 MainWindow::MainWindow( QWidget *parent )
   : KXmlGuiWindow( parent )
 {
-  setCentralWidget( new MainWidget( this ) );
+  mMain = new MainWidget( this );
+  setCentralWidget( mMain );
 
   KStandardAction::quit( qApp, SLOT(quit()), actionCollection() );
 
@@ -50,10 +50,17 @@ MainWindow::MainWindow( QWidget *parent )
        QString(), "UseAtYourOwnRiskWarning" );
 }
 
+MainWindow::~MainWindow()
+{
+  delete mMain;
+}
+
 bool MainWindow::queryExit()
 {
   KConfigGroup config( KGlobal::config(), "UiState" );
   KPIM::UiStateSaver::saveState( this, config );
   KGlobal::config()->sync();
+  delete mMain;
+  mMain = 0;
   return KXmlGuiWindow::queryExit();
 }

@@ -36,7 +36,7 @@ class RenderTest : public QObject
   {
     setenv("GNUPGHOME", KDESRCDIR "../../messagecore/tests/gnupg_home" , 1 );
     setenv("LC_ALL", "C", 1);
-    setenv( "KDEHOME", QFile::encodeName(  QDir::homePath() + QString::fromAscii(  "/.kde-unit-test" ) ), 1 );
+    setenv( "KDEHOME", QFile::encodeName(  QDir::homePath() + QString::fromLatin1(  "/.kde-unit-test" ) ), 1 );
   }
   private slots:
     void testRender_data()
@@ -81,6 +81,7 @@ class RenderTest : public QObject
       otp.parseObjectTree( msg.get() );
       fileWriter.queue("</body></html>");
       fileWriter.flush();
+      fileWriter.end();
 
       QVERIFY( QFile::exists( outFileName ) );
 

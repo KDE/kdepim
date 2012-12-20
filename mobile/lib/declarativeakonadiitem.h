@@ -1,7 +1,7 @@
 #ifndef DECLARATIVEAKONADIITEM_H
 #define DECLARATIVEAKONADIITEM_H
 
-#include <QtDeclarative/QDeclarativeItem>
+#include <QDeclarativeItem>
 
 #include <Akonadi/Item>
 

@@ -88,7 +88,7 @@ QString HTMLQuoteColorer::process( const QString &htmlSource, QString&extraHead 
   "  lineBreakNodes[4] = \"ol\"\n"
   "  lineBreakNodes[5] = \"li\"\n"
 
-  "  for( i = 0; i < lineBreakNodes.length; lineBreakNodes++) {\n"
+  "  for( i = 0; i < lineBreakNodes.length; i++) {\n"
   "    if ( lineBreakNodes[i] == nodeName ) {\n"
   "      mIsFirstTextNodeInLine = true;\n"
   "      break;\n"
@@ -123,19 +123,21 @@ QString HTMLQuoteColorer::process( const QString &htmlSource, QString&extraHead 
 
   "function quoteLength( line )\n"
   "{\n"
-  "  line = line.replace(  \"\\s\", \"\" ).replace( '|', '>' );\n"
+  "  line = line.replace(  / /g, \"\" ).replace( '|', '>' );\n"
   "  if ( line.substr( 0, 3 ) == \">>>\" ) return 3;\n"
   "  if ( line.substr( 0, 2 ) == \">>\" ) return 2;\n"
   "  if ( line.substr( 0, 1 ) == '>' ) return 1;\n"
   "  return 0;\n"
   "}\n");
 
+  page.settings()->setAttribute( QWebSettings::JavascriptEnabled, true );
   frame->evaluateJavaScript( script );
+  page.settings()->setAttribute( QWebSettings::JavascriptEnabled, false );
+
   const QWebElement body = frame->documentElement().findFirst("body");
   const QWebElement header = frame->documentElement().findFirst("head");
 
   extraHead = header.toInnerXml();
-
   return body.toInnerXml();
 #else
   return htmlSource;

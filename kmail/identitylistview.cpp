@@ -97,7 +97,14 @@ namespace KMail {
                          "dialog, section Identity, to indicate the "
                          "default identity", "%1 (Default)",
                          ident.identityName() ) );
+      QFont fontItem(font(0));
+      fontItem.setBold(true);
+      setFont(0,fontItem);
     } else {
+      QFont fontItem(font(0));
+      fontItem.setBold(false);
+      setFont(0,fontItem);
+
       setText( 0, ident.identityName() );
     }
     setText( 1, ident.fullEmailAddr() );
@@ -120,6 +127,7 @@ namespace KMail {
     setHeaderLabels( QStringList() << i18n( "Identity Name" ) << i18n( "Email Address" ) );
     setRootIsDecorated( false );
     header()->setMovable( false );
+    header()->setResizeMode( QHeaderView::ResizeToContents );
     setAllColumnsShowFocus( true );
     setAlternatingRowColors( true );
     setSortingEnabled( true );
@@ -155,10 +163,10 @@ namespace KMail {
     kDebug() << "after editing";
 
     if ( !selectedItems().isEmpty() ) {
-      IdentityListViewItem *item = dynamic_cast<IdentityListViewItem*>( selectedItems()[0] );
 
       QLineEdit *edit = dynamic_cast<QLineEdit*>( editor ); // krazy:exclude=qclasses
       if ( edit ) {
+        IdentityListViewItem *item = dynamic_cast<IdentityListViewItem*>( selectedItems()[0] );
         const QString text = edit->text();
         emit rename( item, text );
       }
@@ -167,9 +175,7 @@ namespace KMail {
 
   void IdentityListView::slotCustomContextMenuRequested( const QPoint &pos )
   {
-    kDebug() << "position:" << pos;
     QTreeWidgetItem *item = itemAt( pos );
-    kDebug() << "item:" << item;
     if ( item ) {
       IdentityListViewItem *lvItem = dynamic_cast<IdentityListViewItem*>( item );
       if ( lvItem ) {

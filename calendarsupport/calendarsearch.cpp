@@ -36,7 +36,7 @@
 #include <KDateTime>
 #include <KJob>
 #include <KRandom>
-#include <kselectionproxymodel.h>  //krazy:exclude=camelcase to build against kdelibs4.5
+#include <KSelectionProxyModel>
 
 #include <QItemSelection>
 #include <QItemSelectionModel>

@@ -18,13 +18,15 @@
  */
 
 #include "filteractionaddtag.h"
-
+#include "filtermanager.h"
 #include "filteractionmissingargumentdialog.h"
 
-#include <nepomuk2/tag.h>
+#include <Nepomuk2/Tag>
 #include <Nepomuk2/Resource>
+#include <Nepomuk2/ResourceManager>
 
 #include <QTextDocument>
+#include <QPointer>
 
 using namespace MailCommon;
 
@@ -36,7 +38,8 @@ FilterAction* FilterActionAddTag::newAction()
 FilterActionAddTag::FilterActionAddTag( QObject *parent )
   : FilterActionWithStringList( "add tag", i18n( "Add Tag" ), parent )
 {
-  initializeTagList();
+    mParameterList = FilterManager::instance()->tagList();
+    connect(FilterManager::instance(),SIGNAL(tagListingFinished()),SLOT(slotTagListingFinished()));
 }
 
 bool FilterActionAddTag::isEmpty() const
@@ -44,12 +47,9 @@ bool FilterActionAddTag::isEmpty() const
   return false;
 }
 
-void FilterActionAddTag::initializeTagList()
+void FilterActionAddTag::slotTagListingFinished()
 {
-  foreach( const Nepomuk2::Tag &tag, Nepomuk2::Tag::allTags() ) {
-    mParameterList.append( tag.label() );
-    mLabelList.append( tag.uri().toString() );
-  }
+  mParameterList = FilterManager::instance()->tagList();
 }
 
 bool FilterActionAddTag::argsFromStringInteractive( const QString &argsStr, const QString& filterName )
@@ -59,13 +59,15 @@ bool FilterActionAddTag::argsFromStringInteractive( const QString &argsStr, cons
   if( mParameterList.isEmpty() )
     return false;
   const int index = mParameterList.indexOf( mParameter );
-  if ( index == -1 ) {
-    FilterActionMissingTagDialog *dlg = new FilterActionMissingTagDialog( mParameterList, filterName, argsStr );
-    if ( dlg->exec() ) {
-      mParameter = dlg->selectedTag();
-      needUpdate = true;
+  if ( Nepomuk2::ResourceManager::instance()->initialized() ) {
+    if ( index == -1 ) {
+      QPointer<FilterActionMissingTagDialog> dlg = new FilterActionMissingTagDialog( mParameterList, filterName, argsStr );
+      if ( dlg->exec() ) {
+        mParameter = dlg->selectedTag();
+        needUpdate = true;
+      }
+      delete dlg;
     }
-    delete dlg;
   }
   return needUpdate;
 }
@@ -76,7 +78,6 @@ FilterAction::ReturnCode FilterActionAddTag::process( ItemContext &context ) con
   const int index = mParameterList.indexOf( mParameter );
   if ( index == -1 )
     return ErrorButGoOn;
-
   Nepomuk2::Resource resource( context.item().url() );
   resource.addTag( mParameter );
 
@@ -94,7 +95,6 @@ void FilterActionAddTag::argsFromString( const QString &argsStr )
     mParameter = argsStr;
     return;
   }
-
   foreach ( const QString& tag, mParameterList ) {
     if ( tag == argsStr ) {
       mParameter = tag;
@@ -109,8 +109,9 @@ void FilterActionAddTag::argsFromString( const QString &argsStr )
 QString FilterActionAddTag::argsAsString() const
 {
   const int index = mParameterList.indexOf( mParameter );
-  if ( index == -1 )
+  if ( index == -1 ) {
     return QString();
+  }
 
   return mParameterList.at( index );
 }
@@ -119,3 +120,5 @@ QString FilterActionAddTag::displayString() const
 {
   return label() + QLatin1String( " \"" ) + Qt::escape( argsAsString() ) + QLatin1String( "\"" );
 }
+
+#include "filteractionaddtag.moc"

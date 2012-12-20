@@ -39,7 +39,7 @@ class AddDirectoryServiceDialogImpl : public QDialog, public Ui::AddDirectorySer
     Q_OBJECT
 
 public:
-    explicit AddDirectoryServiceDialogImpl( QWidget* parent = 0, const char* name = 0, bool modal = false, Qt::WFlags fl = 0 );
+    explicit AddDirectoryServiceDialogImpl( QWidget* parent = 0, const char* name = 0, bool modal = false, Qt::WindowFlags fl = 0 );
     ~AddDirectoryServiceDialogImpl();
 private Q_SLOTS:
     void slotAccept();

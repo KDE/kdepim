@@ -43,7 +43,7 @@ class Toolbox: public QWidget, public Ui::ToolboxBase
 {
     Q_OBJECT
 public:
-    Toolbox( QWidget *parent );
+    explicit Toolbox( QWidget *parent );
     ~Toolbox();
 
     /**

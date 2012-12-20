@@ -40,7 +40,8 @@ KMailCVT::KMailCVT(QWidget *parent)
   : KAssistantDialog(parent) {
   setModal(true);
   setWindowTitle( i18n( "KMailCVT Import Tool" ) );
-
+  KGlobal::locale()->insertCatalog( "libmailimporter" );
+  KGlobal::locale()->insertCatalog( "libmailcommon" );
   KMailCVTKernel *kernel = new KMailCVTKernel( this );
   CommonKernel->registerKernelIf( kernel ); //register KernelIf early, it is used by the Filter classes
   CommonKernel->registerSettingsIf( kernel ); //SettingsIf is used in FolderTreeWidget
@@ -59,7 +60,7 @@ KMailCVT::KMailCVT(QWidget *parent)
   // Disable the 'next button to begin with.
   setValid( currentPage(), false );
 
-  connect( selfilterpage->mWidget->mCollectionRequestor, SIGNAL(folderChanged(Akonadi::Collection)),
+  connect( selfilterpage->widget()->mCollectionRequestor, SIGNAL(folderChanged(Akonadi::Collection)),
            this, SLOT(collectionChanged(Akonadi::Collection)) );
   Akonadi::Control::widgetNeedsAkonadi(this);
   readConfig();
@@ -74,14 +75,14 @@ void KMailCVT::readConfig()
 {
   KConfigGroup group( KGlobal::config(), "FolderSelectionDialog" );
   if ( group.hasKey( "LastSelectedFolder" ) ) {
-     selfilterpage->mWidget->mCollectionRequestor->setCollection( CommonKernel->collectionFromId(group.readEntry("LastSelectedFolder", -1 )));
+     selfilterpage->widget()->mCollectionRequestor->setCollection( CommonKernel->collectionFromId(group.readEntry("LastSelectedFolder", -1 )));
   }
 }
 
 void KMailCVT::writeConfig()
 {
   KConfigGroup group( KGlobal::config(), "FolderSelectionDialog" );
-  group.writeEntry( "LastSelectedFolder", selfilterpage->mWidget->mCollectionRequestor->collection().id() );
+  group.writeEntry( "LastSelectedFolder", selfilterpage->widget()->mCollectionRequestor->collection().id() );
   group.sync();
 }
 
@@ -90,7 +91,7 @@ void KMailCVT::next()
   if( currentPage() == page1 ){
     // Save selected filter
     Filter *selectedFilter = selfilterpage->getSelectedFilter();
-    Akonadi::Collection selectedCollection = selfilterpage->mWidget->mCollectionRequestor->collection();
+    Akonadi::Collection selectedCollection = selfilterpage->widget()->mCollectionRequestor->collection();
     // without filter don't go next
     if ( !selectedFilter )
       return;

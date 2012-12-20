@@ -18,6 +18,7 @@
 
 #include "templatestextedit.h"
 #include "templatessyntaxhighlighter.h"
+#include "templatesutil.h"
 
 #include <KGlobalSettings>
 
@@ -47,82 +48,8 @@ TemplatesTextEdit::~TemplatesTextEdit()
 void TemplatesTextEdit::initCompleter()
 {
   QStringList listWord;
-  listWord << QLatin1String( "%QUOTE" )
-           << QLatin1String( "%FORCEDPLAIN" )
-           << QLatin1String( "%FORCEDHTML" )
-           << QLatin1String( "%QHEADERS" )
-           << QLatin1String( "%HEADERS" )
-           << QLatin1String( "%TEXT" )
-           << QLatin1String( "%OTEXTSIZE" )
-           << QLatin1String( "%OTEXT" )
-           << QLatin1String( "%OADDRESSEESADDR" )
-           << QLatin1String( "%CCADDR" )
-           << QLatin1String( "%CCNAME" )
-           << QLatin1String( "%CCFNAME" )
-           << QLatin1String( "%CCLNAME" )
-           << QLatin1String( "%TOADDR" )
-           << QLatin1String( "%TONAME" )
-           << QLatin1String( "%TOFNAME" )
-           << QLatin1String( "%TOLNAME" )
-           << QLatin1String( "%TOLIST" )
-           << QLatin1String( "%FROMADDR" )
-           << QLatin1String( "%FROMNAME" )
-           << QLatin1String( "%FROMFNAME" )
-           << QLatin1String( "%FROMLNAME" )
-           << QLatin1String( "%FULLSUBJECT" )
-           << QLatin1String( "%FULLSUBJ" )
-           << QLatin1String( "%MSGID" )
-           << QLatin1String( "%HEADER( " )
-           << QLatin1String( "%OCCADDR" )
-           << QLatin1String( "%OCCNAME" )
-           << QLatin1String( "%OCCFNAME" )
-           << QLatin1String( "%OCCLNAME" )
-           << QLatin1String( "%OTOADDR" )
-           << QLatin1String( "%OTONAME" )
-           << QLatin1String( "%OTOFNAME" )
-           << QLatin1String( "%OTOLNAME" )
-           << QLatin1String( "%OTOLIST" )
-           << QLatin1String( "%OTO" )
-           << QLatin1String( "%OFROMADDR" )
-           << QLatin1String( "%OFROMNAME" )
-           << QLatin1String( "%OFROMFNAME" )
-           << QLatin1String( "%OFROMLNAME" )
-           << QLatin1String( "%OFULLSUBJECT" )
-           << QLatin1String( "%OFULLSUBJ" )
-           << QLatin1String( "%OMSGID" )
-           << QLatin1String( "%DATEEN" )
-           << QLatin1String( "%DATESHORT" )
-           << QLatin1String( "%DATE" )
-           << QLatin1String( "%DOW" )
-           << QLatin1String( "%TIMELONGEN" )
-           << QLatin1String( "%TIMELONG" )
-           << QLatin1String( "%TIME" )
-           << QLatin1String( "%ODATEEN" )
-           << QLatin1String( "%ODATESHORT" )
-           << QLatin1String( "%ODATE" )
-           << QLatin1String( "%ODOW" )
-           << QLatin1String( "%OTIMELONGEN" )
-           << QLatin1String( "%OTIMELONG" )
-           << QLatin1String( "%OTIME" )
-           << QLatin1String( "%BLANK" )
-           << QLatin1String( "%NOP" )
-           << QLatin1String( "%CLEAR" )
-           << QLatin1String( "%DEBUGOFF" )
-           << QLatin1String( "%DEBUG" )
-           << QLatin1String( "%CURSOR" )
-           << QLatin1String( "%SIGNATURE" );
-
-  listWord << QLatin1String( "%REM=\"\"%-" )
-           << QLatin1String( "%INSERT=\"\"" )
-           << QLatin1String( "%SYSTEM=\"\"" )
-           << QLatin1String( "%PUT=\"\"" )
-           << QLatin1String( "%QUOTEPIPE=\"\"" )
-           << QLatin1String( "%MSGPIPE=\"\"" )
-           << QLatin1String( "%BODYPIPE=\"\"" )
-           << QLatin1String( "%CLEARPIPE=\"\"" )
-           << QLatin1String( "%TEXTPIPE=\"\"" )
-           << QLatin1String( "%OHEADER=\"\"" )
-           << QLatin1String( "%HEADER=\".*\"" );
+  listWord << Util::keywords();
+  listWord << Util::keywordsWithArgs();
 
   m_completer = new QCompleter( this );
   m_completer->setModel( new QStringListModel( listWord, m_completer ) );
@@ -138,10 +65,10 @@ void TemplatesTextEdit::initCompleter()
 void TemplatesTextEdit::slotInsertCompletion( const QString &completion )
 {
   QTextCursor tc = textCursor();
-  int extra = completion.length() - m_completer->completionPrefix().length();
-  tc.movePosition( QTextCursor::Left );
-  tc.movePosition( QTextCursor::EndOfWord );
-  tc.insertText( completion.right( extra ) );
+  tc.movePosition( QTextCursor::StartOfWord );
+  tc.movePosition( QTextCursor::EndOfWord, QTextCursor::KeepAnchor );
+  tc.removeSelectedText();
+  tc.insertText( completion.right( completion.length()-1 ) );
   setTextCursor( tc );
 
 }
@@ -187,7 +114,10 @@ QString TemplatesTextEdit::wordUnderCursor()
       // vHanda: I don't understand why the cursor seems to give a pos 1 past
       // the last char instead of just the last char.
       int pos = tc.position() - 1;
-      if ( pos < 0 || eow.contains( document()->characterAt(pos) ) ) {
+      if ( pos < 0 ||
+           eow.contains( document()->characterAt( pos ) ) ||
+           document()->characterAt( pos ) == QChar( QChar::LineSeparator ) ||
+           document()->characterAt( pos ) == QChar( QChar::ParagraphSeparator ) ) {
         break;
       }
       tc.movePosition( QTextCursor::Left, QTextCursor::KeepAnchor );

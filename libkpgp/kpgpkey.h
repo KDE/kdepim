@@ -60,7 +60,7 @@ class KeyIDList : public QList<KeyID>
   KeyIDList() { }
   KeyIDList( const KeyIDList& l ) : QList<KeyID>(l) { }
   KeyIDList( const QList<KeyID>& l ) : QList<KeyID>(l) { }
-  KeyIDList( const KeyID& i ) { append(i); }
+  explicit KeyIDList( const KeyID& i ) { append(i); }
 
   QStringList toStringList() const;
 

@@ -42,12 +42,12 @@ class TextEditor;
 class KSelectAction;
 class KAction;
 class KToolBar;
-
+class KToggleAction;
 class WebView : public KWebView {
     Q_OBJECT
 
 public:
-    WebView ( QWidget* = 0 );
+    explicit WebView ( QWidget* = 0 );
     //just shows the cursor.
     void startEditing();
 
@@ -67,7 +67,7 @@ class TextEditor : public QWidget {
     Q_OBJECT
 
 public:
-    TextEditor ( QWidget* = 0 );
+    explicit TextEditor ( QWidget* = 0 );
 
     enum WebAction { AlignLeft = 100, AlignRight, AlignCenter, AlignJustify, StrikeThrough, NumberedList, BulletedList};
 
@@ -165,8 +165,8 @@ private:
     KAction *actColorSelect;
     KAction *actAddImage;
 //     KAction *actAddMedia;
-    KAction *actOrderedList;
-    KAction *actUnorderedList;
+    KToggleAction *actOrderedList;
+    KToggleAction *actUnorderedList;
     KAction *actBlockQuote;
     KAction *actSplitPost;
     KAction *actCheckSpelling;

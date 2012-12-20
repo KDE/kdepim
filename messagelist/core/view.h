@@ -339,9 +339,11 @@ public:
   bool selectFirstMessageItem( MessageTypeFilter messageTypeFilter, bool centerItem );
 
   /**
-   * Fills menu by adding actions for manipulating the view.
+   * Selects the last message item in the view that matches messageTypeFilter.
+   * If centerItem is true then the specified item will be positioned
+   * at the center of the view, if possible.
    */
-  void fillViewMenu( KMenu * menu );
+  bool selectLastMessageItem( MessageTypeFilter messageTypeFilter, bool centerItem );
 
   /**
    * Sets the focus on the quick search line of the currently active tab.
@@ -363,6 +365,13 @@ public:
    * @reimp
    */
   virtual void setRowHidden( int row, const QModelIndex & parent, bool hide );
+
+  void sortOrderMenuAboutToShow(KMenu *menu);
+
+  void aggregationMenuAboutToShow(KMenu *menu);
+
+  void themeMenuAboutToShow(KMenu *menu);
+
 
 protected:
   /**
@@ -502,7 +511,7 @@ protected:
    * Returns 0 if the view is empty.
    */
   Item * firstMessageItem( MessageTypeFilter messageTypeFilter )
-    { return messageItemAfter( 0, messageTypeFilter, false ); };
+    { return messageItemAfter( 0, messageTypeFilter, false ); }
 
   /**
    * Finds the previous message item with respect to the current item.
@@ -543,7 +552,7 @@ protected:
    * Returns 0 if the view is empty.
    */
   Item * lastMessageItem( MessageTypeFilter messageTypeFilter )
-    { return messageItemBefore( 0, messageTypeFilter, false ); };
+    { return messageItemBefore( 0, messageTypeFilter, false ); }
 
   /**
    * This is called by Model to signal a start of a lengthy job batch.

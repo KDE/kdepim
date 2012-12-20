@@ -33,7 +33,7 @@ class LocalResourceCreator : public QObject
 {
   Q_OBJECT
 public:
-  LocalResourceCreator(QObject* parent = 0);
+  explicit LocalResourceCreator(QObject* parent = 0);
 
   void createIfMissing();
 

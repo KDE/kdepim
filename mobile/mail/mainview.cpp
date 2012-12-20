@@ -101,6 +101,7 @@
 #include <mailcommon/filter/filteraction.h>
 #include <mailcommon/foldercollection.h>
 #include <mailcommon/mailutil.h>
+#include <pimcommon/pimutil.h>
 #include <mailtransport/transportmanager.h>
 #include <messagecomposer/akonadisender.h>
 #include <messagecore/stringutil.h>
@@ -111,7 +112,7 @@
 #include <QtCore/QSignalMapper>
 #include <QtCore/QTimer>
 #include <QtDBus/QDBusConnection>
-#include <QtDeclarative/QDeclarativeContext>
+#include <QDeclarativeContext>
 #include <QLabel>
 #include <QItemSelectionModel>
 #include <QTreeView>
@@ -1006,6 +1007,7 @@ void MainView::markImportant( bool checked )
   item.setFlags( status.statusFlags() );
 
   ItemModifyJob *job = new ItemModifyJob( item );
+  job->disableRevisionCheck();
   job->setIgnorePayload( true );
   connect( job, SIGNAL(result(KJob*)), SLOT(modifyDone(KJob*)) );
 }
@@ -1029,6 +1031,7 @@ void MainView::markMailTask( bool checked )
   item.setFlags( status.statusFlags() );
 
   ItemModifyJob *job = new ItemModifyJob( item );
+  job->disableRevisionCheck();
   job->setIgnorePayload( true );
   connect( job, SIGNAL(result(KJob*)), SLOT(modifyDone(KJob*)) );
 }

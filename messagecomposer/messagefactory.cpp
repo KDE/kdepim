@@ -940,7 +940,7 @@ void MessageFactory::applyCharset( const KMime::Message::Ptr msg )
 
       QList<QByteArray> chars;
       foreach ( const QString &charset, charsets )
-        chars << charset.toAscii();
+        chars << charset.toLatin1();
 
       QByteArray fallbackCharset = Message::Util::selectCharset( chars, body );
       if ( fallbackCharset.isEmpty() ) // UTF-8 as fall-through

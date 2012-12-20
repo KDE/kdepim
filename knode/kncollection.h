@@ -43,7 +43,7 @@ class KNCollection {
     /** Create a new collection.
      * @param p The parent collection.
      */
-    KNCollection( KNCollection::Ptr p );
+    explicit KNCollection( KNCollection::Ptr p );
     virtual ~KNCollection();
 
     /// Returns the collection type.

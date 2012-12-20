@@ -27,10 +27,14 @@ ContactDisplayMessageMemento::ContactDisplayMessageMemento( const QString &email
     mMailAllowToRemoteContent( false ),
     mForceDisplayTo( Viewer::Unknown )
 {
-    Akonadi::ContactSearchJob *searchJob = new Akonadi::ContactSearchJob();
-    searchJob->setQuery( Akonadi::ContactSearchJob::Email, emailAddress );
-    connect( searchJob, SIGNAL(result(KJob*)),
-             this, SLOT(slotSearchJobFinished(KJob*)) );
+    if( !emailAddress.isEmpty() ) {
+      Akonadi::ContactSearchJob *searchJob = new Akonadi::ContactSearchJob();
+      searchJob->setQuery( Akonadi::ContactSearchJob::Email, emailAddress );
+      connect( searchJob, SIGNAL(result(KJob*)),
+               this, SLOT(slotSearchJobFinished(KJob*)) );
+    } else {
+      mFinished = true;
+    }
 }
 
 ContactDisplayMessageMemento::~ContactDisplayMessageMemento()

@@ -511,7 +511,7 @@ void IncidenceMonthItem::updateSelection( const Akonadi::Item &incidence, const 
 QString IncidenceMonthItem::text( bool end ) const
 {
   QString ret = mIncidence->summary();
-  if ( !allDay() && monthScene()->monthView()->preferences()->showTimeInMonthView() ) {
+  if ( !allDay() && !mIsJournal && monthScene()->monthView()->preferences()->showTimeInMonthView() ) {
     // Prepend the time str to the text
     QString timeStr;
     if ( mIsTodo ) {
@@ -562,9 +562,11 @@ QList<QPixmap *> IncidenceMonthItem::icons() const
   const QSet<EventView::ItemIcon> icons =
     monthScene()->monthView()->preferences()->monthViewIcons();
 
+  QString customIconName;
   if ( icons.contains( EventViews::EventView::CalendarCustomIcon ) ) {
     const QString iconName = EventView::iconForItem( item );
     if ( !iconName.isEmpty() && iconName != "view-calendar" && iconName != "office-calendar" ) {
+      customIconName = iconName;
       ret << new QPixmap( cachedSmallIcon( iconName ) );
     }
   }
@@ -594,7 +596,10 @@ QList<QPixmap *> IncidenceMonthItem::icons() const
                                                              EventView::JournalIcon ) ) {
     KDateTime occurrenceDateTime = mIncidence->dateTime( Incidence::RoleRecurrenceStart );
     occurrenceDateTime.setDate( realStartDate() );
-    ret << new QPixmap( cachedSmallIcon( mIncidence->iconName( occurrenceDateTime ) ) );
+
+    const QString incidenceIconName = mIncidence->iconName( occurrenceDateTime );
+    if ( customIconName != incidenceIconName )
+      ret << new QPixmap( cachedSmallIcon( incidenceIconName ) );
   }
 
   if ( icons.contains( EventView::ReadOnlyIcon ) &&

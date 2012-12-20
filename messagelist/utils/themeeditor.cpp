@@ -250,7 +250,8 @@ Item * ThemePreviewDelegate::itemFromIndex( const QModelIndex &index ) const
 
 
 ThemePreviewWidget::ThemePreviewWidget( QWidget * parent )
-  : QTreeWidget( parent )
+  : QTreeWidget( parent ),
+    mTheme( 0 )
 {
   mSelectedThemeContentItem = 0;
   mSelectedThemeColumn = 0;

@@ -85,12 +85,14 @@ GrantleeContactGroupFormatter::~GrantleeContactGroupFormatter()
   delete d;
 }
 
+#ifndef KDE_USE_FINAL
 inline static void setHashField( QVariantHash &hash, const QString &name, const QString &value )
 {
   if ( !value.isEmpty() ) {
     hash.insert( name, value );
   }
 }
+#endif
 
 static QVariantHash memberHash( const KABC::ContactGroup::Data &data )
 {

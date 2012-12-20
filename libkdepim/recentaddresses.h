@@ -35,7 +35,6 @@
 #include <KDialog>
 #include <QStringList>
 class KConfig;
-class KEditListBox;
 class KEditListWidget;
 class KPushButton;
 class QListWidget;
@@ -47,7 +46,7 @@ class KDEPIM_EXPORT RecentAddressDialog : public KDialog
 {
     Q_OBJECT
   public:
-    RecentAddressDialog( QWidget *parent );
+    explicit RecentAddressDialog( QWidget *parent );
     void setAddresses( const QStringList &addrs );
     QStringList addresses() const;
     void addAddresses(KConfig *config);
@@ -134,7 +133,7 @@ class KDEPIM_EXPORT RecentAddresses
     void clear();
 
   private:
-    RecentAddresses( KConfig *config = 0 );
+    explicit RecentAddresses( KConfig *config = 0 );
 
     KABC::Addressee::List m_addresseeList;
 

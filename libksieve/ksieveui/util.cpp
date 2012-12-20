@@ -38,6 +38,7 @@
 
 
 #include "util.h"
+#include "pimcommon/pimutil.h"
 #include "imapsettings.h"
 #include "settings.h"
 
@@ -50,8 +51,8 @@ using namespace KSieveUi;
 
 KUrl KSieveUi::Util::findSieveUrlForAccount( const QString &identifier )
 {
-  QScopedPointer<OrgKdeAkonadiImapSettingsInterface> interface( new OrgKdeAkonadiImapSettingsInterface( "org.freedesktop.Akonadi.Resource." + identifier,
-                                                                                                        "/Settings", QDBusConnection::sessionBus() ) );
+  QScopedPointer<OrgKdeAkonadiImapSettingsInterface> interface( PimCommon::Util::createImapSettingsInterface(identifier) );
+
   if ( !interface->sieveSupport() )
     return KUrl();
 

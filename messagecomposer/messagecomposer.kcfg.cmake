@@ -100,16 +100,20 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
       <whatsthis>Turn this option on to make Outlook &#8482; understand attachment names containing non-English characters</whatsthis>
       <default>false</default>
     </entry>
-      <entry name="WordWrap" type="Bool" key="word-wrap">
-        <label>Word &amp;wrap at column:</label>
-        <default>true</default>
-      </entry>
-      <entry name="LineWrapWidth" type="Int" key="break-at">
-        <label></label>
-        <default>78</default>
-        <min>30</min>
-        <max>998</max>
-      </entry>
+    <entry name="WordWrap" type="Bool" key="word-wrap">
+      <label>Word &amp;wrap at column:</label>
+      <default>true</default>
+    </entry>
+    <entry name="LineWrapWidth" type="Int" key="break-at">
+      <label></label>
+      <default>78</default>
+      <min>30</min>
+      <max>998</max>
+    </entry>
+    <entry name="ImprovePlainTextOfHtmlMessage" type="Bool" key="improve-plain-text-html-message">
+      <label>Improve Plain Text of HTML message</label>
+      <default>true</default>
+    </entry>
     <entry name="CryptoWarningUnencrypted" type="Bool" key="crypto-warning-unencrypted">
         <label>Warn before sending unencrypted messages.</label>
         <default>false</default>
@@ -197,5 +201,68 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
     <entry name="ReplaceSingleQuotes" type="Bool" key="replace-single-quotes">
       <default>false</default>
     </entry>
+    <entry name="AutoFormatUrl" type="Bool" key="autoformat-url">
+      <default>false</default>
+    </entry>
+    <entry name="AutoBoldUnderline" type="Bool" key="auto-bold-underline">
+      <default>false</default>
+    </entry>
+    <entry name="SuperScript" type="Bool" key="super-script">
+      <default>false</default>
+    </entry>
+  </group>
+
+  <group name="AutoResizeImage">
+    <entry name="AutoResizeImageEnabled" type="Bool" key="auto-resize-image-enabled">
+      <default>false</default>
+    </entry>
+    <entry name="KeepImageRatio" type="Bool" key="keep-image-ratio">
+      <default>false</default>
+    </entry>
+    <entry name="AskBeforeResizing" type="Bool" key="ask-before-resizing">
+      <default>true</default>
+    </entry>
+    <entry name="ReduceImageToMaximum" type="Bool" key="reduce-image-to-maximum">
+      <default>false</default>
+    </entry>
+    <entry name="EnlargeImageToMinimum" type="Bool" key="enlarge-image-to-minimum">
+      <default>false</default>
+    </entry>
+    <entry name="CustomMinimumHeight" type="int" key="custom-minimum-height">
+      <default>520</default>
+    </entry>
+    <entry name="CustomMinimumWidth" type="int" key="custom-minimum-width">
+      <default>520</default>
+    </entry>
+    <entry name="CustomMaximumHeight" type="int" key="custom-maximum-height">
+      <default>520</default>
+    </entry>
+    <entry name="CustomMaximumWidth" type="int" key="custom-maximum-width">
+      <default>520</default>
+    </entry>
+
+    <entry name="MaximumHeight" type="int" key="maximum-height">
+      <default>0</default>
+    </entry>
+    <entry name="MaximumWidth" type="int" key="maximum-width">
+      <default>0</default>
+    </entry>
+    <entry name="MinimumHeight" type="int" key="minimum-height">
+      <default>0</default>
+    </entry>
+    <entry name="MinimumWidth" type="int" key="minimum-width">
+      <default>0</default>
+    </entry>
+    <entry name="WriteFormat" type="String" key="write-format">
+      <default></default>
+    </entry>
+    <entry name="SkipImageLowerSizeEnabled" type="Bool" key="skip-image-lower-size-enabled">
+      <default>false</default>
+    </entry>
+    <entry name="SkipImageLowerSize" type="int" key="skip-image-lower-size">
+      <default>220</default>
+    </entry>
+
   </group>
 </kcfg>
+

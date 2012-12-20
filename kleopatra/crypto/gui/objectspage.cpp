@@ -117,7 +117,7 @@ void ObjectsPage::Private::listSelectionChanged()
     removeButton->setEnabled( !fileListWidget->selectedItems().isEmpty() );
 }
 
-ObjectsPage::ObjectsPage( QWidget * parent, Qt::WFlags f )
+ObjectsPage::ObjectsPage( QWidget * parent, Qt::WindowFlags f )
   : WizardPage( parent, f ), d( new Private( this ) )
 {
     

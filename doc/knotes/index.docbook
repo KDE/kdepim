@@ -6,9 +6,9 @@
   <!ENTITY % English "INCLUDE" > <!-- change language only here -->
 ]>
 
-<book lang="&language;">
+<book id="knotes" lang="&language;">
 
-<bookinfo>
+<bookinfo id="knotesinfo">
 <title>The &knotes; Handbook</title>
 
 <authorgroup>
@@ -130,7 +130,7 @@ mouse, or by holding down the &Shift; key and using the
 <varlistentry>
 <term>Inserting the date:</term>
 <listitem>
-<para>To insert the current date in the Note &RMB; click on the title
+<para>To insert the current date in the note &RMB; click on the title
 bar of the note and select <guimenuitem>Insert
 Date</guimenuitem>.</para>
 <para>The current date and time will be inserted at the cursor

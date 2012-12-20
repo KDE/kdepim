@@ -93,17 +93,14 @@ class FilterManager: public QObject
      *  @param account @c true if an account id is specified else @c false
      *  @param accountId The id of the KMAccount that the message was retrieved from
      *
-     *  @return 2 if a critical error occurred (eg out of disk space)
-     *          1 if the caller is still owner of the message and
-     *          0 otherwise. If the caller does not any longer own the message
-     *                       he *must* not delete the message or do similar stupid things. ;-)
+     *  @return true if the filtering was successful, false in case of any error
      */
-    int process( const Akonadi::Item &item, MailCommon::SearchRule::RequiredPart requestedPart,
+    bool process( const Akonadi::Item &item, bool needsFullPayload,
                  FilterSet set = Inbound,
                  bool account = false, const QString &accountId = QString() );
 
-    int process( const QList<MailCommon::MailFilter*>& mailFilters, const Akonadi::Item &item,
-                 MailCommon::SearchRule::RequiredPart requestedPart, FilterSet set = Inbound,
+    bool process( const QList<MailCommon::MailFilter*>& mailFilters, const Akonadi::Item &item,
+                 bool needsFullPayload, FilterSet set = Inbound,
                  bool account = false, const QString &accountId = QString() );
 
     /**
@@ -112,10 +109,10 @@ class FilterManager: public QObject
      * Applies @p filter to message @p item.
      * Return codes are as with the above method.
      */
-    int process( const Akonadi::Item &item, MailCommon::SearchRule::RequiredPart requiredPart, const MailCommon::MailFilter *filter );
+    bool process( const Akonadi::Item &item, bool needsFullPayload, const MailCommon::MailFilter *filter );
 
-    void filter( qlonglong itemId, FilterSet set, const QString &accountId );
-    void filter( qlonglong itemId, const QString &filterId, MailCommon::SearchRule::RequiredPart requiredPart );
+    void filter( const Akonadi::Item& item, FilterManager::FilterSet set, const QString& resourceId );
+    void filter( const Akonadi::Item &item, const QString& filterId, const QString& resourceId );
 
     void applySpecificFilters(const QList<Akonadi::Item> &selectedMessages, MailCommon::SearchRule::RequiredPart requiredPart, const QStringList& listFilters );
 
@@ -127,18 +124,19 @@ class FilterManager: public QObject
     /**
      * Returns whether the configured filters need the full mail content.
      */
-    MailCommon::SearchRule::RequiredPart requiredPart() const;
-
+    MailCommon::SearchRule::RequiredPart requiredPart(const QString& id) const;
 
     void mailCollectionRemoved( const Akonadi::Collection& collection );
+
 #ifndef NDEBUG
     /**
      * Outputs all filter rules to console. Used for debugging.
      */
     void dump() const;
 #endif
+
 protected:
-    bool processContextItem(MailCommon::ItemContext context, bool emitSignal, int &result );
+    bool processContextItem(MailCommon::ItemContext context );
 
   Q_SIGNALS:
     /**
@@ -149,12 +147,15 @@ protected:
     /**
      * This signal is emitted to notify that @p item has not been moved.
      */
-    void itemNotMoved( const Akonadi::Item &item );
+    void filteringFailed( const Akonadi::Item &item );
+
+    void percent(int progress);
+    void progressMessage(const QString& message);
 
   private:
     //@cond PRIVATE
     class Private;
-    Private* const d;
+    Private* d;
 
     Q_PRIVATE_SLOT( d, void itemsFetchJobForFilterDone( KJob* ) )
     Q_PRIVATE_SLOT( d, void itemFetchJobForFilterDone( KJob* ) )

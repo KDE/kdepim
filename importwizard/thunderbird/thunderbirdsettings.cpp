@@ -22,8 +22,9 @@
 
 #include <kpimidentities/identity.h>
 #include <kpimidentities/signature.h>
+#include <KStandardDirs>
 
-
+#include <KABC/VCardConverter>
 #include <QTextStream>
 #include <QStringList>
 #include <QFile>
@@ -49,6 +50,8 @@ ThunderbirdSettings::ThunderbirdSettings( const QString& filename, ImportWizard 
          line.contains(QLatin1String("mailnews."))||
          line.contains(QLatin1String("mail.compose."))||
          line.contains(QLatin1String("mail.spellcheck")) ||
+         line.contains(QLatin1String("mail.SpellCheckBeforeSend")) ||
+         line.contains(QLatin1String("spellchecker.dictionary")) ||
          line.contains(QLatin1String("ldap_")) ||
          line.contains(QLatin1String("mail.biff.")) ||
          line.contains(QLatin1String("mailnews.tags."))) {
@@ -193,6 +196,20 @@ void ThunderbirdSettings::readGlobalSettings()
   } else {
     //Default value in thunderbird
     addKmailConfig(QLatin1String("General"),QLatin1String("beep-on-mail"), true);
+  }
+  const QString mailSpellCheckBeforeSendStr = QLatin1String("mail.SpellCheckBeforeSend");
+  if(mHashConfig.contains(mailSpellCheckBeforeSendStr)) {
+    const bool mailSpellCheckBeforeSend = mHashConfig.value(mailSpellCheckBeforeSendStr).toBool();
+    addKmailConfig(QLatin1String("Composer"),QLatin1String("check-spelling-before-send"), mailSpellCheckBeforeSend);
+  } else {
+    addKmailConfig(QLatin1String("Composer"),QLatin1String("check-spelling-before-send"), false);
+  }
+
+  const QString mailSpellCheckLanguageStr = QLatin1String("spellchecker.dictionary");
+  if(mHashConfig.contains(mailSpellCheckLanguageStr)) {
+    const QString mailSpellCheckLanguage = mHashConfig.value(mailSpellCheckLanguageStr).toString();
+    addKmailConfig(QLatin1String("Spelling"), QLatin1String("defaultLanguage"),mailSpellCheckLanguage);
+    //TODO create map to convert thunderbird name to aspell name
   }
 }
 
@@ -379,10 +396,8 @@ void ThunderbirdSettings::readAccount()
     } else if ( type == QLatin1String( "none" ) ) {
       //FIXME look at if we can implement it
       kDebug()<<" account type none!";
-      continue;
     } else if (type == QLatin1String("movemail")) {
       kDebug()<<" movemail accound found and not implemented in importthunderbird";
-      continue;
       //TODO
     } else if (type == QLatin1String("rss")) {
       //TODO when akregator2 will merge in kdepim
@@ -586,8 +601,24 @@ void ThunderbirdSettings::readIdentity( const QString& account )
   if ( mHashConfig.contains( attachVcardStr ) ) {
     const bool attachVcard = mHashConfig.value( attachVcardStr ).toBool();
     newIdentity->setAttachVcard(attachVcard);
-    const QString vcardContent = mHashConfig.value( identity + QLatin1String( ".escapedVCard" ) ).toString();
-    //TODO: write data in vcard file
+  }
+  const QString attachVcardContentStr( identity + QLatin1String( ".escapedVCard" ) );
+  if( mHashConfig.contains( attachVcardContentStr ) ) {
+      const QString str = mHashConfig.value( attachVcardContentStr ).toString();
+      QByteArray vcard = QByteArray::fromPercentEncoding ( str.toLocal8Bit() );
+      KABC::VCardConverter converter;
+      KABC::Addressee addr = converter.parseVCard( vcard );
+
+      const QString filename = KStandardDirs::locateLocal("appdata",newIdentity->identityName() + QLatin1String(".vcf"));
+      QFile file(filename);
+      if ( file.open( QIODevice::WriteOnly |QIODevice::Text ) ) {
+        const QByteArray data = converter.exportVCard( addr, KABC::VCardConverter::v3_0 );
+        file.write( data );
+        file.flush();
+        file.close();
+        newIdentity->setVCardFile(filename);
+      }
+
   }
   const QString composeHtmlStr( identity + QLatin1String( ".compose_html" ) );
   //TODO: implement it in kmail

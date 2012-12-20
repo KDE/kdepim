@@ -27,7 +27,7 @@ class EntityCollectionOrderProxyModel : public Akonadi::EntityOrderProxyModel
 {
   Q_OBJECT
   public:
-    EntityCollectionOrderProxyModel( QObject *parent = 0 );
+    explicit EntityCollectionOrderProxyModel( QObject *parent = 0 );
 
     virtual ~EntityCollectionOrderProxyModel();
 

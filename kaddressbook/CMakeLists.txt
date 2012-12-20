@@ -56,6 +56,7 @@ set(kaddressbook_xxport_SRCS
 )
 
 set(kaddressbook_LIB_SRCS
+  startup.cpp
   aboutdata.cpp
   contactfields.cpp
   contactselectiondialog.cpp
@@ -89,6 +90,7 @@ kde4_add_kcfg_files(kaddressbook_LIB_SRCS settings.kcfgc)
 kde4_add_library(kaddressbookprivate ${LIBRARY_TYPE} ${kaddressbook_LIB_SRCS})
 target_link_libraries(kaddressbookprivate
   kdepim
+  pimcommon
   ${KDE4_KDEUI_LIBS}
   ${KDEPIMLIBS_AKONADI_LIBS}
   ${KDEPIMLIBS_KABC_LIBS}

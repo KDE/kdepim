@@ -25,7 +25,6 @@
 #include <kjob.h>
 
 namespace Akonadi {
-class Item;
 }
 
 namespace KPIM {

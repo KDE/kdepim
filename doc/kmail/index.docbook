@@ -24,7 +24,7 @@
   <!ENTITY smime "<acronym>S/MIME</acronym>">
   <!ENTITY kolab "<acronym>Kolab</acronym>">
 ]>
-<book lang="&language;">
+<book id="kmail" lang="&language;">
 <bookinfo>
 <title>The &kmail; Handbook</title>
 

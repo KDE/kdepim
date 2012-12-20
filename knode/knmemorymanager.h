@@ -44,7 +44,7 @@ class KNMemoryManager {
     /** Article cache item. */
     class ArticleItem {
     public:
-      ArticleItem( KNArticle::Ptr a ) { art=a; sync(); }
+      explicit ArticleItem( KNArticle::Ptr a ) { art=a; sync(); }
       ~ArticleItem()            {}
       void sync();
 

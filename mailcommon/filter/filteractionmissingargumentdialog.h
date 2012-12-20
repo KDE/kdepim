@@ -145,6 +145,9 @@ class FilterActionMissingTagDialog : public KDialog
     ~FilterActionMissingTagDialog();
     QString selectedTag() const;
 
+  private Q_SLOTS:
+    void slotAddTag();
+
   private:
     QListWidget *mTagList;
 };

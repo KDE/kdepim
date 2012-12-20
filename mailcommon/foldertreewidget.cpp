@@ -20,9 +20,11 @@
 #include "entitycollectionorderproxymodel.h"
 #include "foldertreeview.h"
 #include "foldertreewidgetproxymodel.h"
-#include "imapaclattribute.h"
 #include "mailkernel.h"
 #include "mailutil.h"
+
+#include "pimcommon/imapaclattribute.h"
+#include "pimcommon/pimutil.h"
 
 #include <akonadi_next/quotacolorproxymodel.h>
 
@@ -87,7 +89,7 @@ FolderTreeWidget::FolderTreeWidget(
   FolderTreeWidgetProxyModel::FolderTreeWidgetProxyModelOptions optReadableProxy )
   : QWidget( parent ), d( new FolderTreeWidgetPrivate() )
 {
-  Akonadi::AttributeFactory::registerAttribute<MailCommon::ImapAclAttribute>();
+  Akonadi::AttributeFactory::registerAttribute<PimCommon::ImapAclAttribute>();
 
   d->folderTreeView = new FolderTreeView( xmlGuiClient, this, options & ShowUnreadCount );
   d->folderTreeView->showStatisticAnimation( options & ShowCollectionStatisticAnimation );
@@ -333,8 +335,8 @@ void FolderTreeWidget::readQuotaConfig()
   if ( !MessageCore::GlobalSettings::self()->useDefaultColors() ) {
     KConfigGroup readerConfig( KernelIf->config(), "Reader" );
     quotaColor = readerConfig.readEntry( "CloseToQuotaColor", quotaColor );
-    threshold = SettingsIf->closeToQuotaThreshold();
   }
+  threshold = SettingsIf->closeToQuotaThreshold();
   quotaWarningParameters( quotaColor, threshold );
 }
 

@@ -52,6 +52,7 @@ using namespace MailCommon;
 FilterLogDialog::FilterLogDialog( QWidget * parent )
   : KDialog( parent ), mIsInitialized( false )
 {
+  KGlobal::locale()->insertCatalog(QLatin1String("akonadi_mailfilter_agent"));
   setCaption( i18n( "Filter Log Viewer" ) );
   setButtons( User1|User2|Close );
   setObjectName( "FilterLogDlg" );
@@ -190,6 +191,21 @@ void FilterLogDialog::readConfig()
     FilterLog::instance()->setContentTypeEnabled( FilterLog::AppliedAction,isLogAppliedAction ); 
   if ( FilterLog::instance()->maxLogSize() != maxLogSize )
     FilterLog::instance()->setMaxLogSize( maxLogSize );  
+
+  KConfigGroup geometryGroup( config, "Geometry" );
+  const QSize size = geometryGroup.readEntry( "filterLogSize", QSize() );
+  if ( size != QSize() ) {
+    resize( size );
+  } else {
+    adjustSize();
+  }
+}
+
+FilterLogDialog::~FilterLogDialog()
+{
+  KConfigGroup myGroup( KGlobal::config(), "Geometry" );
+  myGroup.writeEntry( "filterLogSize", size() );
+  myGroup.sync();
 }
 
 void FilterLogDialog::writeConfig()

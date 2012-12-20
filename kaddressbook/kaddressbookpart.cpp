@@ -21,6 +21,7 @@
 #include "kaddressbookpart.h"
 #include "aboutdata.h"
 #include "mainwidget.h"
+#include "startup.h"
 
 #include <KComponentData>
 #include <KDebug>
@@ -41,6 +42,8 @@ KAddressBookPart::KAddressBookPart( QWidget *parentWidget, QObject *parent,
   : KParts::ReadOnlyPart( parent )
 {
   setComponentData( KAddressBookFactory::componentData() );
+
+  KAddressBook::insertLibraryCatalogues();
 
   KIconLoader::global()->addAppDir( "kaddressbook" );
   // create a canvas to insert our widget

@@ -25,6 +25,7 @@ ArchiveMailInfo::ArchiveMailInfo()
   , mArchiveType( MailCommon::BackupJob::Zip )
   , mArchiveUnit( ArchiveMailInfo::ArchiveDays ) 
   , mSaveCollectionId(-1) 
+  , mMaximumArchiveCount(0)
   , mSaveSubCollection(false)
 {
 }
@@ -35,6 +36,7 @@ ArchiveMailInfo::ArchiveMailInfo(const KConfigGroup& config)
   , mArchiveType( MailCommon::BackupJob::Zip ) 
   , mArchiveUnit( ArchiveMailInfo::ArchiveDays ) 
   , mSaveCollectionId(-1)
+  , mMaximumArchiveCount(0)
   , mSaveSubCollection(false)
 {
   readConfig(config);
@@ -45,26 +47,53 @@ ArchiveMailInfo::~ArchiveMailInfo()
 {
 }
 
-KUrl ArchiveMailInfo::realUrl(const QString& foldername) const
+QString normalizeFolderName(const QString& folderName)
 {
-  const int numExtensions = 4;
-  // The extensions here are also sorted, like the enum order of BackupJob::ArchiveType
-  const char *extensions[numExtensions] = { ".zip", ".tar", ".tar.bz2", ".tar.gz" };
-  QString adaptFolderName(foldername);
+  QString adaptFolderName(folderName);
   adaptFolderName.replace(QLatin1Char('/'),QLatin1Char('_'));
+  return adaptFolderName;
+}
+
+QString ArchiveMailInfo::dirArchive() const
+{
   const QDir dir(url().path());
   QString dirPath = url().path();
   if(!dir.exists()) {
     dirPath = QDir::homePath();
     qDebug()<<" Path doesn't exist"<<dir.path();
   }
+  return dirPath;
+}
+
+KUrl ArchiveMailInfo::realUrl(const QString& folderName) const
+{
+  const int numExtensions = 4;
+  // The extensions here are also sorted, like the enum order of BackupJob::ArchiveType
+  const char *extensions[numExtensions] = { ".zip", ".tar", ".tar.bz2", ".tar.gz" };
+  QString dirPath = dirArchive();
+
   const QString path = dirPath + QLatin1Char( '/' ) + i18nc( "Start of the filename for a mail archive file" , "Archive" )
-      + QLatin1Char( '_' ) + adaptFolderName + QLatin1Char( '_' )
+      + QLatin1Char( '_' ) + normalizeFolderName(folderName) + QLatin1Char( '_' )
       + QDate::currentDate().toString( Qt::ISODate ) + extensions[mArchiveType];
   KUrl real(path);
   return real;
 }
 
+QStringList ArchiveMailInfo::listOfArchive(const QString& folderName) const
+{
+  const int numExtensions = 4;
+  // The extensions here are also sorted, like the enum order of BackupJob::ArchiveType
+  const char *extensions[numExtensions] = { ".zip", ".tar", ".tar.bz2", ".tar.gz" };
+  const QString dirPath = dirArchive();
+
+  QDir dir(dirPath);
+
+  QStringList nameFilters;
+  nameFilters << i18nc( "Start of the filename for a mail archive file" , "Archive" ) + QLatin1Char( '_' ) +
+                 normalizeFolderName(folderName) + QLatin1Char( '_' ) + QLatin1String("*") + extensions[mArchiveType];
+  const QStringList lst = dir.entryList ( nameFilters, QDir::Files|QDir::NoDotAndDotDot, QDir::Time|QDir::Reversed );
+  return lst;
+}
 
 bool ArchiveMailInfo::isEmpty() const
 {
@@ -121,6 +150,7 @@ void ArchiveMailInfo::readConfig(const KConfigGroup& config)
   mArchiveUnit = static_cast<ArchiveUnit>( config.readEntry( "archiveUnit", ( int )ArchiveDays ) );
   Akonadi::Collection::Id tId = config.readEntry("saveCollectionId",mSaveCollectionId);
   mArchiveAge = config.readEntry("archiveAge",1);
+  mMaximumArchiveCount = config.readEntry("maximumArchiveCount",0);
   if ( tId >= 0 ) {
     mSaveCollectionId = tId;
   }
@@ -135,6 +165,7 @@ void ArchiveMailInfo::writeConfig(KConfigGroup & config )
   config.writeEntry("archiveUnit", ( int )mArchiveUnit );
   config.writeEntry("saveCollectionId",mSaveCollectionId);
   config.writeEntry("archiveAge",mArchiveAge);
+  config.writeEntry("maximumArchiveCount",mMaximumArchiveCount);
   config.sync();
 }
 
@@ -166,4 +197,14 @@ void ArchiveMailInfo::setSaveCollectionId(Akonadi::Collection::Id collectionId)
 Akonadi::Collection::Id ArchiveMailInfo::saveCollectionId() const
 {
   return mSaveCollectionId;
+}
+
+int ArchiveMailInfo::maximumArchiveCount() const
+{
+  return mMaximumArchiveCount;
+}
+
+void ArchiveMailInfo::setMaximumArchiveCount( int max )
+{
+  mMaximumArchiveCount = max;
 }

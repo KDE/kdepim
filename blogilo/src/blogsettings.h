@@ -33,7 +33,7 @@ class BlogSettings : public QWidget, public Ui::SettingsBlogsBase
 {
     Q_OBJECT
 public:
-    BlogSettings( QWidget *parent = 0 );
+    explicit BlogSettings( QWidget *parent = 0 );
     ~BlogSettings();
 
 signals:

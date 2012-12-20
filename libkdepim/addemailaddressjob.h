@@ -25,7 +25,7 @@
 #include <kjob.h>
 
 namespace Akonadi {
-class Item;
+  class Item;
 }
 
 namespace KPIM {
@@ -69,11 +69,12 @@ class KDEPIM_EXPORT AddEmailAddressJob : public KJob
   private:
     //@cond PRIVATE
     class Private;
-    Private* const d;
+    Private *const d;
 
     Q_PRIVATE_SLOT( d, void slotSearchDone( KJob* ) )
     Q_PRIVATE_SLOT( d, void slotAddContactDone( KJob* ) )
     Q_PRIVATE_SLOT( d, void slotCollectionsFetched( KJob* ) )
+    Q_PRIVATE_SLOT( d, void slotResourceCreationDone( KJob* ) )
     //@endcond
 };
 

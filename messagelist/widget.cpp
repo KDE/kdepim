@@ -93,15 +93,6 @@ Widget::~Widget()
 void Widget::setXmlGuiClient( KXMLGUIClient *xmlGuiClient )
 {
   d->mXmlGuiClient = xmlGuiClient;
-
-  if ( d->mXmlGuiClient ) {
-    KToggleAction * const showHideQuicksearch = new KToggleAction( i18n( "Show Quick Search Bar" ), this );
-    showHideQuicksearch->setShortcut( Qt::CTRL + Qt::Key_H );
-    showHideQuicksearch->setChecked( Core::Settings::showQuickSearch() );
-
-    d->mXmlGuiClient->actionCollection()->addAction( QLatin1String( "show_quick_search" ), showHideQuicksearch );
-    connect( showHideQuicksearch, SIGNAL(triggered(bool)), this, SLOT(changeQuicksearchVisibility()) );
-  }
 }
 
 bool Widget::canAcceptDrag( const QDropEvent * e )
@@ -170,6 +161,11 @@ bool Widget::selectFirstMessageItem( MessageList::Core::MessageTypeFilter messag
   return view()->selectFirstMessageItem( messageTypeFilter, centerItem );
 }
 
+bool Widget::selectLastMessageItem( Core::MessageTypeFilter messageTypeFilter, bool centerItem )
+{
+  return view()->selectLastMessageItem( messageTypeFilter, centerItem );
+}
+
 void Widget::selectAll()
 {
   view()->setAllGroupsExpanded( true );
@@ -208,10 +204,10 @@ void Widget::fillMessageTagCombo( KComboBox * combo )
   foreach( const Nepomuk2::Tag &nepomukTag, Nepomuk2::Tag::allTags() ) {
     const QString id = nepomukTag.uri().toString();
     if(tagSelectedLst.contains(id)) {
-      QString iconName = QLatin1String( "mail-tagged" );
+      QString iconName = nepomukTag.genericIcon(); 
+      if(iconName.isEmpty()) 
+        iconName = QLatin1String( "mail-tagged" ); 
       const QString label = nepomukTag.label();
-      if ( !nepomukTag.symbols().isEmpty() )
-        iconName = nepomukTag.symbols().first();
       const QString id = nepomukTag.uri().toString();
       combo->addItem( SmallIcon( iconName ), label, QVariant( id ) );
     }
@@ -677,7 +673,6 @@ MessageList::Core::MessageItemSetReference Widget::selectionAsPersistentSet( boo
 
 MessageList::Core::MessageItemSetReference Widget::currentThreadAsPersistentSet() const
 {
-  QList<Item> lstMiPtr;
   QList<Core::MessageItem *> lstMi = view()->currentThreadAsMessageItemList();
   if ( lstMi.isEmpty() ) {
     return -1;

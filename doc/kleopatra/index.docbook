@@ -33,9 +33,9 @@
   <!ENTITY ca "<acronym>CA</acronym>">
 ]>
 
-<book lang="&language;">
+<book id="kleopatra" lang="&language;">
 
-<bookinfo>
+<bookinfo id="kleopatrainfo">
 <title>The &kleopatra; Handbook</title>
 
 <authorgroup>

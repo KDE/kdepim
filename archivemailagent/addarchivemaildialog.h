@@ -27,6 +27,7 @@ class KComboBox;
 class QCheckBox;
 class KUrlRequester;
 class QSpinBox;
+class KIntSpinBox;
 
 namespace MailCommon {
   class FolderRequester;
@@ -55,6 +56,11 @@ public:
 
   ArchiveMailInfo *info();
 
+  void setMaximumArchiveCount(int);
+
+  int maximumArchiveCount() const;
+
+
 private Q_SLOTS:
   void slotFolderChanged(const Akonadi::Collection&);
   void slotUpdateOkButton();
@@ -67,6 +73,8 @@ private:
   QCheckBox *mRecursiveCheckBox;
   KUrlRequester *mPath;
   QSpinBox *mDays;
+  KIntSpinBox *mMaximumArchive;
+
   ArchiveMailInfo *mInfo;
 };
 

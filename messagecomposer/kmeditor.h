@@ -27,7 +27,9 @@
 
 #include <KPIMTextEdit/TextEdit>
 
-class KMComposerAutoCorrection;
+namespace MessageComposer {
+  class ComposerAutoCorrection;
+}
 
 namespace KPIMIdentities {
   class Signature;
@@ -178,9 +180,14 @@ class MESSAGECOMPOSER_EXPORT KMeditor : public KPIMTextEdit::TextEdit
      */
     void fillComposerTextPart( Message::TextPart* textPart ) const;
 
-    KMComposerAutoCorrection* autocorrection() const;
+    MessageComposer::ComposerAutoCorrection* autocorrection() const;
 
-    void setAutocorrection(KMComposerAutoCorrection* autocorrect);
+    void setAutocorrection(MessageComposer::ComposerAutoCorrection* autocorrect);
+
+    void setAutocorrectionLanguage(const QString& lang);
+
+    void forcePlainTextMarkup(bool force);
+
   public Q_SLOTS:
 
     void slotAddQuotes();
@@ -188,7 +195,7 @@ class MESSAGECOMPOSER_EXPORT KMeditor : public KPIMTextEdit::TextEdit
     void slotRemoveQuotes();
     void slotPasteWithoutFormatting();
     void slotChangeInsertMode();
-
+    void insertPlainTextImplementation();
   Q_SIGNALS:
 
     /**

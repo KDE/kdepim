@@ -23,7 +23,7 @@ using KPIM::RecentAddresses;
 #include "mailcommon/pop3settings.h"
 #include "mailcommon/foldertreeview.h"
 #include "mailcommon/filter/kmfilterdialog.h"
-
+#include "pimcommon/pimutil.h"
 
 // kdepim includes
 #include "kdepim-version.h"
@@ -50,7 +50,7 @@ using KMail::MailServiceImpl;
 #include "messagecomposersettings.h"
 #include "messagecomposer/messagehelper.h"
 #include "messagecomposer/messagecomposersettings.h"
-#include "messagecomposer/autocorrection/kmcomposerautocorrection.h"
+#include "messagecomposer/autocorrection/composerautocorrection.h"
 
 #include "templateparser/templateparser.h"
 #include "templateparser/globalsettings_base.h"
@@ -121,7 +121,7 @@ static bool s_askingToGoOnline = false;
 KMKernel::KMKernel (QObject *parent, const char *name) :
   QObject(parent),
   mIdentityManager(0), mConfigureDialog(0), mMailService(0),
-  mSystemNetworkStatus ( Solid::Networking::status() )
+  mSystemNetworkStatus ( Solid::Networking::status() ), mSystemTray(0)
 {
   Akonadi::AttributeFactory::registerAttribute<Akonadi::SearchDescriptionAttribute>();
   QDBusConnection::sessionBus().registerService("org.kde.kmail");
@@ -131,7 +131,6 @@ KMKernel::KMKernel (QObject *parent, const char *name) :
   setObjectName( name );
   mySelf = this;
   the_startingUp = true;
-  closed_by_user = true;
   the_firstInstance = true;
 
   the_undoStack = 0;
@@ -149,7 +148,7 @@ KMKernel::KMKernel (QObject *parent, const char *name) :
   mJobScheduler = new JobScheduler( this );
   mXmlGuiInstance = KComponentData();
 
-  mAutoCorrection = new KMComposerAutoCorrection();
+  mAutoCorrection = new MessageComposer::ComposerAutoCorrection();
   KMime::setFallbackCharEncoding( MessageCore::GlobalSettings::self()->fallbackCharacterEncoding() );
   KMime::setUseOutlookAttachmentEncoding( MessageComposer::MessageComposerSettings::self()->outlookCompatibleAttachments() );
 
@@ -217,7 +216,7 @@ KMKernel::KMKernel (QObject *parent, const char *name) :
 
   connect ( Solid::Networking::notifier(), SIGNAL(statusChanged(Solid::Networking::Status)),
             this, SLOT(slotSystemNetworkStatusChanged(Solid::Networking::Status)) );
-  
+
   connect( KPIM::ProgressManager::instance(), SIGNAL(progressItemCompleted(KPIM::ProgressItem*)),
            this, SLOT(slotProgressItemCompletedOrCanceled(KPIM::ProgressItem*)) );
   connect( KPIM::ProgressManager::instance(), SIGNAL(progressItemCanceled(KPIM::ProgressItem*)),
@@ -232,6 +231,8 @@ KMKernel::~KMKernel ()
 {
   delete mMailService;
   mMailService = 0;
+
+  mSystemTray = 0;
 
   stopAgentInstance();
   slotSyncConfig();
@@ -568,7 +569,7 @@ void KMKernel::openReader( bool onlyCheck )
 
   bool activate;
   if (ktmw) {
-    mWin = (KMMainWin *) ktmw;
+    mWin = static_cast<KMMainWin *>(ktmw);
     activate = !onlyCheck; // existing window: only activate if not --check
     if ( activate )
        mWin->show();
@@ -852,10 +853,12 @@ QDBusObjectPath KMKernel::newMessage( const QString &to,
 
   TemplateParser::TemplateParser parser( msg, TemplateParser::TemplateParser::NewMessage );
   parser.setIdentityManager( identityManager() );
-  parser.process( msg, folder ? folder->collection() : Akonadi::Collection() );
+  Akonadi::Collection col = folder ? folder->collection() : Akonadi::Collection();
+  parser.process( msg, col );
 
   KMail::Composer *win = makeComposer( msg, false, false, KMail::Composer::New, id );
 
+  win->setCollectionForNewMessage(col);
   //Add the attachment if we have one
   if ( !attachURL.isEmpty() && attachURL.isValid() ) {
     win->addAttachment( attachURL, "" );
@@ -939,7 +942,7 @@ void KMKernel::stopNetworkJobs()
     return;
 
   setAccountStatus(false);
-  
+
   GlobalSettings::setNetworkState( GlobalSettings::EnumNetworkState::Offline );
   BroadcastStatus::instance()->setStatusMsg( i18n("KMail is set to be offline; all network jobs are suspended"));
   emit onlineStatusChanged( (GlobalSettings::EnumNetworkState::type)GlobalSettings::networkState() );
@@ -950,7 +953,7 @@ void KMKernel::setAccountStatus(bool goOnline)
 {
   const Akonadi::AgentInstance::List lst = MailCommon::Util::agentInstances(false);
   foreach ( Akonadi::AgentInstance type, lst ) {
-    const QString identifier( type.identifier() ); 
+    const QString identifier( type.identifier() );
     if ( identifier.contains( IMAP_RESOURCE_IDENTIFIER ) ||
          identifier.contains( POP3_RESOURCE_IDENTIFIER ) ||
          identifier.contains( MAILDISPATCHER_RESOURCE_IDENTIFIER ) ) {
@@ -1438,34 +1441,15 @@ QString KMKernel::localDataPath()
 
 bool KMKernel::haveSystemTrayApplet() const
 {
-  return !systemTrayApplets.isEmpty();
+  return (mSystemTray!=0);
 }
 
 void KMKernel::updateSystemTray()
 {
-  if ( haveSystemTrayApplet() ) {
-    const int nbSystemTray = systemTrayApplets.count();
-    for (int i = 0; i < nbSystemTray; ++i) {
-      systemTrayApplets.at( i )->updateSystemTray();
-    }
+  if ( mSystemTray ) {
+    mSystemTray->updateSystemTray();
   }
 }
-
-bool KMKernel::registerSystemTrayApplet( KMail::KMSystemTray* applet )
-{
-  if ( !systemTrayApplets.contains( applet ) ) {
-    systemTrayApplets.append( applet );
-    return true;
-  }
-  else
-    return false;
-}
-
-bool KMKernel::unregisterSystemTrayApplet( KMail::KMSystemTray* applet )
-{
-  return systemTrayApplets.removeAll( applet ) > 0;
-}
-
 
 KPIMIdentities::IdentityManager * KMKernel::identityManager() {
   if ( !mIdentityManager ) {
@@ -1625,18 +1609,15 @@ bool KMKernel::canQueryClose()
   if ( KMMainWidget::mainWidgetList() &&
        KMMainWidget::mainWidgetList()->count() > 1 )
     return true;
-  KMMainWidget *widget = getKMMainWidget();
-  if ( !widget )
-    return true;
-  KMail::KMSystemTray* systray = widget->systray();
-  if ( !systray || GlobalSettings::closeDespiteSystemTray() )
+  if ( !mSystemTray || GlobalSettings::closeDespiteSystemTray() )
       return true;
-  if ( systray->mode() == GlobalSettings::EnumSystemTrayPolicy::ShowAlways ) {
-    systray->hideKMail();
+  if ( mSystemTray->mode() == GlobalSettings::EnumSystemTrayPolicy::ShowAlways ) {
+    mSystemTray->hideKMail();
     return false;
-  } else if ( ( systray->mode() == GlobalSettings::EnumSystemTrayPolicy::ShowOnUnread ) && ( systray->hasUnreadMail() )) {
-    systray->setStatus( KStatusNotifierItem::Active );
-    systray->hideKMail();
+  } else if ( ( mSystemTray->mode() == GlobalSettings::EnumSystemTrayPolicy::ShowOnUnread ) ) {
+    if( mSystemTray->hasUnreadMail() )
+      mSystemTray->setStatus( KStatusNotifierItem::Active );
+    mSystemTray->hideKMail();
     return false;
   }
   return true;
@@ -1717,7 +1698,7 @@ void KMKernel::itemDispatchStarted()
   // Watch progress of the MDA.
   KPIM::ProgressManager::createProgressItem( 0,
       MailTransport::DispatcherInterface().dispatcherInstance(),
-      QString::fromAscii( "Sender" ),
+      QString::fromLatin1( "Sender" ),
       i18n( "Sending messages" ),
       i18n( "Initiating sending process..." ),
       true );
@@ -1725,6 +1706,15 @@ void KMKernel::itemDispatchStarted()
 
 void KMKernel::instanceStatusChanged( Akonadi::AgentInstance instance )
 {
+  if (instance.identifier() == QLatin1String( "akonadi_mailfilter_agent" ) ) {
+     // Creating a progress item twice is ok, it will simply return the already existing
+      // item
+      KPIM::ProgressItem *progress =  KPIM::ProgressManager::createProgressItem( 0, instance,
+                                        instance.identifier(), instance.name(), instance.statusMessage(),
+                                        false, true );
+      progress->setProperty( "AgentIdentifier", instance.identifier() );
+      return;
+  }
   if ( MailCommon::Util::agentInstances(true).contains( instance ) ) {
     if ( instance.status() == Akonadi::AgentInstance::Running ) {
 
@@ -1743,7 +1733,7 @@ void KMKernel::instanceStatusChanged( Akonadi::AgentInstance instance )
           useCrypto = mResourceCryptoSettingCache.value(identifier);
       } else {
         if ( identifier.contains( IMAP_RESOURCE_IDENTIFIER ) ) {
-            OrgKdeAkonadiImapSettingsInterface *iface = MailCommon::Util::createImapSettingsInterface( identifier );
+            OrgKdeAkonadiImapSettingsInterface *iface = PimCommon::Util::createImapSettingsInterface( identifier );
             if ( iface->isValid() ) {
                 const QString imapSafety = iface->safety();
                 useCrypto = ( imapSafety == QLatin1String( "SSL" ) || imapSafety == QLatin1String( "STARTTLS" ) );
@@ -1760,7 +1750,7 @@ void KMKernel::instanceStatusChanged( Akonadi::AgentInstance instance )
         }
      }
 
-      
+
       // Creating a progress item twice is ok, it will simply return the already existing
       // item
       KPIM::ProgressItem *progress =  KPIM::ProgressManager::createProgressItem( 0, instance,
@@ -1910,7 +1900,7 @@ void KMKernel::checkFolderFromResources( const Akonadi::Collection::List& collec
     if ( type.status() == Akonadi::AgentInstance::Broken )
       continue;
     if ( type.identifier().contains( IMAP_RESOURCE_IDENTIFIER ) ) {
-      OrgKdeAkonadiImapSettingsInterface *iface = MailCommon::Util::createImapSettingsInterface( type.identifier() );
+      OrgKdeAkonadiImapSettingsInterface *iface = PimCommon::Util::createImapSettingsInterface( type.identifier() );
       if ( iface->isValid() ) {
         foreach( const Akonadi::Collection& collection, collectionList ) {
           const Akonadi::Collection::Id collectionId = collection.id();
@@ -1918,7 +1908,7 @@ void KMKernel::checkFolderFromResources( const Akonadi::Collection::List& collec
             //Use default trash
             iface->setTrashCollection( CommonKernel->trashCollectionFolder().id() );
             iface->writeConfig();
-            break; 
+            break;
           }
         }
       }
@@ -2044,9 +2034,32 @@ void KMKernel::makeResourceOnline(MessageViewer::Viewer::ResourceOnlineMode mode
   }
 }
 
-KMComposerAutoCorrection* KMKernel::composerAutoCorrection()
+MessageComposer::ComposerAutoCorrection* KMKernel::composerAutoCorrection()
 {
   return mAutoCorrection;
 }
+
+void KMKernel::toggleSystemTray()
+{
+  KMMainWidget *widget = getKMMainWidget();
+  if ( widget  ) {
+    if ( !mSystemTray && GlobalSettings::self()->systemTrayEnabled() ) {
+      mSystemTray = new KMail::KMSystemTray(widget);
+    } else if ( mSystemTray && !GlobalSettings::self()->systemTrayEnabled() ) {
+      // Get rid of system tray on user's request
+      kDebug() << "deleting systray";
+      delete mSystemTray;
+      mSystemTray = 0;
+    }
+
+    // Set mode of systemtray. If mode has changed, tray will handle this.
+    if ( mSystemTray ) {
+      mSystemTray->setMode( GlobalSettings::self()->systemTrayPolicy() );
+      mSystemTray->setShowUnread( GlobalSettings::self()->systemTrayShowUnread() );
+    }
+
+  }
+}
+
 
 #include "kmkernel.moc"

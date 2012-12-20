@@ -40,7 +40,7 @@ class KNMainWindow : public KXmlGuiWindow
   Q_OBJECT
 
 public:
-  KNMainWindow( QWidget* parent = 0 );
+  explicit KNMainWindow( QWidget* parent = 0 );
   ~KNMainWindow();
   void openURL( const KUrl& );
   KNMainWidget *mainWidget() { return m_mainWidget; }

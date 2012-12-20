@@ -696,7 +696,14 @@ void SearchRuleString::addQueryTerms( Nepomuk2::Query::GroupTerm &groupTerm ) co
   if ( kasciistricmp( field(), "<tag>" ) == 0 ) {
     const Nepomuk2::Tag tag( contents() );
     if ( tag.exists() ) {
-      addAndNegateTerm(Nepomuk2::Query::ComparisonTerm(Soprano::Vocabulary::NAO::hasTag(),Nepomuk2::Query::ResourceTerm( tag ), Nepomuk2::Query::ComparisonTerm::Equal ),groupTerm );
+       addAndNegateTerm(Nepomuk2::Query::ComparisonTerm(Soprano::Vocabulary::NAO::hasTag(),Nepomuk2::Query::ResourceTerm( tag ), Nepomuk2::Query::ComparisonTerm::Equal ),groupTerm );
+    } else {
+      foreach ( const Nepomuk2::Tag &tag, Nepomuk2::Tag::allTags() ) {
+        if(tag.label() == contents()) {
+            addAndNegateTerm(Nepomuk2::Query::ComparisonTerm(Soprano::Vocabulary::NAO::hasTag(),Nepomuk2::Query::ResourceTerm( tag ), Nepomuk2::Query::ComparisonTerm::Equal ),groupTerm );
+            break;
+        }
+      }
     }
   }
 
@@ -1206,39 +1213,55 @@ void SearchRuleStatus::addTagTerm( Nepomuk2::Query::GroupTerm &groupTerm,
 {
   // TODO handle function() == NOT
   const Nepomuk2::Tag tag( tagId );
-  addAndNegateTerm(
-    Nepomuk2::Query::ComparisonTerm(
-      Soprano::Vocabulary::NAO::hasTag(),
-      Nepomuk2::Query::ResourceTerm( tag.uri() ),
-      Nepomuk2::Query::ComparisonTerm::Equal ),
-    groupTerm );
+  if(tag.exists()) {
+    addAndNegateTerm(
+      Nepomuk2::Query::ComparisonTerm(
+        Soprano::Vocabulary::NAO::hasTag(),
+        Nepomuk2::Query::ResourceTerm( tag.uri() ),
+        Nepomuk2::Query::ComparisonTerm::Equal ),
+      groupTerm );
+  }
 }
 
 void SearchRuleStatus::addQueryTerms( Nepomuk2::Query::GroupTerm &groupTerm ) const
 {
-  bool read = false;
-  if ( function() == FuncContains || function() == FuncEquals ) {
-    read = true;
-  }
-
-  if ( !mStatus.isRead() ) {
-    read = !read;
-  }
-
-  groupTerm.addSubTerm(
-    Nepomuk2::Query::ComparisonTerm(
-      Vocabulary::NMO::isRead(),
-      Nepomuk2::Query::LiteralTerm( read ),
-      Nepomuk2::Query::ComparisonTerm::Equal ) );
-
   if ( mStatus.isImportant() ) {
     addTagTerm( groupTerm, "important" );
-  }
-  if ( mStatus.isToAct() ) {
+  } else if ( mStatus.isToAct() ) {
     addTagTerm( groupTerm, "todo" );
-  }
-  if ( mStatus.isWatched() ) {
+  } else if ( mStatus.isWatched() ) {
     addTagTerm( groupTerm, "watched" );
+  } else if ( mStatus.isDeleted() ) {
+    addTagTerm( groupTerm, "deleted" );
+  } else if ( mStatus.isSpam() ) {
+    addTagTerm( groupTerm, "spam" );
+  } else if ( mStatus.isReplied() ) {
+    addTagTerm( groupTerm, "replied" );
+  } else if ( mStatus.isIgnored() ) {
+    addTagTerm( groupTerm, "ignored" );
+  } else if ( mStatus.isForwarded() ) {
+    addTagTerm( groupTerm, "forwarded" );
+  } else if ( mStatus.isSent() ) {
+    addTagTerm( groupTerm, "sent" );
+  } else if ( mStatus.isQueued() ) {
+    addTagTerm( groupTerm, "queued" );
+  } else if ( mStatus.isHam() ) {
+    addTagTerm( groupTerm, "ham" );
+  } else {
+      bool read = false;
+      if ( function() == FuncContains || function() == FuncEquals ) {
+        read = true;
+      }
+
+      if ( !mStatus.isRead() ) {
+        read = !read;
+      }
+      groupTerm.addSubTerm(
+        Nepomuk2::Query::ComparisonTerm(
+          Vocabulary::NMO::isRead(),
+          Nepomuk2::Query::LiteralTerm( read ),
+          Nepomuk2::Query::ComparisonTerm::Equal ) );
+
   }
 
   // TODO

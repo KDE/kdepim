@@ -20,14 +20,12 @@
 
 #include <QWebFrame>
 
-#if QT_VERSION >= 0x40800
 QString Q_GUI_EXPORT qTextAfterOffsetFromString( int offset, QAccessible2::BoundaryType boundaryType,
                                          int *startOffset, int *endOffset, const QString& text );
 QString Q_GUI_EXPORT qTextBeforeOffsetFromString( int offset, QAccessible2::BoundaryType boundaryType,
                                          int *startOffset, int *endOffset, const QString& text );
 QString Q_GUI_EXPORT qTextAtOffsetFromString( int offset, QAccessible2::BoundaryType boundaryType,
                                          int *startOffset, int *endOffset, const QString& text );
-#endif
 
 AccessibleMailWebView::AccessibleMailWebView( MessageViewer::MailWebView* widget ):
   QAccessibleWidgetEx( widget, QAccessible::Document )
@@ -43,11 +41,7 @@ int AccessibleMailWebView::characterCount()
 
 int AccessibleMailWebView::selectionCount()
 {
-#if QT_VERSION >= 0x40800
   return m_widget->hasSelection() ? 1 : 0;
-#else
-  return 0;
-#endif
 }
 
 void AccessibleMailWebView::addSelection( int startOffset, int endOffset )
@@ -56,10 +50,8 @@ void AccessibleMailWebView::addSelection( int startOffset, int endOffset )
 
 void AccessibleMailWebView::removeSelection( int selectionIndex )
 {
-#if QT_VERSION >= 0x40800
   if ( selectionIndex == 0 )
     m_widget->clearSelection();
-#endif
 }
 
 void AccessibleMailWebView::setSelection( int selectionIndex, int startOffset, int endOffset )
@@ -110,27 +102,15 @@ void AccessibleMailWebView::scrollToSubstring( int startIndex, int endIndex )
 
 QString AccessibleMailWebView::textAfterOffset( int offset, QAccessible2::BoundaryType boundaryType, int* startOffset, int* endOffset )
 {
-#if QT_VERSION >= 0x40800
   return qTextAfterOffsetFromString( offset, boundaryType, startOffset, endOffset, m_widget->page()->mainFrame()->toPlainText() );
-#else
-  return QString();
-#endif
 }
 
 QString AccessibleMailWebView::textBeforeOffset( int offset, QAccessible2::BoundaryType boundaryType, int* startOffset, int* endOffset )
 {
-#if QT_VERSION >= 0x40800
   return qTextBeforeOffsetFromString( offset, boundaryType, startOffset, endOffset, m_widget->page()->mainFrame()->toPlainText() );
-#else
-  return QString();
-#endif
 }
 
 QString AccessibleMailWebView::textAtOffset( int offset, QAccessible2::BoundaryType boundaryType, int* startOffset, int* endOffset )
 {
-#if QT_VERSION >= 0x40800
   return qTextAtOffsetFromString( offset, boundaryType, startOffset, endOffset, m_widget->page()->mainFrame()->toPlainText() );
-#else
-  return QString();
-#endif
 }

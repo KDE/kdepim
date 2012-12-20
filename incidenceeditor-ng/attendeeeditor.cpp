@@ -62,7 +62,7 @@ void AttendeeEditor::slotCalculateTotal()
       }
     }
   }
-  emit( countChanged( count ) );
+  emit countChanged( count );
   // We always want at least one empty line
   if ( empty == 0 ) {
     addData();

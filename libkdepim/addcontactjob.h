@@ -76,6 +76,8 @@ class KDEPIM_EXPORT AddContactJob : public KJob
      */
     virtual void start();
 
+    void showMessageBox(bool b);
+
   private:
     //@cond PRIVATE
     class Private;

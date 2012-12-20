@@ -41,7 +41,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTime : public IncidenceEditor
 {
   Q_OBJECT
   public:
-    IncidenceDateTime( Ui::EventOrTodoDesktop *ui );
+    explicit IncidenceDateTime( Ui::EventOrTodoDesktop *ui );
     ~IncidenceDateTime();
 
     virtual void load( const KCalCore::Incidence::Ptr &incidence );
@@ -70,7 +70,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTime : public IncidenceEditor
     bool startDateTimeEnabled() const;
     bool endDateTimeEnabled() const;
 
-    bool isValid() const;
+    /**reimp*/ bool isValid() const;
 
   signals:
     // used to indicate that the widgets were activated

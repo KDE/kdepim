@@ -28,6 +28,7 @@
 
 #include "tagselectdialog.h"
 #include "tag.h"
+#include "kmkernel.h"
 
 #include <KListWidgetSearchLine>
 
@@ -55,23 +56,25 @@ TagSelectDialog::TagSelectDialog( QWidget * parent, int numberOfSelectedMessages
   setMainWidget( mainWidget );
 
   mListTag = new QListWidget( this );
-  mListWidgetSearchLine = new KListWidgetSearchLine(this,mListTag);
-  mListWidgetSearchLine->setClickMessage(i18n("Search tag"));
-  mListWidgetSearchLine->setClearButtonShown(true);
+  KListWidgetSearchLine *listWidgetSearchLine = new KListWidgetSearchLine(this,mListTag);
+  listWidgetSearchLine->setClickMessage(i18n("Search tag"));
+  listWidgetSearchLine->setClearButtonShown(true);
 
-  mainLayout->addWidget(mListWidgetSearchLine);
+  mainLayout->addWidget(listWidgetSearchLine);
   mainLayout->addWidget( mListTag );
   
-  QList<Tag::Ptr> tagList;
+  QList<MailCommon::Tag::Ptr> tagList;
   foreach( const Nepomuk2::Tag &nepomukTag, Nepomuk2::Tag::allTags() ) {
-    tagList.append( Tag::fromNepomuk( nepomukTag ) );
+    tagList.append( MailCommon::Tag::fromNepomuk( nepomukTag ) );
   }
-  qSort( tagList.begin(), tagList.end(), KMail::Tag::compare );
+  qSort( tagList.begin(), tagList.end(), MailCommon::Tag::compare );
 
   Nepomuk2::Resource itemResource( selectedItem.url() );
 
-  foreach( const Tag::Ptr &tag, tagList ) {
-    QListWidgetItem *item = new QListWidgetItem( tag->tagName, mListTag );
+  foreach( const MailCommon::Tag::Ptr &tag, tagList ) {
+    if(tag->tagStatus)
+      continue;
+    QListWidgetItem *item = new QListWidgetItem(KIcon(tag->iconName), tag->tagName, mListTag );
     item->setFlags( Qt::ItemIsUserCheckable | Qt::ItemIsEnabled | Qt::ItemIsSelectable );
     item->setCheckState( Qt::Unchecked );
     mListTag->addItem( item );
@@ -83,11 +86,22 @@ TagSelectDialog::TagSelectDialog( QWidget * parent, int numberOfSelectedMessages
       item->setCheckState( Qt::Unchecked );
     }    
   }
+
+  KConfigGroup group( KMKernel::self()->config(), "TagSelectDialog" );
+  const QSize size = group.readEntry( "Size", QSize() );
+  if ( size.isValid() ) {
+    resize( size );
+  } else {
+    resize( 500, 300 );
+  }
+
 }
 
 TagSelectDialog::~TagSelectDialog()
 {
-  
+  KConfigGroup group( KMKernel::self()->config(), "TagSelectDialog" );
+  group.writeEntry( "Size", size() );
+
 }
 
 QList<QString> TagSelectDialog::selectedTag() const

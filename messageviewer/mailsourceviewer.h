@@ -38,7 +38,6 @@
 #include <KDialog>
 class QString;
 class QWidget;
-class QShowEvent;
 
 namespace MessageViewer {
 class FindBarSourceView;
@@ -62,16 +61,6 @@ protected:
   virtual void highlightBlock ( const QString & text );
 };
 
-class HTMLSourceHighlighter : public QSyntaxHighlighter
-{
-public:
-  HTMLSourceHighlighter( QTextDocument * textdocument )
-    : QSyntaxHighlighter( textdocument )
-  {}
-protected:
-  virtual void highlightBlock ( const QString & text );
-};
-
 class MailSourceViewTextBrowserWidget : public QWidget
 {
   Q_OBJECT
@@ -80,6 +69,7 @@ public:
 
   void setText( const QString& text );
   void setPlainText( const QString& text );
+  void setFixedFont();
   MessageViewer::MailSourceViewTextBrowser *textBrowser() const;
 private slots:
   void slotFind();
@@ -131,20 +121,19 @@ class MailSourceViewer : public KDialog
 {
 Q_OBJECT
 public:
-  MailSourceViewer( QWidget *parent = 0 );
+  explicit MailSourceViewer( QWidget *parent = 0 );
   ~MailSourceViewer();
 
   void setRawSource( const QString &source );
   void setDisplayedSource( const QString &source );
+  void setFixedFont();
 private:
-  KTabWidget *mTabWidget;
   MailSourceViewTextBrowserWidget *mRawBrowser;
   FindBarSourceView *mFindBar;
 #ifndef NDEBUG
+  KTabWidget *mTabWidget;
   MailSourceViewTextBrowserWidget *mHtmlBrowser;
-  HTMLSourceHighlighter *mHtmlSourceHighLighter;
 #endif
-  MailSourceHighlighter *mRawSourceHighLighter;
 };
 
 }

@@ -7,9 +7,9 @@
   <!ENTITY % English "INCLUDE">
 ]>
 
-<book lang="&language;">
+<book id="akregator" lang="&language;">
 
-<bookinfo>
+<bookinfo id="akregatorinfo">
 <title>The &akregator; Handbook</title>
 
 <authorgroup>
@@ -239,8 +239,6 @@ On pages with this RSS icon<inlinemediaobject>
 </mediaobject>
 </screenshot>
 </para>
-<note><para>For the integration into &konqueror; you need the &akregator; plugin
-from the &kde; Extragear module.</para></note>
 </sect1>
 
 <sect1 id="creating-folder">
@@ -322,7 +320,7 @@ dialog. The configuration dialog can be found in the menu under <menuchoice>
 <varlistentry>
 <term><guilabel>Use notifications for all feeds</guilabel></term>
 <listitem><para>Set global notifications for all feeds. This setting will
-override the individual notification value of each feed. When enabled, &akregator; will notify you of all new articles fetched in any feed. If you only want to enable notifications for some (but not all) feeds, leave this option disabled and enable notifications for the each specific feed using the individual feed properties dialog.</para>
+override the individual notification value of each feed. When enabled, &akregator; will notify you of all new articles fetched in any feed. If you only want to enable notifications for some (but not all) feeds, leave this option disabled and enable notifications for each specific feed using the individual feed properties dialog.</para>
 </listitem>
 </varlistentry>
 <varlistentry>
@@ -374,7 +372,7 @@ updating feeds. You can configure the &kde;-wide browser cache
 in &konqueror;'s configuration dialog.</para>
 <note><para>You should leave this option enabled whenever possible. Disabling
 this option leads to increased network traffic. The traffic caused by
-aggregators not using caching increases the costs for providers and may decrease the number of feeds are offered in future.</para></note>
+aggregators not using caching increases the costs for providers and may decrease the number of feeds that are offered in future.</para></note>
 </listitem>
 </varlistentry>
 </variablelist>
@@ -383,6 +381,9 @@ aggregators not using caching increases the costs for providers and may decrease
 </variablelist>
 
 </sect1>
+
+ <!--FIXME Share Services Tab missing-->
+ 
 <sect1 id="archive-tab">
 <title>Archive</title>
 <para>Archiving articles means storing the links of articles. Here you can limit the
@@ -973,6 +974,7 @@ in the mail.</para></listitem>
 in the mail.
 </para></listitem>
 </varlistentry>
+<!--FIXME Share Article missing-->
 </variablelist>
 
 </sect2>

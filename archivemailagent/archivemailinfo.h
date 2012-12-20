@@ -38,7 +38,7 @@ public:
     ArchiveMaxUnits
   };
 
-  KUrl realUrl(const QString &filename) const;
+  KUrl realUrl(const QString &folderName) const;
 
   bool isEmpty() const;
 
@@ -66,13 +66,20 @@ public:
   void setLastDateSaved( const QDate& date );
   QDate lastDateSaved() const;
 
+  int maximumArchiveCount() const;
+  void setMaximumArchiveCount( int max );
+
+  QStringList listOfArchive(const QString& foldername) const;
+
 private:
+  QString dirArchive() const;
   QDate mLastDateSaved;
   int mArchiveAge;
   MailCommon::BackupJob::ArchiveType mArchiveType;
   ArchiveUnit mArchiveUnit;
   Akonadi::Collection::Id mSaveCollectionId;
   KUrl mPath;
+  int mMaximumArchiveCount;
   bool mSaveSubCollection;
 };
 

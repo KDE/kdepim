@@ -22,6 +22,8 @@
 #include <messagelist/messagelist_export.h>
 #include <QString>
 #include <QColor>
+#include <KUrl>
+class KMenu;
 
 namespace MessageList
 {
@@ -40,7 +42,11 @@ namespace Util {
   MESSAGELIST_EXPORT QColor unreadDefaultMessageColor();
   MESSAGELIST_EXPORT QColor importantDefaultMessageColor();
   MESSAGELIST_EXPORT QColor todoDefaultMessageColor();
+  MESSAGELIST_EXPORT void fillViewMenu( KMenu * menu, QObject *receiver );
 
+  /// Returns the first few lines of the actual email text
+  /// This data is taken from Nepomuk, if available.
+  MESSAGELIST_EXPORT QString contentSummary( const KUrl& url );
 }
 }
 

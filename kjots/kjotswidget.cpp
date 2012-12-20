@@ -328,6 +328,10 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
 
   KStandardAction::pasteText( editor, SLOT(paste()), actionCollection );
 
+  KStandardAction::undo( editor, SLOT(undo()), actionCollection );
+  KStandardAction::redo( editor, SLOT(redo()), actionCollection );
+  KStandardAction::selectAll( editor, SLOT(selectAll()), actionCollection );
+
   action = actionCollection->addAction( "copyIntoTitle" );
   action->setText( i18n( "Copy &into Page Title" ) );
   action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_T ) );

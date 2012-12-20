@@ -37,7 +37,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDialog : public KDialog
   Q_OBJECT
 
   public:
-    explicit IncidenceDialog( QWidget *parent = 0, Qt::WFlags flags = 0 );
+    explicit IncidenceDialog( QWidget *parent = 0, Qt::WindowFlags flags = 0 );
     virtual ~IncidenceDialog();
 
     /**

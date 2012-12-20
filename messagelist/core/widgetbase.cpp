@@ -133,8 +133,8 @@ Widget::Widget( QWidget *pParent )
   setObjectName( QLatin1String( "messagelistwidget" ) );
 
   QGridLayout * g = new QGridLayout( this );
-  g->setMargin( 2 ); // use a smaller default
-  g->setSpacing( 2 );
+  g->setMargin( 0 );
+  g->setSpacing( 0 );
 
   d->mLockSearch = new QToolButton( this );
   d->mLockSearch->setCheckable( true );
@@ -185,6 +185,7 @@ Widget::Widget( QWidget *pParent )
 
 
   d->mView = new View( this );
+  d->mView->setFrameStyle( QFrame::NoFrame );
   d->mView->setSortOrder( &d->mSortOrder );
   d->mView->setObjectName( QLatin1String( "messagealistview" ) );
   g->addWidget( d->mView, 1, 0, 1, 6 );
@@ -216,34 +217,32 @@ Widget::~Widget()
   delete d;
 }
 
-void Widget::changeQuicksearchVisibility()
+void Widget::changeQuicksearchVisibility(bool show)
 {
   KLineEdit * const lineEdit = d->mSearchEdit;
   QWidget * const comboBox = d->mStatusFilterCombo;
   QWidget * const fullSearchButton = d->mOpenFullSearchButton;
-  if ( lineEdit ) {
-    const bool visible = lineEdit->isVisible() &&
-                         comboBox->isVisible() &&
-                         fullSearchButton->isVisible();
-    if ( visible ) {
-      //if we hide it we do not want to apply the filter,
-      //otherwise someone is maybe stuck with x new emails
-      //and cannot read it because of filter
-      lineEdit->clear();
+  if ( !show ) {
+    //if we hide it we do not want to apply the filter,
+    //otherwise someone is maybe stuck with x new emails
+    //and cannot read it because of filter
+    lineEdit->clear();
 
-      //we focus the message list if we hide the searchbar
-      d->mView->setFocus( Qt::OtherFocusReason );
-    }
-    else {
-      // on show: we focus the lineedit for fast filtering
-      lineEdit->setFocus( Qt::OtherFocusReason );
-    }
-    lineEdit->setVisible( !visible );
-    comboBox->setVisible( !visible );
-    fullSearchButton->setVisible( !visible );
-    d->mLockSearch->setVisible( !visible );
-    Settings::self()->setShowQuickSearch( !visible );
+    //we focus the message list if we hide the searchbar
+    d->mView->setFocus( Qt::OtherFocusReason );
   }
+  else {
+    // on show: we focus the lineedit for fast filtering
+    lineEdit->setFocus( Qt::OtherFocusReason );
+    if ( d->mFilter ) {
+      resetFilter();
+    }
+  }
+  lineEdit->setVisible( show );
+  comboBox->setVisible( show );
+  fullSearchButton->setVisible( show );
+  d->mLockSearch->setVisible( show );
+  Settings::self()->setShowQuickSearch( show );
 }
 
 void Widget::populateStatusFilterCombo()
@@ -418,7 +417,7 @@ void Widget::setStorageModel( StorageModel * storageModel, PreSelectionMode preS
           d->mSearchTimer = 0;
       }
 
-      d->mSearchEdit->setText( QString() );
+      d->mSearchEdit->clear();
 
       if ( d->mFilter ) {
           resetFilter();
@@ -460,7 +459,11 @@ void Widget::themeMenuAboutToShow()
   KMenu * menu = dynamic_cast< KMenu * >( sender() );
   if ( !menu )
     return;
+  themeMenuAboutToShow(menu);
+}
 
+void Widget::themeMenuAboutToShow(KMenu *menu)
+{
   menu->clear();
 
   menu->addTitle( i18n( "Theme" ) );
@@ -547,7 +550,11 @@ void Widget::aggregationMenuAboutToShow()
   KMenu * menu = dynamic_cast< KMenu * >( sender() );
   if ( !menu )
     return;
+  aggregationMenuAboutToShow(menu);
+}
 
+void Widget::aggregationMenuAboutToShow(KMenu *menu)
+{
   menu->clear();
 
   menu->addTitle( i18n( "Aggregation" ) );
@@ -628,7 +635,11 @@ void Widget::sortOrderMenuAboutToShow()
   KMenu * menu = dynamic_cast< KMenu * >( sender() );
   if ( !menu )
     return;
+  sortOrderMenuAboutToShow(menu);
+}
 
+void Widget::sortOrderMenuAboutToShow(KMenu *menu)
+{
   menu->clear();
 
   menu->addTitle( i18n( "Message Sort Order" ) );
@@ -1158,10 +1169,7 @@ void Widget::viewMessageStatusChangeRequest( MessageItem *msg, const Akonadi::Me
 
 void Widget::focusQuickSearch()
 {
-  if ( d->mSearchEdit )
-  {
-    d->mSearchEdit->setFocus();
-  }
+  d->mSearchEdit->setFocus();
 }
 
 bool Widget::isThreaded() const
@@ -1177,6 +1185,11 @@ bool Widget::selectionEmpty() const
 void Widget::setCurrentFolder( const Akonadi::Collection &collection )
 {
   d->mCurrentFolderUrl = collection.url( Akonadi::Collection::UrlShort );
+}
+
+bool Widget::searchEditHasFocus() const
+{
+  return d->mSearchEdit->hasFocus();
 }
 
 #include "widgetbase.moc"

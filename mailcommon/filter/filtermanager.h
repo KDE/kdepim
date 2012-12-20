@@ -28,6 +28,13 @@
 
 #include <QObject>
 
+namespace Nepomuk2 {
+class Resource;
+namespace Query {
+class Result;
+}
+}
+
 namespace MailCommon {
 
 class FilterActionDict;
@@ -88,10 +95,7 @@ class MAILCOMMON_EXPORT FilterManager : public QObject
      * Applies filter with the given @p identifier on the message @p item.
      * @return @c true on success, @c false otherwise.
      */
-    void filter( const Akonadi::Item &item, const QString &identifier ) const;
-
-    void filter( const qlonglong &id, const QString &identifier,
-                 SearchRule::RequiredPart requiredPart ) const;
+    void filter( const Akonadi::Item &item, const QString &identifier, const QString &resourceId ) const;
 
     /**
      * Process given message item by applying the filter rules one by
@@ -115,8 +119,6 @@ class MAILCOMMON_EXPORT FilterManager : public QObject
      * @param set Select the filter set to use.
      */
     void filter( const Akonadi::Item::List &messages, FilterSet set = Explicit ) const;
-
-    void filter( const QVector<qlonglong> &itemIds, FilterSet set = Explicit ) const;
 
     void filter( const Akonadi::Item::List &messages, SearchRule::RequiredPart requiredPart,
                  const QStringList &listFilters ) const;
@@ -158,14 +160,21 @@ class MAILCOMMON_EXPORT FilterManager : public QObject
      */
     void endUpdate();
 
+    QStringList tagList() const;
+
   private Q_SLOTS:
     void slotServerStateChanged(Akonadi::ServerManager::State);
-
+    void slotFinishedTagListing();
+    void slotNewTagEntries(const QList<Nepomuk2::Query::Result>&);
+    void slotReadConfig();
+    void updateTagList();
   Q_SIGNALS:
     /**
      * This signal is emitted whenever the filter list has been updated.
      */
     void filtersChanged();
+
+    void tagListingFinished();
 
   private:
     FilterManager();

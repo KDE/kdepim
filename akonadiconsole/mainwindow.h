@@ -22,6 +22,8 @@
 #ifndef AKONADICONSOLE_MAINWINDOW_H
 #define AKONADICONSOLE_MAINWINDOW_H
 
+#include "mainwidget.h"
+
 #include <KXmlGuiWindow>
 
 class MainWindow : public KXmlGuiWindow
@@ -30,9 +32,13 @@ class MainWindow : public KXmlGuiWindow
 
   public:
     explicit MainWindow( QWidget *parent = 0 );
+    ~MainWindow();
 
   protected:
     bool queryExit();
+
+  private:
+    MainWidget *mMain;
 };
 
 #endif

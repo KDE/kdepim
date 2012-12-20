@@ -43,7 +43,6 @@
 #include "expirejob.h"
 #include "foldercollection.h"
 #include "pop3settings.h"
-#include "imapsettings.h"
 #include "mailkernel.h"
 #include "filter/filteractionmissingargumentdialog.h"
 
@@ -90,14 +89,6 @@
 #include <KTemporaryFile>
 #include <KIO/JobUiDelegate>
 
-OrgKdeAkonadiImapSettingsInterface *MailCommon::Util::createImapSettingsInterface(
-  const QString &ident )
-{
-  return
-    new OrgKdeAkonadiImapSettingsInterface(
-      "org.freedesktop.Akonadi.Resource." + ident, "/Settings", QDBusConnection::sessionBus() );
-}
-
 OrgKdeAkonadiPOP3SettingsInterface *MailCommon::Util::createPop3SettingsInterface(
   const QString &ident )
 {
@@ -118,6 +109,14 @@ bool MailCommon::Util::isVirtualCollection( const QString &resource )
       resource == QLatin1String( "akonadi_nepomuktag_resource" ) ||
       resource == QLatin1String( "akonadi_search_resource" ) );
 }
+
+bool MailCommon::Util::isLocalCollection( const QString &resource )
+{
+  return resource.contains(QLatin1String("akonadi_mbox_resource")) ||
+         resource.contains(QLatin1String("akonadi_maildir_resource")) ||
+         resource.contains(QLatin1String("akonadi_mixedmaildir_resource"));
+}
+
 
 QString MailCommon::Util::fullCollectionPath( const Akonadi::Collection &collection )
 {
@@ -508,13 +507,13 @@ static QModelIndex indexBelow( QAbstractItemModel *model, const QModelIndex &cur
   return QModelIndex(); // nothing found -> end of tree
 }
 
-static QModelIndex lastChildOf( QAbstractItemModel *model, const QModelIndex &current )
+static QModelIndex lastChildOfModel( QAbstractItemModel *model, const QModelIndex &current )
 {
   if ( model->rowCount( current ) == 0 ) {
     return current;
   }
 
-  return lastChildOf( model, model->index( model->rowCount( current ) - 1, 0, current ) );
+  return lastChildOfModel( model, model->index( model->rowCount( current ) - 1, 0, current ) );
 }
 
 static QModelIndex indexAbove( QAbstractItemModel *model, const QModelIndex &current )
@@ -531,7 +530,7 @@ static QModelIndex indexAbove( QAbstractItemModel *model, const QModelIndex &cur
 
   // the item above us is the last child (or grandchild, or grandgrandchild... etc)
   // of our previous sibling
-  return lastChildOf( model, previousSibling );
+  return lastChildOfModel( model, previousSibling );
 }
 
 QModelIndex MailCommon::Util::nextUnreadCollection( QAbstractItemModel *model,

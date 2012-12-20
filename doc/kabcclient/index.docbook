@@ -10,9 +10,9 @@
 ]>
 <!-- The language must NOT be changed here. -->
 
-<book lang="&language;">
+<book id="kabcclient" lang="&language;">
 
-<bookinfo>
+<bookinfo id="kabcclientinfo">
 
 <title>The &kabcclient; Handbook</title>
 

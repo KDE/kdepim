@@ -363,33 +363,34 @@ QString FancyHeaderStyle::drawSpamMeter( SpamError spamError, double percent, do
   QImage meterBar( meterWidth, 1, QImage::Format_Indexed8/*QImage::Format_RGB32*/ );
   meterBar.setNumColors( 24 );
 
-  const unsigned short gradient[meterWidth][3] = {
-    {   0, 255,   0 },
-    {  27, 254,   0 },
-    {  54, 252,   0 },
-    {  80, 250,   0 },
-    { 107, 249,   0 },
-    { 135, 247,   0 },
-    { 161, 246,   0 },
-    { 187, 244,   0 },
-    { 214, 242,   0 },
-    { 241, 241,   0 },
-    { 255, 228,   0 },
-    { 255, 202,   0 },
-    { 255, 177,   0 },
-    { 255, 151,   0 },
-    { 255, 126,   0 },
-    { 255, 101,   0 },
-    { 255,  76,   0 },
-    { 255,  51,   0 },
-    { 255,  25,   0 },
-    { 255,   0,   0 }
-  };
   meterBar.setColor( meterWidth + 1, qRgb( 255, 255, 255 ) );
   meterBar.setColor( meterWidth + 2, qRgb( 170, 170, 170 ) );
   if ( spamError != noError ) // grey is for errors
     meterBar.fill( meterWidth + 2 );
   else {
+    static const unsigned short gradient[meterWidth][3] = {
+      {   0, 255,   0 },
+      {  27, 254,   0 },
+      {  54, 252,   0 },
+      {  80, 250,   0 },
+      { 107, 249,   0 },
+      { 135, 247,   0 },
+      { 161, 246,   0 },
+      { 187, 244,   0 },
+      { 214, 242,   0 },
+      { 241, 241,   0 },
+      { 255, 228,   0 },
+      { 255, 202,   0 },
+      { 255, 177,   0 },
+      { 255, 151,   0 },
+      { 255, 126,   0 },
+      { 255, 101,   0 },
+      { 255,  76,   0 },
+      { 255,  51,   0 },
+      { 255,  25,   0 },
+     { 255,   0,   0 }
+    }; 
+
     meterBar.fill( meterWidth + 1 );
     const int max = qMin( meterWidth, static_cast<int>( percent ) / 5 );
     for ( int i = 0; i < max; ++i ) {
@@ -604,7 +605,6 @@ QString FancyHeaderStyle::format( KMime::Message *message ) const {
     userHTML = QString("<div class=\"senderpic\">") + userHTML + "</div>";
   }
 
-  qDebug()<<" photoURL"<<photoURL;
   // the subject line and box below for details
   if ( strategy->showHeader( "subject" ) ) {
     const int flags = LinkLocator::PreserveSpaces |
@@ -1102,10 +1102,10 @@ HeaderStyle * HeaderStyle::create( Type type ) {
 HeaderStyle * HeaderStyle::create( const QString & type ) {
   const QString lowerType = type.toLower();
   if ( lowerType == QLatin1String("brief") ) return brief();
-  if ( lowerType == QLatin1String("plain") )  return plain();
-  if ( lowerType == QLatin1String("enterprise") )  return enterprise();
-  if ( lowerType == QLatin1String("mobile") )  return mobile();
-  if ( lowerType == QLatin1String( "mobileExtended") )  return mobileExtended();
+  else if ( lowerType == QLatin1String("plain") )  return plain();
+  else if ( lowerType == QLatin1String("enterprise") )  return enterprise();
+  else if ( lowerType == QLatin1String("mobile") )  return mobile();
+  else if ( lowerType == QLatin1String( "mobileExtended") )  return mobileExtended();
   //if ( lowerType == "fancy" ) return fancy(); // not needed, see below
   // don't kFatal here, b/c the strings are user-provided
   // (KConfig), so fail gracefully to the default:

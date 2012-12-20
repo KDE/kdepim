@@ -457,13 +457,16 @@ void AttendeeLine::slotTextChanged( const QString &str )
 {
   Q_UNUSED( str );
   mModified = true;
-  emit changed();
+  emit changed(); // TODO: This doesn't seem connected to anywhere in incidenceattendee.cpp.
+                  // but the important code is run in slotHandleChange() anyway so we don't see any bug
 }
 
 void AttendeeLine::slotComboChanged()
 {
   mModified = true;
-  emit changed();
+  // If mUid is empty, we're still populating the widget, don't write fields to data yet
+  if ( !mUid.isEmpty() )
+    dataFromFields();
 }
 
 void AttendeeLine::aboutToBeDeleted()

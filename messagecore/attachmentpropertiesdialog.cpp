@@ -90,18 +90,16 @@ void AttachmentPropertiesDialog::Private::polishUi()
     ui.name->setReadOnly( true );
     ui.description->setReadOnly( true );
     ui.encoding->setEnabled( false );
-    ui.autoDisplay->setEnabled( false );
-    ui.encrypt->setEnabled( false );
-    ui.sign->setEnabled( false );
-
+    ui.sign->hide();
+    ui.autoDisplay->hide();
+    ui.encrypt->hide();
     q->setButtons( Close | Help );
   } else {
-    populateEncodings();
     populateMimeTypes();
 
     q->setButtons( Ok | Cancel | Help );
   }
-
+  populateEncodings();
   q->setDefaultButton( Ok );
   populateWhatsThis();
 }
@@ -199,9 +197,6 @@ void AttachmentPropertiesDialog::Private::populateEncodings()
 
 void AttachmentPropertiesDialog::Private::populateMimeTypes()
 {
-  // TODO these are what the old KMMsgPartDialog used.
-  // Should we use KMimeType::allMimeTypes()?
-
   QStringList list;
   list << QString::fromLatin1( "text/html" )
        << QString::fromLatin1( "text/plain" )
@@ -221,7 +216,7 @@ void AttachmentPropertiesDialog::Private::loadFromPart()
 
   ui.mimeType->setCurrentItem( mPart->mimeType(), true );
   ui.size->setText( KGlobal::locale()->formatByteSize( mPart->size() ) );
-  ui.name->setText( mPart->name() );
+  ui.name->setText( mPart->name().isEmpty() ? mPart->fileName() : mPart->name()  );
   ui.description->setText( mPart->description() );
   ui.encoding->setCurrentIndex( int( mPart->encoding() ) );
   ui.autoDisplay->setChecked( mPart->isInline() );
@@ -266,6 +261,7 @@ AttachmentPropertiesDialog::AttachmentPropertiesDialog( const AttachmentPart::Pt
     d( new Private( this ) )
 {
   d->init( part, readOnly );
+  setWindowTitle(i18n("Attachment Properties"));
 }
 
 AttachmentPropertiesDialog::AttachmentPropertiesDialog( const KMime::Content *content,
@@ -281,6 +277,7 @@ AttachmentPropertiesDialog::AttachmentPropertiesDialog( const KMime::Content *co
 
   const AttachmentPart::Ptr part = job->attachmentPart();
   d->init( part, true );
+  setWindowTitle(i18n("Attachment Properties"));
 }
 
 AttachmentPropertiesDialog::~AttachmentPropertiesDialog()

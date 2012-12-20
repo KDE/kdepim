@@ -149,8 +149,8 @@ class MessageText : public KTextEdit
 
 
 // Basic flags for the window
-static const Qt::WFlags          WFLAGS       = Qt::WindowStaysOnTopHint;
-static const Qt::WFlags          WFLAGS2      = Qt::WindowContextHelpButtonHint;
+static const Qt::WindowFlags          WFLAGS       = Qt::WindowStaysOnTopHint;
+static const Qt::WindowFlags          WFLAGS2      = Qt::WindowContextHelpButtonHint;
 static const Qt::WidgetAttribute WidgetFlags  = Qt::WA_DeleteOnClose;
 
 // Error message bit masks
@@ -179,7 +179,7 @@ MessageWin*           MessageWin::mAudioOwner = 0;
 * displayed.
 */
 MessageWin::MessageWin(const KAEvent* event, const KAAlarm& alarm, int flags)
-    : MainWindowBase(0, static_cast<Qt::WFlags>(WFLAGS | WFLAGS2 | ((flags & ALWAYS_HIDE) || getWorkAreaAndModal() ? Qt::WindowType(0) : Qt::X11BypassWindowManagerHint))),
+    : MainWindowBase(0, static_cast<Qt::WindowFlags>(WFLAGS | WFLAGS2 | ((flags & ALWAYS_HIDE) || getWorkAreaAndModal() ? Qt::WindowType(0) : Qt::X11BypassWindowManagerHint))),
       mMessage(event->cleanText()),
       mFont(event->font()),
       mBgColour(event->bgColour()),
@@ -1299,12 +1299,13 @@ void MessageWin::alarmShowing(KAEvent& event)
     if (!mAlwaysHide)
     {
         // Copy the alarm to the displaying calendar in case of a crash, etc.
-        KAEvent* dispEvent = new KAEvent;
 #ifdef USE_AKONADI
+        KAEvent dispEvent;
         Akonadi::Collection collection = AkonadiModel::instance()->collectionForItem(event.itemId());
-        dispEvent->setDisplaying(event, mAlarmType, collection.id(),
+        dispEvent.setDisplaying(event, mAlarmType, collection.id(),
                     mDateTime.effectiveKDateTime(), mShowEdit, !mNoDefer);
 #else
+        KAEvent* dispEvent = new KAEvent;
         AlarmResource* resource = AlarmResources::instance()->resource(kcalEvent);
         dispEvent->setDisplaying(event, mAlarmType, (resource ? resource->identifier() : QString()),
                     mDateTime.effectiveKDateTime(), mShowEdit, !mNoDefer);
@@ -1313,17 +1314,19 @@ void MessageWin::alarmShowing(KAEvent& event)
         if (cal)
         {
 #ifdef USE_AKONADI
-            cal->deleteDisplayEvent(dispEvent->id());   // in case it already exists
-            if (!cal->addEvent(*dispEvent))
+            cal->deleteDisplayEvent(dispEvent.id());   // in case it already exists
+            cal->addEvent(dispEvent);
 #else
             cal->deleteEvent(dispEvent->id());   // in case it already exists
             if (!cal->addEvent(dispEvent))
-#endif
                 delete dispEvent;
+#endif
             cal->save();
         }
+#ifndef USE_AKONADI
         else
             delete dispEvent;
+#endif
     }
     theApp()->rescheduleAlarm(event, alarm);
 }

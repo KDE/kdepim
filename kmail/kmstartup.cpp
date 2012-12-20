@@ -89,6 +89,7 @@ void checkConfigUpdates() {
   GlobalSettings::self()->setUpdateLevel( numUpdates );
 }
 
+#if 0
 void lockOrDie() {
 // Check and create a lock file to prevent concurrent access to kmail files
   QString appName = KGlobal::mainComponent().componentName();
@@ -201,6 +202,7 @@ void lockOrDie() {
   group.writeEntry( "programName", programName );
   group.sync();
 }
+#endif
 
 void insertLibraryCataloguesAndIcons() {
   static const char * const catalogs[] = {
@@ -213,6 +215,7 @@ void insertLibraryCataloguesAndIcons() {
     "libmessageviewer",
     "libmessagecore",
     "libmessagecomposer",
+    "libpimcommon",
     "libmailcommon",
     "libtemplateparser",
     "libakonadi_next",
@@ -221,7 +224,8 @@ void insertLibraryCataloguesAndIcons() {
     "akonadicontact",
     "libkpimtextedit",
     "libkpimutils",
-    "akonadicontact"
+    "akonadicontact",
+    "kabc"
 
   };
 
@@ -234,6 +238,7 @@ void insertLibraryCataloguesAndIcons() {
 
 }
 
+#if 0
 void cleanup()
 {
   const QString lockLocation = KStandardDirs::locateLocal("data", "kmail2/lock");
@@ -242,4 +247,5 @@ void cleanup()
   group.writeEntry("pid", -1);
   group.sync();
 }
+#endif
 }

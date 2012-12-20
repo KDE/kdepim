@@ -71,7 +71,7 @@ public:
   void okButtonClicked();
   void exportAggregationButtonClicked();
   void importAggregationButtonClicked();
-
+  void updateButton(QListWidgetItem* cur);
 
   ConfigureAggregationsDialog * const q;
 

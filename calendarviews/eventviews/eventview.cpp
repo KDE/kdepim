@@ -45,11 +45,11 @@ using namespace Future;
 
 #include <KHolidays/Holidays>
 
-#include <kcheckableproxymodel.h> //krazy:exclude=camelcase TODO wait for kdelibs4.8
+#include <KCheckableProxyModel>
 #include <KGuiItem>
 #include <KGlobal>
 #include <KLocale>
-#include <kviewstatemaintainer.h> //krazy:exclude=camelcase TODO wait for kdelibs4.8
+#include <KViewStateMaintainer>
 
 #include <QApplication>
 #include <QKeyEvent>
@@ -59,7 +59,7 @@ using namespace KCalCore;
 using namespace EventViews;
 using namespace Akonadi;
 
-static const KCatalogLoader loader( "libeventviews" );
+static const KCatalogLoader loaderCatalog( "libeventviews" );
 
 CalendarSupport::CollectionSelection *EventViewPrivate::sGlobalCollectionSelection = 0;
 

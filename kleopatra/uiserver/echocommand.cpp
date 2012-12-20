@@ -89,7 +89,7 @@ int EchoCommand::doStart() {
         keyword = option("inquire").toString().toStdString();
 #else
         const QString tmpStr = option("inquire").toString();
-        const QByteArray asc = tmpStr.toAscii();
+        const QByteArray asc = tmpStr.toLatin1();
         keyword = std::string(asc.constData(), asc.length());
 #endif
         if ( keyword.empty() )
@@ -100,7 +100,7 @@ int EchoCommand::doStart() {
     const std::string output = option("text").toString().toStdString();
 #else
         const QString tmpStr = option("text").toString();
-        const QByteArray asc = tmpStr.toAscii();
+        const QByteArray asc = tmpStr.toLatin1();
         const std::string output = std::string(asc.constData(), asc.length());
 #endif
 

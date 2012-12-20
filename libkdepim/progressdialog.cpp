@@ -313,10 +313,9 @@ ProgressDialog::~ProgressDialog()
 
 void ProgressDialog::slotTransactionAdded( ProgressItem *item )
 {
-  TransactionItem *parent = 0;
   if ( item->parent() ) {
     if ( mTransactionsToListviewItems.contains( item->parent() ) ) {
-      parent = mTransactionsToListviewItems[ item->parent() ];
+      TransactionItem * parent = mTransactionsToListviewItems[ item->parent() ];
       parent->addSubTransaction( item );
     }
   } else {

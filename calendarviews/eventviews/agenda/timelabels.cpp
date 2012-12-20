@@ -42,7 +42,7 @@ static const KCatalogLoader loader( "timezones4" );
 using namespace EventViews;
 
 TimeLabels::TimeLabels( const KDateTime::Spec &spec, int rows,
-                        TimeLabelsZone *parent, Qt::WFlags f )
+                        TimeLabelsZone *parent, Qt::WindowFlags f )
   : QFrame( parent, f )
 {
   mTimeLabelsZone = parent;

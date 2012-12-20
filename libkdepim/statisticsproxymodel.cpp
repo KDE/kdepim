@@ -415,7 +415,7 @@ QVariant StatisticsProxyModel::data( const QModelIndex & index, int role) const
       = sourceModel()->data( sourceIndex,
                              EntityTreeModel::CollectionRole ).value<Collection>();
 
-    if ( collection.isValid() && collection.statistics().count()>0 ) {
+    if ( collection.isValid() ) {
       const QModelIndex sourceIndex = d->sourceIndexAtFirstColumn( index );
       return d->toolTipForCollection( sourceIndex, collection );
     }

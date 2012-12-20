@@ -35,9 +35,12 @@
 #include <QtCore/QObject>
 #include <QtCore/QTimer>
 #include <QMouseEvent>
+#include <QWebElement>
 
 namespace GpgME { class Error; }
-namespace KIO { class Job; }
+namespace KIO { 
+  class Job; 
+}
 
 namespace Kleo { class SpecialJob; }
 
@@ -50,15 +53,8 @@ class KMenu;
 
 class QPoint;
 class QSplitter;
-class QStyle;
 class QModelIndex;
 class QTreeView;
-class QActionGroup;
-
-namespace KParts {
-  struct BrowserArguments;
-  class OpenUrlArguments;
-}
 
 namespace MessageViewer {
 
@@ -71,7 +67,6 @@ namespace MessageViewer {
   class HeaderStyle;
   class FindBarMailWebView;
   class MimeTreeModel;
-  class ConfigureWidget;
   class WebKitPartHtmlWriter;
   class HtmlStatusBar;
   class MailWebView;
@@ -357,6 +352,8 @@ public:
   /** View message part of type message/RFC822 in extra viewer window. */
   void atmViewMsg( KMime::Message::Ptr message );
 
+  void setExternalWindow( bool b );
+
   void adjustLayout();
   void createWidgets();
   void createActions();
@@ -450,6 +447,7 @@ public:
 
 
 private slots:
+  void slotToggleCaretBrowsing(bool);
   void slotAtmDecryptWithChiasmusResult( const GpgME::Error &, const QVariant & );
   void slotAtmDecryptWithChiasmusUploadResult( KJob * );
 
@@ -636,17 +634,21 @@ public:
   CSSHelper * mCSSHelper;
   bool mUseFixedFont;
   bool mPrinting;
-  //bool mShowCompleteMessage;
   QString mIdOfLastViewedMessage;
   QWidget *mMainWindow;
   KActionCollection *mActionCollection;
   KAction *mCopyAction, *mCopyURLAction,
       *mUrlOpenAction, *mSelectAllAction,
       *mScrollUpAction, *mScrollDownAction, *mScrollUpMoreAction, *mScrollDownMoreAction,
-      *mViewSourceAction, *mSaveMessageAction;
+      *mViewSourceAction, *mSaveMessageAction, *mFindInMessageAction;
   KToggleAction *mHeaderOnlyAttachmentsAction;
   KSelectAction *mSelectEncodingAction;
   KToggleAction *mToggleFixFontAction, *mToggleDisplayModeAction;
+#ifndef KDEPIM_NO_WEBKIT
+#if QTWEBKIT_VERSION >= QTWEBKIT_VERSION_CHECK(2, 3, 0)
+  KToggleAction *mCaretBrowsing;
+#endif
+#endif
   KAction *mZoomTextOnlyAction, *mZoomInAction, *mZoomOutAction, *mZoomResetAction;
   KToggleAction *mToggleMimePartTreeAction;
   KAction *mSpeakTextAction;
@@ -672,6 +674,7 @@ public:
   bool mZoomTextOnly;
   int mRecursionCountForDisplayMessage;
   KMime::Content *mCurrentContent;
+  KMime::Content *mMessagePartNode;
   QString mCurrentFileName;
   QString mMessagePath;
   QMap<EditorWatcher*, KMime::Content*> mEditorWatchers;

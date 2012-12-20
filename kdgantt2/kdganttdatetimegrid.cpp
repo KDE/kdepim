@@ -865,7 +865,7 @@ void DateTimeGrid::paintHourScaleHeader( QPainter* painter,
         QStyleOptionHeader opt;
         if ( widget ) opt.init( widget );
         opt.rect = QRectF( x-offset+1, headerRect.top()+headerRect.height()/2., dayWidth()/24., headerRect.height()/2. ).toAlignedRect();
-        opt.text = dt.time().toString( QString::fromAscii( "hh" ) );
+        opt.text = dt.time().toString( QString::fromLatin1( "hh" ) );
         opt.textAlignment = Qt::AlignCenter;
         style->drawControl(QStyle::CE_Header, &opt, painter, widget);
     }
@@ -901,7 +901,7 @@ void DateTimeGrid::paintDayScaleHeader( QPainter* painter,  const QRectF& header
         QStyleOptionHeader opt;
         opt.init( widget );
         opt.rect = QRectF( x-offset+1, headerRect.top()+headerRect.height()/2., dayWidth(), headerRect.height()/2. ).toAlignedRect();
-        opt.text = dt.toString( QString::fromAscii( "ddd" ) ).left( 1 );
+        opt.text = dt.toString( QString::fromLatin1( "ddd" ) ).left( 1 );
         opt.textAlignment = Qt::AlignCenter;
         style->drawControl(QStyle::CE_Header, &opt, painter, widget);
     }

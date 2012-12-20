@@ -22,6 +22,8 @@
 #ifndef AKONADICONSOLE_MAINWIDGET_H
 #define AKONADICONSOLE_MAINWIDGET_H
 
+#include "browserwidget.h"
+
 #include <QWidget>
 
 class KXmlGuiWindow;
@@ -32,6 +34,7 @@ class MainWidget : public QWidget
 
   public:
     explicit MainWidget( KXmlGuiWindow *parent = 0 );
+    ~MainWidget();
 
   private Q_SLOTS:
     void createSearch();
@@ -39,6 +42,9 @@ class MainWidget : public QWidget
     void stopServer();
     void restartServer();
     void configureServer();
+
+  private:
+    BrowserWidget *mBrowser;
 };
 
 #endif

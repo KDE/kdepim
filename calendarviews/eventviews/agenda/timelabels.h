@@ -47,7 +47,7 @@ class EVENTVIEWS_EXPORT TimeLabels : public QFrame
     typedef QList<TimeLabels *> List;
 
     TimeLabels( const KDateTime::Spec &spec, int rows,
-                TimeLabelsZone *parent = 0, Qt::WFlags f = 0 );
+                TimeLabelsZone *parent = 0, Qt::WindowFlags f = 0 );
 
     /** updates widget's internal state */
     void updateConfig();

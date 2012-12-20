@@ -48,7 +48,7 @@ class KMReaderWin: public QWidget {
   Q_OBJECT
 
 public:
-  KMReaderWin( QWidget *parent, QWidget *mainWindow,
+  explicit KMReaderWin( QWidget *parent, QWidget *mainWindow,
                KActionCollection *actionCollection, Qt::WindowFlags f = 0 );
   virtual ~KMReaderWin();
 
@@ -143,6 +143,9 @@ public:
   KAction *speakTextAction();
   KAction* translateAction();
   KAction* downloadImageToDiskAction() const;
+  KAction *viewSourceAction();
+  KAction *findInMessageAction();
+  KAction *saveAsAction();
 
   KAction* editContactAction() const { return mEditContactAction; }
 

@@ -29,10 +29,10 @@ class KTNEFView : public QTreeWidget
   Q_OBJECT
 
   public:
-    KTNEFView( QWidget *parent = 0 );
+    explicit KTNEFView( QWidget *parent = 0 );
     ~KTNEFView();
 
-    void setAttachments( QList<KTNEFAttach *> list );
+    void setAttachments(const QList<KTNEFAttach *> &list );
     QList<KTNEFAttach *> getSelection();
 
   signals:

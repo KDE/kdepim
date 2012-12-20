@@ -25,6 +25,8 @@
 #include <KDE/KMenu>
 #include <KDE/KXMLGUIClient>
 
+#include <KToggleAction>
+
 #include <QtCore/QAbstractItemModel>
 #include <QAbstractProxyModel>
 #include <QItemSelectionModel>
@@ -57,7 +59,9 @@ public:
       mActivatePreviousTabAction( 0 ),
       mMoveTabLeftAction( 0 ),
       mMoveTabRightAction( 0 ),
-      mPreferEmptyTab( false ) { }
+      mPreferEmptyTab( false ),
+      mMaxTabCreated( 0 )
+  { }
 
   void onSelectionChanged( const QItemSelection &selected, const QItemSelection &deselected );
   void onNewTabClicked();
@@ -72,6 +76,8 @@ public:
   void moveTabRight();
   void moveTabBackward();
   void moveTabForward();
+  void changeQuicksearchVisibility(bool);
+  void addActivateTabAction(int i);
   QItemSelection mapSelectionToSource( const QItemSelection &selection ) const;
   QItemSelection mapSelectionFromSource( const QItemSelection &selection ) const;
   void updateTabControls();
@@ -95,6 +101,7 @@ public:
   KAction *mMoveTabLeftAction;
   KAction *mMoveTabRightAction;
   bool mPreferEmptyTab;
+  int mMaxTabCreated;
 };
 
 } // namespace MessageList
@@ -106,6 +113,7 @@ using namespace MessageList;
 Pane::Pane( QAbstractItemModel *model, QItemSelectionModel *selectionModel, QWidget *parent )
   : KTabWidget( parent ), d( new Private( this ) )
 {
+  setDocumentMode( true );
   d->mModel = model;
   d->mSelectionModel = selectionModel;
 
@@ -182,11 +190,31 @@ Pane::~Pane()
   delete d;
 }
 
+void Pane::Private::addActivateTabAction(int i)
+{
+  QString actionname;
+  actionname.sprintf("activate_tab_%02d", i);
+  KAction *action = new KAction( i18n("Activate Tab %1", i), q);
+  action->setShortcut( QKeySequence( QString::fromLatin1( "Alt+%1" ).arg( i ) ) );
+  mXmlGuiClient->actionCollection()->addAction( actionname, action );
+  connect( action, SIGNAL(triggered(bool)),q, SLOT(activateTab()) );
+}
+
+
+
 void Pane::setXmlGuiClient( KXMLGUIClient *xmlGuiClient )
 {
   d->mXmlGuiClient = xmlGuiClient;
 
-  for ( int i=0; i<count(); i++ ) {
+  KToggleAction * const showHideQuicksearch = new KToggleAction( i18n( "Show Quick Search Bar" ), this );
+  showHideQuicksearch->setShortcut( Qt::CTRL + Qt::Key_H );
+  showHideQuicksearch->setChecked( Core::Settings::showQuickSearch() );
+
+  d->mXmlGuiClient->actionCollection()->addAction( QLatin1String( "show_quick_search" ), showHideQuicksearch );
+  connect( showHideQuicksearch, SIGNAL(triggered(bool)), this, SLOT(changeQuicksearchVisibility(bool)) );
+
+
+  for ( int i=0; i<count(); ++i ) {
     Widget *w = qobject_cast<Widget *>( widget( i ) );
     w->setXmlGuiClient( d->mXmlGuiClient );
   }
@@ -198,8 +226,7 @@ void Pane::setXmlGuiClient( KXMLGUIClient *xmlGuiClient )
     }
     d->mActionMenu = new KActionMenu( KIcon(), i18n( "Message List" ), this );
     d->mXmlGuiClient->actionCollection()->addAction( QLatin1String( "view_message_list" ), d->mActionMenu );
-    const Widget * const w = static_cast<Widget*>( currentWidget() );
-    w->view()->fillViewMenu( d->mActionMenu->menu() );
+    MessageList::Util::fillViewMenu( d->mActionMenu->menu(), this );
 
     KAction *action = new KAction( i18n("Create new tab"), this );
     action->setShortcut( QKeySequence( Qt::ALT + Qt::Key_T ) );
@@ -207,21 +234,18 @@ void Pane::setXmlGuiClient( KXMLGUIClient *xmlGuiClient )
     connect( action, SIGNAL(triggered(bool)), SLOT(onNewTabClicked()) );
     d->mActionMenu->addAction( action );
 
+    d->mMaxTabCreated = count();
+    for (int i=1;i<10 && i<=count();++i) {
+      d->addActivateTabAction(i);
+    }
+
+
     d->mCloseTabAction = new KAction( i18n("Close tab"), this );
     d->mCloseTabAction->setShortcut( QKeySequence( Qt::ALT + Qt::Key_W ) );
     d->mXmlGuiClient->actionCollection()->addAction( QLatin1String( "close_current_tab" ), d->mCloseTabAction );
     connect( d->mCloseTabAction, SIGNAL(triggered(bool)), SLOT(onCloseTabClicked()) );
     d->mActionMenu->addAction( d->mCloseTabAction );
     d->mCloseTabAction->setEnabled( false );
-
-    QString actionname;
-    for (int i=1;i<10;i++) {
-      actionname.sprintf("activate_tab_%02d", i);
-      action = new KAction( i18n("Activate Tab %1", i),this );
-      action->setShortcut( QKeySequence( QString::fromLatin1( "Alt+%1" ).arg( i ) ) );
-      d->mXmlGuiClient->actionCollection()->addAction( actionname, action );
-      connect( action, SIGNAL(triggered(bool)), SLOT(activateTab()) );
-    }
 
     d->mActivateNextTabAction = new KAction( i18n("Activate Next Tab"),this );
     d->mXmlGuiClient->actionCollection()->addAction( QLatin1String( "activate_next_tab" ), d->mActivateNextTabAction );
@@ -243,9 +267,6 @@ void Pane::setXmlGuiClient( KXMLGUIClient *xmlGuiClient )
     d->mXmlGuiClient->actionCollection()->addAction( QLatin1String( "move_tab_right" ), d->mMoveTabRightAction );
     d->mMoveTabRightAction->setEnabled( false );
     connect( d->mMoveTabRightAction, SIGNAL(triggered(bool)), SLOT(moveTabRight()) );
-
-
-
   }
 }
 
@@ -332,6 +353,20 @@ bool Pane::selectFirstMessageItem( MessageList::Core::MessageTypeFilter messageT
       return true;
 
     return w->selectFirstMessageItem( messageTypeFilter, centerItem );
+  } else {
+    return false;
+  }
+}
+
+bool Pane::selectLastMessageItem(Core::MessageTypeFilter messageTypeFilter, bool centerItem)
+{
+  Widget *w = static_cast<Widget*>( currentWidget() );
+
+  if ( w ) {
+    if ( w->view()->model()->isLoading() )
+      return true;
+
+    return w->selectLastMessageItem( messageTypeFilter, centerItem );
   } else {
     return false;
   }
@@ -540,6 +575,16 @@ void Pane::Private::closeTab( QWidget *w )
   updateTabControls();
 }
 
+
+void Pane::Private::changeQuicksearchVisibility(bool show)
+{
+    for ( int i=0; i<q->count(); i++ ) {
+      Widget *w = qobject_cast<Widget *>( q->widget( i ) );
+      w->changeQuicksearchVisibility(show);
+    }
+}
+
+
 bool Pane::eventFilter( QObject *object, QEvent *event )
 {
   if ( event->type() == QEvent::MouseButtonPress ) {
@@ -572,6 +617,8 @@ void Pane::Private::onCurrentTabChanged()
 void Pane::Private::onTabContextMenuRequest( const QPoint &pos )
 {
   QTabBar *bar = q->tabBar();
+  if ( q->count() <= 1 ) return;
+
   const int indexBar = bar->tabAt( bar->mapFrom( q, pos ) );
   if ( indexBar == -1 ) return;
 
@@ -649,7 +696,15 @@ QItemSelectionModel *Pane::createNewTab()
 {
   Widget * w = new Widget( this );
   w->setXmlGuiClient( d->mXmlGuiClient );
+
   addTab( w, i18nc( "@title:tab Empty messagelist", "Empty" ) );
+
+  if(d->mXmlGuiClient && count() < 10) {
+    if(d->mMaxTabCreated < count() ) {
+       d->mMaxTabCreated = count();
+       d->addActivateTabAction(d->mMaxTabCreated);
+    }
+  }
 
   QItemSelectionModel *s = new QItemSelectionModel( d->mModel, w );
   MessageList::StorageModel *m = createStorageModel( d->mModel, s, w );
@@ -972,8 +1027,7 @@ void Pane::readConfig()
     if(numberOfTab == 0) {
       createNewTab();
     } else {
-      for(int i = 0; i<numberOfTab; ++i)
-      {
+      for(int i = 0; i<numberOfTab; ++i) {
         KConfigGroup grp(MessageList::Core::Settings::self()->config(),QString::fromLatin1("MessageListTab%1").arg(i));
         QItemSelectionModel *selectionModel = createNewTab();
 #if 0
@@ -996,6 +1050,43 @@ void Pane::readConfig()
   } else {
     createNewTab();
   }
+}
+
+
+bool Pane::searchEditHasFocus() const
+{
+  Widget *w = static_cast<Widget*>( currentWidget() );
+  if ( w )
+    return w->searchEditHasFocus();
+  return false;
+}
+
+
+void Pane::sortOrderMenuAboutToShow()
+{
+  KMenu * menu = dynamic_cast< KMenu * >( sender() );
+  if ( !menu )
+    return;
+  const Widget * const w = static_cast<Widget*>( currentWidget() );
+  w->view()->sortOrderMenuAboutToShow(menu);
+}
+
+void Pane::aggregationMenuAboutToShow()
+{
+  KMenu * menu = dynamic_cast< KMenu * >( sender() );
+  if ( !menu )
+   return;
+  const Widget * const w = static_cast<Widget*>( currentWidget() );
+  w->view()->aggregationMenuAboutToShow(menu);
+}
+
+void Pane::themeMenuAboutToShow()
+{
+  KMenu * menu = dynamic_cast< KMenu * >( sender() );
+  if ( !menu )
+    return;
+  const Widget * const w = static_cast<Widget*>( currentWidget() );
+  w->view()->themeMenuAboutToShow(menu);
 }
 
 

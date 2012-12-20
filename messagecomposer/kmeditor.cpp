@@ -23,7 +23,13 @@
 #include "kmeditor.h"
 #include "textpart.h"
 #include "messageviewer/nodehelper.h"
-#include "autocorrection/kmcomposerautocorrection.h"
+#include "autocorrection/composerautocorrection.h"
+#include "messagecomposersettings.h"
+
+
+#ifdef GRANTLEE_GREATER_0_2
+#include <grantlee/plaintextmarkupbuilder.h>
+#endif
 
 #include <KEncodingFileDialog>
 #include <KLocale>
@@ -52,6 +58,7 @@ class KMeditorPrivate
     KMeditorPrivate( KMeditor *parent )
      : q( parent ),
        useExtEditor( false ),
+       forcePlainTextMarkup( false ),
        mExtEditorProcess( 0 ),
        mExtEditorTempFile( 0 ),
        mAutoCorrection( 0 )
@@ -101,12 +108,12 @@ class KMeditorPrivate
     QString extEditorPath;
     KMeditor *q;
     bool useExtEditor;
-    
+    bool forcePlainTextMarkup;
     QString quotePrefix;
 
     KProcess *mExtEditorProcess;
     KTemporaryFile *mExtEditorTempFile;
-    KMComposerAutoCorrection *mAutoCorrection;
+    MessageComposer::ComposerAutoCorrection *mAutoCorrection;
 };
 
 }
@@ -206,7 +213,7 @@ void KMeditorPrivate::startExternalEditor()
                     q, SLOT(slotEditorFinished(int,QProcess::ExitStatus)) );
   mExtEditorProcess->start();
   if ( !mExtEditorProcess->waitForStarted() ) {
-    //TODO: messagebox
+    KMessageBox::error(q->topLevelWidget(),i18n("External editor can not be started. Please verify command \"%1\"",commandLine));
     mExtEditorProcess->deleteLater();
     mExtEditorProcess = 0;
     delete mExtEditorTempFile;
@@ -265,8 +272,7 @@ void KMeditor::keyPressEvent ( QKeyEvent *e )
   } else {
     if(e->key() == Qt::Key_Space || e->key() == Qt::Key_Enter) {
       if(d->mAutoCorrection) {
-          //TODO verify
-        d->mAutoCorrection->autocorrect(*document(),textCursor().position());
+        d->mAutoCorrection->autocorrect((textMode() == KRichTextEdit::Rich), *document(),textCursor().position());
       }
     }
     TextEdit::keyPressEvent( e );
@@ -433,7 +439,7 @@ void KMeditor::slotAddQuotes()
 QString KMeditorPrivate::addQuotesToText( const QString &inputText )
 {
   QString answer = QString( inputText );
-  QString indentStr = q->defaultQuoteSign();
+  const QString indentStr = q->defaultQuoteSign();
   answer.replace( QLatin1Char( '\n' ), QLatin1Char( '\n' ) + indentStr );
   //cursor.selectText() as QChar::ParagraphSeparator as paragraph separator.
   answer.replace( QChar::ParagraphSeparator, QLatin1Char( '\n' ) + indentStr );
@@ -760,8 +766,29 @@ bool KMeditor::replaceSignature( const KPIMIdentities::Signature &oldSig,
 
 void KMeditor::fillComposerTextPart ( TextPart* textPart ) const
 {
+#ifdef GRANTLEE_GREATER_0_2 
+  if( isFormattingUsed() && MessageComposer::MessageComposerSettings::self()->improvePlainTextOfHtmlMessage() ) {
+    Grantlee::PlainTextMarkupBuilder *pb = new Grantlee::PlainTextMarkupBuilder();
+
+    Grantlee::MarkupDirector *pmd = new Grantlee::MarkupDirector( pb );
+    pmd->processDocument( document() );
+    const QString plainText = pb->getResult();
+    textPart->setCleanPlainText( toCleanPlainText(plainText) );
+    QTextDocument *doc = new QTextDocument(plainText);
+    doc->adjustSize();
+    
+    textPart->setWrappedPlainText(toWrappedPlainText(doc));
+    delete doc;
+    delete pmd;
+    delete pb;
+  } else {
+    textPart->setCleanPlainText( toCleanPlainText() );
+    textPart->setWrappedPlainText( toWrappedPlainText() );
+  }
+#else
   textPart->setCleanPlainText( toCleanPlainText() );
   textPart->setWrappedPlainText( toWrappedPlainText() );
+#endif
   textPart->setWordWrappingEnabled( lineWrapMode() == QTextEdit::FixedColumnWidth );
   if( isFormattingUsed() ) {
     textPart->setCleanHtml( toCleanHtml() );
@@ -769,15 +796,44 @@ void KMeditor::fillComposerTextPart ( TextPart* textPart ) const
   }
 }
 
-KMComposerAutoCorrection* KMeditor::autocorrection() const
+MessageComposer::ComposerAutoCorrection* KMeditor::autocorrection() const
 {
   return d->mAutoCorrection;
 }
 
-void KMeditor::setAutocorrection(KMComposerAutoCorrection* autocorrect)
+void KMeditor::setAutocorrection(MessageComposer::ComposerAutoCorrection* autocorrect)
 {
   d->mAutoCorrection = autocorrect;
 }
 
+void KMeditor::setAutocorrectionLanguage(const QString& lang)
+{
+  d->mAutoCorrection->setLanguage(lang);
+}
+
+void KMeditor::forcePlainTextMarkup(bool force)
+{
+  d->forcePlainTextMarkup = force;
+}
+
+void KMeditor::insertPlainTextImplementation()
+{
+#ifdef GRANTLEE_GREATER_0_2
+  if( d->forcePlainTextMarkup ) {
+    Grantlee::PlainTextMarkupBuilder *pb = new Grantlee::PlainTextMarkupBuilder();
+
+    Grantlee::MarkupDirector *pmd = new Grantlee::MarkupDirector( pb );
+    pmd->processDocument( document() );
+    const QString plainText = pb->getResult();
+    document()->setPlainText(plainText);
+    delete pmd;
+    delete pb;
+  } else {
+    document()->setPlainText(document()->toPlainText());
+  }
+#else
+  document()->setPlainText(document()->toPlainText()); 
+#endif
+}
 
 #include "kmeditor.moc"

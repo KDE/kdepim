@@ -60,7 +60,7 @@ STRIGI_ENDANALYZER_RETVAL VcfEndAnalyzer::analyze( Strigi::AnalysisResult &index
   if ( contact.isEmpty() )
     return Strigi::Error;
 
-  const QUrl url( QString::fromAscii( index.path().data(), index.path().size() ) );
+  const QUrl url( QString::fromLatin1( index.path().data(), index.path().size() ) );
   if ( url.scheme() == QLatin1String( "akonadi" ) && url.hasQueryItem( "collection" ) )
     index.addValue( m_factory->isPartOfField, url.queryItemValue( "collection" ).toUtf8().data() );
 

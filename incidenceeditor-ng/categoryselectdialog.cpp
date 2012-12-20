@@ -106,7 +106,7 @@ void CategorySelectWidget::setSelected( const QStringList &selList )
   mWidgets->mCategories->setAutoCheckChildren( remAutoCheckChildren );
 }
 
-static QStringList getSelectedCategories( AutoCheckTreeWidget *categoriesView )
+static QStringList getSelectedCategoriesFromCategoriesView( AutoCheckTreeWidget *categoriesView )
 {
   QStringList categories;
 
@@ -148,7 +148,7 @@ void CategorySelectWidget::hideHeader()
 
 QStringList CategorySelectWidget::selectedCategories( QString &categoriesStr )
 {
-  mCategoryList = getSelectedCategories( listView() );
+  mCategoryList = getSelectedCategoriesFromCategoriesView( listView() );
   categoriesStr = mCategoryList.join( ", " );
   return mCategoryList;
 }

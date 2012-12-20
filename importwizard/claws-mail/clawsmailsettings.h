@@ -18,7 +18,6 @@
 #ifndef ClawsMailSettings_H
 #define ClawsMailSettings_H
 
-#include "abstractsettings.h"
 #include "sylpheed/sylpheedsettings.h"
 
 class ImportWizard;
@@ -36,7 +35,6 @@ protected:
   void readTemplateFormat(const KConfigGroup& group);
   void readGlobalSettings(const KConfigGroup& group);
   void readTagColor(const KConfigGroup& group);
-
 
 private:
   QString writeColor(const QColor& col);

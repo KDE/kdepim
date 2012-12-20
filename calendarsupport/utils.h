@@ -58,8 +58,8 @@ class QMimeData;
 
 typedef QList<QModelIndex> QModelIndexList;
 
-namespace CalendarSupport
-{
+namespace CalendarSupport {
+
   class Calendar;
   /**
    * returns the incidence from an akonadi item, or a null pointer if the item has no such payload

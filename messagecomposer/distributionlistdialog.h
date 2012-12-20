@@ -34,8 +34,8 @@ class DistributionListDialog : public KDialog
 {
   Q_OBJECT
   public:
-    DistributionListDialog( QWidget *parent );
-
+    explicit DistributionListDialog( QWidget *parent );
+    ~DistributionListDialog();
     void setRecipients( const Recipient::List & );
 
   public slots:
@@ -46,6 +46,10 @@ class DistributionListDialog : public KDialog
     void slotDelayedSetRecipients( KJob* );
     void slotDelayedUser1( KJob* );
     void slotContactGroupCreateJobResult( KJob* );
+
+  private:
+    void readConfig();
+    void writeConfig();
 
   private:
     KLineEdit *mTitleEdit;

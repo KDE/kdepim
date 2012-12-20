@@ -229,7 +229,7 @@ void MonthGraphicsItem::paint( QPainter *p, const QStyleOptionGraphicsItem *, QW
 
   p->setRenderHint( QPainter::Antialiasing );
 
-  int textMargin = 10;
+  int textMargin = 7;
 
   QColor bgColor = mMonthItem->bgColor();
   bgColor = mMonthItem->selected() ?
@@ -321,7 +321,7 @@ void MonthGraphicsItem::paint( QPainter *p, const QStyleOptionGraphicsItem *, QW
       curXPos += icon->width();
     }
 
-    p->drawText( textRect, alignFlag, text );
+    p->drawText( textRect, alignFlag | Qt::AlignVCenter, text );
   } else {
     text = p->fontMetrics().elidedText( text, Qt::ElideRight, textRect.width() );
     p->drawText( textRect, alignFlag, text );

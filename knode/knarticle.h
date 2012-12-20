@@ -46,7 +46,7 @@ class KNArticle : public KMime::NewsArticle, public KNJobItem {
       ATlocal
     };
 
-    KNArticle( boost::shared_ptr<KNArticleCollection> c );
+    explicit KNArticle( boost::shared_ptr<KNArticleCollection> c );
     ~KNArticle();
 
     virtual void clear();
@@ -108,7 +108,7 @@ class KNRemoteArticle : public KNArticle {
     /// List of remote articles.
     typedef QList<KNRemoteArticle::Ptr> List;
 
-    KNRemoteArticle( boost::shared_ptr<KNGroup> g );
+    explicit KNRemoteArticle( boost::shared_ptr<KNGroup> g );
     ~KNRemoteArticle();
 
     // type
@@ -215,7 +215,7 @@ class KNLocalArticle : public KNArticle {
     /// List of local articles.
     typedef QList<KNLocalArticle::Ptr> List;
 
-    KNLocalArticle( boost::shared_ptr<KNArticleCollection> c = boost::shared_ptr<KNArticleCollection>() );
+    explicit KNLocalArticle( boost::shared_ptr<KNArticleCollection> c = boost::shared_ptr<KNArticleCollection>() );
     ~KNLocalArticle();
 
     //type
@@ -280,8 +280,8 @@ class KNAttachment {
     */
     typedef boost::shared_ptr<KNAttachment> Ptr;
 
-    KNAttachment(KMime::Content *c);
-    KNAttachment(KNLoadHelper *helper);
+    explicit KNAttachment(KMime::Content *c);
+    explicit KNAttachment(KNLoadHelper *helper);
     ~KNAttachment();
 
     //name (used as a Content-Type parameter and as filename)

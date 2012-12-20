@@ -56,7 +56,7 @@ class KNLoadHelper {
 
 public:
 
-  KNLoadHelper(QWidget *parent);
+  explicit KNLoadHelper(QWidget *parent);
   ~KNLoadHelper();
 
   /** opens a file dialog and returns a file open for reading */
@@ -116,11 +116,5 @@ public:
   static int findStringInFile( QFile *file, const char *str );
 
 };
-
-namespace Utils {
-
-  QString rot13( const QString &s );
-
-}
 
 #endif

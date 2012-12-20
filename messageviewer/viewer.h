@@ -276,6 +276,9 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
   KAction *speakTextAction();
   KAction *copyImageLocation();
   KAction *translateAction();
+  KAction *viewSourceAction();
+  KAction *findInMessageAction();
+  KAction *saveAsAction();
 
   const HeaderStrategy * headerStrategy() const;
 
@@ -327,6 +330,8 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
 
 
   QString selectedText() const;
+
+  void setExternalWindow( bool b );
 
 signals:
   void changeDisplayMail(Viewer::ForceDisplayTo,bool);

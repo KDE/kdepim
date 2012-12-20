@@ -107,7 +107,7 @@ public:
   /**
     * Returns the required part from the item that is needed for the filter to
     * operate. See @ref SearchRule::RequiredPart */
-  SearchRule::RequiredPart requiredPart() const;
+  SearchRule::RequiredPart requiredPart(const QString& id) const;
 
   /** Write contents to given config group. */
   void writeConfig( KConfigGroup& config, bool exportFilter ) const;

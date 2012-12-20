@@ -25,7 +25,7 @@ using namespace IncidenceEditorNG;
 // TODO: I think that most of the code in EventOrTodoDialog can be moved to this
 //       class and reused for Journals as well
 
-IncidenceDialog::IncidenceDialog( QWidget *parent, Qt::WFlags flags )
+IncidenceDialog::IncidenceDialog( QWidget *parent, Qt::WindowFlags flags )
   : KDialog( parent, flags )
 {
 }

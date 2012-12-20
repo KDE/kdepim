@@ -24,16 +24,16 @@
 #include <akonadi/attributefactory.h>
 #include <akonadi/entitydisplayattribute.h>
 #include <kactioncollection.h>
-#include <mailcommon/aclmanager.h>
-#include <mailcommon/imapaclattribute.h>
+#include <pimcommon/aclmanager.h>
+#include <pimcommon/imapaclattribute.h>
 
 #include <QtCore/QAbstractItemModel>
 #include <QItemSelectionModel>
 
 AclEditor::AclEditor( KActionCollection *actionCollection, QObject *parent )
-  : QObject( parent ), mAclManager( new MailCommon::AclManager( this ) )
+  : QObject( parent ), mAclManager( new PimCommon::AclManager( this ) )
 {
-  Akonadi::AttributeFactory::registerAttribute<MailCommon::ImapAclAttribute>();
+  Akonadi::AttributeFactory::registerAttribute<PimCommon::ImapAclAttribute>();
 
   actionCollection->addAction( "acleditor_add", mAclManager->addAction() );
   actionCollection->addAction( "acleditor_edit", mAclManager->editAction() );
@@ -63,7 +63,7 @@ bool AclEditor::collectionHasAcls() const
   if ( !mCollection.isValid() )
     return false;
 
-  return mCollection.hasAttribute<MailCommon::ImapAclAttribute>();
+  return mCollection.hasAttribute<PimCommon::ImapAclAttribute>();
 }
 
 void AclEditor::load()

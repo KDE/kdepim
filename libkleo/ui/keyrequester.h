@@ -77,7 +77,7 @@ namespace Kleo {
     explicit KeyRequester( unsigned int allowedKeys, bool multipleKeys=false,
                            QWidget * parent=0 );
     // Constructor for Qt Designer
-    KeyRequester( QWidget * parent=0 );
+    explicit KeyRequester( QWidget * parent=0 );
     ~KeyRequester();
 
     const GpgME::Key & key() const;
@@ -172,7 +172,7 @@ namespace Kleo {
     /**
      * Constructor for Qt designer
      */
-    EncryptionKeyRequester( QWidget * parent );
+    explicit EncryptionKeyRequester( QWidget * parent );
     ~EncryptionKeyRequester();
 
     void setAllowedKeys( unsigned int proto, bool onlyTrusted=true, bool onlyValid=true );
@@ -205,7 +205,7 @@ namespace Kleo {
     /**
      * Constructor for Qt designer
      */
-    SigningKeyRequester( QWidget * parent );
+    explicit SigningKeyRequester( QWidget * parent );
     ~SigningKeyRequester();
 
     /*

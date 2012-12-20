@@ -145,7 +145,7 @@ bool FilterKMailArchive::importDirectory( const KArchiveDirectory *directory, co
       const KArchiveDirectory *dir = static_cast<const KArchiveDirectory*>( entry );
 
       if ( !dir->name().startsWith( QLatin1String( "." ) ) ) {
-        if ( !importFolder( dir, folderPath + '/' + dir->name() ) )
+        if ( !importFolder( dir, folderPath + QLatin1Char('/') + dir->name() ) )
           return false;
       }
 

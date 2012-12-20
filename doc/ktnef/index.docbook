@@ -6,9 +6,9 @@
   <!ENTITY % English "INCLUDE" > <!-- change language only here -->
 ]>
 
-<book lang="&language;">
+<book id="ktnef" lang="&language;">
 
-<bookinfo>
+<bookinfo id="ktnefinfo">
 <title>The TNEF File Viewer Handbook</title>
 
 <authorgroup>

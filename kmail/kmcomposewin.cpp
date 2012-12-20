@@ -44,7 +44,6 @@
 #include "messagecore/attachmentcollector.h"
 #include "util.h"
 #include "snippetwidget.h"
-#include <messagecomposer/keyresolver.h>
 #include "templatesconfiguration_kfg.h"
 #include "foldercollectionmonitor.h"
 #include "mailkernel.h"
@@ -53,6 +52,7 @@
 #include "messageviewer/translator/translatorwidget.h"
 #include "messagecomposer/selectspecialchar.h"
 #include "attachmentmissingwarning.h"
+#include "createnewcontactjob.h"
 
 // KDEPIM includes
 #include <libkpgp/kpgpblock.h>
@@ -197,7 +197,7 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, bool lastSignState,
     mDictionaryAction( 0 ), mSnippetAction( 0 ), mTranslateAction(0),
     mCodecAction( 0 ),
     mCryptoModuleAction( 0 ),
-    mEncryptChiasmusAction( 0 ),
+    //mEncryptChiasmusAction( 0 ),
     mDummyComposer( 0 ),
     mLabelWidth( 0 ),
     mComposerBase( 0 ),
@@ -217,7 +217,7 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, bool lastSignState,
 
   connect( mComposerBase, SIGNAL(enableHtml()),
            this, SLOT(enableHtml()) );
-  connect( mComposerBase, SIGNAL(failed(QString)), this, SLOT(slotSendFailed(QString)) );
+  connect( mComposerBase, SIGNAL(failed(QString,Message::ComposerViewBase::FailedType)), this, SLOT(slotSendFailed(QString,Message::ComposerViewBase::FailedType)) );
   connect( mComposerBase, SIGNAL(sentSuccessfully()), this, SLOT(slotSendSuccessful()) );
   connect( mComposerBase, SIGNAL(modified(bool)), this, SLOT(setModified(bool)) );
 
@@ -387,7 +387,9 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, bool lastSignState,
            this, SLOT(slotSpellCheckingStatus(QString)) );
   connect( editor, SIGNAL(insertModeChanged()),
            this, SLOT(slotOverwriteModeChanged()) );
-
+#ifdef HAVE_FORCESPELLCHECKING
+  connect(editor,SIGNAL(spellCheckingFinished()),this,SLOT(slotCheckSendNow()));
+#endif
   mSnippetWidget = new SnippetWidget( editor, actionCollection(), mSnippetSplitter );
   mSnippetWidget->setVisible( GlobalSettings::self()->showSnippetManager() );
   mSnippetSplitter->addWidget( mSnippetWidget );
@@ -415,6 +417,7 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, bool lastSignState,
   Message::AttachmentModel* attachmentModel = new Message::AttachmentModel( this );
   KMail::AttachmentView *attachmentView = new KMail::AttachmentView( attachmentModel, mSplitter );
   attachmentView->hideIfEmpty();
+  connect(attachmentView,SIGNAL(modified(bool)),SLOT(setModified(bool)));
   KMail::AttachmentController* attachmentController = new KMail::AttachmentController( attachmentModel, attachmentView, this );
 
   mComposerBase->setAttachmentModel( attachmentModel );
@@ -429,7 +432,7 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, bool lastSignState,
   connect( m_verifyMissingAttachment, SIGNAL(timeout()), this, SLOT(slotVerifyMissingAttachmentTimeout()) );
 
   readConfig();
-  setupStatusBar(attachmentView->toolButton());
+  setupStatusBar(attachmentView->widget());
   setupActions();
   setupEditor();
   rethinkFields();
@@ -966,7 +969,7 @@ void KMComposeWin::rethinkHeaderLine( int aValue, int aMask, int &aRow,
 }
 
 //-----------------------------------------------------------------------------
-void KMComposeWin::applyTemplate( uint uoid )
+void KMComposeWin::applyTemplate( uint uoid, uint uOldId )
 {
   const KPIMIdentities::Identity &ident = kmkernel->identityManager()->identityForUoid( uoid );
   if ( ident.isNull() )
@@ -998,10 +1001,11 @@ void KMComposeWin::applyTemplate( uint uoid )
     parser.setAllowDecryption( MessageViewer::GlobalSettings::self()->automaticDecrypt() );
     parser.setIdentityManager( KMKernel::self()->identityManager() );
     if ( !mCustomTemplate.isEmpty() )
-      parser.process( mCustomTemplate, KMime::Message::Ptr() );
+      parser.process( mCustomTemplate, mMsg, mCollectionForNewMessage );
     else
-      parser.processWithIdentity( uoid, KMime::Message::Ptr() );
-
+      parser.processWithIdentity( uoid, mMsg, mCollectionForNewMessage );
+    mComposerBase->updateTemplate( mMsg );
+    updateSignature(uoid, uOldId);
     return;
   }
 
@@ -1016,6 +1020,7 @@ void KMComposeWin::applyTemplate( uint uoid )
     job->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
     job->setProperty( "mode", (int)mode );
     job->setProperty( "uoid", uoid );
+    job->setProperty( "uOldid", uOldId );
     connect( job, SIGNAL(result(KJob*)), SLOT(slotDelayedApplyTemplate(KJob*)) );
   }
 }
@@ -1027,6 +1032,7 @@ void KMComposeWin::slotDelayedApplyTemplate( KJob *job )
 
   const TemplateParser::TemplateParser::Mode mode = static_cast<TemplateParser::TemplateParser::Mode>( fetchJob->property( "mode" ).toInt() );
   const uint uoid = fetchJob->property( "uoid" ).toUInt();
+  const uint uOldId = fetchJob->property( "uOldid" ).toUInt();
 
   TemplateParser::TemplateParser parser( mMsg, mode );
   parser.setSelection( mTextSelection );
@@ -1039,7 +1045,21 @@ void KMComposeWin::slotDelayedApplyTemplate( KJob *job )
     else
       parser.processWithIdentity( uoid, MessageCore::Util::message( item ) );
   }
+  mComposerBase->updateTemplate( mMsg );
+  updateSignature(uoid, uOldId);
 
+}
+
+void KMComposeWin::updateSignature(uint uoid, uint uOldId)
+{
+    const KPIMIdentities::Identity &ident = kmkernel->identityManager()->identityForUoid( uoid );
+    const KPIMIdentities::Identity &oldIdentity = kmkernel->identityManager()->identityForUoid( uOldId  );
+    mComposerBase->identityChanged( ident, oldIdentity, true );
+}
+
+void KMComposeWin::setCollectionForNewMessage( const Akonadi::Collection& folder)
+{
+    mCollectionForNewMessage = folder;
 }
 
 void KMComposeWin::setQuotePrefix( uint uoid )
@@ -1092,7 +1112,7 @@ void KMComposeWin::setupActions( void )
     action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_Return ) );
     connect( action, SIGNAL(triggered(bool)), SLOT(slotSendNow()));
 
-    // FIXME: change to mail_send_via icon when this exits.
+    // FIXME: change to mail_send_via icon when this exist.
     actActionNowMenu = new KActionMenu( KIcon( "mail-send" ), i18n("&Send Mail Via"), this );
     actActionNowMenu->setIconText( i18n( "Send" ) );
     actionCollection()->addAction( "send_default_via", actActionNowMenu );
@@ -1342,7 +1362,8 @@ void KMComposeWin::setupActions( void )
   mTranslateAction->setChecked(false);
   connect(mTranslateAction, SIGNAL(triggered(bool)), mTranslatorWidget,SLOT(setVisible(bool)));
 
-
+  //Chiamus not supported in kmail2
+#if 0
   if ( Kleo::CryptoBackendFactory::instance()->protocol( "Chiasmus" ) ) {
     KToggleAction *a = new KToggleAction( KIcon( "chiasmus_chi" ), i18n("Encrypt Message with Chiasmus..."), this );
     actionCollection()->addAction( "encrypt_message_chiasmus", a );
@@ -1353,6 +1374,7 @@ void KMComposeWin::setupActions( void )
   } else {
     mEncryptChiasmusAction = 0;
   }
+#endif
 
   mEncryptAction = new KToggleAction(KIcon("document-encrypt"), i18n("&Encrypt Message"), this);
   mEncryptAction->setIconText( i18n( "Encrypt" ) );
@@ -1372,9 +1394,9 @@ void KMComposeWin::setupActions( void )
 
   changeCryptoAction();
 
-  connect( mEncryptAction, SIGNAL(toggled(bool)),
+  connect( mEncryptAction, SIGNAL(triggered(bool)),
            SLOT(slotEncryptToggled(bool)) );
-  connect( mSignAction, SIGNAL(toggled(bool)),
+  connect( mSignAction, SIGNAL(triggered(bool)),
            SLOT(slotSignToggled(bool)) );
 
   QStringList l;
@@ -1387,11 +1409,6 @@ void KMComposeWin::setupActions( void )
   connect(mCryptoModuleAction, SIGNAL(triggered(int)), SLOT(slotSelectCryptoModule()));
   mCryptoModuleAction->setItems( l );
   mCryptoModuleAction->setToolTip( i18n( "Select a cryptographic format for this message" ) );
-
-  actionFormatReset = new KAction( KIcon( "draw-eraser" ), i18n("Reset Font Settings"), this );
-  actionFormatReset->setIconText( i18n("Reset Font") );
-  actionCollection()->addAction( "format_reset", actionFormatReset );
-  connect( actionFormatReset, SIGNAL(triggered(bool)), SLOT(slotFormatReset()) );
 
   mComposerBase->editor()->createActions( actionCollection() );
 
@@ -1885,12 +1902,12 @@ bool KMComposeWin::encryptToSelf()
 
 
 
-void KMComposeWin::slotSendFailed( const QString& msg )
+void KMComposeWin::slotSendFailed( const QString& msg,Message::ComposerViewBase::FailedType type)
 {
   //   setModified( false );
   setEnabled( true );
   KMessageBox::sorry( mMainWidget, msg,
-                      i18n( "Sending Message Failed" ) );
+                      (type == Message::ComposerViewBase::AutoSave) ? i18n( "Autosave Message Failed" ) : i18n( "Sending Message Failed" ) );
 }
 
 void KMComposeWin::slotSendSuccessful()
@@ -1913,11 +1930,6 @@ Kleo::CryptoMessageFormat KMComposeWin::cryptoMessageFormat() const
     return Kleo::AutoFormat;
   }
   return cb2format( mCryptoModuleAction->currentItem() );
-}
-
-bool KMComposeWin::queryExit ()
-{
-  return true;
 }
 
 //-----------------------------------------------------------------------------
@@ -2095,6 +2107,9 @@ bool KMComposeWin::insertFromMimeData( const QMimeData *source, bool forceAttach
     // Get the image data before showing the dialog, since that processes events which can delete
     // the QMimeData object behind our back
     const QByteArray imageData = source->data( "image/png" );
+    if ( imageData.isEmpty() ) {
+       return true;
+    }
     if ( !forceAttachment ) {
       if ( mComposerBase->editor()->textMode() == KRichTextEdit::Rich && mComposerBase->editor()->isEnableImageActions() ) {
         QImage image = qvariant_cast<QImage>( source->imageData() );
@@ -2250,6 +2265,7 @@ void KMComposeWin::slotFetchJob(KJob*job)
         data.replace(("X-messaging/sms-All"),("X-SMS"));
         data.replace(("X-messaging/meanwhile-All"),("X-MEANWHILE"));
         data.replace(("X-messaging/irc-All"),("X-IRC"));
+        data.replace(("X-messaging/googletalk-All"),("X-GOOGLETALK"));
         addAttachment( attachmentName, KMime::Headers::CEbase64, QString(), data, item.mimeType().toLatin1() );
       } else {
         addAttachment( attachmentName, KMime::Headers::CEbase64, QString(), item.payloadData(), item.mimeType().toLatin1() );
@@ -2442,7 +2458,9 @@ void KMComposeWin::setEncryption( bool encrypt, bool setByUser )
 
   // make sure the mEncryptAction is in the right state
   mEncryptAction->setChecked( encrypt );
-
+  if(!setByUser) {
+    slotUpdateSignatureAndEncrypionStateIndicators();
+  }
   // show the appropriate icon
   if ( encrypt ) {
     mEncryptAction->setIcon( KIcon( "document-encrypt" ) );
@@ -2494,6 +2512,9 @@ void KMComposeWin::setSigning( bool sign, bool setByUser )
   // make sure the mSignAction is in the right state
   mSignAction->setChecked( sign );
 
+  if(!setByUser) {
+    slotUpdateSignatureAndEncrypionStateIndicators();
+  }
   // mark the attachments for (no) signing
   if ( canSignEncryptAttachments() ) {
     mComposerBase->attachmentModel()->setSignSelected( sign );
@@ -2814,6 +2835,19 @@ void KMComposeWin::slotSendNow()
   if ( !checkRecipientNumber() )
     return;
 
+  if( GlobalSettings::self()->checkSpellingBeforeSend()) {
+#ifdef HAVE_FORCESPELLCHECKING
+    mComposerBase->editor()->forceSpellChecking();
+#else
+    slotCheckSendNow();
+#endif
+  } else {
+    slotCheckSendNow();
+  }
+}
+
+void KMComposeWin::slotCheckSendNow()
+{
   if ( GlobalSettings::self()->confirmBeforeSend() ) {
     int rc = KMessageBox::warningYesNoCancel( mMainWidget,
                                               i18n("About to send email..."),
@@ -2872,7 +2906,6 @@ void KMComposeWin::enableHtml()
   if ( !markupAction->isChecked() )
     markupAction->setChecked( true );
 
-  mSaveFont = mComposerBase->editor()->currentFont();
   mComposerBase->editor()->updateActionStates();
   mComposerBase->editor()->setActionsEnabled( true );
 }
@@ -2882,6 +2915,26 @@ void KMComposeWin::enableHtml()
 //-----------------------------------------------------------------------------
 void KMComposeWin::disableHtml( Message::ComposerViewBase::Confirmation confirmation )
 {
+  bool forcePlainTextMarkup = false;
+#ifdef GRANTLEE_GREATER_0_2
+  if ( confirmation == Message::ComposerViewBase::LetUserConfirm && mComposerBase->editor()->isFormattingUsed() && !mForceDisableHtml ) {
+    int choice = KMessageBox::warningYesNoCancel( this, i18n( "Turning HTML mode off "
+        "will cause the text to lose the formatting. Are you sure?" ),
+        i18n( "Lose the formatting?" ), KGuiItem( i18n( "Lose Formatting" ) ), KGuiItem( i18n( "Add Markup Plain Text" ) ) , KStandardGuiItem::cancel(),
+              "LoseFormattingWarning" );
+
+    switch(choice) {
+    case KMessageBox::Cancel:
+        enableHtml();
+        return;
+    case KMessageBox::No:
+        forcePlainTextMarkup = true;
+        break;
+    case KMessageBox::Yes:
+        break;
+    }
+  }
+#else
   if ( confirmation == Message::ComposerViewBase::LetUserConfirm && mComposerBase->editor()->isFormattingUsed() && !mForceDisableHtml ) {
     int choice = KMessageBox::warningContinueCancel( this, i18n( "Turning HTML mode off "
         "will cause the text to lose the formatting. Are you sure?" ),
@@ -2892,7 +2945,9 @@ void KMComposeWin::disableHtml( Message::ComposerViewBase::Confirmation confirma
       return;
     }
   }
+#endif
 
+  mComposerBase->editor()->forcePlainTextMarkup(forcePlainTextMarkup);
   mComposerBase->editor()->switchToPlainText();
   mComposerBase->editor()->setActionsEnabled( false );
 
@@ -2972,7 +3027,7 @@ void KMComposeWin::slotIdentityChanged( uint uoid, bool initalChange )
   if ( ident.isNull() ) {
     return;
   }
-
+  bool wasModified(isModified());
   emit identityChanged( identity() );
   if ( !ident.fullEmailAddr().isNull() ) {
     mEdtFrom->setText( ident.fullEmailAddr() );
@@ -2990,7 +3045,6 @@ void KMComposeWin::slotIdentityChanged( uint uoid, bool initalChange )
   const KPIMIdentities::Identity &oldIdentity =
       KMKernel::self()->identityManager()->identityForUoidOrDefault( mId );
 
-  mComposerBase->identityChanged( ident, oldIdentity );
 
   if ( ident.organization().isEmpty() ) {
     mMsg->organization()->clear();
@@ -3036,11 +3090,11 @@ void KMComposeWin::slotIdentityChanged( uint uoid, bool initalChange )
   }
 
   // if unmodified, apply new template, if one is set
-  bool msgCleared = false;
-  if ( !isModified() && !( ident.templates().isEmpty() && mCustomTemplate.isEmpty() ) &&
+  if ( !wasModified && !( ident.templates().isEmpty() && mCustomTemplate.isEmpty() ) &&
        !initalChange ) {
-    applyTemplate( uoid );
-    msgCleared = true;
+    applyTemplate( uoid, mId );
+  } else {
+    mComposerBase->identityChanged( ident, oldIdentity, false );
   }
 
 
@@ -3076,6 +3130,7 @@ void KMComposeWin::slotIdentityChanged( uint uoid, bool initalChange )
   changeCryptoAction();
   // make sure the From and BCC fields are shown if necessary
   rethinkFields( false );
+  setModified(wasModified);
 }
 
 //-----------------------------------------------------------------------------
@@ -3154,11 +3209,6 @@ void KMComposeWin::slotFolderRemoved( const Akonadi::Collection & col )
   }
 }
 
-void KMComposeWin::slotFormatReset()
-{
-  mComposerBase->editor()->setTextForegroundColor( palette().text().color() );
-  mComposerBase->editor()->setFont( mSaveFont );
-}
 
 void KMComposeWin::slotOverwriteModeChanged()
 {
@@ -3194,6 +3244,7 @@ void KMComposeWin::slotCursorPositionChanged()
   }
 }
 
+#if 0
 namespace {
 class KToggleActionResetter {
   KToggleAction *mAction;
@@ -3279,6 +3330,7 @@ void KMComposeWin::slotEncryptChiasmusToggled( bool on )
   assert( !GlobalSettings::chiasmusKey().isEmpty() );
   resetter.disable();
 }
+#endif
 
 void KMComposeWin::recipientEditorSizeHintChanged()
 {
@@ -3339,7 +3391,7 @@ void KMComposeWin::charSelected(const QChar& c)
 
 void KMComposeWin::slotSaveAsFile()
 {
-    KFileDialog *dlg = new KFileDialog(KUrl(),QString(),this);
+    QPointer<KFileDialog> dlg = new KFileDialog(KUrl(),QString(),this);
     dlg->setOperationMode(KFileDialog::Saving);
     if(mComposerBase->editor()->textMode() == KMeditor::Rich ) {
       dlg->setFilter( QString::fromLatin1("text/html text/plain") );
@@ -3354,19 +3406,20 @@ void KMComposeWin::slotSaveAsFile()
           return;
         }
         QTextStream out(&file);
-        if(dlg->currentFilter() == QString::fromLatin1("text/html") ) {
-          out<<mComposerBase->editor()->toHtml();
-        } else {
+        if(dlg->currentFilter() == QString::fromLatin1("text/plain") ) {
           out<<mComposerBase->editor()->toPlainText();
+        } else {
+          out<<mComposerBase->editor()->toHtml();
         }
+        file.close();
     }
     delete dlg;
 }
 
 void KMComposeWin::slotCreateAddressBookContact()
 {
-  Akonadi::ContactEditorDialog dlg( Akonadi::ContactEditorDialog::CreateMode, this );
-  dlg.exec();
+  CreateNewContactJob *job = new CreateNewContactJob( this, this );
+  job->start();
 }
 
 void KMComposeWin::slotAttachMissingFile()
@@ -3389,3 +3442,4 @@ void KMComposeWin::slotVerifyMissingAttachmentTimeout()
     m_verifyMissingAttachment->start();
   }
 }
+

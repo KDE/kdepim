@@ -1500,14 +1500,15 @@ QString TemplateParser::findTemplate()
 QString TemplateParser::pipe( const QString &cmd, const QString &buf )
 {
   KProcess process;
-  bool success, finished;
+  bool success;
 
   process.setOutputChannelMode( KProcess::SeparateChannels );
   process.setShellCommand( cmd );
   process.start();
   if ( process.waitForStarted( PipeTimeout ) ) {
+    bool finished = false;
     if ( !buf.isEmpty() ) {
-      process.write( buf.toAscii() );
+      process.write( buf.toLatin1() );
     }
     if ( buf.isEmpty() || process.waitForBytesWritten( PipeTimeout ) ) {
       if ( !buf.isEmpty() ) {
@@ -1594,6 +1595,7 @@ QString TemplateParser::htmlMessageText( bool aStripSignature, AllowSelection is
   page.settings()->setAttribute( QWebSettings::JavascriptEnabled, false );
   page.settings()->setAttribute( QWebSettings::JavaEnabled, false );
   page.settings()->setAttribute( QWebSettings::PluginsEnabled, false );
+  page.settings()->setAttribute( QWebSettings::AutoLoadImages, false );
 
   page.currentFrame()->setHtml( htmlElement );
 

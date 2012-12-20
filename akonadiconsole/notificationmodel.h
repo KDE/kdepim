@@ -29,7 +29,7 @@ class NotificationModel : public QAbstractItemModel
 {
   Q_OBJECT
   public:
-    NotificationModel( QObject *parent );
+    explicit NotificationModel( QObject *parent );
 
     int columnCount(const QModelIndex& parent = QModelIndex()) const;
     int rowCount(const QModelIndex& parent = QModelIndex()) const;

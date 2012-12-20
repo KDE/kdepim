@@ -30,7 +30,6 @@
 class KJob;
 class KProgressDialog;
 
-class QAbstractItemModel;
 class QAction;
 class QItemSelectionModel;
 class QSignalMapper;
@@ -48,7 +47,7 @@ class XXPortManager : public QObject
      *
      * @param parent The widget that is used as parent for dialogs.
      */
-    XXPortManager( QWidget *parent = 0 );
+    explicit XXPortManager( QWidget *parent = 0 );
 
     /**
      * Destroys the xxport manager.

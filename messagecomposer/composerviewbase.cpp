@@ -98,6 +98,7 @@ Message::ComposerViewBase::ComposerViewBase ( QObject* parent, QWidget *parentGu
  , m_cryptoMessageFormat( Kleo::AutoFormat )
  , m_pendingQueueJobs( 0 )
  , m_autoSaveTimer( 0 )
+ , m_autoSaveErrorShown( false )
  , m_autoSaveInterval( 1 * 1000 * 60 ) // default of 1 min
 {
   m_charsets << "utf-8"; // default, so we have a backup in case client code forgot to set.
@@ -156,8 +157,6 @@ void Message::ComposerViewBase::setMessage ( const KMime::Message::Ptr& msg )
   MessageViewer::ObjectTreeParser otp( &emptySource );//All default are ok
   otp.parseObjectTree( msgContent );
 
-  m_editor->setPlainText( otp.plainTextContent() );
-
   // Load the attachments
   MessageCore::AttachmentCollector ac;
   ac.collectAttachmentsFrom( msgContent );
@@ -180,9 +179,36 @@ void Message::ComposerViewBase::setMessage ( const KMime::Message::Ptr& msg )
     m_editor->setHtml( otp.htmlContent() );
     emit enableHtml();
     collectImages( m_msg.get() );
+  } else {
+    m_editor->setPlainText( otp.plainTextContent() );
   }
 
   if ( m_msg->headerByType( "X-KMail-CursorPos" ) ) {
+    m_editor->setCursorPositionFromStart( m_msg->headerByType( "X-KMail-CursorPos" )->asUnicodeString().toInt() );
+  }
+}
+
+void Message::ComposerViewBase::updateTemplate ( const KMime::Message::Ptr& msg )
+{
+  // First, we copy the message and then parse it to the object tree parser.
+  // The otp gets the message text out of it, in textualContent(), and also decrypts
+  // the message if necessary.
+  KMime::Content *msgContent = new KMime::Content;
+  msgContent->setContent( msg->encodedContent() );
+  msgContent->parse();
+  MessageViewer::EmptySource emptySource;
+  MessageViewer::ObjectTreeParser otp( &emptySource );//All default are ok
+  otp.parseObjectTree( msgContent );
+  // Set the HTML text and collect HTML images
+  if ( !otp.htmlContent().isEmpty() ) {
+    m_editor->setHtml( otp.htmlContent() );
+    emit enableHtml();
+    collectImages( msg.get() );
+  } else {
+    m_editor->setPlainText( otp.plainTextContent() );
+  }
+
+  if ( msg->headerByType( "X-KMail-CursorPos" ) ) {
     m_editor->setCursorPositionFromStart( m_msg->headerByType( "X-KMail-CursorPos" )->asUnicodeString().toInt() );
   }
 }
@@ -205,7 +231,7 @@ void Message::ComposerViewBase::send ( MessageSender::SendMethod method, Message
     }
   }
   m_msg->setHeader( new KMime::Headers::Generic( "X-KMail-Transport", m_msg.get(), QString::number(m_transport->currentTransportId()), "utf-8" ) );
- 
+
   m_msg->setHeader( new KMime::Headers::Generic( "X-KMail-Fcc", m_msg.get(), QString::number( m_fccCollection.id() ) , "utf-8" ) );
   m_msg->setHeader( new KMime::Headers::Generic( "X-KMail-Identity", m_msg.get(), QString::number( identity.uoid() ), "utf-8" ));
 
@@ -244,7 +270,7 @@ void Message::ComposerViewBase::send ( MessageSender::SendMethod method, Message
     }
     if ( KMessageBox::No == ret ) {
       m_encrypt = false;
-      m_encrypt = false;
+      m_sign = false;
     } else {
       emit disableHtml( NoConfirmationNeeded );
     }
@@ -341,6 +367,10 @@ void Message::ComposerViewBase::slotEmailAddressResolved ( KJob* job )
     m_msg->setHeader( new KMime::Headers::Generic( "X-KMail-UnExpanded-BCC", m_msg.get(), unExpandedBcc.join( QLatin1String( ", " ) ).toLatin1() ) );
   }
 
+  Q_ASSERT(m_composers.isEmpty()); //composers should be empty. The caller of this function
+                                   //checks for emptyness before calling it
+                                   //so just ensure it actually is empty
+                                   //and document it
   // we first figure out if we need to create multiple messages with different crypto formats
   // if so, we create a composer per format
   // if we aren't signing or encrypting, this just returns a single empty message
@@ -357,13 +387,23 @@ void Message::ComposerViewBase::slotEmailAddressResolved ( KJob* job )
     return;
   }
 
+  bool autoresizeImage = false;
+  if(MessageComposer::MessageComposerSettings::self()->autoResizeImageEnabled()) {
+    if(MessageComposer::MessageComposerSettings::self()->askBeforeResizing()) {
+       const int rc = KMessageBox::warningYesNo( m_parentWidget,i18n("Do you want to resize images?"),
+                                                 i18n("Auto Resize Images"), KStandardGuiItem::yes(), KStandardGuiItem::no());
+       if(rc == KMessageBox::Yes) {
+           autoresizeImage = true;
+       }
+    }
+  }
   // Compose each message and prepare it for queueing, sending, or storing
   foreach( Message::Composer* composer, m_composers ) {
     fillGlobalPart( composer->globalPart() );
     m_editor->fillComposerTextPart( composer->textPart() );
     fillInfoPart( composer->infoPart(), UseExpandedRecipients );
 
-    composer->addAttachmentParts( m_attachmentModel->attachments() );
+    composer->addAttachmentParts( m_attachmentModel->attachments(), autoresizeImage );
 
     connect( composer, SIGNAL(result(KJob*)), this, SLOT(slotSendComposeResult(KJob*)) );
     composer->start();
@@ -372,9 +412,83 @@ void Message::ComposerViewBase::slotEmailAddressResolved ( KJob* job )
    }
 }
 
+namespace {
+
+ // helper methods for reading encryption settings
+
+inline int encryptKeyNearExpiryWarningThresholdInDays() {
+  if ( ! MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() ) {
+    return -1;
+  }
+  const int num =
+  MessageComposer::MessageComposerSettings::self()->cryptoWarnEncrKeyNearExpiryThresholdDays();
+  return qMax( 1, num );
+}
+
+inline int signingKeyNearExpiryWarningThresholdInDays()
+{
+  if ( ! MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() ) {
+    return -1;
+  }
+  const int num =
+  MessageComposer::MessageComposerSettings::self()->cryptoWarnSignKeyNearExpiryThresholdDays();
+  return qMax( 1, num );
+}
+
+inline int encryptRootCertNearExpiryWarningThresholdInDays()
+{
+  if ( ! MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() ) {
+    return -1;
+  }
+  const int num =
+  MessageComposer::MessageComposerSettings::self()->cryptoWarnEncrRootNearExpiryThresholdDays();
+  return qMax( 1, num );
+}
+
+inline int signingRootCertNearExpiryWarningThresholdInDays() {
+  if ( ! MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() ) {
+    return -1;
+  }
+  const int num =
+  MessageComposer::MessageComposerSettings::self()->cryptoWarnSignRootNearExpiryThresholdDays();
+  return qMax( 1, num );
+}
+
+inline int encryptChainCertNearExpiryWarningThresholdInDays()
+{
+  if ( ! MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() ) {
+    return -1;
+  }
+  const int num =
+  MessageComposer::MessageComposerSettings::self()->cryptoWarnEncrChaincertNearExpiryThresholdDays();
+  return qMax( 1, num );
+}
+
+inline int signingChainCertNearExpiryWarningThresholdInDays()
+{
+  if ( ! MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() ) {
+    return -1;
+  }
+  const int num =
+  MessageComposer::MessageComposerSettings::self()->cryptoWarnSignChaincertNearExpiryThresholdDays();;
+  return qMax( 1, num );
+}
+
+inline bool encryptToSelf()
+{
+  // return !Kpgp::Module::getKpgp() || Kpgp::Module::getKpgp()->encryptToSelf();
+  return MessageComposer::MessageComposerSettings::self()->cryptoEncryptToSelf();
+}
+
+inline bool showKeyApprovalDialog()
+{
+  return MessageComposer::MessageComposerSettings::self()->cryptoShowKeysForApproval();
+}
+
+} // nameless namespace
+
 QList< Message::Composer* > Message::ComposerViewBase::generateCryptoMessages ()
 {
-   QList< Message::Composer* > composers;
 
   kDebug() << "filling crypto info";
   Kleo::KeyResolver* keyResolver = new Kleo::KeyResolver(  encryptToSelf(),
@@ -394,19 +508,20 @@ QList< Message::Composer* > Message::ComposerViewBase::generateCryptoMessages ()
   QStringList signKeys;
 
   bool signSomething = m_sign;
-  foreach( MessageCore::AttachmentPart::Ptr attachment, m_attachmentModel->attachments() ) {
-    if( attachment->isSigned() )
-      signSomething = true;
-  }
+  bool doSignCompletely = m_sign;
   bool encryptSomething = m_encrypt;
+  bool doEncryptCompletely = m_encrypt;
   foreach( MessageCore::AttachmentPart::Ptr attachment, m_attachmentModel->attachments() ) {
-    if( attachment->isEncrypted() )
+    if( attachment->isSigned() ) {
+      signSomething = true;
+    } else {
+      doEncryptCompletely = false;
+    }
+    if( attachment->isEncrypted() ) {
       encryptSomething = true;
-  }
-
-   if( !signSomething && !encryptSomething ) {
-    composers.append( new Message::Composer() );
-    return composers;
+    } else {
+      doSignCompletely = false;
+    }
   }
 
   if( encryptSomething ) {
@@ -416,7 +531,7 @@ QList< Message::Composer* > Message::ComposerViewBase::generateCryptoMessages ()
       encryptToSelfKeys.push_back( QLatin1String( id.smimeEncryptionKey() ) );
     if ( keyResolver->setEncryptToSelfKeys( encryptToSelfKeys ) != Kpgp::Ok ) {
       kDebug() << "Failed to set encryptoToSelf keys!";
-      return composers;
+      return QList< Message::Composer* >();
     }
   }
 
@@ -427,7 +542,7 @@ QList< Message::Composer* > Message::ComposerViewBase::generateCryptoMessages ()
       signKeys.push_back( QLatin1String( id.smimeSigningKey() ) );
     if ( keyResolver->setSigningKeys( signKeys ) != Kpgp::Ok ) {
       kDebug() << "Failed to set signing keys!";
-      return composers;
+      return QList< Message::Composer* >();
     }
   }
 
@@ -437,16 +552,40 @@ QList< Message::Composer* > Message::ComposerViewBase::generateCryptoMessages ()
   keyResolver->setPrimaryRecipients( recipients );
   keyResolver->setSecondaryRecipients( bcc );
 
+  bool result = true;
+  signSomething = determineWhetherToSign( doSignCompletely, keyResolver,signSomething, result );
+  if(!result) {
+      /// TODO handle failure
+      kDebug() << "failed to resolve keys! oh noes";
+      emit failed( i18n( "Failed to resolve keys. Please report a bug." ) );
+      return QList< Message::Composer*>();
+  }
+
+  encryptSomething = determineWhetherToEncrypt( doEncryptCompletely,keyResolver,encryptSomething, signSomething, result );
+  if(!result) {
+      /// TODO handle failure
+      kDebug() << "failed to resolve keys! oh noes";
+      emit failed( i18n( "Failed to resolve keys. Please report a bug." ) );
+      return QList< Message::Composer*>();
+  }
+
+  if( !signSomething && !encryptSomething ) {
+    return QList< Message::Composer* >() << new Message::Composer();
+  }
+
+
   if ( keyResolver->resolveAllKeys( signSomething, encryptSomething ) != Kpgp::Ok ) {
     /// TODO handle failure
     kDebug() << "failed to resolve keys! oh noes";
     emit failed( i18n( "Failed to resolve keys. Please report a bug." ) );
-    return composers;
+    return QList< Message::Composer*>();
   }
   kDebug() << "done resolving keys:";
 
-  Kleo::CryptoMessageFormat concreteEncryptFormat = Kleo::AutoFormat;
+  QList< Message::Composer* > composers;
+
   if( encryptSomething ) {
+    Kleo::CryptoMessageFormat concreteEncryptFormat = Kleo::AutoFormat;
     for ( unsigned int i = 0 ; i < numConcreteCryptoMessageFormats ; ++i ) {
       if ( keyResolver->encryptionItems( concreteCryptoMessageFormats[i] ).empty() )
         continue;
@@ -500,10 +639,18 @@ QList< Message::Composer* > Message::ComposerViewBase::generateCryptoMessages ()
 
       composers.append( composer );
     }
+  } else if( !signSomething && !encryptSomething ) {
+     Message::Composer* composer =  new Message::Composer;
+     composers.append( composer );
+     //If we canceled sign or encrypt be sure to change status in attachment.
+     markAllAttachmentsForSigning(false);
+     markAllAttachmentsForSigning(false);
   }
+
 
   if( composers.isEmpty() && ( signSomething || encryptSomething ) )
     Q_ASSERT_X( false, "ComposerViewBase::fillCryptoInfo" , "No concrete sign or encrypt method selected");
+
 
   return composers;
 }
@@ -837,10 +984,10 @@ void Message::ComposerViewBase::slotAutoSaveComposeResult( KJob *job )
     // The job warned the user about something, and the user chose to return
     // to the message.  Nothing to do.
     kDebug() << "UserCancelledError.";
-    emit failed( i18n( "Job cancelled by the user" ) );
+    emit failed( i18n( "Job cancelled by the user" ), AutoSave );
   } else {
     kDebug() << "other Error.";
-    emit failed( i18n( "Could not autosave message: %1", job->errorString() ) );
+    emit failed( i18n( "Could not autosave message: %1", job->errorString() ), AutoSave );
   }
 
   m_composers.removeAll( composer );
@@ -1141,14 +1288,14 @@ void Message::ComposerViewBase::updateRecipients( const KPIMIdentities::Identity
   if ( type == MessageComposer::Recipient::Bcc ) {
     oldIdentList = oldIdent.bcc();
     newIdentList = ident.bcc();
-    
+
   } else if ( type == MessageComposer::Recipient::Cc ) {
     oldIdentList = oldIdent.cc();
     newIdentList = ident.cc();
   } else {
     return;
   }
-    
+
   if ( oldIdentList != newIdentList ) {
     const KMime::Types::Mailbox::List oldRecipients = MessageCore::StringUtil::mailboxListFromUnicodeString( oldIdentList );
     foreach ( const KMime::Types::Mailbox &recipient, oldRecipients ) {
@@ -1165,7 +1312,7 @@ void Message::ComposerViewBase::updateRecipients( const KPIMIdentities::Identity
   }
 }
 
-void Message::ComposerViewBase::identityChanged ( const KPIMIdentities::Identity &ident, const KPIMIdentities::Identity &oldIdent )
+void Message::ComposerViewBase::identityChanged ( const KPIMIdentities::Identity &ident, const KPIMIdentities::Identity &oldIdent, bool msgCleared )
 {
   updateRecipients( ident, oldIdent, MessageComposer::Recipient::Bcc );
   updateRecipients( ident, oldIdent, MessageComposer::Recipient::Cc );
@@ -1174,18 +1321,17 @@ void Message::ComposerViewBase::identityChanged ( const KPIMIdentities::Identity
                                                ( oldIdent ).signature();
   KPIMIdentities::Signature newSig = const_cast<KPIMIdentities::Identity&>
                                                ( ident ).signature();
-
   //replace existing signatures
   const bool replaced = editor()->replaceSignature( oldSig, newSig );
-
   // Just append the signature if there was no old signature
-  if ( !replaced && (/* msgCleared ||*/ oldSig.rawText().isEmpty() ) ) {
+  if ( !replaced && ( msgCleared || oldSig.rawText().isEmpty() ) ) {
     signatureController()->applySignature( newSig );
   }
   const QString vcardFileName = ident.vCardFile();
   attachmentController()->setIdentityHasOwnVcard(!vcardFileName.isEmpty());
   attachmentController()->setAttachOwnVcard(ident.attachVcard());
 
+  m_editor->setAutocorrectionLanguage(ident.autocorrectionLanguage());
 }
 
 void Message::ComposerViewBase::setEditor ( Message::KMeditor* editor )
@@ -1376,12 +1522,10 @@ bool Message::ComposerViewBase::hasMissingAttachments( const QStringList& attach
                QString::fromLatin1("\\b") );
   rx.setCaseSensitivity( Qt::CaseInsensitive );
 
-  bool gotMatch = false;
-
   // check whether the subject contains one of the attachment key words
   // unless the message is a reply or a forwarded message
   const QString subj = subject();
-  gotMatch = ( MessageHelper::stripOffPrefixes( subj ) == subj ) && ( rx.indexIn( subj ) >= 0 );
+  bool gotMatch = ( MessageHelper::stripOffPrefixes( subj ) == subj ) && ( rx.indexIn( subj ) >= 0 );
 
   if ( !gotMatch ) {
     // check whether the non-quoted text contains one of the attachment key
@@ -1427,74 +1571,278 @@ Message::ComposerViewBase::MissingAttachment Message::ComposerViewBase::checkFor
 }
 
 
-int Message::ComposerViewBase::encryptKeyNearExpiryWarningThresholdInDays() {
-  if ( ! MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() ) {
-    return -1;
-  }
-  const int num =
-  MessageComposer::MessageComposerSettings::self()->cryptoWarnEncrKeyNearExpiryThresholdDays();
-  return qMax( 1, num );
-}
 
-int Message::ComposerViewBase::signingKeyNearExpiryWarningThresholdInDays()
+void Message::ComposerViewBase::markAllAttachmentsForSigning(bool sign)
 {
-  if ( ! MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() ) {
-    return -1;
+  foreach( MessageCore::AttachmentPart::Ptr attachment, m_attachmentModel->attachments() ) {
+    if( attachment->isSigned() ) {
+       attachment->setSigned(sign);
+    }
   }
-  const int num =
-  MessageComposer::MessageComposerSettings::self()->cryptoWarnSignKeyNearExpiryThresholdDays();
-  return qMax( 1, num );
 }
 
-int Message::ComposerViewBase::encryptRootCertNearExpiryWarningThresholdInDays()
+void Message::ComposerViewBase::markAllAttachmentsForEncryption(bool encrypt)
 {
-  if ( ! MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() ) {
-    return -1;
+  foreach( MessageCore::AttachmentPart::Ptr attachment, m_attachmentModel->attachments() ) {
+    if( attachment->isEncrypted() ) {
+        attachment->setEncrypted(encrypt);
+    }
   }
-  const int num =
-  MessageComposer::MessageComposerSettings::self()->cryptoWarnEncrRootNearExpiryThresholdDays();
-  return qMax( 1, num );
 }
 
-int Message::ComposerViewBase::signingRootCertNearExpiryWarningThresholdInDays() {
-  if ( ! MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() ) {
-    return -1;
-  }
-  const int num =
-  MessageComposer::MessageComposerSettings::self()->cryptoWarnSignRootNearExpiryThresholdDays();
-  return qMax( 1, num );
-}
-
-int Message::ComposerViewBase::encryptChainCertNearExpiryWarningThresholdInDays()
+bool Message::ComposerViewBase::determineWhetherToSign( bool doSignCompletely, Kleo::KeyResolver* keyResolver, bool signSomething, bool & result )
 {
-  if ( ! MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() ) {
-    return -1;
-  }
-  const int num =
-  MessageComposer::MessageComposerSettings::self()->cryptoWarnEncrChaincertNearExpiryThresholdDays();
-  return qMax( 1, num );
+    bool sign = false;
+    switch ( keyResolver->checkSigningPreferences( signSomething ) ) {
+    case Kleo::DoIt:
+        if ( !signSomething ) {
+            markAllAttachmentsForSigning( true );
+            return true;
+        }
+        sign = true;
+        break;
+    case Kleo::DontDoIt:
+        sign = false;
+        break;
+    case Kleo::AskOpportunistic:
+        assert( 0 );
+    case Kleo::Ask:
+    {
+        // the user wants to be asked or has to be asked
+#ifndef QT_NO_CURSOR
+        MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+#endif
+        const QString msg = i18n("Examination of the recipient's signing preferences "
+                                 "yielded that you be asked whether or not to sign "
+                                 "this message.\n"
+                                 "Sign this message?");
+        switch ( KMessageBox::questionYesNoCancel( m_parentWidget, msg,
+                                                   i18n("Sign Message?"),
+                                                   KGuiItem( i18nc("to sign","&Sign") ),
+                                                   KGuiItem( i18n("Do &Not Sign") ) ) ) {
+        case KMessageBox::Cancel:
+            result = false;
+            return false;
+        case KMessageBox::Yes:
+            markAllAttachmentsForSigning( true );
+            return true;
+        case KMessageBox::No:
+            markAllAttachmentsForSigning( false );
+            return false;
+        }
+    }
+        break;
+    case Kleo::Conflict:
+    {
+        // warn the user that there are conflicting signing preferences
+#ifndef QT_NO_CURSOR
+        MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+#endif
+        const QString msg = i18n("There are conflicting signing preferences "
+                                 "for these recipients.\n"
+                                 "Sign this message?");
+        switch ( KMessageBox::warningYesNoCancel( m_parentWidget, msg,
+                                                  i18n("Sign Message?"),
+                                                  KGuiItem( i18nc("to sign","&Sign") ),
+                                                  KGuiItem( i18n("Do &Not Sign") ) ) ) {
+        case KMessageBox::Cancel:
+            result = false;
+            return false;
+        case KMessageBox::Yes:
+            markAllAttachmentsForSigning( true );
+            return true;
+        case KMessageBox::No:
+            markAllAttachmentsForSigning( false );
+            return false;
+        }
+    }
+        break;
+    case Kleo::Impossible:
+    {
+#ifndef QT_NO_CURSOR
+        MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+#endif
+        const QString msg = i18n("You have requested to sign this message, "
+                                 "but no valid signing keys have been configured "
+                                 "for this identity.");
+        if ( KMessageBox::warningContinueCancel( m_parentWidget, msg,
+                                                 i18n("Send Unsigned?"),
+                                                 KGuiItem( i18n("Send &Unsigned") ) )
+             == KMessageBox::Cancel ) {
+            result = false;
+            return false;
+        } else {
+            markAllAttachmentsForSigning( false );
+            return false;
+        }
+    }
+    }
+
+    if ( !sign || !doSignCompletely ) {
+        if ( MessageComposer::MessageComposerSettings::self()->cryptoWarningUnsigned() ) {
+#ifndef QT_NO_CURSOR
+        MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+#endif
+            const QString msg = sign && !doSignCompletely ?
+                        i18n("Some parts of this message will not be signed.\n"
+                             "Sending only partially signed messages might violate site policy.\n"
+                             "Sign all parts instead?") // oh, I hate this...
+                      : i18n("This message will not be signed.\n"
+                             "Sending unsigned message might violate site policy.\n"
+                             "Sign message instead?"); // oh, I hate this...
+            const QString buttonText = sign && !doSignCompletely
+                    ? i18n("&Sign All Parts") : i18n("&Sign");
+            switch ( KMessageBox::warningYesNoCancel( m_parentWidget, msg,
+                                                      i18n("Unsigned-Message Warning"),
+                                                      KGuiItem( buttonText ),
+                                                      KGuiItem( i18n("Send &As Is") ) ) ) {
+            case KMessageBox::Cancel:
+                result = false;
+                return false;
+            case KMessageBox::Yes:
+                markAllAttachmentsForSigning( true );
+                return true;
+            case KMessageBox::No:
+                return sign || doSignCompletely;
+            }
+        }
+    }
+    return sign || doSignCompletely;
 }
 
-int Message::ComposerViewBase::signingChainCertNearExpiryWarningThresholdInDays()
+bool Message::ComposerViewBase::determineWhetherToEncrypt( bool doEncryptCompletely, Kleo::KeyResolver* keyResolver, bool encryptSomething, bool signSomething, bool & result )
 {
-  if ( ! MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() ) {
-    return -1;
-  }
-  const int num =
-  MessageComposer::MessageComposerSettings::self()->cryptoWarnSignChaincertNearExpiryThresholdDays();;
-  return qMax( 1, num );
-}
+    bool encrypt = false;
+    bool opportunistic = false;
+    switch ( keyResolver->checkEncryptionPreferences( encryptSomething ) ) {
+    case Kleo::DoIt:
+        if ( !encryptSomething ) {
+            markAllAttachmentsForEncryption( true );
+            return true;
+        }
+        encrypt = true;
+        break;
+    case Kleo::DontDoIt:
+        encrypt = false;
+        break;
+    case Kleo::AskOpportunistic:
+        opportunistic = true;
+        // fall through...
+    case Kleo::Ask:
+    {
+        // the user wants to be asked or has to be asked
+#ifndef QT_NO_CURSOR
+        MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+#endif
+        const QString msg = opportunistic
+                ? i18n("Valid trusted encryption keys were found for all recipients.\n"
+                       "Encrypt this message?")
+                : i18n("Examination of the recipient's encryption preferences "
+                       "yielded that you be asked whether or not to encrypt "
+                       "this message.\n"
+                       "Encrypt this message?");
+        switch ( KMessageBox::questionYesNoCancel( m_parentWidget, msg,
+                                                   i18n("Encrypt Message?"),
+                                                   KGuiItem( signSomething
+                                                             ? i18n("Sign && &Encrypt")
+                                                             : i18n("&Encrypt") ),
+                                                   KGuiItem( signSomething
+                                                             ? i18n("&Sign Only")
+                                                             : i18n("&Send As-Is") ) ) ) {
+        case KMessageBox::Cancel:
+            result = false;
+            return false;
+        case KMessageBox::Yes:
+            markAllAttachmentsForEncryption( true );
+            return true;
+        case KMessageBox::No:
+            markAllAttachmentsForEncryption( false );
+            return false;
+        }
+    }
+        break;
+    case Kleo::Conflict:
+    {
+        // warn the user that there are conflicting encryption preferences
+#ifndef QT_NO_CURSOR
+        MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+#endif
+        const QString msg = i18n("There are conflicting encryption preferences "
+                                 "for these recipients.\n"
+                                 "Encrypt this message?");
+        switch ( KMessageBox::warningYesNoCancel( m_parentWidget, msg,
+                                                  i18n("Encrypt Message?"),
+                                                  KGuiItem( i18n("&Encrypt") ),
+                                                  KGuiItem( i18n("Do &Not Encrypt")) ) ) {
+        case KMessageBox::Cancel:
+            result = false;
+            return false;
+        case KMessageBox::Yes:
+            markAllAttachmentsForEncryption( true );
+            return true;
+        case KMessageBox::No:
+            markAllAttachmentsForEncryption( false );
+            return false;
+        }
+    }
+        break;
+    case Kleo::Impossible:
+    {
+#ifndef QT_NO_CURSOR
+        MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+#endif
+        const QString msg = i18n("You have requested to encrypt this message, "
+                                 "and to encrypt a copy to yourself, "
+                                 "but no valid trusted encryption keys have been "
+                                 "configured for this identity.");
+        if ( KMessageBox::warningContinueCancel( m_parentWidget, msg,
+                                                 i18n("Send Unencrypted?"),
+                                                 KGuiItem( i18n("Send &Unencrypted") ) )
+             == KMessageBox::Cancel ) {
+            result = false;
+            return false;
+        } else {
+            markAllAttachmentsForEncryption( false );
+            return false;
+        }
+    }
+    }
 
-bool Message::ComposerViewBase::encryptToSelf()
-{
-  // return !Kpgp::Module::getKpgp() || Kpgp::Module::getKpgp()->encryptToSelf();
-  return MessageComposer::MessageComposerSettings::self()->cryptoEncryptToSelf();
-}
+    if ( !encrypt || !doEncryptCompletely ) {
+        if ( MessageComposer::MessageComposerSettings::self()->cryptoWarningUnencrypted() ) {
+#ifndef QT_NO_CURSOR
+            MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+#endif
+            const QString msg = !doEncryptCompletely ?
+                        i18n("Some parts of this message will not be encrypted.\n"
+                             "Sending only partially encrypted messages might violate "
+                             "site policy and/or leak sensitive information.\n"
+                             "Encrypt all parts instead?") // oh, I hate this...
+                      : i18n("This message will not be encrypted.\n"
+                             "Sending unencrypted messages might violate site policy and/or "
+                             "leak sensitive information.\n"
+                             "Encrypt messages instead?"); // oh, I hate this...
+            const QString buttonText = !doEncryptCompletely
+                    ? i18n("&Encrypt All Parts") : i18n("&Encrypt");
+            switch ( KMessageBox::warningYesNoCancel( m_parentWidget, msg,
+                                                      i18n("Unencrypted Message Warning"),
+                                                      KGuiItem( buttonText ),
+                                                      KGuiItem( signSomething
+                                                                ? i18n("&Sign Only")
+                                                                : i18n("&Send As-Is")) ) ) {
+            case KMessageBox::Cancel:
+                result = false;
+                return false;
+            case KMessageBox::Yes:
+                markAllAttachmentsForEncryption( true );
+                return true;
+            case KMessageBox::No:
+                return encrypt || doEncryptCompletely;
+            }
+        }
+    }
 
-bool Message::ComposerViewBase::showKeyApprovalDialog()
-{
-  return MessageComposer::MessageComposerSettings::self()->cryptoShowKeysForApproval();
+    return encrypt || doEncryptCompletely;
 }
-
 
 #include "composerviewbase.moc"

@@ -113,8 +113,13 @@ TabWidget::TabWidget(QWidget * parent)
     d->tabsClose->setEnabled( false );
     d->tabsClose->adjustSize();
     d->tabsClose->setToolTip( i18n("Close the current tab"));
+
+#ifndef QT_NO_ACCESSIBILITY
+    d->tabsClose->setAccessibleName( i18n( "Close tab" ) );
+#endif
+
     setCornerWidget( d->tabsClose, Qt::TopRightCorner );
-    d->updateTabBarVisibility();
+    d->updateTabBarVisibility();    
 }
 
 TabWidget::~TabWidget()
@@ -425,6 +430,12 @@ void TabWidget::slotCloseRequest(QWidget* widget)
     if (d->frames.value(widget))
         emit signalRemoveFrameRequest(d->frames.value(widget)->id());
 }
+
+void TabWidget::slotActivateTab()
+{
+    setCurrentIndex( sender()->objectName().right( 2 ).toInt() -1 );
+}
+
 
 } // namespace Akregator
 

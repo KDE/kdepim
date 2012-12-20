@@ -27,6 +27,7 @@
  */
 #include "kmsearchmessagemodel.h"
 #include "mailcommon/mailutil.h"
+#include "messagelist/messagelistutil.h"
 
 #include "messagecore/stringutil.h"
 
@@ -63,48 +64,17 @@ KMSearchMessageModel::~KMSearchMessageModel( )
 {
 }
 
-QString contentSummary( const Akonadi::Item& item )
-{
-  Nepomuk2::Resource mail( item.url() );
-  const QString content =
-      mail.property( Nepomuk2::Vocabulary::NMO::plainTextMessageContent() ).toString();
-  // Extract the first 5 non-empty, non-quoted lines from the content and return it
-  int numLines = 0;
-  const int maxLines = 5;
-  const QStringList lines = content.split( QLatin1Char( '\n' ) );
-  QString ret;
-  foreach( const QString &line, lines ) {
-    const QString lineTrimmed = line.trimmed();
-    const bool isQuoted = lineTrimmed.startsWith( QLatin1Char( '>' ) ) || lineTrimmed.startsWith( QLatin1Char( '|' ) );
-    if ( !isQuoted && !lineTrimmed.isEmpty() ) {
-      ret += line + QLatin1Char( '\n' );
-      numLines++;
-      if ( numLines >= maxLines )
-        break;
-    }
-  }
-  return ret;
-}
-
-
 QString toolTip( const Akonadi::Item& item )
 {
   MessagePtr msg = item.payload<MessagePtr>();
 
   QColor bckColor = QApplication::palette().color( QPalette::ToolTipBase );
   QColor txtColor = QApplication::palette().color( QPalette::ToolTipText );
-  QColor darkerColor(
-    ( ( bckColor.red() * 8 ) + ( txtColor.red() * 2 ) ) / 10,
-    ( ( bckColor.green() * 8 ) + ( txtColor.green() * 2 ) ) / 10,
-    ( ( bckColor.blue() * 8 ) + ( txtColor.blue() * 2 ) ) / 10
-    );
 
   const QString bckColorName = bckColor.name();
   const QString txtColorName = txtColor.name();
-  const QString darkerColorName = darkerColor.name();
   const bool textIsLeftToRight = ( QApplication::layoutDirection() == Qt::LeftToRight );
   const QString textDirection =  textIsLeftToRight ? QLatin1String( "left" ) : QLatin1String( "right" );
-  const QString firstColumnWidth =  textIsLeftToRight ? QLatin1String( "45" ) : QLatin1String( "55" );
 
   QString tip = QString::fromLatin1(
     "<table width=\"100%\" border=\"0\" cellpadding=\"2\" cellspacing=\"0\">"
@@ -137,7 +107,7 @@ QString toolTip( const Akonadi::Item& item )
     "</td>"                                                      \
     "</tr>" );
 
-  QString content = contentSummary(item);
+  QString content = MessageList::Util::contentSummary( item.url() );
 
   if ( textIsLeftToRight ) {
     tip += htmlCodeForStandardRow.arg( i18n( "From" ) ).arg( MessageCore::StringUtil::stripEmailAddr( msg->from()->asUnicodeString() ) );

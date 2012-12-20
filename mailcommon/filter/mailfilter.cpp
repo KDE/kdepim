@@ -26,10 +26,11 @@
 #include "filteraction.h"
 #include "filteractiondict.h"
 #include "filtermanager.h"
-#include "mailutil.h"
 #include "filterlog.h"
 #include "filteractionmissingargumentdialog.h"
 using MailCommon::FilterLog;
+
+#include "pimcommon/pimutil.h"
 
 // KDEPIMLIBS headers
 #include <Akonadi/AgentManager>
@@ -238,12 +239,15 @@ MailFilter::AccountType MailFilter::applicability() const
   return mApplicability;
 }
 
-SearchRule::RequiredPart MailFilter::requiredPart() const
+SearchRule::RequiredPart MailFilter::requiredPart(const QString& id) const
 {
   //find the required message part needed for the filter
   //this can be either only the Envelope, all Header or the CompleteMessage
   //Makes the assumption that  Envelope < Header < CompleteMessage
   int requiredPart = SearchRule::Envelope;
+
+  if (!bEnabled || !applyOnAccount(id))
+    return SearchRule::Envelope;
 
   if (pattern())
     requiredPart = qMax( requiredPart, (int)pattern()->requiredPart() ) ; // no pattern means always matches?

@@ -89,6 +89,9 @@ IdentityPage::~IdentityPage()
 
 void IdentityPage::load()
 {
+  if ( !MailCommon::Kernel::self()->kernelIsRegistered() ) {
+    return;
+  }
   mOldNumberOfIdentities = mIdentityManager->shadowIdentities().count();
   // Fill the list:
   mIPage.mIdentityList->clear();
@@ -105,6 +108,9 @@ void IdentityPage::load()
 
 void IdentityPage::save()
 {
+  if ( !MailCommon::Kernel::self()->kernelIsRegistered() ) {
+    return;
+  }
   mIdentityManager->sort();
   mIdentityManager->commit();
 
@@ -275,10 +281,12 @@ void IdentityPage::slotContextMenu( IdentityListViewItem *item, const QPoint &po
   menu->addAction( i18n( "Add..." ), this, SLOT(slotNewIdentity()) );
   if ( item ) {
     menu->addAction( i18n( "Modify..." ), this, SLOT(slotModifyIdentity()) );
+    menu->addAction( i18n( "Rename" ), this, SLOT(slotRenameIdentity()) );
     if ( mIPage.mIdentityList->topLevelItemCount() > 1 ) {
       menu->addAction( i18n( "Remove" ), this, SLOT(slotRemoveIdentity()) );
     }
     if ( !item->identity().isDefault() ) {
+      menu->addSeparator();
       menu->addAction( i18n( "Set as Default" ), this, SLOT(slotSetAsDefault()) );
     }
   }
@@ -301,6 +309,7 @@ void IdentityPage::slotSetAsDefault()
 
   mIdentityManager->setAsDefault( item->identity().uoid() );
   refreshList();
+  mIPage.mSetAsDefaultButton->setEnabled( false );
 }
 
 void IdentityPage::refreshList()

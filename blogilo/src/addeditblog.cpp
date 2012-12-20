@@ -62,7 +62,7 @@ public:
     QString tmpBlogUrl;
 };
 
-AddEditBlog::AddEditBlog( int blog_id, QWidget *parent, Qt::WFlags flags )
+AddEditBlog::AddEditBlog( int blog_id, QWidget *parent, Qt::WindowFlags flags )
         : KDialog( parent, flags ), d(new Private)
 {
     kDebug();

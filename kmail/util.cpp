@@ -151,13 +151,14 @@ void KMail::Util::handleClickedURL( const KUrl &url, const QSharedPointer<MailCo
 
     KMail::Composer * win = KMail::makeComposer( msg, false, false, KMail::Composer::New, identity );
     win->setFocusToSubject();
+    win->setCollectionForNewMessage( folder->collection() );
     win->show();
   } else {
     kWarning() << "Can't handle URL:" << url;
   }
 }
 
-void KMail::Util::mailingListsHandleURL( const KUrl::List& lst,const QSharedPointer<MailCommon::FolderCollection> &folder )
+bool KMail::Util::mailingListsHandleURL( const KUrl::List& lst,const QSharedPointer<MailCommon::FolderCollection> &folder )
 {
   const QString handler = ( folder->mailingList().handler() == MailingList::KMail )
     ? QLatin1String( "mailto" ) : QLatin1String( "https" );
@@ -176,43 +177,70 @@ void KMail::Util::mailingListsHandleURL( const KUrl::List& lst,const QSharedPoin
 
   if ( !urlToHandle.isEmpty() ) {
     KMail::Util::handleClickedURL( urlToHandle, folder );
+    return true;
   } else {
     kWarning()<< "Can't handle url";
+    return false;
   }
 }
 
-void KMail::Util::mailingListPost( const QSharedPointer<MailCommon::FolderCollection> &fd )
+bool KMail::Util::mailingListPost( const QSharedPointer<MailCommon::FolderCollection> &fd )
 {
   if ( fd )
-    KMail::Util::mailingListsHandleURL( fd->mailingList().postUrls(),fd );
+    return KMail::Util::mailingListsHandleURL( fd->mailingList().postUrls(),fd );
+  return false;
 }
 
-void KMail::Util::mailingListSubscribe( const QSharedPointer<MailCommon::FolderCollection> &fd )
+bool KMail::Util::mailingListSubscribe( const QSharedPointer<MailCommon::FolderCollection> &fd )
 {
   if ( fd )
-    KMail::Util::mailingListsHandleURL( fd->mailingList().subscribeUrls(),fd );
+    return KMail::Util::mailingListsHandleURL( fd->mailingList().subscribeUrls(),fd );
+  return false;
 }
 
-void KMail::Util::mailingListUnsubscribe( const QSharedPointer<MailCommon::FolderCollection> &fd )
+bool KMail::Util::mailingListUnsubscribe( const QSharedPointer<MailCommon::FolderCollection> &fd )
 {
   if ( fd )
-    KMail::Util::mailingListsHandleURL( fd->mailingList().unsubscribeUrls(),fd );
+    return KMail::Util::mailingListsHandleURL( fd->mailingList().unsubscribeUrls(),fd );
+  return false;
 }
 
-void KMail::Util::mailingListArchives( const QSharedPointer<MailCommon::FolderCollection> &fd )
+bool KMail::Util::mailingListArchives( const QSharedPointer<MailCommon::FolderCollection> &fd )
 {
   if ( fd )
-    KMail::Util::mailingListsHandleURL( fd->mailingList().archiveUrls(),fd );
+    return KMail::Util::mailingListsHandleURL( fd->mailingList().archiveUrls(),fd );
+  return false;
 }
 
-void KMail::Util::mailingListHelp( const QSharedPointer<MailCommon::FolderCollection> &fd )
+bool KMail::Util::mailingListHelp( const QSharedPointer<MailCommon::FolderCollection> &fd )
 {
   if ( fd )
-    KMail::Util::mailingListsHandleURL( fd->mailingList().helpUrls(),fd );
+    return KMail::Util::mailingListsHandleURL( fd->mailingList().helpUrls(),fd );
+  return false;
 }
 
 void KMail::Util::lastEncryptAndSignState(bool &lastEncrypt, bool &lastSign, const KMime::Message::Ptr& msg)
 {
-    lastSign = KMime::isSigned(msg.get());
-    lastEncrypt = KMime::isEncrypted(msg.get());
+  lastSign = KMime::isSigned(msg.get());
+  lastEncrypt = KMime::isEncrypted(msg.get());
+}
+
+QColor KMail::Util::misspelledColor()
+{
+  return QColor(Qt::red);
+}
+
+QColor KMail::Util::quoteL1Color()
+{
+  return QColor( 0x00, 0x80, 0x00 );
+}
+
+QColor KMail::Util::quoteL2Color()
+{
+  return QColor( 0x00, 0x70, 0x00 );
+}
+
+QColor KMail::Util::quoteL3Color()
+{
+  return QColor( 0x00, 0x60, 0x00 );
 }

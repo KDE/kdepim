@@ -17,9 +17,10 @@
 */
 
 #include "foldercollection.h"
-#include "imapsettings.h"
 #include "mailkernel.h"
 #include "mailutil.h"
+#include "imapsettings.h"
+#include "pimcommon/pimutil.h"
 
 #include <Akonadi/ItemFetchJob>
 #include <Akonadi/ItemFetchScope>
@@ -217,7 +218,7 @@ void FolderCollection::writeConfig() const
 
     if ( mCollection.resource().contains( IMAP_RESOURCE_IDENTIFIER ) ) {
       OrgKdeAkonadiImapSettingsInterface *imapSettingsInterface =
-        Util::createImapSettingsInterface( mCollection.resource() );
+        PimCommon::Util::createImapSettingsInterface( mCollection.resource() );
 
       if ( imapSettingsInterface->isValid() ) {
         QDBusReply<int> reply = imapSettingsInterface->accountIdentity();
@@ -291,7 +292,7 @@ uint FolderCollection::identity() const
   if ( mUseDefaultIdentity ) {
     int identityId = -1;
     OrgKdeAkonadiImapSettingsInterface *imapSettingsInterface =
-      Util::createImapSettingsInterface( mCollection.resource() );
+      PimCommon::Util::createImapSettingsInterface( mCollection.resource() );
 
     if ( imapSettingsInterface->isValid() ) {
       QDBusReply<bool> useDefault = imapSettingsInterface->useDefaultIdentity();

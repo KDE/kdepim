@@ -10,9 +10,9 @@
 ]>
 <!-- The language must NOT be changed here. -->
 
-<book lang="&language;">
+<book id="konsolekalendar" lang="&language;">
 
-<bookinfo>
+<bookinfo id="konsolekalendarinfo">
 
 <title>The &konsolekalendar; Handbook</title>
 

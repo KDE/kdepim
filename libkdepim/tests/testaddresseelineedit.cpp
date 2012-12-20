@@ -42,8 +42,9 @@ int main(int argc, char* argv[])
   vbox->addWidget(kale1);
   KPIM::AddresseeLineEdit *kale2 = new KPIM::AddresseeLineEdit(0);
   vbox->addWidget(kale2);
+  vbox->addStretch();
 
-  w->resize( 400, 20 );
+  w->resize( 400, 400 );
   w->show();
 
   return app.exec();

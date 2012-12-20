@@ -28,7 +28,6 @@
 #include <QTreeView>
 
 class QContextMenuEvent;
-class QToolButton;
 
 namespace Message {
 class AttachmentModel;
@@ -44,7 +43,8 @@ class AttachmentView : public QTreeView
     /// can't change model afterwards.
     explicit AttachmentView( Message::AttachmentModel *model, QWidget *parent = 0 );
     ~AttachmentView();
-    QToolButton *toolButton();
+
+    QWidget *widget();
 
   public slots:
     /// model sets these
@@ -53,6 +53,7 @@ class AttachmentView : public QTreeView
     void hideIfEmpty();
     void selectNewAttachment();
 
+    void updateAttachmentLabel();
   protected:
     /** reimpl to avoid default drag cursor */
     virtual void startDrag( Qt::DropActions supportedActions );
@@ -63,12 +64,15 @@ class AttachmentView : public QTreeView
     /** reimpl to avoid drags from ourselves */
     virtual void dragEnterEvent( QDragEnterEvent *event );
 
+  private Q_SLOTS:
+    void slotShowHideAttchementList(bool);
   private:
     void saveHeaderState();
     void restoreHeaderState();
 
   signals:
     void contextMenuRequested();
+    void modified(bool);
 
   private:
     class Private;

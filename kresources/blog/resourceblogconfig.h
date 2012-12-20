@@ -51,7 +51,7 @@ class KCAL_RESOURCEBLOG_EXPORT ResourceBlogConfig : public KRES::ConfigWidget
 
       @param parent The parent widget to attach to.
     */
-    ResourceBlogConfig( QWidget *parent = 0 );
+    explicit ResourceBlogConfig( QWidget *parent = 0 );
 
     /**
       Destroy the configuration widget for blog resource.

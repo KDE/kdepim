@@ -127,8 +127,11 @@ void AggregationEditor::editAggregation( Aggregation *set )
                                              (int)mCurrentAggregation->threadExpandPolicy() );
   ComboBoxUtils::setIntegerOptionComboValue( mFillViewStrategyCombo,
                                              (int)mCurrentAggregation->fillViewStrategy() );
-
+  fillThreadLeaderCombo();
+  fillThreadExpandPolicyCombo();
+  fillGroupExpandPolicyCombo();
   setReadOnly( mCurrentAggregation->readOnly() );
+
 }
 
 void AggregationEditor::setReadOnly(bool readOnly)

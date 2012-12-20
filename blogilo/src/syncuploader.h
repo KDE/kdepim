@@ -43,7 +43,7 @@ class SyncUploader : public QObject
 {
 Q_OBJECT
 public:
-    SyncUploader( QObject *parent=0 );
+    explicit SyncUploader( QObject *parent=0 );
     ~SyncUploader();
 
     /**

@@ -83,7 +83,7 @@ public:
 
 private:
   QString mAgent;
-   SpamError mError;
+  SpamError mError;
   float mScore;
   float mConfidence;
   QString mHeader;

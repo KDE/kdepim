@@ -42,6 +42,7 @@
 #include <KFontSizeAction>
 #include <kstatusbar.h>
 #include <KMessageBox>
+#include <KAcceleratorManager>
 #include "kmcommands.h"
 #include "kmenubar.h"
 #include "kmenu.h"
@@ -53,6 +54,7 @@
 #include "mailkernel.h"
 #include "foldercollection.h"
 
+#include <KActionCollection>
 #include <akonadi/contact/contactsearchjob.h>
 #include <kpimutils/email.h>
 #include <kmime/kmime_message.h>
@@ -322,9 +324,6 @@ void KMReaderMainWin::setupAccel()
            this, SLOT(slotReplyOrForwardFinished()) );
 
   //----- File Menu
-  mSaveAsAction = KStandardAction::saveAs( mReaderWin->viewer(), SLOT(slotSaveMessage()),
-                                           actionCollection() );
-  mSaveAsAction->setShortcut( KStandardShortcut::shortcut( KStandardShortcut::Save ) );
 
   mSaveAtmAction  = new KAction(KIcon("mail-attachment"), i18n("Save A&ttachments..."), actionCollection() );
   connect( mSaveAtmAction, SIGNAL(triggered(bool)), mReaderWin->viewer(), SLOT(slotAttachmentSaveAll()) );
@@ -341,23 +340,17 @@ void KMReaderMainWin::setupAccel()
   closeShortcut.setAlternate( QKeySequence(Qt::Key_Escape));
   closeAction->setShortcuts(closeShortcut);
 
-  //----- View Menu
-  mViewSourceAction  = new KAction(i18n("&View Source"), this);
-  actionCollection()->addAction("view_source", mViewSourceAction );
-  connect(mViewSourceAction, SIGNAL(triggered(bool)), mReaderWin->viewer(), SLOT(slotShowMessageSource()));
-  mViewSourceAction->setShortcut(QKeySequence(Qt::Key_V));
-
   //----- Message Menu
 
-  fontAction = new KFontAction( i18n("Select Font"), this );
-  actionCollection()->addAction( "text_font", fontAction );
-  fontAction->setFont( mReaderWin->cssHelper()->bodyFont().family() );
-  connect( fontAction, SIGNAL(triggered(QString)),
+  mFontAction = new KFontAction( i18n("Select Font"), this );
+  actionCollection()->addAction( "text_font", mFontAction );
+  mFontAction->setFont( mReaderWin->cssHelper()->bodyFont().family() );
+  connect( mFontAction, SIGNAL(triggered(QString)),
            SLOT(slotFontAction(QString)) );
-  fontSizeAction = new KFontSizeAction( i18n( "Select Size" ), this );
-  fontSizeAction->setFontSize( mReaderWin->cssHelper()->bodyFont().pointSize() );
-  actionCollection()->addAction( "text_size", fontSizeAction );
-  connect( fontSizeAction, SIGNAL(fontSizeChanged(int)),
+  mFontSizeAction = new KFontSizeAction( i18n( "Select Size" ), this );
+  mFontSizeAction->setFontSize( mReaderWin->cssHelper()->bodyFont().pointSize() );
+  actionCollection()->addAction( "text_size", mFontSizeAction );
+  connect( mFontSizeAction, SIGNAL(fontSizeChanged(int)),
            SLOT(slotSizeAction(int)) );
 
 
@@ -391,7 +384,6 @@ void KMReaderMainWin::slotCopyItem(QAction*action)
   if ( action )
   {
     const QModelIndex index = action->data().value<QModelIndex>();
-    QAbstractItemModel *model = const_cast<QAbstractItemModel *>( index.model() );
     const Akonadi::Collection collection = index.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
 
     if ( mMsg.isValid() ) {
@@ -417,52 +409,78 @@ void KMReaderMainWin::slotMessagePopup(const Akonadi::Item&aMsg , const KUrl&aUr
 {
   mMsg = aMsg;
 
-  const QString email =  KPIMUtils::firstEmailAddress( aUrl.path() );
-  Akonadi::ContactSearchJob *job = new Akonadi::ContactSearchJob( this );
-  job->setLimit( 1 );
-  job->setQuery( Akonadi::ContactSearchJob::Email, email, Akonadi::ContactSearchJob::ExactMatch );
-  job->setProperty( "point", aPoint );
-  job->setProperty( "imageUrl", imageUrl );
-  job->setProperty( "url", aUrl );
-  connect( job, SIGNAL(result(KJob*)), SLOT(slotDelayedMessagePopup(KJob*)) );
+  const QString email =  KPIMUtils::firstEmailAddress( aUrl.path() ).toLower();
+  if ( aUrl.protocol() == "mailto" && !email.isEmpty()) {
+    Akonadi::ContactSearchJob *job = new Akonadi::ContactSearchJob( this );
+    job->setLimit( 1 );
+    job->setQuery( Akonadi::ContactSearchJob::Email, email, Akonadi::ContactSearchJob::ExactMatch );
+    job->setProperty( "msg", QVariant::fromValue( mMsg ) );
+    job->setProperty( "point", aPoint );
+    job->setProperty( "imageUrl", imageUrl );
+    job->setProperty( "url", aUrl );
+    connect( job, SIGNAL(result(KJob*)), SLOT(slotContactSearchJobForMessagePopupDone(KJob*)) );
+  } else {
+    showMessagePopup(mMsg, aUrl, imageUrl, aPoint, false, false);
+  }
 }
 
-void KMReaderMainWin::slotDelayedMessagePopup( KJob *job )
+void KMReaderMainWin::slotContactSearchJobForMessagePopupDone( KJob *job )
 {
   const Akonadi::ContactSearchJob *searchJob = qobject_cast<Akonadi::ContactSearchJob*>( job );
   const bool contactAlreadyExists = !searchJob->contacts().isEmpty();
+
+  const QList<Akonadi::Item> listContact = searchJob->items();
+  const bool uniqueContactFound = (listContact.count() == 1);
+  if(uniqueContactFound) {
+      mReaderWin->setContactItem(listContact.first());
+  } else {
+      mReaderWin->setContactItem(Akonadi::Item());
+  }
+
+  const Akonadi::Item msg = job->property( "msg" ).value<Akonadi::Item>();
   const QPoint aPoint = job->property( "point" ).toPoint();
-  const KUrl iUrl = job->property("imageUrl").value<KUrl>();
+  const KUrl imageUrl = job->property("imageUrl").value<KUrl>();
   const KUrl url = job->property("url").value<KUrl>();
+
+  showMessagePopup(msg, url, imageUrl, aPoint, contactAlreadyExists, uniqueContactFound);
+}
+
+void KMReaderMainWin::showMessagePopup(const Akonadi::Item&msg ,const KUrl&url,const KUrl &imageUrl,const QPoint& aPoint, bool contactAlreadyExists, bool uniqueContactFound)
+{
   KMenu *menu = new KMenu;
 
   bool urlMenuAdded = false;
   bool copyAdded = false;
+  const bool messageHasPayload = msg.hasPayload<KMime::Message::Ptr>();
   if ( !url.isEmpty() ) {
     if ( url.protocol() == QLatin1String( "mailto" ) ) {
       // popup on a mailto URL
       menu->addAction( mReaderWin->mailToComposeAction() );
-      if ( mMsg.hasPayload<KMime::Message::Ptr>() ) {
+      if ( messageHasPayload ) {
         menu->addAction( mReaderWin->mailToReplyAction() );
         menu->addAction( mReaderWin->mailToForwardAction() );
         menu->addSeparator();
       }
 
       if ( contactAlreadyExists ) {
-        menu->addAction( mReaderWin->openAddrBookAction() );
+        if(uniqueContactFound) {
+          menu->addAction( mReaderWin->editContactAction() );
+        } else {
+          menu->addAction( mReaderWin->openAddrBookAction() );
+        }
       } else {
         menu->addAction( mReaderWin->addAddrBookAction() );
       }
 
       menu->addAction( mReaderWin->copyURLAction() );
       copyAdded = true;
-    } else {
+    } else if( url.protocol() != QLatin1String( "attachment" ) ){
       // popup on a not-mailto URL
       menu->addAction( mReaderWin->urlOpenAction() );
       menu->addAction( mReaderWin->addBookmarksAction() );
       menu->addAction( mReaderWin->urlSaveAsAction() );
       menu->addAction( mReaderWin->copyURLAction() );
-      if(!iUrl.isEmpty()) {
+      if(!imageUrl.isEmpty()) {
         menu->addSeparator();
         menu->addAction( mReaderWin->copyImageLocation());
         menu->addAction(mReaderWin->downloadImageToDiskAction());
@@ -475,8 +493,10 @@ void KMReaderMainWin::slotDelayedMessagePopup( KJob *job )
     if ( urlMenuAdded ) {
       menu->addSeparator();
     }
-    menu->addAction( mMsgActions->replyMenu() );
-    menu->addSeparator();
+    if(messageHasPayload) {
+      menu->addAction( mMsgActions->replyMenu() );
+      menu->addSeparator();
+    }
     if( !copyAdded )
       menu->addAction( mReaderWin->copyAction() );
     menu->addAction( mReaderWin->selectAllAction() );
@@ -488,51 +508,50 @@ void KMReaderMainWin::slotDelayedMessagePopup( KJob *job )
     menu->addAction( mReaderWin->speakTextAction());
   } else if ( !urlMenuAdded ) {
     // popup somewhere else (i.e., not a URL) on the message
-    if (!mMsg.hasPayload<KMime::Message::Ptr>() ) {
-      // no message
-      delete menu;
-      return;
-    }
-    bool replyForwardMenu = false;
-    Akonadi::Collection col = parentCollection();
-    if ( col.isValid() ) {
-      if ( ! ( CommonKernel->folderIsSentMailFolder( col ) ||
-               CommonKernel->folderIsDrafts( col ) ||
-               CommonKernel->folderIsTemplates( col ) ) ) {
+    if (messageHasPayload) {
+      bool replyForwardMenu = false;
+      Akonadi::Collection col = parentCollection();
+      if ( col.isValid() ) {
+        if ( ! ( CommonKernel->folderIsSentMailFolder( col ) ||
+                 CommonKernel->folderIsDrafts( col ) ||
+                 CommonKernel->folderIsTemplates( col ) ) ) {
+          replyForwardMenu = true;
+        }
+      } else if ( messageHasPayload ) {
         replyForwardMenu = true;
       }
-    } else if ( mMsg.hasPayload<KMime::Message::Ptr>() ) {
-      replyForwardMenu = true;
-    }
-    if ( replyForwardMenu ) {
-        // add the reply and forward actions only if we are not in a sent-mail,
-        // templates or drafts folder
-        menu->addAction( mMsgActions->replyMenu() );
-        menu->addAction( mMsgActions->forwardMenu() );
+      if ( replyForwardMenu ) {
+          // add the reply and forward actions only if we are not in a sent-mail,
+          // templates or drafts folder
+          menu->addAction( mMsgActions->replyMenu() );
+          menu->addAction( mMsgActions->forwardMenu() );
+          menu->addSeparator();
+      }
+      menu->addAction( copyActionMenu(menu) );
+
+      menu->addSeparator();
+      if(!imageUrl.isEmpty()) {
         menu->addSeparator();
-    }
-    menu->addAction( copyActionMenu(menu) );
+        menu->addAction( mReaderWin->copyImageLocation());
+        menu->addAction( mReaderWin->downloadImageToDiskAction());
+        menu->addSeparator();
+      }
 
-    menu->addSeparator();
-    if(!iUrl.isEmpty()) {
-      menu->addSeparator();
-      menu->addAction( mReaderWin->copyImageLocation());
-      menu->addAction( mReaderWin->downloadImageToDiskAction());
-      menu->addSeparator();
-    }
-
-    menu->addAction( mViewSourceAction );
-    menu->addAction( mReaderWin->toggleFixFontAction() );
-    menu->addAction( mReaderWin->toggleMimePartTreeAction() );
-    menu->addSeparator();
-    menu->addAction( mMsgActions->printAction() );
-    menu->addAction( mSaveAsAction );
-    menu->addAction( mSaveAtmAction );
-    if ( mMsg.isValid() ) {
-      menu->addSeparator();
-      menu->addAction( mMsgActions->createTodoAction() );
+      menu->addAction( mReaderWin->viewSourceAction() );
+      menu->addAction( mReaderWin->toggleFixFontAction() );
+      menu->addAction( mReaderWin->toggleMimePartTreeAction() );
+      menu->addAction( mReaderWin->saveAsAction() );
+      menu->addAction( mSaveAtmAction );
+      if ( msg.isValid() ) {
+        menu->addSeparator();
+        menu->addAction( mMsgActions->createTodoAction() );
+      }
+    } else {
+      menu->addAction( mReaderWin->toggleFixFontAction() );
+      menu->addAction( mReaderWin->toggleMimePartTreeAction() );
     }
   }
+  KAcceleratorManager::manage(menu);
   menu->exec( aPoint, 0 );
   delete menu;
 }

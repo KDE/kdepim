@@ -72,7 +72,7 @@ STRIGI_ENDANALYZER_RETVAL MailEndAnalyzer::analyze( Strigi::AnalysisResult &inde
   if ( read < 0 )
     return Strigi::Error;
 
-  const QUrl url( QString::fromAscii( index.path().data(), index.path().size() ) );
+  const QUrl url( QString::fromLatin1( index.path().data(), index.path().size() ) );
   if ( url.scheme() == QLatin1String( "akonadi" ) && url.hasQueryItem( "mimetype" ) ) {
     const QString mimeType = QUrl::fromPercentEncoding( url.queryItemValue( "mimetype" ).toLatin1() );
 

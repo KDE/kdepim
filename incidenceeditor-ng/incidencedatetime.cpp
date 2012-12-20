@@ -67,6 +67,15 @@ IncidenceDateTime::IncidenceDateTime( Ui::EventOrTodoDesktop *ui )
            SLOT(toggleTimeZoneVisibility()) );
 #endif
 
+  QList<QLineEdit*> lineEdits;
+  lineEdits << mUi->mStartDateEdit->lineEdit() << mUi->mEndDateEdit->lineEdit()
+            << mUi->mStartTimeEdit->lineEdit() << mUi->mEndTimeEdit->lineEdit();
+  foreach( QLineEdit *lineEdit, lineEdits ) {
+    KLineEdit *klineEdit = qobject_cast<KLineEdit*>( lineEdit );
+    if ( klineEdit )
+        klineEdit->setClearButtonShown( false );
+  }
+
   connect( mUi->mFreeBusyCheck, SIGNAL(toggled(bool)), SLOT(checkDirtyStatus()) );
   connect( mUi->mWholeDayCheck, SIGNAL(toggled(bool)), SLOT(enableTimeEdits()) );
   connect( mUi->mWholeDayCheck, SIGNAL(toggled(bool)), SLOT(checkDirtyStatus()) );
@@ -504,7 +513,9 @@ void IncidenceDateTime::load( const KCalCore::Event::Ptr &event )
   mUi->mEndCheck->setChecked( true ); // Set to checked so we can reuse enableTimeEdits.
 
   // Start time
-  connect( mUi->mStartTimeEdit, SIGNAL(timeChanged(QTime)),
+  connect( mUi->mStartTimeEdit, SIGNAL(timeChanged(QTime)), // when editing with mouse, or up/down arrows
+           SLOT(updateStartTime(QTime)) );
+  connect( mUi->mStartTimeEdit, SIGNAL(timeEdited(QTime)), // When editing with any key except up/down
            SLOT(updateStartTime(QTime)) );
   connect( mUi->mStartDateEdit, SIGNAL(dateChanged(QDate)),
            SLOT(updateStartDate(QDate)) );
@@ -513,9 +524,13 @@ void IncidenceDateTime::load( const KCalCore::Event::Ptr &event )
   // End time
   connect( mUi->mEndTimeEdit, SIGNAL(timeChanged(QTime)),
            SLOT(checkDirtyStatus()) );
+  connect( mUi->mEndTimeEdit, SIGNAL(timeEdited(QTime)),
+           SLOT(checkDirtyStatus()) );
   connect( mUi->mEndDateEdit, SIGNAL(dateChanged(QDate)),
            SLOT(checkDirtyStatus()) );
   connect( mUi->mEndTimeEdit, SIGNAL(timeChanged(QTime)),
+           SIGNAL(endTimeChanged(QTime)) );
+  connect( mUi->mEndTimeEdit, SIGNAL(timeEdited(QTime)),
            SIGNAL(endTimeChanged(QTime)) );
   connect( mUi->mEndDateEdit, SIGNAL(dateChanged(QDate)),
            SIGNAL(endDateChanged(QDate)) );
@@ -874,6 +889,18 @@ bool IncidenceDateTime::endDateTimeEnabled() const
 
 bool IncidenceDateTime::isValid() const
 {
+  if ( startDateTimeEnabled() && !currentStartDateTime().isValid() ) {
+    //TODO: Add strings
+    qWarning() << "Start date is invalid";
+    return false;
+  }
+
+  if ( endDateTimeEnabled() && !currentEndDateTime().isValid() ) {
+    //TODO: Add strings
+    qWarning() << "End date is invalid";
+    return false;
+  }
+
   if ( startDateTimeEnabled() && endDateTimeEnabled() &&
        currentStartDateTime() > currentEndDateTime() ) {
     if ( mLoadedIncidence->type() == KCalCore::Incidence::TypeEvent ) {
@@ -886,7 +913,11 @@ bool IncidenceDateTime::isValid() const
                                 "The to-do is due before it starts.\n"
                                 "Please correct dates and times." );
 
+    } else if ( mLoadedIncidence->type() == KCalCore::Incidence::TypeJournal ) {
+      return true;
     }
+
+    kDebug() << mLastErrorString;
     return false;
   } else {
     mLastErrorString.clear();

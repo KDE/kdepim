@@ -33,6 +33,9 @@
 #include <kdebug.h>
 #include <KMenu>
 #include <KLocale>
+#include <KAction>
+#include <KActionMenu>
+#include <KActionCollection>
 
 #include <QPainter>
 
@@ -59,6 +62,7 @@ KMSystemTray::KMSystemTray(QObject *parent)
     mDesktopOfMainWin( 0 ),
     mMode( GlobalSettings::EnumSystemTrayPolicy::ShowOnUnread ),
     mCount( 0 ),
+    mShowUnreadMail( true ),
     mNewMessagesPopup( 0 ),
     mSendQueued( 0 )
 {
@@ -68,7 +72,6 @@ KMSystemTray::KMSystemTray(QObject *parent)
   setIconByName( "kmail" );
   mIcon = KIcon( "mail-unread-new" );
 
-#ifdef Q_WS_X11
   KMMainWidget * mainWidget = kmkernel->getKMMainWidget();
   if ( mainWidget ) {
     QWidget * mainWin = mainWidget->window();
@@ -77,9 +80,6 @@ KMSystemTray::KMSystemTray(QObject *parent)
                                             NET::WMDesktop ).desktop();
     }
   }
-#endif
-  // register the applet with the kernel
-  kmkernel->registerSystemTrayApplet( this );
 
 
   connect( this, SIGNAL(activateRequested(bool,QPoint)),
@@ -116,16 +116,22 @@ void KMSystemTray::buildPopupMenu()
     contextMenu()->addAction( action );
   if ( ( action = mainWidget->action("check_mail_in") ) )
     contextMenu()->addAction( action );
-  if ( ( mSendQueued = mainWidget->action("send_queued") ) )
-    contextMenu()->addAction( mSendQueued );
-  if ( ( action = mainWidget->action("send_queued_via") ) )
-    contextMenu()->addAction( action );
+
+  mSendQueued = mainWidget->sendQueuedAction();
+  contextMenu()->addAction( mSendQueued );
+  contextMenu()->addAction( mainWidget->sendQueueViaMenu() );
+
   contextMenu()->addSeparator();
   if ( ( action = mainWidget->action("new_message") ) )
     contextMenu()->addAction( action );
   if ( ( action = mainWidget->action("kmail_configure_kmail") ) )
     contextMenu()->addAction( action );
   contextMenu()->addSeparator();
+  if ( (action = mainWidget->action("akonadi_work_offline") ) )
+    contextMenu()->addAction( action );
+  contextMenu()->addSeparator();
+
+
 
   if ( ( action = actionCollection()->action("file_quit") ) )
     contextMenu()->addAction( action );
@@ -133,8 +139,14 @@ void KMSystemTray::buildPopupMenu()
 
 KMSystemTray::~KMSystemTray()
 {
-  // unregister the applet
-  kmkernel->unregisterSystemTrayApplet( this );
+}
+
+void KMSystemTray::setShowUnread(bool showUnread)
+{
+  if(mShowUnreadMail == showUnread)
+    return;
+  mShowUnreadMail = showUnread;
+  updateSystemTray();
 }
 
 void KMSystemTray::setMode(int newMode)
@@ -173,46 +185,48 @@ void KMSystemTray::updateCount()
     setIconByName( "kmail" );
     return;
   }
-  setIconByName( "mail-unread-new" );
+  if(mShowUnreadMail) {
+    const int overlaySize = KIconLoader::SizeSmallMedium;
 
-  const int overlaySize = KIconLoader::SizeSmallMedium;
+    const QString countString = QString::number( mCount );
+    QFont countFont = KGlobalSettings::generalFont();
+    countFont.setBold(true);
 
-  const QString countString = QString::number( mCount );
-  QFont countFont = KGlobalSettings::generalFont();
-  countFont.setBold(true);
+    // decrease the size of the font for the number of unread messages if the
+    // number doesn't fit into the available space
+    float countFontSize = countFont.pointSizeF();
+    QFontMetrics qfm( countFont );
+    int width = qfm.width( countString );
+    if( width > (overlaySize - 2) )
+    {
+      countFontSize *= float( overlaySize - 2 ) / float( width );
+      countFont.setPointSizeF( countFontSize );
+    }
 
-  // decrease the size of the font for the number of unread messages if the
-  // number doesn't fit into the available space
-  float countFontSize = countFont.pointSizeF();
-  QFontMetrics qfm( countFont );
-  int width = qfm.width( countString );
-  if( width > (overlaySize - 2) )
-  {
-    countFontSize *= float( overlaySize - 2 ) / float( width );
-    countFont.setPointSizeF( countFontSize );
+    // Paint the number in a pixmap
+    QPixmap overlayPixmap( overlaySize, overlaySize );
+    overlayPixmap.fill( Qt::transparent );
+
+    QPainter p( &overlayPixmap );
+    p.setFont( countFont );
+    KColorScheme scheme( QPalette::Active, KColorScheme::View );
+
+    p.setBrush( Qt::NoBrush );
+    p.setPen( scheme.foreground( KColorScheme::LinkText ).color() );
+    p.setOpacity( 1.0 );
+    p.drawText( overlayPixmap.rect(),Qt::AlignCenter, countString );
+    p.end();
+
+    QPixmap iconPixmap = mIcon.pixmap(overlaySize, overlaySize);
+
+    QPainter pp(&iconPixmap);
+    pp.drawPixmap(0, 0, overlayPixmap);
+    pp.end();
+
+    setIconByPixmap( iconPixmap );
+  } else {
+    setIconByName( "mail-unread-new" );
   }
-
-  // Paint the number in a pixmap
-  QPixmap overlayPixmap( overlaySize, overlaySize );
-  overlayPixmap.fill( Qt::transparent );
-
-  QPainter p( &overlayPixmap );
-  p.setFont( countFont );
-  KColorScheme scheme( QPalette::Active, KColorScheme::View );
-
-  p.setBrush( Qt::NoBrush );
-  p.setPen( scheme.foreground( KColorScheme::LinkText ).color() );
-  p.setOpacity( 1.0 );
-  p.drawText( overlayPixmap.rect(),Qt::AlignCenter, countString );
-  p.end();
-
-  QPixmap iconPixmap = mIcon.pixmap(overlaySize, overlaySize);
-
-  QPainter pp(&iconPixmap);
-  pp.drawPixmap(0, 0, overlayPixmap);
-  pp.end();
-
-  setIconByPixmap( iconPixmap );
 }
 
 
@@ -226,7 +240,7 @@ void KMSystemTray::slotActivated()
   if ( !mainWidget )
     return ;
 
-  QWidget *mainWin = kmkernel->getKMMainWidget()->window();
+  QWidget *mainWin = mainWidget->window();
   if ( !mainWin )
     return ;
 
@@ -309,18 +323,17 @@ void KMSystemTray::fillFoldersMenu( QMenu *menu, const QAbstractItemModel *model
 
 void KMSystemTray::hideKMail()
 {
-  if (!kmkernel->getKMMainWidget())
+  KMMainWidget * mainWidget = kmkernel->getKMMainWidget();
+  if (!mainWidget)
     return;
-  QWidget *mainWin = kmkernel->getKMMainWidget()->window();
+  QWidget *mainWin = mainWidget->window();
   Q_ASSERT(mainWin);
   if(mainWin)
   {
-#ifdef Q_WS_X11
     mDesktopOfMainWin = KWindowSystem::windowInfo( mainWin->winId(),
                                           NET::WMDesktop ).desktop();
     // iconifying is unnecessary, but it looks cooler
     KWindowSystem::minimizeWindow( mainWin->winId() );
-#endif
     mainWin->hide();
   }
 }
@@ -389,7 +402,7 @@ void KMSystemTray::slotSelectCollection(QAction*act)
   KMMainWidget * mainWidget = kmkernel->getKMMainWidget();
   if ( !mainWidget )
     return ;
-  QWidget *mainWin = kmkernel->getKMMainWidget()->window();
+  QWidget *mainWin = mainWidget->window();
   if( mainWin && !mainWin->isVisible() )
     activate();
 }

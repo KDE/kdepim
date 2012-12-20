@@ -34,7 +34,6 @@ class QPushButton;
 class QLabel;
 class QCheckBox;
 class QFont;
-class QRegExpValidator;
 class QPoint;
 class QGroupBox;
 class QSpinBox;
@@ -49,15 +48,14 @@ class ListView;
 class ConfigureDialog;
 class KIntSpinBox;
 class SimpleStringListEditor;
-class KColorCombo;
-class KFontRequester;
-class KIconButton;
-class KKeySequenceWidget;
 class KComboBox;
 class ColorListBox;
 class KCModuleProxy;
 class KIntNumInput;
-class KMComposerAutoCorrectionWidget;
+namespace MessageComposer {
+  class ComposerAutoCorrectionWidget;
+  class AutoResizeImageWidget;
+}
 
 namespace MessageList {
   namespace Utils {
@@ -76,13 +74,14 @@ namespace TemplateParser {
   class TemplatesConfiguration;
 }
 
-namespace KMail {
+namespace MailCommon {
   class Tag;
   typedef QSharedPointer<Tag> TagPtr;
 }
 
 namespace MailCommon {
   class FolderRequester;
+  class TagWidget;
 }
 
 namespace Kleo {
@@ -93,7 +92,7 @@ namespace Kleo {
 class ConfigModuleTab : public QWidget {
   Q_OBJECT
 public:
-   ConfigModuleTab( QWidget *parent=0 )
+   explicit ConfigModuleTab( QWidget *parent=0 )
       : QWidget( parent ),
         mEmitChanges( true )
       {}
@@ -156,7 +155,7 @@ private:
 class AccountsPageSendingTab : public ConfigModuleTab {
   Q_OBJECT
 public:
-  AccountsPageSendingTab( QWidget * parent=0 );
+  explicit AccountsPageSendingTab( QWidget * parent=0 );
   virtual ~AccountsPageSendingTab();
   QString helpAnchor() const;
   void save();
@@ -168,6 +167,7 @@ private:
 
 private:
   QCheckBox   *mConfirmSendCheck;
+  QCheckBox   *mCheckSpellingBeforeSending;
   KComboBox   *mSendOnCheckCombo;
   KComboBox   *mSendMethodCombo;
   KLineEdit   *mDefaultDomainEdit;
@@ -177,7 +177,7 @@ private:
 class AccountsPageReceivingTab : public ConfigModuleTab {
   Q_OBJECT
 public:
-  AccountsPageReceivingTab( QWidget * parent=0 );
+  explicit AccountsPageReceivingTab( QWidget * parent=0 );
   ~AccountsPageReceivingTab();
   QString helpAnchor() const;
   void save();
@@ -249,7 +249,7 @@ private:
 class AppearancePageFontsTab : public ConfigModuleTab {
   Q_OBJECT
 public:
-  AppearancePageFontsTab( QWidget * parent=0 );
+  explicit AppearancePageFontsTab( QWidget * parent=0 );
   QString helpAnchor() const;
   void save();
 
@@ -274,7 +274,7 @@ private:
 class AppearancePageColorsTab : public ConfigModuleTab {
   Q_OBJECT
 public:
-  AppearancePageColorsTab( QWidget * parent=0 );
+  explicit AppearancePageColorsTab( QWidget * parent=0 );
   QString helpAnchor() const;
   void save();
 
@@ -294,7 +294,7 @@ private:
 class AppearancePageLayoutTab : public ConfigModuleTab {
   Q_OBJECT
 public:
-  AppearancePageLayoutTab( QWidget * parent=0 );
+  explicit AppearancePageLayoutTab( QWidget * parent=0 );
   QString helpAnchor() const;
 
   void save();
@@ -319,7 +319,7 @@ private: // data
 class AppearancePageHeadersTab : public ConfigModuleTab {
   Q_OBJECT
 public:
-  AppearancePageHeadersTab( QWidget * parent=0 );
+  explicit AppearancePageHeadersTab( QWidget * parent=0 );
 
   QString helpAnchor() const;
 
@@ -350,7 +350,7 @@ private slots:
 class AppearancePageReaderTab : public ConfigModuleTab {
   Q_OBJECT
 public:
-  AppearancePageReaderTab( QWidget * parent=0 );
+  explicit AppearancePageReaderTab( QWidget * parent=0 );
 
   QString helpAnchor() const;
 
@@ -362,6 +362,7 @@ private:
 
 private: // data
   QCheckBox *mCloseAfterReplyOrForwardCheck;
+  QCheckBox *mAccessKeyEnabled;
   MessageViewer::ConfigureWidget *mViewerSettings;
 };
 
@@ -369,7 +370,7 @@ private: // data
 class AppearancePageSystemTrayTab : public ConfigModuleTab {
   Q_OBJECT
 public:
-  AppearancePageSystemTrayTab( QWidget * parent=0 );
+  explicit AppearancePageSystemTrayTab( QWidget * parent=0 );
 
   QString helpAnchor() const;
 
@@ -380,6 +381,7 @@ private:
 
 private: // data
   QCheckBox    *mSystemTrayCheck;
+  QCheckBox    *mSystemTrayShowUnreadMail;
   KButtonGroup *mSystemTrayGroup;
 };
 
@@ -391,10 +393,10 @@ public:
   explicit TagListWidgetItem( const QIcon & icon, const QString & text, QListWidget * parent = 0);
 
   ~TagListWidgetItem();
-  void setKMailTag( const KMail::Tag::Ptr& tag );
-  KMail::Tag::Ptr kmailTag() const;
+  void setKMailTag( const MailCommon::Tag::Ptr& tag );
+  MailCommon::Tag::Ptr kmailTag() const;
 private:
-  KMail::Tag::Ptr mTag;
+  MailCommon::Tag::Ptr mTag;
 };
 
 /**Configuration tab in the appearance page for modifying the available set of
@@ -402,7 +404,7 @@ private:
 class AppearancePageMessageTagTab : public ConfigModuleTab {
   Q_OBJECT
 public:
-  AppearancePageMessageTagTab( QWidget * parent=0);
+  explicit AppearancePageMessageTagTab( QWidget * parent=0);
   ~AppearancePageMessageTagTab();
 
   QString helpAnchor() const;
@@ -458,28 +460,18 @@ private:
 
 private: // data
 
-  KLineEdit *mTagNameLineEdit, *mTagAddLineEdit;
+  KLineEdit *mTagAddLineEdit;
   QPushButton *mTagAddButton, *mTagRemoveButton,
               *mTagUpButton, *mTagDownButton;
 
   QListWidget *mTagListBox;
 
-  QCheckBox *mTextColorCheck, *mBackgroundColorCheck,
-            *mTextFontCheck, *mInToolbarCheck;
-
   QGroupBox *mTagsGroupBox, *mTagSettingGroupBox;
 
-  KColorCombo *mTextColorCombo, *mBackgroundColorCombo;
-
-  KFontRequester *mFontRequester;
-
-  KIconButton *mIconButton;
-
-  KKeySequenceWidget *mKeySequenceWidget;
-
+  MailCommon::TagWidget *mTagWidget;
 
   // So we can compare to mMsgTagList and see if the user changed tags
-  QList<KMail::TagPtr> mOriginalMsgTagList;
+  QList<MailCommon::TagPtr> mOriginalMsgTagList;
 
   /*Used to safely call slotRecordTagSettings when the selection in
     list box changes*/
@@ -521,7 +513,7 @@ private:
 class ComposerPageGeneralTab : public ConfigModuleTab {
   Q_OBJECT
 public:
-  ComposerPageGeneralTab( QWidget * parent=0 );
+  explicit ComposerPageGeneralTab( QWidget * parent=0 );
   QString helpAnchor() const;
 
   void save();
@@ -549,6 +541,7 @@ private:
   QCheckBox     *mExternalEditorCheck;
   KUrlRequester *mEditorRequester;
   KIntSpinBox   *mMaximumRecipients;
+  QCheckBox     *mImprovePlainTextOfHtmlMessage;
 #ifdef KDEPIM_ENTERPRISE_BUILD
   KComboBox     *mForwardTypeCombo;
   QCheckBox     *mRecipientCheck;
@@ -559,7 +552,7 @@ private:
 class ComposerPageTemplatesTab : public ConfigModuleTab {
   Q_OBJECT
 public:
-  ComposerPageTemplatesTab( QWidget * parent = 0 );
+  explicit ComposerPageTemplatesTab( QWidget * parent = 0 );
   QString helpAnchor() const;
 
   void save();
@@ -576,7 +569,7 @@ private:
 class ComposerPageCustomTemplatesTab : public ConfigModuleTab {
   Q_OBJECT
 public:
-  ComposerPageCustomTemplatesTab( QWidget * parent = 0 );
+  explicit ComposerPageCustomTemplatesTab( QWidget * parent = 0 );
   QString helpAnchor() const;
 
   void save();
@@ -593,7 +586,7 @@ private:
 class ComposerPageSubjectTab : public ConfigModuleTab {
   Q_OBJECT
 public:
-  ComposerPageSubjectTab( QWidget * parent = 0 );
+  explicit ComposerPageSubjectTab( QWidget * parent = 0 );
   QString helpAnchor() const;
 
   void save();
@@ -612,7 +605,7 @@ private:
 class ComposerPageCharsetTab : public ConfigModuleTab {
   Q_OBJECT
 public:
-  ComposerPageCharsetTab( QWidget * parent=0 );
+  explicit ComposerPageCharsetTab( QWidget * parent=0 );
   QString helpAnchor() const;
 
   void save();
@@ -633,7 +626,7 @@ private:
 class ComposerPageHeadersTab : public ConfigModuleTab {
   Q_OBJECT
 public:
-  ComposerPageHeadersTab( QWidget * parent=0 );
+  explicit ComposerPageHeadersTab( QWidget * parent=0 );
   QString helpAnchor() const;
 
   void save();
@@ -653,7 +646,6 @@ private:
 private:
   QCheckBox   *mCreateOwnMessageIdCheck;
   KLineEdit   *mMessageIdSuffixEdit;
-  QRegExpValidator *mMessageIdSuffixValidator;
   ListView    *mTagList;
   QPushButton *mRemoveHeaderButton;
   KLineEdit   *mTagNameEdit;
@@ -665,7 +657,7 @@ private:
 class ComposerPageAttachmentsTab : public ConfigModuleTab {
   Q_OBJECT
 public:
-  ComposerPageAttachmentsTab( QWidget * parent=0 );
+  explicit ComposerPageAttachmentsTab( QWidget * parent=0 );
   QString helpAnchor() const;
 
   void save();
@@ -687,18 +679,35 @@ private:
 class ComposerPageAutoCorrectionTab : public ConfigModuleTab {
   Q_OBJECT
 public:
-  ComposerPageAutoCorrectionTab( QWidget * parent=0 );
+  explicit ComposerPageAutoCorrectionTab( QWidget * parent=0 );
   QString helpAnchor() const;
 
   void save();
 
 private:
   virtual void doLoadFromGlobalSettings();
-  //FIXME virtual void doResetToDefaultsOther();
+  virtual void doResetToDefaultsOther();
 
 private:
-  KMComposerAutoCorrectionWidget *autocorrectionWidget;
+  MessageComposer::ComposerAutoCorrectionWidget *autocorrectionWidget;
 };
+
+class ComposerPageAutoImageResizeTab : public ConfigModuleTab {
+  Q_OBJECT
+public:
+  explicit ComposerPageAutoImageResizeTab( QWidget * parent=0 );
+  QString helpAnchor() const;
+
+  void save();
+
+private:
+  virtual void doLoadFromGlobalSettings();
+  virtual void doResetToDefaultsOther();
+
+private:
+  MessageComposer::AutoResizeImageWidget *autoResizeWidget;
+};
+
 
 
 
@@ -718,7 +727,7 @@ public:
   typedef ComposerPageHeadersTab HeadersTab;
   typedef ComposerPageAttachmentsTab AttachmentsTab;
   typedef ComposerPageAutoCorrectionTab AutoCorrectionTab;
-
+  typedef ComposerPageAutoImageResizeTab AutoImageResizeTab;
 private:
   GeneralTab  *mGeneralTab;
   TemplatesTab  *mTemplatesTab;
@@ -728,6 +737,7 @@ private:
   HeadersTab  *mHeadersTab;
   AttachmentsTab  *mAttachmentsTab;
   AutoCorrectionTab *mAutoCorrectionTab;
+  AutoImageResizeTab *mAutoImageResizeTab;
 };
 
 //
@@ -739,7 +749,7 @@ private:
 class SecurityPageGeneralTab : public ConfigModuleTab {
   Q_OBJECT
 public:
-  SecurityPageGeneralTab( QWidget * parent=0 );
+  explicit SecurityPageGeneralTab( QWidget * parent=0 );
   QString helpAnchor() const;
 
   void save();
@@ -791,7 +801,7 @@ public:
 private Q_SLOTS:
   void slotReenableAllWarningsClicked();
   void slotConfigureGnupg();
-  void slotConfigureChiasmus();
+  //void slotConfigureChiasmus();
 
 private:
   virtual void doLoadFromGlobalSettings();
@@ -854,7 +864,7 @@ private:
 class MiscPageFolderTab : public ConfigModuleTab {
   Q_OBJECT
 public:
-  MiscPageFolderTab( QWidget * parent=0 );
+  explicit MiscPageFolderTab( QWidget * parent=0 );
 
   void save();
  QString helpAnchor() const;
@@ -872,7 +882,7 @@ private:
 class MiscPageInviteTab : public ConfigModuleTab  {
   Q_OBJECT
 public:
-  MiscPageInviteTab( QWidget * parent=0 );
+  explicit MiscPageInviteTab( QWidget * parent=0 );
   void save();
   virtual void doResetToDefaultsOther();
 
@@ -887,7 +897,7 @@ private:
 class MiscPageProxyTab : public ConfigModuleTab  {
   Q_OBJECT
 public:
-  MiscPageProxyTab( QWidget * parent=0 );
+  explicit MiscPageProxyTab( QWidget * parent=0 );
   void save();
 private:
   KCModuleProxy *mProxyModule;

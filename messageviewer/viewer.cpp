@@ -74,7 +74,6 @@ Viewer::~Viewer()
   //the d_ptr is automatically deleted
 }
 
-
 void Viewer::setMessage(KMime::Message::Ptr message, UpdateMode updateMode )
 {
   Q_D(Viewer);
@@ -408,6 +407,18 @@ void Viewer::setHeaderStyleAndStrategy( HeaderStyle * style,
   d->setHeaderStyleAndStrategy( style, strategy );
 }
 
+void Viewer::setExternalWindow( bool b )
+{
+  Q_D( Viewer );
+  d->setExternalWindow( b );
+}
+
+KAction *Viewer::viewSourceAction()
+{
+  Q_D( Viewer );
+  return d->mViewSourceAction;
+}
+
 KAction *Viewer::copyURLAction()
 {
   Q_D( Viewer );
@@ -438,7 +449,11 @@ KAction *Viewer::translateAction()
   return d->mTranslateAction;
 }
 
-
+KAction *Viewer::saveAsAction()
+{
+  Q_D( Viewer );
+  return d->mSaveMessageAction;
+}
 
 KAction *Viewer::urlOpenAction()
 {
@@ -593,9 +608,14 @@ bool Viewer::zoomTextOnly() const
   return d->mZoomTextOnly;
 }
 
+KAction *Viewer::findInMessageAction()
+{
+  Q_D( Viewer );
+  return d->mFindInMessageAction;
+}
+
 void Viewer::slotChangeDisplayMail(Viewer::ForceDisplayTo mode,bool loadExternal)
 {
-    qDebug()<<"void Viewer::slotChangeDisplayMail(Viewer::ForceDisplayTo mode,bool loadExternal)"<<loadExternal;
     setHtmlLoadExtOverride(loadExternal);
     switch(mode) {
     case Viewer::Html:

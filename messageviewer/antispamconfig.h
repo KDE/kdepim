@@ -34,8 +34,8 @@
 #ifndef __MESSAGEVIEWER_ANTISPAMCONFIG_H__
 #define __MESSAGEVIEWER_ANTISPAMCONFIG_H__
 
-#include <QtCore/QRegExp>
-#include <QtCore/QVector>
+#include <QRegExp>
+#include <QVector>
 #include "messageviewer_export.h"
 
 class QString;

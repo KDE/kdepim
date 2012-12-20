@@ -28,7 +28,7 @@ class NotificationMonitor : public QWidget
 {
   Q_OBJECT
   public:
-    NotificationMonitor( QWidget *parent );
+    explicit NotificationMonitor( QWidget *parent );
 
   private slots:
     void contextMenu(const QPoint& pos);

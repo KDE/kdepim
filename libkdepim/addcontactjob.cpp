@@ -35,12 +35,12 @@ class AddContactJob::Private
 {
   public:
     Private( AddContactJob *qq, const KABC::Addressee &contact, QWidget *parentWidget )
-      : q( qq ), mContact( contact ), mParentWidget( parentWidget )
+      : q( qq ), mContact( contact ), mParentWidget( parentWidget ), mShowMessageBox(true)
     {
     }
 
     Private( AddContactJob *qq, const KABC::Addressee &contact, const Akonadi::Collection &collection )
-      : q( qq ), mContact( contact ), mParentWidget( 0 ), mCollection( collection )
+      : q( qq ), mContact( contact ), mParentWidget( 0 ), mCollection( collection ), mShowMessageBox(true)
     {
     }
 
@@ -58,10 +58,14 @@ class AddContactJob::Private
       const KABC::Addressee::List contacts = searchJob->contacts();
 
       if ( !contacts.isEmpty() ) { // contact is already part of the address book...
-        const QString text = i18n( "The VCard's primary email address is already in "
-                                   "your address book; however, you may save the VCard "
-                                   "into a file and import it into the address book manually." );
-        KMessageBox::information( mParentWidget, text );
+        if(mShowMessageBox) {
+          const QString text =
+            i18nc( "@info",
+                   "The VCard's primary email address is already in "
+                   "your address book; however, you may save the VCard into "
+                   "a file and import it into the address book manually." );
+          KMessageBox::information( mParentWidget, text );
+        }
         q->setError( UserDefinedError );
         q->emitResult();
         return;
@@ -73,19 +77,24 @@ class AddContactJob::Private
         QPointer<Akonadi::CollectionDialog> dlg = new Akonadi::CollectionDialog( mParentWidget );
         dlg->setMimeTypeFilter( mimeTypes );
         dlg->setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
-        dlg->setCaption( i18n( "Select Address Book" ) );
-        dlg->setDescription( i18n( "Select the address book the new contact shall be saved in:" ) );
+        dlg->setCaption( i18nc( "@title:window", "Select Address Book" ) );
+        dlg->setDescription(
+          i18nc( "@info",
+                 "Select the address book where the contact will be saved:" ) );
+        dlg->changeCollectionDialogOptions( Akonadi::CollectionDialog::KeepTreeExpanded );
 
-        if ( dlg->exec() == QDialog::Accepted ) {
-          mCollection = dlg->selectedCollection();
-        } else {
+        bool gotIt = true;
+        if ( !dlg->exec() ) {
           q->setError( UserDefinedError );
           q->emitResult();
-          delete dlg;
+          gotIt = false;
+        } else {
+          mCollection = dlg->selectedCollection();
+        }
+        delete dlg;
+        if ( !gotIt ) {
           return;
         }
-
-        delete dlg;
       }
 
       if ( mCollection.isValid() ) {
@@ -112,11 +121,18 @@ class AddContactJob::Private
         return;
       }
 
-      const QString text = i18n( "The VCard was added to your address book; "
-                                 "you can add more information to this "
-                                 "entry by opening the address book." );
-      KMessageBox::information( mParentWidget, text, QString(), QLatin1String("addedtokabc") );
-
+      if(mShowMessageBox) {
+        const QString text =
+          i18nc( "@info",
+                 "The VCard was added to your address book; "
+                 "you can add more information to this "
+                 "entry by opening the address book." );
+        KMessageBox::information(
+          mParentWidget,
+          text,
+          QString(),
+          QLatin1String("addedtokabc") );
+      }
       q->emitResult();
     }
 
@@ -124,6 +140,7 @@ class AddContactJob::Private
     KABC::Addressee mContact;
     QWidget *mParentWidget;
     Akonadi::Collection mCollection;
+    bool mShowMessageBox;
 };
 
 AddContactJob::AddContactJob( const KABC::Addressee &contact, QWidget *parentWidget, QObject *parent )
@@ -139,6 +156,11 @@ AddContactJob::AddContactJob( const KABC::Addressee &contact, const Akonadi::Col
 AddContactJob::~AddContactJob()
 {
   delete d;
+}
+
+void AddContactJob::showMessageBox(bool b)
+{
+    d->mShowMessageBox = b;
 }
 
 void AddContactJob::start()

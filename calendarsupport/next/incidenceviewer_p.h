@@ -31,7 +31,7 @@ class TextBrowser : public KTextBrowser
   Q_OBJECT
 
   public:
-    TextBrowser( QWidget *parent = 0 );
+    explicit TextBrowser( QWidget *parent = 0 );
 
     void setSource( const QUrl &name );
 

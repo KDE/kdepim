@@ -36,6 +36,8 @@ ArchiveMailAgent::ArchiveMailAgent( const QString &id )
   : Akonadi::AgentBase( id )
 {
   mArchiveManager = new ArchiveMailManager(this);
+  KGlobal::locale()->insertCatalog( "libmailcommon" );
+  KGlobal::locale()->insertCatalog( "akonadi_archivemail_agent" );
 
   m_collectionMonitor = new Akonadi::Monitor( this );
   m_collectionMonitor->fetchCollection( true );

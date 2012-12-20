@@ -180,13 +180,13 @@ static void showJobError( KJob* job )
 }
 
 KMCommand::KMCommand( QWidget *parent )
-  : mResult( Undefined ), mDeletesItself( false ),
+  : mCountMsgs(0), mResult( Undefined ), mDeletesItself( false ),
     mEmitsCompletedItself( false ), mParent( parent )
 {
 }
 
 KMCommand::KMCommand( QWidget *parent, const Akonadi::Item &msg )
-  : mResult( Undefined ), mDeletesItself( false ),
+  : mCountMsgs(0), mResult( Undefined ), mDeletesItself( false ),
     mEmitsCompletedItself( false ), mParent( parent )
 {
   if ( msg.isValid() || msg.hasPayload<KMime::Message::Ptr>() ) {
@@ -195,7 +195,7 @@ KMCommand::KMCommand( QWidget *parent, const Akonadi::Item &msg )
 }
 
 KMCommand::KMCommand( QWidget *parent, const QList<Akonadi::Item> &msgList )
-  : mResult( Undefined ), mDeletesItself( false ),
+  : mCountMsgs(0), mResult( Undefined ), mDeletesItself( false ),
     mEmitsCompletedItself( false ), mParent( parent )
 {
   mMsgList = msgList;
@@ -567,7 +567,7 @@ KMCommand::Result KMEditMessageCommand::execute()
 {
   if ( !mMessage )
     return Failed;
-  
+
   KMail::Composer *win = KMail::makeComposer();
   bool lastEncrypt = false;
   bool lastSign = false;
@@ -604,7 +604,7 @@ KMCommand::Result KMEditItemCommand::execute()
   if ( !msg ) {
     return Failed;
   }
-  
+
   if ( mDeleteFromSource ) {
     setDeletesItself( true );
     Akonadi::ItemDeleteJob *job = new Akonadi::ItemDeleteJob( item );
@@ -1215,6 +1215,7 @@ KMCommand::Result KMSetStatusCommand::execute()
     slotModifyItemDone( 0 ); // pretend we did something
   } else {
     Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( itemsToModify, this );
+    modifyJob->disableRevisionCheck();
     modifyJob->setIgnorePayload( true );
     connect( modifyJob, SIGNAL(result(KJob*)), this, SLOT(slotModifyItemDone(KJob*)) );
   }
@@ -1292,9 +1293,8 @@ KMCommand::Result KMSetTagCommand::execute()
 
 KMFilterActionCommand::KMFilterActionCommand( QWidget *parent,
                                               const QVector<qlonglong> &msgListId,
-                                              const QString &filterId,
-                                              MailCommon::SearchRule::RequiredPart requiredPart )
-    : KMCommand( parent ), mMsgListId(msgListId), mFilterId( filterId  ), mRequiredPart( requiredPart )
+                                              const QString &filterId)
+    : KMCommand( parent ), mMsgListId(msgListId), mFilterId( filterId  )
 {
 }
 
@@ -1322,7 +1322,7 @@ KMCommand::Result KMFilterActionCommand::execute()
     }
 
 
-    MailCommon::FilterManager::instance()->filter( id, mFilterId, mRequiredPart );
+    MailCommon::FilterManager::instance()->filter( Akonadi::Item(id), mFilterId, QString() );
     progressItem->incCompletedItems();
   }
 
@@ -1332,17 +1332,17 @@ KMCommand::Result KMFilterActionCommand::execute()
 }
 
 
-KMMetaFilterActionCommand::KMMetaFilterActionCommand( const QString &filterId, SearchRule::RequiredPart requiredPart,
+KMMetaFilterActionCommand::KMMetaFilterActionCommand( const QString &filterId,
                                                       KMMainWidget *main )
     : QObject( main ),
-      mFilterId( filterId ), mRequiredPart( requiredPart ), mMainWidget( main )
+      mFilterId( filterId ), mMainWidget( main )
 {
 }
 
 void KMMetaFilterActionCommand::start()
 {
   KMCommand *filterCommand = new KMFilterActionCommand(
-      mMainWidget, mMainWidget->messageListPane()->selectionAsMessageItemListId() , mFilterId, mRequiredPart );
+      mMainWidget, mMainWidget->messageListPane()->selectionAsMessageItemListId() , mFilterId);
   filterCommand->start();
 }
 

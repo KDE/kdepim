@@ -59,7 +59,7 @@ public:
   
   QMap<QString, QMap<QString, QString> > listLanguage;
   QByteArray data;
-  KTextEdit *inputText;
+  TranslatorTextEdit *inputText;
   KTextEdit *translatedText;
   MinimumComboBox *from;
   MinimumComboBox *to;
@@ -87,6 +87,27 @@ void TranslatorWidget::TranslatorWidgetPrivate::initLanguage()
   listLanguage = abstractTranslator->initListLanguage(from);
 }
 
+
+TranslatorTextEdit::TranslatorTextEdit(QWidget *parent)
+  :KTextEdit(parent)
+{
+}
+
+void TranslatorTextEdit::dropEvent( QDropEvent *event )
+{
+  if(event->source() != this ) {
+    if( event->mimeData()->hasText() ) {
+      QTextCursor cursor = textCursor();
+      cursor.beginEditBlock();
+      cursor.insertText(event->mimeData()->text());
+      cursor.endEditBlock();
+      event->setDropAction(Qt::CopyAction);
+      event->accept();
+      return;
+    }
+  }
+  QTextEdit::dropEvent(event);
+}
 
 
 TranslatorWidget::TranslatorWidget( QWidget* parent )
@@ -156,17 +177,19 @@ void TranslatorWidget::init()
   hboxLayout->addWidget( closeBtn );
   connect( closeBtn, SIGNAL(clicked()), this, SLOT(slotCloseWidget()) );
 
-  QLabel *label = new QLabel( i18n( "From:" ) );
+  QLabel *label = new QLabel( i18nc( "Translate from language", "From:" ) );
   hboxLayout->addWidget( label );
   d->from = new MinimumComboBox;
   hboxLayout->addWidget( d->from );
 
-  label = new QLabel( i18n( "To:" ) );
+  label = new QLabel( i18nc( "Translate to language", "To:" ) );
   hboxLayout->addWidget( label );
   d->to = new MinimumComboBox;
+  connect( d->to, SIGNAL(currentIndexChanged(int)), SLOT(slotTranslate()) );
   hboxLayout->addWidget( d->to );
 
-  KPushButton *invert = new KPushButton(i18n("Invert"),this);
+  KPushButton *invert = new KPushButton(
+    i18nc("Invert language choices so that from becomes to and to becomes from", "Invert"),this);
   connect(invert,SIGNAL(clicked()),this,SLOT(slotInvertLanguage()));
   hboxLayout->addWidget(invert);
 
@@ -185,7 +208,7 @@ void TranslatorWidget::init()
 
   QSplitter *splitter = new QSplitter;
   splitter->setChildrenCollapsible( false );
-  d->inputText = new KTextEdit;
+  d->inputText = new TranslatorTextEdit;
   d->inputText->setAcceptRichText(false);
   d->inputText->setClickMessage(i18n("Drag text that you want to translate."));
   connect( d->inputText, SIGNAL(textChanged()), SLOT(slotTextChanged()) );
@@ -223,6 +246,7 @@ void TranslatorWidget::slotFromLanguageChanged( int index )
   if ( indexTo != -1 ) {
     d->to->setCurrentIndex( indexTo );
   }
+  slotTranslate();
 }
 
 void TranslatorWidget::setTextToTranslate( const QString& text)
@@ -253,7 +277,7 @@ void TranslatorWidget::slotTranslate()
 void TranslatorWidget::slotTranslateDone()
 {
   d->translate->setEnabled( true );
-  d->translatedText->setHtml(d->abstractTranslator->resultTranslate());
+  d->translatedText->setPlainText(d->abstractTranslator->resultTranslate());
 }
 
 void TranslatorWidget::slotTranslateFailed()

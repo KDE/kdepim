@@ -42,7 +42,7 @@ namespace GpgME {
 class CertListView : public Kleo::KeyListView {
   Q_OBJECT
 public:
-    explicit CertListView( QWidget * parent=0, Qt::WFlags f=0 );
+    explicit CertListView( QWidget * parent=0, Qt::WindowFlags f=0 );
     ~CertListView();
 
 public slots:

@@ -21,6 +21,8 @@
 #include "imapsettings.h"
 #include "pop3settings.h"
 
+#include "pimcommon/pimutil.h"
+
 #include <Akonadi/AgentInstance>
 #include <Akonadi/EntityMimeTypeFilterModel>
 #include <Akonadi/KMime/SpecialMailCollections>
@@ -278,7 +280,7 @@ Akonadi::Collection Kernel::trashCollectionFromResource( const Akonadi::Collecti
     const QString collectionResourceName( col.resource() );
     if ( collectionResourceName.contains( IMAP_RESOURCE_IDENTIFIER ) ) {
       OrgKdeAkonadiImapSettingsInterface *iface =
-        MailCommon::Util::createImapSettingsInterface( collectionResourceName );
+        PimCommon::Util::createImapSettingsInterface( collectionResourceName );
 
       if ( iface->isValid() ) {
         trashCol =  Akonadi::Collection( iface->trashCollection() );
@@ -302,7 +304,7 @@ bool Kernel::folderIsTrash( const Akonadi::Collection &col )
     }
     if ( type.identifier().contains( IMAP_RESOURCE_IDENTIFIER ) ) {
       OrgKdeAkonadiImapSettingsInterface *iface =
-        MailCommon::Util::createImapSettingsInterface( type.identifier() );
+        PimCommon::Util::createImapSettingsInterface( type.identifier() );
 
       if ( iface->isValid() ) {
         if ( iface->trashCollection() == col.id() ) {
@@ -346,7 +348,12 @@ bool Kernel::folderIsInbox( const Akonadi::Collection &collection, bool withoutP
     return true;
   }
   //Fix order. Remoteid is not "inbox" when translated
-  if( collection == Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Inbox ) ) {
+  if ( collection == Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Inbox ) ) {
+    return true;
+  }
+
+  //MBOX is one folder only, treat as inbox
+  if ( collection.resource().contains(MBOX_RESOURCE_IDENTIFIER) ) {
     return true;
   }
 

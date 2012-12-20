@@ -482,15 +482,17 @@ void FolderTreeWidgetItem::setTotalCount( int totalCount )
     totalCountToDisplay += mChildrenTotalCount;
 
   FolderTreeWidget * tree = dynamic_cast< FolderTreeWidget * >( treeWidget() );
-  int idx = tree->totalColumnIndex();
-  if ( tree && idx >= 0 )
-  {
-    // FIXME: Why the "parent()" logic is hardwired here ?
-    if ( parent() || mAlwaysDisplayCounts || !isExpanded() )
-      setText( idx, QString::number( totalCountToDisplay ) );
-    else
-      setText( idx, QString() );
-    setTextAlignment( idx, Qt::AlignRight );
+  if( tree ) {
+    int idx = tree->totalColumnIndex();
+    if ( idx >= 0 )
+    {
+      // FIXME: Why the "parent()" logic is hardwired here ?
+      if ( parent() || mAlwaysDisplayCounts || !isExpanded() )
+        setText( idx, QString::number( totalCountToDisplay ) );
+      else
+        setText( idx, QString() );
+      setTextAlignment( idx, Qt::AlignRight );
+    }
   }
 }
 
@@ -523,11 +525,13 @@ void FolderTreeWidgetItem::setDataSize( qint64 dataSize )
     txt = "-";
 
   FolderTreeWidget * tree = dynamic_cast< FolderTreeWidget * >( treeWidget() );
-  int idx = tree->dataSizeColumnIndex();
-  if ( tree && idx >= 0 )
-  {
-    setText( idx, txt );
-    setTextAlignment( idx, Qt::AlignRight );
+  if( tree ) {
+    int idx = tree->dataSizeColumnIndex();
+    if ( idx >= 0 )
+    {
+      setText( idx, txt );
+      setTextAlignment( idx, Qt::AlignRight );
+    }
   }
 }
 

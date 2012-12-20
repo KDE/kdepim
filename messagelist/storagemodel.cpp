@@ -40,7 +40,6 @@
 
 
 #include <KDE/KLocale>
-#include <Nepomuk/ResourceManager>
 #include <Soprano/Statement>
 #include <soprano/signalcachemodel.h>
 #include <soprano/nao.h>
@@ -363,6 +362,7 @@ void StorageModel::setMessageItemStatus( MessageList::Core::MessageItem *mi,
   Item item = itemForRow( row );
   item.setFlags( status.statusFlags() );
   ItemModifyJob *job = new ItemModifyJob( item, this );
+  job->disableRevisionCheck();
   job->setIgnorePayload( true );
 }
 

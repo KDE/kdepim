@@ -43,7 +43,7 @@
     <listitem>
       <para>for all other Linux distributions:
       </para>
-      <para>in your user directory in <filename>.kde/share/config/kdeglobals</filename> add the line <userinput> BrowserApplication[$e]=!firefox</userinput> under category <guilabel>[General]</guilabel>  If <emphasis>General</emphasis> category does not exist you should add it.</para>
+      <para>in your user directory in <filename>.kde/share/config/kdeglobals</filename> add the line <userinput> BrowserApplication[$e]=!firefox</userinput> under category <guilabel>[General]</guilabel>. If <emphasis>General</emphasis> category does not exist you should add it.</para>
     </listitem>
   </itemizedlist>
 <para>You can also use the script in <ulink url="http://userbase.kde.org/Special:myLanguage/Tutorials/Modify_KDE_Software_Defaults">Tutorials/Modify_KDE_Software_Defaults</ulink></para>
@@ -60,7 +60,7 @@
 <qandaentry><question><para>How to store sent mails in a special folder?</para></question>
 <answer>
   <para><emphasis>Symptom:</emphasis> You want to store mails in a special folder. Maybe you are using an IMAP server and want to store your mails on the server, not in the client.</para>
-  <para><emphasis>Solution:</emphasis> In &kmail;, choose <menuchoice><guimenu>Settings</guimenu><guisubmenu>Configure KMail</guisubmenu><guimenuitem>Identities</guimenuitem><guimenuitem>(Choose an identity)</guimenuitem><guimenuitem>Modify</guimenuitem><guimenuitem>Advanced</guimenuitem><guimenuitem>Sent-mail-folder</guimenuitem></menuchoice></para>
+  <para><emphasis>Solution:</emphasis> In &kmail;, choose <menuchoice><guimenu>Settings</guimenu><guisubmenu>Configure KMail</guisubmenu><guimenuitem>Identities</guimenuitem><guimenuitem>(Choose an identity)</guimenuitem><guimenuitem>Modify</guimenuitem><guimenuitem>Advanced</guimenuitem><guimenuitem>Sent-mail folder</guimenuitem></menuchoice></para>
 </answer>
 </qandaentry>
 
@@ -77,7 +77,7 @@
   <para><emphasis>Symptom:</emphasis> You exchange encrypted mail with a friend, but would like to store it unencrypted, once you have opened the message.</para>
   <para><emphasis>Solution:</emphasis> To store emails that have been decrypted once in unencrypted format henceforth, add this to your <filename>kmailrc</filename> configuration file, in the [Reader] section:</para>
   <para><userinput>store-displayed-messages-unencrypted=true</userinput></para>
-  <para>This may only work with <emphasis>SMIME</emphasis> but implementation for <emphasis>OpenPgP</emphasis> is being worked on.</para>
+  <para>This may only work with <emphasis>SMIME</emphasis> but implementation for <emphasis>OpenPGP</emphasis> is being worked on.</para>
 </answer>
 </qandaentry>
 
@@ -469,7 +469,7 @@ and there is no way to activate them.</para></answer>
 <qandaentry>
 <question><para>Can I use two different versions of &kmail; at the same time? Can I go
 back from a current version of &kmail; to an older one?</para></question>
-<answer><para>You can only run one instance of &kmail; at once. We also recommend
+<answer><para>You can only run one instance of &kmail; at a time. We also recommend
 to stick to a certain version and not switch back and forth between different versions.
 Downgrading to an older version will probably cause problems, &eg; because the index file
 formats might have changed. Upgrading should never be a problem.</para></answer>
@@ -481,7 +481,7 @@ formats might have changed. Upgrading should never be a problem.</para></answer>
 </qandaentry>
 
 <qandaentry>
-<question><para>&kmail; crashed while I was writing a mail; is that mail is lost now?</para></question>
+<question><para>&kmail; crashed while I was writing a mail; is that mail lost now?</para></question>
 <answer><para>&kmail; tries to save your mail to
 <filename class="directory">~/.kde4/share/apps/kmail/autosave</filename> in case of a crash. The next time you start
 &kmail; the mail composer should appear with your mail again; If it does not,
@@ -675,7 +675,7 @@ Is there any documentation on the available interfaces?</para></question>
 <answer><para>You can get a list of functions by using this command in a shell:
 <userinput><command>qdbus</command>
 <option>org.kde.kmail /KMail</option></userinput>. Then you can control &kmail; like this: <userinput><command>qdbus</command>
-<option>org.kde.kmail /KMail org.kde.kmail.kmail.folderList</option></userinput>. You can use <application>qdbusviewer</application> to browse available methods in graphical interface.</para></answer>
+<option>org.kde.kmail /KMail org.kde.kmail.kmail.folderList</option></userinput>. You can use <application>qdbusviewer</application> to browse available methods in a graphical interface.</para></answer>
 </qandaentry>
 
 <qandaentry>
@@ -762,7 +762,7 @@ the &imap; account, the Local Folders will stay collapsed when &kmail; starts.
 	</para>
       </listitem>
       <listitem>
-	<para>Give the search an informative name (Search folder name) like <replaceable>KDE-PIM-USERS-Watched</replaceable>
+	<para>Give the search an informative name (<guilabel>Search folder name</guilabel>) like <replaceable>KDE-PIM-USERS-Watched</replaceable>
 	</para>
       </listitem>
       <listitem>
@@ -783,7 +783,7 @@ the &imap; account, the Local Folders will stay collapsed when &kmail; starts.
 <para><emphasis>Step by step implementation</emphasis></para>
 <para><warning><para>The provided solution was tested limited number of times and should be used with caution.</para></warning></para>
 <itemizedlist>
-<listitem><para>Prerequisites, make sure you have those before starting
+<listitem><para>Prerequisites, make sure you have these before starting
 <itemizedlist>
 <listitem><para>libtranslate
 </para></listitem>

@@ -54,7 +54,7 @@ namespace IncidenceDialogFactory
     bool needsSaving,
     KCalCore::IncidenceBase::IncidenceType type,
     Akonadi::IncidenceChanger *changer,
-    QWidget *parent = 0, Qt::WFlags flags = 0 );
+    QWidget *parent = 0, Qt::WindowFlags flags = 0 );
 
   INCIDENCEEDITORS_NG_EXPORT IncidenceDialog *createTodoEditor(
     const QString &summary,
@@ -66,7 +66,7 @@ namespace IncidenceDialogFactory
     bool inlineAttachment,
     Akonadi::Collection defaultCollection,
     bool cleanupAttachmentTemp,
-    QWidget *parent = 0, Qt::WFlags flags = 0 );
+    QWidget *parent = 0, Qt::WindowFlags flags = 0 );
 
   INCIDENCEEDITORS_NG_EXPORT IncidenceDialog *createEventEditor(
     const QString &summary,
@@ -78,7 +78,7 @@ namespace IncidenceDialogFactory
     bool inlineAttachment,
     Akonadi::Collection defaultCollection,
     bool cleanupAttachmentTempFiles,
-    QWidget *parent = 0, Qt::WFlags flags = 0 );
+    QWidget *parent = 0, Qt::WindowFlags flags = 0 );
 
 } // namespace IncidenceDialogFactory
 

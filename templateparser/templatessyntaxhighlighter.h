@@ -30,9 +30,9 @@ class TEMPLATEPARSER_EXPORT TemplatesSyntaxHighlighter : public QSyntaxHighlight
   Q_OBJECT
   public:
     explicit TemplatesSyntaxHighlighter( QTextDocument *doc );
-    virtual ~TemplatesSyntaxHighlighter();
+    ~TemplatesSyntaxHighlighter();
 
-    virtual void highlightBlock( const QString &text );
+    void highlightBlock( const QString &text );
 
   private:
     void init();

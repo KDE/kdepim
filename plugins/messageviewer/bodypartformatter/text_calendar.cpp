@@ -3,7 +3,7 @@
 
   Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
   Copyright (c) 2007 Volker Krause <vkrause@kde.org>
-  Copyright (c) 2010 Klar‰lvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
+  Copyright (c) 2010 Klar√§lvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License as published by
@@ -456,7 +456,6 @@ class UrlHandler : public Interface::BodyPartURLHandler
           receiver = (*it).address();
         }
       }
-
       if ( found != 1 ) {
         QStringList possibleAddrs;
         bool ok;
@@ -490,7 +489,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
           receiver.clear();
         }
       }
-
+      delete im;
       return receiver;
     }
 
@@ -563,6 +562,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
       }
       msg->to()->fromUnicodeString( to, "utf-8" );
       msg->from()->fromUnicodeString( receiver, "utf-8" );
+      msg->date()->setDateTime( KDateTime::currentLocalDateTime() );
 
       if ( !GlobalSettings::self()->legacyBodyInvites() ) {
         msg->contentType()->from7BitString( "text/calendar; method=reply; charset=\"utf-8\"" );
@@ -588,8 +588,6 @@ class UrlHandler : public Interface::BodyPartURLHandler
         KPIMIdentities::IdentityManager().identityForAddress(
           findReceiver( viewerInstance->message().get() ) );
 
-      kDebug() << "Full email: " << identity.fullEmailAddr();
-
       const bool nullIdentity = ( identity == KPIMIdentities::Identity::null() );
 
       if ( !nullIdentity ) {
@@ -600,21 +598,18 @@ class UrlHandler : public Interface::BodyPartURLHandler
       }
 
       const bool identityHasTransport = !identity.transport().isEmpty();
-      QString transportName;
+      int transportId = -1;
       if ( !nullIdentity && identityHasTransport ) {
-          transportName = identity.transport();
-      } else if ( !nullIdentity && identity.isDefault() ) {
-          transportName = TransportManager::self()->defaultTransportName();
+          transportId = identity.transport().toInt();
       } else {
-          transportName = TransportManager::self()->defaultTransportName();
+          transportId = TransportManager::self()->defaultTransportId();
       }
-
-      if(transportName.isEmpty()) {
+      if(transportId == -1) {
         if ( !TransportManager::self()->showTransportCreationDialog( 0, TransportManager::IfNoTransportExists ) )
           return false;
-        transportName = TransportManager::self()->defaultTransportName();
+        transportId = TransportManager::self()->defaultTransportId();
       }
-      msg->setHeader( new KMime::Headers::Generic( "X-KMail-Transport", msg.get(), transportName, "utf-8" ) );
+      msg->setHeader( new KMime::Headers::Generic( "X-KMail-Transport", msg.get(), QString::number(transportId), "utf-8" ) );
 
       // Outlook will only understand the reply if the From: header is the
       // same as the To: header of the invitation message.
@@ -658,7 +653,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
       }
 #else
       msg->assemble();
-      MailTransport::Transport *transport = MailTransport::TransportManager::self()->transportByName( transportName );
+      MailTransport::Transport *transport = MailTransport::TransportManager::self()->transportById( transportId );
 
 
       MailTransport::MessageQueueJob *job = new MailTransport::MessageQueueJob;
@@ -667,7 +662,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
                                        KPIMUtils::normalizeAddressesAndEncodeIdn( to ) ) );
       job->transportAttribute().setTransportId(transport->id());
 
-      if ( transport && transport->specifySenderOverwriteAddress() ) {
+      if ( transport->specifySenderOverwriteAddress() ) {
         job->addressAttribute().setFrom(
           KPIMUtils::extractEmailAddress(
             KPIMUtils::normalizeAddressesAndEncodeIdn( transport->senderOverwriteAddress() ) ) );
@@ -1018,8 +1013,10 @@ class UrlHandler : public Interface::BodyPartURLHandler
       if ( status == Attendee::Delegated ) {
         incidence = stringToIncidence( iCal );
         myself = findMyself( incidence, receiver );
-        myself->setStatus( status );
-        myself->setDelegate( delegateString );
+        if ( myself ) {
+          myself->setStatus( status );
+          myself->setDelegate( delegateString );
+        }
         QString name, email;
         KPIMUtils::extractEmailAddressAndName( delegateString, email, name );
         Attendee::Ptr delegate( new Attendee( name, email, true ) );
@@ -1194,7 +1191,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
     {
       // filter out known paths that don't belong to this type of urlmanager.
       // kolab/issue4054 msg27201
-      if ( path.contains( "addToAddressBook:" ) ) {
+      if ( path.contains( "addToAddressBook:" ) || path.contains(QLatin1String("updateToAddressBook")) ) {
         return false;
       }
 

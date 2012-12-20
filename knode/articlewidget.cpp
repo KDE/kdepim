@@ -58,6 +58,7 @@
 #include <libkpgp/kpgpblock.h>
 
 #include <messageviewer/kxface.h>
+#include <messagecomposer/util.h>
 #include <kpimutils/kfileio.h>
 #include <kpimutils/linklocator.h>
 #include <kpimutils/email.h>
@@ -941,7 +942,7 @@ QString ArticleWidget::toHtmlString( const QString &line, int flags )
   QString text = line;
   if ( flags & ArticleWidget::AllowROT13 ) {
     if ( mRot13 )
-      text = Utils::rot13( line );
+      text = Message::Util::rot13( line );
   }
   return KPIMUtils::LinkLocator::convertToHtml( text, llflags );
 }

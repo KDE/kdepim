@@ -21,9 +21,9 @@
     Exchange german links (find "(german" )
     Maybe complete the <accels> of the menus
     After that set version to 0.7.1 -->
-<book lang="&language;">
+<book id="knode" lang="&language;">
 
-<bookinfo>
+<bookinfo id="knodeinfo">
 <title>The &knode; Handbook</title>
 
 <authorgroup>

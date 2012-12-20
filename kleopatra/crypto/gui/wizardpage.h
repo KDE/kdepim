@@ -49,7 +49,7 @@ namespace Gui {
         friend class ::Kleo::Crypto::Gui::Wizard;
         Q_OBJECT
     public:
-        explicit WizardPage( QWidget * parent=0, Qt::WFlags f=0 );
+        explicit WizardPage( QWidget * parent=0, Qt::WindowFlags f=0 );
         virtual ~WizardPage();
 
         virtual bool isComplete() const = 0;

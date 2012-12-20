@@ -50,7 +50,7 @@ class FilterLogDialog : public KDialog
   public:
     /** constructor */
     explicit FilterLogDialog( QWidget * parent );
-  
+    ~FilterLogDialog();
   protected slots:
     void slotLogEntryAdded( const QString& logEntry );
     void slotLogShrinked();

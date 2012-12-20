@@ -127,9 +127,9 @@ namespace Kleo {
       virtual QColor keyBackground( const GpgME::Key &, const QColor &  ) const;
     };
 
-    KeyListView( const ColumnStrategy * strategy,
+    explicit KeyListView( const ColumnStrategy * strategy,
 		 const DisplayStrategy * display=0,
-		 QWidget * parent=0, Qt::WFlags f=0 );
+		 QWidget * parent=0, Qt::WindowFlags f=0 );
 
     ~KeyListView();
 

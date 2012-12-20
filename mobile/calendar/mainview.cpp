@@ -81,8 +81,8 @@
 
 #include <QtCore/QTimer>
 #include <QtDBus/QDBusConnection>
-#include <QtDeclarative/QDeclarativeEngine>
-#include <QtDeclarative/QDeclarativeContext>
+#include <QDeclarativeEngine>
+#include <QDeclarativeContext>
 #include <QGraphicsItem>
 
 #ifdef Q_OS_WINCE

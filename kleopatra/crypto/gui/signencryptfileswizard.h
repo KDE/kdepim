@@ -44,7 +44,7 @@ namespace Gui {
     class SignEncryptFilesWizard : public SignEncryptWizard {
         Q_OBJECT
     public:
-        explicit SignEncryptFilesWizard( QWidget * parent=0, Qt::WFlags f=0 );
+        explicit SignEncryptFilesWizard( QWidget * parent=0, Qt::WindowFlags f=0 );
         ~SignEncryptFilesWizard();
 
         /*reimp*/ void onNext( int currentId );

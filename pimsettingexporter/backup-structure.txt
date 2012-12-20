@@ -1,0 +1,29 @@
+2012-05-14:
+-----------
+Zip structure is :
+Root
+|-----transports
+|       |---------mailtransports
+|
+|-----identities
+|       |---------emailidentities
+|       |---------uoid-identity
+|                   |--------- vcard file
+|
+|-----resources
+|       |---------<resource name> (just pop3/imap4)
+|
+|-----mails
+|       |---------<resource name>
+|                   |---------<resource config file>
+|                   |---------<archive resource>
+|
+|-----configs
+|       |---------filters
+|       |---------kmail2rc
+|
+|-----akonadi
+|       |---------<archive akonadi>
+|-----nepomuk
+|       |---------<archive nepomuk>
+

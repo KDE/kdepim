@@ -70,13 +70,18 @@ namespace TemplateParser {
   class TemplatesConfiguration;
 }
 
+namespace MessageComposer {
+  class ComposerAutoCorrectionLanguage;
+}
+
+
 namespace KMail {
 
   class IdentityDialog : public KDialog {
     Q_OBJECT
   public:
-    IdentityDialog( QWidget * parent=0 );
-    virtual ~IdentityDialog();
+    explicit IdentityDialog( QWidget * parent=0 );
+    ~IdentityDialog();
 
     void setIdentity( /*_not_ const*/ KPIMIdentities::Identity & ident );
 
@@ -86,7 +91,7 @@ namespace KMail {
     void slotAboutToShow( int );
 
     /*! \reimp */
-    virtual void slotButtonClicked( int button );
+    void slotButtonClicked( int button );
 
     // copy default templates to identity templates
     void slotCopyGlobal();
@@ -125,6 +130,8 @@ namespace KMail {
     QCheckBox                        *mAttachMyVCard;
     QString                          mVcardFilename;
     KPushButton                      *mEditVCard;
+    MessageComposer::ComposerAutoCorrectionLanguage *mAutoCorrectionLanguage;
+
     // "templates" tab:
     TemplateParser::TemplatesConfiguration *mWidget;
     QCheckBox                    *mCustom;

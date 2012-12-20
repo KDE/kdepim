@@ -423,6 +423,23 @@ void FolderTreeView::slotFocusPrevFolder()
   }
 }
 
+void FolderTreeView::slotFocusFirstFolder()
+{
+  const QModelIndex first = moveCursor( QAbstractItemView::MoveHome, 0 );
+  if ( first.isValid() ) {
+    setCurrentModelIndex( first );
+  }
+}
+
+void FolderTreeView::slotFocusLastFolder()
+{
+  const QModelIndex last = moveCursor( QAbstractItemView::MoveEnd, 0 );
+  if ( last.isValid() ) {
+    setCurrentModelIndex( last );
+  }
+}
+
+
 void FolderTreeView::selectNextUnreadFolder( bool confirm )
 {
   // find next unread collection starting from current position

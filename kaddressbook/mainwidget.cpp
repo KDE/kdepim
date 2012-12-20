@@ -34,6 +34,9 @@
 
 #include "libkdepim/uistatesaver.h"
 
+#include <pimcommon/collectionaclpage.h>
+#include <pimcommon/imapaclattribute.h>
+
 #include <Akonadi/ETMViewStateSaver>
 #include <Akonadi/CollectionFilterProxyModel>
 #include <Akonadi/CollectionModel>
@@ -42,6 +45,8 @@
 #include <Akonadi/EntityTreeView>
 #include <Akonadi/ItemView>
 #include <Akonadi/MimeTypeChecker>
+#include <Akonadi/AttributeFactory>
+#include <Akonadi/CollectionPropertiesDialog>
 #include <Akonadi/Contact/ContactDefaultActions>
 #include <Akonadi/Contact/ContactEditorDialog>
 #include <Akonadi/Contact/ContactGroupEditorDialog>
@@ -127,6 +132,7 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   : QWidget( parent ), mAllContactsModel( 0 ), mXmlGuiClient( guiClient )
 {
   mXXPortManager = new XXPortManager( this );
+  Akonadi::AttributeFactory::registerAttribute<PimCommon::ImapAclAttribute>();
 
   setupGui();
   setupActions( guiClient->actionCollection() );
@@ -252,17 +258,24 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   }
 
   QList<Akonadi::StandardContactActionManager::Type> contactActions;
-  contactActions <<Akonadi::StandardContactActionManager::CreateContact
-                 <<Akonadi::StandardContactActionManager::CreateContactGroup
-                 <<Akonadi::StandardContactActionManager::EditItem;
+  contactActions << Akonadi::StandardContactActionManager::CreateContact
+                 << Akonadi::StandardContactActionManager::CreateContactGroup
+                 << Akonadi::StandardContactActionManager::EditItem;
 
   Q_FOREACH( Akonadi::StandardContactActionManager::Type contactAction, contactActions ) {
     mActionManager->createAction( contactAction );
   }
+  static bool pageRegistered = false;
+
+  if ( !pageRegistered ) {
+    Akonadi::CollectionPropertiesDialog::registerPage( new PimCommon::CollectionAclPageFactory );
+    pageRegistered = true;
+  }
 
   const QStringList pages =
       QStringList() << QLatin1String( "Akonadi::CollectionGeneralPropertiesPage" )
-                    << QLatin1String( "Akonadi::CachePolicyPage" );
+                    << QLatin1String( "Akonadi::CachePolicyPage" )
+                    << QLatin1String( "PimCommon::CollectionAclPage" );
 
   mActionManager->setCollectionPropertiesPageNames( pages );
 
@@ -517,20 +530,20 @@ void MainWidget::setupActions( KActionCollection *collection )
   KAction *act = new KAction( i18nc( "@action:inmenu", "Simple (one column)" ), mViewModeGroup );
   act->setCheckable( true );
   act->setData( 1 );
-  act->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_1 ) );
+  act->setShortcut( QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_1 ) );
   act->setWhatsThis( i18n( "Show a simple mode of the address book view." ) );
   collection->addAction( "view_mode_simple", act );
 
   act = new KAction( i18nc( "@action:inmenu", "Two Columns" ), mViewModeGroup );
   act->setCheckable( true );
   act->setData( 2 );
-  act->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_2 ) );
+  act->setShortcut( QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_2 ) );
   collection->addAction( "view_mode_2columns", act );
 
   act = new KAction( i18nc( "@action:inmenu", "Three Columns" ), mViewModeGroup );
   act->setCheckable( true );
   act->setData( 3 );
-  act->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_3 ) );
+  act->setShortcut( QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_3 ) );
   collection->addAction( "view_mode_3columns", act );
 
   connect( mViewModeGroup, SIGNAL(triggered(QAction*)), SLOT(setViewMode(QAction*)) );
@@ -724,11 +737,11 @@ void MainWidget::setViewMode( int mode )
   //kDebug() << "cur" << currentMode << "new" << mode;
   if ( mode == currentMode ) return;			// nothing to do
 
-  if ( mode == 0)
-      mode = currentMode;				// initialisation, no save
-  else
+  if ( mode == 0 ) {
+      mode = currentMode;// initialisation, no save
+  } else {
       saveSplitterStates();				// for 2- or 3-column mode
-
+  }
   if ( mode == 1 ) {					// simple mode
     mMainWidgetSplitter2->setVisible( false );
     mDetailsPane->setVisible( true );
@@ -738,10 +751,10 @@ void MainWidget::setViewMode( int mode )
     mMainWidgetSplitter2->setVisible( true );
     mContactSwitcher->setVisible( false );
 
-    if ( mode == 2) {					// 2 columns
+    if ( mode == 2 ) {					// 2 columns
         mMainWidgetSplitter2->setOrientation( Qt::Vertical );
     }
-    else if ( mode == 3) {				// 3 columns
+    else if ( mode == 3 ) {				// 3 columns
         mMainWidgetSplitter2->setOrientation( Qt::Horizontal );
     }
   }

@@ -27,7 +27,7 @@ class KImportPage;
 class KMailCVT : public KAssistantDialog {
   Q_OBJECT
 public:
-  KMailCVT(QWidget* parent=0);
+  explicit KMailCVT(QWidget* parent=0);
   ~KMailCVT();
 
   virtual void next();

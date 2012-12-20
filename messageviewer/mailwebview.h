@@ -35,7 +35,8 @@
 
 #include <boost/function.hpp>
 
-class QAction;
+class QLabel;
+class KActionCollection;
 
 namespace MessageViewer {
 
@@ -53,7 +54,7 @@ class MESSAGEVIEWER_EXPORT MailWebView : public KWebView
   Q_OBJECT
 public:
 
-    explicit MailWebView( QWidget *parent=0 );
+    explicit MailWebView(KActionCollection *actionCollection = 0, QWidget *parent=0 );
     ~MailWebView();
 
     enum FindFlag {
@@ -116,6 +117,30 @@ protected:
 #endif
     /// Reimplemented to catch context menu events and emit popupMenu()
     virtual bool event( QEvent *event );
+    /// Reimplement for access key
+    virtual void keyReleaseEvent(QKeyEvent*);
+    virtual void keyPressEvent(QKeyEvent*);
+    virtual void wheelEvent (QWheelEvent* e);
+
+private Q_SLOTS:
+    void hideAccessKeys();
+
+private:
+#ifndef KDEPIM_NO_WEBKIT
+    bool checkForAccessKey(QKeyEvent *event);
+    void showAccessKeys();
+    void makeAccessKeyLabel(const QChar &accessKey, const QWebElement &element);
+    enum AccessKeyState {
+        NotActivated,
+        PreActivated,
+        Activated
+    };
+    AccessKeyState mAccessKeyActivated;
+    QList<QLabel*> mAccessKeyLabels;
+    QHash<QChar, QWebElement> mAccessKeyNodes;
+    QHash<QString, QChar> mDuplicateLinkElements;
+#endif
+    KActionCollection *mActionCollection;
 };
 
 }

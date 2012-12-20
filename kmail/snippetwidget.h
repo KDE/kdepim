@@ -31,12 +31,12 @@ class QContextMenuEvent;
 class SnippetWidget : public QTreeView
 {
   public:
-    SnippetWidget( KMComposerEditor *editor, KActionCollection *actionCollection, QWidget *parent = 0 );
+    explicit SnippetWidget( KMComposerEditor *editor, KActionCollection *actionCollection, QWidget *parent = 0 );
     ~SnippetWidget();
 
   protected:
-    virtual void contextMenuEvent( QContextMenuEvent* );
-  virtual void dropEvent( QDropEvent * );
+    void contextMenuEvent( QContextMenuEvent* );
+    void dropEvent( QDropEvent * );
   private:
     MailCommon::SnippetsManager *mSnippetsManager;
 };

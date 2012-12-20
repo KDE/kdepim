@@ -22,11 +22,8 @@
 #include <kpimidentities/signature.h>
 #include <QString>
 
-class QFile;
-class QDomDocument;
 
 class ImportWizard;
-class KConfigGroup;
 class QDomElement;
 
 class EvolutionSettings : public AbstractSettings

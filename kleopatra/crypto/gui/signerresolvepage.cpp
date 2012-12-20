@@ -487,7 +487,7 @@ SignerResolvePage::Operation SignerResolvePage::operation() const
 }
 
 
-SignerResolvePage::SignerResolvePage( QWidget * parent, Qt::WFlags f )
+SignerResolvePage::SignerResolvePage( QWidget * parent, Qt::WindowFlags f )
   : WizardPage( parent, f ), d( new Private( this ) )
 {
     setTitle( i18n( "<b>Choose Operation to be Performed</b>" ) );

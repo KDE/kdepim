@@ -237,6 +237,14 @@ public:
    */
   bool selectFirstMessageItem( MessageList::Core::MessageTypeFilter messageTypeFilter, bool centerItem );
 
+  /**
+   * Selects the last message item in the view that matches the specified Core::MessageTypeFilter.
+   * If centerItem is true then the specified item will be positioned
+   * at the center of the view, if possible.
+   *
+   * The function returns true if a message was selected and false otherwise.
+   */
+  bool selectLastMessageItem( MessageList::Core::MessageTypeFilter messageTypeFilter, bool centerItem );
 
   /**
    * If expand is true then it expands the current thread, otherwise
@@ -381,6 +389,7 @@ public:
 
   void readConfig();
 
+  bool searchEditHasFocus() const;
 
 public slots:
   /**
@@ -392,6 +401,13 @@ public slots:
    * Add a new tab to the Pane and select it.
    */
   QItemSelectionModel *createNewTab();
+
+  void sortOrderMenuAboutToShow();
+
+  void aggregationMenuAboutToShow();
+
+  void themeMenuAboutToShow();
+
 
 signals:
   /**
@@ -453,6 +469,7 @@ private:
   Q_PRIVATE_SLOT(d, void onCurrentTabChanged())
   Q_PRIVATE_SLOT(d, void onTabContextMenuRequest( const QPoint& ))
   Q_PRIVATE_SLOT(d, void updateTabControls())
+  Q_PRIVATE_SLOT(d, void changeQuicksearchVisibility(bool))
 
   bool eventFilter( QObject *obj, QEvent *event );
 

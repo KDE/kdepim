@@ -58,6 +58,7 @@
 #include <KTemporaryFile>
 #include <KToggleAction>
 #include <KPrintPreview>
+#include <kdeprintdialog.h>
 
 #include <kfileitemactions.h>
 #include <KFileItemListProperties>
@@ -73,24 +74,17 @@
 #include <kleo/cryptobackendfactory.h>
 #include <kleo/cryptobackend.h>
 
-#include <QWebElement>
-
 #include <mailtransport/errorattribute.h>
 
 //Qt includes
 #include <QClipboard>
 #include <QDesktopWidget>
 #include <QFileInfo>
-#include <QImageReader>
 #include <QItemSelectionModel>
 #include <QSignalMapper>
 #include <QSplitter>
-#include <QStyle>
-#include <QTextDocument>
 #include <QTreeView>
 #include <QVBoxLayout>
-#include <QScrollBar>
-#include <QScrollArea>
 #include <QPrinter>
 #include <QPrintDialog>
 #include <QHeaderView>
@@ -202,6 +196,7 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
     mShowRawToltecMail( false ),
     mRecursionCountForDisplayMessage( 0 ),
     mCurrentContent( 0 ),
+    mMessagePartNode( 0 ),
     mJob( 0 ),
     q( aParent ),
     mShowFullToAddressList( true ),
@@ -210,7 +205,7 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
     mZoomFactor( 100 )
 {
   if ( !mainWindow )
-    mainWindow = aParent;
+    mMainWindow = aParent;
 
   mHtmlOverride = false;
   mHtmlLoadExtOverride = false;
@@ -220,7 +215,7 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
   mUpdateReaderWinTimer.setObjectName( "mUpdateReaderWinTimer" );
   mResizeTimer.setObjectName( "mResizeTimer" );
 
-  mExternalWindow  = ( aParent == mainWindow );
+  mExternalWindow  = false;
   mPrinting = false;
 
   createWidgets();
@@ -304,7 +299,8 @@ KMime::Content * ViewerPrivate::nodeFromUrl( const KUrl & url )
         node = c->content( idx );
       }
     } else {
-      node= mMessage->content( KMime::ContentIndex( path ) );
+      if( mMessage )
+         node= mMessage->content( KMime::ContentIndex( path ) );
     }
   } else {
     QString path = url.toLocalFile();
@@ -359,16 +355,8 @@ void ViewerPrivate::openAttachment( KMime::Content* node, const QString & name )
     return;
 
   if ( mimetype.isNull() || mimetype->name() == "application/octet-stream" ) {
-    // consider the filename if mimetype cannot be found by content-type
-    mimetype = KMimeType::findByPath( name, 0, true /* no disk access */  );
-
+      mimetype = Util::mimetype(name);
   }
-  if ( mimetype->name() == "application/octet-stream" ) {
-    // consider the attachment's contents if neither the Content-Type header
-    // nor the filename give us a clue
-    mimetype = KMimeType::findByFileContent( name );
-  }
-
   KService::Ptr offer =
       KMimeTypeTrader::self()->preferredService( mimetype->name(), "Application" );
 
@@ -693,7 +681,7 @@ QString ViewerPrivate::createAtmFileLink( const QString& atmFileName ) const
 
 KService::Ptr ViewerPrivate::getServiceOffer( KMime::Content *content)
 {
-  QString fileName = mNodeHelper->writeNodeToTempFile( content );
+  const QString fileName = mNodeHelper->writeNodeToTempFile( content );
 
   const QString contentTypeStr = content->contentType()->mimeType();
 
@@ -707,15 +695,9 @@ KService::Ptr ViewerPrivate::getServiceOffer( KMime::Content *content)
     return KService::Ptr( 0 );
   }
 
-  if ( mimetype.isNull() ) {
-    // consider the filename if mimetype cannot be found by content-type
-    mimetype = KMimeType::findByPath( fileName, 0, true /* no disk access */ );
-  }
-  if ( ( mimetype->name() == "application/octet-stream" )
-    /*TODO(Andris) port when on-demand loading is done   && msgPart.isComplete() */) {
-    // consider the attachment's contents if neither the Content-Type header
-    // nor the filename give us a clue
-    mimetype = KMimeType::findByFileContent( fileName );
+  if ( mimetype.isNull() || mimetype->name() == "application/octet-stream"  ) {
+      /*TODO(Andris) port when on-demand loading is done   && msgPart.isComplete() */
+      mimetype = MessageViewer::Util::mimetype(fileName);
   }
   return KMimeTypeTrader::self()->preferredService( mimetype->name(), "Application" );
 }
@@ -1070,27 +1052,7 @@ void ViewerPrivate::initHtmlWidget()
     mHtmlWriter = mPartHtmlWriter;
 #endif
   }
-#if 0
-  // We do a queued connection below, and for that we need to register the meta types of the
-  // parameters.
-  //
-  // Why do we do a queued connection instead of a direct one? slotUrlOpen() handles those clicks,
-  // and can end up in the click handler for accepting invitations. That handler can pop up a dialog
-  // asking the user for a comment on the invitation reply. This dialog is started with exec(), i.e.
-  // executes a sub-eventloop. This sub-eventloop then eventually re-enters the KHTML event handler,
-  // which then thinks we started a drag, and therefore adds a silly drag object to the cursor, with
-  // urls like x-kmail-whatever/43/8/accept, and we don't want that drag object.
-  //
-  // Therefore, use queued connections to avoid the reentry of the KHTML event loop, so we don't
-  // get the drag object.
-  static bool metaTypesRegistered = false;
-  if ( !metaTypesRegistered ) {
-    qRegisterMetaType<KParts::OpenUrlArguments>( "KParts::OpenUrlArguments" );
-    qRegisterMetaType<KParts::BrowserArguments>( "KParts::BrowserArguments" );
-    qRegisterMetaType<KParts::WindowArgs>( "KParts::WindowArgs" );
-    metaTypesRegistered = true;
-  }
-#endif
+
   connect( mViewer, SIGNAL(linkHovered(QString,QString,QString)),
            this, SLOT(slotUrlOn(QString,QString,QString)) );
   connect( mViewer, SIGNAL(linkClicked(QUrl)),
@@ -1311,6 +1273,7 @@ void ViewerPrivate::resetStateForNewMessage()
   enableMessageDisplay(); // just to make sure it's on
   mMessage.reset();
   mNodeHelper->clear();
+  mMessagePartNode = 0;
   delete mMimePartModel->root();
   mMimePartModel->setRoot( 0 );
   mSavedRelativePosition = 0;
@@ -1378,6 +1341,7 @@ void ViewerPrivate::setMessagePart( KMime::Content * node )
   mUpdateReaderWinTimer.stop();
 
   if ( node ) {
+    mMessagePartNode = node;
     if ( node->bodyIsMessage() ) {
       mMainWindow->setWindowTitle( node->bodyAsMessage()->subject()->asUnicodeString() );
     } else {
@@ -1511,7 +1475,7 @@ void ViewerPrivate::createWidgets() {
   mColorBar->setObjectName( "mColorBar" );
   mColorBar->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Expanding );
 
-  mViewer = new MailWebView( readerBox );
+  mViewer = new MailWebView( mActionCollection, readerBox );
   mViewer->setObjectName( "mViewer" );
 
   mFindBar = new FindBarMailWebView( mViewer, readerBox );
@@ -1713,7 +1677,7 @@ void ViewerPrivate::createActions()
   connect(mViewSourceAction, SIGNAL(triggered(bool)), SLOT(slotShowMessageSource()));
   mViewSourceAction->setShortcut(QKeySequence(Qt::Key_V));
 
-  mSaveMessageAction = new KAction(i18n("&Save message"), this);
+  mSaveMessageAction = new KAction(KIcon("document-save-as"), i18n("&Save message..."), this);
   ac->addAction("save_message", mSaveMessageAction);
   connect(mSaveMessageAction, SIGNAL(triggered(bool)), SLOT(slotSaveMessage()));
   //Laurent: conflict with kmail shortcut
@@ -1777,6 +1741,18 @@ void ViewerPrivate::createActions()
   connect( mTranslateAction, SIGNAL(triggered(bool)),
            SLOT(slotTranslate()) );
 
+  mFindInMessageAction = new KAction(KIcon("edit-find"), i18n("&Find in Message..."), this);
+  ac->addAction("find_in_messages", mFindInMessageAction );
+  connect(mFindInMessageAction, SIGNAL(triggered(bool)), SLOT(slotFind()));
+  mFindInMessageAction->setShortcut(KStandardShortcut::find());
+
+#if QTWEBKIT_VERSION >= QTWEBKIT_VERSION_CHECK(2, 3, 0)
+  mCaretBrowsing = new KToggleAction(i18n("Toggle Caret Browsing"), this);
+  mCaretBrowsing->setShortcut(Qt::Key_F7);
+  ac->addAction( "toggle_caret_browsing", mCaretBrowsing );
+  connect( mCaretBrowsing, SIGNAL(triggered(bool)), SLOT(slotToggleCaretBrowsing(bool)) );
+  mCaretBrowsing->setChecked(false);
+#endif
 }
 
 
@@ -2114,10 +2090,8 @@ void ViewerPrivate::slotToggleHtmlMode()
 
 void ViewerPrivate::slotFind()
 {
-#if QT_VERSION >= 0x040800
   if ( mViewer->hasSelection() )
     mFindBar->setText( mViewer->selectedText() );
-#endif
   mFindBar->show();
   mFindBar->focusAndSetCursor();
 }
@@ -2151,7 +2125,7 @@ void ViewerPrivate::slotShowMessageSource()
   if( !mMessage )
     return;
   mNodeHelper->messageWithExtraContent( mMessage.get() );
-  const QString rawMessage = QString::fromAscii(  mMessage->encodedContent() );
+  const QString rawMessage = QString::fromLatin1(  mMessage->encodedContent() );
   const QString htmlSource = mViewer->htmlSource();
 
   MailSourceViewer *viewer = new MailSourceViewer(); // deletes itself upon close
@@ -2159,7 +2133,7 @@ void ViewerPrivate::slotShowMessageSource()
   viewer->setRawSource( rawMessage );
   viewer->setDisplayedSource( htmlSource );
   if( mUseFixedFont ) {
-    viewer->setFont( KGlobalSettings::fixedFont() );
+    viewer->setFixedFont();
   }
 
   // Well, there is no widget to be seen here, so we have to use QCursor::pos()
@@ -2212,6 +2186,8 @@ void ViewerPrivate::updateReaderWin()
       mColorBar->hide();
     }
     displayMessage();
+  } else if( mMessagePartNode ) {
+    setMessagePart( mMessagePartNode );
   } else {
     mColorBar->hide();
 #ifndef QT_NO_TREEVIEW
@@ -2402,8 +2378,9 @@ void ViewerPrivate::slotPrintMsg()
     return;
   QPrinter printer;
 
-  AutoQPointer<QPrintDialog> dlg( new QPrintDialog( &printer/*, mViewer*/ ) );
-  if ( dlg->exec() == QDialog::Accepted && dlg ) {
+  AutoQPointer<QPrintDialog> dlg(KdePrint::createPrintDialog(&printer));
+  
+  if ( dlg && dlg->exec() == QDialog::Accepted ) {
     mViewer->print( &printer );
   }
 #endif
@@ -2547,12 +2524,12 @@ void ViewerPrivate::attachmentProperties( KMime::Content *content )
   dialog->show();
 }
 
-
-
 void ViewerPrivate::slotAttachmentCopy()
 {
+#ifndef QT_NO_CLIPBOARD
   KMime::Content::List contents = selectedContents();
   attachmentCopy( contents );
+#endif
 }
 
 void ViewerPrivate::attachmentCopy( const KMime::Content::List & contents )
@@ -2623,8 +2600,8 @@ void ViewerPrivate::slotAttachmentEditDone( EditorWatcher* editorWatcher )
       file.close();
 
       mMessageItem.setPayloadFromData( mMessage->encodedContent() );
-      /*Akonadi::ItemModifyJob *job = */new Akonadi::ItemModifyJob( mMessageItem );
-      // FIXME: Check for errors in the job
+      Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob( mMessageItem );
+      connect( job, SIGNAL(result(KJob*)), SLOT(itemModifiedResult(KJob*)) );
     }
   }
   mEditorWatchers.remove( editorWatcher );
@@ -2733,10 +2710,6 @@ void ViewerPrivate::slotUrlCopy()
 
 void ViewerPrivate::slotSaveMessage()
 {
-  if ( !mMessageItem.isValid() ) {
-    return;
-  }
-
   if ( !mMessageItem.hasPayload<KMime::Message::Ptr>() ) {
     if ( mMessageItem.isValid() ) {
       kWarning() << "Payload is not a MessagePtr!";
@@ -2812,6 +2785,12 @@ void ViewerPrivate::setShowAttachmentQuicklist( bool showAttachmentQuicklist  )
 {
   mShowAttachmentQuicklist = showAttachmentQuicklist;
 }
+
+void ViewerPrivate::setExternalWindow( bool b )
+{
+  mExternalWindow = b;
+}
+
 
 void ViewerPrivate::scrollToAttachment( KMime::Content *node )
 {
@@ -3164,6 +3143,20 @@ void ViewerPrivate::goOnline()
 void ViewerPrivate::goResourceOnline()
 {
   emit makeResourceOnline(Viewer::SelectedResource);
+}
+
+void ViewerPrivate::slotToggleCaretBrowsing(bool toggle)
+{
+#ifndef KDEPIM_NO_WEBKIT
+#if QTWEBKIT_VERSION >= QTWEBKIT_VERSION_CHECK(2, 3, 0)
+  if( toggle ) {
+    KMessageBox::information( mMainWindow,
+        i18n("Caret Browsing will be activated. Switch off with F7 shortcut."),
+        i18n("Activate Caret Browsing") );
+  }
+  mViewer->settings()->setAttribute(QWebSettings::CaretBrowsingEnabled, toggle);
+#endif
+#endif
 }
 
 

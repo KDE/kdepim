@@ -43,9 +43,10 @@ namespace KPIM {
 }
 
 class MessageSender;
-class KMComposerAutoCorrection;
+namespace MessageComposer {
+  class ComposerAutoCorrection;
+}
 
-class KJob;
 /** The KMail namespace contains classes used for KMail.
 * This is to keep them out of the way from all the other
 * un-namespaced classes in libs and the rest of PIM.
@@ -74,8 +75,6 @@ class ConfigureDialog;
 
 namespace MailCommon {
   class Kernel;
-  class FilterManager;
-  class FilterActionDict;
   class FolderCollection;
   class FolderCollectionMonitor;
   class JobScheduler;
@@ -375,9 +374,6 @@ public:
    */
   bool haveSystemTrayApplet() const;
 
-  bool registerSystemTrayApplet( KMail::KMSystemTray* );
-  bool unregisterSystemTrayApplet( KMail::KMSystemTray* );
-
   QTextCodec *networkCodec() { return netCodec; }
 
   /** returns a reference to the first Mainwin or a temporary Mainwin */
@@ -419,7 +415,9 @@ public:
   void updatePaneTagComboBox();
 
 
-  KMComposerAutoCorrection* composerAutoCorrection();
+  MessageComposer::ComposerAutoCorrection* composerAutoCorrection();
+
+  void toggleSystemTray();
 
 protected:
   void agentInstanceBroken( const Akonadi::AgentInstance& instance );
@@ -501,7 +499,6 @@ private:
   /** are we going down? set from here */
   bool the_shuttingDown;
   /** true unles kmail is closed by session management */
-  bool closed_by_user;
   bool the_firstInstance;
 
   KSharedConfig::Ptr mConfig;
@@ -517,7 +514,7 @@ private:
 
   Solid::Networking::Status mSystemNetworkStatus;
 
-  QList<KMail::KMSystemTray*> systemTrayApplets;
+  KMail::KMSystemTray* mSystemTray;
   QHash<QString, bool> mResourceCryptoSettingCache;
   MailCommon::FolderCollectionMonitor *mFolderCollectionMonitor;
   Akonadi::EntityTreeModel *mEntityTreeModel;
@@ -529,7 +526,7 @@ private:
   int mWrapCol;
 
   QPointer<MailCommon::KMFilterDialog> mFilterEditDialog;
-  KMComposerAutoCorrection *mAutoCorrection;
+  MessageComposer::ComposerAutoCorrection *mAutoCorrection;
 };
 
 #endif // _KMKERNEL_H

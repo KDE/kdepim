@@ -33,54 +33,54 @@ KMailCvtFilterInfoGui::~KMailCvtFilterInfoGui()
 
 void KMailCvtFilterInfoGui::setStatusMessage( const QString& status )
 {
-  m_dlg->mWidget->mMailImporterWidget->setStatusMessage( status );
+  m_dlg->widget()->mMailImporterWidget->setStatusMessage( status );
 }
 
 void KMailCvtFilterInfoGui::setFrom( const QString& from )
 {
-  m_dlg->mWidget->mMailImporterWidget->setFrom( from );
+  m_dlg->widget()->mMailImporterWidget->setFrom( from );
 }
 
 void KMailCvtFilterInfoGui::setTo( const QString& to )
 {
-  m_dlg->mWidget->mMailImporterWidget->setTo( to );
+  m_dlg->widget()->mMailImporterWidget->setTo( to );
 }
 
 void KMailCvtFilterInfoGui::setCurrent( const QString& current )
 {
-  m_dlg->mWidget->mMailImporterWidget->setCurrent( current );
+  m_dlg->widget()->mMailImporterWidget->setCurrent( current );
   kapp->processEvents();
 }
 
 void  KMailCvtFilterInfoGui::setCurrent( int percent )
 {
-  m_dlg->mWidget->mMailImporterWidget->setCurrent( percent );
+  m_dlg->widget()->mMailImporterWidget->setCurrent( percent );
   kapp->processEvents(); // Be careful - back & finish buttons disabled, so only user event that can happen is cancel/close button
 }
 
 void  KMailCvtFilterInfoGui::setOverall( int percent )
 {
-  m_dlg->mWidget->mMailImporterWidget->setOverall( percent );
+  m_dlg->widget()->mMailImporterWidget->setOverall( percent );
 }
 
 void KMailCvtFilterInfoGui::addInfoLogEntry( const QString& log )
 {
-  m_dlg->mWidget->mMailImporterWidget->addInfoLogEntry( log );
-  m_dlg->mWidget->mMailImporterWidget->setLastCurrentItem();
+  m_dlg->widget()->mMailImporterWidget->addInfoLogEntry( log );
+  m_dlg->widget()->mMailImporterWidget->setLastCurrentItem();
   kapp->processEvents();
 }
 
 void KMailCvtFilterInfoGui::addErrorLogEntry( const QString& log )
 {
-  m_dlg->mWidget->mMailImporterWidget->addErrorLogEntry( log );
-  m_dlg->mWidget->mMailImporterWidget->setLastCurrentItem();
+  m_dlg->widget()->mMailImporterWidget->addErrorLogEntry( log );
+  m_dlg->widget()->mMailImporterWidget->setLastCurrentItem();
   kapp->processEvents();
 }
 
 
 void KMailCvtFilterInfoGui::clear()
 {
-    m_dlg->mWidget->mMailImporterWidget->clear();
+    m_dlg->widget()->mMailImporterWidget->clear();
 }
 
 void KMailCvtFilterInfoGui::alert( const QString& message )

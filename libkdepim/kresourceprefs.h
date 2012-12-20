@@ -40,7 +40,7 @@ namespace KPIM {
 class KDEPIM_EXPORT KResourcePrefs : public KConfigSkeleton
 {
   public:
-    KResourcePrefs( const QString &name = QString() );
+    explicit KResourcePrefs( const QString &name = QString() );
 
     /**
       Adds a prefix to all groups of this prefs object.

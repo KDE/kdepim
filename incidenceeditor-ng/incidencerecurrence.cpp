@@ -424,16 +424,22 @@ bool IncidenceRecurrence::isValid() const
     const KDateTime referenceDate = incidence->dateTime( KCalCore::Incidence::RoleRecurrenceStart );
 
     if ( referenceDate.isValid() ) {
-      if ( incidence->recurrence()->recursOn( referenceDate.date(), referenceDate.timeSpec() ) ||
-           incidence->recurrence()->getNextDateTime( referenceDate ).isValid() ) {
-        return true;
-      } else {
+      if ( !( incidence->recurrence()->recursOn( referenceDate.date(), referenceDate.timeSpec() ) ||
+           incidence->recurrence()->getNextDateTime( referenceDate ).isValid() ) ) {
         mLastErrorString = i18n( "A recurring event or to-do must occur at least once. "
                                  "Adjust the recurring parameters." );
+        kDebug() << mLastErrorString;
         return false;
       }
     } else {
       mLastErrorString = i18n( "The event's start date or the to-do's due date is invalid." );
+      kDebug() << mLastErrorString;
+      return false;
+    }
+
+    if ( mUi->mRecurrenceEndCombo->currentIndex() == RecurrenceEndOn &&
+         !mUi->mRecurrenceEndDate->date().isValid() ) {
+      qWarning() << "Recurrence end date is invalid."; // TODO: strings after freeze
       return false;
     }
   }
@@ -444,6 +450,11 @@ bool IncidenceRecurrence::isValid() const
 void IncidenceRecurrence::addException()
 {
   const QDate date = mUi->mExceptionDateEdit->date();
+  if ( !date.isValid() ) {
+    qWarning() << "Refusing to add invalid date";
+    return;
+  }
+
   const QString dateStr = KGlobal::locale()->formatDate( date );
   if( mUi->mExceptionList->findItems( dateStr, Qt::MatchExactly ).isEmpty() ) {
     mExceptionDates.append( date );

@@ -71,6 +71,7 @@ using MessageComposer::MessageFactory;
 #include <kcodecs.h>
 #include <ktoggleaction.h>
 #include <kservice.h>
+#include <KActionCollection>
 
 #include <QClipboard>
 
@@ -109,6 +110,7 @@ KMReaderWin::KMReaderWin(QWidget *aParent,
   QVBoxLayout * vlay = new QVBoxLayout( this );
   vlay->setMargin( 0 );
   mViewer = new Viewer( this, mainWindow, mActionCollection );
+  mViewer->setExternalWindow( true );
   mViewer->setAppName( "KMail" );
   connect( mViewer, SIGNAL(urlClicked(Akonadi::Item,KUrl)),
            this, SLOT(slotUrlClicked(Akonadi::Item,KUrl)) );
@@ -592,6 +594,22 @@ KAction *KMReaderWin::copyAction()
 {
   return mViewer->copyAction();
 }
+
+KAction *KMReaderWin::viewSourceAction()
+{
+  return mViewer->viewSourceAction();
+}
+
+KAction *KMReaderWin::saveAsAction()
+{
+  return mViewer->saveAsAction();
+}
+
+KAction *KMReaderWin::findInMessageAction()
+{
+  return mViewer->findInMessageAction();
+}
+
 KAction *KMReaderWin::urlOpenAction()
 {
   return mViewer->urlOpenAction();

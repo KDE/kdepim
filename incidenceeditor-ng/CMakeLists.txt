@@ -1,3 +1,4 @@
+KDE4_NO_ENABLE_FINAL(incidenceeditor-ng)
 if(KDEPIM_MOBILE_UI)
   remove_definitions(-DKDEPIM_MOBILE_UI)
 endif()

@@ -2,6 +2,10 @@ project(kmail)
 
 include(CheckIncludeFiles)
 
+if(GRANTLEE_GREATER_0_2)
+  add_definitions(-DGRANTLEE_GREATER_0_2)
+endif()
+
 if (NOT WINCE)
 
   set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${KDE4_DATA_DIR}/cmake/modules)
@@ -30,6 +34,8 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/messagecore
   ${CMAKE_SOURCE_DIR}/mailcommon
   ${CMAKE_BINARY_DIR}/mailcommon
+  ${CMAKE_SOURCE_DIR}/pimcommon
+  ${CMAKE_BINARY_DIR}/pimcommon
   ${CMAKE_SOURCE_DIR}/korganizer
   ${GPGME_INCLUDES}
   ${Boost_INCLUDE_DIR}
@@ -62,7 +68,7 @@ if (NOT WINCE AND KDEPIM_BUILD_DESKTOP)
      collectionviewpage.cpp
      collectionquotapage.cpp
      collectionquotapage_p.cpp
-     collectionaclpage.cpp
+     collectionmailinglistpage.cpp
      colorlistbox.cpp
      kmmainwin.cpp
      configagentdelegate.cpp
@@ -93,7 +99,6 @@ if (NOT WINCE AND KDEPIM_BUILD_DESKTOP)
      codecaction.cpp
      codecmanager.cpp
      foldershortcutdialog.cpp
-     mailinglistpropertiesdialog.cpp
      util.cpp
      messageactions.cpp
      statusbarlabel.cpp
@@ -102,7 +107,6 @@ if (NOT WINCE AND KDEPIM_BUILD_DESKTOP)
      attachmentview.cpp
      archivefolderdialog.cpp
      searchdescriptionattribute.cpp
-     tag.cpp
      tagactionmanager.cpp
      foldershortcutactionmanager.cpp
      addressvalidationjob.cpp
@@ -116,13 +120,7 @@ if (NOT WINCE AND KDEPIM_BUILD_DESKTOP)
      identityeditvcarddialog.cpp
      identityaddvcarddialog.cpp
      attachmentmissingwarning.cpp
-  )
-
-  soprano_add_ontology(kmailprivate_LIB_SRCS
-    ${CMAKE_SOURCE_DIR}/messagecore/messagetag.trig
-    "MessageTag"
-    "Vocabulary"
-    "trig"
+     createnewcontactjob.cpp
   )
 
   # TODO PORT
@@ -184,6 +182,7 @@ if (NOT WINCE AND KDEPIM_BUILD_DESKTOP)
     messagecore
     messagecomposer
     messagelist
+    pimcommon
     mailcommon
     templateparser
     ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}

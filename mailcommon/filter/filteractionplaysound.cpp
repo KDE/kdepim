@@ -28,6 +28,7 @@
 #include <KDE/KLocale>
 
 #include <QtCore/QFile>
+#include <QPointer>
 
 using namespace MailCommon;
 
@@ -78,7 +79,7 @@ bool FilterActionPlaySound::argsFromStringInteractive( const QString &argsStr, c
   bool needUpdate = false;
   argsFromString( argsStr );
   if(!QFile(mParameter).exists()){
-      FilterActionMissingSoundUrlDialog *dlg = new FilterActionMissingSoundUrlDialog( filterName, argsStr );
+      QPointer<FilterActionMissingSoundUrlDialog> dlg = new FilterActionMissingSoundUrlDialog( filterName, argsStr );
       if ( dlg->exec() ) {
         mParameter = dlg->soundUrl();
         needUpdate = true;

@@ -43,7 +43,6 @@
 #include <Akonadi/AgentInstance>
 #include <Akonadi/Collection>
 
-class OrgKdeAkonadiImapSettingsInterface;
 class OrgKdeAkonadiPOP3SettingsInterface;
 
 namespace Akonadi {
@@ -56,8 +55,8 @@ class QAbstractItemModel;
 class QModelIndex;
 class QString;
 
-#define IMAP_RESOURCE_IDENTIFIER "akonadi_imap_resource"
 #define POP3_RESOURCE_IDENTIFIER "akonadi_pop3_resource"
+#define MBOX_RESOURCE_IDENTIFIER "akonadi_mbox_resource"
 
 namespace MailCommon {
 
@@ -66,9 +65,6 @@ namespace MailCommon {
  * various places.
  */
 namespace Util {
-
-  MAILCOMMON_EXPORT OrgKdeAkonadiImapSettingsInterface *createImapSettingsInterface(
-    const QString &ident );
 
   MAILCOMMON_EXPORT OrgKdeAkonadiPOP3SettingsInterface *createPop3SettingsInterface(
     const QString &ident );
@@ -131,6 +127,7 @@ namespace Util {
   MAILCOMMON_EXPORT QString convertFolderPathToCollectionStr( const QString& folder);
 
   MAILCOMMON_EXPORT bool foundMailer();
+  MAILCOMMON_EXPORT bool isLocalCollection( const QString &resource );
 }
 
 }

@@ -40,6 +40,7 @@ opera/operasettings.cpp
 oe/oeimportdata.cpp
 mailapp/mailappimportdata.cpp
 pmail/pmailimportdata.cpp
+pmail/pmailsettings.cpp
 thebat/thebatimportdata.cpp
 balsa/balsaimportdata.cpp
 balsa/balsasettings.cpp
@@ -51,6 +52,7 @@ claws-mail/clawsmailaddressbook.cpp
 
 include_directories(${CMAKE_SOURCE_DIR}/mailimporter 
                     ${CMAKE_SOURCE_DIR}/mailcommon 
+		    ${CMAKE_SOURCE_DIR}/pimcommon
 		    ${CMAKE_SOURCE_DIR}/mailcommon/filter/
                     ${NEPOMUK_CORE_INCLUDE_DIR}
                     ${SOPRANO_INCLUDE_DIR})
@@ -85,6 +87,7 @@ target_link_libraries(importwizard
   ${KDEPIMLIBS_KPIMUTILS_LIBS}
   ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
   mailimporter
+  pimcommon
   mailcommon
   kdepim
   messagecomposer

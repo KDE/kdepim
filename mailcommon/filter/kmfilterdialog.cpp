@@ -52,6 +52,7 @@ using MailCommon::FilterImporterExporter;
 #include <KWindowSystem>
 
 #include <QApplication>
+#include <QHeaderView>
 #include <QButtonGroup>
 #include <QCheckBox>
 #include <QGridLayout>
@@ -64,6 +65,7 @@ using MailCommon::FilterImporterExporter;
 #include <QShortcut>
 #include <QSplitter>
 
+Q_DECLARE_METATYPE(MailCommon::FilterImporterExporter::FilterType)
 using namespace MailCommon;
 
 namespace MailCommon {
@@ -80,6 +82,9 @@ AccountList::AccountList( QWidget *parent )
     setFrameStyle( QFrame::WinPanel + QFrame::Sunken );
     setSortingEnabled( false );
     setRootIsDecorated( false );
+    setSortingEnabled( true );
+    sortByColumn( 0, Qt::AscendingOrder );
+    header()->setMovable( false );
 }
 
 AccountList::~AccountList()
@@ -287,6 +292,8 @@ I18N_NOOP( "<qt><p>Check this button to force the confirmation dialog to be "
 //
 //=============================================================================
 
+
+
 KMFilterDialog::KMFilterDialog( const QList<KActionCollection*> &actionCollection,
                                 QWidget *parent, bool createDummyFilter )
   : KDialog( parent ),
@@ -308,31 +315,31 @@ KMFilterDialog::KMFilterDialog( const QList<KActionCollection*> &actionCollectio
   QMenu *menu = new QMenu();
 
   QAction *act = new QAction( i18n( "KMail filters" ), this );
-  act->setData( (int)MailCommon::FilterImporterExporter::KMailFilter );
+  act->setData( QVariant::fromValue(MailCommon::FilterImporterExporter::KMailFilter) );
   menu->addAction( act );
 
   act = new QAction( i18n( "Thunderbird filters" ), this );
-  act->setData( (int)MailCommon::FilterImporterExporter::ThunderBirdFilter );
+  act->setData( QVariant::fromValue(MailCommon::FilterImporterExporter::ThunderBirdFilter) );
   menu->addAction( act );
 
   act = new QAction( i18n( "Evolution filters" ), this );
-  act->setData( (int)MailCommon::FilterImporterExporter::EvolutionFilter );
+  act->setData( QVariant::fromValue(MailCommon::FilterImporterExporter::EvolutionFilter) );
   menu->addAction( act );
 
   act = new QAction( i18n( "Sylpheed filters" ), this );
-  act->setData( (int)MailCommon::FilterImporterExporter::SylpheedFilter );
+  act->setData( QVariant::fromValue(MailCommon::FilterImporterExporter::SylpheedFilter) );
   menu->addAction( act );
 
   act = new QAction( i18n( "Procmail filters" ), this );
-  act->setData( (int)MailCommon::FilterImporterExporter::ProcmailFilter );
+  act->setData( QVariant::fromValue(MailCommon::FilterImporterExporter::ProcmailFilter) );
   menu->addAction( act );
 
   act = new QAction( i18n( "Balsa filters" ), this );
-  act->setData( (int)MailCommon::FilterImporterExporter::BalsaFilter );
+  act->setData( QVariant::fromValue(MailCommon::FilterImporterExporter::BalsaFilter) );
   menu->addAction( act );
 
   act = new QAction( i18n( "Claws Mail filters" ), this );
-  act->setData( (int)MailCommon::FilterImporterExporter::ClawsMailFilter );
+  act->setData( QVariant::fromValue(MailCommon::FilterImporterExporter::ClawsMailFilter) );
   menu->addAction( act );
 
   connect( menu, SIGNAL(triggered(QAction*)), SLOT(slotImportFilter(QAction*)) );
@@ -350,7 +357,6 @@ KMFilterDialog::KMFilterDialog( const QList<KActionCollection*> &actionCollectio
   topVLayout->addLayout( topLayout );
   topLayout->setSpacing( spacingHint() );
   topLayout->setMargin( 0 );
-  QHBoxLayout *hbl = topLayout;
   QVBoxLayout *vbl2 = 0;
 
   QSplitter *splitter = new QSplitter;
@@ -364,7 +370,7 @@ KMFilterDialog::KMFilterDialog( const QList<KActionCollection*> &actionCollectio
 
   QWidget *page1 = new QWidget( tabWidget );
   tabWidget->addTab( page1, i18nc( "General mail filter settings.", "General" ) );
-  hbl = new QHBoxLayout( page1 );
+  QHBoxLayout * hbl = new QHBoxLayout( page1 );
   hbl->setSpacing( spacingHint() );
   hbl->setMargin( marginHint() );
 
@@ -644,7 +650,7 @@ void KMFilterDialog::slotRunFilters()
       return;
   }
   SearchRule::RequiredPart requiredPart = SearchRule::Envelope;
-  const QStringList selectedFiltersId = mFilterList->selectedFilterId( requiredPart );
+  const QStringList selectedFiltersId = mFilterList->selectedFilterId( requiredPart, mFolderRequester->collection().resource() );
   if ( selectedFiltersId.isEmpty() ) {
     KMessageBox::information(
       this,
@@ -1043,7 +1049,7 @@ void KMFilterListBox::createFilter( const QByteArray &field, const QString &valu
 
   MailFilter *newFilter = new MailFilter();
   newFilter->pattern()->append( newRule );
-  newFilter->pattern()->setName( QString::fromLatin1( "<%1>:%2" ).
+  newFilter->pattern()->setName( QString::fromLatin1( "<%1>: %2" ).
                                    arg( QString::fromLatin1( field ) ).
                                    arg( value ) );
 
@@ -1349,7 +1355,7 @@ QList<QListWidgetItem*> KMFilterListBox::selectedFilter()
   return listWidgetItem;
 }
 
-QStringList KMFilterListBox::selectedFilterId( SearchRule::RequiredPart &requiredPart ) const
+QStringList KMFilterListBox::selectedFilterId( SearchRule::RequiredPart& requiredPart, const QString& resource ) const
 {
   QStringList listFilterId;
   requiredPart = SearchRule::Envelope;
@@ -1360,7 +1366,7 @@ QStringList KMFilterListBox::selectedFilterId( SearchRule::RequiredPart &require
         static_cast<QListWidgetFilterItem*>( mListWidget->item( i ) )->filter()->identifier();
       listFilterId << id;
       requiredPart = qMax(requiredPart,
-          static_cast<QListWidgetFilterItem*>( mListWidget->item( i ) )->filter()->requiredPart());
+          static_cast<QListWidgetFilterItem*>( mListWidget->item( i ) )->filter()->requiredPart(resource));
     }
   }
   return listFilterId;
@@ -1625,7 +1631,7 @@ void KMFilterListBox::swapNeighbouringFilters( int untouchedOne, int movedOne )
 void KMFilterDialog::slotImportFilter( QAction *act )
 {
   if ( act ) {
-    importFilters( ( FilterImporterExporter::FilterType )act->data().toInt() );
+    importFilters( act->data().value<MailCommon::FilterImporterExporter::FilterType>() );
   }
 }
 

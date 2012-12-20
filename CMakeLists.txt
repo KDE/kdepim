@@ -103,14 +103,14 @@ endif()
 #    3.2 alpha1
 
 # Do NOT add quote
-set(KDEPIM_DEV_VERSION pre)
+set(KDEPIM_DEV_VERSION prealpha)
 
 # add an extra space
 if(DEFINED KDEPIM_DEV_VERSION)
   set(KDEPIM_DEV_VERSION " ${KDEPIM_DEV_VERSION}")
 endif()
 
-set(KDEPIM_VERSION "4.10${KDEPIM_DEV_VERSION}")
+set(KDEPIM_VERSION "4.11${KDEPIM_DEV_VERSION}")
 
 configure_file(kdepim-version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/kdepim-version.h @ONLY)
 
@@ -121,12 +121,12 @@ if(WINCE)
   find_program(KDE4_KDECONFIG_EXECUTABLE NAMES kde4-config PATHS ${HOST_BINDIR} NO_DEFAULT_PATH)
 endif()
 
-find_package(KDE4 4.7.0 REQUIRED)
+find_package(KDE4 4.9.0 REQUIRED)
 include(KDE4Defaults)
 include(MacroLibrary)
 include(CheckIncludeFiles)
 include(MacroBoolTo01)
-find_package(KdepimLibs 4.9.57 REQUIRED)
+find_package(KdepimLibs 4.9.81 REQUIRED)
 
 ############### Load the CTest options ###############
 
@@ -186,7 +186,7 @@ else()
 
 # Otherwise...
 ############### Find the stuff we need ###############
-  set(AKONADI_MIN_VERSION 1.8.0)
+  set(AKONADI_MIN_VERSION 1.8.51)
   find_package(Akonadi QUIET NO_MODULE ${AKONADI_MIN_VERSION})
   macro_log_feature(Akonadi_FOUND "Akonadi" "Akonadi server libraries" "http://pim.kde.org/akonadi" TRUE "${AKONADI_MIN_VERSION}" "Akonadi is required to build KDEPIM")
 
@@ -212,8 +212,10 @@ else()
   find_package(Grantlee QUIET NO_MODULE)
   macro_log_feature(Grantlee_FOUND "Grantlee" "The Grantlee Template System" "http://www.gitorious.org/grantlee/pages/Home" FALSE "" "Templating and theming for KJots and KaddressBook." )
 
-  find_package(Nepomuk)
-  macro_log_feature(Nepomuk_FOUND "Nepomuk" "The Nepomuk libraries" "http://www.kde.org" TRUE "" "Nepomuk extends the search and tagging functionalities in KMail and Akonadi")
+  if(${Grantlee_FOUND} AND ("${Grantlee_VERSION}" VERSION_GREATER "0.2.0"))
+     set(GRANTLEE_GREATER_0_2 TRUE)
+  endif()
+
   find_package(NepomukCore)
   macro_log_feature(NepomukCore_FOUND "NepomukCore" "The NepomukCore libraries" "http://www.kde.org" TRUE "" "Nepomuk extends the search and tagging functionalities in KMail and Akonadi")
 
@@ -296,6 +298,7 @@ else()
   add_subdirectory(libksieve)
   add_subdirectory(kdgantt2)
   add_subdirectory(icons)
+  add_subdirectory(composereditor-ng)
   add_subdirectory(messagecore)
   if(NOT WINCE)
     add_subdirectory(messagelist)
@@ -318,6 +321,7 @@ else()
   set(MESSAGEVIEWER_SUPPORTED TRUE)
   add_subdirectory(messageviewer)
   macro_optional_add_subdirectory(messagecomposer)
+  add_subdirectory(pimcommon)
   add_subdirectory(mailcommon) # TODO: does this make sense?!?
   add_subdirectory(mailfilteragent)
   macro_optional_add_subdirectory(kmail)
@@ -347,7 +351,7 @@ else()
     macro_optional_add_subdirectory(ksendemail)
     macro_optional_add_subdirectory(ktnef)
     macro_optional_add_subdirectory(mailimporter)
-    macro_optional_add_subdirectory(backupmail)
+    macro_optional_add_subdirectory(pimsettingexporter)
     macro_optional_add_subdirectory(kalarm)
 
     if(KDEPIMLIBS_KCAL_LIBRARY)

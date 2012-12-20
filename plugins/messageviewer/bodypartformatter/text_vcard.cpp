@@ -2,7 +2,7 @@
 
   This file is part of KMail, the KDE mail client.
   Copyright (c) 2004 Till Adam <adam@kde.org>
-  Copyright (c) 2010 Klar‰lvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
+  Copyright (c) 2010 Klar√§lvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
   Copyright (c) 2012 Laurent Montel <montel@kde.org>
 
   KMail is free software; you can redistribute it and/or modify it
@@ -34,6 +34,8 @@
 #include "messageviewer/interfaces/bodyparturlhandler.h"
 #include "messageviewer/interfaces/bodypart.h"
 #include <messageviewer/nodehelper.h>
+#include "updatecontactjob.h"
+#include "vcardmemento.h"
 
 using MessageViewer::Interface::BodyPart;
 #include "messageviewer/webkitparthtmlwriter.h"
@@ -66,19 +68,27 @@ class Formatter : public MessageViewer::Interface::BodyPartFormatter
     {
     }
 
-    Result format( BodyPart *bodyPart, MessageViewer::HtmlWriter *writer ) const
+    Result format( BodyPart * part, MessageViewer::HtmlWriter * writer ) const
+    {
+      return format ( part, writer, 0 );
+    }
+
+    Result format( BodyPart *bodyPart, MessageViewer::HtmlWriter *writer, QObject* asyncResultObserver ) const
     {
       if ( !writer ) {
-        return AsIcon;
+        return Ok;
       }
 
-      KABC::VCardConverter vcc;
       const QString vCard = bodyPart->asText();
       if ( vCard.isEmpty() ) {
         return AsIcon;
       }
 
-      KABC::Addressee::List al = vcc.parseVCards( vCard.toUtf8() );
+      KABC::VCardConverter vcc;
+      const KABC::Addressee::List al = vcc.parseVCards( vCard.toUtf8() );
+
+      MessageViewer::VcardMemento *memento = dynamic_cast<MessageViewer::VcardMemento*>( bodyPart->memento() );
+      QStringList lst;
 
       // Pre-count the number of non-empty addressees
       int count = 0;
@@ -86,7 +96,12 @@ class Formatter : public MessageViewer::Interface::BodyPartFormatter
         if ( a.isEmpty() ) {
           continue;
         }
-        count++;
+        if(!memento) {
+	  if(!a.emails().isEmpty()) {
+            lst.append(a.emails().first());
+	    count++;
+	  }
+        }
       }
       if ( !count ) {
         return AsIcon;
@@ -99,6 +114,19 @@ class Formatter : public MessageViewer::Interface::BodyPartFormatter
       count = 0;
       static QString defaultPixmapPath = QLatin1String("file:///") + KIconLoader::global()->iconPath( "user-identity", KIconLoader::Desktop );
       static QString defaultMapIconPath = QLatin1String("file:///") + KIconLoader::global()->iconPath( "document-open-remote", KIconLoader::Small );
+
+
+      if ( !memento ) {
+        MessageViewer::VcardMemento *memento = new MessageViewer::VcardMemento(lst);
+        bodyPart->setBodyPartMemento( memento );
+
+        if ( asyncResultObserver ) {
+          QObject::connect( memento, SIGNAL(update(MessageViewer::Viewer::UpdateMode)),
+                            asyncResultObserver, SLOT(update(MessageViewer::Viewer::UpdateMode)) );
+        }
+      }
+
+
       foreach ( const KABC::Addressee &a, al ) {
         if ( a.isEmpty() ) {
           continue;
@@ -107,7 +135,7 @@ class Formatter : public MessageViewer::Interface::BodyPartFormatter
         formatter.setContact( a );
         formatter.setDisplayQRCode(false);
         QString htmlStr = formatter.toHtml( Akonadi::StandardContactFormatter::EmbeddableForm );
-        KABC::Picture photo = a.photo();
+        const KABC::Picture photo = a.photo();
         htmlStr.replace(QLatin1String("<img src=\"map_icon\""),QString::fromLatin1("<img src=\"%1\"").arg(defaultMapIconPath));
         if(photo.isEmpty()) {
           htmlStr.replace(QLatin1String("img src=\"contact_photo\""),QString::fromLatin1("img src=\"%1\"").arg(defaultPixmapPath));
@@ -122,13 +150,32 @@ class Formatter : public MessageViewer::Interface::BodyPartFormatter
         }
         writer->queue( htmlStr );
 
-        QString addToLinkText = i18n( "[Add this contact to the address book]" );
-        QString op = QString::fromLatin1( "addToAddressBook:%1" ).arg( count );
-        writer->queue( "<div align=\"center\"><a href=\"" +
-                       bodyPart->makeLink( op ) +
-                       "\">" +
-                       addToLinkText +
-                       "</a></div><br><br>" );
+        if(!memento ||
+                (memento && !memento->finished()) ||
+                (memento && memento->finished() && !memento->vcardExist(count)) ) {
+          const QString addToLinkText = i18n( "[Add this contact to the address book]" );
+          QString op = QString::fromLatin1( "addToAddressBook:%1" ).arg( count );
+          writer->queue( "<div align=\"center\"><a href=\"" +
+                         bodyPart->makeLink( op ) +
+                         "\">" +
+                         addToLinkText +
+                         "</a></div><br><br>" );
+        } else {
+            if(memento->address(count) != a) {
+              const QString addToLinkText = i18n( "[Update this contact to the address book]" );
+              QString op = QString::fromLatin1( "updateToAddressBook:%1" ).arg( count );
+              writer->queue( "<div align=\"center\"><a href=\"" +
+                             bodyPart->makeLink( op ) +
+                             "\">" +
+                             addToLinkText +
+                            "</a></div><br><br>" );
+            } else {
+                const QString addToLinkText = i18n( "[This contact is already in addressbook]" );
+                writer->queue( "<div align=\"center\">" +
+                               addToLinkText +
+                              "</a></div><br><br>" );
+            }
+        }
         count++;
       }
 
@@ -149,18 +196,24 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
         return true;
       }
       KABC::VCardConverter vcc;
-      KABC::Addressee::List al = vcc.parseVCards( vCard.toUtf8() );
-      int index = path.right( path.length() - path.lastIndexOf( ":" ) - 1 ).toInt();
+      const KABC::Addressee::List al = vcc.parseVCards( vCard.toUtf8() );
+      const int index = path.right( path.length() - path.lastIndexOf( ":" ) - 1 ).toInt();
       if ( index == -1 || index >= al.count() ) {
         return true;
       }
-      KABC::Addressee a = al[index];
+      const KABC::Addressee a = al.at(index);
       if ( a.isEmpty() ) {
         return true;
       }
 
-      KPIM::AddContactJob *job = new KPIM::AddContactJob( a, 0 );
-      job->start();
+      if(path.startsWith(QLatin1String("addToAddressBook"))) {
+
+        KPIM::AddContactJob *job = new KPIM::AddContactJob( a, 0 );
+        job->start();
+      } else if( path.startsWith(QLatin1String("updateToAddressBook"))) {
+        UpdateContactJob *job = new UpdateContactJob(a.emails().first(), a, 0);
+        job->start();
+      }
 
       return true;
     }
@@ -170,10 +223,10 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       const QString vCard = part->asText();
       if ( !vCard.isEmpty() ) {
         KABC::VCardConverter vcc;
-        KABC::Addressee::List al = vcc.parseVCards( vCard.toUtf8() );
+        const KABC::Addressee::List al = vcc.parseVCards( vCard.toUtf8() );
         const int index = path.right( path.length() - path.lastIndexOf( ":" ) - 1 ).toInt();
         if ( index >= 0 && index < al.count() ) {
-          return al[index];
+          return al.at(index);
         }
       }
       return KABC::Addressee();
@@ -209,10 +262,11 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
     QString statusBarMessage( BodyPart *part, const QString &path ) const
     {
       KABC::Addressee a = findAddressee( part, path );
+      const bool addToAddressBook = path.startsWith(QLatin1String("addToAddressBook"));
       if ( a.realName().isEmpty() ) {
-        return i18n( "Add this contact to the address book." );
+        return addToAddressBook ? i18n( "Add this contact to the address book." ) : i18n("Update this contact to the address book.");
       } else {
-        return i18n( "Add \"%1\" to the address book.", a.realName() );
+        return addToAddressBook ? i18n( "Add \"%1\" to the address book.", a.realName() ) : i18n("Update \"%1\" to the address book.", a.realName());
      }
     }
 

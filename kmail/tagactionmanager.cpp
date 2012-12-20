@@ -22,8 +22,11 @@
 #include "messageactions.h"
 
 #include "messagecore/taglistmonitor.h"
-#include <nepomuk2/tag.h>
+#include <Nepomuk2/Tag>
 #include <Nepomuk2/ResourceManager>
+#include <Nepomuk2/Query/QueryServiceClient>
+#include <Nepomuk2/Query/Result>
+#include <Nepomuk2/Query/ResourceTypeTerm>
 
 #include <KAction>
 #include <KActionCollection>
@@ -34,7 +37,7 @@
 
 #include <QSignalMapper>
 #include <soprano/nao.h>
-//#include <nepomuk/resourcewatcher.h>
+#include <nepomuk2/resourcewatcher.h>
 
 using namespace KMail;
 
@@ -49,24 +52,21 @@ TagActionManager::TagActionManager( QObject *parent, KActionCollection *actionCo
     mGUIClient( guiClient ),
     mTagListMonitor( new MessageCore::TagListMonitor( this ) ),
     mSeparatorAction( 0 ),
-    mMoreAction( 0 )
+    mMoreAction( 0 ),
+    mTagQueryClient( 0 )
 {
   connect( mTagListMonitor, SIGNAL(tagsChanged()), this, SLOT(tagsChanged()) );
-  KAction *separator = new KAction( this );
-  separator->setSeparator( true );
-  mMessageActions->messageStatusMenu()->menu()->addAction( separator );
+  mMessageActions->messageStatusMenu()->menu()->addSeparator();
   connect( Nepomuk2::ResourceManager::instance(), SIGNAL(nepomukSystemStarted()),
-           SLOT(slotNepomukStarted()) );
+           SLOT(tagsChanged()) );
   connect( Nepomuk2::ResourceManager::instance(), SIGNAL(nepomukSystemStopped()),
-           SLOT(slotNepomukStopped()) );
+           SLOT(tagsChanged()) );
 
-#if 0
-  Nepomuk::ResourceWatcher* watcher = new Nepomuk::ResourceWatcher(this);
+  Nepomuk2::ResourceWatcher* watcher = new Nepomuk2::ResourceWatcher(this);
   watcher->addType(Soprano::Vocabulary::NAO::Tag());
-  connect(watcher, SIGNAL(propertyAdded(Nepomuk::Resource,Nepomuk::Types::Property,QVariant)), this, SLOT(tagsChanged()));
-  connect(watcher, SIGNAL(propertyRemoved(Nepomuk::Resource,Nepomuk::Types::Property,QVariant)),this, SLOT(tagsChanged()));
+  connect(watcher, SIGNAL(resourceCreated(Nepomuk2::Resource,QList<QUrl>)), this, SLOT(tagsChanged()));
+  connect(watcher, SIGNAL(resourceRemoved(QUrl,QList<QUrl>)),this, SLOT(tagsChanged()));
   watcher->start();
-#endif
 }
 
 TagActionManager::~TagActionManager()
@@ -105,7 +105,7 @@ void TagActionManager::clearActions()
   mMessageTagToggleMapper = 0;
 }
 
-void TagActionManager::createTagAction( const Tag::Ptr &tag, bool addToMenu )
+void TagActionManager::createTagAction( const MailCommon::Tag::Ptr &tag, bool addToMenu )
 {
   QString cleanName( i18n("Message Tag %1", tag->tagName ) );
   cleanName.replace('&',"&&");
@@ -133,21 +133,26 @@ void TagActionManager::createTagAction( const Tag::Ptr &tag, bool addToMenu )
 
 void TagActionManager::createActions()
 {
+  if( mTagQueryClient )
+      return;
   clearActions();
 
-
   if ( mTags.isEmpty() ) {
-    const QList<Nepomuk2::Tag> alltags( Nepomuk2::Tag::allTags() );
-    if ( alltags.isEmpty() )
-      return;
-
-    // Build a sorted list of tags
-    foreach( const Nepomuk2::Tag &nepomukTag, alltags ) {
-      mTags.append( Tag::fromNepomuk( nepomukTag ) );
-    }
-    qSort( mTags.begin(), mTags.end(), KMail::Tag::compare );
+      mTagQueryClient = new Nepomuk2::Query::QueryServiceClient(this);
+      connect( mTagQueryClient, SIGNAL(newEntries(QList<Nepomuk2::Query::Result>)),
+            this, SLOT(newTagEntries(QList<Nepomuk2::Query::Result>)) );
+      connect( mTagQueryClient, SIGNAL(finishedListing()),
+            this, SLOT(finishedTagListing()) );
+      Nepomuk2::Query::ResourceTypeTerm term( Soprano::Vocabulary::NAO::Tag() );
+      Nepomuk2::Query::Query query( term );
+      mTagQueryClient->query(query);
+  } else {
+    createTagActions();
   }
+}
 
+void TagActionManager::createTagActions()
+{
   //Use a mapper to understand which tag button is triggered
   mMessageTagToggleMapper = new QSignalMapper( this );
   connect( mMessageTagToggleMapper, SIGNAL(mapped(QString)),
@@ -156,7 +161,9 @@ void TagActionManager::createActions()
   // Create a action for each tag and plug it into various places
   int i = 0;
   const int numberOfTag(mTags.count());
-  foreach( const Tag::Ptr &tag, mTags ) {
+  foreach( const MailCommon::Tag::Ptr &tag, mTags ) {
+    if(tag->tagStatus)
+      continue;
     if ( i< s_numberMaxTag )
       createTagAction( tag,true );
     else
@@ -183,6 +190,26 @@ void TagActionManager::createActions()
     mGUIClient->plugActionList( "toolbar_messagetag_actions", mToolbarActions );
   }
 }
+
+void TagActionManager::newTagEntries (const QList<Nepomuk2::Query::Result> &results)
+{
+  foreach (const Nepomuk2::Query::Result &result, results) {
+    Nepomuk2::Resource resource = result.resource();
+    mTags.append( MailCommon::Tag::fromNepomuk( resource ) );
+  }
+}
+
+void TagActionManager::finishedTagListing()
+{
+  mTagQueryClient->close();
+  mTagQueryClient->deleteLater();
+  mTagQueryClient = 0;
+  if ( mTags.isEmpty() )
+    return;
+  qSort( mTags.begin(), mTags.end(), MailCommon::Tag::compare );
+  createTagActions();
+}
+
 
 void TagActionManager::updateActionStates( int numberOfSelectedMessages,
                                            const Akonadi::Item &selectedItem )
@@ -218,17 +245,6 @@ void TagActionManager::tagsChanged()
 {
   mTags.clear(); // re-read the tags
   createActions();
-}
-
-void TagActionManager::slotNepomukStarted()
-{
-  tagsChanged();
-}
-
-void TagActionManager::slotNepomukStopped()
-{
-  mTags.clear();
-  clearActions();
 }
 
 

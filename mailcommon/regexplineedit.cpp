@@ -33,7 +33,7 @@
 #include <KDialog>
 #include <KLineEdit>
 #include <KLocale>
-#include <kregexpeditorinterface.h> //krazy:exclude=camelcase as no such
+#include <kregexpeditorinterface.h> //krazy:exclude=camelcase TODO wait for kdelibs4.10
 #include <KServiceTypeTrader>
 
 #include <QHBoxLayout>

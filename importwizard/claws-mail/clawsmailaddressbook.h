@@ -22,7 +22,6 @@
 #include <QDir>
 
 class ImportWizard;
-class KConfigGroup;
 
 
 class ClawsMailAddressBook : public SylpheedAddressBook

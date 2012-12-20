@@ -40,7 +40,7 @@ class CompletionOrderEditorAdaptor : public QDBusAbstractAdaptor
    Q_OBJECT
    Q_CLASSINFO("D-Bus Interface", "org.kde.pim.CompletionOrder" )
 public:
-   CompletionOrderEditorAdaptor( QObject *parent );
+   explicit CompletionOrderEditorAdaptor( QObject *parent );
 Q_SIGNALS:
    void completionOrderChanged();
 };

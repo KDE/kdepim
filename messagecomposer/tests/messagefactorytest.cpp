@@ -282,11 +282,11 @@ void MessageFactoryTest::testCreateRedirect()
   
   QString msgId = MessageCore::StringUtil::generateMessageId( msg->sender()->asUnicodeString(), QString() );
 
-  QRegExp rx( QString::fromAscii( "Resent-Message-ID: ([^\n]*)" ) );
-  rx.indexIn( QString::fromAscii( rdir->head() ) );
+  QRegExp rx( QString::fromLatin1( "Resent-Message-ID: ([^\n]*)" ) );
+  rx.indexIn( QString::fromLatin1( rdir->head() ) );
 
-  QRegExp rxmessageid( QString::fromAscii( "Message-ID: ([^\n]+)" ) );
-  rxmessageid.indexIn( QString::fromAscii( rdir->head() ) );
+  QRegExp rxmessageid( QString::fromLatin1( "Message-ID: ([^\n]+)" ) );
+  rxmessageid.indexIn( QString::fromLatin1( rdir->head() ) );
   kWarning() << "messageid:" << rxmessageid.cap(1) << "(" << rdir->head() << ")";
   QString baseline = QString::fromLatin1( "From: me@me.me\n"
                                           "Cc: cc@cc.cc\n"
@@ -341,11 +341,11 @@ void MessageFactoryTest::testCreateResend()
 
   QString msgId = MessageCore::StringUtil::generateMessageId( msg->sender()->asUnicodeString(), QString() );
 
-  QRegExp rx( QString::fromAscii( "Resent-Message-ID: ([^\n]*)" ) );
-  rx.indexIn( QString::fromAscii( rdir->head() ) );
+  QRegExp rx( QString::fromLatin1( "Resent-Message-ID: ([^\n]*)" ) );
+  rx.indexIn( QString::fromLatin1( rdir->head() ) );
 
-  QRegExp rxmessageid( QString::fromAscii( "Message-ID: ([^\n]+)" ) );
-  rxmessageid.indexIn( QString::fromAscii( rdir->head() ) );
+  QRegExp rxmessageid( QString::fromLatin1( "Message-ID: ([^\n]+)" ) );
+  rxmessageid.indexIn( QString::fromLatin1( rdir->head() ) );
   
   QString baseline = QString::fromLatin1( "From: me@me.me\n"
                                           "To: %1\n"
@@ -431,7 +431,9 @@ KMime::Message::Ptr MessageFactoryTest::createPlainTestMessage()
 KMime::Message::Ptr MessageFactoryTest::loadMessageFromFile(QString filename)
 {
   QFile file( QLatin1String( MAIL_DATA_DIR "/" + filename.toLatin1() ) );
-  Q_ASSERT( file.open( QIODevice::ReadOnly ) );
+  const bool opened = file.open( QIODevice::ReadOnly );
+  Q_ASSERT( opened );
+  Q_UNUSED( opened );
   const QByteArray data = KMime::CRLFtoLF( file.readAll() );
   Q_ASSERT( !data.isEmpty() );
   KMime::Message::Ptr msg( new KMime::Message );

@@ -61,7 +61,7 @@ class EVENTVIEWS_EXPORT MonthScene : public QGraphicsScene
       ResizeRight
     };
 
-    MonthScene( MonthView *parent );
+    explicit MonthScene( MonthView *parent );
     ~MonthScene();
 
     int columnWidth() const;
@@ -280,7 +280,7 @@ class EVENTVIEWS_EXPORT MonthScene : public QGraphicsScene
 class EVENTVIEWS_EXPORT MonthGraphicsView : public QGraphicsView
 {
   public:
-    MonthGraphicsView( MonthView *parent );
+    explicit MonthGraphicsView( MonthView *parent );
 
     /**
       Draws the cells.

@@ -30,11 +30,13 @@
 #include "core/settings.h"
 #include "core/storagemodelbase.h"
 #include "core/widgetbase.h"
+#include "messagelistutil.h"
 
 #include "messagecore/stringutil.h"
 
 #include <kmime/kmime_dateformatter.h> // kdepimlibs
 
+#include <Akonadi/Item>
 #include <QHelpEvent>
 #include <QToolTip>
 #include <QHeaderView>
@@ -790,7 +792,7 @@ void View::slotHeaderContextMenuRequested( const QPoint &pnt )
     );
 
   menu.addSeparator();
-  fillViewMenu( &menu );
+  MessageList::Util::fillViewMenu( &menu, d->mWidget );
 
   menu.exec( header()->mapToGlobal( pnt ) );
 }
@@ -1612,27 +1614,6 @@ void View::selectFocusedMessageItem( bool centerItem )
     scrollTo( idx, QAbstractItemView::PositionAtCenter );
 }
 
-void View::fillViewMenu( KMenu * menu )
-{
-  KMenu* sortingMenu = new KMenu( i18n( "Sorting" ), menu );
-  sortingMenu->setIcon( KIcon( QLatin1String( "view-sort-ascending" ) ) );
-  menu->addMenu( sortingMenu );
-  connect( sortingMenu, SIGNAL(aboutToShow()),
-           d->mWidget, SLOT(sortOrderMenuAboutToShow()) );
-
-  KMenu* aggregationMenu = new KMenu( i18n( "Aggregation" ), menu );
-  aggregationMenu->setIcon( KIcon( QLatin1String( "view-process-tree" ) ) );
-  menu->addMenu( aggregationMenu );
-  connect( aggregationMenu, SIGNAL(aboutToShow()),
-           d->mWidget, SLOT(aggregationMenuAboutToShow()) );
-
-  KMenu* themeMenu = new KMenu( i18n( "Theme" ), menu );
-  themeMenu->setIcon( KIcon( QLatin1String( "preferences-desktop-theme" ) ) );
-  menu->addMenu( themeMenu );
-  connect( themeMenu, SIGNAL(aboutToShow()),
-           d->mWidget, SLOT(themeMenuAboutToShow()) );
-}
-
 bool View::selectFirstMessageItem( MessageTypeFilter messageTypeFilter, bool centerItem )
 {
   if ( !storageModel() )
@@ -1643,6 +1624,32 @@ bool View::selectFirstMessageItem( MessageTypeFilter messageTypeFilter, bool cen
     return false;
 
   Q_ASSERT( it != d->mModel->rootItem() ); // must never happen (obviously)
+
+  setFocus();
+  ensureDisplayedWithParentsExpanded( it );
+
+  QModelIndex idx = d->mModel->index( it, 0 );
+
+  Q_ASSERT( idx.isValid() );
+
+  setCurrentIndex( idx );
+
+  if ( centerItem )
+    scrollTo( idx, QAbstractItemView::PositionAtCenter );
+
+  return true;
+}
+
+bool View::selectLastMessageItem( MessageTypeFilter messageTypeFilter, bool centerItem )
+{
+  if ( !storageModel() )
+      return false;
+
+  Item * it = lastMessageItem( messageTypeFilter );
+  if ( !it )
+    return false;
+
+  Q_ASSERT( it != d->mModel->rootItem() );
 
   setFocus();
   ensureDisplayedWithParentsExpanded( it );
@@ -2358,7 +2365,6 @@ bool View::event( QEvent *e )
   QString darkerColorName = darkerColor.name();
   const bool textIsLeftToRight = ( QApplication::layoutDirection() == Qt::LeftToRight );
   const QString textDirection =  textIsLeftToRight ? QLatin1String( "left" ) : QLatin1String( "right" );
-  const QString firstColumnWidth =  textIsLeftToRight ? QLatin1String( "45" ) : QLatin1String( "55" );
 
   QString tip = QString::fromLatin1(
       "<table width=\"100%\" border=\"0\" cellpadding=\"2\" cellspacing=\"0\">"
@@ -2410,7 +2416,7 @@ bool View::event( QEvent *e )
       }
 
       QString status = mi->statusDescription();
-      QString tags = mi->tagListDescription();
+      const QString tags = mi->tagListDescription();
       if ( !tags.isEmpty () )
       {
         if ( !status.isEmpty() )
@@ -2434,7 +2440,7 @@ bool View::event( QEvent *e )
         }
       }
 
-      QString content = mi->contentSummary();
+      QString content = MessageList::Util::contentSummary(mi->akonadiItem().url());
       if ( !content.isEmpty() ) {
         if ( textIsLeftToRight ) {
           tip += htmlCodeForStandardRow.arg( i18n( "Preview" ) ).arg( content.replace( QLatin1Char( '\n' ), QLatin1String( "<br>" ) ) );
@@ -2745,5 +2751,21 @@ void View::setRowHidden( int row, const QModelIndex & parent, bool hide )
 
   QTreeView::setRowHidden( row, parent, hide );
 }
+
+void View::sortOrderMenuAboutToShow(KMenu *menu)
+{
+  d->mWidget->sortOrderMenuAboutToShow(menu);
+}
+
+void View::aggregationMenuAboutToShow(KMenu *menu)
+{
+  d->mWidget->aggregationMenuAboutToShow(menu);
+}
+
+void View::themeMenuAboutToShow(KMenu *menu)
+{
+  d->mWidget->themeMenuAboutToShow(menu);
+}
+
 
 #include "view.moc"

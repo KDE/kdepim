@@ -22,6 +22,8 @@
 #ifndef INSTANCESELECTOR_H
 #define INSTANCESELECTOR_H
 
+#include "mainwindow.h"
+
 #include <KDialog>
 
 namespace Ui {
@@ -35,7 +37,7 @@ class InstanceSelector : public KDialog
 {
   Q_OBJECT
   public:
-    explicit InstanceSelector( const QString &remoteHost, QWidget* parent = 0, Qt::WFlags flags = 0 );
+    explicit InstanceSelector( const QString &remoteHost, QWidget* parent = 0, Qt::WindowFlags flags = 0 );
     virtual ~InstanceSelector();
     virtual void accept();
     virtual void reject();
@@ -47,6 +49,7 @@ class InstanceSelector : public KDialog
     QScopedPointer<Ui::InstanceSelector> ui;
     QString m_remoteHost;
     QString m_instance;
+    MainWindow *mWindow;
 };
 
 #endif // INSTANCESELECTOR_H

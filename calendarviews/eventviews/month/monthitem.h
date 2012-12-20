@@ -48,7 +48,7 @@ class EVENTVIEWS_EXPORT MonthItem : public QObject
   Q_OBJECT
 
   public:
-    MonthItem( MonthScene *monthWidget );
+    explicit MonthItem( MonthScene *monthWidget );
     virtual ~MonthItem();
 
     QWidget *parentWidget() const;

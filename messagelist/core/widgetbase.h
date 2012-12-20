@@ -34,6 +34,7 @@ class KLineEdit;
 class QTimer;
 class QActionGroup;
 class KComboBox;
+class KMenu;
 
 namespace Akonadi
 {
@@ -132,6 +133,13 @@ public:
 
   void saveCurrentSelection();
 
+  bool searchEditHasFocus() const;
+
+
+  void sortOrderMenuAboutToShow(KMenu *menu);
+  void themeMenuAboutToShow(KMenu *menu);
+  void aggregationMenuAboutToShow(KMenu *menu);
+
 public slots:
 
   /**
@@ -142,7 +150,7 @@ public slots:
   /**
    * Shows or hides the quicksearch field, the filter combobox and the toolbutton for advanced search.
    */
-  void changeQuicksearchVisibility();
+  void changeQuicksearchVisibility(bool);
 
 protected:
   /**

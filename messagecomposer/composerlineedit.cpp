@@ -68,14 +68,10 @@ void ComposerLineEdit::keyPressEvent(QKeyEvent *e)
     emit focusDown();
     AddresseeLineEdit::keyPressEvent(e);
     return;
-  }
-  if (e->key() == Qt::Key_Up)
-  {
+  } else if (e->key() == Qt::Key_Up) {
     emit focusUp();
     return;
-  }
-  if (e->key() == Qt::Key_Down)
-  {
+  } else if (e->key() == Qt::Key_Down) {
     emit focusDown();
     return;
   }
@@ -204,7 +200,7 @@ void ComposerLineEdit::groupDropExpandResult( KJob* job )
 #ifndef QT_NO_CONTEXTMENU
 void ComposerLineEdit::contextMenuEvent( QContextMenuEvent*e )
 {
-  QMenu *popup = createStandardContextMenu();
+  QPointer<QMenu> popup = createStandardContextMenu();
   if ( popup ) { // can be 0 on platforms with only a touch interface
     popup->addSeparator();
     QAction* act = popup->addAction( i18n( "Edit Recent Addresses..." ));

@@ -720,7 +720,7 @@ Qt::ItemFlags Model::flags( const QModelIndex & index ) const {
         case Host:
         case Port:
             if ( isReadOnlyRow( row ) )
-                return flags & ~(Qt::ItemIsEnabled|Qt::ItemIsEnabled) ;
+                return flags & ~(Qt::ItemIsEditable|Qt::ItemIsEnabled) ;
             else
                 return flags | Qt::ItemIsEditable ;
         case BaseDN:

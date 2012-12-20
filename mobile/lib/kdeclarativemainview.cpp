@@ -72,13 +72,13 @@
 #include <QtCore/QPluginLoader>
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusMessage>
-#include <QtDeclarative/QDeclarativeContext>
-#include <QtDeclarative/QDeclarativeEngine>
-#include <QtDeclarative/QDeclarativeImageProvider>
+#include <QDeclarativeContext>
+#include <QDeclarativeEngine>
+#include <QDeclarativeImageProvider>
 #include <QApplication>
 #include <QTreeView>
 
-#include <QtDeclarative/QDeclarativeItem>
+#include <QDeclarativeItem>
 
 #include <sys/utsname.h>
 

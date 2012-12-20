@@ -3,6 +3,8 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/messageviewer
   ${CMAKE_SOURCE_DIR}/templateparser
   ${CMAKE_BINARY_DIR}/templateparser
+  ${CMAKE_BINARY_DIR}/pimcommon
+  ${CMAKE_SOURCE_DIR}/pimcommon
   ${CMAKE_CURRENT_BINARY_DIR}/../ontologies
   ${CMAKE_CURRENT_SOURCE_DIR}/filter
   ${CMAKE_CURRENT_SOURCE_DIR}
@@ -13,9 +15,6 @@ include_directories(
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
 
 set(libmailcommon_SRCS
-  aclentrydialog.cpp
-  aclmanager.cpp
-  aclutils.cpp
   attributeregistrar.cpp
   backupjob.cpp
   collectionannotationsattribute.cpp
@@ -86,7 +85,6 @@ set(libmailcommon_SRCS
   foldertreeview.cpp
   foldertreewidget.cpp
   foldertreewidgetproxymodel.cpp
-  imapaclattribute.cpp
   jobscheduler.cpp
   mailkernel.cpp
   mailutil.cpp
@@ -101,8 +99,18 @@ set(libmailcommon_SRCS
   snippetsmanager.cpp
   snippetsmodel.cpp
   snippetvariabledialog.cpp
-  createresource.cpp
+  tagwidget.cpp
+  tag.cpp
+  filter/addtagdialog.cpp
 )
+
+soprano_add_ontology(libmailcommon_SRCS
+  ${CMAKE_SOURCE_DIR}/messagecore/messagetag.trig
+  "MessageTag"
+  "Vocabulary"
+  "trig"
+)
+
 
 set_source_files_properties(${CMAKE_SOURCE_DIR}/mailfilteragent/org.freedesktop.Akonadi.MailFilterAgent.xml PROPERTIES INCLUDE "../mailfilteragent/dbusoperators.h")
 
@@ -125,7 +133,6 @@ macro(add_resource_iface _kcfgFile _ifaceName _className)
   )
 endmacro()
 
-add_resource_iface(imapresource.kcfg org.kde.Akonadi.Imap.Settings ImapSettings)
 add_resource_iface(settings.kcfg org.kde.Akonadi.POP3.Settings Pop3Settings)
 
 qt4_add_dbus_interfaces(libmailcommon_SRCS
@@ -138,6 +145,7 @@ target_link_libraries(mailcommon messageviewer messagecore messagecomposer maili
   templateparser
   kdepim
   akonadi_next
+  pimcommon
   ${KDEPIMLIBS_KMIME_LIBS}
   ${KDEPIMLIBS_AKONADI_LIBS}
   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}

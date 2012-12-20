@@ -66,7 +66,7 @@ class LDAPCompletionItem : public CompletionItem
 {
   public:
     LDAPCompletionItem( KLDAP::LdapClient *ldapClient )
-      : mLdapClient( ldapClient )
+      : mLdapClient( ldapClient ), mWeight(0)
     {
     }
 
