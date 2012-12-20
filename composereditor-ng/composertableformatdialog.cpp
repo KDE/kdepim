@@ -24,6 +24,7 @@
 
 #include <KLocale>
 #include <KColorButton>
+#include <KSeparator>
 
 #include <QWebElement>
 #include <QVBoxLayout>
@@ -85,6 +86,9 @@ void ComposerTableFormatDialogPrivate::initialize(const QWebElement &element)
     insertTableWidget = new KPIMTextEdit::InsertTableWidget( q );
     lay->addWidget(insertTableWidget);
 
+    KSeparator *sep = new KSeparator;
+    lay->addWidget( sep );
+
     QHBoxLayout *hbox = new QHBoxLayout;
     useBackgroundColor = new QCheckBox( i18n( "Background Color:" ) );
     hbox->addWidget(useBackgroundColor);
@@ -92,7 +96,11 @@ void ComposerTableFormatDialogPrivate::initialize(const QWebElement &element)
     backgroundColor->setEnabled(false);
     hbox->addWidget(backgroundColor);
 
+
     lay->addLayout(hbox);
+
+    sep = new KSeparator;
+    lay->addWidget( sep );
 
     q->connect(q,SIGNAL(okClicked()),q,SLOT(_k_slotOkClicked()));
 
