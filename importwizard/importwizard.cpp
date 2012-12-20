@@ -38,6 +38,7 @@
 #include "thebat/thebatimportdata.h"
 #include "balsa/balsaimportdata.h"
 #include "claws-mail/clawsmailimportdata.h"
+#include "trojita/trojitaimportdata.h"
 
 #include <kaboutapplicationdialog.h>
 #include <kglobal.h>
@@ -115,6 +116,7 @@ ImportWizard::ImportWizard(QWidget *parent)
 
   addImportModule(new BalsaImportData(this));
   addImportModule(new ClawsMailImportData(this));
+  addImportModule(new TrojitaImportData(this));
 
   // Disable the 'next button to begin with.
   setValid( currentPage(), false );

@@ -48,6 +48,8 @@ balsa/balsaaddressbook.cpp
 claws-mail/clawsmailimportdata.cpp
 claws-mail/clawsmailsettings.cpp
 claws-mail/clawsmailaddressbook.cpp
+trojita/trojitasettings.cpp
+trojita/trojitaimportdata.cpp
 )
 
 include_directories(${CMAKE_SOURCE_DIR}/mailimporter 
