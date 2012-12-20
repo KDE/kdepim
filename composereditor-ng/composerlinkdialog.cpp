@@ -23,6 +23,7 @@
 
 #include <KLineEdit>
 #include <KLocale>
+#include <KSeparator>
 
 #include <QVBoxLayout>
 #include <QLabel>
@@ -71,6 +72,11 @@ void ComposerLinkDialogPrivate::initialize(const QWebElement &element)
     linkLocation = new KLineEdit;
     linkLocation->setClearButtonShown(true);
     layout->addWidget( linkLocation );
+
+    KSeparator *sep = new KSeparator;
+    layout->addWidget( sep );
+
+
     q->connect(q,SIGNAL(okClicked()),q,SLOT(slotOkClicked()));
 
 }

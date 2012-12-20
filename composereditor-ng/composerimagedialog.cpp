@@ -24,6 +24,7 @@
 
 #include <KLocale>
 #include <KLineEdit>
+#include <KSeparator>
 
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -122,6 +123,8 @@ void ComposerImageDialogPrivate::initialize()
     hbox->addWidget(alternateTitle);
     lay->addLayout(hbox);
 
+    KSeparator *sep = new KSeparator;
+    lay->addWidget(sep);
 
     q->connect(imageWidget,SIGNAL(enableButtonOk(bool)),q,SLOT(enableButtonOk(bool)));
     q->connect(q,SIGNAL(okClicked()),q,SLOT(slotOkClicked()));
