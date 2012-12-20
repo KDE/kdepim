@@ -79,6 +79,7 @@ private Q_SLOTS:
   void slotImportAutoCorrection(QAction* act);
 
   void changeLanguage(int);
+  void updateAddRemoveButton();
 Q_SIGNALS:
   void changed();
 
