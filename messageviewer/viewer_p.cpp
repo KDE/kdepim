@@ -1255,7 +1255,7 @@ void ViewerPrivate::printMessage( const Akonadi::Item &message )
 #endif
 }
 
-void ViewerPrivate::printPreviousMessage( const Akonadi::Item &message )
+void ViewerPrivate::printPreviewMessage( const Akonadi::Item &message )
 {
 // wince does not support printing
 #ifndef Q_OS_WINCE

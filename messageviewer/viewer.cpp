@@ -127,10 +127,10 @@ void Viewer::printMessage( const Akonadi::Item &msg )
   d->printMessage( msg );
 }
 
-void Viewer::printPreviousMessage( const Akonadi::Item &message )
+void Viewer::printPreviewMessage( const Akonadi::Item &message )
 {
   Q_D( Viewer );
-  d->printPreviousMessage( message );
+  d->printPreviewMessage( message );
 }
 
 void Viewer::printPreview()

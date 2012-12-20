@@ -321,7 +321,7 @@ public:
 
   /** Print message. */
   void printMessage( const Akonadi::Item &msg );
-  void printPreviousMessage( const Akonadi::Item &message );
+  void printPreviewMessage( const Akonadi::Item &message );
 
   void resetStateForNewMessage();
 
