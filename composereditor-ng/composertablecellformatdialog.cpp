@@ -151,7 +151,10 @@ void ComposerTableCellFormatDialogPrivate::_k_slotOkClicked()
 {
     if(!webElement.isNull()) {
         if(useBackgroundColor->isChecked()) {
-            webElement.setAttribute(QLatin1String("bgcolor"),backgroundColor->color().name());
+            const QColor col = backgroundColor->color();
+            if(col.isValid()) {
+                webElement.setAttribute(QLatin1String("bgcolor"),col.name());
+            }
         } else {
             webElement.removeAttribute(QLatin1String("bgcolor"));
         }

@@ -59,11 +59,21 @@ void PageColorBackgroundDialog::slotOkClicked()
                 element.removeAttribute(QLatin1String("alink"));
                 element.removeAttribute(QLatin1String("vlink"));
             } else {
-                element.setAttribute(QLatin1String("bgcolor"),mPageColorWidget->pageBackgroundColor().name());
-                element.setAttribute(QLatin1String("text"),mPageColorWidget->textColor().name());
-                element.setAttribute(QLatin1String("link"),mPageColorWidget->linkColor().name());
-                element.setAttribute(QLatin1String("alink"),mPageColorWidget->activeLinkColor().name());
-                element.setAttribute(QLatin1String("vlink"),mPageColorWidget->visitedLinkColor().name());
+                QColor col = mPageColorWidget->pageBackgroundColor();
+                if(col.isValid())
+                    element.setAttribute(QLatin1String("bgcolor"),col.name());
+                col = mPageColorWidget->textColor();
+                if(col.isValid())
+                    element.setAttribute(QLatin1String("text"),col.name());
+                col = mPageColorWidget->linkColor();
+                if(col.isValid())
+                    element.setAttribute(QLatin1String("link"),col.name());
+                col = mPageColorWidget->activeLinkColor();
+                if(col.isValid())
+                    element.setAttribute(QLatin1String("alink"),col.name());
+                col = mPageColorWidget->visitedLinkColor();
+                if(col.isValid())
+                    element.setAttribute(QLatin1String("vlink"),col.name());
             }
             if(mPageColorWidget->backgroundImageUrl().isEmpty()) {
                 element.removeAttribute(QLatin1String("background"));

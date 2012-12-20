@@ -53,6 +53,8 @@
 #include <KFontAction>
 #include <KMenu>
 #include <KFileDialog>
+#include <KPrintPreview>
+#include <kdeprintdialog.h>
 
 
 #include <QAction>
@@ -63,6 +65,8 @@
 #include <QContextMenuEvent>
 #include <QDebug>
 #include <QPointer>
+#include <QPrinter>
+#include <QPrintDialog>
 
 
 namespace ComposerEditorNG {
@@ -123,6 +127,8 @@ public:
     void _k_slotToggleBlockQuote();
     void _k_slotEditImage();
     void _k_slotSaveAs();
+    void _k_slotPrint();
+    void _k_slotPrintPreview();
 
     QAction* getAction ( QWebPage::WebAction action ) const;
     QVariant evaluateJavascript(const QString& command);
@@ -172,6 +178,8 @@ public:
     KAction *action_page_color;
     KAction *action_block_quote;
     KAction *action_save_as;
+    KAction *action_print;
+    KAction *action_print_preview;
 
 
     ComposerView *q;
@@ -470,6 +478,25 @@ void ComposerViewPrivate::_k_slotSaveAs()
         const qint64 c = file.write(data);
         success = (c >= data.length());
     }
+}
+
+void ComposerViewPrivate::_k_slotPrint()
+{
+    QPrinter printer;
+    QPointer<QPrintDialog> dlg(KdePrint::createPrintDialog(&printer));
+
+    if ( dlg && dlg->exec() == QDialog::Accepted ) {
+      q->print( &printer );
+    }
+    delete dlg;
+}
+
+void ComposerViewPrivate::_k_slotPrintPreview()
+{
+    QPrinter printer;
+    KPrintPreview previewdlg( &printer, q );
+    q->print( &printer );
+    previewdlg.exec();
 }
 
 void ComposerViewPrivate::_k_slotChangePageColorAndBackground()
@@ -806,12 +833,10 @@ void ComposerView::createActions(KActionCollection *actionCollection)
     //Find
     d->action_find = KStandardAction::find(this, SLOT(_k_slotFind()), actionCollection);
     d->htmlEditorActionList.append(d->action_find);
-    actionCollection->addAction(QLatin1String("htmleditor_find"), d->action_find);
 
     //Replace
     d->action_replace = KStandardAction::replace(this, SLOT(_k_slotReplace()), actionCollection);
     d->htmlEditorActionList.append(d->action_replace);
-    actionCollection->addAction(QLatin1String("htmleditor_replace"), d->action_replace);
 
     //Table
     d->action_insert_table = new KAction( i18n( "Table..." ), this );
@@ -826,8 +851,16 @@ void ComposerView::createActions(KActionCollection *actionCollection)
     connect( d->action_page_color, SIGNAL(triggered(bool)), SLOT(_k_slotChangePageColorAndBackground()) );
 
     //Save As
-    d->action_save_as = KStandardAction::saveAs(this,SLOT(_k_slotSaveAs()),this);
+    d->action_save_as = KStandardAction::saveAs(this,SLOT(_k_slotSaveAs()),actionCollection);
     d->htmlEditorActionList.append(d->action_save_as);
+
+    //Print
+    d->action_print = KStandardAction::print( this, SLOT(_k_slotPrint()), actionCollection );
+    d->htmlEditorActionList.append(d->action_print);
+
+    d->action_print_preview = KStandardAction::printPreview( this, SLOT(_k_slotPrintPreview()), actionCollection );
+    d->htmlEditorActionList.append(d->action_print_preview);
+
 }
 
 void ComposerView::contextMenuEvent(QContextMenuEvent* event)
