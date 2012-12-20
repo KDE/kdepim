@@ -88,7 +88,8 @@ set(libmessageviewer_SRCS
   translator/translatorutil.cpp
   translator/translatorwidget.cpp
   translator/abstracttranslator.cpp
-  translator/babelfishtranslator.cpp
+  #Laurent: disable it we can't use it directly now
+  #translator/babelfishtranslator.cpp
   translator/googletranslator.cpp
   minimumcombobox.cpp
   ${_mailwebview_cpp}
