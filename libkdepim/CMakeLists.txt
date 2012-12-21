@@ -84,11 +84,6 @@ target_link_libraries(kdepim
   ${NEPOMUK_CORE_LIBRARY}
 )
 
-  target_link_libraries(kdepim
-    ${NEPOMUK_QUERY_LIBRARIES}
-    ${SOPRANO_LIBRARIES}
-  )
-
 
 target_link_libraries(kdepim LINK_INTERFACE_LIBRARIES
   ${KDEPIMLIBS_KRESOURCES_LIBS}
