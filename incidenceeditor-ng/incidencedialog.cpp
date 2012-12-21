@@ -624,6 +624,7 @@ IncidenceDialog::IncidenceDialog( Akonadi::IncidenceChanger *changer,
                        , d_ptr( new IncidenceDialogPrivate( changer, this ) )
 {
   Q_D( IncidenceDialog );
+  setAttribute( Qt::WA_DeleteOnClose );
 
   resize( QSize( 600, 500 ).expandedTo( minimumSizeHint() ) );
   d->mUi->mTabWidget->setCurrentIndex( 0 );
