@@ -41,7 +41,6 @@ private:
 
     Q_PRIVATE_SLOT( d, void _k_slotOkClicked() )
     Q_PRIVATE_SLOT( d, void _k_slotApplyClicked() )
-
 };
 }
 

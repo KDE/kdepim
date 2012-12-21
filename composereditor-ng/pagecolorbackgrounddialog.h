@@ -26,8 +26,7 @@ class QWebFrame;
 
 namespace ComposerEditorNG
 {
-class PageColorBackgroundWidget;
-
+class PageColorBackgroundDialogPrivate;
 class PageColorBackgroundDialog : public KDialog
 {
     Q_OBJECT
@@ -35,16 +34,12 @@ public:
     explicit PageColorBackgroundDialog(QWebFrame *frame, QWidget *parent = 0);
     ~PageColorBackgroundDialog();
 
-private Q_SLOTS:
-    void slotOkClicked();
-    void slotApplyClicked();
+private:
+    friend class PageColorBackgroundDialogPrivate;
+    PageColorBackgroundDialogPrivate * const d;
+    Q_PRIVATE_SLOT( d, void _k_slotOkClicked() )
+    Q_PRIVATE_SLOT( d, void _k_slotApplyClicked() )
 
-private:
-    void initSettings();
-    void applyChanges();
-private:
-    PageColorBackgroundWidget *mPageColorWidget;
-    QWebFrame *mFrame;
 };
 }
 
