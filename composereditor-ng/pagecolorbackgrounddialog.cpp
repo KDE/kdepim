@@ -22,6 +22,7 @@
 #include "pagecolorbackgroundwidget.h"
 
 #include <KLocale>
+#include <KSeparator>
 
 #include <QVBoxLayout>
 #include <QWebFrame>
@@ -33,13 +34,17 @@ PageColorBackgroundDialog::PageColorBackgroundDialog(QWebFrame *frame, QWidget *
     KDialog(parent), mFrame(frame)
 {
     setCaption( i18n( "Page Color and Background" ) );
-    setButtons( Ok | Cancel );
+    setButtons( Ok | Apply | Cancel );
 
     QVBoxLayout *layout = new QVBoxLayout( mainWidget() );
     mPageColorWidget = new PageColorBackgroundWidget;
     layout->addWidget(mPageColorWidget);
-    connect(this,SIGNAL(okClicked()),this,SLOT(slotOkClicked()));
 
+    KSeparator *sep = new KSeparator;
+    layout->addWidget( sep );
+
+    connect(this,SIGNAL(okClicked()),this,SLOT(slotOkClicked()));
+    connect(this,SIGNAL(applyClicked()),this,SLOT(slotApplyClicked()));
     initSettings();
 }
 
@@ -47,7 +52,18 @@ PageColorBackgroundDialog::~PageColorBackgroundDialog()
 {
 }
 
+void PageColorBackgroundDialog::slotApplyClicked()
+{
+    applyChanges();
+}
+
 void PageColorBackgroundDialog::slotOkClicked()
+{
+    applyChanges();
+    accept();
+}
+
+void PageColorBackgroundDialog::applyChanges()
 {
     if(mFrame) {
         QWebElement element = mFrame->findFirstElement(QLatin1String("body"));
@@ -83,7 +99,6 @@ void PageColorBackgroundDialog::slotOkClicked()
             }
         }
     }
-    accept();
 }
 
 void PageColorBackgroundDialog::initSettings()

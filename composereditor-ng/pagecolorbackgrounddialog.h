@@ -37,10 +37,11 @@ public:
 
 private Q_SLOTS:
     void slotOkClicked();
+    void slotApplyClicked();
 
 private:
     void initSettings();
-
+    void applyChanges();
 private:
     PageColorBackgroundWidget *mPageColorWidget;
     QWebFrame *mFrame;
