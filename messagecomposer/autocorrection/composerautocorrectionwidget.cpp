@@ -331,7 +331,13 @@ void ComposerAutoCorrectionWidget::enableAdvAutocorrection(bool state)
 void ComposerAutoCorrectionWidget::addAutocorrectEntry()
 {
     QTreeWidgetItem *item = ui->treeWidget->currentItem ();
-    QString find = ui->find->text();
+    const QString find = ui->find->text();
+    const QString replace = ui->replace->text();
+    if(find == replace ) {
+      KMessageBox::error( this, i18n("\"Replace\" string is the same as \"Find\" string."),i18n( "Add Autocorrection Entry" ) );
+      return;
+    }
+
     bool modify = false;
 
     // Modify actually, not add, so we want to remove item from hash
@@ -340,15 +346,15 @@ void ComposerAutoCorrectionWidget::addAutocorrectEntry()
         modify = true;
     }
 
-    m_autocorrectEntries.insert(find, ui->replace->text());
+    m_autocorrectEntries.insert(find, replace);
     ui->treeWidget->setSortingEnabled(false);
     if (modify) {
         item->setText(0,find);
-        item->setText(1,ui->replace->text());
+        item->setText(1,replace);
     } else {
         item = new QTreeWidgetItem( ui->treeWidget, item );
         item->setText( 0, find );
-        item->setText( 1, ui->replace->text() );
+        item->setText( 1, replace );
     }
 
     ui->treeWidget->setSortingEnabled(true);
