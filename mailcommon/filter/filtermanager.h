@@ -160,7 +160,7 @@ class MAILCOMMON_EXPORT FilterManager : public QObject
      */
     void endUpdate();
 
-    QStringList tagList() const;
+    QMap<QUrl, QString> tagList() const;
 
   private Q_SLOTS:
     void slotServerStateChanged(Akonadi::ServerManager::State);
@@ -168,6 +168,11 @@ class MAILCOMMON_EXPORT FilterManager : public QObject
     void slotNewTagEntries(const QList<Nepomuk2::Query::Result>&);
     void slotReadConfig();
     void updateTagList();
+
+    void resourceCreated(const Nepomuk2::Resource&,const QList<QUrl>&);
+    void resourceRemoved(const QUrl&,const QList<QUrl>&);
+    void propertyChanged(const Nepomuk2::Resource&);
+
   Q_SIGNALS:
     /**
      * This signal is emitted whenever the filter list has been updated.
