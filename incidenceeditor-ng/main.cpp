@@ -32,7 +32,7 @@
 #include <KCalCore/Journal>
 
 #include "korganizereditorconfig.h"
-#include "eventortododialog.h"
+#include "incidencedialog.h"
 #include "incidencedefaults.h"
 
 using namespace IncidenceEditorNG;
@@ -119,7 +119,7 @@ int main( int argc, char **argv )
 
   EditorConfig::setEditorConfig( new KOrganizerEditorConfig );
 
-  EventOrTodoDialog dialog;
+  IncidenceDialog dialog;
   dialog.load( item ); // The dialog will show up once the item is loaded.
 
   return app.exec();

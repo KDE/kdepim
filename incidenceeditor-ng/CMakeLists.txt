@@ -72,14 +72,13 @@ kde4_add_kcfg_files(incidenceeditors_ng_shared_LIB_SRCS globalsettings_base.kcfg
 if(NOT WINCE)
   set(incidenceeditors_ng_shared_LIB_SRCS
     ${incidenceeditors_ng_shared_LIB_SRCS}
-    incidencedialog.cpp
   )
 
   set(incidenceeditors_ng_desktop_LIB_SRCS
     ${incidenceeditors_ng_shared_LIB_SRCS}
     templatemanagementdialog.cpp
     incidencedialogfactory.cpp
-    eventortododialog.cpp
+    incidencedialog.cpp
     visualfreebusywidget.cpp
   )
 
@@ -88,7 +87,7 @@ if(NOT WINCE)
     categoryselectdialog_base.ui
     categorydialog_base.ui
     template_management_dialog_base.ui
-    eventortododesktop.ui
+    dialogdesktop.ui
     alarmdialog.ui
     attachmenteditdialog.ui
     schedulingdialog.ui
@@ -130,9 +129,9 @@ endif()
     categoryselectdialog_base.ui
     categorydialog_base.ui
     editoralarms_base.ui
-    eventortododesktop.ui
-    eventortodomobile.ui
-    eventortodomoremobile.ui
+    dialogdesktop.ui
+    dialogmobile.ui
+    dialogmoremobile.ui
     attachmenteditdialog.ui
     alarmdialog.ui
     mobileschedulingdialog.ui

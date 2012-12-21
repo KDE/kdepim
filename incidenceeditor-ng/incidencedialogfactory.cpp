@@ -19,7 +19,7 @@
 */
 
 #include "incidencedialogfactory.h"
-#include "eventortododialog.h"
+#include "incidencedialog.h"
 #include "incidencedefaults.h"
 #include "groupwareintegration.h"
 
@@ -41,8 +41,7 @@ IncidenceDialog *IncidenceDialogFactory::create( bool needsSaving,
   case KCalCore::IncidenceBase::TypeTodo:
   case KCalCore::IncidenceBase::TypeJournal:
   {
-    // TODO: rename EventOrTodoDialog to IncidenceDialog
-    EventOrTodoDialog *dialog = new EventOrTodoDialog( changer, parent, flags );
+    IncidenceDialog *dialog = new IncidenceDialog( changer, parent, flags );
 
     // needs to be save to akonadi?, apply button should be turned on if so.
     dialog->setInitiallyDirty( needsSaving/* mInitiallyDirty */ );
