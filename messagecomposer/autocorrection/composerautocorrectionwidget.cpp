@@ -431,13 +431,11 @@ void ComposerAutoCorrectionWidget::setFindReplaceText(QTreeWidgetItem*item ,int 
 void ComposerAutoCorrectionWidget::abbreviationChanged(const QString &text)
 {
   ui->add1->setEnabled(!text.isEmpty());
-  emitChanged();
 }
 
 void ComposerAutoCorrectionWidget::twoUpperLetterChanged(const QString &text)
 {
   ui->add2->setEnabled(!text.isEmpty());
-  emitChanged();
 }
 
 void ComposerAutoCorrectionWidget::addAbbreviationEntry()
