@@ -38,3 +38,14 @@ TrojitaSettings::~TrojitaSettings()
 {
 
 }
+
+void TrojitaSettings::readIdentity()
+{
+    //TODO
+}
+
+
+void TrojitaSettings::readGlobalSettings()
+{
+    //TODO
+}

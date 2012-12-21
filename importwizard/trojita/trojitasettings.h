@@ -27,6 +27,9 @@ class TrojitaSettings : public AbstractSettings
 public:
   explicit TrojitaSettings(const QString &filename, ImportWizard *parent);
   ~TrojitaSettings();
+private:
+  void readIdentity();
+  void readGlobalSettings();
 };
 
 #endif // ClawsMailSettings_H

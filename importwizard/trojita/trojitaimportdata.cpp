@@ -40,7 +40,6 @@ TrojitaImportData::~TrojitaImportData()
 
 bool TrojitaImportData::foundMailer() const
 {
-  //TODO find a method to search it. Perhaps look at binary.
   QDir directory( mPath );
   if ( directory.exists() )
     return true;
@@ -59,14 +58,15 @@ bool TrojitaImportData::importMails()
 
 bool TrojitaImportData::importSettings()
 {
-  return false;
+  TrojitaSettings settings(mPath,mImportWizard);
+  return true;
 }
 
 
 AbstractImporter::TypeSupportedOptions TrojitaImportData::supportedOption()
 {
   TypeSupportedOptions options;
-  options |=AbstractImporter::Mails;
+  //options |=AbstractImporter::Mails;
   options |=AbstractImporter::Settings;
   return options;
 }
