@@ -42,6 +42,8 @@ public:
     void _k_slotTableCellFormat();
     void _k_slotRemoveCellContents();
     void _k_slotRemoveCell();
+    void _k_slotInsertCellBefore();
+    void _k_slotInsertCellAfter();
 
     void updateActions();
     KAction *action_insert_table;
@@ -50,10 +52,22 @@ public:
     KAction *action_table_cell_format;
     KAction *action_remove_cell_contents;
     KAction *action_remove_cell;
+    KAction *action_insert_cell_before;
+    KAction *action_insert_cell_after;
     ComposerTableActionMenu *q;
     QWebElement webElement;
     QWidget *parentWidget;
 };
+
+void ComposerTableActionMenuPrivate::_k_slotInsertCellAfter()
+{
+    //TODO
+}
+
+void ComposerTableActionMenuPrivate::_k_slotInsertCellBefore()
+{
+    //TODO
+}
 
 void ComposerTableActionMenuPrivate::_k_slotRemoveCellContents()
 {
@@ -103,6 +117,15 @@ ComposerTableActionMenu::ComposerTableActionMenu(const QWebElement& element,QObj
     d->action_insert_row_below = new KAction( KIcon(QLatin1String("edit-table-insert-row-below")), i18n( "Row Below" ), this );
     insertMenu->addAction( d->action_insert_row_below );
     connect( d->action_insert_row_below, SIGNAL(triggered(bool)), SLOT(_k_slotInsertRowBelow()) );
+
+    insertMenu->addSeparator();
+    d->action_insert_cell_before = new KAction( i18n( "Cell Before" ), this );
+    insertMenu->addAction( d->action_insert_cell_before );
+    connect( d->action_insert_cell_before, SIGNAL(triggered(bool)), SLOT(_k_slotInsertCellBefore()) );
+
+    d->action_insert_cell_after = new KAction( i18n( "Cell After" ), this );
+    insertMenu->addAction( d->action_insert_cell_after );
+    connect( d->action_insert_cell_after, SIGNAL(triggered(bool)), SLOT(_k_slotInsertCellAfter()) );
 
     KActionMenu *removeMenu = new KActionMenu( i18n( "Delete" ), this );
     addAction( removeMenu );
