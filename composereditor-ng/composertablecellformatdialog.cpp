@@ -39,7 +39,7 @@ public:
         :webElement(element)
         ,q(qq)
     {
-        q->setButtons( KDialog::Ok | KDialog::Cancel );
+        q->setButtons( KDialog::Ok | KDialog::Apply | KDialog::Cancel );
         q->setCaption( i18n( "Edit Cell Format" ) );
 
         QVBoxLayout *layout = new QVBoxLayout( q->mainWidget() );
@@ -103,6 +103,7 @@ public:
 
         q->connect(q,SIGNAL(okClicked()),q,SLOT(_k_slotOkClicked()));
 
+        q->connect(q,SIGNAL(applyClicked()),q,SLOT(_k_slotApplyClicked()));
         if(!webElement.isNull()) {
             if(webElement.hasAttribute(QLatin1String("bgcolor"))) {
                 useBackgroundColor->setChecked(true);
@@ -131,6 +132,9 @@ public:
     }
 
     void _k_slotOkClicked();
+    void _k_slotApplyClicked();
+
+    void applyChanges();
 
     QWebElement webElement;
     KColorButton *backgroundColor;
@@ -147,7 +151,12 @@ public:
     ComposerTableCellFormatDialog *q;
 };
 
-void ComposerTableCellFormatDialogPrivate::_k_slotOkClicked()
+void ComposerTableCellFormatDialogPrivate::_k_slotApplyClicked()
+{
+    applyChanges();
+}
+
+void ComposerTableCellFormatDialogPrivate::applyChanges()
 {
     if(!webElement.isNull()) {
         if(useBackgroundColor->isChecked()) {
@@ -181,6 +190,11 @@ void ComposerTableCellFormatDialogPrivate::_k_slotOkClicked()
             webElement.setAttribute(QLatin1String("height"), heightStr);
         }
     }
+}
+
+void ComposerTableCellFormatDialogPrivate::_k_slotOkClicked()
+{
+    applyChanges();
     q->accept();
 }
 
