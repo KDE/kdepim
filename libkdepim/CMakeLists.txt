@@ -88,6 +88,7 @@ target_link_libraries(kdepim
 if(NOT KDEPIM_NO_NEPOMUK)
   target_link_libraries(kdepim
     ${NEPOMUK_QUERY_LIBRARIES}
+    ${NEPOMUK_LIBRARIES}
     ${SOPRANO_LIBRARIES}
   )
 endif()
