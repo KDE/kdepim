@@ -41,6 +41,8 @@ public:
     {
     }
 
+    void _k_slotOkClicked();
+    void _k_slotApplyClicked();
     void initialize();
 
     QString html() const;
@@ -54,6 +56,22 @@ public:
     KLineEdit *alternateTitle;
     ComposerImageDialog *q;
 };
+
+void ComposerImageDialogPrivate::_k_slotOkClicked()
+{
+    if(!webElement.isNull()) {
+        updateImageHtml();
+    }
+    q->accept();
+}
+
+void ComposerImageDialogPrivate::_k_slotApplyClicked()
+{
+    if(!webElement.isNull()) {
+        updateImageHtml();
+    }
+}
+
 
 void ComposerImageDialogPrivate::updateImageHtml()
 {
@@ -95,7 +113,7 @@ void ComposerImageDialogPrivate::updateImageHtml()
 void ComposerImageDialogPrivate::initialize()
 {
     q->setCaption( webElement.isNull() ? i18n( "Insert Image" ) : i18n( "Edit Image" ));
-    q->setButtons( KDialog::Ok|KDialog::Cancel );
+    q->setButtons( webElement.isNull() ? KDialog::Ok | KDialog::Cancel : KDialog::Ok | KDialog::Apply | KDialog::Cancel);
     q->setButtonText( KDialog::Ok, i18n( "Insert" ) );
 
     QWidget *w = new QWidget;
@@ -127,11 +145,14 @@ void ComposerImageDialogPrivate::initialize()
     lay->addWidget(sep);
 
     q->connect(imageWidget,SIGNAL(enableButtonOk(bool)),q,SLOT(enableButtonOk(bool)));
-    q->connect(q,SIGNAL(okClicked()),q,SLOT(slotOkClicked()));
+    q->connect(q,SIGNAL(okClicked()),q,SLOT(_k_slotOkClicked()));
+
+
     q->setMainWidget(w);
     q->enableButtonOk( false );
 
     if(!webElement.isNull()) {
+        q->connect(q,SIGNAL(applyClicked()),q,SLOT(_k_slotApplyClicked()));
         imageWidget->setImageUrl(webElement.attribute(QLatin1String("src")));
         if(webElement.hasAttribute(QLatin1String("height")) && webElement.hasAttribute(QLatin1String("width"))) {
             imageWidget->setImageWidth(webElement.attribute(QLatin1String("width")).toInt());
@@ -196,13 +217,7 @@ QString ComposerImageDialog::html() const
     return d->html();
 }
 
-void ComposerImageDialog::slotOkClicked()
-{
-    if(!d->webElement.isNull()) {
-        d->updateImageHtml();
-    }
-    accept();
-}
+
 }
 
 #include "composerimagedialog.moc"

@@ -81,7 +81,10 @@ void ComposerTableActionMenuPrivate::_k_slotRemoveCell()
 
 void ComposerTableActionMenuPrivate::updateActions()
 {
-    action_table_cell_format->setEnabled(webElement.tagName().toLower() == QLatin1String("td"));
+    const bool isACell = (webElement.tagName().toLower() == QLatin1String("td"));
+    action_table_cell_format->setEnabled(isACell);
+    action_remove_cell_contents->setEnabled(isACell && !webElement.toInnerXml().isEmpty());
+    action_remove_cell->setEnabled(isACell);
 }
 
 void ComposerTableActionMenuPrivate::_k_slotInsertRowBelow()
