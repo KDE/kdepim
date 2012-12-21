@@ -19,19 +19,18 @@
 #include "importwizardutil.h"
 
 #include <mailtransport/transportmanager.h>
-#include "mailcommon/mailutil.h"
 
 #include <kpimidentities/identity.h>
 #include <kpimidentities/signature.h>
 
-
-#include <KConfig>
-#include <KConfigGroup>
-#include <QFile>
+#include <QSettings>
 
 TrojitaSettings::TrojitaSettings(const QString& filename,ImportWizard *parent)
   :AbstractSettings( parent )
 {
+    settings = new QSettings(filename,QSettings::IniFormat,this);
+    readIdentity();
+    readGlobalSettings();
 }
 
 TrojitaSettings::~TrojitaSettings()
