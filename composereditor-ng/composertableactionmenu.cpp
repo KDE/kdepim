@@ -95,12 +95,12 @@ ComposerTableActionMenu::ComposerTableActionMenu(const QWebElement& element,QObj
     KActionMenu *insertMenu = new KActionMenu( i18n( "Insert" ), this );
     addAction( insertMenu );
 
-    d->action_insert_table = new KAction( i18n( "Table..." ), this );
+    d->action_insert_table = new KAction( KIcon(QLatin1String("table")), i18n( "Table..." ), this );
     insertMenu->addAction( d->action_insert_table );
     connect( d->action_insert_table, SIGNAL(triggered(bool)), SIGNAL(insertNewTable()) );
 
     insertMenu->addSeparator();
-    d->action_insert_row_below = new KAction( i18n( "Row Below" ), this );
+    d->action_insert_row_below = new KAction( KIcon(QLatin1String("edit-table-insert-row-below")), i18n( "Row Below" ), this );
     insertMenu->addAction( d->action_insert_row_below );
     connect( d->action_insert_row_below, SIGNAL(triggered(bool)), SLOT(_k_slotInsertRowBelow()) );
 
