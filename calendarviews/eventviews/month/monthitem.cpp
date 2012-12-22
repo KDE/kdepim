@@ -34,6 +34,7 @@
 #include <calendarsupport/utils.h>
 
 #include <KCalUtils/IncidenceFormatter>
+#include <KCalUtils/RecurrenceActions>
 
 #include <KMessageBox>
 
@@ -430,75 +431,57 @@ void IncidenceMonthItem::updateDates( int startOffset, int endOffset )
     return;
   }
 
-  bool modify = true;
-
   Akonadi::Item item = akonadiItem();
   item.setPayload( mIncidence );
   if ( mIncidence->recurs() ) {
     const int res = monthScene()->mMonthView->showMoveRecurDialog( mIncidence, startDate() );
     switch ( res ) {
-      case KMessageBox::Ok: // All occurrences
-        modify = true;
+      case KCalUtils::RecurrenceActions::AllOccurrences:
+      {// All occurrences
+        KCalCore::Incidence::Ptr oldIncidence( mIncidence->clone() );
+        setNewDates( mIncidence, startOffset, endOffset );
+        changer->modifyIncidence( item, oldIncidence );
         break;
-      case KMessageBox::Yes: // Just this occurrence
+      }
+      case KCalUtils::RecurrenceActions::SelectedOccurrence: // Just this occurrence
       {
-        modify = true;
-        KCalCore::Incidence::Ptr oldIncSaved( mIncidence->clone() );
-        KCalCore::Incidence::Ptr newInc( CalendarSupport::dissociateOccurrence(
+        KCalCore::Incidence::Ptr oldIncidenceSaved( mIncidence->clone() );
+        KCalCore::Incidence::Ptr newIncidence( CalendarSupport::dissociateOccurrence(
             item, startDate(), CalendarSupport::KCalPrefs::instance()->timeSpec() ) );
-        if ( newInc ) {
-          if ( changer->modifyIncidence( item, oldIncSaved ) != -1 )
-            changer->createIncidence( newInc, item.parentCollection(), parentWidget() );
+        if ( newIncidence ) {
+          if ( changer->modifyIncidence( item, oldIncidenceSaved ) != -1 ) {
+            setNewDates( newIncidence, startOffset, endOffset );
+            changer->createIncidence( newIncidence, item.parentCollection(), parentWidget() );
+          }
         } else {
           KMessageBox::sorry(
             parentWidget(),
             i18n( "Unable to add the exception item to the calendar. "
                   "No change will be done." ),
             i18n( "Error Occurred" ) );
-          modify = false;
         }
         break;
       }
-      case KMessageBox::No: // All future occurrences
+      case KCalUtils::RecurrenceActions::FutureOccurrences: // All future occurrences
       {
-        modify = true;
-        KCalCore::Incidence::Ptr oldIncSaved( mIncidence->clone() );
-        KCalCore::Incidence::Ptr newInc( CalendarSupport::dissociateOccurrence(
+        KCalCore::Incidence::Ptr oldIncidenceSaved( mIncidence->clone() );
+        KCalCore::Incidence::Ptr newIncidence( CalendarSupport::dissociateOccurrence(
             item, startDate(), CalendarSupport::KCalPrefs::instance()->timeSpec(), false ) );
-        if ( newInc ) {
-          if ( changer->modifyIncidence( item, oldIncSaved ) != -1 )
-            changer->createIncidence( newInc, item.parentCollection(), parentWidget() );
+        if ( newIncidence ) {
+          if ( changer->modifyIncidence( item, oldIncidenceSaved ) != -1 ) {
+            setNewDates( newIncidence, startOffset, endOffset );
+            changer->createIncidence( newIncidence, item.parentCollection(), parentWidget() );
+          }
         } else {
           KMessageBox::sorry(
             parentWidget(),
             i18n( "Unable to add the future items to the calendar. "
                   "No change will be done." ),
             i18n( "Error Occurred" ) );
-          modify = false;
         }
         break;
       }
-      default:
-        modify = false;
     }
-  }
-
-  if ( modify ) {
-    KCalCore::Incidence::Ptr oldInc( mIncidence->clone() );
-
-    if ( !mIsTodo ) {
-      mIncidence->setDtStart( mIncidence->dtStart().addDays( startOffset ) );
-
-      if ( mIsEvent ) {
-        KCalCore::Event::Ptr event = mIncidence.staticCast<Event>();
-        event->setDtEnd( event->dtEnd().addDays( endOffset ) );
-      }
-    } else {
-      KCalCore::Todo::Ptr todo = mIncidence.staticCast<Todo>();
-      todo->setDtDue( todo->dtDue().addDays( startOffset ) );
-    }
-
-    changer->modifyIncidence( item, oldInc );
   }
 }
 
@@ -719,6 +702,22 @@ Akonadi::Item::Id IncidenceMonthItem::akonadiItemId() const
 {
   return mAkonadiItemId;
 }
+
+void IncidenceMonthItem::setNewDates( const KCalCore::Incidence::Ptr &incidence,
+                                      int startOffset, int endOffset )
+{
+  if ( mIsTodo ) {
+    KCalCore::Todo::Ptr todo = incidence.staticCast<Todo>();
+    todo->setDtDue( todo->dtDue().addDays( startOffset ) );
+  } else {
+    incidence->setDtStart( incidence->dtStart().addDays( startOffset ) );
+    if ( mIsEvent ) {
+      KCalCore::Event::Ptr event = incidence.staticCast<Event>();
+      event->setDtEnd( event->dtEnd().addDays( endOffset ) );
+    }
+  }
+}
+
 //-----------------------------------------------------------------
 // HOLIDAYMONTHITEM
 HolidayMonthItem::HolidayMonthItem( MonthScene *monthScene, const QDate &date,

@@ -317,6 +317,9 @@ class EVENTVIEWS_EXPORT IncidenceMonthItem : public MonthItem
   private:
     void updateDates( int startOffset, int endOffset );
 
+    void setNewDates( const KCalCore::Incidence::Ptr &incidence,
+                      int startOffset, int endOffset );
+
     /**
       Returns the category color for this incidence.
     */
