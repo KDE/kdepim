@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Simple
+Name[bs]=Jednostavan
 Name[ca]=Senzill
 Name[ca@valencia]=Senzill
 Name[cs]=Jednoduchý
@@ -42,6 +43,7 @@ Name[uk]=Проста
 Name[x-test]=xxSimplexx
 Name[zh_TW]=簡單
 Description=A Simple theme
+Description[bs]=Jednostavna tema
 Description[ca]=Un tema senzill
 Description[ca@valencia]=Un tema senzill
 Description[cs]=Jednoduchý motiv

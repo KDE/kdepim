@@ -150,6 +150,7 @@ Comment[x-test]=xxColors & Fonts Configurationxx
 Comment[zh_CN]=颜色和字体配置
 Comment[zh_TW]=設定顏色與字型
 X-KDE-Keywords=color,font, configuration
+X-KDE-Keywords[bs]=boja, vrsta slova, konfiguracija
 X-KDE-Keywords[ca]=color,tipus de lletra, configuració
 X-KDE-Keywords[cs]=barva,písmu,nastavení
 X-KDE-Keywords[da]=farve,skriftype,konfiguration

@@ -1,6 +1,7 @@
 [Global]
 IconName=mail-mobile
 Comment=KDE Kontact Touch e-mail client
+Comment[bs]=KDE Kontact Touch klijent za elektronsku poštu
 Comment[ca]=Client de correu del Kontact Touch del KDE
 Comment[ca@valencia]=Client de correu del Kontact Touch del KDE
 Comment[da]=KDE Kontact Touch e-mail-klient
@@ -38,6 +39,7 @@ Comment[uk]=Клієнт електронної пошти KDE Kontact Touch
 Comment[x-test]=xxKDE Kontact Touch e-mail clientxx
 Comment[zh_TW]=KDE Kontact Touch 收發信軟體
 Name=Kontact Touch Mail
+Name[bs]=Kontact Touch pošta
 Name[ca]=Correu del Kontact Touch
 Name[ca@valencia]=Correu del Kontact Touch
 Name[da]=Kontact Touch E-mail
@@ -78,6 +80,7 @@ Name[zh_TW]=Kontact Touch Mail
 
 [Event/sendfailed]
 Name=Error while sending email
+Name[bs]=Greška u slanju pošte
 Name[ca]=Error en enviar correu
 Name[ca@valencia]=Error en enviar correu
 Name[cs]=Chyba při odesílání emailu
@@ -118,6 +121,7 @@ Name[x-test]=xxError while sending emailxx
 Name[zh_CN]=发送邮件时出错
 Name[zh_TW]=傳送郵件時發生錯誤
 Comment=There was an error while trying to send the e-mail.
+Comment[bs]=Desila se greška pri pokušaju slanja elektronske pošte
 Comment[ca]=S'ha produït un error en provar d'enviar el correu electrònic.
 Comment[ca@valencia]=S'ha produït un error en provar d'enviar el correu electrònic.
 Comment[cs]=Nastala chyba při odesílání emailu.

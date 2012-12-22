@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Backup Mail
+Name[bs]=Sigurna kopija pošte
 Name[ca]=Còpia de seguretat de correu
 Name[da]=Tag backup af e-mails
 Name[de]=E-Mail-Sicherung
@@ -32,6 +33,7 @@ Name[zh_TW]=備份郵件
 Exec=backupmail
 Type=Application
 Comment=Backup Mail allows to save all data from kmail and restore them in other system.
+Comment[bs]=Sigurna kopija pošte vam omogućava da spremite sve podatke iz Kmail i vratiti ih u drugi sistem.
 Comment[ca]=La còpia de seguretat de correu us permet desar totes les dades del KMail i restaura-les en un altre sistema.
 Comment[da]=Backup af e-mails lader dig gemme alle data fra KMail og genskabe dem på et andet system.
 Comment[el]=Τα εφεδρικά αντίγραφα αλληλογραφίας σας επιτρέπουν την αποθήκευση όλων των δεδομένων από το kmail και την επαναφορά τους σε άλλο σύστημα.

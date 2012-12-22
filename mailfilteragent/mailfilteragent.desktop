@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Mail Filter Agent
+Name[bs]=Agent poštanskog filtera
 Name[ca]=Agent de filtre de correu
 Name[cs]=Agent filtrování pošty
 Name[da]=Mailfilteragent
@@ -33,6 +34,7 @@ Name[uk]=Агент фільтрування пошти
 Name[x-test]=xxMail Filter Agentxx
 Name[zh_TW]=郵件過濾代理程式
 Comment=Extension to filter emails
+Comment[bs]=Proširenje za filtriranje elektronske pošte
 Comment[ca]=Extensió per a filtrar correus
 Comment[ca@valencia]=Extensió per a filtrar correus
 Comment[da]=Udvidelse til at filtrere e-mails
