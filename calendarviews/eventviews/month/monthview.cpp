@@ -28,7 +28,6 @@
 #include "monthscene.h"
 #include "prefs.h"
 
-//#include <calendarsupport/calendarsearch.h>
 #include <calendarsupport/collectionselection.h>
 #include <Akonadi/Calendar/ETMCalendar>
 #include <calendarsupport/kcalprefs.h>
@@ -59,7 +58,6 @@ class MonthViewPrivate : public Akonadi::ETMCalendar::CalendarObserver
     void triggerDelayedReload( EventView::Change reason );
 
   public:  /// Members
-    // Akonadi::ETMCalendarSearch *calendarSearch;
     QTimer                           reloadTimer;
     MonthScene                      *scene;
     QDate                            selectedItemDate;
@@ -81,7 +79,6 @@ class MonthViewPrivate : public Akonadi::ETMCalendar::CalendarObserver
 
 MonthViewPrivate::MonthViewPrivate( MonthView *qq )
   : q( qq ),
-    //calendarSearch( new Akonadi::ETMCalendarSearch( qq ) ),
     scene( new MonthScene( qq ) ),
     selectedItemId( -1 ),
     view( new MonthGraphicsView( qq ) )
@@ -240,16 +237,6 @@ MonthView::MonthView( NavButtonsVisibility visibility, QWidget *parent )
     d->view->setFrameStyle( QFrame::NoFrame );
   }
 
-  /*
-  connect( d->calendarSearch->model(), SIGNAL(rowsInserted(QModelIndex,int,int)),
-           this, SLOT(rowsInserted(QModelIndex,int,int)) );
-  connect( d->calendarSearch->model(), SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)),
-           this, SLOT(rowsAboutToBeRemoved(QModelIndex,int,int)) );
-  connect( d->calendarSearch->model(), SIGNAL(dataChanged(QModelIndex,QModelIndex)),
-           this, SLOT(dataChanged(QModelIndex,QModelIndex)) );
-  connect( d->calendarSearch->model(), SIGNAL(modelReset()), this, SLOT(calendarReset()) );
-  */
-
   connect( d->scene, SIGNAL(showIncidencePopupSignal(Akonadi::Item,QDate)),
            SIGNAL(showIncidencePopupSignal(Akonadi::Item,QDate)) );
 
@@ -280,19 +267,6 @@ MonthView::~MonthView()
 
 void MonthView::updateConfig()
 {
-  /*
-  Akonadi::ETMCalendarSearch::IncidenceTypes types;
-  if ( preferences()->showTodosMonthView() ) {
-    types |= Akonadi::ETMCalendarSearch::Todos;
-  }
-
-  if ( preferences()->showJournalsMonthView() ) {
-    types |= Akonadi::ETMCalendarSearch::Journals;
-  }
-
-  types |= Akonadi::ETMCalendarSearch::Events;
-  d->calendarSearch->setIncidenceTypes( types );
-  */
   d->scene->update();
   setChanges( changes() | ConfigChanged );
   d->reloadTimer.start( 50 );
@@ -340,8 +314,6 @@ void MonthView::setDateRange( const KDateTime &start, const KDateTime &end,
                               const QDate &preferredMonth )
 {
   EventView::setDateRange( start, end, preferredMonth );
-  // d->calendarSearch->setStartDate( actualStartDateTime() );
-  // d->calendarSearch->setEndDate( actualEndDateTime() );
   setChanges( changes() | DatesChanged );
   d->reloadTimer.start( 50 );
 }
@@ -649,54 +621,6 @@ void MonthView::calendarReset()
   kDebug();
   d->triggerDelayedReload( ResourcesChanged );
 }
-
-/*
-void MonthView::dataChanged( const QModelIndex &topLeft, const QModelIndex &bottomRight )
-{
-  Q_ASSERT( topLeft.parent() == bottomRight.parent() );
-  incidencesChanged( CalendarSupport::itemsFromModel( d->calendarSearch->model(), topLeft.parent(),
-                                                      topLeft.row(), bottomRight.row() ) );
-}
-
-void MonthView::rowsInserted( const QModelIndex &parent, int start, int end )
-{
-  incidencesAdded( CalendarSupport::itemsFromModel( d->calendarSearch->model(),
-                                                    parent, start, end ) );
-}
-
-void MonthView::rowsAboutToBeRemoved( const QModelIndex &parent, int start, int end )
-{
-  incidencesAboutToBeRemoved( CalendarSupport::itemsFromModel( d->calendarSearch->model(),
-                                                               parent, start, end ) );
-}
-
-void MonthView::incidencesAdded( const Akonadi::Item::List &incidences )
-{
-  KDateTime::Spec timeSpec = CalendarSupport::KCalPrefs::instance()->timeSpec();
-  Q_FOREACH ( const Akonadi::Item &i, incidences ) {
-    kDebug() << "item added: " << CalendarSupport::incidence( i )->summary();
-  }
-  d->triggerDelayedReload( IncidencesAdded );
-}
-
-void MonthView::incidencesAboutToBeRemoved( const Akonadi::Item::List &incidences )
-{
-  Q_FOREACH ( const Akonadi::Item &i, incidences ) {
-    kDebug() << "item removed: " << CalendarSupport::incidence( i )->summary();
-    d->scene->removeIncidence( i.id() );
-  }
-
-  // No need to trigger reload, we already removed the incidence.
-}
-
-void MonthView::incidencesChanged( const Akonadi::Item::List &incidences )
-{
-  Q_FOREACH ( const Akonadi::Item &i, incidences ) {
-    kDebug() << "item changed: " << CalendarSupport::incidence( i )->summary();
-  }
-  d->triggerDelayedReload( IncidencesEdited );
-}
-*/
 
 QDate MonthView::averageDate() const
 {

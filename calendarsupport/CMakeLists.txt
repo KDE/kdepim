@@ -20,11 +20,9 @@ set(calendarsupport_LIB_SRCS
   categoryconfig.cpp
   collectiongeneralpage.cpp
   collectionselection.cpp
-  daterangefilterproxymodel.cpp
   eventarchiver.cpp
   identitymanager.cpp
   incidenceattachmentmodel.cpp
-  incidencefilterproxymodel.cpp
   kcalmodel.cpp
   kcalprefs.cpp
   utils.cpp
