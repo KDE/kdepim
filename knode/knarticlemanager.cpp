@@ -955,6 +955,10 @@ void KNArticleManager::createThread( KNRemoteArticle::Ptr a )
 void KNArticleManager::createCompleteThread( KNRemoteArticle::Ptr a )
 {
   KNRemoteArticle::Ptr ref = a->displayedReference();
+  if ( !ref ) {
+    return;
+  }
+
   KNRemoteArticle::Ptr art, top;
   bool inThread=false;
   bool showThreads = knGlobals.settings()->showThreads();
