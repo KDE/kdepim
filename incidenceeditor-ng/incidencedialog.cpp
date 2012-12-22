@@ -520,6 +520,7 @@ void IncidenceDialogPrivate::load( const Akonadi::Item &item )
     mUi->mTabWidget->removeTab( AttachmentsTab );
     mUi->mTabWidget->removeTab( RecurrenceTab );
     mUi->mTabWidget->removeTab( AlarmsTab );
+    mUi->mTabWidget->removeTab( AttendeesTab );
   }
 
   mEditor->load( CalendarSupport::incidence( item ) );
