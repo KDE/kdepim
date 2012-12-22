@@ -299,7 +299,7 @@ void KNArticleManager::showHdrs(bool clear)
       knGlobals.scheduler()->nntpMutex().unlock();
   }
 
-  else { //folder
+  else if (f_older) {
 
     KNLocalArticle::Ptr art;
     if(f_ilter) {
