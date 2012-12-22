@@ -105,6 +105,7 @@ Comment[x-test]=xxConfiguration of GnuPG System optionsxx
 Comment[zh_CN]=GnuPG 系统选项的配置
 Comment[zh_TW]=設定 GnuPG 系統選項
 X-KDE-Keywords=gpg,gpgsm,gpg-agent,dirmngr,scdaemon,kleopatra,signing,encryption
+X-KDE-Keywords[bs]=gpg, gpgsm, gpg-agent, dirmngr, scdaemon, kleopatra, potpisivanje, šifriranje
 X-KDE-Keywords[ca]=gpg,gpgsm,gpg-agent,dirmngr,scdaemon,kleopatra,signatura,encriptatge
 X-KDE-Keywords[da]=gpg,gpgsm,gpg-agent,dirmngr,scdaemon,kleopatra,signering,kryptering
 X-KDE-Keywords[de]=GPG,GPGSM,GPG-Agent,dirmngr,SC-Daemon,Kleopatra,signieren,verschlüsseln

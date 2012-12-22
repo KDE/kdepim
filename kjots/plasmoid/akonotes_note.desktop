@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Akonotes note plasmoid
+Name[bs]=Akonotes napomena plasmoid
 Name[ca]=Estri nota de l'Akonotes
 Name[ca@valencia]=Estri nota de l'Akonotes
 Name[da]=Akonotes note-plasmoid
@@ -38,6 +39,7 @@ Name[x-test]=xxAkonotes note plasmoidxx
 Name[zh_CN]=Akonotes 便笺 plasmoid
 Name[zh_TW]=Akonotes note 小程式
 Comment=Akonotes note plasmoid
+Comment[bs]=Akonotes napomena plasmoid
 Comment[ca]=L'estri nota de l'Akonotes
 Comment[ca@valencia]=L'estri nota de l'Akonotes
 Comment[da]=Akonotes note-plasmoid
