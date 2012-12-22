@@ -25,6 +25,7 @@
 #include "agenda/agendaview.h"
 #include "agenda/timelabelszone.h"
 
+#include <Akonadi/EntityTreeModel>
 #include <Akonadi/Calendar/ETMCalendar>
 #include <calendarsupport/collectionselection.h>
 #include <calendarsupport/utils.h>
@@ -211,7 +212,7 @@ void MultiAgendaView::setCalendar( Akonadi::ETMCalendar *cal )
 {
   EventView::setCalendar( cal );
   Q_FOREACH ( KCheckableProxyModel *const i, d->mCollectionSelectionModels ) {
-    i->setSourceModel( cal->unfilteredModel() );
+    i->setSourceModel( cal->entityTreeModel() );
   }
   recreateViews();
 }
@@ -674,7 +675,7 @@ void MultiAgendaView::doRestoreConfig( const KConfigGroup &configGroup )
     QSortFilterProxyModel *sortProxy = new QSortFilterProxyModel( this );
     sortProxy->setDynamicSortFilter( true );
     if ( calendar() ) {
-      sortProxy->setSourceModel( calendar()->unfilteredModel() );
+      sortProxy->setSourceModel( calendar()->entityTreeModel() );
     }
 
     // Only show the first column

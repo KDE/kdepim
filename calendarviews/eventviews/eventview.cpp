@@ -27,6 +27,7 @@
 #include "eventview_p.h"
 #include "prefs.h"
 
+#include <Akonadi/EntityTreeModel>
 #include <Akonadi/Calendar/ETMCalendar>
 #include <calendarsupport/collectionselection.h>
 #include <calendarsupport/kcalprefs.h>
@@ -171,7 +172,7 @@ void EventView::setCalendar( Akonadi::ETMCalendar *calendar )
   if ( d->calendar != calendar ) {
     d->calendar = calendar;
     if ( calendar && d->collectionSelectionModel ) {
-      d->collectionSelectionModel->setSourceModel( calendar->filteredModel() );
+      d->collectionSelectionModel->setSourceModel( calendar->model() );
     }
   }
 }
@@ -545,7 +546,7 @@ void EventView::restoreConfig( const KConfigGroup &configGroup )
       sortProxy->setSortCaseSensitivity( Qt::CaseInsensitive );
 
       if ( d->calendar ) {
-        sortProxy->setSourceModel( d->calendar->unfilteredModel() );
+         sortProxy->setSourceModel( d->calendar->entityTreeModel() );
       }
 
       // Only show the first column.
