@@ -419,15 +419,9 @@ void IncidenceMonthItem::finalizeResize( const QDate &newStartDate,
 
 void IncidenceMonthItem::updateDates( int startOffset, int endOffset )
 {
-  if ( startOffset == 0 && endOffset == 0 ) {
-    return;
-  }
-
   Akonadi::IncidenceChanger *changer = monthScene()->incidenceChanger();
-  if ( !changer ) {
-    KMessageBox::sorry( parentWidget(), i18n( "Unable to save %1 \"%2\".",
-                        i18n( mIncidence->typeStr() ), mIncidence->summary() ) );
-    kDebug() << "No incidence changer is set";
+  if ( !changer || ( startOffset == 0 && endOffset == 0 ) ) {
+    kDebug() << changer << startOffset << endOffset;
     return;
   }
 
