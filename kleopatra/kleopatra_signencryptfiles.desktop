@@ -6,7 +6,6 @@ MimeType=application/octet-stream;
 X-KDE-ServiceTypes=KonqPopupMenu/Plugin
 Name=Kleopatra Sign/Encrypt Files
 Name[ar]=كليوبترا  توقيع/ تشفير  الملفات
-Name[bs]=Kleopatra potpisivanje/šifrovanje datoteka
 Name[ca]=Signatura/Encriptat de fitxers del Kleopatra
 Name[ca@valencia]=Signatura/Encriptat de fitxers del Kleopatra
 Name[cs]=Zašifrovat a podepsat soubory (Kleopatra)
@@ -102,7 +101,6 @@ Exec=kleopatra --encrypt-sign %F
 [Desktop Action kleoencryptfiles]
 Name=Encrypt File
 Name[ar]=تشفير الملف
-Name[bs]=Potpisivanje datoteke
 Name[ca]=Encripta el fitxer
 Name[ca@valencia]=Encripta el fitxer
 Name[cs]=Zašifrovat soubor
@@ -156,7 +154,6 @@ Exec=kleopatra --encrypt %F
 [Desktop Action kleosignfilesopenpgp]
 Name=OpenPGP-Sign File
 Name[ar]=توقيع الملف بـ OpenPGP
-Name[bs]=OpenPGP-potpisivanje
 Name[ca]=Signa amb OpenPGP el fitxer
 Name[ca@valencia]=Signa amb OpenPGP el fitxer
 Name[cs]=Podepsat soubor pomocí OpenPGP
@@ -206,7 +203,6 @@ Exec=kleopatra --openpgp --sign %F
 [Desktop Action kleosignfilescms]
 Name=S/MIME-Sign File
 Name[ar]=توقيع الملف بـ S/MIME
-Name[bs]=S/MIME-potpisivanje
 Name[ca]=Signa amb S/MIME el fitxer
 Name[ca@valencia]=Signa amb S/MIME el fitxer
 Name[cs]=Podepsat soubor pomocí S/MIME

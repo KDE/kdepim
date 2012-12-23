@@ -5,7 +5,6 @@ X-KDE-ServiceTypes=inode/directory,KonqPopupMenu/Plugin
 Actions=kleosignencryptfolder;kleoencryptfolder;
 Name=Kleopatra Sign/Encrypt Folders
 Name[ar]=كليوبترا توقيع / تشفير المجلدات
-Name[bs]=Kleopatra potpisivanje/šifrovanje direktorija
 Name[ca]=Signatura/Encriptat de carpetes del Kleopatra
 Name[ca@valencia]=Signatura/Encriptat de carpetes del Kleopatra
 Name[cs]=Podepsat/zašifrovat složky (Kleopatra)
