@@ -1,7 +1,6 @@
 [Global]
 IconName=kmail
 Comment=Archive Mail Agent
-Comment[bs]=Arhiva poštanskih agenata
 Comment[ca]=Agent d'arxivat de correus
 Comment[da]=Agent til mail-arkivering
 Comment[de]=Agent zur E-Mail-Archivierung
@@ -33,7 +32,6 @@ Comment[uk]=Агент архівування пошти
 Comment[x-test]=xxArchive Mail Agentxx
 Comment[zh_TW]=歸檔郵件代理程式
 Name=Archive Mail Agent
-Name[bs]=Arhiva poštanskih agenata
 Name[ca]=Agent d'arxivat de correus
 Name[da]=Agent til mail-arkivering
 Name[de]=Agent zur E-Mail-Archivierung
@@ -67,7 +65,6 @@ Name[zh_TW]=歸檔郵件代理程式
 
 [Event/archivemailfinished]
 Name=Archive Mail finished
-Name[bs]=Arhiva završene pošte
 Name[ca]=Ha finalitzat l'arxivat de correus
 Name[da]=Mail-arkivering gennemført
 Name[de]=E-Mail-Archivierung beendet
@@ -102,7 +99,6 @@ Action=Popup
 
 [Event/archivemailstarted]
 Name=Archive Mail started
-Name[bs]=Arhiva započete pošte
 Name[ca]=S'ha iniciat l'arxivat de correus
 Name[da]=Mail-arkivering startet
 Name[de]=E-Mail-Archivierung gestartet
@@ -137,7 +133,6 @@ Action=Popup
 
 [Event/archivemailerror]
 Name=Archive Mail Error
-Name[bs]=arhiva pogrešne pošte
 Name[ca]=Error d'arxivat de correus
 Name[da]=Fejl i mail-arkivering
 Name[de]=E-Mail-Archivierungsfehler

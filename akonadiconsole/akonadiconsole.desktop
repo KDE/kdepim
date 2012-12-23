@@ -1,7 +1,6 @@
 [Desktop Entry]
 Name=Akonadi Console
 Name[ar]=طرفية اكوندا
-Name[bs]=Akonadi konzola
 Name[ca]=Consola de l'Akonadi
 Name[ca@valencia]=Consola de l'Akonadi
 Name[cs]=Konzole Akonadi
@@ -54,7 +53,6 @@ Icon=akonadiconsole
 Type=Application
 Comment=Akonadi Management and Debugging Console
 Comment[ar]=إدارة اكوندا و طرفية التنقيح
-Comment[bs]=Akonadi konzola za rukovanje i traženje pogrešaka
 Comment[ca]=Consola de gestió i depuració per a l'Akonadi
 Comment[ca@valencia]=Consola de gestió i depuració per a l'Akonadi
 Comment[cs]=Správa Akonadi a ladicí konzole

@@ -5,7 +5,6 @@ MimeType=application/pgp;application/pgp-encrypted;application/pgp-signature;app
 X-KDE-ServiceTypes=KonqPopupMenu/Plugin
 Name=Kleopatra Decrypt/Verify Files
 Name[ar]=كليوبترا  فك تشفير/التحقق من الملفات
-Name[bs]=Kleopatra dešifrovanje/ovjeravanje datoteke
 Name[ca]=Desencriptat/verificació de fitxers del Kleopatra
 Name[ca@valencia]=Desencriptat/verificació de fitxers del Kleopatra
 Name[cs]=Dešifrovat/ověřit soubory (Kleopatra)
@@ -54,7 +53,6 @@ Actions=kleodecryptverifyfiles;
 [Desktop Action kleodecryptverifyfiles]
 Name=Decrypt/Verify File
 Name[ar]=فك تشفير/التحقق من ملف
-Name[bs]=Dešifrovanje/ovjeravanje datoteke
 Name[ca]=Desencriptat/verificació de fitxers
 Name[ca@valencia]=Desencriptat/verificació de fitxers
 Name[cs]=Dešifrovat/ověřit soubor

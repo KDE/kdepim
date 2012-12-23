@@ -1,6 +1,5 @@
 [Desktop Entry]
 Name=mailreader
-Name[bs]=mailreader
 Name[ca]=mailreader
 Name[ca@valencia]=mailreader
 Name[da]=mailreader
@@ -48,7 +47,6 @@ Icon=mailreader
 Type=Application
 X-DocPath=mailreader/index.html
 GenericName=A KDE4 Application
-GenericName[bs]=KDE4 aplikacija
 GenericName[ca]=Una aplicació KDE4
 GenericName[ca@valencia]=Una aplicació KDE4
 GenericName[cs]=Aplikace prostředí KDE4

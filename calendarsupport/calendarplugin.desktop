@@ -1,7 +1,6 @@
 [Desktop Entry]
 Name=Calendar Plugin Interface
 Name[ar]=واجهة ملحق التقويم
-Name[bs]=Dodatak za Kalendar
 Name[ca]=Interfície de connector del calendari
 Name[ca@valencia]=Interfície de connector del calendari
 Name[cs]=Rozhraní modulu kalendáře
@@ -53,7 +52,6 @@ Comment[af]=Kalender Inplak
 Comment[ar]=ملحق التقويم
 Comment[bg]=Приставка за календар
 Comment[br]=Lugent an deiziadur
-Comment[bs]=Dodatak za kalendar
 Comment[ca]=Connector calendari
 Comment[ca@valencia]=Connector calendari
 Comment[cs]=Kalendářový modul
