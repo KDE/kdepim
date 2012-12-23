@@ -53,6 +53,7 @@ Actions=kleoencryptsignfiles;kleoencryptfiles;kleosignfilesopenpgp;kleosignfiles
 
 [Desktop Action kleoencryptsignfiles]
 Name=Sign & Encrypt File
+Name[bs]=Potpiši i šifruj daoteku
 Name[ca]=Signa i encripta el fitxer
 Name[ca@valencia]=Signa i encripta el fitxer
 Name[cs]=Podepsat a zašifrovat soubor

@@ -82,6 +82,7 @@ X-KDE-StartupNotify=true
 X-DBUS-StartupType=Unique
 X-DBUS-ServiceName=org.kde.korganizer
 Keywords=mobile
+Keywords[bs]=mobilni
 Keywords[ca]=mòbil
 Keywords[ca@valencia]=mòbil
 Keywords[cs]=mobilní
