@@ -4,6 +4,7 @@
 [Misc]
 Name=Letter home/private address
 Name[ar]=عنوان البيت/خاص للرسالة
+Name[bs]=Pismo privatno/privatna adresa
 Name[ca]=Adreça postal particular/privada
 Name[ca@valencia]=Adreça postal particular/privada
 Name[cs]=Soukromá korespondenční adresa
@@ -46,6 +47,7 @@ Name[sr@latin]=Privatna adresa za pisma
 Name[sv]=Brev hem/privatadress
 Name[tr]=Özel/Ev mektup adresi
 Name[uk]=Домашня/особиста адреса для листування
+Name[wa]=Adresse dal måjhon/da sinne po les letes
 Name[x-test]=xxLetter home/private addressxx
 Name[zh_CN]=标识家庭/私人地址
 Name[zh_TW]=信件私人地址

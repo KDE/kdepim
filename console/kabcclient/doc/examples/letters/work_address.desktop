@@ -4,6 +4,7 @@
 [Misc]
 Name=Letter business/work address
 Name[ar]=عنوان العمل/الوظيفة للرسالة
+Name[bs]=Pismo poslovno/radna adresa
 Name[ca]=Adreça postal negoci/treball
 Name[ca@valencia]=Adreça postal negoci/treball
 Name[cs]=Obchodní korespondenční adresa
@@ -46,6 +47,7 @@ Name[sr@latin]=Poslovna adresa za pisma
 Name[sv]=Brev företag/arbetsadress
 Name[tr]=İş/Çalışma mektup adresi
 Name[uk]=Бізнесова/робоча адреса для листування
+Name[wa]=Adresse po les afwaires/do buro po les letes
 Name[x-test]=xxLetter business/work addressxx
 Name[zh_CN]=标识商务/工作地址
 Name[zh_TW]=信件工作地址
