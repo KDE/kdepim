@@ -41,7 +41,7 @@ namespace MessageViewer {
 class MESSAGEVIEWER_EXPORT CSSHelper : public CSSHelperBase
 {
 public:
-  CSSHelper( const QPaintDevice *pd );
+  explicit CSSHelper( const QPaintDevice *pd );
 
   /** @return HTML head including style sheet definitions and the
   &gt;body&lt; tag */

@@ -43,7 +43,7 @@ class MESSAGEVIEWER_EXPORT MarkMessageReadHandler : public QObject, public Abstr
      *
      * @param parent The parent object.
      */
-    MarkMessageReadHandler( QObject *parent = 0 );
+    explicit MarkMessageReadHandler( QObject *parent = 0 );
 
     /**
      * Destroys the mark message read handler.

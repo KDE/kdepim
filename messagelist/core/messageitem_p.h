@@ -34,7 +34,7 @@ class MessageItemPrivate : public ItemPrivate
 {
 public:
 
-  MessageItemPrivate( MessageItem *qq );
+  explicit MessageItemPrivate( MessageItem *qq );
   ~MessageItemPrivate();
 
   /**

@@ -54,7 +54,7 @@ class MailSourceViewTextBrowser;
 class MailSourceHighlighter : public QSyntaxHighlighter
 {
 public:
-  MailSourceHighlighter( QTextDocument * textdocument )
+  explicit MailSourceHighlighter( QTextDocument * textdocument )
     : QSyntaxHighlighter( textdocument )
   {}
 protected:

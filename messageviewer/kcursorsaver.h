@@ -17,7 +17,7 @@ class KCursorSaver
 {
 public:
     /// constructor taking QCursor shapes
-    KCursorSaver(Qt::CursorShape shape) {
+    explicit KCursorSaver(Qt::CursorShape shape) {
         QApplication::setOverrideCursor( QCursor(shape) );
         inited = true;
     }
