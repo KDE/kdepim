@@ -476,6 +476,10 @@ void IncidenceMonthItem::updateDates( int startOffset, int endOffset )
         break;
       }
     }
+  } else { // Doesn't recur
+    KCalCore::Incidence::Ptr oldIncidence( mIncidence->clone() );
+    setNewDates( mIncidence, startOffset, endOffset );
+    changer->modifyIncidence( item, oldIncidence );
   }
 }
 
