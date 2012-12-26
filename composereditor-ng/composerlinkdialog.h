@@ -37,12 +37,10 @@ public:
 
     QString html() const;
 
-public Q_SLOTS:
-    void slotOkClicked();
-
 private:
     friend class ComposerLinkDialogPrivate;
     ComposerLinkDialogPrivate * const d;
+    Q_PRIVATE_SLOT(d, void _k_slotOkClicked() )
 };
 }
 

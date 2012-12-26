@@ -44,6 +44,8 @@ public:
 
     void updateLinkHtml();
 
+    void _k_slotOkClicked();
+
     QWebElement webElement;
     KLineEdit *linkText;
     KLineEdit *linkLocation;
@@ -77,9 +79,18 @@ void ComposerLinkDialogPrivate::initialize(const QWebElement &element)
     layout->addWidget( sep );
 
 
-    q->connect(q,SIGNAL(okClicked()),q,SLOT(slotOkClicked()));
+    q->connect(q,SIGNAL(okClicked()),q,SLOT(_k_slotOkClicked()));
 
 }
+
+void ComposerLinkDialogPrivate::_k_slotOkClicked()
+{
+    if(!webElement.isNull()) {
+        updateLinkHtml();
+    }
+    q->accept();
+}
+
 
 QString ComposerLinkDialogPrivate::html() const
 {
@@ -120,14 +131,6 @@ ComposerLinkDialog::ComposerLinkDialog(const QWebElement& element, QWidget *pare
 ComposerLinkDialog::~ComposerLinkDialog()
 {
     delete d;
-}
-
-void ComposerLinkDialog::slotOkClicked()
-{
-    if(!d->webElement.isNull()) {
-        d->updateLinkHtml();
-    }
-    accept();
 }
 
 QString ComposerLinkDialog::html() const
