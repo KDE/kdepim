@@ -100,7 +100,7 @@ bool FilterActionAddTag::argsFromStringInteractive( const QString &argsStr, cons
   if ( Nepomuk2::ResourceManager::instance()->initialized() ) {
     if ( !index ) {
         //TODO adapt it.
-      QPointer<FilterActionMissingTagDialog> dlg = new FilterActionMissingTagDialog( mList.values(), filterName, argsStr );
+      QPointer<FilterActionMissingTagDialog> dlg = new FilterActionMissingTagDialog( mList, filterName, argsStr );
       if ( dlg->exec() ) {
         mParameter = dlg->selectedTag();
         needUpdate = true;

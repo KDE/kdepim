@@ -138,7 +138,7 @@ class FilterActionMissingTagDialog : public KDialog
 {
   Q_OBJECT
   public:
-    explicit FilterActionMissingTagDialog( const QStringList &templateList,
+    explicit FilterActionMissingTagDialog(const QMap<QUrl, QString> &templateList,
                                            const QString &filtername,
                                            const QString &argsStr,
                                            QWidget *parent = 0 );
@@ -149,6 +149,9 @@ class FilterActionMissingTagDialog : public KDialog
     void slotAddTag();
 
   private:
+    enum TypeData {
+       UrlData = Qt::UserRole + 1
+    };
     QListWidget *mTagList;
 };
 
