@@ -236,7 +236,7 @@ class EVENTVIEWS_EXPORT MonthScene : public QGraphicsScene
     /**
        Returns true if (x, y) is in the monthgrid, false else.
     */
-    bool isInMonthGrid( int x, int y );
+    bool isInMonthGrid( int x, int y ) const;
 
     bool mInitialized;
 

@@ -686,7 +686,8 @@ void MonthScene::mouseReleaseEvent ( QGraphicsSceneMouseEvent *mouseEvent )
 
 // returns true if the point is in the monthgrid (allows to avoid selecting a cell when
 // a click is outside the month grid
-bool MonthScene::isInMonthGrid( int x, int y ) {
+bool MonthScene::isInMonthGrid( int x, int y ) const
+{
   return x >= 0 && y >= 0 && x <= availableWidth() && y <= availableHeight();
 }
 
