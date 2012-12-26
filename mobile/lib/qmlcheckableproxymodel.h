@@ -30,7 +30,7 @@ public:
   enum MoreRoles {
     CheckOn = Qt::UserRole + 3000
   };
-  QMLCheckableItemProxyModel (QObject* parent = 0)
+  explicit QMLCheckableItemProxyModel (QObject* parent = 0)
     : KCheckableProxyModel(parent)
   {
   }

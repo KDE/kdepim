@@ -37,7 +37,7 @@ class MOBILEUI_EXPORT NotifyingStateMachine : public QStateMachine
 {
   Q_OBJECT
 public:
-  NotifyingStateMachine(QObject *parent = 0);
+  explicit NotifyingStateMachine(QObject *parent = 0);
 
   void requestState(const QString &state);
 
@@ -50,7 +50,7 @@ class RequestNamedTransition : public QSignalTransition
 {
   Q_OBJECT
 public:
-  RequestNamedTransition(QStateMachine *stateMachine, QState* sourceState = 0);
+  explicit RequestNamedTransition(QStateMachine *stateMachine, QState* sourceState = 0);
 
   virtual bool eventTest(QEvent* event);
 

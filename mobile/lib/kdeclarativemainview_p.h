@@ -71,7 +71,7 @@ public: /// members
   FavoritesEditor                    *mFavoritesEditor;
 
 public: /// Methods
-  KDeclarativeMainViewPrivate( KDeclarativeMainView* );
+  explicit KDeclarativeMainViewPrivate( KDeclarativeMainView* );
 
   void openHtml( const QString &path );
 
