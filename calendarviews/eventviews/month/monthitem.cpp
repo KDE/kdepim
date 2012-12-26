@@ -254,8 +254,10 @@ bool MonthItem::greaterThan( const MonthItem *e1, const MonthItem *e2 )
 
 bool MonthItem::greaterThanFallback( const MonthItem *other ) const
 {
-  // Yeah, pointer comparison if there is nothing else to compare...
-  return this < other;
+  const HolidayMonthItem *h = qobject_cast<const HolidayMonthItem*>( other );
+
+  // If "other" is a holiday, display it first.
+  return !h;
 }
 
 void MonthItem::updatePosition()
