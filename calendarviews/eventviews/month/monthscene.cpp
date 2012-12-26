@@ -673,13 +673,6 @@ void MonthScene::mouseReleaseEvent ( QGraphicsSceneMouseEvent *mouseEvent )
     mActionType = None;
     mStartCell = 0;
 
-    // FIXME: WOW, quite heavy if only a move happened...
-    // and BTW, when changing an incidence, we should get an event anyway,
-    // which should trigger the reload...
-    if ( somethingChanged ) {
-      mMonthView->reloadIncidences();
-    }
-
     mouseEvent->accept();
   }
 }
