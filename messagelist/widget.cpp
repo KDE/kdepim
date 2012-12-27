@@ -328,7 +328,7 @@ void Widget::viewGroupHeaderContextPopupRequest( MessageList::Core::GroupHeaderI
   QModelIndex index = view()->model()->index( ghi, 0 );
   view()->setCurrentIndex(index);
 
-  if ( view()->isExpanded( view()->model()->index( ghi, 0 ) ) ) {
+  if ( view()->isExpanded( index ) ) {
     act = menu.addAction( i18n ( "Collapse Group" ) );
     connect( act, SIGNAL(triggered(bool)),
              view(), SLOT(slotCollapseCurrentItem()) );
