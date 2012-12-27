@@ -28,6 +28,7 @@
 #include "composertableformatdialog.h"
 #include "composertablecellformatdialog.h"
 #include "composertableactionmenu.h"
+#include "globalsettings_base.h"
 
 #include <kpimtextedit/emoticontexteditaction.h>
 #include <kpimtextedit/inserthtmldialog.h>
@@ -139,7 +140,7 @@ public:
     void hideImageResizeWidget();
     void showImageResizeWidget();
 #if QTWEBKIT_VERSION >= QTWEBKIT_VERSION_CHECK(2, 3, 0)
-    void checkSpellingEnabled();
+    bool checkSpellingEnabled();
 #endif
 
 
@@ -194,15 +195,17 @@ Q_DECLARE_METATYPE(ComposerEditorNG::ComposerViewPrivate::FormatType)
 namespace ComposerEditorNG {
 
 #if QTWEBKIT_VERSION >= QTWEBKIT_VERSION_CHECK(2, 3, 0)
-void ComposerViewPrivate::checkSpellingEnabled()
+bool ComposerViewPrivate::checkSpellingEnabled()
 {
-    //TODO
+    return ComposerEditorNG::GlobalSettingsBase::autoSpellChecking();
 }
 #endif
 
 void ComposerViewPrivate::_k_changeAutoSpellChecking(bool checked)
 {
-    //TODO
+#if QTWEBKIT_VERSION >= QTWEBKIT_VERSION_CHECK(2, 3, 0)
+    ComposerEditorNG::GlobalSettingsBase::setAutoSpellChecking(checked);
+#endif
 }
 
 QAction* ComposerViewPrivate::getAction ( QWebPage::WebAction action ) const

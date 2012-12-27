@@ -30,6 +30,11 @@ set(libcomposereditor_ng_SRCS
     ${wk_HEADERS_MOC}
 )
 
+kde4_add_kcfg_files(libcomposereditor_ng_SRCS
+   globalsettings_base.kcfgc 
+)
+
+
 kde4_add_ui_files(libcomposereditor_ng_SRCS ui/pagecolorbackgroundwidget.ui )
 
 
