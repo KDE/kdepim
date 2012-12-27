@@ -80,6 +80,7 @@ private:
     Q_PRIVATE_SLOT( d, void _k_slotSaveAs() )
     Q_PRIVATE_SLOT( d, void _k_slotPrint() )
     Q_PRIVATE_SLOT( d, void _k_slotPrintPreview() )
+    Q_PRIVATE_SLOT( d, void _k_changeAutoSpellChecking(bool) )
 };
 }
 

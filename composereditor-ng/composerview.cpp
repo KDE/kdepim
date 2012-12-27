@@ -129,7 +129,7 @@ public:
     void _k_slotSaveAs();
     void _k_slotPrint();
     void _k_slotPrintPreview();
-
+    void _k_changeAutoSpellChecking(bool);
     QAction* getAction ( QWebPage::WebAction action ) const;
     QVariant evaluateJavascript(const QString& command);
     void execCommand(const QString &cmd);
@@ -138,6 +138,9 @@ public:
 
     void hideImageResizeWidget();
     void showImageResizeWidget();
+#if QTWEBKIT_VERSION >= QTWEBKIT_VERSION_CHECK(2, 3, 0)
+    void checkSpellingEnabled();
+#endif
 
 
     int spellTextSelectionStart;
@@ -181,7 +184,6 @@ public:
     KAction *action_print;
     KAction *action_print_preview;
 
-
     ComposerView *q;
     ComposerImageResizeWidget *imageResizeWidget;
 };
@@ -190,6 +192,18 @@ public:
 Q_DECLARE_METATYPE(ComposerEditorNG::ComposerViewPrivate::FormatType)
 
 namespace ComposerEditorNG {
+
+#if QTWEBKIT_VERSION >= QTWEBKIT_VERSION_CHECK(2, 3, 0)
+void ComposerViewPrivate::checkSpellingEnabled()
+{
+    //TODO
+}
+#endif
+
+void ComposerViewPrivate::_k_changeAutoSpellChecking(bool checked)
+{
+    //TODO
+}
 
 QAction* ComposerViewPrivate::getAction ( QWebPage::WebAction action ) const
 {
@@ -911,7 +925,13 @@ void ComposerView::contextMenuEvent(QContextMenuEvent* event)
         menu->addAction(d->action_spell_check);
         menu->addSeparator();
     }
-
+#if QTWEBKIT_VERSION >= QTWEBKIT_VERSION_CHECK(2, 3, 0)
+    QAction *autoSpellCheckingAction = menu->addAction(i18n("Auto Spell Check"));
+    autoSpellCheckingAction->setCheckable( true );
+    autoSpellCheckingAction->setChecked( d->checkSpellingEnabled() );
+    connect( autoSpellCheckingAction, SIGNAL(triggered(bool)), this, SLOT(_k_changeAutoSpellChecking(bool)) );
+    connect(tableActionMenu,SIGNAL(insertNewTable()),SLOT(_k_slotInsertTable()));
+#endif
     QAction *speakAction = menu->addAction(i18n("Speak Text"));
     speakAction->setIcon(KIcon(QLatin1String("preferences-desktop-text-to-speech")));
     speakAction->setEnabled(!emptyDocument );
