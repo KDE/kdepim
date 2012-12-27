@@ -31,6 +31,7 @@ public:
   
   bool importMails();
   bool importSettings();
+  bool importAddressBook();
 
   QString name() const;
 

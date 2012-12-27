@@ -63,11 +63,18 @@ bool TrojitaImportData::importSettings()
   return true;
 }
 
+bool TrojitaImportData::importAddressBook()
+{
+    //TODO
+  return true;
+}
+
 
 AbstractImporter::TypeSupportedOptions TrojitaImportData::supportedOption()
 {
   TypeSupportedOptions options;
   //options |=AbstractImporter::Mails;
   options |=AbstractImporter::Settings;
+  options |=AbstractImporter::AddressBooks;
   return options;
 }
