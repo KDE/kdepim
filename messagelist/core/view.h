@@ -365,6 +365,9 @@ public:
 
   void themeMenuAboutToShow(KMenu *menu);
 
+  void setCollapseItem(const QModelIndex& index);
+  void setExpandItem(const QModelIndex& index);
+
 
 protected:
   /**
