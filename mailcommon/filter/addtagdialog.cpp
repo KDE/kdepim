@@ -53,9 +53,21 @@ void AddTagDialog::slotOk()
   mTagWidget->recordTagSettings(tag);
   MailCommon::Tag::SaveFlags saveFlags = mTagWidget->saveFlags();
   tag->saveToNepomuk( saveFlags );
+
+  mLabel = name;
+  mNepomukUrl = tag->nepomukResourceUri.toString();
+
   accept();
+}
 
+QString AddTagDialog::label() const
+{
+  return mLabel;
+}
 
+QString AddTagDialog::nepomukUrl() const
+{
+  return mNepomukUrl;
 }
 
 #include "addtagdialog.moc"
