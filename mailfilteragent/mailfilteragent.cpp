@@ -64,18 +64,18 @@ MailFilterAgent::MailFilterAgent( const QString &id )
   connect(m_filterManager, SIGNAL(percent(int)), this, SLOT(emitProgress(int)));
   connect(m_filterManager, SIGNAL(progressMessage(QString)), this, SLOT(emitProgressMessage(QString)));
 
-  m_collectionMonitor = new Akonadi::Monitor( this );
-  m_collectionMonitor->fetchCollection( true );
-  m_collectionMonitor->ignoreSession( Akonadi::Session::defaultSession() );
-  m_collectionMonitor->collectionFetchScope().setAncestorRetrieval( Akonadi::CollectionFetchScope::All );
-  m_collectionMonitor->setMimeTypeMonitored( KMime::Message::mimeType() );
+  Akonadi::Monitor *collectionMonitor = new Akonadi::Monitor( this );
+  collectionMonitor->fetchCollection( true );
+  collectionMonitor->ignoreSession( Akonadi::Session::defaultSession() );
+  collectionMonitor->collectionFetchScope().setAncestorRetrieval( Akonadi::CollectionFetchScope::All );
+  collectionMonitor->setMimeTypeMonitored( KMime::Message::mimeType() );
 
-  connect( m_collectionMonitor, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)),
+  connect( collectionMonitor, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)),
            this, SLOT(mailCollectionAdded(Akonadi::Collection,Akonadi::Collection)) );
-  connect( m_collectionMonitor, SIGNAL(collectionChanged(Akonadi::Collection)),
+  connect( collectionMonitor, SIGNAL(collectionChanged(Akonadi::Collection)),
            this, SLOT(mailCollectionChanged(Akonadi::Collection)) );
 
-  connect( m_collectionMonitor, SIGNAL(collectionRemoved(Akonadi::Collection)),
+  connect( collectionMonitor, SIGNAL(collectionRemoved(Akonadi::Collection)),
            this, SLOT(mailCollectionRemoved(Akonadi::Collection)) );
 
   QTimer::singleShot( 0, this, SLOT(initializeCollections()) );
