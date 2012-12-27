@@ -41,8 +41,8 @@ ComposerHtmlEditor::ComposerHtmlEditor()
 
 
     editor->createActions( actionCollection() );
-    setupGUI();
     setupActions();
+    setupGUI();
 }
 
 ComposerHtmlEditor::~ComposerHtmlEditor()
