@@ -744,11 +744,6 @@ void AgendaView::connectAgenda( Agenda *agenda, Agenda *otherAgenda )
   connect( agenda, SIGNAL(deleteIncidenceSignal(Akonadi::Item)),
                    SIGNAL(deleteIncidenceSignal(Akonadi::Item)) );
 
-  connect( agenda, SIGNAL(startMultiModify(QString)),
-                   SIGNAL(startMultiModify(QString)) );
-  connect( agenda, SIGNAL(endMultiModify()),
-                   SIGNAL(endMultiModify()) );
-
   // drag signals
   connect( agenda, SIGNAL(startDragSignal(Akonadi::Item)),
            SLOT(startDrag(Akonadi::Item)) );
