@@ -60,7 +60,7 @@ class PIMSTRIGI_ANALYZER_EXPORT MailEndAnalyzer : public Strigi::StreamEndAnalyz
       TypeField
     };
 
-    MailEndAnalyzer( const MailEndAnalyzerFactory *factory );
+    explicit MailEndAnalyzer( const MailEndAnalyzerFactory *factory );
     ~MailEndAnalyzer();
 
     const char* name() const;

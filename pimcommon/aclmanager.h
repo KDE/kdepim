@@ -49,7 +49,7 @@ class PIMCOMMON_EXPORT AclManager : public QObject
      *
      * @param parent The parent object.
      */
-    AclManager( QObject *parent = 0 );
+    explicit AclManager( QObject *parent = 0 );
 
     /**
      * Destroys the ACL manager.

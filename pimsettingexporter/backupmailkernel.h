@@ -31,7 +31,7 @@ class FolderCollectionMonitor;
 class BackupMailKernel : public QObject, public MailCommon::IKernel, public MailCommon::ISettings
 {
   public:
-    BackupMailKernel( QObject *parent = 0 );
+    explicit BackupMailKernel( QObject *parent = 0 );
 
     virtual KPIMIdentities::IdentityManager *identityManager();
     virtual MessageSender *msgSender();

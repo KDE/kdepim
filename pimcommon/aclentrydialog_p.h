@@ -39,7 +39,7 @@ class AclEntryDialog : public KDialog
      *
      * @param parent The parent widget.
      */
-    AclEntryDialog( QWidget *parent = 0 );
+    explicit AclEntryDialog( QWidget *parent = 0 );
 
     /**
      * Destroys the ACL entry dialog.

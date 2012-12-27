@@ -35,7 +35,7 @@ class IcsEndAnalyzerFactory;
 class PIMSTRIGI_ANALYZER_EXPORT IcsEndAnalyzer : public Strigi::StreamEndAnalyzer
 {
   public:
-    IcsEndAnalyzer( const IcsEndAnalyzerFactory *factory );
+    explicit IcsEndAnalyzer( const IcsEndAnalyzerFactory *factory );
 
     const char* name() const;
     bool checkHeader( const char* header, qint32 headersize ) const;
