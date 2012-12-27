@@ -375,8 +375,13 @@ QString FilterActionMissingTagDialog::selectedTag() const
 
 void FilterActionMissingTagDialog::slotAddTag()
 {
-  AddTagDialog dlg(this);
-  dlg.exec();
+  QPointer<AddTagDialog> dlg = new AddTagDialog(this);
+  if(dlg->exec())  {
+    QListWidgetItem *item = new QListWidgetItem( dlg->label() );
+    item->setData(UrlData, dlg->nepomukUrl());
+    mTagList->addItem(item);
+  }
+  delete dlg;
 }
 
 FilterActionMissingSoundUrlDialog::FilterActionMissingSoundUrlDialog( const QString &filtername,
