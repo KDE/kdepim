@@ -53,7 +53,7 @@ class MESSAGECOMPOSER_EXPORT SignEncryptJob : public ContentJobBase, public Abst
   Q_OBJECT
 
   public:
-    SignEncryptJob( QObject *parent = 0 );
+    explicit SignEncryptJob( QObject *parent = 0 );
     virtual ~SignEncryptJob();
 
     void setContent( KMime::Content* content );

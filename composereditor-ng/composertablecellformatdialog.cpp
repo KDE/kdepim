@@ -19,10 +19,12 @@
 */
 
 #include "composertablecellformatdialog.h"
+#include "composercellsizewidget.h"
 
 #include <KLocale>
 #include <KColorButton>
 #include <KComboBox>
+#include <KSeparator>
 
 #include <QWebElement>
 #include <QVBoxLayout>
@@ -37,10 +39,21 @@ public:
         :webElement(element)
         ,q(qq)
     {
-        q->setButtons( KDialog::Ok | KDialog::Cancel );
+        q->setButtons( KDialog::Ok | KDialog::Apply | KDialog::Cancel );
         q->setCaption( i18n( "Edit Cell Format" ) );
 
         QVBoxLayout *layout = new QVBoxLayout( q->mainWidget() );
+
+        width = new ComposerCellSizeWidget;
+        width->setLabel( i18n("Width:") );
+        layout->addWidget(width);
+
+        height = new ComposerCellSizeWidget;
+        height->setLabel( i18n("Height:") );
+        layout->addWidget(height);
+
+        KSeparator *sep = new KSeparator;
+        layout->addWidget( sep );
 
         QHBoxLayout *hbox = new QHBoxLayout;
 
@@ -70,6 +83,9 @@ public:
         layout->addLayout(hbox);
         q->connect(useVerticalAlignment,SIGNAL(toggled(bool)),verticalAlignment,SLOT(setEnabled(bool)));
 
+        sep = new KSeparator;
+        layout->addWidget( sep );
+
         hbox = new QHBoxLayout;
         useBackgroundColor = new QCheckBox( i18n( "Background Color:" ) );
         hbox->addWidget(useBackgroundColor);
@@ -78,10 +94,16 @@ public:
         hbox->addWidget(backgroundColor);
 
         layout->addLayout(hbox);
+
+        sep = new KSeparator;
+        layout->addWidget( sep );
+
+
         q->connect(useBackgroundColor,SIGNAL(toggled(bool)),backgroundColor,SLOT(setEnabled(bool)));
 
         q->connect(q,SIGNAL(okClicked()),q,SLOT(_k_slotOkClicked()));
 
+        q->connect(q,SIGNAL(applyClicked()),q,SLOT(_k_slotApplyClicked()));
         if(!webElement.isNull()) {
             if(webElement.hasAttribute(QLatin1String("bgcolor"))) {
                 useBackgroundColor->setChecked(true);
@@ -98,10 +120,21 @@ public:
                 const QString align = webElement.attribute(QLatin1String("align"));
                 horizontalAlignment->setCurrentIndex( horizontalAlignment->findData( align ) );
             }
+            if(webElement.hasAttribute(QLatin1String("width"))) {
+                const QString widthVal = webElement.attribute(QLatin1String("width"));
+                width->setValue(widthVal);
+            }
+            if(webElement.hasAttribute(QLatin1String("height"))) {
+                const QString heightVal = webElement.attribute(QLatin1String("height"));
+                height->setValue(heightVal);
+            }
         }
     }
 
     void _k_slotOkClicked();
+    void _k_slotApplyClicked();
+
+    void applyChanges();
 
     QWebElement webElement;
     KColorButton *backgroundColor;
@@ -113,14 +146,24 @@ public:
     QCheckBox *useVerticalAlignment;
     QCheckBox *useHorizontalAlignment;
 
+    ComposerCellSizeWidget *width;
+    ComposerCellSizeWidget *height;
     ComposerTableCellFormatDialog *q;
 };
 
-void ComposerTableCellFormatDialogPrivate::_k_slotOkClicked()
+void ComposerTableCellFormatDialogPrivate::_k_slotApplyClicked()
+{
+    applyChanges();
+}
+
+void ComposerTableCellFormatDialogPrivate::applyChanges()
 {
     if(!webElement.isNull()) {
         if(useBackgroundColor->isChecked()) {
-            webElement.setAttribute(QLatin1String("bgcolor"),backgroundColor->color().name());
+            const QColor col = backgroundColor->color();
+            if(col.isValid()) {
+                webElement.setAttribute(QLatin1String("bgcolor"),col.name());
+            }
         } else {
             webElement.removeAttribute(QLatin1String("bgcolor"));
         }
@@ -134,7 +177,24 @@ void ComposerTableCellFormatDialogPrivate::_k_slotOkClicked()
         } else {
             webElement.removeAttribute(QLatin1String("align"));
         }
+        const QString widthStr = width->value();
+        if(widthStr.isEmpty()) {
+            webElement.removeAttribute(QLatin1String("width"));
+        } else {
+            webElement.setAttribute(QLatin1String("width"), widthStr);
+        }
+        const QString heightStr = height->value();
+        if(heightStr.isEmpty()) {
+            webElement.removeAttribute(QLatin1String("height"));
+        } else {
+            webElement.setAttribute(QLatin1String("height"), heightStr);
+        }
     }
+}
+
+void ComposerTableCellFormatDialogPrivate::_k_slotOkClicked()
+{
+    applyChanges();
     q->accept();
 }
 

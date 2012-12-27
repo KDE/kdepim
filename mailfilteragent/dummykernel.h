@@ -15,7 +15,7 @@ class FolderCollectionMonitor;
 class DummyKernel : public QObject, public MailCommon::IKernel, public MailCommon::ISettings
 {
   public:
-    DummyKernel( QObject *parent = 0 );
+    explicit DummyKernel( QObject *parent = 0 );
 
     virtual KPIMIdentities::IdentityManager *identityManager();
     virtual MessageSender *msgSender();

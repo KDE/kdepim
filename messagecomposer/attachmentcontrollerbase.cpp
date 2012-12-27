@@ -528,6 +528,7 @@ void AttachmentControllerBase::compressAttachment( AttachmentPart::Ptr part, boo
     Q_ASSERT( originalPart ); // Found in uncompressedParts.
     bool ok = d->model->replaceAttachment( part, originalPart );
     Q_ASSERT( ok );
+    Q_UNUSED( ok );
   }
 }
 

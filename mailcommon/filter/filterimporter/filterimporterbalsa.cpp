@@ -91,10 +91,8 @@ void FilterImporterBalsa::parseCondition(const QString& condition,MailCommon::Ma
     }
     Q_FOREACH(QString cond, conditionList) {
         cond = cond.trimmed();
-        bool negative = false;
         if(cond.startsWith(QLatin1String("NOT"))) {
             cond = cond.right(cond.length()-3);
-            negative = true;
             cond = cond.trimmed();
         }
         qDebug()<<" cond"<<cond;

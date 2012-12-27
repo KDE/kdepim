@@ -42,12 +42,11 @@ public:
      */
     QString html() const;
 
-private Q_SLOTS:
-    void slotOkClicked();
-
 private:
     friend class ComposerImageDialogPrivate;
     ComposerImageDialogPrivate * const d;
+    Q_PRIVATE_SLOT(d, void _k_slotOkClicked() )
+    Q_PRIVATE_SLOT(d, void _k_slotApplyClicked() )
 };
 }
 

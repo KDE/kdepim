@@ -29,7 +29,7 @@ class OrderedChildCollectionsModel : public QSortFilterProxyModel
 {
   Q_OBJECT
 public:
-  OrderedChildCollectionsModel(QObject* parent = 0);
+  explicit OrderedChildCollectionsModel(QObject* parent = 0);
 
   virtual bool lessThan(const QModelIndex& left, const QModelIndex& right) const;
 

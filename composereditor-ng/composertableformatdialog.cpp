@@ -24,6 +24,7 @@
 
 #include <KLocale>
 #include <KColorButton>
+#include <KSeparator>
 
 #include <QWebElement>
 #include <QVBoxLayout>
@@ -43,9 +44,10 @@ public:
 
     void initialize( const QWebElement& element);
 
-    void updateTableHtml();
+    void applyChanges();
 
     void _k_slotOkClicked();
+    void _k_slotApplyClicked();
 
     QWebElement webElement;
     KColorButton *backgroundColor;
@@ -54,7 +56,7 @@ public:
     ComposerTableFormatDialog *q;
 };
 
-void ComposerTableFormatDialogPrivate::updateTableHtml()
+void ComposerTableFormatDialogPrivate::applyChanges()
 {
     if(!webElement.isNull()) {
         webElement.setAttribute(QLatin1String("border"),QString::number(insertTableWidget->border()));
@@ -76,7 +78,7 @@ void ComposerTableFormatDialogPrivate::initialize(const QWebElement &element)
 {
     webElement = element;
     q->setCaption( i18n( "Table Format" ) );
-    q->setButtons( KDialog::Ok|KDialog::Cancel );
+    q->setButtons( KDialog::Ok | KDialog::Apply | KDialog::Cancel );
     q->setButtonText( KDialog::Ok, i18n( "Edit" ) );
     QWidget *page = new QWidget( q );
     q->setMainWidget( page );
@@ -85,6 +87,9 @@ void ComposerTableFormatDialogPrivate::initialize(const QWebElement &element)
     insertTableWidget = new KPIMTextEdit::InsertTableWidget( q );
     lay->addWidget(insertTableWidget);
 
+    KSeparator *sep = new KSeparator;
+    lay->addWidget( sep );
+
     QHBoxLayout *hbox = new QHBoxLayout;
     useBackgroundColor = new QCheckBox( i18n( "Background Color:" ) );
     hbox->addWidget(useBackgroundColor);
@@ -92,9 +97,14 @@ void ComposerTableFormatDialogPrivate::initialize(const QWebElement &element)
     backgroundColor->setEnabled(false);
     hbox->addWidget(backgroundColor);
 
+
     lay->addLayout(hbox);
 
+    sep = new KSeparator;
+    lay->addWidget( sep );
+
     q->connect(q,SIGNAL(okClicked()),q,SLOT(_k_slotOkClicked()));
+    q->connect(q,SIGNAL(applyClicked()),q,SLOT(_k_slotApplyClicked()));
 
     q->connect(useBackgroundColor,SIGNAL(toggled(bool)),backgroundColor,SLOT(setEnabled(bool)));
     if(!webElement.isNull()) {
@@ -126,12 +136,14 @@ void ComposerTableFormatDialogPrivate::initialize(const QWebElement &element)
 
 void ComposerTableFormatDialogPrivate::_k_slotOkClicked()
 {
-    if(!webElement.isNull()) {
-        updateTableHtml();
-    }
+    applyChanges();
     q->accept();
 }
 
+void ComposerTableFormatDialogPrivate::_k_slotApplyClicked()
+{
+    applyChanges();
+}
 
 ComposerTableFormatDialog::ComposerTableFormatDialog(const QWebElement& element, QWidget *parent)
     : KDialog(parent), d(new ComposerTableFormatDialogPrivate(this))

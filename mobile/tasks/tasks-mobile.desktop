@@ -2,6 +2,7 @@
 Version=1.0
 Encoding=UTF-8
 Name=Tasks
+Name[bs]=Zadaci
 Name[ca]=Tasques
 Name[ca@valencia]=Tasques
 Name[cs]=Úkoly
@@ -22,6 +23,7 @@ Name[lt]=Užduotys
 Name[nb]=Oppgaver
 Name[nds]=Opgaven
 Name[nl]=Taken
+Name[pa]=ਟਾਸਕ
 Name[pl]=Zadania
 Name[pt]=Tarefas
 Name[pt_BR]=Tarefas

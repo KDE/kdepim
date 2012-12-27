@@ -25,9 +25,15 @@ set(libcomposereditor_ng_SRCS
     composertableformatdialog.cpp
     composertablecellformatdialog.cpp
     composertableactionmenu.cpp
+    composercellsizewidget.cpp
     spellplugin/kspellplugin.cpp  
     ${wk_HEADERS_MOC}
 )
+
+kde4_add_kcfg_files(libcomposereditor_ng_SRCS
+   globalsettings_base.kcfgc 
+)
+
 
 kde4_add_ui_files(libcomposereditor_ng_SRCS ui/pagecolorbackgroundwidget.ui )
 
@@ -35,7 +41,7 @@ kde4_add_ui_files(libcomposereditor_ng_SRCS ui/pagecolorbackgroundwidget.ui )
 kde4_add_library(composereditorng ${LIBRARY_TYPE} ${libcomposereditor_ng_SRCS})
 
 target_link_libraries(composereditorng 
-  ${KDE4_KDEWEBKIT_LIBRARY} ${QT_QTWEBKIT_LIBRARY} ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS}
+   ${KDE4_KDEWEBKIT_LIBRARY} ${QT_QTWEBKIT_LIBRARY} ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS} ${KDE4_KPRINTUTILS_LIBS}
 )
 
 

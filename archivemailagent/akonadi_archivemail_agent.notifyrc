@@ -1,6 +1,7 @@
 [Global]
 IconName=kmail
 Comment=Archive Mail Agent
+Comment[bs]=Arhiva poštanskih agenata
 Comment[ca]=Agent d'arxivat de correus
 Comment[da]=Agent til mail-arkivering
 Comment[de]=Agent zur E-Mail-Archivierung
@@ -29,9 +30,11 @@ Comment[sr@ijekavianlatin]=Agent za arhiviranje pošte
 Comment[sr@latin]=Agent za arhiviranje pošte
 Comment[sv]=E-postarkiveringsmodul
 Comment[uk]=Агент архівування пошти
+Comment[wa]=Adjint d' årtchivaedje d' emiles
 Comment[x-test]=xxArchive Mail Agentxx
 Comment[zh_TW]=歸檔郵件代理程式
 Name=Archive Mail Agent
+Name[bs]=Arhiva poštanskih agenata
 Name[ca]=Agent d'arxivat de correus
 Name[da]=Agent til mail-arkivering
 Name[de]=Agent zur E-Mail-Archivierung
@@ -60,11 +63,13 @@ Name[sr@ijekavianlatin]=Agent za arhiviranje pošte
 Name[sr@latin]=Agent za arhiviranje pošte
 Name[sv]=E-postarkiveringsmodul
 Name[uk]=Агент архівування пошти
+Name[wa]=Adjint d' årtchivaedje d' emiles
 Name[x-test]=xxArchive Mail Agentxx
 Name[zh_TW]=歸檔郵件代理程式
 
 [Event/archivemailfinished]
 Name=Archive Mail finished
+Name[bs]=Arhiva završene pošte
 Name[ca]=Ha finalitzat l'arxivat de correus
 Name[da]=Mail-arkivering gennemført
 Name[de]=E-Mail-Archivierung beendet
@@ -93,12 +98,14 @@ Name[sr@ijekavianlatin]=Arhiviranje pošte završeno
 Name[sr@latin]=Arhiviranje pošte završeno
 Name[sv]=Arkivering av e-post klar
 Name[uk]=Архівування пошти завершено
+Name[wa]=Årtchivaedje des emiles tot fwait
 Name[x-test]=xxArchive Mail finishedxx
 Name[zh_TW]=歸檔郵件已完成
 Action=Popup
 
 [Event/archivemailstarted]
 Name=Archive Mail started
+Name[bs]=Arhiva započete pošte
 Name[ca]=S'ha iniciat l'arxivat de correus
 Name[da]=Mail-arkivering startet
 Name[de]=E-Mail-Archivierung gestartet
@@ -127,12 +134,14 @@ Name[sr@ijekavianlatin]=Arhiviranje pošte započeto
 Name[sr@latin]=Arhiviranje pošte započeto
 Name[sv]=Arkivering av e-post påbörjad
 Name[uk]=Розпочато архівування пошти
+Name[wa]=Årtchivaedje des emiles ataké
 Name[x-test]=xxArchive Mail startedxx
 Name[zh_TW]=歸檔郵件已開始
 Action=Popup
 
 [Event/archivemailerror]
 Name=Archive Mail Error
+Name[bs]=arhiva pogrešne pošte
 Name[ca]=Error d'arxivat de correus
 Name[da]=Fejl i mail-arkivering
 Name[de]=E-Mail-Archivierungsfehler
@@ -161,6 +170,7 @@ Name[sr@ijekavianlatin]=Greška pri arhiviranju pošte
 Name[sr@latin]=Greška pri arhiviranju pošte
 Name[sv]=Fel vid brevarkivering
 Name[uk]=Помилка під час архівування пошти
+Name[wa]=Åk n' a nén stî come dj' årtchivéve les emiles
 Name[x-test]=xxArchive Mail Errorxx
 Name[zh_TW]=歸檔郵件發生錯誤
 Action=Popup

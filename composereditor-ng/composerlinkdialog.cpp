@@ -23,6 +23,7 @@
 
 #include <KLineEdit>
 #include <KLocale>
+#include <KSeparator>
 
 #include <QVBoxLayout>
 #include <QLabel>
@@ -42,6 +43,8 @@ public:
     QString html() const;
 
     void updateLinkHtml();
+
+    void _k_slotOkClicked();
 
     QWebElement webElement;
     KLineEdit *linkText;
@@ -71,9 +74,23 @@ void ComposerLinkDialogPrivate::initialize(const QWebElement &element)
     linkLocation = new KLineEdit;
     linkLocation->setClearButtonShown(true);
     layout->addWidget( linkLocation );
-    q->connect(q,SIGNAL(okClicked()),q,SLOT(slotOkClicked()));
+
+    KSeparator *sep = new KSeparator;
+    layout->addWidget( sep );
+
+
+    q->connect(q,SIGNAL(okClicked()),q,SLOT(_k_slotOkClicked()));
 
 }
+
+void ComposerLinkDialogPrivate::_k_slotOkClicked()
+{
+    if(!webElement.isNull()) {
+        updateLinkHtml();
+    }
+    q->accept();
+}
+
 
 QString ComposerLinkDialogPrivate::html() const
 {
@@ -114,14 +131,6 @@ ComposerLinkDialog::ComposerLinkDialog(const QWebElement& element, QWidget *pare
 ComposerLinkDialog::~ComposerLinkDialog()
 {
     delete d;
-}
-
-void ComposerLinkDialog::slotOkClicked()
-{
-    if(!d->webElement.isNull()) {
-        d->updateLinkHtml();
-    }
-    accept();
 }
 
 QString ComposerLinkDialog::html() const

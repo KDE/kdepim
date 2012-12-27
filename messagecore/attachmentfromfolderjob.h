@@ -44,7 +44,7 @@ class MESSAGECORE_EXPORT AttachmentFromFolderJob : public AttachmentFromUrlBaseJ
     * @param parent The parent object.
     */
 
-    AttachmentFromFolderJob( const KUrl &url = KUrl(), QObject *parent = 0 );
+    explicit AttachmentFromFolderJob( const KUrl &url = KUrl(), QObject *parent = 0 );
 
     /**
     * Destroys the job.

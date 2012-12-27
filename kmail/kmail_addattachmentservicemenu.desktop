@@ -7,6 +7,7 @@ Actions=sendto;
 [Desktop Action sendto]
 Icon=kmail
 Name=Send as Email Attachment
+Name[bs]=Pošalji kao dodatak elektronske pošte
 Name[ca]=Envia com a adjunt a correu
 Name[ca@valencia]=Envia com a adjunt a correu
 Name[cs]=Odeslat jako přílohu emailu
@@ -40,6 +41,7 @@ Name[sr@ijekavianlatin]=Pošalji kao prilog e‑pošte
 Name[sr@latin]=Pošalji kao prilog e‑pošte
 Name[sv]=Skicka som e-postbilaga
 Name[uk]=Надіслати у долученні до листа
+Name[wa]=Evoyî come ataetchmint a èn emile
 Name[x-test]=xxSend as Email Attachmentxx
 Name[zh_TW]=以電子郵件附件傳送
 Exec=kmail --attach %F

@@ -27,7 +27,7 @@ namespace Message {
 class JobBasePrivate
 {
   public:
-    JobBasePrivate( JobBase *qq )
+    explicit JobBasePrivate( JobBase *qq )
       : q_ptr( qq )
     {
     }

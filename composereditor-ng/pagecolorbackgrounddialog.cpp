@@ -22,86 +22,132 @@
 #include "pagecolorbackgroundwidget.h"
 
 #include <KLocale>
+#include <KSeparator>
 
 #include <QVBoxLayout>
 #include <QWebFrame>
 #include <QWebElement>
 
-using namespace ComposerEditorNG;
+namespace ComposerEditorNG {
 
-PageColorBackgroundDialog::PageColorBackgroundDialog(QWebFrame *frame, QWidget *parent) :
-    KDialog(parent), mFrame(frame)
+class PageColorBackgroundDialogPrivate
 {
-    setCaption( i18n( "Page Color and Background" ) );
-    setButtons( Ok | Cancel );
+public:
+    PageColorBackgroundDialogPrivate(QWebFrame *frame, PageColorBackgroundDialog *qq)
+        :webFrame(frame), q(qq)
+    {
+        q->setCaption( i18n( "Page Color and Background" ) );
+        q->setButtons( KDialog::Ok | KDialog::Apply | KDialog::Cancel );
 
-    QVBoxLayout *layout = new QVBoxLayout( mainWidget() );
-    mPageColorWidget = new PageColorBackgroundWidget;
-    layout->addWidget(mPageColorWidget);
-    connect(this,SIGNAL(okClicked()),this,SLOT(slotOkClicked()));
+        QVBoxLayout *layout = new QVBoxLayout( q->mainWidget() );
+        pageColorWidget = new PageColorBackgroundWidget;
+        layout->addWidget(pageColorWidget);
 
-    initSettings();
-}
+        KSeparator *sep = new KSeparator;
+        layout->addWidget( sep );
 
-PageColorBackgroundDialog::~PageColorBackgroundDialog()
-{
-}
-
-void PageColorBackgroundDialog::slotOkClicked()
-{
-    if(mFrame) {
-        QWebElement element = mFrame->findFirstElement(QLatin1String("body"));
-        if(!element.isNull()) {
-            if(mPageColorWidget->useDefaultColor()) {
-                element.removeAttribute(QLatin1String("bgcolor"));
-                element.removeAttribute(QLatin1String("text"));
-                element.removeAttribute(QLatin1String("link"));
-                element.removeAttribute(QLatin1String("alink"));
-                element.removeAttribute(QLatin1String("vlink"));
-            } else {
-                element.setAttribute(QLatin1String("bgcolor"),mPageColorWidget->pageBackgroundColor().name());
-                element.setAttribute(QLatin1String("text"),mPageColorWidget->textColor().name());
-                element.setAttribute(QLatin1String("link"),mPageColorWidget->linkColor().name());
-                element.setAttribute(QLatin1String("alink"),mPageColorWidget->activeLinkColor().name());
-                element.setAttribute(QLatin1String("vlink"),mPageColorWidget->visitedLinkColor().name());
-            }
-            if(mPageColorWidget->backgroundImageUrl().isEmpty()) {
-                element.removeAttribute(QLatin1String("background"));
-            } else {
-                //FIX IT
-                element.setAttribute(QLatin1String("background"),QString::fromLatin1("file://%1").arg(mPageColorWidget->backgroundImageUrl().path()));
-            }
-        }
+        q->connect(q,SIGNAL(okClicked()),q,SLOT(_k_slotOkClicked()));
+        q->connect(q,SIGNAL(applyClicked()),q,SLOT(_k_slotApplyClicked()));
+        initSettings();
     }
-    accept();
-}
 
-void PageColorBackgroundDialog::initSettings()
+    void initSettings();
+
+    void applyChanges();
+
+    void _k_slotOkClicked();
+    void _k_slotApplyClicked();
+
+    PageColorBackgroundWidget *pageColorWidget;
+    QWebFrame *webFrame;
+    PageColorBackgroundDialog *q;
+};
+
+void PageColorBackgroundDialogPrivate::initSettings()
 {
-    if(mFrame) {
-        const QWebElement element = mFrame->findFirstElement(QLatin1String("body"));
+    if(webFrame) {
+        const QWebElement element = webFrame->findFirstElement(QLatin1String("body"));
         if(!element.isNull()) {
             if(element.hasAttribute(QLatin1String("bgcolor"))||
                     element.hasAttribute(QLatin1String("text"))||
                     element.hasAttribute(QLatin1String("link"))||
                     element.hasAttribute(QLatin1String("vlink"))||
                     element.hasAttribute(QLatin1String("alink"))) {
-                mPageColorWidget->setUseDefaultColor(false);
-                mPageColorWidget->setPageBackgroundColor(QColor(element.attribute(QLatin1String("bgcolor"))));
-                mPageColorWidget->setTextColor(QColor(element.attribute(QLatin1String("text"))));
-                mPageColorWidget->setLinkColor(QColor(element.attribute(QLatin1String("link"))));
-                mPageColorWidget->setActiveLinkColor(QColor(element.attribute(QLatin1String("alink"))));
-                mPageColorWidget->setVisitedLinkColor(QColor(element.attribute(QLatin1String("vlink"))));
+                pageColorWidget->setUseDefaultColor(false);
+                pageColorWidget->setPageBackgroundColor(QColor(element.attribute(QLatin1String("bgcolor"))));
+                pageColorWidget->setTextColor(QColor(element.attribute(QLatin1String("text"))));
+                pageColorWidget->setLinkColor(QColor(element.attribute(QLatin1String("link"))));
+                pageColorWidget->setActiveLinkColor(QColor(element.attribute(QLatin1String("alink"))));
+                pageColorWidget->setVisitedLinkColor(QColor(element.attribute(QLatin1String("vlink"))));
             } else {
-                mPageColorWidget->setUseDefaultColor(true);
+                pageColorWidget->setUseDefaultColor(true);
             }
             if(element.hasAttribute(QLatin1String("background"))) {
-                mPageColorWidget->setBackgroundImageUrl(KUrl(element.attribute(QLatin1String("background"))));
+                pageColorWidget->setBackgroundImageUrl(KUrl(element.attribute(QLatin1String("background"))));
+            }
+        }
+    }
+}
+
+void PageColorBackgroundDialogPrivate::_k_slotOkClicked()
+{
+    applyChanges();
+    q->accept();
+}
+
+void PageColorBackgroundDialogPrivate::_k_slotApplyClicked()
+{
+    applyChanges();
+}
+
+void PageColorBackgroundDialogPrivate::applyChanges()
+{
+    if(webFrame) {
+        QWebElement element = webFrame->findFirstElement(QLatin1String("body"));
+        if(!element.isNull()) {
+            if(pageColorWidget->useDefaultColor()) {
+                element.removeAttribute(QLatin1String("bgcolor"));
+                element.removeAttribute(QLatin1String("text"));
+                element.removeAttribute(QLatin1String("link"));
+                element.removeAttribute(QLatin1String("alink"));
+                element.removeAttribute(QLatin1String("vlink"));
+            } else {
+                QColor col = pageColorWidget->pageBackgroundColor();
+                if(col.isValid())
+                    element.setAttribute(QLatin1String("bgcolor"),col.name());
+                col = pageColorWidget->textColor();
+                if(col.isValid())
+                    element.setAttribute(QLatin1String("text"),col.name());
+                col = pageColorWidget->linkColor();
+                if(col.isValid())
+                    element.setAttribute(QLatin1String("link"),col.name());
+                col = pageColorWidget->activeLinkColor();
+                if(col.isValid())
+                    element.setAttribute(QLatin1String("alink"),col.name());
+                col = pageColorWidget->visitedLinkColor();
+                if(col.isValid())
+                    element.setAttribute(QLatin1String("vlink"),col.name());
+            }
+            if(pageColorWidget->backgroundImageUrl().isEmpty()) {
+                element.removeAttribute(QLatin1String("background"));
+            } else {
+                //FIX IT
+                element.setAttribute(QLatin1String("background"),QString::fromLatin1("file://%1").arg(pageColorWidget->backgroundImageUrl().path()));
             }
         }
     }
 }
 
 
+PageColorBackgroundDialog::PageColorBackgroundDialog(QWebFrame *frame, QWidget *parent)
+    : KDialog(parent), d(new PageColorBackgroundDialogPrivate(frame, this))
+{
+}
+
+PageColorBackgroundDialog::~PageColorBackgroundDialog()
+{
+}
+
+}
 
 #include "pagecolorbackgrounddialog.moc"

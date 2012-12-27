@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Akonotes plasmoid
+Name[bs]=Akonotes plasmoid
 Name[ca]=Estri Akonotes
 Name[ca@valencia]=Estri Akonotes
 Name[cs]=Plasmoid Akonotes
@@ -36,10 +37,12 @@ Name[sr@latin]=Plazmoid Ako‑beležaka
 Name[sv]=Plasmoid Ako-anteckningar
 Name[tr]=Akonotes plasmoid
 Name[uk]=Плазмоїд Akonotes
+Name[wa]=Plasmowide Akonotes
 Name[x-test]=xxAkonotes plasmoidxx
 Name[zh_CN]=Akonotes plasmoid
 Name[zh_TW]=Akonotes 小程式
 Comment=Akonotes plasmoid
+Comment[bs]=Akonotes plasmoid
 Comment[ca]=L'estri Akonotes
 Comment[ca@valencia]=L'estri Akonotes
 Comment[cs]=Plasmoid Akonotes
@@ -76,6 +79,7 @@ Comment[sr@latin]=Plazmoid Ako‑beležaka
 Comment[sv]=Plasmoid Ako-anteckningar
 Comment[tr]=Akonotes plasmoid
 Comment[uk]=Плазмоїд Akonotes
+Comment[wa]=Plasmowide Akonotes
 Comment[x-test]=xxAkonotes plasmoidxx
 Comment[zh_CN]=Akonotes plasmoid
 Comment[zh_TW]=Akonotes 小程式

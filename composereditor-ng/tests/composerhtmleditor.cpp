@@ -53,18 +53,6 @@ void ComposerHtmlEditor::setupActions()
 {
     KStandardAction::quit( kapp, SLOT(quit()),
                            actionCollection() );
-
-    KStandardAction::open( this, SLOT(openFile()),
-                           actionCollection() );
-
-    KStandardAction::save( this, SLOT(saveFile()),
-                           actionCollection() );
-
-    KStandardAction::saveAs( this, SLOT(saveFileAs()),
-                             actionCollection() );
-
-    KStandardAction::openNew( this, SLOT(newFile()),
-                              actionCollection() );
 }
 
 

@@ -59,6 +59,7 @@ QString FilterImporterClawsMails::defaultFiltersSettingsPath()
 
 MailFilter * FilterImporterClawsMails::parseLine(QTextStream& stream, const QString& line, MailFilter *filter)
 {
+  Q_UNUSED( stream );
   appendFilter(filter);
   filter = new MailFilter();
   if(line.startsWith(QLatin1String("enabled"))) {

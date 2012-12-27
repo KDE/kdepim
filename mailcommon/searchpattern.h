@@ -644,7 +644,7 @@ class MAILCOMMON_EXPORT SearchPattern : public QList<SearchRule::Ptr>
      * given. This feature is mainly (solely?) used in KMFilter,
      * as we don't allow to store search patterns in the config (yet).
      */
-    SearchPattern( const KConfigGroup &config );
+    explicit SearchPattern( const KConfigGroup &config );
 
     /** Destructor. Deletes all stored rules! */
     ~SearchPattern();

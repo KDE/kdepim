@@ -134,6 +134,7 @@ FolderSelectionDialog::~FolderSelectionDialog()
 
 void FolderSelectionDialog::slotDoubleClick(const QModelIndex& index)
 {
+  Q_UNUSED( index );
   const bool hasSelectedCollection =
     ( d->folderTreeWidget->selectionModel()->selectedIndexes().count() > 0 );
   if(hasSelectedCollection) {

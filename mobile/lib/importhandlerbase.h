@@ -35,7 +35,7 @@ class MOBILEUI_EXPORT ImportHandlerBase : public QObject
   Q_OBJECT
 
   public:
-    ImportHandlerBase( QObject *parent = 0 );
+    explicit ImportHandlerBase( QObject *parent = 0 );
     ~ImportHandlerBase();
 
     void setSelectionModel( QItemSelectionModel *model );

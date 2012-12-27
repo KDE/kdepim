@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Simple
+Name[bs]=Jednostavan
 Name[ca]=Senzill
 Name[ca@valencia]=Senzill
 Name[cs]=Jednoduchý
@@ -39,9 +40,11 @@ Name[sv]=Enkel
 Name[tr]=Sade
 Name[ug]=ئاددىي
 Name[uk]=Проста
+Name[wa]=Simpe
 Name[x-test]=xxSimplexx
 Name[zh_TW]=簡單
 Description=A Simple theme
+Description[bs]=Jednostavna tema
 Description[ca]=Un tema senzill
 Description[ca@valencia]=Un tema senzill
 Description[cs]=Jednoduchý motiv
@@ -80,6 +83,7 @@ Description[sv]=Ett enkelt tema
 Description[tr]=Basit, sade bir tema
 Description[ug]=ئاددىي ئۆرنەك
 Description[uk]=Проста тема
+Description[wa]=On simpe tinme
 Description[x-test]=xxA Simple themexx
 Description[zh_TW]=簡單的主題。
 FileName=default.html

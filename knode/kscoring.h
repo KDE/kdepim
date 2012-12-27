@@ -138,7 +138,7 @@ class KNODE_EXPORT ActionSetScore : public ActionBase {
 
 class KNODE_EXPORT ActionNotify : public ActionBase {
   public:
-    ActionNotify( const QString & );
+    explicit ActionNotify( const QString & );
     ActionNotify( const ActionNotify & );
     virtual ~ActionNotify() {}
     virtual QString toString() const;

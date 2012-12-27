@@ -26,9 +26,6 @@
 #include <Akonadi/Collection>
 #include <akonadi/item.h>
 
-namespace Akonadi {
-class Monitor;
-}
 
 class FilterLogDialog;
 class FilterManager;
@@ -66,7 +63,6 @@ class MailFilterAgent : public Akonadi::AgentBase, public Akonadi::AgentBase::Ob
     void itemsReceiviedForFiltering( const Akonadi::Item::List &items );
 
   private:
-    Akonadi::Monitor *m_collectionMonitor;
     FilterManager *m_filterManager;
 
     FilterLogDialog *m_filterLogDialog;

@@ -37,11 +37,11 @@ namespace MailCommon {
 // FilterActionAddTag - append tag to message
 // Appends a tag to messages
 //=============================================================================
-class FilterActionAddTag: public FilterActionWithStringList
+class FilterActionAddTag: public FilterAction
 {
   Q_OBJECT
   public:
-    FilterActionAddTag( QObject *parent = 0 );
+    explicit FilterActionAddTag( QObject *parent = 0 );
     virtual ReturnCode process( ItemContext &context ) const;
     SearchRule::RequiredPart requiredPart() const;
 
@@ -54,11 +54,19 @@ class FilterActionAddTag: public FilterActionWithStringList
     virtual QString displayString() const;
     virtual bool argsFromStringInteractive( const QString &argsStr, const QString& filterName );
 
+    virtual QWidget *createParamWidget( QWidget *parent ) const;
+    virtual void applyParamWidgetValue( QWidget *paramWidget );
+    virtual void setParamWidgetValue( QWidget *paramWidget ) const;
+    virtual void clearParamWidget( QWidget *paramWidget ) const;
+
+
   private Q_SLOTS:
     void slotTagListingFinished();
 
   private:
     void initializeTagList();
+    mutable QMap<QUrl, QString> mList;
+    QString mParameter;
 };
 
 }

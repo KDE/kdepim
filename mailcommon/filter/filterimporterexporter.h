@@ -68,7 +68,7 @@ class MAILCOMMON_EXPORT FilterImporterExporter
      *
      * @param parent The parent widget.
      */
-    FilterImporterExporter( QWidget *parent = 0 );
+    explicit FilterImporterExporter( QWidget *parent = 0 );
 
     /**
      * Destroys the filter importer/exporter.

@@ -38,7 +38,7 @@ class AggregationComboBox;
 class AggregationComboBoxPrivate
 {
 public:
-  AggregationComboBoxPrivate( AggregationComboBox *owner )
+  explicit AggregationComboBoxPrivate( AggregationComboBox *owner )
     : q( owner ) { }
 
   AggregationComboBox * const q;
