@@ -37,7 +37,6 @@ set(messagecore_LIB_SRCS
    messagehelpers.cpp
    nodehelper.cpp
    stringutil.cpp
-   taglistmonitor.cpp
 )
 
 if (NOT WINCE)
