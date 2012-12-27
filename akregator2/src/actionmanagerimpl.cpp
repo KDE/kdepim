@@ -87,30 +87,38 @@ void ActionManagerImpl::slotNodeSelected( const Akonadi::Collection& c )
     KRss::FeedCollection fc( c );
     if ( !fc.isFolder() ) {
         QAction* remove = action("feed_remove");
-        if (remove)
-            remove->setEnabled(true);
+        if (remove) {
+            remove->setEnabled( c.rights() & Akonadi::Collection::CanDeleteCollection );
+            remove->setText(i18n("&Delete Feed"));
+        }
+        QAction* modify = action("feed_modify");
+        if (modify) {
+            modify->setEnabled( c.rights() & Akonadi::Collection::CanChangeCollection );
+            modify->setText(i18n("&Edit Feed..."));
+        }
         if ( QAction* const a = action("feed_homepage") ) {
             a->setEnabled(!fc.htmlUrl().isEmpty());
         }
 
         action("feed_fetch")->setText(i18n("&Fetch Feed"));
-        action("feed_remove")->setText(i18n("&Delete Feed"));
-        action("feed_modify")->setText(i18n("&Edit Feed..."));
         action("feed_mark_feed_as_read")->setText(i18n("&Mark Feed as Read"));
     } else {
         QAction* remove = action("feed_remove");
-        if (remove)
-            remove->setEnabled( true );
+        if (remove) {
+            remove->setEnabled( c.parentCollection().isValid() &&
+                                c.rights() & Akonadi::Collection::CanDeleteCollection );
+            remove->setText( i18n("&Delete Folder") );
+        }
+        QAction *modify = action("feed_modify");
+        if (modify) {
+            modify->setEnabled( c.rights() & Akonadi::Collection::CanChangeCollection );
+            modify->setText(i18n("&Modify Folder"));
+        }
         QAction* hp = action("feed_homepage");
         if (hp)
             hp->setEnabled(false);
 
         action("feed_fetch")->setText(i18n("&Fetch Feeds"));
-        if ( QAction* const a = action("feed_remove") ) {
-            a->setText( i18n("&Delete Folder") );
-            a->setEnabled( c.parentCollection().isValid() );
-        }
-        action("feed_modify")->setText(i18n("&Modify Folder"));
         action("feed_mark_feed_as_read")->setText(i18n("&Mark Feeds as Read"));
     }
 }
