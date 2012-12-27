@@ -60,6 +60,7 @@
 #include <Akonadi/CollectionDeleteJob>
 #include <Akonadi/EntityTreeModel>
 #include <Akonadi/Session>
+#include <Akonadi/Control>
 
 #include <krss/feedcollection.h>
 #include <KRss/Item>
@@ -311,8 +312,7 @@ Akregator2::MainWidget::MainWidget( Part *part, QWidget *parent, ActionManagerIm
     else if(Solid::Networking::status() == Solid::Networking::Unconnected)
         this->m_networkAvailable=false;
 
-
-
+    Akonadi::Control::widgetNeedsAkonadi( this );
 }
 
 void Akregator2::MainWidget::slotOnShutdown()
