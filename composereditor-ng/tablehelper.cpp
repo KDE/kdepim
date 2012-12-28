@@ -18,7 +18,7 @@
 
 */
 
-#include "tablehelper.h"
+#include "tablehelper_p.h"
 
 #include <QDebug>
 
@@ -66,5 +66,19 @@ QWebElement TableHelper::rowWebElement(const QWebElement&element)
     }
     return QWebElement();
 }
+
+QWebElement TableHelper::tableWebElement(const QWebElement&element)
+{
+    if(element.tagName().toLower() == TABLE) {
+        return element;
+    } else {
+        QWebElement e = element;
+        do {
+            e = e.parent();
+        } while(e.tagName().toLower() != TABLE);
+        return e;
+    }
+}
+
 
 }

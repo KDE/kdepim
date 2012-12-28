@@ -22,7 +22,7 @@
 #include "composertablecellformatdialog.h"
 #include "composertableformatdialog.h"
 #include "composereditorutil_p.h"
-#include "tablehelper.h"
+#include "tablehelper_p.h"
 
 #include <KLocale>
 
@@ -74,7 +74,7 @@ void ComposerTableActionMenuPrivate::_k_slotRemoveRow()
 
 void ComposerTableActionMenuPrivate::_k_slotRemoveTable()
 {
-    QWebElement tableElement = Util::tableWebElement(webElement);
+    QWebElement tableElement = TableHelper::tableWebElement(webElement);
     if (!tableElement.isNull()) {
         tableElement.removeFromDocument();
     }
@@ -116,7 +116,7 @@ void ComposerTableActionMenuPrivate::_k_slotInsertRowBelow()
 
 void ComposerTableActionMenuPrivate::_k_slotTableFormat()
 {
-    ComposerTableFormatDialog dlg( Util::tableWebElement(webElement),parentWidget );
+    ComposerTableFormatDialog dlg( TableHelper::tableWebElement(webElement),parentWidget );
     dlg.exec();
 }
 
