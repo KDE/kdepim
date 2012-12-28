@@ -33,7 +33,6 @@
 #include "notificationmanager.h"
 #include "plugin.h"
 #include "pluginmanager.h"
-#include "setupakonadicommand.h"
 #include "trayicon.h"
 #include "kernel.h"
 
@@ -59,6 +58,9 @@
 #include <KParts/Plugin>
 #include <KCMultiDialog>
 #include <kstandardaction.h>
+
+#include <KRss/FeedPropertiesCollectionAttribute>
+#include <Akonadi/AttributeFactory>
 
 #include <QFile>
 #include <QObject>
@@ -106,6 +108,8 @@ Part::Part( QWidget *parentWidget, QObject *parent, const QVariantList& )
     , m_dialog()
 
 {
+    Akonadi::AttributeFactory::registerAttribute<KRss::FeedPropertiesCollectionAttribute>();
+
     initFonts();
 
     setPluginLoadingMode( LoadPluginsIfEnabled );
@@ -130,6 +134,7 @@ Part::Part( QWidget *parentWidget, QObject *parent, const QVariantList& )
     connect(Kernel::self()->frameManager(), SIGNAL(signalCanceled(QString)), this, SIGNAL(canceled(QString)));
     connect(Kernel::self()->frameManager(), SIGNAL(signalStarted()), this, SLOT(slotStarted()));
     connect(Kernel::self()->frameManager(), SIGNAL(signalCompleted()), this, SIGNAL(completed()));
+
 
     // notify the part that this is our internal widget
     setWidget(m_mainWidget);
@@ -178,13 +183,6 @@ void Part::loadPlugins( const QString& type )
             continue;
         plugin->initialize();
         plugin->insertGuiClients( this );
-    }
-}
-
-void Part::slotAkonadiSetUp( KJob* job ) {
-    if ( job->error() ) {
-        QApplication::quit();
-        return;
     }
 }
 
@@ -271,8 +269,6 @@ Part::~Part()
 
 void Part::readProperties(const KConfigGroup & config)
 {
-    openStandardFeedList();
-
     if(m_mainWidget)
         m_mainWidget->readProperties(config);
 }
@@ -294,14 +290,6 @@ void Part::fetchAllFeeds()
     m_mainWidget->slotFetchAllFeeds();
 }
 
-void Part::openStandardFeedList()
-{
-    SetUpAkonadiCommand* cmd = new SetUpAkonadiCommand;
-    cmd->setParentWidget( m_mainWidget );
-    cmd->setMainWidget( m_mainWidget );
-    connect( cmd, SIGNAL(finished(KJob*)), this , SLOT(slotAkonadiSetUp(KJob*)) );
-    cmd->start();
-}
 
 bool Part::openFile() {
     return true;

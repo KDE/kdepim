@@ -4,7 +4,6 @@
   <interface name="org.kde.akregator2.part">
     <method name="fetchAllFeeds" />
     <method name="saveSettings" />
-    <method name="openStandardFeedList"/>
     <method name="addFeed" />
     <method name="handleCommandLine">
       <arg name="result" type="b" direction="out"/>

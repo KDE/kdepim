@@ -84,9 +84,6 @@ class Part : public KParts::ReadOnlyPart
             */
         bool openUrl(const KUrl& url);
 
-        /** Opens standard feedlist */
-        void openStandardFeedList();
-
         void addFeed();
         /** Fetch all feeds in the feed tree */
         void fetchAllFeeds();
@@ -149,8 +146,6 @@ class Part : public KParts::ReadOnlyPart
         void slotOnShutdown();
         void slotSettingsChanged();
         void slotSetStatusText( const QString &statusText );
-
-        void slotAkonadiSetUp( KJob* job );
 
     private: // methods
 
