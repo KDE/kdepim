@@ -204,7 +204,7 @@ else()
   find_package(Grantlee QUIET CONFIG)
   set_package_properties(Grantlee PROPERTIES DESCRIPTION "The Grantlee Template System" URL "http://www.gitorious.org/grantlee/pages/Home" TYPE OPTIONAL PURPOSE "Templating and theming for KJots and KaddressBook." )
 
-  if(${Grantlee_FOUND} AND ("${Grantlee_VERSION}" VERSION_GREATER "0.2.0"))
+  if(Grantlee_FOUND AND ("${Grantlee_VERSION}" VERSION_GREATER "0.2.0"))
      set(GRANTLEE_GREATER_0_2 TRUE)
   endif()
 
