@@ -242,7 +242,11 @@ if ( NOT Assuan2_FIND_QUIETLY )
     message( STATUS "No usable assuan found." )
   endif()
 
-  macro_bool_to_bool( Assuan2_FIND_REQUIRED _req )
+  if( Assuan2_FIND_REQUIRED )
+    set( _ASSUAN2_TYPE "REQUIRED" )
+  else()
+    set( _ASSUAN2_TYPE "OPTIONAL" )
+  endif()
 
   if ( WIN32 )
     set( _assuan2_homepage "http://www.gpg4win.org" )
@@ -250,20 +254,16 @@ if ( NOT Assuan2_FIND_QUIETLY )
     set( _assuan2_homepage "http://www.gnupg.org/related_software/libassuan" )
   endif()
 
-  macro_log_feature(
-    ASSUAN2_FOUND
-    "assuan2"
-    "Assuan v2 IPC library"
-    ${_assuan2_homepage}
-    ${_req}
-    "${_ASSUAN2_MIN_VERSION} or greater"
-    "Needed for Kleopatra to act as the GnuPG UI Server"
+  set_package_properties(ASSUAN2 PROPERTIES DESCRIPTION "Assuan v2 IPC library"
+                         URL ${_assuan2_homepage}
+                         TYPE ${_ASSUAN2_TYPE}
+                         PURPOSE "Needed for Kleopatra to act as the GnuPG UI Server"
   )
 
 else()
 
   if ( Assuan2_FIND_REQUIRED AND NOT ASSUAN2_FOUND )
-    message( FATAL_ERROR "" )
+    message( FATAL_ERROR "Assuan2 is required but was not found." )
   endif()
 
 endif()
