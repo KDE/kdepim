@@ -140,7 +140,6 @@ QString KWebSpellChecker::autoCorrectSuggestionForMisspelledWord(const QString& 
         return QString("");
     */
 
-
     return QString();
 }
 

@@ -292,7 +292,7 @@ bool IncidenceChanger::sendGroupwareMessage( const Akonadi::Item &aitem,
       handler.setDefaultAction(
         actionFromStatus( d->mOperationStatus.value( atomicOperationId ) ) );
     }
-    InvitationHandler::SendResult status;
+    InvitationHandler::SendResult status = InvitationHandler::ResultNoSendingNeeded;
     switch ( action ) {
       case INCIDENCEADDED:
         status = handler.sendIncidenceCreatedMessage( method, incidence );
