@@ -18,6 +18,8 @@
 
 */
 #include "composerhtmleditor.h"
+#include "domtreewidget.h"
+#include "../composerview.h"
 
 #include <kapplication.h>
 #include <kactioncollection.h>
@@ -32,11 +34,14 @@ ComposerHtmlEditor::ComposerHtmlEditor()
     editor = new ComposerEditorNG::ComposerEditor(this);
 
 
-    QVBoxLayout *l = new QVBoxLayout();
+    QHBoxLayout *l = new QHBoxLayout();
     QWidget *w = new QWidget();
     l->addWidget( editor );
-    w->setLayout( l );
 
+    DomTreeWidget *domWidget = new DomTreeWidget(editor->view(), this);
+    l->addWidget(domWidget);
+
+    w->setLayout( l );
     setCentralWidget( w );
 
 
