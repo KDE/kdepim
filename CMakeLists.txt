@@ -214,9 +214,9 @@ else()
   find_package(NepomukWidgets QUIET CONFIG)
   set_package_properties(NepomukWidgets PROPERTIES DESCRIPTION "The NepomukWidget libraries" URL "http://www.kde.org" TYPE RECOMMENDED PURPOSE "Nepomuk-widgets is needed for building Akonadiconsole")
 
-  # FIXME: where is the file ?
-  find_package(LibXslt)
-  macro_log_feature(XSLTPROC_EXECUTABLE "xsltproc" "The command line XSLT processor from libxslt" "http://xmlsoft.org/XSLT/" TRUE "" "Required to generate the D-Bus interfaces.")
+  # Xsltproc
+  find_package(Xsltproc)
+  set_package_properties(Xsltproc PROPERTIES DESCRIPTION "XSLT processor from libxslt" TYPE REQUIRED PURPOSE "Required to generate D-Bus interfaces.")
 
 ############### Desktop vs. Mobile options ##############
 
@@ -241,21 +241,6 @@ else()
   if(NOT KDEPIMLIBS_KRESOURCES_LIBRARY)
     add_definitions( -DKDEPIM_NO_KRESOURCES )
   endif()
-
-############### Macros ###############
-
-  # generates a D-Bus interface description from a KConfigXT file
-  macro(kcfg_generate_dbus_interface _kcfg _name)
-    add_custom_command(
-      OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${_name}.xml
-      COMMAND ${XSLTPROC_EXECUTABLE} --stringparam interfaceName ${_name}
-      ${KDEPIMLIBS_DATA_DIR}/akonadi-kde/kcfg2dbus.xsl
-      ${_kcfg}
-      > ${CMAKE_CURRENT_BINARY_DIR}/${_name}.xml
-      DEPENDS ${KDEPIMLIBS_DATA_DIR}/akonadi-kde/kcfg2dbus.xsl
-      ${_kcfg}
-      )
-  endmacro(kcfg_generate_dbus_interface)
 
 ############### Code used in several places ###############
 # TODO Remove from the top CMakeLists.
