@@ -161,16 +161,13 @@ endif()
 
 ############### ONLY_KLEO ###############
 
-# The KDEPIM_ONLY_KLEO option is true
+# If the KDEPIM_ONLY_KLEO option is true
 if(KDEPIM_ONLY_KLEO)
   find_package(QGpgme)
   set_package_properties(QGpgme PROPERTIES DESCRIPTION "The QGpgME library" URL "http://www.kde.org" TYPE REQUIRED PURPOSE "QGpgME is required to build Kleopatra.")
-  # FIXME: clean
-  #macro_log_feature(QGPGME_FOUND "QGpgME" "The QGpgME library" "http://www.kde.org" TRUE "" "QGpgME is required to build Kleopatra.")
 
   add_definitions(${QT_DEFINITIONS} ${KDE4_DEFINITIONS} ${KDEPIM_DEFINITIONS} -DQT3_SUPPORT_WARNINGS)
-  # FIXME NEPOMUK_CORE_INCLUDE_DIR is empty at this point
-  include_directories (${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDE4_INCLUDES} ${KDEPIMLIBS_INCLUDE_DIRS} ${QT_QTDBUS_INCLUDE_DIR} ${NEPOMUK_CORE_INCLUDE_DIR})
+  include_directories (${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDE4_INCLUDES} ${KDEPIMLIBS_INCLUDE_DIRS} ${QT_QTDBUS_INCLUDE_DIR})
   include(kleopatra/ConfigureChecks.cmake)
 
   add_subdirectory(libkleo)
