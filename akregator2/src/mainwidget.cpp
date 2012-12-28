@@ -271,7 +271,6 @@ Akregator2::MainWidget::MainWidget( Part *part, QWidget *parent, ActionManagerIm
 
     KConfigGroup conf(Settings::self()->config(), "General");
 
-#ifdef KRSS_PORT_DISABLED
     if(!conf.readEntry("Disable Introduction", false))
     {
         m_articleListView->hide();
@@ -280,7 +279,6 @@ Akregator2::MainWidget::MainWidget( Part *part, QWidget *parent, ActionManagerIm
         m_mainFrame->slotSetTitle(i18n("About"));
         m_displayingAboutPage = true;
     }
-#endif
 
     m_markReadTimer = new QTimer(this);
     m_markReadTimer->setSingleShot(true);
