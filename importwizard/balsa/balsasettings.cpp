@@ -65,6 +65,7 @@ BalsaSettings::~BalsaSettings()
 
 void BalsaSettings::readAccount(const KConfigGroup &grp, bool autoCheck, int autoDelay)
 {
+  Q_UNUSED( autoDelay );
   const QString type = grp.readEntry(QLatin1String("Type"));
   bool check = grp.readEntry(QLatin1String("Check"), false);
   if(type == QLatin1String("LibBalsaMailboxPOP3")) {
@@ -74,6 +75,7 @@ void BalsaSettings::readAccount(const KConfigGroup &grp, bool autoCheck, int aut
     const QString name = grp.readEntry(QLatin1String("Name"));
 
     const bool apop = grp.readEntry(QLatin1String("DisableApop"),false);
+    Q_UNUSED( apop );
     const QString agentIdentifyName = AbstractBase::createResource( "akonadi_pop3_resource", name,settings );
 
     addCheckMailOnStartup(agentIdentifyName,autoCheck);
@@ -207,10 +209,12 @@ void BalsaSettings::readGlobalSettings(const KConfig &config)
     KConfigGroup messageDisplay = config.group(QLatin1String("MessageDisplay"));
     if(messageDisplay.hasKey(QLatin1String("WordWrap"))) {
       bool wordWrap = messageDisplay.readEntry(QLatin1String("WordWrap"),false);
+      Q_UNUSED( wordWrap );
       //TODO not implemented in kmail.
     }
     if(messageDisplay.hasKey(QLatin1String("WordWrapLength"))) {
       const int wordWrapLength = messageDisplay.readEntry(QLatin1String("WordWrapLength"),-1);
+      Q_UNUSED( wordWrapLength );
       //TODO not implemented in kmail
     }
     if(messageDisplay.hasKey(QLatin1String("DateFormat"))) {

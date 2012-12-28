@@ -118,6 +118,7 @@ Akonadi::Entity::Id ArchiveMailKernel::lastSelectedFolder()
 
 void ArchiveMailKernel::setLastSelectedFolder(const Akonadi::Entity::Id& col)
 {
+  Q_UNUSED( col );
 }
 
 

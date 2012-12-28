@@ -696,6 +696,7 @@ void MainWidget::setQRCodeShow( bool on )
     mItemView->setCurrentIndex( mItemView->model()->index( 0, 0 ) );
   }
 #endif
+  Q_UNUSED( on );
 }
 
 Akonadi::Collection MainWidget::currentAddressBook() const
