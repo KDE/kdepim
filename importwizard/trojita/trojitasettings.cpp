@@ -29,18 +29,64 @@ TrojitaSettings::TrojitaSettings(const QString& filename,ImportWizard *parent)
   :AbstractSettings( parent )
 {
     settings = new QSettings(filename,QSettings::IniFormat,this);
+    readImapAccount();
+    readTransport();
     readIdentity();
     readGlobalSettings();
 }
 
 TrojitaSettings::~TrojitaSettings()
 {
+    delete settings;
+}
 
+void TrojitaSettings::readImapAccount()
+{
+    //TODO
+    QMap<QString, QVariant> settings;
+    QString name;
+    if (!name.isEmpty()) {
+        const QString agentIdentifyName = AbstractBase::createResource( "akonadi_imap_resource", name, settings );
+    }
+}
+
+void TrojitaSettings::readTransport()
+{
+    settings->beginGroup(QLatin1String("General"));
+    const QString smtpMethod = settings->value(QLatin1String("msa.method")).toString();
+
+    if (smtpMethod == QLatin1String("IMAP-SENDMAIL")) {
+
+    } else if (smtpMethod == QLatin1String("SMTP")) {
+
+    } else if (smtpMethod == QLatin1String("SSMTP")) {
+
+    } else if (smtpMethod == QLatin1String("sendmail")) {
+
+    } else {
+        qWarning()<<" smtpMethod unknown "<<smtpMethod;
+    }
+    settings->endGroup();
 }
 
 void TrojitaSettings::readIdentity()
 {
-    //TODO
+    const int size = settings->beginReadArray(QLatin1String("identities"));
+    for (int i=0; i<size; ++i) {
+        settings->setArrayIndex(i);
+        KPIMIdentities::Identity* identity  = createIdentity();
+        const QString realName = settings->value(QLatin1String("realName")).toString();
+        identity->setFullName( realName );
+        identity->setIdentityName( realName );
+        const QString address = settings->value(QLatin1String("address")).toString();
+        identity->setPrimaryEmailAddress(address);
+        const QString organisation = settings->value(QLatin1String("organisation")).toString();
+        identity->setOrganization(organisation);
+        const QString signature = settings->value(QLatin1String("signature")).toString();
+        qDebug()<<" realName :"<<realName<<" address : "<<address<<" organisation : "<<organisation<<" signature: "<<signature;
+        storeIdentity(identity);
+    }
+    settings->endArray();
 }
 
 

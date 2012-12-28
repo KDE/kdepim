@@ -17,6 +17,7 @@
 
 #include "trojita/trojitaimportdata.h"
 #include "trojita/trojitasettings.h"
+#include "trojita/trojitaaddressbook.h"
 #include "mailimporter/filterinfo.h"
 #include "importfilterinfogui.h"
 #include "importwizard.h"
@@ -28,9 +29,9 @@
 
 
 TrojitaImportData::TrojitaImportData(ImportWizard*parent)
-  :AbstractImporter(parent)
+    :AbstractImporter(parent)
 {
-  mPath = QDir::homePath() + QLatin1String("/.config/flaska.net/");
+    mPath = QDir::homePath() + QLatin1String("/.config/flaska.net/");
 }
 
 TrojitaImportData::~TrojitaImportData()
@@ -40,41 +41,41 @@ TrojitaImportData::~TrojitaImportData()
 
 bool TrojitaImportData::foundMailer() const
 {
-  QDir directory( mPath );
-  if ( directory.exists() )
-    return true;
-  return false;
+    QDir directory( mPath );
+    if ( directory.exists() )
+        return true;
+    return false;
 }
 
 QString TrojitaImportData::name() const
 {
-  return QLatin1String("Trojita");
+    return QLatin1String("Trojita");
 }
 
 bool TrojitaImportData::importMails()
 {
-  return false;
+    return false;
 }
 
 bool TrojitaImportData::importSettings()
 {
-  const QString settingsPath = mPath + QLatin1String("trojita.conf");
-  TrojitaSettings settings(settingsPath,mImportWizard);
-  return true;
+    const QString settingsPath = mPath + QLatin1String("trojita.conf");
+    TrojitaSettings settings(settingsPath,mImportWizard);
+    return true;
 }
 
 bool TrojitaImportData::importAddressBook()
 {
-    //TODO
-  return true;
+    TrojitaAddressBook addressBooks(mImportWizard);
+    return true;
 }
 
 
 AbstractImporter::TypeSupportedOptions TrojitaImportData::supportedOption()
 {
-  TypeSupportedOptions options;
-  //options |=AbstractImporter::Mails;
-  options |=AbstractImporter::Settings;
-  options |=AbstractImporter::AddressBooks;
-  return options;
+    TypeSupportedOptions options;
+    //options |=AbstractImporter::Mails;
+    options |=AbstractImporter::Settings;
+    options |=AbstractImporter::AddressBooks;
+    return options;
 }

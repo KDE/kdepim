@@ -26,12 +26,14 @@ class QSettings;
 class TrojitaSettings : public AbstractSettings
 {
 public:
-  explicit TrojitaSettings(const QString &filename, ImportWizard *parent);
-  ~TrojitaSettings();
+    explicit TrojitaSettings(const QString &filename, ImportWizard *parent);
+    ~TrojitaSettings();
 private:
-  void readIdentity();
-  void readGlobalSettings();
-  QSettings *settings;
+    void readImapAccount();
+    void readIdentity();
+    void readGlobalSettings();
+    void readTransport();
+    QSettings *settings;
 };
 
 #endif // ClawsMailSettings_H
