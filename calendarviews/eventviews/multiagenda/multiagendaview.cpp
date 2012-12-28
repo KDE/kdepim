@@ -298,10 +298,6 @@ void MultiAgendaView::Private::setupViews()
                 q, SIGNAL(showIncidenceSignal(Akonadi::Item)) );
     q->connect( agenda, SIGNAL(deleteIncidenceSignal(Akonadi::Item)),
                 q, SIGNAL(deleteIncidenceSignal(Akonadi::Item)) );
-    q->connect( agenda, SIGNAL(startMultiModify(QString)),
-                q, SIGNAL(startMultiModify(QString)) );
-    q->connect( agenda, SIGNAL(endMultiModify()),
-                q, SIGNAL(endMultiModify()) );
 
     q->connect( agenda, SIGNAL(incidenceSelected(Akonadi::Item,QDate)),
                 q, SIGNAL(incidenceSelected(Akonadi::Item,QDate)) );

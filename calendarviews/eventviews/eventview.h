@@ -447,9 +447,6 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
      */
     void dissociateOccurrencesSignal( const Akonadi::Item &, const QDate & );
 
-    void startMultiModify( const QString & );
-    void endMultiModify();
-
     /**
      * instructs the receiver to create a new event in given collection. Doesn't make
      * sense to connect to more than one receiver.
