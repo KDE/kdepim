@@ -48,14 +48,25 @@ public:
     }
     void _k_slotOkClicked();
 
+    void initialize();
+
     QWebElement webElement;
     ExtendAttributes::ExtendType type;
     ExtendAttributes *q;
 };
 
+void ExtendAttributesPrivate::initialize()
+{
+    if(!webElement.isNull()) {
+
+    }
+}
+
 void ExtendAttributesPrivate::_k_slotOkClicked()
 {
-    //TODO
+    if(!webElement.isNull()) {
+
+    }
     q->accept();
 }
 

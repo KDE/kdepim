@@ -22,6 +22,7 @@
 #include "composertablecellformatdialog.h"
 #include "composertableformatdialog.h"
 #include "composereditorutil_p.h"
+#include "tablehelper.h"
 
 #include <KLocale>
 
@@ -44,6 +45,8 @@ public:
     void _k_slotRemoveCell();
     void _k_slotInsertCellBefore();
     void _k_slotInsertCellAfter();
+    void _k_slotRemoveTable();
+    void _k_slotRemoveRow();
 
     void updateActions();
     KAction *action_insert_table;
@@ -54,10 +57,28 @@ public:
     KAction *action_remove_cell;
     KAction *action_insert_cell_before;
     KAction *action_insert_cell_after;
+    KAction *action_remove_table;
+    KAction *action_remove_row;
     ComposerTableActionMenu *q;
     QWebElement webElement;
     QWidget *parentWidget;
 };
+
+void ComposerTableActionMenuPrivate::_k_slotRemoveRow()
+{
+    QWebElement rowElement = TableHelper::rowWebElement(webElement);
+    if (!rowElement.isNull()) {
+       rowElement.removeFromDocument();
+    }
+}
+
+void ComposerTableActionMenuPrivate::_k_slotRemoveTable()
+{
+    QWebElement tableElement = Util::tableWebElement(webElement);
+    if (!tableElement.isNull()) {
+        tableElement.removeFromDocument();
+    }
+}
 
 void ComposerTableActionMenuPrivate::_k_slotInsertCellAfter()
 {
@@ -83,6 +104,7 @@ void ComposerTableActionMenuPrivate::updateActions()
 {
     const bool isACell = (webElement.tagName().toLower() == QLatin1String("td"));
     action_table_cell_format->setEnabled(isACell);
+    action_remove_row->setEnabled(isACell);
     action_remove_cell_contents->setEnabled(isACell && !webElement.toInnerXml().isEmpty());
     action_remove_cell->setEnabled(isACell);
 }
@@ -100,7 +122,7 @@ void ComposerTableActionMenuPrivate::_k_slotTableFormat()
 
 void ComposerTableActionMenuPrivate::_k_slotTableCellFormat()
 {
-    ComposerTableCellFormatDialog dlg( webElement,parentWidget );
+    ComposerTableCellFormatDialog dlg( webElement, parentWidget );
     dlg.exec();
 }
 
@@ -132,6 +154,16 @@ ComposerTableActionMenu::ComposerTableActionMenu(const QWebElement& element,QObj
 
     KActionMenu *removeMenu = new KActionMenu( i18n( "Delete" ), this );
     addAction( removeMenu );
+
+    d->action_remove_table = new KAction( i18n( "Table" ), this );
+    removeMenu->addAction( d->action_remove_table );
+    connect( d->action_remove_table, SIGNAL(triggered(bool)), SLOT(_k_slotRemoveTable()) );
+
+
+    d->action_remove_row = new KAction( i18n( "Row" ), this );
+    removeMenu->addAction( d->action_remove_row );
+    connect( d->action_remove_row, SIGNAL(triggered(bool)), SLOT(_k_slotRemoveRow()) );
+
 
     d->action_remove_cell = new KAction( i18n( "Cell" ), this );
     removeMenu->addAction( d->action_remove_cell );
