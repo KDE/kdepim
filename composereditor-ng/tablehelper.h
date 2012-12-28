@@ -19,12 +19,14 @@
 */
 #ifndef TABLEHELPER_H
 #define TABLEHELPER_H
+
+#include <QWebElement>
+
 namespace ComposerEditorNG {
-class TableHelper
-{
-public:
-    TableHelper();
-};
+
+namespace TableHelper {
+QWebElement tableBodyWebElement(const QWebElement&element);
+}
 }
 
 #endif // TABLEHELPER_H

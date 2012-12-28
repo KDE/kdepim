@@ -20,19 +20,47 @@
 
 #include "extendattributes.h"
 
+#include <KSeparator>
+#include <KLocale>
+
+#include <QWebElement>
+#include <QVBoxLayout>
+
 namespace ComposerEditorNG {
 
 class ExtendAttributesPrivate
 {
 public:
-    ExtendAttributesPrivate()
+    ExtendAttributesPrivate(const QWebElement& element, ExtendAttributes::ExtendType extendType, ExtendAttributes *qq)
+        : webElement(element), type(extendType), q(qq)
     {
+        q->setCaption( i18n( "Extend Attribute" ) );
+        q->setButtons( KDialog::Ok | KDialog::Cancel );
+        QWidget *page = new QWidget( q );
+        q->setMainWidget( page );
+
+        QVBoxLayout *lay = new QVBoxLayout( page );
+
+        KSeparator *sep = new KSeparator;
+        lay->addWidget( sep );
+
+        q->connect(q,SIGNAL(okClicked()),q,SLOT(_k_slotOkClicked()));
     }
+    void _k_slotOkClicked();
+
+    QWebElement webElement;
+    ExtendAttributes::ExtendType type;
+    ExtendAttributes *q;
 };
 
+void ExtendAttributesPrivate::_k_slotOkClicked()
+{
+    //TODO
+    q->accept();
+}
 
-ExtendAttributes::ExtendAttributes(QWidget *parent)
-    : KDialog(parent), d(new ExtendAttributesPrivate)
+ExtendAttributes::ExtendAttributes(const QWebElement &element, ExtendType type, QWidget *parent)
+    : KDialog(parent), d(new ExtendAttributesPrivate(element, type, this))
 {
 }
 
@@ -42,3 +70,5 @@ ExtendAttributes::~ExtendAttributes()
 }
 
 }
+
+#include "extendattributes.moc"

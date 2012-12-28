@@ -30,7 +30,7 @@ class AttendeeSelector : public KDialog
 {
   Q_OBJECT
   public:
-    AttendeeSelector( QWidget *parent = 0 );
+    explicit AttendeeSelector( QWidget *parent = 0 );
 
     QStringList attendees() const;
 

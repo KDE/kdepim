@@ -377,7 +377,9 @@ protected:
    */
   virtual void viewMessageStatusChangeRequest( MessageList::Core::MessageItem *msg, const Akonadi::MessageStatus &set, const Akonadi::MessageStatus &clear );
 
-
+private Q_SLOTS:
+  void slotCollapseItem();
+  void slotExpandItem();
 
 
 signals:

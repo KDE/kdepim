@@ -618,7 +618,7 @@ Akonadi::Collection::Id MailCommon::Util::convertFolderPathToCollectionId( const
   if ( lst.count() == 1 && exactPath )
     newFolderId = lst.at( 0 ).id();
   else {
-    FilterActionMissingCollectionDialog *dlg = new FilterActionMissingCollectionDialog( lst, QString(), folder );
+    QPointer<FilterActionMissingCollectionDialog> dlg = new FilterActionMissingCollectionDialog( lst, QString(), folder );
     if ( dlg->exec() ) {
       newFolderId = dlg->selectedCollection().id();
     }

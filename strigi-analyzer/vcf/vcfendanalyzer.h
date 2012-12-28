@@ -36,7 +36,7 @@ class VcfEndAnalyzerFactory;
 class PIMSTRIGI_ANALYZER_EXPORT VcfEndAnalyzer : public Strigi::StreamEndAnalyzer
 {
   public:
-    VcfEndAnalyzer( const VcfEndAnalyzerFactory *factory );
+    explicit VcfEndAnalyzer( const VcfEndAnalyzerFactory *factory );
 
     const char* name() const;
     bool checkHeader( const char* header, qint32 headersize ) const;

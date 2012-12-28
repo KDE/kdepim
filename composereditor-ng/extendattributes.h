@@ -22,12 +22,14 @@
 #define EXTENDATTRIBUTES_H
 
 #include <KDialog>
+class QWebElement;
 
 namespace ComposerEditorNG
 {
 class ExtendAttributesPrivate;
 class ExtendAttributes : public KDialog
 {
+    Q_OBJECT
 public:
     enum ExtendType {
         Image,
@@ -36,11 +38,12 @@ public:
         Link
     };
 
-    explicit ExtendAttributes(QWidget *parent);
+    explicit ExtendAttributes(const QWebElement& element, ExtendType type,QWidget *parent);
     ~ExtendAttributes();
 private:
     friend class ExtendAttributesPrivate;
     ExtendAttributesPrivate * const d;
+    Q_PRIVATE_SLOT( d, void _k_slotOkClicked() )
 };
 }
 
