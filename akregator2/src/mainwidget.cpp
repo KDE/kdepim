@@ -483,7 +483,7 @@ void Akregator2::MainWidget::slotNormalView()
         const Akonadi::Item aitem = m_selectionController->currentItem();
 
         if ( aitem.isValid() )
-            m_articleViewer->showItem( aitem );
+            m_articleViewer->showItem( m_selectionController->selectedCollection(), aitem );
         else
             m_articleViewer->slotShowSummary( m_selectionController->selectedCollection(),
                                               m_selectionController->selectedCollectionIndex().data( Akonadi::EntityTreeModel::UnreadCountRole ).toInt() );
@@ -507,7 +507,7 @@ void Akregator2::MainWidget::slotWidescreenView()
         const Akonadi::Item item = m_selectionController->currentItem();
 
         if ( item.isValid() )
-            m_articleViewer->showItem( item );
+            m_articleViewer->showItem( m_selectionController->selectedCollection(), item );
         else
             m_articleViewer->slotShowSummary( m_selectionController->selectedCollection(),
                                               m_selectionController->selectedCollectionIndex().data( Akonadi::EntityTreeModel::UnreadCountRole ).toInt() );
@@ -760,7 +760,7 @@ void Akregator2::MainWidget::slotItemSelected( const Akonadi::Item& item )
     const Akonadi::Item::List items = m_selectionController->selectedItems();
     emit signalItemsSelected( items );
 
-    m_articleViewer->showItem( item );
+    m_articleViewer->showItem( m_selectionController->selectedCollection(), item );
 
     if ( !item.isValid() || KRss::Item::isRead( item ) )
         return;

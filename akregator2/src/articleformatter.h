@@ -54,7 +54,7 @@ class ArticleFormatter
 
         void setPaintDevice(QPaintDevice* device);
 
-        virtual QString formatItem( const Akonadi::Item& item, IconOption icon ) const = 0;
+        virtual QString formatItem( const Akonadi::Item& item, const Akonadi::Collection& storageCollection, IconOption icon ) const = 0;
 
         virtual QString formatSummary( const Akonadi::Collection& collection, int unread ) const = 0;
 
@@ -74,10 +74,10 @@ class DefaultNormalViewFormatter : public ArticleFormatter
 {
     public:
 
-        explicit DefaultNormalViewFormatter( const KUrl& imageDir, QPaintDevice* device = 0 );
+        explicit DefaultNormalViewFormatter( QPaintDevice* device = 0 );
         ~DefaultNormalViewFormatter();
 
-        QString formatItem( const Akonadi::Item& item, IconOption option ) const;
+        QString formatItem( const Akonadi::Item& item, const Akonadi::Collection& storageCollection, IconOption option ) const;
 
         /* reimp */ QString formatSummary( const Akonadi::Collection& collection, int unread ) const;
 
@@ -86,7 +86,6 @@ class DefaultNormalViewFormatter : public ArticleFormatter
     private:
         DefaultNormalViewFormatter();
 
-        KUrl m_imageDir;
         class SummaryVisitor;
         class SummaryFeedVisitor;
 };
@@ -96,9 +95,9 @@ class DefaultCombinedViewFormatter : public ArticleFormatter
 
     public:
 
-        explicit DefaultCombinedViewFormatter( const KUrl& imageDir, QPaintDevice* device = 0 );
+        explicit DefaultCombinedViewFormatter( QPaintDevice* device = 0 );
 
-        QString formatItem( const Akonadi::Item& item, IconOption option ) const;
+        QString formatItem( const Akonadi::Item& item, const Akonadi::Collection& storageCollection, IconOption option ) const;
 
         /* reimp */ QString formatSummary( const Akonadi::Collection& collection, int unread ) const;
 
@@ -106,8 +105,6 @@ class DefaultCombinedViewFormatter : public ArticleFormatter
 
     private:
         DefaultCombinedViewFormatter();
-
-        KUrl m_imageDir;
 };
 
 } // namespace Akregator2

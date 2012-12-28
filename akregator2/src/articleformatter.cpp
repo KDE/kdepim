@@ -42,6 +42,7 @@
 #include <QPalette>
 #include <QString>
 
+#include <QTextDocument> //Qt::escape
 using namespace boost;
 using namespace Akregator2;
 using namespace Akonadi;
@@ -75,12 +76,17 @@ namespace {
     }
 }
 
-static QString imageLink( const QString& imageDir, const Akonadi::Collection& c ) {
+static QString imageLink( const Akonadi::Collection& c ) {
     KRss::FeedCollection fc( c );
-    const QString file = Utils::fileNameForUrl( fc.xmlUrl() );
-    KUrl u( imageDir );
-    u.setFileName(file);
-    return QString("<a href=\"%1\"><img class=\"headimage\" src=\"%2.png\"></a>\n").arg(fc.htmlUrl(), u.url());
+    if ( fc.imageUrl().isEmpty() )
+        return QString();
+
+    const QString imageTag = QString::fromLatin1("<img class=\"headimage\" alt=\"%2\" src=\"%3\"/>").arg( Qt::escape( fc.imageTitle() ), Qt::escape( fc.imageUrl() ) );
+    const QString linkUrl = !fc.imageLink().isEmpty() ? fc.imageLink() : fc.htmlUrl();
+    if ( linkUrl.isEmpty() )
+        return imageTag;
+    else
+        return QString::fromLatin1("<a href=\"%1\">%2</a>").arg( Qt::escape( linkUrl ), imageTag );
 }
 
 class ArticleFormatter::Private
@@ -128,7 +134,7 @@ static QString formatFolderSummary( const Collection& c, int unread ) {
     return text;
 }
 
-static QString formatFeedSummary( const FeedCollection& feed, int unread, const KUrl& imageDir ) {
+static QString formatFeedSummary( const FeedCollection& feed, int unread ) {
 
     QString text = QString("<div class=\"headerbox\" dir=\"%1\">\n").arg(QApplication::isRightToLeft() ? "rtl" : "ltr");
 
@@ -142,19 +148,9 @@ static QString formatFeedSummary( const FeedCollection& feed, int unread, const 
 
     text += "</div>\n"; // headertitle
     text += "</div>\n"; // /headerbox
+    text += imageLink( feed );
 
-    #ifdef KRSS_PORT_DISABLED
-    if (!node->image().isNull()) // image
-    {
-        text += QString("<div class=\"body\">");
-        QString file = Utils::fileNameForUrl(node->xmlUrl());
-        KUrl u(q->m_imageDir);
-        u.setFileName(file);
-        text += QString("<a href=\"%1\"><img class=\"headimage\" src=\"%2.png\"></a>\n").arg(node->htmlUrl(), u.url());
-    }
-    else
-#endif
-        text += "<div class=\"body\">";
+    text += "<div class=\"body\">";
 
 
     if( !feed.description().isEmpty() )
@@ -176,15 +172,15 @@ static QString formatFeedSummary( const FeedCollection& feed, int unread, const 
     return text;
 }
 
-static QString formatCollectionSummary( const Collection& c, int unread, const KUrl& imageDir ) {
-    FeedCollection fc;
+static QString formatCollectionSummary( const Collection& c, int unread ) {
+    FeedCollection fc( c );
     if ( fc.isFolder() )
         return formatFolderSummary( c, unread );
     else
-        return formatFeedSummary( fc, unread, imageDir );
+        return formatFeedSummary( fc, unread );
 }
 
-QString DefaultNormalViewFormatter::formatItem( const Akonadi::Item& aitem, IconOption icon) const
+QString DefaultNormalViewFormatter::formatItem( const Akonadi::Item& aitem, const Akonadi::Collection& storageCollection, IconOption icon) const
 {
     const KRss::Item item = aitem.payload<KRss::Item>();
 
@@ -230,13 +226,11 @@ QString DefaultNormalViewFormatter::formatItem( const Akonadi::Item& aitem, Icon
 
     text += "</div>\n"; // end headerbox
 
-#ifdef KRSS_PORT_DISABLED
-    if (icon == ShowIcon && fl )
+    if (icon == ShowIcon )
     {
-        const shared_ptr<const Feed> f = fl->constFeedById( item.sourceFeedId() );
-        text += ImageLinkVisitor( m_imageDir ).getImageLink( f );
+        KRss::FeedCollection fc( storageCollection );
+        text += imageLink( fc );
     }
-#endif
 
     const QString content = item.contentWithDescriptionAsFallback();
 
@@ -350,13 +344,13 @@ QString DefaultNormalViewFormatter::getCss() const
     return css;
 }
 
-DefaultCombinedViewFormatter::DefaultCombinedViewFormatter(const KUrl& imageDir, QPaintDevice* device ) : ArticleFormatter( device ), m_imageDir(imageDir)
+DefaultCombinedViewFormatter::DefaultCombinedViewFormatter( QPaintDevice* device )
+    : ArticleFormatter( device )
 {
 }
 
-DefaultNormalViewFormatter::DefaultNormalViewFormatter(const KUrl& imageDir, QPaintDevice* device )
-    : ArticleFormatter( device ),
-    m_imageDir( imageDir )
+DefaultNormalViewFormatter::DefaultNormalViewFormatter( QPaintDevice* device )
+    : ArticleFormatter( device )
 {
 }
 
@@ -364,7 +358,7 @@ DefaultNormalViewFormatter::~DefaultNormalViewFormatter()
 {
 }
 
-QString DefaultCombinedViewFormatter::formatItem( const Akonadi::Item& aitem, IconOption icon ) const
+QString DefaultCombinedViewFormatter::formatItem( const Akonadi::Item& aitem, const Akonadi::Collection& storageCollection, IconOption icon ) const
 {
     const KRss::Item item = aitem.payload<KRss::Item>();
 
@@ -409,13 +403,11 @@ QString DefaultCombinedViewFormatter::formatItem( const Akonadi::Item& aitem, Ic
 
     text += "</div>\n"; // end headerbox
 
-#ifdef KRSS_PORT_DISABLED
-    if (icon == ShowIcon && fl )
+    if (icon == ShowIcon )
     {
-        const shared_ptr<const Feed> f = fl->constFeedById( item.sourceFeedId() );
-        text += ImageLinkVisitor( m_imageDir ).getImageLink( f );
+        KRss::FeedCollection fc( storageCollection );
+        text += imageLink( fc );
     }
-#endif
 
     const QString content = item.contentWithDescriptionAsFallback();
     if (!content.isEmpty())
@@ -531,7 +523,7 @@ QString DefaultCombinedViewFormatter::getCss() const
 
 QString DefaultNormalViewFormatter::formatSummary( const Akonadi::Collection& c, int unread ) const
 {
-    return formatCollectionSummary( c, unread, m_imageDir );
+    return formatCollectionSummary( c, unread );
 }
 
 QString DefaultCombinedViewFormatter::formatSummary( const Akonadi::Collection&, int ) const

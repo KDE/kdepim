@@ -69,7 +69,7 @@ class ArticleViewer : public QWidget
 
         void setCombinedViewFormatter(const boost::shared_ptr<ArticleFormatter>& formatter);
 
-        void showItem( const Akonadi::Item& item );
+        void showItem( const Akonadi::Collection& storageCollection, const Akonadi::Item& item );
 
         /** Shows the articles of the tree node @c node (combined view).
          * Changes in the node will update the view automatically.
@@ -188,7 +188,6 @@ class ArticleViewer : public QWidget
         QString m_combinedModeCSS;
         QString m_htmlFooter;
         QString m_currentText;
-        KUrl m_imageDir;
         KUrl m_link;
         enum ViewMode { NormalView, CombinedView, SummaryView };
         ViewMode m_viewMode;

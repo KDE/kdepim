@@ -87,12 +87,11 @@ ArticleViewer::ArticleViewer(QWidget *parent)
       m_url(0),
       m_htmlFooter(),
       m_currentText(),
-      m_imageDir( KUrl::fromPath( KGlobal::dirs()->saveLocation("cache", "akregator2/Media/" ) ) ),
       m_viewMode(NormalView),
       m_part( new ArticleViewerPart( this ) ),
       m_model( 0 ),
-      m_normalViewFormatter( new DefaultNormalViewFormatter( m_imageDir, m_part->view() ) ),
-      m_combinedViewFormatter( new DefaultCombinedViewFormatter( m_imageDir, m_part->view() ) )
+      m_normalViewFormatter( new DefaultNormalViewFormatter( m_part->view() ) ),
+      m_combinedViewFormatter( new DefaultCombinedViewFormatter( m_part->view() ) )
 {
     QGridLayout* layout = new QGridLayout(this);
     layout->setMargin(0);
@@ -522,7 +521,7 @@ public:
 };
 #endif
 
-void ArticleViewer::showItem( const Akonadi::Item& aitem )
+void ArticleViewer::showItem( const Akonadi::Collection& storageCollection, const Akonadi::Item& aitem )
 {
     if ( !aitem.isValid() || KRss::Item::isDeleted( aitem ) )
     {
@@ -548,7 +547,7 @@ void ArticleViewer::showItem( const Akonadi::Item& aitem )
     else
 #endif // KRSS_PORT_DISABLED
 
-        renderContent( m_normalViewFormatter->formatItem( aitem, ArticleFormatter::ShowIcon ) );
+    renderContent( m_normalViewFormatter->formatItem( aitem, storageCollection, ArticleFormatter::ShowIcon ) );
 
     setArticleActionsEnabled(true);
 }
@@ -586,7 +585,7 @@ void ArticleViewer::slotUpdateCombinedView()
 
    QString text;
    Q_FOREACH( const Akonadi::Item& i, items )
-       text += "<p><div class=\"article\">"+m_combinedViewFormatter->formatItem( i, ArticleFormatter::NoIcon )+"</div><p>";
+       text += "<p><div class=\"article\">"+m_combinedViewFormatter->formatItem( i, Akonadi::Collection(), ArticleFormatter::NoIcon )+"</div><p>";
 
    renderContent(text);
 }
