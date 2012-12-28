@@ -20,9 +20,12 @@
 
 #include "tablehelper.h"
 
+#include <QDebug>
+
 namespace ComposerEditorNG {
 static QString TBODY = QLatin1String("tbody");
 static QString TABLE = QLatin1String("table");
+static QString ROW = QLatin1String("tr");
 
 QWebElement TableHelper::tableBodyWebElement(const QWebElement&element)
 {
@@ -45,6 +48,23 @@ QWebElement TableHelper::tableBodyWebElement(const QWebElement&element)
         } while( (e.tagName().toLower() != TBODY) && !e.isNull() );
         return e;
     }
+}
+
+QWebElement TableHelper::rowWebElement(const QWebElement&element)
+{
+    const QString tagName(element.tagName().toLower());
+    if (tagName == TABLE) {
+        return QWebElement();
+    } else if (tagName == ROW) {
+        return element;
+    } else {
+        QWebElement e = element;
+        do {
+            e = e.parent();
+        } while( (e.tagName().toLower() != ROW) && !e.isNull() );
+        return e;
+    }
+    return QWebElement();
 }
 
 }
