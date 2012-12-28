@@ -372,7 +372,9 @@ else()
     macro_optional_add_subdirectory(akonadiconsole)
   endif()
   macro_optional_add_subdirectory(console)
-  macro_optional_add_subdirectory(strigi-analyzer)
+  if(Strigi_FOUND)
+    macro_optional_add_subdirectory(strigi-analyzer)
+  endif()
 
   # These targets depend on optional applications
   if(KDEPIMLIBS_KRESOURCES_LIBRARY)
