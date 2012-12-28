@@ -139,7 +139,11 @@ set_package_properties(Boost PROPERTIES DESCRIPTION "Boost C++ Libraries" URL "h
 
 # Kleopatra needs to know if the topological.hpp header exists (part of Boost_graph).
 find_path(Boost_TOPOLOGICAL_SORT_DIR NAMES boost/graph/topological_sort.hpp PATHS ${Boost_INCLUDE_DIRS})
-macro_log_feature(Boost_TOPOLOGICAL_SORT_DIR "The Boost Topological_sort header" "topological_sort.hpp (part of Boost_graph)" "http://www.boost.org/" FALSE "" "Necessary to build kleopatra")
+if(Boost_TOPOLOGICAL_SORT_DIR)
+  message(STATUS "The Boost Topological_sort header was found. Building Kleopatra")
+else()
+  message(STATUS "The Boost Topological_sort header was NOT found. Kleopatra will not be built")
+endif()
 
 ############### Windows specific ###############
 
