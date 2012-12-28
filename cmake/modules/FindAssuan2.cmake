@@ -3,10 +3,6 @@
 # Variables set:
 #  ASSUAN2_{INCLUDES,FOUND,LIBRARIES} will be set for each of the above
 
-# do away with crappy condition repetition on else/endfoo
-set( CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS_assuan2_saved ${CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS} )
-set( CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS true )
-
 #if this is built-in, please replace, if it isn't, export into a MacroToBool.cmake of it's own
 macro( macro_bool_to_bool FOUND_VAR )
   foreach( _current_VAR ${ARGN} )
@@ -127,7 +123,7 @@ else() # not WIN32
 
     # if libassuan-config has been found
     if ( _ASSUAN2CONFIG_EXECUTABLE )
-      
+
       message( STATUS "Found libassuan-config at ${_ASSUAN2CONFIG_EXECUTABLE}" )
 
       exec_program( ${_ASSUAN2CONFIG_EXECUTABLE} ARGS --version OUTPUT_VARIABLE ASSUAN2_VERSION )
@@ -267,5 +263,3 @@ else()
   endif()
 
 endif()
-
-set( CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS_assuan2_saved )

@@ -27,10 +27,6 @@
 # Therefore, the as-yet-nonexistant -glib nd -qt flavours are only commented out, not removed.
 #
 
-# do away with crappy condition repetition on else/endfoo
-set( CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS_assuan_saved ${CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS} )
-set( CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS true )
-
 #if this is built-in, please replace, if it isn't, export into a MacroToBool.cmake of it's own
 macro( macro_bool_to_bool FOUND_VAR )
   foreach( _current_VAR ${ARGN} )
@@ -371,5 +367,3 @@ else()
   endif()
 
 endif()
-
-set( CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS_assuan_saved )
