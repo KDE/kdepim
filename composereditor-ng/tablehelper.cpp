@@ -22,8 +22,27 @@
 
 namespace ComposerEditorNG {
 
-TableHelper::TableHelper()
+QWebElement TableHelper::tableBodyWebElement(const QWebElement&element)
 {
+    const QString tagName(element.tagName().toLower());
+    if (tagName == QLatin1String("table")) {
+        QWebElement tableElement = element.firstChild();
+        while (!tableElement.isNull()) {
+            if ( tableElement.tagName().toLower() == QLatin1String("tbody") ) {
+                return tableElement;
+            }
+            tableElement = tableElement.nextSibling();
+        }
+        return QWebElement();
+    } else if (tagName == QLatin1String("tbody")) {
+        return element;
+    } else {
+        QWebElement e = element;
+        do {
+            e = e.parent();
+        } while( (e.tagName().toLower() != QLatin1String("tdbody")) && !e.isNull() );
+        return e;
+    }
 }
 
 }
