@@ -117,6 +117,7 @@ Akonadi::Entity::Id KMailCVTKernel::lastSelectedFolder()
 
 void KMailCVTKernel::setLastSelectedFolder(const Akonadi::Entity::Id& col)
 {
+  Q_UNUSED( col );
 }
 
 

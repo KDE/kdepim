@@ -72,6 +72,7 @@ bool ComposerTestUtil::verifySignature( KMime::Content* content, QByteArray sign
   if( f & Kleo::OpenPGPMIMEFormat ) {
     KMime::Content* signedPart = MessageViewer::ObjectTreeParser::findType( resultMessage, "application", "pgp-signature", true, true );
     Q_ASSERT( signedPart );
+    Q_UNUSED( signedPart );
 
     // process the result..
     kDebug() << resultMessage->topLevel();
@@ -93,9 +94,11 @@ bool ComposerTestUtil::verifySignature( KMime::Content* content, QByteArray sign
     if( f & Kleo::SMIMEFormat ) {
       KMime::Content* signedPart = MessageViewer::ObjectTreeParser::findType( resultMessage, "application", "pkcs7-signature", true, true );
       Q_ASSERT( signedPart );
+      Q_UNUSED( signedPart );
     } else if( f & Kleo::SMIMEOpaqueFormat ) {
       KMime::Content* signedPart = MessageViewer::ObjectTreeParser::findType( resultMessage, "application", "pkcs7-mime", true, true );
       Q_ASSERT( signedPart );
+      Q_UNUSED( signedPart );
     }
     // process the result..
     otp.parseObjectTree( resultMessage );
@@ -130,6 +133,7 @@ bool ComposerTestUtil::verifyEncryption( KMime::Content* content, QByteArray enc
     // ensure the enc part exists and is parseable
     KMime::Content* encPart = MessageViewer::ObjectTreeParser::findType( resultMessage, "application", "pgp-encrypted", true, true );
     Q_ASSERT( encPart );
+    Q_UNUSED( encPart );
 
     // process the result..
    // kDebug() << resultMessage->topLevel();
@@ -161,6 +165,8 @@ bool ComposerTestUtil::verifyEncryption( KMime::Content* content, QByteArray enc
     // ensure the enc part exists and is parseable
     KMime::Content* encPart = MessageViewer::ObjectTreeParser::findType( resultMessage, "application", "pkcs7-mime", true, true );
     Q_ASSERT( encPart );
+    Q_UNUSED( encPart );
+    
     otp.parseObjectTree( resultMessage );
     Q_ASSERT( nh->encryptionState( resultMessage ) == MessageViewer::KMMsgFullyEncrypted );
     Q_ASSERT( otp.rawDecryptedBody() == encrContent );
@@ -196,6 +202,7 @@ bool ComposerTestUtil::verifySignatureAndEncryption( KMime::Content* content, QB
     Q_ASSERT( nh->encryptionState( resultMessage.get() ) == MessageViewer::KMMsgFullyEncrypted );
 
     KMime::Content* signedPart = MessageCore::NodeHelper::nextSibling( encPart );
+    Q_UNUSED( signedPart );
 //       kDebug() << "resultMessage:" << resultMessage->encodedContent();
 //       kDebug() << "resultMessage rawresultstr:" << otp.rawDecryptedBody() << "signed?" << resultMessage;
 //       kDebug() << "signed Part:" << signedPart->encodedContent() << "Signed?" << ( nh->signatureState( signedPart ) == MessageViewer::KMMsgFullySigned );

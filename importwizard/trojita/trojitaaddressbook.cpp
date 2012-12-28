@@ -29,6 +29,7 @@
 TrojitaAddressBook::TrojitaAddressBook(const QDir& dir, ImportWizard *parent)
   : AbstractAddressBook( parent )
 {
+  Q_UNUSED( dir );
 }
 
 TrojitaAddressBook::~TrojitaAddressBook()

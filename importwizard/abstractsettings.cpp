@@ -140,11 +140,17 @@ void AbstractSettings::syncKmailConfig()
 
 void AbstractSettings::addKNodeConfig(const QString& groupName, const QString& key, bool value)
 {
+  Q_UNUSED( groupName );
+  Q_UNUSED( key );
+  Q_UNUSED( value );
   //TODO
 }
 
 void AbstractSettings::addAkregatorConfig(const QString& groupName, const QString& key, bool value)
 {
+  Q_UNUSED( groupName );
+  Q_UNUSED( key );
+  Q_UNUSED( value );
   //TODO
 }
 
