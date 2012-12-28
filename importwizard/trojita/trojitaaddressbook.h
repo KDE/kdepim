@@ -30,11 +30,8 @@ class ImportWizard;
 class TrojitaAddressBook : public AbstractAddressBook
 {
 public:
-  explicit TrojitaAddressBook(const QDir &dir, ImportWizard *parent);
+  explicit TrojitaAddressBook(ImportWizard *parent);
   ~TrojitaAddressBook();
-private:
-  void readAddressBook( const QString& filename );
-  QHash<QString, QStringList > mAddressBookUid;
 };
 
 #endif /* TrojitaAddressBook_H */

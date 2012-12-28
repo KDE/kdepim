@@ -20,16 +20,11 @@
 #include <kabc/contactgroup.h>
 
 #include <KDebug>
-#include <KLocale>
 
-#include <QDir>
-#include <QDebug>
-#include <QDomDocument>
 
-TrojitaAddressBook::TrojitaAddressBook(const QDir& dir, ImportWizard *parent)
+TrojitaAddressBook::TrojitaAddressBook(ImportWizard *parent)
   : AbstractAddressBook( parent )
 {
-  Q_UNUSED( dir );
 }
 
 TrojitaAddressBook::~TrojitaAddressBook()
