@@ -26,22 +26,20 @@
 #include <kstandardaction.h>
 #include <klocale.h>
 #include <kdebug.h>
+
 #include <QVBoxLayout>
+#include <QSplitter>
 
 ComposerHtmlEditor::ComposerHtmlEditor()
     : KXmlGuiWindow()
 {
+    QSplitter *w = new QSplitter;
+
     editor = new ComposerEditorNG::ComposerEditor(this);
-
-
-    QHBoxLayout *l = new QHBoxLayout();
-    QWidget *w = new QWidget();
-    l->addWidget( editor );
-
     DomTreeWidget *domWidget = new DomTreeWidget(editor->view(), this);
-    l->addWidget(domWidget);
+    w->addWidget(domWidget);
 
-    w->setLayout( l );
+    w->addWidget( editor );
     setCentralWidget( w );
 
 
