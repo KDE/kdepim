@@ -132,6 +132,12 @@ QAction* ComposerEditor::action(QWebPage::WebAction action)
 {
     return d->view->page()->action(action);
 }
+
+ComposerView *ComposerEditor::view() const
+{
+    return d->view;
+}
+
 }
 
 #include "composereditor.moc"

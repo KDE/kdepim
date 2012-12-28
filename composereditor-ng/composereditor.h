@@ -32,7 +32,7 @@ class KAction;
 namespace ComposerEditorNG
 {
 class ComposerEditorPrivate;
-
+class ComposerView;
 class COMPOSEREDITORNG_EXPORT ComposerEditor : public QWidget
 {
     Q_OBJECT
@@ -60,6 +60,8 @@ public:
      * @return a QAction from QWebPage
      */
     QAction* action(QWebPage::WebAction action);
+
+    ComposerView *view() const;
 
 public Q_SLOTS:
     void setEnableRichText(bool richTextEnabled);
