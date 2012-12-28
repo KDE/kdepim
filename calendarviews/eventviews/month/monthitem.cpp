@@ -445,10 +445,12 @@ void IncidenceMonthItem::updateDates( int startOffset, int endOffset )
         KCalCore::Incidence::Ptr newIncidence( CalendarSupport::dissociateOccurrence(
             item, startDate(), CalendarSupport::KCalPrefs::instance()->timeSpec() ) );
         if ( newIncidence ) {
+          changer->startAtomicOperation( i18n( "Move single occurrence" ) );
           if ( changer->modifyIncidence( item, oldIncidenceSaved ) != -1 ) {
             setNewDates( newIncidence, startOffset, endOffset );
             changer->createIncidence( newIncidence, item.parentCollection(), parentWidget() );
           }
+          changer->endAtomicOperation();
         } else {
           KMessageBox::sorry(
             parentWidget(),
@@ -464,10 +466,12 @@ void IncidenceMonthItem::updateDates( int startOffset, int endOffset )
         KCalCore::Incidence::Ptr newIncidence( CalendarSupport::dissociateOccurrence(
             item, startDate(), CalendarSupport::KCalPrefs::instance()->timeSpec(), false ) );
         if ( newIncidence ) {
+          changer->startAtomicOperation( i18n( "Move future occurrences" ) );
           if ( changer->modifyIncidence( item, oldIncidenceSaved ) != -1 ) {
             setNewDates( newIncidence, startOffset, endOffset );
             changer->createIncidence( newIncidence, item.parentCollection(), parentWidget() );
           }
+          changer->endAtomicOperation();
         } else {
           KMessageBox::sorry(
             parentWidget(),
