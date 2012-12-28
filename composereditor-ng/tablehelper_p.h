@@ -27,6 +27,7 @@ namespace ComposerEditorNG {
 namespace TableHelper {
 QWebElement tableBodyWebElement(const QWebElement&element);
 QWebElement rowWebElement(const QWebElement&element);
+QWebElement tableWebElement(const QWebElement&element);
 }
 }
 
