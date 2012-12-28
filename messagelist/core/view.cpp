@@ -2258,6 +2258,7 @@ void View::mouseMoveEvent( QMouseEvent * e )
 
 void View::contextMenuEvent( QContextMenuEvent * e )
 {
+  Q_UNUSED( e );
   QModelIndex index = currentIndex();
   if ( index.isValid() ) {
     QRect indexRect = this->visualRect( index );

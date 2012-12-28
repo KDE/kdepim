@@ -46,6 +46,8 @@ int AccessibleMailWebView::selectionCount()
 
 void AccessibleMailWebView::addSelection( int startOffset, int endOffset )
 {
+  Q_UNUSED( startOffset );
+  Q_UNUSED( endOffset );
 }
 
 void AccessibleMailWebView::removeSelection( int selectionIndex )
@@ -56,10 +58,14 @@ void AccessibleMailWebView::removeSelection( int selectionIndex )
 
 void AccessibleMailWebView::setSelection( int selectionIndex, int startOffset, int endOffset )
 {
+  Q_UNUSED( selectionIndex );
+  Q_UNUSED( startOffset );
+  Q_UNUSED( endOffset );
 }
 
 void AccessibleMailWebView::setCursorPosition( int position )
 {
+  Q_UNUSED( position );
 }
 
 QString AccessibleMailWebView::text( int startOffset, int endOffset )
@@ -72,22 +78,30 @@ QString AccessibleMailWebView::text( int startOffset, int endOffset )
 
 QString AccessibleMailWebView::attributes( int offset, int* startOffset, int* endOffset )
 {
+  Q_UNUSED( offset );
+  Q_UNUSED( startOffset );
+  Q_UNUSED( endOffset );
   return QString();
 }
 
 void AccessibleMailWebView::selection( int selectionIndex, int* startOffset, int* endOffset )
 {
+  Q_UNUSED( selectionIndex );
   *startOffset = -1;
   *endOffset = -1;
 }
 
 QRect AccessibleMailWebView::characterRect( int offset, QAccessible2::CoordinateType coordType )
 {
+  Q_UNUSED( offset );
+  Q_UNUSED( coordType );
   return QRect();
 }
 
 int AccessibleMailWebView::offsetAtPoint( const QPoint& point, QAccessible2::CoordinateType coordType )
 {
+  Q_UNUSED( point );
+  Q_UNUSED( coordType );
   return 0;
 }
 
