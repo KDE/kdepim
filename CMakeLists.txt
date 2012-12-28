@@ -83,24 +83,13 @@ endif()
 #
 # "x.y.z" follow the kdelibs version kdepim is released with.
 #
-# If "z" is 0, it the version is "x.y"
+# If "z" is 0, the version is "x.y"
 #
-# KDEPIM_DEV_VERSION
-# is empty for final versions. For development versions "build" is
-# something like "pre", "alpha1", "alpha2", "beta1", "beta2", "rc1", "rc2".
+# KDEPIM_DEV_VERSION is empty for final versions.
+# For development versions "build" is something like "pre", "alpha1", "alpha2", "beta1", "beta2", "rc1", "rc2".
 #
 # Examples in chronological order:
-#
-#    3.0
-#    3.0.1
-#    3.1 alpha1
-#    3.1 beta1
-#    3.1 beta2
-#    3.1 rc1
-#    3.1
-#    3.1.1
-#    3.2 pre
-#    3.2 alpha1
+# 3.0, 3.0.1, 3.1 alpha1, 3.1 beta1, 3.1 beta2, 3.1 rc1, 3.1, 3.1.1, 3.2 pre, 3.2 alpha1
 
 # Do NOT add quote
 set(KDEPIM_DEV_VERSION pre)
