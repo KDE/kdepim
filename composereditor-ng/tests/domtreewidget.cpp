@@ -52,6 +52,7 @@ void DomTreeWidget::slotUpdate()
     QWebElement document = frame->documentElement();
 
     examineChildElements(document, mTreeWidget->invisibleRootItem());
+    mTreeWidget->expandAll();
 }
 
 void DomTreeWidget::examineChildElements(const QWebElement &parentElement, QTreeWidgetItem *parentItem)
