@@ -37,6 +37,7 @@
 
 #include <krss/item.h>
 #include <krss/feeditemmodel.h>
+#include <krss/feedcollection.h>
 
 #include <QAbstractItemModel>
 
@@ -537,17 +538,12 @@ void ArticleViewer::showItem( const Akonadi::Collection& storageCollection, cons
 
     m_link = KUrl( item.link() );
 
-#ifdef KRSS_PORT_DISABLED
+    const KRss::FeedCollection fc( storageCollection );
 
-    const shared_ptr<const Feed> f = fl ? fl->constFeedById( item.sourceFeedId() ) : shared_ptr<const Feed>();
-    PreferredLinkVisitor visitor;
-    const KUrl url = visitor.getPreferredLink( f, item );
-    if ( url.isValid() )
-        openUrl( url );
+    if ( fc.preferItemLinkForDisplay() && !item.link().isEmpty() )
+        openUrl( m_link );
     else
-#endif // KRSS_PORT_DISABLED
-
-    renderContent( m_normalViewFormatter->formatItem( aitem, storageCollection, ArticleFormatter::ShowIcon ) );
+      renderContent( m_normalViewFormatter->formatItem( aitem, storageCollection, ArticleFormatter::ShowIcon ) );
 
     setArticleActionsEnabled(true);
 }
