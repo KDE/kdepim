@@ -36,7 +36,7 @@ public:
         Link
     };
 
-    explicit ExtendAttributes(QWidget *parent);
+    explicit ExtendAttributes(ExtendType type,QWidget *parent);
     ~ExtendAttributes();
 private:
     friend class ExtendAttributesPrivate;

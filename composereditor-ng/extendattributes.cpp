@@ -25,14 +25,17 @@ namespace ComposerEditorNG {
 class ExtendAttributesPrivate
 {
 public:
-    ExtendAttributesPrivate()
+    ExtendAttributesPrivate(ExtendAttributes::ExtendType extendType, ExtendAttributes *qq)
+        : type(extendType), q(qq)
     {
     }
+    ExtendAttributes::ExtendType type;
+    ExtendAttributes *q;
 };
 
 
-ExtendAttributes::ExtendAttributes(QWidget *parent)
-    : KDialog(parent), d(new ExtendAttributesPrivate)
+ExtendAttributes::ExtendAttributes(ExtendType type, QWidget *parent)
+    : KDialog(parent), d(new ExtendAttributesPrivate(type, this))
 {
 }
 
