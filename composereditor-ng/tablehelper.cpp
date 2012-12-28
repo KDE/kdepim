@@ -21,26 +21,28 @@
 #include "tablehelper.h"
 
 namespace ComposerEditorNG {
+static QString TBODY = QLatin1String("tbody");
+static QString TABLE = QLatin1String("table");
 
 QWebElement TableHelper::tableBodyWebElement(const QWebElement&element)
 {
     const QString tagName(element.tagName().toLower());
-    if (tagName == QLatin1String("table")) {
+    if (tagName == TABLE) {
         QWebElement tableElement = element.firstChild();
         while (!tableElement.isNull()) {
-            if ( tableElement.tagName().toLower() == QLatin1String("tbody") ) {
+            if ( tableElement.tagName().toLower() == TBODY ) {
                 return tableElement;
             }
             tableElement = tableElement.nextSibling();
         }
         return QWebElement();
-    } else if (tagName == QLatin1String("tbody")) {
+    } else if (tagName == TBODY) {
         return element;
     } else {
         QWebElement e = element;
         do {
             e = e.parent();
-        } while( (e.tagName().toLower() != QLatin1String("tdbody")) && !e.isNull() );
+        } while( (e.tagName().toLower() != TBODY) && !e.isNull() );
         return e;
     }
 }
