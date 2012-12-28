@@ -312,6 +312,7 @@ bool MorkParser::parseCell()
 
 		cur = nextChar();
 	}
+	Q_UNUSED( bColumnOid );
 	// Apply column and text
     int ColumnId = Column.toInt( 0, 16 );
 

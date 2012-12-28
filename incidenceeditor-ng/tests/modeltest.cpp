@@ -229,6 +229,8 @@ void ModelTest::index()
     Q_ASSERT ( model->index ( rows, columns ) == QModelIndex() );
     Q_ASSERT ( model->index ( 0, 0 ).isValid() == true );
 
+    Q_UNUSED( columns );
+
     // Make sure that the same index is *always* returned
     QModelIndex a = model->index ( 0, 0 );
     QModelIndex b = model->index ( 0, 0 );

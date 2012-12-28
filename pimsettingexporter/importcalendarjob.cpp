@@ -20,6 +20,8 @@
 
 ImportCalendarJob::ImportCalendarJob(QWidget *parent, ArchiveStorage *archiveStorage)
 {
+  Q_UNUSED( parent );
+  Q_UNUSED( archiveStorage );
 }
 
 ImportCalendarJob::~ImportCalendarJob()

@@ -107,6 +107,8 @@ void AutoImageResizeDialog::slotUser1()
     mImage = mImage.scaled(mWidth->value(),mHeight->value());
     const bool result = mImage.save(&mBuffer,"PNG"); //TODO customize it.
 
+    Q_UNUSED( result );
+
     mBuffer.close();
     accept();
 }
