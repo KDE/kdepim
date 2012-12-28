@@ -60,20 +60,10 @@ KCMAkregator2AdvancedConfig::KCMAkregator2AdvancedConfig( QWidget* parent, const
 void KCMAkregator2AdvancedConfig::load()
 {
     KCModule::load();
-#ifdef KRSS_PORT_DISABLED
-    m_widget->selectFactory(Settings::archiveBackend());
-#else
-    kWarning() << "Code temporarily disabled (Akonadi port)";
-#endif //KRSS_PORT_DISABLED
 }
 
 void KCMAkregator2AdvancedConfig::save()
 {
-#ifdef KRSS_PORT_DISABLED
-    Settings::setArchiveBackend( m_widget->selectedFactory() );
-#else
-    kWarning() << "Code temporarily disabled (Akonadi port)";
-#endif //KRSS_PORT_DISABLED
     KCModule::save();
 }
 

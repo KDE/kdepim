@@ -48,16 +48,6 @@ KCMAkregator2GeneralConfig::KCMAkregator2GeneralConfig( QWidget* parent, const Q
     QVBoxLayout* layout = new QVBoxLayout( this );
     layout->addWidget( m_widget );
 
-    ui.kcfg_AutoFetchInterval->setSuffix(ki18np(" minute", "minutes"));
-#ifdef KRSS_PORT_DISABLED
-
-    
-    connect( ui.kcfg_UseIntervalFetch, SIGNAL(toggled(bool)),
-             ui.kcfg_AutoFetchInterval, SLOT(setEnabled(bool)) );
-    connect( ui.kcfg_UseIntervalFetch, SIGNAL(toggled(bool)),
-             ui.autoFetchIntervalLabel, SLOT(setEnabled(bool)) );
-
-#endif
     KAboutData *about = new KAboutData( I18N_NOOP( "kcmakrgeneralconfig" ), 0,
                                         ki18n( "Configure Feeds" ),
                                         0, KLocalizedString(), KAboutData::License_GPL,
