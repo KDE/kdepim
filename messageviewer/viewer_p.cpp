@@ -444,6 +444,7 @@ bool ViewerPrivate::deleteAttachment(KMime::Content * node, bool showWarning)
   mMimePartModel->setRoot( modifiedMessage );
   mMessageItem.setPayloadFromData( modifiedMessage->encodedContent() );
   Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob( mMessageItem );
+  job->disableRevisionCheck();
   connect( job, SIGNAL(result(KJob*)), SLOT(itemModifiedResult(KJob*)) );
   return true;
 }
