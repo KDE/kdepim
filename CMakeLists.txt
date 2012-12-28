@@ -212,8 +212,7 @@ else()
   set_package_properties(NepomukCore PROPERTIES DESCRIPTION "The Nepomuk Core libraries" URL "http://www.kde.org" TYPE REQUIRED PURPOSE "Nepomuk extends the search and tagging functionalities in KMail and Akonadi")
 
   find_package(NepomukWidgets QUIET CONFIG)
-  # FIXME: is akonadiconsole always built ?
-  set_package_properties(NepomukWidgets PROPERTIES DESCRIPTION "The NepomukWidget libraries" URL "http://www.kde.org" TYPE REQUIRED PURPOSE "Nepomuk extends the search and tagging functionalities in AkonadiConsole")
+  set_package_properties(NepomukWidgets PROPERTIES DESCRIPTION "The NepomukWidget libraries" URL "http://www.kde.org" TYPE RECOMMENDED PURPOSE "Nepomuk-widgets is needed for building Akonadiconsole")
 
   # FIXME: where is the file ?
   find_package(LibXslt)
@@ -369,7 +368,9 @@ else()
     macro_optional_add_subdirectory(kontact) # must be the last one.
   endif()
 
-  macro_optional_add_subdirectory(akonadiconsole)
+  if(NepomukWidgets_FOUND)
+    macro_optional_add_subdirectory(akonadiconsole)
+  endif()
   macro_optional_add_subdirectory(console)
   macro_optional_add_subdirectory(strigi-analyzer)
 
