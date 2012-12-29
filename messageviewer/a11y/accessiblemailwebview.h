@@ -40,6 +40,9 @@ public:
   virtual void setSelection( int selectionIndex, int startOffset, int endOffset );
   virtual void setCursorPosition( int );
 
+  // unhide overload QString text(Text, int) from QAccessible
+  using QAccessibleWidgetEx::text;
+  
   virtual QString text( int startOffset, int endOffset );
 
   virtual QString attributes( int offset, int* startOffset, int* endOffset );

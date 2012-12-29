@@ -56,6 +56,9 @@ namespace {
       return AsIcon;
     }
 
+    // unhide the overload with three arguments
+    using MessageViewer::Interface::BodyPartFormatter::format;
+
     bool process( ObjectTreeParser *, KMime::Content *, ProcessResult & result ) const {
       result.setNeverDisplayInline( true );
       return false;
