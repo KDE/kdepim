@@ -42,7 +42,7 @@ using namespace MessageViewer;
 VCardViewer::VCardViewer(QWidget *parent, const QByteArray& vCard)
   : KDialog( parent )
 {
-  setCaption( i18n("VCard Viewer") );
+  setCaption( i18n("vCard Viewer") );
   setButtons( User1|User2|User3|Close );
   setModal( false );
   setDefaultButton( Close );
