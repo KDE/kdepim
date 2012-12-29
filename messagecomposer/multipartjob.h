@@ -34,7 +34,7 @@ class MESSAGECOMPOSER_EXPORT MultipartJob : public ContentJobBase
   Q_OBJECT
 
   public:
-    MultipartJob( QObject *parent = 0 );
+    explicit MultipartJob( QObject *parent = 0 );
     virtual ~MultipartJob();
 
     QByteArray multipartSubtype() const;

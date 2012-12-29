@@ -47,7 +47,7 @@ class MESSAGEVIEWER_EXPORT CSSHelperBase {
         default values.
         Sub-Classes should put their config loading here.
      */
-    CSSHelperBase( const QPaintDevice *pd );
+    explicit CSSHelperBase( const QPaintDevice *pd );
 
     /** @return HTML head including style sheet definitions and the
         &gt;body&lt; tag */

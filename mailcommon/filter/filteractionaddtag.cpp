@@ -20,6 +20,7 @@
 #include "filteractionaddtag.h"
 #include "filtermanager.h"
 #include "filteractionmissingargumentdialog.h"
+#include "messageviewer/minimumcombobox.h"
 
 #include <Nepomuk2/Tag>
 #include <Nepomuk2/Resource>
@@ -36,11 +37,48 @@ FilterAction* FilterActionAddTag::newAction()
 }
 
 FilterActionAddTag::FilterActionAddTag( QObject *parent )
-  : FilterActionWithStringList( "add tag", i18n( "Add Tag" ), parent )
+  : FilterAction( "add tag", i18n( "Add Tag" ), parent )
 {
-    mParameterList = FilterManager::instance()->tagList();
+    mList = FilterManager::instance()->tagList();
     connect(FilterManager::instance(),SIGNAL(tagListingFinished()),SLOT(slotTagListingFinished()));
 }
+
+QWidget* FilterActionAddTag::createParamWidget( QWidget *parent ) const
+{
+  MessageViewer::MinimumComboBox *comboBox = new MessageViewer::MinimumComboBox( parent );
+  comboBox->setEditable( false );
+  QMapIterator<QUrl, QString> i(mList);
+  while (i.hasNext()) {
+      i.next();
+      comboBox->addItem(i.value(), i.key());
+  }
+
+  setParamWidgetValue( comboBox );
+
+  connect( comboBox, SIGNAL(currentIndexChanged(int)),
+           this, SIGNAL(filterActionModified()) );
+
+  return comboBox;
+}
+
+void FilterActionAddTag::applyParamWidgetValue( QWidget *paramWidget )
+{
+    MessageViewer::MinimumComboBox* combo = static_cast<MessageViewer::MinimumComboBox*>( paramWidget );
+    mParameter = combo->itemData(combo->currentIndex()).toString();
+}
+
+void FilterActionAddTag::setParamWidgetValue( QWidget *paramWidget ) const
+{
+  const int index = static_cast<MessageViewer::MinimumComboBox*>( paramWidget )->findData(mParameter);
+
+  static_cast<MessageViewer::MinimumComboBox*>( paramWidget )->setCurrentIndex( index < 0 ? 0 : index );
+}
+
+void FilterActionAddTag::clearParamWidget( QWidget *paramWidget ) const
+{
+  static_cast<MessageViewer::MinimumComboBox*>( paramWidget )->setCurrentIndex( 0 );
+}
+
 
 bool FilterActionAddTag::isEmpty() const
 {
@@ -49,19 +87,20 @@ bool FilterActionAddTag::isEmpty() const
 
 void FilterActionAddTag::slotTagListingFinished()
 {
-  mParameterList = FilterManager::instance()->tagList();
+    mList = FilterManager::instance()->tagList();
 }
 
 bool FilterActionAddTag::argsFromStringInteractive( const QString &argsStr, const QString& filterName )
 {
   bool needUpdate = false;
   argsFromString( argsStr );
-  if( mParameterList.isEmpty() )
+  if( mList.isEmpty() )
     return false;
-  const int index = mParameterList.indexOf( mParameter );
+  const bool index = mList.contains( mParameter );
   if ( Nepomuk2::ResourceManager::instance()->initialized() ) {
-    if ( index == -1 ) {
-      QPointer<FilterActionMissingTagDialog> dlg = new FilterActionMissingTagDialog( mParameterList, filterName, argsStr );
+    if ( !index ) {
+        //TODO adapt it.
+      QPointer<FilterActionMissingTagDialog> dlg = new FilterActionMissingTagDialog( mList, filterName, argsStr );
       if ( dlg->exec() ) {
         mParameter = dlg->selectedTag();
         needUpdate = true;
@@ -75,9 +114,9 @@ bool FilterActionAddTag::argsFromStringInteractive( const QString &argsStr, cons
 
 FilterAction::ReturnCode FilterActionAddTag::process( ItemContext &context ) const
 {
-  const int index = mParameterList.indexOf( mParameter );
-  if ( index == -1 )
+  if(!mList.contains(mParameter)) {
     return ErrorButGoOn;
+  }
   Nepomuk2::Resource resource( context.item().url() );
   resource.addTag( mParameter );
 
@@ -91,29 +130,25 @@ SearchRule::RequiredPart FilterActionAddTag::requiredPart() const
 
 void FilterActionAddTag::argsFromString( const QString &argsStr )
 {
-  if( mParameterList.isEmpty() ) {
+  if( mList.isEmpty() ) {
     mParameter = argsStr;
     return;
   }
-  foreach ( const QString& tag, mParameterList ) {
-    if ( tag == argsStr ) {
-      mParameter = tag;
+  if(mList.contains(argsStr)) {
+      mParameter = argsStr;
       return;
-    }
   }
-
-  if ( !mParameterList.isEmpty() )
-    mParameter = mParameterList.at( 0 );
+  if ( !mList.isEmpty() )
+      mParameter = mList.values().at(0);
 }
 
 QString FilterActionAddTag::argsAsString() const
 {
-  const int index = mParameterList.indexOf( mParameter );
-  if ( index == -1 ) {
-    return QString();
+  if(!mList.contains(mParameter)) {
+     return QString();
   }
 
-  return mParameterList.at( index );
+  return mList.value(mParameter);
 }
 
 QString FilterActionAddTag::displayString() const

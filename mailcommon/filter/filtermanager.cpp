@@ -52,7 +52,7 @@ class FilterManager::Private
     void writeConfig( bool withSync = true ) const;
     void clear();
 
-    QStringList mTagList;
+    QMap<QUrl, QString> mTagList;
     static FilterManager *mInstance;
     static FilterActionDict *mFilterActionDict;
 
@@ -122,9 +122,13 @@ FilterManager::FilterManager()
   Nepomuk2::ResourceWatcher *watcher = new Nepomuk2::ResourceWatcher(this);
   watcher->addType(Soprano::Vocabulary::NAO::Tag());
   connect(watcher, SIGNAL(resourceCreated(Nepomuk2::Resource,QList<QUrl>)),
-          this, SLOT(updateTagList()));
+          this, SLOT(resourceCreated(Nepomuk2::Resource,QList<QUrl>)));
   connect(watcher, SIGNAL(resourceRemoved(QUrl,QList<QUrl>)),
-          this, SLOT(updateTagList()));
+          this, SLOT(resourceRemoved(QUrl,QList<QUrl>)));
+  connect(watcher, SIGNAL(propertyChanged(Nepomuk2::Resource,Nepomuk2::Types::Property,QVariantList,QVariantList)),
+          this, SLOT(propertyChanged(Nepomuk2::Resource)));
+
+
   watcher->start();
 
   qDBusRegisterMetaType<QList<qint64> >();
@@ -149,6 +153,7 @@ void FilterManager::updateTagList()
 {
   if( d->mTagQueryClient )
       return;
+  d->mTagList.clear();
   d->mTagQueryClient = new Nepomuk2::Query::QueryServiceClient(this);
   connect( d->mTagQueryClient, SIGNAL(newEntries(QList<Nepomuk2::Query::Result>)),
            this, SLOT(slotNewTagEntries(QList<Nepomuk2::Query::Result>)) );
@@ -175,15 +180,35 @@ void FilterManager::slotFinishedTagListing()
 
 void FilterManager::slotNewTagEntries(const QList<Nepomuk2::Query::Result>& results)
 {
-  d->mTagList.clear();
   Q_FOREACH(const Nepomuk2::Query::Result &result, results ) {
     Nepomuk2::Resource resource = result.resource();
-    d->mTagList.append( resource.label() );
+    d->mTagList.insert(resource.uri(), resource.label());
   }
-  d->mTagList.sort();
 }
 
-QStringList FilterManager::tagList() const
+void FilterManager::resourceCreated(const Nepomuk2::Resource& res,const QList<QUrl>&)
+{
+    d->mTagList.insert(res.uri(),res.label());
+    Q_EMIT tagListingFinished();
+}
+
+void FilterManager::resourceRemoved(const QUrl&url,const QList<QUrl>&)
+{
+    if(d->mTagList.contains(url)) {
+        d->mTagList.remove(url);
+    }
+    Q_EMIT tagListingFinished();
+}
+
+void FilterManager::propertyChanged(const Nepomuk2::Resource& res)
+{
+    if(d->mTagList.contains(res.uri())) {
+        d->mTagList.insert(res.uri(), res.label() );
+    }
+    Q_EMIT tagListingFinished();
+}
+
+QMap<QUrl, QString> FilterManager::tagList() const
 {
   return d->mTagList;
 }
@@ -257,7 +282,7 @@ void FilterManager::appendFilters( const QList<MailCommon::MailFilter*> &filters
         if ( newFilter->name() == filter->name() ) {
           d->mFilters.removeAll( filter );
           i = 0;
-	  numberOfFilters = d->mFilters.count();
+          numberOfFilters = d->mFilters.count();
         }
       }
     }

@@ -29,10 +29,14 @@ public:
   explicit AddTagDialog(QWidget *parent = 0);
   ~AddTagDialog();
 
+  QString label() const;
+  QString nepomukUrl() const;
 private Q_SLOTS:
   void slotOk();
 
 private:
+  QString mLabel;
+  QString mNepomukUrl;
   MailCommon::TagWidget *mTagWidget;
 };
 

@@ -85,7 +85,7 @@ public:
   /**
    * Creates the mighty Model attached to the specified View.
    */
-  Model( View *pParent );
+  explicit Model( View *pParent );
 
   /**
    * Destroys the mighty model along with the tree of items it manages.

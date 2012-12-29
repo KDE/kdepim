@@ -33,7 +33,7 @@ class MESSAGECORE_EXPORT AttachmentFromUrlBaseJob : public AttachmentLoadJob
     Q_OBJECT
 
   public:
-    AttachmentFromUrlBaseJob( const KUrl &url = KUrl(), QObject *parent = 0 );
+    explicit AttachmentFromUrlBaseJob( const KUrl &url = KUrl(), QObject *parent = 0 );
     virtual ~AttachmentFromUrlBaseJob();
     
     /**

@@ -209,7 +209,6 @@ void ComposerImageResizeWidget::paintEvent( QPaintEvent * )
     if(d->imageElement.isNull())
         return;
 
-
     const int width = d->imageElement.geometry().width();
     const int height = d->imageElement.geometry().height();
     QPainter painter(this);

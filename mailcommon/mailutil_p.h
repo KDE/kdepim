@@ -39,7 +39,7 @@ class AttachmentSelectionDialog : public KDialog
       AttachWithoutAttachments
     };
 
-    AttachmentSelectionDialog( QWidget *parent = 0 )
+    explicit AttachmentSelectionDialog( QWidget *parent = 0 )
       : KDialog( parent ),
         mButtonCode( KDialog::Cancel )
     {

@@ -1028,8 +1028,6 @@ Base2::parseKeyList( const QByteArray& output, bool secretKeys )
         // Example:
         //             Key fingerprint = 47 30 7C 76 05 BF 5E FB  72 41 00 F2 7D 0B D0 49
 
-        int pos2;
-        pos2 = pos + 18;
         QByteArray fingerprint = output.mid( pos, index2-pos );
         // remove white space from the fingerprint
 	for ( int idx = 0 ; (idx = fingerprint.indexOf(' ', idx)) != -1 ; )

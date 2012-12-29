@@ -27,3 +27,4 @@
 - Add extra html setting for table/image/link etc.
 - Add support for resize directly image with mouse. (In progress)
 - Add support for resize directly table with mouse. (In progress)
+- Add support for printing (DONE)

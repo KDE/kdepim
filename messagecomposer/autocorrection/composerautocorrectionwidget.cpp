@@ -73,6 +73,7 @@ ComposerAutoCorrectionWidget::ComposerAutoCorrectionWidget(QWidget *parent) :
   connect(ui->removeButton, SIGNAL(clicked()), this, SLOT(removeAutocorrectEntry()));
   connect(ui->treeWidget, SIGNAL(itemClicked(QTreeWidgetItem*,int)), this, SLOT(setFindReplaceText(QTreeWidgetItem*,int)));
   connect(ui->treeWidget,SIGNAL(deleteSelectedItems()),SLOT(removeAutocorrectEntry()));
+  connect(ui->treeWidget,SIGNAL(itemSelectionChanged ()),SLOT(updateAddRemoveButton()));
   connect(ui->find, SIGNAL(textChanged(QString)), this, SLOT(enableAddRemoveButton()));
   connect(ui->replace, SIGNAL(textChanged(QString)), this, SLOT(enableAddRemoveButton()));
   connect(ui->abbreviation, SIGNAL(textChanged(QString)), this, SLOT(abbreviationChanged(QString)));
@@ -83,9 +84,9 @@ ComposerAutoCorrectionWidget::ComposerAutoCorrectionWidget(QWidget *parent) :
   connect(ui->remove2, SIGNAL(clicked()), this, SLOT(removeTwoUpperLetterEntry()));
   connect(ui->typographicDoubleQuotes,SIGNAL(clicked()),SIGNAL(changed()));
   connect(ui->typographicSingleQuotes,SIGNAL(clicked()),SIGNAL(changed()));
-  connect(ui->abbreviationList,SIGNAL(itemClicked(QListWidgetItem*)),SLOT(slotEnableDisableAbreviationList()));
+  connect(ui->abbreviationList,SIGNAL(itemSelectionChanged()),SLOT(slotEnableDisableAbreviationList()));
   connect(ui->abbreviationList,SIGNAL(deleteSelectedItems()),SLOT(removeAbbreviationEntry()));
-  connect(ui->twoUpperLetterList,SIGNAL(itemClicked(QListWidgetItem*)),SLOT(slotEnableDisableTwoUpperEntry()));
+  connect(ui->twoUpperLetterList,SIGNAL(itemSelectionChanged()),SLOT(slotEnableDisableTwoUpperEntry()));
   connect(ui->twoUpperLetterList,SIGNAL(deleteSelectedItems()),SLOT(removeTwoUpperLetterEntry()));
   connect(ui->autocorrectionLanguage,SIGNAL(activated(int)),SLOT(changeLanguage(int)));
   slotEnableDisableAbreviationList();
@@ -330,7 +331,13 @@ void ComposerAutoCorrectionWidget::enableAdvAutocorrection(bool state)
 void ComposerAutoCorrectionWidget::addAutocorrectEntry()
 {
     QTreeWidgetItem *item = ui->treeWidget->currentItem ();
-    QString find = ui->find->text();
+    const QString find = ui->find->text();
+    const QString replace = ui->replace->text();
+    if(find == replace ) {
+      KMessageBox::error( this, i18n("\"Replace\" string is the same as \"Find\" string."),i18n( "Add Autocorrection Entry" ) );
+      return;
+    }
+
     bool modify = false;
 
     // Modify actually, not add, so we want to remove item from hash
@@ -339,15 +346,15 @@ void ComposerAutoCorrectionWidget::addAutocorrectEntry()
         modify = true;
     }
 
-    m_autocorrectEntries.insert(find, ui->replace->text());
+    m_autocorrectEntries.insert(find, replace);
     ui->treeWidget->setSortingEnabled(false);
     if (modify) {
         item->setText(0,find);
-        item->setText(1,ui->replace->text());
+        item->setText(1,replace);
     } else {
         item = new QTreeWidgetItem( ui->treeWidget, item );
         item->setText( 0, find );
-        item->setText( 1, ui->replace->text() );
+        item->setText( 1, replace );
     }
 
     ui->treeWidget->setSortingEnabled(true);
@@ -357,7 +364,7 @@ void ComposerAutoCorrectionWidget::addAutocorrectEntry()
 
 void ComposerAutoCorrectionWidget::removeAutocorrectEntry()
 {
-  QList<QTreeWidgetItem *> 	listItems = ui->treeWidget->selectedItems ();
+  QList<QTreeWidgetItem *> listItems = ui->treeWidget->selectedItems ();
   if(listItems.isEmpty())
       return;
   Q_FOREACH(QTreeWidgetItem *item, listItems) {
@@ -380,6 +387,12 @@ void ComposerAutoCorrectionWidget::removeAutocorrectEntry()
   ui->treeWidget->setSortingEnabled(false);
 
   emitChanged();
+}
+
+void ComposerAutoCorrectionWidget::updateAddRemoveButton()
+{
+    QList<QTreeWidgetItem *> listItems = ui->treeWidget->selectedItems ();
+    ui->removeButton->setEnabled(!listItems.isEmpty());
 }
 
 void ComposerAutoCorrectionWidget::enableAddRemoveButton()
@@ -424,13 +437,11 @@ void ComposerAutoCorrectionWidget::setFindReplaceText(QTreeWidgetItem*item ,int 
 void ComposerAutoCorrectionWidget::abbreviationChanged(const QString &text)
 {
   ui->add1->setEnabled(!text.isEmpty());
-  emitChanged();
 }
 
 void ComposerAutoCorrectionWidget::twoUpperLetterChanged(const QString &text)
 {
   ui->add2->setEnabled(!text.isEmpty());
-  emitChanged();
 }
 
 void ComposerAutoCorrectionWidget::addAbbreviationEntry()

@@ -1,0 +1,10 @@
+File=composereditor-ng.kcfg
+ClassName=GlobalSettingsBase
+NameSpace=ComposerEditorNG
+Visibility=COMPOSEREDITORNG_EXPORT
+Mutators=true
+Singleton=true
+ItemAccessors=true
+SetUserTexts=true
+IncludeFiles=qapplication.h,composereditor_export.h
+

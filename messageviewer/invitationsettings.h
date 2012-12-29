@@ -40,7 +40,7 @@ class  MESSAGEVIEWER_EXPORT InvitationSettings : public QWidget
 {
   Q_OBJECT
 public:
-  InvitationSettings( QWidget * parent=0 );
+  explicit InvitationSettings( QWidget * parent=0 );
   ~InvitationSettings();
   /*reimp*/ void save();
   QString helpAnchor() const;

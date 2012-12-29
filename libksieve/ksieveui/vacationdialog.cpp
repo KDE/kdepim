@@ -120,6 +120,7 @@ VacationDialog::VacationDialog( const QString & caption, QWidget * parent,
            mDomainEdit, SLOT(setEnabled(bool)) );
 
   Q_ASSERT( row == rows - 1 );
+  Q_UNUSED( rows );
 }
 
 VacationDialog::~VacationDialog() {

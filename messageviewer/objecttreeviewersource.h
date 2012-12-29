@@ -31,7 +31,7 @@ class ViewerPrivate;
 /** An ObjectTreeParser source working on a MailViewer object */
 class MailViewerSource : public ObjectTreeSourceIf {
  public:
-  MailViewerSource( ViewerPrivate * viewer);
+  explicit MailViewerSource( ViewerPrivate * viewer);
   ~MailViewerSource();
   bool htmlMail();
   bool decryptMessage();

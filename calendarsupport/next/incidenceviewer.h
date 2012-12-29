@@ -79,7 +79,7 @@ class CALENDARSUPPORT_EXPORT IncidenceViewer : public QWidget, public Akonadi::I
      * *param
      * @param parent it the parent widget.
      */
-    IncidenceViewer( QWidget *parent = 0 );
+    explicit IncidenceViewer( QWidget *parent = 0 );
 
     /**
      * Destroys the incidence viewer.

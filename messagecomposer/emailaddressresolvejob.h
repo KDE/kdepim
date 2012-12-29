@@ -51,7 +51,7 @@ class MESSAGECOMPOSER_EXPORT EmailAddressResolveJob : public KJob
      *
      * @param parent The parent object.
      */
-    EmailAddressResolveJob( QObject *parent = 0 );
+    explicit EmailAddressResolveJob( QObject *parent = 0 );
 
     /**
      * Destroys the email address resolve job.

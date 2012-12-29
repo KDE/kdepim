@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Akonotes list plasmoid
+Name[bs]=Akonotes lista plasmoid
 Name[ca]=Estri llista de l'Akonotes
 Name[ca@valencia]=Estri llista de l'Akonotes
 Name[da]=Akonotes liste-plasmoid
@@ -34,10 +35,12 @@ Name[sr@latin]=Plazmoid liste Ako‑beležaka
 Name[sv]=Plasmoid Ako-anteckningslista
 Name[tr]=Akonotes liste plasmoidi
 Name[uk]=Плазмоїд списку Akonotes
+Name[wa]=Plasmowide di djivêye Akonotes
 Name[x-test]=xxAkonotes list plasmoidxx
 Name[zh_CN]=Akonotes 列表 plasmoid
 Name[zh_TW]=Akonotes list 小程式
 Comment=Akonotes list plasmoid
+Comment[bs]=Akonotes lista plasmoid
 Comment[ca]=L'estri llista de l'Akonotes
 Comment[ca@valencia]=L'estri llista de l'Akonotes
 Comment[da]=Akonotes list-plasmoid
@@ -72,6 +75,7 @@ Comment[sr@latin]=Plazmoid liste Ako‑beležaka
 Comment[sv]=Plasmoid Ako-anteckningslista
 Comment[tr]=Akonotes liste plasmoidi
 Comment[uk]=Плазмоїд списку Akonotes
+Comment[wa]=Plasmowide di djivêye Akonotes
 Comment[x-test]=xxAkonotes list plasmoidxx
 Comment[zh_CN]=Akonotes 列表 plasmoid
 Comment[zh_TW]=Akonotes list 小程式

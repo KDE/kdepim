@@ -33,7 +33,7 @@ class FindBarSourceView : public FindBarBase
     virtual ~FindBarSourceView();
 
   private:
-    FindBarSourceView( QWidget *parent) { Q_UNUSED(parent); }
+    explicit FindBarSourceView( QWidget *parent) { Q_UNUSED(parent); }
     void clearSelections();
     void searchText( bool backward, bool isAutoSearch );
     void updateHighLight(bool);

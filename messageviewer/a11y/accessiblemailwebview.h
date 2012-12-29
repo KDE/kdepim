@@ -30,7 +30,7 @@ class AccessibleMailWebView: public QAccessibleWidgetEx,
 {
   Q_ACCESSIBLE_OBJECT
 public:
-  AccessibleMailWebView( MessageViewer::MailWebView *widget );
+  explicit AccessibleMailWebView( MessageViewer::MailWebView *widget );
 
   virtual int characterCount();
 

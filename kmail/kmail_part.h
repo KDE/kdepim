@@ -27,7 +27,6 @@
 
 #include "kmail_export.h"
 #include <kparts/browserextension.h>
-#include <kparts/statusbarextension.h>
 #include <kparts/event.h>
 #include <kparts/part.h>
 #include <akonadi/collection.h>
@@ -36,13 +35,9 @@
 #include <QPixmap>
 
 class KMailStatusBarExtension;
-class KMKernel;
 class KMMainWidget;
 namespace KPIM { class StatusbarProgressWidget; }
 using KPIM::StatusbarProgressWidget;
-
-class ActionManager;
-
 
 class KMailPart: public KParts::ReadOnlyPart
 {
@@ -71,22 +66,8 @@ class KMailPart: public KParts::ReadOnlyPart
     virtual void guiActivateEvent(KParts::GUIActivateEvent *e);
 
   private:
-    KMKernel *mKMailKernel;
     KMMainWidget *mainWidget;
-    ActionManager *mActionManager;
-    KMailStatusBarExtension *mStatusBar;
     QWidget *mParentWidget;
-};
-
-class KMailStatusBarExtension : public KParts::StatusBarExtension
-{
-public:
-  explicit KMailStatusBarExtension( KMailPart *parent );
-
-  KMainWindow *mainWindow() const;
-
-private:
-  KMailPart *mParent;
 };
 
 #endif

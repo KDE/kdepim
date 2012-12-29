@@ -75,6 +75,7 @@ bool ListViewRowController::isRowVisible( const QModelIndex& _idx ) const
 
 bool ListViewRowController::isRowExpanded( const QModelIndex& _idx ) const
 {
+    Q_UNUSED( _idx );
     return false;
 }
 

@@ -41,7 +41,7 @@ namespace Core
 class ItemPrivate
 {
 public:
-  ItemPrivate( Item *owner )
+  explicit ItemPrivate( Item *owner )
     : q( owner ),
       mChildItems( 0 ),
       mParent( 0 ),

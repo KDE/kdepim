@@ -32,7 +32,7 @@ class FilterActionSetIdentity: public FilterActionWithUOID
 {
    Q_OBJECT
  public:
-    FilterActionSetIdentity( QObject *parent = 0 );
+    explicit FilterActionSetIdentity( QObject *parent = 0 );
     virtual ReturnCode process( ItemContext &context ) const;
     virtual SearchRule::RequiredPart requiredPart() const;
     virtual bool argsFromStringInteractive( const QString &argsStr, const QString &filterName );

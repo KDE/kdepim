@@ -350,10 +350,12 @@ void GraphicsItem::updateModel()
         ConstraintModel* cmodel = scene()->constraintModel();
         assert( model );
         assert( cmodel );
+        Q_UNUSED( cmodel );
         if ( model ) {
             //ItemType typ = static_cast<ItemType>( model->data( index(),
             //                                                   ItemTypeRole ).toInt() );
             const QModelIndex sourceIdx = scene()->summaryHandlingModel()->mapToSource( index() );
+            Q_UNUSED( sourceIdx );
             QList<Constraint> constraints;
             for( QList<ConstraintGraphicsItem*>::iterator it1 = m_startConstraints.begin() ;
                  it1 != m_startConstraints.end() ;

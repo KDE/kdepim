@@ -2224,7 +2224,6 @@ void View::mousePressEvent( QMouseEvent * e )
           }
         break;
         case Qt::RightButton:
-          clearSelection(); // make sure it's true, so it's clear that the eventual popup belongs to the group header
           d->mWidget->viewGroupHeaderContextPopupRequest( groupHeaderItem, viewport()->mapToGlobal( e->pos() ) );
         break;
         default:
@@ -2259,6 +2258,7 @@ void View::mouseMoveEvent( QMouseEvent * e )
 
 void View::contextMenuEvent( QContextMenuEvent * e )
 {
+  Q_UNUSED( e );
   QModelIndex index = currentIndex();
   if ( index.isValid() ) {
     QRect indexRect = this->visualRect( index );
@@ -2766,6 +2766,19 @@ void View::themeMenuAboutToShow(KMenu *menu)
 {
   d->mWidget->themeMenuAboutToShow(menu);
 }
+
+void View::setCollapseItem(const QModelIndex& index)
+{
+    if(index.isValid())
+      setExpanded( index, false );
+}
+
+void View::setExpandItem(const QModelIndex& index)
+{
+    if(index.isValid())
+      setExpanded( index, true );
+}
+
 
 
 #include "view.moc"

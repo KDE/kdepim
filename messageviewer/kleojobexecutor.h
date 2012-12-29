@@ -45,7 +45,7 @@ class KleoJobExecutor : public QObject
 {
   Q_OBJECT
   public:
-    KleoJobExecutor( QObject *parent = 0 );
+    explicit KleoJobExecutor( QObject *parent = 0 );
 
     GpgME::VerificationResult exec( Kleo::VerifyDetachedJob* job,
                                     const QByteArray &signature,

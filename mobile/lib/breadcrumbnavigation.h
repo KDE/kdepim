@@ -34,7 +34,7 @@ class KBreadcrumbNavigationProxyModel : public Akonadi::SelectionProxyModel
   Q_OBJECT
 
   public:
-    KBreadcrumbNavigationProxyModel( QItemSelectionModel *selectionModel, QObject *parent = 0 );
+    explicit KBreadcrumbNavigationProxyModel( QItemSelectionModel *selectionModel, QObject *parent = 0 );
 
     void setShowHiddenAscendantData( bool showHiddenAscendantData );
     bool showHiddenAscendantData() const;
@@ -52,7 +52,7 @@ class KNavigatingProxyModel : public Akonadi::SelectionProxyModel
   Q_OBJECT
 
   public:
-    KNavigatingProxyModel( KForwardingItemSelectionModel *selectionModel, QObject *parent = 0 );
+    explicit KNavigatingProxyModel( KForwardingItemSelectionModel *selectionModel, QObject *parent = 0 );
 
     virtual void setSourceModel( QAbstractItemModel *sourceModel );
 

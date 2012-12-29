@@ -59,7 +59,7 @@ class MAILCOMMON_EXPORT MDNAdviceHelper : public QObject
       KMime::MDN::DispositionType d );
 
   private:
-    MDNAdviceHelper( QObject *parent = 0 )
+    explicit MDNAdviceHelper( QObject *parent = 0 )
     {
       Q_UNUSED( parent );
     }

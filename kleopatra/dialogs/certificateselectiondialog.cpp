@@ -341,6 +341,7 @@ void CertificateSelectionDialog::Private::slotDoubleClicked( const QModelIndex &
     assert( view );
     const KeyListModelInterface * const model = dynamic_cast<KeyListModelInterface*>( view->model() );
     assert( model );
+    Q_UNUSED( model );
     QItemSelectionModel * const sm = view->selectionModel();
     assert( sm );
     sm->select( idx, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );

@@ -27,10 +27,6 @@
 # Therefore, the as-yet-nonexistant -glib nd -qt flavours are only commented out, not removed.
 #
 
-# do away with crappy condition repetition on else/endfoo
-set( CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS_assuan_saved ${CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS} )
-set( CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS true )
-
 #if this is built-in, please replace, if it isn't, export into a MacroToBool.cmake of it's own
 macro( macro_bool_to_bool FOUND_VAR )
   foreach( _current_VAR ${ARGN} )
@@ -178,7 +174,7 @@ else() # not WIN32
 
     # if libassuan-config has been found
     if ( _ASSUANCONFIG_EXECUTABLE )
-      
+
       message( STATUS "Found libassuan-config at ${_ASSUANCONFIG_EXECUTABLE}" )
 
       exec_program( ${_ASSUANCONFIG_EXECUTABLE} ARGS --version OUTPUT_VARIABLE ASSUAN_VERSION )
@@ -347,7 +343,11 @@ if ( NOT Assuan_FIND_QUIETLY )
     message( STATUS "No usable assuan flavours found." )
   endif()
 
-  macro_bool_to_bool( Assuan_FIND_REQUIRED _req )
+  if( Assuan_FIND_REQUIRED )
+    set( _ASSUAN_TYPE "REQUIRED" )
+  else()
+    set( _ASSUAN_TYPE "OPTIONAL" )
+  endif()
 
   if ( WIN32 )
     set( _assuan_homepage "http://www.gpg4win.org" )
@@ -355,22 +355,15 @@ if ( NOT Assuan_FIND_QUIETLY )
     set( _assuan_homepage "http://www.gnupg.org/related_software/libassuan" )
   endif()
 
-  macro_log_feature(
-    ASSUAN_FOUND
-    "assuan"
-    "Assuan IPC library"
-    ${_assuan_homepage}
-    ${_req}
-    "${_ASSUAN_MIN_VERSION} or greater"
-    "Needed for Kleopatra to act as the GnuPG UI Server"
+  set_package_properties(ASSUAN PROPERTIES DESCRIPTION "Assuan IPC library"
+                         URL ${_assuan_homepage}
+                         TYPE ${_ASSUAN_TYPE}
+                         PURPOSE "Needed for Kleopatra to act as the GnuPG UI Server"
   )
-
 else()
 
   if ( Assuan_FIND_REQUIRED AND NOT ASSUAN_FOUND )
-    message( FATAL_ERROR "" )
+    message( FATAL_ERROR "Assuan is required but was not found." )
   endif()
 
 endif()
-
-set( CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS_assuan_saved )

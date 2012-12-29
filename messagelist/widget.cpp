@@ -23,8 +23,6 @@
 #include <akonadi/itemcopyjob.h>
 #include <akonadi/itemmovejob.h>
 
-#include <messagecore/taglistmonitor.h>
-
 #include "storagemodel.h"
 #include "core/messageitem.h"
 #include "core/view.h"
@@ -51,6 +49,13 @@
 #include <Nepomuk2/Tag>
 #include "core/groupheaderitem.h"
 
+#include <Nepomuk2/ResourceWatcher>
+#include <Nepomuk2/Resource>
+#include <Nepomuk2/Vocabulary/NIE>
+#include <Nepomuk2/ResourceWatcher>
+#include <soprano/nao.h>
+
+
 namespace MessageList
 {
 
@@ -68,8 +73,8 @@ public:
 
   int mLastSelectedMessage;
   KXMLGUIClient *mXmlGuiClient;
+  QModelIndex mGroupHeaderItemIndex;
 
-  MessageCore::TagListMonitor *mTagListMonitor;
 };
 
 } // namespace MessageList
@@ -81,8 +86,16 @@ Widget::Widget( QWidget *parent )
   : Core::Widget( parent ), d( new Private( this ) )
 {
   populateStatusFilterCombo();
-  d->mTagListMonitor = new MessageCore::TagListMonitor( this );
-  connect( d->mTagListMonitor, SIGNAL(tagsChanged()), this, SLOT(populateStatusFilterCombo()) );
+
+  Nepomuk2::ResourceWatcher *watcher = new Nepomuk2::ResourceWatcher(this);
+  watcher->addType(Soprano::Vocabulary::NAO::Tag());
+  connect(watcher, SIGNAL(resourceCreated(Nepomuk2::Resource,QList<QUrl>)),
+          this, SLOT(populateStatusFilterCombo()));
+  connect(watcher, SIGNAL(resourceRemoved(QUrl,QList<QUrl>)),
+          this, SLOT(populateStatusFilterCombo()));
+  connect(watcher, SIGNAL(propertyChanged(Nepomuk2::Resource,Nepomuk2::Types::Property,QVariantList,QVariantList)),
+          this, SLOT(populateStatusFilterCombo()));
+  watcher->start();
 }
 
 Widget::~Widget()
@@ -314,16 +327,16 @@ void Widget::viewGroupHeaderContextPopupRequest( MessageList::Core::GroupHeaderI
   QAction *act;
 
   QModelIndex index = view()->model()->index( ghi, 0 );
-  view()->setCurrentIndex(index);
+  d->mGroupHeaderItemIndex = index;
 
-  if ( view()->isExpanded( view()->model()->index( ghi, 0 ) ) ) {
+  if ( view()->isExpanded( index ) ) {
     act = menu.addAction( i18n ( "Collapse Group" ) );
     connect( act, SIGNAL(triggered(bool)),
-             view(), SLOT(slotCollapseCurrentItem()) );
+             this, SLOT(slotCollapseItem()) );
   } else {
     act = menu.addAction( i18n ( "Expand Group" ) );
     connect( act, SIGNAL(triggered(bool)),
-             view(), SLOT(slotExpandCurrentItem()) );
+             this, SLOT(slotExpandItem()) );
   }
   
   menu.addSeparator();
@@ -686,6 +699,16 @@ Akonadi::Collection Widget::currentCollection() const
   if ( collections.size()!=1 )
     return Akonadi::Collection(); // no folder here or too many (in case we can't decide where the drop will end)
   return collections.first();
+}
+
+void Widget::slotCollapseItem()
+{
+  view()->setCollapseItem(d->mGroupHeaderItemIndex);
+}
+
+void Widget::slotExpandItem()
+{
+  view()->setExpandItem(d->mGroupHeaderItemIndex);
 }
 
 #include "widget.moc"

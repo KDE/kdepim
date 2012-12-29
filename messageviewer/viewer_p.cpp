@@ -444,6 +444,7 @@ bool ViewerPrivate::deleteAttachment(KMime::Content * node, bool showWarning)
   mMimePartModel->setRoot( modifiedMessage );
   mMessageItem.setPayloadFromData( modifiedMessage->encodedContent() );
   Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob( mMessageItem );
+  job->disableRevisionCheck();
   connect( job, SIGNAL(result(KJob*)), SLOT(itemModifiedResult(KJob*)) );
   return true;
 }
@@ -1255,7 +1256,7 @@ void ViewerPrivate::printMessage( const Akonadi::Item &message )
 #endif
 }
 
-void ViewerPrivate::printPreviousMessage( const Akonadi::Item &message )
+void ViewerPrivate::printPreviewMessage( const Akonadi::Item &message )
 {
 // wince does not support printing
 #ifndef Q_OS_WINCE
@@ -3157,6 +3158,7 @@ void ViewerPrivate::slotToggleCaretBrowsing(bool toggle)
   mViewer->settings()->setAttribute(QWebSettings::CaretBrowsingEnabled, toggle);
 #endif
 #endif
+Q_UNUSED( toggle );
 }
 
 

@@ -376,7 +376,7 @@ void TimelineView::showDates( const QDate &start, const QDate &end, const QDate 
           item->setColor( resourceColor );
         }
         kDebug() << "Created item " << item
-                 << " (" <<  CalendarSupport::displayName( collection ) << ") "
+                 << " (" <<  CalendarSupport::displayName( calendar(), collection ) << ") "
                  << "with index " <<  index - 1 << " from collection " << collection.id();
         d->mCalendarItemMap.insert( collection.id(), item );
       }

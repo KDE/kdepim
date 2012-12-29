@@ -27,6 +27,7 @@
 
 namespace Nepomuk2
 {
+class Resource;
 namespace Query
 {
 class QueryServiceClient;
@@ -42,10 +43,6 @@ class QSignalMapper;
 class KAction;
 namespace Akonadi {
   class Item;
-}
-
-namespace MessageCore {
-  class TagListMonitor;
 }
 
 namespace KMail {
@@ -117,6 +114,9 @@ namespace KMail {
       void newTagEntries(const QList<Nepomuk2::Query::Result>& results);
       void finishedTagListing();
       void tagsChanged();
+      void resourceCreated(const Nepomuk2::Resource&,const QList<QUrl>&);
+      void resourceRemoved(const QUrl&,const QList<QUrl>&);
+      void propertyChanged(const Nepomuk2::Resource&);
 
     private:
       void createTagAction( const MailCommon::Tag::Ptr &tag, bool addToMenu );
@@ -126,7 +126,6 @@ namespace KMail {
       MessageActions *mMessageActions;
       QSignalMapper *mMessageTagToggleMapper;
       KXMLGUIClient *mGUIClient;
-      MessageCore::TagListMonitor *mTagListMonitor;
 
       KAction *mSeparatorAction;
       KAction *mMoreAction;

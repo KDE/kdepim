@@ -44,7 +44,7 @@ namespace MessageViewer {
 
   class MESSAGEVIEWER_EXPORT FileHtmlWriter : public HtmlWriter {
   public:
-    FileHtmlWriter( const QString & filename );
+    explicit FileHtmlWriter( const QString & filename );
     virtual ~FileHtmlWriter();
 
     void begin( const QString & cssDefs );

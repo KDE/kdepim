@@ -28,6 +28,7 @@
 #include <KDebug>
 #include "kspellplugin.h"
 #include <QTextBoundaryFinder>
+#include "globalsettings_base.h"
 
 #define methodDebug() kDebug("KWebSpellChecker: %s", __FUNCTION__)
 
@@ -47,7 +48,7 @@ KWebSpellChecker::~KWebSpellChecker()
 
 bool KWebSpellChecker::isContinousSpellCheckingEnabled() const
 {
-    return true;
+    return ComposerEditorNG::GlobalSettingsBase::autoSpellChecking();
 }
 
 void KWebSpellChecker::toggleContinousSpellChecking()
@@ -138,7 +139,6 @@ QString KWebSpellChecker::autoCorrectSuggestionForMisspelledWord(const QString& 
     else
         return QString("");
     */
-
 
     return QString();
 }

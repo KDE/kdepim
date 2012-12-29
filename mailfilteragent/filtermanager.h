@@ -60,7 +60,7 @@ class FilterManager: public QObject
      *
      * @param parent The parent object.
      */
-    FilterManager( QObject *parent = 0 );
+    explicit FilterManager( QObject *parent = 0 );
 
     /**
      * Destroys the filter manager.

@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Air
+Name[bs]=Vazduh
 Name[ca]=Aire
 Name[ca@valencia]=Aire
 Name[cs]=Vzduch
@@ -39,9 +40,11 @@ Name[sv]=Luft
 Name[tr]=Air
 Name[ug]=ھاۋا
 Name[uk]=Air
+Name[wa]=Air
 Name[x-test]=xxAirxx
 Name[zh_TW]=Air
 Description=An Air theme
+Description[bs]=Vazdušna tema
 Description[ca]=Un tema aire
 Description[ca@valencia]=Un tema aire
 Description[cs]=Vzdušný motiv
@@ -80,6 +83,7 @@ Description[sv]=Ett lufttema
 Description[tr]=Air teması
 Description[ug]=ھاۋا ئۆرنىكى
 Description[uk]=Тема «Air»
+Description[wa]=On tinme come l' air
 Description[x-test]=xxAn Air themexx
 Description[zh_TW]=Air 主題
 FileName=default.html

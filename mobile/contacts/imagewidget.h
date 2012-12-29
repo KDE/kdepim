@@ -42,7 +42,7 @@ class ImageWidget : public QPushButton
       Logo
     };
 
-    ImageWidget( QWidget *parent = 0 );
+    explicit ImageWidget( QWidget *parent = 0 );
     explicit ImageWidget( Type type, QWidget *parent = 0 );
     ~ImageWidget();
 

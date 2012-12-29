@@ -194,10 +194,16 @@ void TranslatorWidget::init()
   hboxLayout->addWidget(invert);
 
   KPushButton *clear = new KPushButton(i18n("Clear"),this);
+#ifndef QT_NO_ACCESSIBILITY
+  clear->setAccessibleName( i18n("Clear") );
+#endif
   connect(clear,SIGNAL(clicked()),this,SLOT(slotClear()));
   hboxLayout->addWidget(clear);
 
   d->translate = new KPushButton( i18n( "Translate" ) );
+#ifndef QT_NO_ACCESSIBILITY
+  d->translate->setAccessibleName( i18n("Translate") );
+#endif
   hboxLayout->addWidget( d->translate );
   connect( d->translate, SIGNAL(clicked()), SLOT(slotTranslate()) );
 

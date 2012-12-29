@@ -17,6 +17,7 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/calendarsupport
   ${CMAKE_BINARY_DIR}/calendarsupport
   ${CMAKE_SOURCE_DIR}/calendarviews
+  ${ZLIB_INCLUDE_DIRS}
 )
 
 if(KDEPIM_MOBILE_UI)
@@ -74,7 +75,7 @@ target_link_libraries(eventviews
   ${KDE4_KDEUI_LIBS}
   ${KDEPIMLIBS_KMIME_LIBS}
   ${KDE4_KCMUTILS_LIBS}
-  ${ZLIB_LIBRARY}
+  ${ZLIB_LIBRARIES}
   ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
   ${KDE4_KIO_LIBS}
   ${KDEPIMLIBS_AKONADI_LIBS}

@@ -37,7 +37,7 @@ class CtgEndAnalyzerFactory;
 class PIMSTRIGI_ANALYZER_EXPORT CtgEndAnalyzer : public Strigi::StreamEndAnalyzer
 {
   public:
-    CtgEndAnalyzer( const CtgEndAnalyzerFactory *factory );
+    explicit CtgEndAnalyzer( const CtgEndAnalyzerFactory *factory );
 
     const char* name() const;
     bool checkHeader( const char* header, qint32 headersize ) const;

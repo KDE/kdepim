@@ -34,7 +34,7 @@ class CalendarHelper : public QObject
   Q_PROPERTY(int year READ year WRITE setYear NOTIFY yearChanged)
 
   public:
-    CalendarHelper( QObject *parent = 0 );
+    explicit CalendarHelper( QObject *parent = 0 );
     ~CalendarHelper();
 
     QDate date() const;

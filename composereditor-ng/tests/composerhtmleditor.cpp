@@ -18,31 +18,34 @@
 
 */
 #include "composerhtmleditor.h"
+#include "domtreewidget.h"
+#include "../composerview.h"
 
 #include <kapplication.h>
 #include <kactioncollection.h>
 #include <kstandardaction.h>
 #include <klocale.h>
 #include <kdebug.h>
+
 #include <QVBoxLayout>
+#include <QSplitter>
 
 ComposerHtmlEditor::ComposerHtmlEditor()
     : KXmlGuiWindow()
 {
+    QSplitter *w = new QSplitter;
+
     editor = new ComposerEditorNG::ComposerEditor(this);
+    DomTreeWidget *domWidget = new DomTreeWidget(editor->view(), this);
+    w->addWidget(domWidget);
 
-
-    QVBoxLayout *l = new QVBoxLayout();
-    QWidget *w = new QWidget();
-    l->addWidget( editor );
-    w->setLayout( l );
-
+    w->addWidget( editor );
     setCentralWidget( w );
 
 
     editor->createActions( actionCollection() );
-    setupGUI();
     setupActions();
+    setupGUI();
 }
 
 ComposerHtmlEditor::~ComposerHtmlEditor()
@@ -53,18 +56,6 @@ void ComposerHtmlEditor::setupActions()
 {
     KStandardAction::quit( kapp, SLOT(quit()),
                            actionCollection() );
-
-    KStandardAction::open( this, SLOT(openFile()),
-                           actionCollection() );
-
-    KStandardAction::save( this, SLOT(saveFile()),
-                           actionCollection() );
-
-    KStandardAction::saveAs( this, SLOT(saveFileAs()),
-                             actionCollection() );
-
-    KStandardAction::openNew( this, SLOT(newFile()),
-                              actionCollection() );
 }
 
 

@@ -39,7 +39,7 @@ class DistributionListExpandJob : public KJob
      * @param name The name of the distribution list to expand.
      * @param parent The parent object.
      */
-    DistributionListExpandJob( const QString &name, QObject *parent = 0 );
+    explicit DistributionListExpandJob( const QString &name, QObject *parent = 0 );
 
     /**
      * Destroys the distribution list expand job.

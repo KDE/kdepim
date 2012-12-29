@@ -42,7 +42,7 @@ class MESSAGECOMPOSER_EXPORT RecipientsPicker : public KDialog
   Q_OBJECT
 
   public:
-    RecipientsPicker( QWidget *parent );
+    explicit RecipientsPicker( QWidget *parent );
     ~RecipientsPicker();
 
     void setRecipients( const Recipient::List & );

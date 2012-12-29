@@ -324,7 +324,7 @@ bool FilterActionMissingAccountDialog::allAccountExist( const QStringList &lst )
 }
 
 FilterActionMissingTagDialog::FilterActionMissingTagDialog(
-  const QStringList &tagList, const QString &filtername,
+  const QMap<QUrl, QString> &tagList, const QString &filtername,
   const QString &argsStr, QWidget *parent )
   : KDialog( parent )
 {
@@ -345,7 +345,15 @@ FilterActionMissingTagDialog::FilterActionMissingTagDialog(
   label->setWordWrap(true);
   lay->addWidget( label );
   mTagList = new QListWidget( this );
-  mTagList->addItems( tagList );
+
+  QMapIterator<QUrl, QString> map(tagList);
+  while (map.hasNext()) {
+     map.next(); 
+     QListWidgetItem *item = new QListWidgetItem( map.value() );
+     item->setData(UrlData, map.key().toString());
+     mTagList->addItem(item);
+  }
+
   connect(this,SIGNAL(user1Clicked()),SLOT(slotAddTag()));
   connect( mTagList, SIGNAL(itemDoubleClicked(QListWidgetItem*)),
            this, SLOT(accept()) );
@@ -360,15 +368,20 @@ FilterActionMissingTagDialog::~FilterActionMissingTagDialog()
 QString FilterActionMissingTagDialog::selectedTag() const
 {
   if ( mTagList->currentItem() ) {
-    return mTagList->currentItem()->text();
+    return mTagList->currentItem()->data(UrlData).toString();
   }
   return QString();
 }
 
 void FilterActionMissingTagDialog::slotAddTag()
 {
-  AddTagDialog dlg(this);
-  dlg.exec();
+  QPointer<AddTagDialog> dlg = new AddTagDialog(this);
+  if(dlg->exec())  {
+    QListWidgetItem *item = new QListWidgetItem( dlg->label() );
+    item->setData(UrlData, dlg->nepomukUrl());
+    mTagList->addItem(item);
+  }
+  delete dlg;
 }
 
 FilterActionMissingSoundUrlDialog::FilterActionMissingSoundUrlDialog( const QString &filtername,

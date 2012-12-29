@@ -29,7 +29,7 @@ class ComposerAutoResizer : public QObject
   Q_OBJECT
 
   public:
-    ComposerAutoResizer( QTextEdit *parent );
+    explicit ComposerAutoResizer( QTextEdit *parent );
 
     QDeclarativeItem *findFlickable( QGraphicsItem *parent ) const;
 

@@ -212,6 +212,7 @@ void DecryptVerifyFilesController::doTaskDone( const Task* task, const shared_pt
 {
     assert( task );
     assert( task == d->m_runningTask.get() );
+    Q_UNUSED( task );
 
     // We could just delete the tasks here, but we can't use
     // Qt::QueuedConnection here (we need sender()) and other slots
