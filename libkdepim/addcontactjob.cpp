@@ -61,8 +61,8 @@ class AddContactJob::Private
         if(mShowMessageBox) {
           const QString text =
             i18nc( "@info",
-                   "The VCard's primary email address is already in "
-                   "your address book; however, you may save the VCard into "
+                   "The vCard's primary email address is already in "
+                   "your address book; however, you may save the vCard into "
                    "a file and import it into the address book manually." );
           KMessageBox::information( mParentWidget, text );
         }
@@ -124,7 +124,7 @@ class AddContactJob::Private
       if(mShowMessageBox) {
         const QString text =
           i18nc( "@info",
-                 "The VCard was added to your address book; "
+                 "The vCard was added to your address book; "
                  "you can add more information to this "
                  "entry by opening the address book." );
         KMessageBox::information(
