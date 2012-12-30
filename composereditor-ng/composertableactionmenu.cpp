@@ -47,6 +47,7 @@ public:
     void _k_slotInsertCellAfter();
     void _k_slotRemoveTable();
     void _k_slotRemoveRow();
+    void _k_slotRemoveColumn();
 
     void updateActions();
     KAction *action_insert_table;
@@ -59,10 +60,16 @@ public:
     KAction *action_insert_cell_after;
     KAction *action_remove_table;
     KAction *action_remove_row;
+    KAction *action_remove_column;
     ComposerTableActionMenu *q;
     QWebElement webElement;
     QWidget *parentWidget;
 };
+
+void ComposerTableActionMenuPrivate::_k_slotRemoveColumn()
+{
+    //TODO
+}
 
 void ComposerTableActionMenuPrivate::_k_slotRemoveRow()
 {
@@ -111,6 +118,7 @@ void ComposerTableActionMenuPrivate::updateActions()
     action_remove_cell->setEnabled(isACell);
     action_insert_cell_after->setEnabled(isACell);
     action_insert_cell_before->setEnabled(isACell);
+    action_remove_column->setEnabled(isACell);
 }
 
 void ComposerTableActionMenuPrivate::_k_slotInsertRowBelow()
@@ -163,21 +171,21 @@ ComposerTableActionMenu::ComposerTableActionMenu(const QWebElement& element,QObj
     removeMenu->addAction( d->action_remove_table );
     connect( d->action_remove_table, SIGNAL(triggered(bool)), SLOT(_k_slotRemoveTable()) );
 
-
     d->action_remove_row = new KAction( i18n( "Row" ), this );
     removeMenu->addAction( d->action_remove_row );
     connect( d->action_remove_row, SIGNAL(triggered(bool)), SLOT(_k_slotRemoveRow()) );
 
+    d->action_remove_column = new KAction( i18n( "Column" ), this );
+    removeMenu->addAction( d->action_remove_column );
+    connect( d->action_remove_column, SIGNAL(triggered(bool)), SLOT(_k_slotRemoveColumn()) );
 
     d->action_remove_cell = new KAction( i18n( "Cell" ), this );
     removeMenu->addAction( d->action_remove_cell );
     connect( d->action_remove_cell, SIGNAL(triggered(bool)), SLOT(_k_slotRemoveCell()) );
 
-
     d->action_remove_cell_contents = new KAction( i18n( "Cell Contents" ), this );
     removeMenu->addAction( d->action_remove_cell_contents );
     connect( d->action_remove_cell_contents, SIGNAL(triggered(bool)), SLOT(_k_slotRemoveCellContents()) );
-
 
     d->action_table_format = new KAction( i18n( "Table Format..." ), this );
     connect( d->action_table_format, SIGNAL(triggered(bool)), SLOT(_k_slotTableFormat()) );
