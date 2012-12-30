@@ -82,7 +82,8 @@ void ComposerTableActionMenuPrivate::_k_slotRemoveTable()
 
 void ComposerTableActionMenuPrivate::_k_slotInsertCellAfter()
 {
-    //TODO
+    QWebElement e = webElement.clone();
+    webElement.appendOutside(e);
 }
 
 void ComposerTableActionMenuPrivate::_k_slotInsertCellBefore()
@@ -107,6 +108,7 @@ void ComposerTableActionMenuPrivate::updateActions()
     action_remove_row->setEnabled(isACell);
     action_remove_cell_contents->setEnabled(isACell && !webElement.toInnerXml().isEmpty());
     action_remove_cell->setEnabled(isACell);
+    action_insert_cell_after->setEnabled(isACell);
 }
 
 void ComposerTableActionMenuPrivate::_k_slotInsertRowBelow()
