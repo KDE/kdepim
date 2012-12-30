@@ -65,6 +65,8 @@ set(eventviews_LIB_SRCS
   timeline/timelineview.cpp
   timeline/timelineitem.cpp
   timeline/timelineview_p.cpp
+
+  whatsnext/whatsnextview.cpp
 )
 
 kde4_add_kcfg_files(eventviews_LIB_SRCS prefs_base.kcfgc)
