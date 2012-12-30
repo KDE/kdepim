@@ -22,9 +22,12 @@
 
 #include <KSeparator>
 #include <KLocale>
+#include <KComboBox>
+#include <KLineEdit>
 
 #include <QWebElement>
 #include <QVBoxLayout>
+#include <QHBoxLayout>
 #include <QTreeWidget>
 
 namespace ComposerEditorNG {
@@ -45,6 +48,13 @@ public:
         treeWidget = new QTreeWidget;
         lay->addWidget(treeWidget);
 
+        QHBoxLayout *hbox = new QHBoxLayout;
+        attributes = new KComboBox;
+        hbox->addWidget(attributes);
+        attributeValue = new KLineEdit;
+        hbox->addWidget(attributeValue);
+
+        lay->addLayout(hbox);
         KSeparator *sep = new KSeparator;
         lay->addWidget( sep );
 
@@ -56,6 +66,8 @@ public:
 
     QWebElement webElement;
     QTreeWidget *treeWidget;
+    KComboBox *attributes;
+    KLineEdit *attributeValue;
     ExtendAttributes::ExtendType type;
     ExtendAttributes *q;
 };
