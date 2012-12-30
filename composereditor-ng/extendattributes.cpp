@@ -25,6 +25,7 @@
 
 #include <QWebElement>
 #include <QVBoxLayout>
+#include <QTreeWidget>
 
 namespace ComposerEditorNG {
 
@@ -41,6 +42,9 @@ public:
 
         QVBoxLayout *lay = new QVBoxLayout( page );
 
+        treeWidget = new QTreeWidget;
+        lay->addWidget(treeWidget);
+
         KSeparator *sep = new KSeparator;
         lay->addWidget( sep );
 
@@ -51,6 +55,7 @@ public:
     void initialize();
 
     QWebElement webElement;
+    QTreeWidget *treeWidget;
     ExtendAttributes::ExtendType type;
     ExtendAttributes *q;
 };
