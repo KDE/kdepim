@@ -22,39 +22,37 @@
   without including the source code for Qt in the source distribution.
 */
 
-#ifndef KORG_VIEWS_KOTIMESPENTVIEW_H
-#define KORG_VIEWS_KOTIMESPENTVIEW_H
+#ifndef CALENDARVIEWS_TIMESPENTVIEW_H
+#define CALENDARVIEWS_TIMESPENTVIEW_H
 
-#include "korganizer/baseview.h"
-#include <Akonadi/Calendar/ETMCalendar>
+#include "eventview.h"
+#include <Akonadi/Calendar/IncidenceChanger>
 
 namespace EventViews {
-  class TimeSpentView;
-}
+
+class TimeSpentWidget;
 
 /**
   This view show the time spent on each category.
 */
-class KOTimeSpentView : public KOrg::BaseView
+class EVENTVIEWS_EXPORT TimeSpentView : public EventViews::EventView
 {
   Q_OBJECT
   public:
-    explicit KOTimeSpentView( QWidget *parent = 0 );
-    ~KOTimeSpentView();
+    explicit TimeSpentView( QWidget *parent = 0 );
+    ~TimeSpentView();
 
     virtual int currentDateCount() const;
 
-    virtual Akonadi::Item::List selectedIncidences()
+    virtual Akonadi::Item::List selectedIncidences() const
     {
       return Akonadi::Item::List();
     }
 
-    KCalCore::DateList selectedIncidenceDates()
+    KCalCore::DateList selectedIncidenceDates() const
     {
       return KCalCore::DateList();
     }
-
-    void setCalendar( const Akonadi::ETMCalendar::Ptr &cal );
 
   public Q_SLOTS:
     virtual void updateView();
@@ -63,10 +61,15 @@ class KOTimeSpentView : public KOrg::BaseView
     virtual void showIncidences( const Akonadi::Item::List &incidenceList, const QDate &date );
 
     void changeIncidenceDisplay( const Akonadi::Item &, Akonadi::IncidenceChanger::ChangeType );
-    virtual KOrg::CalPrinterBase::PrintType printType() const;
 
   private:
-    EventViews::TimeSpentView *mView;
+    TimeSpentWidget *mView;
+    QDate mStartDate;
+    QDate mEndDate;
+
+    friend class EventViews::TimeSpentWidget;
 };
+
+}
 
 #endif

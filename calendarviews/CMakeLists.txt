@@ -66,6 +66,8 @@ set(eventviews_LIB_SRCS
   timeline/timelineitem.cpp
   timeline/timelineview_p.cpp
 
+  timespent/timespentview.cpp
+
   whatsnext/whatsnextview.cpp
 )
 
