@@ -523,7 +523,7 @@ void Widget::themeSelected( bool )
     return;
 
   QVariant v = act->data();
-  QString id = v.toString();
+  const QString id = v.toString();
 
   if ( id.isEmpty() )
     return;
