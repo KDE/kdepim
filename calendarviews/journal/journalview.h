@@ -22,15 +22,15 @@
   with any edition of Qt, and distribute the resulting executable,
   without including the source code for Qt in the source distribution.
 */
-#ifndef KORG_VIEWS_KOJOURNALVIEW_H
-#define KORG_VIEWS_KOJOURNALVIEW_H
+#ifndef CALENDARVIEWS_JOURNALVIEW_H
+#define CALENDARVIEWS_JOURNALVIEW_H
 
-#include "korganizer/baseview.h"
-#include <KCalCore/Incidence> // for KCalCore::DateList typedef
+#include "eventview.h"
+#include <Akonadi/Calendar/IncidenceChanger>
+#include <KCalCore/Journal>
 
-namespace EventViews {
-  class JournalView;
-}
+class KVBox;
+class QScrollArea;
 
 /**
  * This class provides a journal view.
@@ -39,32 +39,36 @@ namespace EventViews {
  * @author Cornelius Schumacher <schumacher@kde.org>, Reinhold Kainhofer <reinhold@kainhofer.com>
  * @see KOBaseView
  */
-class KOJournalView : public KOrg::BaseView
+namespace EventViews {
+
+class JournalDateView;
+
+class EVENTVIEWS_EXPORT JournalView : public EventView
 {
   Q_OBJECT
   public:
-    explicit KOJournalView( QWidget *parent = 0 );
-    ~KOJournalView();
+    explicit JournalView( QWidget *parent = 0 );
+    ~JournalView();
 
-    virtual int currentDateCount() const;
-    virtual Akonadi::Item::List selectedIncidences();
-
-    KCalCore::DateList selectedIncidenceDates()
+    /**reimp*/ int currentDateCount() const;
+    /**reimp*/ Akonadi::Item::List selectedIncidences() const;
+    KCalCore::DateList selectedIncidenceDates() const
     {
       return KCalCore::DateList();
     }
 
-    void setCalendar( const Akonadi::ETMCalendar::Ptr & );
+    void appendJournal( const Akonadi::Item &journal, const QDate &dt );
 
-    /** reimp */
+    /** documentation in baseview.h */
     void getHighlightMode( bool &highlightEvents,
                            bool &highlightTodos,
                            bool &highlightJournals );
 
-    /** reimp */
-    KOrg::CalPrinterBase::PrintType printType() const;
+    bool eventFilter( QObject *, QEvent * );
 
   public Q_SLOTS:
+    // Don't update the view when midnight passed, otherwise we'll have data loss (bug 79145)
+    virtual void dayPassed( const QDate & ) {}
     void updateView();
     void flushView();
 
@@ -74,10 +78,25 @@ class KOJournalView : public KOrg::BaseView
     void changeIncidenceDisplay( const Akonadi::Item &incidence,
                                  Akonadi::IncidenceChanger::ChangeType );
     void setIncidenceChanger( Akonadi::IncidenceChanger *changer );
-    void printJournal( const KCalCore::Journal::Ptr &journal );
+    void newJournal();
+  Q_SIGNALS:
+    void flushEntries();
+    void setIncidenceChangerSignal( Akonadi::IncidenceChanger * );
+    void journalEdited( const Akonadi::Item &journal );
+    void journalDeleted( const Akonadi::Item &journal );
+    void printJournal( const KCalCore::Journal::Ptr & );
+
+  protected:
+    void clearEntries();
 
   private:
-    EventViews::JournalView *mJournalView;
+    QScrollArea *mSA;
+    KVBox *mVBox;
+    QMap<QDate, EventViews::JournalDateView*> mEntries;
+    Akonadi::IncidenceChanger *mChanger;
+//    DateList mSelectedDates;  // List of dates to be displayed
 };
+
+}
 
 #endif

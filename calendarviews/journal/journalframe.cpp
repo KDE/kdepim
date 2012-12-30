@@ -26,10 +26,7 @@
 
 // Journal Entry
 
-#include "journalview.h"
-#include "calprinter.h"
-#include "kocorehelper.h"
-#include "koglobals.h"
+#include "journalframe.h"
 
 #include <calendarsupport/utils.h>
 
@@ -40,15 +37,18 @@
 
 #include <KDialog>
 #include <KTextBrowser>
+#include <KLocale>
+#include <KGlobalSettings>
 
 #include <QEvent>
 #include <QHBoxLayout>
 #include <QPushButton>
 
-JournalDateView::JournalDateView( const Akonadi::ETMCalendar::Ptr &calendar, QWidget *parent )
-  : KVBox( parent ), mCalendar( calendar )
+using namespace EventViews;
+
+JournalDateView::JournalDateView( Akonadi::ETMCalendar *calendar, QWidget *parent )
+  : KVBox( parent ), mCalendar( calendar ), mChanger( 0 )
 {
-  mChanger = 0;
 }
 
 JournalDateView::~JournalDateView()
@@ -67,10 +67,10 @@ void JournalDateView::clear()
   mEntries.clear();
 }
 
-// should only be called by the KOJournalView now.
+// should only be called by the JournalView now.
 void JournalDateView::addJournal( const Akonadi::Item &j )
 {
-  QMap<Akonadi::Item::Id,JournalView *>::Iterator pos = mEntries.find( j.id() );
+  QMap<Akonadi::Item::Id,JournalFrame *>::Iterator pos = mEntries.find( j.id() );
   if ( pos != mEntries.end() ) {
     return;
   }
@@ -78,7 +78,7 @@ void JournalDateView::addJournal( const Akonadi::Item &j )
   QWidget *container = new QWidget( this );
   QHBoxLayout *layout = new QHBoxLayout( container );
   layout->addStretch( 1 );
-  JournalView *entry = new JournalView( j, mCalendar, this );
+  JournalFrame *entry = new JournalFrame( j, mCalendar, this );
   layout->addWidget( entry, 3/*stretch*/ );
   layout->addStretch( 1 );
 
@@ -97,12 +97,14 @@ void JournalDateView::addJournal( const Akonadi::Item &j )
            this, SIGNAL(editIncidence(Akonadi::Item)) );
   connect( entry, SIGNAL(incidenceSelected(Akonadi::Item,QDate)),
                   SIGNAL(incidenceSelected(Akonadi::Item,QDate)) );
+  connect( entry, SIGNAL(printJournal(KCalCore::Journal::Ptr)),
+           SIGNAL(printJournal(KCalCore::Journal::Ptr)) );
 }
 
 Akonadi::Item::List JournalDateView::journals() const
 {
   Akonadi::Item::List l;
-  Q_FOREACH ( const JournalView *const i, mEntries ) {
+  Q_FOREACH ( const JournalFrame *const i, mEntries ) {
     l.push_back( i->journal() );
   }
   return l;
@@ -121,18 +123,17 @@ void JournalDateView::emitNewJournal()
 
 void JournalDateView::journalEdited( const Akonadi::Item &journal )
 {
-  QMap<Akonadi::Item::Id,JournalView *>::Iterator pos = mEntries.find( journal.id() );
+  QMap<Akonadi::Item::Id,JournalFrame *>::Iterator pos = mEntries.find( journal.id() );
   if ( pos == mEntries.end() ) {
     return;
   }
 
   pos.value()->setJournal( journal );
-
 }
 
 void JournalDateView::journalDeleted( const Akonadi::Item &journal )
 {
-  QMap<Akonadi::Item::Id,JournalView *>::Iterator pos = mEntries.find( journal.id() );
+  QMap<Akonadi::Item::Id,JournalFrame *>::Iterator pos = mEntries.find( journal.id() );
   if ( pos == mEntries.end() ) {
     return;
   }
@@ -141,9 +142,9 @@ void JournalDateView::journalDeleted( const Akonadi::Item &journal )
   mEntries.remove( journal.id() );
 }
 
-JournalView::JournalView( const Akonadi::Item &j,
-                          const Akonadi::ETMCalendar::Ptr &calendar,
-                          QWidget *parent )
+JournalFrame::JournalFrame( const Akonadi::Item &j,
+                            Akonadi::ETMCalendar *calendar,
+                            QWidget *parent )
   : QFrame( parent ), mJournal( j ), mCalendar( calendar )
 {
   mDirty = false;
@@ -166,7 +167,7 @@ JournalView::JournalView( const Akonadi::Item &j,
   mEditButton = new QPushButton( this );
   mEditButton->setObjectName( "editButton" );
   mEditButton->setText( i18n( "&Edit" ) );
-  mEditButton->setIcon( KOGlobals::self()->smallIcon( "document-properties" ) );
+  mEditButton->setIcon( SmallIcon( "document-properties" ) );
   mEditButton->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed );
   mEditButton->setToolTip( i18n( "Edit this journal entry" ) );
   mEditButton->setWhatsThis( i18n( "Opens an editor dialog for this journal entry" ) );
@@ -176,7 +177,7 @@ JournalView::JournalView( const Akonadi::Item &j,
   mDeleteButton = new QPushButton( this );
   mDeleteButton->setObjectName( "deleteButton" );
   mDeleteButton->setText( i18n( "&Delete" ) );
-  QPixmap pix = KOGlobals::self()->smallIcon( "edit-delete" );
+  QPixmap pix = SmallIcon( "edit-delete" );
   mDeleteButton->setIcon( pix );
   mDeleteButton->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed );
   mDeleteButton->setToolTip( i18n( "Delete this journal entry" ) );
@@ -187,12 +188,12 @@ JournalView::JournalView( const Akonadi::Item &j,
   mPrintButton = new QPushButton( this );
   mPrintButton->setText( i18n( "&Print" ) );
   mPrintButton->setObjectName( "printButton" );
-  mPrintButton->setIcon( KOGlobals::self()->smallIcon( "document-print" ) );
+  mPrintButton->setIcon( SmallIcon( "document-print" ) );
   mPrintButton->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed );
   mPrintButton->setToolTip( i18n( "Print this journal entry" ) );
   mPrintButton->setWhatsThis( i18n( "Opens a print dialog for this journal entry" ) );
   buttonsLayout->addWidget( mPrintButton );
-  connect( mPrintButton, SIGNAL(clicked()), this, SLOT(printItem()) );
+  connect( mPrintButton, SIGNAL(clicked()), this, SLOT(printJournal()) );
 
   readJournal( mJournal );
   mDirty = false;
@@ -202,11 +203,11 @@ JournalView::JournalView( const Akonadi::Item &j,
   mBrowser->setStyleSheet( "QFrame { border: 0px solid white } " );
 }
 
-JournalView::~JournalView()
+JournalFrame::~JournalFrame()
 {
 }
 
-bool JournalView::eventFilter ( QObject *object, QEvent *event )
+bool JournalFrame::eventFilter ( QObject *object, QEvent *event )
 {
   Q_UNUSED( object );
 
@@ -229,51 +230,31 @@ bool JournalView::eventFilter ( QObject *object, QEvent *event )
   return false;
 }
 
-void JournalView::deleteItem()
+void JournalFrame::deleteItem()
 {
   if ( CalendarSupport::hasJournal( mJournal ) ) {
     emit deleteIncidence( mJournal );
   }
 }
 
-void JournalView::editItem()
+void JournalFrame::editItem()
 {
   if ( CalendarSupport::hasJournal( mJournal ) ) {
     emit editIncidence( mJournal );
   }
 }
 
-void JournalView::printItem()
+void JournalFrame::setCalendar( Akonadi::ETMCalendar *calendar )
 {
-  if ( const KCalCore::Journal::Ptr j = CalendarSupport::journal( mJournal ) ) {
-    KOCoreHelper helper;
-    CalPrinter printer( this, mCalendar.data(), &helper, true );
-    connect( this, SIGNAL(configChanged()), &printer, SLOT(updateConfig()) );
-
-    Incidence::List selectedIncidences;
-    selectedIncidences.append( j );
-
-    //make sure to clear and then restore the view stylesheet, else the view
-    //stylesheet is propagated to the child print dialog. see bug 303902
-    const QString ss = styleSheet();
-    setStyleSheet( QString() );
-    printer.print( KOrg::CalPrinterBase::Incidence,
-                   mDate, mDate, selectedIncidences );
-    setStyleSheet( ss );
-  }
+  mCalendar = calendar;
 }
 
-void JournalView::setCalendar( const Akonadi::ETMCalendar::Ptr &cal )
-{
-  mCalendar = cal;
-}
-
-void JournalView::setDate( const QDate &date )
+void JournalFrame::setDate( const QDate &date )
 {
   mDate = date;
 }
 
-void JournalView::setJournal( const Akonadi::Item &journal )
+void JournalFrame::setJournal( const Akonadi::Item &journal )
 {
   if ( !CalendarSupport::hasJournal( journal ) ) {
     return;
@@ -285,13 +266,18 @@ void JournalView::setJournal( const Akonadi::Item &journal )
   mDirty = false;
 }
 
-void JournalView::setDirty()
+void JournalFrame::setDirty()
 {
   mDirty = true;
   kDebug();
 }
 
-void JournalView::readJournal( const Akonadi::Item &j )
+void JournalFrame::printJournal()
+{
+  emit printJournal( CalendarSupport::journal( mJournal ) );
+}
+
+void JournalFrame::readJournal( const Akonadi::Item &j )
 {
   int baseFontSize = KGlobalSettings::generalFont().pointSize();
   mJournal = j;
@@ -333,4 +319,4 @@ void JournalView::readJournal( const Akonadi::Item &j )
 
 }
 
-#include "journalview.moc"
+#include "journalframe.moc"

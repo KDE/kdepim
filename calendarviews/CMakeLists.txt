@@ -50,6 +50,9 @@ set(eventviews_LIB_SRCS
   agenda/timelabelszone.cpp
   agenda/timescaleconfigdialog.cpp
 
+  journal/journalframe.cpp
+  journal/journalview.cpp
+
   list/listview.cpp
 
   month/monthgraphicsitems.cpp
