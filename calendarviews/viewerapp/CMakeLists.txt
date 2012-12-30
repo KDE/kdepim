@@ -2,8 +2,8 @@ project(calendarviewsapp)
 
 include_directories(
   ${Boost_INCLUDE_DIR}
-  ${calendarView_SOURCE_DIR}/eventviews
-  ${calendarView_SOURCE_DIR}/eventviews/agenda
+  ${calendarView_SOURCE_DIR}/
+  ${calendarView_SOURCE_DIR}/agenda
 )
 
 set(viewerapp_SRCS

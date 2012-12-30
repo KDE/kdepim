@@ -60,9 +60,9 @@
 #include <calendarsupport/identitymanager.h>
 #include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/utils.h>
-#include <calendarviews/eventviews/eventview.h>
-#include <calendarviews/eventviews/agenda/agendaview.h>
-#include <calendarviews/eventviews/month/monthview.h>
+#include <calendarviews/eventview.h>
+#include <calendarviews/agenda/agendaview.h>
+#include <calendarviews/month/monthview.h>
 #include <kaction.h>
 #include <kactioncollection.h>
 #include <kcalcore/event.h>

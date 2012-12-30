@@ -20,8 +20,8 @@
 #ifndef CONFIGWIDGET_H
 #define CONFIGWIDGET_H
 
-#include "calendarviews/eventviews/eventview.h"
-#include "calendarviews/eventviews/prefs.h"
+#include "calendarviews/eventview.h"
+#include "calendarviews/prefs.h"
 
 #include "declarativewidgetbase.h"
 #include "mainview.h"

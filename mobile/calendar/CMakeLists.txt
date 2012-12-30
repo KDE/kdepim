@@ -4,7 +4,7 @@ include_directories(
   # This is probably not the correct way to get KCalPrefs in.
   ${CMAKE_SOURCE_DIR}/calendarsupport/
   ${CMAKE_BINARY_DIR}/calendarsupport/
-  ${CMAKE_SOURCE_DIR}/calendarviews/eventviews
+  ${CMAKE_SOURCE_DIR}/calendarviews
   ${KDEPIMLIBS_INCLUDE_DIR}
   ${AKONADI_INCLUDE_DIR}
   ${Boost_INCLUDE_DIR}

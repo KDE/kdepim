@@ -27,8 +27,8 @@
 #include <Akonadi/Entity>
 #include <KCalCore/ScheduleMessage>
 
-#include <calendarviews/eventviews/eventview.h>
-#include <calendarviews/eventviews/prefs.h>
+#include <calendarviews/eventview.h>
+#include <calendarviews/prefs.h>
 
 #include <KCalCore/Incidence>
 

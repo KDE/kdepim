@@ -22,7 +22,7 @@
 #include <KGlobal>
 #include <KGlobalSettings>
 
-#include <calendarviews/eventviews/agenda/agendaview.h>
+#include <calendarviews/agenda/agendaview.h>
 #include <Akonadi/Calendar/ETMCalendar>
 #include <KLocale>
 

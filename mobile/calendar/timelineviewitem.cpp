@@ -24,7 +24,7 @@
 #include <KGlobalSettings>
 
 #include <Akonadi/Calendar/ETMCalendar>
-#include <calendarviews/eventviews/timeline/timelineview.h>
+#include <calendarviews/timeline/timelineview.h>
 #include <KLocale>
 #include <QLayout>
 

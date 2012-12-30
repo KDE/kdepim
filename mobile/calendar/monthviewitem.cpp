@@ -21,7 +21,7 @@
 #include "mainview.h"
 
 #include <Akonadi/Calendar/ETMCalendar>
-#include <calendarviews/eventviews/month/monthview.h>
+#include <calendarviews/month/monthview.h>
 
 #include <KGlobal>
 #include <KGlobalSettings>

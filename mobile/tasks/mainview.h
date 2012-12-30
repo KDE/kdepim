@@ -27,8 +27,8 @@
 #include <Akonadi/Entity>
 #include <Akonadi/Calendar/ETMCalendar>
 
-#include <calendarviews/eventviews/eventview.h>
-#include <calendarviews/eventviews/prefs.h>
+#include <calendarviews/eventview.h>
+#include <calendarviews/prefs.h>
 
 class KJob;
 class TasksActionManager;

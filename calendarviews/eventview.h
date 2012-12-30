@@ -91,6 +91,10 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
 {
   Q_OBJECT
   public:
+    enum {
+      // This value is passed to QColor's lighter(int factor) for selected events
+      BRIGHTNESS_FACTOR = 125
+    };
 
     enum ItemIcon {
       CalendarCustomIcon = 0,
@@ -131,11 +135,6 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
      * Destructor. Views will do view-specific cleanups here.
      */
     ~EventView();
-
-    enum {
-      // This value is passed to QColor's lighter(int factor) for selected events
-      BRIGHTNESS_FACTOR = 125
-    };
 
     virtual void setCalendar( Akonadi::ETMCalendar *cal );
 
