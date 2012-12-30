@@ -90,12 +90,14 @@ void ComposerTableActionMenuPrivate::_k_slotRemoveTable()
 void ComposerTableActionMenuPrivate::_k_slotInsertCellAfter()
 {
     QWebElement e = webElement.clone();
+    e.setInnerXml(QString());
     webElement.appendOutside(e);
 }
 
 void ComposerTableActionMenuPrivate::_k_slotInsertCellBefore()
 {
     QWebElement e = webElement.clone();
+    e.setInnerXml(QString());
     webElement.prependOutside(e);
 }
 
