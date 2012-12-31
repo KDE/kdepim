@@ -112,6 +112,8 @@ int AccessibleMailWebView::cursorPosition()
 
 void AccessibleMailWebView::scrollToSubstring( int startIndex, int endIndex )
 {
+  Q_UNUSED( startIndex );
+  Q_UNUSED( endIndex );
 }
 
 QString AccessibleMailWebView::textAfterOffset( int offset, QAccessible2::BoundaryType boundaryType, int* startOffset, int* endOffset )

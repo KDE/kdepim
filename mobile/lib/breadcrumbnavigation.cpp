@@ -122,6 +122,7 @@ void KNavigatingProxyModel::_sourceRowsRemoved( const QModelIndex &parent, int s
 
 void KNavigatingProxyModel::navigationSelectionChanged( const QItemSelection &selected, const QItemSelection &deselected )
 {
+  Q_UNUSED( selected );
   if (deselected.size() != 1)
     return updateNavigation();
 
