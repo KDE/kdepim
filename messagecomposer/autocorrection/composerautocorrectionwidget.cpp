@@ -73,7 +73,7 @@ ComposerAutoCorrectionWidget::ComposerAutoCorrectionWidget(QWidget *parent) :
   connect(ui->removeButton, SIGNAL(clicked()), this, SLOT(removeAutocorrectEntry()));
   connect(ui->treeWidget, SIGNAL(itemClicked(QTreeWidgetItem*,int)), this, SLOT(setFindReplaceText(QTreeWidgetItem*,int)));
   connect(ui->treeWidget,SIGNAL(deleteSelectedItems()),SLOT(removeAutocorrectEntry()));
-  connect(ui->treeWidget,SIGNAL(itemSelectionChanged ()),SLOT(updateAddRemoveButton()));
+  connect(ui->treeWidget,SIGNAL(itemSelectionChanged()),SLOT(updateAddRemoveButton()));
   connect(ui->find, SIGNAL(textChanged(QString)), this, SLOT(enableAddRemoveButton()));
   connect(ui->replace, SIGNAL(textChanged(QString)), this, SLOT(enableAddRemoveButton()));
   connect(ui->abbreviation, SIGNAL(textChanged(QString)), this, SLOT(abbreviationChanged(QString)));
