@@ -116,7 +116,7 @@ endif()
 find_package(KDE4 4.9.4 REQUIRED)
 include(KDE4Defaults)
 
-find_package(KdepimLibs 4.9.81)
+find_package(KdepimLibs 4.10.61)
 set_package_properties(KdepimLibs PROPERTIES DESCRIPTION "The KDEPIM libraries" URL "http://www.kde.org" TYPE REQUIRED)
 
 ############### Load the CTest options ###############
