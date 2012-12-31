@@ -24,6 +24,7 @@
 #include <KLocale>
 #include <KComboBox>
 #include <KLineEdit>
+#include <KPushButton>
 
 #include <QWebElement>
 #include <QVBoxLayout>
@@ -55,33 +56,54 @@ public:
         hbox->addWidget(attributeValue);
 
         lay->addLayout(hbox);
+        removeAttribute = new KPushButton( i18n( "Remove" ) );
+        q->connect(removeAttribute,SIGNAL(clicked(bool)),q,SLOT(_k_slotRemoveAttribute()));
+        lay->addWidget(removeAttribute);
+
         KSeparator *sep = new KSeparator;
         lay->addWidget( sep );
 
         q->connect(q,SIGNAL(okClicked()),q,SLOT(_k_slotOkClicked()));
+        fillCombobox();
     }
     void _k_slotOkClicked();
+    void _k_slotRemoveAttribute();
 
     void initialize();
+    void fillCombobox();
 
     QWebElement webElement;
     QTreeWidget *treeWidget;
     KComboBox *attributes;
     KLineEdit *attributeValue;
+    KPushButton *removeAttribute;
     ExtendAttributes::ExtendType type;
     ExtendAttributes *q;
 };
 
+void ExtendAttributesPrivate::fillCombobox()
+{
+    //TODO
+}
+
+void ExtendAttributesPrivate::_k_slotRemoveAttribute()
+{
+    QTreeWidgetItem *item = treeWidget->currentItem();
+    if (item) {
+        delete item;
+    }
+}
+
 void ExtendAttributesPrivate::initialize()
 {
-    if(!webElement.isNull()) {
+    if (!webElement.isNull()) {
 
     }
 }
 
 void ExtendAttributesPrivate::_k_slotOkClicked()
 {
-    if(!webElement.isNull()) {
+    if (!webElement.isNull()) {
 
     }
     q->accept();
