@@ -95,17 +95,32 @@ void TrojitaSettings::readTransport()
 {
     settings->beginGroup(QLatin1String("General"));
     const QString smtpMethod = settings->value(QLatin1String("msa.method")).toString();
+    if (!smtpMethod.isEmpty()) {
+        MailTransport::Transport *mt = createTransport();
+#if 0
+        QString smtpHostKey = QLatin1String("msa.smtp.host");
+        QString smtpPortKey = QLatin1String("msa.smtp.port");
+        QString smtpAuthKey = QLatin1String("msa.smtp.auth");
+        QString smtpStartTlsKey = QLatin1String("msa.smtp.starttls");
+        QString smtpUserKey = QLatin1String("msa.smtp.auth.user");
+        QString smtpPassKey = QLatin1String("msa.smtp.auth.pass");
+        QString sendmailKey = QLatin1String("msa.sendmail");
+        QString sendmailDefaultCmd = QLatin1String("sendmail -bm -oi");
 
-    if (smtpMethod == QLatin1String("IMAP-SENDMAIL")) {
+#endif
 
-    } else if (smtpMethod == QLatin1String("SMTP")) {
+        if (smtpMethod == QLatin1String("IMAP-SENDMAIL")) {
 
-    } else if (smtpMethod == QLatin1String("SSMTP")) {
+        } else if (smtpMethod == QLatin1String("SMTP")) {
 
-    } else if (smtpMethod == QLatin1String("sendmail")) {
+        } else if (smtpMethod == QLatin1String("SSMTP")) {
 
-    } else {
-        qWarning()<<" smtpMethod unknown "<<smtpMethod;
+        } else if (smtpMethod == QLatin1String("sendmail")) {
+            mt->setType(MailTransport::Transport::EnumType::Sendmail);
+        } else {
+            qWarning()<<" smtpMethod unknown "<<smtpMethod;
+        }
+        storeTransport( mt, true ); //only one smtp for the moment
     }
     settings->endGroup();
 }
