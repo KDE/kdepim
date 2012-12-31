@@ -43,10 +43,51 @@ TrojitaSettings::~TrojitaSettings()
 void TrojitaSettings::readImapAccount()
 {
     //TODO
-    QMap<QString, QVariant> settings;
+    QMap<QString, QVariant> newSettings;
     QString name;
+
+    if (settings->contains(QLatin1String("imap.host"))) {
+
+    }
+
+    if (settings->contains(QLatin1String("imap.port"))) {
+
+    }
+
+    if (settings->contains(QLatin1String("imap.starttls"))) {
+
+    }
+
+    if (settings->contains(QLatin1String("imap.auth.user"))) {
+
+    }
+
+    if (settings->contains(QLatin1String("imap.auth.pass"))) {
+
+    }
+
+    if (settings->contains(QLatin1String("imap.process"))) {
+
+    }
+
+    if (settings->contains(QLatin1String("imap.offline"))) {
+
+    }
+
+    if (settings->contains(QLatin1String("imap.enableId"))) {
+
+    }
+
+    if (settings->contains(QLatin1String("imap.ssl.pemCertificate"))) {
+
+    }
+
+    if (settings->contains(QLatin1String("imap.capabilities.blacklist"))) {
+
+    }
+
     if (!name.isEmpty()) {
-        const QString agentIdentifyName = AbstractBase::createResource( "akonadi_imap_resource", name, settings );
+        const QString agentIdentifyName = AbstractBase::createResource( "akonadi_imap_resource", name, newSettings );
     }
 }
 
@@ -82,8 +123,14 @@ void TrojitaSettings::readIdentity()
         identity->setPrimaryEmailAddress(address);
         const QString organisation = settings->value(QLatin1String("organisation")).toString();
         identity->setOrganization(organisation);
-        const QString signature = settings->value(QLatin1String("signature")).toString();
-        qDebug()<<" realName :"<<realName<<" address : "<<address<<" organisation : "<<organisation<<" signature: "<<signature;
+        QString signatureStr = settings->value(QLatin1String("signature")).toString();
+        if (!signatureStr.isEmpty()) {
+            KPIMIdentities::Signature signature;
+            signature.setType( KPIMIdentities::Signature::Inlined );
+            signature.setText( signatureStr );
+            identity->setSignature( signature );
+        }
+        qDebug()<<" realName :"<<realName<<" address : "<<address<<" organisation : "<<organisation<<" signature: "<<signatureStr;
         storeIdentity(identity);
     }
     settings->endArray();
