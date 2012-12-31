@@ -206,6 +206,7 @@ void ComposerViewPrivate::_k_changeAutoSpellChecking(bool checked)
 #if QTWEBKIT_VERSION >= QTWEBKIT_VERSION_CHECK(2, 3, 0)
     ComposerEditorNG::GlobalSettingsBase::setAutoSpellChecking(checked);
 #endif
+  Q_UNUSED( checked );
 }
 
 QAction* ComposerViewPrivate::getAction ( QWebPage::WebAction action ) const
