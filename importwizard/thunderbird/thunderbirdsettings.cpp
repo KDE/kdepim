@@ -576,21 +576,18 @@ void ThunderbirdSettings::readIdentity( const QString& account )
   }
 
   //fcc_reply_follows_parent not implemented in kmail
-  if ( mHashConfig.contains( identity + QLatin1String( ".fcc_folder_picker_mode" ) ) )
+  //fcc_folder_picker_mode is just a flag for thunderbird. Not necessary during import.
+  //if ( mHashConfig.contains( identity + QLatin1String( ".fcc_folder_picker_mode" ) ) )
   {
-    const int useSpecificFccFolder = mHashConfig.value(  identity + QLatin1String( ".fcc_folder_picker_mode" ) ).toInt();
-    if ( useSpecificFccFolder == 1 )
-    {
+    if (mHashConfig.contains( identity + QLatin1String( ".fcc_folder" ) )) {
       const QString fccFolder = convertThunderbirdPath( mHashConfig.value( identity + QLatin1String( ".fcc_folder" ) ).toString() );
       newIdentity->setFcc( fccFolder );
     }
   }
 
-  if ( mHashConfig.contains( identity + QLatin1String( ".tmpl_folder_picker_mode" ) ) )
+  //if ( mHashConfig.contains( identity + QLatin1String( ".tmpl_folder_picker_mode" ) ) )
   {
-    const int useSpecificTemplateFolder = mHashConfig.value(  identity + QLatin1String( ".tmpl_folder_picker_mode" ) ).toInt();
-    if ( useSpecificTemplateFolder == 1 )
-    {
+    if (mHashConfig.contains( identity + QLatin1String( ".stationery_folder" ) )) {
       const QString templateFolder = convertThunderbirdPath( mHashConfig.value( identity + QLatin1String( ".stationery_folder" ) ).toString() );
       newIdentity->setTemplates( templateFolder );
     }
