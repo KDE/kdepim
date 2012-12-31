@@ -352,6 +352,9 @@ void SylpheedSettings::readPop3Account( const KConfigGroup& accountConfig, bool 
 void SylpheedSettings::readImapAccount( const KConfigGroup& accountConfig, bool checkMailOnStartup, int intervalCheckMail )
 {
   QMap<QString, QVariant> settings;
+  const QString host = accountConfig.readEntry("receive_server");
+  settings.insert(QLatin1String("ImapServer"), host);
+
   const QString name = accountConfig.readEntry( QLatin1String( "name" ) );
   const int sslimap = accountConfig.readEntry( QLatin1String( "ssl_imap" ), 0);
   switch(sslimap) {
