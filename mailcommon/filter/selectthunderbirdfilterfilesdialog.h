@@ -34,7 +34,10 @@ public:
   void setStartDir(const KUrl&);
 
 private:
+  void readConfig();
+  void writeConfig();
   SelectThunderbirdFilterFilesWidget *mSelectFilterFilesWidget;
+
 };
 }
 
