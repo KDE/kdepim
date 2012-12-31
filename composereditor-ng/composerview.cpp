@@ -391,8 +391,8 @@ void ComposerViewPrivate::_k_slotSpellCheck()
     spellDialog->setAttribute(Qt::WA_DeleteOnClose, true);
 
     spellDialog->showSpellCheckCompletionMessage(true);
-    q->connect(spellDialog, SIGNAL(replace(QString, int, QString)), q, SLOT(_k_spellCheckerCorrected(QString, int, QString)));
-    q->connect(spellDialog, SIGNAL(misspelling(QString, int)), q, SLOT(_k_spellCheckerMisspelling(QString, int)));
+    q->connect(spellDialog, SIGNAL(replace(QString,int,QString)), q, SLOT(_k_spellCheckerCorrected(QString,int,QString)));
+    q->connect(spellDialog, SIGNAL(misspelling(QString,int)), q, SLOT(_k_spellCheckerMisspelling(QString,int)));
     if (contextMenuResult.isContentSelected())
         q->connect(spellDialog, SIGNAL(done(QString)), q, SLOT(_k_slotSpellCheckDone(QString)));
     spellDialog->setBuffer(text);
