@@ -575,6 +575,11 @@ void ThunderbirdSettings::readIdentity( const QString& account )
     }
   }
 
+  if( mHashConfig.contains( identity + QLatin1String( ".fcc" ) ) ) {
+      const bool fccEnabled = mHashConfig.value(identity + QLatin1String( ".fcc" )).toBool();
+      newIdentity->setDisabledFcc( !fccEnabled );
+  }
+
   //fcc_reply_follows_parent not implemented in kmail
   //fcc_folder_picker_mode is just a flag for thunderbird. Not necessary during import.
   //if ( mHashConfig.contains( identity + QLatin1String( ".fcc_folder_picker_mode" ) ) )
