@@ -61,12 +61,30 @@ MailCommon::MailFilter *FilterImporterThunderbird::parseLine( QTextStream &strea
   } else if ( line.startsWith( QLatin1String( "action=" ) ) ) {
     line = cleanArgument( line, QLatin1String( "action=" ) );
     QString value;
-    const QString actionName = extractActions( line, filter, value );
+    QString actionName = extractActions( line, filter, value );
     if ( !stream.atEnd() ) {
       line = stream.readLine();
       if ( line.startsWith( QLatin1String( "actionValue=" ) ) ) {
         value = cleanArgument( line, QLatin1String( "actionValue=" ) );
-        if(actionName == QLatin1String("copy") || actionName == QLatin1String("transfer")) {
+        //change priority
+        if(actionName == QLatin1String("Change priority")) {
+            QStringList lstValue;
+            lstValue << QLatin1String("X-Priority");
+            if (value == QLatin1String("Highest")) {
+                value = QLatin1String("1 (Highest)");
+            } else if (value == QLatin1String("High")) {
+                value = QLatin1String("2 (High)");
+            } else if (value == QLatin1String("Normal")) {
+                value = QLatin1String("3 (Normal)");
+            } else if (value == QLatin1String("Low")) {
+                value = QLatin1String("4 (Low)");
+            } else if (value == QLatin1String("Lowest")) {
+                value = QLatin1String("5 (Lowest)");
+            }
+            lstValue << value;
+            value = lstValue.join(QLatin1String("\t"));
+            actionName = QLatin1String("add header");
+        } else if(actionName == QLatin1String("copy") || actionName == QLatin1String("transfer")) {
           KUrl url(value);
           if(url.isValid()) {
             QString path = url.path();
@@ -369,6 +387,7 @@ QString FilterImporterThunderbird::extractActions( const QString &line,
   } else if ( line == QLatin1String( "Delete" ) ) {
     actionName = QLatin1String( "delete" );
   } else if ( line == QLatin1String( "Change priority" ) ) {
+    actionName = QLatin1String("Change priority"); //Doesn't exist in kmail but we help us to importing
   } else if ( line == QLatin1String( "Ignore thread" ) ) {
   } else if ( line == QLatin1String( "Ignore subthread" ) ) {
   } else if ( line == QLatin1String( "Watch thread" ) ) {
