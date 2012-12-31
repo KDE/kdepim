@@ -47,11 +47,13 @@ void TrojitaSettings::readImapAccount()
     QString name;
 
     if (settings->contains(QLatin1String("imap.host"))) {
-
+        name = settings->value(QLatin1String("imap.host")).toString();
+        newSettings.insert(QLatin1String("ImapServer"),name);
     }
 
     if (settings->contains(QLatin1String("imap.port"))) {
-
+        int port = settings->value(QLatin1String("imap.port")).toInt();
+        newSettings.insert( QLatin1String( "ImapPort" ), port );
     }
 
     if (settings->contains(QLatin1String("imap.starttls"))) {
@@ -71,7 +73,7 @@ void TrojitaSettings::readImapAccount()
     }
 
     if (settings->contains(QLatin1String("imap.offline"))) {
-
+        //newSettings.insert( QLatin1String( "DisconnectedModeEnabled" ), offlineStatus );
     }
 
     if (settings->contains(QLatin1String("imap.enableId"))) {
