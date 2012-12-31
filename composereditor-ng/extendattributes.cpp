@@ -51,6 +51,7 @@ public:
 
         QHBoxLayout *hbox = new QHBoxLayout;
         attributes = new KComboBox;
+        q->connect(attributes,SIGNAL(activated(int)),q,SLOT(_k_attributeChanged(int)));
         hbox->addWidget(attributes);
         attributeValue = new KLineEdit;
         hbox->addWidget(attributeValue);
@@ -68,6 +69,7 @@ public:
     }
     void _k_slotOkClicked();
     void _k_slotRemoveAttribute();
+    void _k_attributeChanged(int);
 
     void initialize();
     void fillCombobox();
@@ -81,8 +83,24 @@ public:
     ExtendAttributes *q;
 };
 
+void ExtendAttributesPrivate::_k_attributeChanged(int)
+{
+    //TODO
+}
+
 void ExtendAttributesPrivate::fillCombobox()
 {
+    switch(type) {
+    case ExtendAttributes::Image:
+        break;
+    case ExtendAttributes::Table:
+        break;
+    case ExtendAttributes::Cell:
+        break;
+    case ExtendAttributes::Link:
+        break;
+    }
+
     //TODO
 }
 
