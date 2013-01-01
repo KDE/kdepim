@@ -2553,7 +2553,7 @@ region defined in the <guilabel>Use holiday region</guilabel> drop down above.</
 <term><guilabel>Default appointment time</guilabel></term>
 <listitem><para>Select the default start time for events from the drop down list.
 When you choose <link linkend="menu-actions-new-event">New
-Event</link> from the <link linkend="entering-data-events">Action Menu</link>, or
+Event</link> from the <link linkend="entering-data-events">Actions Menu</link>, or
 create an event in some other manner such that &korganizer; cannot guess
 when you would like your event to start, &korganizer; will put this hour
 in the start time editor as the default value.</para></listitem>
@@ -2563,7 +2563,7 @@ in the start time editor as the default value.</para></listitem>
 <term><guilabel>Default duration of new appointment (HH:MM):</guilabel></term>
 <listitem><para>Select the default duration for events using the spin box. When
 you choose <link linkend="menu-actions-new-event">New Event</link> from the
-<link linkend="entering-data-events">Action Menu</link>, or create an event in
+<link linkend="entering-data-events">Actions Menu</link>, or create an event in
 some other manner such that &korganizer; cannot guess its duration,
 &korganizer; will use this as the default value.
 </para></listitem>
