@@ -25,7 +25,8 @@
 #ifndef AKREGATOR2_KERNEL_H
 #define AKREGATOR2_KERNEL_H
 
-#include <boost/shared_ptr.hpp>
+#include <QObject>
+#include <Akonadi/AgentInstance>
 
 #include "akregator2_export.h"
 
@@ -33,8 +34,10 @@ namespace Akregator2 {
 
 class FrameManager;
 
-class AKREGATOR2_EXPORT Kernel
+class AKREGATOR2_EXPORT Kernel: public QObject
 {
+    Q_OBJECT
+
     public:
 
         static Kernel* self();
@@ -50,6 +53,8 @@ class AKREGATOR2_EXPORT Kernel
 
         class KernelPrivate;
         KernelPrivate* d;
+
+        Q_PRIVATE_SLOT( d, void instanceStatusChanged( const Akonadi::AgentInstance& instance ) )
 };
 
 } // namespace Akregator

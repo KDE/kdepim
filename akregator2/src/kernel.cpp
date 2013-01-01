@@ -25,8 +25,12 @@
 #include "kernel.h"
 
 #include "framemanager.h"
+#include <libkdepim/progressmanager.h>
 
 #include <QPointer>
+#include <QStringList>
+#include <Akonadi/AgentManager>
+#include <krss/item.h>
 
 using namespace boost;
 
@@ -46,12 +50,31 @@ Kernel* Kernel::self()
 class Kernel::KernelPrivate
 {
     public:
-    FrameManager* frameManager;
+        void instanceStatusChanged( const Akonadi::AgentInstance &instance );
+
+        FrameManager* frameManager;
 };
+
+void Kernel::KernelPrivate::instanceStatusChanged( const Akonadi::AgentInstance& instance )
+{
+  if ( !instance.type().mimeTypes().contains( KRss::Item::mimeType() ) ) {
+      return;
+  }
+
+  if ( instance.status() == Akonadi::AgentInstance::Running ) {
+      KPIM::ProgressItem *item = KPIM::ProgressManager::createProgressItem( 0, instance,
+            instance.identifier(), instance.name(), instance.statusMessage(), true, false);
+      item->setProperty( "AgentIdentifier", instance.identifier() );
+  }
+}
 
 Kernel::Kernel() : d(new KernelPrivate)
 {
     d->frameManager = new FrameManager();
+
+    Akonadi::AgentManager *manager = Akonadi::AgentManager::self();
+    connect(manager, SIGNAL(instanceStatusChanged(Akonadi::AgentInstance)),
+            this, SLOT(instanceStatusChanged(Akonadi::AgentInstance)));
 }
 
 Kernel::~Kernel()
@@ -67,3 +90,5 @@ FrameManager* Kernel::frameManager()
 }
 
 } // namespace Akregator
+
+#include "kernel.moc"
