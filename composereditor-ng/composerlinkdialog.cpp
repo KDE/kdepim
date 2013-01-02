@@ -92,8 +92,7 @@ void ComposerLinkDialogPrivate::initialize(const QWebElement &element)
     vbox->addWidget( sep );
 
 
-    q->connect(q,SIGNAL(okClicked()),q,SLOT(_k_slotOkClicked()));
-
+    q->connect(q, SIGNAL(okClicked()), q, SLOT(_k_slotOkClicked()));
 }
 
 void ComposerLinkDialogPrivate::fillTarget()
@@ -103,7 +102,7 @@ void ComposerLinkDialogPrivate::fillTarget()
 
 void ComposerLinkDialogPrivate::_k_slotOkClicked()
 {
-    if(!webElement.isNull()) {
+    if (!webElement.isNull()) {
         updateLinkHtml();
     }
     q->accept();
@@ -113,7 +112,7 @@ void ComposerLinkDialogPrivate::_k_slotOkClicked()
 QString ComposerLinkDialogPrivate::html() const
 {
     const QUrl url = ComposerEditorNG::Util::guessUrlFromString(linkLocation->text());
-    if(url.isValid()){
+    if (url.isValid()){
         const QString html = QString::fromLatin1( "<a href=\'%1\'>%2</a>" ).arg ( url.toString() ).arg ( linkText->text() );
         return html;
     }
@@ -122,7 +121,7 @@ QString ComposerLinkDialogPrivate::html() const
 
 void ComposerLinkDialogPrivate::updateLinkHtml()
 {
-    if(linkLocation->text().isEmpty()) {
+    if (linkLocation->text().isEmpty()) {
         webElement.removeAttribute(QLatin1String("href"));
     } else {
         webElement.setAttribute(QLatin1String("href"), linkLocation->text());

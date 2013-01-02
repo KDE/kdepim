@@ -242,7 +242,7 @@ static QVariant execJScript(QWebElement element, const QString& script)
 
 void ComposerViewPrivate::_k_setFormatType(QAction *act)
 {
-    if(!act) {
+    if (!act) {
         return;
     }
     QString command;
@@ -608,7 +608,7 @@ ComposerView::ComposerView(QWidget *parent)
     page()->setContentEditable(true);
     page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
     connect(this, SIGNAL(linkClicked(QUrl)), SIGNAL(openLink(QUrl)));
-    connect( page(), SIGNAL (selectionChanged()), this, SLOT(_k_slotAdjustActions()) );
+    connect(page(), SIGNAL(selectionChanged()), this, SLOT(_k_slotAdjustActions()) );
 
     setWindowModified(false);
 
@@ -913,7 +913,7 @@ void ComposerView::contextMenuEvent(QContextMenuEvent* event)
         menu->addAction(d->action_find);
         menu->addSeparator();
     }
-    if(imageSelected) {
+    if (imageSelected) {
         QAction *editImageAction = menu->addAction(i18n("Edit Image..."));
         connect( editImageAction, SIGNAL(triggered(bool)), this, SLOT(_k_slotEditImage()) );
     } else if(linkSelected) {
@@ -925,7 +925,7 @@ void ComposerView::contextMenuEvent(QContextMenuEvent* event)
         menu->addAction(tableActionMenu);
     }
     menu->addSeparator();
-    if(!emptyDocument) {
+    if (!emptyDocument) {
         menu->addAction(d->action_spell_check);
         menu->addSeparator();
     }

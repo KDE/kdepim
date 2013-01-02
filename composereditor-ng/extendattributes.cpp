@@ -51,20 +51,20 @@ public:
 
         QHBoxLayout *hbox = new QHBoxLayout;
         attributes = new KComboBox;
-        q->connect(attributes,SIGNAL(activated(int)),q,SLOT(_k_attributeChanged(int)));
+        q->connect(attributes, SIGNAL(activated(int)), q, SLOT(_k_attributeChanged(int)));
         hbox->addWidget(attributes);
         attributeValue = new KLineEdit;
         hbox->addWidget(attributeValue);
 
         lay->addLayout(hbox);
         removeAttribute = new KPushButton( i18n( "Remove" ) );
-        q->connect(removeAttribute,SIGNAL(clicked(bool)),q,SLOT(_k_slotRemoveAttribute()));
+        q->connect(removeAttribute, SIGNAL(clicked(bool)), q, SLOT(_k_slotRemoveAttribute()));
         lay->addWidget(removeAttribute);
 
         KSeparator *sep = new KSeparator;
         lay->addWidget( sep );
 
-        q->connect(q,SIGNAL(okClicked()),q,SLOT(_k_slotOkClicked()));
+        q->connect(q, SIGNAL(okClicked()), q, SLOT(_k_slotOkClicked()));
         fillCombobox();
     }
     void _k_slotOkClicked();

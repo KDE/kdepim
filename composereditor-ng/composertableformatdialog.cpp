@@ -58,13 +58,13 @@ public:
 
 void ComposerTableFormatDialogPrivate::applyChanges()
 {
-    if(!webElement.isNull()) {
+    if (!webElement.isNull()) {
         webElement.setAttribute(QLatin1String("border"),QString::number(insertTableWidget->border()));
         const QString width = QString::fromLatin1("%1%2").arg(insertTableWidget->length()).arg(insertTableWidget->typeOfLength() == QTextLength::PercentageLength ? QLatin1String("%") : QString());
         webElement.setAttribute(QLatin1String("width"),width);
-        if(useBackgroundColor->isChecked()) {
+        if (useBackgroundColor->isChecked()) {
             const QColor col = backgroundColor->color();
-            if(col.isValid()) {
+            if (col.isValid()) {
                 webElement.setAttribute(QLatin1String("bgcolor"),backgroundColor->color().name());
             }
         } else {
@@ -106,8 +106,8 @@ void ComposerTableFormatDialogPrivate::initialize(const QWebElement &element)
     q->connect(q,SIGNAL(okClicked()),q,SLOT(_k_slotOkClicked()));
     q->connect(q,SIGNAL(applyClicked()),q,SLOT(_k_slotApplyClicked()));
 
-    q->connect(useBackgroundColor,SIGNAL(toggled(bool)),backgroundColor,SLOT(setEnabled(bool)));
-    if(!webElement.isNull()) {
+    q->connect(useBackgroundColor, SIGNAL(toggled(bool)), backgroundColor, SLOT(setEnabled(bool)));
+    if (!webElement.isNull()) {
         if(webElement.hasAttribute(QLatin1String("border"))) {
             insertTableWidget->setBorder(webElement.attribute(QLatin1String("border")).toInt());
         }
