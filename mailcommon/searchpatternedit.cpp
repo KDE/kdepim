@@ -609,6 +609,7 @@ void SearchPatternEdit::initLayout( SearchPatternEditOptions options )
   connect( mRuleLister, SIGNAL(widgetAdded(QWidget*)),
            this, SLOT(slotRuleAdded(QWidget*)) );
   connect( mRuleLister, SIGNAL(widgetRemoved()), this, SIGNAL(patternChanged()) );
+  connect( mRuleLister, SIGNAL(clearWidgets()), this, SIGNAL(patternChanged()));
 
   layout->addWidget( mRuleLister );
 }
