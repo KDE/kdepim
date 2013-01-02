@@ -90,11 +90,12 @@ AggregationEditor::AggregationEditor( QWidget *parent )
   tabg->setColumnStretch( 1, 1 );
   tabg->setRowStretch( 1, 1 );
   fillGroupingCombo();
-  fillGroupExpandPolicyCombo();
   fillThreadingCombo();
+  fillFillViewStrategyCombo();
+
   fillThreadLeaderCombo();
   fillThreadExpandPolicyCombo();
-  fillFillViewStrategyCombo();
+  fillGroupExpandPolicyCombo();
 }
 
 AggregationEditor::~AggregationEditor()
@@ -110,28 +111,34 @@ void AggregationEditor::editAggregation( Aggregation *set )
     setEnabled( false );
     return;
   }
-
   setEnabled( true );
-
   nameEdit()->setText( set->name() );
   descriptionEdit()->setText( set->description() );
 
   ComboBoxUtils::setIntegerOptionComboValue( mGroupingCombo, (int)mCurrentAggregation->grouping() );
-  ComboBoxUtils::setIntegerOptionComboValue( mGroupExpandPolicyCombo,
-                                             (int)mCurrentAggregation->groupExpandPolicy() );
   ComboBoxUtils::setIntegerOptionComboValue( mThreadingCombo,
                                              (int)mCurrentAggregation->threading() );
-  ComboBoxUtils::setIntegerOptionComboValue( mThreadLeaderCombo,
-                                             (int)mCurrentAggregation->threadLeader() );
-  ComboBoxUtils::setIntegerOptionComboValue( mThreadExpandPolicyCombo,
-                                             (int)mCurrentAggregation->threadExpandPolicy() );
   ComboBoxUtils::setIntegerOptionComboValue( mFillViewStrategyCombo,
                                              (int)mCurrentAggregation->fillViewStrategy() );
+
+  //Necessary to fill after apply mGroupingCombo/mThreadingCombo/mFillViewStrategyCombo otherwise other combo are not filled.
   fillThreadLeaderCombo();
   fillThreadExpandPolicyCombo();
   fillGroupExpandPolicyCombo();
-  setReadOnly( mCurrentAggregation->readOnly() );
 
+  ComboBoxUtils::setIntegerOptionComboValue( mThreadLeaderCombo,
+                                             (int)mCurrentAggregation->threadLeader() );
+
+  ComboBoxUtils::setIntegerOptionComboValue( mThreadExpandPolicyCombo,
+                                             (int)mCurrentAggregation->threadExpandPolicy() );
+
+  ComboBoxUtils::setIntegerOptionComboValue( mGroupExpandPolicyCombo,
+                                             (int)mCurrentAggregation->groupExpandPolicy() );
+  fillThreadLeaderCombo();
+  fillThreadExpandPolicyCombo();
+  fillGroupExpandPolicyCombo();
+
+  setReadOnly( mCurrentAggregation->readOnly() );
 }
 
 void AggregationEditor::setReadOnly(bool readOnly)
