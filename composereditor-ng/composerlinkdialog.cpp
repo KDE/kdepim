@@ -86,6 +86,7 @@ void ComposerLinkDialogPrivate::initialize(const QWebElement &element)
 
     target = new KComboBox;
     fillTarget();
+    target->setCurrentIndex(0);
     layout->addWidget( target, 2, 1 );
 
     KSeparator *sep = new KSeparator;
@@ -97,7 +98,11 @@ void ComposerLinkDialogPrivate::initialize(const QWebElement &element)
 
 void ComposerLinkDialogPrivate::fillTarget()
 {
-    //TODO
+    target->addItem(i18n("No Set"), QString());
+    target->addItem(i18n("Current Window"), QLatin1String("_self"));
+    target->addItem(i18n("New Window"), QLatin1String("_blank"));
+    target->addItem(i18n("In parent frame"), QLatin1String("_parent"));
+    target->addItem(i18n("In the full body of the window"), QLatin1String("_top"));
 }
 
 void ComposerLinkDialogPrivate::_k_slotOkClicked()
@@ -113,7 +118,12 @@ QString ComposerLinkDialogPrivate::html() const
 {
     const QUrl url = ComposerEditorNG::Util::guessUrlFromString(linkLocation->text());
     if (url.isValid()){
-        const QString html = QString::fromLatin1( "<a href=\'%1\'>%2</a>" ).arg ( url.toString() ).arg ( linkText->text() );
+        const QString targetStr = target->itemData(target->currentIndex()).toString();
+        QString html = QString::fromLatin1( "<a ");
+        if(!targetStr.isEmpty()) {
+            html += QString::fromLatin1("target=\'%1\'").arg(targetStr);
+        }
+        html += QString::fromLatin1( "href=\'%1\'>%2</a>" ).arg ( url.toString() ).arg ( linkText->text() );
         return html;
     }
     return QString();
@@ -125,6 +135,12 @@ void ComposerLinkDialogPrivate::updateLinkHtml()
         webElement.removeAttribute(QLatin1String("href"));
     } else {
         webElement.setAttribute(QLatin1String("href"), linkLocation->text());
+    }
+    const QString targetStr = target->itemData(target->currentIndex()).toString();
+    if (targetStr.isEmpty()) {
+        webElement.removeAttribute(QLatin1String("target"));
+    } else {
+        webElement.setAttribute(QLatin1String("target"), targetStr);
     }
 }
 
