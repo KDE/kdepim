@@ -44,6 +44,7 @@ public:
     QString html() const;
 
     void updateLinkHtml();
+    void fillTarget();
 
     void _k_slotOkClicked();
 
@@ -84,6 +85,7 @@ void ComposerLinkDialogPrivate::initialize(const QWebElement &element)
     layout->addWidget( label, 2, 0 );
 
     target = new KComboBox;
+    fillTarget();
     layout->addWidget( target, 2, 1 );
 
     KSeparator *sep = new KSeparator;
@@ -92,6 +94,11 @@ void ComposerLinkDialogPrivate::initialize(const QWebElement &element)
 
     q->connect(q,SIGNAL(okClicked()),q,SLOT(_k_slotOkClicked()));
 
+}
+
+void ComposerLinkDialogPrivate::fillTarget()
+{
+    //TODO
 }
 
 void ComposerLinkDialogPrivate::_k_slotOkClicked()
