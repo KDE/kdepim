@@ -101,7 +101,6 @@ KParts::ReadOnlyPart *AkregatorPlugin::createPart()
 
   m_interface = new OrgKdeAkregator2PartInterface(
     "org.kde.akregator2", "/Akregator2", QDBusConnection::sessionBus() );
-  m_interface->openStandardFeedList();
 
   return part;
 }
@@ -151,7 +150,6 @@ int AkregatorUniqueAppHandler::newInstance()
 
   org::kde::akregator2::part akregator(
     "org.kde.akregator2", "/Akregator2", QDBusConnection::sessionBus() );
-  akregator.openStandardFeedList();
   akregator.handleCommandLine();
 
   return KontactInterface::UniqueAppHandler::newInstance();
