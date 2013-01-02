@@ -114,7 +114,9 @@ void AkonadiSender::sendOrQueueMessage( const KMime::Message::Ptr &message, Mess
   kDebug() << "KMime::Message: \n[\n" << message->encodedContent().left( 1000 ) << "\n]\n";
 
   MessageQueueJob *qjob = new MessageQueueJob( this );
-  if ( message->headerByType( "X-KMail-Fcc" ) ) {
+  if( message->hasHeader( "X-KMail-FccDisabled" ) ) {
+    qjob->sentBehaviourAttribute().setSentBehaviour( MailTransport::SentBehaviourAttribute::Delete );
+  } else if ( message->headerByType( "X-KMail-Fcc" ) ) {
     qjob->sentBehaviourAttribute().setSentBehaviour(
                                  SentBehaviourAttribute::MoveToCollection );
     const int sentCollectionId = message->headerByType( "X-KMail-Fcc" )->asUnicodeString().toInt();

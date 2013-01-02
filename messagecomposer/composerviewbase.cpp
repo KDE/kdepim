@@ -729,6 +729,9 @@ void Message::ComposerViewBase::fillInfoPart ( Message::InfoPart* infoPart, Mess
     extras << m_msg->headerByType( "X-KMail-Link-Type" );
   if( m_msg->headerByType( "X-Face" ) )
     extras << m_msg->headerByType( "X-Face" );
+  if( m_msg->headerByType( "X-KMail-FccDisabled") )
+    extras << m_msg->headerByType( "X-KMail-FccDisabled");
+
   infoPart->setExtraHeaders( extras );
 }
 
@@ -789,7 +792,10 @@ void Message::ComposerViewBase::queueMessage( KMime::Message::Ptr message, Messa
   if( mSendMethod == MessageSender::SendLater )
     qjob->dispatchModeAttribute().setDispatchMode( MailTransport::DispatchModeAttribute::Manual );
 
-  if ( !infoPart->fcc().isEmpty() ) {
+
+  if( message->hasHeader( "X-KMail-FccDisabled" ) ) {
+    qjob->sentBehaviourAttribute().setSentBehaviour( MailTransport::SentBehaviourAttribute::Delete );
+  } else if ( !infoPart->fcc().isEmpty() ) {
     qjob->sentBehaviourAttribute().setSentBehaviour( MailTransport::SentBehaviourAttribute::MoveToCollection );
 
     const Akonadi::Collection sentCollection( infoPart->fcc().toLongLong() );

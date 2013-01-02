@@ -564,7 +564,16 @@ KMime::Message::Ptr MessageFactory::createRedirect( const QString &toStr, int tr
     header = new KMime::Headers::Generic( "X-KMail-Fcc", msg.get(), fcc, "utf-8" );
     msg->setHeader( header );    
   }
-  
+
+  const bool fccIsDisabled = ident.disabledFcc();
+  if (fccIsDisabled) {
+      KMime::Headers::Generic *header = new KMime::Headers::Generic( "X-KMail-FccDisabled", msg.get(), QLatin1String("true"), "utf-8" );
+      msg->setHeader( header );
+  } else {
+      msg->removeHeader( "X-KMail-FccDisabled" );
+  }
+
+
   msg->assemble();
 
   MessageCore::Util::addLinkInformation( msg, m_id, Akonadi::MessageStatus::statusForwarded() );
