@@ -159,6 +159,13 @@ ComposerLinkDialog::ComposerLinkDialog(const QWebElement& element, QWidget *pare
     d->initialize(element);
     d->linkLocation->setText(d->webElement.attribute(QLatin1String("href")));
     d->linkText->setText(d->webElement.toInnerXml());
+    if (d->webElement.hasAttribute(QLatin1String("target"))) {
+        const QString targetStr = d->webElement.attribute(QLatin1String("target"));
+        const int index = d->target->findData(targetStr);
+        if (index > -1) {
+            d->target->setCurrentIndex(index);
+        }
+    }
 }
 
 ComposerLinkDialog::~ComposerLinkDialog()
