@@ -107,9 +107,7 @@ void ExtendAttributesPrivate::fillCombobox()
 void ExtendAttributesPrivate::_k_slotRemoveAttribute()
 {
     QTreeWidgetItem *item = treeWidget->currentItem();
-    if (item) {
-        delete item;
-    }
+    delete item;
 }
 
 void ExtendAttributesPrivate::initialize()

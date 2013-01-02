@@ -46,8 +46,8 @@ public:
         KSeparator *sep = new KSeparator;
         layout->addWidget( sep );
 
-        q->connect(q,SIGNAL(okClicked()),q,SLOT(_k_slotOkClicked()));
-        q->connect(q,SIGNAL(applyClicked()),q,SLOT(_k_slotApplyClicked()));
+        q->connect(q, SIGNAL(okClicked()), q, SLOT(_k_slotOkClicked()));
+        q->connect(q, SIGNAL(applyClicked()), q, SLOT(_k_slotApplyClicked()));
         initSettings();
     }
 
@@ -102,10 +102,10 @@ void PageColorBackgroundDialogPrivate::_k_slotApplyClicked()
 
 void PageColorBackgroundDialogPrivate::applyChanges()
 {
-    if(webFrame) {
+    if (webFrame) {
         QWebElement element = webFrame->findFirstElement(QLatin1String("body"));
-        if(!element.isNull()) {
-            if(pageColorWidget->useDefaultColor()) {
+        if (!element.isNull()) {
+            if (pageColorWidget->useDefaultColor()) {
                 element.removeAttribute(QLatin1String("bgcolor"));
                 element.removeAttribute(QLatin1String("text"));
                 element.removeAttribute(QLatin1String("link"));
