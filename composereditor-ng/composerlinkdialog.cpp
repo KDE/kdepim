@@ -24,6 +24,7 @@
 #include <KLineEdit>
 #include <KLocale>
 #include <KSeparator>
+#include <KComboBox>
 
 #include <QVBoxLayout>
 #include <QLabel>
@@ -49,6 +50,7 @@ public:
     QWebElement webElement;
     KLineEdit *linkText;
     KLineEdit *linkLocation;
+    KComboBox *target;
     ComposerLinkDialog *q;
 };
 
@@ -59,24 +61,33 @@ void ComposerLinkDialogPrivate::initialize(const QWebElement &element)
 
     q->setCaption( webElement.isNull() ? i18n( "Create Link" ) : i18n( "Edit Link" ) );
 
-    QVBoxLayout *layout = new QVBoxLayout( q->mainWidget() );
+    QVBoxLayout *vbox = new QVBoxLayout(q->mainWidget());
+
+    QGridLayout *layout = new QGridLayout;
+    vbox->addLayout(layout);
 
     QLabel *label = new QLabel(i18n("Enter text to display for the link:"));
-    layout->addWidget( label );
+    layout->addWidget( label, 0, 0 );
 
     linkText = new KLineEdit;
     linkText->setReadOnly(!webElement.isNull());
     linkText->setClearButtonShown(true);
-    layout->addWidget( linkText );
+    layout->addWidget( linkText, 0, 1 );
 
     label = new QLabel(i18n("Enter the location:"));
-    layout->addWidget( label );
+    layout->addWidget( label, 1, 0 );
     linkLocation = new KLineEdit;
     linkLocation->setClearButtonShown(true);
-    layout->addWidget( linkLocation );
+    layout->addWidget( linkLocation, 1, 1 );
+
+    label = new QLabel(i18n("Target"));
+    layout->addWidget( label, 2, 0 );
+
+    target = new KComboBox;
+    layout->addWidget( target, 2, 1 );
 
     KSeparator *sep = new KSeparator;
-    layout->addWidget( sep );
+    vbox->addWidget( sep );
 
 
     q->connect(q,SIGNAL(okClicked()),q,SLOT(_k_slotOkClicked()));
