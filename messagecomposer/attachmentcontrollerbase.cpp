@@ -793,13 +793,16 @@ void AttachmentControllerBase::showAddAttachmentDialog()
         addAttachment( urlWithEncoding );
       }
     }
+    emit fileAttached();
   }
   delete dialog;
 #else
   // use native dialog, while being much simpler, it actually fits on the screen much better than our own monster dialog
   const QString fileName = KFileDialog::getOpenFileName( KUrl(), QString(), d->wParent, i18n("Attach File" ) );
-  if ( !fileName.isEmpty() )
+  if ( !fileName.isEmpty() ) {
     addAttachment( KUrl::fromLocalFile( fileName ) );
+    emit fileAttached();
+  }
 #endif
 }
 
