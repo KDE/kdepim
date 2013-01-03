@@ -55,7 +55,6 @@ private:
     Private* const d;
     Q_PRIVATE_SLOT( d, void importFinished( KJob* ) )
     Q_PRIVATE_SLOT( d, void collectionDeleted( KJob* ) )
-    Q_PRIVATE_SLOT( d, void pendingCreateFinished( KJob* ) )
 };
 
 }
