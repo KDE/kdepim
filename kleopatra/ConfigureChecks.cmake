@@ -1,11 +1,11 @@
 # assuan configure checks
 include(CheckFunctionExists)
 
-macro_optional_find_package(Assuan2)
+find_package(Assuan2)
 if ( ASSUAN2_FOUND )
   set ( ASSUAN_SUFFIX "2" )
 else ( ASSUAN2_FOUND )
-  macro_optional_find_package(Assuan)
+  find_package(Assuan)
   set ( ASSUAN_SUFFIX )
 endif ( ASSUAN2_FOUND )
 
