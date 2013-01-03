@@ -46,7 +46,7 @@ public:
 void ExtendAttributesButtonPrivate::_k_slotClicked()
 {
     QPointer<ExtendAttributesDialog> dlg = new ExtendAttributesDialog(webElement, extendType, q );
-    if(dlg->exec()) {
+    if (dlg->exec()) {
         Q_EMIT q->webElementChanged();
     }
     delete dlg;

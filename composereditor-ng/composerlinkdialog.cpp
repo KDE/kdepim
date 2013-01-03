@@ -19,6 +19,7 @@
 */
 
 #include "composerlinkdialog.h"
+#include "extendattributesbutton.h"
 #include "composereditorutil_p.h"
 
 #include <KLineEdit>
@@ -47,6 +48,7 @@ public:
     void fillTarget();
 
     void _k_slotOkClicked();
+    void _k_slotWebElementChanged();
 
     QWebElement webElement;
     KLineEdit *linkText;
@@ -89,6 +91,12 @@ void ComposerLinkDialogPrivate::initialize(const QWebElement &element)
     target->setCurrentIndex(0);
     layout->addWidget( target, 2, 1 );
 
+    if (!webElement.isNull()) {
+        ExtendAttributesButton *button = new ExtendAttributesButton(webElement,ExtendAttributesDialog::Link,q);
+        q->connect(button, SIGNAL(webElementChanged()), q, SLOT(_k_slotWebElementChanged()));
+        layout->addWidget( button, 3, 1 );
+    }
+
     KSeparator *sep = new KSeparator;
     vbox->addWidget( sep );
 
@@ -103,6 +111,11 @@ void ComposerLinkDialogPrivate::fillTarget()
     target->addItem(i18n("New Window"), QLatin1String("_blank"));
     target->addItem(i18n("In parent frame"), QLatin1String("_parent"));
     target->addItem(i18n("In the full body of the window"), QLatin1String("_top"));
+}
+
+void ComposerLinkDialogPrivate::_k_slotWebElementChanged()
+{
+    //TODO
 }
 
 void ComposerLinkDialogPrivate::_k_slotOkClicked()
