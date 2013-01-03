@@ -19,9 +19,10 @@
 */
 
 #include "extendattributesbutton.h"
-#include "extendattributesdialog.h"
 
 #include <KLocale>
+
+#include <QPointer>
 
 namespace ComposerEditorNG
 {
@@ -29,8 +30,8 @@ namespace ComposerEditorNG
 class ExtendAttributesButtonPrivate
 {
 public:
-    ExtendAttributesButtonPrivate(ExtendAttributesButton *qq)
-        : q(qq)
+    ExtendAttributesButtonPrivate(const QWebElement& element, ExtendAttributesDialog::ExtendType type, ExtendAttributesButton *qq)
+        : q(qq), webElement(element), extendType(type)
     {
         q->setText(i18n("Advanced"));
         q->connect(q, SIGNAL(clicked(bool)), q, SLOT(_k_slotClicked()));
@@ -38,15 +39,22 @@ public:
     void _k_slotClicked();
 
     ExtendAttributesButton *q;
+    QWebElement webElement;
+    ExtendAttributesDialog::ExtendType extendType;
 };
 
 void ExtendAttributesButtonPrivate::_k_slotClicked()
 {
+    QPointer<ExtendAttributesDialog> dlg = new ExtendAttributesDialog(webElement, extendType, q );
+    if(dlg->exec()) {
+        //TODO
+    }
+    delete dlg;
     //TODO
 }
 
-ExtendAttributesButton::ExtendAttributesButton(QWidget *parent)
-    : QPushButton(parent), d(new ExtendAttributesButtonPrivate(this))
+ExtendAttributesButton::ExtendAttributesButton(const QWebElement& element, ExtendAttributesDialog::ExtendType type, QWidget *parent)
+    : QPushButton(parent), d(new ExtendAttributesButtonPrivate(element, type, this))
 {
     setText(i18n("Advanced"));
 }

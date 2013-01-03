@@ -21,16 +21,20 @@
 #ifndef EXTENDATTRIBUTESBUTTON_H
 #define EXTENDATTRIBUTESBUTTON_H
 
+#include "extendattributesdialog.h"
+
 #include <QPushButton>
+#include <QWebElement>
 
 namespace ComposerEditorNG
 {
+
 class ExtendAttributesButtonPrivate;
 class ExtendAttributesButton : public QPushButton
 {
     Q_OBJECT
 public:
-    explicit ExtendAttributesButton(QWidget *parent);
+    explicit ExtendAttributesButton(const QWebElement &element, ComposerEditorNG::ExtendAttributesDialog::ExtendType type, QWidget *parent);
     ~ExtendAttributesButton();
 private:
     friend class ExtendAttributesButtonPrivate;
