@@ -200,7 +200,7 @@ else()
   find_package(SharedDesktopOntologies 0.10)
   set_package_properties(SharedDesktopOntologies PROPERTIES DESCRIPTION "Shared Desktop Ontologies" URL "http://oscaf.sourceforge.net" TYPE REQUIRED PURPOSE "Ontologies necessary for the Nepomuk semantic desktop")
 
-  find_package(Soprano 2.7.56)
+  find_package(Soprano 2.8.0)
   set_package_properties(Soprano PROPERTIES DESCRIPTION "C++/Qt4 framework for RDF data" URL "http://soprano.sourceforge.net" TYPE REQUIRED PURPOSE "Storage of semantic data")
   include(SopranoAddOntology)
 
