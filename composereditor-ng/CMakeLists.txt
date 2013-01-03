@@ -16,7 +16,7 @@ set(libcomposereditor_ng_SRCS
     composerview.cpp
     pagecolorbackgrounddialog.cpp
     pagecolorbackgroundwidget.cpp
-    extendattributes.cpp
+    extendattributesdialog.cpp
     extendattributesbutton.cpp
     composereditorutil.cpp
     composerimagedialog.cpp

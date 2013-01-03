@@ -19,7 +19,7 @@
 */
 
 #include "extendattributesbutton.h"
-#include "extendattributes.h"
+#include "extendattributesdialog.h"
 
 #include <KLocale>
 

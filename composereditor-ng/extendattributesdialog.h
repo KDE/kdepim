@@ -18,16 +18,16 @@
 
 */
 
-#ifndef EXTENDATTRIBUTES_H
-#define EXTENDATTRIBUTES_H
+#ifndef EXTENDATTRIBUTESDIALOG_H
+#define EXTENDATTRIBUTESDIALOG_H
 
 #include <KDialog>
 class QWebElement;
 
 namespace ComposerEditorNG
 {
-class ExtendAttributesPrivate;
-class ExtendAttributes : public KDialog
+class ExtendAttributesDialogPrivate;
+class ExtendAttributesDialog : public KDialog
 {
     Q_OBJECT
 public:
@@ -38,15 +38,15 @@ public:
         Link
     };
 
-    explicit ExtendAttributes(const QWebElement& element, ExtendType type,QWidget *parent);
-    ~ExtendAttributes();
+    explicit ExtendAttributesDialog(const QWebElement& element, ExtendType type,QWidget *parent);
+    ~ExtendAttributesDialog();
 private:
-    friend class ExtendAttributesPrivate;
-    ExtendAttributesPrivate * const d;
+    friend class ExtendAttributesDialogPrivate;
+    ExtendAttributesDialogPrivate * const d;
     Q_PRIVATE_SLOT( d, void _k_slotOkClicked() )
     Q_PRIVATE_SLOT( d, void _k_slotRemoveAttribute() )
     Q_PRIVATE_SLOT( d, void _k_attributeChanged(int) )
 };
 }
 
-#endif // EXTENDATTRIBUTES_H
+#endif // EXTENDATTRIBUTESDIALOG_H
