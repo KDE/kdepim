@@ -91,6 +91,7 @@ class MESSAGECOMPOSER_EXPORT AttachmentControllerBase : public QObject
     void showAttachment( KMime::Content *content, const QByteArray &charset );
     void selectedAllAttachment();
     void addOwnVcard(bool);
+    void fileAttached();
 
   protected:
     void exportPublicKey( const QString &fingerprint );
