@@ -17,25 +17,36 @@
   02110-1301, USA.
 
 */
-#ifndef COMPOSERTABLERESIZEWIDGET_H
-#define COMPOSERTABLERESIZEWIDGET_H
 
-#include <QWidget>
+#ifndef EXTENDATTRIBUTESDIALOG_H
+#define EXTENDATTRIBUTESDIALOG_H
+
+#include <KDialog>
+class QWebElement;
 
 namespace ComposerEditorNG
 {
-class ComposerTableResizeWidgetPrivate;
-class ComposerTableResizeWidget : public QWidget
+class ExtendAttributesDialogPrivate;
+class ExtendAttributesDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit ComposerTableResizeWidget(QWidget *parent);
-    ~ComposerTableResizeWidget();
+    enum ExtendType {
+        Image,
+        Table,
+        Cell,
+        Link
+    };
 
+    explicit ExtendAttributesDialog(const QWebElement& element, ExtendType type,QWidget *parent);
+    ~ExtendAttributesDialog();
 private:
-    friend class ComposerTableResizeWidgetPrivate;
-    ComposerTableResizeWidgetPrivate * const d;
+    friend class ExtendAttributesDialogPrivate;
+    ExtendAttributesDialogPrivate * const d;
+    Q_PRIVATE_SLOT( d, void _k_slotOkClicked() )
+    Q_PRIVATE_SLOT( d, void _k_slotRemoveAttribute() )
+    Q_PRIVATE_SLOT( d, void _k_attributeChanged(int) )
 };
 }
 
-#endif // COMPOSERTABLERESIZEWIDGET_H
+#endif // EXTENDATTRIBUTESDIALOG_H

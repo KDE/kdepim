@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -117,7 +117,7 @@ void FindReplaceBarPrivate::setFoundMatch( bool match )
     QString styleSheet;
 
     if (!search->text().isEmpty()) {
-        if(negativeBackground.isEmpty()) {
+        if (negativeBackground.isEmpty()) {
             KStatefulBrush bgBrush(KColorScheme::View, KColorScheme::PositiveBackground);
             positiveBackground = QString::fromLatin1("QLineEdit{ background-color:%1 }").arg(bgBrush.brush(search).color().name());
             bgBrush = KStatefulBrush(KColorScheme::View, KColorScheme::NegativeBackground);
@@ -173,9 +173,11 @@ void FindReplaceBarPrivate::searchText( bool backward, bool isAutoSearch )
         searchOptions |= QWebPage::HighlightAllOccurrences;
 
     const QString searchWord( search->text() );
-    if( !isAutoSearch && !lastSearchStr.contains( searchWord, Qt::CaseSensitive ) ) {
+
+    if ( !isAutoSearch && !lastSearchStr.contains( searchWord, Qt::CaseSensitive ) ) {
         clearSelections();
     }
+
     webView->findText(QString(), QWebPage::HighlightAllOccurrences); //Clear an existing highligh
 
     lastSearchStr = searchWord;
@@ -291,8 +293,7 @@ bool FindReplaceBar::event(QEvent* e)
             e->accept();
             d->_k_closeBar();
             return true;
-        }
-        else if ( kev->key() == Qt::Key_Enter ||
+        } else if ( kev->key() == Qt::Key_Enter ||
                   kev->key() == Qt::Key_Return ) {
             e->accept();
             if( shortCutOverride ) {

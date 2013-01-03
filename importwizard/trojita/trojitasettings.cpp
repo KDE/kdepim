@@ -42,7 +42,6 @@ TrojitaSettings::~TrojitaSettings()
 
 void TrojitaSettings::readImapAccount()
 {
-    //TODO
     QMap<QString, QVariant> newSettings;
     QString name;
 
@@ -57,35 +56,42 @@ void TrojitaSettings::readImapAccount()
     }
 
     if (settings->contains(QLatin1String("imap.starttls"))) {
-
+        const bool useTLS = settings->value(QLatin1String("imap.starttls")).toBool();
+        if (useTLS) {
+            newSettings.insert( QLatin1String( "Safety" ), QLatin1String( "STARTTLS" ) );
+        }
     }
 
     if (settings->contains(QLatin1String("imap.auth.user"))) {
-
+        const QString userName = settings->value(QLatin1String("imap.auth.user")).toString();
+        if (!userName.isEmpty()) {
+            newSettings.insert( QLatin1String( "Username" ), userName );
+        }
     }
 
     if (settings->contains(QLatin1String("imap.auth.pass"))) {
-
+        //Store in kwallet. Need to do it.
     }
 
     if (settings->contains(QLatin1String("imap.process"))) {
-
+        //What's this ?
     }
 
     if (settings->contains(QLatin1String("imap.offline"))) {
-        //newSettings.insert( QLatin1String( "DisconnectedModeEnabled" ), offlineStatus );
+        const bool offlineStatus = settings->value(QLatin1String("imap.offline")).toBool();
+        newSettings.insert( QLatin1String( "DisconnectedModeEnabled" ), offlineStatus );
     }
 
     if (settings->contains(QLatin1String("imap.enableId"))) {
-
+        //What's this ?
     }
 
     if (settings->contains(QLatin1String("imap.ssl.pemCertificate"))) {
-
+        //TODO ?
     }
 
     if (settings->contains(QLatin1String("imap.capabilities.blacklist"))) {
-
+        //TODO ?
     }
 
     if (!name.isEmpty()) {

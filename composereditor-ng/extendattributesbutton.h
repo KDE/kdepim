@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013 Montel Laurent <montel@kde.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -18,35 +18,33 @@
 
 */
 
-#ifndef EXTENDATTRIBUTES_H
-#define EXTENDATTRIBUTES_H
+#ifndef EXTENDATTRIBUTESBUTTON_H
+#define EXTENDATTRIBUTESBUTTON_H
 
-#include <KDialog>
-class QWebElement;
+#include "extendattributesdialog.h"
+
+#include <QPushButton>
+#include <QWebElement>
 
 namespace ComposerEditorNG
 {
-class ExtendAttributesPrivate;
-class ExtendAttributes : public KDialog
+
+class ExtendAttributesButtonPrivate;
+class ExtendAttributesButton : public QPushButton
 {
     Q_OBJECT
 public:
-    enum ExtendType {
-        Image,
-        Table,
-        Cell,
-        Link
-    };
+    explicit ExtendAttributesButton(const QWebElement &element, ComposerEditorNG::ExtendAttributesDialog::ExtendType type, QWidget *parent);
+    ~ExtendAttributesButton();
 
-    explicit ExtendAttributes(const QWebElement& element, ExtendType type,QWidget *parent);
-    ~ExtendAttributes();
+Q_SIGNALS:
+    void webElementChanged();
+
 private:
-    friend class ExtendAttributesPrivate;
-    ExtendAttributesPrivate * const d;
-    Q_PRIVATE_SLOT( d, void _k_slotOkClicked() )
-    Q_PRIVATE_SLOT( d, void _k_slotRemoveAttribute() )
-    Q_PRIVATE_SLOT( d, void _k_attributeChanged(int) )
+    friend class ExtendAttributesButtonPrivate;
+    ExtendAttributesButtonPrivate * const d;
+    Q_PRIVATE_SLOT(d, void _k_slotClicked() )
 };
 }
 
-#endif // EXTENDATTRIBUTES_H
+#endif // EXTENDATTRIBUTESBUTTON_H

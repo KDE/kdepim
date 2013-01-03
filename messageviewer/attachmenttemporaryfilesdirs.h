@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012-2013 Montel Laurent <montel.org>
+  Copyright (c) 2013 Montel Laurent <montel@kde.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -17,25 +17,35 @@
   02110-1301, USA.
 
 */
-#ifndef COMPOSERTABLERESIZEWIDGET_H
-#define COMPOSERTABLERESIZEWIDGET_H
 
-#include <QWidget>
+#ifndef ATTACHMENTTEMPORARYFILESDIRS_H
+#define ATTACHMENTTEMPORARYFILESDIRS_H
 
-namespace ComposerEditorNG
-{
-class ComposerTableResizeWidgetPrivate;
-class ComposerTableResizeWidget : public QWidget
+#include <QObject>
+#include <QStringList>
+
+namespace MessageViewer {
+
+class AttachmentTemporaryFilesDirs : public QObject
 {
     Q_OBJECT
 public:
-    explicit ComposerTableResizeWidget(QWidget *parent);
-    ~ComposerTableResizeWidget();
+    explicit AttachmentTemporaryFilesDirs(QObject *parent = 0);
+    ~AttachmentTemporaryFilesDirs();
+
+    void addTempFile( const QString& file );
+    void addTempDir( const QString& dir );
+    QStringList temporaryFiles() const;
+    void removeTempFiles();
+
+private Q_SLOTS:
+    void slotRemoveTempFiles();
 
 private:
-    friend class ComposerTableResizeWidgetPrivate;
-    ComposerTableResizeWidgetPrivate * const d;
+    QStringList mTempFiles;
+    QStringList mTempDirs;
 };
+
 }
 
-#endif // COMPOSERTABLERESIZEWIDGET_H
+#endif // ATTACHMENTTEMPORARYFILESDIRS_H

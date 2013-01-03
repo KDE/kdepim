@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012-2013 Montel Laurent <montel.org>
+  Copyright (c) 2013 Montel Laurent <montel@kde.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -17,25 +17,8 @@
   02110-1301, USA.
 
 */
-#ifndef COMPOSERTABLERESIZEWIDGET_H
-#define COMPOSERTABLERESIZEWIDGET_H
 
-#include <QWidget>
+#ifndef EXTENDATTRIBUTESDIALOG_P_H
+#define EXTENDATTRIBUTESDIALOG_P_H
 
-namespace ComposerEditorNG
-{
-class ComposerTableResizeWidgetPrivate;
-class ComposerTableResizeWidget : public QWidget
-{
-    Q_OBJECT
-public:
-    explicit ComposerTableResizeWidget(QWidget *parent);
-    ~ComposerTableResizeWidget();
-
-private:
-    friend class ComposerTableResizeWidgetPrivate;
-    ComposerTableResizeWidgetPrivate * const d;
-};
-}
-
-#endif // COMPOSERTABLERESIZEWIDGET_H
+#endif // EXTENDATTRIBUTESDIALOG_P_H

@@ -70,6 +70,7 @@ set(libmessageviewer_SRCS
   markmessagereadhandler.cpp
   mimetreemodel.cpp
   nodehelper.cpp
+  attachmenttemporaryfilesdirs.cpp
   objecttreeemptysource.cpp
   objecttreeparser.cpp
   objecttreeparser_p.cpp

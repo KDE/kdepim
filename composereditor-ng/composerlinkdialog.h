@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -41,6 +41,7 @@ private:
     friend class ComposerLinkDialogPrivate;
     ComposerLinkDialogPrivate * const d;
     Q_PRIVATE_SLOT(d, void _k_slotOkClicked() )
+    Q_PRIVATE_SLOT(d, void _k_slotWebElementChanged() )
 };
 }
 

@@ -383,8 +383,11 @@ void AddEditBlog::fetchedBlogId( const QList< QMap < QString , QString > > & lis
             blogName = qobject_cast<QLabel*>( blogsList->cellWidget(row, 0) )->text();
             blogUrl = qobject_cast<QLabel*>( blogsList->cellWidget(row, 1) )->text();
             apiUrl = qobject_cast<QLabel*>( blogsList->cellWidget(row, 3) )->text();
-        } else
+        } else {
+            delete blogsDialog;
             return;
+        }
+        delete blogsDialog;
     } else if (list.count() > 0) {
         blogId = list.constBegin()->value("id");
         blogName = list.constBegin()->value("title");

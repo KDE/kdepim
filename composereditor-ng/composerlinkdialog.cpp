@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -19,6 +19,7 @@
 */
 
 #include "composerlinkdialog.h"
+#include "extendattributesbutton.h"
 #include "composereditorutil_p.h"
 
 #include <KLineEdit>
@@ -47,6 +48,7 @@ public:
     void fillTarget();
 
     void _k_slotOkClicked();
+    void _k_slotWebElementChanged();
 
     QWebElement webElement;
     KLineEdit *linkText;
@@ -86,24 +88,39 @@ void ComposerLinkDialogPrivate::initialize(const QWebElement &element)
 
     target = new KComboBox;
     fillTarget();
+    target->setCurrentIndex(0);
     layout->addWidget( target, 2, 1 );
+
+    if (!webElement.isNull()) {
+        ExtendAttributesButton *button = new ExtendAttributesButton(webElement,ExtendAttributesDialog::Link,q);
+        q->connect(button, SIGNAL(webElementChanged()), q, SLOT(_k_slotWebElementChanged()));
+        layout->addWidget( button, 3, 1 );
+    }
 
     KSeparator *sep = new KSeparator;
     vbox->addWidget( sep );
 
 
-    q->connect(q,SIGNAL(okClicked()),q,SLOT(_k_slotOkClicked()));
-
+    q->connect(q, SIGNAL(okClicked()), q, SLOT(_k_slotOkClicked()));
 }
 
 void ComposerLinkDialogPrivate::fillTarget()
+{
+    target->addItem(i18n("No Set"), QString());
+    target->addItem(i18n("Current Window"), QLatin1String("_self"));
+    target->addItem(i18n("New Window"), QLatin1String("_blank"));
+    target->addItem(i18n("In parent frame"), QLatin1String("_parent"));
+    target->addItem(i18n("In the full body of the window"), QLatin1String("_top"));
+}
+
+void ComposerLinkDialogPrivate::_k_slotWebElementChanged()
 {
     //TODO
 }
 
 void ComposerLinkDialogPrivate::_k_slotOkClicked()
 {
-    if(!webElement.isNull()) {
+    if (!webElement.isNull()) {
         updateLinkHtml();
     }
     q->accept();
@@ -113,8 +130,13 @@ void ComposerLinkDialogPrivate::_k_slotOkClicked()
 QString ComposerLinkDialogPrivate::html() const
 {
     const QUrl url = ComposerEditorNG::Util::guessUrlFromString(linkLocation->text());
-    if(url.isValid()){
-        const QString html = QString::fromLatin1( "<a href=\'%1\'>%2</a>" ).arg ( url.toString() ).arg ( linkText->text() );
+    if (url.isValid()) {
+        const QString targetStr = target->itemData(target->currentIndex()).toString();
+        QString html = QString::fromLatin1( "<a ");
+        if(!targetStr.isEmpty()) {
+            html += QString::fromLatin1("target=\'%1\'").arg(targetStr);
+        }
+        html += QString::fromLatin1( "href=\'%1\'>%2</a>" ).arg ( url.toString() ).arg ( linkText->text() );
         return html;
     }
     return QString();
@@ -122,10 +144,16 @@ QString ComposerLinkDialogPrivate::html() const
 
 void ComposerLinkDialogPrivate::updateLinkHtml()
 {
-    if(linkLocation->text().isEmpty()) {
+    if (linkLocation->text().isEmpty()) {
         webElement.removeAttribute(QLatin1String("href"));
     } else {
         webElement.setAttribute(QLatin1String("href"), linkLocation->text());
+    }
+    const QString targetStr = target->itemData(target->currentIndex()).toString();
+    if (targetStr.isEmpty()) {
+        webElement.removeAttribute(QLatin1String("target"));
+    } else {
+        webElement.setAttribute(QLatin1String("target"), targetStr);
     }
 }
 
@@ -144,6 +172,13 @@ ComposerLinkDialog::ComposerLinkDialog(const QWebElement& element, QWidget *pare
     d->initialize(element);
     d->linkLocation->setText(d->webElement.attribute(QLatin1String("href")));
     d->linkText->setText(d->webElement.toInnerXml());
+    if (d->webElement.hasAttribute(QLatin1String("target"))) {
+        const QString targetStr = d->webElement.attribute(QLatin1String("target"));
+        const int index = d->target->findData(targetStr);
+        if (index > -1) {
+            d->target->setCurrentIndex(index);
+        }
+    }
 }
 
 ComposerLinkDialog::~ComposerLinkDialog()

@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -69,7 +69,7 @@ QWebElement TableHelper::rowWebElement(const QWebElement&element)
 
 QWebElement TableHelper::tableWebElement(const QWebElement&element)
 {
-    if(element.tagName().toLower() == TABLE) {
+    if (element.tagName().toLower() == TABLE) {
         return element;
     } else {
         QWebElement e = element;

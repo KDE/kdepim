@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -58,13 +58,13 @@ public:
 
 void ComposerTableFormatDialogPrivate::applyChanges()
 {
-    if(!webElement.isNull()) {
+    if (!webElement.isNull()) {
         webElement.setAttribute(QLatin1String("border"),QString::number(insertTableWidget->border()));
         const QString width = QString::fromLatin1("%1%2").arg(insertTableWidget->length()).arg(insertTableWidget->typeOfLength() == QTextLength::PercentageLength ? QLatin1String("%") : QString());
         webElement.setAttribute(QLatin1String("width"),width);
-        if(useBackgroundColor->isChecked()) {
+        if (useBackgroundColor->isChecked()) {
             const QColor col = backgroundColor->color();
-            if(col.isValid()) {
+            if (col.isValid()) {
                 webElement.setAttribute(QLatin1String("bgcolor"),backgroundColor->color().name());
             }
         } else {
@@ -106,12 +106,12 @@ void ComposerTableFormatDialogPrivate::initialize(const QWebElement &element)
     q->connect(q,SIGNAL(okClicked()),q,SLOT(_k_slotOkClicked()));
     q->connect(q,SIGNAL(applyClicked()),q,SLOT(_k_slotApplyClicked()));
 
-    q->connect(useBackgroundColor,SIGNAL(toggled(bool)),backgroundColor,SLOT(setEnabled(bool)));
-    if(!webElement.isNull()) {
-        if(webElement.hasAttribute(QLatin1String("border"))) {
+    q->connect(useBackgroundColor, SIGNAL(toggled(bool)), backgroundColor, SLOT(setEnabled(bool)));
+    if (!webElement.isNull()) {
+        if (webElement.hasAttribute(QLatin1String("border"))) {
             insertTableWidget->setBorder(webElement.attribute(QLatin1String("border")).toInt());
         }
-        if(webElement.hasAttribute(QLatin1String("width"))) {
+        if (webElement.hasAttribute(QLatin1String("width"))) {
             QString width = webElement.attribute(QLatin1String("width"));
             if(width.endsWith(QLatin1Char('%'))) {
                 insertTableWidget->setTypeOfLength(QTextLength::PercentageLength);
@@ -122,7 +122,7 @@ void ComposerTableFormatDialogPrivate::initialize(const QWebElement &element)
                 insertTableWidget->setLength(width.toInt());
             }
         }
-        if(webElement.hasAttribute(QLatin1String("bgcolor"))) {
+        if (webElement.hasAttribute(QLatin1String("bgcolor"))) {
             useBackgroundColor->setChecked(true);
             const QColor color = QColor(webElement.attribute(QLatin1String("bgcolor")));
             backgroundColor->setColor(color);

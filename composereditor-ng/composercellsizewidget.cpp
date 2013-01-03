@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -54,15 +54,15 @@ public:
         layout->addWidget(size);
 
         typeSize = new KComboBox;
-        q->connect( typeSize, SIGNAL(activated(int)),q,SLOT(slotTypeChanged(int)) );
+        q->connect(typeSize, SIGNAL(activated(int)), q, SLOT(slotTypeChanged(int)) );
 
         // xgettext: no-c-format
         typeSize->addItem( i18n( "% of windows" ), Percentage );
         typeSize->addItem( i18n( "pixels" ), Fixed );
         layout->addWidget(typeSize);
 
-        q->connect(check,SIGNAL(toggled(bool)),typeSize,SLOT(setEnabled(bool)));
-        q->connect(check,SIGNAL(toggled(bool)),size,SLOT(setEnabled(bool)));
+        q->connect(check, SIGNAL(toggled(bool)), typeSize, SLOT(setEnabled(bool)));
+        q->connect(check, SIGNAL(toggled(bool)), size, SLOT(setEnabled(bool)));
         check->setChecked(false);
         size->setEnabled(false);
         typeSize->setEnabled(false);
@@ -89,7 +89,7 @@ void ComposerCellSizeWidgetPrivate::setLabel(const QString& str)
 
 void ComposerCellSizeWidgetPrivate::setValue(const QString& val)
 {
-    if(val.isEmpty()) {
+    if (val.isEmpty()) {
         check->setChecked(false);
     } else {
         check->setChecked(true);
@@ -131,8 +131,8 @@ void ComposerCellSizeWidgetPrivate::slotTypeChanged(int index)
 
 QString ComposerCellSizeWidgetPrivate::value() const
 {
-    if(check->isChecked()) {
-        if((TypeSize)typeSize->itemData( typeSize->currentIndex() ).toInt() == Percentage) {
+    if (check->isChecked()) {
+        if ((TypeSize)typeSize->itemData( typeSize->currentIndex() ).toInt() == Percentage) {
             return QString::fromLatin1("%1%").arg(size->value());
         }
         return QString::number(size->value());

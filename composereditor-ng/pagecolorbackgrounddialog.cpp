@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -46,8 +46,8 @@ public:
         KSeparator *sep = new KSeparator;
         layout->addWidget( sep );
 
-        q->connect(q,SIGNAL(okClicked()),q,SLOT(_k_slotOkClicked()));
-        q->connect(q,SIGNAL(applyClicked()),q,SLOT(_k_slotApplyClicked()));
+        q->connect(q, SIGNAL(okClicked()), q, SLOT(_k_slotOkClicked()));
+        q->connect(q, SIGNAL(applyClicked()), q, SLOT(_k_slotApplyClicked()));
         initSettings();
     }
 
@@ -65,10 +65,10 @@ public:
 
 void PageColorBackgroundDialogPrivate::initSettings()
 {
-    if(webFrame) {
+    if (webFrame) {
         const QWebElement element = webFrame->findFirstElement(QLatin1String("body"));
-        if(!element.isNull()) {
-            if(element.hasAttribute(QLatin1String("bgcolor"))||
+        if (!element.isNull()) {
+            if (element.hasAttribute(QLatin1String("bgcolor"))||
                     element.hasAttribute(QLatin1String("text"))||
                     element.hasAttribute(QLatin1String("link"))||
                     element.hasAttribute(QLatin1String("vlink"))||
@@ -82,7 +82,7 @@ void PageColorBackgroundDialogPrivate::initSettings()
             } else {
                 pageColorWidget->setUseDefaultColor(true);
             }
-            if(element.hasAttribute(QLatin1String("background"))) {
+            if (element.hasAttribute(QLatin1String("background"))) {
                 pageColorWidget->setBackgroundImageUrl(KUrl(element.attribute(QLatin1String("background"))));
             }
         }
@@ -102,10 +102,10 @@ void PageColorBackgroundDialogPrivate::_k_slotApplyClicked()
 
 void PageColorBackgroundDialogPrivate::applyChanges()
 {
-    if(webFrame) {
+    if (webFrame) {
         QWebElement element = webFrame->findFirstElement(QLatin1String("body"));
-        if(!element.isNull()) {
-            if(pageColorWidget->useDefaultColor()) {
+        if (!element.isNull()) {
+            if (pageColorWidget->useDefaultColor()) {
                 element.removeAttribute(QLatin1String("bgcolor"));
                 element.removeAttribute(QLatin1String("text"));
                 element.removeAttribute(QLatin1String("link"));
@@ -128,7 +128,7 @@ void PageColorBackgroundDialogPrivate::applyChanges()
                 if(col.isValid())
                     element.setAttribute(QLatin1String("vlink"),col.name());
             }
-            if(pageColorWidget->backgroundImageUrl().isEmpty()) {
+            if (pageColorWidget->backgroundImageUrl().isEmpty()) {
                 element.removeAttribute(QLatin1String("background"));
             } else {
                 //FIX IT

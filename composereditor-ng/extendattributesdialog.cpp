@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -18,7 +18,7 @@
 
 */
 
-#include "extendattributes.h"
+#include "extendattributesdialog.h"
 
 #include <KSeparator>
 #include <KLocale>
@@ -33,10 +33,10 @@
 
 namespace ComposerEditorNG {
 
-class ExtendAttributesPrivate
+class ExtendAttributesDialogPrivate
 {
 public:
-    ExtendAttributesPrivate(const QWebElement& element, ExtendAttributes::ExtendType extendType, ExtendAttributes *qq)
+    ExtendAttributesDialogPrivate(const QWebElement& element, ExtendAttributesDialog::ExtendType extendType, ExtendAttributesDialog *qq)
         : webElement(element), type(extendType), q(qq)
     {
         q->setCaption( i18n( "Extend Attribute" ) );
@@ -51,20 +51,20 @@ public:
 
         QHBoxLayout *hbox = new QHBoxLayout;
         attributes = new KComboBox;
-        q->connect(attributes,SIGNAL(activated(int)),q,SLOT(_k_attributeChanged(int)));
+        q->connect(attributes, SIGNAL(activated(int)), q, SLOT(_k_attributeChanged(int)));
         hbox->addWidget(attributes);
         attributeValue = new KLineEdit;
         hbox->addWidget(attributeValue);
 
         lay->addLayout(hbox);
         removeAttribute = new KPushButton( i18n( "Remove" ) );
-        q->connect(removeAttribute,SIGNAL(clicked(bool)),q,SLOT(_k_slotRemoveAttribute()));
+        q->connect(removeAttribute, SIGNAL(clicked(bool)), q, SLOT(_k_slotRemoveAttribute()));
         lay->addWidget(removeAttribute);
 
         KSeparator *sep = new KSeparator;
         lay->addWidget( sep );
 
-        q->connect(q,SIGNAL(okClicked()),q,SLOT(_k_slotOkClicked()));
+        q->connect(q, SIGNAL(okClicked()), q, SLOT(_k_slotOkClicked()));
         fillCombobox();
     }
     void _k_slotOkClicked();
@@ -79,47 +79,45 @@ public:
     KComboBox *attributes;
     KLineEdit *attributeValue;
     KPushButton *removeAttribute;
-    ExtendAttributes::ExtendType type;
-    ExtendAttributes *q;
+    ExtendAttributesDialog::ExtendType type;
+    ExtendAttributesDialog *q;
 };
 
-void ExtendAttributesPrivate::_k_attributeChanged(int)
+void ExtendAttributesDialogPrivate::_k_attributeChanged(int)
 {
     //TODO
 }
 
-void ExtendAttributesPrivate::fillCombobox()
+void ExtendAttributesDialogPrivate::fillCombobox()
 {
     switch(type) {
-    case ExtendAttributes::Image:
+    case ExtendAttributesDialog::Image:
         break;
-    case ExtendAttributes::Table:
+    case ExtendAttributesDialog::Table:
         break;
-    case ExtendAttributes::Cell:
+    case ExtendAttributesDialog::Cell:
         break;
-    case ExtendAttributes::Link:
+    case ExtendAttributesDialog::Link:
         break;
     }
 
     //TODO
 }
 
-void ExtendAttributesPrivate::_k_slotRemoveAttribute()
+void ExtendAttributesDialogPrivate::_k_slotRemoveAttribute()
 {
     QTreeWidgetItem *item = treeWidget->currentItem();
-    if (item) {
-        delete item;
-    }
+    delete item;
 }
 
-void ExtendAttributesPrivate::initialize()
+void ExtendAttributesDialogPrivate::initialize()
 {
     if (!webElement.isNull()) {
 
     }
 }
 
-void ExtendAttributesPrivate::_k_slotOkClicked()
+void ExtendAttributesDialogPrivate::_k_slotOkClicked()
 {
     if (!webElement.isNull()) {
 
@@ -127,16 +125,16 @@ void ExtendAttributesPrivate::_k_slotOkClicked()
     q->accept();
 }
 
-ExtendAttributes::ExtendAttributes(const QWebElement &element, ExtendType type, QWidget *parent)
-    : KDialog(parent), d(new ExtendAttributesPrivate(element, type, this))
+ExtendAttributesDialog::ExtendAttributesDialog(const QWebElement &element, ExtendType type, QWidget *parent)
+    : KDialog(parent), d(new ExtendAttributesDialogPrivate(element, type, this))
 {
 }
 
-ExtendAttributes::~ExtendAttributes()
+ExtendAttributesDialog::~ExtendAttributesDialog()
 {
     delete d;
 }
 
 }
 
-#include "extendattributes.moc"
+#include "extendattributesdialog.moc"

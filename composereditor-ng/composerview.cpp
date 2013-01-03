@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -225,7 +225,7 @@ void ComposerViewPrivate::hideImageResizeWidget()
 
 void ComposerViewPrivate::showImageResizeWidget()
 {
-    if(!imageResizeWidget) {
+    if (!imageResizeWidget) {
         imageResizeWidget = new ComposerImageResizeWidget(contextMenuResult.element(),q);
         imageResizeWidget->move(contextMenuResult.element().geometry().topLeft());
         imageResizeWidget->show();
@@ -242,7 +242,7 @@ static QVariant execJScript(QWebElement element, const QString& script)
 
 void ComposerViewPrivate::_k_setFormatType(QAction *act)
 {
-    if(!act) {
+    if (!act) {
         return;
     }
     QString command;
@@ -292,9 +292,9 @@ void ComposerViewPrivate::_k_slotAddEmoticon(const QString& emoticon)
 void ComposerViewPrivate::_k_slotInsertHtml()
 {
     QPointer<KPIMTextEdit::InsertHtmlDialog> dialog = new KPIMTextEdit::InsertHtmlDialog( q );
-    if ( dialog->exec() ) {
+    if (dialog->exec()) {
         const QString str = dialog->html().remove(QLatin1String("\n"));
-        if ( !str.isEmpty() ) {
+        if (!str.isEmpty()) {
             execCommand(QLatin1String("insertHTML"), str);
         }
     }
@@ -305,7 +305,7 @@ void ComposerViewPrivate::_k_setTextBackgroundColor()
 {
     QColor newColor = ComposerEditorNG::Util::convertRgbToQColor(evaluateJavascript(QLatin1String("getTextBackgroundColor()")).toString());
     const int result = KColorDialog::getColor(newColor,q);
-    if(result == QDialog::Accepted) {
+    if (result == QDialog::Accepted) {
         execCommand(QLatin1String("hiliteColor"), newColor.name());
     }
 }
@@ -324,7 +324,7 @@ void ComposerViewPrivate::_k_setTextForegroundColor()
 {
     QColor newColor = ComposerEditorNG::Util::convertRgbToQColor(evaluateJavascript(QLatin1String("getTextForegroundColor()")).toString());
     const int result = KColorDialog::getColor(newColor,q);
-    if(result == QDialog::Accepted) {
+    if (result == QDialog::Accepted) {
         execCommand(QLatin1String("foreColor"), newColor.name());
     }
 }
@@ -332,7 +332,7 @@ void ComposerViewPrivate::_k_setTextForegroundColor()
 void ComposerViewPrivate::_k_slotAddImage()
 {
     QPointer<ComposerImageDialog> dlg = new ComposerImageDialog( q );
-    if ( dlg->exec() == KDialog::Accepted ) {
+    if (dlg->exec() == KDialog::Accepted) {
         execCommand(QLatin1String("insertHTML"), dlg->html());
     }
     delete dlg;
@@ -348,7 +348,7 @@ void ComposerViewPrivate::_k_slotEditImage()
 void ComposerViewPrivate::_k_slotInsertTable()
 {
     QPointer<ComposerTableDialog> dlg = new ComposerTableDialog( q );
-    if( dlg->exec() == KDialog::Accepted ) {
+    if (dlg->exec() == KDialog::Accepted) {
         execCommand(QLatin1String("insertHTML"), dlg->html());
     }
     delete dlg;
@@ -363,9 +363,9 @@ void ComposerViewPrivate::_k_insertLink()
 {
     const QString selectedText = q->selectedText();
     QPointer<ComposerEditorNG::ComposerLinkDialog> dlg = new ComposerEditorNG::ComposerLinkDialog( selectedText, q );
-    if( dlg->exec() == KDialog::Accepted ) {
+    if (dlg->exec() == KDialog::Accepted) {
         const QString html(dlg->html());
-        if(!html.isEmpty())
+        if (!html.isEmpty())
             execCommand ( QLatin1String("insertHTML"), html );
     }
     delete dlg;
@@ -390,14 +390,11 @@ void ComposerViewPrivate::_k_setFontFamily(const QString& family)
 void ComposerViewPrivate::_k_slotSpellCheck()
 {
     QString text(execJScript(contextMenuResult.element(), QLatin1String("this.value")).toString());
-    if (contextMenuResult.isContentSelected())
-    {
+    if (contextMenuResult.isContentSelected()) {
         spellTextSelectionStart = qMax(0, execJScript(contextMenuResult.element(), QLatin1String("this.selectionStart")).toInt());
         spellTextSelectionEnd = qMax(0, execJScript(contextMenuResult.element(), QLatin1String("this.selectionEnd")).toInt());
         text = text.mid(spellTextSelectionStart, (spellTextSelectionEnd - spellTextSelectionStart));
-    }
-    else
-    {
+    } else {
         spellTextSelectionStart = 0;
         spellTextSelectionEnd = 0;
     }
@@ -503,7 +500,7 @@ void ComposerViewPrivate::_k_slotPrint()
     QPrinter printer;
     QPointer<QPrintDialog> dlg(KdePrint::createPrintDialog(&printer));
 
-    if ( dlg && dlg->exec() == QDialog::Accepted ) {
+    if (dlg && dlg->exec() == QDialog::Accepted ) {
       q->print( &printer );
     }
     delete dlg;
@@ -537,7 +534,7 @@ void ComposerViewPrivate::_k_slotAdjustActions()
     FOLLOW_CHECK(action_direction_rtl, QWebPage::SetTextDirectionRightToLeft);
 
     const QString alignment = evaluateJavascript(QLatin1String("getAlignment()")).toString();
-    if(alignment == QLatin1String("left")) {
+    if (alignment == QLatin1String("left")) {
         action_align_left->setChecked(true);
     } else if(alignment == QLatin1String("right")) {
         action_align_right->setChecked(true);
@@ -579,19 +576,19 @@ bool ComposerViewPrivate::queryCommandState(const QString &cmd)
 void ComposerViewPrivate::_k_slotSpeakText()
 {
     // If KTTSD not running, start it.
-    if (!QDBusConnection::sessionBus().interface()->isServiceRegistered(QLatin1String("org.kde.kttsd")))
-    {
+    if (!QDBusConnection::sessionBus().interface()->isServiceRegistered(QLatin1String("org.kde.kttsd"))) {
         QString error;
-        if (KToolInvocation::startServiceByDesktopName(QLatin1String("kttsd"), QStringList(), &error))
-        {
+        if (KToolInvocation::startServiceByDesktopName(QLatin1String("kttsd"), QStringList(), &error)) {
             KMessageBox::error(q, i18n( "Starting Jovie Text-to-Speech Service Failed"), error );
             return;
         }
     }
     QDBusInterface ktts(QLatin1String("org.kde.kttsd"), QLatin1String("/KSpeech"), QLatin1String("org.kde.KSpeech"));
+
     QString text = q->selectedText();
     if(text.isEmpty())
         text = q->page()->mainFrame()->toPlainText();
+
     ktts.asyncCall(QLatin1String("say"), text, 0);
 }
 
@@ -600,6 +597,7 @@ ComposerView::ComposerView(QWidget *parent)
 {
     QFile file ( KStandardDirs::locate ( "data", QLatin1String("composereditor/composereditorinitialhtml") ) );
     kDebug() <<file.fileName();
+
     if ( !file.open ( QIODevice::ReadOnly ) )
         KMessageBox::error(this, i18n ( "Cannot open template file." ), i18n ( "composer editor" ));
     else
@@ -608,7 +606,7 @@ ComposerView::ComposerView(QWidget *parent)
     page()->setContentEditable(true);
     page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
     connect(this, SIGNAL(linkClicked(QUrl)), SIGNAL(openLink(QUrl)));
-    connect( page(), SIGNAL (selectionChanged()), this, SLOT(_k_slotAdjustActions()) );
+    connect(page(), SIGNAL(selectionChanged()), this, SLOT(_k_slotAdjustActions()) );
 
     setWindowModified(false);
 
@@ -746,8 +744,6 @@ void ComposerView::createActions(KActionCollection *actionCollection)
     actionCollection->addAction(QLatin1String("htmleditor_format_list_unordered"), d->action_unordered_list);
     FORWARD_ACTION(d->action_unordered_list, QWebPage::InsertUnorderedList);
 
-
-
     d->action_format_type = new KSelectAction(KIcon(QLatin1String("format-list-unordered")), i18nc("@title:menu", "List Style"), actionCollection);
     KAction *act = d->action_format_type->addAction(i18n( "Paragraph" ));
     act->setData(QVariant::fromValue(ComposerViewPrivate::Paragraph));
@@ -793,9 +789,6 @@ void ComposerView::createActions(KActionCollection *actionCollection)
     d->htmlEditorActionList.append((d->action_text_background_color));
     actionCollection->addAction(QLatin1String("htmleditor_format_text_background_color"), d->action_text_background_color);
     connect(d->action_text_background_color, SIGNAL(triggered()), this, SLOT(_k_setTextBackgroundColor()));
-
-
-
 
     d->action_add_emoticon = new KPIMTextEdit::EmoticonTextEditAction(actionCollection);
     actionCollection->addAction(QLatin1String("htmleditor_add_emoticon"), d->action_add_emoticon);
@@ -909,11 +902,11 @@ void ComposerView::contextMenuEvent(QContextMenuEvent* event)
     menu->addSeparator();
     menu->addAction(page()->action(QWebPage::SelectAll));
     menu->addSeparator();
-    if(!emptyDocument) {
+    if (!emptyDocument) {
         menu->addAction(d->action_find);
         menu->addSeparator();
     }
-    if(imageSelected) {
+    if (imageSelected) {
         QAction *editImageAction = menu->addAction(i18n("Edit Image..."));
         connect( editImageAction, SIGNAL(triggered(bool)), this, SLOT(_k_slotEditImage()) );
     } else if(linkSelected) {
@@ -925,7 +918,7 @@ void ComposerView::contextMenuEvent(QContextMenuEvent* event)
         menu->addAction(tableActionMenu);
     }
     menu->addSeparator();
-    if(!emptyDocument) {
+    if (!emptyDocument) {
         menu->addAction(d->action_spell_check);
         menu->addSeparator();
     }
@@ -953,7 +946,7 @@ void ComposerView::setActionsEnabled(bool enabled)
 
 void ComposerView::mousePressEvent(QMouseEvent * event)
 {
-    if(event->button() == Qt::LeftButton) {
+    if (event->button() == Qt::LeftButton) {
         d->contextMenuResult = page()->mainFrame()->hitTestContent(event->pos());
         const bool imageSelected = !d->contextMenuResult.imageUrl().isEmpty();
         if(imageSelected) {
@@ -979,7 +972,7 @@ void ComposerView::wheelEvent(QWheelEvent * event)
 
 void ComposerView::mouseDoubleClickEvent(QMouseEvent * event)
 {
-    if(event->button() == Qt::LeftButton) {
+    if (event->button() == Qt::LeftButton) {
         d->contextMenuResult = page()->mainFrame()->hitTestContent(event->pos());
         const bool imageSelected = !d->contextMenuResult.imageUrl().isEmpty();
         if(imageSelected) {

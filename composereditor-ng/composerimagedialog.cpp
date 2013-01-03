@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -59,7 +59,7 @@ public:
 
 void ComposerImageDialogPrivate::_k_slotOkClicked()
 {
-    if(!webElement.isNull()) {
+    if (!webElement.isNull()) {
         updateImageHtml();
     }
     q->accept();
@@ -67,7 +67,7 @@ void ComposerImageDialogPrivate::_k_slotOkClicked()
 
 void ComposerImageDialogPrivate::_k_slotApplyClicked()
 {
-    if(!webElement.isNull()) {
+    if (!webElement.isNull()) {
         updateImageHtml();
     }
 }
@@ -81,27 +81,27 @@ void ComposerImageDialogPrivate::updateImageHtml()
         imageWidth = imageWidget->imageWidth();
         imageHeight = imageWidget->imageHeight();
     }
-    if(imageWidth == -1 ) {
+    if (imageWidth == -1 ) {
         webElement.removeAttribute(QLatin1String("width"));
     } else {
         webElement.setAttribute(QLatin1String("width"), QString::number(imageWidth));
     }
 
-    if(imageHeight == -1 ) {
+    if (imageHeight == -1 ) {
         webElement.removeAttribute(QLatin1String("height"));
     } else {
         webElement.setAttribute(QLatin1String("height"), QString::number(imageHeight));
     }
 
     QString str(title->text());
-    if(str.isEmpty()) {
+    if (str.isEmpty()) {
         webElement.removeAttribute(QLatin1String("title"));
     } else {
         webElement.setAttribute(QLatin1String("title"), str);
     }
 
     str = alternateTitle->text();
-    if(str.isEmpty()) {
+    if (str.isEmpty()) {
         webElement.removeAttribute(QLatin1String("alt"));
     } else {
         webElement.setAttribute(QLatin1String("alt"), str);
@@ -151,7 +151,7 @@ void ComposerImageDialogPrivate::initialize()
     q->setMainWidget(w);
     q->enableButtonOk( false );
 
-    if(!webElement.isNull()) {
+    if (!webElement.isNull()) {
         q->connect(q,SIGNAL(applyClicked()),q,SLOT(_k_slotApplyClicked()));
         imageWidget->setImageUrl(webElement.attribute(QLatin1String("src")));
         if(webElement.hasAttribute(QLatin1String("height")) && webElement.hasAttribute(QLatin1String("width"))) {
@@ -173,21 +173,21 @@ QString ComposerImageDialogPrivate::html() const
         imageHeight = imageWidget->imageHeight();
     }
     QString imageHtml = QString::fromLatin1("<img");
-    if(imageWidth>0) {
+    if (imageWidth>0) {
         imageHtml += QString::fromLatin1(" width=%1").arg(imageWidth);
     }
-    if(imageHeight>0) {
+    if (imageHeight>0) {
         imageHtml += QString::fromLatin1(" height=%1").arg(imageHeight);
     }
-    if(!url.isEmpty()) {
+    if (!url.isEmpty()) {
         imageHtml += QString::fromLatin1(" src='file://%1'").arg(url.path());
     }
     QString str = title->text();
-    if(!str.isEmpty()) {
+    if (!str.isEmpty()) {
         imageHtml += QString::fromLatin1(" title='%1'").arg(str);
     }
     str = alternateTitle->text();
-    if(!str.isEmpty()) {
+    if (!str.isEmpty()) {
         imageHtml += QString::fromLatin1(" alt='%1'").arg(str);
     }
     imageHtml += QString::fromLatin1(" />");

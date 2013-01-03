@@ -41,6 +41,11 @@
 class DBMan::Private
 {
 public:
+    Private()
+        : mWallet(0),
+          useWallet(false)
+    {
+    }
     KWallet::Wallet* mWallet;
     QString mLastErrorText;
     bool useWallet;
@@ -128,6 +133,10 @@ DBMan::~DBMan()
 {
     kDebug();
     d->db.close();
+    if(d->useWallet) {
+        d->mWallet->deleteLater();
+        d->mWallet = 0;
+    }
     delete d;
     mSelf = 0L;
 }
