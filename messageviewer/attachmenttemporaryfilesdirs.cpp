@@ -67,7 +67,7 @@ void AttachmentTemporaryFilesDirs::addTempFile( const QString& file )
     mTempFiles.append( file );
 }
 
-void AttachmentTemporaryFilesDirs::addTemDir( const QString& dir )
+void AttachmentTemporaryFilesDirs::addTempDir( const QString& dir )
 {
     mTempDirs.append( dir );
 }
