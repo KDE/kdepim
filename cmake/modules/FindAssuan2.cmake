@@ -14,7 +14,6 @@ macro( macro_bool_to_bool FOUND_VAR )
   endforeach()
 endmacro()
 
-include (MacroEnsureVersion)
 include (MacroBoolTo01)
 include (MacroLogFeature)
 
@@ -129,7 +128,9 @@ else() # not WIN32
       exec_program( ${_ASSUAN2CONFIG_EXECUTABLE} ARGS --version OUTPUT_VARIABLE ASSUAN2_VERSION )
 
       set( _ASSUAN2_MIN_VERSION "2.0.0" )
-      macro_ensure_version( ${_ASSUAN2_MIN_VERSION} ${ASSUAN2_VERSION} _ASSUAN2_INSTALLED_VERSION_OK )
+      if( ASSUAN2_VERSION VERSION_GREATER ${_ASSUAN2_MIN_VERSION} )
+        set( _ASSUAN2_INSTALLED_VERSION_OK TRUE )
+      endif()
 
       if ( NOT _ASSUAN2_INSTALLED_VERSION_OK )
 
