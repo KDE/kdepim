@@ -19,17 +19,41 @@
 */
 
 #include "extendattributesbutton.h"
+#include "extendattributes.h"
+
+#include <KLocale>
 
 namespace ComposerEditorNG
 {
 
-ExtendAttributesButton::ExtendAttributesButton(QWidget *parent)
-    : QPushButton(parent)
+class ExtendAttributesButtonPrivate
 {
+public:
+    ExtendAttributesButtonPrivate(ExtendAttributesButton *qq)
+        : q(qq)
+    {
+        q->setText(i18n("Advanced"));
+        q->connect(q, SIGNAL(clicked(bool)), q, SLOT(_k_slotClicked()));
+    }
+    void _k_slotClicked();
+
+    ExtendAttributesButton *q;
+};
+
+void ExtendAttributesButtonPrivate::_k_slotClicked()
+{
+    //TODO
+}
+
+ExtendAttributesButton::ExtendAttributesButton(QWidget *parent)
+    : QPushButton(parent), d(new ExtendAttributesButtonPrivate(this))
+{
+    setText(i18n("Advanced"));
 }
 
 ExtendAttributesButton::~ExtendAttributesButton()
 {
+    delete d;
 }
 
 

@@ -25,12 +25,17 @@
 
 namespace ComposerEditorNG
 {
+class ExtendAttributesButtonPrivate;
 class ExtendAttributesButton : public QPushButton
 {
     Q_OBJECT
 public:
     explicit ExtendAttributesButton(QWidget *parent);
     ~ExtendAttributesButton();
+private:
+    friend class ExtendAttributesButtonPrivate;
+    ExtendAttributesButtonPrivate * const d;
+    Q_PRIVATE_SLOT(d, void _k_slotClicked() )
 };
 }
 
