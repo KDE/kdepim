@@ -30,11 +30,11 @@ class AttachmentTemporaryFilesDirs : public QObject
 {
     Q_OBJECT
 public:
-    explicit AttachmentTemporaryFilesDirs(QObject *parent);
+    explicit AttachmentTemporaryFilesDirs(QObject *parent = 0);
     ~AttachmentTemporaryFilesDirs();
 
     void addTempFile( const QString& file );
-    void addTemDir( const QString& dir );
+    void addTempDir( const QString& dir );
     QStringList temporaryFiles() const;
     void removeTempFiles();
 
