@@ -15,7 +15,6 @@ macro( macro_bool_to_bool FOUND_VAR )
 endmacro()
 
 include (MacroBoolTo01)
-include (MacroLogFeature)
 
 if ( WIN32 )
 
