@@ -20,12 +20,14 @@
 
 #include "attachmenttemporaryfilesdirs.h"
 
-#include <QDebug>
 #include <QDir>
 #include <QFile>
 #include <QTimer>
 
 using namespace MessageViewer;
+
+//10 secondes
+static int DELETEAFTER = 10000;
 
 AttachmentTemporaryFilesDirs::AttachmentTemporaryFilesDirs(QObject *parent)
     : QObject(parent)
@@ -35,18 +37,15 @@ AttachmentTemporaryFilesDirs::AttachmentTemporaryFilesDirs(QObject *parent)
 
 AttachmentTemporaryFilesDirs::~AttachmentTemporaryFilesDirs()
 {
-    qDebug()<<" AttachmentTemporaryFilesDirs::~AttachmentTemporaryFilesDirs() ";
 }
 
 void AttachmentTemporaryFilesDirs::removeTempFiles()
 {
-    //10 secondes.
-    QTimer::singleShot(10000, this, SLOT(slotRemoveTempFiles()));
+    QTimer::singleShot(DELETEAFTER, this, SLOT(slotRemoveTempFiles()));
 }
 
 void AttachmentTemporaryFilesDirs::slotRemoveTempFiles()
 {
-    qDebug()<<" NodeHelper::removeTempFiles()***********************************";
     QStringList::ConstIterator end = mTempFiles.constEnd();
     for (QStringList::ConstIterator it = mTempFiles.constBegin(); it != end; ++it) {
         QFile::remove(*it);
