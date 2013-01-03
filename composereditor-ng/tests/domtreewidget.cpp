@@ -69,3 +69,5 @@ void DomTreeWidget::examineChildElements(const QWebElement &parentElement, QTree
         element = element.nextSibling();
     }
 }
+
+#include "domtreewidget.moc"
