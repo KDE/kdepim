@@ -36,6 +36,10 @@ class ExtendAttributesButton : public QPushButton
 public:
     explicit ExtendAttributesButton(const QWebElement &element, ComposerEditorNG::ExtendAttributesDialog::ExtendType type, QWidget *parent);
     ~ExtendAttributesButton();
+
+Q_SIGNALS:
+    void webElementChanged();
+
 private:
     friend class ExtendAttributesButtonPrivate;
     ExtendAttributesButtonPrivate * const d;

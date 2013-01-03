@@ -47,10 +47,9 @@ void ExtendAttributesButtonPrivate::_k_slotClicked()
 {
     QPointer<ExtendAttributesDialog> dlg = new ExtendAttributesDialog(webElement, extendType, q );
     if(dlg->exec()) {
-        //TODO
+        Q_EMIT q->webElementChanged();
     }
     delete dlg;
-    //TODO
 }
 
 ExtendAttributesButton::ExtendAttributesButton(const QWebElement& element, ExtendAttributesDialog::ExtendType type, QWidget *parent)
