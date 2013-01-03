@@ -87,7 +87,7 @@ QString ComposerEditor::plainTextContent() const
 
 void ComposerEditor::setEnableRichText(bool richTextEnabled)
 {
-    if(d->richTextEnabled != richTextEnabled) {
+    if (d->richTextEnabled != richTextEnabled) {
         d->richTextEnabled = richTextEnabled;
         d->view->setActionsEnabled(d->richTextEnabled);
     }

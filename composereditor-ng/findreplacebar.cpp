@@ -117,7 +117,7 @@ void FindReplaceBarPrivate::setFoundMatch( bool match )
     QString styleSheet;
 
     if (!search->text().isEmpty()) {
-        if(negativeBackground.isEmpty()) {
+        if (negativeBackground.isEmpty()) {
             KStatefulBrush bgBrush(KColorScheme::View, KColorScheme::PositiveBackground);
             positiveBackground = QString::fromLatin1("QLineEdit{ background-color:%1 }").arg(bgBrush.brush(search).color().name());
             bgBrush = KStatefulBrush(KColorScheme::View, KColorScheme::NegativeBackground);

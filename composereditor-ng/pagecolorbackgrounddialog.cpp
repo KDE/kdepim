@@ -65,10 +65,10 @@ public:
 
 void PageColorBackgroundDialogPrivate::initSettings()
 {
-    if(webFrame) {
+    if (webFrame) {
         const QWebElement element = webFrame->findFirstElement(QLatin1String("body"));
-        if(!element.isNull()) {
-            if(element.hasAttribute(QLatin1String("bgcolor"))||
+        if (!element.isNull()) {
+            if (element.hasAttribute(QLatin1String("bgcolor"))||
                     element.hasAttribute(QLatin1String("text"))||
                     element.hasAttribute(QLatin1String("link"))||
                     element.hasAttribute(QLatin1String("vlink"))||
@@ -82,7 +82,7 @@ void PageColorBackgroundDialogPrivate::initSettings()
             } else {
                 pageColorWidget->setUseDefaultColor(true);
             }
-            if(element.hasAttribute(QLatin1String("background"))) {
+            if (element.hasAttribute(QLatin1String("background"))) {
                 pageColorWidget->setBackgroundImageUrl(KUrl(element.attribute(QLatin1String("background"))));
             }
         }
@@ -128,7 +128,7 @@ void PageColorBackgroundDialogPrivate::applyChanges()
                 if(col.isValid())
                     element.setAttribute(QLatin1String("vlink"),col.name());
             }
-            if(pageColorWidget->backgroundImageUrl().isEmpty()) {
+            if (pageColorWidget->backgroundImageUrl().isEmpty()) {
                 element.removeAttribute(QLatin1String("background"));
             } else {
                 //FIX IT

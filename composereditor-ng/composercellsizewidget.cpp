@@ -54,7 +54,7 @@ public:
         layout->addWidget(size);
 
         typeSize = new KComboBox;
-        q->connect( typeSize, SIGNAL(activated(int)), q, SLOT(slotTypeChanged(int)) );
+        q->connect(typeSize, SIGNAL(activated(int)), q, SLOT(slotTypeChanged(int)) );
 
         // xgettext: no-c-format
         typeSize->addItem( i18n( "% of windows" ), Percentage );
@@ -89,7 +89,7 @@ void ComposerCellSizeWidgetPrivate::setLabel(const QString& str)
 
 void ComposerCellSizeWidgetPrivate::setValue(const QString& val)
 {
-    if(val.isEmpty()) {
+    if (val.isEmpty()) {
         check->setChecked(false);
     } else {
         check->setChecked(true);
@@ -131,8 +131,8 @@ void ComposerCellSizeWidgetPrivate::slotTypeChanged(int index)
 
 QString ComposerCellSizeWidgetPrivate::value() const
 {
-    if(check->isChecked()) {
-        if((TypeSize)typeSize->itemData( typeSize->currentIndex() ).toInt() == Percentage) {
+    if (check->isChecked()) {
+        if ((TypeSize)typeSize->itemData( typeSize->currentIndex() ).toInt() == Percentage) {
             return QString::fromLatin1("%1%").arg(size->value());
         }
         return QString::number(size->value());

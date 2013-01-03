@@ -225,7 +225,7 @@ void ComposerViewPrivate::hideImageResizeWidget()
 
 void ComposerViewPrivate::showImageResizeWidget()
 {
-    if(!imageResizeWidget) {
+    if (!imageResizeWidget) {
         imageResizeWidget = new ComposerImageResizeWidget(contextMenuResult.element(),q);
         imageResizeWidget->move(contextMenuResult.element().geometry().topLeft());
         imageResizeWidget->show();
@@ -576,8 +576,7 @@ bool ComposerViewPrivate::queryCommandState(const QString &cmd)
 void ComposerViewPrivate::_k_slotSpeakText()
 {
     // If KTTSD not running, start it.
-    if (!QDBusConnection::sessionBus().interface()->isServiceRegistered(QLatin1String("org.kde.kttsd")))
-    {
+    if (!QDBusConnection::sessionBus().interface()->isServiceRegistered(QLatin1String("org.kde.kttsd"))) {
         QString error;
         if (KToolInvocation::startServiceByDesktopName(QLatin1String("kttsd"), QStringList(), &error)) {
             KMessageBox::error(q, i18n( "Starting Jovie Text-to-Speech Service Failed"), error );

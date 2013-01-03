@@ -94,7 +94,7 @@ ComposerImageResizeWidgetPrivate::ResizeDirection ComposerImageResizeWidgetPriva
 {
     ResizeDirection dir;
     const QRect r(imageElement.geometry());
-    if(QRect(0,0,resizeSquareSize,resizeSquareSize).contains(pos)) {
+    if (QRect(0,0,resizeSquareSize,resizeSquareSize).contains(pos)) {
         dir = TopLeft;
     } else if(QRect(0,r.height()-resizeSquareSize,resizeSquareSize,resizeSquareSize).contains(pos)) {
         dir = BottomLeft;
@@ -154,10 +154,10 @@ void ComposerImageResizeWidgetPrivate::resizeImage(const QPoint& pos)
         width = imageElement.attribute(QLatin1String("width")).toInt() - pos.x() - firstPosition.x();
         break;
     }
-    if(width != -1) {
+    if (width != -1) {
         imageElement.setAttribute(QLatin1String("width"),QString::number(width));
     }
-    if(height != -1) {
+    if (height != -1) {
         imageElement.setAttribute(QLatin1String("height"),QString::number(height));
     }
     q->resize(QSize(width,height));
@@ -176,7 +176,7 @@ ComposerImageResizeWidget::~ComposerImageResizeWidget()
 
 void ComposerImageResizeWidget::mouseMoveEvent( QMouseEvent * event )
 {
-    if(!d->mousePressed) {
+    if (!d->mousePressed) {
         d->setResizeDirectionCursor(event->pos());
     } else if(d->direction!=ComposerImageResizeWidgetPrivate::None){
         //TODO resize
@@ -186,7 +186,7 @@ void ComposerImageResizeWidget::mouseMoveEvent( QMouseEvent * event )
 void ComposerImageResizeWidget::mousePressEvent( QMouseEvent * event )
 {
     d->direction = d->resizeDirection(event->pos());
-    if(d->direction!=ComposerImageResizeWidgetPrivate::None) {
+    if (d->direction!=ComposerImageResizeWidgetPrivate::None) {
         d->mousePressed = true;
         d->firstPosition = event->pos();
     } else {
@@ -197,7 +197,7 @@ void ComposerImageResizeWidget::mousePressEvent( QMouseEvent * event )
 
 void ComposerImageResizeWidget::mouseReleaseEvent( QMouseEvent * event )
 {
-    if(d->mousePressed) {
+    if (d->mousePressed) {
         d->resizeImage(event->pos());
         d->mousePressed = false;
         d->direction = ComposerImageResizeWidgetPrivate::None;
@@ -206,7 +206,7 @@ void ComposerImageResizeWidget::mouseReleaseEvent( QMouseEvent * event )
 
 void ComposerImageResizeWidget::paintEvent( QPaintEvent * )
 {
-    if(d->imageElement.isNull())
+    if (d->imageElement.isNull())
         return;
 
     const int width = d->imageElement.geometry().width();

@@ -108,10 +108,10 @@ void ComposerTableFormatDialogPrivate::initialize(const QWebElement &element)
 
     q->connect(useBackgroundColor, SIGNAL(toggled(bool)), backgroundColor, SLOT(setEnabled(bool)));
     if (!webElement.isNull()) {
-        if(webElement.hasAttribute(QLatin1String("border"))) {
+        if (webElement.hasAttribute(QLatin1String("border"))) {
             insertTableWidget->setBorder(webElement.attribute(QLatin1String("border")).toInt());
         }
-        if(webElement.hasAttribute(QLatin1String("width"))) {
+        if (webElement.hasAttribute(QLatin1String("width"))) {
             QString width = webElement.attribute(QLatin1String("width"));
             if(width.endsWith(QLatin1Char('%'))) {
                 insertTableWidget->setTypeOfLength(QTextLength::PercentageLength);
@@ -122,7 +122,7 @@ void ComposerTableFormatDialogPrivate::initialize(const QWebElement &element)
                 insertTableWidget->setLength(width.toInt());
             }
         }
-        if(webElement.hasAttribute(QLatin1String("bgcolor"))) {
+        if (webElement.hasAttribute(QLatin1String("bgcolor"))) {
             useBackgroundColor->setChecked(true);
             const QColor color = QColor(webElement.attribute(QLatin1String("bgcolor")));
             backgroundColor->setColor(color);

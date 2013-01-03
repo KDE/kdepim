@@ -69,7 +69,7 @@ QWebElement TableHelper::rowWebElement(const QWebElement&element)
 
 QWebElement TableHelper::tableWebElement(const QWebElement&element)
 {
-    if(element.tagName().toLower() == TABLE) {
+    if (element.tagName().toLower() == TABLE) {
         return element;
     } else {
         QWebElement e = element;

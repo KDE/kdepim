@@ -104,27 +104,27 @@ public:
         q->connect(q,SIGNAL(okClicked()),q,SLOT(_k_slotOkClicked()));
 
         q->connect(q,SIGNAL(applyClicked()),q,SLOT(_k_slotApplyClicked()));
-        if(!webElement.isNull()) {
-            if(webElement.hasAttribute(QLatin1String("bgcolor"))) {
+        if (!webElement.isNull()) {
+            if (webElement.hasAttribute(QLatin1String("bgcolor"))) {
                 useBackgroundColor->setChecked(true);
                 const QColor color = QColor(webElement.attribute(QLatin1String("bgcolor")));
                 backgroundColor->setColor(color);
             }
-            if(webElement.hasAttribute(QLatin1String("valign"))) {
+            if (webElement.hasAttribute(QLatin1String("valign"))) {
                 useVerticalAlignment->setChecked(true);
                 const QString valign = webElement.attribute(QLatin1String("valign"));
                 verticalAlignment->setCurrentIndex( verticalAlignment->findData( valign ) );
             }
-            if(webElement.hasAttribute(QLatin1String("align"))) {
+            if (webElement.hasAttribute(QLatin1String("align"))) {
                 useHorizontalAlignment->setChecked(true);
                 const QString align = webElement.attribute(QLatin1String("align"));
                 horizontalAlignment->setCurrentIndex( horizontalAlignment->findData( align ) );
             }
-            if(webElement.hasAttribute(QLatin1String("width"))) {
+            if (webElement.hasAttribute(QLatin1String("width"))) {
                 const QString widthVal = webElement.attribute(QLatin1String("width"));
                 width->setValue(widthVal);
             }
-            if(webElement.hasAttribute(QLatin1String("height"))) {
+            if (webElement.hasAttribute(QLatin1String("height"))) {
                 const QString heightVal = webElement.attribute(QLatin1String("height"));
                 height->setValue(heightVal);
             }
@@ -158,33 +158,33 @@ void ComposerTableCellFormatDialogPrivate::_k_slotApplyClicked()
 
 void ComposerTableCellFormatDialogPrivate::applyChanges()
 {
-    if(!webElement.isNull()) {
-        if(useBackgroundColor->isChecked()) {
+    if (!webElement.isNull()) {
+        if (useBackgroundColor->isChecked()) {
             const QColor col = backgroundColor->color();
-            if(col.isValid()) {
+            if (col.isValid()) {
                 webElement.setAttribute(QLatin1String("bgcolor"),col.name());
             }
         } else {
             webElement.removeAttribute(QLatin1String("bgcolor"));
         }
-        if(useVerticalAlignment->isChecked()) {
+        if (useVerticalAlignment->isChecked()) {
             webElement.setAttribute(QLatin1String("valign"), verticalAlignment->itemData( verticalAlignment->currentIndex () ).toString());
         } else {
             webElement.removeAttribute(QLatin1String("valign"));
         }
-        if(useHorizontalAlignment->isChecked()) {
+        if (useHorizontalAlignment->isChecked()) {
             webElement.setAttribute(QLatin1String("align"), horizontalAlignment->itemData( horizontalAlignment->currentIndex () ).toString());
         } else {
             webElement.removeAttribute(QLatin1String("align"));
         }
         const QString widthStr = width->value();
-        if(widthStr.isEmpty()) {
+        if (widthStr.isEmpty()) {
             webElement.removeAttribute(QLatin1String("width"));
         } else {
             webElement.setAttribute(QLatin1String("width"), widthStr);
         }
         const QString heightStr = height->value();
-        if(heightStr.isEmpty()) {
+        if (heightStr.isEmpty()) {
             webElement.removeAttribute(QLatin1String("height"));
         } else {
             webElement.setAttribute(QLatin1String("height"), heightStr);
