@@ -52,7 +52,8 @@ public:
     m_collectionHeaders << "Collection";
     m_itemHeaders << "Id" << "Remote Id" << "MimeType";
   }
-  virtual ~GenericState() {}
+  virtual ~GenericState() {
+  }
 
   QVariant entityData( const Item &item, int column, int role ) const
   {
@@ -211,6 +212,14 @@ AkonadiBrowserModel::AkonadiBrowserModel( ChangeRecorder* monitor, QObject* pare
   m_calendarState = new CalendarState();
 
   m_currentState = m_genericState;
+}
+
+AkonadiBrowserModel::~AkonadiBrowserModel()
+{
+  delete m_genericState;
+  delete m_mailState;
+  delete m_contactsState;
+  delete m_calendarState;
 }
 
 QVariant AkonadiBrowserModel::entityData( const Item &item, int column, int role ) const

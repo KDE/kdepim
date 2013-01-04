@@ -120,7 +120,20 @@ void TrojitaSettings::readTransport()
         if (smtpMethod == QLatin1String("IMAP-SENDMAIL")) {
 
         } else if (smtpMethod == QLatin1String("SMTP")) {
+            if (settings->contains(QLatin1String("msa.smtp.host"))) {
+                mt->setHost(settings->value(QLatin1String("msa.smtp.host")).toString());
+            }
+            if (settings->contains(QLatin1String("msa.smtp.port"))) {
+                mt->setPort(settings->value(QLatin1String("msa.smtp.port")).toInt());
+            }
+            if (settings->contains(QLatin1String("msa.smtp.auth.user"))) {
+                mt->setUserName(settings->value(QLatin1String("msa.smtp.auth.user")).toString());
+            }
+            if (settings->contains(QLatin1String("msa.smtp.auth.pass"))) {
+                mt->setPassword(settings->value(QLatin1String("msa.smtp.auth.pass")).toString());
+            }
 
+            mt->setType(MailTransport::Transport::EnumType::SMTP);
         } else if (smtpMethod == QLatin1String("SSMTP")) {
 
         } else if (smtpMethod == QLatin1String("sendmail")) {

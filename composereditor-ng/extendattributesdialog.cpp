@@ -19,6 +19,7 @@
 */
 
 #include "extendattributesdialog.h"
+#include "extendattributesutil_p.h"
 
 #include <KSeparator>
 #include <KLocale>
@@ -66,6 +67,7 @@ public:
 
         q->connect(q, SIGNAL(okClicked()), q, SLOT(_k_slotOkClicked()));
         fillCombobox();
+        initialize();
     }
     void _k_slotOkClicked();
     void _k_slotRemoveAttribute();
@@ -80,6 +82,7 @@ public:
     KLineEdit *attributeValue;
     KPushButton *removeAttribute;
     ExtendAttributesDialog::ExtendType type;
+    QMap<QString, QStringList> attributesMap;
     ExtendAttributesDialog *q;
 };
 
@@ -90,18 +93,8 @@ void ExtendAttributesDialogPrivate::_k_attributeChanged(int)
 
 void ExtendAttributesDialogPrivate::fillCombobox()
 {
-    switch(type) {
-    case ExtendAttributesDialog::Image:
-        break;
-    case ExtendAttributesDialog::Table:
-        break;
-    case ExtendAttributesDialog::Cell:
-        break;
-    case ExtendAttributesDialog::Link:
-        break;
-    }
-
-    //TODO
+    attributesMap = ComposerEditorNG::ExtendAttributesUtil::attributesMap(type);
+    attributes->addItems(attributesMap.keys());
 }
 
 void ExtendAttributesDialogPrivate::_k_slotRemoveAttribute()

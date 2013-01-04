@@ -279,6 +279,7 @@ void ExpireJob::slotExpireDone( KJob *job )
                   "canceled.",
                   mSrcFolder.name(), mMoveToFolder.name() );
     }
+    break;
 
   default: //any other error
     if ( expirationAttribute->expireAction() == MailCommon::ExpireCollectionAttribute::ExpireDelete ) {
