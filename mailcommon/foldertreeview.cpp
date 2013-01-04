@@ -152,9 +152,6 @@ void FolderTreeView::slotHeaderContextMenuRequested( const QPoint &pnt )
     act->setCheckable( true );
     act->setChecked( !header()->isSectionHidden( i ) );
     act->setData( QVariant( i ) );
-    if ( i == 0 ) {
-      act->setEnabled( false );
-    }
     connect( act,  SIGNAL(triggered(bool)),
              SLOT(slotHeaderContextMenuChangeHeader(bool)) );
   }
