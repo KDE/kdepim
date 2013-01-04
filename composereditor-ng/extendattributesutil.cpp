@@ -17,8 +17,19 @@
   02110-1301, USA.
 
 */
+#include "extendattributesutil_p.h"
 
-#ifndef EXTENDATTRIBUTESDIALOG_P_H
-#define EXTENDATTRIBUTESDIALOG_P_H
-
-#endif // EXTENDATTRIBUTESDIALOG_P_H
+namespace ComposerEditorNG
+{
+QMap<QString, QStringList> ExtendAttributesUtil::attributesMap(ExtendAttributesDialog::ExtendType type)
+{
+    switch(type) {
+    case ExtendAttributesDialog::Image:
+    case ExtendAttributesDialog::Table:
+    case ExtendAttributesDialog::Cell:
+    case ExtendAttributesDialog::Link:
+        break;
+    }
+    return QMap<QString, QStringList>();
+}
+}
