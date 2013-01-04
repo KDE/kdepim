@@ -43,18 +43,13 @@ class ArticleFormatter
 {
     public:
 
-        enum IconOption {
-            NoIcon,
-            ShowIcon
-        };
-
         explicit ArticleFormatter( QPaintDevice* device = 0 );
 
         virtual ~ArticleFormatter();
 
         void setPaintDevice(QPaintDevice* device);
 
-        virtual QString formatItem( const Akonadi::Item& item, const Akonadi::Collection& storageCollection, IconOption icon ) const = 0;
+        virtual QString formatItem( const Akonadi::Item& item ) const = 0;
 
         virtual QString formatSummary( const Akonadi::Collection& collection, int unread ) const = 0;
 
@@ -77,7 +72,7 @@ class DefaultNormalViewFormatter : public ArticleFormatter
         explicit DefaultNormalViewFormatter( QPaintDevice* device = 0 );
         ~DefaultNormalViewFormatter();
 
-        QString formatItem( const Akonadi::Item& item, const Akonadi::Collection& storageCollection, IconOption option ) const;
+        QString formatItem( const Akonadi::Item& item ) const;
 
         /* reimp */ QString formatSummary( const Akonadi::Collection& collection, int unread ) const;
 
@@ -97,7 +92,7 @@ class DefaultCombinedViewFormatter : public ArticleFormatter
 
         explicit DefaultCombinedViewFormatter( QPaintDevice* device = 0 );
 
-        QString formatItem( const Akonadi::Item& item, const Akonadi::Collection& storageCollection, IconOption option ) const;
+        QString formatItem( const Akonadi::Item& item ) const;
 
         /* reimp */ QString formatSummary( const Akonadi::Collection& collection, int unread ) const;
 

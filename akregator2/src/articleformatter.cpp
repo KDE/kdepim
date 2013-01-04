@@ -180,7 +180,7 @@ static QString formatCollectionSummary( const Collection& c, int unread ) {
         return formatFeedSummary( fc, unread );
 }
 
-QString DefaultNormalViewFormatter::formatItem( const Akonadi::Item& aitem, const Akonadi::Collection& storageCollection, IconOption icon) const
+QString DefaultNormalViewFormatter::formatItem( const Akonadi::Item& aitem ) const
 {
     const KRss::Item item = aitem.payload<KRss::Item>();
 
@@ -225,12 +225,6 @@ QString DefaultNormalViewFormatter::formatItem( const Akonadi::Item& aitem, cons
     }
 
     text += "</div>\n"; // end headerbox
-
-    if (icon == ShowIcon )
-    {
-        KRss::FeedCollection fc( storageCollection );
-        text += imageLink( fc );
-    }
 
     const QString content = item.contentWithDescriptionAsFallback();
 
@@ -358,7 +352,7 @@ DefaultNormalViewFormatter::~DefaultNormalViewFormatter()
 {
 }
 
-QString DefaultCombinedViewFormatter::formatItem( const Akonadi::Item& aitem, const Akonadi::Collection& storageCollection, IconOption icon ) const
+QString DefaultCombinedViewFormatter::formatItem( const Akonadi::Item& aitem ) const
 {
     const KRss::Item item = aitem.payload<KRss::Item>();
 
@@ -402,12 +396,6 @@ QString DefaultCombinedViewFormatter::formatItem( const Akonadi::Item& aitem, co
     }
 
     text += "</div>\n"; // end headerbox
-
-    if (icon == ShowIcon )
-    {
-        KRss::FeedCollection fc( storageCollection );
-        text += imageLink( fc );
-    }
 
     const QString content = item.contentWithDescriptionAsFallback();
     if (!content.isEmpty())

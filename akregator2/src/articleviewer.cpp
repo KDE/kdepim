@@ -543,7 +543,7 @@ void ArticleViewer::showItem( const Akonadi::Collection& storageCollection, cons
     if ( fc.preferItemLinkForDisplay() && !item.link().isEmpty() )
         openUrl( m_link );
     else
-      renderContent( m_normalViewFormatter->formatItem( aitem, storageCollection, ArticleFormatter::ShowIcon ) );
+      renderContent( m_normalViewFormatter->formatItem( aitem ) );
 
     setArticleActionsEnabled(true);
 }
@@ -581,7 +581,7 @@ void ArticleViewer::slotUpdateCombinedView()
 
    QString text;
    Q_FOREACH( const Akonadi::Item& i, items )
-       text += "<p><div class=\"article\">"+m_combinedViewFormatter->formatItem( i, Akonadi::Collection(), ArticleFormatter::NoIcon )+"</div><p>";
+       text += "<p><div class=\"article\">"+m_combinedViewFormatter->formatItem( i )+"</div><p>";
 
    renderContent(text);
 }
