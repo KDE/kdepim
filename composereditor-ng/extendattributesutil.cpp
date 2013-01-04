@@ -25,11 +25,39 @@ QMap<QString, QStringList> ExtendAttributesUtil::attributesMap(ExtendAttributesD
 {
     switch(type) {
     case ExtendAttributesDialog::Image:
+        return attributesMapImage();
     case ExtendAttributesDialog::Table:
+        return attributesMapTable();
     case ExtendAttributesDialog::Cell:
+        return attributesMapCell();
     case ExtendAttributesDialog::Link:
-        break;
+        return attributesMapLink();
     }
     return QMap<QString, QStringList>();
 }
+
+QMap<QString, QStringList> ExtendAttributesUtil::attributesMapImage()
+{
+    QMap<QString, QStringList> map;
+    return map;
+}
+
+QMap<QString, QStringList> ExtendAttributesUtil::attributesMapTable()
+{
+    QMap<QString, QStringList> map;
+    return map;
+}
+
+QMap<QString, QStringList> ExtendAttributesUtil::attributesMapCell()
+{
+    QMap<QString, QStringList> map;
+    return map;
+}
+
+QMap<QString, QStringList> ExtendAttributesUtil::attributesMapLink()
+{
+    QMap<QString, QStringList> map;
+    return map;
+}
+
 }

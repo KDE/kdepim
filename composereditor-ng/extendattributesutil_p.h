@@ -26,6 +26,10 @@ namespace ComposerEditorNG
 {
 namespace ExtendAttributesUtil {
 QMap<QString, QStringList> attributesMap(ExtendAttributesDialog::ExtendType type);
+QMap<QString, QStringList> attributesMapImage();
+QMap<QString, QStringList> attributesMapTable();
+QMap<QString, QStringList> attributesMapCell();
+QMap<QString, QStringList> attributesMapLink();
 }
 }
 #endif // EXTENDATTRIBUTESUTIL_P_H
