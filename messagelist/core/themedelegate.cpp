@@ -975,6 +975,7 @@ void ThemeDelegate::paint( QPainter * painter, const QStyleOptionViewItem & opti
             paint_boolean_state_icon( messageItem->status().hasInvitation(),
                                       Manager::instance()->pixmapMessageInvitation(), ci, painter,
                                       l, top, r, layoutDir == Qt::LeftToRight, mTheme->iconSize() );
+	  break;
         case Theme::ContentItem::ActionItemStateIcon:
           if ( messageItem )
             paint_boolean_state_icon( messageItem->status().isToAct(),
