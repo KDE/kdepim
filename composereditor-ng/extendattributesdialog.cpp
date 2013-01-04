@@ -67,6 +67,7 @@ public:
 
         q->connect(q, SIGNAL(okClicked()), q, SLOT(_k_slotOkClicked()));
         fillCombobox();
+        initialize();
     }
     void _k_slotOkClicked();
     void _k_slotRemoveAttribute();
