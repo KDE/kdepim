@@ -80,7 +80,7 @@ public:
             QPointer<FeedPropertiesDialog> dlg( new FeedPropertiesDialog( q->parentWidget() ) );
             dlg->setFeedTitle( fc.title() );
             dlg->setUrl( fc.xmlUrl() );
-            dlg->setCustomFetchInterval( fc.fetchInterval() > 0 ); //PENDING(frank) correct?
+            dlg->setCustomFetchInterval( fc.fetchInterval() >= 0 );
             dlg->setFetchInterval( fc.fetchInterval() );
 
             if ( dlg->exec() != QDialog::Accepted ) {
@@ -91,7 +91,7 @@ public:
             fc.setName( dlg->feedTitle() + KRandom::randomString( 8 ) );
             fc.setTitle( dlg->feedTitle() );
             fc.setXmlUrl( dlg->url() );
-            fc.setFetchInterval( dlg->hasCustomFetchInterval() ? dlg->fetchInterval() : 0 );
+            fc.setFetchInterval( dlg->hasCustomFetchInterval() ? dlg->fetchInterval() : -1 );
             delete dlg;
             CollectionModifyJob* job = new CollectionModifyJob( fc, session );
             connect( job, SIGNAL(finished(KJob*)), q, SLOT(collectionModified(KJob*)) );
