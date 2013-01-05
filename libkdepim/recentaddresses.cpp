@@ -35,7 +35,6 @@
 #include <KDebug>
 #include <KGlobal>
 #include <KLocale>
-#include <KEditListWidget>
 #include <KLineEdit>
 #include <KPushButton>
 
