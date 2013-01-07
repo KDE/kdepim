@@ -56,18 +56,81 @@ QMap<QString, QStringList> ExtendAttributesUtil::attributesMapImage()
     map.insert(QLatin1String("usemap"),QStringList());
     map.insert(QLatin1String("vspace"),QStringList());
     map.insert(QLatin1String("width"),QStringList());
+    //TODO add global attribute.
     return map;
 }
 
 QMap<QString, QStringList> ExtendAttributesUtil::attributesMapTable()
 {
     QMap<QString, QStringList> map;
+    QStringList align;
+    align<<QLatin1String("left");
+    align<<QLatin1String("center");
+    align<<QLatin1String("right");
+    map.insert(QLatin1String("align"),align);
+    map.insert(QLatin1String("bgcolor"),QStringList());
+    map.insert(QLatin1String("border"),QStringList());
+    map.insert(QLatin1String("cellpadding"),QStringList());
+    map.insert(QLatin1String("cellspacing"),QStringList());
+    QStringList frame;
+    frame<<QLatin1String("void");
+    frame<<QLatin1String("above");
+    frame<<QLatin1String("below");
+    frame<<QLatin1String("hsides");
+    frame<<QLatin1String("lhs");
+    frame<<QLatin1String("rhs");
+    frame<<QLatin1String("vsides");
+    frame<<QLatin1String("box");
+    frame<<QLatin1String("border");
+    map.insert(QLatin1String("frame"),frame);
+    QStringList rules;
+    QLatin1String("none");
+    QLatin1String("groups");
+    QLatin1String("rows");
+    QLatin1String("cols");
+    QLatin1String("all");
+    map.insert(QLatin1String("rules"),rules);
+    map.insert(QLatin1String("summary"),QStringList());
+    map.insert(QLatin1String("width"),QStringList());
+    //TODO add global attribute.
     return map;
 }
 
 QMap<QString, QStringList> ExtendAttributesUtil::attributesMapCell()
 {
     QMap<QString, QStringList> map;
+    map.insert(QLatin1String("abbr"),QStringList());
+    QStringList align;
+    align<<QLatin1String("top");
+    align<<QLatin1String("bottom");
+    align<<QLatin1String("middle");
+    align<<QLatin1String("left");
+    align<<QLatin1String("right");
+    align<<QLatin1String("char");
+    map.insert(QLatin1String("align"),align);
+    map.insert(QLatin1String("axis"),QStringList());
+    map.insert(QLatin1String("bgcolor"),QStringList());
+    map.insert(QLatin1String("char"),QStringList());
+    map.insert(QLatin1String("charoff"),QStringList());
+    map.insert(QLatin1String("colspan"),QStringList());
+    map.insert(QLatin1String("headers"),QStringList());
+    map.insert(QLatin1String("height"),QStringList());
+    map.insert(QLatin1String("nowrap"),QStringList());
+    map.insert(QLatin1String("rowspan"),QStringList());
+    QStringList scope;
+    scope<<QLatin1String("col");
+    scope<<QLatin1String("colgroup");
+    scope<<QLatin1String("row");
+    scope<<QLatin1String("rowgroup");
+    map.insert(QLatin1String("scope"),scope);
+    QStringList valign;
+    valign<<QLatin1String("top");
+    valign<<QLatin1String("middle");
+    valign<<QLatin1String("bottom");
+    valign<<QLatin1String("baseline");
+    map.insert(QLatin1String("valign"),valign);
+    map.insert(QLatin1String("width"),QStringList());
+    //TODO add global attribute.
     return map;
 }
 
