@@ -19,6 +19,7 @@
 */
 
 #include "composerimagedialog.h"
+#include "extendattributesbutton.h"
 
 #include "kpimtextedit/insertimagewidget.h"
 
@@ -43,6 +44,7 @@ public:
 
     void _k_slotOkClicked();
     void _k_slotApplyClicked();
+    void _k_slotWebElementChanged();
     void initialize();
 
     QString html() const;
@@ -56,6 +58,11 @@ public:
     KLineEdit *alternateTitle;
     ComposerImageDialog *q;
 };
+
+void ComposerImageDialogPrivate::_k_slotWebElementChanged()
+{
+    //TODO
+}
 
 void ComposerImageDialogPrivate::_k_slotOkClicked()
 {
@@ -140,6 +147,13 @@ void ComposerImageDialogPrivate::initialize()
     alternateTitle = new KLineEdit;
     hbox->addWidget(alternateTitle);
     lay->addLayout(hbox);
+
+    if (!webElement.isNull()) {
+        ExtendAttributesButton *button = new ExtendAttributesButton(webElement,ExtendAttributesDialog::Image,q);
+        q->connect(button, SIGNAL(webElementChanged()), q, SLOT(_k_slotWebElementChanged()));
+        lay->addWidget( button );
+    }
+
 
     KSeparator *sep = new KSeparator;
     lay->addWidget(sep);
