@@ -21,6 +21,25 @@
 
 namespace ComposerEditorNG
 {
+
+QMap<QString, QStringList> ExtendAttributesUtil::globalAttribute()
+{
+    QMap<QString, QStringList> globalAttr;
+    globalAttr.insert(QLatin1String("accesskey"),QStringList());
+    globalAttr.insert(QLatin1String("class"),QStringList());
+    QStringList dir;
+    dir<<QLatin1String("ltr");
+    dir<<QLatin1String("rtl");
+    dir<<QLatin1String("auto");
+    globalAttr.insert(QLatin1String("dir"),dir);
+    globalAttr.insert(QLatin1String("id"),QStringList());
+    globalAttr.insert(QLatin1String("lang"),QStringList());
+    globalAttr.insert(QLatin1String("style"),QStringList());
+    globalAttr.insert(QLatin1String("tabindex"),QStringList());
+    globalAttr.insert(QLatin1String("title"),QStringList());
+    return globalAttr;
+}
+
 QMap<QString, QStringList> ExtendAttributesUtil::attributesMap(ExtendAttributesDialog::ExtendType type)
 {
     switch(type) {
@@ -39,6 +58,7 @@ QMap<QString, QStringList> ExtendAttributesUtil::attributesMap(ExtendAttributesD
 QMap<QString, QStringList> ExtendAttributesUtil::attributesMapImage()
 {
     QMap<QString, QStringList> map;
+    map = globalAttribute();
     QStringList align;
     align<<QLatin1String("top");
     align<<QLatin1String("bottom");
@@ -56,13 +76,13 @@ QMap<QString, QStringList> ExtendAttributesUtil::attributesMapImage()
     map.insert(QLatin1String("usemap"),QStringList());
     map.insert(QLatin1String("vspace"),QStringList());
     map.insert(QLatin1String("width"),QStringList());
-    //TODO add global attribute.
     return map;
 }
 
 QMap<QString, QStringList> ExtendAttributesUtil::attributesMapTable()
 {
     QMap<QString, QStringList> map;
+    map = globalAttribute();
     QStringList align;
     align<<QLatin1String("left");
     align<<QLatin1String("center");
@@ -92,13 +112,13 @@ QMap<QString, QStringList> ExtendAttributesUtil::attributesMapTable()
     map.insert(QLatin1String("rules"),rules);
     map.insert(QLatin1String("summary"),QStringList());
     map.insert(QLatin1String("width"),QStringList());
-    //TODO add global attribute.
     return map;
 }
 
 QMap<QString, QStringList> ExtendAttributesUtil::attributesMapCell()
 {
     QMap<QString, QStringList> map;
+    map = globalAttribute();
     map.insert(QLatin1String("abbr"),QStringList());
     QStringList align;
     align<<QLatin1String("top");
@@ -130,13 +150,13 @@ QMap<QString, QStringList> ExtendAttributesUtil::attributesMapCell()
     valign<<QLatin1String("baseline");
     map.insert(QLatin1String("valign"),valign);
     map.insert(QLatin1String("width"),QStringList());
-    //TODO add global attribute.
     return map;
 }
 
 QMap<QString, QStringList> ExtendAttributesUtil::attributesMapLink()
 {
     QMap<QString, QStringList> map;
+    map = globalAttribute();
     map.insert(QLatin1String("charset"),QStringList());
     map.insert(QLatin1String("href"),QStringList());
     map.insert(QLatin1String("hreflang"),QStringList());
@@ -172,8 +192,6 @@ QMap<QString, QStringList> ExtendAttributesUtil::attributesMapLink()
     target<<QLatin1String("_parent");
     map.insert(QLatin1String("target"),target);
     map.insert(QLatin1String("type"),QStringList());
-
-    //TODO add global attribute.
     return map;
 }
 
