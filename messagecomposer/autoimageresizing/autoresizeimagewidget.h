@@ -25,6 +25,7 @@ namespace Ui {
 class AutoResizeImageWidget;
 }
 
+class QButtonGroup;
 
 namespace MessageComposer {
 class MESSAGECOMPOSER_EXPORT AutoResizeImageWidget : public QWidget
@@ -43,11 +44,13 @@ Q_SIGNALS:
 
 private Q_SLOTS:
   void slotComboboxChanged(int index);
+  void slotSourceFilterClicked(int);
 
 private:
   void initComboBox(KComboBox *combo);
   void initWriteImageFormat();
   Ui::AutoResizeImageWidget *ui;
+  QButtonGroup *mSourceFilterGroup;
   bool mWasChanged;
 };
 }

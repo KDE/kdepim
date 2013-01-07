@@ -21,7 +21,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
@@ -264,7 +264,7 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_3">
        <item>
-        <widget class="QGroupBox" name="groupBox">
+        <widget class="QGroupBox" name="filterSourceGroupBox">
          <property name="title">
           <string>Source filter</string>
          </property>
@@ -287,7 +287,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QRadioButton" name="ExcludeFilesWithPattern">
+           <widget class="QRadioButton" name="excludeFilesWithPattern">
             <property name="text">
              <string>Exclude all files with pattern</string>
             </property>
