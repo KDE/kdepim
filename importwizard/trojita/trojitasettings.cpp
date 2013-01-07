@@ -126,18 +126,30 @@ void TrojitaSettings::readTransport()
             if (settings->contains(QLatin1String("msa.smtp.port"))) {
                 mt->setPort(settings->value(QLatin1String("msa.smtp.port")).toInt());
             }
-            if (settings->contains(QLatin1String("msa.smtp.auth.user"))) {
-                mt->setUserName(settings->value(QLatin1String("msa.smtp.auth.user")).toString());
-            }
-            if (settings->contains(QLatin1String("msa.smtp.auth.pass"))) {
-                mt->setPassword(settings->value(QLatin1String("msa.smtp.auth.pass")).toString());
+            if (settings->contains(QLatin1String("msa.smtp.auth"))) {
+                if (settings->value(QLatin1String("msa.smtp.auth")).toBool()) {
+                    if (settings->contains(QLatin1String("msa.smtp.auth.user"))) {
+                        mt->setUserName(settings->value(QLatin1String("msa.smtp.auth.user")).toString());
+                    }
+                    if (settings->contains(QLatin1String("msa.smtp.auth.pass"))) {
+                        mt->setPassword(settings->value(QLatin1String("msa.smtp.auth.pass")).toString());
+                    }
+                }
             }
 
+            if (settings->contains(QLatin1String("msa.smtp.starttls"))) {
+                if (settings->value(QLatin1String("msa.smtp.starttls")).toBool()) {
+                    mt->setEncryption( MailTransport::Transport::EnumEncryption::TLS );
+                }
+            }
             mt->setType(MailTransport::Transport::EnumType::SMTP);
         } else if (smtpMethod == QLatin1String("SSMTP")) {
 
         } else if (smtpMethod == QLatin1String("sendmail")) {
             mt->setType(MailTransport::Transport::EnumType::Sendmail);
+            if (settings->contains(QLatin1String("msa.sendmail"))) {
+                mt->setHost(settings->value(QLatin1String("msa.sendmail")).toString());
+            }
         } else {
             qWarning()<<" smtpMethod unknown "<<smtpMethod;
         }
