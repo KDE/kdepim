@@ -105,21 +105,9 @@ void TrojitaSettings::readTransport()
     const QString smtpMethod = settings->value(QLatin1String("msa.method")).toString();
     if (!smtpMethod.isEmpty()) {
         MailTransport::Transport *mt = createTransport();
-#if 0
-        QString smtpHostKey = QLatin1String("msa.smtp.host");
-        QString smtpPortKey = QLatin1String("msa.smtp.port");
-        QString smtpAuthKey = QLatin1String("msa.smtp.auth");
-        QString smtpStartTlsKey = QLatin1String("msa.smtp.starttls");
-        QString smtpUserKey = QLatin1String("msa.smtp.auth.user");
-        QString smtpPassKey = QLatin1String("msa.smtp.auth.pass");
-        QString sendmailKey = QLatin1String("msa.sendmail");
-        QString sendmailDefaultCmd = QLatin1String("sendmail -bm -oi");
-
-#endif
-
         if (smtpMethod == QLatin1String("IMAP-SENDMAIL")) {
-
-        } else if (smtpMethod == QLatin1String("SMTP")) {
+            //TODO ?
+        } else if (smtpMethod == QLatin1String("SMTP") || smtpMethod == QLatin1String("SSMTP")) {
             if (settings->contains(QLatin1String("msa.smtp.host"))) {
                 mt->setHost(settings->value(QLatin1String("msa.smtp.host")).toString());
             }
@@ -143,8 +131,6 @@ void TrojitaSettings::readTransport()
                 }
             }
             mt->setType(MailTransport::Transport::EnumType::SMTP);
-        } else if (smtpMethod == QLatin1String("SSMTP")) {
-
         } else if (smtpMethod == QLatin1String("sendmail")) {
             mt->setType(MailTransport::Transport::EnumType::Sendmail);
             if (settings->contains(QLatin1String("msa.sendmail"))) {
