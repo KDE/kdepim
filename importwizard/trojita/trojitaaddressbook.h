@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -21,8 +21,7 @@
 
 #include "abstractaddressbook.h"
 #include <QHash>
-class QDir;
-class QString;
+class QSettings;
 
 
 class ImportWizard;
@@ -30,8 +29,11 @@ class ImportWizard;
 class TrojitaAddressBook : public AbstractAddressBook
 {
 public:
-  explicit TrojitaAddressBook(ImportWizard *parent);
-  ~TrojitaAddressBook();
+    explicit TrojitaAddressBook(const QString &filename, ImportWizard *parent);
+    ~TrojitaAddressBook();
+private:
+    void readAddressBook();
+    QSettings *settings;
 };
 
 #endif /* TrojitaAddressBook_H */

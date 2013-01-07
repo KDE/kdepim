@@ -60,13 +60,14 @@ bool TrojitaImportData::importMails()
 bool TrojitaImportData::importSettings()
 {
     const QString settingsPath = mPath + QLatin1String("trojita.conf");
-    TrojitaSettings settings(settingsPath,mImportWizard);
+    TrojitaSettings settings(settingsPath, mImportWizard);
     return true;
 }
 
 bool TrojitaImportData::importAddressBook()
 {
-    TrojitaAddressBook addressBooks(mImportWizard);
+    const QString addressbookPath = QDir::homePath() + QLatin1String("/.abook/addressbook");
+    TrojitaAddressBook addressBooks(addressbookPath, mImportWizard);
     return true;
 }
 
