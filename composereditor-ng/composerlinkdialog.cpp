@@ -46,6 +46,7 @@ public:
 
     void updateLinkHtml();
     void fillTarget();
+    void updateSettings();
 
     void _k_slotOkClicked();
     void _k_slotWebElementChanged();
@@ -115,7 +116,7 @@ void ComposerLinkDialogPrivate::fillTarget()
 
 void ComposerLinkDialogPrivate::_k_slotWebElementChanged()
 {
-    //TODO
+    updateSettings();
 }
 
 void ComposerLinkDialogPrivate::_k_slotOkClicked()
@@ -157,11 +158,25 @@ void ComposerLinkDialogPrivate::updateLinkHtml()
     }
 }
 
+void ComposerLinkDialogPrivate::updateSettings()
+{
+    if (!webElement.isNull()) {
+        linkLocation->setText(webElement.attribute(QLatin1String("href")));
+        linkText->setText(webElement.toInnerXml());
+        if (webElement.hasAttribute(QLatin1String("target"))) {
+            const QString targetStr = webElement.attribute(QLatin1String("target"));
+            const int index = target->findData(targetStr);
+            if (index > -1) {
+                target->setCurrentIndex(index);
+            }
+        }
+    }
+
+}
 
 ComposerLinkDialog::ComposerLinkDialog(const QString& selectedText, QWidget *parent)
     : KDialog(parent), d(new ComposerLinkDialogPrivate(this))
 {
-
     d->initialize();
     d->linkText->setText(selectedText);
 }
@@ -170,15 +185,7 @@ ComposerLinkDialog::ComposerLinkDialog(const QWebElement& element, QWidget *pare
     : KDialog(parent),d(new ComposerLinkDialogPrivate(this))
 {
     d->initialize(element);
-    d->linkLocation->setText(d->webElement.attribute(QLatin1String("href")));
-    d->linkText->setText(d->webElement.toInnerXml());
-    if (d->webElement.hasAttribute(QLatin1String("target"))) {
-        const QString targetStr = d->webElement.attribute(QLatin1String("target"));
-        const int index = d->target->findData(targetStr);
-        if (index > -1) {
-            d->target->setCurrentIndex(index);
-        }
-    }
+    d->updateSettings();
 }
 
 ComposerLinkDialog::~ComposerLinkDialog()

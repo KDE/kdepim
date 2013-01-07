@@ -20,6 +20,7 @@
 
 #include "composertablecellformatdialog.h"
 #include "composercellsizewidget.h"
+#include "extendattributesbutton.h"
 
 #include <KLocale>
 #include <KColorButton>
@@ -95,6 +96,12 @@ public:
 
         layout->addLayout(hbox);
 
+        if (!webElement.isNull()) {
+            ExtendAttributesButton *button = new ExtendAttributesButton(webElement,ExtendAttributesDialog::Cell,q);
+            q->connect(button, SIGNAL(webElementChanged()), q, SLOT(_k_slotWebElementChanged()));
+            layout->addWidget( button );
+        }
+
         sep = new KSeparator;
         layout->addWidget( sep );
 
@@ -104,37 +111,15 @@ public:
         q->connect(q,SIGNAL(okClicked()),q,SLOT(_k_slotOkClicked()));
 
         q->connect(q,SIGNAL(applyClicked()),q,SLOT(_k_slotApplyClicked()));
-        if (!webElement.isNull()) {
-            if (webElement.hasAttribute(QLatin1String("bgcolor"))) {
-                useBackgroundColor->setChecked(true);
-                const QColor color = QColor(webElement.attribute(QLatin1String("bgcolor")));
-                backgroundColor->setColor(color);
-            }
-            if (webElement.hasAttribute(QLatin1String("valign"))) {
-                useVerticalAlignment->setChecked(true);
-                const QString valign = webElement.attribute(QLatin1String("valign"));
-                verticalAlignment->setCurrentIndex( verticalAlignment->findData( valign ) );
-            }
-            if (webElement.hasAttribute(QLatin1String("align"))) {
-                useHorizontalAlignment->setChecked(true);
-                const QString align = webElement.attribute(QLatin1String("align"));
-                horizontalAlignment->setCurrentIndex( horizontalAlignment->findData( align ) );
-            }
-            if (webElement.hasAttribute(QLatin1String("width"))) {
-                const QString widthVal = webElement.attribute(QLatin1String("width"));
-                width->setValue(widthVal);
-            }
-            if (webElement.hasAttribute(QLatin1String("height"))) {
-                const QString heightVal = webElement.attribute(QLatin1String("height"));
-                height->setValue(heightVal);
-            }
-        }
+        updateSettings();
     }
 
     void _k_slotOkClicked();
     void _k_slotApplyClicked();
+    void _k_slotWebElementChanged();
 
     void applyChanges();
+    void updateSettings();
 
     QWebElement webElement;
     KColorButton *backgroundColor;
@@ -150,6 +135,41 @@ public:
     ComposerCellSizeWidget *height;
     ComposerTableCellFormatDialog *q;
 };
+
+void ComposerTableCellFormatDialogPrivate::_k_slotWebElementChanged()
+{
+    updateSettings();
+}
+
+void ComposerTableCellFormatDialogPrivate::updateSettings()
+{
+    if (!webElement.isNull()) {
+        if (webElement.hasAttribute(QLatin1String("bgcolor"))) {
+            useBackgroundColor->setChecked(true);
+            const QColor color = QColor(webElement.attribute(QLatin1String("bgcolor")));
+            backgroundColor->setColor(color);
+        }
+        if (webElement.hasAttribute(QLatin1String("valign"))) {
+            useVerticalAlignment->setChecked(true);
+            const QString valign = webElement.attribute(QLatin1String("valign"));
+            verticalAlignment->setCurrentIndex( verticalAlignment->findData( valign ) );
+        }
+        if (webElement.hasAttribute(QLatin1String("align"))) {
+            useHorizontalAlignment->setChecked(true);
+            const QString align = webElement.attribute(QLatin1String("align"));
+            horizontalAlignment->setCurrentIndex( horizontalAlignment->findData( align ) );
+        }
+        if (webElement.hasAttribute(QLatin1String("width"))) {
+            const QString widthVal = webElement.attribute(QLatin1String("width"));
+            width->setValue(widthVal);
+        }
+        if (webElement.hasAttribute(QLatin1String("height"))) {
+            const QString heightVal = webElement.attribute(QLatin1String("height"));
+            height->setValue(heightVal);
+        }
+    }
+
+}
 
 void ComposerTableCellFormatDialogPrivate::_k_slotApplyClicked()
 {

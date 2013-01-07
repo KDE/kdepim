@@ -104,11 +104,11 @@ QMap<QString, QStringList> ExtendAttributesUtil::attributesMapTable()
     frame<<QLatin1String("border");
     map.insert(QLatin1String("frame"),frame);
     QStringList rules;
-    QLatin1String("none");
-    QLatin1String("groups");
-    QLatin1String("rows");
-    QLatin1String("cols");
-    QLatin1String("all");
+    rules<<QLatin1String("none");
+    rules<<QLatin1String("groups");
+    rules<<QLatin1String("rows");
+    rules<<QLatin1String("cols");
+    rules<<QLatin1String("all");
     map.insert(QLatin1String("rules"),rules);
     map.insert(QLatin1String("summary"),QStringList());
     map.insert(QLatin1String("width"),QStringList());

@@ -19,6 +19,7 @@
 */
 
 #include "composertableformatdialog.h"
+#include "extendattributesbutton.h"
 
 #include <KPIMTextEdit/InsertTableWidget>
 
@@ -45,9 +46,11 @@ public:
     void initialize( const QWebElement& element);
 
     void applyChanges();
+    void updateSettings();
 
     void _k_slotOkClicked();
     void _k_slotApplyClicked();
+    void _k_slotWebElementChanged();
 
     QWebElement webElement;
     KColorButton *backgroundColor;
@@ -55,6 +58,11 @@ public:
     KPIMTextEdit::InsertTableWidget *insertTableWidget;
     ComposerTableFormatDialog *q;
 };
+
+void ComposerTableFormatDialogPrivate::_k_slotWebElementChanged()
+{
+    updateSettings();
+}
 
 void ComposerTableFormatDialogPrivate::applyChanges()
 {
@@ -100,6 +108,12 @@ void ComposerTableFormatDialogPrivate::initialize(const QWebElement &element)
 
     lay->addLayout(hbox);
 
+    if (!webElement.isNull()) {
+        ExtendAttributesButton *button = new ExtendAttributesButton(webElement,ExtendAttributesDialog::Table,q);
+        q->connect(button, SIGNAL(webElementChanged()), q, SLOT(_k_slotWebElementChanged()));
+        lay->addWidget( button );
+    }
+
     sep = new KSeparator;
     lay->addWidget( sep );
 
@@ -107,6 +121,11 @@ void ComposerTableFormatDialogPrivate::initialize(const QWebElement &element)
     q->connect(q,SIGNAL(applyClicked()),q,SLOT(_k_slotApplyClicked()));
 
     q->connect(useBackgroundColor, SIGNAL(toggled(bool)), backgroundColor, SLOT(setEnabled(bool)));
+    updateSettings();
+}
+
+void ComposerTableFormatDialogPrivate::updateSettings()
+{
     if (!webElement.isNull()) {
         if (webElement.hasAttribute(QLatin1String("border"))) {
             insertTableWidget->setBorder(webElement.attribute(QLatin1String("border")).toInt());

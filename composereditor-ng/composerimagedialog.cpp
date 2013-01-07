@@ -50,6 +50,7 @@ public:
     QString html() const;
 
     void updateImageHtml();
+    void updateSettings();
 
     QWebElement webElement;
 
@@ -61,7 +62,7 @@ public:
 
 void ComposerImageDialogPrivate::_k_slotWebElementChanged()
 {
-    //TODO
+    updateSettings();
 }
 
 void ComposerImageDialogPrivate::_k_slotOkClicked()
@@ -167,14 +168,19 @@ void ComposerImageDialogPrivate::initialize()
 
     if (!webElement.isNull()) {
         q->connect(q,SIGNAL(applyClicked()),q,SLOT(_k_slotApplyClicked()));
-        imageWidget->setImageUrl(webElement.attribute(QLatin1String("src")));
-        if(webElement.hasAttribute(QLatin1String("height")) && webElement.hasAttribute(QLatin1String("width"))) {
-            imageWidget->setImageWidth(webElement.attribute(QLatin1String("width")).toInt());
-            imageWidget->setImageHeight(webElement.attribute(QLatin1String("height")).toInt());
-        }
-        alternateTitle->setText(webElement.attribute(QLatin1String("alt")));
-        title->setText(webElement.attribute(QLatin1String("title")));
+        updateSettings();
     }
+}
+
+void ComposerImageDialogPrivate::updateSettings()
+{
+    imageWidget->setImageUrl(webElement.attribute(QLatin1String("src")));
+    if(webElement.hasAttribute(QLatin1String("height")) && webElement.hasAttribute(QLatin1String("width"))) {
+        imageWidget->setImageWidth(webElement.attribute(QLatin1String("width")).toInt());
+        imageWidget->setImageHeight(webElement.attribute(QLatin1String("height")).toInt());
+    }
+    alternateTitle->setText(webElement.attribute(QLatin1String("alt")));
+    title->setText(webElement.attribute(QLatin1String("title")));
 }
 
 QString ComposerImageDialogPrivate::html() const
