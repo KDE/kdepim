@@ -621,5 +621,21 @@ KABC::Addressee::List KOAttendeeEditor::expandDistList( const QString &text )  c
   return aList;
 }
 
+void KOAttendeeEditor::setOrganizer(const QString &newOrganizer)
+{
+  QString name;
+  QString email;
+  bool success = KPIM::getNameAndMail( newOrganizer, name, email );
+
+  if (!success) return;
+
+  for ( int i = 0 ; i < mOrganizerCombo->count(); ++i ) {
+    if ( mOrganizerCombo->text( i ) == newOrganizer ) {
+      mOrganizerCombo->setCurrentItem( i );
+      kdDebug(5850) << "Set organizer to: " << newOrganizer << endl;
+      return;
+    }
+  }
+}
 
 #include "koattendeeeditor.moc"

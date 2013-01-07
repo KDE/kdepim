@@ -1028,16 +1028,6 @@ void KOEditorFreeBusy::setOrganizer(const QString &newOrganizer)
 
   if (!success) return;
 
-  int found = 0;
-  for ( int i = 0 ; i < mOrganizerCombo->count(); ++i ) {
-    if ( mOrganizerCombo->text( i ) == newOrganizer ) {
-      found = i;
-      mOrganizerCombo->setCurrentItem( i );
-      kdDebug(5850) << "Set organizer to: " << newOrganizer << endl;
-      break;
-    }
-  }
-
   Attendee *currentOrganizerAttendee = 0;
   Attendee *newOrganizerAttendee = 0;
 
@@ -1063,6 +1053,8 @@ void KOEditorFreeBusy::setOrganizer(const QString &newOrganizer)
     updateAttendee();
   }
   mCurrentOrganizer = newOrganizer;
+
+  KOAttendeeEditor::setOrganizer( newOrganizer );
 }
 
 #include "koeditorfreebusy.moc"

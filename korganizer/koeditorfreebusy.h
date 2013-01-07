@@ -63,7 +63,7 @@ class KOEditorFreeBusy : public KOAttendeeEditor
     void triggerReload();
     void cancelReload();
 
-    void setOrganizer(const QString &newOrganizer);
+    virtual void setOrganizer(const QString &newOrganizer);
   signals:
     void dateTimesChanged( const QDateTime &, const QDateTime & );
 

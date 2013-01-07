@@ -830,9 +830,55 @@ void KOTodoView::popupMenu( QListViewItem *item, const QPoint &, int column )
 
 void KOTodoView::newTodo()
 {
+  QString subResource = QString();
+  ResourceCalendar * res = NULL;
+  CalendarResources * calendarRes = dynamic_cast<CalendarResources*>( calendar() );
+
   kdDebug() << k_funcinfo << endl;
-  emit newTodoSignal( 0/*ResourceCalendar*/, QString()/*subResource*/,
-                      QDate::currentDate().addDays(7) );
+  if ( calendarRes ) {
+    kdDebug(5850) << "Searching if resource / subresource is distinct for saving to CalendarResources" << endl;
+    QPtrList<KRES::Resource> list;
+    CalendarResourceManager::ActiveIterator it;
+
+    // Same code as used for finding out the destination resource
+    for ( it = calendarRes->resourceManager()->activeBegin();
+          it != calendarRes->resourceManager()->activeEnd(); ++it ) {
+      if ( !(*it)->readOnly() ) {
+        //Insert the first the Standard resource to get be the default selected.
+        if ( calendarRes->resourceManager()->standardResource() == *it )
+          list.insert( 0, *it );
+        else
+          list.append( *it );
+      }
+    }
+    if ( list.count() != 1 ) {
+      kdDebug(5850) << "No distinct Tasks resource found" << endl;
+    } else {
+      res = static_cast<ResourceCalendar *> (list.first());
+      CalendarResourceManager::ActiveIterator it;
+      QStringList candidates;
+      QStringList subresources = res->subresources();
+
+      kdDebug(5850) << "Opening editor for new " << res->resourceName() << endl;
+      for ( QStringList::Iterator subit = subresources.begin();
+            subit != subresources.end(); ++subit ) {
+        if ( res->subresourceType( *subit ) == "todo" &&
+             res->subresourceWritable( *subit ) &&
+             res->subresourceActive( *subit ) ) {
+          candidates << *subit;
+        }
+      }
+      if ( candidates.count() == 1 ) {
+        // User has one Calendar and one active todo resource, we know where the
+        // new ToDo should be created
+        subResource = candidates.first();
+        kdDebug(5850) << "Found distinct subresource: " << subResource << endl;
+      } else {
+        kdDebug(5850) << "Did not find a distinct subresource " << endl;
+      }
+    }
+  }
+  emit newTodoSignal( res, subResource, QDate::currentDate().addDays(7) );
 }
 
 void KOTodoView::newSubTodo()

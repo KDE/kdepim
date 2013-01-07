@@ -61,6 +61,8 @@ class KOAttendeeEditor : public QWidget
     /** return a clone of the event with attendees to be canceld*/
     void cancelAttendeeEvent( KCal::Incidence *incidence );
 
+    virtual void setOrganizer(const QString &newOrganizer);
+
   public slots:
     void acceptForMe();
     void declineForMe();

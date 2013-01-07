@@ -393,9 +393,8 @@ void KOIncidenceEditor::setResource( ResourceCalendar *res, const QString &subRe
           const QString identityMail = KOCore::self()->identityManager()->identityForUoid(
               identityID ).fullEmailAddr();
           kdDebug(5850) << "Default identity found for subresource " << identityMail << endl;
-          KOEditorFreeBusy * fbEditor = dynamic_cast<KOEditorFreeBusy*>( mAttendeeEditor );
           if ( mAttendeeEditor ) {
-            fbEditor->setOrganizer( identityMail );
+            mAttendeeEditor->setOrganizer( identityMail );
           }
         }
       }
