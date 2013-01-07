@@ -21,6 +21,25 @@
 
 namespace ComposerEditorNG
 {
+
+QMap<QString, QStringList> ExtendAttributesUtil::globalAttribute()
+{
+    QMap<QString, QStringList> globalAttr;
+    globalAttr.insert(QLatin1String("accesskey"),QStringList());
+    globalAttr.insert(QLatin1String("class"),QStringList());
+    QStringList dir;
+    dir<<QLatin1String("ltr");
+    dir<<QLatin1String("rtl");
+    dir<<QLatin1String("auto");
+    globalAttr.insert(QLatin1String("dir"),dir);
+    globalAttr.insert(QLatin1String("id"),QStringList());
+    globalAttr.insert(QLatin1String("lang"),QStringList());
+    globalAttr.insert(QLatin1String("style"),QStringList());
+    globalAttr.insert(QLatin1String("tabindex"),QStringList());
+    globalAttr.insert(QLatin1String("title"),QStringList());
+    return globalAttr;
+}
+
 QMap<QString, QStringList> ExtendAttributesUtil::attributesMap(ExtendAttributesDialog::ExtendType type)
 {
     switch(type) {
@@ -39,24 +58,140 @@ QMap<QString, QStringList> ExtendAttributesUtil::attributesMap(ExtendAttributesD
 QMap<QString, QStringList> ExtendAttributesUtil::attributesMapImage()
 {
     QMap<QString, QStringList> map;
+    map = globalAttribute();
+    QStringList align;
+    align<<QLatin1String("top");
+    align<<QLatin1String("bottom");
+    align<<QLatin1String("middle");
+    align<<QLatin1String("left");
+    align<<QLatin1String("right");
+    map.insert(QLatin1String("align"),align);
+    map.insert(QLatin1String("alt"),QStringList());
+    map.insert(QLatin1String("border"),QStringList());
+    map.insert(QLatin1String("height"),QStringList());
+    map.insert(QLatin1String("hspace"),QStringList());
+    map.insert(QLatin1String("ismap"),QStringList());
+    map.insert(QLatin1String("longdesc"),QStringList());
+    map.insert(QLatin1String("src"),QStringList());
+    map.insert(QLatin1String("usemap"),QStringList());
+    map.insert(QLatin1String("vspace"),QStringList());
+    map.insert(QLatin1String("width"),QStringList());
     return map;
 }
 
 QMap<QString, QStringList> ExtendAttributesUtil::attributesMapTable()
 {
     QMap<QString, QStringList> map;
+    map = globalAttribute();
+    QStringList align;
+    align<<QLatin1String("left");
+    align<<QLatin1String("center");
+    align<<QLatin1String("right");
+    map.insert(QLatin1String("align"),align);
+    map.insert(QLatin1String("bgcolor"),QStringList());
+    map.insert(QLatin1String("border"),QStringList());
+    map.insert(QLatin1String("cellpadding"),QStringList());
+    map.insert(QLatin1String("cellspacing"),QStringList());
+    QStringList frame;
+    frame<<QLatin1String("void");
+    frame<<QLatin1String("above");
+    frame<<QLatin1String("below");
+    frame<<QLatin1String("hsides");
+    frame<<QLatin1String("lhs");
+    frame<<QLatin1String("rhs");
+    frame<<QLatin1String("vsides");
+    frame<<QLatin1String("box");
+    frame<<QLatin1String("border");
+    map.insert(QLatin1String("frame"),frame);
+    QStringList rules;
+    rules<<QLatin1String("none");
+    rules<<QLatin1String("groups");
+    rules<<QLatin1String("rows");
+    rules<<QLatin1String("cols");
+    rules<<QLatin1String("all");
+    map.insert(QLatin1String("rules"),rules);
+    map.insert(QLatin1String("summary"),QStringList());
+    map.insert(QLatin1String("width"),QStringList());
     return map;
 }
 
 QMap<QString, QStringList> ExtendAttributesUtil::attributesMapCell()
 {
     QMap<QString, QStringList> map;
+    map = globalAttribute();
+    map.insert(QLatin1String("abbr"),QStringList());
+    QStringList align;
+    align<<QLatin1String("top");
+    align<<QLatin1String("bottom");
+    align<<QLatin1String("middle");
+    align<<QLatin1String("left");
+    align<<QLatin1String("right");
+    align<<QLatin1String("char");
+    map.insert(QLatin1String("align"),align);
+    map.insert(QLatin1String("axis"),QStringList());
+    map.insert(QLatin1String("bgcolor"),QStringList());
+    map.insert(QLatin1String("char"),QStringList());
+    map.insert(QLatin1String("charoff"),QStringList());
+    map.insert(QLatin1String("colspan"),QStringList());
+    map.insert(QLatin1String("headers"),QStringList());
+    map.insert(QLatin1String("height"),QStringList());
+    map.insert(QLatin1String("nowrap"),QStringList());
+    map.insert(QLatin1String("rowspan"),QStringList());
+    QStringList scope;
+    scope<<QLatin1String("col");
+    scope<<QLatin1String("colgroup");
+    scope<<QLatin1String("row");
+    scope<<QLatin1String("rowgroup");
+    map.insert(QLatin1String("scope"),scope);
+    QStringList valign;
+    valign<<QLatin1String("top");
+    valign<<QLatin1String("middle");
+    valign<<QLatin1String("bottom");
+    valign<<QLatin1String("baseline");
+    map.insert(QLatin1String("valign"),valign);
+    map.insert(QLatin1String("width"),QStringList());
     return map;
 }
 
 QMap<QString, QStringList> ExtendAttributesUtil::attributesMapLink()
 {
     QMap<QString, QStringList> map;
+    map = globalAttribute();
+    map.insert(QLatin1String("charset"),QStringList());
+    map.insert(QLatin1String("href"),QStringList());
+    map.insert(QLatin1String("hreflang"),QStringList());
+    map.insert(QLatin1String("media"),QStringList());
+    QStringList rel;
+    rel<<QLatin1String("alternate");
+    rel<<QLatin1String("archives");
+    rel<<QLatin1String("author");
+    rel<<QLatin1String("bookmark");
+    rel<<QLatin1String("external");
+    rel<<QLatin1String("first");
+    rel<<QLatin1String("help");
+    rel<<QLatin1String("icon");
+    rel<<QLatin1String("last");
+    rel<<QLatin1String("license");
+    rel<<QLatin1String("next");
+    rel<<QLatin1String("nofollow");
+    rel<<QLatin1String("noreferrer");
+    rel<<QLatin1String("pingback");
+    rel<<QLatin1String("prefetch");
+    rel<<QLatin1String("prev");
+    rel<<QLatin1String("search");
+    rel<<QLatin1String("sidebar");
+    rel<<QLatin1String("stylesheet");
+    rel<<QLatin1String("tag");
+    rel<<QLatin1String("up");
+    map.insert(QLatin1String("rel"),rel);
+    map.insert(QLatin1String("rev"),QStringList());
+    QStringList target;
+    target<<QLatin1String("_blank");
+    target<<QLatin1String("_self");
+    target<<QLatin1String("_top");
+    target<<QLatin1String("_parent");
+    map.insert(QLatin1String("target"),target);
+    map.insert(QLatin1String("type"),QStringList());
     return map;
 }
 

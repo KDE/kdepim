@@ -263,6 +263,13 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
       <default>220</default>
     </entry>
 
+    <entry name="FilterSourcePattern" type="String" key="filter-source-pattern">
+      <default></default>
+    </entry>
+    <entry name="FilterSourceType" type="int" key="filter-source-type">
+      <default>0</default>
+    </entry>
+
   </group>
 </kcfg>
 

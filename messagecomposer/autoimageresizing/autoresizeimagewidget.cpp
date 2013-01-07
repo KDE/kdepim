@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -50,12 +50,18 @@ AutoResizeImageWidget::AutoResizeImageWidget(QWidget *parent)
   connect(ui->customMinimumHeight,SIGNAL(valueChanged(int)),SIGNAL(changed()));
   connect(ui->skipImageSizeLower,SIGNAL(clicked()),SIGNAL(changed()));
   connect(ui->imageSize,SIGNAL(valueChanged(int)),SIGNAL(changed()));
-
+  connect(ui->pattern,SIGNAL(textChanged(QString)),SIGNAL(changed()));
   connect(ui->CBMaximumWidth,SIGNAL(currentIndexChanged(int)),SLOT(slotComboboxChanged(int)));
   connect(ui->CBMaximumHeight,SIGNAL(currentIndexChanged(int)),SLOT(slotComboboxChanged(int)));
   connect(ui->CBMinimumWidth,SIGNAL(currentIndexChanged(int)),SLOT(slotComboboxChanged(int)));
   connect(ui->CBMinimumHeight,SIGNAL(currentIndexChanged(int)),SLOT(slotComboboxChanged(int)));
   connect(ui->WriteToImageFormat,SIGNAL(activated(int)),SIGNAL(changed()));
+
+  mSourceFilterGroup = new QButtonGroup(ui->filterSourceGroupBox);
+  connect( mSourceFilterGroup, SIGNAL(buttonClicked(int)), this, SLOT(slotSourceFilterClicked(int)) );
+  mSourceFilterGroup->addButton( ui->notFilterFilename, 0 );
+  mSourceFilterGroup->addButton( ui->includeFilesWithPattern, 1 );
+  mSourceFilterGroup->addButton( ui->excludeFilesWithPattern, 2 );
 }
 
 AutoResizeImageWidget::~AutoResizeImageWidget()
@@ -63,10 +69,16 @@ AutoResizeImageWidget::~AutoResizeImageWidget()
   delete ui;
 }
 
+void AutoResizeImageWidget::slotSourceFilterClicked(int button)
+{
+  ui->pattern->setEnabled(button != 0);
+  Q_EMIT changed();
+}
+
 void AutoResizeImageWidget::slotComboboxChanged(int index)
 {
   KComboBox* combo = qobject_cast< KComboBox* >( sender() );
-  if(combo) {
+  if (combo) {
     const bool isCustom = combo->itemData(index) == -1;
     if(combo == ui->CBMaximumWidth) {
       ui->customMaximumWidth->setEnabled(isCustom);
@@ -92,8 +104,7 @@ void AutoResizeImageWidget::initComboBox(KComboBox *combo)
        <<1024
        <<1600
        <<2048;
-  Q_FOREACH(int val, size)
-  {
+  Q_FOREACH(int val, size) {
      combo->addItem(QString::number(val), val);
   }
   combo->addItem(i18n("Custom"), -1);
@@ -153,8 +164,8 @@ void AutoResizeImageWidget::loadConfig()
 
 void AutoResizeImageWidget::writeConfig()
 {
-  if(ui->EnlargeImageToMinimum->isChecked() && ui->ReduceImageToMaximum->isChecked()) {
-    if((ui->customMinimumWidth->value()>=ui->customMaximumWidth->value()) ||
+  if (ui->EnlargeImageToMinimum->isChecked() && ui->ReduceImageToMaximum->isChecked()) {
+    if ((ui->customMinimumWidth->value()>=ui->customMaximumWidth->value()) ||
        (ui->customMinimumHeight->value()>=ui->customMaximumHeight->value())) {
         KMessageBox::error(this, i18n("Please verify minimum and maximum values."), i18n("Error in minimum Maximum value"));
         return;
@@ -219,7 +230,7 @@ void AutoResizeImageWidget::resetToDefault()
    ui->customMinimumHeight->setEnabled(ui->CBMinimumHeight->itemData(index) == -1);
 
    index = ui->WriteToImageFormat->findData(MessageComposer::MessageComposerSettings::self()->writeFormat());
-   if(index == -1) {
+   if (index == -1) {
       ui->WriteToImageFormat->setCurrentIndex(0);
    } else {
       ui->WriteToImageFormat->setCurrentIndex(index);

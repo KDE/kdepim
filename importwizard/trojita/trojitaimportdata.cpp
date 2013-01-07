@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -60,13 +60,14 @@ bool TrojitaImportData::importMails()
 bool TrojitaImportData::importSettings()
 {
     const QString settingsPath = mPath + QLatin1String("trojita.conf");
-    TrojitaSettings settings(settingsPath,mImportWizard);
+    TrojitaSettings settings(settingsPath, mImportWizard);
     return true;
 }
 
 bool TrojitaImportData::importAddressBook()
 {
-    TrojitaAddressBook addressBooks(mImportWizard);
+    const QString addressbookPath = QDir::homePath() + QLatin1String("/.abook/addressbook");
+    TrojitaAddressBook addressBooks(addressbookPath, mImportWizard);
     return true;
 }
 

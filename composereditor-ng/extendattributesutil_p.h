@@ -30,6 +30,7 @@ QMap<QString, QStringList> attributesMapImage();
 QMap<QString, QStringList> attributesMapTable();
 QMap<QString, QStringList> attributesMapCell();
 QMap<QString, QStringList> attributesMapLink();
+QMap<QString, QStringList> globalAttribute();
 }
 }
 #endif // EXTENDATTRIBUTESUTIL_P_H

@@ -1210,7 +1210,9 @@ void AddresseeLineEdit::insert( const QString &t )
 
 void AddresseeLineEdit::setText( const QString & text )
 {
+  const int cursorPos = cursorPosition();
   KLineEdit::setText( text.trimmed() );
+  setCursorPosition( cursorPos );
 }
 
 void AddresseeLineEdit::paste()

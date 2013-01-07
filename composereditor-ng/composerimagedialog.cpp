@@ -19,6 +19,7 @@
 */
 
 #include "composerimagedialog.h"
+#include "extendattributesbutton.h"
 
 #include "kpimtextedit/insertimagewidget.h"
 
@@ -43,11 +44,13 @@ public:
 
     void _k_slotOkClicked();
     void _k_slotApplyClicked();
+    void _k_slotWebElementChanged();
     void initialize();
 
     QString html() const;
 
     void updateImageHtml();
+    void updateSettings();
 
     QWebElement webElement;
 
@@ -56,6 +59,11 @@ public:
     KLineEdit *alternateTitle;
     ComposerImageDialog *q;
 };
+
+void ComposerImageDialogPrivate::_k_slotWebElementChanged()
+{
+    updateSettings();
+}
 
 void ComposerImageDialogPrivate::_k_slotOkClicked()
 {
@@ -141,6 +149,13 @@ void ComposerImageDialogPrivate::initialize()
     hbox->addWidget(alternateTitle);
     lay->addLayout(hbox);
 
+    if (!webElement.isNull()) {
+        ExtendAttributesButton *button = new ExtendAttributesButton(webElement,ExtendAttributesDialog::Image,q);
+        q->connect(button, SIGNAL(webElementChanged()), q, SLOT(_k_slotWebElementChanged()));
+        lay->addWidget( button );
+    }
+
+
     KSeparator *sep = new KSeparator;
     lay->addWidget(sep);
 
@@ -153,14 +168,19 @@ void ComposerImageDialogPrivate::initialize()
 
     if (!webElement.isNull()) {
         q->connect(q,SIGNAL(applyClicked()),q,SLOT(_k_slotApplyClicked()));
-        imageWidget->setImageUrl(webElement.attribute(QLatin1String("src")));
-        if(webElement.hasAttribute(QLatin1String("height")) && webElement.hasAttribute(QLatin1String("width"))) {
-            imageWidget->setImageWidth(webElement.attribute(QLatin1String("width")).toInt());
-            imageWidget->setImageHeight(webElement.attribute(QLatin1String("height")).toInt());
-        }
-        alternateTitle->setText(webElement.attribute(QLatin1String("alt")));
-        title->setText(webElement.attribute(QLatin1String("title")));
+        updateSettings();
     }
+}
+
+void ComposerImageDialogPrivate::updateSettings()
+{
+    imageWidget->setImageUrl(webElement.attribute(QLatin1String("src")));
+    if(webElement.hasAttribute(QLatin1String("height")) && webElement.hasAttribute(QLatin1String("width"))) {
+        imageWidget->setImageWidth(webElement.attribute(QLatin1String("width")).toInt());
+        imageWidget->setImageHeight(webElement.attribute(QLatin1String("height")).toInt());
+    }
+    alternateTitle->setText(webElement.attribute(QLatin1String("alt")));
+    title->setText(webElement.attribute(QLatin1String("title")));
 }
 
 QString ComposerImageDialogPrivate::html() const

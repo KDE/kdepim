@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -21,13 +21,22 @@
 
 #include <KDebug>
 
+#include <QSettings>
 
-TrojitaAddressBook::TrojitaAddressBook(ImportWizard *parent)
+
+TrojitaAddressBook::TrojitaAddressBook(const QString& filename, ImportWizard *parent)
   : AbstractAddressBook( parent )
 {
+    settings = new QSettings(filename,QSettings::IniFormat,this);
+    readAddressBook();
 }
 
 TrojitaAddressBook::~TrojitaAddressBook()
 {
+    delete settings;
 }
 
+void TrojitaAddressBook::readAddressBook()
+{
+    //TODO
+}

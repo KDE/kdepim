@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -25,6 +25,7 @@ namespace Ui {
 class AutoResizeImageWidget;
 }
 
+class QButtonGroup;
 
 namespace MessageComposer {
 class MESSAGECOMPOSER_EXPORT AutoResizeImageWidget : public QWidget
@@ -43,11 +44,13 @@ Q_SIGNALS:
 
 private Q_SLOTS:
   void slotComboboxChanged(int index);
+  void slotSourceFilterClicked(int);
 
 private:
   void initComboBox(KComboBox *combo);
   void initWriteImageFormat();
   Ui::AutoResizeImageWidget *ui;
+  QButtonGroup *mSourceFilterGroup;
   bool mWasChanged;
 };
 }

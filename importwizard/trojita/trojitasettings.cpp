@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel.org>
   
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -105,39 +105,37 @@ void TrojitaSettings::readTransport()
     const QString smtpMethod = settings->value(QLatin1String("msa.method")).toString();
     if (!smtpMethod.isEmpty()) {
         MailTransport::Transport *mt = createTransport();
-#if 0
-        QString smtpHostKey = QLatin1String("msa.smtp.host");
-        QString smtpPortKey = QLatin1String("msa.smtp.port");
-        QString smtpAuthKey = QLatin1String("msa.smtp.auth");
-        QString smtpStartTlsKey = QLatin1String("msa.smtp.starttls");
-        QString smtpUserKey = QLatin1String("msa.smtp.auth.user");
-        QString smtpPassKey = QLatin1String("msa.smtp.auth.pass");
-        QString sendmailKey = QLatin1String("msa.sendmail");
-        QString sendmailDefaultCmd = QLatin1String("sendmail -bm -oi");
-
-#endif
-
         if (smtpMethod == QLatin1String("IMAP-SENDMAIL")) {
-
-        } else if (smtpMethod == QLatin1String("SMTP")) {
+            //TODO ?
+        } else if (smtpMethod == QLatin1String("SMTP") || smtpMethod == QLatin1String("SSMTP")) {
             if (settings->contains(QLatin1String("msa.smtp.host"))) {
                 mt->setHost(settings->value(QLatin1String("msa.smtp.host")).toString());
             }
             if (settings->contains(QLatin1String("msa.smtp.port"))) {
                 mt->setPort(settings->value(QLatin1String("msa.smtp.port")).toInt());
             }
-            if (settings->contains(QLatin1String("msa.smtp.auth.user"))) {
-                mt->setUserName(settings->value(QLatin1String("msa.smtp.auth.user")).toString());
-            }
-            if (settings->contains(QLatin1String("msa.smtp.auth.pass"))) {
-                mt->setPassword(settings->value(QLatin1String("msa.smtp.auth.pass")).toString());
+            if (settings->contains(QLatin1String("msa.smtp.auth"))) {
+                if (settings->value(QLatin1String("msa.smtp.auth")).toBool()) {
+                    if (settings->contains(QLatin1String("msa.smtp.auth.user"))) {
+                        mt->setUserName(settings->value(QLatin1String("msa.smtp.auth.user")).toString());
+                    }
+                    if (settings->contains(QLatin1String("msa.smtp.auth.pass"))) {
+                        mt->setPassword(settings->value(QLatin1String("msa.smtp.auth.pass")).toString());
+                    }
+                }
             }
 
+            if (settings->contains(QLatin1String("msa.smtp.starttls"))) {
+                if (settings->value(QLatin1String("msa.smtp.starttls")).toBool()) {
+                    mt->setEncryption( MailTransport::Transport::EnumEncryption::TLS );
+                }
+            }
             mt->setType(MailTransport::Transport::EnumType::SMTP);
-        } else if (smtpMethod == QLatin1String("SSMTP")) {
-
         } else if (smtpMethod == QLatin1String("sendmail")) {
             mt->setType(MailTransport::Transport::EnumType::Sendmail);
+            if (settings->contains(QLatin1String("msa.sendmail"))) {
+                mt->setHost(settings->value(QLatin1String("msa.sendmail")).toString());
+            }
         } else {
             qWarning()<<" smtpMethod unknown "<<smtpMethod;
         }
