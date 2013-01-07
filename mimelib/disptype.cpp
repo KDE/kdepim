@@ -337,6 +337,11 @@ void DwDispositionType::EnumToStr()
 
 void DwDispositionType::StrToEnum()
 {
+    if (mDispositionTypeStr.empty()) {
+        mDispositionType = DwMime::kDispTypeUnknown;
+        return;
+    }
+
     switch (mDispositionTypeStr[0]) {
     case 'i':
         if (DwStrcasecmp(mDispositionTypeStr, "inline") == 0) {
