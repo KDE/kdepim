@@ -214,16 +214,17 @@ void ComposerImageResizeWidget::paintEvent( QPaintEvent * )
     QPainter painter(this);
 
     painter.drawRect(QRect(0,0,width,height));
-    painter.fillRect(QRect(0,0,resizeSquareSize,resizeSquareSize),Qt::white);
-    painter.fillRect(QRect(width-resizeSquareSize,0,resizeSquareSize,resizeSquareSize),Qt::white);
-    painter.fillRect(QRect(0,height-resizeSquareSize,resizeSquareSize,resizeSquareSize),Qt::white);
-    painter.fillRect(QRect(width-resizeSquareSize,height-resizeSquareSize,resizeSquareSize,resizeSquareSize),Qt::white);
+    painter.setPen(Qt::white);
+    painter.drawRect(QRect(0,0,resizeSquareSize,resizeSquareSize));
+    painter.drawRect(QRect(width-resizeSquareSize,0,resizeSquareSize,resizeSquareSize));
+    painter.drawRect(QRect(0,height-resizeSquareSize,resizeSquareSize,resizeSquareSize));
+    painter.drawRect(QRect(width-resizeSquareSize,height-resizeSquareSize,resizeSquareSize,resizeSquareSize));
 
-    painter.fillRect(QRect((width-resizeSquareSize)/2,0,resizeSquareSize,resizeSquareSize),Qt::white);
-    painter.fillRect(QRect((width-resizeSquareSize)/2,height-resizeSquareSize,resizeSquareSize,resizeSquareSize),Qt::white);
+    painter.drawRect(QRect((width-resizeSquareSize)/2,0,resizeSquareSize,resizeSquareSize));
+    painter.drawRect(QRect((width-resizeSquareSize)/2,height-resizeSquareSize,resizeSquareSize,resizeSquareSize));
 
-    painter.fillRect(QRect(0,(height-resizeSquareSize)/2,resizeSquareSize,resizeSquareSize),Qt::white);
-    painter.fillRect(QRect(width-resizeSquareSize,(height-resizeSquareSize)/2,resizeSquareSize,resizeSquareSize),Qt::white);
+    painter.drawRect(QRect(0,(height-resizeSquareSize)/2,resizeSquareSize,resizeSquareSize));
+    painter.drawRect(QRect(width-resizeSquareSize,(height-resizeSquareSize)/2,resizeSquareSize,resizeSquareSize));
 }
 
 
