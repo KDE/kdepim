@@ -33,6 +33,7 @@ target_link_libraries(pimcommon
     ${KDEPIMLIBS_AKONADI_LIBS}
     ${KDEPIMLIBS_KIMAP_LIBS}
     ${KDE4_KDEUI_LIBS}
+    kdepim
 )
 
 set_target_properties(pimcommon PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
