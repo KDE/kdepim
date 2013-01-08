@@ -107,9 +107,9 @@ void ComposerCellSizeWidgetPrivate::setValue(const QString& val)
 
 void ComposerCellSizeWidgetPrivate::setType(TypeSize type)
 {
-  const int index = typeSize->findData(QVariant(type));
-  typeSize->setCurrentIndex(index);
-  slotTypeChanged(index);
+    const int index = typeSize->findData(QVariant(type));
+    typeSize->setCurrentIndex(index);
+    slotTypeChanged(index);
 }
 
 
