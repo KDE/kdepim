@@ -59,9 +59,9 @@ AutoResizeImageWidget::AutoResizeImageWidget(QWidget *parent)
 
   mSourceFilterGroup = new QButtonGroup(ui->filterSourceGroupBox);
   connect( mSourceFilterGroup, SIGNAL(buttonClicked(int)), this, SLOT(slotSourceFilterClicked(int)) );
-  mSourceFilterGroup->addButton( ui->notFilterFilename, 0 );
-  mSourceFilterGroup->addButton( ui->includeFilesWithPattern, 1 );
-  mSourceFilterGroup->addButton( ui->excludeFilesWithPattern, 2 );
+  mSourceFilterGroup->addButton( ui->notFilterFilename, NoFilter );
+  mSourceFilterGroup->addButton( ui->includeFilesWithPattern, IncludeFilesWithPattern );
+  mSourceFilterGroup->addButton( ui->excludeFilesWithPattern, ExcludeFilesWithPattern );
 }
 
 AutoResizeImageWidget::~AutoResizeImageWidget()
@@ -161,14 +161,14 @@ void AutoResizeImageWidget::loadConfig()
   }
   ui->pattern->setText(MessageComposer::MessageComposerSettings::self()->filterSourcePattern());
 
-  switch(MessageComposer::MessageComposerSettings::self()->filterSourceType()) {
-  case 0:
+  switch((FileSourceFilter)MessageComposer::MessageComposerSettings::self()->filterSourceType()) {
+  case NoFilter:
       ui->notFilterFilename->setChecked(true);
       break;
-  case 1:
+  case IncludeFilesWithPattern:
       ui->includeFilesWithPattern->setChecked(true);
       break;
-  case 2:
+  case ExcludeFilesWithPattern:
       ui->excludeFilesWithPattern->setChecked(true);
       break;
   }
@@ -255,18 +255,17 @@ void AutoResizeImageWidget::resetToDefault()
       ui->WriteToImageFormat->setCurrentIndex(index);
    }
 
-   switch(MessageComposer::MessageComposerSettings::self()->filterSourceType()) {
-   case 0:
+   switch((FileSourceFilter)MessageComposer::MessageComposerSettings::self()->filterSourceType()) {
+   case NoFilter:
        ui->notFilterFilename->setChecked(true);
        break;
-   case 1:
+   case IncludeFilesWithPattern:
        ui->includeFilesWithPattern->setChecked(true);
        break;
-   case 2:
+   case ExcludeFilesWithPattern:
        ui->excludeFilesWithPattern->setChecked(true);
        break;
    }
-
 
    MessageComposer::MessageComposerSettings::self()->useDefaults( bUseDefaults );
 
