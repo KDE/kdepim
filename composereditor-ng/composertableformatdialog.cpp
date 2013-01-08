@@ -145,6 +145,8 @@ void ComposerTableFormatDialogPrivate::updateSettings()
             useBackgroundColor->setChecked(true);
             const QColor color = QColor(webElement.attribute(QLatin1String("bgcolor")));
             backgroundColor->setColor(color);
+        } else {
+            useBackgroundColor->setChecked(false);
         }
         QWebElementCollection allRows = webElement.findAll(QLatin1String("tr"));
         insertTableWidget->setRows(allRows.count());

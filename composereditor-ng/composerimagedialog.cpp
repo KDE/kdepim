@@ -153,6 +153,7 @@ void ComposerImageDialogPrivate::initialize()
         ExtendAttributesButton *button = new ExtendAttributesButton(webElement,ExtendAttributesDialog::Image,q);
         q->connect(button, SIGNAL(webElementChanged()), q, SLOT(_k_slotWebElementChanged()));
         lay->addWidget( button );
+        q->connect(q,SIGNAL(applyClicked()),q,SLOT(_k_slotApplyClicked()));
     }
 
 
@@ -166,10 +167,7 @@ void ComposerImageDialogPrivate::initialize()
     q->setMainWidget(w);
     q->enableButtonOk( false );
 
-    if (!webElement.isNull()) {
-        q->connect(q,SIGNAL(applyClicked()),q,SLOT(_k_slotApplyClicked()));
-        updateSettings();
-    }
+    updateSettings();
 }
 
 void ComposerImageDialogPrivate::updateSettings()
