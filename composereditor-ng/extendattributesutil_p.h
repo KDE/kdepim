@@ -31,6 +31,8 @@ QMap<QString, QStringList> attributesMapTable();
 QMap<QString, QStringList> attributesMapCell();
 QMap<QString, QStringList> attributesMapLink();
 QMap<QString, QStringList> globalAttribute();
+QMap<QString, QStringList> attributesJavascript();
+QMap<QString, QStringList> attributesMapBody();
 }
 }
 #endif // EXTENDATTRIBUTESUTIL_P_H

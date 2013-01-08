@@ -51,6 +51,8 @@ QMap<QString, QStringList> ExtendAttributesUtil::attributesMap(ExtendAttributesD
         return attributesMapCell();
     case ExtendAttributesDialog::Link:
         return attributesMapLink();
+    case ExtendAttributesDialog::Body:
+        return attributesMapBody();
     }
     return QMap<QString, QStringList>();
 }
@@ -192,6 +194,43 @@ QMap<QString, QStringList> ExtendAttributesUtil::attributesMapLink()
     target<<QLatin1String("_parent");
     map.insert(QLatin1String("target"),target);
     map.insert(QLatin1String("type"),QStringList());
+    return map;
+}
+
+QMap<QString, QStringList> ExtendAttributesUtil::attributesMapBody()
+{
+    QMap<QString, QStringList> map;
+    return map;
+}
+
+QMap<QString, QStringList> ExtendAttributesUtil::attributesJavascript()
+{
+    QMap<QString, QStringList> map;
+    //Form event
+    map.insert(QLatin1String("onblur"),QStringList());
+    map.insert(QLatin1String("onchange"),QStringList());
+    map.insert(QLatin1String("onfocus"),QStringList());
+    map.insert(QLatin1String("onreset"),QStringList());
+    map.insert(QLatin1String("onselect"),QStringList());
+    map.insert(QLatin1String("onsubmit"),QStringList());
+    //Keyboard event.
+    map.insert(QLatin1String("onkeydown"),QStringList());
+    map.insert(QLatin1String("onkeypress"),QStringList());
+    map.insert(QLatin1String("onkeyup"),QStringList());
+
+    //Mouse event.
+    map.insert(QLatin1String("onclick"),QStringList());
+    map.insert(QLatin1String("ondblclick"),QStringList());
+    map.insert(QLatin1String("onmousedown"),QStringList());
+    map.insert(QLatin1String("onmousemove"),QStringList());
+    map.insert(QLatin1String("onmouseout"),QStringList());
+    map.insert(QLatin1String("onmouseover"),QStringList());
+    map.insert(QLatin1String("onmouseup"),QStringList());
+
+    //WindowEvent
+    map.insert(QLatin1String("onload"),QStringList());
+    map.insert(QLatin1String("onunload"),QStringList());
+
     return map;
 }
 

@@ -36,8 +36,16 @@ public:
         Image,
         Table,
         Cell,
-        Link
+        Link,
+        Body
     };
+
+    enum SettingsType {
+        HtmlAttributes,
+        InlineStyle,
+        JavascriptEvents
+    };
+
 
     explicit ExtendAttributesDialog(const QWebElement& element, ExtendType type,QWidget *parent);
     ~ExtendAttributesDialog();
@@ -45,10 +53,6 @@ private:
     friend class ExtendAttributesDialogPrivate;
     ExtendAttributesDialogPrivate * const d;
     Q_PRIVATE_SLOT( d, void _k_slotOkClicked() )
-    Q_PRIVATE_SLOT( d, void _k_slotRemoveAttribute() )
-    Q_PRIVATE_SLOT( d, void _k_attributeChanged(const QString&) )
-    Q_PRIVATE_SLOT( d, void _k_slotCurrentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*) )
-    Q_PRIVATE_SLOT( d, void _k_attributeValueChanged(const QString&) )
 };
 }
 

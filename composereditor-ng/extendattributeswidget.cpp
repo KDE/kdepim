@@ -30,14 +30,19 @@
 #include <QVBoxLayout>
 #include <QLineEdit>
 #include <QWebElement>
+#include <QDebug>
 
 namespace ComposerEditorNG {
 
 class ExtendAttributesWidgetPrivate
 {
 public:
-    ExtendAttributesWidgetPrivate(ExtendAttributesWidget *qq)
-        :blockSignal(false), q(qq)
+    ExtendAttributesWidgetPrivate(const QWebElement& element, ExtendAttributesDialog::SettingsType settingsType, ExtendAttributesDialog::ExtendType extendType, ExtendAttributesWidget *qq)
+        : webElement(element),
+          type(extendType),
+          settings(settingsType),
+          blockSignal(false),
+          q(qq)
     {
         QVBoxLayout *lay = new QVBoxLayout(q);
 
@@ -68,7 +73,6 @@ public:
         KSeparator *sep = new KSeparator;
         lay->addWidget( sep );
 
-        q->connect(q, SIGNAL(okClicked()), q, SLOT(_k_slotOkClicked()));
         fillCombobox();
         initialize();
 
@@ -81,10 +85,13 @@ public:
 
     void initialize();
     void fillCombobox();
+    void changeAttributes();
 
     QWebElement webElement;
 
     ExtendAttributesDialog::ExtendType type;
+
+    ExtendAttributesDialog::SettingsType settings;
 
     QMap<QString, QStringList> attributesMap;
     QTreeWidget *treeWidget;
@@ -112,7 +119,9 @@ void ExtendAttributesWidgetPrivate::_k_slotCurrentItemChanged(QTreeWidgetItem*,Q
     QTreeWidgetItem *item = treeWidget->currentItem();
     removeAttribute->setEnabled(item);
     if (item) {
-        _k_attributeChanged(item->text(0));
+        const QString key = item->text(0);
+        _k_attributeChanged(key);
+        attributes->setCurrentIndex(attributes->findText(key));
     }
 }
 
@@ -138,7 +147,17 @@ void ExtendAttributesWidgetPrivate::_k_attributeChanged(const QString& key)
 
 void ExtendAttributesWidgetPrivate::fillCombobox()
 {
-    attributesMap = ComposerEditorNG::ExtendAttributesUtil::attributesMap(type);
+    switch(settings) {
+    case ExtendAttributesDialog::HtmlAttributes:
+        attributesMap = ComposerEditorNG::ExtendAttributesUtil::attributesMap(type);
+        break;
+    case ExtendAttributesDialog::InlineStyle:
+        //TODO
+        break;
+    case ExtendAttributesDialog::JavascriptEvents:
+        attributesMap = ComposerEditorNG::ExtendAttributesUtil::attributesJavascript();
+        break;
+    }
     attributes->addItems(attributesMap.keys());
 }
 
@@ -162,10 +181,28 @@ void ExtendAttributesWidgetPrivate::initialize()
     }
 }
 
+void ExtendAttributesWidgetPrivate::changeAttributes()
+{
+    if (!webElement.isNull()) {
+        const QStringList keys = attributesMap.keys();
+        Q_FOREACH (const QString& str, keys) {
+            const QList<QTreeWidgetItem *> lstItems = treeWidget->findItems(str, Qt::MatchCaseSensitive);
+            if (lstItems.isEmpty()) {
+                if (webElement.hasAttribute(str)) {
+                    webElement.removeAttribute(str);
+                }
+            } else {
+                const QString value = lstItems.at(0)->text(1);
+                if (!value.isEmpty()) {
+                    webElement.setAttribute(str, value);
+                }
+            }
+        }
+    }
+}
 
-
-ExtendAttributesWidget::ExtendAttributesWidget(QWidget *parent)
-    : QWidget(parent), d(new ExtendAttributesWidgetPrivate(this))
+ExtendAttributesWidget::ExtendAttributesWidget(const QWebElement &element, ExtendAttributesDialog::SettingsType settings, ExtendAttributesDialog::ExtendType type, QWidget *parent)
+    : QWidget(parent), d(new ExtendAttributesWidgetPrivate(element, settings, type, this))
 {
 }
 
@@ -174,5 +211,12 @@ ExtendAttributesWidget::~ExtendAttributesWidget()
     delete d;
 }
 
+void ExtendAttributesWidget::changeAttributes()
+{
+    d->changeAttributes();
 }
 
+}
+
+
+#include "extendattributeswidget.moc"

@@ -516,8 +516,12 @@ void ComposerViewPrivate::_k_slotPrintPreview()
 
 void ComposerViewPrivate::_k_slotChangePageColorAndBackground()
 {
-    PageColorBackgroundDialog dlg(q->page()->mainFrame(), q);
-    dlg.exec();
+    const QWebElement element = q->page()->mainFrame()->findFirstElement(QLatin1String("body"));
+    if (!element.isNull()) {
+        QPointer<PageColorBackgroundDialog> dlg = new PageColorBackgroundDialog(element, q);
+        dlg->exec();
+        delete dlg;
+    }
 }
 
 void ComposerViewPrivate::_k_slotAdjustActions()

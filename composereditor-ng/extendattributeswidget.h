@@ -23,15 +23,20 @@
 
 #include <QWidget>
 
+#include "extendattributesdialog.h"
+
 namespace ComposerEditorNG
 {
 class ExtendAttributesWidgetPrivate;
 
 class ExtendAttributesWidget : public QWidget
 {
+    Q_OBJECT
 public:
-    explicit ExtendAttributesWidget(QWidget *parent);
+    explicit ExtendAttributesWidget(const QWebElement &element, ExtendAttributesDialog::SettingsType settings, ExtendAttributesDialog::ExtendType type, QWidget *parent);
     ~ExtendAttributesWidget();
+
+    void changeAttributes();
 
 private:
     friend class ExtendAttributesWidgetPrivate;
