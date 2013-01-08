@@ -404,11 +404,15 @@ void FilterManager::filter(const Akonadi::Item& item, const QString& filterId, c
 
 bool FilterManager::process( const Akonadi::Item& item, bool needsFullPayload, const MailFilter* filter )
 {
+  if ( !filter ) {
+    return false;
+  }
+
   if ( !filter->isEnabled() ) {
     return true;
   }
 
-  if ( !filter || !item.hasPayload<KMime::Message::Ptr>() ) {
+  if ( !item.hasPayload<KMime::Message::Ptr>() ) {
     kError() << "Filter is null or item doesn't have correct payload.";
     return false;
   }

@@ -22,7 +22,7 @@
 #define PAGECOLORBACKGROUNDDIALOG_H
 
 #include <KDialog>
-class QWebFrame;
+class QWebElement;
 
 namespace ComposerEditorNG
 {
@@ -31,7 +31,7 @@ class PageColorBackgroundDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit PageColorBackgroundDialog(QWebFrame *frame, QWidget *parent = 0);
+    explicit PageColorBackgroundDialog(const QWebElement& element, QWidget *parent = 0);
     ~PageColorBackgroundDialog();
 
 private:
@@ -39,7 +39,7 @@ private:
     PageColorBackgroundDialogPrivate * const d;
     Q_PRIVATE_SLOT( d, void _k_slotOkClicked() )
     Q_PRIVATE_SLOT( d, void _k_slotApplyClicked() )
-
+    Q_PRIVATE_SLOT( d, void _k_slotWebElementChanged() )
 };
 }
 

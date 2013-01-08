@@ -19,6 +19,7 @@
 */
 
 #include "extendattributesdialog.h"
+#include "extendattributeswidget.h"
 #include "extendattributesutil_p.h"
 
 #include <KSeparator>
@@ -31,6 +32,7 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QTreeWidget>
+#include <QLabel>
 
 namespace ComposerEditorNG {
 
@@ -38,10 +40,7 @@ class ExtendAttributesDialogPrivate
 {
 public:
     ExtendAttributesDialogPrivate(const QWebElement& element, ExtendAttributesDialog::ExtendType extendType, ExtendAttributesDialog *qq)
-        : webElement(element),
-          type(extendType),
-          blockSignal(false),
-          q(qq)
+        : q(qq)
     {
         q->setCaption( i18n( "Extend Attribute" ) );
         q->setButtons( KDialog::Ok | KDialog::Cancel );
@@ -49,135 +48,56 @@ public:
         q->setMainWidget( page );
 
         QVBoxLayout *lay = new QVBoxLayout( page );
+        QString tagName;
+        switch(extendType) {
+        case ExtendAttributesDialog::Image:
+            tagName = QLatin1String("img");
+            break;
+        case ExtendAttributesDialog::Table:
+            tagName = QLatin1String("table");
+            break;
+        case ExtendAttributesDialog::Cell:
+            tagName = QLatin1String("cell");
+            break;
+        case ExtendAttributesDialog::Link:
+            tagName = QLatin1String("a");
+            break;
+        case ExtendAttributesDialog::Body:
+            tagName = QLatin1String("body");
+            break;
+        }
 
-        treeWidget = new QTreeWidget;
-        QStringList headerStr;
-        headerStr << i18n("Attribute")<< i18n("Value");
-        q->connect(treeWidget, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)), q, SLOT(_k_slotCurrentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)));
+        QLabel *lab = new QLabel( i18n("Current attributes for: \"%1\"", tagName) );
+        lay->addWidget(lab);
 
-        treeWidget->setHeaderLabels(headerStr);
-        lay->addWidget(treeWidget);
+        QTabWidget *tab = new QTabWidget;
 
-        QHBoxLayout *hbox = new QHBoxLayout;
-        attributes = new KComboBox;
-        q->connect(attributes, SIGNAL(activated(QString)), q, SLOT(_k_attributeChanged(QString)));
-        hbox->addWidget(attributes);
+        htmlAttributes = new ExtendAttributesWidget(element, ExtendAttributesDialog::HtmlAttributes, extendType, q);
+        javascriptAttributes = new ExtendAttributesWidget(element, ExtendAttributesDialog::JavascriptEvents, extendType, q);
+        inlineStyleAttributes = new ExtendAttributesWidget(element, ExtendAttributesDialog::InlineStyle, extendType, q);
 
-        attributeValue = new KComboBox;
-        attributeValue->setEditable(true);
-        q->connect(attributeValue->lineEdit(), SIGNAL(textChanged(QString)), q, SLOT(_k_attributeValueChanged(QString)));
-        hbox->addWidget(attributeValue);
+        tab->addTab(htmlAttributes, i18n("Html Attributes"));
+        tab->addTab(javascriptAttributes, i18n("Javascript"));
+        tab->addTab(inlineStyleAttributes, i18n("Inline Style"));
 
-        lay->addLayout(hbox);
-        removeAttribute = new KPushButton( i18n( "Remove" ) );
-        removeAttribute->setEnabled(false);
-        q->connect(removeAttribute, SIGNAL(clicked(bool)), q, SLOT(_k_slotRemoveAttribute()));
-        lay->addWidget(removeAttribute);
-
-        KSeparator *sep = new KSeparator;
-        lay->addWidget( sep );
-
+        lay->addWidget(tab);
         q->connect(q, SIGNAL(okClicked()), q, SLOT(_k_slotOkClicked()));
-        fillCombobox();
-        initialize();
+        q->resize(400,300);
     }
     void _k_slotOkClicked();
-    void _k_slotRemoveAttribute();
-    void _k_attributeChanged(const QString &key);
-    void _k_slotCurrentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*);
-    void _k_attributeValueChanged(const QString&);
 
-    void initialize();
-    void fillCombobox();
-
-    QWebElement webElement;
-    QTreeWidget *treeWidget;
-    KComboBox *attributes;
-    KComboBox *attributeValue;
-    KPushButton *removeAttribute;
-    ExtendAttributesDialog::ExtendType type;
-    QMap<QString, QStringList> attributesMap;
-    bool blockSignal;
+    ExtendAttributesWidget *htmlAttributes;
+    ExtendAttributesWidget *javascriptAttributes;
+    ExtendAttributesWidget *inlineStyleAttributes;
     ExtendAttributesDialog *q;
 };
 
-void ExtendAttributesDialogPrivate::_k_attributeValueChanged(const QString& val)
-{
-    if (blockSignal)
-        return;
-
-    QTreeWidgetItem *item = treeWidget->currentItem();
-    if (item) {
-        item->setText(1, val);
-    }
-}
-
-void ExtendAttributesDialogPrivate::_k_slotCurrentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)
-{
-    removeAttribute->setEnabled(treeWidget->currentItem());
-}
-
-void ExtendAttributesDialogPrivate::_k_attributeChanged(const QString& key)
-{
-    blockSignal = true;
-
-    attributeValue->clear();
-    attributeValue->addItem(QString()); //Add first empty attributes.
-    attributeValue->addItems(attributesMap.value(key));
-
-    const QList<QTreeWidgetItem *> lstItems = treeWidget->findItems(key, Qt::MatchCaseSensitive);
-    if (lstItems.isEmpty()) {
-        QTreeWidgetItem *item = new QTreeWidgetItem(treeWidget);
-        item->setText(0, key);
-        treeWidget->setCurrentItem(item);
-    } else {
-        treeWidget->setCurrentItem(lstItems.at(0));
-        attributeValue->lineEdit()->setText(lstItems.at(0)->text(1));
-    }
-    blockSignal = false;
-}
-
-void ExtendAttributesDialogPrivate::fillCombobox()
-{
-    attributesMap = ComposerEditorNG::ExtendAttributesUtil::attributesMap(type);
-    attributes->addItems(attributesMap.keys());
-}
-
-void ExtendAttributesDialogPrivate::_k_slotRemoveAttribute()
-{
-    QTreeWidgetItem *item = treeWidget->currentItem();
-    delete item;
-}
-
-void ExtendAttributesDialogPrivate::initialize()
-{
-    if (!webElement.isNull()) {
-        const QStringList keys = attributesMap.keys();
-        Q_FOREACH (const QString& str, keys) {
-            if (webElement.hasAttribute(str)) {
-                QTreeWidgetItem *item = new QTreeWidgetItem(treeWidget);
-                item->setText(0, str);
-                item->setText(1, webElement.attribute(str));
-            }
-        }
-    }
-}
 
 void ExtendAttributesDialogPrivate::_k_slotOkClicked()
 {
-    if (!webElement.isNull()) {
-        const QStringList keys = attributesMap.keys();
-        Q_FOREACH (const QString& str, keys) {
-            const QList<QTreeWidgetItem *> lstItems = treeWidget->findItems(str, Qt::MatchCaseSensitive);
-            if (lstItems.isEmpty()) {
-                if (webElement.hasAttribute(str)) {
-                    webElement.removeAttribute(str);
-                }
-            } else {
-                webElement.setAttribute(str, lstItems.at(0)->text(1));
-            }
-        }
-    }
+    htmlAttributes->changeAttributes();
+    javascriptAttributes->changeAttributes();
+    inlineStyleAttributes->changeAttributes();
     q->accept();
 }
 

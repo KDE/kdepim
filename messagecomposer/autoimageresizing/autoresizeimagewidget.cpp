@@ -59,9 +59,9 @@ AutoResizeImageWidget::AutoResizeImageWidget(QWidget *parent)
 
   mSourceFilterGroup = new QButtonGroup(ui->filterSourceGroupBox);
   connect( mSourceFilterGroup, SIGNAL(buttonClicked(int)), this, SLOT(slotSourceFilterClicked(int)) );
-  mSourceFilterGroup->addButton( ui->notFilterFilename, 0 );
-  mSourceFilterGroup->addButton( ui->includeFilesWithPattern, 1 );
-  mSourceFilterGroup->addButton( ui->excludeFilesWithPattern, 2 );
+  mSourceFilterGroup->addButton( ui->notFilterFilename, NoFilter );
+  mSourceFilterGroup->addButton( ui->includeFilesWithPattern, IncludeFilesWithPattern );
+  mSourceFilterGroup->addButton( ui->excludeFilesWithPattern, ExcludeFilesWithPattern );
 }
 
 AutoResizeImageWidget::~AutoResizeImageWidget()
@@ -159,6 +159,20 @@ void AutoResizeImageWidget::loadConfig()
   } else {
       ui->WriteToImageFormat->setCurrentIndex(index);
   }
+  ui->pattern->setText(MessageComposer::MessageComposerSettings::self()->filterSourcePattern());
+
+  switch((FileSourceFilter)MessageComposer::MessageComposerSettings::self()->filterSourceType()) {
+  case NoFilter:
+      ui->notFilterFilename->setChecked(true);
+      break;
+  case IncludeFilesWithPattern:
+      ui->includeFilesWithPattern->setChecked(true);
+      break;
+  case ExcludeFilesWithPattern:
+      ui->excludeFilesWithPattern->setChecked(true);
+      break;
+  }
+
   mWasChanged = false;
 }
 
@@ -191,6 +205,10 @@ void AutoResizeImageWidget::writeConfig()
   MessageComposer::MessageComposerSettings::self()->setSkipImageLowerSizeEnabled(ui->skipImageSizeLower->isChecked());
   MessageComposer::MessageComposerSettings::self()->setSkipImageLowerSize(ui->imageSize->value());
 
+  MessageComposer::MessageComposerSettings::self()->setFilterSourcePattern(ui->pattern->text());
+
+  MessageComposer::MessageComposerSettings::self()->setFilterSourceType(mSourceFilterGroup->checkedId());
+
   mWasChanged = false;
 }
 
@@ -212,6 +230,7 @@ void AutoResizeImageWidget::resetToDefault()
    ui->skipImageSizeLower->setChecked(MessageComposer::MessageComposerSettings::self()->skipImageLowerSizeEnabled());
    ui->imageSize->setValue(MessageComposer::MessageComposerSettings::self()->skipImageLowerSize());
 
+   ui->pattern->setText(MessageComposer::MessageComposerSettings::self()->filterSourcePattern());
 
    int index = qMax(0, ui->CBMaximumWidth->findData(MessageComposer::MessageComposerSettings::self()->maximumWidth()));
    ui->CBMaximumWidth->setCurrentIndex(index);
@@ -236,6 +255,17 @@ void AutoResizeImageWidget::resetToDefault()
       ui->WriteToImageFormat->setCurrentIndex(index);
    }
 
+   switch((FileSourceFilter)MessageComposer::MessageComposerSettings::self()->filterSourceType()) {
+   case NoFilter:
+       ui->notFilterFilename->setChecked(true);
+       break;
+   case IncludeFilesWithPattern:
+       ui->includeFilesWithPattern->setChecked(true);
+       break;
+   case ExcludeFilesWithPattern:
+       ui->excludeFilesWithPattern->setChecked(true);
+       break;
+   }
 
    MessageComposer::MessageComposerSettings::self()->useDefaults( bUseDefaults );
 

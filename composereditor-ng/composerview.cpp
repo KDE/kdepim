@@ -206,7 +206,7 @@ void ComposerViewPrivate::_k_changeAutoSpellChecking(bool checked)
 #if QTWEBKIT_VERSION >= QTWEBKIT_VERSION_CHECK(2, 3, 0)
     ComposerEditorNG::GlobalSettingsBase::setAutoSpellChecking(checked);
 #endif
-  Q_UNUSED( checked );
+    Q_UNUSED( checked );
 }
 
 QAction* ComposerViewPrivate::getAction ( QWebPage::WebAction action ) const
@@ -501,7 +501,7 @@ void ComposerViewPrivate::_k_slotPrint()
     QPointer<QPrintDialog> dlg(KdePrint::createPrintDialog(&printer));
 
     if (dlg && dlg->exec() == QDialog::Accepted ) {
-      q->print( &printer );
+        q->print( &printer );
     }
     delete dlg;
 }
@@ -516,8 +516,12 @@ void ComposerViewPrivate::_k_slotPrintPreview()
 
 void ComposerViewPrivate::_k_slotChangePageColorAndBackground()
 {
-    PageColorBackgroundDialog dlg(q->page()->mainFrame(), q);
-    dlg.exec();
+    const QWebElement element = q->page()->mainFrame()->findFirstElement(QLatin1String("body"));
+    if (!element.isNull()) {
+        QPointer<PageColorBackgroundDialog> dlg = new PageColorBackgroundDialog(element, q);
+        dlg->exec();
+        delete dlg;
+    }
 }
 
 void ComposerViewPrivate::_k_slotAdjustActions()
@@ -545,7 +549,7 @@ void ComposerViewPrivate::_k_slotAdjustActions()
     }
     const QString font = evaluateJavascript(QLatin1String("getFontFamily()")).toString();
     if(!font.isEmpty()) {
-      action_font_family->setFont(font);
+        action_font_family->setFont(font);
     }
 }
 

@@ -502,7 +502,6 @@ CallId Scheduler::acceptCancel( const IncidenceBase::Ptr &incidence,
     }
 
     if ( isMine ) {
-      bool ret = false;
       //TODO_SERGIO: use ItemDeleteJob and make this async.
       kDebug() << "removing existing incidence " << i->uid();
 
@@ -526,7 +525,7 @@ CallId Scheduler::acceptCancel( const IncidenceBase::Ptr &incidence,
 
       if ( emitResult ) {
         deleteTransaction( incidence->uid() );
-        errorMessage = ret ? QString() : QLatin1String( "Error deleting incidence" );
+        errorMessage = QLatin1String( "Error deleting incidence" );
         emitOperationFinished( callId, resultCode, errorMessage );
       }
 

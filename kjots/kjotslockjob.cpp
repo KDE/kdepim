@@ -44,9 +44,8 @@ void KJotsLockJob::doStart()
   foreach ( const Akonadi::Collection &_col, m_collections )
   {
     Akonadi::Collection col = _col;
-    KJotsLockAttribute *attr = new KJotsLockAttribute();
     if ( m_type == LockJob )
-      col.addAttribute( attr );
+      col.addAttribute( new KJotsLockAttribute() );
     else
       col.removeAttribute<KJotsLockAttribute>();
     new Akonadi::CollectionModifyJob( col, this );
@@ -54,9 +53,8 @@ void KJotsLockJob::doStart()
   foreach ( const Akonadi::Item &_item, m_items )
   {
     Akonadi::Item item = _item;
-    KJotsLockAttribute *attr = new KJotsLockAttribute();
     if ( m_type == LockJob )
-      item.addAttribute( attr );
+      item.addAttribute( new KJotsLockAttribute() );
     else
       item.removeAttribute<KJotsLockAttribute>();
 

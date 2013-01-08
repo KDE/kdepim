@@ -79,6 +79,7 @@ set( messagecomposer_src
      selectspecialchar.cpp
      autoimageresizing/autoimageresizedialog.cpp
      autoimageresizing/autoresizeimagewidget.cpp
+     autoimageresizing/autoresizeimageutil.cpp
 )
 
 kde4_add_ui_files(messagecomposer_src
