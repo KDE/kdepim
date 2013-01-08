@@ -294,7 +294,18 @@
            </widget>
           </item>
           <item>
-           <widget class="KLineEdit" name="pattern"/>
+           <layout class="QHBoxLayout" name="horizontalLayout_3">
+            <item>
+             <widget class="QLabel" name="patternLabel">
+              <property name="text">
+               <string>Pattern:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="KLineEdit" name="pattern"/>
+            </item>
+           </layout>
           </item>
           <item>
            <spacer name="verticalSpacer_3">

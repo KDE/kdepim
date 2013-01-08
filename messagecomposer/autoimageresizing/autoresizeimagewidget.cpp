@@ -159,6 +159,20 @@ void AutoResizeImageWidget::loadConfig()
   } else {
       ui->WriteToImageFormat->setCurrentIndex(index);
   }
+  ui->pattern->setText(MessageComposer::MessageComposerSettings::self()->filterSourcePattern());
+
+  switch(MessageComposer::MessageComposerSettings::self()->filterSourceType()) {
+  case 0:
+      ui->notFilterFilename->setChecked(true);
+      break;
+  case 1:
+      ui->includeFilesWithPattern->setChecked(true);
+      break;
+  case 2:
+      ui->excludeFilesWithPattern->setChecked(true);
+      break;
+  }
+
   mWasChanged = false;
 }
 
@@ -191,6 +205,10 @@ void AutoResizeImageWidget::writeConfig()
   MessageComposer::MessageComposerSettings::self()->setSkipImageLowerSizeEnabled(ui->skipImageSizeLower->isChecked());
   MessageComposer::MessageComposerSettings::self()->setSkipImageLowerSize(ui->imageSize->value());
 
+  MessageComposer::MessageComposerSettings::self()->setFilterSourcePattern(ui->pattern->text());
+
+  MessageComposer::MessageComposerSettings::self()->setFilterSourceType(mSourceFilterGroup->checkedId());
+
   mWasChanged = false;
 }
 
@@ -212,6 +230,7 @@ void AutoResizeImageWidget::resetToDefault()
    ui->skipImageSizeLower->setChecked(MessageComposer::MessageComposerSettings::self()->skipImageLowerSizeEnabled());
    ui->imageSize->setValue(MessageComposer::MessageComposerSettings::self()->skipImageLowerSize());
 
+   ui->pattern->setText(MessageComposer::MessageComposerSettings::self()->filterSourcePattern());
 
    int index = qMax(0, ui->CBMaximumWidth->findData(MessageComposer::MessageComposerSettings::self()->maximumWidth()));
    ui->CBMaximumWidth->setCurrentIndex(index);
@@ -234,6 +253,18 @@ void AutoResizeImageWidget::resetToDefault()
       ui->WriteToImageFormat->setCurrentIndex(0);
    } else {
       ui->WriteToImageFormat->setCurrentIndex(index);
+   }
+
+   switch(MessageComposer::MessageComposerSettings::self()->filterSourceType()) {
+   case 0:
+       ui->notFilterFilename->setChecked(true);
+       break;
+   case 1:
+       ui->includeFilesWithPattern->setChecked(true);
+       break;
+   case 2:
+       ui->excludeFilesWithPattern->setChecked(true);
+       break;
    }
 
 
