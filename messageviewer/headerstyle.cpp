@@ -708,6 +708,19 @@ QString FancyHeaderStyle::format( KMime::Message *message ) const {
       }
     }
   }
+
+  if ( strategy->showHeader( "x-bugzilla-url" ) && message->headerByType("X-Bugzilla-URL") ) {
+    const QString product   = message->headerByType("X-Bugzilla-Product")   ? message->headerByType("X-Bugzilla-Product")->asUnicodeString() : QString();
+    const QString component = message->headerByType("X-Bugzilla-Component") ? message->headerByType("X-Bugzilla-Component")->asUnicodeString() : QString();
+    const QString status    = message->headerByType("X-Bugzilla-Status")    ? message->headerByType("X-Bugzilla-Status")->asUnicodeString() : QString();
+    headerStr.append(QString::fromLatin1("<tr><th>%1</th>\n"
+                                         "<td>%2/%3, <strong>%4</strong></td></tr>\n")
+                      .arg(i18n("Bugzilla: "))
+                      .arg( strToHtml( product ) )
+                      .arg( strToHtml( component ) )
+                      .arg( strToHtml( status) ) );
+  }
+
   headerStr.append( QString( "<tr><td colspan=\"2\"><div id=\"attachmentInjectionPoint\"></div></td></tr>" ) );
   headerStr.append(
     QString::fromLatin1( "</table></td><td align=\"center\">%1</td></tr></table>\n" ).arg(userHTML) );
