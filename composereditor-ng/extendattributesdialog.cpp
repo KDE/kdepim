@@ -114,7 +114,9 @@ void ExtendAttributesDialogPrivate::_k_attributeValueChanged(const QString& val)
 
 void ExtendAttributesDialogPrivate::_k_slotCurrentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)
 {
-    removeAttribute->setEnabled(treeWidget->currentItem());
+    QTreeWidgetItem *item = treeWidget->currentItem();
+    removeAttribute->setEnabled(item);
+    _k_attributeChanged(item->text(0));
 }
 
 void ExtendAttributesDialogPrivate::_k_attributeChanged(const QString& key)
@@ -147,6 +149,7 @@ void ExtendAttributesDialogPrivate::_k_slotRemoveAttribute()
 {
     QTreeWidgetItem *item = treeWidget->currentItem();
     delete item;
+    removeAttribute->setEnabled(item);
 }
 
 void ExtendAttributesDialogPrivate::initialize()
