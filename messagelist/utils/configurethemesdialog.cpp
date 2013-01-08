@@ -383,8 +383,8 @@ void ConfigureThemesDialog::Private::cloneThemeButtonClicked()
   mEditor->editTheme( item->theme() );
 
   const int numberOfSelectedItem(mThemeList->selectedItems().count());
-  mDeleteThemeButton->setEnabled( item && !item->theme()->readOnly() );
-  mExportThemeButton->setEnabled( item );
+  mDeleteThemeButton->setEnabled( !item->theme()->readOnly() );
+  mExportThemeButton->setEnabled( true );
   mCloneThemeButton->setEnabled(numberOfSelectedItem == 1);
 }
 
