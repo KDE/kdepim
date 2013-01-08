@@ -17,11 +17,20 @@
 
 
 #include "autoresizeimageutil.h"
+#include "messagecomposersettings.h"
 
 using namespace MessageComposer;
 
-bool Util::resizeImage()
+bool Util::resizeImage(MessageCore::AttachmentPart::Ptr part)
 {
+    if(MessageComposer::MessageComposerSettings::self()->skipImageLowerSizeEnabled() &&
+            (part->size() > MessageComposer::MessageComposerSettings::self()->skipImageLowerSize() *1024)) {
+        if(part->mimeType() == "image/gif" ||
+                part->mimeType() == "image/jpeg" ||
+                part->mimeType() == "image/png" ) {
+            return true;
+        }
+    }
     return false;
 }
 

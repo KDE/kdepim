@@ -17,10 +17,11 @@
 
 #ifndef AUTORESIZEIMAGEUTIL_H
 #define AUTORESIZEIMAGEUTIL_H
+#include <messagecore/attachmentpart.h>
 
 namespace MessageComposer {
 namespace Util {
-bool resizeImage();
+bool resizeImage(MessageCore::AttachmentPart::Ptr part);
 }
 
 }
