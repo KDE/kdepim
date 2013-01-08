@@ -178,7 +178,10 @@ void ExtendAttributesDialogPrivate::_k_slotOkClicked()
                     webElement.removeAttribute(str);
                 }
             } else {
-                webElement.setAttribute(str, lstItems.at(0)->text(1));
+                const QString value = lstItems.at(0)->text(1);
+                if (!value.isEmpty()) {
+                    webElement.setAttribute(str, value);
+                }
             }
         }
     }
