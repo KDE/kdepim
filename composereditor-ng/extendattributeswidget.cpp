@@ -48,7 +48,12 @@ public:
 
         treeWidget = new QTreeWidget;
         QStringList headerStr;
-        headerStr << i18n("Attribute")<< i18n("Value");
+
+        if (settings == ExtendAttributesDialog::InlineStyle)
+            headerStr << i18n("Property")<< i18n("Value");
+        else
+            headerStr << i18n("Attribute")<< i18n("Value");
+
         q->connect(treeWidget, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)), q, SLOT(_k_slotCurrentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)));
 
         treeWidget->setHeaderLabels(headerStr);
