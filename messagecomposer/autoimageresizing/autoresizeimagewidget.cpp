@@ -59,9 +59,9 @@ AutoResizeImageWidget::AutoResizeImageWidget(QWidget *parent)
 
   mSourceFilterGroup = new QButtonGroup(ui->filterSourceGroupBox);
   connect( mSourceFilterGroup, SIGNAL(buttonClicked(int)), this, SLOT(slotSourceFilterClicked(int)) );
-  mSourceFilterGroup->addButton( ui->notFilterFilename, NoFilter );
-  mSourceFilterGroup->addButton( ui->includeFilesWithPattern, IncludeFilesWithPattern );
-  mSourceFilterGroup->addButton( ui->excludeFilesWithPattern, ExcludeFilesWithPattern );
+  mSourceFilterGroup->addButton( ui->notFilterFilename, MessageComposer::MessageComposerSettings::EnumFilterSourceType::NoFilter );
+  mSourceFilterGroup->addButton( ui->includeFilesWithPattern, MessageComposer::MessageComposerSettings::EnumFilterSourceType::IncludeFilesWithPattern );
+  mSourceFilterGroup->addButton( ui->excludeFilesWithPattern, MessageComposer::MessageComposerSettings::EnumFilterSourceType::ExcludeFilesWithPattern );
 }
 
 AutoResizeImageWidget::~AutoResizeImageWidget()
@@ -161,14 +161,14 @@ void AutoResizeImageWidget::loadConfig()
   }
   ui->pattern->setText(MessageComposer::MessageComposerSettings::self()->filterSourcePattern());
 
-  switch((FileSourceFilter)MessageComposer::MessageComposerSettings::self()->filterSourceType()) {
-  case NoFilter:
+  switch(MessageComposer::MessageComposerSettings::self()->filterSourceType()) {
+  case MessageComposer::MessageComposerSettings::EnumFilterSourceType::NoFilter:
       ui->notFilterFilename->setChecked(true);
       break;
-  case IncludeFilesWithPattern:
+  case MessageComposer::MessageComposerSettings::EnumFilterSourceType::IncludeFilesWithPattern:
       ui->includeFilesWithPattern->setChecked(true);
       break;
-  case ExcludeFilesWithPattern:
+  case MessageComposer::MessageComposerSettings::EnumFilterSourceType::ExcludeFilesWithPattern:
       ui->excludeFilesWithPattern->setChecked(true);
       break;
   }
@@ -255,14 +255,14 @@ void AutoResizeImageWidget::resetToDefault()
       ui->WriteToImageFormat->setCurrentIndex(index);
    }
 
-   switch((FileSourceFilter)MessageComposer::MessageComposerSettings::self()->filterSourceType()) {
-   case NoFilter:
+   switch(MessageComposer::MessageComposerSettings::self()->filterSourceType()) {
+   case MessageComposer::MessageComposerSettings::EnumFilterSourceType::NoFilter:
        ui->notFilterFilename->setChecked(true);
        break;
-   case IncludeFilesWithPattern:
+   case MessageComposer::MessageComposerSettings::EnumFilterSourceType::IncludeFilesWithPattern:
        ui->includeFilesWithPattern->setChecked(true);
        break;
-   case ExcludeFilesWithPattern:
+   case MessageComposer::MessageComposerSettings::EnumFilterSourceType::ExcludeFilesWithPattern:
        ui->excludeFilesWithPattern->setChecked(true);
        break;
    }

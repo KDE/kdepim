@@ -32,12 +32,6 @@ class MESSAGECOMPOSER_EXPORT AutoResizeImageWidget : public QWidget
 {
   Q_OBJECT
 public:
-    enum FileSourceFilter {
-        NoFilter = 0,
-        IncludeFilesWithPattern = 1,
-        ExcludeFilesWithPattern = 2
-    };
-
   explicit AutoResizeImageWidget(QWidget *parent = 0);
   ~AutoResizeImageWidget();
 
