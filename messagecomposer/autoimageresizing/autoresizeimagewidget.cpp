@@ -161,19 +161,25 @@ void AutoResizeImageWidget::loadConfig()
   }
   ui->pattern->setText(MessageComposer::MessageComposerSettings::self()->filterSourcePattern());
 
-  switch(MessageComposer::MessageComposerSettings::self()->filterSourceType()) {
-  case MessageComposer::MessageComposerSettings::EnumFilterSourceType::NoFilter:
-      ui->notFilterFilename->setChecked(true);
-      break;
-  case MessageComposer::MessageComposerSettings::EnumFilterSourceType::IncludeFilesWithPattern:
-      ui->includeFilesWithPattern->setChecked(true);
-      break;
-  case MessageComposer::MessageComposerSettings::EnumFilterSourceType::ExcludeFilesWithPattern:
-      ui->excludeFilesWithPattern->setChecked(true);
-      break;
-  }
+  updateFilterSourceTypeSettings();
 
   mWasChanged = false;
+}
+
+void AutoResizeImageWidget::updateFilterSourceTypeSettings()
+{
+    switch(MessageComposer::MessageComposerSettings::self()->filterSourceType()) {
+    case MessageComposer::MessageComposerSettings::EnumFilterSourceType::NoFilter:
+        ui->notFilterFilename->setChecked(true);
+        break;
+    case MessageComposer::MessageComposerSettings::EnumFilterSourceType::IncludeFilesWithPattern:
+        ui->includeFilesWithPattern->setChecked(true);
+        break;
+    case MessageComposer::MessageComposerSettings::EnumFilterSourceType::ExcludeFilesWithPattern:
+        ui->excludeFilesWithPattern->setChecked(true);
+        break;
+    }
+
 }
 
 void AutoResizeImageWidget::writeConfig()
@@ -255,18 +261,7 @@ void AutoResizeImageWidget::resetToDefault()
       ui->WriteToImageFormat->setCurrentIndex(index);
    }
 
-   switch(MessageComposer::MessageComposerSettings::self()->filterSourceType()) {
-   case MessageComposer::MessageComposerSettings::EnumFilterSourceType::NoFilter:
-       ui->notFilterFilename->setChecked(true);
-       break;
-   case MessageComposer::MessageComposerSettings::EnumFilterSourceType::IncludeFilesWithPattern:
-       ui->includeFilesWithPattern->setChecked(true);
-       break;
-   case MessageComposer::MessageComposerSettings::EnumFilterSourceType::ExcludeFilesWithPattern:
-       ui->excludeFilesWithPattern->setChecked(true);
-       break;
-   }
-
+   updateFilterSourceTypeSettings();
    MessageComposer::MessageComposerSettings::self()->useDefaults( bUseDefaults );
 
 

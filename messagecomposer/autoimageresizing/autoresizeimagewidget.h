@@ -47,6 +47,7 @@ private Q_SLOTS:
   void slotSourceFilterClicked(int);
 
 private:
+  void updateFilterSourceTypeSettings();
   void initComboBox(KComboBox *combo);
   void initWriteImageFormat();
   Ui::AutoResizeImageWidget *ui;
