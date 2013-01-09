@@ -36,7 +36,6 @@ using namespace KSieveUi;
 SieveTextEdit::SieveTextEdit( QWidget *parent )
   :QPlainTextEdit( parent )
 {
-  setFocus();
   setWordWrapMode ( QTextOption::NoWrap );
   setFont( KGlobalSettings::fixedFont() );
   (void) new SieveSyntaxHighlighter( document() );
@@ -59,7 +58,7 @@ void SieveTextEdit::contextMenuEvent( QContextMenuEvent *event )
   QMenu *popup = createStandardContextMenu();
   if (popup) {
     popup->addSeparator();
-    popup->addAction( KStandardGuiItem::find().text(),this,SIGNAL(findText()) , Qt::Key_F+Qt::CTRL);
+    popup->addAction( KStandardGuiItem::find().icon(), KStandardGuiItem::find().text(),this,SIGNAL(findText()) , Qt::Key_F+Qt::CTRL);
     //Code from KTextBrowser
     KIconTheme::assignIconsToContextMenu( isReadOnly() ? KIconTheme::ReadOnlyText
                                           : KIconTheme::TextEditor,
