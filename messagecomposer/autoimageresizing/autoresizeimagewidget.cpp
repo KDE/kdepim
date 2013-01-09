@@ -57,6 +57,7 @@ AutoResizeImageWidget::AutoResizeImageWidget(QWidget *parent)
   connect(ui->CBMinimumHeight,SIGNAL(currentIndexChanged(int)),SLOT(slotComboboxChanged(int)));
   connect(ui->WriteToImageFormat,SIGNAL(activated(int)),SIGNAL(changed()));
 
+  ui->pattern->setEnabled(false);
   mSourceFilterGroup = new QButtonGroup(ui->filterSourceGroupBox);
   connect( mSourceFilterGroup, SIGNAL(buttonClicked(int)), this, SLOT(slotSourceFilterClicked(int)) );
   mSourceFilterGroup->addButton( ui->notFilterFilename, MessageComposer::MessageComposerSettings::EnumFilterSourceType::NoFilter );
@@ -171,15 +172,17 @@ void AutoResizeImageWidget::updateFilterSourceTypeSettings()
     switch(MessageComposer::MessageComposerSettings::self()->filterSourceType()) {
     case MessageComposer::MessageComposerSettings::EnumFilterSourceType::NoFilter:
         ui->notFilterFilename->setChecked(true);
+        ui->pattern->setEnabled(false);
         break;
     case MessageComposer::MessageComposerSettings::EnumFilterSourceType::IncludeFilesWithPattern:
         ui->includeFilesWithPattern->setChecked(true);
+        ui->pattern->setEnabled(true);
         break;
     case MessageComposer::MessageComposerSettings::EnumFilterSourceType::ExcludeFilesWithPattern:
         ui->excludeFilesWithPattern->setChecked(true);
+        ui->pattern->setEnabled(true);
         break;
     }
-
 }
 
 void AutoResizeImageWidget::writeConfig()
