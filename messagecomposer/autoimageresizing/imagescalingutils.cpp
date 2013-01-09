@@ -16,7 +16,7 @@
 */
 
 
-#include "autoresizeimageutil.h"
+#include "imagescalingutils.h"
 #include "messagecomposersettings.h"
 
 using namespace MessageComposer;

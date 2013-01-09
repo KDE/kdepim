@@ -15,8 +15,8 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef AUTOIMAGERESIZEDIALOG_H
-#define AUTOIMAGERESIZEDIALOG_H
+#ifndef IMAGESCALINGDIALOG
+#define IMAGESCALINGDIALOG
 
 #include <KDialog>
 #include <QBuffer>
@@ -25,12 +25,12 @@ class QSpinBox;
 
 namespace MessageComposer {
 
-class AutoImageResizeDialog : public KDialog
+class ImageScalingDialog : public KDialog
 {
   Q_OBJECT
 public:
-  explicit AutoImageResizeDialog(QWidget *parent = 0);
-  ~AutoImageResizeDialog();
+  explicit ImageScalingDialog(QWidget *parent = 0);
+  ~ImageScalingDialog();
 
   void setImageFromData(const QByteArray& data);
   QByteArray imageData();
@@ -53,4 +53,4 @@ private:
 };
 }
 
-#endif // AUTOIMAGERESIZEDIALOG_H
+#endif // IMAGESCALINGDIALOG

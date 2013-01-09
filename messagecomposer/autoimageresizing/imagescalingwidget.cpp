@@ -15,8 +15,8 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "autoresizeimagewidget.h"
-#include "ui_autoresizeimagewidget.h"
+#include "imagescalingwidget.h"
+#include "ui_imagescalingwidget.h"
 #include "messagecomposersettings.h"
 
 #include <KComboBox>
@@ -27,9 +27,9 @@
 
 using namespace MessageComposer;
 
-AutoResizeImageWidget::AutoResizeImageWidget(QWidget *parent)
+ImageScalingWidget::ImageScalingWidget(QWidget *parent)
   :QWidget(parent),
-    ui(new Ui::AutoResizeImageWidget),
+    ui(new Ui::ImageScalingWidget),
     mWasChanged(false)
 {
   ui->setupUi(this);
@@ -65,18 +65,18 @@ AutoResizeImageWidget::AutoResizeImageWidget(QWidget *parent)
   mSourceFilterGroup->addButton( ui->excludeFilesWithPattern, MessageComposer::MessageComposerSettings::EnumFilterSourceType::ExcludeFilesWithPattern );
 }
 
-AutoResizeImageWidget::~AutoResizeImageWidget()
+ImageScalingWidget::~ImageScalingWidget()
 {
   delete ui;
 }
 
-void AutoResizeImageWidget::slotSourceFilterClicked(int button)
+void ImageScalingWidget::slotSourceFilterClicked(int button)
 {
   ui->pattern->setEnabled(button != 0);
   Q_EMIT changed();
 }
 
-void AutoResizeImageWidget::slotComboboxChanged(int index)
+void ImageScalingWidget::slotComboboxChanged(int index)
 {
   KComboBox* combo = qobject_cast< KComboBox* >( sender() );
   if (combo) {
@@ -94,7 +94,7 @@ void AutoResizeImageWidget::slotComboboxChanged(int index)
   }
 }
 
-void AutoResizeImageWidget::initComboBox(KComboBox *combo)
+void ImageScalingWidget::initComboBox(KComboBox *combo)
 {
   QList<int> size;
   size <<240
@@ -111,7 +111,7 @@ void AutoResizeImageWidget::initComboBox(KComboBox *combo)
   combo->addItem(i18n("Custom"), -1);
 }
 
-void AutoResizeImageWidget::initWriteImageFormat()
+void ImageScalingWidget::initWriteImageFormat()
 {
     /* Too many format :)
     QList<QByteArray> listWriteFormat = QImageWriter::supportedImageFormats();
@@ -123,7 +123,7 @@ void AutoResizeImageWidget::initWriteImageFormat()
     ui->WriteToImageFormat->addItem(QString::fromLatin1("PNG"));
 }
 
-void AutoResizeImageWidget::loadConfig()
+void ImageScalingWidget::loadConfig()
 {
   ui->enabledAutoResize->setChecked(MessageComposer::MessageComposerSettings::self()->autoResizeImageEnabled());
   ui->KeepImageRatio->setChecked(MessageComposer::MessageComposerSettings::self()->keepImageRatio());
@@ -167,7 +167,7 @@ void AutoResizeImageWidget::loadConfig()
   mWasChanged = false;
 }
 
-void AutoResizeImageWidget::updateFilterSourceTypeSettings()
+void ImageScalingWidget::updateFilterSourceTypeSettings()
 {
     switch(MessageComposer::MessageComposerSettings::self()->filterSourceType()) {
     case MessageComposer::MessageComposerSettings::EnumFilterSourceType::NoFilter:
@@ -185,7 +185,7 @@ void AutoResizeImageWidget::updateFilterSourceTypeSettings()
     }
 }
 
-void AutoResizeImageWidget::writeConfig()
+void ImageScalingWidget::writeConfig()
 {
   if (ui->EnlargeImageToMinimum->isChecked() && ui->ReduceImageToMaximum->isChecked()) {
     if ((ui->customMinimumWidth->value()>=ui->customMaximumWidth->value()) ||
@@ -221,7 +221,7 @@ void AutoResizeImageWidget::writeConfig()
   mWasChanged = false;
 }
 
-void AutoResizeImageWidget::resetToDefault()
+void ImageScalingWidget::resetToDefault()
 {
    const bool bUseDefaults = MessageComposer::MessageComposerSettings::self()->useDefaults( true );
 
@@ -271,4 +271,4 @@ void AutoResizeImageWidget::resetToDefault()
    mWasChanged = false;
 }
 
-#include "autoresizeimagewidget.moc"
+#include "imagescalingwidget.moc"

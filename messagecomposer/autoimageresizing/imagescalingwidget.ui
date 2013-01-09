@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>AutoResizeImageWidget</class>
- <widget class="QWidget" name="AutoResizeImageWidget">
+ <class>ImageScalingWidget</class>
+ <widget class="QWidget" name="ImageScalingWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
