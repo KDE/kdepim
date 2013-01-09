@@ -1108,7 +1108,7 @@ bool ViewerPrivate::eventFilter( QObject *, QEvent *e )
       const int numDegrees = me->delta() / 8;
       const int numSteps = numDegrees / 15;
       const qreal factor = mZoomFactor + numSteps * 10;
-      if ( factor >= 100 && factor <= 300 ) {
+      if ( factor >= 10 && factor <= 300 ) {
         mZoomFactor = factor;
         setZoomFactor( factor/100.0 );
       }
@@ -3102,11 +3102,11 @@ void ViewerPrivate::slotZoomIn()
 void ViewerPrivate::slotZoomOut()
 {
 #ifndef KDEPIM_NO_WEBKIT
-  if ( mZoomFactor <= 100 )
+  if ( mZoomFactor <= 10 )
     return;
   mZoomFactor -= zoomBy;
-  if( mZoomFactor < 100 )
-    mZoomFactor = 100;
+  if( mZoomFactor < 10 )
+    mZoomFactor = 10;
   mViewer->setZoomFactor( mZoomFactor/100.0 );
 #endif
 }
