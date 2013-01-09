@@ -237,9 +237,11 @@ bool Util::saveContents( QWidget *parent, const QList<KMime::Content*> &contents
     } else {
       curUrl = url;
     }
-
     if ( !curUrl.isEmpty() ) {
-
+      //Bug #312954
+      if (contents.count() > 1 && (curUrl.fileName() == QLatin1String("smime.p7s")) ) {
+         continue;
+      }
       // Rename the file if we have already saved one with the same name:
       // try appending a number before extension (e.g. "pic.jpg" => "pic_2.jpg")
       QString origFile = curUrl.fileName();
