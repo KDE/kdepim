@@ -36,7 +36,6 @@ using namespace KSieveUi;
 SieveTextEdit::SieveTextEdit( QWidget *parent )
   :QPlainTextEdit( parent )
 {
-  setFocus();
   setWordWrapMode ( QTextOption::NoWrap );
   setFont( KGlobalSettings::fixedFont() );
   (void) new SieveSyntaxHighlighter( document() );
