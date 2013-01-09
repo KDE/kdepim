@@ -200,8 +200,27 @@ QMap<QString, QStringList> ExtendAttributesUtil::attributesMapLink()
 QMap<QString, QStringList> ExtendAttributesUtil::attributesMapBody()
 {
     QMap<QString, QStringList> map;
+    map = globalAttribute();
+    map.insert(QLatin1String("alink"),QStringList());
+    map.insert(QLatin1String("background"),QStringList());
+    map.insert(QLatin1String("bgcolor"),QStringList());
+    map.insert(QLatin1String("link"),QStringList());
+    map.insert(QLatin1String("text"),QStringList());
+    map.insert(QLatin1String("vlink"),QStringList());
     return map;
 }
+
+QMap<QString, QStringList> ExtendAttributesUtil::attributesJavascriptWindowAndBase()
+{
+    QMap<QString, QStringList> map;
+    map = attributesJavascript();
+    //WindowEvent
+    map.insert(QLatin1String("onload"),QStringList());
+    map.insert(QLatin1String("onunload"),QStringList());
+    return map;
+}
+
+
 
 QMap<QString, QStringList> ExtendAttributesUtil::attributesJavascript()
 {
@@ -226,11 +245,6 @@ QMap<QString, QStringList> ExtendAttributesUtil::attributesJavascript()
     map.insert(QLatin1String("onmouseout"),QStringList());
     map.insert(QLatin1String("onmouseover"),QStringList());
     map.insert(QLatin1String("onmouseup"),QStringList());
-
-    //WindowEvent
-    map.insert(QLatin1String("onload"),QStringList());
-    map.insert(QLatin1String("onunload"),QStringList());
-
     return map;
 }
 

@@ -155,7 +155,10 @@ void ExtendAttributesWidgetPrivate::fillCombobox()
         //TODO
         break;
     case ExtendAttributesDialog::JavascriptEvents:
-        attributesMap = ComposerEditorNG::ExtendAttributesUtil::attributesJavascript();
+        if (type == ExtendAttributesDialog::Body)
+            attributesMap = ComposerEditorNG::ExtendAttributesUtil::attributesJavascriptWindowAndBase();
+        else
+            attributesMap = ComposerEditorNG::ExtendAttributesUtil::attributesJavascript();
         break;
     }
     attributes->addItems(attributesMap.keys());
