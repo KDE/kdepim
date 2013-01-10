@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel.org>
   code based on calligra autocorrection.
   
   This program is free software; you can redistribute it and/or modify it
@@ -61,7 +61,6 @@ ComposerAutoCorrection::ComposerAutoCorrection()
 ComposerAutoCorrection::~ComposerAutoCorrection()
 {
 }
-
 
 void ComposerAutoCorrection::selectWord(QTextCursor &cursor, int cursorPosition)
 {
@@ -503,9 +502,9 @@ void ComposerAutoCorrection::uppercaseFirstCharOfSentence()
 
     QString text = mCursor.selectedText();
 
-    if (text.isEmpty()) // start of a paragraph
+    if (text.isEmpty()) {// start of a paragraph
         mWord.replace(0, 1, mWord.at(0).toUpper());
-    else {
+    } else {
         QString::ConstIterator constIter = text.constEnd();
         constIter--;
 
@@ -532,9 +531,9 @@ void ComposerAutoCorrection::uppercaseFirstCharOfSentence()
                 if (replace)
                     mWord.replace(0, 1, mWord.at(0).toUpper());
                 break;
-            }
-            else
+            } else {
                 break;
+            }
         }
     }
 
