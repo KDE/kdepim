@@ -88,6 +88,7 @@ SieveEditor::SieveEditor( QWidget * parent )
 
   setMainWidget( mainWidget );
   resize( 800,600);
+  mTextEdit->setFocus();
 }
 
 SieveEditor::~SieveEditor()

@@ -45,6 +45,7 @@ private:
     Q_PRIVATE_SLOT( d, void _k_attributeChanged(const QString&) )
     Q_PRIVATE_SLOT( d, void _k_slotCurrentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*) )
     Q_PRIVATE_SLOT( d, void _k_attributeValueChanged(const QString&) )
+    Q_PRIVATE_SLOT( d, void _k_attributeLineEditChanged(const QString&) )
 };
 }
 

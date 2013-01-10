@@ -15,7 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "autoimageresizedialog.h"
+#include "imagescalingdialog.h"
 #include <KLocale>
 
 #include <QLabel>
@@ -25,7 +25,7 @@
 
 using namespace MessageComposer;
 
-AutoImageResizeDialog::AutoImageResizeDialog(QWidget *parent)
+ImageScalingDialog::ImageScalingDialog(QWidget *parent)
     :KDialog(parent), mImageRatio(-1)
 {
     setCaption( i18nc("@title:window", "Resize Image") );
@@ -83,11 +83,11 @@ AutoImageResizeDialog::AutoImageResizeDialog(QWidget *parent)
     connect( this, SIGNAL(user1Clicked()), this, SLOT(slotUser1()) );
 }
 
-AutoImageResizeDialog::~AutoImageResizeDialog()
+ImageScalingDialog::~ImageScalingDialog()
 {
 }
 
-void AutoImageResizeDialog::setImageFromData(const QByteArray& data)
+void ImageScalingDialog::setImageFromData(const QByteArray& data)
 {
     //TODO add KMessageBox when error.
     if(!mImage.loadFromData(data)) {
@@ -96,12 +96,12 @@ void AutoImageResizeDialog::setImageFromData(const QByteArray& data)
     //return true;
 }
 
-QByteArray AutoImageResizeDialog::imageData()
+QByteArray ImageScalingDialog::imageData()
 {
     return mBuffer.data();
 }
 
-void AutoImageResizeDialog::slotUser1()
+void ImageScalingDialog::slotUser1()
 {
     mBuffer.open(QIODevice::WriteOnly);
     mImage = mImage.scaled(mWidth->value(),mHeight->value());
@@ -113,14 +113,14 @@ void AutoImageResizeDialog::slotUser1()
     accept();
 }
 
-void AutoImageResizeDialog::slotKeepOriginalSizeClicked(bool checked)
+void ImageScalingDialog::slotKeepOriginalSizeClicked(bool checked)
 {
     mHeight->setEnabled( !checked );
     mWidth->setEnabled( !checked );
     mKeepImageRatio->setEnabled( !checked );
 }
 
-void AutoImageResizeDialog::slotImageWidthChanged(int value)
+void ImageScalingDialog::slotImageWidthChanged(int value)
 {
     if ( mKeepImageRatio->isChecked() && !mKeepOriginalSize->isChecked() ) {
         if ( mImageRatio != -1 ) {
@@ -131,7 +131,7 @@ void AutoImageResizeDialog::slotImageWidthChanged(int value)
     }
 }
 
-void AutoImageResizeDialog::slotImageHeightChanged(int value)
+void ImageScalingDialog::slotImageHeightChanged(int value)
 {
     if ( mKeepImageRatio->isChecked()&& !mKeepOriginalSize->isChecked() ) {
         if ( mImageRatio != -1 ) {
@@ -142,9 +142,9 @@ void AutoImageResizeDialog::slotImageHeightChanged(int value)
     }
 }
 
-QByteArray AutoImageResizeDialog::mimetype() const
+QByteArray ImageScalingDialog::mimetype() const
 {
     return "image/png"; //Customize it too
 }
 
-#include "autoimageresizedialog.moc"
+#include "imagescalingdialog.moc"

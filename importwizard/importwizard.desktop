@@ -1,5 +1,8 @@
 [Desktop Entry]
 Name=KMail Import Wizard
+Name[sv]=Kmail-importguide
+Name[uk]=Майстер імпортування KMail
+Name[x-test]=xxKMail Import Wizardxx
 Exec=importwizard
 Type=Application
 Icon=kontact-import-wizard

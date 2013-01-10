@@ -32,6 +32,7 @@ QMap<QString, QStringList> attributesMapCell();
 QMap<QString, QStringList> attributesMapLink();
 QMap<QString, QStringList> globalAttribute();
 QMap<QString, QStringList> attributesJavascript();
+QMap<QString, QStringList> attributesJavascriptWindowAndBase();
 QMap<QString, QStringList> attributesMapBody();
 }
 }

@@ -266,8 +266,15 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
     <entry name="FilterSourcePattern" type="String" key="filter-source-pattern">
       <default></default>
     </entry>
-    <entry name="FilterSourceType" type="int" key="filter-source-type">
-      <default>0</default>
+
+    <entry name="FilterSourceType" type="Enum">
+      <label></label>
+      <choices>
+        <choice name="NoFilter"/>
+        <choice name="IncludeFilesWithPattern"/>
+        <choice name="ExcludeFilesWithPattern"/>
+      </choices> 
+      <default>NoFilter</default>
     </entry>
 
   </group>

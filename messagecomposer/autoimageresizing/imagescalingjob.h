@@ -14,8 +14,8 @@
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
-#ifndef AUTORESIZEIMAGEJOB_H
-#define AUTORESIZEIMAGEJOB_H
+#ifndef IMAGESCALINGJOB_H
+#define IMAGESCALINGJOB_H
 
 #include <QByteArray>
 #include <QObject>
@@ -23,12 +23,12 @@
 #include <QBuffer>
 
 namespace MessageComposer {
-class AutoResizeImageJob : public QObject
+class ImageScalingJob : public QObject
 {
     Q_OBJECT
 public:
-    explicit AutoResizeImageJob(QObject *parent);
-    ~AutoResizeImageJob();
+    explicit ImageScalingJob(QObject *parent);
+    ~ImageScalingJob();
 
     /**
      * @brief loadImageFromData
@@ -60,4 +60,4 @@ private:
 };
 }
 
-#endif // AUTORESIZEIMAGEJOB_H
+#endif // IMAGESCALINGJOB_H

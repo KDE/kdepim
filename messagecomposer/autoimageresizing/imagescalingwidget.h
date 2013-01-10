@@ -15,31 +15,25 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef AUTORESIZEIMAGEWIDGET_H
-#define AUTORESIZEIMAGEWIDGET_H
+#ifndef IMAGESCALINGWIDGET_H
+#define IMAGESCALINGWIDGET_H
 #include <QWidget>
 #include "messagecomposer_export.h"
 
 class KComboBox;
 namespace Ui {
-class AutoResizeImageWidget;
+class ImageScalingWidget;
 }
 
 class QButtonGroup;
 
 namespace MessageComposer {
-class MESSAGECOMPOSER_EXPORT AutoResizeImageWidget : public QWidget
+class MESSAGECOMPOSER_EXPORT ImageScalingWidget : public QWidget
 {
   Q_OBJECT
 public:
-    enum FileSourceFilter {
-        NoFilter = 0,
-        IncludeFilesWithPattern = 1,
-        ExcludeFilesWithPattern = 2
-    };
-
-  explicit AutoResizeImageWidget(QWidget *parent = 0);
-  ~AutoResizeImageWidget();
+  explicit ImageScalingWidget(QWidget *parent = 0);
+  ~ImageScalingWidget();
 
   void loadConfig();
   void writeConfig();
@@ -53,12 +47,13 @@ private Q_SLOTS:
   void slotSourceFilterClicked(int);
 
 private:
+  void updateFilterSourceTypeSettings();
   void initComboBox(KComboBox *combo);
   void initWriteImageFormat();
-  Ui::AutoResizeImageWidget *ui;
+  Ui::ImageScalingWidget *ui;
   QButtonGroup *mSourceFilterGroup;
   bool mWasChanged;
 };
 }
 
-#endif // AUTORESIZEIMAGEWIDGET_H
+#endif // IMAGESCALINGWIDGET_H

@@ -14,7 +14,7 @@
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
-#include "autoresizeimagejob.h"
+#include "imagescalingjob.h"
 #include "messagecomposersettings.h"
 
 #include <QBuffer>
@@ -22,17 +22,17 @@
 
 using namespace MessageComposer;
 
-AutoResizeImageJob::AutoResizeImageJob(QObject *parent)
+ImageScalingJob::ImageScalingJob(QObject *parent)
     :QObject(parent)
 {
 }
 
-AutoResizeImageJob::~AutoResizeImageJob()
+ImageScalingJob::~ImageScalingJob()
 {
 
 }
 
-bool AutoResizeImageJob::loadImageFromData(const QByteArray& data)
+bool ImageScalingJob::loadImageFromData(const QByteArray& data)
 {
   if(!mImage.loadFromData(data)) {
     return false;
@@ -40,7 +40,7 @@ bool AutoResizeImageJob::loadImageFromData(const QByteArray& data)
   return true;
 }
 
-bool AutoResizeImageJob::resizeImage()
+bool ImageScalingJob::resizeImage()
 {
   if(mImage.isNull())
      return false;
@@ -104,7 +104,7 @@ bool AutoResizeImageJob::resizeImage()
 
 }
 
-QByteArray AutoResizeImageJob::mimetype() const
+QByteArray ImageScalingJob::mimetype() const
 {
     //Add more mimetype if a day we add more saving format.
     const QString type = MessageComposer::MessageComposerSettings::self()->writeFormat();
@@ -116,9 +116,9 @@ QByteArray AutoResizeImageJob::mimetype() const
     return QByteArray();
 }
 
-QByteArray AutoResizeImageJob::imageArray() const
+QByteArray ImageScalingJob::imageArray() const
 {
     return mBuffer.data();
 }
 
-#include "autoresizeimagejob.moc"
+#include "imagescalingjob.moc"
