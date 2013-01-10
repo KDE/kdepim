@@ -21,7 +21,7 @@
 #include "composerview.h"
 #include "composerlinkdialog.h"
 #include "pagecolorbackgrounddialog.h"
-#include "composereditorutil_p.h"
+#include "composereditorutils_p.h"
 #include "composerimagedialog.h"
 #include "composerimageresizewidget.h"
 #include "composertabledialog.h"
@@ -303,7 +303,7 @@ void ComposerViewPrivate::_k_slotInsertHtml()
 
 void ComposerViewPrivate::_k_setTextBackgroundColor()
 {
-    QColor newColor = ComposerEditorNG::Util::convertRgbToQColor(evaluateJavascript(QLatin1String("getTextBackgroundColor()")).toString());
+    QColor newColor = ComposerEditorNG::Utils::convertRgbToQColor(evaluateJavascript(QLatin1String("getTextBackgroundColor()")).toString());
     const int result = KColorDialog::getColor(newColor,q);
     if (result == QDialog::Accepted) {
         execCommand(QLatin1String("hiliteColor"), newColor.name());
@@ -322,7 +322,7 @@ void ComposerViewPrivate::_k_slotDeleteText()
 
 void ComposerViewPrivate::_k_setTextForegroundColor()
 {
-    QColor newColor = ComposerEditorNG::Util::convertRgbToQColor(evaluateJavascript(QLatin1String("getTextForegroundColor()")).toString());
+    QColor newColor = ComposerEditorNG::Utils::convertRgbToQColor(evaluateJavascript(QLatin1String("getTextForegroundColor()")).toString());
     const int result = KColorDialog::getColor(newColor,q);
     if (result == QDialog::Accepted) {
         execCommand(QLatin1String("foreColor"), newColor.name());
@@ -476,7 +476,7 @@ void ComposerViewPrivate::_k_slotReplace()
 
 void ComposerViewPrivate::_k_slotSaveAs()
 {
-    QString fn = KFileDialog::getSaveFileName(QString(),i18n("HTML-Files (*.htm *.html);;All Files (*)") ,q,i18n("Save as..."));
+    QString fn = KFileDialog::getSaveFileName(QString(), i18n("HTML-Files (*.htm *.html);;All Files (*)") , q, i18n("Save as..."));
     //TODO add KMessageBox
     if (fn.isEmpty())
         return;
@@ -500,7 +500,7 @@ void ComposerViewPrivate::_k_slotPrint()
     QPrinter printer;
     QPointer<QPrintDialog> dlg(KdePrint::createPrintDialog(&printer));
 
-    if (dlg && dlg->exec() == QDialog::Accepted ) {
+    if ( dlg->exec() == QDialog::Accepted ) {
         q->print( &printer );
     }
     delete dlg;
@@ -918,7 +918,7 @@ void ComposerView::contextMenuEvent(QContextMenuEvent* event)
         connect( editLinkAction, SIGNAL(triggered(bool)), this, SLOT(_k_slotEditLink()) );
     } else if(tableSelected) {
         ComposerTableActionMenu * tableActionMenu = new ComposerTableActionMenu(elm,menu,this);
-        connect(tableActionMenu,SIGNAL(insertNewTable()),SLOT(_k_slotInsertTable()));
+        connect(tableActionMenu, SIGNAL(insertNewTable()), this, SLOT(_k_slotInsertTable()));
         menu->addAction(tableActionMenu);
     }
     menu->addSeparator();

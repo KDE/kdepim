@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -18,22 +18,22 @@
 
 */
 
-#ifndef EXTENDATTRIBUTESUTIL_P_H
-#define EXTENDATTRIBUTESUTIL_P_H
-#include "extendattributesdialog.h"
+#ifndef COMPOSEREDITORUTIL_P_H
+#define COMPOSEREDITORUTIL_P_H
+
+#include <QColor>
+#include <QString>
+#include <QUrl>
+#include <QWebElement>
 
 namespace ComposerEditorNG
 {
-namespace ExtendAttributesUtil {
-QMap<QString, QStringList> attributesMap(ExtendAttributesDialog::ExtendType type);
-QMap<QString, QStringList> attributesMapImage();
-QMap<QString, QStringList> attributesMapTable();
-QMap<QString, QStringList> attributesMapCell();
-QMap<QString, QStringList> attributesMapLink();
-QMap<QString, QStringList> globalAttribute();
-QMap<QString, QStringList> attributesJavascript();
-QMap<QString, QStringList> attributesJavascriptWindowAndBase();
-QMap<QString, QStringList> attributesMapBody();
+
+namespace Utils {
+QColor convertRgbToQColor(QString rgb);
+QUrl guessUrlFromString(const QString &string);
 }
+
 }
-#endif // EXTENDATTRIBUTESUTIL_P_H
+
+#endif // COMPOSEREDITORUTIL_P_H

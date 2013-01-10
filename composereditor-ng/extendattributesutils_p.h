@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012-2013 Montel Laurent <montel.org>
+  Copyright (c) 2013 Montel Laurent <montel@kde.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -18,27 +18,22 @@
 
 */
 
-#ifndef DOMTREEWIDGET_H
-#define DOMTREEWIDGET_H
+#ifndef EXTENDATTRIBUTESUTIL_P_H
+#define EXTENDATTRIBUTESUTIL_P_H
+#include "extendattributesdialog.h"
 
-#include <QWidget>
-class QTreeWidget;
-class QWebView;
-class QTreeWidgetItem;
-class QWebElement;
-
-class DomTreeWidget : public QWidget
+namespace ComposerEditorNG
 {
-    Q_OBJECT
-public:
-    explicit DomTreeWidget(QWebView *view, QWidget *parent = 0);
-    ~DomTreeWidget();
-private Q_SLOTS:
-    void slotUpdate();
-private:
-    void examineChildElements(const QWebElement &parentElement, QTreeWidgetItem *parentItem);
-    QTreeWidget *mTreeWidget;
-    QWebView *mView;
-};
-
-#endif // DOMTREEWIDGET_H
+namespace ExtendAttributesUtils {
+QMap<QString, QStringList> attributesMap(ExtendAttributesDialog::ExtendType type);
+QMap<QString, QStringList> attributesMapImage();
+QMap<QString, QStringList> attributesMapTable();
+QMap<QString, QStringList> attributesMapCell();
+QMap<QString, QStringList> attributesMapLink();
+QMap<QString, QStringList> globalAttribute();
+QMap<QString, QStringList> attributesJavascript();
+QMap<QString, QStringList> attributesJavascriptWindowAndBase();
+QMap<QString, QStringList> attributesMapBody();
+}
+}
+#endif // EXTENDATTRIBUTESUTIL_P_H

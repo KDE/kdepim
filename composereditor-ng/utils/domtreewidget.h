@@ -18,22 +18,31 @@
 
 */
 
-#ifndef COMPOSEREDITORUTIL_P_H
-#define COMPOSEREDITORUTIL_P_H
+#ifndef DOMTREEWIDGET_H
+#define DOMTREEWIDGET_H
 
-#include <QColor>
-#include <QString>
-#include <QUrl>
-#include <QWebElement>
+#include "composereditor_export.h"
+
+#include <QWidget>
+class QTreeWidget;
+class QWebView;
+class QTreeWidgetItem;
+class QWebElement;
 
 namespace ComposerEditorNG
 {
-
-namespace Util {
-QColor convertRgbToQColor(QString rgb);
-QUrl guessUrlFromString(const QString &string);
+class DomTreeWidgetPrivate;
+class COMPOSEREDITORNG_EXPORT DomTreeWidget : public QWidget
+{
+    Q_OBJECT
+public:
+    explicit DomTreeWidget(QWebView *view, QWidget *parent = 0);
+    ~DomTreeWidget();
+private:
+    friend class DomTreeWidgetPrivate;
+    DomTreeWidgetPrivate * const d;
+    Q_PRIVATE_SLOT(d, void _k_slotUpdate() )
+};
 }
 
-}
-
-#endif // COMPOSEREDITORUTIL_P_H
+#endif // DOMTREEWIDGET_H

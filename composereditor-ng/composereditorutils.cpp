@@ -18,11 +18,11 @@
 
 */
 
-#include "composereditorutil_p.h"
+#include "composereditorutils_p.h"
 
 #include <QFile>
 
-QColor ComposerEditorNG::Util::convertRgbToQColor(QString rgb)
+QColor ComposerEditorNG::Utils::convertRgbToQColor(QString rgb)
 {
     rgb.chop(1);
     rgb.remove(QLatin1String("rgb("));
@@ -36,7 +36,7 @@ QColor ComposerEditorNG::Util::convertRgbToQColor(QString rgb)
 }
 
 
-QUrl ComposerEditorNG::Util::guessUrlFromString(const QString &string)
+QUrl ComposerEditorNG::Utils::guessUrlFromString(const QString &string)
 {
     QString urlStr = string.trimmed();
     QRegExp test(QLatin1String("^[a-zA-Z]+\\:.*"));

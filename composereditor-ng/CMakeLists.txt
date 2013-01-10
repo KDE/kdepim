@@ -19,8 +19,8 @@ set(libcomposereditor_ng_SRCS
     extendattributesdialog.cpp
     extendattributesbutton.cpp
     extendattributeswidget.cpp
-    extendattributesutil.cpp
-    composereditorutil.cpp
+    extendattributesutils.cpp
+    composereditorutils.cpp
     composerimagedialog.cpp
     composerimageresizewidget.cpp
     composertabledialog.cpp
@@ -30,7 +30,8 @@ set(libcomposereditor_ng_SRCS
     composertableactionmenu.cpp
     composercellsizewidget.cpp
     tablehelper.cpp
-    spellplugin/kspellplugin.cpp  
+    spellplugin/kspellplugin.cpp 
+    utils/domtreewidget.cpp 
     ${wk_HEADERS_MOC}
 )
 

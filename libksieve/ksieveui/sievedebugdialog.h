@@ -40,7 +40,7 @@ class KSIEVEUI_EXPORT SieveDebugDialog : public KDialog
 
   public:
     explicit SieveDebugDialog( QWidget *parent = 0 );
-    virtual ~SieveDebugDialog();
+    ~SieveDebugDialog();
 
   protected:
     void handlePutResult( KManageSieve::SieveJob *job, bool success, bool );

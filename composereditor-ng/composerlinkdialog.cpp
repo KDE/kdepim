@@ -20,7 +20,7 @@
 
 #include "composerlinkdialog.h"
 #include "extendattributesbutton.h"
-#include "composereditorutil_p.h"
+#include "composereditorutils_p.h"
 
 #include <KLineEdit>
 #include <KLocale>
@@ -130,7 +130,7 @@ void ComposerLinkDialogPrivate::_k_slotOkClicked()
 
 QString ComposerLinkDialogPrivate::html() const
 {
-    const QUrl url = ComposerEditorNG::Util::guessUrlFromString(linkLocation->text());
+    const QUrl url = ComposerEditorNG::Utils::guessUrlFromString(linkLocation->text());
     if (url.isValid()) {
         const QString targetStr = target->itemData(target->currentIndex()).toString();
         QString html = QString::fromLatin1( "<a ");

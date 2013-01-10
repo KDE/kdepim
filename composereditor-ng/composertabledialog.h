@@ -34,13 +34,10 @@ public:
     ~ComposerTableDialog();
 
     QString html() const;
-
-private Q_SLOTS:
-    void slotOkClicked();
-
 private:
     friend class ComposerTableDialogPrivate;
     ComposerTableDialogPrivate * const d;
+    Q_PRIVATE_SLOT( d, void _k_slotOkClicked() )
 };
 }
 

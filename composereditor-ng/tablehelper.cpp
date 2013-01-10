@@ -20,8 +20,6 @@
 
 #include "tablehelper_p.h"
 
-#include <QDebug>
-
 namespace ComposerEditorNG {
 static QString TBODY = QLatin1String("tbody");
 static QString TABLE = QLatin1String("table");

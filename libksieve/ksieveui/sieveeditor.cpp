@@ -99,6 +99,7 @@ void SieveEditor::slotFind()
 {
   if ( mTextEdit->textCursor().hasSelection() )
     mFindBar->setText( mTextEdit->textCursor().selectedText() );
+  mTextEdit->moveCursor(QTextCursor::Start);
   mFindBar->show();
   mFindBar->focusAndSetCursor();  
 }

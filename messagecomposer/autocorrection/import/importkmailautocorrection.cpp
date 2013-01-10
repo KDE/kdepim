@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel.org>
   
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -105,8 +105,9 @@ bool ImportKMailAutocorrection::import(const QString& fileName, LoadAttribute lo
     if(loadAttribute == All || loadAttribute == SuperScript) {
         QDomElement superScript = de.namedItem(QLatin1String("SuperScript")).toElement();
         if (!superScript.isNull()) {
-            QDomNodeList nl = superScript.childNodes();
-            for(int i = 0; i < nl.count() ; i++)
+            const QDomNodeList nl = superScript.childNodes();
+            const int numberOfNl(nl.count());
+            for(int i = 0; i < numberOfNl ; ++i)
                 mSuperScriptEntries.insert(nl.item(i).toElement().attribute(QLatin1String("find")), nl.item(i).toElement().attribute(QLatin1String("super")));
         }
     }

@@ -20,6 +20,8 @@
 
 #include "domtreewidget.h"
 
+#include <KLocale>
+
 #include <QVBoxLayout>
 #include <QPushButton>
 #include <QWebView>
@@ -27,24 +29,32 @@
 #include <QWebElement>
 #include <QWebFrame>
 
-DomTreeWidget::DomTreeWidget(QWebView *view, QWidget *parent)
-    : QWidget(parent), mView(view)
+namespace ComposerEditorNG
 {
-    QVBoxLayout *lay = new QVBoxLayout;
-    mTreeWidget = new QTreeWidget;
-    lay->addWidget(mTreeWidget);
-    QPushButton *button = new QPushButton(QLatin1String("Update"));
-    connect(button, SIGNAL(clicked()), this, SLOT(slotUpdate()));
-    lay->addWidget(button);
-    setLayout(lay);
-}
-
-DomTreeWidget::~DomTreeWidget()
+class DomTreeWidgetPrivate
 {
+public:
+    DomTreeWidgetPrivate(QWebView *view, DomTreeWidget *qq)
+        : mView(view),
+          q(qq)
+    {
+        QVBoxLayout *lay = new QVBoxLayout;
+        mTreeWidget = new QTreeWidget;
+        lay->addWidget(mTreeWidget);
+        QPushButton *button = new QPushButton( i18n("Update"));
+        q->connect(button, SIGNAL(clicked()), q, SLOT(_k_slotUpdate()));
+        lay->addWidget(button);
+        q->setLayout(lay);
+    }
+    void _k_slotUpdate();
+    void examineChildElements(const QWebElement &parentElement, QTreeWidgetItem *parentItem);
 
-}
+    QTreeWidget *mTreeWidget;
+    QWebView *mView;
+    DomTreeWidget *q;
+};
 
-void DomTreeWidget::slotUpdate()
+void DomTreeWidgetPrivate::_k_slotUpdate()
 {
     mTreeWidget->clear();
 
@@ -55,7 +65,7 @@ void DomTreeWidget::slotUpdate()
     mTreeWidget->expandAll();
 }
 
-void DomTreeWidget::examineChildElements(const QWebElement &parentElement, QTreeWidgetItem *parentItem)
+void DomTreeWidgetPrivate::examineChildElements(const QWebElement &parentElement, QTreeWidgetItem *parentItem)
 {
     QWebElement element = parentElement.firstChild();
     while (!element.isNull()) {
@@ -63,11 +73,29 @@ void DomTreeWidget::examineChildElements(const QWebElement &parentElement, QTree
         QTreeWidgetItem *item = new QTreeWidgetItem();
         item->setText(0, element.tagName());
         parentItem->addChild(item);
+        const QStringList listAttributes = element.attributeNames();
+        Q_FOREACH (const QString& str, listAttributes) {
+            QTreeWidgetItem *subItem = new QTreeWidgetItem();
+            const QString value = element.attribute(str);
+            subItem->setText(0, str + QString::fromLatin1(" (%1)").arg(value));
+            item->addChild(subItem);
+        }
 
         examineChildElements(element, item);
 
         element = element.nextSibling();
     }
+}
+
+DomTreeWidget::DomTreeWidget(QWebView *view, QWidget *parent)
+    : QWidget(parent),d(new DomTreeWidgetPrivate(view,this))
+{
+}
+
+DomTreeWidget::~DomTreeWidget()
+{
+}
+
 }
 
 #include "domtreewidget.moc"

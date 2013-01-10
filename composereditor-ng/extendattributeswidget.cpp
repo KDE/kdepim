@@ -19,7 +19,7 @@
 */
 
 #include "extendattributeswidget.h"
-#include "extendattributesutil_p.h"
+#include "extendattributesutils_p.h"
 
 #include <KComboBox>
 #include <KPushButton>
@@ -174,16 +174,16 @@ void ExtendAttributesWidgetPrivate::fillCombobox()
 {
     switch(settings) {
     case ExtendAttributesDialog::HtmlAttributes:
-        attributesMap = ComposerEditorNG::ExtendAttributesUtil::attributesMap(type);
+        attributesMap = ComposerEditorNG::ExtendAttributesUtils::attributesMap(type);
         break;
     case ExtendAttributesDialog::InlineStyle:
         //nothing
         break;
     case ExtendAttributesDialog::JavascriptEvents:
         if (type == ExtendAttributesDialog::Body)
-            attributesMap = ComposerEditorNG::ExtendAttributesUtil::attributesJavascriptWindowAndBase();
+            attributesMap = ComposerEditorNG::ExtendAttributesUtils::attributesJavascriptWindowAndBase();
         else
-            attributesMap = ComposerEditorNG::ExtendAttributesUtil::attributesJavascript();
+            attributesMap = ComposerEditorNG::ExtendAttributesUtils::attributesJavascript();
         break;
     }
     if (attributes)

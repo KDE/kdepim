@@ -21,7 +21,6 @@
 #include "composertableactionmenu.h"
 #include "composertablecellformatdialog.h"
 #include "composertableformatdialog.h"
-#include "composereditorutil_p.h"
 #include "tablehelper_p.h"
 
 #include <KLocale>
