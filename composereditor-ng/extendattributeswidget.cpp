@@ -19,7 +19,7 @@
 */
 
 #include "extendattributeswidget.h"
-#include "extendattributesutil_p.h"
+#include "extendattributesutils_p.h"
 
 #include <KComboBox>
 #include <KPushButton>

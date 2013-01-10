@@ -20,7 +20,7 @@
 
 #include "extendattributesdialog.h"
 #include "extendattributeswidget.h"
-#include "extendattributesutil_p.h"
+#include "extendattributesutils_p.h"
 
 #include <KSeparator>
 #include <KLocale>

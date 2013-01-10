@@ -19,7 +19,7 @@ set(libcomposereditor_ng_SRCS
     extendattributesdialog.cpp
     extendattributesbutton.cpp
     extendattributeswidget.cpp
-    extendattributesutil.cpp
+    extendattributesutils.cpp
     composereditorutil.cpp
     composerimagedialog.cpp
     composerimageresizewidget.cpp

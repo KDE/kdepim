@@ -17,7 +17,7 @@
   02110-1301, USA.
 
 */
-#include "extendattributesutil_p.h"
+#include "extendattributesutils_p.h"
 
 namespace ComposerEditorNG
 {
