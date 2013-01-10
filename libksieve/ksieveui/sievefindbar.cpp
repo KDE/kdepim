@@ -257,9 +257,14 @@ bool SieveFindBar::event(QEvent* e)
     // Not using a QShortcut for this because it could conflict with
     // window-global actions (e.g. Emil Sedgh binds Esc to "close tab").
     // With a shortcut override we can catch this before it gets to kactions.
-    if (e->type() == QEvent::ShortcutOverride || e->type() == QEvent::KeyPress) {
+    const bool shortCutOverride = (e->type() == QEvent::ShortcutOverride);
+    if (shortCutOverride || e->type() == QEvent::KeyPress) {
         QKeyEvent* kev = static_cast<QKeyEvent* >(e);
         if (kev->key() == Qt::Key_Escape) {
+            if( shortCutOverride ) {
+                e->accept();
+                return true;
+            }
             e->accept();
             closeBar();
             return true;
@@ -267,6 +272,9 @@ bool SieveFindBar::event(QEvent* e)
         else if ( kev->key() == Qt::Key_Enter ||
                   kev->key() == Qt::Key_Return ) {
           e->accept();
+          if( shortCutOverride ) {
+             return true;
+          }
           if ( kev->modifiers() & Qt::ShiftModifier )
             findPrev();
           else if ( kev->modifiers() == Qt::NoModifier )
