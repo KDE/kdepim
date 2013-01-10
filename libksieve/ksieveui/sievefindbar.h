@@ -44,7 +44,7 @@ class SieveFindBar : public QWidget
     void focusAndSetCursor();
 
   protected:
-    virtual bool event(QEvent* e);
+    bool event(QEvent* e);
     void clearSelections();
     void updateHighLight(bool);
     void searchText( bool backward, bool isAutoSearch );
