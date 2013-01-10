@@ -28,6 +28,8 @@
 #include <KStandardGuiItem>
 #include <KMessageBox>
 #include <KToolInvocation>
+#include <KStandardAction>
+#include <KAction>
 
 #include <QCompleter>
 #include <QStringListModel>
@@ -67,13 +69,27 @@ void SieveTextEdit::contextMenuEvent( QContextMenuEvent *event )
 {
   QMenu *popup = createStandardContextMenu();
   if (popup) {
+    const bool emptyDocument = document()->isEmpty();
+    QList<QAction *> actionList = popup->actions();
+    enum { UndoAct, RedoAct, CutAct, CopyAct, PasteAct, ClearAct, SelectAllAct, NCountActs };
+    QAction *separatorAction = 0L;
+    int idx = actionList.indexOf( actionList[SelectAllAct] ) + 1;
+    if ( idx < actionList.count() )
+       separatorAction = actionList.at( idx );
+    if ( separatorAction )
+    {
+       KAction *clearAllAction = KStandardAction::clear(this, SLOT(slotUndoableClear()), popup);
+       if ( emptyDocument )
+           clearAllAction->setEnabled( false );
+       popup->insertAction( separatorAction, clearAllAction );
+    }
+
     popup->addSeparator();
     popup->addAction( KStandardGuiItem::find().icon(), KStandardGuiItem::find().text(),this,SIGNAL(findText()) , Qt::Key_F+Qt::CTRL);
     //Code from KTextBrowser
     KIconTheme::assignIconsToContextMenu( isReadOnly() ? KIconTheme::ReadOnlyText
                                           : KIconTheme::TextEditor,
                                           popup->actions() );
-    const bool emptyDocument = document()->isEmpty();
     popup->addSeparator();
     QAction *speakAction = popup->addAction(i18n("Speak Text"));
     speakAction->setIcon(KIcon("preferences-desktop-text-to-speech"));
@@ -102,6 +118,16 @@ void SieveTextEdit::slotSpeakText()
     else
         text = toPlainText();
     ktts.asyncCall("say", text, 0);
+}
+
+void SieveTextEdit::slotUndoableClear()
+{
+  QTextCursor cursor = textCursor();
+  cursor.beginEditBlock();
+  cursor.movePosition(QTextCursor::Start);
+  cursor.movePosition(QTextCursor::End, QTextCursor::KeepAnchor);
+  cursor.removeSelectedText();
+  cursor.endEditBlock();
 }
 
 void SieveTextEdit::resizeEvent(QResizeEvent *e)

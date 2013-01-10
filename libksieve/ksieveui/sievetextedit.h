@@ -45,6 +45,8 @@ class KSIEVEUI_EXPORT SieveTextEdit : public QPlainTextEdit
     QString wordUnderCursor();
     void updateLineNumberAreaWidth(int newBlockCount);
     void updateLineNumberArea(const QRect &, int);
+  private Q_SLOTS:
+    void slotUndoableClear();
 
   private Q_SLOTS:
     void slotSpeakText();
