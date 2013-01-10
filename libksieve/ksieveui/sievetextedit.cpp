@@ -76,8 +76,7 @@ void SieveTextEdit::contextMenuEvent( QContextMenuEvent *event )
     int idx = actionList.indexOf( actionList[SelectAllAct] ) + 1;
     if ( idx < actionList.count() )
        separatorAction = actionList.at( idx );
-    if ( separatorAction )
-    {
+    if ( separatorAction ) {
        KAction *clearAllAction = KStandardAction::clear(this, SLOT(slotUndoableClear()), popup);
        if ( emptyDocument )
            clearAllAction->setEnabled( false );
