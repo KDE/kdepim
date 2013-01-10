@@ -35,9 +35,9 @@ class KSIEVEUI_EXPORT SieveSyntaxHighlighter : public QSyntaxHighlighter
 
   public:
     explicit SieveSyntaxHighlighter( QTextDocument* doc );
-    virtual ~SieveSyntaxHighlighter();
+    ~SieveSyntaxHighlighter();
 
-    virtual void highlightBlock(const QString& text);
+    void highlightBlock(const QString& text);
 
   private:
     void init();
