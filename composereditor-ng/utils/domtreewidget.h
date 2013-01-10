@@ -21,24 +21,28 @@
 #ifndef DOMTREEWIDGET_H
 #define DOMTREEWIDGET_H
 
+#include "composereditor_export.h"
+
 #include <QWidget>
 class QTreeWidget;
 class QWebView;
 class QTreeWidgetItem;
 class QWebElement;
 
-class DomTreeWidget : public QWidget
+namespace ComposerEditorNG
+{
+class DomTreeWidgetPrivate;
+class COMPOSEREDITORNG_EXPORT DomTreeWidget : public QWidget
 {
     Q_OBJECT
 public:
     explicit DomTreeWidget(QWebView *view, QWidget *parent = 0);
     ~DomTreeWidget();
-private Q_SLOTS:
-    void slotUpdate();
 private:
-    void examineChildElements(const QWebElement &parentElement, QTreeWidgetItem *parentItem);
-    QTreeWidget *mTreeWidget;
-    QWebView *mView;
+    friend class DomTreeWidgetPrivate;
+    DomTreeWidgetPrivate * const d;
+    Q_PRIVATE_SLOT(d, void _k_slotUpdate() )
 };
+}
 
 #endif // DOMTREEWIDGET_H

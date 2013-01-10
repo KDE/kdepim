@@ -42,6 +42,8 @@ public:
 
     void initialize();
 
+    void _k_slotOkClicked();
+
     KPIMTextEdit::InsertTableWidget *insertTableWidget;
     ComposerTableDialog *q;
 };
@@ -83,7 +85,12 @@ void ComposerTableDialogPrivate::initialize()
     lay->addWidget( sep );
 
     q->setMainWidget( page );
-    q->connect(q,SIGNAL(okClicked()),q,SLOT(slotOkClicked()));
+    q->connect(q,SIGNAL(okClicked()),q,SLOT(_k_slotOkClicked()));
+}
+
+void ComposerTableDialogPrivate::_k_slotOkClicked()
+{
+    q->accept();
 }
 
 ComposerTableDialog::ComposerTableDialog(QWidget *parent)
@@ -101,11 +108,6 @@ ComposerTableDialog::~ComposerTableDialog()
 QString ComposerTableDialog::html() const
 {
     return d->html();
-}
-
-void ComposerTableDialog::slotOkClicked()
-{
-    accept();
 }
 
 

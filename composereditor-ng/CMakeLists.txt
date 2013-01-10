@@ -30,7 +30,8 @@ set(libcomposereditor_ng_SRCS
     composertableactionmenu.cpp
     composercellsizewidget.cpp
     tablehelper.cpp
-    spellplugin/kspellplugin.cpp  
+    spellplugin/kspellplugin.cpp 
+    utils/domtreewidget.cpp 
     ${wk_HEADERS_MOC}
 )
 

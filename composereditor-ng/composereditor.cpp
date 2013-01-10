@@ -46,10 +46,6 @@ public:
 
     bool richTextEnabled;
 };
-}
-
-
-namespace ComposerEditorNG {
 
 
 ComposerEditor::ComposerEditor(QWidget *parent)

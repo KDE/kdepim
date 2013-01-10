@@ -1,9 +1,11 @@
 PROJECT( composerhtmleditor )
 
+include_directories(
+  ${CMAKE_SOURCE_DIR}/composereditor-ng )
+
 set(composerhtmlSources
   main.cpp
   composerhtmleditor.cpp
-  domtreewidget.cpp
 )
 
 KDE4_ADD_EXECUTABLE(composerhtmleditor ${composerhtmlSources} )

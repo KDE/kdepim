@@ -476,7 +476,7 @@ void ComposerViewPrivate::_k_slotReplace()
 
 void ComposerViewPrivate::_k_slotSaveAs()
 {
-    QString fn = KFileDialog::getSaveFileName(QString(),i18n("HTML-Files (*.htm *.html);;All Files (*)") ,q,i18n("Save as..."));
+    QString fn = KFileDialog::getSaveFileName(QString(), i18n("HTML-Files (*.htm *.html);;All Files (*)") , q, i18n("Save as..."));
     //TODO add KMessageBox
     if (fn.isEmpty())
         return;
@@ -500,7 +500,7 @@ void ComposerViewPrivate::_k_slotPrint()
     QPrinter printer;
     QPointer<QPrintDialog> dlg(KdePrint::createPrintDialog(&printer));
 
-    if (dlg && dlg->exec() == QDialog::Accepted ) {
+    if ( dlg->exec() == QDialog::Accepted ) {
         q->print( &printer );
     }
     delete dlg;
@@ -918,7 +918,7 @@ void ComposerView::contextMenuEvent(QContextMenuEvent* event)
         connect( editLinkAction, SIGNAL(triggered(bool)), this, SLOT(_k_slotEditLink()) );
     } else if(tableSelected) {
         ComposerTableActionMenu * tableActionMenu = new ComposerTableActionMenu(elm,menu,this);
-        connect(tableActionMenu,SIGNAL(insertNewTable()),SLOT(_k_slotInsertTable()));
+        connect(tableActionMenu, SIGNAL(insertNewTable()), this, SLOT(_k_slotInsertTable()));
         menu->addAction(tableActionMenu);
     }
     menu->addSeparator();
