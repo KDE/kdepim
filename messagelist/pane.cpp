@@ -229,7 +229,7 @@ void Pane::setXmlGuiClient( KXMLGUIClient *xmlGuiClient )
     MessageList::Util::fillViewMenu( d->mActionMenu->menu(), this );
 
     KAction *action = new KAction( i18n("Create new tab"), this );
-    action->setShortcut( QKeySequence( Qt::ALT + Qt::Key_T ) );
+    action->setShortcut( QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_T ) );
     d->mXmlGuiClient->actionCollection()->addAction( QLatin1String( "create_new_tab" ), action );
     connect( action, SIGNAL(triggered(bool)), SLOT(onNewTabClicked()) );
     d->mActionMenu->addAction( action );
@@ -241,7 +241,7 @@ void Pane::setXmlGuiClient( KXMLGUIClient *xmlGuiClient )
 
 
     d->mCloseTabAction = new KAction( i18n("Close tab"), this );
-    d->mCloseTabAction->setShortcut( QKeySequence( Qt::ALT + Qt::Key_W ) );
+    d->mCloseTabAction->setShortcut( QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_W ) );
     d->mXmlGuiClient->actionCollection()->addAction( QLatin1String( "close_current_tab" ), d->mCloseTabAction );
     connect( d->mCloseTabAction, SIGNAL(triggered(bool)), SLOT(onCloseTabClicked()) );
     d->mActionMenu->addAction( d->mCloseTabAction );
