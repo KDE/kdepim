@@ -22,7 +22,7 @@
 namespace ComposerEditorNG
 {
 
-QMap<QString, QStringList> ExtendAttributesUtil::globalAttribute()
+QMap<QString, QStringList> ExtendAttributesUtils::globalAttribute()
 {
     QMap<QString, QStringList> globalAttr;
     globalAttr.insert(QLatin1String("accesskey"),QStringList());
@@ -40,7 +40,7 @@ QMap<QString, QStringList> ExtendAttributesUtil::globalAttribute()
     return globalAttr;
 }
 
-QMap<QString, QStringList> ExtendAttributesUtil::attributesMap(ExtendAttributesDialog::ExtendType type)
+QMap<QString, QStringList> ExtendAttributesUtils::attributesMap(ExtendAttributesDialog::ExtendType type)
 {
     switch(type) {
     case ExtendAttributesDialog::Image:
@@ -57,7 +57,7 @@ QMap<QString, QStringList> ExtendAttributesUtil::attributesMap(ExtendAttributesD
     return QMap<QString, QStringList>();
 }
 
-QMap<QString, QStringList> ExtendAttributesUtil::attributesMapImage()
+QMap<QString, QStringList> ExtendAttributesUtils::attributesMapImage()
 {
     QMap<QString, QStringList> map;
     map = globalAttribute();
@@ -81,7 +81,7 @@ QMap<QString, QStringList> ExtendAttributesUtil::attributesMapImage()
     return map;
 }
 
-QMap<QString, QStringList> ExtendAttributesUtil::attributesMapTable()
+QMap<QString, QStringList> ExtendAttributesUtils::attributesMapTable()
 {
     QMap<QString, QStringList> map;
     map = globalAttribute();
@@ -117,7 +117,7 @@ QMap<QString, QStringList> ExtendAttributesUtil::attributesMapTable()
     return map;
 }
 
-QMap<QString, QStringList> ExtendAttributesUtil::attributesMapCell()
+QMap<QString, QStringList> ExtendAttributesUtils::attributesMapCell()
 {
     QMap<QString, QStringList> map;
     map = globalAttribute();
@@ -155,7 +155,7 @@ QMap<QString, QStringList> ExtendAttributesUtil::attributesMapCell()
     return map;
 }
 
-QMap<QString, QStringList> ExtendAttributesUtil::attributesMapLink()
+QMap<QString, QStringList> ExtendAttributesUtils::attributesMapLink()
 {
     QMap<QString, QStringList> map;
     map = globalAttribute();
@@ -197,7 +197,7 @@ QMap<QString, QStringList> ExtendAttributesUtil::attributesMapLink()
     return map;
 }
 
-QMap<QString, QStringList> ExtendAttributesUtil::attributesMapBody()
+QMap<QString, QStringList> ExtendAttributesUtils::attributesMapBody()
 {
     QMap<QString, QStringList> map;
     map = globalAttribute();
@@ -210,7 +210,7 @@ QMap<QString, QStringList> ExtendAttributesUtil::attributesMapBody()
     return map;
 }
 
-QMap<QString, QStringList> ExtendAttributesUtil::attributesJavascriptWindowAndBase()
+QMap<QString, QStringList> ExtendAttributesUtils::attributesJavascriptWindowAndBase()
 {
     QMap<QString, QStringList> map;
     map = attributesJavascript();
@@ -222,7 +222,7 @@ QMap<QString, QStringList> ExtendAttributesUtil::attributesJavascriptWindowAndBa
 
 
 
-QMap<QString, QStringList> ExtendAttributesUtil::attributesJavascript()
+QMap<QString, QStringList> ExtendAttributesUtils::attributesJavascript()
 {
     QMap<QString, QStringList> map;
     //Form event

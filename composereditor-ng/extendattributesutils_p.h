@@ -24,7 +24,7 @@
 
 namespace ComposerEditorNG
 {
-namespace ExtendAttributesUtil {
+namespace ExtendAttributesUtils {
 QMap<QString, QStringList> attributesMap(ExtendAttributesDialog::ExtendType type);
 QMap<QString, QStringList> attributesMapImage();
 QMap<QString, QStringList> attributesMapTable();
