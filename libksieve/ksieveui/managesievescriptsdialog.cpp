@@ -85,13 +85,22 @@ ManageSieveScriptsDialog::ManageSieveScriptsDialog( QWidget * parent, const char
   connect( mClose, SIGNAL(clicked()), this, SLOT(accept()) );
   buttonLayout->addWidget( mClose );
 
-  resize( sizeHint().width(), sizeHint().height() );
+  KConfigGroup group( KGlobal::config(), "ManageSieveScriptsDialog" );
+  const QSize size = group.readEntry( "Size", QSize() );
+  if ( size.isValid() ) {
+    resize( size );
+  } else {
+    resize( sizeHint().width(), sizeHint().height() );
+  }
+
   slotRefresh();
 }
 
 ManageSieveScriptsDialog::~ManageSieveScriptsDialog()
 {
   clear( true );
+  KConfigGroup group( KGlobal::config(), "ManageSieveScriptsDialog" );
+  group.writeEntry( "Size", size() );
 }
 
 void ManageSieveScriptsDialog::killAllJobs( bool disconnectSignal )
