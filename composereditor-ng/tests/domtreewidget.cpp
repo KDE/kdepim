@@ -63,6 +63,13 @@ void DomTreeWidget::examineChildElements(const QWebElement &parentElement, QTree
         QTreeWidgetItem *item = new QTreeWidgetItem();
         item->setText(0, element.tagName());
         parentItem->addChild(item);
+        const QStringList listAttributes = element.attributeNames();
+        Q_FOREACH (const QString& str, listAttributes) {
+            QTreeWidgetItem *subItem = new QTreeWidgetItem();
+            const QString value = element.attribute(str);
+            subItem->setText(0, str + QString::fromLatin1(" (%1)").arg(value));
+            item->addChild(subItem);
+        }
 
         examineChildElements(element, item);
 
