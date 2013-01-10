@@ -23,6 +23,7 @@ using namespace MessageComposer;
 
 bool Util::resizeImage(MessageCore::AttachmentPart::Ptr part)
 {
+    const QString filename = part->fileName();
     if(MessageComposer::MessageComposerSettings::self()->skipImageLowerSizeEnabled() &&
             (part->size() > MessageComposer::MessageComposerSettings::self()->skipImageLowerSize() *1024)) {
         if(part->mimeType() == "image/gif" ||

@@ -29,12 +29,11 @@ ImageScalingJob::ImageScalingJob(QObject *parent)
 
 ImageScalingJob::~ImageScalingJob()
 {
-
 }
 
 bool ImageScalingJob::loadImageFromData(const QByteArray& data)
 {
-  if(!mImage.loadFromData(data)) {
+  if (!mImage.loadFromData(data)) {
     return false;
   }
   return true;
@@ -48,7 +47,7 @@ bool ImageScalingJob::resizeImage()
   const int height = mImage.height();
   int newWidth = -1;
   int newHeight = -1;
-  if(MessageComposer::MessageComposerSettings::self()->reduceImageToMaximum()) {
+  if (MessageComposer::MessageComposerSettings::self()->reduceImageToMaximum()) {
 
       int maximumWidth = MessageComposer::MessageComposerSettings::self()->maximumWidth();
       if (maximumWidth == -1) {
@@ -91,7 +90,7 @@ bool ImageScalingJob::resizeImage()
           newHeight = minimumHeight;
       }
   }
-  if((newHeight != height) || (newWidth != width)) {
+  if ((newHeight != height) || (newWidth != width)) {
       mBuffer.open(QIODevice::WriteOnly);
       mImage = mImage.scaled(newWidth,newHeight, MessageComposer::MessageComposerSettings::self()->keepImageRatio() ? Qt::KeepAspectRatio : Qt::IgnoreAspectRatio);
       const bool result = mImage.save(&mBuffer,MessageComposer::MessageComposerSettings::self()->writeFormat().toLocal8Bit());
