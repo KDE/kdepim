@@ -18,12 +18,11 @@
 
 #include "sievetextedit.h"
 #include "sievelinenumberarea.h"
-
 #include "sievesyntaxhighlighter.h"
 
 
 #include <KLocale>
-#include <kglobalsettings.h>
+#include <KGlobalSettings>
 #include <KIconTheme>
 #include <KStandardGuiItem>
 #include <KMessageBox>
@@ -53,10 +52,10 @@ SieveTextEdit::SieveTextEdit( QWidget *parent )
   (void) new SieveSyntaxHighlighter( document() );
   m_sieveLineNumberArea = new SieveLineNumberArea(this);
 
-  connect(this, SIGNAL(blockCountChanged(int)), this, SLOT(updateLineNumberAreaWidth(int)));
-  connect(this, SIGNAL(updateRequest(QRect,int)), this, SLOT(updateLineNumberArea(QRect,int)));
+  connect(this, SIGNAL(blockCountChanged(int)), this, SLOT(slotUpdateLineNumberAreaWidth(int)));
+  connect(this, SIGNAL(updateRequest(QRect,int)), this, SLOT(slotUpdateLineNumberArea(QRect,int)));
   
-  updateLineNumberAreaWidth(0);
+  slotUpdateLineNumberAreaWidth(0);
 
   initCompleter();
 }
@@ -174,12 +173,12 @@ void SieveTextEdit::lineNumberAreaPaintEvent(QPaintEvent *event)
   }
 }
 
-void SieveTextEdit::updateLineNumberAreaWidth(int)
+void SieveTextEdit::slotUpdateLineNumberAreaWidth(int)
 { 
   setViewportMargins(lineNumberAreaWidth(), 0, 0, 0);
 }
 
-void SieveTextEdit::updateLineNumberArea(const QRect &rect, int dy)
+void SieveTextEdit::slotUpdateLineNumberArea(const QRect &rect, int dy)
 {
   if (dy)
     m_sieveLineNumberArea->scroll(0, dy);
@@ -187,7 +186,7 @@ void SieveTextEdit::updateLineNumberArea(const QRect &rect, int dy)
     m_sieveLineNumberArea->update(0, rect.y(), m_sieveLineNumberArea->width(), rect.height());
 
   if (rect.contains(viewport()->rect()))
-    updateLineNumberAreaWidth(0);
+    slotUpdateLineNumberAreaWidth(0);
 }
 
 void SieveTextEdit::initCompleter()
@@ -250,7 +249,7 @@ void SieveTextEdit::keyPressEvent(QKeyEvent* e)
   m_completer->complete( cr );
 }
 
-QString SieveTextEdit::wordUnderCursor()
+QString SieveTextEdit::wordUnderCursor() const
 {
     static QString eow = QLatin1String( "~!@#$%^&*()+{}|\"<>,./;'[]\\-= " ); // everything without ':', '?' and '_'
     QTextCursor tc = textCursor();

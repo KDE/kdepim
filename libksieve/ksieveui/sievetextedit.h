@@ -35,23 +35,20 @@ class KSIEVEUI_EXPORT SieveTextEdit : public QPlainTextEdit
 
   public:
     explicit SieveTextEdit( QWidget *parent );
-    virtual ~SieveTextEdit();
+    ~SieveTextEdit();
 
     void lineNumberAreaPaintEvent(QPaintEvent *event);
     int lineNumberAreaWidth();
 
-  protected slots:
+  private Q_SLOTS:
     void slotInsertCompletion( const QString& );
-    QString wordUnderCursor();
-    void updateLineNumberAreaWidth(int newBlockCount);
-    void updateLineNumberArea(const QRect &, int);
-  private Q_SLOTS:
+    void slotUpdateLineNumberAreaWidth(int newBlockCount);
+    void slotUpdateLineNumberArea(const QRect &, int);
     void slotUndoableClear();
-
-  private Q_SLOTS:
     void slotSpeakText();
 
   protected:
+    QString wordUnderCursor() const;
     void initCompleter();
     void keyPressEvent(QKeyEvent* e);
     void resizeEvent(QResizeEvent *event);
