@@ -20,9 +20,15 @@
 #include "sievelinenumberarea.h"
 
 #include "sievesyntaxhighlighter.h"
+
+
+#include <KLocale>
 #include <kglobalsettings.h>
 #include <KIconTheme>
 #include <KStandardGuiItem>
+#include <KMessageBox>
+#include <KToolInvocation>
+
 #include <QCompleter>
 #include <QStringListModel>
 #include <QKeyEvent>
@@ -30,6 +36,10 @@
 #include <QScrollBar>
 #include <QPainter>
 #include <QMenu>
+#include <QDBusInterface>
+#include <QDBusConnection>
+#include <QDBusConnectionInterface>
+
 
 using namespace KSieveUi;
 
@@ -63,10 +73,35 @@ void SieveTextEdit::contextMenuEvent( QContextMenuEvent *event )
     KIconTheme::assignIconsToContextMenu( isReadOnly() ? KIconTheme::ReadOnlyText
                                           : KIconTheme::TextEditor,
                                           popup->actions() );
-
+    const bool emptyDocument = document()->isEmpty();
+    popup->addSeparator();
+    QAction *speakAction = popup->addAction(i18n("Speak Text"));
+    speakAction->setIcon(KIcon("preferences-desktop-text-to-speech"));
+    speakAction->setEnabled(!emptyDocument );
+    connect( speakAction, SIGNAL(triggered(bool)), this, SLOT(slotSpeakText()) );
     popup->exec( event->globalPos() );
+
     delete popup;
   }
+}
+
+void SieveTextEdit::slotSpeakText()
+{
+    // If KTTSD not running, start it.
+    if (!QDBusConnection::sessionBus().interface()->isServiceRegistered("org.kde.kttsd")) {
+        QString error;
+        if (KToolInvocation::startServiceByDesktopName("kttsd", QStringList(), &error)) {
+            KMessageBox::error(this, i18n( "Starting Jovie Text-to-Speech Service Failed"), error );
+            return;
+        }
+    }
+    QDBusInterface ktts("org.kde.kttsd", "/KSpeech", "org.kde.KSpeech");
+    QString text;
+    if(textCursor().hasSelection())
+        text = textCursor().selectedText();
+    else
+        text = toPlainText();
+    ktts.asyncCall("say", text, 0);
 }
 
 void SieveTextEdit::resizeEvent(QResizeEvent *e)
