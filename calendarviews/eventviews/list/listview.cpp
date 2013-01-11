@@ -429,6 +429,7 @@ void ListView::Private::addIncidence( CalendarSupport::Calendar *calendar,
   ListItemVisitor v( item, mStartDate );
   if ( !tinc->accept( v, tinc ) ) {
     delete item;
+    return;
   }
 
   item->setData( 0, Qt::UserRole, QVariant( aitem.id() ) );
