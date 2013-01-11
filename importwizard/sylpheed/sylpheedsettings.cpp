@@ -226,8 +226,8 @@ QString SylpheedSettings::convertToKmailTemplate(const QString& templateStr)
   newTemplate.replace(QLatin1String("%cc"),QLatin1String("%CCNAME"));
   newTemplate.replace(QLatin1String("%c"),QLatin1String("%CCNAME"));
 
-  newTemplate.replace(QLatin1String("%email"),QLatin1String("%CCNAME"));
-  newTemplate.replace(QLatin1String("%A"),QLatin1String("%CCNAME"));
+  newTemplate.replace(QLatin1String("%email"),QLatin1String("%OFROMNAME"));
+  newTemplate.replace(QLatin1String("%A"),QLatin1String("%OFROMNAME"));
 
   newTemplate.replace(QLatin1String("%cursor"),QLatin1String("%CURSOR"));
   newTemplate.replace(QLatin1String("%X"),QLatin1String("%CURSOR"));
@@ -244,6 +244,14 @@ QString SylpheedSettings::convertToKmailTemplate(const QString& templateStr)
   newTemplate.replace(QLatin1String("%messageid"),QLatin1String("%MSGID"));
   newTemplate.replace(QLatin1String("%i"),QLatin1String("%MSGID"));
 
+  newTemplate.replace(QLatin1String("%firstname"),QLatin1String("%OFROMNAME"));
+  newTemplate.replace(QLatin1String("%F"),QLatin1String("%OFROMNAME"));
+
+  newTemplate.replace(QLatin1String("%lastname"),QLatin1String("%OFROMLNAME"));
+  newTemplate.replace(QLatin1String("%L"),QLatin1String("%OFROMLNAME"));
+
+  newTemplate.replace(QLatin1String("%fullname"),QLatin1String("%OFROMFNAME"));
+  newTemplate.replace(QLatin1String("%N"),QLatin1String("%OFROMFNAME"));
   //TODO add more variable
   return newTemplate;
 }
