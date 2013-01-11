@@ -124,7 +124,9 @@ void ComposerTableActionMenuPrivate::updateActions()
 
 void ComposerTableActionMenuPrivate::_k_slotInsertRowBelow()
 {
-    //TODO
+    //Fix delete cells contents.
+    QWebElement e = webElement.parent().clone();
+    webElement.parent().prependOutside(e);
 }
 
 void ComposerTableActionMenuPrivate::_k_slotTableFormat()
