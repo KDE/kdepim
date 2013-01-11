@@ -18,7 +18,7 @@ macro( add_messagecomposer_test _source )
   target_link_libraries( ${_name} ${KDEPIMLIBS_KMIME_LIBS} messagecomposer messageviewer messagecore templateparser ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS} ${QT_QTTEST_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTCORE_LIBRARY} ${KDE4_KDEUI_LIBS} ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
   ${KDEPIMLIBS_AKONADI_LIBS}
 )
-endmacro( add_messagecomposer_test )
+endmacro()
 
 
 macro( add_messagecomposer_cryptotest _source )
@@ -40,7 +40,7 @@ macro( add_messagecomposer_cryptotest _source )
       ${KDE4_KDEUI_LIBS}
       ${QGPGME_LIBRARIES}
       )
-endmacro( add_messagecomposer_cryptotest )
+endmacro()
 
 
 # Utility stuff.

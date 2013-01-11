@@ -44,7 +44,7 @@ if (NOT WINCE)
      ${messagecore_LIB_SRCS}
      annotationdialog.cpp
   )
-endif (NOT WINCE)
+endif ()
 
 kde4_add_kcfg_files(messagecore_LIB_SRCS
   globalsettings_base.kcfgc

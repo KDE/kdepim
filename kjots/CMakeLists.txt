@@ -15,9 +15,9 @@ if("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}")
   include_directories( ../akonadi/akonadi_next )
 
   set(KJOTS_BUILD_KONTACT_PLUGIN FALSE)
-else("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}")
+else()
   option(KJOTS_BUILD_KONTACT_PLUGIN "Build kjots with support for kontact" TRUE)
-endif("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}")
+endif()
 
 include_directories(
   ${KDE4_INCLUDES}
@@ -31,7 +31,7 @@ set(kjotsLibs ${KDE4_KIO_LIBS})
 if(KJOTS_BUILD_KONTACT_PLUGIN)
   add_definitions(-DKJOTSKONTACTPLUGIN)
   set(kjotsLibs ${kjotsLibs} kdepim)
-endif(KJOTS_BUILD_KONTACT_PLUGIN)
+endif()
 
 add_subdirectory( icons )
 add_subdirectory( plasmoid )
@@ -78,7 +78,7 @@ macro(add_resource_iface _kcfgFile _ifaceName _className)
   qt4_add_dbus_interface(kjots_common_SRCS
     ${CMAKE_CURRENT_BINARY_DIR}/${_ifaceName}.xml ${_codeFile} ${_className}
   )
-endmacro(add_resource_iface)
+endmacro()
 
 add_resource_iface( ${CMAKE_CURRENT_SOURCE_DIR}/maildirresource.kcfg
                     org.kde.Akonadi.Maildir.Settings MaildirSettings )
@@ -123,7 +123,7 @@ target_link_libraries(kjots
 
 if(KJOTS_BUILD_KONTACT_PLUGIN)
   target_link_libraries(kjots ${KDEPIMLIBS_KONTACTINTERFACE_LIBS} )
-endif(KJOTS_BUILD_KONTACT_PLUGIN)
+endif()
 
 
 install(TARGETS kjots  ${INSTALL_TARGETS_DEFAULT_ARGS} )
@@ -193,4 +193,4 @@ if ( KJOTS_BUILD_KONTACT_PLUGIN  )
 
 
 
-endif ( KJOTS_BUILD_KONTACT_PLUGIN )
+endif ()

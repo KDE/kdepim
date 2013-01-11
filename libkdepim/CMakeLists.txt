@@ -57,7 +57,7 @@ if (KDEPIMLIBS_KRESOURCES_LIBS)
   set(kdepim_LIB_SRCS ${kdepim_LIB_SRCS}
     kresourceprefs.cpp
   )
-endif (KDEPIMLIBS_KRESOURCES_LIBS)
+endif ()
 
 if (KDEPIM_INPROCESS_LDAP)
   set(kdepim_LIB_SRCS ${kdepim_LIB_SRCS}
@@ -98,7 +98,7 @@ target_link_libraries(kdepim LINK_INTERFACE_LIBRARIES
 
 if(MINGW)
    target_link_libraries(kdepim oleaut32)
-endif(MINGW)
+endif()
 
 set_target_properties(kdepim PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 install(TARGETS kdepim ${INSTALL_TARGETS_DEFAULT_ARGS})
@@ -116,7 +116,7 @@ if (QT_QTDESIGNER_FOUND)
   target_link_libraries(kdepimwidgets  ${KDE4_KIO_LIBS} kdepim)
 
   install(TARGETS kdepimwidgets  DESTINATION ${PLUGIN_INSTALL_DIR}/plugins/designer)
-endif (QT_QTDESIGNER_FOUND)
+endif ()
 
 ########### next target ###############
 
@@ -127,9 +127,9 @@ set( kcm_ldap_SRCS
 
 if (NOT WINCE)
   kde4_add_plugin(kcm_ldap ${kcm_ldap_SRCS})
-else (NOT WINCE)
+else ()
   kde4_add_plugin(kcm_ldap STATIC ${kcm_ldap_SRCS})
-endif (NOT WINCE)
+endif ()
 
 target_link_libraries(kcm_ldap ${KDE4_KDECORE_LIBS} ${KDE4_KDEUI_LIBS} kdepim)
 

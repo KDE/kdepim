@@ -6,9 +6,9 @@ add_definitions(-DMAKE_PIMSTRIGIANALYZER_LIB)
 
 if(WINCE)
 kde4_add_library(ics STATIC ${icsendanalyzer_SRCS})
-else(WINCE)
+else()
 kde4_add_library(ics MODULE ${icsendanalyzer_SRCS})
-endif(WINCE)
+endif()
 
 target_link_libraries(ics ${STRIGI_STREAMANALYZER_LIBRARY} ${STRIGI_STREAMS_LIBRARY} ${KDEPIMLIBS_KCALCORE_LIBS} ${KDE4_KIO_LIBS} )
 
