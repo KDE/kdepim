@@ -217,7 +217,7 @@ void ConfigureThemesDialog::Private::commitEditor()
   mEditor->commit();
 
   ThemeListWidgetItem * editedItem = findThemeItemByTheme( editedTheme );
-  if ( editedItem )
+  if ( !editedItem )
     return;
 
   // We must reset the runtime column state as the columns might have

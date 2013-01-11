@@ -221,7 +221,7 @@ void ConfigureAggregationsDialog::Private::commitEditor()
   mEditor->commit();
 
   AggregationListWidgetItem * editedItem = findAggregationItemByAggregation( editedAggregation );
-  if ( editedItem )
+  if ( !editedItem )
     return;
   const QString goodName = uniqueNameForAggregation( editedAggregation->name(), editedAggregation );
   editedAggregation->setName( goodName );
