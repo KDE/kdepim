@@ -138,6 +138,7 @@ void ComposerImageDialogPrivate::initialize()
     QLabel *lab = new QLabel(i18n("Tooltip:"));
     hbox->addWidget(lab);
     title = new KLineEdit;
+    title->setClearButtonShown(true);
     hbox->addWidget(title);
     lay->addLayout(hbox);
 
@@ -146,6 +147,7 @@ void ComposerImageDialogPrivate::initialize()
     lab = new QLabel(i18n("Alternate text:"));
     hbox->addWidget(lab);
     alternateTitle = new KLineEdit;
+    alternateTitle->setClearButtonShown(true);
     hbox->addWidget(alternateTitle);
     lay->addLayout(hbox);
 
