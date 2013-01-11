@@ -124,8 +124,10 @@ void SieveFindBar::autoSearch( const QString& str )
   const bool isNotEmpty = ( !str.isEmpty() );
   m_findPrevBtn->setEnabled( isNotEmpty );
   m_findNextBtn->setEnabled( isNotEmpty );
-  if ( isNotEmpty )
+  if ( isNotEmpty ) {
+    m_view->moveCursor(QTextCursor::Start);
     QTimer::singleShot( 0, this, SLOT(slotSearchText()) );
+  }
   else
     clearSelections();
 }
