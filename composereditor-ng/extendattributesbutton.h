@@ -24,7 +24,8 @@
 #include "extendattributesdialog.h"
 
 #include <QPushButton>
-#include <QWebElement>
+
+class QWebElement;
 
 namespace ComposerEditorNG
 {
