@@ -57,8 +57,8 @@ public:
         q->connect(typeSize, SIGNAL(activated(int)), q, SLOT(slotTypeChanged(int)) );
 
         // xgettext: no-c-format
-        typeSize->addItem( i18n( "% of windows" ), Percentage );
-        typeSize->addItem( i18n( "pixels" ), Fixed );
+        typeSize->addItem( i18nc( "@item:inlistbox size type", "% of windows" ), Percentage );
+        typeSize->addItem( i18nc( "@item:inlistbox size type", "pixels" ), Fixed );
         layout->addWidget(typeSize);
 
         q->connect(check, SIGNAL(toggled(bool)), typeSize, SLOT(setEnabled(bool)));
