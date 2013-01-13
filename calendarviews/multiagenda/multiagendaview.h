@@ -47,7 +47,7 @@ class EVENTVIEWS_EXPORT MultiAgendaView : public EventView
     bool eventDurationHint( QDateTime &startDt, QDateTime &endDt, bool &allDay ) const;
 
     /* reimp */
-    void setCalendar( Akonadi::ETMCalendar *cal );
+    void setCalendar( const Akonadi::ETMCalendar::Ptr &cal );
 
     /* reimp */
     bool hasConfigurationDialog() const;

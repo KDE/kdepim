@@ -23,13 +23,13 @@
   without including the source code for Qt in the source distribution.
 */
 
-#include "kotodoviewquickaddline.h"
+#include "todoviewquickaddline.h"
 
 #include <KLocale>
 
 #include <QKeyEvent>
 
-KOTodoViewQuickAddLine::KOTodoViewQuickAddLine( QWidget *parent )
+TodoViewQuickAddLine::TodoViewQuickAddLine( QWidget *parent )
   : KLineEdit( parent )
 {
   connect( this, SIGNAL(returnPressed()),
@@ -39,7 +39,7 @@ KOTodoViewQuickAddLine::KOTodoViewQuickAddLine( QWidget *parent )
   setToolTip( mClickMessage );
 }
 
-void KOTodoViewQuickAddLine::keyPressEvent( QKeyEvent *event )
+void TodoViewQuickAddLine::keyPressEvent( QKeyEvent *event )
 {
   if ( event->key() == Qt::Key_Return ) {
     mModifiers = event->modifiers();
@@ -48,7 +48,7 @@ void KOTodoViewQuickAddLine::keyPressEvent( QKeyEvent *event )
   KLineEdit::keyPressEvent( event );
 }
 
-void KOTodoViewQuickAddLine::returnPressed()
+void TodoViewQuickAddLine::returnPressed()
 {
   // Workaround bug #217592 (disappearing cursor)
   unsetCursor();
@@ -56,7 +56,7 @@ void KOTodoViewQuickAddLine::returnPressed()
   emit returnPressed( mModifiers );
 }
 
-void KOTodoViewQuickAddLine::resizeEvent ( QResizeEvent * event )
+void TodoViewQuickAddLine::resizeEvent ( QResizeEvent * event )
 {
   KLineEdit::resizeEvent( event );
 
@@ -66,4 +66,4 @@ void KOTodoViewQuickAddLine::resizeEvent ( QResizeEvent * event )
                      width() - clearButtonUsedSize().width() ) );
 }
 
-#include "kotodoviewquickaddline.moc"
+#include "todoviewquickaddline.moc"

@@ -708,7 +708,7 @@ AgendaView::~AgendaView()
   delete d;
 }
 
-void AgendaView::setCalendar( Akonadi::ETMCalendar *cal )
+void AgendaView::setCalendar( const Akonadi::ETMCalendar::Ptr &cal )
 {
   if ( calendar() ) {
     calendar()->unregisterObserver( d );

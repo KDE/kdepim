@@ -25,23 +25,25 @@
   without including the source code for Qt in the source distribution.
 */
 
-#include "kotodoviewquicksearch.h"
-#include "koprefs.h"
+#include "todoviewquicksearch.h"
+#include <calendarsupport/kcalprefs.h>
 
 #include <Akonadi/Calendar/ETMCalendar>
 #include <calendarsupport/categoryconfig.h>
 
 #include <libkdepim/kcheckcombobox.h>
 
-#include <incidenceeditor-ng/categoryhierarchyreader.h>
+#include <calendarsupport/categoryhierarchyreader.h>
 
 #include <KCalCore/CalFilter>
 
 #include <KLineEdit>
+#include <KLocale>
 
 #include <QHBoxLayout>
 
-KOTodoViewQuickSearch::KOTodoViewQuickSearch( const Akonadi::ETMCalendar::Ptr &calendar, QWidget *parent )
+TodoViewQuickSearch::TodoViewQuickSearch( const Akonadi::ETMCalendar::Ptr &calendar,
+                                          QWidget *parent )
   : QWidget( parent ), mCalendar( calendar )
 {
   QHBoxLayout *layout = new QHBoxLayout( this );
@@ -109,7 +111,7 @@ KOTodoViewQuickSearch::KOTodoViewQuickSearch( const Akonadi::ETMCalendar::Ptr &c
   setLayout( layout );
 }
 
-void KOTodoViewQuickSearch::setCalendar( const Akonadi::ETMCalendar::Ptr &calendar )
+void TodoViewQuickSearch::setCalendar( const Akonadi::ETMCalendar::Ptr &calendar )
 {
   if ( calendar != mCalendar ) {
     mCalendar = calendar;
@@ -117,19 +119,19 @@ void KOTodoViewQuickSearch::setCalendar( const Akonadi::ETMCalendar::Ptr &calend
   }
 }
 
-void KOTodoViewQuickSearch::updateCategories()
+void TodoViewQuickSearch::updateCategories()
 {
   fillCategories();
 }
 
-void KOTodoViewQuickSearch::reset()
+void TodoViewQuickSearch::reset()
 {
   mSearchLine->clear();
   mCategoryCombo->setCurrentIndex( 0 );
   mPriorityCombo->setCurrentIndex( 0 );
 }
 
-void KOTodoViewQuickSearch::fillCategories()
+void TodoViewQuickSearch::fillCategories()
 {
   QStringList currentCategories = mCategoryCombo->checkedItems( Qt::UserRole );
   mCategoryCombo->clear();
@@ -142,7 +144,7 @@ void KOTodoViewQuickSearch::fillCategories()
       categories = filter->categoryList();
       categories.sort();
     } else {
-      CalendarSupport::CategoryConfig cc( KOPrefs::instance() );
+      CalendarSupport::CategoryConfig cc( CalendarSupport::KCalPrefs::instance() );
       categories = cc.customCategories();
       QStringList filterCategories = filter->categoryList();
       categories.sort();
@@ -163,11 +165,11 @@ void KOTodoViewQuickSearch::fillCategories()
     }
   }
 
-  IncidenceEditorNG::CategoryHierarchyReaderQComboBox( mCategoryCombo ).read( categories );
+  CalendarSupport::CategoryHierarchyReaderQComboBox( mCategoryCombo ).read( categories );
   mCategoryCombo->setCheckedItems( currentCategories, Qt::UserRole );
 }
 
-void KOTodoViewQuickSearch::fillPriorities()
+void TodoViewQuickSearch::fillPriorities()
 {
   QStringList priorityValues;
   priorityValues.append( i18nc( "@action:inmenu priority is unspecified", "unspecified" ) );
@@ -182,19 +184,19 @@ void KOTodoViewQuickSearch::fillPriorities()
     }
   }
   // TODO: Using the same method as for categories to fill mPriorityCombo
-  IncidenceEditorNG::CategoryHierarchyReaderQComboBox( mPriorityCombo ).read( priorityValues );
+  CalendarSupport::CategoryHierarchyReaderQComboBox( mPriorityCombo ).read( priorityValues );
 }
 
-void KOTodoViewQuickSearch::emitFilterCategoryChanged()
+void TodoViewQuickSearch::emitFilterCategoryChanged()
 {
   // The display role doesn't work because it represents subcategories
   // as " subcategory", and we want "ParentCollection:subCategory"
   emit filterCategoryChanged( mCategoryCombo->checkedItems( Qt::UserRole ) );
 }
 
-void KOTodoViewQuickSearch::emitFilterPriorityChanged()
+void TodoViewQuickSearch::emitFilterPriorityChanged()
 {
   emit filterPriorityChanged( mPriorityCombo->checkedItems( Qt::UserRole ) );
 }
 
-#include "kotodoviewquicksearch.moc"
+#include "todoviewquicksearch.moc"

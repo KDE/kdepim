@@ -18,6 +18,7 @@ set(calendarsupport_LIB_SRCS
   # calendarsearch.cpp
   calendarutils.cpp
   categoryconfig.cpp
+  categoryhierarchyreader.cpp
   collectiongeneralpage.cpp
   collectionselection.cpp
   eventarchiver.cpp

@@ -241,7 +241,7 @@ class Agenda::Private
     double mDesiredGridSpacingY;
 
     // We need the calendar for drag'n'drop and for paint the ResourceColor
-    Akonadi::ETMCalendar *mCalendar;
+    Akonadi::ETMCalendar::Ptr mCalendar;
     Akonadi::IncidenceChanger *mChanger;
 
     // size of border, where mouse action will resize the AgendaItem
@@ -2218,7 +2218,7 @@ KCalCore::DateList Agenda::dateList() const
   return d->mSelectedDates;
 }
 
-void Agenda::setCalendar( Akonadi::ETMCalendar *cal )
+void Agenda::setCalendar( const Akonadi::ETMCalendar::Ptr &cal )
 {
   d->mCalendar = cal;
 }

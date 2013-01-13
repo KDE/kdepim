@@ -57,7 +57,6 @@ class EVENTVIEWS_EXPORT Prefs
     ~Prefs();
 
     void readConfig();
-
     void writeConfig();
 
   public:
@@ -139,6 +138,9 @@ class EVENTVIEWS_EXPORT Prefs
     bool fullViewMonth() const;
     void setFullViewMonth( bool fullView );
 
+    bool sortCompletedTodosSeparately() const;
+    void setSortCompletedTodosSeparately( bool sort );
+
     void setEnableToolTips( bool enable );
     bool enableToolTips() const;
 
@@ -197,6 +199,23 @@ class EVENTVIEWS_EXPORT Prefs
 
     QSet<EventViews::EventView::ItemIcon> monthViewIcons() const;
     void setMonthViewIcons( const QSet<EventViews::EventView::ItemIcon> &icons );
+
+    void setFlatListTodo( bool );
+    bool flatListTodo() const;
+
+    void setFullViewTodo( bool );
+    bool fullViewTodo() const;
+
+    bool enableTodoQuickSearch() const;
+    void setEnableTodoQuickSearch( bool enable );
+
+    bool enableQuickTodo() const;
+    void setEnableQuickTodo( bool enable );
+
+    bool highlightTodos() const;
+    void setHighlightTodos( bool );
+
+    KConfig *config() const;
 
   private:
     class Private;

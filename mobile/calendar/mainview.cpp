@@ -190,6 +190,7 @@ void MainView::doDelayedInit()
   qmlRegisterUncreatableType<EventsGuiStateManager>( "org.kde.akonadi.events", 4, 5, "EventsGuiStateManager", QLatin1String( "This type is only exported for its enums" ) );
 
   m_calendar = Akonadi::ETMCalendar::Ptr( new Akonadi::ETMCalendar() );
+  m_calendar->setWeakPointer( m_calendar );
   engine()->rootContext()->setContextProperty( "calendarModel", QVariant::fromValue( static_cast<QObject*>( m_calendar.data() ) ) );
   Akonadi::FreeBusyManager::self()->setCalendar( m_calendar );
 

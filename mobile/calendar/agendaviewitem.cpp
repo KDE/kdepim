@@ -84,15 +84,16 @@ void AgendaViewItem::setEndDate(const QDate& endDate)
 
 QObject* AgendaViewItem::calendar() const
 {
-  return m_view->calendar();
+  return m_view->calendar().data();
 }
 
 void AgendaViewItem::setCalendar(QObject* calendarObj)
 {
-  Akonadi::ETMCalendar* cal = qobject_cast<Akonadi::ETMCalendar*>( calendarObj );
+  Akonadi::ETMCalendar *cal = qobject_cast<Akonadi::ETMCalendar*>( calendarObj );
+
   kDebug() << calendarObj << cal;
   if ( cal ) {
-    m_view->setCalendar( cal );
+    m_view->setCalendar( cal->weakPointer().toStrongRef().dynamicCast<Akonadi::ETMCalendar>() );
     m_view->updateConfig();
   }
 }

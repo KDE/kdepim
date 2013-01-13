@@ -643,7 +643,7 @@ bool MonthView::isBusyDay( const QDate &day ) const
   return !d->mBusyDays[day].isEmpty();
 }
 
-void MonthView::setCalendar( Akonadi::ETMCalendar *cal )
+void MonthView::setCalendar( const Akonadi::ETMCalendar::Ptr &cal )
 {
   Q_ASSERT( cal );
 

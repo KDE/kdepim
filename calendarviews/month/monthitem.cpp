@@ -28,7 +28,6 @@
 #include "prefs.h"
 #include "prefs_base.h" // Ugly, but needed for the Enums
 
-#include <Akonadi/Calendar/ETMCalendar>
 #include <Akonadi/Calendar/IncidenceChanger>
 #include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/utils.h>
@@ -297,7 +296,7 @@ QList<MonthGraphicsItem *> EventViews::MonthItem::monthGraphicsItems() const
 //-----------------------------------------------------------------
 // INCIDENCEMONTHITEM
 IncidenceMonthItem::IncidenceMonthItem( MonthScene *monthScene,
-                                        Akonadi::ETMCalendar *calendar,
+                                        const Akonadi::ETMCalendar::Ptr &calendar,
                                         const Akonadi::Item &aitem,
                                         const QDate &recurStartDate )
   : MonthItem( monthScene ), mCalendar( calendar ),
@@ -530,7 +529,7 @@ QString IncidenceMonthItem::text( bool end ) const
 QString IncidenceMonthItem::toolTipText( const QDate &date ) const
 {
   return KCalUtils::IncidenceFormatter::toolTipStr(
-    CalendarSupport::displayName( mCalendar, akonadiItem().parentCollection() ),
+    CalendarSupport::displayName( mCalendar.data(), akonadiItem().parentCollection() ),
     mIncidence,
     date, true, CalendarSupport::KCalPrefs::instance()->timeSpec() );
 }

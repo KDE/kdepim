@@ -46,7 +46,7 @@
 
 using namespace EventViews;
 
-JournalDateView::JournalDateView( Akonadi::ETMCalendar *calendar, QWidget *parent )
+JournalDateView::JournalDateView( const Akonadi::ETMCalendar::Ptr &calendar, QWidget *parent )
   : KVBox( parent ), mCalendar( calendar ), mChanger( 0 )
 {
 }
@@ -143,7 +143,7 @@ void JournalDateView::journalDeleted( const Akonadi::Item &journal )
 }
 
 JournalFrame::JournalFrame( const Akonadi::Item &j,
-                            Akonadi::ETMCalendar *calendar,
+                            const Akonadi::ETMCalendar::Ptr &calendar,
                             QWidget *parent )
   : QFrame( parent ), mJournal( j ), mCalendar( calendar )
 {
@@ -244,7 +244,7 @@ void JournalFrame::editItem()
   }
 }
 
-void JournalFrame::setCalendar( Akonadi::ETMCalendar *calendar )
+void JournalFrame::setCalendar( const Akonadi::ETMCalendar::Ptr &calendar )
 {
   mCalendar = calendar;
 }

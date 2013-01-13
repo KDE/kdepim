@@ -23,7 +23,7 @@
 #include <kdgantt2/kdganttglobal.h>
 
 #include <calendarsupport/kcalprefs.h>
-#include <Akonadi/Calendar/ETMCalendar>
+
 #include <calendarsupport/utils.h>
 
 #include <KCalCore/Incidence>
@@ -33,7 +33,7 @@ using namespace KCalCore;
 using namespace KCalUtils;
 using namespace EventViews;
 
-TimelineItem::TimelineItem( Akonadi::ETMCalendar *calendar, uint index,
+TimelineItem::TimelineItem( const Akonadi::ETMCalendar::Ptr &calendar, uint index,
                             QStandardItemModel *model, QObject *parent )
   : QObject( parent ), mCalendar( calendar ), mModel( model ), mIndex( index )
 {
@@ -113,7 +113,7 @@ void TimelineItem::setColor( const QColor &color )
   mColor = color;
 }
 
-TimelineSubItem::TimelineSubItem( Akonadi::ETMCalendar *calendar,
+TimelineSubItem::TimelineSubItem( const Akonadi::ETMCalendar::Ptr &calendar,
                                   const Akonadi::Item &incidence, TimelineItem *parent )
   : QStandardItem(), mCalendar( calendar ), mIncidence( incidence ),
     mParent( parent ), mToolTipNeedsUpdate( true )
@@ -157,7 +157,7 @@ void TimelineSubItem::updateToolTip()
   mToolTipNeedsUpdate = false;
 
   setData( IncidenceFormatter::toolTipStr(
-             CalendarSupport::displayName( mCalendar, mIncidence.parentCollection() ),
+             CalendarSupport::displayName( mCalendar.data(), mIncidence.parentCollection() ),
              CalendarSupport::incidence( mIncidence ), originalStart().date(),
              true, CalendarSupport::KCalPrefs::instance()->timeSpec() ), Qt::ToolTipRole );
 }

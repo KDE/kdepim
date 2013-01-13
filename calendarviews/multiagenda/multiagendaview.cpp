@@ -208,7 +208,7 @@ MultiAgendaView::MultiAgendaView( QWidget *parent )
   topLevelLayout->addWidget( topSideBox );
 }
 
-void MultiAgendaView::setCalendar( Akonadi::ETMCalendar *cal )
+void MultiAgendaView::setCalendar( const Akonadi::ETMCalendar::Ptr &cal )
 {
   EventView::setCalendar( cal );
   Q_FOREACH ( KCheckableProxyModel *const i, d->mCollectionSelectionModels ) {
@@ -492,7 +492,7 @@ AgendaView *MultiAgendaView::Private::createView( const QString &title )
 
 void MultiAgendaView::Private::addView( const Akonadi::Collection &collection )
 {
-  AgendaView *av = createView( CalendarSupport::displayName( q->calendar(), collection ) );
+  AgendaView *av = createView( CalendarSupport::displayName( q->calendar().data(), collection ) );
   av->setCollectionId( collection.id() );
 }
 

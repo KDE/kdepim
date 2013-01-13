@@ -22,15 +22,14 @@
   without including the source code for Qt in the source distribution.
 */
 
-#include "kotododelegates.h"
-#include "koprefs.h"
-#include "kotodomodel.h"
-#include "kotodoviewview.h"
+#include "tododelegates.h"
+#include "todomodel.h"
+#include "todoviewview.h"
 
 #include <Akonadi/Calendar/ETMCalendar>
 #include <calendarsupport/categoryconfig.h>
-
-#include <incidenceeditor-ng/categoryhierarchyreader.h>
+#include <calendarsupport/kcalprefs.h>
+#include <calendarsupport/categoryhierarchyreader.h>
 
 #include <libkdepim/kcheckcombobox.h>
 
@@ -47,16 +46,16 @@
 // ---------------- COMPLETION DELEGATE --------------------------
 // ---------------------------------------------------------------
 
-KOTodoCompleteDelegate::KOTodoCompleteDelegate( QObject *parent )
+TodoCompleteDelegate::TodoCompleteDelegate( QObject *parent )
  : QStyledItemDelegate( parent )
 {
 }
 
-KOTodoCompleteDelegate::~KOTodoCompleteDelegate()
+TodoCompleteDelegate::~TodoCompleteDelegate()
 {
 }
 
-void KOTodoCompleteDelegate::paint( QPainter *painter,
+void TodoCompleteDelegate::paint( QPainter *painter,
                                     const QStyleOptionViewItem &option,
                                     const QModelIndex &index ) const
 {
@@ -70,7 +69,7 @@ void KOTodoCompleteDelegate::paint( QPainter *painter,
 
   if ( index.data( Qt::EditRole ).toInt() > 0 ) {
     bool isEditing = false;
-    KOTodoViewView *view = qobject_cast<KOTodoViewView*>( parent() );
+    TodoViewView *view = qobject_cast<TodoViewView*>( parent() );
     if ( view ) {
       isEditing = view->isEditing( index );
     }
@@ -88,7 +87,7 @@ void KOTodoCompleteDelegate::paint( QPainter *painter,
   }
 }
 
-QSize KOTodoCompleteDelegate::sizeHint( const QStyleOptionViewItem &option,
+QSize TodoCompleteDelegate::sizeHint( const QStyleOptionViewItem &option,
                                         const QModelIndex &index ) const
 {
   QStyleOptionViewItemV4 opt = option;
@@ -104,7 +103,7 @@ QSize KOTodoCompleteDelegate::sizeHint( const QStyleOptionViewItem &option,
                                   QSize(), opt.widget );
 }
 
-void KOTodoCompleteDelegate::initStyleOptionProgressBar(
+void TodoCompleteDelegate::initStyleOptionProgressBar(
                                 QStyleOptionProgressBar *option,
                                 const QModelIndex &index ) const
 {
@@ -117,14 +116,14 @@ void KOTodoCompleteDelegate::initStyleOptionProgressBar(
   option->textVisible = true;
 }
 
-QWidget *KOTodoCompleteDelegate::createEditor( QWidget *parent,
+QWidget *TodoCompleteDelegate::createEditor( QWidget *parent,
                                                const QStyleOptionViewItem &option,
                                                const QModelIndex &index ) const
 {
   Q_UNUSED( option );
   Q_UNUSED( index );
 
-  KOTodoCompleteSlider *slider = new KOTodoCompleteSlider( parent );
+  TodoCompleteSlider *slider = new TodoCompleteSlider( parent );
 
   slider->setRange( 0, 100 );
   slider->setOrientation( Qt::Horizontal );
@@ -132,7 +131,7 @@ QWidget *KOTodoCompleteDelegate::createEditor( QWidget *parent,
   return slider;
 }
 
-void KOTodoCompleteDelegate::setEditorData( QWidget *editor,
+void TodoCompleteDelegate::setEditorData( QWidget *editor,
                                             const QModelIndex &index ) const
 {
   QSlider *slider = static_cast<QSlider *>( editor );
@@ -140,7 +139,7 @@ void KOTodoCompleteDelegate::setEditorData( QWidget *editor,
   slider->setValue( index.data( Qt::EditRole ).toInt() );
 }
 
-void KOTodoCompleteDelegate::setModelData( QWidget *editor,
+void TodoCompleteDelegate::setModelData( QWidget *editor,
                                            QAbstractItemModel *model,
                                            const QModelIndex &index ) const
 {
@@ -149,7 +148,7 @@ void KOTodoCompleteDelegate::setModelData( QWidget *editor,
   model->setData( index, slider->value() );
 }
 
-void KOTodoCompleteDelegate::updateEditorGeometry( QWidget *editor,
+void TodoCompleteDelegate::updateEditorGeometry( QWidget *editor,
                                                    const QStyleOptionViewItem &option,
                                                    const QModelIndex &index ) const
 {
@@ -158,14 +157,14 @@ void KOTodoCompleteDelegate::updateEditorGeometry( QWidget *editor,
   editor->setGeometry( option.rect );
 }
 
-KOTodoCompleteSlider::KOTodoCompleteSlider( QWidget *parent )
+TodoCompleteSlider::TodoCompleteSlider( QWidget *parent )
   : QSlider( parent )
 {
   connect( this, SIGNAL(valueChanged(int)),
            this, SLOT(updateTip(int)) );
 }
 
-void KOTodoCompleteSlider::updateTip( int value )
+void TodoCompleteSlider::updateTip( int value )
 {
   QPoint p;
   p.setY( height() / 2 );
@@ -179,16 +178,16 @@ void KOTodoCompleteSlider::updateTip( int value )
 // ---------------- PRIORITY DELEGATE ----------------------------
 // ---------------------------------------------------------------
 
-KOTodoPriorityDelegate::KOTodoPriorityDelegate( QObject *parent )
+TodoPriorityDelegate::TodoPriorityDelegate( QObject *parent )
   : QStyledItemDelegate( parent )
 {
 }
 
-KOTodoPriorityDelegate::~KOTodoPriorityDelegate()
+TodoPriorityDelegate::~TodoPriorityDelegate()
 {
 }
 
-QWidget *KOTodoPriorityDelegate::createEditor( QWidget *parent,
+QWidget *TodoPriorityDelegate::createEditor( QWidget *parent,
                                                const QStyleOptionViewItem &option,
                                                const QModelIndex &index ) const
 {
@@ -211,7 +210,7 @@ QWidget *KOTodoPriorityDelegate::createEditor( QWidget *parent,
   return combo;
 }
 
-void KOTodoPriorityDelegate::setEditorData( QWidget *editor,
+void TodoPriorityDelegate::setEditorData( QWidget *editor,
                                             const QModelIndex &index ) const
 {
   KComboBox *combo = static_cast<KComboBox *>( editor );
@@ -219,7 +218,7 @@ void KOTodoPriorityDelegate::setEditorData( QWidget *editor,
   combo->setCurrentIndex( index.data( Qt::EditRole ).toInt() );
 }
 
-void KOTodoPriorityDelegate::setModelData( QWidget *editor,
+void TodoPriorityDelegate::setModelData( QWidget *editor,
                                            QAbstractItemModel *model,
                                            const QModelIndex &index ) const
 {
@@ -228,7 +227,7 @@ void KOTodoPriorityDelegate::setModelData( QWidget *editor,
   model->setData( index, combo->currentIndex() );
 }
 
-void KOTodoPriorityDelegate::updateEditorGeometry( QWidget *editor,
+void TodoPriorityDelegate::updateEditorGeometry( QWidget *editor,
                                                    const QStyleOptionViewItem &option,
                                                    const QModelIndex &index ) const
 {
@@ -240,16 +239,16 @@ void KOTodoPriorityDelegate::updateEditorGeometry( QWidget *editor,
 // ---------------- DUE DATE DELEGATE ----------------------------
 // ---------------------------------------------------------------
 
-KOTodoDueDateDelegate::KOTodoDueDateDelegate( QObject *parent )
+TodoDueDateDelegate::TodoDueDateDelegate( QObject *parent )
   : QStyledItemDelegate( parent )
 {
 }
 
-KOTodoDueDateDelegate::~KOTodoDueDateDelegate()
+TodoDueDateDelegate::~TodoDueDateDelegate()
 {
 }
 
-QWidget *KOTodoDueDateDelegate::createEditor( QWidget *parent,
+QWidget *TodoDueDateDelegate::createEditor( QWidget *parent,
                                               const QStyleOptionViewItem &option,
                                               const QModelIndex &index ) const
 {
@@ -261,7 +260,7 @@ QWidget *KOTodoDueDateDelegate::createEditor( QWidget *parent,
   return dateEdit;
 }
 
-void KOTodoDueDateDelegate::setEditorData( QWidget *editor,
+void TodoDueDateDelegate::setEditorData( QWidget *editor,
                                            const QModelIndex &index ) const
 {
   KDateComboBox *dateEdit = static_cast<KDateComboBox *>( editor );
@@ -269,7 +268,7 @@ void KOTodoDueDateDelegate::setEditorData( QWidget *editor,
   dateEdit->setDate( index.data( Qt::EditRole ).toDate() );
 }
 
-void KOTodoDueDateDelegate::setModelData( QWidget *editor,
+void TodoDueDateDelegate::setModelData( QWidget *editor,
                                           QAbstractItemModel *model,
                                           const QModelIndex &index ) const
 {
@@ -278,7 +277,7 @@ void KOTodoDueDateDelegate::setModelData( QWidget *editor,
   model->setData( index, dateEdit->date() );
 }
 
-void KOTodoDueDateDelegate::updateEditorGeometry( QWidget *editor,
+void TodoDueDateDelegate::updateEditorGeometry( QWidget *editor,
                                                   const QStyleOptionViewItem &option,
                                                   const QModelIndex &index ) const
 {
@@ -290,16 +289,16 @@ void KOTodoDueDateDelegate::updateEditorGeometry( QWidget *editor,
 // ---------------- CATEGORIES DELEGATE --------------------------
 // ---------------------------------------------------------------
 
-KOTodoCategoriesDelegate::KOTodoCategoriesDelegate( QObject *parent )
+TodoCategoriesDelegate::TodoCategoriesDelegate( QObject *parent )
   : QStyledItemDelegate( parent ), mCalendar(0)
 {
 }
 
-KOTodoCategoriesDelegate::~KOTodoCategoriesDelegate()
+TodoCategoriesDelegate::~TodoCategoriesDelegate()
 {
 }
 
-QWidget *KOTodoCategoriesDelegate::createEditor( QWidget *parent,
+QWidget *TodoCategoriesDelegate::createEditor( QWidget *parent,
                                                  const QStyleOptionViewItem &option,
                                                  const QModelIndex &index ) const
 {
@@ -315,7 +314,7 @@ QWidget *KOTodoCategoriesDelegate::createEditor( QWidget *parent,
       categories = filter->categoryList();
       categories.sort();
     } else {
-      CalendarSupport::CategoryConfig cc( KOPrefs::instance() );
+      CalendarSupport::CategoryConfig cc( CalendarSupport::KCalPrefs::instance() );
       categories = cc.customCategories();
       QStringList filterCategories = filter->categoryList();
       categories.sort();
@@ -336,14 +335,14 @@ QWidget *KOTodoCategoriesDelegate::createEditor( QWidget *parent,
     }
   }
 
-  IncidenceEditorNG::CategoryHierarchyReaderQComboBox( combo ).read( categories );
+  CalendarSupport::CategoryHierarchyReaderQComboBox( combo ).read( categories );
   // TODO test again with newer version of Qt, if it manages then to move
   // the popup together with the combobox.
   //combo->showPopup();
   return combo;
 }
 
-void KOTodoCategoriesDelegate::setEditorData( QWidget *editor,
+void TodoCategoriesDelegate::setEditorData( QWidget *editor,
                                               const QModelIndex &index ) const
 {
   KPIM::KCheckComboBox *combo = static_cast<KPIM::KCheckComboBox *>( editor );
@@ -351,7 +350,7 @@ void KOTodoCategoriesDelegate::setEditorData( QWidget *editor,
   combo->setCheckedItems( index.data( Qt::EditRole ).toStringList(), Qt::UserRole );
 }
 
-void KOTodoCategoriesDelegate::setModelData( QWidget *editor,
+void TodoCategoriesDelegate::setModelData( QWidget *editor,
                                              QAbstractItemModel *model,
                                              const QModelIndex &index ) const
 {
@@ -360,7 +359,7 @@ void KOTodoCategoriesDelegate::setModelData( QWidget *editor,
   model->setData( index, combo->checkedItems( Qt::UserRole ) );
 }
 
-void KOTodoCategoriesDelegate::updateEditorGeometry( QWidget *editor,
+void TodoCategoriesDelegate::updateEditorGeometry( QWidget *editor,
                                                      const QStyleOptionViewItem &option,
                                                      const QModelIndex &index ) const
 {
@@ -369,7 +368,7 @@ void KOTodoCategoriesDelegate::updateEditorGeometry( QWidget *editor,
   editor->setGeometry( option.rect );
 }
 
-void KOTodoCategoriesDelegate::setCalendar( const Akonadi::ETMCalendar::Ptr &cal )
+void TodoCategoriesDelegate::setCalendar( const Akonadi::ETMCalendar::Ptr &cal )
 {
   mCalendar = cal;
 }
@@ -377,21 +376,21 @@ void KOTodoCategoriesDelegate::setCalendar( const Akonadi::ETMCalendar::Ptr &cal
 // ---------------- RICH TEXT DELEGATE ---------------------------
 // ---------------------------------------------------------------
 
-KOTodoRichTextDelegate::KOTodoRichTextDelegate( QObject *parent )
+TodoRichTextDelegate::TodoRichTextDelegate( QObject *parent )
   : QStyledItemDelegate( parent )
 {
   m_textDoc = new QTextDocument( this );
 }
 
-KOTodoRichTextDelegate::~KOTodoRichTextDelegate()
+TodoRichTextDelegate::~TodoRichTextDelegate()
 {
 }
 
-void KOTodoRichTextDelegate::paint( QPainter *painter,
+void TodoRichTextDelegate::paint( QPainter *painter,
                                     const QStyleOptionViewItem &option,
                                     const QModelIndex &index ) const
 {
-  if ( index.data( KOTodoModel::IsRichTextRole ).toBool() ) {
+  if ( index.data( TodoModel::IsRichTextRole ).toBool() ) {
     QStyleOptionViewItemV4 opt = option;
     initStyleOption( &opt, index );
 
@@ -444,11 +443,11 @@ void KOTodoRichTextDelegate::paint( QPainter *painter,
   }
 }
 
-QSize KOTodoRichTextDelegate::sizeHint( const QStyleOptionViewItem &option,
-                                        const QModelIndex &index ) const
+QSize TodoRichTextDelegate::sizeHint( const QStyleOptionViewItem &option,
+                                      const QModelIndex &index ) const
 {
   QSize ret = QStyledItemDelegate::sizeHint( option, index );
-  if ( index.data( KOTodoModel::IsRichTextRole ).toBool() ) {
+  if ( index.data( TodoModel::IsRichTextRole ).toBool() ) {
     m_textDoc->setHtml( index.data().toString() );
     ret = ret.expandedTo( m_textDoc->size().toSize() );
   }
@@ -460,4 +459,4 @@ QSize KOTodoRichTextDelegate::sizeHint( const QStyleOptionViewItem &option,
   return ret;
 }
 
-#include "kotododelegates.moc"
+#include "tododelegates.moc"

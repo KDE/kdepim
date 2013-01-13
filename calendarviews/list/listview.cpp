@@ -132,11 +132,11 @@ class ListView::Private
     {
     }
 
-    void addIncidences( Akonadi::ETMCalendar *calendar,
+    void addIncidences( const Akonadi::ETMCalendar::Ptr &calendar,
                         const KCalCore::Incidence::List &incidenceList, const QDate &date );
-    void addIncidence( Akonadi::ETMCalendar *calendar,
+    void addIncidence( const Akonadi::ETMCalendar::Ptr &calendar,
                        const KCalCore::Incidence::Ptr &, const QDate &date );
-    void addIncidence( Akonadi::ETMCalendar *calendar,
+    void addIncidence( const Akonadi::ETMCalendar::Ptr &calendar,
                        const Akonadi::Item &, const QDate &date );
     ListViewItem *getItemForIncidence( const Akonadi::Item & );
 
@@ -268,7 +268,7 @@ bool ListView::Private::ListItemVisitor::visit( Journal::Ptr j )
   return true;
 }
 
-ListView::ListView( Akonadi::ETMCalendar *calendar,
+ListView::ListView( const Akonadi::ETMCalendar::Ptr &calendar,
                     QWidget *parent, bool nonInteractive )
   : EventView( parent ), d( new Private( this ) )
 {
@@ -383,7 +383,7 @@ void ListView::showAll()
   d->addIncidences( calendar(), calendar()->incidences(), QDate() );
 }
 
-void ListView::Private::addIncidences( Akonadi::ETMCalendar *calendar,
+void ListView::Private::addIncidences( const Akonadi::ETMCalendar::Ptr &calendar,
                                        const KCalCore::Incidence::List &incidences,
                                        const QDate &date )
 {
@@ -392,7 +392,7 @@ void ListView::Private::addIncidences( Akonadi::ETMCalendar *calendar,
   }
 }
 
-void ListView::Private::addIncidence( Akonadi::ETMCalendar *calendar,
+void ListView::Private::addIncidence( const Akonadi::ETMCalendar::Ptr &calendar,
                                       const Akonadi::Item &item,
                                       const QDate &date )
 {
@@ -402,7 +402,7 @@ void ListView::Private::addIncidence( Akonadi::ETMCalendar *calendar,
   }  
 }
 
-void ListView::Private::addIncidence( Akonadi::ETMCalendar *calendar,
+void ListView::Private::addIncidence( const Akonadi::ETMCalendar::Ptr &calendar,
                                       const KCalCore::Incidence::Ptr &incidence,
                                       const QDate &date )
 {
@@ -435,7 +435,7 @@ void ListView::Private::addIncidence( Akonadi::ETMCalendar *calendar,
   for ( int col = 0; col < Dummy_EOF_Column; ++col ) {
     item->setToolTip( col,
                       IncidenceFormatter::toolTipStr(
-                        CalendarSupport::displayName( calendar, aitem.parentCollection() ),
+                        CalendarSupport::displayName( calendar.data(), aitem.parentCollection() ),
                         incidence ) );
   }
 

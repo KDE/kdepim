@@ -28,7 +28,6 @@
 #include "journalview.h"
 #include "journalframe.h"
 
-#include <Akonadi/Calendar/ETMCalendar>
 #include <calendarsupport/utils.h>
 
 #include <KVBox>

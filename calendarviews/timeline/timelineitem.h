@@ -23,6 +23,7 @@
 
 #include <KCalCore/Incidence>
 
+#include <Akonadi/Calendar/ETMCalendar>
 #include <Akonadi/Item>
 
 #include <KDateTime>
@@ -31,9 +32,6 @@
 #include <QList>
 #include <QStandardItemModel>
 
-namespace Akonadi {
-  class ETMCalendar;
-}
 
 namespace EventViews {
 
@@ -43,7 +41,7 @@ class TimelineItem : public QObject
 {
   Q_OBJECT
   public:
-    TimelineItem( Akonadi::ETMCalendar *calendar, uint index, QStandardItemModel *model,
+    TimelineItem( const Akonadi::ETMCalendar::Ptr &calendar, uint index, QStandardItemModel *model,
                   QObject *parent );
 
     void insertIncidence( const Akonadi::Item &incidence,
@@ -56,7 +54,7 @@ class TimelineItem : public QObject
     void setColor( const QColor &color );
 
   private:
-    Akonadi::ETMCalendar *mCalendar;
+    Akonadi::ETMCalendar::Ptr mCalendar;
     QMap<Akonadi::Item::Id, QList<QStandardItem*> > mItemMap;
     QStandardItemModel *mModel;
     QColor mColor;
@@ -66,7 +64,7 @@ class TimelineItem : public QObject
 class TimelineSubItem : public QStandardItem
 {
   public:
-    TimelineSubItem( Akonadi::ETMCalendar *calendar,
+    TimelineSubItem( const Akonadi::ETMCalendar::Ptr &calendar,
                      const Akonadi::Item &incidence, TimelineItem *parent );
     ~TimelineSubItem();
 
@@ -99,7 +97,7 @@ class TimelineSubItem : public QStandardItem
     void updateToolTip();
 
   private:
-    Akonadi::ETMCalendar *mCalendar;
+    Akonadi::ETMCalendar::Ptr mCalendar;
     Akonadi::Item mIncidence;
     KDateTime mStart;
     TimelineItem *mParent;

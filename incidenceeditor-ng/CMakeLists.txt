@@ -54,8 +54,6 @@ set(incidenceeditors_ng_shared_LIB_SRCS
   groupwareintegration.cpp
 
   incidencedefaults.cpp
-
-  categoryhierarchyreader.cpp
   editorconfig.cpp
   korganizereditorconfig.cpp
 

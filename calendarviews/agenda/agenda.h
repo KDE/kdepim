@@ -37,7 +37,6 @@
 
 namespace Akonadi {
   class IncidenceChanger;
-  class ETMCalendar;
 }
 
 namespace EventViews {
@@ -157,7 +156,7 @@ class EVENTVIEWS_EXPORT Agenda : public QWidget
     void setDateList( const KCalCore::DateList &selectedDates );
     KCalCore::DateList dateList() const;
 
-    void setCalendar( Akonadi::ETMCalendar *cal );
+    void setCalendar( const Akonadi::ETMCalendar::Ptr &cal );
 
     void setIncidenceChanger( Akonadi::IncidenceChanger *changer );
 

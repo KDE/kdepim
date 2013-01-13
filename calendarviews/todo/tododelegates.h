@@ -22,8 +22,8 @@
   without including the source code for Qt in the source distribution.
 */
 
-#ifndef KORG_VIEWS_KOTODODELEGATES_H
-#define KORG_VIEWS_KOTODODELEGATES_H
+#ifndef CALENDARVIEWS_TODODELEGATES_H
+#define CALENDARVIEWS_TODODELEGATES_H
 
 #include <Akonadi/Calendar/ETMCalendar>
 #include <QStyledItemDelegate>
@@ -40,13 +40,13 @@ class QTextDocument;
 
   @author Thomas Thrainer
 */
-class KOTodoCompleteDelegate : public QStyledItemDelegate
+class TodoCompleteDelegate : public QStyledItemDelegate
 {
   Q_OBJECT
   public:
-    explicit KOTodoCompleteDelegate( QObject *parent = 0 );
+    explicit TodoCompleteDelegate( QObject *parent = 0 );
 
-    ~KOTodoCompleteDelegate();
+    ~TodoCompleteDelegate();
 
     void paint( QPainter *painter, const QStyleOptionViewItem &option,
                 const QModelIndex &index ) const;
@@ -67,12 +67,12 @@ class KOTodoCompleteDelegate : public QStyledItemDelegate
                                      const QModelIndex &index ) const;
 };
 
-class KOTodoCompleteSlider : public QSlider
+class TodoCompleteSlider : public QSlider
 {
   Q_OBJECT
 
   public:
-    explicit KOTodoCompleteSlider( QWidget *parent );
+    explicit TodoCompleteSlider( QWidget *parent );
 
   private Q_SLOTS:
     void updateTip( int value );
@@ -85,13 +85,13 @@ class KOTodoCompleteSlider : public QSlider
 
   @author Thomas Thrainer
  */
-class KOTodoPriorityDelegate : public QStyledItemDelegate
+class TodoPriorityDelegate : public QStyledItemDelegate
 {
   Q_OBJECT
   public:
-    explicit KOTodoPriorityDelegate( QObject *parent = 0 );
+    explicit TodoPriorityDelegate( QObject *parent = 0 );
 
-    ~KOTodoPriorityDelegate();
+    ~TodoPriorityDelegate();
 
     QWidget *createEditor( QWidget *parent, const QStyleOptionViewItem &option,
                            const QModelIndex &index ) const;
@@ -110,13 +110,13 @@ class KOTodoPriorityDelegate : public QStyledItemDelegate
 
   @author Thomas Thrainer
  */
-class KOTodoDueDateDelegate : public QStyledItemDelegate
+class TodoDueDateDelegate : public QStyledItemDelegate
 {
   Q_OBJECT
   public:
-    explicit KOTodoDueDateDelegate( QObject *parent = 0 );
+    explicit TodoDueDateDelegate( QObject *parent = 0 );
 
-    ~KOTodoDueDateDelegate();
+    ~TodoDueDateDelegate();
 
     QWidget *createEditor( QWidget *parent, const QStyleOptionViewItem &option,
                            const QModelIndex &index ) const;
@@ -135,13 +135,13 @@ class KOTodoDueDateDelegate : public QStyledItemDelegate
 
   @author Thomas Thrainer
  */
-class KOTodoCategoriesDelegate : public QStyledItemDelegate
+class TodoCategoriesDelegate : public QStyledItemDelegate
 {
   Q_OBJECT
   public:
-    explicit KOTodoCategoriesDelegate( QObject *parent = 0 );
+    explicit TodoCategoriesDelegate( QObject *parent = 0 );
 
-    ~KOTodoCategoriesDelegate();
+    ~TodoCategoriesDelegate();
 
     QWidget *createEditor( QWidget *parent, const QStyleOptionViewItem &option,
                            const QModelIndex &index ) const;
@@ -163,13 +163,13 @@ class KOTodoCategoriesDelegate : public QStyledItemDelegate
 
   @author Thomas Thrainer
  */
-class KOTodoRichTextDelegate : public QStyledItemDelegate
+class TodoRichTextDelegate : public QStyledItemDelegate
 {
   Q_OBJECT
   public:
-    explicit KOTodoRichTextDelegate( QObject *parent = 0 );
+    explicit TodoRichTextDelegate( QObject *parent = 0 );
 
-    ~KOTodoRichTextDelegate();
+    ~TodoRichTextDelegate();
 
     void paint( QPainter *painter, const QStyleOptionViewItem &option,
                 const QModelIndex &index ) const;

@@ -22,32 +22,42 @@
   without including the source code for Qt in the source distribution.
 */
 
-#ifndef KORG_VIEWS_KOTODOVIEWQUICKADDLINE_H
-#define KORG_VIEWS_KOTODOVIEWQUICKADDLINE_H
+#ifndef CALENDARVIEWS_TODOVIEWVIEW_H
+#define CALENDARVIEWS_TODOVIEWVIEW_H
 
-#include <KLineEdit>
+#include <QTreeView>
+#include <QTimer>
 
-class KOTodoViewQuickAddLine : public KLineEdit
+class KMenu;
+
+class TodoViewView : public QTreeView
 {
   Q_OBJECT
 
   public:
-    explicit KOTodoViewQuickAddLine( QWidget *parent );
-    virtual ~KOTodoViewQuickAddLine() {}
+    explicit TodoViewView( QWidget *parent = 0 );
+
+    bool isEditing( const QModelIndex &index ) const;
+
+    virtual bool eventFilter( QObject *watched, QEvent *event );
 
   protected:
-    void keyPressEvent( QKeyEvent *event );
-    void resizeEvent( QResizeEvent *event );
-
-  Q_SIGNALS:
-    void returnPressed( Qt::KeyboardModifiers modifiers );
-
-  private Q_SLOTS:
-    void returnPressed();
+    virtual QModelIndex moveCursor( CursorAction cursorAction, Qt::KeyboardModifiers modifiers );
+    virtual void mousePressEvent( QMouseEvent * );
+    virtual void mouseReleaseEvent( QMouseEvent * );
+    virtual void mouseMoveEvent( QMouseEvent * );
 
   private:
-    Qt::KeyboardModifiers mModifiers;
-    QString mClickMessage;
+    QModelIndex getNextEditableIndex( const QModelIndex &cur, int inc );
+
+    KMenu *mHeaderPopup;
+    QList<QAction *> mColumnActions;
+    QTimer mExpandTimer;
+    bool mIgnoreNextMouseRelease;
+
+  private slots:
+    void toggleColumnHidden( QAction *action );
+    void expandParent();
 };
 
 #endif

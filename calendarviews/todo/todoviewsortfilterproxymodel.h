@@ -22,18 +22,21 @@
   without including the source code for Qt in the source distribution.
 */
 
-#ifndef KORG_VIEWS_KOTODOVIEWSORTFILTERPROXYMODEL_H
-#define KORG_VIEWS_KOTODOVIEWSORTFILTERPROXYMODEL_H
+#ifndef CALENDARVIEWS_TODOVIEWSORTFILTERPROXYMODEL_H
+#define CALENDARVIEWS_TODOVIEWSORTFILTERPROXYMODEL_H
+
+#include "prefs.h"
 
 #include <QSortFilterProxyModel>
 #include <QStringList>
 
-class KOTodoViewSortFilterProxyModel : public QSortFilterProxyModel
+class TodoViewSortFilterProxyModel : public QSortFilterProxyModel
 {
   Q_OBJECT
 
   public:
-    explicit KOTodoViewSortFilterProxyModel( QObject *parent = 0 );
+    explicit TodoViewSortFilterProxyModel( const EventViews::PrefsPtr &prefs,
+                                           QObject *parent = 0 );
 
     void sort( int column, Qt::SortOrder order = Qt::AscendingOrder );
 
@@ -62,6 +65,7 @@ class KOTodoViewSortFilterProxyModel : public QSortFilterProxyModel
     QStringList mCategories;
     QStringList mPriorities;
     Qt::SortOrder mSortOrder;
+    EventViews::PrefsPtr mPreferences;
 };
 
 #endif

@@ -22,9 +22,9 @@
 
 #include "categoryeditdialog.h"
 
-#include "categoryhierarchyreader.h"
 #include "ui_categoryeditdialog_base.h"
 
+#include <calendarsupport/categoryhierarchyreader.h>
 #include <calendarsupport/categoryconfig.h>
 
 #include <KLocale>
@@ -107,7 +107,7 @@ CategoryEditDialog::~CategoryEditDialog()
 
 void CategoryEditDialog::fillList()
 {
-  IncidenceEditorNG::CategoryHierarchyReaderQTreeWidget(
+  CalendarSupport::CategoryHierarchyReaderQTreeWidget(
     mWidgets->mCategories ).read( mCategoryConfig->customCategories() );
 }
 

@@ -23,7 +23,7 @@
   without including the source code for Qt in the source distribution.
 */
 
-#include "kotodoviewview.h"
+#include "todoviewview.h"
 
 #include <KLocale>
 #include <KMenu>
@@ -34,7 +34,7 @@
 #include <QHeaderView>
 #include <QMouseEvent>
 
-KOTodoViewView::KOTodoViewView( QWidget *parent )
+TodoViewView::TodoViewView( QWidget *parent )
   : QTreeView( parent ), mHeaderPopup( 0 ), mIgnoreNextMouseRelease( false )
 {
   header()->installEventFilter( this );
@@ -43,13 +43,13 @@ KOTodoViewView::KOTodoViewView( QWidget *parent )
   mExpandTimer.setInterval( 1000 );
 }
 
-bool KOTodoViewView::isEditing( const QModelIndex &index ) const
+bool TodoViewView::isEditing( const QModelIndex &index ) const
 {
   return state() & QAbstractItemView::EditingState &&
          currentIndex() == index;
 }
 
-bool KOTodoViewView::eventFilter( QObject *watched, QEvent *event )
+bool TodoViewView::eventFilter( QObject *watched, QEvent *event )
 {
   Q_UNUSED( watched );
   if ( event->type() == QEvent::ContextMenu ) {
@@ -83,7 +83,7 @@ bool KOTodoViewView::eventFilter( QObject *watched, QEvent *event )
   return false;
 }
 
-void KOTodoViewView::toggleColumnHidden( QAction *action )
+void TodoViewView::toggleColumnHidden( QAction *action )
 {
   if ( action->isChecked() ) {
     showColumn( action->data().toInt() );
@@ -97,8 +97,8 @@ void KOTodoViewView::toggleColumnHidden( QAction *action )
   }
 }
 
-QModelIndex KOTodoViewView::moveCursor( CursorAction cursorAction,
-                                        Qt::KeyboardModifiers modifiers )
+QModelIndex TodoViewView::moveCursor( CursorAction cursorAction,
+                                      Qt::KeyboardModifiers modifiers )
 {
   QModelIndex current = currentIndex();
   if ( !current.isValid() ) {
@@ -175,7 +175,7 @@ QModelIndex KOTodoViewView::moveCursor( CursorAction cursorAction,
   return QTreeView::moveCursor( cursorAction, modifiers );
 }
 
-QModelIndex KOTodoViewView::getNextEditableIndex( const QModelIndex &cur, int inc )
+QModelIndex TodoViewView::getNextEditableIndex( const QModelIndex &cur, int inc )
 {
   if ( !cur.isValid() ) {
     return QModelIndex();
@@ -194,7 +194,7 @@ QModelIndex KOTodoViewView::getNextEditableIndex( const QModelIndex &cur, int in
   return QModelIndex();
 }
 
-void KOTodoViewView::mouseReleaseEvent ( QMouseEvent *event )
+void TodoViewView::mouseReleaseEvent ( QMouseEvent *event )
 {
   mExpandTimer.stop();
 
@@ -211,13 +211,13 @@ void KOTodoViewView::mouseReleaseEvent ( QMouseEvent *event )
   }
 }
 
-void KOTodoViewView::mouseMoveEvent( QMouseEvent *event )
+void TodoViewView::mouseMoveEvent( QMouseEvent *event )
 {
   mExpandTimer.stop();
   QTreeView::mouseMoveEvent( event );
 }
 
-void KOTodoViewView::mousePressEvent( QMouseEvent *event )
+void TodoViewView::mousePressEvent( QMouseEvent *event )
 {
   mExpandTimer.stop();
   QModelIndex index = indexAt( event->pos() );
@@ -228,7 +228,7 @@ void KOTodoViewView::mousePressEvent( QMouseEvent *event )
   QTreeView::mousePressEvent( event );
 }
 
-void KOTodoViewView::expandParent()
+void TodoViewView::expandParent()
 {
   QModelIndex index = indexAt( viewport()->mapFromGlobal( QCursor::pos() ) );
   if ( index.isValid() ) {
@@ -238,4 +238,4 @@ void KOTodoViewView::expandParent()
   }
 }
 
-#include "kotodoviewview.moc"
+#include "todoviewview.moc"

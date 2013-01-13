@@ -47,7 +47,7 @@ class JournalFrame : public QFrame
     typedef QList<JournalFrame*> List;
 
     JournalFrame( const Akonadi::Item &journal,
-                  Akonadi::ETMCalendar *calendar,
+                  const Akonadi::ETMCalendar::Ptr &calendar,
                   QWidget *parent );
 
     ~JournalFrame();
@@ -56,7 +56,7 @@ class JournalFrame : public QFrame
     void setJournal( const Akonadi::Item &journal );
     Akonadi::Item journal() const { return mJournal; }
 
-    void setCalendar( Akonadi::ETMCalendar * );
+    void setCalendar( const Akonadi::ETMCalendar::Ptr &  );
     QDate date() const { return mDate; }
 
     void clear();
@@ -83,7 +83,7 @@ class JournalFrame : public QFrame
 
   private:
     Akonadi::Item mJournal;
-    Akonadi::ETMCalendar *mCalendar;
+    Akonadi::ETMCalendar::Ptr mCalendar;
     QDate mDate;
     bool mReadOnly;
 
@@ -103,7 +103,7 @@ class JournalDateView : public KVBox
   public:
     typedef QList<JournalDateView*> List;
 
-    JournalDateView( Akonadi::ETMCalendar *, QWidget *parent );
+    JournalDateView( const Akonadi::ETMCalendar::Ptr & , QWidget *parent );
     ~JournalDateView();
 
     void addJournal( const Akonadi::Item &journal );
@@ -131,7 +131,7 @@ class JournalDateView : public KVBox
     void journalDeleted( const Akonadi::Item & );
 
   private:
-    Akonadi::ETMCalendar *mCalendar;
+    Akonadi::ETMCalendar::Ptr mCalendar;
     QDate mDate;
     QMap<Akonadi::Item::Id,JournalFrame *> mEntries;
 

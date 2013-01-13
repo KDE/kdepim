@@ -27,13 +27,10 @@
 
 #include <Akonadi/Item>
 #include <KCalCore/Incidence>
+#include <Akonadi/Calendar/ETMCalendar>
 
 #include <QDate>
 #include <QObject>
-
-namespace Akonadi {
-  class ETMCalendar;
-}
 
 namespace EventViews {
 
@@ -274,7 +271,7 @@ class EVENTVIEWS_EXPORT IncidenceMonthItem : public MonthItem
 
   public:
     IncidenceMonthItem( MonthScene *monthScene,
-                        Akonadi::ETMCalendar *calendar,
+                        const Akonadi::ETMCalendar::Ptr &calendar,
                         const Akonadi::Item &incidence,
                         const QDate &recurStartDate = QDate() );
 
@@ -325,7 +322,7 @@ class EVENTVIEWS_EXPORT IncidenceMonthItem : public MonthItem
     */
     QColor catColor() const;
 
-    Akonadi::ETMCalendar *mCalendar;
+    Akonadi::ETMCalendar::Ptr mCalendar;
     KCalCore::Incidence::Ptr mIncidence;
     Akonadi::Item::Id mAkonadiItemId;
     int mRecurDayOffset;

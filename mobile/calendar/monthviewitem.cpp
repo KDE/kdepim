@@ -67,7 +67,7 @@ void MonthViewItem::emitItemSelected( const Akonadi::Item &item, const QDate &ac
 
 QObject* MonthViewItem::calendar() const
 {
-  return mView->calendar();
+  return mView->calendar().data();
 }
 
 void MonthViewItem::setCalendar( QObject* calendarObj )
@@ -75,7 +75,7 @@ void MonthViewItem::setCalendar( QObject* calendarObj )
   Akonadi::ETMCalendar* cal = qobject_cast<Akonadi::ETMCalendar*>( calendarObj );
   kDebug() << calendarObj << cal;
   if ( cal ) {
-    mView->setCalendar( cal );
+    mView->setCalendar( cal->weakPointer().toStrongRef().dynamicCast<Akonadi::ETMCalendar>() );
     mView->updateConfig();
   }
 }

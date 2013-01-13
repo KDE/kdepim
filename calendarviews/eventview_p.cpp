@@ -90,8 +90,4 @@ void EventViewPrivate::reconnectCollectionSelection()
   if ( customCollectionSelection ) {
     customCollectionSelection->disconnect( q );
   }
-
-  QObject::connect( q->collectionSelection(),
-                    SIGNAL(selectionChanged(Akonadi::Collection::List,Akonadi::Collection::List)),
-                    q, SLOT(collectionSelectionChanged()) );
 }

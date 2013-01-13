@@ -21,8 +21,10 @@
   without including the source code for Qt in the source distribution.
 */
 
-#ifndef KORG_VIEWS_KOTODOMODEL_H
-#define KORG_VIEWS_KOTODOMODEL_H
+#ifndef CALENDARVIEWS_TODOMODEL_H
+#define CALENDARVIEWS_TODOMODEL_H
+
+#include "prefs.h"
 
 #include <Akonadi/Calendar/IncidenceChanger>
 #include <Akonadi/Calendar/ETMCalendar>
@@ -35,7 +37,7 @@
 
 class QMimeData;
 
-class KOTodoModel : public QAbstractProxyModel
+class TodoModel : public QAbstractProxyModel
 {
   Q_OBJECT
 
@@ -59,9 +61,9 @@ class KOTodoModel : public QAbstractProxyModel
       IsRichTextRole
     };
 
-    explicit KOTodoModel( QObject *parent = 0 );
+    explicit TodoModel( const EventViews::PrefsPtr &preferences, QObject *parent = 0 );
 
-    ~KOTodoModel();
+    ~TodoModel();
 
     /**reimp*/
     int rowCount( const QModelIndex &parent = QModelIndex() ) const;

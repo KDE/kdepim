@@ -21,10 +21,7 @@
   without including the source code for Qt in the source distribution.
 */
 
-#include "kotodomodel_p.h"
-#include "koglobals.h"
-#include "koprefs.h"
-#include "kohelper.h"
+#include "todomodel_p.h"
 #include "incidencetreemodel.h"
 
 #include <calendarsupport/utils.h>
@@ -69,14 +66,15 @@ static bool isDueToday( const KCalCore::Todo::Ptr &todo )
   return !todo->isCompleted() && todo->dtDue().date() == QDate::currentDate();
 }
 
-KOTodoModel::Private::Private( KOTodoModel *qq )
-  : QObject(),
-    q( qq )
+TodoModel::Private::Private( const EventViews::PrefsPtr &preferences,
+                             TodoModel *qq ) : QObject()
+                                             , m_preferences( preferences )
+                                             , q( qq )
 {
 }
 
-Akonadi::Item KOTodoModel::Private::findItemByUid( const QString &uid,
-                                                   const QModelIndex &parent ) const
+Akonadi::Item TodoModel::Private::findItemByUid( const QString &uid,
+                                                 const QModelIndex &parent ) const
 {
   Q_ASSERT( !uid.isEmpty() );
   IncidenceTreeModel *treeModel = qobject_cast<IncidenceTreeModel*>( q->sourceModel() );
@@ -103,22 +101,22 @@ Akonadi::Item KOTodoModel::Private::findItemByUid( const QString &uid,
   return item;
 }
 
-void KOTodoModel::Private::onDataChanged( const QModelIndex &begin, const QModelIndex &end )
+void TodoModel::Private::onDataChanged( const QModelIndex &begin, const QModelIndex &end )
 {
   Q_ASSERT( begin.isValid() );
   Q_ASSERT( end.isValid() );
   const QModelIndex proxyBegin = q->mapFromSource( begin );
   Q_ASSERT( proxyBegin.column() == 0 );
   const QModelIndex proxyEnd = q->mapFromSource( end );
-  emit q->dataChanged( proxyBegin, proxyEnd.sibling( proxyEnd.row(), KOTodoModel::ColumnCount-1 ) );
+  emit q->dataChanged( proxyBegin, proxyEnd.sibling( proxyEnd.row(), TodoModel::ColumnCount-1 ) );
 }
 
-void KOTodoModel::Private::onHeaderDataChanged( Qt::Orientation orientation, int first, int last )
+void TodoModel::Private::onHeaderDataChanged( Qt::Orientation orientation, int first, int last )
 {
   emit q->headerDataChanged( orientation, first, last );
 }
 
-void KOTodoModel::Private::onRowsAboutToBeInserted( const QModelIndex &parent, int begin, int end )
+void TodoModel::Private::onRowsAboutToBeInserted( const QModelIndex &parent, int begin, int end )
 {
   const QModelIndex index = q->mapFromSource( parent );
   Q_ASSERT( !( parent.isValid() ^ index.isValid() ) ); // Both must be valid, or both invalid
@@ -127,12 +125,12 @@ void KOTodoModel::Private::onRowsAboutToBeInserted( const QModelIndex &parent, i
   q->beginInsertRows( index, begin, end );
 }
 
-void KOTodoModel::Private::onRowsInserted( const QModelIndex &, int, int )
+void TodoModel::Private::onRowsInserted( const QModelIndex &, int, int )
 {
   q->endInsertRows();
 }
 
-void KOTodoModel::Private::onRowsAboutToBeRemoved( const QModelIndex &parent, int begin, int end )
+void TodoModel::Private::onRowsAboutToBeRemoved( const QModelIndex &parent, int begin, int end )
 {
   const QModelIndex index = q->mapFromSource( parent );
   Q_ASSERT( !( parent.isValid() ^ index.isValid() ) ); // Both must be valid, or both invalid
@@ -141,12 +139,12 @@ void KOTodoModel::Private::onRowsAboutToBeRemoved( const QModelIndex &parent, in
   q->beginRemoveRows( index, begin, end );
 }
 
-void KOTodoModel::Private::onRowsRemoved( const QModelIndex &, int, int )
+void TodoModel::Private::onRowsRemoved( const QModelIndex &, int, int )
 {
   q->endRemoveRows();
 }
 
-void KOTodoModel::Private::onRowsAboutToBeMoved( const QModelIndex &sourceParent,
+void TodoModel::Private::onRowsAboutToBeMoved( const QModelIndex &sourceParent,
                                                  int sourceStart,
                                                  int sourceEnd,
                                                  const QModelIndex &destinationParent,
@@ -163,22 +161,22 @@ void KOTodoModel::Private::onRowsAboutToBeMoved( const QModelIndex &sourceParent
   */
 }
 
-void KOTodoModel::Private::onRowsMoved( const QModelIndex &, int, int, const QModelIndex &, int )
+void TodoModel::Private::onRowsMoved( const QModelIndex &, int, int, const QModelIndex &, int )
 {
   /*q->endMoveRows();*/
 }
 
-void KOTodoModel::Private::onModelAboutToBeReset()
+void TodoModel::Private::onModelAboutToBeReset()
 {
   q->beginResetModel();
 }
 
-void KOTodoModel::Private::onModelReset()
+void TodoModel::Private::onModelReset()
 {
   q->endResetModel();
 }
 
-void KOTodoModel::Private::onLayoutAboutToBeChanged()
+void TodoModel::Private::onLayoutAboutToBeChanged()
 {
   Q_ASSERT( m_persistentIndexes.isEmpty() );
   Q_ASSERT( m_layoutChangePersistentIndexes.isEmpty() );
@@ -197,7 +195,7 @@ void KOTodoModel::Private::onLayoutAboutToBeChanged()
   emit q->layoutAboutToBeChanged();
 }
 
-void KOTodoModel::Private::onLayoutChanged()
+void TodoModel::Private::onLayoutChanged()
 {
   for ( int i = 0; i < m_persistentIndexes.size(); ++i ) {
     QModelIndex newIndex_col0 = q->mapFromSource( m_layoutChangePersistentIndexes.at( i ) );
@@ -216,18 +214,18 @@ void KOTodoModel::Private::onLayoutChanged()
   emit q->layoutChanged();
 }
 
-KOTodoModel::KOTodoModel( QObject *parent )
-  : QAbstractProxyModel( parent ), d( new Private( this ) )
+TodoModel::TodoModel( const EventViews::PrefsPtr &preferences, QObject *parent )
+  : QAbstractProxyModel( parent ), d( new Private( preferences, this ) )
 {
-  setObjectName( "KOTodoModel" );
+  setObjectName( "TodoModel" );
 }
 
-KOTodoModel::~KOTodoModel()
+TodoModel::~TodoModel()
 {
   delete d;
 }
 
-QVariant KOTodoModel::data( const QModelIndex &index, int role ) const
+QVariant TodoModel::data( const QModelIndex &index, int role ) const
 {
   Q_ASSERT( index.isValid() );
   if ( !index.isValid() || !d->m_calendar ) {
@@ -289,8 +287,7 @@ QVariant KOTodoModel::data( const QModelIndex &index, int role ) const
     case DescriptionColumn:
       return QVariant( todo->description() );
     case CalendarColumn:
-      //TODO_SERGIO pass the calendar
-      return QVariant( CalendarSupport::displayName( 0, item.parentCollection() ) );
+      return QVariant( CalendarSupport::displayName( d->m_calendar.data(), item.parentCollection() ) );
     }
     return QVariant();
   }
@@ -312,18 +309,16 @@ QVariant KOTodoModel::data( const QModelIndex &index, int role ) const
     case DescriptionColumn:
       return QVariant( todo->description() );
     case CalendarColumn:
-      // TODO_SERGIO: Pass calendar
-      return QVariant( CalendarSupport::displayName( 0, item.parentCollection() ) );
+      return QVariant( CalendarSupport::displayName( d->m_calendar.data(), item.parentCollection() ) );
     }
     return QVariant();
   }
 
   // set the tooltip for every item
   if ( role == Qt::ToolTipRole ) {
-    if ( KOPrefs::instance()->enableToolTips() ) {
+    if ( d->m_preferences->enableToolTips() ) {
       return QVariant( KCalUtils::IncidenceFormatter::toolTipStr(
-                         // TODO_SERGIO: Pass calendar
-                         CalendarSupport::displayName( 0, item.parentCollection() ),
+                         CalendarSupport::displayName( d->m_calendar.data(), item.parentCollection() ),
                          todo, QDate(), true,
                          CalendarSupport::KCalPrefs::instance()->timeSpec() ) );
     } else {
@@ -335,10 +330,10 @@ QVariant KOTodoModel::data( const QModelIndex &index, int role ) const
   if ( role == Qt::BackgroundRole ) {
     if ( todo->isOverdue() ) {
       return QVariant(
-        QBrush( KOPrefs::instance()->todoOverdueColor() ) );
+        QBrush( d->m_preferences->todoOverdueColor() ) );
     } else if ( isDueToday( todo ) ) {
       return QVariant(
-        QBrush( KOPrefs::instance()->todoDueTodayColor() ) );
+        QBrush( d->m_preferences->todoDueTodayColor() ) );
     }
   }
 
@@ -356,7 +351,7 @@ QVariant KOTodoModel::data( const QModelIndex &index, int role ) const
   // the checkbox ( which increments the next occurrence date ).
   if ( role == Qt::DecorationRole && index.column() == SummaryColumn ) {
     if ( todo->recurs() ) {
-      return QVariant( QIcon( KOGlobals::self()->smallIcon( "task-recurring" ) ) );
+      return QVariant( QIcon( SmallIcon( "task-recurring" ) ) );
     }
   }
 
@@ -405,7 +400,7 @@ QVariant KOTodoModel::data( const QModelIndex &index, int role ) const
   return QVariant();
 }
 
-bool KOTodoModel::setData( const QModelIndex &index, const QVariant &value, int role )
+bool TodoModel::setData( const QModelIndex &index, const QVariant &value, int role )
 {
   Q_ASSERT( index.isValid() );
   if ( !d->m_changer ) {
@@ -424,7 +419,7 @@ bool KOTodoModel::setData( const QModelIndex &index, const QVariant &value, int 
   const KCalCore::Todo::Ptr todo = CalendarSupport::todo( item );
 
   if ( !item.isValid() || !todo ) {
-    kWarning() << "KOTodoModel::setData() called, bug item is invalid or doesn't have payload";
+    kWarning() << "TodoModel::setData() called, bug item is invalid or doesn't have payload";
     Q_ASSERT( false );
     return false;
   }
@@ -477,13 +472,14 @@ bool KOTodoModel::setData( const QModelIndex &index, const QVariant &value, int 
     return true;
   } else {
     if ( !( role == Qt::CheckStateRole && index.column() == 0 ) ) {
-      KOHelper::showSaveIncidenceErrorMsg( 0, todo ); //TODO pass parent
+      //KOHelper::showSaveIncidenceErrorMsg( 0, todo ); //TODO pass parent
+      kError() << "Unable to modify incidence";
     }
     return false;
   }
 }
 
-int KOTodoModel::rowCount( const QModelIndex &parent ) const
+int TodoModel::rowCount( const QModelIndex &parent ) const
 {
   if ( sourceModel() ) {
     if ( parent.isValid() ) {
@@ -496,12 +492,12 @@ int KOTodoModel::rowCount( const QModelIndex &parent ) const
   return 0;
 }
 
-int KOTodoModel::columnCount( const QModelIndex & ) const
+int TodoModel::columnCount( const QModelIndex & ) const
 {
   return ColumnCount;
 }
 
-void KOTodoModel::setSourceModel( QAbstractItemModel *model )
+void TodoModel::setSourceModel( QAbstractItemModel *model )
 {
   if ( model == sourceModel() ) {
     return;
@@ -586,12 +582,12 @@ void KOTodoModel::setSourceModel( QAbstractItemModel *model )
   endResetModel();
 }
 
-void KOTodoModel::setIncidenceChanger( Akonadi::IncidenceChanger *changer )
+void TodoModel::setIncidenceChanger( Akonadi::IncidenceChanger *changer )
 {
   d->m_changer = changer;
 }
 
-QVariant KOTodoModel::headerData( int column, Qt::Orientation orientation, int role ) const
+QVariant TodoModel::headerData( int column, Qt::Orientation orientation, int role ) const
 {
   if ( orientation != Qt::Horizontal ) {
     return QVariant();
@@ -632,18 +628,18 @@ QVariant KOTodoModel::headerData( int column, Qt::Orientation orientation, int r
   return QVariant();
 }
 
-void KOTodoModel::setCalendar( const Akonadi::ETMCalendar::Ptr &calendar )
+void TodoModel::setCalendar( const Akonadi::ETMCalendar::Ptr &calendar )
 {
   d->m_calendar = calendar;
 }
 
-Qt::DropActions KOTodoModel::supportedDropActions() const
+Qt::DropActions TodoModel::supportedDropActions() const
 {
   // Qt::CopyAction not supported yet
   return Qt::MoveAction;
 }
 
-QStringList KOTodoModel::mimeTypes() const
+QStringList TodoModel::mimeTypes() const
 {
   static QStringList list;
   if ( list.isEmpty() ) {
@@ -652,7 +648,7 @@ QStringList KOTodoModel::mimeTypes() const
   return list;
 }
 
-QMimeData *KOTodoModel::mimeData( const QModelIndexList &indexes ) const
+QMimeData *TodoModel::mimeData( const QModelIndexList &indexes ) const
 {
   Akonadi::Item::List items;
   Q_FOREACH ( const QModelIndex &index, indexes ) {
@@ -665,7 +661,7 @@ QMimeData *KOTodoModel::mimeData( const QModelIndexList &indexes ) const
   return CalendarSupport::createMimeData( items, d->m_calendar->timeSpec() );
 }
 
-bool KOTodoModel::dropMimeData( const QMimeData *data, Qt::DropAction action,
+bool TodoModel::dropMimeData( const QMimeData *data, Qt::DropAction action,
                               int row, int column, const QModelIndex &parent )
 {
   Q_UNUSED( row );
@@ -758,7 +754,7 @@ bool KOTodoModel::dropMimeData( const QMimeData *data, Qt::DropAction action,
   return false;
 }
 
-Qt::ItemFlags KOTodoModel::flags( const QModelIndex &index ) const
+Qt::ItemFlags TodoModel::flags( const QModelIndex &index ) const
 {
   if ( !index.isValid() ) {
     return 0;
@@ -808,7 +804,7 @@ Qt::ItemFlags KOTodoModel::flags( const QModelIndex &index ) const
   return ret;
 }
 
-QModelIndex KOTodoModel::mapFromSource( const QModelIndex &sourceIndex ) const
+QModelIndex TodoModel::mapFromSource( const QModelIndex &sourceIndex ) const
 {
   if ( !sourceModel() || !sourceIndex.isValid() ) {
     return QModelIndex();
@@ -819,7 +815,7 @@ QModelIndex KOTodoModel::mapFromSource( const QModelIndex &sourceIndex ) const
   return createIndex( sourceIndex.row(), 0, sourceIndex.internalPointer() );
 }
 
-QModelIndex KOTodoModel::mapToSource( const QModelIndex &proxyIndex ) const
+QModelIndex TodoModel::mapToSource( const QModelIndex &proxyIndex ) const
 {
   if ( !sourceModel() || !proxyIndex.isValid() ) {
     return QModelIndex();
@@ -839,7 +835,7 @@ QModelIndex KOTodoModel::mapToSource( const QModelIndex &proxyIndex ) const
   return sourceIndex;
 }
 
-QModelIndex KOTodoModel::index( int row, int column, const QModelIndex &parent ) const
+QModelIndex TodoModel::index( int row, int column, const QModelIndex &parent ) const
 {
   if ( !sourceModel() ) {
     return QModelIndex();
@@ -864,7 +860,7 @@ QModelIndex KOTodoModel::index( int row, int column, const QModelIndex &parent )
   return QModelIndex();
 }
 
-QModelIndex KOTodoModel::parent( const QModelIndex &child ) const
+QModelIndex TodoModel::parent( const QModelIndex &child ) const
 {
   if ( !sourceModel() || !child.isValid() ) {
     return QModelIndex();
@@ -882,7 +878,7 @@ QModelIndex KOTodoModel::parent( const QModelIndex &child ) const
   return QModelIndex();
 }
 
-QModelIndex KOTodoModel::buddy( const QModelIndex &index ) const
+QModelIndex TodoModel::buddy( const QModelIndex &index ) const
 {
   // We reimplement because the default implementation calls mapToSource() and
   // source model doesn't have the same number of columns.

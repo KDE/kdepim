@@ -813,6 +813,16 @@ void Prefs::setFullViewMonth( bool fullView )
   d->setBool( d->mBaseConfig.fullViewMonthItem(), fullView );
 }
 
+bool Prefs::sortCompletedTodosSeparately() const
+{
+  return d->getBool( d->mBaseConfig.sortCompletedTodosSeparatelyItem() );
+}
+
+void Prefs::setSortCompletedTodosSeparately( bool enable )
+{
+  d->setBool( d->mBaseConfig.sortCompletedTodosSeparatelyItem(), enable );
+}
+
 void Prefs::setEnableToolTips( bool enable )
 {
   d->setBool( d->mBaseConfig.enableToolTipsItem(), enable );
@@ -1050,4 +1060,57 @@ void Prefs::setMonthViewIcons( const QSet<EventViews::EventView::ItemIcon> &icon
   d->mBaseConfig.mMonthViewIcons = icons;
 }
 
-// kate: space-indent on; indent-width 2; replace-tabs on;
+void Prefs::setFlatListTodo( bool enable )
+{
+  d->mBaseConfig.mFlatListTodo = enable;
+}
+
+bool Prefs::flatListTodo() const
+{
+  return d->mBaseConfig.mFlatListTodo;
+}
+
+void Prefs::setFullViewTodo( bool enable )
+{
+  d->mBaseConfig.mFullViewTodo = enable;
+}
+
+bool Prefs::fullViewTodo() const
+{
+  return d->mBaseConfig.mFullViewTodo;
+}
+
+bool Prefs::enableTodoQuickSearch() const
+{
+  return d->mBaseConfig.mEnableTodoQuickSearch;
+}
+
+void Prefs::setEnableTodoQuickSearch( bool enable )
+{
+  d->mBaseConfig.mEnableTodoQuickSearch = enable;
+}
+
+bool Prefs::enableQuickTodo() const
+{
+  return d->mBaseConfig.mEnableQuickTodo;
+}
+
+void Prefs::setEnableQuickTodo( bool enable )
+{
+  d->mBaseConfig.mEnableQuickTodo = enable;
+}
+
+bool Prefs::highlightTodos() const
+{
+  return d->mBaseConfig.mHighlightTodos;
+}
+
+void Prefs::setHighlightTodos( bool highlight )
+{
+  d->mBaseConfig.mHighlightTodos = highlight;
+}
+
+KConfig *Prefs::config() const
+{
+  return d->mAppConfig ? d->mAppConfig->config() : d->mBaseConfig.config();
+}

@@ -103,7 +103,7 @@ void TimelineView::Private::newEventWithHint( const QDateTime &dt )
 
 TimelineItem *TimelineView::Private::calendarItemForIncidence( const Akonadi::Item &incidence )
 {
-  Akonadi::ETMCalendar *calres = q->calendar();
+  Akonadi::ETMCalendar::Ptr calres = q->calendar();
   TimelineItem *item = 0;
   if ( !calres ) {
     item = mCalendarItemMap.value( -1 );

@@ -18,14 +18,10 @@
 */
 
 #include "categoryhierarchyreader.h"
-
-#include <calendarsupport/categoryconfig.h>
-
+#include "categoryconfig.h"
 #include <KComboBox>
-
 #include <QTreeWidget>
 
-using namespace IncidenceEditorNG;
 using namespace CalendarSupport;
 
 inline QString &quote( QString &string )

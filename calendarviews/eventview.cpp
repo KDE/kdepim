@@ -28,7 +28,7 @@
 #include "prefs.h"
 
 #include <Akonadi/EntityTreeModel>
-#include <Akonadi/Calendar/ETMCalendar>
+
 #include <calendarsupport/collectionselection.h>
 #include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/utils.h>
@@ -166,7 +166,7 @@ int EventView::showMoveRecurDialog( const Incidence::Ptr &inc, const QDate &date
   return KCalUtils::RecurrenceActions::NoOccurrence;
 }
 
-void EventView::setCalendar( Akonadi::ETMCalendar *calendar )
+void EventView::setCalendar( const Akonadi::ETMCalendar::Ptr &calendar )
 {
   Q_D( EventView );
   if ( d->calendar != calendar ) {
@@ -177,7 +177,7 @@ void EventView::setCalendar( Akonadi::ETMCalendar *calendar )
   }
 }
 
-Akonadi::ETMCalendar *EventView::calendar() const
+Akonadi::ETMCalendar::Ptr EventView::calendar() const
 {
   Q_D( const EventView );
   return d->calendar;
@@ -410,11 +410,6 @@ void EventView::setCustomCollectionSelectionProxyModel( KCheckableProxyModel *mo
   delete d->collectionSelectionModel;
   d->collectionSelectionModel = model;
   d->setUpModels();
-}
-
-void EventView::collectionSelectionChanged()
-{
-
 }
 
 KCheckableProxyModel *EventView::customCollectionSelectionProxyModel() const

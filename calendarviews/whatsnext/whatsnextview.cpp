@@ -314,7 +314,7 @@ void WhatsNextView::showIncidence( const QString &uid )
 {
   Akonadi::Item item;
 
-  Akonadi::ETMCalendar *cal = calendar();
+  Akonadi::ETMCalendar::Ptr cal = calendar();
   if ( !cal ) {
     return;
   }

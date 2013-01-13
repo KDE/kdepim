@@ -16,10 +16,10 @@
   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
   Boston, MA 02110-1301, USA.
 */
-#ifndef INCIDENCEEDITOR_CATEGORYHIERARCHYREADER_H
-#define INCIDENCEEDITOR_CATEGORYHIERARCHYREADER_H
+#ifndef CALENDARSUPPORT_CATEGORYHIERARCHYREADER_H
+#define CALENDARSUPPORT_CATEGORYHIERARCHYREADER_H
 
-#include "incidenceeditors-ng_export.h"
+#include "calendarsupport_export.h"
 
 #include <QVariant>
 
@@ -28,9 +28,9 @@ class KComboBox;
 class QTreeWidget;
 class QTreeWidgetItem;
 
-namespace IncidenceEditorNG {
+namespace CalendarSupport {
 
-class INCIDENCEEDITORS_NG_EXPORT CategoryHierarchyReader
+class CALENDARSUPPORT_EXPORT CategoryHierarchyReader
 {
   public:
     void read( QStringList categories );
@@ -45,7 +45,7 @@ class INCIDENCEEDITORS_NG_EXPORT CategoryHierarchyReader
     virtual int depth() const = 0;
 };
 
-class INCIDENCEEDITORS_NG_EXPORT CategoryHierarchyReaderQComboBox : public CategoryHierarchyReader
+class CALENDARSUPPORT_EXPORT CategoryHierarchyReaderQComboBox : public CategoryHierarchyReader
 {
   public:
     CategoryHierarchyReaderQComboBox( KComboBox *box ) : mBox( box ), mCurrentDepth( 0 ) {}
@@ -63,7 +63,7 @@ class INCIDENCEEDITORS_NG_EXPORT CategoryHierarchyReaderQComboBox : public Categ
 };
 
 #ifndef QT_NO_TREEWIDGET
-class INCIDENCEEDITORS_NG_EXPORT CategoryHierarchyReaderQTreeWidget : public CategoryHierarchyReader
+class CALENDARSUPPORT_EXPORT CategoryHierarchyReaderQTreeWidget : public CategoryHierarchyReader
 {
   public:
     explicit CategoryHierarchyReaderQTreeWidget( QTreeWidget *tree )

@@ -62,7 +62,7 @@ QPixmap *AgendaItem::eventPxmp = 0;
 
 //-----------------------------------------------------------------------------
 
-AgendaItem::AgendaItem( EventView *eventView, Akonadi::ETMCalendar *calendar,
+AgendaItem::AgendaItem( EventView *eventView, const Akonadi::ETMCalendar::Ptr &calendar,
                         const Akonadi::Item &item,
                         int itemPos, int itemCount,
                         const QDate &qd, bool isSelected, QWidget *parent )
@@ -1367,7 +1367,7 @@ bool AgendaItem::event( QEvent *event )
       QToolTip::showText(
         helpEvent->globalPos(),
         KCalUtils::IncidenceFormatter::toolTipStr(
-          CalendarSupport::displayName( mCalendar, mIncidence.parentCollection() ),
+          CalendarSupport::displayName( mCalendar.data(), mIncidence.parentCollection() ),
           CalendarSupport::incidence( mIncidence ),
           mDate, true, mEventView->preferences()->timeSpec() ),
         this );

@@ -30,6 +30,7 @@
 
 #include <Akonadi/Collection>
 #include <Akonadi/Item>
+#include <Akonadi/Calendar/ETMCalendar>
 
 #include <KCalCore/Incidence>
 #include <KCalCore/Todo>
@@ -57,7 +58,6 @@ namespace CalendarSupport {
 
 namespace Akonadi {
   class IncidenceChanger;
-  class ETMCalendar;
 }
 
 class KCheckableProxyModel;
@@ -136,12 +136,12 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
      */
     ~EventView();
 
-    virtual void setCalendar( Akonadi::ETMCalendar *cal );
+    virtual void setCalendar( const Akonadi::ETMCalendar::Ptr &cal );
 
     /**
       Return calendar object of this view.
     */
-    virtual Akonadi::ETMCalendar *calendar() const;
+    virtual Akonadi::ETMCalendar::Ptr calendar() const;
 
     /*
       update config is called after prefs are set.
@@ -474,7 +474,6 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
     void newJournalSignal( const QDate & );
 
   protected Q_SLOTS:
-    virtual void collectionSelectionChanged();
     virtual void calendarReset();
 
   protected:

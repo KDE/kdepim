@@ -349,7 +349,7 @@ void TimelineView::showDates( const QDate &start, const QDate &end, const QDate 
   uint index = 0;
   // item for every calendar
   TimelineItem *item = 0;
-  Akonadi::ETMCalendar *calres = calendar();
+  Akonadi::ETMCalendar::Ptr calres = calendar();
   if ( !calres ) {
     item = new TimelineItem( calendar(),
                              index++,
@@ -370,13 +370,13 @@ void TimelineView::showDates( const QDate &start, const QDate &end, const QDate 
                                  d->mGantt );
         d->mLeftView->addTopLevelItem(
           new QTreeWidgetItem(
-            QStringList() << CalendarSupport::displayName( calendar(), collection ) ) );
+            QStringList() << CalendarSupport::displayName( calendar().data(), collection ) ) );
         const QColor resourceColor = EventViews::resourceColor( collection, preferences() );
         if ( resourceColor.isValid() ) {
           item->setColor( resourceColor );
         }
         kDebug() << "Created item " << item
-                 << " (" <<  CalendarSupport::displayName( calendar(), collection ) << ") "
+                 << " (" <<  CalendarSupport::displayName( calendar().data(), collection ) << ") "
                  << "with index " <<  index - 1 << " from collection " << collection.id();
         d->mCalendarItemMap.insert( collection.id(), item );
       }

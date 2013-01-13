@@ -54,7 +54,7 @@ class EventViewPrivate
     void setUpModels();
 
   public: /// Members
-    Akonadi::ETMCalendar *calendar;
+    Akonadi::ETMCalendar::Ptr calendar;
     CalendarSupport::CollectionSelection *customCollectionSelection;
     KCheckableProxyModel *collectionSelectionModel;
 

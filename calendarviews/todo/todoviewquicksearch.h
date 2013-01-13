@@ -24,8 +24,8 @@
   without including the source code for Qt in the source distribution.
 */
 
-#ifndef KORG_VIEWS_KOTODOVIEWQUICKSEARCH_H
-#define KORG_VIEWS_KOTODOVIEWQUICKSEARCH_H
+#ifndef CALENDARVIEWS_TODOVIEWQUICKSEARCH_H
+#define CALENDARVIEWS_TODOVIEWQUICKSEARCH_H
 
 #include <Akonadi/Calendar/ETMCalendar>
 #include <QWidget>
@@ -36,12 +36,13 @@ namespace KPIM {
 
 class KLineEdit;
 
-class KOTodoViewQuickSearch : public QWidget
+class TodoViewQuickSearch : public QWidget
 {
   Q_OBJECT
   public:
-    KOTodoViewQuickSearch( const Akonadi::ETMCalendar::Ptr &calendar, QWidget *parent );
-    virtual ~KOTodoViewQuickSearch() {}
+    TodoViewQuickSearch( const Akonadi::ETMCalendar::Ptr &calendar,
+                         QWidget *parent );
+    ~TodoViewQuickSearch() {}
 
     void setCalendar( const Akonadi::ETMCalendar::Ptr &calendar );
     void updateCategories();

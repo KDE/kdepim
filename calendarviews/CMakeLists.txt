@@ -62,6 +62,16 @@ set(eventviews_LIB_SRCS
 
   multiagenda/multiagendaview.cpp
 
+  todo/tododelegates.cpp
+  todo/todomodel.cpp
+  todo/incidencetreemodel.cpp
+
+  todo/todoviewquickaddline.cpp
+  todo/todoviewquicksearch.cpp
+  todo/todoviewsortfilterproxymodel.cpp
+  todo/todoviewview.cpp
+  todo/todoview.cpp
+
   timeline/timelineview.cpp
   timeline/timelineitem.cpp
   timeline/timelineview_p.cpp

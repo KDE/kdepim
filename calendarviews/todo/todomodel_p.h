@@ -21,10 +21,10 @@
   without including the source code for Qt in the source distribution.
 */
 
-#ifndef KORG_VIEWS_KOTODOMODEL_P_H
-#define KORG_VIEWS_KOTODOMODEL_P_H
+#ifndef CALENDARVIEWS_TODOMODEL_P_H
+#define CALENDARVIEWS_TODOMODEL_P_H
 
-#include "kotodomodel.h"
+#include "todomodel.h"
 
 #include <Akonadi/Item>
 #include <Akonadi/Calendar/ETMCalendar>
@@ -36,11 +36,11 @@ namespace Akonadi {
   class IncidenceChanger;
 }
 
-class KOTodoModel::Private : public QObject
+class TodoModel::Private : public QObject
 {
   Q_OBJECT
   public:
-    Private( KOTodoModel *qq );
+    Private( const EventViews::PrefsPtr &preferences, TodoModel *qq );
 
     //TODO: O(N) complexity, see if the profiler complains about this
     Akonadi::Item findItemByUid( const QString &uid, const QModelIndex &parent ) const;
@@ -53,6 +53,7 @@ class KOTodoModel::Private : public QObject
     QList<QPersistentModelIndex> m_layoutChangePersistentIndexes;
     QModelIndexList m_persistentIndexes;
     QList<int> m_columns;
+    EventViews::PrefsPtr m_preferences;
 
   private Q_SLOTS:
     void onDataChanged( const QModelIndex &begin, const QModelIndex &end );
@@ -72,7 +73,7 @@ class KOTodoModel::Private : public QObject
     void onLayoutChanged();
 
   private:
-    KOTodoModel *q;
+    TodoModel *const q;
 };
 
 #endif
