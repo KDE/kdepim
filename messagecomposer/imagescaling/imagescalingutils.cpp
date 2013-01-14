@@ -27,6 +27,7 @@ bool Utils::resizeImage(MessageCore::AttachmentPart::Ptr part)
     const QString pattern = MessageComposer::MessageComposerSettings::self()->filterSourcePattern();
 
     if (!pattern.isEmpty()) {
+        //TODO use regexp ?
         const QStringList lstPattern = pattern.split(QLatin1Char(';'));
         Q_FOREACH (const QString& patternStr, lstPattern) {
             switch (MessageComposer::MessageComposerSettings::self()->filterSourceType()) {
