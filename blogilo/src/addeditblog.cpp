@@ -266,30 +266,35 @@ void AddEditBlog::fetchBlogId()
         case 1:
         case 2:
         case 3:
-            d->mBlog = new KBlog::Blogger1( KUrl( d->ui.txtUrl->text() ), this );
-            dynamic_cast<KBlog::Blogger1*>( d->mBlog )->setUsername( d->ui.txtUser->text() );
-            dynamic_cast<KBlog::Blogger1*>( d->mBlog )->setPassword( d->ui.txtPass->text() );
-            connect( dynamic_cast<KBlog::Blogger1*>( d->mBlog ) , SIGNAL(listedBlogs(QList<QMap<QString,QString> >)),
+        {
+	    KBlog::Blogger1 *blog = new KBlog::Blogger1( KUrl( d->ui.txtUrl->text() ), this );
+            d->mBlog = blog;
+            blog->setUsername( d->ui.txtUser->text() );
+            blog->setPassword( d->ui.txtPass->text() );
+            connect( blog , SIGNAL(listedBlogs(QList<QMap<QString,QString> >)),
                      this, SLOT(fetchedBlogId(QList<QMap<QString,QString> >)) );
             d->mFetchBlogIdTimer = new QTimer( this );
             d->mFetchBlogIdTimer->setSingleShot( true );
             connect( d->mFetchBlogIdTimer, SIGNAL(timeout()), this, SLOT(handleFetchIDTimeout()) );
             d->mFetchBlogIdTimer->start( TIMEOUT );
-            dynamic_cast<KBlog::Blogger1*>( d->mBlog )->listBlogs();
+            blog->listBlogs();
             break;
-
+        }
         case 4:
-            d->mBlog = new KBlog::GData( d->ui.txtUrl->text() , this );
-            dynamic_cast<KBlog::GData*>( d->mBlog )->setUsername( d->ui.txtUser->text() );
-            dynamic_cast<KBlog::GData*>( d->mBlog )->setPassword( d->ui.txtPass->text() );
-            connect( dynamic_cast<KBlog::GData*>( d->mBlog ), SIGNAL(fetchedProfileId(QString)),
+	{
+	    KBlog::GData* blog = new KBlog::GData( d->ui.txtUrl->text() , this );
+            d->mBlog = blog;
+            blog->setUsername( d->ui.txtUser->text() );
+            blog->setPassword( d->ui.txtPass->text() );
+            connect( blog, SIGNAL(fetchedProfileId(QString)),
                      this, SLOT(fetchedProfileId(QString)) );
-            dynamic_cast<KBlog::GData*>( d->mBlog )->fetchProfileId();
+            blog->fetchProfileId();
             d->mFetchProfileIdTimer = new QTimer( this );
             d->mFetchProfileIdTimer->setSingleShot( true );
             connect( d->mFetchProfileIdTimer, SIGNAL(timeout()), this, SLOT(handleFetchIDTimeout()) );
             d->mFetchProfileIdTimer->start( TIMEOUT );
             break;
+	}
         default:
             kDebug()<<"Unknown API";
             return;

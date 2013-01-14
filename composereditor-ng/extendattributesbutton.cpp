@@ -23,6 +23,8 @@
 #include <KLocale>
 
 #include <QPointer>
+#include <QWebElement>
+
 
 namespace ComposerEditorNG
 {

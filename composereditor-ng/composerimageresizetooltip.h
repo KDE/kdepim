@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013 Montel Laurent <montel.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -17,35 +17,27 @@
   02110-1301, USA.
 
 */
+#ifndef COMPOSERIMAGERESIZETOOLTIP_H
+#define COMPOSERIMAGERESIZETOOLTIP_H
 
-#ifndef EXTENDATTRIBUTESBUTTON_H
-#define EXTENDATTRIBUTESBUTTON_H
-
-#include "extendattributesdialog.h"
-
-#include <QPushButton>
-
-class QWebElement;
+#include <QWidget>
 
 namespace ComposerEditorNG
 {
+class ComposerImageResizeToolTipPrivate;
 
-class ExtendAttributesButtonPrivate;
-class ExtendAttributesButton : public QPushButton
+class ComposerImageResizeToolTip : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ExtendAttributesButton(const QWebElement &element, ComposerEditorNG::ExtendAttributesDialog::ExtendType type, QWidget *parent);
-    ~ExtendAttributesButton();
-
-Q_SIGNALS:
-    void webElementChanged();
-
+    explicit ComposerImageResizeToolTip(QWidget *parent);
+    ~ComposerImageResizeToolTip();
+    void displaySize(const QSize& s);
 private:
-    friend class ExtendAttributesButtonPrivate;
-    ExtendAttributesButtonPrivate * const d;
-    Q_PRIVATE_SLOT(d, void _k_slotClicked() )
+    friend class ComposerImageResizeToolTipPrivate;
+    ComposerImageResizeToolTipPrivate * const d;
 };
+
 }
 
-#endif // EXTENDATTRIBUTESBUTTON_H
+#endif // COMPOSERIMAGERESIZETOOLTIP_H

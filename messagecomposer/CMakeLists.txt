@@ -76,15 +76,15 @@ set( messagecomposer_src
      autocorrection/import/importkmailautocorrection.cpp
      autocorrection/import/importabstractautocorrection.cpp
      selectspecialchar.cpp
-     autoimageresizing/imagescalingjob.cpp
-     autoimageresizing/imagescalingdialog.cpp
-     autoimageresizing/imagescalingwidget.cpp
-     autoimageresizing/imagescalingutils.cpp
+     imagescaling/imagescalingjob.cpp
+     imagescaling/imagescalingdialog.cpp
+     imagescaling/imagescalingwidget.cpp
+     imagescaling/imagescalingutils.cpp
 )
 
 kde4_add_ui_files(messagecomposer_src
      autocorrection/composerautocorrectionwidget.ui
-     autoimageresizing/imagescalingwidget.ui
+     imagescaling/imagescalingwidget.ui
 )
 
 
@@ -93,15 +93,15 @@ if (NOT WINCE)
   set( messagecomposer_src ${messagecomposer_src}
      distributionlistdialog.cpp
   )
-endif (NOT WINCE)
+endif ()
 
 if(KDEPIM_ENTERPRISE_BUILD)
   set(WARN_TOOMANY_RECIPIENTS_DEFAULT true)
   set(ALLOW_SEMICOLON_AS_ADDRESS_SEPARATOR_DEFAULT true)
-else(KDEPIM_ENTERPRISE_BUILD)
+else()
   set(WARN_TOOMANY_RECIPIENTS_DEFAULT false)
   set(ALLOW_SEMICOLON_AS_ADDRESS_SEPARATOR_DEFAULT false)
-endif(KDEPIM_ENTERPRISE_BUILD)
+endif()
 
 configure_file(messagecomposer.kcfg.cmake ${CMAKE_CURRENT_BINARY_DIR}/messagecomposer.kcfg)
 

@@ -35,12 +35,12 @@ IF(WIN32)
     ${blogilo_SRCS}
     composer/bilbobrowser_win.cpp
     )
-else(WIN32)
+else()
     set(blogilo_SRCS
     ${blogilo_SRCS}
     composer/bilbobrowser.cpp
     )
-endif(WIN32)
+endif()
 
 kde4_add_ui_files(
    blogilo_SRCS

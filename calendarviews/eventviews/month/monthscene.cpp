@@ -727,7 +727,7 @@ void MonthScene::selectItem( MonthItem *item )
   mSelectedItem = item;
   Q_ASSERT( CalendarSupport::hasIncidence( tmp->akonadiItem() ) );
 
-  if ( mMonthView && mMonthView->selectedIncidenceDates().isEmpty() ) {
+  if ( mMonthView->selectedIncidenceDates().isEmpty() ) {
     emit incidenceSelected( tmp->akonadiItem(), QDate() );
   } else {
     emit incidenceSelected( tmp->akonadiItem(), mMonthView->selectedIncidenceDates().first() );

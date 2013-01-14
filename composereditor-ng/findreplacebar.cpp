@@ -217,7 +217,7 @@ FindReplaceBar::FindReplaceBar(KWebView *parent)
 
     QToolButton * closeBtn = new QToolButton( this );
     closeBtn->setIcon( KIcon( QLatin1String("dialog-close") ) );
-    closeBtn->setIconSize( QSize( 24, 24 ) );
+    closeBtn->setIconSize( QSize( 16, 16 ) );
     closeBtn->setToolTip( i18n( "Close" ) );
 
 #ifndef QT_NO_ACCESSIBILITY

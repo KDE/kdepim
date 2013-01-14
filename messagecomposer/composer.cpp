@@ -33,8 +33,8 @@
 #include "signencryptjob.h"
 #include "skeletonmessagejob.h"
 #include "transparentjob.h"
-#include "autoimageresizing/imagescalingjob.h"
-#include "autoimageresizing/imagescalingutils.h"
+#include "imagescaling/imagescalingjob.h"
+#include "imagescaling/imagescalingutils.h"
 #include "messagecomposersettings.h"
 
 
@@ -520,7 +520,7 @@ void Composer::addAttachmentPart( AttachmentPart::Ptr part, bool autoresizeImage
   Q_ASSERT( !d->started );
   Q_ASSERT( !d->attachmentParts.contains( part ) );
   if( autoresizeImage ) {      
-      if (MessageComposer::Util::resizeImage(part)) {
+      if (MessageComposer::Utils::resizeImage(part)) {
           MessageComposer::ImageScalingJob *autoResizeJob = new MessageComposer::ImageScalingJob(this);
           if(autoResizeJob->loadImageFromData(part->data())) {
               if(autoResizeJob->resizeImage()) {

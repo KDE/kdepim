@@ -1,4 +1,4 @@
-/* Copyright (C) 2011, 2012 Laurent Montel <montel@kde.org>
+/* Copyright (C) 2011, 2012, 2013 Laurent Montel <montel@kde.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -23,6 +23,7 @@
 #include <kiconloader.h>
 #include <kmessagebox.h>
 #include <kfiledialog.h>
+#include <KTextEdit>
 #include <errno.h>
 
 #include <QSplitter>
@@ -77,7 +78,7 @@ SieveEditor::SieveEditor( QWidget * parent )
   connect( shortcut, SIGNAL(activated()), SLOT(slotFind()) );
   connect( mTextEdit, SIGNAL(findText()), SLOT(slotFind()) );
    
-  mDebugTextEdit = new QTextEdit;
+  mDebugTextEdit = new KTextEdit;
   mDebugTextEdit->setReadOnly( true );
   splitter->addWidget( widget );
   splitter->addWidget( mDebugTextEdit );
@@ -87,12 +88,21 @@ SieveEditor::SieveEditor( QWidget * parent )
   connect( this, SIGNAL(user3Clicked()), SLOT(slotImport()) );
 
   setMainWidget( mainWidget );
-  resize( 800,600);
+  KConfigGroup group( KGlobal::config(), "SieveEditor" );
+  const QSize sizeDialog = group.readEntry( "Size", QSize() );
+  if ( sizeDialog.isValid() ) {
+    resize( sizeDialog );
+  } else {
+    resize( 800,600);
+  }
+
   mTextEdit->setFocus();
 }
 
 SieveEditor::~SieveEditor()
 {
+  KConfigGroup group( KGlobal::config(), "SieveEditor" );
+  group.writeEntry( "Size", size() );
 }
 
 void SieveEditor::slotFind()

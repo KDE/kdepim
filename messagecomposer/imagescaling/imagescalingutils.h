@@ -15,23 +15,15 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#ifndef AUTORESIZEIMAGEUTIL_H
+#define AUTORESIZEIMAGEUTIL_H
+#include <messagecore/attachmentpart.h>
 
-#include "imagescalingutils.h"
-#include "messagecomposersettings.h"
-
-using namespace MessageComposer;
-
-bool Util::resizeImage(MessageCore::AttachmentPart::Ptr part)
-{
-    const QString filename = part->fileName();
-    if(MessageComposer::MessageComposerSettings::self()->skipImageLowerSizeEnabled() &&
-            (part->size() > MessageComposer::MessageComposerSettings::self()->skipImageLowerSize() *1024)) {
-        if(part->mimeType() == "image/gif" ||
-                part->mimeType() == "image/jpeg" ||
-                part->mimeType() == "image/png" ) {
-            return true;
-        }
-    }
-    return false;
+namespace MessageComposer {
+namespace Utils {
+bool resizeImage(MessageCore::AttachmentPart::Ptr part);
 }
 
+}
+
+#endif // AUTORESIZEIMAGEUTIL_H

@@ -124,7 +124,9 @@ void ComposerTableActionMenuPrivate::updateActions()
 
 void ComposerTableActionMenuPrivate::_k_slotInsertRowBelow()
 {
-    //TODO
+    //Fix delete cells contents.
+    QWebElement e = webElement.parent().clone();
+    webElement.parent().prependOutside(e);
 }
 
 void ComposerTableActionMenuPrivate::_k_slotTableFormat()
@@ -147,44 +149,44 @@ ComposerTableActionMenu::ComposerTableActionMenu(const QWebElement& element,QObj
     KActionMenu *insertMenu = new KActionMenu( i18n( "Insert" ), this );
     addAction( insertMenu );
 
-    d->action_insert_table = new KAction( KIcon(QLatin1String("table")), i18n( "Table..." ), this );
+    d->action_insert_table = new KAction( KIcon(QLatin1String("table")), i18nc( "@item:inmenu Insert", "Table..." ), this );
     insertMenu->addAction( d->action_insert_table );
     connect( d->action_insert_table, SIGNAL(triggered(bool)), SIGNAL(insertNewTable()) );
 
     insertMenu->addSeparator();
-    d->action_insert_row_below = new KAction( KIcon(QLatin1String("edit-table-insert-row-below")), i18n( "Row Below" ), this );
+    d->action_insert_row_below = new KAction( KIcon(QLatin1String("edit-table-insert-row-below")), i18nc( "@item:inmenu Insert", "Row Below" ), this );
     insertMenu->addAction( d->action_insert_row_below );
     connect( d->action_insert_row_below, SIGNAL(triggered(bool)), SLOT(_k_slotInsertRowBelow()) );
 
     insertMenu->addSeparator();
-    d->action_insert_cell_before = new KAction( i18n( "Cell Before" ), this );
+    d->action_insert_cell_before = new KAction( i18nc( "@item:inmenu Insert", "Cell Before" ), this );
     insertMenu->addAction( d->action_insert_cell_before );
     connect( d->action_insert_cell_before, SIGNAL(triggered(bool)), SLOT(_k_slotInsertCellBefore()) );
 
-    d->action_insert_cell_after = new KAction( i18n( "Cell After" ), this );
+    d->action_insert_cell_after = new KAction( i18nc( "@item:inmenu Insert", "Cell After" ), this );
     insertMenu->addAction( d->action_insert_cell_after );
     connect( d->action_insert_cell_after, SIGNAL(triggered(bool)), SLOT(_k_slotInsertCellAfter()) );
 
     KActionMenu *removeMenu = new KActionMenu( i18n( "Delete" ), this );
     addAction( removeMenu );
 
-    d->action_remove_table = new KAction( i18n( "Table" ), this );
+    d->action_remove_table = new KAction( i18nc( "@item:inmenu Delete", "Table" ), this );
     removeMenu->addAction( d->action_remove_table );
     connect( d->action_remove_table, SIGNAL(triggered(bool)), SLOT(_k_slotRemoveTable()) );
 
-    d->action_remove_row = new KAction( i18n( "Row" ), this );
+    d->action_remove_row = new KAction( i18nc( "@item:inmenu Delete", "Row" ), this );
     removeMenu->addAction( d->action_remove_row );
     connect( d->action_remove_row, SIGNAL(triggered(bool)), SLOT(_k_slotRemoveRow()) );
 
-    d->action_remove_column = new KAction( i18n( "Column" ), this );
+    d->action_remove_column = new KAction( i18nc( "@item:inmenu Delete", "Column" ), this );
     removeMenu->addAction( d->action_remove_column );
     connect( d->action_remove_column, SIGNAL(triggered(bool)), SLOT(_k_slotRemoveColumn()) );
 
-    d->action_remove_cell = new KAction( i18n( "Cell" ), this );
+    d->action_remove_cell = new KAction( i18nc( "@item:inmenu Delete", "Cell" ), this );
     removeMenu->addAction( d->action_remove_cell );
     connect( d->action_remove_cell, SIGNAL(triggered(bool)), SLOT(_k_slotRemoveCell()) );
 
-    d->action_remove_cell_contents = new KAction( i18n( "Cell Contents" ), this );
+    d->action_remove_cell_contents = new KAction( i18nc( "@item:inmenu Delete", "Cell Contents" ), this );
     removeMenu->addAction( d->action_remove_cell_contents );
     connect( d->action_remove_cell_contents, SIGNAL(triggered(bool)), SLOT(_k_slotRemoveCellContents()) );
 

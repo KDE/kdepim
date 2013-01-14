@@ -44,7 +44,7 @@ SieveFindBar::SieveFindBar( QPlainTextEdit * view, QWidget * parent )
 
   QToolButton * closeBtn = new QToolButton( this );
   closeBtn->setIcon( KIcon( "dialog-close" ) );
-  closeBtn->setIconSize( QSize( 24, 24 ) );
+  closeBtn->setIconSize( QSize( 16, 16 ) );
   closeBtn->setToolTip( i18n( "Close" ) );
 
 #ifndef QT_NO_ACCESSIBILITY
@@ -124,8 +124,10 @@ void SieveFindBar::autoSearch( const QString& str )
   const bool isNotEmpty = ( !str.isEmpty() );
   m_findPrevBtn->setEnabled( isNotEmpty );
   m_findNextBtn->setEnabled( isNotEmpty );
-  if ( isNotEmpty )
+  if ( isNotEmpty ) {
+    m_view->moveCursor(QTextCursor::Start);
     QTimer::singleShot( 0, this, SLOT(slotSearchText()) );
+  }
   else
     clearSelections();
 }
@@ -185,7 +187,7 @@ void SieveFindBar::searchText( bool backward, bool isAutoSearch )
     cursor.setPosition( cursor.selectionStart() );
     m_view->setTextCursor( cursor );
   }
-  else if( !mLastSearchStr.contains( m_search->text(), Qt::CaseSensitive ))
+  else if ( !mLastSearchStr.contains( m_search->text(), Qt::CaseSensitive ))
   {
     clearSelections();
   }
@@ -261,7 +263,7 @@ bool SieveFindBar::event(QEvent* e)
     if (shortCutOverride || e->type() == QEvent::KeyPress) {
         QKeyEvent* kev = static_cast<QKeyEvent* >(e);
         if (kev->key() == Qt::Key_Escape) {
-            if( shortCutOverride ) {
+            if ( shortCutOverride ) {
                 e->accept();
                 return true;
             }
@@ -272,7 +274,7 @@ bool SieveFindBar::event(QEvent* e)
         else if ( kev->key() == Qt::Key_Enter ||
                   kev->key() == Qt::Key_Return ) {
           e->accept();
-          if( shortCutOverride ) {
+          if ( shortCutOverride ) {
              return true;
           }
           if ( kev->modifiers() & Qt::ShiftModifier )

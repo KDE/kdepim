@@ -28,6 +28,7 @@
 #include <QTreeWidgetItem>
 #include <QWebElement>
 #include <QWebFrame>
+#include <QHeaderView>
 
 namespace ComposerEditorNG
 {
@@ -39,8 +40,9 @@ public:
           q(qq)
     {
         QVBoxLayout *lay = new QVBoxLayout;
-        mTreeWidget = new QTreeWidget;
-        lay->addWidget(mTreeWidget);
+        treeWidget = new QTreeWidget;
+        treeWidget->header()->hide();
+        lay->addWidget(treeWidget);
         QPushButton *button = new QPushButton( i18n("Update"));
         q->connect(button, SIGNAL(clicked()), q, SLOT(_k_slotUpdate()));
         lay->addWidget(button);
@@ -49,20 +51,20 @@ public:
     void _k_slotUpdate();
     void examineChildElements(const QWebElement &parentElement, QTreeWidgetItem *parentItem);
 
-    QTreeWidget *mTreeWidget;
+    QTreeWidget *treeWidget;
     QWebView *mView;
     DomTreeWidget *q;
 };
 
 void DomTreeWidgetPrivate::_k_slotUpdate()
 {
-    mTreeWidget->clear();
+    treeWidget->clear();
 
     QWebFrame *frame = mView->page()->mainFrame();
     QWebElement document = frame->documentElement();
 
-    examineChildElements(document, mTreeWidget->invisibleRootItem());
-    mTreeWidget->expandAll();
+    examineChildElements(document, treeWidget->invisibleRootItem());
+    treeWidget->expandAll();
 }
 
 void DomTreeWidgetPrivate::examineChildElements(const QWebElement &parentElement, QTreeWidgetItem *parentItem)

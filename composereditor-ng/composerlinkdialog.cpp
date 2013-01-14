@@ -107,11 +107,11 @@ void ComposerLinkDialogPrivate::initialize(const QWebElement &element)
 
 void ComposerLinkDialogPrivate::fillTarget()
 {
-    target->addItem(i18n("No Set"), QString());
-    target->addItem(i18n("Current Window"), QLatin1String("_self"));
-    target->addItem(i18n("New Window"), QLatin1String("_blank"));
-    target->addItem(i18n("In parent frame"), QLatin1String("_parent"));
-    target->addItem(i18n("In the full body of the window"), QLatin1String("_top"));
+    target->addItem(i18nc("@item:inlistbox Target", "No Set"), QString());
+    target->addItem(i18nc("@item:inlistbox Target", "Current Window"), QLatin1String("_self"));
+    target->addItem(i18nc("@item:inlistbox Target", "New Window"), QLatin1String("_blank"));
+    target->addItem(i18nc("@item:inlistbox Target", "In parent frame"), QLatin1String("_parent"));
+    target->addItem(i18nc("@item:inlistbox Target", "In the full body of the window"), QLatin1String("_top"));
 }
 
 void ComposerLinkDialogPrivate::_k_slotWebElementChanged()

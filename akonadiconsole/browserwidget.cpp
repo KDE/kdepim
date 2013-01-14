@@ -464,11 +464,12 @@ void BrowserWidget::clearCache()
   QString str = QString("DELETE FROM PimItemTable WHERE collectionId=%1").arg(coll.id());
   qDebug() << str;
   QSqlQuery query( str, DbAccess::database() );
-  query.exec();
-  if (query.lastError().isValid()) {
-     qDebug() << query.lastError();
-     KMessageBox::error( this, query.lastError().text() );
-   }
+  if (query.exec() ) {
+    if (query.lastError().isValid()) {
+       qDebug() << query.lastError();
+       KMessageBox::error( this, query.lastError().text() );
+     }
+  }
 }
 
 Akonadi::Collection BrowserWidget::currentCollection() const

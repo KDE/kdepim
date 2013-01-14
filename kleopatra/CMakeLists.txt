@@ -125,9 +125,9 @@ if(USABLE_ASSUAN_FOUND)
     add_definitions(-DGPG_ERR_SOURCE_DEFAULT=GPG_ERR_SOURCE_USER_1)
   endif()
 
-else(USABLE_ASSUAN_FOUND)
+else()
   set(_kleopatra_uiserver_SRCS)
-endif(USABLE_ASSUAN_FOUND)
+endif()
 
 kde4_add_ui_files(_kleopatra_uiserver_SRCS crypto/gui/signingcertificateselectionwidget.ui)
 

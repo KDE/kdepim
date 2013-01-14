@@ -46,7 +46,7 @@ FindBarBase::FindBarBase( QWidget * parent )
 
   QToolButton * closeBtn = new QToolButton( this );
   closeBtn->setIcon( KIcon( "dialog-close" ) );
-  closeBtn->setIconSize( QSize( 24, 24 ) );
+  closeBtn->setIconSize( QSize( 16, 16 ) );
   closeBtn->setToolTip( i18n( "Close" ) );
 
 #ifndef QT_NO_ACCESSIBILITY
@@ -160,7 +160,7 @@ void FindBarBase::setFoundMatch( bool match )
   QString styleSheet;
 
   if (!m_search->text().isEmpty()) {
-    if(mNegativeBackground.isEmpty()) {
+    if (mNegativeBackground.isEmpty()) {
       KStatefulBrush bgBrush(KColorScheme::View, KColorScheme::PositiveBackground);
       mPositiveBackground = QString::fromLatin1("QLineEdit{ background-color:%1 }").arg(bgBrush.brush(m_search).color().name());
       bgBrush = KStatefulBrush(KColorScheme::View, KColorScheme::NegativeBackground);
@@ -234,7 +234,7 @@ bool FindBarBase::event(QEvent* e)
     if ( shortCutOverride || e->type() == QEvent::KeyPress ) {
         QKeyEvent* kev = static_cast<QKeyEvent* >(e);
         if (kev->key() == Qt::Key_Escape) {
-            if( shortCutOverride ) {
+            if ( shortCutOverride ) {
                 e->accept();
                 return true;
             }
@@ -245,7 +245,7 @@ bool FindBarBase::event(QEvent* e)
         else if ( kev->key() == Qt::Key_Enter ||
                   kev->key() == Qt::Key_Return ) {
           e->accept();
-          if( shortCutOverride ) {
+          if ( shortCutOverride ) {
               return true;
           }
           if ( kev->modifiers() & Qt::ShiftModifier )

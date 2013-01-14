@@ -12,6 +12,6 @@ if(KMAIL_SUPPORTED)
 
   install( TARGETS ksendemail ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
-else(KMAIL_SUPPORTED)
+else()
   message(STATUS "Ksendemail will NOT be built.")
-endif(KMAIL_SUPPORTED)
+endif()

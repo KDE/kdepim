@@ -215,7 +215,9 @@ void Kernel::emergencyExit( const QString &reason )
   static bool s_showingErrorBox = false;
   if ( !s_showingErrorBox ) {
       s_showingErrorBox = true;
-      KMessageBox::error( 0, mesg );
+      if ( qApp ) { //see bug 313104
+        KMessageBox::error( 0, mesg );
+      }
       ::exit(1);
   }
 }
