@@ -39,6 +39,7 @@ private:
   void readGlobalSettings();
   void readLdapSettings();
   void readTagSettings();
+  void readExtensionsSettings();
 
   void insertIntoMap( const QString& line );
 

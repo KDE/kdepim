@@ -54,7 +54,8 @@ ThunderbirdSettings::ThunderbirdSettings( const QString& filename, ImportWizard 
          line.contains(QLatin1String("spellchecker.dictionary")) ||
          line.contains(QLatin1String("ldap_")) ||
          line.contains(QLatin1String("mail.biff.")) ||
-         line.contains(QLatin1String("mailnews.tags."))) {
+         line.contains(QLatin1String("mailnews.tags.")) ||
+         line.contains(QLatin1String("extensions.AutoResizeImage."))) {
         insertIntoMap( line );
       }
     } else {
@@ -70,10 +71,24 @@ ThunderbirdSettings::ThunderbirdSettings( const QString& filename, ImportWizard 
   readGlobalSettings();
   readLdapSettings();
   readTagSettings();
+  readExtensionsSettings();
 }
 
 ThunderbirdSettings::~ThunderbirdSettings()
 {
+}
+
+void ThunderbirdSettings::readExtensionsSettings()
+{
+    //TODO
+    //AutoResizeImage
+    const QString filterPatternEnabledStr = QLatin1String("extensions.AutoResizeImage.filterPatterns");
+    if(mHashConfig.contains(filterPatternEnabledStr)) {
+      const bool filterPatternEnabled = mHashConfig.value(filterPatternEnabledStr).toBool();
+      //addKmailConfig(QLatin1String("Behaviour"), QLatin1String("DelayedMarkAsRead"), markMessageRead);
+    }
+
+
 }
 
 void ThunderbirdSettings::readTagSettings()
