@@ -21,7 +21,7 @@
 
 using namespace MessageComposer;
 
-bool Util::resizeImage(MessageCore::AttachmentPart::Ptr part)
+bool Utils::resizeImage(MessageCore::AttachmentPart::Ptr part)
 {
     const QString filename = part->fileName();
     const QString pattern = MessageComposer::MessageComposerSettings::self()->filterSourcePattern();

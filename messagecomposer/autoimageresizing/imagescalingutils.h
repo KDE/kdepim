@@ -20,7 +20,7 @@
 #include <messagecore/attachmentpart.h>
 
 namespace MessageComposer {
-namespace Util {
+namespace Utils {
 bool resizeImage(MessageCore::AttachmentPart::Ptr part);
 }
 
