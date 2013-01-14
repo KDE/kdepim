@@ -29,6 +29,7 @@ set(libcomposereditor_ng_SRCS
     composertablecellformatdialog.cpp
     composertableactionmenu.cpp
     composercellsizewidget.cpp
+    composerimageresizetooltip.cpp
     tablehelper.cpp
     spellplugin/kspellplugin.cpp 
     utils/domtreewidget.cpp 

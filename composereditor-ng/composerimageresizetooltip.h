@@ -24,12 +24,18 @@
 
 namespace ComposerEditorNG
 {
+class ComposerImageResizeToolTipPrivate;
 
 class ComposerImageResizeToolTip : public QWidget
 {
+    Q_OBJECT
 public:
     explicit ComposerImageResizeToolTip(QWidget *parent);
     ~ComposerImageResizeToolTip();
+    void displaySize(const QSize& s);
+private:
+    friend class ComposerImageResizeToolTipPrivate;
+    ComposerImageResizeToolTipPrivate * const d;
 };
 
 }
