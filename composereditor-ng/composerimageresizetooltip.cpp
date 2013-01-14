@@ -35,6 +35,8 @@ public:
         : q(qq)
     {
         QHBoxLayout *lay = new QHBoxLayout;
+        lay->setMargin(0);
+        lay->setSpacing(0);
         lab = new QLabel;
         lay->addWidget(lab);
         q->setLayout(lay);

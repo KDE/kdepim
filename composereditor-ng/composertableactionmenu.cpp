@@ -38,6 +38,7 @@ public:
     {
     }
     void _k_slotInsertRowBelow();
+    void _k_slotInsertRowAbove();
     void _k_slotTableFormat();
     void _k_slotTableCellFormat();
     void _k_slotRemoveCellContents();
@@ -47,10 +48,13 @@ public:
     void _k_slotRemoveTable();
     void _k_slotRemoveRow();
     void _k_slotRemoveColumn();
+    void _k_slotInsertColumnBefore();
+    void _k_slotInsertColumnAfter();
 
     void updateActions();
     KAction *action_insert_table;
     KAction *action_insert_row_below;
+    KAction *action_insert_row_above;
     KAction *action_table_format;
     KAction *action_table_cell_format;
     KAction *action_remove_cell_contents;
@@ -60,10 +64,37 @@ public:
     KAction *action_remove_table;
     KAction *action_remove_row;
     KAction *action_remove_column;
+    KAction *action_insert_column_before;
+    KAction *action_insert_column_after;
     ComposerTableActionMenu *q;
     QWebElement webElement;
     QWidget *parentWidget;
 };
+
+void ComposerTableActionMenuPrivate::_k_slotInsertColumnAfter()
+{
+    //TODO
+}
+
+void ComposerTableActionMenuPrivate::_k_slotInsertColumnBefore()
+{
+    //TODO
+}
+
+void ComposerTableActionMenuPrivate::_k_slotInsertRowBelow()
+{
+    //Fix delete cells contents.
+    QWebElement e = webElement.parent().clone();
+    webElement.parent().prependOutside(e);
+}
+
+void ComposerTableActionMenuPrivate::_k_slotInsertRowAbove()
+{
+    //Fix delete cells contents.
+    QWebElement e = webElement.parent().clone();
+    webElement.parent().appendOutside(e);
+}
+
 
 void ComposerTableActionMenuPrivate::_k_slotRemoveColumn()
 {
@@ -122,12 +153,6 @@ void ComposerTableActionMenuPrivate::updateActions()
     action_remove_column->setEnabled(isACell);
 }
 
-void ComposerTableActionMenuPrivate::_k_slotInsertRowBelow()
-{
-    //Fix delete cells contents.
-    QWebElement e = webElement.parent().clone();
-    webElement.parent().prependOutside(e);
-}
 
 void ComposerTableActionMenuPrivate::_k_slotTableFormat()
 {
@@ -157,6 +182,19 @@ ComposerTableActionMenu::ComposerTableActionMenu(const QWebElement& element,QObj
     d->action_insert_row_below = new KAction( KIcon(QLatin1String("edit-table-insert-row-below")), i18nc( "@item:inmenu Insert", "Row Below" ), this );
     insertMenu->addAction( d->action_insert_row_below );
     connect( d->action_insert_row_below, SIGNAL(triggered(bool)), SLOT(_k_slotInsertRowBelow()) );
+
+    d->action_insert_row_above = new KAction( KIcon(QLatin1String("edit-table-insert-row-above")), i18nc( "@item:inmenu Insert", "Row Above" ), this );
+    insertMenu->addAction( d->action_insert_row_above );
+    connect( d->action_insert_row_above, SIGNAL(triggered(bool)), SLOT(_k_slotInsertRowAbove()) );
+
+    insertMenu->addSeparator();
+    d->action_insert_column_before = new KAction( KIcon(QLatin1String("edit-table-insert-column-left")), i18nc( "@item:inmenu Insert", "Column Before" ), this );
+    insertMenu->addAction( d->action_insert_column_before );
+    connect( d->action_insert_column_before, SIGNAL(triggered(bool)), SLOT(_k_slotInsertColumnBefore()) );
+
+    d->action_insert_column_after = new KAction( KIcon(QLatin1String("edit-table-insert-column-right")), i18nc( "@item:inmenu Insert", "Column After" ), this );
+    insertMenu->addAction( d->action_insert_column_after );
+    connect( d->action_insert_column_after, SIGNAL(triggered(bool)), SLOT(_k_slotInsertColumnAfter()) );
 
     insertMenu->addSeparator();
     d->action_insert_cell_before = new KAction( i18nc( "@item:inmenu Insert", "Cell Before" ), this );
@@ -197,8 +235,6 @@ ComposerTableActionMenu::ComposerTableActionMenu(const QWebElement& element,QObj
     d->action_table_cell_format = new KAction( i18n( "Table Cell Format..." ), this );
     connect( d->action_table_cell_format, SIGNAL(triggered(bool)), SLOT(_k_slotTableCellFormat()) );
     addAction( d->action_table_cell_format );
-
-
 
     d->updateActions();
 }

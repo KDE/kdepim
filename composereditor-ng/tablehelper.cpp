@@ -78,5 +78,30 @@ QWebElement TableHelper::tableWebElement(const QWebElement&element)
     }
 }
 
+QWebElement TableHelper::nextCell(const QWebElement& element)
+{
+    //TODO
+    return QWebElement();
+}
+
+QWebElement TableHelper::previousCell(const QWebElement& element)
+{
+    //TODO
+    return QWebElement();
+}
+
+
+int TableHelper::tableRowCount()
+{
+    //TODO
+    return 0;
+}
+
+int TableHelper::tableColumnCount()
+{
+    //TODO
+    return 0;
+}
+
 
 }
