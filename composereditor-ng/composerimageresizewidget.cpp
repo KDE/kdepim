@@ -186,6 +186,7 @@ void ComposerImageResizeWidget::mouseMoveEvent( QMouseEvent * event )
     if (!d->mousePressed) {
         d->setResizeDirectionCursor(event->pos());
     } else if(d->direction!=ComposerImageResizeWidgetPrivate::None){
+        //resize(d->resizeImage(event->pos()));
         //TODO resize
     }
 }
