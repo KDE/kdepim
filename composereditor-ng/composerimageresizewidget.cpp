@@ -23,6 +23,7 @@
 #include <QMouseEvent>
 #include <QPainter>
 #include <QDebug>
+#include <QToolTip>
 
 namespace ComposerEditorNG
 {
@@ -186,6 +187,7 @@ void ComposerImageResizeWidget::mouseMoveEvent( QMouseEvent * event )
     if (!d->mousePressed) {
         d->setResizeDirectionCursor(event->pos());
     } else if(d->direction!=ComposerImageResizeWidgetPrivate::None){
+        QSize size = d->resizeImage(event->pos());
         //resize(d->resizeImage(event->pos()));
         //TODO resize
     }
