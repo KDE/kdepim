@@ -88,12 +88,21 @@ SieveEditor::SieveEditor( QWidget * parent )
   connect( this, SIGNAL(user3Clicked()), SLOT(slotImport()) );
 
   setMainWidget( mainWidget );
-  resize( 800,600);
+  KConfigGroup group( KGlobal::config(), "SieveEditor" );
+  const QSize sizeDialog = group.readEntry( "Size", QSize() );
+  if ( sizeDialog.isValid() ) {
+    resize( sizeDialog );
+  } else {
+    resize( 800,600);
+  }
+
   mTextEdit->setFocus();
 }
 
 SieveEditor::~SieveEditor()
 {
+  KConfigGroup group( KGlobal::config(), "SieveEditor" );
+  group.writeEntry( "Size", size() );
 }
 
 void SieveEditor::slotFind()
