@@ -92,7 +92,7 @@ void AbstractAddressBook::slotStoreDone(KJob*job)
     addAddressBookImportError( i18n( "Error during contact creation: %1", job->errorString() ) );
     return;
   }
-  addAddressBookImportInfo( i18n( "Contact creation has been finished" ) );
+  addAddressBookImportInfo( i18n( "Contact creation complete" ) );
 }
 
 void AbstractAddressBook::addImportInfo( const QString& log )
