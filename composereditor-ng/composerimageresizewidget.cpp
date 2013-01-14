@@ -53,7 +53,8 @@ public:
         q->resize(imageElement.geometry().size());
     }
 
-    void resizeImage(const QPoint& pos);
+    void resizeElement(const QPoint& pos);
+    QSize resizeImage(const QPoint& pos);
     void setResizeDirectionCursor(const QPoint& pos);
     ResizeDirection resizeDirection(const QPoint& pos);
 
@@ -118,7 +119,19 @@ ComposerImageResizeWidgetPrivate::ResizeDirection ComposerImageResizeWidgetPriva
     return dir;
 }
 
-void ComposerImageResizeWidgetPrivate::resizeImage(const QPoint& pos)
+void ComposerImageResizeWidgetPrivate::resizeElement(const QPoint& pos)
+{
+    const QSize size = resizeImage(pos);
+    if (size.width() != -1) {
+        imageElement.setAttribute(QLatin1String("width"),QString::number(size.width()));
+    }
+    if (size.height() != -1) {
+        imageElement.setAttribute(QLatin1String("height"),QString::number(size.height()));
+    }
+    q->resize(size);
+}
+
+QSize ComposerImageResizeWidgetPrivate::resizeImage(const QPoint& pos)
 {
     int width = -1;
     int height = -1;
@@ -154,13 +167,7 @@ void ComposerImageResizeWidgetPrivate::resizeImage(const QPoint& pos)
         width = imageElement.attribute(QLatin1String("width")).toInt() - pos.x() - firstPosition.x();
         break;
     }
-    if (width != -1) {
-        imageElement.setAttribute(QLatin1String("width"),QString::number(width));
-    }
-    if (height != -1) {
-        imageElement.setAttribute(QLatin1String("height"),QString::number(height));
-    }
-    q->resize(QSize(width,height));
+    return QSize(width, height);
 }
 
 ComposerImageResizeWidget::ComposerImageResizeWidget(const QWebElement &element, QWidget *parent)
@@ -198,7 +205,7 @@ void ComposerImageResizeWidget::mousePressEvent( QMouseEvent * event )
 void ComposerImageResizeWidget::mouseReleaseEvent( QMouseEvent * event )
 {
     if (d->mousePressed) {
-        d->resizeImage(event->pos());
+        d->resizeElement(event->pos());
         d->mousePressed = false;
         d->direction = ComposerImageResizeWidgetPrivate::None;
     }
