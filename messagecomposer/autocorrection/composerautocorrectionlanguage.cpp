@@ -43,7 +43,6 @@ ComposerAutoCorrectionLanguage::~ComposerAutoCorrectionLanguage()
 
 }
 
-
 QString ComposerAutoCorrectionLanguage::language() const
 {
   return itemData ( currentIndex() ).toString();
