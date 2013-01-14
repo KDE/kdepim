@@ -19,6 +19,7 @@
 */
 
 #include "composerimageresizewidget.h"
+#include "composerimageresizetooltip.h"
 
 #include <QMouseEvent>
 #include <QPainter>
@@ -47,6 +48,7 @@ public:
 
     ComposerImageResizeWidgetPrivate(ComposerImageResizeWidget *qq, const QWebElement& element)
         : q(qq),
+          imageSizetoolTip(0),
           imageElement(element),
           direction(None),
           mousePressed(false)
@@ -60,6 +62,7 @@ public:
     ResizeDirection resizeDirection(const QPoint& pos);
 
     ComposerImageResizeWidget *q;
+    ComposerImageResizeToolTip *imageSizetoolTip;
     QWebElement imageElement;
     ResizeDirection direction;
     QPoint firstPosition;
@@ -188,6 +191,12 @@ void ComposerImageResizeWidget::mouseMoveEvent( QMouseEvent * event )
         d->setResizeDirectionCursor(event->pos());
     } else if(d->direction!=ComposerImageResizeWidgetPrivate::None){
         QSize size = d->resizeImage(event->pos());
+        if (!d->imageSizetoolTip) {
+            d->imageSizetoolTip = new ComposerImageResizeToolTip(this);
+        }
+        d->imageSizetoolTip->show();
+        d->imageSizetoolTip->displaySize(size);
+        d->imageSizetoolTip->move(mapFromParent(event->pos()));
         //resize(d->resizeImage(event->pos()));
         //TODO resize
     }
@@ -211,6 +220,9 @@ void ComposerImageResizeWidget::mouseReleaseEvent( QMouseEvent * event )
         d->resizeElement(event->pos());
         d->mousePressed = false;
         d->direction = ComposerImageResizeWidgetPrivate::None;
+        if (d->imageSizetoolTip) {
+            d->imageSizetoolTip->hide();
+        }
     }
 }
 

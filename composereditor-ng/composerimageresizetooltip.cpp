@@ -20,6 +20,11 @@
 
 #include "composerimageresizetooltip.h"
 
+#include <KLocale>
+
+#include <QHBoxLayout>
+#include <QLabel>
+
 namespace ComposerEditorNG
 {
 
@@ -29,14 +34,27 @@ public:
     ComposerImageResizeToolTipPrivate(ComposerImageResizeToolTip *qq)
         : q(qq)
     {
-
+        QHBoxLayout *lay = new QHBoxLayout;
+        lab = new QLabel;
+        lay->addWidget(lab);
+        q->setLayout(lay);
     }
+    void displaySize(const QSize& s);
+
+    QLabel *lab;
     ComposerImageResizeToolTip *q;
+
 };
+
+void ComposerImageResizeToolTipPrivate::displaySize(const QSize& s)
+{
+    lab->setText( i18n("%1x%2").arg(s.width()).arg(s.height()));
+}
 
 ComposerImageResizeToolTip::ComposerImageResizeToolTip(QWidget *parent)
     : QWidget(parent), d(new ComposerImageResizeToolTipPrivate(this))
 {
+    setWindowFlags(Qt::ToolTip);
 }
 
 ComposerImageResizeToolTip::~ComposerImageResizeToolTip()
@@ -45,7 +63,7 @@ ComposerImageResizeToolTip::~ComposerImageResizeToolTip()
 
 void ComposerImageResizeToolTip::displaySize(const QSize& s)
 {
-
+    d->displaySize(s);
 }
 
 }
