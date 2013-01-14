@@ -33,8 +33,8 @@
 #include "signencryptjob.h"
 #include "skeletonmessagejob.h"
 #include "transparentjob.h"
-#include "autoimageresizing/imagescalingjob.h"
-#include "autoimageresizing/imagescalingutils.h"
+#include "imagescaling/imagescalingjob.h"
+#include "imagescaling/imagescalingutils.h"
 #include "messagecomposersettings.h"
 
 

@@ -76,15 +76,15 @@ set( messagecomposer_src
      autocorrection/import/importkmailautocorrection.cpp
      autocorrection/import/importabstractautocorrection.cpp
      selectspecialchar.cpp
-     autoimageresizing/imagescalingjob.cpp
-     autoimageresizing/imagescalingdialog.cpp
-     autoimageresizing/imagescalingwidget.cpp
-     autoimageresizing/imagescalingutils.cpp
+     imagescaling/imagescalingjob.cpp
+     imagescaling/imagescalingdialog.cpp
+     imagescaling/imagescalingwidget.cpp
+     imagescaling/imagescalingutils.cpp
 )
 
 kde4_add_ui_files(messagecomposer_src
      autocorrection/composerautocorrectionwidget.ui
-     autoimageresizing/imagescalingwidget.ui
+     imagescaling/imagescalingwidget.ui
 )
 
 
