@@ -27,19 +27,22 @@ bool Utils::resizeImage(MessageCore::AttachmentPart::Ptr part)
     const QString pattern = MessageComposer::MessageComposerSettings::self()->filterSourcePattern();
 
     if (!pattern.isEmpty()) {
-        switch (MessageComposer::MessageComposerSettings::self()->filterSourceType()) {
-        case MessageComposer::MessageComposerSettings::EnumFilterSourceType::NoFilter:
-            break;
-        case MessageComposer::MessageComposerSettings::EnumFilterSourceType::IncludeFilesWithPattern:
-            if (!filename.startsWith(pattern)) {
-                return false;
+        const QStringList lstPattern = pattern.split(QLatin1Char(';'));
+        Q_FOREACH (const QString& patternStr, lstPattern) {
+            switch (MessageComposer::MessageComposerSettings::self()->filterSourceType()) {
+            case MessageComposer::MessageComposerSettings::EnumFilterSourceType::NoFilter:
+                break;
+            case MessageComposer::MessageComposerSettings::EnumFilterSourceType::IncludeFilesWithPattern:
+                if (!filename.startsWith(patternStr)) {
+                    return false;
+                }
+                break;
+            case MessageComposer::MessageComposerSettings::EnumFilterSourceType::ExcludeFilesWithPattern:
+                if (filename.startsWith(patternStr)) {
+                    return false;
+                }
+                break;
             }
-            break;
-        case MessageComposer::MessageComposerSettings::EnumFilterSourceType::ExcludeFilesWithPattern:
-            if (filename.startsWith(pattern)) {
-                return false;
-            }
-            break;
         }
     }
 

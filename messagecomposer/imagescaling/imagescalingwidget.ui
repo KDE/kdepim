@@ -303,7 +303,11 @@
              </widget>
             </item>
             <item>
-             <widget class="KLineEdit" name="pattern"/>
+             <widget class="KLineEdit" name="pattern">
+              <property name="whatsThis">
+               <string>This line allows to define several pattern. Separate them with ';'.</string>
+              </property>
+             </widget>
             </item>
            </layout>
           </item>
