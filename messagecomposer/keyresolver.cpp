@@ -260,7 +260,7 @@ static std::vector<GpgME::UserID> matchingUIDs( const std::vector<GpgME::UserID>
 
     std::vector<GpgME::UserID> result;
     result.reserve( uids.size() );
-    
+
     for ( std::vector<GpgME::UserID>::const_iterator it = uids.begin(), end = uids.end() ; it != end ; ++it )
         // PENDING(marc) check DN for an EMAIL, too, in case of X.509 certs... :/
         if ( const char * email = it->email() )
@@ -1826,7 +1826,7 @@ void Kleo::KeyResolver::saveContactPreference( const QString& email, const Conta
     if ( !ok )
       return;
 
-    Akonadi::CollectionDialog dlg;
+    Akonadi::CollectionDialog dlg( Akonadi::CollectionDialog::KeepTreeExpanded );
     dlg.setMimeTypeFilter( QStringList() << KABC::Addressee::mimeType() );
     dlg.setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
     dlg.setDescription( i18n( "Select the address book folder to store the new contact in:" ) );
