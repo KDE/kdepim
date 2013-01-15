@@ -8,39 +8,6 @@
 namespace KSieveUi {
 
 /**
- * A tree widget with an additional signal contextMenuRequested.
- */
-class TreeWidgetWithContextMenu : public QTreeWidget
-{
-  Q_OBJECT
-
-  public:
-
-    TreeWidgetWithContextMenu( QWidget *parent )
-      : QTreeWidget( parent )
-    {}
-#ifndef QT_NO_CONTEXTMENU
-  Q_SIGNALS:
-
-    /**
-     * Emitted when the user right-clicks an item.
-     * @param item The item the user clicked on.
-     * @param pos the position of the click, in global coordinates
-     */
-    void contextMenuRequested( QTreeWidgetItem* item, QPoint position );
-
-  protected:
-
-    /**
-     * Reimplemented from QTreeWidget.
-     */
-    virtual void contextMenuEvent( QContextMenuEvent * event ) {
-        emit contextMenuRequested( itemAt( event->pos() ), event->globalPos() );
-    }
-#endif
-};
-
-/**
  * A radio button which has an associated tree widget item, and which selectes that
  * tree widget item when receiving focus.
  */

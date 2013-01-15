@@ -47,14 +47,15 @@ ManageSieveScriptsDialog::ManageSieveScriptsDialog( QWidget * parent, const char
   vlay->setSpacing( 0 );
   vlay->setMargin( 0 );
 
-  mListView = new TreeWidgetWithContextMenu( frame);
+  mListView = new QTreeWidget( frame);
+  mListView->setContextMenuPolicy(Qt::CustomContextMenu);
   mListView->setHeaderLabel( i18n( "Available Scripts" ) );
   mListView->setRootIsDecorated( true );
   mListView->setAlternatingRowColors( true );
   mListView->setSelectionMode( QAbstractItemView::SingleSelection );
 #ifndef QT_NO_CONTEXTMENU
-  connect( mListView, SIGNAL(contextMenuRequested(QTreeWidgetItem*,QPoint)),
-           this, SLOT(slotContextMenuRequested(QTreeWidgetItem*,QPoint)) );
+  connect( mListView, SIGNAL(customContextMenuRequested(QPoint)),
+           this, SLOT(slotContextMenuRequested(QPoint)) );
 #endif
   connect( mListView, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),
            this, SLOT(slotDoubleClicked(QTreeWidgetItem*)) );
@@ -221,8 +222,9 @@ void ManageSieveScriptsDialog::slotItem( KManageSieve::SieveJob * job, const QSt
   }
 }
 
-void ManageSieveScriptsDialog::slotContextMenuRequested( QTreeWidgetItem *item, QPoint p )
+void ManageSieveScriptsDialog::slotContextMenuRequested( const QPoint& p )
 {
+  QTreeWidgetItem *item = mListView->itemAt( p );
   if ( !item )
     return;
   if ( !item->parent() && !mUrls.count( item ))
@@ -240,7 +242,7 @@ void ManageSieveScriptsDialog::slotContextMenuRequested( QTreeWidgetItem *item, 
       menu.addAction( i18n( "New Script..." ), this, SLOT(slotNewScript()) );
   }
   if ( !menu.actions().isEmpty() )
-    menu.exec( p );
+    menu.exec( mListView->viewport()->mapToGlobal(p) );
 }
 
 void ManageSieveScriptsDialog::slotDeactivateScript()
@@ -560,4 +562,3 @@ void ManageSieveScriptsDialog::addMessageEntry( const QString & errorMsg, const 
 
 
 #include "managesievescriptsdialog.moc"
-#include "managesievescriptsdialog_p.moc"
