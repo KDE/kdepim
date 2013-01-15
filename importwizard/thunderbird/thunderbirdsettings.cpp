@@ -102,22 +102,26 @@ void ThunderbirdSettings::readExtensionsSettings()
     const QString maxResolutionXStr = QLatin1String("extensions.AutoResizeImage.maxResolutionX");
     if (mHashConfig.contains(maxResolutionXStr)) {
         const int val = mHashConfig.value(maxResolutionXStr).toInt();
-        addKmailConfig(QLatin1String("AutoResizeImage"), QLatin1String("maximum-width"), adaptAutoResizeResolution(val) );
+        int adaptedValue = adaptAutoResizeResolution(val,QLatin1String("extensions.AutoResizeImage.maxResolutionXList"));
+        addKmailConfig(QLatin1String("AutoResizeImage"), QLatin1String("maximum-width"), adaptedValue );
     }
     const QString maxResolutionYStr = QLatin1String("extensions.AutoResizeImage.maxResolutionY");
     if (mHashConfig.contains(maxResolutionYStr)) {
         const int val = mHashConfig.value(maxResolutionYStr).toInt();
-        addKmailConfig(QLatin1String("AutoResizeImage"), QLatin1String("maximum-height"), adaptAutoResizeResolution(val) );
+        int adaptedValue = adaptAutoResizeResolution(val,QLatin1String("extensions.AutoResizeImage.maxResolutionYList"));
+        addKmailConfig(QLatin1String("AutoResizeImage"), QLatin1String("maximum-height"), adaptedValue );
     }
     const QString minResolutionXStr = QLatin1String("extensions.AutoResizeImage.minResolutionX");
     if (mHashConfig.contains(minResolutionXStr)) {
         const int val = mHashConfig.value(minResolutionXStr).toInt();
-        addKmailConfig(QLatin1String("AutoResizeImage"), QLatin1String("minimum-width"), adaptAutoResizeResolution(val) );
+        int adaptedValue = adaptAutoResizeResolution(val,QLatin1String("extensions.AutoResizeImage.minResolutionXList"));
+        addKmailConfig(QLatin1String("AutoResizeImage"), QLatin1String("minimum-width"), adaptedValue );
     }
     const QString minResolutionYStr = QLatin1String("extensions.AutoResizeImage.minResolutionY");
     if (mHashConfig.contains(minResolutionYStr)) {
         const int val = mHashConfig.value(minResolutionYStr).toInt();
-        addKmailConfig(QLatin1String("AutoResizeImage"), QLatin1String("minimum-height"), adaptAutoResizeResolution(val) );
+        int adaptedValue = adaptAutoResizeResolution(val,QLatin1String("extensions.AutoResizeImage.minResolutionYList"));
+        addKmailConfig(QLatin1String("AutoResizeImage"), QLatin1String("minimum-height"), adaptedValue );
     }
 
     //Default is true.
@@ -130,10 +134,39 @@ void ThunderbirdSettings::readExtensionsSettings()
     }
 }
 
-int ThunderbirdSettings::adaptAutoResizeResolution(int index)
+int ThunderbirdSettings::adaptAutoResizeResolution(int index, const QString& configStrList)
 {
-    //TODO
-    return index;
+    switch(index) {
+    case 0:
+        return 240;
+    case 1:
+        return 320;
+    case 2:
+        return 512;
+    case 3:
+        return 640;
+    case 4:
+        return 800;
+    case 5:
+        return 1024;
+    case 6:
+        return 1280;
+    case 7:
+        return 2048;
+    case 8:
+        return 1024;
+    case 9: //custom case
+    {
+        if (mHashConfig.contains(configStrList)) {
+            const QString res =  mHashConfig.value(configStrList).toString();
+            const QStringList lst = res.split(QLatin1Char(';'));
+            int val = lst.last().toInt();
+            return val;
+        }
+    }
+    default:
+        return -1;
+    }
 }
 
 void ThunderbirdSettings::readTagSettings()
