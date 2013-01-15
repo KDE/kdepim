@@ -91,13 +91,25 @@ QWebElement TableHelper::previousCell(const QWebElement& element)
 }
 
 
-int TableHelper::tableRowCount()
+int TableHelper::tableRowCount(const QWebElement& element)
 {
+    int numberOfRow = 0;
+    QWebElement tableBodyElement = tableBodyWebElement(element);
+    if (!tableBodyElement.isNull()) {
+        //Search all TR
+        QWebElement trElement = tableBodyElement.firstChild();
+        while (!trElement.isNull()) {
+            if (trElement.tagName().toLower() == ROW ) {
+                numberOfRow++;
+            }
+            trElement = trElement.nextSibling();
+        }
+    }
     //TODO
-    return 0;
+    return numberOfRow;
 }
 
-int TableHelper::tableColumnCount()
+int TableHelper::tableColumnCount(const QWebElement& element)
 {
     //TODO
     return 0;

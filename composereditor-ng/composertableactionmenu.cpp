@@ -103,9 +103,17 @@ void ComposerTableActionMenuPrivate::_k_slotRemoveColumn()
 
 void ComposerTableActionMenuPrivate::_k_slotRemoveRow()
 {
-    QWebElement rowElement = TableHelper::rowWebElement(webElement);
-    if (!rowElement.isNull()) {
-       rowElement.removeFromDocument();
+    if (TableHelper::tableRowCount(webElement) == 1 ) {
+        //Remove full table
+        QWebElement tableElement = TableHelper::tableWebElement(webElement);
+        if (!tableElement.isNull()) {
+            tableElement.removeFromDocument();
+        }
+    } else {
+        QWebElement rowElement = TableHelper::rowWebElement(webElement);
+        if (!rowElement.isNull()) {
+            rowElement.removeFromDocument();
+        }
     }
 }
 

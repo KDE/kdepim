@@ -28,8 +28,8 @@ namespace TableHelper {
 QWebElement tableBodyWebElement(const QWebElement&element);
 QWebElement rowWebElement(const QWebElement&element);
 QWebElement tableWebElement(const QWebElement&element);
-int tableRowCount();
-int tableColumnCount();
+int tableRowCount(const QWebElement &element);
+int tableColumnCount(const QWebElement &element);
 QWebElement previousCell(const QWebElement& element);
 QWebElement nextCell(const QWebElement& element);
 }
