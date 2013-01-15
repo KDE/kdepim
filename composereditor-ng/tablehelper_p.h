@@ -32,6 +32,7 @@ int tableRowCount(const QWebElement &element);
 int tableColumnCount(const QWebElement &element);
 QWebElement previousCell(const QWebElement& element);
 QWebElement nextCell(const QWebElement& element);
+void removeCellContentsFromCurrentRow(const QWebElement& element);
 }
 }
 

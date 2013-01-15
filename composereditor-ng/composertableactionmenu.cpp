@@ -86,6 +86,7 @@ void ComposerTableActionMenuPrivate::_k_slotInsertRowBelow()
     //Fix delete cells contents.
     QWebElement e = webElement.parent().clone();
     webElement.parent().prependOutside(e);
+    TableHelper::removeCellContentsFromCurrentRow(webElement);
 }
 
 void ComposerTableActionMenuPrivate::_k_slotInsertRowAbove()
@@ -93,6 +94,7 @@ void ComposerTableActionMenuPrivate::_k_slotInsertRowAbove()
     //Fix delete cells contents.
     QWebElement e = webElement.parent().clone();
     webElement.parent().appendOutside(e);
+    TableHelper::removeCellContentsFromCurrentRow(webElement);
 }
 
 

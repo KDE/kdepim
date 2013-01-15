@@ -20,10 +20,13 @@
 
 #include "tablehelper_p.h"
 
+#include <QDebug>
+
 namespace ComposerEditorNG {
 static QString TBODY = QLatin1String("tbody");
 static QString TABLE = QLatin1String("table");
 static QString ROW = QLatin1String("tr");
+static QString CELL = QLatin1String("td");
 
 QWebElement TableHelper::tableBodyWebElement(const QWebElement&element)
 {
@@ -90,7 +93,6 @@ QWebElement TableHelper::previousCell(const QWebElement& element)
     return QWebElement();
 }
 
-
 int TableHelper::tableRowCount(const QWebElement& element)
 {
     int numberOfRow = 0;
@@ -105,7 +107,6 @@ int TableHelper::tableRowCount(const QWebElement& element)
             trElement = trElement.nextSibling();
         }
     }
-    //TODO
     return numberOfRow;
 }
 
@@ -115,5 +116,21 @@ int TableHelper::tableColumnCount(const QWebElement& element)
     return 0;
 }
 
+void TableHelper::removeCellContentsFromCurrentRow(const QWebElement& element)
+{
+    QWebElement e = element;
+    do {
+        e = e.parent();
+    } while( (e.tagName().toLower() != ROW) && !e.isNull() );
+    if (!e.isNull()) {
+        QWebElement cellElement = e.firstChild();
+        while (!cellElement.isNull()) {
+            if (cellElement.tagName().toLower() == CELL ) {
+                cellElement.setInnerXml(QString::fromLatin1("<BR>"));
+            }
+            cellElement = cellElement.nextSibling();
+        }
+    }
+}
 
 }
