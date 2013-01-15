@@ -1,6 +1,5 @@
 
 #include "managesievescriptsdialog.h"
-#include "managesievescriptsdialog_p.h"
 #include "sievetextedit.h"
 #include "sieveeditor.h"
 
@@ -21,18 +20,18 @@
 #include <QMenu>
 #include <QTreeWidget>
 #include <QVBoxLayout>
+#include <QDebug>
 
 #include <errno.h>
 
 using namespace KSieveUi;
 
-bool ItemRadioButton::mTreeWidgetIsBeingCleared = false;
-
 ManageSieveScriptsDialog::ManageSieveScriptsDialog( QWidget * parent, const char * name )
   : QDialog( parent ),
     mSieveEditor( 0 ),
     mIsNewScript( false ),
-    mWasActive( false )
+    mWasActive( false ),
+    mBlockSignal( false )
 {
   setWindowTitle( i18n( "Manage Sieve Scripts" ) );
   setObjectName( name );
@@ -61,6 +60,8 @@ ManageSieveScriptsDialog::ManageSieveScriptsDialog( QWidget * parent, const char
            this, SLOT(slotDoubleClicked(QTreeWidgetItem*)) );
   connect( mListView, SIGNAL(itemSelectionChanged()),
            this, SLOT(slotUpdateButtons()) );
+  connect( mListView, SIGNAL(itemChanged(QTreeWidgetItem *,int)),
+           this, SLOT(slotItemChanged(QTreeWidgetItem*, int)));
   vlay->addWidget( mListView );
 
   QHBoxLayout *buttonLayout = new QHBoxLayout;
@@ -125,9 +126,23 @@ bool ManageSieveScriptsDialog::serverHasError(QTreeWidgetItem *item) const
   return false;
 }
 
+void ManageSieveScriptsDialog::slotItemChanged(QTreeWidgetItem*item, int col)
+{
+    if (!item || mBlockSignal || (col != 0) ) {
+        return;
+    }
+    if ( !isFileNameItem( item ) )
+      return;
+    QTreeWidgetItem *parent = item->parent();
+    if ( itemIsActived( item ) && mSelectedItems[parent] != item ) {
+      mSelectedItems[parent] = item;
+      changeActiveScript( parent, true );
+    }
+
+}
+
 void ManageSieveScriptsDialog::slotUpdateButtons()
 {
-
   QTreeWidgetItem * item = mListView->currentItem();
 
   bool enabled = true;
@@ -151,13 +166,14 @@ void ManageSieveScriptsDialog::slotUpdateButtons()
     enabled = item && isFileNameItem( item );
     mEditScript->setEnabled( enabled );
     mDeleteScript->setEnabled( enabled );
-    mDeactivateScript->setEnabled( enabled && isRadioButtonChecked( item ));
+    mDeactivateScript->setEnabled( enabled && itemIsActived( item ));
   }
 }
 
 
 void ManageSieveScriptsDialog::slotRefresh(bool disconnectSignal)
 {
+  mBlockSignal = true;
   clear(disconnectSignal);
   QTreeWidgetItem *last = 0;
   Akonadi::AgentInstance::List lst = KSieveUi::Util::imapAgentInstances();
@@ -199,6 +215,7 @@ void ManageSieveScriptsDialog::slotResult( KManageSieve::SieveJob * job, bool su
 
   mListView->expandItem( parent );
 
+  mBlockSignal = false;
   if ( success )
     return;
 
@@ -215,9 +232,11 @@ void ManageSieveScriptsDialog::slotItem( KManageSieve::SieveJob * job, const QSt
   if ( !parent )
     return;
   QTreeWidgetItem* item = new QTreeWidgetItem( parent );
-  addRadioButton( item, filename );
+  item->setFlags(item->flags() & (Qt::ItemIsUserCheckable|Qt::ItemIsEnabled|Qt::ItemIsSelectable));
+
+  item->setText(0,filename);
+  item->setCheckState(0, isActive ? Qt::Checked : Qt::Unchecked);
   if ( isActive ) {
-    setRadioButtonState( item, true );
     mSelectedItems[parent] = item;
   }
 }
@@ -234,7 +253,7 @@ void ManageSieveScriptsDialog::slotContextMenuRequested( const QPoint& p )
     // script items:
     menu.addAction( i18n( "Delete Script" ), this, SLOT(slotDeleteScript()) );
     menu.addAction( i18n( "Edit Script..." ), this, SLOT(slotEditScript()) );
-    if ( isRadioButtonChecked( item ) )
+    if ( itemIsActived( item ) )
       menu.addAction( i18n( "Deactivate Script" ), this, SLOT(slotDeactivateScript()) );
   } else if ( !item->parent() ) {
     // top-levels:
@@ -251,21 +270,9 @@ void ManageSieveScriptsDialog::slotDeactivateScript()
   if ( !isFileNameItem( item ) )
     return;
   QTreeWidgetItem *parent = item->parent();
-  if ( isRadioButtonChecked( item ) ) {
+  if ( itemIsActived( item ) ) {
     mSelectedItems[parent] = item;
     changeActiveScript( parent, false );
-  }
-}
-
-void ManageSieveScriptsDialog::slotSelectionChanged()
-{
-  QTreeWidgetItem * item = mListView->currentItem();
-  if ( !isFileNameItem( item ) )
-    return;
-  QTreeWidgetItem *parent = item->parent();
-  if ( isRadioButtonChecked( item ) && mSelectedItems[parent] != item ) {
-    mSelectedItems[parent] = item;
-    changeActiveScript( parent, true );
   }
 }
 
@@ -283,7 +290,7 @@ void ManageSieveScriptsDialog::changeActiveScript( QTreeWidgetItem * item, bool 
   QTreeWidgetItem* selected = mSelectedItems[item];
   if ( !selected )
     return;
-  u.setFileName( itemText( selected ) );
+  u.setFileName( selected->text(0) );
 
   KManageSieve::SieveJob * job;
   if ( activate )
@@ -294,76 +301,25 @@ void ManageSieveScriptsDialog::changeActiveScript( QTreeWidgetItem * item, bool 
            this, SLOT(slotRefresh()) );
 }
 
-void ManageSieveScriptsDialog::addRadioButton( QTreeWidgetItem *item, const QString &text )
+bool ManageSieveScriptsDialog::itemIsActived( QTreeWidgetItem *item ) const
 {
   Q_ASSERT( item && item->parent() );
-  Q_ASSERT( !mListView->itemWidget( item, 0 ) );
-
-  // Create the radio button and set it as item widget
-  ItemRadioButton *radioButton = new ItemRadioButton( item );
-  radioButton->setAutoExclusive( false );
-  radioButton->setText( text );
-  mListView->setItemWidget( item, 0, radioButton );
-  connect( radioButton, SIGNAL(toggled(bool)),
-           this, SLOT(slotSelectionChanged()) );
-
-  // Add the radio button to the button group
-  QTreeWidgetItem *parent = item->parent();
-  QButtonGroup *buttonGroup = mButtonGroups.value( parent );
-  if ( !buttonGroup ) {
-    buttonGroup = new QButtonGroup();
-    mButtonGroups.insert( parent, buttonGroup );
-  }
-  buttonGroup->addButton( radioButton );
-}
-
-void ManageSieveScriptsDialog::setRadioButtonState( QTreeWidgetItem *item, bool checked )
-{
-  Q_ASSERT( item && item->parent() );
-
-  ItemRadioButton *radioButton = dynamic_cast<ItemRadioButton*>( mListView->itemWidget( item, 0 ) );
-  Q_ASSERT( radioButton );
-  radioButton->setChecked( checked );
-}
-
-
-bool ManageSieveScriptsDialog::isRadioButtonChecked( QTreeWidgetItem *item ) const
-{
-  Q_ASSERT( item && item->parent() );
-
-  ItemRadioButton *radioButton = dynamic_cast<ItemRadioButton*>( mListView->itemWidget( item, 0 ) );
-  Q_ASSERT( radioButton );
-  return radioButton->isChecked();
-}
-
-QString ManageSieveScriptsDialog::itemText( QTreeWidgetItem *item ) const
-{
-  Q_ASSERT( item && item->parent() );
-
-  ItemRadioButton *radioButton = dynamic_cast<ItemRadioButton*>( mListView->itemWidget( item, 0 ) );
-  Q_ASSERT( radioButton );
-  return radioButton->text().remove( '&' );
+    return (item->checkState(0) == Qt::Checked);
 }
 
 bool ManageSieveScriptsDialog::isFileNameItem( QTreeWidgetItem *item ) const
 {
-   if ( !item || !item->parent() )
-     return false;
-
-  ItemRadioButton *radioButton = dynamic_cast<ItemRadioButton*>( mListView->itemWidget( item, 0 ) );
-  return ( radioButton != 0 );
+    if ( !item || !item->parent() )
+        return false;
+    return (item->flags() & Qt::ItemIsUserCheckable);
 }
 
 void ManageSieveScriptsDialog::clear( bool disconnect )
 {
   killAllJobs(disconnect);
   mSelectedItems.clear();
-  qDeleteAll( mButtonGroups );
-  mButtonGroups.clear();
   mUrls.clear();
-  ItemRadioButton::setTreeWidgetIsBeingCleared( true );
   mListView->clear();
-  ItemRadioButton::setTreeWidgetIsBeingCleared( false );
 }
 
 void ManageSieveScriptsDialog::slotDoubleClicked( QTreeWidgetItem * item )
@@ -391,7 +347,7 @@ void ManageSieveScriptsDialog::slotDeleteScript()
   if ( u.isEmpty() )
     return;
 
-  u.setFileName( itemText( currentItem ) );
+  u.setFileName( currentItem->text(0) );
 
   if ( KMessageBox::warningContinueCancel( this, i18n( "Really delete script \"%1\" from the server?", u.fileName() ),
                                    i18n( "Delete Sieve Script Confirmation" ),
@@ -414,7 +370,7 @@ void ManageSieveScriptsDialog::slotEditScript()
   KUrl url = mUrls[parent];
   if ( url.isEmpty() )
     return;
-  url.setFileName( itemText( currentItem ) );
+  url.setFileName( currentItem->text(0) );
   mCurrentURL = url;
   mIsNewScript = false;
   KManageSieve::SieveJob * job = KManageSieve::SieveJob::get( url );
@@ -449,25 +405,23 @@ void ManageSieveScriptsDialog::slotNewScript()
   u.setFileName( name );
 
 
-  QButtonGroup *buttonGroup = mButtonGroups.value( currentItem );
-
-  if ( buttonGroup ) {
-    QList<QAbstractButton *> group = buttonGroup->buttons();
-    const int numberOfGroup( group.count() );
-    for ( int i = 0; i < numberOfGroup; ++i ) {
-      if ( group.at( i )->text().remove( '&' ) == name ) {
-        KMessageBox::error(
-          this,
-          i18n( "Script name already used \"%1\".", name ),
-          i18n( "New Script" ) );
-        return;
+  QTreeWidgetItem * parentItem = currentItem;
+  if (parentItem) {
+      for (int i = 0; i <parentItem->childCount(); ++i) {
+          if (parentItem->child(i)->text(0) == name) {
+              KMessageBox::error(
+                this,
+                i18n( "Script name already used \"%1\".", name ),
+                i18n( "New Script" ) );
+              return;
+          }
       }
-    }
   }
 
-  QTreeWidgetItem *newItem =
-    new QTreeWidgetItem( currentItem );
-  addRadioButton( newItem, name );
+  QTreeWidgetItem *newItem = new QTreeWidgetItem( currentItem );
+  newItem->setFlags(newItem->flags() & (Qt::ItemIsUserCheckable|Qt::ItemIsEnabled|Qt::ItemIsSelectable));
+  newItem->setText(0,name);
+  newItem->setCheckState(0,Qt::Unchecked);
   mCurrentURL = u;
   mIsNewScript = true;
   slotGetResult( 0, true, QString(), false );
