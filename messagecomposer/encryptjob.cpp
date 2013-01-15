@@ -161,6 +161,9 @@ void EncryptJob::process()
     proto = Kleo::CryptoBackendFactory::instance()->openpgp();
   } else if( d->format & Kleo::AnySMIME ) {
     proto = Kleo::CryptoBackendFactory::instance()->smime();
+  } else {
+    kDebug() << "HELP! Encrypt job but have protocol to encrypt with.";
+    return;
   }
 
   Q_ASSERT( proto );
