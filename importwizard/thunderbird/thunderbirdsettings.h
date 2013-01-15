@@ -40,6 +40,7 @@ private:
   void readLdapSettings();
   void readTagSettings();
   void readExtensionsSettings();
+  int adaptAutoResizeResolution(int index);
 
   void insertIntoMap( const QString& line );
 
