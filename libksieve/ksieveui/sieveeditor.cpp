@@ -83,6 +83,7 @@ SieveEditor::SieveEditor( QWidget * parent )
   splitter->addWidget( widget );
   splitter->addWidget( mDebugTextEdit );
   splitter->setSizes( size );
+  splitter->setChildrenCollapsible(false);
   connect( mTextEdit, SIGNAL(textChanged()), SLOT(slotTextChanged()) );
   connect( this, SIGNAL(user2Clicked()), SLOT(slotSaveAs()) );
   connect( this, SIGNAL(user3Clicked()), SLOT(slotImport()) );
