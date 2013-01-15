@@ -251,14 +251,19 @@ void DistributionListDialog::slotDelayedUser1( KJob *job )
     return;
   }
 
-  Akonadi::CollectionDialog dlg( Akonadi::CollectionDialog::KeepTreeExpanded, 0, this );
-  dlg.setMimeTypeFilter( QStringList() << KABC::Addressee::mimeType() << KABC::ContactGroup::mimeType() );
-  dlg.setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
-  dlg.setDescription( i18n( "Select the address book folder to store the contact group in:" ) );
-  if ( !dlg.exec() )
+  QPointer<Akonadi::CollectionDialog> dlg =
+    new Akonadi::CollectionDialog( Akonadi::CollectionDialog::KeepTreeExpanded, 0, this );
+  dlg->setMimeTypeFilter( QStringList() << KABC::Addressee::mimeType()
+                                        << KABC::ContactGroup::mimeType() );
+  dlg->setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
+  dlg->setDescription( i18n( "Select the address book folder to store the contact group in:" ) );
+  if ( !dlg->exec() ) {
+    delete dlg;
     return;
+  }
 
-  const Akonadi::Collection targetCollection = dlg.selectedCollection();
+  const Akonadi::Collection targetCollection = dlg->selectedCollection();
+  delete dlg;
 
   KABC::ContactGroup group( name );
   const int numberOfTopLevel( mRecipientsList->topLevelItemCount() );

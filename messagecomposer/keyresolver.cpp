@@ -60,17 +60,18 @@
 #include <kmessagebox.h>
 
 #include <QStringList>
+#include <QPointer>
 #include <QTextDocument>
-#include <time.h>
 
 #include <algorithm>
-#include <memory>
-#include <iterator>
-#include <functional>
-#include <map>
-#include <set>
-#include <iostream>
 #include <cassert>
+#include <ctime>
+#include <functional>
+#include <iostream>
+#include <iterator>
+#include <map>
+#include <memory>
+#include <set>
 
 // this should go into stl_util.h, which has since moved into messageviewer.
 // for lack of a better place put it in here for now.
@@ -1472,15 +1473,19 @@ Kpgp::Result Kleo::KeyResolver::showKeyApprovalDialog() {
   const MessageViewer::KCursorSaver idle( MessageViewer::KBusyPtr::idle() );
 #endif
 
-  Kleo::KeyApprovalDialog dlg( items, senderKeys );
+  QPointer<Kleo::KeyApprovalDialog> dlg = new Kleo::KeyApprovalDialog( items, senderKeys );
 
-  if ( dlg.exec() == QDialog::Rejected )
+  if ( dlg->exec() == QDialog::Rejected ) {
+    delete dlg;
     return Kpgp::Canceled;
+  }
 
-  items = dlg.items();
-  senderKeys = dlg.senderKeys();
+  items = dlg->items();
+  senderKeys = dlg->senderKeys();
+  const bool prefsChanged = dlg->preferencesChanged();
+  delete dlg;
 
-  if ( dlg.preferencesChanged() ) {
+  if ( prefsChanged ) {
     for ( uint i = 0; i < items.size(); ++i ) {
       ContactPreferences pref = lookupContactPreferences( items[i].address );
       pref.encryptionPreference = items[i].pref;
@@ -1596,25 +1601,35 @@ std::vector<GpgME::Key> Kleo::KeyResolver::signingKeys( CryptoMessageFormat f ) 
 //
 
 
-std::vector<GpgME::Key> Kleo::KeyResolver::selectKeys( const QString & person, const QString & msg, const std::vector<GpgME::Key> & selectedKeys ) const {
+std::vector<GpgME::Key> Kleo::KeyResolver::selectKeys(
+  const QString &person, const QString &msg, const std::vector<GpgME::Key> &selectedKeys ) const
+{
   const bool opgp = containsOpenPGP( mCryptoMessageFormats );
   const bool x509 = containsSMIME( mCryptoMessageFormats );
 
-  Kleo::KeySelectionDialog dlg( i18n("Encryption Key Selection"),
-				msg, KPIMUtils::extractEmailAddress( person ), selectedKeys,
-                                Kleo::KeySelectionDialog::ValidEncryptionKeys
-                                & ~(opgp ? 0 : Kleo::KeySelectionDialog::OpenPGPKeys)
-                                & ~(x509 ? 0 : Kleo::KeySelectionDialog::SMIMEKeys),
-				true, true ); // multi-selection and "remember choice" box
+  QPointer<Kleo::KeySelectionDialog> dlg =
+    new Kleo::KeySelectionDialog(
+      i18n("Encryption Key Selection"),
+      msg, KPIMUtils::extractEmailAddress( person ), selectedKeys,
+      Kleo::KeySelectionDialog::ValidEncryptionKeys
+      & ~(opgp ? 0 : Kleo::KeySelectionDialog::OpenPGPKeys)
+      & ~(x509 ? 0 : Kleo::KeySelectionDialog::SMIMEKeys),
+      true, true ); // multi-selection and "remember choice" box
 
-  if ( dlg.exec() != QDialog::Accepted )
+  if ( dlg->exec() != QDialog::Accepted ) {
+    delete dlg;
     return std::vector<GpgME::Key>();
-  std::vector<GpgME::Key> keys = dlg.selectedKeys();
+  }
+
+  std::vector<GpgME::Key> keys = dlg->selectedKeys();
   keys.erase( std::remove_if( keys.begin(), keys.end(),
                               NotValidTrustedEncryptionKey ), // -= trusted?
                               keys.end() );
-  if ( !keys.empty() && dlg.rememberSelection() )
-    setKeysForAddress( person, dlg.pgpKeyFingerprints(), dlg.smimeFingerprints() );
+  if ( !keys.empty() && dlg->rememberSelection() ) {
+    setKeysForAddress( person, dlg->pgpKeyFingerprints(), dlg->smimeFingerprints() );
+  }
+
+  delete dlg;
   return keys;
 }
 
@@ -1826,14 +1841,18 @@ void Kleo::KeyResolver::saveContactPreference( const QString& email, const Conta
     if ( !ok )
       return;
 
-    Akonadi::CollectionDialog dlg( Akonadi::CollectionDialog::KeepTreeExpanded );
-    dlg.setMimeTypeFilter( QStringList() << KABC::Addressee::mimeType() );
-    dlg.setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
-    dlg.setDescription( i18n( "Select the address book folder to store the new contact in:" ) );
-    if ( !dlg.exec() )
+    QPointer<Akonadi::CollectionDialog> dlg =
+      new Akonadi::CollectionDialog( Akonadi::CollectionDialog::KeepTreeExpanded );
+    dlg->setMimeTypeFilter( QStringList() << KABC::Addressee::mimeType() );
+    dlg->setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
+    dlg->setDescription( i18n( "Select the address book folder to store the new contact in:" ) );
+    if ( !dlg->exec() ) {
+      delete dlg;
       return;
+    }
 
-    const Akonadi::Collection targetCollection = dlg.selectedCollection();
+    const Akonadi::Collection targetCollection = dlg->selectedCollection();
+    delete dlg;
 
     KABC::Addressee contact;
     contact.setNameFromString( fullName );
