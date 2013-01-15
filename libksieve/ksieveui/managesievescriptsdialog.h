@@ -12,6 +12,7 @@
 class QButtonGroup;
 class QTreeWidgetItem;
 class KPushButton;
+class QTreeWidget;
 namespace KManageSieve {
 class SieveJob;
 }
@@ -33,7 +34,7 @@ class KSIEVEUI_EXPORT ManageSieveScriptsDialog : public QDialog
     void slotRefresh( bool disconnectSignal = false );
     void slotItem( KManageSieve::SieveJob *, const QString &, bool );
     void slotResult( KManageSieve::SieveJob *, bool, const QString &, bool );
-    void slotContextMenuRequested( QTreeWidgetItem*, QPoint position );
+    void slotContextMenuRequested( const QPoint& position );
     void slotDoubleClicked( QTreeWidgetItem* );
     void slotSelectionChanged();
     void slotNewScript();
@@ -97,7 +98,7 @@ class KSIEVEUI_EXPORT ManageSieveScriptsDialog : public QDialog
       SIEVE_SERVER_ERROR = Qt::UserRole +1
     };
 
-    TreeWidgetWithContextMenu* mListView;
+    QTreeWidget* mListView;
     SieveEditor * mSieveEditor;
     QMap<KManageSieve::SieveJob*,QTreeWidgetItem*> mJobs;
     QMap<QTreeWidgetItem*,KUrl> mUrls;
