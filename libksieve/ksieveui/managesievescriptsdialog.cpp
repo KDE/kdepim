@@ -253,6 +253,7 @@ void ManageSieveScriptsDialog::slotContextMenuRequested( const QPoint& p )
     // script items:
     menu.addAction( i18n( "Delete Script" ), this, SLOT(slotDeleteScript()) );
     menu.addAction( i18n( "Edit Script..." ), this, SLOT(slotEditScript()) );
+    menu.addSeparator();
     if ( itemIsActived( item ) )
       menu.addAction( i18n( "Deactivate Script" ), this, SLOT(slotDeactivateScript()) );
   } else if ( !item->parent() ) {
