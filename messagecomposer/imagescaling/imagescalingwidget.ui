@@ -272,7 +272,7 @@
           <item>
            <widget class="QRadioButton" name="notFilterFilename">
             <property name="text">
-             <string>Do not filter</string>
+             <string>Do not filter (All files are included)</string>
             </property>
             <property name="checked">
              <bool>true</bool>
@@ -282,14 +282,14 @@
           <item>
            <widget class="QRadioButton" name="includeFilesWithPattern">
             <property name="text">
-             <string>Include all files with pattern</string>
+             <string>Include all files whose names contains one of the patterns</string>
             </property>
            </widget>
           </item>
           <item>
            <widget class="QRadioButton" name="excludeFilesWithPattern">
             <property name="text">
-             <string>Exclude all files with pattern</string>
+             <string>Exclude all files whose names contains one of the patterns</string>
             </property>
            </widget>
           </item>
@@ -310,6 +310,16 @@
              </widget>
             </item>
            </layout>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="renameResizedImage">
+            <property name="text">
+             <string>Rename resized images with following pattern:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="renameResizedImagePattern"/>
           </item>
           <item>
            <spacer name="verticalSpacer_3">

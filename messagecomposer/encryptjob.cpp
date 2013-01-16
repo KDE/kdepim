@@ -154,13 +154,16 @@ void EncryptJob::process()
     d->content = d->subjobContents.first();
   }
 
-  d->resultContent = new KMime::Content;
+  //d->resultContent = new KMime::Content;
 
   const Kleo::CryptoBackend::Protocol *proto = 0;
   if( d->format & Kleo::AnyOpenPGP ) {
     proto = Kleo::CryptoBackendFactory::instance()->openpgp();
   } else if( d->format & Kleo::AnySMIME ) {
     proto = Kleo::CryptoBackendFactory::instance()->smime();
+  } else {
+    kDebug() << "HELP! Encrypt job but have protocol to encrypt with.";
+    return;
   }
 
   Q_ASSERT( proto );

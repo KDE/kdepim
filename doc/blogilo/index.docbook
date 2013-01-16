@@ -5,7 +5,7 @@
        CVS -->
   <!ENTITY kapplication "<application>Blogilo</application>">
   <!ENTITY kappname "&kapplication;">
-  <!ENTITY package "playground/pim">
+  <!ENTITY package "kdepim">
   <!ENTITY % addindex "IGNORE">
   <!ENTITY % English "INCLUDE"> 
 ]>

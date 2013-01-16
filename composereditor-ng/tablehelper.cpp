@@ -20,10 +20,13 @@
 
 #include "tablehelper_p.h"
 
+#include <QDebug>
+
 namespace ComposerEditorNG {
 static QString TBODY = QLatin1String("tbody");
 static QString TABLE = QLatin1String("table");
 static QString ROW = QLatin1String("tr");
+static QString CELL = QLatin1String("td");
 
 QWebElement TableHelper::tableBodyWebElement(const QWebElement&element)
 {
@@ -78,5 +81,56 @@ QWebElement TableHelper::tableWebElement(const QWebElement&element)
     }
 }
 
+QWebElement TableHelper::nextCell(const QWebElement& element)
+{
+    //TODO
+    return QWebElement();
+}
+
+QWebElement TableHelper::previousCell(const QWebElement& element)
+{
+    //TODO
+    return QWebElement();
+}
+
+int TableHelper::tableRowCount(const QWebElement& element)
+{
+    int numberOfRow = 0;
+    QWebElement tableBodyElement = tableBodyWebElement(element);
+    if (!tableBodyElement.isNull()) {
+        //Search all TR
+        QWebElement trElement = tableBodyElement.firstChild();
+        while (!trElement.isNull()) {
+            if (trElement.tagName().toLower() == ROW ) {
+                numberOfRow++;
+            }
+            trElement = trElement.nextSibling();
+        }
+    }
+    return numberOfRow;
+}
+
+int TableHelper::tableColumnCount(const QWebElement& element)
+{
+    //TODO
+    return 0;
+}
+
+void TableHelper::removeCellContentsFromCurrentRow(const QWebElement& element)
+{
+    QWebElement e = element;
+    do {
+        e = e.parent();
+    } while( (e.tagName().toLower() != ROW) && !e.isNull() );
+    if (!e.isNull()) {
+        QWebElement cellElement = e.firstChild();
+        while (!cellElement.isNull()) {
+            if (cellElement.tagName().toLower() == CELL ) {
+                cellElement.setInnerXml(QString::fromLatin1("<BR>"));
+            }
+            cellElement = cellElement.nextSibling();
+        }
+    }
+}
 
 }

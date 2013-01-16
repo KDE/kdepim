@@ -162,6 +162,10 @@ void ImageScalingWidget::loadConfig()
   }
   ui->pattern->setText(MessageComposer::MessageComposerSettings::self()->filterSourcePattern());
 
+  ui->renameResizedImage->setChecked(MessageComposer::MessageComposerSettings::self()->renameResizedImages());
+
+  ui->renameResizedImagePattern->setText(MessageComposer::MessageComposerSettings::self()->renameResizedImagesPattern());
+
   updateFilterSourceTypeSettings();
 
   mWasChanged = false;
@@ -218,6 +222,11 @@ void ImageScalingWidget::writeConfig()
 
   MessageComposer::MessageComposerSettings::self()->setFilterSourceType(mSourceFilterGroup->checkedId());
 
+  MessageComposer::MessageComposerSettings::self()->setRenameResizedImages(ui->renameResizedImage->isChecked());
+
+  MessageComposer::MessageComposerSettings::self()->setRenameResizedImagesPattern(ui->renameResizedImagePattern->text());
+
+
   mWasChanged = false;
 }
 
@@ -263,6 +272,10 @@ void ImageScalingWidget::resetToDefault()
    } else {
       ui->WriteToImageFormat->setCurrentIndex(index);
    }
+
+   ui->renameResizedImage->setChecked(MessageComposer::MessageComposerSettings::self()->renameResizedImages());
+
+   ui->renameResizedImagePattern->setText(MessageComposer::MessageComposerSettings::self()->renameResizedImagesPattern());
 
    updateFilterSourceTypeSettings();
    MessageComposer::MessageComposerSettings::self()->useDefaults( bUseDefaults );

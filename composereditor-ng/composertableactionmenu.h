@@ -45,6 +45,7 @@ private:
     friend class ComposerTableActionMenuPrivate;
     ComposerTableActionMenuPrivate * const d;
     Q_PRIVATE_SLOT( d, void _k_slotInsertRowBelow() )
+    Q_PRIVATE_SLOT( d, void _k_slotInsertRowAbove() )
     Q_PRIVATE_SLOT( d, void _k_slotTableFormat() )
     Q_PRIVATE_SLOT( d, void _k_slotTableCellFormat() )
     Q_PRIVATE_SLOT( d, void _k_slotRemoveCellContents() )
@@ -54,6 +55,8 @@ private:
     Q_PRIVATE_SLOT( d, void _k_slotRemoveTable() )
     Q_PRIVATE_SLOT( d, void _k_slotRemoveRow() )
     Q_PRIVATE_SLOT( d, void _k_slotRemoveColumn() )
+    Q_PRIVATE_SLOT( d, void _k_slotInsertColumnBefore() )
+    Q_PRIVATE_SLOT( d, void _k_slotInsertColumnAfter() )
 };
 }
 
