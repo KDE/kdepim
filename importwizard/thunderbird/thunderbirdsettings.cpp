@@ -148,6 +148,18 @@ void ThunderbirdSettings::readExtensionsSettings()
         const bool confirmBeforeResizing = mHashConfig.value(confirmBeforeResizingStr).toBool();
         addKmailConfig(QLatin1String("AutoResizeImage"), QLatin1String("ask-before-resizing"), confirmBeforeResizing );
     }
+    //extensions.AutoResizeImage.convertImages : not implemented in kmail
+
+    const QString conversionFormatStr("extensions.AutoResizeImage.conversionFormat");
+    if (mHashConfig.contains(conversionFormatStr)) {
+        QString conversionFormat = mHashConfig.value(conversionFormatStr).toString();
+        if (conversionFormat == QLatin1String("png")) {
+            conversionFormat = QLatin1String("PNG");
+        } else {
+            conversionFormat = QLatin1String("JPG");
+        }
+        addKmailConfig(QLatin1String("AutoResizeImage"), QLatin1String("write-format"), conversionFormat );
+    }
 
 }
 
