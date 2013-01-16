@@ -312,6 +312,16 @@
            </layout>
           </item>
           <item>
+           <widget class="QCheckBox" name="renameResizedImage">
+            <property name="text">
+             <string>Rename resized images with following pattern:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="renameResizedImagePattern"/>
+          </item>
+          <item>
            <spacer name="verticalSpacer_3">
             <property name="orientation">
              <enum>Qt::Vertical</enum>
