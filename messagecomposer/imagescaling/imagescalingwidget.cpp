@@ -167,6 +167,7 @@ void ImageScalingWidget::loadConfig()
   ui->renameResizedImage->setChecked(MessageComposer::MessageComposerSettings::self()->renameResizedImages());
 
   ui->renameResizedImagePattern->setText(MessageComposer::MessageComposerSettings::self()->renameResizedImagesPattern());
+  ui->renameResizedImagePattern->setEnabled(ui->renameResizedImage->isChecked());
 
   updateFilterSourceTypeSettings();
 
@@ -278,7 +279,7 @@ void ImageScalingWidget::resetToDefault()
    ui->renameResizedImage->setChecked(MessageComposer::MessageComposerSettings::self()->renameResizedImages());
 
    ui->renameResizedImagePattern->setText(MessageComposer::MessageComposerSettings::self()->renameResizedImagesPattern());
-
+   ui->renameResizedImagePattern->setEnabled(ui->renameResizedImage->isChecked());
    updateFilterSourceTypeSettings();
    MessageComposer::MessageComposerSettings::self()->useDefaults( bUseDefaults );
 
