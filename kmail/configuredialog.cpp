@@ -2655,6 +2655,18 @@ ComposerPageGeneralTab::ComposerPageGeneralTab( QWidget * parent, const char * n
   connect( mShowRecentAddressesInComposer, SIGNAL( stateChanged(int) ),
            this, SLOT( slotEmitChanged( void ) ) );
 
+  mRemoveOwnIdentitiesCheck = new QCheckBox(
+           GlobalSettings::self()->removeOwnIdentitiesItem()->label(),
+           this );
+  QToolTip::add( mRemoveOwnIdentitiesCheck,
+        i18n( "Exclude all configured identities from Reply to All recipient list." ) );
+  QWhatsThis::add( mRemoveOwnIdentitiesCheck, i18n( GlobalSettings::self()
+           ->removeOwnIdentitiesItem()->whatsThis().utf8() ) );
+  vlay->addWidget( mRemoveOwnIdentitiesCheck );
+  connect( mRemoveOwnIdentitiesCheck, SIGNAL( stateChanged(int) ),
+           this, SLOT( slotEmitChanged( void ) ) );
+
+
   // a checkbox for "word wrap" and a spinbox for the column in
   // which to wrap:
   hlay = new QHBoxLayout( vlay ); // inherits spacing
@@ -2811,6 +2823,7 @@ void ComposerPage::GeneralTab::doLoadFromGlobalSettings() {
   mRecipientCheck->setChecked( GlobalSettings::self()->tooManyRecipients() );
   mRecipientSpin->setValue( GlobalSettings::self()->recipientThreshold() );
   mAutoSave->setValue( GlobalSettings::self()->autosaveInterval() );
+  mRemoveOwnIdentitiesCheck->setChecked( GlobalSettings::self()->removeOwnIdentities() );
   if ( GlobalSettings::self()->forwardingInlineByDefault() )
     mForwardTypeCombo->setCurrentItem( 0 );
   else
@@ -2849,6 +2862,9 @@ void ComposerPage::GeneralTab::installProfile( KConfig * profile ) {
     mRecipientSpin->setValue( composer.readNumEntry( "recipient-threshold" ) );
   if ( composer.hasKey( "autosave" ) )
     mAutoSave->setValue( composer.readNumEntry( "autosave" ) );
+  if ( composer.hasKey( "remove-own-identities-on-reply" ) ) {
+    mRemoveOwnIdentitiesCheck->setChecked( composer.readBoolEntry("remove-own-identities-on-reply") );
+  }
 
   if ( general.hasKey( "use-external-editor" )
        && general.hasKey( "external-editor" ) ) {
@@ -2866,6 +2882,7 @@ void ComposerPage::GeneralTab::save() {
   GlobalSettings::self()->setStripSignature( mStripSignatureCheck->isChecked() );
   GlobalSettings::self()->setRequestMDN( mAutoRequestMDNCheck->isChecked() );
   GlobalSettings::self()->setWordWrap( mWordWrapCheck->isChecked() );
+  GlobalSettings::self()->setRemoveOwnIdentities( mRemoveOwnIdentitiesCheck->isChecked() );
 
   GlobalSettings::self()->setLineWrapWidth( mWrapColumnSpin->value() );
   GlobalSettings::self()->setTooManyRecipients( mRecipientCheck->isChecked() );

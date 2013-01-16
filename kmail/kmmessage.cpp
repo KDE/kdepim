@@ -1000,7 +1000,26 @@ KMMessage* KMMessage::createReply( KMail::ReplyStrategy replyStrategy,
 
     if ( !ccRecipients.isEmpty() ) {
       // strip all my addresses from the list of CC recipients
-      ccRecipients = stripMyAddressesFromAddressList( ccRecipients );
+      if ( GlobalSettings::self()->removeOwnIdentities() ) {
+        ccRecipients = stripMyAddressesFromAddressList( ccRecipients );
+      }
+      else {
+        // We keep all addresses even if they are our own except the one that will
+        // be the default set identity for sending
+        QStringList addresses = ccRecipients;
+
+        for( QStringList::Iterator it = addresses.begin(); it != addresses.end(); ) {
+          if( KPIM::getEmailAddress( *it ) == kmkernel->identityManager()->identityForUoidOrDefault( identityUoid() ).primaryEmailAddress() ) {
+            kdDebug(5006) << "Removing only the identity " << *it << " from the CC list"
+                          << endl;
+            it = addresses.remove( it );
+          }
+          else {
+            it++;
+          }
+        }
+        ccRecipients = addresses.join( ", " );
+      }
 
       // in case of a reply to self toStr might be empty. if that's the case
       // then propagate a cc recipient to To: (if there is any).

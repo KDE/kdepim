@@ -342,6 +342,11 @@
         <label>A&amp;utomatically insert signature</label>
         <default>auto</default>
       </entry>
+      <entry name="RemoveOwnIdentities" type="Bool" key="remove-own-identities-on-reply">
+        <label>Exclude all my email addresses from Reply to All.</label>
+        <whatsthis>Excludes all email addresses that are configured in identities from the list of recipients when using Reply to All.</whatsthis>
+        <default>true</default>
+      </entry>
       <entry name="StickyIdentity" type="Bool" key="sticky-identity">
         <whatsthis>Remember this identity, so that it will be used in future composer windows as well.
         </whatsthis>

@@ -615,6 +615,7 @@ private:
   QCheckBox     *mQuoteSelectionOnlyCheck;
   QCheckBox     *mAutoRequestMDNCheck;
   QCheckBox	*mShowRecentAddressesInComposer;
+  QCheckBox     *mRemoveOwnIdentitiesCheck;
   QCheckBox     *mWordWrapCheck;
   KIntSpinBox   *mWrapColumnSpin;
   QCheckBox     *mRecipientCheck;
