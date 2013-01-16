@@ -143,6 +143,12 @@ void ThunderbirdSettings::readExtensionsSettings()
         const int skipMinimumSize = mHashConfig.value(skipMinimumSizeStr).toInt();
         addKmailConfig(QLatin1String("AutoResizeImage"), QLatin1String("skip-image-lower-size"), skipMinimumSize );
     }
+    const QString confirmBeforeResizingStr("extensions.AutoResizeImage.confirmResizing");
+    if (mHashConfig.contains(confirmBeforeResizingStr)) {
+        const bool confirmBeforeResizing = mHashConfig.value(confirmBeforeResizingStr).toBool();
+        addKmailConfig(QLatin1String("AutoResizeImage"), QLatin1String("ask-before-resizing"), confirmBeforeResizing );
+    }
+
 }
 
 int ThunderbirdSettings::adaptAutoResizeResolution(int index, const QString& configStrList)
