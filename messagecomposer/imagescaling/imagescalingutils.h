@@ -22,6 +22,7 @@
 namespace MessageComposer {
 namespace Utils {
 bool resizeImage(MessageCore::AttachmentPart::Ptr part);
+void changeFileName(MessageCore::AttachmentPart::Ptr part);
 }
 
 }

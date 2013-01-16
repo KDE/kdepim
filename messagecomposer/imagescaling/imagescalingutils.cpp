@@ -58,3 +58,13 @@ bool Utils::resizeImage(MessageCore::AttachmentPart::Ptr part)
     return false;
 }
 
+void Utils::changeFileName(MessageCore::AttachmentPart::Ptr part)
+{
+    if (MessageComposer::MessageComposerSettings::self()->renameResizedImages()) {
+        const QString pattern = MessageComposer::MessageComposerSettings::self()->renameResizedImagesPattern();
+        if (!pattern.isEmpty()) {
+            const QString filename = part->fileName();
+            //TODO
+        }
+    }
+}
