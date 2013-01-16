@@ -186,6 +186,7 @@ void Message::ComposerViewBase::setMessage ( const KMime::Message::Ptr& msg )
   if ( m_msg->headerByType( "X-KMail-CursorPos" ) ) {
     m_editor->setCursorPositionFromStart( m_msg->headerByType( "X-KMail-CursorPos" )->asUnicodeString().toInt() );
   }
+  delete msgContent;
 }
 
 void Message::ComposerViewBase::updateTemplate ( const KMime::Message::Ptr& msg )
@@ -211,6 +212,7 @@ void Message::ComposerViewBase::updateTemplate ( const KMime::Message::Ptr& msg 
   if ( msg->headerByType( "X-KMail-CursorPos" ) ) {
     m_editor->setCursorPositionFromStart( m_msg->headerByType( "X-KMail-CursorPos" )->asUnicodeString().toInt() );
   }
+  delete msgContent;
 }
 
 void Message::ComposerViewBase::send ( MessageSender::SendMethod method, MessageSender::SaveIn saveIn )
