@@ -83,12 +83,22 @@ QWebElement TableHelper::tableWebElement(const QWebElement&element)
 
 QWebElement TableHelper::nextCell(const QWebElement& element)
 {
+    QWebElement cellElement = element.nextSibling();
+    //Next cell
+    if (!cellElement.isNull()) {
+        return cellElement;
+    }
     //TODO
     return QWebElement();
 }
 
 QWebElement TableHelper::previousCell(const QWebElement& element)
 {
+    QWebElement cellElement = element.previousSibling();
+    //previous cell
+    if (!cellElement.isNull()) {
+        return cellElement;
+    }
     //TODO
     return QWebElement();
 }
