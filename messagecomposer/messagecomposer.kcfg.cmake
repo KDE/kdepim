@@ -277,6 +277,13 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
       <default>NoFilter</default>
     </entry>
 
+    <entry name="RenameResizedImages" type="Bool" key="rename-resized-images">
+      <default>false</default>
+    </entry>
+    <entry name="RenameResizedImagesPattern" type="String" key="rename-resized-images-pattern">
+      <default></default>
+    </entry>  
+
   </group>
 </kcfg>
 
