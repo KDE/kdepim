@@ -60,8 +60,8 @@ ManageSieveScriptsDialog::ManageSieveScriptsDialog( QWidget * parent, const char
            this, SLOT(slotDoubleClicked(QTreeWidgetItem*)) );
   connect( mListView, SIGNAL(itemSelectionChanged()),
            this, SLOT(slotUpdateButtons()) );
-  connect( mListView, SIGNAL(itemChanged(QTreeWidgetItem *,int)),
-           this, SLOT(slotItemChanged(QTreeWidgetItem*, int)));
+  connect( mListView, SIGNAL(itemChanged(QTreeWidgetItem*,int)),
+           this, SLOT(slotItemChanged(QTreeWidgetItem*,int)));
   vlay->addWidget( mListView );
 
   QHBoxLayout *buttonLayout = new QHBoxLayout;
@@ -251,11 +251,12 @@ void ManageSieveScriptsDialog::slotContextMenuRequested( const QPoint& p )
   QMenu menu;
   if ( isFileNameItem( item ) ) {
     // script items:
-    menu.addAction( i18n( "Delete Script" ), this, SLOT(slotDeleteScript()) );
     menu.addAction( i18n( "Edit Script..." ), this, SLOT(slotEditScript()) );
-    menu.addSeparator();
-    if ( itemIsActived( item ) )
+    menu.addAction( i18n( "Delete Script" ), this, SLOT(slotDeleteScript()) );
+    if ( itemIsActived( item ) ) {
+      menu.addSeparator();
       menu.addAction( i18n( "Deactivate Script" ), this, SLOT(slotDeactivateScript()) );
+    }
   } else if ( !item->parent() ) {
     // top-levels:
     if ( !serverHasError(item) )
