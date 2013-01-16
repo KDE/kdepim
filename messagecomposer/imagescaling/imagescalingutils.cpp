@@ -34,12 +34,12 @@ bool Utils::resizeImage(MessageCore::AttachmentPart::Ptr part)
             case MessageComposer::MessageComposerSettings::EnumFilterSourceType::NoFilter:
                 break;
             case MessageComposer::MessageComposerSettings::EnumFilterSourceType::IncludeFilesWithPattern:
-                if (!filename.startsWith(patternStr)) {
+                if (!filename.contains(patternStr)) {
                     return false;
                 }
                 break;
             case MessageComposer::MessageComposerSettings::EnumFilterSourceType::ExcludeFilesWithPattern:
-                if (filename.startsWith(patternStr)) {
+                if (filename.contains(patternStr)) {
                     return false;
                 }
                 break;
