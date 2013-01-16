@@ -60,8 +60,8 @@ ManageSieveScriptsDialog::ManageSieveScriptsDialog( QWidget * parent, const char
            this, SLOT(slotDoubleClicked(QTreeWidgetItem*)) );
   connect( mListView, SIGNAL(itemSelectionChanged()),
            this, SLOT(slotUpdateButtons()) );
-  connect( mListView, SIGNAL(itemChanged(QTreeWidgetItem *,int)),
-           this, SLOT(slotItemChanged(QTreeWidgetItem*, int)));
+  connect( mListView, SIGNAL(itemChanged(QTreeWidgetItem*,int)),
+           this, SLOT(slotItemChanged(QTreeWidgetItem*,int)));
   vlay->addWidget( mListView );
 
   QHBoxLayout *buttonLayout = new QHBoxLayout;
