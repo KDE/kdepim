@@ -166,7 +166,7 @@ void SignEncryptJob::process()
     return;
   }
 
-  d->resultContent = new KMime::Content;
+  //d->resultContent = new KMime::Content;
 
   kDebug() << "creating signencrypt from:" << proto->name() << proto->displayName();
   std::auto_ptr<Kleo::SignEncryptJob> job( proto->signEncryptJob( !d->binaryHint( d->format ), d->format == Kleo::InlineOpenPGPFormat ) );
