@@ -56,6 +56,8 @@ ImageScalingWidget::ImageScalingWidget(QWidget *parent)
   connect(ui->CBMinimumWidth,SIGNAL(currentIndexChanged(int)),SLOT(slotComboboxChanged(int)));
   connect(ui->CBMinimumHeight,SIGNAL(currentIndexChanged(int)),SLOT(slotComboboxChanged(int)));
   connect(ui->WriteToImageFormat,SIGNAL(activated(int)),SIGNAL(changed()));
+  connect(ui->renameResizedImage,SIGNAL(clicked()),SIGNAL(changed()));
+  connect(ui->renameResizedImagePattern,SIGNAL(textChanged(QString)),SIGNAL(changed()));
 
   ui->pattern->setEnabled(false);
   mSourceFilterGroup = new QButtonGroup(ui->filterSourceGroupBox);
