@@ -21,5 +21,20 @@
 #include "listhelper_p.h"
 
 namespace ComposerEditorNG {
+static QString OL = QLatin1String("ol");
+static QString UL = QLatin1String("ul");
+
+QWebElement ListHelper::ulElement(const QWebElement& element)
+{
+    //TODO
+    return element;
+}
+
+QWebElement ListHelper::olElement(const QWebElement& element)
+{
+    //TODO
+    return element;
+}
+
 
 }

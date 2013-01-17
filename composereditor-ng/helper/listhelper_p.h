@@ -21,10 +21,13 @@
 #ifndef LISTHELPER_H
 #define LISTHELPER_H
 
+#include <QWebElement>
+
 namespace ComposerEditorNG {
 
 namespace ListHelper {
-
+QWebElement ulElement(const QWebElement&element);
+QWebElement olElement(const QWebElement&element);
 }
 }
 
