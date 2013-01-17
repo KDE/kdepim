@@ -60,6 +60,9 @@ ImageScalingWidget::ImageScalingWidget(QWidget *parent)
   connect(ui->renameResizedImage,SIGNAL(clicked(bool)),ui->renameResizedImagePattern,SLOT(setEnabled(bool)));
   connect(ui->renameResizedImagePattern,SIGNAL(textChanged(QString)),SIGNAL(changed()));
 
+  connect(ui->resizeEmailsPattern,SIGNAL(textChanged(QString)),SIGNAL(changed()));
+  connect(ui->doNotResizePattern,SIGNAL(textChanged(QString)),SIGNAL(changed()));
+
   ui->pattern->setEnabled(false);
   mSourceFilenameFilterGroup = new QButtonGroup(ui->filterSourceGroupBox);
   connect( mSourceFilenameFilterGroup, SIGNAL(buttonClicked(int)), this, SLOT(slotSourceFilterClicked(int)) );
@@ -90,7 +93,10 @@ void ImageScalingWidget::slotSourceFilterClicked(int button)
 
 void ImageScalingWidget::slotRecipientFilterClicked(int button)
 {
-  //TODO
+  ui->resizeEmailsPattern->setEnabled( (button == MessageComposer::MessageComposerSettings::EnumFilterRecipientType::ResizeEachEmailsContainsPattern) ||
+                                      (button == MessageComposer::MessageComposerSettings::EnumFilterRecipientType::ResizeOneEmailContainsPattern) );
+  ui->doNotResizePattern->setEnabled((button == MessageComposer::MessageComposerSettings::EnumFilterRecipientType::DontResizeEachEmailsContainsPattern) ||
+                                     (button == MessageComposer::MessageComposerSettings::EnumFilterRecipientType::DontResizeOneEmailContainsPattern) );
   Q_EMIT changed();
 }
 
