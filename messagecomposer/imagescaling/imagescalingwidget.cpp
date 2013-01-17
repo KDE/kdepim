@@ -61,11 +61,15 @@ ImageScalingWidget::ImageScalingWidget(QWidget *parent)
   connect(ui->renameResizedImagePattern,SIGNAL(textChanged(QString)),SIGNAL(changed()));
 
   ui->pattern->setEnabled(false);
-  mSourceFilterGroup = new QButtonGroup(ui->filterSourceGroupBox);
-  connect( mSourceFilterGroup, SIGNAL(buttonClicked(int)), this, SLOT(slotSourceFilterClicked(int)) );
-  mSourceFilterGroup->addButton( ui->notFilterFilename, MessageComposer::MessageComposerSettings::EnumFilterSourceType::NoFilter );
-  mSourceFilterGroup->addButton( ui->includeFilesWithPattern, MessageComposer::MessageComposerSettings::EnumFilterSourceType::IncludeFilesWithPattern );
-  mSourceFilterGroup->addButton( ui->excludeFilesWithPattern, MessageComposer::MessageComposerSettings::EnumFilterSourceType::ExcludeFilesWithPattern );
+  mSourceFilenameFilterGroup = new QButtonGroup(ui->filterSourceGroupBox);
+  connect( mSourceFilenameFilterGroup, SIGNAL(buttonClicked(int)), this, SLOT(slotSourceFilterClicked(int)) );
+  mSourceFilenameFilterGroup->addButton( ui->notFilterFilename, MessageComposer::MessageComposerSettings::EnumFilterSourceType::NoFilter );
+  mSourceFilenameFilterGroup->addButton( ui->includeFilesWithPattern, MessageComposer::MessageComposerSettings::EnumFilterSourceType::IncludeFilesWithPattern );
+  mSourceFilenameFilterGroup->addButton( ui->excludeFilesWithPattern, MessageComposer::MessageComposerSettings::EnumFilterSourceType::ExcludeFilesWithPattern );
+
+  mRecipientFilterGroup = new QButtonGroup(ui->tab_4);
+  connect( mRecipientFilterGroup, SIGNAL(buttonClicked(int)), this, SLOT(slotRecipientFilterClicked(int)) );
+
 }
 
 ImageScalingWidget::~ImageScalingWidget()
@@ -76,6 +80,12 @@ ImageScalingWidget::~ImageScalingWidget()
 void ImageScalingWidget::slotSourceFilterClicked(int button)
 {
   ui->pattern->setEnabled(button != 0);
+  Q_EMIT changed();
+}
+
+void ImageScalingWidget::slotRecipientFilterClicked(int button)
+{
+  //TODO
   Q_EMIT changed();
 }
 
@@ -224,7 +234,7 @@ void ImageScalingWidget::writeConfig()
 
   MessageComposer::MessageComposerSettings::self()->setFilterSourcePattern(ui->pattern->text());
 
-  MessageComposer::MessageComposerSettings::self()->setFilterSourceType(mSourceFilterGroup->checkedId());
+  MessageComposer::MessageComposerSettings::self()->setFilterSourceType(mSourceFilenameFilterGroup->checkedId());
 
   MessageComposer::MessageComposerSettings::self()->setRenameResizedImages(ui->renameResizedImage->isChecked());
 
