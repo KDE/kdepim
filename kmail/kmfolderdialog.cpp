@@ -342,7 +342,8 @@ KMail::FolderDialogGeneralTab::FolderDialogGeneralTab( KMFolderDialog* dlg,
                                                  const QString& aName,
                                                  QWidget* parent, const char* name )
   : FolderDialogTab( dlg, parent, name ),
-    mSharedSeenFlagsCheckBox( 0 )
+    mSharedSeenFlagsCheckBox( 0 ),
+    mNameEdit( 0 )
 {
   mIsLocalSystemFolder = mDlg->folder()->isSystemFolder();
   mIsResourceFolder = kmkernel->iCalIface().isStandardResourceFolder( mDlg->folder() );
