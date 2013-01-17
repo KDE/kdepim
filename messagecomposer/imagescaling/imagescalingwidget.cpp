@@ -69,7 +69,12 @@ ImageScalingWidget::ImageScalingWidget(QWidget *parent)
 
   mRecipientFilterGroup = new QButtonGroup(ui->tab_4);
   connect( mRecipientFilterGroup, SIGNAL(buttonClicked(int)), this, SLOT(slotRecipientFilterClicked(int)) );
-
+  ui->doNotResizePattern->setEnabled(false);
+  mRecipientFilterGroup->addButton(ui->doNotFilterRecipients,MessageComposer::MessageComposerSettings::EnumFilterRecipientType::NoFilter );
+  mRecipientFilterGroup->addButton(ui->resizeEachEmails,MessageComposer::MessageComposerSettings::EnumFilterRecipientType::ResizeEachEmailsContainsPattern );
+  mRecipientFilterGroup->addButton(ui->resizeOneEmails,MessageComposer::MessageComposerSettings::EnumFilterRecipientType::ResizeOneEmailContainsPattern );
+  mRecipientFilterGroup->addButton(ui->doNotResizeEachEmails,MessageComposer::MessageComposerSettings::EnumFilterRecipientType::DontResizeEachEmailsContainsPattern );
+  mRecipientFilterGroup->addButton(ui->doNotResizeOneEmails,MessageComposer::MessageComposerSettings::EnumFilterRecipientType::DontResizeOneEmailContainsPattern );
 }
 
 ImageScalingWidget::~ImageScalingWidget()

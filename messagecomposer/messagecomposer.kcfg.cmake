@@ -283,6 +283,17 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
     <entry name="RenameResizedImagesPattern" type="String" key="rename-resized-images-pattern">
       <default></default>
     </entry>  
+    <entry name="FilterRecipientType" type="Enum">
+      <label></label>
+      <choices>
+        <choice name="NoFilter"/>
+        <choice name="ResizeEachEmailsContainsPattern"/>
+        <choice name="ResizeOneEmailContainsPattern"/>
+        <choice name="DontResizeEachEmailsContainsPattern"/>
+        <choice name="DontResizeOneEmailContainsPattern"/>
+      </choices>
+      <default>NoFilter</default>
+    </entry>
 
   </group>
 </kcfg>
