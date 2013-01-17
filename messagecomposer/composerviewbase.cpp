@@ -335,6 +335,9 @@ void Message::ComposerViewBase::slotEmailAddressResolved ( KJob* job )
     // to not block sending emails completly.
   }
 
+  bool autoresizeImage = MessageComposer::MessageComposerSettings::self()->autoResizeImageEnabled();
+
+
   const MessageComposer::EmailAddressResolveJob *resolveJob = qobject_cast<MessageComposer::EmailAddressResolveJob*>( job );
   if( mSaveIn == MessageSender::SaveInNone ) {
     mExpandedFrom = resolveJob->expandedFrom();
@@ -389,13 +392,14 @@ void Message::ComposerViewBase::slotEmailAddressResolved ( KJob* job )
     return;
   }
 
-  bool autoresizeImage = false;
-  if(MessageComposer::MessageComposerSettings::self()->autoResizeImageEnabled()) {
-    if(MessageComposer::MessageComposerSettings::self()->askBeforeResizing()) {
+  if (autoresizeImage) {
+    if (MessageComposer::MessageComposerSettings::self()->askBeforeResizing()) {
        const int rc = KMessageBox::warningYesNo( m_parentWidget,i18n("Do you want to resize images?"),
                                                  i18n("Auto Resize Images"), KStandardGuiItem::yes(), KStandardGuiItem::no());
-       if(rc == KMessageBox::Yes) {
+       if (rc == KMessageBox::Yes) {
            autoresizeImage = true;
+       } else {
+           autoresizeImage = false;
        }
     }
   }
