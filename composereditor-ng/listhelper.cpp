@@ -18,7 +18,7 @@
 
 */
 
-#include "listhelper.h"
+#include "listhelper_p.h"
 
 namespace ComposerEditorNG {
 
