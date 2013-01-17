@@ -67,8 +67,6 @@ private:
 
     KUrl mUrl;
     QCheckBox *mApplyAll;
-    QPushButton *mOverWrite;
-    QPushButton *mIgnore;
     QPushButton *mRename;
     QPushButton *mSuggestNewName;
     KLineEdit *mNameEdit;

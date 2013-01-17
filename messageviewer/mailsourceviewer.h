@@ -58,7 +58,7 @@ public:
     : QSyntaxHighlighter( textdocument )
   {}
 protected:
-  virtual void highlightBlock ( const QString & text );
+  void highlightBlock ( const QString & text );
 };
 
 class MailSourceViewTextBrowserWidget : public QWidget
@@ -84,7 +84,7 @@ class MailSourceViewTextBrowser: public QPlainTextEdit
 public:
   explicit MailSourceViewTextBrowser( QWidget *parent = 0 );
 protected:
-  virtual void contextMenuEvent( QContextMenuEvent *event );
+  void contextMenuEvent( QContextMenuEvent *event );
 private slots:
   void slotSpeakText();
 signals:
