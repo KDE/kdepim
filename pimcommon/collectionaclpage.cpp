@@ -94,8 +94,7 @@ class ActionButton : public QPushButton
 
 CollectionAclPage::CollectionAclPage( QWidget *parent )
   : CollectionPropertiesPage( parent ),
-    mAclManager( new PimCommon::AclManager( this ) ),
-    mChanged( false )
+    mAclManager( new PimCommon::AclManager( this ) )
 {
   setObjectName( QLatin1String( "PimCommon::CollectionAclPage" ) );
 
