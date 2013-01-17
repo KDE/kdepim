@@ -27,15 +27,14 @@ class KImportPage;
 class KMailCVT : public KAssistantDialog {
   Q_OBJECT
 public:
-  KMailCVT(QWidget* parent=0);
+  explicit KMailCVT(QWidget* parent=0);
   ~KMailCVT();
 
-  virtual void next();
-  virtual void reject();
-public slots:
-  void help();
+  void next();
+  void reject();
   
 private slots:
+  void help();
   void collectionChanged( const Akonadi::Collection& selectedCollection );
 private:
   void writeConfig();
