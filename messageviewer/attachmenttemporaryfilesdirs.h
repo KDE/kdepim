@@ -37,10 +37,13 @@ public:
     void addTempDir( const QString& dir );
     QStringList temporaryFiles() const;
     void removeTempFiles();
+    void forceCleanTempFiles();
 
 private Q_SLOTS:
     void slotRemoveTempFiles();
 
+private:
+    void cleanTempFiles();
 private:
     QStringList mTempFiles;
     QStringList mTempDirs;

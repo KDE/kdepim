@@ -78,6 +78,7 @@ public:
     void setNodeUnprocessed( KMime::Content* node, bool recurse );
     bool nodeProcessed( KMime::Content* node ) const;
     void clear();
+    void forceCleanTempFiles();
 
     void setEncryptionState( KMime::Content* node, const KMMsgEncryptionState state );
     KMMsgEncryptionState encryptionState( KMime::Content *node ) const;

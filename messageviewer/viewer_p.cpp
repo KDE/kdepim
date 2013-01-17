@@ -257,7 +257,7 @@ ViewerPrivate::~ViewerPrivate()
   delete mHtmlWriter; mHtmlWriter = 0;
   delete mViewer; mViewer = 0;
   delete mCSSHelper;
-  mNodeHelper->removeTempFiles();
+  mNodeHelper->forceCleanTempFiles();
   delete mNodeHelper;
 }
 
