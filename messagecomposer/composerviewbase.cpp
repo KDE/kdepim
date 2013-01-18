@@ -31,6 +31,7 @@
 #include "infopart.h"
 #include "composer.h"
 #include "util.h"
+#include "imagescaling/imagescalingutils.h"
 
 #include <messageviewer/objecttreeemptysource.h>
 #include <messageviewer/objecttreeparser.h>
@@ -344,6 +345,15 @@ void Message::ComposerViewBase::slotEmailAddressResolved ( KJob* job )
     mExpandedTo = resolveJob->expandedTo();
     mExpandedCc = resolveJob->expandedCc();
     mExpandedBcc = resolveJob->expandedBcc();
+    if (autoresizeImage) {
+      QStringList listEmails;
+      listEmails<< mExpandedFrom;
+      listEmails<< mExpandedTo;
+      listEmails<< mExpandedCc;
+      listEmails<< mExpandedBcc;
+      autoresizeImage = MessageComposer::Utils::filterRecipients(listEmails);
+    }
+
   } else { // saved to draft, so keep the old values, not very nice.
     mExpandedFrom = from();
     foreach( const MessageComposer::Recipient::Ptr &r, m_recipientsEditor->recipients() ) {
@@ -370,6 +380,7 @@ void Message::ComposerViewBase::slotEmailAddressResolved ( KJob* job )
     m_msg->setHeader( new KMime::Headers::Generic( "X-KMail-UnExpanded-To", m_msg.get(), unExpandedTo.join( QLatin1String( ", " ) ).toLatin1() ) );
     m_msg->setHeader( new KMime::Headers::Generic( "X-KMail-UnExpanded-CC", m_msg.get(), unExpandedCc.join( QLatin1String( ", " ) ).toLatin1() ) );
     m_msg->setHeader( new KMime::Headers::Generic( "X-KMail-UnExpanded-BCC", m_msg.get(), unExpandedBcc.join( QLatin1String( ", " ) ).toLatin1() ) );
+    autoresizeImage = false;
   }
 
   Q_ASSERT(m_composers.isEmpty()); //composers should be empty. The caller of this function

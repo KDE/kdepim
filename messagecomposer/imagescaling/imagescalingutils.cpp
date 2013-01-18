@@ -72,22 +72,57 @@ void Utils::changeFileName(MessageCore::AttachmentPart::Ptr part)
 
 bool Utils::filterRecipients(const QStringList& recipients)
 {
+    if (recipients.isEmpty())
+        return false;
+
     if (MessageComposer::MessageComposerSettings::self()->filterRecipientType() == MessageComposer::MessageComposerSettings::EnumFilterRecipientType::NoFilter) {
         return false;
     }
-    Q_FOREACH( const QString& emails, recipients ) {
-        switch(MessageComposer::MessageComposerSettings::self()->filterRecipientType()) {
-        case MessageComposer::MessageComposerSettings::EnumFilterRecipientType::NoFilter:
+
+    const QString doNotResizeEmailsPattern = MessageComposer::MessageComposerSettings::self()->doNotResizeEmailsPattern();
+    const QString resizeEmailsPattern = MessageComposer::MessageComposerSettings::self()->resizeEmailsPattern();
+    if (doNotResizeEmailsPattern.isEmpty() && resizeEmailsPattern.isEmpty())
+        return false;
+
+    switch(MessageComposer::MessageComposerSettings::self()->filterRecipientType()) {
+    case MessageComposer::MessageComposerSettings::EnumFilterRecipientType::NoFilter:
+        return false;
+    case MessageComposer::MessageComposerSettings::EnumFilterRecipientType::ResizeEachEmailsContainsPattern:
+        if (resizeEmailsPattern.isEmpty())
             return false;
-        case MessageComposer::MessageComposerSettings::EnumFilterRecipientType::ResizeEachEmailsContainsPattern:
-            break;
-        case MessageComposer::MessageComposerSettings::EnumFilterRecipientType::ResizeOneEmailContainsPattern:
-            break;
-        case MessageComposer::MessageComposerSettings::EnumFilterRecipientType::DontResizeEachEmailsContainsPattern:
-            break;
-        case MessageComposer::MessageComposerSettings::EnumFilterRecipientType::DontResizeOneEmailContainsPattern:
-            break;
+        Q_FOREACH( const QString& emails, recipients ) {
+            if (!emails.contains(resizeEmailsPattern)) {
+                return false;
+            }
         }
+        return true;
+    case MessageComposer::MessageComposerSettings::EnumFilterRecipientType::ResizeOneEmailContainsPattern:
+        if (resizeEmailsPattern.isEmpty())
+            return false;
+        Q_FOREACH( const QString& emails, recipients ) {
+            if (emails.contains(resizeEmailsPattern)) {
+                return true;
+            }
+        }
+        return false;
+    case MessageComposer::MessageComposerSettings::EnumFilterRecipientType::DontResizeEachEmailsContainsPattern:
+        if (doNotResizeEmailsPattern.isEmpty())
+            return false;
+        Q_FOREACH( const QString& emails, recipients ) {
+            if (!emails.contains(doNotResizeEmailsPattern)) {
+                return false;
+            }
+        }
+        return true;
+    case MessageComposer::MessageComposerSettings::EnumFilterRecipientType::DontResizeOneEmailContainsPattern:
+        if (doNotResizeEmailsPattern.isEmpty())
+            return false;
+        Q_FOREACH( const QString& emails, recipients ) {
+            if (emails.contains(doNotResizeEmailsPattern)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     return false;
