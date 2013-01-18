@@ -949,7 +949,6 @@ void ComposerView::contextMenuEvent(QContextMenuEvent* event)
     autoSpellCheckingAction->setCheckable( true );
     autoSpellCheckingAction->setChecked( d->checkSpellingEnabled() );
     connect( autoSpellCheckingAction, SIGNAL(triggered(bool)), this, SLOT(_k_changeAutoSpellChecking(bool)) );
-    connect( autoSpellCheckingAction, SIGNAL(insertNewTable()),SLOT(_k_slotInsertTable()));
 #endif
     QAction *speakAction = menu->addAction(i18n("Speak Text"));
     speakAction->setIcon(KIcon(QLatin1String("preferences-desktop-text-to-speech")));
