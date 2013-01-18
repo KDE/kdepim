@@ -70,19 +70,24 @@ void Utils::changeFileName(MessageCore::AttachmentPart::Ptr part)
     }
 }
 
-bool Utils::filterRecipients(const QString& recipients)
+bool Utils::filterRecipients(const QStringList& recipients)
 {
-    switch(MessageComposer::MessageComposerSettings::self()->filterRecipientType()) {
-    case MessageComposer::MessageComposerSettings::EnumFilterRecipientType::NoFilter:
-        break;
-    case MessageComposer::MessageComposerSettings::EnumFilterRecipientType::ResizeEachEmailsContainsPattern:
-        break;
-    case MessageComposer::MessageComposerSettings::EnumFilterRecipientType::ResizeOneEmailContainsPattern:
-        break;
-    case MessageComposer::MessageComposerSettings::EnumFilterRecipientType::DontResizeEachEmailsContainsPattern:
-        break;
-    case MessageComposer::MessageComposerSettings::EnumFilterRecipientType::DontResizeOneEmailContainsPattern:
-        break;
+    if (MessageComposer::MessageComposerSettings::self()->filterRecipientType() == MessageComposer::MessageComposerSettings::EnumFilterRecipientType::NoFilter) {
+        return false;
+    }
+    Q_FOREACH( const QString& emails, recipients ) {
+        switch(MessageComposer::MessageComposerSettings::self()->filterRecipientType()) {
+        case MessageComposer::MessageComposerSettings::EnumFilterRecipientType::NoFilter:
+            return false;
+        case MessageComposer::MessageComposerSettings::EnumFilterRecipientType::ResizeEachEmailsContainsPattern:
+            break;
+        case MessageComposer::MessageComposerSettings::EnumFilterRecipientType::ResizeOneEmailContainsPattern:
+            break;
+        case MessageComposer::MessageComposerSettings::EnumFilterRecipientType::DontResizeEachEmailsContainsPattern:
+            break;
+        case MessageComposer::MessageComposerSettings::EnumFilterRecipientType::DontResizeOneEmailContainsPattern:
+            break;
+        }
     }
 
     return false;

@@ -23,7 +23,7 @@ namespace MessageComposer {
 namespace Utils {
 bool resizeImage(MessageCore::AttachmentPart::Ptr part);
 void changeFileName(MessageCore::AttachmentPart::Ptr part);
-bool filterRecipients(const QString& recipients);
+bool filterRecipients(const QStringList &recipients);
 }
 
 }
