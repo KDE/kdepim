@@ -20,22 +20,23 @@
 
 #ifndef COMPOSERVIEW_H
 #define COMPOSERVIEW_H
-
+#include "composereditor_export.h"
 #include <KWebView>
+
 class KActionCollection;
 
 namespace ComposerEditorNG
 {
 class ComposerViewPrivate;
 
-class ComposerView : public KWebView
+class COMPOSEREDITORNG_EXPORT ComposerView : public KWebView
 {
     Q_OBJECT
 public:
     explicit ComposerView(QWidget * parent = 0);
     ~ComposerView();
 
-    void createActions(KActionCollection *actionCollection);
+    virtual void createActions(KActionCollection *actionCollection);
 
     void setActionsEnabled(bool enabled);
 
@@ -81,6 +82,7 @@ private:
     Q_PRIVATE_SLOT( d, void _k_slotPrint() )
     Q_PRIVATE_SLOT( d, void _k_slotPrintPreview() )
     Q_PRIVATE_SLOT( d, void _k_changeAutoSpellChecking(bool) )
+    Q_PRIVATE_SLOT( d, void _k_slotEditList() )
 };
 }
 

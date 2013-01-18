@@ -1,6 +1,6 @@
 /* ============================================================
 *
-* This file is a part of the rekonq project
+* Based on kspellplugin from rekonq project
 *
 * Copyright (C) 2012 by Lindsay Mathieson <lindsay dot mathieson at gmail dot com>
 *

@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013 Montel Laurent <montel.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -18,37 +18,28 @@
 
 */
 
-#ifndef ATTACHMENTTEMPORARYFILESDIRS_H
-#define ATTACHMENTTEMPORARYFILESDIRS_H
+#ifndef COMPOSERLISTDIALOG_H
+#define COMPOSERLISTDIALOG_H
 
-#include <QObject>
-#include <QStringList>
+#include <KDialog>
 
-namespace MessageViewer {
+class QWebElement;
 
-class AttachmentTemporaryFilesDirs : public QObject
+namespace ComposerEditorNG
+{
+class ComposerListDialogPrivate;
+class ComposerListDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit AttachmentTemporaryFilesDirs(QObject *parent = 0);
-    ~AttachmentTemporaryFilesDirs();
-
-    void addTempFile( const QString& file );
-    void addTempDir( const QString& dir );
-    QStringList temporaryFiles() const;
-    void removeTempFiles();
-    void forceCleanTempFiles();
-
-private Q_SLOTS:
-    void slotRemoveTempFiles();
+    explicit ComposerListDialog(const QWebElement &element, QWidget *parent);
+    ~ComposerListDialog();
 
 private:
-    void cleanTempFiles();
-private:
-    QStringList mTempFiles;
-    QStringList mTempDirs;
+    friend class ComposerListDialogPrivate;
+    ComposerListDialogPrivate * const d;
+    Q_PRIVATE_SLOT( d, void _k_slotOkClicked() )
 };
 
 }
-
-#endif // ATTACHMENTTEMPORARYFILESDIRS_H
+#endif // COMPOSERLISTDIALOG_H

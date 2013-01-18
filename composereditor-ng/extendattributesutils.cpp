@@ -22,6 +22,22 @@
 namespace ComposerEditorNG
 {
 
+QMap<QString, QStringList> ExtendAttributesUtils::listGlobalAttribute()
+{
+    QMap<QString, QStringList> globalAttr;
+    globalAttr.insert(QLatin1String("id"),QStringList());
+    globalAttr.insert(QLatin1String("class"),QStringList());
+    globalAttr.insert(QLatin1String("title"),QStringList());
+    globalAttr.insert(QLatin1String("lang"),QStringList());
+    QStringList dir;
+    dir<<QLatin1String("ltr");
+    dir<<QLatin1String("rtl");
+    dir<<QLatin1String("auto");
+    globalAttr.insert(QLatin1String("dir"),dir);
+
+    return globalAttr;
+}
+
 QMap<QString, QStringList> ExtendAttributesUtils::globalAttribute()
 {
     QMap<QString, QStringList> globalAttr;
@@ -53,6 +69,14 @@ QMap<QString, QStringList> ExtendAttributesUtils::attributesMap(ExtendAttributes
         return attributesMapLink();
     case ExtendAttributesDialog::Body:
         return attributesMapBody();
+    case ExtendAttributesDialog::ListUL:
+        return attributesMapListUL();
+    case ExtendAttributesDialog::ListOL:
+        return attributesMapListOL();
+    case ExtendAttributesDialog::ListDL:
+        return attributesMapListDL();
+    default:
+        break;
     }
     return QMap<QString, QStringList>();
 }
@@ -197,6 +221,49 @@ QMap<QString, QStringList> ExtendAttributesUtils::attributesMapLink()
     return map;
 }
 
+QMap<QString, QStringList> ExtendAttributesUtils::attributesMapListUL()
+{
+    QMap<QString, QStringList> map;
+    map = listGlobalAttribute();
+    QStringList rel;
+    rel<<QLatin1String("compact");
+    map.insert(QLatin1String("compact"),rel);
+    QStringList type;
+    type<<QLatin1String("disc");
+    type<<QLatin1String("square");
+    type<<QLatin1String("circle");
+    map.insert(QLatin1String("type"),type);
+    return map;
+}
+
+QMap<QString, QStringList> ExtendAttributesUtils::attributesMapListOL()
+{
+    QMap<QString, QStringList> map;
+    map = listGlobalAttribute();
+    QStringList rel;
+    rel<<QLatin1String("compact");
+    map.insert(QLatin1String("compact"),rel);
+    map.insert(QLatin1String("start"),QStringList());
+    QStringList type;
+    type<<QLatin1String("1");
+    type<<QLatin1String("A");
+    type<<QLatin1String("a");
+    type<<QLatin1String("I");
+    type<<QLatin1String("i");
+    map.insert(QLatin1String("type"),type);
+
+    return map;
+}
+
+QMap<QString, QStringList> ExtendAttributesUtils::attributesMapListDL()
+{
+    QMap<QString, QStringList> map;
+    map = listGlobalAttribute();
+    return map;
+}
+
+
+
 QMap<QString, QStringList> ExtendAttributesUtils::attributesMapBody()
 {
     QMap<QString, QStringList> map;
@@ -219,8 +286,6 @@ QMap<QString, QStringList> ExtendAttributesUtils::attributesJavascriptWindowAndB
     map.insert(QLatin1String("onunload"),QStringList());
     return map;
 }
-
-
 
 QMap<QString, QStringList> ExtendAttributesUtils::attributesJavascript()
 {

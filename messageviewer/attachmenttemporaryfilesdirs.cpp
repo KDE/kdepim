@@ -23,6 +23,7 @@
 #include <QDir>
 #include <QFile>
 #include <QTimer>
+#include <QDebug>
 
 using namespace MessageViewer;
 
@@ -44,7 +45,12 @@ void AttachmentTemporaryFilesDirs::removeTempFiles()
     QTimer::singleShot(DELETEAFTER, this, SLOT(slotRemoveTempFiles()));
 }
 
-void AttachmentTemporaryFilesDirs::slotRemoveTempFiles()
+void AttachmentTemporaryFilesDirs::forceCleanTempFiles()
+{
+    cleanTempFiles();
+}
+
+void AttachmentTemporaryFilesDirs::cleanTempFiles()
 {
     QStringList::ConstIterator end = mTempFiles.constEnd();
     for (QStringList::ConstIterator it = mTempFiles.constBegin(); it != end; ++it) {
@@ -56,7 +62,11 @@ void AttachmentTemporaryFilesDirs::slotRemoveTempFiles()
         QDir(*it).rmdir(*it);
     }
     mTempDirs.clear();
+}
 
+void AttachmentTemporaryFilesDirs::slotRemoveTempFiles()
+{
+    cleanTempFiles();
     //Delete it after cleaning
     deleteLater();
 }

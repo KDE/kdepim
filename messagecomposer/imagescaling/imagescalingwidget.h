@@ -45,13 +45,16 @@ Q_SIGNALS:
 private Q_SLOTS:
   void slotComboboxChanged(int index);
   void slotSourceFilterClicked(int);
+  void slotRecipientFilterClicked(int);
 
 private:
   void updateFilterSourceTypeSettings();
   void initComboBox(KComboBox *combo);
   void initWriteImageFormat();
+  void updateEmailsFilterTypeSettings();
   Ui::ImageScalingWidget *ui;
-  QButtonGroup *mSourceFilterGroup;
+  QButtonGroup *mSourceFilenameFilterGroup;
+  QButtonGroup *mRecipientFilterGroup;
   bool mWasChanged;
 };
 }

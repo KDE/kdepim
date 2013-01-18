@@ -50,6 +50,7 @@ public:
         QVBoxLayout *lay = new QVBoxLayout(q);
 
         treeWidget = new QTreeWidget;
+        treeWidget->setRootIsDecorated(false);
         QStringList headerStr;
 
         if (settings == ExtendAttributesDialog::InlineStyle)

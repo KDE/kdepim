@@ -190,7 +190,7 @@ void ComposerImageResizeWidget::mouseMoveEvent( QMouseEvent * event )
     if (!d->mousePressed) {
         d->setResizeDirectionCursor(event->pos());
     } else if(d->direction!=ComposerImageResizeWidgetPrivate::None){
-        QSize size = d->resizeImage(event->pos());
+        const QSize size = d->resizeImage(event->pos());
         if (!d->imageSizetoolTip) {
             d->imageSizetoolTip = new ComposerImageResizeToolTip(this);
         }

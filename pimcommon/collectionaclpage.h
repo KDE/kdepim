@@ -68,8 +68,6 @@ class PIMCOMMON_EXPORT CollectionAclPage : public Akonadi::CollectionPropertiesP
     KPushButton* mAddACL;
     KPushButton* mEditACL;
     KPushButton* mRemoveACL;
-
-    bool mChanged;
 };
 AKONADI_COLLECTION_PROPERTIES_PAGE_FACTORY( CollectionAclPageFactory, CollectionAclPage )
 }

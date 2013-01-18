@@ -30,6 +30,12 @@ QMap<QString, QStringList> attributesMapImage();
 QMap<QString, QStringList> attributesMapTable();
 QMap<QString, QStringList> attributesMapCell();
 QMap<QString, QStringList> attributesMapLink();
+//List
+QMap<QString, QStringList> listGlobalAttribute();
+QMap<QString, QStringList> attributesMapListUL();
+QMap<QString, QStringList> attributesMapListOL();
+QMap<QString, QStringList> attributesMapListDL();
+
 QMap<QString, QStringList> globalAttribute();
 QMap<QString, QStringList> attributesJavascript();
 QMap<QString, QStringList> attributesJavascriptWindowAndBase();

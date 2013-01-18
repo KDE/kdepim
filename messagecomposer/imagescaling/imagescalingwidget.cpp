@@ -57,14 +57,28 @@ ImageScalingWidget::ImageScalingWidget(QWidget *parent)
   connect(ui->CBMinimumHeight,SIGNAL(currentIndexChanged(int)),SLOT(slotComboboxChanged(int)));
   connect(ui->WriteToImageFormat,SIGNAL(activated(int)),SIGNAL(changed()));
   connect(ui->renameResizedImage,SIGNAL(clicked()),SIGNAL(changed()));
+  connect(ui->renameResizedImage,SIGNAL(clicked(bool)),ui->renameResizedImagePattern,SLOT(setEnabled(bool)));
   connect(ui->renameResizedImagePattern,SIGNAL(textChanged(QString)),SIGNAL(changed()));
 
+  connect(ui->resizeEmailsPattern,SIGNAL(textChanged(QString)),SIGNAL(changed()));
+  connect(ui->doNotResizePattern,SIGNAL(textChanged(QString)),SIGNAL(changed()));
+
   ui->pattern->setEnabled(false);
-  mSourceFilterGroup = new QButtonGroup(ui->filterSourceGroupBox);
-  connect( mSourceFilterGroup, SIGNAL(buttonClicked(int)), this, SLOT(slotSourceFilterClicked(int)) );
-  mSourceFilterGroup->addButton( ui->notFilterFilename, MessageComposer::MessageComposerSettings::EnumFilterSourceType::NoFilter );
-  mSourceFilterGroup->addButton( ui->includeFilesWithPattern, MessageComposer::MessageComposerSettings::EnumFilterSourceType::IncludeFilesWithPattern );
-  mSourceFilterGroup->addButton( ui->excludeFilesWithPattern, MessageComposer::MessageComposerSettings::EnumFilterSourceType::ExcludeFilesWithPattern );
+  mSourceFilenameFilterGroup = new QButtonGroup(ui->filterSourceGroupBox);
+  connect( mSourceFilenameFilterGroup, SIGNAL(buttonClicked(int)), this, SLOT(slotSourceFilterClicked(int)) );
+  mSourceFilenameFilterGroup->addButton( ui->notFilterFilename, MessageComposer::MessageComposerSettings::EnumFilterSourceType::NoFilter );
+  mSourceFilenameFilterGroup->addButton( ui->includeFilesWithPattern, MessageComposer::MessageComposerSettings::EnumFilterSourceType::IncludeFilesWithPattern );
+  mSourceFilenameFilterGroup->addButton( ui->excludeFilesWithPattern, MessageComposer::MessageComposerSettings::EnumFilterSourceType::ExcludeFilesWithPattern );
+
+  mRecipientFilterGroup = new QButtonGroup(ui->tab_4);
+  connect( mRecipientFilterGroup, SIGNAL(buttonClicked(int)), this, SLOT(slotRecipientFilterClicked(int)) );
+  ui->doNotResizePattern->setEnabled(false);
+  ui->resizeEmailsPattern->setEnabled(false);
+  mRecipientFilterGroup->addButton(ui->doNotFilterRecipients,MessageComposer::MessageComposerSettings::EnumFilterRecipientType::NoFilter );
+  mRecipientFilterGroup->addButton(ui->resizeEachEmails,MessageComposer::MessageComposerSettings::EnumFilterRecipientType::ResizeEachEmailsContainsPattern );
+  mRecipientFilterGroup->addButton(ui->resizeOneEmails,MessageComposer::MessageComposerSettings::EnumFilterRecipientType::ResizeOneEmailContainsPattern );
+  mRecipientFilterGroup->addButton(ui->doNotResizeEachEmails,MessageComposer::MessageComposerSettings::EnumFilterRecipientType::DontResizeEachEmailsContainsPattern );
+  mRecipientFilterGroup->addButton(ui->doNotResizeOneEmails,MessageComposer::MessageComposerSettings::EnumFilterRecipientType::DontResizeOneEmailContainsPattern );
 }
 
 ImageScalingWidget::~ImageScalingWidget()
@@ -75,6 +89,15 @@ ImageScalingWidget::~ImageScalingWidget()
 void ImageScalingWidget::slotSourceFilterClicked(int button)
 {
   ui->pattern->setEnabled(button != 0);
+  Q_EMIT changed();
+}
+
+void ImageScalingWidget::slotRecipientFilterClicked(int button)
+{
+  ui->resizeEmailsPattern->setEnabled( (button == MessageComposer::MessageComposerSettings::EnumFilterRecipientType::ResizeEachEmailsContainsPattern) ||
+                                      (button == MessageComposer::MessageComposerSettings::EnumFilterRecipientType::ResizeOneEmailContainsPattern) );
+  ui->doNotResizePattern->setEnabled((button == MessageComposer::MessageComposerSettings::EnumFilterRecipientType::DontResizeEachEmailsContainsPattern) ||
+                                     (button == MessageComposer::MessageComposerSettings::EnumFilterRecipientType::DontResizeOneEmailContainsPattern) );
   Q_EMIT changed();
 }
 
@@ -169,7 +192,12 @@ void ImageScalingWidget::loadConfig()
   ui->renameResizedImagePattern->setText(MessageComposer::MessageComposerSettings::self()->renameResizedImagesPattern());
   ui->renameResizedImagePattern->setEnabled(ui->renameResizedImage->isChecked());
 
+  ui->doNotResizePattern->setText(MessageComposer::MessageComposerSettings::self()->doNotResizeEmailsPattern());
+  ui->resizeEmailsPattern->setText(MessageComposer::MessageComposerSettings::self()->resizeEmailsPattern());
+
+
   updateFilterSourceTypeSettings();
+  updateEmailsFilterTypeSettings();
 
   mWasChanged = false;
 }
@@ -188,6 +216,34 @@ void ImageScalingWidget::updateFilterSourceTypeSettings()
     case MessageComposer::MessageComposerSettings::EnumFilterSourceType::ExcludeFilesWithPattern:
         ui->excludeFilesWithPattern->setChecked(true);
         ui->pattern->setEnabled(true);
+        break;
+    }
+}
+
+void ImageScalingWidget::updateEmailsFilterTypeSettings()
+{
+    ui->doNotResizePattern->setEnabled(false);
+    ui->resizeEmailsPattern->setEnabled(false);
+
+    switch(MessageComposer::MessageComposerSettings::self()->filterRecipientType()) {
+    case MessageComposer::MessageComposerSettings::EnumFilterRecipientType::NoFilter:
+        ui->doNotFilterRecipients->setChecked(true);
+        break;
+    case MessageComposer::MessageComposerSettings::EnumFilterRecipientType::ResizeEachEmailsContainsPattern:
+        ui->resizeEachEmails->setChecked(true);
+        ui->resizeEmailsPattern->setEnabled(true);
+        break;
+    case MessageComposer::MessageComposerSettings::EnumFilterRecipientType::ResizeOneEmailContainsPattern:
+        ui->resizeOneEmails->setChecked(true);
+        ui->resizeEmailsPattern->setEnabled(true);
+        break;
+    case MessageComposer::MessageComposerSettings::EnumFilterRecipientType::DontResizeEachEmailsContainsPattern:
+        ui->doNotResizeEachEmails->setChecked(true);
+        ui->doNotResizePattern->setEnabled(true);
+        break;
+    case MessageComposer::MessageComposerSettings::EnumFilterRecipientType::DontResizeOneEmailContainsPattern:
+        ui->doNotResizeOneEmails->setChecked(true);
+        ui->doNotResizePattern->setEnabled(false);
         break;
     }
 }
@@ -223,12 +279,15 @@ void ImageScalingWidget::writeConfig()
 
   MessageComposer::MessageComposerSettings::self()->setFilterSourcePattern(ui->pattern->text());
 
-  MessageComposer::MessageComposerSettings::self()->setFilterSourceType(mSourceFilterGroup->checkedId());
+  MessageComposer::MessageComposerSettings::self()->setFilterSourceType(mSourceFilenameFilterGroup->checkedId());
 
   MessageComposer::MessageComposerSettings::self()->setRenameResizedImages(ui->renameResizedImage->isChecked());
 
   MessageComposer::MessageComposerSettings::self()->setRenameResizedImagesPattern(ui->renameResizedImagePattern->text());
 
+  MessageComposer::MessageComposerSettings::self()->setDoNotResizeEmailsPattern(ui->doNotResizePattern->text());
+  MessageComposer::MessageComposerSettings::self()->setResizeEmailsPattern(ui->resizeEmailsPattern->text());
+  MessageComposer::MessageComposerSettings::self()->setFilterRecipientType(mRecipientFilterGroup->checkedId());
 
   mWasChanged = false;
 }
@@ -281,6 +340,11 @@ void ImageScalingWidget::resetToDefault()
    ui->renameResizedImagePattern->setText(MessageComposer::MessageComposerSettings::self()->renameResizedImagesPattern());
    ui->renameResizedImagePattern->setEnabled(ui->renameResizedImage->isChecked());
    updateFilterSourceTypeSettings();
+
+   ui->doNotResizePattern->setText(MessageComposer::MessageComposerSettings::self()->doNotResizeEmailsPattern());
+   ui->resizeEmailsPattern->setText(MessageComposer::MessageComposerSettings::self()->resizeEmailsPattern());
+   updateEmailsFilterTypeSettings();
+
    MessageComposer::MessageComposerSettings::self()->useDefaults( bUseDefaults );
 
 

@@ -298,6 +298,12 @@ QString NodeHelper::createTempDir( const QString &param )
   return fname;
 }
 
+void NodeHelper::forceCleanTempFiles()
+{
+    mAttachmentFilesDir->forceCleanTempFiles();
+    delete mAttachmentFilesDir;
+    mAttachmentFilesDir = 0;
+}
 
 void NodeHelper::removeTempFiles()
 {

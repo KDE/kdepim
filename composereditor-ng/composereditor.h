@@ -40,10 +40,16 @@ public:
     Q_PROPERTY(bool enableRichText READ enableRichText WRITE setEnableRichText)
 
     explicit ComposerEditor(QWidget *parent);
+    explicit ComposerEditor(ComposerView *view, QWidget *parent);
+
     ~ComposerEditor();
 
     virtual void createActions(KActionCollection *actionCollection);
 
+    /**
+     * @brief plainTextContent
+     * @return text as plain text.
+     */
     QString plainTextContent() const;
 
     bool enableRichText() const;

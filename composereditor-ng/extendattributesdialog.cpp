@@ -65,6 +65,15 @@ public:
         case ExtendAttributesDialog::Body:
             tagName = QLatin1String("body");
             break;
+        case ExtendAttributesDialog::ListUL:
+            tagName = QLatin1String("ul");
+            break;
+        case ExtendAttributesDialog::ListOL:
+            tagName = QLatin1String("ol");
+            break;
+        case ExtendAttributesDialog::ListDL:
+            tagName = QLatin1String("dl");
+            break;
         }
 
         QLabel *lab = new QLabel( i18n("Current attributes for: \"%1\"", tagName) );

@@ -40,6 +40,18 @@ public:
     {
     }
 
+    void initialize()
+    {
+        QVBoxLayout * vlay = new QVBoxLayout;
+        vlay->setMargin(0);
+        vlay->addWidget(view);
+        findReplaceBar = new FindReplaceBar(view);
+        vlay->addWidget(findReplaceBar);
+        q->setLayout(vlay);
+        q->connect(view,SIGNAL(showFindBar()),findReplaceBar,SLOT(showAndFocus()));
+        q->connect(view,SIGNAL(openLink(QUrl)),SIGNAL(openLink(QUrl)));
+    }
+
     FindReplaceBar *findReplaceBar;
     ComposerEditor *q;
     ComposerView *view;
@@ -47,19 +59,18 @@ public:
     bool richTextEnabled;
 };
 
+ComposerEditor::ComposerEditor(ComposerView *view, QWidget *parent)
+    : QWidget(parent), d(new ComposerEditorPrivate(this))
+{
+    d->view = view;
+    d->initialize();
+}
 
 ComposerEditor::ComposerEditor(QWidget *parent)
     : QWidget(parent), d(new ComposerEditorPrivate(this))
 {
-    QVBoxLayout * vlay = new QVBoxLayout;
-    vlay->setMargin(0);
     d->view = new ComposerView(this);
-    vlay->addWidget(d->view);
-    d->findReplaceBar = new FindReplaceBar(d->view);
-    vlay->addWidget(d->findReplaceBar);
-    setLayout(vlay);
-    connect(d->view,SIGNAL(showFindBar()),d->findReplaceBar,SLOT(showAndFocus()));
-    connect(d->view,SIGNAL(openLink(QUrl)),SIGNAL(openLink(QUrl)));
+    d->initialize();
 }
 
 ComposerEditor::~ComposerEditor()
@@ -68,7 +79,6 @@ ComposerEditor::~ComposerEditor()
     qDebug()<<"content "<<content;
     delete d;
 }
-
 
 void ComposerEditor::createActions(KActionCollection *actionCollection)
 {

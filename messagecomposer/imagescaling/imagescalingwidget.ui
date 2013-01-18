@@ -348,6 +348,70 @@
        </item>
       </layout>
      </widget>
+     <widget class="QWidget" name="tab_4">
+      <attribute name="title">
+       <string>Recipients</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_8">
+       <item>
+        <widget class="QRadioButton" name="doNotFilterRecipients">
+         <property name="text">
+          <string>Do not filter (All recipients are allowed)</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="resizeEachEmails">
+         <property name="text">
+          <string>Resize if each emails address contains one of the pattern</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="resizeOneEmails">
+         <property name="text">
+          <string>Resize if one emails address contains one of the pattern</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="resizeEmailsPattern"/>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="doNotResizeEachEmails">
+         <property name="text">
+          <string>Do not resize if each emails address contains one of the pattern</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="doNotResizeOneEmails">
+         <property name="text">
+          <string>Do not resize if one emails address contains one of the pattern</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="doNotResizePattern"/>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_4">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
     </widget>
    </item>
   </layout>

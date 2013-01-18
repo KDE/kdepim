@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -18,37 +18,18 @@
 
 */
 
-#ifndef ATTACHMENTTEMPORARYFILESDIRS_H
-#define ATTACHMENTTEMPORARYFILESDIRS_H
+#ifndef LISTHELPER_H
+#define LISTHELPER_H
 
-#include <QObject>
-#include <QStringList>
+#include <QWebElement>
 
-namespace MessageViewer {
+namespace ComposerEditorNG {
 
-class AttachmentTemporaryFilesDirs : public QObject
-{
-    Q_OBJECT
-public:
-    explicit AttachmentTemporaryFilesDirs(QObject *parent = 0);
-    ~AttachmentTemporaryFilesDirs();
-
-    void addTempFile( const QString& file );
-    void addTempDir( const QString& dir );
-    QStringList temporaryFiles() const;
-    void removeTempFiles();
-    void forceCleanTempFiles();
-
-private Q_SLOTS:
-    void slotRemoveTempFiles();
-
-private:
-    void cleanTempFiles();
-private:
-    QStringList mTempFiles;
-    QStringList mTempDirs;
-};
-
+namespace ListHelper {
+QWebElement ulElement(const QWebElement&element);
+QWebElement olElement(const QWebElement&element);
+QWebElement listElement(const QWebElement& element);
+}
 }
 
-#endif // ATTACHMENTTEMPORARYFILESDIRS_H
+#endif // LISTHELPER_H

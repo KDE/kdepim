@@ -28,6 +28,7 @@
 #include "composertableformatdialog.h"
 #include "composertablecellformatdialog.h"
 #include "composertableactionmenu.h"
+#include "composerlistdialog.h"
 #include "globalsettings_base.h"
 
 #include <kpimtextedit/emoticontexteditaction.h>
@@ -131,6 +132,8 @@ public:
     void _k_slotPrint();
     void _k_slotPrintPreview();
     void _k_changeAutoSpellChecking(bool);
+    void _k_slotEditList();
+
     QAction* getAction ( QWebPage::WebAction action ) const;
     QVariant evaluateJavascript(const QString& command);
     void execCommand(const QString &cmd);
@@ -524,6 +527,14 @@ void ComposerViewPrivate::_k_slotChangePageColorAndBackground()
     }
 }
 
+void ComposerViewPrivate::_k_slotEditList()
+{
+    QPointer<ComposerListDialog> dlg = new ComposerListDialog(contextMenuResult.element(),q);
+    if (dlg->exec()) {
+        //TODO
+    }
+}
+
 void ComposerViewPrivate::_k_slotAdjustActions()
 {
     FOLLOW_CHECK(action_text_bold, QWebPage::ToggleBold);
@@ -891,6 +902,10 @@ void ComposerView::contextMenuEvent(QContextMenuEvent* event)
     const bool tableSelected = (elm.tagName().toLower() == QLatin1String("table") ||
                                 tableCellSelected );
 
+    const bool listSelected = (elm.tagName().toLower() == QLatin1String("ol") ||
+                               elm.tagName().toLower() == QLatin1String("ul") ||
+                               elm.tagName().toLower() == QLatin1String("li") );
+
     qDebug()<<" elm.tagName().toLower() "<<elm.tagName().toLower();
 
     KMenu *menu = new KMenu;
@@ -913,13 +928,16 @@ void ComposerView::contextMenuEvent(QContextMenuEvent* event)
     if (imageSelected) {
         QAction *editImageAction = menu->addAction(i18n("Edit Image..."));
         connect( editImageAction, SIGNAL(triggered(bool)), this, SLOT(_k_slotEditImage()) );
-    } else if(linkSelected) {
+    } else if (linkSelected) {
         QAction *editLinkAction = menu->addAction(i18n("Edit Link..."));
         connect( editLinkAction, SIGNAL(triggered(bool)), this, SLOT(_k_slotEditLink()) );
-    } else if(tableSelected) {
+    } else if (tableSelected) {
         ComposerTableActionMenu * tableActionMenu = new ComposerTableActionMenu(elm,menu,this);
         connect(tableActionMenu, SIGNAL(insertNewTable()), this, SLOT(_k_slotInsertTable()));
         menu->addAction(tableActionMenu);
+    } else if (listSelected) {
+        QAction *editListAction = menu->addAction(i18n("Edit List..."));
+        connect( editListAction, SIGNAL(triggered(bool)), this, SLOT(_k_slotEditList()) );
     }
     menu->addSeparator();
     if (!emptyDocument) {
@@ -931,7 +949,6 @@ void ComposerView::contextMenuEvent(QContextMenuEvent* event)
     autoSpellCheckingAction->setCheckable( true );
     autoSpellCheckingAction->setChecked( d->checkSpellingEnabled() );
     connect( autoSpellCheckingAction, SIGNAL(triggered(bool)), this, SLOT(_k_changeAutoSpellChecking(bool)) );
-    connect(tableActionMenu,SIGNAL(insertNewTable()),SLOT(_k_slotInsertTable()));
 #endif
     QAction *speakAction = menu->addAction(i18n("Speak Text"));
     speakAction->setIcon(KIcon(QLatin1String("preferences-desktop-text-to-speech")));
