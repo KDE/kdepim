@@ -21,6 +21,7 @@
 #include "composerlistdialog.h"
 
 #include <KLocale>
+#include <KSeparator>
 
 #include <QVBoxLayout>
 #include <QWebElement>
@@ -37,6 +38,8 @@ public:
     {
         initialize();
     }
+    void _k_slotOkClicked();
+
     void initialize();
     QWebElement webElement;
     ComposerListDialog *q;
@@ -44,7 +47,20 @@ public:
 
 void ComposerListDialogPrivate::initialize()
 {
-    //TODO
+    q->setButtons( KDialog::Ok | KDialog::Cancel );
+    q->setCaption( i18n( "Edit List" ) );
+
+    QVBoxLayout *vbox = new QVBoxLayout(q->mainWidget());
+    KSeparator *sep = new KSeparator;
+    vbox->addWidget( sep );
+
+
+    q->connect(q, SIGNAL(okClicked()), q, SLOT(_k_slotOkClicked()));
+}
+
+void ComposerListDialogPrivate::_k_slotOkClicked()
+{
+    q->accept();
 }
 
 ComposerListDialog::ComposerListDialog(const QWebElement& element, QWidget *parent)
@@ -58,3 +74,5 @@ ComposerListDialog::~ComposerListDialog()
 }
 
 }
+
+#include "composerlistdialog.moc"

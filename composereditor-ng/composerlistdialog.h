@@ -30,6 +30,7 @@ namespace ComposerEditorNG
 class ComposerListDialogPrivate;
 class ComposerListDialog : public KDialog
 {
+    Q_OBJECT
 public:
     explicit ComposerListDialog(const QWebElement &element, QWidget *parent);
     ~ComposerListDialog();
@@ -37,6 +38,7 @@ public:
 private:
     friend class ComposerListDialogPrivate;
     ComposerListDialogPrivate * const d;
+    Q_PRIVATE_SLOT( d, void _k_slotOkClicked() )
 };
 
 }
