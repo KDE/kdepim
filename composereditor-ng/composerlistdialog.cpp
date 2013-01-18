@@ -19,6 +19,7 @@
 */
 
 #include "composerlistdialog.h"
+#include "helper/listhelper_p.h"
 
 #include <KLocale>
 #include <KSeparator>
@@ -42,7 +43,16 @@ public:
     }
     void _k_slotOkClicked();
 
+    enum ListType {
+        None = 0,
+        Bullet = 1,
+        Numbered = 2,
+        Definition = 3
+    };
+
     void initialize();
+    void updateSettings();
+    void updateListHtml();
     QWebElement webElement;
     QComboBox *listType;
     ComposerListDialog *q;
@@ -60,7 +70,10 @@ void ComposerListDialogPrivate::initialize()
 
     listType = new QComboBox;
     vbox->addWidget(listType);
-
+    listType->addItem(i18n("None"), None);
+    listType->addItem(i18n("Bullet List"), Bullet);
+    listType->addItem(i18n("Numbered List"), Numbered);
+    listType->addItem(i18n("Definition List"), Definition);
 
     KSeparator *sep = new KSeparator;
     vbox->addWidget( sep );
@@ -69,8 +82,27 @@ void ComposerListDialogPrivate::initialize()
     q->connect(q, SIGNAL(okClicked()), q, SLOT(_k_slotOkClicked()));
 }
 
+void ComposerListDialogPrivate::updateSettings()
+{
+    if (!webElement.isNull()) {
+        //TODO
+    }
+}
+
+void ComposerListDialogPrivate::updateListHtml()
+{
+    /*
+    QWebElement e = ListHelper::olElement(webElement);
+    e.addClass(QLatin1String("UL"));
+    */
+    //TODO
+}
+
 void ComposerListDialogPrivate::_k_slotOkClicked()
 {
+    if (!webElement.isNull()) {
+        updateListHtml();
+    }
     q->accept();
 }
 

@@ -22,6 +22,22 @@
 namespace ComposerEditorNG
 {
 
+QMap<QString, QStringList> ExtendAttributesUtils::listGlobalAttribute()
+{
+    QMap<QString, QStringList> globalAttr;
+    globalAttr.insert(QLatin1String("id"),QStringList());
+    globalAttr.insert(QLatin1String("class"),QStringList());
+    globalAttr.insert(QLatin1String("title"),QStringList());
+    globalAttr.insert(QLatin1String("lang"),QStringList());
+    QStringList dir;
+    dir<<QLatin1String("ltr");
+    dir<<QLatin1String("rtl");
+    dir<<QLatin1String("auto");
+    globalAttr.insert(QLatin1String("dir"),dir);
+
+    return globalAttr;
+}
+
 QMap<QString, QStringList> ExtendAttributesUtils::globalAttribute()
 {
     QMap<QString, QStringList> globalAttr;
@@ -208,6 +224,7 @@ QMap<QString, QStringList> ExtendAttributesUtils::attributesMapLink()
 QMap<QString, QStringList> ExtendAttributesUtils::attributesMapListUL()
 {
     QMap<QString, QStringList> map;
+    map = listGlobalAttribute();
     QStringList rel;
     rel<<QLatin1String("compact");
     map.insert(QLatin1String("compact"),rel);
@@ -222,6 +239,7 @@ QMap<QString, QStringList> ExtendAttributesUtils::attributesMapListUL()
 QMap<QString, QStringList> ExtendAttributesUtils::attributesMapListOL()
 {
     QMap<QString, QStringList> map;
+    map = listGlobalAttribute();
     QStringList rel;
     rel<<QLatin1String("compact");
     map.insert(QLatin1String("compact"),rel);
@@ -233,12 +251,14 @@ QMap<QString, QStringList> ExtendAttributesUtils::attributesMapListOL()
     type<<QLatin1String("I");
     type<<QLatin1String("i");
     map.insert(QLatin1String("type"),type);
+
     return map;
 }
 
 QMap<QString, QStringList> ExtendAttributesUtils::attributesMapListDL()
 {
     QMap<QString, QStringList> map;
+    map = listGlobalAttribute();
     return map;
 }
 
