@@ -51,6 +51,7 @@ private:
   void updateFilterSourceTypeSettings();
   void initComboBox(KComboBox *combo);
   void initWriteImageFormat();
+  void updateEmailsFilterTypeSettings();
   Ui::ImageScalingWidget *ui;
   QButtonGroup *mSourceFilenameFilterGroup;
   QButtonGroup *mRecipientFilterGroup;

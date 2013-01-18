@@ -72,5 +72,18 @@ void Utils::changeFileName(MessageCore::AttachmentPart::Ptr part)
 
 bool Utils::filterRecipients(const QString& recipients)
 {
+    switch(MessageComposer::MessageComposerSettings::self()->filterRecipientType()) {
+    case MessageComposer::MessageComposerSettings::EnumFilterRecipientType::NoFilter:
+        break;
+    case MessageComposer::MessageComposerSettings::EnumFilterRecipientType::ResizeEachEmailsContainsPattern:
+        break;
+    case MessageComposer::MessageComposerSettings::EnumFilterRecipientType::ResizeOneEmailContainsPattern:
+        break;
+    case MessageComposer::MessageComposerSettings::EnumFilterRecipientType::DontResizeEachEmailsContainsPattern:
+        break;
+    case MessageComposer::MessageComposerSettings::EnumFilterRecipientType::DontResizeOneEmailContainsPattern:
+        break;
+    }
+
     return false;
 }

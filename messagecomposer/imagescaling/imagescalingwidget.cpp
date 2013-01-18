@@ -197,6 +197,7 @@ void ImageScalingWidget::loadConfig()
 
 
   updateFilterSourceTypeSettings();
+  updateEmailsFilterTypeSettings();
 
   mWasChanged = false;
 }
@@ -215,6 +216,34 @@ void ImageScalingWidget::updateFilterSourceTypeSettings()
     case MessageComposer::MessageComposerSettings::EnumFilterSourceType::ExcludeFilesWithPattern:
         ui->excludeFilesWithPattern->setChecked(true);
         ui->pattern->setEnabled(true);
+        break;
+    }
+}
+
+void ImageScalingWidget::updateEmailsFilterTypeSettings()
+{
+    ui->doNotResizePattern->setEnabled(false);
+    ui->resizeEmailsPattern->setEnabled(false);
+
+    switch(MessageComposer::MessageComposerSettings::self()->filterRecipientType()) {
+    case MessageComposer::MessageComposerSettings::EnumFilterRecipientType::NoFilter:
+        ui->doNotFilterRecipients->setChecked(true);
+        break;
+    case MessageComposer::MessageComposerSettings::EnumFilterRecipientType::ResizeEachEmailsContainsPattern:
+        ui->resizeEachEmails->setChecked(true);
+        ui->resizeEmailsPattern->setEnabled(true);
+        break;
+    case MessageComposer::MessageComposerSettings::EnumFilterRecipientType::ResizeOneEmailContainsPattern:
+        ui->resizeOneEmails->setChecked(true);
+        ui->resizeEmailsPattern->setEnabled(true);
+        break;
+    case MessageComposer::MessageComposerSettings::EnumFilterRecipientType::DontResizeEachEmailsContainsPattern:
+        ui->doNotResizeEachEmails->setChecked(true);
+        ui->doNotResizePattern->setEnabled(true);
+        break;
+    case MessageComposer::MessageComposerSettings::EnumFilterRecipientType::DontResizeOneEmailContainsPattern:
+        ui->doNotResizeOneEmails->setChecked(true);
+        ui->doNotResizePattern->setEnabled(false);
         break;
     }
 }
@@ -258,7 +287,7 @@ void ImageScalingWidget::writeConfig()
 
   MessageComposer::MessageComposerSettings::self()->setDoNotResizeEmailsPattern(ui->doNotResizePattern->text());
   MessageComposer::MessageComposerSettings::self()->setResizeEmailsPattern(ui->resizeEmailsPattern->text());
-
+  MessageComposer::MessageComposerSettings::self()->setFilterRecipientType(mRecipientFilterGroup->checkedId());
 
   mWasChanged = false;
 }
@@ -314,7 +343,7 @@ void ImageScalingWidget::resetToDefault()
 
    ui->doNotResizePattern->setText(MessageComposer::MessageComposerSettings::self()->doNotResizeEmailsPattern());
    ui->resizeEmailsPattern->setText(MessageComposer::MessageComposerSettings::self()->resizeEmailsPattern());
-
+   updateEmailsFilterTypeSettings();
 
    MessageComposer::MessageComposerSettings::self()->useDefaults( bUseDefaults );
 
