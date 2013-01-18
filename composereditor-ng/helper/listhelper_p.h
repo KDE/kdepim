@@ -28,6 +28,7 @@ namespace ComposerEditorNG {
 namespace ListHelper {
 QWebElement ulElement(const QWebElement&element);
 QWebElement olElement(const QWebElement&element);
+QWebElement listElement(const QWebElement& element);
 }
 }
 

@@ -26,15 +26,53 @@ static QString UL = QLatin1String("ul");
 
 QWebElement ListHelper::ulElement(const QWebElement& element)
 {
-    //TODO
+    if (element.isNull())
+        return element;
+    const QString tagName = element.tagName();
+    if (tagName == UL) {
+        return element;
+    } else {
+        QWebElement e = element;
+        do {
+            e = e.parent();
+        } while( (e.tagName().toLower() != UL) && !e.isNull() );
+        return e;
+    }
     return element;
 }
 
 QWebElement ListHelper::olElement(const QWebElement& element)
 {
-    //TODO
+    if (element.isNull())
+        return element;
+    const QString tagName = element.tagName();
+    if (tagName == OL) {
+        return element;
+    } else {
+        QWebElement e = element;
+        do {
+            e = e.parent();
+        } while( (e.tagName().toLower() != OL) && !e.isNull() );
+        return e;
+    }
     return element;
 }
 
+QWebElement ListHelper::listElement(const QWebElement& element)
+{
+    if (element.isNull())
+        return element;
+    const QString tagName = element.tagName();
+    if ((tagName == OL) || (tagName == UL)) {
+        return element;
+    } else {
+        QWebElement e = element;
+        do {
+            e = e.parent();
+        } while( ((e.tagName().toLower() != OL) || (e.tagName().toLower() != UL)) && !e.isNull() );
+        return e;
+    }
+    return element;
+}
 
 }
