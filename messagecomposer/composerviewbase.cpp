@@ -334,7 +334,7 @@ void Message::ComposerViewBase::slotEmailAddressResolved ( KJob* job )
     // This error could be caused by a broken search infrastructure, so we ignore it for now
     // to not block sending emails completly.
   }
-
+  bool autoResize = true;
   const MessageComposer::EmailAddressResolveJob *resolveJob = qobject_cast<MessageComposer::EmailAddressResolveJob*>( job );
   if( mSaveIn == MessageSender::SaveInNone ) {
     mExpandedFrom = resolveJob->expandedFrom();
@@ -367,6 +367,7 @@ void Message::ComposerViewBase::slotEmailAddressResolved ( KJob* job )
     m_msg->setHeader( new KMime::Headers::Generic( "X-KMail-UnExpanded-To", m_msg.get(), unExpandedTo.join( QLatin1String( ", " ) ).toLatin1() ) );
     m_msg->setHeader( new KMime::Headers::Generic( "X-KMail-UnExpanded-CC", m_msg.get(), unExpandedCc.join( QLatin1String( ", " ) ).toLatin1() ) );
     m_msg->setHeader( new KMime::Headers::Generic( "X-KMail-UnExpanded-BCC", m_msg.get(), unExpandedBcc.join( QLatin1String( ", " ) ).toLatin1() ) );
+    autoResize = false;
   }
 
   Q_ASSERT(m_composers.isEmpty()); //composers should be empty. The caller of this function
@@ -390,7 +391,7 @@ void Message::ComposerViewBase::slotEmailAddressResolved ( KJob* job )
   }
 
   bool autoresizeImage = false;
-  if(MessageComposer::MessageComposerSettings::self()->autoResizeImageEnabled()) {
+  if(autoResize && MessageComposer::MessageComposerSettings::self()->autoResizeImageEnabled()) {
     if(MessageComposer::MessageComposerSettings::self()->askBeforeResizing()) {
        const int rc = KMessageBox::warningYesNo( m_parentWidget,i18n("Do you want to resize images?"),
                                                  i18n("Auto Resize Images"), KStandardGuiItem::yes(), KStandardGuiItem::no());
