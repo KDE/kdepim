@@ -64,7 +64,13 @@ void Utils::changeFileName(MessageCore::AttachmentPart::Ptr part)
         const QString pattern = MessageComposer::MessageComposerSettings::self()->renameResizedImagesPattern();
         if (!pattern.isEmpty()) {
             const QString filename = part->fileName();
-            //TODO
+            //TODO use pattern.
+            //Need to define pattern type.
         }
     }
+}
+
+bool Utils::filterRecipients(const QString& recipients)
+{
+    return false;
 }
