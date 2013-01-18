@@ -208,12 +208,31 @@ QMap<QString, QStringList> ExtendAttributesUtils::attributesMapLink()
 QMap<QString, QStringList> ExtendAttributesUtils::attributesMapListUL()
 {
     QMap<QString, QStringList> map;
+    QStringList rel;
+    rel<<QLatin1String("compact");
+    map.insert(QLatin1String("compact"),rel);
+    QStringList type;
+    type<<QLatin1String("disc");
+    type<<QLatin1String("square");
+    type<<QLatin1String("circle");
+    map.insert(QLatin1String("type"),type);
     return map;
 }
 
 QMap<QString, QStringList> ExtendAttributesUtils::attributesMapListOL()
 {
     QMap<QString, QStringList> map;
+    QStringList rel;
+    rel<<QLatin1String("compact");
+    map.insert(QLatin1String("compact"),rel);
+    map.insert(QLatin1String("start"),QStringList());
+    QStringList type;
+    type<<QLatin1String("1");
+    type<<QLatin1String("A");
+    type<<QLatin1String("a");
+    type<<QLatin1String("I");
+    type<<QLatin1String("i");
+    map.insert(QLatin1String("type"),type);
     return map;
 }
 
