@@ -37,7 +37,10 @@ public:
         Table,
         Cell,
         Link,
-        Body
+        Body,
+        ListUL,
+        ListOL,
+        ListDL
     };
 
     enum SettingsType {

@@ -25,6 +25,8 @@
 
 #include <QVBoxLayout>
 #include <QWebElement>
+#include <QComboBox>
+#include <QLabel>
 
 namespace ComposerEditorNG
 {
@@ -42,6 +44,7 @@ public:
 
     void initialize();
     QWebElement webElement;
+    QComboBox *listType;
     ComposerListDialog *q;
 };
 
@@ -51,6 +54,14 @@ void ComposerListDialogPrivate::initialize()
     q->setCaption( i18n( "Edit List" ) );
 
     QVBoxLayout *vbox = new QVBoxLayout(q->mainWidget());
+
+    QLabel *lab = new QLabel(i18n("List Type"));
+    vbox->addWidget(lab);
+
+    listType = new QComboBox;
+    vbox->addWidget(listType);
+
+
     KSeparator *sep = new KSeparator;
     vbox->addWidget( sep );
 

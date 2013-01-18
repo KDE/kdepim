@@ -53,6 +53,14 @@ QMap<QString, QStringList> ExtendAttributesUtils::attributesMap(ExtendAttributes
         return attributesMapLink();
     case ExtendAttributesDialog::Body:
         return attributesMapBody();
+    case ExtendAttributesDialog::ListUL:
+        return attributesMapListUL();
+    case ExtendAttributesDialog::ListOL:
+        return attributesMapListOL();
+    case ExtendAttributesDialog::ListDL:
+        return attributesMapListDL();
+    default:
+        break;
     }
     return QMap<QString, QStringList>();
 }
@@ -197,6 +205,26 @@ QMap<QString, QStringList> ExtendAttributesUtils::attributesMapLink()
     return map;
 }
 
+QMap<QString, QStringList> ExtendAttributesUtils::attributesMapListUL()
+{
+    QMap<QString, QStringList> map;
+    return map;
+}
+
+QMap<QString, QStringList> ExtendAttributesUtils::attributesMapListOL()
+{
+    QMap<QString, QStringList> map;
+    return map;
+}
+
+QMap<QString, QStringList> ExtendAttributesUtils::attributesMapListDL()
+{
+    QMap<QString, QStringList> map;
+    return map;
+}
+
+
+
 QMap<QString, QStringList> ExtendAttributesUtils::attributesMapBody()
 {
     QMap<QString, QStringList> map;
@@ -219,8 +247,6 @@ QMap<QString, QStringList> ExtendAttributesUtils::attributesJavascriptWindowAndB
     map.insert(QLatin1String("onunload"),QStringList());
     return map;
 }
-
-
 
 QMap<QString, QStringList> ExtendAttributesUtils::attributesJavascript()
 {
