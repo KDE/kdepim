@@ -73,6 +73,7 @@ ImageScalingWidget::ImageScalingWidget(QWidget *parent)
   mRecipientFilterGroup = new QButtonGroup(ui->tab_4);
   connect( mRecipientFilterGroup, SIGNAL(buttonClicked(int)), this, SLOT(slotRecipientFilterClicked(int)) );
   ui->doNotResizePattern->setEnabled(false);
+  ui->resizeEmailsPattern->setEnabled(false);
   mRecipientFilterGroup->addButton(ui->doNotFilterRecipients,MessageComposer::MessageComposerSettings::EnumFilterRecipientType::NoFilter );
   mRecipientFilterGroup->addButton(ui->resizeEachEmails,MessageComposer::MessageComposerSettings::EnumFilterRecipientType::ResizeEachEmailsContainsPattern );
   mRecipientFilterGroup->addButton(ui->resizeOneEmails,MessageComposer::MessageComposerSettings::EnumFilterRecipientType::ResizeOneEmailContainsPattern );
@@ -191,6 +192,10 @@ void ImageScalingWidget::loadConfig()
   ui->renameResizedImagePattern->setText(MessageComposer::MessageComposerSettings::self()->renameResizedImagesPattern());
   ui->renameResizedImagePattern->setEnabled(ui->renameResizedImage->isChecked());
 
+  ui->doNotResizePattern->setText(MessageComposer::MessageComposerSettings::self()->doNotResizeEmailsPattern());
+  ui->resizeEmailsPattern->setText(MessageComposer::MessageComposerSettings::self()->resizeEmailsPattern());
+
+
   updateFilterSourceTypeSettings();
 
   mWasChanged = false;
@@ -251,6 +256,9 @@ void ImageScalingWidget::writeConfig()
 
   MessageComposer::MessageComposerSettings::self()->setRenameResizedImagesPattern(ui->renameResizedImagePattern->text());
 
+  MessageComposer::MessageComposerSettings::self()->setDoNotResizeEmailsPattern(ui->doNotResizePattern->text());
+  MessageComposer::MessageComposerSettings::self()->setResizeEmailsPattern(ui->resizeEmailsPattern->text());
+
 
   mWasChanged = false;
 }
@@ -303,6 +311,11 @@ void ImageScalingWidget::resetToDefault()
    ui->renameResizedImagePattern->setText(MessageComposer::MessageComposerSettings::self()->renameResizedImagesPattern());
    ui->renameResizedImagePattern->setEnabled(ui->renameResizedImage->isChecked());
    updateFilterSourceTypeSettings();
+
+   ui->doNotResizePattern->setText(MessageComposer::MessageComposerSettings::self()->doNotResizeEmailsPattern());
+   ui->resizeEmailsPattern->setText(MessageComposer::MessageComposerSettings::self()->resizeEmailsPattern());
+
+
    MessageComposer::MessageComposerSettings::self()->useDefaults( bUseDefaults );
 
 

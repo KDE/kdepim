@@ -294,6 +294,13 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
       </choices>
       <default>NoFilter</default>
     </entry>
+    <entry name="DoNotResizeEmailsPattern" type="String" key="do-not-resize-emails-pattern">
+      <default></default>
+    </entry>
+    <entry name="ResizeEmailsPattern" type="String" key="resize-emails-pattern">
+      <default></default>
+    </entry>
+
 
   </group>
 </kcfg>
