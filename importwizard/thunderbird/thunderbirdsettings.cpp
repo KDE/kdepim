@@ -161,6 +161,41 @@ void ThunderbirdSettings::readExtensionsSettings()
         addKmailConfig(QLatin1String("AutoResizeImage"), QLatin1String("write-format"), conversionFormat );
     }
 
+    const QString filterRecipientsStr("extensions.AutoResizeImage.filterRecipients");
+    if (mHashConfig.contains(filterRecipientsStr)) {
+        const int filterRecipients = mHashConfig.value(filterRecipientsStr).toInt();
+        switch(filterRecipients) {
+        case 0:
+            addKmailConfig(QLatin1String("AutoResizeImage"), QLatin1String("FilterRecipientType"), QLatin1String("NoFilter") );
+            break;
+        case 1:
+            addKmailConfig(QLatin1String("AutoResizeImage"), QLatin1String("FilterRecipientType"), QLatin1String("ResizeEachEmailsContainsPattern") );
+            break;
+        case 2:
+            addKmailConfig(QLatin1String("AutoResizeImage"), QLatin1String("FilterRecipientType"), QLatin1String("ResizeOneEmailContainsPattern") );
+            break;
+        case 3:
+            addKmailConfig(QLatin1String("AutoResizeImage"), QLatin1String("FilterRecipientType"), QLatin1String("DontResizeEachEmailsContainsPattern") );
+            break;
+        case 4:
+            addKmailConfig(QLatin1String("AutoResizeImage"), QLatin1String("FilterRecipientType"), QLatin1String("DontResizeOneEmailContainsPattern") );
+            break;
+        }
+
+
+    }
+
+    const QString filteringRecipientsPatternsWhiteListStr("extensions.AutoResizeImage.filteringRecipientsPatternsWhiteList");
+    if (mHashConfig.contains(filteringRecipientsPatternsWhiteListStr)) {
+        const QString filteringRecipientsPatternsWhiteList = mHashConfig.value(filteringRecipientsPatternsWhiteListStr).toString();
+        addKmailConfig(QLatin1String("AutoResizeImage"), QLatin1String("resize-emails-pattern"), filteringRecipientsPatternsWhiteList );
+    }
+
+    const QString filteringRecipientsPatternsBlackListStr("extensions.AutoResizeImage.filteringRecipientsPatternsBlackList");
+    if (mHashConfig.contains(filteringRecipientsPatternsBlackListStr)) {
+        const QString filteringRecipientsPatternsBlackList = mHashConfig.value(filteringRecipientsPatternsBlackListStr).toString();
+        addKmailConfig(QLatin1String("AutoResizeImage"), QLatin1String("do-not-resize-emails-pattern"), filteringRecipientsPatternsBlackList );
+    }
 }
 
 int ThunderbirdSettings::adaptAutoResizeResolution(int index, const QString& configStrList)

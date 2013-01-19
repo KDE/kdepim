@@ -19,6 +19,7 @@
 */
 
 #include "composerlistdialog.h"
+#include "extendattributesbutton.h"
 #include "helper/listhelper_p.h"
 
 #include <KLocale>
@@ -42,6 +43,7 @@ public:
         initialize();
     }
     void _k_slotOkClicked();
+    void _k_slotWebElementChanged();
 
     enum ListType {
         None = 0,
@@ -75,9 +77,18 @@ void ComposerListDialogPrivate::initialize()
     listType->addItem(i18n("Numbered List"), Numbered);
     listType->addItem(i18n("Definition List"), Definition);
 
-    KSeparator *sep = new KSeparator;
-    vbox->addWidget( sep );
+    KSeparator *sep = 0;
+    if (!webElement.isNull()) {
+        sep = new KSeparator;
+        vbox->addWidget( sep );
+        //TODO customize
+        ExtendAttributesButton *button = new ExtendAttributesButton(webElement,ExtendAttributesDialog::ListUL,q);
+        q->connect(button, SIGNAL(webElementChanged()), q, SLOT(_k_slotWebElementChanged()));
+        vbox->addWidget( button );
+    }
 
+    sep = new KSeparator;
+    vbox->addWidget( sep );
 
     q->connect(q, SIGNAL(okClicked()), q, SLOT(_k_slotOkClicked()));
 }
@@ -95,6 +106,11 @@ void ComposerListDialogPrivate::updateListHtml()
     QWebElement e = ListHelper::olElement(webElement);
     e.addClass(QLatin1String("UL"));
     */
+    //TODO
+}
+
+void ComposerListDialogPrivate::_k_slotWebElementChanged()
+{
     //TODO
 }
 
