@@ -33,9 +33,8 @@ public:
 
     ~ComposerHtmlEditor();
 
-    void setupActions();
-
 private:
+    void setupActions();
     ComposerEditorNG::ComposerEditor *editor;
 };
 
