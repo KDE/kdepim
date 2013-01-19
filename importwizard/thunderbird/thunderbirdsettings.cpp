@@ -161,6 +161,22 @@ void ThunderbirdSettings::readExtensionsSettings()
         addKmailConfig(QLatin1String("AutoResizeImage"), QLatin1String("write-format"), conversionFormat );
     }
 
+    const QString filterRecipientsStr("extensions.AutoResizeImage.filterRecipients");
+    if (mHashConfig.contains(filterRecipientsStr)) {
+        const int filterRecipients = mHashConfig.value(filterRecipientsStr).toInt();
+    }
+
+    const QString filteringRecipientsPatternsWhiteListStr("extensions.AutoResizeImage.filteringRecipientsPatternsWhiteList");
+    if (mHashConfig.contains(filteringRecipientsPatternsWhiteListStr)) {
+        const QString filteringRecipientsPatternsWhiteList = mHashConfig.value(filteringRecipientsPatternsWhiteListStr).toString();
+        //TODO
+    }
+
+    const QString filteringRecipientsPatternsBlackListStr("extensions.AutoResizeImage.filteringRecipientsPatternsBlackList");
+    if (mHashConfig.contains(filteringRecipientsPatternsBlackListStr)) {
+        const QString filteringRecipientsPatternsBlackList = mHashConfig.value(filteringRecipientsPatternsBlackListStr).toString();
+        //TODO
+    }
 }
 
 int ThunderbirdSettings::adaptAutoResizeResolution(int index, const QString& configStrList)
