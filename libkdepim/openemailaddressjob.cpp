@@ -61,6 +61,7 @@ class OpenEmailAddressJob::Private
           new Akonadi::ContactEditorDialog(
             Akonadi::ContactEditorDialog::EditMode, mParentWidget );
         dlg->setContact( contacts.first() );
+        dlg->setAttribute( Qt::WA_DeleteOnClose );
         dlg->show();
 
         q->emitResult();
@@ -88,6 +89,7 @@ class OpenEmailAddressJob::Private
         new Akonadi::ContactEditorDialog(
           Akonadi::ContactEditorDialog::EditMode, mParentWidget );
       dlg->setContact( createJob->contact() );
+      dlg->setAttribute( Qt::WA_DeleteOnClose );
       dlg->show();
 
       q->emitResult();

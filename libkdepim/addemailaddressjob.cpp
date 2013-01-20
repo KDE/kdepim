@@ -238,6 +238,7 @@ class AddEmailAddressJob::Private
           new Akonadi::ContactEditorDialog( Akonadi::ContactEditorDialog::EditMode,
                                             mParentWidget );
         dlg->setContact( mItem );
+        dlg->setAttribute( Qt::WA_DeleteOnClose );
         dlg->show();
       }
       q->emitResult();
