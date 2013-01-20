@@ -30,6 +30,8 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 
+#include <QPointer>
+
 using namespace KPIM;
 
 class OpenEmailAddressJob::Private
@@ -55,9 +57,11 @@ class OpenEmailAddressJob::Private
       const Akonadi::Item::List contacts = searchJob->items();
       if ( !contacts.isEmpty() ) {
         // open the editor with the matching item
-        Akonadi::ContactEditorDialog dlg( Akonadi::ContactEditorDialog::EditMode, mParentWidget );
-        dlg.setContact( contacts.first() );
-        dlg.exec();
+        QPointer<Akonadi::ContactEditorDialog> dlg =
+          new Akonadi::ContactEditorDialog(
+            Akonadi::ContactEditorDialog::EditMode, mParentWidget );
+        dlg->setContact( contacts.first() );
+        dlg->show();
 
         q->emitResult();
         return;
@@ -80,9 +84,11 @@ class OpenEmailAddressJob::Private
       const AddEmailAddressJob *createJob = qobject_cast<AddEmailAddressJob*>( job );
 
       // open the editor with the matching item
-      Akonadi::ContactEditorDialog dlg( Akonadi::ContactEditorDialog::EditMode, mParentWidget );
-      dlg.setContact( createJob->contact() );
-      dlg.exec();
+      QPointer<Akonadi::ContactEditorDialog> dlg =
+        new Akonadi::ContactEditorDialog(
+          Akonadi::ContactEditorDialog::EditMode, mParentWidget );
+      dlg->setContact( createJob->contact() );
+      dlg->show();
 
       q->emitResult();
     }
