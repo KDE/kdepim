@@ -633,7 +633,7 @@ used.</para>
 </qandaentry>
 
 <qandaentry>
-<question><para>How do I leave messages on the server?</para></question>
+<question><para>How do I leave messages on the POP3 server?</para></question>
 <answer><!--<para>See the <link linkend="popfilters">Download filters</link> chapter.-->
 <para>If you want to leave all messages on the server: open up the
 <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure &kmail;...</guimenuitem>
