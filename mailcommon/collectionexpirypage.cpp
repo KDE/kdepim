@@ -57,7 +57,7 @@ bool CollectionExpiryPage::canHandle( const Akonadi::Collection &col ) const
   return ( fd->canDeleteMessages() && !fd->isStructural() );
 }
 
-void CollectionExpiryPage::init( const Akonadi::Collection &collection )
+void CollectionExpiryPage::init()
 {
   QVBoxLayout *globalVBox = new QVBoxLayout( this );
   globalVBox->setObjectName( "globalVBox" );
@@ -139,7 +139,7 @@ void CollectionExpiryPage::init( const Akonadi::Collection &collection )
 void CollectionExpiryPage::load( const Akonadi::Collection &collection )
 {
   mCollection = collection;
-  init( collection );
+  init();
 
   bool mustDeleteExpirationAttribute = false;
   MailCommon::ExpireCollectionAttribute *attr = MailCommon::ExpireCollectionAttribute::expirationCollectionAttribute( mCollection, mustDeleteExpirationAttribute );
@@ -227,7 +227,7 @@ void CollectionExpiryPage::saveAndExpire( Akonadi::Collection &collection, bool 
   else
     attribute->setExpireAction( ExpireCollectionAttribute::ExpireMove );
 
-  Akonadi::CollectionModifyJob *job = new Akonadi::CollectionModifyJob( mCollection, this );
+  Akonadi::CollectionModifyJob *job = new Akonadi::CollectionModifyJob( collection, this );
   job->setProperty( "enableGlobally", enableGlobally );
   job->setProperty( "expireNow", expireNow );
   connect( job, SIGNAL(result(KJob*)), this, SLOT(slotCollectionModified(KJob*)) );

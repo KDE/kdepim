@@ -40,7 +40,7 @@ class MAILCOMMON_EXPORT CollectionExpiryPage : public Akonadi::CollectionPropert
 {
   Q_OBJECT
 
-  public:
+public:
     explicit CollectionExpiryPage( QWidget *parent = 0 );
     ~CollectionExpiryPage();
 
@@ -48,8 +48,8 @@ class MAILCOMMON_EXPORT CollectionExpiryPage : public Akonadi::CollectionPropert
     void load( const Akonadi::Collection &collection );
     void save( Akonadi::Collection &collection );
 
-  protected:
-    void init( const Akonadi::Collection & );
+protected:
+    void init();
 
 protected slots:
     void slotUpdateControls();
@@ -60,7 +60,7 @@ protected slots:
 private:
     void saveAndExpire( Akonadi::Collection &collection, bool expireNow );
 
-  private:
+private:
     QCheckBox *expireReadMailCB;
     KIntSpinBox *expireReadMailSB;
     QCheckBox *expireUnreadMailCB;
