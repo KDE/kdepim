@@ -180,9 +180,10 @@ void ThunderbirdSettings::readExtensionsSettings()
         case 4:
             addKmailConfig(QLatin1String("AutoResizeImage"), QLatin1String("FilterRecipientType"), QLatin1String("DontResizeOneEmailContainsPattern") );
             break;
+        default:
+            qDebug()<<" unknow FilterRecipientType: "<<filterRecipients;
+            break;
         }
-
-
     }
 
     const QString filteringRecipientsPatternsWhiteListStr("extensions.AutoResizeImage.filteringRecipientsPatternsWhiteList");
