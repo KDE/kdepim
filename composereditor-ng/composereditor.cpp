@@ -19,7 +19,7 @@
 */
 
 #include "composereditor.h"
-#include "findreplacebar.h"
+#include "utils/findreplacebar.h"
 #include "composerview.h"
 
 #include <QDebug>
