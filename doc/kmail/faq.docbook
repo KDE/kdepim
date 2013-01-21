@@ -751,7 +751,7 @@ the &imap; account, the Local Folders will stay collapsed when &kmail; starts.
   </listitem>
   <listitem>
     <para>Create a search on mailing list messages</para>
-    <para>Go to the folder where your mailing list messages are stored &eg; (Local Folders/KDE-PIM-USERS) and hit <keycap>S</keycap> key or in the menu <menuchoice><guimenu>Edit</guimenu><guimenuitem>Find Messages</guimenuitem></menuchoice>.</para>
+    <para>Go to the folder where your mailing list messages are stored (&eg; Local Folders/KDE-PIM-USERS) and hit <keycap>S</keycap> key or in the menu <menuchoice><guimenu>Edit</guimenu><guimenuitem>Find Messages</guimenuitem></menuchoice>.</para>
     <itemizedlist>
       <listitem>
 	<para>Select <guilabel>Match all of the following</guilabel><footnote><para>Pay attention to the <guilabel>Include sub-folders</guilabel>.</para></footnote>
