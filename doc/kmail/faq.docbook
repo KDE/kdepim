@@ -778,8 +778,8 @@ the &imap; account, the Local Folders will stay collapsed when &kmail; starts.
 
 <qandaentry>
 <question><para>How to use E-Mail Translation?</para></question>
-<answer><para><emphasis>Symptom</emphasis>: you receive mail messages in different languages and want to translate them without doing lots of copy and paste.</para>
-<para><emphasis>Solution</emphasis>: using an external program to translate our E-Mail and display it.</para>
+<answer><para><emphasis>Symptom:</emphasis> you receive mail messages in different languages and want to translate them without doing lots of copy and paste.</para>
+<para><emphasis>Solution:</emphasis> using an external program to translate our E-Mail and display it.</para>
 <para><emphasis>Step by step implementation</emphasis></para>
 <para><warning><para>The provided solution was tested limited number of times and should be used with caution.</para></warning></para>
 <itemizedlist>
