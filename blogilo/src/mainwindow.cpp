@@ -76,7 +76,6 @@ MainWindow::MainWindow()
     tabPosts->setDocumentMode(true);
     connect( tabPosts, SIGNAL(tabCloseRequested(int)), this, SLOT(slotRemovePostEntry(int)) );
     setCentralWidget( tabPosts );
-//     this->setDockOptions( QMainWindow::ForceTabbedDocks);
 
     toolbox = new Toolbox( this );
     toolboxDock = new QDockWidget( i18n( "Toolbox" ), this );
@@ -87,18 +86,11 @@ MainWindow::MainWindow()
     toolboxDock->setWidget( toolbox );
     this->addDockWidget( Qt::RightDockWidgetArea, toolboxDock );
 
-    //btnRemovePost = new QToolButton( tabPosts );
-    //btnRemovePost->setIcon( KIcon( "tab-close" ) );
-    //btnRemovePost->setToolTip( i18n( "Close tab" ) );
-    //tabPosts->setCornerWidget( btnRemovePost, Qt::TopRightCorner );
-    //connect( btnRemovePost, SIGNAL(clicked(bool)), this, SLOT(slotRemovePostEntry()) );
-
     // then, setup our actions
     setupActions();
 
     // add a status bar
     statusBar()->show();
-//     toolbox->show();
 
     // a call to KXmlGuiWindow::setupGUI() populates the GUI
     // with actions, using KXMLGUI.
