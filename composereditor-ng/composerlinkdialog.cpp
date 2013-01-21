@@ -19,7 +19,7 @@
 */
 
 #include "composerlinkdialog.h"
-#include "extendattributesbutton.h"
+#include "extendattributes/extendattributesbutton.h"
 #include "composereditorutils_p.h"
 
 #include <KLineEdit>

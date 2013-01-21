@@ -20,7 +20,7 @@
 
 #include "composertablecellformatdialog.h"
 #include "composercellsizewidget.h"
-#include "extendattributesbutton.h"
+#include "extendattributes/extendattributesbutton.h"
 
 #include <KLocale>
 #include <KColorButton>
