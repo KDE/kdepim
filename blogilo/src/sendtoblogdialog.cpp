@@ -59,12 +59,12 @@ SendToBlogDialog::~SendToBlogDialog()
     delete d;
 }
 
-bool SendToBlogDialog::isPrivate()
+bool SendToBlogDialog::isPrivate() const
 {
     return d->mIsPrivate;
 }
 
-bool SendToBlogDialog::isNew()
+bool SendToBlogDialog::isNew() const
 {
     return d->mIsNew;
 }

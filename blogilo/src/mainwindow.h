@@ -122,7 +122,6 @@ private:
     KStatusNotifierItem *systemTray;
     KTabWidget *tabPosts;
 
-    QToolButton *btnRemovePost;
     int previousActivePostIndex;
 
     int busyNumber;///If this is 0 so there isn't any progress! otherwise there is! so progressbar will show

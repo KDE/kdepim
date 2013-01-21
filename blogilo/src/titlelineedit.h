@@ -39,7 +39,7 @@ signals:
     void downKeyPressed();
 
 protected:
-    virtual void keyPressEvent(QKeyEvent* );
+    void keyPressEvent(QKeyEvent* );
 };
 
 #endif // TITLELINEEDIT_H
