@@ -42,7 +42,7 @@ EntriesCountDialog::~EntriesCountDialog()
     Settings::self()->writeConfig();
 }
 
-int EntriesCountDialog::count()
+int EntriesCountDialog::count() const
 {
     return ui.spinCount->value();
 }
