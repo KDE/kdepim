@@ -11,7 +11,7 @@ qt4_wrap_cpp(wk_HEADERS_MOC spellplugin/qwebkitplatformplugin.h)
 
 set(libcomposereditor_ng_SRCS 
     composereditor.cpp
-    composerlinkdialog.cpp
+    dialog/composerlinkdialog.cpp
     utils/findreplacebar.cpp
     composerview.cpp
     pagecolorbackgrounddialog.cpp
@@ -30,7 +30,7 @@ set(libcomposereditor_ng_SRCS
     table/composertableactionmenu.cpp
     table/composercellsizewidget.cpp
     image/composerimageresizetooltip.cpp
-    composerlistdialog.cpp
+    dialog/composerlistdialog.cpp
     helper/tablehelper.cpp
     helper/listhelper.cpp
     spellplugin/kspellplugin.cpp 

@@ -19,7 +19,7 @@
 */
 
 #include "composerview.h"
-#include "composerlinkdialog.h"
+#include "dialog/composerlinkdialog.h"
 #include "pagecolorbackgrounddialog.h"
 #include "composereditorutils_p.h"
 #include "image/composerimagedialog.h"
@@ -28,7 +28,7 @@
 #include "table/composertableformatdialog.h"
 #include "table/composertablecellformatdialog.h"
 #include "table/composertableactionmenu.h"
-#include "composerlistdialog.h"
+#include "dialog/composerlistdialog.h"
 #include "globalsettings_base.h"
 
 #include <kpimtextedit/emoticontexteditaction.h>
