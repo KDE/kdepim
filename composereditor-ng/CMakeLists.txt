@@ -14,8 +14,8 @@ set(libcomposereditor_ng_SRCS
     dialog/composerlinkdialog.cpp
     utils/findreplacebar.cpp
     composerview.cpp
-    pagecolorbackgrounddialog.cpp
-    pagecolorbackgroundwidget.cpp
+    pagecolor/pagecolorbackgrounddialog.cpp
+    pagecolor/pagecolorbackgroundwidget.cpp
     extendattributes/extendattributesdialog.cpp
     extendattributes/extendattributesbutton.cpp
     extendattributes/extendattributeswidget.cpp

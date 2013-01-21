@@ -20,7 +20,7 @@
 
 #include "composerview.h"
 #include "dialog/composerlinkdialog.h"
-#include "pagecolorbackgrounddialog.h"
+#include "pagecolor/pagecolorbackgrounddialog.h"
 #include "composereditorutils_p.h"
 #include "image/composerimagedialog.h"
 #include "image/composerimageresizewidget.h"
