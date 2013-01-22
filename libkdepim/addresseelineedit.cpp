@@ -227,6 +227,8 @@ class AddresseeLineEdit::Private
         m_searchExtended( false ),
         m_useSemicolonAsSeparator( false )
     {
+        m_delayedQueryTimer.setSingleShot(true);
+        connect( &m_delayedQueryTimer, SIGNAL(timeout()), q, SLOT(slotTriggerDelayedQueries()) );
     }
 
     void init();
@@ -258,6 +260,7 @@ class AddresseeLineEdit::Private
     void stopNepomukSearch();
     void slotNepomukHits( const QList<Nepomuk2::Query::Result>& result );
     void slotNepomukSearchFinished();
+    void slotTriggerDelayedQueries();
     static KCompletion::CompOrder completionOrder();
 
     AddresseeLineEdit *q;
@@ -270,6 +273,7 @@ class AddresseeLineEdit::Private
     bool m_lastSearchMode;
     bool m_searchExtended; //has \" been added?
     bool m_useSemicolonAsSeparator;
+    QTimer m_delayedQueryTimer;
 };
 
 void AddresseeLineEdit::Private::init()
@@ -621,16 +625,25 @@ void AddresseeLineEdit::Private::updateSearchString()
   }
 }
 
+void AddresseeLineEdit::Private::slotTriggerDelayedQueries()
+{
+    if (m_searchString.isEmpty())
+        return;
+
+    // If Nepomuk is running, we send a ContactSearch job to
+    // Akonadi, which will forward the query to Nepomuk, be
+    // notified of matching items and return those to us.
+    akonadiPerformSearch();
+    // additionally, we ask Nepomuk directly, to get hits that
+    // did not come in through Akonadi
+    startNepomukSearch();
+}
+
 void AddresseeLineEdit::Private::startSearches()
 {
     if ( Nepomuk2::ResourceManager::instance()->initialized() ) {
-      // If Nepomuk is running, we send a ContactSearch job to
-      // Akonadi, which will forward the query to Nepomuk, be
-      // notified of matching items and return those to us.
-      akonadiPerformSearch();
-      // additionally, we ask Nepomuk directly, to get hits that
-      // did not come in through Akonadi
-      startNepomukSearch();
+        if (!m_delayedQueryTimer.isActive())
+            m_delayedQueryTimer.start(500);
     } else {
       // If Nepomuk is not available, we instead simply fetch
       // all contacts from Akonadi and filter them ourselves.
