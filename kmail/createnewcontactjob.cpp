@@ -21,7 +21,7 @@
 #include "createnewcontactjob.h"
 #include "util.h"
 
-#include <KLocale>
+#include <libkdepim/broadcaststatus.h>
 
 #include <KABC/Addressee>
 #include <KABC/ContactGroup>
@@ -32,6 +32,10 @@
 #include <Akonadi/CollectionFetchScope>
 #include <Akonadi/AgentFilterProxyModel>
 #include <Akonadi/Contact/ContactEditorDialog>
+
+#include <KLocale>
+
+#include <QPointer>
 
 CreateNewContactJob::CreateNewContactJob(QWidget *parentWidget, QObject *parent)
     : KJob(parent),
@@ -118,8 +122,19 @@ void CreateNewContactJob::slotResourceCreationDone(KJob* job)
 
 void CreateNewContactJob::createContact()
 {
-    Akonadi::ContactEditorDialog dlg( Akonadi::ContactEditorDialog::CreateMode, mParentWidget );
-    dlg.exec();
+  QPointer<Akonadi::ContactEditorDialog> dlg =
+    new Akonadi::ContactEditorDialog(
+      Akonadi::ContactEditorDialog::CreateMode, mParentWidget );
+  dlg->setAttribute( Qt::WA_DeleteOnClose );
+  connect( dlg, SIGNAL(contactStored(Akonadi::Item)),
+           this, SLOT(contactStored(Akonadi::Item)) );
+  dlg->show();
+}
+
+void CreateNewContactJob::contactStored( const Akonadi::Item &item )
+{
+  Q_UNUSED( item );
+  KPIM::BroadcastStatus::instance()->setStatusMsg( i18n( "Contact created successfully" ) );
 }
 
 #include "createnewcontactjob.moc"

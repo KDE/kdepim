@@ -19,7 +19,7 @@
 */
 
 #include "composerimagedialog.h"
-#include "extendattributesbutton.h"
+#include "extendattributes/extendattributesbutton.h"
 
 #include "kpimtextedit/insertimagewidget.h"
 

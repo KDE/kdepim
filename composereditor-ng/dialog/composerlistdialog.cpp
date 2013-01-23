@@ -19,7 +19,7 @@
 */
 
 #include "composerlistdialog.h"
-#include "extendattributesbutton.h"
+#include "extendattributes/extendattributesbutton.h"
 #include "helper/listhelper_p.h"
 
 #include <KLocale>

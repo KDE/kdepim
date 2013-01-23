@@ -19,8 +19,8 @@
 */
 
 #include "composereditor.h"
-#include "findreplacebar.h"
 #include "composerview.h"
+#include "utils/findreplacebar.h"
 
 #include <QDebug>
 #include <QVBoxLayout>

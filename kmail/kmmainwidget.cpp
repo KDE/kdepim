@@ -25,7 +25,6 @@
 #include "searchwindow.h"
 #include "antispamwizard.h"
 #include "statusbarlabel.h"
-#include "expirypropertiesdialog.h"
 #include "undostack.h"
 #include "kmcommands.h"
 #include "kmmainwin.h"
@@ -59,6 +58,7 @@
 
 #include "pimcommon/collectionaclpage.h"
 #include "mailcommon/collectiongeneralpage.h"
+#include "mailcommon/collectionexpirypage.h"
 #include "mailcommon/expirecollectionattribute.h"
 #include "mailcommon/filter/filtermanager.h"
 #include "mailcommon/filter/mailfilter.h"
@@ -122,8 +122,6 @@
 #include <akonadi/collectiondeletejob.h>
 #include <akonadi/dbusconnectionpool.h>
 #include <Akonadi/CachePolicy>
-#include <Akonadi/Contact/ContactEditorDialog>
-
 
 #include <kpimidentities/identity.h>
 #include <kpimidentities/identitymanager.h>
@@ -187,8 +185,7 @@
 #include <QtDBus/QDBusInterface>
 #include <QtDBus/QDBusReply>
 #include <QLabel>
-
-
+#include <QDBusPendingCallWatcher>
 
 // System includes
 #include <assert.h>
@@ -304,6 +301,7 @@ K_GLOBAL_STATIC( KMMainWidget::PtrList, theMainWidgetList )
       Akonadi::CollectionPropertiesDialog::registerPage( new CollectionMaintenancePageFactory );
       Akonadi::CollectionPropertiesDialog::registerPage( new CollectionQuotaPageFactory );
       Akonadi::CollectionPropertiesDialog::registerPage( new CollectionTemplatesPageFactory );
+      Akonadi::CollectionPropertiesDialog::registerPage( new MailCommon::CollectionExpiryPageFactory );
       Akonadi::CollectionPropertiesDialog::registerPage( new CollectionViewPageFactory );
       Akonadi::CollectionPropertiesDialog::registerPage( new CollectionMailingListPageFactory );
       Akonadi::CollectionPropertiesDialog::registerPage( new CollectionShortcutPageFactory );
@@ -3856,10 +3854,7 @@ void KMMainWidget::slotEditNotifications()
 
 void KMMainWidget::slotShowExpiryProperties()
 {
-  if ( mCurrentFolder ) {
-     ExpiryPropertiesDialog *dlg = new ExpiryPropertiesDialog( this, mCurrentFolder->collection() );
-     dlg->show();
-  }
+  showCollectionProperties( QLatin1String( "MailCommon::CollectionExpiryPage" ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -4736,10 +4731,11 @@ void KMMainWidget::slotCollectionPropertiesFinished( KJob *job )
                                           << QLatin1String( "KMail::CollectionViewPage" )
                                           << QLatin1String( "Akonadi::CachePolicyPage" )
                                           << QLatin1String( "KMail::CollectionTemplatesPage" )
-                                          << QLatin1String( "KMail::CollectionShortcutPage" )
+                                          << QLatin1String( "MailCommon::CollectionExpiryPage" )
                                           << QLatin1String( "PimCommon::CollectionAclPage" )
                                           << QLatin1String( "KMail::CollectionMailingListPage" )
                                           << QLatin1String( "KMail::CollectionQuotaPage" )
+                                          << QLatin1String( "KMail::CollectionShortcutPage" )
                                           << QLatin1String( "KMail::CollectionMaintenancePage" );
 
   Akonadi::CollectionPropertiesDialog *dlg = new Akonadi::CollectionPropertiesDialog( collection, pages, this );
@@ -4817,27 +4813,32 @@ void KMMainWidget::slotServerSideSubscription()
         return;
     bool isImapOnline = false;
     if( kmkernel->isImapFolder( mCurrentFolder->collection(), isImapOnline ) ) {
-        QDBusInterface *iface  = new QDBusInterface(
+        QDBusInterface iface(
                     QLatin1String( "org.freedesktop.Akonadi.Resource.")+mCurrentFolder->collection().resource(),
                     QLatin1String( "/" ), QLatin1String( "org.kde.Akonadi.Imap.Resource" ),
                     DBusConnectionPool::threadConnection(), this );
-        if ( !iface->isValid() ) {
+        if ( !iface.isValid() ) {
             kDebug()<<"Can not create imap dbus interface";
-            delete iface;
             return;
         }
-        const QDBusReply<int> reply = iface->call( QLatin1String( "configureSubscription" ), (qlonglong)winId() );
-        if ( !reply.isValid() ) {
-            delete iface;
-            return;
-        }
-        if(reply == -2 ){
-            KMessageBox::error(this,i18n("IMAP server not configured yet. Please configure the server in the IMAP account before setting up server-side subscription."));
-        } else if(reply == -1) {
-            KMessageBox::error(this,i18n("Log in failed, please configure the IMAP account before setting up server-side subscription."));
-        }
-        delete iface;
+        QDBusPendingCall call = iface.asyncCall( QLatin1String( "configureSubscription" ), (qlonglong)winId() );
+        QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(call, this);
+        connect(watcher, SIGNAL(finished(QDBusPendingCallWatcher*)), this, SLOT(slotConfigureSubscriptionFinished(QDBusPendingCallWatcher*)));
     }
+}
+
+void KMMainWidget::slotConfigureSubscriptionFinished(QDBusPendingCallWatcher* watcher)
+{
+    QDBusPendingReply<int> reply = *watcher;
+    if ( !reply.isValid() ) {
+        return;
+    }
+    if(reply == -2 ){
+        KMessageBox::error(this,i18n("IMAP server not configured yet. Please configure the server in the IMAP account before setting up server-side subscription."));
+    } else if(reply == -1) {
+        KMessageBox::error(this,i18n("Log in failed, please configure the IMAP account before setting up server-side subscription."));
+    }
+    watcher->deleteLater();
 }
 
 void KMMainWidget::savePaneSelection()

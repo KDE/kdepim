@@ -19,7 +19,7 @@
 */
 
 #include "composertableformatdialog.h"
-#include "extendattributesbutton.h"
+#include "extendattributes/extendattributesbutton.h"
 
 #include <KPIMTextEdit/InsertTableWidget>
 

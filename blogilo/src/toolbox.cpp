@@ -152,8 +152,10 @@ you have to select a blog from the Blogs page before asking for the list of entr
         if( Settings::showUpdateEntriesDialog() ) {
             QPointer<EntriesCountDialog> dia = new EntriesCountDialog( this );
             dia->setAttribute( Qt::WA_DeleteOnClose, false );
-            if( dia->exec() == 0 )
+            if( !dia->exec() ) {
+                delete dia;
                 return;
+            }
             count = dia->count();
             dia->deleteLater();
         }

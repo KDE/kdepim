@@ -97,7 +97,6 @@
 #include <kpimidentities/identitymanager.h>
 #include <kselectionproxymodel.h>
 #include <kstandarddirs.h>
-#include <mailcommon/expirypropertiesdialog.h>
 #include <mailcommon/filter/filteraction.h>
 #include <mailcommon/foldercollection.h>
 #include <mailcommon/mailutil.h>
@@ -1691,6 +1690,7 @@ void MainView::folderChanged()
 
 void MainView::showExpireProperties()
 {
+#if 0
   const QItemSelectionModel *collectionSelectionModel = regularSelectionModel();
   if ( collectionSelectionModel->selection().indexes().isEmpty() )
     return;
@@ -1701,6 +1701,7 @@ void MainView::showExpireProperties()
 
   MailCommon::ExpiryPropertiesDialog *dlg = new MailCommon::ExpiryPropertiesDialog( this, collection );
   dlg->show();
+#endif
 }
 
 void MainView::moveToOrEmptyTrash()

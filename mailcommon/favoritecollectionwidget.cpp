@@ -40,6 +40,8 @@ public:
 FavoriteCollectionWidget::FavoriteCollectionWidget( KXMLGUIClient *xmlGuiClient, QWidget *parent )
   : Akonadi::EntityListView( xmlGuiClient, parent ), d( new Private )
 {
+  setFocusPolicy( Qt::NoFocus );
+
   connect( KGlobalSettings::self(), SIGNAL(kdisplayFontChanged()),
            this, SLOT(slotGeneralFontChanged()));
   connect( KGlobalSettings::self(), SIGNAL(kdisplayPaletteChanged()),

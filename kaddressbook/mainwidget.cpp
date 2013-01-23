@@ -48,7 +48,6 @@
 #include <Akonadi/AttributeFactory>
 #include <Akonadi/CollectionPropertiesDialog>
 #include <Akonadi/Contact/ContactDefaultActions>
-#include <Akonadi/Contact/ContactEditorDialog>
 #include <Akonadi/Contact/ContactGroupEditorDialog>
 #include <Akonadi/Contact/ContactGroupViewer>
 #include <Akonadi/Contact/ContactsFilterProxyModel>

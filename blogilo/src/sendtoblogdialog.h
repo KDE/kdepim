@@ -34,10 +34,10 @@ public:
     explicit SendToBlogDialog( bool isNew, bool isPrivate, QWidget *parent = 0 );
     ~SendToBlogDialog();
 
-    bool isPrivate();
-    bool isNew();
+    bool isPrivate() const;
+    bool isNew() const;
 public slots:
-    virtual void accept();
+    void accept();
 private:
     class Private;
     Private * const d;

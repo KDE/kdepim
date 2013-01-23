@@ -11,26 +11,26 @@ qt4_wrap_cpp(wk_HEADERS_MOC spellplugin/qwebkitplatformplugin.h)
 
 set(libcomposereditor_ng_SRCS 
     composereditor.cpp
-    composerlinkdialog.cpp
-    findreplacebar.cpp
+    dialog/composerlinkdialog.cpp
+    utils/findreplacebar.cpp
     composerview.cpp
-    pagecolorbackgrounddialog.cpp
-    pagecolorbackgroundwidget.cpp
-    extendattributesdialog.cpp
-    extendattributesbutton.cpp
-    extendattributeswidget.cpp
-    extendattributesutils.cpp
+    pagecolor/pagecolorbackgrounddialog.cpp
+    pagecolor/pagecolorbackgroundwidget.cpp
+    extendattributes/extendattributesdialog.cpp
+    extendattributes/extendattributesbutton.cpp
+    extendattributes/extendattributeswidget.cpp
+    extendattributes/extendattributesutils.cpp
     composereditorutils.cpp
-    composerimagedialog.cpp
-    composerimageresizewidget.cpp
-    composertabledialog.cpp
-    composertableresizewidget.cpp
-    composertableformatdialog.cpp
-    composertablecellformatdialog.cpp
-    composertableactionmenu.cpp
-    composercellsizewidget.cpp
-    composerimageresizetooltip.cpp
-    composerlistdialog.cpp
+    image/composerimagedialog.cpp
+    image/composerimageresizewidget.cpp
+    table/composertabledialog.cpp
+    table/composertableresizewidget.cpp
+    table/composertableformatdialog.cpp
+    table/composertablecellformatdialog.cpp
+    table/composertableactionmenu.cpp
+    table/composercellsizewidget.cpp
+    image/composerimageresizetooltip.cpp
+    dialog/composerlistdialog.cpp
     helper/tablehelper.cpp
     helper/listhelper.cpp
     spellplugin/kspellplugin.cpp 

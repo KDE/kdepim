@@ -31,6 +31,7 @@
 #include <kpimutils/email.h>
 #include <libkdepim/addemailaddressjob.h>
 #include <libkdepim/openemailaddressjob.h>
+#include <libkdepim/broadcaststatus.h>
 #include "kmcommands.h"
 #include "mailcommon/sendmdnhandler.h"
 #include <QVBoxLayout>
@@ -161,7 +162,7 @@ void KMReaderWin::createActions()
   // forward to
   mMailToForwardAction = new KAction( KIcon( "mail-forward" ),
                                       i18n( "Forward To..." ), this );
-  mMailToForwardAction->setShortcutConfigurable( false );		                                      
+  mMailToForwardAction->setShortcutConfigurable( false );
   ac->addAction( "mailto_forward", mMailToForwardAction );
   connect( mMailToForwardAction, SIGNAL(triggered(bool)),
            SLOT(slotMailtoForward()) );
@@ -486,7 +487,7 @@ void KMReaderWin::slotMailtoOpenAddrBook()
 {
   const KUrl url = urlClicked();
   if( url.isEmpty() )
-    return;	
+    return;
   const QString emailString = KPIMUtils::decodeMailtoUrl( url );
 
   KPIM::OpenEmailAddressJob *job = new KPIM::OpenEmailAddressJob( emailString, mMainWindow, this );
@@ -686,7 +687,7 @@ void KMReaderWin::slotShowReader( KMime::Content* msgPart, bool htmlMail, const 
 
 void KMReaderWin::slotShowMessage( KMime::Message::Ptr message, const QString& encoding )
 {
-  KMReaderMainWin *win = new KMReaderMainWin();  
+  KMReaderMainWin *win = new KMReaderMainWin();
   win->showMessage( encoding, message );
   win->show();
 }
@@ -757,11 +758,20 @@ void KMReaderWin::setContactItem(const Akonadi::Item& contact)
 void KMReaderWin::slotEditContact()
 {
   if( mSearchedContact.isValid() ) {
-    Akonadi::ContactEditorDialog *dlg = new Akonadi::ContactEditorDialog( Akonadi::ContactEditorDialog::EditMode, this );
-    dlg->setContact(mSearchedContact);
-    dlg->exec();
-    delete dlg;
+   QPointer<Akonadi::ContactEditorDialog> dlg =
+      new Akonadi::ContactEditorDialog( Akonadi::ContactEditorDialog::EditMode, this );
+    connect( dlg, SIGNAL(contactStored(Akonadi::Item)),
+             this, SLOT(contactStored(Akonadi::Item)) );
+    dlg->setContact( mSearchedContact );
+    dlg->setAttribute( Qt::WA_DeleteOnClose );
+    dlg->show();
   }
+}
+
+void KMReaderWin::contactStored( const Akonadi::Item &item )
+{
+  Q_UNUSED( item );
+  KPIM::BroadcastStatus::instance()->setStatusMsg( i18n( "Contact modified successfully" ) );
 }
 
 #include "kmreaderwin.moc"

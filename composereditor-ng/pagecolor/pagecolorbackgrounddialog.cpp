@@ -20,7 +20,7 @@
 
 #include "pagecolorbackgrounddialog.h"
 #include "pagecolorbackgroundwidget.h"
-#include "extendattributesbutton.h"
+#include "extendattributes/extendattributesbutton.h"
 
 #include <KLocale>
 #include <KSeparator>

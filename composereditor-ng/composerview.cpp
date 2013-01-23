@@ -19,16 +19,17 @@
 */
 
 #include "composerview.h"
-#include "composerlinkdialog.h"
-#include "pagecolorbackgrounddialog.h"
 #include "composereditorutils_p.h"
-#include "composerimagedialog.h"
-#include "composerimageresizewidget.h"
-#include "composertabledialog.h"
-#include "composertableformatdialog.h"
-#include "composertablecellformatdialog.h"
-#include "composertableactionmenu.h"
-#include "composerlistdialog.h"
+
+#include "dialog/composerlinkdialog.h"
+#include "dialog/composerlistdialog.h"
+#include "image/composerimagedialog.h"
+#include "image/composerimageresizewidget.h"
+#include "pagecolor/pagecolorbackgrounddialog.h"
+#include "table/composertabledialog.h"
+#include "table/composertableformatdialog.h"
+#include "table/composertablecellformatdialog.h"
+#include "table/composertableactionmenu.h"
 #include "globalsettings_base.h"
 
 #include <kpimtextedit/emoticontexteditaction.h>
@@ -208,8 +209,9 @@ void ComposerViewPrivate::_k_changeAutoSpellChecking(bool checked)
 {
 #if QTWEBKIT_VERSION >= QTWEBKIT_VERSION_CHECK(2, 3, 0)
     ComposerEditorNG::GlobalSettingsBase::setAutoSpellChecking(checked);
-#endif
+#else
     Q_UNUSED( checked );
+#endif
 }
 
 QAction* ComposerViewPrivate::getAction ( QWebPage::WebAction action ) const
@@ -401,10 +403,9 @@ void ComposerViewPrivate::_k_slotSpellCheck()
         spellTextSelectionStart = 0;
         spellTextSelectionEnd = 0;
     }
+
     if (text.isEmpty())
-    {
         return;
-    }
 
     Sonnet::BackgroundChecker *backgroundSpellCheck = new Sonnet::BackgroundChecker;
     Sonnet::Dialog* spellDialog = new Sonnet::Dialog(backgroundSpellCheck, q);
@@ -424,9 +425,7 @@ void ComposerViewPrivate::_k_spellCheckerCorrected(const QString& original, int 
 {
     // Adjust the selection end...
     if (spellTextSelectionEnd > 0)
-    {
         spellTextSelectionEnd += qMax(0, (replacement.length() - original.length()));
-    }
 
     const int index = pos + spellTextSelectionStart;
     QString script(QLatin1String("this.value=this.value.substring(0,"));
@@ -456,8 +455,7 @@ void ComposerViewPrivate::_k_slotSpellCheckDone(const QString&)
 {
     // Restore the text selection if one was present before we started the
     // spell check.
-    if (spellTextSelectionStart > 0 || spellTextSelectionEnd > 0)
-    {
+    if (spellTextSelectionStart > 0 || spellTextSelectionEnd > 0) {
         QString script(QLatin1String("; this.setSelectionRange("));
         script += QString::number(spellTextSelectionStart);
         script += QLatin1Char(',');
