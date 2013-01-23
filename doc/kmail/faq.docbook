@@ -820,7 +820,7 @@ my $translation_command = "translate ";
 my $languages_pair = "-f $from_language -t $to_language";
 my $line;
 my $message='';
-while ($line=)
+while ($line=&lt;&gt;)
 {
     $message.=$line;
 }
@@ -841,8 +841,7 @@ sub rec_parts
 	    rec_parts ($part,@sub_parts);
 	}
 	my $type=$part-&gt;content_type;
-	if (( $part-&gt;content_type =~ m[text/plain]gi )
-|( $part-&gt;content_type eq ''))
+	if (( $part-&gt;content_type =~ m[text/plain]gi )||( $part-&gt;content_type eq ''))
 	{
 	    my $body = $part-&gt;body;
 	    $body=~s/['"`]*//g;
@@ -870,7 +869,7 @@ print $email-&gt;as_string;
 </para></listitem>
 <listitem><para>Troubleshooting
 </para></listitem>
-<listitem><para>If the script is not working you can test it outside of &kmail; to narrow down the responsible component. Save a mail message as <filename>1.mbox</filename> file and run in the terminal <userinput>$~/bin/mail_translate.pl  2.mbox</userinput>
+<listitem><para>If the script is not working you can test it outside of &kmail; to narrow down the responsible component. Save a mail message as <filename>1.mbox</filename> file and run in the terminal <userinput>$~/bin/mail_translate.pl &lt;1.mbox &gt;2.mbox</userinput>
 </para></listitem>
 </itemizedlist>
 </para></listitem>
