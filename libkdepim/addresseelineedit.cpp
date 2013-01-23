@@ -349,16 +349,20 @@ void AddresseeLineEdit::Private::stopLDAPLookup()
 
 
 static const char* sparqlquery =
-    //"select distinct ?email where { ?r a nco:Contact . ?r nco:hasEmailAddress ?v . ?v nco:emailAddress ?email . FILTER regex(str(?email), \"\\\\b%1\", \"i\")}";
-    "select distinct ?email ?fullname where { ?r a nco:Contact . ?r nco:hasEmailAddress ?v .  ?v nco:emailAddress ?email . "
-    "{ FILTER regex( str(?email), \"\\\\b%1\", \"i\") . ?r nco:fullname ?fullname } "
-    "union "
-    "{ ?r nco:fullname ?fullname . FILTER regex( str(?fullname), \"\\\\b%1\", \"i\") } "
-    "union "
-    "{ ?r nco:fullname ?fullname . ?r nco:nameFamily ?family . FILTER regex( str(?family), \"\\\\b%1\", \"i\") } "
-    "union "
-    "{ ?r nco:fullname ?fullname . ?r nco:nameGiven ?given . FILTER regex( str(?given), \"\\\\b%1\", \"i\") } "
-    "} ";
+    "select distinct ?email ?fullname where {"
+    "{"
+        "?r nco:hasEmailAddress   ?em ."
+        "?em nco:emailAddress ?email ."
+        "?r ?p ?fullname ."
+        "FILTER( ?p in (nco:fullname, nco:nameFamily, nco:nameGiven)  )."
+        "FILTER( bif:contains(?fullname, \"'%1*'\")  )."
+    "} UNION {"
+        "?r nco:hasEmailAddress   ?em ."
+        "?em nco:emailAddress ?email ."
+        "FILTER( bif:contains(?email, \"'%1*'\")  )."
+        "?r nco:fullname ?fullname ."
+    "}"
+    "}";
 
 void AddresseeLineEdit::Private::startNepomukSearch()
 {
