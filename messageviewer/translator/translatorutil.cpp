@@ -25,5 +25,5 @@ void MessageViewer::TranslatorUtil::addPairToMap( QMap<QString, QString>& map, c
 
 void MessageViewer::TranslatorUtil::addItemToFromComboBox( KComboBox *combo, const QPair<QString, QString>& pair )
 {
-  combo->addItem( pair.first, pair.second );
+  combo->addItem( i18n(pair.first.toUtf8()), pair.second );
 }
