@@ -34,6 +34,7 @@ Comment[sr@latin]=Agent filtriranja pošte
 Comment[sv]=Postfiltreringsmodul
 Comment[uk]=Агент фільтрування пошти
 Comment[x-test]=xxMail Filter Agentxx
+Comment[zh_CN]=邮件过滤代理
 Comment[zh_TW]=郵件過濾代理程式
 Name=Mail Filter Agent
 Name[bs]=Agent poštanskog filtera
@@ -69,6 +70,7 @@ Name[sr@latin]=Agent filtriranja pošte
 Name[sv]=Postfiltreringsmodul
 Name[uk]=Агент фільтрування пошти
 Name[x-test]=xxMail Filter Agentxx
+Name[zh_CN]=邮件过滤代理
 Name[zh_TW]=郵件過濾代理程式
 
 [Event/mailfilterlogenabled]
@@ -105,6 +107,7 @@ Name[sr@latin]=Dnevnik filtriranja pošte uključen
 Name[sv]=Postfiltreringslogg aktiverad
 Name[uk]=Увімкнено журнал фільтрування пошти
 Name[x-test]=xxMail filter log enabledxx
+Name[zh_CN]=邮件过滤器日志已启用
 Name[zh_TW]=郵件過濾紀錄已開啟
 Action=Popup
 

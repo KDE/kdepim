@@ -38,6 +38,7 @@ Comment[sv]=KDE Kontact Touch e-postklient
 Comment[tr]=KDE Kontact Touch e-posta istemcisi
 Comment[uk]=Клієнт електронної пошти KDE Kontact Touch
 Comment[x-test]=xxKDE Kontact Touch e-mail clientxx
+Comment[zh_CN]=KDE Kontach 触摸版邮件客户端
 Comment[zh_TW]=KDE Kontact Touch 收發信軟體
 Name=Kontact Touch Mail
 Name[bs]=Kontact Touch pošta
@@ -78,6 +79,7 @@ Name[tr]=Kontact Touch Posta
 Name[ug]=Kontact Touch خېتى
 Name[uk]=Пошта Kontact Touch
 Name[x-test]=xxKontact Touch Mailxx
+Name[zh_CN]=Kontact 触摸版邮件
 Name[zh_TW]=Kontact Touch Mail
 
 [Event/sendfailed]
@@ -163,5 +165,6 @@ Comment[sv]=Ett fel uppstod vid försök att skicka e-post.
 Comment[tr]=E-posta gönderilmeye çalışılırken hata oldu.
 Comment[uk]=Під час спроби надсилання пошти сталася помилка.
 Comment[x-test]=xxThere was an error while trying to send the e-mail.xx
+Comment[zh_CN]=尝试发送邮件时发生错误。
 Comment[zh_TW]=傳送郵件時發生錯誤。
 Action=Popup

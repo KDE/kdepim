@@ -38,6 +38,7 @@ Name[tr]=CoisceimPart
 Name[uk]=CoisceimPart
 Name[wa]=CoisceimPårt
 Name[x-test]=xxCoisceimPartxx
+Name[zh_CN]=CoisceimPart
 Name[zh_TW]=CoisceimPart
 X-KDE-ServiceTypes=KParts/ReadOnlyPart
 X-KDE-Library=coisceimpart

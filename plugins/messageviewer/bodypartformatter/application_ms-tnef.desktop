@@ -39,6 +39,7 @@ Name[sv]=TNEF
 Name[tr]=TNEF
 Name[uk]=TNEF
 Name[x-test]=xxTNEFxx
+Name[zh_CN]=TNEF
 Name[zh_TW]=TNEF
 Comment=A bodypart formatter plugin for TNEF attachments
 Comment[bs]=Formater za glavno tijelo TNEF priloga
@@ -77,6 +78,7 @@ Comment[sv]=Ett insticksprogram för brevtextformatering av TNEF-bilagor
 Comment[tr]=TNEF ekleri için gövde biçimlendirme eklentisi
 Comment[uk]=Додаток форматування текстової частини для долучень TNEF
 Comment[x-test]=xxA bodypart formatter plugin for TNEF attachmentsxx
+Comment[zh_CN]=TNEF 附件的正文格式化插件
 Comment[zh_TW]=TNEF 附加檔的主文部份格式化外掛程式
 
 [Plugin]
