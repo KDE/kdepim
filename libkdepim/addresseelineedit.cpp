@@ -93,7 +93,7 @@ class AddresseeLineEditStatic
     {
       KConfig config( QLatin1String( "kpimcompletionorder" ) );
       const KConfigGroup group( &config, QLatin1String( "General" ) );
-      useNepomukCompletion = group.readEntry( "UseNepomuk", false );
+      useNepomukCompletion = group.readEntry( "UseNepomuk", true );
     }
 
     ~AddresseeLineEditStatic()
