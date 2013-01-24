@@ -53,7 +53,7 @@
 <qandaentry><question><para>How to control your Roaming profile's connection?</para></question>
 <answer>
   <para>You set up a <emphasis>Roaming profile</emphasis> to access your home server while you are on the road, but it keeps trying to connect even when you are at home. Auto-connection is disabled in the setup screens.</para>
-  <para><menuchoice><guimenu>Settings</guimenu><guisubmenu>Configure KMail</guisubmenu><guimenuitem>Accounts</guimenuitem><guimenuitem>Receiving (tab)</guimenuitem><guimenuitem>(select the account to exclude)</guimenuitem><guimenuitem>Modify</guimenuitem><guimenuitem>General (tab)</guimenuitem></menuchoice>, uncheck <guilabel>Include in manual mail check</guilabel>. This will exclude the profile when you hit the download icon, but the profile will still be available from the drop-down list, making it easy to get your mail while away from home.</para>
+  <para><menuchoice><guimenu>Settings</guimenu><guisubmenu>Configure KMail</guisubmenu><guimenuitem>Accounts</guimenuitem><guimenuitem>Receiving (tab)</guimenuitem><guimenuitem>(select the account to exclude)</guimenuitem><guimenuitem>Retrieval Options</guimenuitem></menuchoice>, uncheck <guilabel>Include in Manual Mail Check</guilabel>. This will exclude the profile when you hit the download icon, but the profile will still be available from the drop-down list, making it easy to get your mail while away from home.</para>
 </answer>
 </qandaentry>
 
