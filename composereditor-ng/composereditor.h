@@ -52,6 +52,8 @@ public:
      */
     QString plainTextContent() const;
 
+    QString htmlContent() const;
+
     bool enableRichText() const;
 
     /**

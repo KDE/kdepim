@@ -149,6 +149,11 @@ void ComposerEditor::setHtmlContent( const QString& html )
     d->view->setHtmlContent(html);
 }
 
+QString ComposerEditor::htmlContent() const
+{
+    return d->view->page()->mainFrame()->toHtml();
+}
+
 }
 
 #include "composereditor.moc"
