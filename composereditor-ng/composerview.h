@@ -39,6 +39,7 @@ public:
     virtual void createActions(KActionCollection *actionCollection);
 
     void setActionsEnabled(bool enabled);
+    void setHtmlContent( const QString& html );
 
 protected:
     void contextMenuEvent(QContextMenuEvent* event);

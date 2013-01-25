@@ -144,6 +144,11 @@ ComposerView *ComposerEditor::view() const
     return d->view;
 }
 
+void ComposerEditor::setHtmlContent( const QString& html )
+{
+    d->view->setHtmlContent(html);
+}
+
 }
 
 #include "composereditor.moc"

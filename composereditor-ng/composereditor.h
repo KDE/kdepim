@@ -69,6 +69,8 @@ public:
 
     ComposerView *view() const;
 
+    void setHtmlContent( const QString& html );
+
 public Q_SLOTS:
     void setEnableRichText(bool richTextEnabled);
     void paste();
