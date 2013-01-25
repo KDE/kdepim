@@ -55,10 +55,10 @@ protected slots:
     void sendMouseReleaseEvent();
 
 protected:
-    virtual void contextMenuEvent(QContextMenuEvent* event);
+    void contextMenuEvent(QContextMenuEvent* event);
 //     virtual void keyPressEvent ( QKeyEvent* );
-    virtual void dragEnterEvent ( QDragEnterEvent* );
-    virtual void dropEvent ( QDropEvent* );
+    void dragEnterEvent ( QDragEnterEvent* );
+    void dropEvent ( QDropEvent* );
 };
 
 //----------------------------------------------------------------------
