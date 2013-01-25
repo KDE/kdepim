@@ -67,7 +67,7 @@ void Utils::changeFileName(MessageCore::AttachmentPart::Ptr part)
             pattern.replace(QLatin1String("%t"), QTime::currentTime().toString());
             pattern.replace(QLatin1String("%d"), QDate::currentDate().toString());
             pattern.replace(QLatin1String("%n"), filename); //Original name
-            //TODO
+            //FIXME
             pattern.replace(QLatin1String("%e"), filename); //Extension
 
             //TODO use pattern.
