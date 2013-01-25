@@ -28,8 +28,6 @@
 #include <QWidget>
 
 #include "kurl.h"
-// #include "kparts/part.h"
-// #include "kparts/browserextension.h"
 
 class QCheckBox;
 class QProgressBar;
