@@ -1011,6 +1011,10 @@ void ComposerView::setHtmlContent( const QString& html )
     d->evaluateJavascript(QString::fromLatin1("replaceHtml(\"%1\")").arg(text));
 }
 
+void ComposerView::evaluateJavascript( const QString& javascript)
+{
+    d->evaluateJavascript(javascript);
+}
 
 }
 

@@ -40,6 +40,7 @@ public:
 
     void setActionsEnabled(bool enabled);
     void setHtmlContent( const QString& html );
+    void evaluateJavascript( const QString& javascript);
 
 protected:
     void contextMenuEvent(QContextMenuEvent* event);
