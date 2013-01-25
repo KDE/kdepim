@@ -30,6 +30,10 @@ class BlogiloComposerEditor : public ComposerEditorNG::ComposerEditor
 public:
     explicit BlogiloComposerEditor(BlogiloComposerView *view, QWidget *parent);
     ~BlogiloComposerEditor();
+
+    void setReadOnly ( bool _readOnly );
+private:
+    bool readOnly;
 };
 
 #endif // BLOGILOCOMPOSEREDITOR_H

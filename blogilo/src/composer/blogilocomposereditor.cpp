@@ -21,11 +21,20 @@
 #include "blogilocomposereditor.h"
 
 BlogiloComposerEditor::BlogiloComposerEditor(BlogiloComposerView *view, QWidget *parent)
-    : ComposerEditorNG::ComposerEditor(view,parent)
+    : ComposerEditorNG::ComposerEditor(view,parent),
+      readOnly(false)
 {
 }
 
 BlogiloComposerEditor::~BlogiloComposerEditor()
 {
 
+}
+
+void BlogiloComposerEditor::setReadOnly ( bool _readOnly )
+{
+    if (readOnly != _readOnly) {
+        readOnly = _readOnly;
+        view()->evaluateJavascript( QString::fromLatin1( "setReadOnly(%1)" ).arg ( readOnly ? QLatin1String("true") : QLatin1String("false") ) );
+    }
 }
