@@ -216,7 +216,6 @@ void WebView::contextMenuEvent(QContextMenuEvent* event)
 TextEditor::TextEditor ( QWidget *parent )
         : QWidget ( parent ), webView(new WebView(this))
 {
-    objectsAreModified = false;
     readOnly = false;
     QFile file ( KStandardDirs::locate ( "data", "blogilo/TextEditorInitialHtml" ) );
     kDebug() <<file.fileName();
@@ -264,11 +263,6 @@ void TextEditor::dropMimeDataSlot ( const QMimeData *mime )
 //       Downloader downloader(this);
 //       insertImage(downloader.download(urls[0]));
     }
-}
-
-void TextEditor::anObjectIsModifiedSlot()
-{
-    objectsAreModified = true;
 }
 
 void TextEditor::createLayout()
