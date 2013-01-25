@@ -8,4 +8,4 @@ soprano_add_ontology(nie_apps_SRCS ${SHAREDDESKTOPONTOLOGIES_ROOT_DIR}/nie/nco.t
 soprano_add_ontology(nie_apps_SRCS ${SHAREDDESKTOPONTOLOGIES_ROOT_DIR}/nie/nmo.trig "NMO" "Vocabulary" "trig")
 
 kde4_add_library(niefast_apps STATIC ${nie_apps_SRCS})
-target_link_libraries(niefast_apps ${QT_QTCORE_LIBRARY} ${SOPRANO_LIBRARIES} ${NEPOMUK_LIBRARIES})
+target_link_libraries(niefast_apps ${QT_QTCORE_LIBRARY} ${SOPRANO_LIBRARIES} )
