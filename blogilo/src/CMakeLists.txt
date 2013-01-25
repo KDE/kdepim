@@ -15,7 +15,6 @@ set(blogilo_SRCS
  backend.cpp
  entriescountdialog.cpp
  bilbomedia.cpp
- addcategory.cpp
  catcheckbox.cpp
  sendtoblogdialog.cpp
  waitwidget.cpp
@@ -47,7 +46,6 @@ kde4_add_ui_files(
   toolboxbase.ui
   addeditblogbase.ui
   entriescountdialogbase.ui
-  addcategorybase.ui
   settingsbase.ui
   editorsettingsbase.ui
   advancedsettingsbase.ui
