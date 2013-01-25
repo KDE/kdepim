@@ -27,6 +27,9 @@ set(blogilo_SRCS
  composer/dialogs/addmediadialog.cpp
  composer/dialogs/addeditimage.cpp
  composer/texteditor.cpp
+
+ composer/blogilocomposerview.cpp
+ composer/blogilocomposereditor.cpp
 )
 
 IF(WIN32)
