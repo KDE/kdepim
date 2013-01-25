@@ -30,6 +30,9 @@ public:
     ~BlogiloComposerView();
 
     void createActions(KActionCollection *actionCollection);
+
+private Q_SLOTS:
+    void slotAddPostSplitter();
 };
 
 #endif // BLOGILOCOMPOSERVIEW_H

@@ -38,3 +38,7 @@ void BlogiloComposerView::createActions(KActionCollection *actionCollection)
     //TODO
 }
 
+void BlogiloComposerView::slotAddPostSplitter()
+{
+//TODO
+}
