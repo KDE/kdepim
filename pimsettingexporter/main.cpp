@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
     KDEPIM_VERSION, ki18n("PIM Setting Exporter"), KAboutData::License_GPL_V2,
     ki18n("Copyright © 2012-2013 pimsettingexporter authors"));
   aboutData.addAuthor(ki18n("Laurent Montel"), ki18n("Maintainer"), "montel@kde.org");
-  //aboutData.setProgramIconName("kontact-import-wizard");
+  aboutData.setProgramIconName(QLatin1String("kontact"));
   KCmdLineArgs::init( argc, argv, &aboutData );
 
   KCmdLineOptions options;

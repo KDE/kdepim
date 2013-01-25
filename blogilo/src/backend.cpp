@@ -95,9 +95,7 @@ void Backend::getCategoryListFromServer()
                  this, SLOT(categoriesListed(QList<QMap<QString,QString> >)) );
         tmp->listCategories();
     } else {
-        char err[] = "Blog API doesn't support getting Category list.";
-        kDebug() << err;
-        error( KBlog::Blog::NotSupported, i18n( err ) );
+        error( KBlog::Blog::NotSupported, i18n( "Blog API doesn't support getting Category list." ) );
     }
 }
 

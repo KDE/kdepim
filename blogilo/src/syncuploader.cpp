@@ -33,7 +33,9 @@ class SyncUploader::Private
 {
 public:
     Private()
-    :mCurrentMedia(0),success(false)
+    :mCurrentMedia(0),
+      loop(0),
+      success(false)
     {}
     BilboMedia *mCurrentMedia;
     QEventLoop *loop;
