@@ -96,6 +96,7 @@ DomTreeWidget::DomTreeWidget(QWebView *view, QWidget *parent)
 
 DomTreeWidget::~DomTreeWidget()
 {
+    delete d;
 }
 
 }
