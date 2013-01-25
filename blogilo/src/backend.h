@@ -25,11 +25,12 @@
 #ifndef BACKEND_H
 #define BACKEND_H
 
-#include <QObject>
-#include <QMap>
 #include "category.h"
 #include <kblog/blog.h>
 #include "bilbopost.h"
+
+#include <QObject>
+#include <QMap>
 
 
 class BilboBlog;

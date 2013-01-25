@@ -25,9 +25,11 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <kxmlguiwindow.h>
 #include "bilbopost.h"
 #include "bilboblog.h"
+
+#include <kxmlguiwindow.h>
+
 #include <QPointer>
 
 class KStatusNotifierItem;

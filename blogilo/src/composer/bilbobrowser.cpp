@@ -24,10 +24,10 @@
 //krazy:excludeall=qmethods due to use of KStatusBar::showMessage()
 
 #include "bilbobrowser.h"
+#include "stylegetter.h"
+#include "global.h"
+#include "settings.h"
 
-#include <QWidget>
-#include <QProgressBar>
-#include <QTimer>
 
 #include <khtml_part.h>
 #include <khtmlview.h>
@@ -35,14 +35,13 @@
 #include <kmessagebox.h>
 #include <kseparator.h>
 #include <kpushbutton.h>
-// #include <kjob.h>
-// #include <kio/jobclasses.h>
 
-#include "stylegetter.h"
-#include "global.h"
-#include "settings.h"
 #include <QCheckBox>
 #include <QVBoxLayout>
+#include <QWidget>
+#include <QProgressBar>
+#include <QTimer>
+
 
 BilboBrowser::BilboBrowser( QWidget *parent ) : QWidget( parent )
 {

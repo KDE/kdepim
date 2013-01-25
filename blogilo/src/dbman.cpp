@@ -24,15 +24,17 @@
 //krazy:excludeall=crashy to skip false positives due to QSqlQuery.exec() usage
 
 #include "dbman.h"
-#include <kmessagebox.h>
 #include "bilboblog.h"
 #include "bilbopost.h"
+
 #include <kdebug.h>
 #include <KDE/KLocale>
 #include <kdatetime.h>
 #include <kurl.h>
 #include <kwallet.h>
 #include <kio/deletejob.h>
+#include <kmessagebox.h>
+
 #include <QSqlError>
 #include <QSqlQuery>
 #include <QFile>

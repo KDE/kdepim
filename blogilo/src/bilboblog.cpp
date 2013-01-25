@@ -23,10 +23,12 @@
 */
 
 #include "bilboblog.h"
-#include <QApplication>
 #include <kblog/wordpressbuggy.h>
 #include <kblog/gdata.h>
 #include <KDebug>
+
+#include <QApplication>
+
 
 class BilboBlog::Private
 {
