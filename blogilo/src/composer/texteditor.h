@@ -136,14 +136,12 @@ private slots:
     void somethingEdittedSlot();
     void updateStyle();
     void dropMimeDataSlot ( const QMimeData* );
-    void anObjectIsModifiedSlot();
 
 private:
 //       mutable Document document;
     WebView *webView;
     QList<int> fontSizes;
     bool readOnly;
-    bool objectsAreModified;
     KToolBar *barVisual;
 
     KAction *actBold;
