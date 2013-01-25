@@ -196,7 +196,7 @@ void ComposerImageResizeWidget::mouseMoveEvent( QMouseEvent * event )
         }
         d->imageSizetoolTip->show();
         d->imageSizetoolTip->displaySize(size);
-        d->imageSizetoolTip->move(mapFromParent(event->pos()));
+        d->imageSizetoolTip->move(QCursor::pos());
         //resize(d->resizeImage(event->pos()));
         //TODO resize
     }
