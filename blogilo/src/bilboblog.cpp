@@ -269,3 +269,5 @@ bool BilboBlog::supportTag() const
 {
     return d->mSupportedFeatures["tag"];
 }
+
+#include "bilboblog.moc"
