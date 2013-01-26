@@ -1020,9 +1020,6 @@ void View::setCurrentThreadExpanded( bool expand )
     setExpanded( currentIndex(), expand );
   } else if ( it->type() == Item::Message ) {
     MessageItem * message = static_cast< MessageItem *>( it );
-    if ( !message )
-      return;
-
     while ( message->parent() )
     {
       if ( message->parent()->type() != Item::Message )
