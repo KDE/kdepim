@@ -61,11 +61,18 @@ bool Utils::resizeImage(MessageCore::AttachmentPart::Ptr part)
 void Utils::changeFileName(MessageCore::AttachmentPart::Ptr part)
 {
     if (MessageComposer::MessageComposerSettings::self()->renameResizedImages()) {
-        const QString pattern = MessageComposer::MessageComposerSettings::self()->renameResizedImagesPattern();
+        QString pattern = MessageComposer::MessageComposerSettings::self()->renameResizedImagesPattern();
         if (!pattern.isEmpty()) {
             const QString filename = part->fileName();
+            pattern.replace(QLatin1String("%t"), QTime::currentTime().toString());
+            pattern.replace(QLatin1String("%d"), QDate::currentDate().toString());
+            pattern.replace(QLatin1String("%n"), filename); //Original name
+            //FIXME
+            pattern.replace(QLatin1String("%e"), filename); //Extension
+
             //TODO use pattern.
             //Need to define pattern type.
+            part->setFileName(pattern);
         }
     }
 }

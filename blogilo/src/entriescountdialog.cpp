@@ -23,8 +23,10 @@
 */
 
 #include "entriescountdialog.h"
-#include <kdebug.h>
 #include "settings.h"
+
+#include <kdebug.h>
+
 
 EntriesCountDialog::EntriesCountDialog( QWidget *parent )
         : KDialog( parent )

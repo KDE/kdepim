@@ -27,6 +27,7 @@
 #include "bilbopost.h"
 #include "bilbomedia.h"
 #include "dbman.h"
+#include <settings.h>
 
 #include <kurl.h>
 #include <kblog/blogger1.h>
@@ -37,10 +38,9 @@
 #include <kblog/blogmedia.h>
 #include <kdebug.h>
 #include <KDE/KLocale>
-// #include <QMimeData>
+
 #include <kio/netaccess.h>
 #include <kio/job.h>
-#include <settings.h>
 
 const QRegExp splitRX("((<hr/?>)?<!--split-->)");
 

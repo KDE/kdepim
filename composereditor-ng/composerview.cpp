@@ -1004,6 +1004,18 @@ void ComposerView::mouseDoubleClickEvent(QMouseEvent * event)
     KWebView::mouseDoubleClickEvent(event);
 }
 
+void ComposerView::setHtmlContent( const QString& html )
+{
+    QString text = html;
+    text = text.replace(QLatin1Char('\"'), QLatin1String("\\\"")).simplified();
+    d->evaluateJavascript(QString::fromLatin1("replaceHtml(\"%1\")").arg(text));
+}
+
+void ComposerView::evaluateJavascript( const QString& javascript)
+{
+    d->evaluateJavascript(javascript);
+}
+
 }
 
 #include "composerview.moc"

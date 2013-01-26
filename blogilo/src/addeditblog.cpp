@@ -23,6 +23,9 @@
 */
 
 #include "addeditblog.h"
+#include "waitwidget.h"
+#include "bilboblog.h"
+#include "dbman.h"
 
 #include <kblog/gdata.h>
 #include <kblog/blogger1.h>
@@ -35,9 +38,6 @@
 #include <kio/jobclasses.h>
 #include <kio/job.h>
 
-#include "waitwidget.h"
-#include "bilboblog.h"
-#include "dbman.h"
 #include <QTableWidget>
 #include <QTimer>
 

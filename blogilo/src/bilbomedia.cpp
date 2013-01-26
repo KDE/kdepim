@@ -24,8 +24,9 @@
 
 #include "bilbomedia.h"
 #include "kicon.h"
-#include "kdebug.h"
-//#include <QMimeData>
+
+#include <kdebug.h>
+
 #include <QPixmap>
 
 class BilboMedia::Private

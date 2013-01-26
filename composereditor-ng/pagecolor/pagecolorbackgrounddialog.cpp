@@ -151,6 +151,7 @@ PageColorBackgroundDialog::PageColorBackgroundDialog(const QWebElement& element,
 
 PageColorBackgroundDialog::~PageColorBackgroundDialog()
 {
+    delete d;
 }
 
 }

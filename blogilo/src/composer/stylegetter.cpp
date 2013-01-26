@@ -29,20 +29,20 @@
 */
 
 #include "stylegetter.h"
+#include "bilbopost.h"
+#include "bilboblog.h"
+#include "backend.h"
+#include "dbman.h"
 
 #include <kio/job.h>
 #include <kstandarddirs.h>
 #include <kmessagebox.h>
 #include <klocalizedstring.h>
 #include <kdebug.h>
+#include <kdatetime.h>
 
 #include <QFile>
 
-#include "bilbopost.h"
-#include "bilboblog.h"
-#include "backend.h"
-#include "dbman.h"
-#include <kdatetime.h>
 
 static const char POST_TITLE[] = "Temporary-Post-Used-For-Style-Detection-Title-";
 static const char  POST_CONTENT[] = "Temporary-Post-Used-For-Style-Detection-Content-";

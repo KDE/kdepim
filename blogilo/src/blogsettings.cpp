@@ -24,9 +24,11 @@
 
 #include "blogsettings.h"
 #include "addeditblog.h"
+#include "dbman.h"
+
 #include <kdebug.h>
 #include <KMessageBox>
-#include "dbman.h"
+
 
 BlogSettings::BlogSettings( QWidget *parent )
     : QWidget( parent )

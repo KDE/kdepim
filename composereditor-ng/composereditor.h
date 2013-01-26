@@ -52,6 +52,8 @@ public:
      */
     QString plainTextContent() const;
 
+    QString htmlContent() const;
+
     bool enableRichText() const;
 
     /**
@@ -68,6 +70,8 @@ public:
     QAction* action(QWebPage::WebAction action);
 
     ComposerView *view() const;
+
+    void setHtmlContent( const QString& html );
 
 public Q_SLOTS:
     void setEnableRichText(bool richTextEnabled);

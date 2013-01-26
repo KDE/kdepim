@@ -23,9 +23,11 @@
 */
 
 #include "bilbopost.h"
-#include <QStringList>
 #include <kdatetime.h>
 #include <kdebug.h>
+
+#include <QStringList>
+
 
 class BilboPostPrivate
 {

@@ -23,10 +23,12 @@
 */
 
 #include "bilboblog.h"
-#include <QApplication>
 #include <kblog/wordpressbuggy.h>
 #include <kblog/gdata.h>
 #include <KDebug>
+
+#include <QApplication>
+
 
 class BilboBlog::Private
 {
@@ -267,3 +269,5 @@ bool BilboBlog::supportTag() const
 {
     return d->mSupportedFeatures["tag"];
 }
+
+#include "bilboblog.moc"

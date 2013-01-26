@@ -15,7 +15,6 @@ set(blogilo_SRCS
  backend.cpp
  entriescountdialog.cpp
  bilbomedia.cpp
- addcategory.cpp
  catcheckbox.cpp
  sendtoblogdialog.cpp
  waitwidget.cpp
@@ -28,6 +27,9 @@ set(blogilo_SRCS
  composer/dialogs/addmediadialog.cpp
  composer/dialogs/addeditimage.cpp
  composer/texteditor.cpp
+
+ composer/blogilocomposerview.cpp
+ composer/blogilocomposereditor.cpp
 )
 
 IF(WIN32)
@@ -47,7 +49,6 @@ kde4_add_ui_files(
   toolboxbase.ui
   addeditblogbase.ui
   entriescountdialogbase.ui
-  addcategorybase.ui
   settingsbase.ui
   editorsettingsbase.ui
   advancedsettingsbase.ui
@@ -64,7 +65,7 @@ kde4_add_kcfg_files( blogilo_SRCS settings.kcfgc)
 kde4_add_app_icon(blogilo_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/../icons/hi*-app-blogilo.png")
 kde4_add_executable( blogilo ${blogilo_SRCS})
 
-target_link_libraries( blogilo ${KDE4_KDEUI_LIBS} ${QT_QTSQL_LIBRARY} ${KDE4_KTEXTEDITOR_LIBS} ${QT_QTWEBKIT_LIBRARY} ${KDE4_KDEWEBKIT_LIBRARY} ${KDEPIMLIBS_KBLOG_LIBS} )
+target_link_libraries( blogilo ${KDE4_KDEUI_LIBS} ${QT_QTSQL_LIBRARY} ${KDE4_KTEXTEDITOR_LIBS} ${QT_QTWEBKIT_LIBRARY} ${KDE4_KDEWEBKIT_LIBRARY} ${KDEPIMLIBS_KBLOG_LIBS} composereditorng )
 IF(NOT WIN32)
     target_link_libraries( blogilo ${KDE4_KHTML_LIBS} )
 ENDIF(NOT WIN32)

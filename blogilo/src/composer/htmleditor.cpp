@@ -24,7 +24,6 @@
 
 #include "htmleditor.h"
 
-#include <QMenu>
 
 #include <kglobal.h>
 #include <ktexteditor/editor.h>
@@ -35,6 +34,8 @@
 #include <kaction.h>
 #include <klocalizedstring.h>
 
+
+#include <QMenu>
 
 class HtmlEditorPrivate
 {
@@ -102,11 +103,6 @@ KTextEditor::View* HtmlEditor::createView( QWidget* parent )
     view->setContextMenu( menu );
     return view;
 }
-
-// void HtmlEditor::setContent( KTextEditor::View* view, const QString &text)
-// {
-//     view->document()->setText( text );
-// }
 
 QWidget* HtmlEditor::configPage( int number, QWidget* parent )
 {
