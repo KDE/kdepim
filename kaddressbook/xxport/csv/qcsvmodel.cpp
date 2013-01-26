@@ -100,7 +100,7 @@ class QCsvModel::Private
 {
   public:
     Private( QCsvModel *model )
-      : mParent( model ),
+      : mParent( model ), mParser( 0 ),
         mDevice( 0 ), mRowCount( 0 ), mColumnCount( 0 )
     {
     }

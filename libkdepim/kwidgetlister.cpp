@@ -53,7 +53,13 @@ class KWidgetLister::Private
     Private( KWidgetLister *qq )
       : q( qq ),
         mBtnMore( 0 ),
-        mBtnFewer( 0 )
+        mBtnFewer( 0 ),
+        mBtnClear( 0 ),
+        mLayout( 0 ),
+        mButtonBox( 0 ),
+        mMinWidgets( 0 ),
+        mMaxWidgets( 0 )
+
       
     {
     }

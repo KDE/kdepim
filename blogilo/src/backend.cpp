@@ -48,7 +48,7 @@ class Backend::Private
 {
 public:
     Private()
-    :categoryListNotSet(false)
+    :kBlog(0), bBlog(0), categoryListNotSet(false)
     {}
     KBlog::Blog *kBlog;
     BilboBlog *bBlog;

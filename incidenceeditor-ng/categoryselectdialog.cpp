@@ -164,7 +164,7 @@ void CategorySelectWidget::setCategoryList( const QStringList &categories )
 }
 
 CategorySelectDialog::CategorySelectDialog( CategoryConfig *cc, QWidget *parent )
-  : KDialog( parent )
+  : KDialog( parent ), d( 0 )
 {
   setCaption( i18n( "Select Categories" ) );
 #ifdef KDEPIM_MOBILE_UI

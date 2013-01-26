@@ -35,7 +35,7 @@
 #include <QTreeWidget>
 
 AttachPropertyDialog::AttachPropertyDialog( QWidget *parent )
-  : QDialog( parent )
+  : QDialog( parent ), mAttach(0)
 {
   mUI.setupUi( this );
   mUI.mProperties->setHeaderHidden( true );

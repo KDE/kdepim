@@ -37,6 +37,8 @@ FilterLNotes::FilterLNotes() :
                "messages will be stored in subfolders named by the files they came from under: "
                "\"LNotes-Import\" in your local folder.</p>"))
 {
+  currentFile = 1;
+  totalFiles = 0;
 }
 
 /** Destructor. */
