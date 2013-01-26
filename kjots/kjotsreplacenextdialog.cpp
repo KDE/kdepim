@@ -25,7 +25,7 @@
 #include <KLocale>
 
 KJotsReplaceNextDialog::KJotsReplaceNextDialog(QWidget *parent) :
-    KDialog(parent)
+    KDialog(parent), m_answer(Close)
 {
     setModal( true );
     setCaption( i18n("Replace") );
