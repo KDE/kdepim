@@ -41,7 +41,7 @@ class AclEntryDialog::Private
 {
   public:
     Private( AclEntryDialog *qq )
-      : q( qq ), mButtonLayout(0)
+      : q( qq ), mButtonLayout(0),mUserIdLineEdit(0), mButtonLayout(0)
     {
     }
 
