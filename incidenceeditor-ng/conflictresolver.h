@@ -188,7 +188,6 @@ class INCIDENCEEDITORS_NG_EXPORT ConflictResolver : public QObject
                             // to prevent the process from being repeated many times
                             // after a series of quick parameter changes.
 
-    bool mForceDownload;
     FreeBusyItemModel *mFBModel;
     QWidget *mParentWidget;
 
