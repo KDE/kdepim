@@ -28,7 +28,7 @@
 
 using namespace KPIMIdentities;
 
-KDE_EXPORT QString ktexteditorkabcbridge( const QString &placeHolder, QWidget *widget, bool *ok )
+extern "C" KDE_EXPORT QString ktexteditorkabcbridge( const QString &placeHolder, QWidget *widget, bool *ok )
 {
   KGlobal::locale()->insertCatalog( "ktexteditorkabcbridge_plugin" );
 
