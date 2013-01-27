@@ -38,6 +38,7 @@
 #include "emailsimporthandler.h"
 #include "mailactionmanager.h"
 #include "mailcommon/collectiongeneralpage.h"
+#include "mailcommon/collectionexpirypage.h"
 #include "mailcommon/filter/filtermanager.h"
 #include "mailcommon/mailkernel.h"
 #include "mailcommon/redirectdialog.h"
@@ -157,6 +158,7 @@ MainView::MainView(QWidget* parent)
   QDBusConnection::sessionBus().registerObject( "/composer", this, QDBusConnection::ExportScriptableSlots );
 
   Akonadi::CollectionPropertiesDialog::registerPage( new MailCommon::CollectionGeneralPageFactory );
+  Akonadi::CollectionPropertiesDialog::registerPage( new MailCommon::CollectionExpiryPageFactory );
 }
 
 MainView::~MainView()
@@ -517,7 +519,6 @@ void MainView::doDelayedInit()
   connect( actionCollection()->action( "prefer_html_to_plain" ), SIGNAL(triggered(bool)), SLOT(preferHTML(bool)) );
   connect( actionCollection()->action( "prefer_html_to_plain_viewer" ), SIGNAL(triggered(bool)), SLOT(preferHtmlViewer(bool)) );
   connect( actionCollection()->action( "load_external_ref" ), SIGNAL(triggered(bool)), SLOT(loadExternalReferences(bool)) );
-  connect( actionCollection()->action( "show_expire_properties" ), SIGNAL(triggered(bool)), SLOT(showExpireProperties()) );
   connect( actionCollection()->action( "move_all_to_trash" ), SIGNAL(triggered(bool)), SLOT(moveToOrEmptyTrash()) );
   connect( actionCollection()->action( "create_todo_reminder" ), SIGNAL(triggered(bool)), SLOT(createToDo()) );
   connect( actionCollection()->action( "create_event" ), SIGNAL(triggered(bool)), SLOT(createEvent()) );
@@ -1371,7 +1372,8 @@ void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelect
            this, SLOT(launchAccountWizard()) );
 
   const QStringList pages = QStringList() << QLatin1String( "MailCommon::CollectionGeneralPage" )
-                                          << QLatin1String( "Akonadi::CachePolicyPage" );
+                                          << QLatin1String( "Akonadi::CachePolicyPage" )
+                                          << QLatin1String( "MailCommon::CollectionExpiryPage" );
 
   mMailActionManager->setCollectionPropertiesPageNames( pages );
 
@@ -1686,22 +1688,6 @@ void MainView::folderChanged()
     if ( CommonKernel->folderIsTrash( collection ) )
       actionCollection()->action( "move_all_to_trash" )->setText( i18n( "Empty Trash" ) );
   }
-}
-
-void MainView::showExpireProperties()
-{
-#if 0
-  const QItemSelectionModel *collectionSelectionModel = regularSelectionModel();
-  if ( collectionSelectionModel->selection().indexes().isEmpty() )
-    return;
-
-  const QModelIndex index = collectionSelectionModel->selection().indexes().first();
-  const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
-  Q_ASSERT( collection.isValid() );
-
-  MailCommon::ExpiryPropertiesDialog *dlg = new MailCommon::ExpiryPropertiesDialog( this, collection );
-  dlg->show();
-#endif
 }
 
 void MainView::moveToOrEmptyTrash()
