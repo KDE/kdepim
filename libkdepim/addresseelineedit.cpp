@@ -224,6 +224,7 @@ class AddresseeLineEdit::Private
         m_completionInitialized( false ),
         m_smartPaste( false ),
         m_addressBookConnected( false ),
+        m_lastSearchMode( false ),
         m_searchExtended( false ),
         m_useSemicolonAsSeparator( false )
     {
