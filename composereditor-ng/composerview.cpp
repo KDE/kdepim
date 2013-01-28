@@ -1019,28 +1019,42 @@ void ComposerView::createAction(ComposerViewAction type)
             d->action_block_quote = new KAction(KIcon(QLatin1String("format-text-blockquote")), i18n( "Blockquote" ), this );
             d->htmlEditorActionList.append(d->action_block_quote);
             connect( d->action_block_quote, SIGNAL(triggered()), this, SLOT(_k_slotToggleBlockQuote()) );
-
         }
         break;
     }
     case Find:
     {
+        if (!d->action_find) {
+
+        }
         break;
     }
     case Replace:
     {
+        if (!d->action_replace) {
+
+        }
         break;
     }
     case SaveAs:
     {
+        if (!d->action_save_as) {
+
+        }
         break;
     }
     case Print:
     {
+        if (!d->action_print) {
+
+        }
         break;
     }
     case PrintPreview:
     {
+        if (!d->action_print_preview) {
+
+        }
         break;
     }
     default:
@@ -1151,7 +1165,7 @@ void ComposerView::createActions(KActionCollection *actionCollection)
     d->action_print = KStandardAction::print( this, SLOT(_k_slotPrint()), this);
     d->htmlEditorActionList.append(d->action_print);
 
-    d->action_print_preview = KStandardAction::printPreview( this, SLOT(_k_slotPrintPreview()), actionCollection );
+    d->action_print_preview = KStandardAction::printPreview( this, SLOT(_k_slotPrintPreview()), this );
     d->htmlEditorActionList.append(d->action_print_preview);
 
 }
