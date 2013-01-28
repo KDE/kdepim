@@ -175,14 +175,15 @@ void AddEditBlog::autoConfigure()
 void AddEditBlog::gotHtml( KJob *job )
 {
     kDebug();
-    if ( !job ) return;
+    if ( !job )
+        return;
     if ( job->error() ) {
         kDebug() << "Auto configuration failed! Error: " << job->errorString();
         hideWaitWidget();
         KMessageBox::sorry(this, i18n("Auto configuration failed. You have to set Blog API on Advanced tab manually."));
         return;
     }
-    QString httpData( dynamic_cast<KIO::StoredTransferJob*>( job )->data() );
+    QString httpData( static_cast<KIO::StoredTransferJob*>( job )->data() );
     job->deleteLater();
 
     QString textUrl;
@@ -262,44 +263,45 @@ void AddEditBlog::fetchBlogId()
     kDebug() << d->ui.comboApi->currentIndex();
 
     switch ( d->ui.comboApi->currentIndex() ) {
-        case 0:
-        case 1:
-        case 2:
-        case 3:
-        {
-	    KBlog::Blogger1 *blog = new KBlog::Blogger1( KUrl( d->ui.txtUrl->text() ), this );
-            d->mBlog = blog;
-            blog->setUsername( d->ui.txtUser->text() );
-            blog->setPassword( d->ui.txtPass->text() );
-            connect( blog , SIGNAL(listedBlogs(QList<QMap<QString,QString> >)),
-                     this, SLOT(fetchedBlogId(QList<QMap<QString,QString> >)) );
-            d->mFetchBlogIdTimer = new QTimer( this );
-            d->mFetchBlogIdTimer->setSingleShot( true );
-            connect( d->mFetchBlogIdTimer, SIGNAL(timeout()), this, SLOT(handleFetchIDTimeout()) );
-            d->mFetchBlogIdTimer->start( TIMEOUT );
-            blog->listBlogs();
-            break;
-        }
-        case 4:
-	{
-	    KBlog::GData* blog = new KBlog::GData( d->ui.txtUrl->text() , this );
-            d->mBlog = blog;
-            blog->setUsername( d->ui.txtUser->text() );
-            blog->setPassword( d->ui.txtPass->text() );
-            connect( blog, SIGNAL(fetchedProfileId(QString)),
-                     this, SLOT(fetchedProfileId(QString)) );
-            blog->fetchProfileId();
-            d->mFetchProfileIdTimer = new QTimer( this );
-            d->mFetchProfileIdTimer->setSingleShot( true );
-            connect( d->mFetchProfileIdTimer, SIGNAL(timeout()), this, SLOT(handleFetchIDTimeout()) );
-            d->mFetchProfileIdTimer->start( TIMEOUT );
-            break;
-	}
-        default:
-            kDebug()<<"Unknown API";
-            return;
-            break;
-    };
+    case 0:
+    case 1:
+    case 2:
+    case 3:
+    {
+        KBlog::Blogger1 *blog = new KBlog::Blogger1( KUrl( d->ui.txtUrl->text() ), this );
+        d->mBlog = blog;
+        blog->setUsername( d->ui.txtUser->text() );
+        blog->setPassword( d->ui.txtPass->text() );
+        connect( blog , SIGNAL(listedBlogs(QList<QMap<QString,QString> >)),
+                 this, SLOT(fetchedBlogId(QList<QMap<QString,QString> >)) );
+        d->mFetchBlogIdTimer = new QTimer( this );
+        d->mFetchBlogIdTimer->setSingleShot( true );
+        connect( d->mFetchBlogIdTimer, SIGNAL(timeout()), this, SLOT(handleFetchIDTimeout()) );
+        d->mFetchBlogIdTimer->start( TIMEOUT );
+        blog->listBlogs();
+        break;
+    }
+    case 4:
+    {
+        KBlog::GData* blog = new KBlog::GData( d->ui.txtUrl->text() , this );
+        d->mBlog = blog;
+        blog->setUsername( d->ui.txtUser->text() );
+        blog->setPassword( d->ui.txtPass->text() );
+        connect( blog, SIGNAL(fetchedProfileId(QString)),
+                 this, SLOT(fetchedProfileId(QString)) );
+        blog->fetchProfileId();
+        d->mFetchProfileIdTimer = new QTimer( this );
+        d->mFetchProfileIdTimer->setSingleShot( true );
+        connect( d->mFetchProfileIdTimer, SIGNAL(timeout()), this, SLOT(handleFetchIDTimeout()) );
+        d->mFetchProfileIdTimer->start( TIMEOUT );
+        break;
+    }
+    default:
+        kDebug()<<"Unknown API";
+        return;
+        break;
+    }
+
     connect( d->mBlog, SIGNAL(error(KBlog::Blog::ErrorType,QString)),
              this, SLOT(handleFetchError(KBlog::Blog::ErrorType,QString)) );
     d->ui.txtId->setText( i18n( "Please wait..." ) );
@@ -382,8 +384,10 @@ void AddEditBlog::fetchedBlogId( const QList< QMap < QString , QString > > & lis
         blogsDialog->setWindowTitle( i18n("Which blog?") );
         if( blogsDialog->exec() ) {
             int row = blogsList->currentRow();
-            if( row == -1 )
+            if( row == -1 ) {
+                delete blogsList;
                 return;
+            }
             blogId = qobject_cast<QLabel*>( blogsList->cellWidget(row, 2) )->text();
             blogName = qobject_cast<QLabel*>( blogsList->cellWidget(row, 0) )->text();
             blogUrl = qobject_cast<QLabel*>( blogsList->cellWidget(row, 1) )->text();
