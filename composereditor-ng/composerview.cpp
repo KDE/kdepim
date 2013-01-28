@@ -1016,6 +1016,11 @@ void ComposerView::evaluateJavascript( const QString& javascript)
     d->evaluateJavascript(javascript);
 }
 
+void ComposerView::createToolBar(const QList<ComposerViewAction>&)
+{
+    //TODO
+}
+
 }
 
 #include "composerview.moc"

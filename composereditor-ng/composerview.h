@@ -36,7 +36,48 @@ public:
     explicit ComposerView(QWidget * parent = 0);
     ~ComposerView();
 
+    enum ComposerViewAction {
+        Bold,
+        Italic,
+        Underline,
+        StrikeOut,
+        AlignLeft,
+        AlignCenter,
+        AlignRight,
+        AlignJustify,
+        DirectionLtr,
+        DirectionRtl,
+        SubScript,
+        SuperScript,
+        HorizontalRule,
+        ListIndent,
+        ListDedent,
+        OrderedList,
+        UnorderedList,
+        FormatType,
+        FontSize,
+        FontFamily,
+        Emoticon,
+        InsertHtml,
+        InsertImage,
+        InsertTable,
+        InsertLink,
+        TextForegroundColor,
+        TextBackgroundColor,
+        FormatReset,
+        SpellCheck,
+        Find,
+        Replace,
+        PageColor,
+        BlockQuote,
+        SaveAs,
+        Print,
+        PrintPreview
+    };
+
     virtual void createActions(KActionCollection *actionCollection);
+
+    void createToolBar(const QList<ComposerViewAction>&);
 
     void setActionsEnabled(bool enabled);
     void setHtmlContent( const QString& html );
