@@ -462,8 +462,8 @@ bool ComposerAutoCorrection::singleSpaces()
       return false;
   if (!mCursor.atBlockStart() && mWord.length() == 1 && mWord.at(0) == QLatin1Char(' ')) {
     // then when the prev char is also a space, don't insert one.
-    QTextBlock block = mCursor.block();
-    QString text = block.text();
+    const QTextBlock block = mCursor.block();
+    const QString text = block.text();
     if (text.at(mCursor.position() -1 - block.position()) == QLatin1Char(' ')) {
       mWord.clear();
       return true;
@@ -480,7 +480,7 @@ void ComposerAutoCorrection::capitalizeWeekDays()
   const QString trimmed = mWord.trimmed();
   Q_FOREACH (const QString & name, mCacheNameOfDays) {
     if (trimmed == name) {
-       int pos = mWord.indexOf(name);
+       const int pos = mWord.indexOf(name);
        mWord.replace(pos, 1, name.at(0).toUpper());
        return;
     }
