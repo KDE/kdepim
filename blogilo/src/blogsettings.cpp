@@ -117,7 +117,7 @@ void BlogSettings::loadBlogsList()
 {
     kDebug();
     QList<BilboBlog*> list = DBMan::self()->blogList().values();
-    int count = list.count();
+    const int count = list.count();
     for(int i=0; i<count; ++i) {
         addBlogToList( *list[i] );
     }

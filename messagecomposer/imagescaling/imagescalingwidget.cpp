@@ -24,6 +24,7 @@
 #include <KMessageBox>
 
 #include <QImageWriter>
+#include <QWhatsThis>
 
 using namespace MessageComposer;
 
@@ -79,11 +80,29 @@ ImageScalingWidget::ImageScalingWidget(QWidget *parent)
   mRecipientFilterGroup->addButton(ui->resizeOneEmails,MessageComposer::MessageComposerSettings::EnumFilterRecipientType::ResizeOneEmailContainsPattern );
   mRecipientFilterGroup->addButton(ui->doNotResizeEachEmails,MessageComposer::MessageComposerSettings::EnumFilterRecipientType::DontResizeEachEmailsContainsPattern );
   mRecipientFilterGroup->addButton(ui->doNotResizeOneEmails,MessageComposer::MessageComposerSettings::EnumFilterRecipientType::DontResizeOneEmailContainsPattern );
+
+  ui->help->setText( i18n( "<a href=\"whatsthis\">How does this work?</a>" ) );
+  connect( ui->help, SIGNAL(linkActivated(QString)),SLOT(slotHelpLinkClicked(QString)) );
 }
 
 ImageScalingWidget::~ImageScalingWidget()
 {
   delete ui;
+}
+
+void ImageScalingWidget::slotHelpLinkClicked(const QString&)
+{
+    const QString help =
+      i18n( "<qt>"
+            "<p>Here you can define image filename.</p>"
+            "<p>You can use:"
+            "<p> - %t set current time</p>"
+            "<p> - %d set current date</p>"
+            "<p> - %n original filename</p>"
+            "<p> - %e extension</p>"
+            "</qt>" );
+
+    QWhatsThis::showText( QCursor::pos(), help );
 }
 
 void ImageScalingWidget::slotSourceFilterClicked(int button)

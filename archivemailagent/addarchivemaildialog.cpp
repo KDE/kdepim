@@ -40,6 +40,7 @@ AddArchiveMailDialog::AddArchiveMailDialog(ArchiveMailInfo* info,QWidget *parent
   setButtons( Ok|Cancel );
   setDefaultButton( Ok );
   setModal( true );
+  setWindowIcon( KIcon( "kmail" ) );
   QWidget *mainWidget = new QWidget( this );
   QGridLayout *mainLayout = new QGridLayout( mainWidget );
   mainLayout->setSpacing( KDialog::spacingHint() );

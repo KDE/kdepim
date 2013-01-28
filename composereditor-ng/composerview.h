@@ -24,6 +24,7 @@
 #include <KWebView>
 
 class KActionCollection;
+class KToolBar;
 
 namespace ComposerEditorNG
 {
@@ -36,7 +37,58 @@ public:
     explicit ComposerView(QWidget * parent = 0);
     ~ComposerView();
 
-    virtual void createActions(KActionCollection *actionCollection);
+    enum ComposerViewAction {
+        //Separator
+        Separator,
+        //Real Actions
+        Bold,
+        Italic,
+        Underline,
+        StrikeOut,
+        AlignLeft,
+        AlignCenter,
+        AlignRight,
+        AlignJustify,
+        DirectionLtr,
+        DirectionRtl,
+        SubScript,
+        SuperScript,
+        HorizontalRule,
+        ListIndent,
+        ListDedent,
+        OrderedList,
+        UnorderedList,
+        FormatType,
+        FontSize,
+        FontFamily,
+        Emoticon,
+        InsertHtml,
+        InsertImage,
+        InsertTable,
+        InsertLink,
+        TextForegroundColor,
+        TextBackgroundColor,
+        FormatReset,
+        SpellCheck,
+        Find,
+        Replace,
+        PageColor,
+        BlockQuote,
+        SaveAs,
+        Print,
+        PrintPreview,
+
+        //Keep at end
+        LastType
+    };
+
+    virtual void addCreatedActionsToActionCollection(KActionCollection *actionCollection);
+
+    void createActions(const QList<ComposerViewAction>&);
+
+    void createAllActions();
+
+    void createToolBar(const QList<ComposerViewAction>&lstAction, KToolBar *toolbar);
 
     void setActionsEnabled(bool enabled);
     void setHtmlContent( const QString& html );

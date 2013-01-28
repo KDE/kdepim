@@ -175,10 +175,14 @@ void PostEntry::createUi()
 
 void PostEntry::slotFocusEditor()
 {
-    if(d->tabWidget->currentIndex() == 0)
+    switch(d->tabWidget->currentIndex()) {
+    case 0:
         d->wysiwygEditor->startEditing();
-    else if(d->tabWidget->currentIndex() == 1)
+        break;
+    case 1:
         d->htmlEditor->setFocus();
+        break;
+    }
 }
 
 void PostEntry::slotSyncEditors(int index)
@@ -229,7 +233,7 @@ QString PostEntry::htmlContent()
     return d->htmlEditor->document()->text();
 }
 
-QString PostEntry::plainTextContent()
+QString PostEntry::plainTextContent() const
 {
     return d->wysiwygEditor->plainTextContent();
 }
@@ -278,7 +282,7 @@ void PostEntry::setPostBody( const QString & content, const QString &additionalC
 //     connect( txtTitle, SIGNAL(textChanged(QString)), this, SLOT(slotPostModified()) );
 }
 
-int PostEntry::currentPostBlogId()
+int PostEntry::currentPostBlogId() const
 {
     return d->mCurrentPostBlogId;
 }
@@ -318,7 +322,7 @@ void PostEntry::setCurrentPost( const BilboPost &post )
     this->setPostTitle( d->mCurrentPost.title() );
 }
 
-Qt::LayoutDirection PostEntry::defaultLayoutDirection()
+Qt::LayoutDirection PostEntry::defaultLayoutDirection() const
 {
     return d->txtTitle->layoutDirection();
 }
@@ -336,7 +340,7 @@ PostEntry::~PostEntry()
     delete d;
 }
 
-QList< BilboMedia* > PostEntry::localImages()
+QList< BilboMedia* > PostEntry::localImages() const
 {
     return d->wysiwygEditor->getLocalImages();
 }
@@ -445,6 +449,7 @@ void PostEntry::submitPost( int blogId, const BilboPost &postData )
             deleteProgressBar();
         }
     }
+    delete dia;
 }
 
 void PostEntry::slotPostPublished( int blog_id, BilboPost *post )

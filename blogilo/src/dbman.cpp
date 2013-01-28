@@ -85,7 +85,20 @@ DBMan::DBMan()
     reloadBlogList();
 }
 
-QString DBMan::lastErrorText()
+DBMan::~DBMan()
+{
+    kDebug();
+    d->db.close();
+    if(d->useWallet) {
+        d->mWallet->deleteLater();
+        d->mWallet = 0;
+    }
+    delete d;
+    mSelf = 0L;
+}
+
+
+QString DBMan::lastErrorText() const
 {
     return d->mLastErrorText;
 }
@@ -108,7 +121,7 @@ void DBMan::reloadBlogList()
 {
     d->mBlogList.clear();
     QList<BilboBlog*> listBlogs = this->listBlogs();
-    int count = listBlogs.count();
+    const int count = listBlogs.count();
     for ( int i = 0; i < count; ++i ) {
         d->mBlogList [ listBlogs[i]->id() ] = listBlogs[i];
     }
@@ -131,17 +144,6 @@ bool DBMan::connectDB()
     return true;
 }
 
-DBMan::~DBMan()
-{
-    kDebug();
-    d->db.close();
-    if(d->useWallet) {
-        d->mWallet->deleteLater();
-        d->mWallet = 0;
-    }
-    delete d;
-    mSelf = 0L;
-}
 
 /**
 Will create configuration database!

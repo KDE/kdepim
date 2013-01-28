@@ -162,8 +162,8 @@ void ManageSieveScriptsDialog::slotUpdateButtons()
     if ( serverHasError(item) )
       mNewScript->setEnabled( false );
     else
-      mNewScript->setEnabled( item && mUrls.count( item ) );
-    enabled = item && isFileNameItem( item );
+      mNewScript->setEnabled( mUrls.count( item ) );
+    enabled = isFileNameItem( item );
     mEditScript->setEnabled( enabled );
     mDeleteScript->setEnabled( enabled );
     mDeactivateScript->setEnabled( enabled && itemIsActived( item ));

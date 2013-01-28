@@ -71,7 +71,7 @@ public:
 
     KIcon icon() const;
 
-    quint16 checksum();
+    quint16 checksum() const;
     void setCheckSum( quint16 sum );
 
 private:

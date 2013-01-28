@@ -46,6 +46,7 @@ private Q_SLOTS:
   void slotComboboxChanged(int index);
   void slotSourceFilterClicked(int);
   void slotRecipientFilterClicked(int);
+  void slotHelpLinkClicked(const QString&);
 
 private:
   void updateFilterSourceTypeSettings();
