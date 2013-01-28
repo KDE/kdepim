@@ -33,6 +33,7 @@ ArchiveMailDialog::ArchiveMailDialog(QWidget *parent)
   :KDialog(parent)
 {
   setCaption( i18n( "Configure Archive Mail Agent" ) );
+  setWindowIcon( KIcon( "kmail" ) );
   setButtons( Ok|Cancel );
   setDefaultButton( Ok );
   setModal( true );
