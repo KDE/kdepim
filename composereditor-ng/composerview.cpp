@@ -636,7 +636,7 @@ void ComposerView::createActions(KActionCollection *actionCollection)
     d->htmlEditorActionList.clear();
 
     //format
-    d->action_text_bold = new KToggleAction(KIcon(QLatin1String("format-text-bold")), i18nc("@action boldify selected text", "&Bold"), actionCollection);
+    d->action_text_bold = new KToggleAction(KIcon(QLatin1String("format-text-bold")), i18nc("@action boldify selected text", "&Bold"), this);
     QFont bold;
     bold.setBold(true);
     d->action_text_bold->setFont(bold);
@@ -645,7 +645,7 @@ void ComposerView::createActions(KActionCollection *actionCollection)
     d->action_text_bold->setShortcut(KShortcut(Qt::CTRL + Qt::Key_B));
     FORWARD_ACTION(d->action_text_bold, QWebPage::ToggleBold);
 
-    d->action_text_italic = new KToggleAction(KIcon(QLatin1String("format-text-italic")), i18nc("@action italicize selected text", "&Italic"), actionCollection);
+    d->action_text_italic = new KToggleAction(KIcon(QLatin1String("format-text-italic")), i18nc("@action italicize selected text", "&Italic"), this);
     QFont italic;
     italic.setItalic(true);
     d->action_text_italic->setFont(italic);
@@ -654,7 +654,7 @@ void ComposerView::createActions(KActionCollection *actionCollection)
     d->action_text_italic->setShortcut(KShortcut(Qt::CTRL + Qt::Key_I));
     FORWARD_ACTION(d->action_text_italic, QWebPage::ToggleItalic);
 
-    d->action_text_underline = new KToggleAction(KIcon(QLatin1String("format-text-underline")), i18nc("@action underline selected text", "&Underline"), actionCollection);
+    d->action_text_underline = new KToggleAction(KIcon(QLatin1String("format-text-underline")), i18nc("@action underline selected text", "&Underline"), this);
     QFont underline;
     underline.setUnderline(true);
     d->action_text_underline->setFont(underline);
@@ -663,32 +663,32 @@ void ComposerView::createActions(KActionCollection *actionCollection)
     d->action_text_underline->setShortcut(KShortcut(Qt::CTRL + Qt::Key_U));
     FORWARD_ACTION(d->action_text_underline, QWebPage::ToggleUnderline);
 
-    d->action_text_strikeout = new KToggleAction(KIcon(QLatin1String("format-text-strikethrough")), i18nc("@action", "&Strike Out"), actionCollection);
+    d->action_text_strikeout = new KToggleAction(KIcon(QLatin1String("format-text-strikethrough")), i18nc("@action", "&Strike Out"), this);
     d->htmlEditorActionList.append((d->action_text_strikeout));
     actionCollection->addAction(QLatin1String("htmleditor_format_text_strikeout"), d->action_text_strikeout);
     d->action_text_strikeout->setShortcut(KShortcut(Qt::CTRL + Qt::Key_L));
     FORWARD_ACTION(d->action_text_strikeout, QWebPage::ToggleStrikethrough);
 
     //Alignment
-    d->action_align_left = new KToggleAction(KIcon(QLatin1String("format-justify-left")), i18nc("@action", "Align &Left"), actionCollection);
+    d->action_align_left = new KToggleAction(KIcon(QLatin1String("format-justify-left")), i18nc("@action", "Align &Left"), this);
     d->action_align_left->setIconText(i18nc("@label left justify", "Left"));
     d->htmlEditorActionList.append((d->action_align_left));
     actionCollection->addAction(QLatin1String("htmleditor_format_align_left"), d->action_align_left);
     FORWARD_ACTION(d->action_align_left, QWebPage::AlignLeft);
 
-    d->action_align_center = new KToggleAction(KIcon(QLatin1String("format-justify-center")), i18nc("@action", "Align &Center"), actionCollection);
+    d->action_align_center = new KToggleAction(KIcon(QLatin1String("format-justify-center")), i18nc("@action", "Align &Center"), this);
     d->action_align_center->setIconText(i18nc("@label center justify", "Center"));
     d->htmlEditorActionList.append((d->action_align_center));
     actionCollection->addAction(QLatin1String("htmleditor_format_align_center"), d->action_align_center);
     FORWARD_ACTION(d->action_align_center, QWebPage::AlignCenter);
 
-    d->action_align_right = new KToggleAction(KIcon(QLatin1String("format-justify-right")), i18nc("@action", "Align &Right"), actionCollection);
+    d->action_align_right = new KToggleAction(KIcon(QLatin1String("format-justify-right")), i18nc("@action", "Align &Right"), this);
     d->action_align_right->setIconText(i18nc("@label right justify", "Right"));
     d->htmlEditorActionList.append((d->action_align_right));
     actionCollection->addAction(QLatin1String("htmleditor_format_align_right"), d->action_align_right);
     FORWARD_ACTION(d->action_align_right, QWebPage::AlignRight);
 
-    d->action_align_justify = new KToggleAction(KIcon(QLatin1String("format-justify-fill")), i18nc("@action", "&Justify"), actionCollection);
+    d->action_align_justify = new KToggleAction(KIcon(QLatin1String("format-justify-fill")), i18nc("@action", "&Justify"), this);
     d->action_align_justify->setIconText(i18nc("@label justify fill", "Justify"));
     d->htmlEditorActionList.append((d->action_align_justify));
     actionCollection->addAction(QLatin1String("htmleditor_format_align_justify"), d->action_align_justify);
@@ -701,13 +701,13 @@ void ComposerView::createActions(KActionCollection *actionCollection)
     alignmentGroup->addAction(d->action_align_justify);
 
     //Direction
-    d->action_direction_ltr = new KToggleAction(KIcon(QLatin1String("format-text-direction-ltr")), i18nc("@action", "Left-to-Right"), actionCollection);
+    d->action_direction_ltr = new KToggleAction(KIcon(QLatin1String("format-text-direction-ltr")), i18nc("@action", "Left-to-Right"), this);
     d->action_direction_ltr->setIconText(i18nc("@label left-to-right", "Left-to-Right"));
     d->htmlEditorActionList.append(d->action_direction_ltr);
     actionCollection->addAction(QLatin1String("htmleditor_direction_ltr"), d->action_direction_ltr);
     FORWARD_ACTION(d->action_direction_ltr, QWebPage::SetTextDirectionLeftToRight);
 
-    d->action_direction_rtl = new KToggleAction(KIcon(QLatin1String("format-text-direction-rtl")), i18nc("@action", "Right-to-Left"), actionCollection);
+    d->action_direction_rtl = new KToggleAction(KIcon(QLatin1String("format-text-direction-rtl")), i18nc("@action", "Right-to-Left"), this);
     d->action_direction_rtl->setIconText(i18nc("@label right-to-left", "Right-to-Left"));
     d->htmlEditorActionList.append(d->action_direction_rtl);
     actionCollection->addAction(QLatin1String("htmleditor_direction_rtl"), d->action_direction_rtl);
@@ -718,46 +718,46 @@ void ComposerView::createActions(KActionCollection *actionCollection)
     directionGroup->addAction(d->action_direction_rtl);
 
     //indent
-    d->action_list_indent = new KAction(KIcon(QLatin1String("format-indent-more")), i18nc("@action", "Increase Indent"), actionCollection);
+    d->action_list_indent = new KAction(KIcon(QLatin1String("format-indent-more")), i18nc("@action", "Increase Indent"), this);
     d->htmlEditorActionList.append((d->action_list_indent));
     actionCollection->addAction(QLatin1String("htmleditor_format_list_indent_more"), d->action_list_indent);
     FORWARD_ACTION(d->action_list_indent, QWebPage::Indent);
 
-    d->action_list_dedent = new KAction(KIcon(QLatin1String("format-indent-less")), i18nc("@action", "Decrease Indent"), actionCollection);
+    d->action_list_dedent = new KAction(KIcon(QLatin1String("format-indent-less")), i18nc("@action", "Decrease Indent"), this);
     d->htmlEditorActionList.append(d->action_list_dedent);
     actionCollection->addAction(QLatin1String("htmleditor_format_list_indent_less"), d->action_list_dedent);
     FORWARD_ACTION(d->action_list_dedent, QWebPage::Outdent);
 
     //horizontal line
-    d->action_insert_horizontal_rule = new KAction(KIcon(QLatin1String("insert-horizontal-rule")), i18nc("@action", "Insert Rule Line"), actionCollection);
+    d->action_insert_horizontal_rule = new KAction(KIcon(QLatin1String("insert-horizontal-rule")), i18nc("@action", "Insert Rule Line"), this);
     d->htmlEditorActionList.append((d->action_insert_horizontal_rule));
     actionCollection->addAction(QLatin1String("htmleditor_insert_horizontal_rule"), d->action_insert_horizontal_rule);
     connect( d->action_insert_horizontal_rule, SIGNAL(triggered(bool)), SLOT(_k_slotInsertHorizontalRule()) );
 
 
     //Superscript/subScript
-    d->action_text_subscript = new KToggleAction(KIcon(QLatin1String("format-text-subscript")), i18nc("@action", "Subscript"), actionCollection);
+    d->action_text_subscript = new KToggleAction(KIcon(QLatin1String("format-text-subscript")), i18nc("@action", "Subscript"), this);
     d->htmlEditorActionList.append((d->action_text_subscript));
     actionCollection->addAction(QLatin1String("htmleditor_format_text_subscript"), d->action_text_subscript);
     FORWARD_ACTION(d->action_text_subscript, QWebPage::ToggleSubscript);
 
-    d->action_text_superscript = new KToggleAction(KIcon(QLatin1String("format-text-superscript")), i18nc("@action", "Superscript"), actionCollection);
+    d->action_text_superscript = new KToggleAction(KIcon(QLatin1String("format-text-superscript")), i18nc("@action", "Superscript"), this);
     d->htmlEditorActionList.append((d->action_text_superscript));
     actionCollection->addAction(QLatin1String("htmleditor_format_text_superscript"), d->action_text_superscript);
     FORWARD_ACTION(d->action_text_superscript, QWebPage::ToggleSuperscript);
 
-    d->action_ordered_list = new KToggleAction(KIcon(QLatin1String("format-list-ordered")), i18n("Ordered Style"), actionCollection);
+    d->action_ordered_list = new KToggleAction(KIcon(QLatin1String("format-list-ordered")), i18n("Ordered Style"), this);
     d->htmlEditorActionList.append(d->action_ordered_list);
     actionCollection->addAction(QLatin1String("htmleditor_format_list_ordered"), d->action_ordered_list);
     FORWARD_ACTION(d->action_ordered_list, QWebPage::InsertOrderedList);
 
 
-    d->action_unordered_list = new KToggleAction( KIcon( QLatin1String("format-list-unordered" )), i18n( "Unordered List" ), actionCollection );
+    d->action_unordered_list = new KToggleAction( KIcon( QLatin1String("format-list-unordered" )), i18n( "Unordered List" ), this);
     d->htmlEditorActionList.append(d->action_unordered_list);
     actionCollection->addAction(QLatin1String("htmleditor_format_list_unordered"), d->action_unordered_list);
     FORWARD_ACTION(d->action_unordered_list, QWebPage::InsertUnorderedList);
 
-    d->action_format_type = new KSelectAction(KIcon(QLatin1String("format-list-unordered")), i18nc("@title:menu", "List Style"), actionCollection);
+    d->action_format_type = new KSelectAction(KIcon(QLatin1String("format-list-unordered")), i18nc("@title:menu", "List Style"), this);
     KAction *act = d->action_format_type->addAction(i18n( "Paragraph" ));
     act->setData(QVariant::fromValue(ComposerViewPrivate::Paragraph));
     act = d->action_format_type->addAction(i18n( "Heading 1" ));
@@ -791,14 +791,14 @@ void ComposerView::createActions(KActionCollection *actionCollection)
 
     //Color
     //Foreground Color
-    d->action_text_foreground_color = new KAction(KIcon(QLatin1String("format-stroke-color")), i18nc("@action", "Text &Color..."), actionCollection);
+    d->action_text_foreground_color = new KAction(KIcon(QLatin1String("format-stroke-color")), i18nc("@action", "Text &Color..."), this);
     d->action_text_foreground_color->setIconText(i18nc("@label stroke color", "Color"));
     d->htmlEditorActionList.append((d->action_text_foreground_color));
     actionCollection->addAction(QLatin1String("htmleditor_format_text_foreground_color"), d->action_text_foreground_color);
     connect(d->action_text_foreground_color, SIGNAL(triggered()), this, SLOT(_k_setTextForegroundColor()));
 
     //Background Color
-    d->action_text_background_color = new KAction(KIcon(QLatin1String("format-fill-color")), i18nc("@action", "Text &Highlight..."), actionCollection);
+    d->action_text_background_color = new KAction(KIcon(QLatin1String("format-fill-color")), i18nc("@action", "Text &Highlight..."), this);
     d->htmlEditorActionList.append((d->action_text_background_color));
     actionCollection->addAction(QLatin1String("htmleditor_format_text_background_color"), d->action_text_background_color);
     connect(d->action_text_background_color, SIGNAL(triggered()), this, SLOT(_k_setTextBackgroundColor()));
@@ -812,23 +812,23 @@ void ComposerView::createActions(KActionCollection *actionCollection)
     actionCollection->addAction( QLatin1String( "htmleditor_insert_html" ), d->action_insert_html );
     connect( d->action_insert_html, SIGNAL(triggered(bool)), SLOT(_k_slotInsertHtml()) );
 
-    d->action_insert_image = new KAction( KIcon( QLatin1String( "insert-image" ) ), i18n( "Add Image" ), actionCollection );
+    d->action_insert_image = new KAction( KIcon( QLatin1String( "insert-image" ) ), i18n( "Add Image" ), this);
     actionCollection->addAction( QLatin1String( "htmleditor_add_image" ), d->action_insert_image );
     connect( d->action_insert_image, SIGNAL(triggered(bool)), SLOT(_k_slotAddImage()) );
 
-    d->action_format_reset = new KAction( KIcon( QLatin1String("draw-eraser") ), i18n("Reset Font Settings"), actionCollection );
+    d->action_format_reset = new KAction( KIcon( QLatin1String("draw-eraser") ), i18n("Reset Font Settings"), this);
     actionCollection->addAction( QLatin1String("htmleditor_format_reset"), d->action_format_reset );
     FORWARD_ACTION(d->action_format_reset, QWebPage::RemoveFormat);
 
 
     //link
-    d->action_insert_link = new KAction(KIcon(QLatin1String("insert-link")), i18nc("@action", "Link"), actionCollection);
+    d->action_insert_link = new KAction(KIcon(QLatin1String("insert-link")), i18nc("@action", "Link"), this);
     d->htmlEditorActionList.append(d->action_insert_link);
     actionCollection->addAction(QLatin1String("htmleditor_insert_link"), d->action_insert_link);
     connect(d->action_insert_link, SIGNAL(triggered(bool)), this, SLOT(_k_insertLink()));
 
     //Font
-    d->action_font_size = new KSelectAction(i18nc("@action", "Font &Size"), actionCollection);
+    d->action_font_size = new KSelectAction(i18nc("@action", "Font &Size"), this);
     d->htmlEditorActionList.append(d->action_font_size);
     QStringList sizes;
     sizes << QLatin1String("xx-small");
@@ -843,23 +843,23 @@ void ComposerView::createActions(KActionCollection *actionCollection)
     actionCollection->addAction(QLatin1String("htmleditor_format_font_size"), d->action_font_size);
     connect(d->action_font_size, SIGNAL(triggered(int)), this, SLOT(_k_setFontSize(int)));
 
-    d->action_font_family = new KFontAction(i18nc("@action", "&Font"), actionCollection);
+    d->action_font_family = new KFontAction(i18nc("@action", "&Font"), this);
     d->htmlEditorActionList.append((d->action_font_family));
     actionCollection->addAction(QLatin1String("htmleditor_format_font_family"), d->action_font_family);
     connect(d->action_font_family, SIGNAL(triggered(QString)), this, SLOT(_k_setFontFamily(QString)));
 
     //Spell Checking
-    d->action_spell_check = new KAction(KIcon(QLatin1String("tools-check-spelling")), i18n("Check Spelling..."), actionCollection);
+    d->action_spell_check = new KAction(KIcon(QLatin1String("tools-check-spelling")), i18n("Check Spelling..."), this);
     d->htmlEditorActionList.append(d->action_spell_check);
     actionCollection->addAction(QLatin1String("htmleditor_spell_check"), d->action_spell_check);
     connect(d->action_spell_check, SIGNAL(triggered(bool)), this, SLOT(_k_slotSpellCheck()));
 
     //Find
-    d->action_find = KStandardAction::find(this, SLOT(_k_slotFind()), actionCollection);
+    d->action_find = KStandardAction::find(this, SLOT(_k_slotFind()), this);
     d->htmlEditorActionList.append(d->action_find);
 
     //Replace
-    d->action_replace = KStandardAction::replace(this, SLOT(_k_slotReplace()), actionCollection);
+    d->action_replace = KStandardAction::replace(this, SLOT(_k_slotReplace()), this);
     d->htmlEditorActionList.append(d->action_replace);
 
     //Table
@@ -875,11 +875,11 @@ void ComposerView::createActions(KActionCollection *actionCollection)
     connect( d->action_page_color, SIGNAL(triggered(bool)), SLOT(_k_slotChangePageColorAndBackground()) );
 
     //Save As
-    d->action_save_as = KStandardAction::saveAs(this,SLOT(_k_slotSaveAs()),actionCollection);
+    d->action_save_as = KStandardAction::saveAs(this,SLOT(_k_slotSaveAs()), this);
     d->htmlEditorActionList.append(d->action_save_as);
 
     //Print
-    d->action_print = KStandardAction::print( this, SLOT(_k_slotPrint()), actionCollection );
+    d->action_print = KStandardAction::print( this, SLOT(_k_slotPrint()), this);
     d->htmlEditorActionList.append(d->action_print);
 
     d->action_print_preview = KStandardAction::printPreview( this, SLOT(_k_slotPrintPreview()), actionCollection );
