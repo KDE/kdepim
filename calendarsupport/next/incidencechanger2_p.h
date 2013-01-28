@@ -158,7 +158,6 @@ class IncidenceChanger2::Private : public QObject
 
     // History object for user undo/redo
     History *mHistory;
-    bool mHistoryEnabled;
 
     /**
      * Queue modifications by ID. We can only send a modification to Akonadi
