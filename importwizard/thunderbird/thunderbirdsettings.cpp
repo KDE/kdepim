@@ -196,6 +196,22 @@ void ThunderbirdSettings::readExtensionsSettings()
         const QString filteringRecipientsPatternsBlackList = mHashConfig.value(filteringRecipientsPatternsBlackListStr).toString();
         addKmailConfig(QLatin1String("AutoResizeImage"), QLatin1String("do-not-resize-emails-pattern"), filteringRecipientsPatternsBlackList );
     }
+
+    const QString filteringRenamingPatternStr("extensions.AutoResizeImage.renamingPattern");
+    if (mHashConfig.contains(filteringRenamingPatternStr)) {
+        QString filteringRenamingPattern = mHashConfig.value(filteringRenamingPatternStr).toString();
+        filteringRenamingPattern.replace(QLatin1String("%3Fn"), QLatin1String("%n"));
+        filteringRenamingPattern.replace(QLatin1String("%3Ft"), QLatin1String("%t"));
+        filteringRenamingPattern.replace(QLatin1String("%3Fd"), QLatin1String("%d"));
+        filteringRenamingPattern.replace(QLatin1String("%3Fe"), QLatin1String("%e"));
+        addKmailConfig(QLatin1String("AutoResizeImage"), QLatin1String("rename-resized-images-pattern"), filteringRenamingPattern);
+    }
+
+    const QString filteringRenamingImageStr("extensions.AutoResizeImage.renameResizedImages");
+    if (mHashConfig.contains(filteringRenamingImageStr)) {
+        addKmailConfig(QLatin1String("AutoResizeImage"), QLatin1String("rename-resized-images"), true);
+    }
+
 }
 
 int ThunderbirdSettings::adaptAutoResizeResolution(int index, const QString& configStrList)
