@@ -366,8 +366,8 @@ QList< Category > Toolbox::selectedCategories()
     QList<Category> list;
     int count = d->listCategoryCheckBoxes.count();
     for ( int i = 0; i < count; ++i ) {
-        if ( d->listCategoryCheckBoxes[i]->isChecked() )
-            list.append( d->listCategoryCheckBoxes[i]->category() );
+        if ( d->listCategoryCheckBoxes.at(i)->isChecked() )
+            list.append( d->listCategoryCheckBoxes.at(i)->category() );
     }
     return list;
 }
@@ -378,8 +378,8 @@ QStringList Toolbox::selectedCategoriesTitle()
     QStringList list;
     int count = d->listCategoryCheckBoxes.count();
     for ( int i = 0; i < count; ++i ) {
-        if ( d->listCategoryCheckBoxes[i]->isChecked() )
-            list.append( d->listCategoryCheckBoxes[i]->category().name );
+        if ( d->listCategoryCheckBoxes.at(i)->isChecked() )
+            list.append( d->listCategoryCheckBoxes.at(i)->category().name );
     }
     return list;
 }
@@ -389,8 +389,8 @@ void Toolbox::setSelectedCategories( const QStringList &list )
     unCheckCatList();
     int count = d->listCategoryCheckBoxes.count();
     for ( int i = 0; i < count; ++i ) {
-        if ( list.contains( d->listCategoryCheckBoxes[i]->category().name, Qt::CaseInsensitive ) )
-            d->listCategoryCheckBoxes[i]->setChecked( true );
+        if ( list.contains( d->listCategoryCheckBoxes.at(i)->category().name, Qt::CaseInsensitive ) )
+            d->listCategoryCheckBoxes.at(i)->setChecked( true );
     }
 }
 
@@ -443,7 +443,7 @@ void Toolbox::unCheckCatList()
 {
     int count = d->listCategoryCheckBoxes.count();
     for ( int j = 0; j < count; ++j ) {
-        d->listCategoryCheckBoxes[j]->setChecked( false );
+        d->listCategoryCheckBoxes.at(j)->setChecked( false );
     }
 }
 
@@ -504,11 +504,10 @@ void Toolbox::slotRemoveLocalEntry()
 {
     kDebug();
     if(localEntriesTable->selectedItems().count() > 0) {
-        int local_id = localEntriesTable->item(localEntriesTable->currentRow(), 0)->data(32).toInt();
         if( KMessageBox::warningYesNo(this, i18n("Are you sure you want to remove the selected local entry?"))
             == KMessageBox::No )
             return;
-
+        const int local_id = localEntriesTable->item(localEntriesTable->currentRow(), 0)->data(32).toInt();
         if( DBMan::self()->removeLocalEntry(local_id) ) {
             localEntriesTable->removeRow(localEntriesTable->currentRow());
         } else {

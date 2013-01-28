@@ -39,7 +39,6 @@ public:
     enum UploadType{BlogAPI=0, FTP};
     void init( const BilboBlog* currentBlog );
 signals:
-//     void error(const QString &msg);
     void sigBusy(bool isBusy);
 protected slots:
     bool selectNewFile();

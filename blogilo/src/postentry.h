@@ -53,13 +53,13 @@ public:
     void setPostTitle( const QString &title );
     void setPostBody( const QString &content, const QString &additionalContent=QString() );
 
-    int currentPostBlogId();
+    int currentPostBlogId() const;
     void setCurrentPostBlogId( int blog_id );
 
     BilboPost* currentPost();
     void setCurrentPost( const BilboPost &post );
 
-    Qt::LayoutDirection defaultLayoutDirection();
+    Qt::LayoutDirection defaultLayoutDirection() const;
     void setDefaultLayoutDirection( Qt::LayoutDirection direction );
 
     /**
@@ -144,7 +144,7 @@ protected:
      */
     QString htmlContent();
 
-    QString plainTextContent();
+    QString plainTextContent() const;
 
     /**
      * Sets the given string as the HtmlEditor and VisualEditor content.
@@ -152,7 +152,7 @@ protected:
      */
     void setHtmlContent( const QString &content );
 
-    QList <BilboMedia*> localImages();
+    QList <BilboMedia*> localImages() const;
     void replaceImageSrc(const QString& src, const QString& dest);
 
 private:

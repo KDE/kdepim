@@ -101,6 +101,7 @@ KBlog::Blog* BilboBlog::blogBackend()
             break;
         case BilboBlog::WORDPRESSBUGGY_API:
             d->kblog = new KBlog::WordpressBuggy( url(), this );
+            break;
         }
         d->kblog->setUserAgent( APPNAME, VERSION );
         d->kblog->setUsername( username() );

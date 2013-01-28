@@ -144,7 +144,7 @@ KIcon BilboMedia::icon() const
     return KIcon( type );
 }
 
-quint16 BilboMedia::checksum()
+quint16 BilboMedia::checksum() const
 {
     return d->mChecksum;
 }

@@ -33,7 +33,6 @@ class KStatusBar;
 class QButtonGroup;
 class BilboPost;
 class BilboBlog;
-// class BlogRadioButton;
 class CatCheckBox;
 /**
  @author Mehrdad Momeny <mehrdad.momeny@gmail.com>

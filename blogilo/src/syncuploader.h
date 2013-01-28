@@ -55,7 +55,6 @@ public:
 
 private slots:
     void slotMediaFileUploaded( BilboMedia *media );
-//     void slotError( const QString& errMsg );
     void slotMediaError( const QString &errorMessage, BilboMedia* media );
 
 private:
