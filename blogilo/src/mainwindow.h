@@ -54,8 +54,6 @@ public:
 
     ~MainWindow();
 
-//     static KTextEditor::editor& htmlEditor();
-
 signals:
     void mediaFilesUploaded( int count );
     void settingsChanged();

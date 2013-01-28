@@ -20,6 +20,10 @@
 
 #include "blogilocomposerview.h"
 
+#include <QApplication>
+#include <QTimer>
+#include <QMouseEvent>
+#include <QAction>
 
 BlogiloComposerView::BlogiloComposerView(QWidget * parent)
     :ComposerEditorNG::ComposerView(parent)
@@ -32,13 +36,22 @@ BlogiloComposerView::~BlogiloComposerView()
 
 }
 
-void BlogiloComposerView::createActions(KActionCollection *actionCollection)
+void BlogiloComposerView::startEditing()
 {
-    ComposerEditorNG::ComposerView::createActions(actionCollection);
-    //TODO
+    //NOTE: it needs a mouse click!
+    //any better way to make the cursor visible?
+    this -> setFocus();
+    QMouseEvent mouseEventPress ( QEvent::MouseButtonPress, QPoint ( 10,10 ), Qt::LeftButton, Qt::NoButton, Qt::NoModifier );
+    QApplication::sendEvent ( this, &mouseEventPress );
+    QTimer::singleShot ( 50, this, SLOT(slotSendMouseReleaseEvent()) );
 }
 
-void BlogiloComposerView::slotAddPostSplitter()
+void BlogiloComposerView::slotSendMouseReleaseEvent()
 {
-//TODO
+    QMouseEvent mouseEventRelease ( QEvent::MouseButtonRelease, QPoint ( 10,10 ), Qt::LeftButton, Qt::NoButton, Qt::NoModifier );
+    QApplication::sendEvent ( this, &mouseEventRelease );
+    pageAction( QWebPage::MoveToEndOfDocument )->trigger();
 }
+
+
+#include "blogilocomposerview.moc"

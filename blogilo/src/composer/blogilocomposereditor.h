@@ -24,6 +24,8 @@
 
 #include <composereditor-ng/composereditor.h>
 
+class BilboMedia;
+
 class BlogiloComposerEditor : public ComposerEditorNG::ComposerEditor
 {
     Q_OBJECT
@@ -32,7 +34,18 @@ public:
     ~BlogiloComposerEditor();
 
     void setReadOnly ( bool _readOnly );
+    QList< BilboMedia* > getLocalImages();
+    void replaceImageSrc(const QString& src, const QString& dest);
+
+    void startEditing();
+
+private Q_SLOTS:
+    void slotAddPostSplitter();
+    void slotToggleCode(bool);
+
 private:
+    void execCommand( const QString &cmd, const QString &arg );
+    void execCommand ( const QString &cmd );
     bool readOnly;
 };
 
