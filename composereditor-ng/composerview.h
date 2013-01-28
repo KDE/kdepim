@@ -72,8 +72,16 @@ public:
         BlockQuote,
         SaveAs,
         Print,
-        PrintPreview
+        PrintPreview,
+
+        //Keep at end
+        LastType
     };
+
+    void addCreatedActionsToActionCollection(KActionCollection *actionCollection);
+    void createActions(const QList<ComposerViewAction>&);
+    void createAction(ComposerViewAction type);
+    void createAllActions();
 
     virtual void createActions(KActionCollection *actionCollection);
 
