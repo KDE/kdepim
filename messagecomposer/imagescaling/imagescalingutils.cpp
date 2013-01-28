@@ -67,10 +67,16 @@ void Utils::changeFileName(MessageCore::AttachmentPart::Ptr part)
             pattern.replace(QLatin1String("%t"), QTime::currentTime().toString());
             pattern.replace(QLatin1String("%d"), QDate::currentDate().toString());
             pattern.replace(QLatin1String("%n"), filename); //Original name
-            //FIXME
-            pattern.replace(QLatin1String("%e"), filename); //Extension
 
-            //TODO use pattern.
+            const QString type = MessageComposer::MessageComposerSettings::self()->writeFormat();
+            QString newExtension;
+            if(type == QLatin1String("JPG")) {
+                newExtension = QLatin1String("jpg");
+            } else if(type == QLatin1String("PNG")) {
+                newExtension = QLatin1String("png");
+            }
+            pattern.replace(QLatin1String("%e"), newExtension); //Extension
+
             //Need to define pattern type.
             part->setFileName(pattern);
         }
