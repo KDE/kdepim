@@ -43,7 +43,11 @@ ComposerHtmlEditor::ComposerHtmlEditor()
     setCentralWidget( w );
 
 
-    editor->createActions( actionCollection() );
+    editor->createAllActions();
+    editor->addCreatedActionsToActionCollection( actionCollection() );
+    QList<ComposerEditorNG::ComposerView::ComposerViewAction> lst;
+    lst << ComposerEditorNG::ComposerView::Bold;
+    editor->createToolBar(lst);
     setupActions();
     setupGUI();
 }

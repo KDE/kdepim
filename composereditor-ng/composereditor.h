@@ -22,6 +22,7 @@
 #define COMPOSEREDITOR_H
 
 #include "composereditor_export.h"
+#include "composerview.h"
 
 #include <QWidget>
 #include <QWebPage>
@@ -44,7 +45,24 @@ public:
 
     ~ComposerEditor();
 
-    virtual void createActions(KActionCollection *actionCollection);
+    virtual void addCreatedActionsToActionCollection(KActionCollection *actionCollection);
+
+
+    void createActions(const QList<ComposerView::ComposerViewAction>&);
+
+    /**
+     * @brief createAllActions. Create all actions.
+     */
+    void createAllActions();
+
+    /**
+     * @brief createToolBar.
+     */
+    void createToolBar(const QList<ComposerView::ComposerViewAction>&);
+
+    void addActionInToolBar(QAction *act);
+
+    KToolBar *toolbar();
 
     /**
      * @brief plainTextContent

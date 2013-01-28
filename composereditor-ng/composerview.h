@@ -24,6 +24,7 @@
 #include <KWebView>
 
 class KActionCollection;
+class KToolBar;
 
 namespace ComposerEditorNG
 {
@@ -37,6 +38,9 @@ public:
     ~ComposerView();
 
     enum ComposerViewAction {
+        //Separator
+        Separator,
+        //Real Actions
         Bold,
         Italic,
         Underline,
@@ -78,14 +82,13 @@ public:
         LastType
     };
 
-    void addCreatedActionsToActionCollection(KActionCollection *actionCollection);
+    virtual void addCreatedActionsToActionCollection(KActionCollection *actionCollection);
+
     void createActions(const QList<ComposerViewAction>&);
-    void createAction(ComposerViewAction type);
+
     void createAllActions();
 
-    virtual void createActions(KActionCollection *actionCollection);
-
-    void createToolBar(const QList<ComposerViewAction>&);
+    void createToolBar(const QList<ComposerViewAction>&lstAction, KToolBar *toolbar);
 
     void setActionsEnabled(bool enabled);
     void setHtmlContent( const QString& html );
