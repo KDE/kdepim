@@ -12,7 +12,6 @@ qt4_wrap_cpp(wk_HEADERS_MOC spellplugin/qwebkitplatformplugin.h)
 set(libcomposereditor_ng_SRCS 
     composereditor.cpp
     dialog/composerlinkdialog.cpp
-    utils/findreplacebar.cpp
     composerview.cpp
     pagecolor/pagecolorbackgrounddialog.cpp
     pagecolor/pagecolorbackgroundwidget.cpp
@@ -34,7 +33,8 @@ set(libcomposereditor_ng_SRCS
     helper/tablehelper.cpp
     helper/listhelper.cpp
     spellplugin/kspellplugin.cpp 
-    utils/domtreewidget.cpp 
+    widgets/domtreewidget.cpp 
+    widgets/findreplacebar.cpp
     ${wk_HEADERS_MOC}
 )
 

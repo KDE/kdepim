@@ -20,7 +20,7 @@
 
 #include "composereditor.h"
 #include "composerview.h"
-#include "utils/findreplacebar.h"
+#include "widgets/findreplacebar.h"
 
 #include <KToolBar>
 
