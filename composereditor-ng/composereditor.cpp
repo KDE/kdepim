@@ -189,7 +189,7 @@ void ComposerEditor::addActionInToolBar(QAction *act)
     }
 }
 
-KToolBar *ComposerEditor::toolbar()
+KToolBar *ComposerEditor::toolbar() const
 {
     return d->toolbar;
 }

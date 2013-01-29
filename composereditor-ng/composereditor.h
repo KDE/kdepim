@@ -47,7 +47,9 @@ public:
 
     virtual void addCreatedActionsToActionCollection(KActionCollection *actionCollection);
 
-
+    /**
+     * @brief createActions create a list of action from default action.
+     */
     void createActions(const QList<ComposerView::ComposerViewAction>&);
 
     /**
@@ -60,9 +62,17 @@ public:
      */
     void createToolBar(const QList<ComposerView::ComposerViewAction>&);
 
+    /**
+     * @brief addActionInToolBar add action in toolbar. QAction that is not in default action from composerview.
+     * @param act
+     */
     void addActionInToolBar(QAction *act);
 
-    KToolBar *toolbar();
+    /**
+     * @brief toolbar
+     * @return a pointer from toolbar.
+     */
+    KToolBar *toolbar() const;
 
     /**
      * @brief plainTextContent
@@ -70,7 +80,17 @@ public:
      */
     QString plainTextContent() const;
 
+    /**
+     * @brief htmlContent
+     * @return the html content.
+     */
     QString htmlContent() const;
+    /**
+     * @brief setHtmlContent
+     * @param html set html in composerview.
+     */
+    void setHtmlContent( const QString& html );
+
 
     bool enableRichText() const;
 
@@ -88,8 +108,6 @@ public:
     QAction* action(QWebPage::WebAction action);
 
     ComposerView *view() const;
-
-    void setHtmlContent( const QString& html );
 
 public Q_SLOTS:
     void setEnableRichText(bool richTextEnabled);

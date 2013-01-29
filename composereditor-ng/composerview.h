@@ -92,6 +92,11 @@ public:
 
     void setActionsEnabled(bool enabled);
     void setHtmlContent( const QString& html );
+
+    /**
+     * @brief evaluateJavascript
+     * @param javascript evaluate javascript function.
+     */
     void evaluateJavascript( const QString& javascript);
 
 protected:
