@@ -25,11 +25,7 @@
 
 #include "postentry.h"
 
-#ifdef WIN32
-#include "composer/bilbobrowser_win.h"
-#else
 #include "composer/bilbobrowser.h"
-#endif
 
 #include <kdebug.h>
 #include <klocalizedstring.h>

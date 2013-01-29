@@ -24,49 +24,34 @@
 //krazy:excludeall=qmethods due to use of KStatusBar::showMessage()
 
 #include "bilbobrowser.h"
-#include "stylegetter.h"
-#include "global.h"
-#include "settings.h"
 
-
-#include <khtml_part.h>
-#include <khtmlview.h>
+#include <QWebView>
+#include <QProgressBar>
 #include <kstatusbar.h>
 #include <kmessagebox.h>
 #include <kseparator.h>
 #include <kpushbutton.h>
 
-#include <QCheckBox>
+#include "stylegetter.h"
+#include "global.h"
+#include "settings.h"
+#include <klocalizedstring.h>
+#include <dbman.h>
+#include <bilboblog.h>
+#include <qcheckbox.h>
 #include <QVBoxLayout>
-#include <QWidget>
-#include <QProgressBar>
 #include <QTimer>
-
 
 BilboBrowser::BilboBrowser( QWidget *parent ) : QWidget( parent )
 {
-    browserPart = new KHTMLPart( parent );
-    browserPart->setStatusMessagesEnabled( true );
-    browserPart->setOnlyLocalReferences( false );
-
-//     viewInBlogStyle = new QCheckBox( "View post in the blog style", parent );
+    mWebView = new QWebView(this);
 
     createUi( parent );
 
-    KParts::BrowserExtension *browserExtension = browserPart->browserExtension();
-    if ( browserExtension ) {
-        connect( browserExtension, SIGNAL(loadingProgress(int)),
-                browserProgress, SLOT(setValue(int)) );
-        connect( browserExtension, SIGNAL( openUrlRequestDelayed( const KUrl &,
-                                          const KParts::OpenUrlArguments &,
-                                          const KParts::BrowserArguments & ) ),
-                this, SLOT(slotOpenRequested(KUrl)) );
-    }
-
-    connect( browserPart, SIGNAL(completed()), this, SLOT(slotCompleted()) );
-    connect( browserPart, SIGNAL(canceled(QString)), this, SLOT(
-            slotCanceled( const QString& ) ) );
-    connect( browserPart, SIGNAL(setStatusBarText(QString)), this,
+    connect( mWebView, SIGNAL(loadProgress(int)),
+            browserProgress, SLOT(setValue(int)) );
+    connect( mWebView, SIGNAL(loadFinished(bool)) , this, SLOT(slotCompleted(bool)) );
+    connect( mWebView, SIGNAL(statusBarMessage(QString)), this,
             SLOT(slotSetStatusBarText(QString)) );
 }
 
@@ -99,7 +84,7 @@ void BilboBrowser::createUi( QWidget *parent )
 
     vlayout->addLayout( hlayout );
     vlayout->addWidget( separator );
-    vlayout->addWidget( browserPart->view() );
+    vlayout->addWidget( mWebView );
 
     browserProgress = new QProgressBar( this );
     browserProgress->setFixedSize(120, 17);
@@ -121,29 +106,22 @@ void BilboBrowser::setHtml( const QString& title, const QString& content )
     browserProgress->reset();
     browserStatus->showMessage( i18n( "loading page items..." ) );
 
-    browserPart->begin();
     if ( viewInBlogStyle->isChecked() ) {
-        browserPart->write( StyleGetter::styledHtml( __currentBlogId, title, content ) );
+        mWebView->setHtml( StyleGetter::styledHtml( __currentBlogId, title, content ),
+                           DBMan::self()->blog(__currentBlogId)->url());
     } else {
-        browserPart->write(
-              "<html><body><h2 align='center'>" + title + "</h2>" + content + "</html>" );
+        mWebView->setHtml( "<html><body><h2 align='center'>" + title + "</h2>" + content + "</html>" );
     }
-    browserPart->end();
 }
 
 void BilboBrowser::stop()
 {
-    browserPart->closeUrl();
-    slotCanceled( QString() );
+    mWebView->stop();
 }
-/*
-void BilboBrowser::setBrowserDirection( Qt::LayoutDirection direction )
-{
-    browserPart->view()->setLayoutDirection( direction );
-}*/
 
 void BilboBrowser::slotGetBlogStyle()
 {
+    stop();
     int blogid = __currentBlogId;
     if ( blogid < 0 ) {
         KMessageBox::information( this,
@@ -152,7 +130,6 @@ void BilboBrowser::slotGetBlogStyle()
         return;
     }
 
-    browserPart->setStatusMessagesEnabled( false );
     browserStatus->showMessage( i18n( "Fetching blog style from the web..." ) );
     if ( browserProgress->isHidden() ) {
         browserProgress->show();
@@ -168,7 +145,6 @@ void BilboBrowser::slotGetBlogStyle()
 void BilboBrowser::slotSetBlogStyle()
 {
     browserStatus->showMessage( i18n( "Blog style fetched." ), 2000 );
-    browserPart->setStatusMessagesEnabled( true );
     Q_EMIT sigSetBlogStyle();
 
     if ( qobject_cast< StyleGetter* >( sender() ) ) {
@@ -176,19 +152,12 @@ void BilboBrowser::slotSetBlogStyle()
     }
 }
 
-void BilboBrowser::slotCompleted()
+void BilboBrowser::slotCompleted(bool ok)
 {
     QTimer::singleShot( 1500, browserProgress, SLOT(hide()) );
-}
-
-void BilboBrowser::slotCanceled( const QString& errMsg )
-{
-    if ( !errMsg.isEmpty() ) {
-        KMessageBox::detailedError( this,
-               i18n( "An error occurred in the latest transaction." ), errMsg );
+    if(!ok){
+        browserStatus->showMessage( i18n( "An error occurred in the latest transaction." ), 5000 );
     }
-    browserStatus->showMessage( i18n( "Operation canceled." ) );
-    QTimer::singleShot( 2000, browserProgress, SLOT(hide()) );
 }
 
 void BilboBrowser::slotSetStatusBarText( const QString& text )
@@ -200,13 +169,8 @@ void BilboBrowser::slotSetStatusBarText( const QString& text )
 
 void BilboBrowser::slotViewModeChanged()
 {
-    browserPart->closeUrl();
+    stop();
     setHtml( currentTitle, currentContent );
-}
-
-void BilboBrowser::slotOpenRequested( const KUrl& url )
-{
-    browserPart->openUrl( url );
 }
 
 #include "composer/bilbobrowser.moc"

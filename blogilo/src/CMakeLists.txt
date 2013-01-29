@@ -27,19 +27,9 @@ set(blogilo_SRCS
 
  composer/blogilocomposerview.cpp
  composer/blogilocomposereditor.cpp
+ composer/bilbobrowser.cpp
 )
 
-IF(WIN32)
-    set(blogilo_SRCS
-    ${blogilo_SRCS}
-    composer/bilbobrowser_win.cpp
-    )
-else()
-    set(blogilo_SRCS
-    ${blogilo_SRCS}
-    composer/bilbobrowser.cpp
-    )
-endif()
 
 kde4_add_ui_files(
    blogilo_SRCS
