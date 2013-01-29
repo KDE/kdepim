@@ -1,7 +1,4 @@
 project(kdepim)
-# set_package_properties appeared in cmake 2.8.6
-# TODO: Remove when kdelibs >= 4.10 will be required
-cmake_minimum_required(VERSION 2.8.6 FATAL_ERROR)
 
 # where to look first for cmake modules. This line must be the first one or cmake will use the system's FindFoo.cmake
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
@@ -113,7 +110,7 @@ if(WINCE)
   find_program(KDE4_KDECONFIG_EXECUTABLE NAMES kde4-config PATHS ${HOST_BINDIR} NO_DEFAULT_PATH)
 endif()
 
-find_package(KDE4 4.9.4 REQUIRED)
+find_package(KDE4 4.10 REQUIRED)
 include(KDE4Defaults)
 
 find_package(KdepimLibs 4.10.61)

@@ -1061,7 +1061,7 @@ void ComposerViewPrivate::_k_slotSpeakText()
 ComposerView::ComposerView(QWidget *parent)
     : KWebView(parent),d(new ComposerViewPrivate(this))
 {
-    QFile file ( KStandardDirs::locate ( "data", QLatin1String("composereditor/composereditorinitialhtml") ) );
+    QFile file ( initialHtml() );
     kDebug() <<file.fileName();
 
     if ( !file.open ( QIODevice::ReadOnly ) )
@@ -1081,6 +1081,11 @@ ComposerView::ComposerView(QWidget *parent)
 ComposerView::~ComposerView()
 {
     delete d;
+}
+
+QString ComposerView::initialHtml()
+{
+    return KStandardDirs::locate ( "data", QLatin1String("composereditor/composereditorinitialhtml") );
 }
 
 void ComposerView::createActions(const QList<ComposerViewAction>& lstActions)
@@ -1297,9 +1302,7 @@ void ComposerView::mouseDoubleClickEvent(QMouseEvent * event)
 
 void ComposerView::setHtmlContent( const QString& html )
 {
-    QString text = html;
-    text = text.replace(QLatin1Char('\"'), QLatin1String("\\\"")).simplified();
-    d->evaluateJavascript(QString::fromLatin1("replaceHtml(\"%1\")").arg(text));
+    setHtml(html);
 }
 
 void ComposerView::evaluateJavascript( const QString& javascript)

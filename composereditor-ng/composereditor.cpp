@@ -59,6 +59,7 @@ public:
         q->setLayout(vlay);
         q->connect(view,SIGNAL(showFindBar()),findReplaceBar,SLOT(showAndFocus()));
         q->connect(view,SIGNAL(openLink(QUrl)),SIGNAL(openLink(QUrl)));
+        q->connect(view->page(), SIGNAL(contentsChanged()), q, SIGNAL(textChanged()) );
     }
 
     FindReplaceBar *findReplaceBar;
@@ -189,7 +190,7 @@ void ComposerEditor::addActionInToolBar(QAction *act)
     }
 }
 
-KToolBar *ComposerEditor::toolbar()
+KToolBar *ComposerEditor::toolbar() const
 {
     return d->toolbar;
 }

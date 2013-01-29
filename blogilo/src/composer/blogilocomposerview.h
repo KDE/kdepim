@@ -29,10 +29,9 @@ public:
     explicit BlogiloComposerView(QWidget * parent = 0);
     ~BlogiloComposerView();
 
-    void createActions(KActionCollection *actionCollection);
-
+    void startEditing();
 private Q_SLOTS:
-    void slotAddPostSplitter();
+    void slotSendMouseReleaseEvent();
 };
 
 #endif // BLOGILOCOMPOSERVIEW_H

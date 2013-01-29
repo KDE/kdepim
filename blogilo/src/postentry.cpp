@@ -3,6 +3,7 @@
 
     Copyright (C) 2008-2010 Mehrdad Momeny <mehrdad.momeny@gmail.com>
     Copyright (C) 2008-2010 Golnaz Nilieh <g382nilieh@gmail.com>
+    Copyright (C) 2013 Laurent Montel <montel@kde.org>
 
     This program is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -24,11 +25,7 @@
 
 #include "postentry.h"
 
-#ifdef WIN32
-#include "composer/bilbobrowser_win.h"
-#else
 #include "composer/bilbobrowser.h"
-#endif
 
 #include <kdebug.h>
 #include <klocalizedstring.h>
@@ -47,7 +44,9 @@
 #include <QLabel>
 #include <QTimer>
 #include <qlayout.h>
-#include "composer/texteditor.h"
+#include "composer/blogilocomposereditor.h"
+#include "composer/blogilocomposerview.h"
+
 #include "composer/htmleditor.h"
 #include <ktexteditor/view.h>
 #include <ktexteditor/document.h>
@@ -74,7 +73,6 @@ public:
     int mNumOfFilesToBeUploaded;
     bool isUploadingMediaFilesFailed;
     bool isNewPost;
-//     bool mIsModified;
     bool isPostContentModified;
 
 
@@ -83,7 +81,7 @@ public:
     QWidget *tabHtml;
     QWidget *tabPreview;
 
-    TextEditor *wysiwygEditor;
+    BlogiloComposerEditor *wysiwygEditor;
     KTextEditor::View *htmlEditor;
     BilboBrowser *previewer;
 
@@ -91,7 +89,7 @@ public:
 };
 
 PostEntry::PostEntry( QWidget *parent )
-        : QFrame( parent ), d(new Private)
+    : QFrame( parent ), d(new Private)
 {
     kDebug();
     createUi();
@@ -109,6 +107,12 @@ PostEntry::PostEntry( QWidget *parent )
     connect( this, SIGNAL(textChanged()), this, SLOT(slotPostModified()) );
 }
 
+PostEntry::~PostEntry()
+{
+    kDebug();
+    delete d;
+}
+
 void PostEntry::settingsChanged()
 {
     kDebug();
@@ -121,7 +125,6 @@ void PostEntry::settingsChanged()
 
 void PostEntry::createUi()
 {
-
     d->tabWidget = new KTabWidget(this);
     d->tabVisual = new QWidget( d->tabWidget );
     d->tabHtml = new QWidget( d->tabWidget );
@@ -133,7 +136,9 @@ void PostEntry::createUi()
     d->prev_index = 0;
 
     /// WYSIWYG Editor:
-    d->wysiwygEditor = new TextEditor( d->tabVisual );
+    BlogiloComposerView *view = new BlogiloComposerView(this);
+    d->wysiwygEditor = new BlogiloComposerEditor(view,d->tabVisual);
+    //d->wysiwygEditor = new TextEditor( d->tabVisual );
     QVBoxLayout *vLayout = new QVBoxLayout( d->tabVisual );
     vLayout->addWidget( d->wysiwygEditor );
 
@@ -148,7 +153,7 @@ void PostEntry::createUi()
     gLayout->addWidget( d->previewer );
 
     connect( d->previewer, SIGNAL(sigSetBlogStyle()), this, SLOT(
-            slotSetPostPreview() ) );
+                 slotSetPostPreview() ) );
 
 
     d->tabWidget->setCurrentIndex( 0 );
@@ -272,14 +277,14 @@ void PostEntry::setPostBody( const QString & content, const QString &additionalC
         body = content + "<hr/><!--split-->" + additionalContent;
         d->mCurrentPost.setAdditionalContent(QString());
     }
-//     if(body.isEmpty()){
-//         body = "<p></p>";//This is because of Bug #387578
-//     }
+    //     if(body.isEmpty()){
+    //         body = "<p></p>";//This is because of Bug #387578
+    //     }
     d->mCurrentPost.setContent( body );
     setHtmlContent( body );
     d->isPostContentModified = false;
     connect( this, SIGNAL(textChanged()), this, SLOT(slotPostModified()) );
-//     connect( txtTitle, SIGNAL(textChanged(QString)), this, SLOT(slotPostModified()) );
+    //     connect( txtTitle, SIGNAL(textChanged(QString)), this, SLOT(slotPostModified()) );
 }
 
 int PostEntry::currentPostBlogId() const
@@ -334,12 +339,6 @@ void PostEntry::setDefaultLayoutDirection( Qt::LayoutDirection direction )
     d->txtTitle->setLayoutDirection( direction );
 }
 
-PostEntry::~PostEntry()
-{
-    kDebug();
-    delete d;
-}
-
 QList< BilboMedia* > PostEntry::localImages() const
 {
     return d->wysiwygEditor->getLocalImages();
@@ -365,19 +364,19 @@ bool PostEntry::uploadMediaFiles( Backend *backend )
         QList<BilboMedia*>::iterator it = lImages.begin();
         QList<BilboMedia*>::iterator endIt = lImages.end();
         for ( ; it != endIt; ++it ) {
-                BilboMedia *media = (*it);
-                SyncUploader *uploader = new SyncUploader(this);
-                if( uploader->uploadMedia( backend, media ) ){
-                    replaceImageSrc( media->localUrl().url(),
-                                                        media->remoteUrl().url());
-                } else {
-                    QString err = i18n( "Uploading the media file %1 failed.\n%2",
-                                        media->name(), uploader->errorMessage());
-                    emit postPublishingDone( true, err );
-                    result = false;
-                    break;
-                }
-                uploader->deleteLater();
+            BilboMedia *media = (*it);
+            SyncUploader *uploader = new SyncUploader(this);
+            if( uploader->uploadMedia( backend, media ) ){
+                replaceImageSrc( media->localUrl().url(),
+                                 media->remoteUrl().url());
+            } else {
+                QString err = i18n( "Uploading the media file %1 failed.\n%2",
+                                    media->name(), uploader->errorMessage());
+                emit postPublishingDone( true, err );
+                result = false;
+                break;
+            }
+            uploader->deleteLater();
         }
         d->mCurrentPost.setContent( htmlContent() );
     }
@@ -401,8 +400,8 @@ void PostEntry::submitPost( int blogId, const BilboPost &postData )
     setCurrentPostFromEditor();
     if ( d->mCurrentPost.content().isEmpty() || d->mCurrentPost.title().isEmpty() ) {
         if ( KMessageBox::warningContinueCancel( this,
-            i18n( "Your post title or body is empty.\nAre you sure you want to submit this post?" )
-            ) == KMessageBox::Cancel )
+                                                 i18n( "Your post title or body is empty.\nAre you sure you want to submit this post?" )
+                                                 ) == KMessageBox::Cancel )
             return;
     }
     bool isNew = false;
@@ -465,7 +464,7 @@ void PostEntry::slotPostPublished( int blog_id, BilboPost *post )
     } else {
         msg = i18n( "Post with title \"%1\" published successfully.", post->title() );
     }
-//     KMessageBox::information( this, msg, "Successful" );
+    //     KMessageBox::information( this, msg, "Successful" );
     deleteProgressBar();
     this->unsetCursor();
     emit postPublishingDone( false, msg );
@@ -495,8 +494,7 @@ void PostEntry::saveLocally()
 {
     kDebug();
     if( currentPost()->content().isEmpty() ) {
-        if( KMessageBox::warningYesNo(this, i18n("The current post content is empty, \
-are you sure you want to save an empty post?")) == KMessageBox::No )
+        if( KMessageBox::warningYesNo(this, i18n("The current post content is empty, are you sure you want to save an empty post?")) == KMessageBox::No )
             return;
     }
     int resId = DBMan::self()->saveLocalEntry( *currentPost(), d->mCurrentPostBlogId );
@@ -528,8 +526,8 @@ void PostEntry::slotPostModified()
 {
     kDebug();
     disconnect( this, SIGNAL(textChanged()), this, SLOT(slotPostModified()) );
-//         disconnect( txtTitle, SIGNAL(textChanged(QString)), this, SLOT(slotPostModified()) );
-//     emit postModified();
+    //         disconnect( txtTitle, SIGNAL(textChanged(QString)), this, SLOT(slotPostModified()) );
+    //     emit postModified();
     d->isPostContentModified = true;
 }
 

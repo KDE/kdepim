@@ -23,26 +23,13 @@ set(blogilo_SRCS
  syncuploader.cpp
  composer/htmleditor.cpp
  composer/stylegetter.cpp
- composer/dialogs/addeditlink.cpp
  composer/dialogs/addmediadialog.cpp
- composer/dialogs/addeditimage.cpp
- composer/texteditor.cpp
 
  composer/blogilocomposerview.cpp
  composer/blogilocomposereditor.cpp
+ composer/bilbobrowser.cpp
 )
 
-IF(WIN32)
-    set(blogilo_SRCS
-    ${blogilo_SRCS}
-    composer/bilbobrowser_win.cpp
-    )
-else()
-    set(blogilo_SRCS
-    ${blogilo_SRCS}
-    composer/bilbobrowser.cpp
-    )
-endif()
 
 kde4_add_ui_files(
    blogilo_SRCS
@@ -57,8 +44,6 @@ kde4_add_ui_files(
   blogsettingsbase.ui
   uploadmediabase.ui
   composer/dialogs/addmediadialogbase.ui
-  composer/dialogs/editimagebase.ui
-  composer/dialogs/addeditlinkbase.ui
 )
 
 kde4_add_kcfg_files( blogilo_SRCS settings.kcfgc)
@@ -78,4 +63,3 @@ install( TARGETS blogilo ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 install( PROGRAMS ../blogilo.desktop  DESTINATION  ${XDG_APPS_INSTALL_DIR} )
 install( FILES blogilo.kcfg  DESTINATION  ${KCFG_INSTALL_DIR} )
-install( FILES blogiloui.rc composer/TextEditorInitialHtml  DESTINATION  ${DATA_INSTALL_DIR}/blogilo )
