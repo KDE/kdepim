@@ -37,6 +37,8 @@ public:
     explicit ComposerView(QWidget * parent = 0);
     ~ComposerView();
 
+    virtual QString initialHtml();
+
     enum ComposerViewAction {
         //Separator
         Separator,
