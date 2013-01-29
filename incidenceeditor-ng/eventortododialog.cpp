@@ -713,7 +713,8 @@ void EventOrTodoDialog::selectCollection( const Akonadi::Collection &collection 
 void EventOrTodoDialog::setIsCounterProposal( bool isCounterProposal )
 {
   Q_D( EventOrTodoDialog );
-  d->mInvitationDispatcher->setIsCounterProposal( isCounterProposal );
+  if (d->mInvitationDispatcher)
+    d->mInvitationDispatcher->setIsCounterProposal( isCounterProposal );
 }
 
 QObject *EventOrTodoDialog::typeAheadReceiver() const
