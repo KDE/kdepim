@@ -327,14 +327,14 @@
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_9">
           <item>
-           <widget class="QCheckBox" name="checkBox">
+           <widget class="QCheckBox" name="resizeImageWithFormats">
             <property name="text">
              <string>Resize all images with one of this format</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="KLineEdit" name="klineedit">
+           <widget class="KLineEdit" name="resizeImageWithFormatsType">
             <property name="showClearButton" stdset="0">
              <bool>true</bool>
             </property>

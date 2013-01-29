@@ -53,6 +53,7 @@ private:
   void initComboBox(KComboBox *combo);
   void initWriteImageFormat();
   void updateEmailsFilterTypeSettings();
+  void updateSettings();
   Ui::ImageScalingWidget *ui;
   QButtonGroup *mSourceFilenameFilterGroup;
   QButtonGroup *mRecipientFilterGroup;

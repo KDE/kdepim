@@ -300,7 +300,12 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
     <entry name="ResizeEmailsPattern" type="String" key="resize-emails-pattern">
       <default></default>
     </entry>
-
+    <entry name="ResizeImagesWithFormats" type="Bool" key="resize-image-with-formats">
+      <default>false</default>
+    </entry>
+    <entry name="ResizeImagesWithFormatsType" type="String" key="resize-image-with-formats-type">
+      <default></default>
+    </entry>
 
   </group>
 </kcfg>
