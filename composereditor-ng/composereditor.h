@@ -107,6 +107,10 @@ public:
      */
     QAction* action(QWebPage::WebAction action);
 
+    /**
+     * @brief view
+     * @return the viewer.
+     */
     ComposerView *view() const;
 
 public Q_SLOTS:
@@ -119,6 +123,9 @@ public Q_SLOTS:
 
 Q_SIGNALS:
     void openLink(const QUrl&);
+    /**
+     * @brief textChanged emit this signal when text in view changed.
+     */
     void textChanged();
 
 private:

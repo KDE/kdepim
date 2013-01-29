@@ -37,6 +37,10 @@ public:
     explicit ComposerView(QWidget * parent = 0);
     ~ComposerView();
 
+    /**
+     * @brief initialHtml
+     * @return initial html file. Needs to initialize view
+     */
     virtual QString initialHtml();
 
     enum ComposerViewAction {
