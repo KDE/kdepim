@@ -42,7 +42,8 @@
 #include <QVBoxLayout>
 #include <QTimer>
 
-BilboBrowser::BilboBrowser( QWidget *parent ) : QWidget( parent )
+BilboBrowser::BilboBrowser( QWidget *parent )
+    : QWidget( parent )
 {
     mWebView = new KWebView(this);
 

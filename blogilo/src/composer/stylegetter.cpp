@@ -107,13 +107,12 @@ QString StyleGetter::styledHtml( const int blogid,
 //
 //     QString blogDir = tempBlog.url().host();
     //QString url = QString( "bilbo/%1/" ).arg( blogid );
-    QString url = QString( "blogilo/%1/" ).arg( blogid );
+    QString url = QString::fromLatin1("blogilo/%1/" ).arg( blogid );
     url = KStandardDirs::locateLocal( "data", url , true );
     KUrl dest( url );
     dest.addPath("style.html");
     dest.setScheme("file");
 
-    QString buffer;
     if ( !dest.isValid() ) {
         return "<html><body><h2 align='center'>" + title + "</h2><br>" + content + "</html>";
     }
@@ -121,6 +120,8 @@ QString StyleGetter::styledHtml( const int blogid,
     if ( !file.open( QIODevice::ReadOnly | QIODevice::Text ) ) {
         return "<html><body><h2 align='center'>" + title + "</h2><br>" + content + "</html>";
     }
+
+    QString buffer;
     while ( !file.atEnd() ) {
         QByteArray line = file.readLine();
         buffer.append( QString::fromUtf8( line ) );
@@ -233,16 +234,14 @@ void StyleGetter::generateRandomPostStrings()
     kDebug();
     srand( time( 0 ) );
     int postRandomNumber = rand();
-    mPostTitle = QString( "%1%2" ).arg( POST_TITLE ).arg( postRandomNumber );
-    mPostContent = QString( "%1%2" ).arg( POST_CONTENT ).arg( postRandomNumber );
+    mPostTitle = QString::fromLatin1("%1%2" ).arg( POST_TITLE ).arg( postRandomNumber );
+    mPostContent = QString::fromLatin1( "%1%2" ).arg( POST_CONTENT ).arg( postRandomNumber );
 }
 
 void StyleGetter::slotError( const QString & errMsg )
 {
     kDebug();
-//     QString err = i18n( "An Error occurred on latest transaction.\n%1", errMsg );
     KMessageBox::detailedError( mParent, i18n( "An error occurred in the latest transaction." ), errMsg );
-//     KMessageBox::error( mParent, err );
     b->deleteLater();
 }
 

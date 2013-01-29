@@ -35,7 +35,6 @@ public:
     int mBlogId;
     int mMediaId;
     bool mIsUploaded;
-//     bool mIsLocal;
     KUrl mLocalUrl;
     KUrl mRemoteUrl;
     QString mMimeType;
