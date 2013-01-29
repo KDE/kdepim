@@ -1297,9 +1297,7 @@ void ComposerView::mouseDoubleClickEvent(QMouseEvent * event)
 
 void ComposerView::setHtmlContent( const QString& html )
 {
-    QString text = html;
-    text = text.replace(QLatin1Char('\"'), QLatin1String("\\\"")).simplified();
-    d->evaluateJavascript(QString::fromLatin1("replaceHtml(\"%1\")").arg(text));
+    setHtml(html);
 }
 
 void ComposerView::evaluateJavascript( const QString& javascript)
