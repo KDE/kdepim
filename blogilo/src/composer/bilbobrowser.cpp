@@ -25,7 +25,7 @@
 
 #include "bilbobrowser.h"
 
-#include <QWebView>
+#include <KWebView>
 #include <QProgressBar>
 #include <kstatusbar.h>
 #include <kmessagebox.h>
@@ -44,7 +44,7 @@
 
 BilboBrowser::BilboBrowser( QWidget *parent ) : QWidget( parent )
 {
-    mWebView = new QWebView(this);
+    mWebView = new KWebView(this);
 
     createUi( parent );
 

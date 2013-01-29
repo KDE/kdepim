@@ -32,7 +32,7 @@
 
 class QCheckBox;
 class QProgressBar;
-class QWebView;
+class KWebView;
 class KPushButton;
 class KStatusBar;
 
@@ -88,9 +88,9 @@ protected Q_SLOTS:
     void slotViewModeChanged();
 
 private:
-    void createUi( QWidget *parent = 0 );
+    void createUi( QWidget *parent );
 
-    QWebView *mWebView;
+    KWebView *mWebView;
     QCheckBox *viewInBlogStyle;
     KPushButton *btnGetStyle;
     QProgressBar *browserProgress;
