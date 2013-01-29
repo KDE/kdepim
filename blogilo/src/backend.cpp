@@ -60,7 +60,7 @@ public:
 };
 
 Backend::Backend( int blog_id, QObject* parent )
-: QObject( parent ), d(new Private)
+    : QObject( parent ), d(new Private)
 {
     kDebug() << "with blog id: " << blog_id;
     d->bBlog = DBMan::self()->blog( blog_id );
@@ -86,9 +86,10 @@ Backend::~Backend()
 void Backend::getCategoryListFromServer()
 {
     kDebug() << "Blog Id: " << d->bBlog->id();
-    if ( d->bBlog->api() == BilboBlog::METAWEBLOG_API || d->bBlog->api() == BilboBlog::MOVABLETYPE_API ||
+    if ( d->bBlog->api() == BilboBlog::METAWEBLOG_API ||
+         d->bBlog->api() == BilboBlog::MOVABLETYPE_API ||
          d->bBlog->api() == BilboBlog::WORDPRESSBUGGY_API ) {
-        KBlog::MetaWeblog *tmp = dynamic_cast<KBlog::MetaWeblog*>( d->kBlog );
+        KBlog::MetaWeblog *tmp = static_cast<KBlog::MetaWeblog*>( d->kBlog );
         connect( tmp, SIGNAL(listedCategories(QList<QMap<QString,QString> >)),
                  this, SLOT(categoriesListed(QList<QMap<QString,QString> >)) );
         tmp->listCategories();
@@ -103,15 +104,14 @@ void Backend::categoriesListed( const QList< QMap < QString , QString > > & cate
     DBMan::self()->clearCategories( d->bBlog->id() );
 
     for ( int i = 0; i < categories.count(); ++i ) {
-        QString name, description, htmlUrl, rssUrl, categoryId, parentId;
         const QMap<QString, QString> &category = categories.at( i );
 
-        name = category.value( "name", QString() );
-        description = category.value( "description", QString() );
-        htmlUrl = category.value( "htmlUrl", QString() );
-        rssUrl = category.value( "rssUrl", QString() );
-        categoryId = category.value( "categoryId", QString() );
-        parentId = category.value( "parentId", QString() );
+        const QString name = category.value( "name", QString() );
+        const QString description = category.value( "description", QString() );
+        const QString htmlUrl = category.value( "htmlUrl", QString() );
+        const QString rssUrl = category.value( "rssUrl", QString() );
+        QString categoryId = category.value( "categoryId", QString() );
+        const QString parentId = category.value( "parentId", QString() );
 
         if(categoryId.isEmpty()) {
             categoryId = QString::number(i);

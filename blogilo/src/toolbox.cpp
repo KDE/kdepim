@@ -38,7 +38,6 @@
 #include "backend.h"
 #include "bilbopost.h"
 #include "bilboblog.h"
-// #include "blogradiobutton.h"
 #include "catcheckbox.h"
 #include <KMenu>
 #include <KAction>
@@ -55,7 +54,7 @@ public:
     KStatusBar *statusbar;
 };
 Toolbox::Toolbox( QWidget *parent )
-        : QWidget( parent ), d(new Private)
+    : QWidget( parent ), d(new Private)
 {
     kDebug();
     d->mCurrentBlogId = -1;
@@ -102,6 +101,13 @@ Toolbox::Toolbox( QWidget *parent )
     QTimer::singleShot(1000, this, SLOT(reloadLocalPosts()));
 }
 
+Toolbox::~Toolbox()
+{
+    kDebug();
+    delete d;
+}
+
+
 void Toolbox::setCurrentBlogId( int blog_id )
 {
     kDebug()<<blog_id;
@@ -124,8 +130,7 @@ void Toolbox::slotReloadCategoryList()
     kDebug();
 //     QAbstractButton *btn = listBlogRadioButtons.checkedButton();
     if ( d->mCurrentBlogId == -1 ) {
-        KMessageBox::sorry( this, i18n( "No blog has been selected: \
-you have to select a blog from the Blogs page before asking for the list of categories." ) );
+        KMessageBox::sorry( this, i18n( "No blog has been selected: you have to select a blog from the Blogs page before asking for the list of categories." ) );
         return;
     }
 
@@ -142,9 +147,7 @@ void Toolbox::slotUpdateEntries(int count)
 {
     kDebug();
     if ( d->mCurrentBlogId == -1 ) {
-        KMessageBox::sorry( this, i18n( "No blog has been selected: \
-you have to select a blog from the Blogs page before asking for the list of entries." ) );
-        kDebug() << "There isn't any selected blog.";
+        KMessageBox::sorry( this, i18n( "No blog has been selected: you have to select a blog from the Blogs page before asking for the list of entries." ) );
         return;
     }
     if(count == 0) {
@@ -223,8 +226,7 @@ void Toolbox::slotRemoveSelectedEntryFromServer()
 {
     if(lstEntriesList->selectedItems().count() < 1)
         return;
-    if( KMessageBox::warningYesNoCancel(this, i18n( "Removing a post from your blog cannot be undone.\
-\nAre you sure you want to remove the post with title \"%1\" from your blog?", lstEntriesList->currentItem()->text() ))
+    if( KMessageBox::warningYesNoCancel(this, i18n( "Removing a post from your blog cannot be undone.\nAre you sure you want to remove the post with title \"%1\" from your blog?", lstEntriesList->currentItem()->text() ))
     == KMessageBox::Yes) {
         BilboPost *post = new BilboPost( DBMan::self()->getPostInfo( lstEntriesList->currentItem()->
                                                                      data(32).toInt() ) );
@@ -364,7 +366,7 @@ QList< Category > Toolbox::selectedCategories()
 {
     kDebug();
     QList<Category> list;
-    int count = d->listCategoryCheckBoxes.count();
+    const int count = d->listCategoryCheckBoxes.count();
     for ( int i = 0; i < count; ++i ) {
         if ( d->listCategoryCheckBoxes.at(i)->isChecked() )
             list.append( d->listCategoryCheckBoxes.at(i)->category() );
@@ -397,8 +399,7 @@ void Toolbox::setSelectedCategories( const QStringList &list )
 QStringList Toolbox::currentTags()
 {
     kDebug();
-    QStringList t;
-    t = txtCatTags->text().split( QRegExp( QString::fromUtf8(",|،") ), QString::SkipEmptyParts );
+    QStringList t = txtCatTags->text().split( QRegExp( QString::fromUtf8(",|،") ), QString::SkipEmptyParts );
     for ( int i = 0; i < t.count() ; ++i ) {
         t[i] = t[i].trimmed();
     }
@@ -433,15 +434,9 @@ void Toolbox::slotEntriesCopyUrl()
         KMessageBox::sorry(this, i18n( "No link field is available in the database for this entry." ) );
 }
 
-Toolbox::~Toolbox()
-{
-    kDebug();
-    delete d;
-}
-
 void Toolbox::unCheckCatList()
 {
-    int count = d->listCategoryCheckBoxes.count();
+    const int count = d->listCategoryCheckBoxes.count();
     for ( int j = 0; j < count; ++j ) {
         d->listCategoryCheckBoxes.at(j)->setChecked( false );
     }
@@ -479,15 +474,15 @@ void Toolbox::reloadLocalPosts()
     for (int i=0; i < count; ++i){
         int newRow = localEntriesTable->rowCount();
         localEntriesTable->insertRow(newRow);
-        QString postTitle = localList[i].value( "post_title" ).toString();
+        QString postTitle = localList.at(i).value( "post_title" ).toString();
         QTableWidgetItem *item1 = new QTableWidgetItem( postTitle );
         item1->setToolTip( postTitle );
-        item1->setData(32, localList[i].value( "local_id" ).toInt());//Post_id
+        item1->setData(32, localList.at(i).value( "local_id" ).toInt());//Post_id
         localEntriesTable->setItem( newRow, 0, item1 );
-        QString blogTitle = localList[i].value( "blog_title" ).toString();
+        QString blogTitle = localList.at(i).value( "blog_title" ).toString();
         QTableWidgetItem *item2 = new QTableWidgetItem( blogTitle );
         item2->setToolTip( blogTitle );
-        item2->setData(32, localList[i].value( "blog_id" ).toInt());//blog_id
+        item2->setData(32, localList.at(i).value( "blog_id" ).toInt());//blog_id
         localEntriesTable->setItem( newRow, 1, item2 );
     }
 }

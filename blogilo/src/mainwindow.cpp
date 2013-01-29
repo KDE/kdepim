@@ -32,9 +32,7 @@
 #include "bilbomedia.h"
 #include "settings.h"
 #include "bilboblog.h"
-// #include "composer/multilinetextedit.h"
 #include "blogsettings.h"
-// #include "htmleditor.h"
 
 #include "ui_advancedsettingsbase.h"
 #include "ui_settingsbase.h"
@@ -319,8 +317,8 @@ void MainWindow::slotSettingsChanged()
 
 void MainWindow::slotDialogDestroyed( QObject *win )
 {
-    QSize size = qobject_cast<QWidget *>(win)->size();
-    QString name = win->objectName();
+    const QSize size = qobject_cast<QWidget *>(win)->size();
+    const QString name = win->objectName();
     if(name == "settings") {
         Settings::setConfigWindowSize( size );
     }
@@ -350,7 +348,7 @@ void MainWindow::slotBlogAdded( const BilboBlog &blog )
 
 void MainWindow::slotBlogEdited( const BilboBlog &blog )
 {
-    int count = blogs->actions().count();
+    const int count = blogs->actions().count();
     for(int i=0; i< count; ++i){
         if( blogs->action( i )->data().toInt() == blog.id() ) {
             blogs->action( i )->setText( blog.title() );
@@ -446,12 +444,10 @@ void MainWindow::slotPublishPost()
     kDebug();
     if ( mCurrentBlogId == -1 ) {
         KMessageBox::sorry( this, i18n( "You have to select a blog to publish this post to." ) );
-        kDebug() << "Blog id not sets correctly.";
         return;
     }
     if( !activePost || tabPosts->currentIndex() == -1) {
         KMessageBox::sorry( this, i18n( "There is no open post to submit." ) );
-        kDebug() << "There isn't any post";
         return;
     }
     toolbox->getFieldsValue( activePost->currentPost() );

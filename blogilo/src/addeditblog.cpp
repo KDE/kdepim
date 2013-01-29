@@ -220,9 +220,9 @@ void AddEditBlog::gotHtml( KJob *job )
     while (textUrl.endsWith(QChar('/'))) {
         textUrl.remove(textUrl.length()-1, 1);
     }
-        d->ui.txtUrl->setText( textUrl + "/xmlrpc.php" );
-        fetchBlogId();
-        return;
+    d->ui.txtUrl->setText( textUrl + "/xmlrpc.php" );
+    fetchBlogId();
+    return;
     }
 
     // add MT for WordpressBuggy -> URL/xmlrpc.php exists
@@ -484,11 +484,11 @@ AddEditBlog::~AddEditBlog()
 
 void AddEditBlog::setSupportedFeatures( BilboBlog::ApiType api )
 {
-    QString yesStyle = "QLabel{color: green;}";
-    QString yesText = i18nc( "Supported feature or Not", "Yes" );
-    QString noStyle = "QLabel{color: red;}";
-    QString noText = i18nc( "Supported feature or Not", "No, API does not support it" );
-    QString notYetText = i18nc( "Supported feature or Not", "No, Blogilo does not yet support it" );
+    const QString yesStyle = "QLabel{color: green;}";
+    const QString yesText = i18nc( "Supported feature or Not", "Yes" );
+    const QString noStyle = "QLabel{color: red;}";
+    const QString noText = i18nc( "Supported feature or Not", "No, API does not support it" );
+    const QString notYetText = i18nc( "Supported feature or Not", "No, Blogilo does not yet support it" );
 
     d->ui.featureCreatePost->setText( yesText );
     d->ui.featureCreatePost->setStyleSheet( yesStyle );

@@ -142,7 +142,7 @@ protected:
      * then copies the content of HtmlEditor into the variable mHtmlContent, and returns it.
      * @return an String which contains html text
      */
-    QString htmlContent();
+    QString htmlContent() const;
 
     QString plainTextContent() const;
 
