@@ -103,14 +103,14 @@ endif()
 #    3.2 alpha1
 
 # Do NOT add quote
-set(KDEPIM_DEV_VERSION rc3)
+set(KDEPIM_DEV_VERSION)
 
 # add an extra space
 if(DEFINED KDEPIM_DEV_VERSION)
   set(KDEPIM_DEV_VERSION " ${KDEPIM_DEV_VERSION}")
 endif()
 
-set(KDEPIM_VERSION "4.10")
+set(KDEPIM_VERSION "4.10.0")
 
 configure_file(kdepim-version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/kdepim-version.h @ONLY)
 
