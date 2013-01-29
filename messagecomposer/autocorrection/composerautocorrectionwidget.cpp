@@ -227,7 +227,6 @@ void ComposerAutoCorrectionWidget::resetToDefault()
   ui->typographicSingleQuotes->setChecked(false);
 
   loadGlobalAutoCorrectionAndException();
-  mWasChanged = false;
 }
 
 void ComposerAutoCorrectionWidget::enableSingleQuotes(bool state)

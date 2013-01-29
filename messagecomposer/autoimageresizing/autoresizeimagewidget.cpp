@@ -217,9 +217,6 @@ void AutoResizeImageWidget::resetToDefault()
 
 
    MessageComposer::MessageComposerSettings::self()->useDefaults( bUseDefaults );
-
-
-   mWasChanged = false;
 }
 
 #include "autoresizeimagewidget.moc"
