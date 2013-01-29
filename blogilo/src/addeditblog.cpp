@@ -134,18 +134,19 @@ void AddEditBlog::autoConfigure()
     showWaitWidget( i18n("Trying to guess blog and API type...") );
     QString textUrl;
     ///Guess API with Url:
-    if ( d->ui.txtUrl->text().contains( "xmlrpc.php", Qt::CaseInsensitive ) ) {
+    if ( d->ui.txtUrl->text().contains( QLatin1String("xmlrpc.php"), Qt::CaseInsensitive ) ) {
         d->ui.comboApi->setCurrentIndex( 3 );
         fetchBlogId();
         return;
     }
-    if ( d->ui.txtUrl->text().contains( "blogspot", Qt::CaseInsensitive ) ) {
+    if ( d->ui.txtUrl->text().contains( QLatin1String("blogspot"), Qt::CaseInsensitive ) ) {
         d->ui.comboApi->setCurrentIndex( 4 );
         fetchBlogId();
         return;
     }
-    if ( d->ui.txtUrl->text().contains( "wordpress", Qt::CaseInsensitive ) ) {
+    if ( d->ui.txtUrl->text().contains( QLatin1String("wordpress"), Qt::CaseInsensitive ) ) {
         d->ui.comboApi->setCurrentIndex( 3 );
+
     textUrl = d->ui.txtUrl->text();
     while (textUrl.endsWith(QChar('/'))) {
         textUrl.remove(textUrl.length()-1, 1);
@@ -154,7 +155,7 @@ void AddEditBlog::autoConfigure()
         fetchBlogId();
         return;
     }
-    if ( d->ui.txtUrl->text().contains( "livejournal", Qt::CaseInsensitive ) ) {
+    if ( d->ui.txtUrl->text().contains( QLatin1String("livejournal"), Qt::CaseInsensitive ) ) {
         d->ui.comboApi->setCurrentIndex( 0 );
         d->tmpBlogUrl = d->ui.txtUrl->text();
         d->ui.txtUrl->setText( "http://www.livejournal.com/interface/blogger/" );
@@ -239,7 +240,8 @@ void AddEditBlog::gotXmlRpcTest( KJob *job )
 {
     kDebug();
     d->mFetchAPITimer->deleteLater();
-    if ( !job ) return;
+    if ( !job )
+        return;
     if ( job->error() ) {
         kDebug() << "Auto configuration failed! Error: " << job->errorString();
         hideWaitWidget();
@@ -439,15 +441,16 @@ void AddEditBlog::fetchedProfileId( const QString &id )
     Q_UNUSED(id);
     d->mFetchProfileIdTimer->deleteLater();
     d->mFetchProfileIdTimer = 0;
-    connect( dynamic_cast<KBlog::GData*>( d->mBlog ), SIGNAL(listedBlogs(QList<QMap<QString,QString> >)),
+    KBlog::GData* blog = static_cast<KBlog::GData*>( d->mBlog );
+    connect( blog, SIGNAL(listedBlogs(QList<QMap<QString,QString> >)),
              this, SLOT(fetchedBlogId(QList<QMap<QString,QString> >)) );
-    connect( dynamic_cast<KBlog::GData*>( d->mBlog ), SIGNAL(error(KBlog::Blog::ErrorType,QString)),
+    connect( blog, SIGNAL(error(KBlog::Blog::ErrorType,QString)),
              this, SLOT(handleFetchError(KBlog::Blog::ErrorType,QString)) );
     d->mFetchBlogIdTimer = new QTimer( this );
     d->mFetchBlogIdTimer->setSingleShot( true );
     connect( d->mFetchBlogIdTimer, SIGNAL(timeout()), this, SLOT(handleFetchIDTimeout()) );
     d->mFetchBlogIdTimer->start( TIMEOUT );
-    dynamic_cast<KBlog::GData*>( d->mBlog )->listBlogs();
+    blog->listBlogs();
 }
 
 void AddEditBlog::enableOkButton( const QString & txt )

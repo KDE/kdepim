@@ -18,7 +18,7 @@
 
 */
 #include "composerhtmleditor.h"
-#include "utils/domtreewidget.h"
+#include "widgets/domtreewidget.h"
 #include "composerview.h"
 
 #include <kapplication.h>

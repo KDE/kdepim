@@ -185,7 +185,7 @@ void Toolbox::slotLoadEntriesFromDB( int blog_id )
         lstItem->setToolTip(listEntries[i].value("c_time").toDateTime().toString());
         if(listEntries[i].value("is_private").toBool()) {
             lstItem->setForeground(QBrush(Qt::blue));
-            lstItem->setToolTip(lstItem->toolTip() + " (Draft)");
+            lstItem->setToolTip(i18n("%1 (Draft)",lstItem->toolTip()));
         }
         lstItem->setData( 32, listEntries[i].value("id").toInt() );
         lstEntriesList->addItem( lstItem );

@@ -52,8 +52,6 @@ public:
     {}
     KBlog::Blog *kBlog;
     BilboBlog *bBlog;
-//     quint16 mChecksum;
-//     QString mediaLocalUrl;
     QList<Category> mCreatePostCategories;
     QMap<QString, KBlog::BlogPost *> mSetPostCategoriesMap;
     QMap<KBlog::BlogPost *, BilboPost::Status> mSubmitPostStatusMap;

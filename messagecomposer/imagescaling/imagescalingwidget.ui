@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>580</width>
-    <height>333</height>
+    <width>614</width>
+    <height>453</height>
    </rect>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
@@ -307,9 +307,38 @@
               <property name="whatsThis">
                <string>This line allows to define several pattern. Separate them with ';'.</string>
               </property>
+              <property name="clickMessage">
+               <string>Specify patterns separate with ';'</string>
+              </property>
+              <property name="showClearButton" stdset="0">
+               <bool>true</bool>
+              </property>
              </widget>
             </item>
            </layout>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBox_2">
+         <property name="title">
+          <string>Image Format</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_9">
+          <item>
+           <widget class="QCheckBox" name="checkBox">
+            <property name="text">
+             <string>Resize all images with one of this format</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="KLineEdit" name="klineedit">
+            <property name="showClearButton" stdset="0">
+             <bool>true</bool>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>
@@ -328,7 +357,11 @@
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="renameResizedImagePattern"/>
+           <widget class="KLineEdit" name="renameResizedImagePattern">
+            <property name="showClearButton" stdset="0">
+             <bool>true</bool>
+            </property>
+           </widget>
           </item>
           <item>
            <widget class="QLabel" name="help">
@@ -385,7 +418,11 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="resizeEmailsPattern"/>
+        <widget class="KLineEdit" name="resizeEmailsPattern">
+         <property name="showClearButton" stdset="0">
+          <bool>true</bool>
+         </property>
+        </widget>
        </item>
        <item>
         <widget class="QRadioButton" name="doNotResizeEachEmails">
@@ -402,7 +439,11 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="doNotResizePattern"/>
+        <widget class="KLineEdit" name="doNotResizePattern">
+         <property name="showClearButton" stdset="0">
+          <bool>true</bool>
+         </property>
+        </widget>
        </item>
        <item>
         <spacer name="verticalSpacer_4">
