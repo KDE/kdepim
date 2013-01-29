@@ -365,9 +365,6 @@ void ImageScalingWidget::resetToDefault()
    updateEmailsFilterTypeSettings();
 
    MessageComposer::MessageComposerSettings::self()->useDefaults( bUseDefaults );
-
-
-   mWasChanged = false;
 }
 
 #include "imagescalingwidget.moc"
