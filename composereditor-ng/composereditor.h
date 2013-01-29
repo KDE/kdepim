@@ -119,6 +119,7 @@ public Q_SLOTS:
 
 Q_SIGNALS:
     void openLink(const QUrl&);
+    void textChanged();
 
 private:
     friend class ComposerEditorPrivate;
