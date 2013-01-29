@@ -25,6 +25,8 @@
 
 #include <KDebug>
 #include <KMimeType>
+#include <KAction>
+#include <KLocale>
 
 #include <QWebElementCollection>
 #include <QWebFrame>
@@ -55,58 +57,18 @@ BlogiloComposerEditor::BlogiloComposerEditor(BlogiloComposerView *view, QWidget 
     lstActions<<ComposerEditorNG::ComposerView::DirectionRtl;
     lstActions<<ComposerEditorNG::ComposerView::OrderedList;
     lstActions<<ComposerEditorNG::ComposerView::UnorderedList;
-
-
-
-    /*
-    actCheckSpelling = new KAction( KIcon( "tools-check-spelling" ),
-                                    i18n( "Enable Spell Checking"), this );
-    actCheckSpelling->setCheckable( true );
-    connect( actCheckSpelling, SIGNAL(triggered(bool)), this,
-             SLOT(slotToggleSpellChecking(bool)) );
-//     barVisual->addAction( actCheckSpelling ); FIXME: Missing functionality
-
-    barVisual->addSeparator();
-
-
-    actCode = new KAction( KIcon( "format-text-code" ), i18nc( "Sets text font to code style",
-                           "Code" ), this );
-//     actCode->setCheckable( true );
-    connect( actCode, SIGNAL(triggered(bool)), this, SLOT(slotToggleCode(bool)) );
-    barVisual->addAction( actCode );
-
-
-    barVisual->addSeparator();
-
-    actRightToLeft = new KAction( KIcon( "format-text-direction-rtl" ), i18nc(
-                                 "Sets text direction as right to left",
-                                 "Right to Left" ), this );
-    actRightToLeft->setCheckable( true );
-    connect( actRightToLeft, SIGNAL(toggled(bool)), this, SLOT(slotChangeLayoutDirection(bool)) );
-    barVisual->addAction( actRightToLeft );
-
-    barVisual->addSeparator();
-
-
-    actSplitPost = new KAction( KIcon( "insert-more-mark" ), i18n( "Split text" ), this );
-    connect( actSplitPost, SIGNAL(triggered(bool)), this, SLOT(slotAddPostSplitter()) );
-    barVisual->addAction( actSplitPost );
-    */
-
     createActions(lstActions);
     createToolBar(lstActions);
 
-/*
-    actSplitPost = new KAction( KIcon( "insert-more-mark" ), i18n( "Split text" ), this );
-    connect( actSplitPost, SIGNAL(triggered(bool)), this, SLOT(slotAddPostSplitter()) );
-    barVisual->addAction( actSplitPost );
-    actCode = new KAction( KIcon( "format-text-code" ), i18nc( "Sets text font to code style",
+    mActSplitPost = new KAction( KIcon( "insert-more-mark" ), i18n( "Split text" ), this );
+    connect( mActSplitPost, SIGNAL(triggered(bool)), this, SLOT(slotAddPostSplitter()) );
+    addActionInToolBar(mActSplitPost);
+
+    mActCode = new KAction( KIcon( "format-text-code" ), i18nc( "Sets text font to code style",
                            "Code" ), this );
 //     actCode->setCheckable( true );
-    connect( actCode, SIGNAL(triggered(bool)), this, SLOT(slotToggleCode(bool)) );
-    barVisual->addAction( actCode );
-
-  */
+    connect( mActCode, SIGNAL(triggered(bool)), this, SLOT(slotToggleCode(bool)) );
+    addActionInToolBar(mActCode);
 }
 
 BlogiloComposerEditor::~BlogiloComposerEditor()

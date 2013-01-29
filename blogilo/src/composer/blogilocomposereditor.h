@@ -47,6 +47,8 @@ private:
     void execCommand( const QString &cmd, const QString &arg );
     void execCommand ( const QString &cmd );
     bool readOnly;
+    KAction *mActSplitPost;
+    KAction *mActCode;
 };
 
 #endif // BLOGILOCOMPOSEREDITOR_H
