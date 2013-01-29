@@ -47,7 +47,10 @@
 #include <QLabel>
 #include <QTimer>
 #include <qlayout.h>
-#include "composer/texteditor.h"
+//#include "composer/texteditor.h"
+#include "composer/blogilocomposereditor.h"
+#include "composer/blogilocomposerview.h"
+
 #include "composer/htmleditor.h"
 #include <ktexteditor/view.h>
 #include <ktexteditor/document.h>
@@ -83,7 +86,7 @@ public:
     QWidget *tabHtml;
     QWidget *tabPreview;
 
-    TextEditor *wysiwygEditor;
+    BlogiloComposerEditor *wysiwygEditor;
     KTextEditor::View *htmlEditor;
     BilboBrowser *previewer;
 
@@ -133,7 +136,9 @@ void PostEntry::createUi()
     d->prev_index = 0;
 
     /// WYSIWYG Editor:
-    d->wysiwygEditor = new TextEditor( d->tabVisual );
+    BlogiloComposerView *view = new BlogiloComposerView(this);
+    d->wysiwygEditor = new BlogiloComposerEditor(view,d->tabVisual);
+    //d->wysiwygEditor = new TextEditor( d->tabVisual );
     QVBoxLayout *vLayout = new QVBoxLayout( d->tabVisual );
     vLayout->addWidget( d->wysiwygEditor );
 
@@ -240,6 +245,7 @@ QString PostEntry::plainTextContent() const
 
 void PostEntry::setHtmlContent(const QString& content)
 {
+    qDebug()<<" void PostEntry::setHtmlContent(const QString& content)" <<content;
     d->wysiwygEditor->setHtmlContent(content);
     d->htmlEditor->document()->setText( content );
 }
