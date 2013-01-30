@@ -128,6 +128,7 @@ Comment[zh_TW]=目錄服務設定
 X-KDE-Keywords=ldap,directory,services,hkp,keyserver
 X-KDE-Keywords[bs]=ldap,podsjetnik, usluge, HKP, keyserver
 X-KDE-Keywords[ca]=ldap,directori,serveis,hkp,servidor de claus
+X-KDE-Keywords[ca@valencia]=ldap,directori,serveis,hkp,servidor de claus
 X-KDE-Keywords[da]=ldap,directory,tjenester,hkp,nøgleserver
 X-KDE-Keywords[de]=LDAP,Verzeichnis,Dienste,HKP,Schlüsselserver
 X-KDE-Keywords[el]=ldap,κατάλογος,υπηρεσίες,hkp,keyserver

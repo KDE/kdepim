@@ -145,7 +145,6 @@ class KDEPIM_EXPORT ProgressDialog : public OverlayWidget
     virtual void closeEvent( QCloseEvent * );
 
     TransactionItemView *mScrollView;
-    TransactionItem *mPreviousItem;
     QMap<const ProgressItem *, TransactionItem *> mTransactionsToListviewItems;
     bool mWasLastShown;
 };

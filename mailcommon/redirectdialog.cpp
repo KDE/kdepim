@@ -61,7 +61,7 @@ class RedirectDialog::Private
 {
   public:
     Private( RedirectDialog *qq, RedirectDialog::SendMode mode )
-      : q( qq ), mSendMode( mode )
+      : q( qq ), mEditTo( 0 ), mSendMode( mode ), mComboboxIdentity( 0 ), mTransportCombobox( 0 )
     {
     }
 
@@ -71,9 +71,7 @@ class RedirectDialog::Private
     void slotAddressChanged( const QString & );
 
     RedirectDialog *q;
-    QLabel *mLabelTo;
     MessageComposer::ComposerLineEdit *mEditTo;
-    QPushButton *mBtnTo;
 
     QString mResentTo;
     RedirectDialog::SendMode mSendMode;
@@ -132,7 +130,7 @@ RedirectDialog::RedirectDialog( SendMode mode, QWidget *parent )
 
   QFrame *vbox = new KVBox( this );
   setMainWidget( vbox );
-  d->mLabelTo = new QLabel( i18n( "Select the recipient &addresses "
+  QLabel *LabelTo = new QLabel( i18n( "Select the recipient &addresses "
                                   "to redirect to:" ), vbox );
 
   KHBox *hbox = new KHBox( vbox );
@@ -141,19 +139,19 @@ RedirectDialog::RedirectDialog( SendMode mode, QWidget *parent )
   d->mEditTo->setRecentAddressConfig( KernelIf->config().data() );
   d->mEditTo->setMinimumWidth( 300 );
 
-  d->mBtnTo = new QPushButton( QString(), hbox );
-  d->mBtnTo->setIcon( KIcon( "help-contents" ) );
-  d->mBtnTo->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
-  d->mBtnTo->setMinimumSize( d->mBtnTo->sizeHint() * 1.2 );
-  d->mBtnTo->setToolTip( i18n( "Use the Address-Selection Dialog" ) );
-  d->mBtnTo->setWhatsThis( i18n( "This button opens a separate dialog "
+  QPushButton *BtnTo = new QPushButton( QString(), hbox );
+  BtnTo->setIcon( KIcon( "help-contents" ) );
+  BtnTo->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
+  BtnTo->setMinimumSize( BtnTo->sizeHint() * 1.2 );
+  BtnTo->setToolTip( i18n( "Use the Address-Selection Dialog" ) );
+  BtnTo->setWhatsThis( i18n( "This button opens a separate dialog "
                                  "where you can select recipients out "
                                  "of all available addresses." ) );
 
-  connect( d->mBtnTo, SIGNAL(clicked()), SLOT(slotAddressSelection()) );
+  connect( BtnTo, SIGNAL(clicked()), SLOT(slotAddressSelection()) );
 
   connect( d->mEditTo, SIGNAL(textChanged(QString)), SLOT(slotAddressChanged(QString)) );
-  d->mLabelTo->setBuddy( d->mBtnTo );
+  LabelTo->setBuddy( BtnTo );
   d->mEditTo->setFocus();
 
   hbox = new KHBox( vbox );

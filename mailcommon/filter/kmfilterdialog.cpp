@@ -297,6 +297,7 @@ I18N_NOOP( "<qt><p>Check this button to force the confirmation dialog to be "
 KMFilterDialog::KMFilterDialog( const QList<KActionCollection*> &actionCollection,
                                 QWidget *parent, bool createDummyFilter )
   : KDialog( parent ),
+    mFilter( 0 ),
     mDoNotClose( false ),
     mIgnoreFilterUpdates( true )
 {
