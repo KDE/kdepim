@@ -70,7 +70,7 @@
 #include <QPointer>
 #include <QPrinter>
 #include <QPrintDialog>
-
+#include <QClipboard>
 
 namespace ComposerEditorNG {
 
@@ -170,6 +170,7 @@ public:
     void _k_slotPrintPreview();
     void _k_changeAutoSpellChecking(bool);
     void _k_slotEditList();
+    void _k_slotPasteWithoutFormatting();
 
     QAction* getAction ( QWebPage::WebAction action ) const;
     QVariant evaluateJavascript(const QString& command);
@@ -1058,6 +1059,18 @@ void ComposerViewPrivate::_k_slotSpeakText()
     ktts.asyncCall(QLatin1String("say"), text, 0);
 }
 
+void ComposerViewPrivate::_k_slotPasteWithoutFormatting()
+{
+#ifndef QT_NO_CLIPBOARD
+    if ( q->hasFocus() ) {
+        const QString s = QApplication::clipboard()->text();
+        if ( !s.isEmpty() ) {
+            execCommand(QLatin1String("insertHTML"), s);
+        }
+    }
+#endif
+}
+
 ComposerView::ComposerView(QWidget *parent)
     : KWebView(parent),d(new ComposerViewPrivate(this))
 {
@@ -1212,6 +1225,9 @@ void ComposerView::contextMenuEvent(QContextMenuEvent* event)
     menu->addAction(page()->action(QWebPage::Cut));
     menu->addAction(page()->action(QWebPage::Copy));
     menu->addAction(page()->action(QWebPage::Paste));
+    QAction *pasteWithoutFormatting = menu->addAction(i18n("Paste Without Formatting"));
+    connect( pasteWithoutFormatting, SIGNAL(triggered(bool)), this, SLOT(_k_slotPasteWithoutFormatting()) );
+
     menu->addSeparator();
     if (!emptyDocument) {
         menu->addAction(page()->action(QWebPage::SelectAll));
