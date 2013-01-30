@@ -3,6 +3,7 @@
 
     Copyright (C) 2008-2010 Mehrdad Momeny <mehrdad.momeny@gmail.com>
     Copyright (C) 2008-2010 Golnaz Nilieh <g382nilieh@gmail.com>
+    Copyright (C) 2013 Laurent Montel <montel@kde.org>
 
     This program is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -24,14 +25,6 @@
 //krazy:excludeall=qmethods due to use of KStatusBar::showMessage()
 
 #include "toolbox.h"
-
-#include <kstatusbar.h>
-#include <kdebug.h>
-#include <kxmlguiwindow.h>
-#include <kmessagebox.h>
-#include <kdatetime.h>
-#include <kurl.h>
-
 #include "dbman.h"
 #include "entriescountdialog.h"
 #include "addeditblog.h"
@@ -39,12 +32,19 @@
 #include "bilbopost.h"
 #include "bilboblog.h"
 #include "catcheckbox.h"
+
 #include <KMenu>
 #include <KAction>
 #include <KToolInvocation>
 #include <settings.h>
 #include <QClipboard>
 #include <QTimer>
+#include <kstatusbar.h>
+#include <kdebug.h>
+#include <kxmlguiwindow.h>
+#include <kmessagebox.h>
+#include <kdatetime.h>
+#include <kurl.h>
 
 class Toolbox::Private
 {
@@ -362,7 +362,7 @@ void Toolbox::setFieldsValue( BilboPost* post )
     txtSummary->setPlainText( post->summary() );
 }
 
-QList< Category > Toolbox::selectedCategories()
+QList< Category > Toolbox::selectedCategories() const
 {
     kDebug();
     QList<Category> list;
@@ -374,7 +374,7 @@ QList< Category > Toolbox::selectedCategories()
     return list;
 }
 
-QStringList Toolbox::selectedCategoriesTitle()
+QStringList Toolbox::selectedCategoriesTitle() const
 {
     kDebug();
     QStringList list;
@@ -466,11 +466,10 @@ void Toolbox::reloadLocalPosts()
     kDebug();
     localEntriesTable->clearContents();
     localEntriesTable->setRowCount(0);
+
     QList<QVariantMap> localList = DBMan::self()->listLocalPosts();
-//     QList<QVariantMap>::ConstIterator it = localList.constBegin();
-//     QList<QVariantMap>::ConstIterator endIt = localList.constEnd();
-    int count = localList.count();
-    kDebug()<<count;
+    const int count = localList.count();
+
     for (int i=0; i < count; ++i){
         int newRow = localEntriesTable->rowCount();
         localEntriesTable->insertRow(newRow);
@@ -498,7 +497,7 @@ void Toolbox::slotLocalEntrySelected( int row, int column )
 void Toolbox::slotRemoveLocalEntry()
 {
     kDebug();
-    if(localEntriesTable->selectedItems().count() > 0) {
+    if(!localEntriesTable->selectedItems().isEmpty()) {
         if( KMessageBox::warningYesNo(this, i18n("Are you sure you want to remove the selected local entry?"))
             == KMessageBox::No )
             return;
@@ -556,7 +555,7 @@ void Toolbox::requestEntriesListContextMenu( const QPoint & pos )
 
 void Toolbox::openPostInBrowser()
 {
-    if( lstEntriesList->selectedItems().count() <= 0 )
+    if( !lstEntriesList->selectedItems().isEmpty() )
         return;
     BilboPost post = DBMan::self()->getPostInfo( lstEntriesList->currentItem()->data( 32 ).toInt() );
     QString url;
@@ -571,7 +570,7 @@ void Toolbox::openPostInBrowser()
 
 void Toolbox::copyPostTitle()
 {
-    if( lstEntriesList->selectedItems().count() > 0 )
+    if( !lstEntriesList->selectedItems().isEmpty() )
         QApplication::clipboard()->setText( lstEntriesList->currentItem()->text() );
 }
 

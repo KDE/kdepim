@@ -47,7 +47,7 @@ class AddEditBlog::Private
 {
 public:
     Private()
-    : wait(0)
+        : wait(0)
     {}
     Ui::AddEditBlogBase ui;
     KTabWidget *mainW;
@@ -63,7 +63,7 @@ public:
 };
 
 AddEditBlog::AddEditBlog( int blog_id, QWidget *parent, Qt::WindowFlags flags )
-        : KDialog( parent, flags ), d(new Private)
+    : KDialog( parent, flags ), d(new Private)
 {
     kDebug();
     d->mainW = new KTabWidget( this );
@@ -147,10 +147,10 @@ void AddEditBlog::autoConfigure()
     if ( d->ui.txtUrl->text().contains( QLatin1String("wordpress"), Qt::CaseInsensitive ) ) {
         d->ui.comboApi->setCurrentIndex( 3 );
 
-    textUrl = d->ui.txtUrl->text();
-    while (textUrl.endsWith(QChar('/'))) {
-        textUrl.remove(textUrl.length()-1, 1);
-    }
+        textUrl = d->ui.txtUrl->text();
+        while (textUrl.endsWith(QChar('/'))) {
+            textUrl.remove(textUrl.length()-1, 1);
+        }
         d->ui.txtUrl->setText( textUrl + "/xmlrpc.php" );
         fetchBlogId();
         return;
@@ -216,19 +216,19 @@ void AddEditBlog::gotHtml( KJob *job )
         d->mFetchAPITimer->deleteLater();
         d->ui.comboApi->setCurrentIndex( 3 );
 
-    textUrl = d->ui.txtUrl->text();
-    while (textUrl.endsWith(QChar('/'))) {
-        textUrl.remove(textUrl.length()-1, 1);
-    }
-    d->ui.txtUrl->setText( textUrl + "/xmlrpc.php" );
-    fetchBlogId();
-    return;
+        textUrl = d->ui.txtUrl->text();
+        while (textUrl.endsWith(QChar('/'))) {
+            textUrl.remove(textUrl.length()-1, 1);
+        }
+        d->ui.txtUrl->setText( textUrl + "/xmlrpc.php" );
+        fetchBlogId();
+        return;
     }
 
     // add MT for WordpressBuggy -> URL/xmlrpc.php exists
     textUrl = d->ui.txtUrl->text();
     while (textUrl.endsWith(QChar('/'))) {
-    textUrl.remove(textUrl.length()-1, 1);
+        textUrl.remove(textUrl.length()-1, 1);
     }
     KIO::StoredTransferJob *testXmlRpcJob = KIO::storedGet( QString(textUrl + QLatin1String("/xmlrpc.php")),
                                                             KIO::NoReload, KIO::HideProgressInfo );
@@ -249,10 +249,10 @@ void AddEditBlog::gotXmlRpcTest( KJob *job )
         return;
     }
     KMessageBox::information(this, i18n("The program could not guess the API of your blog, \
-but has found an XMLRPC interface and is trying to use it.\
-\nThe MovableType API is assumed for now; choose another API if you know the server supports it."));
-    d->ui.comboApi->setCurrentIndex( 2 );
-    QString textUrl = d->ui.txtUrl->text();
+                                        but has found an XMLRPC interface and is trying to use it.\
+                                        \nThe MovableType API is assumed for now; choose another API if you know the server supports it."));
+                             d->ui.comboApi->setCurrentIndex( 2 );
+            QString textUrl = d->ui.txtUrl->text();
     while (textUrl.endsWith(QChar('/'))) {
         textUrl.remove(textUrl.length()-1, 1);
     }
@@ -324,8 +324,8 @@ void AddEditBlog::handleFetchIDTimeout()
     d->ui.txtId->setEnabled( true );
     hideWaitWidget();
     KMessageBox::error( this, i18n( "Fetching the blog id timed out. Check your Internet connection,\
-and your homepage URL, username or password.\nNote that the URL has to contain \"http://\"\
-\nIf you are using a self-hosted Wordpress blog, you have to enable Remote Publishing in its configuration." ) );
+                                    and your homepage URL, username or password.\nNote that the URL has to contain \"http://\"\
+                                    \nIf you are using a self-hosted Wordpress blog, you have to enable Remote Publishing in its configuration." ) );
 }
 
 void AddEditBlog::handleFetchAPITimeout()
@@ -337,8 +337,8 @@ void AddEditBlog::handleFetchAPITimeout()
     d->ui.txtId->setEnabled( true );
     d->ui.txtId->setText( QString() );
     KMessageBox::sorry( this, i18n( "The API guess function has failed, \
-please check your Internet connection. Otherwise, you have to set the API type manually on the Advanced tab." ),
-                        i18n( "Auto Configuration Failed" ) );
+                                    please check your Internet connection. Otherwise, you have to set the API type manually on the Advanced tab." ),
+                                    i18n( "Auto Configuration Failed" ) );
 }
 
 void AddEditBlog::handleFetchError( KBlog::Blog::ErrorType type, const QString & errorMsg )
@@ -500,61 +500,61 @@ void AddEditBlog::setSupportedFeatures( BilboBlog::ApiType api )
     d->ui.featureCreateCategory->setStyleSheet( noStyle );
 
     switch( api ) {
-        case BilboBlog::BLOGGER1_API:
-            d->ui.featureUploadMedia->setText( noText );
-            d->ui.featureUploadMedia->setStyleSheet( noStyle );
-            d->ui.featureCategories->setText( noText );
-            d->ui.featureCategories->setStyleSheet( noStyle );
-            d->ui.featureMultipagedPosts->setText( noText );
-            d->ui.featureMultipagedPosts->setStyleSheet( noStyle );
-            d->ui.featureCreateCategory->setText( noText );
-            d->ui.featureTags->setText( noText );
-            d->ui.featureTags->setStyleSheet( noStyle );
-            break;
-        case BilboBlog::METAWEBLOG_API:
-            d->ui.featureUploadMedia->setText( yesText );
-            d->ui.featureUploadMedia->setStyleSheet( yesStyle );
-            d->ui.featureCategories->setText( noText );
-            d->ui.featureCategories->setStyleSheet( noStyle );
-            d->ui.featureMultipagedPosts->setText( noText );
-            d->ui.featureMultipagedPosts->setStyleSheet( noStyle );
-            d->ui.featureCreateCategory->setText( noText );
-            d->ui.featureTags->setText( noText );
-            d->ui.featureTags->setStyleSheet( noStyle );
-            break;
-        case BilboBlog::MOVABLETYPE_API:
-            d->ui.featureUploadMedia->setText( yesText );
-            d->ui.featureUploadMedia->setStyleSheet( yesStyle );
-            d->ui.featureCategories->setText( yesText );
-            d->ui.featureCategories->setStyleSheet( yesStyle );
-            d->ui.featureMultipagedPosts->setText( yesText );
-            d->ui.featureMultipagedPosts->setStyleSheet( yesStyle );
-            d->ui.featureCreateCategory->setText( noText );
-            d->ui.featureTags->setText( yesText );
-            d->ui.featureTags->setStyleSheet( yesStyle );
-            break;
-        case BilboBlog::WORDPRESSBUGGY_API:
-            d->ui.featureUploadMedia->setText( yesText );
-            d->ui.featureUploadMedia->setStyleSheet( yesStyle );
-            d->ui.featureCategories->setText( yesText );
-            d->ui.featureCategories->setStyleSheet( yesStyle );
-            d->ui.featureMultipagedPosts->setText( yesText );
-            d->ui.featureMultipagedPosts->setStyleSheet( yesStyle );
-            d->ui.featureCreateCategory->setText( notYetText );
-            d->ui.featureTags->setText( yesText );
-            d->ui.featureTags->setStyleSheet( yesStyle );
-            break;
-        case BilboBlog::GDATA_API:
-            d->ui.featureUploadMedia->setText( noText );
-            d->ui.featureUploadMedia->setStyleSheet( noStyle );
-            d->ui.featureCategories->setText( noText );
-            d->ui.featureCategories->setStyleSheet( noStyle );
-            d->ui.featureMultipagedPosts->setText( noText );
-            d->ui.featureMultipagedPosts->setStyleSheet( noStyle );
-            d->ui.featureCreateCategory->setText( noText );
-            d->ui.featureTags->setText( yesText );
-            d->ui.featureTags->setStyleSheet( yesStyle );
-            break;
+    case BilboBlog::BLOGGER1_API:
+        d->ui.featureUploadMedia->setText( noText );
+        d->ui.featureUploadMedia->setStyleSheet( noStyle );
+        d->ui.featureCategories->setText( noText );
+        d->ui.featureCategories->setStyleSheet( noStyle );
+        d->ui.featureMultipagedPosts->setText( noText );
+        d->ui.featureMultipagedPosts->setStyleSheet( noStyle );
+        d->ui.featureCreateCategory->setText( noText );
+        d->ui.featureTags->setText( noText );
+        d->ui.featureTags->setStyleSheet( noStyle );
+        break;
+    case BilboBlog::METAWEBLOG_API:
+        d->ui.featureUploadMedia->setText( yesText );
+        d->ui.featureUploadMedia->setStyleSheet( yesStyle );
+        d->ui.featureCategories->setText( noText );
+        d->ui.featureCategories->setStyleSheet( noStyle );
+        d->ui.featureMultipagedPosts->setText( noText );
+        d->ui.featureMultipagedPosts->setStyleSheet( noStyle );
+        d->ui.featureCreateCategory->setText( noText );
+        d->ui.featureTags->setText( noText );
+        d->ui.featureTags->setStyleSheet( noStyle );
+        break;
+    case BilboBlog::MOVABLETYPE_API:
+        d->ui.featureUploadMedia->setText( yesText );
+        d->ui.featureUploadMedia->setStyleSheet( yesStyle );
+        d->ui.featureCategories->setText( yesText );
+        d->ui.featureCategories->setStyleSheet( yesStyle );
+        d->ui.featureMultipagedPosts->setText( yesText );
+        d->ui.featureMultipagedPosts->setStyleSheet( yesStyle );
+        d->ui.featureCreateCategory->setText( noText );
+        d->ui.featureTags->setText( yesText );
+        d->ui.featureTags->setStyleSheet( yesStyle );
+        break;
+    case BilboBlog::WORDPRESSBUGGY_API:
+        d->ui.featureUploadMedia->setText( yesText );
+        d->ui.featureUploadMedia->setStyleSheet( yesStyle );
+        d->ui.featureCategories->setText( yesText );
+        d->ui.featureCategories->setStyleSheet( yesStyle );
+        d->ui.featureMultipagedPosts->setText( yesText );
+        d->ui.featureMultipagedPosts->setStyleSheet( yesStyle );
+        d->ui.featureCreateCategory->setText( notYetText );
+        d->ui.featureTags->setText( yesText );
+        d->ui.featureTags->setStyleSheet( yesStyle );
+        break;
+    case BilboBlog::GDATA_API:
+        d->ui.featureUploadMedia->setText( noText );
+        d->ui.featureUploadMedia->setStyleSheet( noStyle );
+        d->ui.featureCategories->setText( noText );
+        d->ui.featureCategories->setStyleSheet( noStyle );
+        d->ui.featureMultipagedPosts->setText( noText );
+        d->ui.featureMultipagedPosts->setStyleSheet( noStyle );
+        d->ui.featureCreateCategory->setText( noText );
+        d->ui.featureTags->setText( yesText );
+        d->ui.featureTags->setStyleSheet( yesStyle );
+        break;
     };
 }
 
@@ -570,10 +570,10 @@ void AddEditBlog::slotButtonClicked( int button )
     if ( button == KDialog::Ok ) {
         if ( d->bBlog->blogid().isEmpty() && d->ui.txtId->text().isEmpty() ) {
             KMessageBox::sorry( this, i18n( "Blog ID has not yet been retrieved.\
-\nYou can fetch the blog ID by clicking on \"Auto Configure\" or the \"Fetch ID\" button; otherwise, you have\
- to insert your blog ID manually." )
+                                            \nYou can fetch the blog ID by clicking on \"Auto Configure\" or the \"Fetch ID\" button; otherwise, you have\
+                                            to insert your blog ID manually." )
                                             );
-            return;
+                    return;
         }
         d->bBlog->setApi(( BilboBlog::ApiType )d->ui.comboApi->currentIndex() );
         d->bBlog->setDirection(( Qt::LayoutDirection )d->ui.comboDir->currentIndex() );
