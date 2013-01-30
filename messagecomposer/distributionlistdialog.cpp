@@ -48,7 +48,7 @@ class DistributionListItem : public QTreeWidgetItem
 {
   public:
     DistributionListItem( QTreeWidget *tree )
-      : QTreeWidgetItem( tree )
+      : QTreeWidgetItem( tree ), mIsTransient(false)
     {
       setFlags( flags() | Qt::ItemIsUserCheckable );
     }
