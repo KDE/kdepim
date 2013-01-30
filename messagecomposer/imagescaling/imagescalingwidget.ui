@@ -329,7 +329,7 @@
           <item>
            <widget class="QCheckBox" name="resizeImageWithFormats">
             <property name="text">
-             <string>Resize all images with one of this format</string>
+             <string>Resize all images with one of these formats</string>
             </property>
            </widget>
           </item>
