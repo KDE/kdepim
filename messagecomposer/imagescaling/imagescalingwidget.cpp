@@ -65,6 +65,7 @@ ImageScalingWidget::ImageScalingWidget(QWidget *parent)
   connect(ui->doNotResizePattern,SIGNAL(textChanged(QString)),SIGNAL(changed()));
   connect(ui->resizeImageWithFormatsType,SIGNAL(textChanged(QString)),SIGNAL(changed()));
   connect(ui->resizeImageWithFormats,SIGNAL(clicked(bool)),SIGNAL(changed()));
+  connect(ui->resizeImageWithFormats,SIGNAL(clicked(bool)),ui->resizeImageWithFormatsType,SLOT(setEnabled(bool)));
   ui->resizeImageWithFormatsType->setEnabled(false);
 
   ui->pattern->setEnabled(false);
@@ -217,6 +218,8 @@ void ImageScalingWidget::updateSettings()
     ui->doNotResizePattern->setText(MessageComposer::MessageComposerSettings::self()->doNotResizeEmailsPattern());
     ui->resizeEmailsPattern->setText(MessageComposer::MessageComposerSettings::self()->resizeEmailsPattern());
 
+    ui->resizeImageWithFormats->setChecked(MessageComposer::MessageComposerSettings::self()->resizeImagesWithFormats());
+    ui->resizeImageWithFormatsType->setText(MessageComposer::MessageComposerSettings::self()->resizeImagesWithFormatsType());
 
     updateFilterSourceTypeSettings();
     updateEmailsFilterTypeSettings();
@@ -315,6 +318,8 @@ void ImageScalingWidget::writeConfig()
   MessageComposer::MessageComposerSettings::self()->setResizeEmailsPattern(ui->resizeEmailsPattern->text());
   MessageComposer::MessageComposerSettings::self()->setFilterRecipientType(mRecipientFilterGroup->checkedId());
 
+  MessageComposer::MessageComposerSettings::self()->setResizeImagesWithFormats(ui->resizeImageWithFormats->isChecked());
+  MessageComposer::MessageComposerSettings::self()->setResizeImagesWithFormatsType(ui->resizeImageWithFormatsType->text());
   mWasChanged = false;
 }
 
