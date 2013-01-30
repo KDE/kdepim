@@ -47,15 +47,29 @@ bool Utils::resizeImage(MessageCore::AttachmentPart::Ptr part)
         }
     }
 
-    if (MessageComposer::MessageComposerSettings::self()->skipImageLowerSizeEnabled() &&
-            (part->size() > MessageComposer::MessageComposerSettings::self()->skipImageLowerSize() *1024)) {
-        if (part->mimeType() == "image/gif" ||
-                part->mimeType() == "image/jpeg" ||
-                part->mimeType() == "image/png" ) {
-            return true;
+    if (MessageComposer::MessageComposerSettings::self()->resizeImagesWithFormats()) {
+        const QString formatsType = MessageComposer::MessageComposerSettings::self()->resizeImagesWithFormatsType();
+        if (!formatsType.isEmpty()) {
+            //TODO
         }
     }
-    return false;
+
+    if (MessageComposer::MessageComposerSettings::self()->skipImageLowerSizeEnabled() ) {
+        if (part->size() > MessageComposer::MessageComposerSettings::self()->skipImageLowerSize() *1024) {
+            if (part->mimeType() == "image/gif" ||
+                part->mimeType() == "image/jpeg" ||
+                part->mimeType() == "image/png" ) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+
+    return true;
 }
 
 void Utils::changeFileName(MessageCore::AttachmentPart::Ptr part)
