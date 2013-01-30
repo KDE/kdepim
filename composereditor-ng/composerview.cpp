@@ -1213,8 +1213,10 @@ void ComposerView::contextMenuEvent(QContextMenuEvent* event)
     menu->addAction(page()->action(QWebPage::Copy));
     menu->addAction(page()->action(QWebPage::Paste));
     menu->addSeparator();
-    menu->addAction(page()->action(QWebPage::SelectAll));
-    menu->addSeparator();
+    if (!emptyDocument) {
+        menu->addAction(page()->action(QWebPage::SelectAll));
+        menu->addSeparator();
+    }
     if (!emptyDocument && d->action_find) {
         menu->addAction(d->action_find);
         menu->addSeparator();

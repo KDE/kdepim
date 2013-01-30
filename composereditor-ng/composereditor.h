@@ -91,7 +91,10 @@ public:
      */
     void setHtmlContent( const QString& html );
 
-
+    /**
+     * @brief enableRichText
+     * @return true if we use richtext mode. Otherwise return false.
+     */
     bool enableRichText() const;
 
     /**
