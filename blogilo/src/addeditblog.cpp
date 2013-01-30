@@ -369,7 +369,8 @@ void AddEditBlog::fetchedBlogId( const QList< QMap < QString , QString > > & lis
         int i=0;
         blogsList->setColumnCount(4);
         QStringList headers;
-        headers<<"Title"<<"Url";
+        headers<<i18n("Title")<<i18n("Url");
+
         blogsList->setHorizontalHeaderLabels(headers);
         blogsList->setColumnHidden(2, true);
         blogsList->setColumnHidden(3, true);

@@ -444,8 +444,7 @@ void Toolbox::unCheckCatList()
 
 void Toolbox::setButtonsIcon()
 {
-//     btnEntriesReload->setIcon( KIcon( "view-refresh" ) );
-    btnEntriesUpdate->setIcon( KIcon( "arrow-down" ) );
+    btnEntriesUpdate->setIcon( KIcon( "view-refresh" ) );
     btnEntriesRemove->setIcon( KIcon( "list-remove" ) );
     btnEntriesClear->setIcon( KIcon( "edit-clear" ) );
     btnCatReload->setIcon( KIcon( "view-refresh" ) );
