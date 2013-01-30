@@ -360,7 +360,7 @@ void ConfigureThemesDialog::Private::newThemeButtonClicked()
   mThemeList->setCurrentItem( item );
   mEditor->editTheme( item->theme() );
 
-  mDeleteThemeButton->setEnabled( item && !item->theme()->readOnly() );
+  mDeleteThemeButton->setEnabled( !item->theme()->readOnly() );
   mExportThemeButton->setEnabled( item );
   mCloneThemeButton->setEnabled(numberOfSelectedItem == 1);
 }
