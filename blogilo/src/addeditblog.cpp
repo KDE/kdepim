@@ -102,7 +102,7 @@ AddEditBlog::AddEditBlog( int blog_id, QWidget *parent, Qt::WindowFlags flags )
         d->ui.txtTitle->setEnabled(true);
     } else {
         d->bBlog = new BilboBlog( this );
-        d->bBlog->setBlogId( 0 );
+        d->bBlog->setBlogId( QString() );
         this->enableButtonOk( false );
         d->ui.txtTitle->setEnabled(false);
     }
@@ -148,17 +148,17 @@ void AddEditBlog::autoConfigure()
         d->ui.comboApi->setCurrentIndex( 3 );
 
         textUrl = d->ui.txtUrl->text();
-        while (textUrl.endsWith(QChar('/'))) {
+        while (textUrl.endsWith(QLatin1Char('/'))) {
             textUrl.remove(textUrl.length()-1, 1);
         }
-        d->ui.txtUrl->setText( textUrl + "/xmlrpc.php" );
+        d->ui.txtUrl->setText( textUrl + QLatin1String("/xmlrpc.php") );
         fetchBlogId();
         return;
     }
     if ( d->ui.txtUrl->text().contains( QLatin1String("livejournal"), Qt::CaseInsensitive ) ) {
         d->ui.comboApi->setCurrentIndex( 0 );
         d->tmpBlogUrl = d->ui.txtUrl->text();
-        d->ui.txtUrl->setText( "http://www.livejournal.com/interface/blogger/" );
+        d->ui.txtUrl->setText( QLatin1String("http://www.livejournal.com/interface/blogger/") );
         d->ui.txtId->setText( d->ui.txtUser->text() );
         d->ui.txtTitle->setText( d->ui.txtUser->text() );
         hideWaitWidget();
@@ -188,46 +188,46 @@ void AddEditBlog::gotHtml( KJob *job )
     job->deleteLater();
 
     QString textUrl;
-    QRegExp rxGData( QString( "content='blogger' name='generator'" ) );
+    QRegExp rxGData( QString::fromLatin1( "content='blogger' name='generator'" ) );
     if ( rxGData.indexIn( httpData ) != -1 ) {
         kDebug() << "content='blogger' name='generator' matched";
         d->mFetchAPITimer->deleteLater();
         d->ui.comboApi->setCurrentIndex( 4 );
-        QRegExp rxBlogId( QString( "BlogID=(\\d+)" ) );
+        QRegExp rxBlogId( QString::fromLatin1("BlogID=(\\d+)" ) );
         d->ui.txtId->setText( rxBlogId.cap( 1 ) );
         hideWaitWidget();
         return;
     }
 
-    QRegExp rxLiveJournal( QString( "rel=\"openid.server\" href=\"http://www.livejournal.com/openid/server.bml\"" ) );
+    QRegExp rxLiveJournal( QString::fromLatin1( "rel=\"openid.server\" href=\"http://www.livejournal.com/openid/server.bml\"" ) );
     if ( rxLiveJournal.indexIn( httpData ) != -1 ) {
         kDebug() << " rel=\"openid.server\" href=\"http://www.livejournal.com/openid/server.bml\" matched";
         d->mFetchAPITimer->deleteLater();
         d->ui.comboApi->setCurrentIndex( 0 );
-        d->ui.txtUrl->setText( "http://www.liverjournal.com/interface/blogger/" );
+        d->ui.txtUrl->setText( QLatin1String("http://www.liverjournal.com/interface/blogger/") );
         d->ui.txtId->setText( d->ui.txtUser->text() );
         hideWaitWidget();
         return;
     }
 
-    QRegExp rxWordpress( QString( "name=\"generator\" content=\"WordPress" ) );
+    QRegExp rxWordpress( QString::fromLatin1( "name=\"generator\" content=\"WordPress" ) );
     if ( rxWordpress.indexIn( httpData ) != -1 ) {
         kDebug() << "name=\"generator\" content=\"WordPress matched";
         d->mFetchAPITimer->deleteLater();
         d->ui.comboApi->setCurrentIndex( 3 );
 
         textUrl = d->ui.txtUrl->text();
-        while (textUrl.endsWith(QChar('/'))) {
+        while (textUrl.endsWith(QLatin1Char('/'))) {
             textUrl.remove(textUrl.length()-1, 1);
         }
-        d->ui.txtUrl->setText( textUrl + "/xmlrpc.php" );
+        d->ui.txtUrl->setText( textUrl + QLatin1String("/xmlrpc.php") );
         fetchBlogId();
         return;
     }
 
     // add MT for WordpressBuggy -> URL/xmlrpc.php exists
     textUrl = d->ui.txtUrl->text();
-    while (textUrl.endsWith(QChar('/'))) {
+    while (textUrl.endsWith(QLatin1Char('/'))) {
         textUrl.remove(textUrl.length()-1, 1);
     }
     KIO::StoredTransferJob *testXmlRpcJob = KIO::storedGet( QString(textUrl + QLatin1String("/xmlrpc.php")),
@@ -253,10 +253,10 @@ void AddEditBlog::gotXmlRpcTest( KJob *job )
                                         \nThe MovableType API is assumed for now; choose another API if you know the server supports it."));
                              d->ui.comboApi->setCurrentIndex( 2 );
             QString textUrl = d->ui.txtUrl->text();
-    while (textUrl.endsWith(QChar('/'))) {
+    while (textUrl.endsWith(QLatin1Char('/'))) {
         textUrl.remove(textUrl.length()-1, 1);
     }
-    d->ui.txtUrl->setText( textUrl + "/xmlrpc.php" );
+    d->ui.txtUrl->setText( textUrl + QLatin1String("/xmlrpc.php") );
     fetchBlogId();
 }
 
@@ -375,12 +375,12 @@ void AddEditBlog::fetchedBlogId( const QList< QMap < QString , QString > > & lis
         blogsList->setColumnHidden(2, true);
         blogsList->setColumnHidden(3, true);
         for(;it != endIt; ++it){
-            kDebug()<<it->value("title");
+            kDebug()<<it->value(QLatin1String("title"));
             blogsList->insertRow(i);
-            blogsList->setCellWidget(i, 0, new QLabel( it->value("title")) );
-            blogsList->setCellWidget(i, 1, new QLabel( it->value("url")) );
-            blogsList->setCellWidget(i, 2, new QLabel( it->value("id")) );
-            blogsList->setCellWidget(i, 3, new QLabel( it->value("apiUrl")) );
+            blogsList->setCellWidget(i, 0, new QLabel( it->value(QLatin1String("title"))) );
+            blogsList->setCellWidget(i, 1, new QLabel( it->value(QLatin1String("url"))) );
+            blogsList->setCellWidget(i, 2, new QLabel( it->value(QLatin1String("id"))) );
+            blogsList->setCellWidget(i, 3, new QLabel( it->value(QLatin1String("apiUrl"))) );
             ++i;
         }
         blogsDialog->setMainWidget(blogsList);
@@ -401,10 +401,10 @@ void AddEditBlog::fetchedBlogId( const QList< QMap < QString , QString > > & lis
         }
         delete blogsDialog;
     } else if (list.count() > 0) {
-        blogId = list.constBegin()->value("id");
-        blogName = list.constBegin()->value("title");
-        blogUrl = list.constBegin()->value("url");
-        apiUrl = list.constBegin()->value("apiUrl");
+        blogId = list.constBegin()->value(QLatin1String("id"));
+        blogName = list.constBegin()->value(QLatin1String("title"));
+        blogUrl = list.constBegin()->value(QLatin1String("url"));
+        apiUrl = list.constBegin()->value(QLatin1String("apiUrl"));
     } else {
         KMessageBox::sorry(this, i18n("Sorry, No blog found with the specified account info."));
         return;
@@ -485,9 +485,9 @@ AddEditBlog::~AddEditBlog()
 
 void AddEditBlog::setSupportedFeatures( BilboBlog::ApiType api )
 {
-    const QString yesStyle = "QLabel{color: green;}";
+    const QString yesStyle = QLatin1String("QLabel{color: green;}");
     const QString yesText = i18nc( "Supported feature or Not", "Yes" );
-    const QString noStyle = "QLabel{color: red;}";
+    const QString noStyle = QLatin1String("QLabel{color: red;}");
     const QString noText = i18nc( "Supported feature or Not", "No, API does not support it" );
     const QString notYetText = i18nc( "Supported feature or Not", "No, Blogilo does not yet support it" );
 

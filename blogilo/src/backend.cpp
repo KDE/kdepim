@@ -210,16 +210,14 @@ void Backend::uploadMedia( BilboMedia * media )
             KIO::TransferJob *job = KIO::get( media->localUrl(), KIO::Reload, KIO::HideProgressInfo);
             if( !KIO::NetAccess::synchronousRun(job, 0, &data) ){
                 kError()<<"Job error: " << job->errorString();
-                tmp = i18n( "Uploading media failed: Cannot read the media file,\
- please check if it exists. Path: %1", media->localUrl().pathOrUrl() );
+                tmp = i18n( "Uploading media failed: Cannot read the media file, please check if it exists. Path: %1", media->localUrl().pathOrUrl() );
                 kDebug() << "Emitting sigError...";
                 Q_EMIT sigMediaError( tmp, media );
             }
 
             if ( data.count() == 0 ) {
                 kError() << "Cannot read the media file, please check if it exists.";
-                tmp = i18n( "Uploading media failed: Cannot read the media file,\
- please check if it exists. Path: %1", media->localUrl().pathOrUrl() );
+                tmp = i18n( "Uploading media failed: Cannot read the media file, please check if it exists. Path: %1", media->localUrl().pathOrUrl() );
                 kDebug() << "Emitting sigError...";
                 Q_EMIT sigMediaError( tmp, media );
                 return;
@@ -419,25 +417,25 @@ void Backend::savePostInDbAndEmitResult( KBlog::BlogPost *post )
 KBlog::BlogPost* Backend::preparePost( KBlog::BlogPost* post )
 {
     QString content = post->content();
-    QString html1 = QString();
+    QString html1;
     int i = 0;
     int found = content.indexOf("<pre>", i, Qt::CaseInsensitive);
     while ( found != -1 )
     {
-    html1 += content.mid( i, found-i).remove('\n');
-    i = found;
-    found = content.indexOf("</pre>", i, Qt::CaseInsensitive);
-    if ( found != -1 ) {
-        html1 += content.mid( i, found+5-i);
-        i = found + 5;
-        found = content.indexOf("<pre>", i, Qt::CaseInsensitive);
-    } else {
-        html1 += content.mid( i, content.length()-i );
-        i = -1;
-    }
+        html1 += content.mid( i, found-i).remove('\n');
+        i = found;
+        found = content.indexOf("</pre>", i, Qt::CaseInsensitive);
+        if ( found != -1 ) {
+            html1 += content.mid( i, found+5-i);
+            i = found + 5;
+            found = content.indexOf("<pre>", i, Qt::CaseInsensitive);
+        } else {
+            html1 += content.mid( i, content.length()-i );
+            i = -1;
+        }
     }
     if ( i != -1 )
-    html1 += content.mid( i, content.length()-i).remove('\n');
+        html1 += content.mid( i, content.length()-i).remove('\n');
     post->setContent( html1 );
 
     content = post->additionalContent();
@@ -446,20 +444,20 @@ KBlog::BlogPost* Backend::preparePost( KBlog::BlogPost* post )
     found = content.indexOf("<pre>", i, Qt::CaseInsensitive);
     while ( found != -1 )
     {
-    html2 += content.mid( i, found-i).remove('\n');
-    i = found;
-    found = content.indexOf("</pre>", i, Qt::CaseInsensitive);
-    if ( found != -1 ) {
-        html2 += content.mid( i, found+5-i);
-        i = found + 5;
-        found = content.indexOf("<pre>", i, Qt::CaseInsensitive);
-    } else {
-        html2 += content.mid( i, content.length()-i );
-        i = -1;
-    }
+        html2 += content.mid( i, found-i).remove('\n');
+        i = found;
+        found = content.indexOf("</pre>", i, Qt::CaseInsensitive);
+        if ( found != -1 ) {
+            html2 += content.mid( i, found+5-i);
+            i = found + 5;
+            found = content.indexOf("<pre>", i, Qt::CaseInsensitive);
+        } else {
+            html2 += content.mid( i, content.length()-i );
+            i = -1;
+        }
     }
     if ( i != -1 )
-    html2 += content.mid( i, content.length()-i).remove('\n');
+        html2 += content.mid( i, content.length()-i).remove('\n');
     post->setAdditionalContent( html2 );
 
     //the following two lines are replaced by the above code, because '\n' characters shouldn't
@@ -470,14 +468,14 @@ KBlog::BlogPost* Backend::preparePost( KBlog::BlogPost* post )
     if ( d->bBlog->api() == BilboBlog::MOVABLETYPE_API || d->bBlog->api() == BilboBlog::WORDPRESSBUGGY_API ) {
         QStringList content = post->content().split(splitRX);
         if( content.count() == 2 ) {
-            post->setContent(content[0]);
-            post->setAdditionalContent( content[1] );
+            post->setContent(content.at(0));
+            post->setAdditionalContent( content.at(1) );
         }
     }
-//     if( d->bBlog->api() == BilboBlog::MOVABLETYPE_API && post.categoryList().count() > 0 ) {
-//         mCreatePostCategories = post.categoryList();
-//         categoryListNotSet = true;
-//     }
+    //     if( d->bBlog->api() == BilboBlog::MOVABLETYPE_API && post.categoryList().count() > 0 ) {
+    //         mCreatePostCategories = post.categoryList();
+    //         categoryListNotSet = true;
+    //     }
     return post;//.toKBlogPost();
 }
 

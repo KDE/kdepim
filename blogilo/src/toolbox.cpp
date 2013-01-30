@@ -184,13 +184,13 @@ void Toolbox::slotLoadEntriesFromDB( int blog_id )
     listEntries = DBMan::self()->listPostsInfo( blog_id );
     int count = listEntries.count();
     for ( int i=0; i < count; ++i ) {
-        QListWidgetItem *lstItem = new QListWidgetItem( listEntries[i].value("title").toString() );
-        lstItem->setToolTip(listEntries[i].value("c_time").toDateTime().toString());
-        if(listEntries[i].value("is_private").toBool()) {
+        QListWidgetItem *lstItem = new QListWidgetItem( listEntries[i].value(QLatin1String("title")).toString() );
+        lstItem->setToolTip(listEntries[i].value(QLatin1String("c_time")).toDateTime().toString());
+        if(listEntries[i].value(QLatin1String("is_private")).toBool()) {
             lstItem->setForeground(QBrush(Qt::blue));
             lstItem->setToolTip(i18n("%1 (Draft)",lstItem->toolTip()));
         }
-        lstItem->setData( 32, listEntries[i].value("id").toInt() );
+        lstItem->setData( 32, listEntries[i].value(QLatin1String("id")).toInt() );
         lstEntriesList->addItem( lstItem );
     }
     d->statusbar->showMessage( i18n( "List of entries received." ), STATUSTIMEOUT );
@@ -340,7 +340,7 @@ void Toolbox::setFieldsValue( BilboPost* post )
     }
 
     setSelectedCategories( post->categories() );
-    txtCatTags->setText( post->tags().join( ", " ) );
+    txtCatTags->setText( post->tags().join( QLatin1String(", ") ) );
 //     kDebug() << "Post status is: " << post->status();
     if ( post->status() == KBlog::BlogPost::New )
         comboOptionsStatus->setCurrentIndex( 2 );
@@ -444,20 +444,13 @@ void Toolbox::unCheckCatList()
 
 void Toolbox::setButtonsIcon()
 {
-    btnEntriesUpdate->setIcon( KIcon( "view-refresh" ) );
-    btnEntriesRemove->setIcon( KIcon( "list-remove" ) );
-    btnEntriesClear->setIcon( KIcon( "edit-clear" ) );
-    btnCatReload->setIcon( KIcon( "view-refresh" ) );
-    btnCatAdd->setIcon( KIcon( "list-add" ) );
-    btnLocalRemove->setIcon( KIcon( "list-remove" ) );
+    btnEntriesUpdate->setIcon( KIcon( QLatin1String("view-refresh") ) );
+    btnEntriesRemove->setIcon( KIcon( QLatin1String("list-remove") ) );
+    btnEntriesClear->setIcon( KIcon( QLatin1String("edit-clear") ) );
+    btnCatReload->setIcon( KIcon( QLatin1String("view-refresh") ) );
+    btnCatAdd->setIcon( KIcon( QLatin1String("list-add") ) );
+    btnLocalRemove->setIcon( KIcon( QLatin1String("list-remove") ) );
     ///TODO Add option for selecting only text or only Icon for Toolbox buttons!
-//     btnEntriesReload->setText( QString() );
-//     btnEntriesUpdate->setText( QString() );
-//     btnEntriesRemove->setText( QString() );
-//     btnEntriesClear->setText( QString() );
-//     btnCatReload->setText( QString() );
-//     btnCatAdd->setText( QString() );
-//     btnLocalRemove->setText( QString() );
 }
 
 void Toolbox::reloadLocalPosts()
@@ -472,15 +465,15 @@ void Toolbox::reloadLocalPosts()
     for (int i=0; i < count; ++i){
         int newRow = localEntriesTable->rowCount();
         localEntriesTable->insertRow(newRow);
-        QString postTitle = localList.at(i).value( "post_title" ).toString();
+        QString postTitle = localList.at(i).value( QLatin1String("post_title") ).toString();
         QTableWidgetItem *item1 = new QTableWidgetItem( postTitle );
         item1->setToolTip( postTitle );
-        item1->setData(32, localList.at(i).value( "local_id" ).toInt());//Post_id
+        item1->setData(32, localList.at(i).value( QLatin1String("local_id") ).toInt());//Post_id
         localEntriesTable->setItem( newRow, 0, item1 );
-        QString blogTitle = localList.at(i).value( "blog_title" ).toString();
+        QString blogTitle = localList.at(i).value( QLatin1String("blog_title") ).toString();
         QTableWidgetItem *item2 = new QTableWidgetItem( blogTitle );
         item2->setToolTip( blogTitle );
-        item2->setData(32, localList.at(i).value( "blog_id" ).toInt());//blog_id
+        item2->setData(32, localList.at(i).value( QLatin1String("blog_id") ).toInt());//blog_id
         localEntriesTable->setItem( newRow, 1, item2 );
     }
 }
@@ -536,13 +529,13 @@ void Toolbox::requestEntriesListContextMenu( const QPoint & pos )
 {
     Q_UNUSED(pos);
     KMenu *entriesContextMenu = new KMenu;
-    KAction *actEntriesOpenInBrowser = new KAction( KIcon("applications-internet"),
+    KAction *actEntriesOpenInBrowser = new KAction( KIcon(QLatin1String("applications-internet")),
                                                     i18n("Open in browser"), entriesContextMenu );
     connect( actEntriesOpenInBrowser, SIGNAL(triggered()), this, SLOT(openPostInBrowser()) );
-    KAction *actEntriesCopyUrl = new KAction( KIcon("edit-copy"),
+    KAction *actEntriesCopyUrl = new KAction( KIcon(QLatin1String("edit-copy")),
                                               i18n("Copy URL"), entriesContextMenu );
     connect( actEntriesCopyUrl, SIGNAL(triggered(bool)), this, SLOT(slotEntriesCopyUrl()) );
-    KAction *actEntriesCopyTitle = new KAction( KIcon("edit-copy"),
+    KAction *actEntriesCopyTitle = new KAction( KIcon(QLatin1String("edit-copy")),
                                                 i18n("Copy title"), entriesContextMenu );
     connect( actEntriesCopyTitle, SIGNAL(triggered(bool)), this, SLOT(copyPostTitle()) );
     entriesContextMenu->addAction( actEntriesOpenInBrowser );

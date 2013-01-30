@@ -79,8 +79,6 @@ MainWindow::MainWindow()
     toolboxDock = new QDockWidget( i18n( "Toolbox" ), this );
     toolboxDock->setAllowedAreas( Qt::RightDockWidgetArea | Qt::LeftDockWidgetArea );
     toolboxDock->setFeatures( QDockWidget::AllDockWidgetFeatures );
-    toolboxDock->setObjectName( "dock_toolbox" );
-    toolbox->setObjectName( "toolbox" );
     toolboxDock->setWidget( toolbox );
     this->addDockWidget( Qt::RightDockWidgetArea, toolboxDock );
 
@@ -98,7 +96,7 @@ MainWindow::MainWindow()
     setupGUI();
 
     toolbox->setVisible( Settings::showToolboxOnStart() );
-    actionCollection()->action("toggle_toolbox")->setChecked( Settings::showToolboxOnStart() );
+    actionCollection()->action(QLatin1String("toggle_toolbox"))->setChecked( Settings::showToolboxOnStart() );
 
     setupSystemTray();
 
@@ -149,24 +147,24 @@ void MainWindow::setupActions()
     KStandardAction::preferences( this, SLOT(optionsPreferences()), actionCollection() );
 
     // custom menu and menu item
-    KAction *actNewPost = new KAction( KIcon( "document-new" ), i18n( "New Post" ), this );
+    KAction *actNewPost = new KAction( KIcon( QLatin1String("document-new") ), i18n( "New Post" ), this );
     actionCollection()->addAction( QLatin1String( "new_post" ), actNewPost );
     actNewPost->setShortcut( Qt::CTRL + Qt::Key_N );
     connect( actNewPost, SIGNAL(triggered(bool)), this, SLOT(slotCreateNewPost()) );
 
-    KAction *actAddBlog = new KAction( KIcon( "list-add" ), i18n( "Add Blog..." ), this );
+    KAction *actAddBlog = new KAction( KIcon( QLatin1String("list-add") ), i18n( "Add Blog..." ), this );
     actionCollection()->addAction( QLatin1String( "add_blog" ), actAddBlog );
     connect( actAddBlog, SIGNAL(triggered(bool)), this, SLOT(addBlog()) );
 
-    KAction *actPublish = new KAction( KIcon( "arrow-up" ), i18n( "Submit..." ), this );
+    KAction *actPublish = new KAction( KIcon( QLatin1String("arrow-up") ), i18n( "Submit..." ), this );
     actionCollection()->addAction( QLatin1String( "publish_post" ), actPublish );
     connect( actPublish, SIGNAL(triggered(bool)), this, SLOT(slotPublishPost()) );
 
-    KAction *actUpload = new KAction( KIcon( "upload-media" ), i18n( "Upload Media..." ), this );
+    KAction *actUpload = new KAction( KIcon( QLatin1String("upload-media") ), i18n( "Upload Media..." ), this );
     actionCollection()->addAction( QLatin1String( "upload_media" ), actUpload );
     connect( actUpload, SIGNAL(triggered(bool)), this, SLOT(uploadMediaObject()) );
 
-    KAction *actSaveLocally = new KAction( KIcon( "document-save" ), i18n( "Save Locally" ), this );
+    KAction *actSaveLocally = new KAction( KIcon( QLatin1String("document-save") ), i18n( "Save Locally" ), this );
     actionCollection()->addAction( QLatin1String( "save_locally" ), actSaveLocally );
     actSaveLocally->setShortcut( Qt::CTRL + Qt::Key_S );
     connect( actSaveLocally, SIGNAL(triggered(bool)), this, SLOT(slotSavePostLocally()) );
@@ -182,7 +180,7 @@ void MainWindow::setupActions()
     blogs = new KSelectAction( this );
     actionCollection()->addAction( QLatin1String( "blogs_list" ), blogs );
 
-    KAction *actOpenBlog = new KAction(KIcon("applications-internet"), i18n("Open in browser"), this);
+    KAction *actOpenBlog = new KAction(KIcon(QLatin1String("applications-internet")), i18n("Open in browser"), this);
     actionCollection()->addAction( QLatin1String("open_blog_in_browser"), actOpenBlog);
     actOpenBlog->setToolTip(i18n("Open current blog in browser"));
     connect( actOpenBlog, SIGNAL(triggered(bool)), this, SLOT(slotOpenCurrentBlogInBrowser()) );
@@ -272,10 +270,10 @@ void MainWindow::optionsPreferences()
     // compare the names of the widgets in the .ui file
     // to the names of the variables in the .kcfg file
     //avoid having 2 dialogs shown
-    if ( KConfigDialog::showDialog( "settings" ) )  {
+    if ( KConfigDialog::showDialog( QLatin1String("settings") ) )  {
         return;
     }
-    KConfigDialog *dialog = new KConfigDialog( this, "settings", Settings::self() );
+    KConfigDialog *dialog = new KConfigDialog( this, QLatin1String("settings"), Settings::self() );
     QWidget *generalSettingsDlg = new QWidget;
     generalSettingsDlg->setAttribute( Qt::WA_DeleteOnClose );
     Ui::SettingsBase ui_prefs_base;
@@ -298,10 +296,10 @@ void MainWindow::optionsPreferences()
 
 //     QWidget *htmlEditorSettings = HtmlEditor::self()->configPage( 0, dialog );
 //     dialog->addPage( htmlEditorSettings, i18n( "HTML Editor" ), "configure" );
-    dialog->addPage( generalSettingsDlg, i18nc( "Configure Page", "General" ), "configure" );
-    dialog->addPage( blogSettingsDlg, i18nc( "Configure Page", "Blogs" ), "document-properties");
-    dialog->addPage( editorSettingsDlg, i18nc( "Configure Page", "Editor" ), "accessories-text-editor" );
-    dialog->addPage( advancedSettingsDlg, i18nc( "Configure Page", "Advanced" ), "applications-utilities");
+    dialog->addPage( generalSettingsDlg, i18nc( "Configure Page", "General" ), QLatin1String("configure") );
+    dialog->addPage( blogSettingsDlg, i18nc( "Configure Page", "Blogs" ), QLatin1String("document-properties"));
+    dialog->addPage( editorSettingsDlg, i18nc( "Configure Page", "Editor" ), QLatin1String("accessories-text-editor"));
+    dialog->addPage( advancedSettingsDlg, i18nc( "Configure Page", "Advanced" ), QLatin1String("applications-utilities"));
     connect( dialog, SIGNAL(settingsChanged(QString)), this, SIGNAL(settingsChanged()) );
     connect( dialog, SIGNAL(settingsChanged(QString)), this, SLOT(slotSettingsChanged()) );
     connect( dialog, SIGNAL(destroyed(QObject*)), this, SLOT(slotDialogDestroyed(QObject*)));
@@ -319,7 +317,7 @@ void MainWindow::slotDialogDestroyed( QObject *win )
 {
     const QSize size = qobject_cast<QWidget *>(win)->size();
     const QString name = win->objectName();
-    if(name == "settings") {
+    if(name == QLatin1String("settings")) {
         Settings::setConfigWindowSize( size );
     }
 }
@@ -379,9 +377,9 @@ void MainWindow::setupSystemTray()
     if( Settings::enableSysTrayIcon()) {
         if ( !systemTray ) {
             systemTray = new KStatusNotifierItem( this );
-            systemTray->setIconByName("blogilo");
-            systemTray->setToolTip( "blogilo", i18n("Blogilo"), i18n("A KDE Blogging Client") );
-            systemTray->contextMenu()->addAction( actionCollection()->action("new_post") );
+            systemTray->setIconByName(QLatin1String("blogilo"));
+            systemTray->setToolTip( QLatin1String("blogilo"), i18n("Blogilo"), i18n("A KDE Blogging Client") );
+            systemTray->contextMenu()->addAction( actionCollection()->action(QLatin1String("new_post")) );
             systemTray->setCategory(KStatusNotifierItem::ApplicationStatus);
             systemTray->setStatus(KStatusNotifierItem::Active);
         }
@@ -559,7 +557,7 @@ void MainWindow::postManipulationDone( bool isError, const QString &customMessag
         PostEntry *entry = qobject_cast<PostEntry*>(sender());
         if(entry){
           if (KMessageBox::questionYesNo(this, i18n("%1\nDo you want to keep the post open?", customMessage),
-                    QString(), KStandardGuiItem::yes(), KStandardGuiItem::no(), "KeepPostOpen") == KMessageBox::No ) {
+                    QString(), KStandardGuiItem::yes(), KStandardGuiItem::no(), QLatin1String("KeepPostOpen")) == KMessageBox::No ) {
             slotRemovePostEntry( tabPosts->indexOf( entry ) );
           } else {
             toolbox->setFieldsValue(entry->currentPost());
