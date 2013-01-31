@@ -248,9 +248,9 @@ void AddEditBlog::gotXmlRpcTest( KJob *job )
         KMessageBox::sorry(this, i18n("Auto configuration failed. You have to set Blog API on Advanced tab manually."));
         return;
     }
-    KMessageBox::information(this, i18n("The program could not guess the API of your blog, \
-                                        but has found an XMLRPC interface and is trying to use it.\
-                                        \nThe MovableType API is assumed for now; choose another API if you know the server supports it."));
+    KMessageBox::information(this, i18n("The program could not guess the API of your blog, "
+                                        "but has found an XMLRPC interface and is trying to use it.\n"
+                                        "The MovableType API is assumed for now; choose another API if you know the server supports it."));
                              d->ui.comboApi->setCurrentIndex( 2 );
             QString textUrl = d->ui.txtUrl->text();
     while (textUrl.endsWith(QLatin1Char('/'))) {
@@ -323,9 +323,9 @@ void AddEditBlog::handleFetchIDTimeout()
     d->ui.txtId->setText( QString() );
     d->ui.txtId->setEnabled( true );
     hideWaitWidget();
-    KMessageBox::error( this, i18n( "Fetching the blog id timed out. Check your Internet connection,\
-                                    and your homepage URL, username or password.\nNote that the URL has to contain \"http://\"\
-                                    \nIf you are using a self-hosted Wordpress blog, you have to enable Remote Publishing in its configuration." ) );
+    KMessageBox::error( this, i18n( "Fetching the blog id timed out. Check your Internet connection,"
+                                    "and your homepage URL, username or password.\nNote that the URL has to contain \"http://\"\n"
+                                    "If you are using a self-hosted Wordpress blog, you have to enable Remote Publishing in its configuration." ) );
 }
 
 void AddEditBlog::handleFetchAPITimeout()
@@ -336,8 +336,8 @@ void AddEditBlog::handleFetchAPITimeout()
     hideWaitWidget();
     d->ui.txtId->setEnabled( true );
     d->ui.txtId->setText( QString() );
-    KMessageBox::sorry( this, i18n( "The API guess function has failed, \
-                                    please check your Internet connection. Otherwise, you have to set the API type manually on the Advanced tab." ),
+    KMessageBox::sorry( this, i18n( "The API guess function has failed, "
+                                    "please check your Internet connection. Otherwise, you have to set the API type manually on the Advanced tab." ),
                                     i18n( "Auto Configuration Failed" ) );
 }
 
@@ -570,9 +570,9 @@ void AddEditBlog::slotButtonClicked( int button )
     kDebug();
     if ( button == KDialog::Ok ) {
         if ( d->bBlog->blogid().isEmpty() && d->ui.txtId->text().isEmpty() ) {
-            KMessageBox::sorry( this, i18n( "Blog ID has not yet been retrieved.\
-                                            \nYou can fetch the blog ID by clicking on \"Auto Configure\" or the \"Fetch ID\" button; otherwise, you have\
-                                            to insert your blog ID manually." )
+            KMessageBox::sorry( this, i18n( "Blog ID has not yet been retrieved.\n"
+                                            "You can fetch the blog ID by clicking on \"Auto Configure\" or the \"Fetch ID\" button; otherwise, you have "
+                                            "to insert your blog ID manually." )
                                             );
                     return;
         }
