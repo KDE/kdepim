@@ -22,7 +22,6 @@
 #include "autocorrection/composerautocorrection.h"
 #include <QWidget>
 #include <KDialog>
-#include <KCharSelect>
 
 class QTreeWidgetItem;
 
