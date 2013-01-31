@@ -61,8 +61,13 @@
 #define TIMEOUT 5000
 
 MainWindow::MainWindow()
-    : KXmlGuiWindow(), activePost(0), systemTray(0), previousActivePostIndex(-1),
-    busyNumber(0), progress(0), mCurrentBlogId(__currentBlogId)
+    : KXmlGuiWindow(),
+      activePost(0),
+      systemTray(0),
+      previousActivePostIndex(-1),
+      busyNumber(0),
+      progress(0),
+      mCurrentBlogId(__currentBlogId)
 {
     kDebug();
     setWindowTitle( i18n("Blogilo") );
@@ -111,11 +116,11 @@ MainWindow::MainWindow()
     connect( toolbox, SIGNAL(sigBusy(bool)), this, SLOT(slotBusy(bool)));
 
     QList<BilboBlog*> blogList = DBMan::self()->blogList().values();
-    int count = blogList.count();
+    const int count = blogList.count();
     for(int i=0; i < count; ++i) {
-        QAction *act = new QAction( blogList[i]->title(), blogs );
+        QAction *act = new QAction( blogList.at(i)->title(), blogs );
         act->setCheckable( true );
-        act->setData( blogList[i]->id() );
+        act->setData( blogList.at(i)->id() );
         blogs->addAction( act );
     }
     connect( blogs, SIGNAL(triggered(QAction*)), this, SLOT(currentBlogChanged(QAction*)) );
