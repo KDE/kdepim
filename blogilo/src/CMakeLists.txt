@@ -33,16 +33,16 @@ set(blogilo_SRCS
 
 kde4_add_ui_files(
    blogilo_SRCS
-  toolboxbase.ui
-  addeditblogbase.ui
-  entriescountdialogbase.ui
-  settingsbase.ui
-  editorsettingsbase.ui
-  advancedsettingsbase.ui
-  sendtoblogbase.ui
-  waitwidgetbase.ui
-  blogsettingsbase.ui
-  uploadmediabase.ui
+  ui/toolboxbase.ui
+  ui/addeditblogbase.ui
+  ui/entriescountdialogbase.ui
+  ui/settingsbase.ui
+  ui/editorsettingsbase.ui
+  ui/advancedsettingsbase.ui
+  ui/sendtoblogbase.ui
+  ui/waitwidgetbase.ui
+  ui/blogsettingsbase.ui
+  ui/uploadmediabase.ui
   composer/dialogs/addmediadialogbase.ui
 )
 

@@ -75,7 +75,6 @@ set( messagecomposer_src
      autocorrection/import/importlibreofficeautocorrection.cpp
      autocorrection/import/importkmailautocorrection.cpp
      autocorrection/import/importabstractautocorrection.cpp
-     selectspecialchar.cpp
      imagescaling/imagescalingjob.cpp
      imagescaling/imagescalingdialog.cpp
      imagescaling/imagescalingwidget.cpp

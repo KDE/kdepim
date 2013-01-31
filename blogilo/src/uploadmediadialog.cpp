@@ -40,14 +40,15 @@
 #include <kio/jobclasses.h>
 #include <kio/job.h>
 
-UploadMediaDialog::UploadMediaDialog( QWidget *parent ) :
-    KDialog(parent), mCurrentBlog(0)
+UploadMediaDialog::UploadMediaDialog( QWidget *parent )
+    : KDialog(parent), mCurrentBlog(0)
 {
     kDebug();
     QWidget *widget = new QWidget;
     ui.setupUi(widget);
-    this->setMainWidget(widget);
-    this->setAttribute(Qt::WA_DeleteOnClose);
+    setMainWidget(widget);
+    setAttribute(Qt::WA_DeleteOnClose);
+
     setButtonText(KDialog::Ok, i18n("Upload") );
     setWindowTitle( i18n( "Upload Media..." ) );
     ui.kcfg_FtpPath->setText(Settings::ftpServerPath());
@@ -111,7 +112,7 @@ bool UploadMediaDialog::selectNewFile()
 
 void UploadMediaDialog::slotUploadTypeChanged(int index)
 {
-    UploadType type = (UploadType)ui.kcfg_uploadType->itemData(index).toInt();
+    UploadType type = static_cast<UploadType>(ui.kcfg_uploadType->itemData(index).toInt());
     if(type == FTP) {
         ui.kcfg_ftpBox->setEnabled(true);
     } else {
@@ -122,7 +123,7 @@ void UploadMediaDialog::slotUploadTypeChanged(int index)
 void UploadMediaDialog::slotButtonClicked(int button)
 {
     if(button == KDialog::Ok) {
-        UploadType type = (UploadType)ui.kcfg_uploadType->itemData(ui.kcfg_uploadType->currentIndex()).toInt();
+        UploadType type = static_cast<UploadType>(ui.kcfg_uploadType->itemData(ui.kcfg_uploadType->currentIndex()).toInt());
         if( type == BlogAPI ) {///Using API!
             BilboMedia *media = new BilboMedia(this);
             KUrl mediaUrl( ui.kcfg_urlLineEdit->text() );
@@ -146,7 +147,7 @@ void UploadMediaDialog::slotButtonClicked(int button)
             KUrl dest;
             dest.setUrl(ui.kcfg_FtpPath->text() , QUrl::TolerantMode);
             if( dest.isValid() ) {
-                if( dest.scheme() == "ftp" || dest.scheme() == "sftp" ) {
+                if( dest.scheme() == QLatin1String("ftp") || dest.scheme() == QLatin1String("sftp") ) {
                     KUrl src(ui.kcfg_urlLineEdit->text());
                     dest.addPath( ui.kcfg_Name->text().isEmpty() ? src.fileName() :
                                                                   ui.kcfg_Name->text() );

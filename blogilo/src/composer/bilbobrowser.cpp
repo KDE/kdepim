@@ -123,8 +123,7 @@ void BilboBrowser::stop()
 void BilboBrowser::slotGetBlogStyle()
 {
     stop();
-    int blogid = __currentBlogId;
-    if ( blogid < 0 ) {
+    if ( __currentBlogId < 0 ) {
         KMessageBox::information( this,
                i18n( "Please select a blog, then try again." ),
                i18n( "Select a blog" ) );

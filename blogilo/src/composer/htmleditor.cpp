@@ -40,8 +40,6 @@
 class HtmlEditorPrivate
 {
 public:
-//     HtmlEditorPrivate() : instance( 0L ) {}
-//     ~HtmlEditorPrivate() { delete instance; }
     HtmlEditor instance;
 };
 
@@ -49,9 +47,6 @@ K_GLOBAL_STATIC( HtmlEditorPrivate, instancePrivate )
 
 HtmlEditor* HtmlEditor::self()
 {
-//     if ( !instancePrivate->instance ) {
-//         instance = new HtmlEditor;
-//     }
     return &instancePrivate->instance;
 }
 

@@ -762,9 +762,6 @@ namespace {
     private:
         Protocol m_lastEffectiveProtocol;
 
-        bool m_keysLoaded    : 1;
-        bool m_cmsKeysLoaded : 1;
-
         SearchBar m_searchbar;
         KeyTreeView m_unselectedKTV;
         QPushButton m_selectPB, m_unselectPB;

@@ -23,10 +23,9 @@
 #include "import/importabstractautocorrection.h"
 
 #include "messagecomposersettings.h"
-#include "selectspecialchar.h"
+#include <kpimtextedit/selectspecialchar.h>
 
 #include <KFileDialog>
-#include <KCharSelect>
 #include <KMessageBox>
 
 #include <QTreeWidgetItem>
@@ -245,7 +244,7 @@ void ComposerAutoCorrectionWidget::enableDoubleQuotes(bool state)
 
 void ComposerAutoCorrectionWidget::selectSingleQuoteCharOpen()
 {
-    SelectSpecialChar dlg(this);
+    KPIMTextEdit::SelectSpecialChar dlg(this);
     dlg.setCurrentChar(m_singleQuotes.begin);
     dlg.showSelectButton(false);
     dlg.autoInsertChar();
@@ -258,7 +257,7 @@ void ComposerAutoCorrectionWidget::selectSingleQuoteCharOpen()
 
 void ComposerAutoCorrectionWidget::selectSingleQuoteCharClose()
 {
-    SelectSpecialChar dlg(this);
+    KPIMTextEdit::SelectSpecialChar dlg(this);
     dlg.showSelectButton(false);
     dlg.setCurrentChar(m_singleQuotes.end);
     dlg.autoInsertChar();
@@ -279,7 +278,7 @@ void ComposerAutoCorrectionWidget::setDefaultSingleQuotes()
 
 void ComposerAutoCorrectionWidget::selectDoubleQuoteCharOpen()
 {
-    SelectSpecialChar dlg(this);
+    KPIMTextEdit::SelectSpecialChar dlg(this);
     dlg.showSelectButton(false);
     dlg.setCurrentChar(m_doubleQuotes.begin);
     dlg.autoInsertChar();
@@ -292,7 +291,7 @@ void ComposerAutoCorrectionWidget::selectDoubleQuoteCharOpen()
 
 void ComposerAutoCorrectionWidget::selectDoubleQuoteCharClose()
 {
-    SelectSpecialChar dlg(this);
+    KPIMTextEdit::SelectSpecialChar dlg(this);
     dlg.showSelectButton(false);
     dlg.setCurrentChar(m_doubleQuotes.end);
     dlg.autoInsertChar();

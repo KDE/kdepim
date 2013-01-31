@@ -57,6 +57,7 @@ BlogiloComposerEditor::BlogiloComposerEditor(BlogiloComposerView *view, QWidget 
     lstActions<<ComposerEditorNG::ComposerView::DirectionRtl;
     lstActions<<ComposerEditorNG::ComposerView::OrderedList;
     lstActions<<ComposerEditorNG::ComposerView::UnorderedList;
+    lstActions<<ComposerEditorNG::ComposerView::PasteWithoutFormatting;
     createActions(lstActions);
     createToolBar(lstActions);
 

@@ -286,7 +286,7 @@ bool FindReplaceBar::event(QEvent* e)
     if ( shortCutOverride || e->type() == QEvent::KeyPress ) {
         QKeyEvent* kev = static_cast<QKeyEvent* >(e);
         if (kev->key() == Qt::Key_Escape) {
-            if( shortCutOverride ) {
+            if ( shortCutOverride ) {
                 e->accept();
                 return true;
             }
@@ -296,7 +296,7 @@ bool FindReplaceBar::event(QEvent* e)
         } else if ( kev->key() == Qt::Key_Enter ||
                   kev->key() == Qt::Key_Return ) {
             e->accept();
-            if( shortCutOverride ) {
+            if ( shortCutOverride ) {
                 return true;
             }
             if ( kev->modifiers() & Qt::ShiftModifier )

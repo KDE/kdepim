@@ -449,6 +449,8 @@ void MainWidget::setupGui()
 
   mMainWidgetSplitter1->setStretchFactor( 1, 9 );	// maximum width for detail
   mMainWidgetSplitter2->setStretchFactor( 1, 9 );	// for intuitive resizing
+  mMainWidgetSplitter2->setChildrenCollapsible(false);
+  mMainWidgetSplitter1->setChildrenCollapsible(false);
 
   QVBoxLayout *detailsPaneLayout = new QVBoxLayout( mDetailsPane );
   detailsPaneLayout->setMargin( 0 );

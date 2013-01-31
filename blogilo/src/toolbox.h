@@ -3,6 +3,7 @@
 
     Copyright (C) 2008-2010 Mehrdad Momeny <mehrdad.momeny@gmail.com>
     Copyright (C) 2008-2010 Golnaz Nilieh <g382nilieh@gmail.com>
+    Copyright (C) 2013 Laurent Montel <montel@kde.org>
 
     This program is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -25,7 +26,6 @@
 #ifndef TOOLBOX_H
 #define TOOLBOX_H
 
-#include <QDir>
 #include "category.h"
 #include "ui_toolboxbase.h"
 
@@ -71,7 +71,6 @@ public slots:
     void setDateTimeNow();
 
 signals:
-//     void sigCurrentBlogChanged( int blog_id );
     void sigEntrySelected( BilboPost &post, int blog_id );
     void sigError( const QString& );
     void sigBusy( bool isBusy );
@@ -84,8 +83,8 @@ protected slots:
     void slotError(const QString& errorMessage);
 
 private:
-    QStringList selectedCategoriesTitle();
-    QList<Category> selectedCategories();
+    QStringList selectedCategoriesTitle() const;
+    QList<Category> selectedCategories() const;
     void setSelectedCategories( const QStringList& );
     QStringList currentTags();
     void clearCatList();

@@ -72,6 +72,7 @@ public:
         InsertImage,
         InsertTable,
         InsertLink,
+        InsertSpecialChar,
         TextForegroundColor,
         TextBackgroundColor,
         FormatReset,
@@ -83,6 +84,7 @@ public:
         SaveAs,
         Print,
         PrintPreview,
+        PasteWithoutFormatting,
 
         //Keep at end
         LastType
@@ -148,6 +150,8 @@ private:
     Q_PRIVATE_SLOT( d, void _k_slotPrintPreview() )
     Q_PRIVATE_SLOT( d, void _k_changeAutoSpellChecking(bool) )
     Q_PRIVATE_SLOT( d, void _k_slotEditList() )
+    Q_PRIVATE_SLOT( d, void _k_slotPasteWithoutFormatting() )
+    Q_PRIVATE_SLOT( d, void _k_slotInsertSpecialChar() )
 };
 }
 

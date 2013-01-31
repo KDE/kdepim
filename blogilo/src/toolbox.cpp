@@ -3,6 +3,7 @@
 
     Copyright (C) 2008-2010 Mehrdad Momeny <mehrdad.momeny@gmail.com>
     Copyright (C) 2008-2010 Golnaz Nilieh <g382nilieh@gmail.com>
+    Copyright (C) 2013 Laurent Montel <montel@kde.org>
 
     This program is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -24,28 +25,26 @@
 //krazy:excludeall=qmethods due to use of KStatusBar::showMessage()
 
 #include "toolbox.h"
-
-#include <kstatusbar.h>
-#include <kdebug.h>
-#include <kxmlguiwindow.h>
-#include <kmessagebox.h>
-#include <kdatetime.h>
-#include <kurl.h>
-
 #include "dbman.h"
 #include "entriescountdialog.h"
 #include "addeditblog.h"
 #include "backend.h"
 #include "bilbopost.h"
 #include "bilboblog.h"
-// #include "blogradiobutton.h"
 #include "catcheckbox.h"
+
 #include <KMenu>
 #include <KAction>
 #include <KToolInvocation>
 #include <settings.h>
 #include <QClipboard>
 #include <QTimer>
+#include <kstatusbar.h>
+#include <kdebug.h>
+#include <kxmlguiwindow.h>
+#include <kmessagebox.h>
+#include <kdatetime.h>
+#include <kurl.h>
 
 class Toolbox::Private
 {
@@ -55,7 +54,7 @@ public:
     KStatusBar *statusbar;
 };
 Toolbox::Toolbox( QWidget *parent )
-        : QWidget( parent ), d(new Private)
+    : QWidget( parent ), d(new Private)
 {
     kDebug();
     d->mCurrentBlogId = -1;
@@ -65,25 +64,16 @@ Toolbox::Toolbox( QWidget *parent )
         this->d->statusbar = new KStatusBar( this );
     setupUi( this );
     setButtonsIcon();
-//     frameBlog->layout()->setAlignment( Qt::AlignTop );
     frameCat->layout()->setAlignment( Qt::AlignTop );
-//     reloadBlogList();
     optionsDate->setDate( QDateTime::currentDateTime().date() );
     optionsTime->setTime( QDateTime::currentDateTime().time() );
-//     connect( btnBlogAdd, SIGNAL(clicked()), this, SLOT(slotAddBlog()) );
-//     connect( btnBlogEdit, SIGNAL(clicked()), this, SLOT(slotEditBlog()) );
-//     connect( btnBlogRemove, SIGNAL(clicked()), this, SLOT(slotRemoveBlog()) );
 
     connect( btnCatReload, SIGNAL(clicked()), this, SLOT(slotReloadCategoryList()) );
     connect( btnEntriesUpdate, SIGNAL(clicked()), this, SLOT(slotUpdateEntries()) );
     connect( btnEntriesClear, SIGNAL(clicked(bool)), this, SLOT(clearEntries()) );
 
-//     connect( this, SIGNAL(sigCurrentBlogChanged(int)), this, SLOT(slotCurrentBlogChanged(int)) );
-//     connect( &listBlogRadioButtons, SIGNAL(buttonClicked(int)), this, SLOT(slotSetCurrentBlog()) );
-
     connect( lstEntriesList, SIGNAL(itemDoubleClicked(QListWidgetItem*)),
              this, SLOT(slotEntrySelected(QListWidgetItem*)) );
-//     connect( btnEntriesCopyUrl, SIGNAL(clicked(bool)), this, SLOT(slotEntriesCopyUrl()) );
     connect( btnEntriesRemove, SIGNAL(clicked(bool)), this, SLOT(slotRemoveSelectedEntryFromServer()) );
 
     connect( btnOptionsNow, SIGNAL(clicked(bool)), this, SLOT(setDateTimeNow()) );
@@ -102,13 +92,18 @@ Toolbox::Toolbox( QWidget *parent )
     QTimer::singleShot(1000, this, SLOT(reloadLocalPosts()));
 }
 
+Toolbox::~Toolbox()
+{
+    kDebug();
+    delete d;
+}
+
+
 void Toolbox::setCurrentBlogId( int blog_id )
 {
     kDebug()<<blog_id;
     if( d->mCurrentBlogId == blog_id )
         return;
-//     btnBlogEdit->setEnabled( true );
-//     btnBlogRemove->setEnabled( true );
     d->mCurrentBlogId = blog_id;
     if( blog_id <= 0 )
         return;
@@ -122,10 +117,8 @@ void Toolbox::setCurrentBlogId( int blog_id )
 void Toolbox::slotReloadCategoryList()
 {
     kDebug();
-//     QAbstractButton *btn = listBlogRadioButtons.checkedButton();
     if ( d->mCurrentBlogId == -1 ) {
-        KMessageBox::sorry( this, i18n( "No blog has been selected: \
-you have to select a blog from the Blogs page before asking for the list of categories." ) );
+        KMessageBox::sorry( this, i18n( "No blog has been selected: you have to select a blog from the Blogs page before asking for the list of categories." ) );
         return;
     }
 
@@ -135,16 +128,13 @@ you have to select a blog from the Blogs page before asking for the list of cate
     emit sigBusy( true );
     d->statusbar->showMessage( i18n( "Requesting list of categories..." ) );
     b->getCategoryListFromServer();
-//     this->setCursor( Qt::BusyCursor );
 }
 
 void Toolbox::slotUpdateEntries(int count)
 {
     kDebug();
     if ( d->mCurrentBlogId == -1 ) {
-        KMessageBox::sorry( this, i18n( "No blog has been selected: \
-you have to select a blog from the Blogs page before asking for the list of entries." ) );
-        kDebug() << "There isn't any selected blog.";
+        KMessageBox::sorry( this, i18n( "No blog has been selected: you have to select a blog from the Blogs page before asking for the list of entries." ) );
         return;
     }
     if(count == 0) {
@@ -181,13 +171,13 @@ void Toolbox::slotLoadEntriesFromDB( int blog_id )
     listEntries = DBMan::self()->listPostsInfo( blog_id );
     int count = listEntries.count();
     for ( int i=0; i < count; ++i ) {
-        QListWidgetItem *lstItem = new QListWidgetItem( listEntries[i].value("title").toString() );
-        lstItem->setToolTip(listEntries[i].value("c_time").toDateTime().toString());
-        if(listEntries[i].value("is_private").toBool()) {
+        QListWidgetItem *lstItem = new QListWidgetItem( listEntries[i].value(QLatin1String("title")).toString() );
+        lstItem->setToolTip(listEntries[i].value(QLatin1String("c_time")).toDateTime().toString());
+        if(listEntries[i].value(QLatin1String("is_private")).toBool()) {
             lstItem->setForeground(QBrush(Qt::blue));
             lstItem->setToolTip(i18n("%1 (Draft)",lstItem->toolTip()));
         }
-        lstItem->setData( 32, listEntries[i].value("id").toInt() );
+        lstItem->setData( 32, listEntries[i].value(QLatin1String("id")).toInt() );
         lstEntriesList->addItem( lstItem );
     }
     d->statusbar->showMessage( i18n( "List of entries received." ), STATUSTIMEOUT );
@@ -223,8 +213,7 @@ void Toolbox::slotRemoveSelectedEntryFromServer()
 {
     if(lstEntriesList->selectedItems().count() < 1)
         return;
-    if( KMessageBox::warningYesNoCancel(this, i18n( "Removing a post from your blog cannot be undone.\
-\nAre you sure you want to remove the post with title \"%1\" from your blog?", lstEntriesList->currentItem()->text() ))
+    if( KMessageBox::warningYesNoCancel(this, i18n( "Removing a post from your blog cannot be undone.\nAre you sure you want to remove the post with title \"%1\" from your blog?", lstEntriesList->currentItem()->text() ))
     == KMessageBox::Yes) {
         BilboPost *post = new BilboPost( DBMan::self()->getPostInfo( lstEntriesList->currentItem()->
                                                                      data(32).toInt() ) );
@@ -338,7 +327,7 @@ void Toolbox::setFieldsValue( BilboPost* post )
     }
 
     setSelectedCategories( post->categories() );
-    txtCatTags->setText( post->tags().join( ", " ) );
+    txtCatTags->setText( post->tags().join( QLatin1String(", ") ) );
 //     kDebug() << "Post status is: " << post->status();
     if ( post->status() == KBlog::BlogPost::New )
         comboOptionsStatus->setCurrentIndex( 2 );
@@ -360,11 +349,11 @@ void Toolbox::setFieldsValue( BilboPost* post )
     txtSummary->setPlainText( post->summary() );
 }
 
-QList< Category > Toolbox::selectedCategories()
+QList< Category > Toolbox::selectedCategories() const
 {
     kDebug();
     QList<Category> list;
-    int count = d->listCategoryCheckBoxes.count();
+    const int count = d->listCategoryCheckBoxes.count();
     for ( int i = 0; i < count; ++i ) {
         if ( d->listCategoryCheckBoxes.at(i)->isChecked() )
             list.append( d->listCategoryCheckBoxes.at(i)->category() );
@@ -372,7 +361,7 @@ QList< Category > Toolbox::selectedCategories()
     return list;
 }
 
-QStringList Toolbox::selectedCategoriesTitle()
+QStringList Toolbox::selectedCategoriesTitle() const
 {
     kDebug();
     QStringList list;
@@ -397,8 +386,7 @@ void Toolbox::setSelectedCategories( const QStringList &list )
 QStringList Toolbox::currentTags()
 {
     kDebug();
-    QStringList t;
-    t = txtCatTags->text().split( QRegExp( QString::fromUtf8(",|،") ), QString::SkipEmptyParts );
+    QStringList t = txtCatTags->text().split( QRegExp( QString::fromUtf8(",|،") ), QString::SkipEmptyParts );
     for ( int i = 0; i < t.count() ; ++i ) {
         t[i] = t[i].trimmed();
     }
@@ -433,15 +421,9 @@ void Toolbox::slotEntriesCopyUrl()
         KMessageBox::sorry(this, i18n( "No link field is available in the database for this entry." ) );
 }
 
-Toolbox::~Toolbox()
-{
-    kDebug();
-    delete d;
-}
-
 void Toolbox::unCheckCatList()
 {
-    int count = d->listCategoryCheckBoxes.count();
+    const int count = d->listCategoryCheckBoxes.count();
     for ( int j = 0; j < count; ++j ) {
         d->listCategoryCheckBoxes.at(j)->setChecked( false );
     }
@@ -449,21 +431,13 @@ void Toolbox::unCheckCatList()
 
 void Toolbox::setButtonsIcon()
 {
-//     btnEntriesReload->setIcon( KIcon( "view-refresh" ) );
-    btnEntriesUpdate->setIcon( KIcon( "arrow-down" ) );
-    btnEntriesRemove->setIcon( KIcon( "list-remove" ) );
-    btnEntriesClear->setIcon( KIcon( "edit-clear" ) );
-    btnCatReload->setIcon( KIcon( "view-refresh" ) );
-    btnCatAdd->setIcon( KIcon( "list-add" ) );
-    btnLocalRemove->setIcon( KIcon( "list-remove" ) );
+    btnEntriesUpdate->setIcon( KIcon( QLatin1String("view-refresh") ) );
+    btnEntriesRemove->setIcon( KIcon( QLatin1String("list-remove") ) );
+    btnEntriesClear->setIcon( KIcon( QLatin1String("edit-clear") ) );
+    btnCatReload->setIcon( KIcon( QLatin1String("view-refresh") ) );
+    btnCatAdd->setIcon( KIcon( QLatin1String("list-add") ) );
+    btnLocalRemove->setIcon( KIcon( QLatin1String("list-remove") ) );
     ///TODO Add option for selecting only text or only Icon for Toolbox buttons!
-//     btnEntriesReload->setText( QString() );
-//     btnEntriesUpdate->setText( QString() );
-//     btnEntriesRemove->setText( QString() );
-//     btnEntriesClear->setText( QString() );
-//     btnCatReload->setText( QString() );
-//     btnCatAdd->setText( QString() );
-//     btnLocalRemove->setText( QString() );
 }
 
 void Toolbox::reloadLocalPosts()
@@ -471,23 +445,22 @@ void Toolbox::reloadLocalPosts()
     kDebug();
     localEntriesTable->clearContents();
     localEntriesTable->setRowCount(0);
+
     QList<QVariantMap> localList = DBMan::self()->listLocalPosts();
-//     QList<QVariantMap>::ConstIterator it = localList.constBegin();
-//     QList<QVariantMap>::ConstIterator endIt = localList.constEnd();
-    int count = localList.count();
-    kDebug()<<count;
+    const int count = localList.count();
+
     for (int i=0; i < count; ++i){
         int newRow = localEntriesTable->rowCount();
         localEntriesTable->insertRow(newRow);
-        QString postTitle = localList[i].value( "post_title" ).toString();
+        QString postTitle = localList.at(i).value( QLatin1String("post_title") ).toString();
         QTableWidgetItem *item1 = new QTableWidgetItem( postTitle );
         item1->setToolTip( postTitle );
-        item1->setData(32, localList[i].value( "local_id" ).toInt());//Post_id
+        item1->setData(32, localList.at(i).value( QLatin1String("local_id") ).toInt());//Post_id
         localEntriesTable->setItem( newRow, 0, item1 );
-        QString blogTitle = localList[i].value( "blog_title" ).toString();
+        QString blogTitle = localList.at(i).value( QLatin1String("blog_title") ).toString();
         QTableWidgetItem *item2 = new QTableWidgetItem( blogTitle );
         item2->setToolTip( blogTitle );
-        item2->setData(32, localList[i].value( "blog_id" ).toInt());//blog_id
+        item2->setData(32, localList.at(i).value( QLatin1String("blog_id") ).toInt());//blog_id
         localEntriesTable->setItem( newRow, 1, item2 );
     }
 }
@@ -503,7 +476,7 @@ void Toolbox::slotLocalEntrySelected( int row, int column )
 void Toolbox::slotRemoveLocalEntry()
 {
     kDebug();
-    if(localEntriesTable->selectedItems().count() > 0) {
+    if(!localEntriesTable->selectedItems().isEmpty()) {
         if( KMessageBox::warningYesNo(this, i18n("Are you sure you want to remove the selected local entry?"))
             == KMessageBox::No )
             return;
@@ -543,13 +516,13 @@ void Toolbox::requestEntriesListContextMenu( const QPoint & pos )
 {
     Q_UNUSED(pos);
     KMenu *entriesContextMenu = new KMenu;
-    KAction *actEntriesOpenInBrowser = new KAction( KIcon("applications-internet"),
+    KAction *actEntriesOpenInBrowser = new KAction( KIcon(QLatin1String("applications-internet")),
                                                     i18n("Open in browser"), entriesContextMenu );
     connect( actEntriesOpenInBrowser, SIGNAL(triggered()), this, SLOT(openPostInBrowser()) );
-    KAction *actEntriesCopyUrl = new KAction( KIcon("edit-copy"),
+    KAction *actEntriesCopyUrl = new KAction( KIcon(QLatin1String("edit-copy")),
                                               i18n("Copy URL"), entriesContextMenu );
     connect( actEntriesCopyUrl, SIGNAL(triggered(bool)), this, SLOT(slotEntriesCopyUrl()) );
-    KAction *actEntriesCopyTitle = new KAction( KIcon("edit-copy"),
+    KAction *actEntriesCopyTitle = new KAction( KIcon(QLatin1String("edit-copy")),
                                                 i18n("Copy title"), entriesContextMenu );
     connect( actEntriesCopyTitle, SIGNAL(triggered(bool)), this, SLOT(copyPostTitle()) );
     entriesContextMenu->addAction( actEntriesOpenInBrowser );
@@ -561,7 +534,7 @@ void Toolbox::requestEntriesListContextMenu( const QPoint & pos )
 
 void Toolbox::openPostInBrowser()
 {
-    if( lstEntriesList->selectedItems().count() <= 0 )
+    if( !lstEntriesList->selectedItems().isEmpty() )
         return;
     BilboPost post = DBMan::self()->getPostInfo( lstEntriesList->currentItem()->data( 32 ).toInt() );
     QString url;
@@ -576,7 +549,7 @@ void Toolbox::openPostInBrowser()
 
 void Toolbox::copyPostTitle()
 {
-    if( lstEntriesList->selectedItems().count() > 0 )
+    if( !lstEntriesList->selectedItems().isEmpty() )
         QApplication::clipboard()->setText( lstEntriesList->currentItem()->text() );
 }
 

@@ -54,6 +54,10 @@ public:
     : q( owner ),
       mXmlGuiClient( 0 ),
       mActionMenu( 0 ),
+      mModel( 0 ),
+      mSelectionModel( 0 ),
+      mNewTabButton( 0 ),
+      mCloseTabButton( 0 ),
       mCloseTabAction( 0 ),
       mActivateNextTabAction( 0 ),
       mActivatePreviousTabAction( 0 ),
@@ -758,7 +762,8 @@ QItemSelection Pane::Private::mapSelectionFromSource( const QItemSelection &sele
 void Pane::Private::updateTabControls()
 {
   const bool enableAction = ( q->count()>1 );
-  mCloseTabButton->setEnabled( enableAction );
+  if (mCloseTabButton)
+    mCloseTabButton->setEnabled( enableAction );
   if ( mCloseTabAction )
     mCloseTabAction->setEnabled( enableAction );
   if ( mActivatePreviousTabAction )

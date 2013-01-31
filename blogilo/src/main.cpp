@@ -41,6 +41,7 @@ int main( int argc, char *argv[] )
                       KLocalizedString(), "http://blogilo.gnufolks.org" );
     about.addAuthor( ki18n( "Mehrdad Momeny" ), ki18n( "Core Developer" ), "mehrdad.momeny@gmail.com" );
     about.addAuthor( ki18n( "Golnaz Nilieh" ), ki18n( "Core Developer" ), "g382nilieh@gmail.com" );
+    about.addAuthor( ki18n( "Laurent Montel" ), ki18n( "Core Developer" ), "montel@kde.org" );
     about.addCredit( ki18n( "Roozbeh Shafiee" ), ki18n( "Icon designer" ), "roozbeh@roozbehonline.com");
     about.addCredit( ki18n( "Sajjad Baroodkoo" ), ki18n( "Icon designer" ), "sajjad@graphit.ir");
 
@@ -53,7 +54,6 @@ int main( int argc, char *argv[] )
     global_init();
 
     MainWindow *bilbo = new MainWindow;
-//     bilbo->setAttribute(Qt::WA_DeleteOnClose, false);
 
     bilbo->show();
     int r = app.exec();

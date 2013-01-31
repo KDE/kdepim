@@ -26,6 +26,8 @@
 #include "kleo/enum.h"
 #include <KDE/KMime/Message>
 
+#include <QTextEdit>
+
 
 namespace KMime {
   class Content;
@@ -80,6 +82,7 @@ namespace Util {
     void addSendReplyForwardAction(const KMime::Message::Ptr &message, MailTransport::MessageQueueJob *qjob);
     MESSAGECOMPOSER_EXPORT bool sendMailDispatcherIsOnline( QWidget *parent = 0);
     MESSAGECOMPOSER_EXPORT QString rot13(const QString &s);
+    MESSAGECOMPOSER_EXPORT void addTextBox(QTextEdit *edit);
 }
 
 }

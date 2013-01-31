@@ -138,13 +138,12 @@ void PostEntry::createUi()
     /// WYSIWYG Editor:
     BlogiloComposerView *view = new BlogiloComposerView(this);
     d->wysiwygEditor = new BlogiloComposerEditor(view,d->tabVisual);
-    //d->wysiwygEditor = new TextEditor( d->tabVisual );
     QVBoxLayout *vLayout = new QVBoxLayout( d->tabVisual );
     vLayout->addWidget( d->wysiwygEditor );
 
     ///htmlEditor:
     d->htmlEditor = HtmlEditor::self()->createView( d->tabHtml );
-    QGridLayout *hLayout = new QGridLayout( d->tabHtml );
+    QGridLayout *hLayout = new QGridLayout;( d->tabHtml );
     hLayout->addWidget( d->htmlEditor );
 
     ///previewer:
@@ -152,8 +151,7 @@ void PostEntry::createUi()
     QGridLayout *gLayout = new QGridLayout( d->tabPreview );
     gLayout->addWidget( d->previewer );
 
-    connect( d->previewer, SIGNAL(sigSetBlogStyle()), this, SLOT(
-                 slotSetPostPreview() ) );
+    connect( d->previewer, SIGNAL(sigSetBlogStyle()), this, SLOT(slotSetPostPreview()) );
 
 
     d->tabWidget->setCurrentIndex( 0 );
@@ -197,7 +195,8 @@ void PostEntry::slotSyncEditors(int index)
     if ( index == 0 ) {
         if ( d->prev_index == 2 ) {
             d->previewer->stop();
-            goto SyncEnd;
+            d->prev_index = index;
+            return;
         }//An else clause can do the job of goto, No? -Mehrdad :D
         d->wysiwygEditor->setHtmlContent(d->htmlEditor->document()->text());
         d->wysiwygEditor->setFocus();
@@ -205,7 +204,8 @@ void PostEntry::slotSyncEditors(int index)
     } else if ( index == 1 ) {
         if ( d->prev_index == 2 ) {
             d->previewer->stop();
-            goto SyncEnd;
+            d->prev_index = index;
+            return;
         }
         d->htmlEditor->document()->setText( d->wysiwygEditor->htmlContent() );
         d->htmlEditor->setFocus();
@@ -217,7 +217,6 @@ void PostEntry::slotSyncEditors(int index)
         }
         d->previewer->setHtml( d->txtTitle->text(), d->htmlEditor->document()->text() );
     }
-SyncEnd:
     d->prev_index = index;
 }
 
@@ -228,7 +227,7 @@ void PostEntry::slotSetPostPreview()
     }
 }
 
-QString PostEntry::htmlContent()
+QString PostEntry::htmlContent() const
 {
     if ( d->tabWidget->currentIndex() == 1 ) {
         d->wysiwygEditor->setHtmlContent( d->htmlEditor->document()->text() );
@@ -359,7 +358,7 @@ bool PostEntry::uploadMediaFiles( Backend *backend )
         backend = new Backend( d->mCurrentPostBlogId, this );
     }
     QList<BilboMedia*> lImages = localImages();
-    if( lImages.size()>0 ) {
+    if( !lImages.isEmpty() ) {
         showProgressBar();
         QList<BilboMedia*>::iterator it = lImages.begin();
         QList<BilboMedia*>::iterator endIt = lImages.end();
@@ -486,8 +485,8 @@ void PostEntry::deleteProgressBar()
     if(d->progress){
         this->layout()->removeWidget( d->progress );
         d->progress->deleteLater();
+        d->progress = 0L;
     }
-    d->progress = 0L;
 }
 
 void PostEntry::saveLocally()

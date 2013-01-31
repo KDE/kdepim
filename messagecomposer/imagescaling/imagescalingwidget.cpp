@@ -63,6 +63,10 @@ ImageScalingWidget::ImageScalingWidget(QWidget *parent)
 
   connect(ui->resizeEmailsPattern,SIGNAL(textChanged(QString)),SIGNAL(changed()));
   connect(ui->doNotResizePattern,SIGNAL(textChanged(QString)),SIGNAL(changed()));
+  connect(ui->resizeImageWithFormatsType,SIGNAL(textChanged(QString)),SIGNAL(changed()));
+  connect(ui->resizeImageWithFormats,SIGNAL(clicked(bool)),SIGNAL(changed()));
+  connect(ui->resizeImageWithFormats,SIGNAL(clicked(bool)),ui->resizeImageWithFormatsType,SLOT(setEnabled(bool)));
+  ui->resizeImageWithFormatsType->setEnabled(false);
 
   ui->pattern->setEnabled(false);
   mSourceFilenameFilterGroup = new QButtonGroup(ui->filterSourceGroupBox);
@@ -167,58 +171,64 @@ void ImageScalingWidget::initWriteImageFormat()
     ui->WriteToImageFormat->addItem(QString::fromLatin1("PNG"));
 }
 
+void ImageScalingWidget::updateSettings()
+{
+    ui->enabledAutoResize->setChecked(MessageComposer::MessageComposerSettings::self()->autoResizeImageEnabled());
+    ui->KeepImageRatio->setChecked(MessageComposer::MessageComposerSettings::self()->keepImageRatio());
+    ui->AskBeforeResizing->setChecked(MessageComposer::MessageComposerSettings::self()->askBeforeResizing());
+    ui->EnlargeImageToMinimum->setChecked(MessageComposer::MessageComposerSettings::self()->enlargeImageToMinimum());
+    ui->ReduceImageToMaximum->setChecked(MessageComposer::MessageComposerSettings::self()->reduceImageToMaximum());
+    ui->skipImageSizeLower->setChecked(MessageComposer::MessageComposerSettings::self()->skipImageLowerSizeEnabled());
+    ui->imageSize->setValue(MessageComposer::MessageComposerSettings::self()->skipImageLowerSize());
+
+    ui->customMaximumWidth->setValue(MessageComposer::MessageComposerSettings::self()->customMaximumWidth());
+    ui->customMaximumHeight->setValue(MessageComposer::MessageComposerSettings::self()->customMaximumHeight());
+    ui->customMinimumWidth->setValue(MessageComposer::MessageComposerSettings::self()->customMinimumWidth());
+    ui->customMinimumHeight->setValue(MessageComposer::MessageComposerSettings::self()->customMinimumHeight());
+
+    int index = qMax(0, ui->CBMaximumWidth->findData(MessageComposer::MessageComposerSettings::self()->maximumWidth()));
+    ui->CBMaximumWidth->setCurrentIndex(index);
+    ui->customMaximumWidth->setEnabled(ui->CBMaximumWidth->itemData(index) == -1);
+
+    index = qMax(0, ui->CBMaximumHeight->findData(MessageComposer::MessageComposerSettings::self()->maximumHeight()));
+    ui->CBMaximumHeight->setCurrentIndex(index);
+    ui->customMaximumHeight->setEnabled(ui->CBMaximumHeight->itemData(index) == -1);
+
+    index = qMax(0, ui->CBMinimumWidth->findData(MessageComposer::MessageComposerSettings::self()->minimumWidth()));
+    ui->CBMinimumWidth->setCurrentIndex(index);
+    ui->customMinimumWidth->setEnabled(ui->CBMinimumWidth->itemData(index) == -1);
+
+    index = qMax(0, ui->CBMinimumHeight->findData(MessageComposer::MessageComposerSettings::self()->minimumHeight()));
+    ui->CBMinimumHeight->setCurrentIndex(index);
+    ui->customMinimumHeight->setEnabled(ui->CBMinimumHeight->itemData(index) == -1);
+
+    index = ui->WriteToImageFormat->findData(MessageComposer::MessageComposerSettings::self()->writeFormat());
+    if(index == -1) {
+        ui->WriteToImageFormat->setCurrentIndex(0);
+    } else {
+        ui->WriteToImageFormat->setCurrentIndex(index);
+    }
+    ui->pattern->setText(MessageComposer::MessageComposerSettings::self()->filterSourcePattern());
+
+    ui->renameResizedImage->setChecked(MessageComposer::MessageComposerSettings::self()->renameResizedImages());
+
+    ui->renameResizedImagePattern->setText(MessageComposer::MessageComposerSettings::self()->renameResizedImagesPattern());
+    ui->renameResizedImagePattern->setEnabled(ui->renameResizedImage->isChecked());
+
+    ui->doNotResizePattern->setText(MessageComposer::MessageComposerSettings::self()->doNotResizeEmailsPattern());
+    ui->resizeEmailsPattern->setText(MessageComposer::MessageComposerSettings::self()->resizeEmailsPattern());
+
+    ui->resizeImageWithFormats->setChecked(MessageComposer::MessageComposerSettings::self()->resizeImagesWithFormats());
+    ui->resizeImageWithFormatsType->setText(MessageComposer::MessageComposerSettings::self()->resizeImagesWithFormatsType());
+
+    updateFilterSourceTypeSettings();
+    updateEmailsFilterTypeSettings();
+}
+
 void ImageScalingWidget::loadConfig()
 {
-  ui->enabledAutoResize->setChecked(MessageComposer::MessageComposerSettings::self()->autoResizeImageEnabled());
-  ui->KeepImageRatio->setChecked(MessageComposer::MessageComposerSettings::self()->keepImageRatio());
-  ui->AskBeforeResizing->setChecked(MessageComposer::MessageComposerSettings::self()->askBeforeResizing());
-  ui->EnlargeImageToMinimum->setChecked(MessageComposer::MessageComposerSettings::self()->enlargeImageToMinimum());
-  ui->ReduceImageToMaximum->setChecked(MessageComposer::MessageComposerSettings::self()->reduceImageToMaximum());
-  ui->skipImageSizeLower->setChecked(MessageComposer::MessageComposerSettings::self()->skipImageLowerSizeEnabled());
-  ui->imageSize->setValue(MessageComposer::MessageComposerSettings::self()->skipImageLowerSize());
-
-  ui->customMaximumWidth->setValue(MessageComposer::MessageComposerSettings::self()->customMaximumWidth());
-  ui->customMaximumHeight->setValue(MessageComposer::MessageComposerSettings::self()->customMaximumHeight());
-  ui->customMinimumWidth->setValue(MessageComposer::MessageComposerSettings::self()->customMinimumWidth());
-  ui->customMinimumHeight->setValue(MessageComposer::MessageComposerSettings::self()->customMinimumHeight());
-
-  int index = qMax(0, ui->CBMaximumWidth->findData(MessageComposer::MessageComposerSettings::self()->maximumWidth()));
-  ui->CBMaximumWidth->setCurrentIndex(index);
-  ui->customMaximumWidth->setEnabled(ui->CBMaximumWidth->itemData(index) == -1);
-
-  index = qMax(0, ui->CBMaximumHeight->findData(MessageComposer::MessageComposerSettings::self()->maximumHeight()));
-  ui->CBMaximumHeight->setCurrentIndex(index);
-  ui->customMaximumHeight->setEnabled(ui->CBMaximumHeight->itemData(index) == -1);
-
-  index = qMax(0, ui->CBMinimumWidth->findData(MessageComposer::MessageComposerSettings::self()->minimumWidth()));
-  ui->CBMinimumWidth->setCurrentIndex(index);
-  ui->customMinimumWidth->setEnabled(ui->CBMinimumWidth->itemData(index) == -1);
-
-  index = qMax(0, ui->CBMinimumHeight->findData(MessageComposer::MessageComposerSettings::self()->minimumHeight()));
-  ui->CBMinimumHeight->setCurrentIndex(index);
-  ui->customMinimumHeight->setEnabled(ui->CBMinimumHeight->itemData(index) == -1);
-
-  index = ui->WriteToImageFormat->findData(MessageComposer::MessageComposerSettings::self()->writeFormat());
-  if(index == -1) {
-      ui->WriteToImageFormat->setCurrentIndex(0);
-  } else {
-      ui->WriteToImageFormat->setCurrentIndex(index);
-  }
-  ui->pattern->setText(MessageComposer::MessageComposerSettings::self()->filterSourcePattern());
-
-  ui->renameResizedImage->setChecked(MessageComposer::MessageComposerSettings::self()->renameResizedImages());
-
-  ui->renameResizedImagePattern->setText(MessageComposer::MessageComposerSettings::self()->renameResizedImagesPattern());
-  ui->renameResizedImagePattern->setEnabled(ui->renameResizedImage->isChecked());
-
-  ui->doNotResizePattern->setText(MessageComposer::MessageComposerSettings::self()->doNotResizeEmailsPattern());
-  ui->resizeEmailsPattern->setText(MessageComposer::MessageComposerSettings::self()->resizeEmailsPattern());
-
-
-  updateFilterSourceTypeSettings();
-  updateEmailsFilterTypeSettings();
-
-  mWasChanged = false;
+    updateSettings();
+    mWasChanged = false;
 }
 
 void ImageScalingWidget::updateFilterSourceTypeSettings()
@@ -308,62 +318,15 @@ void ImageScalingWidget::writeConfig()
   MessageComposer::MessageComposerSettings::self()->setResizeEmailsPattern(ui->resizeEmailsPattern->text());
   MessageComposer::MessageComposerSettings::self()->setFilterRecipientType(mRecipientFilterGroup->checkedId());
 
+  MessageComposer::MessageComposerSettings::self()->setResizeImagesWithFormats(ui->resizeImageWithFormats->isChecked());
+  MessageComposer::MessageComposerSettings::self()->setResizeImagesWithFormatsType(ui->resizeImageWithFormatsType->text());
   mWasChanged = false;
 }
 
 void ImageScalingWidget::resetToDefault()
 {
    const bool bUseDefaults = MessageComposer::MessageComposerSettings::self()->useDefaults( true );
-
-   ui->enabledAutoResize->setChecked(MessageComposer::MessageComposerSettings::self()->autoResizeImageEnabled());
-   ui->KeepImageRatio->setChecked(MessageComposer::MessageComposerSettings::self()->keepImageRatio());
-   ui->AskBeforeResizing->setChecked(MessageComposer::MessageComposerSettings::self()->askBeforeResizing());
-   ui->EnlargeImageToMinimum->setChecked(MessageComposer::MessageComposerSettings::self()->enlargeImageToMinimum());
-   ui->ReduceImageToMaximum->setChecked(MessageComposer::MessageComposerSettings::self()->reduceImageToMaximum());
-
-   ui->customMaximumWidth->setValue(MessageComposer::MessageComposerSettings::self()->customMaximumWidth());
-   ui->customMaximumHeight->setValue(MessageComposer::MessageComposerSettings::self()->customMaximumHeight());
-   ui->customMinimumWidth->setValue(MessageComposer::MessageComposerSettings::self()->customMinimumWidth());
-   ui->customMinimumHeight->setValue(MessageComposer::MessageComposerSettings::self()->customMinimumHeight());
-
-   ui->skipImageSizeLower->setChecked(MessageComposer::MessageComposerSettings::self()->skipImageLowerSizeEnabled());
-   ui->imageSize->setValue(MessageComposer::MessageComposerSettings::self()->skipImageLowerSize());
-
-   ui->pattern->setText(MessageComposer::MessageComposerSettings::self()->filterSourcePattern());
-
-   int index = qMax(0, ui->CBMaximumWidth->findData(MessageComposer::MessageComposerSettings::self()->maximumWidth()));
-   ui->CBMaximumWidth->setCurrentIndex(index);
-   ui->customMaximumWidth->setEnabled(ui->CBMaximumWidth->itemData(index) == -1);
-
-   index = qMax(0, ui->CBMaximumHeight->findData(MessageComposer::MessageComposerSettings::self()->maximumHeight()));
-   ui->CBMaximumHeight->setCurrentIndex(index);
-   ui->customMaximumHeight->setEnabled(ui->CBMaximumHeight->itemData(index) == -1);
-
-   index = qMax(0, ui->CBMinimumWidth->findData(MessageComposer::MessageComposerSettings::self()->minimumWidth()));
-   ui->CBMinimumWidth->setCurrentIndex(index);
-   ui->customMinimumWidth->setEnabled(ui->CBMinimumWidth->itemData(index) == -1);
-
-   index = qMax(0, ui->CBMinimumHeight->findData(MessageComposer::MessageComposerSettings::self()->minimumHeight()));
-   ui->CBMinimumHeight->setCurrentIndex(index);
-   ui->customMinimumHeight->setEnabled(ui->CBMinimumHeight->itemData(index) == -1);
-
-   index = ui->WriteToImageFormat->findData(MessageComposer::MessageComposerSettings::self()->writeFormat());
-   if (index == -1) {
-      ui->WriteToImageFormat->setCurrentIndex(0);
-   } else {
-      ui->WriteToImageFormat->setCurrentIndex(index);
-   }
-
-   ui->renameResizedImage->setChecked(MessageComposer::MessageComposerSettings::self()->renameResizedImages());
-
-   ui->renameResizedImagePattern->setText(MessageComposer::MessageComposerSettings::self()->renameResizedImagesPattern());
-   ui->renameResizedImagePattern->setEnabled(ui->renameResizedImage->isChecked());
-   updateFilterSourceTypeSettings();
-
-   ui->doNotResizePattern->setText(MessageComposer::MessageComposerSettings::self()->doNotResizeEmailsPattern());
-   ui->resizeEmailsPattern->setText(MessageComposer::MessageComposerSettings::self()->resizeEmailsPattern());
-   updateEmailsFilterTypeSettings();
-
+   updateSettings();
    MessageComposer::MessageComposerSettings::self()->useDefaults( bUseDefaults );
 }
 

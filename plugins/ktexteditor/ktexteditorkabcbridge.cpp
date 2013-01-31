@@ -28,6 +28,9 @@
 
 using namespace KPIMIdentities;
 
+// extern "C" is needed here because this function must be located using
+// QLibrary resolve() that only knows how to resolve C functions
+// This function is used by kate/kwrite
 extern "C" KDE_EXPORT QString ktexteditorkabcbridge( const QString &placeHolder, QWidget *widget, bool *ok )
 {
   KGlobal::locale()->insertCatalog( "ktexteditorkabcbridge_plugin" );

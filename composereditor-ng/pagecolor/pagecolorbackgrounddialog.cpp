@@ -119,19 +119,19 @@ void PageColorBackgroundDialogPrivate::applyChanges()
             webElement.removeAttribute(QLatin1String("vlink"));
         } else {
             QColor col = pageColorWidget->pageBackgroundColor();
-            if(col.isValid())
+            if (col.isValid())
                 webElement.setAttribute(QLatin1String("bgcolor"),col.name());
             col = pageColorWidget->textColor();
-            if(col.isValid())
+            if (col.isValid())
                 webElement.setAttribute(QLatin1String("text"),col.name());
             col = pageColorWidget->linkColor();
-            if(col.isValid())
+            if (col.isValid())
                 webElement.setAttribute(QLatin1String("link"),col.name());
             col = pageColorWidget->activeLinkColor();
-            if(col.isValid())
+            if (col.isValid())
                 webElement.setAttribute(QLatin1String("alink"),col.name());
             col = pageColorWidget->visitedLinkColor();
-            if(col.isValid())
+            if (col.isValid())
                 webElement.setAttribute(QLatin1String("vlink"),col.name());
         }
         if (pageColorWidget->backgroundImageUrl().isEmpty()) {

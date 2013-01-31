@@ -47,6 +47,7 @@ SyncUploader::SyncUploader( QObject *parent )
     :QObject(parent),d(new Private)
 {
 }
+
 SyncUploader::~SyncUploader()
 {
     delete d;
