@@ -127,14 +127,13 @@ void KNComposerEditor::slotRemoveBox()
 
 void KNComposerEditor::slotAddBox()
 {
-  //Laurent fixme
   QTextCursor cursor = textCursor();
   if ( cursor.hasSelection() )
   {
     QString s = cursor.selectedText();
-    s.prepend( ",----[  ]\n" );
-    s.replace( QRegExp("\n"),"\n| " );
-    s.append( "\n`----" );
+    s.prepend( QLatin1String(",----[  ]\n| " ));
+    s.replace( QChar::ParagraphSeparator,QLatin1String("\n| ") );
+    s.append( QLatin1String("\n`----") );
     insertPlainText( s );
   } else {
     //int oldPos = cursor.position();
