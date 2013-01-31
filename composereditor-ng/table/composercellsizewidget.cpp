@@ -94,7 +94,7 @@ void ComposerCellSizeWidgetPrivate::setValue(const QString& val)
     } else {
         check->setChecked(true);
         QString valStr(val);
-        if(valStr.endsWith(QLatin1Char('%'))) {
+        if (valStr.endsWith(QLatin1Char('%'))) {
             setType(Percentage);
             valStr.chop(1);
             size->setValue(valStr.toInt());

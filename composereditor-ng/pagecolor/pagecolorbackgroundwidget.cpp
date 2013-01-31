@@ -65,7 +65,7 @@ void PageColorBackgroundWidget::setTextColor(const QColor &col)
 
 void PageColorBackgroundWidget::setUseDefaultColor(bool b)
 {
-    if(b)
+    if (b)
         ui->defaultColor->setChecked(true);
     else
         ui->customColors->setChecked(true);

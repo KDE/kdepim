@@ -1022,20 +1022,20 @@ void ComposerViewPrivate::_k_slotAdjustActions()
     if (alignment == QLatin1String("left")) {
         if (action_align_left)
             action_align_left->setChecked(true);
-    } else if(alignment == QLatin1String("right")) {
+    } else if (alignment == QLatin1String("right")) {
         if (action_align_right)
             action_align_right->setChecked(true);
-    } else if(alignment == QLatin1String("center")) {
+    } else if (alignment == QLatin1String("center")) {
         if (action_align_center)
             action_align_center->setChecked(true);
-    } else if(alignment == QLatin1String("-webkit-auto")) {
+    } else if (alignment == QLatin1String("-webkit-auto")) {
         if (action_align_justify)
             action_align_justify->setChecked(true);
     }
 
     if (action_font_family) {
         const QString font = evaluateJavascript(QLatin1String("getFontFamily()")).toString();
-        if(!font.isEmpty()) {
+        if (!font.isEmpty()) {
             action_font_family->setFont(font);
         }
     }
@@ -1078,7 +1078,7 @@ void ComposerViewPrivate::_k_slotSpeakText()
     QDBusInterface ktts(QLatin1String("org.kde.kttsd"), QLatin1String("/KSpeech"), QLatin1String("org.kde.KSpeech"));
 
     QString text = q->selectedText();
-    if(text.isEmpty())
+    if (text.isEmpty())
         text = q->page()->mainFrame()->toPlainText();
 
     ktts.asyncCall(QLatin1String("say"), text, 0);
@@ -1322,7 +1322,7 @@ void ComposerView::mousePressEvent(QMouseEvent * event)
     if (event->button() == Qt::LeftButton) {
         d->contextMenuResult = page()->mainFrame()->hitTestContent(event->pos());
         const bool imageSelected = !d->contextMenuResult.imageUrl().isEmpty();
-        if(imageSelected) {
+        if (imageSelected) {
             d->showImageResizeWidget();
         }
     } else {
@@ -1348,7 +1348,7 @@ void ComposerView::mouseDoubleClickEvent(QMouseEvent * event)
     if (event->button() == Qt::LeftButton) {
         d->contextMenuResult = page()->mainFrame()->hitTestContent(event->pos());
         const bool imageSelected = !d->contextMenuResult.imageUrl().isEmpty();
-        if(imageSelected) {
+        if (imageSelected) {
             d->showImageResizeWidget();
             d->_k_slotEditImage();
         }

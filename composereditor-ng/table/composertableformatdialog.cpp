@@ -132,7 +132,7 @@ void ComposerTableFormatDialogPrivate::updateSettings()
         }
         if (webElement.hasAttribute(QLatin1String("width"))) {
             QString width = webElement.attribute(QLatin1String("width"));
-            if(width.endsWith(QLatin1Char('%'))) {
+            if (width.endsWith(QLatin1Char('%'))) {
                 insertTableWidget->setTypeOfLength(QTextLength::PercentageLength);
                 width.chop(1);
                 insertTableWidget->setLength(width.toInt());

@@ -24,6 +24,7 @@
 
 #include <KLocale>
 #include <KSeparator>
+#include <KComboBox>
 
 #include <QVBoxLayout>
 #include <QWebElement>
@@ -38,7 +39,10 @@ class ComposerListDialogPrivate
 public:
     ComposerListDialogPrivate(const QWebElement& element, ComposerListDialog *qq)
         : webElement(element),
-          q(qq)
+          listType(0),
+          listStyle(0),
+          q(qq),
+          type(ExtendAttributesDialog::ListUL)
     {
         initialize();
     }
@@ -55,9 +59,12 @@ public:
     void initialize();
     void updateSettings();
     void updateListHtml();
+    void fillStyle();
     QWebElement webElement;
-    QComboBox *listType;
+    KComboBox *listType;
+    KComboBox *listStyle;
     ComposerListDialog *q;
+    ExtendAttributesDialog::ExtendType type;
 };
 
 void ComposerListDialogPrivate::initialize()
@@ -70,12 +77,17 @@ void ComposerListDialogPrivate::initialize()
     QLabel *lab = new QLabel(i18n("List Type"));
     vbox->addWidget(lab);
 
-    listType = new QComboBox;
+    listType = new KComboBox;
     vbox->addWidget(listType);
     listType->addItem(i18n("None"), None);
     listType->addItem(i18n("Bullet List"), Bullet);
     listType->addItem(i18n("Numbered List"), Numbered);
     listType->addItem(i18n("Definition List"), Definition);
+
+    //TODO
+    listStyle = new KComboBox;
+    vbox->addWidget(listStyle);
+
 
     KSeparator *sep = 0;
     if (!webElement.isNull()) {
@@ -91,6 +103,25 @@ void ComposerListDialogPrivate::initialize()
     vbox->addWidget( sep );
 
     q->connect(q, SIGNAL(okClicked()), q, SLOT(_k_slotOkClicked()));
+    fillStyle();
+}
+
+void ComposerListDialogPrivate::fillStyle()
+{
+    listStyle->clear();
+    if (type == ExtendAttributesDialog::ListUL) {
+        listStyle->addItem(i18n("Automatic"),QString());
+        listStyle->addItem(i18n("Solid circle"),QLatin1String("disc"));
+        listStyle->addItem(i18n("Open circle"),QLatin1String("circle"));
+        listStyle->addItem(i18n("Solid square"),QLatin1String("square"));
+    } else if (type == ExtendAttributesDialog::ListOL) {
+        listStyle->addItem(i18n("Automatic"),QString());
+        listStyle->addItem(i18n("1,2,3..."),QLatin1String("1"));
+        listStyle->addItem(i18n("A,B,C..."),QLatin1String("A"));
+        listStyle->addItem(i18n("a,b,c..."),QLatin1String("a"));
+        listStyle->addItem(i18n("I,II,III..."),QLatin1String("I"));
+        listStyle->addItem(i18n("i,ii,iii..."),QLatin1String("i"));
+    }
 }
 
 void ComposerListDialogPrivate::updateSettings()

@@ -134,7 +134,7 @@ QString ComposerLinkDialogPrivate::html() const
     if (url.isValid()) {
         const QString targetStr = target->itemData(target->currentIndex()).toString();
         QString html = QString::fromLatin1( "<a ");
-        if(!targetStr.isEmpty()) {
+        if (!targetStr.isEmpty()) {
             html += QString::fromLatin1("target=\'%1\'").arg(targetStr);
         }
         html += QString::fromLatin1( "href=\'%1\'>%2</a>" ).arg ( url.toString() ).arg ( linkText->text() );
@@ -171,7 +171,6 @@ void ComposerLinkDialogPrivate::updateSettings()
             }
         }
     }
-
 }
 
 ComposerLinkDialog::ComposerLinkDialog(const QString& selectedText, QWidget *parent)

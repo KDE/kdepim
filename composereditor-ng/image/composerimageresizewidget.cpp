@@ -101,21 +101,21 @@ ComposerImageResizeWidgetPrivate::ResizeDirection ComposerImageResizeWidgetPriva
     const QRect r(imageElement.geometry());
     if (QRect(0,0,resizeSquareSize,resizeSquareSize).contains(pos)) {
         dir = TopLeft;
-    } else if(QRect(0,r.height()-resizeSquareSize,resizeSquareSize,resizeSquareSize).contains(pos)) {
+    } else if (QRect(0,r.height()-resizeSquareSize,resizeSquareSize,resizeSquareSize).contains(pos)) {
         dir = BottomLeft;
-    } else if(QRect(r.width()-resizeSquareSize,r.height()-resizeSquareSize,resizeSquareSize,resizeSquareSize).contains(pos)) {
+    } else if (QRect(r.width()-resizeSquareSize,r.height()-resizeSquareSize,resizeSquareSize,resizeSquareSize).contains(pos)) {
         dir = BottomRight;
-    } else if(QRect(r.width()-resizeSquareSize,0,resizeSquareSize,resizeSquareSize).contains(pos)) {
+    } else if (QRect(r.width()-resizeSquareSize,0,resizeSquareSize,resizeSquareSize).contains(pos)) {
         dir = TopRight;
-    } else if(QRect(0,0,r.width(),resizeSquareSize).contains(pos)) {
+    } else if (QRect(0,0,r.width(),resizeSquareSize).contains(pos)) {
         dir = Top;
-    } else if(QRect(0,r.height()-resizeSquareSize,r.width(),resizeSquareSize).contains(pos)) {
+    } else if (QRect(0,r.height()-resizeSquareSize,r.width(),resizeSquareSize).contains(pos)) {
         dir = Bottom;
-    } else if(QRect(0,0,resizeSquareSize,r.height()).contains(pos)) {
+    } else if (QRect(0,0,resizeSquareSize,r.height()).contains(pos)) {
         dir = Left;
-    } else if(QRect(r.width()-resizeSquareSize,0,resizeSquareSize,r.height()).contains(pos)) {
+    } else if (QRect(r.width()-resizeSquareSize,0,resizeSquareSize,r.height()).contains(pos)) {
         dir = Right;
-    } else if(QRect(r.width(),resizeSquareSize,resizeSquareSize,resizeSquareSize).contains(pos)) {
+    } else if (QRect(r.width(),resizeSquareSize,resizeSquareSize,resizeSquareSize).contains(pos)) {
         dir = TopLeft;
     } else {
         dir = None;
@@ -189,7 +189,7 @@ void ComposerImageResizeWidget::mouseMoveEvent( QMouseEvent * event )
 {
     if (!d->mousePressed) {
         d->setResizeDirectionCursor(event->pos());
-    } else if(d->direction!=ComposerImageResizeWidgetPrivate::None){
+    } else if (d->direction!=ComposerImageResizeWidgetPrivate::None){
         const QSize size = d->resizeImage(event->pos());
         if (!d->imageSizetoolTip) {
             d->imageSizetoolTip = new ComposerImageResizeToolTip(this);

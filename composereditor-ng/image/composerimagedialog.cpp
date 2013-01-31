@@ -175,7 +175,7 @@ void ComposerImageDialogPrivate::initialize()
 void ComposerImageDialogPrivate::updateSettings()
 {
     imageWidget->setImageUrl(webElement.attribute(QLatin1String("src")));
-    if(webElement.hasAttribute(QLatin1String("height")) && webElement.hasAttribute(QLatin1String("width"))) {
+    if (webElement.hasAttribute(QLatin1String("height")) && webElement.hasAttribute(QLatin1String("width"))) {
         imageWidget->setImageWidth(webElement.attribute(QLatin1String("width")).toInt());
         imageWidget->setImageHeight(webElement.attribute(QLatin1String("height")).toInt());
     }
