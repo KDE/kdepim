@@ -83,6 +83,7 @@ public:
         SaveAs,
         Print,
         PrintPreview,
+        PasteWithoutFormatting,
 
         //Keep at end
         LastType

@@ -121,6 +121,7 @@ public:
           action_save_as(0),
           action_print(0),
           action_print_preview(0),
+          action_paste_withoutformatting(0),
           q(qq),
           imageResizeWidget(0)
     {
@@ -227,6 +228,7 @@ public:
     KAction *action_save_as;
     KAction *action_print;
     KAction *action_print_preview;
+    KAction *action_paste_withoutformatting;
 
     ComposerView *q;
     ComposerImageResizeWidget *imageResizeWidget;
@@ -605,11 +607,22 @@ void ComposerViewPrivate::createAction(ComposerView::ComposerViewAction type)
         }
         break;
     }
+    case ComposerView::PasteWithoutFormatting:
+    {
+        if (!action_paste_withoutformatting) {
+            action_paste_withoutformatting = new KAction(i18n( "Paste Without Formatting" ), q);
+            htmlEditorActionList.append(action_paste_withoutformatting);
+            q->connect( action_paste_withoutformatting, SIGNAL(triggered()), q, SLOT(_k_slotPasteWithoutFormatting()) );
+        }
+    }
     case ComposerView::Separator:
         //nothing
-    default:
+        break;
+    case ComposerView::LastType:
+        //nothing
         break;
     }
+
 }
 
 
@@ -1193,6 +1206,8 @@ void ComposerView::addCreatedActionsToActionCollection(KActionCollection *action
             actionCollection->addAction(QLatin1String("htmleditor_print"), d->action_print);
         if (d->action_print_preview)
             actionCollection->addAction(QLatin1String("htmleditor_print_preview"), d->action_print_preview);
+        if (d->action_paste_withoutformatting)
+            actionCollection->addAction(QLatin1String("htmleditor_paste_without_formatting"), d->action_paste_withoutformatting);
     }
 }
 
@@ -1225,8 +1240,9 @@ void ComposerView::contextMenuEvent(QContextMenuEvent* event)
     menu->addAction(page()->action(QWebPage::Cut));
     menu->addAction(page()->action(QWebPage::Copy));
     menu->addAction(page()->action(QWebPage::Paste));
-    QAction *pasteWithoutFormatting = menu->addAction(i18n("Paste Without Formatting"));
-    connect( pasteWithoutFormatting, SIGNAL(triggered(bool)), this, SLOT(_k_slotPasteWithoutFormatting()) );
+    if (d->action_paste_withoutformatting) {
+        menu->addAction(d->action_paste_withoutformatting);
+    }
 
     menu->addSeparator();
     if (!emptyDocument) {
@@ -1447,12 +1463,17 @@ void ComposerView::createToolBar(const QList<ComposerViewAction>& lstAction, KTo
             toolbar->addAction(act);
             break;
         }
-        default:
+        case PasteWithoutFormatting: {
+            toolbar->addAction(d->action_paste_withoutformatting);
             break;
+        }
+        case LastType: {
+            //nothing
+            break;
+        }
         }
     }
 }
-
 }
 
 #include "composerview.moc"
