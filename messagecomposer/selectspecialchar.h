@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
   
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -22,34 +22,33 @@
 #include <KDialog>
 
 class KCharSelect;
-
+class SelectSpecialCharPrivate;
 class MESSAGECOMPOSER_EXPORT SelectSpecialChar : public KDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit SelectSpecialChar(QWidget *parent);
-  ~SelectSpecialChar();
+    explicit SelectSpecialChar(QWidget *parent);
+    ~SelectSpecialChar();
 
-  void setCurrentChar(const QChar &c);
-  QChar currentChar() const;
+    void setCurrentChar(const QChar &c);
+    QChar currentChar() const;
 
-  void setOkButtonText(const QString& text);
+    void setOkButtonText(const QString& text);
 
-  void showSelectButton(bool show);
+    void showSelectButton(bool show);
 
-  /*
+    /*
    * When we double click we call accept
    */
-  void autoInsertChar();
-
-private Q_SLOTS:
-  void slotInsertChar();
+    void autoInsertChar();
 
 Q_SIGNALS:
-  void charSelected(const QChar&);
+    void charSelected(const QChar&);
 
 private:
-  KCharSelect *mCharSelect;
+    SelectSpecialCharPrivate * const d;
+    friend class SelectSpecialCharPrivate;
+    Q_PRIVATE_SLOT( d, void _k_slotInsertChar() )
 };
 
 #endif // SelectSpecialChar_H
