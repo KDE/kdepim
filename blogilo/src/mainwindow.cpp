@@ -80,6 +80,10 @@ MainWindow::MainWindow()
     toolboxDock->setAllowedAreas( Qt::RightDockWidgetArea | Qt::LeftDockWidgetArea );
     toolboxDock->setFeatures( QDockWidget::AllDockWidgetFeatures );
     toolboxDock->setWidget( toolbox );
+
+    toolboxDock->setObjectName( QLatin1String("dock_toolbox") );
+    toolbox->setObjectName( QLatin1String("toolbox") );
+
     this->addDockWidget( Qt::RightDockWidgetArea, toolboxDock );
 
     // then, setup our actions
