@@ -72,6 +72,7 @@ public:
         InsertImage,
         InsertTable,
         InsertLink,
+        InsertSpecialChar,
         TextForegroundColor,
         TextBackgroundColor,
         FormatReset,
@@ -150,6 +151,7 @@ private:
     Q_PRIVATE_SLOT( d, void _k_changeAutoSpellChecking(bool) )
     Q_PRIVATE_SLOT( d, void _k_slotEditList() )
     Q_PRIVATE_SLOT( d, void _k_slotPasteWithoutFormatting() )
+    Q_PRIVATE_SLOT( d, void _k_slotInsertSpecialChar() )
 };
 }
 

@@ -34,6 +34,7 @@
 
 #include <kpimtextedit/emoticontexteditaction.h>
 #include <kpimtextedit/inserthtmldialog.h>
+#include <kpimtextedit/selectspecialchar.h>
 
 #include <Sonnet/Dialog>
 #include <sonnet/backgroundchecker.h>
@@ -122,6 +123,7 @@ public:
           action_print(0),
           action_print_preview(0),
           action_paste_withoutformatting(0),
+          action_insert_specialchar(0),
           q(qq),
           imageResizeWidget(0)
     {
@@ -172,6 +174,7 @@ public:
     void _k_changeAutoSpellChecking(bool);
     void _k_slotEditList();
     void _k_slotPasteWithoutFormatting();
+    void _k_slotInsertSpecialChar();
 
     QAction* getAction ( QWebPage::WebAction action ) const;
     QVariant evaluateJavascript(const QString& command);
@@ -229,6 +232,7 @@ public:
     KAction *action_print;
     KAction *action_print_preview;
     KAction *action_paste_withoutformatting;
+    KAction *action_insert_specialchar;
 
     ComposerView *q;
     ComposerImageResizeWidget *imageResizeWidget;
@@ -613,6 +617,14 @@ void ComposerViewPrivate::createAction(ComposerView::ComposerViewAction type)
             action_paste_withoutformatting = new KAction(i18n( "Paste Without Formatting" ), q);
             htmlEditorActionList.append(action_paste_withoutformatting);
             q->connect( action_paste_withoutformatting, SIGNAL(triggered()), q, SLOT(_k_slotPasteWithoutFormatting()) );
+        }
+    }
+    case ComposerView::InsertSpecialChar:
+    {
+        if (!action_insert_specialchar) {
+            action_insert_specialchar = new KAction(i18n( "Insert Special Char..." ), q);
+            htmlEditorActionList.append(action_insert_specialchar);
+            q->connect( action_insert_specialchar, SIGNAL(triggered()), q, SLOT(_k_slotInsertSpecialChar()) );
         }
     }
     case ComposerView::Separator:
@@ -1084,6 +1096,16 @@ void ComposerViewPrivate::_k_slotPasteWithoutFormatting()
 #endif
 }
 
+void ComposerViewPrivate::_k_slotInsertSpecialChar()
+{
+    KPIMTextEdit::SelectSpecialChar dlg(q);
+    dlg.showSelectButton(false);
+    dlg.autoInsertChar();
+    if (dlg.exec()) {
+        execCommand(QLatin1String("insertHTML"), dlg.currentChar());
+    }
+}
+
 ComposerView::ComposerView(QWidget *parent)
     : KWebView(parent),d(new ComposerViewPrivate(this))
 {
@@ -1208,6 +1230,8 @@ void ComposerView::addCreatedActionsToActionCollection(KActionCollection *action
             actionCollection->addAction(QLatin1String("htmleditor_print_preview"), d->action_print_preview);
         if (d->action_paste_withoutformatting)
             actionCollection->addAction(QLatin1String("htmleditor_paste_without_formatting"), d->action_paste_withoutformatting);
+        if (d->action_insert_specialchar)
+            actionCollection->addAction(QLatin1String("htmleditor_insert_specialchar"), d->action_insert_specialchar);
     }
 }
 
@@ -1423,6 +1447,9 @@ void ComposerView::createToolBar(const QList<ComposerViewAction>& lstAction, KTo
             break;
         case InsertLink:
             toolbar->addAction(d->action_insert_link);
+            break;
+        case InsertSpecialChar:
+            toolbar->addAction(d->action_insert_specialchar);
             break;
         case TextForegroundColor:
             toolbar->addAction(d->action_text_foreground_color);
