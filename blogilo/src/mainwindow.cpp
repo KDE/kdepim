@@ -138,7 +138,7 @@ bool MainWindow::queryExit()
     writeConfigs();
     if( !DBMan::self()->clearTempEntries() )
         kDebug()<<"Could not erase temp_post table: "<< DBMan::self()->lastErrorText();
-    int count = tabPosts->count();
+    const int count = tabPosts->count();
     if(count > 0) {
         toolbox->getFieldsValue(activePost->currentPost());
         for(int i =0; i<count; ++i) {
@@ -224,7 +224,7 @@ void MainWindow::setCurrentBlog( int blog_id )
 //         actionCollection()->action("publish_post")->setEnabled( false );
         return;
     }
-    int count = blogs->items().count();
+    const int count = blogs->items().count();
     for (int i=0; i<count; ++i) {
         if( blogs->action(i)->data().toInt() == blog_id ) {
             blogs->setCurrentItem( i );
@@ -262,7 +262,7 @@ void MainWindow::slotCreateNewPost()
 
     tabPosts->setCurrentWidget( createPostEntry( mCurrentBlogId, BilboPost()) );
     if( mCurrentBlogId == -1 ) {
-        if( blogs->items().count() > 0 ) {
+        if( !blogs->items().isEmpty() ) {
             blogs->setCurrentItem( 0 );
             currentBlogChanged( blogs->action( 0 ) );
         }
@@ -366,7 +366,7 @@ void MainWindow::slotBlogEdited( const BilboBlog &blog )
 
 void MainWindow::slotBlogRemoved( int blog_id )
 {
-    int count = blogs->actions().count();
+    const int count = blogs->actions().count();
     for(int i=0; i< count; ++i){
         if( blogs->action( i )->data().toInt() == blog_id ) {
             if( blogs->currentItem() == i ) {
