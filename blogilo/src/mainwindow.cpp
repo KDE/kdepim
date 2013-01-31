@@ -80,6 +80,32 @@ MainWindow::MainWindow()
     connect( tabPosts, SIGNAL(tabCloseRequested(int)), this, SLOT(slotRemovePostEntry(int)) );
     setCentralWidget( tabPosts );
 
+
+    mNewTabButton = new QToolButton( this );
+    mNewTabButton->setIcon( KIcon( QLatin1String( "tab-new" ) ) );
+    mNewTabButton->adjustSize();
+    mNewTabButton->setToolTip( i18nc("@info:tooltip", "Open a new tab"));
+#ifndef QT_NO_ACCESSIBILITY
+    mNewTabButton->setAccessibleName( i18n( "New tab" ) );
+#endif
+    tabPosts->setCornerWidget( mNewTabButton, Qt::TopLeftCorner );
+    connect( mNewTabButton, SIGNAL(clicked()),
+             SLOT(slotCreateNewPost()) );
+
+
+    mCloseTabButton = new QToolButton( this );
+    mCloseTabButton->setIcon( KIcon( QLatin1String( "tab-close" ) ) );
+    mCloseTabButton->adjustSize();
+    mCloseTabButton->setToolTip( i18nc("@info:tooltip", "Close the current tab"));
+#ifndef QT_NO_ACCESSIBILITY
+    mCloseTabButton->setAccessibleName( i18n( "Close tab" ) );
+#endif
+    tabPosts->setCornerWidget( mCloseTabButton, Qt::TopRightCorner );
+    connect( mCloseTabButton, SIGNAL(clicked()),
+             SLOT(slotCloseTabClicked()) );
+
+
+
     toolbox = new Toolbox( this );
     toolboxDock = new QDockWidget( i18n( "Toolbox" ), this );
     toolboxDock->setAllowedAreas( Qt::RightDockWidgetArea | Qt::LeftDockWidgetArea );
@@ -130,6 +156,14 @@ MainWindow::MainWindow()
 MainWindow::~MainWindow()
 {
     kDebug();
+}
+
+void MainWindow::slotCloseTabClicked()
+{
+    const int currentIndex = tabPosts->currentIndex();
+    if (currentIndex != -1) {
+        slotRemovePostEntry(currentIndex);
+    }
 }
 
 bool MainWindow::queryExit()
@@ -478,15 +512,6 @@ void MainWindow::slotRemovePostEntry( int pos )
     tabPosts->removePage(widget);
     widget->close();
 
-//     if(tabPosts->count() == 1)
-//         tabPosts->setTabBarHidden(true);
-//     else
-//         tabPosts->setTabBarHidden(false);
-
-//     if( tabPosts->count() == 0 ){
-//         slotCreateNewPost();
-//         previousActivePostIndex = 0;
-//     }
     if( tabPosts->count() < 1 ) {
         activePost = 0;
         toolbox->resetFields();
@@ -626,10 +651,6 @@ QWidget* MainWindow::createPostEntry(int blog_id, const BilboPost& post)
     connect( temp, SIGNAL(sigBusy(bool)), this, SLOT(slotBusy(bool)) );
 
     tabPosts->addTab( temp, post.title() );
-//     if(tabPosts->count() == 1)
-//         tabPosts->setTabBarHidden(true);
-//     else
-//         tabPosts->setTabBarHidden(false);
     return temp;
 }
 

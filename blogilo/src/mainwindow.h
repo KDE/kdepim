@@ -101,6 +101,8 @@ private slots:
 
     void slotDialogDestroyed( QObject *win );
 
+    void slotCloseTabClicked();
+
 protected:
     void keyPressEvent( QKeyEvent * event );
     virtual bool queryExit();
@@ -129,5 +131,7 @@ private:
 
     KSelectAction *blogs;
     int &mCurrentBlogId;
+    QToolButton *mCloseTabButton;
+    QToolButton *mNewTabButton;
 };
 #endif
