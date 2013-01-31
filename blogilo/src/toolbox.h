@@ -71,7 +71,6 @@ public slots:
     void setDateTimeNow();
 
 signals:
-//     void sigCurrentBlogChanged( int blog_id );
     void sigEntrySelected( BilboPost &post, int blog_id );
     void sigError( const QString& );
     void sigBusy( bool isBusy );

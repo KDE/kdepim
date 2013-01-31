@@ -54,7 +54,6 @@ int main( int argc, char *argv[] )
     global_init();
 
     MainWindow *bilbo = new MainWindow;
-//     bilbo->setAttribute(Qt::WA_DeleteOnClose, false);
 
     bilbo->show();
     int r = app.exec();

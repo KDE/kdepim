@@ -50,7 +50,7 @@ public:
 
     QWidget* configPage( int number, QWidget* parent);
 
-private slots:
+private Q_SLOTS:
     void toggleWordWrap();
     void toggleLineNumber();
 

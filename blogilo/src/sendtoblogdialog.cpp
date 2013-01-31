@@ -29,6 +29,12 @@
 class SendToBlogDialog::Private
 {
 public:
+    Private()
+        : mIsPrivate(false),
+          mIsNew(false)
+    {
+    }
+
     Ui::SendToBlogBase ui;
     bool mIsPrivate;
     bool mIsNew;
@@ -71,16 +77,8 @@ bool SendToBlogDialog::isNew() const
 
 void SendToBlogDialog::accept()
 {
-    if(d->ui.saveDraft->isChecked()) {
-        d->mIsPrivate = true;
-    } else {
-        d->mIsPrivate = false;
-    }
-    if(d->ui.pubAsModify->isChecked()) {
-        d->mIsNew = false;
-    } else {
-        d->mIsNew = true;
-    }
+    d->mIsPrivate = d->ui.saveDraft->isChecked();
+    d->mIsNew = !d->ui.pubAsModify->isChecked();
     KDialog::accept();
 }
 

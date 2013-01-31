@@ -33,9 +33,9 @@ class TitleLineEdit : public KLineEdit
 Q_OBJECT
 public:
     explicit TitleLineEdit(QWidget* parent = 0);
-    virtual ~TitleLineEdit();
+    ~TitleLineEdit();
 
-signals:
+Q_SIGNALS:
     void downKeyPressed();
 
 protected:

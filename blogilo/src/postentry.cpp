@@ -138,13 +138,12 @@ void PostEntry::createUi()
     /// WYSIWYG Editor:
     BlogiloComposerView *view = new BlogiloComposerView(this);
     d->wysiwygEditor = new BlogiloComposerEditor(view,d->tabVisual);
-    //d->wysiwygEditor = new TextEditor( d->tabVisual );
     QVBoxLayout *vLayout = new QVBoxLayout( d->tabVisual );
     vLayout->addWidget( d->wysiwygEditor );
 
     ///htmlEditor:
     d->htmlEditor = HtmlEditor::self()->createView( d->tabHtml );
-    QGridLayout *hLayout = new QGridLayout( d->tabHtml );
+    QGridLayout *hLayout = new QGridLayout;( d->tabHtml );
     hLayout->addWidget( d->htmlEditor );
 
     ///previewer:
@@ -152,8 +151,7 @@ void PostEntry::createUi()
     QGridLayout *gLayout = new QGridLayout( d->tabPreview );
     gLayout->addWidget( d->previewer );
 
-    connect( d->previewer, SIGNAL(sigSetBlogStyle()), this, SLOT(
-                 slotSetPostPreview() ) );
+    connect( d->previewer, SIGNAL(sigSetBlogStyle()), this, SLOT(slotSetPostPreview()) );
 
 
     d->tabWidget->setCurrentIndex( 0 );

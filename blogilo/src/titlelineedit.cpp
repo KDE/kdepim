@@ -26,7 +26,8 @@
 #include <QKeyEvent>
 #include <KDebug>
 
-TitleLineEdit::TitleLineEdit(QWidget* parent): KLineEdit(parent)
+TitleLineEdit::TitleLineEdit(QWidget* parent)
+    : KLineEdit(parent)
 {
 
 }

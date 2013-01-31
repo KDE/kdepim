@@ -103,15 +103,16 @@ void Backend::categoriesListed( const QList< QMap < QString , QString > > & cate
     kDebug() << "Blog Id: " << d->bBlog->id();
     DBMan::self()->clearCategories( d->bBlog->id() );
 
-    for ( int i = 0; i < categories.count(); ++i ) {
+    const int categoriesCount(categories.count());
+    for ( int i = 0; i < categoriesCount; ++i ) {
         const QMap<QString, QString> &category = categories.at( i );
 
-        const QString name = category.value( "name", QString() );
-        const QString description = category.value( "description", QString() );
-        const QString htmlUrl = category.value( "htmlUrl", QString() );
-        const QString rssUrl = category.value( "rssUrl", QString() );
-        QString categoryId = category.value( "categoryId", QString() );
-        const QString parentId = category.value( "parentId", QString() );
+        const QString name = category.value( QLatin1String("name"), QString() );
+        const QString description = category.value( QLatin1String("description"), QString() );
+        const QString htmlUrl = category.value( QLatin1String("htmlUrl"), QString() );
+        const QString rssUrl = category.value( QLatin1String("rssUrl"), QString() );
+        QString categoryId = category.value( QLatin1String("categoryId"), QString() );
+        const QString parentId = category.value( QLatin1String("parentId"), QString() );
 
         if(categoryId.isEmpty()) {
             categoryId = QString::number(i);
@@ -137,10 +138,10 @@ void Backend::entriesListed( const QList< KBlog::BlogPost > & posts )
 //     DBMan::self()->clearPosts( d->bBlog->id() );
 
     for ( int i = 0; i < posts.count(); i++ ) {
-        BilboPost tempPost( posts[i] );
+        BilboPost tempPost( posts.at(i) );
         if(Settings::changeNToBreak()) {
-            tempPost.setContent( tempPost.content().replace( '\n', "<br/>" ) );
-            tempPost.setAdditionalContent( tempPost.additionalContent().replace( '\n', "<br/>" ) );
+            tempPost.setContent( tempPost.content().replace( QLatin1Char('\n'), QLatin1String("<br/>") ) );
+            tempPost.setAdditionalContent( tempPost.additionalContent().replace( QLatin1Char('\n'), QLatin1String("<br/>") ) );
         }
         DBMan::self()->addPost( tempPost, d->bBlog->id() );
     }

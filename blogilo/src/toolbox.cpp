@@ -64,25 +64,16 @@ Toolbox::Toolbox( QWidget *parent )
         this->d->statusbar = new KStatusBar( this );
     setupUi( this );
     setButtonsIcon();
-//     frameBlog->layout()->setAlignment( Qt::AlignTop );
     frameCat->layout()->setAlignment( Qt::AlignTop );
-//     reloadBlogList();
     optionsDate->setDate( QDateTime::currentDateTime().date() );
     optionsTime->setTime( QDateTime::currentDateTime().time() );
-//     connect( btnBlogAdd, SIGNAL(clicked()), this, SLOT(slotAddBlog()) );
-//     connect( btnBlogEdit, SIGNAL(clicked()), this, SLOT(slotEditBlog()) );
-//     connect( btnBlogRemove, SIGNAL(clicked()), this, SLOT(slotRemoveBlog()) );
 
     connect( btnCatReload, SIGNAL(clicked()), this, SLOT(slotReloadCategoryList()) );
     connect( btnEntriesUpdate, SIGNAL(clicked()), this, SLOT(slotUpdateEntries()) );
     connect( btnEntriesClear, SIGNAL(clicked(bool)), this, SLOT(clearEntries()) );
 
-//     connect( this, SIGNAL(sigCurrentBlogChanged(int)), this, SLOT(slotCurrentBlogChanged(int)) );
-//     connect( &listBlogRadioButtons, SIGNAL(buttonClicked(int)), this, SLOT(slotSetCurrentBlog()) );
-
     connect( lstEntriesList, SIGNAL(itemDoubleClicked(QListWidgetItem*)),
              this, SLOT(slotEntrySelected(QListWidgetItem*)) );
-//     connect( btnEntriesCopyUrl, SIGNAL(clicked(bool)), this, SLOT(slotEntriesCopyUrl()) );
     connect( btnEntriesRemove, SIGNAL(clicked(bool)), this, SLOT(slotRemoveSelectedEntryFromServer()) );
 
     connect( btnOptionsNow, SIGNAL(clicked(bool)), this, SLOT(setDateTimeNow()) );
@@ -113,8 +104,6 @@ void Toolbox::setCurrentBlogId( int blog_id )
     kDebug()<<blog_id;
     if( d->mCurrentBlogId == blog_id )
         return;
-//     btnBlogEdit->setEnabled( true );
-//     btnBlogRemove->setEnabled( true );
     d->mCurrentBlogId = blog_id;
     if( blog_id <= 0 )
         return;
@@ -128,7 +117,6 @@ void Toolbox::setCurrentBlogId( int blog_id )
 void Toolbox::slotReloadCategoryList()
 {
     kDebug();
-//     QAbstractButton *btn = listBlogRadioButtons.checkedButton();
     if ( d->mCurrentBlogId == -1 ) {
         KMessageBox::sorry( this, i18n( "No blog has been selected: you have to select a blog from the Blogs page before asking for the list of categories." ) );
         return;
@@ -140,7 +128,6 @@ void Toolbox::slotReloadCategoryList()
     emit sigBusy( true );
     d->statusbar->showMessage( i18n( "Requesting list of categories..." ) );
     b->getCategoryListFromServer();
-//     this->setCursor( Qt::BusyCursor );
 }
 
 void Toolbox::slotUpdateEntries(int count)
