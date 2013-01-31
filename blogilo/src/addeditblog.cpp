@@ -388,7 +388,7 @@ void AddEditBlog::fetchedBlogId( const QList< QMap < QString , QString > > & lis
         if( blogsDialog->exec() ) {
             int row = blogsList->currentRow();
             if( row == -1 ) {
-                delete blogsList;
+                delete blogsDialog;
                 return;
             }
             blogId = qobject_cast<QLabel*>( blogsList->cellWidget(row, 2) )->text();
