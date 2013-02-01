@@ -21,7 +21,7 @@
 #include "folderrequester.h"
 #include "mailkernel.h"
 #include "mailutil.h"
-#include "filter/addtagdialog.h"
+#include "addtagdialog.h"
 
 #include <Akonadi/EntityMimeTypeFilterModel>
 

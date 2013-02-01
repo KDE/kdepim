@@ -101,7 +101,7 @@ set(libmailcommon_SRCS
   snippetvariabledialog.cpp
   tagwidget.cpp
   tag.cpp
-  filter/addtagdialog.cpp
+  addtagdialog.cpp
 )
 
 soprano_add_ontology(libmailcommon_SRCS
