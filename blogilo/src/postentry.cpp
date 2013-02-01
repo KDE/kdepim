@@ -143,7 +143,7 @@ void PostEntry::createUi()
 
     ///htmlEditor:
     d->htmlEditor = HtmlEditor::self()->createView( d->tabHtml );
-    QGridLayout *hLayout = new QGridLayout;( d->tabHtml );
+    QGridLayout *hLayout = new QGridLayout( d->tabHtml );
     hLayout->addWidget( d->htmlEditor );
 
     ///previewer:
