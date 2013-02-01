@@ -20,10 +20,13 @@
 
 #include <KLocale>
 #include <KLineEdit>
+#include <KMessageBox>
 
 #include <Nepomuk2/Tag>
 
 #include <QVBoxLayout>
+
+using namespace MailCommon;
 
 AddTagDialog::AddTagDialog(const QList<KActionCollection *>& actions, QWidget *parent)
   : KDialog(parent)
@@ -45,6 +48,11 @@ AddTagDialog::~AddTagDialog()
 {
 }
 
+void AddTagDialog::setTags(const QList<MailCommon::Tag::Ptr>& tags)
+{
+    mTags = tags;
+}
+
 void AddTagDialog::slotTagNameChanged(const QString& text)
 {
   enableButtonOk(!text.isEmpty());
@@ -53,6 +61,14 @@ void AddTagDialog::slotTagNameChanged(const QString& text)
 void AddTagDialog::slotOk()
 {
   const QString name(mTagWidget->tagNameLineEdit()->text());
+
+  Q_FOREACH ( const MailCommon::Tag::Ptr &tag, mTags ) {
+    if ( tag->tagName == name ) {
+      KMessageBox::error( this, i18n( "Tag %1 already exists", name ) );
+      return;
+    }
+  }
+
   Nepomuk2::Tag nepomukTag( name );
   nepomukTag.setLabel( name );
 

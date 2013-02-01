@@ -18,19 +18,22 @@
 #ifndef ADDTAGDIALOG_H
 #define ADDTAGDIALOG_H
 
+#include "mailcommon_export.h"
+#include "tag.h"
 #include <KDialog>
 class KActionCollection;
 
 namespace MailCommon {
-  class TagWidget;
-}
-class AddTagDialog : public KDialog
+class TagWidget;
+
+class MAILCOMMON_EXPORT AddTagDialog : public KDialog
 {
   Q_OBJECT
 public:
   explicit AddTagDialog(const QList<KActionCollection *>& actions, QWidget *parent = 0);
   ~AddTagDialog();
 
+  void setTags(const QList<MailCommon::Tag::Ptr>& tags);
   QString label() const;
   QString nepomukUrl() const;
 private Q_SLOTS:
@@ -41,6 +44,7 @@ private:
   QString mLabel;
   QString mNepomukUrl;
   MailCommon::TagWidget *mTagWidget;
+  QList<MailCommon::Tag::Ptr> mTags;
 };
-
+}
 #endif // ADDTAGDIALOG_H

@@ -375,7 +375,7 @@ QString FilterActionMissingTagDialog::selectedTag() const
 
 void FilterActionMissingTagDialog::slotAddTag()
 {
-  QPointer<AddTagDialog> dlg = new AddTagDialog(QList<KActionCollection*>(),this);
+  QPointer<MailCommon::AddTagDialog> dlg = new MailCommon::AddTagDialog(QList<KActionCollection*>(),this);
   if(dlg->exec())  {
     QListWidgetItem *item = new QListWidgetItem( dlg->label() );
     item->setData(UrlData, dlg->nepomukUrl());
