@@ -23,12 +23,13 @@
 namespace ComposerEditorNG {
 static QString OL = QLatin1String("ol");
 static QString UL = QLatin1String("ul");
+static QString DL = QLatin1String("dl");
 
 QWebElement ListHelper::ulElement(const QWebElement& element)
 {
     if (element.isNull())
         return element;
-    const QString tagName = element.tagName();
+    const QString tagName = element.tagName().toLower();
     if (tagName == UL) {
         return element;
     } else {
@@ -45,7 +46,7 @@ QWebElement ListHelper::olElement(const QWebElement& element)
 {
     if (element.isNull())
         return element;
-    const QString tagName = element.tagName();
+    const QString tagName = element.tagName().toLower();
     if (tagName == OL) {
         return element;
     } else {
@@ -58,18 +59,38 @@ QWebElement ListHelper::olElement(const QWebElement& element)
     return element;
 }
 
-QWebElement ListHelper::listElement(const QWebElement& element)
+QWebElement ListHelper::dlElement(const QWebElement& element)
 {
     if (element.isNull())
         return element;
-    const QString tagName = element.tagName();
-    if ((tagName == OL) || (tagName == UL)) {
+    const QString tagName = element.tagName().toLower();
+    if (tagName == DL) {
         return element;
     } else {
         QWebElement e = element;
         do {
             e = e.parent();
-        } while( ((e.tagName().toLower() != OL) || (e.tagName().toLower() != UL)) && !e.isNull() );
+        } while( (e.tagName().toLower() != DL) && !e.isNull() );
+        return e;
+    }
+    return element;
+}
+
+
+QWebElement ListHelper::listElement(const QWebElement& element)
+{
+    if (element.isNull())
+        return element;
+    const QString tagName = element.tagName().toLower();
+    if ((tagName == OL) || (tagName == UL) || (tagName == DL)) {
+        return element;
+    } else {
+        QWebElement e = element;
+        do {
+            e = e.parent();
+        } while( ((e.tagName().toLower() != OL) ||
+                  (e.tagName().toLower() != UL) ||
+                  (e.tagName().toLower() != DL)) && !e.isNull() );
         return e;
     }
     return element;

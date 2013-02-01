@@ -30,6 +30,7 @@
 #include <QWebElement>
 #include <QComboBox>
 #include <QLabel>
+#include <QSpinBox>
 
 namespace ComposerEditorNG
 {
@@ -57,18 +58,22 @@ public:
     };
 
     void initialize();
+    void initializeTypeList();
     void updateSettings();
     void updateListHtml();
     void fillStyle();
     QWebElement webElement;
     KComboBox *listType;
     KComboBox *listStyle;
+    QSpinBox *start;
     ComposerListDialog *q;
     ExtendAttributesDialog::ExtendType type;
 };
 
 void ComposerListDialogPrivate::initialize()
 {
+    initializeTypeList();
+
     q->setButtons( KDialog::Ok | KDialog::Cancel );
     q->setCaption( i18n( "Edit List" ) );
 
@@ -84,9 +89,16 @@ void ComposerListDialogPrivate::initialize()
     listType->addItem(i18n("Numbered List"), Numbered);
     listType->addItem(i18n("Definition List"), Definition);
 
-    //TODO
     listStyle = new KComboBox;
     vbox->addWidget(listStyle);
+
+    //TODO
+    lab = new QLabel(i18n("Start Number:"));
+    vbox->addWidget(lab);
+    start = new QSpinBox;
+    start->setMinimum(0);
+    start->setMaximum(9999);
+    vbox->addWidget(start);
 
 
     KSeparator *sep = 0;
@@ -94,7 +106,7 @@ void ComposerListDialogPrivate::initialize()
         sep = new KSeparator;
         vbox->addWidget( sep );
         //TODO customize
-        ExtendAttributesButton *button = new ExtendAttributesButton(webElement,ExtendAttributesDialog::ListUL,q);
+        ExtendAttributesButton *button = new ExtendAttributesButton(webElement,type,q);
         q->connect(button, SIGNAL(webElementChanged()), q, SLOT(_k_slotWebElementChanged()));
         vbox->addWidget( button );
     }
@@ -104,6 +116,12 @@ void ComposerListDialogPrivate::initialize()
 
     q->connect(q, SIGNAL(okClicked()), q, SLOT(_k_slotOkClicked()));
     fillStyle();
+    updateSettings();
+}
+
+void ComposerListDialogPrivate::initializeTypeList()
+{
+    //TODO
 }
 
 void ComposerListDialogPrivate::fillStyle()
@@ -114,6 +132,8 @@ void ComposerListDialogPrivate::fillStyle()
         listStyle->addItem(i18n("Solid circle"),QLatin1String("disc"));
         listStyle->addItem(i18n("Open circle"),QLatin1String("circle"));
         listStyle->addItem(i18n("Solid square"),QLatin1String("square"));
+        listStyle->setEnabled(true);
+        start->setEnabled(false);
     } else if (type == ExtendAttributesDialog::ListOL) {
         listStyle->addItem(i18n("Automatic"),QString());
         listStyle->addItem(i18n("1,2,3..."),QLatin1String("1"));
@@ -121,6 +141,11 @@ void ComposerListDialogPrivate::fillStyle()
         listStyle->addItem(i18n("a,b,c..."),QLatin1String("a"));
         listStyle->addItem(i18n("I,II,III..."),QLatin1String("I"));
         listStyle->addItem(i18n("i,ii,iii..."),QLatin1String("i"));
+        listStyle->setEnabled(true);
+        start->setEnabled(true);
+    } else {
+        listStyle->setEnabled(false);
+        start->setEnabled(false);
     }
 }
 
@@ -142,7 +167,7 @@ void ComposerListDialogPrivate::updateListHtml()
 
 void ComposerListDialogPrivate::_k_slotWebElementChanged()
 {
-    //TODO
+    fillStyle();
 }
 
 void ComposerListDialogPrivate::_k_slotOkClicked()
