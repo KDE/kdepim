@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
   
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -25,7 +25,7 @@
 
 #include <QVBoxLayout>
 
-AddTagDialog::AddTagDialog(QWidget *parent)
+AddTagDialog::AddTagDialog(const QList<KActionCollection *>& actions, QWidget *parent)
   : KDialog(parent)
 {
   setModal( true );
@@ -34,13 +34,20 @@ AddTagDialog::AddTagDialog(QWidget *parent)
   setDefaultButton( Ok );
   showButtonSeparator( true );
   QVBoxLayout *lay = new QVBoxLayout( mainWidget() );
-  mTagWidget = new MailCommon::TagWidget(QList<KActionCollection*>(),this);
+  mTagWidget = new MailCommon::TagWidget(actions,this);
   lay->addWidget(mTagWidget);
   connect( this, SIGNAL(okClicked()), SLOT(slotOk()) );
+  connect(mTagWidget->tagNameLineEdit(), SIGNAL(textChanged(QString)), SLOT(slotTagNameChanged(QString)));
+  enableButtonOk(false);
 }
 
 AddTagDialog::~AddTagDialog()
 {
+}
+
+void AddTagDialog::slotTagNameChanged(const QString& text)
+{
+  enableButtonOk(!text.isEmpty());
 }
 
 void AddTagDialog::slotOk()

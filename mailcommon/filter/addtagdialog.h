@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
   
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -19,6 +19,8 @@
 #define ADDTAGDIALOG_H
 
 #include <KDialog>
+class KActionCollection;
+
 namespace MailCommon {
   class TagWidget;
 }
@@ -26,13 +28,14 @@ class AddTagDialog : public KDialog
 {
   Q_OBJECT
 public:
-  explicit AddTagDialog(QWidget *parent = 0);
+  explicit AddTagDialog(const QList<KActionCollection *>& actions, QWidget *parent = 0);
   ~AddTagDialog();
 
   QString label() const;
   QString nepomukUrl() const;
 private Q_SLOTS:
   void slotOk();
+  void slotTagNameChanged(const QString& text);
 
 private:
   QString mLabel;
