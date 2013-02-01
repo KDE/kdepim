@@ -569,7 +569,8 @@ void ComposerViewPrivate::createAction(ComposerView::ComposerViewAction type)
     case ComposerView::Find:
     {
         if (!action_find) {
-            action_find = new KAction(KIcon(QLatin1String("edit_find")), i18n( "&Find..." ), q);
+            action_find = new KAction(KIcon(QLatin1String("edit-find")), i18n( "&Find..." ), q);
+            action_find->setShortcut(KStandardShortcut::find());
             htmlEditorActionList.append(action_find);
             q->connect( action_find, SIGNAL(triggered()), q, SLOT(_k_slotFind()) );
         }
@@ -578,8 +579,9 @@ void ComposerViewPrivate::createAction(ComposerView::ComposerViewAction type)
     case ComposerView::Replace:
     {
         if (!action_replace) {
-            action_replace = new KAction(KIcon(QLatin1String("edit_replace")), i18n( "&Replace..." ), q);
+            action_replace = new KAction(KIcon(QLatin1String("edit-replace")), i18n( "&Replace..." ), q);
             htmlEditorActionList.append(action_replace);
+            action_replace->setShortcut(KStandardShortcut::replace());
             q->connect( action_replace, SIGNAL(triggered()), q, SLOT(_k_slotReplace()) );
         }
         break;
@@ -589,6 +591,7 @@ void ComposerViewPrivate::createAction(ComposerView::ComposerViewAction type)
         if (!action_save_as) {
             action_save_as = new KAction(KIcon(QLatin1String("file_save_as")), i18n( "Save &As..." ), q);
             htmlEditorActionList.append(action_save_as);
+            action_replace->setShortcut(KStandardShortcut::save());
             q->connect( action_save_as, SIGNAL(triggered()), q, SLOT(_k_slotSaveAs()) );
         }
         break;
@@ -598,6 +601,7 @@ void ComposerViewPrivate::createAction(ComposerView::ComposerViewAction type)
         if (!action_print) {
             action_print = new KAction(KIcon(QLatin1String("file_print")), i18n( "&Print..." ), q);
             htmlEditorActionList.append(action_print);
+            action_replace->setShortcut(KStandardShortcut::print());
             q->connect( action_print, SIGNAL(triggered()), q, SLOT(_k_slotPrint()) );
         }
         break;
