@@ -29,7 +29,7 @@
 
 
 EntriesCountDialog::EntriesCountDialog( QWidget *parent )
-        : KDialog( parent )
+    : KDialog( parent )
 {
     QWidget *dialog = new QWidget;
     ui.setupUi( dialog );
