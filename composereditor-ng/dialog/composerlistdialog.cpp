@@ -88,6 +88,8 @@ void ComposerListDialogPrivate::initialize()
     listType->addItem(i18n("Bullet List"), Bullet);
     listType->addItem(i18n("Numbered List"), Numbered);
     listType->addItem(i18n("Definition List"), Definition);
+    //TODO
+    listType->setEnabled(false);
 
     listStyle = new KComboBox;
     vbox->addWidget(listStyle);
