@@ -37,17 +37,20 @@ public:
     explicit UploadMediaDialog( QWidget *parent=0 );
     ~UploadMediaDialog();
     enum UploadType{BlogAPI=0, FTP};
+
     void init( const BilboBlog* currentBlog );
-signals:
+
+Q_SIGNALS:
     void sigBusy(bool isBusy);
-protected slots:
+
+private Q_SLOTS:
     bool selectNewFile();
-    void currentMediaChanged(QString);
+    void currentMediaChanged(const QString &);
     void slotUploadTypeChanged(int index);
-    void slotButtonClicked(int button);
     void slotMediaObjectUploaded(KJob *);
     void slotMediaObjectUploaded(BilboMedia*);
     void slotError( const QString &msg );
+    void slotOkClicked();
 private:
     const BilboBlog *mCurrentBlog;
     Ui::UploadMediaBase ui;

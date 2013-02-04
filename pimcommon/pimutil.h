@@ -43,7 +43,7 @@
 class OrgKdeAkonadiImapSettingsInterface;
 
 
-#define IMAP_RESOURCE_IDENTIFIER "akonadi_imap_resource"
+#define IMAP_RESOURCE_IDENTIFIER QLatin1String("akonadi_imap_resource")
 
 namespace PimCommon {
 

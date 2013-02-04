@@ -76,7 +76,6 @@ set( messagecomposer_src
      autocorrection/import/importkmailautocorrection.cpp
      autocorrection/import/importabstractautocorrection.cpp
      imagescaling/imagescalingjob.cpp
-     imagescaling/imagescalingdialog.cpp
      imagescaling/imagescalingwidget.cpp
      imagescaling/imagescalingutils.cpp
 )

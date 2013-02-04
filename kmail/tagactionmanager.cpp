@@ -1,5 +1,5 @@
 /* Copyright 2010 Thomas McGuire <mcguire@kde.org>
-   Copyright 2011 Laurent Montel <montel@kde.org>
+   Copyright 2011-2012-2013 Laurent Montel <montel@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public License as
@@ -21,7 +21,7 @@
 
 #include "messageactions.h"
 
-#include "mailcommon/tagwidget.h"
+#include "mailcommon/addtagdialog.h"
 
 #include <Nepomuk2/Tag>
 #include <Nepomuk2/ResourceManager>
@@ -55,7 +55,8 @@ TagActionManager::TagActionManager( QObject *parent, KActionCollection *actionCo
     mMessageActions( messageActions ),
     mMessageTagToggleMapper( 0 ),
     mGUIClient( guiClient ),
-    mSeparatorAction( 0 ),
+    mSeparatorMoreAction( 0 ),
+    mSeparatorNewTagAction( 0 ),
     mMoreAction( 0 ),
     mNewTagAction( 0 ),
     mTagQueryClient( 0 )
@@ -97,19 +98,22 @@ void TagActionManager::clearActions()
     mActionCollection->removeAction( action );
   }
 
-  if ( mSeparatorAction ) {
-    mMessageActions->messageStatusMenu()->removeAction( mSeparatorAction );
-    mSeparatorAction = 0;
+  if ( mSeparatorMoreAction ) {
+    mMessageActions->messageStatusMenu()->removeAction( mSeparatorMoreAction );
   }
-  if ( mMoreAction ) {
-    mMessageActions->messageStatusMenu()->removeAction( mMoreAction );
-    mMoreAction = 0;
+
+  if ( mSeparatorNewTagAction ) {
+    mMessageActions->messageStatusMenu()->removeAction( mSeparatorNewTagAction );
   }
 
   if ( mNewTagAction ) {
     mMessageActions->messageStatusMenu()->removeAction( mNewTagAction );
-    mNewTagAction = 0;
   }
+
+  if ( mMoreAction ) {
+    mMessageActions->messageStatusMenu()->removeAction( mMoreAction );
+  }
+
 
   mTagActions.clear();
   delete mMessageTagToggleMapper;
@@ -174,6 +178,7 @@ void TagActionManager::createTagActions()
 
   // Create a action for each tag and plug it into various places
   int i = 0;
+  bool needToAddMoreAction = false;
   const int numberOfTag(mTags.count());
   foreach( const MailCommon::Tag::Ptr &tag, mTags ) {
     if(tag->tagStatus)
@@ -190,23 +195,40 @@ void TagActionManager::createTagActions()
 
       if ( i == s_numberMaxTag && i < numberOfTag )
       {
-        mSeparatorAction = new KAction( this );
-        mSeparatorAction->setSeparator( true );
-        mMessageActions->messageStatusMenu()->menu()->addAction( mSeparatorAction );
-
-        mMoreAction = new KAction( i18n( "More..." ), this );
-        mMessageActions->messageStatusMenu()->menu()->addAction( mMoreAction );
-        connect( mMoreAction, SIGNAL(triggered(bool)),
-                 this, SIGNAL(tagMoreActionClicked()) );
+        needToAddMoreAction = true;
       }
     }
     ++i;
   }
 
-  mNewTagAction = new KAction( i18n( "Add new tag..." ), this );
+
+  if(!mSeparatorNewTagAction) {
+    mSeparatorNewTagAction = new QAction( this );
+    mSeparatorNewTagAction->setSeparator( true );
+  }
+  mMessageActions->messageStatusMenu()->menu()->addAction( mSeparatorNewTagAction );
+
+  if (!mNewTagAction) {
+    mNewTagAction = new KAction( i18n( "Add new tag..." ), this );
+    connect( mNewTagAction, SIGNAL(triggered(bool)),
+             this, SLOT(newTagActionClicked()) );
+  }
   mMessageActions->messageStatusMenu()->menu()->addAction( mNewTagAction );
-  connect( mNewTagAction, SIGNAL(triggered(bool)),
-           this, SLOT(newTagActionClicked()) );
+
+  if (needToAddMoreAction) {
+    if(!mSeparatorMoreAction) {
+      mSeparatorMoreAction = new QAction( this );
+      mSeparatorMoreAction->setSeparator( true );
+    }
+    mMessageActions->messageStatusMenu()->menu()->addAction( mSeparatorMoreAction );
+
+    if (!mMoreAction) {
+      mMoreAction = new KAction( i18n( "More..." ), this );
+      connect( mMoreAction, SIGNAL(triggered(bool)),
+               this, SIGNAL(tagMoreActionClicked()) );
+    }
+    mMessageActions->messageStatusMenu()->menu()->addAction( mMoreAction );
+  }
 
   if ( !mToolbarActions.isEmpty() && mGUIClient->factory() ) {
     mGUIClient->plugActionList( "toolbar_messagetag_actions", mToolbarActions );
@@ -321,37 +343,13 @@ void TagActionManager::propertyChanged(const Nepomuk2::Resource& res)
 
 void TagActionManager::newTagActionClicked()
 {
-    QPointer<KDialog> dialog = new KDialog();
-    dialog->setCaption( i18n( "Add Tag" ) );
-    dialog->setButtons( KDialog::Ok | KDialog::Cancel );
-    dialog->setDefaultButton( KDialog::Ok );
-    dialog->showButtonSeparator( true );
-    MailCommon::TagWidget *tagWidget = new MailCommon::TagWidget( QList<KActionCollection*>() << mActionCollection, dialog );
-    dialog->setMainWidget( tagWidget );
+    QPointer<MailCommon::AddTagDialog> dialog = new MailCommon::AddTagDialog(QList<KActionCollection*>() << mActionCollection, 0);
+    dialog->setTags(mTags);
     if ( dialog->exec() ) {
-      const QString name = tagWidget->tagNameLineEdit()->text();
-
-      foreach( const MailCommon::Tag::Ptr &tag, mTags ) {
-        if ( tag->tagName == name ) {
-          KMessageBox::error( dialog, i18n( "Tag %1 already exists", name ) );
-          delete dialog;
-          return;
-        }
-      }
-
-      Nepomuk2::Tag nepomukTag( name );
-      nepomukTag.setLabel( name );
-
-      MailCommon::Tag::Ptr tag = MailCommon::Tag::fromNepomuk( nepomukTag );
-      tagWidget->recordTagSettings( tag );
-      MailCommon::Tag::SaveFlags saveFlags = tagWidget->saveFlags();
-      tag->saveToNepomuk( saveFlags );
-      mNewTagUri = tag->nepomukResourceUri.toString();
-
+      mNewTagUri = dialog->nepomukUrl();
       // Assign tag to all selected items right away
       emit tagActionTriggered( mNewTagUri );
     }
-
     delete dialog;
 }
 

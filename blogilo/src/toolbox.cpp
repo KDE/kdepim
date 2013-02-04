@@ -534,7 +534,7 @@ void Toolbox::requestEntriesListContextMenu( const QPoint & pos )
 
 void Toolbox::openPostInBrowser()
 {
-    if( !lstEntriesList->selectedItems().isEmpty() )
+    if( lstEntriesList->selectedItems().isEmpty() )
         return;
     BilboPost post = DBMan::self()->getPostInfo( lstEntriesList->currentItem()->data( 32 ).toInt() );
     QString url;

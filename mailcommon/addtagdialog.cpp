@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
   
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -20,12 +20,15 @@
 
 #include <KLocale>
 #include <KLineEdit>
+#include <KMessageBox>
 
 #include <Nepomuk2/Tag>
 
 #include <QVBoxLayout>
 
-AddTagDialog::AddTagDialog(QWidget *parent)
+using namespace MailCommon;
+
+AddTagDialog::AddTagDialog(const QList<KActionCollection *>& actions, QWidget *parent)
   : KDialog(parent)
 {
   setModal( true );
@@ -34,18 +37,38 @@ AddTagDialog::AddTagDialog(QWidget *parent)
   setDefaultButton( Ok );
   showButtonSeparator( true );
   QVBoxLayout *lay = new QVBoxLayout( mainWidget() );
-  mTagWidget = new MailCommon::TagWidget(QList<KActionCollection*>(),this);
+  mTagWidget = new MailCommon::TagWidget(actions,this);
   lay->addWidget(mTagWidget);
   connect( this, SIGNAL(okClicked()), SLOT(slotOk()) );
+  connect(mTagWidget->tagNameLineEdit(), SIGNAL(textChanged(QString)), SLOT(slotTagNameChanged(QString)));
+  enableButtonOk(false);
 }
 
 AddTagDialog::~AddTagDialog()
 {
 }
 
+void AddTagDialog::setTags(const QList<MailCommon::Tag::Ptr>& tags)
+{
+    mTags = tags;
+}
+
+void AddTagDialog::slotTagNameChanged(const QString& text)
+{
+  enableButtonOk(!text.isEmpty());
+}
+
 void AddTagDialog::slotOk()
 {
   const QString name(mTagWidget->tagNameLineEdit()->text());
+
+  Q_FOREACH ( const MailCommon::Tag::Ptr &tag, mTags ) {
+    if ( tag->tagName == name ) {
+      KMessageBox::error( this, i18n( "Tag %1 already exists", name ) );
+      return;
+    }
+  }
+
   Nepomuk2::Tag nepomukTag( name );
   nepomukTag.setLabel( name );
 

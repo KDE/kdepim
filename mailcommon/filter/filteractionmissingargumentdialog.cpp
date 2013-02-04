@@ -21,7 +21,7 @@
 #include "folderrequester.h"
 #include "mailkernel.h"
 #include "mailutil.h"
-#include "filter/addtagdialog.h"
+#include "addtagdialog.h"
 
 #include <Akonadi/EntityMimeTypeFilterModel>
 
@@ -375,7 +375,7 @@ QString FilterActionMissingTagDialog::selectedTag() const
 
 void FilterActionMissingTagDialog::slotAddTag()
 {
-  QPointer<AddTagDialog> dlg = new AddTagDialog(this);
+  QPointer<MailCommon::AddTagDialog> dlg = new MailCommon::AddTagDialog(QList<KActionCollection*>(),this);
   if(dlg->exec())  {
     QListWidgetItem *item = new QListWidgetItem( dlg->label() );
     item->setData(UrlData, dlg->nepomukUrl());

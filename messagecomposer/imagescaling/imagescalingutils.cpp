@@ -50,7 +50,10 @@ bool Utils::resizeImage(MessageCore::AttachmentPart::Ptr part)
     if (MessageComposer::MessageComposerSettings::self()->resizeImagesWithFormats()) {
         const QString formatsType = MessageComposer::MessageComposerSettings::self()->resizeImagesWithFormatsType();
         if (!formatsType.isEmpty()) {
-            //TODO
+            const QStringList lstFormat = formatsType.split(QLatin1Char(';'));
+            Q_FOREACH (const QString& type, lstFormat) {
+                //TODO improve it.
+            }
         }
     }
 

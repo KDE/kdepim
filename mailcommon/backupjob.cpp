@@ -166,7 +166,7 @@ void BackupJob::abort( const QString &errorMessage )
     // The progressmanager will delete it
   }
   QString text = i18n( "Failed to archive the folder '%1'.", mRootFolder.name() );
-  text += '\n' + errorMessage;
+  text += QLatin1Char('\n') + errorMessage;
   Q_EMIT error(text);
   if(mDisplayMessageBox)
     KMessageBox::sorry( mParentWidget, text, i18n( "Archiving failed" ) );
@@ -196,10 +196,10 @@ void BackupJob::finish()
   QString text = i18n( "Archiving folder '%1' successfully completed. "
                        "The archive was written to the file '%2'.",
                        mRootFolder.name(), mMailArchivePath.path() );
-  text += '\n' + i18np( "1 message of size %2 was archived.",
+  text += QLatin1Char('\n') + i18np( "1 message of size %2 was archived.",
                         "%1 messages with the total size of %2 were archived.",
                         mArchivedMessages, KIO::convertSize( mArchivedSize ) );
-  text += '\n' + i18n( "The archive file has a size of %1.",
+  text += QLatin1Char('\n') + i18n( "The archive file has a size of %1.",
                        KIO::convertSize( archiveFileInfo.size() ) );
   if(mDisplayMessageBox) {
     KMessageBox::information( mParentWidget, text, i18n( "Archiving finished" ) );
@@ -249,11 +249,11 @@ void BackupJob::processMessage( const Akonadi::Item &item )
   const QByteArray messageData = message->encodedContent();
   const qint64 messageSize = messageData.size();
   const QString messageName = QString::number( item.id() );
-  const QString fileName = pathForCollection( mCurrentFolder ) + "/cur/" + messageName;
+  const QString fileName = pathForCollection( mCurrentFolder ) + QLatin1String("/cur/") + messageName;
 
   // PORT ME: user and group!
   kDebug() << "AKONDI PORT: disabled code here!";
-  if ( !mArchive->writeFile( fileName, "user", "group", messageData, messageSize ) ) {
+  if ( !mArchive->writeFile( fileName, QLatin1String("user"), QLatin1String("group"), messageData, messageSize ) ) {
     abort( i18n( "Failed to write a message into the archive folder '%1'.",
                  mCurrentFolder.name() ) );
     return;
@@ -292,7 +292,7 @@ bool BackupJob::writeDirHelper( const QString &directoryPath )
 {
   // PORT ME: Correct user/group
   kDebug() << "AKONDI PORT: Disabled code here!";
-  return mArchive->writeDir( directoryPath, "user", "group" );
+  return mArchive->writeDir( directoryPath, QLatin1String("user"), QLatin1String("group") );
 }
 
 QString BackupJob::collectionName( const Akonadi::Collection &collection ) const
@@ -313,11 +313,11 @@ QString BackupJob::pathForCollection( const Akonadi::Collection &collection ) co
   if ( collection != mRootFolder ) {
     Q_ASSERT( curCol.isValid() );
     while ( curCol != mRootFolder ) {
-      fullPath.prepend( '.' + collectionName( curCol ) + QString::fromLatin1(".directory/") );
+      fullPath.prepend( QLatin1Char('.') + collectionName( curCol ) + QString::fromLatin1(".directory/") );
       curCol = curCol.parentCollection();
     }
     Q_ASSERT( curCol == mRootFolder );
-    fullPath.prepend( '.' + collectionName( curCol ) + QString::fromLatin1(".directory/") );
+    fullPath.prepend( QLatin1Char('.') + collectionName( curCol ) + QString::fromLatin1(".directory/") );
   }
   return fullPath;
 }
@@ -328,7 +328,7 @@ QString BackupJob::subdirPathForCollection( const Akonadi::Collection &collectio
   const int parentDirEndIndex = path.lastIndexOf( collection.name() );
   Q_ASSERT( parentDirEndIndex != -1 );
   path = path.left( parentDirEndIndex );
-  path.append( '.' + collection.name() + ".directory" );
+  path.append( QLatin1Char('.') + collection.name() + QLatin1String(".directory") );
   return path;
 }
 
@@ -412,17 +412,17 @@ void BackupJob::start()
   }
   case Tar:
   {
-    mArchive = new KTar( mMailArchivePath.path(), "application/x-tar" );
+    mArchive = new KTar( mMailArchivePath.path(), QLatin1String("application/x-tar") );
     break;
   }
   case TarGz:
   {
-    mArchive = new KTar( mMailArchivePath.path(), "application/x-gzip" );
+    mArchive = new KTar( mMailArchivePath.path(), QLatin1String("application/x-gzip") );
     break;
   }
   case TarBz2:
   {
-    mArchive = new KTar( mMailArchivePath.path(), "application/x-bzip2" );
+    mArchive = new KTar( mMailArchivePath.path(), QLatin1String("application/x-bzip2") );
     break;
   }
   }
@@ -434,7 +434,7 @@ void BackupJob::start()
   }
 
   mProgressItem = KPIM::ProgressManager::createProgressItem(
-      "BackupJob",
+      QLatin1String("BackupJob"),
       i18n( "Archiving" ),
       QString(),
       true );

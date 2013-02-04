@@ -35,7 +35,6 @@ public:
     QString mAuthor;
     int mId;///id in DB
     int localId;
-//  Position mPosition;
     bool mModifyTimeStamp;///Just for toolbox entry!
     QList<Category> mCategoryList;
 };
@@ -150,11 +149,11 @@ void BilboPost::setCategoryList( const QList< Category > & list )
 {
     d_ptr->mCategoryList = list;
     QStringList cats;
-    int count = list.count();
+    const int count = list.count();
     for ( int i = 0; i < count; ++i ) {
         cats.append( list[i].name );
     }
-    this->setCategories( cats );
+    setCategories( cats );
 }
 
 void BilboPost::setProperties( const BilboPost& postProp )

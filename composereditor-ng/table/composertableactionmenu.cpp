@@ -34,7 +34,23 @@ class ComposerTableActionMenuPrivate
 {
 public:
     ComposerTableActionMenuPrivate(QWidget *parent, const QWebElement& element, ComposerTableActionMenu *qq)
-        : q( qq ), webElement(element), parentWidget(parent)
+        : action_insert_table( 0 ),
+          action_insert_row_below( 0 ),
+          action_insert_row_above( 0 ),
+          action_table_format( 0 ),
+          action_table_cell_format( 0 ),
+          action_remove_cell_contents( 0 ),
+          action_remove_cell( 0 ),
+          action_insert_cell_before( 0 ),
+          action_insert_cell_after( 0 ),
+          action_remove_table( 0 ),
+          action_remove_row( 0 ),
+          action_remove_column( 0 ),
+          action_insert_column_before( 0 ),
+          action_insert_column_after( 0 ),
+          q( qq ),
+          webElement(element),
+          parentWidget(parent)
     {
     }
     void _k_slotInsertRowBelow();
@@ -83,7 +99,6 @@ void ComposerTableActionMenuPrivate::_k_slotInsertColumnBefore()
 
 void ComposerTableActionMenuPrivate::_k_slotInsertRowBelow()
 {
-    //Fix delete cells contents.
     QWebElement e = webElement.parent().clone();
     webElement.parent().prependOutside(e);
     TableHelper::removeCellContentsFromCurrentRow(webElement);
@@ -91,7 +106,6 @@ void ComposerTableActionMenuPrivate::_k_slotInsertRowBelow()
 
 void ComposerTableActionMenuPrivate::_k_slotInsertRowAbove()
 {
-    //Fix delete cells contents.
     QWebElement e = webElement.parent().clone();
     webElement.parent().appendOutside(e);
     TableHelper::removeCellContentsFromCurrentRow(webElement);
