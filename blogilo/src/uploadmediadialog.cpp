@@ -85,7 +85,7 @@ void UploadMediaDialog::init( const BilboBlog *currentBlog )
     this->show();
 }
 
-void UploadMediaDialog::currentMediaChanged(QString newPath)
+void UploadMediaDialog::currentMediaChanged(const QString& newPath)
 {
     ui.kcfg_previewer->showPreview(KUrl(newPath));
 }
