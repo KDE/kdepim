@@ -87,7 +87,7 @@ void ComposerView::createActions(const QList<ComposerViewAction>& lstActions)
 void ComposerView::createAllActions()
 {
     for ( uint i = 0; i < LastType; ++i ) {
-      d->createAction( (ComposerViewAction)i );
+        d->createAction( (ComposerViewAction)i );
     }
     d->connectActionGroup();
 }
