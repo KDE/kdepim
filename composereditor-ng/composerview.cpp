@@ -20,7 +20,6 @@
 
 #include "composerview.h"
 #include "composerview_p.h"
-#include "composereditorutils_p.h"
 
 #include "table/composertableactionmenu.h"
 #include "globalsettings_base.h"
@@ -41,7 +40,6 @@
 #include <KToolBar>
 
 #include <QAction>
-#include <QWebFrame>
 #include <QWebElement>
 #include <QContextMenuEvent>
 #include <QDebug>
