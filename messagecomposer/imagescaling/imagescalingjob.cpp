@@ -41,7 +41,7 @@ bool ImageScalingJob::loadImageFromData(const QByteArray& data)
 
 bool ImageScalingJob::resizeImage()
 {
-  if(mImage.isNull())
+  if (mImage.isNull())
      return false;
   const int width = mImage.width();
   const int height = mImage.height();
@@ -57,12 +57,12 @@ bool ImageScalingJob::resizeImage()
       if (maximumHeight == -1) {
           maximumHeight = MessageComposer::MessageComposerSettings::self()->customMaximumHeight();
       }
-      if( width > maximumWidth ) {
+      if ( width > maximumWidth ) {
           newWidth = maximumWidth;
       } else {
           newWidth = width;
       }
-      if(height > maximumHeight) {
+      if (height > maximumHeight) {
           newHeight = maximumHeight;
       } else {
           newHeight = height;
@@ -72,7 +72,7 @@ bool ImageScalingJob::resizeImage()
       newWidth = width;
   }
 
-  if(MessageComposer::MessageComposerSettings::self()->enlargeImageToMinimum()) {
+  if (MessageComposer::MessageComposerSettings::self()->enlargeImageToMinimum()) {
 
       int minimumWidth = MessageComposer::MessageComposerSettings::self()->minimumWidth();
       if (minimumWidth == -1) {
@@ -83,10 +83,10 @@ bool ImageScalingJob::resizeImage()
       if (minimumHeight == -1) {
           minimumHeight = MessageComposer::MessageComposerSettings::self()->customMinimumHeight();
       }
-      if(newWidth < minimumWidth) {
+      if (newWidth < minimumWidth) {
           newWidth = minimumWidth;
       }
-      if(newHeight < minimumHeight) {
+      if (newHeight < minimumHeight) {
           newHeight = minimumHeight;
       }
   }
@@ -107,9 +107,9 @@ QByteArray ImageScalingJob::mimetype() const
 {
     //Add more mimetype if a day we add more saving format.
     const QString type = MessageComposer::MessageComposerSettings::self()->writeFormat();
-    if(type == QLatin1String("JPG")) {
+    if (type == QLatin1String("JPG")) {
         return "image/jpeg";
-    } else if(type == QLatin1String("PNG")) {
+    } else if (type == QLatin1String("PNG")) {
         return "image/png";
     }
     return QByteArray();
