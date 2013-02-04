@@ -39,6 +39,7 @@ class QToolButton;
 class Toolbox;
 class KSelectAction;
 class PostEntry;
+class PostsTabWidget;
 
 /**
 Main window of blogilo...
@@ -122,7 +123,7 @@ private:
     QDockWidget *toolboxDock;
     QPointer<PostEntry> activePost;
     KStatusNotifierItem *systemTray;
-    KTabWidget *tabPosts;
+    PostsTabWidget *tabPosts;
 
     int previousActivePostIndex;
 

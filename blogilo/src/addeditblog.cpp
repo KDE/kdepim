@@ -359,7 +359,8 @@ void AddEditBlog::fetchedBlogId( const QList< QMap < QString , QString > > & lis
     }
     hideWaitWidget();
     QString blogId, blogName, blogUrl, apiUrl;
-    if ( list.count() > 1 ) {
+    const int listCount(list.count());
+    if ( listCount > 1 ) {
         kDebug() << "User has more than ONE blog!";
         KDialog *blogsDialog = new KDialog(this);
         QTableWidget *blogsList = new QTableWidget(blogsDialog);
@@ -400,7 +401,7 @@ void AddEditBlog::fetchedBlogId( const QList< QMap < QString , QString > > & lis
             return;
         }
         delete blogsDialog;
-    } else if (list.count() > 0) {
+    } else if (listCount > 0) {
         blogId = list.constBegin()->value(QLatin1String("id"));
         blogName = list.constBegin()->value(QLatin1String("title"));
         blogUrl = list.constBegin()->value(QLatin1String("url"));
@@ -456,7 +457,7 @@ void AddEditBlog::fetchedProfileId( const QString &id )
 
 void AddEditBlog::enableOkButton( const QString & txt )
 {
-    bool check = !txt.isEmpty();
+    const bool check = !txt.isEmpty();
     enableButtonOk( check );
     d->ui.txtTitle->setEnabled( check );
 }

@@ -59,7 +59,6 @@ int main( int argc, char *argv[] )
     int r = app.exec();
 
     global_end();
-    delete bilbo;
     return r;
 }
 

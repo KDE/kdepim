@@ -21,6 +21,7 @@ set(blogilo_SRCS
  blogsettings.cpp
  uploadmediadialog.cpp
  syncuploader.cpp
+ poststabwidget.cpp
  composer/htmleditor.cpp
  composer/stylegetter.cpp
  composer/dialogs/addmediadialog.cpp
