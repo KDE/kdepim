@@ -220,6 +220,8 @@ void ImageScalingWidget::updateSettings()
 
     ui->resizeImageWithFormats->setChecked(MessageComposer::MessageComposerSettings::self()->resizeImagesWithFormats());
     ui->resizeImageWithFormatsType->setText(MessageComposer::MessageComposerSettings::self()->resizeImagesWithFormatsType());
+    ui->resizeImageWithFormatsType->setEnabled(ui->resizeImageWithFormats->isChecked());
+
 
     updateFilterSourceTypeSettings();
     updateEmailsFilterTypeSettings();
