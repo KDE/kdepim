@@ -212,6 +212,12 @@ void ThunderbirdSettings::readExtensionsSettings()
         addKmailConfig(QLatin1String("AutoResizeImage"), QLatin1String("rename-resized-images"), true);
     }
 
+    const QString filteringImageFormatsStr("extensions.AutoResizeImage.imageFormats");
+    if (mHashConfig.contains(filteringImageFormatsStr)) {
+        const QString filteringImageFormats = mHashConfig.value(filteringImageFormatsStr).toString();
+        //convert it.
+        addKmailConfig(QLatin1String("AutoResizeImage"), QLatin1String("resize-image-with-formats"), filteringImageFormats);
+    }
 }
 
 int ThunderbirdSettings::adaptAutoResizeResolution(int index, const QString& configStrList)
