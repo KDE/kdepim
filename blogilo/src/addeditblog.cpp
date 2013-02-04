@@ -68,8 +68,8 @@ AddEditBlog::AddEditBlog( int blog_id, QWidget *parent, Qt::WindowFlags flags )
     kDebug();
     d->mainW = new KTabWidget( this );
     d->ui.setupUi( d->mainW );
-    this->setMainWidget( d->mainW );
-    this->setWindowTitle( i18n( "Add a new blog" ) );
+    setMainWidget( d->mainW );
+    setWindowTitle( i18n( "Add a new blog" ) );
     d->isNewBlog = true;
     d->mFetchAPITimer = d->mFetchBlogIdTimer = d->mFetchProfileIdTimer = 0;
 
@@ -86,8 +86,8 @@ AddEditBlog::AddEditBlog( int blog_id, QWidget *parent, Qt::WindowFlags flags )
     connect( d->ui.txtId, SIGNAL(returnPressed()), this, SLOT(slotReturnPressed()) );
 
     if ( blog_id > -1 ) {
-        this->setWindowTitle( i18n( "Edit blog settings" ) );
-        this->enableButtonOk( true );
+        setWindowTitle( i18n( "Edit blog settings" ) );
+        enableButtonOk( true );
         d->ui.btnFetch->setEnabled( true );
         d->ui.btnAutoConf->setEnabled( true );
         d->isNewBlog = false;
@@ -103,7 +103,7 @@ AddEditBlog::AddEditBlog( int blog_id, QWidget *parent, Qt::WindowFlags flags )
     } else {
         d->bBlog = new BilboBlog( this );
         d->bBlog->setBlogId( QString() );
-        this->enableButtonOk( false );
+        enableButtonOk( false );
         d->ui.txtTitle->setEnabled(false);
     }
 
@@ -457,15 +457,15 @@ void AddEditBlog::fetchedProfileId( const QString &id )
 void AddEditBlog::enableOkButton( const QString & txt )
 {
     bool check = !txt.isEmpty();
-    this->enableButtonOk( check );
+    enableButtonOk( check );
     d->ui.txtTitle->setEnabled( check );
 }
 
 void AddEditBlog::slotReturnPressed()
 {
     ///FIXME This function commented temporarilly! check its functionality! and uncomment it!
-    if(this->isButtonEnabled(KDialog::Ok)){
-        this->setButtonFocus(KDialog::Ok);
+    if(isButtonEnabled(KDialog::Ok)){
+        setButtonFocus(KDialog::Ok);
     } else {
         if(d->mainW->currentIndex()==0){
             if(d->ui.btnAutoConf->isEnabled()){

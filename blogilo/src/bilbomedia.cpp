@@ -139,7 +139,7 @@ KIcon BilboMedia::icon() const
         }
     }
 
-    type.replace( QChar( '/' ), QChar( '-' ) );
+    type.replace( QLatin1Char( '/' ), QLatin1Char( '-' ) );
     return KIcon( type );
 }
 

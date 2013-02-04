@@ -41,9 +41,6 @@ it's implemented to decrease dependency to KBlog :)
 class BilboPost : public KBlog::BlogPost
 {
 public:
-//  enum Position{
-//   Published=0, Draft, Local
-//  };
     BilboPost();
     explicit BilboPost( const KBlog::BlogPost& );
     BilboPost( const BilboPost& );
@@ -59,7 +56,6 @@ public:
     int localId() const;
     void setLocalId( const int );
 
-//     KBlog::BlogPost * toKBlogPost();
     QString toString() const;
 
     bool isModifyTimeStamp() const;
