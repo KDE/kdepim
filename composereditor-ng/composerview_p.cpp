@@ -39,8 +39,6 @@
 
 #include <KToolInvocation>
 #include <KLocale>
-#include <KAction>
-#include <KFontAction>
 #include <KToggleAction>
 #include <KAction>
 #include <KSelectAction>

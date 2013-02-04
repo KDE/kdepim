@@ -28,36 +28,23 @@
 #include <kpimtextedit/emoticontexteditaction.h>
 
 
-#include <KToolInvocation>
 #include <KLocale>
 #include <KAction>
-#include <KFontAction>
 #include <KToggleAction>
-#include <KAction>
+#include <KFontAction>
 #include <KSelectAction>
 #include <KActionCollection>
-#include <KColorDialog>
 #include <KMessageBox>
 #include <KStandardDirs>
 #include <KDebug>
-#include <KFontAction>
 #include <KMenu>
-#include <KFileDialog>
-#include <KPrintPreview>
-#include <kdeprintdialog.h>
 #include <KToolBar>
 
 #include <QAction>
-#include <QDBusInterface>
-#include <QDBusConnectionInterface>
 #include <QWebFrame>
 #include <QWebElement>
 #include <QContextMenuEvent>
 #include <QDebug>
-#include <QPointer>
-#include <QPrinter>
-#include <QPrintDialog>
-#include <QClipboard>
 
 namespace ComposerEditorNG {
 
