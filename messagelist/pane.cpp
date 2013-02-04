@@ -616,19 +616,17 @@ void Pane::Private::onTabContextMenuRequest( const QPoint &pos )
   if ( !w ) return;
 
   KMenu menu( q );
-  QAction *action;
 
-  action = menu.addAction( i18nc( "@action:inmenu", "Close Tab" ) );
-  action->setEnabled( q->count() > 1 );
-  action->setIcon( KIcon( QLatin1String( "tab-close" ) ) );
-  connect( action, SIGNAL(triggered(bool)),
-           q, SLOT(onCloseTabClicked()) ); // Reuse the logic...
+
+  QAction *closeTabAction = menu.addAction( i18nc( "@action:inmenu", "Close Tab" ) );
+  closeTabAction->setEnabled( q->count() > 1 );
+  closeTabAction->setIcon( KIcon( QLatin1String( "tab-close" ) ) );
 
   QAction *allOther = menu.addAction( i18nc("@action:inmenu", "Close All Other Tabs" ) );
   allOther->setEnabled( q->count() > 1 );
   allOther->setIcon( KIcon( QLatin1String( "tab-close-other" ) ) );
 
-  action = menu.exec( q->mapToGlobal( pos ) );
+  QAction *action = menu.exec( q->mapToGlobal( pos ) );
 
   if ( action == allOther ) { // Close all other tabs
     QList<Widget *> widgets;
@@ -646,6 +644,8 @@ void Pane::Private::onTabContextMenuRequest( const QPoint &pos )
     }
 
     updateTabControls();
+  } else if (action == closeTabAction) {
+      closeTab(q->widget(indexBar));
   }
 }
 
