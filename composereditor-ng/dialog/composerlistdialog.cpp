@@ -107,7 +107,6 @@ void ComposerListDialogPrivate::initialize()
     if (!webElement.isNull()) {
         sep = new KSeparator;
         vbox->addWidget( sep );
-        //TODO customize
         ExtendAttributesButton *button = new ExtendAttributesButton(webElement,type,q);
         q->connect(button, SIGNAL(webElementChanged()), q, SLOT(_k_slotWebElementChanged()));
         vbox->addWidget( button );
