@@ -308,7 +308,7 @@ void ComposerViewPrivate::createAction(ComposerView::ComposerViewAction type)
         }
         break;
     }
-    case ComposerView::InsertHtml:
+    case ComposerView::InsertImage:
     {
         if (!action_insert_image) {
             action_insert_image = new KAction( KIcon( QLatin1String( "insert-image" ) ), i18n( "Add Image" ), q);
@@ -316,7 +316,7 @@ void ComposerViewPrivate::createAction(ComposerView::ComposerViewAction type)
         }
         break;
     }
-    case ComposerView::InsertImage:
+    case ComposerView::InsertHtml:
     {
         if (!action_insert_html) {
             action_insert_html = new KAction( i18n( "Insert HTML" ), q);
