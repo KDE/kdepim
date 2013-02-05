@@ -633,11 +633,9 @@ void Pane::Private::onTabContextMenuRequest( const QPoint &pos )
 
 
   QAction *closeTabAction = menu.addAction( i18nc( "@action:inmenu", "Close Tab" ) );
-  closeTabAction->setEnabled( q->count() > 1 );
   closeTabAction->setIcon( KIcon( QLatin1String( "tab-close" ) ) );
 
   QAction *allOther = menu.addAction( i18nc("@action:inmenu", "Close All Other Tabs" ) );
-  allOther->setEnabled( q->count() > 1 );
   allOther->setIcon( KIcon( QLatin1String( "tab-close-other" ) ) );
 
   QAction *action = menu.exec( q->mapToGlobal( pos ) );
