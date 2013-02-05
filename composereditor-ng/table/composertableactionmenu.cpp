@@ -268,6 +268,8 @@ ComposerTableActionMenu::ComposerTableActionMenu(const QWebElement& element,QObj
     removeMenu->addAction( d->action_remove_cell_contents );
     connect( d->action_remove_cell_contents, SIGNAL(triggered(bool)), SLOT(_k_slotRemoveCellContents()) );
 
+    addSeparator();
+
     d->action_merge_cell = new KAction( KIcon(QLatin1String("edit-table-cell-merge")), i18n( "Join With Cell to the Right" ), this );
     connect( d->action_merge_cell, SIGNAL(triggered(bool)), SLOT(_k_slotMergeCell()) );
     addAction( d->action_merge_cell );
