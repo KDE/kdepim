@@ -137,7 +137,8 @@ void Backend::entriesListed( const QList< KBlog::BlogPost > & posts )
     kDebug() << "Blog Id: " << d->bBlog->id();
 //     DBMan::self()->clearPosts( d->bBlog->id() );
 
-    for ( int i = 0; i < posts.count(); i++ ) {
+    const int postCount(posts.count());
+    for ( int i = 0; i < postCount; ++i ) {
         BilboPost tempPost( posts.at(i) );
         if(Settings::changeNToBreak()) {
             tempPost.setContent( tempPost.content().replace( QLatin1Char('\n'), QLatin1String("<br/>") ) );

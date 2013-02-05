@@ -56,6 +56,7 @@
 #include <kimagefilepreview.h>
 #include "uploadmediadialog.h"
 #include <QTimer>
+#include <QKeyEvent>
 #include <KToolInvocation>
 #include <KMenu>
 
