@@ -120,7 +120,7 @@ public Q_SLOTS:
 protected Q_SLOTS:
     void slotError( const QString& errMsg );
     void slotPostPublished( int blog_id, BilboPost *post );
-    void slotTitleChanged( const QString& title );
+    void slotTitleChanged();
     void showProgressBar();
     void deleteProgressBar();
     void saveTemporary();

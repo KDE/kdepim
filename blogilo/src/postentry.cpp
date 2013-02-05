@@ -169,8 +169,8 @@ void PostEntry::createUi()
     d->txtTitle = new KPIM::SpellCheckLineEdit( this, QLatin1String( "blogilorc" ) );
     d->horizontalLayout->addWidget( d->txtTitle );
     d->labelTitle->setBuddy( d->txtTitle );
-    connect( d->txtTitle, SIGNAL(textChanged(QString)), this,
-             SLOT(slotTitleChanged(QString)) );
+    connect( d->txtTitle, SIGNAL(textChanged()), this,
+             SLOT(slotTitleChanged()) );
     connect( d->txtTitle, SIGNAL(focusDown()), SLOT(slotFocusEditor()) );
 
     d->gridLayout->addLayout( d->horizontalLayout, 0, 0, 1, 1 );
@@ -248,10 +248,11 @@ void PostEntry::setHtmlContent(const QString& content)
     d->htmlEditor->document()->setText( content );
 }
 
-void PostEntry::slotTitleChanged( const QString& title )
+void PostEntry::slotTitleChanged()
 {
-    d->mCurrentPost.setTitle( title );
-    Q_EMIT postTitleChanged( title );
+    const QString titleText(d->txtTitle->toPlainText());
+    d->mCurrentPost.setTitle(titleText);
+    Q_EMIT postTitleChanged(titleText);
 }
 
 QString PostEntry::postTitle() const
