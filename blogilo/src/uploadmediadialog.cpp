@@ -158,9 +158,9 @@ void UploadMediaDialog::slotOkClicked()
                 return;
             }
         }
-        KMessageBox::error(this, i18n("Inserted FTP URL is not a valid URL.\n\
-                                      Note: The URL must start with \"ftp\" or \"sftp\",\
-                                      and end with a \"/\" that indicates the directory to which the file should be uploaded."));
+        KMessageBox::error(this, i18n("Inserted FTP URL is not a valid URL.\n"
+                                      "Note: The URL must start with \"ftp\" or \"sftp\", "
+                                      "and end with a \"/\" that indicates the directory to which the file should be uploaded."));
         // > what is meant here?
         // edited coles 2009 - I think it makes sense now.
     }
