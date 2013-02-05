@@ -138,6 +138,7 @@ RedirectDialog::RedirectDialog( SendMode mode, QWidget *parent )
   d->mEditTo = new MessageComposer::ComposerLineEdit( true, hbox );
   d->mEditTo->setRecentAddressConfig( KernelIf->config().data() );
   d->mEditTo->setMinimumWidth( 300 );
+  d->mEditTo->setClearButtonShown( true );
 
   QPushButton *BtnTo = new QPushButton( QString(), hbox );
   BtnTo->setIcon( KIcon( "help-contents" ) );

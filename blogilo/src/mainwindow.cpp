@@ -33,6 +33,7 @@
 #include "settings.h"
 #include "bilboblog.h"
 #include "blogsettings.h"
+#include "poststabwidget.h"
 
 #include "ui_advancedsettingsbase.h"
 #include "ui_settingsbase.h"
@@ -55,6 +56,7 @@
 #include <kimagefilepreview.h>
 #include "uploadmediadialog.h"
 #include <QTimer>
+#include <QKeyEvent>
 #include <KToolInvocation>
 #include <KMenu>
 
@@ -72,39 +74,12 @@ MainWindow::MainWindow()
     kDebug();
     setWindowTitle( i18n("Blogilo") );
 
-    tabPosts = new KTabWidget( this );
-    tabPosts->setElideMode( Qt::ElideRight );
-    tabPosts->setTabsClosable( true );
-    tabPosts->tabBar()->setSelectionBehaviorOnRemove( QTabBar::SelectPreviousTab );
-    tabPosts->setDocumentMode(true);
-    connect( tabPosts, SIGNAL(tabCloseRequested(int)), this, SLOT(slotRemovePostEntry(int)) );
+    tabPosts = new PostsTabWidget(this);
     setCentralWidget( tabPosts );
-
-
-    mNewTabButton = new QToolButton( this );
-    mNewTabButton->setIcon( KIcon( QLatin1String( "tab-new" ) ) );
-    mNewTabButton->adjustSize();
-    mNewTabButton->setToolTip( i18nc("@info:tooltip", "Open a new tab"));
-#ifndef QT_NO_ACCESSIBILITY
-    mNewTabButton->setAccessibleName( i18n( "New tab" ) );
-#endif
-    tabPosts->setCornerWidget( mNewTabButton, Qt::TopLeftCorner );
-    connect( mNewTabButton, SIGNAL(clicked()),
-             SLOT(slotCreateNewPost()) );
-
-
-    mCloseTabButton = new QToolButton( this );
-    mCloseTabButton->setIcon( KIcon( QLatin1String( "tab-close" ) ) );
-    mCloseTabButton->adjustSize();
-    mCloseTabButton->setToolTip( i18nc("@info:tooltip", "Close the current tab"));
-#ifndef QT_NO_ACCESSIBILITY
-    mCloseTabButton->setAccessibleName( i18n( "Close tab" ) );
-#endif
-    tabPosts->setCornerWidget( mCloseTabButton, Qt::TopRightCorner );
-    connect( mCloseTabButton, SIGNAL(clicked()),
-             SLOT(slotCloseTabClicked()) );
-
-
+    connect(tabPosts,SIGNAL(createNewPost()),SLOT(slotCreateNewPost()));
+    connect(tabPosts,SIGNAL(closeTabClicked()),SLOT(slotCloseTabClicked()));
+    connect(tabPosts,SIGNAL(tabCloseRequested(int)), this, SLOT(slotRemovePostEntry(int)));
+    connect(tabPosts,SIGNAL(tabRemoveAllExclude(int)), this, SLOT(slotRemoveAllExclude(int)));
 
     toolbox = new Toolbox( this );
     toolboxDock = new QDockWidget( i18n( "Toolbox" ), this );
@@ -494,6 +469,30 @@ void MainWindow::slotPublishPost()
     toolbox->getFieldsValue( activePost->currentPost() );
 //     post.setPrivate( false );
     activePost->submitPost( mCurrentBlogId, *activePost->currentPost() );
+}
+
+void MainWindow::slotRemoveAllExclude(int pos)
+{
+    for(int i = tabPosts->count()-1; i >=0; --i) {
+        if (i == pos) {
+            continue;
+        }
+        PostEntry *widget = qobject_cast<PostEntry*>( tabPosts->widget( i ) );
+        if( !widget ) {
+            if( activePost )
+                widget = activePost;
+            else
+                return;
+        }
+        DBMan::self()->removeTempEntry( *widget->currentPost() );
+        tabPosts->removePage(widget);
+        widget->close();
+    }
+    if( tabPosts->count() < 1 ) {
+        activePost = 0;
+        toolbox->resetFields();
+//         actionCollection()->action("publish_post")->setEnabled( false );
+    }
 }
 
 void MainWindow::slotRemovePostEntry( int pos )

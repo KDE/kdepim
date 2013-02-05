@@ -27,7 +27,7 @@
           <x>0</x>
           <y>0</y>
           <width>343</width>
-          <height>437</height>
+          <height>441</height>
          </rect>
         </property>
         <attribute name="label">
@@ -127,7 +127,7 @@
           <x>0</x>
           <y>0</y>
           <width>343</width>
-          <height>437</height>
+          <height>441</height>
          </rect>
         </property>
         <attribute name="label">
@@ -154,7 +154,7 @@
               <x>0</x>
               <y>0</y>
               <width>333</width>
-              <height>362</height>
+              <height>370</height>
              </rect>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_7">
@@ -238,7 +238,7 @@
           <x>0</x>
           <y>0</y>
           <width>343</width>
-          <height>437</height>
+          <height>441</height>
          </rect>
         </property>
         <attribute name="label">
@@ -482,12 +482,15 @@
           </widget>
          </item>
          <item>
-          <widget class="QPlainTextEdit" name="txtSummary">
+          <widget class="KTextEdit" name="txtSummary">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
+           </property>
+           <property name="acceptRichText">
+            <bool>false</bool>
            </property>
           </widget>
          </item>
@@ -511,8 +514,8 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>343</width>
-          <height>437</height>
+          <width>94</width>
+          <height>110</height>
          </rect>
         </property>
         <attribute name="label">
@@ -598,9 +601,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>KListWidget</class>
-   <extends>QListWidget</extends>
-   <header>klistwidget.h</header>
+   <class>KComboBox</class>
+   <extends>QComboBox</extends>
+   <header>kcombobox.h</header>
   </customwidget>
   <customwidget>
    <class>KDateWidget</class>
@@ -608,24 +611,29 @@
    <header>kdatewidget.h</header>
   </customwidget>
   <customwidget>
-   <class>KPushButton</class>
-   <extends>QPushButton</extends>
-   <header>kpushbutton.h</header>
-  </customwidget>
-  <customwidget>
    <class>KLineEdit</class>
    <extends>QLineEdit</extends>
    <header>klineedit.h</header>
   </customwidget>
   <customwidget>
-   <class>KComboBox</class>
-   <extends>QComboBox</extends>
-   <header>kcombobox.h</header>
-  </customwidget>
-  <customwidget>
    <class>KSeparator</class>
    <extends>QFrame</extends>
    <header>kseparator.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KPushButton</class>
+   <extends>QPushButton</extends>
+   <header>kpushbutton.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KTextEdit</class>
+   <extends>QTextEdit</extends>
+   <header>ktextedit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KListWidget</class>
+   <extends>QListWidget</extends>
+   <header>klistwidget.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>

@@ -121,9 +121,16 @@ public:
     ExtendAttributesWidget *q;
 };
 
-void ExtendAttributesWidgetPrivate::_k_attributeLineEditChanged(const QString&)
+void ExtendAttributesWidgetPrivate::_k_attributeLineEditChanged(const QString&text)
 {
-    //TODO
+    QTreeWidgetItem *item = treeWidget->currentItem();
+    if (item && item->text(1).isEmpty()) {
+        item->setText(0,text);
+    } else {
+        QTreeWidgetItem *item = new QTreeWidgetItem(treeWidget);
+        item->setText(0, text);
+        treeWidget->setCurrentItem(item);
+    }
 }
 
 void ExtendAttributesWidgetPrivate::_k_attributeValueChanged(const QString& val)
@@ -161,9 +168,15 @@ void ExtendAttributesWidgetPrivate::_k_attributeChanged(const QString& key)
 
     const QList<QTreeWidgetItem *> lstItems = treeWidget->findItems(key, Qt::MatchCaseSensitive);
     if (lstItems.isEmpty()) {
-        QTreeWidgetItem *item = new QTreeWidgetItem(treeWidget);
-        item->setText(0, key);
-        treeWidget->setCurrentItem(item);
+        QTreeWidgetItem *currentItem = treeWidget->currentItem();
+        if (currentItem && currentItem->text(1).isEmpty()) {
+            currentItem->setText(0, key);
+            treeWidget->setCurrentItem(currentItem);
+        } else {
+            QTreeWidgetItem *item = new QTreeWidgetItem(treeWidget);
+            item->setText(0, key);
+            treeWidget->setCurrentItem(item);
+        }
     } else {
         treeWidget->setCurrentItem(lstItems.at(0));
         attributeValue->lineEdit()->setText(lstItems.at(0)->text(1));

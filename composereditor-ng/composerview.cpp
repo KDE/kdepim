@@ -86,7 +86,7 @@ void ComposerView::createActions(const QList<ComposerViewAction>& lstActions)
 
 void ComposerView::createAllActions()
 {
-    for ( uint i = 0; i < LastType; ++i ) {
+    for (uint i=0;i<LastType;++i) {
         d->createAction( (ComposerViewAction)i );
     }
     d->connectActionGroup();
@@ -311,7 +311,7 @@ void ComposerView::evaluateJavascript( const QString& javascript)
 void ComposerView::createToolBar(const QList<ComposerViewAction>& lstAction, KToolBar* toolbar)
 {
     const int numberOfAction(lstAction.count());
-    for (int i=0; i<numberOfAction; ++i) {
+    for (int i=0;i<numberOfAction;++i) {
         switch(lstAction.at(i)) {
         case Bold:
             toolbar->addAction(d->action_text_bold);

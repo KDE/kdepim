@@ -26,39 +26,39 @@
  *  your version.
  */
 
-#ifndef KMSUBJECTLINEEDIT_H
-#define KMSUBJECTLINEEDIT_H
-#include "messagecomposer_export.h"
+#ifndef SpellCheckLineEdit_H
+#define SpellCheckLineEdit_H
+#include "kdepim_export.h"
 
 #include <KTextEdit>
 
 class QContextMenuEvent;
 class QMimeData;
-namespace Message {
+namespace KPIM {
 
-class MESSAGECOMPOSER_EXPORT KMSubjectLineEdit : public KTextEdit
+class KDEPIM_EXPORT SpellCheckLineEdit : public KTextEdit
 {
   Q_OBJECT
 
 public:
   /**
-   * Constructs a KMSubjectLineEdit object.
+   * Constructs a SpellCheckLineEdit object.
    * @param parent of widget
    * @param configFile config file name for spell checking
    */
-  explicit KMSubjectLineEdit(QWidget* parent, const QString& configFile);
+  explicit SpellCheckLineEdit(QWidget* parent, const QString& configFile);
   /**
    * Destructor
    */
-  ~KMSubjectLineEdit();
+  ~SpellCheckLineEdit();
   
 protected:
   void createHighlighter();
 
-  virtual QSize sizeHint() const;
-  virtual QSize minimumSizeHint() const;
-  virtual void keyPressEvent(QKeyEvent*);
-  virtual void insertFromMimeData ( const QMimeData * source );
+  QSize sizeHint() const;
+  QSize minimumSizeHint() const;
+  void keyPressEvent(QKeyEvent*);
+  void insertFromMimeData ( const QMimeData * source );
 
 Q_SIGNALS:
   /**
@@ -68,11 +68,12 @@ Q_SIGNALS:
   void focusUp();
   
   void focusDown();
+
 private:
   class Private;
   Private *const d;
 
 };
 }
-#endif /* KMSUBJECTLINEEDIT_H */
+#endif /* SpellCheckLineEdit_H */
 

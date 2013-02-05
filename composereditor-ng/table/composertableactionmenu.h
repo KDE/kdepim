@@ -40,7 +40,6 @@ Q_SIGNALS:
      */
     void insertNewTable();
 
-
 private:
     friend class ComposerTableActionMenuPrivate;
     ComposerTableActionMenuPrivate * const d;
@@ -57,6 +56,8 @@ private:
     Q_PRIVATE_SLOT( d, void _k_slotRemoveColumn() )
     Q_PRIVATE_SLOT( d, void _k_slotInsertColumnBefore() )
     Q_PRIVATE_SLOT( d, void _k_slotInsertColumnAfter() )
+    Q_PRIVATE_SLOT( d, void _k_slotMergeCell() )
+    Q_PRIVATE_SLOT( d, void _k_slotSplitCell() )
 };
 }
 

@@ -47,13 +47,13 @@
 #include "composer/blogilocomposereditor.h"
 #include "composer/blogilocomposerview.h"
 
+#include <libkdepim/spellchecklineedit.h>
+
 #include "composer/htmleditor.h"
 #include <ktexteditor/view.h>
 #include <ktexteditor/document.h>
 #include <QHBoxLayout>
 #include <KTabWidget>
-#include "titlelineedit.h"
-
 
 #define MINUTE 60000
 
@@ -64,7 +64,7 @@ public:
     QGridLayout *gridLayout;
     QHBoxLayout *horizontalLayout;
     QLabel *labelTitle;
-    TitleLineEdit *txtTitle;
+    KPIM::SpellCheckLineEdit *txtTitle;
     QTimer *mTimer;
     BilboPost mCurrentPost;
     int mCurrentPostBlogId;
@@ -166,12 +166,12 @@ void PostEntry::createUi()
     d->labelTitle->setText( i18nc( "noun, the post title", "Title:" ) );
     d->horizontalLayout->addWidget( d->labelTitle );
 
-    d->txtTitle = new TitleLineEdit( this );
+    d->txtTitle = new KPIM::SpellCheckLineEdit( this, QLatin1String( "blogilorc" ) );
     d->horizontalLayout->addWidget( d->txtTitle );
     d->labelTitle->setBuddy( d->txtTitle );
-    connect( d->txtTitle, SIGNAL(textChanged(QString)), this,
-             SLOT(slotTitleChanged(QString)) );
-    connect( d->txtTitle, SIGNAL(downKeyPressed()), SLOT(slotFocusEditor()) );
+    connect( d->txtTitle, SIGNAL(textChanged()), this,
+             SLOT(slotTitleChanged()) );
+    connect( d->txtTitle, SIGNAL(focusDown()), SLOT(slotFocusEditor()) );
 
     d->gridLayout->addLayout( d->horizontalLayout, 0, 0, 1, 1 );
 }
@@ -215,7 +215,7 @@ void PostEntry::slotSyncEditors(int index)
         } else {
             d->htmlEditor->document()->setText( d->wysiwygEditor->htmlContent() );
         }
-        d->previewer->setHtml( d->txtTitle->text(), d->htmlEditor->document()->text() );
+        d->previewer->setHtml( d->txtTitle->toPlainText(), d->htmlEditor->document()->text() );
     }
     d->prev_index = index;
 }
@@ -223,7 +223,7 @@ void PostEntry::slotSyncEditors(int index)
 void PostEntry::slotSetPostPreview()
 {
     if ( d->tabWidget->currentIndex() == 2 ) {
-        d->previewer->setHtml( d->txtTitle->text(), d->htmlEditor->document()->text() );
+        d->previewer->setHtml( d->txtTitle->toPlainText(), d->htmlEditor->document()->text() );
     }
 }
 
@@ -248,10 +248,11 @@ void PostEntry::setHtmlContent(const QString& content)
     d->htmlEditor->document()->setText( content );
 }
 
-void PostEntry::slotTitleChanged( const QString& title )
+void PostEntry::slotTitleChanged()
 {
-    d->mCurrentPost.setTitle( title );
-    Q_EMIT postTitleChanged( title );
+    const QString titleText(d->txtTitle->toPlainText());
+    d->mCurrentPost.setTitle(titleText);
+    Q_EMIT postTitleChanged(titleText);
 }
 
 QString PostEntry::postTitle() const
@@ -262,7 +263,7 @@ QString PostEntry::postTitle() const
 void PostEntry::setPostTitle( const QString & title )
 {
     kDebug();
-    d->txtTitle->setText( title );
+    d->txtTitle->setPlainText( title );
     d->mCurrentPost.setTitle( title );
 }
 

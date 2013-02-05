@@ -141,7 +141,6 @@ void Toolbox::slotUpdateEntries(int count)
         count = Settings::updateEntriesCount();
         if( Settings::showUpdateEntriesDialog() ) {
             QPointer<EntriesCountDialog> dia = new EntriesCountDialog( this );
-            dia->setAttribute( Qt::WA_DeleteOnClose, false );
             if( !dia->exec() ) {
                 delete dia;
                 return;
@@ -172,12 +171,12 @@ void Toolbox::slotLoadEntriesFromDB( int blog_id )
     int count = listEntries.count();
     for ( int i=0; i < count; ++i ) {
         QListWidgetItem *lstItem = new QListWidgetItem( listEntries[i].value(QLatin1String("title")).toString() );
-        lstItem->setToolTip(listEntries[i].value(QLatin1String("c_time")).toDateTime().toString());
+        lstItem->setToolTip(listEntries.at(i).value(QLatin1String("c_time")).toDateTime().toString());
         if(listEntries[i].value(QLatin1String("is_private")).toBool()) {
             lstItem->setForeground(QBrush(Qt::blue));
             lstItem->setToolTip(i18n("%1 (Draft)",lstItem->toolTip()));
         }
-        lstItem->setData( 32, listEntries[i].value(QLatin1String("id")).toInt() );
+        lstItem->setData( 32, listEntries.at(i).value(QLatin1String("id")).toInt() );
         lstEntriesList->addItem( lstItem );
     }
     d->statusbar->showMessage( i18n( "List of entries received." ), STATUSTIMEOUT );

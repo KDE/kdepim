@@ -66,7 +66,6 @@ set( messagecomposer_src
      emailaddressresolvejob.cpp
 
      keyresolver.cpp
-     kmsubjectlineedit.cpp
      autocorrection/composerautocorrection.cpp
      autocorrection/composerautocorrectionwidget.cpp
      autocorrection/composerautocorrectionlistwidget.cpp

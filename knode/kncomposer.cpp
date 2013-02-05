@@ -510,7 +510,7 @@ void KNComposer::setMessageMode(MessageMode mode)
   v_iew->setMessageMode(m_ode);
   //Laurent fixme
 #if 0
-  QString s = v_iew->editor()->document ()->begin()->text ();
+  QString s = v_iew->editor()->document ()->begin().text ();
   if (m_ode == news_mail) {
     if (!s.contains(i18n("<posted & mailed>"))) {
       QTextCursor cursor(v_iew->editor()->document ()->begin());

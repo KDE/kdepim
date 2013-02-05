@@ -50,13 +50,16 @@ BlogiloComposerEditor::BlogiloComposerEditor(BlogiloComposerView *view, QWidget 
     lstActions<<ComposerEditorNG::ComposerView::Separator;
     lstActions<<ComposerEditorNG::ComposerView::InsertLink;
     lstActions<<ComposerEditorNG::ComposerView::InsertImage;
+    lstActions<<ComposerEditorNG::ComposerView::Separator;
     lstActions<<ComposerEditorNG::ComposerView::AlignLeft;
     lstActions<<ComposerEditorNG::ComposerView::AlignCenter;
     lstActions<<ComposerEditorNG::ComposerView::AlignRight;
     lstActions<<ComposerEditorNG::ComposerView::AlignJustify;
+    lstActions<<ComposerEditorNG::ComposerView::Separator;
     lstActions<<ComposerEditorNG::ComposerView::DirectionRtl;
     lstActions<<ComposerEditorNG::ComposerView::OrderedList;
     lstActions<<ComposerEditorNG::ComposerView::UnorderedList;
+    lstActions<<ComposerEditorNG::ComposerView::Separator;
     lstActions<<ComposerEditorNG::ComposerView::PasteWithoutFormatting;
     lstActions<<ComposerEditorNG::ComposerView::InsertTable;
 

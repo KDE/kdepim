@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Montel Laurent <montel@kde.org>
+ * Copyright (c) 2011-2012-2013 Montel Laurent <montel@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@
  *  your version.
  */
 
-#include "kmsubjectlineedit.h"
+#include "spellchecklineedit.h"
 
 #include <QKeyEvent>
 #include <QContextMenuEvent>
@@ -37,79 +37,76 @@
 
 #include <KLocale>
 
-using namespace Message;
+using namespace KPIM;
 
-class KMSubjectLineEdit::Private
+class SpellCheckLineEdit::Private
 {
 public:
-  Private( )
+    Private()
     {
     }
-  QString configFile;
+    QString configFile;
 };
 
-KMSubjectLineEdit::KMSubjectLineEdit(QWidget* parent, const QString& configFile)
-  :KTextEdit( parent ),
-   d( new Private )
+SpellCheckLineEdit::SpellCheckLineEdit(QWidget* parent, const QString& configFile)
+    : KTextEdit( parent ),
+      d( new Private )
 {
-  d->configFile = configFile;
-  
-  enableFindReplace(false);
+    d->configFile = configFile;
+
+    enableFindReplace(false);
 #ifdef HAVE_SHOWTABACTION
-  showTabAction(false);
+    showTabAction(false);
 #endif
-  setAcceptRichText(false);
-  setTabChangesFocus( true );
-  // widget may not be resized vertically
-  setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding,QSizePolicy::Fixed));
-  setLineWrapMode(NoWrap);
-  setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-  setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-  setCheckSpellingEnabledInternal( true );
-  document()->adjustSize();
-  
-  document()->setDocumentMargin(2);
+    setAcceptRichText(false);
+    setTabChangesFocus( true );
+    // widget may not be resized vertically
+    setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding,QSizePolicy::Fixed));
+    setLineWrapMode(NoWrap);
+    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    setCheckSpellingEnabledInternal( true );
+    document()->adjustSize();
+
+    document()->setDocumentMargin(2);
 }
 
-KMSubjectLineEdit::~KMSubjectLineEdit()
+SpellCheckLineEdit::~SpellCheckLineEdit()
 {
-  delete d;
+    delete d;
 }
 
-void KMSubjectLineEdit::createHighlighter()
+void SpellCheckLineEdit::createHighlighter()
 {
-  Sonnet::Highlighter *highlighter = new Sonnet::Highlighter(this, d->configFile);
-  highlighter->setAutomatic( false );
-  
-  KTextEdit::setHighlighter(highlighter);
+    Sonnet::Highlighter *highlighter = new Sonnet::Highlighter(this, d->configFile);
+    highlighter->setAutomatic( false );
 
-  if ( !spellCheckingLanguage().isEmpty() ) {
-    setSpellCheckingLanguage( spellCheckingLanguage() );
-  }
+    KTextEdit::setHighlighter(highlighter);
+
+    if (!spellCheckingLanguage().isEmpty()) {
+        setSpellCheckingLanguage( spellCheckingLanguage() );
+    }
 }
 
-void KMSubjectLineEdit::keyPressEvent(QKeyEvent *e)
+void SpellCheckLineEdit::keyPressEvent(QKeyEvent *e)
 {
-  if (e->key() == Qt::Key_Enter ||
-      e->key() == Qt::Key_Return ||
-      e->key() == Qt::Key_Down)
-  {
-    emit focusDown();
-    return;
-  }
-  else if (e->key() == Qt::Key_Up)
-  {
-    emit focusUp();
-    return;
-  }
-  KTextEdit::keyPressEvent(e);
+    if (e->key() == Qt::Key_Enter ||
+            e->key() == Qt::Key_Return ||
+            e->key() == Qt::Key_Down) {
+        emit focusDown();
+        return;
+    } else if (e->key() == Qt::Key_Up) {
+        emit focusUp();
+        return;
+    }
+    KTextEdit::keyPressEvent(e);
 }
 
-QSize KMSubjectLineEdit::sizeHint() const
+QSize SpellCheckLineEdit::sizeHint() const
 {
     QFontMetrics fm(font());
 
-    int h = document()->size().toSize().height() - fm.descent() + 2 * frameWidth();
+    const int h = document()->size().toSize().height() - fm.descent() + 2 * frameWidth();
 
     QStyleOptionFrameV2 opt;
     opt.initFrom(this);
@@ -123,12 +120,12 @@ QSize KMSubjectLineEdit::sizeHint() const
     return s;
 }
 
-QSize KMSubjectLineEdit::minimumSizeHint() const
+QSize SpellCheckLineEdit::minimumSizeHint() const
 {
-   return sizeHint();
+    return sizeHint();
 }
 
-void KMSubjectLineEdit::insertFromMimeData(const QMimeData * source)
+void SpellCheckLineEdit::insertFromMimeData(const QMimeData * source)
 {
     if(!source)
         return;
@@ -139,8 +136,7 @@ void KMSubjectLineEdit::insertFromMimeData(const QMimeData * source)
     QString pasteText = source->text();
 
     // is there any text in the clipboard?
-    if(!pasteText.isEmpty())
-    {
+    if (!pasteText.isEmpty()) {
         // replace \r with \n to make xterm pastes happy
         pasteText.replace(QLatin1Char( '\r' ),QLatin1Char( '\n' ));
         // remove blank lines
@@ -157,14 +153,14 @@ void KMSubjectLineEdit::insertFromMimeData(const QMimeData * source)
 
         // does the text contain at least one newline character?
         if(pasteText.contains(QLatin1Char( '\n' )))
-          pasteText.remove(QLatin1Char( '\n' ));
+            pasteText.remove(QLatin1Char( '\n' ));
         
         insertPlainText(pasteText);
         ensureCursorVisible();
         return;
-    }
-    else {
-      KTextEdit::insertFromMimeData(source);
+    } else {
+        KTextEdit::insertFromMimeData(source);
     }
 }
-#include "kmsubjectlineedit.moc"
+
+#include "spellchecklineedit.moc"
