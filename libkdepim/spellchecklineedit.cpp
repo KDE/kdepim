@@ -26,7 +26,7 @@
  *  your version.
  */
 
-#include "kmsubjectlineedit.h"
+#include "spellchecklineedit.h"
 
 #include <QKeyEvent>
 #include <QContextMenuEvent>
@@ -39,7 +39,7 @@
 
 using namespace KPIM;
 
-class KMSubjectLineEdit::Private
+class SpellCheckLineEdit::Private
 {
 public:
     Private()
@@ -48,7 +48,7 @@ public:
     QString configFile;
 };
 
-KMSubjectLineEdit::KMSubjectLineEdit(QWidget* parent, const QString& configFile)
+SpellCheckLineEdit::SpellCheckLineEdit(QWidget* parent, const QString& configFile)
     : KTextEdit( parent ),
       d( new Private )
 {
@@ -71,12 +71,12 @@ KMSubjectLineEdit::KMSubjectLineEdit(QWidget* parent, const QString& configFile)
     document()->setDocumentMargin(2);
 }
 
-KMSubjectLineEdit::~KMSubjectLineEdit()
+SpellCheckLineEdit::~SpellCheckLineEdit()
 {
     delete d;
 }
 
-void KMSubjectLineEdit::createHighlighter()
+void SpellCheckLineEdit::createHighlighter()
 {
     Sonnet::Highlighter *highlighter = new Sonnet::Highlighter(this, d->configFile);
     highlighter->setAutomatic( false );
@@ -88,7 +88,7 @@ void KMSubjectLineEdit::createHighlighter()
     }
 }
 
-void KMSubjectLineEdit::keyPressEvent(QKeyEvent *e)
+void SpellCheckLineEdit::keyPressEvent(QKeyEvent *e)
 {
     if (e->key() == Qt::Key_Enter ||
             e->key() == Qt::Key_Return ||
@@ -102,7 +102,7 @@ void KMSubjectLineEdit::keyPressEvent(QKeyEvent *e)
     KTextEdit::keyPressEvent(e);
 }
 
-QSize KMSubjectLineEdit::sizeHint() const
+QSize SpellCheckLineEdit::sizeHint() const
 {
     QFontMetrics fm(font());
 
@@ -120,12 +120,12 @@ QSize KMSubjectLineEdit::sizeHint() const
     return s;
 }
 
-QSize KMSubjectLineEdit::minimumSizeHint() const
+QSize SpellCheckLineEdit::minimumSizeHint() const
 {
     return sizeHint();
 }
 
-void KMSubjectLineEdit::insertFromMimeData(const QMimeData * source)
+void SpellCheckLineEdit::insertFromMimeData(const QMimeData * source)
 {
     if(!source)
         return;
@@ -163,4 +163,4 @@ void KMSubjectLineEdit::insertFromMimeData(const QMimeData * source)
     }
 }
 
-#include "kmsubjectlineedit.moc"
+#include "spellchecklineedit.moc"
