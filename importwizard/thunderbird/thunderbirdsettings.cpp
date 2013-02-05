@@ -216,7 +216,13 @@ void ThunderbirdSettings::readExtensionsSettings()
     if (mHashConfig.contains(filteringImageFormatsStr)) {
         const QString filteringImageFormats = mHashConfig.value(filteringImageFormatsStr).toString();
         //convert it.
-        addKmailConfig(QLatin1String("AutoResizeImage"), QLatin1String("resize-image-with-formats"), filteringImageFormats);
+        addKmailConfig(QLatin1String("AutoResizeImage"), QLatin1String("resize-image-with-formats-type"), filteringImageFormats);
+    }
+
+    const QString filteringImageFormatsEnabledStr("extensions.AutoResizeImage.filterFormats");
+    if (mHashConfig.contains(filteringImageFormatsEnabledStr)) {
+        const bool filteringImageFormatsEnabled = mHashConfig.value(filteringImageFormatsEnabledStr).toBool();
+        addKmailConfig(QLatin1String("AutoResizeImage"), QLatin1String("resize-image-with-formats"), filteringImageFormatsEnabled);
     }
 }
 
