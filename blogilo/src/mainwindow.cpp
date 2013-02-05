@@ -77,8 +77,8 @@ MainWindow::MainWindow()
     setCentralWidget( tabPosts );
     connect(tabPosts,SIGNAL(createNewPost()),SLOT(slotCreateNewPost()));
     connect(tabPosts,SIGNAL(closeTabClicked()),SLOT(slotCloseTabClicked()));
-    connect(tabPosts, SIGNAL(tabCloseRequested(int)), this, SLOT(slotRemovePostEntry(int)));
-
+    connect(tabPosts,SIGNAL(tabCloseRequested(int)), this, SLOT(slotRemovePostEntry(int)));
+    connect(tabPosts,SIGNAL(tabRemoveAllExclude(int)), this, SLOT(slotRemoveAllExclude(int)));
 
     toolbox = new Toolbox( this );
     toolboxDock = new QDockWidget( i18n( "Toolbox" ), this );
@@ -468,6 +468,30 @@ void MainWindow::slotPublishPost()
     toolbox->getFieldsValue( activePost->currentPost() );
 //     post.setPrivate( false );
     activePost->submitPost( mCurrentBlogId, *activePost->currentPost() );
+}
+
+void MainWindow::slotRemoveAllExclude(int pos)
+{
+    for(int i = tabPosts->count()-1; i >=0; --i) {
+        if (i == pos) {
+            continue;
+        }
+        PostEntry *widget = qobject_cast<PostEntry*>( tabPosts->widget( i ) );
+        if( !widget ) {
+            if( activePost )
+                widget = activePost;
+            else
+                return;
+        }
+        DBMan::self()->removeTempEntry( *widget->currentPost() );
+        tabPosts->removePage(widget);
+        widget->close();
+    }
+    if( tabPosts->count() < 1 ) {
+        activePost = 0;
+        toolbox->resetFields();
+//         actionCollection()->action("publish_post")->setEnabled( false );
+    }
 }
 
 void MainWindow::slotRemovePostEntry( int pos )

@@ -23,6 +23,7 @@
 
 #include <QToolButton>
 #include <QTabBar>
+#include <QDebug>
 
 PostsTabWidget::PostsTabWidget(QWidget *parent)
     : KTabWidget(parent)
@@ -83,23 +84,11 @@ void PostsTabWidget::slotTabContextMenuRequest( const QPoint &pos )
   QAction *action = menu.exec( mapToGlobal( pos ) );
 
   if ( action == allOther ) { // Close all other tabs
-      /*
-    QList<Widget *> widgets;
-    const int index = q->indexOf( w );
-
-    for ( int i=0; i<q->count(); i++ ) {
-      if ( i==index) continue; // Skip the current one
-
-      Widget *other = qobject_cast<Widget *>( q->widget( i ) );
-      widgets << other;
-    }
-
-    foreach ( Widget *other, widgets ) {
-      delete other;
-    }
-    */
+      Q_EMIT tabRemoveAllExclude(indexBar);
   } else if (action == closeTab) {
       Q_EMIT tabCloseRequested(indexBar);
   }
 }
 
+
+#include "poststabwidget.moc"

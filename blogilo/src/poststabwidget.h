@@ -31,6 +31,7 @@ public:
 Q_SIGNALS:
     void createNewPost();
     void closeTabClicked();
+    void tabRemoveAllExclude(int);
 
 private Q_SLOTS:
     void slotTabContextMenuRequest(const QPoint&);

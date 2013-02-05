@@ -103,6 +103,7 @@ private slots:
     void slotDialogDestroyed( QObject *win );
 
     void slotCloseTabClicked();
+    void slotRemoveAllExclude(int);
 
 protected:
     void keyPressEvent( QKeyEvent * event );
