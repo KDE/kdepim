@@ -262,7 +262,7 @@ QString PostEntry::postTitle() const
 void PostEntry::setPostTitle( const QString & title )
 {
     kDebug();
-    d->txtTitle->setText( title );
+    d->txtTitle->setPlainText( title );
     d->mCurrentPost.setTitle( title );
 }
 
