@@ -161,9 +161,15 @@ void ExtendAttributesWidgetPrivate::_k_attributeChanged(const QString& key)
 
     const QList<QTreeWidgetItem *> lstItems = treeWidget->findItems(key, Qt::MatchCaseSensitive);
     if (lstItems.isEmpty()) {
-        QTreeWidgetItem *item = new QTreeWidgetItem(treeWidget);
-        item->setText(0, key);
-        treeWidget->setCurrentItem(item);
+        QTreeWidgetItem *currentItem = treeWidget->currentItem();
+        if (currentItem && currentItem->text(1).isEmpty()) {
+            currentItem->setText(0, key);
+            treeWidget->setCurrentItem(currentItem);
+        } else {
+            QTreeWidgetItem *item = new QTreeWidgetItem(treeWidget);
+            item->setText(0, key);
+            treeWidget->setCurrentItem(item);
+        }
     } else {
         treeWidget->setCurrentItem(lstItems.at(0));
         attributeValue->lineEdit()->setText(lstItems.at(0)->text(1));
