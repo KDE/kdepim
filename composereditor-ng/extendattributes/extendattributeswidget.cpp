@@ -121,9 +121,16 @@ public:
     ExtendAttributesWidget *q;
 };
 
-void ExtendAttributesWidgetPrivate::_k_attributeLineEditChanged(const QString&)
+void ExtendAttributesWidgetPrivate::_k_attributeLineEditChanged(const QString&text)
 {
-    //TODO
+    QTreeWidgetItem *item = treeWidget->currentItem();
+    if (item && item->text(1).isEmpty()) {
+        item->setText(0,text);
+    } else {
+        QTreeWidgetItem *item = new QTreeWidgetItem(treeWidget);
+        item->setText(0, text);
+        treeWidget->setCurrentItem(item);
+    }
 }
 
 void ExtendAttributesWidgetPrivate::_k_attributeValueChanged(const QString& val)
