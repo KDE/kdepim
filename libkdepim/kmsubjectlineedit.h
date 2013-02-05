@@ -28,15 +28,15 @@
 
 #ifndef KMSUBJECTLINEEDIT_H
 #define KMSUBJECTLINEEDIT_H
-#include "messagecomposer_export.h"
+#include "kdepim_export.h"
 
 #include <KTextEdit>
 
 class QContextMenuEvent;
 class QMimeData;
-namespace Message {
+namespace KPIM {
 
-class MESSAGECOMPOSER_EXPORT KMSubjectLineEdit : public KTextEdit
+class KDEPIM_EXPORT KMSubjectLineEdit : public KTextEdit
 {
   Q_OBJECT
 
@@ -55,10 +55,10 @@ public:
 protected:
   void createHighlighter();
 
-  virtual QSize sizeHint() const;
-  virtual QSize minimumSizeHint() const;
-  virtual void keyPressEvent(QKeyEvent*);
-  virtual void insertFromMimeData ( const QMimeData * source );
+  QSize sizeHint() const;
+  QSize minimumSizeHint() const;
+  void keyPressEvent(QKeyEvent*);
+  void insertFromMimeData ( const QMimeData * source );
 
 Q_SIGNALS:
   /**
@@ -68,6 +68,7 @@ Q_SIGNALS:
   void focusUp();
   
   void focusDown();
+
 private:
   class Private;
   Private *const d;

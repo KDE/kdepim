@@ -51,6 +51,7 @@ set(kdepim_LIB_SRCS
    nepomukwarning.cpp
    statisticsproxymodel.cpp
    customlogwidget.cpp
+   kmsubjectlineedit.cpp
 )
 
 if (KDEPIMLIBS_KRESOURCES_LIBS)
