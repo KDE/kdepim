@@ -778,7 +778,7 @@ void AddresseeLineEdit::Private::doCompletion( bool ctrlT )
 
   case KGlobalSettings::CompletionPopup:
   {
-    const QStringList items = adjustedCompletionItems( true );
+    const QStringList items = adjustedCompletionItems( false );
     setCompletedItems( items, false );
   }
   break;
