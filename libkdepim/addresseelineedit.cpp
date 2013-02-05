@@ -369,8 +369,8 @@ void AddresseeLineEdit::Private::startNepomukSearch()
 {
   // We do a word boundary substring search, which will easily yield hundreds
   // of hits. Since the nepomuk search is mostly an auxiliary measure,
-  // we limit it to substrings of size 3 or larger.
-  if ( m_searchString.size() <= 2 || !s_static->useNepomukCompletion ) {
+  // we limit it to substrings of size 4 (min. of bif:contains) or larger.
+  if ( m_searchString.size() <= 3 || !s_static->useNepomukCompletion ) {
     return;
   }
   const QString query = QString::fromLatin1( sparqlquery ).arg( m_searchString );
