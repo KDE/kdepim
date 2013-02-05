@@ -48,6 +48,8 @@ public:
           action_remove_column( 0 ),
           action_insert_column_before( 0 ),
           action_insert_column_after( 0 ),
+          action_merge_cell( 0 ),
+          action_split_cell( 0 ),
           q( qq ),
           webElement(element),
           parentWidget(parent)
@@ -66,6 +68,8 @@ public:
     void _k_slotRemoveColumn();
     void _k_slotInsertColumnBefore();
     void _k_slotInsertColumnAfter();
+    void _k_slotMergeCell();
+    void _k_slotSplitCell();
 
     void updateActions();
     KAction *action_insert_table;
@@ -82,10 +86,22 @@ public:
     KAction *action_remove_column;
     KAction *action_insert_column_before;
     KAction *action_insert_column_after;
+    KAction *action_merge_cell;
+    KAction *action_split_cell;
     ComposerTableActionMenu *q;
     QWebElement webElement;
     QWidget *parentWidget;
 };
+
+void ComposerTableActionMenuPrivate::_k_slotSplitCell()
+{
+    //TODO
+}
+
+void ComposerTableActionMenuPrivate::_k_slotMergeCell()
+{
+    //TODO
+}
 
 void ComposerTableActionMenuPrivate::_k_slotInsertColumnAfter()
 {
@@ -251,6 +267,16 @@ ComposerTableActionMenu::ComposerTableActionMenu(const QWebElement& element,QObj
     d->action_remove_cell_contents = new KAction( i18nc( "@item:inmenu Delete", "Cell Contents" ), this );
     removeMenu->addAction( d->action_remove_cell_contents );
     connect( d->action_remove_cell_contents, SIGNAL(triggered(bool)), SLOT(_k_slotRemoveCellContents()) );
+
+    d->action_merge_cell = new KAction( KIcon(QLatin1String("edit-table-cell-merge")), i18n( "Join With Cell to the Right" ), this );
+    connect( d->action_merge_cell, SIGNAL(triggered(bool)), SLOT(_k_slotMergeCell()) );
+    addAction( d->action_merge_cell );
+
+    d->action_split_cell = new KAction( KIcon(QLatin1String("edit-table-cell-split")), i18n( "Split cells" ), this );
+    connect( d->action_split_cell, SIGNAL(triggered(bool)), SLOT(_k_slotSplitCell()) );
+    addAction( d->action_split_cell );
+
+    addSeparator();
 
     d->action_table_format = new KAction( i18n( "Table Format..." ), this );
     connect( d->action_table_format, SIGNAL(triggered(bool)), SLOT(_k_slotTableFormat()) );
