@@ -18,7 +18,7 @@
 
 */
 
-#include "composereditorutils_p.h"
+#include "utils/composereditorutils_p.h"
 
 #include <QFile>
 
