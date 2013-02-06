@@ -505,7 +505,7 @@ QString FancyHeaderStyle::format( KMime::Message *message ) const {
     ContactDisplayMessageMemento *photoMemento =
         dynamic_cast<ContactDisplayMessageMemento*>( nodeHelper()->bodyPartMemento( message, "contactphoto" ) );
     if ( !photoMemento ) {
-      const QString email = KPIMUtils::firstEmailAddress( message->from()->asUnicodeString() );
+      const QString email = KPIMUtils::firstEmailAddress( message->from()->as7BitString(false) );
       photoMemento = new ContactDisplayMessageMemento( email );
       nodeHelper()->setBodyPartMemento( message, "contactphoto", photoMemento );
       QObject::connect( photoMemento, SIGNAL(update(MessageViewer::Viewer::UpdateMode)),
