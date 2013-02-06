@@ -19,7 +19,7 @@
 */
 
 #include "composerview.h"
-#include "composerview_p.h"
+#include "private/composerview_p.h"
 
 #include "table/composertableactionmenu.h"
 #include "globalsettings_base.h"
