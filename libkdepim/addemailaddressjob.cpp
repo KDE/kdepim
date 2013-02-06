@@ -40,6 +40,7 @@
 #include <KMessageBox>
 
 #include <QPointer>
+#include <QTextDocument>
 
 using namespace KPIM;
 
@@ -80,7 +81,7 @@ class AddEmailAddressJob::Private
         const QString text =
           i18nc( "@info",
                  "A contact with the email address <email>%1</email> "
-                 "is already in your address book.", mCompleteAddress );
+                 "is already in your address book.", Qt::escape(mCompleteAddress) );
 
         KMessageBox::information(
           mParentWidget,
@@ -225,7 +226,7 @@ class AddEmailAddressJob::Private
                "<para>A contact for <email>%1</email> was successfully added "
                "to your address book.</para>"
                "<para>Do you want to edit this new contact now?</para>",
-               mCompleteAddress );
+               Qt::escape(mCompleteAddress) );
 
       if ( KMessageBox::questionYesNo(
              mParentWidget,
