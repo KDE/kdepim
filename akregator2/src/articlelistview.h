@@ -29,6 +29,7 @@
 #include "abstractselectioncontroller.h"
 
 #include <Akonadi/EntityTreeView>
+#include <KConfigGroup>
 #include <QPointer>
 #include <QSortFilterProxyModel>
 #include <QTreeView>
@@ -85,7 +86,7 @@ class AKREGATOR2PART_EXPORT ArticleListView : public Akonadi::EntityTreeView, pu
 
 public:
 
-    explicit ArticleListView( QWidget* parent = 0 );
+    explicit ArticleListView( const KConfigGroup &config, QWidget* parent = 0 );
     ~ArticleListView();
 
     //impl ArticleLister
@@ -160,6 +161,7 @@ private:
     std::vector<boost::shared_ptr<const Filters::AbstractMatcher> > m_matchers;
     QByteArray m_feedHeaderState;
     QByteArray m_groupHeaderState;
+    KConfigGroup m_config;
 };
 
 } // namespace Akregator2

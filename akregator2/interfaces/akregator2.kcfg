@@ -134,6 +134,11 @@
    <default>0</default>
   </entry>
 </group>
+<group name="Search">
+  <entry key="Last Search Collection Id" type="Int" >
+    <default>0</default>
+  </entry>
+</group>
 <group name="Advanced" >
   <entry key="Delay Mark Read" name="UseMarkReadDelay" type="Bool" >
    <whatsthis>Whether to delay before marking an article as read upon selecting it.</whatsthis>

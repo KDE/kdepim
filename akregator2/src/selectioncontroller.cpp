@@ -123,35 +123,18 @@ static Akonadi::Item::List itemsForIndexes( const QModelIndexList& indexes )
     return items;
 }
 
-Akregator2::SelectionController::SelectionController( Akonadi::Session* session, QObject* parent )
+Akregator2::SelectionController::SelectionController( Akonadi::Session* session, KRss::FeedItemModel *itemModel, QObject* parent )
     : AbstractSelectionController( parent ),
     m_feedSelector(),
     m_articleLister( 0 ),
     m_singleDisplay( 0 ),
     m_folderExpansionHandler( 0 ),
-    m_itemModel( 0 ),
+    m_itemModel( itemModel ),
     m_feedSelectionResolved( 0 ),
     m_session( session ),
     m_collectionFilterModel( 0 ),
     m_unreadWatcher( new TotalUnreadCountWatcher( this ) )
 {
-    Akonadi::ItemFetchScope iscope;
-    iscope.fetchPayloadPart( KRss::Item::HeadersPart );
-    iscope.fetchAttribute<Akonadi::EntityDisplayAttribute>();
-    Akonadi::CollectionFetchScope cscope;
-    cscope.setIncludeStatistics( true );
-    cscope.setContentMimeTypes( QStringList() << KRss::Item::mimeType() );
-    Akonadi::ChangeRecorder* recorder = new Akonadi::ChangeRecorder( this );
-    recorder->setSession( m_session );
-    recorder->fetchCollection( true );
-    recorder->setAllMonitored();
-    recorder->setCollectionFetchScope( cscope );
-    recorder->setItemFetchScope( iscope );
-    recorder->fetchCollectionStatistics( true );
-    recorder->setCollectionMonitored( Akonadi::Collection::root() );
-    recorder->setMimeTypeMonitored( KRss::Item::mimeType() );
-    m_itemModel = new FeedItemModel( recorder, this );
-
     Akonadi::EntityMimeTypeFilterModel* filterProxy = new Akonadi::EntityMimeTypeFilterModel( this );
     filterProxy->addMimeTypeInclusionFilter( Akonadi::Collection::mimeType() );
     filterProxy->setHeaderGroup( Akonadi::EntityTreeModel::CollectionTreeHeaders );

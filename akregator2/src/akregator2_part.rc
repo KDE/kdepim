@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
-<kpartgui name="akregator2_part" version="421">
+<kpartgui name="akregator2_part" version="422">
   <MenuBar>
     <Menu name="file">
       <Action name="file_import"/>
@@ -16,6 +16,7 @@
       <Action name="feed_modify"/>
       <Action name="feed_remove"/>
       <Separator/>
+      <Action name="search"/>
     </Menu>
 
     <Menu name="view">

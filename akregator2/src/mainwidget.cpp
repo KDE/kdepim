@@ -49,6 +49,8 @@
 #include "selectioncontroller.h"
 #include "speechclient.h"
 #include "tabwidget.h"
+#include "searchwindow.h"
+#include "searchdescriptionattribute.h"
 #include "types.h"
 
 #include <Akonadi/AgentManager>
@@ -56,11 +58,18 @@
 #include <Akonadi/Collection>
 #include <Akonadi/CollectionDeleteJob>
 #include <Akonadi/EntityTreeModel>
+#include <Akonadi/EntityDisplayAttribute>
 #include <Akonadi/Session>
 #include <Akonadi/Control>
+#include <Akonadi/ItemFetchScope>
+#include <Akonadi/CollectionFetchScope>
+#include <Akonadi/ChangeRecorder>
+#include <Akonadi/AttributeFactory>
+#include <akonadi/persistentsearchattribute.h>
 
 #include <krss/feedcollection.h>
 #include <KRss/Item>
+#include <KRss/FeedItemModel>
 
 #include <solid/networking.h>
 
@@ -79,6 +88,7 @@
 #include <ktoggleaction.h>
 #include <ktoolinvocation.h>
 #include <kurl.h>
+
 
 #include <QClipboard>
 #include <QPixmap>
@@ -124,6 +134,9 @@ Akregator2::MainWidget::MainWidget( Part *part, QWidget *parent, ActionManagerIm
      m_viewMode(NormalView),
      m_actionManager(actionManager)
 {
+    Akonadi::AttributeFactory::registerAttribute<Akregator2::SearchDescriptionAttribute>();
+    Akonadi::AttributeFactory::registerAttribute<Akonadi::PersistentSearchAttribute>();
+
     m_actionManager->initMainWidget(this);
     m_actionManager->initFrameManager(Kernel::self()->frameManager());
     m_part = part;
@@ -194,11 +207,28 @@ Akregator2::MainWidget::MainWidget( Part *part, QWidget *parent, ActionManagerIm
     m_articleSplitter = new QSplitter(Qt::Vertical, m_mainTab);
     m_articleSplitter->setObjectName("panner2");
 
-    m_articleListView = new ArticleListView( m_articleSplitter );
+    m_articleListView = new ArticleListView( KConfigGroup( Settings::self()->config(), "General" ),  m_articleSplitter );
 
     m_session = new Akonadi::Session( QByteArray( "Akregator2-" ) + QByteArray::number( qrand() ) );
 
-    m_selectionController = new SelectionController( m_session, this );
+    Akonadi::ItemFetchScope iscope;
+    iscope.fetchPayloadPart( KRss::Item::HeadersPart );
+    iscope.fetchAttribute<Akonadi::EntityDisplayAttribute>();
+    Akonadi::CollectionFetchScope cscope;
+    cscope.setIncludeStatistics( true );
+    cscope.setContentMimeTypes( QStringList() << KRss::Item::mimeType() );
+    Akonadi::ChangeRecorder* recorder = new Akonadi::ChangeRecorder( this );
+    recorder->setSession( m_session );
+    recorder->fetchCollection( true );
+    recorder->setAllMonitored();
+    recorder->setCollectionFetchScope( cscope );
+    recorder->setItemFetchScope( iscope );
+    recorder->fetchCollectionStatistics( true );
+    recorder->setCollectionMonitored( Akonadi::Collection::root() );
+    recorder->setMimeTypeMonitored( KRss::Item::mimeType() );
+    m_itemModel = new KRss::FeedItemModel( recorder, this );
+
+    m_selectionController = new SelectionController( m_session, m_itemModel, this );
     m_selectionController->setArticleLister( m_articleListView );
     m_selectionController->setFeedSelector( m_feedListView );
     connect( m_selectionController, SIGNAL(totalUnreadCountChanged(int)), this, SIGNAL(signalUnreadCountChanged(int)) );
@@ -1140,6 +1170,12 @@ void Akregator2::MainWidget::slotJobFinished( KJob *job )
 void Akregator2::MainWidget::slotReloadAllTabs()
 {
     m_tabWidget->slotReloadAllTabs();
+}
+
+void Akregator2::MainWidget::slotSearch()
+{
+    SearchWindow *window = new SearchWindow( m_itemModel, m_selectionController->selectedCollection(), this );
+    window->show();
 }
 
 bool Akregator2::MainWidget::isNetworkAvailable() const

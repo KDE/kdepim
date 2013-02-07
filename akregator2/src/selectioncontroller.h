@@ -77,7 +77,7 @@ class SelectionController : public AbstractSelectionController
 
 public:
 
-    explicit SelectionController( Akonadi::Session* session, QObject* parent = 0 );
+    explicit SelectionController( Akonadi::Session* session, KRss::FeedItemModel *itemModel, QObject* parent = 0 );
 
     //impl
     void setFeedSelector( QAbstractItemView* feedSelector ) ;

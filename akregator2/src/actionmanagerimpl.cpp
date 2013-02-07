@@ -240,6 +240,12 @@ void ActionManagerImpl::initMainWidget(MainWidget* mainWidget)
     connect(action, SIGNAL(triggered(bool)), d->mainWidget, SLOT(slotFeedModify()));
     action->setShortcuts(KShortcut( "F2" ));
 
+    action = coll->addAction("search");
+    action->setIcon(KIcon("system-search"));
+    action->setText(i18n("&Search"));
+    connect(action, SIGNAL(triggered(bool)), d->mainWidget, SLOT(slotSearch()));
+    action->setShortcut(KShortcut( "S" ));
+
     // toolbar / View
     action = coll->addAction("normal_view");
     action->setIcon(KIcon("view-split-top-bottom"));

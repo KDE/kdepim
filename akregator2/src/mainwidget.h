@@ -49,12 +49,13 @@ class QDomDocument;
 class QSplitter;
 
 namespace KRss {
-    class FeedListView;
+class FeedListView;
+class FeedItemModel;
 }
 
 namespace Akonadi {
-    class Collection;
-    class Session;
+class Collection;
+class Session;
 }
 
 namespace Akregator2 {
@@ -139,6 +140,9 @@ class AKREGATOR2PART_EXPORT MainWidget : public QWidget
         void slotOpenSelectedArticles();
         void slotOpenSelectedArticlesInBackground();
 
+        /** opens the link of an item in the external browser */
+        void slotOpenItemInBrowser( const Akonadi::Item& item );
+
         void slotOnShutdown();
 
         /** selected tree node has changed */
@@ -180,6 +184,7 @@ class AKREGATOR2PART_EXPORT MainWidget : public QWidget
         /** reloads all open tabs */
         void slotReloadAllTabs();
 
+        void slotSearch();
 
         /** toggles the keep flag of the currently selected article */
         void slotArticleToggleKeepFlag(bool enabled);
@@ -222,9 +227,6 @@ class AKREGATOR2PART_EXPORT MainWidget : public QWidget
         /** special behaviour in article list view (TODO: move code there?) */
         void slotMouseButtonPressed(int button, const KUrl&);
 
-        /** opens the link of an item in the external browser */
-        void slotOpenItemInBrowser( const Akonadi::Item& item );
-
         void slotFetchQueueStarted();
         void slotFetchQueueFinished();
         void slotJobFinished( KJob *job );
@@ -237,6 +239,7 @@ class AKREGATOR2PART_EXPORT MainWidget : public QWidget
         /** opens current article in new tab, background/foreground depends on settings TODO: use selected instead of current? */
         void openSelectedArticles(bool openInBackground);
 
+        KRss::FeedItemModel *m_itemModel;
         SelectionController* m_selectionController;
 
         KRss::FeedListView* m_feedListView;

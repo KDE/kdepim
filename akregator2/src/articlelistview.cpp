@@ -212,16 +212,15 @@ void ArticleListView::saveHeaderSettings()
             m_groupHeaderState = state;
     }
 
-    KConfigGroup conf( Settings::self()->config(), "General" );
-    conf.writeEntry( "ArticleListFeedHeaders", m_feedHeaderState.toBase64() );
-    conf.writeEntry( "ArticleListGroupHeaders", m_groupHeaderState.toBase64() );
+
+    m_config.writeEntry( "ArticleListFeedHeaders", m_feedHeaderState.toBase64() );
+    m_config.writeEntry( "ArticleListGroupHeaders", m_groupHeaderState.toBase64() );
 }
 
 void ArticleListView::loadHeaderSettings()
 {
-    KConfigGroup conf( Settings::self()->config(), "General" );
-    m_feedHeaderState = QByteArray::fromBase64( conf.readEntry( "ArticleListFeedHeaders" ).toAscii() );
-    m_groupHeaderState = QByteArray::fromBase64( conf.readEntry( "ArticleListGroupHeaders" ).toAscii() );
+    m_feedHeaderState = QByteArray::fromBase64( m_config.readEntry( "ArticleListFeedHeaders" ).toAscii() );
+    m_groupHeaderState = QByteArray::fromBase64( m_config.readEntry( "ArticleListGroupHeaders" ).toAscii() );
 }
 
 QItemSelectionModel* ArticleListView::articleSelectionModel() const
@@ -296,9 +295,10 @@ void ArticleListView::setIsAggregation( bool aggregation )
         setFeedMode();
 }
 
-ArticleListView::ArticleListView( QWidget* parent )
+ArticleListView::ArticleListView( const KConfigGroup &config, QWidget* parent )
     : Akonadi::EntityTreeView(parent),
-    m_columnMode( FeedMode )
+    m_columnMode( FeedMode ),
+    m_config( config )
 {
     setSortingEnabled( true );
     setAlternatingRowColors( true );
