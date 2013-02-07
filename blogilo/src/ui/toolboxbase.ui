@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>357</width>
+    <width>456</width>
     <height>563</height>
    </rect>
   </property>
@@ -26,8 +26,8 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>343</width>
-          <height>441</height>
+          <width>442</width>
+          <height>445</height>
          </rect>
         </property>
         <attribute name="label">
@@ -126,8 +126,8 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>343</width>
-          <height>441</height>
+          <width>442</width>
+          <height>445</height>
          </rect>
         </property>
         <attribute name="label">
@@ -153,8 +153,8 @@
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>333</width>
-              <height>370</height>
+              <width>432</width>
+              <height>376</height>
              </rect>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_7">
@@ -237,8 +237,8 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>343</width>
-          <height>441</height>
+          <width>425</width>
+          <height>368</height>
          </rect>
         </property>
         <attribute name="label">
@@ -514,8 +514,8 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>94</width>
-          <height>110</height>
+          <width>442</width>
+          <height>445</height>
          </rect>
         </property>
         <attribute name="label">
@@ -526,7 +526,7 @@
           <number>2</number>
          </property>
          <item>
-          <widget class="QTableWidget" name="localEntriesTable">
+          <widget class="QTreeWidget" name="localEntries">
            <property name="editTriggers">
             <set>QAbstractItemView::NoEditTriggers</set>
            </property>
@@ -539,9 +539,12 @@
            <property name="selectionBehavior">
             <enum>QAbstractItemView::SelectRows</enum>
            </property>
+           <property name="rootIsDecorated">
+            <bool>false</bool>
+           </property>
            <column>
             <property name="text">
-             <string comment="Post title">Title</string>
+             <string>Title</string>
             </property>
            </column>
            <column>

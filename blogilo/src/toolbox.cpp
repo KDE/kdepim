@@ -59,9 +59,9 @@ Toolbox::Toolbox( QWidget *parent )
     kDebug();
     d->mCurrentBlogId = -1;
     if ( parent )
-        this->d->statusbar = qobject_cast<KXmlGuiWindow*>( parent )->statusBar();
+        d->statusbar = qobject_cast<KXmlGuiWindow*>( parent )->statusBar();
     else
-        this->d->statusbar = new KStatusBar( this );
+        d->statusbar = new KStatusBar( this );
     setupUi( this );
     setButtonsIcon();
     frameCat->layout()->setAlignment( Qt::AlignTop );
@@ -77,8 +77,8 @@ Toolbox::Toolbox( QWidget *parent )
     connect( btnEntriesRemove, SIGNAL(clicked(bool)), this, SLOT(slotRemoveSelectedEntryFromServer()) );
 
     connect( btnOptionsNow, SIGNAL(clicked(bool)), this, SLOT(setDateTimeNow()) );
-    connect( localEntriesTable, SIGNAL(cellDoubleClicked(int,int)),
-             this, SLOT(slotLocalEntrySelected(int,int)) );
+    connect( localEntries, SIGNAL(itemClicked(QTreeWidgetItem*,int)),
+             this, SLOT(slotLocalEntrySelected(QTreeWidgetItem*,int)) );
     connect( btnLocalRemove, SIGNAL(clicked(bool)) , this, SLOT(slotRemoveLocalEntry()) );
 
     lblOptionsTrackBack->setVisible( false );
@@ -154,7 +154,7 @@ void Toolbox::slotUpdateEntries(int count)
     connect( entryB, SIGNAL(sigEntriesListFetched(int)), this, SLOT(slotLoadEntriesFromDB(int)) );
     connect( entryB, SIGNAL(sigError(QString)), this, SIGNAL(sigError(QString)) );
     d->statusbar->showMessage( i18n( "Requesting list of entries..." ) );
-    this->setCursor( Qt::BusyCursor );
+    setCursor( Qt::BusyCursor );
     emit sigBusy( true );
 }
 
@@ -180,7 +180,7 @@ void Toolbox::slotLoadEntriesFromDB( int blog_id )
         lstEntriesList->addItem( lstItem );
     }
     d->statusbar->showMessage( i18n( "List of entries received." ), STATUSTIMEOUT );
-    this->unsetCursor();
+    unsetCursor();
     emit sigBusy( false );
 }
 
@@ -204,7 +204,7 @@ void Toolbox::slotLoadCategoryListFromDB( int blog_id )
         frameCat->layout()->addWidget( cb );
     }
     d->statusbar->showMessage( i18n( "List of categories received." ), STATUSTIMEOUT );
-    this->unsetCursor();
+    unsetCursor();
     emit sigBusy( false );
 }
 
@@ -285,9 +285,9 @@ void Toolbox::clearCatList()
 void Toolbox::getFieldsValue( BilboPost* currentPost )
 {
     kDebug();
-    currentPost->setCategoryList( this->selectedCategories() );
-    currentPost->setTags( this->currentTags() );
-    currentPost->setModifyTimeStamp( this->chkOptionsTime->isChecked() );
+    currentPost->setCategoryList( selectedCategories() );
+    currentPost->setTags( currentTags() );
+    currentPost->setModifyTimeStamp( chkOptionsTime->isChecked() );
     if ( currentPost->status() == KBlog::BlogPost::New ) {
         if ( chkOptionsTime->isChecked() ) {
             currentPost->setModificationDateTime( KDateTime( optionsDate->date(), optionsTime->time() ) );
@@ -442,46 +442,40 @@ void Toolbox::setButtonsIcon()
 void Toolbox::reloadLocalPosts()
 {
     kDebug();
-    localEntriesTable->clearContents();
-    localEntriesTable->setRowCount(0);
+
+    localEntries->clear();
 
     QList<QVariantMap> localList = DBMan::self()->listLocalPosts();
     const int count = localList.count();
 
     for (int i=0; i < count; ++i){
-        int newRow = localEntriesTable->rowCount();
-        localEntriesTable->insertRow(newRow);
-        QString postTitle = localList.at(i).value( QLatin1String("post_title") ).toString();
-        QTableWidgetItem *item1 = new QTableWidgetItem( postTitle );
-        item1->setToolTip( postTitle );
-        item1->setData(32, localList.at(i).value( QLatin1String("local_id") ).toInt());//Post_id
-        localEntriesTable->setItem( newRow, 0, item1 );
-        QString blogTitle = localList.at(i).value( QLatin1String("blog_title") ).toString();
-        QTableWidgetItem *item2 = new QTableWidgetItem( blogTitle );
-        item2->setToolTip( blogTitle );
-        item2->setData(32, localList.at(i).value( QLatin1String("blog_id") ).toInt());//blog_id
-        localEntriesTable->setItem( newRow, 1, item2 );
+        const QString postTitle = localList.at(i).value( QLatin1String("post_title") ).toString();
+        const QString blogTitle = localList.at(i).value( QLatin1String("blog_title") ).toString();
+
+        QTreeWidgetItem *item = new QTreeWidgetItem( localEntries, QStringList()<<postTitle<<blogTitle );
+        item->setData(0, LocalEntryID, localList.at(i).value( QLatin1String("local_id") ).toInt());
+        item->setData(1, LocalEntryID, localList.at(i).value( QLatin1String("blog_id") ).toInt());
     }
 }
 
-void Toolbox::slotLocalEntrySelected( int row, int column )
+void Toolbox::slotLocalEntrySelected( QTreeWidgetItem* item,int column )
 {
     kDebug()<<"Emitting sigEntrySelected...";
     Q_UNUSED(column);
-    BilboPost post = DBMan::self()->localPost(localEntriesTable->item(row, 0)->data(32).toInt());
-    emit sigEntrySelected( post, localEntriesTable->item(row, 1)->data(32).toInt() );
+    BilboPost post = DBMan::self()->localPost(item->data(0, LocalEntryID).toInt());
+    emit sigEntrySelected( post, item->data(1, LocalEntryID).toInt() );
 }
 
 void Toolbox::slotRemoveLocalEntry()
 {
     kDebug();
-    if(!localEntriesTable->selectedItems().isEmpty()) {
+    if(localEntries->currentItem()) {
         if( KMessageBox::warningYesNo(this, i18n("Are you sure you want to remove the selected local entry?"))
             == KMessageBox::No )
             return;
-        const int local_id = localEntriesTable->item(localEntriesTable->currentRow(), 0)->data(32).toInt();
+        const int local_id = localEntries->currentItem()->data(0,LocalEntryID).toInt();
         if( DBMan::self()->removeLocalEntry(local_id) ) {
-            localEntriesTable->removeRow(localEntriesTable->currentRow());
+            delete localEntries->currentItem();
         } else {
             KMessageBox::detailedError(this, i18n("Cannot remove selected local entry."),
                                        DBMan::self()->lastErrorText());
