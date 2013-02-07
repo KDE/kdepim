@@ -68,6 +68,7 @@ class MAILCOMMON_EXPORT FolderSelectionDialog : public KDialog
     void collectionCreationResult( KJob * );
     void rowsInserted( const QModelIndex &col, int, int );
     void slotDoubleClick(const QModelIndex&);
+    void slotFolderTreeWidgetContextMenuRequested(const QPoint&);
 
   protected:
     void focusTreeView();
