@@ -78,7 +78,7 @@ QString ComposerView::initialHtml()
 
 void ComposerView::createActions(const QList<ComposerViewAction>& lstActions)
 {
-    Q_FOREACH(ComposerViewAction action, lstActions) {
+    Q_FOREACH (ComposerViewAction action, lstActions) {
         d->createAction( action );
     }
     d->connectActionGroup();
@@ -192,7 +192,7 @@ void ComposerView::contextMenuEvent(QContextMenuEvent* event)
                                elm.tagName().toLower() == QLatin1String("ul") ||
                                elm.tagName().toLower() == QLatin1String("li") );
 
-    qDebug()<<" elm.tagName().toLower() "<<elm.tagName().toLower();
+    //kDebug()<<" elm.tagName().toLower() "<<elm.tagName().toLower();
 
     KMenu *menu = new KMenu;
     const QString selectedText = page()->mainFrame()->toPlainText().simplified();
@@ -252,7 +252,7 @@ void ComposerView::contextMenuEvent(QContextMenuEvent* event)
 
 void ComposerView::setActionsEnabled(bool enabled)
 {
-    Q_FOREACH(QAction* action, d->htmlEditorActionList) {
+    Q_FOREACH (QAction* action, d->htmlEditorActionList) {
         action->setEnabled(enabled);
     }
 }
