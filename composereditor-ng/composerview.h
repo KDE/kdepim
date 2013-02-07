@@ -101,6 +101,8 @@ public:
     void setActionsEnabled(bool enabled);
     void setHtmlContent( const QString& html );
 
+    QAction *action(ComposerViewAction actionType) const;
+
     /**
      * @brief evaluateJavascript
      * @param javascript evaluate javascript function.

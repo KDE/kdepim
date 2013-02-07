@@ -441,6 +441,93 @@ void ComposerView::createToolBar(const QList<ComposerViewAction>& lstAction, KTo
         }
     }
 }
+
+QAction *ComposerView::action(ComposerViewAction actionType) const
+{
+    switch(actionType) {
+    case Bold:
+        return d->action_text_bold;
+    case Italic:
+        return d->action_text_italic;
+    case Underline:
+        return d->action_text_underline;
+    case StrikeOut:
+        return d->action_text_strikeout;
+    case AlignLeft:
+        return d->action_align_left;
+    case AlignCenter:
+        return d->action_align_center;
+    case AlignRight:
+        return d->action_align_right;
+    case AlignJustify:
+        return d->action_align_justify;
+    case DirectionLtr:
+        return d->action_direction_ltr;
+    case DirectionRtl:
+        return d->action_direction_rtl;
+    case SubScript:
+        return d->action_text_subscript;
+    case SuperScript:
+        return d->action_text_superscript;
+    case HorizontalRule:
+        return d->action_insert_horizontal_rule;
+    case ListIndent:
+        return d->action_list_indent;
+    case ListDedent:
+        return d->action_list_dedent;
+    case OrderedList:
+        return d->action_ordered_list;
+    case UnorderedList:
+        return d->action_unordered_list;
+    case FormatType:
+        return d->action_format_type;
+    case FontSize:
+        return d->action_font_size;
+    case FontFamily:
+        return d->action_font_family;
+    case Emoticon:
+        return d->action_add_emoticon;
+    case InsertHtml:
+        return d->action_insert_html;
+    case InsertImage:
+        return d->action_insert_image;
+    case InsertTable:
+        return d->action_insert_table;
+    case InsertLink:
+        return d->action_insert_link;
+    case InsertSpecialChar:
+        return d->action_insert_specialchar;
+    case TextForegroundColor:
+        return d->action_text_foreground_color;
+    case TextBackgroundColor:
+        return d->action_text_background_color;
+    case FormatReset:
+        return d->action_format_reset;
+    case SpellCheck:
+        return d->action_spell_check;
+    case Find:
+        return d->action_find;
+    case Replace:
+        return d->action_replace;
+    case PageColor:
+        return d->action_page_color;
+    case BlockQuote:
+        return d->action_block_quote;
+    case SaveAs:
+        return d->action_save_as;
+    case Print:
+        return d->action_print;
+    case PrintPreview:
+        return d->action_print_preview;
+    case PasteWithoutFormatting:
+        return d->action_paste_withoutformatting;
+    case Separator:
+    case LastType:
+        break;
+    }
+    return 0;
+}
+
 }
 
 #include "composerview.moc"
