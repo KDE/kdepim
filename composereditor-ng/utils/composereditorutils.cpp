@@ -27,9 +27,9 @@ QColor ComposerEditorNG::Utils::convertRgbToQColor(QString rgb)
     rgb.chop(1);
     rgb.remove(QLatin1String("rgb("));
     rgb = rgb.simplified();
-    const QStringList colorLst = rgb.split(QLatin1String(","));
+    const QStringList colorLst = rgb.split(QLatin1Char(','));
     if (colorLst.count() == 3) {
-        QColor col(colorLst.at(0).toInt(),colorLst.at(1).toInt(),colorLst.at(2).toInt());
+        const QColor col(colorLst.at(0).toInt(),colorLst.at(1).toInt(),colorLst.at(2).toInt());
         return col;
     }
     return QColor();

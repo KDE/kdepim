@@ -130,6 +130,7 @@ void ComposerTableActionMenuPrivate::_k_slotInsertRowAbove()
 
 void ComposerTableActionMenuPrivate::_k_slotRemoveColumn()
 {
+    qDebug()<<" tableColumb :"<<TableHelper::tableColumnCount(webElement);
     //TODO
 }
 
