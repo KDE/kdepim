@@ -61,7 +61,7 @@ class AddEmailAddressJob::Private
           q->emitResult();
           return;
         }
-        q->emitResult();
+        createContact();
     }
 
 
@@ -92,7 +92,11 @@ class AddEmailAddressJob::Private
         q->emitResult();
         return;
       }
+      createContact();
+    }
 
+    void createContact()
+    {
       const QStringList mimeTypes( KABC::Addressee::mimeType() );
 
       Akonadi::CollectionFetchJob * const addressBookJob =
