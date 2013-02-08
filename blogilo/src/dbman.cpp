@@ -62,9 +62,9 @@ DBMan::DBMan()
     d->mWallet = KWallet::Wallet::openWallet( KWallet::Wallet::LocalWallet(), 0 );
     if ( d->mWallet ) {
         d->useWallet = true;
-        if ( !d->mWallet->setFolder( "blogilo" ) ) {
-            d->mWallet->createFolder( "blogilo" );
-            d->mWallet->setFolder( "blogilo" );
+        if ( !d->mWallet->setFolder( QLatin1String("blogilo") ) ) {
+            d->mWallet->createFolder( QLatin1String("blogilo") );
+            d->mWallet->setFolder( QLatin1String("blogilo") );
         }
         kDebug() << "Wallet successfully opened.";
     } else {
@@ -123,7 +123,7 @@ void DBMan::reloadBlogList()
     QList<BilboBlog*> listBlogs = this->listBlogs();
     const int count = listBlogs.count();
     for ( int i = 0; i < count; ++i ) {
-        d->mBlogList [ listBlogs[i]->id() ] = listBlogs[i];
+        d->mBlogList [ listBlogs.at(i)->id() ] = listBlogs.at(i);
     }
 }
 
@@ -356,7 +356,7 @@ bool DBMan::removeBlog( int blog_id )
         kDebug() << q.lastError().text();
         return res;
     }
-    QString path = KStandardDirs::locateLocal( "data", QString( "blogilo/%1/" ).arg( blog_id ) , false );
+    QString path = KStandardDirs::locateLocal( "data", QString::fromLatin1( "blogilo/%1/" ).arg( blog_id ) , false );
     KIO::del(KUrl(path), KIO::HideProgressInfo);
     reloadBlogList();
     return res;

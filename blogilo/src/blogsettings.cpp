@@ -42,9 +42,9 @@ BlogSettings::BlogSettings( QWidget *parent )
     connect( blogsTable, SIGNAL(currentItemChanged(QTableWidgetItem*,QTableWidgetItem*)),
              this, SLOT(blogsTablestateChanged()) );
 
-    btnAdd->setIcon( KIcon( "list-add" ) );
-    btnEdit->setIcon( KIcon( "edit-rename" ) );
-    btnRemove->setIcon( KIcon( "list-remove" ) );
+    btnAdd->setIcon( KIcon( QLatin1String("list-add") ) );
+    btnEdit->setIcon( KIcon( QLatin1String("edit-rename") ) );
+    btnRemove->setIcon( KIcon( QLatin1String("list-remove") ) );
     loadBlogsList();
 }
 
