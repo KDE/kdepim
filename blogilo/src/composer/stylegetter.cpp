@@ -197,7 +197,11 @@ void StyleGetter::slotHtmlCopied( KJob *job )
     if ( file.exists() ) {
         file.remove();
     }
-    file.open( QIODevice::WriteOnly );
+    if (!file.open( QIODevice::WriteOnly ) ) {
+        KMessageBox::error( mParent,
+                            i18n( "Cannot write data to file %1", file.fileName() ) );
+        return;
+    }
     if ( file.write( httpData ) == -1 ) {
         KMessageBox::error( mParent,
                             i18n( "Cannot write data to file %1", file.fileName() ) );
