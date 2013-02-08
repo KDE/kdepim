@@ -63,7 +63,6 @@ ComposerView::ComposerView(QWidget *parent)
     connect(page(), SIGNAL(selectionChanged()), this, SLOT(_k_slotAdjustActions()) );
 
     setWindowModified(false);
-
 }
 
 ComposerView::~ComposerView()
