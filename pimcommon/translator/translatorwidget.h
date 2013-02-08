@@ -1,6 +1,6 @@
 /* -*- mode: C++; c-file-style: "gnu" -*-
 
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
 
   The program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -18,12 +18,12 @@
 
 #ifndef TRANSLATORWIDGET_H
 #define TRANSLATORWIDGET_H
-#include "messageviewer_export.h"
-#include <QWidget>
+
+#include "pimcommon_export.h"
 #include <kio/job.h>
 #include <KTextEdit>
 
-namespace MessageViewer {
+namespace PimCommon {
 
 class TranslatorTextEdit : public KTextEdit
 {
@@ -34,39 +34,39 @@ protected:
     void dropEvent( QDropEvent * );
 };
 
-class MESSAGEVIEWER_EXPORT TranslatorWidget : public QWidget
+class PIMCOMMON_EXPORT TranslatorWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit TranslatorWidget( QWidget* parent = 0 );
-  explicit TranslatorWidget( const QString& text, QWidget* parent = 0 );
-  ~TranslatorWidget();
-  void setTextToTranslate( const QString& );
-  void writeConfig();
-  void readConfig();
+    explicit TranslatorWidget( QWidget* parent = 0 );
+    explicit TranslatorWidget( const QString& text, QWidget* parent = 0 );
+    ~TranslatorWidget();
+    void setTextToTranslate( const QString& );
+    void writeConfig();
+    void readConfig();
 
-  
+
 public Q_SLOTS:
-  void slotTranslate();
-  void slotCloseWidget();
+    void slotTranslate();
+    void slotCloseWidget();
 
 private Q_SLOTS:
-  void slotFromLanguageChanged( int );
-  void slotTextChanged();
-  void slotInvertLanguage();
-  void slotClear();
-  void slotTranslateDone();
-  void slotTranslateFailed();
+    void slotFromLanguageChanged( int );
+    void slotTextChanged();
+    void slotInvertLanguage();
+    void slotClear();
+    void slotTranslateDone();
+    void slotTranslateFailed();
 protected:
-  bool event(QEvent* e);
+    bool event(QEvent* e);
 
 Q_SIGNALS:
-  void translatorWasClosed();
+    void translatorWasClosed();
 private:
-  void init();
-  void initLanguage();
-  class TranslatorWidgetPrivate;
-  TranslatorWidgetPrivate *const d;
+    void init();
+    void initLanguage();
+    class TranslatorWidgetPrivate;
+    TranslatorWidgetPrivate *const d;
 
 };
 }

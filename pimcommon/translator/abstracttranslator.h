@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2012 Montel Laurent <montel@kde.org>
   
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -24,32 +24,32 @@
 
 class KComboBox;
 
-namespace MessageViewer {
+namespace PimCommon {
 class AbstractTranslator : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit AbstractTranslator();
-  virtual ~AbstractTranslator();
+    explicit AbstractTranslator();
+    virtual ~AbstractTranslator();
 
-  virtual void translate() = 0;
+    virtual void translate() = 0;
 
-  virtual QMap<QString, QMap<QString, QString> > initListLanguage(KComboBox* from) = 0;
+    virtual QMap<QString, QMap<QString, QString> > initListLanguage(KComboBox* from) = 0;
 
-  QString resultTranslate() const;
-  void setInputText(const QString& text);
-  void setFrom(const QString& language);
-  void setTo(const QString& language);
+    QString resultTranslate() const;
+    void setInputText(const QString& text);
+    void setFrom(const QString& language);
+    void setTo(const QString& language);
 
 Q_SIGNALS:
-  void translateDone();
-  void translateFailed();
+    void translateDone();
+    void translateFailed();
 
 protected:
-  QString mInputText;
-  QString mFrom;
-  QString mTo;
-  QString mResult;
+    QString mInputText;
+    QString mFrom;
+    QString mTo;
+    QString mResult;
 };
 }
 

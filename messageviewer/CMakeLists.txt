@@ -86,13 +86,6 @@ set(libmessageviewer_SRCS
   viewer_p.cpp
   webkitparthtmlwriter.cpp
   renamefiledialog.cpp
-  translator/translatorutil.cpp
-  translator/translatorwidget.cpp
-  translator/abstracttranslator.cpp
-  #Laurent: disable it we can't use it directly now
-  #translator/babelfishtranslator.cpp
-  translator/googletranslator.cpp
-  minimumcombobox.cpp
   ${_mailwebview_cpp}
 )
 
@@ -119,9 +112,11 @@ target_link_libraries(messageviewer messagecore kdepim kpgp kleo
   ${KDE4_KPRINTUTILS_LIBS}
   ${QGPGME_LIBRARIES}
   ${_mailwebview_lib}
+  pimcommon
 )
 
 include_directories(
+    ${CMAKE_SOURCE_DIR}/pimcommon
     ${CMAKE_SOURCE_DIR}/libkleo
     ${Boost_INCLUDE_DIR}
     ${GPGME_INCLUDES}

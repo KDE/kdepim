@@ -19,7 +19,7 @@
 
 #include "filteractionaddheader.h"
 
-#include <messageviewer/minimumcombobox.h>
+#include <pimcommon/minimumcombobox.h>
 
 #include <KLineEdit>
 #include <KLocale>
@@ -73,7 +73,7 @@ QWidget* FilterActionAddHeader::createParamWidget( QWidget *parent ) const
   layout->setSpacing( 4 );
   layout->setMargin( 0 );
 
-  MessageViewer::MinimumComboBox *comboBox = new MessageViewer::MinimumComboBox( widget );
+  PimCommon::MinimumComboBox *comboBox = new PimCommon::MinimumComboBox( widget );
   comboBox->setObjectName( "combo" );
   comboBox->setEditable( true );
   comboBox->setInsertPolicy( QComboBox::InsertAtBottom );
@@ -110,7 +110,7 @@ void FilterActionAddHeader::setParamWidgetValue( QWidget *paramWidget ) const
 {
   const int index = mParameterList.indexOf( mParameter );
 
-  MessageViewer::MinimumComboBox *comboBox = paramWidget->findChild<MessageViewer::MinimumComboBox*>( "combo" );
+  PimCommon::MinimumComboBox *comboBox = paramWidget->findChild<PimCommon::MinimumComboBox*>( "combo" );
   Q_ASSERT( comboBox );
   comboBox->clear();
   comboBox->addItems( mParameterList );
@@ -130,7 +130,7 @@ void FilterActionAddHeader::setParamWidgetValue( QWidget *paramWidget ) const
 
 void FilterActionAddHeader::applyParamWidgetValue( QWidget *paramWidget )
 {
-  const MessageViewer::MinimumComboBox *comboBox = paramWidget->findChild<MessageViewer::MinimumComboBox*>( "combo" );
+  const PimCommon::MinimumComboBox *comboBox = paramWidget->findChild<PimCommon::MinimumComboBox*>( "combo" );
   Q_ASSERT( comboBox );
   mParameter = comboBox->currentText();
 
@@ -141,7 +141,7 @@ void FilterActionAddHeader::applyParamWidgetValue( QWidget *paramWidget )
 
 void FilterActionAddHeader::clearParamWidget( QWidget *paramWidget ) const
 {
-  MessageViewer::MinimumComboBox *comboBox = paramWidget->findChild<MessageViewer::MinimumComboBox*>( "combo" );
+  PimCommon::MinimumComboBox *comboBox = paramWidget->findChild<PimCommon::MinimumComboBox*>( "combo" );
   Q_ASSERT( comboBox );
   comboBox->setCurrentIndex( 0 );
 

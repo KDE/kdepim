@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
   
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -15,15 +15,36 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "translatorutil.h"
-#include <KComboBox>
+#include "abstracttranslator.h"
 
-void MessageViewer::TranslatorUtil::addPairToMap( QMap<QString, QString>& map, const QPair<QString, QString>& pair )
+using namespace PimCommon;
+
+AbstractTranslator::AbstractTranslator()
 {
-  map.insert( i18n(pair.first.toUtf8()), pair.second );
 }
 
-void MessageViewer::TranslatorUtil::addItemToFromComboBox( KComboBox *combo, const QPair<QString, QString>& pair )
+AbstractTranslator::~AbstractTranslator()
 {
-  combo->addItem( i18n(pair.first.toUtf8()), pair.second );
 }
+
+void AbstractTranslator::setInputText(const QString& text)
+{
+    mInputText = text;
+}
+
+void AbstractTranslator::setFrom(const QString& language)
+{
+    mFrom = language;
+}
+
+void AbstractTranslator::setTo(const QString& language)
+{
+    mTo = language;
+}
+
+QString AbstractTranslator::resultTranslate() const
+{
+    return mResult;
+}
+
+#include "abstracttranslator.moc"

@@ -20,7 +20,7 @@
 #include "filteractionrewriteheader.h"
 
 #include "../regexplineedit.h"
-#include <messageviewer/minimumcombobox.h>
+#include <pimcommon/minimumcombobox.h>
 
 #include <KDE/KLineEdit>
 #include <KDE/KLocale>
@@ -96,7 +96,7 @@ QWidget* FilterActionRewriteHeader::createParamWidget( QWidget *parent ) const
   layout->setSpacing( 4 );
   layout->setMargin( 0 );
 
-  MessageViewer::MinimumComboBox *comboBox = new MessageViewer::MinimumComboBox( widget );
+  PimCommon::MinimumComboBox *comboBox = new PimCommon::MinimumComboBox( widget );
   comboBox->setEditable( true );
   comboBox->setObjectName( "combo" );
   comboBox->setInsertPolicy( QComboBox::InsertAtBottom );
@@ -140,7 +140,7 @@ QWidget* FilterActionRewriteHeader::createParamWidget( QWidget *parent ) const
 void FilterActionRewriteHeader::setParamWidgetValue( QWidget *paramWidget ) const
 {
   const int index = mParameterList.indexOf( mParameter );
-  MessageViewer::MinimumComboBox *comboBox = paramWidget->findChild<MessageViewer::MinimumComboBox*>( "combo" );
+  PimCommon::MinimumComboBox *comboBox = paramWidget->findChild<PimCommon::MinimumComboBox*>( "combo" );
   Q_ASSERT( comboBox );
 
   comboBox->clear();
@@ -163,7 +163,7 @@ void FilterActionRewriteHeader::setParamWidgetValue( QWidget *paramWidget ) cons
 
 void FilterActionRewriteHeader::applyParamWidgetValue( QWidget *paramWidget )
 {
-  const MessageViewer::MinimumComboBox *comboBox = paramWidget->findChild<MessageViewer::MinimumComboBox*>( "combo" );
+  const PimCommon::MinimumComboBox *comboBox = paramWidget->findChild<PimCommon::MinimumComboBox*>( "combo" );
   Q_ASSERT( comboBox );
   mParameter = comboBox->currentText();
 
@@ -178,7 +178,7 @@ void FilterActionRewriteHeader::applyParamWidgetValue( QWidget *paramWidget )
 
 void FilterActionRewriteHeader::clearParamWidget( QWidget *paramWidget ) const
 {
-  MessageViewer::MinimumComboBox *comboBox = paramWidget->findChild<MessageViewer::MinimumComboBox*>( "combo" );
+  PimCommon::MinimumComboBox *comboBox = paramWidget->findChild<PimCommon::MinimumComboBox*>( "combo" );
   Q_ASSERT( comboBox );
   comboBox->setCurrentIndex( 0 );
 
