@@ -42,6 +42,7 @@ class GroupwareUiDelegate : public QObject, public CalendarSupport::GroupwareUiD
 {
   public:
     GroupwareUiDelegate()
+      : mCalendar( 0 )
     {
     }
 
