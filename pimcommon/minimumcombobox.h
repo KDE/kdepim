@@ -18,20 +18,21 @@
 */
 
 
-#ifndef MESSAGEVIEWER_MINIMUMCOMBOBOX_H
-#define MESSAGEVIEWER_MINIMUMCOMBOBOX_H
+#ifndef PIMCOMMON_MINIMUMCOMBOBOX_H
+#define PIMCOMMON_MINIMUMCOMBOBOX_H
 
 #include <kcombobox.h>
-#include "messageviewer_export.h"
+#include "pimcommon_export.h"
 
-namespace MessageViewer {
+namespace PimCommon {
 
   /** @short A KComboBox, which minimum size hint can be really small */
-  class MESSAGEVIEWER_EXPORT MinimumComboBox: public KComboBox {
+  class PIMCOMMON_EXPORT MinimumComboBox: public KComboBox {
     Q_OBJECT
   public:
       explicit MinimumComboBox(QWidget* parent = 0) : KComboBox( parent ) {}
-      virtual QSize minimumSizeHint() const { return QSize( 50, KComboBox::minimumSizeHint().height() ); }
+  protected:
+      QSize minimumSizeHint() const { return QSize( 50, KComboBox::minimumSizeHint().height() ); }
   };
 
 }

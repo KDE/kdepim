@@ -64,7 +64,7 @@ public slots:
     void resetFields();
     void slotEntrySelected( QListWidgetItem *item );
     void slotEntriesCopyUrl();
-    void slotLocalEntrySelected( int row, int column );
+    void slotLocalEntrySelected(QTreeWidgetItem *, int column );
     void reloadLocalPosts();
     void slotRemoveLocalEntry();
     void clearEntries();
@@ -83,6 +83,11 @@ protected slots:
     void slotError(const QString& errorMessage);
 
 private:
+
+    enum LocalEntryType {
+        LocalEntryID = QTreeWidgetItem::UserType +1
+    };
+
     QStringList selectedCategoriesTitle() const;
     QList<Category> selectedCategories() const;
     void setSelectedCategories( const QStringList& );

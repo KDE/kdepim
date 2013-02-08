@@ -21,7 +21,7 @@
 #include "rulewidgethandlermanager.h"
 using MailCommon::RuleWidgetHandlerManager;
 
-#include <messageviewer/minimumcombobox.h>
+#include <pimcommon/minimumcombobox.h>
 #include <KComboBox>
 #include <KDebug>
 #include <KDialog>
@@ -132,7 +132,7 @@ void SearchRuleWidget::initWidget()
   hlay->setMargin( 0 );
 
   // initialize the header field combo box
-  mRuleField = new MessageViewer::MinimumComboBox( this );
+  mRuleField = new PimCommon::MinimumComboBox( this );
   mRuleField->setObjectName( "mRuleField" );
   mRuleField->setEditable( true );
   KLineEdit *edit = new KLineEdit;

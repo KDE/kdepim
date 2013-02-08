@@ -42,7 +42,6 @@ public:
 SendToBlogDialog::SendToBlogDialog( bool isNew, bool isPrivate, QWidget *parent )
     : KDialog(parent), d(new Private)
 {
-    kDebug()<<isNew<<isPrivate;
     QWidget *dialog = new QWidget( this );
     d->ui.setupUi( dialog );
     dialog->setAttribute( Qt::WA_DeleteOnClose );

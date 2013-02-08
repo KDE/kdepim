@@ -70,6 +70,9 @@ namespace MessageViewer {
   class WebKitPartHtmlWriter;
   class HtmlStatusBar;
   class MailWebView;
+}
+
+namespace PimCommon {
   class TranslatorWidget;
 }
 
@@ -616,7 +619,7 @@ public:
   MimeTreeModel *mMimePartModel;
   MailWebView *mViewer;
   FindBarMailWebView *mFindBar;
-  TranslatorWidget *mTranslatorWidget;
+  PimCommon::TranslatorWidget *mTranslatorWidget;
 
   const AttachmentStrategy * mAttachmentStrategy;
   const HeaderStrategy * mHeaderStrategy;

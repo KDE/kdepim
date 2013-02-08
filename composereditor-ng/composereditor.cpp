@@ -86,8 +86,8 @@ ComposerEditor::ComposerEditor(QWidget *parent)
 
 ComposerEditor::~ComposerEditor()
 {
-    QString content = d->view->page()->mainFrame()->toHtml();
-    qDebug()<<"content "<<content;
+    //const QString content = d->view->page()->mainFrame()->toHtml();
+    //qDebug()<<" content :"<<content;
     delete d;
 }
 

@@ -6,7 +6,6 @@ set(blogilo_SRCS
  mainwindow.cpp
  toolbox.cpp
  addeditblog.cpp
- titlelineedit.cpp
  postentry.cpp
  dbman.cpp
  global.cpp
@@ -64,3 +63,4 @@ install( TARGETS blogilo ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 install( PROGRAMS ../blogilo.desktop  DESTINATION  ${XDG_APPS_INSTALL_DIR} )
 install( FILES blogilo.kcfg  DESTINATION  ${KCFG_INSTALL_DIR} )
+install( FILES blogiloui.rc DESTINATION  ${DATA_INSTALL_DIR}/blogilo )

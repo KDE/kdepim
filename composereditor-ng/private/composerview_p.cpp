@@ -19,7 +19,7 @@
 */
 
 #include "composerview_p.h"
-#include "composereditorutils_p.h"
+#include "utils/composereditorutils_p.h"
 #include "dialog/composerlinkdialog.h"
 #include "dialog/composerlistdialog.h"
 #include "image/composerimagedialog.h"

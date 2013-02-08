@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
   
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -15,36 +15,29 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#ifndef GOOGLETRANSLATOR_H
+#define GOOGLETRANSLATOR_H
+
 #include "abstracttranslator.h"
 
-using namespace MessageViewer;
+class QWebPage;
+class KComboBox;
 
-AbstractTranslator::AbstractTranslator()
+namespace PimCommon {
+class GoogleTranslator : public AbstractTranslator
 {
+    Q_OBJECT
+public:
+    explicit GoogleTranslator();
+    ~GoogleTranslator();
+
+    QMap<QString, QMap<QString, QString> > initListLanguage(KComboBox* from);
+    void translate();
+protected Q_SLOTS:
+    void slotLoadFinished(bool result);
+private:
+    QWebPage *mWebPage;
+};
 }
 
-AbstractTranslator::~AbstractTranslator()
-{
-}
-
-void AbstractTranslator::setInputText(const QString& text)
-{
-  mInputText = text;
-}
-
-void AbstractTranslator::setFrom(const QString& language)
-{
-  mFrom = language;
-}
-
-void AbstractTranslator::setTo(const QString& language)
-{
-  mTo = language;
-}
-
-QString AbstractTranslator::resultTranslate() const
-{
-  return mResult;
-}
-
-#include "abstracttranslator.moc"
+#endif // GOOGLETRANSLATOR_H

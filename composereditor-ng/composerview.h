@@ -99,7 +99,10 @@ public:
     void createToolBar(const QList<ComposerViewAction>&lstAction, KToolBar *toolbar);
 
     void setActionsEnabled(bool enabled);
+
     void setHtmlContent( const QString& html );
+
+    QAction *action(ComposerViewAction actionType) const;
 
     /**
      * @brief evaluateJavascript

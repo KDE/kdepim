@@ -124,7 +124,7 @@
 #include "vcardviewer.h"
 #include "mailwebview.h"
 #include "findbar/findbarmailwebview.h"
-#include "translator/translatorwidget.h"
+#include "pimcommon/translator/translatorwidget.h"
 
 #include "interfaces/bodypart.h"
 #include "interfaces/htmlwriter.h"
@@ -1480,7 +1480,7 @@ void ViewerPrivate::createWidgets() {
   mViewer->setObjectName( "mViewer" );
 
   mFindBar = new FindBarMailWebView( mViewer, readerBox );
-  mTranslatorWidget = new TranslatorWidget(readerBox);
+  mTranslatorWidget = new PimCommon::TranslatorWidget(readerBox);
 #ifndef QT_NO_TREEVIEW
   mSplitter->setStretchFactor( mSplitter->indexOf(mMimePartTree), 0 );
 #endif

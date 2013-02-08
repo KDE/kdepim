@@ -19,7 +19,7 @@
 
 #include "filteractionwithstringlist.h"
 
-#include <messageviewer/minimumcombobox.h>
+#include <pimcommon/minimumcombobox.h>
 
 using namespace MailCommon;
 
@@ -30,7 +30,7 @@ FilterActionWithStringList::FilterActionWithStringList( const char *name, const 
 
 QWidget* FilterActionWithStringList::createParamWidget( QWidget *parent ) const
 {
-  MessageViewer::MinimumComboBox *comboBox = new MessageViewer::MinimumComboBox( parent );
+  PimCommon::MinimumComboBox *comboBox = new PimCommon::MinimumComboBox( parent );
   comboBox->setEditable( false );
   comboBox->addItems( mParameterList );
   setParamWidgetValue( comboBox );
@@ -43,18 +43,18 @@ QWidget* FilterActionWithStringList::createParamWidget( QWidget *parent ) const
 
 void FilterActionWithStringList::applyParamWidgetValue( QWidget *paramWidget )
 {
-  mParameter = static_cast<MessageViewer::MinimumComboBox*>( paramWidget )->currentText();
+  mParameter = static_cast<PimCommon::MinimumComboBox*>( paramWidget )->currentText();
 }
 
 void FilterActionWithStringList::setParamWidgetValue( QWidget *paramWidget ) const
 {
   const int index = mParameterList.indexOf( mParameter );
-  static_cast<MessageViewer::MinimumComboBox*>( paramWidget )->setCurrentIndex( index >= 0 ? index : 0 );
+  static_cast<PimCommon::MinimumComboBox*>( paramWidget )->setCurrentIndex( index >= 0 ? index : 0 );
 }
 
 void FilterActionWithStringList::clearParamWidget( QWidget *paramWidget ) const
 {
-  static_cast<MessageViewer::MinimumComboBox*>( paramWidget )->setCurrentIndex( 0 );
+  static_cast<PimCommon::MinimumComboBox*>( paramWidget )->setCurrentIndex( 0 );
 }
 
 void FilterActionWithStringList::argsFromString( const QString &argsStr )

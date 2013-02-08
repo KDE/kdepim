@@ -32,6 +32,7 @@
 #include <KInputDialog>
 #include <KLocale>
 #include <KMessageBox>
+#include <KMenu>
 
 #include <QKeyEvent>
 #include <QVBoxLayout>
@@ -108,6 +109,10 @@ FolderSelectionDialog::FolderSelectionDialog( QWidget *parent, SelectionFolderOp
   if ( !d->mNotAllowToCreateNewFolder ) {
     enableButton( KDialog::User1, false );
     connect( this, SIGNAL(user1Clicked()), this, SLOT(slotAddChildFolder()) );
+    d->folderTreeWidget->folderTreeView()->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect( d->folderTreeWidget->folderTreeView(), SIGNAL(customContextMenuRequested(QPoint)),
+             SLOT(slotFolderTreeWidgetContextMenuRequested(QPoint)) );
+
   }
 
   connect( d->folderTreeWidget->selectionModel(),
@@ -131,6 +136,16 @@ FolderSelectionDialog::~FolderSelectionDialog()
   writeConfig();
   delete d;
 }
+
+void FolderSelectionDialog::slotFolderTreeWidgetContextMenuRequested(const QPoint& pos)
+{
+    if (isButtonEnabled( KDialog::User1 ) && d->folderTreeWidget->folderTreeView()->indexAt(pos).isValid()) {
+        KMenu menu;
+        menu.addAction(i18n( "&New Subfolder..." ),this, SLOT(slotAddChildFolder()));
+        menu.exec(QCursor::pos());
+    }
+}
+
 
 void FolderSelectionDialog::slotDoubleClick(const QModelIndex& index)
 {

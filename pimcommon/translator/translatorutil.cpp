@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
   
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -15,29 +15,15 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef GOOGLETRANSLATOR_H
-#define GOOGLETRANSLATOR_H
+#include "translatorutil.h"
+#include <KComboBox>
 
-#include "abstracttranslator.h"
-
-class QWebPage;
-class KComboBox;
-
-namespace MessageViewer {
-class GoogleTranslator : public AbstractTranslator
+void PimCommon::TranslatorUtil::addPairToMap( QMap<QString, QString>& map, const QPair<QString, QString>& pair )
 {
-  Q_OBJECT
-public:
-  explicit GoogleTranslator();
-  ~GoogleTranslator();
-
-  QMap<QString, QMap<QString, QString> > initListLanguage(KComboBox* from);
-  void translate();
-protected Q_SLOTS:
-  void slotLoadFinished(bool result);
-private:
-  QWebPage *mWebPage;
-};
+    map.insert( i18n(pair.first.toUtf8()), pair.second );
 }
 
-#endif // GOOGLETRANSLATOR_H
+void PimCommon::TranslatorUtil::addItemToFromComboBox( KComboBox *combo, const QPair<QString, QString>& pair )
+{
+    combo->addItem( i18n(pair.first.toUtf8()), pair.second );
+}

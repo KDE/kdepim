@@ -111,7 +111,7 @@ int TableHelper::tableRowCount(const QWebElement& element)
         //Search all TR
         QWebElement trElement = tableBodyElement.firstChild();
         while (!trElement.isNull()) {
-            if (trElement.tagName().toLower() == ROW ) {
+            if (trElement.tagName().toLower() == ROW) {
                 numberOfRow++;
             }
             trElement = trElement.nextSibling();
@@ -122,6 +122,37 @@ int TableHelper::tableRowCount(const QWebElement& element)
 
 int TableHelper::tableColumnCount(const QWebElement& element)
 {
+    int numberColumn = 0;
+    QWebElement tableBodyElement = tableBodyWebElement(element);
+    if (!tableBodyElement.isNull()) {
+        //Search all TR
+        QWebElement trElement = tableBodyElement.firstChild();
+        while (!trElement.isNull()) {
+            if (trElement.tagName().toLower() == ROW) {
+                QWebElement tdElement = trElement.firstChild();
+                int currentNumberColumn = 0;
+                while (!tdElement.isNull()) {
+                    if (tdElement.tagName().toLower() == CELL) {
+                        currentNumberColumn++;
+                    }
+                    tdElement = tdElement.nextSibling();
+                }
+                numberColumn = qMax(numberColumn, currentNumberColumn);
+            }
+            trElement = trElement.nextSibling();
+        }
+    }
+    return numberColumn;
+}
+
+
+int TableHelper::currentColumn(const QWebElement& element)
+{
+    QWebElement e = element;
+    do {
+        e = e.parent();
+    } while( (e.tagName().toLower() != ROW) && !e.isNull() );
+
     //TODO
     return 0;
 }

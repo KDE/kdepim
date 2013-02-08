@@ -69,7 +69,7 @@ AddEditBlog::AddEditBlog( int blog_id, QWidget *parent, Qt::WindowFlags flags )
     d->mainW = new KTabWidget( this );
     d->ui.setupUi( d->mainW );
     setMainWidget( d->mainW );
-    setWindowTitle( i18n( "Add a new blog" ) );
+
     d->isNewBlog = true;
     d->mFetchAPITimer = d->mFetchBlogIdTimer = d->mFetchProfileIdTimer = 0;
 
@@ -101,6 +101,7 @@ AddEditBlog::AddEditBlog( int blog_id, QWidget *parent, Qt::WindowFlags flags )
         d->ui.comboDir->setCurrentIndex( d->bBlog->direction() );
         d->ui.txtTitle->setEnabled(true);
     } else {
+        setWindowTitle( i18n( "Add a new blog" ) );
         d->bBlog = new BilboBlog( this );
         d->bBlog->setBlogId( QString() );
         enableButtonOk( false );

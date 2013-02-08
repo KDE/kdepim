@@ -131,7 +131,7 @@ void FolderTreeWidgetProxyModel::setEnabledCheck( bool enable )
 
   d->enableCheck = enable;
   if ( enable ) {
-    setAccessRights( Akonadi::Collection::CanCreateItem );
+    setAccessRights( Akonadi::Collection::CanCreateItem | Akonadi::Collection::CanCreateCollection );
   }
 }
 

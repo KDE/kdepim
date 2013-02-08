@@ -12,6 +12,13 @@ set(libpimcommon_SRCS
   createresource.cpp
   imapaclattribute.cpp
   pimutil.cpp
+  minimumcombobox.cpp
+  translator/translatorutil.cpp
+  translator/translatorwidget.cpp
+  translator/abstracttranslator.cpp
+  #Laurent: disable it we can't use it directly now
+  #translator/babelfishtranslator.cpp
+  translator/googletranslator.cpp
 )
 
 macro(add_resource_iface _kcfgFile _ifaceName _className)
@@ -33,6 +40,7 @@ target_link_libraries(pimcommon
     ${KDEPIMLIBS_AKONADI_LIBS}
     ${KDEPIMLIBS_KIMAP_LIBS}
     ${KDE4_KDEUI_LIBS}
+    ${QT_QTWEBKIT_LIBRARY}
     kdepim
 )
 

@@ -12,7 +12,7 @@ qt4_wrap_cpp(wk_HEADERS_MOC spellplugin/qwebkitplatformplugin.h)
 set(libcomposereditor_ng_SRCS 
     composereditor.cpp
     dialog/composerlinkdialog.cpp
-    composerview_p.cpp
+    private/composerview_p.cpp
     composerview.cpp
     pagecolor/pagecolorbackgrounddialog.cpp
     pagecolor/pagecolorbackgroundwidget.cpp
@@ -20,7 +20,7 @@ set(libcomposereditor_ng_SRCS
     extendattributes/extendattributesbutton.cpp
     extendattributes/extendattributeswidget.cpp
     extendattributes/extendattributesutils.cpp
-    composereditorutils.cpp
+    utils/composereditorutils.cpp
     image/composerimagedialog.cpp
     image/composerimageresizewidget.cpp
     table/composertabledialog.cpp
