@@ -435,7 +435,7 @@ static inline void paint_boolean_state_icon( bool enabled, const QPixmap * pix,
   {
     // still paint, but very soft
     qreal oldOpacity = painter->opacity();
-    painter->setOpacity( 0.3 );
+    painter->setOpacity( 0.1 );
     paint_permanent_icon( pix, ci, painter, left, top, right, alignOnRight, iconSize );
     painter->setOpacity( oldOpacity );
     return;
