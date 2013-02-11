@@ -24,36 +24,37 @@
 */
 
 #include "postentry.h"
-
-#include "composer/bilbobrowser.h"
-
-#include <kdebug.h>
-#include <klocalizedstring.h>
-#include <klineedit.h>
-#include <KMessageBox>
 #include "bilbomedia.h"
 #include "backend.h"
 #include "dbman.h"
 #include "global.h"
 #include "sendtoblogdialog.h"
-#include <kio/job.h>
 #include "settings.h"
 #include "bilboblog.h"
 #include "syncuploader.h"
+
+#include "composer/blogilocomposereditor.h"
+#include "composer/blogilocomposerview.h"
+#include "composer/bilbobrowser.h"
+#include "composer/htmleditor.h"
+
+#include <libkdepim/spellchecklineedit.h>
+
+
+#include <kdebug.h>
+#include <klocalizedstring.h>
+#include <klineedit.h>
+#include <KMessageBox>
+#include <ktexteditor/view.h>
+#include <ktexteditor/document.h>
+#include <kio/job.h>
+#include <KTabWidget>
+
 #include <QProgressBar>
 #include <QLabel>
 #include <QTimer>
 #include <qlayout.h>
-#include "composer/blogilocomposereditor.h"
-#include "composer/blogilocomposerview.h"
-
-#include <libkdepim/spellchecklineedit.h>
-
-#include "composer/htmleditor.h"
-#include <ktexteditor/view.h>
-#include <ktexteditor/document.h>
 #include <QHBoxLayout>
-#include <KTabWidget>
 
 #define MINUTE 60000
 

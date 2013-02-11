@@ -34,12 +34,12 @@
 #include "bilboblog.h"
 #include "blogsettings.h"
 #include "poststabwidget.h"
+#include "uploadmediadialog.h"
 
 #include "ui_advancedsettingsbase.h"
 #include "ui_settingsbase.h"
 #include "ui_editorsettingsbase.h"
 
-#include <kdeversion.h>
 #include <ktabwidget.h>
 #include <KStatusNotifierItem>
 #include <kstatusbar.h>
@@ -49,16 +49,17 @@
 #include <kdebug.h>
 #include <kmessagebox.h>
 #include <KDE/KLocale>
+#include <KSelectAction>
+#include <kimagefilepreview.h>
+#include <KToolInvocation>
+#include <KMenu>
+
+
 #include <QDir>
 #include <QDockWidget>
 #include <QProgressBar>
-#include <KSelectAction>
-#include <kimagefilepreview.h>
-#include "uploadmediadialog.h"
 #include <QTimer>
 #include <QKeyEvent>
-#include <KToolInvocation>
-#include <KMenu>
 
 #define TIMEOUT 5000
 

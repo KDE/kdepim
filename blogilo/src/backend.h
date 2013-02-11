@@ -26,8 +26,9 @@
 #define BACKEND_H
 
 #include "category.h"
-#include <kblog/blog.h>
 #include "bilbopost.h"
+
+#include <kblog/blog.h>
 
 #include <QObject>
 #include <QMap>
@@ -35,7 +36,6 @@
 
 class BilboBlog;
 class BilboMedia;
-// class KBlog::BlogMedia;
 /**
 Engine of application.
 this is heart and brain of app. ;)
