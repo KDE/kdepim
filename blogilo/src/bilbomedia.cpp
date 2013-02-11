@@ -23,8 +23,8 @@
 */
 
 #include "bilbomedia.h"
-#include "kicon.h"
 
+#include <kicon.h>
 #include <kdebug.h>
 
 #include <QPixmap>

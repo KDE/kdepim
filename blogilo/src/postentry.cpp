@@ -53,7 +53,7 @@
 #include <QProgressBar>
 #include <QLabel>
 #include <QTimer>
-#include <qlayout.h>
+#include <QLayout>
 #include <QHBoxLayout>
 
 #define MINUTE 60000
@@ -155,7 +155,6 @@ void PostEntry::createUi()
 
     d->tabWidget->setCurrentIndex( 0 );
 
-    //this->resize( 626, 307 );
     d->gridLayout = new QGridLayout( this );
 
     d->horizontalLayout = new QHBoxLayout();

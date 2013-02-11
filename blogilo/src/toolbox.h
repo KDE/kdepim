@@ -83,7 +83,6 @@ protected slots:
     void slotError(const QString& errorMessage);
 
 private:
-
     enum LocalEntryType {
         LocalEntryID = QTreeWidgetItem::UserType +1
     };
