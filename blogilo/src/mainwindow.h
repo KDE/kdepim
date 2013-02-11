@@ -78,7 +78,6 @@ protected slots:
     void slotRemovePostEntry( int post );
 
     void slotSavePostLocally();
-//     void slotSaveAsDraft();
 
     void slotError( const QString &errorMessage );
 
