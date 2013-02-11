@@ -88,6 +88,15 @@ QWebElement TableHelper::nextCell(const QWebElement& element)
     if (!cellElement.isNull()) {
         return cellElement;
     }
+    QWebElement parentElement = element.parent();
+    QWebElement firstElement = parentElement.firstChild();
+    while (!firstElement.isNull()) {
+        if (firstElement == element) {
+
+        }
+        firstElement = firstElement.nextSibling();
+    }
+
     //TODO
     return QWebElement();
 }
@@ -172,6 +181,28 @@ void TableHelper::removeCellContentsFromCurrentRow(const QWebElement& element)
             cellElement = cellElement.nextSibling();
         }
     }
+}
+
+int TableHelper::currentCellColSpan(const QWebElement& element)
+{
+    QWebElement e = element;
+    if (e.tagName().toLower() == CELL) {
+        if (e.hasAttribute(QLatin1String("colspan"))) {
+            return e.attribute(QLatin1String("colspan")).toInt();
+        }
+    }
+    return -1;
+}
+
+int TableHelper::currentCellRowSpan(const QWebElement& element)
+{
+    QWebElement e = element;
+    if (e.tagName().toLower() == CELL) {
+        if (e.hasAttribute(QLatin1String("rowspan"))) {
+            return e.attribute(QLatin1String("rowspan")).toInt();
+        }
+    }
+    return -1;
 }
 
 }

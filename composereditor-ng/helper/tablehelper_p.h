@@ -28,12 +28,21 @@ namespace TableHelper {
 QWebElement tableBodyWebElement(const QWebElement&element);
 QWebElement rowWebElement(const QWebElement&element);
 QWebElement tableWebElement(const QWebElement&element);
+
 int tableRowCount(const QWebElement &element);
+
 int tableColumnCount(const QWebElement &element);
+
 QWebElement previousCell(const QWebElement& element);
 QWebElement nextCell(const QWebElement& element);
+
 void removeCellContentsFromCurrentRow(const QWebElement& element);
+
 int currentColumn(const QWebElement& element);
+
+int currentCellColSpan(const QWebElement& element);
+int currentCellRowSpan(const QWebElement& element);
+
 }
 }
 

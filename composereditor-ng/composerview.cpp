@@ -77,17 +77,16 @@ QString ComposerView::initialHtml()
 
 void ComposerView::createActions(const QList<ComposerViewAction>& lstActions)
 {
-    Q_FOREACH (ComposerViewAction action, lstActions) {
+    Q_FOREACH (ComposerViewAction action, lstActions)
         d->createAction( action );
-    }
+
     d->connectActionGroup();
 }
 
 void ComposerView::createAllActions()
 {
-    for (uint i=0;i<LastType;++i) {
+    for (uint i=0;i<LastType;++i)
         d->createAction( (ComposerViewAction)i );
-    }
     d->connectActionGroup();
 }
 
@@ -203,9 +202,8 @@ void ComposerView::contextMenuEvent(QContextMenuEvent* event)
     menu->addAction(page()->action(QWebPage::Cut));
     menu->addAction(page()->action(QWebPage::Copy));
     menu->addAction(page()->action(QWebPage::Paste));
-    if (d->action_paste_withoutformatting) {
+    if (d->action_paste_withoutformatting)
         menu->addAction(d->action_paste_withoutformatting);
-    }
 
     menu->addSeparator();
     if (!emptyDocument) {
@@ -251,9 +249,8 @@ void ComposerView::contextMenuEvent(QContextMenuEvent* event)
 
 void ComposerView::setActionsEnabled(bool enabled)
 {
-    Q_FOREACH (QAction* action, d->htmlEditorActionList) {
+    Q_FOREACH (QAction* action, d->htmlEditorActionList)
         action->setEnabled(enabled);
-    }
 }
 
 void ComposerView::mousePressEvent(QMouseEvent * event)

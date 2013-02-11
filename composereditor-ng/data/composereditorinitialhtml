@@ -68,6 +68,19 @@ function getFontFamily()
    return getCurrentStyle(node, "font-family");
 }
 
+function getHtml()
+{
+   var node = document.getElementById("editableArea");
+   return node.innerHTML;
+}
+
+function replaceImageSrc(src, dest)
+{
+    var html = getHtml();
+    var res = html.replace(src, dest);
+    replaceHtml(res);
+}
+
 </script>
 
 </head>
