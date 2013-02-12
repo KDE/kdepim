@@ -28,6 +28,8 @@
 
 #include "spellchecklineedit.h"
 
+#include <sonnet/speller.h>
+
 #include <QKeyEvent>
 #include <QContextMenuEvent>
 #include <QStyle>
@@ -39,13 +41,16 @@
 
 using namespace KPIM;
 
+
 class SpellCheckLineEdit::Private
 {
 public:
     Private()
+        : speller(0)
     {
     }
     QString configFile;
+    Sonnet::Speller* speller;
 };
 
 SpellCheckLineEdit::SpellCheckLineEdit(QWidget* parent, const QString& configFile)
@@ -69,6 +74,8 @@ SpellCheckLineEdit::SpellCheckLineEdit(QWidget* parent, const QString& configFil
     document()->adjustSize();
 
     document()->setDocumentMargin(2);
+
+    connect(this, SIGNAL(aboutToShowContextMenu(QMenu*)), this, SLOT(insertLanguageMenu(QMenu*)));
 }
 
 SpellCheckLineEdit::~SpellCheckLineEdit()
@@ -162,5 +169,68 @@ void SpellCheckLineEdit::insertFromMimeData(const QMimeData * source)
         KTextEdit::insertFromMimeData(source);
     }
 }
+
+static inline QString i18n_kdelibs4(const char *str) { return ki18n(str).toString("kdelibs4"); }
+
+void SpellCheckLineEdit::insertLanguageMenu(QMenu* contextMenu)
+{
+    QAction* spellCheckAction = 0;
+
+    foreach (QAction* action, contextMenu->actions())
+    {
+        if (action->text() == i18n_kdelibs4("Auto Spell Check"))
+        {
+            spellCheckAction = action;
+            break;
+        }
+    }
+
+    if (spellCheckAction)
+    {
+        QMenu* languagesMenu = new QMenu(i18n("Spell Checking Language"), this);
+        QActionGroup* languagesGroup = new QActionGroup(languagesMenu);
+        languagesGroup->setExclusive(true);
+
+        if (!d->speller)
+            d->speller = new Sonnet::Speller();
+
+        QMapIterator<QString, QString> i(d->speller->availableDictionaries());
+        QAction* languageAction = 0;
+
+        while (i.hasNext())
+        {
+            i.next();
+
+            languageAction = languagesMenu->addAction(i.key());
+            languageAction->setCheckable(true);
+            languageAction->setChecked(spellCheckingLanguage() == i.value() || (spellCheckingLanguage().isEmpty()
+                && d->speller->defaultLanguage() == i.value()));
+            languageAction->setData(i.value());
+            languageAction->setActionGroup(languagesGroup);
+            connect(languageAction, SIGNAL(triggered(bool)), this, SLOT(languageSelected()));
+        }
+
+        contextMenu->insertMenu(spellCheckAction, languagesMenu);
+    }
+}
+
+void SpellCheckLineEdit::languageSelected()
+{
+    QAction* languageAction = static_cast<QAction*>(QObject::sender());
+
+    setSpellCheckingLanguage(languageAction->data().toString());
+}
+
+void SpellCheckLineEdit::disableSpellChecking()
+{
+    setCheckSpellingEnabled(false);
+}
+
+void SpellCheckLineEdit::setSpellChecking(bool set)
+{
+    //TODO
+    //Preferences::self()->setSpellChecking(set);
+}
+
 
 #include "spellchecklineedit.moc"
