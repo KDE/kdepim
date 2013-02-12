@@ -24,36 +24,37 @@
 */
 
 #include "postentry.h"
-
-#include "composer/bilbobrowser.h"
-
-#include <kdebug.h>
-#include <klocalizedstring.h>
-#include <klineedit.h>
-#include <KMessageBox>
 #include "bilbomedia.h"
 #include "backend.h"
 #include "dbman.h"
 #include "global.h"
 #include "sendtoblogdialog.h"
-#include <kio/job.h>
 #include "settings.h"
 #include "bilboblog.h"
 #include "syncuploader.h"
-#include <QProgressBar>
-#include <QLabel>
-#include <QTimer>
-#include <qlayout.h>
+
 #include "composer/blogilocomposereditor.h"
 #include "composer/blogilocomposerview.h"
+#include "composer/bilbobrowser.h"
+#include "composer/htmleditor.h"
 
 #include <libkdepim/spellchecklineedit.h>
 
-#include "composer/htmleditor.h"
+
+#include <kdebug.h>
+#include <klocalizedstring.h>
+#include <klineedit.h>
+#include <KMessageBox>
 #include <ktexteditor/view.h>
 #include <ktexteditor/document.h>
-#include <QHBoxLayout>
+#include <kio/job.h>
 #include <KTabWidget>
+
+#include <QProgressBar>
+#include <QLabel>
+#include <QTimer>
+#include <QLayout>
+#include <QHBoxLayout>
 
 #define MINUTE 60000
 
@@ -91,7 +92,6 @@ public:
 PostEntry::PostEntry( QWidget *parent )
     : QFrame( parent ), d(new Private)
 {
-    kDebug();
     createUi();
     connect( d->wysiwygEditor, SIGNAL(textChanged()), this, SIGNAL(textChanged()) );
     connect( d->htmlEditor->document(), SIGNAL(textChanged(KTextEditor::Document*)),
@@ -109,7 +109,6 @@ PostEntry::PostEntry( QWidget *parent )
 
 PostEntry::~PostEntry()
 {
-    kDebug();
     delete d;
 }
 
@@ -117,7 +116,7 @@ void PostEntry::settingsChanged()
 {
     kDebug();
     d->mTimer->setInterval(Settings::autosaveInterval() * MINUTE);
-    if(Settings::autosaveInterval())
+    if (Settings::autosaveInterval())
         d->mTimer->start();
     else
         d->mTimer->stop();
@@ -156,7 +155,6 @@ void PostEntry::createUi()
 
     d->tabWidget->setCurrentIndex( 0 );
 
-    this->resize( 626, 307 );
     d->gridLayout = new QGridLayout( this );
 
     d->horizontalLayout = new QHBoxLayout();
@@ -190,8 +188,6 @@ void PostEntry::slotFocusEditor()
 
 void PostEntry::slotSyncEditors(int index)
 {
-    kDebug();
-
     if ( index == 0 ) {
         if ( d->prev_index == 2 ) {
             d->previewer->stop();
@@ -262,22 +258,20 @@ QString PostEntry::postTitle() const
 
 void PostEntry::setPostTitle( const QString & title )
 {
-    kDebug();
     d->txtTitle->setPlainText( title );
     d->mCurrentPost.setTitle( title );
 }
 
 void PostEntry::setPostBody( const QString & content, const QString &additionalContent )
 {
-    kDebug();
     QString body;
-    if(additionalContent.isEmpty()) {
+    if (additionalContent.isEmpty()) {
         body = content;
     } else {
         body = content + "<hr/><!--split-->" + additionalContent;
         d->mCurrentPost.setAdditionalContent(QString());
     }
-    //     if(body.isEmpty()){
+    //     if (body.isEmpty()){
     //         body = "<p></p>";//This is because of Bug #387578
     //     }
     d->mCurrentPost.setContent( body );
@@ -294,7 +288,6 @@ int PostEntry::currentPostBlogId() const
 
 void PostEntry::setCurrentPostBlogId( int blog_id )
 {
-    kDebug();
     d->mCurrentPostBlogId = blog_id;
     if ( blog_id != -1 && DBMan::self()->blogList().contains( blog_id ) ) {
         setDefaultLayoutDirection( DBMan::self()->blogList().value( blog_id )->direction() );
@@ -303,7 +296,7 @@ void PostEntry::setCurrentPostBlogId( int blog_id )
 
 void PostEntry::setCurrentPostFromEditor()
 {
-    if( d->isPostContentModified ) {
+    if ( d->isPostContentModified ) {
         kDebug();
         const QString& str = htmlContent();
         d->mCurrentPost.setContent( str );
@@ -320,7 +313,6 @@ BilboPost* PostEntry::currentPost()
 
 void PostEntry::setCurrentPost( const BilboPost &post )
 {
-    kDebug();
     d->mCurrentPost = post;
     kDebug()<<"local_id: "<<d->mCurrentPost.localId();
     this->setPostBody( d->mCurrentPost.content(), d->mCurrentPost.additionalContent() );
@@ -351,22 +343,21 @@ void PostEntry::replaceImageSrc(const QString& src, const QString& dest)
 
 bool PostEntry::uploadMediaFiles( Backend *backend )
 {
-    kDebug();
     bool localBackend = false;
     bool result = true;
-    if( !backend ) {
+    if ( !backend ) {
         localBackend = true;
         backend = new Backend( d->mCurrentPostBlogId, this );
     }
     QList<BilboMedia*> lImages = localImages();
-    if( !lImages.isEmpty() ) {
+    if ( !lImages.isEmpty() ) {
         showProgressBar();
         QList<BilboMedia*>::iterator it = lImages.begin();
         QList<BilboMedia*>::iterator endIt = lImages.end();
         for ( ; it != endIt; ++it ) {
             BilboMedia *media = (*it);
             SyncUploader *uploader = new SyncUploader(this);
-            if( uploader->uploadMedia( backend, media ) ){
+            if ( uploader->uploadMedia( backend, media ) ){
                 replaceImageSrc( media->localUrl().url(),
                                  media->remoteUrl().url());
             } else {
@@ -380,15 +371,14 @@ bool PostEntry::uploadMediaFiles( Backend *backend )
         }
         d->mCurrentPost.setContent( htmlContent() );
     }
-    if(localBackend)
+    if (localBackend)
         backend->deleteLater();
     return result;
 }
 
 void PostEntry::slotError( const QString & errMsg )
 {
-    kDebug();
-    QString err = i18n( "An error occurred in the last transaction.\n%1", errMsg );
+    const QString err = i18n( "An error occurred in the last transaction.\n%1", errMsg );
     emit postPublishingDone( true, err );
     deleteProgressBar();
     sender()->deleteLater();
@@ -396,7 +386,6 @@ void PostEntry::slotError( const QString & errMsg )
 
 void PostEntry::submitPost( int blogId, const BilboPost &postData )
 {
-    kDebug();
     setCurrentPostFromEditor();
     if ( d->mCurrentPost.content().isEmpty() || d->mCurrentPost.title().isEmpty() ) {
         if ( KMessageBox::warningContinueCancel( this,
@@ -405,17 +394,17 @@ void PostEntry::submitPost( int blogId, const BilboPost &postData )
             return;
     }
     bool isNew = false;
-    if(d->mCurrentPost.status() == BilboPost::New)
+    if (d->mCurrentPost.status() == BilboPost::New)
         isNew = true;
     QPointer<SendToBlogDialog> dia = new SendToBlogDialog( isNew, d->mCurrentPost.isPrivate(), this);
     dia->setAttribute(Qt::WA_DeleteOnClose, false);
-    if( dia->exec() == KDialog::Accepted ) {
+    if ( dia->exec() == KDialog::Accepted ) {
         this->setCursor( Qt::BusyCursor );
         d->mCurrentPost.setProperties( postData );
         d->mCurrentPostBlogId = blogId;
 
         QString msgType;
-        if(dia->isPrivate()) {
+        if (dia->isPrivate()) {
             msgType =  i18nc("Post status, e.g Draft or Published Post", "draft");
             d->mCurrentPost.setPrivate(true);
         } else {
@@ -424,7 +413,7 @@ void PostEntry::submitPost( int blogId, const BilboPost &postData )
         }
 
         QString statusMsg;
-        if(dia->isNew()) {
+        if (dia->isNew()) {
             statusMsg = i18n("Submitting new %1...", msgType);
             d->isNewPost = true;
         } else {
@@ -440,7 +429,7 @@ void PostEntry::submitPost( int blogId, const BilboPost &postData )
             showProgressBar();
             connect( b, SIGNAL(sigPostPublished(int,BilboPost*)),
                      this, SLOT(slotPostPublished(int,BilboPost*)) );
-            if(d->isNewPost)
+            if (d->isNewPost)
                 b->publishPost( &d->mCurrentPost );
             else
                 b->modifyPost( &d->mCurrentPost );
@@ -459,7 +448,7 @@ void PostEntry::slotPostPublished( int blog_id, BilboPost *post )
     setCurrentPost(*post);
     if ( d->mCurrentPost.isPrivate() ) {
         msg = i18n( "Draft with title \"%1\" saved successfully.", post->title() );
-    } else if(d->mCurrentPost.status() == BilboPost::Modified){
+    } else if (d->mCurrentPost.status() == BilboPost::Modified){
         msg = i18n( "Post with title \"%1\" modified successfully.", post->title() );
     } else {
         msg = i18n( "Post with title \"%1\" published successfully.", post->title() );
@@ -473,7 +462,7 @@ void PostEntry::slotPostPublished( int blog_id, BilboPost *post )
 
 void PostEntry::showProgressBar()
 {
-    if( !d->progress ) {
+    if ( !d->progress ) {
         d->progress = new QProgressBar( this );
         layout()->addWidget( d->progress );
         d->progress->setRange( 0, 0 );
@@ -482,8 +471,7 @@ void PostEntry::showProgressBar()
 
 void PostEntry::deleteProgressBar()
 {
-    kDebug();
-    if(d->progress){
+    if (d->progress){
         this->layout()->removeWidget( d->progress );
         d->progress->deleteLater();
         d->progress = 0L;
@@ -492,13 +480,12 @@ void PostEntry::deleteProgressBar()
 
 void PostEntry::saveLocally()
 {
-    kDebug();
-    if( currentPost()->content().isEmpty() ) {
-        if( KMessageBox::warningYesNo(this, i18n("The current post content is empty, are you sure you want to save an empty post?")) == KMessageBox::No )
+    if ( currentPost()->content().isEmpty() ) {
+        if ( KMessageBox::warningYesNo(this, i18n("The current post content is empty, are you sure you want to save an empty post?")) == KMessageBox::No )
             return;
     }
-    int resId = DBMan::self()->saveLocalEntry( *currentPost(), d->mCurrentPostBlogId );
-    if(resId == -1){
+    const int resId = DBMan::self()->saveLocalEntry( *currentPost(), d->mCurrentPostBlogId );
+    if (resId == -1){
         KMessageBox::detailedSorry(this, i18n("Saving post locally failed."), DBMan::self()->lastErrorText());
         return;
     }
@@ -510,9 +497,9 @@ void PostEntry::saveLocally()
 
 void PostEntry::saveTemporary()
 {
-    if( d->isPostContentModified ) {
-        int res = DBMan::self()->saveTempEntry( *currentPost(), d->mCurrentPostBlogId);
-        if(res != -1) {
+    if ( d->isPostContentModified ) {
+        const int res = DBMan::self()->saveTempEntry( *currentPost(), d->mCurrentPostBlogId);
+        if (res != -1) {
             d->mCurrentPost.setLocalId( res );
             emit postSavedTemporary();
             kDebug()<<"Temporary saved";

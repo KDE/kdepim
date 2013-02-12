@@ -25,8 +25,10 @@
 #ifndef BILBOPOST_H
 #define BILBOPOST_H
 
-#include <kblog/blogpost.h>
 #include "category.h"
+
+#include <kblog/blogpost.h>
+
 
 class QUrl;
 class QDateTime;

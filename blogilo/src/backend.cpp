@@ -27,7 +27,7 @@
 #include "bilbopost.h"
 #include "bilbomedia.h"
 #include "dbman.h"
-#include <settings.h>
+#include "settings.h"
 
 #include <kurl.h>
 #include <kblog/blogger1.h>

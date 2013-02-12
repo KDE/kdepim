@@ -26,7 +26,7 @@
 #include <kuniqueapplication.h>
 #include "global.h"
 #include "constants.h"
-#include "settings.h"
+
 
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
@@ -35,7 +35,6 @@ static const char description[] =
 
 int main( int argc, char *argv[] )
 {
-    qDebug()<<APPNAME<<' '<<VERSION;
     KAboutData about( "blogilo", 0, ki18n( APPNAME ), VERSION, ki18n( description ),
                       KAboutData::License_GPL_V2, ki18n( "Copyright © 2008–2013 Blogilo authors" ),
                       KLocalizedString(), "http://blogilo.gnufolks.org" );

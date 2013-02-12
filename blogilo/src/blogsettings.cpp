@@ -33,7 +33,6 @@
 BlogSettings::BlogSettings( QWidget *parent )
     : QWidget( parent )
 {
-    kDebug();
     setupUi( this );
 
     connect( btnAdd, SIGNAL(clicked()), this, SLOT(addBlog()) );
@@ -50,12 +49,10 @@ BlogSettings::BlogSettings( QWidget *parent )
 
 BlogSettings::~BlogSettings()
 {
-    kDebug();
 }
 
 void BlogSettings::addBlog()
 {
-    kDebug();
     AddEditBlog *addEditBlogWindow = new AddEditBlog( -1, this );
     addEditBlogWindow->setWindowModality( Qt::ApplicationModal );
     addEditBlogWindow->setAttribute( Qt::WA_DeleteOnClose );
@@ -68,13 +65,11 @@ void BlogSettings::addBlog()
 
 void BlogSettings::slotBlogAdded( const BilboBlog &blog )
 {
-    kDebug();
     addBlogToList( blog );
 }
 
 void BlogSettings::editBlog()
 {
-    kDebug();
     if( blogsTable->selectedItems().count() <= 0 )
         return;
     int blog_id = blogsTable->item( blogsTable->currentRow(), 0 )->data( 32 ).toInt();
@@ -90,14 +85,12 @@ void BlogSettings::editBlog()
 
 void BlogSettings::slotBlogEdited( const BilboBlog &blog )
 {
-    kDebug();
     blogsTable->item( blogsTable->currentRow(), 0 )->setText( blog.title() );
     blogsTable->item( blogsTable->currentRow(), 1 )->setText( blog.blogUrl() );
 }
 
 void BlogSettings::removeBlog()
 {
-    kDebug();
     if( blogsTable->selectedItems().count() <= 0 )
         return;
     if(KMessageBox::warningYesNo(this, i18n("Are you sure you want to remove the selected blog?")) 
@@ -115,7 +108,6 @@ void BlogSettings::removeBlog()
 
 void BlogSettings::loadBlogsList()
 {
-    kDebug();
     QList<BilboBlog*> list = DBMan::self()->blogList().values();
     const int count = list.count();
     for(int i=0; i<count; ++i) {
@@ -136,7 +128,6 @@ void BlogSettings::blogsTablestateChanged()
 
 void BlogSettings::addBlogToList( const BilboBlog &blog )
 {
-    kDebug();
     int newRow = blogsTable->rowCount();
     blogsTable->insertRow( newRow );
     QTableWidgetItem *item1 = new QTableWidgetItem( blog.title() );

@@ -60,6 +60,10 @@ protected:
   void keyPressEvent(QKeyEvent*);
   void insertFromMimeData ( const QMimeData * source );
 
+protected Q_SLOTS:
+  void insertLanguageMenu(QMenu* contextMenu);
+  void languageSelected();
+
 Q_SIGNALS:
   /**
    * Emitted when the user uses the up arrow in the first line. The application

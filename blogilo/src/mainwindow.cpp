@@ -34,12 +34,12 @@
 #include "bilboblog.h"
 #include "blogsettings.h"
 #include "poststabwidget.h"
+#include "uploadmediadialog.h"
 
 #include "ui_advancedsettingsbase.h"
 #include "ui_settingsbase.h"
 #include "ui_editorsettingsbase.h"
 
-#include <kdeversion.h>
 #include <ktabwidget.h>
 #include <KStatusNotifierItem>
 #include <kstatusbar.h>
@@ -49,16 +49,17 @@
 #include <kdebug.h>
 #include <kmessagebox.h>
 #include <KDE/KLocale>
+#include <KSelectAction>
+#include <kimagefilepreview.h>
+#include <KToolInvocation>
+#include <KMenu>
+
+
 #include <QDir>
 #include <QDockWidget>
 #include <QProgressBar>
-#include <KSelectAction>
-#include <kimagefilepreview.h>
-#include "uploadmediadialog.h"
 #include <QTimer>
 #include <QKeyEvent>
-#include <KToolInvocation>
-#include <KMenu>
 
 #define TIMEOUT 5000
 
@@ -145,10 +146,10 @@ bool MainWindow::queryExit()
 {
     kDebug();
     writeConfigs();
-    if( !DBMan::self()->clearTempEntries() )
+    if ( !DBMan::self()->clearTempEntries() )
         kDebug()<<"Could not erase temp_post table: "<< DBMan::self()->lastErrorText();
     const int count = tabPosts->count();
-    if(count > 0) {
+    if (count > 0) {
         toolbox->getFieldsValue(activePost->currentPost());
         for(int i =0; i<count; ++i) {
             PostEntry* pst = qobject_cast<PostEntry*>(tabPosts->widget(i));
@@ -209,7 +210,7 @@ void MainWindow::loadTempPosts()
     kDebug();
     QMap<BilboPost*, int> tempList = DBMan::self()->listTempPosts();
     int count = tempList.count();
-    if( count > 0 ){
+    if ( count > 0 ){
         QMap<BilboPost*, int>::ConstIterator it = tempList.constBegin();
         QMap<BilboPost*, int>::ConstIterator endIt = tempList.constEnd();
         for( ; it != endIt; ++it ) {
@@ -220,14 +221,14 @@ void MainWindow::loadTempPosts()
     }
 //     activePost = qobject_cast<PostEntry*>( tabPosts->currentWidget() );
     previousActivePostIndex = 0;
-    if( activePost )
+    if ( activePost )
         setCurrentBlog( activePost->currentPostBlogId() );
 }
 
 void MainWindow::setCurrentBlog( int blog_id )
 {
     kDebug()<<blog_id;
-    if(blog_id == -1) {
+    if (blog_id == -1) {
         blogs->setCurrentItem( -1 );
         toolbox->setCurrentBlogId( blog_id );
 //         actionCollection()->action("publish_post")->setEnabled( false );
@@ -235,7 +236,7 @@ void MainWindow::setCurrentBlog( int blog_id )
     }
     const int count = blogs->items().count();
     for (int i=0; i<count; ++i) {
-        if( blogs->action(i)->data().toInt() == blog_id ) {
+        if ( blogs->action(i)->data().toInt() == blog_id ) {
             blogs->setCurrentItem( i );
             currentBlogChanged( blogs->action( i ) );
             break;
@@ -245,12 +246,12 @@ void MainWindow::setCurrentBlog( int blog_id )
 
 void MainWindow::currentBlogChanged( QAction *act )
 {
-    if( act ) {
-        if( mCurrentBlogId == act->data().toInt() )
+    if ( act ) {
+        if ( mCurrentBlogId == act->data().toInt() )
             return;
         mCurrentBlogId = act->data().toInt();
 //         __currentBlogId = mCurrentBlogId;
-        if( activePost ) {
+        if ( activePost ) {
 //             actionCollection()->action("publish_post")->setEnabled( true );
             activePost->setCurrentPostBlogId( mCurrentBlogId );
         } else {
@@ -259,7 +260,7 @@ void MainWindow::currentBlogChanged( QAction *act )
         blogs->setToolTip( DBMan::self()->blogList().value( mCurrentBlogId )->blogUrl() );
     } else {
         mCurrentBlogId = -1;
-        if( activePost )
+        if ( activePost )
             activePost->setCurrentPostBlogId( mCurrentBlogId );
     }
     toolbox->setCurrentBlogId( mCurrentBlogId );
@@ -270,8 +271,8 @@ void MainWindow::slotCreateNewPost()
     kDebug();
 
     tabPosts->setCurrentWidget( createPostEntry( mCurrentBlogId, BilboPost()) );
-    if( mCurrentBlogId == -1 ) {
-        if( !blogs->items().isEmpty() ) {
+    if ( mCurrentBlogId == -1 ) {
+        if ( !blogs->items().isEmpty() ) {
             blogs->setCurrentItem( 0 );
             currentBlogChanged( blogs->action( 0 ) );
         }
@@ -335,7 +336,7 @@ void MainWindow::slotDialogDestroyed( QObject *win )
 {
     const QSize size = qobject_cast<QWidget *>(win)->size();
     const QString name = win->objectName();
-    if(name == QLatin1String("settings")) {
+    if (name == QLatin1String("settings")) {
         Settings::setConfigWindowSize( size );
     }
 }
@@ -366,7 +367,7 @@ void MainWindow::slotBlogEdited( const BilboBlog &blog )
 {
     const int count = blogs->actions().count();
     for(int i=0; i< count; ++i){
-        if( blogs->action( i )->data().toInt() == blog.id() ) {
+        if ( blogs->action( i )->data().toInt() == blog.id() ) {
             blogs->action( i )->setText( blog.title() );
             break;
         }
@@ -377,13 +378,13 @@ void MainWindow::slotBlogRemoved( int blog_id )
 {
     const int count = blogs->actions().count();
     for(int i=0; i< count; ++i){
-        if( blogs->action( i )->data().toInt() == blog_id ) {
-            if( blogs->currentItem() == i ) {
+        if ( blogs->action( i )->data().toInt() == blog_id ) {
+            if ( blogs->currentItem() == i ) {
                 blogs->setCurrentItem( i-1 );
                 currentBlogChanged( blogs->action( i-1 ) );
             }
             blogs->removeAction( blogs->action( i ) );
-            if(blogs->currentItem() == -1)
+            if (blogs->currentItem() == -1)
                 toolbox->clearFields();
             break;
         }
@@ -392,7 +393,7 @@ void MainWindow::slotBlogRemoved( int blog_id )
 
 void MainWindow::setupSystemTray()
 {
-    if( Settings::enableSysTrayIcon()) {
+    if ( Settings::enableSysTrayIcon()) {
         if ( !systemTray ) {
             systemTray = new KStatusNotifierItem( this );
             systemTray->setIconByName(QLatin1String("blogilo"));
@@ -401,15 +402,10 @@ void MainWindow::setupSystemTray()
             systemTray->setCategory(KStatusNotifierItem::ApplicationStatus);
             systemTray->setStatus(KStatusNotifierItem::Active);
         }
-    } else if( systemTray ) {
+    } else if ( systemTray ) {
         systemTray->deleteLater();
         systemTray = 0;
     }
-}
-
-void MainWindow::slotUploadAllChanges()
-{
-    kDebug();
 }
 
 void MainWindow::slotPostTitleChanged( const QString& title )
@@ -462,7 +458,7 @@ void MainWindow::slotPublishPost()
         KMessageBox::sorry( this, i18n( "You have to select a blog to publish this post to." ) );
         return;
     }
-    if( !activePost || tabPosts->currentIndex() == -1) {
+    if ( !activePost || tabPosts->currentIndex() == -1) {
         KMessageBox::sorry( this, i18n( "There is no open post to submit." ) );
         return;
     }
@@ -478,8 +474,8 @@ void MainWindow::slotRemoveAllExclude(int pos)
             continue;
         }
         PostEntry *widget = qobject_cast<PostEntry*>( tabPosts->widget( i ) );
-        if( !widget ) {
-            if( activePost )
+        if ( !widget ) {
+            if ( activePost )
                 widget = activePost;
             else
                 return;
@@ -488,7 +484,7 @@ void MainWindow::slotRemoveAllExclude(int pos)
         tabPosts->removePage(widget);
         widget->close();
     }
-    if( tabPosts->count() < 1 ) {
+    if ( tabPosts->count() < 1 ) {
         activePost = 0;
         toolbox->resetFields();
 //         actionCollection()->action("publish_post")->setEnabled( false );
@@ -501,8 +497,8 @@ void MainWindow::slotRemovePostEntry( int pos )
 
     PostEntry *widget = qobject_cast<PostEntry*>( tabPosts->widget( pos ) );
     
-    if( !widget ) {
-        if( activePost )
+    if ( !widget ) {
+        if ( activePost )
             widget = activePost;
         else
             return;
@@ -511,7 +507,7 @@ void MainWindow::slotRemovePostEntry( int pos )
     tabPosts->removePage(widget);
     widget->close();
 
-    if( tabPosts->count() < 1 ) {
+    if ( tabPosts->count() < 1 ) {
         activePost = 0;
         toolbox->resetFields();
 //         actionCollection()->action("publish_post")->setEnabled( false );
@@ -528,7 +524,7 @@ void MainWindow::slotNewPostOpened( BilboPost &newPost, int blog_id )
 void MainWindow::slotSavePostLocally()
 {
     kDebug();
-    if(activePost && tabPosts->count() > 0) {
+    if (activePost && tabPosts->count() > 0) {
         toolbox->getFieldsValue(activePost->currentPost());
         activePost->saveLocally();
         toolbox->reloadLocalPosts();
@@ -584,11 +580,11 @@ void MainWindow::keyPressEvent( QKeyEvent * event )
 void MainWindow::postManipulationDone( bool isError, const QString &customMessage )
 {
     kDebug();
-    if(isError){
+    if (isError){
         KMessageBox::detailedError(this, i18n("Submitting post failed"), customMessage);
     } else {
         PostEntry *entry = qobject_cast<PostEntry*>(sender());
-        if(entry){
+        if (entry){
           if (KMessageBox::questionYesNo(this, i18n("%1\nDo you want to keep the post open?", customMessage),
                     QString(), KStandardGuiItem::yes(), KStandardGuiItem::no(), QLatin1String("KeepPostOpen")) == KMessageBox::No ) {
             slotRemovePostEntry( tabPosts->indexOf( entry ) );
@@ -605,11 +601,11 @@ void MainWindow::postManipulationDone( bool isError, const QString &customMessag
 void MainWindow::slotBusy(bool isBusy)
 {
     kDebug()<<"isBusy="<<isBusy<<"\tbusyNumber="<<busyNumber;
-    if(isBusy){
+    if (isBusy){
         this->setCursor(Qt::BusyCursor);
         toolbox->setCursor( Qt::BusyCursor );
         ++busyNumber;
-        if(!progress){
+        if (!progress){
             progress = new QProgressBar(statusBar());
             progress->setMinimum( 0 );
             progress->setMaximum( 0 );
@@ -618,10 +614,10 @@ void MainWindow::slotBusy(bool isBusy)
         }
     } else {
         --busyNumber;
-        if( busyNumber < 1 ){
+        if ( busyNumber < 1 ){
             this->unsetCursor();
             toolbox->unsetCursor();
-            if(progress){
+            if (progress){
                 statusBar()->removeWidget(progress);
                 progress->deleteLater();
                 progress = 0;
@@ -662,7 +658,7 @@ void MainWindow::uploadMediaObject()
 {
     UploadMediaDialog *uploadDlg = new UploadMediaDialog(this);
     connect(uploadDlg, SIGNAL(sigBusy(bool)), SLOT(slotBusy(bool)));
-    if(mCurrentBlogId == -1)
+    if (mCurrentBlogId == -1)
         uploadDlg->init( 0 );
     else
         uploadDlg->init( DBMan::self()->blog(mCurrentBlogId) );
@@ -672,7 +668,7 @@ void MainWindow::slotOpenCurrentBlogInBrowser()
 {
     if (mCurrentBlogId > -1) {
         KUrl url( DBMan::self()->blog( mCurrentBlogId )->blogUrl() );
-        if(url.isValid())
+        if (url.isValid())
             KToolInvocation::invokeBrowser(url.url());
         else
             KMessageBox::sorry(this, i18n("Cannot find current blog URL."));

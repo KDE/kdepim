@@ -101,11 +101,10 @@ Toolbox::~Toolbox()
 
 void Toolbox::setCurrentBlogId( int blog_id )
 {
-    kDebug()<<blog_id;
-    if( d->mCurrentBlogId == blog_id )
+    if ( d->mCurrentBlogId == blog_id )
         return;
     d->mCurrentBlogId = blog_id;
-    if( blog_id <= 0 )
+    if ( blog_id <= 0 )
         return;
     slotLoadCategoryListFromDB( blog_id );
     slotLoadEntriesFromDB( blog_id );
@@ -116,7 +115,6 @@ void Toolbox::setCurrentBlogId( int blog_id )
 
 void Toolbox::slotReloadCategoryList()
 {
-    kDebug();
     if ( d->mCurrentBlogId == -1 ) {
         KMessageBox::sorry( this, i18n( "No blog has been selected: you have to select a blog from the Blogs page before asking for the list of categories." ) );
         return;
@@ -132,16 +130,15 @@ void Toolbox::slotReloadCategoryList()
 
 void Toolbox::slotUpdateEntries(int count)
 {
-    kDebug();
     if ( d->mCurrentBlogId == -1 ) {
         KMessageBox::sorry( this, i18n( "No blog has been selected: you have to select a blog from the Blogs page before asking for the list of entries." ) );
         return;
     }
-    if(count == 0) {
+    if (count == 0) {
         count = Settings::updateEntriesCount();
-        if( Settings::showUpdateEntriesDialog() ) {
+        if ( Settings::showUpdateEntriesDialog() ) {
             QPointer<EntriesCountDialog> dia = new EntriesCountDialog( this );
-            if( !dia->exec() ) {
+            if ( !dia->exec() ) {
                 delete dia;
                 return;
             }
@@ -172,7 +169,7 @@ void Toolbox::slotLoadEntriesFromDB( int blog_id )
     for ( int i=0; i < count; ++i ) {
         QListWidgetItem *lstItem = new QListWidgetItem( listEntries[i].value(QLatin1String("title")).toString() );
         lstItem->setToolTip(listEntries.at(i).value(QLatin1String("c_time")).toDateTime().toString());
-        if(listEntries[i].value(QLatin1String("is_private")).toBool()) {
+        if (listEntries[i].value(QLatin1String("is_private")).toBool()) {
             lstItem->setForeground(QBrush(Qt::blue));
             lstItem->setToolTip(i18n("%1 (Draft)",lstItem->toolTip()));
         }
@@ -210,9 +207,9 @@ void Toolbox::slotLoadCategoryListFromDB( int blog_id )
 
 void Toolbox::slotRemoveSelectedEntryFromServer()
 {
-    if(lstEntriesList->selectedItems().count() < 1)
+    if (lstEntriesList->selectedItems().count() < 1)
         return;
-    if( KMessageBox::warningYesNoCancel(this, i18n( "Removing a post from your blog cannot be undone.\nAre you sure you want to remove the post with title \"%1\" from your blog?", lstEntriesList->currentItem()->text() ))
+    if ( KMessageBox::warningYesNoCancel(this, i18n( "Removing a post from your blog cannot be undone.\nAre you sure you want to remove the post with title \"%1\" from your blog?", lstEntriesList->currentItem()->text() ))
     == KMessageBox::Yes) {
         BilboPost *post = new BilboPost( DBMan::self()->getPostInfo( lstEntriesList->currentItem()->
                                                                      data(32).toInt() ) );
@@ -300,7 +297,7 @@ void Toolbox::getFieldsValue( BilboPost* currentPost )
         currentPost->setCreationDateTime( KDateTime( optionsDate->date(), optionsTime->time() ) );
         currentPost->setModificationDateTime( KDateTime( optionsDate->date(), optionsTime->time() ) );
     }
-    if( currentPost->creationDateTime().isUtc() || currentPost->modificationDateTime().isUtc() ){
+    if ( currentPost->creationDateTime().isUtc() || currentPost->modificationDateTime().isUtc() ){
         kDebug()<<"creationDateTime was UTC!";
         currentPost->setCreationDateTime( KDateTime( currentPost->creationDateTime().dateTime(),
                                                     KDateTime::LocalZone ) );
@@ -337,7 +334,7 @@ void Toolbox::setFieldsValue( BilboPost* post )
     chkOptionsComments->setChecked( post->isCommentAllowed() );
     chkOptionsTrackback->setChecked( post->isTrackBackAllowed() );
     chkOptionsTime->setChecked( post->isModifyTimeStamp() );
-    if( post->creationDateTime().isUtc() || post->modificationDateTime().isUtc() ){
+    if ( post->creationDateTime().isUtc() || post->modificationDateTime().isUtc() ){
         kDebug()<<"creationDateTime was UTC!";
         post->setCreationDateTime(KDateTime(post->creationDateTime().dateTime(), KDateTime::LocalZone));
         post->setModificationDateTime(KDateTime(post->modificationDateTime().dateTime(), KDateTime::LocalZone));
@@ -412,7 +409,7 @@ void Toolbox::slotEntriesCopyUrl()
         return;
     }
     BilboPost post = DBMan::self()->getPostInfo( lstEntriesList->currentItem()->data( 32 ).toInt() );
-    if( !post.permaLink().isEmpty() )
+    if ( !post.permaLink().isEmpty() )
         QApplication::clipboard()->setText( post.permaLink().prettyUrl() );
     else if ( !post.link().isEmpty() )
         QApplication::clipboard()->setText( post.link().prettyUrl() );
@@ -469,12 +466,12 @@ void Toolbox::slotLocalEntrySelected( QTreeWidgetItem* item,int column )
 void Toolbox::slotRemoveLocalEntry()
 {
     kDebug();
-    if(localEntries->currentItem()) {
-        if( KMessageBox::warningYesNo(this, i18n("Are you sure you want to remove the selected local entry?"))
+    if (localEntries->currentItem()) {
+        if ( KMessageBox::warningYesNo(this, i18n("Are you sure you want to remove the selected local entry?"))
             == KMessageBox::No )
             return;
         const int local_id = localEntries->currentItem()->data(0,LocalEntryID).toInt();
-        if( DBMan::self()->removeLocalEntry(local_id) ) {
+        if ( DBMan::self()->removeLocalEntry(local_id) ) {
             delete localEntries->currentItem();
         } else {
             KMessageBox::detailedError(this, i18n("Cannot remove selected local entry."),
@@ -488,7 +485,7 @@ void Toolbox::slotRemoveLocalEntry()
 void Toolbox::clearEntries()
 {
     kDebug();
-    if( d->mCurrentBlogId == -1 )
+    if ( d->mCurrentBlogId == -1 )
         return;
     if ( KMessageBox::warningContinueCancel(this, i18n("Are you sure you want to clear the list of entries?")) ==
          KMessageBox::Cancel )
@@ -527,11 +524,11 @@ void Toolbox::requestEntriesListContextMenu( const QPoint & pos )
 
 void Toolbox::openPostInBrowser()
 {
-    if( lstEntriesList->selectedItems().isEmpty() )
+    if ( lstEntriesList->selectedItems().isEmpty() )
         return;
     BilboPost post = DBMan::self()->getPostInfo( lstEntriesList->currentItem()->data( 32 ).toInt() );
     QString url;
-    if( !post.permaLink().isEmpty() )
+    if ( !post.permaLink().isEmpty() )
         url = post.permaLink().pathOrUrl();
     else if ( !post.link().isEmpty() )
         url = post.link().pathOrUrl();
@@ -542,7 +539,7 @@ void Toolbox::openPostInBrowser()
 
 void Toolbox::copyPostTitle()
 {
-    if( !lstEntriesList->selectedItems().isEmpty() )
+    if ( !lstEntriesList->selectedItems().isEmpty() )
         QApplication::clipboard()->setText( lstEntriesList->currentItem()->text() );
 }
 

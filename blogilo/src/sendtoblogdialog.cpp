@@ -47,13 +47,13 @@ SendToBlogDialog::SendToBlogDialog( bool isNew, bool isPrivate, QWidget *parent 
     dialog->setAttribute( Qt::WA_DeleteOnClose );
     this->setMainWidget( dialog );
     setWindowTitle( i18n( "Submitting as..." ) );
-    if( isNew ) {
+    if ( isNew ) {
         d->ui.pubAsModify->setEnabled( false );
         d->ui.pubAsNewPost->setChecked( true );
     } else {
         d->ui.pubAsModify->setChecked( true );
     }
-    if( isPrivate )
+    if ( isPrivate )
         d->ui.saveDraft->setChecked(true);
     d->mIsNew = isNew;
     d->mIsPrivate = isPrivate;

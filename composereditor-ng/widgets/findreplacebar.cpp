@@ -85,9 +85,9 @@ void FindReplaceBarPrivate::_k_slotHighlightAllChanged(bool highLight)
             searchOptions |= QWebPage::FindCaseSensitively;
         searchOptions |= QWebPage::HighlightAllOccurrences;
         found = webView->findText(lastSearchStr, searchOptions);
-    }
-    else
+    } else {
         found = webView->findText(QString(), QWebPage::HighlightAllOccurrences);
+    }
     setFoundMatch( found );
 
 }
@@ -174,9 +174,8 @@ void FindReplaceBarPrivate::searchText( bool backward, bool isAutoSearch )
 
     const QString searchWord( search->text() );
 
-    if ( !isAutoSearch && !lastSearchStr.contains( searchWord, Qt::CaseSensitive ) ) {
+    if ( !isAutoSearch && !lastSearchStr.contains( searchWord, Qt::CaseSensitive ) )
         clearSelections();
-    }
 
     webView->findText(QString(), QWebPage::HighlightAllOccurrences); //Clear an existing highligh
 

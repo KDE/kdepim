@@ -56,9 +56,8 @@ public:
 };
 
 DBMan::DBMan()
-: d(new Private)
+    : d(new Private)
 {
-    kDebug();
     d->mWallet = KWallet::Wallet::openWallet( KWallet::Wallet::LocalWallet(), 0 );
     if ( d->mWallet ) {
         d->useWallet = true;

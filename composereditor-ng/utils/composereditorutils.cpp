@@ -55,10 +55,10 @@ QUrl ComposerEditorNG::Utils::guessUrlFromString(const QString &string)
 
     // Might be a shorturl - try to detect the schema.
     if (!hasSchema) {
-        int dotIndex = urlStr.indexOf(QLatin1Char('.'));
+        const int dotIndex = urlStr.indexOf(QLatin1Char('.'));
         if (dotIndex != -1) {
-            QString prefix = urlStr.left(dotIndex).toLower();
-            QString schema = (prefix == QLatin1String("ftp")) ? prefix : QLatin1String("http");
+            const QString prefix = urlStr.left(dotIndex).toLower();
+            const QString schema = (prefix == QLatin1String("ftp")) ? prefix : QLatin1String("http");
             QUrl url(schema + QLatin1String("://") + urlStr, QUrl::TolerantMode);
             if (url.isValid())
                 return url;

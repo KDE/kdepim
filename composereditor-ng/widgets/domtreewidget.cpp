@@ -75,6 +75,7 @@ void DomTreeWidgetPrivate::examineChildElements(const QWebElement &parentElement
         QTreeWidgetItem *item = new QTreeWidgetItem();
         item->setText(0, element.tagName());
         parentItem->addChild(item);
+
         const QStringList listAttributes = element.attributeNames();
         Q_FOREACH (const QString& str, listAttributes) {
             QTreeWidgetItem *subItem = new QTreeWidgetItem();

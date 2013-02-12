@@ -61,7 +61,7 @@ QString SyncUploader::errorMessage() const
 bool SyncUploader::uploadMedia( Backend *backend, BilboMedia *media )
 {
     kDebug();
-    if(!backend || !media){
+    if (!backend || !media){
         kError()<<"Media or Backend is NULL";
         return false;
     }
@@ -72,7 +72,7 @@ bool SyncUploader::uploadMedia( Backend *backend, BilboMedia *media )
                 this, SLOT(slotMediaError(QString,BilboMedia*)) );
 
     backend->uploadMedia( media );
-    if( d->loop->exec()==0 )
+    if ( d->loop->exec()==0 )
         return true;
     else
         return false;
@@ -80,7 +80,7 @@ bool SyncUploader::uploadMedia( Backend *backend, BilboMedia *media )
 
 void SyncUploader::slotMediaFileUploaded( BilboMedia *media )
 {
-    if(media && media == d->mCurrentMedia){
+    if (media && media == d->mCurrentMedia){
         kDebug();
         d->success = true;
         d->loop->exit();
@@ -90,7 +90,7 @@ void SyncUploader::slotMediaFileUploaded( BilboMedia *media )
 void SyncUploader::slotMediaError( const QString &errorMessage, BilboMedia* media )
 {
     kDebug();
-    if(media && media == d->mCurrentMedia){
+    if (media && media == d->mCurrentMedia){
         d->success = false;
         d->error = errorMessage;
         d->loop->exit(1);

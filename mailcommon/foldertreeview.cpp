@@ -185,16 +185,6 @@ void FolderTreeView::slotHeaderContextMenuRequested( const QPoint &pnt )
   act->setData( QVariant( (int)FolderTreeWidget::DisplayAlways ) );
   connect( act, SIGNAL(triggered(bool)),
            SLOT(slotHeaderContextMenuChangeToolTipDisplayPolicy(bool)) );
-  act = menu.addAction( i18nc( "@action:inmenu", "When Text Obscured" ) );
-  act->setCheckable( true );
-
-  //Port it !!!!
-  act->setEnabled( false );
-  grp->addAction( act );
-  act->setChecked( mToolTipDisplayPolicy == FolderTreeWidget::DisplayWhenTextElided );
-  act->setData( QVariant( (int)FolderTreeWidget::DisplayWhenTextElided ) );
-  connect( act, SIGNAL(triggered(bool)),
-           SLOT(slotHeaderContextMenuChangeToolTipDisplayPolicy(bool)) );
 
   act = menu.addAction( i18nc( "@action:inmenu Never display tooltips.", "Never" ) );
   act->setCheckable( true );

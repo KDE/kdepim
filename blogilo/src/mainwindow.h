@@ -64,7 +64,6 @@ protected slots:
     void slotSettingsChanged();
     void slotCreateNewPost();
     void addBlog();
-    void slotUploadAllChanges();
     void slotPostTitleChanged( const QString& title );
     void slotToggleToolboxVisible( bool isVisible );
     void slotToolboxVisibilityChanged( bool isVisible );
@@ -79,7 +78,6 @@ protected slots:
     void slotRemovePostEntry( int post );
 
     void slotSavePostLocally();
-//     void slotSaveAsDraft();
 
     void slotError( const QString &errorMessage );
 
