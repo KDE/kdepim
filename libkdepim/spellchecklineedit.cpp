@@ -217,19 +217,7 @@ void SpellCheckLineEdit::insertLanguageMenu(QMenu* contextMenu)
 void SpellCheckLineEdit::languageSelected()
 {
     QAction* languageAction = static_cast<QAction*>(QObject::sender());
-
     setSpellCheckingLanguage(languageAction->data().toString());
-}
-
-void SpellCheckLineEdit::disableSpellChecking()
-{
-    setCheckSpellingEnabled(false);
-}
-
-void SpellCheckLineEdit::setSpellChecking(bool set)
-{
-    //TODO
-    //Preferences::self()->setSpellChecking(set);
 }
 
 

@@ -61,8 +61,6 @@ protected:
   void insertFromMimeData ( const QMimeData * source );
 
 protected Q_SLOTS:
-  void disableSpellChecking();
-  void setSpellChecking(bool set);
   void insertLanguageMenu(QMenu* contextMenu);
   void languageSelected();
 
