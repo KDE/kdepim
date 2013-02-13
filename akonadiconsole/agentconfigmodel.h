@@ -32,6 +32,7 @@ class AgentConfigModel : public QAbstractTableModel
   Q_OBJECT
   public:
     AgentConfigModel( QObject * parent = 0 );
+    ~AgentConfigModel();
     void setAgentInstance( const Akonadi::AgentInstance &instance );
 
     int columnCount(const QModelIndex& parent = QModelIndex()) const;

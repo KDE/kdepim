@@ -62,6 +62,7 @@ using namespace Akonadi;
 
 KJotsEdit::KJotsEdit ( QItemSelectionModel *selectionModel, QWidget *parent )
   : KRichTextWidget(parent),
+    actionCollection( 0 ),
     allowAutoDecimal(false),
     m_selectionModel( selectionModel )
 {

@@ -39,7 +39,7 @@
 #include "bilbomedia.h"
 #include "settings.h"
 
-AddMediaDialog::AddMediaDialog( QWidget *parent ) : KDialog( parent )
+AddMediaDialog::AddMediaDialog( QWidget *parent ) : KDialog( parent ), media( 0 )  
 {
     QWidget *dialog = new QWidget( this );
     ui.setupUi( dialog );

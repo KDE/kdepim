@@ -143,8 +143,12 @@ QString MessageItemPrivate::mFontToDoMessageKey;
 MessageItemPrivate::MessageItemPrivate( MessageItem* qq )
   : ItemPrivate( qq ),
     mThreadingStatus( MessageItem::ParentMissing ),
+    mEncryptionState( MessageItem::NotEncrypted ),
+    mSignatureState( MessageItem::NotSigned ),
     mAboutToBeRemoved( false ),
-    mAnnotationStateChecked( false ),
+    mSubjectIsPrefixed( false ), 
+    mAnnotationStateChecked( false ), 
+    mHasAnnotation( false ),          
     mTagList( 0 )
 {
 }

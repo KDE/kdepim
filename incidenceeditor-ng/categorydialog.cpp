@@ -229,7 +229,7 @@ void CategoryWidget::handleColorChanged( const QColor &newColor )
 }
 
 CategoryDialog::CategoryDialog( CategoryConfig *cc, QWidget *parent )
-  : KDialog( parent )
+  : KDialog( parent ), d( 0 )
 {
   setCaption( i18n( "Select Categories" ) );
 #ifdef KDEPIM_MOBILE_UI

@@ -43,7 +43,7 @@ class FilterActionWidget::Private
 {
   public:
     Private( FilterActionWidget *qq )
-      : q( qq )
+      : q( qq ), mComboBox( 0 ), mAdd( 0 ), mRemove( 0 ), mLayout( 0 )
     {
     }
 

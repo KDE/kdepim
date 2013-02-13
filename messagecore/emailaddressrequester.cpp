@@ -33,14 +33,13 @@ class MessageCore::EmailAddressRequester::Private
 {
   public:
     Private( EmailAddressRequester *qq )
-      : q( qq )
+      : q( qq ), mLineEdit( 0 )
     {
     }
 
     void slotAddressBook();
 
     EmailAddressRequester *q;
-    QPushButton* mButton;
     KLineEdit* mLineEdit;
 };    
 
@@ -80,14 +79,14 @@ EmailAddressRequester::EmailAddressRequester( QWidget *parent )
   layout->addWidget( d->mLineEdit, 1 );
   
 
-  d->mButton = new QPushButton( this );
-  d->mButton->setIcon( KIcon( "help-contents" ) );
-  d->mButton->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
-  d->mButton->setFixedHeight( d->mLineEdit->sizeHint().height() );
-  d->mButton->setToolTip( i18n( "Open Address Book" ) );
-  layout->addWidget( d->mButton );
+  QPushButton *button = new QPushButton( this );
+  button->setIcon( KIcon( "help-contents" ) );
+  button->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
+  button->setFixedHeight( d->mLineEdit->sizeHint().height() );
+  button->setToolTip( i18n( "Open Address Book" ) );
+  layout->addWidget( button );
 
-  connect( d->mButton, SIGNAL(clicked()), this, SLOT(slotAddressBook()) );
+  connect( button, SIGNAL(clicked()), this, SLOT(slotAddressBook()) );
   connect( d->mLineEdit, SIGNAL(textChanged(QString)),
            this, SIGNAL(textChanged()) );
 }
