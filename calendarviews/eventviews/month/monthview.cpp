@@ -84,7 +84,8 @@ MonthViewPrivate::MonthViewPrivate( MonthView *qq )
     //calendarSearch( new CalendarSupport::CalendarSearch( qq ) ),
     scene( new MonthScene( qq ) ),
     selectedItemId( -1 ),
-    view( new MonthGraphicsView( qq ) )
+    view( new MonthGraphicsView( qq ) ),
+    fullView( 0 )
 {
   reloadTimer.setSingleShot( true );
   view->setScene( scene );

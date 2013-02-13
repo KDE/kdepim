@@ -189,7 +189,6 @@ class CALENDARSUPPORT_EXPORT CalendarAdaptor : public KCalCore::MemoryCalendar
     void schedule( KCalCore::iTIPMethod method, const Akonadi::Item &item );
 
     Akonadi::Collection mDefaultCollection;
-    CalendarSupport::Calendar *mCalendar;
     QWidget *mParent;
     bool mDeleteCalendar;
     bool mStoreDefaultCollection;

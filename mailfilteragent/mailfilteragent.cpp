@@ -148,8 +148,11 @@ void MailFilterAgent::itemAdded( const Akonadi::Item &item, const Akonadi::Colle
   /* The monitor mimetype filter would override the collection filter, therefor we have to check
    * for the mimetype of the item here.
    */
-  if ( item.mimeType() != KMime::Message::mimeType() )
+  qDebug()<<" MailFilterAgent::itemAdded :"<<item.id();
+  if ( item.mimeType() != KMime::Message::mimeType() ) {
+    qDebug() << "MailFilterAgent::itemAdded called for a non-message item!";
     return;
+  }
 
   MailCommon::SearchRule::RequiredPart requiredPart = m_filterManager->requiredPart(collection.resource());
 
@@ -171,22 +174,29 @@ void MailFilterAgent::itemAdded( const Akonadi::Item &item, const Akonadi::Colle
 
 void MailFilterAgent::itemsReceiviedForFiltering (const Akonadi::Item::List& items)
 {
-  if (items.isEmpty())
+  if (items.isEmpty()) {
+    qDebug() << "MailFilterAgent::itemsReceiviedForFiltering items is empty!";
     return;
+  }
 
   Akonadi::Item item = items.first();
   /*
    * happens when item no longer exists etc, and queue compression didn't happen yet
    */
-  if ( !item.hasPayload() )
+  if ( !item.hasPayload() ) {
+    qDebug() << "MailFilterAgent::itemsReceiviedForFiltering item has no payload!";
     return;
+  }
 
   Akonadi::MessageStatus status;
   status.setStatusFromFlags( item.flags() );
-  if ( status.isRead() || status.isSpam() || status.isIgnored() )
+  if ( status.isRead() || status.isSpam() || status.isIgnored() ) {
+    qDebug() << "MailFilterAgent::itemsReceiviedForFiltering message not filtered because its status: " << status.isRead() << status.isSpam() << status.isIgnored();
     return;
+  }
 
   const QString resource = sender()->property("resource").toString();
+qDebug()<<" itemsReceiviedForFiltering********************************************** :"<<item.id()<<" resource :"<<resource;
   emitProgressMessage(i18n("Filtering in %1",Akonadi::AgentManager::self()->instance(resource).name()) );
   m_filterManager->process( item, m_filterManager->requiredPart(resource), FilterManager::Inbound, true, resource );
 

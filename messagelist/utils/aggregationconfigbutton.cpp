@@ -32,7 +32,7 @@ class MessageList::Utils::AggregationConfigButtonPrivate
 {
 public:
   AggregationConfigButtonPrivate( AggregationConfigButton *owner )
-    : q( owner ) { }
+    : q( owner ), mAggregationComboBox( 0 )  { }
 
   AggregationConfigButton * const q;
 
