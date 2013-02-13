@@ -24,11 +24,7 @@
 
 #include "addmediadialog.h"
 
-#ifdef WIN32
-#include <QFileDialog>
-#else
 #include <KFileDialog>
-#endif
 
 #include <klineedit.h>
 #include <kmessagebox.h>
@@ -66,13 +62,9 @@ AddMediaDialog::~AddMediaDialog()
 void AddMediaDialog::slotSelectLocalFile()
 {
     QString path;
-#ifdef WIN32
-    path = QFileDialog::getOpenFileName( this, i18n("Choose a file") );//krazy:exclude=qclasses KFileDialog has problem on WIN32 now
-#else
     path = KFileDialog::getOpenFileName( KUrl(),
                                          QString(), this,
                                          i18n("Choose a file") );
-#endif
     ui.urlReqLineEdit->setText(path);
 }
 

@@ -77,7 +77,7 @@ Toolbox::Toolbox( QWidget *parent )
     connect( btnEntriesRemove, SIGNAL(clicked(bool)), this, SLOT(slotRemoveSelectedEntryFromServer()) );
 
     connect( btnOptionsNow, SIGNAL(clicked(bool)), this, SLOT(setDateTimeNow()) );
-    connect( localEntries, SIGNAL(itemClicked(QTreeWidgetItem*,int)),
+    connect( localEntries, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),
              this, SLOT(slotLocalEntrySelected(QTreeWidgetItem*,int)) );
     connect( btnLocalRemove, SIGNAL(clicked(bool)) , this, SLOT(slotRemoveLocalEntry()) );
 
