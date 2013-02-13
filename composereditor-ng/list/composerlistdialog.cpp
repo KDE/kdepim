@@ -31,6 +31,7 @@
 #include <QComboBox>
 #include <QLabel>
 #include <QSpinBox>
+#include <QDebug>
 
 namespace ComposerEditorNG
 {
