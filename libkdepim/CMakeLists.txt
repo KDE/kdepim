@@ -41,7 +41,6 @@ set(kdepim_LIB_SRCS
    broadcaststatus.cpp
    kwidgetlister.cpp
    recentaddresses.cpp
-   sendsmsdialog.cpp
    kmailcompletion.cpp
    pimmessagebox.cpp
    multiplyingline.cpp
