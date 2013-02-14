@@ -670,6 +670,10 @@ void AddresseeLineEdit::Private::startSearches()
 
 void AddresseeLineEdit::Private::akonadiPerformSearch()
 {
+
+  if ( m_searchString.size() <= 2 ) {
+    return;
+  }
   kDebug() << "searching akonadi with:" << m_searchString;
 
   // first, kill all job still in flight, they are no longer current

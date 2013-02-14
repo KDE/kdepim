@@ -1,7 +1,7 @@
 project(kdepim)
 
 # where to look first for cmake modules. This line must be the first one or cmake will use the system's FindFoo.cmake
-set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules")
 
 ############### Build Options ###############
 
@@ -197,7 +197,7 @@ else()
   find_package(SharedDesktopOntologies 0.10)
   set_package_properties(SharedDesktopOntologies PROPERTIES DESCRIPTION "Shared Desktop Ontologies" URL "http://oscaf.sourceforge.net" TYPE REQUIRED PURPOSE "Ontologies necessary for the Nepomuk semantic desktop")
 
-  find_package(Soprano 2.8.0)
+  find_package(Soprano 2.9.0)
   set_package_properties(Soprano PROPERTIES DESCRIPTION "C++/Qt4 framework for RDF data" URL "http://soprano.sourceforge.net" TYPE REQUIRED PURPOSE "Storage of semantic data")
   include(SopranoAddOntology)
 
@@ -327,7 +327,9 @@ else()
     macro_optional_add_subdirectory(kmailcvt)
     macro_optional_add_subdirectory(knotes)
     macro_optional_add_subdirectory(ksendemail)
+if(QT_QT3SUPPORT_FOUND)
     macro_optional_add_subdirectory(ktnef)
+endif()
     macro_optional_add_subdirectory(mailimporter)
     macro_optional_add_subdirectory(pimsettingexporter)
     macro_optional_add_subdirectory(kalarm)
