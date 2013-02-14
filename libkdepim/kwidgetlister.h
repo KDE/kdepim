@@ -36,10 +36,6 @@
 #include "kdepim_export.h"
 #include <QWidget>
 
-class QPushButton;
-class QVBoxLayout;
-class KHBox;
-
 namespace KPIM {
 
 /**
