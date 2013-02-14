@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012-2013 Montel Laurent <montel.org>
+  Copyright (c) 2013 Montel Laurent <montel@kde.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -18,31 +18,29 @@
 
 */
 
-#ifndef ComposerLinkDialog_H
-#define ComposerLinkDialog_H
+#ifndef COMPOSERLISTDIALOG_H
+#define COMPOSERLISTDIALOG_H
+
 #include <KDialog>
 
 class QWebElement;
 
 namespace ComposerEditorNG
 {
-class ComposerLinkDialogPrivate;
-class ComposerLinkDialog : public KDialog
+class ComposerListDialogPrivate;
+class ComposerListDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit ComposerLinkDialog(const QString &selectedText, QWidget *parent);
-    explicit ComposerLinkDialog(const QWebElement& element, QWidget *parent);
-    ~ComposerLinkDialog();
-
-    QString html() const;
+    explicit ComposerListDialog(const QWebElement &element, QWidget *parent);
+    ~ComposerListDialog();
 
 private:
-    friend class ComposerLinkDialogPrivate;
-    ComposerLinkDialogPrivate * const d;
-    Q_PRIVATE_SLOT(d, void _k_slotOkClicked() )
-    Q_PRIVATE_SLOT(d, void _k_slotWebElementChanged() )
+    friend class ComposerListDialogPrivate;
+    ComposerListDialogPrivate * const d;
+    Q_PRIVATE_SLOT( d, void _k_slotOkClicked() )
+    Q_PRIVATE_SLOT( d, void _k_slotWebElementChanged() )
 };
-}
 
-#endif // ComposerLinkDialog_H
+}
+#endif // COMPOSERLISTDIALOG_H

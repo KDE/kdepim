@@ -32,7 +32,7 @@ libkpgp               DEPRECATED
 libksieve             Marc Mutz <mutz@kde.org>
 mailcommon            <kmail maintainer>
 mailfilteragent       ?
-mailimporter          Laurent Montel <montel@kde.org>
+pimsettingexporter    Laurent Montel <montel@kde.org>
 messagecomposer       <kmail maintainer>
 messagecore           <kmail maintainer>
 messagelist           <kmail maintainer>

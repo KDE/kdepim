@@ -76,9 +76,6 @@ class INCIDENCEEDITORS_NG_EXPORT VisualFreeBusyWidget : public QWidget
     FreeBusyGanttProxyModel *mModel;
 
     KDateTime mDtStart, mDtEnd;
-
-    FreeBusyItemModel *m;
-    bool mIsOrganizer;
 };
 
 }

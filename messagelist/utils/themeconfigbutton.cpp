@@ -33,7 +33,7 @@ class MessageList::Utils::ThemeConfigButtonPrivate
 {
 public:
   ThemeConfigButtonPrivate( ThemeConfigButton *owner )
-    : q( owner ) { }
+    : q( owner ), mThemeComboBox( 0 )  { }
 
   ThemeConfigButton * const q;
 

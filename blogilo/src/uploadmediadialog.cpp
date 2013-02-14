@@ -25,9 +25,6 @@
 #include "uploadmediadialog.h"
 #include <KDebug>
 
-#ifdef WIN32
-#include <QFileDialog>
-#endif
 #include <KFileDialog>
 
 #include <settings.h>
@@ -93,14 +90,9 @@ void UploadMediaDialog::currentMediaChanged(const QString& newPath)
 
 bool UploadMediaDialog::selectNewFile()
 {
-    QString mediaPath;
-#ifdef WIN32
-    mediaPath = QFileDialog::getOpenFileName( this, i18n("Select Media to Upload") );//krazy:exclude=qclasses KFileDialog has problem on WIN32 now
-#else
-    mediaPath = KFileDialog::getOpenFileName( KUrl("kfiledialog:///image?global"),
+    const QString mediaPath = KFileDialog::getOpenFileName( KUrl("kfiledialog:///image?global"),
                                                       QString(), this,
                                                       i18n("Select Media to Upload"));
-#endif
     if( mediaPath.isEmpty() )
         return false;
 

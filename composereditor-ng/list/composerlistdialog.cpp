@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel.org>
+  Copyright (c) 2013 Montel Laurent <montel@kde.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -31,6 +31,7 @@
 #include <QComboBox>
 #include <QLabel>
 #include <QSpinBox>
+#include <QDebug>
 
 namespace ComposerEditorNG
 {

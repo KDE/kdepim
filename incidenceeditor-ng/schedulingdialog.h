@@ -76,7 +76,9 @@ class INCIDENCEEDITORS_NG_EXPORT SchedulingDialog : public KDialog, private Ui_D
 
     ConflictResolver *mResolver;
     FreePeriodModel *mPeriodModel;
+#ifndef KDEPIM_MOBILE_UI
     VisualFreeBusyWidget *mVisualWidget;
+#endif
 };
 
 }

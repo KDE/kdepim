@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel.org>
+  Copyright (c) 2013 Montel Laurent <montel@kde.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -20,8 +20,8 @@
 
 #include "composerview_p.h"
 #include "utils/composereditorutils_p.h"
-#include "dialog/composerlinkdialog.h"
-#include "dialog/composerlistdialog.h"
+#include "link/composerlinkdialog.h"
+#include "list/composerlistdialog.h"
 #include "image/composerimagedialog.h"
 #include "table/composertabledialog.h"
 #include "image/composerimageresizewidget.h"
