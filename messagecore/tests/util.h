@@ -23,9 +23,6 @@
 
 #include <gpgme++/key.h>
 #include <messageviewer/objecttreeemptysource.h>
-#ifndef Q_MOC_RUN
-#include <boost/graph/graph_concepts.hpp>
-#endif
 
 namespace MessageCore {
 
