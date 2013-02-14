@@ -35,7 +35,7 @@
 #include "pimcommon_export.h"
 
 class QCheckBox;
-class QPushButton;
+class KPushButton;
 class KLineEdit;
 
 namespace PimCommon {
@@ -47,8 +47,7 @@ public:
     explicit RenameFileDialog(const KUrl& url, bool multiFiles, QWidget * parent);
     ~RenameFileDialog();
 
-    enum RenameFileDialogResult
-    {
+    enum RenameFileDialogResult {
         RENAMEFILE_IGNORE = 0,
         RENAMEFILE_IGNOREALL = 1,
         RENAMEFILE_RENAME = 2,
@@ -71,8 +70,8 @@ private:
 
     KUrl mUrl;
     QCheckBox *mApplyAll;
-    QPushButton *mRename;
-    QPushButton *mSuggestNewName;
+    KPushButton *mRename;
+    KPushButton *mSuggestNewName;
     KLineEdit *mNameEdit;
 };
 }

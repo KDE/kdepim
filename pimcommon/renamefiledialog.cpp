@@ -29,6 +29,7 @@
 
 #include <kseparator.h>
 #include <KLineEdit>
+#include <KPushButton>
 #include <KLocale>
 #include <kio/global.h>
 
@@ -49,7 +50,7 @@ RenameFileDialog::RenameFileDialog(const KUrl& url, bool multiFiles, QWidget * p
     setWindowTitle(i18n( "File Already Exists" ));
     QVBoxLayout* pLayout = new QVBoxLayout(this);
 
-    QLabel *label = new QLabel(i18n( "A file named <filename>%1</filename> already exists. Do you want to overwrite it?",url.fileName()),this);
+    QLabel *label = new QLabel(i18n( "A file named <filename>%1</filename> already exists. Do you want to overwrite it?", url.fileName()),this);
     pLayout->addWidget(label);
 
     QHBoxLayout* renameLayout = new QHBoxLayout();
@@ -59,18 +60,18 @@ RenameFileDialog::RenameFileDialog(const KUrl& url, bool multiFiles, QWidget * p
     mNameEdit = new KLineEdit(this);
     renameLayout->addWidget(mNameEdit);
     mNameEdit->setText(url.fileName());
-    mSuggestNewName = new QPushButton(i18n("Suggest New &Name"), this);
+    mSuggestNewName = new KPushButton(i18n("Suggest New &Name"), this);
     renameLayout->addWidget(mSuggestNewName);
     connect(mSuggestNewName, SIGNAL(clicked()), this, SLOT(slotSuggestNewNamePressed()));
 
 
-    QPushButton *overWrite = new QPushButton(i18n("&Overwrite"),this);
+    KPushButton *overWrite = new KPushButton(i18n("&Overwrite"),this);
     connect(overWrite,SIGNAL(clicked()),this,SLOT(slotOverwritePressed()));
 
-    QPushButton *ignore = new QPushButton(i18n("&Ignore"),this);
+    KPushButton *ignore = new KPushButton(i18n("&Ignore"),this);
     connect(ignore,SIGNAL(clicked()),this,SLOT(slotIgnorePressed()));
 
-    mRename = new QPushButton(i18n("&Rename"),this);
+    mRename = new KPushButton(i18n("&Rename"),this);
     connect(mRename,SIGNAL(clicked()),this,SLOT(slotRenamePressed()));
 
     KSeparator* separator = new KSeparator(this);
@@ -79,7 +80,7 @@ RenameFileDialog::RenameFileDialog(const KUrl& url, bool multiFiles, QWidget * p
     QHBoxLayout* layout = new QHBoxLayout();
     pLayout->addLayout(layout);
 
-    if(multiFiles){
+    if (multiFiles){
         mApplyAll = new QCheckBox(i18n("Appl&y to All"), this);
         connect(mApplyAll, SIGNAL(clicked()), this, SLOT(slotApplyAllPressed()));
         layout->addWidget(mApplyAll);
@@ -96,7 +97,7 @@ RenameFileDialog::~RenameFileDialog()
 
 void RenameFileDialog::slotOverwritePressed()
 {
-    if(mApplyAll && mApplyAll->isChecked()) {
+    if (mApplyAll && mApplyAll->isChecked()) {
         done(RENAMEFILE_OVERWRITEALL);
     } else {
         done(RENAMEFILE_OVERWRITE);
@@ -105,7 +106,7 @@ void RenameFileDialog::slotOverwritePressed()
 
 void RenameFileDialog::slotIgnorePressed()
 {
-    if(mApplyAll && mApplyAll->isChecked()) {
+    if (mApplyAll && mApplyAll->isChecked()) {
         done(RENAMEFILE_IGNOREALL);
     } else {
         done(RENAMEFILE_IGNORE);
@@ -114,7 +115,7 @@ void RenameFileDialog::slotIgnorePressed()
 
 void RenameFileDialog::slotRenamePressed()
 {
-    if(mNameEdit->text().isEmpty())
+    if (mNameEdit->text().isEmpty())
         return;
     done(RENAMEFILE_RENAME);
 }
