@@ -124,8 +124,10 @@ bool LDIFXXPort::exportContacts( const KABC::Addressee::List &list ) const
             if ( result == PimCommon::RenameFileDialog::RENAMEFILE_RENAME ) {
                 fileName = dialog->newName().toLocalFile();
             } else if (result == PimCommon::RenameFileDialog::RENAMEFILE_IGNORE) {
+                delete dialog;
                 return true;
             }
+            delete dialog;
         }
     }
 

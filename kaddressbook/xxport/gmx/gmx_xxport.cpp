@@ -359,8 +359,10 @@ bool GMXXXPort::exportContacts( const KABC::AddresseeList &list ) const
           if ( result == PimCommon::RenameFileDialog::RENAMEFILE_RENAME ) {
               url = dialog->newName();
           } else if (result == PimCommon::RenameFileDialog::RENAMEFILE_IGNORE) {
+              delete dialog;
               return true;
           }
+          delete dialog;
       }
   }
 

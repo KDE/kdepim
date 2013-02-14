@@ -54,8 +54,10 @@ bool CsvXXPort::exportContacts( const KABC::Addressee::List &contacts ) const
           if ( result == PimCommon::RenameFileDialog::RENAMEFILE_RENAME ) {
               url = dialog->newName();
           } else if (result == PimCommon::RenameFileDialog::RENAMEFILE_IGNORE) {
+              delete dialog;
               return true;
           }
+          delete dialog;
       }
   }
 

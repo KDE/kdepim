@@ -291,8 +291,10 @@ bool VCardXXPort::doExport( const KUrl &url, const QByteArray &data ) const
         if ( result == PimCommon::RenameFileDialog::RENAMEFILE_RENAME ) {
             newUrl = dialog->newName();
         } else if (result == PimCommon::RenameFileDialog::RENAMEFILE_IGNORE) {
+            delete dialog;
             return true;
         }
+        delete dialog;
     }
 
     KTemporaryFile tmpFile;
