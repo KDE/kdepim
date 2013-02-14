@@ -19,6 +19,8 @@
 
 #include "vcard_xxport.h"
 
+#include "pimcommon/renamefiledialog.h"
+
 #include <Akonadi/Contact/ContactViewer>
 
 #ifdef QGPGME_FOUND
@@ -280,24 +282,26 @@ KABC::Addressee::List VCardXXPort::parseVCard( const QByteArray &data ) const
 }
 
 bool VCardXXPort::doExport( const KUrl &url, const QByteArray &data ) const
-{
-  if ( url.isLocalFile() && QFileInfo( url.toLocalFile() ).exists() ) {
-    int answer =
-      KMessageBox::questionYesNo(
-        parentWidget(),
-        i18nc( "@info", "Do you want to overwrite file \"%1\"", url.toLocalFile() ) );
-    if ( answer == KMessageBox::No ) {
-      return false;
+{   
+    KUrl newUrl(url);
+    if ( newUrl.isLocalFile() && QFileInfo( newUrl.toLocalFile() ).exists() ) {
+        PimCommon::RenameFileDialog::RenameFileDialogResult result = PimCommon::RenameFileDialog::RENAMEFILE_IGNORE;
+        PimCommon::RenameFileDialog *dialog = new PimCommon::RenameFileDialog(newUrl, false, parentWidget());
+        result = static_cast<PimCommon::RenameFileDialog::RenameFileDialogResult>(dialog->exec());
+        if ( result == PimCommon::RenameFileDialog::RENAMEFILE_RENAME ) {
+            newUrl = dialog->newName();
+        } else if (result == PimCommon::RenameFileDialog::RENAMEFILE_IGNORE) {
+            return true;
+        }
     }
-  }
 
-  KTemporaryFile tmpFile;
-  tmpFile.open();
+    KTemporaryFile tmpFile;
+    tmpFile.open();
 
-  tmpFile.write( data );
-  tmpFile.flush();
+    tmpFile.write( data );
+    tmpFile.flush();
 
-  return KIO::NetAccess::upload( tmpFile.fileName(), url, parentWidget() );
+    return KIO::NetAccess::upload( tmpFile.fileName(), newUrl, parentWidget() );
 }
 
 KABC::Addressee::List VCardXXPort::filterContacts( const KABC::Addressee::List &addrList ) const

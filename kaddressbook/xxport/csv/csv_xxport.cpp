@@ -21,6 +21,8 @@
 #include "contactfields.h"
 #include "csvimportdialog.h"
 
+#include "pimcommon/renamefiledialog.h"
+
 #include <KFileDialog>
 #include <KLocale>
 #include <KMessageBox>
@@ -45,12 +47,16 @@ bool CsvXXPort::exportContacts( const KABC::Addressee::List &contacts ) const
   }
 
   if ( QFileInfo( url.isLocalFile() ? url.toLocalFile() : url.path() ).exists() ) {
-    if ( KMessageBox::questionYesNo(
-           parentWidget(),
-           i18n( "Do you want to overwrite file \"%1\"",
-                 url.isLocalFile() ? url.toLocalFile() : url.path() ) ) == KMessageBox::No ) {
-      return true;
-    }
+      if ( url.isLocalFile() && QFileInfo( url.toLocalFile() ).exists() ) {
+          PimCommon::RenameFileDialog::RenameFileDialogResult result = PimCommon::RenameFileDialog::RENAMEFILE_IGNORE;
+          PimCommon::RenameFileDialog *dialog = new PimCommon::RenameFileDialog(url, false, parentWidget());
+          result = static_cast<PimCommon::RenameFileDialog::RenameFileDialogResult>(dialog->exec());
+          if ( result == PimCommon::RenameFileDialog::RENAMEFILE_RENAME ) {
+              url = dialog->newName();
+          } else if (result == PimCommon::RenameFileDialog::RENAMEFILE_IGNORE) {
+              return true;
+          }
+      }
   }
 
   if ( !url.isLocalFile() ) {

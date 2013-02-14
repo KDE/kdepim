@@ -35,6 +35,8 @@
 
 #include "ldif_xxport.h"
 
+#include "pimcommon/renamefiledialog.h"
+
 #include <KABC/LDIFConverter>
 
 #include <KCodecs>
@@ -112,16 +114,22 @@ bool LDIFXXPort::exportContacts( const KABC::Addressee::List &list ) const
 
     return KIO::NetAccess::upload( tmpFile.fileName(), url, parentWidget() );
   } else {
-    const QString fileName = url.toLocalFile();
+    QString fileName = url.toLocalFile();
 
-    if ( QFileInfo( fileName ).exists() ) {
-      if ( KMessageBox::questionYesNo(
-             parentWidget(),
-             i18n( "Do you want to overwrite file \"%1\"", fileName ) ) == KMessageBox::No ) {
-        return true; // skip export
-      }
+    if ( QFileInfo( fileName ).exists() ) {    
+        if ( url.isLocalFile() && QFileInfo( url.toLocalFile() ).exists() ) {
+            PimCommon::RenameFileDialog::RenameFileDialogResult result = PimCommon::RenameFileDialog::RENAMEFILE_IGNORE;
+            PimCommon::RenameFileDialog *dialog = new PimCommon::RenameFileDialog(url, false, parentWidget());
+            result = static_cast<PimCommon::RenameFileDialog::RenameFileDialogResult>(dialog->exec());
+            if ( result == PimCommon::RenameFileDialog::RENAMEFILE_RENAME ) {
+                fileName = dialog->newName().toLocalFile();
+            } else if (result == PimCommon::RenameFileDialog::RENAMEFILE_IGNORE) {
+                return true;
+            }
+        }
     }
 
+    //TODO fix export in network as other export function
     QFile file( fileName );
 
     if ( !file.open( QIODevice::WriteOnly ) ) {
