@@ -142,7 +142,7 @@ void RenameFileDialog::slotSuggestNewNamePressed()
 KUrl RenameFileDialog::newName() const
 {
     KUrl newDest(mUrl);
-    QString fileName = mNameEdit->text();
+    const QString fileName = mNameEdit->text();
 
     newDest.setFileName(KIO::encodeFileName(fileName));
 
