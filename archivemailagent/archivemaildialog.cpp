@@ -139,7 +139,7 @@ void ArchiveMailWidget::customContextMenuRequested(const QPoint&)
 {
   const QList<QTreeWidgetItem *> listItems = mWidget->treeWidget->selectedItems();
   KMenu menu;
-  menu.addAction(i18n("Add..."),this,SLOT(slotOpenFolder()));
+  menu.addAction(i18n("Add..."),this,SLOT(slotAddItem()));
   if( !listItems.isEmpty() ) {
    if( listItems.count() == 1) {
       menu.addAction(i18n("Open Containing Folder..."),this,SLOT(slotOpenFolder()));
