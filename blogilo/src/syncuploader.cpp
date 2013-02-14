@@ -60,7 +60,6 @@ QString SyncUploader::errorMessage() const
 
 bool SyncUploader::uploadMedia( Backend *backend, BilboMedia *media )
 {
-    kDebug();
     if (!backend || !media){
         kError()<<"Media or Backend is NULL";
         return false;
@@ -89,7 +88,6 @@ void SyncUploader::slotMediaFileUploaded( BilboMedia *media )
 
 void SyncUploader::slotMediaError( const QString &errorMessage, BilboMedia* media )
 {
-    kDebug();
     if (media && media == d->mCurrentMedia){
         d->success = false;
         d->error = errorMessage;

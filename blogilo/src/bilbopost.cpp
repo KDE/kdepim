@@ -40,7 +40,6 @@ public:
 BilboPost::BilboPost()
         : KBlog::BlogPost(), d_ptr(new BilboPostPrivate)
 {
-    kDebug();
     this->setCreationDateTime( KDateTime::currentLocalDateTime() );
     this->setModificationDateTime( KDateTime::currentLocalDateTime() );
     this->setCommentAllowed( true );
@@ -55,7 +54,6 @@ BilboPost::BilboPost()
 BilboPost::BilboPost( const KBlog::BlogPost &post )
         : KBlog::BlogPost( post ), d_ptr(new BilboPostPrivate)
 {
-    kDebug()<<"KBlog::BlogPost";
     d_ptr->mId = -1;
     d_ptr->localId = -1;
     d_ptr->mModifyTimeStamp = false;
@@ -64,7 +62,6 @@ BilboPost::BilboPost( const KBlog::BlogPost &post )
 BilboPost::BilboPost( const BilboPost &post )
         : KBlog::BlogPost(post), d_ptr(new BilboPostPrivate)
 {
-    kDebug()<<"BilboPost";
     this->setAuthor( post.author() );
     this->setModifyTimeStamp( post.isModifyTimeStamp() );
     this->setId( post.id() );
@@ -74,7 +71,6 @@ BilboPost::BilboPost( const BilboPost &post )
 
 BilboPost::~BilboPost()
 {
-    kDebug();
     delete d_ptr;
 }
 
@@ -110,7 +106,6 @@ void BilboPost::setLocalId(const int localId)
 
 QString BilboPost::toString() const
 {
-    qDebug( "BilboPost::toString" );
 //  if(!title().isEmpty())
 //   qDebug("BilboPost::toString: title is %s", this->title());
     QString ret;
