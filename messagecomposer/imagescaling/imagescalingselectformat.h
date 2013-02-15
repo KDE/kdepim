@@ -17,10 +17,45 @@
 #ifndef IMAGESCALINGSELECTFORMAT_H
 #define IMAGESCALINGSELECTFORMAT_H
 
-class ImageScalingSelectFormat
+#include <KDialog>
+
+class KLineEdit;
+class KPushButton;
+class QListWidget;
+
+namespace MessageComposer {
+
+class ImageScalingSelectFormatDialog : public KDialog
 {
+    Q_OBJECT
 public:
-    ImageScalingSelectFormat();
+    explicit ImageScalingSelectFormatDialog(QWidget *parent);
+    ~ImageScalingSelectFormatDialog();
+    void setFormat(const QString &format);
+    QString format() const;
+
+private:
+    void initialize();
+    QListWidget *mListWidget;
 };
+
+class ImageScalingSelectFormat : public QWidget
+{
+    Q_OBJECT
+public:
+    explicit ImageScalingSelectFormat(QWidget *parent);
+    ~ImageScalingSelectFormat();
+
+    void setFormat(const QString &format);
+    QString format() const;
+
+private Q_SLOTS:
+    void slotSelectFormat();
+
+private:
+    KLineEdit *mFormat;
+    KPushButton *mSelectFormat;
+};
+}
 
 #endif // IMAGESCALINGSELECTFORMAT_H

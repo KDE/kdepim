@@ -17,6 +17,94 @@
 
 #include "imagescalingselectformat.h"
 
-ImageScalingSelectFormat::ImageScalingSelectFormat()
+#include <KLineEdit>
+#include <KPushButton>
+#include <KLocale>
+
+#include <QListWidget>
+#include <QHBoxLayout>
+
+using namespace MessageComposer;
+
+ImageScalingSelectFormatDialog::ImageScalingSelectFormatDialog(QWidget *parent)
+    : KDialog(parent)
+{
+    QWidget *w = new QWidget( this );
+    setMainWidget( w );
+    setCaption( i18nc("@title:window", "Select Image Format") );
+    setButtons( Ok | Cancel );
+    setDefaultButton( Ok );
+
+    QBoxLayout *topLayout = new QVBoxLayout( w );
+    topLayout->setSpacing( spacingHint() );
+    initialize();
+}
+
+ImageScalingSelectFormatDialog::~ImageScalingSelectFormatDialog()
 {
 }
+
+void ImageScalingSelectFormatDialog::initialize()
+{
+    /*
+    QList<QByteArray> listWriteFormat = QImageWriter::supportedImageFormats();
+    Q_FOREACH(const QByteArray& format, listWriteFormat) {
+        ui->WriteToImageFormat->addItem(QString::fromLatin1(format));
+    }
+    */
+}
+
+QString ImageScalingSelectFormatDialog::format() const
+{
+    //TODO
+    return QString();
+}
+
+void ImageScalingSelectFormatDialog::setFormat(const QString &format)
+{
+    mListWidget->clear();
+    const QStringList listFormat = format.split(QLatin1Char(';'));
+    Q_FOREACH (const QString &str, listFormat) {
+
+    }
+
+    //TODO
+}
+
+ImageScalingSelectFormat::ImageScalingSelectFormat(QWidget *parent)
+    : QWidget(parent)
+{
+    QHBoxLayout *lay = new QHBoxLayout;
+    mFormat = new KLineEdit;
+    mFormat->setReadOnly(true);
+    lay->addWidget(mFormat);
+    mSelectFormat = new KPushButton(i18n("..."));
+    connect(mSelectFormat, SIGNAL(clicked(bool)), this, SLOT(slotSelectFormat()));
+    lay->addWidget(mSelectFormat);
+}
+
+ImageScalingSelectFormat::~ImageScalingSelectFormat()
+{
+}
+
+void ImageScalingSelectFormat::slotSelectFormat()
+{
+    QPointer<ImageScalingSelectFormatDialog> dialog = new ImageScalingSelectFormatDialog(this);
+    dialog->setFormat(mFormat->text());
+    if (dialog->exec()) {
+        mFormat->setText(dialog->format());
+    }
+    delete dialog;
+}
+
+void ImageScalingSelectFormat::setFormat(const QString &format)
+{
+    mFormat->setText(format);
+}
+
+QString ImageScalingSelectFormat::format() const
+{
+    return mFormat->text();
+}
+
+#include "imagescalingselectformat.moc"
