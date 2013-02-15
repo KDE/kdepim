@@ -119,7 +119,8 @@ QString PimCommon::RenameFileDialog::RenameFileDialogPrivate::suggestName(const 
 
 
 RenameFileDialog::RenameFileDialog(const KUrl& url, bool multiFiles, QWidget * parent)
-    :QDialog(parent), d(new RenameFileDialogPrivate(url, this))
+    : QDialog(parent),
+      d(new RenameFileDialogPrivate(url, this))
 {
     setWindowTitle(i18n( "File Already Exists" ));
     QVBoxLayout* pLayout = new QVBoxLayout(this);
@@ -168,6 +169,7 @@ RenameFileDialog::RenameFileDialog(const KUrl& url, bool multiFiles, QWidget * p
 
 RenameFileDialog::~RenameFileDialog()
 {
+    delete d;
 }
 
 void RenameFileDialog::slotOverwritePressed()
