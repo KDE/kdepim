@@ -42,114 +42,32 @@
 
 using namespace PimCommon;
 
-RenameFileDialog::RenameFileDialog(const KUrl& url, bool multiFiles, QWidget * parent)
-    :QDialog(parent),
-      mUrl(url),
-      mApplyAll(0)
+
+class PimCommon::RenameFileDialog::RenameFileDialogPrivate
 {
-    setWindowTitle(i18n( "File Already Exists" ));
-    QVBoxLayout* pLayout = new QVBoxLayout(this);
+public:
+    RenameFileDialogPrivate(const KUrl& _url, RenameFileDialog *qq)
+        : url(_url),
+          applyAll(0),
+          rename(0),
+          suggestNewName(0),
+          nameEdit(0),
+          q(qq)
+    {
 
-    QLabel *label = new QLabel(i18n( "A file named <filename>%1</filename> already exists. Do you want to overwrite it?", url.fileName()),this);
-    pLayout->addWidget(label);
-
-    QHBoxLayout* renameLayout = new QHBoxLayout();
-    pLayout->addLayout(renameLayout);
-
-
-    mNameEdit = new KLineEdit(this);
-    renameLayout->addWidget(mNameEdit);
-    mNameEdit->setText(url.fileName());
-    mSuggestNewName = new KPushButton(i18n("Suggest New &Name"), this);
-    renameLayout->addWidget(mSuggestNewName);
-    connect(mSuggestNewName, SIGNAL(clicked()), this, SLOT(slotSuggestNewNamePressed()));
-
-
-    KPushButton *overWrite = new KPushButton(i18n("&Overwrite"),this);
-    connect(overWrite,SIGNAL(clicked()),this,SLOT(slotOverwritePressed()));
-
-    KPushButton *ignore = new KPushButton(i18n("&Ignore"),this);
-    connect(ignore,SIGNAL(clicked()),this,SLOT(slotIgnorePressed()));
-
-    mRename = new KPushButton(i18n("&Rename"),this);
-    connect(mRename,SIGNAL(clicked()),this,SLOT(slotRenamePressed()));
-
-    KSeparator* separator = new KSeparator(this);
-    pLayout->addWidget(separator);
-
-    QHBoxLayout* layout = new QHBoxLayout();
-    pLayout->addLayout(layout);
-
-    if (multiFiles){
-        mApplyAll = new QCheckBox(i18n("Appl&y to All"), this);
-        connect(mApplyAll, SIGNAL(clicked()), this, SLOT(slotApplyAllPressed()));
-        layout->addWidget(mApplyAll);
-        slotApplyAllPressed();
     }
-    layout->addWidget(mRename);
-    layout->addWidget(overWrite);
-    layout->addWidget(ignore);
-}
+    QString suggestName(const KUrl& baseURL, const QString& oldName);
 
-RenameFileDialog::~RenameFileDialog()
-{
-}
+    KUrl url;
+    QCheckBox *applyAll;
+    KPushButton *rename;
+    KPushButton *suggestNewName;
+    KLineEdit *nameEdit;
+    RenameFileDialog *q;
 
-void RenameFileDialog::slotOverwritePressed()
-{
-    if (mApplyAll && mApplyAll->isChecked()) {
-        done(RENAMEFILE_OVERWRITEALL);
-    } else {
-        done(RENAMEFILE_OVERWRITE);
-    }
-}
+};
 
-void RenameFileDialog::slotIgnorePressed()
-{
-    if (mApplyAll && mApplyAll->isChecked()) {
-        done(RENAMEFILE_IGNOREALL);
-    } else {
-        done(RENAMEFILE_IGNORE);
-    }
-}
-
-void RenameFileDialog::slotRenamePressed()
-{
-    if (mNameEdit->text().isEmpty())
-        return;
-    done(RENAMEFILE_RENAME);
-}
-
-void RenameFileDialog::slotApplyAllPressed()
-{
-    const bool enabled(!mApplyAll->isChecked());
-    mNameEdit->setEnabled(enabled);
-    mSuggestNewName->setEnabled(enabled);
-    mRename->setEnabled(enabled);
-}
-
-void RenameFileDialog::slotSuggestNewNamePressed()
-{
-    if (mNameEdit->text().isEmpty())
-        return;
-
-    KUrl destDirectory(mUrl);
-
-    destDirectory.setPath(destDirectory.directory());
-    mNameEdit->setText(suggestName(destDirectory, mNameEdit->text()));
-}
-
-KUrl RenameFileDialog::newName() const
-{
-    KUrl newDest(mUrl);
-    const QString fileName = mNameEdit->text();
-
-    newDest.setFileName(KIO::encodeFileName(fileName));
-
-    return newDest;
-}
-
-QString RenameFileDialog::suggestName(const KUrl& baseURL, const QString& oldName)
+QString PimCommon::RenameFileDialog::RenameFileDialogPrivate::suggestName(const KUrl& baseURL, const QString& oldName)
 {
     QString dotSuffix, suggestedName;
     QString basename = oldName;
@@ -196,7 +114,116 @@ QString RenameFileDialog::suggestName(const KUrl& baseURL, const QString& oldNam
         return suggestedName;
     else // already exists -> recurse
         return suggestName(baseURL, suggestedName);
+
 }
+
+
+RenameFileDialog::RenameFileDialog(const KUrl& url, bool multiFiles, QWidget * parent)
+    :QDialog(parent), d(new RenameFileDialogPrivate(url, this))
+{
+    setWindowTitle(i18n( "File Already Exists" ));
+    QVBoxLayout* pLayout = new QVBoxLayout(this);
+
+    QLabel *label = new QLabel(i18n( "A file named <filename>%1</filename> already exists. Do you want to overwrite it?", url.fileName()),this);
+    pLayout->addWidget(label);
+
+    QHBoxLayout* renameLayout = new QHBoxLayout();
+    pLayout->addLayout(renameLayout);
+
+
+    d->nameEdit = new KLineEdit(this);
+    renameLayout->addWidget(d->nameEdit);
+    d->nameEdit->setClearButtonShown(true);
+    d->nameEdit->setText(url.fileName());
+    d->suggestNewName = new KPushButton(i18n("Suggest New &Name"), this);
+    renameLayout->addWidget(d->suggestNewName);
+    connect(d->suggestNewName, SIGNAL(clicked()), this, SLOT(slotSuggestNewNamePressed()));
+
+
+    KPushButton *overWrite = new KPushButton(i18n("&Overwrite"),this);
+    connect(overWrite,SIGNAL(clicked()),this,SLOT(slotOverwritePressed()));
+
+    KPushButton *ignore = new KPushButton(i18n("&Ignore"),this);
+    connect(ignore,SIGNAL(clicked()),this,SLOT(slotIgnorePressed()));
+
+    d->rename = new KPushButton(i18n("&Rename"),this);
+    connect(d->rename,SIGNAL(clicked()),this,SLOT(slotRenamePressed()));
+
+    KSeparator* separator = new KSeparator(this);
+    pLayout->addWidget(separator);
+
+    QHBoxLayout* layout = new QHBoxLayout();
+    pLayout->addLayout(layout);
+
+    if (multiFiles){
+        d->applyAll = new QCheckBox(i18n("Appl&y to All"), this);
+        connect(d->applyAll, SIGNAL(clicked()), this, SLOT(slotApplyAllPressed()));
+        layout->addWidget(d->applyAll);
+        slotApplyAllPressed();
+    }
+    layout->addWidget(d->rename);
+    layout->addWidget(overWrite);
+    layout->addWidget(ignore);
+}
+
+RenameFileDialog::~RenameFileDialog()
+{
+}
+
+void RenameFileDialog::slotOverwritePressed()
+{
+    if (d->applyAll && d->applyAll->isChecked()) {
+        done(RENAMEFILE_OVERWRITEALL);
+    } else {
+        done(RENAMEFILE_OVERWRITE);
+    }
+}
+
+void RenameFileDialog::slotIgnorePressed()
+{
+    if (d->applyAll && d->applyAll->isChecked()) {
+        done(RENAMEFILE_IGNOREALL);
+    } else {
+        done(RENAMEFILE_IGNORE);
+    }
+}
+
+void RenameFileDialog::slotRenamePressed()
+{
+    if (d->nameEdit->text().isEmpty())
+        return;
+    done(RENAMEFILE_RENAME);
+}
+
+void RenameFileDialog::slotApplyAllPressed()
+{
+    const bool enabled(!d->applyAll->isChecked());
+    d->nameEdit->setEnabled(enabled);
+    d->suggestNewName->setEnabled(enabled);
+    d->rename->setEnabled(enabled);
+}
+
+void RenameFileDialog::slotSuggestNewNamePressed()
+{
+    if (d->nameEdit->text().isEmpty())
+        return;
+
+    KUrl destDirectory(d->url);
+
+    destDirectory.setPath(destDirectory.directory());
+    d->nameEdit->setText(d->suggestName(destDirectory, d->nameEdit->text()));
+}
+
+KUrl RenameFileDialog::newName() const
+{
+    KUrl newDest(d->url);
+    const QString fileName = d->nameEdit->text();
+
+    newDest.setFileName(KIO::encodeFileName(fileName));
+
+    return newDest;
+}
+
 
 #include "renamefiledialog.moc"
 

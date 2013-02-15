@@ -39,7 +39,7 @@ class KPushButton;
 class KLineEdit;
 
 namespace PimCommon {
-
+class RenameFileDialogPrivate;
 class PIMCOMMON_EXPORT RenameFileDialog : public QDialog
 {
     Q_OBJECT
@@ -66,13 +66,9 @@ private Q_SLOTS:
     void slotSuggestNewNamePressed();
 
 private:
-    QString suggestName(const KUrl& baseURL, const QString& oldName);
-
-    KUrl mUrl;
-    QCheckBox *mApplyAll;
-    KPushButton *mRename;
-    KPushButton *mSuggestNewName;
-    KLineEdit *mNameEdit;
+    //@cond PRIVATE
+    class RenameFileDialogPrivate;
+    RenameFileDialogPrivate *const d;
 };
 }
 
