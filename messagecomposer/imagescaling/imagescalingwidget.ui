@@ -361,9 +361,6 @@
           </item>
           <item>
            <widget class="KLineEdit" name="renameResizedImagePattern">
-            <property name="clickMessage">
-             <string>Specify patterns separate with ';'</string>
-            </property>
             <property name="showClearButton" stdset="0">
              <bool>true</bool>
             </property>
