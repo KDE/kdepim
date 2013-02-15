@@ -74,10 +74,10 @@ QString PimCommon::RenameFileDialog::RenameFileDialogPrivate::suggestName(const 
     const QChar spacer(' ');
 
     //ignore dots at the beginning, that way "..aFile.tar.gz" will become "..aFile 1.tar.gz" instead of " 1..aFile.tar.gz"
-    int index = basename.indexOf('.');
+    int index = basename.indexOf(QLatin1Char('.'));
     int continous = 0;
     while (continous == index) {
-        index = basename.indexOf('.', index + 1);
+        index = basename.indexOf(QLatin1Char('.'), index + 1);
         ++continous;
     }
 
@@ -94,14 +94,14 @@ QString PimCommon::RenameFileDialog::RenameFileDialogPrivate::suggestName(const 
         const int number = tmp.toInt(&ok);
 
         if (!ok) {  // ok there is no number
-            suggestedName = basename + spacer + '1' + dotSuffix;
+            suggestedName = basename + spacer + QLatin1Char('1') + dotSuffix;
         } else {
             // yes there's already a number behind the spacer so increment it by one
             basename.replace(pos + 1, tmp.length(), QString::number(number + 1));
             suggestedName = basename + dotSuffix;
         }
     } else // no spacer yet
-        suggestedName = basename + spacer + '1' + dotSuffix ;
+        suggestedName = basename + spacer + QLatin1Char('1') + dotSuffix ;
 
     // Check if suggested name already exists
     bool exists = false;
