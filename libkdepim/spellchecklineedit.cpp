@@ -208,7 +208,7 @@ void SpellCheckLineEdit::insertLanguageMenu(QMenu* contextMenu)
 
     if (spellCheckAction)
     {
-        QMenu* languagesMenu = new QMenu(i18n("Spell Checking Language"), this);
+        QMenu* languagesMenu = new QMenu(i18n("Spell Checking Language"), contextMenu);
         QActionGroup* languagesGroup = new QActionGroup(languagesMenu);
         languagesGroup->setExclusive(true);
 
