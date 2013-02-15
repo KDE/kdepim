@@ -333,13 +333,17 @@ bool MailClient::send( const KPIMIdentities::Identity &identity,
   MailTransport::MessageQueueJob *qjob = new MailTransport::MessageQueueJob( this );
   qjob->transportAttribute().setTransportId( transportId );
 
-  const Akonadi::Collection sentCollection( identity.fcc().toLongLong() );
-  if (sentCollection.isValid()) {
-      qjob->sentBehaviourAttribute().setSentBehaviour( MailTransport::SentBehaviourAttribute::MoveToCollection );
-      qjob->sentBehaviourAttribute().setMoveToCollection( sentCollection );
+  if (identity.disabledFcc()) {
+      qjob->sentBehaviourAttribute().setSentBehaviour( MailTransport::SentBehaviourAttribute::Delete );
   } else {
-      qjob->sentBehaviourAttribute().setSentBehaviour(
-                  MailTransport::SentBehaviourAttribute::MoveToDefaultSentCollection );
+      const Akonadi::Collection sentCollection( identity.fcc().toLongLong() );
+      if (sentCollection.isValid()) {
+          qjob->sentBehaviourAttribute().setSentBehaviour( MailTransport::SentBehaviourAttribute::MoveToCollection );
+          qjob->sentBehaviourAttribute().setMoveToCollection( sentCollection );
+      } else {
+          qjob->sentBehaviourAttribute().setSentBehaviour(
+                      MailTransport::SentBehaviourAttribute::MoveToDefaultSentCollection );
+      }
   }
 
   if ( transport && transport->specifySenderOverwriteAddress() ) {
