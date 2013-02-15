@@ -70,8 +70,6 @@ bool Utils::resizeImage(MessageCore::AttachmentPart::Ptr part)
             return false;
         }
     }
-
-
     return true;
 }
 
