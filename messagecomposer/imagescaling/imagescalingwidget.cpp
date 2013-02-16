@@ -98,7 +98,7 @@ void ImageScalingWidget::slotHelpLinkClicked(const QString&)
 {
     const QString help =
       i18n( "<qt>"
-            "<p>Here you can define image filename."
+            "<p>Here you can define image filename. "
             "You can use:</p>"
             "<ul>"
             "<li>%t set current time</li>"
