@@ -79,6 +79,8 @@
 static const unsigned int keyLengths[] = {
   1024, 1532, 2048, 3072, 4096
 };
+#define DEFAULT_KEY_LENGTH 2048
+
 static const unsigned int numKeyLengths = sizeof keyLengths / sizeof *keyLengths;
 
 static QString attributeLabel( const QString & attr, bool required ) {
@@ -137,8 +139,12 @@ CertificateWizardImpl::CertificateWizardImpl( QWidget* parent,  const char* name
     connect( insertAddressButton, SIGNAL( clicked() ),
 	     this, SLOT( slotSetValuesFromWhoAmI() ) );
 
-    for ( unsigned int i = 0 ; i < numKeyLengths ; ++i )
+    for ( unsigned int i = 0 ; i < numKeyLengths ; ++i ) {
       keyLengthCB->insertItem( i18n("%n bit", "%n bits", keyLengths[i] ) );
+      if ( keyLengths[i] == DEFAULT_KEY_LENGTH ) {
+        keyLengthCB->setCurrentItem( i );
+      }
+    }
 }
 
 static bool requirementsAreMet( const CertificateWizardImpl::AttrPairList & list ) {
