@@ -73,14 +73,14 @@ void ArchiveMailAgent::mailCollectionRemoved(const Akonadi::Collection& collecti
 void ArchiveMailAgent::showConfigureDialog(qlonglong windowId)
 {
   ArchiveMailDialog *dialog = new ArchiveMailDialog();
-  if(windowId) {
+  if (windowId) {
 #ifndef Q_WS_WIN
     KWindowSystem::setMainWindow( dialog, windowId );
 #else
     KWindowSystem::setMainWindow( dialog, (HWND)windowId );
 #endif
   }
-  if(dialog->exec()) {
+  if (dialog->exec()) {
     mArchiveManager->load();
   }
   delete dialog;

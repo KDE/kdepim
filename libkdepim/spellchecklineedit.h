@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Montel Laurent <montel@kde.org>
+ * Copyright (c) 2011-2012-2013 Montel Laurent <montel@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -38,44 +38,46 @@ namespace KPIM {
 
 class KDEPIM_EXPORT SpellCheckLineEdit : public KTextEdit
 {
-  Q_OBJECT
+    Q_OBJECT
 
 public:
-  /**
+    /**
    * Constructs a SpellCheckLineEdit object.
    * @param parent of widget
    * @param configFile config file name for spell checking
    */
-  explicit SpellCheckLineEdit(QWidget* parent, const QString& configFile);
-  /**
+    explicit SpellCheckLineEdit(QWidget* parent, const QString& configFile);
+    /**
    * Destructor
    */
-  ~SpellCheckLineEdit();
-  
-protected:
-  void createHighlighter();
+    ~SpellCheckLineEdit();
 
-  QSize sizeHint() const;
-  QSize minimumSizeHint() const;
-  void keyPressEvent(QKeyEvent*);
-  void insertFromMimeData ( const QMimeData * source );
+    bool activateLanguageMenu() const;
+    void setActivateLanguageMenu(bool activate);
+protected:
+    void createHighlighter();
+
+    QSize sizeHint() const;
+    QSize minimumSizeHint() const;
+    void keyPressEvent(QKeyEvent*);
+    void insertFromMimeData ( const QMimeData * source );
 
 protected Q_SLOTS:
-  void insertLanguageMenu(QMenu* contextMenu);
-  void languageSelected();
+    void insertLanguageMenu(QMenu* contextMenu);
+    void languageSelected();
 
 Q_SIGNALS:
-  /**
+    /**
    * Emitted when the user uses the up arrow in the first line. The application
    * should then put the focus on the widget above the text edit.
    */
-  void focusUp();
-  
-  void focusDown();
+    void focusUp();
+
+    void focusDown();
 
 private:
-  class Private;
-  Private *const d;
+    class Private;
+    Private *const d;
 
 };
 }

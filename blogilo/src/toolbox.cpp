@@ -56,7 +56,6 @@ public:
 Toolbox::Toolbox( QWidget *parent )
     : QWidget( parent ), d(new Private)
 {
-    kDebug();
     d->mCurrentBlogId = -1;
     if ( parent )
         d->statusbar = qobject_cast<KXmlGuiWindow*>( parent )->statusBar();
@@ -94,7 +93,6 @@ Toolbox::Toolbox( QWidget *parent )
 
 Toolbox::~Toolbox()
 {
-    kDebug();
     delete d;
 }
 
@@ -157,7 +155,6 @@ void Toolbox::slotUpdateEntries(int count)
 
 void Toolbox::slotLoadEntriesFromDB( int blog_id )
 {
-    kDebug();
     if ( blog_id == -1 ) {
         kDebug() << "Blog Id doesn't set correctly";
         return;
@@ -183,7 +180,6 @@ void Toolbox::slotLoadEntriesFromDB( int blog_id )
 
 void Toolbox::slotLoadCategoryListFromDB( int blog_id )
 {
-    kDebug();
     if ( blog_id == -1 ) {
         kDebug() << "Blog Id do not sets correctly";
         return;
@@ -239,7 +235,6 @@ void Toolbox::slotError(const QString& errorMessage)
 
 void Toolbox::clearFields()
 {
-    kDebug();
     clearCatList();
     lstEntriesList->clear();
     txtCatTags->clear();
@@ -256,7 +251,6 @@ void Toolbox::clearFields()
 
 void Toolbox::resetFields()
 {
-    kDebug();
     unCheckCatList();
     txtCatTags->clear();
     chkOptionsTime->setChecked( false );
@@ -272,7 +266,6 @@ void Toolbox::resetFields()
 
 void Toolbox::clearCatList()
 {
-    kDebug();
     foreach( CatCheckBox* cat, d->listCategoryCheckBoxes ){
         cat->deleteLater();
     }
@@ -281,7 +274,6 @@ void Toolbox::clearCatList()
 
 void Toolbox::getFieldsValue( BilboPost* currentPost )
 {
-    kDebug();
     currentPost->setCategoryList( selectedCategories() );
     currentPost->setTags( currentTags() );
     currentPost->setModifyTimeStamp( chkOptionsTime->isChecked() );
@@ -313,9 +305,6 @@ void Toolbox::getFieldsValue( BilboPost* currentPost )
 
 void Toolbox::setFieldsValue( BilboPost* post )
 {
-    kDebug();
-//     kDebug()<<"New Post is: "<<post.toString();
-    //delete currentPost;
     if ( post == 0 ) {
         resetFields();
         kDebug()<<"post is NULL";
@@ -347,7 +336,6 @@ void Toolbox::setFieldsValue( BilboPost* post )
 
 QList< Category > Toolbox::selectedCategories() const
 {
-    kDebug();
     QList<Category> list;
     const int count = d->listCategoryCheckBoxes.count();
     for ( int i = 0; i < count; ++i ) {
@@ -359,9 +347,8 @@ QList< Category > Toolbox::selectedCategories() const
 
 QStringList Toolbox::selectedCategoriesTitle() const
 {
-    kDebug();
     QStringList list;
-    int count = d->listCategoryCheckBoxes.count();
+    const int count = d->listCategoryCheckBoxes.count();
     for ( int i = 0; i < count; ++i ) {
         if ( d->listCategoryCheckBoxes.at(i)->isChecked() )
             list.append( d->listCategoryCheckBoxes.at(i)->category().name );
@@ -381,7 +368,6 @@ void Toolbox::setSelectedCategories( const QStringList &list )
 
 QStringList Toolbox::currentTags()
 {
-    kDebug();
     QStringList t = txtCatTags->text().split( QRegExp( QString::fromUtf8(",|،") ), QString::SkipEmptyParts );
     for ( int i = 0; i < t.count() ; ++i ) {
         t[i] = t[i].trimmed();
@@ -391,8 +377,6 @@ QStringList Toolbox::currentTags()
 
 void Toolbox::slotEntrySelected( QListWidgetItem * item )
 {
-    kDebug();
-//     setFieldsValue(*post);
     BilboPost post = DBMan::self()->getPostInfo( item->data( 32 ).toInt() );
     kDebug() << "Emiting sigEntrySelected...";
     Q_EMIT sigEntrySelected( post, d->mCurrentBlogId );
@@ -465,7 +449,6 @@ void Toolbox::slotLocalEntrySelected( QTreeWidgetItem* item,int column )
 
 void Toolbox::slotRemoveLocalEntry()
 {
-    kDebug();
     if (localEntries->currentItem()) {
         if ( KMessageBox::warningYesNo(this, i18n("Are you sure you want to remove the selected local entry?"))
             == KMessageBox::No )
@@ -484,7 +467,6 @@ void Toolbox::slotRemoveLocalEntry()
 
 void Toolbox::clearEntries()
 {
-    kDebug();
     if ( d->mCurrentBlogId == -1 )
         return;
     if ( KMessageBox::warningContinueCancel(this, i18n("Are you sure you want to clear the list of entries?")) ==

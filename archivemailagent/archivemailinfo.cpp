@@ -58,7 +58,7 @@ QString ArchiveMailInfo::dirArchive() const
 {
   const QDir dir(url().path());
   QString dirPath = url().path();
-  if(!dir.exists()) {
+  if (!dir.exists()) {
     dirPath = QDir::homePath();
     qDebug()<<" Path doesn't exist"<<dir.path();
   }

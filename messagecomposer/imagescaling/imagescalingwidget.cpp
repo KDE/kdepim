@@ -98,12 +98,14 @@ void ImageScalingWidget::slotHelpLinkClicked(const QString&)
 {
     const QString help =
       i18n( "<qt>"
-            "<p>Here you can define image filename.</p>"
-            "<p>You can use:"
-            "<p> - %t set current time</p>"
-            "<p> - %d set current date</p>"
-            "<p> - %n original filename</p>"
-            "<p> - %e extension</p>"
+            "<p>Here you can define image filename. "
+            "You can use:</p>"
+            "<ul>"
+            "<li>%t set current time</li>"
+            "<li>%d set current date</li>"
+            "<li>%n original filename</li>"
+            "<li>%e extension</li>"
+            "</ul>"
             "</qt>" );
 
     QWhatsThis::showText( QCursor::pos(), help );

@@ -23,7 +23,6 @@
 
 #include <gpgme++/key.h>
 #include <messageviewer/objecttreeemptysource.h>
-#include <boost/graph/graph_concepts.hpp>
 
 namespace MessageCore {
 

@@ -44,7 +44,7 @@ ArchiveJob::~ArchiveJob()
 
 void ArchiveJob::execute()
 {
-  if(mInfo) {
+  if (mInfo) {
     MailCommon::BackupJob *backupJob = new MailCommon::BackupJob();
     Akonadi::Collection collection(mInfo->saveCollectionId());
     backupJob->setRootFolder( MailCommon::Util::updatedCollection(collection) );

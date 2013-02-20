@@ -77,6 +77,7 @@ set( messagecomposer_src
      imagescaling/imagescalingjob.cpp
      imagescaling/imagescalingwidget.cpp
      imagescaling/imagescalingutils.cpp
+     imagescaling/imagescalingselectformat.cpp
 )
 
 kde4_add_ui_files(messagecomposer_src

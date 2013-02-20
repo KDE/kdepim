@@ -46,10 +46,17 @@ class SpellCheckLineEdit::Private
 {
 public:
     Private()
-        : speller(0)
+        : activateLanguageMenu(true),
+          speller(0)
     {
     }
+    ~Private()
+    {
+        delete speller;
+    }
+
     QString configFile;
+    bool activateLanguageMenu;
     Sonnet::Speller* speller;
 };
 
@@ -82,6 +89,17 @@ SpellCheckLineEdit::~SpellCheckLineEdit()
 {
     delete d;
 }
+
+bool SpellCheckLineEdit::activateLanguageMenu() const
+{
+    return d->activateLanguageMenu;
+}
+
+void SpellCheckLineEdit::setActivateLanguageMenu(bool activate)
+{
+    d->activateLanguageMenu = activate;
+}
+
 
 void SpellCheckLineEdit::createHighlighter()
 {
@@ -174,6 +192,9 @@ static inline QString i18n_kdelibs4(const char *str) { return ki18n(str).toStrin
 
 void SpellCheckLineEdit::insertLanguageMenu(QMenu* contextMenu)
 {
+    if (!d->activateLanguageMenu)
+        return;
+
     QAction* spellCheckAction = 0;
 
     foreach (QAction* action, contextMenu->actions())
@@ -187,7 +208,7 @@ void SpellCheckLineEdit::insertLanguageMenu(QMenu* contextMenu)
 
     if (spellCheckAction)
     {
-        QMenu* languagesMenu = new QMenu(i18n("Spell Checking Language"), this);
+        QMenu* languagesMenu = new QMenu(i18n("Spell Checking Language"), contextMenu);
         QActionGroup* languagesGroup = new QActionGroup(languagesMenu);
         languagesGroup->setExclusive(true);
 

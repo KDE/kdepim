@@ -47,7 +47,7 @@
 #include <QStringList>
 #include <QVariant>
 #include <QFileInfo>
-//Added by qt3to4:
+
 #include <QList>
 
 #include <map>

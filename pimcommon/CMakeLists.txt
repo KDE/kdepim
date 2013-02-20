@@ -19,6 +19,7 @@ set(libpimcommon_SRCS
   #Laurent: disable it we can't use it directly now
   #translator/babelfishtranslator.cpp
   translator/googletranslator.cpp
+  renamefiledialog.cpp
 )
 
 macro(add_resource_iface _kcfgFile _ifaceName _className)

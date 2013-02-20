@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Montel Laurent <montel@kde.org>
+ * Copyright (c) 2011-2012-2013 Montel Laurent <montel@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -31,21 +31,23 @@
 
 #include <QDialog>
 #include <KUrl>
+
+#include "pimcommon_export.h"
+
 class QCheckBox;
-class QPushButton;
+class KPushButton;
 class KLineEdit;
 
-namespace MessageViewer {
-
-class RenameFileDialog : public QDialog
+namespace PimCommon {
+class RenameFileDialogPrivate;
+class PIMCOMMON_EXPORT RenameFileDialog : public QDialog
 {
     Q_OBJECT
 public:
     explicit RenameFileDialog(const KUrl& url, bool multiFiles, QWidget * parent);
     ~RenameFileDialog();
 
-    enum RenameFileDialogResult
-    {
+    enum RenameFileDialogResult {
         RENAMEFILE_IGNORE = 0,
         RENAMEFILE_IGNOREALL = 1,
         RENAMEFILE_RENAME = 2,
@@ -62,14 +64,11 @@ private Q_SLOTS:
     void slotRenamePressed();
     void slotApplyAllPressed();
     void slotSuggestNewNamePressed();
-private:
-    QString suggestName(const KUrl& baseURL, const QString& oldName);
 
-    KUrl mUrl;
-    QCheckBox *mApplyAll;
-    QPushButton *mRename;
-    QPushButton *mSuggestNewName;
-    KLineEdit *mNameEdit;
+private:
+    //@cond PRIVATE
+    class RenameFileDialogPrivate;
+    RenameFileDialogPrivate *const d;
 };
 }
 

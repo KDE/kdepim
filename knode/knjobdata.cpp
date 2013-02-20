@@ -24,7 +24,7 @@
 #include "knnntpaccount.h"
 #include "scheduler.h"
 
-//Added by qt3to4:
+
 #include <QTimer>
 
 KNJobConsumer::KNJobConsumer()
