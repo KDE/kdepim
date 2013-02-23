@@ -576,7 +576,7 @@ QList< Message::Composer* > Message::ComposerViewBase::generateCryptoMessages ()
   signSomething = determineWhetherToSign( doSignCompletely, keyResolver,signSomething, result );
   if(!result) {
       /// TODO handle failure
-      kDebug() << "failed to resolve keys! oh noes";
+      kDebug() << "determineWhetherToSign: failed to resolve keys! oh noes";
       emit failed( i18n( "Failed to resolve keys. Please report a bug." ) );
       return QList< Message::Composer*>();
   }
@@ -584,7 +584,7 @@ QList< Message::Composer* > Message::ComposerViewBase::generateCryptoMessages ()
   encryptSomething = determineWhetherToEncrypt( doEncryptCompletely,keyResolver,encryptSomething, signSomething, result );
   if(!result) {
       /// TODO handle failure
-      kDebug() << "failed to resolve keys! oh noes";
+      kDebug() << "determineWhetherToEncrypt: failed to resolve keys! oh noes";
       emit failed( i18n( "Failed to resolve keys. Please report a bug." ) );
       return QList< Message::Composer*>();
   }
@@ -594,9 +594,13 @@ QList< Message::Composer* > Message::ComposerViewBase::generateCryptoMessages ()
   }
 
 
-  if ( keyResolver->resolveAllKeys( signSomething, encryptSomething ) != Kpgp::Ok ) {
+  const Kpgp::Result kpgpResult = keyResolver->resolveAllKeys( signSomething, encryptSomething );
+  if ( kpgpResult == Kpgp::Canceled ) {
+    kDebug() << "resolveAllKeys: one key resolution canceled by user";
+    return QList< Message::Composer*>();
+  } else if ( kpgpResult != Kpgp::Ok ) {
     /// TODO handle failure
-    kDebug() << "failed to resolve keys! oh noes";
+    kDebug() << "resolveAllKeys: failed to resolve keys! oh noes";
     emit failed( i18n( "Failed to resolve keys. Please report a bug." ) );
     return QList< Message::Composer*>();
   }

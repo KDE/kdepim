@@ -183,7 +183,7 @@ void EncryptJob::process()
   // FIXME: Make async!
   const GpgME::EncryptionResult res = seJob->exec( d->keys,
                                                    content,
-                                                   false,
+                                                   true, // 'alwaysTrust' provided keys
                                                    encryptedBody );
 
   if ( res.error() ) {
