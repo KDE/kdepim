@@ -59,9 +59,7 @@ bool Utils::resizeImage(MessageCore::AttachmentPart::Ptr part)
 
     if (MessageComposer::MessageComposerSettings::self()->skipImageLowerSizeEnabled() ) {
         if (part->size() > MessageComposer::MessageComposerSettings::self()->skipImageLowerSize() *1024) {
-            if (part->mimeType() == "image/gif" ||
-                part->mimeType() == "image/jpeg" ||
-                part->mimeType() == "image/png" ) {
+            if (hasImage(part->mimeType()) ) {
                 return true;
             } else {
                 return false;
@@ -104,17 +102,17 @@ bool Utils::filterRecipients(const QStringList& recipients)
         return false;
 
     if (MessageComposer::MessageComposerSettings::self()->filterRecipientType() == MessageComposer::MessageComposerSettings::EnumFilterRecipientType::NoFilter) {
-        return false;
+        return true;
     }
 
     const QString doNotResizeEmailsPattern = MessageComposer::MessageComposerSettings::self()->doNotResizeEmailsPattern();
     const QString resizeEmailsPattern = MessageComposer::MessageComposerSettings::self()->resizeEmailsPattern();
     if (doNotResizeEmailsPattern.isEmpty() && resizeEmailsPattern.isEmpty())
-        return false;
+        return true;
 
     switch(MessageComposer::MessageComposerSettings::self()->filterRecipientType()) {
     case MessageComposer::MessageComposerSettings::EnumFilterRecipientType::NoFilter:
-        return false;
+        return true;
     case MessageComposer::MessageComposerSettings::EnumFilterRecipientType::ResizeEachEmailsContainsPattern:
         if (resizeEmailsPattern.isEmpty())
             return false;
@@ -153,5 +151,25 @@ bool Utils::filterRecipients(const QStringList& recipients)
         return false;
     }
 
+    return false;
+}
+
+bool Utils::hasImage(const QByteArray &mimetype)
+{
+    if ( mimetype == "image/gif" ||
+         mimetype == "image/jpeg" ||
+         mimetype == "image/png" ) {
+        return true;
+    }
+    return false;
+}
+
+bool Utils::containsImage(const MessageCore::AttachmentPart::List &parts)
+{
+    foreach( MessageCore::AttachmentPart::Ptr part, parts ) {
+        if (hasImage(part->mimeType())) {
+            return true;
+        }
+    }
     return false;
 }
