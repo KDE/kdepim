@@ -392,13 +392,24 @@ void Message::ComposerViewBase::slotEmailAddressResolved ( KJob* job )
 
   bool autoresizeImage = false;
   if(autoResize && MessageComposer::MessageComposerSettings::self()->autoResizeImageEnabled()) {
-    if(MessageComposer::MessageComposerSettings::self()->askBeforeResizing()) {
-       const int rc = KMessageBox::warningYesNo( m_parentWidget,i18n("Do you want to resize images?"),
-                                                 i18n("Auto Resize Images"), KStandardGuiItem::yes(), KStandardGuiItem::no());
-       if(rc == KMessageBox::Yes) {
-           autoresizeImage = true;
-       }
-    }
+      bool hasImage = false;
+      foreach( MessageCore::AttachmentPart::Ptr part, m_attachmentModel->attachments() ) {
+          if ( part->mimeType() == "image/gif" ||
+               part->mimeType() == "image/jpeg" ||
+               part->mimeType() == "image/png" ) {
+              hasImage = true;
+              break;
+          }
+      }
+      if(hasImage && MessageComposer::MessageComposerSettings::self()->askBeforeResizing()) {
+          const int rc = KMessageBox::warningYesNo( m_parentWidget,i18n("Do you want to resize images?"),
+                                                    i18n("Auto Resize Images"), KStandardGuiItem::yes(), KStandardGuiItem::no());
+          if(rc == KMessageBox::Yes) {
+              autoresizeImage = true;
+          }
+      } else {
+          autoresizeImage = false;
+      }
   }
   // Compose each message and prepare it for queueing, sending, or storing
   foreach( Message::Composer* composer, m_composers ) {
