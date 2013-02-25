@@ -338,7 +338,6 @@ void Message::ComposerViewBase::slotEmailAddressResolved ( KJob* job )
 
   bool autoresizeImage = MessageComposer::MessageComposerSettings::self()->autoResizeImageEnabled();
 
-
   const MessageComposer::EmailAddressResolveJob *resolveJob = qobject_cast<MessageComposer::EmailAddressResolveJob*>( job );
   if( mSaveIn == MessageSender::SaveInNone ) {
     mExpandedFrom = resolveJob->expandedFrom();
@@ -405,13 +404,17 @@ void Message::ComposerViewBase::slotEmailAddressResolved ( KJob* job )
 
   if (autoresizeImage) {
     if (MessageComposer::MessageComposerSettings::self()->askBeforeResizing()) {
-       const int rc = KMessageBox::warningYesNo( m_parentWidget,i18n("Do you want to resize images?"),
-                                                 i18n("Auto Resize Images"), KStandardGuiItem::yes(), KStandardGuiItem::no());
-       if (rc == KMessageBox::Yes) {
-           autoresizeImage = true;
-       } else {
-           autoresizeImage = false;
-       }
+        if (MessageComposer::Utils::containsImage(m_attachmentModel->attachments())) {
+            const int rc = KMessageBox::warningYesNo( m_parentWidget,i18n("Do you want to resize images?"),
+                                                      i18n("Auto Resize Images"), KStandardGuiItem::yes(), KStandardGuiItem::no());
+            if (rc == KMessageBox::Yes) {
+                autoresizeImage = true;
+            } else {
+                autoresizeImage = false;
+            }
+        } else {
+            autoresizeImage = false;
+        }
     }
   }
   // Compose each message and prepare it for queueing, sending, or storing
