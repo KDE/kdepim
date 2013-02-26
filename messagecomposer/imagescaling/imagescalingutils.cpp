@@ -51,9 +51,15 @@ bool Utils::resizeImage(MessageCore::AttachmentPart::Ptr part)
         const QString formatsType = MessageComposer::MessageComposerSettings::self()->resizeImagesWithFormatsType();
         if (!formatsType.isEmpty()) {
             const QStringList lstFormat = formatsType.split(QLatin1Char(';'));
+            bool willResizeImage = false;
             Q_FOREACH (const QString& type, lstFormat) {
-                //TODO improve it.
+                if(QString::fromLatin1(part->mimeType()) == type) {
+                    willResizeImage = true;
+                    break;
+                }
             }
+            if(!willResizeImage)
+                return false;
         }
     }
 
