@@ -37,6 +37,8 @@ ImageScalingSelectFormatDialog::ImageScalingSelectFormatDialog(QWidget *parent)
 
     QBoxLayout *topLayout = new QVBoxLayout( w );
     topLayout->setSpacing( spacingHint() );
+    mListWidget = new QListWidget;
+    topLayout->addWidget(mListWidget);
     initialize();
 }
 
@@ -44,19 +46,20 @@ ImageScalingSelectFormatDialog::~ImageScalingSelectFormatDialog()
 {
 }
 
+void ImageScalingSelectFormatDialog::addImageFormat(const QString &format, const QString &mimetype)
+{
+    QListWidgetItem *item = new QListWidgetItem(format);
+    item->setFlags(item->flags() | Qt::ItemIsUserCheckable );
+    item->setData(ImageScalingSelectFormatDialog::ImageRole, mimetype);
+    item->setCheckState(Qt::Unchecked);
+    mListWidget->addItem(item);
+}
+
 void ImageScalingSelectFormatDialog::initialize()
 {
-    QListWidgetItem *item = new QListWidgetItem(QLatin1String("PNG"));
-    item->setData(ImageScalingSelectFormatDialog::ImageRole, QLatin1String("image/png"));
-    mListWidget->addItem(item);
-
-    item = new QListWidgetItem(QLatin1String("JPEG"));
-    item->setData(ImageScalingSelectFormatDialog::ImageRole, QLatin1String("image/jpeg"));
-    mListWidget->addItem(item);
-
-    item = new QListWidgetItem(QLatin1String("GIF"));
-    item->setData(ImageScalingSelectFormatDialog::ImageRole, QLatin1String("image/gif"));
-    mListWidget->addItem(item);
+    addImageFormat(QLatin1String("PNG"), QLatin1String("image/png"));
+    addImageFormat(QLatin1String("JPEG"), QLatin1String("image/jpeg"));
+    addImageFormat(QLatin1String("GIF"), QLatin1String("image/gif"));
 }
 
 QString ImageScalingSelectFormatDialog::format() const
@@ -67,7 +70,6 @@ QString ImageScalingSelectFormatDialog::format() const
 
 void ImageScalingSelectFormatDialog::setFormat(const QString &format)
 {
-    mListWidget->clear();
     const QStringList listFormat = format.split(QLatin1Char(';'));
     Q_FOREACH (const QString &str, listFormat) {
 
@@ -79,7 +81,7 @@ void ImageScalingSelectFormatDialog::setFormat(const QString &format)
 ImageScalingSelectFormat::ImageScalingSelectFormat(QWidget *parent)
     : QWidget(parent)
 {
-    QHBoxLayout *lay = new QHBoxLayout;
+    QHBoxLayout *lay = new QHBoxLayout(this);
     mFormat = new KLineEdit;
     mFormat->setReadOnly(true);
     lay->addWidget(mFormat);

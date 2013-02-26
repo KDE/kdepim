@@ -21,7 +21,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
@@ -334,13 +334,7 @@
            </widget>
           </item>
           <item>
-           <widget class="KLineEdit" name="resizeImageWithFormatsType">
-            <property name="clickMessage">
-             <string>Specify format separate with ';'</string>
-            </property>
-            <property name="showClearButton" stdset="0">
-             <bool>true</bool>
-            </property>
+           <widget class="MessageComposer::ImageScalingSelectFormat" name="resizeImageWithFormatsType">
            </widget>
           </item>
          </layout>
@@ -479,6 +473,11 @@
    <extends>QLineEdit</extends>
    <header>klineedit.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>MessageComposer::ImageScalingSelectFormat</class>
+   <extends>QWidget</extends>
+   <header>imagescaling/imagescalingselectformat.h</header>
   </customwidget>
   <customwidget>
    <class>KIntSpinBox</class>
