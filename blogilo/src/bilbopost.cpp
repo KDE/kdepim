@@ -38,7 +38,7 @@ public:
 };
 
 BilboPost::BilboPost()
-        : KBlog::BlogPost(), d_ptr(new BilboPostPrivate)
+    : KBlog::BlogPost(), d_ptr(new BilboPostPrivate)
 {
     this->setCreationDateTime( KDateTime::currentLocalDateTime() );
     this->setModificationDateTime( KDateTime::currentLocalDateTime() );
@@ -52,7 +52,7 @@ BilboPost::BilboPost()
 }
 
 BilboPost::BilboPost( const KBlog::BlogPost &post )
-        : KBlog::BlogPost( post ), d_ptr(new BilboPostPrivate)
+    : KBlog::BlogPost( post ), d_ptr(new BilboPostPrivate)
 {
     d_ptr->mId = -1;
     d_ptr->localId = -1;
@@ -60,7 +60,7 @@ BilboPost::BilboPost( const KBlog::BlogPost &post )
 }
 
 BilboPost::BilboPost( const BilboPost &post )
-        : KBlog::BlogPost(post), d_ptr(new BilboPostPrivate)
+    : KBlog::BlogPost(post), d_ptr(new BilboPostPrivate)
 {
     this->setAuthor( post.author() );
     this->setModifyTimeStamp( post.isModifyTimeStamp() );
@@ -106,8 +106,8 @@ void BilboPost::setLocalId(const int localId)
 
 QString BilboPost::toString() const
 {
-//  if(!title().isEmpty())
-//   qDebug("BilboPost::toString: title is %s", this->title());
+    //  if(!title().isEmpty())
+    //   qDebug("BilboPost::toString: title is %s", this->title());
     QString ret;
     ret = "\n******* Post Info **********";
     ret += QString( "\nID: " ) + postId();
@@ -144,7 +144,7 @@ void BilboPost::setCategoryList( const QList< Category > & list )
     QStringList cats;
     const int count = list.count();
     for ( int i = 0; i < count; ++i ) {
-        cats.append( list[i].name );
+        cats.append( list.at(i).name );
     }
     setCategories( cats );
 }

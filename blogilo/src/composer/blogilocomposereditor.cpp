@@ -112,7 +112,7 @@ QList< BilboMedia* > BlogiloComposerEditor::getLocalImages()
 
 void BlogiloComposerEditor::replaceImageSrc(const QString& src, const QString& dest)
 {
-    QString cmd = QString::fromLatin1("replaceImageSrc('%1','%2')").arg(src).arg(dest);
+    const QString cmd = QString::fromLatin1("replaceImageSrc('%1','%2')").arg(src).arg(dest);
     view()->evaluateJavascript(cmd);
 }
 
@@ -147,14 +147,14 @@ void BlogiloComposerEditor::startEditing()
 void BlogiloComposerEditor::execCommand ( const QString &cmd )
 {
     QWebFrame *frame = view()->page()->mainFrame();
-    QString js = QString::fromLatin1( "document.execCommand(\"%1\", false, null)" ).arg ( cmd );
+    const QString js = QString::fromLatin1( "document.execCommand(\"%1\", false, null)" ).arg ( cmd );
     frame->evaluateJavaScript ( js );
 }
 
 void BlogiloComposerEditor::execCommand( const QString &cmd, const QString &arg )
 {
     QWebFrame *frame = view()->page()->mainFrame();
-    QString js = QString::fromLatin1( "document.execCommand(\"%1\", false, \"%2\")" ).arg ( cmd ).arg ( arg );
+    const QString js = QString::fromLatin1( "document.execCommand(\"%1\", false, \"%2\")" ).arg ( cmd ).arg ( arg );
     frame->evaluateJavaScript ( js );
 }
 
