@@ -201,12 +201,8 @@ else()
   set_package_properties(Soprano PROPERTIES DESCRIPTION "C++/Qt4 framework for RDF data" URL "http://soprano.sourceforge.net" TYPE REQUIRED PURPOSE "Storage of semantic data")
   include(SopranoAddOntology)
 
-  find_package(Grantlee QUIET CONFIG)
+  find_package(Grantlee 0.3.0 QUIET CONFIG)
   set_package_properties(Grantlee PROPERTIES DESCRIPTION "The Grantlee Template System" URL "http://www.gitorious.org/grantlee/pages/Home" TYPE OPTIONAL PURPOSE "Templating and theming for KJots and KaddressBook." )
-
-  if(Grantlee_FOUND AND ("${Grantlee_VERSION}" VERSION_GREATER "0.2.0"))
-     set(GRANTLEE_GREATER_0_2 TRUE)
-  endif()
 
   find_package(NepomukCore QUIET CONFIG)
   set_package_properties(NepomukCore PROPERTIES DESCRIPTION "The Nepomuk Core libraries" URL "http://www.kde.org" TYPE REQUIRED PURPOSE "Nepomuk extends the search and tagging functionalities in KMail and Akonadi")
