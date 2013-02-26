@@ -46,12 +46,17 @@ ImageScalingSelectFormatDialog::~ImageScalingSelectFormatDialog()
 
 void ImageScalingSelectFormatDialog::initialize()
 {
-    /*
-    QList<QByteArray> listWriteFormat = QImageWriter::supportedImageFormats();
-    Q_FOREACH(const QByteArray& format, listWriteFormat) {
-        ui->WriteToImageFormat->addItem(QString::fromLatin1(format));
-    }
-    */
+    QListWidgetItem *item = new QListWidgetItem(QLatin1String("PNG"));
+    item->setData(ImageScalingSelectFormatDialog::ImageRole, QLatin1String("image/png"));
+    mListWidget->addItem(item);
+
+    item = new QListWidgetItem(QLatin1String("JPEG"));
+    item->setData(ImageScalingSelectFormatDialog::ImageRole, QLatin1String("image/jpeg"));
+    mListWidget->addItem(item);
+
+    item = new QListWidgetItem(QLatin1String("GIF"));
+    item->setData(ImageScalingSelectFormatDialog::ImageRole, QLatin1String("image/gif"));
+    mListWidget->addItem(item);
 }
 
 QString ImageScalingSelectFormatDialog::format() const

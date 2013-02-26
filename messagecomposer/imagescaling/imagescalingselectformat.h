@@ -35,6 +35,9 @@ public:
     QString format() const;
 
 private:
+    enum {
+        ImageRole = Qt::UserRole + 1
+    };
     void initialize();
     QListWidget *mListWidget;
 };
