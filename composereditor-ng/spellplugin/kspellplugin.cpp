@@ -147,7 +147,7 @@ void KWebSpellChecker::guessesForWord(const QString& word, const QString& contex
 {
     Q_UNUSED(context);
 
-    QStringList words = m_speller->suggest(word);
+    const QStringList words = m_speller->suggest(word);
     guesses = words;
 }
 
