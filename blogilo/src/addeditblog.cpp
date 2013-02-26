@@ -96,7 +96,9 @@ AddEditBlog::AddEditBlog( int blog_id, QWidget *parent, Qt::WindowFlags flags )
         d->ui.txtUser->setText( d->bBlog->username() );
         d->ui.txtPass->setText( d->bBlog->password() );
         d->ui.txtId->setText( d->bBlog->blogid() );
-        d->ui.txtTitle->setText( d->bBlog->title() );
+        QString title = d->bBlog->title();
+        title = title.replace(QLatin1String("&amp;"), QLatin1String("&"));
+        d->ui.txtTitle->setText( title );
         d->ui.comboApi->setCurrentIndex( d->bBlog->api() );
         d->ui.comboDir->setCurrentIndex( d->bBlog->direction() );
         d->ui.txtTitle->setEnabled(true);
