@@ -37,6 +37,8 @@ ImageScalingSelectFormatDialog::ImageScalingSelectFormatDialog(QWidget *parent)
 
     QBoxLayout *topLayout = new QVBoxLayout( w );
     topLayout->setSpacing( spacingHint() );
+    mListWidget = new QListWidget;
+    topLayout->addWidget(mListWidget);
     initialize();
 }
 
@@ -44,37 +46,53 @@ ImageScalingSelectFormatDialog::~ImageScalingSelectFormatDialog()
 {
 }
 
+void ImageScalingSelectFormatDialog::addImageFormat(const QString &format, const QString &mimetype)
+{
+    QListWidgetItem *item = new QListWidgetItem(format);
+    item->setFlags(item->flags() | Qt::ItemIsUserCheckable );
+    item->setData(ImageScalingSelectFormatDialog::ImageRole, mimetype);
+    item->setCheckState(Qt::Unchecked);
+    mListWidget->addItem(item);
+}
+
 void ImageScalingSelectFormatDialog::initialize()
 {
-    /*
-    QList<QByteArray> listWriteFormat = QImageWriter::supportedImageFormats();
-    Q_FOREACH(const QByteArray& format, listWriteFormat) {
-        ui->WriteToImageFormat->addItem(QString::fromLatin1(format));
-    }
-    */
+    addImageFormat(QLatin1String("PNG"), QLatin1String("image/png"));
+    addImageFormat(QLatin1String("JPEG"), QLatin1String("image/jpeg"));
+    addImageFormat(QLatin1String("GIF"), QLatin1String("image/gif"));
 }
 
 QString ImageScalingSelectFormatDialog::format() const
 {
-    //TODO
-    return QString();
+    const int numberOfElement(mListWidget->count());
+    QString formatStr;
+    for (int i=0; i < numberOfElement;++i) {
+        if (mListWidget->item(i)->checkState() == Qt::Checked) {
+            if (!formatStr.isEmpty()) {
+                formatStr += QLatin1Char(';');
+            }
+            formatStr += mListWidget->item(i)->data(ImageScalingSelectFormatDialog::ImageRole).toString();
+        }
+    }
+    return formatStr;
 }
 
 void ImageScalingSelectFormatDialog::setFormat(const QString &format)
 {
-    mListWidget->clear();
     const QStringList listFormat = format.split(QLatin1Char(';'));
-    Q_FOREACH (const QString &str, listFormat) {
-
+    const int numberOfElement(mListWidget->count());
+    for (int i=0; i < numberOfElement;++i) {
+        QListWidgetItem *item = mListWidget->item(i);
+        if (listFormat.contains(item->data(ImageScalingSelectFormatDialog::ImageRole).toString())) {
+            item->setCheckState(Qt::Checked);
+        }
     }
-
-    //TODO
 }
 
 ImageScalingSelectFormat::ImageScalingSelectFormat(QWidget *parent)
     : QWidget(parent)
 {
-    QHBoxLayout *lay = new QHBoxLayout;
+    QHBoxLayout *lay = new QHBoxLayout(this);
     mFormat = new KLineEdit;
     mFormat->setReadOnly(true);
     lay->addWidget(mFormat);

@@ -11,12 +11,7 @@ add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
 
 add_subdirectory( tests )
-if(GRANTLEE_GREATER_0_2)
-  add_definitions(-DGRANTLEE_GREATER_0_2)
-  include_directories(${Grantlee_INCLUDE_DIRS})
-else()
-  message(STATUS "Grantlee > 0.2 was not found. We need Grantlee >= 0.3.0 to improve Plain-text version of HTML messages")
-endif()
+include_directories(${Grantlee_INCLUDE_DIRS})
 
 set( messagecomposer_src
 
@@ -111,9 +106,7 @@ kde4_add_library( messagecomposer ${LIBRARY_TYPE} ${messagecomposer_src} )
 target_link_libraries( messagecomposer ${KDE4_KIO_LIBS} ${KDEPIMLIBS_KMIME_LIBS} ${KDEPIMLIBS_AKONADI_KMIME_LIBS} ${KDEPIMLIBS_AKONADI_LIBS} ${KDEPIMLIBS_MAILTRANSPORT_LIBS} ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS} ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
  messagecore messageviewer templateparser kleo kdepim ${QGPGME_LIBRARIES} )
 
-if(GRANTLEE_GREATER_0_2)
 target_link_libraries( messagecomposer ${Grantlee_GUI_LIBRARIES})
-endif()
 
 set_target_properties( messagecomposer PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 

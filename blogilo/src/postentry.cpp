@@ -361,7 +361,7 @@ bool PostEntry::uploadMediaFiles( Backend *backend )
                 replaceImageSrc( media->localUrl().url(),
                                  media->remoteUrl().url());
             } else {
-                QString err = i18n( "Uploading the media file %1 failed.\n%2",
+                const QString err = i18n( "Uploading the media file %1 failed.\n%2",
                                     media->name(), uploader->errorMessage());
                 emit postPublishingDone( true, err );
                 result = false;

@@ -21,9 +21,11 @@
 
 namespace MessageComposer {
 namespace Utils {
+bool containsImage(const MessageCore::AttachmentPart::List &parts);
 bool resizeImage(MessageCore::AttachmentPart::Ptr part);
 void changeFileName(MessageCore::AttachmentPart::Ptr part);
 bool filterRecipients(const QStringList &recipients);
+bool hasImage(const QByteArray &mimetype);
 }
 
 }

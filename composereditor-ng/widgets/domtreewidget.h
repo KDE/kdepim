@@ -26,8 +26,6 @@
 #include <QWidget>
 class QTreeWidget;
 class QWebView;
-class QTreeWidgetItem;
-class QWebElement;
 
 namespace ComposerEditorNG
 {

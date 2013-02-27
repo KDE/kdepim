@@ -132,6 +132,14 @@
         {% endwith %}
       {% endif %}
 
+      {% for customField in contact.customFieldsUrl %}
+        {% with customField.title as title %}
+        {% with customField.value|safe as value %}
+        {% include "contact_row.html" %}
+        {% endwith %}
+        {% endwith %}
+      {% endfor %}
+
       {% for customField in contact.customFields %}
         {% with customField.title as title %}
         {% with customField.value as value %}

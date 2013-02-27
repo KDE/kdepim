@@ -102,12 +102,6 @@ void FolderTreeWidgetProxyModel::readConfig()
 
 Qt::ItemFlags FolderTreeWidgetProxyModel::flags( const QModelIndex &index ) const
 {
-  if ( !d->filterStr.isEmpty() ) {
-    if ( !index.data().toString().contains( d->filterStr, Qt::CaseInsensitive ) ) {
-      return KRecursiveFilterProxyModel::flags( index ) & ~( Qt::ItemIsSelectable | Qt::ItemIsEnabled );
-    }
-  }
-
   if ( d->enableCheck ) {
       const QModelIndex sourceIndex = mapToSource( index );
       const QModelIndex rowIndex = sourceIndex.sibling( sourceIndex.row(), 0 );

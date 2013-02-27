@@ -23,6 +23,8 @@
 */
 
 #include "addmediadialog.h"
+#include "bilbomedia.h"
+#include "settings.h"
 
 #include <KFileDialog>
 
@@ -32,8 +34,6 @@
 #include <kdebug.h>
 #include <kio/job.h>
 
-#include "bilbomedia.h"
-#include "settings.h"
 
 AddMediaDialog::AddMediaDialog( QWidget *parent ) 
    : KDialog( parent ), media( 0 )  
@@ -61,8 +61,7 @@ AddMediaDialog::~AddMediaDialog()
 
 void AddMediaDialog::slotSelectLocalFile()
 {
-    QString path;
-    path = KFileDialog::getOpenFileName( KUrl(),
+    const QString path = KFileDialog::getOpenFileName( KUrl(),
                                          QString(), this,
                                          i18n("Choose a file") );
     ui.urlReqLineEdit->setText(path);

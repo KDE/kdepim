@@ -40,14 +40,21 @@
 
 #include <QTableWidget>
 #include <QTimer>
-
+#include <QTextDocument>
 static const int TIMEOUT = 45000;
 
 class AddEditBlog::Private
 {
 public:
     Private()
-        : wait(0)
+        : mainW(0),
+          isNewBlog(false),
+          bBlog(0),
+          mBlog(0),
+          mFetchProfileIdTimer(0),
+          mFetchBlogIdTimer(0),
+          mFetchAPITimer(0),
+          wait(0)
     {}
     Ui::AddEditBlogBase ui;
     KTabWidget *mainW;
@@ -57,7 +64,6 @@ public:
     QTimer* mFetchProfileIdTimer;
     QTimer* mFetchBlogIdTimer;
     QTimer* mFetchAPITimer;
-    bool isIdFetched;
     WaitWidget *wait;
     QString tmpBlogUrl;
 };
@@ -96,7 +102,9 @@ AddEditBlog::AddEditBlog( int blog_id, QWidget *parent, Qt::WindowFlags flags )
         d->ui.txtUser->setText( d->bBlog->username() );
         d->ui.txtPass->setText( d->bBlog->password() );
         d->ui.txtId->setText( d->bBlog->blogid() );
-        d->ui.txtTitle->setText( d->bBlog->title() );
+        QString title = d->bBlog->title();
+        title = title.replace(QLatin1String("&amp;"), QLatin1String("&"));
+        d->ui.txtTitle->setText( title );
         d->ui.comboApi->setCurrentIndex( d->bBlog->api() );
         d->ui.comboDir->setCurrentIndex( d->bBlog->direction() );
         d->ui.txtTitle->setEnabled(true);
@@ -176,7 +184,6 @@ void AddEditBlog::autoConfigure()
 
 void AddEditBlog::gotHtml( KJob *job )
 {
-    kDebug();
     if ( !job )
         return;
     if ( job->error() ) {
@@ -188,7 +195,6 @@ void AddEditBlog::gotHtml( KJob *job )
     QString httpData( static_cast<KIO::StoredTransferJob*>( job )->data() );
     job->deleteLater();
 
-    QString textUrl;
     QRegExp rxGData( QString::fromLatin1( "content='blogger' name='generator'" ) );
     if ( rxGData.indexIn( httpData ) != -1 ) {
         kDebug() << "content='blogger' name='generator' matched";
@@ -211,6 +217,7 @@ void AddEditBlog::gotHtml( KJob *job )
         return;
     }
 
+    QString textUrl;
     QRegExp rxWordpress( QString::fromLatin1( "name=\"generator\" content=\"WordPress" ) );
     if ( rxWordpress.indexIn( httpData ) != -1 ) {
         kDebug() << "name=\"generator\" content=\"WordPress matched";
@@ -252,8 +259,8 @@ void AddEditBlog::gotXmlRpcTest( KJob *job )
     KMessageBox::information(this, i18n("The program could not guess the API of your blog, "
                                         "but has found an XMLRPC interface and is trying to use it.\n"
                                         "The MovableType API is assumed for now; choose another API if you know the server supports it."));
-                             d->ui.comboApi->setCurrentIndex( 2 );
-            QString textUrl = d->ui.txtUrl->text();
+    d->ui.comboApi->setCurrentIndex( 2 );
+    QString textUrl = d->ui.txtUrl->text();
     while (textUrl.endsWith(QLatin1Char('/'))) {
         textUrl.remove(textUrl.length()-1, 1);
     }
@@ -263,8 +270,6 @@ void AddEditBlog::gotXmlRpcTest( KJob *job )
 
 void AddEditBlog::fetchBlogId()
 {
-    kDebug() << d->ui.comboApi->currentIndex();
-
     switch ( d->ui.comboApi->currentIndex() ) {
     case 0:
     case 1:
@@ -302,7 +307,6 @@ void AddEditBlog::fetchBlogId()
     default:
         kDebug()<<"Unknown API";
         return;
-        break;
     }
 
     connect( d->mBlog, SIGNAL(error(KBlog::Blog::ErrorType,QString)),
@@ -353,7 +357,6 @@ void AddEditBlog::handleFetchError( KBlog::Blog::ErrorType type, const QString &
 
 void AddEditBlog::fetchedBlogId( const QList< QMap < QString , QString > > & list )
 {
-    kDebug();
     if( d->mFetchBlogIdTimer ) {
         d->mFetchBlogIdTimer->deleteLater();
         d->mFetchBlogIdTimer = 0;

@@ -708,7 +708,6 @@ void ComposerViewPrivate::_k_slotSpellCheck()
     backgroundSpellCheck->setParent(spellDialog);
     spellDialog->setAttribute(Qt::WA_DeleteOnClose, true);
 
-    spellDialog->showSpellCheckCompletionMessage(true);
     q->connect(spellDialog, SIGNAL(replace(QString,int,QString)), q, SLOT(_k_spellCheckerCorrected(QString,int,QString)));
     q->connect(spellDialog, SIGNAL(misspelling(QString,int)), q, SLOT(_k_spellCheckerMisspelling(QString,int)));
     if (contextMenuResult.isContentSelected())
@@ -727,7 +726,8 @@ void ComposerViewPrivate::_k_spellCheckerCorrected(const QString& original, int 
     QString script(QLatin1String("this.value=this.value.substring(0,"));
     script += QString::number(index);
     script += QLatin1String(") + \"");
-    script +=  replacement;
+    QString w(replacement);
+    script +=  w.replace(QLatin1Char('\''), QLatin1String("\\\'")); // Escape any Quote marks in replacement word
     script += QLatin1String("\" + this.value.substring(");
     script += QString::number(index + original.length());
     script += QLatin1String(")");

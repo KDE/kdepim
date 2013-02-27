@@ -32,6 +32,15 @@
 class BilboMedia::Private
 {
 public:
+    Private()
+        : mBlogId(-1),
+          mMediaId(-1),
+          mIsUploaded(false),
+          mChecksum(0)
+    {
+
+    }
+
     int mBlogId;
     int mMediaId;
     bool mIsUploaded;

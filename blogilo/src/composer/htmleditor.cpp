@@ -113,7 +113,7 @@ void HtmlEditor::toggleWordWrap()
 {
     KTextEditor::View *view = qobject_cast< KTextEditor::View* >( sender()->parent() );
     KTextEditor::ConfigInterface *interface = qobject_cast< KTextEditor::ConfigInterface* >( view );
-    bool result = interface->configValue( "dynamic-word-wrap" ).toBool();
+    const bool result = interface->configValue( "dynamic-word-wrap" ).toBool();
     interface->setConfigValue( "dynamic-word-wrap", !( result ) );
 }
 
@@ -121,7 +121,7 @@ void HtmlEditor::toggleLineNumber()
 {
     KTextEditor::View *view = qobject_cast< KTextEditor::View* >( sender()->parent() );
     KTextEditor::ConfigInterface *interface = qobject_cast< KTextEditor::ConfigInterface* >( view );
-    bool result = interface->configValue( "line-numbers" ).toBool();
+    const bool result = interface->configValue( "line-numbers" ).toBool();
     interface->setConfigValue( "line-numbers", !( result ) );
 }
 

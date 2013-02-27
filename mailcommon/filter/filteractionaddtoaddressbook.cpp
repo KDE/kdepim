@@ -127,6 +127,8 @@ QWidget* FilterActionAddToAddressBook::createParamWidget( QWidget *parent ) cons
            this, SIGNAL(filterActionModified()) );
   connect( headerCombo, SIGNAL(currentIndexChanged(int)),
            this, SIGNAL(filterActionModified()) );
+  connect( collectionComboBox, SIGNAL(activated(int)),
+           this, SIGNAL(filterActionModified()) );
 
   setParamWidgetValue( widget );
 

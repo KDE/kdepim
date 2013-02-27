@@ -221,7 +221,7 @@ void ImageScalingWidget::updateSettings()
     ui->resizeEmailsPattern->setText(MessageComposer::MessageComposerSettings::self()->resizeEmailsPattern());
 
     ui->resizeImageWithFormats->setChecked(MessageComposer::MessageComposerSettings::self()->resizeImagesWithFormats());
-    ui->resizeImageWithFormatsType->setText(MessageComposer::MessageComposerSettings::self()->resizeImagesWithFormatsType());
+    ui->resizeImageWithFormatsType->setFormat(MessageComposer::MessageComposerSettings::self()->resizeImagesWithFormatsType());
     ui->resizeImageWithFormatsType->setEnabled(ui->resizeImageWithFormats->isChecked());
 
 
@@ -323,7 +323,7 @@ void ImageScalingWidget::writeConfig()
   MessageComposer::MessageComposerSettings::self()->setFilterRecipientType(mRecipientFilterGroup->checkedId());
 
   MessageComposer::MessageComposerSettings::self()->setResizeImagesWithFormats(ui->resizeImageWithFormats->isChecked());
-  MessageComposer::MessageComposerSettings::self()->setResizeImagesWithFormatsType(ui->resizeImageWithFormatsType->text());
+  MessageComposer::MessageComposerSettings::self()->setResizeImagesWithFormatsType(ui->resizeImageWithFormatsType->format());
   mWasChanged = false;
 }
 

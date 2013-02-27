@@ -23,19 +23,20 @@
 */
 
 #include "uploadmediadialog.h"
-#include <KDebug>
 
-#include <KFileDialog>
-
-#include <settings.h>
-#include <KMessageBox>
+#include "settings.h"
 #include "bilboblog.h"
 #include "bilbomedia.h"
 #include "backend.h"
+
 #include <KApplication>
-#include <QClipboard>
+#include <KDebug>
+#include <KMessageBox>
+#include <KFileDialog>
 #include <kio/jobclasses.h>
 #include <kio/job.h>
+
+#include <QClipboard>
 
 UploadMediaDialog::UploadMediaDialog( QWidget *parent )
     : KDialog(parent), mCurrentBlog(0)

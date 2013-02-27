@@ -32,11 +32,11 @@
 #include "bilbopost.h"
 #include "bilboblog.h"
 #include "catcheckbox.h"
+#include "settings.h"
 
 #include <KMenu>
 #include <KAction>
 #include <KToolInvocation>
-#include <settings.h>
 #include <QClipboard>
 #include <QTimer>
 #include <kstatusbar.h>
