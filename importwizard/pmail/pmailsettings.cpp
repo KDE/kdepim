@@ -52,14 +52,17 @@ PMailSettings::~PMailSettings()
 
 void PMailSettings::readIdentity( const KConfigGroup& group )
 {
-    KPIMIdentities::Identity* newIdentity = createIdentity();
-    const QString personalNameStr = QLatin1String("Personal name                             ");
+
+    QString personalNameStr = QLatin1String("Personal name                             ");
+    QString personalName;
     if(group.hasKey(personalNameStr)) {
-        QString personalName = group.readEntry(personalNameStr);
+        personalName = group.readEntry(personalNameStr);
         personalName.remove(0,1); //Remove first space
-        newIdentity->setFullName( personalName );
-        newIdentity->setIdentityName( personalName );
     }
+    KPIMIdentities::Identity* newIdentity = createIdentity(personalName);
+    newIdentity->setFullName( personalName );
+    newIdentity->setIdentityName( personalName );
+
     const QString emailStr = QLatin1String("Internet E-mail Address                   ");
     if(group.hasKey(emailStr)) {
         QString email = group.readEntry(emailStr);

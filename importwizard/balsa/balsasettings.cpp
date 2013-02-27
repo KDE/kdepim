@@ -94,8 +94,9 @@ void BalsaSettings::readAccount(const KConfigGroup &grp, bool autoCheck, int aut
 
 void BalsaSettings::readIdentity(const KConfigGroup &grp)
 {
-  KPIMIdentities::Identity* newIdentity = createIdentity();
-  newIdentity->setFullName(grp.readEntry(QLatin1String("FullName")));
+  QString name = grp.readEntry(QLatin1String("FullName"));
+  KPIMIdentities::Identity* newIdentity = createIdentity(name);
+  newIdentity->setFullName(name);
   newIdentity->setEmailAddr(grp.readEntry(QLatin1String("Address")));
   newIdentity->setReplyToAddr(grp.readEntry(QLatin1String("ReplyTo")));
   newIdentity->setBcc(grp.readEntry(QLatin1String("Bcc")));

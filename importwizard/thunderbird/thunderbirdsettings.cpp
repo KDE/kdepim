@@ -697,8 +697,10 @@ QString convertThunderbirdPath(const QString& path)
 
 void ThunderbirdSettings::readIdentity( const QString& account )
 {
-  KPIMIdentities::Identity* newIdentity = createIdentity();
   const QString identity = QString::fromLatin1( "mail.identity.%1" ).arg( account );
+  QString fullName = mHashConfig.value( identity + QLatin1String( ".fullName" ) ).toString();
+  KPIMIdentities::Identity* newIdentity = createIdentity(fullName);
+
   
   const QString smtpServer = mHashConfig.value( identity + QLatin1String( ".smtpServer" ) ).toString();
   if(!smtpServer.isEmpty() && mHashSmtp.contains(smtpServer))
@@ -709,7 +711,6 @@ void ThunderbirdSettings::readIdentity( const QString& account )
   const QString userEmail = mHashConfig.value( identity + QLatin1String( ".useremail" ) ).toString();
   newIdentity->setPrimaryEmailAddress(userEmail);
 
-  const QString fullName = mHashConfig.value( identity + QLatin1String( ".fullName" ) ).toString();
   newIdentity->setFullName( fullName );
   newIdentity->setIdentityName( fullName );
 

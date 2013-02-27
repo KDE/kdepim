@@ -219,7 +219,8 @@ void OperaSettings::readTransport(const KConfigGroup &grp)
 
 void OperaSettings::readIdentity(const KConfigGroup &grp)
 {
-    KPIMIdentities::Identity* newIdentity = createIdentity();
+    QString realName = grp.readEntry(QLatin1String("Real Name"));
+    KPIMIdentities::Identity* newIdentity = createIdentity(realName);
     const QString cc = grp.readEntry(QLatin1String("Auto CC"));
     newIdentity->setCc( cc );
 
@@ -230,7 +231,7 @@ void OperaSettings::readIdentity(const KConfigGroup &grp)
     if(!replyTo.isEmpty())
       newIdentity->setReplyToAddr( replyTo );
 
-    const QString realName = grp.readEntry(QLatin1String("Real Name"));
+
     newIdentity->setFullName( realName );
     newIdentity->setIdentityName( realName );
 

@@ -259,11 +259,13 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
     kDebug() << "Account not found";
     return;
   }
-  KPIMIdentities::Identity* newIdentity = createIdentity();
+
   QString name;
   if(domElement.hasAttribute(QLatin1String("name"))) {
     name = domElement.attribute(QLatin1String("name"));
   }
+
+  KPIMIdentities::Identity* newIdentity = createIdentity(name);
 
   const bool enableManualCheck = (domElement.attribute(QLatin1String("enabled"))== QLatin1String( "true" ));
 
