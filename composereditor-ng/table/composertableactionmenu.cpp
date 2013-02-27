@@ -34,7 +34,8 @@ class ComposerTableActionMenuPrivate
 {
 public:
     ComposerTableActionMenuPrivate(QWidget *parent, const QWebElement& element, ComposerTableActionMenu *qq)
-        : action_insert_table( 0 ),
+        : webElement(element),
+          action_insert_table( 0 ),
           action_insert_row_below( 0 ),
           action_insert_row_above( 0 ),
           action_table_format( 0 ),
@@ -51,7 +52,6 @@ public:
           action_merge_cell( 0 ),
           action_split_cell( 0 ),
           q( qq ),
-          webElement(element),
           parentWidget(parent)
     {
     }
@@ -72,6 +72,8 @@ public:
     void _k_slotSplitCell();
 
     void updateActions();
+    QWebElement webElement;
+
     KAction *action_insert_table;
     KAction *action_insert_row_below;
     KAction *action_insert_row_above;
@@ -89,7 +91,6 @@ public:
     KAction *action_merge_cell;
     KAction *action_split_cell;
     ComposerTableActionMenu *q;
-    QWebElement webElement;
     QWidget *parentWidget;
 };
 
@@ -130,7 +131,7 @@ void ComposerTableActionMenuPrivate::_k_slotInsertRowAbove()
 
 void ComposerTableActionMenuPrivate::_k_slotRemoveColumn()
 {
-    qDebug()<<" tableColumb :"<<TableHelper::tableColumnCount(webElement);
+    qDebug()<<" tableColumn :"<<TableHelper::tableColumnCount(webElement);
     //TODO
 }
 

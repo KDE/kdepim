@@ -47,7 +47,8 @@
 namespace ComposerEditorNG {
 
 ComposerView::ComposerView(QWidget *parent)
-    : KWebView(parent),d(new ComposerViewPrivate(this))
+    : KWebView(parent),
+      d(new ComposerViewPrivate(this))
 {
     QFile file ( initialHtml() );
     kDebug() <<file.fileName();

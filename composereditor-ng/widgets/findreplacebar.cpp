@@ -42,7 +42,14 @@ class FindReplaceBarPrivate
 {
 public:
     FindReplaceBarPrivate(FindReplaceBar *qq, KWebView *view)
-        :q(qq), webView(view)
+        : q(qq),
+          search(0),
+          caseSensitiveAct(0),
+          highlightAll(0),
+          findPreviousButton(0),
+          findNextButton(0),
+          optionsMenu(0),
+          webView(view)
     {
 
     }
@@ -61,11 +68,12 @@ public:
     void searchText( bool backward, bool isAutoSearch );
     void messageInfo( bool backward, bool isAutoSearch, bool found );
 
-    FindReplaceBar *q;
+
     QString positiveBackground;
     QString negativeBackground;
     QString lastSearchStr;
 
+    FindReplaceBar *q;
     KLineEdit *search;
     QAction *caseSensitiveAct;
     QAction *highlightAll;
