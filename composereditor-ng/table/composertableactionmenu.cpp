@@ -106,7 +106,11 @@ void ComposerTableActionMenuPrivate::_k_slotSplitCell()
 
 void ComposerTableActionMenuPrivate::_k_slotMergeCellToTheRight()
 {
-    //TODO
+    if (webElement.hasAttribute(QLatin1String("colspan"))) {
+        webElement.setAttribute(QLatin1String("colspan"),QString::number(webElement.attribute(QLatin1String("colspan")).toInt() + 1));
+    } else {
+        webElement.setAttribute(QLatin1String("colspan"),QString::number(2));
+    }
 }
 
 void ComposerTableActionMenuPrivate::_k_slotInsertColumnAfter()
