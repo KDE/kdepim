@@ -232,6 +232,8 @@ void Pane::setXmlGuiClient( KXMLGUIClient *xmlGuiClient )
     d->mXmlGuiClient->actionCollection()->addAction( QLatin1String( "view_message_list" ), d->mActionMenu );
     MessageList::Util::fillViewMenu( d->mActionMenu->menu(), this );
 
+    d->mActionMenu->addSeparator();
+
     KAction *action = new KAction( i18n("Create new tab"), this );
     action->setShortcut( QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_T ) );
     d->mXmlGuiClient->actionCollection()->addAction( QLatin1String( "create_new_tab" ), action );
