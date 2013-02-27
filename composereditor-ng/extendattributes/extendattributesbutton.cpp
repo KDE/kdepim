@@ -57,7 +57,6 @@ void ExtendAttributesButtonPrivate::_k_slotClicked()
 ExtendAttributesButton::ExtendAttributesButton(const QWebElement& element, ExtendAttributesDialog::ExtendType type, QWidget *parent)
     : QPushButton(parent), d(new ExtendAttributesButtonPrivate(element, type, this))
 {
-    setText(i18n("Advanced"));
 }
 
 ExtendAttributesButton::~ExtendAttributesButton()
