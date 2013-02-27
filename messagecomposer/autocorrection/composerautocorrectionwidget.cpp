@@ -518,9 +518,10 @@ void ComposerAutoCorrectionWidget::slotImportAutoCorrection(QAction* act)
         ComposerAutoCorrectionWidget::ImportFileType type = act->data().value<ComposerAutoCorrectionWidget::ImportFileType>();
         QString title;
         QString filter;
-        switch(type) {
+        switch (type) {
         case ComposerAutoCorrectionWidget::LibreOffice:
             title = i18n("Import LibreOffice Autocorrection");
+            filter = QLatin1String("*.dat");
             break;
         case ComposerAutoCorrectionWidget::KMail:
             title = i18n("Import KMail Autocorrection");
@@ -540,7 +541,7 @@ void ComposerAutoCorrectionWidget::slotImportAutoCorrection(QAction* act)
             default:
                 return;
             }
-            if(importAutoCorrection->import(fileName,ImportAbstractAutocorrection::All))
+            if (importAutoCorrection->import(fileName,ImportAbstractAutocorrection::All))
             {
                 m_autocorrectEntries = importAutoCorrection->autocorrectEntries();
                 addAutoCorrectEntries();
