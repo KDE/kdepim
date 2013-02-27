@@ -68,7 +68,7 @@ public:
     void _k_slotRemoveColumn();
     void _k_slotInsertColumnBefore();
     void _k_slotInsertColumnAfter();
-    void _k_slotMergeCell();
+    void _k_slotMergeCellToTheRight();
     void _k_slotSplitCell();
 
     void updateActions();
@@ -99,7 +99,7 @@ void ComposerTableActionMenuPrivate::_k_slotSplitCell()
     //TODO
 }
 
-void ComposerTableActionMenuPrivate::_k_slotMergeCell()
+void ComposerTableActionMenuPrivate::_k_slotMergeCellToTheRight()
 {
     //TODO
 }
@@ -273,7 +273,7 @@ ComposerTableActionMenu::ComposerTableActionMenu(const QWebElement& element,QObj
     addSeparator();
 
     d->action_merge_cell = new KAction( KIcon(QLatin1String("edit-table-cell-merge")), i18n( "Join With Cell to the Right" ), this );
-    connect( d->action_merge_cell, SIGNAL(triggered(bool)), SLOT(_k_slotMergeCell()) );
+    connect( d->action_merge_cell, SIGNAL(triggered(bool)), SLOT(_k_slotMergeCellToTheRight()) );
     addAction( d->action_merge_cell );
 
     d->action_split_cell = new KAction( KIcon(QLatin1String("edit-table-cell-split")), i18n( "Split cells" ), this );
