@@ -516,6 +516,7 @@ void ComposerAutoCorrectionWidget::slotImportAutoCorrection(QAction* act)
     switch(type) {
     case ComposerAutoCorrectionWidget::LibreOffice:
        title = i18n("Import LibreOffice Autocorrection");
+       filter = QLatin1String("*.dat");
        break;
     case ComposerAutoCorrectionWidget::KMail:
        title = i18n("Import KMail Autocorrection");
