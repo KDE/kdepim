@@ -54,6 +54,10 @@ private slots:
 
 private:
     void addBlogToList( const BilboBlog &blog );
+    enum BlogType {
+        BlogId = QTreeWidgetItem::UserType +1
+    };
+
 };
 
 #endif // SETTINGSBLOGS_H
