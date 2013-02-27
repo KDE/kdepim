@@ -22,6 +22,7 @@
 #include "messageviewer/minimumcombobox.h"
 
 #include <KDE/KLocale>
+#include <KDE/KLineEdit>
 
 using namespace MailCommon;
 
@@ -51,6 +52,8 @@ QWidget* FilterActionRemoveHeader::createParamWidget( QWidget *parent ) const
   setParamWidgetValue( comboBox );
 
   connect( comboBox, SIGNAL(currentIndexChanged(int)),
+           this, SIGNAL(filterActionModified()) );
+  connect( comboBox->lineEdit(), SIGNAL(textChanged(QString)),
            this, SIGNAL(filterActionModified()) );
 
   return comboBox;
