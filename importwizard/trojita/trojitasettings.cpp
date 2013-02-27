@@ -151,8 +151,8 @@ void TrojitaSettings::readIdentity()
     const int size = settings->beginReadArray(QLatin1String("identities"));
     for (int i=0; i<size; ++i) {
         settings->setArrayIndex(i);
-        KPIMIdentities::Identity* identity  = createIdentity();
-        const QString realName = settings->value(QLatin1String("realName")).toString();
+        QString realName = settings->value(QLatin1String("realName")).toString();
+        KPIMIdentities::Identity* identity  = createIdentity(realName);
         identity->setFullName( realName );
         identity->setIdentityName( realName );
         const QString address = settings->value(QLatin1String("address")).toString();
