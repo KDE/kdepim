@@ -96,7 +96,12 @@ public:
 
 void ComposerTableActionMenuPrivate::_k_slotSplitCell()
 {
-    //TODO
+    if (webElement.hasAttribute(QLatin1String("colspan"))) {
+        webElement.removeAttribute(QLatin1String("colspan"));
+    }
+    if (webElement.hasAttribute(QLatin1String("rowspan"))) {
+        webElement.removeAttribute(QLatin1String("rowspan"));
+    }
 }
 
 void ComposerTableActionMenuPrivate::_k_slotMergeCellToTheRight()
