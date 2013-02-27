@@ -133,6 +133,10 @@ void ComposerImageDialogPrivate::initialize()
     imageWidget = new KPIMTextEdit::InsertImageWidget(q);
     lay->addWidget(imageWidget);
 
+    KSeparator *sep = new KSeparator;
+    lay->addWidget(sep);
+
+
     //ToolTip
     QHBoxLayout *hbox = new QHBoxLayout;
     QLabel *lab = new QLabel(i18n("Tooltip:"));
@@ -159,7 +163,7 @@ void ComposerImageDialogPrivate::initialize()
     }
 
 
-    KSeparator *sep = new KSeparator;
+    sep = new KSeparator;
     lay->addWidget(sep);
 
     q->connect(imageWidget,SIGNAL(enableButtonOk(bool)),q,SLOT(enableButtonOk(bool)));
