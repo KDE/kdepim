@@ -33,16 +33,16 @@ class ExtendAttributesButtonPrivate
 {
 public:
     ExtendAttributesButtonPrivate(const QWebElement& element, ExtendAttributesDialog::ExtendType type, ExtendAttributesButton *qq)
-        : q(qq), webElement(element), extendType(type)
+        : webElement(element), extendType(type), q(qq)
     {
         q->setText(i18n("Advanced"));
         q->connect(q, SIGNAL(clicked(bool)), q, SLOT(_k_slotClicked()));
     }
     void _k_slotClicked();
 
-    ExtendAttributesButton *q;
     QWebElement webElement;
     ExtendAttributesDialog::ExtendType extendType;
+    ExtendAttributesButton *q;
 };
 
 void ExtendAttributesButtonPrivate::_k_slotClicked()
