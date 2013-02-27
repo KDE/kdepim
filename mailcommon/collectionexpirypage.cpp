@@ -221,10 +221,8 @@ void CollectionExpiryPage::saveAndExpire( Akonadi::Collection &collection, bool 
     attribute->setExpireAction( ExpireCollectionAttribute::ExpireMove );
 
   Akonadi::CollectionModifyJob *job = new Akonadi::CollectionModifyJob( collection, this );
-  job->setProperty( "enableGlobally", enableGlobally );
   job->setProperty( "expireNow", expireNow );
   connect( job, SIGNAL(result(KJob*)), this, SLOT(slotCollectionModified(KJob*)) );
-
   mChanged = false;
 }
 
