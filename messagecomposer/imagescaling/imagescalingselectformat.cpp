@@ -94,6 +94,7 @@ ImageScalingSelectFormat::ImageScalingSelectFormat(QWidget *parent)
 {
     QHBoxLayout *lay = new QHBoxLayout(this);
     mFormat = new KLineEdit;
+    connect(mFormat, SIGNAL(textChanged(QString)),SIGNAL(textChanged(QString)));
     mFormat->setReadOnly(true);
     lay->addWidget(mFormat);
     mSelectFormat = new KPushButton(i18n("..."));
