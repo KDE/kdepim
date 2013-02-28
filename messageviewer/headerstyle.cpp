@@ -78,7 +78,6 @@ static inline QString directionOf( const QString & str ) {
   return str.isRightToLeft() ? "rtl" : "ltr" ;
 }
 
-// ### tmp wrapper to make kmreaderwin code working:
 static QString strToHtml( const QString & str,
                           int flags = LinkLocator::PreserveSpaces ) {
   return LinkLocator::convertToHtml( str, flags );
