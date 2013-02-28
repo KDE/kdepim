@@ -57,6 +57,7 @@ private:
   void mergeKmailSnippetConfig(const KArchiveFile * archivefile, const QString&filename, const QString&prefix);
   void mergeArchiveMailAgentConfig(const KArchiveFile * archivefile, const QString&filename, const QString&prefix);
   void copyArchiveMailAgentConfigGroup(KSharedConfig::Ptr archiveConfigOrigin, KSharedConfig::Ptr archiveConfigDestination);
+  QString uniqueIdentityName(const QString& name);
 
   Akonadi::Collection::Id convertPathToId(const QString& path);
 
