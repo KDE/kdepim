@@ -1827,7 +1827,7 @@ KToggleAction *ViewerPrivate::actionForHeaderStyle( const HeaderStyle * style, c
   const char * actionName = 0;
   if ( style == HeaderStyle::enterprise() )
     actionName = "view_headers_enterprise";
-  if ( style == HeaderStyle::fancy() )
+  else if ( style == HeaderStyle::fancy() )
     actionName = "view_headers_fancy";
   else if ( style == HeaderStyle::brief() )
     actionName = "view_headers_brief";
@@ -2227,8 +2227,7 @@ void ViewerPrivate::slotCycleHeaderStyles() {
   if ( style == HeaderStyle::enterprise() ) {
     slotFancyHeaders();
     actionName = "view_headers_fancy";
-  }
-  if ( style == HeaderStyle::fancy() ) {
+  } else if ( style == HeaderStyle::fancy() ) {
     slotBriefHeaders();
     actionName = "view_headers_brief";
   } else if ( style == HeaderStyle::brief() ) {
