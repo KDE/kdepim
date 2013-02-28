@@ -758,9 +758,11 @@ void ImportMailJob::restoreIdentity()
           }
         }
       }
+      QString name =  group.readEntry(QLatin1String("Name"));
 
+      KPIMIdentities::Identity* identity = &mIdentityManager->newFromScratch( uniqueIdentityName(name) );
+      group.writeEntry(QLatin1String("Name"), name);
       group.sync();
-      KPIMIdentities::Identity* identity = &mIdentityManager->newFromScratch( QString() );
 
       identity->readConfig(group);
 
@@ -776,6 +778,17 @@ void ImportMailJob::restoreIdentity()
   } else {
     Q_EMIT error(i18n("Failed to restore identity file."));
   }
+}
+
+QString ImportMailJob::uniqueIdentityName(const QString& name)
+{
+    QString newName(name);
+    int i = 0;
+    while(!mIdentityManager->isUnique( newName )) {
+        newName = QString::fromLatin1("%1_%2").arg(name).arg(i);
+        i++;
+    }
+    return newName;
 }
 
 void ImportMailJob::restoreAkonadiDb()
