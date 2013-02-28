@@ -97,7 +97,7 @@ ImageScalingSelectFormat::ImageScalingSelectFormat(QWidget *parent)
     connect(mFormat, SIGNAL(textChanged(QString)),SIGNAL(textChanged(QString)));
     mFormat->setReadOnly(true);
     lay->addWidget(mFormat);
-    mSelectFormat = new KPushButton(i18n("..."));
+    mSelectFormat = new KPushButton(i18n("Select Format..."));
     connect(mSelectFormat, SIGNAL(clicked(bool)), this, SLOT(slotSelectFormat()));
     lay->addWidget(mSelectFormat);
 }
