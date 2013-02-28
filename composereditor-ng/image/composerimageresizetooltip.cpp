@@ -45,7 +45,6 @@ public:
 
     QLabel *lab;
     ComposerImageResizeToolTip *q;
-
 };
 
 void ComposerImageResizeToolTipPrivate::displaySize(const QSize& s)

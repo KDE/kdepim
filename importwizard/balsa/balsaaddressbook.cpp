@@ -70,7 +70,7 @@ void BalsaAddressBook::readAddressBook(const KConfigGroup& grp)
     if(!path.isEmpty()) {
       KABC::Addressee::List contacts;
       QFile file( path );
-      if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+      if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         QTextStream stream( &file );
         stream.setCodec( "ISO 8859-1" );
 

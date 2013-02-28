@@ -41,7 +41,6 @@
 UploadMediaDialog::UploadMediaDialog( QWidget *parent )
     : KDialog(parent), mCurrentBlog(0)
 {
-    kDebug();
     QWidget *widget = new QWidget;
     ui.setupUi(widget);
     setMainWidget(widget);
@@ -61,7 +60,6 @@ UploadMediaDialog::UploadMediaDialog( QWidget *parent )
 
 UploadMediaDialog::~UploadMediaDialog()
 {
-    kDebug();
     Settings::setFtpServerPath(ui.kcfg_FtpPath->text());
     Settings::setHttpUrl(ui.kcfg_httpUrl->text());
     Settings::self()->writeConfig();

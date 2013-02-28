@@ -222,7 +222,7 @@ static inline void append_string( QString &buffer, const QString &append )
   buffer += append;
 }
 
-QString Item::statusDescription() const
+QString Item::statusDescription(bool hasNepomukTag) const
 {
   QString ret;
   if( status().isRead() )
@@ -233,33 +233,34 @@ QString Item::statusDescription() const
   if( status().hasAttachment() )
     append_string( ret, i18nc( "Status of an item", "Has Attachment" ) );
 
-  if( status().isReplied() )
-    append_string( ret, i18nc( "Status of an item", "Replied" ) );
-
-  if( status().isForwarded() )
-    append_string( ret, i18nc( "Status of an item", "Forwarded" ) );
-
-  if( status().isSent() )
-    append_string( ret, i18nc( "Status of an item", "Sent" ) );
-
-  if( status().isImportant() )
-    append_string( ret, i18nc( "Status of an item", "Important" ) );
-
   if( status().isToAct() )
     append_string( ret, i18nc( "Status of an item", "Action Item" ) );
 
-  if( status().isSpam() )
-    append_string( ret, i18nc( "Status of an item", "Spam" ) );
+  if (!hasNepomukTag) {
+      if( status().isReplied() )
+          append_string( ret, i18nc( "Status of an item", "Replied" ) );
 
-  if( status().isHam() )
-    append_string( ret, i18nc( "Status of an item", "Ham" ) );
+      if( status().isForwarded() )
+          append_string( ret, i18nc( "Status of an item", "Forwarded" ) );
 
-  if( status().isWatched() )
-    append_string( ret, i18nc( "Status of an item", "Watched" ) );
+      if( status().isSent() )
+          append_string( ret, i18nc( "Status of an item", "Sent" ) );
 
-  if( status().isIgnored() )
-    append_string( ret, i18nc( "Status of an item", "Ignored" ) );
+      if( status().isImportant() )
+          append_string( ret, i18nc( "Status of an item", "Important" ) );
 
+      if( status().isSpam() )
+          append_string( ret, i18nc( "Status of an item", "Spam" ) );
+
+      if( status().isHam() )
+          append_string( ret, i18nc( "Status of an item", "Ham" ) );
+
+      if( status().isWatched() )
+          append_string( ret, i18nc( "Status of an item", "Watched" ) );
+
+      if( status().isIgnored() )
+          append_string( ret, i18nc( "Status of an item", "Ignored" ) );
+  }
   return ret;
 }
 

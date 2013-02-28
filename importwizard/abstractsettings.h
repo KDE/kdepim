@@ -47,9 +47,11 @@ protected:
 
   void syncKmailConfig();
 
+  QString uniqueIdentityName(const QString& name);
+
   QString createResource(const QString& resources , const QString& name, const QMap<QString, QVariant> &settings);
 
-  KPIMIdentities::Identity* createIdentity();
+  KPIMIdentities::Identity* createIdentity(QString& name);
 
   MailTransport::Transport *createTransport();
   

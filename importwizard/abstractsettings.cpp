@@ -49,9 +49,10 @@ AbstractSettings::~AbstractSettings()
   delete mManager;
 }
 
-KPIMIdentities::Identity* AbstractSettings::createIdentity()
+KPIMIdentities::Identity* AbstractSettings::createIdentity(QString& name)
 {
-  KPIMIdentities::Identity* identity = &mManager->newFromScratch( QString() );
+  name = uniqueIdentityName(name);
+  KPIMIdentities::Identity* identity = &mManager->newFromScratch( name );
   addImportInfo(i18n("Setting up identity..."));
   return identity;
 }
@@ -63,6 +64,16 @@ void AbstractSettings::storeIdentity(KPIMIdentities::Identity* identity)
   addImportInfo(i18n("Identity set up."));
 }
 
+QString AbstractSettings::uniqueIdentityName(const QString& name)
+{
+    QString newName(name);
+    int i = 0;
+    while(!mManager->isUnique( newName )) {
+        newName = QString::fromLatin1("%1_%2").arg(name).arg(i);
+        i++;
+    }
+    return newName;
+}
 
 MailTransport::Transport *AbstractSettings::createTransport()
 {

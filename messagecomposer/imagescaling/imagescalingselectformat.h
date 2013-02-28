@@ -53,6 +53,9 @@ public:
     void setFormat(const QString &format);
     QString format() const;
 
+Q_SIGNALS:
+    void textChanged(const QString&);
+
 private Q_SLOTS:
     void slotSelectFormat();
 

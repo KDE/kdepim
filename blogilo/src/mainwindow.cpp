@@ -72,7 +72,6 @@ MainWindow::MainWindow()
       progress(0),
       mCurrentBlogId(__currentBlogId)
 {
-    kDebug();
     setWindowTitle( i18n("Blogilo") );
 
     tabPosts = new PostsTabWidget(this);
@@ -131,7 +130,6 @@ MainWindow::MainWindow()
 
 MainWindow::~MainWindow()
 {
-    kDebug();
 }
 
 void MainWindow::slotCloseTabClicked()
@@ -144,7 +142,6 @@ void MainWindow::slotCloseTabClicked()
 
 bool MainWindow::queryExit()
 {
-    kDebug();
     writeConfigs();
     if ( !DBMan::self()->clearTempEntries() )
         kDebug()<<"Could not erase temp_post table: "<< DBMan::self()->lastErrorText();

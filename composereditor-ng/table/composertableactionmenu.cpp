@@ -34,7 +34,8 @@ class ComposerTableActionMenuPrivate
 {
 public:
     ComposerTableActionMenuPrivate(QWidget *parent, const QWebElement& element, ComposerTableActionMenu *qq)
-        : action_insert_table( 0 ),
+        : webElement(element),
+          action_insert_table( 0 ),
           action_insert_row_below( 0 ),
           action_insert_row_above( 0 ),
           action_table_format( 0 ),
@@ -51,7 +52,6 @@ public:
           action_merge_cell( 0 ),
           action_split_cell( 0 ),
           q( qq ),
-          webElement(element),
           parentWidget(parent)
     {
     }
@@ -68,10 +68,12 @@ public:
     void _k_slotRemoveColumn();
     void _k_slotInsertColumnBefore();
     void _k_slotInsertColumnAfter();
-    void _k_slotMergeCell();
+    void _k_slotMergeCellToTheRight();
     void _k_slotSplitCell();
 
     void updateActions();
+    QWebElement webElement;
+
     KAction *action_insert_table;
     KAction *action_insert_row_below;
     KAction *action_insert_row_above;
@@ -89,18 +91,26 @@ public:
     KAction *action_merge_cell;
     KAction *action_split_cell;
     ComposerTableActionMenu *q;
-    QWebElement webElement;
     QWidget *parentWidget;
 };
 
 void ComposerTableActionMenuPrivate::_k_slotSplitCell()
 {
-    //TODO
+    if (webElement.hasAttribute(QLatin1String("colspan"))) {
+        webElement.removeAttribute(QLatin1String("colspan"));
+    }
+    if (webElement.hasAttribute(QLatin1String("rowspan"))) {
+        webElement.removeAttribute(QLatin1String("rowspan"));
+    }
 }
 
-void ComposerTableActionMenuPrivate::_k_slotMergeCell()
+void ComposerTableActionMenuPrivate::_k_slotMergeCellToTheRight()
 {
-    //TODO
+    if (webElement.hasAttribute(QLatin1String("colspan"))) {
+        webElement.setAttribute(QLatin1String("colspan"),QString::number(webElement.attribute(QLatin1String("colspan")).toInt() + 1));
+    } else {
+        webElement.setAttribute(QLatin1String("colspan"),QString::number(2));
+    }
 }
 
 void ComposerTableActionMenuPrivate::_k_slotInsertColumnAfter()
@@ -130,7 +140,7 @@ void ComposerTableActionMenuPrivate::_k_slotInsertRowAbove()
 
 void ComposerTableActionMenuPrivate::_k_slotRemoveColumn()
 {
-    qDebug()<<" tableColumb :"<<TableHelper::tableColumnCount(webElement);
+    qDebug()<<" tableColumn :"<<TableHelper::tableColumnCount(webElement);
     //TODO
 }
 
@@ -272,7 +282,7 @@ ComposerTableActionMenu::ComposerTableActionMenu(const QWebElement& element,QObj
     addSeparator();
 
     d->action_merge_cell = new KAction( KIcon(QLatin1String("edit-table-cell-merge")), i18n( "Join With Cell to the Right" ), this );
-    connect( d->action_merge_cell, SIGNAL(triggered(bool)), SLOT(_k_slotMergeCell()) );
+    connect( d->action_merge_cell, SIGNAL(triggered(bool)), SLOT(_k_slotMergeCellToTheRight()) );
     addAction( d->action_merge_cell );
 
     d->action_split_cell = new KAction( KIcon(QLatin1String("edit-table-cell-split")), i18n( "Split cells" ), this );

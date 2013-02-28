@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="currentIndex">
-   <number>0</number>
+   <number>2</number>
   </property>
   <widget class="QWidget" name="tabBasic">
    <attribute name="title">
@@ -507,11 +507,13 @@ You can set more options in the Advanced tab.</string>
    <class>KComboBox</class>
    <extends>QComboBox</extends>
    <header>kcombobox.h</header>
+   <container>1</container>
   </customwidget>
   <customwidget>
    <class>KLineEdit</class>
    <extends>QLineEdit</extends>
    <header>klineedit.h</header>
+   <container>1</container>
   </customwidget>
   <customwidget>
    <class>KSeparator</class>

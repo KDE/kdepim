@@ -19,6 +19,8 @@
 */
 
 #include "addemailaddressjob.h"
+#include "broadcaststatus.h"
+
 
 #include <Akonadi/CollectionDialog>
 #include <Akonadi/Contact/ContactSearchJob>
@@ -243,11 +245,26 @@ class AddEmailAddressJob::Private
           new Akonadi::ContactEditorDialog( Akonadi::ContactEditorDialog::EditMode,
                                             mParentWidget );
         dlg->setContact( mItem );
-        dlg->setAttribute( Qt::WA_DeleteOnClose );
-        dlg->show();
+        connect( dlg, SIGNAL(contactStored(Akonadi::Item)),
+                 q, SLOT(contactStored(Akonadi::Item)) );
+        connect( dlg, SIGNAL(error(QString)),
+                 q, SLOT(slotContactEditorError(QString)) );
+        dlg->exec();
+        delete dlg;
       }
       q->emitResult();
     }
+
+    void slotContactEditorError(const QString &error)
+    {
+        KMessageBox::error(mParentWidget, i18n("Contact can not stored: %1", error), i18n("Failed to store contact"));
+    }
+
+    void contactStored( const Akonadi::Item & )
+    {
+        KPIM::BroadcastStatus::instance()->setStatusMsg( i18n( "Contact created successfully" ) );
+    }
+
 
     AddEmailAddressJob *q;
     QString mCompleteAddress;

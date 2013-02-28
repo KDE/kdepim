@@ -518,6 +518,7 @@ public slots:
   void slotStandardHeaders();
   void slotLongHeaders();
   void slotAllHeaders();
+  void slotCustomHeaders();
 
   void slotCycleAttachmentStrategy();
   void slotIconicAttachments();

@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
   based on code from kdepim-runtime/tray/global.cpp
 
   This program is free software; you can redistribute it and/or modify it
