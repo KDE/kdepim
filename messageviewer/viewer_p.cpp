@@ -1556,6 +1556,14 @@ void ViewerPrivate::createActions()
   group->addAction( raction );
   headerMenu->addAction( raction );
 
+  raction  = new KToggleAction(i18nc("View->headers->", "&Custom Headers"), this);
+  ac->addAction("view_custom_headers", raction );
+  connect(raction, SIGNAL(triggered(bool)), SLOT(slotCustomHeaders()));
+  raction->setHelpText( i18n("Show custom headers") );
+  group->addAction( raction );
+  headerMenu->addAction( raction );
+
+
   // attachment style
   KActionMenu *attachmentMenu  = new KActionMenu(i18nc("View->", "&Attachments"), this);
   ac->addAction("view_attachments", attachmentMenu );
@@ -1838,6 +1846,8 @@ KToggleAction *ViewerPrivate::actionForHeaderStyle( const HeaderStyle * style, c
       actionName = "view_headers_long";
     else if ( strategy == HeaderStrategy::all() )
       actionName = "view_headers_all";
+    else if ( strategy == HeaderStrategy::custom() )
+      actionName = "view_custom_headers";
   }
   if ( actionName )
     return static_cast<KToggleAction*>(mActionCollection->action(actionName));
@@ -2243,6 +2253,9 @@ void ViewerPrivate::slotCycleHeaderStyles() {
     } else if ( strategy == HeaderStrategy::all() ) {
       slotEnterpriseHeaders();
       actionName = "view_headers_enterprise";
+    } else if ( strategy == HeaderStrategy::custom() ) {
+      slotCustomHeaders();
+      actionName = "view_custom_headers";
     }
   }
 
@@ -2288,11 +2301,17 @@ void ViewerPrivate::slotLongHeaders()
 
 
 
-void ViewerPrivate::slotAllHeaders() {
+void ViewerPrivate::slotAllHeaders() 
+{
   setHeaderStyleAndStrategy( HeaderStyle::plain(),
                              HeaderStrategy::all(), true );
 }
 
+void ViewerPrivate::slotCustomHeaders() 
+{
+  setHeaderStyleAndStrategy( HeaderStyle::plain(),
+                             HeaderStrategy::custom(), true );
+}
 
 void ViewerPrivate::slotCycleAttachmentStrategy()
 {
