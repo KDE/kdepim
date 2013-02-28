@@ -40,6 +40,7 @@ BlogSettings::BlogSettings( QWidget *parent )
     connect( btnRemove, SIGNAL(clicked()), this, SLOT(removeBlog()) );
     connect( blogsTable, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)),
              this, SLOT(blogsTablestateChanged()) );
+    connect (blogsTable, SIGNAL(doubleClicked(QModelIndex)), SLOT(editBlog()));
 
     blogsTable->setHeaderLabels(QStringList()<<i18n("Title")<<i18n("URL"));
     btnAdd->setIcon( KIcon( QLatin1String("list-add") ) );
