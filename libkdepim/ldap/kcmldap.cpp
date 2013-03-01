@@ -248,8 +248,6 @@ void KCMLdap::load()
   KConfig *config = KLDAP::LdapClientSearch::config();
   KConfigGroup group( config, "LDAP" );
 
-  QString host;
-
   uint count = group.readEntry( "NumSelectedHosts", 0 );
   for ( uint i = 0; i < count; ++i ) {
     KLDAP::LdapServer server;
