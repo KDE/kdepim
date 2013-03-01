@@ -167,6 +167,13 @@ static QString formatFeedSummary( const FeedCollection& feed, int unread ) {
         text += "</div>\n"; // / link
     }
 
+    if (feed.fetchError()) {
+        text += QString("<div class=\"base\" dir=\"%1\">").arg(Utils::directionOf(feed.fetchErrorString()));
+        text += QLatin1String("<p><font color=\"red\">"); //TODO make this proper CSS
+        text += i18n("Updating the feed failed: %1", Qt::escape(feed.fetchErrorString()));
+        text += QLatin1String("</font></p>");
+        text += "</div>\n"; // / link
+    }
 //text += i18n("<b>Unread articles:</b> %1").arg(node->unread());
     text += "</div>"; // /body
     return text;
