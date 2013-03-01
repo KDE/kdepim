@@ -30,7 +30,7 @@
 #include <kconfigdialogmanager.h>
 #include <klocale.h>
 #include <libkdepim/completionordereditor.h>
-#include <libkdepim/ldap/ldapclient.h>
+#include <libkdepim/ldap/ldapclientsearch.h>
 #include <libkdepim/recentaddresses.h>
 
 #include <QLineEdit>

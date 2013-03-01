@@ -31,6 +31,7 @@ set(kdepim_LIB_SRCS
    kweekdaycheckcombo.cpp
    ldap/ldapclient.cpp
    ldap/ldapsearchdialog.cpp
+   ldap/ldapclientsearch.cpp
    overlaywidget.cpp
    progressmanager.cpp
    progressmanager_akonadiagent.cpp

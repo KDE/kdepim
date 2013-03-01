@@ -24,6 +24,7 @@
 #include "ldapsearchdialog.h"
 
 #include "ldapclient.h"
+#include "ldapclientsearch.h"
 
 #include <QtCore/QPair>
 #include <QApplication>

@@ -42,7 +42,7 @@
 #include <klocale.h>
 #include <kvbox.h>
 
-#include "ldapclient.h"
+#include "ldapclientsearch.h"
 #include <kldap/ldapserver.h>
 
 #include "addhostdialog_p.h"
