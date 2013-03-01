@@ -176,7 +176,6 @@ TodoView::TodoView( const EventViews::PrefsPtr &prefs,
                     bool sidebarView, QWidget *parent )
   : EventView( parent )
   , mQuickSearch( 0 )
-  , mChanger( 0 )
   , mQuickAdd( 0 )
   , mTreeStateRestorer( 0 )
   , mSidebarView( sidebarView )
@@ -646,7 +645,7 @@ void TodoView::addTodo( const QString &summary,
                           const KCalCore::Todo::Ptr &parent,
                           const QStringList &categories )
 {
-  if ( !mChanger || summary.trimmed().isEmpty() ) {
+  if ( !changer() || summary.trimmed().isEmpty() ) {
     return;
   }
 
@@ -674,7 +673,7 @@ void TodoView::addTodo( const QString &summary,
     }
   }
 
-  mChanger->createIncidence( todo, collection, this );
+  changer()->createIncidence( todo, collection, this );
 }
 
 void TodoView::addQuickTodo( Qt::KeyboardModifiers modifiers )
@@ -829,7 +828,7 @@ void TodoView::deleteTodo()
     const Akonadi::Item todoItem =
       selection[0].data ( TodoModel::TodoRole ).value<Akonadi::Item>();
 
-    if ( !mChanger->deletedRecently( todoItem.id() ) ) {
+    if ( !changer()->deletedRecently( todoItem.id() ) ) {
       emit deleteIncidenceSignal( todoItem );
     }
   }
@@ -856,7 +855,7 @@ void TodoView::newSubTodo()
 
 void TodoView::copyTodoToDate( const QDate &date )
 {
-  if ( !mChanger ) {
+  if ( !changer() ) {
     return;
   }
 
@@ -885,7 +884,7 @@ void TodoView::copyTodoToDate( const QDate &date )
   due.setDate( date );
   todo->setDtDue( due );
 
-  mChanger->createIncidence( todo, Akonadi::Collection(), this );
+  changer()->createIncidence( todo, Akonadi::Collection(), this );
 }
 
 void TodoView::itemDoubleClicked( const QModelIndex &index )
@@ -960,7 +959,7 @@ void TodoView::setNewDate( const QDate &date )
     }
     todo->setDtDue( dt );
 
-    mChanger->modifyIncidence( todoItem, oldTodo, this );
+    changer()->modifyIncidence( todoItem, oldTodo, this );
   } else {
     kDebug() << "Item is readOnly";
   }
@@ -988,9 +987,9 @@ void TodoView::setNewPercentage( QAction *action )
       todo->setPercentComplete( percentage );
     }
     if ( todo->recurs() && percentage == 100 ) {
-      mChanger->modifyIncidence( todoItem, oldTodo, this );
+      changer()->modifyIncidence( todoItem, oldTodo, this );
     } else {
-      mChanger->modifyIncidence( todoItem, oldTodo, this );
+      changer()->modifyIncidence( todoItem, oldTodo, this );
     }
   } else {
     kDebug() << "Item is read only";
@@ -1009,7 +1008,7 @@ void TodoView::setNewPriority( QAction *action )
     KCalCore::Todo::Ptr oldTodo( todo->clone() );
     todo->setPriority( mPriority[action] );
 
-    mChanger->modifyIncidence( todoItem, oldTodo, this );
+    changer()->modifyIncidence( todoItem, oldTodo, this );
   }
 }
 
@@ -1034,7 +1033,7 @@ void TodoView::changedCategories( QAction *action )
     }
     categories.sort();
     todo->setCategories( categories );
-    mChanger->modifyIncidence( todoItem, oldTodo, this );
+    changer()->modifyIncidence( todoItem, oldTodo, this );
   } else {
     kDebug() << "No active item, active item is read-only, or locking failed";
   }
