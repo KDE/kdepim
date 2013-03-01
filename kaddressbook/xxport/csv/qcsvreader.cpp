@@ -23,6 +23,8 @@
 #include <QtCore/QTextCodec>
 #include <QtCore/QTextStream>
 
+#include <KLocale>
+
 QCsvBuilderInterface::~QCsvBuilderInterface()
 {
 }
@@ -106,7 +108,7 @@ bool QCsvReader::read( QIODevice *device )
 
   if ( !device->isOpen() ) {
     d->emitBeginLine( row );
-    d->mBuilder->error( "Device is not open" );
+    d->mBuilder->error( i18n("Device is not open") );
     d->emitEndLine( row );
     d->mBuilder->end();
     return false;
