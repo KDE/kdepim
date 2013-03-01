@@ -27,9 +27,6 @@
 #include <QtCore/QScopedPointer>
 
 
-
-
-
 using namespace MessageCore;
 
 class AttachmentFromFolderJob::Private
