@@ -4,10 +4,10 @@
 #include <KLineEdit>
 #include <KListWidget>
 #include <KLocale>
-#include <KPushButton>
 
 #include <QLabel>
 #include <QVBoxLayout>
+#include <KPushButton>
 
 namespace MessageViewer {
 

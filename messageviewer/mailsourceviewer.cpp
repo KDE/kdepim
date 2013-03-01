@@ -40,13 +40,12 @@
 #include <kstandardguiitem.h>
 #include <kwindowsystem.h>
 #include <kglobalsettings.h>
+#include <KTabWidget>
 
 #include <QtCore/QRegExp>
 #include <QApplication>
 #include <QIcon>
-#include <QPushButton>
 #include <QShortcut>
-#include <QTabBar>
 #include <QVBoxLayout>
 #include <QContextMenuEvent>
 #include <QDebug>

@@ -66,6 +66,8 @@
 #include <QClipboard>
 #include <QProcess>
 #include <QFile>
+#include <QMimeData>
+#include <QDrag>
 
 #include <algorithm>
 
