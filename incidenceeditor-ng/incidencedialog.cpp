@@ -710,7 +710,8 @@ void IncidenceDialog::selectCollection( const Akonadi::Collection &collection )
 void IncidenceDialog::setIsCounterProposal( bool isCounterProposal )
 {
   //Q_D( IncidenceDialog );
-  //d->mInvitationDispatcher->setIsCounterProposal( isCounterProposal ); TODO_SERGIO
+  //if (d->mInvitationDispatcher)
+      //d->mInvitationDispatcher->setIsCounterProposal( isCounterProposal ); TODO_SERGIO
 }
 
 QObject *IncidenceDialog::typeAheadReceiver() const
