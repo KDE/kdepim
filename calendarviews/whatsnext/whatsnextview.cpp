@@ -151,7 +151,7 @@ void WhatsNextView::updateView()
     mText += "<h2><img src=\"";
     mText += ipath;
     mText += "\">";
-    mText += i18n( "To-do:" ) + "</h2>\n";
+    mText += i18n( "To-dos:" ) + "</h2>\n";
     mText += "<ul>\n";
     Q_FOREACH( const KCalCore::Todo::Ptr &todo, todos ) {
       if ( !todo->isCompleted() && todo->hasDueDate() && todo->dtDue().date() <= mEndDate ) {
