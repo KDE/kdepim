@@ -270,7 +270,7 @@ void KMeditor::keyPressEvent ( QKeyEvent *e )
     textCursor().clearSelection();
     emit focusUp();
   } else {
-    if(e->key() == Qt::Key_Space || e->key() == Qt::Key_Enter) {
+    if(e->key() == Qt::Key_Space || e->key() == Qt::Key_Enter || Qt::Key_Return) {
       if(d->mAutoCorrection) {
         d->mAutoCorrection->autocorrect((textMode() == KRichTextEdit::Rich), *document(),textCursor().position());
       }
