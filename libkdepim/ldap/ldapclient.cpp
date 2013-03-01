@@ -30,7 +30,6 @@
 #include <kldap/ldapurl.h>
 #include <kldap/ldif.h>
 
-#include <KCodecs>
 #include <KConfig>
 #include <KConfigGroup>
 #include <KDebug>

@@ -21,19 +21,17 @@
 
 #include "kcmldap_p.h"
 
-#include <QtCore/QString>
 #include <QGroupBox>
 #include <QLabel>
 #include <QListWidget>
 #include <QListWidgetItem>
-#include <QPushButton>
 #include <QToolButton>
 #include <QVBoxLayout>
+#include <QPushButton>
 
 #include <kaboutdata.h>
 #include <kapplication.h>
 #include <kcomponentdata.h>
-#include <kconfigdialogmanager.h>
 #include <kconfig.h>
 #include <kconfiggroup.h>
 #include <kdemacros.h>

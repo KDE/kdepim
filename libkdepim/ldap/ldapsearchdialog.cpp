@@ -50,7 +50,6 @@
 #include <klineedit.h>
 #include <klocale.h>
 #include <kmessagebox.h>
-#include <ktoolinvocation.h>
 
 using namespace KLDAP;
 
