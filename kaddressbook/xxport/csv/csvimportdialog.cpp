@@ -216,6 +216,7 @@ CSVImportDialog::CSVImportDialog( QWidget *parent )
 
 CSVImportDialog::~CSVImportDialog()
 {
+  delete mDevice;
 }
 
 KABC::AddresseeList CSVImportDialog::contacts() const
