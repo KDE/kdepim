@@ -20,7 +20,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 //#define MESSAGEVIEWER_READER_HTML_DEBUG 1
-#include <config-messageviewer.h>
+
 
 #include "viewer_p.h"
 #include "viewer.h"

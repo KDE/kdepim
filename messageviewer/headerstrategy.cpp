@@ -30,7 +30,7 @@
 */
 
 
-#include <config-messageviewer.h>
+
 
 #include "headerstrategy.h"
 

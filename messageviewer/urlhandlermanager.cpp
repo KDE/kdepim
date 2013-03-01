@@ -33,7 +33,7 @@
 */
 
 
-#include <config-messageviewer.h>
+
 
 #include "urlhandlermanager.h"
 

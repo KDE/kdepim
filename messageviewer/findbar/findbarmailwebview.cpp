@@ -16,7 +16,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <config-messageviewer.h>
+
 
 #include "findbarmailwebview.h"
 #include "mailwebview.h"
