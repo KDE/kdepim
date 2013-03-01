@@ -149,7 +149,6 @@ class EVENTVIEWS_EXPORT TodoView : public EventViews::EventView
     TodoCategoriesDelegate *mCategoriesDelegate;
 
     TodoViewQuickSearch *mQuickSearch;
-    Akonadi::IncidenceChanger *mChanger;
     TodoViewQuickAddLine *mQuickAdd;
     QToolButton *mFullViewButton;
     QToolButton *mFlatViewButton;
