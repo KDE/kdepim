@@ -54,7 +54,7 @@ class KCModuleProxy;
 class KIntNumInput;
 namespace MessageComposer {
   class ComposerAutoCorrectionWidget;
-  class AutoResizeImageWidget;
+  class ImageScalingWidget;
 }
 
 namespace MessageList {
@@ -161,8 +161,8 @@ public:
   void save();
 
 private:
-  virtual void doLoadFromGlobalSettings();
-  virtual void doLoadOther();
+  void doLoadFromGlobalSettings();
+  void doLoadOther();
   //FIXME virtual void doResetToDefaultsOther();
 
 private:
@@ -199,8 +199,8 @@ private slots:
   void slotCheckOnStatupChanged( bool checked );
 
 private:
-  virtual void doLoadFromGlobalSettings();
-  virtual void doLoadOther();
+  void doLoadFromGlobalSettings();
+  void doLoadOther();
 
   struct RetrievalOptions {
     RetrievalOptions( bool manualCheck, bool offline, bool checkOnStartup )
@@ -258,9 +258,9 @@ private slots:
 
 private:
   //virtual void doLoadFromGlobalSettings();
-  virtual void doLoadOther();
+  void doLoadOther();
   void updateFontSelector();
-  virtual void doResetToDefaultsOther();
+  void doResetToDefaultsOther();
 
 private:
   QCheckBox    *mCustomFontCheck;
@@ -280,8 +280,8 @@ public:
 
 private:
   //virtual void doLoadFromGlobalSettings();
-  virtual void doLoadOther();
-  virtual void doResetToDefaultsOther();
+  void doLoadOther();
+  void doResetToDefaultsOther();
   void loadColor( bool loadFromConfig );
 
 private:
@@ -301,7 +301,7 @@ public:
 
 private:
   //virtual void doLoadFromGlobalSettings();
-  virtual void doLoadOther();
+  void doLoadOther();
   //FIXME virtual void doResetToDefaultsOther();
 
 private: // data
@@ -326,8 +326,8 @@ public:
   void save();
 
 private: // methods
-  virtual void doLoadFromGlobalSettings();
-  virtual void doLoadOther();
+  void doLoadFromGlobalSettings();
+  void doLoadOther();
   // virtual void doResetToDefaultsOther();
   void setDateDisplay( int id, const QString & format );
 
@@ -357,12 +357,11 @@ public:
   void save();
 
 private:
-  virtual void doLoadOther();
+  void doLoadOther();
   //FIXME virtual void doResetToDefaultsOther();
 
 private: // data
   QCheckBox *mCloseAfterReplyOrForwardCheck;
-  QCheckBox *mAccessKeyEnabled;
   MessageViewer::ConfigureWidget *mViewerSettings;
 };
 
@@ -377,7 +376,7 @@ public:
   void save();
 
 private:
-  virtual void doLoadFromGlobalSettings();
+  void doLoadFromGlobalSettings();
 
 private: // data
   QCheckBox    *mSystemTrayCheck;
@@ -454,7 +453,7 @@ private slots:
                       const QModelIndex &, int destinationRow );
 
 private:
-  virtual void doLoadFromGlobalSettings();
+  void doLoadFromGlobalSettings();
   void swapTagsInListBox( const int first, const int second );
   void updateButtons();
 
@@ -522,8 +521,8 @@ protected slots:
   void slotConfigureCompletionOrder();
 
 private:
-  virtual void doLoadFromGlobalSettings();
-  virtual void doResetToDefaultsOther();
+  void doLoadFromGlobalSettings();
+  void doResetToDefaultsOther();
 
 private:
   QCheckBox     *mAutoAppSignFileCheck;
@@ -560,8 +559,8 @@ public:
 private slots:
 
 private:
-  virtual void doLoadFromGlobalSettings();
-  virtual void doResetToDefaultsOther();
+  void doLoadFromGlobalSettings();
+  void doResetToDefaultsOther();
 private:
   TemplateParser::TemplatesConfiguration* mWidget;
 };
@@ -574,10 +573,8 @@ public:
 
   void save();
 
-private slots:
-
 private:
-  virtual void doLoadFromGlobalSettings();
+  void doLoadFromGlobalSettings();
 
 private:
   TemplateParser::CustomTemplates* mWidget;
@@ -592,8 +589,8 @@ public:
   void save();
 
 private:
-  virtual void doLoadFromGlobalSettings();
-  virtual void doResetToDefaultsOther();
+  void doLoadFromGlobalSettings();
+  void doResetToDefaultsOther();
 
 private:
   SimpleStringListEditor *mReplyListEditor;
@@ -615,8 +612,8 @@ private slots:
 
 private:
   //virtual void doLoadFromGlobalSettings();
-  virtual void doLoadOther();
-  virtual void doResetToDefaultsOther();
+  void doLoadOther();
+  void doResetToDefaultsOther();
 
 private:
   SimpleStringListEditor *mCharsetListEditor;
@@ -640,13 +637,13 @@ private slots:
 
 private:
   //virtual void doLoadFromGlobalSettings();
-  virtual void doLoadOther();
-  virtual void doResetToDefaultsOther();
+  void doLoadOther();
+  void doResetToDefaultsOther();
 
 private:
   QCheckBox   *mCreateOwnMessageIdCheck;
   KLineEdit   *mMessageIdSuffixEdit;
-  ListView    *mTagList;
+  ListView    *mHeaderList;
   QPushButton *mRemoveHeaderButton;
   KLineEdit   *mTagNameEdit;
   KLineEdit   *mTagValueEdit;
@@ -666,7 +663,7 @@ private slots:
   void slotOutlookCompatibleClicked();
 
 private:
-  virtual void doLoadFromGlobalSettings();
+  void doLoadFromGlobalSettings();
   //FIXME virtual void doResetToDefaultsOther();
 
 private:
@@ -685,8 +682,8 @@ public:
   void save();
 
 private:
-  virtual void doLoadFromGlobalSettings();
-  virtual void doResetToDefaultsOther();
+  void doLoadFromGlobalSettings();
+  void doResetToDefaultsOther();
 
 private:
   MessageComposer::ComposerAutoCorrectionWidget *autocorrectionWidget;
@@ -705,7 +702,7 @@ private:
   virtual void doResetToDefaultsOther();
 
 private:
-  MessageComposer::AutoResizeImageWidget *autoResizeWidget;
+  MessageComposer::ImageScalingWidget *autoResizeWidget;
 };
 
 
@@ -756,7 +753,7 @@ public:
 
 private:
   //virtual void doLoadFromGlobalSettings();
-  virtual void doLoadOther();
+  void doLoadOther();
   //FIXME virtual void doResetToDefaultsOther();
 
 private:
@@ -780,8 +777,8 @@ public:
   void save();
 
 private:
-  virtual void doLoadFromGlobalSettings();
-  virtual void doLoadOther();
+  void doLoadFromGlobalSettings();
+  void doLoadOther();
   //FIXME virtual void doResetToDefaultsOther();
 
 private:
@@ -804,8 +801,8 @@ private Q_SLOTS:
   //void slotConfigureChiasmus();
 
 private:
-  virtual void doLoadFromGlobalSettings();
-  virtual void doLoadOther();
+  void doLoadFromGlobalSettings();
+  void doLoadOther();
   //FIXME virtual void doResetToDefaultsOther();
 
 private:
@@ -827,7 +824,7 @@ private slots:
 
 private:
   //virtual void doLoadFromGlobalSettings();
-  virtual void doLoadOther();
+  void doLoadOther();
   //FIXME virtual void doResetToDefaultsOther();
 
 private:
@@ -870,8 +867,8 @@ public:
  QString helpAnchor() const;
 
 private:
-  virtual void doLoadFromGlobalSettings();
-  virtual void doLoadOther();
+  void doLoadFromGlobalSettings();
+  void doLoadOther();
   //FIXME virtual void doResetToDefaultsOther();
 
 private:
@@ -884,10 +881,10 @@ class MiscPageInviteTab : public ConfigModuleTab  {
 public:
   explicit MiscPageInviteTab( QWidget * parent=0 );
   void save();
-  virtual void doResetToDefaultsOther();
+  void doResetToDefaultsOther();
 
 private:
-  virtual void doLoadFromGlobalSettings();
+  void doLoadFromGlobalSettings();
 
 private:
   MessageViewer::InvitationSettings *mInvitationUi;

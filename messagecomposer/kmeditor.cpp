@@ -1,7 +1,7 @@
 /*
  * kmeditor.cpp
  *
- * Copyright 2007, 2008, 2009, 2010, 2011, 2012 Laurent Montel <montel@kde.org>
+ * Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013 Laurent Montel <montel@kde.org>
  * Copyright 2008 Thomas McGuire <mcguire@kde.org>
  *
  * This library is free software; you can redistribute it and/or
@@ -27,9 +27,7 @@
 #include "messagecomposersettings.h"
 
 
-#ifdef GRANTLEE_GREATER_0_2
 #include <grantlee/plaintextmarkupbuilder.h>
-#endif
 
 #include <KEncodingFileDialog>
 #include <KLocale>
@@ -766,7 +764,6 @@ bool KMeditor::replaceSignature( const KPIMIdentities::Signature &oldSig,
 
 void KMeditor::fillComposerTextPart ( TextPart* textPart ) const
 {
-#ifdef GRANTLEE_GREATER_0_2 
   if( isFormattingUsed() && MessageComposer::MessageComposerSettings::self()->improvePlainTextOfHtmlMessage() ) {
     Grantlee::PlainTextMarkupBuilder *pb = new Grantlee::PlainTextMarkupBuilder();
 
@@ -785,10 +782,6 @@ void KMeditor::fillComposerTextPart ( TextPart* textPart ) const
     textPart->setCleanPlainText( toCleanPlainText() );
     textPart->setWrappedPlainText( toWrappedPlainText() );
   }
-#else
-  textPart->setCleanPlainText( toCleanPlainText() );
-  textPart->setWrappedPlainText( toWrappedPlainText() );
-#endif
   textPart->setWordWrappingEnabled( lineWrapMode() == QTextEdit::FixedColumnWidth );
   if( isFormattingUsed() ) {
     textPart->setCleanHtml( toCleanHtml() );
@@ -818,7 +811,6 @@ void KMeditor::forcePlainTextMarkup(bool force)
 
 void KMeditor::insertPlainTextImplementation()
 {
-#ifdef GRANTLEE_GREATER_0_2
   if( d->forcePlainTextMarkup ) {
     Grantlee::PlainTextMarkupBuilder *pb = new Grantlee::PlainTextMarkupBuilder();
 
@@ -831,9 +823,6 @@ void KMeditor::insertPlainTextImplementation()
   } else {
     document()->setPlainText(document()->toPlainText());
   }
-#else
-  document()->setPlainText(document()->toPlainText()); 
-#endif
 }
 
 #include "kmeditor.moc"

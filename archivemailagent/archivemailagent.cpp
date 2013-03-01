@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -73,14 +73,14 @@ void ArchiveMailAgent::mailCollectionRemoved(const Akonadi::Collection& collecti
 void ArchiveMailAgent::showConfigureDialog(qlonglong windowId)
 {
   ArchiveMailDialog *dialog = new ArchiveMailDialog();
-  if(windowId) {
+  if (windowId) {
 #ifndef Q_WS_WIN
     KWindowSystem::setMainWindow( dialog, windowId );
 #else
     KWindowSystem::setMainWindow( dialog, (HWND)windowId );
 #endif
   }
-  if(dialog->exec()) {
+  if (dialog->exec()) {
     mArchiveManager->load();
   }
   delete dialog;

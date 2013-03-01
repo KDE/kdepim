@@ -168,7 +168,7 @@ SieveDebugDialog::SieveDebugDialog( QWidget *parent )
     mSieveJob( 0 )
 {
     setCaption( i18n( "Sieve Diagnostics" ) );
-    setButtons( Ok );
+    setButtons( Close );
 
     // Collect all accounts
     const Akonadi::AgentInstance::List lst = KSieveUi::Util::imapAgentInstances();

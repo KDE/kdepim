@@ -36,6 +36,7 @@
 
 #include <QtCore/QSet>
 #include <QtCore/QRegExp>
+#include <QTextDocument>
 
 using namespace Akonadi;
 
@@ -332,7 +333,7 @@ QString GrantleeContactFormatter::toHtml( HtmlForm form ) const
   // Custom fields
 
   QVariantList customFields;
-
+  QVariantList customFieldsUrl;
   static QSet<QString> blacklistedKeys;
   if ( blacklistedKeys.isEmpty() ) {
     blacklistedKeys.insert( QLatin1String( "CRYPTOPROTOPREF" ) );
@@ -366,48 +367,52 @@ QString GrantleeContactFormatter::toHtml( HtmlForm form ) const
           continue;
         }
 
+        bool addUrl = false;
         // check whether it is a custom local field
         foreach ( const QVariantMap &description, customFieldDescriptions() ) {
           if ( description.value( QLatin1String( "key" ) ).toString() == key ) {
             key = description.value( QLatin1String( "title" ) ).toString();
-
-            if ( description.value( QLatin1String( "type" ) ) ==
-                 QLatin1String( "boolean" ) ) {
+            const QString descriptionType = description.value( QLatin1String( "type" ) ).toString();
+            if ( descriptionType == QLatin1String( "boolean" ) ) {
               if ( value == QLatin1String( "true" ) ) {
                 value = i18nc( "Boolean value", "yes" );
               } else {
                 value = i18nc( "Boolean value", "no" );
               }
 
-            } else if ( description.value( QLatin1String( "type" ) ) ==
-                        QLatin1String( "date" ) ) {
+            } else if ( descriptionType  == QLatin1String( "date" ) ) {
               const QDate date = QDate::fromString( value, Qt::ISODate );
               value = KGlobal::locale()->formatDate( date, KLocale::ShortDate );
 
-            } else if ( description.value( QLatin1String( "type" ) ) ==
-                        QLatin1String( "time" ) ) {
+            } else if ( descriptionType == QLatin1String( "time" ) ) {
               const QTime time = QTime::fromString( value, Qt::ISODate );
               value = KGlobal::locale()->formatTime( time );
 
-            } else if ( description.value( QLatin1String( "type" ) ) ==
-                        QLatin1String( "datetime" ) ) {
+            } else if ( descriptionType == QLatin1String( "datetime" ) ) {
               const QDateTime dateTime = QDateTime::fromString( value, Qt::ISODate );
               value = KGlobal::locale()->formatDateTime( dateTime, KLocale::ShortDate );
+            } else if ( descriptionType == QLatin1String("url") ) {
+              value = KStringHandler::tagUrls( Qt::escape(value) );
+              addUrl = true;
             }
             break;
           }
         }
-
         QVariantHash customFieldObject;
         customFieldObject.insert( QLatin1String( "title" ), key );
         customFieldObject.insert( QLatin1String( "value" ), value );
 
-        customFields.append( customFieldObject );
+        if (addUrl) {
+            customFieldsUrl.append( customFieldObject );
+        } else {
+            customFields.append( customFieldObject );
+        }
       }
     }
   }
 
   contactObject.insert( QLatin1String( "customFields" ), customFields );
+  contactObject.insert( QLatin1String( "customFieldsUrl" ), customFieldsUrl );
 
   QVariantHash colorsObject;
 

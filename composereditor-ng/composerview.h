@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -20,24 +20,95 @@
 
 #ifndef COMPOSERVIEW_H
 #define COMPOSERVIEW_H
-
+#include "composereditor_export.h"
 #include <KWebView>
+
 class KActionCollection;
+class KToolBar;
 
 namespace ComposerEditorNG
 {
 class ComposerViewPrivate;
 
-class ComposerView : public KWebView
+class COMPOSEREDITORNG_EXPORT ComposerView : public KWebView
 {
     Q_OBJECT
 public:
     explicit ComposerView(QWidget * parent = 0);
     ~ComposerView();
 
-    void createActions(KActionCollection *actionCollection);
+    /**
+     * @brief initialHtml
+     * @return initial html file. Needs to initialize view
+     */
+    virtual QString initialHtml();
+
+    enum ComposerViewAction {
+        //Separator
+        Separator,
+        //Real Actions
+        Bold,
+        Italic,
+        Underline,
+        StrikeOut,
+        AlignLeft,
+        AlignCenter,
+        AlignRight,
+        AlignJustify,
+        DirectionLtr,
+        DirectionRtl,
+        SubScript,
+        SuperScript,
+        HorizontalRule,
+        ListIndent,
+        ListDedent,
+        OrderedList,
+        UnorderedList,
+        FormatType,
+        FontSize,
+        FontFamily,
+        Emoticon,
+        InsertHtml,
+        InsertImage,
+        InsertTable,
+        InsertLink,
+        InsertSpecialChar,
+        TextForegroundColor,
+        TextBackgroundColor,
+        FormatReset,
+        SpellCheck,
+        Find,
+        Replace,
+        PageColor,
+        BlockQuote,
+        SaveAs,
+        Print,
+        PrintPreview,
+        PasteWithoutFormatting,
+
+        //Keep at end
+        LastType
+    };
+
+    virtual void addCreatedActionsToActionCollection(KActionCollection *actionCollection);
+
+    void createActions(const QList<ComposerViewAction>&);
+
+    void createAllActions();
+
+    void createToolBar(const QList<ComposerViewAction>&lstAction, KToolBar *toolbar);
 
     void setActionsEnabled(bool enabled);
+
+    void setHtmlContent( const QString& html );
+
+    QAction *action(ComposerViewAction actionType) const;
+
+    /**
+     * @brief evaluateJavascript
+     * @param javascript evaluate javascript function.
+     */
+    void evaluateJavascript( const QString& javascript);
 
 protected:
     void contextMenuEvent(QContextMenuEvent* event);
@@ -81,6 +152,9 @@ private:
     Q_PRIVATE_SLOT( d, void _k_slotPrint() )
     Q_PRIVATE_SLOT( d, void _k_slotPrintPreview() )
     Q_PRIVATE_SLOT( d, void _k_changeAutoSpellChecking(bool) )
+    Q_PRIVATE_SLOT( d, void _k_slotEditList() )
+    Q_PRIVATE_SLOT( d, void _k_slotPasteWithoutFormatting() )
+    Q_PRIVATE_SLOT( d, void _k_slotInsertSpecialChar() )
 };
 }
 

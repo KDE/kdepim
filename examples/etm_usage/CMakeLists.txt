@@ -10,7 +10,7 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${etm_usage_SOURCE_DIR})
   include(MacroOptionalAddSubdirectory)
   include(CheckIncludeFiles)
   include(FindKdepimLibs)
-endif(${CMAKE_SOURCE_DIR} STREQUAL ${etm_usage_SOURCE_DIR})
+endif()
 
 include_directories(
   ${KDE4_INCLUDES}

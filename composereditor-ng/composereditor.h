@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -22,6 +22,7 @@
 #define COMPOSEREDITOR_H
 
 #include "composereditor_export.h"
+#include "composerview.h"
 
 #include <QWidget>
 #include <QWebPage>
@@ -40,12 +41,60 @@ public:
     Q_PROPERTY(bool enableRichText READ enableRichText WRITE setEnableRichText)
 
     explicit ComposerEditor(QWidget *parent);
+    explicit ComposerEditor(ComposerView *view, QWidget *parent);
+
     ~ComposerEditor();
 
-    virtual void createActions(KActionCollection *actionCollection);
+    virtual void addCreatedActionsToActionCollection(KActionCollection *actionCollection);
 
+    /**
+     * @brief createActions create a list of action from default action.
+     */
+    void createActions(const QList<ComposerView::ComposerViewAction>&);
+
+    /**
+     * @brief createAllActions. Create all actions.
+     */
+    void createAllActions();
+
+    /**
+     * @brief createToolBar.
+     */
+    void createToolBar(const QList<ComposerView::ComposerViewAction>&);
+
+    /**
+     * @brief addActionInToolBar add action in toolbar. QAction that is not in default action from composerview.
+     * @param act
+     */
+    void addActionInToolBar(QAction *act);
+
+    /**
+     * @brief toolbar
+     * @return a pointer from toolbar.
+     */
+    KToolBar *toolbar() const;
+
+    /**
+     * @brief plainTextContent
+     * @return text as plain text.
+     */
     QString plainTextContent() const;
 
+    /**
+     * @brief htmlContent
+     * @return the html content.
+     */
+    QString htmlContent() const;
+    /**
+     * @brief setHtmlContent
+     * @param html set html in composerview.
+     */
+    void setHtmlContent( const QString& html );
+
+    /**
+     * @brief enableRichText
+     * @return true if we use richtext mode. Otherwise return false.
+     */
     bool enableRichText() const;
 
     /**
@@ -61,6 +110,10 @@ public:
      */
     QAction* action(QWebPage::WebAction action);
 
+    /**
+     * @brief view
+     * @return the viewer.
+     */
     ComposerView *view() const;
 
 public Q_SLOTS:
@@ -73,6 +126,10 @@ public Q_SLOTS:
 
 Q_SIGNALS:
     void openLink(const QUrl&);
+    /**
+     * @brief textChanged emit this signal when text in view changed.
+     */
+    void textChanged();
 
 private:
     friend class ComposerEditorPrivate;

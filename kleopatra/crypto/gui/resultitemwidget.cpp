@@ -76,7 +76,7 @@ namespace {
 class ResultItemWidget::Private {
     ResultItemWidget* const q;
 public:
-    explicit Private( const shared_ptr<const Task::Result> result, ResultItemWidget* qq ) : q( qq ), m_result( result ), m_detailsLabel( 0 ), m_showDetailsLabel( 0 ) { assert( m_result ); }
+    explicit Private( const shared_ptr<const Task::Result> result, ResultItemWidget* qq ) : q( qq ), m_result( result ), m_detailsLabel( 0 ), m_showDetailsLabel( 0 ), m_closeButton( 0 ) { assert( m_result ); }
 
     void slotLinkActivated( const QString & );
     void updateShowDetailsLabel();

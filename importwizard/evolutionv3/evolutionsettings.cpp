@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -259,11 +259,13 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
     kDebug() << "Account not found";
     return;
   }
-  KPIMIdentities::Identity* newIdentity = createIdentity();
+
   QString name;
   if(domElement.hasAttribute(QLatin1String("name"))) {
     name = domElement.attribute(QLatin1String("name"));
   }
+
+  KPIMIdentities::Identity* newIdentity = createIdentity(name);
 
   const bool enableManualCheck = (domElement.attribute(QLatin1String("enabled"))== QLatin1String( "true" ));
 

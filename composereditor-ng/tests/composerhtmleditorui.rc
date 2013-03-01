@@ -23,6 +23,7 @@
   <Action name="htmleditor_format_list_indent_less"/>
   <Separator lineSeparator="true"/>
   <Action name="htmleditor_insert_horizontal_rule"/>
+  <Action name="htmleditor_insert_specialchar"/>
   </Menu>
 </MenuBar>
 

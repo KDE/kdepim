@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -58,7 +58,7 @@ QString ArchiveMailInfo::dirArchive() const
 {
   const QDir dir(url().path());
   QString dirPath = url().path();
-  if(!dir.exists()) {
+  if (!dir.exists()) {
     dirPath = QDir::homePath();
     qDebug()<<" Path doesn't exist"<<dir.path();
   }

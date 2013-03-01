@@ -33,7 +33,8 @@
 #include "signencryptjob.h"
 #include "skeletonmessagejob.h"
 #include "transparentjob.h"
-#include "autoimageresizing/autoresizeimagejob.h"
+#include "imagescaling/imagescalingjob.h"
+#include "imagescaling/imagescalingutils.h"
 #include "messagecomposersettings.h"
 
 
@@ -518,21 +519,16 @@ void Composer::addAttachmentPart( AttachmentPart::Ptr part, bool autoresizeImage
   Q_D( Composer );
   Q_ASSERT( !d->started );
   Q_ASSERT( !d->attachmentParts.contains( part ) );
-  if( autoresizeImage ) {
-      if(MessageComposer::MessageComposerSettings::self()->skipImageLowerSizeEnabled() &&
-              (part->size() > MessageComposer::MessageComposerSettings::self()->skipImageLowerSize() *1024)) {
-          if(part->mimeType() == "image/gif" ||
-                  part->mimeType() == "image/jpeg" ||
-                  part->mimeType() == "image/png" ) {
-              MessageComposer::AutoResizeImageJob *autoResizeJob = new MessageComposer::AutoResizeImageJob(this);
-              if(autoResizeJob->loadImageFromData(part->data())) {
-                  if(autoResizeJob->resizeImage()) {
-                      part->setData(autoResizeJob->imageArray());
-                      part->setMimeType(autoResizeJob->mimetype());
-                  }
+  if( autoresizeImage ) {      
+      if (MessageComposer::Utils::resizeImage(part)) {
+          MessageComposer::ImageScalingJob *autoResizeJob = new MessageComposer::ImageScalingJob(this);
+          if(autoResizeJob->loadImageFromData(part->data())) {
+              if(autoResizeJob->resizeImage()) {
+                  part->setData(autoResizeJob->imageArray());
+                  part->setMimeType(autoResizeJob->mimetype());
               }
-              delete autoResizeJob;
           }
+          delete autoResizeJob;
       }
   }
   d->attachmentParts.append( part );

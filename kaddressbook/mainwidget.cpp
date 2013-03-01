@@ -48,7 +48,6 @@
 #include <Akonadi/AttributeFactory>
 #include <Akonadi/CollectionPropertiesDialog>
 #include <Akonadi/Contact/ContactDefaultActions>
-#include <Akonadi/Contact/ContactEditorDialog>
 #include <Akonadi/Contact/ContactGroupEditorDialog>
 #include <Akonadi/Contact/ContactGroupViewer>
 #include <Akonadi/Contact/ContactsFilterProxyModel>
@@ -450,6 +449,8 @@ void MainWidget::setupGui()
 
   mMainWidgetSplitter1->setStretchFactor( 1, 9 );	// maximum width for detail
   mMainWidgetSplitter2->setStretchFactor( 1, 9 );	// for intuitive resizing
+  mMainWidgetSplitter2->setChildrenCollapsible(false);
+  mMainWidgetSplitter1->setChildrenCollapsible(false);
 
   QVBoxLayout *detailsPaneLayout = new QVBoxLayout( mDetailsPane );
   detailsPaneLayout->setMargin( 0 );
@@ -482,8 +483,7 @@ void MainWidget::setupGui()
   Akonadi::ContactDefaultActions *actions = new Akonadi::ContactDefaultActions( this );
   actions->connectToView( mContactDetails );
   actions->connectToView( mContactGroupDetails );
-//#ifdef GRANTLEE_FOUND
-#if 0 // disabled because Grantlee supports no i18n for KDE 4.6 yet
+#ifdef GRANTLEE_FOUND
  Akonadi::GrantleeContactFormatter *formatter =
    new Akonadi::GrantleeContactFormatter(
      KStandardDirs::locate( "data", QLatin1String( "kaddressbook/viewertemplates/" ) ) );

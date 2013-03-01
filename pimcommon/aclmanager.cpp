@@ -68,22 +68,16 @@ class AclModel : public QAbstractListModel
         return QString::fromLatin1( "%1: %2" ).
                  arg( QString::fromLatin1( right.first ) ).
                  arg( AclUtils::permissionsToUserString( right.second ) );
-        break;
       case UserIdRole:
         return QString::fromLatin1( right.first );
-        break;
       case PermissionsRole:
         return QVariant( static_cast<int>( right.second ) );
-        break;
       case PermissionsTextRole:
         return AclUtils::permissionsToUserString( right.second );
-        break;
       default:
         return QVariant();
-        break;
       }
 
-      return QVariant();
     }
 
     virtual bool setData( const QModelIndex &index, const QVariant &value, int role = Qt::EditRole )

@@ -53,7 +53,7 @@
 <qandaentry><question><para>How to control your Roaming profile's connection?</para></question>
 <answer>
   <para>You set up a <emphasis>Roaming profile</emphasis> to access your home server while you are on the road, but it keeps trying to connect even when you are at home. Auto-connection is disabled in the setup screens.</para>
-  <para><menuchoice><guimenu>Settings</guimenu><guisubmenu>Configure KMail</guisubmenu><guimenuitem>Accounts</guimenuitem><guimenuitem>Receiving (tab)</guimenuitem><guimenuitem>(select the account to exclude)</guimenuitem><guimenuitem>Modify</guimenuitem><guimenuitem>General (tab)</guimenuitem></menuchoice>, uncheck <guilabel>Include in manual mail check</guilabel>. This will exclude the profile when you hit the download icon, but the profile will still be available from the drop-down list, making it easy to get your mail while away from home.</para>
+  <para><menuchoice><guimenu>Settings</guimenu><guisubmenu>Configure KMail</guisubmenu><guimenuitem>Accounts</guimenuitem><guimenuitem>Receiving (tab)</guimenuitem><guimenuitem>(select the account to exclude)</guimenuitem><guimenuitem>Retrieval Options</guimenuitem></menuchoice>, uncheck <guilabel>Include in Manual Mail Check</guilabel>. This will exclude the profile when you hit the download icon, but the profile will still be available from the drop-down list, making it easy to get your mail while away from home.</para>
 </answer>
 </qandaentry>
 
@@ -126,7 +126,7 @@
   <para><emphasis>Symptom:</emphasis> You are using &kmail; on a netbook, and find that the new <emphasis>Aggregation</emphasis> display leaves you little screen space</para>
   <para><emphasis>Solution:</emphasis>If you want to change the look so that a mail uses a single row instead of two rows, go to  <menuchoice><guimenu>View</guimenu><guisubmenu>Message List</guisubmenu><guimenuitem>Theme</guimenuitem></menuchoice> and change the theme to <guilabel>Classic</guilabel>. If you want to disable grouping by date, change the aggregation using <menuchoice><guimenu>View</guimenu><guisubmenu>Message List</guisubmenu><guimenuitem>Aggregation</guimenuitem></menuchoice> to <guilabel>Standard Mailing List</guilabel>. Now your &kmail; will look exactly like it did in earlier versions.</para>
 
-<para>In <menuchoice><guimenu>Settings</guimenu><guisubmenu>Configure KMail</guisubmenu><guimenuitem>Appearance</guimenuitem><guimenuitem>Fonts</guimenuitem></menuchoice> you can select <guilabel>Custom Font</guilabel> and change the setting for each component in the list. This is when you discover that your folder list and the message bodies do use the fonts you want, but the message list still has too large a font.</para>
+<para>In <menuchoice><guimenu>Settings</guimenu><guisubmenu>Configure KMail</guisubmenu><guimenuitem>Appearance</guimenuitem><guimenuitem>Fonts</guimenuitem></menuchoice> you can select <guilabel>Use custom fonts</guilabel> and change the setting for each component in the list. This is when you discover that your folder list and the message bodies do use the fonts you want, but the message list still has too large a font.</para>
 
 <para>You can make the font changes by right-clicking on the Message List headers, and selecting <menuchoice><guimenu>Theme</guimenu><guisubmenu>Configure</guisubmenu><guimenuitem>Appearance Tab</guimenuitem></menuchoice>.
 Each one of those column headers needs to be clicked on, and your new custom font set. At the end of this, the message list will display in the same font as the rest of your layout.</para>
@@ -633,7 +633,7 @@ used.</para>
 </qandaentry>
 
 <qandaentry>
-<question><para>How do I leave messages on the server?</para></question>
+<question><para>How do I leave messages on the POP3 server?</para></question>
 <answer><!--<para>See the <link linkend="popfilters">Download filters</link> chapter.-->
 <para>If you want to leave all messages on the server: open up the
 <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure &kmail;...</guimenuitem>
@@ -751,7 +751,7 @@ the &imap; account, the Local Folders will stay collapsed when &kmail; starts.
   </listitem>
   <listitem>
     <para>Create a search on mailing list messages</para>
-    <para>Go to the folder where your mailing list messages are stored &eg; (Local Folders/KDE-PIM-USERS) and hit <keycap>S</keycap> key or in the menu <menuchoice><guimenu>Edit</guimenu><guimenuitem>Find Messages</guimenuitem></menuchoice>.</para>
+    <para>Go to the folder where your mailing list messages are stored (&eg; Local Folders/KDE-PIM-USERS) and hit <keycap>S</keycap> key or in the menu <menuchoice><guimenu>Edit</guimenu><guimenuitem>Find Messages</guimenuitem></menuchoice>.</para>
     <itemizedlist>
       <listitem>
 	<para>Select <guilabel>Match all of the following</guilabel><footnote><para>Pay attention to the <guilabel>Include sub-folders</guilabel>.</para></footnote>
@@ -778,8 +778,8 @@ the &imap; account, the Local Folders will stay collapsed when &kmail; starts.
 
 <qandaentry>
 <question><para>How to use E-Mail Translation?</para></question>
-<answer><para><emphasis>Symptom</emphasis>: you receive mail messages in different languages and want to translate them without doing lots of copy and paste.</para>
-<para><emphasis>Solution</emphasis>: using an external program to translate our E-Mail and display it.</para>
+<answer><para><emphasis>Symptom:</emphasis> you receive mail messages in different languages and want to translate them without doing lots of copy and paste.</para>
+<para><emphasis>Solution:</emphasis> using an external program to translate our E-Mail and display it.</para>
 <para><emphasis>Step by step implementation</emphasis></para>
 <para><warning><para>The provided solution was tested limited number of times and should be used with caution.</para></warning></para>
 <itemizedlist>
@@ -820,7 +820,7 @@ my $translation_command = "translate ";
 my $languages_pair = "-f $from_language -t $to_language";
 my $line;
 my $message='';
-while ($line=)
+while ($line=&lt;&gt;)
 {
     $message.=$line;
 }
@@ -841,8 +841,7 @@ sub rec_parts
 	    rec_parts ($part,@sub_parts);
 	}
 	my $type=$part-&gt;content_type;
-	if (( $part-&gt;content_type =~ m[text/plain]gi )
-|( $part-&gt;content_type eq ''))
+	if (( $part-&gt;content_type =~ m[text/plain]gi )||( $part-&gt;content_type eq ''))
 	{
 	    my $body = $part-&gt;body;
 	    $body=~s/['"`]*//g;
@@ -870,7 +869,7 @@ print $email-&gt;as_string;
 </para></listitem>
 <listitem><para>Troubleshooting
 </para></listitem>
-<listitem><para>If the script is not working you can test it outside of &kmail; to narrow down the responsible component. Save a mail message as <filename>1.mbox</filename> file and run in the terminal <userinput>$~/bin/mail_translate.pl  2.mbox</userinput>
+<listitem><para>If the script is not working you can test it outside of &kmail; to narrow down the responsible component. Save a mail message as <filename>1.mbox</filename> file and run in the terminal <userinput>$~/bin/mail_translate.pl &lt;1.mbox &gt;2.mbox</userinput>
 </para></listitem>
 </itemizedlist>
 </para></listitem>

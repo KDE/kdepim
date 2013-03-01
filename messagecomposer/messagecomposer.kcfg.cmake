@@ -263,6 +263,50 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
       <default>220</default>
     </entry>
 
+    <entry name="FilterSourcePattern" type="String" key="filter-source-pattern">
+      <default></default>
+    </entry>
+
+    <entry name="FilterSourceType" type="Enum">
+      <label></label>
+      <choices>
+        <choice name="NoFilter"/>
+        <choice name="IncludeFilesWithPattern"/>
+        <choice name="ExcludeFilesWithPattern"/>
+      </choices> 
+      <default>NoFilter</default>
+    </entry>
+
+    <entry name="RenameResizedImages" type="Bool" key="rename-resized-images">
+      <default>false</default>
+    </entry>
+    <entry name="RenameResizedImagesPattern" type="String" key="rename-resized-images-pattern">
+      <default></default>
+    </entry>  
+    <entry name="FilterRecipientType" type="Enum">
+      <label></label>
+      <choices>
+        <choice name="NoFilter"/>
+        <choice name="ResizeEachEmailsContainsPattern"/>
+        <choice name="ResizeOneEmailContainsPattern"/>
+        <choice name="DontResizeEachEmailsContainsPattern"/>
+        <choice name="DontResizeOneEmailContainsPattern"/>
+      </choices>
+      <default>NoFilter</default>
+    </entry>
+    <entry name="DoNotResizeEmailsPattern" type="String" key="do-not-resize-emails-pattern">
+      <default></default>
+    </entry>
+    <entry name="ResizeEmailsPattern" type="String" key="resize-emails-pattern">
+      <default></default>
+    </entry>
+    <entry name="ResizeImagesWithFormats" type="Bool" key="resize-image-with-formats">
+      <default>false</default>
+    </entry>
+    <entry name="ResizeImagesWithFormatsType" type="String" key="resize-image-with-formats-type">
+      <default></default>
+    </entry>
+
   </group>
 </kcfg>
 

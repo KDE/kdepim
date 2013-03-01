@@ -104,32 +104,32 @@ namespace KMail {
     // "obtain X-Face from" combo and label:
     hlay = new QHBoxLayout(); // inherits spacing
     vlay->addLayout( hlay );
-    mSourceCombo = new KComboBox( this );
-    mSourceCombo->setEditable( false );
-    mSourceCombo->setWhatsThis(
+    KComboBox *sourceCombo = new KComboBox( this );
+    sourceCombo->setEditable( false );
+    sourceCombo->setWhatsThis(
                     i18n("Click on the widgets below to obtain help on the input methods."));
-    mSourceCombo->setEnabled( false ); // since !mEnableCheck->isChecked()
-    mSourceCombo->addItems( QStringList()
+    sourceCombo->setEnabled( false ); // since !mEnableCheck->isChecked()
+    sourceCombo->addItems( QStringList()
         << i18nc( "continuation of \"obtain picture from\"",
                  "External Source" )
         << i18nc( "continuation of \"obtain picture from\"",
                  "Input Field Below" ) );
     label = new QLabel( i18n("Obtain pic&ture from:"), this );
-    label->setBuddy( mSourceCombo );
+    label->setBuddy( sourceCombo );
     label->setEnabled( false ); // since !mEnableCheck->isChecked()
     hlay->addWidget( label );
-    hlay->addWidget( mSourceCombo, 1 );
+    hlay->addWidget( sourceCombo, 1 );
 
     // widget stack that is controlled by the source combo:
     QStackedWidget * widgetStack = new QStackedWidget( this );
     widgetStack->setEnabled( false ); // since !mEnableCheck->isChecked()
     vlay->addWidget( widgetStack, 1 );
-    connect( mSourceCombo, SIGNAL(highlighted(int)),
+    connect( sourceCombo, SIGNAL(highlighted(int)),
              widgetStack, SLOT(setCurrentIndex(int)) );
-    connect( mSourceCombo, SIGNAL(activated(int)),
+    connect( sourceCombo, SIGNAL(activated(int)),
              widgetStack, SLOT(setCurrentIndex(int)) );
     connect( mEnableCheck, SIGNAL(toggled(bool)),
-             mSourceCombo, SLOT(setEnabled(bool)) );
+             sourceCombo, SLOT(setEnabled(bool)) );
     connect( mEnableCheck, SIGNAL(toggled(bool)),
              widgetStack, SLOT(setEnabled(bool)) );
     connect( mEnableCheck, SIGNAL(toggled(bool)),
@@ -172,7 +172,7 @@ namespace KMail {
     label1->setWordWrap( true );
     page_vlay->addWidget( label1 );
 
-    widgetStack->setCurrentIndex( 0 ); // since mSourceCombo->currentItem() == 0
+    widgetStack->setCurrentIndex( 0 ); // since sourceCombo->currentItem() == 0
 
     // page 1: input field for direct entering
     ++pageno;
@@ -223,8 +223,7 @@ namespace KMail {
   void XFaceConfigurator::setXfaceFromFile( const KUrl &url )
   {
     QString tmpFile;
-    if( KIO::NetAccess::download( url, tmpFile, this ) )
-    {
+    if (KIO::NetAccess::download( url, tmpFile, this )) {
       KXFace xf;
       mTextEdit->setText( xf.fromImage( QImage( tmpFile ) ) );
       KIO::NetAccess::removeTempFile( tmpFile );
@@ -235,8 +234,8 @@ namespace KMail {
 
   void XFaceConfigurator::slotSelectFile()
   {
-    QStringList mimeTypes = KImageIO::mimeTypes (KImageIO::Reading);
-    const QString filter = mimeTypes.join (" ");
+    const QStringList mimeTypes = KImageIO::mimeTypes (KImageIO::Reading);
+    const QString filter = mimeTypes.join (QLatin1String(" "));
     const KUrl url = KFileDialog::getOpenUrl( QString(), filter, this, QString() );
     if ( !url.isEmpty() )
       setXfaceFromFile( url );
@@ -269,13 +268,12 @@ namespace KMail {
     if ( contact.photo().isIntern() )
     {
       const QImage photo = contact.photo().data();
-      if ( !photo.isNull() )
-      {
+      if ( !photo.isNull() ) {
         KXFace xf;
         mTextEdit->setText( xf.fromImage( photo ) );
-      }
-      else
+      } else {
         KMessageBox::information( this, i18n("No picture set for your address book entry."), i18n("No Picture") );
+      }
 
     }
     else
@@ -292,8 +290,7 @@ namespace KMail {
   {
     QString str = mTextEdit->toPlainText();
 
-    if ( !str.isEmpty() )
-    {
+    if ( !str.isEmpty() ) {
       if ( str.startsWith( QLatin1String("x-face:"), Qt::CaseInsensitive ) )
       {
         str = str.remove( "x-face:", Qt::CaseInsensitive );
@@ -302,9 +299,7 @@ namespace KMail {
       KXFace xf;
       const QPixmap p = QPixmap::fromImage( xf.toImage(str) );
       mXFaceLabel->setPixmap( p );
-    }
-    else
-    {
+    } else {
       mXFaceLabel->clear();
     }
   }

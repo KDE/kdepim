@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -112,19 +112,26 @@ bool ThunderbirdImportData::importFilters()
   QDir dir(path);
   bool filtersAdded = false;
   const QStringList subDir = dir.entryList(QDir::AllDirs|QDir::NoDotAndDotDot,QDir::Name);
+  if (subDir.isEmpty())
+      return true;
+
   Q_FOREACH( const QString& mailPath, subDir ) {
     const QString subMailPath(path + QLatin1Char('/') + mailPath);
     QDir dirMail(subMailPath);
     const QStringList subDirMail = dirMail.entryList(QDir::AllDirs|QDir::NoDotAndDotDot,QDir::Name);
+    bool foundFilterFile = false;
     Q_FOREACH( const QString& file, subDirMail ) {
       const QString filterFile(subMailPath +QLatin1Char('/')+ file + QLatin1String("/msgFilterRules.dat"));
       if(QFile(filterFile).exists()) {
+        foundFilterFile = true;
         const bool added = addFilters( filterFile, MailCommon::FilterImporterExporter::ThunderBirdFilter );
         if(!filtersAdded && added) {
           filtersAdded = true;
         }
       }
     }
+    if (!foundFilterFile)
+        return true;
   }
   return filtersAdded;
 }

@@ -20,6 +20,7 @@ Name[it]=Tasks
 Name[kk]=Тапсырмалар
 Name[km]=ភារកិច្ច​
 Name[lt]=Užduotys
+Name[mr]=कार्ये
 Name[nb]=Oppgaver
 Name[nds]=Opgaven
 Name[nl]=Taken
@@ -39,6 +40,7 @@ Name[sv]=Uppgifter
 Name[ug]=ۋەزىپىلەر
 Name[uk]=Завдання
 Name[x-test]=xxTasksxx
+Name[zh_CN]=任务
 Name[zh_TW]=工作
 Exec=tasks-mobile
 

@@ -54,7 +54,6 @@ namespace Akonadi {
   class EntityMimeTypeFilterModel;
 }
 
-#define IMAP_RESOURCE_IDENTIFIER "akonadi_imap_resource"
 #define POP3_RESOURCE_IDENTIFIER "akonadi_pop3_resource"
 #define MAILDISPATCHER_RESOURCE_IDENTIFIER "akonadi_maildispatcher_agent"
 namespace KMail
@@ -98,8 +97,7 @@ namespace Util {
      * Handles a clicked URL, but only in case the viewer didn't handle it.
      * Currently only support mailto.
      */
-    void handleClickedURL( const KUrl &url,  const QSharedPointer<MailCommon::FolderCollection> &folder );
-    void handleClickedURL( const KUrl &url );
+    bool handleClickedURL( const KUrl &url, const QSharedPointer<MailCommon::FolderCollection> &folder = QSharedPointer<MailCommon::FolderCollection>() );
 
 
     bool mailingListsHandleURL( const KUrl::List& lst,const QSharedPointer<MailCommon::FolderCollection> &folder );

@@ -2965,8 +2965,6 @@ ModelPrivate::ViewItemJobResult ModelPrivate::viewItemJobStepInternalForJobPass1
         if ( curIndex <= endIndex )
         {
           job->setCurrentIndex( curIndex );
-          if ( mi )
-            delete mi;
           return ViewItemJobInterrupted;
         }
       }

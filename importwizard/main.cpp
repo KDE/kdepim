@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
   //FIXME: "wizards" are "assistents" in new KDE slang
   KAboutData aboutData( "importwizard", 0, ki18n("importwizard"),
     KDEPIM_VERSION, ki18n("PIM Import Tool"), KAboutData::License_GPL_V2,
-    ki18n("Copyright © 2012 importwizard authors"));
+    ki18n("Copyright © 2012-2013 importwizard authors"));
   aboutData.addAuthor(ki18n("Laurent Montel"), ki18n("Maintainer"), "montel@kde.org");
   aboutData.setProgramIconName("kontact-import-wizard");
   KCmdLineArgs::init( argc, argv, &aboutData );

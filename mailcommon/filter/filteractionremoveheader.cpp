@@ -19,9 +19,10 @@
 
 #include "filteractionremoveheader.h"
 
-#include "messageviewer/minimumcombobox.h"
+#include "pimcommon/minimumcombobox.h"
 
 #include <KDE/KLocale>
+#include <KDE/KLineEdit>
 
 using namespace MailCommon;
 
@@ -45,12 +46,14 @@ FilterActionRemoveHeader::FilterActionRemoveHeader( QObject *parent )
 
 QWidget* FilterActionRemoveHeader::createParamWidget( QWidget *parent ) const
 {
-  MessageViewer::MinimumComboBox *comboBox = new MessageViewer::MinimumComboBox( parent );
+  PimCommon::MinimumComboBox *comboBox = new PimCommon::MinimumComboBox( parent );
   comboBox->setEditable( true );
   comboBox->setInsertPolicy( QComboBox::InsertAtBottom );
   setParamWidgetValue( comboBox );
 
   connect( comboBox, SIGNAL(currentIndexChanged(int)),
+           this, SIGNAL(filterActionModified()) );
+  connect( comboBox->lineEdit(), SIGNAL(textChanged(QString)),
            this, SIGNAL(filterActionModified()) );
 
   return comboBox;
@@ -80,7 +83,7 @@ SearchRule::RequiredPart FilterActionRemoveHeader::requiredPart() const
 
 void FilterActionRemoveHeader::setParamWidgetValue( QWidget *paramWidget ) const
 {
-  MessageViewer::MinimumComboBox *comboBox = dynamic_cast<MessageViewer::MinimumComboBox*>(paramWidget );
+  PimCommon::MinimumComboBox *comboBox = dynamic_cast<PimCommon::MinimumComboBox*>(paramWidget );
   Q_ASSERT( comboBox );
 
   const int index = mParameterList.indexOf( mParameter );

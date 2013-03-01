@@ -63,7 +63,7 @@ class KDatePickerPopup::Private
 {
   public:
     Private( KDatePickerPopup *qq )
-      : q( qq )
+      : q( qq ), mDatePicker( 0 )
     {
     }
 

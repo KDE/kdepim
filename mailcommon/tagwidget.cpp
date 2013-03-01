@@ -64,6 +64,7 @@ TagWidget::TagWidget(const QList<KActionCollection*>& actionCollections, QWidget
 
     mTextColorCombo = new KColorCombo( this );
     settings->addWidget( mTextColorCombo, 2, 1 );
+    mTextColorCombo->setEnabled(false);
 
     connect( mTextColorCheck, SIGNAL(toggled(bool)),
              mTextColorCombo, SLOT(setEnabled(bool)) );
@@ -79,6 +80,7 @@ TagWidget::TagWidget(const QList<KActionCollection*>& actionCollections, QWidget
 
     mBackgroundColorCombo = new KColorCombo( this );
     settings->addWidget( mBackgroundColorCombo, 3, 1 );
+    mBackgroundColorCombo->setEnabled(false);
 
     connect( mBackgroundColorCheck, SIGNAL(toggled(bool)),
              mBackgroundColorCombo, SLOT(setEnabled(bool)) );
@@ -93,6 +95,7 @@ TagWidget::TagWidget(const QList<KActionCollection*>& actionCollections, QWidget
 
     mFontRequester = new KFontRequester( this );
     settings->addWidget( mFontRequester, 4, 1 );
+    mFontRequester->setEnabled(false);
 
     connect( mTextFontCheck, SIGNAL(toggled(bool)),
              mFontRequester, SLOT(setEnabled(bool)) );
@@ -105,6 +108,7 @@ TagWidget::TagWidget(const QList<KActionCollection*>& actionCollections, QWidget
     mIconButton = new KIconButton( this );
     mIconButton->setIconSize( 16 );
     mIconButton->setIconType( KIconLoader::NoGroup, KIconLoader::Action );
+    mIconButton->setIcon(KIcon("mail-tagged"));
     settings->addWidget( mIconButton, 5, 1 );
     connect( mIconButton, SIGNAL(iconChanged(QString)),
              SIGNAL(iconNameChanged(QString)) );

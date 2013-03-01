@@ -1,4 +1,11 @@
+/*   -*- mode: C++; c-file-style: "gnu" -*-
+ *   kmail: KDE mail client
+ */
+
 #include "configuredialoglistview.h"
+
+#include <KLocale>
+#include <KMenu>
 
 ListView::ListView( QWidget *parent )
   : QTreeWidget( parent )
@@ -7,6 +14,8 @@ ListView::ListView( QWidget *parent )
   setAlternatingRowColors( true );
   setSelectionMode( QAbstractItemView::SingleSelection );
   setRootIsDecorated( false );
+  setContextMenuPolicy( Qt::CustomContextMenu );
+  connect( this, SIGNAL(customContextMenuRequested(QPoint)), SLOT(slotContextMenu(QPoint)) );
 }
 
 
@@ -25,22 +34,30 @@ void ListView::showEvent( QShowEvent *e )
 
 void ListView::resizeColums()
 {
-  int c = columnCount();
-  if( c == 0 )
-  {
+  const int c = columnCount();
+  if( c == 0 ) {
     return;
   }
 
-  int w1 = viewport()->width();
-  int w2 = w1 / c;
-  int w3 = w1 - (c-1)*w2;
+  const int w1 = viewport()->width();
+  const int w2 = w1 / c;
+  const int w3 = w1 - (c-1)*w2;
 
-  for( int i=0; i<c-1; i++ )
-  {
+  for ( int i=0; i<c-1; i++ ) {
     setColumnWidth( i, w2 );
   }
   setColumnWidth( c-1, w3 );
 }
 
+void ListView::slotContextMenu(const QPoint& pos)
+{
+    KMenu *menu = new KMenu( this );
+    menu->addAction( i18n("Add"), this, SIGNAL(addHeader()));
+    if (currentItem()) {
+        menu->addAction( i18n("Remove"), this, SIGNAL(removeHeader()));
+    }
+    menu->exec( viewport()->mapToGlobal( pos ) );
+    delete menu;
+}
 
 #include "configuredialoglistview.moc"

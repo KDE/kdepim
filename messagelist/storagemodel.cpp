@@ -330,8 +330,6 @@ void StorageModel::updateMessageItemData( MessageList::Core::MessageItem *mi,
                                           int row ) const
 {
   const Item item = itemForRow( row );
-  const KMime::Message::Ptr mail = messageForItem( item );
-  Q_ASSERT( mail );
 
   Akonadi::MessageStatus stat;
   stat.setStatusFromFlags( item.flags() );

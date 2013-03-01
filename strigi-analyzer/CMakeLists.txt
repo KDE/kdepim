@@ -1,6 +1,6 @@
 if(WINCE)
 add_definitions(-DSTRIGI_STATIC)
-endif(WINCE)
+endif()
 
 if(${STRIGI_VERSION} VERSION_GREATER 0.7.2)
   set(USE_STRIGI_KMPSEARCHER_H TRUE)
@@ -19,4 +19,4 @@ add_subdirectory( ics )
 add_subdirectory( mail )
 if(WINCE)
 add_subdirectory( strigidaemon_static )
-endif(WINCE)
+endif()

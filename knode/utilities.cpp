@@ -16,7 +16,7 @@
 #include <QListWidget>
 #include <QRegExp>
 #include <QCursor>
-//Added by qt3to4:
+
 #include <QHBoxLayout>
 
 #include <klocale.h>

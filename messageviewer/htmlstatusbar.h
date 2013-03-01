@@ -70,7 +70,7 @@ public:
   };
 
   explicit HtmlStatusBar( QWidget * parent=0, const char * name=0, Qt::WindowFlags f=0 );
-  virtual ~HtmlStatusBar();
+  ~HtmlStatusBar();
 
   /** @return current mode. */
   Util::HtmlMode mode() const { return mMode ; }

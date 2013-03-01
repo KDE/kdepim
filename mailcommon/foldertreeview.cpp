@@ -152,9 +152,6 @@ void FolderTreeView::slotHeaderContextMenuRequested( const QPoint &pnt )
     act->setCheckable( true );
     act->setChecked( !header()->isSectionHidden( i ) );
     act->setData( QVariant( i ) );
-    if ( i == 0 ) {
-      act->setEnabled( false );
-    }
     connect( act,  SIGNAL(triggered(bool)),
              SLOT(slotHeaderContextMenuChangeHeader(bool)) );
   }
@@ -186,16 +183,6 @@ void FolderTreeView::slotHeaderContextMenuRequested( const QPoint &pnt )
   grp->addAction( act );
   act->setChecked( mToolTipDisplayPolicy == FolderTreeWidget::DisplayAlways );
   act->setData( QVariant( (int)FolderTreeWidget::DisplayAlways ) );
-  connect( act, SIGNAL(triggered(bool)),
-           SLOT(slotHeaderContextMenuChangeToolTipDisplayPolicy(bool)) );
-  act = menu.addAction( i18nc( "@action:inmenu", "When Text Obscured" ) );
-  act->setCheckable( true );
-
-  //Port it !!!!
-  act->setEnabled( false );
-  grp->addAction( act );
-  act->setChecked( mToolTipDisplayPolicy == FolderTreeWidget::DisplayWhenTextElided );
-  act->setData( QVariant( (int)FolderTreeWidget::DisplayWhenTextElided ) );
   connect( act, SIGNAL(triggered(bool)),
            SLOT(slotHeaderContextMenuChangeToolTipDisplayPolicy(bool)) );
 

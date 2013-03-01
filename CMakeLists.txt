@@ -1,10 +1,7 @@
 project(kdepim)
-# set_package_properties appeared in cmake 2.8.6
-# TODO: Remove when kdelibs >= 4.10 will be required
-cmake_minimum_required(VERSION 2.8.6 FATAL_ERROR)
 
 # where to look first for cmake modules. This line must be the first one or cmake will use the system's FindFoo.cmake
-set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules")
 
 ############### Build Options ###############
 
@@ -113,10 +110,10 @@ if(WINCE)
   find_program(KDE4_KDECONFIG_EXECUTABLE NAMES kde4-config PATHS ${HOST_BINDIR} NO_DEFAULT_PATH)
 endif()
 
-find_package(KDE4 4.9.0 REQUIRED)
+find_package(KDE4 4.10 REQUIRED)
 include(KDE4Defaults)
 
-find_package(KdepimLibs 4.9.81)
+find_package(KdepimLibs 4.10.64)
 set_package_properties(KdepimLibs PROPERTIES DESCRIPTION "The KDEPIM libraries" URL "http://www.kde.org" TYPE REQUIRED)
 
 ############### Load the CTest options ###############
@@ -200,16 +197,12 @@ else()
   find_package(SharedDesktopOntologies 0.10)
   set_package_properties(SharedDesktopOntologies PROPERTIES DESCRIPTION "Shared Desktop Ontologies" URL "http://oscaf.sourceforge.net" TYPE REQUIRED PURPOSE "Ontologies necessary for the Nepomuk semantic desktop")
 
-  find_package(Soprano 2.7.56)
+  find_package(Soprano 2.9.0)
   set_package_properties(Soprano PROPERTIES DESCRIPTION "C++/Qt4 framework for RDF data" URL "http://soprano.sourceforge.net" TYPE REQUIRED PURPOSE "Storage of semantic data")
   include(SopranoAddOntology)
 
-  find_package(Grantlee QUIET CONFIG)
-  set_package_properties(Grantlee PROPERTIES DESCRIPTION "The Grantlee Template System" URL "http://www.gitorious.org/grantlee/pages/Home" TYPE OPTIONAL PURPOSE "Templating and theming for KJots and KaddressBook." )
-
-  if(Grantlee_FOUND AND ("${Grantlee_VERSION}" VERSION_GREATER "0.2.0"))
-     set(GRANTLEE_GREATER_0_2 TRUE)
-  endif()
+  find_package(Grantlee 0.3.0 QUIET CONFIG)
+  set_package_properties(Grantlee PROPERTIES DESCRIPTION "The Grantlee Template System" URL "http://www.gitorious.org/grantlee/pages/Home" TYPE REQUIRED PURPOSE "Grantlee is requires for kmail and templating, theming for KJots and KaddressBook." )
 
   find_package(NepomukCore QUIET CONFIG)
   set_package_properties(NepomukCore PROPERTIES DESCRIPTION "The Nepomuk Core libraries" URL "http://www.kde.org" TYPE REQUIRED PURPOSE "Nepomuk extends the search and tagging functionalities in KMail and Akonadi")
@@ -330,7 +323,9 @@ else()
     macro_optional_add_subdirectory(kmailcvt)
     macro_optional_add_subdirectory(knotes)
     macro_optional_add_subdirectory(ksendemail)
+if(QT_QT3SUPPORT_FOUND)
     macro_optional_add_subdirectory(ktnef)
+endif()
     macro_optional_add_subdirectory(mailimporter)
     macro_optional_add_subdirectory(pimsettingexporter)
     macro_optional_add_subdirectory(kalarm)

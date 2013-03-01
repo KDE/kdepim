@@ -54,6 +54,10 @@ public:
     : q( owner ),
       mXmlGuiClient( 0 ),
       mActionMenu( 0 ),
+      mModel( 0 ),
+      mSelectionModel( 0 ),
+      mNewTabButton( 0 ),
+      mCloseTabButton( 0 ),
       mCloseTabAction( 0 ),
       mActivateNextTabAction( 0 ),
       mActivatePreviousTabAction( 0 ),
@@ -228,8 +232,10 @@ void Pane::setXmlGuiClient( KXMLGUIClient *xmlGuiClient )
     d->mXmlGuiClient->actionCollection()->addAction( QLatin1String( "view_message_list" ), d->mActionMenu );
     MessageList::Util::fillViewMenu( d->mActionMenu->menu(), this );
 
+    d->mActionMenu->addSeparator();
+
     KAction *action = new KAction( i18n("Create new tab"), this );
-    action->setShortcut( QKeySequence( Qt::ALT + Qt::Key_T ) );
+    action->setShortcut( QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_T ) );
     d->mXmlGuiClient->actionCollection()->addAction( QLatin1String( "create_new_tab" ), action );
     connect( action, SIGNAL(triggered(bool)), SLOT(onNewTabClicked()) );
     d->mActionMenu->addAction( action );
@@ -241,7 +247,7 @@ void Pane::setXmlGuiClient( KXMLGUIClient *xmlGuiClient )
 
 
     d->mCloseTabAction = new KAction( i18n("Close tab"), this );
-    d->mCloseTabAction->setShortcut( QKeySequence( Qt::ALT + Qt::Key_W ) );
+    d->mCloseTabAction->setShortcut( QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_W ) );
     d->mXmlGuiClient->actionCollection()->addAction( QLatin1String( "close_current_tab" ), d->mCloseTabAction );
     connect( d->mCloseTabAction, SIGNAL(triggered(bool)), SLOT(onCloseTabClicked()) );
     d->mActionMenu->addAction( d->mCloseTabAction );
@@ -626,19 +632,15 @@ void Pane::Private::onTabContextMenuRequest( const QPoint &pos )
   if ( !w ) return;
 
   KMenu menu( q );
-  QAction *action;
 
-  action = menu.addAction( i18nc( "@action:inmenu", "Close Tab" ) );
-  action->setEnabled( q->count() > 1 );
-  action->setIcon( KIcon( QLatin1String( "tab-close" ) ) );
-  connect( action, SIGNAL(triggered(bool)),
-           q, SLOT(onCloseTabClicked()) ); // Reuse the logic...
+
+  QAction *closeTabAction = menu.addAction( i18nc( "@action:inmenu", "Close Tab" ) );
+  closeTabAction->setIcon( KIcon( QLatin1String( "tab-close" ) ) );
 
   QAction *allOther = menu.addAction( i18nc("@action:inmenu", "Close All Other Tabs" ) );
-  allOther->setEnabled( q->count() > 1 );
   allOther->setIcon( KIcon( QLatin1String( "tab-close-other" ) ) );
 
-  action = menu.exec( q->mapToGlobal( pos ) );
+  QAction *action = menu.exec( q->mapToGlobal( pos ) );
 
   if ( action == allOther ) { // Close all other tabs
     QList<Widget *> widgets;
@@ -656,6 +658,8 @@ void Pane::Private::onTabContextMenuRequest( const QPoint &pos )
     }
 
     updateTabControls();
+  } else if (action == closeTabAction) {
+      closeTab(q->widget(indexBar));
   }
 }
 
@@ -758,7 +762,8 @@ QItemSelection Pane::Private::mapSelectionFromSource( const QItemSelection &sele
 void Pane::Private::updateTabControls()
 {
   const bool enableAction = ( q->count()>1 );
-  mCloseTabButton->setEnabled( enableAction );
+  if (mCloseTabButton)
+    mCloseTabButton->setEnabled( enableAction );
   if ( mCloseTabAction )
     mCloseTabAction->setEnabled( enableAction );
   if ( mActivatePreviousTabAction )

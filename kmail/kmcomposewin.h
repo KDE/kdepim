@@ -79,8 +79,8 @@ namespace KPIMIdentities {
   class Identity;
 }
 
-
-namespace KMail {
+namespace KPIMTextEdit {
+  class SelectSpecialChar;
 }
 
 namespace KIO {
@@ -89,20 +89,20 @@ namespace KIO {
 
 namespace Message {
   class Composer;
-  class KMSubjectLineEdit;
 }
 
-namespace MessageComposer
-{
+namespace KPIM {
+  class SpellCheckLineEdit;
+}
+
+namespace MessageComposer {
   class ComposerLineEdit;
 }
-namespace MailCommon
-{
+namespace MailCommon {
   class FolderRequester;
 }
  
-namespace MessageViewer
-{
+namespace PimCommon {
   class TranslatorWidget;
 }
 
@@ -589,7 +589,7 @@ class KMComposeWin : public KMail::Composer
     QWidget   *mMainWidget;
     Sonnet::DictionaryComboBox *mDictionaryCombo;
     MessageComposer::ComposerLineEdit *mEdtFrom, *mEdtReplyTo;
-    Message::KMSubjectLineEdit *mEdtSubject;
+    KPIM::SpellCheckLineEdit *mEdtSubject;
     QLabel    *mLblIdentity, *mLblTransport, *mLblFcc;
     QLabel    *mLblFrom, *mLblReplyTo;
     QLabel    *mLblSubject;
@@ -654,8 +654,8 @@ class KMComposeWin : public KMail::Composer
 
 
     SnippetWidget *mSnippetWidget;
-    MessageViewer::TranslatorWidget *mTranslatorWidget;
-    QPointer<SelectSpecialChar> mSelectSpecialChar;
+    PimCommon::TranslatorWidget *mTranslatorWidget;
+    QPointer<KPIMTextEdit::SelectSpecialChar> mSelectSpecialChar;
     AttachmentMissingWarning *mAttachmentMissing;
     QTimer *m_verifyMissingAttachment;
     QLabel *mSignatureStateIndicator;

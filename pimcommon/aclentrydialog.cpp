@@ -20,6 +20,8 @@
 #include "aclentrydialog_p.h"
 #include "aclutils_p.h"
 
+#include "addresseelineedit.h"
+
 #include <Akonadi/Contact/EmailAddressSelectionDialog>
 
 #include <KLineEdit>
@@ -39,7 +41,7 @@ class AclEntryDialog::Private
 {
   public:
     Private( AclEntryDialog *qq )
-      : q( qq ), mButtonLayout(0)
+      : q( qq ), mButtonGroup(0),mUserIdLineEdit(0), mButtonLayout(0)
     {
     }
 
@@ -48,7 +50,7 @@ class AclEntryDialog::Private
 
     AclEntryDialog *q;
     QButtonGroup *mButtonGroup;
-    KLineEdit *mUserIdLineEdit;
+    KPIM::AddresseeLineEdit *mUserIdLineEdit;
     QVBoxLayout *mButtonLayout;
     KIMAP::Acl::Rights mCustomPermissions;
 };
@@ -88,7 +90,7 @@ AclEntryDialog::AclEntryDialog( QWidget *parent )
   QLabel *label = new QLabel( i18n( "&User identifier:" ), page );
   layout->addWidget( label, 0, 0 );
 
-  d->mUserIdLineEdit = new KLineEdit( page );
+  d->mUserIdLineEdit = new KPIM::AddresseeLineEdit( page );
   layout->addWidget( d->mUserIdLineEdit, 0, 1 );
   label->setBuddy( d->mUserIdLineEdit );
   d->mUserIdLineEdit->setWhatsThis(

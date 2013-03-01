@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
   
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -50,13 +50,13 @@ void ImportLibreOfficeAutocorrection::closeArchive()
 bool ImportLibreOfficeAutocorrection::import(const QString& fileName, LoadAttribute loadAttribute)
 {
     //We Don't have it in LibreOffice
-    if(loadAttribute == SuperScript) {
+    if (loadAttribute == SuperScript) {
         return false;
     }
     closeArchive();
     mArchive = new KZip(fileName);
     const bool result = mArchive->open(QIODevice::ReadOnly);
-    if(result) {
+    if (result) {
       importAutoCorrectionFile();
       return true;
     } else {

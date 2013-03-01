@@ -24,6 +24,7 @@
 #include "qstring.h"
 
 class KMMainWidget;
+class KToggleAction;
 namespace KPIM {
    class StatusbarProgressWidget;
    class ProgressDialog;
@@ -58,9 +59,9 @@ public slots:
 protected:
 
   /// Reimplemented to save the docked state
-  virtual void saveProperties( KConfigGroup & );
+  void saveProperties( KConfigGroup & );
 
-  virtual bool queryClose ();
+  bool queryClose ();
 
 protected slots:
   void slotQuit();
@@ -68,11 +69,13 @@ protected slots:
 
 private slots:
   void slotNewMailReader();
+  void slotToggleMenubar(bool dontShowWarning = false);
 
 private:
   KMMainWidget *mKMMainWidget;
   StatusbarProgressWidget *mLittleProgress;
   ProgressDialog *mProgressDialog;
+  KToggleAction *mHideMenuBarAction;
   bool mReallyClose;
 };
 

@@ -42,7 +42,7 @@ class AddHostDialog : public KDialog
 
   private Q_SLOTS:
     void slotHostEditChanged( const QString& );
-    virtual void slotOk();
+    void slotOk();
 
   private:
     KLDAP::LdapConfigWidget *mCfg;

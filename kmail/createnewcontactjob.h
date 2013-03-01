@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -21,7 +21,9 @@
 #ifndef CREATENEWCONTACTJOB_H
 #define CREATENEWCONTACTJOB_H
 
-#include <kjob.h>
+#include <Akonadi/Item>
+#include <KJob>
+
 /**
  * @brief The CreateNewContactJob class
  * The job will check if there is address book folder to store new contact to akonadi
@@ -46,11 +48,13 @@ public:
     /**
      * @brief start the job
      */
-    virtual void start();
+    void start();
 
 private Q_SLOTS:
     void slotCollectionsFetched(KJob*);
     void slotResourceCreationDone(KJob* job);
+    void slotContactEditorError(const QString &error);
+    void contactStored( const Akonadi::Item &item );
 
 private:
     void createContact();

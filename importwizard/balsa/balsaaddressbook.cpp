@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
   
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -61,7 +61,7 @@ void BalsaAddressBook::readAddressBook(const KConfigGroup& grp)
     ldap.ldapUrl = KUrl(grp.readEntry(QLatin1String("Host")));
     ldap.port = ldap.ldapUrl.port();
     //TODO: verify
-    const QString bookDN  = grp.readEntry(QLatin1String("BookDN"));
+    const QString bookDN  = grp.readEntry(QLatin1String("BookDN")); //TODO ?
     ImportWizardUtil::mergeLdap(ldap);
   } else if(type == QLatin1String("LibBalsaAddressBookGpe")) {
       qDebug()<<" Import it !";
@@ -70,16 +70,18 @@ void BalsaAddressBook::readAddressBook(const KConfigGroup& grp)
     if(!path.isEmpty()) {
       KABC::Addressee::List contacts;
       QFile file( path );
-      QTextStream stream( &file );
-      stream.setCodec( "ISO 8859-1" );
+      if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QTextStream stream( &file );
+        stream.setCodec( "ISO 8859-1" );
 
-      const QString wholeFile = stream.readAll();
-      const QDateTime dtDefault = QFileInfo( file ).lastModified();
-      file.close();
+        const QString wholeFile = stream.readAll();
+        const QDateTime dtDefault = QFileInfo( file ).lastModified();
+        file.close();
 
-      KABC::LDIFConverter::LDIFToAddressee( wholeFile, contacts, dtDefault );
-      Q_FOREACH(const KABC::Addressee&contact, contacts) {
-        createContact( contact );
+        KABC::LDIFConverter::LDIFToAddressee( wholeFile, contacts, dtDefault );
+        Q_FOREACH(const KABC::Addressee&contact, contacts) {
+          createContact( contact );
+        }
       }
     }
   } else if(type == QLatin1String("LibBalsaAddressBookVcard")) {

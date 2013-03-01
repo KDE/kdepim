@@ -95,7 +95,6 @@ ActionMenuContainer {
     ActionListItem { name : "akonadi_mark_all_as_read" }
     ActionListItem { name : "move_all_to_trash" }
     ActionListItem { name : "akonadi_remove_duplicates" }
-    ActionListItem { name : "show_expire_properties" }
     ActionListItem { name : "export_selected_emails" }
     ActionListItem { name : "apply_filters" }
     ScriptActionItem { name : "edit_acls"; title : KDE.i18n( "Edit ACLs" ); visible: aclEditor.collectionHasAcls }

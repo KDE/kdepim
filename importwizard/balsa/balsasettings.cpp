@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
   
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -96,8 +96,9 @@ void BalsaSettings::readAccount(const KConfigGroup &grp, bool autoCheck, int aut
 
 void BalsaSettings::readIdentity(const KConfigGroup &grp)
 {
-  KPIMIdentities::Identity* newIdentity = createIdentity();
-  newIdentity->setFullName(grp.readEntry(QLatin1String("FullName")));
+  QString name = grp.readEntry(QLatin1String("FullName"));
+  KPIMIdentities::Identity* newIdentity = createIdentity(name);
+  newIdentity->setFullName(name);
   newIdentity->setEmailAddr(grp.readEntry(QLatin1String("Address")));
   newIdentity->setReplyToAddr(grp.readEntry(QLatin1String("ReplyTo")));
   newIdentity->setBcc(grp.readEntry(QLatin1String("Bcc")));
@@ -169,7 +170,6 @@ void BalsaSettings::readTransport(const KConfigGroup &grp)
   }
 
   const QString ssl = grp.readEntry(QLatin1String("SSL"));
-  //TODO
   if(ssl == QLatin1String("true")) {
       mt->setEncryption( MailTransport::Transport::EnumEncryption::SSL );
   } else if(ssl == QLatin1String("false")) {

@@ -42,6 +42,8 @@ namespace MessageViewer {
 
 namespace MessageViewer {
 
+class AttachmentTemporaryFilesDirs;
+
 /** Flags for the encryption state. */
 typedef enum
 {
@@ -76,6 +78,7 @@ public:
     void setNodeUnprocessed( KMime::Content* node, bool recurse );
     bool nodeProcessed( KMime::Content* node ) const;
     void clear();
+    void forceCleanTempFiles();
 
     void setEncryptionState( KMime::Content* node, const KMMsgEncryptionState state );
     KMMsgEncryptionState encryptionState( KMime::Content *node ) const;
@@ -298,10 +301,9 @@ private:
     QTextCodec *mLocalCodec;
     QMap<KMime::Content*, const QTextCodec*> mOverrideCodecs;
     QMap<QString, QMap<QByteArray, Interface::BodyPartMemento*> > mBodyPartMementoMap;
-    QStringList mTempFiles;
-    QStringList mTempDirs;
     QMap<KMime::Content*, PartMetaData> mPartMetaDatas;
     QMap<KMime::Message::Content*, QList<KMime::Content*> > mExtraContents;
+    AttachmentTemporaryFilesDirs *mAttachmentFilesDir;
 };
 
 }

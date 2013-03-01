@@ -23,11 +23,13 @@
 */
 
 #include "entriescountdialog.h"
-#include <kdebug.h>
 #include "settings.h"
 
+#include <kdebug.h>
+
+
 EntriesCountDialog::EntriesCountDialog( QWidget *parent )
-        : KDialog( parent )
+    : KDialog( parent )
 {
     QWidget *dialog = new QWidget;
     ui.setupUi( dialog );
@@ -42,7 +44,7 @@ EntriesCountDialog::~EntriesCountDialog()
     Settings::self()->writeConfig();
 }
 
-int EntriesCountDialog::count()
+int EntriesCountDialog::count() const
 {
     return ui.spinCount->value();
 }

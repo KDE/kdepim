@@ -775,32 +775,30 @@ void AttachmentControllerBase::showAddAttachmentDialog()
   if( dialog->exec() == KDialog::Accepted && dialog ) {
     const KUrl::List files = dialog->selectedUrls();
     const QString encoding = MessageViewer::NodeHelper::fixEncoding( dialog->selectedEncoding() );
-    if ( files.count() == 1 ) {
-      const KUrl url = files.at( 0 );
-      KUrl urlWithEncoding = url;
-      urlWithEncoding.setFileEncoding( encoding );
-      if ( KMimeType::findByUrl( urlWithEncoding )->name() == QLatin1String( "inode/directory" ) ) {
-        int rc = KMessageBox::warningYesNo( d->wParent,i18n("Do you really want to attach this directory \"%1\" ?", url.toLocalFile() ),i18n( "Attach directory" ) );
-        if ( rc == KMessageBox::Yes ) {
-          addAttachment( urlWithEncoding );
-        }
-      } else {
-        addAttachment( urlWithEncoding );
-      }
-    } else {
-      foreach( const KUrl &url, files ) {
+    const int numberOfFiles(files.count());
+    for (int i=0; i<numberOfFiles; ++i) {
+        const KUrl url = files.at( i );
         KUrl urlWithEncoding = url;
         urlWithEncoding.setFileEncoding( encoding );
-        addAttachment( urlWithEncoding );
-      }
+        if ( KMimeType::findByUrl( urlWithEncoding )->name() == QLatin1String( "inode/directory" ) ) {
+          const int rc = KMessageBox::warningYesNo( d->wParent,i18n("Do you really want to attach this directory \"%1\" ?", url.toLocalFile() ),i18n( "Attach directory" ) );
+          if ( rc == KMessageBox::Yes ) {
+            addAttachment( urlWithEncoding );
+          }
+        } else {
+          addAttachment( urlWithEncoding );
+        }
     }
+    emit fileAttached();
   }
   delete dialog;
 #else
   // use native dialog, while being much simpler, it actually fits on the screen much better than our own monster dialog
   const QString fileName = KFileDialog::getOpenFileName( KUrl(), QString(), d->wParent, i18n("Attach File" ) );
-  if ( !fileName.isEmpty() )
+  if ( !fileName.isEmpty() ) {
     addAttachment( KUrl::fromLocalFile( fileName ) );
+    emit fileAttached();
+  }
 #endif
 }
 

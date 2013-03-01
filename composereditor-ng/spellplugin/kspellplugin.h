@@ -1,6 +1,6 @@
 /* ============================================================
 *
-* This file is a part of the rekonq project
+* Based on kspellplugin from rekonq project
 *
 * Copyright (C) 2012 by Lindsay Mathieson <lindsay dot mathieson at gmail dot com>
 *
@@ -24,8 +24,8 @@
 * ============================================================ */
 
 
-#ifndef TESTQWEBSPELLCHECKER_H
-#define TESTQWEBSPELLCHECKER_H
+#ifndef QWEBSPELLCHECKER_H
+#define QWEBSPELLCHECKER_H
 
 
 #include <QtGlobal>
@@ -40,8 +40,6 @@ class KWebSpellChecker : public QWebSpellChecker
 {
     Q_OBJECT
 public:
-    Sonnet::Speller *m_speller;
-
     KWebSpellChecker();
     ~KWebSpellChecker();
 
@@ -56,6 +54,8 @@ public:
     virtual bool isGrammarCheckingEnabled();
     virtual void toggleGrammarChecking();
     virtual void checkGrammarOfString(const QString&, QList<GrammarDetail>&, int* badGrammarLocation, int* badGrammarLength);
+private:
+    Sonnet::Speller *m_speller;
 };
 
 

@@ -23,7 +23,6 @@
 #include <KDialog>
 
 class QListView;
-class QString;
 
 class TemplateSelectionDialog : public KDialog
 {

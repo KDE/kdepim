@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
   
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -22,7 +22,6 @@
 #include "autocorrection/composerautocorrection.h"
 #include <QWidget>
 #include <KDialog>
-#include <KCharSelect>
 
 class QTreeWidgetItem;
 
@@ -39,7 +38,11 @@ class MESSAGECOMPOSER_EXPORT ComposerAutoCorrectionWidget : public QWidget
   Q_OBJECT
     
 public:
-  enum ImportFileType { LibreOffice, KMail };
+  enum ImportFileType {
+      LibreOffice,
+      KMail
+  };
+
   explicit ComposerAutoCorrectionWidget(QWidget *parent = 0);
   ~ComposerAutoCorrectionWidget();
   void setAutoCorrection(MessageComposer::ComposerAutoCorrection * autoCorrect);
@@ -80,6 +83,7 @@ private Q_SLOTS:
 
   void changeLanguage(int);
   void updateAddRemoveButton();
+
 Q_SIGNALS:
   void changed();
 

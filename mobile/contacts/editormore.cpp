@@ -230,6 +230,8 @@ EditorMore::~EditorMore()
 
 void EditorMore::loadContact( const KABC::Addressee &contact, const Akonadi::ContactMetaData &metaData )
 {
+  Q_UNUSED( metaData );
+
   d->mContact = contact;
 
   // name page
@@ -349,6 +351,8 @@ void EditorMore::loadCustomFields( const KABC::Addressee &contact, const Akonadi
 
 void EditorMore::saveContact( KABC::Addressee &contact, Akonadi::ContactMetaData &metaData ) const
 {
+  Q_UNUSED( metaData );
+
   // name page
   contact.setNickName( d->mNamePage.nicknameLineEdit->text() );
   d->mNamePage.namePartsWidget->storeContact( contact );

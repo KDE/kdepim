@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
   
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -48,15 +48,15 @@ bool ImportKMailAutocorrection::import(const QString& fileName, LoadAttribute lo
 
     QDomElement de = doc.documentElement();
 
-    if(loadAttribute == All) {
-        QDomElement upper = de.namedItem(QLatin1String("UpperCaseExceptions")).toElement();
+    if (loadAttribute == All) {
+        const QDomElement upper = de.namedItem(QLatin1String("UpperCaseExceptions")).toElement();
         if (!upper.isNull()) {
             const QDomNodeList nl = upper.childNodes();
             for (int i = 0; i < nl.count(); i++)
                 mUpperCaseExceptions += nl.item(i).toElement().attribute(QLatin1String("exception"));
         }
 
-        QDomElement twoUpper = de.namedItem(QLatin1String("TwoUpperLetterExceptions")).toElement();
+        const QDomElement twoUpper = de.namedItem(QLatin1String("TwoUpperLetterExceptions")).toElement();
         if (!twoUpper.isNull()) {
             const QDomNodeList nl = twoUpper.childNodes();
             const int numberOfElement(nl.count());
@@ -65,7 +65,7 @@ bool ImportKMailAutocorrection::import(const QString& fileName, LoadAttribute lo
         }
 
         /* Load advanced autocorrect entry, including the format */
-        QDomElement item = de.namedItem(QLatin1String("items")).toElement();
+        const QDomElement item = de.namedItem(QLatin1String("items")).toElement();
         if (!item.isNull())
         {
             const QDomNodeList nl = item.childNodes();
@@ -78,10 +78,10 @@ bool ImportKMailAutocorrection::import(const QString& fileName, LoadAttribute lo
             }
         }
 
-        QDomElement doubleQuote = de.namedItem(QLatin1String("DoubleQuote")).toElement();
-        if(!doubleQuote.isNull()) {
+        const QDomElement doubleQuote = de.namedItem(QLatin1String("DoubleQuote")).toElement();
+        if (!doubleQuote.isNull()) {
             const QDomNodeList nl = doubleQuote.childNodes();
-            if(nl.count()==1) {
+            if (nl.count()==1) {
                 const QDomElement element = nl.item(0).toElement();
                 mTypographicDoubleQuotes.begin = element.attribute(QLatin1String("begin")).at(0);
                 mTypographicDoubleQuotes.end = element.attribute(QLatin1String("end")).at(0);
@@ -91,9 +91,9 @@ bool ImportKMailAutocorrection::import(const QString& fileName, LoadAttribute lo
         }
 
         const QDomElement singleQuote = de.namedItem(QLatin1String("SimpleQuote")).toElement();
-        if(!singleQuote.isNull()) {
+        if (!singleQuote.isNull()) {
             const QDomNodeList nl = singleQuote.childNodes();
-            if(nl.count()==1) {
+            if (nl.count()==1) {
                 const QDomElement element = nl.item(0).toElement();
                 mTypographicSingleQuotes.begin = element.attribute(QLatin1String("begin")).at(0);
                 mTypographicSingleQuotes.end = element.attribute(QLatin1String("end")).at(0);
@@ -103,10 +103,11 @@ bool ImportKMailAutocorrection::import(const QString& fileName, LoadAttribute lo
         }
     }
     if(loadAttribute == All || loadAttribute == SuperScript) {
-        QDomElement superScript = de.namedItem(QLatin1String("SuperScript")).toElement();
+        const QDomElement superScript = de.namedItem(QLatin1String("SuperScript")).toElement();
         if (!superScript.isNull()) {
-            QDomNodeList nl = superScript.childNodes();
-            for(int i = 0; i < nl.count() ; i++)
+            const QDomNodeList nl = superScript.childNodes();
+            const int numberOfNl(nl.count());
+            for(int i = 0; i < numberOfNl ; ++i)
                 mSuperScriptEntries.insert(nl.item(i).toElement().attribute(QLatin1String("find")), nl.item(i).toElement().attribute(QLatin1String("super")));
         }
     }

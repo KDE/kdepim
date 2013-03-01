@@ -65,7 +65,6 @@ CollectionGeneralPage::~CollectionGeneralPage()
 static void addLine( QWidget *parent, QVBoxLayout *layout )
 {
   QFrame *line = new QFrame( parent );
-  line->setObjectName( "line" );
   line->setGeometry( QRect( 80, 150, 250, 20 ) );
   line->setFrameShape( QFrame::HLine );
   line->setFrameShadow( QFrame::Sunken );
@@ -343,7 +342,7 @@ void CollectionGeneralPage::init( const Akonadi::Collection &collection )
   const bool sharedSeen = ( annotations.value( KOLAB_SHAREDSEEN ) == "true" );
 
   const IncidencesFor incidencesFor =
-    incidencesForFromString( annotations.value( KOLAB_INCIDENCESFOR ) );
+    incidencesForFromString( QLatin1String(annotations.value( KOLAB_INCIDENCESFOR )) );
 
   const FolderContentsType folderType = typeFromKolabName( annotations.value( KOLAB_FOLDERTYPE ) );
 

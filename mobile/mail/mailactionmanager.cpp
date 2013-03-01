@@ -118,9 +118,6 @@ MailActionManager::MailActionManager( KActionCollection *actionCollection, QObje
   action->setCheckable( true );
   action->setChecked( false );
 
-  action = actionCollection->addAction( "show_expire_properties" );
-  action->setText( i18n( "Expiration Properties" ) );
-
   action = actionCollection->addAction( "move_all_to_trash" );
   action->setText( i18n( "Move Displayed Emails To Trash" ) );
 

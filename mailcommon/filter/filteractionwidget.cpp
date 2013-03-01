@@ -23,7 +23,7 @@
 #include "filteractiondict.h"
 #include "filtermanager.h"
 #include "mailfilter.h"
-#include <messageviewer/minimumcombobox.h>
+#include <pimcommon/minimumcombobox.h>
 
 #include <KLocalizedString>
 #include <KPushButton>
@@ -43,7 +43,7 @@ class FilterActionWidget::Private
 {
   public:
     Private( FilterActionWidget *qq )
-      : q( qq )
+      : q( qq ), mComboBox( 0 ), mAdd( 0 ), mRemove( 0 ), mLayout( 0 )
     {
     }
 
@@ -108,7 +108,7 @@ FilterActionWidget::FilterActionWidget( QWidget *parent )
   d->mLayout = new QGridLayout( widget );
   d->mLayout->setContentsMargins( 0, 0, 0, 0 );
 
-  d->mComboBox = new MessageViewer::MinimumComboBox( widget );
+  d->mComboBox = new PimCommon::MinimumComboBox( widget );
   d->mComboBox->setEditable( false );
   Q_ASSERT( d->mComboBox );
   d->mLayout->addWidget( d->mComboBox, 1, 1 );

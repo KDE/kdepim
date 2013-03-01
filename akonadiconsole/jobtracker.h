@@ -31,7 +31,7 @@
 class JobInfo
 {
 public:
-  JobInfo() :parent(-1)
+  JobInfo() :parent(-1), state(Initial)
   {}
   bool operator==( const JobInfo& other ) const
   {

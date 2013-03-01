@@ -38,10 +38,6 @@ macro( macro_bool_to_bool FOUND_VAR )
   endforeach()
 endmacro()
 
-include (MacroEnsureVersion)
-
-
-
 if ( WIN32 )
 
   # On Windows, we don't have a libassuan-config script, so we need to
@@ -180,7 +176,9 @@ else() # not WIN32
       exec_program( ${_ASSUANCONFIG_EXECUTABLE} ARGS --version OUTPUT_VARIABLE ASSUAN_VERSION )
 
       set( _ASSUAN_MIN_VERSION "1.0.4" )
-      macro_ensure_version( ${_ASSUAN_MIN_VERSION} ${ASSUAN_VERSION} _ASSUAN_INSTALLED_VERSION_OK )
+      if( ASSUAN_VERSION VERSION_GREATER ${_ASSUAN_MIN_VERSION} )
+        set( _ASSUAN_INSTALLED_VERSION_OK TRUE )
+      endif()
 
       if ( NOT _ASSUAN_INSTALLED_VERSION_OK )
 

@@ -19,6 +19,8 @@
 */
 
 #include "addemailaddressjob.h"
+#include "broadcaststatus.h"
+
 
 #include <Akonadi/CollectionDialog>
 #include <Akonadi/Contact/ContactSearchJob>
@@ -40,6 +42,7 @@
 #include <KMessageBox>
 
 #include <QPointer>
+#include <QTextDocument>
 
 using namespace KPIM;
 
@@ -60,7 +63,7 @@ class AddEmailAddressJob::Private
           q->emitResult();
           return;
         }
-        q->emitResult();
+        createContact();
     }
 
 
@@ -80,7 +83,7 @@ class AddEmailAddressJob::Private
         const QString text =
           i18nc( "@info",
                  "A contact with the email address <email>%1</email> "
-                 "is already in your address book.", mCompleteAddress );
+                 "is already in your address book.", Qt::escape(mCompleteAddress) );
 
         KMessageBox::information(
           mParentWidget,
@@ -91,7 +94,11 @@ class AddEmailAddressJob::Private
         q->emitResult();
         return;
       }
+      createContact();
+    }
 
+    void createContact()
+    {
       const QStringList mimeTypes( KABC::Addressee::mimeType() );
 
       Akonadi::CollectionFetchJob * const addressBookJob =
@@ -225,7 +232,7 @@ class AddEmailAddressJob::Private
                "<para>A contact for <email>%1</email> was successfully added "
                "to your address book.</para>"
                "<para>Do you want to edit this new contact now?</para>",
-               mCompleteAddress );
+               Qt::escape(mCompleteAddress) );
 
       if ( KMessageBox::questionYesNo(
              mParentWidget,
@@ -238,11 +245,26 @@ class AddEmailAddressJob::Private
           new Akonadi::ContactEditorDialog( Akonadi::ContactEditorDialog::EditMode,
                                             mParentWidget );
         dlg->setContact( mItem );
+        connect( dlg, SIGNAL(contactStored(Akonadi::Item)),
+                 q, SLOT(contactStored(Akonadi::Item)) );
+        connect( dlg, SIGNAL(error(QString)),
+                 q, SLOT(slotContactEditorError(QString)) );
         dlg->exec();
         delete dlg;
       }
       q->emitResult();
     }
+
+    void slotContactEditorError(const QString &error)
+    {
+        KMessageBox::error(mParentWidget, i18n("Contact can not stored: %1", error), i18n("Failed to store contact"));
+    }
+
+    void contactStored( const Akonadi::Item & )
+    {
+        KPIM::BroadcastStatus::instance()->setStatusMsg( i18n( "Contact created successfully" ) );
+    }
+
 
     AddEmailAddressJob *q;
     QString mCompleteAddress;

@@ -169,6 +169,9 @@ namespace {
 
       return Ok;
     }
+    
+    // unhide the overload with three arguments
+    using MessageViewer::Interface::BodyPartFormatter::format;
   };
 
   class Plugin : public MessageViewer::Interface::BodyPartFormatterPlugin {

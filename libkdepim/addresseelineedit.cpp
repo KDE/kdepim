@@ -93,7 +93,7 @@ class AddresseeLineEditStatic
     {
       KConfig config( QLatin1String( "kpimcompletionorder" ) );
       const KConfigGroup group( &config, QLatin1String( "General" ) );
-      useNepomukCompletion = group.readEntry( "UseNepomuk", false );
+      useNepomukCompletion = group.readEntry( "UseNepomuk", true );
     }
 
     ~AddresseeLineEditStatic()
@@ -224,9 +224,12 @@ class AddresseeLineEdit::Private
         m_completionInitialized( false ),
         m_smartPaste( false ),
         m_addressBookConnected( false ),
+        m_lastSearchMode( false ),
         m_searchExtended( false ),
         m_useSemicolonAsSeparator( false )
     {
+        m_delayedQueryTimer.setSingleShot(true);
+        connect( &m_delayedQueryTimer, SIGNAL(timeout()), q, SLOT(slotTriggerDelayedQueries()) );
     }
 
     void init();
@@ -258,6 +261,7 @@ class AddresseeLineEdit::Private
     void stopNepomukSearch();
     void slotNepomukHits( const QList<Nepomuk2::Query::Result>& result );
     void slotNepomukSearchFinished();
+    void slotTriggerDelayedQueries();
     static KCompletion::CompOrder completionOrder();
 
     AddresseeLineEdit *q;
@@ -270,6 +274,7 @@ class AddresseeLineEdit::Private
     bool m_lastSearchMode;
     bool m_searchExtended; //has \" been added?
     bool m_useSemicolonAsSeparator;
+    QTimer m_delayedQueryTimer;
 };
 
 void AddresseeLineEdit::Private::init()
@@ -345,16 +350,20 @@ void AddresseeLineEdit::Private::stopLDAPLookup()
 
 
 static const char* sparqlquery =
-    //"select distinct ?email where { ?r a nco:Contact . ?r nco:hasEmailAddress ?v . ?v nco:emailAddress ?email . FILTER regex(str(?email), \"\\\\b%1\", \"i\")}";
-    "select distinct ?email ?fullname where { ?r a nco:Contact . ?r nco:hasEmailAddress ?v .  ?v nco:emailAddress ?email . "
-    "{ FILTER regex( str(?email), \"\\\\b%1\", \"i\") . ?r nco:fullname ?fullname } "
-    "union "
-    "{ ?r nco:fullname ?fullname . FILTER regex( str(?fullname), \"\\\\b%1\", \"i\") } "
-    "union "
-    "{ ?r nco:fullname ?fullname . ?r nco:nameFamily ?family . FILTER regex( str(?family), \"\\\\b%1\", \"i\") } "
-    "union "
-    "{ ?r nco:fullname ?fullname . ?r nco:nameGiven ?given . FILTER regex( str(?given), \"\\\\b%1\", \"i\") } "
-    "} ";
+    "select distinct ?email ?fullname where {"
+    "{"
+        "?r nco:hasEmailAddress   ?em ."
+        "?em nco:emailAddress ?email ."
+        "?r ?p ?fullname ."
+        "FILTER( ?p in (nco:fullname, nco:nameFamily, nco:nameGiven)  )."
+        "FILTER( bif:contains(?fullname, \"'%1*'\")  )."
+    "} UNION {"
+        "?r nco:hasEmailAddress   ?em ."
+        "?em nco:emailAddress ?email ."
+        "FILTER( bif:contains(?email, \"'%1*'\")  )."
+        "?r nco:fullname ?fullname ."
+    "}"
+    "}";
 
 void AddresseeLineEdit::Private::startNepomukSearch()
 {
@@ -621,16 +630,25 @@ void AddresseeLineEdit::Private::updateSearchString()
   }
 }
 
+void AddresseeLineEdit::Private::slotTriggerDelayedQueries()
+{
+    if (m_searchString.isEmpty())
+        return;
+
+    // If Nepomuk is running, we send a ContactSearch job to
+    // Akonadi, which will forward the query to Nepomuk, be
+    // notified of matching items and return those to us.
+    akonadiPerformSearch();
+    // additionally, we ask Nepomuk directly, to get hits that
+    // did not come in through Akonadi
+    startNepomukSearch();
+}
+
 void AddresseeLineEdit::Private::startSearches()
 {
     if ( Nepomuk2::ResourceManager::instance()->initialized() ) {
-      // If Nepomuk is running, we send a ContactSearch job to
-      // Akonadi, which will forward the query to Nepomuk, be
-      // notified of matching items and return those to us.
-      akonadiPerformSearch();
-      // additionally, we ask Nepomuk directly, to get hits that
-      // did not come in through Akonadi
-      startNepomukSearch();
+        if (!m_delayedQueryTimer.isActive())
+            m_delayedQueryTimer.start(500);
     } else {
       // If Nepomuk is not available, we instead simply fetch
       // all contacts from Akonadi and filter them ourselves.
@@ -652,6 +670,10 @@ void AddresseeLineEdit::Private::startSearches()
 
 void AddresseeLineEdit::Private::akonadiPerformSearch()
 {
+
+  if ( m_searchString.size() <= 2 ) {
+    return;
+  }
   kDebug() << "searching akonadi with:" << m_searchString;
 
   // first, kill all job still in flight, they are no longer current
@@ -1210,7 +1232,9 @@ void AddresseeLineEdit::insert( const QString &t )
 
 void AddresseeLineEdit::setText( const QString & text )
 {
+  const int cursorPos = cursorPosition();
   KLineEdit::setText( text.trimmed() );
+  setCursorPosition( cursorPos );
 }
 
 void AddresseeLineEdit::paste()

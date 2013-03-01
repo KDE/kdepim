@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -227,8 +227,8 @@ QString SylpheedSettings::convertToKmailTemplate(const QString& templateStr)
   newTemplate.replace(QLatin1String("%cc"),QLatin1String("%CCNAME"));
   newTemplate.replace(QLatin1String("%c"),QLatin1String("%CCNAME"));
 
-  newTemplate.replace(QLatin1String("%email"),QLatin1String("%CCNAME"));
-  newTemplate.replace(QLatin1String("%A"),QLatin1String("%CCNAME"));
+  newTemplate.replace(QLatin1String("%email"),QLatin1String("%OFROMNAME"));
+  newTemplate.replace(QLatin1String("%A"),QLatin1String("%OFROMNAME"));
 
   newTemplate.replace(QLatin1String("%cursor"),QLatin1String("%CURSOR"));
   newTemplate.replace(QLatin1String("%X"),QLatin1String("%CURSOR"));
@@ -245,6 +245,14 @@ QString SylpheedSettings::convertToKmailTemplate(const QString& templateStr)
   newTemplate.replace(QLatin1String("%messageid"),QLatin1String("%MSGID"));
   newTemplate.replace(QLatin1String("%i"),QLatin1String("%MSGID"));
 
+  newTemplate.replace(QLatin1String("%firstname"),QLatin1String("%OFROMNAME"));
+  newTemplate.replace(QLatin1String("%F"),QLatin1String("%OFROMNAME"));
+
+  newTemplate.replace(QLatin1String("%lastname"),QLatin1String("%OFROMLNAME"));
+  newTemplate.replace(QLatin1String("%L"),QLatin1String("%OFROMLNAME"));
+
+  newTemplate.replace(QLatin1String("%fullname"),QLatin1String("%OFROMFNAME"));
+  newTemplate.replace(QLatin1String("%N"),QLatin1String("%OFROMFNAME"));
   //TODO add more variable
   return newTemplate;
 }
@@ -353,6 +361,9 @@ void SylpheedSettings::readPop3Account( const KConfigGroup& accountConfig, bool 
 void SylpheedSettings::readImapAccount( const KConfigGroup& accountConfig, bool checkMailOnStartup, int intervalCheckMail )
 {
   QMap<QString, QVariant> settings;
+  const QString host = accountConfig.readEntry("receive_server");
+  settings.insert(QLatin1String("ImapServer"), host);
+
   const QString name = accountConfig.readEntry( QLatin1String( "name" ) );
   const int sslimap = accountConfig.readEntry( QLatin1String( "ssl_imap" ), 0);
   switch(sslimap) {
@@ -445,8 +456,9 @@ void SylpheedSettings::readAccount(const KConfigGroup& accountConfig , bool chec
   
 void SylpheedSettings::readIdentity( const KConfigGroup& accountConfig )
 {
-  KPIMIdentities::Identity* identity  = createIdentity();
-  const QString name = accountConfig.readEntry( QLatin1String( "name" ) );
+  QString name = accountConfig.readEntry( QLatin1String( "name" ) );
+  KPIMIdentities::Identity* identity  = createIdentity(name);
+
   identity->setFullName( name );
   identity->setIdentityName( name );
   const QString organization = accountConfig.readEntry( QLatin1String( "organization" ), QString() );

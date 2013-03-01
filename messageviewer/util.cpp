@@ -41,11 +41,12 @@
 
 #include "iconnamecache.h"
 #include "nodehelper.h"
-#include "renamefiledialog.h"
 
 #include "messagecore/globalsettings.h"
 #include "messagecore/nodehelper.h"
 #include "messagecore/stringutil.h"
+
+#include "pimcommon/renamefiledialog.h"
 
 #include <akonadi/item.h>
 
@@ -221,7 +222,7 @@ bool Util::saveContents( QWidget *parent, const QList<KMime::Content*> &contents
 
   bool globalResult = true;
   int unnamedAtmCount = 0;
-  MessageViewer::RenameFileDialog::RenameFileDialogResult result = MessageViewer::RenameFileDialog::RENAMEFILE_IGNORE;
+  PimCommon::RenameFileDialog::RenameFileDialogResult result = PimCommon::RenameFileDialog::RENAMEFILE_IGNORE;
   foreach( KMime::Content *content, contents ) {
     KUrl curUrl;
     if ( !dirUrl.isEmpty() ) {
@@ -237,9 +238,11 @@ bool Util::saveContents( QWidget *parent, const QList<KMime::Content*> &contents
     } else {
       curUrl = url;
     }
-
     if ( !curUrl.isEmpty() ) {
-
+      //Bug #312954
+      if (contents.count() > 1 && (curUrl.fileName() == QLatin1String("smime.p7s")) ) {
+         continue;
+      }
       // Rename the file if we have already saved one with the same name:
       // try appending a number before extension (e.g. "pic.jpg" => "pic_2.jpg")
       QString origFile = curUrl.fileName();
@@ -267,35 +270,35 @@ bool Util::saveContents( QWidget *parent, const QList<KMime::Content*> &contents
       }
 
 
-      if( !(result == MessageViewer::RenameFileDialog::RENAMEFILE_OVERWRITEALL ||
-              result == MessageViewer::RenameFileDialog::RENAMEFILE_IGNOREALL ))
+      if( !(result == PimCommon::RenameFileDialog::RENAMEFILE_OVERWRITEALL ||
+              result == PimCommon::RenameFileDialog::RENAMEFILE_IGNOREALL ))
       {
           if ( KIO::NetAccess::exists( curUrl, KIO::NetAccess::DestinationSide, parent ) ) {
               if ( contents.count() == 1 ) {
-                  RenameFileDialog *dlg = new RenameFileDialog(curUrl,false, parent);
-                  result = static_cast<MessageViewer::RenameFileDialog::RenameFileDialogResult>(dlg->exec());
-                  if ( result == MessageViewer::RenameFileDialog::RENAMEFILE_IGNORE )
+                  PimCommon::RenameFileDialog *dlg = new PimCommon::RenameFileDialog(curUrl,false, parent);
+                  result = static_cast<PimCommon::RenameFileDialog::RenameFileDialogResult>(dlg->exec());
+                  if ( result == PimCommon::RenameFileDialog::RENAMEFILE_IGNORE )
                   {
                       delete dlg;
                       continue;
                   }
-                  else if ( result == MessageViewer::RenameFileDialog::RENAMEFILE_RENAME )
+                  else if ( result == PimCommon::RenameFileDialog::RENAMEFILE_RENAME )
                   {
                       curUrl = dlg->newName();
                   }
                   delete dlg;
               }
               else {
-                  RenameFileDialog *dlg = new RenameFileDialog(curUrl,true, parent);
-                  result = static_cast<MessageViewer::RenameFileDialog::RenameFileDialogResult>(dlg->exec());
+                  PimCommon::RenameFileDialog *dlg = new PimCommon::RenameFileDialog(curUrl,true, parent);
+                  result = static_cast<PimCommon::RenameFileDialog::RenameFileDialogResult>(dlg->exec());
 
-                  if ( result == MessageViewer::RenameFileDialog::RENAMEFILE_IGNORE ||
-                       result == MessageViewer::RenameFileDialog::RENAMEFILE_IGNOREALL )
+                  if ( result == PimCommon::RenameFileDialog::RENAMEFILE_IGNORE ||
+                       result == PimCommon::RenameFileDialog::RENAMEFILE_IGNOREALL )
                   {
                       delete dlg;
                       continue;
                   }
-                  else if ( result == MessageViewer::RenameFileDialog::RENAMEFILE_RENAME )
+                  else if ( result == PimCommon::RenameFileDialog::RENAMEFILE_RENAME )
                   {
                       curUrl = dlg->newName();
                   }
@@ -304,7 +307,7 @@ bool Util::saveContents( QWidget *parent, const QList<KMime::Content*> &contents
           }
       }
       // save
-      if( result != MessageViewer::RenameFileDialog::RENAMEFILE_IGNOREALL ) {
+      if( result != PimCommon::RenameFileDialog::RENAMEFILE_IGNOREALL ) {
           const bool result = saveContent( parent, content, curUrl );
           if ( !result )
               globalResult = result;

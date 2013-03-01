@@ -50,7 +50,7 @@ public:
     ~DBMan();
     const QMap<int, BilboBlog*> & blogList() const;
 
-    QString lastErrorText();
+    QString lastErrorText() const;
     /**
      * \brief Retrieve the instance of DataBase Manager.
      *

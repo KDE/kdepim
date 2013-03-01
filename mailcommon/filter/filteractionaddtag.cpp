@@ -20,7 +20,7 @@
 #include "filteractionaddtag.h"
 #include "filtermanager.h"
 #include "filteractionmissingargumentdialog.h"
-#include "messageviewer/minimumcombobox.h"
+#include "pimcommon/minimumcombobox.h"
 
 #include <Nepomuk2/Tag>
 #include <Nepomuk2/Resource>
@@ -45,7 +45,7 @@ FilterActionAddTag::FilterActionAddTag( QObject *parent )
 
 QWidget* FilterActionAddTag::createParamWidget( QWidget *parent ) const
 {
-  MessageViewer::MinimumComboBox *comboBox = new MessageViewer::MinimumComboBox( parent );
+  PimCommon::MinimumComboBox *comboBox = new PimCommon::MinimumComboBox( parent );
   comboBox->setEditable( false );
   QMapIterator<QUrl, QString> i(mList);
   while (i.hasNext()) {
@@ -63,20 +63,20 @@ QWidget* FilterActionAddTag::createParamWidget( QWidget *parent ) const
 
 void FilterActionAddTag::applyParamWidgetValue( QWidget *paramWidget )
 {
-    MessageViewer::MinimumComboBox* combo = static_cast<MessageViewer::MinimumComboBox*>( paramWidget );
+    PimCommon::MinimumComboBox* combo = static_cast<PimCommon::MinimumComboBox*>( paramWidget );
     mParameter = combo->itemData(combo->currentIndex()).toString();
 }
 
 void FilterActionAddTag::setParamWidgetValue( QWidget *paramWidget ) const
 {
-  const int index = static_cast<MessageViewer::MinimumComboBox*>( paramWidget )->findData(mParameter);
+  const int index = static_cast<PimCommon::MinimumComboBox*>( paramWidget )->findData(mParameter);
 
-  static_cast<MessageViewer::MinimumComboBox*>( paramWidget )->setCurrentIndex( index < 0 ? 0 : index );
+  static_cast<PimCommon::MinimumComboBox*>( paramWidget )->setCurrentIndex( index < 0 ? 0 : index );
 }
 
 void FilterActionAddTag::clearParamWidget( QWidget *paramWidget ) const
 {
-  static_cast<MessageViewer::MinimumComboBox*>( paramWidget )->setCurrentIndex( 0 );
+  static_cast<PimCommon::MinimumComboBox*>( paramWidget )->setCurrentIndex( 0 );
 }
 
 
@@ -99,7 +99,6 @@ bool FilterActionAddTag::argsFromStringInteractive( const QString &argsStr, cons
   const bool index = mList.contains( mParameter );
   if ( Nepomuk2::ResourceManager::instance()->initialized() ) {
     if ( !index ) {
-        //TODO adapt it.
       QPointer<FilterActionMissingTagDialog> dlg = new FilterActionMissingTagDialog( mList, filterName, argsStr );
       if ( dlg->exec() ) {
         mParameter = dlg->selectedTag();

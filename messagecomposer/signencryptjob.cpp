@@ -157,17 +157,16 @@ void SignEncryptJob::process()
     d->content = d->subjobContents.first();
   }
 
-  d->resultContent = new KMime::Content;
-
   const Kleo::CryptoBackend::Protocol *proto = 0;
   if( d->format & Kleo::AnyOpenPGP ) {
     proto = Kleo::CryptoBackendFactory::instance()->openpgp();
   } else if( d->format & Kleo::AnySMIME ) {
     proto = Kleo::CryptoBackendFactory::instance()->smime();
+  } else {
+    return;
   }
 
-  Q_ASSERT( proto );
-
+  //d->resultContent = new KMime::Content;
 
   kDebug() << "creating signencrypt from:" << proto->name() << proto->displayName();
   std::auto_ptr<Kleo::SignEncryptJob> job( proto->signEncryptJob( !d->binaryHint( d->format ), d->format == Kleo::InlineOpenPGPFormat ) );
@@ -181,7 +180,8 @@ void SignEncryptJob::process()
     content = KMime::LFtoCRLF( d->content->body() );
   } else {
     content = KMime::LFtoCRLF( d->content->encodedContent() );
-  }
+  } 
+
 
   // FIXME: Make this async
   const std::pair<GpgME::SigningResult,GpgME::EncryptionResult> res = job->exec( d->signers, d->encKeys,

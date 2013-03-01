@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -21,7 +21,7 @@
 #include "createnewcontactjob.h"
 #include "util.h"
 
-#include <KLocale>
+#include <libkdepim/broadcaststatus.h>
 
 #include <KABC/Addressee>
 #include <KABC/ContactGroup>
@@ -32,6 +32,9 @@
 #include <Akonadi/CollectionFetchScope>
 #include <Akonadi/AgentFilterProxyModel>
 #include <Akonadi/Contact/ContactEditorDialog>
+
+#include <KLocale>
+#include <KMessageBox>
 
 CreateNewContactJob::CreateNewContactJob(QWidget *parentWidget, QObject *parent)
     : KJob(parent),
@@ -111,7 +114,6 @@ void CreateNewContactJob::slotResourceCreationDone(KJob* job)
       emitResult();
       return;
     }
-
     createContact();
     emitResult();
 }
@@ -119,7 +121,21 @@ void CreateNewContactJob::slotResourceCreationDone(KJob* job)
 void CreateNewContactJob::createContact()
 {
     Akonadi::ContactEditorDialog dlg( Akonadi::ContactEditorDialog::CreateMode, mParentWidget );
+    connect( &dlg, SIGNAL(contactStored(Akonadi::Item)), this, SLOT(contactStored(Akonadi::Item)) );
+    connect( &dlg, SIGNAL(error(QString)), this, SLOT(slotContactEditorError(QString)) );
     dlg.exec();
 }
+
+void CreateNewContactJob::contactStored( const Akonadi::Item &item )
+{
+  Q_UNUSED( item );
+  KPIM::BroadcastStatus::instance()->setStatusMsg( i18n( "Contact created successfully" ) );
+}
+
+void CreateNewContactJob::slotContactEditorError(const QString &error)
+{
+    KMessageBox::error(mParentWidget, i18n("Contact can not stored: %1", error), i18n("Failed to store contact"));
+}
+
 
 #include "createnewcontactjob.moc"

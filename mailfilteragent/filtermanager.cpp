@@ -117,13 +117,13 @@ void FilterManager::Private::slotItemsFetchedForFilter( const Akonadi::Item::Lis
   foreach ( const Akonadi::Item &item, items ) {
     mCurrentProgressCount++;
 
-    if (mCurrentProgressCount != mTotalProgressCount) {
-        const QString statusMsg = i18n( "Filtering message %1 of %2", mCurrentProgressCount,
-                                      mTotalProgressCount );
-        emit q->progressMessage(statusMsg);
-        emit q->percent(mCurrentProgressCount * 100 / mTotalProgressCount);
+    if ((mTotalProgressCount > 0) && (mCurrentProgressCount != mTotalProgressCount)) {
+      const QString statusMsg =
+        i18n( "Filtering message %1 of %2", mCurrentProgressCount, mTotalProgressCount );
+      emit q->progressMessage(statusMsg);
+      emit q->percent(mCurrentProgressCount * 100 / mTotalProgressCount);
     } else {
-        emit q->percent(0);
+      emit q->percent(0);
     }
 
     const bool filterResult = q->process( listMailFilters, item, needsFullPayload, filterSet );
@@ -404,11 +404,15 @@ void FilterManager::filter(const Akonadi::Item& item, const QString& filterId, c
 
 bool FilterManager::process( const Akonadi::Item& item, bool needsFullPayload, const MailFilter* filter )
 {
+  if ( !filter ) {
+    return false;
+  }
+
   if ( !filter->isEnabled() ) {
     return true;
   }
 
-  if ( !filter || !item.hasPayload<KMime::Message::Ptr>() ) {
+  if ( !item.hasPayload<KMime::Message::Ptr>() ) {
     kError() << "Filter is null or item doesn't have correct payload.";
     return false;
   }
@@ -464,7 +468,7 @@ bool FilterManager::processContextItem( ItemContext context )
           //the previous remote id. Example: move to another collection on another resource => new remoteId, but our context.item()
           //remoteid still holds the old one. Without clearing it, we try to enforce that on the new location, which is
           //anything but good (and the server replies with "NO Only resources can modify remote identifiers"
-          item.setRemoteId(QString()); 
+          item.setRemoteId(QString());
           Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( item, this );
           modifyJob->disableRevisionCheck(); //no conflict handling for mails as no other process could change the mail body and we don't care about flag conflicts
           //The below is a safety check to ignore modifying payloads if it was not requested,

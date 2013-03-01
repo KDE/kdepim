@@ -24,7 +24,6 @@
 
 #include "htmleditor.h"
 
-#include <QMenu>
 
 #include <kglobal.h>
 #include <ktexteditor/editor.h>
@@ -36,11 +35,11 @@
 #include <klocalizedstring.h>
 
 
+#include <QMenu>
+
 class HtmlEditorPrivate
 {
 public:
-//     HtmlEditorPrivate() : instance( 0L ) {}
-//     ~HtmlEditorPrivate() { delete instance; }
     HtmlEditor instance;
 };
 
@@ -48,9 +47,6 @@ K_GLOBAL_STATIC( HtmlEditorPrivate, instancePrivate )
 
 HtmlEditor* HtmlEditor::self()
 {
-//     if ( !instancePrivate->instance ) {
-//         instance = new HtmlEditor;
-//     }
     return &instancePrivate->instance;
 }
 
@@ -103,11 +99,6 @@ KTextEditor::View* HtmlEditor::createView( QWidget* parent )
     return view;
 }
 
-// void HtmlEditor::setContent( KTextEditor::View* view, const QString &text)
-// {
-//     view->document()->setText( text );
-// }
-
 QWidget* HtmlEditor::configPage( int number, QWidget* parent )
 {
     KTextEditor::ConfigPage *page = mEditor->configPage( number, parent );
@@ -122,7 +113,7 @@ void HtmlEditor::toggleWordWrap()
 {
     KTextEditor::View *view = qobject_cast< KTextEditor::View* >( sender()->parent() );
     KTextEditor::ConfigInterface *interface = qobject_cast< KTextEditor::ConfigInterface* >( view );
-    bool result = interface->configValue( "dynamic-word-wrap" ).toBool();
+    const bool result = interface->configValue( "dynamic-word-wrap" ).toBool();
     interface->setConfigValue( "dynamic-word-wrap", !( result ) );
 }
 
@@ -130,7 +121,7 @@ void HtmlEditor::toggleLineNumber()
 {
     KTextEditor::View *view = qobject_cast< KTextEditor::View* >( sender()->parent() );
     KTextEditor::ConfigInterface *interface = qobject_cast< KTextEditor::ConfigInterface* >( view );
-    bool result = interface->configValue( "line-numbers" ).toBool();
+    const bool result = interface->configValue( "line-numbers" ).toBool();
     interface->setConfigValue( "line-numbers", !( result ) );
 }
 

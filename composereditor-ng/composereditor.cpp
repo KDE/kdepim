@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -19,8 +19,10 @@
 */
 
 #include "composereditor.h"
-#include "findreplacebar.h"
 #include "composerview.h"
+#include "widgets/findreplacebar.h"
+
+#include <KToolBar>
 
 #include <QDebug>
 #include <QVBoxLayout>
@@ -34,51 +36,65 @@ class ComposerEditorPrivate
 public:
     ComposerEditorPrivate(ComposerEditor *qq)
         : findReplaceBar(0),
+          toolbar(0),
           q(qq),
           view(0),
           richTextEnabled(true)
     {
     }
 
+    void initialize()
+    {
+        QVBoxLayout * vlay = new QVBoxLayout;
+        toolbar = new KToolBar(q);
+        toolbar->setIconSize ( QSize ( 22, 22 ) );
+        toolbar->setToolButtonStyle ( Qt::ToolButtonIconOnly );
+
+        vlay->setMargin(0);
+        vlay->addWidget(toolbar);
+        toolbar->hide();
+        vlay->addWidget(view);
+        findReplaceBar = new FindReplaceBar(view);
+        vlay->addWidget(findReplaceBar);
+        q->setLayout(vlay);
+        q->connect(view,SIGNAL(showFindBar()),findReplaceBar,SLOT(showAndFocus()));
+        q->connect(view,SIGNAL(openLink(QUrl)),SIGNAL(openLink(QUrl)));
+        q->connect(view->page(), SIGNAL(contentsChanged()), q, SIGNAL(textChanged()) );
+    }
+
     FindReplaceBar *findReplaceBar;
+    KToolBar *toolbar;
     ComposerEditor *q;
     ComposerView *view;
 
     bool richTextEnabled;
 };
+
+ComposerEditor::ComposerEditor(ComposerView *view, QWidget *parent)
+    : QWidget(parent), d(new ComposerEditorPrivate(this))
+{
+    d->view = view;
+    d->initialize();
 }
-
-
-namespace ComposerEditorNG {
-
 
 ComposerEditor::ComposerEditor(QWidget *parent)
     : QWidget(parent), d(new ComposerEditorPrivate(this))
 {
-    QVBoxLayout * vlay = new QVBoxLayout;
-    vlay->setMargin(0);
     d->view = new ComposerView(this);
-    vlay->addWidget(d->view);
-    d->findReplaceBar = new FindReplaceBar(d->view);
-    vlay->addWidget(d->findReplaceBar);
-    setLayout(vlay);
-    connect(d->view,SIGNAL(showFindBar()),d->findReplaceBar,SLOT(showAndFocus()));
-    connect(d->view,SIGNAL(openLink(QUrl)),SIGNAL(openLink(QUrl)));
+    d->initialize();
 }
 
 ComposerEditor::~ComposerEditor()
 {
-    QString content = d->view->page()->mainFrame()->toHtml();
-    qDebug()<<"content "<<content;
+    //const QString content = d->view->page()->mainFrame()->toHtml();
+    //qDebug()<<" content :"<<content;
     delete d;
 }
 
-
-void ComposerEditor::createActions(KActionCollection *actionCollection)
+void ComposerEditor::addCreatedActionsToActionCollection(KActionCollection *actionCollection)
 {
-    d->view->createActions(actionCollection);
+    d->view->addCreatedActionsToActionCollection(actionCollection);
 }
-
 
 QString ComposerEditor::plainTextContent() const
 {
@@ -87,7 +103,7 @@ QString ComposerEditor::plainTextContent() const
 
 void ComposerEditor::setEnableRichText(bool richTextEnabled)
 {
-    if(d->richTextEnabled != richTextEnabled) {
+    if (d->richTextEnabled != richTextEnabled) {
         d->richTextEnabled = richTextEnabled;
         d->view->setActionsEnabled(d->richTextEnabled);
     }
@@ -136,6 +152,47 @@ QAction* ComposerEditor::action(QWebPage::WebAction action)
 ComposerView *ComposerEditor::view() const
 {
     return d->view;
+}
+
+void ComposerEditor::setHtmlContent( const QString& html )
+{
+    d->view->setHtmlContent(html);
+}
+
+QString ComposerEditor::htmlContent() const
+{
+    return d->view->page()->mainFrame()->toHtml();
+}
+
+void ComposerEditor::createActions(const QList<ComposerView::ComposerViewAction>& lstActions)
+{
+    d->view->createActions(lstActions);
+}
+
+void ComposerEditor::createAllActions()
+{
+    d->view->createAllActions();
+}
+
+void ComposerEditor::createToolBar(const QList<ComposerView::ComposerViewAction>& lstActions)
+{
+    if (d->toolbar) {
+        d->view->createToolBar(lstActions,d->toolbar);
+        d->toolbar->show();
+    }
+}
+
+void ComposerEditor::addActionInToolBar(QAction *act)
+{
+    if (d->toolbar) {
+        d->toolbar->addAction(act);
+        d->toolbar->show();
+    }
+}
+
+KToolBar *ComposerEditor::toolbar() const
+{
+    return d->toolbar;
 }
 
 }

@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -26,8 +26,8 @@ ComposerAutoCorrectionLanguage::ComposerAutoCorrectionLanguage(QWidget *parent)
 {
   KLocale *locale = KGlobal::locale();
   QStringList lstLang = locale->allLanguagesList();
-  Q_FOREACH(const QString& lang, lstLang) {
-    if(lang != QLatin1String("x-test")) {
+  Q_FOREACH (const QString& lang, lstLang) {
+    if (lang != QLatin1String("x-test")) {
       addItem ( locale->languageCodeToName(lang) , lang );
     }
   }
@@ -42,7 +42,6 @@ ComposerAutoCorrectionLanguage::~ComposerAutoCorrectionLanguage()
 {
 
 }
-
 
 QString ComposerAutoCorrectionLanguage::language() const
 {

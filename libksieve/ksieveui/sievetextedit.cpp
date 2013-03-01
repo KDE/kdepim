@@ -18,11 +18,18 @@
 
 #include "sievetextedit.h"
 #include "sievelinenumberarea.h"
-
 #include "sievesyntaxhighlighter.h"
-#include <kglobalsettings.h>
+
+
+#include <KLocale>
+#include <KGlobalSettings>
 #include <KIconTheme>
 #include <KStandardGuiItem>
+#include <KMessageBox>
+#include <KToolInvocation>
+#include <KStandardAction>
+#include <KAction>
+
 #include <QCompleter>
 #include <QStringListModel>
 #include <QKeyEvent>
@@ -30,22 +37,25 @@
 #include <QScrollBar>
 #include <QPainter>
 #include <QMenu>
+#include <QDBusInterface>
+#include <QDBusConnection>
+#include <QDBusConnectionInterface>
+
 
 using namespace KSieveUi;
 
 SieveTextEdit::SieveTextEdit( QWidget *parent )
   :QPlainTextEdit( parent )
 {
-  setFocus();
   setWordWrapMode ( QTextOption::NoWrap );
   setFont( KGlobalSettings::fixedFont() );
   (void) new SieveSyntaxHighlighter( document() );
   m_sieveLineNumberArea = new SieveLineNumberArea(this);
 
-  connect(this, SIGNAL(blockCountChanged(int)), this, SLOT(updateLineNumberAreaWidth(int)));
-  connect(this, SIGNAL(updateRequest(QRect,int)), this, SLOT(updateLineNumberArea(QRect,int)));
+  connect(this, SIGNAL(blockCountChanged(int)), this, SLOT(slotUpdateLineNumberAreaWidth(int)));
+  connect(this, SIGNAL(updateRequest(QRect,int)), this, SLOT(slotUpdateLineNumberArea(QRect,int)));
   
-  updateLineNumberAreaWidth(0);
+  slotUpdateLineNumberAreaWidth(0);
 
   initCompleter();
 }
@@ -58,16 +68,64 @@ void SieveTextEdit::contextMenuEvent( QContextMenuEvent *event )
 {
   QMenu *popup = createStandardContextMenu();
   if (popup) {
+    const bool emptyDocument = document()->isEmpty();
+    QList<QAction *> actionList = popup->actions();
+    enum { UndoAct, RedoAct, CutAct, CopyAct, PasteAct, ClearAct, SelectAllAct, NCountActs };
+    QAction *separatorAction = 0L;
+    int idx = actionList.indexOf( actionList[SelectAllAct] ) + 1;
+    if ( idx < actionList.count() )
+       separatorAction = actionList.at( idx );
+    if ( separatorAction ) {
+       KAction *clearAllAction = KStandardAction::clear(this, SLOT(slotUndoableClear()), popup);
+       if ( emptyDocument )
+           clearAllAction->setEnabled( false );
+       popup->insertAction( separatorAction, clearAllAction );
+    }
+
     popup->addSeparator();
-    popup->addAction( KStandardGuiItem::find().text(),this,SIGNAL(findText()) , Qt::Key_F+Qt::CTRL);
+    popup->addAction( KStandardGuiItem::find().icon(), KStandardGuiItem::find().text(),this,SIGNAL(findText()) , Qt::Key_F+Qt::CTRL);
     //Code from KTextBrowser
     KIconTheme::assignIconsToContextMenu( isReadOnly() ? KIconTheme::ReadOnlyText
                                           : KIconTheme::TextEditor,
                                           popup->actions() );
-
+    popup->addSeparator();
+    QAction *speakAction = popup->addAction(i18n("Speak Text"));
+    speakAction->setIcon(KIcon("preferences-desktop-text-to-speech"));
+    speakAction->setEnabled(!emptyDocument );
+    connect( speakAction, SIGNAL(triggered(bool)), this, SLOT(slotSpeakText()) );
     popup->exec( event->globalPos() );
+
     delete popup;
   }
+}
+
+void SieveTextEdit::slotSpeakText()
+{
+    // If KTTSD not running, start it.
+    if (!QDBusConnection::sessionBus().interface()->isServiceRegistered("org.kde.kttsd")) {
+        QString error;
+        if (KToolInvocation::startServiceByDesktopName("kttsd", QStringList(), &error)) {
+            KMessageBox::error(this, i18n( "Starting Jovie Text-to-Speech Service Failed"), error );
+            return;
+        }
+    }
+    QDBusInterface ktts("org.kde.kttsd", "/KSpeech", "org.kde.KSpeech");
+    QString text;
+    if(textCursor().hasSelection())
+        text = textCursor().selectedText();
+    else
+        text = toPlainText();
+    ktts.asyncCall("say", text, 0);
+}
+
+void SieveTextEdit::slotUndoableClear()
+{
+  QTextCursor cursor = textCursor();
+  cursor.beginEditBlock();
+  cursor.movePosition(QTextCursor::Start);
+  cursor.movePosition(QTextCursor::End, QTextCursor::KeepAnchor);
+  cursor.removeSelectedText();
+  cursor.endEditBlock();
 }
 
 void SieveTextEdit::resizeEvent(QResizeEvent *e)
@@ -115,12 +173,12 @@ void SieveTextEdit::lineNumberAreaPaintEvent(QPaintEvent *event)
   }
 }
 
-void SieveTextEdit::updateLineNumberAreaWidth(int)
+void SieveTextEdit::slotUpdateLineNumberAreaWidth(int)
 { 
   setViewportMargins(lineNumberAreaWidth(), 0, 0, 0);
 }
 
-void SieveTextEdit::updateLineNumberArea(const QRect &rect, int dy)
+void SieveTextEdit::slotUpdateLineNumberArea(const QRect &rect, int dy)
 {
   if (dy)
     m_sieveLineNumberArea->scroll(0, dy);
@@ -128,7 +186,7 @@ void SieveTextEdit::updateLineNumberArea(const QRect &rect, int dy)
     m_sieveLineNumberArea->update(0, rect.y(), m_sieveLineNumberArea->width(), rect.height());
 
   if (rect.contains(viewport()->rect()))
-    updateLineNumberAreaWidth(0);
+    slotUpdateLineNumberAreaWidth(0);
 }
 
 void SieveTextEdit::initCompleter()
@@ -191,7 +249,7 @@ void SieveTextEdit::keyPressEvent(QKeyEvent* e)
   m_completer->complete( cr );
 }
 
-QString SieveTextEdit::wordUnderCursor()
+QString SieveTextEdit::wordUnderCursor() const
 {
     static QString eow = QLatin1String( "~!@#$%^&*()+{}|\"<>,./;'[]\\-= " ); // everything without ':', '?' and '_'
     QTextCursor tc = textCursor();

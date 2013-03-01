@@ -95,7 +95,7 @@ CryptoPagePlugin::CryptoPagePlugin()
   // Send preferences/sign (see kleo/kleo/enum.h)
   KHBox* hbox = new KHBox( box );
 
-  l = new QLabel( i18n( "Sign:" ), hbox );
+  new QLabel( i18n( "Sign:" ), hbox );
 
   mSignPref = new KComboBox( hbox );
   mSignPref->setEditable( false );
@@ -107,7 +107,7 @@ CryptoPagePlugin::CryptoPagePlugin()
   // Send preferences/encrypt (see kleo/kleo/enum.h)
   hbox = new KHBox( box );
 
-  l = new QLabel( i18n( "Encrypt:" ), hbox );
+  new QLabel( i18n( "Encrypt:" ), hbox );
 
   mCryptPref = new KComboBox( hbox );
   mCryptPref->setEditable( false );

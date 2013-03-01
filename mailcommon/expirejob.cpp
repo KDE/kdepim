@@ -61,7 +61,7 @@ using KPIM::BroadcastStatus;
 namespace MailCommon {
 
 ExpireJob::ExpireJob( const Akonadi::Collection &folder, bool immediate )
-  : ScheduledJob( folder, immediate ), mMoveToFolder( 0 )
+  : ScheduledJob( folder, immediate ), mMaxUnreadTime( 0 ), mMaxReadTime( 0 ), mMoveToFolder( 0 )
 {
 }
 
@@ -279,6 +279,7 @@ void ExpireJob::slotExpireDone( KJob *job )
                   "canceled.",
                   mSrcFolder.name(), mMoveToFolder.name() );
     }
+    break;
 
   default: //any other error
     if ( expirationAttribute->expireAction() == MailCommon::ExpireCollectionAttribute::ExpireDelete ) {

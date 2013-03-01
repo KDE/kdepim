@@ -58,7 +58,7 @@ using KPIM::RecentAddresses;
 #include "messagelist/utils/themeconfigbutton.h"
 
 #include "messagecomposer/autocorrection/composerautocorrectionwidget.h"
-#include "messagecomposer/autoimageresizing/autoresizeimagewidget.h"
+#include "messagecomposer/imagescaling/imagescalingwidget.h"
 
 #include "messageviewer/autoqpointer.h"
 #include "messageviewer/nodehelper.h"
@@ -436,6 +436,10 @@ AccountsPageReceivingTab::AccountsPageReceivingTab( QWidget * parent )
   mAccountsReceiving.vlay->setMargin( KDialog::marginHint() );
 
   mAccountsReceiving.mAccountList->agentFilterProxyModel()->addMimeTypeFilter( KMime::Message::mimeType() );
+#ifdef MERGE_KNODE_IN_KMAIL
+  mAccountsReceiving.mAccountList->agentFilterProxyModel()->addMimeTypeFilter( QString::fromLatin1("message/news") );
+#endif
+
   mAccountsReceiving.mAccountList->agentFilterProxyModel()->addCapabilityFilter( "Resource" ); // show only resources, no agents
   mAccountsReceiving.mAccountList->agentFilterProxyModel()->excludeCapabilities( "MailTransport" );
   mAccountsReceiving.mAccountList->agentFilterProxyModel()->excludeCapabilities( "Notes" );
@@ -1200,11 +1204,6 @@ AppearancePageLayoutTab::AppearancePageLayoutTab( QWidget * parent )
   mFolderToolTipsGroup->addButton( folderToolTipsAlwaysRadio, static_cast< int >( FolderTreeWidget::DisplayAlways ) );
   mFolderToolTipsGroupBox->layout()->addWidget( folderToolTipsAlwaysRadio );
 
-  QRadioButton* folderToolTipsElidedRadio = new QRadioButton( i18n( "When Text Obscured" ), mFolderToolTipsGroupBox );
-  mFolderToolTipsGroup->addButton( folderToolTipsElidedRadio, static_cast< int >( FolderTreeWidget::DisplayWhenTextElided ) );
-  folderToolTipsElidedRadio->setEnabled( false ); //Disable it until we reimplement it.
-  mFolderToolTipsGroupBox->layout()->addWidget( folderToolTipsElidedRadio );
-
   QRadioButton* folderToolTipsNeverRadio = new QRadioButton( i18n( "Never" ), mFolderToolTipsGroupBox );
   mFolderToolTipsGroup->addButton( folderToolTipsNeverRadio, static_cast< int >( FolderTreeWidget::DisplayNever ) );
   mFolderToolTipsGroupBox->layout()->addWidget( folderToolTipsNeverRadio );
@@ -1559,11 +1558,6 @@ AppearancePageReaderTab::AppearancePageReaderTab( QWidget * parent )
   connect( mCloseAfterReplyOrForwardCheck, SIGNAL (stateChanged(int)),
            this, SLOT(slotEmitChanged()) );
 
-  mAccessKeyEnabled = new QCheckBox( i18n("Enable Access Key"),this );
-  vlay->addWidget( mAccessKeyEnabled );
-  connect( mAccessKeyEnabled, SIGNAL (stateChanged(int)),
-           this, SLOT(slotEmitChanged()) );
-
   mViewerSettings = new MessageViewer::ConfigureWidget( this );
   connect( mViewerSettings, SIGNAL(settingsChanged()),
            this, SLOT(slotEmitChanged()) );
@@ -1575,7 +1569,6 @@ AppearancePageReaderTab::AppearancePageReaderTab( QWidget * parent )
 void AppearancePage::ReaderTab::doLoadOther()
 {
   loadWidget( mCloseAfterReplyOrForwardCheck, GlobalSettings::self()->closeAfterReplyOrForwardItem() );
-  loadWidget( mAccessKeyEnabled, MessageViewer::GlobalSettings::self()->accessKeyEnabledItem() );
   mViewerSettings->readConfig();
 }
 
@@ -1583,7 +1576,6 @@ void AppearancePage::ReaderTab::doLoadOther()
 void AppearancePage::ReaderTab::save()
 {
   saveCheckBox( mCloseAfterReplyOrForwardCheck, GlobalSettings::self()->closeAfterReplyOrForwardItem() );
-  saveCheckBox( mAccessKeyEnabled, MessageViewer::GlobalSettings::self()->accessKeyEnabledItem() );
   mViewerSettings->writeConfig();
 }
 
@@ -1607,6 +1599,7 @@ AppearancePageSystemTrayTab::AppearancePageSystemTrayTab( QWidget * parent )
 
   mSystemTrayShowUnreadMail = new QCheckBox( i18n("Show unread mail in tray icon"), this );
   vlay->addWidget( mSystemTrayShowUnreadMail );
+  mSystemTrayShowUnreadMail->setEnabled(false);
   connect( mSystemTrayShowUnreadMail, SIGNAL(stateChanged(int)),
            this, SLOT(slotEmitChanged()) );
   connect( mSystemTrayCheck, SIGNAL(toggled(bool)),
@@ -2251,15 +2244,8 @@ ComposerPageGeneralTab::ComposerPageGeneralTab( QWidget * parent )
 
   mImprovePlainTextOfHtmlMessage = new QCheckBox( MessageComposer::MessageComposerSettings::self()->improvePlainTextOfHtmlMessageItem()->label(), this );
   vlay->addWidget( mImprovePlainTextOfHtmlMessage );
-#ifdef GRANTLEE_GREATER_0_2
   connect( mImprovePlainTextOfHtmlMessage, SIGNAL(stateChanged(int)),
            this, SLOT(slotEmitChanged()) );
-#else
-  mImprovePlainTextOfHtmlMessage->setWhatsThis(
-                 i18n( "To support improving the plain text of HTML messages, KMail must be compiled "
-                       "with Grantlee 0.3 or greater." ) );
-  mImprovePlainTextOfHtmlMessage->setEnabled(false);
-#endif
 
   mQuoteSelectionOnlyCheck = new QCheckBox( MessageComposer::MessageComposerSettings::self()->quoteSelectionOnlyItem()->label(),
                                             this );
@@ -2734,6 +2720,8 @@ void ComposerPage::SubjectTab::save()
 {
   MessageComposer::MessageComposerSettings::self()->setReplyPrefixes( mReplyListEditor->stringList() );
   MessageComposer::MessageComposerSettings::self()->setForwardPrefixes( mForwardListEditor->stringList() );
+  MessageComposer::MessageComposerSettings::self()->setReplaceForwardPrefix( mReplaceForwardPrefixCheck->isChecked() );
+  MessageComposer::MessageComposerSettings::self()->setReplaceReplyPrefix( mReplaceReplyPrefixCheck->isChecked() );
 }
 
 void ComposerPage::SubjectTab::doResetToDefaultsOther()
@@ -2925,14 +2913,16 @@ ComposerPageHeadersTab::ComposerPageHeadersTab( QWidget * parent )
   vlay->addLayout( glay );
   glay->setRowStretch( 2, 1 );
   glay->setColumnStretch( 1, 1 );
-  mTagList = new ListView( this );
-  mTagList->setObjectName( "tagList" );
-  mTagList->setHeaderLabels( QStringList() << i18nc("@title:column Name of the mime header.","Name")
+  mHeaderList = new ListView( this );
+  mHeaderList->setObjectName( "tagList" );
+  mHeaderList->setHeaderLabels( QStringList() << i18nc("@title:column Name of the mime header.","Name")
     << i18nc("@title:column Value of the mimeheader.","Value") );
-  mTagList->setSortingEnabled( false );
-  connect( mTagList, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)),
+  mHeaderList->setSortingEnabled( false );
+  connect( mHeaderList, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)),
            this, SLOT(slotMimeHeaderSelectionChanged()) );
-  glay->addWidget( mTagList, 0, 0, 3, 2 );
+  connect( mHeaderList, SIGNAL(addHeader()), SLOT(slotNewMimeHeader()));
+  connect( mHeaderList, SIGNAL(removeHeader()), SLOT(slotRemoveMimeHeader()));
+  glay->addWidget( mHeaderList, 0, 0, 3, 2 );
 
   // "new" and "remove" buttons:
   button = new QPushButton( i18nc("@action:button Add new mime header field.","Ne&w"), this );
@@ -2972,7 +2962,7 @@ ComposerPageHeadersTab::ComposerPageHeadersTab( QWidget * parent )
 void ComposerPage::HeadersTab::slotMimeHeaderSelectionChanged()
 {
   mEmitChanges = false;
-  QTreeWidgetItem * item = mTagList->currentItem();
+  QTreeWidgetItem * item = mHeaderList->currentItem();
 
   if ( item ) {
     mTagNameEdit->setText( item->text( 0 ) );
@@ -2994,7 +2984,7 @@ void ComposerPage::HeadersTab::slotMimeHeaderNameChanged( const QString & text )
 {
   // is called on ::setup(), when clearing the line edits. So be
   // prepared to not find a selection:
-  QTreeWidgetItem * item = mTagList->currentItem();
+  QTreeWidgetItem * item = mHeaderList->currentItem();
   if ( item )
     item->setText( 0, text );
   slotEmitChanged();
@@ -3005,7 +2995,7 @@ void ComposerPage::HeadersTab::slotMimeHeaderValueChanged( const QString & text 
 {
   // is called on ::setup(), when clearing the line edits. So be
   // prepared to not find a selection:
-  QTreeWidgetItem * item = mTagList->currentItem();
+  QTreeWidgetItem * item = mHeaderList->currentItem();
   if ( item )
     item->setText( 1, text );
   slotEmitChanged();
@@ -3014,8 +3004,8 @@ void ComposerPage::HeadersTab::slotMimeHeaderValueChanged( const QString & text 
 
 void ComposerPage::HeadersTab::slotNewMimeHeader()
 {
-  QTreeWidgetItem *listItem = new QTreeWidgetItem( mTagList );
-  mTagList->setCurrentItem( listItem );
+  QTreeWidgetItem *listItem = new QTreeWidgetItem( mHeaderList );
+  mHeaderList->setCurrentItem( listItem );
   slotEmitChanged();
 }
 
@@ -3023,7 +3013,7 @@ void ComposerPage::HeadersTab::slotNewMimeHeader()
 void ComposerPage::HeadersTab::slotRemoveMimeHeader()
 {
   // calling this w/o selection is a programming error:
-  QTreeWidgetItem *item = mTagList->currentItem();
+  QTreeWidgetItem *item = mHeaderList->currentItem();
   if ( !item ) {
     kDebug() << "=================================================="
                   << "Error: Remove button was pressed although no custom header was selected\n"
@@ -3031,18 +3021,18 @@ void ComposerPage::HeadersTab::slotRemoveMimeHeader()
     return;
   }
 
-  QTreeWidgetItem *below = mTagList->itemBelow( item );
+  QTreeWidgetItem *below = mHeaderList->itemBelow( item );
 
   if ( below ) {
     kDebug() << "below";
-    mTagList->setCurrentItem( below );
+    mHeaderList->setCurrentItem( below );
     delete item;
     item = 0;
-  } else if ( mTagList->topLevelItemCount() > 0 ) {
+  } else if ( mHeaderList->topLevelItemCount() > 0 ) {
     delete item;
     item = 0;
-    mTagList->setCurrentItem(
-      mTagList->topLevelItem( mTagList->topLevelItemCount() - 1 )
+    mHeaderList->setCurrentItem(
+      mHeaderList->topLevelItem( mHeaderList->topLevelItemCount() - 1 )
     );
   }
 
@@ -3056,7 +3046,7 @@ void ComposerPage::HeadersTab::doLoadOther()
                        MessageComposer::MessageComposerSettings::useCustomMessageIdSuffix() );
   mCreateOwnMessageIdCheck->setChecked( state );
 
-  mTagList->clear();
+  mHeaderList->clear();
   mTagNameEdit->clear();
   mTagValueEdit->clear();
 
@@ -3069,13 +3059,13 @@ void ComposerPage::HeadersTab::doLoadOther()
     const QString name  = config.readEntry( "name" );
     const QString value = config.readEntry( "value" );
     if( !name.isEmpty() ) {
-      item = new QTreeWidgetItem( mTagList, item );
+      item = new QTreeWidgetItem( mHeaderList, item );
       item->setText( 0, name );
       item->setText( 1, value );
     }
   }
-  if ( mTagList->topLevelItemCount() > 0 ) {
-    mTagList->setCurrentItem( mTagList->topLevelItem( 0 ) );
+  if ( mHeaderList->topLevelItemCount() > 0 ) {
+    mHeaderList->setCurrentItem( mHeaderList->topLevelItem( 0 ) );
   }
   else {
     // disable the "Remove" button
@@ -3101,9 +3091,9 @@ void ComposerPage::HeadersTab::save()
 
   int numValidEntries = 0;
   QTreeWidgetItem *item = 0;
-  const int numberOfEntry = mTagList->topLevelItemCount();
+  const int numberOfEntry = mHeaderList->topLevelItemCount();
   for ( int i = 0; i < numberOfEntry; ++i ) {
-    item = mTagList->topLevelItem( i );
+    item = mHeaderList->topLevelItem( i );
     if( !item->text(0).isEmpty() ) {
       KConfigGroup config( KMKernel::self()->config(), QString::fromLatin1("Mime #%1").arg( numValidEntries ) );
       config.writeEntry( "name",  item->text( 0 ) );
@@ -3125,7 +3115,7 @@ void ComposerPage::HeadersTab::doResetToDefaultsOther()
   const bool state = ( !messageIdSuffix.isEmpty() && useCustomMessageIdSuffix );
   mCreateOwnMessageIdCheck->setChecked( state );
 
-  mTagList->clear();
+  mHeaderList->clear();
   mTagNameEdit->clear();
   mTagValueEdit->clear();
   // disable the "Remove" button
@@ -3295,7 +3285,7 @@ ComposerPageAutoImageResizeTab::ComposerPageAutoImageResizeTab(QWidget *parent)
   QVBoxLayout *vlay = new QVBoxLayout( this );
   vlay->setSpacing( 0 );
   vlay->setMargin( 0 );
-  autoResizeWidget = new MessageComposer::AutoResizeImageWidget(this);
+  autoResizeWidget = new MessageComposer::ImageScalingWidget(this);
   vlay->addWidget(autoResizeWidget);
   setLayout(vlay);
   connect( autoResizeWidget, SIGNAL(changed()), this, SLOT(slotEmitChanged()) );

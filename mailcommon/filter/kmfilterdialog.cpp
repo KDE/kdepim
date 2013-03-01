@@ -297,6 +297,7 @@ I18N_NOOP( "<qt><p>Check this button to force the confirmation dialog to be "
 KMFilterDialog::KMFilterDialog( const QList<KActionCollection*> &actionCollection,
                                 QWidget *parent, bool createDummyFilter )
   : KDialog( parent ),
+    mFilter( 0 ),
     mDoNotClose( false ),
     mIgnoreFilterUpdates( true )
 {
@@ -433,14 +434,6 @@ KMFilterDialog::KMFilterDialog( const QList<KActionCollection*> &actionCollectio
     mAccountList = new AccountList( mAdvOptsGroup );
     gl->addWidget( mAccountList, 0, 1, 4, 3 );
 
-    mApplyBeforeOut =
-      new QCheckBox( i18n( "Apply this filter &before sending messages" ), mAdvOptsGroup );
-    mApplyBeforeOut->setToolTip(
-      i18n( "<p>The filter will be triggered <b>before</b> the message is sent "
-            "and it will affect both the local copy and the sent copy of the message.</p>"
-            "<p>This is required if the recipient's copy also needs to be modified.</p>" ) );
-    gl->addWidget( mApplyBeforeOut, 5, 0, 1, 4 );
-
     mApplyOnOut =
       new QCheckBox( i18n( "Apply this filter to &sent messages" ), mAdvOptsGroup );
     mApplyOnOut->setToolTip(
@@ -449,6 +442,15 @@ KMFilterDialog::KMFilterDialog( const QList<KActionCollection*> &actionCollectio
             "<p>If the recipient's copy also needs to be modified, "
             "please use \"Apply this filter <b>before</b> sending messages\".</p>" ) );
     gl->addWidget( mApplyOnOut, 4, 0, 1, 4 );
+
+    mApplyBeforeOut =
+      new QCheckBox( i18n( "Apply this filter &before sending messages" ), mAdvOptsGroup );
+    mApplyBeforeOut->setToolTip(
+      i18n( "<p>The filter will be triggered <b>before</b> the message is sent "
+            "and it will affect both the local copy and the sent copy of the message.</p>"
+            "<p>This is required if the recipient's copy also needs to be modified.</p>" ) );
+    gl->addWidget( mApplyBeforeOut, 5, 0, 1, 4 );
+
 
     mApplyOnCtrlJ =
       new QCheckBox( i18n( "Apply this filter on manual &filtering" ), mAdvOptsGroup );
@@ -591,6 +593,7 @@ KMFilterDialog::KMFilterDialog( const QList<KActionCollection*> &actionCollectio
   connect( mActionLister, SIGNAL(widgetAdded(QWidget*)), this, SLOT(slotDialogUpdated()) );
   connect( mActionLister, SIGNAL(widgetRemoved()), this, SLOT(slotDialogUpdated()) );
   connect( mActionLister, SIGNAL(filterModified()), this, SLOT(slotDialogUpdated()) );
+  connect( mActionLister, SIGNAL(clearWidgets()), this, SLOT(slotDialogUpdated()) );
   KConfigGroup myGroup( KernelIf->config(), "Geometry" );
   const QSize size = myGroup.readEntry( "filterDialogSize", QSize() );
   if ( size != QSize() ) {

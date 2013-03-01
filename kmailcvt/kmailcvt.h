@@ -30,12 +30,11 @@ public:
   explicit KMailCVT(QWidget* parent=0);
   ~KMailCVT();
 
-  virtual void next();
-  virtual void reject();
-public slots:
-  void help();
+  void next();
+  void reject();
   
 private slots:
+  void help();
   void collectionChanged( const Akonadi::Collection& selectedCollection );
 private:
   void writeConfig();

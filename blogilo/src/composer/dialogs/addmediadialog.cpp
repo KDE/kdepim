@@ -23,12 +23,10 @@
 */
 
 #include "addmediadialog.h"
+#include "bilbomedia.h"
+#include "settings.h"
 
-#ifdef WIN32
-#include <QFileDialog>
-#else
 #include <KFileDialog>
-#endif
 
 #include <klineedit.h>
 #include <kmessagebox.h>
@@ -36,10 +34,9 @@
 #include <kdebug.h>
 #include <kio/job.h>
 
-#include "bilbomedia.h"
-#include "settings.h"
 
-AddMediaDialog::AddMediaDialog( QWidget *parent ) : KDialog( parent )
+AddMediaDialog::AddMediaDialog( QWidget *parent ) 
+   : KDialog( parent ), media( 0 )  
 {
     QWidget *dialog = new QWidget( this );
     ui.setupUi( dialog );
@@ -51,6 +48,7 @@ AddMediaDialog::AddMediaDialog( QWidget *parent ) : KDialog( parent )
     connect( ui.radiobtnLocalUrl, SIGNAL(toggled(bool)),
              ui.urlReqBrowse, SLOT(setEnabled(bool)) );
     connect( ui.urlReqBrowse, SIGNAL(clicked(bool)), SLOT(slotSelectLocalFile()) );
+    connect( this, SIGNAL(okClicked()),SLOT(slotOkClicked()));
     ui.urlReqLineEdit->setFocus();
     ui.urlReqLineEdit->setToolTip( i18n( "Type media path here." ) );
     ui.urlReqBrowse->setToolTip( i18n( "Browse" ) );
@@ -63,62 +61,53 @@ AddMediaDialog::~AddMediaDialog()
 
 void AddMediaDialog::slotSelectLocalFile()
 {
-    QString path;
-#ifdef WIN32
-    path = QFileDialog::getOpenFileName( this, i18n("Choose a file") );//krazy:exclude=qclasses KFileDialog has problem on WIN32 now
-#else
-    path = KFileDialog::getOpenFileName( KUrl(),
+    const QString path = KFileDialog::getOpenFileName( KUrl(),
                                          QString(), this,
                                          i18n("Choose a file") );
-#endif
     ui.urlReqLineEdit->setText(path);
 }
 
-void AddMediaDialog::slotButtonClicked(int button)
+void AddMediaDialog::slotOkClicked()
 {
-    if(button == KDialog::Ok){
-        KUrl mediaUrl( ui.urlReqLineEdit->text() );
-        kDebug() << "parent ok";
-        if ( !mediaUrl.isEmpty() ) {
-            if ( mediaUrl.isValid() ) {
-                media = new BilboMedia();
-                QString name = mediaUrl.fileName();
+    KUrl mediaUrl( ui.urlReqLineEdit->text() );
+    kDebug() << "parent ok";
+    if ( !mediaUrl.isEmpty() ) {
+        if ( mediaUrl.isValid() ) {
+            media = new BilboMedia();
+            QString name = mediaUrl.fileName();
 
-                media->setName( name );
+            media->setName( name );
 
-                if ( !mediaUrl.isLocalFile() ) {
-                    media->setRemoteUrl( mediaUrl.url() );
-                    media->setUploaded( true );
+            if ( !mediaUrl.isLocalFile() ) {
+                media->setRemoteUrl( mediaUrl.url() );
+                media->setUploaded( true );
 
-                    KIO::MimetypeJob* typeJob = KIO::mimetype( mediaUrl, KIO::HideProgressInfo );
+                KIO::MimetypeJob* typeJob = KIO::mimetype( mediaUrl, KIO::HideProgressInfo );
 
-                    connect( typeJob, SIGNAL(mimetype(KIO::Job*,QString)),
-                            this,  SLOT(slotRemoteFileTypeFound(KIO::Job*,QString)) );
+                connect( typeJob, SIGNAL(mimetype(KIO::Job*,QString)),
+                         this,  SLOT(slotRemoteFileTypeFound(KIO::Job*,QString)) );
 
-//                     addOtherMediaAttributes();
+                //                     addOtherMediaAttributes();
 
-                } else {
-                    media->setLocalUrl( mediaUrl.toLocalFile() );
-                    media->setRemoteUrl( mediaUrl.url() );
-                    media->setUploaded( false );
-
-                    KMimeType::Ptr typePtr;
-                    typePtr = KMimeType::findByUrl( mediaUrl, 0, true, false );
-                    name = typePtr.data()->name();
-                    kDebug() << name ;
-                    media->setMimeType( name );
-//                     Q_EMIT sigMediaTypeFound( media );
-
-//                     addOtherMediaAttributes();
-                }
-                _selectedMedia["url"] = media->remoteUrl().url();
-                accept();
             } else {
-                KMessageBox::error( this, i18n( "The selected media address is an invalid URL." ) );
+                media->setLocalUrl( mediaUrl.toLocalFile() );
+                media->setRemoteUrl( mediaUrl.url() );
+                media->setUploaded( false );
+
+                KMimeType::Ptr typePtr;
+                typePtr = KMimeType::findByUrl( mediaUrl, 0, true, false );
+                name = typePtr.data()->name();
+                kDebug() << name ;
+                media->setMimeType( name );
+                //                     Q_EMIT sigMediaTypeFound( media );
+
+                //                     addOtherMediaAttributes();
             }
+            _selectedMedia["url"] = media->remoteUrl().url();
+            accept();
+        } else {
+            KMessageBox::error( this, i18n( "The selected media address is an invalid URL." ) );
         }
-    } else {
-        KDialog::slotButtonClicked(button);
     }
 }
 QMap< QString, QString > AddMediaDialog::selectedMediaProperties() const

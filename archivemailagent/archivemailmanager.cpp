@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -62,16 +62,16 @@ void ArchiveMailManager::load()
     ArchiveMailInfo *info = new ArchiveMailInfo(group);
 
     const QDate diffDate = ArchiveMailAgentUtil::diffDate(info);
-    if(QDate::currentDate() >= diffDate) {
+    if (QDate::currentDate() >= diffDate) {
       Q_FOREACH(ArchiveMailInfo*oldInfo,mListArchiveInfo) {
-        if(oldInfo->saveCollectionId() == info->saveCollectionId()) {
+        if (oldInfo->saveCollectionId() == info->saveCollectionId()) {
           //already in jobscheduler
           delete info;
           info = 0;
           break;
         }
       }
-      if(info) {
+      if (info) {
         //Store task started
         mListArchiveInfo.append(info);
         ScheduledArchiveTask *task = new ScheduledArchiveTask( this, info,Akonadi::Collection(info->saveCollectionId()), /*immediate*/false );
@@ -87,12 +87,12 @@ void ArchiveMailManager::removeCollection(const Akonadi::Collection& collection)
 {
   KSharedConfig::Ptr config = KGlobal::config();
   const QString groupname = archivePattern.arg(collection.id());
-  if(config->hasGroup(groupname)) {
+  if (config->hasGroup(groupname)) {
     KConfigGroup group = config->group(groupname);
     group.deleteGroup();
     config->sync();
     Q_FOREACH(ArchiveMailInfo *info, mListArchiveInfo) {
-      if(info->saveCollectionId() == collection.id()) {
+      if (info->saveCollectionId() == collection.id()) {
         mListArchiveInfo.removeAll(info);
       }
     }
@@ -105,7 +105,7 @@ void ArchiveMailManager::backupDone(ArchiveMailInfo *info)
   KSharedConfig::Ptr config = KGlobal::config();
   const QString groupname = archivePattern.arg(info->saveCollectionId());
   //Don't store it if we removed this task
-  if(config->hasGroup(groupname)) {
+  if (config->hasGroup(groupname)) {
     KConfigGroup group = config->group(groupname);
     info->writeConfig(group);
   }
@@ -113,8 +113,8 @@ void ArchiveMailManager::backupDone(ArchiveMailInfo *info)
   const QString realPath = MailCommon::Util::fullCollectionPath(collection);
   const QStringList lst = info->listOfArchive(realPath);
 
-  if(info->maximumArchiveCount() != 0) {
-    if(lst.count() > info->maximumArchiveCount()) {
+  if (info->maximumArchiveCount() != 0) {
+    if (lst.count() > info->maximumArchiveCount()) {
       const int diff = (lst.count() - info->maximumArchiveCount());
       for(int i = 0; i < diff; ++i) {
         const QString fileToRemove(info->url().path() + QDir::separator() + lst.at(i));

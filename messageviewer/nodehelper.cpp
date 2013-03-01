@@ -24,6 +24,7 @@
 #include "partmetadata.h"
 #include "interfaces/bodypart.h"
 #include "util.h"
+#include "attachmenttemporaryfilesdirs.h"
 
 #include <messagecore/nodehelper.h>
 #include <messagecore/stringutil.h>
@@ -54,7 +55,8 @@ namespace MessageViewer {
 QStringList replySubjPrefixes(QStringList() << "Re\\s*:" << "Re\\[\\d+\\]:" << "Re\\d+:");
 QStringList forwardSubjPrefixes( QStringList() << "Fwd:" << "FW:");
 
-NodeHelper::NodeHelper()
+NodeHelper::NodeHelper() :
+    mAttachmentFilesDir(new AttachmentTemporaryFilesDirs())
 {
   //TODO(Andras) add methods to modify these prefixes
 
@@ -85,6 +87,9 @@ NodeHelper::NodeHelper()
 
 NodeHelper::~NodeHelper()
 {
+    //Don't delete it it will delete in class with a deleteLater;
+    mAttachmentFilesDir->removeTempFiles();
+    mAttachmentFilesDir = 0;
 }
 
 void NodeHelper::setNodeProcessed(KMime::Content* node, bool recurse )
@@ -240,8 +245,7 @@ QString NodeHelper::writeNodeToTempFile(KMime::Content* node)
   }
   if( !KPIMUtils::kByteArrayToFile( data, fname, false, false, false ) )
     return QString();
-
-  mTempFiles.append( fname );
+  mAttachmentFilesDir->addTempFile( fname );
   // make file read-only so that nobody gets the impression that he might
   // edit attached files (cf. bug #52813)
   ::chmod( QFile::encodeName( fname ), S_IRUSR );
@@ -258,7 +262,7 @@ KUrl NodeHelper::tempFileUrlFromNode( const KMime::Content *node )
 
   const QString index = node->index().toString();
 
-  foreach ( const QString &path, mTempFiles ) {
+  foreach ( const QString &path, mAttachmentFilesDir->temporaryFiles() ) {
     int right = path.lastIndexOf( '/' );
     int left = path.lastIndexOf( ".index.", right );
     if ( left != -1 )
@@ -290,32 +294,27 @@ QString NodeHelper::createTempDir( const QString &param )
 
   Q_ASSERT( !fname.isNull() );
 
-  mTempDirs.append( fname );
+  mAttachmentFilesDir->addTempDir( fname );
   return fname;
 }
 
+void NodeHelper::forceCleanTempFiles()
+{
+    mAttachmentFilesDir->forceCleanTempFiles();
+    delete mAttachmentFilesDir;
+    mAttachmentFilesDir = 0;
+}
 
 void NodeHelper::removeTempFiles()
 {
-  QStringList::ConstIterator end = mTempFiles.constEnd();
-  for (QStringList::ConstIterator it = mTempFiles.constBegin(); it != end;
-    ++it)
-  {
-    QFile::remove(*it);
-  }
-  mTempFiles.clear();
-  end = mTempDirs.constEnd();
-  for (QStringList::ConstIterator it = mTempDirs.constBegin(); it != end;
-    ++it)
-  {
-    QDir(*it).rmdir(*it);
-  }
-  mTempDirs.clear();
+  //Don't delete it it will delete in class
+  mAttachmentFilesDir->removeTempFiles();
+  mAttachmentFilesDir = new AttachmentTemporaryFilesDirs();
 }
 
 void NodeHelper::addTempFile( const QString& file )
 {
-  mTempFiles.append( file );
+  mAttachmentFilesDir->addTempFile( file );
 }
 
 bool NodeHelper::isToltecMessage( KMime::Content* node )

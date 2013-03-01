@@ -25,8 +25,13 @@
 #include <QMetaMethod>
 #include <KLocalizedString>
 
-AgentConfigModel::AgentConfigModel(QObject* parent): QAbstractTableModel(parent)
+AgentConfigModel::AgentConfigModel(QObject* parent): QAbstractTableModel(parent), m_interface( 0 )
 {
+}
+
+AgentConfigModel::~AgentConfigModel()
+{
+  delete m_interface;
 }
 
 void AgentConfigModel::setAgentInstance(const Akonadi::AgentInstance& instance)
@@ -39,6 +44,7 @@ void AgentConfigModel::setAgentInstance(const Akonadi::AgentInstance& instance)
     "/Settings" );
   if ( !m_interface->isValid() ) {
     kError() << "Unable to obtain KConfigXT D-Bus interface of agent" << instance.identifier();
+    delete m_interface;
     return;
   }
 

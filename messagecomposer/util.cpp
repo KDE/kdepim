@@ -24,6 +24,7 @@
 #include "util.h"
 
 #include <QTextCodec>
+#include <QTextEdit>
 
 #include <KCharsets>
 #include <KDebug>
@@ -307,7 +308,8 @@ QString Message::Util::rot13(const QString &s)
 {
   QString r(s);
 
-  for (int i=0; i<r.length(); i++) {
+  const int rLenght(r.length());
+  for (int i=0; i<rLenght; i++) {
     if ( ( r[i] >= QLatin1Char('A') && r[i] <= QLatin1Char('M') ) ||
          ( r[i] >= QLatin1Char('a') && r[i] <= QLatin1Char('m') ) ) {
       r[i] = (char)((int)QChar(r[i]).toLatin1() + 13);
@@ -320,5 +322,27 @@ QString Message::Util::rot13(const QString &s)
   }
 
   return r;
+}
+
+void Message::Util::addTextBox(QTextEdit *edit)
+{
+  QTextCursor cursor = edit->textCursor();
+  if ( cursor.hasSelection() )
+  {
+    QString s = cursor.selectedText();
+    s.prepend( QLatin1String(",----[  ]\n| " ));
+    s.replace( QChar::ParagraphSeparator,QLatin1String("\n| ") );
+    s.append( QLatin1String("\n`----") );
+    edit->insertPlainText( s );
+  } else {
+    //int oldPos = cursor.position();
+    cursor.movePosition( QTextCursor::StartOfBlock );
+    cursor.movePosition( QTextCursor::EndOfBlock, QTextCursor::KeepAnchor );
+    const QString s = cursor.selectedText();
+    const QString str = QString::fromLatin1(",----[  ]\n| %1\n`----").arg(s);
+    cursor.insertText( str );
+    //cursor.setPosition( qMax( 0, oldPos - 2 ) );
+    edit->setTextCursor( cursor );
+  }
 }
 

@@ -35,7 +35,6 @@
 #include <KDialog>
 #include <QStringList>
 class KConfig;
-class KEditListWidget;
 class KPushButton;
 class QListWidget;
 class KLineEdit;
@@ -61,7 +60,6 @@ class KDEPIM_EXPORT RecentAddressDialog : public KDialog
     bool eventFilter( QObject* o, QEvent* e );
 
   private:
-    KEditListWidget *mEditor;
     KPushButton* mNewButton, *mRemoveButton;
     QListWidget *mListView;
     KLineEdit *mLineEdit;

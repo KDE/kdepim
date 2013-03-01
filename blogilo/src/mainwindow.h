@@ -25,9 +25,11 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <kxmlguiwindow.h>
 #include "bilbopost.h"
 #include "bilboblog.h"
+
+#include <kxmlguiwindow.h>
+
 #include <QPointer>
 
 class KStatusNotifierItem;
@@ -37,6 +39,7 @@ class QToolButton;
 class Toolbox;
 class KSelectAction;
 class PostEntry;
+class PostsTabWidget;
 
 /**
 Main window of blogilo...
@@ -52,8 +55,6 @@ public:
 
     ~MainWindow();
 
-//     static KTextEditor::editor& htmlEditor();
-
 signals:
     void mediaFilesUploaded( int count );
     void settingsChanged();
@@ -63,7 +64,6 @@ protected slots:
     void slotSettingsChanged();
     void slotCreateNewPost();
     void addBlog();
-    void slotUploadAllChanges();
     void slotPostTitleChanged( const QString& title );
     void slotToggleToolboxVisible( bool isVisible );
     void slotToolboxVisibilityChanged( bool isVisible );
@@ -78,7 +78,6 @@ protected slots:
     void slotRemovePostEntry( int post );
 
     void slotSavePostLocally();
-//     void slotSaveAsDraft();
 
     void slotError( const QString &errorMessage );
 
@@ -101,6 +100,9 @@ private slots:
 
     void slotDialogDestroyed( QObject *win );
 
+    void slotCloseTabClicked();
+    void slotRemoveAllExclude(int);
+
 protected:
     void keyPressEvent( QKeyEvent * event );
     virtual bool queryExit();
@@ -120,9 +122,8 @@ private:
     QDockWidget *toolboxDock;
     QPointer<PostEntry> activePost;
     KStatusNotifierItem *systemTray;
-    KTabWidget *tabPosts;
+    PostsTabWidget *tabPosts;
 
-    QToolButton *btnRemovePost;
     int previousActivePostIndex;
 
     int busyNumber;///If this is 0 so there isn't any progress! otherwise there is! so progressbar will show
@@ -130,5 +131,7 @@ private:
 
     KSelectAction *blogs;
     int &mCurrentBlogId;
+    QToolButton *mCloseTabButton;
+    QToolButton *mNewTabButton;
 };
 #endif

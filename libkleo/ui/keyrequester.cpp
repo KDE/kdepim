@@ -74,7 +74,7 @@
 #include <QStringList>
 #include <QLabel>
 #include <QRegExp>
-//Added by qt3to4:
+
 #include <QHBoxLayout>
 
 #include <assert.h>

@@ -1,4 +1,4 @@
-/* Copyright (C) 2011, 2012 Laurent Montel <montel@kde.org>
+/* Copyright (C) 2011, 2012, 2013 Laurent Montel <montel@kde.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -35,18 +35,20 @@ class KSIEVEUI_EXPORT SieveTextEdit : public QPlainTextEdit
 
   public:
     explicit SieveTextEdit( QWidget *parent );
-    virtual ~SieveTextEdit();
+    ~SieveTextEdit();
 
     void lineNumberAreaPaintEvent(QPaintEvent *event);
     int lineNumberAreaWidth();
 
-  protected slots:
+  private Q_SLOTS:
     void slotInsertCompletion( const QString& );
-    QString wordUnderCursor();
-    void updateLineNumberAreaWidth(int newBlockCount);
-    void updateLineNumberArea(const QRect &, int);
+    void slotUpdateLineNumberAreaWidth(int newBlockCount);
+    void slotUpdateLineNumberArea(const QRect &, int);
+    void slotUndoableClear();
+    void slotSpeakText();
 
   protected:
+    QString wordUnderCursor() const;
     void initCompleter();
     void keyPressEvent(QKeyEvent* e);
     void resizeEvent(QResizeEvent *event);

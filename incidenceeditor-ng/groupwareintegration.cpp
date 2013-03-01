@@ -37,6 +37,7 @@ class GroupwareUiDelegate : public QObject, public Akonadi::GroupwareUiDelegate
 {
   public:
     GroupwareUiDelegate()
+      : mCalendar( 0 )
     {
     }
 

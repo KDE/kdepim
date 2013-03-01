@@ -70,6 +70,9 @@ namespace MessageViewer {
   class WebKitPartHtmlWriter;
   class HtmlStatusBar;
   class MailWebView;
+}
+
+namespace PimCommon {
   class TranslatorWidget;
 }
 
@@ -515,6 +518,7 @@ public slots:
   void slotStandardHeaders();
   void slotLongHeaders();
   void slotAllHeaders();
+  void slotCustomHeaders();
 
   void slotCycleAttachmentStrategy();
   void slotIconicAttachments();
@@ -616,7 +620,7 @@ public:
   MimeTreeModel *mMimePartModel;
   MailWebView *mViewer;
   FindBarMailWebView *mFindBar;
-  TranslatorWidget *mTranslatorWidget;
+  PimCommon::TranslatorWidget *mTranslatorWidget;
 
   const AttachmentStrategy * mAttachmentStrategy;
   const HeaderStrategy * mHeaderStrategy;

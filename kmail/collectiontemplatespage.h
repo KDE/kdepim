@@ -20,7 +20,6 @@
 #define COLLECTIONTEMPLATESPAGE_H
 #include <akonadi/collectionpropertiespage.h>
 
-class KPushButton;
 class QCheckBox;
 namespace TemplateParser {
   class TemplatesConfiguration;
@@ -42,15 +41,18 @@ public:
 public slots:
   void slotCopyGlobal();
 
+private Q_SLOTS:
+  void slotChanged();
+
 protected:
   void init();
 private:
   QCheckBox* mCustom;
   TemplateParser::TemplatesConfiguration* mWidget;
-  KPushButton* mCopyGlobal;
   uint mIdentity;
   QString mCollectionId;
   bool mIsLocalSystemFolder;
+  bool mChanged;
 };
 
 AKONADI_COLLECTION_PROPERTIES_PAGE_FACTORY( CollectionTemplatesPageFactory, CollectionTemplatesPage )

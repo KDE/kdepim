@@ -3,9 +3,9 @@
 - Add background spell checking (qt-webkit-2.3) (In progress)
 - Add hightlighting
 - Add support for signature
-- Add support for images (in progress)
+- Add support for images (DONE)
 - Add support for table (in progress)
-- Add support for link (in progress)
+- Add support for link (DONE)
 - Add support for anchor
 - Add support for horizontal line (DONE)
 - Add support for emoticon (DONE)
@@ -24,7 +24,7 @@
 - Create a real popup menu (In progress)
 - Add quote support
 - Add change text support
-- Add extra html setting for table/image/link etc.
+- Add extra html setting for table/image/link etc. (DONE)
 - Add support for resize directly image with mouse. (In progress)
 - Add support for resize directly table with mouse. (In progress)
 - Add support for printing (DONE)

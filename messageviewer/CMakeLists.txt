@@ -9,12 +9,12 @@ if(KDEPIM_ENTERPRISE_BUILD)
   set(LEGACY_BODY_INVITES true)
   set(EXCHANGE_COMPATIBLE_INVITATIONS true)
   set(OUTLOOK_COMPATIBLE_INVITATION_REPLY_COMMENTS true)
-else(KDEPIM_ENTERPRISE_BUILD)
+else()
   set(LEGACY_MANGLE_FROM_TO_HEADERS false)
   set(LEGACY_BODY_INVITES false)
   set(EXCHANGE_COMPATIBLE_INVITATIONS false)
   set(OUTLOOK_COMPATIBLE_INVITATION_REPLY_COMMENTS false)
-endif(KDEPIM_ENTERPRISE_BUILD)
+endif()
 
 configure_file(messageviewer.kcfg.cmake ${CMAKE_CURRENT_BINARY_DIR}/messageviewer.kcfg)
 
@@ -28,7 +28,7 @@ add_subdirectory(pics)
 
 if(DEBUG_SIGNATURE)
    add_definitions(-DDEBUG_SIGNATURE)
-endif(DEBUG_SIGNATURE)
+endif()
 
 if(KDEPIM_NO_WEBKIT)
   set(_mailwebview_cpp mailwebview_textbrowser.cpp )
@@ -38,7 +38,7 @@ else()
   if(NOT WINCE)
     set(_mailwebview_lib ${KDE4_KDEWEBKIT_LIBRARY} ${QT_QTWEBKIT_LIBRARY})
     add_subdirectory(a11y)
-  endif(NOT WINCE)
+  endif()
 endif()
 
 set(libmessageviewer_SRCS
@@ -70,6 +70,7 @@ set(libmessageviewer_SRCS
   markmessagereadhandler.cpp
   mimetreemodel.cpp
   nodehelper.cpp
+  attachmenttemporaryfilesdirs.cpp
   objecttreeemptysource.cpp
   objecttreeparser.cpp
   objecttreeparser_p.cpp
@@ -84,14 +85,6 @@ set(libmessageviewer_SRCS
   viewer.cpp
   viewer_p.cpp
   webkitparthtmlwriter.cpp
-  renamefiledialog.cpp
-  translator/translatorutil.cpp
-  translator/translatorwidget.cpp
-  translator/abstracttranslator.cpp
-  #Laurent: disable it we can't use it directly now
-  #translator/babelfishtranslator.cpp
-  translator/googletranslator.cpp
-  minimumcombobox.cpp
   ${_mailwebview_cpp}
 )
 
@@ -118,9 +111,11 @@ target_link_libraries(messageviewer messagecore kdepim kpgp kleo
   ${KDE4_KPRINTUTILS_LIBS}
   ${QGPGME_LIBRARIES}
   ${_mailwebview_lib}
+  pimcommon
 )
 
 include_directories(
+    ${CMAKE_SOURCE_DIR}/pimcommon
     ${CMAKE_SOURCE_DIR}/libkleo
     ${Boost_INCLUDE_DIR}
     ${GPGME_INCLUDES}

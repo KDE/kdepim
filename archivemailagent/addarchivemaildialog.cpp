@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -33,13 +33,14 @@ AddArchiveMailDialog::AddArchiveMailDialog(ArchiveMailInfo* info,QWidget *parent
   : KDialog(parent),
     mInfo(info)
 {
-  if(info)
+  if (info)
     setCaption( i18n( "Modify Archive Mail" ) );
   else
     setCaption( i18n( "Add Archive Mail" ) );
   setButtons( Ok|Cancel );
   setDefaultButton( Ok );
   setModal( true );
+  setWindowIcon( KIcon( "kmail" ) );
   QWidget *mainWidget = new QWidget( this );
   QGridLayout *mainLayout = new QGridLayout( mainWidget );
   mainLayout->setSpacing( KDialog::spacingHint() );
@@ -54,7 +55,7 @@ AddArchiveMailDialog::AddArchiveMailDialog(ArchiveMailInfo* info,QWidget *parent
   mFolderRequester->setMustBeReadWrite( false );
   mFolderRequester->setNotAllowToCreateNewFolder( true );
   connect( mFolderRequester, SIGNAL(folderChanged(Akonadi::Collection)), SLOT(slotFolderChanged(Akonadi::Collection)) );
-  if(info) //Don't autorize to modify folder when we just modify item.
+  if (info) //Don't autorize to modify folder when we just modify item.
     mFolderRequester->setEnabled( false );
   folderLabel->setBuddy( mFolderRequester );
   mainLayout->addWidget( mFolderRequester, row, 1 );
@@ -122,7 +123,7 @@ AddArchiveMailDialog::AddArchiveMailDialog(ArchiveMailInfo* info,QWidget *parent
   mainLayout->setColumnStretch( 1, 1 );
   mainLayout->addItem( new QSpacerItem( 1, 1, QSizePolicy::Expanding, QSizePolicy::Expanding ), row, 0 );
 
-  if(mInfo) {
+  if (mInfo) {
     load(mInfo);
   } else {
     enableButtonOk(false);
@@ -151,7 +152,7 @@ void AddArchiveMailDialog::load(ArchiveMailInfo* info)
 
 ArchiveMailInfo* AddArchiveMailDialog::info()
 {
-  if(!mInfo) {
+  if (!mInfo) {
     mInfo = new ArchiveMailInfo();
   }
   mInfo->setSaveSubCollection(mRecursiveCheckBox->isChecked());

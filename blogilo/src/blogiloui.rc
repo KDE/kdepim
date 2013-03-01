@@ -1,5 +1,6 @@
+<?xml version="1.0"?>
 <!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
-<kpartgui name="blogilo" version="9">
+<kpartgui name="blogilo" version="10">
 <MenuBar>
   <Menu name="blog"><text>Blog</text>
     <Action name="add_blog" />
@@ -14,7 +15,7 @@
     <Action name="toggle_toolbox" />
   </Menu>
 </MenuBar>
-<Toolbar name="postToolbar">
+<Toolbar noMerge="1" position="top" name="postToolbar" fullWidth="true">
     <text>Toolbar</text>
     <Action name="new_post" />
     <Action name="save_locally" />

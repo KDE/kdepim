@@ -33,6 +33,7 @@ class ContentJobBasePrivate : public JobBasePrivate
     explicit ContentJobBasePrivate( ContentJobBase *qq )
       : JobBasePrivate( qq )
       , resultContent( 0 )
+      , extraContent( 0 )
     {
     }
 

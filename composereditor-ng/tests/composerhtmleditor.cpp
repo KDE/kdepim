@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -18,8 +18,8 @@
 
 */
 #include "composerhtmleditor.h"
-#include "domtreewidget.h"
-#include "../composerview.h"
+#include "widgets/domtreewidget.h"
+#include "composerview.h"
 
 #include <kapplication.h>
 #include <kactioncollection.h>
@@ -36,14 +36,18 @@ ComposerHtmlEditor::ComposerHtmlEditor()
     QSplitter *w = new QSplitter;
 
     editor = new ComposerEditorNG::ComposerEditor(this);
-    DomTreeWidget *domWidget = new DomTreeWidget(editor->view(), this);
+    ComposerEditorNG::DomTreeWidget *domWidget = new ComposerEditorNG::DomTreeWidget(editor->view(), this);
     w->addWidget(domWidget);
 
     w->addWidget( editor );
     setCentralWidget( w );
 
 
-    editor->createActions( actionCollection() );
+    editor->createAllActions();
+    editor->addCreatedActionsToActionCollection( actionCollection() );
+    QList<ComposerEditorNG::ComposerView::ComposerViewAction> lst;
+    lst << ComposerEditorNG::ComposerView::Bold;
+    editor->createToolBar(lst);
     setupActions();
     setupGUI();
 }

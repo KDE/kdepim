@@ -2,9 +2,6 @@ project(kmail)
 
 include(CheckIncludeFiles)
 
-if(GRANTLEE_GREATER_0_2)
-  add_definitions(-DGRANTLEE_GREATER_0_2)
-endif()
 
 if (NOT WINCE)
 
@@ -19,7 +16,7 @@ if (NOT WINCE)
     COMMENT "Helper target for XML stuff. The Kontact plugin, KOrganizer and others depend on it."
   )
 
-endif (NOT WINCE)
+endif ()
 
 include_directories(
   ${CMAKE_SOURCE_DIR}/libkdepim
@@ -54,7 +51,7 @@ if (NOT WINCE AND KDEPIM_BUILD_DESKTOP)
   add_subdirectory(avscripts)
   add_subdirectory(tests)
   add_subdirectory(kconf_update)
-endif(NOT WINCE AND KDEPIM_BUILD_DESKTOP)
+endif()
 add_subdirectory(kcm_kpimidentities)
 
 ########### kmailprivate ###############
@@ -69,6 +66,7 @@ if (NOT WINCE AND KDEPIM_BUILD_DESKTOP)
      collectionquotapage.cpp
      collectionquotapage_p.cpp
      collectionmailinglistpage.cpp
+     collectionshortcutpage.cpp
      colorlistbox.cpp
      kmmainwin.cpp
      configagentdelegate.cpp
@@ -98,7 +96,6 @@ if (NOT WINCE AND KDEPIM_BUILD_DESKTOP)
      secondarywindow.cpp
      codecaction.cpp
      codecmanager.cpp
-     foldershortcutdialog.cpp
      util.cpp
      messageactions.cpp
      statusbarlabel.cpp
@@ -160,9 +157,9 @@ if (NOT WINCE AND KDEPIM_BUILD_DESKTOP)
 
   if(KDEPIM_ENTERPRISE_BUILD)
     set(WARN_TOOMANY_RECIPIENTS_DEFAULT true)
-  else(KDEPIM_ENTERPRISE_BUILD)
+  else()
     set(WARN_TOOMANY_RECIPIENTS_DEFAULT false)
-  endif(KDEPIM_ENTERPRISE_BUILD)
+  endif()
 
   configure_file(kmail.kcfg.cmake ${CMAKE_CURRENT_BINARY_DIR}/kmail.kcfg)
 
@@ -211,7 +208,6 @@ if (NOT WINCE AND KDEPIM_BUILD_DESKTOP)
     niefast_apps
     ${QT_QTWEBKIT_LIBRARY}
     ${QT_QTSCRIPT_LIBRARY}
-    ${NEPOMUK_LIBRARIES}
     ${NEPOMUK_QUERY_LIBRARIES}
     ${KDE4_KPRINTUTILS_LIBS}
     ${NEPOMUK_CORE_LIBRARY}
@@ -305,5 +301,5 @@ if (NOT WINCE AND KDEPIM_BUILD_DESKTOP)
   install( FILES kmail_addattachmentservicemenu.desktop DESTINATION
     ${SERVICES_INSTALL_DIR}/ServiceMenus)
 
-endif (NOT WINCE AND KDEPIM_BUILD_DESKTOP)
+endif ()
   

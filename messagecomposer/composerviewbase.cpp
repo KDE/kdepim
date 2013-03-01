@@ -31,6 +31,7 @@
 #include "infopart.h"
 #include "composer.h"
 #include "util.h"
+#include "imagescaling/imagescalingutils.h"
 
 #include <messageviewer/objecttreeemptysource.h>
 #include <messageviewer/objecttreeparser.h>
@@ -186,6 +187,7 @@ void Message::ComposerViewBase::setMessage ( const KMime::Message::Ptr& msg )
   if ( m_msg->headerByType( "X-KMail-CursorPos" ) ) {
     m_editor->setCursorPositionFromStart( m_msg->headerByType( "X-KMail-CursorPos" )->asUnicodeString().toInt() );
   }
+  delete msgContent;
 }
 
 void Message::ComposerViewBase::updateTemplate ( const KMime::Message::Ptr& msg )
@@ -211,6 +213,7 @@ void Message::ComposerViewBase::updateTemplate ( const KMime::Message::Ptr& msg 
   if ( msg->headerByType( "X-KMail-CursorPos" ) ) {
     m_editor->setCursorPositionFromStart( m_msg->headerByType( "X-KMail-CursorPos" )->asUnicodeString().toInt() );
   }
+  delete msgContent;
 }
 
 void Message::ComposerViewBase::send ( MessageSender::SendMethod method, MessageSender::SaveIn saveIn )
@@ -333,12 +336,23 @@ void Message::ComposerViewBase::slotEmailAddressResolved ( KJob* job )
     // to not block sending emails completly.
   }
 
+  bool autoresizeImage = MessageComposer::MessageComposerSettings::self()->autoResizeImageEnabled();
+
   const MessageComposer::EmailAddressResolveJob *resolveJob = qobject_cast<MessageComposer::EmailAddressResolveJob*>( job );
   if( mSaveIn == MessageSender::SaveInNone ) {
     mExpandedFrom = resolveJob->expandedFrom();
     mExpandedTo = resolveJob->expandedTo();
     mExpandedCc = resolveJob->expandedCc();
     mExpandedBcc = resolveJob->expandedBcc();
+    if (autoresizeImage) {
+      QStringList listEmails;
+      listEmails<< mExpandedFrom;
+      listEmails<< mExpandedTo;
+      listEmails<< mExpandedCc;
+      listEmails<< mExpandedBcc;
+      autoresizeImage = MessageComposer::Utils::filterRecipients(listEmails);
+    }
+
   } else { // saved to draft, so keep the old values, not very nice.
     mExpandedFrom = from();
     foreach( const MessageComposer::Recipient::Ptr &r, m_recipientsEditor->recipients() ) {
@@ -365,6 +379,7 @@ void Message::ComposerViewBase::slotEmailAddressResolved ( KJob* job )
     m_msg->setHeader( new KMime::Headers::Generic( "X-KMail-UnExpanded-To", m_msg.get(), unExpandedTo.join( QLatin1String( ", " ) ).toLatin1() ) );
     m_msg->setHeader( new KMime::Headers::Generic( "X-KMail-UnExpanded-CC", m_msg.get(), unExpandedCc.join( QLatin1String( ", " ) ).toLatin1() ) );
     m_msg->setHeader( new KMime::Headers::Generic( "X-KMail-UnExpanded-BCC", m_msg.get(), unExpandedBcc.join( QLatin1String( ", " ) ).toLatin1() ) );
+    autoresizeImage = false;
   }
 
   Q_ASSERT(m_composers.isEmpty()); //composers should be empty. The caller of this function
@@ -387,14 +402,19 @@ void Message::ComposerViewBase::slotEmailAddressResolved ( KJob* job )
     return;
   }
 
-  bool autoresizeImage = false;
-  if(MessageComposer::MessageComposerSettings::self()->autoResizeImageEnabled()) {
-    if(MessageComposer::MessageComposerSettings::self()->askBeforeResizing()) {
-       const int rc = KMessageBox::warningYesNo( m_parentWidget,i18n("Do you want to resize images?"),
-                                                 i18n("Auto Resize Images"), KStandardGuiItem::yes(), KStandardGuiItem::no());
-       if(rc == KMessageBox::Yes) {
-           autoresizeImage = true;
-       }
+  if (autoresizeImage) {
+    if (MessageComposer::MessageComposerSettings::self()->askBeforeResizing()) {
+        if (MessageComposer::Utils::containsImage(m_attachmentModel->attachments())) {
+            const int rc = KMessageBox::warningYesNo( m_parentWidget,i18n("Do you want to resize images?"),
+                                                      i18n("Auto Resize Images"), KStandardGuiItem::yes(), KStandardGuiItem::no());
+            if (rc == KMessageBox::Yes) {
+                autoresizeImage = true;
+            } else {
+                autoresizeImage = false;
+            }
+        } else {
+            autoresizeImage = false;
+        }
     }
   }
   // Compose each message and prepare it for queueing, sending, or storing
@@ -729,6 +749,9 @@ void Message::ComposerViewBase::fillInfoPart ( Message::InfoPart* infoPart, Mess
     extras << m_msg->headerByType( "X-KMail-Link-Type" );
   if( m_msg->headerByType( "X-Face" ) )
     extras << m_msg->headerByType( "X-Face" );
+  if( m_msg->headerByType( "X-KMail-FccDisabled") )
+    extras << m_msg->headerByType( "X-KMail-FccDisabled");
+
   infoPart->setExtraHeaders( extras );
 }
 
@@ -789,7 +812,10 @@ void Message::ComposerViewBase::queueMessage( KMime::Message::Ptr message, Messa
   if( mSendMethod == MessageSender::SendLater )
     qjob->dispatchModeAttribute().setDispatchMode( MailTransport::DispatchModeAttribute::Manual );
 
-  if ( !infoPart->fcc().isEmpty() ) {
+
+  if( message->hasHeader( "X-KMail-FccDisabled" ) ) {
+    qjob->sentBehaviourAttribute().setSentBehaviour( MailTransport::SentBehaviourAttribute::Delete );
+  } else if ( !infoPart->fcc().isEmpty() ) {
     qjob->sentBehaviourAttribute().setSentBehaviour( MailTransport::SentBehaviourAttribute::MoveToCollection );
 
     const Akonadi::Collection sentCollection( infoPart->fcc().toLongLong() );

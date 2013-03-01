@@ -124,7 +124,7 @@
 #include "vcardviewer.h"
 #include "mailwebview.h"
 #include "findbar/findbarmailwebview.h"
-#include "translator/translatorwidget.h"
+#include "pimcommon/translator/translatorwidget.h"
 
 #include "interfaces/bodypart.h"
 #include "interfaces/htmlwriter.h"
@@ -257,7 +257,7 @@ ViewerPrivate::~ViewerPrivate()
   delete mHtmlWriter; mHtmlWriter = 0;
   delete mViewer; mViewer = 0;
   delete mCSSHelper;
-  mNodeHelper->removeTempFiles();
+  mNodeHelper->forceCleanTempFiles();
   delete mNodeHelper;
 }
 
@@ -1108,7 +1108,7 @@ bool ViewerPrivate::eventFilter( QObject *, QEvent *e )
       const int numDegrees = me->delta() / 8;
       const int numSteps = numDegrees / 15;
       const qreal factor = mZoomFactor + numSteps * 10;
-      if ( factor >= 100 && factor <= 300 ) {
+      if ( factor >= 10 && factor <= 300 ) {
         mZoomFactor = factor;
         setZoomFactor( factor/100.0 );
       }
@@ -1480,7 +1480,7 @@ void ViewerPrivate::createWidgets() {
   mViewer->setObjectName( "mViewer" );
 
   mFindBar = new FindBarMailWebView( mViewer, readerBox );
-  mTranslatorWidget = new TranslatorWidget(readerBox);
+  mTranslatorWidget = new PimCommon::TranslatorWidget(readerBox);
 #ifndef QT_NO_TREEVIEW
   mSplitter->setStretchFactor( mSplitter->indexOf(mMimePartTree), 0 );
 #endif
@@ -1555,6 +1555,14 @@ void ViewerPrivate::createActions()
   raction->setHelpText( i18n("Show all message headers") );
   group->addAction( raction );
   headerMenu->addAction( raction );
+
+  raction  = new KToggleAction(i18nc("View->headers->", "&Custom Headers"), this);
+  ac->addAction("view_custom_headers", raction );
+  connect(raction, SIGNAL(triggered(bool)), SLOT(slotCustomHeaders()));
+  raction->setHelpText( i18n("Show custom headers") );
+  group->addAction( raction );
+  headerMenu->addAction( raction );
+
 
   // attachment style
   KActionMenu *attachmentMenu  = new KActionMenu(i18nc("View->", "&Attachments"), this);
@@ -1827,7 +1835,7 @@ KToggleAction *ViewerPrivate::actionForHeaderStyle( const HeaderStyle * style, c
   const char * actionName = 0;
   if ( style == HeaderStyle::enterprise() )
     actionName = "view_headers_enterprise";
-  if ( style == HeaderStyle::fancy() )
+  else if ( style == HeaderStyle::fancy() )
     actionName = "view_headers_fancy";
   else if ( style == HeaderStyle::brief() )
     actionName = "view_headers_brief";
@@ -1838,6 +1846,8 @@ KToggleAction *ViewerPrivate::actionForHeaderStyle( const HeaderStyle * style, c
       actionName = "view_headers_long";
     else if ( strategy == HeaderStrategy::all() )
       actionName = "view_headers_all";
+    else if ( strategy == HeaderStrategy::custom() )
+      actionName = "view_custom_headers";
   }
   if ( actionName )
     return static_cast<KToggleAction*>(mActionCollection->action(actionName));
@@ -2227,8 +2237,7 @@ void ViewerPrivate::slotCycleHeaderStyles() {
   if ( style == HeaderStyle::enterprise() ) {
     slotFancyHeaders();
     actionName = "view_headers_fancy";
-  }
-  if ( style == HeaderStyle::fancy() ) {
+  } else if ( style == HeaderStyle::fancy() ) {
     slotBriefHeaders();
     actionName = "view_headers_brief";
   } else if ( style == HeaderStyle::brief() ) {
@@ -2244,6 +2253,9 @@ void ViewerPrivate::slotCycleHeaderStyles() {
     } else if ( strategy == HeaderStrategy::all() ) {
       slotEnterpriseHeaders();
       actionName = "view_headers_enterprise";
+    } else if ( strategy == HeaderStrategy::custom() ) {
+      slotCustomHeaders();
+      actionName = "view_custom_headers";
     }
   }
 
@@ -2289,11 +2301,17 @@ void ViewerPrivate::slotLongHeaders()
 
 
 
-void ViewerPrivate::slotAllHeaders() {
+void ViewerPrivate::slotAllHeaders() 
+{
   setHeaderStyleAndStrategy( HeaderStyle::plain(),
                              HeaderStrategy::all(), true );
 }
 
+void ViewerPrivate::slotCustomHeaders() 
+{
+  setHeaderStyleAndStrategy( HeaderStyle::plain(),
+                             HeaderStrategy::custom(), true );
+}
 
 void ViewerPrivate::slotCycleAttachmentStrategy()
 {
@@ -3102,11 +3120,11 @@ void ViewerPrivate::slotZoomIn()
 void ViewerPrivate::slotZoomOut()
 {
 #ifndef KDEPIM_NO_WEBKIT
-  if ( mZoomFactor <= 100 )
+  if ( mZoomFactor <= 10 )
     return;
   mZoomFactor -= zoomBy;
-  if( mZoomFactor < 100 )
-    mZoomFactor = 100;
+  if( mZoomFactor < 10 )
+    mZoomFactor = 10;
   mViewer->setZoomFactor( mZoomFactor/100.0 );
 #endif
 }

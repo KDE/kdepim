@@ -5,7 +5,7 @@
        CVS -->
   <!ENTITY kapplication "<application>Blogilo</application>">
   <!ENTITY kappname "&kapplication;">
-  <!ENTITY package "playground/pim">
+  <!ENTITY package "kdepim">
   <!ENTITY % addindex "IGNORE">
   <!ENTITY % English "INCLUDE"> 
 ]>
@@ -48,7 +48,7 @@
 <title>Introduction</title>
 
 <para>&kapplication; is a blogging client.</para>
-<para>A blog client (also called blog software or blogware) is a software
+<para>A blog client (also called blog software or blogware) is software
 designed to simplify the creation and maintenance of weblogs. As other
 specialized content management systems do, weblog applications support the
 authoring, editing, and publishing of blog posts and comments, with special
@@ -61,13 +61,13 @@ comments.</para>
 
 <sect1 id="getting-started">
 <title>Getting started</title>
-<para>In &kapplication; main window, you can create new posts, modify previous
+<para>In the &kapplication; main window, you can create new posts, modify previous
 ones, remove them from the server as well as upload media files to the server.
 You can also save posts locally for later use.</para>
 <note><para>All of these will be available after you configure at least one blog
 in
 &kapplication;.</para></note>
-<para>Without any configured blog you can write and save some posts locally for
+<para>Without any configured blog you can write and save posts locally for
 later use.</para>
 <screenshot>
 <screeninfo>Here's a screenshot of &kapplication;</screeninfo>
@@ -85,12 +85,11 @@ later use.</para>
 <sect1 id="configuring-a-blog">
 <title>Configuring a blog</title>
 <para>Blog management is available in the <guilabel>Configure
-&kapplication;</guilabel> dialog, and is accessible via
+&kapplication;</guilabel> dialog, and is accessible via the
 <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure 
-&kapplication;...</guimenuitem></menuchoice> menu. Also there is a shortcut for
-it in the main window in <menuchoice>
-<guimenu>Blog</guimenu><guimenuitem>Add Blog...</guimenuitem></menuchoice>
-menu.</para>
+&kapplication;...</guimenuitem></menuchoice> menu, or alternatively via the
+<menuchoice><guimenu>Blog</guimenu><guimenuitem>Add Blog...</guimenuitem>
+</menuchoice> menu.</para>
 <screenshot>
 <screeninfo>Add a new blog - <guilabel>Basic</guilabel> tab</screeninfo>
   <mediaobject>
@@ -105,14 +104,14 @@ menu.</para>
 <para>
 To add a blog, you simply have to insert your blog address, username and
 password in the corresponding fields and then click the <guibutton>Auto
-Configure</guibutton> button for the most famous blogging servers such as
+Configure</guibutton> button for the most popular blogging servers, such as
 Wordpress. It will guess your blog, and api, and then will fetch your
-BlogId.</para>
-<para>And if it fails, you can manually select your blog's API type in the
+Blog Id.</para>
+<para>If it fails, you can manually select your blog's API type in the
 <guilabel>Advanced</guilabel> tab and click <guibutton>Fetch ID</guibutton> to
-fetch id, or enter your Blog id, if you know it. And if you are using a “right
-to left” language, select <guilabel>Right To Left</guilabel> in next combo
-box.</para>
+fetch your Blog Id, or enter your Blog Id if you know it. And if you are using
+a “right to left” language, select <guilabel>Right To Left</guilabel> in next
+drop-down list.</para>
 <screenshot>
 <screeninfo>Add a new blog - <guilabel>Advanced</guilabel> tab</screeninfo>
   <mediaobject>
@@ -125,15 +124,15 @@ box.</para>
   </mediaobject>
 </screenshot>
 <para>
-You can check what &kapplication; supports for your blog now, in
+You can check what &kapplication; supports for your blog in
 the <guilabel>Supported Features</guilabel> tab.</para>
 </sect1>
 
 <sect1 id="creating-new-post">
 <title>Creating a new Post</title>
-<para>To create a new post, in main window, you can click on <guibutton>New
-Post</guibutton> toolbar button or under <guimenu>Post</guimenu> menu, or simply
-press <keycombo action="simul">&Ctrl;<keycap>N</keycap></keycombo> (its
+<para>To create a new post, in the main window, you can click on <guibutton>New
+Post</guibutton> toolbar button or under the <guimenu>Post</guimenu> menu, or
+simply press <keycombo action="simul">&Ctrl;<keycap>N</keycap></keycombo> (its
 shortcut).</para>
 <para>A new/empty post is created, and you can write, and configure it, and
 then submit it to your blog.</para>
@@ -143,11 +142,12 @@ Toolbox.</para>
 <sect2><title>Composer</title>
 <para>In the Composer section, you have a text field with the label
 <guilabel>Title</guilabel>, where you can write the title of the post. Below it,
-you have 3 tabs to edit your post in several ways. The first is a Visual Editor:
-it is a WYSIWYG editor and you only need to use the icons to format your text.
-Next tab is a &HTML; editor, where you have a text editor to edit &HTML; code of
-your post, with a syntax highlighted editor. And on last tab, you can view your
-post with your blog style, before submitting it to the server.</para>
+you have three tabs to edit your post in several ways. The first is a Visual
+Editor: it is a WYSIWYG editor and you only need to use the icons to format
+your text. The next tab is an &HTML; editor, where you have a syntax
+highlighted text editor to edit the &HTML; code of your post. And on the last
+tab, you can preview your post with your blog style, before submitting it to
+the server.</para>
 </sect2>
 
 <sect2>
@@ -168,8 +168,9 @@ post with your blog style, before submitting it to the server.</para>
   </mediaobject>
 </screenshot>
 <para>In this section, you can fetch the latest posts from the server.</para>
-<para>Double click on a post entry to load it into the composer and modify it or
-remove a post from the server.</para>
+<para>Double click on a post entry to load it into the composer and modify it,
+or select a post and use the relevant button to remove it from the server.
+</para>
 </listitem>
 
 <listitem>
@@ -202,10 +203,10 @@ must be comma separated.</para>
     </textobject>
   </mediaobject>
 </screenshot>
-<para>Here you can select some options for the currently active post in the
-composer such as <guilabel>Feedback</guilabel> options (for example if visitors
+<para>Here you can select options for the currently active post in the
+composer such as <guilabel>Feedback</guilabel> options (for example, if visitors
 can leave a comment for this post or not), select a publish date, or a title to
-use for permalink of the post (for Wordpress blogs only).</para>
+use for a permalink of the post (for Wordpress blogs only).</para>
 </listitem>
 
 <listitem>
@@ -223,7 +224,7 @@ use for permalink of the post (for Wordpress blogs only).</para>
 </screenshot>
 <para>And in the <guilabel>Local Entries</guilabel> section, you can double
 click on an entry to load it
-into composer, or remove it from disk.</para>
+into the composer, or you can remove it from disk.</para>
 </listitem>
 
 </orderedlist>
@@ -234,9 +235,8 @@ into composer, or remove it from disk.</para>
 <sect1 id="uploading">
 <title>Uploading a Media file to the server</title>
 <para>To upload a file to the server, use <menuchoice><guimenu>Blog</guimenu>
-<guimenuitem>Upload Media...</guimenuitem></menuchoice> then you are asked to
-select a file from your disk. Then the media upload dialog will be ready
-to upload it:</para>
+<guimenuitem>Upload Media...</guimenuitem></menuchoice>. You are then asked to
+select a file from your disk. The media upload dialog will be displayed:</para>
 <screenshot>
 <screeninfo>Upload Media</screeninfo>
   <mediaobject>
@@ -251,13 +251,12 @@ to upload it:</para>
 <para>
 If your blog API supports media uploading, you have 2 options here, and if not,
 there is just one and it's &FTP; server.</para>
-<para>You can preview your desired file here (if it has any way to preview), and
-select its name on the server. And then click
-<guibutton>Upload</guibutton>.</para>
-<para>If you want to upload to a &FTP; server, the absolute path of the folder
-is required. And you have to enter a &URL; to use for guessing the link of the
-file on
-the server.</para>
+<para>You can preview your desired file here (if preview method available), and
+enter its name on the server. And then click <guibutton>Upload</guibutton>.
+</para>
+<para>If you want to upload to an &FTP; server, the absolute path of the folder
+is required. And you have to enter a &URL; to use for identifying the link of
+the file on the server.</para>
 </sect1>
 
 </chapter>
@@ -344,10 +343,10 @@ uploading function.</para></note>
 <guimenuitem>Submit...</guimenuitem>
 </menuchoice></term>
 <listitem><para>Open the Submit post dialog, to submit the current active post
-to
-the current blog.</para>
+to the current blog.</para>
 <para>In submit post, you can select if this post should submit as a draft or
-not. And additionally as an edit of current, or as a new post.</para>
+not. And additionally, whether as an edit of the current post, or as a new post.
+</para>
 </listitem>
 </varlistentry>
 
@@ -368,7 +367,15 @@ not. And additionally as an edit of current, or as a new post.</para>
 <guimenu>Settings</guimenu>
 <guimenuitem>Show Toolbox</guimenuitem>
 </menuchoice></term>
-<listitem><para><action>Toggle</action> the toolbox on/off.</para></listitem>
+<listitem><para><action>Toggle</action> displaying the toolbox.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenu>Settings</guimenu>
+<guimenuitem>Show Toolbar</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Toggle</action> displaying the toolbar.</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -376,7 +383,7 @@ not. And additionally as an edit of current, or as a new post.</para>
 <guimenu>Settings</guimenu>
 <guimenuitem>Show Statusbar</guimenuitem>
 </menuchoice></term>
-<listitem><para><action>Toggle</action> the statusbar.</para></listitem>
+<listitem><para><action>Toggle</action> displaying the statusbar.</para></listitem>
 </varlistentry>
 
 <varlistentry>

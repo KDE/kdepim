@@ -435,7 +435,7 @@ static inline void paint_boolean_state_icon( bool enabled, const QPixmap * pix,
   {
     // still paint, but very soft
     qreal oldOpacity = painter->opacity();
-    painter->setOpacity( 0.3 );
+    painter->setOpacity( 0.1 );
     paint_permanent_icon( pix, ci, painter, left, top, right, alignOnRight, iconSize );
     painter->setOpacity( oldOpacity );
     return;
@@ -975,6 +975,7 @@ void ThemeDelegate::paint( QPainter * painter, const QStyleOptionViewItem & opti
             paint_boolean_state_icon( messageItem->status().hasInvitation(),
                                       Manager::instance()->pixmapMessageInvitation(), ci, painter,
                                       l, top, r, layoutDir == Qt::LeftToRight, mTheme->iconSize() );
+	  break;
         case Theme::ContentItem::ActionItemStateIcon:
           if ( messageItem )
             paint_boolean_state_icon( messageItem->status().isToAct(),

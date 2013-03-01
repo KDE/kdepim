@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -33,6 +33,7 @@ ArchiveMailDialog::ArchiveMailDialog(QWidget *parent)
   :KDialog(parent)
 {
   setCaption( i18n( "Configure Archive Mail Agent" ) );
+  setWindowIcon( KIcon( "kmail" ) );
   setButtons( Ok|Cancel );
   setDefaultButton( Ok );
   setModal( true );
@@ -138,7 +139,7 @@ void ArchiveMailWidget::customContextMenuRequested(const QPoint&)
 {
   const QList<QTreeWidgetItem *> listItems = mWidget->treeWidget->selectedItems();
   KMenu menu;
-  menu.addAction(i18n("Add..."),this,SLOT(slotOpenFolder()));
+  menu.addAction(i18n("Add..."),this,SLOT(slotAddItem()));
   if( !listItems.isEmpty() ) {
    if( listItems.count() == 1) {
       menu.addAction(i18n("Open Containing Folder..."),this,SLOT(slotOpenFolder()));

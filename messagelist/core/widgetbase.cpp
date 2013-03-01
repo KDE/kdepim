@@ -65,6 +65,7 @@ public:
     : q( owner ), mView( 0 ), mSearchEdit( 0 ),
       mSearchTimer( 0 ), mStatusFilterCombo( 0 ),
       mOpenFullSearchButton( 0 ),
+      mLockSearch( 0 ),
       mStorageModel( 0 ), mAggregation( 0 ),
       mTheme( 0 ), mFilter( 0 ),
       mStorageUsesPrivateTheme( false ),
@@ -523,7 +524,7 @@ void Widget::themeSelected( bool )
     return;
 
   QVariant v = act->data();
-  QString id = v.toString();
+  const QString id = v.toString();
 
   if ( id.isEmpty() )
     return;

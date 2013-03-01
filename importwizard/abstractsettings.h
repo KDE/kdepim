@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -47,9 +47,11 @@ protected:
 
   void syncKmailConfig();
 
+  QString uniqueIdentityName(const QString& name);
+
   QString createResource(const QString& resources , const QString& name, const QMap<QString, QVariant> &settings);
 
-  KPIMIdentities::Identity* createIdentity();
+  KPIMIdentities::Identity* createIdentity(QString& name);
 
   MailTransport::Transport *createTransport();
   

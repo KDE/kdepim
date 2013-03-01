@@ -463,8 +463,6 @@ class MAILCOMMON_EXPORT KMFilterDialog : public KDialog
     KIconButton *mFilterActionIconButton;
     KKeySequenceWidget *mKeySeqWidget;
     QGroupBox *mAdvOptsGroup;
-    QGroupBox *mGlobalsBox;
-    QCheckBox *mShowLaterBtn;
 
     MailCommon::MailFilter *mFilter;
     MailCommon::FolderRequester *mFolderRequester;

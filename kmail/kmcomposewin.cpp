@@ -48,9 +48,8 @@
 #include "foldercollectionmonitor.h"
 #include "mailkernel.h"
 #include "custommimeheader.h"
-#include <messagecomposer/kmsubjectlineedit.h>
-#include "messageviewer/translator/translatorwidget.h"
-#include "messagecomposer/selectspecialchar.h"
+#include <libkdepim/spellchecklineedit.h>
+#include "pimcommon/translator/translatorwidget.h"
 #include "attachmentmissingwarning.h"
 #include "createnewcontactjob.h"
 
@@ -100,7 +99,6 @@
 #include <akonadi/itemcreatejob.h>
 #include <akonadi/entitymimetypefiltermodel.h>
 #include <akonadi/itemfetchjob.h>
-#include <Akonadi/Contact/ContactEditorDialog>
 #include <kpimutils/email.h>
 #include <kpimidentities/identitymanager.h>
 #include <kpimidentities/identitycombo.h>
@@ -110,6 +108,8 @@
 #include <mailtransport/transport.h>
 #include <kmime/kmime_codecs.h>
 #include <kmime/kmime_message.h>
+#include <kpimtextedit/selectspecialchar.h>
+
 
 // KDELIBS includes
 #include <kactioncollection.h>
@@ -299,7 +299,8 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, bool lastSignState,
   connect( recipientsEditor, SIGNAL(sizeHintChanged()), SLOT(recipientEditorSizeHintChanged()) );
   mComposerBase->setRecipientsEditor( recipientsEditor );
 
-  mEdtSubject = new Message::KMSubjectLineEdit( mHeadersArea, QLatin1String( "kmail2rc" ) );
+  mEdtSubject = new KPIM::SpellCheckLineEdit( mHeadersArea, QLatin1String( "kmail2rc" ) );
+  mEdtSubject->setActivateLanguageMenu(false);
   mEdtSubject->setToolTip( i18n( "Set a subject for this message" ) );
   mLblIdentity = new QLabel( i18n("&Identity:"), mHeadersArea );
   mDictionaryLabel = new QLabel( i18n("&Dictionary:"), mHeadersArea );
@@ -410,7 +411,7 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, bool lastSignState,
   mBtnTransport->setFocusPolicy( Qt::NoFocus );
   mBtnDictionary->setFocusPolicy( Qt::NoFocus );
 
-  mTranslatorWidget = new MessageViewer::TranslatorWidget(this);
+  mTranslatorWidget = new PimCommon::TranslatorWidget(this);
   connect(mTranslatorWidget,SIGNAL(translatorWasClosed()),this,SLOT(slotTranslatorWasClosed()));
   mSplitter->addWidget(mTranslatorWidget);
 
@@ -430,6 +431,7 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, bool lastSignState,
   m_verifyMissingAttachment = new QTimer(this);
   m_verifyMissingAttachment->start(1000*30);
   connect( m_verifyMissingAttachment, SIGNAL(timeout()), this, SLOT(slotVerifyMissingAttachmentTimeout()) );
+  connect( attachmentController, SIGNAL(fileAttached()), mAttachmentMissing, SLOT(slotFileAttached()) );
 
   readConfig();
   setupStatusBar(attachmentView->widget());
@@ -1704,6 +1706,7 @@ void KMComposeWin::setMessage( const KMime::Message::Ptr &newMsg, bool lastSignS
   // always set auto charset, but prefer original when composing if force reply is set.
   setAutoCharset();
 
+  delete msgContent;
 #if 0 //TODO port to kmime
 
   /* Handle the special case of non-mime mails */
@@ -2294,8 +2297,8 @@ void KMComposeWin::slotUndo()
     return;
   }
 
-  if (::qobject_cast<Message::KMSubjectLineEdit*>( fw )) {
-    static_cast<Message::KMSubjectLineEdit*>( fw )->undo();
+  if (::qobject_cast<KPIM::SpellCheckLineEdit*>( fw )) {
+    static_cast<KPIM::SpellCheckLineEdit*>( fw )->undo();
   }else if ( ::qobject_cast<KMComposerEditor*>( fw ) ) {
     static_cast<KTextEdit*>( fw )->undo();
   } else if (::qobject_cast<KLineEdit*>( fw )) {
@@ -2310,8 +2313,8 @@ void KMComposeWin::slotRedo()
     return;
   }
 
-  if (::qobject_cast<Message::KMSubjectLineEdit*>( fw )) {
-    static_cast<Message::KMSubjectLineEdit*>( fw )->redo();
+  if (::qobject_cast<KPIM::SpellCheckLineEdit*>( fw )) {
+    static_cast<KPIM::SpellCheckLineEdit*>( fw )->redo();
   } else if ( ::qobject_cast<KMComposerEditor*>( fw ) ) {
     static_cast<KTextEdit*>( fw )->redo();
   } else if (::qobject_cast<KLineEdit*>( fw )) {
@@ -2327,8 +2330,8 @@ void KMComposeWin::slotCut()
     return;
   }
 
-  if ( ::qobject_cast<Message::KMSubjectLineEdit*>( fw ) ) {
-    static_cast<Message::KMSubjectLineEdit*>( fw )->cut();
+  if ( ::qobject_cast<KPIM::SpellCheckLineEdit*>( fw ) ) {
+    static_cast<KPIM::SpellCheckLineEdit*>( fw )->cut();
   } else if ( ::qobject_cast<KMComposerEditor*>( fw ) ) {
     static_cast<KTextEdit*>(fw)->cut();
   } else if ( ::qobject_cast<KLineEdit*>( fw ) ) {
@@ -2344,8 +2347,8 @@ void KMComposeWin::slotCopy()
     return;
   }
 
-  if ( ::qobject_cast<Message::KMSubjectLineEdit*>( fw ) ) {
-    static_cast<Message::KMSubjectLineEdit*>( fw )->copy();
+  if ( ::qobject_cast<KPIM::SpellCheckLineEdit*>( fw ) ) {
+    static_cast<KPIM::SpellCheckLineEdit*>( fw )->copy();
   } else if ( ::qobject_cast<KMComposerEditor*>( fw ) ) {
     static_cast<KTextEdit*>(fw)->copy();
   } else if ( ::qobject_cast<KLineEdit*>( fw ) ) {
@@ -2360,8 +2363,8 @@ void KMComposeWin::slotPaste()
   if ( !fw ) {
     return;
   }
-  if ( ::qobject_cast<Message::KMSubjectLineEdit*>( fw ) ) {
-    static_cast<Message::KMSubjectLineEdit*>( fw )->paste();
+  if ( ::qobject_cast<KPIM::SpellCheckLineEdit*>( fw ) ) {
+    static_cast<KPIM::SpellCheckLineEdit*>( fw )->paste();
   } else if ( ::qobject_cast<KMComposerEditor*>( fw ) ) {
     static_cast<KTextEdit*>(fw)->paste();
   } else if ( ::qobject_cast<KLineEdit*>( fw ) ) {
@@ -2377,8 +2380,8 @@ void KMComposeWin::slotMarkAll()
     return;
   }
 
-  if (::qobject_cast<Message::KMSubjectLineEdit*>( fw )) {
-    static_cast<Message::KMSubjectLineEdit*>( fw )->selectAll();
+  if (::qobject_cast<KPIM::SpellCheckLineEdit*>( fw )) {
+    static_cast<KPIM::SpellCheckLineEdit*>( fw )->selectAll();
   } else if ( ::qobject_cast<KLineEdit*>( fw ) ) {
     static_cast<KLineEdit*>( fw )->selectAll();
   } else if (::qobject_cast<KMComposerEditor*>( fw )) {
@@ -2918,7 +2921,6 @@ void KMComposeWin::enableHtml()
 void KMComposeWin::disableHtml( Message::ComposerViewBase::Confirmation confirmation )
 {
   bool forcePlainTextMarkup = false;
-#ifdef GRANTLEE_GREATER_0_2
   if ( confirmation == Message::ComposerViewBase::LetUserConfirm && mComposerBase->editor()->isFormattingUsed() && !mForceDisableHtml ) {
     int choice = KMessageBox::warningYesNoCancel( this, i18n( "Turning HTML mode off "
         "will cause the text to lose the formatting. Are you sure?" ),
@@ -2936,18 +2938,6 @@ void KMComposeWin::disableHtml( Message::ComposerViewBase::Confirmation confirma
         break;
     }
   }
-#else
-  if ( confirmation == Message::ComposerViewBase::LetUserConfirm && mComposerBase->editor()->isFormattingUsed() && !mForceDisableHtml ) {
-    int choice = KMessageBox::warningContinueCancel( this, i18n( "Turning HTML mode off "
-        "will cause the text to lose the formatting. Are you sure?" ),
-        i18n( "Lose the formatting?" ), KGuiItem( i18n( "Lose Formatting" ) ), KStandardGuiItem::cancel(),
-              "LoseFormattingWarning" );
-    if ( choice != KMessageBox::Continue ) {
-      enableHtml();
-      return;
-    }
-  }
-#endif
 
   mComposerBase->editor()->forcePlainTextMarkup(forcePlainTextMarkup);
   mComposerBase->editor()->switchToPlainText();
@@ -3082,6 +3072,16 @@ void KMComposeWin::slotIdentityChanged( uint uoid, bool initalChange )
       mComposerBase->transportComboBox()->setCurrentTransport( transport->id() );
     }
   }
+
+  const bool fccIsDisabled = ident.disabledFcc();
+  if (fccIsDisabled) {
+      KMime::Headers::Generic *header = new KMime::Headers::Generic( "X-KMail-FccDisabled", mMsg.get(), QLatin1String("true"), "utf-8" );
+      mMsg->setHeader( header );
+  } else {
+      mMsg->removeHeader( "X-KMail-FccDisabled" );
+  }
+  mFccFolder->setEnabled(!fccIsDisabled);
+
 
   if ( !mBtnDictionary->isChecked() && !mIgnoreStickyFields ) {
     mDictionaryCombo->setCurrentByDictionaryName( ident.dictionary() );
@@ -3378,7 +3378,7 @@ void KMComposeWin::slotTranslatorWasClosed()
 void KMComposeWin::insertSpecialCharacter()
 {
   if(!mSelectSpecialChar) {
-    mSelectSpecialChar = new SelectSpecialChar(this);
+    mSelectSpecialChar = new KPIMTextEdit::SelectSpecialChar(this);
     mSelectSpecialChar->setCaption(i18n("Insert Special Character"));
     mSelectSpecialChar->setOkButtonText(i18n("Insert"));
     connect(mSelectSpecialChar,SIGNAL(charSelected(QChar)),this,SLOT(charSelected(QChar)));
@@ -3431,9 +3431,11 @@ void KMComposeWin::slotAttachMissingFile()
 
 void KMComposeWin::slotCloseAttachMissingFile()
 {
-  m_verifyMissingAttachment->stop();
-  delete m_verifyMissingAttachment;
-  m_verifyMissingAttachment = 0;
+  if(m_verifyMissingAttachment) {
+    m_verifyMissingAttachment->stop();
+    delete m_verifyMissingAttachment;
+    m_verifyMissingAttachment = 0;
+  }
 }
 
 void KMComposeWin::slotVerifyMissingAttachmentTimeout()

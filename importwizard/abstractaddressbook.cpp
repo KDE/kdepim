@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -89,10 +89,10 @@ void AbstractAddressBook::slotStoreDone(KJob*job)
 {
   if ( job->error() ) {
     kDebug()<<" job->errorString() : "<<job->errorString();
-    addAddressBookImportError( i18n( "Error during create contact : %1", job->errorString() ) );
+    addAddressBookImportError( i18n( "Error during contact creation: %1", job->errorString() ) );
     return;
   }
-  addAddressBookImportInfo( i18n( "Contact created done" ) );
+  addAddressBookImportInfo( i18n( "Contact creation complete" ) );
 }
 
 void AbstractAddressBook::addImportInfo( const QString& log )

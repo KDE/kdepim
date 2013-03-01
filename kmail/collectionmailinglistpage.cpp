@@ -48,7 +48,7 @@ using namespace MailCommon;
 
 
 CollectionMailingListPage::CollectionMailingListPage(QWidget * parent) :
-    CollectionPropertiesPage( parent ),mLastItem(0)
+    CollectionPropertiesPage( parent ), mLastItem(0), changed(false)
 {
   setObjectName( QLatin1String( "KMail::CollectionMailingListPage" ) );
   setPageTitle( i18nc( "@title:tab Mailing list settings for a folder.", "Mailing List" ) );
@@ -56,6 +56,11 @@ CollectionMailingListPage::CollectionMailingListPage(QWidget * parent) :
 
 CollectionMailingListPage::~CollectionMailingListPage()
 {
+}
+
+void CollectionMailingListPage::slotConfigChanged()
+{
+  changed = true;
 }
 
 bool CollectionMailingListPage::canHandle( const Akonadi::Collection &col ) const
@@ -76,6 +81,7 @@ void CollectionMailingListPage::init(const Akonadi::Collection & col)
   mHoldsMailingList = new QCheckBox( i18n("Folder holds a mailing list"), this );
   connect( mHoldsMailingList, SIGNAL(toggled(bool)),
            SLOT(slotHoldsML(bool)) );
+  connect( mHoldsMailingList, SIGNAL(toggled(bool)), SLOT(slotConfigChanged()) );
   topLayout->addWidget( mHoldsMailingList );
 
   mGroupWidget = new QWidget( this );
@@ -127,6 +133,7 @@ void CollectionMailingListPage::init(const Akonadi::Collection & col)
   groupLayout->addWidget( handleButton, 6, 2 );
 
   mEditList = new KEditListWidget( mGroupWidget );
+  connect(mEditList, SIGNAL(changed()),SLOT(slotConfigChanged()));
   groupLayout->addWidget( mEditList, 7, 0, 1, 4 );
 
   QStringList el;
@@ -160,17 +167,19 @@ void CollectionMailingListPage::load( const Akonadi::Collection & col )
   mAddressCombo->setCurrentIndex( mLastItem );
   mHoldsMailingList->setChecked( mFolder && mFolder->isMailingListEnabled() );
   slotHoldsML( mHoldsMailingList->isChecked() );
+  changed = false;
 }
 
 void CollectionMailingListPage::save( Akonadi::Collection & col )
 {
   Q_UNUSED( col );
-  if ( mFolder )
-  {
-    // settings for mailingList
-    mFolder->setMailingListEnabled( mHoldsMailingList && mHoldsMailingList->isChecked() );
-    fillMLFromWidgets();
-    mFolder->setMailingList( mMailingList );
+  if( changed ) {
+    if ( mFolder ) {
+      // settings for mailingList
+      mFolder->setMailingListEnabled( mHoldsMailingList && mHoldsMailingList->isChecked() );
+      fillMLFromWidgets();
+      mFolder->setMailingList( mMailingList );
+    }
   }
 }
 
@@ -244,6 +253,7 @@ void CollectionMailingListPage::slotFetchDone( KJob* job )
 void CollectionMailingListPage::slotMLHandling( int element )
 {
   mMailingList.setHandler( static_cast<MailingList::Handler>( element ) );
+  slotConfigChanged();
 }
 
 //----------------------------------------------------------------------------
@@ -252,6 +262,7 @@ void CollectionMailingListPage::slotAddressChanged( int i )
   fillMLFromWidgets();
   fillEditBox();
   mLastItem = i;
+  slotConfigChanged();
 }
 
 //----------------------------------------------------------------------------
@@ -261,21 +272,21 @@ void CollectionMailingListPage::fillMLFromWidgets()
     return;
 
   // make sure that email addresses are prepended by "mailto:"
-  bool changed = false;
-  QStringList oldList = mEditList->items();
+  bool listChanged = false;
+  const QStringList oldList = mEditList->items();
   QStringList newList; // the correct string list
   QStringList::ConstIterator end = oldList.constEnd();
   for ( QStringList::ConstIterator it = oldList.constBegin(); it != end; ++it ) {
     if ( !(*it).startsWith(QLatin1String("http:")) && !(*it).startsWith(QLatin1String("https:")) &&
          !(*it).startsWith(QLatin1String("mailto:")) && ( (*it).contains(QLatin1Char('@')) ) ) {
-      changed = true;
+      listChanged = true;
       newList << "mailto:" + *it;
     }
     else {
       newList << *it;
     }
   }
-  if ( changed ) {
+  if ( listChanged ) {
     mEditList->clear();
     mEditList->insertStringList( newList );
   }

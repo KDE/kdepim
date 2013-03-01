@@ -17,6 +17,7 @@
 
 #include "selectthunderbirdfilterfilesdialog.h"
 #include "selectthunderbirdfilterfileswidget.h"
+#include "mailkernel.h"
 #include <KLocale>
 
 #include <QHBoxLayout>
@@ -38,11 +39,12 @@ SelectThunderbirdFilterFilesDialog::SelectThunderbirdFilterFilesDialog(QWidget *
 
   mSelectFilterFilesWidget = new SelectThunderbirdFilterFilesWidget(mainWidget);
   mainLayout->addWidget(mSelectFilterFilesWidget);
+  readConfig();
 }
 
 SelectThunderbirdFilterFilesDialog::~SelectThunderbirdFilterFilesDialog()
 {
-
+  writeConfig();
 }
 
 QStringList SelectThunderbirdFilterFilesDialog::selectedFiles() const
@@ -53,4 +55,22 @@ QStringList SelectThunderbirdFilterFilesDialog::selectedFiles() const
 void SelectThunderbirdFilterFilesDialog::setStartDir(const KUrl& url)
 {
   mSelectFilterFilesWidget->setStartDir(url);
+}
+
+void SelectThunderbirdFilterFilesDialog::readConfig()
+{
+  KConfigGroup group( KernelIf->config(), "SelectThunderbirdFilterFilesDialog" );
+
+  const QSize size = group.readEntry( "Size", QSize() );
+  if ( size.isValid() ) {
+    resize( size );
+  } else {
+    resize( 500, 300 );
+  }
+}
+
+void SelectThunderbirdFilterFilesDialog::writeConfig()
+{
+  KConfigGroup group( KernelIf->config(), "SelectThunderbirdFilterFilesDialog" );
+  group.writeEntry( "Size", size() );
 }

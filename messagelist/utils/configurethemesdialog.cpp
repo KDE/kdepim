@@ -217,7 +217,7 @@ void ConfigureThemesDialog::Private::commitEditor()
   mEditor->commit();
 
   ThemeListWidgetItem * editedItem = findThemeItemByTheme( editedTheme );
-  if ( editedItem )
+  if ( !editedItem )
     return;
 
   // We must reset the runtime column state as the columns might have
@@ -360,7 +360,7 @@ void ConfigureThemesDialog::Private::newThemeButtonClicked()
   mThemeList->setCurrentItem( item );
   mEditor->editTheme( item->theme() );
 
-  mDeleteThemeButton->setEnabled( item && !item->theme()->readOnly() );
+  mDeleteThemeButton->setEnabled( !item->theme()->readOnly() );
   mExportThemeButton->setEnabled( item );
   mCloneThemeButton->setEnabled(numberOfSelectedItem == 1);
 }
@@ -383,8 +383,8 @@ void ConfigureThemesDialog::Private::cloneThemeButtonClicked()
   mEditor->editTheme( item->theme() );
 
   const int numberOfSelectedItem(mThemeList->selectedItems().count());
-  mDeleteThemeButton->setEnabled( item && !item->theme()->readOnly() );
-  mExportThemeButton->setEnabled( item );
+  mDeleteThemeButton->setEnabled( !item->theme()->readOnly() );
+  mExportThemeButton->setEnabled( true );
   mCloneThemeButton->setEnabled(numberOfSelectedItem == 1);
 }
 

@@ -42,8 +42,7 @@
 #include <kmenu.h>
 #include <krun.h>
 #include <klocale.h>
-#include <khtmlview.h>
-#include <khtml_part.h>
+#include <KIcon>
 #include <kiconloader.h>
 #include <ktoolinvocation.h>
 #include <kurl.h>
@@ -68,7 +67,7 @@ private:
     TabWidget* const q;
 
 public:
-    explicit Private( TabWidget * qq ) : q( qq ), currentMaxLength( 30 ), currentItem( 0 ) {}
+    explicit Private( TabWidget * qq ) : q( qq ), currentMaxLength( 30 ), currentItem( 0 ), tabsClose( 0 ) {}
 
     QHash<QWidget*, Frame*> frames;
     QHash<int, Frame*> framesById;

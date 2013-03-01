@@ -63,7 +63,7 @@ class Widget::Private
 {
 public:
   Private( Widget *owner )
-    : q( owner ), mXmlGuiClient( 0 ) { }
+    : q( owner ), mLastSelectedMessage(-1), mXmlGuiClient( 0 ) { }
 
   Akonadi::Item::List selectionAsItems() const;
   Akonadi::Item itemForRow( int row ) const;
