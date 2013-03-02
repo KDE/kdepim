@@ -51,7 +51,7 @@ using namespace KLDAP;
 
 K_GLOBAL_STATIC_WITH_ARGS( KConfig, s_config, ( "kabldaprc", KConfig::NoGlobals ) )
 
-
+#if 0
 void LdapClientSearch::readConfig( KLDAP::LdapServer &server, const KConfigGroup &config,
                                    int j, bool active )
 {
@@ -161,7 +161,7 @@ void LdapClientSearch::writeConfig( const KLDAP::LdapServer &server, KConfigGrou
   config.writeEntry( prefix + QString( "Auth%1" ).arg( j ), tmp );
   config.writeEntry( prefix + QString( "Mech%1" ).arg( j ), server.mech() );
 }
-
+#endif
 KConfig* LdapClientSearch::config()
 {
   return s_config;

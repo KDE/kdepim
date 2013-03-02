@@ -78,7 +78,7 @@ class KDEPIM_EXPORT LdapClientSearch : public QObject
      * Returns the global config object, which stores the LdapClient configurations.
      */
     static KConfig *config();
-
+#if 0
     /**
      * Reads the LDAP @p server settings from the given config @p group for the
      * given LDAP @p clientNumber.
@@ -96,7 +96,7 @@ class KDEPIM_EXPORT LdapClientSearch : public QObject
      */
     static void writeConfig( const KLDAP::LdapServer &server, KConfigGroup &group,
                              int clientNumber, bool active );
-
+#endif
     /**
      * Starts the LDAP search on all configured LDAP clients with the given search @p query.
      */
