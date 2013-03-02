@@ -29,7 +29,6 @@
 #include "actionmanager.h"
 #include "actions.h"
 #include "articleformatter.h"
-#include "articlematcher.h"
 #include "utils.h"
 #include "openurlrequest.h"
 

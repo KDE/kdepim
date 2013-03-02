@@ -55,7 +55,6 @@ set(akregator2part_PART_SRCS
    abstractselectioncontroller.cpp
    articlematcher.cpp #PENDING(frank) remove/port/move to krss
    command_p.cpp
-#   deletesubscriptioncommand.cpp
    feediconmanager.cpp
    feedlistview.cpp
    feedpropertiesdialog.cpp
@@ -64,7 +63,7 @@ set(akregator2part_PART_SRCS
    utils.cpp
    searchbar.cpp
    browserrun.cpp
-   articlelistview.cpp #PENDING(frank) move to krss
+   articlelistview.cpp
    actionmanager.cpp
    actions.cpp
    actionmanagerimpl.cpp
@@ -81,7 +80,6 @@ set(akregator2part_PART_SRCS
    addfeeddialog.cpp
    exportfeedlistcommand.cpp
    importfeedlistcommand.cpp
-#   importitemsjob.cpp
    tabwidget.cpp
    modifycommands.cpp
    akregator2_part.cpp
