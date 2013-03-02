@@ -119,6 +119,10 @@ void ActionManagerImpl::slotNodeSelected( const Akonadi::Collection& c )
         QAction* hp = action("feed_homepage");
         if (hp)
             hp->setEnabled(false);
+        QAction *newFolder = action("folder_add");
+        if (newFolder) {
+            newFolder->setEnabled( fc.allowSubfolders() );
+        }
 
         action("feed_fetch")->setText(i18n("&Fetch Feeds"));
         action("feed_mark_feed_as_read")->setText(i18n("&Mark Feeds as Read"));
