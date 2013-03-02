@@ -58,19 +58,6 @@
         </item>
        </layout>
       </item>
-      <item>
-       <widget class="QCheckBox" name="kcfg_UseNotifications">
-        <property name="toolTip">
-         <string/>
-        </property>
-        <property name="whatsThis">
-         <string>Select this if you want to get notified when there are new articles.</string>
-        </property>
-        <property name="text">
-         <string>Use &amp;notifications for all feeds</string>
-        </property>
-       </widget>
-      </item>
      </layout>
     </widget>
    </item>
