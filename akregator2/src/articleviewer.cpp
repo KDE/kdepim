@@ -414,34 +414,6 @@ void ArticleViewer::slotPrint( )
     m_part->view()->print();
 }
 
-
-#ifdef KRSS_PORT_DISABLED
-
-void ArticleViewer::connectToNode(TreeNode* node)
-{
-    if (node)
-    {
-        if (m_viewMode == CombinedView)
-        {
-            connect( node, SIGNAL(signalChanged(Akregator2::TreeNode*)), this, SLOT(slotUpdateCombinedView()) );
-            connect( node, SIGNAL(signalArticlesAdded(Akregator2::TreeNode*,QList<Akregator2::Article>)), this, SLOT(slotArticlesAdded(Akregator2::TreeNode*,QList<Akregator2::Article>)));
-            connect( node, SIGNAL(signalArticlesRemoved(Akregator2::TreeNode*,QList<Akregator2::Article>)), this, SLOT(slotArticlesRemoved(Akregator2::TreeNode*,QList<Akregator2::Article>)));
-            connect( node, SIGNAL(signalArticlesUpdated(Akregator2::TreeNode*,QList<Akregator2::Article>)), this, SLOT(slotArticlesUpdated(Akregator2::TreeNode*,QList<Akregator2::Article>)));
-        }
-        if (m_viewMode == SummaryView)
-            connect( node, SIGNAL(signalChanged(Akregator2::TreeNode*)), this, SLOT(slotShowSummary(Akregator2::TreeNode*)) );
-
-        connect( node, SIGNAL(signalDestroyed(Akregator2::TreeNode*)), this, SLOT(slotClear()) );
-    }
-}
-
-void ArticleViewer::disconnectFromNode(TreeNode* node)
-{
-    if (node)
-        node->disconnect( this );
-}
-#endif //KRSS_PORT_DISABLED
-
 void ArticleViewer::renderContent(const QString& text)
 {
     m_part->closeUrl();
@@ -589,12 +561,10 @@ void ArticleViewer::slotUpdateCombinedView()
 
 void ArticleViewer::slotClear()
 {
-#ifdef KRSS_PORT_DISABLED
-    disconnectFromNode(m_node);
-#else
-    kWarning() << "Code temporarily disabled (Akonadi port)";
-#endif //KRSS_PORT_DISABLED
-
+    if ( m_model ) {
+        m_model->disconnect( this );
+        m_model = 0;
+    }
     renderContent(QString());
 }
 
@@ -634,29 +604,6 @@ void ArticleViewer::showNode( QAbstractItemModel* m )
 static bool lessByDate( const KRss::Item& lhs, const KRss::Item& rhs ) {
     return lhs.dateUpdated() < rhs.dateUpdated();
 }
-
-#ifdef KRSS_PORT_DISABLED
-void ArticleViewer::slotArticlesListed( KJob* job ) {
-    assert( job );
-    assert( job == m_listJob );
-
-
-    if ( job->error() ) {
-        kWarning() << job->errorText();
-        slotUpdateCombinedView();
-        return;
-    }
-
-    m_items = m_listJob->items();
-    std::sort( m_items.begin(), m_items.end(), !bind( lessByDate, _1, _2 ) );
-
-    if (!m_items.isEmpty())
-        m_link = m_items.first().link();
-    else
-        m_link = KUrl();
-    slotUpdateCombinedView();
-}
-#endif
 
 void ArticleViewer::keyPressEvent(QKeyEvent* e)
 {

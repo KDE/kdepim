@@ -77,10 +77,10 @@ void CreateFolderCommand::Private::collectionCreated( KJob* j )
         q->emitResult();
         return;
     }
-#ifdef KRSS_PORT_DISABLED
+    CollectionCreateJob* job = qobject_cast<CollectionCreateJob*>( j );
+    Q_ASSERT( job );
     if ( feedListView )
-        feedListView->scrollToTag( job->tag() );
-#endif
+        feedListView->scrollToCollection( job->collection() );
     q->emitResult();
 }
 
