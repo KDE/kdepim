@@ -6,19 +6,6 @@ include_directories(
 
 ########### next target ###############
 
-set(kcm_akrgeneralconfig_SRCS 
-   akregator2_config_general.cpp )
-
-kde4_add_ui_files( kcm_akrgeneralconfig_SRCS settings_general.ui )
-kde4_add_plugin(akregator2_config_general ${kcm_akrgeneralconfig_SRCS})
-
-target_link_libraries( akregator2_config_general akregator2interfaces ${KDE4_KIO_LIBS} )
-
-install( FILES akregator2_config_general.desktop  DESTINATION ${SERVICES_INSTALL_DIR})
-install(TARGETS akregator2_config_general  DESTINATION ${PLUGIN_INSTALL_DIR})
-
-########### next target ###############
-
 set(kcm_akrappearanceconfig_SRCS 
    akregator2_config_appearance.cpp )
 

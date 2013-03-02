@@ -71,21 +71,6 @@
   </entry>
  </group>
  <group name="General" >
-  <entry key="Fetch On Startup" type="Bool" >
-   <label>Fetch on startup</label>
-   <whatsthis>Fetch feedlist on startup.</whatsthis>
-   <default>false</default>
-  </entry>
-  <entry key="Mark All Feeds Read On Startup" type="Bool" >
-   <label>Mark all feeds as read on startup</label>
-   <whatsthis>Mark all feeds as read on startup.</whatsthis>
-   <default>false</default>
-  </entry>
-  <entry key="Use Notifications" type="Bool" >
-   <label>Use notifications</label>
-   <whatsthis>Specifies if the balloon notifications are used or not.</whatsthis>
-   <default>false</default>
-  </entry>
   <entry key="Show Tray Icon" type="Bool" >
    <label>Show tray icon</label>
    <whatsthis>Specifies if the tray icon is shown or not.</whatsthis>

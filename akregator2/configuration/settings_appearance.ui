@@ -3,7 +3,61 @@
  <author>Frank Osterfeld</author>
  <class>Akregator2::SettingsAppearance</class>
  <widget class="QWidget" name="Akregator2::SettingsAppearance">
-  <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0,0,1">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>539</width>
+    <height>620</height>
+   </rect>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_2">
+   <item>
+    <widget class="QGroupBox" name="groupBox_4">
+     <property name="title">
+      <string>Tray Icon</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <widget class="QCheckBox" name="kcfg_ShowTrayIcon">
+        <property name="text">
+         <string>Show tra&amp;y icon</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <spacer name="indent_kcfg_EnableTrayIconUnreadArticleCount">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Fixed</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>17</width>
+            <height>12</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="kcfg_EnableTrayIconUnreadArticleCount">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="text">
+           <string>Display an unread article &amp;count in the tray icon</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+   </item>
    <item>
     <widget class="QGroupBox" name="groupBox_3">
      <property name="title">
@@ -221,6 +275,9 @@
    </item>
    <item>
     <spacer>
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
      <property name="sizeHint" stdset="0">
       <size>
        <width>20</width>
@@ -233,14 +290,14 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>KIntSpinBox</class>
-   <extends>QSpinBox</extends>
-   <header>knuminput.h</header>
-  </customwidget>
-  <customwidget>
    <class>KFontComboBox</class>
    <extends>KComboBox</extends>
    <header>kfontcombobox.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KColorButton</class>
+   <extends>QPushButton</extends>
+   <header>kcolorbutton.h</header>
   </customwidget>
   <customwidget>
    <class>KComboBox</class>
@@ -248,9 +305,9 @@
    <header>kcombobox.h</header>
   </customwidget>
   <customwidget>
-   <class>KColorButton</class>
-   <extends>QPushButton</extends>
-   <header>kcolorbutton.h</header>
+   <class>KIntSpinBox</class>
+   <extends>QSpinBox</extends>
+   <header>knuminput.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
