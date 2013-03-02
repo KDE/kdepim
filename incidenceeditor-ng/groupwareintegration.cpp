@@ -25,7 +25,7 @@
 #include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/utils.h>
 
-#include <Akonadi/Calendar/InvitationHandler>
+#include <Akonadi/Calendar/ITIPHandler>
 
 #include <KSystemTimeZones>
 

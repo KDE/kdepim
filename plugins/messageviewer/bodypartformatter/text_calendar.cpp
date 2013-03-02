@@ -742,10 +742,10 @@ class UrlHandler : public Interface::BodyPartURLHandler
         IncidenceEditorNG::GroupwareIntegration::activate();
       }
 
-      Akonadi::InvitationHandler *handler = new Akonadi::InvitationHandler();
+      Akonadi::ITIPHandler *handler = new Akonadi::ITIPHandler();
 
       // We don't have a parent here, so schedule a deleteLater()
-      QObject::connect( handler, SIGNAL(finished(Akonadi::InvitationHandler::Result,QString)),
+      QObject::connect( handler, SIGNAL(finished(Akonadi::ITIPHandler::Result,QString)),
                         handler, SLOT(deleteLater()) );
 
       handler->processiTIPMessage( receiver, iCal, type );

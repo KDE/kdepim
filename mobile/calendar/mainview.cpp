@@ -44,7 +44,7 @@
 #include <akonadi/agentactionmanager.h>
 #include <akonadi/calendar/standardcalendaractionmanager.h>
 #include <Akonadi/Calendar/IncidenceChanger>
-#include <Akonadi/Calendar/InvitationHandler>
+#include <Akonadi/Calendar/ITIPHandler>
 #include <akonadi/calendar/freebusymanager.h>
 #include <akonadi/calendar/calendarsettings.h>
 #include <akonadi/collectionmodel.h>
@@ -154,7 +154,7 @@ MainView::MainView( QWidget* parent )
 {
   m_calendarPrefs = EventViews::PrefsPtr( new  EventViews::Prefs );
   m_calendarPrefs->readConfig();
-  mInvitationHandler = new Akonadi::InvitationHandler( this );
+  mITIPHandler = new Akonadi::ITIPHandler( this );
 
   Akonadi::CollectionPropertiesDialog::registerPage( new CalendarSupport::CollectionGeneralPageFactory );
 }
@@ -650,7 +650,7 @@ void MainView::fetchForSendICalDone( KJob *job )
 
   KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( item );
   if ( incidence )
-    mInvitationHandler->sendAsICalendar( incidence, this );
+    mITIPHandler->sendAsICalendar( incidence, this );
 }
 
 void MainView::publishItemInformation()
@@ -682,7 +682,7 @@ void MainView::fetchForPublishItemDone( KJob *job )
 
   KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( item );
   if ( incidence )
-    mInvitationHandler->publishInformation( incidence, this );
+    mITIPHandler->publishInformation( incidence, this );
 }
 
 void MainView::sendInvitation()
@@ -740,7 +740,7 @@ void MainView::fetchForiTIPMethodDone( KJob *job )
   const KCalCore::iTIPMethod method = job->property( "iTIPmethod" ).value<KCalCore::iTIPMethod>();
   const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( item );
   if ( incidence )
-    mInvitationHandler->sendiTIPMessage( method, incidence, this );
+    mITIPHandler->sendiTIPMessage( method, incidence, this );
 }
 
 void MainView::saveAllAttachments()
