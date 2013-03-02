@@ -152,14 +152,6 @@ Part::Part( QWidget *parentWidget, QObject *parent, const QVariantList& )
                 this, SIGNAL(signalArticlesSelected(Akonadi::Item::List)) );
     }
 
-    QString useragent = QString( "Akregator/%1; syndication" ).arg( KDEPIM_VERSION );
-
-    if( !Settings::customUserAgent().isEmpty() )
-        useragent = Settings::customUserAgent();
-
-    Syndication::FileRetriever::setUserAgent( useragent );
-
-
     connect(kapp, SIGNAL(aboutToQuit()), this, SLOT(slotOnShutdown()));
 
     loadPlugins( QLatin1String("extension") ); // FIXME: also unload them!
