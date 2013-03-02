@@ -396,8 +396,7 @@ void ActionManagerImpl::initArticleViewer(ArticleViewer* articleViewer)
 {
     if (d->articleViewer)
         return;
-    else
-        d->articleViewer = articleViewer;
+    d->articleViewer = articleViewer;
     connect(d->tabWidget, SIGNAL(signalZoomInFrame(int)), d->articleViewer, SLOT(slotZoomIn(int)));
     connect(d->tabWidget, SIGNAL(signalZoomOutFrame(int)), d->articleViewer, SLOT(slotZoomOut(int)));
 }
