@@ -33,7 +33,7 @@ namespace Akregator2 {
 
 AboutData::AboutData()
     : KAboutData("akregator2", 0, ki18n("Akregator2"), KDEPIM_VERSION, ki18n("A KDE Feed Reader"),
-                 License_GPL, ki18n("(C) 2004-2012 Akregator2 developers"), KLocalizedString(),
+                 License_GPL, ki18n("(C) 2004-2013 Akregator2 developers"), KLocalizedString(),
                      "http://akregator2.kde.org/")
 {
     setOrganizationDomain("kde.org"); // needed to get org.kde.akregator2 used for DBUS 
