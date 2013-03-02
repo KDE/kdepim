@@ -564,12 +564,20 @@ void Akregator2::MainWidget::slotFeedAdd()
     addFeed(QString(), false);
 }
 
+static Akonadi::Collection findParentFolder( const Akonadi::Collection& c ) {
+    if ( !c.isValid() || KRss::FeedCollection( c ).isFolder() )
+        return c;
+    else
+        return c.parentCollection();
+}
+
 void Akregator2::MainWidget::addFeed(const QString& url, bool autoExec)
 {
     std::auto_ptr<CreateFeedCommand> cmd( new CreateFeedCommand( m_session, this ) );
     cmd->setAutoExecute( autoExec );
     cmd->setUrl( url );
-    cmd->setParentCollection( m_selectionController->selectedCollection() );
+    const Akonadi::Collection parentCollection = findParentFolder( m_selectionController->selectedCollection() );
+    cmd->setParentCollection( parentCollection );
     // FIXME: keep a shared pointer to the default resource in MainWidget
     d->setUpAndStart( cmd.release() );
 }
