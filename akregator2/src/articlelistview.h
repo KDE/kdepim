@@ -48,6 +48,11 @@ namespace Akregator2 {
 
 class FilterColumnsProxyModel;
 
+namespace Filters
+{
+    class ArticleMatcher;
+}
+
 class AKREGATOR2PART_EXPORT FilterDeletedProxyModel : public QSortFilterProxyModel {
     Q_OBJECT
 public:

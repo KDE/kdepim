@@ -25,6 +25,7 @@
 #include "articlelistview.h"
 #include "actionmanager.h"
 #include "akregator2config.h"
+#include "articlematcher.h"
 #include <utils/filtercolumnsproxymodel.h>
 
 #include <krss/feeditemmodel.h>
