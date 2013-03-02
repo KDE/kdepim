@@ -29,6 +29,10 @@ class QListWidgetItem;
 class QPushButton;
 class QToolButton;
 
+namespace KLDAP {
+class LdapClientSearchConfig;
+}
+
 class KCMLdap : public KCModule
 {
   Q_OBJECT
@@ -62,6 +66,7 @@ class KCMLdap : public KCModule
 
     QToolButton* mUpButton;
     QToolButton* mDownButton;
+    KLDAP::LdapClientSearchConfig *mClientSearchConfig;
 };
 
 #endif

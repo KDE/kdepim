@@ -19,6 +19,8 @@
 #include "ldapclientsearchconfig.h"
 #include <kldap/ldapserver.h>
 
+#include <QDebug>
+
 #include <KConfig>
 #include <KConfigGroup>
 

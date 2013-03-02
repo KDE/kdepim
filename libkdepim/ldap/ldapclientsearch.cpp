@@ -5,6 +5,8 @@
  *
  *      Ported to KABC by Daniel Molkentin <molkentin@kde.org>
  *
+ * Copyright (C) 2013 Laurent Montel <montel@kde.org>
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
  * License as published by the Free Software Foundation; either
@@ -22,6 +24,7 @@
  */
 
 #include "ldapclientsearch.h"
+#include "ldapclientsearchconfig.h"
 
 #include "ldapclient.h"
 #include "ldapsession.h"
@@ -168,8 +171,16 @@ class LdapClientSearch::Private
 {
   public:
     Private( LdapClientSearch *qq )
-      : q( qq ), mActiveClients( 0 ), mNoLDAPLookup( false )
+        : q( qq ),
+          mActiveClients( 0 ),
+          mNoLDAPLookup( false )
     {
+        mClientSearchConfig = new LdapClientSearchConfig;
+    }
+
+    ~Private()
+    {
+        delete mClientSearchConfig;
     }
 
     struct ResultObject {
@@ -196,6 +207,7 @@ class LdapClientSearch::Private
     bool mNoLDAPLookup;
     QList<ResultObject> mResults;
     QString mConfigFile;
+    LdapClientSearchConfig *mClientSearchConfig;
 };
 
 LdapClientSearch::LdapClientSearch( QObject *parent )
@@ -256,7 +268,7 @@ void LdapClientSearch::Private::readConfig()
     for ( int j = 0; j < numHosts; j++ ) {
       LdapClient *ldapClient = new LdapClient( j, q );
       KLDAP::LdapServer server;
-      q->readConfig( server, config, j, true );
+      mClientSearchConfig->readConfig( server, config, j, true );
       if ( !server.host().isEmpty() ) {
         mNoLDAPLookup = false;
       }
