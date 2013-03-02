@@ -23,6 +23,7 @@
 */
 
 #include "createfeedcommand.h"
+#include "editfeedcommand.h"
 
 #include "addfeeddialog.h"
 #include "editfeedcommand.h"
@@ -59,7 +60,7 @@ public:
 
     void doCreate();
     void creationDone( KJob* );
-    void modificationDone( KJob* );
+    void modificationDone();
 
     Akonadi::Session* m_session;
     QString m_url;
@@ -129,53 +130,30 @@ void CreateFeedCommand::Private::doCreate()
     Akonadi::CollectionCreateJob* job = new Akonadi::CollectionCreateJob( feed );
     q->connect( job, SIGNAL(finished(KJob*)), q, SLOT(creationDone(KJob*)) );
     job->start();
-
-    //PENDING(frank): the following should go to a FeedModifyCommand
-#ifdef KRSS_PORT_DISABLED
-
-    Feed* const feed = afd->feed();
-    delete afd;
-
-    if ( !feed )
-    {
-        q->emitResult();
-        return;
-    }
-
-    QPointer<FeedPropertiesDialog> dlg = new FeedPropertiesDialog( q->parentWidget(), "edit_feed" );
-    dlg->setFeed( feed );
-    dlg->selectFeedName();
-
-    if ( !m_autoexec && ( dlg->exec() != QDialog::Accepted || !thisPointer ) )
-    {
-        delete feed;
-    }
-    else
-    {
-        m_parentFolder = m_parentFolder ? m_parentFolder : m_rootFolder;
-        m_parentFolder->insertChild( feed, m_after );
-        if ( m_feedListView )
-            m_feedListView->ensureNodeVisible( feed );
-    }
-
-    delete dlg;
-    q->emitResult();
-#endif //KRSS_PORT_DISABLED
-
 }
 
 void CreateFeedCommand::Private::creationDone( KJob* job )
 {
     if ( job->error() )
         q->setErrorAndEmitResult( i18n("Could not add feed: %1", job->errorString()) );
-    else
-        q->emitResult();
+    else {
+        Akonadi::CollectionCreateJob* createJob = qobject_cast<Akonadi::CollectionCreateJob*>( job );
+        Q_ASSERT( createJob );
+        EditFeedCommand* cmd = new EditFeedCommand( q );
+        connect( cmd, SIGNAL(finished()), q, SLOT(modificationDone()) );
+        cmd->setParentWidget( q->parentWidget() );
+        cmd->setCollection( createJob->collection() );
+        cmd->setSession( m_session );
+        cmd->start();
+    }
 }
 
-void CreateFeedCommand::Private::modificationDone( KJob* j )
+void CreateFeedCommand::Private::modificationDone()
 {
-    if ( j->error() )
-        q->setErrorAndEmitResult( i18n("Could not edit feed: %1", j->errorString()) );
+    EditFeedCommand* cmd = qobject_cast<EditFeedCommand*>( q->sender() );
+    Q_ASSERT( cmd );
+    if ( cmd->error() )
+        q->setErrorAndEmitResult( i18n("Could not edit feed: %1", cmd->errorString()) );
     else
         q->emitResult();
 }
