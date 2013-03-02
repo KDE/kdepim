@@ -107,7 +107,6 @@ target_link_libraries(akregator2part
                       akregator2private
                       kdepim
                       ${KDEPIMLIBS_KPIMUTILS_LIBS}
-                      ${KDE4_KDE3SUPPORT_LIBS}
                       ${KDEPIMLIBS_KRSS_LIBS}
 		      ${KDE4_AKONADI_LIBS})
 
