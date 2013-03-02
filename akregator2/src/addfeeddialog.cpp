@@ -89,55 +89,6 @@ void AddFeedDialog::textChanged(const QString& text)
     enableButtonOk(!text.isEmpty());
 }
 
-#ifdef KRSS_PORT_DISABLED
-
-void AddFeedDialog::accept()
-{
-    enableButtonOk(false);
-    feedUrl = widget->urlEdit->text().trimmed();
-
-    delete m_feed;
-    m_feed = new Feed( Kernel::self()->storage() );
-
-    // HACK: make weird wordpress links ("feed:http://foobar/rss") work
-    if (feedUrl.startsWith(QLatin1String("feed:")))
-        feedUrl = feedUrl.right( feedUrl.length() - 5 );
-
-    if (feedUrl.indexOf(":/") == -1)
-        feedUrl.prepend("http://");
-    m_feed->setXmlUrl(feedUrl);
-
-    widget->statusLabel->setText( i18n("Downloading %1", feedUrl) );
-
-    connect( m_feed, SIGNAL(fetched(Akregator2::Feed*)),
-             this, SLOT(fetchCompleted(Akregator2::Feed*)) );
-    connect( m_feed, SIGNAL(fetchError(Akregator2::Feed*)),
-             this, SLOT(fetchError(Akregator2::Feed*)) );
-    connect( m_feed, SIGNAL(fetchDiscovery(Akregator2::Feed*)),
-             this, SLOT(fetchDiscovery(Akregator2::Feed*)) );
-
-    m_feed->fetch(true);
-}
-
-void AddFeedDialog::fetchCompleted(Feed * /*f*/)
-{
-    KDialog::accept();
-}
-
-void AddFeedDialog::fetchError(Feed *)
-{
-    KMessageBox::error(this, i18n("Feed not found from %1.", feedUrl));
-    KDialog::reject();
-}
-
-void AddFeedDialog::fetchDiscovery(Feed *f)
-{
-    widget->statusLabel->setText( i18n("Feed found, downloading...") );
-    feedUrl=f->xmlUrl();
-}
-
-#endif // KRSS_PORT_DISABLED
-
 } // namespace Akregator2
 
 #include "addfeeddialog.moc"

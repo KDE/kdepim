@@ -54,13 +54,6 @@ class AddFeedDialog : public KDialog
         void setUrl( const QString& url );
         QString url() const;
 
-#ifdef KRSS_PORT_DISABLED
-    public slots:
-        void fetchCompleted(Akregator2::Feed *);
-        void fetchDiscovery(Akregator2::Feed *);
-        void fetchError(Akregator2::Feed *);
-#endif // KRSS_PORT_DISABLED
-
     private slots:
         void textChanged(const QString&);
 
