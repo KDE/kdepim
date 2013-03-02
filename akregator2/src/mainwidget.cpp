@@ -42,7 +42,6 @@
 #include "exportfeedlistcommand.h"
 #include "framemanager.h"
 #include "kernel.h"
-#include "notificationmanager.h"
 #include "openurlrequest.h"
 #ifdef WITH_LIBKDEPIM
 #include "progressmanager.h"

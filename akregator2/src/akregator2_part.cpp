@@ -30,7 +30,6 @@
 #include "feediconmanager.h"
 #include "framemanager.h"
 #include "mainwidget.h"
-#include "notificationmanager.h"
 #include "plugin.h"
 #include "pluginmanager.h"
 #include "trayicon.h"
@@ -148,9 +147,6 @@ Part::Part( QWidget *parentWidget, QObject *parent, const QVariantList& )
         if ( isTrayIconEnabled() )
             trayIcon->setStatus( KStatusNotifierItem::Active );
 
-        QWidget* const notificationParent = isTrayIconEnabled() ? m_mainWidget->window() : 0;
-        NotificationManager::self()->setWidget(notificationParent, componentData());
-
         connect( m_mainWidget, SIGNAL(signalUnreadCountChanged(int)), trayIcon, SLOT(slotSetUnread(int)) );
         connect( m_mainWidget, SIGNAL(signalItemsSelected(Akonadi::Item::List)),
                 this, SIGNAL(signalArticlesSelected(Akonadi::Item::List)) );
@@ -162,10 +158,6 @@ Part::Part( QWidget *parentWidget, QObject *parent, const QVariantList& )
         useragent = Settings::customUserAgent();
 
     Syndication::FileRetriever::setUserAgent( useragent );
-
-
-    QWidget* const notificationParent = isTrayIconEnabled() ? m_mainWidget->window() : 0;
-    NotificationManager::self()->setWidget(notificationParent, componentData());
 
 
     connect(kapp, SIGNAL(aboutToQuit()), this, SLOT(slotOnShutdown()));
@@ -208,8 +200,6 @@ void Part::addFeed() {
 
 void Part::slotSettingsChanged()
 {
-    NotificationManager::self()->setWidget(isTrayIconEnabled() ? m_mainWidget->window() : 0, componentData());
-
     Syndication::FileRetriever::setUseCache(Settings::useHTMLCache());
     QStringList fonts;
     fonts.append(Settings::standardFont());

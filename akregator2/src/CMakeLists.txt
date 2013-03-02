@@ -87,7 +87,6 @@ set(akregator2part_PART_SRCS
    modifycommands.cpp
    akregator2_part.cpp
    mainwidget.cpp
-   notificationmanager.cpp
    speechclient.cpp
 )
 
