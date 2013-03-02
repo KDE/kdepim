@@ -25,7 +25,7 @@ target_link_libraries(akregator2_sharemicroblog_plugin
 
 install(FILES akregator2_sharemicroblog_plugin.desktop DESTINATION ${SERVICES_INSTALL_DIR})
 install(TARGETS akregator2_sharemicroblog_plugin DESTINATION ${PLUGIN_INSTALL_DIR})
-install(FILES akregator2_sharemicroblog_plugin.rc DESTINATION ${DATA_INSTALL_DIR}/akregator_sharemicroblog_plugin)
+install(FILES akregator2_sharemicroblog_plugin.rc DESTINATION ${DATA_INSTALL_DIR}/akregator2_sharemicroblog_plugin)
 
 ########### settings target ###############
 

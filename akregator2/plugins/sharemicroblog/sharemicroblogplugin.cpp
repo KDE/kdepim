@@ -36,6 +36,8 @@
 #include <Akonadi/Item>
 #include <KRss/Item>
 
+#include <QDebug>
+
 K_PLUGIN_FACTORY(SharePluginFactory, registerPlugin<SharePluginIface>();)
 K_EXPORT_PLUGIN(SharePluginFactory("akregator2_sharemicroblog_plugin"))
 
@@ -51,8 +53,8 @@ SharePluginIface::~SharePluginIface()
 
 void SharePluginIface::doInitialize()
 {
-    connect(parent(), SIGNAL(signalArticlesSelected(QList<Akonadi::Item>)),
-            m_impl, SLOT(articlesSelected(QList<Akonadi::Item>)));
+    connect(parent(), SIGNAL(signalArticlesSelected(Akonadi::Item::List)),
+            m_impl, SLOT(articlesSelected(Akonadi::Item::List)));
 }
 
 void SharePluginIface::insertGuiClients( KXMLGUIClient* parent )
@@ -128,11 +130,11 @@ void SharePlugin::refreshConfig()
     }
 }
 
-void SharePlugin::articlesSelected(const QList<Akonadi::Item>&articles)
+void SharePlugin::articlesSelected(const Akonadi::Item::List& articles)
 {
     m_articles = articles;
-    if (m_shareMenu) m_shareMenu->setEnabled(true);
-    if (m_sharePopupMenu) m_sharePopupMenu->setEnabled(true);
+    if (m_shareMenu) m_shareMenu->setEnabled( !articles.isEmpty() );
+    if (m_sharePopupMenu) m_sharePopupMenu->setEnabled( !articles.isEmpty() );
 }
 
 void SharePlugin::shareArticles()

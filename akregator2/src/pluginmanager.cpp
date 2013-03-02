@@ -43,12 +43,12 @@ PluginManager::query( const QString& constraint )
 {
     // Add versioning constraint
     QString
-    str  = "[X-KDE-akregator2-framework-version] == ";
+    str  = "[X-KDE-akregator-framework-version] == ";
     str += QString::number( AKREGATOR2_PLUGIN_INTERFACE_VERSION );
     str += " and ";
     if (!constraint.trimmed().isEmpty())
         str += constraint + " and ";
-    str += "[X-KDE-akregator2-rank] > 0";
+    str += "[X-KDE-akregator-rank] > 0";
 
     kDebug() <<"Plugin trader constraint:" << str;
 
@@ -70,7 +70,7 @@ PluginManager::createFromQuery( const QString &constraint )
     int rank = 0;
     uint current = 0;
     for ( int i = 0; i < offers.count(); i++ ) {
-        if ( offers[i]->property( "X-KDE-akregator2-rank" ).toInt() > rank )
+        if ( offers[i]->property( "X-KDE-akregator-rank" ).toInt() > rank )
             current = i;
     }
 
@@ -164,10 +164,10 @@ PluginManager::showAbout( const QString &constraint )
 
     str += body.arg( i18nc( "Name of the plugin", "Name" ),                             s->name() );
     str += body.arg( i18nc( "Library name", "Library" ),                                s->library() );
-    str += body.arg( i18nc( "Plugin authors", "Authors" ),                              s->property( "X-KDE-akregator2-authors" ).toStringList().join( "\n" ) );
-    str += body.arg( i18nc( "Plugin authors' emaila addresses", "Email" ),              s->property( "X-KDE-akregator2-email" ).toStringList().join( "\n" ) );
-    str += body.arg( i18nc( "Plugin version", "Version" ),                              s->property( "X-KDE-akregator2-version" ).toString() );
-    str += body.arg( i18nc( "Framework version plugin requires", "Framework Version" ), s->property( "X-KDE-akregator2-framework-version" ).toString() );
+    str += body.arg( i18nc( "Plugin authors", "Authors" ),                              s->property( "X-KDE-akregator-authors" ).toStringList().join( "\n" ) );
+    str += body.arg( i18nc( "Plugin authors' emaila addresses", "Email" ),              s->property( "X-KDE-akregator-email" ).toStringList().join( "\n" ) );
+    str += body.arg( i18nc( "Plugin version", "Version" ),                              s->property( "X-KDE-akregator-version" ).toString() );
+    str += body.arg( i18nc( "Framework version plugin requires", "Framework Version" ), s->property( "X-KDE-akregator-framework-version" ).toString() );
 
     str += "</table></body></html>";
 
@@ -184,12 +184,12 @@ PluginManager::dump( const KService::Ptr service )
       << "name                          : " << service->name() << endl
       << "library                       : " << service->library() << endl
       << "desktopEntryPath              : " << service->entryPath() << endl
-      << "X-KDE-akregator2-plugintype       : " << service->property( "X-KDE-akregator2-plugintype" ).toString() << endl
-      << "X-KDE-akregator2-name             : " << service->property( "X-KDE-akregator2-name" ).toString() << endl
-      << "X-KDE-akregator2-authors          : " << service->property( "X-KDE-akregator2-authors" ).toStringList() << endl
-      << "X-KDE-akregator2-rank             : " << service->property( "X-KDE-akregator2-rank" ).toString() << endl
-      << "X-KDE-akregator2-version          : " << service->property( "X-KDE-akregator2-version" ).toString() << endl
-      << "X-KDE-akregator2-framework-version: " << service->property( "X-KDE-akregator2-framework-version" ).toString()
+      << "X-KDE-akregator-plugintype       : " << service->property( "X-KDE-akregator-plugintype" ).toString() << endl
+      << "X-KDE-akregator-name             : " << service->property( "X-KDE-akregator-name" ).toString() << endl
+      << "X-KDE-akregator-authors          : " << service->property( "X-KDE-akregator-authors" ).toStringList() << endl
+      << "X-KDE-akregator-rank             : " << service->property( "X-KDE-akregator-rank" ).toString() << endl
+      << "X-KDE-akregator-version          : " << service->property( "X-KDE-akregator-version" ).toString() << endl
+      << "X-KDE-akregator-framework-version: " << service->property( "X-KDE-akregator-framework-version" ).toString()
       << endl;
 
 }

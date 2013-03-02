@@ -158,10 +158,10 @@ Part::Part( QWidget *parentWidget, QObject *parent, const QVariantList& )
 
 void Part::loadPlugins( const QString& type )
 {
-    const KService::List offers = PluginManager::query( QString::fromLatin1("[X-KDE-akregator2-plugintype] == '%1'").arg( type ) );
+    const KService::List offers = PluginManager::query( QString::fromLatin1("[X-KDE-akregator-plugintype] == '%1'").arg( type ) );
 
     Q_FOREACH ( const KService::Ptr& i, offers ) {
-        Akregator2::Plugin* plugin = PluginManager::createFromService( i );
+        Akregator2::Plugin* plugin = PluginManager::createFromService( i, this );
         if ( !plugin )
             continue;
         plugin->initialize();

@@ -30,9 +30,7 @@
 #include <KPluginFactory>
 #include <Plasma/DataEngine>
 
-namespace Akonadi {
-    class Item;
-}
+#include <Akonadi/Item>
 
 class KActionMenu;
 
@@ -52,7 +50,7 @@ public slots:
     void dataUpdated(const QString &source, const Plasma::DataEngine::Data &data);
 
 protected slots:
-    void articlesSelected( const QList<Akonadi::Item> &articles );
+    void articlesSelected( const Akonadi::Item::List &articles );
     void slotServiceFinished(Plasma::ServiceJob *job);
     void shareArticles();
 

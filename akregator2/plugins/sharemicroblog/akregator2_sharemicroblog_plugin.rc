@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui>
-<gui name="akregator_sharemicroblog_plugin" library="akregator_sharemicroblog_plugin" version="1">
+<gui name="akregator2_sharemicroblog_plugin" library="akregator2_sharemicroblog_plugin" version="1">
   <MenuBar>
     <Menu name="article"><text>&amp;Article</text>
       <Action name="article_share"/>

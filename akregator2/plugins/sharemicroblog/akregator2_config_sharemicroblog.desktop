@@ -2,12 +2,14 @@
 Icon=akregator
 Type=Service
 X-KDE-ServiceTypes=KCModule
-X-DocPath=akregator2/index.html#configuration
+X-DocPath=akregator2/preferences.html#general-lookup
 
 X-KDE-Library=akregator2_config_sharemicroblog
-X-KDE-ParentApp=akregator3
+X-KDE-ParentApp=akregator2
 X-KDE-ParentComponents=akregator2,kontact_akregator2plugin
 X-KDE-CfgDlgHierarchy=Akregator2
+X-KDE-Weight=1000
+
 X-KDE-Keywords=akregator, configure, settings, online readers
 X-KDE-Keywords[ca]=akregator, configura, arranjament, lectors en línia
 X-KDE-Keywords[da]=akregator, indstil, indstillinger, online læsere
@@ -39,7 +41,6 @@ X-KDE-Keywords[sv]=akregator, anpassa, inställningar, direktläsare
 X-KDE-Keywords[uk]=akregator,configure,settings,online readers,налаштувати,налаштування,параметри,читання
 X-KDE-Keywords[x-test]=xxakregator, configure, settings, online readersxx
 X-KDE-Keywords[zh_TW]=akregator, configure, settings, online readers
-X-KDE-Weight=150
 
 Name=Share Services
 Name[ca]=Serveis de compartició

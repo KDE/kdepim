@@ -100,7 +100,7 @@ Comment[x-test]=xxPlugin for Akregatorxx
 Comment[zh_CN]=Akregator 插件
 Comment[zh_TW]=Akregator 外掛程式
 
-X-KDE-Library=akregator_sharemicroblog_plugin
+X-KDE-Library=akregator2_sharemicroblog_plugin
 X-KDE-ServiceTypes=Akregator2/Plugin
 X-KDE-InterfaceVersion=4
 X-KDE-PluginInfo-EnabledByDefault=true
