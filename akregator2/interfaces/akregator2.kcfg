@@ -59,13 +59,6 @@
   <entry key="UnderlineLinks" type="Bool"> 
   </entry>
  </group>
- <group name="Network" >
-  <entry key="Use HTML Cache" type="Bool" >
-   <label>Use HTML Cache</label>
-   <whatsthis>Use the KDE-wide HTML cache settings when downloading feeds, to avoid unnecessary traffic. Disable only when necessary.</whatsthis>
-   <default>true</default>
-  </entry>
- </group>
  <group name="General" >
   <entry key="Show Tray Icon" type="Bool" >
    <label>Show tray icon</label>

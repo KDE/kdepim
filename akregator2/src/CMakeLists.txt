@@ -109,7 +109,6 @@ target_link_libraries(akregator2part
                       ${KDEPIMLIBS_KPIMUTILS_LIBS}
                       ${KDE4_KDE3SUPPORT_LIBS}
                       ${KDEPIMLIBS_KRSS_LIBS}
-		      ${KDEPIMLIBS_SYNDICATION_LIBS}
 		      ${KDE4_AKONADI_LIBS})
 
 install(TARGETS akregator2part  DESTINATION ${PLUGIN_INSTALL_DIR})

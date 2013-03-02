@@ -69,7 +69,6 @@
 #include <QWidget>
 #include <QDomDocument>
 #include "partadaptor.h"
-#include <syndication/dataretriever.h>
 
 #include <memory>
 
@@ -192,7 +191,6 @@ void Part::addFeed() {
 
 void Part::slotSettingsChanged()
 {
-    Syndication::FileRetriever::setUseCache(Settings::useHTMLCache());
     QStringList fonts;
     fonts.append(Settings::standardFont());
     fonts.append(Settings::fixedFont());
