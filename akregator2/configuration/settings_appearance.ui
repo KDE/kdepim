@@ -23,6 +23,9 @@
         <property name="text">
          <string>Show tra&amp;y icon</string>
         </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
        </widget>
       </item>
       <item>
@@ -46,10 +49,13 @@
         <item>
          <widget class="QCheckBox" name="kcfg_EnableTrayIconUnreadArticleCount">
           <property name="enabled">
-           <bool>false</bool>
+           <bool>true</bool>
           </property>
           <property name="text">
            <string>Display an unread article &amp;count in the tray icon</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
           </property>
          </widget>
         </item>

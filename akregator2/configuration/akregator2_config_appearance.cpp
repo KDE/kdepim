@@ -61,6 +61,8 @@ KCMAkregator2AppearanceConfig::KCMAkregator2AppearanceConfig( QWidget* parent, c
              m_ui.slider_minimumFontSize, SLOT(setValue(int)) );
     connect( m_ui.kcfg_MediumFontSize, SIGNAL(valueChanged(int)),
              m_ui.slider_mediumFontSize, SLOT(setValue(int)) );
+    connect( m_ui.kcfg_ShowTrayIcon, SIGNAL(toggled(bool)),
+             m_ui.kcfg_EnableTrayIconUnreadArticleCount, SLOT(setEnabled(bool)) );
 
     KAboutData *about = new KAboutData( I18N_NOOP( "kcmakrappearanceconfig" ), 0,
                                         ki18n( "Configure Feed Reader Appearance" ),
@@ -74,6 +76,7 @@ KCMAkregator2AppearanceConfig::KCMAkregator2AppearanceConfig( QWidget* parent, c
     m_ui.slider_mediumFontSize->setDisabled( Settings::self()->isImmutable("MediumFontSize") );
     m_ui.lbl_MinimumFontSize->setDisabled( Settings::self()->isImmutable("MinimumFontSize") );
     m_ui.lbl_MediumFontSize->setDisabled( Settings::self()->isImmutable("MediumFontSize") );
+    m_ui.kcfg_EnableTrayIconUnreadArticleCount->setEnabled( m_ui.kcfg_ShowTrayIcon->isChecked() );
 
     addConfig( Settings::self(), m_widget );
 }
