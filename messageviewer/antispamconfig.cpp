@@ -31,7 +31,7 @@
     your version.
 */
 
-#include <config-messageviewer.h>
+
 
 #include "antispamconfig.h"
 

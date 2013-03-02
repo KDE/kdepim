@@ -30,7 +30,7 @@
     your version.
 */
 
-#include <config-messageviewer.h>
+
 
 #include "htmlstatusbar.h"
 #include "globalsettings.h"

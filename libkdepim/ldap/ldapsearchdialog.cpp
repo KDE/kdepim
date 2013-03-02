@@ -24,6 +24,7 @@
 #include "ldapsearchdialog.h"
 
 #include "ldapclient.h"
+#include "ldapclientsearch.h"
 
 #include <QtCore/QPair>
 #include <QApplication>
@@ -50,7 +51,6 @@
 #include <klineedit.h>
 #include <klocale.h>
 #include <kmessagebox.h>
-#include <ktoolinvocation.h>
 
 using namespace KLDAP;
 

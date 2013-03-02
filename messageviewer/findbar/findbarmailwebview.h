@@ -19,7 +19,7 @@
 #define MESSAGEVIEWER_FINDBAR_MAILWEBVIEW_H
 
 
-#include <config-messageviewer.h>
+
 #include "findbarbase.h"
 
 #ifdef KDEPIM_NO_WEBKIT

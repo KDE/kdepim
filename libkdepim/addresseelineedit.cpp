@@ -25,7 +25,7 @@
 */
 
 #include "addresseelineedit.h"
-
+#include "ldap/ldapclientsearch.h"
 #ifndef Q_OS_WINCE
 #include "completionordereditor.h"
 #endif

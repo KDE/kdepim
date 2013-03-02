@@ -562,14 +562,6 @@ void IncidenceDateTime::load( const KCalCore::Event::Ptr &event )
       }
     }
     */
-    // Convert UTC to local timezone, if needed (i.e. for kolab #204059)
-    if ( startDT.isUtc() ) {
-      startDT = startDT.toLocalZone();
-    }
-
-    if ( endDT.isUtc() ) {
-      endDT = endDT.toLocalZone();
-    }
 
     setDateTimes( startDT, endDT );
   } else {

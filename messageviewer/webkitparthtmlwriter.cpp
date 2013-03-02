@@ -31,7 +31,7 @@
 */
 
 
-#include <config-messageviewer.h>
+
 
 #include "webkitparthtmlwriter.h"
 

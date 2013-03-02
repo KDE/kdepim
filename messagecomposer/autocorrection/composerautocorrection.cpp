@@ -99,7 +99,7 @@ void ComposerAutoCorrection::autocorrect(bool htmlMode, QTextDocument& document,
     mWord = mCursor.selectedText();
     if (mWord.isEmpty())
         return;
-
+    mCursor.beginEditBlock();
     bool done = false;
     if (htmlMode) {
         done = autoFormatURLs();
@@ -127,6 +127,7 @@ void ComposerAutoCorrection::autocorrect(bool htmlMode, QTextDocument& document,
 
     if (mCursor.selectedText() != mWord)
         mCursor.insertText(mWord);
+     mCursor.endEditBlock();
 }
 
 void ComposerAutoCorrection::readConfig()
@@ -338,7 +339,7 @@ bool ComposerAutoCorrection::autoFormatURLs()
     if (!mAutoFormatUrl)
         return false;
 
-    QString link = autoDetectURL(mWord);
+    const QString link = autoDetectURL(mWord);
     if (link.isNull())
         return false;
 

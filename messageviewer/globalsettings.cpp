@@ -22,7 +22,7 @@
 */
 
 
-#include <config-messageviewer.h>
+
 
 #include "globalsettings.h"
 #include <QTimer>

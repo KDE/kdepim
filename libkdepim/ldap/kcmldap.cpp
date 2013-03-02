@@ -21,19 +21,17 @@
 
 #include "kcmldap_p.h"
 
-#include <QtCore/QString>
 #include <QGroupBox>
 #include <QLabel>
 #include <QListWidget>
 #include <QListWidgetItem>
-#include <QPushButton>
 #include <QToolButton>
 #include <QVBoxLayout>
+#include <QPushButton>
 
 #include <kaboutdata.h>
 #include <kapplication.h>
 #include <kcomponentdata.h>
-#include <kconfigdialogmanager.h>
 #include <kconfig.h>
 #include <kconfiggroup.h>
 #include <kdemacros.h>
@@ -44,7 +42,7 @@
 #include <klocale.h>
 #include <kvbox.h>
 
-#include "ldapclient.h"
+#include "ldapclientsearch.h"
 #include <kldap/ldapserver.h>
 
 #include "addhostdialog_p.h"
@@ -249,8 +247,6 @@ void KCMLdap::load()
   mHostListView->clear();
   KConfig *config = KLDAP::LdapClientSearch::config();
   KConfigGroup group( config, "LDAP" );
-
-  QString host;
 
   uint count = group.readEntry( "NumSelectedHosts", 0 );
   for ( uint i = 0; i < count; ++i ) {

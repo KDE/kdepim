@@ -42,7 +42,6 @@ class QAbstractItemModel;
 class QCloseEvent;
 class QEvent;
 class QResizeEvent;
-class QString;
 
 namespace MessageViewer {
 
