@@ -86,6 +86,9 @@ class ActionManagerImpl : public ActionManager
 
         KActionCollection* actionCollection();
 
+    private Q_SLOTS:
+        void progressItemsChanged();
+
     private:
 
         void initPart();

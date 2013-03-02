@@ -56,6 +56,8 @@
 #include <QWidget>
 #include <QApplication>
 
+#include <libkdepim/progressmanager.h>
+
 #include <boost/shared_ptr.hpp>
 
 using namespace boost;
@@ -136,6 +138,13 @@ ActionManagerImpl::ActionManagerImpl(Part* part, QObject* parent ) : ActionManag
     d->speakSelectedArticlesAction = 0;
     d->actionCollection = part->actionCollection();
     initPart();
+
+    connect( KPIM::ProgressManager::instance(), SIGNAL(progressItemAdded(KPIM::ProgressItem*)),
+             this, SLOT(progressItemsChanged()), Qt::QueuedConnection );
+    connect( KPIM::ProgressManager::instance(), SIGNAL(progressItemCanceled(KPIM::ProgressItem*)),
+             this, SLOT(progressItemsChanged()), Qt::QueuedConnection );
+    connect( KPIM::ProgressManager::instance(), SIGNAL(progressItemCompleted(KPIM::ProgressItem*)),
+             this, SLOT(progressItemsChanged()), Qt::QueuedConnection );
 }
 
 ActionManagerImpl::~ActionManagerImpl()
@@ -163,6 +172,13 @@ void ActionManagerImpl::setTrayIcon(TrayIcon* trayIcon)
         traypop->addAction(actionCollection()->action("options_configure"));
 }
 
+void ActionManagerImpl::progressItemsChanged()
+{
+    if ( QAction* stopAction = action("feed_stop") ) {
+        const bool canCancel = !KPIM::ProgressManager::instance()->isEmpty();
+        stopAction->setEnabled( canCancel );
+    }
+}
 
 void ActionManagerImpl::initPart()
 {

@@ -43,9 +43,7 @@
 #include "framemanager.h"
 #include "kernel.h"
 #include "openurlrequest.h"
-#ifdef WITH_LIBKDEPIM
-#include "progressmanager.h"
-#endif
+#include <libkdepim/progressmanager.h>
 
 #include "searchbar.h"
 #include "selectioncontroller.h"
@@ -106,10 +104,6 @@ public:
     explicit Private( MainWidget* qq ) : q( qq ) {}
     void setUpAndStart( Command* cmd ) {
         cmd->setParentWidget( q );
-#ifdef WITH_LIBKDEPIM	
-        if ( cmd->isUserVisible() )
-            KPIM::ProgressManager::self()->addJob( cmd );
-#endif
         cmd->start();
     }
 };
@@ -522,9 +516,7 @@ void Akregator2::MainWidget::slotCombinedView()
     if (m_viewMode == CombinedView)
         return;
 
-#ifdef KRSS_PORT_DISABLED
     m_articleListView->slotClear();
-#endif
     m_articleListView->hide();
     m_viewMode = CombinedView;
 
@@ -720,12 +712,7 @@ void Akregator2::MainWidget::slotFetchAllFeeds()
 }
 
 void Akregator2::MainWidget::slotAbortFetches() {
-#ifdef KRSS_PORT_DISABLED
-    if ( !m_feedList )
-        return;
-    Q_FOREACH( const shared_ptr<const KRss::Feed>& feed, m_feedList->constFeeds() )
-        feed->abortFetch();
-#endif
+    KPIM::ProgressManager::instance()->slotAbortAll();
 }
 
 void Akregator2::MainWidget::slotFetchQueueStarted()
