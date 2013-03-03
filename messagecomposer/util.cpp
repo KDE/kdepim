@@ -23,6 +23,9 @@
 
 #include "util.h"
 
+#include "composer.h"
+#include "singlepartjob.h"
+
 #include <QTextCodec>
 
 #include <KCharsets>
@@ -62,9 +65,6 @@ KMime::Content* Message::Util::composeHeadersAndBody( KMime::Content* orig, QByt
 
     if( !makeMultiMime( format, sign ) && format & Kleo::AnySMIME ) {
       result->contentTransferEncoding()->setEncoding( KMime::Headers::CEbase64 );
-    } else {
-      result->contentTransferEncoding()->setEncoding( orig->contentTransferEncoding()->encoding() );
-
     }
 
     result->assemble();
@@ -88,6 +88,7 @@ KMime::Content* Message::Util::composeHeadersAndBody( KMime::Content* orig, QByt
         vers = new KMime::Content;
         vers->contentType()->setMimeType( "application/pgp-encrypted" );
         vers->contentDisposition()->setDisposition( KMime::Headers::CDattachment );
+        vers->contentTransferEncoding()->setEncoding( KMime::Headers::CE7Bit );
         vers->setBody( "Version: 1" );
 
       }
@@ -101,8 +102,21 @@ KMime::Content* Message::Util::composeHeadersAndBody( KMime::Content* orig, QByt
       if( format & Kleo::AnySMIME ) {
         code->contentTransferEncoding()->setEncoding( KMime::Headers::CEbase64 );
         code->contentTransferEncoding()->needToEncode();
+        code->setBody( encodedBody );
       }
-      code->setBody( encodedBody );
+      else {
+        // fixing ContentTransferEncoding
+        Composer composer;
+        SinglepartJob cjob( &composer );
+        cjob.contentType()->setMimeType( orig->contentType()->mimeType() );
+        cjob.contentType()->setCharset( orig->contentType()->charset() );
+        cjob.setData( encodedBody );
+        cjob.exec();
+        cjob.content()->assemble();
+
+        code->contentTransferEncoding()->setEncoding( cjob.contentTransferEncoding()->encoding() );
+        code->setBody( cjob.content()->body() );
+      }
 
       // compose the multi-part message
       if( sign && makeMultiMime( format, true ) )
@@ -112,8 +126,6 @@ KMime::Content* Message::Util::composeHeadersAndBody( KMime::Content* orig, QByt
       result->addContent( code );
     }
   } else { // not MIME, just plain message
-    result->setHead( orig->head() );
-
     QByteArray resultingBody;
     if( sign && makeMultiMime( format, true ) )
       resultingBody += orig->body();
@@ -123,8 +135,20 @@ KMime::Content* Message::Util::composeHeadersAndBody( KMime::Content* orig, QByt
       kDebug() << "Got no encoded payload trying to save as plaintext inline pgp!";
     }
 
-    result->setBody( resultingBody );
+    // fixing ContentTransferEncoding
+    Composer composer;
+    SinglepartJob cjob( &composer );
+    cjob.contentType()->setMimeType( orig->contentType()->mimeType() );
+    cjob.contentType()->setCharset( orig->contentType()->charset() );
+    cjob.setData( resultingBody );
+    cjob.exec();
+    cjob.content()->assemble();
+
+    result->setHead( orig->head() );
+    result->setBody( cjob.content()->encodedBody() );
     result->parse();
+    result->contentTransferEncoding()->setEncoding( cjob.contentTransferEncoding()->encoding() );
+
   }
   return result;
 
