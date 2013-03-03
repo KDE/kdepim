@@ -35,7 +35,7 @@
 #include "delegateselector.h"
 #include "memorycalendarmemento.h"
 
-#include <akonadi/calendar/invitationhandler.h>
+#include <akonadi/calendar/ITIPhandler.h>
 #include <incidenceeditor-ng/groupwareintegration.h>
 
 #include <messageviewer/globalsettings.h>
