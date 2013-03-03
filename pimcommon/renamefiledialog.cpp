@@ -33,7 +33,6 @@
 #include <KLocale>
 #include <kio/global.h>
 
-#include <QPushButton>
 #include <QHBoxLayout>
 #include <QCheckBox>
 #include <QLabel>

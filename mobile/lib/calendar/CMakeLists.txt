@@ -18,8 +18,8 @@ set(mobileui_calendar_SRCS
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
 kde4_add_ui_files(mobileui_calendar_SRCS
-  ${CMAKE_SOURCE_DIR}/incidenceeditor-ng/eventortodomobile.ui
-  ${CMAKE_SOURCE_DIR}/incidenceeditor-ng/eventortodomoremobile.ui
+  ${CMAKE_SOURCE_DIR}/incidenceeditor-ng/dialogmobile.ui
+  ${CMAKE_SOURCE_DIR}/incidenceeditor-ng/dialogmoremobile.ui
 )
 
 add_definitions( -DKDEPIMMOBILEUICALENDAR_STATIC_LIB )

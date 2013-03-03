@@ -434,17 +434,10 @@ void CollectionGeneralPage::load( const Akonadi::Collection &collection )
   init( collection );
 
   if ( mNameEdit ) {
-    QString displayName;
-    if ( collection.hasAttribute<Akonadi::EntityDisplayAttribute>() ) {
-      displayName = collection.attribute<Akonadi::EntityDisplayAttribute>()->displayName();
-    }
+    const QString displayName = collection.displayName();
 
     if ( !mIsLocalSystemFolder || mIsResourceFolder ) {
-      if ( displayName.isEmpty() ) {
-        mNameEdit->setText( collection.name() );
-      } else {
-        mNameEdit->setText( displayName );
-      }
+      mNameEdit->setText( displayName );
     }
   }
 

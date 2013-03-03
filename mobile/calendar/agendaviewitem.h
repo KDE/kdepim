@@ -24,7 +24,7 @@
 
 #include "declarativeakonadiitem.h"
 
-#include "calendarviews/eventviews/prefs.h"
+#include "calendarviews/prefs.h"
 
 namespace Akonadi {
 class Item;

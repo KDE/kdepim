@@ -24,6 +24,7 @@
 #include "alarmpresets.h"
 
 #include <calendarsupport/kcalprefs.h>
+#include <akonadi/calendar/calendarsettings.h>
 
 #include <KABC/Addressee>
 
@@ -431,7 +432,7 @@ IncidenceDefaults IncidenceDefaults::minimalIncidenceDefaults( bool cleanupAttac
   //       the incidence is added.
   if ( CalendarSupport::KCalPrefs::instance()->useGroupwareCommunication() ) {
     defaults.setGroupWareDomain(
-      KUrl( CalendarSupport::KCalPrefs::instance()->freeBusyRetrieveUrl() ).host() );
+      KUrl( Akonadi::CalendarSettings::self()->freeBusyRetrieveUrl() ).host() );
   }
   return defaults;
 }

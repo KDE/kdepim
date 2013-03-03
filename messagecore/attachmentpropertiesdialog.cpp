@@ -44,7 +44,9 @@ class MessageCore::AttachmentPropertiesDialog::Private
   public:
     Private( AttachmentPropertiesDialog *qq )
       : q( qq ),
-        mReadOnly( false ),ui(0),uiReadOnly(0)
+        mReadOnly( false ),
+        ui(0),
+        uiReadOnly(0)
     {
        delete ui;
        delete uiReadOnly;

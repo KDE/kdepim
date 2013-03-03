@@ -20,9 +20,10 @@
 
 #include "incidencedatetime.h"
 #ifdef KDEPIM_MOBILE_UI
-#include "ui_eventortodomobile.h"
+#include "ui_dialogmobile.h"
+#include "ui_dialogmoremobile.h"
 #else
-#include "ui_eventortododesktop.h"
+#include "ui_dialogdesktop.h"
 #endif
 //#ifdef KDEPIM_MOBILE_UI
 //#include "ui_iedatetimemobile.h"
@@ -562,14 +563,6 @@ void IncidenceDateTime::load( const KCalCore::Event::Ptr &event )
       }
     }
     */
-    // Convert UTC to local timezone, if needed (i.e. for kolab #204059)
-    if ( startDT.isUtc() ) {
-      startDT = startDT.toLocalZone();
-    }
-
-    if ( endDT.isUtc() ) {
-      endDT = endDT.toLocalZone();
-    }
 
     setDateTimes( startDT, endDT );
   } else {

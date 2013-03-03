@@ -19,8 +19,8 @@
 
 #include "declarativeeditors.h"
 
-#include "ui_eventortodomobile.h"
-#include "ui_eventortodomoremobile.h"
+#include "ui_dialogmobile.h"
+#include "ui_dialogmoremobile.h"
 
 #include <QtCore/QTimer>
 

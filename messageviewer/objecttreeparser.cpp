@@ -32,7 +32,7 @@
 */
 
 // MessageViewer includes
-#include <config-messageviewer.h>
+
 
 #include "objecttreeparser.h"
 

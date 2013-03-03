@@ -33,7 +33,7 @@
 */
 
 
-#include <config-messageviewer.h>
+
 
 #include "urlhandlermanager.h"
 
@@ -66,6 +66,8 @@
 #include <QClipboard>
 #include <QProcess>
 #include <QFile>
+#include <QMimeData>
+#include <QDrag>
 
 #include <algorithm>
 

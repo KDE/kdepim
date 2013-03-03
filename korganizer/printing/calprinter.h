@@ -28,16 +28,10 @@
 #include "korganizer/korganizer_export.h"
 #include "korganizer/printplugin.h"
 
+#include <Akonadi/Calendar/ETMCalendar>
+
 #include <KComboBox>
 #include <KDialog>
-
-namespace KCal {
-  class Incidence;
-}
-
-namespace CalendarSupport {
-  class Calendar;
-}
 
 using namespace KCalCore;
 
@@ -69,12 +63,12 @@ class KORGANIZERPRIVATE_EXPORT CalPrinter : public QObject, public KOrg::CalPrin
       provide the option to print an single incidence; else, all possible types
       of print types will be shown
     */
-    CalPrinter( QWidget *par, CalendarSupport::Calendar *cal,
+    CalPrinter( QWidget *par, const Akonadi::ETMCalendar::Ptr &calendar,
                 KOrg::CoreHelper *helper, bool uniqItem = false );
 
     virtual ~CalPrinter();
 
-    void init( CalendarSupport::Calendar *calendar );
+    void init( const Akonadi::ETMCalendar::Ptr &calendar );
 
     /**
       Set date range to be printed.
@@ -96,14 +90,14 @@ class KORGANIZERPRIVATE_EXPORT CalPrinter : public QObject, public KOrg::CalPrin
                 Incidence::List selectedIncidences = Incidence::List(),
                 bool preview = false );
 
-    CalendarSupport::Calendar *calendar() const;
+    Akonadi::ETMCalendar::Ptr calendar() const;
     KConfig *config() const;
 
   protected:
     KOrg::PrintPlugin::List mPrintPlugins;
 
   private:
-    CalendarSupport::Calendar *mCalendar;
+    Akonadi::ETMCalendar::Ptr mCalendar;
     QWidget *mParent;
     KConfig *mConfig;
     KOrg::CoreHelper *mCoreHelper;

@@ -33,11 +33,9 @@
 #define MAILSOURCEVIEWER_H
 
 #include <QSyntaxHighlighter>
-#include <KTabWidget>
 #include <QPlainTextEdit>
 #include <KDialog>
-class QString;
-class QWidget;
+class KTabWidget;
 
 namespace MessageViewer {
 class FindBarSourceView;

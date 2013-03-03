@@ -21,19 +21,17 @@
 
 #include "kcmldap_p.h"
 
-#include <QtCore/QString>
 #include <QGroupBox>
 #include <QLabel>
 #include <QListWidget>
 #include <QListWidgetItem>
-#include <QPushButton>
 #include <QToolButton>
 #include <QVBoxLayout>
+#include <QPushButton>
 
 #include <kaboutdata.h>
 #include <kapplication.h>
 #include <kcomponentdata.h>
-#include <kconfigdialogmanager.h>
 #include <kconfig.h>
 #include <kconfiggroup.h>
 #include <kdemacros.h>
@@ -44,7 +42,8 @@
 #include <klocale.h>
 #include <kvbox.h>
 
-#include "ldapclient.h"
+#include "ldapclientsearch.h"
+#include "ldapclientsearchconfig.h"
 #include <kldap/ldapserver.h>
 
 #include "addhostdialog_p.h"
@@ -98,7 +97,7 @@ KCMLdap::KCMLdap( QWidget *parent, const QVariantList& )
   about->addAuthor( ki18n( "Tobias Koenig" ), KLocalizedString(), "tokoe@kde.org" );
 
   setAboutData( about );
-
+  mClientSearchConfig = new KLDAP::LdapClientSearchConfig;
   initGUI();
 
   connect( mHostListView, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
@@ -114,6 +113,7 @@ KCMLdap::KCMLdap( QWidget *parent, const QVariantList& )
 
 KCMLdap::~KCMLdap()
 {
+    delete mClientSearchConfig;
 }
 
 void KCMLdap::slotSelectionChanged( QListWidgetItem *item )
@@ -250,12 +250,10 @@ void KCMLdap::load()
   KConfig *config = KLDAP::LdapClientSearch::config();
   KConfigGroup group( config, "LDAP" );
 
-  QString host;
-
   uint count = group.readEntry( "NumSelectedHosts", 0 );
   for ( uint i = 0; i < count; ++i ) {
     KLDAP::LdapServer server;
-    KLDAP::LdapClientSearch::readConfig( server, group, i, true );
+    mClientSearchConfig->readConfig( server, group, i, true );
     LDAPItem *item = new LDAPItem( mHostListView, server, true );
     item->setCheckState( Qt::Checked );
   }
@@ -263,7 +261,7 @@ void KCMLdap::load()
   count = group.readEntry( "NumHosts", 0 );
   for ( uint i = 0; i < count; ++i ) {
     KLDAP::LdapServer server;
-    KLDAP::LdapClientSearch::readConfig( server, group, i, false );
+    mClientSearchConfig->readConfig( server, group, i, false );
     new LDAPItem( mHostListView, server );
   }
 
@@ -287,10 +285,10 @@ void KCMLdap::save()
 
     KLDAP::LdapServer server = item->server();
     if ( item->checkState() == Qt::Checked ) {
-      KLDAP::LdapClientSearch::writeConfig( server, group, selected, true );
+      mClientSearchConfig->writeConfig( server, group, selected, true );
       selected++;
     } else {
-      KLDAP::LdapClientSearch::writeConfig( server, group, unselected, false );
+      mClientSearchConfig->writeConfig( server, group, unselected, false );
       unselected++;
     }
   }

@@ -35,7 +35,7 @@
 **   your version.
 **
 *******************************************************************************/
-#include <config-messageviewer.h>
+
 
 #include "util.h"
 

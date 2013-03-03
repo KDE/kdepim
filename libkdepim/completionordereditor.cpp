@@ -33,6 +33,7 @@
 #include "completionordereditor_p.h"
 #include <kdescendantsproxymodel.h>
 #include "ldap/ldapclient.h"
+#include "ldap/ldapclientsearch.h"
 
 #include <akonadi/changerecorder.h>
 #include <akonadi/collectionfilterproxymodel.h>

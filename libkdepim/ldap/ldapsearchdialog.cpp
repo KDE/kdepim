@@ -24,7 +24,8 @@
 #include "ldapsearchdialog.h"
 
 #include "ldapclient.h"
-
+#include "ldapclientsearchconfig.h"
+#include "ldapclientsearch.h"
 #include <QtCore/QPair>
 #include <QApplication>
 #include <QCheckBox>
@@ -50,7 +51,6 @@
 #include <klineedit.h>
 #include <klocale.h>
 #include <kmessagebox.h>
-#include <ktoolinvocation.h>
 
 using namespace KLDAP;
 
@@ -658,10 +658,11 @@ void LdapSearchDialog::Private::restoreSettings()
     mIsConfigured = false;
   } else {
     mIsConfigured = true;
+    KLDAP::LdapClientSearchConfig *clientSearchConfig = new KLDAP::LdapClientSearchConfig;
     for ( int j = 0; j < mNumHosts; ++j ) {
       KLDAP::LdapServer ldapServer;
       KLDAP::LdapClient *ldapClient = new KLDAP::LdapClient( 0, q );
-      KLDAP::LdapClientSearch::readConfig( ldapServer, group, j, true );
+      clientSearchConfig->readConfig( ldapServer, group, j, true );
       ldapClient->setServer( ldapServer );
       QStringList attrs;
 
@@ -681,6 +682,7 @@ void LdapSearchDialog::Private::restoreSettings()
 
       mLdapClientList.append( ldapClient );
     }
+    delete clientSearchConfig;
 
     mModel->clear();
   }

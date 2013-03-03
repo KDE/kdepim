@@ -23,21 +23,19 @@
 
 #include "kdeclarativemainview.h"
 
+#include <Akonadi/Calendar/ETMCalendar>
 #include <Akonadi/Entity>
 #include <KCalCore/ScheduleMessage>
 
-#include <calendarviews/eventviews/eventview.h>
-#include <calendarviews/eventviews/prefs.h>
+#include <calendarviews/eventview.h>
+#include <calendarviews/prefs.h>
 
 #include <KCalCore/Incidence>
 
 namespace Akonadi {
 class StandardCalendarActionManager;
-}
-
-namespace CalendarSupport {
-class Calendar;
 class IncidenceChanger;
+class ITIPHandler;
 }
 
 namespace KPIMIdentities {
@@ -124,13 +122,14 @@ class MainView : public KDeclarativeMainView
     void scheduleiTIPMethod( KCalCore::iTIPMethod method );
 
   private:
-    CalendarSupport::Calendar *m_calendar;
+    Akonadi::ETMCalendar::Ptr m_calendar;
     CalendarInterface* m_calendarIface;
     QHash<QObject*, Akonadi::Entity::Id> m_openItemEditors;
     KPIMIdentities::IdentityManager* m_identityManager;
-    CalendarSupport::IncidenceChanger *m_changer;
+    Akonadi::IncidenceChanger *m_changer;
     static EventViews::PrefsPtr m_calendarPrefs;
     Akonadi::StandardCalendarActionManager *mActionManager;
+    Akonadi::ITIPHandler *mITIPHandler;
 };
 
 #endif // MAINVIEW_H

@@ -436,7 +436,7 @@ bool MainView::doNotUseFilterLineEditInCurrentState() const
 void MainView::doDelayedInit()
 {
   if ( !IncidenceEditorNG::GroupwareIntegration::isActive() ) {
-    IncidenceEditorNG::GroupwareIntegration::setGlobalUiDelegate( new GroupwareUiDelegate );
+    IncidenceEditorNG::GroupwareIntegration::setGlobalUiDelegate( new ::GroupwareUiDelegate );
   }
 
   static const bool debugTiming = KCmdLineArgs::parsedArgs()->isSet( "timeit" );

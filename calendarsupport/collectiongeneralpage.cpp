@@ -19,10 +19,10 @@
 */
 
 #include "collectiongeneralpage.h"
-#include "blockalarmsattribute.h"
 
 #include <Akonadi/Collection>
 #include <Akonadi/EntityDisplayAttribute>
+#include <akonadi/calendar/blockalarmsattribute.h>
 
 #include <KCalCore/Event>
 #include <KCalCore/Journal>
@@ -110,9 +110,7 @@ void CollectionGeneralPage::load( const Akonadi::Collection &collection )
 {
   mNameEdit->setEnabled( collection.rights() & Collection::CanChangeCollection );
 
-  const QString displayName = collection.hasAttribute<EntityDisplayAttribute>() ?
-                                collection.attribute<EntityDisplayAttribute>()->displayName() :
-                                collection.name();
+  const QString displayName = collection.displayName();
 
   mNameEdit->setText( displayName );
   mBlockAlarmsCheckBox->setChecked( collection.hasAttribute<BlockAlarmsAttribute>() );

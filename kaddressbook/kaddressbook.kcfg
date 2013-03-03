@@ -22,7 +22,7 @@
     <entry type="Int" name="PrintingStyle">
       <label>Printing style</label>
       <tooltip>Set the printing style</tooltip>
-      <whatsthis>KAddressbok can print the contacts in several styles. With this combobox you can choose one of this.</whatsthis>
+      <whatsthis>KAddressBook can print the contacts in several styles. With this combobox you can choose one of these.</whatsthis>
       <default>0</default>
     </entry>
     <entry type="Enum" name="SortOrder">

@@ -2,7 +2,6 @@
 #define CHIASMUSKEYSELECTOR_H
 
 #include <kdialog.h>
-#include <QLabel>
 #include "messageviewer_export.h"
 
 class KListWidget;

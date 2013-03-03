@@ -23,7 +23,7 @@
 
 #include "koeventview.h"
 
-#include <calendarviews/eventviews/multiagenda/configdialoginterface.h>
+#include <calendarviews/multiagenda/configdialoginterface.h>
 
 #include <KDialog>
 
@@ -47,7 +47,7 @@ class MultiAgendaView : public KOEventView
     int maxDatesHint() const;
 
     bool eventDurationHint( QDateTime &startDt, QDateTime &endDt, bool &allDay );
-    /* reimp */void setCalendar( CalendarSupport::Calendar *cal );
+    /* reimp */void setCalendar( const Akonadi::ETMCalendar::Ptr &cal );
 
     /**
      * reimplemented from KOrg::BaseView
@@ -76,10 +76,10 @@ class MultiAgendaView : public KOEventView
     void showDates( const QDate &start, const QDate &end, const QDate &preferredMonth = QDate() );
     void showIncidences( const Akonadi::Item::List &incidenceList, const QDate &date );
     void updateView();
-    void changeIncidenceDisplay( const Akonadi::Item &, int mode );
+    void changeIncidenceDisplay( const Akonadi::Item &, Akonadi::IncidenceChanger::ChangeType );
     void updateConfig();
 
-    void setIncidenceChanger( CalendarSupport::IncidenceChanger *changer );
+    void setIncidenceChanger( Akonadi::IncidenceChanger *changer );
 
   private:
     class Private;

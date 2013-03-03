@@ -26,6 +26,10 @@
 #include <KCalCore/IncidenceBase>
 #include <Akonadi/Collection>
 
+namespace Akonadi {
+  class IncidenceChanger;
+}
+
 namespace IncidenceEditorNG {
 
 class IncidenceDialog;
@@ -49,6 +53,7 @@ namespace IncidenceDialogFactory
   INCIDENCEEDITORS_NG_EXPORT IncidenceDialog *create(
     bool needsSaving,
     KCalCore::IncidenceBase::IncidenceType type,
+    Akonadi::IncidenceChanger *changer,
     QWidget *parent = 0, Qt::WindowFlags flags = 0 );
 
   INCIDENCEEDITORS_NG_EXPORT IncidenceDialog *createTodoEditor(

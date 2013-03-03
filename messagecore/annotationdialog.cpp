@@ -35,7 +35,9 @@ class AnnotationEditDialog::Private
 {
   public:
     Private( const QUrl &uri )
-      : mNepomukResourceUri( uri ), mTextEdit( 0 ), mHasAnnotation( false )
+      : mNepomukResourceUri( uri ),
+        mTextEdit( 0 ),
+        mHasAnnotation( false )
     {
     }
 

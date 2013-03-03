@@ -22,8 +22,8 @@
 #include <KGlobal>
 #include <KGlobalSettings>
 
-#include <calendarsupport/calendar.h>
-#include <calendarviews/eventviews/agenda/agendaview.h>
+#include <calendarviews/agenda/agendaview.h>
+#include <Akonadi/Calendar/ETMCalendar>
 #include <KLocale>
 
 using namespace EventViews;
@@ -84,15 +84,16 @@ void AgendaViewItem::setEndDate(const QDate& endDate)
 
 QObject* AgendaViewItem::calendar() const
 {
-  return m_view->calendar();
+  return m_view->calendar().data();
 }
 
 void AgendaViewItem::setCalendar(QObject* calendarObj)
 {
-  CalendarSupport::Calendar* cal = qobject_cast<CalendarSupport::Calendar*>( calendarObj );
+  Akonadi::ETMCalendar *cal = qobject_cast<Akonadi::ETMCalendar*>( calendarObj );
+
   kDebug() << calendarObj << cal;
   if ( cal ) {
-    m_view->setCalendar( cal );
+    m_view->setCalendar( cal->weakPointer().toStrongRef().dynamicCast<Akonadi::ETMCalendar>() );
     m_view->updateConfig();
   }
 }

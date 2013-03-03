@@ -42,7 +42,7 @@
 #include <QStackedWidget>
 #include <QVBoxLayout>
 
-CalPrinter::CalPrinter( QWidget *parent, CalendarSupport::Calendar *calendar,
+CalPrinter::CalPrinter( QWidget *parent, const Akonadi::ETMCalendar::Ptr &calendar,
                         KOrg::CoreHelper *helper, bool uniqItem )
   : QObject( parent ), mUniqItem( uniqItem )
 {
@@ -59,7 +59,7 @@ CalPrinter::~CalPrinter()
   delete mConfig;
 }
 
-void CalPrinter::init( CalendarSupport::Calendar *calendar )
+void CalPrinter::init( const Akonadi::ETMCalendar::Ptr &calendar )
 {
   mCalendar = calendar;
 

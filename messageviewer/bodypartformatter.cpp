@@ -30,7 +30,7 @@
 */
 
 
-#include <config-messageviewer.h>
+
 
 #include "bodypartformatter.h"
 #include "bodypartformatterfactory_p.h"

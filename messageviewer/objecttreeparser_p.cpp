@@ -32,7 +32,7 @@
     your version.
 */
 
-#include <config-messageviewer.h>
+
 
 #include "objecttreeparser_p.h"
 

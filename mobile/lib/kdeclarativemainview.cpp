@@ -546,13 +546,7 @@ void KDeclarativeMainView::saveFavorite()
     const QModelIndexList indexes = regularSelectionModel()->selectedRows();
     if ( indexes.count() == 1 ) {
       const Akonadi::Collection collection = indexes.first().data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
-      collectionName = collection.name();
-
-      const Akonadi::EntityDisplayAttribute *attribute = collection.attribute<Akonadi::EntityDisplayAttribute>();
-      if ( attribute ) {
-        if ( !attribute->displayName().isEmpty() )
-          collectionName = attribute->displayName();
-      }
+      collectionName = collection.displayName();
     }
   }
 

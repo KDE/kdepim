@@ -29,7 +29,7 @@
  *  you do not wish to do so, delete this exception statement from
  *  your version.
  */
-#include <config-messageviewer.h>
+
 
 #include "mailsourceviewer.h"
 #include "util.h"
@@ -40,13 +40,12 @@
 #include <kstandardguiitem.h>
 #include <kwindowsystem.h>
 #include <kglobalsettings.h>
+#include <KTabWidget>
 
 #include <QtCore/QRegExp>
 #include <QApplication>
 #include <QIcon>
-#include <QPushButton>
 #include <QShortcut>
-#include <QTabBar>
 #include <QVBoxLayout>
 #include <QContextMenuEvent>
 #include <QDebug>

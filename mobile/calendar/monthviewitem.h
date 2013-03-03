@@ -21,7 +21,7 @@
 
 #include "declarativeakonadiitem.h"
 
-#include "calendarviews/eventviews/prefs.h"
+#include "calendarviews/prefs.h"
 
 namespace EventViews {
 

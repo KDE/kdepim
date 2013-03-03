@@ -25,7 +25,7 @@
 */
 
 #include "addresseelineedit.h"
-
+#include "ldap/ldapclientsearch.h"
 #ifndef Q_OS_WINCE
 #include "completionordereditor.h"
 #endif
@@ -369,8 +369,8 @@ void AddresseeLineEdit::Private::startNepomukSearch()
 {
   // We do a word boundary substring search, which will easily yield hundreds
   // of hits. Since the nepomuk search is mostly an auxiliary measure,
-  // we limit it to substrings of size 3 or larger.
-  if ( m_searchString.size() <= 2 || !s_static->useNepomukCompletion ) {
+  // we limit it to substrings of size 4 (min. of bif:contains) or larger.
+  if ( m_searchString.size() <= 3 || !s_static->useNepomukCompletion ) {
     return;
   }
   const QString query = QString::fromLatin1( sparqlquery ).arg( m_searchString );
@@ -782,7 +782,7 @@ void AddresseeLineEdit::Private::doCompletion( bool ctrlT )
 
   case KGlobalSettings::CompletionPopup:
   {
-    const QStringList items = adjustedCompletionItems( true );
+    const QStringList items = adjustedCompletionItems( false );
     setCompletedItems( items, false );
   }
   break;
@@ -1039,13 +1039,7 @@ void AddresseeLineEdit::Private::slotAkonadiCollectionsReceived(
 {
   foreach ( const Akonadi::Collection &collection, collections ) {
     if ( collection.isValid() ) {
-      const Akonadi::EntityDisplayAttribute *attribute =
-        collection.attribute<Akonadi::EntityDisplayAttribute>();
-
-      QString sourceString = collection.name();
-      if ( attribute && !attribute->displayName().isEmpty() )
-        sourceString = attribute->displayName();
-
+      const QString sourceString = collection.displayName();
       const int index = q->addCompletionSource( sourceString, 1 );
       kDebug() << "\treceived: " << sourceString << "index: " << index;
       s_static->akonadiCollectionToCompletionSourceMap.insert( collection.id(), index );

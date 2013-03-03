@@ -53,12 +53,6 @@ class KCalPrefs::Private
       delete mCategoryConfig;
     }
 
-    // Groupware passwords - deprecated !?
-    // QString mPublishPassword;
-    // QString mRetrievePassword;
-
-    QString mMailTransport;
-
     KDateTime::Spec mTimeSpec;
     Akonadi::Entity::Id mDefaultCalendarId;
 
@@ -162,7 +156,6 @@ void KCalPrefs::fillMailDefaults()
 void KCalPrefs::usrReadConfig()
 {
   KConfigGroup generalConfig( config(), "General" );
-  d->mMailTransport = generalConfig.readEntry( "MailTransport", QString() );
 
   if ( !d->mTimeSpec.isValid() ) {
     setTimeZoneDefault();
@@ -188,21 +181,6 @@ void KCalPrefs::usrReadConfig()
 void KCalPrefs::usrWriteConfig()
 {
   KConfigGroup generalConfig( config(), "General" );
-  if ( !d->mMailTransport.isNull() ) {
-    generalConfig.writeEntry( "MailTransport", d->mMailTransport );
-  }
-
-  if ( !mFreeBusyPublishSavePassword ) {
-    KConfigSkeleton::ItemPassword *i = freeBusyPublishPasswordItem();
-    i->setValue( QString() );
-    i->writeConfig( config() );
-  }
-  if ( !mFreeBusyRetrieveSavePassword ) {
-    KConfigSkeleton::ItemPassword *i = freeBusyRetrievePasswordItem();
-    i->setValue( QString() );
-    i->writeConfig( config() );
-  }
-
   d->mCategoryConfig->setColors( d->mCategoryColors );
 
 #if 0
@@ -328,11 +306,6 @@ bool KCalPrefs::thatIsMe( const QString &_email )
   }
 
   return false;
-}
-
-QString KCalPrefs::mailTransport() const
-{
-  return d->mMailTransport;
 }
 
 void KCalPrefs::setCategoryColor( const QString &cat, const QColor &color )
