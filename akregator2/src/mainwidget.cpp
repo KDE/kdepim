@@ -985,6 +985,12 @@ void Akregator2::MainWidget::slotArticleDelete()
         job->start();
     }
 
+    //Select the next item
+    const QModelIndexList indexes = m_articleListView->selectionModel()->selectedRows();
+    if ( indexes.size() == 1 ) {
+        const QModelIndex nextItem = indexes[0].sibling( indexes[0].row()+1, 0 );
+        m_articleListView->selectionModel()->select( nextItem, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
+    }
 }
 
 
