@@ -21,7 +21,7 @@
 #include "calendarhelper.h"
 #include "clockhelper.h"
 
-#include "ui_eventortodomobile.h"
+#include "ui_dialogmobile.h"
 
 #include <calendarsupport/utils.h>
 #include <calendarsupport/kcalprefs.h>
