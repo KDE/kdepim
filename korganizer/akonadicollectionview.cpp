@@ -5,6 +5,7 @@
   Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
   Copyright (C) 2009 Sebastian Sauer <sebsauer@kdab.net>
   Copyright (C) 2010 Laurent Montel <montel@kde.org>
+  Copyright (C) 2012 Sérgio Martins <iamsergio@gmail.com>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -224,18 +225,10 @@ AkonadiCollectionView::AkonadiCollectionView( CalendarView *view, bool hasContex
   //                                                   "textbox, verb to search", "Search" ) );
   //topLayout->addWidget( searchCol );
 
-  Akonadi::CollectionFilterProxyModel *collectionproxymodel =
-    new Akonadi::CollectionFilterProxyModel( this );
-  collectionproxymodel->setObjectName( "Only show collections" );
-  collectionproxymodel->setDynamicSortFilter( true );
-  collectionproxymodel->addMimeTypeFilter( QString::fromLatin1( "text/calendar" ) );
-  collectionproxymodel->setExcludeVirtualCollections( true );
-
   ColorProxyModel *colorProxy = new ColorProxyModel( this );
   colorProxy->setObjectName( "Show calendar colors" );
   colorProxy->setDynamicSortFilter( true );
-  colorProxy->setSourceModel( collectionproxymodel );
-  mBaseModel = collectionproxymodel;
+  mBaseModel = colorProxy;
 
   mCollectionview = new Akonadi::EntityTreeView( this );
   topLayout->addWidget( mCollectionview );
@@ -244,12 +237,12 @@ AkonadiCollectionView::AkonadiCollectionView( CalendarView *view, bool hasContex
   mCollectionview->setItemDelegate( new ColorDelegate( this ) );
 
   //Filter tree view.
-  KRecursiveFilterProxyModel *filterTreeViewModel = new KRecursiveFilterProxyModel( this );
-  filterTreeViewModel->setDynamicSortFilter( true );
-  filterTreeViewModel->setSourceModel( colorProxy );
-  filterTreeViewModel->setFilterCaseSensitivity( Qt::CaseInsensitive );
-  filterTreeViewModel->setObjectName( "Recursive filtering, for the search bar" );
-  mCollectionview->setModel( filterTreeViewModel );
+  //KRecursiveFilterProxyModel *filterTreeViewModel = new KRecursiveFilterProxyModel( this );
+  //filterTreeViewModel->setDynamicSortFilter( true );
+  //filterTreeViewModel->setSourceModel( colorProxy );
+  //filterTreeViewModel->setFilterCaseSensitivity( Qt::CaseInsensitive );
+  //filterTreeViewModel->setObjectName( "Recursive filtering, for the search bar" );
+  mCollectionview->setModel( colorProxy );
   connect( mCollectionview->selectionModel(),
            SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
            SLOT(updateMenu()) );

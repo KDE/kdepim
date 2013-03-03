@@ -25,10 +25,9 @@
 #define CALENDARSUPPORT_EVENTARCHIVER_H
 
 #include "calendarsupport_export.h"
-#include "incidencechanger.h"
 
 #include <Akonadi/Item>
-
+#include <Akonadi/Calendar/ETMCalendar>
 #include <KCalCore/Event>
 #include <KCalCore/Todo>
 
@@ -36,8 +35,11 @@
 
 class QDate;
 
+namespace Akonadi {
+  class IncidenceChanger;
+}
+
 namespace CalendarSupport {
-  class Calendar;
 
 /**
  * This class handles expiring and archiving of events.
@@ -62,7 +64,7 @@ class CALENDARSUPPORT_EXPORT EventArchiver : public QObject
      * @param widget parent widget for message boxes
      * Confirmation and "no events to process" dialogs will be shown
      */
-    void runOnce( CalendarSupport::Calendar *calendar, CalendarSupport::IncidenceChanger *changer,
+    void runOnce( const Akonadi::ETMCalendar::Ptr &calendar, Akonadi::IncidenceChanger *changer,
                   const QDate &limitDate, QWidget *widget );
 
     /**
@@ -74,22 +76,28 @@ class CALENDARSUPPORT_EXPORT EventArchiver : public QObject
      * Note that error dialogs like "cannot save" are shown even if from this method, so widget
      * should be set in all cases.
      */
-    void runAuto( CalendarSupport::Calendar *calendar, CalendarSupport::IncidenceChanger *changer,
+    void runAuto( const Akonadi::ETMCalendar::Ptr &calendar, Akonadi::IncidenceChanger *changer,
                   QWidget *widget, bool withGUI );
 
   signals:
     void eventsDeleted();
 
   private:
-    void run( CalendarSupport::Calendar *calendar, CalendarSupport::IncidenceChanger *changer,
+    void run( const Akonadi::ETMCalendar::Ptr &calendar, Akonadi::IncidenceChanger *changer,
               const QDate &limitDate, QWidget *widget, bool withGUI, bool errorIfNone );
 
-    void deleteIncidences( CalendarSupport::IncidenceChanger *changer, const QDate &limitDate,
-                           QWidget *widget, const Akonadi::Item::List &incidences, bool withGUI );
+    void deleteIncidences( Akonadi::IncidenceChanger *changer,
+                           const QDate &limitDate,
+                           QWidget *widget,
+                           const Akonadi::Item::List &items,
+                           bool withGUI );
 
-    void archiveIncidences( CalendarSupport::Calendar *calendar,
-                            CalendarSupport::IncidenceChanger *changer, const QDate &limitDate,
-                            QWidget *widget, const Akonadi::Item::List &incidences, bool withGUI );
+    void archiveIncidences( const Akonadi::ETMCalendar::Ptr &calendar,
+                            Akonadi::IncidenceChanger *changer,
+                            const QDate &limitDate,
+                            QWidget *widget,
+                            const KCalCore::Incidence::List &incidences,
+                            bool withGUI );
 
     /**
      * Checks if all to-dos under @p todo and including @p todo were completed before @p limitDate.
@@ -98,7 +106,7 @@ class CALENDARSUPPORT_EXPORT EventArchiver : public QObject
      * @param limitDate
      * @param checkedUids used internaly to prevent infinit recursion due to invalid calendar files
      */
-    bool isSubTreeComplete( CalendarSupport::Calendar *calendar,
+    bool isSubTreeComplete( const Akonadi::ETMCalendar::Ptr &calendar,
                             const KCalCore::Todo::Ptr &todo,
                             const QDate &limitDate, QStringList checkedUids = QStringList() ) const;
 };

@@ -19,10 +19,10 @@
 */
 
 #include "collectiongeneralpage.h"
-#include "blockalarmsattribute.h"
 
 #include <Akonadi/Collection>
 #include <Akonadi/EntityDisplayAttribute>
+#include <akonadi/calendar/blockalarmsattribute.h>
 
 #include <KCalCore/Event>
 #include <KCalCore/Journal>

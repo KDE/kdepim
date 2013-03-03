@@ -33,6 +33,7 @@
 #include "korganizer/part.h"
 
 #include <Akonadi/Item>
+#include <Akonadi/Calendar/ETMCalendar>
 
 #include <KUrl>
 #include <KViewStateMaintainer>
@@ -48,10 +49,6 @@ namespace KOrg {
 
 namespace Akonadi {
   class ETMViewStateSaver;
-}
-
-namespace CalendarSupport {
-  class Calendar;
 }
 
 class KAction;
@@ -345,9 +342,7 @@ class KORGANIZERPRIVATE_EXPORT ActionManager : public QObject
 
     void setTitle();
 
-    void updateUndoAction( const QString & );
-
-    void updateRedoAction( const QString & );
+    void updateUndoRedoActions();
 
     void agentCreated( KJob * );
 
@@ -380,6 +375,7 @@ class KORGANIZERPRIVATE_EXPORT ActionManager : public QObject
     /** Create all the actions. */
     void initActions();
     void enableIncidenceActions( bool enable );
+    Akonadi::ETMCalendar::Ptr calendar() const;
 
     Akonadi::Collection selectedCollection() const;
 
@@ -437,10 +433,8 @@ class KORGANIZERPRIVATE_EXPORT ActionManager : public QObject
     CalendarView *mCalendarView;
     KOrg::MainWindow *mMainWindow;
     bool mIsPart;
-
     bool mHtmlExportSync;
 
-    CalendarSupport::Calendar *mCalendar;
     AkonadiCollectionView *mCollectionView;
     KViewStateMaintainer<Akonadi::ETMViewStateSaver> *mCollectionViewStateSaver;
     KViewStateMaintainer<Akonadi::ETMViewStateSaver> *mCollectionSelectionModelStateSaver;

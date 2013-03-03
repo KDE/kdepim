@@ -28,13 +28,13 @@
 #include "kolistview.h"
 #include "koeventpopupmenu.h"
 
-#include <calendarviews/eventviews/list/listview.h>
+#include <calendarviews/list/listview.h>
 
 #include <QVBoxLayout>
 
 using namespace KOrg;
 
-KOListView::KOListView( CalendarSupport::Calendar *calendar,
+KOListView::KOListView( const Akonadi::ETMCalendar::Ptr &calendar,
                         QWidget *parent, bool nonInteractive )
   : KOEventView( parent )
 {
@@ -92,12 +92,6 @@ KOListView::KOListView( CalendarSupport::Calendar *calendar,
 
   connect( mListView, SIGNAL(dissociateOccurrencesSignal(Akonadi::Item,QDate)),
            SIGNAL(dissociateOccurrencesSignal(Akonadi::Item,QDate)) );
-
-  connect( mListView, SIGNAL(startMultiModify(QString)),
-           SIGNAL(startMultiModify(QString)) );
-
-  connect( mListView, SIGNAL(endMultiModify()),
-           SIGNAL(endMultiModify()) );
 
   connect( mListView, SIGNAL(newEventSignal()),
            SIGNAL(newEventSignal()) );
@@ -167,9 +161,10 @@ void KOListView::showIncidences( const Akonadi::Item::List &incidenceList, const
   mListView->showIncidences( incidenceList, date );
 }
 
-void KOListView::changeIncidenceDisplay( const Akonadi::Item & aitem, int action )
+void KOListView::changeIncidenceDisplay( const Akonadi::Item & aitem,
+                                         Akonadi::IncidenceChanger::ChangeType changeType )
 {
-  mListView->changeIncidenceDisplay( aitem, action );
+  mListView->changeIncidenceDisplay( aitem, changeType );
 }
 
 void KOListView::defaultItemAction( const QModelIndex &index )
@@ -217,14 +212,14 @@ QSize KOListView::sizeHint() const
   return mListView->sizeHint();
 }
 
-void KOListView::setCalendar( CalendarSupport::Calendar *cal )
+void KOListView::setCalendar( const Akonadi::ETMCalendar::Ptr &cal )
 {
   KOEventView::setCalendar( cal );
   mPopupMenu->setCalendar( cal );
   mListView->setCalendar( cal );
 }
 
-void KOListView::setIncidenceChanger( CalendarSupport::IncidenceChanger *changer )
+void KOListView::setIncidenceChanger( Akonadi::IncidenceChanger *changer )
 {
   mListView->setIncidenceChanger( changer );
 }

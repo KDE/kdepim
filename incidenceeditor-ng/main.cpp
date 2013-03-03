@@ -24,6 +24,7 @@
 #include <KCmdLineArgs>
 
 #include <calendarsupport/kcalprefs.h>
+#include <akonadi/calendar/calendarsettings.h>
 
 #include <Akonadi/Item>
 #include <KCalCore/Event>
@@ -31,7 +32,7 @@
 #include <KCalCore/Journal>
 
 #include "korganizereditorconfig.h"
-#include "eventortododialog.h"
+#include "incidencedialog.h"
 #include "incidencedefaults.h"
 
 using namespace IncidenceEditorNG;
@@ -77,7 +78,7 @@ int main( int argc, char **argv )
   //       the incidence is added.
   if ( CalendarSupport::KCalPrefs::instance()->useGroupwareCommunication() ) {
     defaults.setGroupWareDomain(
-      KUrl( CalendarSupport::KCalPrefs::instance()->freeBusyRetrieveUrl() ).host() );
+      KUrl( Akonadi::CalendarSettings::self()->freeBusyRetrieveUrl() ).host() );
   }
 
   if ( args->isSet( "new-event" ) ) {
@@ -118,7 +119,7 @@ int main( int argc, char **argv )
 
   EditorConfig::setEditorConfig( new KOrganizerEditorConfig );
 
-  EventOrTodoDialog dialog;
+  IncidenceDialog dialog;
   dialog.load( item ); // The dialog will show up once the item is loaded.
 
   return app.exec();

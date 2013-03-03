@@ -14,7 +14,7 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/libkdepimdbusinterfaces
   ${CMAKE_BINARY_DIR}/libkdepimdbusinterfaces
   ${CMAKE_SOURCE_DIR}/incidenceeditor-ng
-  ${CMAKE_SOURCE_DIR}/calendarviews/eventviews
+  ${CMAKE_SOURCE_DIR}/calendarviews
   ${AKONADI_INCLUDE_DIR}
   ${Boost_INCLUDE_DIRS}
   ${QT_INCLUDES}
@@ -66,6 +66,7 @@ if(NOT WINCE)
       korganizer_interfaces
       korganizer_core
       calendarsupport
+      akonadi-calendar
     )
 
     install(TARGETS
@@ -83,6 +84,7 @@ if(NOT WINCE)
     kde4_add_plugin(kcm_korganizer ${kcm_korganizer_PART_SRCS})
 
     target_link_libraries(kcm_korganizer
+      akonadi-calendar
       calendarsupport
       eventviews
       incidenceeditorsng
@@ -178,7 +180,6 @@ if(NOT WINCE)
       docprefs.cpp
       exportwebdialog.cpp
       filtereditdialog.cpp
-      history.cpp
       htmlexportjob.cpp
       kdatenavigator.cpp
       kocheckableproxymodel.cpp
@@ -202,22 +203,13 @@ if(NOT WINCE)
       printing/calprinter.cpp
       printing/calprintpluginbase.cpp
       views/agendaview/koagendaview.cpp
-      views/journalview/journalview.cpp
       views/journalview/kojournalview.cpp
       views/listview/kolistview.cpp
       views/monthview/monthview.cpp
       views/multiagendaview/multiagendaview.cpp
       views/timelineview/kotimelineview.cpp
       views/timespentview/kotimespentview.cpp
-      views/todoview/kotododelegates.cpp
-      views/todoview/kotodomodel.cpp
-      views/todoview/incidencetreemodel.cpp
-      #views/todoview/kotodotreestatesaver.cpp
       views/todoview/kotodoview.cpp
-      views/todoview/kotodoviewquickaddline.cpp
-      views/todoview/kotodoviewquicksearch.cpp
-      views/todoview/kotodoviewsortfilterproxymodel.cpp
-      views/todoview/kotodoviewview.cpp
       views/whatsnextview/kowhatsnextview.cpp
     )
 
@@ -268,6 +260,7 @@ if(NOT WINCE)
     target_link_libraries(korganizerprivate
       pimcommon
       akonadi_next
+      akonadi-calendar
       calendarsupport
       eventviews
       incidenceeditorsng

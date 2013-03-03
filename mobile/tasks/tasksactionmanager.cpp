@@ -18,7 +18,6 @@
 */
 #include "tasksactionmanager.h"
 
-#include <calendarsupport/calendar.h>
 
 #include <Akonadi/EntityTreeModel>
 #include <Akonadi/Item>
@@ -31,8 +30,6 @@
 
 #include <QItemSelectionModel>
 
-using namespace CalendarSupport;
-
 TasksActionManager::TasksActionManager( KActionCollection *actionCollection, QObject *parent)
   : QObject( parent )
   , mActionCollection( actionCollection )
@@ -42,7 +39,7 @@ TasksActionManager::TasksActionManager( KActionCollection *actionCollection, QOb
   initActions();
 }
 
-void TasksActionManager::setCalendar( Calendar *calendar )
+void TasksActionManager::setCalendar( const Akonadi::ETMCalendar::Ptr &calendar )
 {
   // Doesn't take ownership. The calendar is used in updateActions.
   mCalendar = calendar;
@@ -80,7 +77,7 @@ void TasksActionManager::updateActions()
   if ( !item.hasPayload<KCalCore::Todo::Ptr>() )
     return;
 
-  if ( mCalendar->findChildren( item ).size() >= 1 )
+  if ( mCalendar->childItems( item.id() ).size() >= 1 )
     mActionCollection->action( QLatin1String( "make_all_subtasks_independent" ) )->setEnabled( true );
 
   // Only enable the make_subtask_independent action for todos that have a parent.

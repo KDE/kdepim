@@ -28,7 +28,7 @@
 #include "kotimelineview.h"
 #include "koeventpopupmenu.h"
 
-#include <calendarviews/eventviews/timeline/timelineview.h>
+#include <calendarviews/timeline/timelineview.h>
 
 #include <QVBoxLayout>
 
@@ -105,12 +105,6 @@ KOTimelineView::KOTimelineView( QWidget *parent )
   connect( d->mTimeLineView, SIGNAL(dissociateOccurrencesSignal(Akonadi::Item,QDate)),
            SIGNAL(dissociateOccurrencesSignal(Akonadi::Item,QDate)) );
 
-  connect( d->mTimeLineView, SIGNAL(startMultiModify(QString)),
-           SIGNAL(startMultiModify(QString)) );
-
-  connect( d->mTimeLineView, SIGNAL(endMultiModify()),
-           SIGNAL(endMultiModify()) );
-
   connect( d->mTimeLineView, SIGNAL(newEventSignal()),
            SIGNAL(newEventSignal()) );
 
@@ -176,9 +170,10 @@ void KOTimelineView::updateView()
 }
 
 /*virtual*/
-void KOTimelineView::changeIncidenceDisplay( const Akonadi::Item &incidence, int mode )
+void KOTimelineView::changeIncidenceDisplay( const Akonadi::Item &incidence,
+                                             Akonadi::IncidenceChanger::ChangeType changeType )
 {
-  d->mTimeLineView->changeIncidenceDisplay( incidence, mode );
+  d->mTimeLineView->changeIncidenceDisplay( incidence, changeType );
 }
 
 bool KOTimelineView::eventDurationHint( QDateTime &startDt, QDateTime &endDt,
@@ -197,14 +192,14 @@ KOrg::CalPrinterBase::PrintType KOTimelineView::printType() const
   }
 }
 
-void KOTimelineView::setCalendar( CalendarSupport::Calendar *cal )
+void KOTimelineView::setCalendar( const Akonadi::ETMCalendar::Ptr &cal )
 {
   KOEventView::setCalendar( cal );
   d->mEventPopup->setCalendar( cal );
   d->mTimeLineView->setCalendar( cal );
 }
 
-void KOTimelineView::setIncidenceChanger( CalendarSupport::IncidenceChanger *changer )
+void KOTimelineView::setIncidenceChanger( Akonadi::IncidenceChanger *changer )
 {
   d->mTimeLineView->setIncidenceChanger( changer );
 }

@@ -31,6 +31,7 @@ if(NOT WINCE)
     ${korgac_SRCS}
     alarmdialog.cpp
     alarmdockwindow.cpp
+    mailclient.cpp
   )
 endif()
 
@@ -72,6 +73,8 @@ else()
 endif()
 
 target_link_libraries(korgac
+  akonadi-calendar
+  akonadi-kmime
   calendarsupport
   incidenceeditorsng
   kdepim

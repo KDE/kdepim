@@ -22,16 +22,10 @@
 
 #include "ui_mainwindow.h"
 
+#include <Akonadi/Calendar/ETMCalendar>
 #include <QMainWindow>
 
-namespace Akonadi
-{
-  class ChangeRecorder;
-}
-
-namespace CalendarSupport
-{
-  class Calendar;
+namespace Akonadi {
   class IncidenceChanger;
 }
 
@@ -61,14 +55,9 @@ class MainWindow : public QMainWindow
 
     Ui_MainWindow mUi;
 
-    Akonadi::ChangeRecorder *mChangeRecorder;
-
-    CalendarSupport::Calendar *mCalendar;
-
-    CalendarSupport::IncidenceChanger *mIncidenceChanger;
-
+    Akonadi::ETMCalendar::Ptr mCalendar;
+    Akonadi::IncidenceChanger *mIncidenceChanger;
     Settings *mSettings;
-
     EventViews::PrefsPtr *mViewPreferences;
 
   private:
@@ -76,10 +65,7 @@ class MainWindow : public QMainWindow
 
   private Q_SLOTS:
     void delayedInit();
-
     void addViewTriggered( QAction *action );
 };
 
 #endif
-
-// kate: space-indent on; indent-width 2; replace-tabs on;

@@ -23,8 +23,8 @@
 #include "declarativewidgetbase.h"
 #include "mainview.h"
 
-#include "calendarviews/eventviews/eventview.h"
-#include "calendarviews/eventviews/prefs.h"
+#include "calendarviews/eventview.h"
+#include "calendarviews/prefs.h"
 
 #include <QGraphicsProxyWidget>
 #include <QWidget>
