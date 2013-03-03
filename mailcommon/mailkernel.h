@@ -132,8 +132,22 @@ class MAILCOMMON_EXPORT Kernel : public QObject
 
     bool folderIsTemplates( const Akonadi::Collection &collection );
 
+    /**
+     * Returns true if the folder is a trash folder.
+     *
+     * When calling this too early (before the SpecialMailCollectionsDiscoveryJob from initFolders finishes),
+     * it will say false erroneously. However you can connect to SpecialMailCollections::collectionsChanged
+     * to react on dynamic changes and call this again.
+     */
     bool folderIsTrash( const Akonadi::Collection &collection );
 
+    /**
+     * Returns the trash folder for the resource which @p col belongs to.
+     *
+     * When calling this too early (before the SpecialMailCollectionsDiscoveryJob from initFolders finishes),
+     * it will return an invalid collection erroneously. However you can connect to SpecialMailCollections::collectionsChanged
+     * to react on dynamic changes and call this again.
+     */
     Akonadi::Collection trashCollectionFromResource( const Akonadi::Collection & col );
 
     /**

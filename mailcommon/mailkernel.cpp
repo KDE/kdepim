@@ -153,6 +153,7 @@ void Kernel::initFolders()
   Akonadi::SpecialMailCollectionsDiscoveryJob *job =
        new Akonadi::SpecialMailCollectionsDiscoveryJob( this );
   job->start();
+  // we don't connect to the job directly: it will register stuff into SpecialMailCollections, which will emit signals.
 }
 
 void Kernel::findCreateDefaultCollection( Akonadi::SpecialMailCollections::Type type )
