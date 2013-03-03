@@ -229,8 +229,6 @@ namespace CalendarSupport {
   CALENDARSUPPORT_EXPORT Akonadi::Collection::List collectionsFromIndexes(
     const QModelIndexList &indexes );
 
-  KDE_DEPRECATED CALENDARSUPPORT_EXPORT QString displayName( const Akonadi::Collection &coll );
-
   CALENDARSUPPORT_EXPORT QString displayName( Akonadi::ETMCalendar *calendar,
                                               const Akonadi::Collection &coll );
 

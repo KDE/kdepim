@@ -71,14 +71,7 @@ void AmazingContactItemDelegate::paint(QPainter* painter, const QStyleOptionView
     painter->drawImage(QRect(0, 0, 40, 40), image);
   }
 
-  QString parentName;
-  if (parentCollection.hasAttribute<EntityDisplayAttribute>() && !parentCollection.attribute<EntityDisplayAttribute>()->displayName().isEmpty())
-  {
-    parentName = parentCollection.attribute<EntityDisplayAttribute>()->displayName();
-  } else
-  {
-    parentName = parentCollection.name();
-  }
+  const QString parentName = parentCollection.displayName();
 
   QString email = addressee.preferredEmail();
   if (email.isEmpty())

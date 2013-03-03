@@ -491,12 +491,6 @@ Akonadi::Collection::List CalendarSupport::collectionsFromIndexes( const QModelI
   return l;
 }
 
-QString CalendarSupport::displayName( const Akonadi::Collection &c )
-{
-  const Akonadi::EntityDisplayAttribute *attr = c.attribute<Akonadi::EntityDisplayAttribute>();
-  return ( attr && !attr->displayName().isEmpty() ) ? attr->displayName() : c.name();
-}
-
 QString CalendarSupport::displayName( Akonadi::ETMCalendar *calendar, const Akonadi::Collection &c )
 {
   QString cName = c.name();
@@ -584,20 +578,10 @@ QString CalendarSupport::displayName( Akonadi::ETMCalendar *calendar, const Akon
     QString ownerStr;        // folder owner: "user@gmail.com"
     if ( calendar ) {
       Akonadi::Collection p = c.parentCollection();
-      Akonadi::EntityDisplayAttribute *pattr =
-        calendar->collection( p.id() ).attribute<Akonadi::EntityDisplayAttribute>();
-      if ( pattr && !pattr->displayName().isEmpty() ) {
-        ownerStr = pattr->displayName();
-      }
+      ownerStr = calendar->collection( p.id() ).displayName();
     }
 
-    const Akonadi::EntityDisplayAttribute *attr = c.attribute<Akonadi::EntityDisplayAttribute>();
-    QString nameStr;         // folder name: can be anything
-    if ( attr && !attr->displayName().isEmpty() ) {
-      nameStr = attr->displayName();
-    } else {
-      nameStr = cName;
-    }
+    const QString nameStr = c.displayName(); // folder name: can be anything
 
     QString typeStr;
     const QString mimeStr = c.contentMimeTypes().join( "," );
@@ -630,13 +614,8 @@ QString CalendarSupport::displayName( Akonadi::ETMCalendar *calendar, const Akon
   } //end google section
 
   // Not groupware so the collection is "mine"
-  const Akonadi::EntityDisplayAttribute *attr = c.attribute<Akonadi::EntityDisplayAttribute>();
-  QString dName;
-  if ( attr && !attr->displayName().isEmpty() ) {
-    dName = attr->displayName();
-  } else {
-    dName = cName;
-  }
+  const QString dName = c.displayName();
+
   if ( !dName.isEmpty() ) {
     return i18n( "My %1", dName );
   } else {
