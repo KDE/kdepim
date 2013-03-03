@@ -34,7 +34,7 @@
 #include "incidencesecrecy.h"
 #include "incidencewhatwhere.h"
 #include "templatemanagementdialog.h"
-#include "ui_eventortododesktop.h"
+#include "ui_dialogdesktop.h"
 
 #include <calendarsupport/categoryconfig.h>
 #include <calendarsupport/kcalprefs.h>
