@@ -28,15 +28,12 @@
 #ifndef KONSOLEKALENDAR_H
 #define KONSOLEKALENDAR_H
 
-#include <QDateTime>
-
-#include <kapplication.h>
-
-#include <kcal/calendarlocal.h>
-#include <kcal/resourcecalendar.h>
-#include <kcal/event.h>
-
 #include "konsolekalendarvariables.h"
+
+#include <KCalCore/Event>
+#include <Akonadi/Calendar/FetchJobCalendar>
+
+#include <QDateTime>
 
 class QTextStream;
 
@@ -98,12 +95,17 @@ class KonsoleKalendar
      * @param  enddate   Ending date
      * @param  summary   Which summary event should have have
      */
-    bool isEvent( QDateTime startdate, QDateTime enddate, QString summary );
+    bool isEvent( const QDateTime &startdate, const QDateTime &enddate, const QString &summary );
 
     /**
      * Creates calendar file (If it doesn't exists)
      */
     bool createCalendar();
+
+    /**
+     * Prints the available calendars.
+     */
+    bool printCalendarList();
 
   private:
     /**
@@ -112,13 +114,18 @@ class KonsoleKalendar
     void printSpecs();
 
     /**
+     * Creates an akonadi resource of type ical.
+     */
+    bool createAkonadiResource(const QString &icalFileName);
+
+    /**
      * Prints event list in many formats
      *
      * @param ts is the #QTextStream to be printed
      * @param eventList which event we should print
      * @param dt is the date to use when printing the event for recurring events
      */
-    bool printEventList( QTextStream *ts, Event::List *eventList, QDate dt );
+    bool printEventList( QTextStream *ts, KCalCore::Event::List *eventList, QDate dt );
 
     /**
      * Prints a single event in many formats
@@ -127,7 +134,7 @@ class KonsoleKalendar
      * @param event which we should print
      * @param dt is the date to use when printing the event for recurring events
      */
-    bool printEvent( QTextStream *ts, Event *event, QDate dt );
+    bool printEvent( QTextStream *ts, const KCalCore::Event::Ptr &event, QDate dt );
 
     /**
      * Variables that changes stuff in program
@@ -137,7 +144,7 @@ class KonsoleKalendar
     /**
      * Calendar file itself
      */
-    ResourceCalendar *m_Calendar;
+    Akonadi::FetchJobCalendar::Ptr m_calendar;
 
     /**
      * This is useful if we like to have same day events to same system

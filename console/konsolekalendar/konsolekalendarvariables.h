@@ -28,16 +28,11 @@
 #ifndef KONSOLEKALENDARVARIABLES_H
 #define KONSOLEKALENDARVARIABLES_H
 
-#include <kcal/calendarlocal.h>
-#include <kcal/calendarresources.h>
-#include <kcal/resourcelocal.h>
-#include <kcal/resourcecalendar.h>
-#include <kcal/event.h>
+#include <KCalCore/Event>
+#include <Akonadi/Calendar/FetchJobCalendar>
 
 #include <QtCore/QString>
 #include <QtCore/QDateTime>
-
-using namespace KCal;
 
 /**
  * @file konsolekalendarvariables.h
@@ -95,7 +90,7 @@ class KonsoleKalendarVariables
      * Get use Events switch.
      * @return true if operation using Events is specified.
      */
-    bool getUseEvents();
+    bool getUseEvents() const;
 
     /**
      * Set switch to use Todos.
@@ -106,7 +101,7 @@ class KonsoleKalendarVariables
      * Get use Todos switch.
      * @return true if operation using Todos is specified.
      */
-    bool getUseTodos();
+    bool getUseTodos() const;
 
     /**
      * Set switch to use Journals.
@@ -117,7 +112,7 @@ class KonsoleKalendarVariables
      * Get use Journals switch.
      * @return true if operation using Journals is specified.
      */
-    bool getUseJournals();
+    bool getUseJournals() const;
 
     /**
      * Sets start date.
@@ -129,13 +124,13 @@ class KonsoleKalendarVariables
      * Get start date.
      * @return start date.
      */
-    QDateTime getStartDateTime();
+    QDateTime getStartDateTime() const;
 
     /**
      * Is there start date?
      * @return true if there is false is there isn't.
      */
-    bool isStartDateTime();
+    bool isStartDateTime() const;
 
     /**
      * Sets end date.
@@ -147,13 +142,13 @@ class KonsoleKalendarVariables
      * Get end date.
      * @return end date.
      */
-    QDateTime getEndDateTime();
+    QDateTime getEndDateTime() const;
 
     /**
      * Is there end date?
      * @return true if there is false is there isn't.
      */
-    bool isEndDateTime();
+    bool isEndDateTime() const;
 
     /**
      * Sets the UID, the unique tag for VCard entry.
@@ -165,13 +160,13 @@ class KonsoleKalendarVariables
      * Get UID, the unique tag for VCard entry.
      * @return UID number.
      */
-    QString getUID();
+    QString getUID() const;
 
     /**
      * Is there UID set?
      * @return true there is UID false there isn't.
      */
-    bool isUID();
+    bool isUID() const;
 
     /**
      * Show only next activity and exit.
@@ -182,7 +177,7 @@ class KonsoleKalendarVariables
     /**
      * Should we show only next activity and exit?
      */
-    bool isNext();
+    bool isNext() const;
 
     /**
      * Should program be more verbose?
@@ -193,7 +188,7 @@ class KonsoleKalendarVariables
     /**
      * Should program be more verbose?
      */
-    bool isVerbose();
+    bool isVerbose() const;
 
     /**
      * Should we only try to run it and do nothing?
@@ -205,7 +200,7 @@ class KonsoleKalendarVariables
      * Is this program only in testing mode?
      * @return true yes false no.
      */
-    bool isDryRun();
+    bool isDryRun() const;
 
     /**
      * Set calendar file
@@ -217,7 +212,7 @@ class KonsoleKalendarVariables
      * Returns fullpath to calendar file.
      * @return calendar file.
      */
-    QString getCalendarFile();
+    QString getCalendarFile() const;
 
     /**
      * Set file to import active calendar.
@@ -229,7 +224,7 @@ class KonsoleKalendarVariables
      * Return import filename.
      * @return File that should be imported.
      */
-    QString getImportFile();
+    QString getImportFile() const;
 
     /**
      * Add description.
@@ -241,13 +236,13 @@ class KonsoleKalendarVariables
      * Return description.
      * @return description of event.
      */
-    QString getDescription();
+    QString getDescription() const;
 
     /**
      * Is there an event description?
      * @return true is there is description false there isn't.
      */
-    bool isDescription();
+    bool isDescription() const;
 
     /**
      * Add location information.
@@ -259,13 +254,13 @@ class KonsoleKalendarVariables
      * Return location information.
      * @return location where event is occurring.
      */
-    QString getLocation();
+    QString getLocation() const;
 
     /**
      * Is there event location information available?
      * @return true is there is description false there isn't.
      */
-    bool isLocation();
+    bool isLocation() const;
 
     /**
      * Add summary.
@@ -277,13 +272,13 @@ class KonsoleKalendarVariables
      * Get summary.
      * @return summary.
      */
-    QString getSummary();
+    QString getSummary() const;
 
     /**
      * Is there an event summary?
      * @return true there is false there isn't.
      */
-    bool isSummary();
+    bool isSummary() const;
 
     /**
      * View all option.
@@ -293,11 +288,11 @@ class KonsoleKalendarVariables
     /**
      * Return all option.
      */
-    bool getAll();
+    bool getAll() const;
     /**
      * Is the all option set?
      */
-    bool isAll();
+    bool isAll() const;
 
     /**
      * Set if Event is floating.
@@ -308,19 +303,19 @@ class KonsoleKalendarVariables
     /**
      * Returns if Event is floating.
      */
-    bool getFloating();
+    bool getFloating() const;
 
     /**
      * Sets the calendar resources for global use.
      *
-     * @param resources is a pointer to the CalendarResources to use.
+     * @param resources is a pointer to the calendar to use.
      */
-    void setCalendar( CalendarResources *resources );
+    void setCalendar( const Akonadi::FetchJobCalendar::Ptr & );
 
     /**
      * Get global calendar resources.
      */
-    CalendarResources *getCalendar();
+    Akonadi::FetchJobCalendar::Ptr getCalendar() const;
 
     /**
      * Sets the output file name to @p export_file.
@@ -332,12 +327,12 @@ class KonsoleKalendarVariables
     /**
      * To what file we'll output.
      */
-    QString getExportFile();
+    QString getExportFile() const;
 
     /**
      * Has an Export File been set?
      */
-    bool isExportFile();
+    bool isExportFile() const;
 
     /**
      * Sets the #ExportType to use.
@@ -349,7 +344,7 @@ class KonsoleKalendarVariables
     /**
      * What export type to use.
      */
-    ExportType getExportType();
+    ExportType getExportType() const;
 
     /**
      * Sets how many day should be seen.
@@ -361,12 +356,12 @@ class KonsoleKalendarVariables
     /**
      * Is there some cound of days should be seen.
      */
-    bool isDaysCount();
+    bool isDaysCount() const;
 
     /**
      * Get how many day should be seen.
      */
-    int getDaysCount();
+    int getDaysCount() const;
 
     /**
      * Sets whether to allow using resources with potential GUI dependencies.
@@ -376,7 +371,7 @@ class KonsoleKalendarVariables
     /**
      * Returns whether to allow using resources with potential GUI dependencies.
      */
-    bool allowGui();
+    bool allowGui() const;
 
   private:
     //@cond PRIVATE
@@ -392,7 +387,7 @@ class KonsoleKalendarVariables
     bool m_bUseEvents;
     bool m_bUseTodos;
     bool m_bUseJournals;
-    QString m_calendar;
+    QString m_calendarFile;
     QString m_import;
     ExportType m_exportType;
     bool m_bIsExportFile;
@@ -408,7 +403,7 @@ class KonsoleKalendarVariables
     bool m_bDaysCount;
     int m_daysCount;
     bool m_bAllowGui;
-    CalendarResources *m_calendarResources;
+    Akonadi::FetchJobCalendar::Ptr m_calendar;
     //@endcond
 };
 

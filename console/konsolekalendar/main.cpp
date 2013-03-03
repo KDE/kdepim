@@ -4,6 +4,7 @@
  * KonsoleKalendar is a command line interface to KDE calendars               *
  * Copyright (C) 2002-2004  Tuukka Pasanen <illuusio@mailcity.com>            *
  * Copyright (C) 2003-2009  Allen Winter <winter@kde.org>                     *
+ * Copyright (C) 2013       Sérgio Martins <iamsergio@gmail.com>              *
  *                                                                            *
  * This program is free software; you can redistribute it and/or modify       *
  * it under the terms of the GNU General Public License as published by       *
@@ -29,8 +30,13 @@
  * KonsoleKalendar main program.
  * @author Tuukka Pasanen
  * @author Allen Winter
+ * @author Sérgio Martins
  */
-#include <time.h>
+
+#include "konsolekalendar.h"
+#include "konsolekalendarepoch.h"
+
+#include "konsolekalendarvariables.h"
 
 #include <kcmdlineargs.h>
 #include <kaboutdata.h>
@@ -40,25 +46,20 @@
 #include <kstandarddirs.h>
 #include <kurl.h>
 #include <kdebug.h>
+#include <KApplication>
 
-#include <kcal/calformat.h>
-#include <kcal/calendarresources.h>
-#include <kcal/resourcelocal.h>
+#include <KCalCore/CalFormat>
 
 #include <QtCore/QDateTime>
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
+#include <QtCore/QEventLoop>
 
 #include <stdlib.h>
 #include <iostream>
+#include <time.h>
 
-#include "stdcalendar.h"
-#include "konsolekalendar.h"
-#include "konsolekalendarepoch.h"
-
-#include "konsolekalendarvariables.h"
-
-using namespace KCal;
+using namespace KCalCore;
 using namespace std;
 
 //@cond IGNORE
@@ -105,8 +106,8 @@ int main( int argc, char *argv[] )
                ki18n( "Print what would have been done, but do not execute" ) );
   options.add( "allow-gui",
                ki18n( "Allow calendars which might need an interactive user interface" ) );
-  options.add( "file <calendar-file>",
-               ki18n( "Specify which calendar you want to use" ) );
+  options.add( "collection <collection id>", // TODO
+               ki18n( "Specify which collection you want to use" ) );
   options.add( ":",
                ki18n( "Incidence types (these options can be combined):" ) );
   options.add( "event",
@@ -129,6 +130,8 @@ int main( int argc, char *argv[] )
                ki18n( "  Create new calendar file if one does not exist" ) );
   options.add( "import <import-file>",
                ki18n( "  Import this calendar to main calendar" ) );
+  options.add( "list-calendars",
+               ki18n( "  List available calendars" ) );
   options.add( ":",
                ki18n( "Operation modifiers:" ) );
   options.add( "all",
@@ -613,86 +616,22 @@ int main( int argc, char *argv[] )
 
   KonsoleKalendar *konsolekalendar = new KonsoleKalendar( &variables );
 
-  if ( args->isSet( "file" ) ) {
-    // calendarFile = true;
-    option = args->getOption( "file" );
-    variables.setCalendarFile( option );
-
-    /*
-     * All modes need to know if the calendar file exists
-     * This must be done before we get to opening biz
-     */
-    bool exists, remote;
-    KUrl url( variables.getCalendarFile() );
-    if ( url.isLocalFile() ) {
-      variables.setCalendarFile( url.toLocalFile() );
-      exists = QFile::exists( variables.getCalendarFile() );
-      remote = false;
-    } else if ( url.protocol().isEmpty() ) {
-      QFileInfo info( variables.getCalendarFile() );
-      variables.setCalendarFile( info.absoluteFilePath() );
-      exists = QFile::exists( variables.getCalendarFile() );
-      remote = false;
-    } else {
-      exists = true; // really have no idea if the remote file exists
-      remote = true;
-    }
-
-    if ( create ) {
-
-      kDebug() << "main | createcalendar |"
-               << "check if calendar file already exists";
-
-      if ( remote ) {
-        cout << i18n( "Attempting to create a remote file %1",
-                      variables.getCalendarFile() ).toLocal8Bit().data()
-             << endl;
-        return 1;
-      } else {
-        if ( exists ) {
-          cout << i18n( "Calendar %1 already exists",
-                        variables.getCalendarFile() ).toLocal8Bit().data()
-               << endl;
-          return 1;
-        }
-      }
-
-      if ( konsolekalendar->createCalendar() ) {
-        cout << i18n( "Calendar %1 successfully created",
-                      variables.getCalendarFile() ).toLocal8Bit().data()
-             << endl;
-        return 0;
-      } else {
-        cout << i18n( "Unable to create calendar: %1",
-                      variables.getCalendarFile() ).toLocal8Bit().data()
-             << endl;
-        return 1;
-      }
-    }
-
-    if ( !exists ) {
-      cout << i18n( "Calendar file not found %1",
-                    variables.getCalendarFile() ).toLocal8Bit().data()
-           << endl;
-      cout << i18n( "Try --create to create new calendar file" ).toLocal8Bit().data()
-           << endl;
-      return 1;
-    }
+  if (args->isSet("list-calendars")) {
+      konsolekalendar->printCalendarList();
+      return 0;
   }
 
-  CalendarResources *calendarResource = NULL;
-  /*
-   * Should we use local calendar or resource?
-   */
-  if ( args->isSet( "file" ) ) {
-    calendarResource = new StdCalendar( variables.getCalendarFile(),
-                                        i18n( "Active Calendar" ) );
-  } else {
-    calendarResource = new StdCalendar( variables.allowGui() );
-  }
+  QEventLoop loop;
+  Akonadi::FetchJobCalendar::Ptr calendar = Akonadi::FetchJobCalendar::Ptr( new Akonadi::FetchJobCalendar() );
+  QObject::connect(calendar.data(), SIGNAL(loadFinished(bool,QString)), &loop, SLOT(quit()));
+  kDebug() << "Starting to load calendar";
+  QElapsedTimer t;
+  t.start();
+  loop.exec();
+  kDebug() << "Calendar loaded in" << t.elapsed() << "ms; success=" << calendar->isLoaded();
+
   if ( !args->isSet( "import" ) ) {
-    variables.setCalendar( calendarResource );
-    calendarResource->load();
+    variables.setCalendar( calendar );
   }
 
   /***************************************************************************
@@ -874,7 +813,7 @@ int main( int argc, char *argv[] )
            << endl;
       return 1;
     }
-    if ( konsolekalendar->changeEvent() != true ) {
+    if ( !konsolekalendar->changeEvent() ) {
       cout << i18n( "No such event UID: change event failed" ).toLocal8Bit().data()
            << endl;
       return 1;
@@ -892,7 +831,7 @@ int main( int argc, char *argv[] )
            << endl;
       return 1;
     }
-    if ( konsolekalendar->deleteEvent() != true ) {
+    if ( !konsolekalendar->deleteEvent() ) {
       cout << i18n( "No such event UID: delete event failed" ).toLocal8Bit().data()
            << endl;
       return 1;
@@ -914,8 +853,6 @@ int main( int argc, char *argv[] )
 
   delete konsolekalendar;
 
-  calendarResource->close();
-  delete calendarResource;
 
   kDebug() << "main | exiting";
 
