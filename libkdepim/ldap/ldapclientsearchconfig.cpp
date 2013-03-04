@@ -1,4 +1,5 @@
-/* Copyright (C) 2013 Laurent Montel <montel@kde.org>
+/*
+ * Copyright (C) 2013 Laurent Montel <montel@kde.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -19,7 +20,6 @@
 #include "ldapclientsearchconfig.h"
 #include <kldap/ldapserver.h>
 
-#include <QDebug>
 
 #include <KStandardDirs>
 #include <KConfig>
@@ -72,7 +72,7 @@ void LdapClientSearchConfig::readConfig( KLDAP::LdapServer &server, KConfigGroup
 {
     QString prefix;
     if ( active ) {
-        prefix = "Selected";
+        prefix = QLatin1String("Selected");
     }
 
     const QString host =  config.readEntry( prefix + QString::fromLatin1( "Host%1" ).arg( j ),
