@@ -48,7 +48,7 @@ public:
      *
      * @param active Defines whether the active settings shall be read.
      */
-    void readConfig( KLDAP::LdapServer &server, const KConfigGroup &group,
+    void readConfig( KLDAP::LdapServer &server, KConfigGroup &group,
                      int clientNumber, bool active );
 
     /**

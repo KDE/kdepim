@@ -24,6 +24,8 @@
 #include <KStandardDirs>
 #include <KConfig>
 #include <KConfigGroup>
+#include <KMessageBox>
+#include <KLocale>
 
 #include <kwallet.h>
 
@@ -66,7 +68,7 @@ LdapClientSearchConfig::~LdapClientSearchConfig()
     delete d;
 }
 
-void LdapClientSearchConfig::readConfig( KLDAP::LdapServer &server, const KConfigGroup &config, int j, bool active )
+void LdapClientSearchConfig::readConfig( KLDAP::LdapServer &server, KConfigGroup &config, int j, bool active )
 {
     QString prefix;
     if ( active ) {
@@ -102,6 +104,23 @@ void LdapClientSearchConfig::readConfig( KLDAP::LdapServer &server, const KConfi
     const QString pwdBindBNEntry = prefix + QString::fromLatin1( "PwdBind%1" ).arg( j );
     QString pwdBindDN = config.readEntry( pwdBindBNEntry, QString() );
     if ( !pwdBindDN.isEmpty() ) {
+        if ( KMessageBox::Yes == KMessageBox::questionYesNo(0, i18n("LDAP password is stored as clear text, do you want to store it in kwallet?"),
+                                                            i18n("Store clear text password in KWallet"),
+                                                            KStandardGuiItem::yes(),
+                                                            KStandardGuiItem::no(),
+                                                            QLatin1String("DoAskToStoreToKwallet"))) {
+            d->wallet = KWallet::Wallet::openWallet( KWallet::Wallet::LocalWallet(), 0 );
+            if ( d->wallet ) {
+                d->useWallet = true;
+                if ( !d->wallet->setFolder( QLatin1String("ldapclient") ) ) {
+                    d->wallet->createFolder( QLatin1String("ldapclient") );
+                    d->wallet->setFolder( QLatin1String("ldapclient") );
+                }
+                d->wallet->writePassword(pwdBindBNEntry, pwdBindDN );
+                config.deleteEntry(pwdBindBNEntry);
+                config.sync();
+            }
+        }
         server.setPassword( pwdBindDN );
     } else { //Look at in Wallet
         d->wallet = KWallet::Wallet::openWallet( KWallet::Wallet::LocalWallet(), 0 );
@@ -165,7 +184,7 @@ void LdapClientSearchConfig::writeConfig( const KLDAP::LdapServer &server, KConf
         if (d->useWallet && d->wallet) {
             d->wallet->writePassword(passwordEntry, password );
         } else {
-            config.writeEntry( prefix + passwordEntry, password );
+            config.writeEntry( passwordEntry, password );
         }
     }
 
