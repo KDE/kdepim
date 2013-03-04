@@ -22,12 +22,16 @@
 #define CONFIGUREIDENTITY_H
 
 #include <QWidget>
+#include <KActivities/Consumer>
 
 class ConfigureIdentity : public QWidget
 {
+    Q_OBJECT
 public:
     explicit ConfigureIdentity(QWidget *parent);
     ~ConfigureIdentity();
+private:
+    KActivities::Consumer *mConsumer;
 };
 
 #endif // CONFIGUREIDENTITY_H

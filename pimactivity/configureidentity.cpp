@@ -28,11 +28,17 @@ ConfigureIdentity::ConfigureIdentity(QWidget *parent)
 {
     if (KActivities::Consumer::serviceStatus() == KActivities::Consumer::NotRunning)  {
         qDebug()<<" kactivities is not running";
+        setEnabled(false);
     }
+
+    mConsumer = new KActivities::Consumer;
+    const QStringList lst = mConsumer->listActivities();
+    qDebug()<< "list activities : "<<lst;
+
 }
 
 ConfigureIdentity::~ConfigureIdentity()
 {
-
+    delete mConsumer;
 }
 
