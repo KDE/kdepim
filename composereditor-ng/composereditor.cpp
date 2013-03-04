@@ -154,7 +154,7 @@ ComposerView *ComposerEditor::view() const
     return d->view;
 }
 
-void ComposerEditor::setHtmlContent( const QString& html )
+void ComposerEditor::setHtmlContent( const QString &html )
 {
     d->view->setHtmlContent(html);
 }
@@ -164,7 +164,7 @@ QString ComposerEditor::htmlContent() const
     return d->view->page()->mainFrame()->toHtml();
 }
 
-void ComposerEditor::createActions(const QList<ComposerView::ComposerViewAction>& lstActions)
+void ComposerEditor::createActions(const QList<ComposerView::ComposerViewAction> &lstActions)
 {
     d->view->createActions(lstActions);
 }
@@ -174,7 +174,7 @@ void ComposerEditor::createAllActions()
     d->view->createAllActions();
 }
 
-void ComposerEditor::createToolBar(const QList<ComposerView::ComposerViewAction>& lstActions)
+void ComposerEditor::createToolBar(const QList<ComposerView::ComposerViewAction> &lstActions)
 {
     if (d->toolbar) {
         d->view->createToolBar(lstActions,d->toolbar);

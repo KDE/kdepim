@@ -50,7 +50,7 @@ public:
     /**
      * @brief createActions create a list of action from default action.
      */
-    void createActions(const QList<ComposerView::ComposerViewAction>&);
+    void createActions(const QList<ComposerView::ComposerViewAction> &);
 
     /**
      * @brief createAllActions. Create all actions.
@@ -60,7 +60,7 @@ public:
     /**
      * @brief createToolBar.
      */
-    void createToolBar(const QList<ComposerView::ComposerViewAction>&);
+    void createToolBar(const QList<ComposerView::ComposerViewAction> &);
 
     /**
      * @brief addActionInToolBar add action in toolbar. QAction that is not in default action from composerview.
@@ -125,7 +125,7 @@ public Q_SLOTS:
     void redo();
 
 Q_SIGNALS:
-    void openLink(const QUrl&);
+    void openLink(const QUrl &);
     /**
      * @brief textChanged emit this signal when text in view changed.
      */
