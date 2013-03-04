@@ -31,6 +31,6 @@ int main( int argc, char **argv )
     KCmdLineArgs::init( argc, argv, &aboutData );
     KApplication app;
     //PimActivity* mw = new PimActivity();
-    mw->show();
+    //mw->show();
     app.exec();
 }
