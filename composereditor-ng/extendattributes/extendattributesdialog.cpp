@@ -27,6 +27,7 @@
 #include <KComboBox>
 #include <KLineEdit>
 #include <KPushButton>
+#include <KDebug>
 
 #include <QWebElement>
 #include <QVBoxLayout>
@@ -73,6 +74,9 @@ public:
             break;
         case ExtendAttributesDialog::ListDL:
             tagName = QLatin1String("dl");
+            break;
+        default:
+            kDebug()<<" extendattribute not implemented"<<extendType;
             break;
         }
 
