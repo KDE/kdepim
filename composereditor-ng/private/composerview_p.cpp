@@ -26,6 +26,7 @@
 #include "table/composertabledialog.h"
 #include "image/composerimageresizewidget.h"
 #include "pagecolor/pagecolorbackgrounddialog.h"
+#include "helper/listhelper_p.h"
 #include "globalsettings_base.h"
 
 
@@ -823,9 +824,13 @@ void ComposerViewPrivate::_k_slotChangePageColorAndBackground()
 
 void ComposerViewPrivate::_k_slotEditList()
 {
-    QPointer<ComposerListDialog> dlg = new ComposerListDialog(contextMenuResult.element(),q);
-    if (dlg->exec()) {
-        //TODO
+    QWebElement listElement = ListHelper::listElement(contextMenuResult.element());
+    if (!listElement.isNull()) {
+        QPointer<ComposerListDialog> dlg = new ComposerListDialog(listElement,q);
+        if (dlg->exec()) {
+            //TODO
+        }
+        delete dlg;
     }
 }
 

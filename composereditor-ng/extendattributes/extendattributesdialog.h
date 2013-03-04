@@ -39,7 +39,8 @@ public:
         Body,
         ListUL,
         ListOL,
-        ListDL
+        ListDL,
+        Unknown /*Last Element*/
     };
 
     enum SettingsType {

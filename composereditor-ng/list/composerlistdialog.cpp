@@ -73,7 +73,6 @@ public:
 
 void ComposerListDialogPrivate::initialize()
 {
-    initializeTypeList();
 
     q->setButtons( KDialog::Ok | KDialog::Cancel );
     q->setCaption( i18n( "Edit List" ) );
@@ -104,6 +103,8 @@ void ComposerListDialogPrivate::initialize()
     vbox->addWidget(start);
 
 
+    initializeTypeList();
+
     KSeparator *sep = 0;
     if (!webElement.isNull()) {
         sep = new KSeparator;
@@ -117,13 +118,32 @@ void ComposerListDialogPrivate::initialize()
     vbox->addWidget( sep );
 
     q->connect(q, SIGNAL(okClicked()), q, SLOT(_k_slotOkClicked()));
-    fillStyle();
+    fillStyle();    
     updateSettings();
+    q->resize(300,200);
 }
 
 void ComposerListDialogPrivate::initializeTypeList()
 {
-    //TODO
+    if (!webElement.isNull()) {
+        type = ListHelper::listType(webElement);
+        switch(type) {
+        case ExtendAttributesDialog::ListOL: {
+            listType->setCurrentIndex(2);
+            break;
+        }
+        case ExtendAttributesDialog::ListUL: {
+            listType->setCurrentIndex(1);
+            break;
+        }
+        case ExtendAttributesDialog::ListDL: {
+            listType->setCurrentIndex(3);
+            break;
+        }
+        default:
+           return;
+        }
+    }
 }
 
 void ComposerListDialogPrivate::fillStyle()
@@ -154,17 +174,32 @@ void ComposerListDialogPrivate::fillStyle()
 void ComposerListDialogPrivate::updateSettings()
 {
     if (!webElement.isNull()) {
-        //TODO
+        if (webElement.hasAttribute(QLatin1String("type"))) {
+            const QString newType = webElement.attribute(QLatin1String("type"));
+            qDebug()<<" newType "<<newType;
+            const int itemIndex = listStyle->findData(newType);
+            qDebug()<<" itemIndex"<<itemIndex;
+            if (itemIndex!=-1) {
+                listStyle->setCurrentIndex(itemIndex);
+            }
+        }
     }
 }
 
 void ComposerListDialogPrivate::updateListHtml()
 {
-    /*
-    QWebElement e = ListHelper::olElement(webElement);
-    e.addClass(QLatin1String("UL"));
-    */
-    //TODO
+    if ((type == ExtendAttributesDialog::ListUL) || (type == ExtendAttributesDialog::ListOL)) {
+        const QString newType = listStyle->itemData(listStyle->currentIndex()).toString();
+        if (newType.isEmpty()) {
+            if (webElement.hasAttribute(QLatin1String("type"))) {
+                webElement.removeAttribute(QLatin1String("type"));
+            }
+        } else {
+            webElement.setAttribute(QLatin1String("type"), newType);
+        }
+    } else {
+        //TODO ?
+    }
 }
 
 void ComposerListDialogPrivate::_k_slotWebElementChanged()
