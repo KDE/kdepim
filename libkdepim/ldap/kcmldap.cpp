@@ -247,7 +247,7 @@ void KCMLdap::slotMoveDown()
 void KCMLdap::load()
 {
   mHostListView->clear();
-  KConfig *config = KLDAP::LdapClientSearch::config();
+  KConfig *config = KLDAP::LdapClientSearchConfig::config();
   KConfigGroup group( config, "LDAP" );
 
   uint count = group.readEntry( "NumSelectedHosts", 0 );
@@ -270,7 +270,7 @@ void KCMLdap::load()
 
 void KCMLdap::save()
 {
-  KConfig *config = KLDAP::LdapClientSearch::config();
+  KConfig *config = KLDAP::LdapClientSearchConfig::config();
   config->deleteGroup( "LDAP" );
 
   KConfigGroup group( config, "LDAP" );

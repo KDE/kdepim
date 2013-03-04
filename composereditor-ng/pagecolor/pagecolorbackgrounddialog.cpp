@@ -137,8 +137,7 @@ void PageColorBackgroundDialogPrivate::applyChanges()
         if (pageColorWidget->backgroundImageUrl().isEmpty()) {
             webElement.removeAttribute(QLatin1String("background"));
         } else {
-            //FIX IT
-            webElement.setAttribute(QLatin1String("background"),QString::fromLatin1("file://%1").arg(pageColorWidget->backgroundImageUrl().path()));
+            webElement.setAttribute(QLatin1String("background"), pageColorWidget->backgroundImageUrl().url());
         }
     }
 }

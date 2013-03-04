@@ -40,6 +40,7 @@
 #include <KToolBar>
 
 #include <QAction>
+#include <QFileInfo>
 #include <QWebElement>
 #include <QContextMenuEvent>
 #include <QDebug>
@@ -54,7 +55,7 @@ ComposerView::ComposerView(QWidget *parent)
     kDebug() <<file.fileName();
 
     if ( !file.open ( QIODevice::ReadOnly ) )
-        KMessageBox::error(this, i18n ( "Cannot open template file." ), i18n ( "composer editor" ));
+        KMessageBox::error(this, i18n ( "Cannot open template file %1.", QFileInfo(file).absoluteFilePath() ), i18n ( "composer editor" ));
     else
         setContent ( file.readAll());//, "application/xhtml+xml" );
 
@@ -174,7 +175,7 @@ void ComposerView::addCreatedActionsToActionCollection(KActionCollection *action
     }
 }
 
-void ComposerView::contextMenuEvent(QContextMenuEvent* event)
+void ComposerView::contextMenuEvent(QContextMenuEvent *event)
 {
     d->hideImageResizeWidget();
     d->contextMenuResult = page()->mainFrame()->hitTestContent(event->pos());
@@ -254,7 +255,7 @@ void ComposerView::setActionsEnabled(bool enabled)
         action->setEnabled(enabled);
 }
 
-void ComposerView::mousePressEvent(QMouseEvent * event)
+void ComposerView::mousePressEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton) {
         d->contextMenuResult = page()->mainFrame()->hitTestContent(event->pos());
@@ -268,19 +269,19 @@ void ComposerView::mousePressEvent(QMouseEvent * event)
     KWebView::mousePressEvent(event);
 }
 
-void ComposerView::keyPressEvent(QKeyEvent * event)
+void ComposerView::keyPressEvent(QKeyEvent *event)
 {
     d->hideImageResizeWidget();
     KWebView::keyPressEvent(event);
 }
 
-void ComposerView::wheelEvent(QWheelEvent * event)
+void ComposerView::wheelEvent(QWheelEvent *event)
 {
     d->hideImageResizeWidget();
     KWebView::wheelEvent(event);
 }
 
-void ComposerView::mouseDoubleClickEvent(QMouseEvent * event)
+void ComposerView::mouseDoubleClickEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton) {
         d->contextMenuResult = page()->mainFrame()->hitTestContent(event->pos());
@@ -295,17 +296,17 @@ void ComposerView::mouseDoubleClickEvent(QMouseEvent * event)
     KWebView::mouseDoubleClickEvent(event);
 }
 
-void ComposerView::setHtmlContent( const QString& html )
+void ComposerView::setHtmlContent( const QString &html )
 {
     setHtml(html);
 }
 
-void ComposerView::evaluateJavascript( const QString& javascript)
+void ComposerView::evaluateJavascript( const QString &javascript)
 {
     d->evaluateJavascript(javascript);
 }
 
-void ComposerView::createToolBar(const QList<ComposerViewAction>& lstAction, KToolBar* toolbar)
+void ComposerView::createToolBar(const QList<ComposerViewAction> &lstAction, KToolBar *toolbar)
 {
     const int numberOfAction(lstAction.count());
     for (int i=0;i<numberOfAction;++i) {

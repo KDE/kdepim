@@ -121,7 +121,7 @@ public:
     ExtendAttributesWidget *q;
 };
 
-void ExtendAttributesWidgetPrivate::_k_attributeLineEditChanged(const QString&text)
+void ExtendAttributesWidgetPrivate::_k_attributeLineEditChanged(const QString &text)
 {
     QTreeWidgetItem *item = treeWidget->currentItem();
     if (item && item->text(1).isEmpty()) {
@@ -133,7 +133,7 @@ void ExtendAttributesWidgetPrivate::_k_attributeLineEditChanged(const QString&te
     }
 }
 
-void ExtendAttributesWidgetPrivate::_k_attributeValueChanged(const QString& val)
+void ExtendAttributesWidgetPrivate::_k_attributeValueChanged(const QString &val)
 {
     if (blockSignal)
         return;
@@ -158,7 +158,7 @@ void ExtendAttributesWidgetPrivate::_k_slotCurrentItemChanged(QTreeWidgetItem*,Q
     }
 }
 
-void ExtendAttributesWidgetPrivate::_k_attributeChanged(const QString& key)
+void ExtendAttributesWidgetPrivate::_k_attributeChanged(const QString &key)
 {
     blockSignal = true;
 

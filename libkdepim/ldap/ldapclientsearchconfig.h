@@ -1,4 +1,5 @@
-/* Copyright (C) 2013 Laurent Montel <montel@kde.org>
+/*
+ * Copyright (C) 2013 Laurent Montel <montel@kde.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -24,6 +25,7 @@
 #include <QObject>
 
 class KConfigGroup;
+class KConfig;
 
 namespace KLDAP {
 class LdapObject;
@@ -37,12 +39,17 @@ public:
     ~LdapClientSearchConfig();
 
     /**
+     * Returns the global config object, which stores the LdapClient configurations.
+     */
+    static KConfig *config();
+
+    /**
      * Reads the LDAP @p server settings from the given config @p group for the
      * given LDAP @p clientNumber.
      *
      * @param active Defines whether the active settings shall be read.
      */
-    void readConfig( KLDAP::LdapServer &server, const KConfigGroup &group,
+    void readConfig( KLDAP::LdapServer &server, KConfigGroup &group,
                      int clientNumber, bool active );
 
     /**

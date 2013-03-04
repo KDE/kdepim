@@ -1,4 +1,5 @@
-/* Copyright (C) 2013 Laurent Montel <montel@kde.org>
+/*
+ * Copyright (C) 2013 Laurent Montel <montel@kde.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -19,10 +20,12 @@
 #include "ldapclientsearchconfig.h"
 #include <kldap/ldapserver.h>
 
-#include <QDebug>
 
+#include <KStandardDirs>
 #include <KConfig>
 #include <KConfigGroup>
+#include <KMessageBox>
+#include <KLocale>
 
 #include <kwallet.h>
 
@@ -48,6 +51,13 @@ public:
     KWallet::Wallet* wallet;
 };
 
+K_GLOBAL_STATIC_WITH_ARGS( KConfig, s_config, ( "kabldaprc", KConfig::NoGlobals ) )
+
+KConfig* LdapClientSearchConfig::config()
+{
+  return s_config;
+}
+
 LdapClientSearchConfig::LdapClientSearchConfig(QObject *parent)
     : QObject(parent), d(new LdapClientSearchConfig::Private())
 {
@@ -58,11 +68,11 @@ LdapClientSearchConfig::~LdapClientSearchConfig()
     delete d;
 }
 
-void LdapClientSearchConfig::readConfig( KLDAP::LdapServer &server, const KConfigGroup &config, int j, bool active )
+void LdapClientSearchConfig::readConfig( KLDAP::LdapServer &server, KConfigGroup &config, int j, bool active )
 {
     QString prefix;
     if ( active ) {
-        prefix = "Selected";
+        prefix = QLatin1String("Selected");
     }
 
     const QString host =  config.readEntry( prefix + QString::fromLatin1( "Host%1" ).arg( j ),
@@ -94,6 +104,23 @@ void LdapClientSearchConfig::readConfig( KLDAP::LdapServer &server, const KConfi
     const QString pwdBindBNEntry = prefix + QString::fromLatin1( "PwdBind%1" ).arg( j );
     QString pwdBindDN = config.readEntry( pwdBindBNEntry, QString() );
     if ( !pwdBindDN.isEmpty() ) {
+        if ( KMessageBox::Yes == KMessageBox::questionYesNo(0, i18n("LDAP password is stored as clear text, do you want to store it in kwallet?"),
+                                                            i18n("Store clear text password in KWallet"),
+                                                            KStandardGuiItem::yes(),
+                                                            KStandardGuiItem::no(),
+                                                            QLatin1String("DoAskToStoreToKwallet"))) {
+            d->wallet = KWallet::Wallet::openWallet( KWallet::Wallet::LocalWallet(), 0 );
+            if ( d->wallet ) {
+                d->useWallet = true;
+                if ( !d->wallet->setFolder( QLatin1String("ldapclient") ) ) {
+                    d->wallet->createFolder( QLatin1String("ldapclient") );
+                    d->wallet->setFolder( QLatin1String("ldapclient") );
+                }
+                d->wallet->writePassword(pwdBindBNEntry, pwdBindDN );
+                config.deleteEntry(pwdBindBNEntry);
+                config.sync();
+            }
+        }
         server.setPassword( pwdBindDN );
     } else { //Look at in Wallet
         d->wallet = KWallet::Wallet::openWallet( KWallet::Wallet::LocalWallet(), 0 );
@@ -120,18 +147,18 @@ void LdapClientSearchConfig::readConfig( KLDAP::LdapServer &server, const KConfi
     tmp = config.readEntry( prefix + QString::fromLatin1( "Security%1" ).arg( j ),
                             QString::fromLatin1( "None" ) );
     server.setSecurity( KLDAP::LdapServer::None );
-    if ( tmp == "SSL" ) {
+    if ( tmp == QLatin1String("SSL") ) {
         server.setSecurity( KLDAP::LdapServer::SSL );
-    } else if ( tmp == "TLS" ) {
+    } else if ( tmp == QLatin1String("TLS") ) {
         server.setSecurity( KLDAP::LdapServer::TLS );
     }
 
     tmp = config.readEntry( prefix + QString::fromLatin1( "Auth%1" ).arg( j ),
                             QString::fromLatin1( "Anonymous" ) );
     server.setAuth( KLDAP::LdapServer::Anonymous );
-    if ( tmp == "Simple" ) {
+    if ( tmp == QLatin1String("Simple") ) {
         server.setAuth( KLDAP::LdapServer::Simple );
-    } else if ( tmp == "SASL" ) {
+    } else if ( tmp == QLatin1String("SASL") ) {
         server.setAuth( KLDAP::LdapServer::SASL );
     }
 
@@ -142,7 +169,7 @@ void LdapClientSearchConfig::writeConfig( const KLDAP::LdapServer &server, KConf
 {
     QString prefix;
     if ( active ) {
-        prefix = "Selected";
+        prefix = QLatin1String("Selected");
     }
 
     config.writeEntry( prefix + QString::fromLatin1( "Host%1" ).arg( j ), server.host() );
@@ -157,7 +184,7 @@ void LdapClientSearchConfig::writeConfig( const KLDAP::LdapServer &server, KConf
         if (d->useWallet && d->wallet) {
             d->wallet->writePassword(passwordEntry, password );
         } else {
-            config.writeEntry( prefix + passwordEntry, password );
+            config.writeEntry( passwordEntry, password );
         }
     }
 
@@ -168,24 +195,24 @@ void LdapClientSearchConfig::writeConfig( const KLDAP::LdapServer &server, KConf
     QString tmp;
     switch ( server.security() ) {
     case KLDAP::LdapServer::TLS:
-        tmp = "TLS";
+        tmp = QLatin1String("TLS");
         break;
     case KLDAP::LdapServer::SSL:
-        tmp = "SSL";
+        tmp = QLatin1String("SSL");
         break;
     default:
-        tmp = "None";
+        tmp = QLatin1String("None");
     }
     config.writeEntry( prefix + QString::fromLatin1( "Security%1" ).arg( j ), tmp );
     switch ( server.auth() ) {
     case KLDAP::LdapServer::Simple:
-        tmp = "Simple";
+        tmp = QLatin1String("Simple");
         break;
     case KLDAP::LdapServer::SSL:
-        tmp = "SASL";
+        tmp = QLatin1String("SASL");
         break;
     default:
-        tmp = "Anonymous";
+        tmp = QLatin1String("Anonymous");
     }
     config.writeEntry( prefix + QString::fromLatin1( "Auth%1" ).arg( j ), tmp );
     config.writeEntry( prefix + QString::fromLatin1( "Mech%1" ).arg( j ), server.mech() );
