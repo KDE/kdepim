@@ -19,10 +19,16 @@
 */
 
 #include "configureidentity.h"
+#include <kactivities/consumer.h>
+
+#include <QDebug>
 
 ConfigureIdentity::ConfigureIdentity(QWidget *parent)
     : QWidget(parent)
 {
+    if (KActivities::Consumer::serviceStatus() == KActivities::Consumer::NotRunning)  {
+        qDebug()<<" kactivities is not running";
+    }
 }
 
 ConfigureIdentity::~ConfigureIdentity()
