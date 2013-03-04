@@ -34,6 +34,7 @@
 #include <kdescendantsproxymodel.h>
 #include "ldap/ldapclient.h"
 #include "ldap/ldapclientsearch.h"
+#include "ldap/ldapclientsearchconfig.h"
 
 #include <akonadi/changerecorder.h>
 #include <akonadi/collectionfilterproxymodel.h>
@@ -88,7 +89,7 @@ class LDAPCompletionItem : public CompletionItem
 
     virtual void save( CompletionOrderEditor* )
     {
-      KConfig *config = KLDAP::LdapClientSearch::config();
+      KConfig *config = KLDAP::LdapClientSearchConfig::config();
       KConfigGroup group( config, "LDAP" );
       group.writeEntry( QString( "SelectedCompletionWeight%1" ).arg( mLdapClient->clientNumber() ),
                         mWeight );

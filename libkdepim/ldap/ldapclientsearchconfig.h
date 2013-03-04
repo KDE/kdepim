@@ -24,6 +24,7 @@
 #include <QObject>
 
 class KConfigGroup;
+class KConfig;
 
 namespace KLDAP {
 class LdapObject;
@@ -35,6 +36,11 @@ class KDEPIM_EXPORT LdapClientSearchConfig : public QObject
 public:
     explicit LdapClientSearchConfig(QObject *parent = 0);
     ~LdapClientSearchConfig();
+
+    /**
+     * Returns the global config object, which stores the LdapClient configurations.
+     */
+    static KConfig *config();
 
     /**
      * Reads the LDAP @p server settings from the given config @p group for the

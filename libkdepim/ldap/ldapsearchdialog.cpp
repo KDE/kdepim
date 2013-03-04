@@ -25,7 +25,6 @@
 
 #include "ldapclient.h"
 #include "ldapclientsearchconfig.h"
-#include "ldapclientsearch.h"
 #include <QtCore/QPair>
 #include <QApplication>
 #include <QCheckBox>
@@ -645,7 +644,7 @@ void LdapSearchDialog::Private::restoreSettings()
   qDeleteAll( mLdapClientList ) ;
   mLdapClientList.clear();
 
-  KConfig *config = KLDAP::LdapClientSearch::config();
+  KConfig *config = KLDAP::LdapClientSearchConfig::config();
 
   KConfigGroup searchGroup( config, "LDAPSearch" );
   mSearchType->setCurrentIndex( searchGroup.readEntry( "SearchType", 0 ) );
@@ -690,7 +689,7 @@ void LdapSearchDialog::Private::restoreSettings()
 
 void LdapSearchDialog::Private::saveSettings()
 {
-  KConfig *config = KLDAP::LdapClientSearch::config();
+  KConfig *config = KLDAP::LdapClientSearchConfig::config();
   KConfigGroup group( config, "LDAPSearch" );
   group.writeEntry( "SearchType", mSearchType->currentIndex() );
   group.sync();

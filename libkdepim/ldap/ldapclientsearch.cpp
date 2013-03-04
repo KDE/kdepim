@@ -49,124 +49,6 @@
 
 using namespace KLDAP;
 
-K_GLOBAL_STATIC_WITH_ARGS( KConfig, s_config, ( "kabldaprc", KConfig::NoGlobals ) )
-
-#if 0
-void LdapClientSearch::readConfig( KLDAP::LdapServer &server, const KConfigGroup &config,
-                                   int j, bool active )
-{
-  QString prefix;
-  if ( active ) {
-    prefix = "Selected";
-  }
-
-  const QString host =  config.readEntry( prefix + QString( "Host%1" ).arg( j ),
-                                          QString() ).trimmed();
-  if ( !host.isEmpty() ) {
-    server.setHost( host );
-  }
-
-  const int port = config.readEntry( prefix + QString( "Port%1" ).arg( j ), 389 );
-  server.setPort( port );
-
-  const QString base = config.readEntry( prefix + QString( "Base%1" ).arg( j ),
-                                         QString() ).trimmed();
-  if ( !base.isEmpty() ) {
-    server.setBaseDn( KLDAP::LdapDN( base ) );
-  }
-
-  const QString user = config.readEntry( prefix + QString( "User%1" ).arg( j ),
-                                         QString() ).trimmed();
-  if ( !user.isEmpty() ) {
-    server.setUser( user );
-  }
-
-  QString bindDN = config.readEntry( prefix + QString( "Bind%1" ).arg( j ), QString() ).trimmed();
-  if ( !bindDN.isEmpty() ) {
-    server.setBindDn( bindDN );
-  }
-
-  QString pwdBindDN = config.readEntry( prefix + QString( "PwdBind%1" ).arg( j ), QString() );
-  if ( !pwdBindDN.isEmpty() ) {
-    server.setPassword( pwdBindDN );
-  }
-
-  server.setTimeLimit( config.readEntry( prefix + QString( "TimeLimit%1" ).arg( j ), 0 ) );
-  server.setSizeLimit( config.readEntry( prefix + QString( "SizeLimit%1" ).arg( j ), 0 ) );
-  server.setPageSize( config.readEntry( prefix + QString( "PageSize%1" ).arg( j ), 0 ) );
-  server.setVersion( config.readEntry( prefix + QString( "Version%1" ).arg( j ), 3 ) );
-
-  QString tmp;
-  tmp = config.readEntry( prefix + QString( "Security%1" ).arg( j ),
-                          QString::fromLatin1( "None" ) );
-  server.setSecurity( KLDAP::LdapServer::None );
-  if ( tmp == "SSL" ) {
-    server.setSecurity( KLDAP::LdapServer::SSL );
-  } else if ( tmp == "TLS" ) {
-    server.setSecurity( KLDAP::LdapServer::TLS );
-  }
-
-  tmp = config.readEntry( prefix + QString( "Auth%1" ).arg( j ),
-                          QString::fromLatin1( "Anonymous" ) );
-  server.setAuth( KLDAP::LdapServer::Anonymous );
-  if ( tmp == "Simple" ) {
-    server.setAuth( KLDAP::LdapServer::Simple );
-  } else if ( tmp == "SASL" ) {
-    server.setAuth( KLDAP::LdapServer::SASL );
-  }
-
-  server.setMech( config.readEntry( prefix + QString( "Mech%1" ).arg( j ), QString() ) );
-}
-
-void LdapClientSearch::writeConfig( const KLDAP::LdapServer &server, KConfigGroup &config, int j,
-                                    bool active )
-{
-  QString prefix;
-  if ( active ) {
-    prefix = "Selected";
-  }
-
-  config.writeEntry( prefix + QString( "Host%1" ).arg( j ), server.host() );
-  config.writeEntry( prefix + QString( "Port%1" ).arg( j ), server.port() );
-  config.writeEntry( prefix + QString( "Base%1" ).arg( j ), server.baseDn().toString() );
-  config.writeEntry( prefix + QString( "User%1" ).arg( j ), server.user() );
-  config.writeEntry( prefix + QString( "Bind%1" ).arg( j ), server.bindDn() );
-  config.writeEntry( prefix + QString( "PwdBind%1" ).arg( j ), server.password() );
-  config.writeEntry( prefix + QString( "TimeLimit%1" ).arg( j ), server.timeLimit() );
-  config.writeEntry( prefix + QString( "SizeLimit%1" ).arg( j ), server.sizeLimit() );
-  config.writeEntry( prefix + QString( "PageSize%1" ).arg( j ), server.pageSize() );
-  config.writeEntry( prefix + QString( "Version%1" ).arg( j ), server.version() );
-  QString tmp;
-  switch ( server.security() ) {
-    case KLDAP::LdapServer::TLS:
-      tmp = "TLS";
-      break;
-    case KLDAP::LdapServer::SSL:
-      tmp = "SSL";
-      break;
-    default:
-      tmp = "None";
-  }
-  config.writeEntry( prefix + QString( "Security%1" ).arg( j ), tmp );
-  switch ( server.auth() ) {
-    case KLDAP::LdapServer::Simple:
-      tmp = "Simple";
-      break;
-    case KLDAP::LdapServer::SSL:
-      tmp = "SASL";
-      break;
-    default:
-      tmp = "Anonymous";
-  }
-  config.writeEntry( prefix + QString( "Auth%1" ).arg( j ), tmp );
-  config.writeEntry( prefix + QString( "Mech%1" ).arg( j ), server.mech() );
-}
-#endif
-KConfig* LdapClientSearch::config()
-{
-  return s_config;
-}
-
 class LdapClientSearch::Private
 {
   public:
@@ -242,7 +124,7 @@ void LdapClientSearch::Private::readWeighForClient( LdapClient *client, const KC
 
 void LdapClientSearch::updateCompletionWeights()
 {
-  KConfigGroup config( KLDAP::LdapClientSearch::config(), "LDAP" );
+  KConfigGroup config( KLDAP::LdapClientSearchConfig::config(), "LDAP" );
   for ( int i = 0; i < d->mClients.size(); i++ ) {
     d->readWeighForClient( d->mClients[ i ], config, i );
   }
@@ -260,7 +142,7 @@ void LdapClientSearch::Private::readConfig()
   mClients.clear();
 
   // stolen from KAddressBook
-  KConfigGroup config( KLDAP::LdapClientSearch::config(), "LDAP" );
+  KConfigGroup config( KLDAP::LdapClientSearchConfig::config(), "LDAP" );
   const int numHosts = config.readEntry( "NumSelectedHosts", 0 );
   if ( !numHosts ) {
     mNoLDAPLookup = true;

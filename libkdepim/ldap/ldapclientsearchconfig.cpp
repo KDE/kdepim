@@ -21,6 +21,7 @@
 
 #include <QDebug>
 
+#include <KStandardDirs>
 #include <KConfig>
 #include <KConfigGroup>
 
@@ -47,6 +48,13 @@ public:
     bool useWallet;
     KWallet::Wallet* wallet;
 };
+
+K_GLOBAL_STATIC_WITH_ARGS( KConfig, s_config, ( "kabldaprc", KConfig::NoGlobals ) )
+
+KConfig* LdapClientSearchConfig::config()
+{
+  return s_config;
+}
 
 LdapClientSearchConfig::LdapClientSearchConfig(QObject *parent)
     : QObject(parent), d(new LdapClientSearchConfig::Private())
