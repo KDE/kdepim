@@ -34,9 +34,7 @@
 #include "ssllabel.h"
 
 #include <KDebug>
-#include <KDialog>
 #include <KHBox>
-#include <KIconLoader>
 #include <KLocale>
 #include <KStandardGuiItem>
 #include <KVBox>

@@ -27,27 +27,27 @@ class QTextDocument;
 namespace KPIM {
 class LogItemDelegate : public QStyledItemDelegate
 {
-  public:
-  explicit LogItemDelegate( QObject *parent );
-  ~LogItemDelegate();
-  
-  virtual QSize sizeHint ( const QStyleOptionViewItem &option, const QModelIndex &index ) const;
-  virtual void paint ( QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index ) const;
-  virtual QWidget  *createEditor ( QWidget *, const QStyleOptionViewItem  &, const QModelIndex & ) const;
+public:
+    explicit LogItemDelegate( QObject *parent );
+    ~LogItemDelegate();
+
+    virtual QSize sizeHint ( const QStyleOptionViewItem &option, const QModelIndex &index ) const;
+    virtual void paint ( QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index ) const;
+    virtual QWidget  *createEditor ( QWidget *, const QStyleOptionViewItem  &, const QModelIndex & ) const;
 
 
-  private:
-  QTextDocument* document ( const QStyleOptionViewItem &option, const QModelIndex &index ) const;
+private:
+    QTextDocument* document ( const QStyleOptionViewItem &option, const QModelIndex &index ) const;
 };
 
 class KDEPIM_EXPORT CustomLogWidget : public QListWidget
 {
-  public:
-  explicit CustomLogWidget( QWidget * parent = 0 );
-  ~CustomLogWidget();
+public:
+    explicit CustomLogWidget( QWidget * parent = 0 );
+    ~CustomLogWidget();
 
-  void addInfoLogEntry( const QString& log );
-  void addErrorLogEntry( const QString& log );
+    void addInfoLogEntry( const QString& log );
+    void addErrorLogEntry( const QString& log );
 };
 }
 

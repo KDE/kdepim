@@ -80,7 +80,7 @@ class KDEPIM_EXPORT CompletionOrderEditor : public KDialog
     void slotSelectionChanged();
     void slotMoveUp();
     void slotMoveDown();
-    virtual void slotOk();
+    void slotOk();
 
   private:
     void loadCompletionItems();
