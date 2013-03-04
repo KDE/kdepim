@@ -147,18 +147,18 @@ void LdapClientSearchConfig::readConfig( KLDAP::LdapServer &server, KConfigGroup
     tmp = config.readEntry( prefix + QString::fromLatin1( "Security%1" ).arg( j ),
                             QString::fromLatin1( "None" ) );
     server.setSecurity( KLDAP::LdapServer::None );
-    if ( tmp == "SSL" ) {
+    if ( tmp == QLatin1String("SSL") ) {
         server.setSecurity( KLDAP::LdapServer::SSL );
-    } else if ( tmp == "TLS" ) {
+    } else if ( tmp == QLatin1String("TLS") ) {
         server.setSecurity( KLDAP::LdapServer::TLS );
     }
 
     tmp = config.readEntry( prefix + QString::fromLatin1( "Auth%1" ).arg( j ),
                             QString::fromLatin1( "Anonymous" ) );
     server.setAuth( KLDAP::LdapServer::Anonymous );
-    if ( tmp == "Simple" ) {
+    if ( tmp == QLatin1String("Simple") ) {
         server.setAuth( KLDAP::LdapServer::Simple );
-    } else if ( tmp == "SASL" ) {
+    } else if ( tmp == QLatin1String("SASL") ) {
         server.setAuth( KLDAP::LdapServer::SASL );
     }
 
@@ -169,7 +169,7 @@ void LdapClientSearchConfig::writeConfig( const KLDAP::LdapServer &server, KConf
 {
     QString prefix;
     if ( active ) {
-        prefix = "Selected";
+        prefix = QLatin1String("Selected");
     }
 
     config.writeEntry( prefix + QString::fromLatin1( "Host%1" ).arg( j ), server.host() );
@@ -195,24 +195,24 @@ void LdapClientSearchConfig::writeConfig( const KLDAP::LdapServer &server, KConf
     QString tmp;
     switch ( server.security() ) {
     case KLDAP::LdapServer::TLS:
-        tmp = "TLS";
+        tmp = QLatin1String("TLS");
         break;
     case KLDAP::LdapServer::SSL:
-        tmp = "SSL";
+        tmp = QLatin1String("SSL");
         break;
     default:
-        tmp = "None";
+        tmp = QLatin1String("None");
     }
     config.writeEntry( prefix + QString::fromLatin1( "Security%1" ).arg( j ), tmp );
     switch ( server.auth() ) {
     case KLDAP::LdapServer::Simple:
-        tmp = "Simple";
+        tmp = QLatin1String("Simple");
         break;
     case KLDAP::LdapServer::SSL:
-        tmp = "SASL";
+        tmp = QLatin1String("SASL");
         break;
     default:
-        tmp = "Anonymous";
+        tmp = QLatin1String("Anonymous");
     }
     config.writeEntry( prefix + QString::fromLatin1( "Auth%1" ).arg( j ), tmp );
     config.writeEntry( prefix + QString::fromLatin1( "Mech%1" ).arg( j ), server.mech() );
