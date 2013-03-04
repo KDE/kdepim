@@ -9,6 +9,7 @@ include_directories (
     ${Boost_INCLUDE_DIR}
     ${CMAKE_SOURCE_DIR}/akregator2/interfaces
     ${CMAKE_BINARY_DIR}/akregator2/interfaces
+    ${NEPOMUK_CORE_INCLUDE_DIR}
     )
 
 ########### next target ###############
