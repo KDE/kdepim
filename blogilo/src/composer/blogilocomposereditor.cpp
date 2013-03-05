@@ -60,11 +60,16 @@ BlogiloComposerEditor::BlogiloComposerEditor(BlogiloComposerView *view, QWidget 
     lstActions<<ComposerEditorNG::ComposerView::OrderedList;
     lstActions<<ComposerEditorNG::ComposerView::UnorderedList;
     lstActions<<ComposerEditorNG::ComposerView::Separator;
-    lstActions<<ComposerEditorNG::ComposerView::PasteWithoutFormatting;
     lstActions<<ComposerEditorNG::ComposerView::InsertTable;
 
-    createActions(lstActions);
-    createToolBar(lstActions);
+
+    QList<ComposerEditorNG::ComposerView::ComposerViewAction> toolBarActions;
+    toolBarActions<<lstActions;
+
+    createActions(lstActions<<ComposerEditorNG::ComposerView::PasteWithoutFormatting);
+
+    createToolBar(toolBarActions);
+
 
     mActSplitPost = new KAction( KIcon( "insert-more-mark" ), i18n( "Split text" ), this );
     connect( mActSplitPost, SIGNAL(triggered(bool)), this, SLOT(slotAddPostSplitter()) );
