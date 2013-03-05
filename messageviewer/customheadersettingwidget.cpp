@@ -16,17 +16,27 @@
 */
 
 #include "customheadersettingwidget.h"
+#include "pimcommon/simplestringlisteditor.h"
+
+#include <KLineEdit>
+
+#include <QHBoxLayout>
+#include <QVBoxLayout>
+#include <QLabel>
 
 namespace MessageViewer {
 
 CustomHeaderSettingWidget::CustomHeaderSettingWidget(QWidget *parent)
     : QWidget(parent)
 {
+    QVBoxLayout *topLayout = new QVBoxLayout;
+    QHBoxLayout *lay = new QHBoxLayout;
+    topLayout->addLayout(lay);
+    setLayout(topLayout);
 }
 
 CustomHeaderSettingWidget::~CustomHeaderSettingWidget()
 {
-
 }
 
 }

@@ -20,15 +20,27 @@
 
 #include "messageviewer_export.h"
 
+
 #include <QWidget>
+
+namespace PimCommon {
+class SimpleStringListEditor;
+}
+
+class KLineEdit;
 
 namespace MessageViewer {
 
 class MESSAGEVIEWER_EXPORT CustomHeaderSettingWidget : public QWidget
 {
+    Q_OBJECT
 public:
     explicit CustomHeaderSettingWidget(QWidget *parent);
     ~CustomHeaderSettingWidget();
+private:
+    PimCommon::SimpleStringListEditor *mHeaderToHide;
+    PimCommon::SimpleStringListEditor *mHeaderToShow;
+    KLineEdit *mHeader;
 };
 
 }
