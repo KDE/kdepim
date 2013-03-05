@@ -36,7 +36,10 @@ class ComposerLinkDialogPrivate
 {
 public:
     ComposerLinkDialogPrivate(ComposerLinkDialog *qq)
-        :q(qq)
+        : linkText(0),
+          linkLocation(0),
+          target(0),
+          q(qq)
     {
     }
 

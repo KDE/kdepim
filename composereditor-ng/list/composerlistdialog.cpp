@@ -43,6 +43,8 @@ public:
         : webElement(element),
           listType(0),
           listStyle(0),
+          start(0),
+          styleLabel(0),
           q(qq),
           type(ExtendAttributesDialog::ListUL)
     {
@@ -67,6 +69,7 @@ public:
     KComboBox *listType;
     KComboBox *listStyle;
     QSpinBox *start;
+    QLabel *styleLabel;
     ComposerListDialog *q;
     ExtendAttributesDialog::ExtendType type;
 };
@@ -89,6 +92,9 @@ void ComposerListDialogPrivate::initialize()
     listType->addItem(i18n("Numbered List"), Numbered);
     listType->addItem(i18n("Definition List"), Definition);
     listType->setEnabled(false);
+
+    styleLabel = new QLabel(i18n("List Type:"));
+    vbox->addWidget(styleLabel);
 
     listStyle = new KComboBox;
     vbox->addWidget(listStyle);
@@ -128,14 +134,17 @@ void ComposerListDialogPrivate::initializeTypeList()
         switch(type) {
         case ExtendAttributesDialog::ListOL: {
             listType->setCurrentIndex(2);
+            styleLabel->setText(i18n("Number Style:"));
             break;
         }
         case ExtendAttributesDialog::ListUL: {
             listType->setCurrentIndex(1);
+            styleLabel->setText(i18n("Bullet Style:"));
             break;
         }
         case ExtendAttributesDialog::ListDL: {
             listType->setCurrentIndex(3);
+            styleLabel->setText(i18n("Bullet Style:"));
             break;
         }
         default:
