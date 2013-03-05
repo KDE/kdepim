@@ -84,6 +84,7 @@ void UnencryptedMessageTest::testForwardedOpenPGPSignedEncrypted()
     TestHtmlWriter testWriter;
   TestCSSHelper testCSSHelper;
   MessageCore::Test::TestObjectTreeSource emptySource( &testWriter, &testCSSHelper );
+  emptySource.setAllowDecryption( true );
   ObjectTreeParser otp( &emptySource, &nodeHelper );
   otp.parseObjectTree( originalMessage.get() );
 
@@ -118,6 +119,7 @@ void UnencryptedMessageTest::testSMIMESignedEncrypted()
 
   NodeHelper nodeHelper;
   EmptySource emptySource;
+  emptySource.setAllowDecryption( true );
   ObjectTreeParser otp( &emptySource, &nodeHelper );
   otp.parseObjectTree( originalMessage.get() );
 
@@ -146,6 +148,7 @@ void UnencryptedMessageTest::testOpenPGPSignedEncrypted()
 
   NodeHelper nodeHelper;
   EmptySource emptySource;
+  emptySource.setAllowDecryption( true );
   ObjectTreeParser otp( &emptySource, &nodeHelper );
   otp.parseObjectTree( originalMessage.get() );
 
@@ -174,6 +177,7 @@ void UnencryptedMessageTest::testOpenPGPEncrypted()
 
   NodeHelper nodeHelper;
   EmptySource emptySource;
+  emptySource.setAllowDecryption( true );
   ObjectTreeParser otp( &emptySource, &nodeHelper );
   otp.parseObjectTree( originalMessage.get() );
 
