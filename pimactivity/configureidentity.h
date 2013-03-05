@@ -22,7 +22,10 @@
 #define CONFIGUREIDENTITY_H
 
 #include <QWidget>
-#include <KActivities/Consumer>
+
+namespace KActivities {
+class Consumer;
+}
 
 class ConfigureIdentity : public QWidget
 {
