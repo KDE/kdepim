@@ -71,19 +71,6 @@
    </item>
    <item>
     <layout class="QGridLayout" name="gridLayout_3">
-     <item row="0" column="0" colspan="2">
-      <widget class="QLabel" name="label_2">
-       <property name="font">
-        <font>
-         <weight>75</weight>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>Composer</string>
-       </property>
-      </widget>
-     </item>
      <item row="1" column="0">
       <spacer name="horizontalSpacer_2">
        <property name="orientation">
@@ -99,6 +86,19 @@
         </size>
        </property>
       </spacer>
+     </item>
+     <item row="0" column="0" colspan="2">
+      <widget class="QLabel" name="label_2">
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>Composer</string>
+       </property>
+      </widget>
      </item>
      <item row="1" column="1">
       <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -187,7 +187,39 @@
        </item>
       </layout>
      </item>
-     <item row="2" column="1">
+     <item row="3" column="1">
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <item>
+        <widget class="QCheckBox" name="kcfg_ComposerReplaceReplyPrefixes">
+         <property name="text">
+          <string>Replace recognized reply prefixes</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="kcfg_ComposerReplaceForwardPrefixes">
+         <property name="text">
+          <string>Replace recognized forward prefixes</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="kcfg_ComposerOutlookCompatibleNaming">
+         <property name="text">
+          <string>Outlook compatible attachment naming</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="kcfg_ComposerDetectMissingAttachments">
+         <property name="text">
+          <string>Enable detection of missing attachments</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="2" column="0" colspan="2">
       <layout class="QGridLayout" name="gridLayout_2">
        <item row="0" column="0" colspan="2">
         <widget class="QLabel" name="label_3">
@@ -352,38 +384,6 @@
         <widget class="QLabel" name="label_5">
          <property name="text">
           <string>Reply to Sender:</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item row="3" column="1">
-      <layout class="QVBoxLayout" name="verticalLayout_3">
-       <item>
-        <widget class="QCheckBox" name="kcfg_ComposerReplaceReplyPrefixes">
-         <property name="text">
-          <string>Replace recognized reply prefixes</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QCheckBox" name="kcfg_ComposerReplaceForwardPrefixes">
-         <property name="text">
-          <string>Replace recognized forward prefixes</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QCheckBox" name="kcfg_ComposerOutlookCompatibleNaming">
-         <property name="text">
-          <string>Outlook compatible attachment naming</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QCheckBox" name="kcfg_ComposerDetectMissingAttachments">
-         <property name="text">
-          <string>Enable detection of missing attachments</string>
          </property>
         </widget>
        </item>
