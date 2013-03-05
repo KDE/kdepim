@@ -85,6 +85,7 @@ set(libmessageviewer_SRCS
   viewer.cpp
   viewer_p.cpp
   webkitparthtmlwriter.cpp
+  customheadersettingwidget.cpp
   ${_mailwebview_cpp}
 )
 
