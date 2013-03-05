@@ -4,6 +4,8 @@
     This file is part of KMail, the KDE mail client.
     Copyright (c) 2001 Marc Mutz <mutz@kde.org>
 
+    Copyright (c) 2013 Laurent Montel <montel@kde.org>
+
     KMail is free software; you can redistribute it and/or modify it
     under the terms of the GNU General Public License, version 2, as
     published by the Free Software Foundation.
@@ -45,7 +47,7 @@
 //********************************************************
 // SimpleStringListEditor
 //********************************************************
-
+namespace PimCommon {
 SimpleStringListEditor::SimpleStringListEditor( QWidget * parent,
                                                 ButtonCode buttons,
                                                 const QString & addLabel,
@@ -371,7 +373,7 @@ void SimpleStringListEditor::slotContextMenu(const QPoint&pos)
     menu->exec( mListBox->mapToGlobal( pos ) );
     delete menu;
 }
-
+}
 
 
 #include "simplestringlisteditor.moc"

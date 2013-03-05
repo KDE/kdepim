@@ -314,6 +314,7 @@ else()
     add_definitions(-DKMAIL_SUPPORTED)
   endif()
 
+  macro_optional_add_subdirectory(pimactivity)
   macro_optional_add_subdirectory(korganizer)
   if(KDEPIM_BUILD_DESKTOP)
     macro_optional_add_subdirectory(akregator)
