@@ -94,7 +94,10 @@
            <bool>false</bool>
           </property>
           <property name="text">
-           <string>Unread articles:</string>
+           <string>&amp;Unread articles:</string>
+          </property>
+          <property name="buddy">
+           <cstring>kcfg_ColorUnreadArticles</cstring>
           </property>
          </widget>
         </item>
@@ -111,7 +114,10 @@
            <bool>false</bool>
           </property>
           <property name="text">
-           <string>New articles:</string>
+           <string>&amp;New articles:</string>
+          </property>
+          <property name="buddy">
+           <cstring>kcfg_ColorNewArticles</cstring>
           </property>
          </widget>
         </item>
@@ -127,7 +133,7 @@
       <item row="0" column="0">
        <widget class="QCheckBox" name="kcfg_UseCustomColors">
         <property name="text">
-         <string>Use custom colors</string>
+         <string>Use &amp;custom colors</string>
         </property>
        </widget>
       </item>
@@ -143,7 +149,10 @@
       <item row="0" column="0">
        <widget class="QLabel" name="lbl_MinimumFontSize">
         <property name="text">
-         <string>Minimum font size:</string>
+         <string>&amp;Minimum font size:</string>
+        </property>
+        <property name="buddy">
+         <cstring>kcfg_MinimumFontSize</cstring>
         </property>
        </widget>
       </item>
@@ -183,7 +192,10 @@
       <item row="1" column="0">
        <widget class="QLabel" name="lbl_MediumFontSize">
         <property name="text">
-         <string>Medium font size:</string>
+         <string>Me&amp;dium font size:</string>
+        </property>
+        <property name="buddy">
+         <cstring>kcfg_MediumFontSize</cstring>
         </property>
        </widget>
       </item>
@@ -232,7 +244,10 @@
       <item row="0" column="0">
        <widget class="QLabel" name="textLabel1">
         <property name="text">
-         <string>Standard font:</string>
+         <string>&amp;Standard font:</string>
+        </property>
+        <property name="buddy">
+         <cstring>kcfg_StandardFont</cstring>
         </property>
        </widget>
       </item>
@@ -242,7 +257,10 @@
       <item row="1" column="0">
        <widget class="QLabel" name="textLabel2_2">
         <property name="text">
-         <string>Fixed font:</string>
+         <string>&amp;Fixed font:</string>
+        </property>
+        <property name="buddy">
+         <cstring>kcfg_FixedFont</cstring>
         </property>
        </widget>
       </item>
@@ -252,7 +270,10 @@
       <item row="2" column="0">
        <widget class="QLabel" name="textLabel3">
         <property name="text">
-         <string>Serif font:</string>
+         <string>S&amp;erif font:</string>
+        </property>
+        <property name="buddy">
+         <cstring>kcfg_SerifFont</cstring>
         </property>
        </widget>
       </item>
@@ -262,7 +283,10 @@
       <item row="3" column="0">
        <widget class="QLabel" name="textLabel4">
         <property name="text">
-         <string>Sans serif font:</string>
+         <string>Sa&amp;ns serif font:</string>
+        </property>
+        <property name="buddy">
+         <cstring>kcfg_SansSerifFont</cstring>
         </property>
        </widget>
       </item>

@@ -20,21 +20,21 @@
      <item>
       <widget class="QPushButton" name="addButton">
        <property name="text">
-        <string>Add...</string>
+        <string>&amp;Add...</string>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="modifyButton">
        <property name="text">
-        <string>Configure...</string>
+        <string>&amp;Configure...</string>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="removeButton">
        <property name="text">
-        <string>Remove</string>
+        <string>&amp;Remove</string>
        </property>
       </widget>
      </item>

@@ -69,7 +69,7 @@
    <item row="4" column="1">
     <widget class="QLabel" name="label">
      <property name="text">
-      <string comment="login identify for blog account">Username:</string>
+      <string comment="login identify for blog account">&amp;Username:</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -85,7 +85,7 @@
    <item row="1" column="1">
     <widget class="QLabel" name="label_9">
      <property name="text">
-      <string>Service URL:</string>
+      <string>&amp;Service URL:</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
