@@ -23,6 +23,8 @@
 
 #include <QDebug>
 
+namespace PimActivity {
+
 ConfigureIdentity::ConfigureIdentity(QWidget *parent)
     : QWidget(parent)
 {
@@ -42,3 +44,14 @@ ConfigureIdentity::~ConfigureIdentity()
     delete mConsumer;
 }
 
+void ConfigureIdentity::readConfig()
+{
+
+}
+
+void ConfigureIdentity::writeConfig()
+{
+
+}
+
+}
