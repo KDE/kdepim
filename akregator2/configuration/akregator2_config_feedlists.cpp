@@ -54,6 +54,7 @@ AddFeedListDialog::AddFeedListDialog( QWidget *parent )
     , m_agentTypeWidget( 0 )
 {
     setWindowTitle( i18n("Create New Feed List") );
+    resize( 480, 340 );
     setButtons( KDialog::Ok|KDialog::Cancel );
     m_agentTypeWidget = new Akonadi::AgentTypeWidget;
     m_agentTypeWidget->agentFilterProxyModel()->addCapabilityFilter( QLatin1String("RssResource") );
