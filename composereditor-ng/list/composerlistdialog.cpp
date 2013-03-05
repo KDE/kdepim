@@ -88,17 +88,15 @@ void ComposerListDialogPrivate::initialize()
     listType->addItem(i18n("Bullet List"), Bullet);
     listType->addItem(i18n("Numbered List"), Numbered);
     listType->addItem(i18n("Definition List"), Definition);
-    //TODO
     listType->setEnabled(false);
 
     listStyle = new KComboBox;
     vbox->addWidget(listStyle);
 
-    //TODO
     lab = new QLabel(i18n("Start Number:"));
     vbox->addWidget(lab);
     start = new QSpinBox;
-    start->setMinimum(0);
+    start->setMinimum(1);
     start->setMaximum(9999);
     vbox->addWidget(start);
 
@@ -176,12 +174,14 @@ void ComposerListDialogPrivate::updateSettings()
     if (!webElement.isNull()) {
         if (webElement.hasAttribute(QLatin1String("type"))) {
             const QString newType = webElement.attribute(QLatin1String("type"));
-            qDebug()<<" newType "<<newType;
             const int itemIndex = listStyle->findData(newType);
-            qDebug()<<" itemIndex"<<itemIndex;
             if (itemIndex!=-1) {
                 listStyle->setCurrentIndex(itemIndex);
             }
+        }
+        if (webElement.hasAttribute(QLatin1String("start"))) {
+            const int startValue = webElement.attribute(QLatin1String("start"), QLatin1String("1")).toInt();
+            start->setValue(startValue);
         }
     }
 }
@@ -196,6 +196,12 @@ void ComposerListDialogPrivate::updateListHtml()
             }
         } else {
             webElement.setAttribute(QLatin1String("type"), newType);
+        }
+        if (start->isEnabled()) {
+            const int startValue = start->value();
+            webElement.setAttribute(QLatin1String("start"), QString::number(startValue));
+        } else {
+            webElement.removeAttribute(QLatin1String("start"));
         }
     } else {
         //TODO ?
