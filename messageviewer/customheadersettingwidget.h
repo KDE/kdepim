@@ -37,10 +37,17 @@ class MESSAGEVIEWER_EXPORT CustomHeaderSettingWidget : public QWidget
 public:
     explicit CustomHeaderSettingWidget(QWidget *parent);
     ~CustomHeaderSettingWidget();
+
+    void loadConfig();
+    void writeConfig();
+    void resetToDefault();
+
+Q_SIGNALS:
+    void changed();
+
 private:
     PimCommon::SimpleStringListEditor *mHeaderToHide;
     PimCommon::SimpleStringListEditor *mHeaderToShow;
-    KLineEdit *mHeader;
 };
 
 }

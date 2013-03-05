@@ -18,7 +18,10 @@
 #include "customheadersettingwidget.h"
 #include "pimcommon/simplestringlisteditor.h"
 
-#include <KLineEdit>
+#include <KConfig>
+#include <KConfigGroup>
+
+#include <KLocale>
 
 #include <QHBoxLayout>
 #include <QVBoxLayout>
@@ -30,13 +33,45 @@ CustomHeaderSettingWidget::CustomHeaderSettingWidget(QWidget *parent)
     : QWidget(parent)
 {
     QVBoxLayout *topLayout = new QVBoxLayout;
-    QHBoxLayout *lay = new QHBoxLayout;
-    topLayout->addLayout(lay);
+    QGridLayout *grid = new QGridLayout;
+    QLabel *lab = new QLabel(i18n("Header to show:"));
+    grid->addWidget(lab, 0, 0);
+
+    PimCommon::SimpleStringListEditor::ButtonCode buttonCode =
+      static_cast<PimCommon::SimpleStringListEditor::ButtonCode>( PimCommon::SimpleStringListEditor::Add | PimCommon::SimpleStringListEditor::Remove );
+
+    mHeaderToShow = new PimCommon::SimpleStringListEditor( this, PimCommon::SimpleStringListEditor::All,
+                                                           i18n("A&dd..."), i18n("Remo&ve"),
+                                                           i18n("&Modify..."), i18n("Header to show:") );
+    grid->addWidget(mHeaderToShow, 1, 0);
+
+    lab = new QLabel(i18n("Header to hide:"));
+    grid->addWidget(mHeaderToShow, 0, 1);
+    mHeaderToHide = new PimCommon::SimpleStringListEditor( this, buttonCode,
+                                                           i18n("A&dd..."), i18n("Remo&ve"),
+                                                           i18n("&Modify..."), i18n("Header to hide:") );
+    grid->addWidget(mHeaderToHide, 1, 1);
+    topLayout->addLayout(grid);
     setLayout(topLayout);
 }
 
 CustomHeaderSettingWidget::~CustomHeaderSettingWidget()
 {
+}
+
+void CustomHeaderSettingWidget::loadConfig()
+{
+
+}
+
+void CustomHeaderSettingWidget::writeConfig()
+{
+
+}
+
+void CustomHeaderSettingWidget::resetToDefault()
+{
+
 }
 
 }
