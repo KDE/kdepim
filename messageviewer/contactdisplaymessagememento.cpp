@@ -59,7 +59,10 @@ void ContactDisplayMessageMemento::slotSearchJobFinished( KJob *job )
     emit update( Viewer::Delayed );
 
   } else if ( contactSize > 1 ) {
-    kDebug()<<" more than 1 contact was found";
+    kDebug()<<" more than 1 contact was found we return first contact";
+    KABC::Addressee addressee = searchJob->contacts().first();
+    processAddress( addressee );
+    emit update( Viewer::Delayed );
     // TODO: Figure out something here...
   }
 }
