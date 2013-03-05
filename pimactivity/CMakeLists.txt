@@ -7,13 +7,19 @@ set_package_properties(KActivities PROPERTIES DESCRIPTION "KActivities" URL "htt
 include_directories(${KACTIVITIES_INCLUDE_DIRS})
 
 
-set(pimactivitySources
-  main.cpp
+set(libpimactivity_SRCS
   configureidentity.cpp
 )
 
-KDE4_ADD_EXECUTABLE(pimactivity ${pimactivitySources} )
-TARGET_LINK_LIBRARIES(pimactivity ${KDE4_KDEUI_LIBS} ${KACTIVITIES_LIBRARY} )
+kde4_add_library(pimactivity ${LIBRARY_TYPE} ${libpimactivity_SRCS})
+
+set_target_properties(pimactivity PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
+
+target_link_libraries(pimactivity
+    ${KDE4_KDEUI_LIBS}
+    ${KACTIVITIES_LIBRARY}
+)
+
 
 install(TARGETS pimactivity ${INSTALL_TARGETS_DEFAULT_ARGS})
 

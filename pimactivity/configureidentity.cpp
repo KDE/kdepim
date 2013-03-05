@@ -55,3 +55,5 @@ void ConfigureIdentity::writeConfig()
 }
 
 }
+
+#include "configureidentity.moc"
