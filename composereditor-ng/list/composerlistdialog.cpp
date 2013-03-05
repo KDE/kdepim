@@ -210,7 +210,7 @@ void ComposerListDialogPrivate::updateListHtml()
 
 void ComposerListDialogPrivate::_k_slotWebElementChanged()
 {
-    fillStyle();
+    updateSettings();
 }
 
 void ComposerListDialogPrivate::_k_slotOkClicked()
