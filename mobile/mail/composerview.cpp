@@ -519,6 +519,7 @@ void ComposerView::setEditor( Message::KMeditor* editor )
     new ComposerAutoResizer(editor);
     m_composerBase->setEditor( editor );
     m_composerBase->editor()->createActions( actionCollection() );
+    m_composerBase->editor()->setAutocorrection(MobileKernel::self()->composerAutoCorrection());
     connect( actionCollection()->action( "composer_add_quote_char" ), SIGNAL(triggered(bool)), m_composerBase->editor(), SLOT(slotAddQuotes()) );
     connect( actionCollection()->action( "composer_remove_quote_char" ), SIGNAL(triggered(bool)), m_composerBase->editor(), SLOT(slotRemoveQuotes()) );
     connect( actionCollection()->action( "composer_spell_check" ), SIGNAL(triggered(bool)), m_composerBase->editor(), SLOT(checkSpelling()) );

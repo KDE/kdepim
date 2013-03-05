@@ -38,6 +38,10 @@ namespace MailCommon {
   class JobScheduler;
 }
 
+namespace MessageComposer {
+  class ComposerAutoCorrection;
+}
+
 class MobileKernel : public MailCommon::IKernel, public MailCommon::ISettings, public MailCommon::IFilter
 {
 
@@ -46,6 +50,7 @@ public:
 
     void setFolderCollectionMonitor( Akonadi::ChangeRecorder* monitor ) { mMonitor = monitor; }
     void setCollectionModel( Akonadi::EntityMimeTypeFilterModel *collectionModel ) { mCollectionModel = collectionModel; }
+    MessageComposer::ComposerAutoCorrection* composerAutoCorrection() const;
 
 //IKernel methods:
     /*reimp*/ Akonadi::ChangeRecorder* folderCollectionMonitor() const { return mMonitor; }
@@ -80,6 +85,7 @@ private:
     Akonadi::EntityMimeTypeFilterModel *mCollectionModel;
     AkonadiSender *mMessageSender;
     KSharedConfig::Ptr mConfig;
+    MessageComposer::ComposerAutoCorrection *mAutoCorrection;
 };
 
 #endif // MOBILEKERNEL_H
