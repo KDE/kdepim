@@ -79,7 +79,7 @@ void ComposerListDialogPrivate::initialize()
 
     QVBoxLayout *vbox = new QVBoxLayout(q->mainWidget());
 
-    QLabel *lab = new QLabel(i18n("List Type"));
+    QLabel *lab = new QLabel(i18n("List Type:"));
     vbox->addWidget(lab);
 
     listType = new KComboBox;
