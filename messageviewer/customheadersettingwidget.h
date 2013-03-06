@@ -35,10 +35,10 @@ class MESSAGEVIEWER_EXPORT CustomHeaderSettingWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit CustomHeaderSettingWidget(QWidget *parent);
+    explicit CustomHeaderSettingWidget(QWidget *parent = 0);
     ~CustomHeaderSettingWidget();
 
-    void loadConfig();
+    void readConfig();
     void writeConfig();
     void resetToDefault();
 

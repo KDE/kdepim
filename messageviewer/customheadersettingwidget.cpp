@@ -44,6 +44,7 @@ CustomHeaderSettingWidget::CustomHeaderSettingWidget(QWidget *parent)
     mHeaderToShow = new PimCommon::SimpleStringListEditor( this, PimCommon::SimpleStringListEditor::All,
                                                            i18n("A&dd..."), i18n("Remo&ve"),
                                                            i18n("&Modify..."), i18n("Header to show:") );
+    connect(mHeaderToShow, SIGNAL(changed()), this, SIGNAL(changed()));
     grid->addWidget(mHeaderToShow, 1, 0);
 
     lab = new QLabel(i18n("Header to hide:"));
@@ -51,6 +52,7 @@ CustomHeaderSettingWidget::CustomHeaderSettingWidget(QWidget *parent)
     mHeaderToHide = new PimCommon::SimpleStringListEditor( this, buttonCode,
                                                            i18n("A&dd..."), i18n("Remo&ve"),
                                                            i18n("&Modify..."), i18n("Header to hide:") );
+    connect(mHeaderToHide, SIGNAL(changed()), this, SIGNAL(changed()));
     grid->addWidget(mHeaderToHide, 1, 1);
     topLayout->addLayout(grid);
     setLayout(topLayout);
@@ -60,7 +62,7 @@ CustomHeaderSettingWidget::~CustomHeaderSettingWidget()
 {
 }
 
-void CustomHeaderSettingWidget::loadConfig()
+void CustomHeaderSettingWidget::readConfig()
 {
     mHeadersToDisplay = MessageViewer::GlobalSettings::self()->headersToDisplay();
     QStringList::iterator end( mHeadersToDisplay.end() );
@@ -80,12 +82,13 @@ void CustomHeaderSettingWidget::loadConfig()
 
 void CustomHeaderSettingWidget::writeConfig()
 {
-
+    MessageViewer::GlobalSettings::self()->setHeadersToDisplay(mHeaderToShow->stringList());
+    MessageViewer::GlobalSettings::self()->setHeadersToHide(mHeaderToHide->stringList());
 }
 
 void CustomHeaderSettingWidget::resetToDefault()
 {
-
+    MessageViewer::GlobalSettings::self()->setHeadersToDisplay(mHeaderToShow->stringList());
 }
 
 }
