@@ -33,194 +33,14 @@
 
 
 #include "headerstrategy.h"
-
-#include "globalsettings.h"
+#include "headerstrategy_p.h"
 
 #include <kdebug.h>
-#include <kconfig.h>
-#include <kconfiggroup.h>
-
-//
-// Header tables:
-//
-namespace MessageViewer {
-static const char * briefHeaders[] = {
-  "subject", "from", "cc", "bcc", "date"
-};
-static const int numBriefHeaders = sizeof briefHeaders / sizeof *briefHeaders;
-
-
-static const char * standardHeaders[] = {
-  "subject", "from", "cc", "bcc", "to"
-};
-static const int numStandardHeaders = sizeof standardHeaders / sizeof *standardHeaders;
-
-
-static const char * richHeaders[] = {
-  "subject", "date", "from", "cc", "bcc", "to",
-  "organization", "organisation", "reply-to",
-  "user-agent", "x-mailer", "x-bugzilla-url"
-};
-static const int numRichHeaders = sizeof richHeaders / sizeof *richHeaders;
-
-//
-// Convenience function
-//
-
-static QStringList stringList( const char * headers[], int numHeaders ) {
-  QStringList sl;
-  for ( int i = 0 ; i < numHeaders ; ++i )
-    sl.push_back( headers[i] );
-  return sl;
-}
-
-//
-// AllHeaderStrategy:
-//   show everything
-//
-
-class AllHeaderStrategy : public HeaderStrategy {
-  friend class HeaderStrategy;
-protected:
-  AllHeaderStrategy() : HeaderStrategy() {}
-  virtual ~AllHeaderStrategy() {}
-
-public:
-  const char * name() const { return "all"; }
-  const HeaderStrategy * next() const { return rich(); }
-  const HeaderStrategy * prev() const { return custom(); }
-
-  DefaultPolicy defaultPolicy() const { return Display; }
-
-  bool showHeader( const QString & ) const {
-    return true; // more efficient than default impl
-  }
-};
-
-//
-// RichHeaderStrategy:
-//   Date, Subject, From, To, CC, ### what exactly?
-//
-
-class RichHeaderStrategy : public HeaderStrategy {
-  friend class HeaderStrategy;
-protected:
-  RichHeaderStrategy()
-    : HeaderStrategy(),
-      mHeadersToDisplay( stringList( richHeaders, numRichHeaders ) ) {}
-  virtual ~RichHeaderStrategy() {}
-
-public:
-  const char * name() const { return "rich"; }
-  const HeaderStrategy * next() const { return standard(); }
-  const HeaderStrategy * prev() const { return all(); }
-
-  QStringList headersToDisplay() const { return mHeadersToDisplay; }
-  DefaultPolicy defaultPolicy() const { return Hide; }
-
-private:
-  const QStringList mHeadersToDisplay;
-};
-
-//
-// StandardHeaderStrategy:
-//   BCC, CC, Date, From, Subject, To
-//
-
-class StandardHeaderStrategy : public HeaderStrategy {
-  friend class HeaderStrategy;
-protected:
-  StandardHeaderStrategy()
-    : HeaderStrategy(),
-      mHeadersToDisplay( stringList( standardHeaders, numStandardHeaders) ) {}
-  virtual ~StandardHeaderStrategy() {}
-
-public:
-  const char * name() const { return "standard"; }
-  const HeaderStrategy * next() const { return brief(); }
-  const HeaderStrategy * prev() const { return rich(); }
-
-  QStringList headersToDisplay() const { return mHeadersToDisplay; }
-  DefaultPolicy defaultPolicy() const { return Hide; }
-
-private:
-  const QStringList mHeadersToDisplay;
-};
-
-//
-// BriefHeaderStrategy
-//   From, Subject, Date
-//
-
-class BriefHeaderStrategy : public HeaderStrategy {
-  friend class HeaderStrategy;
-protected:
-  BriefHeaderStrategy()
-    : HeaderStrategy(),
-      mHeadersToDisplay( stringList( briefHeaders, numBriefHeaders ) ) {}
-  virtual ~BriefHeaderStrategy() {}
-
-public:
-  const char * name() const { return "brief"; }
-  const HeaderStrategy * next() const { return custom(); }
-  const HeaderStrategy * prev() const { return standard(); }
-
-  QStringList headersToDisplay() const { return mHeadersToDisplay; }
-  DefaultPolicy defaultPolicy() const { return Hide; }
-
-private:
-  const QStringList mHeadersToDisplay;
-};
-
-
-//
-// CustomHeaderStrategy
-//   Determined by user
-//
-
-class CustomHeaderStrategy : public HeaderStrategy {
-  friend class HeaderStrategy;
-protected:
-  CustomHeaderStrategy();
-  virtual ~CustomHeaderStrategy() {}
-
-public:
-  const char * name() const { return "custom"; }
-  const HeaderStrategy * next() const { return all(); }
-  const HeaderStrategy * prev() const { return brief(); }
-
-  QStringList headersToDisplay() const { return mHeadersToDisplay; }
-  QStringList headersToHide() const { return mHeadersToHide; }
-  DefaultPolicy defaultPolicy() const { return mDefaultPolicy; }
-
-private:
-  QStringList mHeadersToDisplay;
-  QStringList mHeadersToHide;
-  DefaultPolicy mDefaultPolicy;
-};
-
-
-CustomHeaderStrategy::CustomHeaderStrategy()
-  : HeaderStrategy()
-{
-  mHeadersToDisplay = MessageViewer::GlobalSettings::self()->headersToDisplay();
-  QStringList::iterator end( mHeadersToDisplay.end() );
-  for ( QStringList::iterator it = mHeadersToDisplay.begin() ; it != end ; ++ it )
-      *it = (*it).toLower();
-
-  mHeadersToHide = MessageViewer::GlobalSettings::self()->headersToHide();
-
-  end = mHeadersToHide.end();
-  for ( QStringList::iterator it = mHeadersToHide.begin() ; it != end; ++ it )
-      *it = (*it).toLower();
-
-  mDefaultPolicy = MessageViewer::GlobalSettings::self()->customHeadersDefaultPolicy() == MessageViewer::GlobalSettings::EnumCustomHeadersDefaultPolicy::Display ?  Display : Hide ;
-}
 
 //
 // HeaderStrategy abstract base:
 //
-
+namespace MessageViewer {
 HeaderStrategy::HeaderStrategy() {
 
 }
@@ -279,31 +99,31 @@ static const HeaderStrategy * customStrategy = 0;
 
 const HeaderStrategy * HeaderStrategy::all() {
   if ( !allStrategy )
-    allStrategy = new AllHeaderStrategy();
+    allStrategy = new MessageViewer::AllHeaderStrategy();
   return allStrategy;
 }
 
 const HeaderStrategy * HeaderStrategy::rich() {
   if ( !richStrategy )
-    richStrategy = new RichHeaderStrategy();
+    richStrategy = new MessageViewer::RichHeaderStrategy();
   return richStrategy;
 }
 
 const HeaderStrategy * HeaderStrategy::standard() {
   if ( !standardStrategy )
-    standardStrategy = new StandardHeaderStrategy();
+    standardStrategy = new MessageViewer::StandardHeaderStrategy();
   return standardStrategy;
 }
 
 const HeaderStrategy * HeaderStrategy::brief() {
   if ( !briefStrategy )
-    briefStrategy = new BriefHeaderStrategy();
+    briefStrategy = new MessageViewer::BriefHeaderStrategy();
   return briefStrategy;
 }
 
 const HeaderStrategy * HeaderStrategy::custom() {
   if ( !customStrategy )
-    customStrategy = new CustomHeaderStrategy();
+    customStrategy = new MessageViewer::CustomHeaderStrategy();
   return customStrategy;
 }
 }

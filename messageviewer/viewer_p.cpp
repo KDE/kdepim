@@ -1846,7 +1846,7 @@ KToggleAction *ViewerPrivate::actionForHeaderStyle( const HeaderStyle * style, c
       actionName = "view_headers_long";
     else if ( strategy == HeaderStrategy::all() )
       actionName = "view_headers_all";
-    else if ( strategy == HeaderStrategy::custom() )
+  } else if (style == HeaderStyle::custom() ) {
       actionName = "view_custom_headers";
   }
   if ( actionName )
@@ -2253,10 +2253,10 @@ void ViewerPrivate::slotCycleHeaderStyles() {
     } else if ( strategy == HeaderStrategy::all() ) {
       slotEnterpriseHeaders();
       actionName = "view_headers_enterprise";
-    } else if ( strategy == HeaderStrategy::custom() ) {
+    }
+  } else if ( strategy == HeaderStrategy::custom() ) {
       slotCustomHeaders();
       actionName = "view_custom_headers";
-    }
   }
 
   if ( actionName )
@@ -2307,7 +2307,7 @@ void ViewerPrivate::slotAllHeaders()
 
 void ViewerPrivate::slotCustomHeaders() 
 {
-  setHeaderStyleAndStrategy( HeaderStyle::plain(),
+  setHeaderStyleAndStrategy( HeaderStyle::custom(),
                              HeaderStrategy::custom(), true );
 }
 
