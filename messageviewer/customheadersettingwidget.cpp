@@ -84,6 +84,8 @@ void CustomHeaderSettingWidget::writeConfig()
 {
     MessageViewer::GlobalSettings::self()->setHeadersToDisplay(mHeaderToShow->stringList());
     MessageViewer::GlobalSettings::self()->setHeadersToHide(mHeaderToHide->stringList());
+
+    //Update customheaderstyle
 }
 
 void CustomHeaderSettingWidget::resetToDefault()

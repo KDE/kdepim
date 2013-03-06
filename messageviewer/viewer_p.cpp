@@ -2299,8 +2299,6 @@ void ViewerPrivate::slotLongHeaders()
                              HeaderStrategy::rich(),true );
 }
 
-
-
 void ViewerPrivate::slotAllHeaders() 
 {
   setHeaderStyleAndStrategy( HeaderStyle::plain(),
