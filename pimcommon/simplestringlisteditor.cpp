@@ -289,7 +289,7 @@ void SimpleStringListEditor::slotUp() {
     
     wasMoved = true;
   }
-  
+  //TODO fix setcurrent item
   if ( wasMoved ) {
     emit changed();
   }  
@@ -319,7 +319,7 @@ void SimpleStringListEditor::slotDown() {
     mListBox->insertItem( posItem + 1, item );
     wasMoved = true;
   }
-
+  //TODO fix setcurrent item
   if ( wasMoved ) {
     emit changed();
   }
