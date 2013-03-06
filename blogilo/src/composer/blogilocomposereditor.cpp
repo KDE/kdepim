@@ -69,6 +69,11 @@ BlogiloComposerEditor::BlogiloComposerEditor(BlogiloComposerView *view, QWidget 
     QList<ComposerEditorNG::ComposerView::ComposerViewAction> lstActionsFormat;
     lstActionsFormat<<ComposerEditorNG::ComposerView::SubScript;
     lstActionsFormat<<ComposerEditorNG::ComposerView::SuperScript;
+    lstActionsFormat<<ComposerEditorNG::ComposerView::Separator;
+    lstActionsFormat<<ComposerEditorNG::ComposerView::ListIndent;
+    lstActionsFormat<<ComposerEditorNG::ComposerView::ListDedent;
+    lstActionsFormat<<ComposerEditorNG::ComposerView::Separator;
+    lstActionsFormat<<ComposerEditorNG::ComposerView::TextBackgroundColor;
 
     //Create all actions first (before to add to toolbar)
     createActions(lstActions<<ComposerEditorNG::ComposerView::PasteWithoutFormatting<<lstActionsFormat);
