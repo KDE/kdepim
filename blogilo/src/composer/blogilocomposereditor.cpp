@@ -66,20 +66,27 @@ BlogiloComposerEditor::BlogiloComposerEditor(BlogiloComposerView *view, QWidget 
     QList<ComposerEditorNG::ComposerView::ComposerViewAction> toolBarActions;
     toolBarActions<<lstActions;
 
-    createActions(lstActions<<ComposerEditorNG::ComposerView::PasteWithoutFormatting);
+    QList<ComposerEditorNG::ComposerView::ComposerViewAction> lstActionsFormat;
+    lstActionsFormat<<ComposerEditorNG::ComposerView::SubScript;
+    lstActionsFormat<<ComposerEditorNG::ComposerView::SuperScript;
 
-    createToolBar(toolBarActions);
+    //Create all actions first (before to add to toolbar)
+    createActions(lstActions<<ComposerEditorNG::ComposerView::PasteWithoutFormatting<<lstActionsFormat);
+
+    KToolBar *mainToolBar = createToolBar(toolBarActions);
 
 
     mActSplitPost = new KAction( KIcon( "insert-more-mark" ), i18n( "Split text" ), this );
     connect( mActSplitPost, SIGNAL(triggered(bool)), this, SLOT(slotAddPostSplitter()) );
-    addActionInToolBar(mActSplitPost);
+    addActionInToolBar(mActSplitPost, mainToolBar);
 
     mActCode = new KAction( KIcon( "format-text-code" ), i18nc( "Sets text font to code style",
                            "Code" ), this );
 //     actCode->setCheckable( true );
     connect( mActCode, SIGNAL(triggered(bool)), this, SLOT(slotToggleCode(bool)) );
-    addActionInToolBar(mActCode);
+    addActionInToolBar(mActCode, mainToolBar);
+
+    createToolBar(lstActionsFormat);
 }
 
 BlogiloComposerEditor::~BlogiloComposerEditor()

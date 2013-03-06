@@ -60,19 +60,20 @@ public:
     /**
      * @brief createToolBar.
      */
-    void createToolBar(const QList<ComposerView::ComposerViewAction> &);
+    KToolBar *createToolBar(const QList<ComposerView::ComposerViewAction> &);
 
     /**
      * @brief addActionInToolBar add action in toolbar. QAction that is not in default action from composerview.
      * @param act
+     * @param toolbar toolbar where we will add action.
      */
-    void addActionInToolBar(QAction *act);
+    void addActionInToolBar(QAction *act, KToolBar *toolbar);
 
     /**
      * @brief toolbar
-     * @return a pointer from toolbar.
+     * @return a list of toolbar.
      */
-    KToolBar *toolbar() const;
+    QList<KToolBar *> toolbars() const;
 
     /**
      * @brief plainTextContent
