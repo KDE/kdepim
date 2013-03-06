@@ -46,6 +46,8 @@ Q_SIGNALS:
     void changed();
 
 private:
+    QStringList mHeadersToDisplay;
+    QStringList mHeadersToHide;
     PimCommon::SimpleStringListEditor *mHeaderToHide;
     PimCommon::SimpleStringListEditor *mHeaderToShow;
 };
