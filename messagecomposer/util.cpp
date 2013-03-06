@@ -38,6 +38,7 @@
 #include <akonadi/item.h>
 #include <akonadi/kmime/messagestatus.h>
 #include <akonadi/agentinstance.h>
+#include <akonadi/agentinstancecreatejob.h>
 #include <akonadi/agentmanager.h>
 #include <messagecore/messagehelpers.h>
 
@@ -289,6 +290,14 @@ bool Message::Util::sendMailDispatcherIsOnline( QWidget *parent )
 {
   Akonadi::AgentInstance instance = Akonadi::AgentManager::self()->instance( QLatin1String( "akonadi_maildispatcher_agent" ) );
   if( !instance.isValid() ) {
+    const int rc = KMessageBox::warningYesNo(parent,i18n("The mail dispatcher is not set up, so mails cannot be sent. Do you want to create a mail dispatcher?"),
+                                        i18n("No mail dispatcher."), KStandardGuiItem::yes(), KStandardGuiItem::no(), QLatin1String("no_maildispatcher"));
+    if (rc == KMessageBox::Yes) {
+        const Akonadi::AgentType type = Akonadi::AgentManager::self()->type(QLatin1String("akonadi_maildispatcher_agent"));
+        Q_ASSERT(type.isValid());
+        Akonadi::AgentInstanceCreateJob *job = new Akonadi::AgentInstanceCreateJob(type); // async. We'll have to try again later.
+        job->start();
+    }
     return false;
   }
   if ( instance.isOnline() )
@@ -296,11 +305,11 @@ bool Message::Util::sendMailDispatcherIsOnline( QWidget *parent )
   else {
     const int rc = KMessageBox::warningYesNo( parent,i18n("The mail dispatcher is offline, so mails cannot be sent. Do you want to make it online?"),
                                         i18n("Mail dispatcher offline."), KStandardGuiItem::yes(), KStandardGuiItem::no(), QLatin1String("maildispatcher_put_online"));
-    if ( rc == KMessageBox::No )
-      return false;
-    instance.setIsOnline( true );
-    return true;
-  } 
+    if (rc == KMessageBox::Yes) {
+        instance.setIsOnline( true );
+        return true;
+    }
+  }
   return false;
 }
   
