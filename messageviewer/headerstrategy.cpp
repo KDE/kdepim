@@ -203,23 +203,18 @@ private:
 CustomHeaderStrategy::CustomHeaderStrategy()
   : HeaderStrategy()
 {
-  KConfigGroup customHeader( GlobalSettings::self()->config(), "Custom Headers" );
-  if ( customHeader.hasKey( "headers to display" ) ) {
-    mHeadersToDisplay = customHeader.readEntry( "headers to display", QStringList() );
-    QStringList::iterator end( mHeadersToDisplay.end() );
-    for ( QStringList::iterator it = mHeadersToDisplay.begin() ; it != end ; ++ it )
+  mHeadersToDisplay = MessageViewer::GlobalSettings::self()->headersToDisplay();
+  QStringList::iterator end( mHeadersToDisplay.end() );
+  for ( QStringList::iterator it = mHeadersToDisplay.begin() ; it != end ; ++ it )
       *it = (*it).toLower();
-  } else
-    mHeadersToDisplay = stringList( standardHeaders, numStandardHeaders );
 
-  if ( customHeader.hasKey( "headers to hide" ) ) {
-    mHeadersToHide = customHeader.readEntry( "headers to hide", QStringList() );
-    QStringList::iterator end( mHeadersToHide.end() );
-    for ( QStringList::iterator it = mHeadersToHide.begin() ; it != end; ++ it )
+  mHeadersToHide = MessageViewer::GlobalSettings::self()->headersToHide();
+
+  end = mHeadersToHide.end();
+  for ( QStringList::iterator it = mHeadersToHide.begin() ; it != end; ++ it )
       *it = (*it).toLower();
-  }
 
-  mDefaultPolicy = customHeader.readEntry( "default policy", "hide" ) == "display" ? Display : Hide ;
+  mDefaultPolicy = MessageViewer::GlobalSettings::self()->customHeadersDefaultPolicy() == MessageViewer::GlobalSettings::EnumCustomHeadersDefaultPolicy::Display ?  Display : Hide ;
 }
 
 //

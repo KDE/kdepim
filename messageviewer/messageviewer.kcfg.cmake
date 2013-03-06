@@ -247,4 +247,23 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
       <default>false</default>
     </entry>
   </group>
+
+  <group name="Custom Headers">
+    <entry name="HeadersToDisplay" type="StringList" key="headers to display">
+     <default>subject,from,cc,bcc,to</default>
+    </entry>
+    <entry name="HeadersToHide" type="StringList" key="headers to hide">
+     <default></default>
+    </entry>
+    <entry name="CustomHeadersDefaultPolicy" type="Enum">
+     <label></label>
+     <whatsthis></whatsthis>
+     <choices>
+       <choice name="Display"/>
+       <choice name="Hide"/>
+     </choices>
+    <default>Hide</default>
+   </entry>
+  </group>
 </kcfg>
+
