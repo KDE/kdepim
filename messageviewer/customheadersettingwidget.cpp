@@ -48,7 +48,7 @@ CustomHeaderSettingWidget::CustomHeaderSettingWidget(QWidget *parent)
     grid->addWidget(mHeaderToShow, 1, 0);
 
     lab = new QLabel(i18n("Header to hide:"));
-    grid->addWidget(mHeaderToShow, 0, 1);
+    grid->addWidget(lab, 0, 1);
     mHeaderToHide = new PimCommon::SimpleStringListEditor( this, buttonCode,
                                                            i18n("A&dd..."), i18n("Remo&ve"),
                                                            i18n("&Modify..."), i18n("Header to hide:") );
