@@ -53,8 +53,7 @@ namespace PimCommon {
  */
 namespace Util {
 
-  PIMCOMMON_EXPORT OrgKdeAkonadiImapSettingsInterface *createImapSettingsInterface(
-    const QString &ident );
+  PIMCOMMON_EXPORT OrgKdeAkonadiImapSettingsInterface *createImapSettingsInterface( const QString &ident );
 
 }
 

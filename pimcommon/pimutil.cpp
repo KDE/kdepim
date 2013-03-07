@@ -40,8 +40,7 @@
 
 #include "imapsettings.h"
 
-OrgKdeAkonadiImapSettingsInterface *PimCommon::Util::createImapSettingsInterface(
-  const QString &ident )
+OrgKdeAkonadiImapSettingsInterface *PimCommon::Util::createImapSettingsInterface( const QString &ident )
 {
   return
     new OrgKdeAkonadiImapSettingsInterface(
