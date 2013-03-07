@@ -60,21 +60,38 @@ BlogiloComposerEditor::BlogiloComposerEditor(BlogiloComposerView *view, QWidget 
     lstActions<<ComposerEditorNG::ComposerView::OrderedList;
     lstActions<<ComposerEditorNG::ComposerView::UnorderedList;
     lstActions<<ComposerEditorNG::ComposerView::Separator;
-    lstActions<<ComposerEditorNG::ComposerView::PasteWithoutFormatting;
     lstActions<<ComposerEditorNG::ComposerView::InsertTable;
 
-    createActions(lstActions);
-    createToolBar(lstActions);
+
+    QList<ComposerEditorNG::ComposerView::ComposerViewAction> toolBarActions;
+    toolBarActions<<lstActions;
+
+    QList<ComposerEditorNG::ComposerView::ComposerViewAction> lstActionsFormat;
+    lstActionsFormat<<ComposerEditorNG::ComposerView::SubScript;
+    lstActionsFormat<<ComposerEditorNG::ComposerView::SuperScript;
+    lstActionsFormat<<ComposerEditorNG::ComposerView::Separator;
+    lstActionsFormat<<ComposerEditorNG::ComposerView::ListIndent;
+    lstActionsFormat<<ComposerEditorNG::ComposerView::ListDedent;
+    lstActionsFormat<<ComposerEditorNG::ComposerView::Separator;
+    lstActionsFormat<<ComposerEditorNG::ComposerView::TextBackgroundColor;
+
+    //Create all actions first (before to add to toolbar)
+    createActions(lstActions<<ComposerEditorNG::ComposerView::PasteWithoutFormatting<<lstActionsFormat);
+
+    KToolBar *mainToolBar = createToolBar(toolBarActions);
+
 
     mActSplitPost = new KAction( KIcon( "insert-more-mark" ), i18n( "Split text" ), this );
     connect( mActSplitPost, SIGNAL(triggered(bool)), this, SLOT(slotAddPostSplitter()) );
-    addActionInToolBar(mActSplitPost);
+    addActionInToolBar(mActSplitPost, mainToolBar);
 
     mActCode = new KAction( KIcon( "format-text-code" ), i18nc( "Sets text font to code style",
                            "Code" ), this );
 //     actCode->setCheckable( true );
     connect( mActCode, SIGNAL(triggered(bool)), this, SLOT(slotToggleCode(bool)) );
-    addActionInToolBar(mActCode);
+    addActionInToolBar(mActCode, mainToolBar);
+
+    createToolBar(lstActionsFormat);
 }
 
 BlogiloComposerEditor::~BlogiloComposerEditor()

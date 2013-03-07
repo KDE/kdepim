@@ -82,8 +82,9 @@ EntityCollectionOrderProxyModel::EntityCollectionOrderProxyModel( QObject *paren
   setDynamicSortFilter( true );
   setSortCaseSensitivity( Qt::CaseInsensitive );
   connect( Akonadi::SpecialMailCollections::self(), SIGNAL(defaultCollectionsChanged()),
-           this, SLOT(slotDefaultCollectionsChanged()) );
-
+           this, SLOT(slotSpecialCollectionsChanged()) );
+  connect( Akonadi::SpecialMailCollections::self(), SIGNAL(collectionsChanged(Akonadi::AgentInstance)),
+           this, SLOT(slotSpecialCollectionsChanged()) );
 }
 
 EntityCollectionOrderProxyModel::~EntityCollectionOrderProxyModel()
@@ -94,7 +95,7 @@ EntityCollectionOrderProxyModel::~EntityCollectionOrderProxyModel()
   delete d;
 }
 
-void EntityCollectionOrderProxyModel::slotDefaultCollectionsChanged()
+void EntityCollectionOrderProxyModel::slotSpecialCollectionsChanged()
 {
   if ( !d->manualSortingActive ) {
     d->collectionRanks.clear();

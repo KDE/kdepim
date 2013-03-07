@@ -96,7 +96,7 @@ void LdapClientSearchConfig::readConfig( KLDAP::LdapServer &server, KConfigGroup
         server.setUser( user );
     }
 
-    QString bindDN = config.readEntry( prefix + QString::fromLatin1( "Bind%1" ).arg( j ), QString() ).trimmed();
+    const QString bindDN = config.readEntry( prefix + QString::fromLatin1( "Bind%1" ).arg( j ), QString() ).trimmed();
     if ( !bindDN.isEmpty() ) {
         server.setBindDn( bindDN );
     }

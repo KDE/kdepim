@@ -26,6 +26,7 @@
 #include "table/composertabledialog.h"
 #include "image/composerimageresizewidget.h"
 #include "pagecolor/pagecolorbackgrounddialog.h"
+#include "helper/listhelper_p.h"
 #include "globalsettings_base.h"
 
 
@@ -327,7 +328,7 @@ void ComposerViewPrivate::createAction(ComposerView::ComposerViewAction type)
     case ComposerView::InsertTable:
     {
         if (!action_insert_table) {
-            action_insert_table = new KAction( i18n( "Table..." ), q);
+            action_insert_table = new KAction( KIcon( QLatin1String( "table" ) ), i18n( "Table..." ), q);
             htmlEditorActionList.append(action_insert_table);
             q->connect( action_insert_table, SIGNAL(triggered(bool)), SLOT(_k_slotInsertTable()) );
         }
@@ -823,9 +824,13 @@ void ComposerViewPrivate::_k_slotChangePageColorAndBackground()
 
 void ComposerViewPrivate::_k_slotEditList()
 {
-    QPointer<ComposerListDialog> dlg = new ComposerListDialog(contextMenuResult.element(),q);
-    if (dlg->exec()) {
-        //TODO
+    QWebElement listElement = ListHelper::listElement(contextMenuResult.element());
+    if (!listElement.isNull()) {
+        QPointer<ComposerListDialog> dlg = new ComposerListDialog(listElement,q);
+        if (dlg->exec()) {
+            //TODO
+        }
+        delete dlg;
     }
 }
 

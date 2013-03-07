@@ -43,6 +43,8 @@ public:
         : webElement(element),
           listType(0),
           listStyle(0),
+          start(0),
+          styleLabel(0),
           q(qq),
           type(ExtendAttributesDialog::ListUL)
     {
@@ -67,20 +69,20 @@ public:
     KComboBox *listType;
     KComboBox *listStyle;
     QSpinBox *start;
+    QLabel *styleLabel;
     ComposerListDialog *q;
     ExtendAttributesDialog::ExtendType type;
 };
 
 void ComposerListDialogPrivate::initialize()
 {
-    initializeTypeList();
 
     q->setButtons( KDialog::Ok | KDialog::Cancel );
     q->setCaption( i18n( "Edit List" ) );
 
     QVBoxLayout *vbox = new QVBoxLayout(q->mainWidget());
 
-    QLabel *lab = new QLabel(i18n("List Type"));
+    QLabel *lab = new QLabel(i18n("List Type:"));
     vbox->addWidget(lab);
 
     listType = new KComboBox;
@@ -89,20 +91,23 @@ void ComposerListDialogPrivate::initialize()
     listType->addItem(i18n("Bullet List"), Bullet);
     listType->addItem(i18n("Numbered List"), Numbered);
     listType->addItem(i18n("Definition List"), Definition);
-    //TODO
     listType->setEnabled(false);
+
+    styleLabel = new QLabel(i18n("List Type:"));
+    vbox->addWidget(styleLabel);
 
     listStyle = new KComboBox;
     vbox->addWidget(listStyle);
 
-    //TODO
     lab = new QLabel(i18n("Start Number:"));
     vbox->addWidget(lab);
     start = new QSpinBox;
-    start->setMinimum(0);
+    start->setMinimum(1);
     start->setMaximum(9999);
     vbox->addWidget(start);
 
+
+    initializeTypeList();
 
     KSeparator *sep = 0;
     if (!webElement.isNull()) {
@@ -117,13 +122,35 @@ void ComposerListDialogPrivate::initialize()
     vbox->addWidget( sep );
 
     q->connect(q, SIGNAL(okClicked()), q, SLOT(_k_slotOkClicked()));
-    fillStyle();
+    fillStyle();    
     updateSettings();
+    q->resize(300,200);
 }
 
 void ComposerListDialogPrivate::initializeTypeList()
 {
-    //TODO
+    if (!webElement.isNull()) {
+        type = ListHelper::listType(webElement);
+        switch(type) {
+        case ExtendAttributesDialog::ListOL: {
+            listType->setCurrentIndex(2);
+            styleLabel->setText(i18n("Number Style:"));
+            break;
+        }
+        case ExtendAttributesDialog::ListUL: {
+            listType->setCurrentIndex(1);
+            styleLabel->setText(i18n("Bullet Style:"));
+            break;
+        }
+        case ExtendAttributesDialog::ListDL: {
+            listType->setCurrentIndex(3);
+            styleLabel->setText(i18n("Bullet Style:"));
+            break;
+        }
+        default:
+           return;
+        }
+    }
 }
 
 void ComposerListDialogPrivate::fillStyle()
@@ -154,22 +181,45 @@ void ComposerListDialogPrivate::fillStyle()
 void ComposerListDialogPrivate::updateSettings()
 {
     if (!webElement.isNull()) {
-        //TODO
+        if (webElement.hasAttribute(QLatin1String("type"))) {
+            const QString newType = webElement.attribute(QLatin1String("type"));
+            const int itemIndex = listStyle->findData(newType);
+            if (itemIndex!=-1) {
+                listStyle->setCurrentIndex(itemIndex);
+            }
+        }
+        if (webElement.hasAttribute(QLatin1String("start"))) {
+            const int startValue = webElement.attribute(QLatin1String("start"), QLatin1String("1")).toInt();
+            start->setValue(startValue);
+        }
     }
 }
 
 void ComposerListDialogPrivate::updateListHtml()
 {
-    /*
-    QWebElement e = ListHelper::olElement(webElement);
-    e.addClass(QLatin1String("UL"));
-    */
-    //TODO
+    if ((type == ExtendAttributesDialog::ListUL) || (type == ExtendAttributesDialog::ListOL)) {
+        const QString newType = listStyle->itemData(listStyle->currentIndex()).toString();
+        if (newType.isEmpty()) {
+            if (webElement.hasAttribute(QLatin1String("type"))) {
+                webElement.removeAttribute(QLatin1String("type"));
+            }
+        } else {
+            webElement.setAttribute(QLatin1String("type"), newType);
+        }
+        if (start->isEnabled()) {
+            const int startValue = start->value();
+            webElement.setAttribute(QLatin1String("start"), QString::number(startValue));
+        } else {
+            webElement.removeAttribute(QLatin1String("start"));
+        }
+    } else {
+        //TODO ?
+    }
 }
 
 void ComposerListDialogPrivate::_k_slotWebElementChanged()
 {
-    fillStyle();
+    updateSettings();
 }
 
 void ComposerListDialogPrivate::_k_slotOkClicked()

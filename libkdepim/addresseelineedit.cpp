@@ -355,7 +355,7 @@ static const char* sparqlquery =
         "?r nco:hasEmailAddress   ?em ."
         "?em nco:emailAddress ?email ."
         "?r ?p ?fullname ."
-        "FILTER( ?p in (nco:fullname, nco:nameFamily, nco:nameGiven)  )."
+        "FILTER( ?p in (nco:fullname, nco:nameFamily, nco:nameGiven, nco:nickname, nco:nameAdditional)  )."
         "FILTER( bif:contains(?fullname, \"'%1*'\")  )."
     "} UNION {"
         "?r nco:hasEmailAddress   ?em ."

@@ -19,11 +19,28 @@
 */
 
 #include "listhelper_p.h"
+#include <QDebug>
 
 namespace ComposerEditorNG {
 static QString OL = QLatin1String("ol");
 static QString UL = QLatin1String("ul");
 static QString DL = QLatin1String("dl");
+
+ExtendAttributesDialog::ExtendType ListHelper::listType(const QWebElement& element)
+{
+    if (element.isNull()) {
+        return ExtendAttributesDialog::Unknown;
+    } else {
+        const QString tagName = element.tagName().toLower();
+        if (tagName == OL)
+            return ExtendAttributesDialog::ListOL;
+        else if (tagName == UL)
+            return ExtendAttributesDialog::ListUL;
+        else if (tagName == DL)
+            return ExtendAttributesDialog::ListDL;
+    }
+    return ExtendAttributesDialog::Unknown;
+}
 
 QWebElement ListHelper::ulElement(const QWebElement& element)
 {
@@ -86,12 +103,14 @@ QWebElement ListHelper::listElement(const QWebElement& element)
         return element;
     } else {
         QWebElement e = element;
-        do {
+        while(1) {
             e = e.parent();
-        } while( ((e.tagName().toLower() != OL) ||
-                  (e.tagName().toLower() != UL) ||
-                  (e.tagName().toLower() != DL)) && !e.isNull() );
-        return e;
+            if (((e.tagName().toLower() == OL) ||
+                 (e.tagName().toLower() == UL) ||
+                 (e.tagName().toLower() == DL) ||
+                 (e.isNull()) ) )
+                return e;
+        }
     }
     return element;
 }

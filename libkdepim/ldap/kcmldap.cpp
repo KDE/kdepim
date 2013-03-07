@@ -2,6 +2,7 @@
   This file is part of libkldap.
 
   Copyright (c) 2002-2009 Tobias Koenig <tokoe@kde.org>
+  Copyright (c) 2013 Laurent Montel <montel@kde.org>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General  Public
@@ -41,6 +42,7 @@
 #include <kiconloader.h>
 #include <klocale.h>
 #include <kvbox.h>
+#include <KMessageBox>
 
 #include "ldapclientsearch.h"
 #include "ldapclientsearchconfig.h"
@@ -95,7 +97,7 @@ KCMLdap::KCMLdap( QWidget *parent, const QVariantList& )
                                       ki18n( "(c) 2009 - 2010 Tobias Koenig" ) );
 
   about->addAuthor( ki18n( "Tobias Koenig" ), KLocalizedString(), "tokoe@kde.org" );
-
+  KGlobal::locale()->insertCatalog("libkdepim");
   setAboutData( about );
   mClientSearchConfig = new KLDAP::LdapClientSearchConfig;
   initGUI();
@@ -170,16 +172,18 @@ void KCMLdap::slotEditHost()
 
 void KCMLdap::slotRemoveHost()
 {
-  QListWidgetItem *item = mHostListView->takeItem( mHostListView->currentRow() );
-  if ( !item ) {
-    return;
-  }
+    QListWidgetItem *item = mHostListView->currentItem();
+    if (!item)
+        return;
+    LDAPItem *ldapItem = dynamic_cast<LDAPItem*>( item );
+    if (KMessageBox::No == KMessageBox::questionYesNo(this, i18n("Do you want to remove setting for host \"%1\"?", ldapItem->server().host() ), i18n("Remove Host")))
+        return;
 
-  delete item;
+    delete mHostListView->takeItem( mHostListView->currentRow() );
 
-  slotSelectionChanged( mHostListView->currentItem() );
+    slotSelectionChanged( mHostListView->currentItem() );
 
-  emit changed( true );
+    emit changed( true );
 }
 
 static void swapItems( LDAPItem *item, LDAPItem *other )

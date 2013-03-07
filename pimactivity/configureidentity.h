@@ -22,12 +22,28 @@
 #define CONFIGUREIDENTITY_H
 
 #include <QWidget>
+#include "pimactivity_export.h"
 
-class ConfigureIdentity : public QWidget
+namespace KActivities {
+class Consumer;
+}
+
+namespace PimActivity {
+
+class PIMACTIVITY_EXPORT ConfigureIdentity : public QWidget
 {
+    Q_OBJECT
 public:
     explicit ConfigureIdentity(QWidget *parent);
     ~ConfigureIdentity();
+
+    void readConfig();
+    void writeConfig();
+
+private:
+    KActivities::Consumer *mConsumer;
 };
+
+}
 
 #endif // CONFIGUREIDENTITY_H

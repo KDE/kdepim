@@ -4,6 +4,8 @@
     This file is part of KMail, the KDE mail client.
     Copyright (c) 2001 Marc Mutz <mutz@kde.org>
 
+    Copyright (c) 2013 Laurent Montel <montel@kde.org>
+
     KMail is free software; you can redistribute it and/or modify it
     under the terms of the GNU General Public License, version 2, as
     published by the Free Software Foundation.
@@ -35,6 +37,7 @@
 #include <QWidget>
 #include <QStringList>
 
+#include "pimcommon_export.h"
 
 class QListWidget;
 class QListWidgetItem;
@@ -45,16 +48,19 @@ class QPushButton;
 // SimpleStringListEditor (a listbox with "add..." and "remove" buttons)
 //
 //
-
-class SimpleStringListEditor : public QWidget {
+namespace PimCommon {
+class PIMCOMMON_EXPORT SimpleStringListEditor : public QWidget {
   Q_OBJECT
 public:
   enum ButtonCode {
-    None = 0x00, Add = 0x01,
-    Remove = 0x02, Modify = 0x04,
-    Up = 0x08, Down = 0x10,
-    All = Add|Remove|Modify|Up|Down,
-    Unsorted = Add|Remove|Modify
+      None = 0x00,
+      Add = 0x01,
+      Remove = 0x02,
+      Modify = 0x04,
+      Up = 0x08,
+      Down = 0x10,
+      All = Add|Remove|Modify|Up|Down,
+      Unsorted = Add|Remove|Modify
   };
 
   /** Constructor. Populates the list with @p strings. */
@@ -67,8 +73,10 @@ public:
 
   /** Sets the list of strings displayed to @p strings */
   void setStringList( const QStringList & strings );
+
   /** Adds @p strings to the list of displayed strings */
   void appendStringList( const QStringList & strings );
+
   /** Retrieves the current list of strings */
   QStringList stringList() const;
 
@@ -92,7 +100,8 @@ protected slots:
   void slotSelectionChanged();
 private Q_SLOTS:
   void slotContextMenu(const QPoint&);
-protected:
+
+private:
   bool containsString( const QString & str );
   QList<QListWidgetItem*> selectedItems() const;
   QListWidget   *mListBox;
@@ -104,7 +113,6 @@ protected:
   const QString mAddDialogLabel;
 };
 
-
-
+}
 
 #endif // _SIMPLESTRINGLISTEDITOR_H_

@@ -192,7 +192,7 @@ void ComposerView::contextMenuEvent(QContextMenuEvent *event)
                                elm.tagName().toLower() == QLatin1String("ul") ||
                                elm.tagName().toLower() == QLatin1String("li") );
 
-    //kDebug()<<" elm.tagName().toLower() "<<elm.tagName().toLower();
+    kDebug()<<" elm.tagName().toLower() "<<elm.tagName().toLower();
 
     KMenu *menu = new KMenu;
     const QString selectedText = page()->mainFrame()->toPlainText().simplified();

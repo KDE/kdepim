@@ -26,7 +26,6 @@
 
 #include <kmessagebox.h>
 #include <kdialog.h>
-#include <kpushbutton.h>
 
 int PIMMessageBox::fourBtnMsgBox( QWidget *parent, QMessageBox::Icon type,
                                   const QString &text,

@@ -4,6 +4,8 @@
     This file is part of KMail, the KDE mail client.
     Copyright (c) 2003 Marc Mutz <mutz@kde.org>
 
+    Copyright (c) 2013 Laurent Montel <montel@kde.org>
+
     KMail is free software; you can redistribute it and/or modify it
     under the terms of the GNU General Public License, version 2, as
     published by the Free Software Foundation.
@@ -68,7 +70,9 @@ public:
     Plain,
     Fancy,
     Enterprise,
-    Mobile
+    Mobile,
+    MobileExtended,
+    Custom
   };
 
   static HeaderStyle * create( Type type );
@@ -80,6 +84,7 @@ public:
   static HeaderStyle * enterprise();
   static HeaderStyle * mobile();
   static HeaderStyle * mobileExtended();
+  static HeaderStyle * custom();
 
   //
   // Methods for handling the styles:

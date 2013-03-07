@@ -22,6 +22,7 @@
 #define LISTHELPER_H
 
 #include <QWebElement>
+#include "extendattributes/extendattributesdialog.h"
 
 namespace ComposerEditorNG {
 
@@ -30,7 +31,7 @@ QWebElement ulElement(const QWebElement&element);
 QWebElement olElement(const QWebElement&element);
 QWebElement dlElement(const QWebElement& element);
 QWebElement listElement(const QWebElement& element);
-
+ExtendAttributesDialog::ExtendType listType(const QWebElement& element);
 }
 }
 

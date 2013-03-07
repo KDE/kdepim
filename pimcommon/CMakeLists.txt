@@ -20,6 +20,7 @@ set(libpimcommon_SRCS
   #translator/babelfishtranslator.cpp
   translator/googletranslator.cpp
   renamefiledialog.cpp
+  simplestringlisteditor.cpp
 )
 
 macro(add_resource_iface _kcfgFile _ifaceName _className)

@@ -59,7 +59,9 @@ set(libmessageviewer_SRCS
   findbar/findbarsourceview.cpp
   globalsettings.cpp
   headerstrategy.cpp
+  headerstrategy_p.cpp
   headerstyle.cpp
+  headerstyle_p.cpp
   htmlquotecolorer.cpp
   htmlstatusbar.cpp
   iconnamecache.cpp
@@ -85,6 +87,7 @@ set(libmessageviewer_SRCS
   viewer.cpp
   viewer_p.cpp
   webkitparthtmlwriter.cpp
+  customheadersettingwidget.cpp
   ${_mailwebview_cpp}
 )
 

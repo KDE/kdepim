@@ -24,9 +24,11 @@
 #include "pimcommon/pimutil.h"
 
 #include <Akonadi/AgentInstance>
+#include <Akonadi/AgentManager>
 #include <Akonadi/EntityMimeTypeFilterModel>
 #include <Akonadi/KMime/SpecialMailCollections>
 #include <Akonadi/KMime/SpecialMailCollectionsRequestJob>
+#include <Akonadi/KMime/SpecialMailCollectionsDiscoveryJob>
 
 #include <KPIMIdentities/Identity>
 #include <KPIMIdentities/IdentityManager>
@@ -140,13 +142,18 @@ bool Kernel::isMainFolderCollection( const Akonadi::Collection &col )
 //-----------------------------------------------------------------------------
 void Kernel::initFolders()
 {
-  kDebug() << "Initialized and looking for default specialcollection folders.";
+  kDebug() << "Initialized and looking for specialcollection folders.";
   findCreateDefaultCollection( Akonadi::SpecialMailCollections::Inbox );
   findCreateDefaultCollection( Akonadi::SpecialMailCollections::Outbox );
   findCreateDefaultCollection( Akonadi::SpecialMailCollections::SentMail );
   findCreateDefaultCollection( Akonadi::SpecialMailCollections::Drafts );
   findCreateDefaultCollection( Akonadi::SpecialMailCollections::Trash );
   findCreateDefaultCollection( Akonadi::SpecialMailCollections::Templates );
+
+  Akonadi::SpecialMailCollectionsDiscoveryJob *job =
+       new Akonadi::SpecialMailCollectionsDiscoveryJob( this );
+  job->start();
+  // we don't connect to the job directly: it will register stuff into SpecialMailCollections, which will emit signals.
 }
 
 void Kernel::findCreateDefaultCollection( Akonadi::SpecialMailCollections::Type type )
@@ -279,16 +286,8 @@ Akonadi::Collection Kernel::trashCollectionFromResource( const Akonadi::Collecti
 {
   Akonadi::Collection trashCol;
   if ( col.isValid() ) {
-    const QString collectionResourceName( col.resource() );
-    if ( collectionResourceName.contains( IMAP_RESOURCE_IDENTIFIER ) ) {
-      OrgKdeAkonadiImapSettingsInterface *iface =
-        PimCommon::Util::createImapSettingsInterface( collectionResourceName );
-
-      if ( iface->isValid() ) {
-        trashCol =  Akonadi::Collection( iface->trashCollection() );
-      }
-      delete iface;
-    }
+    const Akonadi::AgentInstance agent = Akonadi::AgentManager::self()->instance(col.resource());
+    trashCol = Akonadi::SpecialMailCollections::self()->collection(Akonadi::SpecialMailCollections::Trash, agent);
   }
   return trashCol;
 }
@@ -300,21 +299,10 @@ bool Kernel::folderIsTrash( const Akonadi::Collection &col )
   }
 
   const Akonadi::AgentInstance::List lst = MailCommon::Util::agentInstances();
-  foreach ( const Akonadi::AgentInstance &type, lst ) {
-    if ( type.status() == Akonadi::AgentInstance::Broken ) {
-      continue;
-    }
-    if ( type.identifier().contains( IMAP_RESOURCE_IDENTIFIER ) ) {
-      OrgKdeAkonadiImapSettingsInterface *iface =
-        PimCommon::Util::createImapSettingsInterface( type.identifier() );
-
-      if ( iface->isValid() ) {
-        if ( iface->trashCollection() == col.id() ) {
-          delete iface;
-          return true;
-        }
-      }
-      delete iface;
+  foreach ( const Akonadi::AgentInstance &agent, lst ) {
+    const Akonadi::Collection trash = Akonadi::SpecialMailCollections::self()->collection(Akonadi::SpecialMailCollections::Trash, agent);
+    if (col == trash) {
+      return true;
     }
   }
   return false;

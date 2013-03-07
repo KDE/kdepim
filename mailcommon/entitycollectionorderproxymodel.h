@@ -40,7 +40,7 @@ class EntityCollectionOrderProxyModel : public Akonadi::EntityOrderProxyModel
     void setTopLevelOrder(const QStringList& list);
 
   public slots:
-    void slotDefaultCollectionsChanged();
+    void slotSpecialCollectionsChanged();
 
   private:
     class EntityCollectionOrderProxyModelPrivate;

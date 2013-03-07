@@ -35,8 +35,8 @@ class ComposerEditorPrivate
 {
 public:
     ComposerEditorPrivate(ComposerEditor *qq)
-        : findReplaceBar(0),
-          toolbar(0),
+        : toolBarLayout(0),
+          findReplaceBar(0),
           q(qq),
           view(0),
           richTextEnabled(true)
@@ -45,14 +45,14 @@ public:
 
     void initialize()
     {
-        QVBoxLayout * vlay = new QVBoxLayout;
-        toolbar = new KToolBar(q);
-        toolbar->setIconSize ( QSize ( 22, 22 ) );
-        toolbar->setToolButtonStyle ( Qt::ToolButtonIconOnly );
+        QVBoxLayout *vlay = new QVBoxLayout;
+
+        toolBarLayout = new QVBoxLayout;
+        toolBarLayout->setMargin(0);
+        vlay->addLayout(toolBarLayout);
 
         vlay->setMargin(0);
-        vlay->addWidget(toolbar);
-        toolbar->hide();
+
         vlay->addWidget(view);
         findReplaceBar = new FindReplaceBar(view);
         vlay->addWidget(findReplaceBar);
@@ -62,8 +62,20 @@ public:
         q->connect(view->page(), SIGNAL(contentsChanged()), q, SIGNAL(textChanged()) );
     }
 
+    KToolBar *createToolBar(const QList<ComposerView::ComposerViewAction> &lstActions)
+    {
+        KToolBar *toolbar = new KToolBar(q);
+        toolbar->setIconSize ( QSize ( 22, 22 ) );
+        toolbar->setToolButtonStyle ( Qt::ToolButtonIconOnly );
+        toolBarLayout->addWidget(toolbar);
+        view->createToolBar(lstActions, toolbar);
+        listToolBar.append(toolbar);
+        return toolbar;
+    }
+
+    QList<KToolBar *> listToolBar;
+    QVBoxLayout *toolBarLayout;
     FindReplaceBar *findReplaceBar;
-    KToolBar *toolbar;
     ComposerEditor *q;
     ComposerView *view;
 
@@ -174,25 +186,21 @@ void ComposerEditor::createAllActions()
     d->view->createAllActions();
 }
 
-void ComposerEditor::createToolBar(const QList<ComposerView::ComposerViewAction> &lstActions)
+KToolBar *ComposerEditor::createToolBar(const QList<ComposerView::ComposerViewAction> &lstActions)
 {
-    if (d->toolbar) {
-        d->view->createToolBar(lstActions,d->toolbar);
-        d->toolbar->show();
+    return d->createToolBar(lstActions);
+}
+
+void ComposerEditor::addActionInToolBar(QAction *act, KToolBar *toolbar)
+{
+    if (toolbar) {
+        toolbar->addAction(act);
     }
 }
 
-void ComposerEditor::addActionInToolBar(QAction *act)
+QList<KToolBar *> ComposerEditor::toolbars() const
 {
-    if (d->toolbar) {
-        d->toolbar->addAction(act);
-        d->toolbar->show();
-    }
-}
-
-KToolBar *ComposerEditor::toolbar() const
-{
-    return d->toolbar;
+    return d->listToolBar;
 }
 
 }

@@ -87,7 +87,7 @@ void MainWindow::addView( const QString &viewName )
 
   if ( eventView ) {
     eventView->setPreferences( *mViewPreferences );
-    eventView->setCalendar( mCalendar.data() );
+    eventView->setCalendar( mCalendar );
     eventView->setIncidenceChanger( mIncidenceChanger );
     eventView->setDateRange( start, end );
     eventView->updateConfig();

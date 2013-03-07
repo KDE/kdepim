@@ -388,7 +388,7 @@ KAction *Viewer::selectAllAction()
   return d->mSelectAllAction;
 }
 
-const HeaderStrategy * Viewer::headerStrategy() const
+HeaderStrategy * Viewer::headerStrategy() const
 {
   Q_D( const Viewer );
   return d->headerStrategy();
@@ -401,7 +401,7 @@ HeaderStyle * Viewer::headerStyle() const
 }
 
 void Viewer::setHeaderStyleAndStrategy( HeaderStyle * style,
-                                        const HeaderStrategy * strategy )
+                                        HeaderStrategy * strategy )
 {
   Q_D( Viewer );
   d->setHeaderStyleAndStrategy( style, strategy );

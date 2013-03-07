@@ -4,6 +4,8 @@
     This file is part of KMail, the KDE mail client.
     Copyright (c) 2003 Marc Mutz <mutz@kde.org>
 
+    Copyright (c) 2013 Laurent Montel <montel@kde.org>
+
     KMail is free software; you can redistribute it and/or modify it
     under the terms of the GNU General Public License, version 2, as
     published by the Free Software Foundation.
@@ -29,56 +31,27 @@
     your version.
 */
 
-#ifndef __MESSAGEVIEWER_HEADERSTRATEGY_H__
-#define __MESSAGEVIEWER_HEADERSTRATEGY_H__
+#include "headerstrategy_p.h"
+#include "globalsettings.h"
 
-#include "messageviewer_export.h"
+#include <kdebug.h>
 
-class QString;
-class QStringList;
 
 namespace MessageViewer {
 
-class MESSAGEVIEWER_EXPORT HeaderStrategy
+CustomHeaderStrategy::CustomHeaderStrategy()
+  : HeaderStrategy()
 {
-protected:
-  HeaderStrategy();
-  virtual ~HeaderStrategy();
-
-public:
-  //
-  // Factory methods:
-  //
-  enum Type { All, Rich, Standard, Brief, Custom };
-
-  static HeaderStrategy *create( Type type );
-  static HeaderStrategy *create( const QString & type );
-
-  static HeaderStrategy * all();
-  static HeaderStrategy * rich();
-  static HeaderStrategy * standard();
-  static HeaderStrategy * brief();
-  static HeaderStrategy * custom();
-
-  //
-  // Methods for handling the strategies:
-  //
-  virtual const char * name() const = 0;
-  virtual const HeaderStrategy * next() const = 0;
-  virtual const HeaderStrategy * prev() const = 0;
-
-  virtual void readConfig() {}
-  //
-  // HeaderStrategy interface:
-  //
-  enum DefaultPolicy { Display, Hide };
-
-  virtual QStringList headersToDisplay() const;
-  virtual QStringList headersToHide() const;
-  virtual DefaultPolicy defaultPolicy() const = 0;
-  virtual bool showHeader( const QString & header ) const;
-};
-
+    readConfig();
 }
 
-#endif // __MESSAGEVIEWER_HEADERSTRATEGY_H__
+void CustomHeaderStrategy::readConfig()
+{
+    mHeadersToDisplay = MessageViewer::GlobalSettings::self()->headersToDisplay();
+
+    mHeadersToHide = MessageViewer::GlobalSettings::self()->headersToHide();
+
+    mDefaultPolicy = MessageViewer::GlobalSettings::self()->customHeadersDefaultPolicy() == MessageViewer::GlobalSettings::EnumCustomHeadersDefaultPolicy::Display ?  Display : Hide ;
+}
+
+}

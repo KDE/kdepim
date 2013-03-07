@@ -202,6 +202,9 @@ void ComposerTableActionMenuPrivate::updateActions()
     action_insert_cell_after->setEnabled(isACell);
     action_insert_cell_before->setEnabled(isACell);
     action_remove_column->setEnabled(isACell);
+
+    const bool cellIsMerged = (webElement.hasAttribute(QLatin1String("colspan")) || webElement.hasAttribute(QLatin1String("rowspan")) );
+    action_split_cell->setEnabled(cellIsMerged);
 }
 
 

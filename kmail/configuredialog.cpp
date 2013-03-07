@@ -65,6 +65,7 @@ using KPIM::RecentAddresses;
 #include "messageviewer/configurewidget.h"
 #include "messageviewer/globalsettings.h"
 #include "messageviewer/invitationsettings.h"
+#include "messageviewer/customheadersettingwidget.h"
 #include "messagelist/core/settings.h"
 #include "messagelist/messagelistutil.h"
 #include "messagecore/globalsettings.h"
@@ -1545,31 +1546,51 @@ QString AppearancePage::ReaderTab::helpAnchor() const
 AppearancePageReaderTab::AppearancePageReaderTab( QWidget * parent )
   : ConfigModuleTab( parent )
 {
-  QVBoxLayout *vlay = new QVBoxLayout( this );
-  vlay->setSpacing( KDialog::spacingHint() );
-  vlay->setMargin( KDialog::marginHint() );
+    QVBoxLayout *topLayout = new QVBoxLayout(this);
+    topLayout->setSpacing( KDialog::spacingHint() );
+    topLayout->setMargin( KDialog::marginHint() );
+    QGroupBox *box = new QGroupBox(i18n("General"));
+    topLayout->addWidget(box);
 
-  // "Close message window after replying or forwarding" check box:
-  populateCheckBox( mCloseAfterReplyOrForwardCheck = new QCheckBox( this ),
-                    GlobalSettings::self()->closeAfterReplyOrForwardItem() );
-  mCloseAfterReplyOrForwardCheck->setToolTip(
-      i18n( "Close the standalone message window after replying or forwarding the message" ) );
-  vlay->addWidget( mCloseAfterReplyOrForwardCheck );
-  connect( mCloseAfterReplyOrForwardCheck, SIGNAL (stateChanged(int)),
-           this, SLOT(slotEmitChanged()) );
+    QVBoxLayout *vlay = new QVBoxLayout;
+    vlay->setSpacing( KDialog::spacingHint() );
+    vlay->setMargin( KDialog::marginHint() );
+    box->setLayout(vlay);
 
-  mViewerSettings = new MessageViewer::ConfigureWidget( this );
-  connect( mViewerSettings, SIGNAL(settingsChanged()),
-           this, SLOT(slotEmitChanged()) );
-  vlay->addWidget( mViewerSettings );
+    // "Close message window after replying or forwarding" check box:
+    populateCheckBox( mCloseAfterReplyOrForwardCheck = new QCheckBox( this ),
+                      GlobalSettings::self()->closeAfterReplyOrForwardItem() );
+    mCloseAfterReplyOrForwardCheck->setToolTip(
+                i18n( "Close the standalone message window after replying or forwarding the message" ) );
+    vlay->addWidget( mCloseAfterReplyOrForwardCheck );
+    connect( mCloseAfterReplyOrForwardCheck, SIGNAL (stateChanged(int)),
+             this, SLOT(slotEmitChanged()) );
 
-  vlay->addStretch( 100 ); // spacer
+    mViewerSettings = new MessageViewer::ConfigureWidget;
+    connect( mViewerSettings, SIGNAL(settingsChanged()),
+             this, SLOT(slotEmitChanged()) );
+    vlay->addWidget( mViewerSettings );
+
+    box = new QGroupBox(i18n("Custom Headers Style"));
+    topLayout->addWidget(box);
+
+    mCustomHeaderSettings = new MessageViewer::CustomHeaderSettingWidget;
+    connect( mCustomHeaderSettings, SIGNAL (changed()), this, SLOT(slotEmitChanged()) );
+
+    vlay = new QVBoxLayout;
+    vlay->setSpacing( KDialog::spacingHint() );
+    vlay->setMargin( KDialog::marginHint() );
+    box->setLayout(vlay);
+    vlay->addWidget(mCustomHeaderSettings);
+
+    vlay->addStretch( 100 ); // spacer
 }
 
 void AppearancePage::ReaderTab::doLoadOther()
 {
   loadWidget( mCloseAfterReplyOrForwardCheck, GlobalSettings::self()->closeAfterReplyOrForwardItem() );
   mViewerSettings->readConfig();
+  mCustomHeaderSettings->readConfig();
 }
 
 
@@ -1577,6 +1598,7 @@ void AppearancePage::ReaderTab::save()
 {
   saveCheckBox( mCloseAfterReplyOrForwardCheck, GlobalSettings::self()->closeAfterReplyOrForwardItem() );
   mViewerSettings->writeConfig();
+  mCustomHeaderSettings->writeConfig();
 }
 
 QString AppearancePage::SystemTrayTab::helpAnchor() const
@@ -2653,10 +2675,10 @@ ComposerPageSubjectTab::ComposerPageSubjectTab( QWidget * parent )
   label->setAlignment( Qt::AlignLeft );
 
   // row 1, string list editor:
-  SimpleStringListEditor::ButtonCode buttonCode =
-    static_cast<SimpleStringListEditor::ButtonCode>( SimpleStringListEditor::Add | SimpleStringListEditor::Remove | SimpleStringListEditor::Modify );
+  PimCommon::SimpleStringListEditor::ButtonCode buttonCode =
+    static_cast<PimCommon::SimpleStringListEditor::ButtonCode>( PimCommon::SimpleStringListEditor::Add | PimCommon::SimpleStringListEditor::Remove | PimCommon::SimpleStringListEditor::Modify );
   mReplyListEditor =
-    new SimpleStringListEditor( group, buttonCode,
+    new PimCommon::SimpleStringListEditor( group, buttonCode,
                                 i18n("A&dd..."), i18n("Re&move"),
                                 i18n("Mod&ify..."),
                                 i18n("Enter new reply prefix:") );
@@ -2688,7 +2710,7 @@ ComposerPageSubjectTab::ComposerPageSubjectTab( QWidget * parent )
 
   // row 1: string list editor
   mForwardListEditor =
-    new SimpleStringListEditor( group, buttonCode,
+    new PimCommon::SimpleStringListEditor( group, buttonCode,
                                 i18n("Add..."),
                                 i18n("Remo&ve"),
                                 i18n("Modify..."),
@@ -2764,7 +2786,7 @@ ComposerPageCharsetTab::ComposerPageCharsetTab( QWidget * parent )
   vlay->addWidget( label );
 
   mCharsetListEditor =
-    new SimpleStringListEditor( this, SimpleStringListEditor::All,
+    new PimCommon::SimpleStringListEditor( this, PimCommon::SimpleStringListEditor::All,
                                 i18n("A&dd..."), i18n("Remo&ve"),
                                 i18n("&Modify..."), i18n("Enter charset:") );
   connect( mCharsetListEditor, SIGNAL(changed()),
@@ -3184,10 +3206,10 @@ ComposerPageAttachmentsTab::ComposerPageAttachmentsTab( QWidget * parent )
 
   vlay->addWidget( label );
 
-  SimpleStringListEditor::ButtonCode buttonCode =
-    static_cast<SimpleStringListEditor::ButtonCode>( SimpleStringListEditor::Add | SimpleStringListEditor::Remove | SimpleStringListEditor::Modify );
+  PimCommon::SimpleStringListEditor::ButtonCode buttonCode =
+    static_cast<PimCommon::SimpleStringListEditor::ButtonCode>( PimCommon::SimpleStringListEditor::Add | PimCommon::SimpleStringListEditor::Remove | PimCommon::SimpleStringListEditor::Modify );
   mAttachWordsListEditor =
-    new SimpleStringListEditor( this, buttonCode,
+    new PimCommon::SimpleStringListEditor( this, buttonCode,
                                 i18n("A&dd..."), i18n("Re&move"),
                                 i18n("Mod&ify..."),
                                 i18n("Enter new key word:") );

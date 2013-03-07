@@ -36,7 +36,10 @@ class ComposerLinkDialogPrivate
 {
 public:
     ComposerLinkDialogPrivate(ComposerLinkDialog *qq)
-        :q(qq)
+        : linkText(0),
+          linkLocation(0),
+          target(0),
+          q(qq)
     {
     }
 
@@ -98,8 +101,7 @@ void ComposerLinkDialogPrivate::initialize(const QWebElement &element)
         layout->addWidget( button, 3, 1 );
     }
 
-    KSeparator *sep = new KSeparator;
-    vbox->addWidget( sep );
+    vbox->addWidget( new KSeparator );
 
 
     q->connect(q, SIGNAL(okClicked()), q, SLOT(_k_slotOkClicked()));
