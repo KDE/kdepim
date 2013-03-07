@@ -51,14 +51,14 @@ public:
   //
   enum Type { All, Rich, Standard, Brief, Custom };
 
-  static const HeaderStrategy * create( Type type );
-  static const HeaderStrategy * create( const QString & type );
+  static HeaderStrategy *create( Type type );
+  static HeaderStrategy *create( const QString & type );
 
-  static const HeaderStrategy * all();
-  static const HeaderStrategy * rich();
-  static const HeaderStrategy * standard();
-  static const HeaderStrategy * brief();
-  static const HeaderStrategy * custom();
+  static HeaderStrategy * all();
+  static HeaderStrategy * rich();
+  static HeaderStrategy * standard();
+  static HeaderStrategy * brief();
+  static HeaderStrategy * custom();
 
   //
   // Methods for handling the strategies:
@@ -67,6 +67,7 @@ public:
   virtual const HeaderStrategy * next() const = 0;
   virtual const HeaderStrategy * prev() const = 0;
 
+  virtual void readConfig() {}
   //
   // HeaderStrategy interface:
   //

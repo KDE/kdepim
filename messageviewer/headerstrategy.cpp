@@ -63,7 +63,7 @@ bool HeaderStrategy::showHeader( const QString & header ) const {
   return defaultPolicy() == Display;
 }
 
-const HeaderStrategy * HeaderStrategy::create( Type type ) {
+HeaderStrategy * HeaderStrategy::create( Type type ) {
   switch ( type ) {
   case All:  return all();
   case Rich:   return rich();
@@ -75,7 +75,7 @@ const HeaderStrategy * HeaderStrategy::create( Type type ) {
   return 0; // make compiler happy
 }
 
-const HeaderStrategy * HeaderStrategy::create( const QString & type ) {
+HeaderStrategy * HeaderStrategy::create( const QString & type ) {
   const QString lowerType = type.toLower();
   if ( lowerType == QLatin1String( "all" ) )
       return all();
@@ -91,37 +91,37 @@ const HeaderStrategy * HeaderStrategy::create( const QString & type ) {
   return standard();
 }
 
-static const HeaderStrategy * allStrategy = 0;
-static const HeaderStrategy * richStrategy = 0;
-static const HeaderStrategy * standardStrategy = 0;
-static const HeaderStrategy * briefStrategy = 0;
-static const HeaderStrategy * customStrategy = 0;
+static HeaderStrategy * allStrategy = 0;
+static HeaderStrategy * richStrategy = 0;
+static HeaderStrategy * standardStrategy = 0;
+static HeaderStrategy * briefStrategy = 0;
+static HeaderStrategy * customStrategy = 0;
 
-const HeaderStrategy * HeaderStrategy::all() {
+HeaderStrategy * HeaderStrategy::all() {
   if ( !allStrategy )
     allStrategy = new MessageViewer::AllHeaderStrategy();
   return allStrategy;
 }
 
-const HeaderStrategy * HeaderStrategy::rich() {
+HeaderStrategy * HeaderStrategy::rich() {
   if ( !richStrategy )
     richStrategy = new MessageViewer::RichHeaderStrategy();
   return richStrategy;
 }
 
-const HeaderStrategy * HeaderStrategy::standard() {
+HeaderStrategy * HeaderStrategy::standard() {
   if ( !standardStrategy )
     standardStrategy = new MessageViewer::StandardHeaderStrategy();
   return standardStrategy;
 }
 
-const HeaderStrategy * HeaderStrategy::brief() {
+HeaderStrategy * HeaderStrategy::brief() {
   if ( !briefStrategy )
     briefStrategy = new MessageViewer::BriefHeaderStrategy();
   return briefStrategy;
 }
 
-const HeaderStrategy * HeaderStrategy::custom() {
+HeaderStrategy * HeaderStrategy::custom() {
   if ( !customStrategy )
     customStrategy = new MessageViewer::CustomHeaderStrategy();
   return customStrategy;

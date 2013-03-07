@@ -40,10 +40,16 @@ namespace MessageViewer {
 CustomHeaderStrategy::CustomHeaderStrategy()
   : HeaderStrategy()
 {
-  mHeadersToDisplay = MessageViewer::GlobalSettings::self()->headersToDisplay();
-
-  mHeadersToHide = MessageViewer::GlobalSettings::self()->headersToHide();
-
-  mDefaultPolicy = MessageViewer::GlobalSettings::self()->customHeadersDefaultPolicy() == MessageViewer::GlobalSettings::EnumCustomHeadersDefaultPolicy::Display ?  Display : Hide ;
+    readConfig();
 }
+
+void CustomHeaderStrategy::readConfig()
+{
+    mHeadersToDisplay = MessageViewer::GlobalSettings::self()->headersToDisplay();
+
+    mHeadersToHide = MessageViewer::GlobalSettings::self()->headersToHide();
+
+    mDefaultPolicy = MessageViewer::GlobalSettings::self()->customHeadersDefaultPolicy() == MessageViewer::GlobalSettings::EnumCustomHeadersDefaultPolicy::Display ?  Display : Hide ;
+}
+
 }

@@ -279,12 +279,12 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
   KAction *findInMessageAction();
   KAction *saveAsAction();
 
-  const HeaderStrategy * headerStrategy() const;
+  HeaderStrategy * headerStrategy() const;
 
   HeaderStyle * headerStyle() const;
 
   void setHeaderStyleAndStrategy( HeaderStyle * style,
-                                  const HeaderStrategy * strategy );
+                                  HeaderStrategy * strategy );
   void writeConfig( bool withSync=true );
 
   KUrl urlClicked() const;

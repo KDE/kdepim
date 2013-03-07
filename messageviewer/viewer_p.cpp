@@ -1135,6 +1135,8 @@ void ViewerPrivate::readConfig()
   mZoomTextOnly = GlobalSettings::self()->zoomTextOnly();
   setZoomTextOnly( mZoomTextOnly );
 
+  if (headerStrategy() )
+    headerStrategy()->readConfig();
   KToggleAction *raction = actionForHeaderStyle( headerStyle(), headerStrategy() );
   if ( raction )
     raction->setChecked( true );
@@ -1182,7 +1184,7 @@ void ViewerPrivate::writeConfig( bool sync )
 
 
 void ViewerPrivate::setHeaderStyleAndStrategy( HeaderStyle * style,
-                                               const HeaderStrategy * strategy , bool writeInConfigFile ) {
+                                               HeaderStrategy * strategy , bool writeInConfigFile ) {
 
   if ( mHeaderStyle == style && mHeaderStrategy == strategy )
     return;
