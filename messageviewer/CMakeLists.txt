@@ -96,8 +96,8 @@ kde4_add_kcfg_files(libmessageviewer_SRCS
 )
 
 kde4_add_ui_files(libmessageviewer_SRCS
-  settings.ui
-  invitationsettings.ui
+  ui/settings.ui
+  ui/invitationsettings.ui
 )
 
 kde4_add_library(messageviewer ${LIBRARY_TYPE} ${libmessageviewer_SRCS})
