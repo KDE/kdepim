@@ -26,7 +26,7 @@
 
 #include <QHBoxLayout>
 #include <QVBoxLayout>
-#include <QLabel>
+#include <QRadioButton>
 
 namespace MessageViewer {
 
@@ -35,8 +35,8 @@ CustomHeaderSettingWidget::CustomHeaderSettingWidget(QWidget *parent)
 {
     QVBoxLayout *topLayout = new QVBoxLayout;
     QGridLayout *grid = new QGridLayout;
-    QLabel *lab = new QLabel(i18n("Header to show:"));
-    grid->addWidget(lab, 0, 0);
+    mCbHeaderToShow = new QRadioButton(i18n("Header to show:"));
+    grid->addWidget(mCbHeaderToShow, 0, 0);
 
     PimCommon::SimpleStringListEditor::ButtonCode buttonCode =
       static_cast<PimCommon::SimpleStringListEditor::ButtonCode>( PimCommon::SimpleStringListEditor::Add | PimCommon::SimpleStringListEditor::Remove );
@@ -47,8 +47,8 @@ CustomHeaderSettingWidget::CustomHeaderSettingWidget(QWidget *parent)
     connect(mHeaderToShow, SIGNAL(changed()), this, SIGNAL(changed()));
     grid->addWidget(mHeaderToShow, 1, 0);
 
-    lab = new QLabel(i18n("Header to hide:"));
-    grid->addWidget(lab, 0, 1);
+    mCbHeaderToHide = new QRadioButton(i18n("Header to hide:"));
+    grid->addWidget(mCbHeaderToHide, 0, 1);
     mHeaderToHide = new PimCommon::SimpleStringListEditor( this, buttonCode,
                                                            i18n("A&dd..."), i18n("Remo&ve"),
                                                            i18n("&Modify..."), i18n("Header to hide:") );

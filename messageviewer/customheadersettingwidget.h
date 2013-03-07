@@ -27,7 +27,7 @@ namespace PimCommon {
 class SimpleStringListEditor;
 }
 
-class KLineEdit;
+class QRadioButton;
 
 namespace MessageViewer {
 
@@ -48,6 +48,8 @@ Q_SIGNALS:
 private:
     QStringList mHeadersToDisplay;
     QStringList mHeadersToHide;
+    QRadioButton *mCbHeaderToHide;
+    QRadioButton *mCbHeaderToShow;
     PimCommon::SimpleStringListEditor *mHeaderToHide;
     PimCommon::SimpleStringListEditor *mHeaderToShow;
 };
