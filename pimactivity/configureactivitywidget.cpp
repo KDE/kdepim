@@ -18,21 +18,19 @@
 
 */
 
-#ifndef ACTIVITYMANAGER_H
-#define ACTIVITYMANAGER_H
-
-#include "pimactivity_export.h"
-
-#include <QObject>
+#include "configureactivitywidget.h"
 
 namespace PimActivity {
-class PIMACTIVITY_EXPORT ActivityManager : public QObject
+ConfigureActivityWidget::ConfigureActivityWidget(QWidget *parent)
+    : QWidget(parent)
 {
-    Q_OBJECT
-public:
-    explicit ActivityManager(QObject *parent = 0);
-    ~ActivityManager();
-};
 }
 
-#endif // ACTIVITYMANAGER_H
+ConfigureActivityWidget::~ConfigureActivityWidget()
+{
+}
+
+}
+
+
+#include "configureactivitywidget.moc"

@@ -17,22 +17,21 @@
   02110-1301, USA.
 
 */
-
-#ifndef ACTIVITYMANAGER_H
-#define ACTIVITYMANAGER_H
+#ifndef CONFIGUREACTIVITYWIDGET_H
+#define CONFIGUREACTIVITYWIDGET_H
 
 #include "pimactivity_export.h"
 
-#include <QObject>
+#include <QWidget>
 
 namespace PimActivity {
-class PIMACTIVITY_EXPORT ActivityManager : public QObject
+class PIMACTIVITY_EXPORT ConfigureActivityWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ActivityManager(QObject *parent = 0);
-    ~ActivityManager();
+    explicit ConfigureActivityWidget(QWidget *parent);
+    ~ConfigureActivityWidget();
 };
 }
 
-#endif // ACTIVITYMANAGER_H
+#endif // CONFIGUREACTIVITYWIDGET_H
