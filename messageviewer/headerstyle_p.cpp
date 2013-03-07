@@ -1054,11 +1054,10 @@ QString CustomHeaderStyle::format( KMime::Message *message ) const {
                                 StringUtil::emailAddrAsAnchor( message->replyTo(), StringUtil::DisplayFullAddress ) + "<br/>\n" );
           }
       } else {
-          /*
-          if (message->headerByType(headerToDisplay)) {
-              //TODO
+          const QByteArray header = headerToDisplay.toLatin1();
+          if (message->headerByType(header)) {
+              headerStr.append( headerToDisplay + ": " + message->headerByType(header)->asUnicodeString() + "<br/>\n" );
           }
-          */
       }
   }
   headerStr += "</div>\n";

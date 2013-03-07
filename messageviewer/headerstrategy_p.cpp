@@ -41,15 +41,8 @@ CustomHeaderStrategy::CustomHeaderStrategy()
   : HeaderStrategy()
 {
   mHeadersToDisplay = MessageViewer::GlobalSettings::self()->headersToDisplay();
-  QStringList::iterator end( mHeadersToDisplay.end() );
-  for ( QStringList::iterator it = mHeadersToDisplay.begin() ; it != end ; ++ it )
-      *it = (*it).toLower();
 
   mHeadersToHide = MessageViewer::GlobalSettings::self()->headersToHide();
-
-  end = mHeadersToHide.end();
-  for ( QStringList::iterator it = mHeadersToHide.begin() ; it != end; ++ it )
-      *it = (*it).toLower();
 
   mDefaultPolicy = MessageViewer::GlobalSettings::self()->customHeadersDefaultPolicy() == MessageViewer::GlobalSettings::EnumCustomHeadersDefaultPolicy::Display ?  Display : Hide ;
 }
