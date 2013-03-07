@@ -1017,13 +1017,13 @@ QString CustomHeaderStyle::format( KMime::Message *message ) const {
 
 
   Q_FOREACH (const QString &headerToDisplay, headersToDisplay) {
-      if ( headerToDisplay == QLatin1String("subject")) {
+      if ( headerToDisplay.toLower() == QLatin1String("subject")) {
           headerStr += QString("<div dir=\"%1\"><b style=\"font-size:130%\">" +
                                subjectString( message ) + "</b></div>\n")
                             .arg(subjectDir);
-      } else if (headerToDisplay == QLatin1String("date")) {
+      } else if (headerToDisplay.toLower() == QLatin1String("date")) {
           headerStr.append(i18n("Date: ") + strToHtml( dateString(message, isPrinting(), /* short = */ false ) ) + "<br/>\n" );
-      } else if (headerToDisplay == QLatin1String("from")) {
+      } else if (headerToDisplay.toLower() == QLatin1String("from")) {
           headerStr.append( i18n("From: ") +
                             StringUtil::emailAddrAsAnchor( message->from(), StringUtil::DisplayFullAddress, "", StringUtil::ShowLink ) );
           if ( !vCardName().isEmpty() )
@@ -1035,20 +1035,20 @@ QString CustomHeaderStyle::format( KMime::Message *message ) const {
             headerStr.append("&nbsp;&nbsp;(" +
                   strToHtml(message->headerByType("Organization")->asUnicodeString()) + ')');
           headerStr.append("<br/>\n");
-      } else if (headerToDisplay == QLatin1String("to")) {
+      } else if (headerToDisplay.toLower() == QLatin1String("to")) {
           headerStr.append( i18nc("To-field of the mailheader.", "To: ") +
                             StringUtil::emailAddrAsAnchor( message->to(), StringUtil::DisplayFullAddress ) + "<br/>\n" );
-      } else if (headerToDisplay == QLatin1String("cc")) {
+      } else if (headerToDisplay.toLower() == QLatin1String("cc")) {
           if (message->cc( false )) {
               headerStr.append( i18n("CC: ") +
                                 StringUtil::emailAddrAsAnchor( message->cc(), StringUtil::DisplayFullAddress ) + "<br/>\n" );
           }
-      } else if (headerToDisplay == QLatin1String("bcc")) {
+      } else if (headerToDisplay.toLower() == QLatin1String("bcc")) {
           if (message->bcc( false )) {
               headerStr.append( i18n("BCC: ") +
                                 StringUtil::emailAddrAsAnchor( message->bcc(), StringUtil::DisplayFullAddress ) + "<br/>\n" );
           }
-      } else if (headerToDisplay == QLatin1String("reply-to")) {
+      } else if (headerToDisplay.toLower() == QLatin1String("reply-to")) {
           if (message->replyTo( false )) {
               headerStr.append( i18n("Reply to: ") +
                                 StringUtil::emailAddrAsAnchor( message->replyTo(), StringUtil::DisplayFullAddress ) + "<br/>\n" );
@@ -1056,7 +1056,7 @@ QString CustomHeaderStyle::format( KMime::Message *message ) const {
       } else {
           const QByteArray header = headerToDisplay.toLatin1();
           if (message->headerByType(header)) {
-              headerStr.append( headerToDisplay + ": " + message->headerByType(header)->asUnicodeString() + "<br/>\n" );
+              headerStr.append( i18n("%1: ",headerToDisplay) + message->headerByType(header)->asUnicodeString() + "<br/>\n" );
           }
       }
   }
