@@ -1009,7 +1009,8 @@ QString CustomHeaderStyle::format( KMime::Message *message ) const {
     // crude way to emulate "all" headers - Note: no strings have
     // i18n(), so direction should always be ltr.
     headerStr= QString("<div class=\"header\" dir=\"ltr\">");
-    headerStr += formatAllMessageHeaders( message );
+    const QStringList headersToHide = strategy->headersToHide();
+    headerStr += formatAllMessageHeaders( message, headersToHide );
     return headerStr + "</div>";
   }
 
@@ -1056,7 +1057,7 @@ QString CustomHeaderStyle::format( KMime::Message *message ) const {
       } else {
           const QByteArray header = headerToDisplay.toLatin1();
           if (message->headerByType(header)) {
-              headerStr.append( i18n("%1: ",headerToDisplay) + message->headerByType(header)->asUnicodeString() + "<br/>\n" );
+              headerStr.append( strToHtml(i18n("%1: ",headerToDisplay) + message->headerByType(header)->asUnicodeString()) + "<br/>\n" );
           }
       }
   }
@@ -1064,17 +1065,20 @@ QString CustomHeaderStyle::format( KMime::Message *message ) const {
   return headerStr;
 }
 
-QString CustomHeaderStyle::formatAllMessageHeaders( KMime::Message *message ) const {
-  QByteArray head = message->head();
-  KMime::Headers::Base *header = KMime::HeaderParsing::extractFirstHeader( head );
-  QString result;
-  while ( header ) {
-    result += strToHtml( QLatin1String(header->type()) + QLatin1String(": ") + header->asUnicodeString() );
-    result += QLatin1String( "<br />\n" );
-    delete header;
-    header = KMime::HeaderParsing::extractFirstHeader( head );
-  }
-  return result;
+QString CustomHeaderStyle::formatAllMessageHeaders( KMime::Message *message, const QStringList &headersToHide ) const
+{
+    QByteArray head = message->head();
+    KMime::Headers::Base *header = KMime::HeaderParsing::extractFirstHeader( head );
+    QString result;
+    while ( header ) {
+        if (!headersToHide.contains(QLatin1String(header->type()))) {
+            result += strToHtml( QLatin1String(header->type()) + QLatin1String(": ") + header->asUnicodeString() );
+            result += QLatin1String( "<br />\n" );
+        }
+        delete header;
+        header = KMime::HeaderParsing::extractFirstHeader( head );
+    }
+    return result;
 }
 
 }

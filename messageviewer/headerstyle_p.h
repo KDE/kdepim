@@ -158,7 +158,7 @@ public:
   QString format( KMime::Message *message ) const;
 
 private:
-  QString formatAllMessageHeaders( KMime::Message *message ) const;
+  QString formatAllMessageHeaders(KMime::Message *message , const QStringList &headersToHide) const;
 };
 
 
