@@ -89,7 +89,10 @@ void CustomHeaderSettingWidget::writeConfig()
 
 void CustomHeaderSettingWidget::resetToDefault()
 {
-    //TODO
+    const bool bUseDefaults = MessageViewer::GlobalSettings::self()->useDefaults( true );
+    readConfig();
+
+    MessageViewer::GlobalSettings::self()->useDefaults( bUseDefaults );
 }
 
 }
