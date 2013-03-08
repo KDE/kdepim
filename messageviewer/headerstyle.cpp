@@ -32,7 +32,13 @@
 */
 
 #include "headerstyle.h"
-#include "headerstyle/headerstyle_p.h"
+#include "headerstyle/briefheaderstyle.h"
+#include "headerstyle/grantleeheaderstyle.h"
+#include "headerstyle/customheaderstyle.h"
+#include "headerstyle/plainheaderstyle.h"
+#include "headerstyle/mobileheaderstyle.h"
+#include "headerstyle/entrepriseheaderstyle.h"
+#include "headerstyle/fancyheaderstyle.h"
 
 #include <KDebug>
 #include <KGlobal>
@@ -62,6 +68,11 @@ HeaderStyle::HeaderStyle()
 
 HeaderStyle::~HeaderStyle() {
 
+}
+
+bool HeaderStyle::hasAttachmentQuickList() const
+{
+  return false;
 }
 
 HeaderStyle * HeaderStyle::create( Type type ) {

@@ -1,5 +1,5 @@
 /*  -*- c++ -*-
-    headerstrategy.h
+    headerstyle.h
 
     This file is part of KMail, the KDE mail client.
     Copyright (c) 2003 Marc Mutz <mutz@kde.org>
@@ -31,45 +31,26 @@
     your version.
 */
 
-#include "headerstrategy_p.h"
-#include "globalsettings.h"
+#ifndef BRIEFHEADERSTYLE_H
+#define BRIEFHEADERSTYLE_H
 
-
-#include <kdebug.h>
-
+#include "headerstyle.h"
 
 namespace MessageViewer {
 
-CustomHeaderStrategy::CustomHeaderStrategy()
-  : HeaderStrategy()
-{
-    readConfig();
+class BriefHeaderStyle : public HeaderStyle {
+    friend class HeaderStyle;
+protected:
+    BriefHeaderStyle() : HeaderStyle() {}
+    virtual ~BriefHeaderStyle() {}
+
+public:
+    const char * name() const { return "brief"; }
+    HeaderStyle * next() const { return plain(); }
+    HeaderStyle * prev() const { return fancy(); }
+
+    QString format( KMime::Message *message ) const;
+};
 }
 
-void CustomHeaderStrategy::readConfig()
-{
-    mHeadersToDisplay = MessageViewer::GlobalSettings::self()->headersToDisplay();
-
-    mHeadersToHide = MessageViewer::GlobalSettings::self()->headersToHide();
-
-    mDefaultPolicy = MessageViewer::GlobalSettings::self()->customHeadersDefaultPolicy() == MessageViewer::GlobalSettings::EnumCustomHeadersDefaultPolicy::Display ?  Display : Hide ;
-}
-
-GrantleeHeaderStrategy::GrantleeHeaderStrategy()
-  : HeaderStrategy()
-{
-    readConfig();
-}
-
-void GrantleeHeaderStrategy::readConfig()
-{
-    //TODO
-    mHeadersToDisplay = MessageViewer::GlobalSettings::self()->headersToDisplay();
-
-    mHeadersToHide = MessageViewer::GlobalSettings::self()->headersToHide();
-
-    mDefaultPolicy = MessageViewer::GlobalSettings::self()->customHeadersDefaultPolicy() == MessageViewer::GlobalSettings::EnumCustomHeadersDefaultPolicy::Display ?  Display : Hide ;
-}
-
-
-}
+#endif // BRIEFHEADERSTYLE_H
