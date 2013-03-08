@@ -1,6 +1,8 @@
 KDE4_NO_ENABLE_FINAL(messageviewer)
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
+include_directories(${Grantlee_INCLUDE_DIRS})
+
 # KCFG files:
 # The main messageviewer.kcfg is configured by CMake and put in the build directory.
 
