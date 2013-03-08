@@ -97,7 +97,7 @@ set(libmessageviewer_SRCS
   viewer_p.cpp
   webkitparthtmlwriter.cpp
   customheadersettingwidget.cpp
-  grantleeheaderformatter.cpp
+  headerstyle/grantleeheaderformatter.cpp
   ${_mailwebview_cpp}
 )
 
