@@ -927,8 +927,9 @@ void ComposerViewPrivate::_k_slotPasteWithoutFormatting()
 {
 #ifndef QT_NO_CLIPBOARD
     if ( q->hasFocus() ) {
-        const QString s = QApplication::clipboard()->text();
+        QString s = QApplication::clipboard()->text();
         if ( !s.isEmpty() ) {
+            s.replace(QLatin1String("\n"), QLatin1String("<BR>"));
             execCommand(QLatin1String("insertHTML"), s);
         }
     }
