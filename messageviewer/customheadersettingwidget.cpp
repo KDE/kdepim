@@ -109,7 +109,7 @@ void CustomHeaderSettingWidget::writeConfig()
 {
     MessageViewer::GlobalSettings::self()->setHeadersToDisplay(mHeaderToShow->stringList());
     MessageViewer::GlobalSettings::self()->setHeadersToHide(mHeaderToHide->stringList());
-
+    MessageViewer::GlobalSettings::self()->setCustomHeadersDefaultPolicy(mHeaderGroup->checkedId());
 }
 
 void CustomHeaderSettingWidget::resetToDefault()

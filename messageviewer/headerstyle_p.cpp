@@ -1007,8 +1007,8 @@ QString CustomHeaderStyle::format( KMime::Message *message ) const {
 
   const QStringList headersToDisplay = strategy->headersToDisplay();
 
-  if ( headersToDisplay.isEmpty()
-        && strategy->defaultPolicy() == HeaderStrategy::Display ) {
+  if ( (strategy->defaultPolicy() == HeaderStrategy::Hide) ||
+       (headersToDisplay.isEmpty() && strategy->defaultPolicy() == HeaderStrategy::Display )) {
     // crude way to emulate "all" headers - Note: no strings have
     // i18n(), so direction should always be ltr.
     headerStr= QString("<div class=\"header\" dir=\"ltr\">");
@@ -1074,8 +1074,10 @@ QString CustomHeaderStyle::formatAllMessageHeaders( KMime::Message *message, con
     KMime::Headers::Base *header = KMime::HeaderParsing::extractFirstHeader( head );
     QString result;
     while ( header ) {
-        if (!headersToHide.contains(QLatin1String(header->type()))) {
-            result += strToHtml( QLatin1String(header->type()) + QLatin1String(": ") + header->asUnicodeString() );
+        const QString headerType = QLatin1String(header->type());
+        if (!headersToHide.contains(headerType) || !headersToHide.contains(headerType.toLower())) {
+
+            result += strToHtml(headerType) + QLatin1String(": ") + header->asUnicodeString();
             result += QLatin1String( "<br />\n" );
         }
         delete header;
