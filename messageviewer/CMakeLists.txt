@@ -63,7 +63,7 @@ set(libmessageviewer_SRCS
   headerstrategy.cpp
   headerstrategy_p.cpp
   headerstyle.cpp
-  headerstyle_p.cpp
+  headerstyle/headerstyle_p.cpp
   htmlquotecolorer.cpp
   htmlstatusbar.cpp
   iconnamecache.cpp

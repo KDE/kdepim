@@ -32,7 +32,7 @@
 */
 
 #include "headerstyle.h"
-#include "headerstyle_p.h"
+#include "headerstyle/headerstyle_p.h"
 
 #include <KDebug>
 #include <KGlobal>
