@@ -18,6 +18,7 @@
 #include "grantleeheaderformatter.h"
 
 #include <grantlee/templateloader.h>
+#include <grantlee/engine.h>
 
 namespace MessageViewer {
 
@@ -32,7 +33,7 @@ public:
         templateLoader->setTemplateDirs( QStringList() << templatePath );
         templateLoader->setTheme( QLatin1String( "default" ) );
         engine->addTemplateLoader( templateLoader );
-        headerTemplate = mEngine->loadByName( "header.html" );
+        headerTemplate = engine->loadByName( "header.html" );
         if ( headerTemplate->error() ) {
           errorMessage += headerTemplate->errorString();
         }

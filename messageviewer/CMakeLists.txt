@@ -88,6 +88,7 @@ set(libmessageviewer_SRCS
   viewer_p.cpp
   webkitparthtmlwriter.cpp
   customheadersettingwidget.cpp
+  grantleeheaderformatter.cpp
   ${_mailwebview_cpp}
 )
 
@@ -114,6 +115,7 @@ target_link_libraries(messageviewer messagecore kdepim kpgp kleo
   ${KDE4_KPRINTUTILS_LIBS}
   ${QGPGME_LIBRARIES}
   ${_mailwebview_lib}
+  ${Grantlee_CORE_LIBRARIES} 
   pimcommon
 )
 
