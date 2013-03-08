@@ -24,6 +24,8 @@
 
 #include <QWidget>
 
+class KTabWidget;
+
 namespace PimActivity {
 class PIMACTIVITY_EXPORT ConfigureActivityWidget : public QWidget
 {
@@ -31,6 +33,8 @@ class PIMACTIVITY_EXPORT ConfigureActivityWidget : public QWidget
 public:
     explicit ConfigureActivityWidget(QWidget *parent);
     ~ConfigureActivityWidget();
+private:
+    KTabWidget *mTabWidget;
 };
 }
 

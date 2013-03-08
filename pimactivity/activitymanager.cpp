@@ -19,16 +19,27 @@
 */
 
 #include "activitymanager.h"
+#include <kactivities/consumer.h>
+
+#include <QDebug>
 
 namespace PimActivity {
 ActivityManager::ActivityManager(QObject *parent)
     : QObject(parent)
 {
+    if (KActivities::Consumer::serviceStatus() == KActivities::Consumer::NotRunning)  {
+        qDebug()<<" kactivities is not running";
+    }
+
+    mConsumer = new KActivities::Consumer;
+    const QStringList lst = mConsumer->listActivities();
+    qDebug()<< "list activities : "<<lst;
+
 }
 
 ActivityManager::~ActivityManager()
 {
-
+    delete mConsumer;
 }
 
 }

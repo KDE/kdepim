@@ -24,9 +24,6 @@
 #include <QWidget>
 #include "pimactivity_export.h"
 
-namespace KActivities {
-class Consumer;
-}
 
 namespace PimActivity {
 
@@ -40,8 +37,6 @@ public:
     void readConfig();
     void writeConfig();
 
-private:
-    KActivities::Consumer *mConsumer;
 };
 
 }
