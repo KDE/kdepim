@@ -1,5 +1,6 @@
 set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
 add_definitions( -DMAIL_DATA_DIR="\\"${CMAKE_CURRENT_SOURCE_DIR}/data\\"" )
+add_definitions( -DGNUPGHOME="\\"${CMAKE_BINARY_DIR}/messagecore/tests/gnupg_home\\"" )
 
 include_directories(
   ${CMAKE_SOURCE_DIR}/libkleo

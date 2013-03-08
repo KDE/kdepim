@@ -44,9 +44,7 @@ QTEST_KDEMAIN( UnencryptedMessageTest, GUI )
 
 void UnencryptedMessageTest::initTestCase()
 {
-  setenv("GNUPGHOME", KDESRCDIR "../../messagecore/tests/gnupg_home" , 1 );
-  setenv("LC_ALL", "C", 1);
-  setenv( "KDEHOME", QFile::encodeName(  QDir::homePath() + QString::fromLatin1(  "/.kde-unit-test" ) ), 1 );
+  MessageCore::Test::setupEnv();
 }
 
 void UnencryptedMessageTest::testMailWithoutEncryption()

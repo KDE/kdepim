@@ -1,8 +1,8 @@
-
+pinentry-program @CMAKE_CURRENT_BINARY_DIR@/pinentry-fake.sh
 ###+++--- GPGConf ---+++###
 allow-mark-trusted
 debug-level basic
-log-file socket:///home/leo/kde/src/kdepim/messagecomposer/tests/gnupg_home/log-socket
+log-file @CMAKE_CURRENT_BINARY_DIR@/gpg-agent.log
 ###+++--- GPGConf ---+++### Tue 29 Jun 2010 10:23:13 AM EDT
 # GPGConf edited this configuration file.
 # It will disable options before this marked block, but it will
