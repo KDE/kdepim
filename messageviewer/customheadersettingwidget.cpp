@@ -85,12 +85,14 @@ void CustomHeaderSettingWidget::writeConfig()
     MessageViewer::GlobalSettings::self()->setHeadersToDisplay(mHeaderToShow->stringList());
     MessageViewer::GlobalSettings::self()->setHeadersToHide(mHeaderToHide->stringList());
 
-    //Update customheaderstyle
 }
 
 void CustomHeaderSettingWidget::resetToDefault()
 {
-    MessageViewer::GlobalSettings::self()->setHeadersToDisplay(mHeaderToShow->stringList());
+    const bool bUseDefaults = MessageViewer::GlobalSettings::self()->useDefaults( true );
+    readConfig();
+
+    MessageViewer::GlobalSettings::self()->useDefaults( bUseDefaults );
 }
 
 }

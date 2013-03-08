@@ -400,7 +400,8 @@ QString FancyHeaderStyle::drawSpamMeter( SpamError spamError, double percent, do
 
 
 QString FancyHeaderStyle::format( KMime::Message *message ) const {
-  if ( !message ) return QString();
+  if ( !message )
+      return QString();
   const HeaderStrategy *strategy = headerStrategy();
   if ( !strategy )
     strategy = HeaderStrategy::rich();
@@ -409,7 +410,7 @@ QString FancyHeaderStyle::format( KMime::Message *message ) const {
   // The direction of the header is determined according to the direction
   // of the application layout.
 
-  QString dir = ( QApplication::isRightToLeft() ? "rtl" : "ltr" );
+  const QString dir = ( QApplication::isRightToLeft() ? "rtl" : "ltr" );
   QString headerStr = QString::fromLatin1("<div class=\"fancy header\" dir=\"%1\">\n").arg(dir);
 
   // However, the direction of the message subject within the header is

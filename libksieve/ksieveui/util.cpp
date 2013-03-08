@@ -119,8 +119,6 @@ KUrl KSieveUi::Util::findSieveUrlForAccount( const QString &identifier )
   }
 }
 
-#define IMAP_RESOURCE_IDENTIFIER "akonadi_imap_resource"
-
 Akonadi::AgentInstance::List KSieveUi::Util::imapAgentInstances()
 {
   Akonadi::AgentInstance::List relevantInstances;
