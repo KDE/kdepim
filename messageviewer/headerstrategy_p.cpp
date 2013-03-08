@@ -54,4 +54,21 @@ void CustomHeaderStrategy::readConfig()
     mDefaultPolicy = MessageViewer::GlobalSettings::self()->customHeadersDefaultPolicy() == MessageViewer::GlobalSettings::EnumCustomHeadersDefaultPolicy::Display ?  Display : Hide ;
 }
 
+GrantleeHeaderStrategy::GrantleeHeaderStrategy()
+  : HeaderStrategy()
+{
+    readConfig();
+}
+
+void GrantleeHeaderStrategy::readConfig()
+{
+    //TODO
+    mHeadersToDisplay = MessageViewer::GlobalSettings::self()->headersToDisplay();
+
+    mHeadersToHide = MessageViewer::GlobalSettings::self()->headersToHide();
+
+    mDefaultPolicy = MessageViewer::GlobalSettings::self()->customHeadersDefaultPolicy() == MessageViewer::GlobalSettings::EnumCustomHeadersDefaultPolicy::Display ?  Display : Hide ;
+}
+
+
 }

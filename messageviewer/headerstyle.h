@@ -72,7 +72,8 @@ public:
     Enterprise,
     Mobile,
     MobileExtended,
-    Custom
+    Custom,
+    Grantlee
   };
 
   static HeaderStyle * create( Type type );
@@ -85,6 +86,7 @@ public:
   static HeaderStyle * mobile();
   static HeaderStyle * mobileExtended();
   static HeaderStyle * custom();
+  static HeaderStyle * grantlee();
 
   //
   // Methods for handling the styles:

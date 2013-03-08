@@ -163,6 +163,23 @@ private:
   QString formatAllMessageHeaders(KMime::Message *message , const QStringList &headersToHide) const;
 };
 
+class GrantleeHeaderStyle : public HeaderStyle {
+  friend class HeaderStyle;
+protected:
+  GrantleeHeaderStyle() : HeaderStyle() {}
+  virtual ~GrantleeHeaderStyle() {}
+
+public:
+  const char * name() const { return "grantlee"; }
+  HeaderStyle * next() const { return fancy(); }
+  HeaderStyle * prev() const { return brief(); }
+
+  QString format( KMime::Message *message ) const;
+
+private:
+  QString formatAllMessageHeaders(KMime::Message *message , const QStringList &headersToHide) const;
+};
+
 
 }
 #endif // HEADERSTYLE_P_H

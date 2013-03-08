@@ -194,6 +194,35 @@ private:
   QStringList mHeadersToHide;
   DefaultPolicy mDefaultPolicy;
 };
+
+//
+// CustomHeaderStrategy
+//   Determined by grantlee theme.
+//
+class GrantleeHeaderStrategy : public HeaderStrategy {
+  friend class HeaderStrategy;
+protected:
+  GrantleeHeaderStrategy();
+  virtual ~GrantleeHeaderStrategy() {}
+
+public:
+  const char * name() const { return "grantlee"; }
+  const HeaderStrategy * next() const { return all(); }
+  const HeaderStrategy * prev() const { return brief(); }
+
+  void readConfig();
+  QStringList headersToDisplay() const { return mHeadersToDisplay; }
+  QStringList headersToHide() const { return mHeadersToHide; }
+  DefaultPolicy defaultPolicy() const { return mDefaultPolicy; }
+
+private:
+  QStringList mHeadersToDisplay;
+  QStringList mHeadersToHide;
+  DefaultPolicy mDefaultPolicy;
+};
+
+
+
 }
 
 #endif // HEADERSTRATEGY_P_H
