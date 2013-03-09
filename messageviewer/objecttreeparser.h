@@ -327,7 +327,7 @@ public:
    *
    * Do not use. Use plainTextContent() and htmlContent() instead.
    */
-  QByteArray rawDecryptedBody() const { return mRawDecryptedBody; }
+  KDE_DEPRECATED QByteArray rawDecryptedBody() const { return mRawDecryptedBody; }
 
   /**
    * The text of the message, ie. what would appear in the
