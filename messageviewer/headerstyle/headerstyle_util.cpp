@@ -27,7 +27,7 @@ namespace HeaderStyleUtil {
 //
 // Convenience functions:
 //
-inline QString directionOf( const QString & str ) {
+QString directionOf( const QString & str ) {
   return str.isRightToLeft() ? QLatin1String("rtl") : QLatin1String("ltr");
 }
 

@@ -32,7 +32,7 @@ namespace HeaderStyleUtil {
 //
 // Convenience functions:
 //
-inline QString directionOf( const QString & str );
+QString directionOf( const QString & str );
 
 QString strToHtml( const QString & str, int flags = LinkLocator::PreserveSpaces );
 
