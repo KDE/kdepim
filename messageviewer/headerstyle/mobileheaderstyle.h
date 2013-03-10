@@ -21,17 +21,15 @@
 
 namespace MessageViewer {
 class MobileHeaderStyle : public HeaderStyle {
-  friend class HeaderStyle;
+    friend class HeaderStyle;
 protected:
-  MobileHeaderStyle() : HeaderStyle() {}
-  virtual ~MobileHeaderStyle() {}
+    MobileHeaderStyle() : HeaderStyle() {}
+    virtual ~MobileHeaderStyle() {}
 
 public:
-  const char * name() const { return "mobile"; }
-  HeaderStyle * next() const { return mobileExtended(); }
-  HeaderStyle * prev() const { return enterprise(); }
+    const char * name() const { return "mobile"; }
 
-  QString format( KMime::Message *message ) const;
+    QString format( KMime::Message *message ) const;
 };
 
 class MobileExtendedHeaderStyle : public HeaderStyle {
@@ -42,8 +40,6 @@ protected:
 
 public:
     const char * name() const { return "mobileExtended"; }
-    HeaderStyle * next() const { return brief(); }
-    HeaderStyle * prev() const { return mobile(); }
 
     QString format( KMime::Message *message ) const;
 };

@@ -24,7 +24,7 @@ namespace MessageViewer {
 class GrantleeHeaderFormatter
 {
 public:
-    explicit GrantleeHeaderFormatter(const QString &templatePath);
+    explicit GrantleeHeaderFormatter();
     ~GrantleeHeaderFormatter();
 
     QString toHtml() const;

@@ -92,8 +92,6 @@ public:
   // Methods for handling the styles:
   //
   virtual const char * name() const = 0;
-  virtual HeaderStyle * next() const = 0;
-  virtual HeaderStyle * prev() const = 0;
 
   //
   // HeaderStyle interface:

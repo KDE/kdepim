@@ -46,9 +46,7 @@ protected:
 
 public:
     const char * name() const { return "brief"; }
-    HeaderStyle * next() const { return plain(); }
-    HeaderStyle * prev() const { return fancy(); }
-
+private:
     QString format( KMime::Message *message ) const;
 };
 }

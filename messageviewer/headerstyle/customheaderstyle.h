@@ -23,20 +23,17 @@
 namespace MessageViewer {
 
 class CustomHeaderStyle : public HeaderStyle {
-  friend class HeaderStyle;
+    friend class HeaderStyle;
 protected:
-  CustomHeaderStyle() : HeaderStyle() {}
-  virtual ~CustomHeaderStyle() {}
+    CustomHeaderStyle() : HeaderStyle() {}
+    virtual ~CustomHeaderStyle() {}
 
 public:
-  const char * name() const { return "custom"; }
-  HeaderStyle * next() const { return fancy(); }
-  HeaderStyle * prev() const { return brief(); }
-
-  QString format( KMime::Message *message ) const;
-
+    const char * name() const { return "custom"; }
 private:
-  QString formatAllMessageHeaders(KMime::Message *message , const QStringList &headersToHide) const;
+
+    QString format( KMime::Message *message ) const;
+    QString formatAllMessageHeaders(KMime::Message *message , const QStringList &headersToHide) const;
 };
 }
 

@@ -23,20 +23,18 @@
 namespace MessageViewer {
 
 class PlainHeaderStyle : public HeaderStyle {
-  friend class HeaderStyle;
+    friend class HeaderStyle;
 protected:
-  PlainHeaderStyle() : HeaderStyle() {}
-  virtual ~PlainHeaderStyle() {}
+    PlainHeaderStyle() : HeaderStyle() {}
+    ~PlainHeaderStyle() {}
 
 public:
-  const char * name() const { return "plain"; }
-  HeaderStyle * next() const { return fancy(); }
-  HeaderStyle * prev() const { return brief(); }
+    const char * name() const { return "plain"; }
 
-  QString format( KMime::Message *message ) const;
+    QString format( KMime::Message *message ) const;
 
 private:
-  QString formatAllMessageHeaders( KMime::Message *message ) const;
+    QString formatAllMessageHeaders( KMime::Message *message ) const;
 };
 }
 #endif // PLAINHEADERSTYLE_H

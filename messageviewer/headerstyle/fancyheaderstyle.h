@@ -31,18 +31,15 @@ protected:
 
 public:
     const char * name() const { return "fancy"; }
-    HeaderStyle * next() const { return enterprise(); }
-    HeaderStyle * prev() const { return plain(); }
 
     QString format( KMime::Message *message ) const;
 
     virtual bool hasAttachmentQuickList() const {
         return true;
     }
-
+private:
     static QString imgToDataUrl( const QImage & image );
 
-private:
     static QString drawSpamMeter( SpamError spamError, double percent, double confidence,
                                   const QString & filterHeader, const QString & confidenceHeader );
 };

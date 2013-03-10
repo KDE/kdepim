@@ -22,22 +22,22 @@
 #include "headerstyle.h"
 
 namespace MessageViewer {
+class GrantleeHeaderFormatter;
 
 class GrantleeHeaderStyle : public HeaderStyle {
-  friend class HeaderStyle;
+    friend class HeaderStyle;
 protected:
-  GrantleeHeaderStyle() : HeaderStyle() {}
-  virtual ~GrantleeHeaderStyle() {}
+    GrantleeHeaderStyle();
+    ~GrantleeHeaderStyle();
 
 public:
-  const char * name() const { return "grantlee"; }
-  HeaderStyle * next() const { return fancy(); }
-  HeaderStyle * prev() const { return brief(); }
+    const char * name() const { return "grantlee"; }
 
-  QString format( KMime::Message *message ) const;
+    QString format( KMime::Message *message ) const;
 
 private:
-  QString formatAllMessageHeaders(KMime::Message *message , const QStringList &headersToHide) const;
+    QString formatAllMessageHeaders(KMime::Message *message , const QStringList &headersToHide) const;
+    GrantleeHeaderFormatter *mGrantleeFormatter;
 };
 }
 #endif // GRANTLEEHEADERSTYLE_H

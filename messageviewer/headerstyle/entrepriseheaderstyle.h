@@ -30,14 +30,6 @@ protected:
 
 public:
     const char * name() const { return "enterprise"; }
-    HeaderStyle * next() const {
-#if defined KDEPIM_MOBILE_UI
-        return mobile();
-#else
-        return brief();
-#endif
-    }
-    HeaderStyle * prev() const { return fancy(); }
 
     QString format( KMime::Message *message ) const;
 

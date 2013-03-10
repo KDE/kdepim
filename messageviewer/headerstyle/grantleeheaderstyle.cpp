@@ -18,6 +18,7 @@
 
 #include "grantleeheaderstyle.h"
 #include "headerstyle/headerstyle_util.h"
+#include "headerstyle/grantleeheaderformatter.h"
 
 #include "headerstrategy.h"
 #include <kpimutils/linklocator.h>
@@ -45,6 +46,18 @@ using KPIMUtils::LinkLocator;
 using namespace MessageViewer;
 
 namespace MessageViewer {
+
+GrantleeHeaderStyle::GrantleeHeaderStyle()
+    : HeaderStyle()
+{
+    mGrantleeFormatter = new GrantleeHeaderFormatter;
+}
+
+GrantleeHeaderStyle::~GrantleeHeaderStyle()
+{
+    delete mGrantleeFormatter;
+}
+
 
 //
 // GrantleeHeaderStyle:

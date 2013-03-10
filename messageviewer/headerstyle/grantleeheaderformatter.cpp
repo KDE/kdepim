@@ -25,11 +25,11 @@ namespace MessageViewer {
 class GrantleeHeaderFormatter::Private
 {
 public:
-    Private( const QString &path )
-        : templatePath(path)
+    Private()
     {
         engine = new Grantlee::Engine;
         templateLoader = Grantlee::FileSystemTemplateLoader::Ptr( new Grantlee::FileSystemTemplateLoader );
+        //TODO templatePath
         templateLoader->setTemplateDirs( QStringList() << templatePath );
         templateLoader->setTheme( QLatin1String( "default" ) );
         engine->addTemplateLoader( templateLoader );
@@ -51,8 +51,8 @@ public:
     Grantlee::Engine *engine;
 };
 
-GrantleeHeaderFormatter::GrantleeHeaderFormatter(const QString &templatePath)
-    : d(new GrantleeHeaderFormatter::Private(templatePath))
+GrantleeHeaderFormatter::GrantleeHeaderFormatter()
+    : d(new GrantleeHeaderFormatter::Private)
 {
 }
 
