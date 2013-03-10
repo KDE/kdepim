@@ -1,5 +1,7 @@
 project(importwizard)
 
+add_subdirectory(icons)
+
 set(importwizard_SRCS
 abstractbase.cpp
 importwizardkernel.cpp
@@ -98,6 +100,5 @@ target_link_libraries(importwizard
   ${NEPOMUK_CORE_LIBRARY}
 )
 
-install(TARGETS importwizard  ${INSTALL_TARGETS_DEFAULT_ARGS} )
+install(TARGETS importwizard  ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(PROGRAMS importwizard.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
-
