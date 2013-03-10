@@ -79,17 +79,11 @@ void CustomHeaderSettingWidget::slotHeaderClicked(int button)
 void CustomHeaderSettingWidget::readConfig()
 {
     mHeadersToDisplay = MessageViewer::GlobalSettings::self()->headersToDisplay();
-    QStringList::iterator end( mHeadersToDisplay.end() );
-    for ( QStringList::iterator it = mHeadersToDisplay.begin() ; it != end ; ++ it )
-        *it = (*it).toLower();
 
     mHeaderToShow->setStringList(mHeadersToDisplay);
 
     mHeadersToHide = MessageViewer::GlobalSettings::self()->headersToHide();
 
-    end = mHeadersToHide.end();
-    for ( QStringList::iterator it = mHeadersToHide.begin() ; it != end; ++ it )
-        *it = (*it).toLower();
     mHeaderToHide->setStringList(mHeadersToHide);
     switch(MessageViewer::GlobalSettings::self()->customHeadersDefaultPolicy()) {
     case MessageViewer::GlobalSettings::EnumCustomHeadersDefaultPolicy::Hide:
