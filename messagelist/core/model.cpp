@@ -525,7 +525,7 @@ QModelIndex Model::index( Item *item, int column ) const
   if ( !item ) {
     return QModelIndex();
   }
-  // FIXME: This function is a bottleneck
+  // FIXME: This function is a bottleneck (the caching in indexOfChildItem only works 30% of the time)
   Item * par = item->parent();
   if ( !par )
   {
@@ -533,16 +533,11 @@ QModelIndex Model::index( Item *item, int column ) const
       item->dump(QString());
     return QModelIndex();
   }
-  int indexGuess = item->indexGuess();
-  if ( par->childItemHasIndex( item, indexGuess ) ) // This is 30% of the bottleneck
-    return createIndex( indexGuess, column, item );
 
-  indexGuess = par->indexOfChildItem( item ); // This is 60% of the bottleneck
-  if ( indexGuess < 0 )
+  const int index = par->indexOfChildItem(item);
+  if ( index < 0 )
     return QModelIndex(); // BUG
-
-  item->setIndexGuess( indexGuess );
-  return createIndex( indexGuess, column, item );
+  return createIndex(index, column, item);
 }
 
 QModelIndex Model::index( int row, int column, const QModelIndex &parent ) const

@@ -213,26 +213,14 @@ public:
   int indexOfChildItem( Item *item ) const;
 
   /**
-   * Returns the cached guess for the index of this item in the parent's child list.
+   * Sets the cached guess for the index of this item in the parent's child list.
    *
    * This is used to speed up the index lookup with the following algorithm:
    * Ask the parent if this item is at the position specified by index guess (this costs ~O(1)).
    * If the position matches we have finished, if it doesn't then perform
    * a linear search via indexOfChildItem() (which costs ~O(n)).
    */
-  int indexGuess() const;
-
-  /**
-   * Updates the cached guess for the index of this item in the parent's child list.
-   * See indexGuess() for more information.
-   */
   void setIndexGuess( int index );
-
-  /**
-   * Returns true if the specified Item is a position idx in the list of children.
-   * See indexGuess() for more information.
-   */
-  bool childItemHasIndex( const Item *item, int idx ) const;
 
   /**
    * Returns the parent Item in the tree, or 0 if this item isn't attached to the tree.

@@ -92,12 +92,7 @@ Item * Item::itemBelowChild( Item * child )
 {
   Q_ASSERT( d_ptr->mChildItems );
 
-  int idx = child->indexGuess();
-  if ( !childItemHasIndex( child, idx ) )
-  {
-    idx = d_ptr->mChildItems->indexOf( child );
-    child->setIndexGuess( idx );
-  }
+  int idx = indexOfChildItem(child);
   Q_ASSERT( idx >= 0 );
 
   idx++;
@@ -140,12 +135,7 @@ Item * Item::itemAboveChild( Item * child )
 {
   if ( d_ptr->mChildItems )
   {
-    int idx = child->indexGuess();
-    if ( !childItemHasIndex( child, idx ) )
-    {
-      idx = d_ptr->mChildItems->indexOf( child );
-      child->setIndexGuess( idx );
-    }
+    int idx = indexOfChildItem(child);
     Q_ASSERT( idx >= 0 );
     idx--;
 
@@ -181,24 +171,23 @@ bool Item::hasChildren() const
   return childItemCount() > 0;
 }
 
-int Item::indexOfChildItem( Item *item ) const
+int Item::indexOfChildItem( Item *child ) const
 {
-  return d_ptr->mChildItems ? d_ptr->mChildItems->indexOf( item ) : -1;
-}
+    if (!d_ptr->mChildItems)
+        return -1;
+    int idx = child->d_ptr->mThisItemIndexGuess;
+    if (idx < d_ptr->mChildItems->count() && d_ptr->mChildItems->at(idx) == child)
+        return idx; // good guess
 
-int Item::indexGuess() const
-{
-  return d_ptr->mThisItemIndexGuess;
+    idx = d_ptr->mChildItems->indexOf(child);
+    if (idx >= 0)
+        child->d_ptr->mThisItemIndexGuess = idx;
+    return idx;
 }
 
 void Item::setIndexGuess( int index )
 {
   d_ptr->mThisItemIndexGuess = index;
-}
-
-bool Item::childItemHasIndex( const Item *item, int idx ) const
-{
-  return d_ptr->mChildItems ? ( ( d_ptr->mChildItems->count() > idx ) ? ( d_ptr->mChildItems->at( idx ) == item ) : false ) : false;
 }
 
 Item * Item::topmostNonRoot()
@@ -593,17 +582,8 @@ void Item::takeChildItem( Model *model, Item *child )
     return;
   }
 
-  // Can't optimize: must call the model functions
-  int idx = child->indexGuess();
-  if ( d_ptr->mChildItems->count() > idx )
-  {
-    if ( d_ptr->mChildItems->at( idx ) != child ) // bad guess :/
-      idx = d_ptr->mChildItems->indexOf( child );
-  }
-  else
-    idx = d_ptr->mChildItems->indexOf( child ); // bad guess :/
-
-  if ( idx < 0 )
+  const int idx = indexOfChildItem(child);
+  if (idx < 0)
     return; // Aaargh... not our child ?
 
   child->setViewable( model, false );
