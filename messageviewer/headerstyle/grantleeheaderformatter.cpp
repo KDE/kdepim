@@ -16,6 +16,12 @@
 */
 
 #include "grantleeheaderformatter.h"
+#include "headerstrategy.h"
+#include "headerstyle_util.h"
+
+#include <kmime/kmime_message.h>
+#include <kmime/kmime_dateformatter.h>
+
 
 #include <grantlee/templateloader.h>
 #include <grantlee/engine.h>
@@ -61,10 +67,15 @@ GrantleeHeaderFormatter::~GrantleeHeaderFormatter()
     delete d;
 }
 
-QString GrantleeHeaderFormatter::toHtml() const
+QString GrantleeHeaderFormatter::toHtml(const MessageViewer::HeaderStrategy *strategy, KMime::Message *message) const
 {
     if ( !d->errorMessage.isEmpty() ) {
       return d->errorMessage;
+    }
+
+    QVariantHash headerObject;
+    if ( strategy->showHeader( "subject" ) ) {
+        headerObject.insert(QLatin1String("subjecti18n"), MessageViewer::HeaderStyleUtil::subjectString( message ) );
     }
     //TODO
     return QString();

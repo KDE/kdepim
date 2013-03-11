@@ -57,8 +57,6 @@ QString EnterpriseHeaderStyle::format( KMime::Message *message ) const
     // considered left-to-right, they are ignored when determining its
     // direction.
 
-    const QString subjectDir = MessageViewer::HeaderStyleUtil::subjectDirectionString( message );
-
     // colors depend on if it is encapsulated or not
     QColor fontColor( Qt::white );
     QString linkColor = "class =\"white\"";

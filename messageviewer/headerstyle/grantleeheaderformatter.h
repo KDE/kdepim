@@ -20,14 +20,19 @@
 
 #include <QString>
 
+namespace KMime {
+class Message;
+}
+
 namespace MessageViewer {
+class HeaderStrategy;
 class GrantleeHeaderFormatter
 {
 public:
     explicit GrantleeHeaderFormatter();
     ~GrantleeHeaderFormatter();
 
-    QString toHtml() const;
+    QString toHtml(const HeaderStrategy *strategy, KMime::Message *message) const;
 
 private:
     class Private;
