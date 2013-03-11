@@ -20,14 +20,34 @@
 
 #include "configureactivitywidget.h"
 
+#include <KTabWidget>
+
+#include <QHBoxLayout>
+
 namespace PimActivity {
+
+class ConfigureActivityWidgetPrivate {
+public:
+    ConfigureActivityWidgetPrivate(ConfigureActivityWidget * qq)
+        : q(qq), tabWidget( 0 )
+    {
+        QHBoxLayout * lay = new QHBoxLayout;
+        tabWidget = new KTabWidget;
+        lay->addWidget(tabWidget);
+        q->setLayout(lay);
+    }
+    ConfigureActivityWidget *q;
+    KTabWidget *tabWidget;
+};
+
 ConfigureActivityWidget::ConfigureActivityWidget(QWidget *parent)
-    : QWidget(parent)
+    : QWidget(parent), d(new ConfigureActivityWidgetPrivate(this))
 {
 }
 
 ConfigureActivityWidget::~ConfigureActivityWidget()
 {
+    delete d;
 }
 
 }

@@ -27,14 +27,17 @@
 class KTabWidget;
 
 namespace PimActivity {
+class ConfigureActivityWidgetPrivate;
 class PIMACTIVITY_EXPORT ConfigureActivityWidget : public QWidget
 {
     Q_OBJECT
 public:
     explicit ConfigureActivityWidget(QWidget *parent);
     ~ConfigureActivityWidget();
+
 private:
-    KTabWidget *mTabWidget;
+    friend class ConfigureActivityWidgetPrivate;
+    ConfigureActivityWidgetPrivate * const d;
 };
 }
 
