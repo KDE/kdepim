@@ -1,6 +1,5 @@
 set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
 add_definitions( -DMAIL_DATA_DIR="\\"${CMAKE_CURRENT_SOURCE_DIR}/data\\"" )
-add_definitions( -DGNUPGHOME="\\"${CMAKE_BINARY_DIR}/messagecore/tests/gnupg_home\\"" )
 
 include_directories(
   ${CMAKE_SOURCE_DIR}/libkleo
@@ -8,6 +7,7 @@ include_directories(
   ${CMAKE_BINARY_DIR}/messageviewer/
   ${Boost_INCLUDE_DIRS}
 )
+include ( ${CMAKE_SOURCE_DIR}/cmake/modules/kde4_handle_crypto_rpath_for_executable.cmake )
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
 add_definitions(-DKMAIL_UNITTESTS=YES)
@@ -32,9 +32,11 @@ endmacro ()
 
 add_messageviewer_unittest( htmlquotecolorertest.cpp )
 add_messageviewer_unittest( objecttreeparsertest.cpp )
+kde4_handle_crypto_rpath_for_executable( objecttreeparsertest )
 add_messageviewer_unittest( rendertest.cpp )
+kde4_handle_crypto_rpath_for_executable( rendertest )
 add_messageviewer_unittest( unencryptedmessagetest.cpp )
-
+kde4_handle_crypto_rpath_for_executable( unencryptedmessagetest )
 
 ########### viewertest_gui ###############
 

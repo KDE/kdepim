@@ -30,7 +30,6 @@ namespace Test {
 
   /**
   * setup a enviroment variables for tests:
-  * * set GNUPGHHOME
   * * set LC_ALL to C
   * * set KDEHOME
   */

@@ -49,6 +49,11 @@
 
 QTEST_KDEMAIN( EncryptJobTest, GUI )
 
+void EncryptJobTest::initTestCase()
+{
+  MessageCore::Test::setupEnv();
+}
+
 void EncryptJobTest::testContentDirect() {
 
 

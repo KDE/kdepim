@@ -30,6 +30,10 @@ namespace Message {
 class CryptoComposerTest : public QObject
 {
   Q_OBJECT
+
+  public Q_SLOTS:
+    void initTestCase();
+
   private Q_SLOTS:
     // openpgp
     void testSignOpenPGPMime();
@@ -38,7 +42,7 @@ class CryptoComposerTest : public QObject
     // the following will do for s-mime as well, as the same sign/enc jobs are used
     void testSignEncryptSameAttachmentsOpenPGPMime();
     void testSignEncryptLateAttachmentsOpenPGPMime();
-  
+
     // secondary recipients
     void testBCCEncrypt();
 

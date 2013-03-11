@@ -35,6 +35,10 @@ namespace Message {
 class EncryptJobTest : public QObject
 {
   Q_OBJECT
+
+  public slots:
+    void initTestCase();
+
   private Q_SLOTS:
     void testContentDirect();
     void testContentChained();

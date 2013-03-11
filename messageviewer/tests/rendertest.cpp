@@ -41,12 +41,13 @@ using namespace MessageViewer;
 class RenderTest : public QObject
 {
   Q_OBJECT
-  void initTestCase()
-  {
-    MessageCore::Test::setupEnv();
-  }
 
   private slots:
+    void initTestCase()
+    {
+      MessageCore::Test::setupEnv();
+    }
+
     void testRender_data()
     {
       QTest::addColumn<QString>( "mailFileName" );

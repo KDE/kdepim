@@ -48,6 +48,10 @@
 
 QTEST_KDEMAIN( SignEncryptTest, GUI )
 
+void SignEncryptTest::initTestCase()
+{
+  MessageCore::Test::setupEnv();
+}
 
 void SignEncryptTest::testContent() {
 
