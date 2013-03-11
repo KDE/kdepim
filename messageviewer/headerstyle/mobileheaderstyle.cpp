@@ -24,7 +24,6 @@
 using KPIMUtils::LinkLocator;
 
 #include <kpimutils/email.h>
-#include "kxface.h"
 #include <messagecore/stringutil.h>
 
 #include <kdebug.h>

@@ -24,10 +24,8 @@
 using KPIMUtils::LinkLocator;
 #include "globalsettings.h"
 #include "nodehelper.h"
-#include "contactdisplaymessagememento.h"
 
 #include <kpimutils/email.h>
-#include "kxface.h"
 #include <messagecore/stringutil.h>
 
 #include <akonadi/contact/contactsearchjob.h>
@@ -37,15 +35,10 @@ using KPIMUtils::LinkLocator;
 #include <kcodecs.h>
 #include <KColorScheme>
 
-#include <KDateTime>
-#include <QBuffer>
-#include <QBitmap>
-#include <QImage>
 #include <QApplication>
 #include <QRegExp>
 #include <QFontMetrics>
 
-#include <kstandarddirs.h>
 #include <KApplication>
 
 #include <kmime/kmime_message.h>

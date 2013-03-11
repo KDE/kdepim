@@ -65,14 +65,14 @@ GrantleeHeaderStyle::~GrantleeHeaderStyle()
 //   show subject larger
 //
 QString GrantleeHeaderStyle::format( KMime::Message *message ) const {
-  if ( !message )
-      return QString();
-  const HeaderStrategy *strategy = headerStrategy();
-  if ( !strategy )
-    strategy = HeaderStrategy::custom();
+    if ( !message )
+        return QString();
+    const HeaderStrategy *strategy = headerStrategy();
+    if ( !strategy )
+        strategy = HeaderStrategy::custom();
 
-  QString themeName;//TODO
-  return mGrantleeFormatter->toHtml(themeName, strategy, message);
+    QString themeName;//TODO load from settings.
+    return mGrantleeFormatter->toHtml(themeName, strategy, message);
 }
 
 QString GrantleeHeaderStyle::formatAllMessageHeaders( KMime::Message *message, const QStringList &headersToHide ) const
