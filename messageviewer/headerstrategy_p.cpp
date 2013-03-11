@@ -43,10 +43,10 @@ namespace MessageViewer {
 CustomHeaderStrategy::CustomHeaderStrategy()
   : HeaderStrategy()
 {
-    readConfig();
+    loadConfig();
 }
 
-void CustomHeaderStrategy::readConfig()
+void CustomHeaderStrategy::loadConfig()
 {
     mHeadersToDisplay = MessageViewer::GlobalSettings::self()->headersToDisplay();
 
@@ -58,10 +58,10 @@ void CustomHeaderStrategy::readConfig()
 GrantleeHeaderStrategy::GrantleeHeaderStrategy()
   : HeaderStrategy()
 {
-    readConfig();
+    loadConfig();
 }
 
-void GrantleeHeaderStrategy::readConfig()
+void GrantleeHeaderStrategy::loadConfig()
 {
     //TODO
     mHeadersToDisplay = MessageViewer::GlobalSettings::self()->headersToDisplay();

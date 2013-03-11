@@ -126,4 +126,10 @@ HeaderStrategy * HeaderStrategy::custom() {
     customStrategy = new MessageViewer::CustomHeaderStrategy();
   return customStrategy;
 }
+
+void HeaderStrategy::readConfig() {
+    if(customStrategy) {
+        static_cast<MessageViewer::CustomHeaderStrategy*>(customStrategy)->loadConfig();
+    }
+}
 }

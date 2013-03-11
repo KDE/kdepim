@@ -184,7 +184,7 @@ public:
   const HeaderStrategy * next() const { return all(); }
   const HeaderStrategy * prev() const { return brief(); }
 
-  void readConfig();
+  void loadConfig();
   QStringList headersToDisplay() const { return mHeadersToDisplay; }
   QStringList headersToHide() const { return mHeadersToHide; }
   DefaultPolicy defaultPolicy() const { return mDefaultPolicy; }
@@ -210,7 +210,7 @@ public:
   const HeaderStrategy * next() const { return all(); }
   const HeaderStrategy * prev() const { return brief(); }
 
-  void readConfig();
+  void loadConfig();
   QStringList headersToDisplay() const { return mHeadersToDisplay; }
   QStringList headersToHide() const { return mHeadersToHide; }
   DefaultPolicy defaultPolicy() const { return mDefaultPolicy; }
