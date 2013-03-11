@@ -397,17 +397,22 @@ void AddresseeLineEdit::Private::slotNepomukHits( const QList<Nepomuk2::Query::R
   Q_FOREACH( const Nepomuk2::Query::Result& result, results) {
     Soprano::Node node = result.requestProperty( Nepomuk2::Vocabulary::NCO::hasEmailAddress() );
     if ( node.isValid() && node.isLiteral() ) {
-      const QString email = node.literal().toString();
-      KABC::Addressee contact;
-      contact.insertEmail( email );
+      const QString fullEmail = node.literal().toString();
+      Q_ASSERT(!fullEmail.isEmpty()); // the query took care of that, right?
+      QString formattedName;
       // extract name, if we have one
       Soprano::Node nodeName = result.requestProperty( Nepomuk2::Vocabulary::NCO::fullname() );
       if ( nodeName.isValid() && nodeName.isLiteral() ) {
-        const QString name = nodeName.literal().toString();
-        contact.setFormattedName( name );
+        formattedName = nodeName.literal().toString();
       }
       Q_ASSERT(s_static);
-      q->addContact( contact, 1, s_static->nepomukCompletionSource );
+
+      if ( formattedName.isEmpty() ) {
+        addCompletionItem( fullEmail, 1, s_static->nepomukCompletionSource );
+      } else {
+        const QString byFirstName = formattedName + QLatin1String(" <") + fullEmail + QLatin1Char('>');
+        addCompletionItem( byFirstName, 1, s_static->nepomukCompletionSource );
+      }
     }
   }
 }
@@ -1361,39 +1366,9 @@ void AddresseeLineEdit::addContact( const KABC::Addressee &addr, int weight, int
     const QString givenName = addr.givenName();
     const QString familyName= addr.familyName();
     const QString nickName  = addr.nickName();
-    const QString domain    = email.mid( email.indexOf( '@' ) + 1 );
     QString fullEmail       = addr.fullEmail( email );
-    //TODO: let user decide what fields to use in lookup, e.g. company, city, ...
-    //for CompletionAuto
-    if ( givenName.isEmpty() && familyName.isEmpty() ) {
-      d->addCompletionItem( fullEmail, weight + isPrefEmail, source ); // use whatever is there
-    } else {
-      const QString byFirstName = QLatin1Char( '"' ) + givenName +
-                                  QLatin1Char( ' ' ) + familyName +
-                                  QLatin1String( "\" <" ) + email + QLatin1Char( '>' );
-      const QString byLastName = QLatin1Char( '"' ) + familyName +
-                                 QLatin1String( ", " ) + givenName +
-                                 QLatin1String( "\" <" ) + email + QLatin1Char( '>' );
-      d->addCompletionItem( byFirstName, weight + isPrefEmail, source );
-      d->addCompletionItem( byLastName, weight + isPrefEmail, source );
-    }
 
-    d->addCompletionItem( email, weight + isPrefEmail, source );
-
-    if ( !nickName.isEmpty() ) {
-      const QString byNick = QLatin1Char( '"' ) + nickName +
-                             QLatin1String( "\" <" ) + email + QLatin1Char( '>' );
-      d->addCompletionItem( byNick, weight + isPrefEmail, source );
-    }
-
-    if ( !domain.isEmpty() ) {
-      const QString byDomain = QLatin1Char( '"' ) + domain + QLatin1Char( ' ' ) +
-                               familyName + QLatin1Char( ' ' ) + givenName +
-                               QLatin1String( "\" <" ) + email + QLatin1Char( '>' );
-      d->addCompletionItem( byDomain, weight + isPrefEmail, source );
-    }
-
-    //for CompletionShell, CompletionPopup
+    // Prepare keywords (for CompletionShell, CompletionPopup)
     QStringList keyWords;
     const QString realName  = addr.realName();
 
@@ -1415,10 +1390,6 @@ void AddresseeLineEdit::addContact( const KABC::Addressee &addr, int weight, int
       keyWords.append( realName );
     }
 
-    if ( !domain.isEmpty() ) {
-      keyWords.append( domain );
-    }
-
     keyWords.append( email );
 
     /* KMailCompletion does not have knowledge about identities, it stores emails and
@@ -1431,7 +1402,27 @@ void AddresseeLineEdit::addContact( const KABC::Addressee &addr, int weight, int
       fullEmail.replace( QLatin1String( " <" ), QLatin1String( "  <" ) );
     }
 
+    // Prepare "givenName" + ' ' + "familyName"
+    QString fullName = givenName;
+    if (!familyName.isEmpty()) {
+        if (!fullName.isEmpty())
+            fullName += QLatin1Char(' ');
+        fullName += familyName;
+    }
+
+    // Finally, we can add the completion items
+    if (!fullName.isEmpty()) {
+      const QString address = KPIMUtils::normalizedAddress(fullName, email, QString());
+      d->addCompletionItem(address, weight + isPrefEmail, source, &keyWords);
+    }
+
+    if ( !nickName.isEmpty() ) {
+      const QString address = KPIMUtils::normalizedAddress(nickName, email, QString());
+      d->addCompletionItem(address, weight + isPrefEmail, source, &keyWords);
+    }
+
     d->addCompletionItem( fullEmail, weight + isPrefEmail, source, &keyWords );
+
     isPrefEmail = 0;
   }
 }
