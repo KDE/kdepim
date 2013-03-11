@@ -99,6 +99,11 @@ QString GrantleeHeaderFormatter::toHtml(const QString &themeName, const MessageV
         headerObject.insert(QLatin1String("bcc"), StringUtil::emailAddrAsAnchor( message->bcc(), StringUtil::DisplayFullAddress ));
     }
 
+    const QString spamHtml = MessageViewer::HeaderStyleUtil::spamStatus(message);
+    if ( !spamHtml.isEmpty() ) {
+        headerObject.insert( QLatin1String( "spamHTML" ), spamHtml );
+    }
+
 
     QVariantHash mapping;
     mapping.insert( "header", headerObject );
