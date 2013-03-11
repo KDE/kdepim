@@ -53,7 +53,6 @@ public:
 private:
   const Theme * mTheme; ///< Shallow pointer to the current theme
   QAbstractItemView * mItemView;
-  static QString mGeneralFontKey;
 
   QColor mGroupHeaderBackgroundColor; // cache
 

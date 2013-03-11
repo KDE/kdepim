@@ -34,6 +34,7 @@
 #include <QLinearGradient>
 #include <KColorScheme>
 #include <KGlobalSettings>
+#include <KGlobal>
 
 using namespace MessageList::Core;
 
@@ -53,8 +54,6 @@ ThemeDelegate::ThemeDelegate( QAbstractItemView * parent )
   mTheme = 0;
   connect( KGlobalSettings::self(), SIGNAL(kdisplayFontChanged()), this,  SLOT(slotGeneralFontChanged()) );
 }
-
-QString ThemeDelegate::mGeneralFontKey = KGlobalSettings::generalFont().key();
 
 ThemeDelegate::~ThemeDelegate()
 {
@@ -93,10 +92,6 @@ void ThemeDelegate::setTheme( const Theme * theme )
 
 }
 
-// FIXME: gcc will refuse to inline these functions loudly complaining
-//        about function growth limit reached. Consider using macros
-//        or just convert to member functions.
-
 static QFontMetrics cachedFontMetrics( const QFont &font )
 {
   static QHash<QString, QFontMetrics*> fontMetricsCache;
@@ -128,8 +123,7 @@ static inline void paint_right_aligned_elided_text( const QString &text, Theme::
   const QFontMetrics fontMetrics = cachedFontMetrics( font );
   const int w = right - left;
   const QString elidedText = fontMetrics.elidedText( text, layoutDir == Qt::LeftToRight ? Qt::ElideLeft : Qt::ElideRight, w );
-  const QRect fct = fontMetrics.boundingRect(elidedText);
-  const QRect rct( left, top, w, fct.height() - fct.top() );
+  const QRect rct( left, top, w, fontMetrics.height() );
   QRect outRct;
 
   if ( ci->softenByBlending() )
@@ -152,8 +146,7 @@ static inline void compute_bounding_rect_for_right_aligned_elided_text( const QS
   const QFontMetrics fontMetrics = cachedFontMetrics( font );
   const int w = right - left;
   const QString elidedText = fontMetrics.elidedText( text, layoutDir == Qt::LeftToRight ? Qt::ElideLeft : Qt::ElideRight, w );
-  const QRect fct = fontMetrics.boundingRect(elidedText);
-  const QRect rct( left, top, w, fct.height() - fct.top() );
+  const QRect rct( left, top, w, fontMetrics.height() );
   const Qt::AlignmentFlag af = layoutDir == Qt::LeftToRight ? Qt::AlignRight : Qt::AlignLeft;
   outRect = fontMetrics.boundingRect( rct, Qt::AlignTop | af | Qt::TextSingleLine, elidedText );
   if ( layoutDir == Qt::LeftToRight )
@@ -169,8 +162,7 @@ static inline void paint_left_aligned_elided_text( const QString &text, Theme::C
   const QFontMetrics fontMetrics = cachedFontMetrics( font );
   const int w = right - left;
   const QString elidedText = fontMetrics.elidedText( text, layoutDir == Qt::LeftToRight ? Qt::ElideRight : Qt::ElideLeft, w );
-  const QRect fct = fontMetrics.boundingRect(elidedText);
-  const QRect rct( left, top, w, fct.height() - fct.top() );
+  const QRect rct( left, top, w, fontMetrics.height() );
   QRect outRct;
   if ( ci->softenByBlending() )
   {
@@ -192,8 +184,7 @@ static inline void compute_bounding_rect_for_left_aligned_elided_text( const QSt
   const QFontMetrics fontMetrics = cachedFontMetrics( font );
   const int w = right - left;
   const QString elidedText = fontMetrics.elidedText( text, layoutDir == Qt::LeftToRight ? Qt::ElideRight : Qt::ElideLeft, w );
-  const QRect fct = fontMetrics.boundingRect(elidedText);
-  const QRect rct( left, top, w, fct.height() - fct.top() );
+  const QRect rct( left, top, w, fontMetrics.height() );
   const Qt::AlignmentFlag af = layoutDir == Qt::LeftToRight ? Qt::AlignLeft : Qt::AlignRight;
   outRect = fontMetrics.boundingRect( rct, Qt::AlignTop | af | Qt::TextSingleLine, elidedText );
   if ( layoutDir == Qt::LeftToRight )
@@ -1679,6 +1670,16 @@ QFont ThemeDelegate::itemFont( const Theme::ContentItem *ci, const Item *item )
   return KGlobalSettings::generalFont();
 }
 
+class ThemeDelegateStaticData
+{
+public:
+    ThemeDelegateStaticData()
+        : mGeneralFontKey(KGlobalSettings::generalFont().key()) {}
+    QString mGeneralFontKey;
+};
+
+K_GLOBAL_STATIC(ThemeDelegateStaticData, s_static)
+
 QString ThemeDelegate::itemFontKey( const Theme::ContentItem *ci, const Item *item )
 {
   if ( ci && ci->useCustomFont() )
@@ -1687,13 +1688,13 @@ QString ThemeDelegate::itemFontKey( const Theme::ContentItem *ci, const Item *it
   if ( item && ( item->type() == Item::Message ) )
     return static_cast< const MessageItem * >( item )->fontKey();
 
-  return mGeneralFontKey;
+  return s_static->mGeneralFontKey;
 }
 
 // Store the new fontKey when the generalFont changes.
 void ThemeDelegate::slotGeneralFontChanged()
 {
-  ThemeDelegate::mGeneralFontKey = KGlobalSettings::generalFont().key();
+  s_static->mGeneralFontKey = KGlobalSettings::generalFont().key();
 }
 
 
