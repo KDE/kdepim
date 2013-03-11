@@ -87,7 +87,6 @@ BlogiloComposerEditor::BlogiloComposerEditor(BlogiloComposerView *view, QWidget 
 
     mActCode = new KAction( KIcon( "format-text-code" ), i18nc( "Sets text font to code style",
                            "Code" ), this );
-//     actCode->setCheckable( true );
     connect( mActCode, SIGNAL(triggered(bool)), this, SLOT(slotToggleCode(bool)) );
     addActionInToolBar(mActCode, mainToolBar);
 
