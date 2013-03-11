@@ -113,7 +113,7 @@ QColor MessageList::Util::unreadDefaultMessageColor()
 
 QColor MessageList::Util::importantDefaultMessageColor()
 {
-    return QColor( 0x0, 0x7F, 0x0 );
+    return QColor( 0x98, 0x0, 0x0 );
 }
 
 QColor MessageList::Util::todoDefaultMessageColor()

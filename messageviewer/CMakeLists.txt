@@ -1,6 +1,8 @@
 KDE4_NO_ENABLE_FINAL(messageviewer)
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
+include_directories(${Grantlee_INCLUDE_DIRS})
+
 # KCFG files:
 # The main messageviewer.kcfg is configured by CMake and put in the build directory.
 
@@ -61,7 +63,14 @@ set(libmessageviewer_SRCS
   headerstrategy.cpp
   headerstrategy_p.cpp
   headerstyle.cpp
-  headerstyle_p.cpp
+  headerstyle/briefheaderstyle.cpp
+  headerstyle/grantleeheaderstyle.cpp
+  headerstyle/customheaderstyle.cpp
+  headerstyle/plainheaderstyle.cpp
+  headerstyle/mobileheaderstyle.cpp
+  headerstyle/entrepriseheaderstyle.cpp
+  headerstyle/headerstyle_util.cpp
+  headerstyle/fancyheaderstyle.cpp
   htmlquotecolorer.cpp
   htmlstatusbar.cpp
   iconnamecache.cpp
@@ -88,6 +97,7 @@ set(libmessageviewer_SRCS
   viewer_p.cpp
   webkitparthtmlwriter.cpp
   customheadersettingwidget.cpp
+  headerstyle/grantleeheaderformatter.cpp
   ${_mailwebview_cpp}
 )
 
@@ -114,6 +124,7 @@ target_link_libraries(messageviewer messagecore kdepim kpgp kleo
   ${KDE4_KPRINTUTILS_LIBS}
   ${QGPGME_LIBRARIES}
   ${_mailwebview_lib}
+  ${Grantlee_CORE_LIBRARIES} 
   pimcommon
 )
 

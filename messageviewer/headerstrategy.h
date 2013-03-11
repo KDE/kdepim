@@ -67,7 +67,7 @@ public:
   virtual const HeaderStrategy * next() const = 0;
   virtual const HeaderStrategy * prev() const = 0;
 
-  virtual void readConfig() {}
+  void readConfig();
   //
   // HeaderStrategy interface:
   //

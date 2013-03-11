@@ -3108,11 +3108,11 @@ void ObjectTreeParser::writeBodyStr( const QByteArray& aStr, const QTextCodec *a
       if ( htmlWriter() ) {
         htmlWriter()->queue( htmlStr );
       }
-      mPlainTextContent += plainTextStr;
+      mPlainTextContent = plainTextStr;
   }
   else { // No inline PGP encryption
     const QString plainText = aCodec->toUnicode( aStr );
-    mPlainTextContent += plainText;
+    mPlainTextContent = plainText;
     if ( htmlWriter() ) {
       htmlWriter()->queue( quotedHTML( plainText, decorate ) );
     }

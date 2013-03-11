@@ -262,7 +262,7 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
        <choice name="Display"/>
        <choice name="Hide"/>
      </choices>
-    <default>Hide</default>
+    <default>Display</default>
    </entry>
   </group>
 </kcfg>

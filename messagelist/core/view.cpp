@@ -1887,12 +1887,12 @@ bool View::isDisplayedWithParentsExpanded( Item * it ) const
     return false; // be nice and allow the caller not to care
 
   if ( !it->isViewable() )
-    return false; // item not viewable (not attacched to the viewable root or qt not yet aware of it)
+    return false; // item not viewable (not attached to the viewable root or qt not yet aware of it)
 
   // the item and all the parents are marked as viewable.
 
   if ( isRowHidden( it->parent()->indexOfChildItem( it ), d->mModel->index( it->parent(), 0 ) ) )
-    return false; // item qt rappresentation explicitly hidden
+    return false; // item qt representation explicitly hidden
 
   // the item (and theoretically all the parents) are not explicitly hidden
 

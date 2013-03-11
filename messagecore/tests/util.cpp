@@ -28,11 +28,15 @@
 #include <KDebug>
 #include <QDir>
 
+void MessageCore::Test::setupEnv() {
+  setenv( "GNUPGHOME", GNUPGHOME, 1 );
+  setenv( "LC_ALL", "C", 1 );
+  setenv( "KDEHOME", QFile::encodeName(  QDir::homePath() + QString::fromLatin1(  "/.kde-unit-test" ) ), 1 );
+}
+
 std::vector< GpgME::Key, std::allocator< GpgME::Key > > MessageCore::Test::getKeys(bool smime)
 {
-  setenv("GNUPGHOME", KDESRCDIR "../../messagecore/tests/gnupg_home" , 1 );
-  setenv("LC_ALL", "C", 1);
-  setenv("KDEHOME", QFile::encodeName( QDir::homePath() + QString::fromLatin1( "/.kde-unit-test" ) ), 1);
+  setupEnv();
 
   Kleo::KeyListJob * job = 0;
 

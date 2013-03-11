@@ -53,6 +53,7 @@ FolderCollectionMonitor::FolderCollectionMonitor( QObject *parent )
   mMonitor->setResourceMonitored( "akonadi_search_resource", true );
   mMonitor->setResourceMonitored( "akonadi_nepomuktag_resource", true );
   mMonitor->itemFetchScope().fetchPayloadPart( Akonadi::MessagePart::Envelope );
+  mMonitor->itemFetchScope().setFetchModificationTime( false );
 }
 
 FolderCollectionMonitor::~FolderCollectionMonitor()

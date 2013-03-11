@@ -25,6 +25,10 @@
 
 #include <QObject>
 
+namespace KActivities {
+class Consumer;
+}
+
 namespace PimActivity {
 class PIMACTIVITY_EXPORT ActivityManager : public QObject
 {
@@ -32,6 +36,8 @@ class PIMACTIVITY_EXPORT ActivityManager : public QObject
 public:
     explicit ActivityManager(QObject *parent = 0);
     ~ActivityManager();
+private:
+    KActivities::Consumer *mConsumer;
 };
 }
 

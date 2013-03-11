@@ -27,6 +27,7 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QRadioButton>
+#include <QButtonGroup>
 
 namespace MessageViewer {
 
@@ -54,6 +55,12 @@ CustomHeaderSettingWidget::CustomHeaderSettingWidget(QWidget *parent)
                                                            i18n("&Modify..."), i18n("Header to hide:") );
     connect(mHeaderToHide, SIGNAL(changed()), this, SIGNAL(changed()));
     grid->addWidget(mHeaderToHide, 1, 1);
+
+    mHeaderGroup = new QButtonGroup(this);
+    mHeaderGroup->addButton(mCbHeaderToHide, MessageViewer::GlobalSettings::EnumCustomHeadersDefaultPolicy::Hide);
+    mHeaderGroup->addButton(mCbHeaderToShow, MessageViewer::GlobalSettings::EnumCustomHeadersDefaultPolicy::Display);
+    connect( mHeaderGroup, SIGNAL(buttonClicked(int)), this, SLOT(slotHeaderClicked(int)) );
+
     topLayout->addLayout(grid);
     setLayout(topLayout);
 }
@@ -62,29 +69,41 @@ CustomHeaderSettingWidget::~CustomHeaderSettingWidget()
 {
 }
 
+void CustomHeaderSettingWidget::slotHeaderClicked(int button)
+{
+    mHeaderToHide->setEnabled(button == MessageViewer::GlobalSettings::EnumCustomHeadersDefaultPolicy::Hide);
+    mHeaderToShow->setEnabled(button == MessageViewer::GlobalSettings::EnumCustomHeadersDefaultPolicy::Display);
+    Q_EMIT changed();
+}
+
 void CustomHeaderSettingWidget::readConfig()
 {
     mHeadersToDisplay = MessageViewer::GlobalSettings::self()->headersToDisplay();
-    QStringList::iterator end( mHeadersToDisplay.end() );
-    for ( QStringList::iterator it = mHeadersToDisplay.begin() ; it != end ; ++ it )
-        *it = (*it).toLower();
 
     mHeaderToShow->setStringList(mHeadersToDisplay);
 
     mHeadersToHide = MessageViewer::GlobalSettings::self()->headersToHide();
 
-    end = mHeadersToHide.end();
-    for ( QStringList::iterator it = mHeadersToHide.begin() ; it != end; ++ it )
-        *it = (*it).toLower();
     mHeaderToHide->setStringList(mHeadersToHide);
-    //TODO display
+    switch(MessageViewer::GlobalSettings::self()->customHeadersDefaultPolicy()) {
+    case MessageViewer::GlobalSettings::EnumCustomHeadersDefaultPolicy::Hide:
+        mHeaderToShow->setEnabled(false);
+        mHeaderToHide->setEnabled(true);
+        mCbHeaderToHide->setChecked(true);
+        break;
+    case MessageViewer::GlobalSettings::EnumCustomHeadersDefaultPolicy::Display:
+        mHeaderToShow->setEnabled(true);
+        mHeaderToHide->setEnabled(false);
+        mCbHeaderToShow->setChecked(true);
+        break;
+    }
 }
 
 void CustomHeaderSettingWidget::writeConfig()
 {
     MessageViewer::GlobalSettings::self()->setHeadersToDisplay(mHeaderToShow->stringList());
     MessageViewer::GlobalSettings::self()->setHeadersToHide(mHeaderToHide->stringList());
-
+    MessageViewer::GlobalSettings::self()->setCustomHeadersDefaultPolicy(mHeaderGroup->checkedId());
 }
 
 void CustomHeaderSettingWidget::resetToDefault()

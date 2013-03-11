@@ -30,6 +30,7 @@
 #include <KLocale>
 #include <KTabWidget>
 #include <KTextEdit>
+#include <Akonadi/ServerManager>
 
 #include <QPushButton>
 #include <QSplitter>
@@ -43,7 +44,11 @@ DebugWidget::DebugWidget( QWidget *parent )
 {
   QVBoxLayout *layout = new QVBoxLayout( this );
 
-  mDebugInterface = new DebugInterface( "org.freedesktop.Akonadi", "/debug", QDBusConnection::sessionBus(), this );
+  QString service = "org.freedesktop.Akonadi";
+  if ( Akonadi::ServerManager::hasInstanceIdentifier() ) {
+    service += "." + Akonadi::ServerManager::instanceIdentifier();
+  }
+  mDebugInterface = new DebugInterface( service, "/debug", QDBusConnection::sessionBus(), this );
   QCheckBox *cb = new QCheckBox( i18n("Enable debugger"), this );
   cb->setChecked( mDebugInterface->isValid() && mDebugInterface->tracer().value() == QLatin1String( "dbus" ) );
   connect( cb, SIGNAL(toggled(bool)), SLOT(enableDebugger(bool)) );

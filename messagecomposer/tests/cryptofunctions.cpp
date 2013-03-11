@@ -59,7 +59,7 @@ bool ComposerTestUtil::verifySignature( KMime::Content* content, QByteArray sign
   KMime::Message* resultMessage =  new KMime::Message;
   resultMessage->setContent( content->encodedContent() );
   resultMessage->parse();
-  
+
   // parse the result and make sure it is valid in various ways
   TestHtmlWriter testWriter;
   TestCSSHelper testCSSHelper;
@@ -138,7 +138,7 @@ bool ComposerTestUtil::verifyEncryption( KMime::Content* content, QByteArray enc
     Q_UNUSED( encPart );
 
     // process the result..
-   // kDebug() << resultMessage->topLevel();
+    // kDebug() << resultMessage->topLevel();
     otp.parseObjectTree( resultMessage );
     Q_ASSERT( nh->encryptionState( resultMessage ) == MessageViewer::KMMsgFullyEncrypted );
 //     kDebug() << "msg:" << resultMessage->encodedContent();
@@ -156,11 +156,12 @@ bool ComposerTestUtil::verifyEncryption( KMime::Content* content, QByteArray enc
     Q_UNUSED( encrContent );
 
     return true;
-    
+
   } else if( f & Kleo::InlineOpenPGPFormat ) {
     qInstallMsgHandler(nullMessageOutput);
     otp.processTextPlainSubtype( resultMessage, pResult );
     qInstallMsgHandler(0);
+
     Q_ASSERT( pResult.inlineEncryptionState() == MessageViewer::KMMsgFullyEncrypted );
 
     return true;
@@ -169,7 +170,7 @@ bool ComposerTestUtil::verifyEncryption( KMime::Content* content, QByteArray enc
     KMime::Content* encPart = MessageViewer::ObjectTreeParser::findType( resultMessage, "application", "pkcs7-mime", true, true );
     Q_ASSERT( encPart );
     Q_UNUSED( encPart );
-    
+
     otp.parseObjectTree( resultMessage );
     Q_ASSERT( nh->encryptionState( resultMessage ) == MessageViewer::KMMsgFullyEncrypted );
     Q_ASSERT( otp.rawDecryptedBody() == encrContent );
@@ -188,7 +189,7 @@ bool ComposerTestUtil::verifySignatureAndEncryption( KMime::Content* content, QB
   KMime::Message::Ptr resultMessage =  KMime::Message::Ptr( new KMime::Message );
   resultMessage->setContent( content->encodedContent() );
   resultMessage->parse();
-  
+
   // parse the result and make sure it is valid in various ways
   TestHtmlWriter testWriter;
   TestCSSHelper testCSSHelper;
@@ -225,6 +226,7 @@ bool ComposerTestUtil::verifySignatureAndEncryption( KMime::Content* content, QB
     qInstallMsgHandler(nullMessageOutput);
     otp.processTextPlainSubtype( resultMessage.get(), pResult );
     qInstallMsgHandler(0);
+
     Q_ASSERT( pResult.inlineEncryptionState() == MessageViewer::KMMsgFullyEncrypted );
     Q_ASSERT( pResult.inlineSignatureState() == MessageViewer::KMMsgFullySigned );
 

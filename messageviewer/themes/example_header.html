@@ -1,0 +1,9 @@
+<div>
+     {% if header.subjecti18n %}
+        {% with header.subjecti18n as title %}
+        {% with header.subject as value %}
+        {% include "header_row.html" %}
+        {% endwith %}
+        {% endwith %}
+     {% endif %}
+</div>

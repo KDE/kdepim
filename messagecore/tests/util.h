@@ -29,6 +29,14 @@ namespace MessageCore {
 namespace Test {
 
   /**
+  * setup a enviroment variables for tests:
+  * * set GNUPGHHOME
+  * * set LC_ALL to C
+  * * set KDEHOME
+  */
+  void setupEnv();
+
+  /**
   * Returns list of keys used in various crypto routines
   */
   std::vector<GpgME::Key> getKeys( bool smime = false );

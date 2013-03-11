@@ -76,21 +76,6 @@ public:
   mutable bool mAnnotationStateChecked : 1; ///< The state of the annotation below has been checked
   mutable bool mHasAnnotation : 1;          ///< Cached value for hasAnnotation()
 
-  static QColor mColorNewMessage;
-  static QColor mColorUnreadMessage;
-  static QColor mColorImportantMessage;
-  static QColor mColorToDoMessage;
-  static QFont mFont;
-  static QFont mFontNewMessage;
-  static QFont mFontUnreadMessage;
-  static QFont mFontImportantMessage;
-  static QFont mFontToDoMessage;
-  static QString mFontKey;
-  static QString mFontNewMessageKey;
-  static QString mFontUnreadMessageKey;
-  static QString mFontImportantMessageKey;
-  static QString mFontToDoMessageKey;
-
 private:
 
   // This creates mTagList and fills it with useful data

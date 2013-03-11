@@ -32,7 +32,13 @@
 */
 
 #include "headerstyle.h"
-#include "headerstyle_p.h"
+#include "headerstyle/briefheaderstyle.h"
+#include "headerstyle/grantleeheaderstyle.h"
+#include "headerstyle/customheaderstyle.h"
+#include "headerstyle/plainheaderstyle.h"
+#include "headerstyle/mobileheaderstyle.h"
+#include "headerstyle/entrepriseheaderstyle.h"
+#include "headerstyle/fancyheaderstyle.h"
 
 #include <KDebug>
 #include <KGlobal>
@@ -64,6 +70,11 @@ HeaderStyle::~HeaderStyle() {
 
 }
 
+bool HeaderStyle::hasAttachmentQuickList() const
+{
+  return false;
+}
+
 HeaderStyle * HeaderStyle::create( Type type ) {
   switch ( type ) {
   case Brief:  return brief();
@@ -73,6 +84,7 @@ HeaderStyle * HeaderStyle::create( Type type ) {
   case Mobile: return mobile();
   case MobileExtended: return mobileExtended();
   case Custom: return custom();
+  case Grantlee: return grantlee();
   }
   kFatal() << "Unknown header style ( type ==" << (int)type << ") requested!";
   return 0; // make compiler happy
@@ -86,6 +98,7 @@ HeaderStyle * HeaderStyle::create( const QString & type ) {
   else if ( lowerType == QLatin1String("mobile") )  return mobile();
   else if ( lowerType == QLatin1String("mobileExtended") )  return mobileExtended();
   else if ( lowerType == QLatin1String("custom") )  return custom();
+  else if ( lowerType == QLatin1String("grantlee")) return grantlee();
   //if ( lowerType == "fancy" ) return fancy(); // not needed, see below
   // don't kFatal here, b/c the strings are user-provided
   // (KConfig), so fail gracefully to the default:
@@ -99,6 +112,7 @@ HeaderStyle * enterpriseStyle = 0;
 HeaderStyle * mobileStyle = 0;
 HeaderStyle * mobileExtendedStyle = 0;
 HeaderStyle * customStyle = 0;
+HeaderStyle * grantleeStyle = 0;
 
 HeaderStyle * HeaderStyle::brief() {
   if ( !briefStyle )
@@ -140,6 +154,12 @@ HeaderStyle * HeaderStyle::custom() {
   if ( !customStyle )
     customStyle = new MessageViewer::CustomHeaderStyle;
   return customStyle;
+}
+
+HeaderStyle * HeaderStyle::grantlee() {
+  if ( !grantleeStyle )
+    grantleeStyle = new MessageViewer::GrantleeHeaderStyle;
+  return grantleeStyle;
 }
 
 

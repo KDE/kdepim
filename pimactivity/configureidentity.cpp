@@ -19,7 +19,6 @@
 */
 
 #include "configureidentity.h"
-#include <kactivities/consumer.h>
 
 #include <QDebug>
 
@@ -28,20 +27,10 @@ namespace PimActivity {
 ConfigureIdentity::ConfigureIdentity(QWidget *parent)
     : QWidget(parent)
 {
-    if (KActivities::Consumer::serviceStatus() == KActivities::Consumer::NotRunning)  {
-        qDebug()<<" kactivities is not running";
-        setEnabled(false);
-    }
-
-    mConsumer = new KActivities::Consumer;
-    const QStringList lst = mConsumer->listActivities();
-    qDebug()<< "list activities : "<<lst;
-
 }
 
 ConfigureIdentity::~ConfigureIdentity()
 {
-    delete mConsumer;
 }
 
 void ConfigureIdentity::readConfig()

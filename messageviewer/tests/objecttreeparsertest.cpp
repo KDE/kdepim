@@ -35,9 +35,7 @@ QTEST_KDEMAIN( ObjectTreeParserTester, GUI )
 
 void ObjectTreeParserTester::initTestCase()
 {
-  setenv("GNUPGHOME", KDESRCDIR "../../messagecore/tests/gnupg_home" , 1 );
-  setenv("LC_ALL", "C", 1);
-  setenv( "KDEHOME", QFile::encodeName(  QDir::homePath() + QString::fromLatin1(  "/.kde-unit-test" ) ), 1 );
+  MessageCore::Test::setupEnv();
 }
 
 void ObjectTreeParserTester::test_parsePlainMessage()
@@ -65,7 +63,7 @@ void ObjectTreeParserTester::test_parsePlainMessage()
 
   // Check that the textual content and the charset have the expected values
   QCOMPARE( otp.plainTextContent(), QString( "This is the message text." ) );
-  QCOMPARE( otp.convertedTextContent().toLatin1().data(), "This is the message text." );
+  QCOMPARE( otp.convertedTextContent().toLatin1().data(), "This is the message text.\n" );
   QVERIFY( otp.htmlContent().isEmpty() );
   QCOMPARE( otp.plainTextContentCharset().toLower(), QByteArray( "iso-8859-15" ) );
 
@@ -112,7 +110,7 @@ void ObjectTreeParserTester::test_parseEncapsulatedMessage()
   QCOMPARE( msg->contents().at( 1 )->contents().first()->contents().at( 1 )->contents().size(), 0 );
 
   // Check that the textual content and the charset have the expected values
-  QCOMPARE( otp.plainTextContent(), QString( "This is the encapsulating message." ) );
+  QCOMPARE( otp.plainTextContent(), QString( "This is the encapsulating message.\n" ) );
   QCOMPARE( otp.plainTextContentCharset().toLower(), QByteArray( "iso-8859-15" ) );
   QVERIFY( otp.htmlContent().isEmpty() );
 
@@ -168,8 +166,8 @@ void ObjectTreeParserTester::test_inlinePGPDecryption()
   otp.parseObjectTree( msg.get() );
   qInstallMsgHandler(0);
 
-  QCOMPARE( otp.plainTextContent().toLatin1().data(), "some random text" );
-  QCOMPARE( otp.convertedTextContent().toLatin1().data(), "some random text" );
+  QCOMPARE( otp.plainTextContent().toLatin1().data(), "some random text\n" );
+  QCOMPARE( otp.convertedTextContent().toLatin1().data(), "some random text\n\n" );
   QVERIFY( otp.htmlContent().isEmpty() );
 }
 
@@ -204,7 +202,7 @@ void ObjectTreeParserTester::test_HTMLOnly()
 
   QVERIFY( otp.plainTextContent().isEmpty() );
   QVERIFY( otp.htmlContent().contains( "<b>SOME</b> HTML text." ) );
-  QCOMPARE( otp.convertedTextContent().toLatin1().data(), "SOME HTML text." );
+  QCOMPARE( otp.convertedTextContent().toLatin1().data(), "SOME HTML text.\n" );
 }
 
 

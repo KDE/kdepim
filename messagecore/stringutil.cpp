@@ -836,11 +836,7 @@ QString guessEmailAddressFromLoginName( const QString &loginName )
   const KUser user( loginName );
   if ( user.isValid() ) {
     QString fullName = user.property( KUser::FullName ).toString();
-    if ( fullName.contains( QRegExp( "[^ 0-9A-Za-z\\x0080-\\xFFFF]" ) ) )
-      address = '"' + fullName.replace( '\\', "\\" ).replace( '"', "\\" )
-          + "\" <" + address + '>';
-    else
-      address = fullName + " <" + address + '>';
+    address = KPIMUtils::quoteNameIfNecessary(fullName) + " <" + address + '>';
   }
 
   return address;
@@ -1070,7 +1066,7 @@ QString stripOffPrefixes( const QString &subject )
     QString tmp = subject;
     if ( regExp.indexIn( tmp ) == 0 ) {
       return tmp.remove( 0, regExp.matchedLength() );
-    } 
+    }
   } else {
    kWarning() << "bigRegExp = \""
                << bigRegExp << "\"\n"
@@ -1112,7 +1108,7 @@ KMime::Types::Mailbox mailboxFromUnicodeString( const QString &address )
 
   if( mailboxes.size() > 1 ) {
     kDebug()<<" mailboxes size > 1 ";
-  }       
+  }
   return mailboxes.first();
 }
 
@@ -1131,7 +1127,7 @@ KMime::Types::Mailbox mailboxFrom7BitString( const QByteArray &address )
   const KMime::Types::Mailbox::List mailboxes = header.mailboxes();
   if( mailboxes.isEmpty() ) {
     return KMime::Types::Mailbox();
-  } 
+  }
   if( mailboxes.size() > 1 ) {
     kDebug()<<" mailboxes size > 1 ";
   }

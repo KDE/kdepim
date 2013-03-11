@@ -24,13 +24,26 @@
 
 #include <QWidget>
 
+class KTabWidget;
+
 namespace PimActivity {
+class ConfigureActivityWidgetPrivate;
 class PIMACTIVITY_EXPORT ConfigureActivityWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ConfigureActivityWidget(QWidget *parent);
+    explicit ConfigureActivityWidget(QWidget *parent = 0);
     ~ConfigureActivityWidget();
+
+    enum ConfigureType {
+        Identity,
+        MailTransport,
+        Collection
+    };
+
+private:
+    friend class ConfigureActivityWidgetPrivate;
+    ConfigureActivityWidgetPrivate * const d;
 };
 }
 

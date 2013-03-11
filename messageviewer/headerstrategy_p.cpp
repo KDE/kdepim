@@ -34,6 +34,7 @@
 #include "headerstrategy_p.h"
 #include "globalsettings.h"
 
+
 #include <kdebug.h>
 
 
@@ -42,10 +43,10 @@ namespace MessageViewer {
 CustomHeaderStrategy::CustomHeaderStrategy()
   : HeaderStrategy()
 {
-    readConfig();
+    loadConfig();
 }
 
-void CustomHeaderStrategy::readConfig()
+void CustomHeaderStrategy::loadConfig()
 {
     mHeadersToDisplay = MessageViewer::GlobalSettings::self()->headersToDisplay();
 
@@ -53,5 +54,22 @@ void CustomHeaderStrategy::readConfig()
 
     mDefaultPolicy = MessageViewer::GlobalSettings::self()->customHeadersDefaultPolicy() == MessageViewer::GlobalSettings::EnumCustomHeadersDefaultPolicy::Display ?  Display : Hide ;
 }
+
+GrantleeHeaderStrategy::GrantleeHeaderStrategy()
+  : HeaderStrategy()
+{
+    loadConfig();
+}
+
+void GrantleeHeaderStrategy::loadConfig()
+{
+    //TODO
+    mHeadersToDisplay = MessageViewer::GlobalSettings::self()->headersToDisplay();
+
+    mHeadersToHide = MessageViewer::GlobalSettings::self()->headersToHide();
+
+    mDefaultPolicy = MessageViewer::GlobalSettings::self()->customHeadersDefaultPolicy() == MessageViewer::GlobalSettings::EnumCustomHeadersDefaultPolicy::Display ?  Display : Hide ;
+}
+
 
 }

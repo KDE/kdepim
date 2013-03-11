@@ -1,4 +1,7 @@
 set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
+add_definitions( -DGNUPGHOME="\\"${CMAKE_CURRENT_BINARY_DIR}/gnupg_home\\"" )
+
+add_subdirectory(gnupg_home)
 
 include_directories( ${Boost_INCLUDE_DIR} )
 

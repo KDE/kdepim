@@ -22,6 +22,7 @@
 
 
 #include <QWidget>
+#include <QButtonGroup>
 
 namespace PimCommon {
 class SimpleStringListEditor;
@@ -45,6 +46,9 @@ public:
 Q_SIGNALS:
     void changed();
 
+private Q_SLOTS:
+    void slotHeaderClicked(int);
+
 private:
     QStringList mHeadersToDisplay;
     QStringList mHeadersToHide;
@@ -52,6 +56,7 @@ private:
     QRadioButton *mCbHeaderToShow;
     PimCommon::SimpleStringListEditor *mHeaderToHide;
     PimCommon::SimpleStringListEditor *mHeaderToShow;
+    QButtonGroup *mHeaderGroup;
 };
 
 }
