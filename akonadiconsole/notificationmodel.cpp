@@ -25,6 +25,7 @@
 #include <KDebug>
 #include <KGlobal>
 #include <KLocale>
+#include <Akonadi/ServerManager>
 #include <QDBusConnection>
 
 using Akonadi::NotificationMessage;
@@ -41,8 +42,12 @@ NotificationModel::NotificationModel(QObject* parent) :
 {
   NotificationMessage::registerDBusTypes();
 
+  QString service = QLatin1String( "org.freedesktop.Akonadi" );
+  if ( Akonadi::ServerManager::hasInstanceIdentifier() ) {
+    service += "." + Akonadi::ServerManager::instanceIdentifier();
+  }
   org::freedesktop::Akonadi::NotificationManager* nm
-    = new org::freedesktop::Akonadi::NotificationManager( QLatin1String( "org.freedesktop.Akonadi" ),
+    = new org::freedesktop::Akonadi::NotificationManager( service,
                                                           QLatin1String( "/notifications" ),
                                                           QDBusConnection::sessionBus(), this );
   if ( !nm ) {
