@@ -128,17 +128,23 @@ void MessageItem::Tag::setPriority( int priority )
 }
 
 
-QColor MessageItemPrivate::mColorUnreadMessage;
-QColor MessageItemPrivate::mColorImportantMessage;
-QColor MessageItemPrivate::mColorToDoMessage;
-QFont MessageItemPrivate::mFont;
-QFont MessageItemPrivate::mFontUnreadMessage;
-QFont MessageItemPrivate::mFontImportantMessage;
-QFont MessageItemPrivate::mFontToDoMessage;
-QString MessageItemPrivate::mFontKey;
-QString MessageItemPrivate::mFontUnreadMessageKey;
-QString MessageItemPrivate::mFontImportantMessageKey;
-QString MessageItemPrivate::mFontToDoMessageKey;
+class MessageItemPrivateSettings
+{
+public:
+    QColor mColorUnreadMessage;
+    QColor mColorImportantMessage;
+    QColor mColorToDoMessage;
+    QFont mFont;
+    QFont mFontUnreadMessage;
+    QFont mFontImportantMessage;
+    QFont mFontToDoMessage;
+    QString mFontKey;
+    QString mFontUnreadMessageKey;
+    QString mFontImportantMessageKey;
+    QString mFontToDoMessageKey;
+};
+
+K_GLOBAL_STATIC(MessageItemPrivateSettings, s_settings)
 
 MessageItemPrivate::MessageItemPrivate( MessageItem* qq )
   : ItemPrivate( qq ),
@@ -146,9 +152,9 @@ MessageItemPrivate::MessageItemPrivate( MessageItem* qq )
     mEncryptionState( MessageItem::NotEncrypted ),
     mSignatureState( MessageItem::NotSigned ),
     mAboutToBeRemoved( false ),
-    mSubjectIsPrefixed( false ), 
-    mAnnotationStateChecked( false ), 
-    mHasAnnotation( false ),          
+    mSubjectIsPrefixed( false ),
+    mAnnotationStateChecked( false ),
+    mHasAnnotation( false ),
     mTagList( 0 )
 {
 }
@@ -360,14 +366,14 @@ QColor MessageItem::textColor() const
   if ( bestTag != 0 ) {
     return bestTag->textColor();
   }
-  QColor clr; 
+  QColor clr;
   Akonadi::MessageStatus messageStatus = status();
   if ( !messageStatus.isRead() ) {
-    clr = d->mColorUnreadMessage;
+    clr = s_settings->mColorUnreadMessage;
   } else if ( messageStatus.isImportant() ) {
-    clr = d->mColorImportantMessage;
+    clr = s_settings->mColorImportantMessage;
   } else if ( messageStatus.isToAct() ) {
-    clr = d->mColorToDoMessage;
+    clr = s_settings->mColorToDoMessage;
   }
 
   return clr;
@@ -402,13 +408,13 @@ QFont MessageItem::font() const
   // from KDE3: "important" overrides "new" overrides "unread" overrides "todo"
   Akonadi::MessageStatus messageStatus = status();
   if ( messageStatus.isImportant() ) {
-    font = d->mFontImportantMessage;
+    font = s_settings->mFontImportantMessage;
   } else if ( !messageStatus.isRead() ) {
-    font = d->mFontUnreadMessage;
+    font = s_settings->mFontUnreadMessage;
   } else if ( messageStatus.isToAct() ) {
-    font = d->mFontToDoMessage;
+    font = s_settings->mFontToDoMessage;
   } else {
-    font = d->mFont;
+    font = s_settings->mFont;
   }
 
   return font;
@@ -431,13 +437,13 @@ QString MessageItem::fontKey() const
   // from KDE3: "important" overrides "new" overrides "unread" overrides "todo"
   Akonadi::MessageStatus messageStatus = status();
   if ( messageStatus.isImportant() ) {
-    return d->mFontImportantMessageKey;
+    return s_settings->mFontImportantMessageKey;
   } else if ( !messageStatus.isRead() ) {
-    return d->mFontUnreadMessageKey;
+    return s_settings->mFontUnreadMessageKey;
   } else if ( messageStatus.isToAct() ) {
-    return d->mFontToDoMessageKey;
+    return s_settings->mFontToDoMessageKey;
   } else {
-    return d->mFontKey;
+    return s_settings->mFontKey;
   }
 
 }
@@ -642,44 +648,44 @@ void MessageItem::subTreeToList( QList< MessageItem * > &list )
 
 void MessageItem::setUnreadMessageColor( const QColor &color )
 {
-  MessageItemPrivate::mColorUnreadMessage = color;
+  s_settings->mColorUnreadMessage = color;
 }
 
 
 void MessageItem::setImportantMessageColor( const QColor &color )
 {
-  MessageItemPrivate::mColorImportantMessage = color;
+  s_settings->mColorImportantMessage = color;
 }
 
 
 void MessageItem::setToDoMessageColor( const QColor &color )
 {
-  MessageItemPrivate::mColorToDoMessage = color;
+  s_settings->mColorToDoMessage = color;
 }
 
 
 void MessageItem::setGeneralFont( const QFont &font )
 {
-  MessageItemPrivate::mFont = font;
-  MessageItemPrivate::mFontKey = font.key();
+  s_settings->mFont = font;
+  s_settings->mFontKey = font.key();
 }
 
 void MessageItem::setUnreadMessageFont( const QFont &font )
 {
-  MessageItemPrivate::mFontUnreadMessage = font;
-  MessageItemPrivate::mFontUnreadMessageKey = font.key();
+  s_settings->mFontUnreadMessage = font;
+  s_settings->mFontUnreadMessageKey = font.key();
 }
 
 void MessageItem::setImportantMessageFont( const QFont &font )
 {
-  MessageItemPrivate::mFontImportantMessage = font;
-  MessageItemPrivate::mFontImportantMessageKey = font.key();
+  s_settings->mFontImportantMessage = font;
+  s_settings->mFontImportantMessageKey = font.key();
 }
 
 void MessageItem::setToDoMessageFont( const QFont &font )
 {
-  MessageItemPrivate::mFontToDoMessage = font;
-  MessageItemPrivate::mFontToDoMessageKey = font.key();
+  s_settings->mFontToDoMessage = font;
+  s_settings->mFontToDoMessageKey = font.key();
 }
 
 FakeItemPrivate::FakeItemPrivate( FakeItem *qq ) : MessageItemPrivate( qq )
