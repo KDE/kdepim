@@ -23,6 +23,7 @@
 #include <kmime/kmime_dateformatter.h>
 
 #include <KLocale>
+#include <KStandardDirs>
 
 #include <grantlee/templateloader.h>
 #include <grantlee/engine.h>
@@ -37,14 +38,9 @@ public:
     {
         engine = new Grantlee::Engine;
         templateLoader = Grantlee::FileSystemTemplateLoader::Ptr( new Grantlee::FileSystemTemplateLoader );
-        //TODO templatePath
-        templateLoader->setTemplateDirs( QStringList() << templatePath );
+        templateLoader->setTemplateDirs( QStringList() << KStandardDirs::locate("data",QLatin1String("messageviewer/themes/")) );
         templateLoader->setTheme( QLatin1String( "default" ) );
         engine->addTemplateLoader( templateLoader );
-        headerTemplate = engine->loadByName( "header.html" );
-        if ( headerTemplate->error() ) {
-          errorMessage += headerTemplate->errorString();
-        }
 
     }
     ~Private()
@@ -52,9 +48,7 @@ public:
         delete engine;
     }
 
-    Grantlee::Template headerTemplate;
     QString templatePath;
-    QString errorMessage;
     Grantlee::FileSystemTemplateLoader::Ptr templateLoader;
     Grantlee::Engine *engine;
 };
@@ -69,10 +63,15 @@ GrantleeHeaderFormatter::~GrantleeHeaderFormatter()
     delete d;
 }
 
-QString GrantleeHeaderFormatter::toHtml(const MessageViewer::HeaderStrategy *strategy, KMime::Message *message) const
+QString GrantleeHeaderFormatter::toHtml(const QString &themeName, const MessageViewer::HeaderStrategy *strategy, KMime::Message *message) const
 {
-    if ( !d->errorMessage.isEmpty() ) {
-      return d->errorMessage;
+    Grantlee::Template headerTemplate = d->engine->loadByName( themeName + "/default.html" );
+    QString errorMessage;
+    if ( headerTemplate->error() ) {
+      errorMessage += headerTemplate->errorString();
+    }
+    if ( !errorMessage.isEmpty() ) {
+      return errorMessage;
     }
 
     QVariantHash headerObject;
@@ -86,7 +85,7 @@ QString GrantleeHeaderFormatter::toHtml(const MessageViewer::HeaderStrategy *str
     mapping.insert( "header", headerObject );
     Grantlee::Context context( mapping );
 
-    return d->headerTemplate->render(&context);
+    return headerTemplate->render(&context);
 }
 
 }

@@ -71,7 +71,8 @@ QString GrantleeHeaderStyle::format( KMime::Message *message ) const {
   if ( !strategy )
     strategy = HeaderStrategy::custom();
 
-  return mGrantleeFormatter->toHtml(strategy, message);
+  QString themeName;//TODO
+  return mGrantleeFormatter->toHtml(themeName, strategy, message);
 }
 
 QString GrantleeHeaderStyle::formatAllMessageHeaders( KMime::Message *message, const QStringList &headersToHide ) const
