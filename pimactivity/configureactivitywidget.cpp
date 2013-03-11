@@ -19,30 +19,80 @@
 */
 
 #include "configureactivitywidget.h"
+#include "activitymanager.h"
+#include "configureidentity.h"
+#include "comboboxactivity.h"
+#include "configuremailtransport.h"
+#include "configurecollections.h"
 
 #include <KTabWidget>
 #include <KLocale>
 
 #include <QHBoxLayout>
 #include <QCheckBox>
+#include <QLabel>
 
 namespace PimActivity {
 
 class ConfigureActivityWidgetPrivate {
 public:
     ConfigureActivityWidgetPrivate(ConfigureActivityWidget * qq)
-        : q(qq), tabWidget( 0 )
+        : q(qq),
+          activateActivity( 0 ),
+          tabWidget( 0 ),
+          manager( 0 ),
+          identity( 0 ),
+          mailTransport( 0 )
     {
+        manager = new ActivityManager;
         QHBoxLayout * lay = new QHBoxLayout;
         activateActivity = new QCheckBox(i18n("Enable activity"));
+
         lay->addWidget(activateActivity);
+
+        QVBoxLayout *verticalLayout = new QVBoxLayout;
+        QLabel *lab = new QLabel(i18n("Activities:"));
+        verticalLayout->addWidget(lab);
+
+        activities = new ComboBoxActivity(q);
+        verticalLayout->addWidget(activities);
+
+
+        lay->addLayout(verticalLayout);
         tabWidget = new KTabWidget;
+
         lay->addWidget(tabWidget);
         q->setLayout(lay);
+        q->connect(activateActivity, SIGNAL(toggled(bool)), activities, SLOT(slotEnabled(bool)));
+        q->connect(activateActivity, SIGNAL(toggled(bool)), tabWidget, SLOT(slotEnabled(bool)));
+
+        addPages();
     }
+    ~ConfigureActivityWidgetPrivate()
+    {
+        delete manager;
+    }
+
+    void addPages()
+    {
+        identity = new ConfigureIdentity(q);
+        tabWidget->addTab(identity, i18n("Identity"));
+
+        mailTransport = new ConfigureMailtransport;
+        tabWidget->addTab(mailTransport, i18n("Transport"));
+
+        collections = new ConfigureCollections;
+        tabWidget->addTab(collections, i18n("Collections"));
+    }
+
     ConfigureActivityWidget *q;
     QCheckBox *activateActivity;
     KTabWidget *tabWidget;
+    ActivityManager *manager;
+    ConfigureIdentity *identity;
+    ComboBoxActivity *activities;
+    ConfigureMailtransport *mailTransport;
+    ConfigureCollections *collections;
 };
 
 ConfigureActivityWidget::ConfigureActivityWidget(QWidget *parent)

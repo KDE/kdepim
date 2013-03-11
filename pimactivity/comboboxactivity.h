@@ -28,7 +28,7 @@ class ComboBoxActivity : public KComboBox
 {
     Q_OBJECT
 public:
-    explicit ComboBoxActivity(QWidget *parent);
+    explicit ComboBoxActivity(QWidget *parent = 0);
     ~ComboBoxActivity();
 };
 }

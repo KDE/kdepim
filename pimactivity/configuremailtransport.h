@@ -17,34 +17,20 @@
   02110-1301, USA.
 
 */
-#ifndef CONFIGUREACTIVITYWIDGET_H
-#define CONFIGUREACTIVITYWIDGET_H
 
-#include "pimactivity_export.h"
+#ifndef CONFIGUREMAILTRANSPORT_H
+#define CONFIGUREMAILTRANSPORT_H
 
 #include <QWidget>
 
-class KTabWidget;
-
 namespace PimActivity {
-class ConfigureActivityWidgetPrivate;
-class PIMACTIVITY_EXPORT ConfigureActivityWidget : public QWidget
+class ConfigureMailtransport : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ConfigureActivityWidget(QWidget *parent = 0);
-    ~ConfigureActivityWidget();
-
-    enum ConfigureType {
-        Identity,
-        MailTransport,
-        Collection
-    };
-
-private:
-    friend class ConfigureActivityWidgetPrivate;
-    ConfigureActivityWidgetPrivate * const d;
+    explicit ConfigureMailtransport(QWidget *parent = 0);
+    ~ConfigureMailtransport();
 };
 }
 
-#endif // CONFIGUREACTIVITYWIDGET_H
+#endif // CONFIGUREMAILTRANSPORT_H
