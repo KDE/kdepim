@@ -34,6 +34,7 @@
 #include <QLinearGradient>
 #include <KColorScheme>
 #include <KGlobalSettings>
+#include <KGlobal>
 
 using namespace MessageList::Core;
 
@@ -53,8 +54,6 @@ ThemeDelegate::ThemeDelegate( QAbstractItemView * parent )
   mTheme = 0;
   connect( KGlobalSettings::self(), SIGNAL(kdisplayFontChanged()), this,  SLOT(slotGeneralFontChanged()) );
 }
-
-QString ThemeDelegate::mGeneralFontKey = KGlobalSettings::generalFont().key();
 
 ThemeDelegate::~ThemeDelegate()
 {
@@ -1679,6 +1678,16 @@ QFont ThemeDelegate::itemFont( const Theme::ContentItem *ci, const Item *item )
   return KGlobalSettings::generalFont();
 }
 
+class ThemeDelegateStaticData
+{
+public:
+    ThemeDelegateStaticData()
+        : mGeneralFontKey(KGlobalSettings::generalFont().key()) {}
+    QString mGeneralFontKey;
+};
+
+K_GLOBAL_STATIC(ThemeDelegateStaticData, s_static)
+
 QString ThemeDelegate::itemFontKey( const Theme::ContentItem *ci, const Item *item )
 {
   if ( ci && ci->useCustomFont() )
@@ -1687,13 +1696,13 @@ QString ThemeDelegate::itemFontKey( const Theme::ContentItem *ci, const Item *it
   if ( item && ( item->type() == Item::Message ) )
     return static_cast< const MessageItem * >( item )->fontKey();
 
-  return mGeneralFontKey;
+  return s_static->mGeneralFontKey;
 }
 
 // Store the new fontKey when the generalFont changes.
 void ThemeDelegate::slotGeneralFontChanged()
 {
-  ThemeDelegate::mGeneralFontKey = KGlobalSettings::generalFont().key();
+  s_static->mGeneralFontKey = KGlobalSettings::generalFont().key();
 }
 
 

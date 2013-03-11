@@ -23,7 +23,6 @@
 #include <QDataStream>
 
 #include <KLocale>
-#include <KGlobalSettings>
 #include <KDebug>
 
 using namespace MessageList::Core;
