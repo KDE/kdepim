@@ -44,7 +44,7 @@ private Q_SLOTS:
 
 private:
     void cleanTempFiles();
-private:
+
     QStringList mTempFiles;
     QStringList mTempDirs;
 };
