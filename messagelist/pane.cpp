@@ -992,7 +992,7 @@ void Pane::writeConfig()
 {
   KConfigGroup conf( MessageList::Core::Settings::self()->config(),"MessageListPane");
 
-  //Delete liste before
+  // Delete list before
   const QStringList list = conf.groupList().filter( QRegExp( QLatin1String("MessageListTab\\d+") ) );
   foreach ( const QString &group, list ) {
     conf.deleteGroup( group );

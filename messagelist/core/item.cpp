@@ -333,7 +333,7 @@ void Item::setViewable( Model *model,bool bViewable )
     return;
   }
 
-  if ( d_ptr->mChildItems->count() < 1 )
+  if ( d_ptr->mChildItems->isEmpty() )
   {
     d_ptr->mIsViewable = bViewable;
     return;
@@ -572,7 +572,7 @@ void Item::takeChildItem( Model *model, Item *child )
     d_ptr->mChildItems->removeOne( child );
 #if 0
     // This *could* be done, but we optimize and avoid it.
-    if ( d->mChildItems->count() < 1 )
+    if ( d->mChildItems->isEmpty() )
     {
       delete d->mChildItems;
       d->mChildItems = 0;
@@ -596,7 +596,7 @@ void Item::takeChildItem( Model *model, Item *child )
 
 #if 0
   // This *could* be done, but we optimize and avoid it.
-  if ( d->mChildItems->count() < 1 )
+  if ( d->mChildItems->isEmpty() )
   {
     delete d->mChildItems;
     d->mChildItems = 0;
