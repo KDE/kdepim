@@ -23,7 +23,7 @@
 
 #include <kmime/kmime_message.h>
 #include <kmime/kmime_dateformatter.h>
-
+#include "spamheaderanalyzer.h"
 
 using KPIMUtils::LinkLocator;
 
@@ -42,6 +42,11 @@ QString subjectString( KMime::Message *message, int flags = LinkLocator::Preserv
 
 QString subjectDirectionString( KMime::Message *message );
 
+QString drawSpamMeter( SpamError spamError, double percent, double confidence,
+                              const QString & filterHeader, const QString & confidenceHeader );
+
+QString imgToDataUrl( const QImage &image );
+QString spamStatus(KMime::Message *message);
 }
 }
 

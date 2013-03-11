@@ -19,7 +19,6 @@
 #define FANCYHEADERSTYLE_H
 
 #include "headerstyle.h"
-#include "spamheaderanalyzer.h"
 namespace MessageViewer {
 
 
@@ -40,8 +39,6 @@ public:
 private:
     static QString imgToDataUrl( const QImage & image );
 
-    static QString drawSpamMeter( SpamError spamError, double percent, double confidence,
-                                  const QString & filterHeader, const QString & confidenceHeader );
 };
 
 }

@@ -61,106 +61,6 @@ namespace MessageViewer {
 //   Like PlainHeaderStyle, but with slick frames and background colours.
 //
 
-
-QString FancyHeaderStyle::drawSpamMeter( SpamError spamError, double percent, double confidence,
-                                         const QString & filterHeader, const QString & confidenceHeader )
-{
-    static const int meterWidth = 20;
-    static const int meterHeight = 5;
-    QImage meterBar( meterWidth, 1, QImage::Format_Indexed8/*QImage::Format_RGB32*/ );
-    meterBar.setNumColors( 24 );
-
-    meterBar.setColor( meterWidth + 1, qRgb( 255, 255, 255 ) );
-    meterBar.setColor( meterWidth + 2, qRgb( 170, 170, 170 ) );
-    if ( spamError != noError ) // grey is for errors
-        meterBar.fill( meterWidth + 2 );
-    else {
-        static const unsigned short gradient[meterWidth][3] = {
-            {   0, 255,   0 },
-            {  27, 254,   0 },
-            {  54, 252,   0 },
-            {  80, 250,   0 },
-            { 107, 249,   0 },
-            { 135, 247,   0 },
-            { 161, 246,   0 },
-            { 187, 244,   0 },
-            { 214, 242,   0 },
-            { 241, 241,   0 },
-            { 255, 228,   0 },
-            { 255, 202,   0 },
-            { 255, 177,   0 },
-            { 255, 151,   0 },
-            { 255, 126,   0 },
-            { 255, 101,   0 },
-            { 255,  76,   0 },
-            { 255,  51,   0 },
-            { 255,  25,   0 },
-            { 255,   0,   0 }
-        };
-
-        meterBar.fill( meterWidth + 1 );
-        const int max = qMin( meterWidth, static_cast<int>( percent ) / 5 );
-        for ( int i = 0; i < max; ++i ) {
-            meterBar.setColor( i+1, qRgb( gradient[i][0], gradient[i][1],
-                    gradient[i][2] ) );
-            meterBar.setPixel( i, 0, i+1 );
-        }
-    }
-
-    QString titleText;
-    QString confidenceString;
-    if ( spamError == noError )
-    {
-        if ( confidence >= 0 )
-        {
-            confidenceString = QString::number( confidence ) + "% &nbsp;";
-            titleText = i18n("%1% probability of being spam with confidence %3%.\n\n"
-                             "Full report:\nProbability=%2\nConfidence=%4",
-                             QString::number(percent,'f',2), filterHeader, confidence, confidenceHeader );
-        }
-        else // do not show negative confidence
-        {
-            confidenceString = QString() + "&nbsp;";
-            titleText = i18n("%1% probability of being spam.\n\n"
-                             "Full report:\nProbability=%2",
-                             QString::number(percent,'f',2), filterHeader);
-        }
-    }
-    else
-    {
-        QString errorMsg;
-        switch ( spamError )
-        {
-        case errorExtractingAgentString:
-            errorMsg = i18n( "No Spam agent" );
-            break;
-        case couldNotConverScoreToFloat:
-            errorMsg = i18n( "Spam filter score not a number" );
-            break;
-        case couldNotConvertThresholdToFloatOrThresholdIsNegative:
-            errorMsg = i18n( "Threshold not a valid number" );
-            break;
-        case couldNotFindTheScoreField:
-            errorMsg = i18n( "Spam filter score could not be extracted from header" );
-            break;
-        case couldNotFindTheThresholdField:
-            errorMsg = i18n( "Threshold could not be extracted from header" );
-            break;
-        default:
-            errorMsg = i18n( "Error evaluating spam score" );
-            break;
-        }
-        // report the error in the spam filter
-        titleText = i18n("%1.\n\n"
-                         "Full report:\n%2",
-                         errorMsg, filterHeader );
-    }
-    return QString("<img src=\"%1\" width=\"%2\" height=\"%3\" style=\"border: 1px solid black;\" title=\"%4\"> &nbsp;")
-            .arg( imgToDataUrl( meterBar ), QString::number( meterWidth ),
-                  QString::number( meterHeight ), titleText ) + confidenceString;
-}
-
-
 QString FancyHeaderStyle::format( KMime::Message *message ) const {
     if ( !message )
         return QString();
@@ -188,17 +88,7 @@ QString FancyHeaderStyle::format( KMime::Message *message ) const {
     // from a few spam filters and try to create visually meaningful graphics
     // out of the spam scores.
 
-    QString spamHTML;
-
-    if ( GlobalSettings::self()->showSpamStatus() ) {
-        const SpamScores scores = SpamHeaderAnalyzer::getSpamScores( message );
-
-        for ( SpamScores::const_iterator it = scores.constBegin(), end = scores.constEnd() ; it != end ; ++it )
-            spamHTML += (*it).agent() + ' ' +
-                    drawSpamMeter( (*it).error(), (*it).score(), (*it).confidence(), (*it).spamHeader(), (*it).confidenceHeader() );
-    }
-
-    QString userHTML;
+    QString spamHTML =  MessageViewer::HeaderStyleUtil::spamStatus(message);
 
     QString photoURL;
     int photoWidth = 60;
@@ -241,7 +131,7 @@ QString FancyHeaderStyle::format( KMime::Message *message ) const {
                         photoWidth = (int)( 60 / ratio );
                         photo = photo.scaled( photoWidth, photoHeight, Qt::IgnoreAspectRatio, Qt::SmoothTransformation );
                     }
-                    photoURL = imgToDataUrl( photo );
+                    photoURL = MessageViewer::HeaderStyleUtil::imgToDataUrl( photo );
                 }
             }
             else
@@ -275,7 +165,7 @@ QString FancyHeaderStyle::format( KMime::Message *message ) const {
                 if ( faceimage.loadFromData( facearray, "png" ) ) {
                     // Spec says image must be 48x48 pixels
                     if ( ( 48 == faceimage.width() ) && ( 48 == faceimage.height() ) ) {
-                        photoURL = imgToDataUrl( faceimage );
+                        photoURL = MessageViewer::HeaderStyleUtil::imgToDataUrl( faceimage );
                         photoWidth = 48;
                         photoHeight = 48;
                     } else {
@@ -298,13 +188,14 @@ QString FancyHeaderStyle::format( KMime::Message *message ) const {
         if ( !xfhead.isEmpty() )
         {
             MessageViewer::KXFace xf;
-            photoURL = imgToDataUrl( xf.toImage( xfhead ) );
+            photoURL = MessageViewer::HeaderStyleUtil::imgToDataUrl( xf.toImage( xfhead ) );
             photoWidth = 48;
             photoHeight = 48;
 
         }
     }
 
+    QString userHTML;
     if( !photoURL.isEmpty() )
     {
         //kDebug() << "Got a photo:" << photoURL;
@@ -439,16 +330,6 @@ QString FancyHeaderStyle::format( KMime::Message *message ) const {
 
     headerStr += "</div>\n\n";
     return headerStr;
-}
-
-QString FancyHeaderStyle::imgToDataUrl( const QImage &image )
-{
-    QByteArray ba;
-    QBuffer buffer( &ba );
-    buffer.open( QIODevice::WriteOnly );
-    image.save( &buffer, "PNG" );
-    return QString::fromLatin1("data:image/%1;base64,%2")
-            .arg( QString::fromLatin1( "PNG" ), QString::fromLatin1( ba.toBase64() ) );
 }
 
 }

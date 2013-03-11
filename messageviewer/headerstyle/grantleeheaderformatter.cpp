@@ -19,8 +19,11 @@
 #include "headerstrategy.h"
 #include "headerstyle_util.h"
 
+#include <messagecore/stringutil.h>
+
 #include <kmime/kmime_message.h>
 #include <kmime/kmime_dateformatter.h>
+
 
 #include <KLocale>
 #include <KStandardDirs>
@@ -28,6 +31,7 @@
 #include <grantlee/templateloader.h>
 #include <grantlee/engine.h>
 
+using namespace MessageCore;
 
 namespace MessageViewer {
 
@@ -78,6 +82,21 @@ QString GrantleeHeaderFormatter::toHtml(const QString &themeName, const MessageV
     if ( strategy->showHeader( "subject" ) ) {
         headerObject.insert(QLatin1String("subjecti18n"), i18n("Subject:") );
         headerObject.insert(QLatin1String("subject"), MessageViewer::HeaderStyleUtil::subjectString( message ) );
+    }
+
+    if ( strategy->showHeader("replyto") && message->replyTo( false )) {
+        headerObject.insert(QLatin1String("replyToi18n"), i18n("Reply to:") );
+        headerObject.insert(QLatin1String("replyTo"), StringUtil::emailAddrAsAnchor( message->replyTo(), StringUtil::DisplayFullAddress ));
+    }
+
+    if ( strategy->showHeader( "cc" ) && message->cc( false ) ) {
+        headerObject.insert(QLatin1String("cci18n"), i18n("CC:") );
+        headerObject.insert(QLatin1String("cc"), StringUtil::emailAddrAsAnchor( message->cc(), StringUtil::DisplayFullAddress ));
+    }
+
+    if ( strategy->showHeader( "bcc" ) && message->bcc( false ) ) {
+        headerObject.insert(QLatin1String("bcci18n"), i18n("BCC:"));
+        headerObject.insert(QLatin1String("bcc"), StringUtil::emailAddrAsAnchor( message->bcc(), StringUtil::DisplayFullAddress ));
     }
 
 
