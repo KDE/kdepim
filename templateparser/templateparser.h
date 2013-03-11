@@ -235,10 +235,10 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
 
   protected:
     Mode mMode;
-    Akonadi::Collection mFolder;
+    Akonadi::Collection mFolder;          //Used to find a template
     uint mIdentity;
-    KMime::Message::Ptr mMsg;
-    KMime::Message::Ptr mOrigMsg;
+    KMime::Message::Ptr mMsg;             // Msg to write to
+    KMime::Message::Ptr mOrigMsg;         // Msg to read from
     QString mSelection;
     bool mAllowDecryption;
     bool mDebug;
