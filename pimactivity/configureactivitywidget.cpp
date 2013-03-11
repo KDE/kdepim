@@ -21,8 +21,10 @@
 #include "configureactivitywidget.h"
 
 #include <KTabWidget>
+#include <KLocale>
 
 #include <QHBoxLayout>
+#include <QCheckBox>
 
 namespace PimActivity {
 
@@ -32,11 +34,14 @@ public:
         : q(qq), tabWidget( 0 )
     {
         QHBoxLayout * lay = new QHBoxLayout;
+        activateActivity = new QCheckBox(i18n("Enable activity"));
+        lay->addWidget(activateActivity);
         tabWidget = new KTabWidget;
         lay->addWidget(tabWidget);
         q->setLayout(lay);
     }
     ConfigureActivityWidget *q;
+    QCheckBox *activateActivity;
     KTabWidget *tabWidget;
 };
 
