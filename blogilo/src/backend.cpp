@@ -226,6 +226,7 @@ void Backend::uploadMedia( BilboMedia * media )
  please check if it exists. Path: %1", media->localUrl().pathOrUrl() );
                 kDebug() << "Emitting sigError...";
                 Q_EMIT sigMediaError( tmp, media );
+                delete m;
                 return;
             }
 
@@ -240,6 +241,7 @@ void Backend::uploadMedia( BilboMedia * media )
                                          media->localUrl().pathOrUrl() );
                 kDebug() << "Emitting sigError...";
                 Q_EMIT sigMediaError( tmp, media );
+                delete m;
                 return;
             }
 
@@ -248,6 +250,7 @@ void Backend::uploadMedia( BilboMedia * media )
                 tmp = i18n( "INTERNAL ERROR: MWBlog is NULL: casting has not worked, this should NEVER happen." );
                 kDebug() << "Emitting sigError...";
                 Q_EMIT sigError( tmp );
+                delete m;
                 return;
             }
             d->mPublishMediaMap[ m ] = media;
