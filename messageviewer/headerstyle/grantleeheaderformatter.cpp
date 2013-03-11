@@ -22,9 +22,11 @@
 #include <kmime/kmime_message.h>
 #include <kmime/kmime_dateformatter.h>
 
+#include <KLocale>
 
 #include <grantlee/templateloader.h>
 #include <grantlee/engine.h>
+
 
 namespace MessageViewer {
 
@@ -75,10 +77,16 @@ QString GrantleeHeaderFormatter::toHtml(const MessageViewer::HeaderStrategy *str
 
     QVariantHash headerObject;
     if ( strategy->showHeader( "subject" ) ) {
-        headerObject.insert(QLatin1String("subjecti18n"), MessageViewer::HeaderStyleUtil::subjectString( message ) );
+        headerObject.insert(QLatin1String("subjecti18n"), i18n("Subject:") );
+        headerObject.insert(QLatin1String("subject"), MessageViewer::HeaderStyleUtil::subjectString( message ) );
     }
-    //TODO
-    return QString();
+
+
+    QVariantHash mapping;
+    mapping.insert( "header", headerObject );
+    Grantlee::Context context( mapping );
+
+    return d->headerTemplate->render(&context);
 }
 
 }
