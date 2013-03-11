@@ -67,7 +67,7 @@ GrantleeHeaderFormatter::~GrantleeHeaderFormatter()
     delete d;
 }
 
-QString GrantleeHeaderFormatter::toHtml(const QString &themeName, const MessageViewer::HeaderStrategy *strategy, KMime::Message *message) const
+QString GrantleeHeaderFormatter::toHtml(const QString &themeName, bool isPrinting, const MessageViewer::HeaderStrategy *strategy, KMime::Message *message) const
 {
     Grantlee::Template headerTemplate = d->engine->loadByName( themeName + "/default.html" );
     QString errorMessage;
@@ -103,6 +103,11 @@ QString GrantleeHeaderFormatter::toHtml(const QString &themeName, const MessageV
     if ( !spamHtml.isEmpty() ) {
         headerObject.insert( QLatin1String( "spamHTML" ), spamHtml );
     }
+    headerObject.insert(QLatin1String("datei18n"), i18n("Date:"));
+
+    headerObject.insert( QLatin1String( "dateshort" ) , MessageViewer::HeaderStyleUtil::strToHtml( MessageViewer::HeaderStyleUtil::dateString(message, isPrinting,true ) ) );
+    headerObject.insert( QLatin1String( "datelong" ) , MessageViewer::HeaderStyleUtil::strToHtml( MessageViewer::HeaderStyleUtil::dateString(message, isPrinting,false ) ) );
+    headerObject.insert( QLatin1String( "date" ), MessageViewer::HeaderStyleUtil::directionOf( MessageViewer::HeaderStyleUtil::dateStr( message->date()->dateTime() ) ) );
 
 
     QVariantHash mapping;

@@ -46,7 +46,13 @@ QString drawSpamMeter( SpamError spamError, double percent, double confidence,
                               const QString & filterHeader, const QString & confidenceHeader );
 
 QString imgToDataUrl( const QImage &image );
+
 QString spamStatus(KMime::Message *message);
+
+QString dateStr(const KDateTime &dateTime);
+
+QString dateShortStr(const KDateTime &dateTime);
+
 }
 }
 

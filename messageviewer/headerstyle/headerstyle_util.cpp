@@ -19,12 +19,19 @@
 #include "nodehelper.h"
 #include "headerstyle.h"
 
+#include <messagecore/stringutil.h>
+
+#include "messagecore/globalsettings.h"
 #include "globalsettings.h"
+
+
 
 #include <KLocale>
 #include <KGlobal>
 
 #include <QBuffer>
+
+using namespace MessageCore;
 
 namespace MessageViewer {
 namespace HeaderStyleUtil {
@@ -49,9 +56,9 @@ QString dateString( KMime::Message *message, bool printing, bool shortDate ) {
     return locale->formatDateTime( dateTime );
   } else {
     if ( shortDate )
-      return MessageViewer::HeaderStyle::dateShortStr( dateTime );
+      return dateShortStr( dateTime );
     else
-      return MessageViewer::HeaderStyle::dateStr( dateTime );
+      return dateStr( dateTime );
   }
 }
 
@@ -204,6 +211,19 @@ QString imgToDataUrl( const QImage &image )
     return QString::fromLatin1("data:image/%1;base64,%2").arg( QString::fromLatin1( "PNG" ), QString::fromLatin1( ba.toBase64() ) );
 }
 
+QString dateStr(const KDateTime &dateTime)
+{
+  const time_t unixTime = dateTime.toTime_t();
+  return KMime::DateFormatter::formatDate(
+              static_cast<KMime::DateFormatter::FormatType>(
+                  MessageCore::GlobalSettings::self()->dateFormat() ),
+              unixTime, MessageCore::GlobalSettings::self()->customDateFormat() );
+}
+
+QString dateShortStr(const KDateTime &dateTime)
+{
+  return KGlobal::locale()->formatDateTime( dateTime, KLocale::FancyShortDate );
+}
 
 }
 }

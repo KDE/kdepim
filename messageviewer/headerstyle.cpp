@@ -162,19 +162,4 @@ HeaderStyle * HeaderStyle::grantlee() {
   return grantleeStyle;
 }
 
-
-QString HeaderStyle::dateStr(const KDateTime &dateTime)
-{
-  const time_t unixTime = dateTime.toTime_t();
-  return KMime::DateFormatter::formatDate(
-              static_cast<KMime::DateFormatter::FormatType>(
-                  MessageCore::GlobalSettings::self()->dateFormat() ),
-              unixTime, MessageCore::GlobalSettings::self()->customDateFormat() );
-}
-
-QString HeaderStyle::dateShortStr(const KDateTime &dateTime)
-{
-  return KGlobal::locale()->formatDateTime( dateTime, KLocale::FancyShortDate );
-}
-
 }

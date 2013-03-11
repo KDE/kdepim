@@ -128,9 +128,6 @@ public:
   void setMessageStatus( const Akonadi::MessageStatus &status ) { mMessageStatus = status; }
   Akonadi::MessageStatus messageStatus() const { return mMessageStatus; }
 
-  static QString dateStr(const KDateTime &dateTime);
-  static QString dateShortStr(const KDateTime &dateTime);
-
 private:
 
   QString mMessagePath;
