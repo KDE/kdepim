@@ -24,22 +24,48 @@
 #include <QDebug>
 
 namespace PimActivity {
+
+class ActivityManagerPrivate
+{
+public:
+    ActivityManagerPrivate()
+    {
+        consumer = new KActivities::Consumer;
+    }
+    ~ActivityManagerPrivate()
+    {
+        delete consumer;
+    }
+
+    KActivities::Consumer *consumer;
+
+};
+
 ActivityManager::ActivityManager(QObject *parent)
-    : QObject(parent)
+    : QObject(parent), d(new ActivityManagerPrivate)
 {
     if (KActivities::Consumer::serviceStatus() == KActivities::Consumer::NotRunning)  {
         qDebug()<<" kactivities is not running";
     }
 
-    mConsumer = new KActivities::Consumer;
-    const QStringList lst = mConsumer->listActivities();
-    qDebug()<< "list activities : "<<lst;
-
 }
 
 ActivityManager::~ActivityManager()
 {
-    delete mConsumer;
+    delete d;
+}
+
+bool ActivityManager::isActive() const
+{
+    return (KActivities::Consumer::serviceStatus() == KActivities::Consumer::Running);
+}
+
+QStringList ActivityManager::listActivities() const
+{
+    if (isActive()) {
+        return d->consumer->listActivities();
+    }
+    return QStringList();
 }
 
 }

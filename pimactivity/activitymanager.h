@@ -25,19 +25,22 @@
 
 #include <QObject>
 
-namespace KActivities {
-class Consumer;
-}
-
 namespace PimActivity {
+class ActivityManagerPrivate;
 class PIMACTIVITY_EXPORT ActivityManager : public QObject
 {
     Q_OBJECT
 public:
     explicit ActivityManager(QObject *parent = 0);
     ~ActivityManager();
+
+    bool isActive() const;
+
+    QStringList listActivities() const;
+
 private:
-    KActivities::Consumer *mConsumer;
+    friend class ActivityManagerPrivate;
+    ActivityManagerPrivate * const d;
 };
 }
 
