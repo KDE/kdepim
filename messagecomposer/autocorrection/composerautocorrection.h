@@ -68,6 +68,8 @@ public:
   bool isAutoBoldUnderline() const { return mAutoBoldUnderline; }
   bool isSuperScript() const { return mSuperScriptAppendix; }
 
+  bool isAddNonBreakingSpace() const { return mAddNonBreakingSpace; }
+
   QString language() const;
   TypographicQuotes typographicSingleQuotes() const { return mTypographicSingleQuotes; }
   TypographicQuotes typographicDoubleQuotes() const { return mTypographicDoubleQuotes; }
@@ -118,6 +120,8 @@ private:
   bool mAutoBoldUnderline;
   bool mEnabled;
   bool mSuperScriptAppendix;
+
+  bool mAddNonBreakingSpace;
 
   QString mWord;
   QTextCursor mCursor;

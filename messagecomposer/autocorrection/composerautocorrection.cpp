@@ -39,7 +39,8 @@ ComposerAutoCorrection::ComposerAutoCorrection()
       mReplaceDoubleQuotes(false),
       mReplaceSingleQuotes(false),
       mEnabled(false),
-      mSuperScriptAppendix(false)
+      mSuperScriptAppendix(false),
+      mAddNonBreakingSpace(false)
 {
     // default double quote open 0x201c
     // default double quote close 0x201d
@@ -144,6 +145,7 @@ void ComposerAutoCorrection::readConfig()
     mReplaceSingleQuotes = MessageComposer::MessageComposerSettings::self()->replaceSingleQuotes();
     mEnabled = MessageComposer::MessageComposerSettings::self()->enabled();
     mSuperScriptAppendix = MessageComposer::MessageComposerSettings::self()->superScript();
+    mAddNonBreakingSpace = MessageComposer::MessageComposerSettings::self()->addNonBreakingSpaceInFrench();
     readAutoCorrectionXmlFile();
 }
 
@@ -161,6 +163,7 @@ void ComposerAutoCorrection::writeConfig()
     MessageComposer::MessageComposerSettings::self()->setReplaceSingleQuotes(mReplaceSingleQuotes);
     MessageComposer::MessageComposerSettings::self()->setEnabled(mEnabled);
     MessageComposer::MessageComposerSettings::self()->setSuperScript(mSuperScriptAppendix);
+    MessageComposer::MessageComposerSettings::self()->setAddNonBreakingSpaceInFrench(mAddNonBreakingSpace);
     MessageComposer::MessageComposerSettings::self()->requestSync();
     writeAutoCorrectionXmlFile();
 }
