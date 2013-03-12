@@ -58,12 +58,6 @@ GrantleeHeaderStyle::~GrantleeHeaderStyle()
     delete mGrantleeFormatter;
 }
 
-
-//
-// GrantleeHeaderStyle:
-//   show every header field on a line by itself,
-//   show subject larger
-//
 QString GrantleeHeaderStyle::format( KMime::Message *message ) const {
     if ( !message )
         return QString();
@@ -75,21 +69,4 @@ QString GrantleeHeaderStyle::format( KMime::Message *message ) const {
     return mGrantleeFormatter->toHtml(themeName, isPrinting(), strategy, message);
 }
 
-QString GrantleeHeaderStyle::formatAllMessageHeaders( KMime::Message *message, const QStringList &headersToHide ) const
-{
-    QByteArray head = message->head();
-    KMime::Headers::Base *header = KMime::HeaderParsing::extractFirstHeader( head );
-    QString result;
-    while ( header ) {
-        const QString headerType = QLatin1String(header->type());
-        if (!headersToHide.contains(headerType) || !headersToHide.contains(headerType.toLower())) {
-
-            result += MessageViewer::HeaderStyleUtil::strToHtml(headerType) + QLatin1String(": ") + header->asUnicodeString();
-            result += QLatin1String( "<br />\n" );
-        }
-        delete header;
-        header = KMime::HeaderParsing::extractFirstHeader( head );
-    }
-    return result;
-}
 }
