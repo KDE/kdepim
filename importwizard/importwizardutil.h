@@ -56,7 +56,8 @@ struct tagStruct {
 
 namespace ImportWizardUtil {
 enum ResourceType {
-    Imap
+    Imap,
+    Pop3
 };
 
 void mergeLdap(const ldapStruct &ldap);

@@ -101,8 +101,18 @@ void ImportWizardUtil::storeInKWallet(const QString &name, ImportWizardUtil::Res
                 wallet->createFolder( "imap" );
             wallet->setFolder( "imap" );
             wallet->writePassword( name+"rc", password );
+        }
         break;
-    }
+    case Pop3:
+        wallet = KWallet::Wallet::openWallet( KWallet::Wallet::NetworkWallet(), 0);
+        if ( wallet && wallet->isOpen() ) {
+            if ( !wallet->hasFolder( "pop3" ) ) {
+                wallet->createFolder( "pop3" );
+            }
+            wallet->setFolder( "pop3" );
+            wallet->writePassword( name, password );
+        }
+        break;
     }
     delete wallet;
 
