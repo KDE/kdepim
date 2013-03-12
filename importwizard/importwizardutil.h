@@ -24,27 +24,27 @@
 
 struct ldapStruct
 {
-  ldapStruct()
-    : maxHint(-1),
-      port(-1),
-      limit(-1),
-      timeout(-1),
-      useSSL(false),
-      useTLS(false)
-  {
-  }
+    ldapStruct()
+        : maxHint(-1),
+          port(-1),
+          limit(-1),
+          timeout(-1),
+          useSSL(false),
+          useTLS(false)
+    {
+    }
 
-  KUrl ldapUrl;
-  QString dn;
-  QString saslMech;
-  QString fileName;
-  QString description;
-  int maxHint;
-  int port;
-  int limit;
-  int timeout;
-  bool useSSL;
-  bool useTLS;
+    KUrl ldapUrl;
+    QString dn;
+    QString saslMech;
+    QString fileName;
+    QString description;
+    int maxHint;
+    int port;
+    int limit;
+    int timeout;
+    bool useSSL;
+    bool useTLS;
 
 };
 
@@ -55,8 +55,9 @@ struct tagStruct {
 
 
 namespace ImportWizardUtil {
-  void mergeLdap(const ldapStruct &ldap);
-  void addNepomukTag(const QList<tagStruct> &tagList);
+void mergeLdap(const ldapStruct &ldap);
+void addNepomukTag(const QList<tagStruct> &tagList);
+void storeInKWallet();
 }
 
 #endif // IMPORTWIZARDUTIL_H

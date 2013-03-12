@@ -32,12 +32,12 @@ ImportFinishPage::~ImportFinishPage()
 
 void ImportFinishPage::addImportInfo( const QString& log )
 {
-  ui->logFinish->addInfoLogEntry( log );
+    ui->logFinish->addInfoLogEntry( log );
 }
 
 void ImportFinishPage::addImportError( const QString& log )
 {
-  ui->logFinish->addErrorLogEntry( log );
+    ui->logFinish->addErrorLogEntry( log );
 }
 
 #include "importfinishpage.moc"
