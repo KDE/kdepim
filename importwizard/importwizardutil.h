@@ -39,6 +39,7 @@ struct ldapStruct
     QString saslMech;
     QString fileName;
     QString description;
+    QString password;
     int maxHint;
     int port;
     int limit;

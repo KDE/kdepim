@@ -74,6 +74,9 @@ void ImportWizardUtil::mergeLdap(const ldapStruct &ldap)
     if (ldap.limit != -1) {
         grp.writeEntry(QString::fromLatin1("SelectedSizeLimit%1").arg(numberOfLdapSelected),ldap.limit);
     }
+    if (!ldap.password.isEmpty()) {
+        storeInKWallet(QString::fromLatin1("SelectedPwdBind%1").arg(numberOfLdapSelected), ImportWizardUtil::Ldap, ldap.password);
+    }
     grp.sync();
 }
 
