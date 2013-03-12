@@ -33,73 +33,73 @@ ImageScalingJob::~ImageScalingJob()
 
 bool ImageScalingJob::loadImageFromData(const QByteArray& data)
 {
-  if (!mImage.loadFromData(data)) {
-    return false;
-  }
-  return true;
+    if (!mImage.loadFromData(data)) {
+        return false;
+    }
+    return true;
 }
 
 bool ImageScalingJob::resizeImage()
 {
-  if (mImage.isNull())
-     return false;
-  const int width = mImage.width();
-  const int height = mImage.height();
-  int newWidth = -1;
-  int newHeight = -1;
-  if (MessageComposer::MessageComposerSettings::self()->reduceImageToMaximum()) {
+    if (mImage.isNull())
+        return false;
+    const int width = mImage.width();
+    const int height = mImage.height();
+    int newWidth = -1;
+    int newHeight = -1;
+    if (MessageComposer::MessageComposerSettings::self()->reduceImageToMaximum()) {
 
-      int maximumWidth = MessageComposer::MessageComposerSettings::self()->maximumWidth();
-      if (maximumWidth == -1) {
-          maximumWidth =  MessageComposer::MessageComposerSettings::self()->customMaximumWidth();
-      }
-      int maximumHeight = MessageComposer::MessageComposerSettings::self()->maximumHeight();
-      if (maximumHeight == -1) {
-          maximumHeight = MessageComposer::MessageComposerSettings::self()->customMaximumHeight();
-      }
-      if ( width > maximumWidth ) {
-          newWidth = maximumWidth;
-      } else {
-          newWidth = width;
-      }
-      if (height > maximumHeight) {
-          newHeight = maximumHeight;
-      } else {
-          newHeight = height;
-      }
-  } else {
-      newHeight = height;
-      newWidth = width;
-  }
+        int maximumWidth = MessageComposer::MessageComposerSettings::self()->maximumWidth();
+        if (maximumWidth == -1) {
+            maximumWidth =  MessageComposer::MessageComposerSettings::self()->customMaximumWidth();
+        }
+        int maximumHeight = MessageComposer::MessageComposerSettings::self()->maximumHeight();
+        if (maximumHeight == -1) {
+            maximumHeight = MessageComposer::MessageComposerSettings::self()->customMaximumHeight();
+        }
+        if ( width > maximumWidth ) {
+            newWidth = maximumWidth;
+        } else {
+            newWidth = width;
+        }
+        if (height > maximumHeight) {
+            newHeight = maximumHeight;
+        } else {
+            newHeight = height;
+        }
+    } else {
+        newHeight = height;
+        newWidth = width;
+    }
 
-  if (MessageComposer::MessageComposerSettings::self()->enlargeImageToMinimum()) {
+    if (MessageComposer::MessageComposerSettings::self()->enlargeImageToMinimum()) {
 
-      int minimumWidth = MessageComposer::MessageComposerSettings::self()->minimumWidth();
-      if (minimumWidth == -1) {
-          minimumWidth =  MessageComposer::MessageComposerSettings::self()->customMinimumWidth();
-      }
+        int minimumWidth = MessageComposer::MessageComposerSettings::self()->minimumWidth();
+        if (minimumWidth == -1) {
+            minimumWidth =  MessageComposer::MessageComposerSettings::self()->customMinimumWidth();
+        }
 
-      int minimumHeight = MessageComposer::MessageComposerSettings::self()->minimumHeight();
-      if (minimumHeight == -1) {
-          minimumHeight = MessageComposer::MessageComposerSettings::self()->customMinimumHeight();
-      }
-      if (newWidth < minimumWidth) {
-          newWidth = minimumWidth;
-      }
-      if (newHeight < minimumHeight) {
-          newHeight = minimumHeight;
-      }
-  }
-  if ((newHeight != height) || (newWidth != width)) {
-      mBuffer.open(QIODevice::WriteOnly);
-      mImage = mImage.scaled(newWidth,newHeight, MessageComposer::MessageComposerSettings::self()->keepImageRatio() ? Qt::KeepAspectRatio : Qt::IgnoreAspectRatio);
-      const bool result = mImage.save(&mBuffer,MessageComposer::MessageComposerSettings::self()->writeFormat().toLocal8Bit());
-      mBuffer.close();
-      return result;
-  } else {
-      return false;
-  }
-  return true;
+        int minimumHeight = MessageComposer::MessageComposerSettings::self()->minimumHeight();
+        if (minimumHeight == -1) {
+            minimumHeight = MessageComposer::MessageComposerSettings::self()->customMinimumHeight();
+        }
+        if (newWidth < minimumWidth) {
+            newWidth = minimumWidth;
+        }
+        if (newHeight < minimumHeight) {
+            newHeight = minimumHeight;
+        }
+    }
+    if ((newHeight != height) || (newWidth != width)) {
+        mBuffer.open(QIODevice::WriteOnly);
+        mImage = mImage.scaled(newWidth,newHeight, MessageComposer::MessageComposerSettings::self()->keepImageRatio() ? Qt::KeepAspectRatio : Qt::IgnoreAspectRatio);
+        const bool result = mImage.save(&mBuffer,MessageComposer::MessageComposerSettings::self()->writeFormat().toLocal8Bit());
+        mBuffer.close();
+        return result;
+    } else {
+        return false;
+    }
+    return true;
 
 }
 
