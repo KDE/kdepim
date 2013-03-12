@@ -240,14 +240,17 @@ void SimpleStringListEditor::slotRemove() {
 
 void SimpleStringListEditor::slotModify() {
     QListWidgetItem* item = mListBox->currentItem();
-    if ( !item ) return;
+    if ( !item )
+        return;
 
     bool ok = false;
     QString newText = KInputDialog::getText( i18n("Change Value"),
                                              mAddDialogLabel, item->text(),
                                              &ok, this );
     emit aboutToAdd( newText );
-    if ( !ok || newText.isEmpty() || newText == item->text() ) return;
+
+    if ( !ok || newText.isEmpty() || newText == item->text() )
+        return;
 
     item->setText( newText );
     emit changed();
