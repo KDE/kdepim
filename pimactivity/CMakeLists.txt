@@ -14,6 +14,7 @@ set(libpimactivity_SRCS
   configureactivitywidget.cpp
   configurecollections.cpp
   configuremailtransport.cpp
+  activitywarning.cpp
 )
 
 kde4_add_library(pimactivity ${LIBRARY_TYPE} ${libpimactivity_SRCS})

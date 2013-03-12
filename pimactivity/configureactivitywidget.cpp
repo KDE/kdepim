@@ -24,6 +24,7 @@
 #include "comboboxactivity.h"
 #include "configuremailtransport.h"
 #include "configurecollections.h"
+#include "activitywarning.h"
 
 #include <KTabWidget>
 #include <KLocale>
@@ -46,9 +47,11 @@ public:
     {
         manager = new ActivityManager;
         QHBoxLayout * lay = new QHBoxLayout;
-        activateActivity = new QCheckBox(i18n("Enable activity"));
+        activateActivity = new QCheckBox(i18n("Enable Support Activity"));
 
         lay->addWidget(activateActivity);
+
+        lay->addWidget(new ActivityWarning(manager));
 
         QVBoxLayout *verticalLayout = new QVBoxLayout;
         QLabel *lab = new QLabel(i18n("Activities:"));

@@ -18,43 +18,30 @@
 
 */
 
-#include "comboboxactivity.h"
+#include "activitywarning.h"
 #include "activitymanager.h"
-#include <KActivities/Consumer>
+
+#include <KLocalizedString>
 
 namespace PimActivity {
-
-class ComboBoxActivityPrivate
+ActivityWarning::ActivityWarning(ActivityManager *activityManager, QWidget *parent)
+    : KMessageWidget(parent)
 {
-public:
-    ComboBoxActivityPrivate(ComboBoxActivity *qq, ActivityManager *manager)
-        : q(qq),
-          activityManager(manager)
-    {
-#if 0
-        q->connect(manager,SIGNAL(serviceStatusChanged(KActivities::Consumer::ServiceStatus)));
-        void activityAdded(const QString & id);
-        void activityRemoved(const QString & id);
-#endif
-
-
-
-        q->addItems(activityManager->listActivities());
-    }
-    ComboBoxActivity *q;
-    ActivityManager *activityManager;
-};
-
-ComboBoxActivity::ComboBoxActivity(ActivityManager *activityManager, QWidget *parent)
-    : KComboBox(parent), d(new ComboBoxActivityPrivate(this, activityManager))
-{
+    setMessageType( Warning );
+    setCloseButtonVisible( true );
+    setWordWrap( true );
+    setText( i18n( "Activities is not active on this computer." ) );
+    connect(activityManager, SIGNAL(serviceStatusChanged(KActivities::Consumer::ServiceStatus)), this, SLOT(setServiceStatusChanged(KActivities::Consumer::ServiceStatus)));
 }
 
-ComboBoxActivity::~ComboBoxActivity()
+ActivityWarning::~ActivityWarning()
 {
-    delete d;
-}
 
 }
 
-#include "comboboxactivity.moc"
+void ActivityWarning::setServiceStatusChanged(KActivities::Consumer::ServiceStatus status)
+{
+    setVisible(status == KActivities::Consumer::NotRunning);
+}
+
+}

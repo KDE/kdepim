@@ -22,6 +22,7 @@
 #define ACTIVITYMANAGER_H
 
 #include "pimactivity_export.h"
+#include <kactivities/consumer.h>
 
 #include <QObject>
 
@@ -37,6 +38,11 @@ public:
     bool isActive() const;
 
     QStringList listActivities() const;
+
+Q_SIGNALS:
+    void serviceStatusChanged(KActivities::Consumer::ServiceStatus);
+    void activityAdded(const QString&);
+    void activityRemoved(const QString&);
 
 private:
     friend class ActivityManagerPrivate;

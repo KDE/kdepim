@@ -19,7 +19,6 @@
 */
 
 #include "activitymanager.h"
-#include <kactivities/consumer.h>
 
 #include <QDebug>
 
@@ -28,21 +27,26 @@ namespace PimActivity {
 class ActivityManagerPrivate
 {
 public:
-    ActivityManagerPrivate()
+    ActivityManagerPrivate(ActivityManager *qq)
+        : q(qq)
     {
         consumer = new KActivities::Consumer;
+        q->connect(consumer,SIGNAL(serviceStatusChanged(KActivities::Consumer::ServiceStatus)),q,SIGNAL(serviceStatusChanged(KActivities::Consumer::ServiceStatus)));
+        q->connect(consumer,SIGNAL(activityAdded(QString)),q,SIGNAL(activityAdded(QString)));
+        q->connect(consumer,SIGNAL(activityRemoved(QString)),q,SIGNAL(activityRemoved(QString)));
     }
     ~ActivityManagerPrivate()
     {
         delete consumer;
     }
 
+    ActivityManager *q;
     KActivities::Consumer *consumer;
 
 };
 
 ActivityManager::ActivityManager(QObject *parent)
-    : QObject(parent), d(new ActivityManagerPrivate)
+    : QObject(parent), d(new ActivityManagerPrivate(this))
 {
     if (KActivities::Consumer::serviceStatus() == KActivities::Consumer::NotRunning)  {
         qDebug()<<" kactivities is not running";

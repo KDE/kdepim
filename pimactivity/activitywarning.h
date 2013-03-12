@@ -17,44 +17,24 @@
   02110-1301, USA.
 
 */
+#ifndef ACTIVITYWARNING_H
+#define ACTIVITYWARNING_H
 
-#include "comboboxactivity.h"
-#include "activitymanager.h"
+#include <KDE/KMessageWidget>
 #include <KActivities/Consumer>
 
 namespace PimActivity {
-
-class ComboBoxActivityPrivate
+class ActivityManager;
+class ActivityWarning : public KMessageWidget
 {
+    Q_OBJECT
 public:
-    ComboBoxActivityPrivate(ComboBoxActivity *qq, ActivityManager *manager)
-        : q(qq),
-          activityManager(manager)
-    {
-#if 0
-        q->connect(manager,SIGNAL(serviceStatusChanged(KActivities::Consumer::ServiceStatus)));
-        void activityAdded(const QString & id);
-        void activityRemoved(const QString & id);
-#endif
+    explicit ActivityWarning(PimActivity::ActivityManager *activityManager, QWidget *parent = 0);
+    ~ActivityWarning();
 
-
-
-        q->addItems(activityManager->listActivities());
-    }
-    ComboBoxActivity *q;
-    ActivityManager *activityManager;
+private Q_SLOTS:
+    void setServiceStatusChanged(KActivities::Consumer::ServiceStatus status);
 };
-
-ComboBoxActivity::ComboBoxActivity(ActivityManager *activityManager, QWidget *parent)
-    : KComboBox(parent), d(new ComboBoxActivityPrivate(this, activityManager))
-{
 }
 
-ComboBoxActivity::~ComboBoxActivity()
-{
-    delete d;
-}
-
-}
-
-#include "comboboxactivity.moc"
+#endif // ACTIVITYWARNING_H
