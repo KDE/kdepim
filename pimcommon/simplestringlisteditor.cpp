@@ -273,7 +273,8 @@ void SimpleStringListEditor::slotUp() {
   }
 
   const int numberOfItem( listWidgetItem.count() );
-  if ( ( numberOfItem == 1 ) && ( mListBox->currentRow() == 0 ) ) {
+  const int currentRow = mListBox->currentRow();
+  if ( ( numberOfItem == 1 ) && ( currentRow == 0 ) ) {
     kDebug() << "Called while the _topmost_ filter is selected, ignoring.";
     return;
   }
@@ -289,9 +290,9 @@ void SimpleStringListEditor::slotUp() {
     
     wasMoved = true;
   }
-  //TODO fix setcurrent item
   if ( wasMoved ) {
     emit changed();
+      mListBox->setCurrentRow(currentRow - 1);
   }  
 }
 
@@ -303,7 +304,8 @@ void SimpleStringListEditor::slotDown() {
 
   const int numberOfElement( mListBox->count() );
   const int numberOfItem( listWidgetItem.count() );
-  if ( ( numberOfItem == 1 ) && ( mListBox->currentRow() == numberOfElement - 1 ) ) {
+  const int currentRow = mListBox->currentRow();
+  if ( ( numberOfItem == 1 ) && ( currentRow == numberOfElement - 1 ) ) {
     kDebug() << "Called while the _last_ filter is selected, ignoring.";
     return;
   }
@@ -319,9 +321,9 @@ void SimpleStringListEditor::slotDown() {
     mListBox->insertItem( posItem + 1, item );
     wasMoved = true;
   }
-  //TODO fix setcurrent item
   if ( wasMoved ) {
     emit changed();
+      mListBox->setCurrentRow(currentRow + 1);
   }
 }
 
