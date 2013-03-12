@@ -889,3 +889,8 @@ void ComposerAutoCorrection::setLanguage(const QString &lang, bool forceGlobal)
     }
 }
 
+bool ComposerAutoCorrection::isFrenchLanguage() const
+{
+    return (mAutoCorrectLang == QLatin1String("FR_fr")); //TODO
+}
+

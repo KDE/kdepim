@@ -85,6 +85,7 @@ public:
   void addAutoCorrect(const QString& currentWord, const QString& replaceWord);
 
 private:
+  bool isFrenchLanguage() const;
   void readConfig();
 
   void fixTwoUppercaseChars();
