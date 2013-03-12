@@ -50,67 +50,67 @@ class QPushButton;
 //
 namespace PimCommon {
 class PIMCOMMON_EXPORT SimpleStringListEditor : public QWidget {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  enum ButtonCode {
-      None = 0x00,
-      Add = 0x01,
-      Remove = 0x02,
-      Modify = 0x04,
-      Up = 0x08,
-      Down = 0x10,
-      All = Add|Remove|Modify|Up|Down,
-      Unsorted = Add|Remove|Modify
-  };
+    enum ButtonCode {
+        None = 0x00,
+        Add = 0x01,
+        Remove = 0x02,
+        Modify = 0x04,
+        Up = 0x08,
+        Down = 0x10,
+        All = Add|Remove|Modify|Up|Down,
+        Unsorted = Add|Remove|Modify
+    };
 
-  /** Constructor. Populates the list with @p strings. */
-  explicit SimpleStringListEditor( QWidget * parent=0,
-                    		   ButtonCode buttons=Unsorted,
-                		   const QString & addLabel=QString(),
-                		   const QString & removeLabel=QString(),
-                		   const QString & modifyLabel=QString(),
-                		   const QString & addDialogLabel=QString() );
+    /** Constructor. Populates the list with @p strings. */
+    explicit SimpleStringListEditor( QWidget * parent=0,
+                                     ButtonCode buttons=Unsorted,
+                                     const QString & addLabel=QString(),
+                                     const QString & removeLabel=QString(),
+                                     const QString & modifyLabel=QString(),
+                                     const QString & addDialogLabel=QString() );
 
-  /** Sets the list of strings displayed to @p strings */
-  void setStringList( const QStringList & strings );
+    /** Sets the list of strings displayed to @p strings */
+    void setStringList( const QStringList & strings );
 
-  /** Adds @p strings to the list of displayed strings */
-  void appendStringList( const QStringList & strings );
+    /** Adds @p strings to the list of displayed strings */
+    void appendStringList( const QStringList & strings );
 
-  /** Retrieves the current list of strings */
-  QStringList stringList() const;
+    /** Retrieves the current list of strings */
+    QStringList stringList() const;
 
-  /** Sets the text of button @p button to @p text */
-  void setButtonText( ButtonCode button, const QString & text );
+    /** Sets the text of button @p button to @p text */
+    void setButtonText( ButtonCode button, const QString & text );
 
 signals:
-  /** Connected slots can alter the argument to be added or set the
+    /** Connected slots can alter the argument to be added or set the
       argument to QString() to suppress adding.
   */
-  void aboutToAdd(QString&);
-  void changed(void);
+    void aboutToAdd(QString&);
+    void changed(void);
 
 protected slots:
-  void slotAdd();
-  void slotRemove();
-  void slotModify();
-  void slotUp();
-  void slotDown();
+    void slotAdd();
+    void slotRemove();
+    void slotModify();
+    void slotUp();
+    void slotDown();
 
-  void slotSelectionChanged();
+    void slotSelectionChanged();
 private Q_SLOTS:
-  void slotContextMenu(const QPoint&);
+    void slotContextMenu(const QPoint&);
 
 private:
-  bool containsString( const QString & str );
-  QList<QListWidgetItem*> selectedItems() const;
-  QListWidget   *mListBox;
-  QPushButton   *mAddButton;
-  QPushButton   *mRemoveButton;
-  QPushButton   *mModifyButton;
-  QPushButton   *mUpButton;
-  QPushButton   *mDownButton;
-  const QString mAddDialogLabel;
+    bool containsString( const QString & str );
+    QList<QListWidgetItem*> selectedItems() const;
+    QListWidget   *mListBox;
+    QPushButton   *mAddButton;
+    QPushButton   *mRemoveButton;
+    QPushButton   *mModifyButton;
+    QPushButton   *mUpButton;
+    QPushButton   *mDownButton;
+    const QString mAddDialogLabel;
 };
 
 }
