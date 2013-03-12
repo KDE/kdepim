@@ -43,7 +43,6 @@ public:
         engine = new Grantlee::Engine;
         templateLoader = Grantlee::FileSystemTemplateLoader::Ptr( new Grantlee::FileSystemTemplateLoader );
         templateLoader->setTemplateDirs( QStringList() << KStandardDirs::locate("data",QLatin1String("messageviewer/themes/")) );
-        templateLoader->setTheme( QLatin1String( "default" ) );
         engine->addTemplateLoader( templateLoader );
 
     }
@@ -69,7 +68,7 @@ GrantleeHeaderFormatter::~GrantleeHeaderFormatter()
 
 QString GrantleeHeaderFormatter::toHtml(const QString &themeName, bool isPrinting, const MessageViewer::HeaderStrategy *strategy, KMime::Message *message) const
 {
-    Grantlee::Template headerTemplate = d->engine->loadByName( themeName + "/default.html" );
+    Grantlee::Template headerTemplate = d->engine->loadByName( themeName + "/header.html" );
     QString errorMessage;
     if ( headerTemplate->error() ) {
       errorMessage += headerTemplate->errorString();

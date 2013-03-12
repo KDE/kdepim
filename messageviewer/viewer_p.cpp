@@ -1831,7 +1831,8 @@ void ViewerPrivate::showContextMenu( KMime::Content* content, const QPoint &pos 
 }
 
 
-KToggleAction *ViewerPrivate::actionForHeaderStyle( const HeaderStyle * style, const HeaderStrategy * strategy ) {
+KToggleAction *ViewerPrivate::actionForHeaderStyle( const HeaderStyle * style, const HeaderStrategy * strategy )
+{
   if ( !mActionCollection )
     return 0;
   const char * actionName = 0;
@@ -1857,7 +1858,8 @@ KToggleAction *ViewerPrivate::actionForHeaderStyle( const HeaderStyle * style, c
     return 0;
 }
 
-KToggleAction *ViewerPrivate::actionForAttachmentStrategy( const AttachmentStrategy * as ) {
+KToggleAction *ViewerPrivate::actionForAttachmentStrategy( const AttachmentStrategy * as )
+{
   if ( !mActionCollection )
     return 0;
   const char * actionName = 0;
@@ -2253,12 +2255,13 @@ void ViewerPrivate::slotCycleHeaderStyles() {
       slotAllHeaders();
       actionName = "view_headers_all";
     } else if ( strategy == HeaderStrategy::all() ) {
-      slotEnterpriseHeaders();
-      actionName = "view_headers_enterprise";
-    }
-  } else if ( strategy == HeaderStrategy::custom() ) {
       slotCustomHeaders();
       actionName = "view_custom_headers";
+    }
+  } else if ( strategy == HeaderStrategy::custom() ) {
+      slotEnterpriseHeaders();
+      actionName = "view_headers_enterprise";
+
   }
 
   if ( actionName )

@@ -4,6 +4,8 @@
     This file is part of KMail, the KDE mail client.
     Copyright (c) 2003 Marc Mutz <mutz@kde.org>
 
+    Copyright (c) 2013 Laurent Montel <montel@kde.org>
+
     KMail is free software; you can redistribute it and/or modify it
     under the terms of the GNU General Public License, version 2, as
     published by the Free Software Foundation.
@@ -70,6 +72,7 @@ HeaderStrategy * HeaderStrategy::create( Type type ) {
   case Standard: return standard();
   case Brief:  return brief();
   case Custom:  return custom();
+  case Grantlee:  return grantlee();
   }
   kFatal() << "Unknown header strategy ( type ==" << (int)type << ") requested!";
   return 0; // make compiler happy
@@ -86,6 +89,8 @@ HeaderStrategy * HeaderStrategy::create( const QString & type ) {
       return brief();
   else if ( lowerType == QLatin1String( "custom" ) )
       return custom();
+  else if ( lowerType == QLatin1String( "grantlee" ) )
+      return grantlee();
   // don't kFatal here, b/c the strings are user-provided
   // (KConfig), so fail gracefully to the default:
   return standard();
@@ -96,6 +101,7 @@ static HeaderStrategy * richStrategy = 0;
 static HeaderStrategy * standardStrategy = 0;
 static HeaderStrategy * briefStrategy = 0;
 static HeaderStrategy * customStrategy = 0;
+static HeaderStrategy * grantleeStrategy = 0;
 
 HeaderStrategy * HeaderStrategy::all() {
   if ( !allStrategy )
@@ -132,4 +138,11 @@ void HeaderStrategy::readConfig() {
         static_cast<MessageViewer::CustomHeaderStrategy*>(customStrategy)->loadConfig();
     }
 }
+
+HeaderStrategy * HeaderStrategy::grantlee() {
+  if ( !grantleeStrategy )
+    grantleeStrategy = new MessageViewer::GrantleeHeaderStrategy();
+  return grantleeStrategy;
+}
+
 }
