@@ -23,6 +23,9 @@
 #include <Nepomuk2/Variant>
 #include "messagetag.h"
 #include <QDebug>
+#include <kwallet.h>
+
+
 
 void ImportWizardUtil::mergeLdap(const ldapStruct &ldap)
 {
@@ -87,7 +90,20 @@ void ImportWizardUtil::addNepomukTag(const QList<tagStruct>& tagList)
     }
 }
 
-void ImportWizardUtil::storeInKWallet()
+void ImportWizardUtil::storeInKWallet(const QString &name, ImportWizardUtil::ResourceType type, const QString &password)
 {
-    //TODO
+    KWallet::Wallet * wallet = 0;
+    switch(type) {
+    case Imap:
+        wallet = KWallet::Wallet::openWallet( KWallet::Wallet::NetworkWallet(), 0 );
+        if ( wallet && wallet->isOpen() ) {
+            if ( !wallet->hasFolder( "imap" ) )
+                wallet->createFolder( "imap" );
+            wallet->setFolder( "imap" );
+            wallet->writePassword( name+"rc", password );
+        break;
+    }
+    }
+    delete wallet;
+
 }

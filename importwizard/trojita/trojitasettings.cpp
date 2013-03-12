@@ -69,7 +69,9 @@ void TrojitaSettings::readImapAccount()
         }
     }
 
+    QString password;
     if (settings->contains(QLatin1String("imap.auth.pass"))) {
+        password = settings->value(QLatin1String("imap.auth.pass")).toString();
         //Store in kwallet. Need to do it.
     }
 
@@ -98,6 +100,9 @@ void TrojitaSettings::readImapAccount()
         const QString agentIdentifyName = AbstractBase::createResource( "akonadi_imap_resource", name, newSettings );
         //Check by default
         addCheckMailOnStartup(agentIdentifyName, true);
+        if (!password.isEmpty()) {
+            ImportWizardUtil::storeInKWallet(agentIdentifyName, ImportWizardUtil::Imap, password);
+        }
     }
 }
 

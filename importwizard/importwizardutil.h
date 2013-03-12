@@ -55,9 +55,13 @@ struct tagStruct {
 
 
 namespace ImportWizardUtil {
+enum ResourceType {
+    Imap
+};
+
 void mergeLdap(const ldapStruct &ldap);
 void addNepomukTag(const QList<tagStruct> &tagList);
-void storeInKWallet();
+void storeInKWallet(const QString &name, ImportWizardUtil::ResourceType type, const QString &password);
 }
 
 #endif // IMPORTWIZARDUTIL_H
