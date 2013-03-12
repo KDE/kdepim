@@ -19,16 +19,31 @@
 */
 
 #include "comboboxactivity.h"
+#include "activitymanager.h"
 
 namespace PimActivity {
-ComboBoxActivity::ComboBoxActivity(QWidget *parent)
-    : KComboBox(parent)
+
+class ComboBoxActivityPrivate
+{
+public:
+    ComboBoxActivityPrivate(ComboBoxActivity *qq, ActivityManager *manager)
+        : q(qq),
+          activityManager(manager)
+    {
+
+    }
+    ComboBoxActivity *q;
+    ActivityManager *activityManager;
+};
+
+ComboBoxActivity::ComboBoxActivity(ActivityManager *activityManager, QWidget *parent)
+    : KComboBox(parent), d(new ComboBoxActivityPrivate(this, activityManager))
 {
 }
 
 ComboBoxActivity::~ComboBoxActivity()
 {
-
+    delete d;
 }
 
 }

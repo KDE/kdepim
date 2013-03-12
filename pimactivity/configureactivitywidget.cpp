@@ -54,7 +54,7 @@ public:
         QLabel *lab = new QLabel(i18n("Activities:"));
         verticalLayout->addWidget(lab);
 
-        activities = new ComboBoxActivity(q);
+        activities = new ComboBoxActivity(manager, q);
         verticalLayout->addWidget(activities);
 
 
