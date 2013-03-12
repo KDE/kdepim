@@ -139,3 +139,6 @@ set_target_properties( messageviewer PROPERTIES VERSION ${GENERIC_LIB_VERSION} S
 install(TARGETS messageviewer ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 #install( FILES viewer.h attachmentstrategy.h headerstrategy.h messageviewer_export.h DESTINATION  ${INCLUDE_INSTALL_DIR}/messageviewer COMPONENT devel)
+
+
+install(DIRECTORY themes DESTINATION ${DATA_INSTALL_DIR}/messageviewer )
