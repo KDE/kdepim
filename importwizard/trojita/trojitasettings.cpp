@@ -168,7 +168,7 @@ void TrojitaSettings::readIdentity()
             signature.setText( signatureStr );
             identity->setSignature( signature );
         }
-        qDebug()<<" realName :"<<realName<<" address : "<<address<<" organisation : "<<organisation<<" signature: "<<signatureStr;
+        kDebug()<<" realName :"<<realName<<" address : "<<address<<" organisation : "<<organisation<<" signature: "<<signatureStr;
         storeIdentity(identity);
     }
     settings->endArray();

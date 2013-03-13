@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -15,6 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#include "kmail1importdata.h"
 #include "mailimporter/filterinfo.h"
 #include "importfilterinfogui.h"
 #include "importwizard.h"
@@ -37,6 +38,8 @@ KMail1ImportData::~KMail1ImportData()
 
 bool KMail1ImportData::foundMailer() const
 {
+    return false;
+    //TODO
     QDir directory( mPath );
     if ( directory.exists() )
         return true;
@@ -67,8 +70,8 @@ bool KMail1ImportData::importAddressBook()
 AbstractImporter::TypeSupportedOptions KMail1ImportData::supportedOption()
 {
     TypeSupportedOptions options;
-    //options |=AbstractImporter::Mails;
+    options |=AbstractImporter::Mails;
     options |=AbstractImporter::Settings;
-    options |=AbstractImporter::AddressBooks;
+    //options |=AbstractImporter::AddressBooks;
     return options;
 }
