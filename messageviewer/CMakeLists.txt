@@ -61,7 +61,7 @@ set(libmessageviewer_SRCS
   findbar/findbarsourceview.cpp
   globalsettings.cpp
   headerstrategy.cpp
-  headerstrategy_p.cpp
+  header/headerstrategy_p.cpp
   headerstyle.cpp
   header/briefheaderstyle.cpp
   header/grantleeheaderstyle.cpp

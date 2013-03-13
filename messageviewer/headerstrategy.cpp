@@ -35,7 +35,7 @@
 
 
 #include "headerstrategy.h"
-#include "headerstrategy_p.h"
+#include "header/headerstrategy_p.h"
 
 #include <kdebug.h>
 
