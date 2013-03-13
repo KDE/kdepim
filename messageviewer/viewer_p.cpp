@@ -1716,6 +1716,9 @@ void ViewerPrivate::createActions()
   ac->addAction("save_message_display_format", mSaveMessageDisplayFormat );
   connect(mSaveMessageDisplayFormat, SIGNAL(triggered(bool)), SLOT(slotSaveMessageDisplayFormat()));
 
+  mResetMessageDisplayFormat = new KAction( i18n("&Reset Display Format"), this);
+  ac->addAction("reset_message_display_format", mResetMessageDisplayFormat );
+  connect(mResetMessageDisplayFormat, SIGNAL(triggered(bool)), SLOT(slotResetMessageDisplayFormat()));
 
   //
   // Scroll actions
@@ -3168,12 +3171,22 @@ void ViewerPrivate::slotSaveMessageDisplayFormat()
             attr->setMessageFormat(Viewer::Html);
         else
             attr->setMessageFormat(Viewer::Text);
+        Akonadi::ItemModifyJob *modify = new Akonadi::ItemModifyJob( mMessageItem );
+        modify->setIgnorePayload( true );
+        modify->disableRevisionCheck();
     }
-    Akonadi::ItemModifyJob *modify = new Akonadi::ItemModifyJob( mMessageItem );
-    modify->setIgnorePayload( true );
-    modify->disableRevisionCheck();
-  //TODO
 }
 
+void ViewerPrivate::slotResetMessageDisplayFormat()
+{
+    if (mMessageItem.isValid()) {
+        if (mMessageItem.hasAttribute<MessageViewer::MessageDisplayFormatAttribute>()) {
+            mMessageItem.removeAttribute<MessageViewer::MessageDisplayFormatAttribute>();
+            Akonadi::ItemModifyJob *modify = new Akonadi::ItemModifyJob( mMessageItem );
+            modify->setIgnorePayload( true );
+            modify->disableRevisionCheck();
+        }
+    }
+}
 
 #include "viewer_p.moc"

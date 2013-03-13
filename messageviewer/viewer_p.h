@@ -586,6 +586,7 @@ public slots:
   void slotSpeakText();
   void slotCopyImageLocation();
   void slotSaveMessageDisplayFormat();
+  void slotResetMessageDisplayFormat();
 signals:
   void showStatusBarMessage( const QString &message );
   void replaceMsgByUnencryptedVersion();
@@ -641,7 +642,7 @@ public:
   KAction *mCopyAction, *mCopyURLAction,
       *mUrlOpenAction, *mSelectAllAction,
       *mScrollUpAction, *mScrollDownAction, *mScrollUpMoreAction, *mScrollDownMoreAction,
-      *mViewSourceAction, *mSaveMessageAction, *mFindInMessageAction, *mSaveMessageDisplayFormat;
+      *mViewSourceAction, *mSaveMessageAction, *mFindInMessageAction, *mSaveMessageDisplayFormat, *mResetMessageDisplayFormat;
   KToggleAction *mHeaderOnlyAttachmentsAction;
   KSelectAction *mSelectEncodingAction;
   KToggleAction *mToggleFixFontAction, *mToggleDisplayModeAction;
