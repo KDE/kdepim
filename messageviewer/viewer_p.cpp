@@ -26,6 +26,7 @@
 #include "viewer.h"
 #include "objecttreeemptysource.h"
 #include "objecttreeviewersource.h"
+#include "messagedisplayformatattribute.h"
 
 #ifdef MESSAGEVIEWER_READER_HTML_DEBUG
 #include "filehtmlwriter.h"
@@ -99,6 +100,7 @@
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/kmime/messagestatus.h>
 #include <akonadi/kmime/specialmailcollections.h>
+#include <akonadi/attributefactory.h>
 #include <kleo/specialjob.h>
 
 #include "chiasmuskeyselector.h"
@@ -151,6 +153,7 @@ using namespace MessageCore;
 const int ViewerPrivate::delay = 150;
 const qreal ViewerPrivate::zoomBy = 20;
 
+static QAtomicInt _k_attributeInitialized;
 
 ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
                               KActionCollection *actionCollection )
@@ -204,6 +207,10 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
     mPreviouslyViewedItem( -1 ),
     mZoomFactor( 100 )
 {
+ if ( _k_attributeInitialized.testAndSetAcquire( 0, 1 ) ) {
+   Akonadi::AttributeFactory::registerAttribute<MessageViewer::MessageDisplayFormatAttribute>();
+  }
+
   if ( !mainWindow )
     mMainWindow = aParent;
 
@@ -241,6 +248,7 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
   Akonadi::ItemFetchScope fs;
   fs.fetchFullPayload();
   fs.fetchAttribute<MailTransport::ErrorAttribute>();
+  fs.fetchAttribute<MessageViewer::MessageDisplayFormatAttribute>();
   mMonitor.setItemFetchScope( fs );
   connect( &mMonitor, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)),
            this, SLOT(slotItemChanged(Akonadi::Item,QSet<QByteArray>)) );
