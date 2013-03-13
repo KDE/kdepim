@@ -98,6 +98,7 @@ set(libmessageviewer_SRCS
   webkitparthtmlwriter.cpp
   customheadersettingwidget.cpp
   headerstyle/grantleeheaderformatter.cpp
+  messagedisplayformatattribute.cpp
   ${_mailwebview_cpp}
 )
 
