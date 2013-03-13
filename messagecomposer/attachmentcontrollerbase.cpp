@@ -811,6 +811,7 @@ void AttachmentControllerBase::addAttachment( AttachmentPart::Ptr part )
   if( MessageComposer::MessageComposerSettings::self()->showMessagePartDialogOnAttach() ) {
     attachmentProperties( part );
   }
+  emit fileAttached();
 }
 
 MessageCore::AttachmentFromUrlBaseJob * AttachmentControllerBase::createAttachmentJob(const KUrl &url)
