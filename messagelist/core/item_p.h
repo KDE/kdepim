@@ -193,9 +193,7 @@ public:
     if ( !mChildItems )
       return false; // not my child! (ugh... should assert ?)
 
-    int idx = child->indexGuess();
-    if ( !q->childItemHasIndex( child, idx ) )
-      idx = q->indexOfChildItem( child );
+    const int idx = q->indexOfChildItem(child);
 
     if ( idx > 0 )
     {
