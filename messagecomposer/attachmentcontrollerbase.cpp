@@ -789,7 +789,6 @@ void AttachmentControllerBase::showAddAttachmentDialog()
           addAttachment( urlWithEncoding );
         }
     }
-    emit fileAttached();
   }
   delete dialog;
 #else
@@ -797,7 +796,6 @@ void AttachmentControllerBase::showAddAttachmentDialog()
   const QString fileName = KFileDialog::getOpenFileName( KUrl(), QString(), d->wParent, i18n("Attach File" ) );
   if ( !fileName.isEmpty() ) {
     addAttachment( KUrl::fromLocalFile( fileName ) );
-    emit fileAttached();
   }
 #endif
 }
