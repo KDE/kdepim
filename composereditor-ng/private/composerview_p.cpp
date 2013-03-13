@@ -945,5 +945,19 @@ void ComposerViewPrivate::_k_slotInsertSpecialChar()
         execCommand(QLatin1String("insertHTML"), dlg.currentChar());
     }
 }
+
+QMap<QString, QString> ComposerViewPrivate::localImages() const
+{
+    QMap<QString, QString> lst;
+    QWebElementCollection images = q->page()->mainFrame()->findAllElements(QLatin1String("img"));
+    Q_FOREACH (const QWebElement& elm, images){
+        if (elm.attribute(QLatin1String("src")).startsWith(QLatin1String("file://"))) {
+            KUrl url (elm.attribute(QLatin1String("src")));
+            lst.insert(url.fileName(), url.path());
+        }
+    }
+    return lst;
+}
+
 }
 

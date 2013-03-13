@@ -526,6 +526,11 @@ QAction *ComposerView::action(ComposerViewAction actionType) const
     return 0;
 }
 
+QMap<QString, QString> ComposerView::localImages() const
+{
+    return d->localImages();
+}
+
 }
 
 #include "composerview.moc"
