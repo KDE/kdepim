@@ -38,6 +38,12 @@ public:
     QByteArray serialized() const;
     void deserialize( const QByteArray &data );
 
+    void setHtmlFormat(bool html);
+    bool htmlFormat() const;
+
+    void setRemoteContent(bool remote);
+    bool remoteContent() const;
+
 
 private:
     friend class MessageDisplayFormatAttributePrivate;
