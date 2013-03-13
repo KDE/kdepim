@@ -32,13 +32,13 @@
 */
 
 #include "headerstyle.h"
-#include "headerstyle/briefheaderstyle.h"
-#include "headerstyle/grantleeheaderstyle.h"
-#include "headerstyle/customheaderstyle.h"
-#include "headerstyle/plainheaderstyle.h"
-#include "headerstyle/mobileheaderstyle.h"
-#include "headerstyle/entrepriseheaderstyle.h"
-#include "headerstyle/fancyheaderstyle.h"
+#include "header/briefheaderstyle.h"
+#include "header/grantleeheaderstyle.h"
+#include "header/customheaderstyle.h"
+#include "header/plainheaderstyle.h"
+#include "header/mobileheaderstyle.h"
+#include "header/entrepriseheaderstyle.h"
+#include "header/fancyheaderstyle.h"
 
 #include <KDebug>
 #include <KGlobal>

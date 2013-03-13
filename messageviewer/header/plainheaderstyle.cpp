@@ -17,7 +17,7 @@
 
 #include "plainheaderstyle.h"
 
-#include "headerstyle/headerstyle_util.h"
+#include "header/headerstyle_util.h"
 
 
 #include "headerstrategy.h"

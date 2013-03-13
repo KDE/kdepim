@@ -17,8 +17,8 @@
 
 
 #include "grantleeheaderstyle.h"
-#include "headerstyle/headerstyle_util.h"
-#include "headerstyle/grantleeheaderformatter.h"
+#include "header/headerstyle_util.h"
+#include "header/grantleeheaderformatter.h"
 
 #include "headerstrategy.h"
 #include <kpimutils/linklocator.h>

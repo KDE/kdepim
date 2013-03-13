@@ -63,14 +63,14 @@ set(libmessageviewer_SRCS
   headerstrategy.cpp
   headerstrategy_p.cpp
   headerstyle.cpp
-  headerstyle/briefheaderstyle.cpp
-  headerstyle/grantleeheaderstyle.cpp
-  headerstyle/customheaderstyle.cpp
-  headerstyle/plainheaderstyle.cpp
-  headerstyle/mobileheaderstyle.cpp
-  headerstyle/entrepriseheaderstyle.cpp
-  headerstyle/headerstyle_util.cpp
-  headerstyle/fancyheaderstyle.cpp
+  header/briefheaderstyle.cpp
+  header/grantleeheaderstyle.cpp
+  header/customheaderstyle.cpp
+  header/plainheaderstyle.cpp
+  header/mobileheaderstyle.cpp
+  header/entrepriseheaderstyle.cpp
+  header/headerstyle_util.cpp
+  header/fancyheaderstyle.cpp
   htmlquotecolorer.cpp
   htmlstatusbar.cpp
   iconnamecache.cpp
@@ -97,7 +97,7 @@ set(libmessageviewer_SRCS
   viewer_p.cpp
   webkitparthtmlwriter.cpp
   customheadersettingwidget.cpp
-  headerstyle/grantleeheaderformatter.cpp
+  header/grantleeheaderformatter.cpp
   messagedisplayformatattribute.cpp
   ${_mailwebview_cpp}
 )
