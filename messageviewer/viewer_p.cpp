@@ -830,6 +830,21 @@ void ViewerPrivate::displayMessage()
 
   mNodeHelper->setOverrideCodec( mMessage.get(), overrideCodec() );
 
+  if ( mMessageItem.hasAttribute<MessageViewer::MessageDisplayFormatAttribute>() ) {
+      const MessageViewer::MessageDisplayFormatAttribute* const attr = mMessageItem.attribute<MessageViewer::MessageDisplayFormatAttribute>();
+      setHtmlLoadExtOverride(attr->remoteContent());
+      switch(attr->messageFormat()) {
+      case Viewer::Html:
+          setHtmlOverride(true);
+          break;
+      case Viewer::Text:
+          setHtmlOverride(false);
+          break;
+      default:
+          break;
+      }
+  }
+
   htmlWriter()->begin( QString() );
   htmlWriter()->queue( mCSSHelper->htmlHead( mUseFixedFont ) );
 
