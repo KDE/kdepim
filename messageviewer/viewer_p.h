@@ -509,7 +509,6 @@ public slots:
 
   void slotMimePartSelected( const QModelIndex &index );
 
-  void slotCycleHeaderStyles();
   void slotBriefHeaders();
   void slotFancyHeaders();
   void slotEnterpriseHeaders();
@@ -518,7 +517,6 @@ public slots:
   void slotAllHeaders();
   void slotCustomHeaders();
 
-  void slotCycleAttachmentStrategy();
   void slotIconicAttachments();
   void slotSmartAttachments();
   void slotInlineAttachments();

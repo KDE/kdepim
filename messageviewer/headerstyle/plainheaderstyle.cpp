@@ -40,7 +40,8 @@ namespace MessageViewer {
 //   show subject larger
 //
 QString PlainHeaderStyle::format( KMime::Message *message ) const {
-  if ( !message ) return QString();
+  if ( !message )
+      return QString();
   const HeaderStrategy *strategy = headerStrategy();
   if ( !strategy )
     strategy = HeaderStrategy::rich();

@@ -1512,9 +1512,6 @@ void ViewerPrivate::createActions()
   ac->addAction("view_headers", headerMenu );
   headerMenu->setHelpText( i18n("Choose display style of message headers") );
 
-  connect( headerMenu, SIGNAL(triggered(bool)),
-           this, SLOT(slotCycleHeaderStyles()) );
-
   QActionGroup *group = new QActionGroup( this );
   raction = new KToggleAction( i18nc("View->headers->", "&Enterprise Headers"), this);
   ac->addAction( "view_headers_enterprise", raction );
@@ -1570,8 +1567,6 @@ void ViewerPrivate::createActions()
   KActionMenu *attachmentMenu  = new KActionMenu(i18nc("View->", "&Attachments"), this);
   ac->addAction("view_attachments", attachmentMenu );
   attachmentMenu->setHelpText( i18n("Choose display style of attachments") );
-  connect( attachmentMenu, SIGNAL(triggered(bool)),
-           this, SLOT(slotCycleAttachmentStrategy()) );
 
   group = new QActionGroup( this );
   raction  = new KToggleAction(i18nc("View->attachments->", "&As Icons"), this);
@@ -2232,43 +2227,6 @@ void ViewerPrivate::slotMimePartSelected( const QModelIndex &index )
   }
 }
 
-
-void ViewerPrivate::slotCycleHeaderStyles() {
-  const HeaderStrategy * strategy = headerStrategy();
-  const HeaderStyle * style = headerStyle();
-
-  const char * actionName = 0;
-  if ( style == HeaderStyle::enterprise() ) {
-    slotFancyHeaders();
-    actionName = "view_headers_fancy";
-  } else if ( style == HeaderStyle::fancy() ) {
-    slotBriefHeaders();
-    actionName = "view_headers_brief";
-  } else if ( style == HeaderStyle::brief() ) {
-    slotStandardHeaders();
-    actionName = "view_headers_standard";
-  } else if ( style == HeaderStyle::plain() ) {
-    if ( strategy == HeaderStrategy::standard() ) {
-      slotLongHeaders();
-      actionName = "view_headers_long";
-    } else if ( strategy == HeaderStrategy::rich() ) {
-      slotAllHeaders();
-      actionName = "view_headers_all";
-    } else if ( strategy == HeaderStrategy::all() ) {
-      slotCustomHeaders();
-      actionName = "view_custom_headers";
-    }
-  } else if ( strategy == HeaderStrategy::custom() ) {
-      slotEnterpriseHeaders();
-      actionName = "view_headers_enterprise";
-
-  }
-
-  if ( actionName )
-    static_cast<KToggleAction*>( mActionCollection->action( actionName ) )->setChecked( true );
-}
-
-
 void ViewerPrivate::slotBriefHeaders()
 {
   setHeaderStyleAndStrategy( HeaderStyle::brief(),
@@ -2315,15 +2273,6 @@ void ViewerPrivate::slotCustomHeaders()
   setHeaderStyleAndStrategy( HeaderStyle::custom(),
                              HeaderStrategy::custom(), true );
 }
-
-void ViewerPrivate::slotCycleAttachmentStrategy()
-{
-  setAttachmentStrategy( attachmentStrategy()->next() );
-  KToggleAction * action = actionForAttachmentStrategy( attachmentStrategy() );
-  assert( action );
-  action->setChecked( true );
-}
-
 
 void ViewerPrivate::slotIconicAttachments()
 {
