@@ -28,12 +28,12 @@ class MessageViewer::MessageDisplayFormatAttributePrivate
 {
 public:
     MessageDisplayFormatAttributePrivate()
-        : htmlFormat(false),
+        : messageFormat(Viewer::Unknown),
           remoteContent(false)
     {
 
     }
-    bool htmlFormat;
+    Viewer::ForceDisplayTo messageFormat;
     bool remoteContent;
 };
 
@@ -50,7 +50,7 @@ MessageDisplayFormatAttribute::~MessageDisplayFormatAttribute()
 MessageDisplayFormatAttribute *MessageDisplayFormatAttribute::clone() const
 {
     MessageDisplayFormatAttribute *messageDisplayFormatAttr = new MessageDisplayFormatAttribute();
-    messageDisplayFormatAttr->setHtmlFormat(htmlFormat());
+    messageDisplayFormatAttr->setMessageFormat(messageFormat());
     messageDisplayFormatAttr->setRemoteContent(remoteContent());
     return messageDisplayFormatAttr;
 }
@@ -65,15 +65,15 @@ QByteArray MessageDisplayFormatAttribute::serialized() const
 {
     QByteArray result;
     QDataStream s( &result, QIODevice::WriteOnly );
-    s << htmlFormat();
+    s << messageFormat();
     s << remoteContent();
 
     return result;
 }
 
-void MessageDisplayFormatAttribute::setHtmlFormat(bool html)
+void MessageDisplayFormatAttribute::setMessageFormat(Viewer::ForceDisplayTo html)
 {
-    d->htmlFormat = html;
+    d->messageFormat = html;
 }
 
 void MessageDisplayFormatAttribute::setRemoteContent(bool remote)
@@ -86,14 +86,16 @@ bool MessageDisplayFormatAttribute::remoteContent() const
     return d->remoteContent;
 }
 
-bool MessageDisplayFormatAttribute::htmlFormat() const
+Viewer::ForceDisplayTo MessageDisplayFormatAttribute::messageFormat() const
 {
-    return d->htmlFormat;
+    return d->messageFormat;
 }
 
 void MessageDisplayFormatAttribute::deserialize( const QByteArray &data )
 {
     QDataStream s( data );
-    s >> d->htmlFormat;
+    int value = 0;
+    s >> value;
+    d->messageFormat = static_cast<Viewer::ForceDisplayTo>(value);
     s >> d->remoteContent;
 }

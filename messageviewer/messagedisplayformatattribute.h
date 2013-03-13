@@ -22,7 +22,7 @@
 #define MESSAGEDISPLAYFORMATATTRIBUTE_H
 
 #include <akonadi/attribute.h>
-
+#include "viewer.h"
 namespace MessageViewer {
 class MessageDisplayFormatAttributePrivate;
 
@@ -38,8 +38,8 @@ public:
     QByteArray serialized() const;
     void deserialize( const QByteArray &data );
 
-    void setHtmlFormat(bool html);
-    bool htmlFormat() const;
+    void setMessageFormat(Viewer::ForceDisplayTo format);
+    Viewer::ForceDisplayTo messageFormat() const;
 
     void setRemoteContent(bool remote);
     bool remoteContent() const;
