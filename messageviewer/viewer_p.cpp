@@ -1712,6 +1712,11 @@ void ViewerPrivate::createActions()
   //Laurent: conflict with kmail shortcut
   //mSaveMessageAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_S));
 
+  mSaveMessageDisplayFormat = new KAction( i18n("&Save Display Format"), this);
+  ac->addAction("save_message_display_format", mSaveMessageDisplayFormat );
+  connect(mSaveMessageDisplayFormat, SIGNAL(triggered(bool)), SLOT(slotSaveMessageDisplayFormat()));
+
+
   //
   // Scroll actions
   //
@@ -3152,6 +3157,22 @@ void ViewerPrivate::slotToggleCaretBrowsing(bool toggle)
 #endif
 #endif
 Q_UNUSED( toggle );
+}
+
+void ViewerPrivate::slotSaveMessageDisplayFormat()
+{
+    if (mMessageItem.isValid()) {
+        MessageViewer::MessageDisplayFormatAttribute *attr  = mMessageItem.attribute<MessageViewer::MessageDisplayFormatAttribute>( Akonadi::Entity::AddIfMissing );
+        attr->setRemoteContent(htmlLoadExtOverride());
+        if (htmlOverride())
+            attr->setMessageFormat(Viewer::Html);
+        else
+            attr->setMessageFormat(Viewer::Text);
+    }
+    Akonadi::ItemModifyJob *modify = new Akonadi::ItemModifyJob( mMessageItem );
+    modify->setIgnorePayload( true );
+    modify->disableRevisionCheck();
+  //TODO
 }
 
 

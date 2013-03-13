@@ -629,6 +629,13 @@ void Viewer::slotChangeDisplayMail(Viewer::ForceDisplayTo mode,bool loadExternal
     }
     update(Viewer::Force);
 }
+
+KAction *Viewer::saveMessageDisplayFormatAction()
+{
+    Q_D( Viewer );
+    return d->mSaveMessageDisplayFormat;
+}
+
 }
 
 #include "viewer.moc"
