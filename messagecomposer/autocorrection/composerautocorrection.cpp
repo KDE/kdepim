@@ -290,8 +290,8 @@ bool ComposerAutoCorrection::autoBoldUnderline()
 
     bool underline = (trimmed.at(0) == QLatin1Char('_') && trimmed.at(trimmed.length() - 1) == QLatin1Char('_'));
     bool bold = (trimmed.at(0) == QLatin1Char('*') && trimmed.at(trimmed.length() - 1) == QLatin1Char('*'));
-
-    if (underline || bold) {
+    bool strikeOut = (trimmed.at(0) == QLatin1Char('-') && trimmed.at(trimmed.length() - 1) == QLatin1Char('-'));
+    if (underline || bold || strikeOut) {
         int startPos = mCursor.selectionStart();
         QString replacement = trimmed.mid(1, trimmed.length() - 2);
         bool foundLetterNumber = false;
@@ -318,6 +318,7 @@ bool ComposerAutoCorrection::autoBoldUnderline()
         QTextCharFormat format;
         format.setFontUnderline(underline ? true : mCursor.charFormat().fontUnderline());
         format.setFontWeight(bold ? QFont::Bold : mCursor.charFormat().fontWeight());
+        format.setFontStrikeOut(strikeOut ? true : mCursor.charFormat().fontStrikeOut());
         mCursor.mergeCharFormat(format);
 
         // to avoid the selection being replaced by mWord
@@ -325,7 +326,8 @@ bool ComposerAutoCorrection::autoBoldUnderline()
 
         // don't do this again if the text is already underlined and bold
         if (mCursor.charFormat().fontUnderline()
-                && mCursor.charFormat().fontWeight() == QFont::Bold) {
+                && mCursor.charFormat().fontWeight() == QFont::Bold
+                && mCursor.charFormat().fontStrikeOut()) {
             return true;
         } else {
             return autoBoldUnderline();

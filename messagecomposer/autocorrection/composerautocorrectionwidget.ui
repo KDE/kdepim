@@ -35,7 +35,7 @@
    <item row="2" column="0" colspan="2">
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab_1">
       <attribute name="title">
@@ -110,7 +110,7 @@
           <string>When you use _underline_ or *bold*, the text between the underscores or asterisks will be converted to underlined or bold text.</string>
          </property>
          <property name="text">
-          <string>Automatically do &amp;bold and underline formatting (HTML mode)</string>
+          <string>Automatically do &amp;bold, strikeout and underline formatting (HTML mode)</string>
          </property>
         </widget>
        </item>
