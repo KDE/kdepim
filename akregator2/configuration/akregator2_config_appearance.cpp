@@ -53,6 +53,12 @@ KCMAkregator2AppearanceConfig::KCMAkregator2AppearanceConfig( QWidget* parent, c
              m_ui.lbl_newArticles, SLOT(setEnabled(bool)) );
     connect( m_ui.kcfg_UseCustomColors, SIGNAL(toggled(bool)),
              m_ui.lbl_unreadArticles, SLOT(setEnabled(bool)) );
+
+    connect( m_ui.slider_minimumFontSize, SIGNAL(valueChanged(int)),
+             m_ui.kcfg_MinimumFontSize , SLOT(setValue(int)) );
+    connect( m_ui.slider_mediumFontSize, SIGNAL(valueChanged(int)),
+             m_ui.kcfg_MediumFontSize , SLOT(setValue(int)) );
+
     connect( m_ui.slider_minimumFontSize, SIGNAL(sliderMoved(int)),
              m_ui.kcfg_MinimumFontSize , SLOT(setValue(int)) );
     connect( m_ui.slider_mediumFontSize, SIGNAL(sliderMoved(int)),
@@ -61,6 +67,7 @@ KCMAkregator2AppearanceConfig::KCMAkregator2AppearanceConfig( QWidget* parent, c
              m_ui.slider_minimumFontSize, SLOT(setValue(int)) );
     connect( m_ui.kcfg_MediumFontSize, SIGNAL(valueChanged(int)),
              m_ui.slider_mediumFontSize, SLOT(setValue(int)) );
+
     connect( m_ui.kcfg_ShowTrayIcon, SIGNAL(toggled(bool)),
              m_ui.kcfg_EnableTrayIconUnreadArticleCount, SLOT(setEnabled(bool)) );
 
