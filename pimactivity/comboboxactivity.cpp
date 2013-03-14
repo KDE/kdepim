@@ -19,16 +19,40 @@
 */
 
 #include "comboboxactivity.h"
+#include "activitymanager.h"
+#include <KActivities/Consumer>
 
 namespace PimActivity {
-ComboBoxActivity::ComboBoxActivity(QWidget *parent)
-    : KComboBox(parent)
+
+class ComboBoxActivityPrivate
+{
+public:
+    ComboBoxActivityPrivate(ComboBoxActivity *qq, ActivityManager *manager)
+        : q(qq),
+          activityManager(manager)
+    {
+#if 0
+        q->connect(manager,SIGNAL(serviceStatusChanged(KActivities::Consumer::ServiceStatus)));
+        void activityAdded(const QString & id);
+        void activityRemoved(const QString & id);
+#endif
+
+
+
+        q->addItems(activityManager->listActivities());
+    }
+    ComboBoxActivity *q;
+    ActivityManager *activityManager;
+};
+
+ComboBoxActivity::ComboBoxActivity(ActivityManager *activityManager, QWidget *parent)
+    : KComboBox(parent), d(new ComboBoxActivityPrivate(this, activityManager))
 {
 }
 
 ComboBoxActivity::~ComboBoxActivity()
 {
-
+    delete d;
 }
 
 }

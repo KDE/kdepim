@@ -146,6 +146,8 @@ public:
     void connectActionGroup();
     void createAction(ComposerView::ComposerViewAction type);
 
+    QMap<QString, QString> localImages() const;
+
     int spellTextSelectionStart;
     int spellTextSelectionEnd;
 

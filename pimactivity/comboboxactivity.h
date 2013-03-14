@@ -24,12 +24,17 @@
 #include <KComboBox>
 
 namespace PimActivity {
+class ActivityManager;
+class ComboBoxActivityPrivate;
 class ComboBoxActivity : public KComboBox
 {
     Q_OBJECT
 public:
-    explicit ComboBoxActivity(QWidget *parent = 0);
+    explicit ComboBoxActivity(ActivityManager *activityManager, QWidget *parent = 0);
     ~ComboBoxActivity();
+private:
+    friend class ComboBoxActivityPrivate;
+    ComboBoxActivityPrivate * const d;
 };
 }
 

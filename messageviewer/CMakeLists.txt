@@ -61,16 +61,16 @@ set(libmessageviewer_SRCS
   findbar/findbarsourceview.cpp
   globalsettings.cpp
   headerstrategy.cpp
-  headerstrategy_p.cpp
+  header/headerstrategy_p.cpp
   headerstyle.cpp
-  headerstyle/briefheaderstyle.cpp
-  headerstyle/grantleeheaderstyle.cpp
-  headerstyle/customheaderstyle.cpp
-  headerstyle/plainheaderstyle.cpp
-  headerstyle/mobileheaderstyle.cpp
-  headerstyle/entrepriseheaderstyle.cpp
-  headerstyle/headerstyle_util.cpp
-  headerstyle/fancyheaderstyle.cpp
+  header/briefheaderstyle.cpp
+  header/grantleeheaderstyle.cpp
+  header/customheaderstyle.cpp
+  header/plainheaderstyle.cpp
+  header/mobileheaderstyle.cpp
+  header/entrepriseheaderstyle.cpp
+  header/headerstyle_util.cpp
+  header/fancyheaderstyle.cpp
   htmlquotecolorer.cpp
   htmlstatusbar.cpp
   iconnamecache.cpp
@@ -97,7 +97,8 @@ set(libmessageviewer_SRCS
   viewer_p.cpp
   webkitparthtmlwriter.cpp
   customheadersettingwidget.cpp
-  headerstyle/grantleeheaderformatter.cpp
+  header/grantleeheaderformatter.cpp
+  messagedisplayformatattribute.cpp
   ${_mailwebview_cpp}
 )
 
@@ -139,3 +140,6 @@ set_target_properties( messageviewer PROPERTIES VERSION ${GENERIC_LIB_VERSION} S
 install(TARGETS messageviewer ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 #install( FILES viewer.h attachmentstrategy.h headerstrategy.h messageviewer_export.h DESTINATION  ${INCLUDE_INSTALL_DIR}/messageviewer COMPONENT devel)
+
+
+install(DIRECTORY themes DESTINATION ${DATA_INSTALL_DIR}/messageviewer )

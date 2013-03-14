@@ -16,7 +16,7 @@
 */
 
 #include "entrepriseheaderstyle.h"
-#include "headerstyle/headerstyle_util.h"
+#include "header/headerstyle_util.h"
 
 #include "headerstrategy.h"
 #include <kpimutils/linklocator.h>

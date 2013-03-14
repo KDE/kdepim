@@ -525,7 +525,7 @@ QModelIndex Model::index( Item *item, int column ) const
   if ( !item ) {
     return QModelIndex();
   }
-  // FIXME: This function is a bottleneck
+  // FIXME: This function is a bottleneck (the caching in indexOfChildItem only works 30% of the time)
   Item * par = item->parent();
   if ( !par )
   {
@@ -533,16 +533,11 @@ QModelIndex Model::index( Item *item, int column ) const
       item->dump(QString());
     return QModelIndex();
   }
-  int indexGuess = item->indexGuess();
-  if ( par->childItemHasIndex( item, indexGuess ) ) // This is 30% of the bottleneck
-    return createIndex( indexGuess, column, item );
 
-  indexGuess = par->indexOfChildItem( item ); // This is 60% of the bottleneck
-  if ( indexGuess < 0 )
+  const int index = par->indexOfChildItem(item);
+  if ( index < 0 )
     return QModelIndex(); // BUG
-
-  item->setIndexGuess( indexGuess );
-  return createIndex( indexGuess, column, item );
+  return createIndex(index, column, item);
 }
 
 QModelIndex Model::index( int row, int column, const QModelIndex &parent ) const
@@ -628,6 +623,51 @@ StorageModel *Model::storageModel() const
   return d->mStorageModel;
 }
 
+void ModelPrivate::clear()
+{
+  if( mFillStepTimer.isActive() )
+    mFillStepTimer.stop();
+
+  // Kill pre-selection at this stage
+  mPreSelectionMode = PreSelectNone;
+  mUniqueIdOfLastSelectedMessageInFolder = 0;
+  mLastSelectedMessageInFolder = 0;
+  mOldestItem = 0;
+  mNewestItem = 0;
+
+  // Reset the row mapper before removing items
+  // This is faster since the items don't need to access the mapper.
+  mInvariantRowMapper->modelReset();
+
+  clearJobList();
+  clearUnassignedMessageLists();
+  clearOrphanChildrenHash();
+  mGroupHeaderItemHash.clear();
+  mGroupHeadersThatNeedUpdate.clear();
+  mThreadingCacheMessageIdMD5ToMessageItem.clear();
+  mThreadingCacheMessageInReplyToIdMD5ToMessageItem.clear();
+  clearThreadingCacheMessageSubjectMD5ToMessageItem();
+  mViewItemJobStepChunkTimeout = 100;
+  mViewItemJobStepIdleInterval = 10;
+  mViewItemJobStepMessageCheckCount = 10;
+  delete mPersistentSetManager;
+  mPersistentSetManager = 0;
+  mCurrentItemToRestoreAfterViewItemJobStep = 0;
+
+  mTodayDate = QDate::currentDate();
+
+    // FIXME: CLEAR THE FILTER HERE AS WE CAN'T APPLY IT WITH UI DISCONNECTED!
+
+
+  mRootItem->killAllChildItems();
+
+  q->reset();
+  //emit headerDataChanged();
+
+  mView->modelHasBeenReset();
+  mView->selectionModel()->clearSelection();
+}
+
 void Model::setStorageModel( StorageModel *storageModel, PreSelectionMode preSelectionMode )
 {
   // Prevent a case of recursion when opening a folder that has a message and the folder was
@@ -636,35 +676,7 @@ void Model::setStorageModel( StorageModel *storageModel, PreSelectionMode preSel
   if ( preventer.isRecursive() )
     return;
 
-  if( d->mFillStepTimer.isActive() )
-    d->mFillStepTimer.stop();
-
-  // Kill pre-selection at this stage
-  d->mPreSelectionMode = PreSelectNone;
-  d->mUniqueIdOfLastSelectedMessageInFolder = 0;
-  d->mLastSelectedMessageInFolder = 0;
-  d->mOldestItem = 0;
-  d->mNewestItem = 0;
-
-  // Reset the row mapper before removing items
-  // This is faster since the items don't need to access the mapper.
-  d->mInvariantRowMapper->modelReset();
-
-  d->clearJobList();
-  d->clearUnassignedMessageLists();
-  d->clearOrphanChildrenHash();
-  d->mGroupHeaderItemHash.clear();
-  d->mGroupHeadersThatNeedUpdate.clear();
-  d->mThreadingCacheMessageIdMD5ToMessageItem.clear();
-  d->mThreadingCacheMessageInReplyToIdMD5ToMessageItem.clear();
-  d->clearThreadingCacheMessageSubjectMD5ToMessageItem();
-  d->mViewItemJobStepChunkTimeout = 100;
-  d->mViewItemJobStepIdleInterval = 10;
-  d->mViewItemJobStepMessageCheckCount = 10;
-  delete d->mPersistentSetManager;
-  d->mPersistentSetManager = 0;
-
-  d->mTodayDate = QDate::currentDate();
+  d->clear();
 
   if ( d->mStorageModel )
   {
@@ -684,17 +696,7 @@ void Model::setStorageModel( StorageModel *storageModel, PreSelectionMode preSel
                 this, SLOT(slotStorageModelHeaderDataChanged(Qt::Orientation,int,int)) );
   }
 
-  d->mRootItem->killAllChildItems();
-
-  // FIXME: CLEAR THE FILTER HERE AS WE CAN'T APPLY IT WITH UI DISCONNECTED!
-
   d->mStorageModel = storageModel;
-
-  reset();
-  //emit headerDataChanged();
-
-  d->mView->modelHasBeenReset();
-  d->mView->selectionModel()->clearSelection();
 
   if ( !d->mStorageModel )
     return; // no folder: nothing to fill
@@ -4291,9 +4293,14 @@ void ModelPrivate::slotStorageModelRowsRemoved( const QModelIndex &parent, int f
 
   Q_ASSERT( from <= to );
 
-  int count = ( to - from ) + 1;
+  const int count = ( to - from ) + 1;
 
   int jobCount = mViewItemJobs.count();
+
+  if (mRootItem && from == 0 && count == mRootItem->childItemCount() && jobCount == 0) {
+    clear();
+    return;
+  }
 
   for ( int idx = 0; idx < jobCount; idx++ )
   {

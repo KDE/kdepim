@@ -43,7 +43,6 @@ public:
         engine = new Grantlee::Engine;
         templateLoader = Grantlee::FileSystemTemplateLoader::Ptr( new Grantlee::FileSystemTemplateLoader );
         templateLoader->setTemplateDirs( QStringList() << KStandardDirs::locate("data",QLatin1String("messageviewer/themes/")) );
-        templateLoader->setTheme( QLatin1String( "default" ) );
         engine->addTemplateLoader( templateLoader );
 
     }
@@ -67,9 +66,9 @@ GrantleeHeaderFormatter::~GrantleeHeaderFormatter()
     delete d;
 }
 
-QString GrantleeHeaderFormatter::toHtml(const QString &themeName, const MessageViewer::HeaderStrategy *strategy, KMime::Message *message) const
+QString GrantleeHeaderFormatter::toHtml(const QString &themeName, bool isPrinting, const MessageViewer::HeaderStrategy *strategy, KMime::Message *message) const
 {
-    Grantlee::Template headerTemplate = d->engine->loadByName( themeName + "/default.html" );
+    Grantlee::Template headerTemplate = d->engine->loadByName( themeName + "/header.html" );
     QString errorMessage;
     if ( headerTemplate->error() ) {
       errorMessage += headerTemplate->errorString();
@@ -98,6 +97,16 @@ QString GrantleeHeaderFormatter::toHtml(const QString &themeName, const MessageV
         headerObject.insert(QLatin1String("bcci18n"), i18n("BCC:"));
         headerObject.insert(QLatin1String("bcc"), StringUtil::emailAddrAsAnchor( message->bcc(), StringUtil::DisplayFullAddress ));
     }
+
+    const QString spamHtml = MessageViewer::HeaderStyleUtil::spamStatus(message);
+    if ( !spamHtml.isEmpty() ) {
+        headerObject.insert( QLatin1String( "spamHTML" ), spamHtml );
+    }
+    headerObject.insert(QLatin1String("datei18n"), i18n("Date:"));
+
+    headerObject.insert( QLatin1String( "dateshort" ) , MessageViewer::HeaderStyleUtil::strToHtml( MessageViewer::HeaderStyleUtil::dateString(message, isPrinting,true ) ) );
+    headerObject.insert( QLatin1String( "datelong" ) , MessageViewer::HeaderStyleUtil::strToHtml( MessageViewer::HeaderStyleUtil::dateString(message, isPrinting,false ) ) );
+    headerObject.insert( QLatin1String( "date" ), MessageViewer::HeaderStyleUtil::directionOf( MessageViewer::HeaderStyleUtil::dateStr( message->date()->dateTime() ) ) );
 
 
     QVariantHash mapping;

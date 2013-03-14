@@ -91,7 +91,6 @@ public:
 
         fillCombobox();
         initialize();
-
     }
 
     void _k_slotRemoveAttribute();

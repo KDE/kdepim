@@ -21,11 +21,11 @@
 #include <QWidget>
 
 namespace Ui {
-  class ImportMailPage;
+class ImportMailPage;
 }
 
 namespace Akonadi {
-  class Collection;
+class Collection;
 }
 
 namespace MailImporter{
@@ -34,23 +34,23 @@ class ImportMailsWidget;
 
 class ImportMailPage : public QWidget
 {
-  Q_OBJECT
-  
+    Q_OBJECT
+
 public:
-  explicit ImportMailPage(QWidget *parent = 0);
-  ~ImportMailPage();
-  MailImporter::ImportMailsWidget *mailWidget();
-  Akonadi::Collection selectedCollection() const;
-  void setImportButtonEnabled(bool enabled);
+    explicit ImportMailPage(QWidget *parent = 0);
+    ~ImportMailPage();
+    MailImporter::ImportMailsWidget *mailWidget();
+    Akonadi::Collection selectedCollection() const;
+    void setImportButtonEnabled(bool enabled);
 
 private Q_SLOTS:
-  void collectionChanged(const Akonadi::Collection& collection);
-  
+    void collectionChanged(const Akonadi::Collection& collection);
+
 Q_SIGNALS:
-  void importMailsClicked();
+    void importMailsClicked();
 
 private:
-  Ui::ImportMailPage *ui;
+    Ui::ImportMailPage *ui;
 };
 
 #endif // IMPORTMAILPAGE_H

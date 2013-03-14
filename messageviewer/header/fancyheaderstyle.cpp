@@ -18,7 +18,7 @@
 #include "fancyheaderstyle.h"
 
 #include "headerstyle.h"
-#include "headerstyle/headerstyle_util.h"
+#include "header/headerstyle_util.h"
 
 
 #include "headerstrategy.h"
@@ -286,7 +286,7 @@ QString FancyHeaderStyle::format( KMime::Message *message ) const {
         headerStr.append(QString::fromLatin1("<tr><th>%1</th>\n"
                                              "<td dir=\"%2\">%3</td></tr>\n")
                          .arg(i18n("Date: "))
-                         .arg( MessageViewer::HeaderStyleUtil::directionOf( dateStr( message->date()->dateTime() ) ) )
+                         .arg( MessageViewer::HeaderStyleUtil::directionOf( MessageViewer::HeaderStyleUtil::dateStr( message->date()->dateTime() ) ) )
                          .arg(MessageViewer::HeaderStyleUtil::strToHtml( MessageViewer::HeaderStyleUtil::dateString( message, isPrinting(), /* short = */ false ) ) ) );
     if ( GlobalSettings::self()->showUserAgent() ) {
         if ( strategy->showHeader( "user-agent" ) ) {

@@ -88,6 +88,7 @@ public:
   void clearThreadingCacheMessageSubjectMD5ToMessageItem();
   void addMessageToSubjectBasedThreadingCache( MessageItem * mi );
   void removeMessageFromSubjectBasedThreadingCache( MessageItem * mi );
+  void clear();
   /**
    * Sync the expanded state of the subtree with the specified root.
    * This will cause the items that are marked with Item::ExpandNeeded to be

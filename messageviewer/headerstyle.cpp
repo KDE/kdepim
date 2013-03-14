@@ -32,13 +32,13 @@
 */
 
 #include "headerstyle.h"
-#include "headerstyle/briefheaderstyle.h"
-#include "headerstyle/grantleeheaderstyle.h"
-#include "headerstyle/customheaderstyle.h"
-#include "headerstyle/plainheaderstyle.h"
-#include "headerstyle/mobileheaderstyle.h"
-#include "headerstyle/entrepriseheaderstyle.h"
-#include "headerstyle/fancyheaderstyle.h"
+#include "header/briefheaderstyle.h"
+#include "header/grantleeheaderstyle.h"
+#include "header/customheaderstyle.h"
+#include "header/plainheaderstyle.h"
+#include "header/mobileheaderstyle.h"
+#include "header/entrepriseheaderstyle.h"
+#include "header/fancyheaderstyle.h"
 
 #include <KDebug>
 #include <KGlobal>
@@ -160,21 +160,6 @@ HeaderStyle * HeaderStyle::grantlee() {
   if ( !grantleeStyle )
     grantleeStyle = new MessageViewer::GrantleeHeaderStyle;
   return grantleeStyle;
-}
-
-
-QString HeaderStyle::dateStr(const KDateTime &dateTime)
-{
-  const time_t unixTime = dateTime.toTime_t();
-  return KMime::DateFormatter::formatDate(
-              static_cast<KMime::DateFormatter::FormatType>(
-                  MessageCore::GlobalSettings::self()->dateFormat() ),
-              unixTime, MessageCore::GlobalSettings::self()->customDateFormat() );
-}
-
-QString HeaderStyle::dateShortStr(const KDateTime &dateTime)
-{
-  return KGlobal::locale()->formatDateTime( dateTime, KLocale::FancyShortDate );
 }
 
 }

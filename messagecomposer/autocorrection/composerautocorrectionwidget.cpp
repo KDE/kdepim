@@ -88,6 +88,7 @@ ComposerAutoCorrectionWidget::ComposerAutoCorrectionWidget(QWidget *parent) :
     connect(ui->twoUpperLetterList,SIGNAL(itemSelectionChanged()),SLOT(slotEnableDisableTwoUpperEntry()));
     connect(ui->twoUpperLetterList,SIGNAL(deleteSelectedItems()),SLOT(removeTwoUpperLetterEntry()));
     connect(ui->autocorrectionLanguage,SIGNAL(activated(int)),SLOT(changeLanguage(int)));
+    connect(ui->addNonBreakingSpaceInFrench,SIGNAL(clicked()),SIGNAL(changed()));
     slotEnableDisableAbreviationList();
     slotEnableDisableTwoUpperEntry();
 

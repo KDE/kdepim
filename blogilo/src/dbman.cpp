@@ -61,10 +61,10 @@ DBMan::DBMan()
     d->mWallet = KWallet::Wallet::openWallet( KWallet::Wallet::LocalWallet(), 0 );
     if ( d->mWallet ) {
         d->useWallet = true;
-        if ( !d->mWallet->setFolder( QLatin1String("blogilo") ) ) {
+        if ( !d->mWallet->hasFolder( QLatin1String("blogilo") ) ) {
             d->mWallet->createFolder( QLatin1String("blogilo") );
-            d->mWallet->setFolder( QLatin1String("blogilo") );
         }
+        d->mWallet->setFolder( QLatin1String("blogilo") );
         kDebug() << "Wallet successfully opened.";
     } else {
         d->useWallet = false;

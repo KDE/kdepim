@@ -26,6 +26,7 @@
 #include "viewer.h"
 #include "objecttreeemptysource.h"
 #include "objecttreeviewersource.h"
+#include "messagedisplayformatattribute.h"
 
 #ifdef MESSAGEVIEWER_READER_HTML_DEBUG
 #include "filehtmlwriter.h"
@@ -99,6 +100,7 @@
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/kmime/messagestatus.h>
 #include <akonadi/kmime/specialmailcollections.h>
+#include <akonadi/attributefactory.h>
 #include <kleo/specialjob.h>
 
 #include "chiasmuskeyselector.h"
@@ -151,6 +153,7 @@ using namespace MessageCore;
 const int ViewerPrivate::delay = 150;
 const qreal ViewerPrivate::zoomBy = 20;
 
+static QAtomicInt _k_attributeInitialized;
 
 ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
                               KActionCollection *actionCollection )
@@ -204,6 +207,10 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
     mPreviouslyViewedItem( -1 ),
     mZoomFactor( 100 )
 {
+ if ( _k_attributeInitialized.testAndSetAcquire( 0, 1 ) ) {
+   Akonadi::AttributeFactory::registerAttribute<MessageViewer::MessageDisplayFormatAttribute>();
+  }
+
   if ( !mainWindow )
     mMainWindow = aParent;
 
@@ -241,6 +248,7 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
   Akonadi::ItemFetchScope fs;
   fs.fetchFullPayload();
   fs.fetchAttribute<MailTransport::ErrorAttribute>();
+  fs.fetchAttribute<MessageViewer::MessageDisplayFormatAttribute>();
   mMonitor.setItemFetchScope( fs );
   connect( &mMonitor, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)),
            this, SLOT(slotItemChanged(Akonadi::Item,QSet<QByteArray>)) );
@@ -821,6 +829,21 @@ void ViewerPrivate::displayMessage()
   showHideMimeTree();
 
   mNodeHelper->setOverrideCodec( mMessage.get(), overrideCodec() );
+
+  if ( mMessageItem.hasAttribute<MessageViewer::MessageDisplayFormatAttribute>() ) {
+      const MessageViewer::MessageDisplayFormatAttribute* const attr = mMessageItem.attribute<MessageViewer::MessageDisplayFormatAttribute>();
+      setHtmlLoadExtOverride(attr->remoteContent());
+      switch(attr->messageFormat()) {
+      case Viewer::Html:
+          setHtmlOverride(true);
+          break;
+      case Viewer::Text:
+          setHtmlOverride(false);
+          break;
+      default:
+          break;
+      }
+  }
 
   htmlWriter()->begin( QString() );
   htmlWriter()->queue( mCSSHelper->htmlHead( mUseFixedFont ) );
@@ -1512,9 +1535,6 @@ void ViewerPrivate::createActions()
   ac->addAction("view_headers", headerMenu );
   headerMenu->setHelpText( i18n("Choose display style of message headers") );
 
-  connect( headerMenu, SIGNAL(triggered(bool)),
-           this, SLOT(slotCycleHeaderStyles()) );
-
   QActionGroup *group = new QActionGroup( this );
   raction = new KToggleAction( i18nc("View->headers->", "&Enterprise Headers"), this);
   ac->addAction( "view_headers_enterprise", raction );
@@ -1570,8 +1590,6 @@ void ViewerPrivate::createActions()
   KActionMenu *attachmentMenu  = new KActionMenu(i18nc("View->", "&Attachments"), this);
   ac->addAction("view_attachments", attachmentMenu );
   attachmentMenu->setHelpText( i18n("Choose display style of attachments") );
-  connect( attachmentMenu, SIGNAL(triggered(bool)),
-           this, SLOT(slotCycleAttachmentStrategy()) );
 
   group = new QActionGroup( this );
   raction  = new KToggleAction(i18nc("View->attachments->", "&As Icons"), this);
@@ -1693,6 +1711,14 @@ void ViewerPrivate::createActions()
   connect(mSaveMessageAction, SIGNAL(triggered(bool)), SLOT(slotSaveMessage()));
   //Laurent: conflict with kmail shortcut
   //mSaveMessageAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_S));
+
+  mSaveMessageDisplayFormat = new KAction( i18n("&Save Display Format"), this);
+  ac->addAction("save_message_display_format", mSaveMessageDisplayFormat );
+  connect(mSaveMessageDisplayFormat, SIGNAL(triggered(bool)), SLOT(slotSaveMessageDisplayFormat()));
+
+  mResetMessageDisplayFormat = new KAction( i18n("&Reset Display Format"), this);
+  ac->addAction("reset_message_display_format", mResetMessageDisplayFormat );
+  connect(mResetMessageDisplayFormat, SIGNAL(triggered(bool)), SLOT(slotResetMessageDisplayFormat()));
 
   //
   // Scroll actions
@@ -1831,7 +1857,8 @@ void ViewerPrivate::showContextMenu( KMime::Content* content, const QPoint &pos 
 }
 
 
-KToggleAction *ViewerPrivate::actionForHeaderStyle( const HeaderStyle * style, const HeaderStrategy * strategy ) {
+KToggleAction *ViewerPrivate::actionForHeaderStyle( const HeaderStyle * style, const HeaderStrategy * strategy )
+{
   if ( !mActionCollection )
     return 0;
   const char * actionName = 0;
@@ -1857,7 +1884,8 @@ KToggleAction *ViewerPrivate::actionForHeaderStyle( const HeaderStyle * style, c
     return 0;
 }
 
-KToggleAction *ViewerPrivate::actionForAttachmentStrategy( const AttachmentStrategy * as ) {
+KToggleAction *ViewerPrivate::actionForAttachmentStrategy( const AttachmentStrategy * as )
+{
   if ( !mActionCollection )
     return 0;
   const char * actionName = 0;
@@ -2230,42 +2258,6 @@ void ViewerPrivate::slotMimePartSelected( const QModelIndex &index )
   }
 }
 
-
-void ViewerPrivate::slotCycleHeaderStyles() {
-  const HeaderStrategy * strategy = headerStrategy();
-  const HeaderStyle * style = headerStyle();
-
-  const char * actionName = 0;
-  if ( style == HeaderStyle::enterprise() ) {
-    slotFancyHeaders();
-    actionName = "view_headers_fancy";
-  } else if ( style == HeaderStyle::fancy() ) {
-    slotBriefHeaders();
-    actionName = "view_headers_brief";
-  } else if ( style == HeaderStyle::brief() ) {
-    slotStandardHeaders();
-    actionName = "view_headers_standard";
-  } else if ( style == HeaderStyle::plain() ) {
-    if ( strategy == HeaderStrategy::standard() ) {
-      slotLongHeaders();
-      actionName = "view_headers_long";
-    } else if ( strategy == HeaderStrategy::rich() ) {
-      slotAllHeaders();
-      actionName = "view_headers_all";
-    } else if ( strategy == HeaderStrategy::all() ) {
-      slotEnterpriseHeaders();
-      actionName = "view_headers_enterprise";
-    }
-  } else if ( strategy == HeaderStrategy::custom() ) {
-      slotCustomHeaders();
-      actionName = "view_custom_headers";
-  }
-
-  if ( actionName )
-    static_cast<KToggleAction*>( mActionCollection->action( actionName ) )->setChecked( true );
-}
-
-
 void ViewerPrivate::slotBriefHeaders()
 {
   setHeaderStyleAndStrategy( HeaderStyle::brief(),
@@ -2312,15 +2304,6 @@ void ViewerPrivate::slotCustomHeaders()
   setHeaderStyleAndStrategy( HeaderStyle::custom(),
                              HeaderStrategy::custom(), true );
 }
-
-void ViewerPrivate::slotCycleAttachmentStrategy()
-{
-  setAttachmentStrategy( attachmentStrategy()->next() );
-  KToggleAction * action = actionForAttachmentStrategy( attachmentStrategy() );
-  assert( action );
-  action->setChecked( true );
-}
-
 
 void ViewerPrivate::slotIconicAttachments()
 {
@@ -3179,5 +3162,31 @@ void ViewerPrivate::slotToggleCaretBrowsing(bool toggle)
 Q_UNUSED( toggle );
 }
 
+void ViewerPrivate::slotSaveMessageDisplayFormat()
+{
+    if (mMessageItem.isValid()) {
+        MessageViewer::MessageDisplayFormatAttribute *attr  = mMessageItem.attribute<MessageViewer::MessageDisplayFormatAttribute>( Akonadi::Entity::AddIfMissing );
+        attr->setRemoteContent(htmlLoadExtOverride());
+        if (htmlOverride())
+            attr->setMessageFormat(Viewer::Html);
+        else
+            attr->setMessageFormat(Viewer::Text);
+        Akonadi::ItemModifyJob *modify = new Akonadi::ItemModifyJob( mMessageItem );
+        modify->setIgnorePayload( true );
+        modify->disableRevisionCheck();
+    }
+}
+
+void ViewerPrivate::slotResetMessageDisplayFormat()
+{
+    if (mMessageItem.isValid()) {
+        if (mMessageItem.hasAttribute<MessageViewer::MessageDisplayFormatAttribute>()) {
+            mMessageItem.removeAttribute<MessageViewer::MessageDisplayFormatAttribute>();
+            Akonadi::ItemModifyJob *modify = new Akonadi::ItemModifyJob( mMessageItem );
+            modify->setIgnorePayload( true );
+            modify->disableRevisionCheck();
+        }
+    }
+}
 
 #include "viewer_p.moc"

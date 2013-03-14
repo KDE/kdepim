@@ -117,6 +117,12 @@ public:
      */
     ComposerView *view() const;
 
+    /**
+     * @brief localImage
+     * @return a list of "<name>, <path>"
+     */
+    QMap<QString, QString> localImages() const;
+
 public Q_SLOTS:
     void setEnableRichText(bool richTextEnabled);
     void paste();

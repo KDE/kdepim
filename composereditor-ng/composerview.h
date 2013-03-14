@@ -110,6 +110,8 @@ public:
      */
     void evaluateJavascript( const QString& javascript);
 
+    QMap<QString, QString> localImages() const;
+
 protected:
     void contextMenuEvent(QContextMenuEvent* event);
     void mousePressEvent(QMouseEvent * event);

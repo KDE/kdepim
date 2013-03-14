@@ -19,27 +19,57 @@
 */
 
 #include "activitymanager.h"
-#include <kactivities/consumer.h>
 
 #include <QDebug>
 
 namespace PimActivity {
+
+class ActivityManagerPrivate
+{
+public:
+    ActivityManagerPrivate(ActivityManager *qq)
+        : q(qq)
+    {
+        consumer = new KActivities::Consumer;
+        q->connect(consumer,SIGNAL(serviceStatusChanged(KActivities::Consumer::ServiceStatus)),q,SIGNAL(serviceStatusChanged(KActivities::Consumer::ServiceStatus)));
+        q->connect(consumer,SIGNAL(activityAdded(QString)),q,SIGNAL(activityAdded(QString)));
+        q->connect(consumer,SIGNAL(activityRemoved(QString)),q,SIGNAL(activityRemoved(QString)));
+    }
+    ~ActivityManagerPrivate()
+    {
+        delete consumer;
+    }
+
+    ActivityManager *q;
+    KActivities::Consumer *consumer;
+
+};
+
 ActivityManager::ActivityManager(QObject *parent)
-    : QObject(parent)
+    : QObject(parent), d(new ActivityManagerPrivate(this))
 {
     if (KActivities::Consumer::serviceStatus() == KActivities::Consumer::NotRunning)  {
         qDebug()<<" kactivities is not running";
     }
 
-    mConsumer = new KActivities::Consumer;
-    const QStringList lst = mConsumer->listActivities();
-    qDebug()<< "list activities : "<<lst;
-
 }
 
 ActivityManager::~ActivityManager()
 {
-    delete mConsumer;
+    delete d;
+}
+
+bool ActivityManager::isActive() const
+{
+    return (KActivities::Consumer::serviceStatus() == KActivities::Consumer::Running);
+}
+
+QStringList ActivityManager::listActivities() const
+{
+    if (isActive()) {
+        return d->consumer->listActivities();
+    }
+    return QStringList();
 }
 
 }

@@ -30,34 +30,34 @@ class QButtonGroup;
 namespace MessageComposer {
 class MESSAGECOMPOSER_EXPORT ImageScalingWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit ImageScalingWidget(QWidget *parent = 0);
-  ~ImageScalingWidget();
+    explicit ImageScalingWidget(QWidget *parent = 0);
+    ~ImageScalingWidget();
 
-  void loadConfig();
-  void writeConfig();
-  void resetToDefault();
+    void loadConfig();
+    void writeConfig();
+    void resetToDefault();
 
 Q_SIGNALS:
-  void changed();
+    void changed();
 
 private Q_SLOTS:
-  void slotComboboxChanged(int index);
-  void slotSourceFilterClicked(int);
-  void slotRecipientFilterClicked(int);
-  void slotHelpLinkClicked(const QString&);
+    void slotComboboxChanged(int index);
+    void slotSourceFilterClicked(int);
+    void slotRecipientFilterClicked(int);
+    void slotHelpLinkClicked(const QString&);
 
 private:
-  void updateFilterSourceTypeSettings();
-  void initComboBox(KComboBox *combo);
-  void initWriteImageFormat();
-  void updateEmailsFilterTypeSettings();
-  void updateSettings();
-  Ui::ImageScalingWidget *ui;
-  QButtonGroup *mSourceFilenameFilterGroup;
-  QButtonGroup *mRecipientFilterGroup;
-  bool mWasChanged;
+    void updateFilterSourceTypeSettings();
+    void initComboBox(KComboBox *combo);
+    void initWriteImageFormat();
+    void updateEmailsFilterTypeSettings();
+    void updateSettings();
+    Ui::ImageScalingWidget *ui;
+    QButtonGroup *mSourceFilenameFilterGroup;
+    QButtonGroup *mRecipientFilterGroup;
+    bool mWasChanged;
 };
 }
 

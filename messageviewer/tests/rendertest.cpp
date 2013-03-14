@@ -27,6 +27,15 @@
 #include <QDir>
 #include <QObject>
 
+// This is used to override the default message output handler. In unit tests, the special message
+// output handler can write messages to stdout delayed, i.e. after the actual kDebug() call. This
+// interfers with KPGP, since KPGP reads output from stdout, which needs to be kept clean.
+void nullMessageOutput( QtMsgType type, const char *msg )
+{
+  Q_UNUSED( type );
+  Q_UNUSED( msg );
+}
+
 using namespace MessageViewer;
 
 class RenderTest : public QObject
@@ -73,11 +82,16 @@ class RenderTest : public QObject
       CSSHelper cssHelper( &paintDevice );
       NodeHelper nodeHelper;
       MessageCore::Test::TestObjectTreeSource testSource( &fileWriter, &cssHelper );
+      testSource.setAllowDecryption( true );
       ObjectTreeParser otp( &testSource, &nodeHelper );
 
       fileWriter.begin( QString() );
       fileWriter.queue( cssHelper.htmlHead( false ) );
+
+      qInstallMsgHandler( nullMessageOutput );
       otp.parseObjectTree( msg.get() );
+      qInstallMsgHandler( 0 );
+
       fileWriter.queue("</body></html>");
       fileWriter.flush();
       fileWriter.end();
@@ -114,11 +128,6 @@ class RenderTest : public QObject
       proc.setProcessChannelMode( QProcess::ForwardedChannels );
       proc.start( "diff", args );
       QVERIFY( proc.waitForFinished() );
-
-      QEXPECT_FAIL( "forward-openpgp-signed-encrypted.mbox", "Signature verification is currently broken in the testsetup", Continue );
-      QEXPECT_FAIL( "openpgp-signed-encrypted.mbox", "Signature verification is currently broken in the testsetup", Continue );
-      QEXPECT_FAIL( "signed-forward-openpgp-signed-encrypted.mbox", "Signature verification is currently broken in the testsetup", Continue );
-      QEXPECT_FAIL( "smime-signed-encrypted.mbox", "Signature verification is currently broken in the testsetup", Continue );
 
       QCOMPARE( proc.exitCode(), 0 );
     }

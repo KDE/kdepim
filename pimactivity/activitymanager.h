@@ -22,22 +22,31 @@
 #define ACTIVITYMANAGER_H
 
 #include "pimactivity_export.h"
+#include <kactivities/consumer.h>
 
 #include <QObject>
 
-namespace KActivities {
-class Consumer;
-}
-
 namespace PimActivity {
+class ActivityManagerPrivate;
 class PIMACTIVITY_EXPORT ActivityManager : public QObject
 {
     Q_OBJECT
 public:
     explicit ActivityManager(QObject *parent = 0);
     ~ActivityManager();
+
+    bool isActive() const;
+
+    QStringList listActivities() const;
+
+Q_SIGNALS:
+    void serviceStatusChanged(KActivities::Consumer::ServiceStatus);
+    void activityAdded(const QString&);
+    void activityRemoved(const QString&);
+
 private:
-    KActivities::Consumer *mConsumer;
+    friend class ActivityManagerPrivate;
+    ActivityManagerPrivate * const d;
 };
 }
 

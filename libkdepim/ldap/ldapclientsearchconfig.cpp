@@ -112,10 +112,10 @@ void LdapClientSearchConfig::readConfig( KLDAP::LdapServer &server, KConfigGroup
             d->wallet = KWallet::Wallet::openWallet( KWallet::Wallet::LocalWallet(), 0 );
             if ( d->wallet ) {
                 d->useWallet = true;
-                if ( !d->wallet->setFolder( QLatin1String("ldapclient") ) ) {
+                if ( !d->wallet->hasFolder( QLatin1String("ldapclient") ) ) {
                     d->wallet->createFolder( QLatin1String("ldapclient") );
-                    d->wallet->setFolder( QLatin1String("ldapclient") );
                 }
+                d->wallet->setFolder( QLatin1String("ldapclient") );
                 d->wallet->writePassword(pwdBindBNEntry, pwdBindDN );
                 config.deleteEntry(pwdBindBNEntry);
                 config.sync();

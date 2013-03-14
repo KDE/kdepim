@@ -15,29 +15,29 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#ifndef GRANTLEEHEADERFORMATTER_H
+#define GRANTLEEHEADERFORMATTER_H
 
-#ifndef GRANTLEEHEADERSTYLE_H
-#define GRANTLEEHEADERSTYLE_H
+#include <QString>
 
-#include "headerstyle.h"
+namespace KMime {
+class Message;
+}
 
 namespace MessageViewer {
-class GrantleeHeaderFormatter;
-
-class GrantleeHeaderStyle : public HeaderStyle {
-    friend class HeaderStyle;
-protected:
-    GrantleeHeaderStyle();
-    ~GrantleeHeaderStyle();
-
+class HeaderStrategy;
+class GrantleeHeaderFormatter
+{
 public:
-    const char * name() const { return "grantlee"; }
+    explicit GrantleeHeaderFormatter();
+    ~GrantleeHeaderFormatter();
 
-    QString format( KMime::Message *message ) const;
+    QString toHtml(const QString &theme, bool isPrinting, const HeaderStrategy *strategy, KMime::Message *message) const;
 
 private:
-    QString formatAllMessageHeaders(KMime::Message *message , const QStringList &headersToHide) const;
-    GrantleeHeaderFormatter *mGrantleeFormatter;
+    class Private;
+    Private *const d;
 };
 }
-#endif // GRANTLEEHEADERSTYLE_H
+
+#endif // GRANTLEEHEADERFORMATTER_H

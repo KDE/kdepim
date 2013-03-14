@@ -203,6 +203,11 @@ QList<KToolBar *> ComposerEditor::toolbars() const
     return d->listToolBar;
 }
 
+QMap<QString, QString> ComposerEditor::localImages() const
+{
+    return d->view->localImages();
+}
+
 }
 
 #include "composereditor.moc"

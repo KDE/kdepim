@@ -146,6 +146,8 @@ public:
   KAction *viewSourceAction();
   KAction *findInMessageAction();
   KAction *saveAsAction();
+  KAction *saveMessageDisplayFormatAction();
+  KAction *resetMessageDisplayFormatAction();
 
   KAction* editContactAction() const { return mEditContactAction; }
 

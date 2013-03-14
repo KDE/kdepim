@@ -35,63 +35,63 @@ class ImportCalendarPage;
 class AbstractImporter;
 
 class ImportWizard : public KAssistantDialog {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit ImportWizard( QWidget* parent=0);
-  ~ImportWizard();
+    explicit ImportWizard( QWidget* parent=0);
+    ~ImportWizard();
 
-  void next();
-  void reject();
-  void back();
-  
-  ImportMailPage* importMailPage() const;
-  ImportFilterPage* importFilterPage() const;
-  ImportAddressbookPage *importAddressBookPage() const;
-  ImportSettingPage *importSettingPage() const;
-  ImportFinishPage *importFinishPage() const;
-  ImportCalendarPage *importCalendarPage() const;
+    void next();
+    void reject();
+    void back();
 
-  void addFinishInfo( const QString& log );
-  void addFinishError( const QString& log );
+    ImportMailPage* importMailPage() const;
+    ImportFilterPage* importFilterPage() const;
+    ImportAddressbookPage *importAddressBookPage() const;
+    ImportSettingPage *importSettingPage() const;
+    ImportFinishPage *importFinishPage() const;
+    ImportCalendarPage *importCalendarPage() const;
+
+    void addFinishInfo( const QString& log );
+    void addFinishError( const QString& log );
 
 private Q_SLOTS:
-  void help();
-  void slotProgramSelected(const QString& program);
-  void slotImportMailsClicked();
-  void slotImportFiltersClicked();
-  void slotProgramDoubleClicked();
-  void slotAtLeastOneComponentSelected( bool b );
-  void slotImportSettingsClicked();
-  void slotImportAddressbookClicked();
-  void slotImportCalendarClicked();
+    void help();
+    void slotProgramSelected(const QString& program);
+    void slotImportMailsClicked();
+    void slotImportFiltersClicked();
+    void slotProgramDoubleClicked();
+    void slotAtLeastOneComponentSelected( bool b );
+    void slotImportSettingsClicked();
+    void slotImportAddressbookClicked();
+    void slotImportCalendarClicked();
 
 private:
-  void addImportModule(AbstractImporter *);
-  void checkModules();
-  void setAppropriatePage(AbstractImporter::TypeSupportedOptions options);
-  void enableAllImportButton();
+    void addImportModule(AbstractImporter *);
+    void checkModules();
+    void setAppropriatePage(AbstractImporter::TypeSupportedOptions options);
+    void enableAllImportButton();
 
-  QMap<QString, AbstractImporter*> mlistImport;
+    QMap<QString, AbstractImporter*> mlistImport;
 
-  AbstractImporter *mSelectedPim;
-  
-  KPageWidgetItem *mPage1;
-  KPageWidgetItem *mPage2;
-  KPageWidgetItem *mPage3;
-  KPageWidgetItem *mPage4;
-  KPageWidgetItem *mPage5;
-  KPageWidgetItem *mPage6;
-  KPageWidgetItem *mPage7;
-  KPageWidgetItem *mPage8;
+    AbstractImporter *mSelectedPim;
 
-  SelectProgramPage *mSelectProgramPage;
-  SelectComponentPage *mSelectComponentPage;
-  ImportMailPage *mImportMailPage;
-  ImportFilterPage *mImportFilterPage;
-  ImportSettingPage *mImportSettingPage;
-  ImportAddressbookPage *mImportAddressbookPage;
-  ImportFinishPage *mImportFinishPage;
-  ImportCalendarPage *mImportCalendarPage;
+    KPageWidgetItem *mPage1;
+    KPageWidgetItem *mPage2;
+    KPageWidgetItem *mPage3;
+    KPageWidgetItem *mPage4;
+    KPageWidgetItem *mPage5;
+    KPageWidgetItem *mPage6;
+    KPageWidgetItem *mPage7;
+    KPageWidgetItem *mPage8;
+
+    SelectProgramPage *mSelectProgramPage;
+    SelectComponentPage *mSelectComponentPage;
+    ImportMailPage *mImportMailPage;
+    ImportFilterPage *mImportFilterPage;
+    ImportSettingPage *mImportSettingPage;
+    ImportAddressbookPage *mImportAddressbookPage;
+    ImportFinishPage *mImportFinishPage;
+    ImportCalendarPage *mImportCalendarPage;
 };
 
 #endif /* IMPORTWIZARD_H */

@@ -3086,6 +3086,10 @@ void KMMainWidget::showMessagePopup(const Akonadi::Item&msg ,const KUrl&url,cons
     }
     menu->addSeparator();
     menu->addAction( mMsgActions->createTodoAction() );
+    menu->addSeparator();
+    menu->addAction( mMsgView->saveMessageDisplayFormatAction() );
+    menu->addAction( mMsgView->resetMessageDisplayFormatAction() );
+    menu->addSeparator();
     menu->addAction( mMsgActions->annotateAction() );
 
   }

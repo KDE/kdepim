@@ -70,7 +70,9 @@ void TrojitaSettings::readImapAccount()
     }
 
     if (settings->contains(QLatin1String("imap.auth.pass"))) {
-        //Store in kwallet. Need to do it.
+        const QString password = settings->value(QLatin1String("imap.auth.pass")).toString();
+        if (!password.isEmpty())
+            newSettings.insert( QLatin1String( "Password" ), password );
     }
 
     if (settings->contains(QLatin1String("imap.process"))) {
@@ -166,7 +168,7 @@ void TrojitaSettings::readIdentity()
             signature.setText( signatureStr );
             identity->setSignature( signature );
         }
-        qDebug()<<" realName :"<<realName<<" address : "<<address<<" organisation : "<<organisation<<" signature: "<<signatureStr;
+        kDebug()<<" realName :"<<realName<<" address : "<<address<<" organisation : "<<organisation<<" signature: "<<signatureStr;
         storeIdentity(identity);
     }
     settings->endArray();

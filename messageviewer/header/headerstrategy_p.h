@@ -82,8 +82,6 @@ protected:
 
 public:
   const char * name() const { return "all"; }
-  const HeaderStrategy * next() const { return rich(); }
-  const HeaderStrategy * prev() const { return custom(); }
 
   DefaultPolicy defaultPolicy() const { return Display; }
 
@@ -107,8 +105,6 @@ protected:
 
 public:
   const char * name() const { return "rich"; }
-  const HeaderStrategy * next() const { return standard(); }
-  const HeaderStrategy * prev() const { return all(); }
 
   QStringList headersToDisplay() const { return mHeadersToDisplay; }
   DefaultPolicy defaultPolicy() const { return Hide; }
@@ -132,8 +128,6 @@ protected:
 
 public:
   const char * name() const { return "standard"; }
-  const HeaderStrategy * next() const { return brief(); }
-  const HeaderStrategy * prev() const { return rich(); }
 
   QStringList headersToDisplay() const { return mHeadersToDisplay; }
   DefaultPolicy defaultPolicy() const { return Hide; }
@@ -157,8 +151,6 @@ protected:
 
 public:
   const char * name() const { return "brief"; }
-  const HeaderStrategy * next() const { return custom(); }
-  const HeaderStrategy * prev() const { return standard(); }
 
   QStringList headersToDisplay() const { return mHeadersToDisplay; }
   DefaultPolicy defaultPolicy() const { return Hide; }
@@ -181,8 +173,6 @@ protected:
 
 public:
   const char * name() const { return "custom"; }
-  const HeaderStrategy * next() const { return all(); }
-  const HeaderStrategy * prev() const { return brief(); }
 
   void loadConfig();
   QStringList headersToDisplay() const { return mHeadersToDisplay; }
@@ -207,8 +197,6 @@ protected:
 
 public:
   const char * name() const { return "grantlee"; }
-  const HeaderStrategy * next() const { return all(); }
-  const HeaderStrategy * prev() const { return brief(); }
 
   void loadConfig();
   QStringList headersToDisplay() const { return mHeadersToDisplay; }
@@ -220,8 +208,6 @@ private:
   QStringList mHeadersToHide;
   DefaultPolicy mDefaultPolicy;
 };
-
-
 
 }
 
