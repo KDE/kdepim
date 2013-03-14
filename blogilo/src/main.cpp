@@ -51,6 +51,7 @@ int main( int argc, char *argv[] )
 
     KUniqueApplication app;
     global_init();
+    KGlobal::locale()->insertCatalog("libkblog");
 
     MainWindow *bilbo = new MainWindow;
 //     bilbo->setAttribute(Qt::WA_DeleteOnClose, false);
