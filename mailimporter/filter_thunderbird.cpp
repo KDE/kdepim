@@ -22,6 +22,7 @@
 #include <ktemporaryfile.h>
 #include <KConfig>
 #include <QFile>
+#include <QPointer>
 
 using namespace MailImporter;
 
@@ -117,12 +118,13 @@ void FilterThunderbird::import()
     thunderDir = QDir::homePath();
   }
 
-  KFileDialog *kfd = new KFileDialog( thunderDir, "", 0 );
+  QPointer<KFileDialog> kfd = new KFileDialog( thunderDir, "", 0 );
   kfd->setMode(KFile::Directory | KFile::LocalOnly);
-  kfd->exec();
-  const QString maildir = kfd->selectedFile();
+  if (kfd->exec()) {
+      const QString maildir = kfd->selectedFile();
+      importMails( maildir );
+  }
   delete kfd;
-  importMails( maildir );
 }
 
 bool FilterThunderbird::excludeFiles( const QString & file )

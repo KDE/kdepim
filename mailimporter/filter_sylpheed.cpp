@@ -23,6 +23,7 @@
 #include <kdebug.h>
 #include <QDomDocument>
 #include <QDomElement>
+#include <QPointer>
 
 using namespace MailImporter;
 
@@ -88,12 +89,13 @@ void FilterSylpheed::import()
   if ( homeDir.isEmpty() )
     homeDir = QDir::homePath();
 
-  KFileDialog *kfd = new KFileDialog( homeDir, "", 0 );
+  QPointer<KFileDialog> kfd = new KFileDialog( homeDir, "", 0 );
   kfd->setMode( KFile::Directory | KFile::LocalOnly );
-  kfd->exec();
-  const QString maildir = kfd->selectedFile();
+  if (kfd->exec()) {
+      const QString maildir = kfd->selectedFile();
+      importMails( maildir );
+  }
   delete kfd;
-  importMails( maildir );
 }
 
 void FilterSylpheed::processDirectory( const QString& path)

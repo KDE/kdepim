@@ -20,6 +20,7 @@
 #include <klocale.h>
 #include <kfiledialog.h>
 #include <ktemporaryfile.h>
+#include <QPointer>
 
 using namespace MailImporter;
 
@@ -61,12 +62,13 @@ void FilterEvolution_v2::import()
     evolDir = QDir::homePath();
   }
 
-  KFileDialog *kfd = new KFileDialog( evolDir, "", 0 );
+  QPointer<KFileDialog> kfd = new KFileDialog( evolDir, "", 0 );
   kfd->setMode(KFile::Directory | KFile::LocalOnly);
-  kfd->exec();
-  const QString dir = kfd->selectedFile();
+  if (kfd->exec()) {
+      const QString dir = kfd->selectedFile();
+      importMails( dir );
+  }
   delete kfd;
-  importMails( dir );
 }
 
 bool FilterEvolution_v2::excludeFiles(const QString& file)
