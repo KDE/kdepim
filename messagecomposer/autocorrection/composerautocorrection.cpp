@@ -506,7 +506,7 @@ void ComposerAutoCorrection::uppercaseFirstCharOfSentence()
 
     int position = mCursor.selectionEnd();
 
-    QString text = mCursor.selectedText();
+    const QString text = mCursor.selectedText();
 
     if (text.isEmpty()) {// start of a paragraph
         mWord.replace(0, 1, mWord.at(0).toUpper());
@@ -526,16 +526,21 @@ void ComposerAutoCorrection::uppercaseFirstCharOfSentence()
                     position--;
                     constIter--;
                 }
-                bool replace = true;
                 selectWord(mCursor, --position);
-                QString prevWord = mCursor.selectedText();
+                const QString prevWord = mCursor.selectedText();
 
                 // search for exception
                 if (mUpperCaseExceptions.contains(prevWord.trimmed()))
-                    replace = false;
+                    break;
+                if (prevWord.startsWith(QLatin1String("http://")) ||
+                        prevWord.startsWith(QLatin1String("ftp://")) ||
+                        prevWord.startsWith(QLatin1String("https://")) ||
+                        prevWord.startsWith(QLatin1String("ftps://")) ||
+                        prevWord.startsWith(QLatin1String("www.")) ||
+                        prevWord.startsWith(QLatin1String("mailto:")) )
+                    break;
 
-                if (replace)
-                    mWord.replace(0, 1, mWord.at(0).toUpper());
+                mWord.replace(0, 1, mWord.at(0).toUpper());
                 break;
             } else {
                 break;
@@ -687,8 +692,7 @@ void ComposerAutoCorrection::replaceTypographicQuotes()
                     *iter = mTypographicDoubleQuotes.begin;
                 else
                     *iter = mTypographicDoubleQuotes.end;
-            }
-            else if (mReplaceSingleQuotes) {
+            } else if (mReplaceSingleQuotes) {
                 if (!ending)
                     *iter = mTypographicSingleQuotes.begin;
                 else
