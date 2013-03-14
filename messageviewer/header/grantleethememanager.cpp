@@ -17,7 +17,10 @@
 
 #include "grantleethememanager.h"
 
+#include <KDirWatch>
+
 #include <QMap>
+
 
 using namespace MessageViewer;
 
@@ -28,10 +31,19 @@ public:
         : themePath(path),
           q(qq)
     {
-
+        watch = new KDirWatch( q );
+        q->connect( watch, SIGNAL(dirty(QString)), SLOT(directoryChanged()) );
     }
+
+    void directoryChanged()
+    {
+        themes.clear();
+        //TODO
+    }
+
     QMap<QString, QString> themes;
     QString themePath;
+    KDirWatch *watch;
     GrantleeThemeManager *q;
 };
 

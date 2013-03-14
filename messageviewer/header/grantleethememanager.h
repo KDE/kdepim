@@ -28,6 +28,7 @@ public:
     explicit GrantleeThemeManager(const QString &path, QObject *parent = 0);
     ~GrantleeThemeManager();
 private:
+    Q_PRIVATE_SLOT( d, void directoryChanged() )
     class Private;
     Private *const d;
 };
