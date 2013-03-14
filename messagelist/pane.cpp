@@ -945,8 +945,6 @@ void Pane::focusView()
 void Pane::reloadGlobalConfiguration()
 {
   d->updateTabControls();
-
-  Core::Settings::self()->writeConfig();
 }
 
 QItemSelectionModel* Pane::currentItemSelectionModel()
