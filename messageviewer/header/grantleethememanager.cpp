@@ -16,10 +16,15 @@
 */
 
 #include "grantleethememanager.h"
+#include "grantleetheme.h"
 
 #include <KDirWatch>
+#include <KConfigGroup>
+#include <KConfig>
 
 #include <QMap>
+#include <QDir>
+#include <QDirIterator>
 
 
 using namespace MessageViewer;
@@ -28,7 +33,7 @@ class GrantleeThemeManager::Private
 {
 public:
     Private(const QString &path, GrantleeThemeManager *qq)
-        : themePath(path),
+        : themesPath(path),
           q(qq)
     {
         watch = new KDirWatch( q );
@@ -37,12 +42,51 @@ public:
 
     void directoryChanged()
     {
-        themes.clear();
-        //TODO
+        setThemesPath( themesPath );
     }
 
-    QMap<QString, QString> themes;
-    QString themePath;
+    void setThemesPath(const QString& path)
+    {
+        if ( !themesPath.isEmpty() ) {
+            watch->stopScan();
+            watch->removeDir( themesPath );
+        }
+
+        // clear all previous theme information
+        themes.clear();
+        if ( path.isEmpty() ) {
+            return;
+        }
+
+        themesPath = path;
+
+        QDirIterator dirIt( themesPath, QStringList(), QDir::AllDirs | QDir::NoDotAndDotDot );
+        while ( dirIt.hasNext() ) {
+            dirIt.next();
+            const GrantleeTheme theme = loadTheme( dirIt.filePath() );
+
+            themes.insert( dirIt.fileName(), theme );
+        }
+
+        watch->addDir( themesPath );
+        watch->startScan();
+    }
+
+    GrantleeTheme loadTheme(const QString &themePath )
+    {
+        const QString themeInfoFile = themePath + QDir::separator() + QString::fromLatin1( "header.desktop" );
+        KConfig config( themeInfoFile );
+        KConfigGroup group( &config, QLatin1String( "Desktop Entry" ) );
+
+        GrantleeTheme theme;
+        theme.setName( group.readEntry( "Name", QString() ) );
+        theme.setDescription( group.readEntry( "Description", QString() ) );
+        theme.setFilename( themePath );
+        return theme;
+    }
+
+    QMap<QString, GrantleeTheme> themes;
+    QString themesPath;
     KDirWatch *watch;
     GrantleeThemeManager *q;
 };

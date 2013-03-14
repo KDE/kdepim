@@ -99,6 +99,7 @@ set(libmessageviewer_SRCS
   customheadersettingwidget.cpp
   header/grantleeheaderformatter.cpp
   header/grantleethememanager.cpp
+  header/grantleetheme.cpp
   messagedisplayformatattribute.cpp
   ${_mailwebview_cpp}
 )
