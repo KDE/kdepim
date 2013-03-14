@@ -45,3 +45,5 @@ GrantleeThemeManager::~GrantleeThemeManager()
     delete d;
 }
 
+
+#include "grantleethememanager.moc"
