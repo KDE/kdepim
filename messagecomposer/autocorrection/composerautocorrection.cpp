@@ -584,10 +584,10 @@ void ComposerAutoCorrection::advancedAutocorrect()
     if (!mAdvancedAutocorrect)
         return;
 
-    int startPos = mCursor.selectionStart();
-    int length = mWord.length();
+    const int startPos = mCursor.selectionStart();
+    const int length = mWord.length();
 
-    QString trimmedWord = mWord.toLower().trimmed();
+    const QString trimmedWord = mWord.toLower().trimmed();
     QString actualWord = trimmedWord;
 
     if (actualWord.isEmpty())
