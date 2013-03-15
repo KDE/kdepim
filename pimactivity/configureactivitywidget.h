@@ -40,7 +40,8 @@ public:
         MailTransport,
         Collection
     };
-
+    void readConfig();
+    void writeConfig();
 private:
     friend class ConfigureActivityWidgetPrivate;
     ConfigureActivityWidgetPrivate * const d;

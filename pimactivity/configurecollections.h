@@ -31,6 +31,8 @@ class ConfigureCollections : public QWidget
 public:
     explicit ConfigureCollections(QWidget *parent = 0);
     ~ConfigureCollections();
+    void readConfig();
+    void writeConfig();
 };
 }
 

@@ -30,6 +30,8 @@ class ConfigureMailtransport : public QWidget
 public:
     explicit ConfigureMailtransport(QWidget *parent = 0);
     ~ConfigureMailtransport();
+    void readConfig();
+    void writeConfig();
 };
 }
 

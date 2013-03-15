@@ -108,6 +108,17 @@ ConfigureActivityWidget::~ConfigureActivityWidget()
     delete d;
 }
 
+void ConfigureActivityWidget::readConfig()
+{
+
+}
+
+void ConfigureActivityWidget::writeConfig()
+{
+
+}
+
+
 }
 
 

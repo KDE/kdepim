@@ -29,6 +29,17 @@ ConfigureMailtransport::~ConfigureMailtransport()
 {
 }
 
+void ConfigureMailtransport::readConfig()
+{
+
+}
+
+void ConfigureMailtransport::writeConfig()
+{
+
+}
+
+
 }
 
 #include "configuremailtransport.moc"

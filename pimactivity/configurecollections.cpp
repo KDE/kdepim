@@ -31,6 +31,17 @@ ConfigureCollections::~ConfigureCollections()
 
 }
 
+void ConfigureCollections::readConfig()
+{
+
+}
+
+void ConfigureCollections::writeConfig()
+{
+
+}
+
+
 }
 
 #include "configurecollections.moc"
