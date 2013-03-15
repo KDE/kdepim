@@ -16,13 +16,11 @@
 */
 
 #include "grantleethememanager.h"
-#include "grantleetheme.h"
 
 #include <KDirWatch>
 #include <KConfigGroup>
 #include <KConfig>
 
-#include <QMap>
 #include <QDir>
 #include <QDirIterator>
 
@@ -99,6 +97,11 @@ GrantleeThemeManager::GrantleeThemeManager(const QString &path, QObject *parent)
 GrantleeThemeManager::~GrantleeThemeManager()
 {
     delete d;
+}
+
+QMap<QString, GrantleeTheme> GrantleeThemeManager::themes() const
+{
+    return d->themes;
 }
 
 

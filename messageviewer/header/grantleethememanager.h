@@ -18,7 +18,11 @@
 #ifndef GRANTLEETHEMEMANAGER_H
 #define GRANTLEETHEMEMANAGER_H
 
+#include "header/grantleetheme.h"
+
 #include <QObject>
+#include <QMap>
+
 
 namespace MessageViewer {
 class GrantleeThemeManager : public QObject
@@ -27,6 +31,8 @@ class GrantleeThemeManager : public QObject
 public:
     explicit GrantleeThemeManager(const QString &path, QObject *parent = 0);
     ~GrantleeThemeManager();
+
+    QMap<QString, GrantleeTheme> themes() const;
 private:
     Q_PRIVATE_SLOT( d, void directoryChanged() )
     class Private;
