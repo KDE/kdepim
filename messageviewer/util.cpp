@@ -513,7 +513,7 @@ bool Util::saveMessageInMbox( const QList<Akonadi::Item>& retrievedMsgs, QWidget
       if( appendMessages ) {
          KMessageBox::error( parent, i18n("File %1 could not be loaded.",localFileName) , i18n( "Error loading message" ) );
       } else {
-	 KMessageBox::error( parent, i18n("File %1 could not be created.",localFileName) , i18n( "Error saving message" ) );
+          KMessageBox::error( parent, i18n("File %1 could not be created.",localFileName) , i18n( "Error saving message" ) );
       }
       return false;
   }
