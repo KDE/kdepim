@@ -16,7 +16,7 @@
 */
 
 #include "grantleeheaderformatter.h"
-#include "headerstrategy.h"
+#include "grantleeheaderstyle.h"
 #include "headerstyle_util.h"
 #include "globalsettings.h"
 
@@ -67,7 +67,7 @@ GrantleeHeaderFormatter::~GrantleeHeaderFormatter()
     delete d;
 }
 
-QString GrantleeHeaderFormatter::toHtml(const QString &themeName, bool isPrinting, const MessageViewer::HeaderStrategy *strategy, KMime::Message *message) const
+QString GrantleeHeaderFormatter::toHtml(const QString &themeName, bool isPrinting, const MessageViewer::GrantleeHeaderStyle *style, KMime::Message *message) const
 {
     Grantlee::Template headerTemplate = d->engine->loadByName( themeName + "/header.html" );
     QString errorMessage;
@@ -124,6 +124,9 @@ QString GrantleeHeaderFormatter::toHtml(const QString &themeName, bool isPrintin
 
     if ( KMime::Headers::Base *organization = message->headerByType("Organization") )
         headerObject.insert( QLatin1String( "organization" ) , MessageViewer::HeaderStyleUtil::strToHtml(organization->asUnicodeString()) );
+
+    if ( !style->vCardName().isEmpty() )
+        headerObject.insert( QLatin1String( "vcardname" ) , style->vCardName() );
 
     QVariantHash mapping;
     mapping.insert( "header", headerObject );

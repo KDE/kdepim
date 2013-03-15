@@ -65,7 +65,7 @@ QString GrantleeHeaderStyle::format( KMime::Message *message ) const {
     if ( !strategy )
         strategy = HeaderStrategy::grantlee();
 
-    return mGrantleeFormatter->toHtml(mThemeName, isPrinting(), strategy, message);
+    return mGrantleeFormatter->toHtml(mThemeName, isPrinting(), this, message);
 }
 
 void GrantleeHeaderStyle::setThemeName(const QString &name)

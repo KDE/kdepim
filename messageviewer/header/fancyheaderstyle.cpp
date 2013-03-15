@@ -88,7 +88,7 @@ QString FancyHeaderStyle::format( KMime::Message *message ) const {
     // from a few spam filters and try to create visually meaningful graphics
     // out of the spam scores.
 
-    QString spamHTML =  MessageViewer::HeaderStyleUtil::spamStatus(message);
+    const QString spamHTML =  MessageViewer::HeaderStyleUtil::spamStatus(message);
 
     QString photoURL;
     int photoWidth = 60;
