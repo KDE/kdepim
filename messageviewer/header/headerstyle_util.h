@@ -53,6 +53,8 @@ QString dateStr(const KDateTime &dateTime);
 
 QString dateShortStr(const KDateTime &dateTime);
 
+QList<KMime::Types::Mailbox> resentFromList(KMime::Message *message);
+
 }
 }
 
