@@ -63,12 +63,6 @@ GrantleeHeaderStrategy::GrantleeHeaderStrategy()
 
 void GrantleeHeaderStrategy::loadConfig()
 {
-    //TODO
-    mHeadersToDisplay = MessageViewer::GlobalSettings::self()->headersToDisplay();
-
-    mHeadersToHide = MessageViewer::GlobalSettings::self()->headersToHide();
-
-    mDefaultPolicy = MessageViewer::GlobalSettings::self()->customHeadersDefaultPolicy() == MessageViewer::GlobalSettings::EnumCustomHeadersDefaultPolicy::Display ?  Display : Hide ;
 }
 
 

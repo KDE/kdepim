@@ -34,11 +34,8 @@ public:
     const char * name() const { return "grantlee"; }
 
     QString format( KMime::Message *message ) const;
-    void setThemeName(const QString &name);
-    QString themeName() const;
 private:
     GrantleeHeaderFormatter *mGrantleeFormatter;
-    QString mThemeName;
 };
 }
 #endif // GRANTLEEHEADERSTYLE_H

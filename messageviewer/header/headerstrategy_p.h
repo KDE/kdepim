@@ -78,7 +78,7 @@ class AllHeaderStrategy : public HeaderStrategy {
   friend class HeaderStrategy;
 protected:
   AllHeaderStrategy() : HeaderStrategy() {}
-  virtual ~AllHeaderStrategy() {}
+  ~AllHeaderStrategy() {}
 
 public:
   const char * name() const { return "all"; }
@@ -101,7 +101,7 @@ protected:
   RichHeaderStrategy()
     : HeaderStrategy(),
       mHeadersToDisplay( stringList( richHeaders, numRichHeaders ) ) {}
-  virtual ~RichHeaderStrategy() {}
+  ~RichHeaderStrategy() {}
 
 public:
   const char * name() const { return "rich"; }
@@ -124,7 +124,7 @@ protected:
   StandardHeaderStrategy()
     : HeaderStrategy(),
       mHeadersToDisplay( stringList( standardHeaders, numStandardHeaders) ) {}
-  virtual ~StandardHeaderStrategy() {}
+  ~StandardHeaderStrategy() {}
 
 public:
   const char * name() const { return "standard"; }
@@ -147,7 +147,7 @@ protected:
   BriefHeaderStrategy()
     : HeaderStrategy(),
       mHeadersToDisplay( stringList( briefHeaders, numBriefHeaders ) ) {}
-  virtual ~BriefHeaderStrategy() {}
+  ~BriefHeaderStrategy() {}
 
 public:
   const char * name() const { return "brief"; }
@@ -169,7 +169,7 @@ class CustomHeaderStrategy : public HeaderStrategy {
   friend class HeaderStrategy;
 protected:
   CustomHeaderStrategy();
-  virtual ~CustomHeaderStrategy() {}
+  ~CustomHeaderStrategy() {}
 
 public:
   const char * name() const { return "custom"; }
@@ -193,20 +193,13 @@ class GrantleeHeaderStrategy : public HeaderStrategy {
   friend class HeaderStrategy;
 protected:
   GrantleeHeaderStrategy();
-  virtual ~GrantleeHeaderStrategy() {}
+  ~GrantleeHeaderStrategy() {}
 
 public:
   const char * name() const { return "grantlee"; }
 
   void loadConfig();
-  QStringList headersToDisplay() const { return mHeadersToDisplay; }
-  QStringList headersToHide() const { return mHeadersToHide; }
-  DefaultPolicy defaultPolicy() const { return mDefaultPolicy; }
-
-private:
-  QStringList mHeadersToDisplay;
-  QStringList mHeadersToHide;
-  DefaultPolicy mDefaultPolicy;
+  DefaultPolicy defaultPolicy() const { return Hide; }
 };
 
 }
