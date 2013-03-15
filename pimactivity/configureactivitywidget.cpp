@@ -37,15 +37,14 @@ namespace PimActivity {
 
 class ConfigureActivityWidgetPrivate {
 public:
-    ConfigureActivityWidgetPrivate(ConfigureActivityWidget * qq)
+    ConfigureActivityWidgetPrivate(ActivityManager *activityManager, ConfigureActivityWidget * qq)
         : q(qq),
           activateActivity( 0 ),
           tabWidget( 0 ),
-          manager( 0 ),
+          manager( activityManager ),
           identity( 0 ),
           mailTransport( 0 )
     {
-        manager = new ActivityManager;
         QHBoxLayout * lay = new QHBoxLayout;
         activateActivity = new QCheckBox(i18n("Enable Support Activity"));
 
@@ -73,7 +72,6 @@ public:
     }
     ~ConfigureActivityWidgetPrivate()
     {
-        delete manager;
     }
 
     void addPages()
@@ -98,8 +96,8 @@ public:
     ConfigureCollections *collections;
 };
 
-ConfigureActivityWidget::ConfigureActivityWidget(QWidget *parent)
-    : QWidget(parent), d(new ConfigureActivityWidgetPrivate(this))
+ConfigureActivityWidget::ConfigureActivityWidget(ActivityManager *manager, QWidget *parent)
+    : QWidget(parent), d(new ConfigureActivityWidgetPrivate(manager, this))
 {
 }
 
