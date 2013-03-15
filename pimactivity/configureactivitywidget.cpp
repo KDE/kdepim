@@ -74,6 +74,20 @@ public:
     {
     }
 
+    void readConfig()
+    {
+        identity->readConfig();
+        mailTransport->readConfig();
+        collections->readConfig();
+    }
+
+    void writeConfig()
+    {
+        identity->writeConfig();
+        mailTransport->writeConfig();
+        collections->writeConfig();
+    }
+
     void addPages()
     {
         identity = new ConfigureIdentity(q);
@@ -108,12 +122,12 @@ ConfigureActivityWidget::~ConfigureActivityWidget()
 
 void ConfigureActivityWidget::readConfig()
 {
-
+    d->readConfig();
 }
 
 void ConfigureActivityWidget::writeConfig()
 {
-
+    d->writeConfig();
 }
 
 

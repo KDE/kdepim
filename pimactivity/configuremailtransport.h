@@ -32,6 +32,9 @@ public:
     ~ConfigureMailtransport();
     void readConfig();
     void writeConfig();
+
+Q_SIGNALS:
+    void changed();
 };
 }
 
