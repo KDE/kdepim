@@ -43,6 +43,7 @@ public:
     };
     void readConfig();
     void writeConfig();
+    void defaults();
 private:
     friend class ConfigureActivityWidgetPrivate;
     ConfigureActivityWidgetPrivate * const d;

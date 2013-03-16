@@ -130,6 +130,10 @@ void ConfigureActivityWidget::writeConfig()
     d->writeConfig();
 }
 
+void ConfigureActivityWidget::defaults()
+{
+
+}
 
 }
 
