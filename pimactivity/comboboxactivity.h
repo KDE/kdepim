@@ -35,6 +35,9 @@ public:
 private:
     friend class ComboBoxActivityPrivate;
     ComboBoxActivityPrivate * const d;
+    Q_PRIVATE_SLOT( d, void slotActivityAdded(const QString&) )
+    Q_PRIVATE_SLOT( d, void slotActivityRemoved(const QString&) )
+    Q_PRIVATE_SLOT( d, void slotActivityStatusChanged(KActivities::Consumer::ServiceStatus) )
 };
 }
 

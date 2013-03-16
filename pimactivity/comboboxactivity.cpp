@@ -31,16 +31,28 @@ public:
         : q(qq),
           activityManager(manager)
     {
-#if 0
-        q->connect(manager,SIGNAL(serviceStatusChanged(KActivities::Consumer::ServiceStatus)));
-        void activityAdded(const QString & id);
-        void activityRemoved(const QString & id);
-#endif
-
-
-
         q->addItems(activityManager->listActivities());
+        q->connect(manager, SIGNAL(activityAdded(QString)), q, SLOT(slotActivityAdded(QString)));
+        q->connect(manager, SIGNAL(activityRemoved(QString)), q, SLOT(slotActivityRemoved(QString)));
+        q->connect(manager, SIGNAL(serviceStatusChanged(KActivities::Consumer::ServiceStatus)), q, SLOT(slotActivityStatusChanged(KActivities::Consumer::ServiceStatus)));
+        q->setEnabled(activityManager->isActive());
     }
+
+    void slotActivityAdded(const QString &name)
+    {
+        q->addItem(name);
+    }
+
+    void slotActivityRemoved(const QString &name)
+    {
+        q->removeItem(q->findText(name));
+    }
+
+    void slotActivityStatusChanged(KActivities::Consumer::ServiceStatus status)
+    {
+        q->setEnabled(status == KActivities::Consumer::Running);
+    }
+
     ComboBoxActivity *q;
     ActivityManager *activityManager;
 };
