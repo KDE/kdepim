@@ -80,7 +80,7 @@ public:
         theme.setName( group.readEntry( "Name", QString() ) );
         theme.setDescription( group.readEntry( "Description", QString() ) );
         theme.setFilename( themePath );
-        theme.setDisplayVariables( group.readEntry( "DisplayVariables"), QStringList());
+        theme.setDisplayVariables( group.readEntry( "DisplayVariables", QStringList() ) );
         return theme;
     }
 
