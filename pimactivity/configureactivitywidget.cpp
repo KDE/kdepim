@@ -65,7 +65,7 @@ public:
 
         lay->addWidget(tabWidget);
         q->setLayout(lay);
-        q->connect(activateActivity, SIGNAL(toggled(bool)), activities, SLOT(slotEnabled(bool)));
+        q->connect(activateActivity, SIGNAL(toggled(bool)), activities, SLOT(setEnabled(bool)));
         q->connect(activateActivity, SIGNAL(toggled(bool)), tabWidget, SLOT(setEnabled(bool)));
 
         addPages();
