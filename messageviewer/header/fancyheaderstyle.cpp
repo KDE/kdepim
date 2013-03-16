@@ -159,7 +159,7 @@ QString FancyHeaderStyle::format( KMime::Message *message ) const {
             // Spec says header should be less than 998 bytes
             // Face: is 5 characters
             if ( facestring.length() < 993 ) {
-                QByteArray facearray = QByteArray::fromBase64( facestring );
+               const QByteArray facearray = QByteArray::fromBase64( facestring );
 
                 QImage faceimage;
                 if ( faceimage.loadFromData( facearray, "png" ) ) {

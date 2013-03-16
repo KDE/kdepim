@@ -18,7 +18,7 @@
 #define GRANTLEETHEME_H
 
 #include <QString>
-
+#include <QStringList>
 namespace MessageViewer {
 class GrantleeTheme
 {
@@ -35,8 +35,11 @@ public:
     QString name() const;
     void setName(const QString &);
 
+    QStringList displayVariables() const;
+    void setDisplayVariables(const QStringList &);
 
 private:
+    QStringList mDisplayVariables;
     QString mFileName;
     QString mDescription;
     QString mName;

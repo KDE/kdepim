@@ -197,7 +197,7 @@ QString drawSpamMeter( SpamError spamError, double percent, double confidence,
                          "Full report:\n%2",
                          errorMsg, filterHeader );
     }
-    return QString("<img src=\"%1\" width=\"%2\" height=\"%3\" style=\"border: 1px solid black;\" title=\"%4\"> &nbsp;")
+    return QString::fromLatin1("<img src=\"%1\" width=\"%2\" height=\"%3\" style=\"border: 1px solid black;\" title=\"%4\"> &nbsp;")
             .arg( imgToDataUrl( meterBar ), QString::number( meterWidth ),
                   QString::number( meterHeight ), titleText ) + confidenceString;
 }
