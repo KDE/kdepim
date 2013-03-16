@@ -45,14 +45,14 @@ public:
           identity( 0 ),
           mailTransport( 0 )
     {
-        QHBoxLayout * lay = new QHBoxLayout;
+        QVBoxLayout * lay = new QVBoxLayout;
         activateActivity = new QCheckBox(i18n("Enable Support Activity"));
 
         lay->addWidget(activateActivity);
 
         lay->addWidget(new ActivityWarning(manager));
 
-        QVBoxLayout *verticalLayout = new QVBoxLayout;
+        QHBoxLayout *verticalLayout = new QHBoxLayout;
         QLabel *lab = new QLabel(i18n("Activities:"));
         verticalLayout->addWidget(lab);
 
@@ -132,7 +132,7 @@ void ConfigureActivityWidget::writeConfig()
 
 void ConfigureActivityWidget::defaults()
 {
-
+    //TODO
 }
 
 }
