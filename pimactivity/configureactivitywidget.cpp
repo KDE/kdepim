@@ -24,7 +24,7 @@
 #include "widgets/comboboxactivity.h"
 #include "widgets/configuremailtransport.h"
 #include "widgets/configurecollections.h"
-#include "activitywarning.h"
+#include "widgets/activitywarning.h"
 
 #include <KTabWidget>
 #include <KLocale>
