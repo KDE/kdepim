@@ -18,27 +18,24 @@
 
 */
 
-#ifndef CONFIGUREIDENTITY_H
-#define CONFIGUREIDENTITY_H
+#ifndef CONFIGUREMAILTRANSPORT_H
+#define CONFIGUREMAILTRANSPORT_H
 
 #include <QWidget>
-#include "pimactivity_export.h"
-
 
 namespace PimActivity {
-
-class PIMACTIVITY_EXPORT ConfigureIdentity : public QWidget
+class ConfigureMailtransport : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ConfigureIdentity(QWidget *parent);
-    ~ConfigureIdentity();
-
+    explicit ConfigureMailtransport(QWidget *parent = 0);
+    ~ConfigureMailtransport();
     void readConfig();
     void writeConfig();
 
+Q_SIGNALS:
+    void changed();
 };
-
 }
 
-#endif // CONFIGUREIDENTITY_H
+#endif // CONFIGUREMAILTRANSPORT_H

@@ -15,29 +15,29 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef GRANTLEEHEADERFORMATTER_H
-#define GRANTLEEHEADERFORMATTER_H
+#ifndef KCMPIMACTIVITY_H
+#define KCMPIMACTIVITY_H
 
-#include <QString>
+#include <kcmodule.h>
 
-namespace KMime {
-class Message;
+namespace PimActivity {
+class ActivityManager;
+class ConfigureActivityWidget;
 }
 
-namespace MessageViewer {
-class GrantleeHeaderStyle;
-class GrantleeHeaderFormatter
+class KCMPimActivity : public KCModule
 {
 public:
-    explicit GrantleeHeaderFormatter();
-    ~GrantleeHeaderFormatter();
+    explicit KCMPimActivity(QWidget *parent, const QVariantList &args );
+    ~KCMPimActivity();
 
-    QString toHtml(const QString &theme, bool isPrinting, const MessageViewer::GrantleeHeaderStyle *style, KMime::Message *message) const;
-
+    void load();
+    void save();
+    void defaults();
 private:
-    class Private;
-    Private *const d;
+    void initGUI();
+    PimActivity::ActivityManager *mManager;
+    PimActivity::ConfigureActivityWidget *mConfigure;
 };
-}
 
-#endif // GRANTLEEHEADERFORMATTER_H
+#endif // KCMPIMACTIVITY_H

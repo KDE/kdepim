@@ -18,43 +18,25 @@
 
 */
 
-#include "comboboxactivity.h"
-#include "activitymanager.h"
-#include <KActivities/Consumer>
+#ifndef CONFIGURECOLLECTIONS_H
+#define CONFIGURECOLLECTIONS_H
+
+#include <QWidget>
 
 namespace PimActivity {
 
-class ComboBoxActivityPrivate
+class ConfigureCollections : public QWidget
 {
+    Q_OBJECT
 public:
-    ComboBoxActivityPrivate(ComboBoxActivity *qq, ActivityManager *manager)
-        : q(qq),
-          activityManager(manager)
-    {
-#if 0
-        q->connect(manager,SIGNAL(serviceStatusChanged(KActivities::Consumer::ServiceStatus)));
-        void activityAdded(const QString & id);
-        void activityRemoved(const QString & id);
-#endif
+    explicit ConfigureCollections(QWidget *parent = 0);
+    ~ConfigureCollections();
+    void readConfig();
+    void writeConfig();
+Q_SIGNALS:
+    void changed();
 
-
-
-        q->addItems(activityManager->listActivities());
-    }
-    ComboBoxActivity *q;
-    ActivityManager *activityManager;
 };
-
-ComboBoxActivity::ComboBoxActivity(ActivityManager *activityManager, QWidget *parent)
-    : KComboBox(parent), d(new ComboBoxActivityPrivate(this, activityManager))
-{
 }
 
-ComboBoxActivity::~ComboBoxActivity()
-{
-    delete d;
-}
-
-}
-
-#include "comboboxactivity.moc"
+#endif // CONFIGURECOLLECTIONS_H

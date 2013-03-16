@@ -34,7 +34,6 @@ public:
     const char * name() const { return "grantlee"; }
 
     QString format( KMime::Message *message ) const;
-
 private:
     GrantleeHeaderFormatter *mGrantleeFormatter;
 };

@@ -94,7 +94,8 @@ void Utils::changeFileName(MessageCore::AttachmentPart::Ptr part)
             } else if(type == QLatin1String("PNG")) {
                 newExtension = QLatin1String("png");
             }
-            pattern.replace(QLatin1String("%e"), newExtension); //Extension
+            if (!newExtension.isEmpty())
+                pattern.replace(QLatin1String("%e"), newExtension); //Extension
 
             //Need to define pattern type.
             part->setFileName(pattern);

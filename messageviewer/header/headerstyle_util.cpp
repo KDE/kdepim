@@ -197,7 +197,7 @@ QString drawSpamMeter( SpamError spamError, double percent, double confidence,
                          "Full report:\n%2",
                          errorMsg, filterHeader );
     }
-    return QString("<img src=\"%1\" width=\"%2\" height=\"%3\" style=\"border: 1px solid black;\" title=\"%4\"> &nbsp;")
+    return QString::fromLatin1("<img src=\"%1\" width=\"%2\" height=\"%3\" style=\"border: 1px solid black;\" title=\"%4\"> &nbsp;")
             .arg( imgToDataUrl( meterBar ), QString::number( meterWidth ),
                   QString::number( meterHeight ), titleText ) + confidenceString;
 }
@@ -224,6 +224,27 @@ QString dateShortStr(const KDateTime &dateTime)
 {
   return KGlobal::locale()->formatDateTime( dateTime, KLocale::FancyShortDate );
 }
+
+
+QList<KMime::Types::Mailbox> resentFromList(KMime::Message *message)
+{
+    // Get the resent-from header into a Mailbox
+    QList<KMime::Types::Mailbox> resentFrom;
+    if ( message->headerByType( "Resent-From" ) ) {
+        const QByteArray data = message->headerByType( "Resent-From" )->as7BitString( false );
+        const char * start = data.data();
+        const char * end = start + data.length();
+        KMime::Types::AddressList addressList;
+        KMime::HeaderParsing::parseAddressList( start, end, addressList );
+        foreach ( const KMime::Types::Address &addr, addressList ) {
+            foreach ( const KMime::Types::Mailbox &mbox, addr.mailboxList ) {
+                resentFrom.append( mbox );
+            }
+        }
+    }
+    return resentFrom;
+}
+
 
 }
 }

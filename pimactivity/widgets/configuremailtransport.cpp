@@ -17,20 +17,29 @@
   02110-1301, USA.
 
 */
-#include "configurecollections.h"
+#include "configuremailtransport.h"
 
 namespace PimActivity {
-
-ConfigureCollections::ConfigureCollections(QWidget *parent)
+ConfigureMailtransport::ConfigureMailtransport(QWidget *parent)
     : QWidget(parent)
 {
 }
 
-ConfigureCollections::~ConfigureCollections()
+ConfigureMailtransport::~ConfigureMailtransport()
+{
+}
+
+void ConfigureMailtransport::readConfig()
 {
 
 }
 
+void ConfigureMailtransport::writeConfig()
+{
+
 }
 
-#include "configurecollections.moc"
+
+}
+
+#include "configuremailtransport.moc"

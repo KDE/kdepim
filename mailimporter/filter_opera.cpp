@@ -19,6 +19,7 @@
 #include <kfiledialog.h>
 #include <ktemporaryfile.h>
 #include <kdebug.h>
+#include <QPointer>
 
 #include "filter_opera.h"
 
@@ -157,13 +158,13 @@ void FilterOpera::import()
     startdir = QDir::homePath();
   }
 
-  KFileDialog *kfd = new KFileDialog( startdir, "", 0);
+  QPointer<KFileDialog> kfd = new KFileDialog( startdir, "", 0);
   kfd->setMode(KFile::Directory | KFile::LocalOnly);
-  kfd->exec();
-  QString operaDir = kfd->selectedFile();
+  if (kfd->exec()) {
+      const QString operaDir = kfd->selectedFile();
+      importMails( operaDir );
+  }
   delete kfd;
-
-  importMails( operaDir );
 }
 
 void FilterOpera::importMails( const QString &maildir )

@@ -63,10 +63,9 @@ QString GrantleeHeaderStyle::format( KMime::Message *message ) const {
         return QString();
     const HeaderStrategy *strategy = headerStrategy();
     if ( !strategy )
-        strategy = HeaderStrategy::custom();
+        strategy = HeaderStrategy::grantlee();
 
-    QString themeName;//TODO load from settings.
-    return mGrantleeFormatter->toHtml(themeName, isPrinting(), strategy, message);
+    return mGrantleeFormatter->toHtml(themeName(), isPrinting(), this, message);
 }
 
 }

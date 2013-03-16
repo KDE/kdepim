@@ -16,8 +16,9 @@
 */
 
 #include "grantleeheaderformatter.h"
-#include "headerstrategy.h"
+#include "grantleeheaderstyle.h"
 #include "headerstyle_util.h"
+#include "globalsettings.h"
 
 #include <messagecore/stringutil.h>
 
@@ -66,34 +67,32 @@ GrantleeHeaderFormatter::~GrantleeHeaderFormatter()
     delete d;
 }
 
-QString GrantleeHeaderFormatter::toHtml(const QString &themeName, bool isPrinting, const MessageViewer::HeaderStrategy *strategy, KMime::Message *message) const
+QString GrantleeHeaderFormatter::toHtml(const QString &themeName, bool isPrinting, const MessageViewer::GrantleeHeaderStyle *style, KMime::Message *message) const
 {
     Grantlee::Template headerTemplate = d->engine->loadByName( themeName + "/header.html" );
     QString errorMessage;
     if ( headerTemplate->error() ) {
-      errorMessage += headerTemplate->errorString();
+        errorMessage += headerTemplate->errorString();
     }
     if ( !errorMessage.isEmpty() ) {
-      return errorMessage;
+        return errorMessage;
     }
 
     QVariantHash headerObject;
-    if ( strategy->showHeader( "subject" ) ) {
-        headerObject.insert(QLatin1String("subjecti18n"), i18n("Subject:") );
-        headerObject.insert(QLatin1String("subject"), MessageViewer::HeaderStyleUtil::subjectString( message ) );
-    }
+    headerObject.insert(QLatin1String("subjecti18n"), i18n("Subject:") );
+    headerObject.insert(QLatin1String("subject"), MessageViewer::HeaderStyleUtil::subjectString( message ) );
 
-    if ( strategy->showHeader("replyto") && message->replyTo( false )) {
+    if ( message->replyTo( false )) {
         headerObject.insert(QLatin1String("replyToi18n"), i18n("Reply to:") );
         headerObject.insert(QLatin1String("replyTo"), StringUtil::emailAddrAsAnchor( message->replyTo(), StringUtil::DisplayFullAddress ));
     }
 
-    if ( strategy->showHeader( "cc" ) && message->cc( false ) ) {
+    if ( message->cc( false ) ) {
         headerObject.insert(QLatin1String("cci18n"), i18n("CC:") );
         headerObject.insert(QLatin1String("cc"), StringUtil::emailAddrAsAnchor( message->cc(), StringUtil::DisplayFullAddress ));
     }
 
-    if ( strategy->showHeader( "bcc" ) && message->bcc( false ) ) {
+    if ( message->bcc( false ) ) {
         headerObject.insert(QLatin1String("bcci18n"), i18n("BCC:"));
         headerObject.insert(QLatin1String("bcc"), StringUtil::emailAddrAsAnchor( message->bcc(), StringUtil::DisplayFullAddress ));
     }
@@ -108,6 +107,26 @@ QString GrantleeHeaderFormatter::toHtml(const QString &themeName, bool isPrintin
     headerObject.insert( QLatin1String( "datelong" ) , MessageViewer::HeaderStyleUtil::strToHtml( MessageViewer::HeaderStyleUtil::dateString(message, isPrinting,false ) ) );
     headerObject.insert( QLatin1String( "date" ), MessageViewer::HeaderStyleUtil::directionOf( MessageViewer::HeaderStyleUtil::dateStr( message->date()->dateTime() ) ) );
 
+    if ( GlobalSettings::self()->showUserAgent() ) {
+        if ( message->headerByType("User-Agent") ) {
+            headerObject.insert( QLatin1String( "useragent" ), MessageViewer::HeaderStyleUtil::strToHtml( message->headerByType("User-Agent")->as7BitString() ) );
+        }
+
+        if ( message->headerByType("X-Mailer") ) {
+            headerObject.insert( QLatin1String( "x-mailer" ), MessageViewer::HeaderStyleUtil::strToHtml( message->headerByType("X-Mailer")->as7BitString() ) );
+        }
+    }
+
+    if ( message->headerByType( "Resent-From" ) ) {
+        const QList<KMime::Types::Mailbox> resentFrom = MessageViewer::HeaderStyleUtil::resentFromList(message);
+        headerObject.insert( QLatin1String( "resentfrom" ), StringUtil::emailAddrAsAnchor( resentFrom, StringUtil::DisplayFullAddress ) );
+    }
+
+    if ( KMime::Headers::Base *organization = message->headerByType("Organization") )
+        headerObject.insert( QLatin1String( "organization" ) , MessageViewer::HeaderStyleUtil::strToHtml(organization->asUnicodeString()) );
+
+    if ( !style->vCardName().isEmpty() )
+        headerObject.insert( QLatin1String( "vcardname" ) , style->vCardName() );
 
     QVariantHash mapping;
     mapping.insert( "header", headerObject );

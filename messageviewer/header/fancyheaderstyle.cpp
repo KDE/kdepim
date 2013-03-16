@@ -88,7 +88,7 @@ QString FancyHeaderStyle::format( KMime::Message *message ) const {
     // from a few spam filters and try to create visually meaningful graphics
     // out of the spam scores.
 
-    QString spamHTML =  MessageViewer::HeaderStyleUtil::spamStatus(message);
+    const QString spamHTML =  MessageViewer::HeaderStyleUtil::spamStatus(message);
 
     QString photoURL;
     int photoWidth = 60;
@@ -159,7 +159,7 @@ QString FancyHeaderStyle::format( KMime::Message *message ) const {
             // Spec says header should be less than 998 bytes
             // Face: is 5 characters
             if ( facestring.length() < 993 ) {
-                QByteArray facearray = QByteArray::fromBase64( facestring );
+               const QByteArray facearray = QByteArray::fromBase64( facestring );
 
                 QImage faceimage;
                 if ( faceimage.loadFromData( facearray, "png" ) ) {
@@ -221,21 +221,7 @@ QString FancyHeaderStyle::format( KMime::Message *message ) const {
     // QString::arg is not possible
     if ( strategy->showHeader( "from" ) ) {
 
-        // Get the resent-from header into a Mailbox
-        QList<KMime::Types::Mailbox> resentFrom;
-        if ( message->headerByType( "Resent-From" ) ) {
-            const QByteArray data = message->headerByType( "Resent-From" )->as7BitString( false );
-            const char * start = data.data();
-            const char * end = start + data.length();
-            KMime::Types::AddressList addressList;
-            KMime::HeaderParsing::parseAddressList( start, end, addressList );
-            foreach ( const KMime::Types::Address &addr, addressList ) {
-                foreach ( const KMime::Types::Mailbox &mbox, addr.mailboxList ) {
-                    resentFrom.append( mbox );
-                }
-            }
-        }
-
+        const QList<KMime::Types::Mailbox> resentFrom = MessageViewer::HeaderStyleUtil::resentFromList(message);
         headerStr += QString::fromLatin1("<tr><th>%1</th>\n"
                                          "<td>")
                 .arg(i18n("From: "))

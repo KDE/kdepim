@@ -14,30 +14,36 @@
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
-
-#ifndef GRANTLEEHEADERFORMATTER_H
-#define GRANTLEEHEADERFORMATTER_H
+#ifndef GRANTLEETHEME_H
+#define GRANTLEETHEME_H
 
 #include <QString>
-
-namespace KMime {
-class Message;
-}
-
+#include <QStringList>
 namespace MessageViewer {
-class GrantleeHeaderStyle;
-class GrantleeHeaderFormatter
+class GrantleeTheme
 {
 public:
-    explicit GrantleeHeaderFormatter();
-    ~GrantleeHeaderFormatter();
+    GrantleeTheme();
+    ~GrantleeTheme();
 
-    QString toHtml(const QString &theme, bool isPrinting, const MessageViewer::GrantleeHeaderStyle *style, KMime::Message *message) const;
+    QString description() const;
+    void setDescription(const QString &description);
+
+    QString filename() const;
+    void setFilename(const QString &file);
+
+    QString name() const;
+    void setName(const QString &);
+
+    QStringList displayVariables() const;
+    void setDisplayVariables(const QStringList &);
 
 private:
-    class Private;
-    Private *const d;
+    QStringList mDisplayVariables;
+    QString mFileName;
+    QString mDescription;
+    QString mName;
 };
 }
 
-#endif // GRANTLEEHEADERFORMATTER_H
+#endif // GRANTLEETHEME_H

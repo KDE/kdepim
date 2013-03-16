@@ -1051,7 +1051,7 @@ void ViewerPrivate::showVCard( KMime::Content* msgPart ) {
   const QByteArray vCard = msgPart->decodedContent();
 
   VCardViewer *vcv = new VCardViewer( mMainWindow, vCard );
-  vcv->setObjectName( "vCardDialog" );
+  vcv->setAttribute( Qt::WA_DeleteOnClose );
   vcv->show();
 }
 

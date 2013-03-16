@@ -28,11 +28,12 @@ class KTabWidget;
 
 namespace PimActivity {
 class ConfigureActivityWidgetPrivate;
+class ActivityManager;
 class PIMACTIVITY_EXPORT ConfigureActivityWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ConfigureActivityWidget(QWidget *parent = 0);
+    explicit ConfigureActivityWidget(PimActivity::ActivityManager *manager, QWidget *parent = 0);
     ~ConfigureActivityWidget();
 
     enum ConfigureType {
@@ -40,7 +41,9 @@ public:
         MailTransport,
         Collection
     };
-
+    void readConfig();
+    void writeConfig();
+    void defaults();
 private:
     friend class ConfigureActivityWidgetPrivate;
     ConfigureActivityWidgetPrivate * const d;

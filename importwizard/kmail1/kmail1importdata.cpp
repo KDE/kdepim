@@ -21,6 +21,7 @@
 #include "importwizard.h"
 
 #include <KLocale>
+#include <KStandardDirs>
 
 #include <QDir>
 #include <QWidget>
@@ -29,6 +30,7 @@
 KMail1ImportData::KMail1ImportData(ImportWizard*parent)
     :AbstractImporter(parent)
 {
+    mPath = KStandardDirs::locateLocal( "config", QLatin1String("kmailrc") );
 }
 
 KMail1ImportData::~KMail1ImportData()
@@ -38,10 +40,8 @@ KMail1ImportData::~KMail1ImportData()
 
 bool KMail1ImportData::foundMailer() const
 {
-    return false;
-    //TODO
-    QDir directory( mPath );
-    if ( directory.exists() )
+    QFile file( mPath );
+    if ( file.exists() )
         return true;
     return false;
 }

@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Service
+X-KDE-ServiceTypes=KCModule
+
+X-KDE-Library=kcm_pimactivity
+X-KDE-Weight=200
+
+Name=PIM Activity Settings
+Comment=Configure the activity for pim application
+X-KDE-Keywords=configure, settings, activity

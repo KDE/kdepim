@@ -20,6 +20,8 @@
 #include <klocale.h>
 #include <kfiledialog.h>
 
+#include <QPointer>
+
 using namespace MailImporter;
 
 /** Default constructor. */
@@ -58,14 +60,13 @@ void FilterBalsa::import()
     balsaDir = QDir::homePath();
   }
 
-  KFileDialog *kfd = new KFileDialog( balsaDir, "", 0 );
+  QPointer<KFileDialog> kfd = new KFileDialog( balsaDir, "", 0 );
   kfd->setMode( KFile::Directory | KFile::LocalOnly );
-  kfd->exec();
-  const QString dir = kfd->selectedFile();
+  if (kfd->exec()) {
+      const QString dir = kfd->selectedFile();
+      importMails( dir );
+  }
   delete kfd;
-
-  importMails( dir );
-
 }
 
 void FilterBalsa::processDirectory( const QString& path)

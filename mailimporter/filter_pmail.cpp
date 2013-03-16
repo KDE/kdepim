@@ -18,6 +18,7 @@
 #include <klocale.h>
 #include <kfiledialog.h>
 #include <QRegExp>
+#include <QPointer>
 #include <ktemporaryfile.h>
 #include <kdebug.h>
 
@@ -41,12 +42,14 @@ FilterPMail::~FilterPMail()
 void FilterPMail::import()
 {
   // Select directory from where I have to import files
-  KFileDialog *kfd = new KFileDialog( QDir::homePath(), "", 0 );
+  QPointer<KFileDialog> kfd = new KFileDialog( QDir::homePath(), "", 0 );
   kfd->setMode(KFile::Directory | KFile::LocalOnly);
-  kfd->exec();
-  const QString maildir = kfd->selectedFile();
+  if (kfd->exec()) {
+      const QString maildir = kfd->selectedFile();
+
+      importMails( maildir );
+  }
   delete kfd;
-  importMails( maildir );
 }
 
 void FilterPMail::importMails( const QString & chosenDir )

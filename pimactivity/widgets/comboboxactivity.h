@@ -18,19 +18,27 @@
 
 */
 
+#ifndef COMBOBOXACTIVITY_H
+#define COMBOBOXACTIVITY_H
 
-#include <kapplication.h>
-#include <kaboutdata.h>
-#include <kcmdlineargs.h>
+#include <KComboBox>
 
-int main( int argc, char **argv )
+namespace PimActivity {
+class ActivityManager;
+class ComboBoxActivityPrivate;
+class ComboBoxActivity : public KComboBox
 {
-    const QByteArray& ba = QByteArray( "pimactivity" );
-    const KLocalizedString name = ki18n( "pimactivity" );
-    KAboutData aboutData( ba, ba, name, ba, name );
-    KCmdLineArgs::init( argc, argv, &aboutData );
-    KApplication app;
-    //PimActivity* mw = new PimActivity();
-    //mw->show();
-    app.exec();
+    Q_OBJECT
+public:
+    explicit ComboBoxActivity(ActivityManager *activityManager, QWidget *parent = 0);
+    ~ComboBoxActivity();
+private:
+    friend class ComboBoxActivityPrivate;
+    ComboBoxActivityPrivate * const d;
+    Q_PRIVATE_SLOT( d, void slotActivityAdded(const QString&) )
+    Q_PRIVATE_SLOT( d, void slotActivityRemoved(const QString&) )
+    Q_PRIVATE_SLOT( d, void slotActivityStatusChanged(KActivities::Consumer::ServiceStatus) )
+};
 }
+
+#endif // COMBOBOXACTIVITY_H

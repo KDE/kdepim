@@ -20,11 +20,11 @@
 
 #include "configureactivitywidget.h"
 #include "activitymanager.h"
-#include "configureidentity.h"
-#include "comboboxactivity.h"
-#include "configuremailtransport.h"
-#include "configurecollections.h"
-#include "activitywarning.h"
+#include "widgets/configureidentity.h"
+#include "widgets/comboboxactivity.h"
+#include "widgets/configuremailtransport.h"
+#include "widgets/configurecollections.h"
+#include "widgets/activitywarning.h"
 
 #include <KTabWidget>
 #include <KLocale>
@@ -37,23 +37,22 @@ namespace PimActivity {
 
 class ConfigureActivityWidgetPrivate {
 public:
-    ConfigureActivityWidgetPrivate(ConfigureActivityWidget * qq)
+    ConfigureActivityWidgetPrivate(ActivityManager *activityManager, ConfigureActivityWidget * qq)
         : q(qq),
           activateActivity( 0 ),
           tabWidget( 0 ),
-          manager( 0 ),
+          manager( activityManager ),
           identity( 0 ),
           mailTransport( 0 )
     {
-        manager = new ActivityManager;
-        QHBoxLayout * lay = new QHBoxLayout;
+        QVBoxLayout * lay = new QVBoxLayout;
         activateActivity = new QCheckBox(i18n("Enable Support Activity"));
 
         lay->addWidget(activateActivity);
 
         lay->addWidget(new ActivityWarning(manager));
 
-        QVBoxLayout *verticalLayout = new QVBoxLayout;
+        QHBoxLayout *verticalLayout = new QHBoxLayout;
         QLabel *lab = new QLabel(i18n("Activities:"));
         verticalLayout->addWidget(lab);
 
@@ -66,14 +65,27 @@ public:
 
         lay->addWidget(tabWidget);
         q->setLayout(lay);
-        q->connect(activateActivity, SIGNAL(toggled(bool)), activities, SLOT(slotEnabled(bool)));
-        q->connect(activateActivity, SIGNAL(toggled(bool)), tabWidget, SLOT(slotEnabled(bool)));
+        q->connect(activateActivity, SIGNAL(toggled(bool)), activities, SLOT(setEnabled(bool)));
+        q->connect(activateActivity, SIGNAL(toggled(bool)), tabWidget, SLOT(setEnabled(bool)));
 
         addPages();
     }
     ~ConfigureActivityWidgetPrivate()
     {
-        delete manager;
+    }
+
+    void readConfig()
+    {
+        identity->readConfig();
+        mailTransport->readConfig();
+        collections->readConfig();
+    }
+
+    void writeConfig()
+    {
+        identity->writeConfig();
+        mailTransport->writeConfig();
+        collections->writeConfig();
     }
 
     void addPages()
@@ -98,14 +110,29 @@ public:
     ConfigureCollections *collections;
 };
 
-ConfigureActivityWidget::ConfigureActivityWidget(QWidget *parent)
-    : QWidget(parent), d(new ConfigureActivityWidgetPrivate(this))
+ConfigureActivityWidget::ConfigureActivityWidget(ActivityManager *manager, QWidget *parent)
+    : QWidget(parent), d(new ConfigureActivityWidgetPrivate(manager, this))
 {
 }
 
 ConfigureActivityWidget::~ConfigureActivityWidget()
 {
     delete d;
+}
+
+void ConfigureActivityWidget::readConfig()
+{
+    d->readConfig();
+}
+
+void ConfigureActivityWidget::writeConfig()
+{
+    d->writeConfig();
+}
+
+void ConfigureActivityWidget::defaults()
+{
+    //TODO
 }
 
 }

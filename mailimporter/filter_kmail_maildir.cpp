@@ -21,6 +21,7 @@
 
 #include <klocale.h>
 #include <kfiledialog.h>
+#include <QPointer>
 
 using namespace MailImporter;
 
@@ -50,12 +51,13 @@ void FilterKMail_maildir::import()
   setCountDuplicates(0);
   const QString homeDir = QDir::homePath();
 
-  KFileDialog *kfd = new KFileDialog( homeDir, "", 0 );
+  QPointer<KFileDialog> kfd = new KFileDialog( homeDir, "", 0 );
   kfd->setMode( KFile::Directory | KFile::LocalOnly );
-  kfd->exec();
-  const QString maildir = kfd->selectedFile();
+  if (kfd->exec()) {
+      const QString maildir = kfd->selectedFile();
+      importMails( maildir );
+  }
   delete kfd;
-  importMails( maildir );
 }
 
 

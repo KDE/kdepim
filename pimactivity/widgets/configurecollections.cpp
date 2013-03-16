@@ -17,21 +17,31 @@
   02110-1301, USA.
 
 */
+#include "configurecollections.h"
 
-#ifndef PIMACTIVITYEDITOR_H
-#define PIMACTIVITYEDITOR_H
+namespace PimActivity {
 
-#include <kxmlguiwindow.h>
-
-class PimActivityEditor : public KXmlGuiWindow
+ConfigureCollections::ConfigureCollections(QWidget *parent)
+    : QWidget(parent)
 {
-    Q_OBJECT
-public:
-    PimActivityEditor();
+}
 
-    ~PimActivityEditor();
-private:
-    void setupActions();
-};
+ConfigureCollections::~ConfigureCollections()
+{
 
-#endif
+}
+
+void ConfigureCollections::readConfig()
+{
+
+}
+
+void ConfigureCollections::writeConfig()
+{
+
+}
+
+
+}
+
+#include "configurecollections.moc"

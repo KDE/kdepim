@@ -17,18 +17,30 @@
   02110-1301, USA.
 
 */
-#include "configuremailtransport.h"
+
+#ifndef CONFIGUREIDENTITY_H
+#define CONFIGUREIDENTITY_H
+
+#include <QWidget>
+#include "pimactivity_export.h"
+
 
 namespace PimActivity {
-ConfigureMailtransport::ConfigureMailtransport(QWidget *parent)
-    : QWidget(parent)
+
+class PIMACTIVITY_EXPORT ConfigureIdentity : public QWidget
 {
+    Q_OBJECT
+public:
+    explicit ConfigureIdentity(QWidget *parent);
+    ~ConfigureIdentity();
+
+    void readConfig();
+    void writeConfig();
+Q_SIGNALS:
+    void changed();
+
+};
+
 }
 
-ConfigureMailtransport::~ConfigureMailtransport()
-{
-}
-
-}
-
-#include "configuremailtransport.moc"
+#endif // CONFIGUREIDENTITY_H

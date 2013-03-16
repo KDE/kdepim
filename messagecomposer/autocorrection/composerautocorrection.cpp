@@ -227,7 +227,7 @@ void ComposerAutoCorrection::superscriptAppendix()
     if (!mSuperScriptAppendix)
         return;
 
-    QString trimmed = mWord.trimmed();
+    const QString trimmed = mWord.trimmed();
     int startPos = -1;
     int endPos = -1;
 
@@ -239,7 +239,7 @@ void ComposerAutoCorrection::superscriptAppendix()
             break;
         }
         else if (i.key() == QLatin1String("othernb")) {
-            int pos = trimmed.indexOf(i.value());
+            const int pos = trimmed.indexOf(i.value());
             if (pos > 0) {
                 QString number = trimmed.left(pos);
                 QString::ConstIterator constIter = number.constBegin();
@@ -283,17 +283,17 @@ bool ComposerAutoCorrection::autoBoldUnderline()
     if (!mAutoBoldUnderline)
         return false;
 
-    QString trimmed = mWord.trimmed();
+    const QString trimmed = mWord.trimmed();
 
     if (trimmed.length() < 3)
         return false;
 
-    bool underline = (trimmed.at(0) == QLatin1Char('_') && trimmed.at(trimmed.length() - 1) == QLatin1Char('_'));
-    bool bold = (trimmed.at(0) == QLatin1Char('*') && trimmed.at(trimmed.length() - 1) == QLatin1Char('*'));
-
-    if (underline || bold) {
+    const bool underline = (trimmed.at(0) == QLatin1Char('_') && trimmed.at(trimmed.length() - 1) == QLatin1Char('_'));
+    const bool bold = (trimmed.at(0) == QLatin1Char('*') && trimmed.at(trimmed.length() - 1) == QLatin1Char('*'));
+    const bool strikeOut = (trimmed.at(0) == QLatin1Char('-') && trimmed.at(trimmed.length() - 1) == QLatin1Char('-'));
+    if (underline || bold || strikeOut) {
         int startPos = mCursor.selectionStart();
-        QString replacement = trimmed.mid(1, trimmed.length() - 2);
+        const QString replacement = trimmed.mid(1, trimmed.length() - 2);
         bool foundLetterNumber = false;
 
         QString::ConstIterator constIter = replacement.constBegin();
@@ -318,6 +318,7 @@ bool ComposerAutoCorrection::autoBoldUnderline()
         QTextCharFormat format;
         format.setFontUnderline(underline ? true : mCursor.charFormat().fontUnderline());
         format.setFontWeight(bold ? QFont::Bold : mCursor.charFormat().fontWeight());
+        format.setFontStrikeOut(strikeOut ? true : mCursor.charFormat().fontStrikeOut());
         mCursor.mergeCharFormat(format);
 
         // to avoid the selection being replaced by mWord
@@ -325,7 +326,8 @@ bool ComposerAutoCorrection::autoBoldUnderline()
 
         // don't do this again if the text is already underlined and bold
         if (mCursor.charFormat().fontUnderline()
-                && mCursor.charFormat().fontWeight() == QFont::Bold) {
+                && mCursor.charFormat().fontWeight() == QFont::Bold
+                && mCursor.charFormat().fontStrikeOut()) {
             return true;
         } else {
             return autoBoldUnderline();
@@ -346,7 +348,7 @@ bool ComposerAutoCorrection::autoFormatURLs()
     if (link.isNull())
         return false;
 
-    QString trimmed = mWord.trimmed();
+    const QString trimmed = mWord.trimmed();
     int startPos = mCursor.selectionStart();
     mCursor.setPosition(startPos);
     mCursor.setPosition(startPos + trimmed.length(), QTextCursor::KeepAnchor);
@@ -431,7 +433,7 @@ QString ComposerAutoCorrection::autoDetectURL(const QString &_word) const
         else if (link_type == 3)
             newWord = QLatin1String("ftp://") + word;
 
-        kDebug() <<"newWord:" << newWord;
+        //kDebug() <<"newWord:" << newWord;
         return newWord;
     }
 
@@ -448,13 +450,13 @@ void ComposerAutoCorrection::fixTwoUppercaseChars()
     if (mTwoUpperLetterExceptions.contains(mWord.trimmed()))
         return;
 
-    QChar firstChar = mWord.at(0);
-    QChar secondChar = mWord.at(1);
+    const QChar firstChar = mWord.at(0);
+    const QChar secondChar = mWord.at(1);
 
-    if (secondChar.isUpper()) {
-        QChar thirdChar = mWord.at(2);
+    if (secondChar.isUpper() && firstChar.isUpper()) {
+        const QChar thirdChar = mWord.at(2);
 
-        if (firstChar.isUpper() && thirdChar.isLower())
+        if (thirdChar.isLower())
             mWord.replace(1, 1, secondChar.toLower());
     }
 }
@@ -504,7 +506,7 @@ void ComposerAutoCorrection::uppercaseFirstCharOfSentence()
 
     int position = mCursor.selectionEnd();
 
-    QString text = mCursor.selectedText();
+    const QString text = mCursor.selectedText();
 
     if (text.isEmpty()) {// start of a paragraph
         mWord.replace(0, 1, mWord.at(0).toUpper());
@@ -524,16 +526,21 @@ void ComposerAutoCorrection::uppercaseFirstCharOfSentence()
                     position--;
                     constIter--;
                 }
-                bool replace = true;
                 selectWord(mCursor, --position);
-                QString prevWord = mCursor.selectedText();
+                const QString prevWord = mCursor.selectedText();
 
                 // search for exception
                 if (mUpperCaseExceptions.contains(prevWord.trimmed()))
-                    replace = false;
+                    break;
+                if (prevWord.startsWith(QLatin1String("http://")) ||
+                        prevWord.startsWith(QLatin1String("ftp://")) ||
+                        prevWord.startsWith(QLatin1String("https://")) ||
+                        prevWord.startsWith(QLatin1String("ftps://")) ||
+                        prevWord.startsWith(QLatin1String("www.")) ||
+                        prevWord.startsWith(QLatin1String("mailto:")) )
+                    break;
 
-                if (replace)
-                    mWord.replace(0, 1, mWord.at(0).toUpper());
+                mWord.replace(0, 1, mWord.at(0).toUpper());
                 break;
             } else {
                 break;
@@ -550,9 +557,9 @@ bool ComposerAutoCorrection::autoFractions()
     if (!mAutoFractions)
         return false;
 
-    QString trimmed = mWord.trimmed();
+    const QString trimmed = mWord.trimmed();
     if (trimmed.length() > 3) {
-        QChar x = trimmed.at(3);
+        const QChar x = trimmed.at(3);
         if (!(x.unicode() == '.' || x.unicode() == ',' || x.unicode() == '?' || x.unicode() == '!'
               || x.unicode() == ':' || x.unicode() == ';'))
             return false;
@@ -577,10 +584,10 @@ void ComposerAutoCorrection::advancedAutocorrect()
     if (!mAdvancedAutocorrect)
         return;
 
-    int startPos = mCursor.selectionStart();
-    int length = mWord.length();
+    const int startPos = mCursor.selectionStart();
+    const int length = mWord.length();
 
-    QString trimmedWord = mWord.toLower().trimmed();
+    const QString trimmedWord = mWord.toLower().trimmed();
     QString actualWord = trimmedWord;
 
     if (actualWord.isEmpty())
@@ -685,8 +692,7 @@ void ComposerAutoCorrection::replaceTypographicQuotes()
                     *iter = mTypographicDoubleQuotes.begin;
                 else
                     *iter = mTypographicDoubleQuotes.end;
-            }
-            else if (mReplaceSingleQuotes) {
+            } else if (mReplaceSingleQuotes) {
                 if (!ending)
                     *iter = mTypographicSingleQuotes.begin;
                 else

@@ -20,7 +20,7 @@
 
 
 #include <QRegExp>
-
+#include <QPointer>
 #include <klocale.h>
 #include <kfiledialog.h>
 #include <ktemporaryfile.h>
@@ -50,14 +50,15 @@ FilterTheBat::~FilterTheBat()
 /** Recursive import of The Bat! maildir. */
 void FilterTheBat::import()
 {
-  QString _homeDir = QDir::homePath();
+  const QString _homeDir = QDir::homePath();
 
-  KFileDialog *kfd = new KFileDialog( _homeDir, "", 0 );
+  QPointer<KFileDialog> kfd = new KFileDialog( _homeDir, "", 0 );
   kfd->setMode( KFile::Directory | KFile::LocalOnly );
-  kfd->exec();
-  const QString maildir = kfd->selectedFile();
+  if (kfd->exec()) {
+      const QString maildir = kfd->selectedFile();
+      importMails( maildir );
+  }
   delete kfd;
-  importMails( maildir );
 }
 
 void FilterTheBat::processDirectory( const QString& path)

@@ -128,8 +128,12 @@ public:
   void setMessageStatus( const Akonadi::MessageStatus &status ) { mMessageStatus = status; }
   Akonadi::MessageStatus messageStatus() const { return mMessageStatus; }
 
+  void setThemeName(const QString &name) { mThemeName = name; }
+  QString themeName() const { return mThemeName; }
+
 private:
 
+  QString mThemeName;
   QString mMessagePath;
   const HeaderStrategy *mStrategy;
   QString mVCardName;
