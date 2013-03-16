@@ -8,13 +8,13 @@ include_directories(${KACTIVITIES_INCLUDE_DIRS})
 
 
 set(libpimactivity_SRCS
-  comboboxactivity.cpp
-  configureidentity.cpp
-  activitymanager.cpp
-  configureactivitywidget.cpp
-  configurecollections.cpp
-  configuremailtransport.cpp
-  activitywarning.cpp
+	widgets/comboboxactivity.cpp
+  	widgets/configureidentity.cpp
+  	activitymanager.cpp
+  	configureactivitywidget.cpp
+  	widgets/configurecollections.cpp
+  	widgets/configuremailtransport.cpp
+  	activitywarning.cpp
 )
 
 kde4_add_library(pimactivity ${LIBRARY_TYPE} ${libpimactivity_SRCS})

@@ -20,10 +20,10 @@
 
 #include "configureactivitywidget.h"
 #include "activitymanager.h"
-#include "configureidentity.h"
-#include "comboboxactivity.h"
-#include "configuremailtransport.h"
-#include "configurecollections.h"
+#include "widgets/configureidentity.h"
+#include "widgets/comboboxactivity.h"
+#include "widgets/configuremailtransport.h"
+#include "widgets/configurecollections.h"
 #include "activitywarning.h"
 
 #include <KTabWidget>
