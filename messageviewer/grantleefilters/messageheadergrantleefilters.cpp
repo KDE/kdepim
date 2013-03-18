@@ -16,6 +16,7 @@
 */
 
 #include "messageheadergrantleefilters.h"
+#include "messageheaderfilter.h"
 
 #include <QtPlugin>
 
@@ -34,7 +35,7 @@ QHash< QString, Grantlee::Filter* > MessageHeaderGrantleeFilters::filters(const 
     Q_UNUSED(iName);
 
     QHash<QString, Grantlee::Filter*> filters;
-    //TODO
+    filters.insert(QLatin1String("longemail"), new MessageHeaderEmail());
     return filters;
 }
 
