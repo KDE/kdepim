@@ -160,13 +160,12 @@ void Toolbox::slotLoadEntriesFromDB( int blog_id )
         return;
     }
     lstEntriesList->clear();
-    QList<QVariantMap> listEntries;
-    listEntries = DBMan::self()->listPostsInfo( blog_id );
-    int count = listEntries.count();
+    const QList<QVariantMap> listEntries = DBMan::self()->listPostsInfo( blog_id );
+    const int count = listEntries.count();
     for ( int i=0; i < count; ++i ) {
         QListWidgetItem *lstItem = new QListWidgetItem( listEntries[i].value(QLatin1String("title")).toString() );
         lstItem->setToolTip(listEntries.at(i).value(QLatin1String("c_time")).toDateTime().toString());
-        if (listEntries[i].value(QLatin1String("is_private")).toBool()) {
+        if (listEntries.at(i).value(QLatin1String("is_private")).toBool()) {
             lstItem->setForeground(QBrush(Qt::blue));
             lstItem->setToolTip(i18n("%1 (Draft)",lstItem->toolTip()));
         }

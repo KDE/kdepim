@@ -31,9 +31,9 @@
 EntriesCountDialog::EntriesCountDialog( QWidget *parent )
     : KDialog( parent )
 {
-    QWidget *dialog = new QWidget;
-    ui.setupUi( dialog );
-    this->setMainWidget( dialog );
+    QWidget *widget = new QWidget;
+    ui.setupUi( widget );
+    setMainWidget( widget );
     ui.spinCount->setValue(Settings::updateEntriesCount());
 }
 

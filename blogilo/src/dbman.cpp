@@ -569,7 +569,7 @@ bool DBMan::clearCategories( int blog_id )
     return res;
 }
 
-int DBMan::addFile( QString name, int blog_id, bool isUploaded, QString localUrl, QString remoteUrl )
+int DBMan::addFile( const QString& name, int blog_id, bool isUploaded, const QString& localUrl, const QString& remoteUrl )
 // int DBMan::addFile( const QString &name, int blog_id, bool isLocal, const QString &localUrl, const QString &remoteUrl )
 {
     QSqlQuery q;
