@@ -73,6 +73,14 @@ public:
         return toolbar;
     }
 
+    void showToolBars(bool visible)
+    {
+        Q_FOREACH (KToolBar *toolBar, listToolBar) {
+            toolBar->setVisible(visible);
+        }
+    }
+
+
     QList<KToolBar *> listToolBar;
     QVBoxLayout *toolBarLayout;
     FindReplaceBar *findReplaceBar;
@@ -118,6 +126,7 @@ void ComposerEditor::setEnableRichText(bool richTextEnabled)
     if (d->richTextEnabled != richTextEnabled) {
         d->richTextEnabled = richTextEnabled;
         d->view->setActionsEnabled(d->richTextEnabled);
+        d->showToolBars(d->richTextEnabled);
     }
 }
 
@@ -207,6 +216,7 @@ QMap<QString, QString> ComposerEditor::localImages() const
 {
     return d->view->localImages();
 }
+
 
 }
 
