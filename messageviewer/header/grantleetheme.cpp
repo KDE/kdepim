@@ -57,7 +57,6 @@ void GrantleeTheme::setName(const QString &n)
     mName = n;
 }
 
-
 QStringList GrantleeTheme::displayVariables() const
 {
     return mDisplayVariables;

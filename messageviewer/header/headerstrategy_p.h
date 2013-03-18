@@ -197,8 +197,6 @@ protected:
 
 public:
   const char * name() const { return "grantlee"; }
-
-  void loadConfig();
   DefaultPolicy defaultPolicy() const { return Hide; }
 };
 

@@ -27,6 +27,7 @@
 #include "objecttreeemptysource.h"
 #include "objecttreeviewersource.h"
 #include "messagedisplayformatattribute.h"
+#include "header/grantleethememanager.h"
 
 #ifdef MESSAGEVIEWER_READER_HTML_DEBUG
 #include "filehtmlwriter.h"
@@ -214,6 +215,8 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
   if ( !mainWindow )
     mMainWindow = aParent;
 
+  mThemeManager = new MessageViewer::GrantleeThemeManager(KStandardDirs::locate("data",QLatin1String("messageviewer/themes/")));
+  connect(mThemeManager, SIGNAL(themesChanged()),SLOT(slotThemesChanged()));
   mHtmlOverride = false;
   mHtmlLoadExtOverride = false;
   mHtmlLoadExternal = false;
@@ -267,6 +270,7 @@ ViewerPrivate::~ViewerPrivate()
   delete mCSSHelper;
   mNodeHelper->forceCleanTempFiles();
   delete mNodeHelper;
+  delete mThemeManager;
 }
 
 void ViewerPrivate::saveMimePartTreeConfig()
@@ -1877,7 +1881,10 @@ KToggleAction *ViewerPrivate::actionForHeaderStyle( const HeaderStyle * style, c
       actionName = "view_headers_all";
   } else if (style == HeaderStyle::custom() ) {
       actionName = "view_custom_headers";
+  } else if (style == HeaderStyle::grantlee()) {
+      //TODO
   }
+
   if ( actionName )
     return static_cast<KToggleAction*>(mActionCollection->action(actionName));
   else
@@ -2303,6 +2310,12 @@ void ViewerPrivate::slotCustomHeaders()
 {
   setHeaderStyleAndStrategy( HeaderStyle::custom(),
                              HeaderStrategy::custom(), true );
+}
+
+void ViewerPrivate::slotGrantleeHeaders()
+{
+  setHeaderStyleAndStrategy( HeaderStyle::grantlee(),
+                             HeaderStrategy::grantlee(), true );
 }
 
 void ViewerPrivate::slotIconicAttachments()
@@ -3187,6 +3200,16 @@ void ViewerPrivate::slotResetMessageDisplayFormat()
             modify->disableRevisionCheck();
         }
     }
+}
+
+void ViewerPrivate::slotThemesChanged()
+{
+    QMapIterator<QString, GrantleeTheme> i(mThemeManager->themes());
+    while (i.hasNext()) {
+        i.next();
+        qDebug()<<" path "<<i.key()<<" name "<<i.value().name();
+    }
+    //TODO
 }
 
 #include "viewer_p.moc"

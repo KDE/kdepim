@@ -33,6 +33,10 @@ public:
     ~GrantleeThemeManager();
 
     QMap<QString, GrantleeTheme> themes() const;
+
+Q_SIGNALS:
+    void themesChanged();
+
 private:
     Q_PRIVATE_SLOT( d, void directoryChanged() )
     class Private;

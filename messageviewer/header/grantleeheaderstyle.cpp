@@ -17,32 +17,11 @@
 
 
 #include "grantleeheaderstyle.h"
-#include "header/headerstyle_util.h"
 #include "header/grantleeheaderformatter.h"
-
 #include "headerstrategy.h"
-#include <kpimutils/linklocator.h>
-using KPIMUtils::LinkLocator;
-#include "globalsettings.h"
-
-#include <kpimutils/email.h>
-#include "kxface.h"
-#include <messagecore/stringutil.h>
-
-#include <kdebug.h>
-#include <klocale.h>
-#include <kglobal.h>
-
-#include <QApplication>
-
-#include <kstandarddirs.h>
-#include <KApplication>
 
 #include <kmime/kmime_message.h>
-#include <kmime/kmime_dateformatter.h>
 
-using namespace MessageCore;
-using KPIMUtils::LinkLocator;
 using namespace MessageViewer;
 
 namespace MessageViewer {

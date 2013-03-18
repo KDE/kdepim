@@ -39,52 +39,52 @@ namespace HeaderStyleUtil {
 // Convenience functions:
 //
 QString directionOf( const QString & str ) {
-  return str.isRightToLeft() ? QLatin1String("rtl") : QLatin1String("ltr");
+    return str.isRightToLeft() ? QLatin1String("rtl") : QLatin1String("ltr");
 }
 
 QString strToHtml( const QString & str, int flags ) {
-  return LinkLocator::convertToHtml( str, flags );
+    return LinkLocator::convertToHtml( str, flags );
 }
 
 // Prepare the date string (when printing always use the localized date)
 QString dateString( KMime::Message *message, bool printing, bool shortDate ) {
-  const KDateTime dateTime = message->date()->dateTime();
-  if ( !dateTime.isValid() )
-    return i18nc( "Unknown date", "Unknown" );
-  if( printing ) {
-    KLocale * locale = KGlobal::locale();
-    return locale->formatDateTime( dateTime );
-  } else {
-    if ( shortDate )
-      return dateShortStr( dateTime );
-    else
-      return dateStr( dateTime );
-  }
+    const KDateTime dateTime = message->date()->dateTime();
+    if ( !dateTime.isValid() )
+        return i18nc( "Unknown date", "Unknown" );
+    if( printing ) {
+        KLocale * locale = KGlobal::locale();
+        return locale->formatDateTime( dateTime );
+    } else {
+        if ( shortDate )
+            return dateShortStr( dateTime );
+        else
+            return dateStr( dateTime );
+    }
 }
 
 QString subjectString( KMime::Message *message, int flags )
 {
-  QString subject;
-  if ( message->subject(false) ) {
-    subject = message->subject()->asUnicodeString();
-    if ( subject.isEmpty() )
-      subject = i18n("No Subject");
-    else
-      subject = strToHtml( subject, flags );
-  } else {
-    subject = i18n("No Subject");
-  }
-  return subject;
+    QString subject;
+    if ( message->subject(false) ) {
+        subject = message->subject()->asUnicodeString();
+        if ( subject.isEmpty() )
+            subject = i18n("No Subject");
+        else
+            subject = strToHtml( subject, flags );
+    } else {
+        subject = i18n("No Subject");
+    }
+    return subject;
 }
 
 QString subjectDirectionString( KMime::Message *message )
 {
-  QString subjectDir;
-  if ( message->subject(false) )
-    subjectDir = directionOf( NodeHelper::cleanSubject( message ) );
-  else
-    subjectDir = directionOf( i18n("No Subject") );
-  return subjectDir;
+    QString subjectDir;
+    if ( message->subject(false) )
+        subjectDir = directionOf( NodeHelper::cleanSubject( message ) );
+    else
+        subjectDir = directionOf( i18n("No Subject") );
+    return subjectDir;
 }
 
 QString spamStatus(KMime::Message *message)
@@ -213,16 +213,16 @@ QString imgToDataUrl( const QImage &image )
 
 QString dateStr(const KDateTime &dateTime)
 {
-  const time_t unixTime = dateTime.toTime_t();
-  return KMime::DateFormatter::formatDate(
-              static_cast<KMime::DateFormatter::FormatType>(
-                  MessageCore::GlobalSettings::self()->dateFormat() ),
-              unixTime, MessageCore::GlobalSettings::self()->customDateFormat() );
+    const time_t unixTime = dateTime.toTime_t();
+    return KMime::DateFormatter::formatDate(
+                static_cast<KMime::DateFormatter::FormatType>(
+                    MessageCore::GlobalSettings::self()->dateFormat() ),
+                unixTime, MessageCore::GlobalSettings::self()->customDateFormat() );
 }
 
 QString dateShortStr(const KDateTime &dateTime)
 {
-  return KGlobal::locale()->formatDateTime( dateTime, KLocale::FancyShortDate );
+    return KGlobal::locale()->formatDateTime( dateTime, KLocale::FancyShortDate );
 }
 
 

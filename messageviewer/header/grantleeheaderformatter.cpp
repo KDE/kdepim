@@ -137,6 +137,24 @@ QString GrantleeHeaderFormatter::toHtml(const QString &themeName, bool isPrintin
     if ( !style->vCardName().isEmpty() )
         headerObject.insert( QLatin1String( "vcardname" ) , style->vCardName() );
 
+
+    // colors depend on if it is encapsulated or not
+    QColor fontColor( Qt::white );
+    QString linkColor = QLatin1String("white");
+    const QColor activeColor = KColorScheme( QPalette::Active, KColorScheme::Selection ).background().color();
+    QColor activeColorDark = activeColor.dark(130);
+    // reverse colors for encapsulated
+    if( !style->isTopLevel() ){
+        activeColorDark = activeColor.dark(50);
+        fontColor = QColor(Qt::black);
+        linkColor = QLatin1String("black");
+    }
+
+    // 3D borders
+    headerObject.insert( QLatin1String( "activecolordark" ), activeColorDark.name() );
+    headerObject.insert( QLatin1String( "fontcolor" ), fontColor.name() );
+    headerObject.insert( QLatin1String( "linkcolor" ) , linkColor );
+
     QVariantHash mapping;
     mapping.insert( "header", headerObject );
     Grantlee::Context context( mapping );

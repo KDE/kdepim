@@ -58,12 +58,6 @@ void CustomHeaderStrategy::loadConfig()
 GrantleeHeaderStrategy::GrantleeHeaderStrategy()
   : HeaderStrategy()
 {
-    loadConfig();
 }
-
-void GrantleeHeaderStrategy::loadConfig()
-{
-}
-
 
 }

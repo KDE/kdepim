@@ -24,8 +24,7 @@ QVariant MessageHeaderEmailShowLink::doFilter(const QVariant& input, const QVari
 {
     Q_UNUSED(autoescape);
     Q_UNUSED(argument);
-    QString value = Grantlee::getSafeString(input);
-    const KMime::Types::Mailbox::List mailboxes = MessageCore::StringUtil::mailboxListFromUnicodeString( value );
+    const KMime::Types::Mailbox::List mailboxes = MessageCore::StringUtil::mailboxListFromUnicodeString( Grantlee::getSafeString(input) );
     return MessageCore::StringUtil::emailAddrAsAnchor( mailboxes, MessageCore::StringUtil::DisplayFullAddress, "", MessageCore::StringUtil::ShowLink );
 }
 
@@ -39,8 +38,7 @@ QVariant MessageHeaderEmailNameOnly::doFilter(const QVariant& input, const QVari
 {
     Q_UNUSED(autoescape);
     Q_UNUSED(argument);
-    QString value = Grantlee::getSafeString(input);
-    const KMime::Types::Mailbox::List mailboxes = MessageCore::StringUtil::mailboxListFromUnicodeString( value );
+    const KMime::Types::Mailbox::List mailboxes = MessageCore::StringUtil::mailboxListFromUnicodeString( Grantlee::getSafeString(input) );
     return MessageCore::StringUtil::emailAddrAsAnchor( mailboxes, MessageCore::StringUtil::DisplayNameOnly );
 }
 
