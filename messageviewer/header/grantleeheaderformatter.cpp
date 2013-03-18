@@ -219,12 +219,12 @@ QString GrantleeHeaderFormatter::toHtml(const QString &themeName, bool isPrintin
 
     if( photoURL.isEmpty() && message->headerByType( "Face" ) && useOtherPhotoSources ) {
         // no photo, look for a Face header
-        QString faceheader = message->headerByType( "Face" )->asUnicodeString();
+        const QString faceheader = message->headerByType( "Face" )->asUnicodeString();
         if ( !faceheader.isEmpty() ) {
 
             kDebug() << "Found Face: header";
 
-            QByteArray facestring = faceheader.toUtf8();
+            const QByteArray facestring = faceheader.toUtf8();
             // Spec says header should be less than 998 bytes
             // Face: is 5 characters
             if ( facestring.length() < 993 ) {
