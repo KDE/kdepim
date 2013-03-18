@@ -23,14 +23,14 @@ class ImportWizard;
 class TheBatImportData : public AbstractImporter
 {
 public:
-  explicit TheBatImportData(ImportWizard *parent);
-  ~TheBatImportData();
+    explicit TheBatImportData(ImportWizard *parent);
+    ~TheBatImportData();
     
-  TypeSupportedOptions supportedOption();
-  bool foundMailer() const;
-  
-  bool importMails();
-  QString name() const;
+    TypeSupportedOptions supportedOption();
+    bool foundMailer() const;
+
+    bool importMails();
+    QString name() const;
 
 };
 

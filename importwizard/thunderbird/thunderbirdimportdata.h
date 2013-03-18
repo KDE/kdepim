@@ -23,21 +23,21 @@ class ImportWizard;
 class ThunderbirdImportData : public AbstractImporter
 {
 public:
-  explicit ThunderbirdImportData(ImportWizard *parent);
-  ~ThunderbirdImportData();
+    explicit ThunderbirdImportData(ImportWizard *parent);
+    ~ThunderbirdImportData();
     
-  TypeSupportedOptions supportedOption();
-  bool foundMailer() const;
-  
-  bool importSettings();
-  bool importMails();
-  bool importFilters();
-  bool importAddressBook();
-  QString name() const;
-private:
-  QString defaultProfile();
+    TypeSupportedOptions supportedOption();
+    bool foundMailer() const;
 
-  QString mDefaultProfile;
+    bool importSettings();
+    bool importMails();
+    bool importFilters();
+    bool importAddressBook();
+    QString name() const;
+private:
+    QString defaultProfile();
+
+    QString mDefaultProfile;
 };
 
 #endif /* THUNDERBIRDIMPORTDATA_H */

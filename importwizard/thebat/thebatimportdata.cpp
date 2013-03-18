@@ -30,7 +30,7 @@
 TheBatImportData::TheBatImportData(ImportWizard*parent)
     :AbstractImporter(parent)
 {
-  mPath = QDir::homePath();
+    mPath = QDir::homePath();
 }
 
 TheBatImportData::~TheBatImportData()
@@ -41,27 +41,27 @@ TheBatImportData::~TheBatImportData()
 bool TheBatImportData::foundMailer() const
 {
 #ifdef Q_OS_WIN
-  QDir directory( mPath );
-  if ( directory.exists() )
-    return true;
+    QDir directory( mPath );
+    if ( directory.exists() )
+        return true;
 #endif
-  return false;
+    return false;
 }
 
 QString TheBatImportData::name() const
 {
-  return QLatin1String("TheBat");
+    return QLatin1String("TheBat");
 }
 
 bool TheBatImportData::importMails()
 {
     MailImporter::FilterInfo *info = initializeInfo();
- 
+
     MailImporter::FilterTheBat thebat;
     thebat.setFilterInfo( info );
     info->setStatusMessage(i18n("Import in progress"));
     QDir directory(mPath);
-    if(directory.exists())
+    if (directory.exists())
         thebat.importMails(mPath);
     else
         thebat.import();
@@ -73,7 +73,7 @@ bool TheBatImportData::importMails()
 
 AbstractImporter::TypeSupportedOptions TheBatImportData::supportedOption()
 {
-  TypeSupportedOptions options;
-  options |=AbstractImporter::Mails;
-  return options;
+    TypeSupportedOptions options;
+    options |=AbstractImporter::Mails;
+    return options;
 }
