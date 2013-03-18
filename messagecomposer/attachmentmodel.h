@@ -54,7 +54,8 @@ class MESSAGECOMPOSER_EXPORT AttachmentModel : public QAbstractItemModel
       MimeTypeRole,
       CompressRole,
       EncryptRole,
-      SignRole
+      SignRole,
+      AutoDisplayRole
     };
 
     /**
@@ -68,6 +69,7 @@ class MESSAGECOMPOSER_EXPORT AttachmentModel : public QAbstractItemModel
       CompressColumn,
       EncryptColumn,
       SignColumn,
+      AutoDisplayColumn,
       LastColumn ///< @internal
     };
 
@@ -95,6 +97,10 @@ class MESSAGECOMPOSER_EXPORT AttachmentModel : public QAbstractItemModel
     /// sets for all
     void setSignSelected( bool selected );
 
+    bool isAutoDisplayEnabled() const;
+    void setAutoDisplayEnabled( bool enabled );
+
+
     virtual QVariant data( const QModelIndex &index, int role = Qt::DisplayRole ) const;
     virtual bool setData( const QModelIndex &index, const QVariant &value, int role = Qt::EditRole );
 
@@ -116,6 +122,7 @@ class MESSAGECOMPOSER_EXPORT AttachmentModel : public QAbstractItemModel
   signals:
     void encryptEnabled( bool enabled );
     void signEnabled( bool enabled );
+    void autoDisplayEnabled( bool enabled );
     void attachUrlsRequested( const KUrl::List &urls );
     void attachItemsRequester( const Akonadi::Item::List & );
     void attachmentRemoved( MessageCore::AttachmentPart::Ptr part );

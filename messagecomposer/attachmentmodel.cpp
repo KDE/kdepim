@@ -59,6 +59,7 @@ class Message::AttachmentModel::Private
     bool signEnabled;
     bool encryptSelected;
     bool signSelected;
+    bool autoDisplayEnabled;
     QList<KTempDir*> tempDirs;
 };
 
@@ -69,6 +70,7 @@ AttachmentModel::Private::Private( AttachmentModel *qq )
   , signEnabled( false )
   , encryptSelected( false )
   , signSelected( false )
+  , autoDisplayEnabled( false )
 {
 }
 
@@ -92,6 +94,7 @@ AttachmentModel::AttachmentModel( QObject *parent )
   names.insert( CompressRole, "attachmentIsCompressed" );
   names.insert( EncryptRole, "attachmentIsEncrypted" );
   names.insert( SignRole, "attachmentIsSigned" );
+  names.insert( AutoDisplayRole, "attachmentIsAutoDiplayed" );
 
   setRoleNames( names );
 }
@@ -211,6 +214,18 @@ void AttachmentModel::setEncryptEnabled( bool enabled )
   emit encryptEnabled( enabled );
 }
 
+bool AttachmentModel::isAutoDisplayEnabled() const
+{
+  return d->autoDisplayEnabled;
+}
+
+void AttachmentModel::setAutoDisplayEnabled( bool enabled )
+{
+  d->autoDisplayEnabled = enabled;
+  emit autoDisplayEnabled( enabled );
+}
+
+
 bool AttachmentModel::isSignEnabled() const
 {
   return d->signEnabled;
@@ -270,7 +285,7 @@ QVariant AttachmentModel::data( const QModelIndex &index, int role ) const
         return QVariant::fromValue( part->mimeType() );
       default:
         return QVariant();
-    };
+    }
   } else if( role == Qt::CheckStateRole ) {
     switch( index.column() ) {
       case CompressColumn:
@@ -279,6 +294,8 @@ QVariant AttachmentModel::data( const QModelIndex &index, int role ) const
         return QVariant::fromValue( int( boolToCheckState( part->isEncrypted() ) ) );
       case SignColumn:
         return QVariant::fromValue( int( boolToCheckState( part->isSigned() ) ) );
+      case AutoDisplayColumn:
+        return QVariant::fromValue( int( boolToCheckState( part->isInline() ) ) );
       default:
         return QVariant();
     }
@@ -303,6 +320,8 @@ QVariant AttachmentModel::data( const QModelIndex &index, int role ) const
     return QVariant::fromValue( part->isEncrypted() );
   } else if ( role == SignRole ) {
     return QVariant::fromValue( part->isSigned() );
+  } else if ( role == AutoDisplayRole ) {
+    return QVariant::fromValue( part->isInline() );
   } else {
     return QVariant();
   }
@@ -329,6 +348,9 @@ bool AttachmentModel::setData( const QModelIndex &index, const QVariant &value, 
         break;
       case SignColumn:
         part->setSigned( value.toBool() );
+        break;
+      case AutoDisplayColumn:
+        part->setInline( value.toBool() );
         break;
       default:
         break; // Do nothing.
@@ -410,7 +432,8 @@ Qt::ItemFlags AttachmentModel::flags( const QModelIndex &index ) const
 
   if( index.column() == CompressColumn ||
       index.column() == EncryptColumn ||
-      index.column() == SignColumn ) {
+      index.column() == SignColumn ||
+      index.column() == AutoDisplayColumn ) {
     return Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled | Qt::ItemIsUserCheckable | defaultFlags;
   } else {
     return Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled | defaultFlags;
@@ -438,6 +461,8 @@ QVariant AttachmentModel::headerData( int section, Qt::Orientation orientation, 
       return i18nc( "@title column attachment encryption checkbox.", "Encrypt" );
     case SignColumn:
       return i18nc( "@title column attachment signed checkbox.", "Sign" );
+    case AutoDisplayColumn:
+      return i18nc( "@title column attachment inlined checkbox.", "Suggest Automatic Display" );
     default:
       kWarning() << "Bad column" << section;
       return QVariant();
