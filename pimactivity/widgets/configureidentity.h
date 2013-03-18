@@ -24,6 +24,10 @@
 #include <QWidget>
 #include "pimactivity_export.h"
 
+class QListWidget;
+namespace KPIMIdentities {
+class IdentityManager;
+}
 
 namespace PimActivity {
 
@@ -38,7 +42,10 @@ public:
     void writeConfig();
 Q_SIGNALS:
     void changed();
-
+private:
+    void init();
+    QListWidget *mListIdentity;
+    KPIMIdentities::IdentityManager *mManager;
 };
 
 }

@@ -20,22 +20,43 @@
 
 #include "configureidentity.h"
 
+#include <KPIMIdentities/IdentityManager>
+
+
+#include <QVBoxLayout>
 #include <QDebug>
+#include <QListWidget>
 
 namespace PimActivity {
 
 ConfigureIdentity::ConfigureIdentity(QWidget *parent)
     : QWidget(parent)
 {
+    QVBoxLayout *lay = new QVBoxLayout;
+    mListIdentity = new QListWidget;
+    lay->addWidget(mListIdentity);
+    init();
+    setLayout(lay);
 }
 
 ConfigureIdentity::~ConfigureIdentity()
 {
 }
 
+void ConfigureIdentity::init()
+{
+    mManager = new KPIMIdentities::IdentityManager( false, this, "mIdentityManager" );
+    KPIMIdentities::IdentityManager::Iterator end( mManager->modifyEnd() );
+
+    for ( KPIMIdentities::IdentityManager::Iterator it = mManager->modifyBegin(); it != end; ++it ) {
+      //TODO
+    }
+
+    //TODO init list.
+}
+
 void ConfigureIdentity::readConfig()
 {
-
 }
 
 void ConfigureIdentity::writeConfig()
