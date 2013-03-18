@@ -87,17 +87,24 @@ QString GrantleeHeaderFormatter::toHtml(const QString &themeName, bool isPrintin
     if ( message->replyTo( false )) {
         headerObject.insert(QLatin1String("replyToi18n"), i18n("Reply to:") );
         headerObject.insert(QLatin1String("replyTo"), StringUtil::emailAddrAsAnchor( message->replyTo(), StringUtil::DisplayFullAddress ));
+        headerObject.insert(QLatin1String("replyToStr"), message->replyTo()->asUnicodeString());
     }
 
     if ( message->cc( false ) ) {
         headerObject.insert(QLatin1String("cci18n"), i18n("CC:") );
         headerObject.insert(QLatin1String("cc"), StringUtil::emailAddrAsAnchor( message->cc(), StringUtil::DisplayFullAddress ));
+        headerObject.insert(QLatin1String("ccStr"), message->cc()->asUnicodeString());
     }
 
     if ( message->bcc( false ) ) {
         headerObject.insert(QLatin1String("bcci18n"), i18n("BCC:"));
         headerObject.insert(QLatin1String("bcc"), StringUtil::emailAddrAsAnchor( message->bcc(), StringUtil::DisplayFullAddress ));
+        headerObject.insert(QLatin1String("bccStr"), message->bcc()->asUnicodeString());
     }
+    headerObject.insert(QLatin1String("fromi18n"), i18n("From:"));
+    headerObject.insert(QLatin1String( "from" ) ,  StringUtil::emailAddrAsAnchor( message->from(), StringUtil::DisplayFullAddress ) );
+    headerObject.insert(QLatin1String( "fromStr" ) , message->from()->asUnicodeString() );
+
 
     const QString spamHtml = MessageViewer::HeaderStyleUtil::spamStatus(message);
     if ( !spamHtml.isEmpty() ) {

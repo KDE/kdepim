@@ -17,15 +17,34 @@
 
 #include "messageheaderfilter.h"
 
-QVariant MessageHeaderEmail::doFilter(const QVariant& input, const QVariant& argument, bool autoescape) const
+#include <messagecore/stringutil.h>
+#include <grantlee/util.h>
+
+QVariant MessageHeaderEmailShowLink::doFilter(const QVariant& input, const QVariant& argument, bool autoescape) const
 {
     Q_UNUSED(autoescape);
-    //TODO
-
-    return QVariant();
+    Q_UNUSED(argument);
+    QString value = Grantlee::getSafeString(input);
+    const KMime::Types::Mailbox::List mailboxes = MessageCore::StringUtil::mailboxListFromUnicodeString( value );
+    return MessageCore::StringUtil::emailAddrAsAnchor( mailboxes, MessageCore::StringUtil::DisplayFullAddress, "", MessageCore::StringUtil::ShowLink );
 }
 
-bool MessageHeaderEmail::isSafe() const
+bool MessageHeaderEmailShowLink::isSafe() const
+{
+    return true;
+}
+
+
+QVariant MessageHeaderEmailNameOnly::doFilter(const QVariant& input, const QVariant& argument, bool autoescape) const
+{
+    Q_UNUSED(autoescape);
+    Q_UNUSED(argument);
+    QString value = Grantlee::getSafeString(input);
+    const KMime::Types::Mailbox::List mailboxes = MessageCore::StringUtil::mailboxListFromUnicodeString( value );
+    return MessageCore::StringUtil::emailAddrAsAnchor( mailboxes, MessageCore::StringUtil::DisplayNameOnly );
+}
+
+bool MessageHeaderEmailNameOnly::isSafe() const
 {
     return true;
 }

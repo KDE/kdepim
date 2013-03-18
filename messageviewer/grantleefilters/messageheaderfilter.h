@@ -22,12 +22,22 @@
 #include <QObject>
 #include <grantlee/filter.h>
 
-class MessageHeaderEmail : public Grantlee::Filter
+
+class MessageHeaderEmailShowLink : public Grantlee::Filter
 {
 public:
     QVariant doFilter(const QVariant& input, const QVariant& argument = QVariant(), bool autoescape = false) const;
 
     bool isSafe() const;
 };
+
+class MessageHeaderEmailNameOnly : public Grantlee::Filter
+{
+public:
+    QVariant doFilter(const QVariant& input, const QVariant& argument = QVariant(), bool autoescape = false) const;
+
+    bool isSafe() const;
+};
+
 
 #endif // MESSAGEHEADERFILTER_H

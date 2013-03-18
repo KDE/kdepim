@@ -6,7 +6,7 @@ INCLUDE_DIRECTORIES( ${PROJECT_BINARY_DIR} ${KDE4_INCLUDES} ${QT_INCLUDES} ${Gra
 )
 
 grantlee_add_plugin(grantlee_messageheaderfilters messageheadergrantleefilters FILTERS messageheaderfilter )
-#TARGET_LINK_LIBRARIES(grantlee_messageheaderfilters )
+TARGET_LINK_LIBRARIES(grantlee_messageheaderfilters messagecore)
 
 ########### install files ###############
 INSTALL(TARGETS grantlee_messageheaderfilters LIBRARY DESTINATION ${PLUGIN_INSTALL_DIR}/plugins/grantlee/${Grantlee_VERSION_MAJOR}.${Grantlee_VERSION_MINOR} )
