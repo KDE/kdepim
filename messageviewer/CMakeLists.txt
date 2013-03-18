@@ -145,3 +145,5 @@ install(TARGETS messageviewer ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 
 install(DIRECTORY themes DESTINATION ${DATA_INSTALL_DIR}/messageviewer )
+
+add_subdirectory(grantleefilters)
