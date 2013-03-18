@@ -1528,7 +1528,7 @@ the dates directly or use the <link linkend="glossary"
  endterm="gloss-calendar-widget">
 Calendar Widget</link>.  Select the time from quarter hour intervals, or enter
 the desired time directly into the time fields. These fields are only available
-when the <guilabel>Takes the whole day</guilabel> box is not checked.</para></listitem>
+when the <guilabel>All Day</guilabel> box is not checked.</para></listitem>
 </varlistentry>
 
 </variablelist>
