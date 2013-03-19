@@ -66,6 +66,7 @@ public:
             themes.insert( dirIt.fileName(), theme );
         }
 
+        Q_EMIT q->themesChanged();
         watch->addDir( themesPath );
         watch->startScan();
     }

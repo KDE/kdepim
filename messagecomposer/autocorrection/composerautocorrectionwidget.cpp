@@ -105,6 +105,8 @@ ComposerAutoCorrectionWidget::ComposerAutoCorrectionWidget(QWidget *parent) :
 
     connect( menu, SIGNAL(triggered(QAction*)), SLOT(slotImportAutoCorrection(QAction*)) );
 
+    connect(ui->exportAutoCorrection,SIGNAL(clicked()),SLOT(slotExportAutoCorrection()));
+
 }
 
 ComposerAutoCorrectionWidget::~ComposerAutoCorrectionWidget()
@@ -134,6 +136,7 @@ void ComposerAutoCorrectionWidget::loadConfig()
     ui->autoSuperScript->setChecked(mAutoCorrection->isSuperScript());
     ui->typographicDoubleQuotes->setChecked(mAutoCorrection->isReplaceDoubleQuotes());
     ui->typographicSingleQuotes->setChecked(mAutoCorrection->isReplaceSingleQuotes());
+    ui->addNonBreakingSpaceInFrench->setChecked(mAutoCorrection->isAddNonBreakingSpace());
     loadAutoCorrectionAndException();
     mWasChanged = false;
 }
@@ -206,6 +209,7 @@ void ComposerAutoCorrectionWidget::writeConfig()
     mAutoCorrection->setReplaceSingleQuotes(ui->typographicSingleQuotes->isChecked());
     mAutoCorrection->setTypographicSingleQuotes(m_singleQuotes);
     mAutoCorrection->setTypographicDoubleQuotes(m_doubleQuotes);
+    mAutoCorrection->setAddNonBreakingSpace(ui->addNonBreakingSpaceInFrench->isChecked());
     mAutoCorrection->writeConfig();
     mWasChanged = false;
 }
@@ -225,6 +229,7 @@ void ComposerAutoCorrectionWidget::resetToDefault()
     ui->autoReplaceNumber->setChecked(false);
     ui->typographicDoubleQuotes->setChecked(false);
     ui->typographicSingleQuotes->setChecked(false);
+    ui->addNonBreakingSpaceInFrench->setChecked(false);
 
     loadGlobalAutoCorrectionAndException();
 }
@@ -592,6 +597,15 @@ void ComposerAutoCorrectionWidget::loadGlobalAutoCorrectionAndException()
     loadAutoCorrectionAndException();
     mWasChanged = true;
     Q_EMIT changed();
+}
+
+void ComposerAutoCorrectionWidget::slotExportAutoCorrection()
+{
+    const KUrl saveUrl= KFileDialog::getSaveUrl(QDir::homePath(), QString(), this, i18n( "Export Autocorrection File" ) );
+    if ( saveUrl.isEmpty() ) {
+        return;
+    }
+    mAutoCorrection->writeAutoCorrectionXmlFile(saveUrl.toLocalFile());
 }
 
 #include "composerautocorrectionwidget.moc"

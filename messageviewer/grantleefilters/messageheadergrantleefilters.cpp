@@ -15,32 +15,29 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef GRANTLEETHEMEMANAGER_H
-#define GRANTLEETHEMEMANAGER_H
+#include "messageheadergrantleefilters.h"
+#include "messageheaderfilter.h"
 
-#include "header/grantleetheme.h"
+#include <QtPlugin>
 
-#include <QObject>
-#include <QMap>
-
-
-namespace MessageViewer {
-class GrantleeThemeManager : public QObject
+MessageHeaderGrantleeFilters::MessageHeaderGrantleeFilters(QObject *parent)
+    : QObject(parent)
 {
-    Q_OBJECT
-public:
-    explicit GrantleeThemeManager(const QString &path, QObject *parent = 0);
-    ~GrantleeThemeManager();
-
-    QMap<QString, GrantleeTheme> themes() const;
-
-Q_SIGNALS:
-    void themesChanged();
-
-private:
-    Q_PRIVATE_SLOT( d, void directoryChanged() )
-    class Private;
-    Private *const d;
-};
 }
-#endif // GRANTLEETHEMEMANAGER_H
+
+MessageHeaderGrantleeFilters::~MessageHeaderGrantleeFilters()
+{
+}
+
+
+QHash< QString, Grantlee::Filter* > MessageHeaderGrantleeFilters::filters(const QString& name)
+{
+    Q_UNUSED(name);
+
+    QHash<QString, Grantlee::Filter*> filters;
+    filters.insert(QLatin1String("showlink"), new MessageHeaderEmailShowLink());
+    filters.insert(QLatin1String("nameonly"), new MessageHeaderEmailNameOnly());
+    return filters;
+}
+
+Q_EXPORT_PLUGIN2(grantlee_messageheaderfilters, MessageHeaderGrantleeFilters)

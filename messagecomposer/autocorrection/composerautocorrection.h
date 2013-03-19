@@ -54,6 +54,7 @@ public:
   void setAutoFormatUrl(bool b) { mAutoFormatUrl = b; }
   void setAutoBoldUnderline(bool b) { mAutoBoldUnderline = b; }
   void setSuperScript(bool b) { mSuperScriptAppendix = b; }
+  void setAddNonBreakingSpace(bool b) { mAddNonBreakingSpace = b; }
 
   bool isEnabledAutoCorrection() const { return mEnabled; }
   bool isUppercaseFirstCharOfSentence() const { return mUppercaseFirstCharOfSentence; }
@@ -84,6 +85,8 @@ public:
 
   void addAutoCorrect(const QString& currentWord, const QString& replaceWord);
 
+  void writeAutoCorrectionXmlFile(const QString &filename = QString());
+
 private:
   bool isFrenchLanguage() const;
   void readConfig();
@@ -104,7 +107,7 @@ private:
 
   QString autoDetectURL(const QString &_word) const;
   void readAutoCorrectionXmlFile(bool forceGlobal = false);
-  void writeAutoCorrectionXmlFile();
+
 
 
   bool mSingleSpaces; // suppress double spaces.

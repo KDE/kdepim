@@ -312,7 +312,7 @@
         <string comment="@info:whatsthis">Set if this to-do's start and due dates have times associated with them.</string>
        </property>
        <property name="text">
-        <string comment="@option:check">Takes the whole day</string>
+        <string comment="@option:check">All Day</string>
        </property>
        <property name="checked">
         <bool>true</bool>

@@ -126,7 +126,7 @@ public:
     bool clearCategories( int blog_id );
 
     ///File:
-    int addFile( QString name, int blog_id, bool isUploaded, QString localUrl, QString remoteUrl );
+    int addFile(const QString &name, int blog_id, bool isUploaded, const QString &localUrl, const QString &remoteUrl );
     int addFile( const BilboMedia& file );
     int addFile();
     bool removeFile( int fileid );

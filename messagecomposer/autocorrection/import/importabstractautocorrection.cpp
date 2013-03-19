@@ -20,7 +20,7 @@
 using namespace MessageComposer;
 
 ImportAbstractAutocorrection::ImportAbstractAutocorrection(QWidget *parent)
-  : mParent(parent)
+    : mParent(parent)
 {
 }
 
@@ -30,22 +30,22 @@ ImportAbstractAutocorrection::~ImportAbstractAutocorrection()
 
 QSet<QString> ImportAbstractAutocorrection::upperCaseExceptions() const
 {
-  return mUpperCaseExceptions;
+    return mUpperCaseExceptions;
 }
 
 QSet<QString> ImportAbstractAutocorrection::twoUpperLetterExceptions() const
 {
-  return mTwoUpperLetterExceptions;
+    return mTwoUpperLetterExceptions;
 }
 
 QHash<QString, QString> ImportAbstractAutocorrection::autocorrectEntries() const
 {
-  return mAutocorrectEntries;
+    return mAutocorrectEntries;
 }
 
 ComposerAutoCorrection::TypographicQuotes ImportAbstractAutocorrection::typographicSingleQuotes() const
 {
-  return mTypographicSingleQuotes;
+    return mTypographicSingleQuotes;
 }
 
 ComposerAutoCorrection::TypographicQuotes ImportAbstractAutocorrection::typographicDoubleQuotes() const

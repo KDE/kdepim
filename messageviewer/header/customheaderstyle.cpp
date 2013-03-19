@@ -28,16 +28,9 @@ using KPIMUtils::LinkLocator;
 #include <kpimutils/email.h>
 #include <messagecore/stringutil.h>
 
-#include <akonadi/contact/contactsearchjob.h>
 #include <kdebug.h>
 #include <klocale.h>
 #include <kglobal.h>
-#include <kcodecs.h>
-#include <KColorScheme>
-
-#include <QApplication>
-#include <QRegExp>
-#include <QFontMetrics>
 
 #include <KApplication>
 
@@ -88,7 +81,7 @@ QString CustomHeaderStyle::format( KMime::Message *message ) const {
     return headerStr + "</div>";
   }
 
-  headerStr = QString("<div class=\"header\" dir=\"%1\">").arg(dir);
+  headerStr = QString::fromLatin1("<div class=\"header\" dir=\"%1\">").arg(dir);
 
 
   Q_FOREACH (const QString &headerToDisplay, headersToDisplay) {
@@ -147,7 +140,6 @@ QString CustomHeaderStyle::formatAllMessageHeaders( KMime::Message *message, con
     while ( header ) {
         const QString headerType = QLatin1String(header->type());
         if (!headersToHide.contains(headerType) || !headersToHide.contains(headerType.toLower())) {
-
             result += MessageViewer::HeaderStyleUtil::strToHtml(headerType) + QLatin1String(": ") + header->asUnicodeString();
             result += QLatin1String( "<br />\n" );
         }

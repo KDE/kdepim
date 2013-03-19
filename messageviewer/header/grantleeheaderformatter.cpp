@@ -19,7 +19,11 @@
 #include "grantleeheaderstyle.h"
 #include "headerstyle_util.h"
 #include "globalsettings.h"
+#include "config-messageviewer.h"
+#include "contactdisplaymessagememento.h"
+#include "kxface.h"
 
+#include <kpimutils/email.h>
 #include <messagecore/stringutil.h>
 
 #include <kmime/kmime_message.h>
@@ -42,6 +46,7 @@ public:
     Private()
     {
         engine = new Grantlee::Engine;
+        engine->setPluginPaths( QStringList() << GRANTLEE_PLUGIN_PATH << MESSAGEVIEWER_GRANTLEE_PLUGIN_PATH);
         templateLoader = Grantlee::FileSystemTemplateLoader::Ptr( new Grantlee::FileSystemTemplateLoader );
         templateLoader->setTemplateDirs( QStringList() << KStandardDirs::locate("data",QLatin1String("messageviewer/themes/")) );
         engine->addTemplateLoader( templateLoader );
@@ -85,17 +90,24 @@ QString GrantleeHeaderFormatter::toHtml(const QString &themeName, bool isPrintin
     if ( message->replyTo( false )) {
         headerObject.insert(QLatin1String("replyToi18n"), i18n("Reply to:") );
         headerObject.insert(QLatin1String("replyTo"), StringUtil::emailAddrAsAnchor( message->replyTo(), StringUtil::DisplayFullAddress ));
+        headerObject.insert(QLatin1String("replyToStr"), message->replyTo()->asUnicodeString());
     }
 
     if ( message->cc( false ) ) {
         headerObject.insert(QLatin1String("cci18n"), i18n("CC:") );
         headerObject.insert(QLatin1String("cc"), StringUtil::emailAddrAsAnchor( message->cc(), StringUtil::DisplayFullAddress ));
+        headerObject.insert(QLatin1String("ccStr"), message->cc()->asUnicodeString());
     }
 
     if ( message->bcc( false ) ) {
         headerObject.insert(QLatin1String("bcci18n"), i18n("BCC:"));
         headerObject.insert(QLatin1String("bcc"), StringUtil::emailAddrAsAnchor( message->bcc(), StringUtil::DisplayFullAddress ));
+        headerObject.insert(QLatin1String("bccStr"), message->bcc()->asUnicodeString());
     }
+    headerObject.insert(QLatin1String("fromi18n"), i18n("From:"));
+    headerObject.insert(QLatin1String( "from" ) ,  StringUtil::emailAddrAsAnchor( message->from(), StringUtil::DisplayFullAddress ) );
+    headerObject.insert(QLatin1String( "fromStr" ) , message->from()->asUnicodeString() );
+
 
     const QString spamHtml = MessageViewer::HeaderStyleUtil::spamStatus(message);
     if ( !spamHtml.isEmpty() ) {
@@ -127,6 +139,33 @@ QString GrantleeHeaderFormatter::toHtml(const QString &themeName, bool isPrintin
 
     if ( !style->vCardName().isEmpty() )
         headerObject.insert( QLatin1String( "vcardname" ) , style->vCardName() );
+
+
+    // colors depend on if it is encapsulated or not
+    QColor fontColor( Qt::white );
+    QString linkColor = QLatin1String("white");
+    const QColor activeColor = KColorScheme( QPalette::Active, KColorScheme::Selection ).background().color();
+    QColor activeColorDark = activeColor.dark(130);
+    // reverse colors for encapsulated
+    if( !style->isTopLevel() ){
+        activeColorDark = activeColor.dark(50);
+        fontColor = QColor(Qt::black);
+        linkColor = QLatin1String("black");
+    }
+
+    // 3D borders
+    headerObject.insert( QLatin1String( "activecolordark" ), activeColorDark.name() );
+    headerObject.insert( QLatin1String( "fontcolor" ), fontColor.name() );
+    headerObject.insert( QLatin1String( "linkcolor" ) , linkColor );
+
+
+    MessageViewer::HeaderStyleUtil::xfaceSettings xface = MessageViewer::HeaderStyleUtil::xface(style, message);
+    if( !xface.photoURL.isEmpty() )
+    {
+        headerObject.insert( QLatin1String( "photowidth" ) , xface.photoWidth );
+        headerObject.insert( QLatin1String( "photoheight" ) , xface.photoHeight );
+        headerObject.insert( QLatin1String( "photourl" ) , xface.photoURL );
+    }
 
     QVariantHash mapping;
     mapping.insert( "header", headerObject );

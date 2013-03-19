@@ -206,7 +206,7 @@ void MainWindow::loadTempPosts()
 {
     kDebug();
     QMap<BilboPost*, int> tempList = DBMan::self()->listTempPosts();
-    int count = tempList.count();
+    const int count = tempList.count();
     if ( count > 0 ){
         QMap<BilboPost*, int>::ConstIterator it = tempList.constBegin();
         QMap<BilboPost*, int>::ConstIterator endIt = tempList.constEnd();
@@ -521,7 +521,7 @@ void MainWindow::slotNewPostOpened( BilboPost &newPost, int blog_id )
 void MainWindow::slotSavePostLocally()
 {
     kDebug();
-    if (activePost && tabPosts->count() > 0) {
+    if (activePost && (tabPosts->count() > 0)) {
         toolbox->getFieldsValue(activePost->currentPost());
         activePost->saveLocally();
         toolbox->reloadLocalPosts();

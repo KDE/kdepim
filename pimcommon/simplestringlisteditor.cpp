@@ -224,6 +224,7 @@ void SimpleStringListEditor::slotAdd() {
     emit aboutToAdd( newEntry );
     if ( ok && !newEntry.isEmpty() && !containsString( newEntry )) {
         mListBox->addItem( newEntry );
+        slotSelectionChanged();
         emit changed();
     }
 }
@@ -235,6 +236,7 @@ void SimpleStringListEditor::slotRemove() {
     Q_FOREACH(QListWidgetItem *item, selectedItems) {
         delete mListBox->takeItem(mListBox->row(item));
     }
+    slotSelectionChanged();
     emit changed();
 }
 

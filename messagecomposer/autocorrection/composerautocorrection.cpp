@@ -652,7 +652,7 @@ void ComposerAutoCorrection::replaceTypographicQuotes()
     bool ending = true;
     QString::Iterator iter = mWord.end();
     iter--;
-
+    //TODO add QChar::Nbsp
     while (iter != mWord.begin()) {
         if (*iter == QLatin1Char('"') || *iter == QLatin1Char('\'')) {
             bool doubleQuotes = *iter == QLatin1Char('"');
@@ -801,9 +801,9 @@ void ComposerAutoCorrection::readAutoCorrectionXmlFile( bool forceGlobal )
     }
 }
 
-void ComposerAutoCorrection::writeAutoCorrectionXmlFile()
+void ComposerAutoCorrection::writeAutoCorrectionXmlFile(const QString &filename)
 {
-    const QString fname = KGlobal::dirs()->locateLocal("data", QLatin1String("autocorrect/custom-") + (mAutoCorrectLang == QLatin1String("en_US") ? QLatin1String("autocorrect") : mAutoCorrectLang) + QLatin1String(".xml"));
+    const QString fname = filename.isEmpty() ? KGlobal::dirs()->locateLocal("data", QLatin1String("autocorrect/custom-") + (mAutoCorrectLang == QLatin1String("en_US") ? QLatin1String("autocorrect") : mAutoCorrectLang) + QLatin1String(".xml")) : filename;
     QFile file(fname);
     if ( !file.open( QIODevice::WriteOnly | QIODevice::Text ) ) {
         kDebug()<<"We can't save in file :"<<fname;

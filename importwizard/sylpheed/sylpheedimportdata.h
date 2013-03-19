@@ -23,17 +23,17 @@ class ImportWizard;
 class SylpheedImportData : public AbstractImporter
 {
 public:
-  explicit SylpheedImportData(ImportWizard *parent);
-  ~SylpheedImportData();
+    explicit SylpheedImportData(ImportWizard *parent);
+    ~SylpheedImportData();
     
-  TypeSupportedOptions supportedOption();
-  bool foundMailer() const;
-  
-  bool importSettings();
-  bool importMails();
-  bool importFilters();
-  bool importAddressBook();
-  QString name() const;
+    TypeSupportedOptions supportedOption();
+    bool foundMailer() const;
+
+    bool importSettings();
+    bool importMails();
+    bool importFilters();
+    bool importAddressBook();
+    QString name() const;
 
 };
 

@@ -32,6 +32,7 @@ ActivityWarning::ActivityWarning(ActivityManager *activityManager, QWidget *pare
     setWordWrap( true );
     setText( i18n( "Activities is not active on this computer." ) );
     connect(activityManager, SIGNAL(serviceStatusChanged(KActivities::Consumer::ServiceStatus)), this, SLOT(setServiceStatusChanged(KActivities::Consumer::ServiceStatus)));
+    setVisible(!activityManager->isActive());
 }
 
 ActivityWarning::~ActivityWarning()
@@ -45,3 +46,5 @@ void ActivityWarning::setServiceStatusChanged(KActivities::Consumer::ServiceStat
 }
 
 }
+
+#include "activitywarning.moc"

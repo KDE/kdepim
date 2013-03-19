@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -14,31 +14,29 @@
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
-#ifndef THUNDERBIRDIMPORTDATA_H
-#define THUNDERBIRDIMPORTDATA_H
 
-#include "abstractimporter.h"
-class ImportWizard;
 
-class ThunderbirdImportData : public AbstractImporter
+#ifndef MESSAGEHEADERFILTER_H
+#define MESSAGEHEADERFILTER_H
+
+#include <grantlee/filter.h>
+
+
+class MessageHeaderEmailShowLink : public Grantlee::Filter
 {
 public:
-    explicit ThunderbirdImportData(ImportWizard *parent);
-    ~ThunderbirdImportData();
-    
-    TypeSupportedOptions supportedOption();
-    bool foundMailer() const;
+    QVariant doFilter(const QVariant& input, const QVariant& argument = QVariant(), bool autoescape = false) const;
 
-    bool importSettings();
-    bool importMails();
-    bool importFilters();
-    bool importAddressBook();
-    QString name() const;
-private:
-    QString defaultProfile();
-
-    QString mDefaultProfile;
+    bool isSafe() const;
 };
 
-#endif /* THUNDERBIRDIMPORTDATA_H */
+class MessageHeaderEmailNameOnly : public Grantlee::Filter
+{
+public:
+    QVariant doFilter(const QVariant& input, const QVariant& argument = QVariant(), bool autoescape = false) const;
 
+    bool isSafe() const;
+};
+
+
+#endif // MESSAGEHEADERFILTER_H

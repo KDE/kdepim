@@ -25,6 +25,8 @@
 #include <kmime/kmime_dateformatter.h>
 #include "spamheaderanalyzer.h"
 
+#include "headerstyle.h"
+
 using KPIMUtils::LinkLocator;
 
 namespace MessageViewer {
@@ -54,6 +56,20 @@ QString dateStr(const KDateTime &dateTime);
 QString dateShortStr(const KDateTime &dateTime);
 
 QList<KMime::Types::Mailbox> resentFromList(KMime::Message *message);
+
+struct xfaceSettings {
+    xfaceSettings()
+    {
+        photoWidth = 60;
+        photoHeight = 60;
+    }
+
+    QString photoURL;
+    int photoWidth;
+    int photoHeight;
+};
+
+xfaceSettings xface(const HeaderStyle *style, KMime::Message *message);
 
 }
 }

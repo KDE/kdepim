@@ -24,6 +24,7 @@ set_target_properties(pimactivity PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVE
 target_link_libraries(pimactivity
     ${KDE4_KDEUI_LIBS}
     ${KACTIVITIES_LIBRARY}
+    ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
 )
 
 

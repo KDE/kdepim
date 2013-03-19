@@ -68,6 +68,7 @@ namespace MessageViewer {
   class WebKitPartHtmlWriter;
   class HtmlStatusBar;
   class MailWebView;
+  class GrantleeThemeManager;
 }
 
 namespace PimCommon {
@@ -516,6 +517,7 @@ public slots:
   void slotLongHeaders();
   void slotAllHeaders();
   void slotCustomHeaders();
+  void slotGrantleeHeaders();
 
   void slotIconicAttachments();
   void slotSmartAttachments();
@@ -587,6 +589,7 @@ public slots:
   void slotCopyImageLocation();
   void slotSaveMessageDisplayFormat();
   void slotResetMessageDisplayFormat();
+  void slotThemesChanged();
 signals:
   void showStatusBarMessage( const QString &message );
   void replaceMsgByUnencryptedVersion();
@@ -689,6 +692,7 @@ public:
   QSet<AbstractMessageLoadedHandler*> mMessageLoadedHandlers;
   Akonadi::Item::Id mPreviouslyViewedItem;
 
+  GrantleeThemeManager *mThemeManager;
   // zoom Factor
   static const qreal zoomBy;
   qreal mZoomFactor;

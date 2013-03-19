@@ -22,19 +22,19 @@
 using namespace MessageComposer;
 
 ComposerAutoCorrectionLanguage::ComposerAutoCorrectionLanguage(QWidget *parent)
-  : KComboBox(parent)
+    : KComboBox(parent)
 {
-  KLocale *locale = KGlobal::locale();
-  QStringList lstLang = locale->allLanguagesList();
-  Q_FOREACH (const QString& lang, lstLang) {
-    if (lang != QLatin1String("x-test")) {
-      addItem ( locale->languageCodeToName(lang) , lang );
+    KLocale *locale = KGlobal::locale();
+    QStringList lstLang = locale->allLanguagesList();
+    Q_FOREACH (const QString& lang, lstLang) {
+        if (lang != QLatin1String("x-test")) {
+            addItem ( locale->languageCodeToName(lang) , lang );
+        }
     }
-  }
-  const QString defaultLang = locale->languageList().first();
-  const int index = findData(defaultLang);
-  setCurrentIndex(index);
-  model()->sort(0);
+    const QString defaultLang = locale->languageList().first();
+    const int index = findData(defaultLang);
+    setCurrentIndex(index);
+    model()->sort(0);
 
 }
 
@@ -45,11 +45,11 @@ ComposerAutoCorrectionLanguage::~ComposerAutoCorrectionLanguage()
 
 QString ComposerAutoCorrectionLanguage::language() const
 {
-  return itemData ( currentIndex() ).toString();
+    return itemData ( currentIndex() ).toString();
 }
 
 void ComposerAutoCorrectionLanguage::setLanguage(const QString &language)
 {
-  const int index = findData(language);
-  setCurrentIndex(index);
+    const int index = findData(language);
+    setCurrentIndex(index);
 }
