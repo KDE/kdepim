@@ -39,7 +39,7 @@ class EntityCollectionOrderProxyModel::EntityCollectionOrderProxyModelPrivate
     {
       const Akonadi::Collection::Id id = collection.id();
       if ( collectionRanks.contains( id ) ) {
-        return collectionRanks[ id ];
+          return collectionRanks[id];
       }
 
       int rank = 100;
@@ -61,7 +61,13 @@ class EntityCollectionOrderProxyModel::EntityCollectionOrderProxyModelPrivate
         rank = 200;
       } else if( !topLevelOrder.isEmpty() ) {
           if( collection.parentCollection() == Akonadi::Collection::root()) {
-              const int order = topLevelOrder.indexOf(collection.resource());
+              const QString resource = collection.resource();
+              if (resource.isEmpty()) {
+                  qDebug()<<" collection has not resource: "<<collection;
+                  //Don't save in collectionranks because we don't have resource name => pb.
+                  return rank;
+              }
+              const int order = topLevelOrder.indexOf(resource);
               if( order != -1 ) {
                   rank = order;
               }
