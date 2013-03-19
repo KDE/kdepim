@@ -101,6 +101,8 @@ set(libmessageviewer_SRCS
   header/grantleethememanager.cpp
   header/grantleetheme.cpp
   messagedisplayformatattribute.cpp
+  scamdetection/scamdetectionwarningwidget.cpp
+  scamdetection/scamdetection.cpp
   ${_mailwebview_cpp}
 )
 

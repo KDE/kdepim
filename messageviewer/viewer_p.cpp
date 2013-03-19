@@ -28,6 +28,7 @@
 #include "objecttreeviewersource.h"
 #include "messagedisplayformatattribute.h"
 #include "header/grantleethememanager.h"
+#include "scamdetection/scamdetectionwarningwidget.h"
 
 #ifdef MESSAGEVIEWER_READER_HTML_DEBUG
 #include "filehtmlwriter.h"
@@ -1504,6 +1505,8 @@ void ViewerPrivate::createWidgets() {
 
   mColorBar->setObjectName( "mColorBar" );
   mColorBar->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Expanding );
+
+  mScamDetectionWarning = new ScamDetectionWarningWidget(readerBox);
 
   mViewer = new MailWebView( mActionCollection, readerBox );
   mViewer->setObjectName( "mViewer" );
