@@ -2048,11 +2048,7 @@ void ViewerPrivate::slotUrlOn(const QString& link, const QString& title, const Q
 
   QString msg = URLHandlerManager::instance()->statusBarMessage( url, this );
   if ( msg.isEmpty() ) {
-    if ( !title.isEmpty() ) {
-      msg = title;
-    } else {
       msg = link;
-    }
   }
 
   KPIM::BroadcastStatus::instance()->setTransientStatusMsg( msg );
