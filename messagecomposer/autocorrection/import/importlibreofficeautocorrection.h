@@ -31,20 +31,20 @@ namespace MessageComposer {
 class ImportLibreOfficeAutocorrection : public ImportAbstractAutocorrection
 {
 public:
-  explicit ImportLibreOfficeAutocorrection(QWidget *parent = 0);
-  ~ImportLibreOfficeAutocorrection();
+    explicit ImportLibreOfficeAutocorrection(QWidget *parent = 0);
+    ~ImportLibreOfficeAutocorrection();
 
-  bool import(const QString& fileName, ImportAbstractAutocorrection::LoadAttribute loadAttribute = All);
+    bool import(const QString& fileName, ImportAbstractAutocorrection::LoadAttribute loadAttribute = All);
 
 private:
-  enum Type {DOCUMENT, SENTENCE, WORD };
+    enum Type {DOCUMENT, SENTENCE, WORD };
 
-  void importAutoCorrectionFile();
-  void closeArchive();
-  bool loadDomElement( QDomDocument &doc, QFile *file );
-  bool importFile(Type type, const KArchiveDirectory* archiveDirectory);
-  KZip *mArchive;
-  KTempDir *mTempDir;
+    void importAutoCorrectionFile();
+    void closeArchive();
+    bool loadDomElement( QDomDocument &doc, QFile *file );
+    bool importFile(Type type, const KArchiveDirectory* archiveDirectory);
+    KZip *mArchive;
+    KTempDir *mTempDir;
 };
 
 }
