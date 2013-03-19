@@ -90,117 +90,13 @@ QString FancyHeaderStyle::format( KMime::Message *message ) const {
 
     const QString spamHTML =  MessageViewer::HeaderStyleUtil::spamStatus(message);
 
-    QString photoURL;
-    int photoWidth = 60;
-    int photoHeight = 60;
-    bool useOtherPhotoSources = false;
-
-    if ( allowAsync() ) {
-
-        Q_ASSERT( nodeHelper() );
-        Q_ASSERT( sourceObject() );
-
-        ContactDisplayMessageMemento *photoMemento =
-                dynamic_cast<ContactDisplayMessageMemento*>( nodeHelper()->bodyPartMemento( message, "contactphoto" ) );
-        if ( !photoMemento ) {
-            const QString email = KPIMUtils::firstEmailAddress( message->from()->as7BitString(false) );
-            photoMemento = new ContactDisplayMessageMemento( email );
-            nodeHelper()->setBodyPartMemento( message, "contactphoto", photoMemento );
-            QObject::connect( photoMemento, SIGNAL(update(MessageViewer::Viewer::UpdateMode)),
-                              sourceObject(), SLOT(update(MessageViewer::Viewer::UpdateMode)) );
-
-            QObject::connect( photoMemento, SIGNAL(changeDisplayMail(Viewer::ForceDisplayTo,bool)),
-                              sourceObject(), SIGNAL(changeDisplayMail(Viewer::ForceDisplayTo,bool)) );
-        }
-
-        if ( photoMemento->finished() ) {
-
-            useOtherPhotoSources = true;
-            if ( photoMemento->photo().isIntern() )
-            {
-                // get photo data and convert to data: url
-                QImage photo = photoMemento->photo().data();
-                if ( !photo.isNull() )
-                {
-                    photoWidth = photo.width();
-                    photoHeight = photo.height();
-                    // scale below 60, otherwise it can get way too large
-                    if ( photoHeight > 60 ) {
-                        double ratio = ( double )photoHeight / ( double )photoWidth;
-                        photoHeight = 60;
-                        photoWidth = (int)( 60 / ratio );
-                        photo = photo.scaled( photoWidth, photoHeight, Qt::IgnoreAspectRatio, Qt::SmoothTransformation );
-                    }
-                    photoURL = MessageViewer::HeaderStyleUtil::imgToDataUrl( photo );
-                }
-            }
-            else
-            {
-                photoURL = photoMemento->photo().url();
-                if ( photoURL.startsWith('/') )
-                    photoURL.prepend( "file:" );
-            }
-        } else {
-            // if the memento is not finished yet, use other photo sources instead
-            useOtherPhotoSources = true;
-        }
-    } else {
-        useOtherPhotoSources = true;
-    }
-
-    if( photoURL.isEmpty() && message->headerByType( "Face" ) && useOtherPhotoSources ) {
-        // no photo, look for a Face header
-        QString faceheader = message->headerByType( "Face" )->asUnicodeString();
-        if ( !faceheader.isEmpty() ) {
-
-            kDebug() << "Found Face: header";
-
-            QByteArray facestring = faceheader.toUtf8();
-            // Spec says header should be less than 998 bytes
-            // Face: is 5 characters
-            if ( facestring.length() < 993 ) {
-               const QByteArray facearray = QByteArray::fromBase64( facestring );
-
-                QImage faceimage;
-                if ( faceimage.loadFromData( facearray, "png" ) ) {
-                    // Spec says image must be 48x48 pixels
-                    if ( ( 48 == faceimage.width() ) && ( 48 == faceimage.height() ) ) {
-                        photoURL = MessageViewer::HeaderStyleUtil::imgToDataUrl( faceimage );
-                        photoWidth = 48;
-                        photoHeight = 48;
-                    } else {
-                        kDebug() << "Face: header image is" << faceimage.width() << "by"
-                                 << faceimage.height() << "not 48x48 Pixels";
-                    }
-                } else {
-                    kDebug() << "Failed to load decoded png from Face: header";
-                }
-            } else {
-                kDebug() << "Face: header too long at" << facestring.length();
-            }
-        }
-    }
-
-    if( photoURL.isEmpty() && message->headerByType( "X-Face" ) && useOtherPhotoSources )
-    {
-        // no photo, look for a X-Face header
-        const QString xfhead = message->headerByType( "X-Face" )->asUnicodeString();
-        if ( !xfhead.isEmpty() )
-        {
-            MessageViewer::KXFace xf;
-            photoURL = MessageViewer::HeaderStyleUtil::imgToDataUrl( xf.toImage( xfhead ) );
-            photoWidth = 48;
-            photoHeight = 48;
-
-        }
-    }
-
     QString userHTML;
-    if( !photoURL.isEmpty() )
+    MessageViewer::HeaderStyleUtil::xfaceSettings xface = MessageViewer::HeaderStyleUtil::xface(this, message);
+    if( !xface.photoURL.isEmpty() )
     {
         //kDebug() << "Got a photo:" << photoURL;
         userHTML = QString::fromLatin1("<img src=\"%1\" width=\"%2\" height=\"%3\">")
-                .arg( photoURL ).arg( photoWidth ).arg( photoHeight );
+                .arg( xface.photoURL ).arg( xface.photoWidth ).arg( xface.photoHeight );
         userHTML = QString("<div class=\"senderpic\">") + userHTML + "</div>";
     }
 

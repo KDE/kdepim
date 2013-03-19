@@ -30,6 +30,10 @@
 #include <KGlobal>
 
 #include <QBuffer>
+#include "contactdisplaymessagememento.h"
+#include "kxface.h"
+
+#include <kpimutils/email.h>
 
 using namespace MessageCore;
 
@@ -245,6 +249,114 @@ QList<KMime::Types::Mailbox> resentFromList(KMime::Message *message)
     return resentFrom;
 }
 
+xfaceSettings xface(const MessageViewer::HeaderStyle *style, KMime::Message *message)
+{
+
+    xfaceSettings settings;
+    bool useOtherPhotoSources = false;
+
+    if ( style->allowAsync() ) {
+
+        Q_ASSERT( style->nodeHelper() );
+        Q_ASSERT( style->sourceObject() );
+
+        ContactDisplayMessageMemento *photoMemento =
+                dynamic_cast<ContactDisplayMessageMemento*>( style->nodeHelper()->bodyPartMemento( message, "contactphoto" ) );
+        if ( !photoMemento ) {
+            const QString email = KPIMUtils::firstEmailAddress( message->from()->as7BitString(false) );
+            photoMemento = new ContactDisplayMessageMemento( email );
+            style->nodeHelper()->setBodyPartMemento( message, "contactphoto", photoMemento );
+            QObject::connect( photoMemento, SIGNAL(update(MessageViewer::Viewer::UpdateMode)),
+                              style->sourceObject(), SLOT(update(MessageViewer::Viewer::UpdateMode)) );
+
+            QObject::connect( photoMemento, SIGNAL(changeDisplayMail(Viewer::ForceDisplayTo,bool)),
+                              style->sourceObject(), SIGNAL(changeDisplayMail(Viewer::ForceDisplayTo,bool)) );
+        }
+
+        if ( photoMemento->finished() ) {
+
+            useOtherPhotoSources = true;
+            if ( photoMemento->photo().isIntern() )
+            {
+                // get photo data and convert to data: url
+                QImage photo = photoMemento->photo().data();
+                if ( !photo.isNull() )
+                {
+                    settings.photoWidth = photo.width();
+                    settings.photoHeight = photo.height();
+                    // scale below 60, otherwise it can get way too large
+                    if ( settings.photoHeight > 60 ) {
+                        double ratio = ( double )settings.photoHeight / ( double )settings.photoWidth;
+                        settings.photoHeight = 60;
+                        settings.photoWidth = (int)( 60 / ratio );
+                        photo = photo.scaled( settings.photoWidth, settings.photoHeight, Qt::IgnoreAspectRatio, Qt::SmoothTransformation );
+                    }
+                    settings.photoURL = MessageViewer::HeaderStyleUtil::imgToDataUrl( photo );
+                }
+            }
+            else
+            {
+                settings.photoURL = photoMemento->photo().url();
+                if ( settings.photoURL.startsWith('/') )
+                    settings.photoURL.prepend( "file:" );
+            }
+        } else {
+            // if the memento is not finished yet, use other photo sources instead
+            useOtherPhotoSources = true;
+        }
+    } else {
+        useOtherPhotoSources = true;
+    }
+
+    if( settings.photoURL.isEmpty() && message->headerByType( "Face" ) && useOtherPhotoSources ) {
+        // no photo, look for a Face header
+        const QString faceheader = message->headerByType( "Face" )->asUnicodeString();
+        if ( !faceheader.isEmpty() ) {
+
+            kDebug() << "Found Face: header";
+
+            const QByteArray facestring = faceheader.toUtf8();
+            // Spec says header should be less than 998 bytes
+            // Face: is 5 characters
+            if ( facestring.length() < 993 ) {
+                const QByteArray facearray = QByteArray::fromBase64( facestring );
+
+                QImage faceimage;
+                if ( faceimage.loadFromData( facearray, "png" ) ) {
+                    // Spec says image must be 48x48 pixels
+                    if ( ( 48 == faceimage.width() ) && ( 48 == faceimage.height() ) ) {
+                        settings.photoURL = MessageViewer::HeaderStyleUtil::imgToDataUrl( faceimage );
+                        settings.photoWidth = 48;
+                        settings.photoHeight = 48;
+                    } else {
+                        kDebug() << "Face: header image is" << faceimage.width() << "by"
+                                 << faceimage.height() << "not 48x48 Pixels";
+                    }
+                } else {
+                    kDebug() << "Failed to load decoded png from Face: header";
+                }
+            } else {
+                kDebug() << "Face: header too long at" << facestring.length();
+            }
+        }
+    }
+
+    if( settings.photoURL.isEmpty() && message->headerByType( "X-Face" ) && useOtherPhotoSources )
+    {
+        // no photo, look for a X-Face header
+        const QString xfhead = message->headerByType( "X-Face" )->asUnicodeString();
+        if ( !xfhead.isEmpty() )
+        {
+            MessageViewer::KXFace xf;
+            settings.photoURL = MessageViewer::HeaderStyleUtil::imgToDataUrl( xf.toImage( xfhead ) );
+            settings.photoWidth = 48;
+            settings.photoHeight = 48;
+
+        }
+    }
+
+    return settings;
+}
 
 }
 }
