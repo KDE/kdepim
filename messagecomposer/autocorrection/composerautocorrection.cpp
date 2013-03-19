@@ -652,7 +652,7 @@ void ComposerAutoCorrection::replaceTypographicQuotes()
     bool ending = true;
     QString::Iterator iter = mWord.end();
     iter--;
-
+    //TODO add QChar::Nbsp
     while (iter != mWord.begin()) {
         if (*iter == QLatin1Char('"') || *iter == QLatin1Char('\'')) {
             bool doubleQuotes = *iter == QLatin1Char('"');
