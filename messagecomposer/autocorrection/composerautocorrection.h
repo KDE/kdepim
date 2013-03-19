@@ -54,6 +54,7 @@ public:
   void setAutoFormatUrl(bool b) { mAutoFormatUrl = b; }
   void setAutoBoldUnderline(bool b) { mAutoBoldUnderline = b; }
   void setSuperScript(bool b) { mSuperScriptAppendix = b; }
+  void setAddNonBreakingSpace(bool b) { mAddNonBreakingSpace = b; }
 
   bool isEnabledAutoCorrection() const { return mEnabled; }
   bool isUppercaseFirstCharOfSentence() const { return mUppercaseFirstCharOfSentence; }

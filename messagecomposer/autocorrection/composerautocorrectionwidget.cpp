@@ -134,6 +134,7 @@ void ComposerAutoCorrectionWidget::loadConfig()
     ui->autoSuperScript->setChecked(mAutoCorrection->isSuperScript());
     ui->typographicDoubleQuotes->setChecked(mAutoCorrection->isReplaceDoubleQuotes());
     ui->typographicSingleQuotes->setChecked(mAutoCorrection->isReplaceSingleQuotes());
+    ui->addNonBreakingSpaceInFrench->setChecked(mAutoCorrection->isAddNonBreakingSpace());
     loadAutoCorrectionAndException();
     mWasChanged = false;
 }
@@ -206,6 +207,7 @@ void ComposerAutoCorrectionWidget::writeConfig()
     mAutoCorrection->setReplaceSingleQuotes(ui->typographicSingleQuotes->isChecked());
     mAutoCorrection->setTypographicSingleQuotes(m_singleQuotes);
     mAutoCorrection->setTypographicDoubleQuotes(m_doubleQuotes);
+    mAutoCorrection->setAddNonBreakingSpace(ui->addNonBreakingSpaceInFrench->isChecked());
     mAutoCorrection->writeConfig();
     mWasChanged = false;
 }
@@ -225,6 +227,7 @@ void ComposerAutoCorrectionWidget::resetToDefault()
     ui->autoReplaceNumber->setChecked(false);
     ui->typographicDoubleQuotes->setChecked(false);
     ui->typographicSingleQuotes->setChecked(false);
+    ui->addNonBreakingSpaceInFrench->setChecked(false);
 
     loadGlobalAutoCorrectionAndException();
 }
