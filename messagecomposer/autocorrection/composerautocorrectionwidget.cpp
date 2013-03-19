@@ -105,6 +105,8 @@ ComposerAutoCorrectionWidget::ComposerAutoCorrectionWidget(QWidget *parent) :
 
     connect( menu, SIGNAL(triggered(QAction*)), SLOT(slotImportAutoCorrection(QAction*)) );
 
+    connect(ui->exportAutoCorrection,SIGNAL(clicked()),SLOT(slotExportAutoCorrection()));
+
 }
 
 ComposerAutoCorrectionWidget::~ComposerAutoCorrectionWidget()
@@ -595,6 +597,15 @@ void ComposerAutoCorrectionWidget::loadGlobalAutoCorrectionAndException()
     loadAutoCorrectionAndException();
     mWasChanged = true;
     Q_EMIT changed();
+}
+
+void ComposerAutoCorrectionWidget::slotExportAutoCorrection()
+{
+    const KUrl saveUrl= KFileDialog::getSaveUrl(QDir::homePath(), QString(), this, i18n( "Export Autocorrection File" ) );
+    if ( saveUrl.isEmpty() ) {
+        return;
+    }
+    mAutoCorrection->writeAutoCorrectionXmlFile(saveUrl.toLocalFile());
 }
 
 #include "composerautocorrectionwidget.moc"
