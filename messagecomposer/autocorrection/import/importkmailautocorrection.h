@@ -24,9 +24,9 @@ namespace MessageComposer {
 class ImportKMailAutocorrection : public ImportAbstractAutocorrection
 {
 public:
-  explicit ImportKMailAutocorrection(QWidget *parent = 0);
-  ~ImportKMailAutocorrection();
-  bool import(const QString& fileName, ImportAbstractAutocorrection::LoadAttribute loadAttribute = All);
+    explicit ImportKMailAutocorrection(QWidget *parent = 0);
+    ~ImportKMailAutocorrection();
+    bool import(const QString& fileName, ImportAbstractAutocorrection::LoadAttribute loadAttribute = All);
 };
 }
 

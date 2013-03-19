@@ -24,7 +24,7 @@ using namespace MessageComposer;
 
 
 ImportKMailAutocorrection::ImportKMailAutocorrection(QWidget *parent)
-  : ImportAbstractAutocorrection(parent)
+    : ImportAbstractAutocorrection(parent)
 {
 }
 
@@ -102,7 +102,7 @@ bool ImportKMailAutocorrection::import(const QString& fileName, LoadAttribute lo
             }
         }
     }
-    if(loadAttribute == All || loadAttribute == SuperScript) {
+    if (loadAttribute == All || loadAttribute == SuperScript) {
         const QDomElement superScript = de.namedItem(QLatin1String("SuperScript")).toElement();
         if (!superScript.isNull()) {
             const QDomNodeList nl = superScript.childNodes();
