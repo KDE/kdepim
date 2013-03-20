@@ -92,8 +92,8 @@ void WebKitPartHtmlWriter::end() {
   mHtmlView->show();
   mHtml.clear();
 
-  resolveCidUrls();
 #ifndef KDEPIM_NO_WEBKIT
+  resolveCidUrls();
   mHtmlView->scamCheck();
 #endif
   mHtmlView->setUpdatesEnabled( true );
