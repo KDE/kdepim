@@ -57,6 +57,12 @@ void ScamDetection::scanPage(const QWebElement &rootElement)
             if (url.host().contains(ip4regExp)) {
                 Q_EMIT messageMayBeAScam();
                 break;
+            } else if (url.path().contains(QLatin1String("url?q="))) { //4) redirect url.
+                Q_EMIT messageMayBeAScam();
+                break;
+            } else if (url.path().count(QLatin1String("http://"))>1) { //5) more that 1 http in url.
+                Q_EMIT messageMayBeAScam();
+                break;
             }
         }
         //3) has form
@@ -67,5 +73,7 @@ void ScamDetection::scanPage(const QWebElement &rootElement)
 
     }
 }
+
+
 
 #include "scamdetection.moc"
