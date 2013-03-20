@@ -23,7 +23,7 @@
 
 #include <kmime/kmime_message.h>
 #include <kmime/kmime_dateformatter.h>
-#include "spamheaderanalyzer.h"
+#include "antispam/spamheaderanalyzer.h"
 
 #include "headerstyle.h"
 

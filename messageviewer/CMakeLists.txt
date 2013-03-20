@@ -44,7 +44,6 @@ else()
 endif()
 
 set(libmessageviewer_SRCS
-  antispamconfig.cpp
   attachmentdialog.cpp
   attachmentstrategy.cpp
   bodypartformatter.cpp
@@ -88,7 +87,6 @@ set(libmessageviewer_SRCS
   objecttreeviewersource.cpp
   partnodebodypart.cpp
   pluginloaderbase.cpp
-  spamheaderanalyzer.cpp
   teehtmlwriter.cpp
   urlhandlermanager.cpp
   util.cpp
@@ -103,6 +101,8 @@ set(libmessageviewer_SRCS
   messagedisplayformatattribute.cpp
   scamdetection/scamdetectionwarningwidget.cpp
   scamdetection/scamdetection.cpp
+  antispam/spamheaderanalyzer.cpp
+  antispam/antispamconfig.cpp
   ${_mailwebview_cpp}
 )
 
