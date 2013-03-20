@@ -623,7 +623,6 @@ void MailWebView::scamCheck()
 {
     const QWebElement root = page()->mainFrame()->documentElement();
     mScamDetection->scanPage(root);
-    //TODO
 }
 
 #include "mailwebview.moc"
