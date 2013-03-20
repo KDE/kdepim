@@ -81,19 +81,21 @@ void TrojitaSettings::readImapAccount()
 
     if (settings->contains(QLatin1String("imap.offline"))) {
         const bool offlineStatus = settings->value(QLatin1String("imap.offline")).toBool();
-        newSettings.insert( QLatin1String( "DisconnectedModeEnabled" ), offlineStatus );
+        //It's not a deconnected mode as imap disconnected #317023
+        //Will implement soon.
+        //TODO use akonadi cache.
     }
 
     if (settings->contains(QLatin1String("imap.enableId"))) {
-        //What's this ?
+        //Not supported by Akonadi.
     }
 
     if (settings->contains(QLatin1String("imap.ssl.pemCertificate"))) {
-        //TODO ?
+        //Not supported by akonadi.
     }
 
     if (settings->contains(QLatin1String("imap.capabilities.blacklist"))) {
-        //TODO ?
+        //Not supported by akonadi-imap-resource.
     }
 
     if (!name.isEmpty()) {
@@ -110,7 +112,7 @@ void TrojitaSettings::readTransport()
     if (!smtpMethod.isEmpty()) {
         MailTransport::Transport *mt = createTransport();
         if (smtpMethod == QLatin1String("IMAP-SENDMAIL")) {
-            //TODO ?
+            //see http://tools.ietf.org/html/draft-kundrat-imap-submit-01
         } else if (smtpMethod == QLatin1String("SMTP") || smtpMethod == QLatin1String("SSMTP")) {
             if (settings->contains(QLatin1String("msa.smtp.host"))) {
                 mt->setHost(settings->value(QLatin1String("msa.smtp.host")).toString());
