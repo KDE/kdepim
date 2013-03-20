@@ -32,8 +32,11 @@ public:
 
     void scanPage(const QWebElement &rootElement);
 
+    void showDetails();
 Q_SIGNALS:
     void messageMayBeAScam();
+private:
+    QString mDetails;
 };
 }
 

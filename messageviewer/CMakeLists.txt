@@ -101,6 +101,7 @@ set(libmessageviewer_SRCS
   messagedisplayformatattribute.cpp
   scamdetection/scamdetectionwarningwidget.cpp
   scamdetection/scamdetection.cpp
+  scamdetection/scamdetectiondetailsdialog.cpp
   antispam/spamheaderanalyzer.cpp
   antispam/antispamconfig.cpp
   ${_mailwebview_cpp}

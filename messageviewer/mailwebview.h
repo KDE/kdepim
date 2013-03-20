@@ -105,6 +105,9 @@ public:
     void scamCheck();
 #endif
 
+public Q_SLOTS:
+    void slotShowDetails();
+
 Q_SIGNALS:
 
     /// Emitted when the user right-clicks somewhere

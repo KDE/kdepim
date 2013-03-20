@@ -207,6 +207,7 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
     mShowFullToAddressList( true ),
     mShowFullCcAddressList( true ),
     mPreviouslyViewedItem( -1 ),
+    mScamDetectionWarning( 0 ),
     mZoomFactor( 100 )
 {
  if ( _k_attributeInitialized.testAndSetAcquire( 0, 1 ) ) {
@@ -1089,6 +1090,7 @@ void ViewerPrivate::initHtmlWidget()
   connect( mViewer, SIGNAL(popupMenu(QUrl,QUrl,QPoint)),
            SLOT(slotUrlPopup(QUrl,QUrl,QPoint)) );
   connect( mViewer, SIGNAL(messageMayBeAScam()), mScamDetectionWarning, SLOT(slotShowWarning()));
+  connect( mScamDetectionWarning, SIGNAL(showDetails()), mViewer, SLOT(slotShowDetails()));
 }
 
 bool ViewerPrivate::eventFilter( QObject *, QEvent *e )

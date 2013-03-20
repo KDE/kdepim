@@ -625,4 +625,9 @@ void MailWebView::scamCheck()
     mScamDetection->scanPage(root);
 }
 
+void MailWebView::slotShowDetails()
+{
+    mScamDetection->showDetails();
+}
+
 #include "mailwebview.moc"

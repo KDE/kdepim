@@ -16,6 +16,7 @@
 */
 
 #include "scamdetection.h"
+#include "scamdetectiondetailsdialog.h"
 #include "globalsettings.h"
 #include <QWebElement>
 #include <QDebug>
@@ -34,6 +35,7 @@ ScamDetection::~ScamDetection()
 
 void ScamDetection::scanPage(const QWebElement &rootElement)
 {
+    mDetails.clear();
     if (GlobalSettings::self()->scamDetectionEnabled()) {
         QRegExp ip4regExp;
         ip4regExp.setPattern(IPv4_PATTERN);
@@ -71,6 +73,11 @@ void ScamDetection::scanPage(const QWebElement &rootElement)
     }
 }
 
-
+void ScamDetection::showDetails()
+{
+    MessageViewer::ScamDetectionDetailsDialog *dlg = new MessageViewer::ScamDetectionDetailsDialog;
+    dlg->setDetails(mDetails);
+    dlg->show();
+}
 
 #include "scamdetection.moc"

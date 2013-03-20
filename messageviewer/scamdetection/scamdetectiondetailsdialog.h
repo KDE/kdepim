@@ -15,28 +15,25 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef SCAMDETECTIONWARNINGWIDGET_H
-#define SCAMDETECTIONWARNINGWIDGET_H
+#ifndef SCAMDETECTIONDETAILSDIALOG_H
+#define SCAMDETECTIONDETAILSDIALOG_H
 
-#include <KMessageWidget>
+#include <KDialog>
+
+class QTextEdit;
 
 namespace MessageViewer {
-class ScamDetectionWarningWidget : public KMessageWidget
+class ScamDetectionDetailsDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit ScamDetectionWarningWidget(QWidget *parent = 0);
-    ~ScamDetectionWarningWidget();
+    explicit ScamDetectionDetailsDialog(QWidget *parent = 0);
+    ~ScamDetectionDetailsDialog();
 
-public Q_SLOTS:
-    void slotShowWarning();
-
-Q_SIGNALS:
-    void showDetails();
-
-private Q_SLOTS:
-    void slotDisableScamDetection();
+    void setDetails(const QString &details);
+private:
+    QTextEdit *mDetails;
 };
 }
 
-#endif // SCAMDETECTIONWARNINGWIDGET_H
+#endif // SCAMDETECTIONDETAILSDIALOG_H

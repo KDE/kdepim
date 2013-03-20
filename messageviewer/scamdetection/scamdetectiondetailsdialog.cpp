@@ -15,28 +15,35 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef SCAMDETECTIONWARNINGWIDGET_H
-#define SCAMDETECTIONWARNINGWIDGET_H
+#include "scamdetectiondetailsdialog.h"
 
-#include <KMessageWidget>
+#include <KLocale>
 
-namespace MessageViewer {
-class ScamDetectionWarningWidget : public KMessageWidget
+#include <QTextEdit>
+
+using namespace MessageViewer;
+
+ScamDetectionDetailsDialog::ScamDetectionDetailsDialog(QWidget *parent)
+    : KDialog(parent)
 {
-    Q_OBJECT
-public:
-    explicit ScamDetectionWarningWidget(QWidget *parent = 0);
-    ~ScamDetectionWarningWidget();
-
-public Q_SLOTS:
-    void slotShowWarning();
-
-Q_SIGNALS:
-    void showDetails();
-
-private Q_SLOTS:
-    void slotDisableScamDetection();
-};
+    setCaption( i18n("Details") );
+    setAttribute( Qt::WA_DeleteOnClose );
+    setButtons( Close );
+    setModal( false );
+    mDetails = new QTextEdit;
+    mDetails->setReadOnly(true);
+    mDetails->setAcceptRichText(false);
+    setMainWidget(mDetails);
+    resize(600,400);
 }
 
-#endif // SCAMDETECTIONWARNINGWIDGET_H
+ScamDetectionDetailsDialog::~ScamDetectionDetailsDialog()
+{
+}
+
+void ScamDetectionDetailsDialog::setDetails(const QString &details)
+{
+    mDetails->setPlainText(details);
+}
+
+#include "scamdetectiondetailsdialog.moc"
