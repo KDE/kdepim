@@ -16,8 +16,10 @@
 */
 
 #include "scamdetectionwarningwidget.h"
+#include "globalsettings.h"
 
 #include <KLocale>
+#include <KAction>
 
 using namespace MessageViewer;
 
@@ -29,6 +31,10 @@ ScamDetectionWarningWidget::ScamDetectionWarningWidget(QWidget *parent)
     setMessageType(Warning);
     setWordWrap(true);
     setText(i18n("This message may be a scam."));
+
+    KAction *action = new KAction( i18n( "Disable scam detection for all messages" ), this );
+    connect( action, SIGNAL(triggered(bool)), SLOT(slotDisableScamDetection()) );
+    addAction( action );
 }
 
 ScamDetectionWarningWidget::~ScamDetectionWarningWidget()
@@ -38,6 +44,13 @@ ScamDetectionWarningWidget::~ScamDetectionWarningWidget()
 void ScamDetectionWarningWidget::slotShowWarning()
 {
     setVisible(true);
+}
+
+void ScamDetectionWarningWidget::slotDisableScamDetection()
+{
+    MessageViewer::GlobalSettings::self()->setScamDetectionEnabled( false );
+    MessageViewer::GlobalSettings::self()->writeConfig();
+    setVisible(false);
 }
 
 #include "scamdetectionwarningwidget.moc"
