@@ -1,5 +1,7 @@
 /* Copyright 2010 Thomas McGuire <mcguire@kde.org>
 
+   Copyright 2013 Laurent Montel <monte@kde.org>
+
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public License as
    published by the Free Software Foundation; either version 2 of
@@ -17,6 +19,7 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "mailwebview.h"
+#include "scamdetection/scamdetection.h"
 
 #include <KDebug>
 #include <KActionCollection>
@@ -120,7 +123,7 @@ static void handleDuplicateLinkElements(const QWebElement& element, QHash<QStrin
 
 
 MailWebView::MailWebView( KActionCollection *actionCollection, QWidget *parent )
-    : SuperClass( parent ), mActionCollection(actionCollection)
+    : SuperClass( parent ), mScamDetection(new ScamDetection), mActionCollection(actionCollection)
 {
   page()->setLinkDelegationPolicy( QWebPage::DelegateAllLinks );
   settings()->setAttribute( QWebSettings::JavascriptEnabled, false );
@@ -129,10 +132,14 @@ MailWebView::MailWebView( KActionCollection *actionCollection, QWidget *parent )
   connect( page(), SIGNAL(linkHovered(QString,QString,QString)),
            this,   SIGNAL(linkHovered(QString,QString,QString)) );
   connect(this, SIGNAL(loadStarted()), this, SLOT(hideAccessKeys()));
+  connect(mScamDetection, SIGNAL(messageMayBeAScam()), this, SIGNAL(messageMayBeAScam()));
   connect(page(), SIGNAL(scrollRequested(int,int,QRect)), this, SLOT(hideAccessKeys()));
 }
 
-MailWebView::~MailWebView() {}
+MailWebView::~MailWebView()
+{
+    delete mScamDetection;
+}
 
 bool MailWebView::event( QEvent *event )
 {
@@ -612,5 +619,11 @@ void MailWebView::makeAccessKeyLabel(const QChar &accessKey, const QWebElement &
     mAccessKeyNodes.insertMulti(accessKey, element);
 }
 
+void MailWebView::scamCheck()
+{
+    const QWebElement root = page()->mainFrame()->documentElement();
+    mScamDetection->scanPage(root);
+    //TODO
+}
 
 #include "mailwebview.moc"

@@ -20,22 +20,20 @@
 
 #include <QObject>
 
-class QWebPage;
+class QWebElement;
 
 namespace MessageViewer {
 class ScamDetection : public QObject
 {
     Q_OBJECT
 public:
-    explicit ScamDetection(QObject *parent);
+    explicit ScamDetection(QObject *parent = 0);
     ~ScamDetection();
 
-    void scanPage(const QString &html);
+    void scanPage(const QWebElement &rootElement);
 
 Q_SIGNALS:
     void messageMayBeAScam();
-private:
-    QWebPage *mPage;
 };
 }
 

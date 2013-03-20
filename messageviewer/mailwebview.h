@@ -39,6 +39,9 @@ class QLabel;
 class KActionCollection;
 
 namespace MessageViewer {
+#ifndef KDEPIM_NO_WEBKIT
+class ScamDetection;
+#endif
 
 /// MailWebView extends KWebView so that it can emit the popupMenu() signal
 #ifdef KDEPIM_NO_WEBKIT
@@ -98,6 +101,9 @@ public:
 
     void setScrollBarPolicy( Qt::Orientation orientation, Qt::ScrollBarPolicy policy );
     Qt::ScrollBarPolicy scrollBarPolicy( Qt::Orientation orientation ) const;
+#ifndef KDEPIM_NO_WEBKIT
+    void scamCheck();
+#endif
 
 Q_SIGNALS:
 
@@ -110,6 +116,7 @@ Q_SIGNALS:
 #ifdef KDEPIM_NO_WEBKIT
     void linkClicked( const QUrl & link );
 #endif
+    void messageMayBeAScam();
 
 protected:
 #ifdef KDEPIM_MOBILE_UI
@@ -139,6 +146,8 @@ private:
     QList<QLabel*> mAccessKeyLabels;
     QHash<QChar, QWebElement> mAccessKeyNodes;
     QHash<QString, QChar> mDuplicateLinkElements;
+
+    ScamDetection *mScamDetection;
 #endif
     KActionCollection *mActionCollection;
 };

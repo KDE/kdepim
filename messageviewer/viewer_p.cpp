@@ -1088,6 +1088,7 @@ void ViewerPrivate::initHtmlWidget()
            this, SLOT(slotUrlOpen(QUrl)), Qt::QueuedConnection );
   connect( mViewer, SIGNAL(popupMenu(QUrl,QUrl,QPoint)),
            SLOT(slotUrlPopup(QUrl,QUrl,QPoint)) );
+  connect( mViewer, SIGNAL(messageMayBeAScam()), mScamDetectionWarning, SLOT(slotShowWarning()));
 }
 
 bool ViewerPrivate::eventFilter( QObject *, QEvent *e )

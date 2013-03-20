@@ -35,4 +35,9 @@ ScamDetectionWarningWidget::~ScamDetectionWarningWidget()
 {
 }
 
+void ScamDetectionWarningWidget::slotShowWarning()
+{
+    setVisible(true);
+}
+
 #include "scamdetectionwarningwidget.moc"

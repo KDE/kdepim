@@ -27,6 +27,9 @@ class ScamDetectionWarningWidget : public KMessageWidget
 public:
     explicit ScamDetectionWarningWidget(QWidget *parent = 0);
     ~ScamDetectionWarningWidget();
+
+public Q_SLOTS:
+    void slotShowWarning();
 };
 }
 

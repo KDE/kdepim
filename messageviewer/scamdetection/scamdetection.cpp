@@ -24,27 +24,32 @@
 using namespace MessageViewer;
 
 ScamDetection::ScamDetection(QObject *parent)
-    : QObject(parent), mPage(new QWebPage())
+    : QObject(parent)
 {
-    mPage->settings()->setAttribute( QWebSettings::JavascriptEnabled, false );
-    mPage->settings()->setAttribute( QWebSettings::JavaEnabled, false );
-    mPage->settings()->setAttribute( QWebSettings::PluginsEnabled, false );
-    mPage->settings()->setAttribute( QWebSettings::AutoLoadImages, false );
 }
 
 ScamDetection::~ScamDetection()
 {
-    delete mPage;
 }
 
-void ScamDetection::scanPage(const QString &html)
+void ScamDetection::scanPage(const QWebElement &rootElement)
 {
-    QWebFrame *frame = mPage->mainFrame();
-    frame->setHtml( html, QUrl( "file:///" ) );
-    QWebElement document = frame->documentElement();
-    QWebElementCollection allAnchor = document.findAll("a");
+    QWebElementCollection allAnchor = rootElement.findAll("a");
     Q_FOREACH (const QWebElement &anchorElement, allAnchor) {
-        qDebug()<<" href"<<anchorElement.attribute(QLatin1String("href"));
+
+        //1) detect if title has a url and title != href
+        const QString href = anchorElement.attribute(QLatin1String("href"));
+        const QString title = anchorElement.attribute(QLatin1String("title"));
+        if (!title.isEmpty()) {
+            if (title.startsWith(QLatin1String("http:")) || title.startsWith(QLatin1String("https:"))) {
+                if (href != title) {
+                    Q_EMIT messageMayBeAScam();
+                    break;
+                }
+            }
+        }
+        //2) delete if url href has ip and not server name.
+        //TODO
     }
 }
 
