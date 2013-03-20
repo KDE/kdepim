@@ -16,6 +16,7 @@
 */
 
 #include "scamdetection.h"
+#include "globalsettings.h"
 #include <QWebPage>
 #include <QWebFrame>
 #include <QWebElement>
@@ -34,22 +35,24 @@ ScamDetection::~ScamDetection()
 
 void ScamDetection::scanPage(const QWebElement &rootElement)
 {
-    QWebElementCollection allAnchor = rootElement.findAll("a");
-    Q_FOREACH (const QWebElement &anchorElement, allAnchor) {
+    if (GlobalSettings::self()->scamDetectionEnabled()) {
+        QWebElementCollection allAnchor = rootElement.findAll("a");
+        Q_FOREACH (const QWebElement &anchorElement, allAnchor) {
 
-        //1) detect if title has a url and title != href
-        const QString href = anchorElement.attribute(QLatin1String("href"));
-        const QString title = anchorElement.attribute(QLatin1String("title"));
-        if (!title.isEmpty()) {
-            if (title.startsWith(QLatin1String("http:")) || title.startsWith(QLatin1String("https:"))) {
-                if (href != title) {
-                    Q_EMIT messageMayBeAScam();
-                    break;
+            //1) detect if title has a url and title != href
+            const QString href = anchorElement.attribute(QLatin1String("href"));
+            const QString title = anchorElement.attribute(QLatin1String("title"));
+            if (!title.isEmpty()) {
+                if (title.startsWith(QLatin1String("http:")) || title.startsWith(QLatin1String("https:"))) {
+                    if (href != title) {
+                        Q_EMIT messageMayBeAScam();
+                        break;
+                    }
                 }
             }
+            //2) delete if url href has ip and not server name.
+            //TODO
         }
-        //2) delete if url href has ip and not server name.
-        //TODO
     }
 }
 

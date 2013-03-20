@@ -147,6 +147,10 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
       <label>Activate Access Key</label>
       <default>true</default>
     </entry>
+    <entry name="ScamDetectionEnabled" type="Bool">
+      <label>KMail can analyse messages for suspected email scams by looking for common techniques used to deceive you</label>
+      <default>false</default>
+    </entry>
   </group>
 
   <group name="TextIndex">
