@@ -17,8 +17,6 @@
 
 #include "scamdetection.h"
 #include "globalsettings.h"
-#include <QWebPage>
-#include <QWebFrame>
 #include <QWebElement>
 #include <QDebug>
 
@@ -70,7 +68,6 @@ void ScamDetection::scanPage(const QWebElement &rootElement)
             Q_EMIT messageMayBeAScam();
             return;
         }
-
     }
 }
 
