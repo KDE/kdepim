@@ -39,7 +39,7 @@ void ScamDetection::scanPage(const QWebElement &rootElement)
     QRegExp ip4regExp;
     ip4regExp.setPattern(IPv4_PATTERN);
     if (GlobalSettings::self()->scamDetectionEnabled()) {
-        QWebElementCollection allAnchor = rootElement.findAll("a");
+        QWebElementCollection allAnchor = rootElement.findAll(QLatin1String("a"));
         Q_FOREACH (const QWebElement &anchorElement, allAnchor) {
             //1) detect if title has a url and title != href
             const QString href = anchorElement.attribute(QLatin1String("href"));
@@ -59,6 +59,12 @@ void ScamDetection::scanPage(const QWebElement &rootElement)
                 break;
             }
         }
+        //3) has form
+        if (rootElement.findAll(QLatin1String("form")).count() > 0) {
+            Q_EMIT messageMayBeAScam();
+            return;
+        }
+
     }
 }
 
