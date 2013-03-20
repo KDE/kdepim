@@ -34,3 +34,5 @@ ScamDetectionWarningWidget::ScamDetectionWarningWidget(QWidget *parent)
 ScamDetectionWarningWidget::~ScamDetectionWarningWidget()
 {
 }
+
+#include "scamdetectionwarningwidget.moc"

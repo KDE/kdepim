@@ -20,6 +20,8 @@
 
 #include <QObject>
 
+class QWebPage;
+
 namespace MessageViewer {
 class ScamDetection : public QObject
 {
@@ -32,7 +34,8 @@ public:
 
 Q_SIGNALS:
     void messageMayBeAScam();
-
+private:
+    QWebPage *mPage;
 };
 }
 

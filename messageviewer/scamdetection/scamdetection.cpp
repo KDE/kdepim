@@ -16,18 +16,36 @@
 */
 
 #include "scamdetection.h"
+#include <QWebPage>
+#include <QWebFrame>
+#include <QWebElement>
+#include <QDebug>
+
 using namespace MessageViewer;
 
 ScamDetection::ScamDetection(QObject *parent)
-    : QObject(parent)
+    : QObject(parent), mPage(new QWebPage())
 {
+    mPage->settings()->setAttribute( QWebSettings::JavascriptEnabled, false );
+    mPage->settings()->setAttribute( QWebSettings::JavaEnabled, false );
+    mPage->settings()->setAttribute( QWebSettings::PluginsEnabled, false );
+    mPage->settings()->setAttribute( QWebSettings::AutoLoadImages, false );
 }
 
 ScamDetection::~ScamDetection()
 {
+    delete mPage;
 }
 
 void ScamDetection::scanPage(const QString &html)
 {
-    //TODO
+    QWebFrame *frame = mPage->mainFrame();
+    frame->setHtml( html, QUrl( "file:///" ) );
+    QWebElement document = frame->documentElement();
+    QWebElementCollection allAnchor = document.findAll("a");
+    Q_FOREACH (const QWebElement &anchorElement, allAnchor) {
+        qDebug()<<" href"<<anchorElement.attribute(QLatin1String("href"));
+    }
 }
+
+#include "scamdetection.moc"
