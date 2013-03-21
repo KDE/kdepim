@@ -1315,6 +1315,7 @@ void ViewerPrivate::resetStateForNewMessage()
   mShowRawToltecMail = !GlobalSettings::self()->showToltecReplacementText();
   mFindBar->closeBar();
   mTranslatorWidget->slotCloseWidget();
+  mScamDetectionWarning->setVisible(false);
 
   if ( mPrinting )
     mLevelQuote = -1;
