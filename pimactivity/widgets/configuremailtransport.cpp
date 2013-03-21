@@ -19,14 +19,27 @@
 */
 #include "configuremailtransport.h"
 
+#include <QListWidget>
+#include <QVBoxLayout>
+
 namespace PimActivity {
 ConfigureMailtransport::ConfigureMailtransport(QWidget *parent)
     : QWidget(parent)
 {
+    QVBoxLayout *lay = new QVBoxLayout;
+    mListTransport = new QListWidget;
+    lay->addWidget(mListTransport);
+    init();
+    setLayout(lay);
 }
 
 ConfigureMailtransport::~ConfigureMailtransport()
 {
+}
+
+void ConfigureMailtransport::init()
+{
+    //TODO
 }
 
 void ConfigureMailtransport::readConfig()
