@@ -69,6 +69,7 @@ namespace MessageViewer {
   class HtmlStatusBar;
   class MailWebView;
   class GrantleeThemeManager;
+  class ScamDetectionWarningWidget;
 }
 
 namespace PimCommon {
@@ -693,6 +694,7 @@ public:
   Akonadi::Item::Id mPreviouslyViewedItem;
 
   GrantleeThemeManager *mThemeManager;
+  ScamDetectionWarningWidget *mScamDetectionWarning;
   // zoom Factor
   static const qreal zoomBy;
   qreal mZoomFactor;

@@ -55,7 +55,8 @@ ThunderbirdSettings::ThunderbirdSettings( const QString& filename, ImportWizard 
                     line.contains(QLatin1String("ldap_")) ||
                     line.contains(QLatin1String("mail.biff.")) ||
                     line.contains(QLatin1String("mailnews.tags.")) ||
-                    line.contains(QLatin1String("extensions.AutoResizeImage."))) {
+                    line.contains(QLatin1String("extensions.AutoResizeImage.")) ||
+                    line.contains(QLatin1String("mail.phishing."))) {
                 insertIntoMap( line );
             }
         } else {
@@ -397,6 +398,15 @@ void ThunderbirdSettings::readGlobalSettings()
         addKmailConfig(QLatin1String("Spelling"), QLatin1String("defaultLanguage"),mailSpellCheckLanguage);
         //TODO create map to convert thunderbird name to aspell name
     }
+
+    const QString mailPhishingDetectionStr = QLatin1String("mail.phishing.detection.enabled");
+    if (mHashConfig.contains(mailPhishingDetectionStr)) {
+        const bool mailPhishingDetectionEnabled = mHashConfig.value(mailPhishingDetectionStr).toBool();
+        addKmailConfig(QLatin1String("Reader"), QLatin1String("ScamDetectionEnabled"), mailPhishingDetectionEnabled);
+    } else { //Default
+        addKmailConfig(QLatin1String("Reader"), QLatin1String("ScamDetectionEnabled"), true);
+    }
+
 }
 
 void ThunderbirdSettings::addAuth(QMap<QString, QVariant>& settings, const QString & argument, const QString &accountName )

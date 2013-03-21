@@ -22,6 +22,7 @@
 #define CONFIGUREMAILTRANSPORT_H
 
 #include <QWidget>
+class QListWidget;
 
 namespace PimActivity {
 class ConfigureMailtransport : public QWidget
@@ -35,6 +36,10 @@ public:
 
 Q_SIGNALS:
     void changed();
+
+private:
+    void init();
+    QListWidget *mListTransport;
 };
 }
 

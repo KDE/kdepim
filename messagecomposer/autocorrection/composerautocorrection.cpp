@@ -493,6 +493,18 @@ void ComposerAutoCorrection::capitalizeWeekDays()
     }
 }
 
+bool ComposerAutoCorrection::excludeToUppercase(const QString &word) const
+{
+    if (word.startsWith(QLatin1String("http://")) ||
+            word.startsWith(QLatin1String("ftp://")) ||
+            word.startsWith(QLatin1String("https://")) ||
+            word.startsWith(QLatin1String("ftps://")) ||
+            word.startsWith(QLatin1String("www.")) ||
+            word.startsWith(QLatin1String("mailto:")) )
+        return true;
+    return false;
+}
+
 void ComposerAutoCorrection::uppercaseFirstCharOfSentence()
 {
     if (!mUppercaseFirstCharOfSentence)
@@ -509,7 +521,8 @@ void ComposerAutoCorrection::uppercaseFirstCharOfSentence()
     const QString text = mCursor.selectedText();
 
     if (text.isEmpty()) {// start of a paragraph
-        mWord.replace(0, 1, mWord.at(0).toUpper());
+        if (!excludeToUppercase(mWord))
+            mWord.replace(0, 1, mWord.at(0).toUpper());
     } else {
         QString::ConstIterator constIter = text.constEnd();
         constIter--;
@@ -532,12 +545,7 @@ void ComposerAutoCorrection::uppercaseFirstCharOfSentence()
                 // search for exception
                 if (mUpperCaseExceptions.contains(prevWord.trimmed()))
                     break;
-                if (prevWord.startsWith(QLatin1String("http://")) ||
-                        prevWord.startsWith(QLatin1String("ftp://")) ||
-                        prevWord.startsWith(QLatin1String("https://")) ||
-                        prevWord.startsWith(QLatin1String("ftps://")) ||
-                        prevWord.startsWith(QLatin1String("www.")) ||
-                        prevWord.startsWith(QLatin1String("mailto:")) )
+                if (excludeToUppercase(mWord))
                     break;
 
                 mWord.replace(0, 1, mWord.at(0).toUpper());

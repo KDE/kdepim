@@ -323,4 +323,8 @@ void MailWebView::hideAccessKeys()
 {
 }
 
+void MailWebView::slotShowDetails()
+{
+}
+
 #include "mailwebview.moc"

@@ -107,6 +107,8 @@ private:
 
   QString autoDetectURL(const QString &_word) const;
   void readAutoCorrectionXmlFile(bool forceGlobal = false);
+  bool excludeToUppercase(const QString &word) const;
+
 
 
 

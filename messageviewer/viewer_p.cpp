@@ -28,6 +28,7 @@
 #include "objecttreeviewersource.h"
 #include "messagedisplayformatattribute.h"
 #include "header/grantleethememanager.h"
+#include "scamdetection/scamdetectionwarningwidget.h"
 
 #ifdef MESSAGEVIEWER_READER_HTML_DEBUG
 #include "filehtmlwriter.h"
@@ -206,6 +207,7 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
     mShowFullToAddressList( true ),
     mShowFullCcAddressList( true ),
     mPreviouslyViewedItem( -1 ),
+    mScamDetectionWarning( 0 ),
     mZoomFactor( 100 )
 {
  if ( _k_attributeInitialized.testAndSetAcquire( 0, 1 ) ) {
@@ -1087,6 +1089,8 @@ void ViewerPrivate::initHtmlWidget()
            this, SLOT(slotUrlOpen(QUrl)), Qt::QueuedConnection );
   connect( mViewer, SIGNAL(popupMenu(QUrl,QUrl,QPoint)),
            SLOT(slotUrlPopup(QUrl,QUrl,QPoint)) );
+  connect( mViewer, SIGNAL(messageMayBeAScam()), mScamDetectionWarning, SLOT(slotShowWarning()));
+  connect( mScamDetectionWarning, SIGNAL(showDetails()), mViewer, SLOT(slotShowDetails()));
 }
 
 bool ViewerPrivate::eventFilter( QObject *, QEvent *e )
@@ -1504,6 +1508,8 @@ void ViewerPrivate::createWidgets() {
 
   mColorBar->setObjectName( "mColorBar" );
   mColorBar->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Expanding );
+
+  mScamDetectionWarning = new ScamDetectionWarningWidget(readerBox);
 
   mViewer = new MailWebView( mActionCollection, readerBox );
   mViewer->setObjectName( "mViewer" );
@@ -2095,11 +2101,7 @@ void ViewerPrivate::slotUrlOn(const QString& link, const QString& title, const Q
 
   QString msg = URLHandlerManager::instance()->statusBarMessage( url, this );
   if ( msg.isEmpty() ) {
-    if ( !title.isEmpty() ) {
-      msg = title;
-    } else {
       msg = link;
-    }
   }
 
   KPIM::BroadcastStatus::instance()->setTransientStatusMsg( msg );

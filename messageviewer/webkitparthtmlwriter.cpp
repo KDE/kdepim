@@ -36,6 +36,7 @@
 #include "webkitparthtmlwriter.h"
 
 #include "mailwebview.h"
+#include "scamdetection/scamdetection.h"
 
 #include <KDebug>
 #include <KUrl>
@@ -91,8 +92,10 @@ void WebKitPartHtmlWriter::end() {
   mHtmlView->show();
   mHtml.clear();
 
+#ifndef KDEPIM_NO_WEBKIT
   resolveCidUrls();
-
+  mHtmlView->scamCheck();
+#endif
   mHtmlView->setUpdatesEnabled( true );
   mHtmlView->update();
   mState = Ended;
