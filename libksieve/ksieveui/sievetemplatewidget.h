@@ -20,6 +20,8 @@
 
 #include <QWidget>
 
+class QListWidget;
+
 namespace KSieveUi {
 class SieveTemplateWidget : public QWidget
 {
@@ -27,6 +29,8 @@ class SieveTemplateWidget : public QWidget
 public:
     explicit SieveTemplateWidget(QWidget *parent);
     ~SieveTemplateWidget();
+private:
+    QListWidget *mListTemplate;
 };
 }
 

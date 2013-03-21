@@ -16,11 +16,18 @@
 */
 
 #include "sievetemplatewidget.h"
-using namespace KSieveUi;
 
+#include <QListWidget>
+#include <QHBoxLayout>
+
+using namespace KSieveUi;
 SieveTemplateWidget::SieveTemplateWidget(QWidget *parent)
     : QWidget(parent)
 {
+    QHBoxLayout *lay = new QHBoxLayout;
+    mListTemplate = new QListWidget;
+    lay->addWidget(mListTemplate);
+    setLayout(lay);
 }
 
 
