@@ -803,6 +803,7 @@ void ComposerAutoCorrection::writeAutoCorrectionXmlFile()
         return;
     }
     QDomDocument root(QLatin1String("autocorrection"));
+    root.appendChild(root.createProcessingInstruction(QLatin1String("xml"), QLatin1String("version=\"1.0\" encoding=\"UTF-8\"")));
 
     QDomElement word = root.createElement(QLatin1String( "Word" ));
     root.appendChild(word);
@@ -869,6 +870,7 @@ void ComposerAutoCorrection::writeAutoCorrectionXmlFile()
 
 
     QTextStream ts( &file );
+    ts.setCodec("UTF-8");
     ts << root.toString();
     file.close();
 }
