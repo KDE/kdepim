@@ -41,7 +41,7 @@ void ScamDetection::scanPage(const QWebElement &rootElement)
         bool foundScam = false;
         QRegExp ip4regExp;
         ip4regExp.setPattern(IPv4_PATTERN);
-        QWebElementCollection allAnchor = rootElement.findAll(QLatin1String("a"));
+        const QWebElementCollection allAnchor = rootElement.findAll(QLatin1String("a"));
         Q_FOREACH (const QWebElement &anchorElement, allAnchor) {
             //1) detect if title has a url and title != href
             const QString href = anchorElement.attribute(QLatin1String("href"));
