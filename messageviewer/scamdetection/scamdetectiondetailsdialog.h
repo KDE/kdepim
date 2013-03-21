@@ -32,6 +32,8 @@ public:
 
     void setDetails(const QString &details);
 private:
+    void writeConfig();
+    void readConfig();
     QTextEdit *mDetails;
 };
 }

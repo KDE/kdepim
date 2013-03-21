@@ -16,6 +16,7 @@
 */
 
 #include "scamdetectiondetailsdialog.h"
+#include "globalsettings.h"
 
 #include <KLocale>
 
@@ -34,16 +35,35 @@ ScamDetectionDetailsDialog::ScamDetectionDetailsDialog(QWidget *parent)
     mDetails->setReadOnly(true);
     mDetails->setAcceptRichText(false);
     setMainWidget(mDetails);
-    resize(600,400);
+    readConfig();
 }
 
 ScamDetectionDetailsDialog::~ScamDetectionDetailsDialog()
 {
+    writeConfig();
 }
 
 void ScamDetectionDetailsDialog::setDetails(const QString &details)
 {
     mDetails->setPlainText(details);
+}
+
+void ScamDetectionDetailsDialog::readConfig()
+{
+    KConfigGroup group( MessageViewer::GlobalSettings::self()->config(), "ScamDetectionDetailsDialog" );
+    const QSize size = group.readEntry( "Size", QSize() );
+    if ( size.isValid() ) {
+        resize( size );
+    } else {
+        resize( 600, 400 );
+    }
+}
+
+void ScamDetectionDetailsDialog::writeConfig()
+{
+    KConfigGroup group( MessageViewer::GlobalSettings::self()->config(), "ScamDetectionDetailsDialog" );
+    group.writeEntry( "Size", size() );
+    group.sync();
 }
 
 #include "scamdetectiondetailsdialog.moc"
