@@ -34,7 +34,7 @@ class KSIEVEUI_EXPORT SieveTextEdit : public QPlainTextEdit
   Q_OBJECT
 
   public:
-    explicit SieveTextEdit( QWidget *parent );
+    explicit SieveTextEdit( QWidget *parent = 0 );
     ~SieveTextEdit();
 
     void lineNumberAreaPaintEvent(QPaintEvent *event);

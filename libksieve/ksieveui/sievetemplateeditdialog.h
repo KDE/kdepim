@@ -15,41 +15,35 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef SIEVETEMPLATEWIDGET_H
-#define SIEVETEMPLATEWIDGET_H
+#ifndef SIEVETEMPLATEEDITDIALOG_H
+#define SIEVETEMPLATEEDITDIALOG_H
 
-#include <QWidget>
-#include <QListWidget>
+#include <KDialog>
+
+class KLineEdit;
 
 namespace KSieveUi {
-
-class SieveTemplateListWidget : public QListWidget
+class SieveTextEdit;
+class SieveTemplateEditDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit SieveTemplateListWidget(QWidget *parent = 0);
-    ~SieveTemplateListWidget();
+    explicit SieveTemplateEditDialog(QWidget *parent = 0);
+    ~SieveTemplateEditDialog();
+
+    void setTemplateName(const QString &name);
+    QString templateName() const;
+
+    void setText(const QString &);
+    QString text() const;
 
 private Q_SLOTS:
-    void slotContextMenu(const QPoint &pos);
-    void slotRemove();
-    void slotAdd();
-    void slotModify();
+    void slotTemplateNameChanged(const QString &);
 
 private:
-    void loadTemplates();
-    void saveTemplates();
-};
-
-class SieveTemplateWidget : public QWidget
-{
-    Q_OBJECT
-public:
-    explicit SieveTemplateWidget(QWidget *parent);
-    ~SieveTemplateWidget();
-private:
-    SieveTemplateListWidget *mListTemplate;
+    SieveTextEdit *mTextEdit;
+    KLineEdit *mTemplateNameEdit;
 };
 }
 
-#endif // SIEVETEMPLATEWIDGET_H
+#endif // SIEVETEMPLATEEDITDIALOG_H
