@@ -17,10 +17,13 @@
 
 #include "sievedefaulttemplate.h"
 
+#include <KLocale>
 
-QString KSieveUi::SieveDefaultTemplate::moveToMailingList()
+KSieveUi::SieveDefaultTemplate::defaultTemplate KSieveUi::SieveDefaultTemplate::moveToMailingList()
 {
-    //TODO
-    return QString();
+    KSieveUi::SieveDefaultTemplate::defaultTemplate tmp;
+    tmp.name = i18n("Move to folder");
+    tmp.text = QString::fromLatin1("TODO");
+    return tmp;
 }
 

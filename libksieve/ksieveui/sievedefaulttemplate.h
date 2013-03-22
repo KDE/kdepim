@@ -23,7 +23,13 @@
 namespace KSieveUi
 {
 namespace SieveDefaultTemplate {
-QString moveToMailingList();
+
+struct defaultTemplate {
+    QString name;
+    QString text;
+};
+
+defaultTemplate moveToMailingList();
 }
 }
 

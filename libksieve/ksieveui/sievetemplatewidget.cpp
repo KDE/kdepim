@@ -17,6 +17,7 @@
 
 #include "sievetemplatewidget.h"
 #include "sievetemplateeditdialog.h"
+#include "sievedefaulttemplate.h"
 
 #include <KMenu>
 #include <KLocale>
@@ -72,7 +73,8 @@ void SieveTemplateListWidget::slotAdd()
     if (dlg->exec()) {
         const QString templateName = dlg->templateName();
         const QString templateScript = dlg->script();
-        //TODO create item.
+        QListWidgetItem *item = new QListWidgetItem(templateName, this);
+        item->setData(SieveTemplateListWidget::SieveText, templateScript);
         mDirty = true;
     }
     delete dlg;
@@ -80,12 +82,14 @@ void SieveTemplateListWidget::slotAdd()
 
 void SieveTemplateListWidget::slotModify()
 {
-    if(currentItem()) {
+    QListWidgetItem * item = currentItem();
+    if(item) {
         QPointer<SieveTemplateEditDialog> dlg = new SieveTemplateEditDialog(this);
         if (dlg->exec()) {
             const QString templateName = dlg->templateName();
             const QString templateScript = dlg->script();
-            //TODO create item.
+            item->setText(templateName);
+            item->setData(SieveTemplateListWidget::SieveText, templateScript);
             mDirty = true;
         }
         delete dlg;
@@ -109,6 +113,10 @@ void SieveTemplateListWidget::loadTemplates()
             item->setData(SieveTemplateListWidget::SieveText, text);
         }
     } else {
+        KSieveUi::SieveDefaultTemplate::defaultTemplate moveToML = KSieveUi::SieveDefaultTemplate::moveToMailingList();
+        QListWidgetItem *item = new QListWidgetItem(moveToML.name, this);
+        item->setData(SieveTemplateListWidget::SieveText, moveToML.text);
+
         //Load default template
     }
     mDirty = false;
@@ -125,10 +133,11 @@ void SieveTemplateListWidget::saveTemplates()
         config->deleteGroup( group );
     }
 
+    const int numberOfTemplate = count();
     KConfigGroup group = config->group( "template" );
-    group.writeEntry( "templateCount", count() );
+    group.writeEntry( "templateCount", numberOfTemplate );
 
-    for ( int i = 0; i < count(); ++i ) {
+    for ( int i = 0; i < numberOfTemplate; ++i ) {
         KConfigGroup group = config->group( QString::fromLatin1( "templateDefine_%1" ).arg ( i ) );
         group.writeEntry( "Name", item(i)->text() );
         group.writeEntry( "Text", item(i)->data(SieveTemplateListWidget::SieveText) );
