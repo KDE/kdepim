@@ -25,6 +25,7 @@
 #include <QListWidget>
 #include <QHBoxLayout>
 #include <QPointer>
+#include <QMimeData>
 #include <QDebug>
 
 using namespace KSieveUi;
@@ -33,6 +34,8 @@ SieveTemplateListWidget::SieveTemplateListWidget(QWidget *parent)
     : QListWidget(parent), mDirty(false)
 {
     setContextMenuPolicy( Qt::CustomContextMenu );
+    setDragDropMode(QAbstractItemView::DragOnly);
+
     connect( this, SIGNAL(customContextMenuRequested(QPoint)),
              SLOT(slotContextMenu(QPoint)) );
     connect(this, SIGNAL(doubleClicked(QModelIndex)), SLOT(slotModify()));
@@ -42,6 +45,24 @@ SieveTemplateListWidget::SieveTemplateListWidget(QWidget *parent)
 SieveTemplateListWidget::~SieveTemplateListWidget()
 {
     saveTemplates();
+}
+
+QStringList SieveTemplateListWidget::mimeTypes() const
+{
+    QStringList lst;
+    lst << QLatin1String( "text/plain" );
+    return lst;
+}
+
+QMimeData *SieveTemplateListWidget::mimeData ( const QList<QListWidgetItem *> items ) const
+{
+    if ( items.isEmpty() ) {
+        return 0;
+    }
+    QMimeData *mimeData = new QMimeData();
+    QListWidgetItem *item = items.first();
+    mimeData->setText( item->data(SieveTemplateListWidget::SieveText).toString() );
+    return mimeData;
 }
 
 void SieveTemplateListWidget::slotContextMenu(const QPoint &pos)

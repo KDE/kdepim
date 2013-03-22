@@ -30,6 +30,10 @@ public:
     explicit SieveTemplateListWidget(QWidget *parent = 0);
     ~SieveTemplateListWidget();
 
+protected:
+    QStringList mimeTypes() const;
+    QMimeData *mimeData( const QList<QListWidgetItem *> items ) const;
+
 private Q_SLOTS:
     void slotContextMenu(const QPoint &pos);
     void slotRemove();
