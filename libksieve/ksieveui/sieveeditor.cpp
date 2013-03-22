@@ -18,6 +18,7 @@
 
 #include "sieveeditor.h"
 #include "sievefindbar.h"
+#include "sievetemplatewidget.h"
 
 #include <klocale.h>
 #include <kiconloader.h>
@@ -61,17 +62,29 @@ SieveEditor::SieveEditor( QWidget * parent )
     QSplitter *splitter = new QSplitter;
     splitter->setOrientation( Qt::Vertical );
     lay->addWidget( splitter );
+    QList<int> size2;
+    size2 << 400 << 100;
+
+    QSplitter *templateSplitter = new QSplitter;
+    templateSplitter->setOrientation( Qt::Horizontal );
     QList<int> size;
     size << 400 << 100;
 
-    mTextEdit = new SieveTextEdit( splitter );
-    mFindBar = new SieveFindBar( mTextEdit, splitter );
+    SieveTemplateWidget *w = new SieveTemplateWidget;
 
-    QWidget *widget = new QWidget( splitter );
-    QVBoxLayout *layTextEdit = new QVBoxLayout;
-    layTextEdit->addWidget( mTextEdit );
-    layTextEdit->addWidget( mFindBar );
-    widget->setLayout( layTextEdit );
+
+
+
+    QWidget *textEditWidget = new QWidget;
+    QVBoxLayout * textEditLayout = new QVBoxLayout;
+    mTextEdit = new SieveTextEdit;
+    textEditLayout->addWidget(mTextEdit);
+    mFindBar = new SieveFindBar( mTextEdit, textEditWidget );
+    textEditLayout->addWidget(mFindBar);
+    textEditWidget->setLayout(textEditLayout);
+
+    templateSplitter->addWidget(textEditWidget);
+    templateSplitter->addWidget(w);
 
     QShortcut *shortcut = new QShortcut( this );
     shortcut->setKey( Qt::Key_F+Qt::CTRL );
@@ -80,7 +93,7 @@ SieveEditor::SieveEditor( QWidget * parent )
 
     mDebugTextEdit = new KTextEdit;
     mDebugTextEdit->setReadOnly( true );
-    splitter->addWidget( widget );
+    splitter->addWidget( templateSplitter );
     splitter->addWidget( mDebugTextEdit );
     splitter->setSizes( size );
     splitter->setChildrenCollapsible(false);

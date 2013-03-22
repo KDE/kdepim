@@ -50,7 +50,7 @@ class SieveTemplateWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit SieveTemplateWidget(QWidget *parent);
+    explicit SieveTemplateWidget(QWidget *parent = 0);
     ~SieveTemplateWidget();
 private:
     SieveTemplateListWidget *mListTemplate;
