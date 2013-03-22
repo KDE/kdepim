@@ -73,8 +73,6 @@ SieveEditor::SieveEditor( QWidget * parent )
     SieveTemplateWidget *w = new SieveTemplateWidget;
 
 
-
-
     QWidget *textEditWidget = new QWidget;
     QVBoxLayout * textEditLayout = new QVBoxLayout;
     mTextEdit = new SieveTextEdit;

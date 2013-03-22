@@ -49,8 +49,10 @@ SieveTemplateEditDialog::SieveTemplateEditDialog(QWidget *parent)
     mTextEdit = new KSieveUi::SieveTextEdit;
     vbox->addWidget(mTextEdit);
 
+    w->setLayout(vbox);
     setMainWidget(w);
     connect(mTemplateNameEdit, SIGNAL(textChanged(QString)),SLOT(slotTemplateNameChanged(QString)));
+    resize(600,400);
 }
 
 SieveTemplateEditDialog::~SieveTemplateEditDialog()

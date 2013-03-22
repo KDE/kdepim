@@ -85,6 +85,8 @@ void SieveTemplateListWidget::slotModify()
     QListWidgetItem * item = currentItem();
     if(item) {
         QPointer<SieveTemplateEditDialog> dlg = new SieveTemplateEditDialog(this);
+        dlg->setTemplateName(item->text());
+        dlg->setScript(item->data(SieveTemplateListWidget::SieveText).toString());
         if (dlg->exec()) {
             const QString templateName = dlg->templateName();
             const QString templateScript = dlg->script();
