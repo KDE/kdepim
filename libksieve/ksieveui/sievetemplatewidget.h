@@ -37,8 +37,13 @@ private Q_SLOTS:
     void slotModify();
 
 private:
+    enum SieveTemplateData {
+        SieveText = Qt::UserRole + 1
+    };
+
     void loadTemplates();
     void saveTemplates();
+    bool mDirty;
 };
 
 class SieveTemplateWidget : public QWidget

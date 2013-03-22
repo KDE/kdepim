@@ -63,12 +63,12 @@ void SieveTemplateEditDialog::slotTemplateNameChanged(const QString &text)
     enableButtonOk(!text.trimmed().isEmpty());
 }
 
-void SieveTemplateEditDialog::setText(const QString &text)
+void SieveTemplateEditDialog::setScript(const QString &text)
 {
     mTextEdit->setPlainText(text);
 }
 
-QString SieveTemplateEditDialog::text() const
+QString SieveTemplateEditDialog::script() const
 {
     return mTextEdit->toPlainText();
 }

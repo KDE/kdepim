@@ -28,7 +28,7 @@
 using namespace KSieveUi;
 
 SieveTemplateListWidget::SieveTemplateListWidget(QWidget *parent)
-    : QListWidget(parent)
+    : QListWidget(parent), mDirty(false)
 {
     setContextMenuPolicy( Qt::CustomContextMenu );
     connect( this, SIGNAL(customContextMenuRequested(QPoint)),
@@ -63,13 +63,17 @@ void SieveTemplateListWidget::slotRemove()
     Q_FOREACH (QListWidgetItem *item, lstSelectedItems) {
         delete item;
     }
+    mDirty = true;
 }
 
 void SieveTemplateListWidget::slotAdd()
 {
     QPointer<SieveTemplateEditDialog> dlg = new SieveTemplateEditDialog(this);
     if (dlg->exec()) {
+        const QString templateName = dlg->templateName();
+        const QString templateScript = dlg->script();
         //TODO create item.
+        mDirty = true;
     }
     delete dlg;
 }
@@ -79,7 +83,10 @@ void SieveTemplateListWidget::slotModify()
     if(currentItem()) {
         QPointer<SieveTemplateEditDialog> dlg = new SieveTemplateEditDialog(this);
         if (dlg->exec()) {
+            const QString templateName = dlg->templateName();
+            const QString templateScript = dlg->script();
             //TODO create item.
+            mDirty = true;
         }
         delete dlg;
     }
@@ -88,12 +95,46 @@ void SieveTemplateListWidget::slotModify()
 
 void SieveTemplateListWidget::loadTemplates()
 {
-    //TODO
+    clear();
+    KSharedConfig::Ptr config = KSharedConfig::openConfig( "sievetemplaterc", KConfig::NoGlobals );
+    KConfigGroup group = config->group( "template" );
+    if (group.hasKey(QLatin1String("templateCount"))) {
+        const int numberTemplate = group.readEntry( "templateCount", 0 );
+        for (int i = 0; i < numberTemplate; ++i) {
+            KConfigGroup group = config->group( QString::fromLatin1( "templateDefine_%1" ).arg ( i ) );
+            const QString name = group.readEntry( "Name", QString() );
+            const QString text = group.readEntry( "Text", QString() );
+
+            QListWidgetItem *item = new QListWidgetItem(name, this);
+            item->setData(SieveTemplateListWidget::SieveText, text);
+        }
+    } else {
+        //Load default template
+    }
+    mDirty = false;
 }
 
 void SieveTemplateListWidget::saveTemplates()
 {
-    //TODO
+    if (!mDirty)
+        return;
+
+    KSharedConfig::Ptr config = KSharedConfig::openConfig( "sievetemplaterc", KConfig::NoGlobals );
+    // clear everything
+    foreach ( const QString &group, config->groupList() ) {
+        config->deleteGroup( group );
+    }
+
+    KConfigGroup group = config->group( "template" );
+    group.writeEntry( "templateCount", count() );
+
+    for ( int i = 0; i < count(); ++i ) {
+        KConfigGroup group = config->group( QString::fromLatin1( "templateDefine_%1" ).arg ( i ) );
+        group.writeEntry( "Name", item(i)->text() );
+        group.writeEntry( "Text", item(i)->data(SieveTemplateListWidget::SieveText) );
+    }
+    config->sync();
+    mDirty = false;
 }
 
 
