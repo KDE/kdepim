@@ -26,6 +26,7 @@
 #include <QHBoxLayout>
 #include <QPointer>
 #include <QMimeData>
+#include <QLabel>
 #include <QDebug>
 
 using namespace KSieveUi;
@@ -68,13 +69,12 @@ QMimeData *SieveTemplateListWidget::mimeData ( const QList<QListWidgetItem *> it
 void SieveTemplateListWidget::slotContextMenu(const QPoint &pos)
 {
     QList<QListWidgetItem *> lstSelectedItems = selectedItems();
-    const bool hasItemsSelected = !lstSelectedItems.isEmpty();
     KMenu *menu = new KMenu( this );
     menu->addAction( i18n("Add..."), this, SLOT(slotAdd()));
     if (lstSelectedItems.count() == 1) {
         menu->addAction( i18n("Modify..."), this, SLOT(slotModify()));
     }
-    if (hasItemsSelected) {
+    if (lstSelectedItems.count() == 1 && !lstSelectedItems.first()->data(SieveTemplateListWidget::DefaultTemplate).toBool()) {
         menu->addAction( i18n("Remove"), this, SLOT(slotRemove()));
     }
     menu->exec( mapToGlobal( pos ) );
@@ -182,8 +182,11 @@ void SieveTemplateListWidget::saveTemplates()
 SieveTemplateWidget::SieveTemplateWidget(QWidget *parent)
     : QWidget(parent)
 {
-    QHBoxLayout *lay = new QHBoxLayout;
+    QVBoxLayout *lay = new QVBoxLayout;
+    QLabel *lab = new QLabel(i18n("Sieve Template:"));
+    lay->addWidget(lab);
     mListTemplate = new SieveTemplateListWidget;
+    mListTemplate->setWhatsThis(i18n("You can drag and drop element on editor to import template"));
     lay->addWidget(mListTemplate);
     setLayout(lay);
 }
