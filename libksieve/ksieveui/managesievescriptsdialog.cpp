@@ -374,7 +374,6 @@ void ManageSieveScriptsDialog::slotEditScript()
     return;
   url.setFileName( currentItem->text(0) );
   mCurrentURL = url;
-qDebug()<<" mCurrentURL :"<<mCurrentURL;
   mIsNewScript = false;
   KManageSieve::SieveJob * job = KManageSieve::SieveJob::get( url );
   connect( job, SIGNAL(result(KManageSieve::SieveJob*,bool,QString,bool)),
