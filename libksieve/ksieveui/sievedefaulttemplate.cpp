@@ -23,7 +23,11 @@ KSieveUi::SieveDefaultTemplate::defaultTemplate KSieveUi::SieveDefaultTemplate::
 {
     KSieveUi::SieveDefaultTemplate::defaultTemplate tmp;
     tmp.name = i18n("Move to folder");
-    tmp.text = QString::fromLatin1("TODO");
+    tmp.text = QString::fromLatin1("require \"fileinto\";\n"
+                                   "if header :contains \"List-ID\" [ \"examples.com\", \"examples.mail.com\" ] {\n"
+                                   "    fileinto \"list-example/examples\"; \n"
+                                   "    stop;\n"
+                                   "});\n");
     return tmp;
 }
 
