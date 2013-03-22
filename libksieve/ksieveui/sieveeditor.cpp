@@ -146,6 +146,7 @@ bool SieveEditor::saveToFile( const QString&filename )
   if ( !file.open( QIODevice::WriteOnly|QIODevice::Text ) )
     return false;
   QTextStream out(&file);
+  out.setCodec("UTF-8");
   out << mTextEdit->toPlainText();
   return true;
 }
