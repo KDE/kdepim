@@ -50,14 +50,14 @@ void ScamDetection::scanPage(const QWebElement &rootElement)
                 if (title.startsWith(QLatin1String("http:")) || title.startsWith(QLatin1String("https:"))) {
                     if (href != title) {
                         foundScam = true;
-                        mDetails += '\n' + i18n("title define in anchor '%1' is different of url define in href '%2'", title, href);
+                        mDetails += '\n' + i18n("title definition in anchor '%1' is different from url definition in href '%2'", title, href);
                     }
                 }
             }
             //2) detect if url href has ip and not server name.
             const QUrl url(href);
             if (url.host().contains(ip4regExp)) {
-                mDetails += '\n' + i18n("Hostname from href define ip '%1'", url.host());
+                mDetails += '\n' + i18n("Hostname from href defines ip '%1'", url.host());
                 foundScam = true;
             } else if (url.path().contains(QLatin1String("url?q="))) { //4) redirect url.
                 mDetails += '\n' + i18n("Href '%1' has a redirection", url.path());
