@@ -62,16 +62,15 @@ SieveEditor::SieveEditor( QWidget * parent )
     QSplitter *splitter = new QSplitter;
     splitter->setOrientation( Qt::Vertical );
     lay->addWidget( splitter );
-    QList<int> size2;
-    size2 << 400 << 100;
-
-    QSplitter *templateSplitter = new QSplitter;
-    templateSplitter->setOrientation( Qt::Horizontal );
     QList<int> size;
     size << 400 << 100;
 
-    SieveTemplateWidget *w = new SieveTemplateWidget;
+    QSplitter *templateSplitter = new QSplitter;
+    templateSplitter->setOrientation( Qt::Horizontal );
 
+
+    //
+    SieveTemplateWidget *w = new SieveTemplateWidget;
 
     QWidget *textEditWidget = new QWidget;
     QVBoxLayout * textEditLayout = new QVBoxLayout;
@@ -83,7 +82,8 @@ SieveEditor::SieveEditor( QWidget * parent )
 
     templateSplitter->addWidget(textEditWidget);
     templateSplitter->addWidget(w);
-
+    templateSplitter->setSizes( size );
+    //
     QShortcut *shortcut = new QShortcut( this );
     shortcut->setKey( Qt::Key_F+Qt::CTRL );
     connect( shortcut, SIGNAL(activated()), SLOT(slotFind()) );

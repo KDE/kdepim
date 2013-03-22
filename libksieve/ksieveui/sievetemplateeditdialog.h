@@ -41,6 +41,8 @@ private Q_SLOTS:
     void slotTemplateNameChanged(const QString &);
 
 private:
+    void readConfig();
+    void writeConfig();
     SieveTextEdit *mTextEdit;
     KLineEdit *mTemplateNameEdit;
 };

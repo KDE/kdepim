@@ -25,6 +25,7 @@
 #include <QListWidget>
 #include <QHBoxLayout>
 #include <QPointer>
+#include <QDebug>
 
 using namespace KSieveUi;
 
@@ -34,6 +35,7 @@ SieveTemplateListWidget::SieveTemplateListWidget(QWidget *parent)
     setContextMenuPolicy( Qt::CustomContextMenu );
     connect( this, SIGNAL(customContextMenuRequested(QPoint)),
              SLOT(slotContextMenu(QPoint)) );
+    connect(this, SIGNAL(doubleClicked(QModelIndex)), SLOT(slotModify()));
     loadTemplates();
 }
 
