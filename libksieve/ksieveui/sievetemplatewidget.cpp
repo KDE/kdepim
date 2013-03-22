@@ -85,7 +85,8 @@ void SieveTemplateListWidget::slotRemove()
 {
     QList<QListWidgetItem *> lstSelectedItems = selectedItems();
     Q_FOREACH (QListWidgetItem *item, lstSelectedItems) {
-        delete item;
+        if (item->data(SieveTemplateListWidget::DefaultTemplate).toBool() == false)
+            delete item;
     }
     mDirty = true;
 }
@@ -96,8 +97,8 @@ void SieveTemplateListWidget::slotAdd()
     if (dlg->exec()) {
         const QString templateName = dlg->templateName();
         const QString templateScript = dlg->script();
-        QListWidgetItem *item = new QListWidgetItem(templateName, this);
-        item->setData(SieveTemplateListWidget::SieveText, templateScript);
+        createListWidgetItem(templateName, templateScript, false);
+
         mDirty = true;
     }
     delete dlg;
@@ -125,6 +126,8 @@ void SieveTemplateListWidget::slotModify()
 void SieveTemplateListWidget::loadTemplates()
 {
     clear();
+    KSieveUi::SieveDefaultTemplate::defaultTemplate moveToML = KSieveUi::SieveDefaultTemplate::moveToMailingList();
+    createListWidgetItem(moveToML.name, moveToML.text, true);
     KSharedConfig::Ptr config = KSharedConfig::openConfig( "sievetemplaterc", KConfig::NoGlobals );
     KConfigGroup group = config->group( "template" );
     if (group.hasKey(QLatin1String("templateCount"))) {
@@ -134,17 +137,17 @@ void SieveTemplateListWidget::loadTemplates()
             const QString name = group.readEntry( "Name", QString() );
             const QString text = group.readEntry( "Text", QString() );
 
-            QListWidgetItem *item = new QListWidgetItem(name, this);
-            item->setData(SieveTemplateListWidget::SieveText, text);
+            createListWidgetItem(name, text, false);
         }
-    } else {
-        KSieveUi::SieveDefaultTemplate::defaultTemplate moveToML = KSieveUi::SieveDefaultTemplate::moveToMailingList();
-        QListWidgetItem *item = new QListWidgetItem(moveToML.name, this);
-        item->setData(SieveTemplateListWidget::SieveText, moveToML.text);
-
-        //Load default template
     }
     mDirty = false;
+}
+
+void SieveTemplateListWidget::createListWidgetItem(const QString &name, const QString &text, bool isDefaultTemplate)
+{
+    QListWidgetItem *item = new QListWidgetItem(name, this);
+    item->setData(SieveTemplateListWidget::SieveText, text);
+    item->setData(SieveTemplateListWidget::DefaultTemplate, isDefaultTemplate);
 }
 
 void SieveTemplateListWidget::saveTemplates()
@@ -158,15 +161,17 @@ void SieveTemplateListWidget::saveTemplates()
         config->deleteGroup( group );
     }
 
-    const int numberOfTemplate = count();
+    int numberOfTemplate = 0;
+    for ( int i = 0; i < count(); ++i ) {
+        if (item(i)->data(SieveTemplateListWidget::DefaultTemplate).toBool() == false) {
+            KConfigGroup group = config->group( QString::fromLatin1( "templateDefine_%1" ).arg ( numberOfTemplate ) );
+            group.writeEntry( "Name", item(i)->text() );
+            group.writeEntry( "Text", item(i)->data(SieveTemplateListWidget::SieveText) );
+            numberOfTemplate ++;
+        }
+    }
     KConfigGroup group = config->group( "template" );
     group.writeEntry( "templateCount", numberOfTemplate );
-
-    for ( int i = 0; i < numberOfTemplate; ++i ) {
-        KConfigGroup group = config->group( QString::fromLatin1( "templateDefine_%1" ).arg ( i ) );
-        group.writeEntry( "Name", item(i)->text() );
-        group.writeEntry( "Text", item(i)->data(SieveTemplateListWidget::SieveText) );
-    }
     config->sync();
     mDirty = false;
 }

@@ -42,9 +42,11 @@ private Q_SLOTS:
 
 private:
     enum SieveTemplateData {
-        SieveText = Qt::UserRole + 1
+        SieveText = Qt::UserRole + 1,
+        DefaultTemplate = Qt::UserRole + 2
     };
 
+    void createListWidgetItem(const QString &name, const QString &text, bool isDefaultTemplate);
     void loadTemplates();
     void saveTemplates();
     bool mDirty;
