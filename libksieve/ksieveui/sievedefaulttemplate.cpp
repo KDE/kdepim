@@ -19,8 +19,9 @@
 
 #include <KLocale>
 
-KSieveUi::SieveDefaultTemplate::defaultTemplate KSieveUi::SieveDefaultTemplate::moveToMailingList()
+QList<KSieveUi::SieveDefaultTemplate::defaultTemplate> KSieveUi::SieveDefaultTemplate::defaultTemplates()
 {
+    QList<KSieveUi::SieveDefaultTemplate::defaultTemplate> lst;
     KSieveUi::SieveDefaultTemplate::defaultTemplate tmp;
     tmp.name = i18n("Move to folder");
     tmp.text = QString::fromLatin1("require \"fileinto\";\n"
@@ -28,6 +29,7 @@ KSieveUi::SieveDefaultTemplate::defaultTemplate KSieveUi::SieveDefaultTemplate::
                                    "    fileinto \"list-example/examples\"; \n"
                                    "    stop;\n"
                                    "});\n");
-    return tmp;
+    lst << tmp;
+    return lst;
 }
 

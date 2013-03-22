@@ -29,7 +29,7 @@ struct defaultTemplate {
     QString text;
 };
 
-defaultTemplate moveToMailingList();
+QList<defaultTemplate> defaultTemplates();
 }
 }
 

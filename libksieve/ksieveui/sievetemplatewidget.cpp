@@ -126,8 +126,10 @@ void SieveTemplateListWidget::slotModify()
 void SieveTemplateListWidget::loadTemplates()
 {
     clear();
-    KSieveUi::SieveDefaultTemplate::defaultTemplate moveToML = KSieveUi::SieveDefaultTemplate::moveToMailingList();
-    createListWidgetItem(moveToML.name, moveToML.text, true);
+    const QList<KSieveUi::SieveDefaultTemplate::defaultTemplate> templatesLst = KSieveUi::SieveDefaultTemplate::defaultTemplates();
+    Q_FOREACH (const KSieveUi::SieveDefaultTemplate::defaultTemplate &tmp, templatesLst) {
+        createListWidgetItem(tmp.name, tmp.text, true);
+    }
     KSharedConfig::Ptr config = KSharedConfig::openConfig( "sievetemplaterc", KConfig::NoGlobals );
     KConfigGroup group = config->group( "template" );
     if (group.hasKey(QLatin1String("templateCount"))) {
