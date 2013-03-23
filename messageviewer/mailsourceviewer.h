@@ -85,8 +85,11 @@ protected:
   void contextMenuEvent( QContextMenuEvent *event );
 private slots:
   void slotSpeakText();
+  void slotSaveAs();
 signals:
   void findText();
+private:
+  bool saveToFile( const QString &filename );
 };
   
 namespace HTMLPrettyFormatter
