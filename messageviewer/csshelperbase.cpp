@@ -643,6 +643,11 @@ namespace MessageViewer {
       "  color: %2 ! important;\n"
       "}\n\n"
 
+
+      "div.fancy.header table a:hover {\n"
+      "  background-color: transparent ! important;\n"
+      "}\n\n"
+
       "span.pimsmileytext {\n"
       "  position: absolute;\n"
       "  top: 0px;\n"
