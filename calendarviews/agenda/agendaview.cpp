@@ -325,6 +325,11 @@ void AgendaView::Private::calendarIncidenceAdded( const KCalCore::Incidence::Ptr
   Q_ASSERT( incidence );
   Q_ASSERT( !incidence->uid().isEmpty() );
   Akonadi::Item item = q->calendar()->item( incidence );
+  if ( incidence->hasRecurrenceId() ) {
+      //Reevaluate the main event instead
+      reevaluateIncidence(q->calendar()->incidence(incidence->uid()));
+      return;
+  }
 
   if ( item.isValid() ) {
     // No need to call setChanges(), that triggers a fillAgenda()
@@ -340,6 +345,11 @@ void AgendaView::Private::calendarIncidenceChanged( const KCalCore::Incidence::P
 {
   Q_ASSERT( incidence );
   Q_ASSERT( !incidence->uid().isEmpty() );
+  if ( incidence->hasRecurrenceId() ) {
+      //Reevaluate the main event instead
+      reevaluateIncidence(q->calendar()->incidence(incidence->uid()));
+      return;
+  }
 
   if ( incidence ) {
     reevaluateIncidence( incidence );
@@ -354,6 +364,13 @@ void AgendaView::Private::calendarIncidenceDeleted( const KCalCore::Incidence::P
 {
   Q_ASSERT( incidence );
   Q_ASSERT( !incidence->uid().isEmpty() );
+  if ( incidence->hasRecurrenceId() ) {
+      //Reevaluate the main event instead
+      //we have to remove this incidence first, because it's already no longer in the calendar (so the exception removal doesn't work)
+      q->removeIncidence( incidence );
+      reevaluateIncidence(q->calendar()->incidence(incidence->uid()));
+      return;
+  }
   if ( !incidence->uid().isEmpty() ) {
     // No need to call setChanges(), that triggers a fillAgenda()
     q->removeIncidence( incidence );
