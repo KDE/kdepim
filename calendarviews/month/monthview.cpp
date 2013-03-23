@@ -33,6 +33,7 @@
 #include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/utils.h>
 
+#include <kcalcore/occurrenceiterator.h>
 #include <KCheckableProxyModel>
 #include <KIcon>
 
@@ -502,65 +503,33 @@ void MonthView::reloadIncidences()
 
   // build global event list
   KDateTime::Spec timeSpec = CalendarSupport::KCalPrefs::instance()->timeSpec();
-  const KCalCore::Incidence::List incidences = calendar()->incidences();
-
   const bool colorMonthBusyDays = preferences()->colorMonthBusyDays();
-  foreach ( const KCalCore::Incidence::Ptr &incidence, incidences ) {
-    const bool isTodo = incidence->type() == KCalCore::Incidence::TypeTodo;
-    Akonadi::Item aitem = calendar()->item( incidence->uid() );
 
-    // Remove the two checks when filtering is done through a proxyModel, when using calendar search
-    if ( !preferences()->showTodosMonthView() && isTodo ) {
+  KCalCore::OccurrenceIterator rIt( *calendar(), actualStartDateTime(), actualEndDateTime() );
+  while ( rIt.hasNext() ) {
+    rIt.next();
+    const bool busyDay = colorMonthBusyDays && makesWholeDayBusy( rIt.incidence() );
+    if ( busyDay ) {
+      QStringList &list = d->mBusyDays[rIt.occurrenceStartDate().date()];
+      list.append( rIt.incidence()->uid() );
+    }
+
+    const Akonadi::Item item = calendar()->item( rIt.incidence() );
+    if ( !item.isValid() ) {
       continue;
     }
-
-    if ( !preferences()->showJournalsMonthView() &&
-         incidence->type() == KCalCore::Incidence::TypeJournal ) {
-      continue;
-    }
-
-    KCalCore::DateTimeList dateTimeList;
-
-    if ( incidence->recurs() ) {
-      // Get a list of all dates that the recurring event will happen
-      dateTimeList = incidence->recurrence()->timesInInterval(
-        actualStartDateTime(), actualEndDateTime() );
-
-      // Check for multi day events that "leak in" this month from outside
-      if ( !incidence->recursOn( actualStartDateTime().date(), timeSpec ) ) {
-        dateTimeList.append( incidence->startDateTimesForDate( actualStartDateTime().date(), timeSpec) );
-      }
-
-      if ( isTodo ) {
-        KCalCore::Todo::Ptr todo = CalendarSupport::todo( aitem );
-        removeFilteredOccurrences( todo, dateTimeList );
-      }
-    } else {
-      const KDateTime dtStart = incidence->dateTime( KCalCore::Incidence::RoleDisplayStart );
-      const KDateTime dtEnd   = incidence->dateTime( KCalCore::Incidence::RoleDisplayEnd );
-
-      if ( dtEnd >= actualStartDateTime() && dtStart <= actualEndDateTime() ) {
-        dateTimeList += dtStart;
-      }
-    }
-    KCalCore::DateTimeList::const_iterator t;
-    const bool busyDay = colorMonthBusyDays && makesWholeDayBusy( incidence );
-    for ( t = dateTimeList.constBegin(); t != dateTimeList.constEnd(); ++t ) {
-      if ( busyDay ) {
-        QStringList &list = d->mBusyDays[t->date()];
-        list.append( incidence->uid() );
-      }
-
-      MonthItem *manager = new IncidenceMonthItem( d->scene,
-                                                   calendar(),
-                                                   aitem,
-                                                   t->toTimeSpec( timeSpec ).date() );
-      d->scene->mManagerList << manager;
-      if ( d->selectedItemId == aitem.id() &&
-           manager->realStartDate() == d->selectedItemDate ) {
-        // only select it outside the loop because we are still creating items
-        itemToReselect = manager;
-      }
+    Q_ASSERT(item.isValid());
+    Q_ASSERT(item.hasPayload());
+    MonthItem *manager = new IncidenceMonthItem( d->scene,
+        calendar(),
+        item,
+        rIt.incidence(),
+        rIt.occurrenceStartDate().toTimeSpec( timeSpec ).date() );
+    d->scene->mManagerList << manager;
+    if ( d->selectedItemId == item.id() &&
+        manager->realStartDate() == d->selectedItemDate ) {
+      // only select it outside the loop because we are still creating items
+      itemToReselect = manager;
     }
   }
 
