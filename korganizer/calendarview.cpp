@@ -1671,8 +1671,9 @@ void CalendarView::dissociateOccurrence( const Akonadi::Item &item, const QDate 
 
   startMultiModify( i18n( "Dissociate occurrence" ) );
   Incidence::Ptr oldincidence( incidence->clone() );
-  Incidence::Ptr newInc(
-    CalendarSupport::dissociateOccurrence( item, date, CalendarSupport::KCalPrefs::instance()->timeSpec(), true ) );
+    KCalCore::MemoryCalendar cal(CalendarSupport::KCalPrefs::instance()->timeSpec());
+    KCalCore::Incidence::Ptr newInc( KCalCore::Calendar::createException(
+        incidence, KDateTime( date, incidence->dtStart().time(), incidence->dtStart().timeSpec() ) ) );
   if ( newInc ) {
     if ( mChanger->modifyIncidence( item, oldincidence, this ) != -1 )
       mChanger->createIncidence( newInc, item.parentCollection(), this );
@@ -1693,9 +1694,9 @@ void CalendarView::dissociateFutureOccurrence( const Akonadi::Item &item, const 
   startMultiModify( i18n( "Dissociate future occurrences" ) );
   Incidence::Ptr oldincidence( incidence->clone() );
 
-  Incidence::Ptr newInc(
-    CalendarSupport::dissociateOccurrence( item, date,
-                                     CalendarSupport::KCalPrefs::instance()->timeSpec(), false ) );
+    KCalCore::MemoryCalendar cal(CalendarSupport::KCalPrefs::instance()->timeSpec());
+    KCalCore::Incidence::Ptr newInc( KCalCore::Calendar::createException(
+        incidence, KDateTime( date, incidence->dtStart().time(), incidence->dtStart().timeSpec() ), true ) );
   if ( newInc ) {
     if ( mChanger->modifyIncidence( item, oldincidence, this ) != -1 )
       mChanger->createIncidence( newInc, item.parentCollection(), this );
