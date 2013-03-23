@@ -217,7 +217,7 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
     */
     void setHolidayMasks();
 
-    void removeIncidence( const QString &uid );
+    void removeIncidence( const KCalCore::Incidence::Ptr &inc );
     /**
       Updates the event indicators after a certain incidence was modified or
       removed.

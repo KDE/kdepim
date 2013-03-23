@@ -1874,23 +1874,23 @@ void Agenda::insertMultiItem( const Akonadi::Item &event, const QDate &qd, int X
   marcus_bains();
 }
 
-QList<AgendaItem::QPtr> Agenda::agendaItems( const QString &uid ) const
+QList<AgendaItem::QPtr> Agenda::agendaItems( const KCalCore::Incidence::Ptr &incidence ) const
 {
   QList<AgendaItem::QPtr> agendaItems;
   foreach ( const AgendaItem::QPtr &agendaItem, d->mItems ) {
-    if ( agendaItem && CalendarSupport::incidence( agendaItem->incidence() )->uid() == uid ) {
+    if ( agendaItem && ( CalendarSupport::incidence( agendaItem->incidence() )->instanceIdentifier() == incidence->instanceIdentifier() ) ) {
       agendaItems.push_back( agendaItem );
     }
   }
   return agendaItems;
 }
 
-void Agenda::removeIncidence( const QString &uid )
+void Agenda::removeIncidence( const KCalCore::Incidence::Ptr &incidence )
 {
   // First find all items to be deleted and store them
   // in its own list. Otherwise removeAgendaItem will reset
   // the current position in the iterator-loop and mess the logic up.
-  const QList<AgendaItem::QPtr> agendaItemsToRemove = agendaItems( uid );
+  const QList<AgendaItem::QPtr> agendaItemsToRemove = agendaItems( incidence );
 
   foreach ( const AgendaItem::QPtr &agendaItem, agendaItemsToRemove ) {
     removeAgendaItem( agendaItem );

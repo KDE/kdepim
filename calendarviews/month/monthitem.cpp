@@ -298,9 +298,10 @@ QList<MonthGraphicsItem *> EventViews::MonthItem::monthGraphicsItems() const
 IncidenceMonthItem::IncidenceMonthItem( MonthScene *monthScene,
                                         const Akonadi::ETMCalendar::Ptr &calendar,
                                         const Akonadi::Item &aitem,
+                                        const KCalCore::Incidence::Ptr &incidence,
                                         const QDate &recurStartDate )
   : MonthItem( monthScene ), mCalendar( calendar ),
-    mIncidence( aitem.payload<Incidence::Ptr>() ),
+    mIncidence( incidence ),
     mAkonadiItemId( aitem.id() )
 {
   mIsEvent = CalendarSupport::hasEvent( aitem );
@@ -690,7 +691,7 @@ QColor IncidenceMonthItem::frameColor() const
 Akonadi::Item IncidenceMonthItem::akonadiItem() const
 {
   if ( mIncidence ) {
-    return monthScene()->mMonthView->calendar()->item( mIncidence->uid() );
+    return monthScene()->mMonthView->calendar()->item( mIncidence );
   } else {
     return Akonadi::Item();
   }

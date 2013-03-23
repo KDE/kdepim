@@ -163,7 +163,7 @@ void TimelineView::Private::insertIncidence( const Akonadi::Item &incidence )
       //PENDING(AKONADI_PORT) check if correct. also check the original if,
       //was inside the for loop (unnecessarily)
       foreach( const KCalCore::Event::Ptr &i, events ) {
-        Akonadi::Item item = q->calendar()->item( i->uid() );
+        Akonadi::Item item = q->calendar()->item( i );
         insertIncidence( item, day );
       }
     }

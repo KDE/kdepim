@@ -290,7 +290,7 @@ void WhatsNextView::appendEvent( const KCalCore::Incidence::Ptr &incidence, cons
 
 void WhatsNextView::appendTodo( const KCalCore::Incidence::Ptr &incidence )
 {
-  Akonadi::Item aitem = calendar()->item( incidence->uid() );
+  Akonadi::Item aitem = calendar()->item( incidence );
   if ( mTodos.contains( aitem ) ) {
     return;
   }
