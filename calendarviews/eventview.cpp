@@ -643,21 +643,6 @@ QColor EventView::itemFrameColor( const QColor &color, bool selected )
   }
 }
 
-void EventView::removeFilteredOccurrences( const KCalCore::Todo::Ptr &todo, QList<KDateTime> &list )
-{
-  Q_ASSERT( todo );
-
-  if ( todo->recurs() && calendar()->filter() &&
-       ( calendar()->filter()->criteria() & KCalCore::CalFilter::HideCompletedTodos ) ) {
-    QMutableListIterator<KDateTime> i( list );
-    while ( i.hasNext() ) {
-      if ( i.next() < todo->dtDue() ) {
-        i.remove();
-      }
-    }
-  }
-}
-
 /** static */
 QString EventView::iconForItem( const Akonadi::Item &item )
 {

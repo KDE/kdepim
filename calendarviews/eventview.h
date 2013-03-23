@@ -515,17 +515,6 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
     */
     virtual void handleBackendError( const QString &error );
 
-    /**
-     * Our proxy models and KCalCore::CalFilter can't handle individual occurrences.
-     * When filtering completed to-dos, the CalFilter doesn't hide them if it's a recurring to-do.
-     *
-     * This method does that manually. Removes from @p list all occurrences that are completed.
-     *
-     * @param list List of occurrences, usually the output from timesInInterval()
-     *
-     */
-    void removeFilteredOccurrences( const KCalCore::Todo::Ptr &todo, QList<KDateTime> &list );
-
   private:
     EventViewPrivate * const d_ptr;
     Q_DECLARE_PRIVATE( EventView )
