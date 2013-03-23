@@ -1163,24 +1163,17 @@ void Agenda::endItemAction()
         modify = true;
         break;
       case KCalUtils::RecurrenceActions::SelectedOccurrence:
-      { // Just this occurrence
-        // Dissociate this occurrence:
-        // create clone of event, set relation to old event, set cloned event
-        // for mActionItem, add exception date to old event, modifyIncidence
-        // for the old event, remove the recurrence from the new copy and then
-        // just go on with the newly adjusted mActionItem and let the usual
-        // code take care of the new time!
+      case KCalUtils::RecurrenceActions::FutureOccurrences:
+      {
+        const bool thisAndFuture = (res == KCalUtils::RecurrenceActions::FutureOccurrences);
         modify = true;
         multiModify = true;
         d->mChanger->startAtomicOperation( i18n( "Dissociate event from recurrence" ) );
-        KCalCore::Incidence::Ptr oldIncSaved( incidence->clone() );
-        KCalCore::Incidence::Ptr newInc( CalendarSupport::dissociateOccurrence(
-          inc, d->mActionItem->itemDate(), d->preferences()->timeSpec() ) );
+        KCalCore::Incidence::Ptr newInc( KCalCore::Calendar::createException(
+          incidence, KDateTime( d->mActionItem->itemDate(), incidence->dtStart().time(), incidence->dtStart().timeSpec() ), thisAndFuture ) );
         if ( newInc ) {
           // don't recreate items, they already have the correct position
           d->mAgendaView->enableAgendaUpdate( false );
-
-          d->mChanger->modifyIncidence( inc, oldIncSaved, this );
 
           Akonadi::Item item;
           item.setPayload( newInc );
@@ -1194,41 +1187,6 @@ void Agenda::endItemAction()
           KMessageBox::sorry(
             this,
             i18n( "Unable to add the exception item to the calendar. "
-                  "No change will be done." ),
-            i18n( "Error Occurred" ) );
-        }
-        break;
-      }
-      case KCalUtils::RecurrenceActions::FutureOccurrences/*Future*/:
-      { // All future occurrences
-        // Dissociate this occurrence:
-        // create clone of event, set relation to old event, set cloned event
-        // for mActionItem, add recurrence end date to old event, modifyIncidence
-        // for the old event, adjust the recurrence for the new copy and then just
-        // go on with the newly adjusted mActionItem and let the usual code take
-        // care of the new time!
-        modify = true;
-        multiModify = true;
-        d->mChanger->startAtomicOperation( i18n( "Split future recurrences" ) );
-        KCalCore::Incidence::Ptr oldIncSaved( incidence->clone() );
-        KCalCore::Incidence::Ptr newInc( CalendarSupport::dissociateOccurrence(
-          inc, d->mActionItem->itemDate(), d->preferences()->timeSpec(), false ) );
-        if ( newInc ) {
-          d->mAgendaView->enableAgendaUpdate( false );
-
-          d->mActionItem->dissociateFromMultiItem();
-          Akonadi::Item item;
-          item.setPayload( newInc );
-          d->mActionItem->setIncidence( item );
-
-          addIncidence = true;
-
-          d->mAgendaView->enableAgendaUpdate( true );
-          d->mChanger->modifyIncidence( inc, oldIncSaved, this );
-        } else {
-          KMessageBox::sorry(
-            this,
-            i18n( "Unable to add the future items to the calendar. "
                   "No change will be done." ),
             i18n( "Error Occurred" ) );
         }
