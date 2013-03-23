@@ -128,7 +128,7 @@ void AgendaItem::updateIcons()
   KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( mIncidence );
   Q_ASSERT( incidence );
   mIconReadonly = incidence->isReadOnly();
-  mIconRecur = incidence->recurs();
+  mIconRecur = incidence->recurs() || incidence->hasRecurrenceId();
   mIconAlarm = incidence->hasEnabledAlarms();
   if ( incidence->attendeeCount() > 1 ) {
     if ( mEventView->kcalPreferences()->thatIsMe( incidence->organizer()->email() ) ) {
