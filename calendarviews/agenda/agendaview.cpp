@@ -41,6 +41,7 @@
 
 #include <KCalCore/CalFilter>
 #include <KCalCore/CalFormat>
+#include <kcalcore/occurrenceiterator.h>
 
 #include <KCalendarSystem>
 #include <KIconLoader> // for SmallIcon()
@@ -1616,6 +1617,7 @@ void AgendaView::displayIncidence( const Akonadi::Item &aitem, bool createSelect
   if ( todo && ( !preferences()->showTodosAgendaView() || !todo->hasDueDate() ) ) {
     return;
   }
+  bool alreadyAddedToday = false;
 
   if ( incidence->recurs() ) {
     // timed incidences occur in [dtStart(), dtEnd()[
@@ -1628,11 +1630,26 @@ void AgendaView::displayIncidence( const Akonadi::Item &aitem, bool createSelect
     // lets include it. timesInInterval() ignores incidences that aren't totaly inside
     // the range
     const KDateTime startDateTimeWithOffset = firstVisibleDateTime.addDays( -eventDuration );
-    dateTimeList = incidence->recurrence()->timesInInterval( startDateTimeWithOffset,
-                                                             lastVisibleDateTime );
 
-    if ( todo ) {
-      removeFilteredOccurrences( todo, dateTimeList );
+    KCalCore::OccurrenceIterator rIt( *calendar(), incidence, startDateTimeWithOffset, lastVisibleDateTime );
+    while ( rIt.hasNext() ) {
+      rIt.next();
+      const bool makesDayBusy = preferences()->colorAgendaBusyDays() && makesWholeDayBusy( rIt.incidence() );
+      if ( makesDayBusy ) {
+        KCalCore::Event::List &busyEvents = d->mBusyDays[rIt.occurrenceStartDate().date()];
+        busyEvents.append( event );
+      }
+
+      const Akonadi::Item item = calendar()->item( rIt.incidence() );
+      if ( !item.isValid() ) {
+        kWarning() << "Couldn't find item for " << rIt.incidence()->uid() << rIt.incidence()->recurrenceId().toString();
+        continue;
+      }
+      Q_ASSERT(item.hasPayload());
+      if ( rIt.occurrenceStartDate().toTimeSpec( timeSpec ).date() == today ) {
+         alreadyAddedToday = true;
+      }
+      d->insertIncidence( item, rIt.occurrenceStartDate().toTimeSpec( timeSpec ).dateTime(), createSelected );
     }
 
   } else {
@@ -1673,21 +1690,9 @@ void AgendaView::displayIncidence( const Akonadi::Item &aitem, bool createSelect
        todo->isOverdue() &&
        dateTimeToday >= firstVisibleDateTime &&
        dateTimeToday <= lastVisibleDateTime ) {
-
-    bool doAdd = true;
-
-    if ( todo->recurs() ) {
-      /* If there's a recurring instance showing up today don't add "today" again
-       * we don't want the event to appear duplicated */
-      for ( t = dateTimeList.begin(); t != dateTimeList.end(); ++t ) {
-        if ( t->toTimeSpec( timeSpec ).date() == today ) {
-          doAdd = false;
-          break;
-        }
-      }
-    }
-
-    if ( doAdd ) {
+    /* If there's a recurring instance showing up today don't add "today" again
+     * we don't want the event to appear duplicated */
+    if ( !alreadyAddedToday ) {
       dateTimeList += dateTimeToday;
     }
   }

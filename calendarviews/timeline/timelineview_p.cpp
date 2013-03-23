@@ -32,6 +32,7 @@
 #include <calendarsupport/utils.h>
 #include <calendarsupport/kcalprefs.h>
 #include <Akonadi/Calendar/IncidenceChanger>
+#include <kcalcore/occurrenceiterator.h>
 
 #include <QStandardItemModel>
 #include <QResizeEvent>
@@ -124,15 +125,14 @@ void TimelineView::Private::insertIncidence( const Akonadi::Item &aitem, const Q
   }
 
   if ( incidence->recurs() ) {
-    QList<KDateTime> l = incidence->startDateTimesForDate( day );
-    if ( l.isEmpty() ) {
-      // strange, but seems to happen for some recurring events...
-      item->insertIncidence( aitem, KDateTime( day, incidence->dtStart().time() ),
-                             KDateTime( day, incidence->dateTime( Incidence::RoleEnd ).time() ) );
-    } else {
-      for ( QList<KDateTime>::ConstIterator it = l.constBegin(); it != l.constEnd(); ++it ) {
-        item->insertIncidence( aitem, *it, incidence->endDateForStart( *it ) );
-      }
+    KCalCore::OccurrenceIterator rIt( *(q->calendar()), incidence, KDateTime( day, QTime( 0, 0 ,0 ) ), KDateTime( day, QTime( 23, 59, 59 ) ) );
+    while ( rIt.hasNext() ) {
+      rIt.next();
+      const Akonadi::Item akonadiItem = q->calendar()->item( rIt.incidence() );
+      const KDateTime startOfOccurrence = rIt.occurrenceStartDate();
+      const KDateTime endOfOccurrence = rIt.incidence()->endDateForStart( startOfOccurrence );
+      const KDateTime::Spec spec = CalendarSupport::KCalPrefs::instance()->timeSpec();
+      item->insertIncidence( akonadiItem, startOfOccurrence.toTimeSpec( spec ),  endOfOccurrence.toTimeSpec( spec ) );
     }
   } else {
     if ( incidence->dtStart().date() == day ||
