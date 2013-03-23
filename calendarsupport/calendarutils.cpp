@@ -149,7 +149,7 @@ bool CalendarUtilsPrivate::purgeCompletedSubTodos( const KCalCore::Todo::Ptr &to
 
   if ( deleteThisTodo ) {
     if ( todo->isCompleted() ) {
-      if ( !mChanger->deleteIncidence( mCalendar->item( todo->uid() ), 0 ) ) {
+      if ( !mChanger->deleteIncidence( mCalendar->item( todo ), 0 ) ) {
         allPurged = false;
       }
     } else {

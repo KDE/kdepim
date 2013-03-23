@@ -410,7 +410,7 @@ void ListView::Private::addIncidence( const Akonadi::ETMCalendar::Ptr &calendar,
   if ( !incidence )
     return;
 
-  Akonadi::Item aitem = calendar->item( incidence->uid() );
+  Akonadi::Item aitem = calendar->item( incidence );
 
   if ( !aitem.isValid() || mItems.contains( aitem.id() ) )
     return;

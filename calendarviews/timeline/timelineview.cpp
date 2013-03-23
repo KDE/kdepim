@@ -400,7 +400,10 @@ void TimelineView::showDates( const QDate &start, const QDate &end, const QDate 
                                  KCalCore::EventSortStartDate,
                                  KCalCore::SortDirectionAscending );
     Q_FOREACH ( const KCalCore::Event::Ptr &event, events ) {
-      Akonadi::Item item = calendar()->item( event->uid() );
+      if ( event->hasRecurrenceId() ) {
+        continue;
+      }
+      Akonadi::Item item = calendar()->item( event );
       d->insertIncidence( item, day );
     }
   }

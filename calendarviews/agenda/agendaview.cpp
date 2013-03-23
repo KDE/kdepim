@@ -266,6 +266,7 @@ class AgendaView::Private : public Akonadi::ETMCalendar::CalendarObserver
     // insertAtDateTime is in the view's timezone
     void insertIncidence( const Akonadi::Item &,
                           const QDateTime &insertAtDateTime, bool createSelected );
+    void reevaluateIncidence( const KCalCore::Incidence::Ptr &incidence );
 
   protected:
     /* reimplemented from KCalCore::Calendar::CalendarObserver */
@@ -305,11 +306,24 @@ QList<QDate> AgendaView::Private::generateDateList( const QDate &start,
   return list;
 }
 
+void AgendaView::Private::reevaluateIncidence( const KCalCore::Incidence::Ptr &incidence )
+{
+    if (!incidence) {
+      kWarning() << "invalid incidence for item";
+      return;
+    }
+    const Akonadi::Item item = q->calendar()->item( incidence );
+    q->removeIncidence( incidence );
+    q->displayIncidence( item, false );
+    mAgenda->checkScrollBoundaries();
+    q->updateEventIndicators();
+}
+
 void AgendaView::Private::calendarIncidenceAdded( const KCalCore::Incidence::Ptr &incidence )
 {
   Q_ASSERT( incidence );
   Q_ASSERT( !incidence->uid().isEmpty() );
-  Akonadi::Item item = q->calendar()->item( incidence->uid() );
+  Akonadi::Item item = q->calendar()->item( incidence );
 
   if ( item.isValid() ) {
     // No need to call setChanges(), that triggers a fillAgenda()
@@ -325,14 +339,9 @@ void AgendaView::Private::calendarIncidenceChanged( const KCalCore::Incidence::P
 {
   Q_ASSERT( incidence );
   Q_ASSERT( !incidence->uid().isEmpty() );
-  Akonadi::Item item = q->calendar()->item( incidence->uid() );
 
-  if ( item.isValid() ) {
-    mAgenda->removeIncidence( incidence->uid() );
-    mAllDayAgenda->removeIncidence( incidence->uid() );
-    q->displayIncidence( item, false );
-    mAgenda->checkScrollBoundaries();
-    q->updateEventIndicators();   
+  if ( incidence ) {
+    reevaluateIncidence( incidence );
   } else {
     kError() << "AgendaView::Private::calendarIncidenceChanged() Invalid item.";
   }
@@ -346,8 +355,7 @@ void AgendaView::Private::calendarIncidenceDeleted( const KCalCore::Incidence::P
   Q_ASSERT( !incidence->uid().isEmpty() );
   if ( !incidence->uid().isEmpty() ) {
     // No need to call setChanges(), that triggers a fillAgenda()
-    mAgenda->removeIncidence( incidence->uid() );
-    mAllDayAgenda->removeIncidence( incidence->uid() );
+    q->removeIncidence( incidence );
     mAgenda->checkScrollBoundaries();
     q->updateEventIndicators();
   } else {
@@ -1414,7 +1422,7 @@ void AgendaView::updateEventDates( AgendaItem *item, bool addIncidence,
   // we are currently working on, which would lead to crashes
   // Only the actually moved agenda item is already at the correct position and mustn't be
   // recreated. All others have to!!!
-  if ( incidence->recurs() ) {
+  if ( incidence->recurs() || incidence->hasRecurrenceId() ) {
     d->mUpdateItem = aitem;
     QMetaObject::invokeMethod( this, "updateView", Qt::QueuedConnection );
   }
@@ -1550,7 +1558,7 @@ void AgendaView::fillAgenda()
 
   foreach ( const KCalCore::Incidence::Ptr &incidence, incidences ) {
     Q_ASSERT( incidence );
-    Akonadi::Item aitem = calendar()->item( incidence->uid() );
+    Akonadi::Item aitem = calendar()->item( incidence );
     const bool wasSelected = aitem.id() == selectedAgendaId  ||
                              aitem.id() == selectedAllDayAgendaId;
 
@@ -1589,6 +1597,9 @@ void AgendaView::displayIncidence( const Akonadi::Item &aitem, bool createSelect
   KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( aitem );
   KCalCore::Todo::Ptr todo = CalendarSupport::todo( aitem );
   KCalCore::Event::Ptr event = CalendarSupport::event( aitem );
+  if ( incidence->hasRecurrenceId() ) {
+    return;
+  }
 
   const KDateTime::Spec timeSpec = preferences()->timeSpec();
 
@@ -1782,7 +1793,7 @@ void AgendaView::slotIncidencesDropped( const KCalCore::Incidence::List &inciden
   newTime.setDateOnly( allDay );
 
   Q_FOREACH ( const KCalCore::Incidence::Ptr &incidence, incidences ) {
-    const Akonadi::Item existingItem = calendar()->item( incidence->uid() );
+    const Akonadi::Item existingItem = calendar()->item( incidence );
     const bool existsInSameCollection = existingItem.isValid() &&
                                                existingItem.storageCollectionId() == collectionId();
 
@@ -1945,10 +1956,16 @@ void AgendaView::deleteSelectedDateTime()
   d->mTimeSpanInAllDay = false;
 }
 
-void AgendaView::removeIncidence( const QString &uid )
+void AgendaView::removeIncidence( const KCalCore::Incidence::Ptr &inc )
 {
-  d->mAgenda->removeIncidence( uid );
-  d->mAllDayAgenda->removeIncidence( uid );
+  d->mAgenda->removeIncidence( inc );
+  d->mAllDayAgenda->removeIncidence( inc );
+  if ( !inc->hasRecurrenceId() ) {
+    foreach ( const KCalCore::Incidence::Ptr &exception, calendar()->instances( inc ) ) {
+      d->mAgenda->removeIncidence( exception );
+      d->mAllDayAgenda->removeIncidence( exception );
+    }
+  }
 }
 
 void AgendaView::updateEventIndicators()
