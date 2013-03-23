@@ -33,6 +33,7 @@
 
 #include "mailsourceviewer.h"
 #include "util.h"
+#include "errno.h"
 #include "findbar/findbarsourceview.h"
 #include "kpimtextedit/htmlhighlighter.h"
 #include <kiconloader.h>
@@ -41,6 +42,8 @@
 #include <kwindowsystem.h>
 #include <kglobalsettings.h>
 #include <KTabWidget>
+#include <KFileDialog>
+#include <KMessageBox>
 
 #include <QtCore/QRegExp>
 #include <QApplication>
@@ -118,9 +121,46 @@ void MailSourceViewTextBrowser::contextMenuEvent( QContextMenuEvent *event )
     popup->addSeparator();
     popup->addAction( KIcon("preferences-desktop-text-to-speech"),i18n("Speak Text"),this,SLOT(slotSpeakText()));
 
+    popup->addSeparator();
+    popup->addAction( KIcon("document-save"),i18n("Save As..."),this,SLOT(slotSaveAs()));
+
     popup->exec( event->globalPos() );
     delete popup;
   }
+}
+
+void MailSourceViewTextBrowser::slotSaveAs()
+{
+    KUrl url;
+    QPointer<KFileDialog> fdlg( new KFileDialog( url, QString(), this) );
+    fdlg->setMode( KFile::File );
+    fdlg->setOperationMode( KFileDialog::Saving );
+    if ( fdlg->exec() == QDialog::Accepted && fdlg )
+    {
+        const QString fileName = fdlg->selectedFile();
+        if ( !saveToFile( fileName ) )
+        {
+            KMessageBox::error( this,
+                                i18n( "Could not write the file %1:\n"
+                                      "\"%2\" is the detailed error description.",
+                                      fileName,
+                                      QString::fromLocal8Bit( strerror( errno ) ) ),
+                                i18n( "View Source Error" ) );
+        }
+    }
+    delete fdlg;
+
+}
+
+bool MailSourceViewTextBrowser::saveToFile( const QString &filename )
+{
+    QFile file( filename );
+    if ( !file.open( QIODevice::WriteOnly|QIODevice::Text ) )
+        return false;
+    QTextStream out(&file);
+    out.setCodec("UTF-8");
+    out << toPlainText();
+    return true;
 }
 
 void MailSourceViewTextBrowser::slotSpeakText()

@@ -32,7 +32,7 @@ SieveTemplateEditDialog::SieveTemplateEditDialog(QWidget *parent)
     : KDialog(parent)
 {
     setCaption( i18n("Templates") );
-    setButtons( Ok |Close );
+    setButtons( Ok |Cancel );
 
     QWidget *w = new QWidget;
     QVBoxLayout *vbox = new QVBoxLayout;
@@ -49,13 +49,33 @@ SieveTemplateEditDialog::SieveTemplateEditDialog(QWidget *parent)
     mTextEdit = new KSieveUi::SieveTextEdit;
     vbox->addWidget(mTextEdit);
 
+    w->setLayout(vbox);
     setMainWidget(w);
+    enableButtonOk(false);
     connect(mTemplateNameEdit, SIGNAL(textChanged(QString)),SLOT(slotTemplateNameChanged(QString)));
+    readConfig();
 }
 
 SieveTemplateEditDialog::~SieveTemplateEditDialog()
 {
+    writeConfig();
+}
 
+void SieveTemplateEditDialog::writeConfig()
+{
+    KConfigGroup group( KGlobal::config(), "SieveTemplateEditDialog" );
+    group.writeEntry( "Size", size() );
+}
+
+void SieveTemplateEditDialog::readConfig()
+{
+    KConfigGroup group( KGlobal::config(), "SieveTemplateEditDialog" );
+    const QSize sizeDialog = group.readEntry( "Size", QSize() );
+    if ( sizeDialog.isValid() ) {
+        resize( sizeDialog );
+    } else {
+        resize(600,400);
+    }
 }
 
 void SieveTemplateEditDialog::slotTemplateNameChanged(const QString &text)
@@ -63,12 +83,12 @@ void SieveTemplateEditDialog::slotTemplateNameChanged(const QString &text)
     enableButtonOk(!text.trimmed().isEmpty());
 }
 
-void SieveTemplateEditDialog::setText(const QString &text)
+void SieveTemplateEditDialog::setScript(const QString &text)
 {
     mTextEdit->setPlainText(text);
 }
 
-QString SieveTemplateEditDialog::text() const
+QString SieveTemplateEditDialog::script() const
 {
     return mTextEdit->toPlainText();
 }

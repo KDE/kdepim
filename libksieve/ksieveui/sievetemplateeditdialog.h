@@ -34,13 +34,15 @@ public:
     void setTemplateName(const QString &name);
     QString templateName() const;
 
-    void setText(const QString &);
-    QString text() const;
+    void setScript(const QString &);
+    QString script() const;
 
 private Q_SLOTS:
     void slotTemplateNameChanged(const QString &);
 
 private:
+    void readConfig();
+    void writeConfig();
     SieveTextEdit *mTextEdit;
     KLineEdit *mTemplateNameEdit;
 };

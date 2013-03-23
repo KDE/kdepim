@@ -33,7 +33,7 @@ ScamDetectionDetailsDialog::ScamDetectionDetailsDialog(QWidget *parent)
     setModal( false );
     mDetails = new QTextEdit;
     mDetails->setReadOnly(true);
-    mDetails->setAcceptRichText(false);
+    mDetails->setAcceptRichText(true);
     setMainWidget(mDetails);
     readConfig();
 }
@@ -45,7 +45,7 @@ ScamDetectionDetailsDialog::~ScamDetectionDetailsDialog()
 
 void ScamDetectionDetailsDialog::setDetails(const QString &details)
 {
-    mDetails->setPlainText(details);
+    mDetails->setHtml(details);
 }
 
 void ScamDetectionDetailsDialog::readConfig()

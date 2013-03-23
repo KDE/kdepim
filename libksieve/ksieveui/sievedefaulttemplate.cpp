@@ -17,10 +17,70 @@
 
 #include "sievedefaulttemplate.h"
 
+#include <KLocale>
 
-QString KSieveUi::SieveDefaultTemplate::moveToMailingList()
+QList<KSieveUi::SieveDefaultTemplate::defaultTemplate> KSieveUi::SieveDefaultTemplate::defaultTemplates()
 {
-    //TODO
-    return QString();
+    QList<KSieveUi::SieveDefaultTemplate::defaultTemplate> lst;
+    KSieveUi::SieveDefaultTemplate::defaultTemplate tmp;
+    tmp.name = i18n("Filter on Mailing List-ID");
+    tmp.text = QString::fromLatin1("require \"fileinto\";\n"
+                                   "if header :contains \"List-ID\" [ \"examples.com\", \"examples.mail.com\" ] {\n"
+                                   "    fileinto \"list-example/examples\"; \n"
+                                   "    stop;\n"
+                                   "}\n");
+    lst << tmp;
+
+    tmp.name = i18n("Filter on Subject");
+    tmp.text = QString::fromLatin1("require \"fileinto\";\n"
+                                   "if header :contains \"Subject\" \"Foo Foo\" { \n"
+                                   "   fileinto \"INBOX.Foo\"; \n"
+                                   "}\n");
+    lst << tmp;
+
+
+    tmp.name = i18n("Filter on Spamassassin");
+    tmp.text = QString::fromLatin1("require \"fileinto\";\n"
+                                   "if header :contains \"X-Spam-Level\" \"*********\" { \n"
+                                   "  fileinto \"Spam\";\n"
+                                   "}\n");
+    lst << tmp;
+
+
+    tmp.name = i18n("Flag messages");
+    tmp.text = QString::fromLatin1("require [\"imap4flags\"];\n"
+                                   "if address \"From\" \"someone@example.org\" { \n"
+                                   "  setflag \"\\Seen\";\n"
+                                   "}\n");
+    lst << tmp;
+
+    tmp.name = i18n("Forward Message");
+    tmp.text = QString::fromLatin1("require [\"copy\"];\n"
+                                   "if header :contains \"Subject\" \"foo\" { \n"
+                                   " redirect :copy \"other@example.net\";\n"
+                                   "}\n");
+    lst << tmp;
+
+    tmp.name = i18n("Forward Message and add copy");
+    tmp.text = QString::fromLatin1("require [\"copy\", \"fileinto\"];\n"
+                                   "if header :contains \"Subject\" \"foo\" { \n"
+                                   "  redirect :copy \"other@example.net\" \n"
+                                   "  fileinto \"Forwarded Messages\" \n"
+                                   "}\n");
+    lst <<tmp;
+
+    tmp.name = i18n("Destroy mail posted by...");
+    tmp.text = QString::fromLatin1("if header :contains [\"from\",\"cc\"]\n"
+                                   "[\n"
+                                   "\"from-foo@example.net\",\n"
+                                   "\"pub@foo.com\",\n"
+                                   "]\n"
+                                   "{\n"
+                                   "  discard;\n"
+                                   "  stop;\n"
+                                   "}\n");
+    lst << tmp;
+
+    return lst;
 }
 

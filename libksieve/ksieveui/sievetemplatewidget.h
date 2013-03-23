@@ -30,6 +30,10 @@ public:
     explicit SieveTemplateListWidget(QWidget *parent = 0);
     ~SieveTemplateListWidget();
 
+protected:
+    QStringList mimeTypes() const;
+    QMimeData *mimeData( const QList<QListWidgetItem *> items ) const;
+
 private Q_SLOTS:
     void slotContextMenu(const QPoint &pos);
     void slotRemove();
@@ -37,15 +41,22 @@ private Q_SLOTS:
     void slotModify();
 
 private:
+    enum SieveTemplateData {
+        SieveText = Qt::UserRole + 1,
+        DefaultTemplate = Qt::UserRole + 2
+    };
+
+    void createListWidgetItem(const QString &name, const QString &text, bool isDefaultTemplate);
     void loadTemplates();
     void saveTemplates();
+    bool mDirty;
 };
 
 class SieveTemplateWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit SieveTemplateWidget(QWidget *parent);
+    explicit SieveTemplateWidget(QWidget *parent = 0);
     ~SieveTemplateWidget();
 private:
     SieveTemplateListWidget *mListTemplate;
