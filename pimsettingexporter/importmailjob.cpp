@@ -687,6 +687,23 @@ void ImportMailJob::restoreConfig()
         }
     }
 
+
+    const QString sievetemplatercStr("sievetemplaterc");
+    const KArchiveEntry* sievetemplatentry  = mArchiveDirectory->entry(BackupMailUtil::configsPath() + sievetemplatercStr);
+    if ( sievetemplatentry &&  sievetemplatentry->isFile()) {
+        const KArchiveFile* sievetemplateconfiguration = static_cast<const KArchiveFile*>(sievetemplatentry);
+        const QString sievetemplaterc = KStandardDirs::locateLocal( "config",  sievetemplatercStr);
+        if (QFile(sievetemplaterc).exists()) {
+            //TODO 4.11 allow to merge config.
+            if (KMessageBox::warningYesNo(mParent,i18n("\"%1\" already exists. Do you want to overwrite it?",sievetemplatercStr),i18n("Restore"))== KMessageBox::Yes) {
+                importTemplatesConfig(sievetemplateconfiguration, sievetemplaterc, sievetemplatercStr, BackupMailUtil::configsPath());
+            }
+        } else {
+            importTemplatesConfig(sievetemplateconfiguration, sievetemplaterc, sievetemplatercStr, BackupMailUtil::configsPath());
+        }
+    }
+
+
     Q_EMIT info(i18n("Config restored."));
 }
 
