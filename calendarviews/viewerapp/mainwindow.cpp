@@ -28,7 +28,6 @@
 #include "timeline/timelineview.h"
 #include "prefs.h"
 
-#include <calendarsupport/calendarmodel.h>
 #include <calendarsupport/collectionselection.h>
 
 #include <Akonadi/Calendar/IncidenceChanger>
