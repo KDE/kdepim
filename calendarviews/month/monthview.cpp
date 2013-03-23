@@ -508,6 +508,17 @@ void MonthView::reloadIncidences()
   KCalCore::OccurrenceIterator rIt( *calendar(), actualStartDateTime(), actualEndDateTime() );
   while ( rIt.hasNext() ) {
     rIt.next();
+
+    // Remove the two checks when filtering is done through a proxyModel, when using calendar search
+    if ( !preferences()->showTodosMonthView() &&
+         rIt.incidence()->type() == KCalCore::Incidence::TypeTodo ) {
+      continue;
+    }
+    if ( !preferences()->showJournalsMonthView() &&
+         rIt.incidence()->type() == KCalCore::Incidence::TypeJournal ) {
+      continue;
+    }
+
     const bool busyDay = colorMonthBusyDays && makesWholeDayBusy( rIt.incidence() );
     if ( busyDay ) {
       QStringList &list = d->mBusyDays[rIt.occurrenceStartDate().date()];
