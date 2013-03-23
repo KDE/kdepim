@@ -24,32 +24,32 @@ class KUrl;
 class ArchiveStorage;
 
 namespace Akonadi {
-  class AgentInstance;
+class AgentInstance;
 }
 
 class ExportMailJob : public AbstractImportExportJob
 {
 public:
-  explicit ExportMailJob(QWidget *parent, BackupMailUtil::BackupTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep);
-  ~ExportMailJob();
-  void start();
+    explicit ExportMailJob(QWidget *parent, BackupMailUtil::BackupTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep);
+    ~ExportMailJob();
+    void start();
 
 private:
 
-  KUrl subdirPath(const KUrl &url ) const;
+    KUrl subdirPath(const KUrl &url ) const;
 
-  void backupTransports();
-  void backupResources();
-  void backupMails();
-  void backupConfig();
-  void backupIdentity();
-  void backupAkonadiDb();
-  void backupNepomuk();
-  void writeDirectory(QString path, const QString &relativePath, KZip *mailArchive);
-  void storeResources(const QString&identifier, const QString& path);
-  KUrl resourcePath(const Akonadi::AgentInstance& agent) const;
-  void backupFile(const QString&filename, const QString& path, const QString&storedName);
-  bool backupMailData(const KUrl& url, const QString& archivePath);
+    void backupTransports();
+    void backupResources();
+    void backupMails();
+    void backupConfig();
+    void backupIdentity();
+    void backupAkonadiDb();
+    void backupNepomuk();
+    void writeDirectory(QString path, const QString &relativePath, KZip *mailArchive);
+    void storeResources(const QString&identifier, const QString& path);
+    KUrl resourcePath(const Akonadi::AgentInstance& agent) const;
+    void backupFile(const QString&filename, const QString& path, const QString&storedName);
+    bool backupMailData(const KUrl& url, const QString& archivePath);
 
 };
 

@@ -26,7 +26,7 @@
 
 
 ExportCalendarJob::ExportCalendarJob(QWidget *parent, ArchiveStorage *archiveStorage)
-  :AbstractImportExportJob(parent,archiveStorage,/*typeSelected,numberOfStep*/0,0 /*TODO fix it*/)
+    :AbstractImportExportJob(parent,archiveStorage,/*typeSelected,numberOfStep*/0,0 /*TODO fix it*/)
 {
 }
 
@@ -37,16 +37,16 @@ ExportCalendarJob::~ExportCalendarJob()
 
 void ExportCalendarJob::start()
 {
-  //TODO
+    //TODO
 }
 
 
 void ExportCalendarJob::backupResources()
 {
-  showInfo(i18n("Backing up resources..."));
-  MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
-  //TODO backup calendar
-  Q_EMIT info(i18n("Resources backup done."));
+    showInfo(i18n("Backing up resources..."));
+    MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+    //TODO backup calendar
+    Q_EMIT info(i18n("Resources backup done."));
 }
 
 #include "exportcalendarjob.moc"

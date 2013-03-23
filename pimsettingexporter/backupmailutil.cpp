@@ -21,38 +21,38 @@
 
 QString BackupMailUtil::transportsPath()
 {
-  return QLatin1String("transports/");
+    return QLatin1String("transports/");
 }
 
 QString BackupMailUtil::resourcesPath()
 {
-  return QLatin1String("resources/");
+    return QLatin1String("resources/");
 }
 
 QString BackupMailUtil::identitiesPath()
 {
-  return QLatin1String("identities/");
+    return QLatin1String("identities/");
 }
 
 QString BackupMailUtil::mailsPath()
 {
-  return QLatin1String("mails/");
+    return QLatin1String("mails/");
 }
 
 QString BackupMailUtil::configsPath()
 {
-  return QLatin1String("configs/");
+    return QLatin1String("configs/");
 }
 
 QString BackupMailUtil::akonadiPath()
 {
-  return QLatin1String("akonadi/");
+    return QLatin1String("akonadi/");
 }
 
 KUrl BackupMailUtil::resourcePath(KSharedConfigPtr resourceConfig)
 {
-  KConfigGroup group = resourceConfig->group(QLatin1String("General"));
-  QString url = group.readEntry(QLatin1String("Path"),QString());
-  url.replace("$HOME", QDir::homePath());
-  return KUrl(url);
+    KConfigGroup group = resourceConfig->group(QLatin1String("General"));
+    QString url = group.readEntry(QLatin1String("Path"),QString());
+    url.replace("$HOME", QDir::homePath());
+    return KUrl(url);
 }

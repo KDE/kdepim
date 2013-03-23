@@ -22,23 +22,23 @@
 #include <QWidget>
 #include "backupmailutil.h"
 namespace Ui {
-  class SelectTypeWidget;
+class SelectTypeWidget;
 }
 
 class SelectTypeWidget : public QWidget
 {
-  Q_OBJECT
-  
+    Q_OBJECT
+
 public:
-  explicit SelectTypeWidget(QWidget *parent = 0);
-  ~SelectTypeWidget();
-  BackupMailUtil::BackupTypes backupTypesSelected(int &numberOfStep) const;
+    explicit SelectTypeWidget(QWidget *parent = 0);
+    ~SelectTypeWidget();
+    BackupMailUtil::BackupTypes backupTypesSelected(int &numberOfStep) const;
 private Q_SLOTS:
-  void slotTypeClicked();
+    void slotTypeClicked();
 Q_SIGNALS:
-  void itemSelected(bool);
+    void itemSelected(bool);
 private:
-  Ui::SelectTypeWidget *ui;
+    Ui::SelectTypeWidget *ui;
 };
 
 #endif // SELECTTYPEWIDGET_H

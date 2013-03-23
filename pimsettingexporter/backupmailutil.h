@@ -22,7 +22,7 @@
 #include <KSharedConfig>
 
 namespace BackupMailUtil {
-  enum BackupType {
+enum BackupType {
     None = 0,
     Identity = 1,
     Mails = 2,
@@ -32,16 +32,16 @@ namespace BackupMailUtil {
     AkonadiDb = 32,
     Nepomuk = 64,
     Calendar = 128
-      //TODO add more type to import/export
-  };
-  Q_DECLARE_FLAGS(BackupTypes, BackupType )
+    //TODO add more type to import/export
+};
+Q_DECLARE_FLAGS(BackupTypes, BackupType )
 
-  KUrl resourcePath(KSharedConfigPtr resourceConfig);
-  QString transportsPath();
-  QString resourcesPath();
-  QString identitiesPath();
-  QString mailsPath();
-  QString configsPath();
-  QString akonadiPath();
+KUrl resourcePath(KSharedConfigPtr resourceConfig);
+QString transportsPath();
+QString resourcesPath();
+QString identitiesPath();
+QString mailsPath();
+QString configsPath();
+QString akonadiPath();
 }
 #endif // UTIL_H

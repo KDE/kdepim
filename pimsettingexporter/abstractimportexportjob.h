@@ -25,41 +25,41 @@ class QWidget;
 class QProgressDialog;
 class ArchiveStorage;
 namespace KPIMIdentities {
-  class Identity;
-  class IdentityManager;
+class Identity;
+class IdentityManager;
 }
 
 class AbstractImportExportJob : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit AbstractImportExportJob(QWidget *parent, ArchiveStorage *archiveStorage, BackupMailUtil::BackupTypes typeSelected, int numberOfStep);
-  ~AbstractImportExportJob();
+    explicit AbstractImportExportJob(QWidget *parent, ArchiveStorage *archiveStorage, BackupMailUtil::BackupTypes typeSelected, int numberOfStep);
+    ~AbstractImportExportJob();
 
-  virtual void start() = 0;
+    virtual void start() = 0;
 
-  bool wasCanceled() const;
+    bool wasCanceled() const;
 
 
 Q_SIGNALS:
-  void info(const QString&);
-  void error(const QString&);
+    void info(const QString&);
+    void error(const QString&);
 
 protected:
-  KZip *archive();
+    KZip *archive();
 
-  QProgressDialog *progressDialog();
-  void increaseProgressDialog();
-  void createProgressDialog();
+    QProgressDialog *progressDialog();
+    void increaseProgressDialog();
+    void createProgressDialog();
 
-  void showInfo(const QString&text);
+    void showInfo(const QString&text);
 
-  BackupMailUtil::BackupTypes mTypeSelected;
-  ArchiveStorage *mArchiveStorage;
-  KPIMIdentities::IdentityManager *mIdentityManager;
-  QWidget *mParent;
-  QProgressDialog *mProgressDialog;
-  int mNumberOfStep;
+    BackupMailUtil::BackupTypes mTypeSelected;
+    ArchiveStorage *mArchiveStorage;
+    KPIMIdentities::IdentityManager *mIdentityManager;
+    QWidget *mParent;
+    QProgressDialog *mProgressDialog;
+    int mNumberOfStep;
 };
 
 #endif // ABSTRACTIMPORTEXPORTJOB_H
