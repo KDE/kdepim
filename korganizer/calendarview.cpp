@@ -1670,13 +1670,10 @@ void CalendarView::dissociateOccurrence( const Akonadi::Item &item, const QDate 
   const Incidence::Ptr incidence = CalendarSupport::incidence( item );
 
   startMultiModify( i18n( "Dissociate occurrence" ) );
-  Incidence::Ptr oldincidence( incidence->clone() );
-    KCalCore::MemoryCalendar cal(CalendarSupport::KCalPrefs::instance()->timeSpec());
-    KCalCore::Incidence::Ptr newInc( KCalCore::Calendar::createException(
-        incidence, KDateTime( date, incidence->dtStart().time(), incidence->dtStart().timeSpec() ) ) );
+  KCalCore::Incidence::Ptr newInc( KCalCore::Calendar::createException(
+      incidence, KDateTime( date, incidence->dtStart().time(), incidence->dtStart().timeSpec() ) ) );
   if ( newInc ) {
-    if ( mChanger->modifyIncidence( item, oldincidence, this ) != -1 )
-      mChanger->createIncidence( newInc, item.parentCollection(), this );
+    mChanger->createIncidence( newInc, item.parentCollection(), this );
   } else {
     KMessageBox::sorry(
       this,
@@ -1692,14 +1689,11 @@ void CalendarView::dissociateFutureOccurrence( const Akonadi::Item &item, const 
   const Incidence::Ptr incidence = CalendarSupport::incidence( item );
 
   startMultiModify( i18n( "Dissociate future occurrences" ) );
-  Incidence::Ptr oldincidence( incidence->clone() );
 
-    KCalCore::MemoryCalendar cal(CalendarSupport::KCalPrefs::instance()->timeSpec());
-    KCalCore::Incidence::Ptr newInc( KCalCore::Calendar::createException(
-        incidence, KDateTime( date, incidence->dtStart().time(), incidence->dtStart().timeSpec() ), true ) );
+  KCalCore::Incidence::Ptr newInc( KCalCore::Calendar::createException(
+      incidence, KDateTime( date, incidence->dtStart().time(), incidence->dtStart().timeSpec() ), true ) );
   if ( newInc ) {
-    if ( mChanger->modifyIncidence( item, oldincidence, this ) != -1 )
-      mChanger->createIncidence( newInc, item.parentCollection(), this );
+    mChanger->createIncidence( newInc, item.parentCollection(), this );
   } else {
     KMessageBox::sorry(
       this,
