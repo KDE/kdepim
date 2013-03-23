@@ -39,6 +39,10 @@ private Q_SLOTS:
     void slotRemove();
     void slotAdd();
     void slotModify();
+    void slotInsertTemplate();
+
+Q_SIGNALS:
+    void insertTemplate(const QString &);
 
 private:
     enum SieveTemplateData {
@@ -58,6 +62,8 @@ class SieveTemplateWidget : public QWidget
 public:
     explicit SieveTemplateWidget(QWidget *parent = 0);
     ~SieveTemplateWidget();
+Q_SIGNALS:
+    void insertTemplate(const QString &);
 private:
     SieveTemplateListWidget *mListTemplate;
 };

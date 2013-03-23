@@ -70,7 +70,7 @@ SieveEditor::SieveEditor( QWidget * parent )
 
 
     //
-    SieveTemplateWidget *w = new SieveTemplateWidget;
+    SieveTemplateWidget *sieveTemplateWidget = new SieveTemplateWidget;
 
     QWidget *textEditWidget = new QWidget;
     QVBoxLayout * textEditLayout = new QVBoxLayout;
@@ -81,8 +81,11 @@ SieveEditor::SieveEditor( QWidget * parent )
     textEditWidget->setLayout(textEditLayout);
 
     templateSplitter->addWidget(textEditWidget);
-    templateSplitter->addWidget(w);
+    templateSplitter->addWidget(sieveTemplateWidget);
     templateSplitter->setSizes( size );
+
+    connect(sieveTemplateWidget, SIGNAL(insertTemplate(QString)), mTextEdit, SLOT(insertPlainText(QString)));
+
     //
     QShortcut *shortcut = new QShortcut( this );
     shortcut->setKey( Qt::Key_F+Qt::CTRL );

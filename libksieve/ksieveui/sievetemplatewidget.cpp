@@ -70,6 +70,10 @@ void SieveTemplateListWidget::slotContextMenu(const QPoint &pos)
 {
     QList<QListWidgetItem *> lstSelectedItems = selectedItems();
     KMenu *menu = new KMenu( this );
+
+    menu->addAction( i18n("Insert template"), this, SLOT(slotInsertTemplate()));
+    menu->addSeparator();
+
     menu->addAction( i18n("Add..."), this, SLOT(slotAdd()));
     if (lstSelectedItems.count() == 1) {
         menu->addAction( i18n("Modify..."), this, SLOT(slotModify()));
@@ -79,6 +83,15 @@ void SieveTemplateListWidget::slotContextMenu(const QPoint &pos)
     }
     menu->exec( mapToGlobal( pos ) );
     delete menu;
+}
+
+void SieveTemplateListWidget::slotInsertTemplate()
+{
+    QListWidgetItem *item = currentItem();
+    if (item) {
+        const QString templateScript = item->data(SieveTemplateListWidget::SieveText).toString();
+        Q_EMIT insertTemplate(templateScript);
+    }
 }
 
 void SieveTemplateListWidget::slotRemove()
@@ -187,6 +200,7 @@ SieveTemplateWidget::SieveTemplateWidget(QWidget *parent)
     lay->addWidget(lab);
     mListTemplate = new SieveTemplateListWidget;
     mListTemplate->setWhatsThis(i18n("You can drag and drop element on editor to import template"));
+    connect(mListTemplate, SIGNAL(insertTemplate(QString)), SIGNAL(insertTemplate(QString)));
     lay->addWidget(mListTemplate);
     setLayout(lay);
 }
