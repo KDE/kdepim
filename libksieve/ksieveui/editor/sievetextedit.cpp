@@ -45,19 +45,19 @@
 using namespace KSieveUi;
 
 SieveTextEdit::SieveTextEdit( QWidget *parent )
-  :QPlainTextEdit( parent )
+    :QPlainTextEdit( parent )
 {
-  setWordWrapMode ( QTextOption::NoWrap );
-  setFont( KGlobalSettings::fixedFont() );
-  (void) new SieveSyntaxHighlighter( document() );
-  m_sieveLineNumberArea = new SieveLineNumberArea(this);
+    setWordWrapMode ( QTextOption::NoWrap );
+    setFont( KGlobalSettings::fixedFont() );
+    (void) new SieveSyntaxHighlighter( document() );
+    m_sieveLineNumberArea = new SieveLineNumberArea(this);
 
-  connect(this, SIGNAL(blockCountChanged(int)), this, SLOT(slotUpdateLineNumberAreaWidth(int)));
-  connect(this, SIGNAL(updateRequest(QRect,int)), this, SLOT(slotUpdateLineNumberArea(QRect,int)));
-  
-  slotUpdateLineNumberAreaWidth(0);
+    connect(this, SIGNAL(blockCountChanged(int)), this, SLOT(slotUpdateLineNumberAreaWidth(int)));
+    connect(this, SIGNAL(updateRequest(QRect,int)), this, SLOT(slotUpdateLineNumberArea(QRect,int)));
 
-  initCompleter();
+    slotUpdateLineNumberAreaWidth(0);
+
+    initCompleter();
 }
 
 SieveTextEdit::~SieveTextEdit()
@@ -121,133 +121,133 @@ void SieveTextEdit::slotSpeakText()
 
 void SieveTextEdit::slotUndoableClear()
 {
-  QTextCursor cursor = textCursor();
-  cursor.beginEditBlock();
-  cursor.movePosition(QTextCursor::Start);
-  cursor.movePosition(QTextCursor::End, QTextCursor::KeepAnchor);
-  cursor.removeSelectedText();
-  cursor.endEditBlock();
+    QTextCursor cursor = textCursor();
+    cursor.beginEditBlock();
+    cursor.movePosition(QTextCursor::Start);
+    cursor.movePosition(QTextCursor::End, QTextCursor::KeepAnchor);
+    cursor.removeSelectedText();
+    cursor.endEditBlock();
 }
 
 void SieveTextEdit::resizeEvent(QResizeEvent *e)
 {
-  QPlainTextEdit::resizeEvent(e);
-  
-  QRect cr = contentsRect();
-  m_sieveLineNumberArea->setGeometry(QRect(cr.left(), cr.top(), lineNumberAreaWidth(), cr.height()));
+    QPlainTextEdit::resizeEvent(e);
+
+    QRect cr = contentsRect();
+    m_sieveLineNumberArea->setGeometry(QRect(cr.left(), cr.top(), lineNumberAreaWidth(), cr.height()));
 }
 
 int SieveTextEdit::lineNumberAreaWidth()
 {
-  int digits = 1;
-  int max = qMax(1, blockCount());
-  while (max >= 10) {
-    max /= 10;
-    ++digits;
-  }
-  
-  const int space = 3 + fontMetrics().width(QLatin1Char('9')) * digits;
-  return space;
+    int digits = 1;
+    int max = qMax(1, blockCount());
+    while (max >= 10) {
+        max /= 10;
+        ++digits;
+    }
+
+    const int space = 3 + fontMetrics().width(QLatin1Char('9')) * digits;
+    return space;
 }
 
 void SieveTextEdit::lineNumberAreaPaintEvent(QPaintEvent *event)
 {
-  QPainter painter(m_sieveLineNumberArea);
-  painter.fillRect(event->rect(), Qt::lightGray);
+    QPainter painter(m_sieveLineNumberArea);
+    painter.fillRect(event->rect(), Qt::lightGray);
 
-  QTextBlock block = firstVisibleBlock();
-  int blockNumber = block.blockNumber();
-  int top = (int) blockBoundingGeometry(block).translated(contentOffset()).top();
-  int bottom = top + (int) blockBoundingRect(block).height();
-  while (block.isValid() && top <= event->rect().bottom()) {
-    if (block.isVisible() && bottom >= event->rect().top()) {
-      const QString number = QString::number(blockNumber + 1);
-      painter.setPen(Qt::black);
-      painter.drawText(0, top, m_sieveLineNumberArea->width(), fontMetrics().height(),
-                       Qt::AlignRight, number);
+    QTextBlock block = firstVisibleBlock();
+    int blockNumber = block.blockNumber();
+    int top = (int) blockBoundingGeometry(block).translated(contentOffset()).top();
+    int bottom = top + (int) blockBoundingRect(block).height();
+    while (block.isValid() && top <= event->rect().bottom()) {
+        if (block.isVisible() && bottom >= event->rect().top()) {
+            const QString number = QString::number(blockNumber + 1);
+            painter.setPen(Qt::black);
+            painter.drawText(0, top, m_sieveLineNumberArea->width(), fontMetrics().height(),
+                             Qt::AlignRight, number);
+        }
+
+        block = block.next();
+        top = bottom;
+        bottom = top + (int) blockBoundingRect(block).height();
+        ++blockNumber;
     }
-    
-    block = block.next();
-    top = bottom;
-    bottom = top + (int) blockBoundingRect(block).height();
-    ++blockNumber;
-  }
 }
 
 void SieveTextEdit::slotUpdateLineNumberAreaWidth(int)
 { 
-  setViewportMargins(lineNumberAreaWidth(), 0, 0, 0);
+    setViewportMargins(lineNumberAreaWidth(), 0, 0, 0);
 }
 
 void SieveTextEdit::slotUpdateLineNumberArea(const QRect &rect, int dy)
 {
-  if (dy)
-    m_sieveLineNumberArea->scroll(0, dy);
-  else
-    m_sieveLineNumberArea->update(0, rect.y(), m_sieveLineNumberArea->width(), rect.height());
+    if (dy)
+        m_sieveLineNumberArea->scroll(0, dy);
+    else
+        m_sieveLineNumberArea->update(0, rect.y(), m_sieveLineNumberArea->width(), rect.height());
 
-  if (rect.contains(viewport()->rect()))
-    slotUpdateLineNumberAreaWidth(0);
+    if (rect.contains(viewport()->rect()))
+        slotUpdateLineNumberAreaWidth(0);
 }
 
 void SieveTextEdit::initCompleter()
 {
-  QStringList listWord;
+    QStringList listWord;
 
-  listWord<< QLatin1String( "require" )<<QLatin1String( "stop" );
-  listWord << QLatin1String( ":contains" )<<QLatin1String( ":matches" )<<QLatin1String( ":is" )<<QLatin1String( ":over" )<<QLatin1String( ":under" )<<QLatin1String( ":all" )<<QLatin1String( ":domain" )<<QLatin1String( ":localpart" );
-  listWord << QLatin1String( "if" )<<QLatin1String( "elsif" )<<QLatin1String( "else" );
-  listWord << QLatin1String( "keep" )<<QLatin1String( "reject" )<<QLatin1String( "discard" )<<QLatin1String( "redirect" )<<QLatin1String( "fileinto" )<<QLatin1String( "addflag" )<<QLatin1String( "setflag" )<<QLatin1String("vacation");
-  listWord << QLatin1String( "address" )<<QLatin1String( "allof" )<<QLatin1String( "anyof" )<<QLatin1String( "exists" )<<QLatin1String( "false" )<<QLatin1String( "header" )<<QLatin1String("not" )<<QLatin1String( "size" )<<QLatin1String( "true" );
-  
-  m_completer = new QCompleter( this );
-  m_completer->setModel( new QStringListModel( listWord, m_completer ) );
-  m_completer->setModelSorting( QCompleter::CaseSensitivelySortedModel );
-  m_completer->setCaseSensitivity( Qt::CaseInsensitive );
-  
-  m_completer->setWidget( this );
-  m_completer->setCompletionMode( QCompleter::PopupCompletion );
-  
-  connect( m_completer, SIGNAL(activated(QString)), this, SLOT(slotInsertCompletion(QString)) );
+    listWord<< QLatin1String( "require" )<<QLatin1String( "stop" );
+    listWord << QLatin1String( ":contains" )<<QLatin1String( ":matches" )<<QLatin1String( ":is" )<<QLatin1String( ":over" )<<QLatin1String( ":under" )<<QLatin1String( ":all" )<<QLatin1String( ":domain" )<<QLatin1String( ":localpart" );
+    listWord << QLatin1String( "if" )<<QLatin1String( "elsif" )<<QLatin1String( "else" );
+    listWord << QLatin1String( "keep" )<<QLatin1String( "reject" )<<QLatin1String( "discard" )<<QLatin1String( "redirect" )<<QLatin1String( "fileinto" )<<QLatin1String( "addflag" )<<QLatin1String( "setflag" )<<QLatin1String("vacation");
+    listWord << QLatin1String( "address" )<<QLatin1String( "allof" )<<QLatin1String( "anyof" )<<QLatin1String( "exists" )<<QLatin1String( "false" )<<QLatin1String( "header" )<<QLatin1String("not" )<<QLatin1String( "size" )<<QLatin1String( "true" );
+
+    m_completer = new QCompleter( this );
+    m_completer->setModel( new QStringListModel( listWord, m_completer ) );
+    m_completer->setModelSorting( QCompleter::CaseSensitivelySortedModel );
+    m_completer->setCaseSensitivity( Qt::CaseInsensitive );
+
+    m_completer->setWidget( this );
+    m_completer->setCompletionMode( QCompleter::PopupCompletion );
+
+    connect( m_completer, SIGNAL(activated(QString)), this, SLOT(slotInsertCompletion(QString)) );
 }
 
 void SieveTextEdit::slotInsertCompletion( const QString& completion )
 {
-  QTextCursor tc = textCursor();
-  const int extra = completion.length() - m_completer->completionPrefix().length();
-  tc.movePosition(QTextCursor::Left);
-  tc.movePosition(QTextCursor::EndOfWord);
-  tc.insertText(completion.right(extra));
-  setTextCursor(tc);
+    QTextCursor tc = textCursor();
+    const int extra = completion.length() - m_completer->completionPrefix().length();
+    tc.movePosition(QTextCursor::Left);
+    tc.movePosition(QTextCursor::EndOfWord);
+    tc.insertText(completion.right(extra));
+    setTextCursor(tc);
 
 }
 
 void SieveTextEdit::keyPressEvent(QKeyEvent* e)
 {
-  if( m_completer->popup()->isVisible() ) {
-    switch (e->key()) {
-    case Qt::Key_Enter:
-    case Qt::Key_Return:
-    case Qt::Key_Escape:
-    case Qt::Key_Tab:
-    case Qt::Key_Backtab:
-      e->ignore();
-      return; // let the completer do default behavior
-    default:
-      break;
+    if( m_completer->popup()->isVisible() ) {
+        switch (e->key()) {
+        case Qt::Key_Enter:
+        case Qt::Key_Return:
+        case Qt::Key_Escape:
+        case Qt::Key_Tab:
+        case Qt::Key_Backtab:
+            e->ignore();
+            return; // let the completer do default behavior
+        default:
+            break;
+        }
     }
-  }
-  QPlainTextEdit::keyPressEvent(e);
-  QString text = wordUnderCursor();
-  if( text.length() < 2 ) // min 2 char for completion
-    return;
+    QPlainTextEdit::keyPressEvent(e);
+    QString text = wordUnderCursor();
+    if( text.length() < 2 ) // min 2 char for completion
+        return;
 
-  m_completer->setCompletionPrefix( text );
+    m_completer->setCompletionPrefix( text );
 
-  QRect cr = cursorRect();
-  cr.setWidth( m_completer->popup()->sizeHintForColumn(0)
-               + m_completer->popup()->verticalScrollBar()->sizeHint().width() );
-  m_completer->complete( cr );
+    QRect cr = cursorRect();
+    cr.setWidth( m_completer->popup()->sizeHintForColumn(0)
+                 + m_completer->popup()->verticalScrollBar()->sizeHint().width() );
+    m_completer->complete( cr );
 }
 
 QString SieveTextEdit::wordUnderCursor() const
@@ -261,8 +261,8 @@ QString SieveTextEdit::wordUnderCursor() const
         // of just the last char.
         int pos = tc.position() - 1;
         if ( pos < 0 || eow.contains( document()->characterAt(pos) )
-                   || document()->characterAt(pos) == QChar(QChar::LineSeparator)
-                   || document()->characterAt(pos) == QChar(QChar::ParagraphSeparator)) 
+             || document()->characterAt(pos) == QChar(QChar::LineSeparator)
+             || document()->characterAt(pos) == QChar(QChar::ParagraphSeparator))
             break;
         tc.movePosition( QTextCursor::Left, QTextCursor::KeepAnchor );
     }

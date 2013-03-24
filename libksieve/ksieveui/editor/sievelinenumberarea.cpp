@@ -1,4 +1,4 @@
-/* Copyright (C) 2012 Laurent Montel <montel@kde.org>
+/* Copyright (C) 2012, 2013 Laurent Montel <montel@kde.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -22,17 +22,17 @@
 using namespace KSieveUi;
 
 SieveLineNumberArea::SieveLineNumberArea(SieveTextEdit *editor)
-  : QWidget( editor ),
-    m_sieveTextEdit( editor )
+    : QWidget( editor ),
+      m_sieveTextEdit( editor )
 {
 }
 
 QSize SieveLineNumberArea::sizeHint() const
 {
-  return QSize(m_sieveTextEdit->lineNumberAreaWidth(), 0);
+    return QSize(m_sieveTextEdit->lineNumberAreaWidth(), 0);
 }
-  
+
 void SieveLineNumberArea::paintEvent(QPaintEvent *event)
 {
-  m_sieveTextEdit->lineNumberAreaPaintEvent(event);
+    m_sieveTextEdit->lineNumberAreaPaintEvent(event);
 }

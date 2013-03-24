@@ -33,10 +33,10 @@ class SieveFindBar;
 
 class KSIEVEUI_EXPORT SieveEditor : public KDialog
 {
-  Q_OBJECT
-  Q_PROPERTY( QString script READ script WRITE setScript )
+    Q_OBJECT
+    Q_PROPERTY( QString script READ script WRITE setScript )
 
-  public:
+public:
     explicit SieveEditor( QWidget * parent=0 );
     ~SieveEditor();
 
@@ -46,13 +46,13 @@ class KSIEVEUI_EXPORT SieveEditor : public KDialog
     void setDebugScript( const QString& debug );
     void setScriptName( const QString&name );
 
-  private slots:
+private slots:
     void slotTextChanged();
     void slotImport();
     void slotSaveAs();
     void slotFind();
 
-  private:
+private:
     bool saveToFile( const QString&filename );
     bool loadFromFile( const QString& filename );
     SieveTextEdit * mTextEdit;
