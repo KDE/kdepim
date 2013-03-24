@@ -17,7 +17,7 @@
  */
 
 #include "sievetextedit.h"
-#include "sievelinenumberarea.h"
+#include "editor/sievelinenumberarea.h"
 #include "sievesyntaxhighlighter.h"
 
 

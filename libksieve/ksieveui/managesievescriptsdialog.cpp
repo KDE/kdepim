@@ -1,7 +1,7 @@
 
 #include "managesievescriptsdialog.h"
 #include "sievetextedit.h"
-#include "sieveeditor.h"
+#include "editor/sieveeditor.h"
 
 #include <klocale.h>
 #include <kiconloader.h>

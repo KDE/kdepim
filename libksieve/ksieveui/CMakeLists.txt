@@ -6,7 +6,6 @@ include_directories(${CMAKE_SOURCE_DIR}/libksieve
 add_subdirectory(tests)
 
 set(ksieveui_LIB_SRCS
-  sievelinenumberarea.cpp
   managesievescriptsdialog.cpp
   sievedebugdialog.cpp
   util.cpp
@@ -14,7 +13,8 @@ set(ksieveui_LIB_SRCS
   vacationdialog.cpp
   sievesyntaxhighlighter.cpp
   sievetextedit.cpp
-  sieveeditor.cpp
+  editor/sieveeditor.cpp
+  editor/sievelinenumberarea.cpp
   sievefindbar.cpp
   templates/sievetemplatewidget.cpp
   templates/sievedefaulttemplate.cpp 
