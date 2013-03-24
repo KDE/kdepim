@@ -74,11 +74,13 @@ void SieveTemplateListWidget::slotContextMenu(const QPoint &pos)
     menu->addAction( i18n("Insert template"), this, SLOT(slotInsertTemplate()));
     menu->addSeparator();
 
+    const bool defaultTemplate = lstSelectedItems.first()->data(SieveTemplateListWidget::DefaultTemplate).toBool();
+
     menu->addAction( i18n("Add..."), this, SLOT(slotAdd()));
     if (lstSelectedItems.count() == 1) {
-        menu->addAction( i18n("Modify..."), this, SLOT(slotModify()));
+        menu->addAction( defaultTemplate ? i18n("Show...") : i18n("Modify..."), this, SLOT(slotModify()));
     }
-    if (lstSelectedItems.count() == 1 && !lstSelectedItems.first()->data(SieveTemplateListWidget::DefaultTemplate).toBool()) {
+    if (lstSelectedItems.count() == 1 && !defaultTemplate) {
         menu->addAction( i18n("Remove"), this, SLOT(slotRemove()));
     }
     menu->exec( mapToGlobal( pos ) );
@@ -121,15 +123,18 @@ void SieveTemplateListWidget::slotModify()
 {
     QListWidgetItem * item = currentItem();
     if(item) {
-        QPointer<SieveTemplateEditDialog> dlg = new SieveTemplateEditDialog(this);
+        const bool defaultTemplate = item->data(SieveTemplateListWidget::DefaultTemplate).toBool();
+        QPointer<SieveTemplateEditDialog> dlg = new SieveTemplateEditDialog(this, defaultTemplate);
         dlg->setTemplateName(item->text());
         dlg->setScript(item->data(SieveTemplateListWidget::SieveText).toString());
         if (dlg->exec()) {
-            const QString templateName = dlg->templateName();
-            const QString templateScript = dlg->script();
-            item->setText(templateName);
-            item->setData(SieveTemplateListWidget::SieveText, templateScript);
-            mDirty = true;
+            if (!defaultTemplate) {
+                const QString templateName = dlg->templateName();
+                const QString templateScript = dlg->script();
+                item->setText(templateName);
+                item->setData(SieveTemplateListWidget::SieveText, templateScript);
+                mDirty = true;
+            }
         }
         delete dlg;
     }

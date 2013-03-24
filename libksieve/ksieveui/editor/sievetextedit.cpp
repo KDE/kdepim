@@ -66,37 +66,38 @@ SieveTextEdit::~SieveTextEdit()
 
 void SieveTextEdit::contextMenuEvent( QContextMenuEvent *event )
 {
-  QMenu *popup = createStandardContextMenu();
-  if (popup) {
-    const bool emptyDocument = document()->isEmpty();
-    QList<QAction *> actionList = popup->actions();
-    enum { UndoAct, RedoAct, CutAct, CopyAct, PasteAct, ClearAct, SelectAllAct, NCountActs };
-    QAction *separatorAction = 0L;
-    int idx = actionList.indexOf( actionList[SelectAllAct] ) + 1;
-    if ( idx < actionList.count() )
-       separatorAction = actionList.at( idx );
-    if ( separatorAction ) {
-       KAction *clearAllAction = KStandardAction::clear(this, SLOT(slotUndoableClear()), popup);
-       if ( emptyDocument )
-           clearAllAction->setEnabled( false );
-       popup->insertAction( separatorAction, clearAllAction );
+    QMenu *popup = createStandardContextMenu();
+    if (popup) {
+        const bool emptyDocument = document()->isEmpty();
+        if (!isReadOnly()) {
+            QList<QAction *> actionList = popup->actions();
+            enum { UndoAct, RedoAct, CutAct, CopyAct, PasteAct, ClearAct, SelectAllAct, NCountActs };
+            QAction *separatorAction = 0L;
+            int idx = actionList.indexOf( actionList[SelectAllAct] ) + 1;
+            if ( idx < actionList.count() )
+                separatorAction = actionList.at( idx );
+            if ( separatorAction ) {
+                KAction *clearAllAction = KStandardAction::clear(this, SLOT(slotUndoableClear()), popup);
+                if ( emptyDocument )
+                    clearAllAction->setEnabled( false );
+                popup->insertAction( separatorAction, clearAllAction );
+            }
+        }
+        popup->addSeparator();
+        popup->addAction( KStandardGuiItem::find().icon(), KStandardGuiItem::find().text(),this,SIGNAL(findText()) , Qt::Key_F+Qt::CTRL);
+        //Code from KTextBrowser
+        KIconTheme::assignIconsToContextMenu( isReadOnly() ? KIconTheme::ReadOnlyText
+                                                           : KIconTheme::TextEditor,
+                                              popup->actions() );
+        popup->addSeparator();
+        QAction *speakAction = popup->addAction(i18n("Speak Text"));
+        speakAction->setIcon(KIcon("preferences-desktop-text-to-speech"));
+        speakAction->setEnabled(!emptyDocument );
+        connect( speakAction, SIGNAL(triggered(bool)), this, SLOT(slotSpeakText()) );
+        popup->exec( event->globalPos() );
+
+        delete popup;
     }
-
-    popup->addSeparator();
-    popup->addAction( KStandardGuiItem::find().icon(), KStandardGuiItem::find().text(),this,SIGNAL(findText()) , Qt::Key_F+Qt::CTRL);
-    //Code from KTextBrowser
-    KIconTheme::assignIconsToContextMenu( isReadOnly() ? KIconTheme::ReadOnlyText
-                                          : KIconTheme::TextEditor,
-                                          popup->actions() );
-    popup->addSeparator();
-    QAction *speakAction = popup->addAction(i18n("Speak Text"));
-    speakAction->setIcon(KIcon("preferences-desktop-text-to-speech"));
-    speakAction->setEnabled(!emptyDocument );
-    connect( speakAction, SIGNAL(triggered(bool)), this, SLOT(slotSpeakText()) );
-    popup->exec( event->globalPos() );
-
-    delete popup;
-  }
 }
 
 void SieveTextEdit::slotSpeakText()

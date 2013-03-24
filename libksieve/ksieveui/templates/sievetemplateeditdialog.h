@@ -28,7 +28,7 @@ class SieveTemplateEditDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit SieveTemplateEditDialog(QWidget *parent = 0);
+    explicit SieveTemplateEditDialog(QWidget *parent = 0, bool defaultTemplate = false);
     ~SieveTemplateEditDialog();
 
     void setTemplateName(const QString &name);

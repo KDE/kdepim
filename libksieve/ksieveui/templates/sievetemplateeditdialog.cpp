@@ -28,11 +28,14 @@
 
 using namespace KSieveUi;
 
-SieveTemplateEditDialog::SieveTemplateEditDialog(QWidget *parent)
+SieveTemplateEditDialog::SieveTemplateEditDialog(QWidget *parent, bool defaultTemplate)
     : KDialog(parent)
 {
     setCaption( i18n("Templates") );
-    setButtons( Ok |Cancel );
+    if (defaultTemplate)
+        setButtons( Close );
+    else
+        setButtons( Ok |Cancel );
 
     QWidget *w = new QWidget;
     QVBoxLayout *vbox = new QVBoxLayout;
@@ -42,17 +45,21 @@ SieveTemplateEditDialog::SieveTemplateEditDialog(QWidget *parent)
     hbox->addWidget(label);
 
     mTemplateNameEdit = new KLineEdit;
+    mTemplateNameEdit->setEnabled(!defaultTemplate);
     hbox->addWidget(mTemplateNameEdit);
 
     vbox->addLayout(hbox);
 
     mTextEdit = new KSieveUi::SieveTextEdit;
+    mTextEdit->setReadOnly(defaultTemplate);
     vbox->addWidget(mTextEdit);
 
     w->setLayout(vbox);
     setMainWidget(w);
-    enableButtonOk(false);
-    connect(mTemplateNameEdit, SIGNAL(textChanged(QString)),SLOT(slotTemplateNameChanged(QString)));
+    if (!defaultTemplate) {
+        enableButtonOk(false);
+        connect(mTemplateNameEdit, SIGNAL(textChanged(QString)),SLOT(slotTemplateNameChanged(QString)));
+    }
     readConfig();
 }
 
