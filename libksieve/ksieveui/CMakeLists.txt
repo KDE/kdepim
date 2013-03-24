@@ -16,9 +16,9 @@ set(ksieveui_LIB_SRCS
   sievetextedit.cpp
   sieveeditor.cpp
   sievefindbar.cpp
-  sievetemplatewidget.cpp
-  sievedefaulttemplate.cpp 
-  sievetemplateeditdialog.cpp 
+  templates/sievetemplatewidget.cpp
+  templates/sievedefaulttemplate.cpp 
+  templates/sievetemplateeditdialog.cpp 
 )
 
 kde4_add_kcfg_files(ksieveui_LIB_SRCS settings.kcfgc)

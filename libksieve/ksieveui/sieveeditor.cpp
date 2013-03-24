@@ -18,7 +18,7 @@
 
 #include "sieveeditor.h"
 #include "sievefindbar.h"
-#include "sievetemplatewidget.h"
+#include "templates/sievetemplatewidget.h"
 
 #include <klocale.h>
 #include <kiconloader.h>
