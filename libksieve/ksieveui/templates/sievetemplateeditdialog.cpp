@@ -16,6 +16,7 @@
 */
 
 #include "sievetemplateeditdialog.h"
+#include "widgets/sievefindbar.h"
 #include "editor/sievetextedit.h"
 
 #include <KLocale>
@@ -24,6 +25,7 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QLabel>
+#include <QShortcut>
 
 
 using namespace KSieveUi;
@@ -54,6 +56,14 @@ SieveTemplateEditDialog::SieveTemplateEditDialog(QWidget *parent, bool defaultTe
     mTextEdit->setReadOnly(defaultTemplate);
     vbox->addWidget(mTextEdit);
 
+    mFindBar = new SieveFindBar( mTextEdit, this );
+    vbox->addWidget(mFindBar);
+
+    QShortcut *shortcut = new QShortcut( this );
+    shortcut->setKey( Qt::Key_F+Qt::CTRL );
+    connect( shortcut, SIGNAL(activated()), SLOT(slotFind()) );
+    connect( mTextEdit, SIGNAL(findText()), SLOT(slotFind()) );
+
     w->setLayout(vbox);
     setMainWidget(w);
     if (!defaultTemplate) {
@@ -67,6 +77,16 @@ SieveTemplateEditDialog::~SieveTemplateEditDialog()
 {
     writeConfig();
 }
+
+void SieveTemplateEditDialog::slotFind()
+{
+    if ( mTextEdit->textCursor().hasSelection() )
+        mFindBar->setText( mTextEdit->textCursor().selectedText() );
+    mTextEdit->moveCursor(QTextCursor::Start);
+    mFindBar->show();
+    mFindBar->focusAndSetCursor();
+}
+
 
 void SieveTemplateEditDialog::writeConfig()
 {
