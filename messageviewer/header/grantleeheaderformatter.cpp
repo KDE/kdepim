@@ -20,8 +20,6 @@
 #include "headerstyle_util.h"
 #include "globalsettings.h"
 #include "config-messageviewer.h"
-#include "contactdisplaymessagememento.h"
-#include "kxface.h"
 
 #include <kpimutils/email.h>
 #include <messagecore/stringutil.h>

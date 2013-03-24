@@ -26,13 +26,10 @@
 using KPIMUtils::LinkLocator;
 #include "globalsettings.h"
 #include "nodehelper.h"
-#include "contactdisplaymessagememento.h"
 
 #include <kpimutils/email.h>
-#include "kxface.h"
 #include <messagecore/stringutil.h>
 
-#include <akonadi/contact/contactsearchjob.h>
 #include <kdebug.h>
 #include <klocale.h>
 #include <kglobal.h>
