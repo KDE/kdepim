@@ -1,6 +1,6 @@
 
 #include "managesievescriptsdialog.h"
-#include "sievetextedit.h"
+#include "editor/sievetextedit.h"
 #include "editor/sieveeditor.h"
 
 #include <klocale.h>

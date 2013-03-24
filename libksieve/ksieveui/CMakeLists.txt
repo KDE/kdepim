@@ -11,11 +11,11 @@ set(ksieveui_LIB_SRCS
   util.cpp
   vacation.cpp
   vacationdialog.cpp
-  sievesyntaxhighlighter.cpp
-  sievetextedit.cpp
+  sievefindbar.cpp
+  editor/sievesyntaxhighlighter.cpp
+  editor/sievetextedit.cpp
   editor/sieveeditor.cpp
   editor/sievelinenumberarea.cpp
-  sievefindbar.cpp
   templates/sievetemplatewidget.cpp
   templates/sievedefaulttemplate.cpp 
   templates/sievetemplateeditdialog.cpp 
