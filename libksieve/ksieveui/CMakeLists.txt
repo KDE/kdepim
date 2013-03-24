@@ -9,9 +9,9 @@ set(ksieveui_LIB_SRCS
   managesievescriptsdialog.cpp
   sievedebugdialog.cpp
   util.cpp
-  vacation.cpp
-  vacationdialog.cpp
-  sievefindbar.cpp
+  vacation/vacation.cpp
+  vacation/vacationdialog.cpp
+  widgets/sievefindbar.cpp
   editor/sievesyntaxhighlighter.cpp
   editor/sievetextedit.cpp
   editor/sieveeditor.cpp
