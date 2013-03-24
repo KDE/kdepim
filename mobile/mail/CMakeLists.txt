@@ -8,6 +8,7 @@ add_subdirectory(tests)
 include_directories(
   ${CMAKE_SOURCE_DIR}/libkleo/
   ${CMAKE_SOURCE_DIR}/libksieve/
+  ${CMAKE_SOURCE_DIR}/libksieve/ksieveui/
   ${CMAKE_SOURCE_DIR}/kmail/
   ${CMAKE_BINARY_DIR}/kmail/kcm_kpimidentities/
   ${CMAKE_SOURCE_DIR}/kmail/kcm_kpimidentities/

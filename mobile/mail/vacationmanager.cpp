@@ -26,7 +26,7 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <ksieveui/util.h>
-#include <ksieveui/vacation.h>
+#include <ksieveui/vacation/vacation.h>
 
 #include <QtCore/QTimer>
 
