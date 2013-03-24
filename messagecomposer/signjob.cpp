@@ -157,21 +157,19 @@ void SignJob::process()
   // for now just do the main recipients
   QByteArray signature;
 
+  d->content->assemble();
+
   // replace simple LFs by CRLFs for all MIME supporting CryptPlugs
   // according to RfC 2633, 3.1.1 Canonicalization
-  d->content->assemble();
   QByteArray content;
-  // 
-
-  if( d->format & Kleo::InlineOpenPGPFormat  &&
-    !( d->format & Kleo::SMIMEOpaqueFormat ) ) {
-    content = KMime::LFtoCRLF( d->content->body() );
+  if( d->format & Kleo::InlineOpenPGPFormat ) {
+    content = d->content->body();
   } else if( !( d->format & Kleo::SMIMEOpaqueFormat ) ) {
     content = KMime::LFtoCRLF( d->content->encodedContent() );
-  } else { // SMimeOpaque doesn't need LFtoCRLF, else it gets munged
+  } else {                    // SMimeOpaque doesn't need LFtoCRLF, else it gets munged
     content = d->content->encodedContent();
   }
-  
+
   // FIXME: Make this async
   GpgME::SigningResult res = job->exec( d->signers,
                                         content,
@@ -189,7 +187,7 @@ void SignJob::process()
   job->deleteLater();
 
   QByteArray signatureHashAlgo =  res.createdSignature( 0 ).hashAlgorithmAsString();
-  
+
   d->resultContent = Message::Util::composeHeadersAndBody( d->content, signature, d->format, true, signatureHashAlgo );
   emitResult();
 }
