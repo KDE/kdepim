@@ -77,9 +77,7 @@ QString GrantleeHeaderFormatter::toHtml(const QString &themeName, bool isPrintin
     Grantlee::Template headerTemplate = d->engine->loadByName( themeName + "/header.html" );
     QString errorMessage;
     if ( headerTemplate->error() ) {
-        errorMessage += headerTemplate->errorString();
-    }
-    if ( !errorMessage.isEmpty() ) {
+        errorMessage = headerTemplate->errorString();
         return errorMessage;
     }
 
