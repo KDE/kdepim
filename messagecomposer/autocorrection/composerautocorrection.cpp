@@ -661,7 +661,7 @@ void ComposerAutoCorrection::replaceTypographicQuotes()
     //     b. and the previous quote of a different kind (so that we get empty quotations right)
 
     bool ending = true;
-    //TODO add QChar::Nbsp
+    const QChar nbsp = QChar(QChar::Nbsp);
     for (int i = mWord.length(); i>1; --i) {
         const QChar c = mWord.at(i-1);
         if (c == QLatin1Char('"') || c == QLatin1Char('\'')) {
@@ -695,25 +695,48 @@ void ComposerAutoCorrection::replaceTypographicQuotes()
             }
 
             if (doubleQuotes && mReplaceDoubleQuotes) {
-                if (!ending)
-                    mWord[i-1] = mTypographicDoubleQuotes.begin;
-                else
-                    mWord[i-1] = mTypographicDoubleQuotes.end;
+
+                if (!ending) {
+                    if (addNonBreakingSpace)
+                        mWord.replace(i-1, 2, QString(nbsp + mTypographicDoubleQuotes.begin));
+                    else
+                        mWord[i-1] = mTypographicDoubleQuotes.begin;
+                } else {
+                    if (addNonBreakingSpace)
+                        mWord.replace(i-1, 2,QString(nbsp + mTypographicDoubleQuotes.end));
+                    else
+                        mWord[i-1] = mTypographicDoubleQuotes.end;
+                }
             } else if (mReplaceSingleQuotes) {
-                if (!ending)
-                    mWord[i-1] = mTypographicSingleQuotes.begin;
-                else
-                    mWord[i-1] = mTypographicSingleQuotes.end;
+                if (!ending) {
+                    if (addNonBreakingSpace)
+                        mWord.replace(i-1, 2,QString(nbsp + mTypographicSingleQuotes.begin));
+                    else
+                        mWord[i-1] = mTypographicSingleQuotes.begin;
+                } else {
+                    if (addNonBreakingSpace)
+                        mWord.replace(i-1, 2,QString(nbsp + mTypographicSingleQuotes.end));
+                    else
+                        mWord[i-1] = mTypographicSingleQuotes.end;
+                }
             }
         }
     }
 
 
     // first character
-    if (mWord.at(0) == QLatin1Char('"') && mReplaceDoubleQuotes)
-        mWord[0] = mTypographicDoubleQuotes.begin;
-    else if (mWord.at(0) == QLatin1Char('\'') && mReplaceSingleQuotes)
-        mWord[0] = mTypographicSingleQuotes.begin;
+    if (mWord.at(0) == QLatin1Char('"') && mReplaceDoubleQuotes) {
+        if (addNonBreakingSpace)
+            mWord.replace(0, 2, QString(mTypographicDoubleQuotes.begin + nbsp));
+        else
+            mWord[0] = mTypographicDoubleQuotes.begin;
+    } else if (mWord.at(0) == QLatin1Char('\'') && mReplaceSingleQuotes) {
+        if (addNonBreakingSpace)
+            mWord.replace(0, 2,QString(mTypographicSingleQuotes.begin + nbsp));
+        else
+            mWord[0] = mTypographicSingleQuotes.begin;
+    }
+
 }
 
 
