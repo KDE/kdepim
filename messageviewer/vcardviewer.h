@@ -1,5 +1,6 @@
 /* This file is part of the KDE project
    Copyright (C) 2002 Daniel Molkentin <molkentin@kde.org>
+   Copyright (C) 2013 Laurent Montel <montel@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -23,7 +24,7 @@
 #include <kabc/addressee.h>
 
 namespace Akonadi {
-  class ContactViewer;
+class ContactViewer;
 }
 
 
@@ -32,20 +33,22 @@ namespace MessageViewer {
 class VCardViewer : public KDialog
 {
     Q_OBJECT
-    public:
-      explicit VCardViewer(QWidget *parent, const QByteArray& vCard);
-      ~VCardViewer();
+public:
+    explicit VCardViewer(QWidget *parent, const QByteArray& vCard);
+    ~VCardViewer();
 
-    private Q_SLOTS:
-      void slotUser1();
-      void slotUser2();
-      void slotUser3();
+private Q_SLOTS:
+    void slotUser1();
+    void slotUser2();
+    void slotUser3();
 
-    private:
-      Akonadi::ContactViewer *mContactViewer;
+private:
+    void readConfig();
+    void writeConfig();
+    Akonadi::ContactViewer *mContactViewer;
 
-      KABC::Addressee::List mAddresseeList;
-      KABC::Addressee::List::ConstIterator itAddresseeList;
+    KABC::Addressee::List mAddresseeList;
+    KABC::Addressee::List::ConstIterator itAddresseeList;
 };
 
 }
