@@ -54,7 +54,9 @@ void ScamDetection::scanPage(const QWebElement &rootElement)
             const QString href = anchorElement.attribute(QLatin1String("href"));
             const QString title = anchorElement.attribute(QLatin1String("title"));
             if (!title.isEmpty()) {
-                if (title.startsWith(QLatin1String("http:")) || title.startsWith(QLatin1String("https:"))) {
+                if (title.startsWith(QLatin1String("http:"))
+                        || title.startsWith(QLatin1String("https:"))
+                        || title.startsWith(QLatin1String("www."))) {
                     if (href != title) {
                         foundScam = true;
                         mDetails += QLatin1String("<li>") + i18n("title definition in anchor '%1' is different from url definition in href '%2'", addWarningColor(title), addWarningColor(href)) + QLatin1String("</li>");
@@ -63,8 +65,12 @@ void ScamDetection::scanPage(const QWebElement &rootElement)
             }
             //2) detect if url href has ip and not server name.
             const QUrl url(href);
-            if (url.host().contains(ip4regExp)) {
-                mDetails += QLatin1String("<li>") + i18n("Hostname from href defines ip '%1'", addWarningColor(url.host()))+QLatin1String("</li>");
+            const QString hostname = url.host();
+            if (hostname.contains(ip4regExp)) {
+                mDetails += QLatin1String("<li>") + i18n("Hostname from href defines ip '%1'", addWarningColor(hostname))+QLatin1String("</li>");
+                foundScam = true;
+            } else if (hostname.contains(QLatin1Char('%'))) { //Hexa value for ip
+                mDetails += QLatin1String("<li>") + i18n("Hostname from href contains hexadecimal value '%1'", addWarningColor(hostname))+QLatin1String("</li>");
                 foundScam = true;
             } else if (url.path().contains(QLatin1String("url?q="))) { //4) redirect url.
                 mDetails += QLatin1String("<li>") + i18n("Href '%1' has a redirection", addWarningColor(url.path())) +QLatin1String("</li>");
