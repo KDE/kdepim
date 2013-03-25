@@ -3,6 +3,7 @@
 
     Copyright (C) 2008-2010 Mehrdad Momeny <mehrdad.momeny@gmail.com>
     Copyright (C) 2008-2010 Golnaz Nilieh <g382nilieh@gmail.com>
+    Copyright (C) 2013 Laurent Montel <montel@kde.org>
 
     This program is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -112,7 +113,6 @@ MainWindow::MainWindow()
 
     connect( tabPosts, SIGNAL(currentChanged(int)), this, SLOT(slotActivePostChanged(int)) );
     connect( toolbox, SIGNAL(sigEntrySelected(BilboPost&,int)), this, SLOT(slotNewPostOpened(BilboPost&,int)) );
-//     connect( toolbox, SIGNAL(sigCurrentBlogChanged(int)), this, SLOT(slotCurrentBlogChanged(int)) );
     connect( toolbox, SIGNAL(sigError(QString)), this, SLOT(slotError(QString)) );
     connect( toolbox, SIGNAL(sigBusy(bool)), this, SLOT(slotBusy(bool)));
 
@@ -310,8 +310,6 @@ void MainWindow::optionsPreferences()
     Ui::AdvancedSettingsBase ui_advancedsettings_base;
     ui_advancedsettings_base.setupUi( advancedSettingsDlg );
 
-//     QWidget *htmlEditorSettings = HtmlEditor::self()->configPage( 0, dialog );
-//     dialog->addPage( htmlEditorSettings, i18n( "HTML Editor" ), "configure" );
     dialog->addPage( generalSettingsDlg, i18nc( "Configure Page", "General" ), QLatin1String("configure") );
     dialog->addPage( blogSettingsDlg, i18nc( "Configure Page", "Blogs" ), QLatin1String("document-properties"));
     dialog->addPage( editorSettingsDlg, i18nc( "Configure Page", "Editor" ), QLatin1String("accessories-text-editor"));
@@ -671,7 +669,7 @@ void MainWindow::slotOpenCurrentBlogInBrowser()
             KMessageBox::sorry(this, i18n("Cannot find current blog URL."));
     }
     ///TODO
-    ///else show a massege to the user saying that a blog should be selected before.
+    ///else show a message to the user saying that a blog should be selected before.
 }
 
 #include "mainwindow.moc"
