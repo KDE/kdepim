@@ -17,7 +17,7 @@
  */
 
 #include "sieveeditor.h"
-#include "widgets/sievefindbar.h"
+#include "sievefindbar.h"
 #include "templates/sievetemplatewidget.h"
 
 #include <klocale.h>

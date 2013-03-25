@@ -11,7 +11,7 @@ set(ksieveui_LIB_SRCS
   util.cpp
   vacation/vacation.cpp
   vacation/vacationdialog.cpp
-  widgets/sievefindbar.cpp
+  editor/sievefindbar.cpp
   editor/sievesyntaxhighlighter.cpp
   editor/sievetextedit.cpp
   editor/sieveeditor.cpp

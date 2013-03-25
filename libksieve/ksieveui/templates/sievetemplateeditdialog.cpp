@@ -16,7 +16,7 @@
 */
 
 #include "sievetemplateeditdialog.h"
-#include "widgets/sievefindbar.h"
+#include "editor/sievefindbar.h"
 #include "editor/sievetextedit.h"
 
 #include <KLocale>
