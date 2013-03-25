@@ -438,7 +438,7 @@ void ManageSieveScriptsDialog::slotGetResult( KManageSieve::SieveJob *, bool suc
         return;
 
     disableManagerScriptsDialog(true);
-    mSieveEditor = new SieveEditor/*( this )*/;
+    mSieveEditor = new SieveEditor;
     mSieveEditor->setScriptName( mCurrentURL.fileName() );
     mSieveEditor->setScript( script );
     connect( mSieveEditor, SIGNAL(okClicked()), this, SLOT(slotSieveEditorOkClicked()) );
