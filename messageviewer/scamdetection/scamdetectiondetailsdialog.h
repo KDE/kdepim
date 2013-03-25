@@ -20,7 +20,7 @@
 
 #include <KDialog>
 
-class QTextEdit;
+class KTextEdit;
 
 namespace MessageViewer {
 class ScamDetectionDetailsDialog : public KDialog
@@ -34,7 +34,7 @@ public:
 private:
     void writeConfig();
     void readConfig();
-    QTextEdit *mDetails;
+    KTextEdit *mDetails;
 };
 }
 

@@ -20,7 +20,7 @@
 
 #include <KLocale>
 
-#include <QTextEdit>
+#include <KTextEdit>
 
 using namespace MessageViewer;
 
@@ -31,7 +31,7 @@ ScamDetectionDetailsDialog::ScamDetectionDetailsDialog(QWidget *parent)
     setAttribute( Qt::WA_DeleteOnClose );
     setButtons( Close );
     setModal( false );
-    mDetails = new QTextEdit;
+    mDetails = new KTextEdit;
     mDetails->setReadOnly(true);
     mDetails->setAcceptRichText(true);
     setMainWidget(mDetails);
