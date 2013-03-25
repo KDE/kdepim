@@ -17,10 +17,15 @@
 
 #include "scamdetectiondetailsdialog.h"
 #include "globalsettings.h"
+#include "autoqpointer.h"
 
 #include <KLocale>
 
 #include <KTextEdit>
+#include <KFileDialog>
+#include <KStandardGuiItem>
+
+#include <QTextStream>
 
 using namespace MessageViewer;
 
@@ -29,18 +34,45 @@ ScamDetectionDetailsDialog::ScamDetectionDetailsDialog(QWidget *parent)
 {
     setCaption( i18n("Details") );
     setAttribute( Qt::WA_DeleteOnClose );
-    setButtons( Close );
+    setButtons( User1|Close );
+    setButtonGuiItem( User1, KStandardGuiItem::saveAs() );
     setModal( false );
     mDetails = new KTextEdit;
     mDetails->setReadOnly(true);
     mDetails->setAcceptRichText(true);
     setMainWidget(mDetails);
+    connect(this, SIGNAL(user1Clicked()), SLOT(slotSaveAs()));
     readConfig();
 }
 
 ScamDetectionDetailsDialog::~ScamDetectionDetailsDialog()
 {
     writeConfig();
+}
+
+void ScamDetectionDetailsDialog::slotSaveAs()
+{
+    KUrl url;
+    MessageViewer::AutoQPointer<KFileDialog> fdlg( new KFileDialog( url, QString(), this) );
+
+    fdlg->setMode( KFile::File );
+    fdlg->setSelection( "scam-detection.html" );
+    fdlg->setOperationMode( KFileDialog::Saving );
+    fdlg->setConfirmOverwrite(true);
+    if ( fdlg->exec() == QDialog::Accepted ) {
+        const QString fileName = fdlg->selectedFile();
+        if ( !fileName.isEmpty() ) {
+            QFile file(fileName);
+            if ( !file.open( QIODevice::WriteOnly | QIODevice::Text ) ) {
+                kDebug()<<"We can't save in file :"<<fileName;
+                return;
+            }
+            QTextStream ts( &file );
+            ts.setCodec("UTF-8");
+            ts << mDetails->toHtml();
+            file.close();
+        }
+    }
 }
 
 void ScamDetectionDetailsDialog::setDetails(const QString &details)
