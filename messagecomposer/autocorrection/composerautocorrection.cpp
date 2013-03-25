@@ -646,6 +646,9 @@ void ComposerAutoCorrection::replaceTypographicQuotes()
     if (!(mReplaceDoubleQuotes && mWord.contains(QLatin1Char('"'))) &&
             !(mReplaceSingleQuotes && mWord.contains(QLatin1Char('\'')))) return;
 
+
+    const bool addNonBreakingSpace = (isFrenchLanguage() && isAddNonBreakingSpace());
+
     // Need to determine if we want a starting or ending quote.
     // we use a starting quote in three cases:
     //  1. if the previous character is a space
@@ -658,15 +661,15 @@ void ComposerAutoCorrection::replaceTypographicQuotes()
     //     b. and the previous quote of a different kind (so that we get empty quotations right)
 
     bool ending = true;
-    QString::Iterator iter = mWord.end();
-    iter--;
     //TODO add QChar::Nbsp
-    while (iter != mWord.begin()) {
-        if (*iter == QLatin1Char('"') || *iter == QLatin1Char('\'')) {
-            bool doubleQuotes = *iter == QLatin1Char('"');
-
-            if ((iter - 1) != mWord.begin()) {
-                QChar::Category c1 = (*(iter - 1)).category();
+    for (int i = mWord.length(); i>0; --i) {
+        qDebug()<<" i "<<i<<" mWord"<<mWord;
+        const QChar c = mWord.at(i-1);
+        qDebug()<<" c: "<<c;
+        if (c == QLatin1Char('"') || c == QLatin1Char('\'')) {
+            const bool doubleQuotes = (c == QLatin1Char('"'));
+            if (i > 2) {
+                QChar::Category c1 = mWord.at(i-1).category();
 
                 // case 1 and 2
                 if (c1 == QChar::Separator_Space || c1 == QChar::Separator_Line || c1 == QChar::Separator_Paragraph ||
@@ -683,38 +686,36 @@ void ComposerAutoCorrection::replaceTypographicQuotes()
                         openingQuote = mTypographicSingleQuotes.begin;
 
                     // case 3b
-                    if (*(iter - 1) != openingQuote)
+                    if (mWord.at(i-1) != openingQuote)
                         ending = false;
                 }
             }
-
             // case 2a and 3a
-            if ((iter - 2) != mWord.constBegin() && !ending)
-            {
-                QChar::Category c2 = (*(iter - 2)).category();
+            if ( i > 3 && !ending) {
+                const QChar::Category c2 = (mWord.at(i-2)).category();
                 ending = (c2 == QChar::Punctuation_InitialQuote);
             }
 
             if (doubleQuotes && mReplaceDoubleQuotes) {
                 if (!ending)
-                    *iter = mTypographicDoubleQuotes.begin;
+                    mWord[i-1] = mTypographicDoubleQuotes.begin;
                 else
-                    *iter = mTypographicDoubleQuotes.end;
+                    mWord[i-1] = mTypographicDoubleQuotes.end;
             } else if (mReplaceSingleQuotes) {
                 if (!ending)
-                    *iter = mTypographicSingleQuotes.begin;
+                    mWord[i-1] = mTypographicSingleQuotes.begin;
                 else
-                    *iter = mTypographicSingleQuotes.end;
+                    mWord[i-1] = mTypographicSingleQuotes.end;
             }
         }
-        iter--;
     }
 
+
     // first character
-    if (*iter == QLatin1Char('"') && mReplaceDoubleQuotes)
-        *iter = mTypographicDoubleQuotes.begin;
-    else if (*iter == QLatin1Char('\'') && mReplaceSingleQuotes)
-        *iter = mTypographicSingleQuotes.begin;
+    if (mWord.at(0) == QLatin1Char('"') && mReplaceDoubleQuotes)
+        mWord[0] = mTypographicDoubleQuotes.begin;
+    else if (mWord.at(0) == QLatin1Char('\'') && mReplaceSingleQuotes)
+        mWord[0] = mTypographicSingleQuotes.begin;
 }
 
 
@@ -907,6 +908,6 @@ void ComposerAutoCorrection::setLanguage(const QString &lang, bool forceGlobal)
 
 bool ComposerAutoCorrection::isFrenchLanguage() const
 {
-    return (mAutoCorrectLang == QLatin1String("FR_fr")); //TODO
+    return (mAutoCorrectLang == QLatin1String("FR_fr") || mAutoCorrectLang == QLatin1String("fr"));
 }
 
