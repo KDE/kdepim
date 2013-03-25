@@ -662,10 +662,8 @@ void ComposerAutoCorrection::replaceTypographicQuotes()
 
     bool ending = true;
     //TODO add QChar::Nbsp
-    for (int i = mWord.length(); i>0; --i) {
-        qDebug()<<" i "<<i<<" mWord"<<mWord;
+    for (int i = mWord.length(); i>1; --i) {
         const QChar c = mWord.at(i-1);
-        qDebug()<<" c: "<<c;
         if (c == QLatin1Char('"') || c == QLatin1Char('\'')) {
             const bool doubleQuotes = (c == QLatin1Char('"'));
             if (i > 2) {
