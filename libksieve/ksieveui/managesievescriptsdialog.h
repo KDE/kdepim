@@ -24,13 +24,13 @@ class TreeWidgetWithContextMenu;
 
 class KSIEVEUI_EXPORT ManageSieveScriptsDialog : public QDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     explicit ManageSieveScriptsDialog( QWidget * parent=0, const char * name=0 );
     ~ManageSieveScriptsDialog();
 
-  private slots:
+private slots:
     void slotRefresh( bool disconnectSignal = false );
     void slotItem( KManageSieve::SieveJob *, const QString &, bool );
     void slotResult( KManageSieve::SieveJob *, bool, const QString &, bool );
@@ -50,7 +50,7 @@ class KSIEVEUI_EXPORT ManageSieveScriptsDialog : public QDialog
     void slotUpdateButtons();
     void slotItemChanged(QTreeWidgetItem*, int);
 
-  private:
+private:
     bool serverHasError(QTreeWidgetItem *item) const;
     void killAllJobs( bool disconnect = false );
     void changeActiveScript( QTreeWidgetItem*, bool activate = true );
@@ -75,11 +75,12 @@ class KSIEVEUI_EXPORT ManageSieveScriptsDialog : public QDialog
     void addOkMessage( const QString & logEntry );
     void addMessageEntry( const QString & errorMsg, const QColor& color );
     void updateButtons();
+    void disableManagerScriptsDialog(bool disable);
 
-  private:
+private:
     enum sieveServerStatus
     {
-      SIEVE_SERVER_ERROR = Qt::UserRole +1
+        SIEVE_SERVER_ERROR = Qt::UserRole +1
     };
 
     QTreeWidget* mListView;
