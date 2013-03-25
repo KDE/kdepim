@@ -24,6 +24,13 @@
 using namespace MessageViewer;
 static QString IPv4_PATTERN = QLatin1String("[0-9]{1,3}\\.[0-9]{1,3}(?:\\.[0-9]{0,3})?(?:\\.[0-9]{0,3})?");
 
+static QString addWarningColor(const QString &url)
+{
+    const QString error = QString::fromLatin1("<font color=#FF0000>%1</font>").arg(url);
+    return error;
+}
+
+
 ScamDetection::ScamDetection(QObject *parent)
     : QObject(parent)
 {
@@ -50,20 +57,20 @@ void ScamDetection::scanPage(const QWebElement &rootElement)
                 if (title.startsWith(QLatin1String("http:")) || title.startsWith(QLatin1String("https:"))) {
                     if (href != title) {
                         foundScam = true;
-                        mDetails += QLatin1String("<li>") + i18n("title definition in anchor '%1' is different from url definition in href '%2'", title, href) + QLatin1String("</li>");
+                        mDetails += QLatin1String("<li>") + i18n("title definition in anchor '%1' is different from url definition in href '%2'", addWarningColor(title), addWarningColor(href)) + QLatin1String("</li>");
                     }
                 }
             }
             //2) detect if url href has ip and not server name.
             const QUrl url(href);
             if (url.host().contains(ip4regExp)) {
-                mDetails += QLatin1String("<li>") + i18n("Hostname from href defines ip '%1'", url.host())+QLatin1String("</li>");
+                mDetails += QLatin1String("<li>") + i18n("Hostname from href defines ip '%1'", addWarningColor(url.host()))+QLatin1String("</li>");
                 foundScam = true;
             } else if (url.path().contains(QLatin1String("url?q="))) { //4) redirect url.
-                mDetails += QLatin1String("<li>") + i18n("Href '%1' has a redirection", url.path()) +QLatin1String("</li>");
+                mDetails += QLatin1String("<li>") + i18n("Href '%1' has a redirection", addWarningColor(url.path())) +QLatin1String("</li>");
                 foundScam = true;
             } else if (url.path().count(QLatin1String("http://"))>1) { //5) more that 1 http in url.
-                mDetails += QLatin1String("<li>") + i18n("Href '%1' contains multiple http://", url.path()) + QLatin1String("</li>");
+                mDetails += QLatin1String("<li>") + i18n("Href '%1' contains multiple http://", addWarningColor(url.path())) + QLatin1String("</li>");
                 foundScam = true;
             }
         }
@@ -84,5 +91,6 @@ void ScamDetection::showDetails()
     dlg->setDetails(mDetails);
     dlg->show();
 }
+
 
 #include "scamdetection.moc"
