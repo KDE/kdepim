@@ -33,7 +33,7 @@ using namespace KSieveUi;
 SieveTemplateEditDialog::SieveTemplateEditDialog(QWidget *parent, bool defaultTemplate)
     : KDialog(parent)
 {
-    setCaption( i18n("Templates") );
+    setCaption( defaultTemplate ? i18n("Default template") : i18n("Template") );
     if (defaultTemplate)
         setButtons( Close );
     else
