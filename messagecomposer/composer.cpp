@@ -68,6 +68,7 @@ class Message::ComposerPrivate : public JobBasePrivate
     void composeStep1();
     void skeletonJobFinished( KJob *job ); // slot
     void composeStep2();
+    QList<ContentJobBase *> createEncryptJobs( ContentJobBase *contentJob, bool sign );
     void contentJobFinished( KJob *job ); // slot
     void contentJobPreCryptFinished( KJob *job ); // slot
     void contentJobPreInlineFinished( KJob *job ); // slot
@@ -159,6 +160,60 @@ void ComposerPrivate::composeStep2()
 
   ContentJobBase *mainJob = 0;
   MainTextJob *mainTextJob = new MainTextJob( textPart, q );
+
+  if( ( sign || encrypt ) && format & Kleo::InlineOpenPGPFormat ) { // needs custom handling --- one SignEncryptJob by itself
+    kDebug() << "sending to sign/enc inline job!";
+
+    if ( encrypt ) {
+
+      QList<ContentJobBase *> jobs = createEncryptJobs(  mainTextJob, sign );
+      foreach( ContentJobBase *subJob, jobs ) {
+        if( attachmentParts.isEmpty() ) {
+          // We have no attachments.  Use the content given by the MainTextJob.
+          mainJob = subJob;
+        } else {
+          MultipartJob *multipartJob = new MultipartJob( q );
+          multipartJob->setMultipartSubtype( "mixed" );
+          multipartJob->appendSubjob( subJob );
+          foreach( AttachmentPart::Ptr part, attachmentParts ) {
+            multipartJob->appendSubjob( new AttachmentJob( part ) );
+          }
+          mainJob = multipartJob;
+        }
+
+        QObject::connect( mainJob, SIGNAL(finished(KJob*)), q, SLOT(contentJobFinished(KJob*)) );
+        q->addSubjob( mainJob );
+        mainJob->start();
+      }
+    } else {
+      SignJob* subJob = new SignJob( q );
+      subJob->setSigningKeys( signers );
+      subJob->setCryptoMessageFormat( format );
+
+      if( attachmentParts.isEmpty() ) {
+        // We have no attachments.  Use the content given by the MainTextJob.
+        mainJob = subJob;
+      } else {
+        subJob->appendSubjob( mainTextJob );
+        MultipartJob *multipartJob = new MultipartJob( q );
+        multipartJob->setMultipartSubtype( "mixed" );
+        multipartJob->appendSubjob( subJob );
+        foreach( AttachmentPart::Ptr part, attachmentParts ) {
+          multipartJob->appendSubjob( new AttachmentJob( part ) );
+        }
+        mainJob = multipartJob;
+      }
+      QObject::connect( mainJob, SIGNAL(finished(KJob*)), q, SLOT(contentJobFinished(KJob*)) );
+      q->addSubjob( mainJob );
+      mainJob->start();
+
+    }
+
+    return;
+  }
+
+
+
   if( attachmentParts.isEmpty() ) {
     // We have no attachments.  Use the content given by the MainTextJob.
     mainJob = mainTextJob;
@@ -182,10 +237,8 @@ void ComposerPrivate::composeStep2()
     }
     mainJob = multipartJob;
   }
-  if( sign && encrypt && format & Kleo::InlineOpenPGPFormat ) { // needs custom handling--- one SignEncryptJob by itself
-    kDebug() << "sending to sign/enc inline job!";
-    QObject::connect( mainJob, SIGNAL(finished(KJob*)), q, SLOT(contentJobPreInlineFinished(KJob*)) );
-  } else if( sign || encrypt ) {
+
+  if( sign || encrypt ) {
     QObject::connect( mainJob, SIGNAL(finished(KJob*)), q, SLOT(contentJobPreCryptFinished(KJob*)) );
   } else {
     QObject::connect( mainJob, SIGNAL(finished(KJob*)), q, SLOT(contentJobFinished(KJob*)) );
@@ -194,6 +247,51 @@ void ComposerPrivate::composeStep2()
   mainJob->start();
 }
 
+QList<ContentJobBase *> ComposerPrivate::createEncryptJobs( ContentJobBase *contentJob, bool sign ) {
+  Q_Q( Composer );
+
+  QList<ContentJobBase *> jobs;
+
+  // each SplitInfo holds a list of recipients/keys, if there is more than
+  // one item in it then it means there are secondary recipients that need
+  // different messages w/ clean headers
+  kDebug() << "starting enc jobs";
+  kDebug() << "format:" << format;
+  kDebug() << "enc data:" << encData.size();
+
+  if( encData.size() == 0 ) { // no key data! bail!
+    q->setErrorText( i18n( "No key data for recipients found." ) );
+    q->setError( Composer::IncompleteError );
+    q->emitResult();
+    return jobs;
+  }
+
+  for( int i = 0; i < encData.size(); ++i ) {
+    QPair<QStringList, std::vector<GpgME::Key> > recipients = encData[ i ];
+    kDebug() << "got first list of recipients:" << recipients.first;
+    ContentJobBase *subJob = 0;
+    if ( sign ) {
+      SignEncryptJob* seJob = new SignEncryptJob( q );
+
+      seJob->setCryptoMessageFormat( format );
+      seJob->setSigningKeys( signers );
+      seJob->setEncryptionKeys( recipients.second );
+      seJob->setRecipients( recipients.first );
+
+      subJob = seJob;
+    } else {
+      EncryptJob* eJob = new EncryptJob( q );
+      eJob->setCryptoMessageFormat( format );
+      eJob->setEncryptionKeys( recipients.second );
+      eJob->setRecipients( recipients.first );
+      subJob = eJob;
+    }
+    kDebug() << "subJob" << subJob;
+    subJob->appendSubjob( contentJob );
+    jobs.append( subJob );
+  }
+  return jobs;
+}
 
 void ComposerPrivate::contentJobPreInlineFinished( KJob *job )
 {
