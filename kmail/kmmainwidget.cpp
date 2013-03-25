@@ -133,7 +133,7 @@
 #include <kmime/kmime_message.h>
 #include <ksieveui/managesievescriptsdialog.h>
 #include <ksieveui/util.h>
-#include <ksieveui/vacation.h>
+#include <ksieveui/vacation/vacation.h>
 
 // KDELIBS includes
 #include <kaboutdata.h>
@@ -1464,8 +1464,11 @@ void KMMainWidget::slotManageSieveScripts()
   if ( !kmkernel->askToGoOnline() ) {
     return;
   }
-  KSieveUi::ManageSieveScriptsDialog * dlg = new KSieveUi::ManageSieveScriptsDialog( this );
-  dlg->show();
+  if (mManageSieveDialog)
+      return;
+
+  mManageSieveDialog = new KSieveUi::ManageSieveScriptsDialog( this );
+  mManageSieveDialog->show();
 }
 
 

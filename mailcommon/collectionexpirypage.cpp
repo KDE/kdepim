@@ -179,8 +179,9 @@ void CollectionExpiryPage::save( Akonadi::Collection &collection )
     saveAndExpire( collection, false );
 }
 
-void CollectionExpiryPage::saveAndExpire( Akonadi::Collection &collection, bool expireNow )
+void CollectionExpiryPage::saveAndExpire( Akonadi::Collection &collection, bool saveSettings )
 {
+  bool expireNow = saveSettings;
   bool enableGlobally = expireReadMailCB->isChecked() || expireUnreadMailCB->isChecked();
   const Akonadi::Collection expireToFolder = folderSelector->collection();
   if ( enableGlobally && moveToRB->isChecked() && !expireToFolder.isValid() ) {
@@ -192,19 +193,19 @@ void CollectionExpiryPage::saveAndExpire( Akonadi::Collection &collection, bool 
 
   MailCommon::ExpireCollectionAttribute *attribute = 0;
   if ( expireToFolder.isValid() && moveToRB->isChecked() ) {
-    if ( expireToFolder.id() == mCollection.id() ) {
+    if ( expireToFolder.id() == collection.id() ) {
       KMessageBox::error( this, i18n( "Please select a different folder than the current folder to expire messages into.\nIf this is not done, expired messages will be permanently deleted."),
                           i18n( "Wrong Folder Selected" ) );
       deletePermanentlyRB->setChecked( true );
       expireNow = false;				// settings are not valid
     }
     else {
-      attribute = mCollection.attribute<MailCommon::ExpireCollectionAttribute>( Akonadi::Entity::AddIfMissing );
+      attribute = collection.attribute<MailCommon::ExpireCollectionAttribute>( Akonadi::Entity::AddIfMissing );
       attribute->setExpireToFolderId( expireToFolder.id() );
     }
   }
   if ( !attribute )
-    attribute =  mCollection.attribute<MailCommon::ExpireCollectionAttribute>( Akonadi::Entity::AddIfMissing );
+    attribute =  collection.attribute<MailCommon::ExpireCollectionAttribute>( Akonadi::Entity::AddIfMissing );
 
   attribute->setAutoExpire( enableGlobally );
   // we always write out days now
@@ -219,10 +220,11 @@ void CollectionExpiryPage::saveAndExpire( Akonadi::Collection &collection, bool 
     attribute->setExpireAction( ExpireCollectionAttribute::ExpireDelete );
   else
     attribute->setExpireAction( ExpireCollectionAttribute::ExpireMove );
-
-  Akonadi::CollectionModifyJob *job = new Akonadi::CollectionModifyJob( collection, this );
-  job->setProperty( "expireNow", expireNow );
-  connect( job, SIGNAL(result(KJob*)), this, SLOT(slotCollectionModified(KJob*)) );
+  if (saveSettings) {
+      Akonadi::CollectionModifyJob *job = new Akonadi::CollectionModifyJob( collection, this );
+      job->setProperty( "expireNow", expireNow );
+      connect( job, SIGNAL(result(KJob*)), this, SLOT(slotCollectionModified(KJob*)) );
+  }
   mChanged = false;
 }
 

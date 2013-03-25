@@ -22,21 +22,21 @@
 #include <QHBoxLayout>
 
 SelectionTypeDialog::SelectionTypeDialog(QWidget *parent)
-  :KDialog(parent)
+    :KDialog(parent)
 {
-  setCaption( i18n( "Select Type" ) );
-  setButtons( Ok|Cancel );
-  setDefaultButton( Ok );
-  setModal( true );
-  QWidget *mainWidget = new QWidget( this );
-  QHBoxLayout *mainLayout = new QHBoxLayout( mainWidget );
-  mainLayout->setSpacing( KDialog::spacingHint() );
-  mainLayout->setMargin( KDialog::marginHint() );
-  mWidget = new SelectTypeWidget(this);
-  mainLayout->addWidget(mWidget);
-  setMainWidget( mainWidget );
-  enableButtonOk(false);
-  connect(mWidget,SIGNAL(itemSelected(bool)),SLOT(slotItemSelected(bool)));
+    setCaption( i18n( "Select Type" ) );
+    setButtons( Ok|Cancel );
+    setDefaultButton( Ok );
+    setModal( true );
+    QWidget *mainWidget = new QWidget( this );
+    QHBoxLayout *mainLayout = new QHBoxLayout( mainWidget );
+    mainLayout->setSpacing( KDialog::spacingHint() );
+    mainLayout->setMargin( KDialog::marginHint() );
+    mWidget = new SelectTypeWidget(this);
+    mainLayout->addWidget(mWidget);
+    setMainWidget( mainWidget );
+    enableButtonOk(false);
+    connect(mWidget,SIGNAL(itemSelected(bool)),SLOT(slotItemSelected(bool)));
 
 }
 
@@ -47,12 +47,12 @@ SelectionTypeDialog::~SelectionTypeDialog()
 
 void SelectionTypeDialog::slotItemSelected(bool selected)
 {
-  enableButtonOk(selected);
+    enableButtonOk(selected);
 }
 
 BackupMailUtil::BackupTypes SelectionTypeDialog::backupTypesSelected(int &numberOfStep) const
 {
-  return mWidget->backupTypesSelected(numberOfStep);
+    return mWidget->backupTypesSelected(numberOfStep);
 }
 
 #include "selectiontypedialog.moc"

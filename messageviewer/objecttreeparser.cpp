@@ -3089,7 +3089,7 @@ void ObjectTreeParser::writeBodyStr( const QByteArray& aStr, const QTextCodec *a
 
       // add the last Non-OpenPGP block
       QByteArray str( nonPgpBlocks.last() );
-      if( !str.isEmpty() ) {
+      if( !str.isEmpty() && str != "\n" ) {
         const QString text = aCodec->toUnicode( str );
         plainTextStr += text;
         htmlStr += quotedHTML( text, decorate );

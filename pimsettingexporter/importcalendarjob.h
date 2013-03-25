@@ -24,11 +24,11 @@ class QWidget;
 class ImportCalendarJob
 {
 public:
-  explicit ImportCalendarJob(QWidget *parent, ArchiveStorage *archiveStorage);
-  ~ImportCalendarJob();
+    explicit ImportCalendarJob(QWidget *parent, ArchiveStorage *archiveStorage);
+    ~ImportCalendarJob();
 
 
-  void restoreResources();
+    void restoreResources();
 };
 
 #endif // IMPORTCALENDARJOB_H

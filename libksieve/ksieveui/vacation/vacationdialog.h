@@ -24,19 +24,19 @@ class QCheckBox;
 template <typename T> class QList;
 
 namespace KMime {
-  namespace Types {
-    struct AddrSpec;
-    typedef QList<AddrSpec> AddrSpecList;
-  }
+namespace Types {
+struct AddrSpec;
+typedef QList<AddrSpec> AddrSpecList;
+}
 }
 
 namespace KSieveUi {
 
 class VacationDialog : public KDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     explicit VacationDialog( const QString & caption, QWidget * parent=0,
                              const char * name=0, bool modal=true );
     virtual ~VacationDialog();
@@ -65,10 +65,10 @@ class VacationDialog : public KDialog
     bool sendForSpam() const;
     virtual void setSendForSpam( bool enable );
 
-  private slots:
+private slots:
     void slotIntervalSpinChanged( int value );
 
-  protected:
+protected:
     QCheckBox   * mActiveCheck;
     KIntSpinBox * mIntervalSpin;
     KLineEdit   * mMailAliasesEdit;

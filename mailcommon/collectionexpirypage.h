@@ -58,7 +58,7 @@ protected slots:
     void slotSaveAndExpire();
 
 private:
-    void saveAndExpire( Akonadi::Collection &collection, bool expireNow );
+    void saveAndExpire( Akonadi::Collection &collection, bool saveSettings );
 
 private:
     QCheckBox *expireReadMailCB;

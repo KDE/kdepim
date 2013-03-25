@@ -18,7 +18,7 @@
 
 #include "sieveeditor.h"
 #include "sievefindbar.h"
-#include "sievetemplatewidget.h"
+#include "templates/sievetemplatewidget.h"
 
 #include <klocale.h>
 #include <kiconloader.h>
@@ -70,7 +70,7 @@ SieveEditor::SieveEditor( QWidget * parent )
 
 
     //
-    SieveTemplateWidget *w = new SieveTemplateWidget;
+    SieveTemplateWidget *sieveTemplateWidget = new SieveTemplateWidget;
 
     QWidget *textEditWidget = new QWidget;
     QVBoxLayout * textEditLayout = new QVBoxLayout;
@@ -81,8 +81,11 @@ SieveEditor::SieveEditor( QWidget * parent )
     textEditWidget->setLayout(textEditLayout);
 
     templateSplitter->addWidget(textEditWidget);
-    templateSplitter->addWidget(w);
+    templateSplitter->addWidget(sieveTemplateWidget);
     templateSplitter->setSizes( size );
+
+    connect(sieveTemplateWidget, SIGNAL(insertTemplate(QString)), mTextEdit, SLOT(insertPlainText(QString)));
+
     //
     QShortcut *shortcut = new QShortcut( this );
     shortcut->setKey( Qt::Key_F+Qt::CTRL );
@@ -134,8 +137,7 @@ void SieveEditor::slotSaveAs()
 
     fdlg->setMode( KFile::File );
     fdlg->setOperationMode( KFileDialog::Saving );
-    if ( fdlg->exec() == QDialog::Accepted && fdlg )
-    {
+    if ( fdlg->exec() == QDialog::Accepted && fdlg ) {
         const QString fileName = fdlg->selectedFile();
         if ( !saveToFile( fileName ) )
         {

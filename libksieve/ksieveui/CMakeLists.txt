@@ -6,19 +6,19 @@ include_directories(${CMAKE_SOURCE_DIR}/libksieve
 add_subdirectory(tests)
 
 set(ksieveui_LIB_SRCS
-  sievelinenumberarea.cpp
   managesievescriptsdialog.cpp
   sievedebugdialog.cpp
   util.cpp
-  vacation.cpp
-  vacationdialog.cpp
-  sievesyntaxhighlighter.cpp
-  sievetextedit.cpp
-  sieveeditor.cpp
-  sievefindbar.cpp
-  sievetemplatewidget.cpp
-  sievedefaulttemplate.cpp 
-  sievetemplateeditdialog.cpp 
+  vacation/vacation.cpp
+  vacation/vacationdialog.cpp
+  editor/sievefindbar.cpp
+  editor/sievesyntaxhighlighter.cpp
+  editor/sievetextedit.cpp
+  editor/sieveeditor.cpp
+  editor/sievelinenumberarea.cpp
+  templates/sievetemplatewidget.cpp
+  templates/sievedefaulttemplate.cpp 
+  templates/sievetemplateeditdialog.cpp 
 )
 
 kde4_add_kcfg_files(ksieveui_LIB_SRCS settings.kcfgc)

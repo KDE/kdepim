@@ -21,20 +21,20 @@
 #include <QWidget>
 
 namespace KPIM {
-  class CustomLogWidget;
+class CustomLogWidget;
 }
 
 class BackupMailWidget : public QWidget
 {
 public:
-  explicit BackupMailWidget(QWidget *parent);
-  ~BackupMailWidget();
-  void addInfoLogEntry( const QString& log );
-  void addErrorLogEntry( const QString& log );
-  void clear();
+    explicit BackupMailWidget(QWidget *parent);
+    ~BackupMailWidget();
+    void addInfoLogEntry( const QString& log );
+    void addErrorLogEntry( const QString& log );
+    void clear();
 
 private:
-  KPIM::CustomLogWidget *mCustomLogWidget;
+    KPIM::CustomLogWidget *mCustomLogWidget;
 };
 
 #endif // BACKUPMAILWIDGET_H

@@ -26,21 +26,21 @@ class ImportMailJob;
 
 class BackupMailWindow: public KXmlGuiWindow
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit BackupMailWindow(QWidget *parent=0);
-  ~BackupMailWindow();
+    explicit BackupMailWindow(QWidget *parent=0);
+    ~BackupMailWindow();
 private Q_SLOTS:
-  void slotBackupData();
-  void slotRestoreData();
-  void slotAddInfo(const QString& info);
-  void slotAddError(const QString& info);
+    void slotBackupData();
+    void slotRestoreData();
+    void slotAddInfo(const QString& info);
+    void slotAddError(const QString& info);
 private:
-  bool canZip() const;
-  void setupActions(bool canZipFile);
-  BackupMailWidget *mBackupMailWidget;
-  ExportMailJob *mBackupData;
-  ImportMailJob *mRestoreData;
+    bool canZip() const;
+    void setupActions(bool canZipFile);
+    BackupMailWidget *mBackupMailWidget;
+    ExportMailJob *mBackupData;
+    ImportMailJob *mRestoreData;
 };
 
 

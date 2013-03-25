@@ -25,13 +25,13 @@ class ArchiveStorage;
 
 class ExportCalendarJob : public AbstractImportExportJob
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit ExportCalendarJob(QWidget *parent, ArchiveStorage *archiveStorage);
-  ~ExportCalendarJob();
-  void start();
+    explicit ExportCalendarJob(QWidget *parent, ArchiveStorage *archiveStorage);
+    ~ExportCalendarJob();
+    void start();
 private:
-  void backupResources();
+    void backupResources();
 };
 
 #endif // EXPORTCALENDARJOB_H

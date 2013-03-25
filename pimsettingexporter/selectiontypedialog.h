@@ -25,16 +25,16 @@ class SelectTypeWidget;
 
 class SelectionTypeDialog : public KDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit SelectionTypeDialog(QWidget * parent);
-  ~SelectionTypeDialog();
-  BackupMailUtil::BackupTypes backupTypesSelected(int &numberOfStep) const;
+    explicit SelectionTypeDialog(QWidget * parent);
+    ~SelectionTypeDialog();
+    BackupMailUtil::BackupTypes backupTypesSelected(int &numberOfStep) const;
 private Q_SLOTS:
-  void slotItemSelected(bool selected);
+    void slotItemSelected(bool selected);
 
 private:
-  SelectTypeWidget *mWidget;
+    SelectTypeWidget *mWidget;
 };
 
 #endif // SELECTIONTYPEDIALOG_H

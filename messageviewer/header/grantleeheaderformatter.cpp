@@ -20,8 +20,6 @@
 #include "headerstyle_util.h"
 #include "globalsettings.h"
 #include "config-messageviewer.h"
-#include "contactdisplaymessagememento.h"
-#include "kxface.h"
 
 #include <kpimutils/email.h>
 #include <messagecore/stringutil.h>
@@ -77,9 +75,7 @@ QString GrantleeHeaderFormatter::toHtml(const QString &themeName, bool isPrintin
     Grantlee::Template headerTemplate = d->engine->loadByName( themeName + "/header.html" );
     QString errorMessage;
     if ( headerTemplate->error() ) {
-        errorMessage += headerTemplate->errorString();
-    }
-    if ( !errorMessage.isEmpty() ) {
+        errorMessage = headerTemplate->errorString();
         return errorMessage;
     }
 
@@ -147,7 +143,7 @@ QString GrantleeHeaderFormatter::toHtml(const QString &themeName, bool isPrintin
     const QColor activeColor = KColorScheme( QPalette::Active, KColorScheme::Selection ).background().color();
     QColor activeColorDark = activeColor.dark(130);
     // reverse colors for encapsulated
-    if( !style->isTopLevel() ){
+    if ( !style->isTopLevel() ) {
         activeColorDark = activeColor.dark(50);
         fontColor = QColor(Qt::black);
         linkColor = QLatin1String("black");
@@ -160,8 +156,7 @@ QString GrantleeHeaderFormatter::toHtml(const QString &themeName, bool isPrintin
 
 
     MessageViewer::HeaderStyleUtil::xfaceSettings xface = MessageViewer::HeaderStyleUtil::xface(style, message);
-    if( !xface.photoURL.isEmpty() )
-    {
+    if ( !xface.photoURL.isEmpty() ) {
         headerObject.insert( QLatin1String( "photowidth" ) , xface.photoWidth );
         headerObject.insert( QLatin1String( "photoheight" ) , xface.photoHeight );
         headerObject.insert( QLatin1String( "photourl" ) , xface.photoURL );

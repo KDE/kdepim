@@ -1,4 +1,4 @@
-/* Copyright (C) 2012 Laurent Montel <montel@kde.org>
+/* Copyright (C) 2011, 2012, 2013 Laurent Montel <montel@kde.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -16,23 +16,45 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "sievelinenumberarea.h"
-#include "sievetextedit.h"
+#ifndef KSIEVE_KSIEVEUI_SIEVESYNTAXHIGHLIGHTER_H
+#define KSIEVE_KSIEVEUI_SIEVESYNTAXHIGHLIGHTER_H
 
-using namespace KSieveUi;
+#include "ksieveui_export.h"
 
-SieveLineNumberArea::SieveLineNumberArea(SieveTextEdit *editor)
-  : QWidget( editor ),
-    m_sieveTextEdit( editor )
+#include <QList>
+#include <QRegExp>
+#include <QSyntaxHighlighter>
+
+class QTextDocument;
+
+namespace KSieveUi {
+
+class KSIEVEUI_EXPORT SieveSyntaxHighlighter : public QSyntaxHighlighter
 {
+    Q_OBJECT
+
+public:
+    explicit SieveSyntaxHighlighter( QTextDocument* doc );
+    ~SieveSyntaxHighlighter();
+
+    void highlightBlock(const QString& text);
+
+private:
+    void init();
+
+    struct Rule {
+        QRegExp pattern;
+        QTextCharFormat format;
+
+        Rule( const QRegExp & r, const QTextCharFormat & f )
+            : pattern(r), format(f) {}
+    };
+
+    QList<Rule> m_rules;
+
+};
+
 }
 
-QSize SieveLineNumberArea::sizeHint() const
-{
-  return QSize(m_sieveTextEdit->lineNumberAreaWidth(), 0);
-}
-  
-void SieveLineNumberArea::paintEvent(QPaintEvent *event)
-{
-  m_sieveTextEdit->lineNumberAreaPaintEvent(event);
-}
+#endif
+

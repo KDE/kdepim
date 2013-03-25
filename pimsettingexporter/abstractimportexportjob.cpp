@@ -25,64 +25,64 @@
 #include <QProgressDialog>
 
 AbstractImportExportJob::AbstractImportExportJob(QWidget *parent, ArchiveStorage *archiveStorage, BackupMailUtil::BackupTypes typeSelected, int numberOfStep)
-  : QObject(parent),
-    mTypeSelected(typeSelected),
-    mArchiveStorage(archiveStorage),
-    mIdentityManager(new KPIMIdentities::IdentityManager( false, this, "mIdentityManager" )),
-    mParent(parent),
-    mProgressDialog(0),
-    mNumberOfStep(numberOfStep)
+    : QObject(parent),
+      mTypeSelected(typeSelected),
+      mArchiveStorage(archiveStorage),
+      mIdentityManager(new KPIMIdentities::IdentityManager( false, this, "mIdentityManager" )),
+      mParent(parent),
+      mProgressDialog(0),
+      mNumberOfStep(numberOfStep)
 {
 }
 
 AbstractImportExportJob::~AbstractImportExportJob()
 {
-  delete mIdentityManager;
+    delete mIdentityManager;
 }
 
 QProgressDialog *AbstractImportExportJob::progressDialog()
 {
-  return mProgressDialog;
+    return mProgressDialog;
 }
 
 void AbstractImportExportJob::createProgressDialog()
 {
-  if(!mProgressDialog) {
-    mProgressDialog = new QProgressDialog(mParent);
-    mProgressDialog->setWindowModality(Qt::WindowModal);
-    mProgressDialog->setMinimum(0);
-    mProgressDialog->setMaximum(mNumberOfStep);
-  }
-  mProgressDialog->show();
-  mProgressDialog->setValue(0);
+    if (!mProgressDialog) {
+        mProgressDialog = new QProgressDialog(mParent);
+        mProgressDialog->setWindowModality(Qt::WindowModal);
+        mProgressDialog->setMinimum(0);
+        mProgressDialog->setMaximum(mNumberOfStep);
+    }
+    mProgressDialog->show();
+    mProgressDialog->setValue(0);
 }
 
 
 bool AbstractImportExportJob::wasCanceled() const
 {
-  if(mProgressDialog)
-    return mProgressDialog->wasCanceled();
-  return false;
+    if (mProgressDialog)
+        return mProgressDialog->wasCanceled();
+    return false;
 }
 
 void AbstractImportExportJob::increaseProgressDialog()
 {
-  if(mProgressDialog) {
-    mProgressDialog->setValue(mProgressDialog->value()+1);
-  }
+    if (mProgressDialog) {
+        mProgressDialog->setValue(mProgressDialog->value()+1);
+    }
 }
 
 void AbstractImportExportJob::showInfo(const QString&text)
 {
-  if(mProgressDialog) {
-    mProgressDialog->setLabelText(text);
-  }
-  Q_EMIT info(text);
+    if (mProgressDialog) {
+        mProgressDialog->setLabelText(text);
+    }
+    Q_EMIT info(text);
 }
 
 KZip *AbstractImportExportJob::archive()
 {
-  return mArchiveStorage->archive();
+    return mArchiveStorage->archive();
 }
 
 #include "abstractimportexportjob.moc"

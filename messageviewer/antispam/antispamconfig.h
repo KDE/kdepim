@@ -44,38 +44,38 @@ namespace MessageViewer {
 
 /// Valid types of SpamAgent
 enum SpamAgentTypes {
-  SpamAgentNone,          //!< Invalid SpamAgent, skip this agent
-  SpamAgentBool,          //!< Simple Yes or No (Razor)
-  SpamAgentFloat,         //!< For straight percentages between 0.0 and 1.0 (BogoFilter)
-  SpamAgentFloatLarge,    //!< For straight percentages between 0.0 and 100.0
-  SpamAgentAdjustedFloat  //!< Use this when we need to compare against a threshold (SpamAssasssin)
+    SpamAgentNone,          //!< Invalid SpamAgent, skip this agent
+    SpamAgentBool,          //!< Simple Yes or No (Razor)
+    SpamAgentFloat,         //!< For straight percentages between 0.0 and 1.0 (BogoFilter)
+    SpamAgentFloatLarge,    //!< For straight percentages between 0.0 and 100.0
+    SpamAgentAdjustedFloat  //!< Use this when we need to compare against a threshold (SpamAssasssin)
 };
 
 class SpamAgent
 {
 public:
-  SpamAgent() : mType( SpamAgentNone ) {}
-  SpamAgent( const QString & name, SpamAgentTypes type, const QByteArray & field, const QByteArray & cfield,
-              const QRegExp & score, const QRegExp & threshold, const QRegExp & confidence )
-    : mName( name ), mType( type ), mField( field ), mConfidenceField( cfield ),
-      mScore( score ), mThreshold( threshold ), mConfidence( confidence ) {}
+    SpamAgent() : mType( SpamAgentNone ) {}
+    SpamAgent( const QString & name, SpamAgentTypes type, const QByteArray & field, const QByteArray & cfield,
+               const QRegExp & score, const QRegExp & threshold, const QRegExp & confidence )
+        : mName( name ), mType( type ), mField( field ), mConfidenceField( cfield ),
+          mScore( score ), mThreshold( threshold ), mConfidence( confidence ) {}
 
-  QString name() const { return mName; }
-  SpamAgentTypes scoreType() const { return mType; }
-  QByteArray header() const { return mField; }
-  QByteArray confidenceHeader() const { return mConfidenceField; }
-  QRegExp scorePattern() const { return mScore; }
-  QRegExp thresholdPattern() const { return mThreshold; }
-  QRegExp confidencePattern() const { return mConfidence; }
+    QString name() const { return mName; }
+    SpamAgentTypes scoreType() const { return mType; }
+    QByteArray header() const { return mField; }
+    QByteArray confidenceHeader() const { return mConfidenceField; }
+    QRegExp scorePattern() const { return mScore; }
+    QRegExp thresholdPattern() const { return mThreshold; }
+    QRegExp confidencePattern() const { return mConfidence; }
 
 private:
-  QString mName;
-  SpamAgentTypes mType;
-  QByteArray mField;
-  QByteArray mConfidenceField;
-  QRegExp mScore;
-  QRegExp mThreshold;
-  QRegExp mConfidence;
+    QString mName;
+    SpamAgentTypes mType;
+    QByteArray mField;
+    QByteArray mConfidenceField;
+    QRegExp mScore;
+    QRegExp mThreshold;
+    QRegExp mConfidence;
 };
 typedef QVector<SpamAgent> SpamAgents;
 
@@ -91,33 +91,32 @@ class AntiSpamConfigSingletonProvider;
     public member functions.
   */
 class MESSAGEVIEWER_EXPORT AntiSpamConfig {
-friend class AntiSpamConfigSingletonProvider;
+    friend class AntiSpamConfigSingletonProvider;
 private:
-  AntiSpamConfig();
+    AntiSpamConfig();
 
 public:
-  ~AntiSpamConfig();
+    ~AntiSpamConfig();
 
-  static AntiSpamConfig * instance();
+    static AntiSpamConfig * instance();
 
-  /**
+    /**
     * Returns a list of all agents found on the system. This
     * might list SA twice, if both the C and the Perl version are present.
     */
-  const SpamAgents agents() const { return mAgents; }
-  SpamAgents agents() { return mAgents; }
+    const SpamAgents agents() const { return mAgents; }
 
-  /**
+    /**
     * Returns a list of unique agents, found on the system. SpamAssassin will
     * only be listed once, even if both the C and the Perl version are
     * installed.
     */
-  const SpamAgents uniqueAgents() const;
+    const SpamAgents uniqueAgents() const;
 
 private:
-  SpamAgents mAgents;
+    SpamAgents mAgents;
 
-  void readConfig();
+    void readConfig();
 };
 
 }

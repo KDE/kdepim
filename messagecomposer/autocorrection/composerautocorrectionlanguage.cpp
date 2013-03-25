@@ -25,7 +25,7 @@ ComposerAutoCorrectionLanguage::ComposerAutoCorrectionLanguage(QWidget *parent)
     : KComboBox(parent)
 {
     KLocale *locale = KGlobal::locale();
-    QStringList lstLang = locale->allLanguagesList();
+    const QStringList lstLang = locale->allLanguagesList();
     Q_FOREACH (const QString& lang, lstLang) {
         if (lang != QLatin1String("x-test")) {
             addItem ( locale->languageCodeToName(lang) , lang );
@@ -35,7 +35,6 @@ ComposerAutoCorrectionLanguage::ComposerAutoCorrectionLanguage(QWidget *parent)
     const int index = findData(defaultLang);
     setCurrentIndex(index);
     model()->sort(0);
-
 }
 
 ComposerAutoCorrectionLanguage::~ComposerAutoCorrectionLanguage()

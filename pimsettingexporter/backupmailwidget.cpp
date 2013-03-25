@@ -24,12 +24,12 @@
 
 
 BackupMailWidget::BackupMailWidget(QWidget * parent)
-  :QWidget(parent)
+    :QWidget(parent)
 {
-  QHBoxLayout *layout = new QHBoxLayout;
-  mCustomLogWidget = new KPIM::CustomLogWidget;
-  layout->addWidget(mCustomLogWidget);
-  setLayout(layout);
+    QHBoxLayout *layout = new QHBoxLayout;
+    mCustomLogWidget = new KPIM::CustomLogWidget;
+    layout->addWidget(mCustomLogWidget);
+    setLayout(layout);
 }
 
 BackupMailWidget::~BackupMailWidget()
@@ -39,16 +39,16 @@ BackupMailWidget::~BackupMailWidget()
 
 void BackupMailWidget::clear()
 {
-  mCustomLogWidget->clear();
+    mCustomLogWidget->clear();
 }
 
 void BackupMailWidget::addInfoLogEntry( const QString& log )
 {
-  mCustomLogWidget->addInfoLogEntry(log);
+    mCustomLogWidget->addInfoLogEntry(log);
 }
 
 void BackupMailWidget::addErrorLogEntry( const QString& log )
 {
-  mCustomLogWidget->addErrorLogEntry(log);
+    mCustomLogWidget->addErrorLogEntry(log);
 }
 

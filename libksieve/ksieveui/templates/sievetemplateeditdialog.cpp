@@ -16,7 +16,8 @@
 */
 
 #include "sievetemplateeditdialog.h"
-#include "sievetextedit.h"
+#include "editor/sievefindbar.h"
+#include "editor/sievetextedit.h"
 
 #include <KLocale>
 #include <KLineEdit>
@@ -24,15 +25,19 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QLabel>
+#include <QShortcut>
 
 
 using namespace KSieveUi;
 
-SieveTemplateEditDialog::SieveTemplateEditDialog(QWidget *parent)
+SieveTemplateEditDialog::SieveTemplateEditDialog(QWidget *parent, bool defaultTemplate)
     : KDialog(parent)
 {
-    setCaption( i18n("Templates") );
-    setButtons( Ok |Cancel );
+    setCaption( defaultTemplate ? i18n("Default template") : i18n("Template") );
+    if (defaultTemplate)
+        setButtons( Close );
+    else
+        setButtons( Ok |Cancel );
 
     QWidget *w = new QWidget;
     QVBoxLayout *vbox = new QVBoxLayout;
@@ -42,17 +47,29 @@ SieveTemplateEditDialog::SieveTemplateEditDialog(QWidget *parent)
     hbox->addWidget(label);
 
     mTemplateNameEdit = new KLineEdit;
+    mTemplateNameEdit->setEnabled(!defaultTemplate);
     hbox->addWidget(mTemplateNameEdit);
 
     vbox->addLayout(hbox);
 
     mTextEdit = new KSieveUi::SieveTextEdit;
+    mTextEdit->setReadOnly(defaultTemplate);
     vbox->addWidget(mTextEdit);
+
+    mFindBar = new SieveFindBar( mTextEdit, this );
+    vbox->addWidget(mFindBar);
+
+    QShortcut *shortcut = new QShortcut( this );
+    shortcut->setKey( Qt::Key_F+Qt::CTRL );
+    connect( shortcut, SIGNAL(activated()), SLOT(slotFind()) );
+    connect( mTextEdit, SIGNAL(findText()), SLOT(slotFind()) );
 
     w->setLayout(vbox);
     setMainWidget(w);
-    enableButtonOk(false);
-    connect(mTemplateNameEdit, SIGNAL(textChanged(QString)),SLOT(slotTemplateNameChanged(QString)));
+    if (!defaultTemplate) {
+        enableButtonOk(false);
+        connect(mTemplateNameEdit, SIGNAL(textChanged(QString)),SLOT(slotTemplateNameChanged(QString)));
+    }
     readConfig();
 }
 
@@ -60,6 +77,16 @@ SieveTemplateEditDialog::~SieveTemplateEditDialog()
 {
     writeConfig();
 }
+
+void SieveTemplateEditDialog::slotFind()
+{
+    if ( mTextEdit->textCursor().hasSelection() )
+        mFindBar->setText( mTextEdit->textCursor().selectedText() );
+    mTextEdit->moveCursor(QTextCursor::Start);
+    mFindBar->show();
+    mFindBar->focusAndSetCursor();
+}
+
 
 void SieveTemplateEditDialog::writeConfig()
 {

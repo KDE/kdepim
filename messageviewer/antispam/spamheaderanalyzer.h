@@ -42,14 +42,14 @@
 namespace MessageViewer {
 
 enum SpamError {
-  noError,
-  uninitializedStructUsed,
-  errorExtractingAgentString,
-  couldNotConverScoreToFloat,
-  couldNotConvertThresholdToFloatOrThresholdIsNegative,
-  couldNotFindTheScoreField,
-  couldNotFindTheThresholdField,
-  couldNotConvertConfidenceToFloat
+    noError,
+    uninitializedStructUsed,
+    errorExtractingAgentString,
+    couldNotConverScoreToFloat,
+    couldNotConvertThresholdToFloatOrThresholdIsNegative,
+    couldNotFindTheScoreField,
+    couldNotFindTheThresholdField,
+    couldNotConvertConfidenceToFloat
 };
 
 /**
@@ -68,26 +68,26 @@ enum SpamError {
 */
 class SpamScore {
 public:
-  
-  SpamScore() : mScore( -2.0 ), mConfidence( -2.0 ) {}
-  SpamScore( const QString & agent, SpamError error, float score, float confidence,
-      const QString & header, const QString & cheader )
-    : mAgent( agent ), mError( error ), mScore( score ), mConfidence( confidence ),
-        mHeader( header ), mConfidenceHeader( cheader ) {}
-  QString agent() const { return mAgent; }
-  float score() const { return mScore; }
-  float confidence() const { return mConfidence; }
-  SpamError error() const { return mError; }
-  QString spamHeader() const { return mHeader; }
-  QString confidenceHeader() const { return mConfidenceHeader; }
+
+    SpamScore() : mScore( -2.0 ), mConfidence( -2.0 ) {}
+    SpamScore( const QString & agent, SpamError error, float score, float confidence,
+               const QString & header, const QString & cheader )
+        : mAgent( agent ), mError( error ), mScore( score ), mConfidence( confidence ),
+          mHeader( header ), mConfidenceHeader( cheader ) {}
+    QString agent() const { return mAgent; }
+    float score() const { return mScore; }
+    float confidence() const { return mConfidence; }
+    SpamError error() const { return mError; }
+    QString spamHeader() const { return mHeader; }
+    QString confidenceHeader() const { return mConfidenceHeader; }
 
 private:
-  QString mAgent;
-  SpamError mError;
-  float mScore;
-  float mConfidence;
-  QString mHeader;
-  QString mConfidenceHeader;
+    QString mAgent;
+    SpamError mError;
+    float mScore;
+    float mConfidence;
+    QString mHeader;
+    QString mConfidenceHeader;
 };
 typedef QVector<SpamScore> SpamScores;
 
@@ -98,12 +98,12 @@ typedef QVector<SpamScore> SpamScores;
   */
 class SpamHeaderAnalyzer {
 public:
-  /**
+    /**
       @short Extract scores from known anti-spam headers
       @param message A KMime::Message to examine
       @return A list of detected scores. See SpamScore
   */
-  static SpamScores getSpamScores( KMime::Message *message );
+    static SpamScores getSpamScores( KMime::Message *message );
 };
 
 }

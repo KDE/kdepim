@@ -166,8 +166,8 @@ void ObjectTreeParserTester::test_inlinePGPDecryption()
   otp.parseObjectTree( msg.get() );
   qInstallMsgHandler(0);
 
-  QCOMPARE( otp.plainTextContent().toLatin1().data(), "some random text\n" );
-  QCOMPARE( otp.convertedTextContent().toLatin1().data(), "some random text\n\n" );
+  QCOMPARE( otp.plainTextContent().toLatin1().data(), "some random text" );
+  QCOMPARE( otp.convertedTextContent().toLatin1().data(), "some random text\n" );
   QVERIFY( otp.htmlContent().isEmpty() );
 }
 

@@ -27,29 +27,29 @@
 
 int main(int argc, char *argv[])
 {
-  KLocale::setMainCatalog("pimsettingexporter");
+    KLocale::setMainCatalog("pimsettingexporter");
 
-  KAboutData aboutData( "pimsettingexporter", 0, ki18n("PIM Setting Exporter"),
-    KDEPIM_VERSION, ki18n("PIM Setting Exporter"), KAboutData::License_GPL_V2,
-    ki18n("Copyright © 2012-2013 pimsettingexporter authors"));
-  aboutData.addAuthor(ki18n("Laurent Montel"), ki18n("Maintainer"), "montel@kde.org");
-  aboutData.setProgramIconName(QLatin1String("kontact"));
-  KCmdLineArgs::init( argc, argv, &aboutData );
+    KAboutData aboutData( "pimsettingexporter", 0, ki18n("PIM Setting Exporter"),
+                          KDEPIM_VERSION, ki18n("PIM Setting Exporter"), KAboutData::License_GPL_V2,
+                          ki18n("Copyright © 2012-2013 pimsettingexporter authors"));
+    aboutData.addAuthor(ki18n("Laurent Montel"), ki18n("Maintainer"), "montel@kde.org");
+    aboutData.setProgramIconName(QLatin1String("kontact"));
+    KCmdLineArgs::init( argc, argv, &aboutData );
 
-  KCmdLineOptions options;
-  KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
+    KCmdLineOptions options;
+    KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
 
-  KUniqueApplication::addCmdLineOptions();
+    KUniqueApplication::addCmdLineOptions();
 
-  if (!KUniqueApplication::start())
-  {
-    kDebug() << "pimsettingexporter is already running!";
-    return (0);
-  }
-  KUniqueApplication a;
-  BackupMailWindow *backupMailWin = new BackupMailWindow();
-  a.setTopWidget(backupMailWin);
-  backupMailWin->show();
+    if (!KUniqueApplication::start())
+    {
+        kDebug() << "pimsettingexporter is already running!";
+        return (0);
+    }
+    KUniqueApplication a;
+    BackupMailWindow *backupMailWin = new BackupMailWindow();
+    a.setTopWidget(backupMailWin);
+    backupMailWin->show();
 
-  return a.exec();
+    return a.exec();
 }

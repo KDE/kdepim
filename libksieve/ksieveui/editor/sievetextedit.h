@@ -31,33 +31,33 @@ class SieveLineNumberArea;
 
 class KSIEVEUI_EXPORT SieveTextEdit : public QPlainTextEdit
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     explicit SieveTextEdit( QWidget *parent = 0 );
     ~SieveTextEdit();
 
     void lineNumberAreaPaintEvent(QPaintEvent *event);
     int lineNumberAreaWidth();
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void slotInsertCompletion( const QString& );
     void slotUpdateLineNumberAreaWidth(int newBlockCount);
     void slotUpdateLineNumberArea(const QRect &, int);
     void slotUndoableClear();
     void slotSpeakText();
 
-  protected:
+protected:
     QString wordUnderCursor() const;
     void initCompleter();
     void keyPressEvent(QKeyEvent* e);
     void resizeEvent(QResizeEvent *event);
     void contextMenuEvent( QContextMenuEvent *event );
 
-  signals:
+signals:
     void findText();
 
-  private:
+private:
     QCompleter *m_completer;
     SieveLineNumberArea *m_sieveLineNumberArea;
 };

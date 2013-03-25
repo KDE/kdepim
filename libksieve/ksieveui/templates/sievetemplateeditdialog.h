@@ -24,11 +24,12 @@ class KLineEdit;
 
 namespace KSieveUi {
 class SieveTextEdit;
+class SieveFindBar;
 class SieveTemplateEditDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit SieveTemplateEditDialog(QWidget *parent = 0);
+    explicit SieveTemplateEditDialog(QWidget *parent = 0, bool defaultTemplate = false);
     ~SieveTemplateEditDialog();
 
     void setTemplateName(const QString &name);
@@ -39,11 +40,13 @@ public:
 
 private Q_SLOTS:
     void slotTemplateNameChanged(const QString &);
+    void slotFind();
 
 private:
     void readConfig();
     void writeConfig();
     SieveTextEdit *mTextEdit;
+    SieveFindBar *mFindBar;
     KLineEdit *mTemplateNameEdit;
 };
 }

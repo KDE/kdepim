@@ -1,4 +1,4 @@
-/* Copyright (C) 2012 Laurent Montel <montel@kde.org>
+/* Copyright (C) 2012, 2013 Laurent Montel <montel@kde.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -27,15 +27,15 @@ class SieveTextEdit;
 
 class SieveLineNumberArea : public QWidget
 {
-  public:
+public:
     explicit SieveLineNumberArea(SieveTextEdit *editor);
 
     QSize sizeHint() const;
 
-  protected:
+protected:
     void paintEvent(QPaintEvent *event);
 
-  private:
+private:
     SieveTextEdit *m_sieveTextEdit;
 };
 

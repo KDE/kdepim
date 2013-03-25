@@ -171,16 +171,18 @@ void SignEncryptJob::process()
   kDebug() << "creating signencrypt from:" << proto->name() << proto->displayName();
   std::auto_ptr<Kleo::SignEncryptJob> job( proto->signEncryptJob( !d->binaryHint( d->format ), d->format == Kleo::InlineOpenPGPFormat ) );
   QByteArray encBody;
+  d->content->assemble();
 
   // replace simple LFs by CRLFs for all MIME supporting CryptPlugs
   // according to RfC 2633, 3.1.1 Canonicalization
-  d->content->assemble();
   QByteArray content;
   if( d->format & Kleo::InlineOpenPGPFormat ) {
-    content = KMime::LFtoCRLF( d->content->body() );
-  } else {
+    content = d->content->body();
+  } else if (  !(  d->format & Kleo::SMIMEOpaqueFormat ) )  {
     content = KMime::LFtoCRLF( d->content->encodedContent() );
-  } 
+  } else {                    // SMimeOpaque doesn't need LFtoCRLF, else it gets munged
+    content = d->content->encodedContent();
+  }
 
 
   // FIXME: Make this async
@@ -205,7 +207,7 @@ void SignEncryptJob::process()
   QByteArray signatureHashAlgo =  res.first.createdSignature( 0 ).hashAlgorithmAsString();
 
   d->resultContent = Message::Util::composeHeadersAndBody( d->content, encBody, d->format, true, signatureHashAlgo );
-//  d->resultContent->setBody( signature );
+
   emitResult();
 }
 

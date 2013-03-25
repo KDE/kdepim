@@ -46,7 +46,7 @@ namespace MessageViewer {
 
 class AntiSpamConfigSingletonProvider
 {
-  public:
+public:
     AntiSpamConfig instance;
 };
 
@@ -54,60 +54,60 @@ K_GLOBAL_STATIC( AntiSpamConfigSingletonProvider, theAntiSpamConfigSingletonProv
 
 AntiSpamConfig * AntiSpamConfig::instance()
 {
-  // better safe than sorry; check whether the global static has already been destroyed
-  if ( theAntiSpamConfigSingletonProvider.isDestroyed() )
-  {
-    return 0;
-  }
-  return &theAntiSpamConfigSingletonProvider->instance;
+    // better safe than sorry; check whether the global static has already been destroyed
+    if ( theAntiSpamConfigSingletonProvider.isDestroyed() )
+    {
+        return 0;
+    }
+    return &theAntiSpamConfigSingletonProvider->instance;
 }
 
 AntiSpamConfig::AntiSpamConfig()
 {
-  // A post routine can be used to delete the object when QCoreApplication destructs,
-  // not adding such a post routine will delete the object normally at program unload
-  qAddPostRoutine(theAntiSpamConfigSingletonProvider.destroy);
-  readConfig();
+    // A post routine can be used to delete the object when QCoreApplication destructs,
+    // not adding such a post routine will delete the object normally at program unload
+    qAddPostRoutine(theAntiSpamConfigSingletonProvider.destroy);
+    readConfig();
 }
 
 AntiSpamConfig::~AntiSpamConfig()
 {
- // When you install a post routine you have to remove the post routine from the destructor of
- // the class used as global static!
- qRemovePostRoutine(theAntiSpamConfigSingletonProvider.destroy);
+    // When you install a post routine you have to remove the post routine from the destructor of
+    // the class used as global static!
+    qRemovePostRoutine(theAntiSpamConfigSingletonProvider.destroy);
 }
 
 
 void AntiSpamConfig::readConfig()
 {
-  mAgents.clear();
-  KConfig config( "kmail.antispamrc" );
-  config.setReadDefaults( true );
-  KConfigGroup general( &config, "General" );
-  unsigned int totalTools = general.readEntry( "tools", 0 );
-  for ( unsigned int i = 1; i <= totalTools; ++i ) {
-    KConfigGroup tool( &config, QString::fromLatin1("Spamtool #%1").arg( i ) );
-    if ( tool.hasKey( "ScoreHeader" ) ) {
-      QString name        = tool.readEntry( "ScoreName" );
-      QByteArray header   = tool.readEntry( "ScoreHeader" ).toLatin1();
-      QByteArray cheader  = tool.readEntry( "ConfidenceHeader" ).toLatin1();
-      QByteArray type     = tool.readEntry( "ScoreType" ).toLatin1();
-      QString score       = tool.readEntryUntranslated( "ScoreValueRegexp" );
-      QString threshold   = tool.readEntryUntranslated( "ScoreThresholdRegexp" );
-      QString confidence  = tool.readEntryUntranslated( "ScoreConfidenceRegexp" );
-      SpamAgentTypes typeE = SpamAgentNone;
-      if ( kasciistricmp( type.data(), "bool" ) == 0 )
-        typeE = SpamAgentBool;
-      else if ( kasciistricmp( type.data(), "decimal" ) == 0 )
-        typeE = SpamAgentFloat;
-      else if ( kasciistricmp( type.data(), "percentage" ) == 0 )
-        typeE = SpamAgentFloatLarge;
-      else if ( kasciistricmp( type.data(), "adjusted" ) == 0 )
-        typeE = SpamAgentAdjustedFloat;
-      mAgents.append( SpamAgent( name, typeE, header, cheader, QRegExp( score ),
-                                 QRegExp( threshold ), QRegExp( confidence ) ) );
+    mAgents.clear();
+    KConfig config( "kmail.antispamrc" );
+    config.setReadDefaults( true );
+    KConfigGroup general( &config, "General" );
+    unsigned int totalTools = general.readEntry( "tools", 0 );
+    for ( unsigned int i = 1; i <= totalTools; ++i ) {
+        KConfigGroup tool( &config, QString::fromLatin1("Spamtool #%1").arg( i ) );
+        if ( tool.hasKey( "ScoreHeader" ) ) {
+            const QString name        = tool.readEntry( "ScoreName" );
+            const QByteArray header   = tool.readEntry( "ScoreHeader" ).toLatin1();
+            const QByteArray cheader  = tool.readEntry( "ConfidenceHeader" ).toLatin1();
+            const QByteArray type     = tool.readEntry( "ScoreType" ).toLatin1();
+            const QString score       = tool.readEntryUntranslated( "ScoreValueRegexp" );
+            const QString threshold   = tool.readEntryUntranslated( "ScoreThresholdRegexp" );
+            const QString confidence  = tool.readEntryUntranslated( "ScoreConfidenceRegexp" );
+            SpamAgentTypes typeE = SpamAgentNone;
+            if ( kasciistricmp( type.data(), "bool" ) == 0 )
+                typeE = SpamAgentBool;
+            else if ( kasciistricmp( type.data(), "decimal" ) == 0 )
+                typeE = SpamAgentFloat;
+            else if ( kasciistricmp( type.data(), "percentage" ) == 0 )
+                typeE = SpamAgentFloatLarge;
+            else if ( kasciistricmp( type.data(), "adjusted" ) == 0 )
+                typeE = SpamAgentAdjustedFloat;
+            mAgents.append( SpamAgent( name, typeE, header, cheader, QRegExp( score ),
+                                       QRegExp( threshold ), QRegExp( confidence ) ) );
+        }
     }
-  }
 }
 
 const SpamAgents AntiSpamConfig::uniqueAgents() const

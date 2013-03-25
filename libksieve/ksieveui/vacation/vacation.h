@@ -25,14 +25,14 @@ class QStringList;
 template <typename T> class QList;
 
 namespace KMime {
-  namespace Types {
-    struct AddrSpec;
-    typedef QList<AddrSpec> AddrSpecList;
-  }
+namespace Types {
+struct AddrSpec;
+typedef QList<AddrSpec> AddrSpecList;
+}
 }
 
 namespace KManageSieve {
-  class SieveJob;
+class SieveJob;
 }
 
 namespace KSieveUi {
@@ -41,9 +41,9 @@ class VacationDialog;
 
 class KSIEVEUI_EXPORT Vacation : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     explicit Vacation( QObject * parent=0, bool checkonly = false, const char * name=0 );
     virtual ~Vacation();
 
@@ -57,7 +57,7 @@ class KSIEVEUI_EXPORT Vacation : public QObject
     static bool defaultSendForSpam();
     static QString defaultDomainName();
 
-  protected:
+protected:
     static QString composeScript( const QString & messageText,
                                   int notificationInterval,
                                   const KMime::Types::AddrSpecList & aliases,
@@ -69,13 +69,13 @@ class KSIEVEUI_EXPORT Vacation : public QObject
     void handlePutResult( KManageSieve::SieveJob * job, bool success, bool );
 
 
-  signals:
+signals:
     void result( bool success );
     // indicates if the vaction script is active or not
     void scriptActive( bool active );
     void requestEditVacation();
 
-  protected slots:
+protected slots:
     void slotDialogDefaults();
     void slotGetResult( KManageSieve::SieveJob * job, bool success,
                         const QString & script, bool active );
@@ -83,7 +83,7 @@ class KSIEVEUI_EXPORT Vacation : public QObject
     void slotDialogCancel();
     void slotPutActiveResult( KManageSieve::SieveJob *, bool );
     void slotPutInactiveResult( KManageSieve::SieveJob *, bool );
-  protected:
+protected:
     // IO:
     KManageSieve::SieveJob * mSieveJob;
     KUrl mUrl;

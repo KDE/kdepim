@@ -70,15 +70,30 @@ void SieveTemplateListWidget::slotContextMenu(const QPoint &pos)
 {
     QList<QListWidgetItem *> lstSelectedItems = selectedItems();
     KMenu *menu = new KMenu( this );
+
+    menu->addAction( i18n("Insert template"), this, SLOT(slotInsertTemplate()));
+    menu->addSeparator();
+
+    const bool defaultTemplate = lstSelectedItems.first()->data(SieveTemplateListWidget::DefaultTemplate).toBool();
+
     menu->addAction( i18n("Add..."), this, SLOT(slotAdd()));
     if (lstSelectedItems.count() == 1) {
-        menu->addAction( i18n("Modify..."), this, SLOT(slotModify()));
+        menu->addAction( defaultTemplate ? i18n("Show...") : i18n("Modify..."), this, SLOT(slotModify()));
     }
-    if (lstSelectedItems.count() == 1 && !lstSelectedItems.first()->data(SieveTemplateListWidget::DefaultTemplate).toBool()) {
+    if (lstSelectedItems.count() == 1 && !defaultTemplate) {
         menu->addAction( i18n("Remove"), this, SLOT(slotRemove()));
     }
     menu->exec( mapToGlobal( pos ) );
     delete menu;
+}
+
+void SieveTemplateListWidget::slotInsertTemplate()
+{
+    QListWidgetItem *item = currentItem();
+    if (item) {
+        const QString templateScript = item->data(SieveTemplateListWidget::SieveText).toString();
+        Q_EMIT insertTemplate(templateScript);
+    }
 }
 
 void SieveTemplateListWidget::slotRemove()
@@ -108,15 +123,18 @@ void SieveTemplateListWidget::slotModify()
 {
     QListWidgetItem * item = currentItem();
     if(item) {
-        QPointer<SieveTemplateEditDialog> dlg = new SieveTemplateEditDialog(this);
+        const bool defaultTemplate = item->data(SieveTemplateListWidget::DefaultTemplate).toBool();
+        QPointer<SieveTemplateEditDialog> dlg = new SieveTemplateEditDialog(this, defaultTemplate);
         dlg->setTemplateName(item->text());
         dlg->setScript(item->data(SieveTemplateListWidget::SieveText).toString());
         if (dlg->exec()) {
-            const QString templateName = dlg->templateName();
-            const QString templateScript = dlg->script();
-            item->setText(templateName);
-            item->setData(SieveTemplateListWidget::SieveText, templateScript);
-            mDirty = true;
+            if (!defaultTemplate) {
+                const QString templateName = dlg->templateName();
+                const QString templateScript = dlg->script();
+                item->setText(templateName);
+                item->setData(SieveTemplateListWidget::SieveText, templateScript);
+                mDirty = true;
+            }
         }
         delete dlg;
     }
@@ -187,6 +205,7 @@ SieveTemplateWidget::SieveTemplateWidget(QWidget *parent)
     lay->addWidget(lab);
     mListTemplate = new SieveTemplateListWidget;
     mListTemplate->setWhatsThis(i18n("You can drag and drop element on editor to import template"));
+    connect(mListTemplate, SIGNAL(insertTemplate(QString)), SIGNAL(insertTemplate(QString)));
     lay->addWidget(mListTemplate);
     setLayout(lay);
 }
