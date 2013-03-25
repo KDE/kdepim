@@ -1153,3 +1153,9 @@ void ImportMailJob::mergeArchiveMailAgentConfig(const KArchiveFile * archivefile
     copyArchiveMailAgentConfigGroup(importingArchiveMailAgentConfig, existingConfig);
     existingConfig->sync();
 }
+
+
+void ImportMailJob::mergeSieveTemplate(const KArchiveFile * archivefile, const QString&filename, const QString&prefix)
+{
+    //TODO
+}
