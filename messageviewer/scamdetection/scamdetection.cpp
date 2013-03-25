@@ -66,17 +66,19 @@ void ScamDetection::scanPage(const QWebElement &rootElement)
             //2) detect if url href has ip and not server name.
             const QUrl url(href);
             const QString hostname = url.host();
+            const QString path = url.path();
             if (hostname.contains(ip4regExp)) {
                 mDetails += QLatin1String("<li>") + i18n("Hostname from href defines ip '%1'", addWarningColor(hostname))+QLatin1String("</li>");
                 foundScam = true;
             } else if (hostname.contains(QLatin1Char('%'))) { //Hexa value for ip
                 mDetails += QLatin1String("<li>") + i18n("Hostname from href contains hexadecimal value '%1'", addWarningColor(hostname))+QLatin1String("</li>");
                 foundScam = true;
-            } else if (url.path().contains(QLatin1String("url?q="))) { //4) redirect url.
-                mDetails += QLatin1String("<li>") + i18n("Href '%1' has a redirection", addWarningColor(url.path())) +QLatin1String("</li>");
+            } else if (path.contains(QLatin1String("url?q="))) { //4) redirect url.
+                mDetails += QLatin1String("<li>") + i18n("Href '%1' has a redirection", addWarningColor(path)) +QLatin1String("</li>");
                 foundScam = true;
-            } else if (url.path().count(QLatin1String("http://"))>1) { //5) more that 1 http in url.
-                mDetails += QLatin1String("<li>") + i18n("Href '%1' contains multiple http://", addWarningColor(url.path())) + QLatin1String("</li>");
+            } else if ((path.count(QLatin1String("http://")) > 1) ||
+                       (path.count(QLatin1String("https://")) > 1)) { //5) more that 1 http in url.
+                mDetails += QLatin1String("<li>") + i18n("Href '%1' contains multiple http://", addWarningColor(path)) + QLatin1String("</li>");
                 foundScam = true;
             }
         }
