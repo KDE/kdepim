@@ -58,7 +58,6 @@ CSSHelper::CSSHelper( const QPaintDevice *pd ) :
   mRecycleQuoteColors = reader.readEntry( "RecycleQuoteColors", false );
 
   mForegroundColor = KColorScheme( QPalette::Active ).foreground().color();
-  mBackgroundColor = KColorScheme( QPalette::Active ).background().color();
   if ( !MessageCore::GlobalSettings::self()->useDefaultColors() ) {
     mLinkColor =
       reader.readEntry( "LinkColor", mLinkColor );
@@ -80,6 +79,7 @@ CSSHelper::CSSHelper( const QPaintDevice *pd ) :
       const QString key = "QuotedText" + QString::number( i+1 );
       mQuoteColor[i] = reader.readEntry( key, mQuoteColor[i] );
     }
+    mBackgroundColor = reader.readEntry( "BackgroundColor", mBackgroundColor );
   }
 
   if ( !MessageCore::GlobalSettings::self()->useDefaultFonts() ) {
