@@ -34,8 +34,6 @@
 
 #include "util.h"
 #include <QLabel>
-class QString;
-class QColor;
 class QMouseEvent;
 
 namespace MessageViewer {
@@ -62,53 +60,53 @@ namespace MessageViewer {
   * @author Ingo Kloecker <kloecker@kde.org>, Marc Mutz <mutz@kde.org>
   **/
 class HtmlStatusBar : public QLabel {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  enum UpdateMode {
-    NoUpdate,
-    Update
-  };
+    enum UpdateMode {
+        NoUpdate,
+        Update
+    };
 
-  explicit HtmlStatusBar( QWidget * parent=0, const char * name=0, Qt::WindowFlags f=0 );
-  ~HtmlStatusBar();
+    explicit HtmlStatusBar( QWidget * parent=0 );
+    ~HtmlStatusBar();
 
-  /** @return current mode. */
-  Util::HtmlMode mode() const { return mMode ; }
-  bool isHtml() const { return mode() == Util::Html; }
-  bool isNormal() const { return mode() == Util::Normal; }
-  bool isMultipartHtml() const { return mode() == Util::MultipartHtml; }
-  bool isMultipartPlain() const { return mode() == Util::MultipartPlain; }
+    /** @return current mode. */
+    Util::HtmlMode mode() const { return mMode ; }
+    bool isHtml() const { return mode() == Util::Html; }
+    bool isNormal() const { return mode() == Util::Normal; }
+    bool isMultipartHtml() const { return mode() == Util::MultipartHtml; }
+    bool isMultipartPlain() const { return mode() == Util::MultipartPlain; }
 
-  // Update the status bar, for example when the color scheme changed.
-  void update();
+    // Update the status bar, for example when the color scheme changed.
+    void update();
 
 public slots:
-  void setHtmlMode();
-  /** Switch to "normal mode". */
-  void setNormalMode();
-  /** Switch to "multipart html mode". */
-  void setMultipartHtmlMode();
-  /** Switch to "multipart plain mode". */
-  void setMultipartPlainMode();
-  /** Switch to mode @p m */
-  void setMode( Util::HtmlMode m, UpdateMode mode = Update );
+    void setHtmlMode();
+    /** Switch to "normal mode". */
+    void setNormalMode();
+    /** Switch to "multipart html mode". */
+    void setMultipartHtmlMode();
+    /** Switch to "multipart plain mode". */
+    void setMultipartPlainMode();
+    /** Switch to mode @p m */
+    void setMode( Util::HtmlMode m, UpdateMode mode = Update );
 
 signals:
 
-  /** The user has clicked the status bar. */
-  void clicked();
+    /** The user has clicked the status bar. */
+    void clicked();
 
 protected:
 
-  void mousePressEvent( QMouseEvent * event );
+    void mousePressEvent( QMouseEvent * event );
 
 private:
-  QString message() const;
-  QString toolTip() const;
-  QColor bgColor() const;
-  QColor fgColor() const;
+    QString message() const;
+    QString toolTip() const;
+    QColor bgColor() const;
+    QColor fgColor() const;
 
-  Util::HtmlMode mMode;
+    Util::HtmlMode mMode;
 };
 
 }
