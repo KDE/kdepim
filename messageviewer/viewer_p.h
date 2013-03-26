@@ -556,6 +556,7 @@ public slots:
   /** Toggle display mode between HTML and plain text. */
   void slotToggleHtmlMode();
   void slotZoomTextOnly();
+  void slotLoadExternalReference();
 
 
   /**

@@ -1765,9 +1765,18 @@ void ViewerPrivate::createActions()
   // Toggle HTML display mode.
   mToggleDisplayModeAction = new KToggleAction( i18n( "Toggle HTML Display Mode" ), this );
   ac->addAction( "toggle_html_display_mode", mToggleDisplayModeAction );
+  mToggleDisplayModeAction->setShortcut(QKeySequence(Qt::SHIFT + Qt::Key_H));
   connect( mToggleDisplayModeAction, SIGNAL(triggered(bool)),
            SLOT(slotToggleHtmlMode()) );
   mToggleDisplayModeAction->setHelpText( i18n( "Toggle display mode between HTML and plain text" ) );
+
+  // Load external reference
+  KAction *loadExternalReferenceAction = new KAction( i18n( "Load external references" ), this );
+  ac->addAction( "load_external_reference", loadExternalReferenceAction );
+  loadExternalReferenceAction->setShortcut(QKeySequence(Qt::SHIFT + Qt::CTRL + Qt::Key_R));
+  connect( loadExternalReferenceAction, SIGNAL(triggered(bool)),
+           SLOT(slotLoadExternalReference()) );
+  loadExternalReferenceAction->setHelpText( i18n( "Load external references from the Internet for this message." ) );
 
 
   mSpeakTextAction = new KAction(i18n("Speak Text"),this);
@@ -2129,6 +2138,14 @@ void ViewerPrivate::slotUrlPopup(const QUrl &aUrl, const QUrl &imageUrl, const Q
   }
 
   emit popupMenu( mMessageItem, aUrl, imageUrl, aPos );
+}
+
+void ViewerPrivate::slotLoadExternalReference()
+{
+    if(mColorBar->isNormal() || htmlLoadExtOverride())
+      return;
+    setHtmlLoadExtOverride( true );
+    update( Viewer::Force );
 }
 
 void ViewerPrivate::slotToggleHtmlMode()
@@ -3210,7 +3227,7 @@ void ViewerPrivate::slotThemesChanged()
     QMapIterator<QString, GrantleeTheme> i(mThemeManager->themes());
     while (i.hasNext()) {
         i.next();
-        qDebug()<<" path "<<i.key()<<" name "<<i.value().name();
+        qDebug()<<" path "<<i.key()<<" name "<<i.value().name()<<" display variable :"<<i.value().displayVariables();
     }
     //TODO
 }
