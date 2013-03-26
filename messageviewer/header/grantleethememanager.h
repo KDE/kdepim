@@ -33,6 +33,7 @@ public:
     ~GrantleeThemeManager();
 
     QMap<QString, GrantleeTheme> themes() const;
+    GrantleeTheme findTheme( const QString &themeName) const;
 
 Q_SIGNALS:
     void themesChanged();

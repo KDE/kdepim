@@ -131,8 +131,12 @@ public:
   void setThemeName(const QString &name) { mThemeName = name; }
   QString themeName() const { return mThemeName; }
 
-private:
+  void setThemeVariables(const QStringList &variables) { mThemeVariables = variables; }
+  QStringList themeVariables() const { return mThemeVariables; }
 
+
+private:
+  QStringList mThemeVariables;
   QString mThemeName;
   QString mMessagePath;
   const HeaderStrategy *mStrategy;

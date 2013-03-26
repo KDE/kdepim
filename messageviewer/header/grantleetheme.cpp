@@ -27,6 +27,11 @@ GrantleeTheme::~GrantleeTheme()
 {
 }
 
+bool GrantleeTheme::isValid() const
+{
+    return !mFileName.isEmpty() && !mName.isEmpty();
+}
+
 QString GrantleeTheme::description() const
 {
     return mDescription;

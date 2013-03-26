@@ -106,5 +106,9 @@ QMap<QString, GrantleeTheme> GrantleeThemeManager::themes() const
     return d->themes;
 }
 
+GrantleeTheme GrantleeThemeManager::findTheme( const QString &themeName) const
+{
+    return d->themes.find(themeName).value();
+}
 
 #include "grantleethememanager.moc"

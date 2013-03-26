@@ -26,6 +26,8 @@ public:
     GrantleeTheme();
     ~GrantleeTheme();
 
+    bool isValid() const;
+
     QString description() const;
     void setDescription(const QString &description);
 
