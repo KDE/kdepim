@@ -56,15 +56,10 @@ KMime::Content* Message::Util::composeHeadersAndBody( KMime::Content* orig, QByt
 
     if( makeMultiMime( format, sign ) ) {
       result->contentType()->setBoundary( boundary );
-    }
-
-    if( format & Kleo::SMIMEOpaqueFormat ) {
+    } else {
+      result->contentTransferEncoding()->setEncoding( KMime::Headers::CEbase64 );
       result->contentDisposition()->setDisposition( KMime::Headers::CDattachment );
       result->contentDisposition()->setFilename( QString::fromLatin1( "smime.p7m" ) );
-    }
-
-    if( !makeMultiMime( format, sign ) && format & Kleo::AnySMIME ) {
-      result->contentTransferEncoding()->setEncoding( KMime::Headers::CEbase64 );
     }
 
     result->assemble();
