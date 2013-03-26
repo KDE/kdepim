@@ -104,7 +104,8 @@ void ImageScalingWidget::slotHelpLinkClicked(const QString&)
                   "<li>%t set current time</li>"
                   "<li>%d set current date</li>"
                   "<li>%n original filename</li>"
-                  "<li>%e extension</li>"
+                  "<li>%e original extension</li>"
+                  "<li>%x new extension</li>"
                   "</ul>"
                   "</qt>" );
 

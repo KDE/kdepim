@@ -19,6 +19,8 @@
 #include "imagescalingutils.h"
 #include "messagecomposersettings.h"
 
+#include <QFileInfo>
+
 using namespace MessageComposer;
 
 bool Utils::resizeImage(MessageCore::AttachmentPart::Ptr part)
@@ -86,6 +88,7 @@ void Utils::changeFileName(MessageCore::AttachmentPart::Ptr part)
             pattern.replace(QLatin1String("%t"), QTime::currentTime().toString());
             pattern.replace(QLatin1String("%d"), QDate::currentDate().toString());
             pattern.replace(QLatin1String("%n"), filename); //Original name
+            pattern.replace(QLatin1String("%e"), QFileInfo(filename).completeSuffix()); //Original extension
 
             const QString type = MessageComposer::MessageComposerSettings::self()->writeFormat();
             QString newExtension;
@@ -95,7 +98,7 @@ void Utils::changeFileName(MessageCore::AttachmentPart::Ptr part)
                 newExtension = QLatin1String("png");
             }
             if (!newExtension.isEmpty())
-                pattern.replace(QLatin1String("%e"), newExtension); //Extension
+                pattern.replace(QLatin1String("%x"), newExtension); //new Extension
 
             //Need to define pattern type.
             part->setFileName(pattern);
