@@ -116,13 +116,27 @@ bool ComposerTestUtil::verifySignature( KMime::Content* content, QByteArray sign
       KMime::Content* signedPart = MessageViewer::ObjectTreeParser::findType( resultMessage, "application", "pkcs7-signature", true, true );
       Q_ASSERT( signedPart );
       Q_ASSERT( signedPart->contentTransferEncoding()->encoding() == KMime::Headers::CEbase64 );
+      Q_ASSERT( signedPart->contentType()->mimeType() == QByteArray( "application/pkcs7-signature" ) );
+      Q_ASSERT( signedPart->contentType()->name() == QString::fromLatin1( "smime.p7s" ) );
+      Q_ASSERT( signedPart->contentDisposition()->disposition() == KMime::Headers::CDattachment );
+      Q_ASSERT( signedPart->contentDisposition()->filename() == QString::fromLatin1( "smime.p7s" ) );
       Q_UNUSED( signedPart );
 
       Q_ASSERT( MessageCore::NodeHelper::firstChild( resultMessage )->contentTransferEncoding()->encoding() == encoding );
+
+      Q_ASSERT( resultMessage->contentType()->mimeType() == QByteArray( "multipart/signed" ) );
+      Q_ASSERT( resultMessage->contentType()->parameter( QString::fromLatin1( "protocol" ) ) == QString::fromLatin1( "application/pkcs7-signature" ) );
+      Q_ASSERT( resultMessage->contentType()->parameter( QString::fromLatin1( "micalg" ) ) == QString::fromLatin1( "sha1" ) );
+
     } else if( f & Kleo::SMIMEOpaqueFormat ) {
       KMime::Content* signedPart = MessageViewer::ObjectTreeParser::findType( resultMessage, "application", "pkcs7-mime", true, true );
       Q_ASSERT( signedPart );
       Q_ASSERT( signedPart->contentTransferEncoding()->encoding() == KMime::Headers::CEbase64 );
+      Q_ASSERT( signedPart->contentType()->mimeType() == QByteArray( "application/pkcs7-mime" ) );
+      Q_ASSERT( signedPart->contentType()->name() == QString::fromLatin1( "smime.p7m" ) );
+      Q_ASSERT( signedPart->contentType()->parameter( QString::fromLatin1( "smime-type" ) ) == QString::fromLatin1( "signed-data" ) );
+      Q_ASSERT( signedPart->contentDisposition()->disposition() == KMime::Headers::CDattachment );
+      Q_ASSERT( signedPart->contentDisposition()->filename() == QString::fromLatin1( "smime.p7m" ) );
       Q_UNUSED( signedPart );
     }
     // process the result..
@@ -188,6 +202,12 @@ bool ComposerTestUtil::verifyEncryption( KMime::Content* content, QByteArray enc
     // ensure the enc part exists and is parseable
     KMime::Content* encPart = MessageViewer::ObjectTreeParser::findType( resultMessage, "application", "pkcs7-mime", true, true );
     Q_ASSERT( encPart );
+
+    Q_ASSERT( encPart->contentType()->mimeType() == QByteArray( "application/pkcs7-mime" ) );
+    Q_ASSERT( encPart->contentType()->name() == QString::fromLatin1( "smime.p7m" ) );
+    Q_ASSERT( encPart->contentType()->parameter( QString::fromLatin1( "smime-type" ) ) == QString::fromLatin1( "enveloped-data" ) );
+    Q_ASSERT( encPart->contentDisposition()->disposition() == KMime::Headers::CDattachment );
+    Q_ASSERT( encPart->contentDisposition()->filename() == QString::fromLatin1( "smime.p7m" ) );
     Q_UNUSED( encPart );
 
     otp.parseObjectTree( resultMessage );
@@ -249,6 +269,11 @@ bool ComposerTestUtil::verifySignatureAndEncryption( KMime::Content* content, QB
   } else if( f & Kleo::AnySMIME ) {
     KMime::Content* encPart = MessageViewer::ObjectTreeParser::findType( resultMessage.get(), "application", "pkcs7-mime", true, true );
     Q_ASSERT( encPart );
+    Q_ASSERT( encPart->contentType()->mimeType() == QByteArray( "application/pkcs7-mime" ) );
+    Q_ASSERT( encPart->contentType()->name() == QString::fromLatin1( "smime.p7m" ) );
+    Q_ASSERT( encPart->contentType()->parameter( QString::fromLatin1( "smime-type" ) ) == QString::fromLatin1( "enveloped-data" ) );
+    Q_ASSERT( encPart->contentDisposition()->disposition() == KMime::Headers::CDattachment );
+    Q_ASSERT( encPart->contentDisposition()->filename() == QString::fromLatin1( "smime.p7m" ) );
     Q_UNUSED( encPart );
 
     otp.parseObjectTree( resultMessage.get() );
