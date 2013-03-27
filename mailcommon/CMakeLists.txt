@@ -126,7 +126,7 @@ qt4_add_dbus_interfaces(libmailcommon_SRCS
 kde4_add_ui_files(libmailcommon_SRCS filter/filterconfigwidget.ui snippets/snippetdialog.ui filter/selectthunderbirdfilterfileswidget.ui)
 
 if(NOT WINCE)
-  set(libmailcommon_SRCS ${libmailcommon_SRCS} soundtestwidget.cpp)
+  set(libmailcommon_SRCS ${libmailcommon_SRCS} filter/soundtestwidget.cpp)
 endif()
 
 macro(add_resource_iface _kcfgFile _ifaceName _className)
