@@ -32,7 +32,7 @@ public:
     explicit GrantleeHeaderFormatter();
     ~GrantleeHeaderFormatter();
 
-    QString toHtml(const QString &theme, bool isPrinting, const MessageViewer::GrantleeHeaderStyle *style, KMime::Message *message) const;
+    QString toHtml(const QString &theme, const QStringList &themeVariable, bool isPrinting, const MessageViewer::GrantleeHeaderStyle *style, KMime::Message *message) const;
 
 private:
     class Private;
