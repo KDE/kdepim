@@ -8,6 +8,7 @@ include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}/../ontologies
   ${CMAKE_CURRENT_SOURCE_DIR}/filter
   ${CMAKE_CURRENT_SOURCE_DIR}
+  ${CMAKE_CURRENT_SOURCE_DIR}/snippets
   ${SOPRANO_INCLUDE_DIR}
   ${NEPOMUK_CORE_INCLUDE_DIR}
 )
@@ -99,10 +100,10 @@ set(libmailcommon_SRCS
   searchpattern.cpp
   searchpatternedit.cpp
   sendmdnhandler.cpp
-  snippetdialog.cpp
-  snippetsmanager.cpp
-  snippetsmodel.cpp
-  snippetvariabledialog.cpp
+  snippets/snippetdialog.cpp
+  snippets/snippetsmanager.cpp
+  snippets/snippetsmodel.cpp
+  snippets/snippetvariabledialog.cpp
   tagwidget.cpp
   tag.cpp
   addtagdialog.cpp
@@ -122,7 +123,7 @@ qt4_add_dbus_interfaces(libmailcommon_SRCS
   ${CMAKE_SOURCE_DIR}/mailfilteragent/org.freedesktop.Akonadi.MailFilterAgent.xml
 )
 
-kde4_add_ui_files(libmailcommon_SRCS filter/filterconfigwidget.ui snippetdialog.ui filter/selectthunderbirdfilterfileswidget.ui)
+kde4_add_ui_files(libmailcommon_SRCS filter/filterconfigwidget.ui snippets/snippetdialog.ui filter/selectthunderbirdfilterfileswidget.ui)
 
 if(NOT WINCE)
   set(libmailcommon_SRCS ${libmailcommon_SRCS} soundtestwidget.cpp)
