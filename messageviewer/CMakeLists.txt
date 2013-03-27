@@ -94,7 +94,7 @@ set(libmessageviewer_SRCS
   viewer.cpp
   viewer_p.cpp
   webkitparthtmlwriter.cpp
-  customheadersettingwidget.cpp
+  header/customheadersettingwidget.cpp
   header/grantleeheaderformatter.cpp
   header/grantleethememanager.cpp
   header/grantleetheme.cpp
