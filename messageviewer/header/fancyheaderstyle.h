@@ -33,12 +33,11 @@ public:
 
     QString format( KMime::Message *message ) const;
 
-    virtual bool hasAttachmentQuickList() const {
+    bool hasAttachmentQuickList() const {
         return true;
     }
 private:
     static QString imgToDataUrl( const QImage & image );
-
 };
 
 }

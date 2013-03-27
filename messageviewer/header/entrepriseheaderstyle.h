@@ -26,14 +26,14 @@ class EnterpriseHeaderStyle : public HeaderStyle {
     friend class HeaderStyle;
 protected:
     EnterpriseHeaderStyle() : HeaderStyle() {}
-    virtual ~EnterpriseHeaderStyle() {}
+    ~EnterpriseHeaderStyle() {}
 
 public:
     const char * name() const { return "enterprise"; }
 
     QString format( KMime::Message *message ) const;
 
-    virtual bool hasAttachmentQuickList() const {
+    bool hasAttachmentQuickList() const {
         return true;
     }
 };

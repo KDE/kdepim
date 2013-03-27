@@ -26,7 +26,7 @@ class CustomHeaderStyle : public HeaderStyle {
     friend class HeaderStyle;
 protected:
     CustomHeaderStyle() : HeaderStyle() {}
-    virtual ~CustomHeaderStyle() {}
+    ~CustomHeaderStyle() {}
 
 public:
     const char * name() const { return "custom"; }
