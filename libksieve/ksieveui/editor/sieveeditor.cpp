@@ -139,8 +139,7 @@ void SieveEditor::slotSaveAs()
     fdlg->setOperationMode( KFileDialog::Saving );
     if ( fdlg->exec() == QDialog::Accepted && fdlg ) {
         const QString fileName = fdlg->selectedFile();
-        if ( !saveToFile( fileName ) )
-        {
+        if ( !saveToFile( fileName ) ) {
             KMessageBox::error( this,
                                 i18n( "Could not write the file %1:\n"
                                       "\"%2\" is the detailed error description.",

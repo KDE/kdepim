@@ -112,7 +112,7 @@ void SieveTextEdit::slotSpeakText()
     }
     QDBusInterface ktts("org.kde.kttsd", "/KSpeech", "org.kde.KSpeech");
     QString text;
-    if(textCursor().hasSelection())
+    if (textCursor().hasSelection())
         text = textCursor().selectedText();
     else
         text = toPlainText();
@@ -133,7 +133,7 @@ void SieveTextEdit::resizeEvent(QResizeEvent *e)
 {
     QPlainTextEdit::resizeEvent(e);
 
-    QRect cr = contentsRect();
+    const QRect cr = contentsRect();
     m_sieveLineNumberArea->setGeometry(QRect(cr.left(), cr.top(), lineNumberAreaWidth(), cr.height()));
 }
 
@@ -224,7 +224,7 @@ void SieveTextEdit::slotInsertCompletion( const QString& completion )
 
 void SieveTextEdit::keyPressEvent(QKeyEvent* e)
 {
-    if( m_completer->popup()->isVisible() ) {
+    if ( m_completer->popup()->isVisible() ) {
         switch (e->key()) {
         case Qt::Key_Enter:
         case Qt::Key_Return:
@@ -238,8 +238,8 @@ void SieveTextEdit::keyPressEvent(QKeyEvent* e)
         }
     }
     QPlainTextEdit::keyPressEvent(e);
-    QString text = wordUnderCursor();
-    if( text.length() < 2 ) // min 2 char for completion
+    const QString text = wordUnderCursor();
+    if ( text.length() < 2 ) // min 2 char for completion
         return;
 
     m_completer->setCompletionPrefix( text );

@@ -54,7 +54,7 @@ protected:
     void resizeEvent(QResizeEvent *event);
     void contextMenuEvent( QContextMenuEvent *event );
 
-signals:
+Q_SIGNALS:
     void findText();
 
 private:

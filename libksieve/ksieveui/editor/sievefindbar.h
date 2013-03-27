@@ -1,4 +1,4 @@
-/* Copyright (C) 2012 Laurent Montel <montel@kde.org>
+/* Copyright (C) 2012, 2013 Laurent Montel <montel@kde.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -32,9 +32,9 @@ namespace KSieveUi {
 
 class SieveFindBar : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     explicit SieveFindBar( QPlainTextEdit * view, QWidget * parent = 0 );
     ~SieveFindBar();
 
@@ -43,7 +43,7 @@ class SieveFindBar : public QWidget
 
     void focusAndSetCursor();
 
-  protected:
+protected:
     bool event(QEvent* e);
     void clearSelections();
     void updateHighLight(bool);
@@ -53,18 +53,18 @@ class SieveFindBar : public QWidget
     void setFoundMatch( bool match );
     void messageInfo( bool backward, bool isAutoSearch, bool found );
 
-  public slots:
+public slots:
     void findNext();
     void findPrev();
     void autoSearch( const QString& str );
     void slotSearchText( bool backward = false, bool isAutoSearch = true );
     void closeBar();
-  private slots:
+private slots:
     void caseSensitivityChanged(bool);
     void slotHighlightAllChanged(bool);
     void slotClearSearch();
 
-  private:
+private:
     QString mLastSearchStr;
     KLineEdit * m_search;
     QAction * m_caseSensitiveAct;
