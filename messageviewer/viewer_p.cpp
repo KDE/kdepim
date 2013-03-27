@@ -3227,7 +3227,7 @@ void ViewerPrivate::slotThemesChanged()
     QMapIterator<QString, GrantleeTheme> i(mThemeManager->themes());
     while (i.hasNext()) {
         i.next();
-        qDebug()<<" path "<<i.key()<<" name "<<i.value().name()<<" display variable :"<<i.value().displayVariables();
+        qDebug()<<" path "<<i.key()<<" name "<<i.value().name()<<" display extra headers :"<<i.value().displayExtraHeaders();
     }
     //TODO
 }
