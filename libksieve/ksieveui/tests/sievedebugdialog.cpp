@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include <ksieveui/sievedebugdialog.h>
+#include <ksieveui/debug/sievedebugdialog.h>
 
 #include <kcomponentdata.h>
 #include <QApplication>

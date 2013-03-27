@@ -1,13 +1,14 @@
 include_directories(${CMAKE_SOURCE_DIR}/libksieve
 	${CMAKE_SOURCE_DIR}/pimcommon
 	${CMAKE_BINARY_DIR}/pimcommon
+        ${CMAKE_SOURCE_DIR}/libksieve/ksieveui
 	)
 
 add_subdirectory(tests)
 
 set(ksieveui_LIB_SRCS
   managesievescriptsdialog.cpp
-  sievedebugdialog.cpp
+  debug/sievedebugdialog.cpp
   util.cpp
   vacation/vacation.cpp
   vacation/vacationdialog.cpp

@@ -75,7 +75,6 @@ set(libmessageviewer_SRCS
   iconnamecache.cpp
   invitationsettings.cpp
   kleojobexecutor.cpp
-  kxface.cpp
   mailsourceviewer.cpp
   markmessagereadhandler.cpp
   mimetreemodel.cpp
@@ -98,6 +97,7 @@ set(libmessageviewer_SRCS
   header/grantleeheaderformatter.cpp
   header/grantleethememanager.cpp
   header/grantleetheme.cpp
+  header/kxface.cpp
   messagedisplayformatattribute.cpp
   scamdetection/scamdetectionwarningwidget.cpp
   scamdetection/scamdetection.cpp

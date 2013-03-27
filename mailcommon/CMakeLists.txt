@@ -83,6 +83,7 @@ set(libmailcommon_SRCS
   filter/mailfilter.cpp
   filter/selectthunderbirdfilterfilesdialog.cpp
   filter/selectthunderbirdfilterfileswidget.cpp
+  filter/mdnadvicedialog.cpp
   foldercollection.cpp
   foldercollectionmonitor.cpp
   folderjob.cpp
@@ -94,7 +95,6 @@ set(libmailcommon_SRCS
   jobscheduler.cpp
   mailkernel.cpp
   mailutil.cpp
-  mdnadvicedialog.cpp
   redirectdialog.cpp
   regexplineedit.cpp
   rulewidgethandlermanager.cpp

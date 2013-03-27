@@ -21,7 +21,7 @@
 #include "filteraction.h"
 
 #include "../mailkernel.h"
-#include "../mdnadvicedialog.h"
+#include "mdnadvicedialog.h"
 #include "../mailutil.h"
 
 #include <messagecomposer/messagefactory.h>
