@@ -38,32 +38,32 @@ class VacationDialog : public KDialog
 
 public:
     explicit VacationDialog( const QString & caption, QWidget * parent=0,
-                             const char * name=0, bool modal=true );
-    virtual ~VacationDialog();
+                             bool modal=true );
+    ~VacationDialog();
 
-    virtual void enableDomainAndSendForSpam( bool enable = true );
+    void enableDomainAndSendForSpam( bool enable = true );
 
     bool activateVacation() const;
-    virtual void setActivateVacation( bool activate );
+    void setActivateVacation( bool activate );
 
     bool domainCheck() const;
-    virtual void setDomainCheck( bool check );
+    void setDomainCheck( bool check );
 
     QString messageText() const;
-    virtual void setMessageText( const QString & text );
+    void setMessageText( const QString & text );
 
     int notificationInterval() const;
-    virtual void setNotificationInterval( int days );
+    void setNotificationInterval( int days );
 
     KMime::Types::AddrSpecList mailAliases() const;
-    virtual void setMailAliases( const KMime::Types::AddrSpecList & aliases );
-    virtual void setMailAliases( const QString & aliases );
+    void setMailAliases( const KMime::Types::AddrSpecList & aliases );
+    void setMailAliases( const QString & aliases );
 
     QString domainName() const;
-    virtual void setDomainName( const QString & domain );
+    void setDomainName( const QString & domain );
 
     bool sendForSpam() const;
-    virtual void setSendForSpam( bool enable );
+    void setSendForSpam( bool enable );
 
 private slots:
     void slotIntervalSpinChanged( int value );
