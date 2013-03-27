@@ -21,6 +21,7 @@
 
 #include <KMenu>
 #include <KLocale>
+#include <KMessageBox>
 
 #include <QListWidget>
 #include <QHBoxLayout>
@@ -98,12 +99,14 @@ void SieveTemplateListWidget::slotInsertTemplate()
 
 void SieveTemplateListWidget::slotRemove()
 {
-    QList<QListWidgetItem *> lstSelectedItems = selectedItems();
-    Q_FOREACH (QListWidgetItem *item, lstSelectedItems) {
-        if (item->data(SieveTemplateListWidget::DefaultTemplate).toBool() == false)
-            delete item;
+    if(KMessageBox::Yes == KMessageBox::questionYesNo(this, i18n("Do you want to delete select template?"), i18n("Delete template"))) {
+        const QList<QListWidgetItem *> lstSelectedItems = selectedItems();
+        Q_FOREACH (QListWidgetItem *item, lstSelectedItems) {
+            if (item->data(SieveTemplateListWidget::DefaultTemplate).toBool() == false)
+                delete item;
+        }
+        mDirty = true;
     }
-    mDirty = true;
 }
 
 void SieveTemplateListWidget::slotAdd()
@@ -183,11 +186,12 @@ void SieveTemplateListWidget::saveTemplates()
 
     int numberOfTemplate = 0;
     for ( int i = 0; i < count(); ++i ) {
-        if (item(i)->data(SieveTemplateListWidget::DefaultTemplate).toBool() == false) {
+        QListWidgetItem *templateItem = item(i);
+        if (templateItem->data(SieveTemplateListWidget::DefaultTemplate).toBool() == false) {
             KConfigGroup group = config->group( QString::fromLatin1( "templateDefine_%1" ).arg ( numberOfTemplate ) );
-            group.writeEntry( "Name", item(i)->text() );
-            group.writeEntry( "Text", item(i)->data(SieveTemplateListWidget::SieveText) );
-            numberOfTemplate ++;
+            group.writeEntry( "Name", templateItem->text() );
+            group.writeEntry( "Text", templateItem->data(SieveTemplateListWidget::SieveText) );
+            numberOfTemplate++;
         }
     }
     KConfigGroup group = config->group( "template" );
