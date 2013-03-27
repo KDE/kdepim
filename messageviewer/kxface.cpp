@@ -62,10 +62,10 @@ static const int MAXLINELEN = 78;
 #define WORDCARRY (1 << BITSPERWORD)
 #define WORDMASK (WORDCARRY - 1)
 
-#define ERR_OK		0	/* successful completion */
-#define ERR_EXCESS	1	/* completed OK but some input was ignored */
-#define ERR_INSUFF	-1	/* insufficient input.  Bad face format? */
-#define ERR_INTERNAL	-2	/* Arithmetic overflow or buffer overflow */
+#define ERR_OK          0        /* successful completion */
+#define ERR_EXCESS      1        /* completed OK but some input was ignored */
+#define ERR_INSUFF     -1        /* insufficient input.  Bad face format? */
+#define ERR_INTERNAL   -2        /* Arithmetic overflow or buffer overflow */
 
 #define BLACK 0
 #define GREY 1
@@ -225,8 +225,8 @@ void KXFace::BigDiv(register unsigned char a, register unsigned char *r)
     *r = 0;
     return;
   }
-  if (a == 0)	/* treat this as a == WORDCARRY */
-  {			/* and just shift everything right a WORD (unsigned char)*/
+  if (a == 0)        /* treat this as a == WORDCARRY */
+  {                        /* and just shift everything right a WORD (unsigned char)*/
     i = --B.b_words;
     w = B.b_word;
     *r = *w;
@@ -264,8 +264,8 @@ void KXFace::BigMul(register unsigned char a)
   a &= WORDMASK;
   if ((a == 1) || (B.b_words == 0))
     return;
-  if (a == 0)	/* treat this as a == WORDCARRY */
-  {			/* and just shift everything left a WORD (unsigned char) */
+  if (a == 0)        /* treat this as a == WORDCARRY */
+  {                        /* and just shift everything left a WORD (unsigned char) */
     if ((i = B.b_words++) >= MAXWORDS - 1)
       longjmp(comp_env, ERR_INTERNAL);
     w = B.b_word + i;
@@ -432,7 +432,7 @@ void KXFace::BigWrite(register char *fbuf)
     BigDiv(NUMPRINTS, &tmp);
     *(s++) = tmp + FIRSTPRINT;
   }
-  i = 7;	// leave room for the field name on the first line
+  i = 7;        // leave room for the field name on the first line
   *(fbuf++) = ' ';
   while (s-- > buf)
   {
