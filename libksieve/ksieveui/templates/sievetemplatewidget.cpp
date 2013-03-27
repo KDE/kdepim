@@ -70,6 +70,8 @@ QMimeData *SieveTemplateListWidget::mimeData ( const QList<QListWidgetItem *> it
 void SieveTemplateListWidget::slotContextMenu(const QPoint &pos)
 {
     QList<QListWidgetItem *> lstSelectedItems = selectedItems();
+    if (lstSelectedItems.isEmpty())
+        return;
     KMenu *menu = new KMenu( this );
 
     menu->addAction( i18n("Insert template"), this, SLOT(slotInsertTemplate()));
