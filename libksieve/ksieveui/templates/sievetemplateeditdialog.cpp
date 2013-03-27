@@ -34,10 +34,11 @@ SieveTemplateEditDialog::SieveTemplateEditDialog(QWidget *parent, bool defaultTe
     : KDialog(parent)
 {
     setCaption( defaultTemplate ? i18n("Default template") : i18n("Template") );
-    if (defaultTemplate)
+    if (defaultTemplate) {
         setButtons( Close );
-    else
+    } else {
         setButtons( Ok |Cancel );
+    }
 
     QWidget *w = new QWidget;
     QVBoxLayout *vbox = new QVBoxLayout;
@@ -69,6 +70,7 @@ SieveTemplateEditDialog::SieveTemplateEditDialog(QWidget *parent, bool defaultTe
     if (!defaultTemplate) {
         enableButtonOk(false);
         connect(mTemplateNameEdit, SIGNAL(textChanged(QString)),SLOT(slotTemplateNameChanged(QString)));
+        mTemplateNameEdit->setFocus();
     }
     readConfig();
 }
