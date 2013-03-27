@@ -7,6 +7,7 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/pimcommon
   ${CMAKE_CURRENT_BINARY_DIR}/../ontologies
   ${CMAKE_CURRENT_SOURCE_DIR}/filter
+  ${CMAKE_CURRENT_SOURCE_DIR}/tag/
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_SOURCE_DIR}/snippets
   ${SOPRANO_INCLUDE_DIR}
@@ -104,9 +105,9 @@ set(libmailcommon_SRCS
   snippets/snippetsmanager.cpp
   snippets/snippetsmodel.cpp
   snippets/snippetvariabledialog.cpp
-  tagwidget.cpp
-  tag.cpp
-  addtagdialog.cpp
+  tag/tagwidget.cpp
+  tag/tag.cpp
+  tag/addtagdialog.cpp
 )
 
 soprano_add_ontology(libmailcommon_SRCS
