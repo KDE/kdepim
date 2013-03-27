@@ -217,7 +217,7 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
   if ( !mainWindow )
     mMainWindow = aParent;
 
-  mThemeManager = new MessageViewer::GrantleeThemeManager(KStandardDirs::locate("data",QLatin1String("messageviewer/themes/")));
+  mThemeManager = new MessageViewer::GrantleeThemeManager(mActionCollection, KStandardDirs::locate("data",QLatin1String("messageviewer/themes/")));
   connect(mThemeManager, SIGNAL(themesChanged()),SLOT(slotThemesChanged()));
   mHtmlOverride = false;
   mHtmlLoadExtOverride = false;

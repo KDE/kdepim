@@ -20,6 +20,8 @@
 #include <KDirWatch>
 #include <KConfigGroup>
 #include <KConfig>
+#include <KXMLGUIClient>
+#include <KActionCollection>
 
 #include <QDir>
 #include <QDirIterator>
@@ -30,8 +32,10 @@ using namespace MessageViewer;
 class GrantleeThemeManager::Private
 {
 public:
-    Private(const QString &path, GrantleeThemeManager *qq)
+    Private(KActionCollection *ac, const QString &path, GrantleeThemeManager *qq)
         : themesPath(path),
+          guiClient(0),
+          actionCollection(ac),
           q(qq)
     {
         watch = new KDirWatch( q );
@@ -88,11 +92,13 @@ public:
     QMap<QString, GrantleeTheme> themes;
     QString themesPath;
     KDirWatch *watch;
+    KXMLGUIClient *guiClient;
+    KActionCollection *actionCollection;
     GrantleeThemeManager *q;
 };
 
-GrantleeThemeManager::GrantleeThemeManager(const QString &path, QObject *parent)
-    : QObject(parent), d(new Private(path,this))
+GrantleeThemeManager::GrantleeThemeManager(KActionCollection *actionCollection, const QString &path, QObject *parent)
+    : QObject(parent), d(new Private(actionCollection, path,this))
 {
 }
 
@@ -109,6 +115,11 @@ QMap<QString, GrantleeTheme> GrantleeThemeManager::themes() const
 GrantleeTheme GrantleeThemeManager::findTheme( const QString &themeName) const
 {
     return d->themes.find(themeName).value();
+}
+
+void GrantleeThemeManager::setXmlGuiClient( KXMLGUIClient *guiClient )
+{
+    d->guiClient = guiClient;
 }
 
 #include "grantleethememanager.moc"

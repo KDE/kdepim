@@ -22,18 +22,22 @@
 
 #include <QObject>
 #include <QMap>
-
+class KXMLGUIClient;
+class KActionCollection;
 
 namespace MessageViewer {
 class GrantleeThemeManager : public QObject
 {
     Q_OBJECT
 public:
-    explicit GrantleeThemeManager(const QString &path, QObject *parent = 0);
+    explicit GrantleeThemeManager(KActionCollection *actionCollection, const QString &path, QObject *parent = 0);
     ~GrantleeThemeManager();
 
     QMap<QString, GrantleeTheme> themes() const;
     GrantleeTheme findTheme( const QString &themeName) const;
+
+
+    void setXmlGuiClient( KXMLGUIClient *guiClient );
 
 Q_SIGNALS:
     void themesChanged();
