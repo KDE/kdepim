@@ -137,6 +137,7 @@ void SieveEditor::slotSaveAs()
 
     fdlg->setMode( KFile::File );
     fdlg->setOperationMode( KFileDialog::Saving );
+    fdlg->setConfirmOverwrite(true);
     if ( fdlg->exec() == QDialog::Accepted && fdlg ) {
         const QString fileName = fdlg->selectedFile();
         if ( !saveToFile( fileName ) ) {
