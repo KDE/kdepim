@@ -20,16 +20,14 @@
 
 #include "messageviewer_export.h"
 
-
 #include <QWidget>
-#include <QButtonGroup>
 
 namespace PimCommon {
 class SimpleStringListEditor;
 }
 
 class QRadioButton;
-
+class QButtonGroup;
 namespace MessageViewer {
 
 class MESSAGEVIEWER_EXPORT CustomHeaderSettingWidget : public QWidget
