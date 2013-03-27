@@ -19,6 +19,7 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/messageviewer
   ${CMAKE_BINARY_DIR}/messageviewer
   ${CMAKE_SOURCE_DIR}/mailcommon
+  ${CMAKE_SOURCE_DIR}/pimcommon/
   ${Boost_INCLUDE_DIR}
   ${SOPRANO_INCLUDE_DIR}
   ${NEPOMUK_CORE_INCLUDE_DIR}

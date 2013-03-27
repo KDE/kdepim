@@ -23,7 +23,7 @@
 #include "mailkernel.h"
 #include "mailutil.h"
 
-#include "pimcommon/imapaclattribute.h"
+#include "pimcommon/acl/imapaclattribute.h"
 #include "pimcommon/pimutil.h"
 
 #include <akonadi_next/quotacolorproxymodel.h>

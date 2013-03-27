@@ -24,8 +24,8 @@
 #include <akonadi/attributefactory.h>
 #include <akonadi/entitydisplayattribute.h>
 #include <kactioncollection.h>
-#include <pimcommon/aclmanager.h>
-#include <pimcommon/imapaclattribute.h>
+#include <pimcommon/acl/aclmanager.h>
+#include <pimcommon/acl/imapaclattribute.h>
 
 #include <QtCore/QAbstractItemModel>
 #include <QItemSelectionModel>
