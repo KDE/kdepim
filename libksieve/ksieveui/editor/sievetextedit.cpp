@@ -137,7 +137,7 @@ void SieveTextEdit::resizeEvent(QResizeEvent *e)
     m_sieveLineNumberArea->setGeometry(QRect(cr.left(), cr.top(), lineNumberAreaWidth(), cr.height()));
 }
 
-int SieveTextEdit::lineNumberAreaWidth()
+int SieveTextEdit::lineNumberAreaWidth() const
 {
     int digits = 1;
     int max = qMax(1, blockCount());

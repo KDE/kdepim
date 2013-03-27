@@ -38,7 +38,7 @@ public:
     ~SieveTextEdit();
 
     void lineNumberAreaPaintEvent(QPaintEvent *event);
-    int lineNumberAreaWidth();
+    int lineNumberAreaWidth() const;
 
 private Q_SLOTS:
     void slotInsertCompletion( const QString& );
