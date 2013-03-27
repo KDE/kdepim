@@ -36,8 +36,9 @@ public:
     QMap<QString, GrantleeTheme> themes() const;
     GrantleeTheme findTheme( const QString &themeName) const;
 
-
     void setXmlGuiClient( KXMLGUIClient *guiClient );
+
+    void activateTheme(const QString &themeName);
 
 Q_SIGNALS:
     void themesChanged();

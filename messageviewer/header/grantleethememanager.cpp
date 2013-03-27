@@ -22,8 +22,10 @@
 #include <KConfig>
 #include <KXMLGUIClient>
 #include <KActionCollection>
+#include <KToggleAction>
 
 #include <QDir>
+#include <QAction>
 #include <QDirIterator>
 
 
@@ -45,6 +47,7 @@ public:
     void directoryChanged()
     {
         setThemesPath( themesPath );
+        updateActionList();
     }
 
     void setThemesPath(const QString& path)
@@ -67,7 +70,7 @@ public:
             dirIt.next();
             const GrantleeTheme theme = loadTheme( dirIt.filePath() );
 
-            themes.insert( dirIt.fileName(), theme );
+            themes.insert( theme.name(), theme );
         }
 
         Q_EMIT q->themesChanged();
@@ -89,8 +92,32 @@ public:
         return theme;
     }
 
-    QMap<QString, GrantleeTheme> themes;
+    void updateActionList()
+    {
+        if (guiClient) {
+            guiClient->unplugActionList(QLatin1String("theme_action_list"));
+        }
+
+        Q_FOREACH ( QAction *action, themesActionList ) {
+            actionCollection->removeAction( action );
+        }
+
+        QMapIterator<QString, GrantleeTheme> i(themes);
+        while (i.hasNext()) {
+            i.next();
+            KToggleAction *act = new KToggleAction(i.value().name(),q);
+            themesActionList.append(act);
+            //TODO connect.
+        }
+
+        if (guiClient) {
+            guiClient->plugActionList(QLatin1String("theme_action_list"), themesActionList);
+        }
+    }
+
     QString themesPath;
+    QMap<QString, GrantleeTheme> themes;
+    QList<QAction*> themesActionList;
     KDirWatch *watch;
     KXMLGUIClient *guiClient;
     KActionCollection *actionCollection;
@@ -120,6 +147,11 @@ GrantleeTheme GrantleeThemeManager::findTheme( const QString &themeName) const
 void GrantleeThemeManager::setXmlGuiClient( KXMLGUIClient *guiClient )
 {
     d->guiClient = guiClient;
+}
+
+void GrantleeThemeManager::activateTheme(const QString &themeName)
+{
+    //TODO
 }
 
 #include "grantleethememanager.moc"
