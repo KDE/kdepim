@@ -80,7 +80,7 @@ InvitationSettings::InvitationSettings( QWidget *parent )
   connect( mInvitationUi->mOutlookCompatibleInvitationComparisons, SIGNAL(stateChanged(int)),
            this, SIGNAL(changed()) );
 
-  //Laurent BUG:257723: in kmail2 it's not possible to not send automaticly.
+  //Laurent BUG:257723: in kmail2 it's not possible to not send automatically.
   mInvitationUi->mAutomaticSending->hide();
   mInvitationUi->mAutomaticSending->setWhatsThis(
     i18n( GlobalSettings::self()->automaticSendingItem()->whatsThis().toUtf8() ) );

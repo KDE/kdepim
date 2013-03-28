@@ -113,7 +113,7 @@ namespace MessageHelper {
 
   /**
    * Skip leading keyword if keyword has given character at it's end
-   * (e.g. ':' or ',') and skip the then following blanks (if any) too.
+   * (e.g. ':' or ',') and skip the following blanks (if any) too.
    * If keywordFound is specified it will be true if a keyword was skipped
    * and false otherwise. */
   QString MESSAGECOMPOSER_EXPORT skipKeyword( const QString& str, QChar sepChar = QLatin1Char( ':' ),
