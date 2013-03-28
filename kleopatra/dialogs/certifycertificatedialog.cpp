@@ -340,6 +340,8 @@ public:
         //PENDING
 #ifdef KLEO_SIGN_KEY_CERTLEVEL_SUPPORT
         sum.checkLevel = selectCheckLevelPage->checkLevel();
+#else
+        sum.checkLevel = 0; 
 #endif
 
         sum.exportable = optionsPage->exportableCertificationSelected();

@@ -66,7 +66,6 @@ public:
     void result( const shared_ptr<const Task::Result> & result );
     void started( const shared_ptr<Task> & result );
     void allDone();
-    void addResultWidget( ResultItemWidget* widget );
     void keepOpenWhenDone( bool keep );
     QLabel * labelForTag( const QString & tag );
 
@@ -75,19 +74,9 @@ public:
     QHash<QString, QLabel*> m_progressLabelByTag;
     QVBoxLayout* m_progressLabelLayout;
     int m_lastErrorItemIndex;
-    ScrollArea* m_scrollArea;
     ResultListWidget* m_resultList;
     QCheckBox* m_keepOpenCB;
 };
-
-void ResultPage::Private::addResultWidget( ResultItemWidget* widget )
-{
-    assert( widget );
-    assert( m_scrollArea->widget() );
-    assert( qobject_cast<QBoxLayout*>( m_scrollArea->widget()->layout() ) );
-    QBoxLayout & blay = *static_cast<QBoxLayout*>( m_scrollArea->widget()->layout() );
-    blay.insertWidget( widget->hasErrorResult() ? m_lastErrorItemIndex++ : ( blay.count() - 1 ), widget );
-}
 
 ResultPage::Private::Private( ResultPage* qq ) : q( qq ), m_lastErrorItemIndex( 0 )
 {
