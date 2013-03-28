@@ -16,6 +16,7 @@
 */
 
 #include "autocreatescriptdialog.h"
+#include <KLocale>
 
 using namespace KSieveUi;
 
