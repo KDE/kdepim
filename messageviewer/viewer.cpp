@@ -642,6 +642,12 @@ KAction *Viewer::resetMessageDisplayFormatAction()
     return d->mResetMessageDisplayFormat;
 }
 
+void Viewer::setXmlGuiClient( KXMLGUIClient *guiClient )
+{
+    Q_D( Viewer );
+    d->setXmlGuiClient(guiClient);
+}
+
 }
 
 #include "viewer.moc"

@@ -275,6 +275,11 @@ ViewerPrivate::~ViewerPrivate()
   delete mThemeManager;
 }
 
+void ViewerPrivate::setXmlGuiClient( KXMLGUIClient *guiClient )
+{
+    mThemeManager->setXmlGuiClient(guiClient);
+}
+
 void ViewerPrivate::saveMimePartTreeConfig()
 {
 #ifndef QT_NO_TREEVIEW

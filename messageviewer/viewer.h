@@ -37,6 +37,7 @@ class KActionCollection;
 class KAction;
 class KToggleAction;
 class KUrl;
+class KXMLGUIClient;
 
 class QAbstractItemModel;
 class QCloseEvent;
@@ -333,6 +334,8 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
   QString selectedText() const;
 
   void setExternalWindow( bool b );
+
+  void setXmlGuiClient( KXMLGUIClient *guiClient );
 
 signals:
   void changeDisplayMail(Viewer::ForceDisplayTo,bool);
