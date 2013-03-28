@@ -101,7 +101,7 @@ void SieveTemplateListWidget::slotInsertTemplate()
 
 void SieveTemplateListWidget::slotRemove()
 {
-    if(KMessageBox::Yes == KMessageBox::questionYesNo(this, i18n("Do you want to delete select template?"), i18n("Delete template"))) {
+    if(KMessageBox::Yes == KMessageBox::questionYesNo(this, i18n("Do you want to delete selected template?"), i18n("Delete template"))) {
         const QList<QListWidgetItem *> lstSelectedItems = selectedItems();
         Q_FOREACH (QListWidgetItem *item, lstSelectedItems) {
             if (item->data(SieveTemplateListWidget::DefaultTemplate).toBool() == false)
