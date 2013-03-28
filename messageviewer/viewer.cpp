@@ -3,6 +3,7 @@
   Copyright (c) 1997 Markus Wuebben <markus.wuebben@kde.org>
   Copyright (C) 2009 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.net
   Copyright (c) 2009 Andras Mantia <andras@kdab.net>
+  Copyright (c) 2013 Laurent Montel <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -315,8 +316,7 @@ Akonadi::Item Viewer::messageItem() const
 bool Viewer::event(QEvent *e)
 {
   Q_D(Viewer);
-  if (e->type() == QEvent::PaletteChange)
-  {
+  if (e->type() == QEvent::PaletteChange) {
     delete d->mCSSHelper;
     d->mCSSHelper = new CSSHelper( d->mViewer );
     d->update( Viewer::Force ); // Force update
