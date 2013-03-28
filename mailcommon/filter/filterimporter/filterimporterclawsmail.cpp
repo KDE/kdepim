@@ -48,6 +48,11 @@ FilterImporterClawsMails::FilterImporterClawsMails( QFile *file )
     appendFilter(filter);
 }
 
+FilterImporterClawsMails::FilterImporterClawsMails()
+    :FilterImporterAbstract()
+{
+}
+
 FilterImporterClawsMails::~FilterImporterClawsMails()
 {
 }
@@ -59,8 +64,7 @@ QString FilterImporterClawsMails::defaultFiltersSettingsPath()
 
 MailFilter * FilterImporterClawsMails::parseLine(const QString& line, MailFilter *filter)
 {
-    if (filter)
-        appendFilter(filter);
+    appendFilter(filter);
     filter = new MailFilter();
     QString tmp = line;
     //Enabled ?
@@ -83,9 +87,14 @@ MailFilter * FilterImporterClawsMails::parseLine(const QString& line, MailFilter
 
     tmp = extractConditions( tmp, filter);
 
-
+    tmp = extractActions(tmp, filter);
     //TODO
     return filter;
+}
+
+QString FilterImporterClawsMails::extractActions( const QString &line,MailFilter *filter)
+{
+    return line;
 }
 
 QString FilterImporterClawsMails::extractConditions( const QString &line,MailFilter *filter)

@@ -33,12 +33,17 @@ class FilterImporterClawsMails : public FilterImporterAbstract
 {
 public:
     explicit FilterImporterClawsMails( QFile *file );
+    //Use for unittests
+    FilterImporterClawsMails();
     ~FilterImporterClawsMails();
     static QString defaultFiltersSettingsPath();
-private:
+
     MailFilter * parseLine(const QString& line, MailFilter *filter);
+
+private:
     QString extractString( const QString & tmp, int & pos);
     QString extractConditions( const QString &line,MailFilter *filter);
+    QString extractActions( const QString &line,MailFilter *filter);
 };
 
 }

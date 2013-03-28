@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012, 2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -31,13 +31,13 @@ class MailFilter;
 
 class FilterImporterAbstract
 {
-  public:
+public:
     explicit FilterImporterAbstract();
     ~FilterImporterAbstract();
     QList<MailFilter*> importFilter() const;
     QStringList emptyFilter() const;
 
-  protected:
+protected:
     void appendFilter( MailCommon::MailFilter *filter );
     void createFilterAction( MailCommon::MailFilter *filter,
                              const QString &actionName, const QString &value );
