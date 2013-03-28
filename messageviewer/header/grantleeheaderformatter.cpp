@@ -69,7 +69,7 @@ GrantleeHeaderFormatter::~GrantleeHeaderFormatter()
     delete d;
 }
 
-QString GrantleeHeaderFormatter::toHtml(const QString &themeName, const QStringList &themeVariable, bool isPrinting, const MessageViewer::GrantleeHeaderStyle *style, KMime::Message *message) const
+QString GrantleeHeaderFormatter::toHtml(const QString &themeName, const QStringList &extraHeader, bool isPrinting, const MessageViewer::GrantleeHeaderStyle *style, KMime::Message *message) const
 {
     Grantlee::Template headerTemplate = d->engine->loadByName( themeName + "/header.html" );
     QString errorMessage;
@@ -159,6 +159,12 @@ QString GrantleeHeaderFormatter::toHtml(const QString &themeName, const QStringL
         headerObject.insert( QLatin1String( "photowidth" ) , xface.photoWidth );
         headerObject.insert( QLatin1String( "photoheight" ) , xface.photoHeight );
         headerObject.insert( QLatin1String( "photourl" ) , xface.photoURL );
+    }
+
+    Q_FOREACH (const QString &header, extraHeader) {
+        if (message->headerByType(header.toLocal8Bit()) ) {
+            headerObject.insert( header , message->headerByType(header.toLocal8Bit())->asUnicodeString() );
+        }
     }
 
     QVariantHash mapping;
