@@ -594,7 +594,6 @@ public slots:
   void slotCopyImageLocation();
   void slotSaveMessageDisplayFormat();
   void slotResetMessageDisplayFormat();
-  void slotThemesChanged();
 signals:
   void showStatusBarMessage( const QString &message );
   void replaceMsgByUnencryptedVersion();

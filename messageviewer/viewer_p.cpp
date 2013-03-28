@@ -218,7 +218,6 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
     mMainWindow = aParent;
 
   mThemeManager = new MessageViewer::GrantleeThemeManager(mActionCollection, KStandardDirs::locate("data",QLatin1String("messageviewer/themes/")));
-  connect(mThemeManager, SIGNAL(themesChanged()),SLOT(slotThemesChanged()));
   mHtmlOverride = false;
   mHtmlLoadExtOverride = false;
   mHtmlLoadExternal = false;
@@ -3225,16 +3224,6 @@ void ViewerPrivate::slotResetMessageDisplayFormat()
             modify->disableRevisionCheck();
         }
     }
-}
-
-void ViewerPrivate::slotThemesChanged()
-{
-    QMapIterator<QString, GrantleeTheme> i(mThemeManager->themes());
-    while (i.hasNext()) {
-        i.next();
-        qDebug()<<" path "<<i.key()<<" name "<<i.value().name()<<" display extra headers :"<<i.value().displayExtraHeaders();
-    }
-    //TODO
 }
 
 #include "viewer_p.moc"
