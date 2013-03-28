@@ -468,15 +468,22 @@ bool Session::saslInteract(void* in)
       case SASL_CB_AUTHNAME:
         kDebug() << "SASL_CB_[AUTHNAME|USER]: '" << m_url.userName() << "'";
         interact->result = strdup( m_url.userName().toUtf8() );
-        interact->len = strlen( (const char *) interact->result );
+        if (interact->result )
+          interact->len = strlen( (const char *) interact->result );
+        else
+          interact->len = 0;
         break;
       case SASL_CB_PASS:
         kDebug() << "SASL_CB_PASS: [hidden] ";
         interact->result = strdup( m_url.password().toUtf8() );
-        interact->len = strlen( (const char *) interact->result );
+        if (interact->result )
+          interact->len = strlen( (const char *) interact->result );
+        else 
+          interact->len = 0;
         break;
       default:
-        interact->result = NULL; interact->len = 0;
+        interact->result = NULL; 
+        interact->len = 0;
         break;
     }
     interact++;

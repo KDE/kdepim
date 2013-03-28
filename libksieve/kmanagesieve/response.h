@@ -38,6 +38,11 @@ class Response
       Quantity
     };
 
+    Response() 
+      : m_type( None ),
+        m_quantity( 0 )
+    {
+    }
     Type type() const;
     QByteArray action() const;
     uint quantity() const;
