@@ -131,6 +131,7 @@ target_link_libraries(messageviewer messagecore kdepim kpgp kleo
   ${QGPGME_LIBRARIES}
   ${_mailwebview_lib}
   ${Grantlee_CORE_LIBRARIES} 
+  ${KDE4_KNEWSTUFF3_LIBS}
   pimcommon
 )
 

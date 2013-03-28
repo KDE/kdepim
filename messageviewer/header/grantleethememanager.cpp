@@ -23,6 +23,8 @@
 #include <KXMLGUIClient>
 #include <KActionCollection>
 #include <KToggleAction>
+#include <KLocale>
+#include <KNS3/DownloadDialog>
 
 #include <QDir>
 #include <QAction>
@@ -42,6 +44,25 @@ public:
     {
         watch = new KDirWatch( q );
         q->connect( watch, SIGNAL(dirty(QString)), SLOT(directoryChanged()) );
+        downloadThemesAction = new KAction(i18n("Download new themes..."), q);
+        actionCollection->addAction( "download_header_themes", downloadThemesAction );
+        connect(downloadThemesAction, SIGNAL(triggered(bool)), q, SLOT(slotDownloadHeaderThemes()) );
+    }
+
+    void slotDownloadHeaderThemes()
+    {
+        if (!downloadThemesDialog) {
+            downloadThemesDialog = new KNS3::DownloadDialog("header_themes.knsrc");
+            connect(downloadThemesDialog.data(), SIGNAL(accepted()), q, SLOT(slotNewStuffFinished()));
+        }
+        downloadThemesDialog.data()->show();
+    }
+
+    void slotNewStuffFinished()
+    {
+        if (downloadThemesDialog) {
+        //TODO
+        }
     }
 
     void directoryChanged()
@@ -121,6 +142,8 @@ public:
     KDirWatch *watch;
     KXMLGUIClient *guiClient;
     KActionCollection *actionCollection;
+    KAction *downloadThemesAction;
+    QWeakPointer<KNS3::DownloadDialog> downloadThemesDialog;
     GrantleeThemeManager *q;
 };
 
