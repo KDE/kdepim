@@ -19,7 +19,7 @@
 #define MAILCOMMON_FILTERIMPORTER_FILTERIMPORTERCLAWSMAILS_P_H
 
 #include "filterimporter/filterimporterabstract_p.h"
-
+#include "mailcommon_export.h"
 #include <QDomElement>
 
 class QFile;
@@ -29,7 +29,7 @@ namespace MailCommon {
 
 class MailFilter;
 
-class FilterImporterClawsMails : public FilterImporterAbstract
+class MAILCOMMON_EXPORT FilterImporterClawsMails : public FilterImporterAbstract
 {
 public:
     explicit FilterImporterClawsMails( QFile *file );
