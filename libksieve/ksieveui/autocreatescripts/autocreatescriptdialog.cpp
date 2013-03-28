@@ -22,6 +22,9 @@ using namespace KSieveUi;
 AutoCreateScriptDialog::AutoCreateScriptDialog(QWidget *parent)
     : KDialog(parent)
 {
+    setCaption( i18n( "Create sieve filter" ) );
+    setButtons( Ok|Cancel );
+    setButtonFocus( Ok );
 }
 
 AutoCreateScriptDialog::~AutoCreateScriptDialog()
