@@ -21,6 +21,7 @@ set(ksieveui_LIB_SRCS
   templates/sievedefaulttemplate.cpp 
   templates/sievetemplateeditdialog.cpp 
   autocreatescripts/autocreatescriptdialog.cpp
+  autocreatescripts/sievegeneratescriptwidgetlister.cpp
 )
 
 kde4_add_kcfg_files(ksieveui_LIB_SRCS settings.kcfgc)
@@ -31,6 +32,7 @@ target_link_libraries(ksieveui
   kmanagesieve
   ksieve
   pimcommon
+  kdepim
   ${KDEPIMLIBS_AKONADI_LIBS}
   ${KDEPIMLIBS_KMIME_LIBS}
   ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
