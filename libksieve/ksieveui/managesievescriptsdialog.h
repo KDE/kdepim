@@ -31,7 +31,7 @@ public:
     ~ManageSieveScriptsDialog();
 
 private slots:
-    void slotRefresh( bool disconnectSignal = false );
+    void slotRefresh();
     void slotItem( KManageSieve::SieveJob *, const QString &, bool );
     void slotResult( KManageSieve::SieveJob *, bool, const QString &, bool );
     void slotContextMenuRequested( const QPoint& position );
@@ -52,7 +52,7 @@ private slots:
 
 private:
     bool serverHasError(QTreeWidgetItem *item) const;
-    void killAllJobs( bool disconnect = false );
+    void killAllJobs();
     void changeActiveScript( QTreeWidgetItem*, bool activate = true );
 
     /**
@@ -69,7 +69,7 @@ private:
     /**
      * Remove everything from the tree widget and clear all caches.
      */
-    void clear( bool disconnect = false );
+    void clear();
 
     void addFailedMessage( const QString & logEntry );
     void addOkMessage( const QString & logEntry );
@@ -101,6 +101,7 @@ private:
     bool mIsNewScript : 1;
     bool mWasActive : 1;
     bool mBlockSignal : 1;
+    bool mClearAll : 1;
 };
 
 }

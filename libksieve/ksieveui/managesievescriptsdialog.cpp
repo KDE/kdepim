@@ -31,7 +31,8 @@ ManageSieveScriptsDialog::ManageSieveScriptsDialog( QWidget * parent, const char
       mSieveEditor( 0 ),
       mIsNewScript( false ),
       mWasActive( false ),
-      mBlockSignal( false )
+      mBlockSignal( false ),
+      mClearAll( false )
 {
     setWindowTitle( i18n( "Manage Sieve Scripts" ) );
     setObjectName( name );
@@ -100,21 +101,20 @@ ManageSieveScriptsDialog::ManageSieveScriptsDialog( QWidget * parent, const char
 
 ManageSieveScriptsDialog::~ManageSieveScriptsDialog()
 {
-    clear( true );
+    clear();
     KConfigGroup group( KGlobal::config(), "ManageSieveScriptsDialog" );
     group.writeEntry( "Size", size() );
 }
 
-void ManageSieveScriptsDialog::killAllJobs( bool disconnectSignal )
+void ManageSieveScriptsDialog::killAllJobs()
 {
+    mClearAll = true;
     QMap<KManageSieve::SieveJob*,QTreeWidgetItem*>::const_iterator it = mJobs.constBegin();
     while (it != mJobs.constEnd()) {
-        if ( disconnectSignal )
-            disconnect( it.key(), SIGNAL(result(KManageSieve::SieveJob*,bool,QString,bool)),
-                        this, SLOT(slotResult(KManageSieve::SieveJob*,bool,QString,bool)) );
         it.key()->kill();
         ++it;
     }
+    mClearAll = false;
     mJobs.clear();
 }
 
@@ -171,14 +171,13 @@ void ManageSieveScriptsDialog::slotUpdateButtons()
 }
 
 
-void ManageSieveScriptsDialog::slotRefresh(bool disconnectSignal)
+void ManageSieveScriptsDialog::slotRefresh()
 {
     mBlockSignal = true;
-    clear(disconnectSignal);
+    clear();
     QTreeWidgetItem *last = 0;
     Akonadi::AgentInstance::List lst = KSieveUi::Util::imapAgentInstances();
-    foreach ( const Akonadi::AgentInstance& type, lst )
-    {
+    foreach ( const Akonadi::AgentInstance& type, lst ) {
         if ( type.status() == Akonadi::AgentInstance::Broken )
             continue;
 
@@ -207,6 +206,8 @@ void ManageSieveScriptsDialog::slotRefresh(bool disconnectSignal)
 
 void ManageSieveScriptsDialog::slotResult( KManageSieve::SieveJob * job, bool success, const QString &, bool )
 {
+    if (mClearAll)
+        return;
     QTreeWidgetItem * parent = mJobs[job];
     if ( !parent )
         return;
@@ -316,9 +317,9 @@ bool ManageSieveScriptsDialog::isFileNameItem( QTreeWidgetItem *item ) const
     return (item->flags() & Qt::ItemIsUserCheckable);
 }
 
-void ManageSieveScriptsDialog::clear( bool disconnect )
+void ManageSieveScriptsDialog::clear()
 {
-    killAllJobs(disconnect);
+    killAllJobs();
     mSelectedItems.clear();
     mUrls.clear();
     mListView->clear();
@@ -475,7 +476,7 @@ void ManageSieveScriptsDialog::slotSieveEditorCancelClicked()
     mSieveEditor = 0;
     mCurrentURL = KUrl();
     if ( mIsNewScript )
-        slotRefresh(true);
+        slotRefresh();
 }
 
 void ManageSieveScriptsDialog::slotPutResultDebug(KManageSieve::SieveJob*,bool success ,const QString& errorMsg)
