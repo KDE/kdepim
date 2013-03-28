@@ -36,7 +36,9 @@ public:
     ~FilterImporterClawsMails();
     static QString defaultFiltersSettingsPath();
 private:
-    MailFilter * parseLine(QTextStream& stream, const QString& line, MailFilter *filter);
+    MailFilter * parseLine(const QString& line, MailFilter *filter);
+    QString extractString( const QString & tmp, int & pos);
+    QString extractConditions( const QString &line,MailFilter *filter);
 };
 
 }
