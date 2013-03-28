@@ -177,4 +177,6 @@ endif()
 set_target_properties(mailcommon PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 install(TARGETS mailcommon ${INSTALL_TARGETS_DEFAULT_ARGS})
 
+add_subdirectory(filter/filterimporter/tests)
+
 #install(FILES viewer.h attachmentstrategy.h headerstrategy.h messageviewer_export.h DESTINATION ${INCLUDE_INSTALL_DIR}/messageviewer COMPONENT devel)

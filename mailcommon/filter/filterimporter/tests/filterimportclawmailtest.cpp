@@ -15,6 +15,8 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 #include "filterimportclawmailtest.h"
+#include "../filterimporterclawsmail_p.h"
+#include "mailfilter.h"
 #include <qtest_kde.h>
 
 
@@ -22,6 +24,9 @@ QTEST_KDEMAIN( FilterImportClawMailtest, NoGUI )
 
 void FilterImportClawMailtest::testImportFilters()
 {
+    MailCommon::FilterImporterClawsMails importer;
+    MailCommon::MailFilter *filter = new MailCommon::MailFilter;
+    filter = importer.parseLine( "tt" , filter);
     //TODO
 }
 
