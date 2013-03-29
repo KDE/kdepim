@@ -18,6 +18,18 @@
 #include "sieveactionwidgetlister.h"
 
 using namespace KSieveUi;
+
+SieveActionWidget::SieveActionWidget(QWidget *parent)
+    : QWidget(parent)
+{
+
+}
+
+SieveActionWidget::~SieveActionWidget()
+{
+}
+
+
 SieveActionWidgetLister::SieveActionWidgetLister(QWidget *parent)
     : KPIM::KWidgetLister(false, 1, 15, parent)
 {
@@ -27,5 +39,24 @@ SieveActionWidgetLister::~SieveActionWidgetLister()
 {
 
 }
+
+void SieveActionWidgetLister::slotAddWidget( QWidget *w )
+{
+  addWidgetAfterThisWidget( w );
+  updateAddRemoveButton();
+}
+
+void SieveActionWidgetLister::slotRemoveWidget( QWidget *w )
+{
+  removeWidget( w );
+  updateAddRemoveButton();
+}
+
+
+void SieveActionWidgetLister::updateAddRemoveButton()
+{
+
+}
+
 
 #include "sieveactionwidgetlister.moc"

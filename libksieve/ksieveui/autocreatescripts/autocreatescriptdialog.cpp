@@ -40,7 +40,7 @@ AutoCreateScriptDialog::AutoCreateScriptDialog(QWidget *parent)
     vlay->setMargin( KDialog::marginHint() );
 
     QSplitter *splitter = new QSplitter;
-
+    splitter->setChildrenCollapsible(false);
     mSieveScript = new SieveScriptListBox( i18n("Sieve Script"));
     splitter->addWidget(mSieveScript);
     vlay->addWidget(splitter);

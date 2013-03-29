@@ -79,6 +79,7 @@ SieveScriptListBox::SieveScriptListBox(const QString &title, QWidget *parent)
     connect( mBtnNew, SIGNAL(clicked()), this, SLOT(slotNew()) );
     connect( mBtnDelete, SIGNAL(clicked()), this, SLOT(slotDelete()) );
     connect( mBtnRename, SIGNAL(clicked()), this, SLOT(slotRename()) );
+    connect( mSieveListScript, SIGNAL(itemSelectionChanged()), SLOT(updateButtons()));
 }
 
 SieveScriptListBox::~SieveScriptListBox()
@@ -87,27 +88,37 @@ SieveScriptListBox::~SieveScriptListBox()
 
 void SieveScriptListBox::updateButtons()
 {
-    //TODO
-
+    const QList<QListWidgetItem*> lst = mSieveListScript->selectedItems();
+    mBtnDelete->setEnabled(!lst.isEmpty());
+    mBtnRename->setEnabled(lst.count() == 1);
 }
 
 void SieveScriptListBox::slotNew()
 {
-    //TODO
+    const QString newName = KInputDialog::getText(i18n("New Script"), i18n("Add new name:"));
+    if (!newName.isEmpty()) {
+        SieveScriptListItem *item = new SieveScriptListItem(newName, mSieveListScript);
+        //TODO create uniq name
+    }
 }
 
 void SieveScriptListBox::slotDelete()
 {
-    //TODO
+    QListWidgetItem *item = mSieveListScript->currentItem();
+    if (item) {
+        delete item;
+    }
 }
 
 void SieveScriptListBox::slotRename()
 {
     QListWidgetItem *item = mSieveListScript->currentItem();
     if (item) {
-    //KInputDialog::
+        const QString newName = KInputDialog::getText(i18n("Rename"), i18n("Add new name:"), item->text());
+        if (!newName.isEmpty()) {
+            item->setText(newName);
+        }
     }
-    //TODO
 }
 
 void SieveScriptListBox::slotEditDescription()
