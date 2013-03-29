@@ -19,17 +19,41 @@
 #define SIEVESCRIPTLISTBOX_H
 
 #include <QGroupBox>
+#include <QListWidgetItem>
 class QListWidget;
+class QPushButton;
 
 namespace KSieveUi {
+
+class SieveScriptListItem : public QListWidgetItem
+{
+public:
+    SieveScriptListItem( const QString &text, QListWidget *parent );
+    ~SieveScriptListItem();
+
+    void setDescription(const QString & desc);
+    QString description() const;
+private:
+    QString mDescription;
+};
+
 class SieveScriptListBox : public QGroupBox
 {
     Q_OBJECT
 public:
     explicit SieveScriptListBox(const QString &title, QWidget *parent = 0);
     ~SieveScriptListBox();
+private Q_SLOTS:
+    void slotNew();
+    void slotDelete();
+    void slotRename();
+    void updateButtons();
+    void slotEditDescription();
 private:
     QListWidget *mSieveListScript;
+    QPushButton *mBtnNew;
+    QPushButton *mBtnDelete;
+    QPushButton *mBtnRename;
 };
 }
 

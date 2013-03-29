@@ -15,27 +15,17 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef AUTOCREATESCRIPTDIALOG_H
-#define AUTOCREATESCRIPTDIALOG_H
+#include "sieveactionwidgetlister.h"
 
-#include <KDialog>
-
-namespace KSieveUi {
-class SieveConditionWidgetLister;
-class SieveActionWidgetLister;
-class SieveScriptListBox;
-class AutoCreateScriptDialog : public KDialog
+using namespace KSieveUi;
+SieveActionWidgetLister::SieveActionWidgetLister(QWidget *parent)
+    : KPIM::KWidgetLister(false, 1, 15, parent)
 {
-    Q_OBJECT
-public:
-    explicit AutoCreateScriptDialog(QWidget *parent = 0);
-    ~AutoCreateScriptDialog();
-    QString script() const;
-private:
-    SieveConditionWidgetLister *mScriptConditionLister;
-    SieveActionWidgetLister *mScriptActionLister;
-    SieveScriptListBox *mSieveScript;
-};
 }
 
-#endif // AUTOCREATESCRIPTDIALOG_H
+SieveActionWidgetLister::~SieveActionWidgetLister()
+{
+
+}
+
+#include "sieveactionwidgetlister.moc"

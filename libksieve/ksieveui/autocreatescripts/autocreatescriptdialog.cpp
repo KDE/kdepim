@@ -16,7 +16,9 @@
 */
 
 #include "autocreatescriptdialog.h"
+#include "sievescriptlistbox.h"
 #include "sieveconditionwidgetlister.h"
+#include "sieveactionwidgetlister.h"
 
 #include <KLocale>
 
@@ -36,11 +38,17 @@ AutoCreateScriptDialog::AutoCreateScriptDialog(QWidget *parent)
     vlay->setSpacing( KDialog::spacingHint() );
     vlay->setMargin( KDialog::marginHint() );
 
-    mSieveScript = new QListWidget;
+    QHBoxLayout *hbox = new QHBoxLayout;
+
+    mSieveScript = new SieveScriptListBox( i18n("Sieve Script"));
+    hbox->addWidget(mSieveScript);
+
 
     mScriptConditionLister = new SieveConditionWidgetLister;
+    hbox->addWidget(mScriptConditionLister);
 
-    vlay->addWidget(mScriptConditionLister);
+    vlay->addLayout(hbox);
+
     setMainWidget( mainWidget );
 }
 
