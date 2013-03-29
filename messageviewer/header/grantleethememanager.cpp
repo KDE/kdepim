@@ -125,6 +125,7 @@ public:
             guiClient->unplugActionList(QLatin1String("theme_action_list"));
         }
 
+        themesActionList.clear();
         Q_FOREACH ( QAction *action, themesActionList ) {
             actionGroup->removeAction(action);
             actionCollection->removeAction( action );
@@ -138,7 +139,6 @@ public:
             actionGroup->addAction(act);
             q->connect(act, SIGNAL(triggered(bool)), q, SLOT(slotThemeSelected()));
         }
-
         if (guiClient) {
             guiClient->plugActionList(QLatin1String("theme_action_list"), themesActionList);
         }
@@ -204,13 +204,13 @@ GrantleeTheme GrantleeThemeManager::findTheme( const QString &themeName) const
 void GrantleeThemeManager::setXmlGuiClient( KXMLGUIClient *guiClient )
 {
     d->guiClient = guiClient;
-    d->updateActionList();
+    d->directoryChanged();
 }
 
 void GrantleeThemeManager::setActionGroup( QActionGroup *actionGroup )
 {
     d->actionGroup = actionGroup;
-    d->updateActionList();
+    d->directoryChanged();
 }
 
 KToggleAction *GrantleeThemeManager::actionForHeaderStyle()
