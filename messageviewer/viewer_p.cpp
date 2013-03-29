@@ -218,6 +218,7 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
     mMainWindow = aParent;
 
   mThemeManager = new MessageViewer::GrantleeThemeManager(mActionCollection, KStandardDirs::locate("data",QLatin1String("messageviewer/themes/")));
+  connect(mThemeManager, SIGNAL(grantleeThemeSelected()), this, SLOT(slotGrantleeHeaders()));
   mHtmlOverride = false;
   mHtmlLoadExtOverride = false;
   mHtmlLoadExternal = false;
@@ -1906,7 +1907,7 @@ KToggleAction *ViewerPrivate::actionForHeaderStyle( const HeaderStyle * style, c
   } else if (style == HeaderStyle::custom() ) {
       actionName = "view_custom_headers";
   } else if (style == HeaderStyle::grantlee()) {
-      //TODO
+      return mThemeManager->actionForHeaderStyle();
   }
 
   if ( actionName )

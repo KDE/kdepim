@@ -118,6 +118,9 @@ public:
 
     void updateActionList()
     {
+        if (!actionGroup)
+            return;
+
         if (guiClient) {
             guiClient->unplugActionList(QLatin1String("theme_action_list"));
         }
@@ -151,6 +154,20 @@ public:
             Q_EMIT q->grantleeThemeSelected();
         }
     }
+
+    KToggleAction *actionForHeaderStyle()
+    {
+        const QString themeName = GlobalSettings::self()->grantleeThemeName();
+        if (themeName.isEmpty())
+            return 0;
+        Q_FOREACH(QAction *act, themesActionList) {
+            if (act->text() == themeName) {
+                return static_cast<KToggleAction*>(act);
+            }
+        }
+        return 0;
+    }
+
 
     QString themesPath;
     QMap<QString, GrantleeTheme> themes;
@@ -187,11 +204,18 @@ GrantleeTheme GrantleeThemeManager::findTheme( const QString &themeName) const
 void GrantleeThemeManager::setXmlGuiClient( KXMLGUIClient *guiClient )
 {
     d->guiClient = guiClient;
+    d->updateActionList();
 }
 
 void GrantleeThemeManager::setActionGroup( QActionGroup *actionGroup )
 {
     d->actionGroup = actionGroup;
+    d->updateActionList();
+}
+
+KToggleAction *GrantleeThemeManager::actionForHeaderStyle()
+{
+    return d->actionForHeaderStyle();
 }
 
 void GrantleeThemeManager::activateTheme(const QString &themeName)
