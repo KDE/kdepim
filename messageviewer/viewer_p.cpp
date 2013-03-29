@@ -1189,6 +1189,7 @@ void ViewerPrivate::readConfig()
   // bottom when all settings are already est.
   setHeaderStyleAndStrategy( HeaderStyle::create( GlobalSettings::self()->headerStyle() ),
                              HeaderStrategy::create( GlobalSettings::self()->headerSetDisplayed() ) );
+  headerStyle()->setThemeName(GlobalSettings::self()->grantleeThemeName());
 
 #ifndef KDEPIM_NO_WEBKIT
   mViewer->settings()->setFontSize( QWebSettings::MinimumFontSize, GlobalSettings::self()->minimumFontSize() );
@@ -1204,8 +1205,10 @@ void ViewerPrivate::readConfig()
 void ViewerPrivate::writeConfig( bool sync )
 {
   GlobalSettings::self()->setUseFixedFont( mUseFixedFont );
-  if ( headerStyle() )
+  if ( headerStyle() ) {
     GlobalSettings::self()->setHeaderStyle( headerStyle()->name() );
+    GlobalSettings::self()->setGrantleeThemeName( headerStyle()->themeName() );
+  }
   if ( headerStrategy() )
     GlobalSettings::self()->setHeaderSetDisplayed( headerStrategy()->name() );
   if ( attachmentStrategy() )
