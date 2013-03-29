@@ -51,6 +51,18 @@ public:
         actionCollection->addAction( "download_header_themes", downloadThemesAction );
         connect(downloadThemesAction, SIGNAL(triggered(bool)), q, SLOT(slotDownloadHeaderThemes()) );
     }
+    ~Private()
+    {
+        if (guiClient)
+            guiClient->unplugActionList(QLatin1String("theme_action_list"));
+
+        Q_FOREACH ( QAction *action, themesActionList ) {
+            if (actionGroup)
+                actionGroup->removeAction(action);
+            actionCollection->removeAction( action );
+        }
+        themesActionList.clear();
+    }
 
     void slotDownloadHeaderThemes()
     {
