@@ -26,7 +26,9 @@ void FilterImportClawMailtest::testImportFilters()
 {
     MailCommon::FilterImporterClawsMails importer;
     MailCommon::MailFilter *filter = new MailCommon::MailFilter;
-    filter = importer.parseLine( "tt" , filter);
-    //TODO
+    filter = importer.parseLine( "enabled rulename \"foo\" subject matchcase \"fff\" add_to_addressbook \"From\" \"addrbook-000002.xml\"" , filter);
+    QCOMPARE(filter->toolbarName(), QLatin1String("foo"));
+    QVERIFY(filter->isEnabled());
+    delete filter;
 }
 
