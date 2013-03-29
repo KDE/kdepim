@@ -118,12 +118,10 @@ public:
 
     void updateActionList()
     {
-        if (!actionGroup)
+        if (!actionGroup || !guiClient)
             return;
 
-        if (guiClient) {
-            guiClient->unplugActionList(QLatin1String("theme_action_list"));
-        }
+        guiClient->unplugActionList(QLatin1String("theme_action_list"));
 
         themesActionList.clear();
         Q_FOREACH ( QAction *action, themesActionList ) {
@@ -139,9 +137,7 @@ public:
             actionGroup->addAction(act);
             q->connect(act, SIGNAL(triggered(bool)), q, SLOT(slotThemeSelected()));
         }
-        if (guiClient) {
-            guiClient->plugActionList(QLatin1String("theme_action_list"), themesActionList);
-        }
+        guiClient->plugActionList(QLatin1String("theme_action_list"), themesActionList);
     }
 
     void slotThemeSelected()
