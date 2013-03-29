@@ -21,6 +21,7 @@
 #include <KLocale>
 
 #include <QVBoxLayout>
+#include <QListWidget>
 
 using namespace KSieveUi;
 
@@ -34,8 +35,12 @@ AutoCreateScriptDialog::AutoCreateScriptDialog(QWidget *parent)
     QVBoxLayout *vlay = new QVBoxLayout( mainWidget );
     vlay->setSpacing( KDialog::spacingHint() );
     vlay->setMargin( KDialog::marginHint() );
-    scriptConditionLister = new SieveConditionWidgetLister;
-    vlay->addWidget(scriptConditionLister);
+
+    mSieveScript = new QListWidget;
+
+    mScriptConditionLister = new SieveConditionWidgetLister;
+
+    vlay->addWidget(mScriptConditionLister);
     setMainWidget( mainWidget );
 }
 

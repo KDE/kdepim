@@ -14,26 +14,25 @@
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
+#include "sievescriptlistbox.h"
 
-#ifndef AUTOCREATESCRIPTDIALOG_H
-#define AUTOCREATESCRIPTDIALOG_H
+#include <QVBoxLayout>
+#include <QListWidget>
 
-#include <KDialog>
-class QListWidget;
+using namespace KSieveUi;
 
-namespace KSieveUi {
-class SieveConditionWidgetLister;
-class AutoCreateScriptDialog : public KDialog
+SieveScriptListBox::SieveScriptListBox(const QString &title, QWidget *parent)
+    : QGroupBox(title, parent)
 {
-    Q_OBJECT
-public:
-    explicit AutoCreateScriptDialog(QWidget *parent = 0);
-    ~AutoCreateScriptDialog();
-    QString script() const;
-private:
-    SieveConditionWidgetLister *mScriptConditionLister;
-    QListWidget *mSieveScript;
-};
+    QVBoxLayout *layout = new QVBoxLayout();
+    mSieveListScript = new QListWidget;
+    layout->addWidget(mSieveListScript);
+    setLayout( layout );
 }
 
-#endif // AUTOCREATESCRIPTDIALOG_H
+SieveScriptListBox::~SieveScriptListBox()
+{
+
+}
+
+#include "sievescriptlistbox.moc"
