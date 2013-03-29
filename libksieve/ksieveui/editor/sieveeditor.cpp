@@ -19,6 +19,7 @@
 #include "sieveeditor.h"
 #include "sievefindbar.h"
 #include "templates/sievetemplatewidget.h"
+#include "autocreatescripts/autocreatescriptdialog.h"
 
 #include <klocale.h>
 #include <kiconloader.h>
@@ -102,6 +103,11 @@ SieveEditor::SieveEditor( QWidget * parent )
     connect( this, SIGNAL(user2Clicked()), SLOT(slotSaveAs()) );
     connect( this, SIGNAL(user3Clicked()), SLOT(slotImport()) );
 
+    //Temporary
+    shortcut = new QShortcut( this );
+    shortcut->setKey( Qt::Key_X+Qt::CTRL+Qt::SHIFT );
+    connect( shortcut, SIGNAL(activated()), SLOT(slotAutoGenerateScripts()) );
+
     setMainWidget( mainWidget );
     KConfigGroup group( KGlobal::config(), "SieveEditor" );
     const QSize sizeDialog = group.readEntry( "Size", QSize() );
@@ -118,6 +124,13 @@ SieveEditor::~SieveEditor()
 {
     KConfigGroup group( KGlobal::config(), "SieveEditor" );
     group.writeEntry( "Size", size() );
+}
+
+void SieveEditor::slotAutoGenerateScripts()
+{
+    AutoCreateScriptDialog *dlg = new AutoCreateScriptDialog(this);
+    dlg->exec();
+    delete dlg;
 }
 
 void SieveEditor::slotFind()

@@ -21,6 +21,7 @@
 #include <KDialog>
 
 namespace KSieveUi {
+class SieveConditionWidgetLister;
 class AutoCreateScriptDialog : public KDialog
 {
     Q_OBJECT
@@ -28,6 +29,8 @@ public:
     explicit AutoCreateScriptDialog(QWidget *parent = 0);
     ~AutoCreateScriptDialog();
     QString script() const;
+private:
+    SieveConditionWidgetLister *scriptConditionLister;
 };
 }
 

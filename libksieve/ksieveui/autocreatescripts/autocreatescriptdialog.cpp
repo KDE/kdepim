@@ -16,7 +16,11 @@
 */
 
 #include "autocreatescriptdialog.h"
+#include "sieveconditionwidgetlister.h"
+
 #include <KLocale>
+
+#include <QVBoxLayout>
 
 using namespace KSieveUi;
 
@@ -26,6 +30,13 @@ AutoCreateScriptDialog::AutoCreateScriptDialog(QWidget *parent)
     setCaption( i18n( "Create sieve filter" ) );
     setButtons( Ok|Cancel );
     setButtonFocus( Ok );
+    QWidget *mainWidget = new QWidget( this );
+    QVBoxLayout *vlay = new QVBoxLayout( mainWidget );
+    vlay->setSpacing( KDialog::spacingHint() );
+    vlay->setMargin( KDialog::marginHint() );
+    scriptConditionLister = new SieveConditionWidgetLister;
+    vlay->addWidget(scriptConditionLister);
+    setMainWidget( mainWidget );
 }
 
 AutoCreateScriptDialog::~AutoCreateScriptDialog()

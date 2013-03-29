@@ -21,7 +21,7 @@ set(ksieveui_LIB_SRCS
   templates/sievedefaulttemplate.cpp 
   templates/sievetemplateeditdialog.cpp 
   autocreatescripts/autocreatescriptdialog.cpp
-  autocreatescripts/sievegeneratescriptwidgetlister.cpp
+  autocreatescripts/sieveconditionwidgetlister.cpp
 )
 
 kde4_add_kcfg_files(ksieveui_LIB_SRCS settings.kcfgc)

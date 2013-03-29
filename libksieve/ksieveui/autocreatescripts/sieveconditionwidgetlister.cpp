@@ -15,17 +15,17 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "sievegeneratescriptwidgetlister.h"
+#include "sieveconditionwidgetlister.h"
 
 using namespace KSieveUi;
-SieveGenerateScriptWidgetLister::SieveGenerateScriptWidgetLister(QWidget *parent)
-    : KPIM::KWidgetLister(parent)
+SieveConditionWidgetLister::SieveConditionWidgetLister(QWidget *parent)
+    : KPIM::KWidgetLister(false, 1, 15, parent)
 {
 }
 
-SieveGenerateScriptWidgetLister::~SieveGenerateScriptWidgetLister()
+SieveConditionWidgetLister::~SieveConditionWidgetLister()
 {
 
 }
 
-#include "sievegeneratescriptwidgetlister.moc"
+#include "sieveconditionwidgetlister.moc"

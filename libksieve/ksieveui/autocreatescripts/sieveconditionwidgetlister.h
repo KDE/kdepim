@@ -16,19 +16,19 @@
 */
 
 
-#ifndef SIEVEGENERATESCRIPTWIDGETLISTER_H
-#define SIEVEGENERATESCRIPTWIDGETLISTER_H
+#ifndef SIEVECONDITIONWIDGETLISTER_H
+#define SIEVECONDITIONWIDGETLISTER_H
 
 #include <libkdepim/kwidgetlister.h>
 
 namespace KSieveUi {
-class SieveGenerateScriptWidgetLister : public KPIM::KWidgetLister
+class SieveConditionWidgetLister : public KPIM::KWidgetLister
 {
     Q_OBJECT
 public:
-    explicit SieveGenerateScriptWidgetLister(QWidget *parent = 0);
-    ~SieveGenerateScriptWidgetLister();
+    explicit SieveConditionWidgetLister(QWidget *parent = 0);
+    ~SieveConditionWidgetLister();
 };
 }
 
-#endif // SIEVEGENERATESCRIPTWIDGETLISTER_H
+#endif // SIEVECONDITIONWIDGETLISTER_H
