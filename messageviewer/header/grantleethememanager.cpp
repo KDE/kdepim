@@ -16,6 +16,7 @@
 */
 
 #include "grantleethememanager.h"
+#include "globalsettings.h"
 
 #include <KDirWatch>
 #include <KConfigGroup>
@@ -132,11 +133,22 @@ public:
             KToggleAction *act = new KToggleAction(i.value().name(),q);
             themesActionList.append(act);
             actionGroup->addAction(act);
-            //TODO connect.
+            q->connect(act, SIGNAL(triggered(bool)), q, SLOT(slotThemeSelected()));
         }
 
         if (guiClient) {
             guiClient->plugActionList(QLatin1String("theme_action_list"), themesActionList);
+        }
+    }
+
+    void slotThemeSelected()
+    {
+        if (q->sender() ) {
+            KToggleAction *act = dynamic_cast<KToggleAction *>(q->sender());
+            if (act) {
+                GlobalSettings::self()->setGrantleeThemeName( act->text() );
+            }
+            Q_EMIT q->grantleeThemeSelected();
         }
     }
 
