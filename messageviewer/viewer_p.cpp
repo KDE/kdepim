@@ -1599,7 +1599,8 @@ void ViewerPrivate::createActions()
   raction->setHelpText( i18n("Show custom headers") );
   group->addAction( raction );
   headerMenu->addAction( raction );
-
+  //Same action group
+  mThemeManager->setActionGroup(group);
 
   // attachment style
   KActionMenu *attachmentMenu  = new KActionMenu(i18nc("View->", "&Attachments"), this);

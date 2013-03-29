@@ -29,6 +29,7 @@
 #include <QDir>
 #include <QAction>
 #include <QDirIterator>
+#include <QActionGroup>
 
 
 using namespace MessageViewer;
@@ -39,6 +40,7 @@ public:
     Private(KActionCollection *ac, const QString &path, GrantleeThemeManager *qq)
         : themesPath(path),
           guiClient(0),
+          actionGroup(0),
           actionCollection(ac),
           q(qq)
     {
@@ -120,6 +122,7 @@ public:
         }
 
         Q_FOREACH ( QAction *action, themesActionList ) {
+            actionGroup->removeAction(action);
             actionCollection->removeAction( action );
         }
 
@@ -128,6 +131,7 @@ public:
             i.next();
             KToggleAction *act = new KToggleAction(i.value().name(),q);
             themesActionList.append(act);
+            actionGroup->addAction(act);
             //TODO connect.
         }
 
@@ -141,6 +145,7 @@ public:
     QList<QAction*> themesActionList;
     KDirWatch *watch;
     KXMLGUIClient *guiClient;
+    QActionGroup *actionGroup;
     KActionCollection *actionCollection;
     KAction *downloadThemesAction;
     QWeakPointer<KNS3::DownloadDialog> downloadThemesDialog;
@@ -170,6 +175,11 @@ GrantleeTheme GrantleeThemeManager::findTheme( const QString &themeName) const
 void GrantleeThemeManager::setXmlGuiClient( KXMLGUIClient *guiClient )
 {
     d->guiClient = guiClient;
+}
+
+void GrantleeThemeManager::setActionGroup( QActionGroup *actionGroup )
+{
+    d->actionGroup = actionGroup;
 }
 
 void GrantleeThemeManager::activateTheme(const QString &themeName)
