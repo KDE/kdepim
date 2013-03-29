@@ -123,11 +123,11 @@ public:
 
         guiClient->unplugActionList(QLatin1String("theme_action_list"));
 
-        themesActionList.clear();
         Q_FOREACH ( QAction *action, themesActionList ) {
             actionGroup->removeAction(action);
             actionCollection->removeAction( action );
         }
+        themesActionList.clear();
 
         QMapIterator<QString, GrantleeTheme> i(themes);
         while (i.hasNext()) {
