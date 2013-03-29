@@ -25,8 +25,7 @@ QTEST_KDEMAIN( FilterImportClawMailtest, NoGUI )
 void FilterImportClawMailtest::testImportFilters()
 {
     MailCommon::FilterImporterClawsMails importer;
-    MailCommon::MailFilter *filter = new MailCommon::MailFilter;
-    filter = importer.parseLine( "enabled rulename \"foo\" subject matchcase \"fff\" add_to_addressbook \"From\" \"addrbook-000002.xml\"" , filter);
+    MailCommon::MailFilter *filter = importer.parseLine( "enabled rulename \"foo\" subject matchcase \"fff\" add_to_addressbook \"From\" \"addrbook-000002.xml\"");
     QCOMPARE(filter->toolbarName(), QLatin1String("foo"));
     QVERIFY(filter->isEnabled());
     delete filter;
