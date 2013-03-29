@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012, 2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -30,14 +30,14 @@ class MailFilter;
 
 class FilterImporterEvolution : public FilterImporterAbstract
 {
-  public:
+public:
     explicit FilterImporterEvolution( QFile *file );
     ~FilterImporterEvolution();
     static QString defaultFiltersSettingsPath();
-  private:
+private:
     enum parseType {
-      PartType = 0,
-      ActionType = 1
+        PartType = 0,
+        ActionType = 1
     };
     void parseFilters( const QDomElement &e );
     void parsePartAction( const QDomElement &ruleFilter,

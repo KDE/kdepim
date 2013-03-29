@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012, 2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -27,17 +27,17 @@
 using namespace MailCommon;
 
 FilterImporterProcmail::FilterImporterProcmail( QFile *file )
-  :FilterImporterAbstract(), mFilterCount( 0 )
+    :FilterImporterAbstract(), mFilterCount( 0 )
 {
-  QTextStream stream(file);
-  MailFilter *filter = 0;
-  while ( !stream.atEnd() ) {
-    QString line = stream.readLine();
-    kDebug() << " line :" << line << " filter " << filter;
-    filter = parseLine( stream, line, filter );
-  }
+    QTextStream stream(file);
+    MailFilter *filter = 0;
+    while ( !stream.atEnd() ) {
+        QString line = stream.readLine();
+        kDebug() << " line :" << line << " filter " << filter;
+        filter = parseLine( stream, line, filter );
+    }
 
-  appendFilter(filter);
+    appendFilter(filter);
 }
 
 FilterImporterProcmail::~FilterImporterProcmail()

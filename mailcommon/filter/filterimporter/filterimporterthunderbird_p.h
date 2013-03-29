@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2011, 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2011, 2012, 2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -29,11 +29,11 @@ class MailFilter;
 
 class FilterImporterThunderbird : public FilterImporterAbstract
 {
-  public:
+public:
     explicit FilterImporterThunderbird( QFile *file );
     ~FilterImporterThunderbird();
     static QString defaultFiltersSettingsPath();
-  private:
+private:
     static QString cleanArgument( const QString &line, const QString &removeStr );
     void extractConditions( const QString &line, MailCommon::MailFilter *filter );
     QString extractActions( const QString &line, MailFilter *filter, QString &value );
