@@ -42,7 +42,8 @@ FilterImporterClawsMails::FilterImporterClawsMails( QFile *file )
         } else if(line.startsWith(QLatin1Char('[')) && line.endsWith(QLatin1Char(']'))) {
             //TODO
         } else {
-            filter = parseLine( line, filter );
+            appendFilter(filter);
+            filter = parseLine( line );
         }
     }
     appendFilter(filter);
@@ -62,10 +63,9 @@ QString FilterImporterClawsMails::defaultFiltersSettingsPath()
     return QString::fromLatin1( "%1/.claws-mail/matcherrc" ).arg( QDir::homePath() );
 }
 
-MailFilter * FilterImporterClawsMails::parseLine(const QString& line, MailFilter *filter)
+MailFilter * FilterImporterClawsMails::parseLine(const QString& line)
 {
-    appendFilter(filter);
-    filter = new MailFilter();
+    MailFilter *filter = new MailFilter();
     QString tmp = line;
     //Enabled ?
     if(tmp.startsWith(QLatin1String("enabled"))) {

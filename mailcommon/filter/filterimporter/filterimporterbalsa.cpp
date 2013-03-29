@@ -137,6 +137,7 @@ void FilterImporterBalsa::parseAction(int actionType, const QString& action,Mail
         break;
     case 3:
         //Print
+        //Not implemented in kmail
         break;
     case 4:
         //Execute
