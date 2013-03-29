@@ -22,12 +22,26 @@
 #include <libkdepim/kwidgetlister.h>
 
 namespace KSieveUi {
+
+class SieveConditionWidget : public QWidget
+{
+    Q_OBJECT
+public:
+    explicit SieveConditionWidget(QWidget *);
+    ~SieveConditionWidget();
+};
+
 class SieveConditionWidgetLister : public KPIM::KWidgetLister
 {
     Q_OBJECT
 public:
     explicit SieveConditionWidgetLister(QWidget *parent = 0);
     ~SieveConditionWidgetLister();
+public Q_SLOTS:
+    void slotAddWidget( QWidget *w );
+    void slotRemoveWidget( QWidget *w );
+private:
+    void updateAddRemoveButton();
 };
 }
 

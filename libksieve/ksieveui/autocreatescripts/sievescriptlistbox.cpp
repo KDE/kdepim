@@ -123,4 +123,9 @@ void SieveScriptListBox::slotEditDescription()
     }
 }
 
+QString SieveScriptListBox::generatedScript() const
+{
+    return QString();
+}
+
 #include "sievescriptlistbox.moc"

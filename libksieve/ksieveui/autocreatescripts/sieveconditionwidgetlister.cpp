@@ -18,12 +18,42 @@
 #include "sieveconditionwidgetlister.h"
 
 using namespace KSieveUi;
+
+SieveConditionWidget::SieveConditionWidget(QWidget *parent)
+    : QWidget(parent)
+{
+
+}
+
+SieveConditionWidget::~SieveConditionWidget()
+{
+}
+
+
 SieveConditionWidgetLister::SieveConditionWidgetLister(QWidget *parent)
     : KPIM::KWidgetLister(false, 1, 15, parent)
 {
 }
 
 SieveConditionWidgetLister::~SieveConditionWidgetLister()
+{
+
+}
+
+void SieveConditionWidgetLister::slotAddWidget( QWidget *w )
+{
+  addWidgetAfterThisWidget( w );
+  updateAddRemoveButton();
+}
+
+void SieveConditionWidgetLister::slotRemoveWidget( QWidget *w )
+{
+  removeWidget( w );
+  updateAddRemoveButton();
+}
+
+
+void SieveConditionWidgetLister::updateAddRemoveButton()
 {
 
 }

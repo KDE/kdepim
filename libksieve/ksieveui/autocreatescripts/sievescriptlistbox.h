@@ -43,6 +43,8 @@ class SieveScriptListBox : public QGroupBox
 public:
     explicit SieveScriptListBox(const QString &title, QWidget *parent = 0);
     ~SieveScriptListBox();
+    QString generatedScript() const;
+
 private Q_SLOTS:
     void slotNew();
     void slotDelete();

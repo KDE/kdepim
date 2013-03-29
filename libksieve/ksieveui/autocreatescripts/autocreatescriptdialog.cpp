@@ -76,7 +76,7 @@ AutoCreateScriptDialog::~AutoCreateScriptDialog()
 
 QString AutoCreateScriptDialog::script() const
 {
-    return QString(); //TODO
+    return mSieveScript->generatedScript();
 }
 
 #include "autocreatescriptdialog.moc"
