@@ -38,6 +38,7 @@ public:
     ~FilterImporterClawsMails();
     static QString defaultFiltersSettingsPath();
 
+    // the returned mail filter instance will be owned by the caller, who must ensure to delete it at some point
     MailFilter * parseLine(const QString& line);
 
 private:
