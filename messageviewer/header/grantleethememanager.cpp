@@ -31,16 +31,16 @@
 #include <QAction>
 #include <QDirIterator>
 #include <QActionGroup>
-
+#include <QTimer>
 
 using namespace MessageViewer;
 
 class GrantleeThemeManager::Private
 {
 public:
-    Private(KActionCollection *ac, const QString &path, GrantleeThemeManager *qq)
+    Private(KXMLGUIClient *xmlGuiClient, KActionCollection *ac, const QString &path, GrantleeThemeManager *qq)
         : themesPath(path),
-          guiClient(0),
+          guiClient(xmlGuiClient),
           actionGroup(0),
           actionCollection(ac),
           q(qq)
@@ -50,7 +50,9 @@ public:
         downloadThemesAction = new KAction(i18n("Download new themes..."), q);
         actionCollection->addAction( "download_header_themes", downloadThemesAction );
         connect(downloadThemesAction, SIGNAL(triggered(bool)), q, SLOT(slotDownloadHeaderThemes()) );
+        QTimer::singleShot(1000, q, SLOT(directoryChanged()));
     }
+
     ~Private()
     {
         if (guiClient)
@@ -130,6 +132,7 @@ public:
 
     void updateActionList()
     {
+        qDebug()<<" updateActionList before"<<themesActionList.count();
         if (!actionGroup || !guiClient)
             return;
 
@@ -149,6 +152,7 @@ public:
             actionGroup->addAction(act);
             q->connect(act, SIGNAL(triggered(bool)), q, SLOT(slotThemeSelected()));
         }
+        qDebug()<<" updateActionList"<<themesActionList.count();
         guiClient->plugActionList(QLatin1String("theme_action_list"), themesActionList);
     }
 
@@ -189,8 +193,8 @@ public:
     GrantleeThemeManager *q;
 };
 
-GrantleeThemeManager::GrantleeThemeManager(KActionCollection *actionCollection, const QString &path, QObject *parent)
-    : QObject(parent), d(new Private(actionCollection, path,this))
+GrantleeThemeManager::GrantleeThemeManager(KXMLGUIClient *guiClient, KActionCollection *actionCollection, const QString &path, QObject *parent)
+    : QObject(parent), d(new Private(guiClient, actionCollection, path,this))
 {
 }
 
@@ -229,6 +233,11 @@ KToggleAction *GrantleeThemeManager::actionForHeaderStyle()
 void GrantleeThemeManager::activateTheme(const QString &themeName)
 {
     //TODO
+}
+
+void GrantleeThemeManager::updateThemeList()
+{
+    d->directoryChanged();
 }
 
 #include "grantleethememanager.moc"

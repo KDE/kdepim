@@ -48,31 +48,44 @@ namespace MessageViewer {
 
 Viewer::Viewer( QWidget *aParent, QWidget *mainWindow, KActionCollection *actionCollection,
                 Qt::WindowFlags aFlags )
-  : QWidget( aParent, aFlags ), d_ptr( new ViewerPrivate( this, mainWindow, actionCollection ) )
+  : QWidget( aParent, aFlags ), d_ptr( new ViewerPrivate( 0, this, mainWindow, actionCollection ) )
 {
-  connect( d_ptr, SIGNAL(replaceMsgByUnencryptedVersion()),
-          SIGNAL(replaceMsgByUnencryptedVersion()) );
-  connect( d_ptr, SIGNAL(popupMenu(Akonadi::Item,KUrl,KUrl,QPoint)),
-           SIGNAL(popupMenu(Akonadi::Item,KUrl,KUrl,QPoint)) );
-  connect( d_ptr, SIGNAL(urlClicked(Akonadi::Item,KUrl)),
-           SIGNAL(urlClicked(Akonadi::Item,KUrl)) );
-  connect( d_ptr, SIGNAL(requestConfigSync()), SIGNAL(requestConfigSync()) );
-  connect( d_ptr, SIGNAL(makeResourceOnline(MessageViewer::Viewer::ResourceOnlineMode)), SIGNAL(makeResourceOnline(MessageViewer::Viewer::ResourceOnlineMode)) );
-  connect( d_ptr, SIGNAL(showReader(KMime::Content*,bool,QString)),
-           SIGNAL(showReader(KMime::Content*,bool,QString)) );
-  connect( d_ptr, SIGNAL(showMessage(KMime::Message::Ptr,QString)), this, SIGNAL(showMessage(KMime::Message::Ptr,QString)) );
-  connect( d_ptr, SIGNAL(showStatusBarMessage(QString)),
-           this, SIGNAL(showStatusBarMessage(QString)) );
-  connect( d_ptr, SIGNAL(itemRemoved()),
-           this, SIGNAL(itemRemoved()) );
-  connect( d_ptr, SIGNAL(changeDisplayMail(Viewer::ForceDisplayTo,bool)), SLOT(slotChangeDisplayMail(Viewer::ForceDisplayTo,bool)) );
-
-  setMessage( KMime::Message::Ptr(), Delayed );
+    initialize();
 }
+
+Viewer::Viewer( KActionCollection *actionCollection, KXMLGUIClient *guiClient, QWidget *aParent, QWidget *mainWindow,
+                Qt::WindowFlags aFlags )
+  : QWidget( aParent, aFlags ), d_ptr( new ViewerPrivate( guiClient, this, mainWindow, actionCollection ) )
+{
+    initialize();
+}
+
 
 Viewer::~Viewer()
 {
   //the d_ptr is automatically deleted
+}
+
+void Viewer::initialize()
+{
+    connect( d_ptr, SIGNAL(replaceMsgByUnencryptedVersion()),
+            SIGNAL(replaceMsgByUnencryptedVersion()) );
+    connect( d_ptr, SIGNAL(popupMenu(Akonadi::Item,KUrl,KUrl,QPoint)),
+             SIGNAL(popupMenu(Akonadi::Item,KUrl,KUrl,QPoint)) );
+    connect( d_ptr, SIGNAL(urlClicked(Akonadi::Item,KUrl)),
+             SIGNAL(urlClicked(Akonadi::Item,KUrl)) );
+    connect( d_ptr, SIGNAL(requestConfigSync()), SIGNAL(requestConfigSync()) );
+    connect( d_ptr, SIGNAL(makeResourceOnline(MessageViewer::Viewer::ResourceOnlineMode)), SIGNAL(makeResourceOnline(MessageViewer::Viewer::ResourceOnlineMode)) );
+    connect( d_ptr, SIGNAL(showReader(KMime::Content*,bool,QString)),
+             SIGNAL(showReader(KMime::Content*,bool,QString)) );
+    connect( d_ptr, SIGNAL(showMessage(KMime::Message::Ptr,QString)), this, SIGNAL(showMessage(KMime::Message::Ptr,QString)) );
+    connect( d_ptr, SIGNAL(showStatusBarMessage(QString)),
+             this, SIGNAL(showStatusBarMessage(QString)) );
+    connect( d_ptr, SIGNAL(itemRemoved()),
+             this, SIGNAL(itemRemoved()) );
+    connect( d_ptr, SIGNAL(changeDisplayMail(Viewer::ForceDisplayTo,bool)), SLOT(slotChangeDisplayMail(Viewer::ForceDisplayTo,bool)) );
+
+    setMessage( KMime::Message::Ptr(), Delayed );
 }
 
 void Viewer::setMessage(KMime::Message::Ptr message, UpdateMode updateMode )

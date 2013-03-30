@@ -157,7 +157,7 @@ const qreal ViewerPrivate::zoomBy = 20;
 
 static QAtomicInt _k_attributeInitialized;
 
-ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
+ViewerPrivate::ViewerPrivate( KXMLGUIClient *guiClient, Viewer *aParent, QWidget *mainWindow,
                               KActionCollection *actionCollection )
   : QObject(aParent),
     mNodeHelper( new NodeHelper ),
@@ -210,57 +210,58 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
     mScamDetectionWarning( 0 ),
     mZoomFactor( 100 )
 {
- if ( _k_attributeInitialized.testAndSetAcquire( 0, 1 ) ) {
-   Akonadi::AttributeFactory::registerAttribute<MessageViewer::MessageDisplayFormatAttribute>();
-  }
+    if ( !mainWindow )
+      mMainWindow = aParent;
+    if ( _k_attributeInitialized.testAndSetAcquire( 0, 1 ) ) {
+      Akonadi::AttributeFactory::registerAttribute<MessageViewer::MessageDisplayFormatAttribute>();
+     }
 
-  if ( !mainWindow )
-    mMainWindow = aParent;
 
-  mThemeManager = new MessageViewer::GrantleeThemeManager(mActionCollection, KStandardDirs::locate("data",QLatin1String("messageviewer/themes/")));
-  connect(mThemeManager, SIGNAL(grantleeThemeSelected()), this, SLOT(slotGrantleeHeaders()));
-  mHtmlOverride = false;
-  mHtmlLoadExtOverride = false;
-  mHtmlLoadExternal = false;
-  mZoomTextOnly = false;
+     mThemeManager = new MessageViewer::GrantleeThemeManager(guiClient, mActionCollection, KStandardDirs::locate("data",QLatin1String("messageviewer/themes/")));
+     connect(mThemeManager, SIGNAL(grantleeThemeSelected()), this, SLOT(slotGrantleeHeaders()));
+     mHtmlOverride = false;
+     mHtmlLoadExtOverride = false;
+     mHtmlLoadExternal = false;
+     mZoomTextOnly = false;
 
-  mUpdateReaderWinTimer.setObjectName( "mUpdateReaderWinTimer" );
-  mResizeTimer.setObjectName( "mResizeTimer" );
+     mUpdateReaderWinTimer.setObjectName( "mUpdateReaderWinTimer" );
+     mResizeTimer.setObjectName( "mResizeTimer" );
 
-  mExternalWindow  = false;
-  mPrinting = false;
+     mExternalWindow  = false;
+     mPrinting = false;
 
-  createWidgets();
-  createActions();
-  initHtmlWidget();
-  readConfig();
+     createWidgets();
+     createActions();
+     initHtmlWidget();
+     readConfig();
 
-  mLevelQuote = GlobalSettings::self()->collapseQuoteLevelSpin() - 1;
+     mLevelQuote = GlobalSettings::self()->collapseQuoteLevelSpin() - 1;
 
-  mResizeTimer.setSingleShot( true );
-  connect( &mResizeTimer, SIGNAL(timeout()),
-           this, SLOT(slotDelayedResize()) );
+     mResizeTimer.setSingleShot( true );
+     connect( &mResizeTimer, SIGNAL(timeout()),
+              this, SLOT(slotDelayedResize()) );
 
-  mUpdateReaderWinTimer.setSingleShot( true );
-  connect( &mUpdateReaderWinTimer, SIGNAL(timeout()),
-           this, SLOT(updateReaderWin()) );
+     mUpdateReaderWinTimer.setSingleShot( true );
+     connect( &mUpdateReaderWinTimer, SIGNAL(timeout()),
+              this, SLOT(updateReaderWin()) );
 
-  connect( mColorBar, SIGNAL(clicked()),
-           this, SLOT(slotToggleHtmlMode()) );
+     connect( mColorBar, SIGNAL(clicked()),
+              this, SLOT(slotToggleHtmlMode()) );
 
-  // FIXME: Don't use the full payload here when attachment loading on demand is used, just
-  //        like in KMMainWidget::slotMessageActivated().
-  Akonadi::ItemFetchScope fs;
-  fs.fetchFullPayload();
-  fs.fetchAttribute<MailTransport::ErrorAttribute>();
-  fs.fetchAttribute<MessageViewer::MessageDisplayFormatAttribute>();
-  mMonitor.setItemFetchScope( fs );
-  connect( &mMonitor, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)),
-           this, SLOT(slotItemChanged(Akonadi::Item,QSet<QByteArray>)) );
-  connect( &mMonitor, SIGNAL(itemRemoved(Akonadi::Item)),
-           this, SLOT(slotClear()) );
-  connect( &mMonitor, SIGNAL(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)),
-           this, SLOT(slotItemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)) );
+     // FIXME: Don't use the full payload here when attachment loading on demand is used, just
+     //        like in KMMainWidget::slotMessageActivated().
+     Akonadi::ItemFetchScope fs;
+     fs.fetchFullPayload();
+     fs.fetchAttribute<MailTransport::ErrorAttribute>();
+     fs.fetchAttribute<MessageViewer::MessageDisplayFormatAttribute>();
+     mMonitor.setItemFetchScope( fs );
+     connect( &mMonitor, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)),
+              this, SLOT(slotItemChanged(Akonadi::Item,QSet<QByteArray>)) );
+     connect( &mMonitor, SIGNAL(itemRemoved(Akonadi::Item)),
+              this, SLOT(slotClear()) );
+     connect( &mMonitor, SIGNAL(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)),
+              this, SLOT(slotItemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)) );
+     mThemeManager->updateThemeList();
 }
 
 ViewerPrivate::~ViewerPrivate()

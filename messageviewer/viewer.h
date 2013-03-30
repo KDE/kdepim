@@ -94,6 +94,9 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
    */
   explicit Viewer( QWidget *parent, QWidget *mainWindow = 0, KActionCollection *actionCollection = 0,
           Qt::WindowFlags f = 0 );
+  explicit Viewer( KActionCollection *actionCollection, KXMLGUIClient *guiClient, QWidget *parent, QWidget *mainWindow = 0,
+          Qt::WindowFlags f = 0 );
+
   virtual ~Viewer();
 
   /**
@@ -375,6 +378,10 @@ signals:
   void itemRemoved();
 
   void makeResourceOnline(MessageViewer::Viewer::ResourceOnlineMode mode);
+
+private:
+  void initialize();
+
 public slots:
 
   /**

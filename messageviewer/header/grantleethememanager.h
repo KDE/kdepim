@@ -32,8 +32,11 @@ class GrantleeThemeManager : public QObject
 {
     Q_OBJECT
 public:
-    explicit GrantleeThemeManager(KActionCollection *actionCollection, const QString &path, QObject *parent = 0);
+    explicit GrantleeThemeManager(KXMLGUIClient *guiClient, KActionCollection *actionCollection, const QString &path, QObject *parent = 0);
     ~GrantleeThemeManager();
+
+    void updateThemeList();
+
 
     QMap<QString, GrantleeTheme> themes() const;
     GrantleeTheme findTheme( const QString &themeName) const;
