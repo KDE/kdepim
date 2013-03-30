@@ -44,6 +44,7 @@ class NepomukResourceRetrieverRunnable : public QRunnable
     void run()
     {
       Nepomuk2::Resource resource( m_url );
+      resource.setWatchEnabled( false );
       foreach ( const QUrl &prop, m_props )
         resource.property( prop ); // loads and caches this property
       QMetaObject::invokeMethod( m_retriever, "resourceRetrievalDone", Qt::QueuedConnection,
