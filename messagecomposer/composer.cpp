@@ -191,12 +191,12 @@ void ComposerPrivate::composeStep2()
       SignJob* subJob = new SignJob( q );
       subJob->setSigningKeys( signers );
       subJob->setCryptoMessageFormat( format );
+      subJob->appendSubjob( mainTextJob );
 
       if( attachmentParts.isEmpty() ) {
         // We have no attachments.  Use the content given by the MainTextJob.
         mainJob = subJob;
       } else {
-        subJob->appendSubjob( mainTextJob );
         MultipartJob *multipartJob = new MultipartJob( q );
         multipartJob->setMultipartSubtype( "mixed" );
         multipartJob->appendSubjob( subJob );

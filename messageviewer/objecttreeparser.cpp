@@ -1387,11 +1387,6 @@ bool ObjectTreeParser::processTextPlainSubtype( KMime::Content *curNode, Process
 {
   const bool isFirstTextPart = ( curNode->topLevel()->textContent() == curNode );
 
-  if ( !htmlWriter() ) {
-    extractNodeInfos( curNode, isFirstTextPart );
-    return true;
-  }
-
   if ( !isFirstTextPart && attachmentStrategy()->defaultDisplay( curNode ) != AttachmentStrategy::Inline &&
        !showOnlyOneMimePart() )
     return false;
@@ -1403,7 +1398,7 @@ bool ObjectTreeParser::processTextPlainSubtype( KMime::Content *curNode, Process
   const bool bDrawFrame = !isFirstTextPart
                         && !showOnlyOneMimePart()
                         && !label.isEmpty();
-  if ( bDrawFrame ) {
+  if ( bDrawFrame && htmlWriter()) {
     label = StringUtil::quoteHtmlChars( label, true );
 
     const QString comment =
@@ -1442,7 +1437,7 @@ bool ObjectTreeParser::processTextPlainSubtype( KMime::Content *curNode, Process
       }
       mNodeHelper->setNodeDisplayedEmbedded( curNode, true );
   }
-  if( bDrawFrame ) {
+  if( bDrawFrame && htmlWriter() ) {
     htmlWriter()->queue( "</td></tr></table>" );
   }
 
@@ -2172,15 +2167,6 @@ void ObjectTreeParser::writeBodyString( const QByteArray & bodyString,
                                         ProcessResult & result,
                                         bool decorate )
 {
-  // FIXME: This is wrong, it means that inline PGP messages will not be decrypted when there is no
-  //        HTML writer. Even if there would be a HTML writer, the decrypted inline PGP text is not
-  //        added to the textual content.
-  //        The solution would be to remove this if statement and make writeBodyStr() add the
-  //        decrypted string to the textual content as well, and removing any manual modifictions
-  //        of the textual content by callers of this method.
-  if ( !htmlWriter() )
-    return;
-
   assert( codec );
   KMMsgSignatureState inlineSignatureState = result.inlineSignatureState();
   KMMsgEncryptionState inlineEncryptionState = result.inlineEncryptionState();
@@ -2981,7 +2967,9 @@ void ObjectTreeParser::writeBodyStr( const QByteArray& aStr, const QTextCodec *a
           if( !str.isEmpty() ) {
             const QString text = aCodec->toUnicode( str );
             plainTextStr += text;
-            htmlStr += quotedHTML( text, decorate );
+            if ( htmlWriter() ) {
+              htmlStr += quotedHTML( text, decorate );
+            }
             kDebug() << "Non-empty Non-OpenPGP block found: '" << str  << "'";
             // treat messages with empty lines before the first clearsigned
             // block as fully signed/encrypted
@@ -3072,7 +3060,9 @@ void ObjectTreeParser::writeBodyStr( const QByteArray& aStr, const QTextCodec *a
               if ( couldDecrypt || !isEncrypted ) {
                 const QString text = aCodec->toUnicode( block.text() );
                 plainTextStr += text;
-                htmlStr += quotedHTML( text, decorate );
+                if ( htmlWriter() ) {
+                  htmlStr += quotedHTML( text, decorate );
+                }
               }
               else {
                 htmlStr += QString::fromLatin1( "<div align=\"center\">%1</div>" )
@@ -3083,7 +3073,9 @@ void ObjectTreeParser::writeBodyStr( const QByteArray& aStr, const QTextCodec *a
           else { // block is neither message block nor clearsigned block
             const QString text = aCodec->toUnicode( block.text() );
             plainTextStr += text;
-            htmlStr += quotedHTML( text, decorate );
+            if ( htmlWriter() ) {
+              htmlStr += quotedHTML( text, decorate );
+            }
           }
       }
 
@@ -3092,7 +3084,8 @@ void ObjectTreeParser::writeBodyStr( const QByteArray& aStr, const QTextCodec *a
       if( !str.isEmpty() && str != "\n" ) {
         const QString text = aCodec->toUnicode( str );
         plainTextStr += text;
-        htmlStr += quotedHTML( text, decorate );
+        if ( htmlWriter() )
+          htmlStr += quotedHTML( text, decorate );
         // Even if the trailing Non-OpenPGP block isn't empty we still
         // consider the message part fully signed/encrypted because else
         // all inline signed mailing list messages would only be partially
@@ -3109,15 +3102,21 @@ void ObjectTreeParser::writeBodyStr( const QByteArray& aStr, const QTextCodec *a
         htmlWriter()->queue( htmlStr );
       }
       mPlainTextContent = plainTextStr;
+      mPlainTextContentCharset = aCodec->name();
   }
   else { // No inline PGP encryption
+
     const QString plainText = aCodec->toUnicode( aStr );
-    mPlainTextContent = plainText;
+
+    if ( mPlainTextContent.isEmpty() ) {
+      mPlainTextContent = plainText;
+      mPlainTextContentCharset = aCodec->name();
+    }
+
     if ( htmlWriter() ) {
-      htmlWriter()->queue( quotedHTML( plainText, decorate ) );
+      htmlWriter()->queue( quotedHTML( mPlainTextContent, decorate ) );
     }
   }
-  mPlainTextContentCharset = aCodec->name();
 }
 
 
