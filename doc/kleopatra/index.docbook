@@ -95,7 +95,7 @@
 
 <abstract>
 <para>
-&kleopatra; is a tool for managing X.509 and OpenPGP certificates.
+  &kleopatra; is a tool for managing <ulink url="http://en.wikipedia.org/wiki/X.509">&x509;</ulink> and <ulink url="http://en.wikipedia.org/wiki/Pretty_Good_Privacy#OpenPGP">OpenPGP</ulink> certificates.
 </para>
 </abstract>
 
@@ -116,8 +116,8 @@
 
 <chapter id="introduction"> <title>Introduction</title>
 
-<para>&kleopatra; is the &kde; tool for managing X.509 and OpenPGP certificates in
-the &gpgsm; and &gpg; keyboxes and for retrieving certificates from
+<para>&kleopatra; is the &kde; tool for managing <ulink url="http://en.wikipedia.org/wiki/X.509">&x509;</ulink> and <ulink url="http://en.wikipedia.org/wiki/Pretty_Good_Privacy#OpenPGP">OpenPGP</ulink> certificates in
+  the <ulink url="http://www.gnupg.org/documentation/manuals/gnupg/Invoking-GPGSM.html">&gpgsm;</ulink> and <ulink url="http://en.wikipedia.org/wiki/GNU_Privacy_Guard">&gpg;</ulink> keyboxes and for retrieving certificates from
 &ldap; and other certificate servers.</para>
 
 <para>&kleopatra; can be started from &kmail;'s <menuchoice><guimenu>Tools</guimenu>
