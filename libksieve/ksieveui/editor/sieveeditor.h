@@ -51,6 +51,7 @@ private slots:
     void slotImport();
     void slotSaveAs();
     void slotFind();
+    void slotAutoGenerateScripts();
 
 private:
     bool saveToFile( const QString&filename );

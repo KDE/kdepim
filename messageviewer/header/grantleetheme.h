@@ -26,6 +26,8 @@ public:
     GrantleeTheme();
     ~GrantleeTheme();
 
+    bool isValid() const;
+
     QString description() const;
     void setDescription(const QString &description);
 
@@ -35,11 +37,11 @@ public:
     QString name() const;
     void setName(const QString &);
 
-    QStringList displayVariables() const;
-    void setDisplayVariables(const QStringList &);
+    QStringList displayExtraHeaders() const;
+    void setDisplayExtraHeaders(const QStringList &);
 
 private:
-    QStringList mDisplayVariables;
+    QStringList mDisplayExtraHeaders;
     QString mFileName;
     QString mDescription;
     QString mName;

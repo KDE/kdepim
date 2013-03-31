@@ -110,7 +110,7 @@ void ObjectTreeParserTester::test_parseEncapsulatedMessage()
   QCOMPARE( msg->contents().at( 1 )->contents().first()->contents().at( 1 )->contents().size(), 0 );
 
   // Check that the textual content and the charset have the expected values
-  QCOMPARE( otp.plainTextContent(), QString( "This is the encapsulating message.\n" ) );
+  QCOMPARE( otp.plainTextContent(), QString( "This is the encapsulating message." ) );
   QCOMPARE( otp.plainTextContentCharset().toLower(), QByteArray( "iso-8859-15" ) );
   QVERIFY( otp.htmlContent().isEmpty() );
 

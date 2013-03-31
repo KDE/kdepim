@@ -1,4 +1,4 @@
-2012-05-14:
+2013-03-27:
 -----------
 Zip structure is :
 Root
@@ -21,6 +21,7 @@ Root
 |-----configs
 |       |---------filters
 |       |---------kmail2rc
+|       |---------sievetemplaterc
 |
 |-----akonadi
 |       |---------<archive akonadi>

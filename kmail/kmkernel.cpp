@@ -357,7 +357,7 @@ static KUrl makeAbsoluteUrl( const QString& str )
 
 bool KMKernel::handleCommandLine( bool noArgsOpensReader )
 {
-  QString to, cc, bcc, subj, body;
+  QString to, cc, bcc, subj, body, inReplyTo, replyTo;
   QStringList customHeaders;
   KUrl messageFile;
   KUrl::List attachURLs;
@@ -397,6 +397,13 @@ bool KMKernel::handleCommandLine( bool noArgsOpensReader )
      mailto = true;
      bcc = args->getOption("bcc");
   }
+
+  if (args->isSet("replyTo"))
+  {
+     mailto = true;
+     replyTo = args->getOption("replyTo");
+  }
+
 
   if (args->isSet("msg"))
   {
@@ -458,8 +465,9 @@ bool KMKernel::handleCommandLine( bool noArgsOpensReader )
           subj = values.value( "subject" );
         if ( !values.value( "body" ).isEmpty() )
           body = values.value( "body" );
-        if ( !values.value( "in-reply-to" ).isEmpty() )
-          customHeaders << "In-Reply-To:" + values.value( "in-reply-to" );
+        if ( !values.value( "in-reply-to" ).isEmpty() ) {
+          inReplyTo = values.value( "in-reply-to" );
+        }
         const QString attach = values.value( "attachment" );
         if ( !attach.isEmpty() ) {
             attachURLs << makeAbsoluteUrl( attach );
@@ -491,7 +499,7 @@ bool KMKernel::handleCommandLine( bool noArgsOpensReader )
     viewMessage( messageFile.url() );
   else
     action( mailto, checkMail, to, cc, bcc, subj, body, messageFile,
-            attachURLs, customHeaders );
+            attachURLs, customHeaders, replyTo, inReplyTo );
   return true;
 }
 
@@ -589,12 +597,13 @@ void KMKernel::openReader( bool onlyCheck )
   }
 }
 
-int KMKernel::openComposer( const QString &to, const QString &cc,
+int KMKernel::openComposer(const QString &to, const QString &cc,
                             const QString &bcc, const QString &subject,
                             const QString &body, bool hidden,
                             const QString &messageFile,
                             const QStringList &attachmentPaths,
-                            const QStringList &customHeaders )
+                            const QStringList &customHeaders,
+                            const QString &replyTo, const QString &inReplyTo)
 {
   kDebug();
   KMail::Composer::TemplateContext context = KMail::Composer::New;
@@ -637,23 +646,9 @@ int KMKernel::openComposer( const QString &to, const QString &cc,
     parser.process( KMime::Message::Ptr() );
   }
 
-  if ( !customHeaders.isEmpty() )
-  {
-    QStringList::ConstIterator end = customHeaders.constEnd();
-    for ( QStringList::ConstIterator it = customHeaders.constBegin() ; it != end ; ++it )
-      if ( !(*it).isEmpty() )
-      {
-        const int pos = (*it).indexOf( ':' );
-        if ( pos > 0 )
-        {
-          const QString header = (*it).left( pos ).trimmed();
-          const QString value = (*it).mid( pos+1 ).trimmed();
-          if ( !header.isEmpty() && !value.isEmpty() ) {
-            KMime::Headers::Generic *h = new KMime::Headers::Generic( header.toUtf8(), msg.get(), value.toUtf8() );
-            msg->setHeader( h );
-          }
-        }
-      }
+  if (!inReplyTo.isEmpty()) {
+      KMime::Headers::InReplyTo *header = new KMime::Headers::InReplyTo( msg.get(), inReplyTo.toUtf8(), "utf-8" );
+      msg->setHeader( header );
   }
 
   msg->assemble();
@@ -668,6 +663,28 @@ int KMKernel::openComposer( const QString &to, const QString &cc,
       }
     }
     cWin->addAttachment( (*it), "" );
+  }
+  if (!replyTo.isEmpty()) {
+      cWin->setCurrentReplyTo(replyTo);
+  }
+
+  if (!customHeaders.isEmpty()) {
+      QMap<QByteArray, QString> extraCustomHeaders;
+      QStringList::ConstIterator end = customHeaders.constEnd();
+      for ( QStringList::ConstIterator it = customHeaders.constBegin() ; it != end ; ++it ) {
+          if ( !(*it).isEmpty() ) {
+              const int pos = (*it).indexOf( QLatin1Char(':') );
+              if ( pos > 0 ) {
+                  const QString header = (*it).left( pos ).trimmed();
+                  const QString value = (*it).mid( pos+1 ).trimmed();
+                  if ( !header.isEmpty() && !value.isEmpty() ) {
+                      extraCustomHeaders.insert(header.toUtf8(), value.toUtf8());
+                  }
+              }
+          }
+      }
+      if (!extraCustomHeaders.isEmpty())
+          cWin->addExtraCustomHeaders(extraCustomHeaders);
   }
   if ( !hidden ) {
     cWin->show();
@@ -1368,12 +1385,14 @@ void KMKernel::action( bool mailto, bool check, const QString &to,
                        const QString &subj, const QString &body,
                        const KUrl &messageFile,
                        const KUrl::List &attachURLs,
-                       const QStringList &customHeaders )
+                       const QStringList &customHeaders,
+                       const QString &replyTo,
+                       const QString &inReplyTo)
 {
   if ( mailto ) {
     openComposer( to, cc, bcc, subj, body, 0,
                   messageFile.pathOrUrl(), attachURLs.toStringList(),
-                  customHeaders );
+                  customHeaders, replyTo, inReplyTo );
   }
   else
     openReader( check );

@@ -26,7 +26,6 @@
 #include <akonadi/contact/contactviewer.h>
 
 #include <kabc/vcardconverter.h>
-#include <kabc/addressee.h>
 using KABC::VCardConverter;
 using KABC::Addressee;
 

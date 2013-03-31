@@ -7,7 +7,9 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/pimcommon
   ${CMAKE_CURRENT_BINARY_DIR}/../ontologies
   ${CMAKE_CURRENT_SOURCE_DIR}/filter
+  ${CMAKE_CURRENT_SOURCE_DIR}/tag/
   ${CMAKE_CURRENT_SOURCE_DIR}
+  ${CMAKE_CURRENT_SOURCE_DIR}/snippets
   ${SOPRANO_INCLUDE_DIR}
   ${NEPOMUK_CORE_INCLUDE_DIR}
 )
@@ -81,6 +83,7 @@ set(libmailcommon_SRCS
   filter/mailfilter.cpp
   filter/selectthunderbirdfilterfilesdialog.cpp
   filter/selectthunderbirdfilterfileswidget.cpp
+  filter/mdnadvicedialog.cpp
   foldercollection.cpp
   foldercollectionmonitor.cpp
   folderjob.cpp
@@ -92,20 +95,19 @@ set(libmailcommon_SRCS
   jobscheduler.cpp
   mailkernel.cpp
   mailutil.cpp
-  mdnadvicedialog.cpp
   redirectdialog.cpp
   regexplineedit.cpp
   rulewidgethandlermanager.cpp
   searchpattern.cpp
   searchpatternedit.cpp
   sendmdnhandler.cpp
-  snippetdialog.cpp
-  snippetsmanager.cpp
-  snippetsmodel.cpp
-  snippetvariabledialog.cpp
-  tagwidget.cpp
-  tag.cpp
-  addtagdialog.cpp
+  snippets/snippetdialog.cpp
+  snippets/snippetsmanager.cpp
+  snippets/snippetsmodel.cpp
+  snippets/snippetvariabledialog.cpp
+  tag/tagwidget.cpp
+  tag/tag.cpp
+  tag/addtagdialog.cpp
 )
 
 soprano_add_ontology(libmailcommon_SRCS
@@ -122,10 +124,10 @@ qt4_add_dbus_interfaces(libmailcommon_SRCS
   ${CMAKE_SOURCE_DIR}/mailfilteragent/org.freedesktop.Akonadi.MailFilterAgent.xml
 )
 
-kde4_add_ui_files(libmailcommon_SRCS filter/filterconfigwidget.ui snippetdialog.ui filter/selectthunderbirdfilterfileswidget.ui)
+kde4_add_ui_files(libmailcommon_SRCS filter/filterconfigwidget.ui snippets/snippetdialog.ui filter/selectthunderbirdfilterfileswidget.ui)
 
 if(NOT WINCE)
-  set(libmailcommon_SRCS ${libmailcommon_SRCS} soundtestwidget.cpp)
+  set(libmailcommon_SRCS ${libmailcommon_SRCS} filter/soundtestwidget.cpp)
 endif()
 
 macro(add_resource_iface _kcfgFile _ifaceName _className)
@@ -174,5 +176,7 @@ endif()
 
 set_target_properties(mailcommon PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 install(TARGETS mailcommon ${INSTALL_TARGETS_DEFAULT_ARGS})
+
+add_subdirectory(filter/filterimporter/tests)
 
 #install(FILES viewer.h attachmentstrategy.h headerstrategy.h messageviewer_export.h DESTINATION ${INCLUDE_INSTALL_DIR}/messageviewer COMPONENT devel)

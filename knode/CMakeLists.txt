@@ -10,6 +10,7 @@ include_directories(
   ${KDE4_INCLUDE_DIR}
   ${CMAKE_SOURCE_DIR}/libkleo
   ${Boost_INCLUDE_DIR}
+  ${CMAKE_SOURCE_DIR}/messageviewer
 )
 
 add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS)

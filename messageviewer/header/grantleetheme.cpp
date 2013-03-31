@@ -27,6 +27,11 @@ GrantleeTheme::~GrantleeTheme()
 {
 }
 
+bool GrantleeTheme::isValid() const
+{
+    return !mFileName.isEmpty() && !mName.isEmpty();
+}
+
 QString GrantleeTheme::description() const
 {
     return mDescription;
@@ -57,12 +62,12 @@ void GrantleeTheme::setName(const QString &n)
     mName = n;
 }
 
-QStringList GrantleeTheme::displayVariables() const
+QStringList GrantleeTheme::displayExtraHeaders() const
 {
-    return mDisplayVariables;
+    return mDisplayExtraHeaders;
 }
 
-void GrantleeTheme::setDisplayVariables(const QStringList &variables)
+void GrantleeTheme::setDisplayExtraHeaders(const QStringList &variables)
 {
-    mDisplayVariables = variables;
+    mDisplayExtraHeaders = variables;
 }

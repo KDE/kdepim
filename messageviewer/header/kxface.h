@@ -497,10 +497,10 @@ typedef struct prob
 
 
 static const Prob levels[4][3] = {
-  {{1, 255},  {251, 0}, {4, 251}},	/* Top of tree almost always grey */
+  {{1, 255},  {251, 0}, {4, 251}},        /* Top of tree almost always grey */
   {{1, 255},  {200, 0}, {55, 200}},
   {{33, 223}, {159, 0}, {64, 159}},
-  {{131, 0},  {0, 0},   {125, 131}}	/* Grey disallowed at bottom */
+  {{131, 0},  {0, 0},   {125, 131}}        /* Grey disallowed at bottom */
 };
 
 static const Prob freqs[16] = {

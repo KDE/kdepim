@@ -71,7 +71,7 @@ static bool isHiddenElement(const QWebElement& element)
     return true;
   }
 
-  // visiblity set to 'hidden' in the element itself or its parent elements.
+  // visibility set to 'hidden' in the element itself or its parent elements.
   if (element.styleProperty(QLatin1String("visibility"),QWebElement::ComputedStyle).compare(QLatin1String("hidden"), Qt::CaseInsensitive) == 0) {
     return true;
   }

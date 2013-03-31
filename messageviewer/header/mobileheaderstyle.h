@@ -24,7 +24,7 @@ class MobileHeaderStyle : public HeaderStyle {
     friend class HeaderStyle;
 protected:
     MobileHeaderStyle() : HeaderStyle() {}
-    virtual ~MobileHeaderStyle() {}
+    ~MobileHeaderStyle() {}
 
 public:
     const char * name() const { return "mobile"; }
@@ -36,7 +36,7 @@ class MobileExtendedHeaderStyle : public HeaderStyle {
     friend class HeaderStyle;
 protected:
     MobileExtendedHeaderStyle() : HeaderStyle() {}
-    virtual ~MobileExtendedHeaderStyle() {}
+    ~MobileExtendedHeaderStyle() {}
 
 public:
     const char * name() const { return "mobileExtended"; }

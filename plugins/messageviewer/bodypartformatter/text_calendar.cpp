@@ -901,7 +901,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
       // get comment for tentative acceptance
       if ( askForComment( status ) ) {
         bool ok = false;
-        QString comment = KInputDialog::getMultiLineText(
+        const QString comment = KInputDialog::getMultiLineText(
           i18n( "Reaction to Invitation" ), i18n( "Comment:" ), QString(), &ok );
         if ( !ok ) {
           return true;
@@ -921,7 +921,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
       }
 
       // First, save it for KOrganizer to handle
-      QString dir = directoryForStatus( status );
+      const QString dir = directoryForStatus( status );
       if ( dir.isEmpty() ) {
         return true; // unknown status
       }
@@ -1070,7 +1070,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
       }
 
       // get the saveas file name
-      QString saveAsFile =
+      const QString saveAsFile =
         KFileDialog::getSaveFileName( name, QString(), 0, i18n( "Save Invitation Attachment" ) );
 
       if ( saveAsFile.isEmpty() ||

@@ -595,7 +595,7 @@ void Vacation::slotGetResult( KManageSieve::SieveJob * job, bool success,
     }
 
     if ( !mDialog && !mCheckOnly )
-        mDialog = new VacationDialog( i18n("Configure \"Out of Office\" Replies"), 0, 0, false );
+        mDialog = new VacationDialog( i18n("Configure \"Out of Office\" Replies"), 0, false );
 
     QString messageText = defaultMessageText();
     int notificationInterval = defaultNotificationInterval();

@@ -42,7 +42,7 @@ class BriefHeaderStyle : public HeaderStyle {
     friend class HeaderStyle;
 protected:
     BriefHeaderStyle() : HeaderStyle() {}
-    virtual ~BriefHeaderStyle() {}
+    ~BriefHeaderStyle() {}
 
 public:
     const char * name() const { return "brief"; }

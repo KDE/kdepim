@@ -19,7 +19,7 @@
 #define MAILCOMMON_FILTERIMPORTER_FILTERIMPORTERCLAWSMAILS_P_H
 
 #include "filterimporter/filterimporterabstract_p.h"
-
+#include "mailcommon_export.h"
 #include <QDomElement>
 
 class QFile;
@@ -29,14 +29,22 @@ namespace MailCommon {
 
 class MailFilter;
 
-class FilterImporterClawsMails : public FilterImporterAbstract
+class MAILCOMMON_EXPORT FilterImporterClawsMails : public FilterImporterAbstract
 {
 public:
     explicit FilterImporterClawsMails( QFile *file );
+    //Use for unittests
+    FilterImporterClawsMails();
     ~FilterImporterClawsMails();
     static QString defaultFiltersSettingsPath();
+
+    // the returned mail filter instance will be owned by the caller, who must ensure to delete it at some point
+    MailFilter * parseLine(const QString& line);
+
 private:
-    MailFilter * parseLine(QTextStream& stream, const QString& line, MailFilter *filter);
+    QString extractString( const QString & tmp, int & pos);
+    QString extractConditions( const QString &line,MailFilter *filter);
+    QString extractActions( const QString &line,MailFilter *filter);
 };
 
 }

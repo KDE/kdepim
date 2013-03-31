@@ -37,6 +37,7 @@ class KActionCollection;
 class KAction;
 class KToggleAction;
 class KUrl;
+class KXMLGUIClient;
 
 class QAbstractItemModel;
 class QCloseEvent;
@@ -93,6 +94,9 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
    */
   explicit Viewer( QWidget *parent, QWidget *mainWindow = 0, KActionCollection *actionCollection = 0,
           Qt::WindowFlags f = 0 );
+  explicit Viewer( KActionCollection *actionCollection, KXMLGUIClient *guiClient, QWidget *parent, QWidget *mainWindow = 0,
+          Qt::WindowFlags f = 0 );
+
   virtual ~Viewer();
 
   /**
@@ -334,6 +338,8 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
 
   void setExternalWindow( bool b );
 
+  void setXmlGuiClient( KXMLGUIClient *guiClient );
+
 signals:
   void changeDisplayMail(Viewer::ForceDisplayTo,bool);
 
@@ -372,6 +378,10 @@ signals:
   void itemRemoved();
 
   void makeResourceOnline(MessageViewer::Viewer::ResourceOnlineMode mode);
+
+private:
+  void initialize();
+
 public slots:
 
   /**

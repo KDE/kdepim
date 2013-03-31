@@ -48,7 +48,7 @@ class KMReaderWin: public QWidget {
   Q_OBJECT
 
 public:
-  explicit KMReaderWin( QWidget *parent, QWidget *mainWindow,
+  explicit KMReaderWin( KXMLGUIClient *guiClient, QWidget *parent, QWidget *mainWindow,
                KActionCollection *actionCollection, Qt::WindowFlags f = 0 );
   virtual ~KMReaderWin();
 
@@ -163,6 +163,9 @@ public:
   bool printSelectedText(bool preview);
 
   void setContactItem(const Akonadi::Item& contact);
+
+  void setXmlGuiClient( KXMLGUIClient *guiClient );
+
 signals:
   /** Emitted after parsing of a message to have it stored
       in unencrypted state in it's folder. */

@@ -16,7 +16,7 @@
 */
 
 #include "addtagdialog.h"
-#include "mailcommon/tagwidget.h"
+#include "mailcommon/tag/tagwidget.h"
 
 #include <KLocale>
 #include <KLineEdit>

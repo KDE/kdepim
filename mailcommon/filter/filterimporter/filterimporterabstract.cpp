@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012, 2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -35,61 +35,61 @@ FilterImporterAbstract::~FilterImporterAbstract()
 
 QList<MailFilter*> FilterImporterAbstract::importFilter() const
 {
-  return mListMailFilter;
+    return mListMailFilter;
 }
 
 QStringList FilterImporterAbstract::emptyFilter() const
 {
-  return mEmptyFilter;
+    return mEmptyFilter;
 }
 
 void FilterImporterAbstract::appendFilter( MailCommon::MailFilter *filter )
 {
-  if ( !filter )
-    return;
-  
-  filter->purify();
-  if ( !filter->isEmpty() ) {
-    // the filter is valid:
-    mListMailFilter << filter;
-  } else {
-    mEmptyFilter << filter->name();
-    // the filter is invalid:
-    delete filter;
-  }
+    if ( !filter )
+        return;
+
+    filter->purify();
+    if ( !filter->isEmpty() ) {
+        // the filter is valid:
+        mListMailFilter << filter;
+    } else {
+        mEmptyFilter << filter->name();
+        // the filter is invalid:
+        delete filter;
+    }
 }
 
 void FilterImporterAbstract::createFilterAction( MailCommon::MailFilter *filter,
                                                  const QString &actionName,
                                                  const QString &value )
 {
-  if ( !actionName.isEmpty() ) {
-    FilterActionDesc *desc = MailCommon::FilterManager::filterActionDict()->value( actionName );
-    if ( desc ) {
-      FilterAction *fa = desc->create();
-      //...create an instance...
-      fa->argsFromStringInteractive( value, filter->name() );
-      //...check if it's empty and...
-      if ( !fa->isEmpty() ) {
-        //...append it if it's not and...
-        filter->actions()->append( fa );
-      } else {
-        //...delete is else.
-        delete fa;
-      }
+    if ( !actionName.isEmpty() ) {
+        FilterActionDesc *desc = MailCommon::FilterManager::filterActionDict()->value( actionName );
+        if ( desc ) {
+            FilterAction *fa = desc->create();
+            //...create an instance...
+            fa->argsFromStringInteractive( value, filter->name() );
+            //...check if it's empty and...
+            if ( !fa->isEmpty() ) {
+                //...append it if it's not and...
+                filter->actions()->append( fa );
+            } else {
+                //...delete is else.
+                delete fa;
+            }
+        }
     }
-  }
 }
 
 bool FilterImporterAbstract::loadDomElement( QDomDocument &doc, QFile *file )
 {
-  QString errorMsg;
-  int errorRow;
-  int errorCol;
-  if ( !doc.setContent( file, &errorMsg, &errorRow, &errorCol ) ) {
-    kDebug() << "Unable to load document.Parse error in line " << errorRow
-             << ", col " << errorCol << ": " << errorMsg;
-    return false;
-  }
-  return true;
+    QString errorMsg;
+    int errorRow;
+    int errorCol;
+    if ( !doc.setContent( file, &errorMsg, &errorRow, &errorCol ) ) {
+        kDebug() << "Unable to load document.Parse error in line " << errorRow
+                 << ", col " << errorCol << ": " << errorMsg;
+        return false;
+    }
+    return true;
 }

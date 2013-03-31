@@ -157,7 +157,7 @@ const qreal ViewerPrivate::zoomBy = 20;
 
 static QAtomicInt _k_attributeInitialized;
 
-ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
+ViewerPrivate::ViewerPrivate( KXMLGUIClient *guiClient, Viewer *aParent, QWidget *mainWindow,
                               KActionCollection *actionCollection )
   : QObject(aParent),
     mNodeHelper( new NodeHelper ),
@@ -210,57 +210,58 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
     mScamDetectionWarning( 0 ),
     mZoomFactor( 100 )
 {
- if ( _k_attributeInitialized.testAndSetAcquire( 0, 1 ) ) {
-   Akonadi::AttributeFactory::registerAttribute<MessageViewer::MessageDisplayFormatAttribute>();
-  }
+    if ( !mainWindow )
+      mMainWindow = aParent;
+    if ( _k_attributeInitialized.testAndSetAcquire( 0, 1 ) ) {
+      Akonadi::AttributeFactory::registerAttribute<MessageViewer::MessageDisplayFormatAttribute>();
+     }
 
-  if ( !mainWindow )
-    mMainWindow = aParent;
 
-  mThemeManager = new MessageViewer::GrantleeThemeManager(KStandardDirs::locate("data",QLatin1String("messageviewer/themes/")));
-  connect(mThemeManager, SIGNAL(themesChanged()),SLOT(slotThemesChanged()));
-  mHtmlOverride = false;
-  mHtmlLoadExtOverride = false;
-  mHtmlLoadExternal = false;
-  mZoomTextOnly = false;
+     mThemeManager = new MessageViewer::GrantleeThemeManager(guiClient, mActionCollection, KStandardDirs::locate("data",QLatin1String("messageviewer/themes/")));
+     connect(mThemeManager, SIGNAL(grantleeThemeSelected()), this, SLOT(slotGrantleeHeaders()));
+     mHtmlOverride = false;
+     mHtmlLoadExtOverride = false;
+     mHtmlLoadExternal = false;
+     mZoomTextOnly = false;
 
-  mUpdateReaderWinTimer.setObjectName( "mUpdateReaderWinTimer" );
-  mResizeTimer.setObjectName( "mResizeTimer" );
+     mUpdateReaderWinTimer.setObjectName( "mUpdateReaderWinTimer" );
+     mResizeTimer.setObjectName( "mResizeTimer" );
 
-  mExternalWindow  = false;
-  mPrinting = false;
+     mExternalWindow  = false;
+     mPrinting = false;
 
-  createWidgets();
-  createActions();
-  initHtmlWidget();
-  readConfig();
+     createWidgets();
+     createActions();
+     initHtmlWidget();
+     readConfig();
 
-  mLevelQuote = GlobalSettings::self()->collapseQuoteLevelSpin() - 1;
+     mLevelQuote = GlobalSettings::self()->collapseQuoteLevelSpin() - 1;
 
-  mResizeTimer.setSingleShot( true );
-  connect( &mResizeTimer, SIGNAL(timeout()),
-           this, SLOT(slotDelayedResize()) );
+     mResizeTimer.setSingleShot( true );
+     connect( &mResizeTimer, SIGNAL(timeout()),
+              this, SLOT(slotDelayedResize()) );
 
-  mUpdateReaderWinTimer.setSingleShot( true );
-  connect( &mUpdateReaderWinTimer, SIGNAL(timeout()),
-           this, SLOT(updateReaderWin()) );
+     mUpdateReaderWinTimer.setSingleShot( true );
+     connect( &mUpdateReaderWinTimer, SIGNAL(timeout()),
+              this, SLOT(updateReaderWin()) );
 
-  connect( mColorBar, SIGNAL(clicked()),
-           this, SLOT(slotToggleHtmlMode()) );
+     connect( mColorBar, SIGNAL(clicked()),
+              this, SLOT(slotToggleHtmlMode()) );
 
-  // FIXME: Don't use the full payload here when attachment loading on demand is used, just
-  //        like in KMMainWidget::slotMessageActivated().
-  Akonadi::ItemFetchScope fs;
-  fs.fetchFullPayload();
-  fs.fetchAttribute<MailTransport::ErrorAttribute>();
-  fs.fetchAttribute<MessageViewer::MessageDisplayFormatAttribute>();
-  mMonitor.setItemFetchScope( fs );
-  connect( &mMonitor, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)),
-           this, SLOT(slotItemChanged(Akonadi::Item,QSet<QByteArray>)) );
-  connect( &mMonitor, SIGNAL(itemRemoved(Akonadi::Item)),
-           this, SLOT(slotClear()) );
-  connect( &mMonitor, SIGNAL(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)),
-           this, SLOT(slotItemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)) );
+     // FIXME: Don't use the full payload here when attachment loading on demand is used, just
+     //        like in KMMainWidget::slotMessageActivated().
+     Akonadi::ItemFetchScope fs;
+     fs.fetchFullPayload();
+     fs.fetchAttribute<MailTransport::ErrorAttribute>();
+     fs.fetchAttribute<MessageViewer::MessageDisplayFormatAttribute>();
+     mMonitor.setItemFetchScope( fs );
+     connect( &mMonitor, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)),
+              this, SLOT(slotItemChanged(Akonadi::Item,QSet<QByteArray>)) );
+     connect( &mMonitor, SIGNAL(itemRemoved(Akonadi::Item)),
+              this, SLOT(slotClear()) );
+     connect( &mMonitor, SIGNAL(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)),
+              this, SLOT(slotItemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)) );
+     mThemeManager->updateThemeList();
 }
 
 ViewerPrivate::~ViewerPrivate()
@@ -273,6 +274,11 @@ ViewerPrivate::~ViewerPrivate()
   mNodeHelper->forceCleanTempFiles();
   delete mNodeHelper;
   delete mThemeManager;
+}
+
+void ViewerPrivate::setXmlGuiClient( KXMLGUIClient *guiClient )
+{
+    mThemeManager->setXmlGuiClient(guiClient);
 }
 
 void ViewerPrivate::saveMimePartTreeConfig()
@@ -1185,6 +1191,7 @@ void ViewerPrivate::readConfig()
   // bottom when all settings are already est.
   setHeaderStyleAndStrategy( HeaderStyle::create( GlobalSettings::self()->headerStyle() ),
                              HeaderStrategy::create( GlobalSettings::self()->headerSetDisplayed() ) );
+  headerStyle()->setThemeName(GlobalSettings::self()->grantleeThemeName());
 
 #ifndef KDEPIM_NO_WEBKIT
   mViewer->settings()->setFontSize( QWebSettings::MinimumFontSize, GlobalSettings::self()->minimumFontSize() );
@@ -1200,8 +1207,10 @@ void ViewerPrivate::readConfig()
 void ViewerPrivate::writeConfig( bool sync )
 {
   GlobalSettings::self()->setUseFixedFont( mUseFixedFont );
-  if ( headerStyle() )
+  if ( headerStyle() ) {
     GlobalSettings::self()->setHeaderStyle( headerStyle()->name() );
+    GlobalSettings::self()->setGrantleeThemeName( headerStyle()->themeName() );
+  }
   if ( headerStrategy() )
     GlobalSettings::self()->setHeaderSetDisplayed( headerStrategy()->name() );
   if ( attachmentStrategy() )
@@ -1595,7 +1604,8 @@ void ViewerPrivate::createActions()
   raction->setHelpText( i18n("Show custom headers") );
   group->addAction( raction );
   headerMenu->addAction( raction );
-
+  //Same action group
+  mThemeManager->setActionGroup(group);
 
   // attachment style
   KActionMenu *attachmentMenu  = new KActionMenu(i18nc("View->", "&Attachments"), this);
@@ -1765,9 +1775,18 @@ void ViewerPrivate::createActions()
   // Toggle HTML display mode.
   mToggleDisplayModeAction = new KToggleAction( i18n( "Toggle HTML Display Mode" ), this );
   ac->addAction( "toggle_html_display_mode", mToggleDisplayModeAction );
+  mToggleDisplayModeAction->setShortcut(QKeySequence(Qt::SHIFT + Qt::Key_H));
   connect( mToggleDisplayModeAction, SIGNAL(triggered(bool)),
            SLOT(slotToggleHtmlMode()) );
   mToggleDisplayModeAction->setHelpText( i18n( "Toggle display mode between HTML and plain text" ) );
+
+  // Load external reference
+  KAction *loadExternalReferenceAction = new KAction( i18n( "Load external references" ), this );
+  ac->addAction( "load_external_reference", loadExternalReferenceAction );
+  loadExternalReferenceAction->setShortcut(QKeySequence(Qt::SHIFT + Qt::CTRL + Qt::Key_R));
+  connect( loadExternalReferenceAction, SIGNAL(triggered(bool)),
+           SLOT(slotLoadExternalReference()) );
+  loadExternalReferenceAction->setHelpText( i18n( "Load external references from the Internet for this message." ) );
 
 
   mSpeakTextAction = new KAction(i18n("Speak Text"),this);
@@ -1889,7 +1908,7 @@ KToggleAction *ViewerPrivate::actionForHeaderStyle( const HeaderStyle * style, c
   } else if (style == HeaderStyle::custom() ) {
       actionName = "view_custom_headers";
   } else if (style == HeaderStyle::grantlee()) {
-      //TODO
+      return mThemeManager->actionForHeaderStyle();
   }
 
   if ( actionName )
@@ -2129,6 +2148,14 @@ void ViewerPrivate::slotUrlPopup(const QUrl &aUrl, const QUrl &imageUrl, const Q
   }
 
   emit popupMenu( mMessageItem, aUrl, imageUrl, aPos );
+}
+
+void ViewerPrivate::slotLoadExternalReference()
+{
+    if(mColorBar->isNormal() || htmlLoadExtOverride())
+      return;
+    setHtmlLoadExtOverride( true );
+    update( Viewer::Force );
 }
 
 void ViewerPrivate::slotToggleHtmlMode()
@@ -3203,16 +3230,6 @@ void ViewerPrivate::slotResetMessageDisplayFormat()
             modify->disableRevisionCheck();
         }
     }
-}
-
-void ViewerPrivate::slotThemesChanged()
-{
-    QMapIterator<QString, GrantleeTheme> i(mThemeManager->themes());
-    while (i.hasNext()) {
-        i.next();
-        qDebug()<<" path "<<i.key()<<" name "<<i.value().name();
-    }
-    //TODO
 }
 
 #include "viewer_p.moc"

@@ -7,9 +7,6 @@ addresseelineedit
 completionordereditor
 kmailcompletion
 
-# Make private and move to kdepimlibs/akonadi/contact
-sendsmsdialog
-
 # Move to kdepimlibs/kontactinterfaces?
 agentprogressmonitor
 broadcaststatus

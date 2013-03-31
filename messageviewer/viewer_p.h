@@ -53,6 +53,7 @@ class QPoint;
 class QSplitter;
 class QModelIndex;
 class QTreeView;
+class KXMLGUIClient;
 
 namespace MessageViewer {
 
@@ -180,7 +181,7 @@ class ViewerPrivate : public QObject {
   Q_OBJECT
 public:
 
-  ViewerPrivate( Viewer *aParent, QWidget *mainWindow, KActionCollection *actionCollection );
+  ViewerPrivate( KXMLGUIClient *guiClient, Viewer *aParent, QWidget *mainWindow, KActionCollection *actionCollection );
 
   virtual ~ViewerPrivate();
 
@@ -448,6 +449,8 @@ public:
   void goOnline();
   void goResourceOnline();
 
+  void setXmlGuiClient( KXMLGUIClient *guiClient );
+
 
 private slots:
   void slotToggleCaretBrowsing(bool);
@@ -556,6 +559,7 @@ public slots:
   /** Toggle display mode between HTML and plain text. */
   void slotToggleHtmlMode();
   void slotZoomTextOnly();
+  void slotLoadExternalReference();
 
 
   /**
@@ -590,7 +594,6 @@ public slots:
   void slotCopyImageLocation();
   void slotSaveMessageDisplayFormat();
   void slotResetMessageDisplayFormat();
-  void slotThemesChanged();
 signals:
   void showStatusBarMessage( const QString &message );
   void replaceMsgByUnencryptedVersion();

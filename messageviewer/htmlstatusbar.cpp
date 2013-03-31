@@ -4,6 +4,7 @@
     This file is part of KMail, the KDE mail client.
     Copyright (c) 2002 Ingo Kloecker <kloecker@kde.org>
     Copyright (c) 2003 Marc Mutz <mutz@kde.org>
+    Copyright (c) 2013 Laurent Montel <montel@kde.org>
 
     KMail is free software; you can redistribute it and/or modify it
     under the terms of the GNU General Public License, version 2, as
@@ -30,168 +31,160 @@
     your version.
 */
 
-
-
 #include "htmlstatusbar.h"
 #include "globalsettings.h"
 
 #include "messagecore/globalsettings.h"
 
 #include <klocale.h>
-#include <kconfig.h>
 #include <kconfiggroup.h>
-#include <kapplication.h>
 
-#include <QColor>
-#include <QString>
-#include <QLabel>
 #include <QMouseEvent>
 
 using namespace MessageViewer;
 
-HtmlStatusBar::HtmlStatusBar( QWidget * parent, const char * name, Qt::WindowFlags f )
-  : QLabel( parent, f ),
-    mMode( Util::Normal )
+HtmlStatusBar::HtmlStatusBar(QWidget * parent)
+    : QLabel( parent ),
+      mMode( Util::Normal )
 {
-  setObjectName( name );
-  setAlignment( Qt::AlignHCenter | Qt::AlignTop );
-  setAutoFillBackground( true );
-  update();
+    setAlignment( Qt::AlignHCenter | Qt::AlignTop );
+    setAutoFillBackground( true );
+    update();
 }
 
 HtmlStatusBar::~HtmlStatusBar() {}
 
 void HtmlStatusBar::update()
 {
-  QPalette pal = palette();
-  pal.setColor( backgroundRole(), bgColor() );
-  pal.setColor( foregroundRole(), fgColor() );
-  setPalette( pal );
-  setText( message() );
-  setToolTip( toolTip() );
+    QPalette pal = palette();
+    pal.setColor( backgroundRole(), bgColor() );
+    pal.setColor( foregroundRole(), fgColor() );
+    setPalette( pal );
+    setText( message() );
+    setToolTip( toolTip() );
 }
 
 void HtmlStatusBar::setNormalMode()
 {
-  setMode( Util::Normal );
+    setMode( Util::Normal );
 }
 
 void HtmlStatusBar::setHtmlMode()
 {
-  setMode( Util::Html );
+    setMode( Util::Html );
 }
 
 void HtmlStatusBar::setMultipartPlainMode()
 {
-  setMode( Util::MultipartPlain );
+    setMode( Util::MultipartPlain );
 }
 
 void HtmlStatusBar::setMultipartHtmlMode()
 {
-  setMode( Util::MultipartHtml );
+    setMode( Util::MultipartHtml );
 }
 
 void HtmlStatusBar::setMode( Util::HtmlMode m, UpdateMode mode )
 {
-  mMode = m;
-  if ( mode == Update )
-    update();
+    mMode = m;
+    if ( mode == Update )
+        update();
 }
 
 void HtmlStatusBar::mousePressEvent( QMouseEvent * event )
 {
-  if ( event->button() == Qt::LeftButton ) {
-    emit clicked();
-  }
+    if ( event->button() == Qt::LeftButton ) {
+        emit clicked();
+    }
 }
 
 QString HtmlStatusBar::message() const {
-  switch ( mode() ) {
-  case Util::Html: // bold: "HTML Message"
-  case Util::MultipartHtml:
-    return i18nc( "'HTML Message' with html linebreaks between each letter and in bold text.",
-                 "<qt><b><br />H<br />T<br />M<br />L<br /> "
-                 "<br />M<br />e<br />s<br />s<br />a<br />g<br />e</b></qt>" );
-  case Util::Normal: // normal: "No HTML Message"
-    return i18nc("'No HTML Message' with html linebreaks between each letter.",
-                 "<qt><br />N<br />o<br /> "
-                 "<br />H<br />T<br />M<br />L<br /> "
-                 "<br />M<br />e<br />s<br />s<br />a<br />g<br />e</qt>" );
-  case Util::MultipartPlain: // normal: "Plain Message"
-    return i18nc("'Plain Message' with html linebreaks between each letter.",
-                 "<qt><br />P<br />l<br />a<br />i<br />n<br /> "
-                 "<br />M<br />e<br />s<br />s<br />a<br />g<br />e<br /></qt>" );
-  default:
-    return QString();
-  }
+    switch ( mode() ) {
+    case Util::Html: // bold: "HTML Message"
+    case Util::MultipartHtml:
+        return i18nc( "'HTML Message' with html linebreaks between each letter and in bold text.",
+                      "<qt><b><br />H<br />T<br />M<br />L<br /> "
+                      "<br />M<br />e<br />s<br />s<br />a<br />g<br />e</b></qt>" );
+    case Util::Normal: // normal: "No HTML Message"
+        return i18nc("'No HTML Message' with html linebreaks between each letter.",
+                     "<qt><br />N<br />o<br /> "
+                     "<br />H<br />T<br />M<br />L<br /> "
+                     "<br />M<br />e<br />s<br />s<br />a<br />g<br />e</qt>" );
+    case Util::MultipartPlain: // normal: "Plain Message"
+        return i18nc("'Plain Message' with html linebreaks between each letter.",
+                     "<qt><br />P<br />l<br />a<br />i<br />n<br /> "
+                     "<br />M<br />e<br />s<br />s<br />a<br />g<br />e<br /></qt>" );
+    default:
+        return QString();
+    }
 }
 
 QString HtmlStatusBar::toolTip() const
 {
-  switch ( mode() )
-  {
+    switch ( mode() )
+    {
     case Util::Html:
     case Util::MultipartHtml:
     case Util::MultipartPlain:
-      return i18n( "Click to toggle between HTML and plain text." );
+        return i18n( "Click to toggle between HTML and plain text." );
     default:
     case Util::Normal:
-      break;
-  }
+        break;
+    }
 
-  return QString();
+    return QString();
 }
 
 QColor HtmlStatusBar::fgColor() const
 {
-  KConfigGroup conf( GlobalSettings::self()->config(), "Reader" );
-  QColor defaultColor, color;
-  switch ( mode() ) {
-  case Util::Html:
-  case Util::MultipartHtml:
-    defaultColor = Qt::white;
-    color = defaultColor;
-    if ( !MessageCore::GlobalSettings::self()->useDefaultColors() ) {
-      color = conf.readEntry( "ColorbarForegroundHTML", defaultColor );
+    KConfigGroup conf( GlobalSettings::self()->config(), "Reader" );
+    QColor defaultColor, color;
+    switch ( mode() ) {
+    case Util::Html:
+    case Util::MultipartHtml:
+        defaultColor = Qt::white;
+        color = defaultColor;
+        if ( !MessageCore::GlobalSettings::self()->useDefaultColors() ) {
+            color = conf.readEntry( "ColorbarForegroundHTML", defaultColor );
+        }
+        return color;
+    case Util::Normal:
+    case Util::MultipartPlain:
+        defaultColor = Qt::black;
+        color = defaultColor;
+        if ( !MessageCore::GlobalSettings::self()->useDefaultColors() ) {
+            color = conf.readEntry( "ColorbarForegroundPlain", defaultColor );
+        }
+        return color;
+    default:
+        return Qt::black;
     }
-    return color;
-  case Util::Normal:
-  case Util::MultipartPlain:
-    defaultColor = Qt::black;
-    color = defaultColor;
-    if ( !MessageCore::GlobalSettings::self()->useDefaultColors() ) {
-      color = conf.readEntry( "ColorbarForegroundPlain", defaultColor );
-    }
-    return color;
-  default:
-    return Qt::black;
-  }
 }
 
 QColor HtmlStatusBar::bgColor() const {
-  KConfigGroup conf( GlobalSettings::self()->config(), "Reader" );
+    KConfigGroup conf( GlobalSettings::self()->config(), "Reader" );
 
-  QColor defaultColor, color;
-  switch ( mode() ) {
-  case Util::Html:
-  case Util::MultipartHtml:
-    defaultColor = Qt::black;
-    color = defaultColor;
-    if ( !MessageCore::GlobalSettings::self()->useDefaultColors() ) {
-      color = conf.readEntry( "ColorbarBackgroundHTML", defaultColor );
+    QColor defaultColor, color;
+    switch ( mode() ) {
+    case Util::Html:
+    case Util::MultipartHtml:
+        defaultColor = Qt::black;
+        color = defaultColor;
+        if ( !MessageCore::GlobalSettings::self()->useDefaultColors() ) {
+            color = conf.readEntry( "ColorbarBackgroundHTML", defaultColor );
+        }
+        return color;
+    case Util::Normal:
+    case Util::MultipartPlain:
+        defaultColor = Qt::lightGray;
+        color = defaultColor;
+        if ( !MessageCore::GlobalSettings::self()->useDefaultColors() ) {
+            color = conf.readEntry( "ColorbarBackgroundPlain", defaultColor );
+        }
+        return color;
+    default:
+        return Qt::white;
     }
-    return color;
-  case Util::Normal:
-  case Util::MultipartPlain:
-    defaultColor = Qt::lightGray;
-    color = defaultColor;
-    if ( !MessageCore::GlobalSettings::self()->useDefaultColors() ) {
-      color = conf.readEntry( "ColorbarBackgroundPlain", defaultColor );
-    }
-    return color;
-  default:
-    return Qt::white;
-  }
 }
 
 #include "htmlstatusbar.moc"

@@ -182,6 +182,7 @@ const DumpCrlCacheCommand::Private * DumpCrlCacheCommand::d_func() const { retur
 
 DumpCrlCacheCommand::Private::Private( DumpCrlCacheCommand * qq, KeyListController * c )
     : Command::Private( qq, c ),
+      dialog(0),
       process(),
       errorBuffer(),
       canceled( false )

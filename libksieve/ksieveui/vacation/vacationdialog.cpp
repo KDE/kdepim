@@ -37,11 +37,10 @@ using KMime::HeaderParsing::parseAddressList;
 using namespace KSieveUi;
 
 VacationDialog::VacationDialog( const QString & caption, QWidget * parent,
-                                const char * name, bool modal )
+                                bool modal )
     : KDialog( parent )
 {
     setCaption( caption );
-    setObjectName( name );
     setButtons( Ok|Cancel|Default );
     setDefaultButton(  Ok );
     setModal( modal );

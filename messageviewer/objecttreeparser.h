@@ -321,7 +321,7 @@ public:
    * multiple MIME parts, the results are conecated together. Not all parts are included in this.
    *
    * Although conecating multiple undecoded body parts with potentially different CTEs together might
-   * not seem to make any sense in these modern times, it is assumed that initally this function
+   * not seem to make any sense in these modern times, it is assumed that initially this function
    * performed quite well, but the ancient scrolls got damaged with the ravages of time
    * and were re-written multiple times.
    *

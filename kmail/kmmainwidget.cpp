@@ -42,7 +42,7 @@
 #include "foldershortcutactionmanager.h"
 #include "collectionpane.h"
 #if !defined(NDEBUG)
-    #include <ksieveui/sievedebugdialog.h>
+    #include <ksieveui/debug/sievedebugdialog.h>
     using KSieveUi::SieveDebugDialog;
 #endif
 
@@ -56,7 +56,7 @@
 #include "archivemailagentinterface.h"
 #include "createnewcontactjob.h"
 
-#include "pimcommon/collectionaclpage.h"
+#include "pimcommon/acl/collectionaclpage.h"
 #include "mailcommon/collectiongeneralpage.h"
 #include "mailcommon/collectionexpirypage.h"
 #include "mailcommon/expirecollectionattribute.h"
@@ -1114,7 +1114,7 @@ void KMMainWidget::createWidgets()
   // Create the reader window
   //
   if ( mReaderWindowActive ) {
-    mMsgView = new KMReaderWin( this, this, actionCollection(), 0 );
+    mMsgView = new KMReaderWin(  mGUIClient, this, this, actionCollection(), 0 );
     if ( mMsgActions ) {
       mMsgActions->setMessageView( mMsgView );
     }

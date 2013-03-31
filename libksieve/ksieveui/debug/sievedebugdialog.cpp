@@ -42,9 +42,9 @@ class SieveDebugDataExtractor : public KSieve::ScriptBuilder
         Days, Addresses
     };
 
-  public:
+public:
     SieveDebugDataExtractor()
-    :   KSieve::ScriptBuilder()
+        :   KSieve::ScriptBuilder()
     {
         kDebug() ;
     }
@@ -54,7 +54,7 @@ class SieveDebugDataExtractor : public KSieve::ScriptBuilder
         kDebug() ;
     }
 
-  private:
+private:
     void commandStart( const QString & identifier )
     {
         kDebug() << "Identifier: '" << identifier <<"'";
@@ -114,7 +114,7 @@ class SieveDebugDataExtractor : public KSieve::ScriptBuilder
     void error( const KSieve::Error & e )
     {
         kDebug() << "###" <<"Error:" <<
-            e.asString() << "@" << e.line() << "," << e.column();
+                    e.asString() << "@" << e.line() << "," << e.column();
     }
 
     void finished()
@@ -152,7 +152,7 @@ class SieveDebugDataExtractor : public KSieve::ScriptBuilder
         kDebug() ;
     }
 
-  private:
+private:
     void reset()
     {
         kDebug() ;
@@ -164,8 +164,8 @@ class SieveDebugDataExtractor : public KSieve::ScriptBuilder
 using namespace KSieveUi;
 
 SieveDebugDialog::SieveDebugDialog( QWidget *parent )
-  : KDialog( parent ),
-    mSieveJob( 0 )
+    : KDialog( parent ),
+      mSieveJob( 0 )
 {
     setCaption( i18n( "Sieve Diagnostics" ) );
     setButtons( Close );
@@ -174,7 +174,7 @@ SieveDebugDialog::SieveDebugDialog( QWidget *parent )
     const Akonadi::AgentInstance::List lst = KSieveUi::Util::imapAgentInstances();
     foreach ( const Akonadi::AgentInstance& type, lst )
     {
-      mResourceIdentifier << type.identifier();
+        mResourceIdentifier << type.identifier();
     }
 
     mEdit = new KTextEdit( this );
@@ -219,7 +219,7 @@ void SieveDebugDialog::slotDiagNextAccount()
         mSieveJob = KManageSieve::SieveJob::list( mUrl );
 
         connect( mSieveJob, SIGNAL(gotList(KManageSieve::SieveJob*,bool,QStringList,QString)),
-            SLOT(slotGetScriptList(KManageSieve::SieveJob*,bool,QStringList,QString)) );
+                 SLOT(slotGetScriptList(KManageSieve::SieveJob*,bool,QStringList,QString)) );
 
         // Bypass the singleShot timer -- it's fired when we get our data
         return;
@@ -253,16 +253,16 @@ void SieveDebugDialog::slotDiagNextScript()
     mSieveJob = KManageSieve::SieveJob::get( mUrl );
 
     connect( mSieveJob, SIGNAL(gotScript(KManageSieve::SieveJob*,bool,QString,bool)),
-        SLOT(slotGetScript(KManageSieve::SieveJob*,bool,QString,bool)) );
+             SLOT(slotGetScript(KManageSieve::SieveJob*,bool,QString,bool)) );
 }
 
 void SieveDebugDialog::slotGetScript( KManageSieve::SieveJob * /* job */, bool success,
-    const QString &script, bool active )
+                                      const QString &script, bool active )
 {
     kDebug() << "( ??," << success
-                   << ", ?," << active << ")" << endl
-                   << "script:" << endl
-                   << script;
+             << ", ?," << active << ")" << endl
+             << "script:" << endl
+             << script;
     mSieveJob = 0; // job deletes itself after returning from this slot!
 
     if ( script.isEmpty() )
@@ -272,9 +272,9 @@ void SieveDebugDialog::slotGetScript( KManageSieve::SieveJob * /* job */, bool s
     else
     {
         mEdit->append( i18n(
-            "------------------------------------------------------------\n"
-            "%1\n"
-            "------------------------------------------------------------\n\n", script ) );
+                           "------------------------------------------------------------\n"
+                           "%1\n"
+                           "------------------------------------------------------------\n\n", script ) );
     }
 
     // Fetch next script
@@ -282,10 +282,10 @@ void SieveDebugDialog::slotGetScript( KManageSieve::SieveJob * /* job */, bool s
 }
 
 void SieveDebugDialog::slotGetScriptList( KManageSieve::SieveJob *job, bool success,
-    const QStringList &scriptList, const QString &activeScript )
+                                          const QStringList &scriptList, const QString &activeScript )
 {
     kDebug() << "Success:" << success <<", List:" << scriptList.join("," ) <<
-        ", active:" << activeScript;
+                ", active:" << activeScript;
     mSieveJob = 0; // job deletes itself after returning from this slot!
 
     mEdit->append( i18n( "Sieve capabilities:\n" ) );
@@ -296,7 +296,7 @@ void SieveDebugDialog::slotGetScriptList( KManageSieve::SieveJob *job, bool succ
     }
     else
     {
-      QStringList::const_iterator end = caps.constEnd();
+        QStringList::const_iterator end = caps.constEnd();
         for ( QStringList::const_iterator it = caps.constBegin(); it !=end; ++it )
             mEdit->append( "* " + *it + '\n' );
         mEdit->append( "\n" );
@@ -342,10 +342,10 @@ void SieveDebugDialog::handlePutResult( KManageSieve::SieveJob *, bool success, 
     if ( success )
     {
         KMessageBox::information( 0, activated ? i18n(
-            "Sieve script installed successfully on the server.\n"
-            "Out of Office reply is now active." )
-            : i18n( "Sieve script installed successfully on the server.\n"
-            "Out of Office reply has been deactivated." ) );
+                                                     "Sieve script installed successfully on the server.\n"
+                                                     "Out of Office reply is now active." )
+                                               : i18n( "Sieve script installed successfully on the server.\n"
+                                                       "Out of Office reply has been deactivated." ) );
     }
 
     kDebug() << "( ???," << success <<", ? )";

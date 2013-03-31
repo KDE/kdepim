@@ -20,7 +20,7 @@
 
 #include <mailtransport/transportmanager.h>
 #include "mailcommon/mailutil.h"
-#include "messageviewer/kxface.h"
+#include "messageviewer/header/kxface.h"
 
 #include <kpimidentities/identity.h>
 #include <kpimidentities/signature.h>

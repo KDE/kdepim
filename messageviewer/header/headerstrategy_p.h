@@ -44,21 +44,21 @@
 //
 namespace MessageViewer {
 static const char * briefHeaders[] = {
-  "subject", "from", "cc", "bcc", "date"
+    "subject", "from", "cc", "bcc", "date"
 };
 static const int numBriefHeaders = sizeof briefHeaders / sizeof *briefHeaders;
 
 
 static const char * standardHeaders[] = {
-  "subject", "from", "cc", "bcc", "to"
+    "subject", "from", "cc", "bcc", "to"
 };
 static const int numStandardHeaders = sizeof standardHeaders / sizeof *standardHeaders;
 
 
 static const char * richHeaders[] = {
-  "subject", "date", "from", "cc", "bcc", "to",
-  "organization", "organisation", "reply-to",
-  "user-agent", "x-mailer", "x-bugzilla-url"
+    "subject", "date", "from", "cc", "bcc", "to",
+    "organization", "organisation", "reply-to",
+    "user-agent", "x-mailer", "x-bugzilla-url"
 };
 static const int numRichHeaders = sizeof richHeaders / sizeof *richHeaders;
 
@@ -67,27 +67,27 @@ static const int numRichHeaders = sizeof richHeaders / sizeof *richHeaders;
 //
 
 static QStringList stringList( const char * headers[], int numHeaders ) {
-  QStringList sl;
-  for ( int i = 0 ; i < numHeaders ; ++i )
-    sl.push_back( headers[i] );
-  return sl;
+    QStringList sl;
+    for ( int i = 0 ; i < numHeaders ; ++i )
+        sl.push_back( headers[i] );
+    return sl;
 }
 
 
 class AllHeaderStrategy : public HeaderStrategy {
-  friend class HeaderStrategy;
+    friend class HeaderStrategy;
 protected:
-  AllHeaderStrategy() : HeaderStrategy() {}
-  ~AllHeaderStrategy() {}
+    AllHeaderStrategy() : HeaderStrategy() {}
+    ~AllHeaderStrategy() {}
 
 public:
-  const char * name() const { return "all"; }
+    const char * name() const { return "all"; }
 
-  DefaultPolicy defaultPolicy() const { return Display; }
+    DefaultPolicy defaultPolicy() const { return Display; }
 
-  bool showHeader( const QString & ) const {
-    return true; // more efficient than default impl
-  }
+    bool showHeader( const QString & ) const {
+        return true; // more efficient than default impl
+    }
 };
 
 //
@@ -96,21 +96,21 @@ public:
 //
 
 class RichHeaderStrategy : public HeaderStrategy {
-  friend class HeaderStrategy;
+    friend class HeaderStrategy;
 protected:
-  RichHeaderStrategy()
-    : HeaderStrategy(),
-      mHeadersToDisplay( stringList( richHeaders, numRichHeaders ) ) {}
-  ~RichHeaderStrategy() {}
+    RichHeaderStrategy()
+        : HeaderStrategy(),
+          mHeadersToDisplay( stringList( richHeaders, numRichHeaders ) ) {}
+    ~RichHeaderStrategy() {}
 
 public:
-  const char * name() const { return "rich"; }
+    const char * name() const { return "rich"; }
 
-  QStringList headersToDisplay() const { return mHeadersToDisplay; }
-  DefaultPolicy defaultPolicy() const { return Hide; }
+    QStringList headersToDisplay() const { return mHeadersToDisplay; }
+    DefaultPolicy defaultPolicy() const { return Hide; }
 
 private:
-  const QStringList mHeadersToDisplay;
+    const QStringList mHeadersToDisplay;
 };
 
 //
@@ -119,21 +119,21 @@ private:
 //
 
 class StandardHeaderStrategy : public HeaderStrategy {
-  friend class HeaderStrategy;
+    friend class HeaderStrategy;
 protected:
-  StandardHeaderStrategy()
-    : HeaderStrategy(),
-      mHeadersToDisplay( stringList( standardHeaders, numStandardHeaders) ) {}
-  ~StandardHeaderStrategy() {}
+    StandardHeaderStrategy()
+        : HeaderStrategy(),
+          mHeadersToDisplay( stringList( standardHeaders, numStandardHeaders) ) {}
+    ~StandardHeaderStrategy() {}
 
 public:
-  const char * name() const { return "standard"; }
+    const char * name() const { return "standard"; }
 
-  QStringList headersToDisplay() const { return mHeadersToDisplay; }
-  DefaultPolicy defaultPolicy() const { return Hide; }
+    QStringList headersToDisplay() const { return mHeadersToDisplay; }
+    DefaultPolicy defaultPolicy() const { return Hide; }
 
 private:
-  const QStringList mHeadersToDisplay;
+    const QStringList mHeadersToDisplay;
 };
 
 //
@@ -142,21 +142,21 @@ private:
 //
 
 class BriefHeaderStrategy : public HeaderStrategy {
-  friend class HeaderStrategy;
+    friend class HeaderStrategy;
 protected:
-  BriefHeaderStrategy()
-    : HeaderStrategy(),
-      mHeadersToDisplay( stringList( briefHeaders, numBriefHeaders ) ) {}
-  ~BriefHeaderStrategy() {}
+    BriefHeaderStrategy()
+        : HeaderStrategy(),
+          mHeadersToDisplay( stringList( briefHeaders, numBriefHeaders ) ) {}
+    ~BriefHeaderStrategy() {}
 
 public:
-  const char * name() const { return "brief"; }
+    const char * name() const { return "brief"; }
 
-  QStringList headersToDisplay() const { return mHeadersToDisplay; }
-  DefaultPolicy defaultPolicy() const { return Hide; }
+    QStringList headersToDisplay() const { return mHeadersToDisplay; }
+    DefaultPolicy defaultPolicy() const { return Hide; }
 
 private:
-  const QStringList mHeadersToDisplay;
+    const QStringList mHeadersToDisplay;
 };
 
 
@@ -166,23 +166,23 @@ private:
 //
 
 class CustomHeaderStrategy : public HeaderStrategy {
-  friend class HeaderStrategy;
+    friend class HeaderStrategy;
 protected:
-  CustomHeaderStrategy();
-  ~CustomHeaderStrategy() {}
+    CustomHeaderStrategy();
+    ~CustomHeaderStrategy() {}
 
 public:
-  const char * name() const { return "custom"; }
+    const char * name() const { return "custom"; }
 
-  void loadConfig();
-  QStringList headersToDisplay() const { return mHeadersToDisplay; }
-  QStringList headersToHide() const { return mHeadersToHide; }
-  DefaultPolicy defaultPolicy() const { return mDefaultPolicy; }
+    void loadConfig();
+    QStringList headersToDisplay() const { return mHeadersToDisplay; }
+    QStringList headersToHide() const { return mHeadersToHide; }
+    DefaultPolicy defaultPolicy() const { return mDefaultPolicy; }
 
 private:
-  QStringList mHeadersToDisplay;
-  QStringList mHeadersToHide;
-  DefaultPolicy mDefaultPolicy;
+    QStringList mHeadersToDisplay;
+    QStringList mHeadersToHide;
+    DefaultPolicy mDefaultPolicy;
 };
 
 //
@@ -190,14 +190,14 @@ private:
 //   Determined by grantlee theme.
 //
 class GrantleeHeaderStrategy : public HeaderStrategy {
-  friend class HeaderStrategy;
+    friend class HeaderStrategy;
 protected:
-  GrantleeHeaderStrategy();
-  ~GrantleeHeaderStrategy() {}
+    GrantleeHeaderStrategy() {}
+    ~GrantleeHeaderStrategy() {}
 
 public:
-  const char * name() const { return "grantlee"; }
-  DefaultPolicy defaultPolicy() const { return Hide; }
+    const char * name() const { return "grantlee"; }
+    DefaultPolicy defaultPolicy() const { return Hide; }
 };
 
 }

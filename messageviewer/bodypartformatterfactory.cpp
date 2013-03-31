@@ -87,7 +87,7 @@ BodyPartFormatterFactory::~BodyPartFormatterFactory() {
 static TypeRegistry * all = 0;
 
 static void insertBodyPartFormatter( const char * type, const char * subtype,
-				     const Interface::BodyPartFormatter * formatter ) {
+                                     const Interface::BodyPartFormatter * formatter ) {
   if ( !type || !*type || !subtype || !*subtype || !formatter || !all )
     return;
 
@@ -103,7 +103,7 @@ static void insertBodyPartFormatter( const char * type, const char * subtype,
   SubtypeRegistry::iterator subtype_it = subtype_reg.find( subtype );
   if ( subtype_it != subtype_reg.end() ) {
     kDebug() << "BodyPartFormatterFactory: overwriting previously registered formatter for \""
-		    << type << "/" << subtype << "\"";
+                    << type << "/" << subtype << "\"";
     subtype_reg.erase( subtype_it ); subtype_it = subtype_reg.end();
   }
 

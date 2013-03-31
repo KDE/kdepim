@@ -5,12 +5,12 @@ include_directories(
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
 
 set(libpimcommon_SRCS
-  aclentrydialog.cpp
-  aclmanager.cpp
-  aclutils.cpp
-  collectionaclpage.cpp
+  acl/aclentrydialog.cpp
+  acl/aclmanager.cpp
+  acl/aclutils.cpp
+  acl/collectionaclpage.cpp
+  acl/imapaclattribute.cpp
   createresource.cpp
-  imapaclattribute.cpp
   pimutil.cpp
   minimumcombobox.cpp
   translator/translatorutil.cpp

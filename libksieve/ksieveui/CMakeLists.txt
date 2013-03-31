@@ -1,13 +1,14 @@
 include_directories(${CMAKE_SOURCE_DIR}/libksieve
 	${CMAKE_SOURCE_DIR}/pimcommon
 	${CMAKE_BINARY_DIR}/pimcommon
+        ${CMAKE_SOURCE_DIR}/libksieve/ksieveui
 	)
 
 add_subdirectory(tests)
 
 set(ksieveui_LIB_SRCS
   managesievescriptsdialog.cpp
-  sievedebugdialog.cpp
+  debug/sievedebugdialog.cpp
   util.cpp
   vacation/vacation.cpp
   vacation/vacationdialog.cpp
@@ -19,6 +20,11 @@ set(ksieveui_LIB_SRCS
   templates/sievetemplatewidget.cpp
   templates/sievedefaulttemplate.cpp 
   templates/sievetemplateeditdialog.cpp 
+  autocreatescripts/autocreatescriptdialog.cpp
+  autocreatescripts/sieveconditionwidgetlister.cpp
+  autocreatescripts/sievescriptlistbox.cpp
+  autocreatescripts/sievescriptdescriptiondialog.cpp
+  autocreatescripts/sieveactionwidgetlister.cpp
 )
 
 kde4_add_kcfg_files(ksieveui_LIB_SRCS settings.kcfgc)
@@ -29,6 +35,7 @@ target_link_libraries(ksieveui
   kmanagesieve
   ksieve
   pimcommon
+  kdepim
   ${KDEPIMLIBS_AKONADI_LIBS}
   ${KDEPIMLIBS_KMIME_LIBS}
   ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}

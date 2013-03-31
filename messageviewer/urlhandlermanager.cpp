@@ -237,7 +237,7 @@ private:
 
 URLHandlerManager::BodyPartURLHandlerManager::~BodyPartURLHandlerManager() {
   for_each( mHandlers.begin(), mHandlers.end(),
-	    DeleteAndSetToZero<Interface::BodyPartURLHandler>() );
+            DeleteAndSetToZero<Interface::BodyPartURLHandler>() );
 }
 
 void URLHandlerManager::BodyPartURLHandlerManager::registerHandler( const Interface::BodyPartURLHandler * handler ) {
@@ -342,7 +342,7 @@ URLHandlerManager::URLHandlerManager() {
 
 URLHandlerManager::~URLHandlerManager() {
   for_each( mHandlers.begin(), mHandlers.end(),
-	    DeleteAndSetToZero<URLHandler>() );
+            DeleteAndSetToZero<URLHandler>() );
 }
 
 void URLHandlerManager::registerHandler( const URLHandler * handler ) {

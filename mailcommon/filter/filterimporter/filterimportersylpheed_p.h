@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012, 2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -30,11 +30,11 @@ class MailFilter;
 
 class FilterImporterSylpheed : public FilterImporterAbstract
 {
-  public:
+public:
     explicit FilterImporterSylpheed( QFile *file );
     ~FilterImporterSylpheed();
     static QString defaultFiltersSettingsPath();
-  private:
+private:
     void parseFilters( const QDomElement &e );
     void parseConditions( const QDomElement &ruleFilter, MailCommon::MailFilter *filter );
     void parseActions( const QDomElement &e, MailCommon::MailFilter *filter );

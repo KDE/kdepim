@@ -75,7 +75,6 @@ set(libmessageviewer_SRCS
   iconnamecache.cpp
   invitationsettings.cpp
   kleojobexecutor.cpp
-  kxface.cpp
   mailsourceviewer.cpp
   markmessagereadhandler.cpp
   mimetreemodel.cpp
@@ -94,10 +93,11 @@ set(libmessageviewer_SRCS
   viewer.cpp
   viewer_p.cpp
   webkitparthtmlwriter.cpp
-  customheadersettingwidget.cpp
+  header/customheadersettingwidget.cpp
   header/grantleeheaderformatter.cpp
   header/grantleethememanager.cpp
   header/grantleetheme.cpp
+  header/kxface.cpp
   messagedisplayformatattribute.cpp
   scamdetection/scamdetectionwarningwidget.cpp
   scamdetection/scamdetection.cpp
@@ -131,6 +131,7 @@ target_link_libraries(messageviewer messagecore kdepim kpgp kleo
   ${QGPGME_LIBRARIES}
   ${_mailwebview_lib}
   ${Grantlee_CORE_LIBRARIES} 
+  ${KDE4_KNEWSTUFF3_LIBS}
   pimcommon
 )
 
@@ -148,5 +149,7 @@ install(TARGETS messageviewer ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 
 install(DIRECTORY themes DESTINATION ${DATA_INSTALL_DIR}/messageviewer )
+
+install(FILES header/data/header_themes.knsrc DESTINATION ${CONFIG_INSTALL_DIR} )
 
 add_subdirectory(grantleefilters)

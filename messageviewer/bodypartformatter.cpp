@@ -96,7 +96,7 @@ namespace {
     bool process( ObjectTreeParser *, KMime::Content *, ProcessResult & ) const; \
     static const BodyPartFormatter * create() { \
       if ( !self ) \
-	self = new subtype##BodyPartFormatter(); \
+        self = new subtype##BodyPartFormatter(); \
       return self; \
     } \
   }; \
@@ -212,20 +212,20 @@ static const BodyPartFormatter * createForText( const char * subtype ) {
     case 'h':
     case 'H':
       if ( kasciistricmp( subtype, "html" ) == 0 )
-	return TextHtmlBodyPartFormatter::create();
+        return TextHtmlBodyPartFormatter::create();
       break;
     case 'r':
     case 'R':
       if ( kasciistricmp( subtype, "rtf" ) == 0 )
-	return AnyTypeBodyPartFormatter::create();
+        return AnyTypeBodyPartFormatter::create();
       break;
     case 'x':
     case 'X':
     case 'v':
     case 'V':
       if ( kasciistricmp( subtype, "x-vcard" ) == 0 ||
-	   kasciistricmp( subtype, "vcard" ) == 0 )
-	return AnyTypeBodyPartFormatter::create();
+           kasciistricmp( subtype, "vcard" ) == 0 )
+        return AnyTypeBodyPartFormatter::create();
       break;
     }
 
@@ -248,17 +248,17 @@ static const BodyPartFormatter * createForMultiPart( const char * subtype ) {
     case 'a':
     case 'A':
       if ( kasciistricmp( subtype, "alternative" ) == 0 )
-	return MultiPartAlternativeBodyPartFormatter::create();
+        return MultiPartAlternativeBodyPartFormatter::create();
       break;
     case 'e':
     case 'E':
       if ( kasciistricmp( subtype, "encrypted" ) == 0 )
-	return MultiPartEncryptedBodyPartFormatter::create();
+        return MultiPartEncryptedBodyPartFormatter::create();
       break;
     case 's':
     case 'S':
       if ( kasciistricmp( subtype, "signed" ) == 0 )
-	return MultiPartSignedBodyPartFormatter::create();
+        return MultiPartSignedBodyPartFormatter::create();
       break;
     }
 
@@ -271,13 +271,13 @@ static const BodyPartFormatter * createForApplication( const char * subtype ) {
     case 'p':
     case 'P':
       if ( kasciistricmp( subtype, "pgp" ) == 0 )
-	return ApplicationPgpBodyPartFormatter::create();
+        return ApplicationPgpBodyPartFormatter::create();
       // fall through
     case 'x':
     case 'X':
       if ( kasciistricmp( subtype, "pkcs7-mime" ) == 0 ||
-	   kasciistricmp( subtype, "x-pkcs7-mime" ) == 0 )
-	return ApplicationPkcs7MimeBodyPartFormatter::create();
+           kasciistricmp( subtype, "x-pkcs7-mime" ) == 0 )
+        return ApplicationPkcs7MimeBodyPartFormatter::create();
       break;
     case 'v':
     case 'V':
@@ -296,24 +296,24 @@ const BodyPartFormatter * BodyPartFormatter::createFor( const char * type, const
     case 'a': // application
     case 'A':
       if ( kasciistricmp( type, "application" ) == 0 )
-	return createForApplication( subtype );
+        return createForApplication( subtype );
       break;
     case 'i': // image
     case 'I':
       if ( kasciistricmp( type, "image" ) == 0 )
-	return createForImage( subtype );
+        return createForImage( subtype );
       break;
     case 'm': // multipart / message
     case 'M':
       if ( kasciistricmp( type, "multipart" ) == 0 )
-	return createForMultiPart( subtype );
+        return createForMultiPart( subtype );
       else if ( kasciistricmp( type, "message" ) == 0 )
-	return createForMessage( subtype );
+        return createForMessage( subtype );
       break;
     case 't': // text
     case 'T':
       if ( kasciistricmp( type, "text" ) == 0 )
-	return createForText( subtype );
+        return createForText( subtype );
       break;
     }
 
