@@ -32,7 +32,8 @@
 using namespace KSieveUi;
 
 SieveScriptListItem::SieveScriptListItem( const QString &text, QListWidget *parent )
-    : QListWidgetItem( text, parent )
+    : QListWidgetItem( text, parent ),
+      mScriptPage(0)
 {
 
 }
