@@ -73,7 +73,7 @@ void SieveTextEdit::contextMenuEvent( QContextMenuEvent *event )
             QList<QAction *> actionList = popup->actions();
             enum { UndoAct, RedoAct, CutAct, CopyAct, PasteAct, ClearAct, SelectAllAct, NCountActs };
             QAction *separatorAction = 0L;
-            int idx = actionList.indexOf( actionList[SelectAllAct] ) + 1;
+            const int idx = actionList.indexOf( actionList[SelectAllAct] ) + 1;
             if ( idx < actionList.count() )
                 separatorAction = actionList.at( idx );
             if ( separatorAction ) {
