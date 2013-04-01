@@ -25,6 +25,7 @@
 #include <QVBoxLayout>
 #include <QListWidget>
 #include <QSplitter>
+#include <QStackedWidget>
 
 using namespace KSieveUi;
 
@@ -45,26 +46,8 @@ AutoCreateScriptDialog::AutoCreateScriptDialog(QWidget *parent)
     splitter->addWidget(mSieveScript);
     vlay->addWidget(splitter);
 
-    QWidget *w = new QWidget;
-    QVBoxLayout *vbox = new QVBoxLayout;
-
-    QGroupBox *conditions = new QGroupBox(i18n("Condition"));
-    QVBoxLayout *hbox = new QVBoxLayout;
-    conditions->setLayout(hbox);
-    mScriptConditionLister = new SieveConditionWidgetLister;
-    hbox->addWidget(mScriptConditionLister);
-
-    vbox->addWidget(conditions);
-
-    QGroupBox *actions = new QGroupBox(i18n("Condition"));
-    hbox = new QVBoxLayout;
-    actions->setLayout(hbox);
-    mScriptActionLister = new SieveActionWidgetLister;
-    hbox->addWidget(mScriptActionLister);
-    vbox->addWidget(actions);
-
-    w->setLayout(vbox);
-    splitter->addWidget(w);
+    mStackWidget = new QStackedWidget;
+    splitter->addWidget(mStackWidget);
 
     setMainWidget( mainWidget );
 }

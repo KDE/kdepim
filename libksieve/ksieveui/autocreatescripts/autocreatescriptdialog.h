@@ -20,9 +20,9 @@
 
 #include <KDialog>
 
+class QStackedWidget;
+
 namespace KSieveUi {
-class SieveConditionWidgetLister;
-class SieveActionWidgetLister;
 class SieveScriptListBox;
 class AutoCreateScriptDialog : public KDialog
 {
@@ -32,9 +32,8 @@ public:
     ~AutoCreateScriptDialog();
     QString script() const;
 private:
-    SieveConditionWidgetLister *mScriptConditionLister;
-    SieveActionWidgetLister *mScriptActionLister;
     SieveScriptListBox *mSieveScript;
+    QStackedWidget *mStackWidget;
 };
 }
 

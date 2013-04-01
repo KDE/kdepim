@@ -21,12 +21,18 @@
 #include <QWidget>
 
 namespace KSieveUi {
+class SieveConditionWidgetLister;
+class SieveActionWidgetLister;
+
 class SieveScriptPage : public QWidget
 {
     Q_OBJECT
 public:
     explicit SieveScriptPage(QWidget *parent);
     ~SieveScriptPage();
+private:
+    SieveConditionWidgetLister *mScriptConditionLister;
+    SieveActionWidgetLister *mScriptActionLister;
 };
 }
 

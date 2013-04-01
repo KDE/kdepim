@@ -16,11 +16,32 @@
 */
 
 #include "sievescriptpage.h"
+#include "sieveactionwidgetlister.h"
+#include "sieveconditionwidgetlister.h"
+#include <QVBoxLayout>
+#include <QGroupBox>
 
 namespace KSieveUi {
 SieveScriptPage::SieveScriptPage(QWidget *parent)
     : QWidget(parent)
 {
+    QVBoxLayout *vbox = new QVBoxLayout;
+
+    QGroupBox *conditions = new QGroupBox(i18n("Condition"));
+    QVBoxLayout *hbox = new QVBoxLayout;
+    conditions->setLayout(hbox);
+    mScriptConditionLister = new SieveConditionWidgetLister;
+    hbox->addWidget(mScriptConditionLister);
+
+    vbox->addWidget(conditions);
+
+    QGroupBox *actions = new QGroupBox(i18n("Condition"));
+    hbox = new QVBoxLayout;
+    actions->setLayout(hbox);
+    mScriptActionLister = new SieveActionWidgetLister;
+    hbox->addWidget(mScriptActionLister);
+    vbox->addWidget(actions);
+    setLayout(vbox);
 }
 
 SieveScriptPage::~SieveScriptPage()
