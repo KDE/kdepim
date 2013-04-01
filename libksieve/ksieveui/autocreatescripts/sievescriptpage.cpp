@@ -18,6 +18,9 @@
 #include "sievescriptpage.h"
 #include "sieveactionwidgetlister.h"
 #include "sieveconditionwidgetlister.h"
+
+#include <KLocale>
+
 #include <QVBoxLayout>
 #include <QGroupBox>
 

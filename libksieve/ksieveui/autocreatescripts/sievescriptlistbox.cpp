@@ -16,6 +16,7 @@
 */
 #include "sievescriptlistbox.h"
 #include "sievescriptdescriptiondialog.h"
+#include "sievescriptpage.h"
 
 #include <KHBox>
 #include <KMessageBox>
@@ -48,6 +49,16 @@ void SieveScriptListItem::setDescription(const QString & desc)
 QString SieveScriptListItem::description() const
 {
     return mDescription;
+}
+
+SieveScriptPage *SieveScriptListItem::scriptPage() const
+{
+    return mScriptPage;
+}
+
+void SieveScriptListItem::setScriptPage(SieveScriptPage *page)
+{
+    mScriptPage = page;
 }
 
 SieveScriptListBox::SieveScriptListBox(const QString &title, QWidget *parent)

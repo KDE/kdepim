@@ -24,7 +24,7 @@ class QListWidget;
 class QPushButton;
 
 namespace KSieveUi {
-
+class SieveScriptPage;
 class SieveScriptListItem : public QListWidgetItem
 {
 public:
@@ -33,8 +33,13 @@ public:
 
     void setDescription(const QString & desc);
     QString description() const;
+
+    SieveScriptPage *scriptPage() const;
+    void setScriptPage(SieveScriptPage *page);
+
 private:
     QString mDescription;
+    SieveScriptPage *mScriptPage;
 };
 
 class SieveScriptListBox : public QGroupBox
