@@ -26,6 +26,7 @@ class QActionGroup;
 class KXMLGUIClient;
 class KActionCollection;
 class KToggleAction;
+class KActionMenu;
 
 namespace MessageViewer {
 class GrantleeThemeManager : public QObject
@@ -47,6 +48,8 @@ public:
     void activateTheme(const QString &themeName);
 
     KToggleAction *actionForHeaderStyle();
+
+    void setActionMenu(KActionMenu *menu);
 
 Q_SIGNALS:
     void themesChanged();

@@ -26,6 +26,7 @@
 #include <KToggleAction>
 #include <KLocale>
 #include <KNS3/DownloadDialog>
+#include <KActionMenu>
 
 #include <QDir>
 #include <QAction>
@@ -42,6 +43,7 @@ public:
         : themesPath(path),
           guiClient(xmlGuiClient),
           actionGroup(0),
+          menu(0),
           actionCollection(ac),
           q(qq)
     {
@@ -187,6 +189,7 @@ public:
     KDirWatch *watch;
     KXMLGUIClient *guiClient;
     QActionGroup *actionGroup;
+    KActionMenu *menu;
     KActionCollection *actionCollection;
     KAction *downloadThemesAction;
     QWeakPointer<KNS3::DownloadDialog> downloadThemesDialog;
@@ -238,6 +241,11 @@ void GrantleeThemeManager::activateTheme(const QString &themeName)
 void GrantleeThemeManager::updateThemeList()
 {
     d->directoryChanged();
+}
+
+void GrantleeThemeManager::setActionMenu(KActionMenu *menu)
+{
+    d->menu = menu;
 }
 
 #include "grantleethememanager.moc"
