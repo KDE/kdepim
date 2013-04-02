@@ -58,5 +58,9 @@ void SieveActionWidgetLister::updateAddRemoveButton()
 
 }
 
+void SieveActionWidgetLister::generatedScript(QString &script)
+{
+    //TODO
+}
 
 #include "sieveactionwidgetlister.moc"

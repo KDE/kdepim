@@ -54,7 +54,9 @@ SieveScriptPage::~SieveScriptPage()
 
 void SieveScriptPage::generatedScript(QString &script)
 {
-    //TODO
+    mScriptConditionLister->generatedScript(script);
+    mScriptActionLister->generatedScript(script);
+    //TODO Close script here.
 }
 
 }

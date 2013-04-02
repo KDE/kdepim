@@ -58,4 +58,10 @@ void SieveConditionWidgetLister::updateAddRemoveButton()
 
 }
 
+void SieveConditionWidgetLister::generatedScript(QString &script)
+{
+    //TODO
+}
+
+
 #include "sieveconditionwidgetlister.moc"

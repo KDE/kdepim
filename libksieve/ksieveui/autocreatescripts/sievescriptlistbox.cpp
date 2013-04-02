@@ -66,7 +66,7 @@ QString SieveScriptListItem::generatedScript() const
 {
     QString script;
     if (!mDescription.isEmpty()) {
-        script = QLatin1Char('#') + mDescription;
+        script = QLatin1Char('#') + i18n("Description:") + QLatin1Char('\n') + mDescription;
         script.replace(QLatin1Char('\n'), QLatin1String("\n#"));
     }
     if (mScriptPage) {
@@ -163,9 +163,11 @@ QString SieveScriptListBox::generatedScript() const
 {
     QString resultScript;
     for (int i = 0; i< mSieveListScript->count(); ++i) {
+        SieveScriptListItem* item = static_cast<SieveScriptListItem*>(mSieveListScript->item(i));
         if (i != 0)
             resultScript += QLatin1Char('\n');
-        resultScript = static_cast<SieveScriptListItem*>(mSieveListScript->item(i))->generatedScript();
+        resultScript += QLatin1Char('#') + i18n("Script name: %1",item->text()) + QLatin1Char('\n');
+        resultScript = item->generatedScript();
     }
     return resultScript;
 }

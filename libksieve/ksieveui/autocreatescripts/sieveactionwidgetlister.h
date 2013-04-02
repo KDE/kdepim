@@ -39,6 +39,7 @@ public:
     explicit SieveActionWidgetLister(QWidget *parent = 0);
     ~SieveActionWidgetLister();
 
+    void generatedScript(QString &script);
 public Q_SLOTS:
     void slotAddWidget( QWidget *w );
     void slotRemoveWidget( QWidget *w );
