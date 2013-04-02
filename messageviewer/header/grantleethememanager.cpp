@@ -53,7 +53,6 @@ public:
         separatorAction = new QAction(q);
         separatorAction->setSeparator(true);
         connect(downloadThemesAction, SIGNAL(triggered(bool)), q, SLOT(slotDownloadHeaderThemes()) );
-        QTimer::singleShot(1000, q, SLOT(directoryChanged()));
     }
 
     ~Private()
