@@ -126,7 +126,9 @@ void SieveScriptListBox::slotNew()
     const QString newName = KInputDialog::getText(i18n("New Script"), i18n("Add new name:"));
     if (!newName.isEmpty()) {
         SieveScriptListItem *item = new SieveScriptListItem(newName, mSieveListScript);
-        //TODO create uniq name
+        SieveScriptPage *page = new SieveScriptPage();
+        item->setScriptPage(page);
+        Q_EMIT addNewPage(page);
     }
 }
 
@@ -134,6 +136,8 @@ void SieveScriptListBox::slotDelete()
 {
     QListWidgetItem *item = mSieveListScript->currentItem();
     if (item) {
+        SieveScriptListItem *itemScript = static_cast<SieveScriptListItem*>(item);
+        Q_EMIT removePage(itemScript->scriptPage());
         delete item;
     }
 }

@@ -43,6 +43,8 @@ AutoCreateScriptDialog::AutoCreateScriptDialog(QWidget *parent)
     QSplitter *splitter = new QSplitter;
     splitter->setChildrenCollapsible(false);
     mSieveScript = new SieveScriptListBox( i18n("Sieve Script"));
+    connect(mSieveScript, SIGNAL(addNewPage(QWidget*)), SLOT(slotAddScriptPage(QWidget*)));
+    connect(mSieveScript, SIGNAL(removePage(QWidget*)), SLOT(slotRemoveScriptPage(QWidget*)));
     splitter->addWidget(mSieveScript);
     vlay->addWidget(splitter);
 
@@ -61,5 +63,16 @@ QString AutoCreateScriptDialog::script() const
 {
     return mSieveScript->generatedScript();
 }
+
+void AutoCreateScriptDialog::slotAddScriptPage(QWidget* w)
+{
+    mStackWidget->addWidget(w);
+}
+
+void AutoCreateScriptDialog::slotRemoveScriptPage(QWidget* w)
+{
+    mStackWidget->removeWidget(w);
+}
+
 
 #include "autocreatescriptdialog.moc"

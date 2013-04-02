@@ -52,6 +52,10 @@ public:
     ~SieveScriptListBox();
     QString generatedScript() const;
 
+Q_SIGNALS:
+    void addNewPage(QWidget *);
+    void removePage(QWidget *);
+
 private Q_SLOTS:
     void slotNew();
     void slotDelete();

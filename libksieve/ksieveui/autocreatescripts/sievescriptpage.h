@@ -28,7 +28,7 @@ class SieveScriptPage : public QWidget
 {
     Q_OBJECT
 public:
-    explicit SieveScriptPage(QWidget *parent);
+    explicit SieveScriptPage(QWidget *parent = 0);
     ~SieveScriptPage();
 
     void generatedScript(QString &script);

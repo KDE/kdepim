@@ -31,6 +31,9 @@ public:
     explicit AutoCreateScriptDialog(QWidget *parent = 0);
     ~AutoCreateScriptDialog();
     QString script() const;
+private Q_SLOTS:
+    void slotAddScriptPage(QWidget*);
+    void slotRemoveScriptPage(QWidget*);
 private:
     SieveScriptListBox *mSieveScript;
     QStackedWidget *mStackWidget;
