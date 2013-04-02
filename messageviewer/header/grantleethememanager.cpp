@@ -47,12 +47,14 @@ public:
           q(qq)
     {
         watch = new KDirWatch( q );
-        q->connect( watch, SIGNAL(dirty(QString)), SLOT(directoryChanged()) );
+
         downloadThemesAction = new KAction(i18n("Download new themes..."), q);
         actionCollection->addAction( "download_header_themes", downloadThemesAction );
         separatorAction = new QAction(q);
         separatorAction->setSeparator(true);
-        connect(downloadThemesAction, SIGNAL(triggered(bool)), q, SLOT(slotDownloadHeaderThemes()) );
+
+        q->connect(downloadThemesAction, SIGNAL(triggered(bool)), q, SLOT(slotDownloadHeaderThemes()) );
+        q->connect( watch, SIGNAL(dirty(QString)), SLOT(directoryChanged()) );
     }
 
     ~Private()
@@ -135,7 +137,6 @@ public:
 
     void updateActionList()
     {
-        qDebug()<<" updateActionList before"<<themesActionList.count();
         if (!actionGroup || !menu)
             return;
         Q_FOREACH ( QAction *action, themesActionList ) {
