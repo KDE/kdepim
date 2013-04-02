@@ -52,7 +52,6 @@ Q_SIGNALS:
 private:
     Q_PRIVATE_SLOT( d, void directoryChanged() )
     Q_PRIVATE_SLOT( d, void slotDownloadHeaderThemes() )
-    Q_PRIVATE_SLOT( d, void slotNewStuffFinished() )
     Q_PRIVATE_SLOT( d, void slotThemeSelected() )
     class Private;
     Private *const d;

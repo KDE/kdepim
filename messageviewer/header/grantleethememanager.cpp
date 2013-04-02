@@ -77,16 +77,8 @@ public:
     {
         if (!downloadThemesDialog) {
             downloadThemesDialog = new KNS3::DownloadDialog(QLatin1String("header_themes.knsrc"));
-            connect(downloadThemesDialog.data(), SIGNAL(accepted()), q, SLOT(slotNewStuffFinished()));
         }
         downloadThemesDialog.data()->show();
-    }
-
-    void slotNewStuffFinished()
-    {
-        if (downloadThemesDialog) {
-        //TODO
-        }
     }
 
     void directoryChanged()
