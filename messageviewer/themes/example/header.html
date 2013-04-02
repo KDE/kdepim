@@ -2,7 +2,14 @@
      {% if header.subjecti18n %}
         {% with header.subjecti18n as title %}
         {% with header.subject as value %}
-        {% include "header_row.html" %}
+        {% endwith %}
+        {% endwith %}
+     {% endif %}
+</div>
+<div>
+     {% if header.datei18n %}
+        {% with header.datei18n as title %}
+        {% with header.date as value %}
         {% endwith %}
         {% endwith %}
      {% endif %}
