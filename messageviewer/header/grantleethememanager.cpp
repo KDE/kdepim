@@ -65,6 +65,7 @@ public:
                 actionGroup->removeAction(action);
             if (actionCollection)
                 actionCollection->removeAction( action );
+            delete action;
         }
         themesActionList.clear();
         themes.clear();
