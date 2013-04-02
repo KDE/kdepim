@@ -237,4 +237,16 @@ void GrantleeThemeManager::setHeaderMenu(KActionMenu *menu)
     d->directoryChanged();
 }
 
+QStringList GrantleeThemeManager::displayExtraHeader(const QString &themename) const
+{
+    QMapIterator<QString, GrantleeTheme> i(d->themes);
+    while (i.hasNext()) {
+       i.next();
+       if (i.value().dirName() == themename) {
+           return i.value().displayExtraHeaders();
+       }
+    }
+    return QStringList();
+}
+
 #include "grantleethememanager.moc"

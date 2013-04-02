@@ -43,6 +43,8 @@ public:
 
     void setHeaderMenu(KActionMenu *menu);
 
+    QStringList displayExtraHeader(const QString &themename) const;
+
 Q_SIGNALS:
     void themesChanged();
     void grantleeThemeSelected();

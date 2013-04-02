@@ -1185,7 +1185,7 @@ void ViewerPrivate::readConfig()
   // bottom when all settings are already est.
   setHeaderStyleAndStrategy( HeaderStyle::create( GlobalSettings::self()->headerStyle() ),
                              HeaderStrategy::create( GlobalSettings::self()->headerSetDisplayed() ) );
-  headerStyle()->setThemeName(GlobalSettings::self()->grantleeThemeName());
+  initGrantleeThemeName();
 
 #ifndef KDEPIM_NO_WEBKIT
   mViewer->settings()->setFontSize( QWebSettings::MinimumFontSize, GlobalSettings::self()->minimumFontSize() );
@@ -2341,7 +2341,14 @@ void ViewerPrivate::slotGrantleeHeaders()
 {
   setHeaderStyleAndStrategy( HeaderStyle::grantlee(),
                              HeaderStrategy::grantlee(), true );
-  headerStyle()->setThemeName(GlobalSettings::self()->grantleeThemeName());
+  initGrantleeThemeName();
+}
+
+void ViewerPrivate::initGrantleeThemeName()
+{
+    const QString themeName = GlobalSettings::self()->grantleeThemeName();
+    headerStyle()->setThemeName(themeName);
+    headerStyle()->setDisplayExtraHeaders(mThemeManager->displayExtraHeader(themeName));
 }
 
 void ViewerPrivate::slotIconicAttachments()

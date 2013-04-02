@@ -605,6 +605,7 @@ signals:
 private:
   QString attachmentInjectionHtml() const;
   QString recipientsQuickListLinkHtml( bool, const QString & ) const;
+  void initGrantleeThemeName();
 
 public:
   NodeHelper* mNodeHelper;
