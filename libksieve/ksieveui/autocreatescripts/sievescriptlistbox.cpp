@@ -97,13 +97,16 @@ SieveScriptListBox::SieveScriptListBox(const QString &title, QWidget *parent)
 
     mBtnRename = new QPushButton( i18n( "Rename..." ), hb );
 
+    mBtnDescription = new QPushButton( i18n( "Edit description..." ), hb );
+
 
     layout->addWidget( hb );
     setLayout( layout );
 
-    connect( mBtnNew, SIGNAL(clicked()), this, SLOT(slotNew()) );
-    connect( mBtnDelete, SIGNAL(clicked()), this, SLOT(slotDelete()) );
-    connect( mBtnRename, SIGNAL(clicked()), this, SLOT(slotRename()) );
+    connect( mBtnNew, SIGNAL(clicked()), this, SLOT(slotNew()));
+    connect( mBtnDelete, SIGNAL(clicked()), this, SLOT(slotDelete()));
+    connect( mBtnRename, SIGNAL(clicked()), this, SLOT(slotRename()));
+    connect( mBtnDescription, SIGNAL(clicked()), this, SLOT(slotEditDescription()));
     connect( mSieveListScript, SIGNAL(itemSelectionChanged()), SLOT(updateButtons()));
 }
 

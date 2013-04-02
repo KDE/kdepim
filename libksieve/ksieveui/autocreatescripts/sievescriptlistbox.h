@@ -63,6 +63,7 @@ private:
     QPushButton *mBtnNew;
     QPushButton *mBtnDelete;
     QPushButton *mBtnRename;
+    QPushButton *mBtnDescription;
 };
 }
 
