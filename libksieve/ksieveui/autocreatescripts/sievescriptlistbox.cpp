@@ -62,6 +62,19 @@ void SieveScriptListItem::setScriptPage(SieveScriptPage *page)
     mScriptPage = page;
 }
 
+QString SieveScriptListItem::generatedScript() const
+{
+    QString script;
+    if (!mDescription.isEmpty()) {
+        script = QLatin1Char('#') + mDescription;
+        script.replace(QLatin1Char('\n'), QLatin1String("\n#"));
+    }
+    if (mScriptPage) {
+        mScriptPage->generatedScript(script);
+    }
+    return script;
+}
+
 SieveScriptListBox::SieveScriptListBox(const QString &title, QWidget *parent)
     : QGroupBox(title, parent)
 {
@@ -148,7 +161,13 @@ void SieveScriptListBox::slotEditDescription()
 
 QString SieveScriptListBox::generatedScript() const
 {
-    return QString();
+    QString resultScript;
+    for (int i = 0; i< mSieveListScript->count(); ++i) {
+        if (i != 0)
+            resultScript += QLatin1Char('\n');
+        resultScript = static_cast<SieveScriptListItem*>(mSieveListScript->item(i))->generatedScript();
+    }
+    return resultScript;
 }
 
 #include "sievescriptlistbox.moc"

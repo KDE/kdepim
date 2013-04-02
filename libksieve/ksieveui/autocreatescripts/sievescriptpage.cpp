@@ -52,6 +52,11 @@ SieveScriptPage::~SieveScriptPage()
 
 }
 
+void SieveScriptPage::generatedScript(QString &script)
+{
+    //TODO
+}
+
 }
 
 #include "sievescriptpage.moc"

@@ -37,6 +37,8 @@ public:
     SieveScriptPage *scriptPage() const;
     void setScriptPage(SieveScriptPage *page);
 
+    QString generatedScript() const;
+
 private:
     QString mDescription;
     SieveScriptPage *mScriptPage;

@@ -30,6 +30,9 @@ class SieveScriptPage : public QWidget
 public:
     explicit SieveScriptPage(QWidget *parent);
     ~SieveScriptPage();
+
+    void generatedScript(QString &script);
+
 private:
     SieveConditionWidgetLister *mScriptConditionLister;
     SieveActionWidgetLister *mScriptActionLister;
