@@ -1,0 +1,16 @@
+project( headerthemeeditor )
+
+
+set(headerthemeeditor_SRCS
+  main.cpp
+  themeeditormainwindow.cpp 
+)
+
+kde4_add_executable(headerthemeeditor ${headerthemeeditor_SRCS} )
+TARGET_LINK_LIBRARIES(headerthemeeditor ${KDE4_KDEUI_LIBS} )
+
+install(TARGETS headerthemeeditor ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(FILES
+  headerthemeeditorui.rc
+  DESTINATION  ${DATA_INSTALL_DIR}/headerthemeeditor)
+
