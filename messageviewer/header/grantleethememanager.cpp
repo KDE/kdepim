@@ -49,7 +49,8 @@ public:
         watch = new KDirWatch( q );
 
         downloadThemesAction = new KAction(i18n("Download new themes..."), q);
-        actionCollection->addAction( "download_header_themes", downloadThemesAction );
+        if (actionCollection)
+            actionCollection->addAction( "download_header_themes", downloadThemesAction );
         separatorAction = new QAction(q);
         separatorAction->setSeparator(true);
 
@@ -62,7 +63,8 @@ public:
         Q_FOREACH ( QAction *action, themesActionList ) {
             if (actionGroup)
                 actionGroup->removeAction(action);
-            actionCollection->removeAction( action );
+            if (actionCollection)
+                actionCollection->removeAction( action );
         }
         themesActionList.clear();
         themes.clear();
@@ -141,7 +143,8 @@ public:
             return;
         Q_FOREACH ( QAction *action, themesActionList ) {
             actionGroup->removeAction(action);
-            actionCollection->removeAction( action );
+            if (actionCollection)
+                actionCollection->removeAction( action );
             menu->removeAction(action);
         }
         menu->removeAction(separatorAction);
