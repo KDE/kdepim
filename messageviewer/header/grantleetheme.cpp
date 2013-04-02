@@ -71,3 +71,14 @@ void GrantleeTheme::setDisplayExtraHeaders(const QStringList &variables)
 {
     mDisplayExtraHeaders = variables;
 }
+
+void GrantleeTheme::setDirName(const QString &name)
+{
+    mDirName = name;
+}
+
+QString GrantleeTheme::dirName() const
+{
+    return mDirName;
+}
+

@@ -105,8 +105,8 @@ public:
         QDirIterator dirIt( themesPath, QStringList(), QDir::AllDirs | QDir::NoDotAndDotDot );
         while ( dirIt.hasNext() ) {
             dirIt.next();
-            const GrantleeTheme theme = loadTheme( dirIt.filePath() );
-
+            const QString dirName = dirIt.fileName();
+            const GrantleeTheme theme = loadTheme( dirIt.filePath(), dirName );
             themes.insert( theme.name(), theme );
         }
 
@@ -115,13 +115,14 @@ public:
         watch->startScan();
     }
 
-    GrantleeTheme loadTheme(const QString &themePath )
+    GrantleeTheme loadTheme(const QString &themePath, const QString &dirName )
     {
         const QString themeInfoFile = themePath + QDir::separator() + QString::fromLatin1( "header.desktop" );
         KConfig config( themeInfoFile );
         KConfigGroup group( &config, QLatin1String( "Desktop Entry" ) );
 
         GrantleeTheme theme;
+        theme.setDirName(dirName);
         theme.setName( group.readEntry( "Name", QString() ) );
         theme.setDescription( group.readEntry( "Description", QString() ) );
         theme.setFilename( themePath );
@@ -148,6 +149,7 @@ public:
         while (i.hasNext()) {
             i.next();
             KToggleAction *act = new KToggleAction(i.value().name(),q);
+            act->setData(i.value().dirName());
             themesActionList.append(act);
             actionGroup->addAction(act);
             menu->addAction(act);
@@ -161,9 +163,8 @@ public:
     {
         if (q->sender() ) {
             KToggleAction *act = dynamic_cast<KToggleAction *>(q->sender());
-            qDebug()<<" act "<<act<<" act->text()"<<act->text();
             if (act) {
-                GlobalSettings::self()->setGrantleeThemeName( act->text() );
+                GlobalSettings::self()->setGrantleeThemeName( act->data().toString() );
                 GlobalSettings::self()->writeConfig();
             }
             Q_EMIT q->grantleeThemeSelected();
@@ -173,13 +174,10 @@ public:
     KToggleAction *actionForHeaderStyle()
     {
         const QString themeName = GlobalSettings::self()->grantleeThemeName();
-        qDebug()<<" themeName "<<themeName;
         if (themeName.isEmpty())
             return 0;
         Q_FOREACH(QAction *act, themesActionList) {
-            qDebug()<<" act->text()"<<act->text();
-            if (act->text() == themeName) {
-
+            if (act->data().toString() == themeName) {
                 return static_cast<KToggleAction*>(act);
             }
         }
