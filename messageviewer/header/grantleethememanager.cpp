@@ -161,6 +161,7 @@ public:
     {
         if (q->sender() ) {
             KToggleAction *act = dynamic_cast<KToggleAction *>(q->sender());
+            qDebug()<<" act "<<act<<" act->text()"<<act->text();
             if (act) {
                 GlobalSettings::self()->setGrantleeThemeName( act->text() );
                 GlobalSettings::self()->writeConfig();
@@ -172,10 +173,13 @@ public:
     KToggleAction *actionForHeaderStyle()
     {
         const QString themeName = GlobalSettings::self()->grantleeThemeName();
+        qDebug()<<" themeName "<<themeName;
         if (themeName.isEmpty())
             return 0;
         Q_FOREACH(QAction *act, themesActionList) {
+            qDebug()<<" act->text()"<<act->text();
             if (act->text() == themeName) {
+
                 return static_cast<KToggleAction*>(act);
             }
         }

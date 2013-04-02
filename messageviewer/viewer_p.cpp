@@ -2341,6 +2341,7 @@ void ViewerPrivate::slotGrantleeHeaders()
 {
   setHeaderStyleAndStrategy( HeaderStyle::grantlee(),
                              HeaderStrategy::grantlee(), true );
+  headerStyle()->setThemeName(GlobalSettings::self()->grantleeThemeName());
 }
 
 void ViewerPrivate::slotIconicAttachments()
