@@ -46,7 +46,7 @@ public:
         engine = new Grantlee::Engine;
         engine->setPluginPaths( QStringList() << GRANTLEE_PLUGIN_PATH << MESSAGEVIEWER_GRANTLEE_PLUGIN_PATH);
         templateLoader = Grantlee::FileSystemTemplateLoader::Ptr( new Grantlee::FileSystemTemplateLoader );
-        templateLoader->setTemplateDirs( QStringList() << KStandardDirs::locate("data",QLatin1String("messageviewer/themes/")) );
+        templatePath = KStandardDirs::locate("data",QLatin1String("messageviewer/themes/"));
         engine->addTemplateLoader( templateLoader );
     }
     ~Private()
@@ -71,7 +71,9 @@ GrantleeHeaderFormatter::~GrantleeHeaderFormatter()
 
 QString GrantleeHeaderFormatter::toHtml(const QString &themeName, const QStringList &extraHeader, bool isPrinting, const MessageViewer::GrantleeHeaderStyle *style, KMime::Message *message) const
 {
-    Grantlee::Template headerTemplate = d->engine->loadByName( themeName + "/header.html" );
+    //TODO improve it.
+    d->templateLoader->setTemplateDirs( QStringList() << d->templatePath << d->templatePath + '/' + themeName );
+    Grantlee::Template headerTemplate = d->engine->loadByName( QString::fromLatin1("%1/header.html").arg(themeName) );
     QString errorMessage;
     if ( headerTemplate->error() ) {
         errorMessage = headerTemplate->errorString();

@@ -60,7 +60,7 @@ public:
 
     ~Private()
     {
-        Q_FOREACH ( QAction *action, themesActionList ) {
+        Q_FOREACH ( KToggleAction *action, themesActionList ) {
             if (actionGroup)
                 actionGroup->removeAction(action);
             if (actionCollection)
@@ -141,11 +141,15 @@ public:
     {
         if (!actionGroup || !menu)
             return;
-        Q_FOREACH ( QAction *action, themesActionList ) {
+        QString themeActivated;
+        Q_FOREACH ( KToggleAction *action, themesActionList ) {
+            if (action->isChecked())
+                themeActivated = action->data().toString();
             actionGroup->removeAction(action);
             if (actionCollection)
                 actionCollection->removeAction( action );
             menu->removeAction(action);
+            delete action;
         }
         menu->removeAction(separatorAction);
         menu->removeAction(downloadThemesAction);
@@ -157,6 +161,8 @@ public:
             i.next();
             KToggleAction *act = new KToggleAction(i.value().name(),q);
             act->setData(i.value().dirName());
+            if (i.value().dirName() == themeActivated)
+                act->setChecked(true);
             themesActionList.append(act);
             actionGroup->addAction(act);
             menu->addAction(act);
@@ -183,7 +189,7 @@ public:
         const QString themeName = GlobalSettings::self()->grantleeThemeName();
         if (themeName.isEmpty())
             return 0;
-        Q_FOREACH(QAction *act, themesActionList) {
+        Q_FOREACH(KToggleAction *act, themesActionList) {
             if (act->data().toString() == themeName) {
                 return static_cast<KToggleAction*>(act);
             }
@@ -194,7 +200,7 @@ public:
 
     QString themesPath;
     QMap<QString, GrantleeTheme> themes;
-    QList<QAction*> themesActionList;
+    QList<KToggleAction*> themesActionList;
     KDirWatch *watch;
     QActionGroup *actionGroup;
     KActionMenu *menu;
@@ -222,8 +228,10 @@ QMap<QString, GrantleeTheme> GrantleeThemeManager::themes() const
 
 void GrantleeThemeManager::setActionGroup( QActionGroup *actionGroup )
 {
-    d->actionGroup = actionGroup;
-    d->directoryChanged();
+    if (d->actionGroup != actionGroup) {
+        d->actionGroup = actionGroup;
+        d->directoryChanged();
+    }
 }
 
 KToggleAction *GrantleeThemeManager::actionForHeaderStyle()
@@ -233,8 +241,10 @@ KToggleAction *GrantleeThemeManager::actionForHeaderStyle()
 
 void GrantleeThemeManager::setHeaderMenu(KActionMenu *menu)
 {
-    d->menu = menu;
-    d->directoryChanged();
+    if (d->menu != menu) {
+        d->menu = menu;
+        d->directoryChanged();
+    }
 }
 
 QStringList GrantleeThemeManager::displayExtraHeader(const QString &themename) const
