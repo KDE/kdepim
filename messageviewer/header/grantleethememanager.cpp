@@ -136,8 +136,10 @@ public:
         Q_FOREACH ( QAction *action, themesActionList ) {
             actionGroup->removeAction(action);
             actionCollection->removeAction( action );
+            menu->remove(static_cast<KAction*>(action));
         }
         themesActionList.clear();
+
 
         QMapIterator<QString, GrantleeTheme> i(themes);
         while (i.hasNext()) {
@@ -145,6 +147,7 @@ public:
             KToggleAction *act = new KToggleAction(i.value().name(),q);
             themesActionList.append(act);
             actionGroup->addAction(act);
+            menu->addAction(act);
             q->connect(act, SIGNAL(triggered(bool)), q, SLOT(slotThemeSelected()));
         }
     }
@@ -222,14 +225,10 @@ void GrantleeThemeManager::activateTheme(const QString &themeName)
     //TODO
 }
 
-void GrantleeThemeManager::updateThemeList()
-{
-    d->directoryChanged();
-}
-
-void GrantleeThemeManager::setActionMenu(KActionMenu *menu)
+void GrantleeThemeManager::setHeaderMenu(KActionMenu *menu)
 {
     d->menu = menu;
+    d->directoryChanged();
 }
 
 #include "grantleethememanager.moc"

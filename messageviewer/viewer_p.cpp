@@ -261,7 +261,6 @@ ViewerPrivate::ViewerPrivate(Viewer *aParent, QWidget *mainWindow,
               this, SLOT(slotClear()) );
      connect( &mMonitor, SIGNAL(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)),
               this, SLOT(slotItemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)) );
-     mThemeManager->updateThemeList();
 }
 
 ViewerPrivate::~ViewerPrivate()
@@ -1601,6 +1600,7 @@ void ViewerPrivate::createActions()
   headerMenu->addAction( raction );
   //Same action group
   mThemeManager->setActionGroup(group);
+  mThemeManager->setHeaderMenu(headerMenu);
 
   // attachment style
   KActionMenu *attachmentMenu  = new KActionMenu(i18nc("View->", "&Attachments"), this);

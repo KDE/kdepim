@@ -35,9 +35,6 @@ public:
     explicit GrantleeThemeManager(KActionCollection *actionCollection, const QString &path, QObject *parent = 0);
     ~GrantleeThemeManager();
 
-    void updateThemeList();
-
-
     QMap<QString, GrantleeTheme> themes() const;
     GrantleeTheme findTheme( const QString &themeName) const;
 
@@ -47,7 +44,7 @@ public:
 
     KToggleAction *actionForHeaderStyle();
 
-    void setActionMenu(KActionMenu *menu);
+    void setHeaderMenu(KActionMenu *menu);
 
 Q_SIGNALS:
     void themesChanged();
