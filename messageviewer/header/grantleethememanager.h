@@ -36,11 +36,8 @@ public:
     ~GrantleeThemeManager();
 
     QMap<QString, GrantleeTheme> themes() const;
-    GrantleeTheme findTheme( const QString &themeName) const;
 
     void setActionGroup( QActionGroup *actionGroup );
-
-    void activateTheme(const QString &themeName);
 
     KToggleAction *actionForHeaderStyle();
 

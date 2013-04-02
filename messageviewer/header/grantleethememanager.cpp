@@ -63,6 +63,9 @@ public:
             actionCollection->removeAction( action );
         }
         themesActionList.clear();
+        themes.clear();
+        if (downloadThemesDialog)
+            delete downloadThemesDialog.data();
     }
 
     void slotDownloadHeaderThemes()
@@ -213,11 +216,6 @@ QMap<QString, GrantleeTheme> GrantleeThemeManager::themes() const
     return d->themes;
 }
 
-GrantleeTheme GrantleeThemeManager::findTheme( const QString &themeName) const
-{
-    return d->themes.find(themeName).value();
-}
-
 void GrantleeThemeManager::setActionGroup( QActionGroup *actionGroup )
 {
     d->actionGroup = actionGroup;
@@ -227,11 +225,6 @@ void GrantleeThemeManager::setActionGroup( QActionGroup *actionGroup )
 KToggleAction *GrantleeThemeManager::actionForHeaderStyle()
 {
     return d->actionForHeaderStyle();
-}
-
-void GrantleeThemeManager::activateTheme(const QString &themeName)
-{
-    //TODO
 }
 
 void GrantleeThemeManager::setHeaderMenu(KActionMenu *menu)
