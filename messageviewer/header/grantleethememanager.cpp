@@ -50,6 +50,8 @@ public:
         q->connect( watch, SIGNAL(dirty(QString)), SLOT(directoryChanged()) );
         downloadThemesAction = new KAction(i18n("Download new themes..."), q);
         actionCollection->addAction( "download_header_themes", downloadThemesAction );
+        separatorAction = new QAction(q);
+        separatorAction->setSeparator(true);
         connect(downloadThemesAction, SIGNAL(triggered(bool)), q, SLOT(slotDownloadHeaderThemes()) );
         QTimer::singleShot(1000, q, SLOT(directoryChanged()));
     }
@@ -136,8 +138,10 @@ public:
         Q_FOREACH ( QAction *action, themesActionList ) {
             actionGroup->removeAction(action);
             actionCollection->removeAction( action );
-            menu->remove(static_cast<KAction*>(action));
+            menu->removeAction(action);
         }
+        menu->removeAction(separatorAction);
+        menu->removeAction(downloadThemesAction);
         themesActionList.clear();
 
 
@@ -150,6 +154,8 @@ public:
             menu->addAction(act);
             q->connect(act, SIGNAL(triggered(bool)), q, SLOT(slotThemeSelected()));
         }
+        menu->addAction(separatorAction);
+        menu->addAction(downloadThemesAction);
     }
 
     void slotThemeSelected()
@@ -184,6 +190,7 @@ public:
     QActionGroup *actionGroup;
     KActionMenu *menu;
     KActionCollection *actionCollection;
+    QAction *separatorAction;
     KAction *downloadThemesAction;
     QWeakPointer<KNS3::DownloadDialog> downloadThemesDialog;
     GrantleeThemeManager *q;
