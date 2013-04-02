@@ -48,14 +48,7 @@ namespace MessageViewer {
 
 Viewer::Viewer( QWidget *aParent, QWidget *mainWindow, KActionCollection *actionCollection,
                 Qt::WindowFlags aFlags )
-  : QWidget( aParent, aFlags ), d_ptr( new ViewerPrivate( 0, this, mainWindow, actionCollection ) )
-{
-    initialize();
-}
-
-Viewer::Viewer( KActionCollection *actionCollection, KXMLGUIClient *guiClient, QWidget *aParent, QWidget *mainWindow,
-                Qt::WindowFlags aFlags )
-  : QWidget( aParent, aFlags ), d_ptr( new ViewerPrivate( guiClient, this, mainWindow, actionCollection ) )
+  : QWidget( aParent, aFlags ), d_ptr( new ViewerPrivate( this, mainWindow, actionCollection ) )
 {
     initialize();
 }
@@ -655,11 +648,6 @@ KAction *Viewer::resetMessageDisplayFormatAction()
     return d->mResetMessageDisplayFormat;
 }
 
-void Viewer::setXmlGuiClient( KXMLGUIClient *guiClient )
-{
-    Q_D( Viewer );
-    d->setXmlGuiClient(guiClient);
-}
 
 }
 

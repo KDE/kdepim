@@ -53,7 +53,6 @@ class QPoint;
 class QSplitter;
 class QModelIndex;
 class QTreeView;
-class KXMLGUIClient;
 
 namespace MessageViewer {
 
@@ -181,7 +180,7 @@ class ViewerPrivate : public QObject {
   Q_OBJECT
 public:
 
-  ViewerPrivate( KXMLGUIClient *guiClient, Viewer *aParent, QWidget *mainWindow, KActionCollection *actionCollection );
+  ViewerPrivate(Viewer *aParent, QWidget *mainWindow, KActionCollection *actionCollection );
 
   virtual ~ViewerPrivate();
 
@@ -448,9 +447,6 @@ public:
 
   void goOnline();
   void goResourceOnline();
-
-  void setXmlGuiClient( KXMLGUIClient *guiClient );
-
 
 private slots:
   void slotToggleCaretBrowsing(bool);

@@ -39,9 +39,8 @@ using namespace MessageViewer;
 class GrantleeThemeManager::Private
 {
 public:
-    Private(KXMLGUIClient *xmlGuiClient, KActionCollection *ac, const QString &path, GrantleeThemeManager *qq)
+    Private(KActionCollection *ac, const QString &path, GrantleeThemeManager *qq)
         : themesPath(path),
-          guiClient(xmlGuiClient),
           actionGroup(0),
           menu(0),
           actionCollection(ac),
@@ -57,9 +56,6 @@ public:
 
     ~Private()
     {
-        if (guiClient)
-            guiClient->unplugActionList(QLatin1String("theme_action_list"));
-
         Q_FOREACH ( QAction *action, themesActionList ) {
             if (actionGroup)
                 actionGroup->removeAction(action);
@@ -135,11 +131,8 @@ public:
     void updateActionList()
     {
         qDebug()<<" updateActionList before"<<themesActionList.count();
-        if (!actionGroup || !guiClient)
+        if (!actionGroup || !menu)
             return;
-
-        guiClient->unplugActionList(QLatin1String("theme_action_list"));
-
         Q_FOREACH ( QAction *action, themesActionList ) {
             actionGroup->removeAction(action);
             actionCollection->removeAction( action );
@@ -154,8 +147,6 @@ public:
             actionGroup->addAction(act);
             q->connect(act, SIGNAL(triggered(bool)), q, SLOT(slotThemeSelected()));
         }
-        qDebug()<<" updateActionList"<<themesActionList.count();
-        guiClient->plugActionList(QLatin1String("theme_action_list"), themesActionList);
     }
 
     void slotThemeSelected()
@@ -187,7 +178,6 @@ public:
     QMap<QString, GrantleeTheme> themes;
     QList<QAction*> themesActionList;
     KDirWatch *watch;
-    KXMLGUIClient *guiClient;
     QActionGroup *actionGroup;
     KActionMenu *menu;
     KActionCollection *actionCollection;
@@ -196,8 +186,8 @@ public:
     GrantleeThemeManager *q;
 };
 
-GrantleeThemeManager::GrantleeThemeManager(KXMLGUIClient *guiClient, KActionCollection *actionCollection, const QString &path, QObject *parent)
-    : QObject(parent), d(new Private(guiClient, actionCollection, path,this))
+GrantleeThemeManager::GrantleeThemeManager(KActionCollection *actionCollection, const QString &path, QObject *parent)
+    : QObject(parent), d(new Private(actionCollection, path,this))
 {
 }
 
@@ -214,12 +204,6 @@ QMap<QString, GrantleeTheme> GrantleeThemeManager::themes() const
 GrantleeTheme GrantleeThemeManager::findTheme( const QString &themeName) const
 {
     return d->themes.find(themeName).value();
-}
-
-void GrantleeThemeManager::setXmlGuiClient( KXMLGUIClient *guiClient )
-{
-    d->guiClient = guiClient;
-    d->directoryChanged();
 }
 
 void GrantleeThemeManager::setActionGroup( QActionGroup *actionGroup )

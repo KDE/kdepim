@@ -23,7 +23,6 @@
 #include <QObject>
 #include <QMap>
 class QActionGroup;
-class KXMLGUIClient;
 class KActionCollection;
 class KToggleAction;
 class KActionMenu;
@@ -33,7 +32,7 @@ class GrantleeThemeManager : public QObject
 {
     Q_OBJECT
 public:
-    explicit GrantleeThemeManager(KXMLGUIClient *guiClient, KActionCollection *actionCollection, const QString &path, QObject *parent = 0);
+    explicit GrantleeThemeManager(KActionCollection *actionCollection, const QString &path, QObject *parent = 0);
     ~GrantleeThemeManager();
 
     void updateThemeList();
@@ -42,7 +41,6 @@ public:
     QMap<QString, GrantleeTheme> themes() const;
     GrantleeTheme findTheme( const QString &themeName) const;
 
-    void setXmlGuiClient( KXMLGUIClient *guiClient );
     void setActionGroup( QActionGroup *actionGroup );
 
     void activateTheme(const QString &themeName);

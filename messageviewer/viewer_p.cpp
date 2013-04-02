@@ -157,7 +157,7 @@ const qreal ViewerPrivate::zoomBy = 20;
 
 static QAtomicInt _k_attributeInitialized;
 
-ViewerPrivate::ViewerPrivate( KXMLGUIClient *guiClient, Viewer *aParent, QWidget *mainWindow,
+ViewerPrivate::ViewerPrivate(Viewer *aParent, QWidget *mainWindow,
                               KActionCollection *actionCollection )
   : QObject(aParent),
     mNodeHelper( new NodeHelper ),
@@ -217,7 +217,7 @@ ViewerPrivate::ViewerPrivate( KXMLGUIClient *guiClient, Viewer *aParent, QWidget
      }
 
 
-     mThemeManager = new MessageViewer::GrantleeThemeManager(guiClient, mActionCollection, KStandardDirs::locate("data",QLatin1String("messageviewer/themes/")));
+     mThemeManager = new MessageViewer::GrantleeThemeManager(mActionCollection, KStandardDirs::locate("data",QLatin1String("messageviewer/themes/")));
      connect(mThemeManager, SIGNAL(grantleeThemeSelected()), this, SLOT(slotGrantleeHeaders()));
      mHtmlOverride = false;
      mHtmlLoadExtOverride = false;
@@ -274,11 +274,6 @@ ViewerPrivate::~ViewerPrivate()
   mNodeHelper->forceCleanTempFiles();
   delete mNodeHelper;
   delete mThemeManager;
-}
-
-void ViewerPrivate::setXmlGuiClient( KXMLGUIClient *guiClient )
-{
-    mThemeManager->setXmlGuiClient(guiClient);
 }
 
 void ViewerPrivate::saveMimePartTreeConfig()
