@@ -108,10 +108,19 @@ SieveScriptListBox::SieveScriptListBox(const QString &title, QWidget *parent)
     connect( mBtnRename, SIGNAL(clicked()), this, SLOT(slotRename()));
     connect( mBtnDescription, SIGNAL(clicked()), this, SLOT(slotEditDescription()));
     connect( mSieveListScript, SIGNAL(itemSelectionChanged()), SLOT(updateButtons()));
+    connect( mSieveListScript, SIGNAL(itemActivated(QListWidgetItem*)), SLOT(slotItemActived(QListWidgetItem*)));
 }
 
 SieveScriptListBox::~SieveScriptListBox()
 {
+}
+
+void SieveScriptListBox::slotItemActived(QListWidgetItem* item)
+{
+    if (item) {
+        SieveScriptListItem *itemScript = static_cast<SieveScriptListItem*>(item);
+        Q_EMIT activatePage(itemScript->scriptPage());
+    }
 }
 
 void SieveScriptListBox::updateButtons()
@@ -126,7 +135,7 @@ void SieveScriptListBox::slotNew()
     const QString newName = KInputDialog::getText(i18n("New Script"), i18n("Add new name:"));
     if (!newName.isEmpty()) {
         SieveScriptListItem *item = new SieveScriptListItem(newName, mSieveListScript);
-        SieveScriptPage *page = new SieveScriptPage();
+        SieveScriptPage *page = new SieveScriptPage;
         item->setScriptPage(page);
         Q_EMIT addNewPage(page);
     }

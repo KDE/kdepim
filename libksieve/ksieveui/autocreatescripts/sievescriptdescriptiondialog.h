@@ -32,6 +32,11 @@ public:
 
     void setDescription(const QString &desc);
     QString description() const;
+
+private:
+    void readConfig();
+    void writeConfig();
+
 private:
     KTextEdit *mEdit;
 };

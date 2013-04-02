@@ -21,6 +21,8 @@
 
 #include <libkdepim/kwidgetlister.h>
 
+class KPushButton;
+
 namespace KSieveUi {
 
 class SieveActionWidget : public QWidget
@@ -29,6 +31,13 @@ class SieveActionWidget : public QWidget
 public:
     explicit SieveActionWidget(QWidget *);
     ~SieveActionWidget();
+private Q_SLOTS:
+    void slotAddWidget();
+    void slotRemoveWidget();
+private:
+    void initWidget();
+    KPushButton *mAdd;
+    KPushButton *mRemove;
 };
 
 

@@ -45,6 +45,7 @@ AutoCreateScriptDialog::AutoCreateScriptDialog(QWidget *parent)
     mSieveScript = new SieveScriptListBox( i18n("Sieve Script"));
     connect(mSieveScript, SIGNAL(addNewPage(QWidget*)), SLOT(slotAddScriptPage(QWidget*)));
     connect(mSieveScript, SIGNAL(removePage(QWidget*)), SLOT(slotRemoveScriptPage(QWidget*)));
+    connect(mSieveScript, SIGNAL(activatePage(QWidget*)), SLOT(slotActivateScriptPage(QWidget*)));
     splitter->addWidget(mSieveScript);
     vlay->addWidget(splitter);
 
@@ -52,11 +53,12 @@ AutoCreateScriptDialog::AutoCreateScriptDialog(QWidget *parent)
     splitter->addWidget(mStackWidget);
 
     setMainWidget( mainWidget );
+    readConfig();
 }
 
 AutoCreateScriptDialog::~AutoCreateScriptDialog()
 {
-
+    writeConfig();
 }
 
 QString AutoCreateScriptDialog::script() const
@@ -64,15 +66,36 @@ QString AutoCreateScriptDialog::script() const
     return mSieveScript->generatedScript();
 }
 
-void AutoCreateScriptDialog::slotAddScriptPage(QWidget* w)
+void AutoCreateScriptDialog::slotAddScriptPage(QWidget *page)
 {
-    mStackWidget->addWidget(w);
+    mStackWidget->addWidget(page);
 }
 
-void AutoCreateScriptDialog::slotRemoveScriptPage(QWidget* w)
+void AutoCreateScriptDialog::slotRemoveScriptPage(QWidget *page)
 {
-    mStackWidget->removeWidget(w);
+    mStackWidget->removeWidget(page);
 }
 
+void AutoCreateScriptDialog::slotActivateScriptPage(QWidget *page)
+{
+    mStackWidget->setCurrentWidget(page);
+}
+
+void AutoCreateScriptDialog::readConfig()
+{
+    KConfigGroup group( KGlobal::config(), "AutoCreateScriptDialog" );
+    const QSize sizeDialog = group.readEntry( "Size", QSize() );
+    if ( sizeDialog.isValid() ) {
+        resize( sizeDialog );
+    } else {
+        resize( 800,600);
+    }
+}
+
+void AutoCreateScriptDialog::writeConfig()
+{
+    KConfigGroup group( KGlobal::config(), "AutoCreateScriptDialog" );
+    group.writeEntry( "Size", size() );
+}
 
 #include "autocreatescriptdialog.moc"

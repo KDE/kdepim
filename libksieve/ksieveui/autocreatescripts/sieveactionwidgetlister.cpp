@@ -17,16 +17,99 @@
 
 #include "sieveactionwidgetlister.h"
 
+#include <KPushButton>
+#include <KDialog>
+
+#include <QHBoxLayout>
+
 using namespace KSieveUi;
 
 SieveActionWidget::SieveActionWidget(QWidget *parent)
     : QWidget(parent)
 {
-
+    initWidget();
 }
 
 SieveActionWidget::~SieveActionWidget()
 {
+}
+
+void SieveActionWidget::initWidget()
+{
+    QHBoxLayout *hlay = new QHBoxLayout( this );
+    hlay->setSpacing( KDialog::spacingHint() );
+    hlay->setMargin( 0 );
+/*
+    // initialize the header field combo box
+    mRuleField = new PimCommon::MinimumComboBox( this );
+    mRuleField->setObjectName( "mRuleField" );
+    mRuleField->setEditable( true );
+    KLineEdit *edit = new KLineEdit;
+    edit->setClickMessage( i18n("Choose or type your own criteria"));
+    mRuleField->setToolTip(i18n("Choose or type your own criteria"));
+    edit->setClearButtonShown(true);
+    mRuleField->setLineEdit(edit);
+    mRuleField->setTrapReturnKey(true);
+
+    mRuleField->addItems( mFilterFieldList );
+    KCompletion *comp = mRuleField->completionObject();
+    comp->setIgnoreCase(true);
+    comp->insertItems(mFilterFieldList);
+    comp->setCompletionMode(KGlobalSettings::CompletionPopupAuto);
+
+    // don't show sliders when popping up this menu
+    mRuleField->setMaxCount( mRuleField->count() );
+    mRuleField->adjustSize();
+    hlay->addWidget( mRuleField );
+
+    // initialize the function/value widget stack
+    mFunctionStack = new QStackedWidget( this );
+    //Don't expand the widget in vertical direction
+    mFunctionStack->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed );
+
+    hlay->addWidget( mFunctionStack );
+
+    mValueStack = new QStackedWidget( this );
+    hlay->addWidget( mValueStack );
+    hlay->setStretchFactor( mValueStack, 10 );
+  */
+    mAdd = new KPushButton( this );
+    mAdd->setIcon( KIcon( "list-add" ) );
+    mAdd->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
+    hlay->addWidget( mAdd );
+
+    mRemove = new KPushButton( this );
+    mRemove->setIcon( KIcon( "list-remove" ) );
+    mRemove->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
+    hlay->addWidget( mRemove );
+
+    //RuleWidgetHandlerManager::instance()->createWidgets( mFunctionStack, mValueStack, this );
+
+    // redirect focus to the header field combo box
+    //setFocusProxy( mRuleField );
+
+    /*
+    connect( mRuleField, SIGNAL(activated(QString)),
+             this, SLOT(slotRuleFieldChanged(QString)) );
+    connect( mRuleField, SIGNAL(editTextChanged(QString)),
+             this, SLOT(slotRuleFieldChanged(QString)) );
+    connect( mRuleField, SIGNAL(editTextChanged(QString)),
+             this, SIGNAL(fieldChanged(QString)) );
+    */
+    connect( mAdd, SIGNAL(clicked()),
+             this, SLOT(slotAddWidget()) );
+    connect( mRemove, SIGNAL(clicked()),
+             this, SLOT(slotRemoveWidget()) );
+}
+
+void SieveActionWidget::slotAddWidget()
+{
+    //TODO
+}
+
+void SieveActionWidget::slotRemoveWidget()
+{
+    //TODO
 }
 
 

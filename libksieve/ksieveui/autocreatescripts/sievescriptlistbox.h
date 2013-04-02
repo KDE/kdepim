@@ -55,6 +55,7 @@ public:
 Q_SIGNALS:
     void addNewPage(QWidget *);
     void removePage(QWidget *);
+    void activatePage(QWidget *);
 
 private Q_SLOTS:
     void slotNew();
@@ -62,6 +63,7 @@ private Q_SLOTS:
     void slotRename();
     void updateButtons();
     void slotEditDescription();
+    void slotItemActived(QListWidgetItem*);
 private:
     QListWidget *mSieveListScript;
     QPushButton *mBtnNew;
