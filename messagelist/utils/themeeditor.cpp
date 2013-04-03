@@ -411,6 +411,8 @@ void ThemePreviewWidget::setTheme( Theme * theme )
   mDropIndicatorPoint2 = QPoint();
   mTheme = theme;
   mDelegate->setTheme( theme );
+  if (!mTheme)
+     return;
   mGroupHeaderSampleItem->setExpanded( true );
 
   const QList< Theme::Column * > & columns = mTheme->columns();
@@ -1547,7 +1549,8 @@ ThemeEditor::~ThemeEditor()
 void ThemeEditor::editTheme( Theme *set )
 {
   mCurrentTheme = set;
-
+  mPreviewWidget->setTheme(mCurrentTheme);
+  
   if ( !mCurrentTheme )
   {
     setEnabled( false );
@@ -1557,8 +1560,6 @@ void ThemeEditor::editTheme( Theme *set )
 
   nameEdit()->setText( set->name() );
   descriptionEdit()->setPlainText( set->description() );
-
-  mPreviewWidget->setTheme( set );
 
   ComboBoxUtils::setIntegerOptionComboValue( mViewHeaderPolicyCombo, (int)mCurrentTheme->viewHeaderPolicy() );
 
