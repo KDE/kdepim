@@ -104,12 +104,12 @@ void SieveActionWidget::initWidget()
 
 void SieveActionWidget::slotAddWidget()
 {
-    //TODO
+    emit addWidget( this );
 }
 
 void SieveActionWidget::slotRemoveWidget()
 {
-    //TODO
+    emit removeWidget( this );
 }
 
 
@@ -145,5 +145,26 @@ void SieveActionWidgetLister::generatedScript(QString &script)
 {
     //TODO
 }
+
+void SieveActionWidgetLister::reconnectWidget( SieveActionWidget *w )
+{
+  connect( w, SIGNAL(addWidget(QWidget*)),
+           this, SLOT(slotAddWidget(QWidget*)), Qt::UniqueConnection );
+  connect( w, SIGNAL(removeWidget(QWidget*)),
+           this, SLOT(slotRemoveWidget(QWidget*)), Qt::UniqueConnection );
+}
+
+void SieveActionWidgetLister::clearWidget( QWidget *aWidget )
+{
+    //TODO
+}
+
+QWidget *SieveActionWidgetLister::createWidget( QWidget *parent )
+{
+    SieveActionWidget *w = new SieveActionWidget( parent);
+    reconnectWidget( w );
+    return w;
+}
+
 
 #include "sieveactionwidgetlister.moc"

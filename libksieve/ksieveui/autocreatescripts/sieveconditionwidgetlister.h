@@ -29,6 +29,9 @@ class SieveConditionWidget : public QWidget
 public:
     explicit SieveConditionWidget(QWidget *);
     ~SieveConditionWidget();
+private:
+    void initWidget();
+    void reset();
 };
 
 class SieveConditionWidgetLister : public KPIM::KWidgetLister

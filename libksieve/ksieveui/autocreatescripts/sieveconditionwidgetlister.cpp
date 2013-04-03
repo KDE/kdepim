@@ -22,13 +22,22 @@ using namespace KSieveUi;
 SieveConditionWidget::SieveConditionWidget(QWidget *parent)
     : QWidget(parent)
 {
-
+    initWidget();
 }
 
 SieveConditionWidget::~SieveConditionWidget()
 {
 }
 
+void SieveConditionWidget::initWidget()
+{
+
+}
+
+void SieveConditionWidget::reset()
+{
+
+}
 
 SieveConditionWidgetLister::SieveConditionWidgetLister(QWidget *parent)
     : KPIM::KWidgetLister(false, 1, 15, parent)

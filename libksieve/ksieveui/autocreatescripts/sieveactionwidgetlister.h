@@ -34,6 +34,9 @@ public:
 private Q_SLOTS:
     void slotAddWidget();
     void slotRemoveWidget();
+Q_SIGNALS:
+    void addWidget(QWidget *w);
+    void removeWidget(QWidget *w);
 private:
     void initWidget();
     KPushButton *mAdd;
@@ -52,7 +55,12 @@ public:
 public Q_SLOTS:
     void slotAddWidget( QWidget *w );
     void slotRemoveWidget( QWidget *w );
+
+protected:
+    void clearWidget( QWidget *aWidget );
+    QWidget *createWidget( QWidget *parent );
 private:
+    void reconnectWidget(SieveActionWidget *w );
     void updateAddRemoveButton();
 };
 }
