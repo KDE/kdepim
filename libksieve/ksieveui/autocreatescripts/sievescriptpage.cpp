@@ -30,7 +30,7 @@ SieveScriptPage::SieveScriptPage(QWidget *parent)
 {
     QVBoxLayout *vbox = new QVBoxLayout;
 
-    QGroupBox *conditions = new QGroupBox(i18n("Condition"));
+    QGroupBox *conditions = new QGroupBox(i18n("Conditions"));
     QVBoxLayout *hbox = new QVBoxLayout;
     conditions->setLayout(hbox);
     mScriptConditionLister = new SieveConditionWidgetLister;
@@ -38,7 +38,7 @@ SieveScriptPage::SieveScriptPage(QWidget *parent)
 
     vbox->addWidget(conditions);
 
-    QGroupBox *actions = new QGroupBox(i18n("Condition"));
+    QGroupBox *actions = new QGroupBox(i18n("Actions"));
     hbox = new QVBoxLayout;
     actions->setLayout(hbox);
     mScriptActionLister = new SieveActionWidgetLister;
