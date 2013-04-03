@@ -22,13 +22,22 @@ using namespace KSieveUi;
 SieveConditionWidget::SieveConditionWidget(QWidget *parent)
     : QWidget(parent)
 {
-
+    initWidget();
 }
 
 SieveConditionWidget::~SieveConditionWidget()
 {
 }
 
+void SieveConditionWidget::initWidget()
+{
+
+}
+
+void SieveConditionWidget::reset()
+{
+
+}
 
 SieveConditionWidgetLister::SieveConditionWidgetLister(QWidget *parent)
     : KPIM::KWidgetLister(false, 1, 15, parent)
@@ -55,7 +64,13 @@ void SieveConditionWidgetLister::slotRemoveWidget( QWidget *w )
 
 void SieveConditionWidgetLister::updateAddRemoveButton()
 {
-
+    //TODO
 }
+
+void SieveConditionWidgetLister::generatedScript(QString &script)
+{
+    //TODO
+}
+
 
 #include "sieveconditionwidgetlister.moc"

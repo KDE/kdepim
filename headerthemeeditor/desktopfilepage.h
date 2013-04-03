@@ -15,28 +15,23 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef SIEVESCRIPTPAGE_H
-#define SIEVESCRIPTPAGE_H
+
+#ifndef DESKTOPFILEPAGE_H
+#define DESKTOPFILEPAGE_H
 
 #include <QWidget>
 
-namespace KSieveUi {
-class SieveConditionWidgetLister;
-class SieveActionWidgetLister;
+class KLineEdit;
 
-class SieveScriptPage : public QWidget
+class DesktopFilePage : public QWidget
 {
     Q_OBJECT
 public:
-    explicit SieveScriptPage(QWidget *parent = 0);
-    ~SieveScriptPage();
-
-    void generatedScript(QString &script);
-
+    explicit DesktopFilePage(QWidget *parent = 0);
+    ~DesktopFilePage();
 private:
-    SieveConditionWidgetLister *mScriptConditionLister;
-    SieveActionWidgetLister *mScriptActionLister;
+    KLineEdit *mName;
+    KLineEdit *mDescription;
 };
-}
 
-#endif // SIEVESCRIPTPAGE_H
+#endif // DESKTOPFILEPAGE_H

@@ -25,6 +25,7 @@
 #include <QVBoxLayout>
 #include <QListWidget>
 #include <QSplitter>
+#include <QStackedWidget>
 
 using namespace KSieveUi;
 
@@ -42,41 +43,59 @@ AutoCreateScriptDialog::AutoCreateScriptDialog(QWidget *parent)
     QSplitter *splitter = new QSplitter;
     splitter->setChildrenCollapsible(false);
     mSieveScript = new SieveScriptListBox( i18n("Sieve Script"));
+    connect(mSieveScript, SIGNAL(addNewPage(QWidget*)), SLOT(slotAddScriptPage(QWidget*)));
+    connect(mSieveScript, SIGNAL(removePage(QWidget*)), SLOT(slotRemoveScriptPage(QWidget*)));
+    connect(mSieveScript, SIGNAL(activatePage(QWidget*)), SLOT(slotActivateScriptPage(QWidget*)));
     splitter->addWidget(mSieveScript);
     vlay->addWidget(splitter);
 
-    QWidget *w = new QWidget;
-    QVBoxLayout *vbox = new QVBoxLayout;
-
-    QGroupBox *conditions = new QGroupBox(i18n("Condition"));
-    QVBoxLayout *hbox = new QVBoxLayout;
-    conditions->setLayout(hbox);
-    mScriptConditionLister = new SieveConditionWidgetLister;
-    hbox->addWidget(mScriptConditionLister);
-
-    vbox->addWidget(conditions);
-
-    QGroupBox *actions = new QGroupBox(i18n("Condition"));
-    hbox = new QVBoxLayout;
-    actions->setLayout(hbox);
-    mScriptActionLister = new SieveActionWidgetLister;
-    hbox->addWidget(mScriptActionLister);
-    vbox->addWidget(actions);
-
-    w->setLayout(vbox);
-    splitter->addWidget(w);
+    mStackWidget = new QStackedWidget;
+    splitter->addWidget(mStackWidget);
 
     setMainWidget( mainWidget );
+    readConfig();
 }
 
 AutoCreateScriptDialog::~AutoCreateScriptDialog()
 {
-
+    writeConfig();
 }
 
 QString AutoCreateScriptDialog::script() const
 {
     return mSieveScript->generatedScript();
+}
+
+void AutoCreateScriptDialog::slotAddScriptPage(QWidget *page)
+{
+    mStackWidget->addWidget(page);
+}
+
+void AutoCreateScriptDialog::slotRemoveScriptPage(QWidget *page)
+{
+    mStackWidget->removeWidget(page);
+}
+
+void AutoCreateScriptDialog::slotActivateScriptPage(QWidget *page)
+{
+    mStackWidget->setCurrentWidget(page);
+}
+
+void AutoCreateScriptDialog::readConfig()
+{
+    KConfigGroup group( KGlobal::config(), "AutoCreateScriptDialog" );
+    const QSize sizeDialog = group.readEntry( "Size", QSize() );
+    if ( sizeDialog.isValid() ) {
+        resize( sizeDialog );
+    } else {
+        resize( 800,600);
+    }
+}
+
+void AutoCreateScriptDialog::writeConfig()
+{
+    KConfigGroup group( KGlobal::config(), "AutoCreateScriptDialog" );
+    group.writeEntry( "Size", size() );
 }
 
 #include "autocreatescriptdialog.moc"

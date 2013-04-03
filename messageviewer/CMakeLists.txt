@@ -71,7 +71,8 @@ set(libmessageviewer_SRCS
   header/headerstyle_util.cpp
   header/fancyheaderstyle.cpp
   htmlquotecolorer.cpp
-  htmlstatusbar.cpp
+  widgets/htmlstatusbar.cpp
+  widgets/vcardviewer.cpp
   iconnamecache.cpp
   invitationsettings.cpp
   kleojobexecutor.cpp
@@ -89,7 +90,6 @@ set(libmessageviewer_SRCS
   teehtmlwriter.cpp
   urlhandlermanager.cpp
   util.cpp
-  vcardviewer.cpp
   viewer.cpp
   viewer_p.cpp
   webkitparthtmlwriter.cpp

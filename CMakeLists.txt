@@ -299,6 +299,7 @@ else()
   add_subdirectory(mailcommon) # TODO: does this make sense?!?
   add_subdirectory(mailfilteragent)
   macro_optional_add_subdirectory(kmail)
+  add_subdirectory(headerthemeeditor)
 
   if(KDEPIM_BUILD_MOBILE)
     add_subdirectory(mobile)

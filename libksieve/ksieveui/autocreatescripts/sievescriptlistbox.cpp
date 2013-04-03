@@ -16,6 +16,7 @@
 */
 #include "sievescriptlistbox.h"
 #include "sievescriptdescriptiondialog.h"
+#include "sievescriptpage.h"
 
 #include <KHBox>
 #include <KMessageBox>
@@ -31,7 +32,8 @@
 using namespace KSieveUi;
 
 SieveScriptListItem::SieveScriptListItem( const QString &text, QListWidget *parent )
-    : QListWidgetItem( text, parent )
+    : QListWidgetItem( text, parent ),
+      mScriptPage(0)
 {
 
 }
@@ -48,6 +50,29 @@ void SieveScriptListItem::setDescription(const QString & desc)
 QString SieveScriptListItem::description() const
 {
     return mDescription;
+}
+
+SieveScriptPage *SieveScriptListItem::scriptPage() const
+{
+    return mScriptPage;
+}
+
+void SieveScriptListItem::setScriptPage(SieveScriptPage *page)
+{
+    mScriptPage = page;
+}
+
+QString SieveScriptListItem::generatedScript() const
+{
+    QString script;
+    if (!mDescription.isEmpty()) {
+        script = QLatin1Char('#') + i18n("Description:") + QLatin1Char('\n') + mDescription;
+        script.replace(QLatin1Char('\n'), QLatin1String("\n#"));
+    }
+    if (mScriptPage) {
+        mScriptPage->generatedScript(script);
+    }
+    return script;
 }
 
 SieveScriptListBox::SieveScriptListBox(const QString &title, QWidget *parent)
@@ -72,18 +97,31 @@ SieveScriptListBox::SieveScriptListBox(const QString &title, QWidget *parent)
 
     mBtnRename = new QPushButton( i18n( "Rename..." ), hb );
 
+    mBtnDescription = new QPushButton( i18n( "Edit description..." ), hb );
+
 
     layout->addWidget( hb );
     setLayout( layout );
 
-    connect( mBtnNew, SIGNAL(clicked()), this, SLOT(slotNew()) );
-    connect( mBtnDelete, SIGNAL(clicked()), this, SLOT(slotDelete()) );
-    connect( mBtnRename, SIGNAL(clicked()), this, SLOT(slotRename()) );
+    connect( mBtnNew, SIGNAL(clicked()), this, SLOT(slotNew()));
+    connect( mBtnDelete, SIGNAL(clicked()), this, SLOT(slotDelete()));
+    connect( mBtnRename, SIGNAL(clicked()), this, SLOT(slotRename()));
+    connect( mBtnDescription, SIGNAL(clicked()), this, SLOT(slotEditDescription()));
     connect( mSieveListScript, SIGNAL(itemSelectionChanged()), SLOT(updateButtons()));
+    connect( mSieveListScript, SIGNAL(itemActivated(QListWidgetItem*)), SLOT(slotItemActived(QListWidgetItem*)));
+    updateButtons();
 }
 
 SieveScriptListBox::~SieveScriptListBox()
 {
+}
+
+void SieveScriptListBox::slotItemActived(QListWidgetItem* item)
+{
+    if (item) {
+        SieveScriptListItem *itemScript = static_cast<SieveScriptListItem*>(item);
+        Q_EMIT activatePage(itemScript->scriptPage());
+    }
 }
 
 void SieveScriptListBox::updateButtons()
@@ -91,6 +129,7 @@ void SieveScriptListBox::updateButtons()
     const QList<QListWidgetItem*> lst = mSieveListScript->selectedItems();
     mBtnDelete->setEnabled(!lst.isEmpty());
     mBtnRename->setEnabled(lst.count() == 1);
+    mBtnDescription->setEnabled(lst.count() == 1);
 }
 
 void SieveScriptListBox::slotNew()
@@ -98,7 +137,10 @@ void SieveScriptListBox::slotNew()
     const QString newName = KInputDialog::getText(i18n("New Script"), i18n("Add new name:"));
     if (!newName.isEmpty()) {
         SieveScriptListItem *item = new SieveScriptListItem(newName, mSieveListScript);
-        //TODO create uniq name
+        SieveScriptPage *page = new SieveScriptPage;
+        item->setScriptPage(page);
+        Q_EMIT addNewPage(page);
+        updateButtons();
     }
 }
 
@@ -106,7 +148,10 @@ void SieveScriptListBox::slotDelete()
 {
     QListWidgetItem *item = mSieveListScript->currentItem();
     if (item) {
+        SieveScriptListItem *itemScript = static_cast<SieveScriptListItem*>(item);
+        Q_EMIT removePage(itemScript->scriptPage());
         delete item;
+        updateButtons();
     }
 }
 
@@ -136,7 +181,15 @@ void SieveScriptListBox::slotEditDescription()
 
 QString SieveScriptListBox::generatedScript() const
 {
-    return QString();
+    QString resultScript;
+    for (int i = 0; i< mSieveListScript->count(); ++i) {
+        SieveScriptListItem* item = static_cast<SieveScriptListItem*>(mSieveListScript->item(i));
+        if (i != 0)
+            resultScript += QLatin1Char('\n');
+        resultScript += QLatin1Char('#') + i18n("Script name: %1",item->text()) + QLatin1Char('\n');
+        resultScript = item->generatedScript();
+    }
+    return resultScript;
 }
 
 #include "sievescriptlistbox.moc"

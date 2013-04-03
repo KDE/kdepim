@@ -15,28 +15,34 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef SIEVESCRIPTPAGE_H
-#define SIEVESCRIPTPAGE_H
 
-#include <QWidget>
+#include "desktopfilepage.h"
 
-namespace KSieveUi {
-class SieveConditionWidgetLister;
-class SieveActionWidgetLister;
+#include <KLineEdit>
+#include <KLocale>
 
-class SieveScriptPage : public QWidget
+#include <QGridLayout>
+#include <QLabel>
+
+DesktopFilePage::DesktopFilePage(QWidget *parent)
+    : QWidget(parent)
 {
-    Q_OBJECT
-public:
-    explicit SieveScriptPage(QWidget *parent = 0);
-    ~SieveScriptPage();
+    QGridLayout *lay = new QGridLayout;
+    QLabel *lab = new QLabel(i18n("Name:"));
+    mName = new KLineEdit;
+    lay->addWidget(lab,0,0);
+    lay->addWidget(mName,0,1);
 
-    void generatedScript(QString &script);
+    lab = new QLabel(i18n("Description:"));
+    mDescription = new KLineEdit;
+    lay->addWidget(lab,1,0);
+    lay->addWidget(mDescription,1,1);
 
-private:
-    SieveConditionWidgetLister *mScriptConditionLister;
-    SieveActionWidgetLister *mScriptActionLister;
-};
+    setLayout(lay);
 }
 
-#endif // SIEVESCRIPTPAGE_H
+DesktopFilePage::~DesktopFilePage()
+{
+}
+
+#include "desktopfilepage.moc"

@@ -40,11 +40,15 @@ public:
     QStringList displayExtraHeaders() const;
     void setDisplayExtraHeaders(const QStringList &);
 
+    void setDirName(const QString &name);
+    QString dirName() const;
+
 private:
     QStringList mDisplayExtraHeaders;
     QString mFileName;
     QString mDescription;
     QString mName;
+    QString mDirName;
 };
 }
 

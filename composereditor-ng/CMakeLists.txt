@@ -4,7 +4,8 @@ add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
 
 
-add_subdirectory(tests)
+# Laurent install it if you want to debug it
+#add_subdirectory(tests)
 
 add_definitions(-DQT_STATICPLUGIN)
 qt4_wrap_cpp(wk_HEADERS_MOC spellplugin/qwebkitplatformplugin.h)

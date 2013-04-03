@@ -18,35 +18,20 @@
 
 */
 
-#ifndef ATTACHMENTTEMPORARYFILESDIRS_H
-#define ATTACHMENTTEMPORARYFILESDIRS_H
+#include "themeeditormainwindow.h"
 
-#include <QObject>
-#include <QStringList>
+#include <kapplication.h>
+#include <kaboutdata.h>
+#include <kcmdlineargs.h>
 
-namespace MessageViewer {
-
-class AttachmentTemporaryFilesDirs : public QObject
+int main( int argc, char **argv )
 {
-    Q_OBJECT
-public:
-    explicit AttachmentTemporaryFilesDirs(QObject *parent = 0);
-    ~AttachmentTemporaryFilesDirs();
-
-    void addTempFile( const QString& file );
-    void addTempDir( const QString& dir );
-    QStringList temporaryFiles() const;
-    void removeTempFiles();
-    void forceCleanTempFiles();
-
-private Q_SLOTS:
-    void slotRemoveTempFiles();
-
-private:
-    QStringList mTempFiles;
-    QStringList mTempDirs;
-};
-
+    const QByteArray& ba = QByteArray( "headerthemeeditor" );
+    const KLocalizedString name = ki18n( "Messageviewer Header Theme Editor" );
+    KAboutData aboutData( ba, ba, name, ba, name );
+    KCmdLineArgs::init( argc, argv, &aboutData );
+    KApplication app;
+    ThemeEditorMainWindow *mw = new ThemeEditorMainWindow();
+    mw->show();
+    app.exec();
 }
-
-#endif // ATTACHMENTTEMPORARYFILESDIRS_H

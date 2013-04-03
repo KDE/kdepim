@@ -78,6 +78,7 @@
 
 #include <kleo-assuan.h>
 
+#ifndef Q_MOC_RUN // QTBUG-22829
 #include <boost/type_traits/remove_pointer.hpp>
 #ifndef _WIN32_WCE
 #include <boost/lexical_cast.hpp>
@@ -85,6 +86,7 @@
 #include <boost/bind.hpp>
 #include <boost/mem_fn.hpp>
 #include <boost/mpl/if.hpp>
+#endif
 
 #include <vector>
 #include <map>

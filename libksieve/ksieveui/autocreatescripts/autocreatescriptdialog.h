@@ -18,23 +18,34 @@
 #ifndef AUTOCREATESCRIPTDIALOG_H
 #define AUTOCREATESCRIPTDIALOG_H
 
+#include "ksieveui_export.h"
+
 #include <KDialog>
 
+class QStackedWidget;
+
 namespace KSieveUi {
-class SieveConditionWidgetLister;
-class SieveActionWidgetLister;
 class SieveScriptListBox;
-class AutoCreateScriptDialog : public KDialog
+class KSIEVEUI_EXPORT AutoCreateScriptDialog : public KDialog
 {
     Q_OBJECT
 public:
     explicit AutoCreateScriptDialog(QWidget *parent = 0);
     ~AutoCreateScriptDialog();
     QString script() const;
+
+private Q_SLOTS:
+    void slotAddScriptPage(QWidget *page);
+    void slotRemoveScriptPage(QWidget *page);
+    void slotActivateScriptPage(QWidget *page);
+
 private:
-    SieveConditionWidgetLister *mScriptConditionLister;
-    SieveActionWidgetLister *mScriptActionLister;
+    void readConfig();
+    void writeConfig();
+
+private:
     SieveScriptListBox *mSieveScript;
+    QStackedWidget *mStackWidget;
 };
 }
 

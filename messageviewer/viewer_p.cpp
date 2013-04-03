@@ -117,7 +117,7 @@
 #include "globalsettings.h"
 #include "headerstyle.h"
 #include "headerstrategy.h"
-#include "htmlstatusbar.h"
+#include "widgets/htmlstatusbar.h"
 #include "webkitparthtmlwriter.h"
 #include "mailsourceviewer.h"
 #include "mimetreemodel.h"
@@ -125,7 +125,7 @@
 #include "objecttreeparser.h"
 #include "urlhandlermanager.h"
 #include "util.h"
-#include "vcardviewer.h"
+#include "widgets/vcardviewer.h"
 #include "mailwebview.h"
 #include "findbar/findbarmailwebview.h"
 #include "pimcommon/translator/translatorwidget.h"
@@ -157,7 +157,7 @@ const qreal ViewerPrivate::zoomBy = 20;
 
 static QAtomicInt _k_attributeInitialized;
 
-ViewerPrivate::ViewerPrivate( KXMLGUIClient *guiClient, Viewer *aParent, QWidget *mainWindow,
+ViewerPrivate::ViewerPrivate(Viewer *aParent, QWidget *mainWindow,
                               KActionCollection *actionCollection )
   : QObject(aParent),
     mNodeHelper( new NodeHelper ),
@@ -217,7 +217,7 @@ ViewerPrivate::ViewerPrivate( KXMLGUIClient *guiClient, Viewer *aParent, QWidget
      }
 
 
-     mThemeManager = new MessageViewer::GrantleeThemeManager(guiClient, mActionCollection, KStandardDirs::locate("data",QLatin1String("messageviewer/themes/")));
+     mThemeManager = new MessageViewer::GrantleeThemeManager(mActionCollection, KStandardDirs::locate("data",QLatin1String("messageviewer/themes/")));
      connect(mThemeManager, SIGNAL(grantleeThemeSelected()), this, SLOT(slotGrantleeHeaders()));
      mHtmlOverride = false;
      mHtmlLoadExtOverride = false;
@@ -261,7 +261,6 @@ ViewerPrivate::ViewerPrivate( KXMLGUIClient *guiClient, Viewer *aParent, QWidget
               this, SLOT(slotClear()) );
      connect( &mMonitor, SIGNAL(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)),
               this, SLOT(slotItemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)) );
-     mThemeManager->updateThemeList();
 }
 
 ViewerPrivate::~ViewerPrivate()
@@ -274,11 +273,6 @@ ViewerPrivate::~ViewerPrivate()
   mNodeHelper->forceCleanTempFiles();
   delete mNodeHelper;
   delete mThemeManager;
-}
-
-void ViewerPrivate::setXmlGuiClient( KXMLGUIClient *guiClient )
-{
-    mThemeManager->setXmlGuiClient(guiClient);
 }
 
 void ViewerPrivate::saveMimePartTreeConfig()
@@ -1191,7 +1185,7 @@ void ViewerPrivate::readConfig()
   // bottom when all settings are already est.
   setHeaderStyleAndStrategy( HeaderStyle::create( GlobalSettings::self()->headerStyle() ),
                              HeaderStrategy::create( GlobalSettings::self()->headerSetDisplayed() ) );
-  headerStyle()->setThemeName(GlobalSettings::self()->grantleeThemeName());
+  initGrantleeThemeName();
 
 #ifndef KDEPIM_NO_WEBKIT
   mViewer->settings()->setFontSize( QWebSettings::MinimumFontSize, GlobalSettings::self()->minimumFontSize() );
@@ -1606,6 +1600,7 @@ void ViewerPrivate::createActions()
   headerMenu->addAction( raction );
   //Same action group
   mThemeManager->setActionGroup(group);
+  mThemeManager->setHeaderMenu(headerMenu);
 
   // attachment style
   KActionMenu *attachmentMenu  = new KActionMenu(i18nc("View->", "&Attachments"), this);
@@ -2346,6 +2341,14 @@ void ViewerPrivate::slotGrantleeHeaders()
 {
   setHeaderStyleAndStrategy( HeaderStyle::grantlee(),
                              HeaderStrategy::grantlee(), true );
+  initGrantleeThemeName();
+}
+
+void ViewerPrivate::initGrantleeThemeName()
+{
+    const QString themeName = GlobalSettings::self()->grantleeThemeName();
+    headerStyle()->setThemeName(themeName);
+    headerStyle()->setDisplayExtraHeaders(mThemeManager->displayExtraHeader(themeName));
 }
 
 void ViewerPrivate::slotIconicAttachments()

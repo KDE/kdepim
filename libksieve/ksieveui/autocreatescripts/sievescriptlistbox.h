@@ -24,7 +24,7 @@ class QListWidget;
 class QPushButton;
 
 namespace KSieveUi {
-
+class SieveScriptPage;
 class SieveScriptListItem : public QListWidgetItem
 {
 public:
@@ -33,8 +33,15 @@ public:
 
     void setDescription(const QString & desc);
     QString description() const;
+
+    SieveScriptPage *scriptPage() const;
+    void setScriptPage(SieveScriptPage *page);
+
+    QString generatedScript() const;
+
 private:
     QString mDescription;
+    SieveScriptPage *mScriptPage;
 };
 
 class SieveScriptListBox : public QGroupBox
@@ -45,17 +52,24 @@ public:
     ~SieveScriptListBox();
     QString generatedScript() const;
 
+Q_SIGNALS:
+    void addNewPage(QWidget *);
+    void removePage(QWidget *);
+    void activatePage(QWidget *);
+
 private Q_SLOTS:
     void slotNew();
     void slotDelete();
     void slotRename();
     void updateButtons();
     void slotEditDescription();
+    void slotItemActived(QListWidgetItem*);
 private:
     QListWidget *mSieveListScript;
     QPushButton *mBtnNew;
     QPushButton *mBtnDelete;
     QPushButton *mBtnRename;
+    QPushButton *mBtnDescription;
 };
 }
 

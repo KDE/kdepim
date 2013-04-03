@@ -23,30 +23,27 @@
 #include <QObject>
 #include <QMap>
 class QActionGroup;
-class KXMLGUIClient;
 class KActionCollection;
 class KToggleAction;
+class KActionMenu;
 
 namespace MessageViewer {
 class GrantleeThemeManager : public QObject
 {
     Q_OBJECT
 public:
-    explicit GrantleeThemeManager(KXMLGUIClient *guiClient, KActionCollection *actionCollection, const QString &path, QObject *parent = 0);
+    explicit GrantleeThemeManager(KActionCollection *actionCollection, const QString &path, QObject *parent = 0);
     ~GrantleeThemeManager();
 
-    void updateThemeList();
-
-
     QMap<QString, GrantleeTheme> themes() const;
-    GrantleeTheme findTheme( const QString &themeName) const;
 
-    void setXmlGuiClient( KXMLGUIClient *guiClient );
     void setActionGroup( QActionGroup *actionGroup );
 
-    void activateTheme(const QString &themeName);
-
     KToggleAction *actionForHeaderStyle();
+
+    void setHeaderMenu(KActionMenu *menu);
+
+    QStringList displayExtraHeader(const QString &themename) const;
 
 Q_SIGNALS:
     void themesChanged();
@@ -55,7 +52,6 @@ Q_SIGNALS:
 private:
     Q_PRIVATE_SLOT( d, void directoryChanged() )
     Q_PRIVATE_SLOT( d, void slotDownloadHeaderThemes() )
-    Q_PRIVATE_SLOT( d, void slotNewStuffFinished() )
     Q_PRIVATE_SLOT( d, void slotThemeSelected() )
     class Private;
     Private *const d;

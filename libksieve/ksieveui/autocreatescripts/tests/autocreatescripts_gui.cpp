@@ -15,28 +15,21 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef SIEVESCRIPTPAGE_H
-#define SIEVESCRIPTPAGE_H
+#include <kdebug.h>
+#include <kcmdlineargs.h>
+#include <kapplication.h>
 
-#include <QWidget>
+#include "libksieve/ksieveui/autocreatescripts/autocreatescriptdialog.h"
 
-namespace KSieveUi {
-class SieveConditionWidgetLister;
-class SieveActionWidgetLister;
-
-class SieveScriptPage : public QWidget
+int main (int argc, char **argv)
 {
-    Q_OBJECT
-public:
-    explicit SieveScriptPage(QWidget *parent = 0);
-    ~SieveScriptPage();
+    KCmdLineArgs::init(argc, argv, "autocreatescripts_gui_gui", 0, ki18n("AutoCreateScripttest_Gui"),
+                       "1.0", ki18n("Test for autocreate script dialog"));
+    KApplication app;
+    KSieveUi::AutoCreateScriptDialog *dialog = new KSieveUi::AutoCreateScriptDialog;
+    dialog->show();
 
-    void generatedScript(QString &script);
+    return app.exec();
 
-private:
-    SieveConditionWidgetLister *mScriptConditionLister;
-    SieveActionWidgetLister *mScriptActionLister;
-};
 }
 
-#endif // SIEVESCRIPTPAGE_H

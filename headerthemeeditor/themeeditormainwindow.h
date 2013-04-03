@@ -15,28 +15,21 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef SIEVESCRIPTPAGE_H
-#define SIEVESCRIPTPAGE_H
+#ifndef THEMEEDITORMAINWINDOW_H
+#define THEMEEDITORMAINWINDOW_H
 
-#include <QWidget>
+#include <KXmlGuiWindow>
 
-namespace KSieveUi {
-class SieveConditionWidgetLister;
-class SieveActionWidgetLister;
+class ThemeEditorPage;
 
-class SieveScriptPage : public QWidget
+class ThemeEditorMainWindow : public KXmlGuiWindow
 {
     Q_OBJECT
 public:
-    explicit SieveScriptPage(QWidget *parent = 0);
-    ~SieveScriptPage();
-
-    void generatedScript(QString &script);
-
+    explicit ThemeEditorMainWindow();
+    ~ThemeEditorMainWindow();
 private:
-    SieveConditionWidgetLister *mScriptConditionLister;
-    SieveActionWidgetLister *mScriptActionLister;
+    ThemeEditorPage *mThemeEditor;
 };
-}
 
-#endif // SIEVESCRIPTPAGE_H
+#endif // THEMEEDITORMAINWINDOW_H

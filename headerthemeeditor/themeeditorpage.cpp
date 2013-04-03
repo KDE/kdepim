@@ -15,28 +15,34 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef SIEVESCRIPTPAGE_H
-#define SIEVESCRIPTPAGE_H
+#include "themeeditorpage.h"
 
-#include <QWidget>
+#include "desktopfilepage.h"
+#include "editorpage.h"
 
-namespace KSieveUi {
-class SieveConditionWidgetLister;
-class SieveActionWidgetLister;
+#include <KTabWidget>
+#include <KLocale>
 
-class SieveScriptPage : public QWidget
+#include <QHBoxLayout>
+
+ThemeEditorPage::ThemeEditorPage(QWidget *parent)
+    : QWidget(parent)
 {
-    Q_OBJECT
-public:
-    explicit SieveScriptPage(QWidget *parent = 0);
-    ~SieveScriptPage();
+    QHBoxLayout *lay = new QHBoxLayout;
+    mTabWidget = new KTabWidget;
+    lay->addWidget(mTabWidget);
+    mEditorPage = new EditorPage;
+    mTabWidget->addTab(mEditorPage, i18n("Editor"));
 
-    void generatedScript(QString &script);
+    mDesktopPage = new DesktopFilePage;
+    mTabWidget->addTab(mDesktopPage, i18n("Desktop File"));
 
-private:
-    SieveConditionWidgetLister *mScriptConditionLister;
-    SieveActionWidgetLister *mScriptActionLister;
-};
+    setLayout(lay);
 }
 
-#endif // SIEVESCRIPTPAGE_H
+ThemeEditorPage::~ThemeEditorPage()
+{
+
+}
+
+#include "themeeditorpage.moc"

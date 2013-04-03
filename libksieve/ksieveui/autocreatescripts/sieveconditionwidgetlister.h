@@ -29,6 +29,9 @@ class SieveConditionWidget : public QWidget
 public:
     explicit SieveConditionWidget(QWidget *);
     ~SieveConditionWidget();
+private:
+    void initWidget();
+    void reset();
 };
 
 class SieveConditionWidgetLister : public KPIM::KWidgetLister
@@ -37,6 +40,8 @@ class SieveConditionWidgetLister : public KPIM::KWidgetLister
 public:
     explicit SieveConditionWidgetLister(QWidget *parent = 0);
     ~SieveConditionWidgetLister();
+
+    void generatedScript(QString &script);
 public Q_SLOTS:
     void slotAddWidget( QWidget *w );
     void slotRemoveWidget( QWidget *w );

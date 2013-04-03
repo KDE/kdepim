@@ -32,12 +32,14 @@ SieveScriptDescriptionDialog::SieveScriptDescriptionDialog(QWidget *parent)
     setButtonFocus( Ok );
     mEdit = new KTextEdit;
     mEdit->setAcceptRichText(false);
+    mEdit->setFocus();
     setMainWidget(mEdit);
+    readConfig();
 }
 
 SieveScriptDescriptionDialog::~SieveScriptDescriptionDialog()
 {
-
+    writeConfig();
 }
 
 void SieveScriptDescriptionDialog::setDescription(const QString &desc)
@@ -49,5 +51,23 @@ QString SieveScriptDescriptionDialog::description() const
 {
     return mEdit->toPlainText();
 }
+
+void SieveScriptDescriptionDialog::readConfig()
+{
+    KConfigGroup group( KGlobal::config(), "SieveScriptDescriptionDialog" );
+    const QSize sizeDialog = group.readEntry( "Size", QSize() );
+    if ( sizeDialog.isValid() ) {
+        resize( sizeDialog );
+    } else {
+        resize( 800,600);
+    }
+}
+
+void SieveScriptDescriptionDialog::writeConfig()
+{
+    KConfigGroup group( KGlobal::config(), "SieveScriptDescriptionDialog" );
+    group.writeEntry( "Size", size() );
+}
+
 
 #include "sievescriptdescriptiondialog.moc"

@@ -108,9 +108,6 @@ QString spamStatus(KMime::Message *message)
 QString drawSpamMeter( SpamError spamError, double percent, double confidence,
                        const QString & filterHeader, const QString & confidenceHeader )
 {
-
-
-
     static const int meterWidth = 20;
     static const int meterHeight = 5;
     QImage meterBar( meterWidth, 1, QImage::Format_Indexed8/*QImage::Format_RGB32*/ );
@@ -155,25 +152,19 @@ QString drawSpamMeter( SpamError spamError, double percent, double confidence,
 
     QString titleText;
     QString confidenceString;
-    if ( spamError == noError )
-    {
-        if ( confidence >= 0 )
-        {
+    if ( spamError == noError ) {
+        if ( confidence >= 0 ) {
             confidenceString = QString::number( confidence ) + "% &nbsp;";
             titleText = i18n("%1% probability of being spam with confidence %3%.\n\n"
                              "Full report:\nProbability=%2\nConfidence=%4",
                              QString::number(percent,'f',2), filterHeader, confidence, confidenceHeader );
-        }
-        else // do not show negative confidence
-        {
+        } else { // do not show negative confidence
             confidenceString = QString() + "&nbsp;";
             titleText = i18n("%1% probability of being spam.\n\n"
                              "Full report:\nProbability=%2",
                              QString::number(percent,'f',2), filterHeader);
         }
-    }
-    else
-    {
+    } else {
         QString errorMsg;
         switch ( spamError )
         {
@@ -276,12 +267,10 @@ xfaceSettings xface(const MessageViewer::HeaderStyle *style, KMime::Message *mes
         if ( photoMemento->finished() ) {
 
             useOtherPhotoSources = true;
-            if ( photoMemento->photo().isIntern() )
-            {
+            if ( photoMemento->photo().isIntern() ) {
                 // get photo data and convert to data: url
                 QImage photo = photoMemento->photo().data();
-                if ( !photo.isNull() )
-                {
+                if ( !photo.isNull() ) {
                     settings.photoWidth = photo.width();
                     settings.photoHeight = photo.height();
                     // scale below 60, otherwise it can get way too large
@@ -293,9 +282,7 @@ xfaceSettings xface(const MessageViewer::HeaderStyle *style, KMime::Message *mes
                     }
                     settings.photoURL = MessageViewer::HeaderStyleUtil::imgToDataUrl( photo );
                 }
-            }
-            else
-            {
+            } else {
                 settings.photoURL = photoMemento->photo().url();
                 if ( settings.photoURL.startsWith('/') )
                     settings.photoURL.prepend( "file:" );
@@ -341,17 +328,14 @@ xfaceSettings xface(const MessageViewer::HeaderStyle *style, KMime::Message *mes
         }
     }
 
-    if( settings.photoURL.isEmpty() && message->headerByType( "X-Face" ) && useOtherPhotoSources )
-    {
+    if( settings.photoURL.isEmpty() && message->headerByType( "X-Face" ) && useOtherPhotoSources ) {
         // no photo, look for a X-Face header
         const QString xfhead = message->headerByType( "X-Face" )->asUnicodeString();
-        if ( !xfhead.isEmpty() )
-        {
+        if ( !xfhead.isEmpty() ) {
             MessageViewer::KXFace xf;
             settings.photoURL = MessageViewer::HeaderStyleUtil::imgToDataUrl( xf.toImage( xfhead ) );
             settings.photoWidth = 48;
             settings.photoHeight = 48;
-
         }
     }
 

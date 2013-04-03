@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=KMail Header Theme Editor
+Type=Application
+Exec=headerthemeeditor
+GenericName=Mail Header Theme Editor
+Terminal=false
+Categories=Qt;KDE;Office;Network;Email;
+InitialPreference=10
