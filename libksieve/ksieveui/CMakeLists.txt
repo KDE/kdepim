@@ -51,3 +51,5 @@ set_target_properties(
 )
 
 install(TARGETS ksieveui ${INSTALL_TARGETS_DEFAULT_ARGS})
+
+add_subdirectory(autocreatescripts/tests)

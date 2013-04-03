@@ -18,13 +18,15 @@
 #ifndef AUTOCREATESCRIPTDIALOG_H
 #define AUTOCREATESCRIPTDIALOG_H
 
+#include "ksieveui_export.h"
+
 #include <KDialog>
 
 class QStackedWidget;
 
 namespace KSieveUi {
 class SieveScriptListBox;
-class AutoCreateScriptDialog : public KDialog
+class KSIEVEUI_EXPORT AutoCreateScriptDialog : public KDialog
 {
     Q_OBJECT
 public:
