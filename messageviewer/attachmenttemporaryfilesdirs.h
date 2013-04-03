@@ -43,8 +43,6 @@ private Q_SLOTS:
     void slotRemoveTempFiles();
 
 private:
-    void cleanTempFiles();
-
     QStringList mTempFiles;
     QStringList mTempDirs;
 };

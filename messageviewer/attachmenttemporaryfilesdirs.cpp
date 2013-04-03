@@ -47,11 +47,6 @@ void AttachmentTemporaryFilesDirs::removeTempFiles()
 
 void AttachmentTemporaryFilesDirs::forceCleanTempFiles()
 {
-    cleanTempFiles();
-}
-
-void AttachmentTemporaryFilesDirs::cleanTempFiles()
-{
     QStringList::ConstIterator end = mTempFiles.constEnd();
     for (QStringList::ConstIterator it = mTempFiles.constBegin(); it != end; ++it) {
         QFile::remove(*it);
@@ -66,7 +61,7 @@ void AttachmentTemporaryFilesDirs::cleanTempFiles()
 
 void AttachmentTemporaryFilesDirs::slotRemoveTempFiles()
 {
-    cleanTempFiles();
+    forceCleanTempFiles();
     //Delete it after cleaning
     deleteLater();
 }
