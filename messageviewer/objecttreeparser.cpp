@@ -43,7 +43,7 @@
 #include "partmetadata.h"
 #include "attachmentstrategy.h"
 #include "interfaces/htmlwriter.h"
-#include "htmlstatusbar.h"
+#include "widgets/htmlstatusbar.h"
 #include "csshelper.h"
 #include "bodypartformatter.h"
 #include "bodypartformatterfactory.h"

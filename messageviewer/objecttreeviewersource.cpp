@@ -21,7 +21,7 @@
 
 #include "objecttreeviewersource.h"
 #include "viewer_p.h"
-#include "htmlstatusbar.h"
+#include "widgets/htmlstatusbar.h"
 
 namespace MessageViewer {
 MailViewerSource::MailViewerSource( ViewerPrivate *viewer ) :
