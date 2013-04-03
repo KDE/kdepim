@@ -36,4 +36,9 @@ EditorPage::~EditorPage()
 {
 }
 
+void EditorPage::saveTheme()
+{
+
+}
+
 #include "editorpage.moc"

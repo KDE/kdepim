@@ -29,6 +29,8 @@ class DesktopFilePage : public QWidget
 public:
     explicit DesktopFilePage(QWidget *parent = 0);
     ~DesktopFilePage();
+
+    void saveTheme();
 private:
     KLineEdit *mName;
     KLineEdit *mDescription;

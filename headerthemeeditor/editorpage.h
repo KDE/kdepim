@@ -29,6 +29,7 @@ class EditorPage : public QWidget
 public:
     explicit EditorPage(QWidget *parent = 0);
     ~EditorPage();
+    void saveTheme();
 private:
     KTextEdit *mEditor;
 };

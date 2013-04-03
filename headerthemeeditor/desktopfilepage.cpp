@@ -45,4 +45,9 @@ DesktopFilePage::~DesktopFilePage()
 {
 }
 
+void DesktopFilePage::saveTheme()
+{
+
+}
+
 #include "desktopfilepage.moc"
