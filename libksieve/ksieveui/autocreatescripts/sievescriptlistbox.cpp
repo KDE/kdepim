@@ -109,6 +109,7 @@ SieveScriptListBox::SieveScriptListBox(const QString &title, QWidget *parent)
     connect( mBtnDescription, SIGNAL(clicked()), this, SLOT(slotEditDescription()));
     connect( mSieveListScript, SIGNAL(itemSelectionChanged()), SLOT(updateButtons()));
     connect( mSieveListScript, SIGNAL(itemActivated(QListWidgetItem*)), SLOT(slotItemActived(QListWidgetItem*)));
+    updateButtons();
 }
 
 SieveScriptListBox::~SieveScriptListBox()
@@ -128,6 +129,7 @@ void SieveScriptListBox::updateButtons()
     const QList<QListWidgetItem*> lst = mSieveListScript->selectedItems();
     mBtnDelete->setEnabled(!lst.isEmpty());
     mBtnRename->setEnabled(lst.count() == 1);
+    mBtnDescription->setEnabled(lst.count() == 1);
 }
 
 void SieveScriptListBox::slotNew()
@@ -138,6 +140,7 @@ void SieveScriptListBox::slotNew()
         SieveScriptPage *page = new SieveScriptPage;
         item->setScriptPage(page);
         Q_EMIT addNewPage(page);
+        updateButtons();
     }
 }
 
@@ -148,6 +151,7 @@ void SieveScriptListBox::slotDelete()
         SieveScriptListItem *itemScript = static_cast<SieveScriptListItem*>(item);
         Q_EMIT removePage(itemScript->scriptPage());
         delete item;
+        updateButtons();
     }
 }
 
