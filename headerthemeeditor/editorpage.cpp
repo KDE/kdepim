@@ -17,11 +17,19 @@
 
 #include "editorpage.h"
 
+#include <KTextEdit>
+
 #include <QVBoxLayout>
 
 EditorPage::EditorPage(QWidget *parent)
     : QWidget(parent)
 {
+    QVBoxLayout *lay = new QVBoxLayout;
+    mEditor = new KTextEdit;
+    mEditor->setAcceptRichText(false);
+    lay->addWidget(mEditor);
+
+    setLayout(lay);
 }
 
 EditorPage::~EditorPage()
