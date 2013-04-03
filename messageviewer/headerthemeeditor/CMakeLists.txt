@@ -14,3 +14,4 @@ install(FILES
   headerthemeeditorui.rc
   DESTINATION  ${DATA_INSTALL_DIR}/headerthemeeditor)
 
+install(PROGRAMS headerthemeeditor.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
