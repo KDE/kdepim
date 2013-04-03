@@ -1,4 +1,4 @@
-/* Copyright (C) 2012 Laurent Montel <montel@kde.org>
+/* Copyright (C) 2012,2013 Laurent Montel <montel@kde.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -15,6 +15,7 @@
  * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
  */
+
 #include "contactdisplaymessagememento.h"
 
 #include <Akonadi/Contact/ContactSearchJob>
@@ -22,18 +23,18 @@
 using namespace MessageViewer;
 
 ContactDisplayMessageMemento::ContactDisplayMessageMemento( const QString &emailAddress )
-  : QObject( 0 ),
-    mFinished( false ),
-    mMailAllowToRemoteContent( false ),
-    mForceDisplayTo( Viewer::Unknown )
+    : QObject( 0 ),
+      mFinished( false ),
+      mMailAllowToRemoteContent( false ),
+      mForceDisplayTo( Viewer::Unknown )
 {
     if( !emailAddress.isEmpty() ) {
-      Akonadi::ContactSearchJob *searchJob = new Akonadi::ContactSearchJob();
-      searchJob->setQuery( Akonadi::ContactSearchJob::Email, emailAddress );
-      connect( searchJob, SIGNAL(result(KJob*)),
-               this, SLOT(slotSearchJobFinished(KJob*)) );
+        Akonadi::ContactSearchJob *searchJob = new Akonadi::ContactSearchJob();
+        searchJob->setQuery( Akonadi::ContactSearchJob::Email, emailAddress );
+        connect( searchJob, SIGNAL(result(KJob*)),
+                 this, SLOT(slotSearchJobFinished(KJob*)) );
     } else {
-      mFinished = true;
+        mFinished = true;
     }
 }
 
@@ -44,81 +45,81 @@ ContactDisplayMessageMemento::~ContactDisplayMessageMemento()
 
 void ContactDisplayMessageMemento::slotSearchJobFinished( KJob *job )
 {
-  mFinished = true;
-  Akonadi::ContactSearchJob *searchJob = static_cast<Akonadi::ContactSearchJob*>( job );
-  if ( searchJob->error() ) {
-    kWarning() << "Unable to fetch contact:" << searchJob->errorText();
-    return;
-  }
+    mFinished = true;
+    Akonadi::ContactSearchJob *searchJob = static_cast<Akonadi::ContactSearchJob*>( job );
+    if ( searchJob->error() ) {
+        kWarning() << "Unable to fetch contact:" << searchJob->errorText();
+        return;
+    }
 
-  const int contactSize( searchJob->contacts().size() );
-  if ( contactSize == 1 ) {
+    const int contactSize( searchJob->contacts().size() );
+    if ( contactSize == 1 ) {
 
-    KABC::Addressee addressee = searchJob->contacts().first();
-    processAddress( addressee );
-    emit update( Viewer::Delayed );
+        KABC::Addressee addressee = searchJob->contacts().first();
+        processAddress( addressee );
+        emit update( Viewer::Delayed );
 
-  } else if ( contactSize > 1 ) {
-    kDebug()<<" more than 1 contact was found we return first contact";
-    KABC::Addressee addressee = searchJob->contacts().first();
-    processAddress( addressee );
-    emit update( Viewer::Delayed );
-    // TODO: Figure out something here...
-  }
+    } else if ( contactSize > 1 ) {
+        kDebug()<<" more than 1 contact was found we return first contact";
+        KABC::Addressee addressee = searchJob->contacts().first();
+        processAddress( addressee );
+        emit update( Viewer::Delayed );
+        // TODO: Figure out something here...
+    }
 }
 
 bool ContactDisplayMessageMemento::finished() const
 {
-  return mFinished;
+    return mFinished;
 }
 
 void ContactDisplayMessageMemento::detach()
 {
-  disconnect( this, SIGNAL(update(MessageViewer::Viewer::UpdateMode)), 0, 0 );
-  disconnect(this, SIGNAL(changeDisplayMail(Viewer::ForceDisplayTo,bool)),0 ,0 );
+    disconnect( this, SIGNAL(update(MessageViewer::Viewer::UpdateMode)), 0, 0 );
+    disconnect(this, SIGNAL(changeDisplayMail(Viewer::ForceDisplayTo,bool)),0 ,0 );
 }
 
 bool ContactDisplayMessageMemento::allowToRemoteContent() const
 {
-  return mMailAllowToRemoteContent;
+    return mMailAllowToRemoteContent;
 }
 
 bool ContactDisplayMessageMemento::forceToHtml() const
 {
-  return ( mForceDisplayTo == Viewer::Html );
+    return ( mForceDisplayTo == Viewer::Html );
 }
 
 bool ContactDisplayMessageMemento::forceToText() const
 {
-  return ( mForceDisplayTo == Viewer::Text );
+    return ( mForceDisplayTo == Viewer::Text );
 }
 
 void ContactDisplayMessageMemento::processAddress( const KABC::Addressee& addressee )
 {
-  mPhoto = addressee.photo();
-  const QStringList customs = addressee.customs();
-  Q_FOREACH( const QString& custom, customs )
-  {
-    if ( custom.contains(QLatin1String( "MailPreferedFormatting")) ) {
-      const QString value = addressee.custom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "MailPreferedFormatting" ) );
-      if ( value == QLatin1String( "TEXT" ) ) {
-        mForceDisplayTo = Viewer::Text;
-      } else if ( value == QLatin1String( "HTML" ) ) {
-        mForceDisplayTo = Viewer::Html;
-      } else {
-        mForceDisplayTo = Viewer::Unknown;
-      }
-    } else if ( custom.contains(QLatin1String( "MailAllowToRemoteContent")) ) {
-      const QString value = addressee.custom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "MailAllowToRemoteContent" ) );
-      mMailAllowToRemoteContent = ( value == QLatin1String( "TRUE" ) );
+    mPhoto = addressee.photo();
+    const QStringList customs = addressee.customs();
+    Q_FOREACH( const QString& custom, customs )
+    {
+        if ( custom.contains(QLatin1String( "MailPreferedFormatting")) ) {
+            const QString value = addressee.custom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "MailPreferedFormatting" ) );
+            if ( value == QLatin1String( "TEXT" ) ) {
+                mForceDisplayTo = Viewer::Text;
+            } else if ( value == QLatin1String( "HTML" ) ) {
+                mForceDisplayTo = Viewer::Html;
+            } else {
+                mForceDisplayTo = Viewer::Unknown;
+            }
+        } else if ( custom.contains(QLatin1String( "MailAllowToRemoteContent")) ) {
+            const QString value = addressee.custom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "MailAllowToRemoteContent" ) );
+            mMailAllowToRemoteContent = ( value == QLatin1String( "TRUE" ) );
+        }
     }
-  }
-  emit changeDisplayMail(mForceDisplayTo, mMailAllowToRemoteContent);
+    emit changeDisplayMail(mForceDisplayTo, mMailAllowToRemoteContent);
 }
 
 KABC::Picture ContactDisplayMessageMemento::photo() const
 {
-  return mPhoto;
+    return mPhoto;
 }
 
 

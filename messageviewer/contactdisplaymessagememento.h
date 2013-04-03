@@ -1,4 +1,4 @@
-/* Copyright (C) 2012 Laurent Montel <montel@kde.org>
+/* Copyright (C) 2012, 2013 Laurent Montel <montel@kde.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -34,33 +34,33 @@ namespace MessageViewer
 
 class ContactDisplayMessageMemento : public QObject, public Interface::BodyPartMemento
 {
-Q_OBJECT
+    Q_OBJECT
 public:
-  explicit ContactDisplayMessageMemento( const QString &emailAddress );
-  ~ContactDisplayMessageMemento();
-  void processAddress( const KABC::Addressee& addressee );
-  bool allowToRemoteContent() const;
-  bool forceToHtml() const;
-  bool forceToText() const;
-  KABC::Picture photo() const;
+    explicit ContactDisplayMessageMemento( const QString &emailAddress );
+    ~ContactDisplayMessageMemento();
+    void processAddress( const KABC::Addressee& addressee );
+    bool allowToRemoteContent() const;
+    bool forceToHtml() const;
+    bool forceToText() const;
+    KABC::Picture photo() const;
 
-  bool finished() const;
+    bool finished() const;
 
-  void detach();
+    void detach();
 
 signals:
-  // TODO: Factor our update and detach into base class
-  void update( MessageViewer::Viewer::UpdateMode );
-  void changeDisplayMail(Viewer::ForceDisplayTo displayAsHtml, bool remoteContent);
+    // TODO: Factor our update and detach into base class
+    void update( MessageViewer::Viewer::UpdateMode );
+    void changeDisplayMail(Viewer::ForceDisplayTo displayAsHtml, bool remoteContent);
 
 private Q_SLOTS:
-  void slotSearchJobFinished( KJob *job );
+    void slotSearchJobFinished( KJob *job );
 
 private:
-  bool mFinished;
-  bool mMailAllowToRemoteContent;
-  Viewer::ForceDisplayTo mForceDisplayTo;
-  KABC::Picture mPhoto;
+    bool mFinished;
+    bool mMailAllowToRemoteContent;
+    Viewer::ForceDisplayTo mForceDisplayTo;
+    KABC::Picture mPhoto;
 };
 
 }
