@@ -17,12 +17,24 @@
 
 #include "themeeditorpage.h"
 
+#include "desktopfilepage.h"
+
+#include <KTabWidget>
+
+#include <QHBoxLayout>
+
 ThemeEditorPage::ThemeEditorPage(QWidget *parent)
     : QWidget(parent)
 {
+    QHBoxLayout *lay = new QHBoxLayout;
+    mTabWidget = new KTabWidget;
+    lay->addWidget(mTabWidget);
+    setLayout(lay);
 }
 
 ThemeEditorPage::~ThemeEditorPage()
 {
 
 }
+
+#include "themeeditorpage.moc"

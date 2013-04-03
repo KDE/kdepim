@@ -15,21 +15,15 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef THEMEEDITORPAGE_H
-#define THEMEEDITORPAGE_H
+#include "editorpage.h"
 
-#include <QWidget>
-
-class KTabWidget;
-
-class ThemeEditorPage : public QWidget
+EditorPage::EditorPage(QWidget *parent)
+    : QWidget(parent)
 {
-    Q_OBJECT
-public:
-    explicit ThemeEditorPage(QWidget *parent);
-    ~ThemeEditorPage();
-private:
-    KTabWidget *mTabWidget;
-};
+}
 
-#endif // THEMEEDITORPAGE_H
+EditorPage::~EditorPage()
+{
+}
+
+#include "editorpage.moc"
