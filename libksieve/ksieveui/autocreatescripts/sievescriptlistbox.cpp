@@ -109,6 +109,7 @@ SieveScriptListBox::SieveScriptListBox(const QString &title, QWidget *parent)
     connect( mBtnDescription, SIGNAL(clicked()), this, SLOT(slotEditDescription()));
     connect( mSieveListScript, SIGNAL(itemSelectionChanged()), SLOT(updateButtons()));
     connect( mSieveListScript, SIGNAL(itemActivated(QListWidgetItem*)), SLOT(slotItemActived(QListWidgetItem*)));
+    connect( mSieveListScript, SIGNAL(itemDoubleClicked(QListWidgetItem*)), SLOT(slotEditDescription()));
     updateButtons();
 }
 
@@ -168,8 +169,9 @@ void SieveScriptListBox::slotRename()
 
 void SieveScriptListBox::slotEditDescription()
 {
-    if (mSieveListScript->currentItem()) {
-        SieveScriptListItem *item = static_cast<SieveScriptListItem*>(mSieveListScript->currentItem());
+    QListWidgetItem *item = mSieveListScript->currentItem();
+    if (item) {
+        SieveScriptListItem *item = static_cast<SieveScriptListItem*>(item);
         QPointer<SieveScriptDescriptionDialog> dlg = new SieveScriptDescriptionDialog(this);
         dlg->setDescription(item->description());
         if (dlg->exec()) {
@@ -187,7 +189,7 @@ QString SieveScriptListBox::generatedScript() const
         if (i != 0)
             resultScript += QLatin1Char('\n');
         resultScript += QLatin1Char('#') + i18n("Script name: %1",item->text()) + QLatin1Char('\n');
-        resultScript = item->generatedScript();
+        resultScript += item->generatedScript();
     }
     return resultScript;
 }
