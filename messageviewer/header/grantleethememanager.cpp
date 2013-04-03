@@ -21,7 +21,6 @@
 #include <KDirWatch>
 #include <KConfigGroup>
 #include <KConfig>
-#include <KXMLGUIClient>
 #include <KActionCollection>
 #include <KToggleAction>
 #include <KLocale>
@@ -32,7 +31,6 @@
 #include <QAction>
 #include <QDirIterator>
 #include <QActionGroup>
-#include <QTimer>
 
 using namespace MessageViewer;
 
