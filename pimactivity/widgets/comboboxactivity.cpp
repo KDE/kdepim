@@ -31,7 +31,12 @@ public:
         : q(qq),
           activityManager(manager)
     {
-        q->addItems(activityManager->listActivities());
+        const QHash<QString, QString> list = activityManager->listActivitiesWithRealName();
+        QHashIterator<QString, QString> i(list);
+        while (i.hasNext()) {
+            i.next();
+            q->addItem(i.value(), i.key());
+        }
         q->connect(manager, SIGNAL(activityAdded(QString)), q, SLOT(slotActivityAdded(QString)));
         q->connect(manager, SIGNAL(activityRemoved(QString)), q, SLOT(slotActivityRemoved(QString)));
         q->connect(manager, SIGNAL(serviceStatusChanged(KActivities::Consumer::ServiceStatus)), q, SLOT(slotActivityStatusChanged(KActivities::Consumer::ServiceStatus)));

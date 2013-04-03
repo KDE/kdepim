@@ -38,6 +38,7 @@ public:
     bool isActive() const;
 
     QStringList listActivities() const;
+    QHash<QString, QString> listActivitiesWithRealName() const;
 
 Q_SIGNALS:
     void serviceStatusChanged(KActivities::Consumer::ServiceStatus);
@@ -47,6 +48,8 @@ Q_SIGNALS:
 private:
     friend class ActivityManagerPrivate;
     ActivityManagerPrivate * const d;
+    Q_PRIVATE_SLOT( d, void slotActivityAdded(const QString&))
+    Q_PRIVATE_SLOT( d, void slotActivityRemoved(const QString&))
 };
 }
 

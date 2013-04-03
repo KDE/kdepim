@@ -31,15 +31,51 @@ public:
         : q(qq)
     {
         consumer = new KActivities::Consumer;
+        const QStringList activities = consumer->listActivities();
+        Q_FOREACH (const QString &id, activities) {
+            insertActivity(id);
+        }
+
         q->connect(consumer,SIGNAL(serviceStatusChanged(KActivities::Consumer::ServiceStatus)),q,SIGNAL(serviceStatusChanged(KActivities::Consumer::ServiceStatus)));
-        q->connect(consumer,SIGNAL(activityAdded(QString)),q,SIGNAL(activityAdded(QString)));
-        q->connect(consumer,SIGNAL(activityRemoved(QString)),q,SIGNAL(activityRemoved(QString)));
+        q->connect(consumer,SIGNAL(activityAdded(QString)),q,SLOT(slotActivityAdded(QString)));
+        q->connect(consumer,SIGNAL(activityRemoved(QString)),q,SLOT(slotActivityRemoved(QString)));
     }
     ~ActivityManagerPrivate()
     {
         delete consumer;
     }
 
+    void insertActivity(const QString &id)
+    {
+        KActivities::Info *activity = new KActivities::Info(id, q);
+        activities[id] = activity;
+    }
+
+    void slotActivityRemoved(const QString &id)
+    {
+        KActivities::Info *activity = activities.take(id);
+        delete activity;
+        emit q->activityRemoved(id);
+    }
+
+    void slotActivityAdded(const QString &id)
+    {
+        insertActivity(id);
+        emit q->activityAdded(id);
+    }
+
+    QHash<QString, QString> listActivitiesWithRealName() const
+    {
+        QHash<QString, QString> result;
+        QHashIterator<QString, KActivities::Info*> i(activities);
+        while (i.hasNext()) {
+            i.next();
+            result.insert(i.key(), i.value()->name());
+        }
+        return result;
+    }
+
+    QHash<QString, KActivities::Info*> activities;
     ActivityManager *q;
     KActivities::Consumer *consumer;
 
@@ -59,9 +95,15 @@ ActivityManager::~ActivityManager()
     delete d;
 }
 
+
 bool ActivityManager::isActive() const
 {
     return (KActivities::Consumer::serviceStatus() == KActivities::Consumer::Running);
+}
+
+QHash<QString, QString> ActivityManager::listActivitiesWithRealName() const
+{
+    return d->listActivitiesWithRealName();
 }
 
 QStringList ActivityManager::listActivities() const
