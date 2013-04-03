@@ -18,8 +18,10 @@
 #include "themeeditorpage.h"
 
 #include "desktopfilepage.h"
+#include "editorpage.h"
 
 #include <KTabWidget>
+#include <KLocale>
 
 #include <QHBoxLayout>
 
@@ -29,6 +31,12 @@ ThemeEditorPage::ThemeEditorPage(QWidget *parent)
     QHBoxLayout *lay = new QHBoxLayout;
     mTabWidget = new KTabWidget;
     lay->addWidget(mTabWidget);
+    mEditorPage = new EditorPage;
+    mTabWidget->addTab(mEditorPage, i18n("Editor"));
+
+    mDesktopPage = new DesktopFilePage;
+    mTabWidget->addTab(mDesktopPage, i18n("Desktop File"));
+
     setLayout(lay);
 }
 

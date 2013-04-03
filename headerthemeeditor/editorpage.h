@@ -25,7 +25,7 @@ class EditorPage : public QWidget
 {
     Q_OBJECT
 public:
-    explicit EditorPage(QWidget *parent);
+    explicit EditorPage(QWidget *parent = 0);
     ~EditorPage();
 };
 

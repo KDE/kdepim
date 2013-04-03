@@ -21,15 +21,19 @@
 #include <QWidget>
 
 class KTabWidget;
+class EditorPage;
+class DesktopFilePage;
 
 class ThemeEditorPage : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ThemeEditorPage(QWidget *parent);
+    explicit ThemeEditorPage(QWidget *parent = 0);
     ~ThemeEditorPage();
 private:
     KTabWidget *mTabWidget;
+    EditorPage *mEditorPage;
+    DesktopFilePage *mDesktopPage;
 };
 
 #endif // THEMEEDITORPAGE_H

@@ -20,12 +20,16 @@
 
 #include <KXmlGuiWindow>
 
+class ThemeEditorPage;
+
 class ThemeEditorMainWindow : public KXmlGuiWindow
 {
     Q_OBJECT
 public:
     explicit ThemeEditorMainWindow();
     ~ThemeEditorMainWindow();
+private:
+    ThemeEditorPage *mThemeEditor;
 };
 
 #endif // THEMEEDITORMAINWINDOW_H

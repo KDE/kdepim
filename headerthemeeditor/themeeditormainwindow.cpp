@@ -17,9 +17,13 @@
 
 #include "themeeditormainwindow.h"
 
+#include "themeeditorpage.h"
+
 ThemeEditorMainWindow::ThemeEditorMainWindow()
     : KXmlGuiWindow()
 {
+    mThemeEditor = new ThemeEditorPage;
+    setCentralWidget(mThemeEditor);
 }
 
 ThemeEditorMainWindow::~ThemeEditorMainWindow()

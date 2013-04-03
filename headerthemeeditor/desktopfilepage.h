@@ -21,12 +21,17 @@
 
 #include <QWidget>
 
+class KLineEdit;
+
 class DesktopFilePage : public QWidget
 {
     Q_OBJECT
 public:
-    explicit DesktopFilePage(QWidget *parent);
+    explicit DesktopFilePage(QWidget *parent = 0);
     ~DesktopFilePage();
+private:
+    KLineEdit *mName;
+    KLineEdit *mDescription;
 };
 
 #endif // DESKTOPFILEPAGE_H

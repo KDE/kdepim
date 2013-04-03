@@ -17,6 +17,8 @@
 
 #include "editorpage.h"
 
+#include <QVBoxLayout>
+
 EditorPage::EditorPage(QWidget *parent)
     : QWidget(parent)
 {

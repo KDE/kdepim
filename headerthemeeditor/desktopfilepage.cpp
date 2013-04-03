@@ -18,9 +18,27 @@
 
 #include "desktopfilepage.h"
 
+#include <KLineEdit>
+#include <KLocale>
+
+#include <QGridLayout>
+#include <QLabel>
+
 DesktopFilePage::DesktopFilePage(QWidget *parent)
     : QWidget(parent)
 {
+    QGridLayout *lay = new QGridLayout;
+    QLabel *lab = new QLabel(i18n("Name:"));
+    mName = new KLineEdit;
+    lay->addWidget(lab,0,0);
+    lay->addWidget(mName,0,1);
+
+    lab = new QLabel(i18n("Description:"));
+    mDescription = new KLineEdit;
+    lay->addWidget(lab,1,0);
+    lay->addWidget(mDescription,1,1);
+
+    setLayout(lay);
 }
 
 DesktopFilePage::~DesktopFilePage()
