@@ -22,6 +22,7 @@
 #include <libkdepim/kwidgetlister.h>
 
 class KPushButton;
+class QGridLayout;
 
 namespace PimCommon {
 class MinimumComboBox;
@@ -44,10 +45,12 @@ Q_SIGNALS:
     void removeWidget(QWidget *w);
 private:
     void initWidget();
+    void setFilterAction( QWidget *widget );
     void reset();
     KPushButton *mAdd;
     KPushButton *mRemove;
     PimCommon::MinimumComboBox *mComboBox;
+    QGridLayout *mLayout;
 };
 
 class SieveConditionWidgetLister : public KPIM::KWidgetLister

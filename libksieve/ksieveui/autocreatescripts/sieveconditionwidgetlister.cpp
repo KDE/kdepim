@@ -20,8 +20,10 @@
 
 #include <KPushButton>
 #include <KDialog>
+#include <KLocale>
 
-#include <QHBoxLayout>
+#include <QGridLayout>
+#include <QLabel>
 
 using namespace KSieveUi;
 
@@ -35,75 +37,48 @@ SieveConditionWidget::~SieveConditionWidget()
 {
 }
 
+void SieveConditionWidget::setFilterAction( QWidget *widget )
+{
+  if ( mLayout->itemAtPosition( 1, 2 ) ) {
+    delete mLayout->itemAtPosition( 1, 2 )->widget();
+  }
+
+  if ( widget ) {
+    mLayout->addWidget( widget, 1, 2 );
+  } else {
+    mLayout->addWidget( new QLabel( i18n( "Please select an condition." ), this ), 1, 2 );
+  }
+}
+
+
 void SieveConditionWidget::initWidget()
 {
-    QHBoxLayout *hlay = new QHBoxLayout( this );
-    hlay->setSpacing( KDialog::spacingHint() );
-    hlay->setMargin( 0 );
+    mLayout = new QGridLayout(this);
+    mLayout->setContentsMargins( 0, 0, 0, 0 );
 
     mComboBox = new PimCommon::MinimumComboBox;
     mComboBox->setEditable( false );
-    hlay->addWidget(mComboBox);
+    mComboBox->setMaxCount( mComboBox->count() );
+    mComboBox->adjustSize();
+
+    mLayout->addWidget(mComboBox, 1, 1);
     connect( mComboBox, SIGNAL(activated(QString)),
              this, SLOT(slotActionChanged(QString)) );
 
-/*
-    // initialize the header field combo box
-    mRuleField = new PimCommon::MinimumComboBox( this );
-    mRuleField->setObjectName( "mRuleField" );
-    mRuleField->setEditable( true );
-    KLineEdit *edit = new KLineEdit;
-    edit->setClickMessage( i18n("Choose or type your own criteria"));
-    mRuleField->setToolTip(i18n("Choose or type your own criteria"));
-    edit->setClearButtonShown(true);
-    mRuleField->setLineEdit(edit);
-    mRuleField->setTrapReturnKey(true);
-
-    mRuleField->addItems( mFilterFieldList );
-    KCompletion *comp = mRuleField->completionObject();
-    comp->setIgnoreCase(true);
-    comp->insertItems(mFilterFieldList);
-    comp->setCompletionMode(KGlobalSettings::CompletionPopupAuto);
-
-    // don't show sliders when popping up this menu
-    mRuleField->setMaxCount( mRuleField->count() );
-    mRuleField->adjustSize();
-    hlay->addWidget( mRuleField );
-
-    // initialize the function/value widget stack
-    mFunctionStack = new QStackedWidget( this );
-    //Don't expand the widget in vertical direction
-    mFunctionStack->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed );
-
-    hlay->addWidget( mFunctionStack );
-
-    mValueStack = new QStackedWidget( this );
-    hlay->addWidget( mValueStack );
-    hlay->setStretchFactor( mValueStack, 10 );
-  */
     mAdd = new KPushButton( this );
     mAdd->setIcon( KIcon( "list-add" ) );
     mAdd->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
-    hlay->addWidget( mAdd );
 
     mRemove = new KPushButton( this );
     mRemove->setIcon( KIcon( "list-remove" ) );
     mRemove->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
-    hlay->addWidget( mRemove );
 
-    //RuleWidgetHandlerManager::instance()->createWidgets( mFunctionStack, mValueStack, this );
+    mLayout->addWidget( mAdd, 1, 3 );
+    mLayout->addWidget( mRemove, 1, 4 );
 
-    // redirect focus to the header field combo box
-    //setFocusProxy( mRuleField );
+    // redirect focus to the filter action combo box
+    setFocusProxy( mComboBox );
 
-    /*
-    connect( mRuleField, SIGNAL(activated(QString)),
-             this, SLOT(slotRuleFieldChanged(QString)) );
-    connect( mRuleField, SIGNAL(editTextChanged(QString)),
-             this, SLOT(slotRuleFieldChanged(QString)) );
-    connect( mRuleField, SIGNAL(editTextChanged(QString)),
-             this, SIGNAL(fieldChanged(QString)) );
-    */
     connect( mAdd, SIGNAL(clicked()),
              this, SLOT(slotAddWidget()) );
     connect( mRemove, SIGNAL(clicked()),

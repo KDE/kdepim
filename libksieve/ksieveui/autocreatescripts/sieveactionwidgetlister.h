@@ -23,6 +23,8 @@
 
 class KPushButton;
 
+class QGridLayout;
+
 namespace PimCommon {
 class MinimumComboBox;
 }
@@ -43,10 +45,12 @@ Q_SIGNALS:
     void addWidget(QWidget *w);
     void removeWidget(QWidget *w);
 private:
+    void setFilterAction( QWidget *widget );
     void initWidget();
     KPushButton *mAdd;
     KPushButton *mRemove;
     PimCommon::MinimumComboBox *mComboBox;
+    QGridLayout *mLayout;
 };
 
 
