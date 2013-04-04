@@ -22,6 +22,7 @@ set(libpimcommon_SRCS
   renamefiledialog.cpp
   simplestringlisteditor.cpp
   templatelistwidget.cpp
+  templateeditdialog.cpp
 )
 
 macro(add_resource_iface _kcfgFile _ifaceName _className)
