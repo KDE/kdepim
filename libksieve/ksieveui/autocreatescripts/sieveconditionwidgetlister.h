@@ -23,6 +23,10 @@
 
 class KPushButton;
 
+namespace PimCommon {
+class MinimumComboBox;
+}
+
 namespace KSieveUi {
 
 class SieveConditionWidget : public QWidget
@@ -34,6 +38,7 @@ public:
 private Q_SLOTS:
     void slotAddWidget();
     void slotRemoveWidget();
+    void slotActionChanged(const QString &action);
 Q_SIGNALS:
     void addWidget(QWidget *w);
     void removeWidget(QWidget *w);
@@ -42,6 +47,7 @@ private:
     void reset();
     KPushButton *mAdd;
     KPushButton *mRemove;
+    PimCommon::MinimumComboBox *mComboBox;
 };
 
 class SieveConditionWidgetLister : public KPIM::KWidgetLister

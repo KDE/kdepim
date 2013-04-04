@@ -171,11 +171,11 @@ void SieveScriptListBox::slotEditDescription()
 {
     QListWidgetItem *item = mSieveListScript->currentItem();
     if (item) {
-        SieveScriptListItem *item = static_cast<SieveScriptListItem*>(item);
+        SieveScriptListItem *sieveItem = static_cast<SieveScriptListItem*>(item);
         QPointer<SieveScriptDescriptionDialog> dlg = new SieveScriptDescriptionDialog(this);
-        dlg->setDescription(item->description());
+        dlg->setDescription(sieveItem->description());
         if (dlg->exec()) {
-            item->setDescription(dlg->description());
+            sieveItem->setDescription(dlg->description());
         }
         delete dlg;
     }

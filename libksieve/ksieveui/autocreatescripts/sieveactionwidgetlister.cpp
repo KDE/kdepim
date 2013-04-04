@@ -16,6 +16,8 @@
 */
 
 #include "sieveactionwidgetlister.h"
+#include "pimcommon/minimumcombobox.h"
+
 
 #include <KPushButton>
 #include <KDialog>
@@ -39,6 +41,13 @@ void SieveActionWidget::initWidget()
     QHBoxLayout *hlay = new QHBoxLayout( this );
     hlay->setSpacing( KDialog::spacingHint() );
     hlay->setMargin( 0 );
+
+    mComboBox = new PimCommon::MinimumComboBox;
+    mComboBox->setEditable( false );
+    hlay->addWidget(mComboBox);
+    connect( mComboBox, SIGNAL(activated(QString)),
+             this, SLOT(slotActionChanged(QString)) );
+
 /*
     // initialize the header field combo box
     mRuleField = new PimCommon::MinimumComboBox( this );
@@ -100,6 +109,11 @@ void SieveActionWidget::initWidget()
              this, SLOT(slotAddWidget()) );
     connect( mRemove, SIGNAL(clicked()),
              this, SLOT(slotRemoveWidget()) );
+}
+
+void SieveActionWidget::slotActionChanged(const QString &action)
+{
+
 }
 
 void SieveActionWidget::slotAddWidget()
