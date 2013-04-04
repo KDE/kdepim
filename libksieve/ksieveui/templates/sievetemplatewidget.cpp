@@ -42,7 +42,7 @@ public:
     }
     ~SieveTemplateListWidgetPrivate()
     {
-
+        saveTemplates();
     }
     void createListWidgetItem(const QString &name, const QString &text, bool isDefaultTemplate)
     {
@@ -128,8 +128,54 @@ public:
         delete menu;
     }
 
+    void loadTemplates()
+    {
+        q->clear();
+        const QList<KSieveUi::SieveDefaultTemplate::defaultTemplate> templatesLst = KSieveUi::SieveDefaultTemplate::defaultTemplates();
+        Q_FOREACH (const KSieveUi::SieveDefaultTemplate::defaultTemplate &tmp, templatesLst) {
+            createListWidgetItem(tmp.name, tmp.text, true);
+        }
+        KSharedConfig::Ptr config = KSharedConfig::openConfig( "sievetemplaterc", KConfig::NoGlobals );
+        KConfigGroup group = config->group( "template" );
+        if (group.hasKey(QLatin1String("templateCount"))) {
+            const int numberTemplate = group.readEntry( "templateCount", 0 );
+            for (int i = 0; i < numberTemplate; ++i) {
+                KConfigGroup group = config->group( QString::fromLatin1( "templateDefine_%1" ).arg ( i ) );
+                const QString name = group.readEntry( "Name", QString() );
+                const QString text = group.readEntry( "Text", QString() );
 
+                createListWidgetItem(name, text, false);
+            }
+        }
+        dirty = false;
+    }
 
+    void saveTemplates()
+    {
+        if (!dirty)
+            return;
+
+        KSharedConfig::Ptr config = KSharedConfig::openConfig( "sievetemplaterc", KConfig::NoGlobals );
+        // clear everything
+        foreach ( const QString &group, config->groupList() ) {
+            config->deleteGroup( group );
+        }
+
+        int numberOfTemplate = 0;
+        for ( int i = 0; i < q->count(); ++i ) {
+            QListWidgetItem *templateItem = q->item(i);
+            if (templateItem->data(SieveTemplateListWidget::DefaultTemplate).toBool() == false) {
+                KConfigGroup group = config->group( QString::fromLatin1( "templateDefine_%1" ).arg ( numberOfTemplate ) );
+                group.writeEntry( "Name", templateItem->text() );
+                group.writeEntry( "Text", templateItem->data(SieveTemplateListWidget::SieveText) );
+                ++numberOfTemplate;
+            }
+        }
+        KConfigGroup group = config->group( "template" );
+        group.writeEntry( "templateCount", numberOfTemplate );
+        config->sync();
+        dirty = false;
+    }
     bool dirty;
     SieveTemplateListWidget *q;
 };
@@ -144,12 +190,11 @@ SieveTemplateListWidget::SieveTemplateListWidget(QWidget *parent)
     connect( this, SIGNAL(customContextMenuRequested(QPoint)),
              SLOT(slotContextMenu(QPoint)) );
     connect(this, SIGNAL(doubleClicked(QModelIndex)), SLOT(slotModify()));
-    loadTemplates();
+    d->loadTemplates();
 }
 
 SieveTemplateListWidget::~SieveTemplateListWidget()
 {
-    saveTemplates();
     delete d;
 }
 
@@ -171,54 +216,6 @@ QMimeData *SieveTemplateListWidget::mimeData ( const QList<QListWidgetItem *> it
     return mimeData;
 }
 
-void SieveTemplateListWidget::loadTemplates()
-{
-    clear();
-    const QList<KSieveUi::SieveDefaultTemplate::defaultTemplate> templatesLst = KSieveUi::SieveDefaultTemplate::defaultTemplates();
-    Q_FOREACH (const KSieveUi::SieveDefaultTemplate::defaultTemplate &tmp, templatesLst) {
-        d->createListWidgetItem(tmp.name, tmp.text, true);
-    }
-    KSharedConfig::Ptr config = KSharedConfig::openConfig( "sievetemplaterc", KConfig::NoGlobals );
-    KConfigGroup group = config->group( "template" );
-    if (group.hasKey(QLatin1String("templateCount"))) {
-        const int numberTemplate = group.readEntry( "templateCount", 0 );
-        for (int i = 0; i < numberTemplate; ++i) {
-            KConfigGroup group = config->group( QString::fromLatin1( "templateDefine_%1" ).arg ( i ) );
-            const QString name = group.readEntry( "Name", QString() );
-            const QString text = group.readEntry( "Text", QString() );
-
-            d->createListWidgetItem(name, text, false);
-        }
-    }
-    d->dirty = false;
-}
-
-void SieveTemplateListWidget::saveTemplates()
-{
-    if (!d->dirty)
-        return;
-
-    KSharedConfig::Ptr config = KSharedConfig::openConfig( "sievetemplaterc", KConfig::NoGlobals );
-    // clear everything
-    foreach ( const QString &group, config->groupList() ) {
-        config->deleteGroup( group );
-    }
-
-    int numberOfTemplate = 0;
-    for ( int i = 0; i < count(); ++i ) {
-        QListWidgetItem *templateItem = item(i);
-        if (templateItem->data(SieveTemplateListWidget::DefaultTemplate).toBool() == false) {
-            KConfigGroup group = config->group( QString::fromLatin1( "templateDefine_%1" ).arg ( numberOfTemplate ) );
-            group.writeEntry( "Name", templateItem->text() );
-            group.writeEntry( "Text", templateItem->data(SieveTemplateListWidget::SieveText) );
-            numberOfTemplate++;
-        }
-    }
-    KConfigGroup group = config->group( "template" );
-    group.writeEntry( "templateCount", numberOfTemplate );
-    config->sync();
-    d->dirty = false;
-}
 
 
 SieveTemplateWidget::SieveTemplateWidget(const QString &title, QWidget *parent)

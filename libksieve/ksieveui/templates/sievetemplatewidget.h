@@ -50,8 +50,6 @@ private:
         SieveText = Qt::UserRole + 1,
         DefaultTemplate = Qt::UserRole + 2
     };
-    void loadTemplates();
-    void saveTemplates();
 };
 
 class SieveTemplateWidget : public QWidget
