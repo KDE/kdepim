@@ -35,7 +35,7 @@ class ThemeTemplateWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ThemeTemplateWidget(const QString &configName, QWidget *parent = 0);
+    explicit ThemeTemplateWidget(const QString &title, QWidget *parent = 0);
     ~ThemeTemplateWidget();
 Q_SIGNALS:
     void insertTemplate(const QString&);

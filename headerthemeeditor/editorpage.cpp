@@ -16,21 +16,29 @@
 */
 
 #include "editorpage.h"
+#include "themetemplatewidget.h"
 
 #include "kpimtextedit/htmlhighlighter.h"
 
 #include <KTextEdit>
+#include <KLocale>
 
+#include <QSplitter>
 #include <QVBoxLayout>
 
 EditorPage::EditorPage(QWidget *parent)
     : QWidget(parent)
 {
     QVBoxLayout *lay = new QVBoxLayout;
+    QSplitter *splitter = new QSplitter;
+    lay->addWidget(splitter);
     mEditor = new KTextEdit;
     new KPIMTextEdit::HtmlHighlighter(mEditor->document());
     mEditor->setAcceptRichText(false);
-    lay->addWidget(mEditor);
+
+    splitter->addWidget(mEditor);
+    mThemeTemplate = new ThemeTemplateWidget(i18n("Theme Templates:"));
+    splitter->addWidget(mThemeTemplate);
 
     setLayout(lay);
 }
@@ -43,5 +51,7 @@ void EditorPage::saveTheme()
 {
 
 }
+
+
 
 #include "editorpage.moc"

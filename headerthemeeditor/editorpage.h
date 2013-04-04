@@ -22,6 +22,7 @@
 #include <QWidget>
 
 class KTextEdit;
+class ThemeTemplateWidget;
 
 class EditorPage : public QWidget
 {
@@ -32,6 +33,7 @@ public:
     void saveTheme();
 private:
     KTextEdit *mEditor;
+    ThemeTemplateWidget *mThemeTemplate;
 };
 
 #endif // EDITORPAGE_H
