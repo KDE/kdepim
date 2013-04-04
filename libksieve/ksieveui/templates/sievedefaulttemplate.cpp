@@ -19,10 +19,10 @@
 
 #include <KLocale>
 
-QList<KSieveUi::SieveDefaultTemplate::defaultTemplate> KSieveUi::SieveDefaultTemplate::defaultTemplates()
+QList<KSieveUi::defaultTemplate> KSieveUi::SieveDefaultTemplate::defaultTemplates()
 {
-    QList<KSieveUi::SieveDefaultTemplate::defaultTemplate> lst;
-    KSieveUi::SieveDefaultTemplate::defaultTemplate tmp;
+    QList<KSieveUi::defaultTemplate> lst;
+    KSieveUi::defaultTemplate tmp;
     tmp.name = i18n("Filter on Mailing List-ID");
     tmp.text = QString::fromLatin1("require \"fileinto\";\n"
                                    "if header :contains \"List-ID\" [ \"examples.com\", \"examples.mail.com\" ] {\n"

@@ -17,6 +17,7 @@
 
 #include "sievetemplatewidget.h"
 #include "sievetemplateeditdialog.h"
+#include "sievedefaulttemplate.h"
 
 #include <KMenu>
 #include <KLocale>
@@ -130,8 +131,8 @@ public:
     void loadTemplates()
     {
         q->clear();
-        const QList<KSieveUi::SieveDefaultTemplate::defaultTemplate> templatesLst = q->defaultTemplates();
-        Q_FOREACH (const KSieveUi::SieveDefaultTemplate::defaultTemplate &tmp, templatesLst) {
+        const QList<KSieveUi::defaultTemplate> templatesLst = q->defaultTemplates();
+        Q_FOREACH (const KSieveUi::defaultTemplate &tmp, templatesLst) {
             createListWidgetItem(tmp.name, tmp.text, true);
         }
         KConfigGroup group = config->group( "template" );
@@ -196,7 +197,7 @@ SieveTemplateListWidget::~SieveTemplateListWidget()
     delete d;
 }
 
-QList<KSieveUi::SieveDefaultTemplate::defaultTemplate> SieveTemplateListWidget::defaultTemplates()
+QList<KSieveUi::defaultTemplate> SieveTemplateListWidget::defaultTemplates()
 {
     return KSieveUi::SieveDefaultTemplate::defaultTemplates();
 }

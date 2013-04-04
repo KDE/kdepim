@@ -21,10 +21,14 @@
 #include <QWidget>
 #include <QListWidget>
 
-#include "sievedefaulttemplate.h"
-
 namespace KSieveUi {
 class SieveTemplateListWidgetPrivate;
+
+struct defaultTemplate {
+    QString name;
+    QString text;
+};
+
 class SieveTemplateListWidget : public QListWidget
 {
     Q_OBJECT
@@ -32,7 +36,7 @@ public:
     explicit SieveTemplateListWidget(QWidget *parent = 0);
     ~SieveTemplateListWidget();
 
-    virtual QList<KSieveUi::SieveDefaultTemplate::defaultTemplate> defaultTemplates();
+    virtual QList<KSieveUi::defaultTemplate> defaultTemplates();
 protected:
     QStringList mimeTypes() const;
     QMimeData *mimeData( const QList<QListWidgetItem *> items ) const;

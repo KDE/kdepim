@@ -19,15 +19,12 @@
 #define SIEVEDEFAULTTEMPLATE_H
 
 #include <QString>
+#include "sievetemplatewidget.h"
 
 namespace KSieveUi
 {
 namespace SieveDefaultTemplate {
 
-struct defaultTemplate {
-    QString name;
-    QString text;
-};
 
 QList<defaultTemplate> defaultTemplates();
 }
