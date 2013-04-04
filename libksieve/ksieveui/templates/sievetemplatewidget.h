@@ -60,7 +60,7 @@ class SieveTemplateWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit SieveTemplateWidget(QWidget *parent = 0);
+    explicit SieveTemplateWidget(const QString &title, QWidget *parent = 0);
     ~SieveTemplateWidget();
 Q_SIGNALS:
     void insertTemplate(const QString &);
