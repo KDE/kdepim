@@ -35,8 +35,8 @@ namespace KSieveUi {
 class SieveTemplateListWidgetPrivate
 {
 public:
-    SieveTemplateListWidgetPrivate(SieveTemplateListWidget *qq)
-        : dirty(false), q(qq)
+    SieveTemplateListWidgetPrivate(const QString &configName, SieveTemplateListWidget *qq)
+        : dirty(false), config(KSharedConfig::openConfig(configName, KConfig::NoGlobals)), q(qq)
     {
 
     }
@@ -135,7 +135,6 @@ public:
         Q_FOREACH (const KSieveUi::SieveDefaultTemplate::defaultTemplate &tmp, templatesLst) {
             createListWidgetItem(tmp.name, tmp.text, true);
         }
-        KSharedConfig::Ptr config = KSharedConfig::openConfig( "sievetemplaterc", KConfig::NoGlobals );
         KConfigGroup group = config->group( "template" );
         if (group.hasKey(QLatin1String("templateCount"))) {
             const int numberTemplate = group.readEntry( "templateCount", 0 );
@@ -155,7 +154,6 @@ public:
         if (!dirty)
             return;
 
-        KSharedConfig::Ptr config = KSharedConfig::openConfig( "sievetemplaterc", KConfig::NoGlobals );
         // clear everything
         foreach ( const QString &group, config->groupList() ) {
             config->deleteGroup( group );
@@ -177,12 +175,13 @@ public:
         dirty = false;
     }
     bool dirty;
+    KSharedConfig::Ptr config;
     SieveTemplateListWidget *q;
 };
 
 
 SieveTemplateListWidget::SieveTemplateListWidget(QWidget *parent)
-    : QListWidget(parent), d(new SieveTemplateListWidgetPrivate(this))
+    : QListWidget(parent), d(new SieveTemplateListWidgetPrivate(QLatin1String("sievetemplaterc"), this))
 {
     setContextMenuPolicy( Qt::CustomContextMenu );
     setDragDropMode(QAbstractItemView::DragOnly);
