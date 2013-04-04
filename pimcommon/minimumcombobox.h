@@ -26,14 +26,14 @@
 
 namespace PimCommon {
 
-  /** @short A KComboBox, which minimum size hint can be really small */
-  class PIMCOMMON_EXPORT MinimumComboBox: public KComboBox {
+/** @short A KComboBox, which minimum size hint can be really small */
+class PIMCOMMON_EXPORT MinimumComboBox: public KComboBox {
     Q_OBJECT
-  public:
-      explicit MinimumComboBox(QWidget* parent = 0) : KComboBox( parent ) {}
-  protected:
-      QSize minimumSizeHint() const { return QSize( 50, KComboBox::minimumSizeHint().height() ); }
-  };
+public:
+    explicit MinimumComboBox(QWidget* parent = 0) : KComboBox( parent ) {}
+protected:
+    QSize minimumSizeHint() const { return QSize( 50, KComboBox::minimumSizeHint().height() ); }
+};
 
 }
 
