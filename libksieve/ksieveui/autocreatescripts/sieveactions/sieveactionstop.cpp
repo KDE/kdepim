@@ -15,37 +15,19 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "sieveaction.h"
+#include "sieveactionstop.h"
 
-#include <QWidget>
+#include <KLocale>
 
-SieveAction::SieveAction(const QString &name, const QString &label, QObject *parent)
-    : QObject(parent), mName(name), mLabel(label)
+SieveActionStop::SieveActionStop(QObject *parent)
+    : SieveAction(QLatin1String("stop"), i18n("Stop"), parent)
 {
 }
 
-SieveAction::~SieveAction()
+SieveAction* SieveActionStop::newAction()
 {
+    return new SieveActionStop;
 }
 
-QString SieveAction::name() const
-{
-    return mName;
-}
 
-QString SieveAction::label() const
-{
-    return mLabel;
-}
-
-SieveAction* SieveAction::newAction()
-{
-  return 0;
-}
-
-QWidget* SieveAction::createParamWidget( QWidget *parent ) const
-{
-  return new QWidget( parent );
-}
-
-#include "sieveaction.moc"
+#include "sieveactionstop.moc"

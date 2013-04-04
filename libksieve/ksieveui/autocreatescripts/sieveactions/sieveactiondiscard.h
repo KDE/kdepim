@@ -15,37 +15,17 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#ifndef SIEVEACTIONDISCARD_H
+#define SIEVEACTIONDISCARD_H
+
 #include "sieveaction.h"
 
-#include <QWidget>
-
-SieveAction::SieveAction(const QString &name, const QString &label, QObject *parent)
-    : QObject(parent), mName(name), mLabel(label)
+class SieveActionDiscard : public SieveAction
 {
-}
+    Q_OBJECT
+public:
+    SieveActionDiscard(QObject *parent = 0);
+    static SieveAction* newAction();
+};
 
-SieveAction::~SieveAction()
-{
-}
-
-QString SieveAction::name() const
-{
-    return mName;
-}
-
-QString SieveAction::label() const
-{
-    return mLabel;
-}
-
-SieveAction* SieveAction::newAction()
-{
-  return 0;
-}
-
-QWidget* SieveAction::createParamWidget( QWidget *parent ) const
-{
-  return new QWidget( parent );
-}
-
-#include "sieveaction.moc"
+#endif // SIEVEACTIONDISCARD_H

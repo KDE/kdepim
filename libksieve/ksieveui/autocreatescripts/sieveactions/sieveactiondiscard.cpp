@@ -15,37 +15,17 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "sieveaction.h"
+#include "sieveactiondiscard.h"
+#include <KLocale>
 
-#include <QWidget>
-
-SieveAction::SieveAction(const QString &name, const QString &label, QObject *parent)
-    : QObject(parent), mName(name), mLabel(label)
+SieveActionDiscard::SieveActionDiscard(QObject *parent)
+    : SieveAction(QLatin1String("discard"), i18n("Discard"), parent)
 {
 }
 
-SieveAction::~SieveAction()
+SieveAction* SieveActionDiscard::newAction()
 {
+  return new SieveActionDiscard;
 }
 
-QString SieveAction::name() const
-{
-    return mName;
-}
-
-QString SieveAction::label() const
-{
-    return mLabel;
-}
-
-SieveAction* SieveAction::newAction()
-{
-  return 0;
-}
-
-QWidget* SieveAction::createParamWidget( QWidget *parent ) const
-{
-  return new QWidget( parent );
-}
-
-#include "sieveaction.moc"
+#include "sieveactiondiscard.moc"
