@@ -21,6 +21,7 @@ set(libpimcommon_SRCS
   translator/googletranslator.cpp
   renamefiledialog.cpp
   simplestringlisteditor.cpp
+  templatelistwidget.cpp
 )
 
 macro(add_resource_iface _kcfgFile _ifaceName _className)
