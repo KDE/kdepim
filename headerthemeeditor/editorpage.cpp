@@ -17,6 +17,8 @@
 
 #include "editorpage.h"
 
+#include "kpimtextedit/htmlhighlighter.h"
+
 #include <KTextEdit>
 
 #include <QVBoxLayout>
@@ -26,6 +28,7 @@ EditorPage::EditorPage(QWidget *parent)
 {
     QVBoxLayout *lay = new QVBoxLayout;
     mEditor = new KTextEdit;
+    new KPIMTextEdit::HtmlHighlighter(mEditor->document());
     mEditor->setAcceptRichText(false);
     lay->addWidget(mEditor);
 
