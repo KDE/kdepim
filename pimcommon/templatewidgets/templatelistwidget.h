@@ -18,7 +18,7 @@
 #ifndef TEMPLATELISTWIDGET_H
 #define TEMPLATELISTWIDGET_H
 
-#include "pimcommon_export.h"
+#include "pimcommon/pimcommon_export.h"
 #include <QListWidget>
 
 namespace PimCommon {

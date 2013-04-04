@@ -44,24 +44,6 @@ QList<PimCommon::defaultTemplate> SieveTemplateListWidget::defaultTemplates()
     return KSieveUi::SieveDefaultTemplate::defaultTemplates();
 }
 
-SieveTemplateWidget::SieveTemplateWidget(const QString &title, QWidget *parent)
-    : QWidget(parent)
-{
-    QVBoxLayout *lay = new QVBoxLayout;
-    QLabel *lab = new QLabel(title);
-    lay->addWidget(lab);
-    mListTemplate = new SieveTemplateListWidget(QLatin1String("sievetemplaterc"));
-    mListTemplate->setWhatsThis(i18n("You can drag and drop element on editor to import template"));
-    connect(mListTemplate, SIGNAL(insertTemplate(QString)), SIGNAL(insertTemplate(QString)));
-    lay->addWidget(mListTemplate);
-    setLayout(lay);
-}
-
-
-SieveTemplateWidget::~SieveTemplateWidget()
-{
-}
-
 bool SieveTemplateListWidget::addNewTemplate(QString &templateName, QString &templateScript)
 {
     QPointer<SieveTemplateEditDialog> dlg = new SieveTemplateEditDialog(this);
@@ -91,6 +73,26 @@ bool SieveTemplateListWidget::modifyTemplate(QString &templateName, QString &tem
     delete dlg;
     return false;
 }
+
+
+SieveTemplateWidget::SieveTemplateWidget(const QString &title, QWidget *parent)
+    : QWidget(parent)
+{
+    QVBoxLayout *lay = new QVBoxLayout;
+    QLabel *lab = new QLabel(title);
+    lay->addWidget(lab);
+    mListTemplate = new SieveTemplateListWidget(QLatin1String("sievetemplaterc"));
+    mListTemplate->setWhatsThis(i18n("You can drag and drop element on editor to import template"));
+    connect(mListTemplate, SIGNAL(insertTemplate(QString)), SIGNAL(insertTemplate(QString)));
+    lay->addWidget(mListTemplate);
+    setLayout(lay);
+}
+
+
+SieveTemplateWidget::~SieveTemplateWidget()
+{
+}
+
 
 
 }
