@@ -36,6 +36,9 @@ public:
     explicit TemplateListWidget(const QString &configName, QWidget *parent = 0);
     ~TemplateListWidget();
 
+    //Need to load template in specific class to allow to use correct defaultTemplates function
+    void loadTemplates();
+
     virtual QList<PimCommon::defaultTemplate> defaultTemplates();
     virtual bool addNewTemplate(QString &templateName, QString &templateScript);
     virtual bool modifyTemplate(QString &templateName, QString &templateScript, bool defaultTemplate);

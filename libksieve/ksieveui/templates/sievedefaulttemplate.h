@@ -26,7 +26,7 @@ namespace KSieveUi
 namespace SieveDefaultTemplate {
 
 
-QList<defaultTemplate> defaultTemplates();
+QList<PimCommon::defaultTemplate> defaultTemplates();
 }
 }
 

@@ -26,6 +26,7 @@
 #include <QListWidgetItem>
 #include <QPointer>
 #include <QMimeData>
+#include <QDebug>
 
 namespace PimCommon {
 
@@ -35,7 +36,6 @@ public:
     TemplateListWidgetPrivate(const QString &configName, TemplateListWidget *qq)
         : dirty(false), config(KSharedConfig::openConfig(configName, KConfig::NoGlobals)), q(qq)
     {
-
     }
     ~TemplateListWidgetPrivate()
     {
@@ -181,7 +181,6 @@ TemplateListWidget::TemplateListWidget(const QString &configName, QWidget *paren
     connect( this, SIGNAL(customContextMenuRequested(QPoint)),
              SLOT(slotContextMenu(QPoint)) );
     connect(this, SIGNAL(doubleClicked(QModelIndex)), SLOT(slotModify()));
-    d->loadTemplates();
 }
 
 TemplateListWidget::~TemplateListWidget()
@@ -189,8 +188,14 @@ TemplateListWidget::~TemplateListWidget()
     delete d;
 }
 
+void TemplateListWidget::loadTemplates()
+{
+    d->loadTemplates();
+}
+
 QList<PimCommon::defaultTemplate> TemplateListWidget::defaultTemplates()
 {
+    qDebug()<<" QList<PimCommon::defaultTemplate> TemplateListWidget::defaultTemplates()";
     return QList<PimCommon::defaultTemplate>();
 }
 
