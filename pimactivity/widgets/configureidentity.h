@@ -23,7 +23,6 @@
 
 #include "abstractconfigurewidget.h"
 #include <QWidget>
-#include "pimactivity_export.h"
 
 class QListWidget;
 namespace KPIMIdentities {
@@ -32,7 +31,7 @@ class IdentityManager;
 
 namespace PimActivity {
 
-class PIMACTIVITY_EXPORT ConfigureIdentity : public QWidget, public AbstractConfigureWidget
+class ConfigureIdentity : public QWidget, public AbstractConfigureWidget
 {
     Q_OBJECT
 public:
