@@ -18,8 +18,6 @@
 #ifndef SIEVETEMPLATEWIDGET_H
 #define SIEVETEMPLATEWIDGET_H
 
-#include <QWidget>
-#include <QListWidget>
 #include "pimcommon/templatewidgets/templatelistwidget.h"
 
 namespace KSieveUi {
