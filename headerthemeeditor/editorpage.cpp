@@ -38,6 +38,7 @@ EditorPage::EditorPage(QWidget *parent)
 
     splitter->addWidget(mEditor);
     mThemeTemplate = new ThemeTemplateWidget(i18n("Theme Templates:"));
+    connect(mThemeTemplate, SIGNAL(insertTemplate(QString)), mEditor, SLOT(insertPlainText(QString)));
     splitter->addWidget(mThemeTemplate);
 
     setLayout(lay);

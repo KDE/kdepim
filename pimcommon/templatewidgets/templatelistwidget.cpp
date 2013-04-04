@@ -100,22 +100,25 @@ public:
 
     void slotContextMenu(const QPoint &pos)
     {
-        QList<QListWidgetItem *> lstSelectedItems = q->selectedItems();
-        if (lstSelectedItems.isEmpty())
-            return;
+        const QList<QListWidgetItem *> lstSelectedItems = q->selectedItems();
+        const bool listSelectedIsEmpty = lstSelectedItems.isEmpty();
         KMenu *menu = new KMenu( q );
 
-        menu->addAction( i18n("Insert template"), q, SLOT(slotInsertTemplate()));
-        menu->addSeparator();
+        if (!listSelectedIsEmpty) {
+            menu->addAction( i18n("Insert template"), q, SLOT(slotInsertTemplate()));
+            menu->addSeparator();
+        }
 
-        const bool defaultTemplate = lstSelectedItems.first()->data(TemplateListWidget::DefaultTemplate).toBool();
 
         menu->addAction( i18n("Add..."), q, SLOT(slotAdd()));
-        if (lstSelectedItems.count() == 1) {
-            menu->addAction( defaultTemplate ? i18n("Show...") : i18n("Modify..."), q, SLOT(slotModify()));
-        }
-        if (lstSelectedItems.count() == 1 && !defaultTemplate) {
-            menu->addAction( i18n("Remove"), q, SLOT(slotRemove()));
+        if (!listSelectedIsEmpty) {
+            const bool defaultTemplate = lstSelectedItems.first()->data(TemplateListWidget::DefaultTemplate).toBool();
+            if (lstSelectedItems.count() == 1) {
+                menu->addAction( defaultTemplate ? i18n("Show...") : i18n("Modify..."), q, SLOT(slotModify()));
+            }
+            if (lstSelectedItems.count() == 1 && !defaultTemplate) {
+                menu->addAction( i18n("Remove"), q, SLOT(slotRemove()));
+            }
         }
         menu->exec( q->mapToGlobal( pos ) );
         delete menu;
