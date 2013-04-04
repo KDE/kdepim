@@ -47,7 +47,7 @@ public:
     {
         QVBoxLayout * lay = new QVBoxLayout;
         activateActivity = new QCheckBox(i18n("Enable Support Activity"));
-
+        activateActivity->setChecked(true);
         lay->addWidget(activateActivity);
 
         lay->addWidget(new ActivityWarning(manager));
@@ -76,6 +76,7 @@ public:
 
     void readConfig()
     {
+        //TODO read "enable activity"
         identity->readConfig();
         mailTransport->readConfig();
         collections->readConfig();
@@ -83,6 +84,7 @@ public:
 
     void writeConfig()
     {
+        //TODO write "enable activity"
         identity->writeConfig();
         mailTransport->writeConfig();
         collections->writeConfig();

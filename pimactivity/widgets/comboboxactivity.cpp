@@ -40,6 +40,7 @@ public:
         q->connect(manager, SIGNAL(activityAdded(QString)), q, SLOT(slotActivityAdded(QString)));
         q->connect(manager, SIGNAL(activityRemoved(QString)), q, SLOT(slotActivityRemoved(QString)));
         q->connect(manager, SIGNAL(serviceStatusChanged(KActivities::Consumer::ServiceStatus)), q, SLOT(slotActivityStatusChanged(KActivities::Consumer::ServiceStatus)));
+        q->connect(q, SIGNAL(activated(int)), q, SLOT(slotActivityChanged(int)));
         q->setEnabled(activityManager->isActive());
     }
 
@@ -56,6 +57,11 @@ public:
     void slotActivityStatusChanged(KActivities::Consumer::ServiceStatus status)
     {
         q->setEnabled(status == KActivities::Consumer::Running);
+    }
+
+    void slotActivityChanged(int index)
+    {
+        Q_EMIT q->activityChanged(q->itemData(index).toString());
     }
 
     ComboBoxActivity *q;
