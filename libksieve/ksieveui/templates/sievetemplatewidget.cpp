@@ -41,7 +41,6 @@ SieveTemplateListWidget::~SieveTemplateListWidget()
 
 QList<PimCommon::defaultTemplate> SieveTemplateListWidget::defaultTemplates()
 {
-    qDebug()<<" QList<PimCommon::defaultTemplate> SieveTemplateListWidget::defaultTemplates()";
     return KSieveUi::SieveDefaultTemplate::defaultTemplates();
 }
 

@@ -20,7 +20,7 @@
 
 #include <QWidget>
 #include <QListWidget>
-#include "pimcommon/templatelistwidget.h"
+#include "pimcommon/templatewidgets/templatelistwidget.h"
 
 namespace KSieveUi {
 class SieveTemplateListWidget : public PimCommon::TemplateListWidget
