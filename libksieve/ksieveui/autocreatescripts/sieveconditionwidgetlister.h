@@ -21,6 +21,8 @@
 
 #include <libkdepim/kwidgetlister.h>
 
+class KPushButton;
+
 namespace KSieveUi {
 
 class SieveConditionWidget : public QWidget
@@ -29,9 +31,17 @@ class SieveConditionWidget : public QWidget
 public:
     explicit SieveConditionWidget(QWidget *);
     ~SieveConditionWidget();
+private Q_SLOTS:
+    void slotAddWidget();
+    void slotRemoveWidget();
+Q_SIGNALS:
+    void addWidget(QWidget *w);
+    void removeWidget(QWidget *w);
 private:
     void initWidget();
     void reset();
+    KPushButton *mAdd;
+    KPushButton *mRemove;
 };
 
 class SieveConditionWidgetLister : public KPIM::KWidgetLister
@@ -45,7 +55,11 @@ public:
 public Q_SLOTS:
     void slotAddWidget( QWidget *w );
     void slotRemoveWidget( QWidget *w );
+protected:
+    void clearWidget( QWidget *aWidget );
+    QWidget *createWidget( QWidget *parent );
 private:
+    void reconnectWidget(SieveConditionWidget *w );
     void updateAddRemoveButton();
 };
 }
