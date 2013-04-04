@@ -57,6 +57,7 @@ public:
         verticalLayout->addWidget(lab);
 
         activities = new ComboBoxActivity(manager, q);
+
         verticalLayout->addWidget(activities);
 
 
@@ -69,9 +70,17 @@ public:
         q->connect(activateActivity, SIGNAL(toggled(bool)), tabWidget, SLOT(setEnabled(bool)));
 
         addPages();
+        q->connect(activities, SIGNAL(activityChanged(QString)), q, SLOT(slotActivityChanged(QString)));
     }
     ~ConfigureActivityWidgetPrivate()
     {
+    }
+
+    void slotActivityChanged(const QString &id)
+    {
+        identity->setActivity(id);
+        mailTransport->setActivity(id);
+        collections->setActivity(id);
     }
 
     void readConfig()

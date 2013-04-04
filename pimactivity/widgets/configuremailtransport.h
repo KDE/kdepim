@@ -34,6 +34,8 @@ public:
     void readConfig();
     void writeConfig();
 
+    void setActivity(const QString &id);
+
 Q_SIGNALS:
     void changed();
 

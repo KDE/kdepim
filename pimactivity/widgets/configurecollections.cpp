@@ -41,6 +41,10 @@ void ConfigureCollections::writeConfig()
 
 }
 
+void ConfigureCollections::setActivity(const QString &id)
+{
+
+}
 
 }
 

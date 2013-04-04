@@ -64,6 +64,12 @@ void ConfigureIdentity::writeConfig()
 
 }
 
+void ConfigureIdentity::setActivity(const QString &id)
+{
+    //TODO
+}
+
+
 }
 
 #include "configureidentity.moc"
