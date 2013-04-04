@@ -29,5 +29,10 @@ SieveAction* SieveActionStop::newAction()
     return new SieveActionStop;
 }
 
+QString SieveActionStop::code() const
+{
+    return QLatin1String("  stop;\n");
+}
+
 
 #include "sieveactionstop.moc"

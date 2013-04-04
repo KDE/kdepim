@@ -48,4 +48,9 @@ QWidget* SieveAction::createParamWidget( QWidget *parent ) const
   return new QWidget( parent );
 }
 
+QString SieveAction::code() const
+{
+    return QString();
+}
+
 #include "sieveaction.moc"

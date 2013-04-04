@@ -26,6 +26,7 @@ class SieveActionStop : public SieveAction
 public:
     SieveActionStop(QObject *parent = 0);
     static SieveAction* newAction();
+    QString code() const;
 };
 
 #endif // SIEVEACTIONSTOP_H

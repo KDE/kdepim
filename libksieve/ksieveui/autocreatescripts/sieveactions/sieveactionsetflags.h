@@ -15,22 +15,22 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "sieveactiondiscard.h"
-#include <KLocale>
 
-SieveActionDiscard::SieveActionDiscard(QObject *parent)
-    : SieveAction(QLatin1String("discard"), i18n("Discard"), parent)
+#ifndef SIEVEACTIONSETFLAGS_H
+#define SIEVEACTIONSETFLAGS_H
+
+#include "sieveaction.h"
+
+class SieveActionSetFlags : public SieveAction
 {
-}
+    Q_OBJECT
+public:
+    SieveActionSetFlags(QObject *parent = 0);
+    static SieveAction* newAction();
 
-SieveAction* SieveActionDiscard::newAction()
-{
-  return new SieveActionDiscard;
-}
+    QWidget *createParamWidget( QWidget *parent ) const;
 
-QString SieveActionDiscard::code() const
-{
-    return QLatin1String("  discard;\n");
-}
+    QString code() const;
+};
 
-#include "sieveactiondiscard.moc"
+#endif // SIEVEACTIONSETFLAGS_H

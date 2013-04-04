@@ -37,6 +37,7 @@ public:
 
     virtual QWidget *createParamWidget( QWidget *parent ) const;
 
+    virtual QString code() const;
 private:
     QString mName;
     QString mLabel;

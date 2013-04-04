@@ -15,22 +15,33 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "sieveactiondiscard.h"
+
+#include "sieveactionsetflags.h"
+#include "pimcommon/minimumcombobox.h"
+
 #include <KLocale>
 
-SieveActionDiscard::SieveActionDiscard(QObject *parent)
-    : SieveAction(QLatin1String("discard"), i18n("Discard"), parent)
+SieveActionSetFlags::SieveActionSetFlags(QObject *parent)
+    : SieveAction(QLatin1String("setflags"), i18n("Set Flags"), parent)
 {
 }
 
-SieveAction* SieveActionDiscard::newAction()
+SieveAction* SieveActionSetFlags::newAction()
 {
-  return new SieveActionDiscard;
+    return new SieveActionSetFlags;
 }
 
-QString SieveActionDiscard::code() const
+QWidget *SieveActionSetFlags::createParamWidget( QWidget *parent ) const
 {
-    return QLatin1String("  discard;\n");
+    PimCommon::MinimumComboBox *comboBox = new PimCommon::MinimumComboBox( parent );
+    //TODO
+    return comboBox;
 }
 
-#include "sieveactiondiscard.moc"
+QString SieveActionSetFlags::code() const
+{
+    //TODO
+    return QString();
+}
+
+#include "sieveactionsetflags.moc"

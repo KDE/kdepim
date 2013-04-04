@@ -29,6 +29,7 @@ set(ksieveui_LIB_SRCS
   autocreatescripts/sieveactions/sieveaction.cpp
   autocreatescripts/sieveactions/sieveactiondiscard.cpp
   autocreatescripts/sieveactions/sieveactionstop.cpp
+  autocreatescripts/sieveactions/sieveactionsetflags.cpp
 )
 
 kde4_add_kcfg_files(ksieveui_LIB_SRCS settings.kcfgc)
