@@ -30,10 +30,113 @@
 #include <QLabel>
 #include <QDebug>
 
-using namespace KSieveUi;
+namespace KSieveUi {
+
+class SieveTemplateListWidgetPrivate
+{
+public:
+    SieveTemplateListWidgetPrivate(SieveTemplateListWidget *qq)
+        : dirty(false), q(qq)
+    {
+
+    }
+    ~SieveTemplateListWidgetPrivate()
+    {
+
+    }
+    void createListWidgetItem(const QString &name, const QString &text, bool isDefaultTemplate)
+    {
+        QListWidgetItem *item = new QListWidgetItem(name, q);
+        item->setData(SieveTemplateListWidget::SieveText, text);
+        item->setData(SieveTemplateListWidget::DefaultTemplate, isDefaultTemplate);
+    }
+
+    void slotAdd()
+    {
+        QPointer<SieveTemplateEditDialog> dlg = new SieveTemplateEditDialog(q);
+        if (dlg->exec()) {
+            const QString templateName = dlg->templateName();
+            const QString templateScript = dlg->script();
+            createListWidgetItem(templateName, templateScript, false);
+            dirty = true;
+        }
+        delete dlg;
+    }
+
+    void slotRemove()
+    {
+        if(KMessageBox::Yes == KMessageBox::questionYesNo(q, i18n("Do you want to delete selected template?"), i18n("Delete template"))) {
+            const QList<QListWidgetItem *> lstSelectedItems = q->selectedItems();
+            Q_FOREACH (QListWidgetItem *item, lstSelectedItems) {
+                if (item->data(SieveTemplateListWidget::DefaultTemplate).toBool() == false)
+                    delete item;
+            }
+            dirty = true;
+        }
+    }
+
+    void slotModify()
+    {
+        QListWidgetItem * item = q->currentItem();
+        if(item) {
+            const bool defaultTemplate = item->data(SieveTemplateListWidget::DefaultTemplate).toBool();
+            QPointer<SieveTemplateEditDialog> dlg = new SieveTemplateEditDialog(q, defaultTemplate);
+            dlg->setTemplateName(item->text());
+            dlg->setScript(item->data(SieveTemplateListWidget::SieveText).toString());
+            if (dlg->exec()) {
+                if (!defaultTemplate) {
+                    const QString templateName = dlg->templateName();
+                    const QString templateScript = dlg->script();
+                    item->setText(templateName);
+                    item->setData(SieveTemplateListWidget::SieveText, templateScript);
+                    dirty = true;
+                }
+            }
+            delete dlg;
+        }
+    }
+
+    void slotInsertTemplate()
+    {
+        QListWidgetItem *item = q->currentItem();
+        if (item) {
+            const QString templateScript = item->data(SieveTemplateListWidget::SieveText).toString();
+            Q_EMIT q->insertTemplate(templateScript);
+        }
+    }
+
+    void slotContextMenu(const QPoint &pos)
+    {
+        QList<QListWidgetItem *> lstSelectedItems = q->selectedItems();
+        if (lstSelectedItems.isEmpty())
+            return;
+        KMenu *menu = new KMenu( q );
+
+        menu->addAction( i18n("Insert template"), q, SLOT(slotInsertTemplate()));
+        menu->addSeparator();
+
+        const bool defaultTemplate = lstSelectedItems.first()->data(SieveTemplateListWidget::DefaultTemplate).toBool();
+
+        menu->addAction( i18n("Add..."), q, SLOT(slotAdd()));
+        if (lstSelectedItems.count() == 1) {
+            menu->addAction( defaultTemplate ? i18n("Show...") : i18n("Modify..."), q, SLOT(slotModify()));
+        }
+        if (lstSelectedItems.count() == 1 && !defaultTemplate) {
+            menu->addAction( i18n("Remove"), q, SLOT(slotRemove()));
+        }
+        menu->exec( q->mapToGlobal( pos ) );
+        delete menu;
+    }
+
+
+
+    bool dirty;
+    SieveTemplateListWidget *q;
+};
+
 
 SieveTemplateListWidget::SieveTemplateListWidget(QWidget *parent)
-    : QListWidget(parent), mDirty(false)
+    : QListWidget(parent), d(new SieveTemplateListWidgetPrivate(this))
 {
     setContextMenuPolicy( Qt::CustomContextMenu );
     setDragDropMode(QAbstractItemView::DragOnly);
@@ -47,6 +150,7 @@ SieveTemplateListWidget::SieveTemplateListWidget(QWidget *parent)
 SieveTemplateListWidget::~SieveTemplateListWidget()
 {
     saveTemplates();
+    delete d;
 }
 
 QStringList SieveTemplateListWidget::mimeTypes() const
@@ -67,91 +171,12 @@ QMimeData *SieveTemplateListWidget::mimeData ( const QList<QListWidgetItem *> it
     return mimeData;
 }
 
-void SieveTemplateListWidget::slotContextMenu(const QPoint &pos)
-{
-    QList<QListWidgetItem *> lstSelectedItems = selectedItems();
-    if (lstSelectedItems.isEmpty())
-        return;
-    KMenu *menu = new KMenu( this );
-
-    menu->addAction( i18n("Insert template"), this, SLOT(slotInsertTemplate()));
-    menu->addSeparator();
-
-    const bool defaultTemplate = lstSelectedItems.first()->data(SieveTemplateListWidget::DefaultTemplate).toBool();
-
-    menu->addAction( i18n("Add..."), this, SLOT(slotAdd()));
-    if (lstSelectedItems.count() == 1) {
-        menu->addAction( defaultTemplate ? i18n("Show...") : i18n("Modify..."), this, SLOT(slotModify()));
-    }
-    if (lstSelectedItems.count() == 1 && !defaultTemplate) {
-        menu->addAction( i18n("Remove"), this, SLOT(slotRemove()));
-    }
-    menu->exec( mapToGlobal( pos ) );
-    delete menu;
-}
-
-void SieveTemplateListWidget::slotInsertTemplate()
-{
-    QListWidgetItem *item = currentItem();
-    if (item) {
-        const QString templateScript = item->data(SieveTemplateListWidget::SieveText).toString();
-        Q_EMIT insertTemplate(templateScript);
-    }
-}
-
-void SieveTemplateListWidget::slotRemove()
-{
-    if(KMessageBox::Yes == KMessageBox::questionYesNo(this, i18n("Do you want to delete selected template?"), i18n("Delete template"))) {
-        const QList<QListWidgetItem *> lstSelectedItems = selectedItems();
-        Q_FOREACH (QListWidgetItem *item, lstSelectedItems) {
-            if (item->data(SieveTemplateListWidget::DefaultTemplate).toBool() == false)
-                delete item;
-        }
-        mDirty = true;
-    }
-}
-
-void SieveTemplateListWidget::slotAdd()
-{
-    QPointer<SieveTemplateEditDialog> dlg = new SieveTemplateEditDialog(this);
-    if (dlg->exec()) {
-        const QString templateName = dlg->templateName();
-        const QString templateScript = dlg->script();
-        createListWidgetItem(templateName, templateScript, false);
-
-        mDirty = true;
-    }
-    delete dlg;
-}
-
-void SieveTemplateListWidget::slotModify()
-{
-    QListWidgetItem * item = currentItem();
-    if(item) {
-        const bool defaultTemplate = item->data(SieveTemplateListWidget::DefaultTemplate).toBool();
-        QPointer<SieveTemplateEditDialog> dlg = new SieveTemplateEditDialog(this, defaultTemplate);
-        dlg->setTemplateName(item->text());
-        dlg->setScript(item->data(SieveTemplateListWidget::SieveText).toString());
-        if (dlg->exec()) {
-            if (!defaultTemplate) {
-                const QString templateName = dlg->templateName();
-                const QString templateScript = dlg->script();
-                item->setText(templateName);
-                item->setData(SieveTemplateListWidget::SieveText, templateScript);
-                mDirty = true;
-            }
-        }
-        delete dlg;
-    }
-}
-
-
 void SieveTemplateListWidget::loadTemplates()
 {
     clear();
     const QList<KSieveUi::SieveDefaultTemplate::defaultTemplate> templatesLst = KSieveUi::SieveDefaultTemplate::defaultTemplates();
     Q_FOREACH (const KSieveUi::SieveDefaultTemplate::defaultTemplate &tmp, templatesLst) {
-        createListWidgetItem(tmp.name, tmp.text, true);
+        d->createListWidgetItem(tmp.name, tmp.text, true);
     }
     KSharedConfig::Ptr config = KSharedConfig::openConfig( "sievetemplaterc", KConfig::NoGlobals );
     KConfigGroup group = config->group( "template" );
@@ -162,22 +187,15 @@ void SieveTemplateListWidget::loadTemplates()
             const QString name = group.readEntry( "Name", QString() );
             const QString text = group.readEntry( "Text", QString() );
 
-            createListWidgetItem(name, text, false);
+            d->createListWidgetItem(name, text, false);
         }
     }
-    mDirty = false;
-}
-
-void SieveTemplateListWidget::createListWidgetItem(const QString &name, const QString &text, bool isDefaultTemplate)
-{
-    QListWidgetItem *item = new QListWidgetItem(name, this);
-    item->setData(SieveTemplateListWidget::SieveText, text);
-    item->setData(SieveTemplateListWidget::DefaultTemplate, isDefaultTemplate);
+    d->dirty = false;
 }
 
 void SieveTemplateListWidget::saveTemplates()
 {
-    if (!mDirty)
+    if (!d->dirty)
         return;
 
     KSharedConfig::Ptr config = KSharedConfig::openConfig( "sievetemplaterc", KConfig::NoGlobals );
@@ -199,7 +217,7 @@ void SieveTemplateListWidget::saveTemplates()
     KConfigGroup group = config->group( "template" );
     group.writeEntry( "templateCount", numberOfTemplate );
     config->sync();
-    mDirty = false;
+    d->dirty = false;
 }
 
 
@@ -221,4 +239,5 @@ SieveTemplateWidget::~SieveTemplateWidget()
 {
 }
 
+}
 #include "sievetemplatewidget.moc"

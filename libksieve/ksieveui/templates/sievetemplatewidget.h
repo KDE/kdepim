@@ -22,7 +22,7 @@
 #include <QListWidget>
 
 namespace KSieveUi {
-
+class SieveTemplateListWidgetPrivate;
 class SieveTemplateListWidget : public QListWidget
 {
     Q_OBJECT
@@ -34,26 +34,24 @@ protected:
     QStringList mimeTypes() const;
     QMimeData *mimeData( const QList<QListWidgetItem *> items ) const;
 
-private Q_SLOTS:
-    void slotContextMenu(const QPoint &pos);
-    void slotRemove();
-    void slotAdd();
-    void slotModify();
-    void slotInsertTemplate();
-
 Q_SIGNALS:
     void insertTemplate(const QString &);
 
 private:
+    friend class SieveTemplateListWidgetPrivate;
+    SieveTemplateListWidgetPrivate * const d;
+    Q_PRIVATE_SLOT( d, void slotAdd() )
+    Q_PRIVATE_SLOT( d, void slotRemove() )
+    Q_PRIVATE_SLOT( d, void slotModify() )
+    Q_PRIVATE_SLOT( d, void slotInsertTemplate() )
+    Q_PRIVATE_SLOT( d, void slotContextMenu(const QPoint &pos) )
+
     enum SieveTemplateData {
         SieveText = Qt::UserRole + 1,
         DefaultTemplate = Qt::UserRole + 2
     };
-
-    void createListWidgetItem(const QString &name, const QString &text, bool isDefaultTemplate);
     void loadTemplates();
     void saveTemplates();
-    bool mDirty;
 };
 
 class SieveTemplateWidget : public QWidget
