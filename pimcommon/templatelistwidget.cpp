@@ -16,6 +16,7 @@
 */
 
 #include "templatelistwidget.h"
+#include "templateeditdialog.h"
 
 #include <KConfigGroup>
 #include <KMessageBox>
@@ -195,7 +196,6 @@ void TemplateListWidget::loadTemplates()
 
 QList<PimCommon::defaultTemplate> TemplateListWidget::defaultTemplates()
 {
-    qDebug()<<" QList<PimCommon::defaultTemplate> TemplateListWidget::defaultTemplates()";
     return QList<PimCommon::defaultTemplate>();
 }
 
@@ -219,16 +219,31 @@ QMimeData *TemplateListWidget::mimeData ( const QList<QListWidgetItem *> items )
 
 bool TemplateListWidget::addNewTemplate(QString &templateName, QString &templateScript)
 {
-    Q_UNUSED(templateName);
-    Q_UNUSED(templateScript);
+    QPointer<TemplateEditDialog> dlg = new TemplateEditDialog(this);
+    if (dlg->exec()) {
+        templateName = dlg->templateName();
+        templateScript = dlg->script();
+        delete dlg;
+        return true;
+    }
+    delete dlg;
     return false;
 }
 
 bool TemplateListWidget::modifyTemplate(QString &templateName, QString &templateScript, bool defaultTemplate)
 {
-    Q_UNUSED(templateName);
-    Q_UNUSED(templateScript);
-    Q_UNUSED(defaultTemplate);
+    QPointer<TemplateEditDialog> dlg = new TemplateEditDialog(this, defaultTemplate);
+    dlg->setTemplateName(templateName);
+    dlg->setScript(templateScript);
+    if (dlg->exec()) {
+        if (!defaultTemplate) {
+            templateName = dlg->templateName();
+            templateScript = dlg->script();
+        }
+        delete dlg;
+        return true;
+    }
+    delete dlg;
     return false;
 }
 
