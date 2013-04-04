@@ -18,38 +18,23 @@
 
 */
 
-#ifndef CONFIGUREIDENTITY_H
-#define CONFIGUREIDENTITY_H
+#ifndef ABSTRACTCONFIGUREWIDGET_H
+#define ABSTRACTCONFIGUREWIDGET_H
 
-#include "abstractconfigurewidget.h"
 #include <QWidget>
-#include "pimactivity_export.h"
-
-class QListWidget;
-namespace KPIMIdentities {
-class IdentityManager;
-}
 
 namespace PimActivity {
-
-class PIMACTIVITY_EXPORT ConfigureIdentity : public QWidget, public AbstractConfigureWidget
+class AbstractConfigureWidget
 {
-    Q_OBJECT
 public:
-    explicit ConfigureIdentity(QWidget *parent);
-    ~ConfigureIdentity();
+    AbstractConfigureWidget();
+    ~AbstractConfigureWidget();
 
-    void readConfig();
-    void writeConfig();
-
-Q_SIGNALS:
-    void changed();
+    void setActivity(const QString &id);
+    QString activity() const;
 private:
-    void init();
-    QListWidget *mListIdentity;
-    KPIMIdentities::IdentityManager *mManager;
+    QString mActivityId;
 };
-
 }
 
-#endif // CONFIGUREIDENTITY_H
+#endif // ABSTRACTCONFIGUREWIDGET_H

@@ -52,12 +52,6 @@ void ConfigureMailtransport::writeConfig()
 
 }
 
-
-void ConfigureMailtransport::setActivity(const QString &id)
-{
-    //TODO
-}
-
 }
 
 #include "configuremailtransport.moc"

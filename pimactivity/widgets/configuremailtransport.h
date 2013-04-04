@@ -21,11 +21,12 @@
 #ifndef CONFIGUREMAILTRANSPORT_H
 #define CONFIGUREMAILTRANSPORT_H
 
+#include "abstractconfigurewidget.h"
 #include <QWidget>
 class QListWidget;
 
 namespace PimActivity {
-class ConfigureMailtransport : public QWidget
+class ConfigureMailtransport : public QWidget, public AbstractConfigureWidget
 {
     Q_OBJECT
 public:
@@ -33,8 +34,6 @@ public:
     ~ConfigureMailtransport();
     void readConfig();
     void writeConfig();
-
-    void setActivity(const QString &id);
 
 Q_SIGNALS:
     void changed();
