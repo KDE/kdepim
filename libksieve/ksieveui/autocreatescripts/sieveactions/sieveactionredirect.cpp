@@ -18,6 +18,7 @@
 #include "sieveactionredirect.h"
 
 #include <KLocale>
+#include <KLineEdit>
 
 using namespace KSieveUi;
 
@@ -33,13 +34,16 @@ SieveAction *SieveActionRedirect::newAction()
 
 QWidget *SieveActionRedirect::createParamWidget( QWidget *parent ) const
 {
-    //TODO
-    return 0;
+    KLineEdit *edit = new KLineEdit(parent);
+    edit->setObjectName("RedirectEdit");
+    return edit;
 }
 
-QString SieveActionRedirect::code(QWidget *) const
+QString SieveActionRedirect::code(QWidget *w) const
 {
-    return QString(); //TODO
+    const KLineEdit *edit = w->findChild<KLineEdit*>( "RedirectEdit" );
+    const QString text = edit->text();
+    return QString::fromLatin1("  redirect \"%1\";").arg(text);
 }
 
 #include "sieveactionredirect.moc"

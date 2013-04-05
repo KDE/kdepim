@@ -50,7 +50,7 @@ QWidget* SieveCondition::createParamWidget( QWidget *parent ) const
   return new QWidget( parent );
 }
 
-QString SieveCondition::code() const
+QString SieveCondition::code(QWidget *parent) const
 {
     return QString();
 }

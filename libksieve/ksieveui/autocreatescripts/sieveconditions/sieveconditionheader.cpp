@@ -35,7 +35,7 @@ QWidget *SieveConditionHeader::createParamWidget( QWidget *parent ) const
     return 0;
 }
 
-QString SieveConditionHeader::code() const
+QString SieveConditionHeader::code(QWidget *parent) const
 {
     //TODO
     return QString();

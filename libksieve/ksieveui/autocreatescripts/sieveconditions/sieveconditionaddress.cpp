@@ -36,7 +36,7 @@ QWidget *SieveConditionAddress::createParamWidget( QWidget *parent ) const
     return 0;
 }
 
-QString SieveConditionAddress::code() const
+QString SieveConditionAddress::code(QWidget *parent) const
 {
     //TODO
     return QString();
