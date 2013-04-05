@@ -24,6 +24,7 @@
 
 #include <QGridLayout>
 #include <QLabel>
+#include <QStackedWidget>
 
 using namespace KSieveUi;
 
@@ -68,6 +69,8 @@ void SieveConditionWidget::initWidget()
     mLayout->addWidget(mComboBox, 1, 1);
     connect( mComboBox, SIGNAL(activated(QString)),
              this, SLOT(slotActionChanged(QString)) );
+
+
 
     mAdd = new KPushButton( this );
     mAdd->setIcon( KIcon( "list-add" ) );

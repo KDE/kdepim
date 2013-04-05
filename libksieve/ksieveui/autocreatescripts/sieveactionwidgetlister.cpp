@@ -44,15 +44,15 @@ SieveActionWidget::~SieveActionWidget()
 
 void SieveActionWidget::setFilterAction( QWidget *widget )
 {
-  if ( mLayout->itemAtPosition( 1, 2 ) ) {
-    delete mLayout->itemAtPosition( 1, 2 )->widget();
-  }
+    if ( mLayout->itemAtPosition( 1, 2 ) ) {
+        delete mLayout->itemAtPosition( 1, 2 )->widget();
+    }
 
-  if ( widget ) {
-    mLayout->addWidget( widget, 1, 2 );
-  } else {
-    mLayout->addWidget( new QLabel( i18n( "Please select an action." ), this ), 1, 2 );
-  }
+    if ( widget ) {
+        mLayout->addWidget( widget, 1, 2 );
+    } else {
+        mLayout->addWidget( new QLabel( i18n( "Please select an action." ), this ), 1, 2 );
+    }
 }
 
 void SieveActionWidget::generatedScript(QString &script)
@@ -72,11 +72,11 @@ void SieveActionWidget::initWidget()
     QList<KSieveUi::SieveAction*>::const_iterator end( list.constEnd() );
     int index = 0;
     for ( index = 0, it = list.constBegin(); it != end; ++it, ++index ) {
-      // append to the list of actions:
-      mActionList.append( *it );
+        // append to the list of actions:
+        mActionList.append( *it );
 
-      // add (i18n-ized) name to combo box
-      mComboBox->addItem( (*it)->label(),(*it)->name() );
+        // add (i18n-ized) name to combo box
+        mComboBox->addItem( (*it)->label(),(*it)->name() );
     }
 
     mComboBox->setMaxCount( mComboBox->count() );
@@ -113,8 +113,8 @@ void SieveActionWidget::initWidget()
 void SieveActionWidget::slotActionChanged(int index)
 {
     setFilterAction( index < mActionList.count() ?
-                       mActionList.at( index )->createParamWidget( this ) :
-                       0 );
+                         mActionList.at( index )->createParamWidget( this ) :
+                         0 );
 }
 
 void SieveActionWidget::slotAddWidget()
@@ -147,14 +147,14 @@ SieveActionWidgetLister::~SieveActionWidgetLister()
 
 void SieveActionWidgetLister::slotAddWidget( QWidget *w )
 {
-  addWidgetAfterThisWidget( w );
-  updateAddRemoveButton();
+    addWidgetAfterThisWidget( w );
+    updateAddRemoveButton();
 }
 
 void SieveActionWidgetLister::slotRemoveWidget( QWidget *w )
 {
-  removeWidget( w );
-  updateAddRemoveButton();
+    removeWidget( w );
+    updateAddRemoveButton();
 }
 
 
@@ -165,20 +165,20 @@ void SieveActionWidgetLister::updateAddRemoveButton()
     bool addButtonEnabled = false;
     bool removeButtonEnabled = false;
     if ( numberOfWidget <= widgetsMinimum() ) {
-      addButtonEnabled = true;
-      removeButtonEnabled = false;
+        addButtonEnabled = true;
+        removeButtonEnabled = false;
     } else if ( numberOfWidget >= widgetsMaximum() ) {
-      addButtonEnabled = false;
-      removeButtonEnabled = true;
+        addButtonEnabled = false;
+        removeButtonEnabled = true;
     } else {
-      addButtonEnabled = true;
-      removeButtonEnabled = true;
+        addButtonEnabled = true;
+        removeButtonEnabled = true;
     }
     QList<QWidget*>::ConstIterator wIt = widgetList.constBegin();
     QList<QWidget*>::ConstIterator wEnd = widgetList.constEnd();
     for ( ; wIt != wEnd ;++wIt ) {
-      SieveActionWidget *w = qobject_cast<SieveActionWidget*>( *wIt );
-      w->updateAddRemoveButton( addButtonEnabled, removeButtonEnabled );
+        SieveActionWidget *w = qobject_cast<SieveActionWidget*>( *wIt );
+        w->updateAddRemoveButton( addButtonEnabled, removeButtonEnabled );
     }
 }
 
@@ -188,17 +188,17 @@ void SieveActionWidgetLister::generatedScript(QString &script)
     QList<QWidget*>::ConstIterator wIt = widgetList.constBegin();
     QList<QWidget*>::ConstIterator wEnd = widgetList.constEnd();
     for ( ; wIt != wEnd ;++wIt ) {
-      SieveActionWidget *w = qobject_cast<SieveActionWidget*>( *wIt );
-      w->generatedScript(script);
+        SieveActionWidget *w = qobject_cast<SieveActionWidget*>( *wIt );
+        w->generatedScript(script);
     }
 }
 
 void SieveActionWidgetLister::reconnectWidget( SieveActionWidget *w )
 {
-  connect( w, SIGNAL(addWidget(QWidget*)),
-           this, SLOT(slotAddWidget(QWidget*)), Qt::UniqueConnection );
-  connect( w, SIGNAL(removeWidget(QWidget*)),
-           this, SLOT(slotRemoveWidget(QWidget*)), Qt::UniqueConnection );
+    connect( w, SIGNAL(addWidget(QWidget*)),
+             this, SLOT(slotAddWidget(QWidget*)), Qt::UniqueConnection );
+    connect( w, SIGNAL(removeWidget(QWidget*)),
+             this, SLOT(slotRemoveWidget(QWidget*)), Qt::UniqueConnection );
 }
 
 void SieveActionWidgetLister::clearWidget( QWidget *aWidget )
