@@ -38,6 +38,7 @@ public:
     virtual QWidget *createParamWidget( QWidget *parent ) const;
 
     virtual QString code() const;
+    virtual QStringList needRequires() const;
 private:
     QString mName;
     QString mLabel;

@@ -46,4 +46,9 @@ QString SieveActionSetFlags::code() const
     return QString();
 }
 
+QStringList SieveActionSetFlags::needRequires() const
+{
+    return QStringList() <<QLatin1String("imapflags");
+}
+
 #include "sieveactionsetflags.moc"

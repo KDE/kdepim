@@ -55,4 +55,9 @@ QString SieveAction::code() const
     return QString();
 }
 
+QStringList SieveAction::needRequires() const
+{
+    return QStringList();
+}
+
 #include "sieveaction.moc"

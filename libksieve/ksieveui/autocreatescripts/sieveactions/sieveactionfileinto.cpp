@@ -41,5 +41,10 @@ QWidget *SieveActionFileInto::createParamWidget( QWidget *parent ) const
     return 0;
 }
 
+QStringList SieveActionFileInto::needRequires() const
+{
+    return QStringList()<<QLatin1String("fileinto");
+}
+
 
 #include "sieveactionfileinto.moc"

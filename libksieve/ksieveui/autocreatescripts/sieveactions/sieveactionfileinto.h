@@ -29,6 +29,7 @@ public:
     static SieveAction* newAction();
     QString code() const;
     QWidget *createParamWidget( QWidget *parent ) const;
+    QStringList needRequires() const;
 };
 }
 
