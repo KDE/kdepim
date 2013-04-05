@@ -19,16 +19,28 @@
 
 #include "themeeditorpage.h"
 
+#include <KStandardAction>
+#include <KApplication>
+#include <KActionCollection>
+
 ThemeEditorMainWindow::ThemeEditorMainWindow()
     : KXmlGuiWindow()
 {
     mThemeEditor = new ThemeEditorPage;
     setCentralWidget(mThemeEditor);
+    setupActions();
+    setupGUI();
+
 }
 
 ThemeEditorMainWindow::~ThemeEditorMainWindow()
 {
 
+}
+
+void ThemeEditorMainWindow::setupActions()
+{
+    KStandardAction::quit( kapp, SLOT(quit()), actionCollection() );
 }
 
 #include "themeeditormainwindow.moc"

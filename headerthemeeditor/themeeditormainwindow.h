@@ -28,7 +28,9 @@ class ThemeEditorMainWindow : public KXmlGuiWindow
 public:
     explicit ThemeEditorMainWindow();
     ~ThemeEditorMainWindow();
+
 private:
+    void setupActions();
     ThemeEditorPage *mThemeEditor;
 };
 
