@@ -48,10 +48,12 @@ QWidget *SieveActionReject::createParamWidget( QWidget *parent ) const
     return w;
 }
 
-QString SieveActionReject::code(QWidget *) const
+QString SieveActionReject::code(QWidget *w) const
 {
-    //TODO
-    return QString::fromLatin1("  reject %1").arg("foo");
+    const KLineEdit *edit = w->findChild<KLineEdit*>( "RejectText" );
+    const QString text = edit->text();
+
+    return QString::fromLatin1("  reject \"%1\";").arg(text);
 }
 
 QStringList SieveActionReject::needRequires() const
