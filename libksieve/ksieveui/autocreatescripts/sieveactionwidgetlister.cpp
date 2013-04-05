@@ -77,13 +77,15 @@ void SieveActionWidget::initWidget()
 
       // add (i18n-ized) name to combo box
       mComboBox->addItem( (*it)->label(),(*it)->name() );
-      // Register the FilterAction modification signal
-      connect( *it, SIGNAL(filterActionModified()), this, SIGNAL(filterModified()) );
     }
 
     mComboBox->setMaxCount( mComboBox->count() );
+    mComboBox->setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed ) );
+    setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed ) );
     mComboBox->adjustSize();
     mLayout->addWidget(mComboBox, 1, 1);
+
+    updateGeometry();
 
     connect( mComboBox, SIGNAL(activated(int)),
              this, SLOT(slotActionChanged(int)) );
