@@ -15,21 +15,35 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "sieveactionlist.h"
-#include "sieveaction.h"
-#include "sieveactiondiscard.h"
-#include "sieveactionsetflags.h"
-#include "sieveactionstop.h"
-#include "sieveactionaddflags.h"
-#include "sieveactionfileinto.h"
 
-QList<KSieveUi::SieveAction *> KSieveUi::SieveActionList::actionList()
+#include "sieveactionaddflags.h"
+#include "pimcommon/minimumcombobox.h"
+
+#include <KLocale>
+
+using namespace KSieveUi;
+SieveActionAddFlags::SieveActionAddFlags(QObject *parent)
+    : SieveAction(QLatin1String("addflags"), i18n("Add Flags"), parent)
 {
-    QList<KSieveUi::SieveAction*> list;
-    list.append(new KSieveUi::SieveActionDiscard);
-    list.append(new KSieveUi::SieveActionStop);
-    list.append(new KSieveUi::SieveActionSetFlags);
-    list.append(new KSieveUi::SieveActionAddFlags);
-    list.append(new KSieveUi::SieveActionFileInto);
-    return list;
+    //TODO add flags
 }
+
+SieveAction* SieveActionAddFlags::newAction()
+{
+    return new SieveActionAddFlags;
+}
+
+QWidget *SieveActionAddFlags::createParamWidget( QWidget *parent ) const
+{
+    PimCommon::MinimumComboBox *comboBox = new PimCommon::MinimumComboBox( parent );
+    //TODO
+    return comboBox;
+}
+
+QString SieveActionAddFlags::code() const
+{
+    //TODO
+    return QString();
+}
+
+#include "sieveactionaddflags.moc"

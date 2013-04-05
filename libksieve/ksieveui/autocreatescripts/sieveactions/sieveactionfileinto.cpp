@@ -15,21 +15,31 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "sieveactionlist.h"
-#include "sieveaction.h"
-#include "sieveactiondiscard.h"
-#include "sieveactionsetflags.h"
-#include "sieveactionstop.h"
-#include "sieveactionaddflags.h"
 #include "sieveactionfileinto.h"
+#include <KLocale>
 
-QList<KSieveUi::SieveAction *> KSieveUi::SieveActionList::actionList()
+using namespace KSieveUi;
+SieveActionFileInto::SieveActionFileInto(QObject *parent)
+    : SieveAction(QLatin1String("fileinto"), i18n("File Into"), parent)
 {
-    QList<KSieveUi::SieveAction*> list;
-    list.append(new KSieveUi::SieveActionDiscard);
-    list.append(new KSieveUi::SieveActionStop);
-    list.append(new KSieveUi::SieveActionSetFlags);
-    list.append(new KSieveUi::SieveActionAddFlags);
-    list.append(new KSieveUi::SieveActionFileInto);
-    return list;
 }
+
+SieveAction* SieveActionFileInto::newAction()
+{
+  return new SieveActionFileInto;
+}
+
+QString SieveActionFileInto::code() const
+{
+    //TODO
+    return QString();
+}
+
+QWidget *SieveActionFileInto::createParamWidget( QWidget *parent ) const
+{
+    //TODO
+    return 0;
+}
+
+
+#include "sieveactionfileinto.moc"
