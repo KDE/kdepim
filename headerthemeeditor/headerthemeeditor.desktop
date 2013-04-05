@@ -1,8 +1,20 @@
 [Desktop Entry]
 Name=KMail Header Theme Editor
+Name[pt]=Editor de Temas de Cabeçalho do KMail
+Name[pt_BR]=Editor de temas de cabeçalho do KMail
+Name[sk]=Editor tém hlavičiek KMail
+Name[sv]=Kmail huvudtemaeditor
+Name[uk]=Редактор тем заголовків повідомлень KMail
+Name[x-test]=xxKMail Header Theme Editorxx
 Type=Application
 Exec=headerthemeeditor
 GenericName=Mail Header Theme Editor
+GenericName[pt]=Editor de Temas de Cabeçalho do KMail
+GenericName[pt_BR]=Editor de temas de cabeçalho de e-mail
+GenericName[sk]=Editor tém hlavičiek pošty
+GenericName[sv]=Temaeditor för brevhuvuden
+GenericName[uk]=Редактор тем заголовків повідомлень
+GenericName[x-test]=xxMail Header Theme Editorxx
 Terminal=false
 Categories=Qt;KDE;Office;Network;Email;
 InitialPreference=10
