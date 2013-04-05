@@ -29,7 +29,7 @@ SieveAction* SieveActionKeep::newAction()
     return new SieveActionKeep;
 }
 
-QString SieveActionKeep::code() const
+QString SieveActionKeep::code(QWidget *) const
 {
     return QLatin1String("keep;");
 }

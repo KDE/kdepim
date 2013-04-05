@@ -26,7 +26,7 @@ class SieveActionDiscard : public SieveAction
 public:
     SieveActionDiscard(QObject *parent = 0);
     static SieveAction* newAction();
-    QString code() const;
+    QString code(QWidget *) const;
 };
 }
 

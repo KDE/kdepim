@@ -30,7 +30,7 @@ public:
     static SieveAction* newAction();
 
     QWidget *createParamWidget( QWidget *parent ) const;
-    QString code() const;
+    QString code(QWidget *) const;
 };
 }
 

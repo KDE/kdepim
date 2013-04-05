@@ -48,7 +48,7 @@ QWidget *SieveActionReject::createParamWidget( QWidget *parent ) const
     return w;
 }
 
-QString SieveActionReject::code() const
+QString SieveActionReject::code(QWidget *) const
 {
     //TODO
     return QString::fromLatin1("  reject %1\n").arg("foo");

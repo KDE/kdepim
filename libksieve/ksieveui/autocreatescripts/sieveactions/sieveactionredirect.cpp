@@ -37,7 +37,7 @@ QWidget *SieveActionRedirect::createParamWidget( QWidget *parent ) const
     return 0;
 }
 
-QString SieveActionRedirect::code() const
+QString SieveActionRedirect::code(QWidget *) const
 {
     return QString(); //TODO
 }

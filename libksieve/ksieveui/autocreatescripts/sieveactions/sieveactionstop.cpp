@@ -31,7 +31,7 @@ SieveAction* SieveActionStop::newAction()
     return new SieveActionStop;
 }
 
-QString SieveActionStop::code() const
+QString SieveActionStop::code(QWidget *) const
 {
     return QLatin1String("  stop;\n");
 }

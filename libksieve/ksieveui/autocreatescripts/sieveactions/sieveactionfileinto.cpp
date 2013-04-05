@@ -29,7 +29,7 @@ SieveAction* SieveActionFileInto::newAction()
   return new SieveActionFileInto;
 }
 
-QString SieveActionFileInto::code() const
+QString SieveActionFileInto::code(QWidget *) const
 {
     //TODO
     return QString();

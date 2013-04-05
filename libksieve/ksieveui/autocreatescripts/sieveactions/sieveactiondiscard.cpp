@@ -29,7 +29,7 @@ SieveAction* SieveActionDiscard::newAction()
   return new SieveActionDiscard;
 }
 
-QString SieveActionDiscard::code() const
+QString SieveActionDiscard::code(QWidget *) const
 {
     return QLatin1String("  discard;\n");
 }

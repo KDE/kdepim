@@ -30,7 +30,7 @@ public:
 
     QWidget *createParamWidget( QWidget *parent ) const;
 
-    QString code() const;
+    QString code(QWidget *) const;
     QStringList needRequires() const;
 };
 }

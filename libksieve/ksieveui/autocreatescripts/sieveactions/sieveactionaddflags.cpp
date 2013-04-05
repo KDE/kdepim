@@ -40,7 +40,7 @@ QWidget *SieveActionAddFlags::createParamWidget( QWidget *parent ) const
     return comboBox;
 }
 
-QString SieveActionAddFlags::code() const
+QString SieveActionAddFlags::code(QWidget *) const
 {
     //TODO
     return QString();

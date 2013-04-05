@@ -27,7 +27,7 @@ class SieveActionFileInto : public SieveAction
 public:
     SieveActionFileInto(QObject *parent = 0);
     static SieveAction* newAction();
-    QString code() const;
+    QString code(QWidget *) const;
     QWidget *createParamWidget( QWidget *parent ) const;
     QStringList needRequires() const;
 };
