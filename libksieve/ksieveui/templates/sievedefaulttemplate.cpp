@@ -50,7 +50,7 @@ QList<PimCommon::defaultTemplate> KSieveUi::SieveDefaultTemplate::defaultTemplat
     tmp.name = i18n("Flag messages");
     tmp.text = QString::fromLatin1("require [\"imap4flags\"];\n"
                                    "if address \"From\" \"someone@example.org\" { \n"
-                                   "  setflag \"\\Seen\";\n"
+                                   "  setflag \"\\\\Seen\";\n"
                                    "}\n");
     lst << tmp;
 
