@@ -24,6 +24,7 @@
 SieveActionSetFlags::SieveActionSetFlags(QObject *parent)
     : SieveAction(QLatin1String("setflags"), i18n("Set Flags"), parent)
 {
+    //TODO add flags
 }
 
 SieveAction* SieveActionSetFlags::newAction()

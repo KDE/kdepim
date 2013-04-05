@@ -37,6 +37,7 @@ class SieveActionWidget : public QWidget
 public:
     explicit SieveActionWidget(QWidget *);
     ~SieveActionWidget();
+    void updateAddRemoveButton( bool addButtonEnabled, bool removeButtonEnabled );
 private Q_SLOTS:
     void slotAddWidget();
     void slotRemoveWidget();

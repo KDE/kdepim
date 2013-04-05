@@ -97,9 +97,14 @@ void SieveActionWidget::slotRemoveWidget()
     emit removeWidget( this );
 }
 
+void SieveActionWidget::updateAddRemoveButton( bool addButtonEnabled, bool removeButtonEnabled )
+{
+    mAdd->setEnabled(addButtonEnabled);
+    mRemove->setEnabled(removeButtonEnabled);
+}
 
 SieveActionWidgetLister::SieveActionWidgetLister(QWidget *parent)
-    : KPIM::KWidgetLister(false, 1, 15, parent)
+    : KPIM::KWidgetLister(false, 2, 8, parent)
 {
 }
 
@@ -123,12 +128,37 @@ void SieveActionWidgetLister::slotRemoveWidget( QWidget *w )
 
 void SieveActionWidgetLister::updateAddRemoveButton()
 {
-
+    QList<QWidget*> widgetList = widgets();
+    const int numberOfWidget( widgetList.count() );
+    bool addButtonEnabled = false;
+    bool removeButtonEnabled = false;
+    if ( numberOfWidget <= widgetsMinimum() ) {
+      addButtonEnabled = true;
+      removeButtonEnabled = false;
+    } else if ( numberOfWidget >= widgetsMaximum() ) {
+      addButtonEnabled = false;
+      removeButtonEnabled = true;
+    } else {
+      addButtonEnabled = true;
+      removeButtonEnabled = true;
+    }
+    QList<QWidget*>::ConstIterator wIt = widgetList.constBegin();
+    QList<QWidget*>::ConstIterator wEnd = widgetList.constEnd();
+    for ( ; wIt != wEnd ;++wIt ) {
+      SieveActionWidget *w = qobject_cast<SieveActionWidget*>( *wIt );
+      w->updateAddRemoveButton( addButtonEnabled, removeButtonEnabled );
+    }
 }
 
 void SieveActionWidgetLister::generatedScript(QString &script)
 {
-    //TODO
+    const QList<QWidget*> widgetList = widgets();
+    QList<QWidget*>::ConstIterator wIt = widgetList.constBegin();
+    QList<QWidget*>::ConstIterator wEnd = widgetList.constEnd();
+    for ( ; wIt != wEnd ;++wIt ) {
+      SieveActionWidget *w = qobject_cast<SieveActionWidget*>( *wIt );
+      //TODO
+    }
 }
 
 void SieveActionWidgetLister::reconnectWidget( SieveActionWidget *w )

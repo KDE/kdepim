@@ -39,15 +39,15 @@ SieveConditionWidget::~SieveConditionWidget()
 
 void SieveConditionWidget::setFilterAction( QWidget *widget )
 {
-  if ( mLayout->itemAtPosition( 1, 2 ) ) {
-    delete mLayout->itemAtPosition( 1, 2 )->widget();
-  }
+    if ( mLayout->itemAtPosition( 1, 2 ) ) {
+        delete mLayout->itemAtPosition( 1, 2 )->widget();
+    }
 
-  if ( widget ) {
-    mLayout->addWidget( widget, 1, 2 );
-  } else {
-    mLayout->addWidget( new QLabel( i18n( "Please select an condition." ), this ), 1, 2 );
-  }
+    if ( widget ) {
+        mLayout->addWidget( widget, 1, 2 );
+    } else {
+        mLayout->addWidget( new QLabel( i18n( "Please select an condition." ), this ), 1, 2 );
+    }
 }
 
 
@@ -106,8 +106,15 @@ void SieveConditionWidget::reset()
 
 }
 
+void SieveConditionWidget::updateAddRemoveButton( bool addButtonEnabled, bool removeButtonEnabled )
+{
+    mAdd->setEnabled(addButtonEnabled);
+    mRemove->setEnabled(removeButtonEnabled);
+}
+
+
 SieveConditionWidgetLister::SieveConditionWidgetLister(QWidget *parent)
-    : KPIM::KWidgetLister(false, 1, 15, parent)
+    : KPIM::KWidgetLister(false, 2, 8, parent)
 {
 }
 
@@ -118,28 +125,47 @@ SieveConditionWidgetLister::~SieveConditionWidgetLister()
 
 void SieveConditionWidgetLister::slotAddWidget( QWidget *w )
 {
-  addWidgetAfterThisWidget( w );
-  updateAddRemoveButton();
+    addWidgetAfterThisWidget( w );
+    updateAddRemoveButton();
 }
 
 void SieveConditionWidgetLister::slotRemoveWidget( QWidget *w )
 {
-  removeWidget( w );
-  updateAddRemoveButton();
+    removeWidget( w );
+    updateAddRemoveButton();
 }
 
 
 void SieveConditionWidgetLister::updateAddRemoveButton()
 {
-    //TODO
+    QList<QWidget*> widgetList = widgets();
+    const int numberOfWidget( widgetList.count() );
+    bool addButtonEnabled = false;
+    bool removeButtonEnabled = false;
+    if ( numberOfWidget <= widgetsMinimum() ) {
+        addButtonEnabled = true;
+        removeButtonEnabled = false;
+    } else if ( numberOfWidget >= widgetsMaximum() ) {
+        addButtonEnabled = false;
+        removeButtonEnabled = true;
+    } else {
+        addButtonEnabled = true;
+        removeButtonEnabled = true;
+    }
+    QList<QWidget*>::ConstIterator wIt = widgetList.constBegin();
+    QList<QWidget*>::ConstIterator wEnd = widgetList.constEnd();
+    for ( ; wIt != wEnd ;++wIt ) {
+        SieveConditionWidget *w = qobject_cast<SieveConditionWidget*>( *wIt );
+        w->updateAddRemoveButton( addButtonEnabled, removeButtonEnabled );
+    }
 }
 
 void SieveConditionWidgetLister::reconnectWidget( SieveConditionWidget *w )
 {
-  connect( w, SIGNAL(addWidget(QWidget*)),
-           this, SLOT(slotAddWidget(QWidget*)), Qt::UniqueConnection );
-  connect( w, SIGNAL(removeWidget(QWidget*)),
-           this, SLOT(slotRemoveWidget(QWidget*)), Qt::UniqueConnection );
+    connect( w, SIGNAL(addWidget(QWidget*)),
+             this, SLOT(slotAddWidget(QWidget*)), Qt::UniqueConnection );
+    connect( w, SIGNAL(removeWidget(QWidget*)),
+             this, SLOT(slotRemoveWidget(QWidget*)), Qt::UniqueConnection );
 }
 
 void SieveConditionWidgetLister::clearWidget( QWidget *aWidget )
@@ -158,7 +184,13 @@ QWidget *SieveConditionWidgetLister::createWidget( QWidget *parent )
 
 void SieveConditionWidgetLister::generatedScript(QString &script)
 {
-    //TODO
+    const QList<QWidget*> widgetList = widgets();
+    QList<QWidget*>::ConstIterator wIt = widgetList.constBegin();
+    QList<QWidget*>::ConstIterator wEnd = widgetList.constEnd();
+    for ( ; wIt != wEnd ;++wIt ) {
+        SieveConditionWidget *w = qobject_cast<SieveConditionWidget*>( *wIt );
+        //TODO
+    }
 }
 
 
