@@ -57,6 +57,7 @@ void SieveActionWidget::setFilterAction( QWidget *widget )
 
 void SieveActionWidget::generatedScript(QString &script)
 {
+    qDebug()<<" code :"<<mActionList.at(mComboBox->currentIndex())->code(mLayout->itemAtPosition( 1, 2 )->widget());
     //TODO
 }
 

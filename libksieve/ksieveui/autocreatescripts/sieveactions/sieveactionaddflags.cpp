@@ -36,6 +36,7 @@ SieveAction* SieveActionAddFlags::newAction()
 QWidget *SieveActionAddFlags::createParamWidget( QWidget *parent ) const
 {
     PimCommon::MinimumComboBox *comboBox = new PimCommon::MinimumComboBox( parent );
+    comboBox->setObjectName("flags");
     //TODO
     return comboBox;
 }

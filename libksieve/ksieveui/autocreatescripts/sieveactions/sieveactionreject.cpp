@@ -51,7 +51,7 @@ QWidget *SieveActionReject::createParamWidget( QWidget *parent ) const
 QString SieveActionReject::code(QWidget *) const
 {
     //TODO
-    return QString::fromLatin1("  reject %1\n").arg("foo");
+    return QString::fromLatin1("  reject %1").arg("foo");
 }
 
 QStringList SieveActionReject::needRequires() const
