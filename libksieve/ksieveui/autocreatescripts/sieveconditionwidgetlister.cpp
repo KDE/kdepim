@@ -55,8 +55,6 @@ void SieveConditionWidget::generatedScript(QString &script)
     //TODO
 }
 
-
-
 void SieveConditionWidget::initWidget()
 {
     mLayout = new QGridLayout(this);

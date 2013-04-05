@@ -17,6 +17,7 @@
 
 #include "sieveactionwidgetlister.h"
 #include "sieveactions/sieveaction.h"
+#include "sieveactions/sieveactionlist.h"
 #include "pimcommon/minimumcombobox.h"
 
 #include <KPushButton>
@@ -25,6 +26,7 @@
 
 #include <QGridLayout>
 #include <QLabel>
+#include <QDebug>
 
 using namespace KSieveUi;
 
@@ -65,6 +67,20 @@ void SieveActionWidget::initWidget()
 
     mComboBox = new PimCommon::MinimumComboBox;
     mComboBox->setEditable( false );
+    const QList<KSieveUi::SieveAction*> list = KSieveUi::SieveActionList::actionList();
+    QList<KSieveUi::SieveAction*>::const_iterator it;
+    QList<KSieveUi::SieveAction*>::const_iterator end( list.constEnd() );
+    int index = 0;
+    for ( index = 0, it = list.constBegin(); it != end; ++it, ++index ) {
+      // append to the list of actions:
+      mActionList.append( *it );
+
+      // add (i18n-ized) name to combo box
+      mComboBox->addItem( (*it)->label(),(*it)->name() );
+      // Register the FilterAction modification signal
+      connect( *it, SIGNAL(filterActionModified()), this, SIGNAL(filterModified()) );
+    }
+
     mComboBox->setMaxCount( mComboBox->count() );
     mComboBox->adjustSize();
     mLayout->addWidget(mComboBox, 1, 1);
