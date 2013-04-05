@@ -15,16 +15,29 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "sieveconditionlist.h"
-#include "sievecondition.h"
-#include "sieveconditionheader.h"
 #include "sieveconditionaddress.h"
+#include <KLocale>
 
-QList<KSieveUi::SieveCondition *> KSieveUi::SieveActionList::conditionList()
+using namespace KSieveUi;
+
+SieveConditionAddress::SieveConditionAddress(QObject *parent)
+    : SieveCondition(QLatin1String("address"), i18n("Address"), parent)
 {
-    QList<KSieveUi::SieveCondition*> list;
-    list.append(new KSieveUi::SieveConditionHeader);
-    list.append(new KSieveUi::SieveConditionAddress);
-    return list;
 }
 
+SieveCondition *SieveConditionAddress::newAction()
+{
+    return new SieveConditionAddress;
+}
+
+QWidget *SieveConditionAddress::createParamWidget( QWidget *parent ) const
+{
+    //TODO
+    return 0;
+}
+
+QString SieveConditionAddress::code() const
+{
+    //TODO
+    return QString();
+}

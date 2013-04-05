@@ -35,7 +35,8 @@ set(ksieveui_LIB_SRCS
   autocreatescripts/sieveactions/sieveactionfileinto.cpp
   autocreatescripts/sieveconditions/sievecondition.cpp
   autocreatescripts/sieveconditions/sieveconditionheader.cpp
-  autocreatescripts/sieveconditions/sieveconditionlist.cpp 
+  autocreatescripts/sieveconditions/sieveconditionlist.cpp
+  autocreatescripts/sieveconditions/sieveconditionaddress.cpp 
 )
 
 kde4_add_kcfg_files(ksieveui_LIB_SRCS settings.kcfgc)
