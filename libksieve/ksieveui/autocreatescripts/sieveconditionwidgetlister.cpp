@@ -120,6 +120,8 @@ void SieveConditionWidget::updateAddRemoveButton( bool addButtonEnabled, bool re
 SieveConditionWidgetLister::SieveConditionWidgetLister(QWidget *parent)
     : KPIM::KWidgetLister(false, 2, 8, parent)
 {
+    slotClear();
+    updateAddRemoveButton();
 }
 
 SieveConditionWidgetLister::~SieveConditionWidgetLister()

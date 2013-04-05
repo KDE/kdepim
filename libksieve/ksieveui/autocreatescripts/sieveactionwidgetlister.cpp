@@ -134,8 +134,10 @@ void SieveActionWidget::updateAddRemoveButton( bool addButtonEnabled, bool remov
 }
 
 SieveActionWidgetLister::SieveActionWidgetLister(QWidget *parent)
-    : KPIM::KWidgetLister(false, 2, 8, parent)
+    : KPIM::KWidgetLister(false, 1, 8, parent)
 {
+    slotClear();
+    updateAddRemoveButton();
 }
 
 SieveActionWidgetLister::~SieveActionWidgetLister()
