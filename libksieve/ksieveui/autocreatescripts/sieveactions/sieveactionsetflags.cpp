@@ -36,12 +36,14 @@ SieveAction* SieveActionSetFlags::newAction()
 QWidget *SieveActionSetFlags::createParamWidget( QWidget *parent ) const
 {
     PimCommon::MinimumComboBox *comboBox = new PimCommon::MinimumComboBox( parent );
+    comboBox->setObjectName("flags");
     //TODO
     return comboBox;
 }
 
-QString SieveActionSetFlags::code(QWidget *) const
+QString SieveActionSetFlags::code(QWidget *w) const
 {
+    PimCommon::MinimumComboBox *comboBox = w->findChild<PimCommon::MinimumComboBox*>( "flags" );
     //TODO
     return QString();
 }

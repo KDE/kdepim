@@ -41,8 +41,9 @@ QWidget *SieveActionAddFlags::createParamWidget( QWidget *parent ) const
     return comboBox;
 }
 
-QString SieveActionAddFlags::code(QWidget *) const
+QString SieveActionAddFlags::code(QWidget *w) const
 {
+    PimCommon::MinimumComboBox *comboBox = w->findChild<PimCommon::MinimumComboBox*>( "flags" );
     //TODO
     return QString();
 }
