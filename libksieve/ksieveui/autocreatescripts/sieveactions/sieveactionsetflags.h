@@ -20,7 +20,7 @@
 #define SIEVEACTIONSETFLAGS_H
 
 #include "sieveaction.h"
-
+namespace KSieveUi {
 class SieveActionSetFlags : public SieveAction
 {
     Q_OBJECT
@@ -32,5 +32,6 @@ public:
 
     QString code() const;
 };
+}
 
 #endif // SIEVEACTIONSETFLAGS_H

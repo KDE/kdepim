@@ -19,6 +19,8 @@
 
 #include <KLocale>
 
+using namespace KSieveUi;
+
 SieveActionStop::SieveActionStop(QObject *parent)
     : SieveAction(QLatin1String("stop"), i18n("Stop"), parent)
 {

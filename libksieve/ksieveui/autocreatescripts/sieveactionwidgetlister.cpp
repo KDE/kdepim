@@ -16,6 +16,7 @@
 */
 
 #include "sieveactionwidgetlister.h"
+#include "sieveactions/sieveaction.h"
 #include "pimcommon/minimumcombobox.h"
 
 #include <KPushButton>
@@ -35,6 +36,8 @@ SieveActionWidget::SieveActionWidget(QWidget *parent)
 
 SieveActionWidget::~SieveActionWidget()
 {
+    qDeleteAll(mActionList);
+    mActionList.clear();
 }
 
 void SieveActionWidget::setFilterAction( QWidget *widget )
@@ -50,6 +53,11 @@ void SieveActionWidget::setFilterAction( QWidget *widget )
   }
 }
 
+void SieveActionWidget::generatedScript(QString &script)
+{
+    //TODO
+}
+
 void SieveActionWidget::initWidget()
 {
     mLayout = new QGridLayout(this);
@@ -60,8 +68,10 @@ void SieveActionWidget::initWidget()
     mComboBox->setMaxCount( mComboBox->count() );
     mComboBox->adjustSize();
     mLayout->addWidget(mComboBox, 1, 1);
-    connect( mComboBox, SIGNAL(activated(QString)),
-             this, SLOT(slotActionChanged(QString)) );
+
+    connect( mComboBox, SIGNAL(activated(int)),
+             this, SLOT(slotActionChanged(int)) );
+
 
     mAdd = new KPushButton( this );
     mAdd->setIcon( KIcon( "list-add" ) );
@@ -82,9 +92,11 @@ void SieveActionWidget::initWidget()
              this, SLOT(slotRemoveWidget()) );
 }
 
-void SieveActionWidget::slotActionChanged(const QString &action)
+void SieveActionWidget::slotActionChanged(int index)
 {
-
+    setFilterAction( index < mActionList.count() ?
+                       mActionList.at( index )->createParamWidget( this ) :
+                       0 );
 }
 
 void SieveActionWidget::slotAddWidget()
@@ -157,7 +169,7 @@ void SieveActionWidgetLister::generatedScript(QString &script)
     QList<QWidget*>::ConstIterator wEnd = widgetList.constEnd();
     for ( ; wIt != wEnd ;++wIt ) {
       SieveActionWidget *w = qobject_cast<SieveActionWidget*>( *wIt );
-      //TODO
+      w->generatedScript(script);
     }
 }
 

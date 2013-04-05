@@ -19,6 +19,8 @@
 
 #include <QWidget>
 
+using namespace KSieveUi;
+
 SieveAction::SieveAction(const QString &name, const QString &label, QObject *parent)
     : QObject(parent), mName(name), mLabel(label)
 {

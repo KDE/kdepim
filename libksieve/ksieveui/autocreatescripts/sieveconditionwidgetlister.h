@@ -37,6 +37,7 @@ public:
     explicit SieveConditionWidget(QWidget *);
     ~SieveConditionWidget();
     void updateAddRemoveButton( bool addButtonEnabled, bool removeButtonEnabled );
+    void generatedScript(QString &script);
 private Q_SLOTS:
     void slotAddWidget();
     void slotRemoveWidget();

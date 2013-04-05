@@ -19,7 +19,7 @@
 #define SIEVEACTIONDISCARD_H
 
 #include "sieveaction.h"
-
+namespace KSieveUi {
 class SieveActionDiscard : public SieveAction
 {
     Q_OBJECT
@@ -28,5 +28,6 @@ public:
     static SieveAction* newAction();
     QString code() const;
 };
+}
 
 #endif // SIEVEACTIONDISCARD_H

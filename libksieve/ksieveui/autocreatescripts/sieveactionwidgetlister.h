@@ -30,7 +30,7 @@ class MinimumComboBox;
 }
 
 namespace KSieveUi {
-
+class SieveAction;
 class SieveActionWidget : public QWidget
 {
     Q_OBJECT
@@ -38,10 +38,11 @@ public:
     explicit SieveActionWidget(QWidget *);
     ~SieveActionWidget();
     void updateAddRemoveButton( bool addButtonEnabled, bool removeButtonEnabled );
+    void generatedScript(QString &script);
 private Q_SLOTS:
     void slotAddWidget();
     void slotRemoveWidget();
-    void slotActionChanged(const QString&);
+    void slotActionChanged(int index);
 Q_SIGNALS:
     void addWidget(QWidget *w);
     void removeWidget(QWidget *w);
@@ -52,6 +53,7 @@ private:
     KPushButton *mRemove;
     PimCommon::MinimumComboBox *mComboBox;
     QGridLayout *mLayout;
+    QList<KSieveUi::SieveAction*> mActionList;
 };
 
 

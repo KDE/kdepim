@@ -50,6 +50,12 @@ void SieveConditionWidget::setFilterAction( QWidget *widget )
     }
 }
 
+void SieveConditionWidget::generatedScript(QString &script)
+{
+    //TODO
+}
+
+
 
 void SieveConditionWidget::initWidget()
 {
@@ -189,7 +195,7 @@ void SieveConditionWidgetLister::generatedScript(QString &script)
     QList<QWidget*>::ConstIterator wEnd = widgetList.constEnd();
     for ( ; wIt != wEnd ;++wIt ) {
         SieveConditionWidget *w = qobject_cast<SieveConditionWidget*>( *wIt );
-        //TODO
+        w->generatedScript(script);
     }
 }
 

@@ -21,6 +21,7 @@
 
 #include <KLocale>
 
+using namespace KSieveUi;
 SieveActionSetFlags::SieveActionSetFlags(QObject *parent)
     : SieveAction(QLatin1String("setflags"), i18n("Set Flags"), parent)
 {

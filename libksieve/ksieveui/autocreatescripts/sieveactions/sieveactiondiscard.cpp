@@ -18,6 +18,7 @@
 #include "sieveactiondiscard.h"
 #include <KLocale>
 
+using namespace KSieveUi;
 SieveActionDiscard::SieveActionDiscard(QObject *parent)
     : SieveAction(QLatin1String("discard"), i18n("Discard"), parent)
 {

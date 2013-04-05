@@ -20,6 +20,7 @@
 
 #include "sieveaction.h"
 
+namespace KSieveUi {
 class SieveActionStop : public SieveAction
 {
     Q_OBJECT
@@ -28,5 +29,6 @@ public:
     static SieveAction* newAction();
     QString code() const;
 };
+}
 
 #endif // SIEVEACTIONSTOP_H

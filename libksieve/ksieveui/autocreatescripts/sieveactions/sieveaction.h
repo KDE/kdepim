@@ -19,7 +19,7 @@
 #define SIEVEACTION_H
 
 #include <QObject>
-
+namespace KSieveUi {
 class SieveAction : public QObject
 {
     Q_OBJECT
@@ -42,5 +42,6 @@ private:
     QString mName;
     QString mLabel;
 };
+}
 
 #endif // SIEVEACTION_H
