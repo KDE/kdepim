@@ -99,6 +99,11 @@ public:
         collections->writeConfig();
     }
 
+    void setDefault()
+    {
+        //TODO
+    }
+
     void addPages()
     {
         identity = new ConfigureIdentity(q);
@@ -143,7 +148,7 @@ void ConfigureActivityWidget::writeConfig()
 
 void ConfigureActivityWidget::defaults()
 {
-    //TODO
+    d->setDefault();
 }
 
 }
