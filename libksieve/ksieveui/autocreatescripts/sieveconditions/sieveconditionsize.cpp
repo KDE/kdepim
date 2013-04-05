@@ -15,18 +15,30 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "sieveconditionlist.h"
-#include "sievecondition.h"
-#include "sieveconditionheader.h"
-#include "sieveconditionaddress.h"
 #include "sieveconditionsize.h"
 
-QList<KSieveUi::SieveCondition *> KSieveUi::SieveActionList::conditionList()
+#include <KLocale>
+
+using namespace KSieveUi;
+
+SieveConditionSize::SieveConditionSize(QObject *parent)
+    : SieveCondition(QLatin1String("size"), i18n("Size"), parent)
 {
-    QList<KSieveUi::SieveCondition*> list;
-    list.append(new KSieveUi::SieveConditionHeader);
-    list.append(new KSieveUi::SieveConditionAddress);
-    list.append(new KSieveUi::SieveConditionSize);
-    return list;
 }
 
+SieveCondition *SieveConditionSize::newAction()
+{
+    return new SieveConditionSize;
+}
+
+QWidget *SieveConditionSize::createParamWidget( QWidget *parent ) const
+{
+    //TODO
+    return 0;
+}
+
+QString SieveConditionSize::code(QWidget *parent) const
+{
+    //TODO
+    return QString();
+}
