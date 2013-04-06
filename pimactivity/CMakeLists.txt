@@ -26,6 +26,7 @@ target_link_libraries(pimactivity
     ${KDE4_KDEUI_LIBS}
     ${KACTIVITIES_LIBRARY}
     ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
+    ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
 )
 
 

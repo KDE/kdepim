@@ -39,6 +39,10 @@ Q_SIGNALS:
     void changed();
 
 private:
+    enum transportId {
+        TransportID = Qt::UserRole +1
+    };
+
     void init();
     QListWidget *mListTransport;
 };

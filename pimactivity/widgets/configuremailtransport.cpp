@@ -19,7 +19,10 @@
 */
 #include "configuremailtransport.h"
 
+#include "mailtransport/transportmanager.h"
+
 #include <QListWidget>
+#include <QListWidgetItem>
 #include <QVBoxLayout>
 
 namespace PimActivity {
@@ -39,7 +42,17 @@ ConfigureMailtransport::~ConfigureMailtransport()
 
 void ConfigureMailtransport::init()
 {
-    //TODO
+    QStringList listNames = MailTransport::TransportManager::self()->transportNames();
+    QList<int> listIds = MailTransport::TransportManager::self()->transportIds();
+    int i = 0;
+    Q_FOREACH (const QString &name, listNames) {
+        QListWidgetItem *item = new QListWidgetItem(mListTransport);
+        //TODO check it or not.
+        item->setText(name);
+        item->setData(TransportID, listIds.at(i));
+        ++i;
+    }
+
 }
 
 void ConfigureMailtransport::readConfig()

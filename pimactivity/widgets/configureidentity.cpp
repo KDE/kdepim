@@ -21,6 +21,7 @@
 #include "configureidentity.h"
 
 #include <KPIMIdentities/IdentityManager>
+#include <KPIMIdentities/Identity>
 
 
 #include <QVBoxLayout>
@@ -41,6 +42,7 @@ ConfigureIdentity::ConfigureIdentity(QWidget *parent)
 
 ConfigureIdentity::~ConfigureIdentity()
 {
+    delete mManager;
 }
 
 void ConfigureIdentity::init()
@@ -49,10 +51,10 @@ void ConfigureIdentity::init()
     KPIMIdentities::IdentityManager::Iterator end( mManager->modifyEnd() );
 
     for ( KPIMIdentities::IdentityManager::Iterator it = mManager->modifyBegin(); it != end; ++it ) {
-      //TODO
+        QListWidgetItem *item = new QListWidgetItem(mListIdentity);
+        //TODO check it or not.
+        item->setText((*it).identityName());
     }
-
-    //TODO init list.
 }
 
 void ConfigureIdentity::readConfig()
