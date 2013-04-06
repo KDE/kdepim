@@ -20,16 +20,24 @@
 
 #include "themeeditormainwindow.h"
 
+#include "kdepim-version.h"
+
 #include <kapplication.h>
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
 
 int main( int argc, char **argv )
 {
-    const QByteArray& ba = QByteArray( "headerthemeeditor" );
-    const KLocalizedString name = ki18n( "Messageviewer Header Theme Editor" );
-    KAboutData aboutData( ba, ba, name, ba, name );
+    KAboutData aboutData( "headerthemeeditor", 0, ki18n("Messageviewer Header Theme Editor"),
+      KDEPIM_VERSION, ki18n("Header Theme Editor"), KAboutData::License_GPL_V2,
+      ki18n("Copyright © 2013 headerthemeeditor authors"));
+    aboutData.addAuthor(ki18n("Laurent Montel"), ki18n("Maintainer"), "montel@kde.org");
+    aboutData.setProgramIconName("kmail");
     KCmdLineArgs::init( argc, argv, &aboutData );
+
+    KCmdLineOptions options;
+    KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
+
     KApplication app;
     ThemeEditorMainWindow *mw = new ThemeEditorMainWindow();
     mw->show();
