@@ -5,6 +5,7 @@ set(headerthemeeditor_SRCS
   main.cpp
   themeeditormainwindow.cpp 
   themeeditorpage.cpp
+  previewpage.cpp
   desktopfilepage.cpp
   editorpage.cpp
   themetemplatewidget.cpp
