@@ -72,7 +72,7 @@ void KNLineEdit::contextMenuEvent( QContextMenuEvent*e )
    QMenu *popup = KLineEdit::createStandardContextMenu();
    popup->addSeparator();
    popup->addAction( i18n( "Edit Recent Addresses..." ),
-		   this, SLOT(editRecentAddresses()) );
+                   this, SLOT(editRecentAddresses()) );
    popup->exec( e->globalPos() );
    delete popup;
 }
@@ -144,7 +144,7 @@ void KNLineEditSpell::highLightWord( unsigned int length, unsigned int pos )
 void KNLineEditSpell::spellCheckDone( const QString &s )
 {
     if( s != text() )
-	setText( s );
+        setText( s );
 }
 
 void KNLineEditSpell::spellCheckerMisspelling( const QString &_text, const QStringList &, unsigned int pos)
@@ -661,7 +661,7 @@ bool KNComposer::hasValidData()
   } else {
     if (notQuoted==0) {
       KMessageBox::sorry(this, i18n("You cannot post an article consisting\n"
-			      "entirely of quoted text."));
+                              "entirely of quoted text."));
       return false;
     }
   }
