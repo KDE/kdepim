@@ -23,7 +23,7 @@
 
 using namespace KSieveUi;
 SieveActionAddFlags::SieveActionAddFlags(QObject *parent)
-    : SieveAction(QLatin1String("addflags"), i18n("Add Flags"), parent)
+    : SieveActionAbstractFlags(QLatin1String("addflags"), i18n("Add Flags"), parent)
 {
     //TODO add flags
 }
@@ -33,24 +33,10 @@ SieveAction* SieveActionAddFlags::newAction()
     return new SieveActionAddFlags;
 }
 
-QWidget *SieveActionAddFlags::createParamWidget( QWidget *parent ) const
+QString SieveActionAddFlags::flagsCode(QWidget *) const
 {
-    PimCommon::MinimumComboBox *comboBox = new PimCommon::MinimumComboBox( parent );
-    comboBox->setObjectName("flags");
-    //TODO
-    return comboBox;
-}
-
-QString SieveActionAddFlags::code(QWidget *w) const
-{
-    PimCommon::MinimumComboBox *comboBox = w->findChild<PimCommon::MinimumComboBox*>( "flags" );
     //TODO
     return QString();
-}
-
-QStringList SieveActionAddFlags::needRequires() const
-{
-    return QStringList() <<QLatin1String("imapflags");
 }
 
 #include "sieveactionaddflags.moc"

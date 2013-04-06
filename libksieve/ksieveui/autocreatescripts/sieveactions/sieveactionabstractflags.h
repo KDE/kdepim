@@ -15,28 +15,24 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#ifndef SIEVEACTIONABSTRACTFLAGS_H
+#define SIEVEACTIONABSTRACTFLAGS_H
 
-#include "sieveactionsetflags.h"
-#include "pimcommon/minimumcombobox.h"
-
-#include <KLocale>
-
-using namespace KSieveUi;
-SieveActionSetFlags::SieveActionSetFlags(QObject *parent)
-    : SieveActionAbstractFlags(QLatin1String("setflags"), i18n("Set Flags"), parent)
+#include "sieveaction.h"
+namespace KSieveUi {
+class SieveActionAbstractFlags : public SieveAction
 {
-    //TODO add flags
+    Q_OBJECT
+public:
+    SieveActionAbstractFlags(const QString &name, const QString &label, QObject *parent = 0);
+
+    QWidget *createParamWidget( QWidget *parent ) const;
+    QString code(QWidget *) const;
+    QStringList needRequires() const;
+
+    virtual QString flagsCode(QWidget *) const = 0;
+};
 }
 
-SieveAction* SieveActionSetFlags::newAction()
-{
-    return new SieveActionSetFlags;
-}
 
-QString SieveActionSetFlags::flagsCode(QWidget *) const
-{
-    //TODO
-    return QString();
-}
-
-#include "sieveactionsetflags.moc"
+#endif // SIEVEACTIONABSTRACTFLAGS_H

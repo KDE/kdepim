@@ -19,18 +19,17 @@
 #ifndef SIEVEACTIONADDFLAGS_H
 #define SIEVEACTIONADDFLAGS_H
 
-#include "sieveaction.h"
+#include "sieveactionabstractflags.h"
+
 namespace KSieveUi {
-class SieveActionAddFlags : public SieveAction
+class SieveActionAddFlags : public SieveActionAbstractFlags
 {
     Q_OBJECT
 public:
     SieveActionAddFlags(QObject *parent = 0);
     static SieveAction* newAction();
+    QString flagsCode(QWidget *) const;
 
-    QWidget *createParamWidget( QWidget *parent ) const;
-    QString code(QWidget *) const;
-    QStringList needRequires() const;
 };
 }
 #endif // SIEVEACTIONADDFLAGS_H

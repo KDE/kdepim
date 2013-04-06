@@ -15,28 +15,36 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#include "sieveactionabstractflags.h"
 
-#include "sieveactionsetflags.h"
 #include "pimcommon/minimumcombobox.h"
 
 #include <KLocale>
 
 using namespace KSieveUi;
-SieveActionSetFlags::SieveActionSetFlags(QObject *parent)
-    : SieveActionAbstractFlags(QLatin1String("setflags"), i18n("Set Flags"), parent)
+SieveActionAbstractFlags::SieveActionAbstractFlags(const QString &name, const QString &label, QObject *parent)
+    : SieveAction(name, label, parent)
 {
     //TODO add flags
 }
 
-SieveAction* SieveActionSetFlags::newAction()
+QWidget *SieveActionAbstractFlags::createParamWidget( QWidget *parent ) const
 {
-    return new SieveActionSetFlags;
-}
-
-QString SieveActionSetFlags::flagsCode(QWidget *) const
-{
+    PimCommon::MinimumComboBox *comboBox = new PimCommon::MinimumComboBox( parent );
+    comboBox->setObjectName("flags");
     //TODO
-    return QString();
+    return comboBox;
 }
 
-#include "sieveactionsetflags.moc"
+QString SieveActionAbstractFlags::code(QWidget *w) const
+{
+    PimCommon::MinimumComboBox *comboBox = w->findChild<PimCommon::MinimumComboBox*>( "flags" );
+    QString str = flagsCode(w);
+    //TODO
+    return str;
+}
+
+QStringList SieveActionAbstractFlags::needRequires() const
+{
+    return QStringList() <<QLatin1String("imapflags");
+}
