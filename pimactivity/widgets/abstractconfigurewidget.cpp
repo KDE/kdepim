@@ -32,7 +32,13 @@ AbstractConfigureWidget::~AbstractConfigureWidget()
 
 void AbstractConfigureWidget::setActivity(const QString &id)
 {
-    mActivityId = id;
+    if (mActivityId != id) {
+        //Save previous activity
+        writeConfig(mActivityId);
+        mActivityId = id;
+        //read new activity
+        readConfig(id);
+    }
 }
 
 QString AbstractConfigureWidget::activity() const

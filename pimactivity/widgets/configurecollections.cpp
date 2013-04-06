@@ -31,12 +31,12 @@ ConfigureCollections::~ConfigureCollections()
 
 }
 
-void ConfigureCollections::readConfig()
+void ConfigureCollections::readConfig(const QString &id)
 {
 
 }
 
-void ConfigureCollections::writeConfig()
+void ConfigureCollections::writeConfig(const QString &id)
 {
 
 }

@@ -55,12 +55,12 @@ void ConfigureMailtransport::init()
 
 }
 
-void ConfigureMailtransport::readConfig()
+void ConfigureMailtransport::readConfig(const QString &id)
 {
 
 }
 
-void ConfigureMailtransport::writeConfig()
+void ConfigureMailtransport::writeConfig(const QString &id)
 {
 
 }

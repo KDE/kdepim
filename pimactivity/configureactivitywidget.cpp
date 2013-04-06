@@ -71,6 +71,7 @@ public:
 
         addPages();
         q->connect(activities, SIGNAL(activityChanged(QString)), q, SLOT(slotActivityChanged(QString)));
+        //TODO initialize activity
     }
     ~ConfigureActivityWidgetPrivate()
     {
@@ -85,18 +86,12 @@ public:
 
     void readConfig()
     {
-        //TODO read "enable activity"
-        identity->readConfig();
-        mailTransport->readConfig();
-        collections->readConfig();
+        //TODO
     }
 
     void writeConfig()
     {
-        //TODO write "enable activity"
-        identity->writeConfig();
-        mailTransport->writeConfig();
-        collections->writeConfig();
+        //TODO
     }
 
     void setDefault()

@@ -28,10 +28,14 @@ class AbstractConfigureWidget
 {
 public:
     AbstractConfigureWidget();
-    ~AbstractConfigureWidget();
+    virtual ~AbstractConfigureWidget();
 
     void setActivity(const QString &id);
     QString activity() const;
+
+    virtual void readConfig(const QString &id) = 0;
+    virtual void writeConfig(const QString &id) = 0;
+
 private:
     QString mActivityId;
 };

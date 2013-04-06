@@ -38,8 +38,9 @@ public:
     explicit ConfigureIdentity(QWidget *parent);
     ~ConfigureIdentity();
 
-    void readConfig();
-    void writeConfig();
+private:
+    void readConfig(const QString &id);
+    void writeConfig(const QString &id);
 
 Q_SIGNALS:
     void changed();

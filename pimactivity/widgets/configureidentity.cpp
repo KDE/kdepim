@@ -57,11 +57,11 @@ void ConfigureIdentity::init()
     }
 }
 
-void ConfigureIdentity::readConfig()
+void ConfigureIdentity::readConfig(const QString &id)
 {
 }
 
-void ConfigureIdentity::writeConfig()
+void ConfigureIdentity::writeConfig(const QString &id)
 {
 
 }
