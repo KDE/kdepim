@@ -188,7 +188,7 @@ void CollectionExpiryPage::saveAndExpire( Akonadi::Collection &collection, bool 
     KMessageBox::error( this, i18n("Please select a folder to expire messages into.\nIf this is not done, expired messages will be permanently deleted."),
                         i18n( "No Folder Selected" ) );
     deletePermanentlyRB->setChecked( true );
-    expireNow = false;				// settings are not valid
+    expireNow = false;                                // settings are not valid
   }
 
   MailCommon::ExpireCollectionAttribute *attribute = 0;
@@ -197,7 +197,7 @@ void CollectionExpiryPage::saveAndExpire( Akonadi::Collection &collection, bool 
       KMessageBox::error( this, i18n( "Please select a different folder than the current folder to expire messages into.\nIf this is not done, expired messages will be permanently deleted."),
                           i18n( "Wrong Folder Selected" ) );
       deletePermanentlyRB->setChecked( true );
-      expireNow = false;				// settings are not valid
+      expireNow = false;                                // settings are not valid
     }
     else {
       attribute = collection.attribute<MailCommon::ExpireCollectionAttribute>( Akonadi::Entity::AddIfMissing );
@@ -230,7 +230,7 @@ void CollectionExpiryPage::saveAndExpire( Akonadi::Collection &collection, bool 
 
 void CollectionExpiryPage::slotSaveAndExpire()
 {
-  saveAndExpire( mCollection, true );			// save and start expire job
+  saveAndExpire( mCollection, true );                        // save and start expire job
 }
 
 void CollectionExpiryPage::slotCollectionModified(KJob* job)

@@ -162,7 +162,7 @@ void FilterManager::updateTagList()
 
   Nepomuk2::Query::ResourceTypeTerm term( Soprano::Vocabulary::NAO::Tag() );
   Nepomuk2::Query::Query query( term );
-  d->mTagQueryClient->query(query);	
+  d->mTagQueryClient->query(query);
 }
 
 void FilterManager::slotReadConfig()
