@@ -160,9 +160,9 @@ void StatusbarProgressWidget::slotProgressItemCompleted( ProgressItem *item )
 {
   if ( item->parent() ) 
   {
-	  item->deleteLater();
-	  item = 0;
-	  return; // we are only interested in top level items
+          item->deleteLater();
+          item = 0;
+          return; // we are only interested in top level items
   }
   item->deleteLater();
   item = 0;

@@ -93,8 +93,8 @@ QDataStream& operator>> ( QDataStream &s, MailList &mailList )
 }
 
 MailSummary::MailSummary( quint32 serialNumber, const QString &messageId,
-			  const QString &subject, const QString &from, const QString &to,
-			  time_t date )
+                          const QString &subject, const QString &from, const QString &to,
+                          time_t date )
     : mSerialNumber( serialNumber ), mMessageId( messageId ),
       mSubject( subject ), mFrom( from ), mTo( to ), mDate( date )
 {}
@@ -130,7 +130,7 @@ time_t MailSummary::date() const
 }
 
 void MailSummary::set( quint32 serialNumber, const QString &messageId,
-		       const QString &subject, const QString &from, const QString &to, time_t date )
+                       const QString &subject, const QString &from, const QString &to, time_t date )
 {
     mSerialNumber = serialNumber;
     mMessageId = messageId;

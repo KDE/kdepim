@@ -73,7 +73,7 @@ void SSLLabel::setState( State state )
     show();
     break;
   case Done:
-	this->setToolTip("");
+        this->setToolTip("");
     hide();
     break;
   case Clean:
