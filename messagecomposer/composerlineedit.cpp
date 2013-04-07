@@ -161,7 +161,7 @@ void ComposerLineEdit::dropEvent(QDropEvent *event)
                 expandJob->start();
               }
             }
-	  }
+          }
         } else {
           QString caption( i18n( "vCard Import Failed" ) );
           QString text = i18n( "<qt>Unable to access <b>%1</b>.</qt>", url.url() );

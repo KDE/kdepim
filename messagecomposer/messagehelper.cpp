@@ -185,7 +185,7 @@ KMime::Types::AddrSpecList extractAddrSpecs( const KMime::Message::Ptr &msg, con
 QString cleanSubject( const KMime::Message::Ptr &msg )
 {
   return cleanSubject( msg, MessageComposer::MessageComposerSettings::self()->replyPrefixes() + MessageComposer::MessageComposerSettings::self()->forwardPrefixes(),
-		       true, QString() ).trimmed();
+                       true, QString() ).trimmed();
 }
 
 QString cleanSubject( const KMime::Message::Ptr &msg, const QStringList & prefixRegExps,
@@ -275,7 +275,7 @@ QString stripOffPrefixes( const QString& str )
 }
 
 QString skipKeyword( const QString& aStr, QChar sepChar,
-			       bool* hasKeyword)
+                               bool* hasKeyword)
 {
   QString str = aStr;
 
