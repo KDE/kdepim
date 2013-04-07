@@ -2153,9 +2153,9 @@ void View::mousePressEvent( QMouseEvent * e )
                     it->status().isImportant() ? Akonadi::MessageStatus::statusImportant() : Akonadi::MessageStatus()
                   );
                 return; // don't select the item
-	      case Theme::ContentItem::ReadStateIcon:
+              case Theme::ContentItem::ReadStateIcon:
                 changeMessageStatusRead( static_cast< MessageItem * >( it ), it->status().isRead() ? false : true );
-		return;
+                return;
               break;
               case Theme::ContentItem::SpamHamStateIcon:
                 changeMessageStatus(
