@@ -30,6 +30,8 @@
 #include "completionordereditor.h"
 #endif
 
+#include "kmailcompletion.h"
+
 #include <Akonadi/Contact/ContactSearchJob>
 #include <Akonadi/Contact/ContactGroupSearchJob>
 #include <Akonadi/CollectionFetchJob>
@@ -76,6 +78,10 @@
 #include <QtDBus/QDBusConnection>
 
 using namespace KPIM;
+
+namespace KPIM {
+  typedef QMap< QString, QPair<int,int> > CompletionItemsMap;
+}
 
 class AddresseeLineEditStatic
 {
@@ -496,11 +502,9 @@ void AddresseeLineEdit::Private::addCompletionItem( const QString &string, int w
     s_static->completionItemMap.insert( string, qMakePair( weight, completionItemSource ) );
   }
 
-  if ( keyWords == 0 ) {
-    s_static->completion->addItem( string, weight );
-  } else {
-    s_static->completion->addItemWithKeys( string, weight, keyWords );
-  }
+  s_static->completion->addItem(string, weight);
+  if (keyWords && !keyWords->isEmpty())
+    s_static->completion->addItemWithKeys(string, weight, keyWords); // see kmailcompletion.cpp
 }
 
 const QStringList KPIM::AddresseeLineEdit::Private::adjustedCompletionItems( bool fullSearch )
@@ -1348,17 +1352,13 @@ void AddresseeLineEdit::addItem( const Akonadi::Item &item, int weight, int sour
 void AddresseeLineEdit::addContactGroup( const KABC::ContactGroup &group, int weight, int source )
 {
   d->addCompletionItem( group.name(), weight, source );
-  QStringList keyWords;
-  keyWords.append( group.name() );
-  d->addCompletionItem( group.name(), weight, source, &keyWords );
 }
 
 void AddresseeLineEdit::addContact( const KABC::Addressee &addr, int weight, int source )
 {
   const QStringList emails = addr.emails();
   QStringList::ConstIterator it;
-  const int prefEmailWeight = 1;     //increment weight by prefEmailWeight
-  int isPrefEmail = prefEmailWeight; //first in list is preferredEmail
+  int isPrefEmail = 1; //first in list is preferredEmail
   QStringList::ConstIterator end( emails.constEnd() );
   for ( it = emails.constBegin(); it != end; ++it ) {
     //TODO: highlight preferredEmail
@@ -1367,40 +1367,6 @@ void AddresseeLineEdit::addContact( const KABC::Addressee &addr, int weight, int
     const QString familyName= addr.familyName();
     const QString nickName  = addr.nickName();
     QString fullEmail       = addr.fullEmail( email );
-
-    // Prepare keywords (for CompletionShell, CompletionPopup)
-    QStringList keyWords;
-    const QString realName  = addr.realName();
-
-    if ( !givenName.isEmpty() && !familyName.isEmpty() ) {
-      keyWords.append( givenName  + QLatin1Char( ' ' ) + familyName );
-      keyWords.append( familyName + QLatin1Char( ' ' ) + givenName );
-      keyWords.append( familyName + QLatin1String( ", " ) + givenName );
-    } else if ( !givenName.isEmpty() ) {
-      keyWords.append( givenName );
-    } else if ( !familyName.isEmpty() ) {
-      keyWords.append( familyName );
-    }
-
-    if ( !nickName.isEmpty() ) {
-      keyWords.append( nickName );
-    }
-
-    if ( !realName.isEmpty() ) {
-      keyWords.append( realName );
-    }
-
-    keyWords.append( email );
-
-    /* KMailCompletion does not have knowledge about identities, it stores emails and
-     * keywords for each email. KMailCompletion::allMatches does a lookup on the
-     * keywords and returns an ordered list of emails. In order to get the preferred
-     * email before others for each identity we use this little trick.
-     * We remove the <blank> in adjustedCompletionItems.
-     */
-    if ( isPrefEmail == prefEmailWeight ) {
-      fullEmail.replace( QLatin1String( " <" ), QLatin1String( "  <" ) );
-    }
 
     // Prepare "givenName" + ' ' + "familyName"
     QString fullName = givenName;
@@ -1413,12 +1379,16 @@ void AddresseeLineEdit::addContact( const KABC::Addressee &addr, int weight, int
     // Finally, we can add the completion items
     if (!fullName.isEmpty()) {
       const QString address = KPIMUtils::normalizedAddress(fullName, email, QString());
-      d->addCompletionItem(address, weight + isPrefEmail, source, &keyWords);
+      if (fullEmail != address) {
+        // This happens when fullEmail contains a middle name, while our own fullName+email only has "first last".
+        // Let's offer both, the fullEmail with 3 parts, looks a tad formal.
+        d->addCompletionItem(address, weight + isPrefEmail, source);
+      }
     }
 
-    if ( !nickName.isEmpty() ) {
-      const QString address = KPIMUtils::normalizedAddress(nickName, email, QString());
-      d->addCompletionItem(address, weight + isPrefEmail, source, &keyWords);
+    QStringList keyWords;
+    if (!nickName.isEmpty()) {
+      keyWords.append(nickName);
     }
 
     d->addCompletionItem( fullEmail, weight + isPrefEmail, source, &keyWords );
