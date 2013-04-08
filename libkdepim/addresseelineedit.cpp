@@ -715,7 +715,7 @@ void AddresseeLineEdit::Private::akonadiListAllContacts()
   kDebug() << "listing all contacts in Akonadi";
   Akonadi::RecursiveItemFetchJob *job =
            new Akonadi::RecursiveItemFetchJob( Akonadi::Collection::root(),
-                                               QStringList() << KABC::Addressee::mimeType(),
+                                               QStringList() << KABC::Addressee::mimeType() << KABC::ContactGroup::mimeType(),
                                                s_static->akonadiSession );
   job->fetchScope().fetchFullPayload();
   job->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
