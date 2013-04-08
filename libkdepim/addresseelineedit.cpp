@@ -1010,7 +1010,7 @@ void AddresseeLineEdit::Private::slotAkonadiSearchResult( KJob *job )
 {
   const int index = s_static->akonadiJobsInFlight.indexOf( qobject_cast<Akonadi::Job*>( job ) );
   if( index != -1 )
-    s_static->akonadiJobsInFlight.remove( s_static->akonadiJobsInFlight.indexOf( qobject_cast<Akonadi::Job*>( job ) ) );
+    s_static->akonadiJobsInFlight.remove( index );
   const Akonadi::ContactSearchJob *contactJob =
     qobject_cast<Akonadi::ContactSearchJob*>( job );
   const Akonadi::ContactGroupSearchJob *groupJob =
