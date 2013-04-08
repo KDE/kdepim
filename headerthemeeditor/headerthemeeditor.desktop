@@ -1,5 +1,7 @@
 [Desktop Entry]
 Name=KMail Header Theme Editor
+Name[de]=KMail-Designeditor für Vorspann
+Name[nl]=Editor van header-thema van KMail
 Name[pt]=Editor de Temas de Cabeçalho do KMail
 Name[pt_BR]=Editor de temas de cabeçalho do KMail
 Name[sk]=Editor tém hlavičiek KMail
@@ -13,6 +15,8 @@ Name[x-test]=xxKMail Header Theme Editorxx
 Type=Application
 Exec=headerthemeeditor
 GenericName=Mail Header Theme Editor
+GenericName[de]=Designeditor für E-Mail-Vorspann
+GenericName[nl]=Editor van header-thema van Mail
 GenericName[pt]=Editor de Temas de Cabeçalho do KMail
 GenericName[pt_BR]=Editor de temas de cabeçalho de e-mail
 GenericName[sk]=Editor tém hlavičiek pošty
