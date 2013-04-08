@@ -32,7 +32,9 @@ namespace KPIM {
 
 /**
  * KMailCompletion allows lookup of email addresses by keyword.
- * Typically a keywods would be firstname, lastname, nickname or domain.
+ * This is used for lookup by nickname, since we don't want the nickname to appear in the final email.
+ * E.g. you have a nickname "idiot" for your boss, you want to type "idiot" but you want the completion
+ * to offer "Full Name <email@domain>", without the nickname being visible.
  */
 class KMailCompletion : public KCompletion
 {
