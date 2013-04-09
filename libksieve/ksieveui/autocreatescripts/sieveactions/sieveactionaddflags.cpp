@@ -25,7 +25,6 @@ using namespace KSieveUi;
 SieveActionAddFlags::SieveActionAddFlags(QObject *parent)
     : SieveActionAbstractFlags(QLatin1String("addflags"), i18n("Add Flags"), parent)
 {
-    //TODO add flags
 }
 
 SieveAction* SieveActionAddFlags::newAction()

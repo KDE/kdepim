@@ -17,6 +17,11 @@
 
 #include "sieveconditionheader.h"
 #include <KLocale>
+
+#include <QComboBox>
+#include <QHBoxLayout>
+
+
 using namespace KSieveUi;
 
 SieveConditionHeader::SieveConditionHeader(QObject *parent)
@@ -31,8 +36,16 @@ SieveCondition *SieveConditionHeader::newAction()
 
 QWidget *SieveConditionHeader::createParamWidget( QWidget *parent ) const
 {
+    QWidget *w = new QWidget(parent);
+    QHBoxLayout *lay = new QHBoxLayout;
+    w->setLayout(lay);
+
+    QComboBox *headerCondition = new QComboBox;
+    headerCondition->setObjectName(QLatin1String("headercondition"));
     //TODO
-    return 0;
+    lay->addWidget(headerCondition);
+    //TODO
+    return w;
 }
 
 QString SieveConditionHeader::code(QWidget *parent) const

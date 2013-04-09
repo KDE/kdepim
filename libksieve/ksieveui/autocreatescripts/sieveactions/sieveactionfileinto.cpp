@@ -17,6 +17,9 @@
 
 #include "sieveactionfileinto.h"
 #include <KLocale>
+#include <KLineEdit>
+
+#include <QHBoxLayout>
 
 using namespace KSieveUi;
 SieveActionFileInto::SieveActionFileInto(QObject *parent)
@@ -37,8 +40,15 @@ QString SieveActionFileInto::code(QWidget *) const
 
 QWidget *SieveActionFileInto::createParamWidget( QWidget *parent ) const
 {
-    //TODO
-    return 0;
+    QWidget *w = new QWidget(parent);
+    QHBoxLayout *lay = new QHBoxLayout;
+    w->setLayout(lay);
+
+    //TODO improve it.
+    KLineEdit *edit = new KLineEdit;
+    lay->addWidget(edit);
+    edit->setObjectName(QLatin1String("fileintolineedit"));
+    return w;
 }
 
 QStringList SieveActionFileInto::needRequires() const

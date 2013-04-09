@@ -20,6 +20,8 @@
 #include <KLocale>
 #include <KLineEdit>
 
+#include <QHBoxLayout>
+
 using namespace KSieveUi;
 
 SieveActionRedirect::SieveActionRedirect(QObject *parent)
@@ -34,9 +36,13 @@ SieveAction *SieveActionRedirect::newAction()
 
 QWidget *SieveActionRedirect::createParamWidget( QWidget *parent ) const
 {
-    KLineEdit *edit = new KLineEdit(parent);
+    QWidget *w = new QWidget(parent);
+    QHBoxLayout *lay = new QHBoxLayout;
+    w->setLayout(lay);
+    KLineEdit *edit = new KLineEdit;
     edit->setObjectName(QLatin1String("RedirectEdit"));
-    return edit;
+    lay->addWidget(edit);
+    return w;
 }
 
 QString SieveActionRedirect::code(QWidget *w) const

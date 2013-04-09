@@ -27,6 +27,7 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QStackedWidget>
+#include <QDebug>
 
 using namespace KSieveUi;
 
@@ -55,7 +56,7 @@ void SieveConditionWidget::setFilterCondition( QWidget *widget )
 
 void SieveConditionWidget::generatedScript(QString &script)
 {
-    //TODO
+    script += mActionList.at(mComboBox->currentIndex())->code(mLayout->itemAtPosition( 1, 2 )->widget()) + QLatin1Char('\n');
 }
 
 void SieveConditionWidget::initWidget()
@@ -213,9 +214,14 @@ void SieveConditionWidgetLister::generatedScript(QString &script)
     const QList<QWidget*> widgetList = widgets();
     QList<QWidget*>::ConstIterator wIt = widgetList.constBegin();
     QList<QWidget*>::ConstIterator wEnd = widgetList.constEnd();
+    bool wasFirst = true;
     for ( ; wIt != wEnd ;++wIt ) {
+        if (!wasFirst) {
+            script += QLatin1String(", ");
+        }
         SieveConditionWidget *w = qobject_cast<SieveConditionWidget*>( *wIt );
         w->generatedScript(script);
+        wasFirst = false;
     }
 }
 

@@ -53,11 +53,16 @@ QStringList SelectFlagsListDialog::flags() const
 SelectFlagsListWidget::SelectFlagsListWidget(QWidget *parent)
     : QListWidget(parent)
 {
-
+    init();
 }
 
 SelectFlagsListWidget::~SelectFlagsListWidget()
 {
+}
+
+void SelectFlagsListWidget::init()
+{
+    //TODO
 }
 
 void SelectFlagsListWidget::setFlags(const QStringList& list)
@@ -70,8 +75,6 @@ QStringList SelectFlagsListWidget::flags() const
     //TODO
     return QStringList();
 }
-
-
 
 SelectFlagsWidget::SelectFlagsWidget(QWidget *parent)
     : QWidget(parent)
@@ -94,15 +97,18 @@ void SelectFlagsWidget::slotSelectFlags()
 {
     QPointer<SelectFlagsListDialog> dialog = new SelectFlagsListDialog(this);
     if (dialog->exec()) {
-        //TODO
+        const QStringList lstFlags = dialog->flags();
+        mCode.clear();
+        Q_FOREACH (const QString &flag, lstFlags) {
+            //TODO
+        }
     }
     delete dialog;
 }
 
 QString SelectFlagsWidget::code() const
 {
-    //TODO
-    return QString();
+    return mCode;
 }
 
 #include "selectflagswidget.moc"

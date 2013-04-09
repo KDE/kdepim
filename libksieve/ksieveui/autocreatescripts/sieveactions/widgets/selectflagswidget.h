@@ -34,6 +34,8 @@ public:
 
     void setFlags(const QStringList& list);
     QStringList flags() const;
+private:
+    void init();
 };
 
 
@@ -65,6 +67,7 @@ public:
 private Q_SLOTS:
     void slotSelectFlags();
 private:
+    QString mCode;
     KLineEdit *mEdit;
 };
 }

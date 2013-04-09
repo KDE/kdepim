@@ -24,7 +24,6 @@ using namespace KSieveUi;
 SieveActionRemoveFlags::SieveActionRemoveFlags(QObject *parent)
     : SieveActionAbstractFlags(QLatin1String("removeflags"), i18n("Remove Flags"), parent)
 {
-    //TODO add flags
 }
 
 SieveAction* SieveActionRemoveFlags::newAction()

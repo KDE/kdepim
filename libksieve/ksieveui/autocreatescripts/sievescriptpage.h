@@ -19,6 +19,8 @@
 #define SIEVESCRIPTPAGE_H
 
 #include <QWidget>
+class QRadioButton;
+class QAbstractButton;
 
 namespace KSieveUi {
 class SieveConditionWidgetLister;
@@ -28,14 +30,27 @@ class SieveScriptPage : public QWidget
 {
     Q_OBJECT
 public:
+
+    enum MatchCondition {
+        OrCondition,
+        AndCondition
+    };
+
     explicit SieveScriptPage(QWidget *parent = 0);
     ~SieveScriptPage();
 
     void generatedScript(QString &script);
 
+    MatchCondition matchCondition() const;
+
+private Q_SLOTS:
+    void slotRadioClicked(QAbstractButton*);
 private:
+    MatchCondition mMatchCondition;
     SieveConditionWidgetLister *mScriptConditionLister;
     SieveActionWidgetLister *mScriptActionLister;
+    QRadioButton *mMatchAll;
+    QRadioButton *mMatchAny;
 };
 }
 

@@ -19,6 +19,10 @@
 
 #include <KLocale>
 
+#include <QSpinBox>
+#include <QHBoxLayout>
+#include <QComboBox>
+
 using namespace KSieveUi;
 
 SieveConditionSize::SieveConditionSize(QObject *parent)
@@ -33,14 +37,31 @@ SieveCondition *SieveConditionSize::newAction()
 
 QWidget *SieveConditionSize::createParamWidget( QWidget *parent ) const
 {
-    //TODO
-    return 0;
+    QWidget *w = new QWidget(parent);
+    QHBoxLayout *lay = new QHBoxLayout;
+    w->setLayout(lay);
+
+    QComboBox *combo = new QComboBox;
+    combo->setObjectName(QLatin1String("combosize"));
+    combo->addItem(i18n("under"), QLatin1String(":under"));
+    combo->addItem(i18n("over"), QLatin1String(":over"));
+    lay->addWidget(combo);
+
+    QSpinBox *spinbox = new QSpinBox;
+    spinbox->setMinimum(1);
+    spinbox->setSuffix(i18n("kb"));
+    spinbox->setObjectName(QLatin1String("spinboxsize"));
+
+    lay->addWidget(spinbox);
+    return w;
 }
 
-QString SieveConditionSize::code(QWidget *parent) const
+QString SieveConditionSize::code(QWidget *w) const
 {
-    //TODO
-    return QString();
+    QComboBox *combo = w->findChild<QComboBox*>( QLatin1String("combosize") );
+    const QString comparaison = combo->itemData(combo->currentIndex()).toString();
+    QSpinBox *spinbox = w->findChild<QSpinBox*>( QLatin1String("spinboxsize") );
+    return QString::fromLatin1("size %1 %2K").arg(comparaison).arg(spinbox->value());
 }
 
 #include "sieveconditionsize.moc"

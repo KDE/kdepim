@@ -18,6 +18,7 @@
 #include "sieveactionabstractflags.h"
 #include "widgets/selectflagswidget.h"
 
+#include <QHBoxLayout>
 
 #include <KLocale>
 
@@ -29,9 +30,13 @@ SieveActionAbstractFlags::SieveActionAbstractFlags(const QString &name, const QS
 
 QWidget *SieveActionAbstractFlags::createParamWidget( QWidget *parent ) const
 {
-    SelectFlagsWidget *flagsWidget = new SelectFlagsWidget(parent);
+    QWidget *w = new QWidget(parent);
+    QHBoxLayout *lay = new QHBoxLayout;
+    w->setLayout(lay);
+    SelectFlagsWidget *flagsWidget = new SelectFlagsWidget;
     flagsWidget->setObjectName(QLatin1String("flagswidget"));
-    return flagsWidget;
+    lay->addWidget(flagsWidget);
+    return w;
 }
 
 QString SieveActionAbstractFlags::code(QWidget *w) const
