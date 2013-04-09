@@ -1,5 +1,8 @@
 project( headerthemeeditor )
 
+add_definitions( -DQT_NO_CAST_FROM_ASCII )
+add_definitions( -DQT_NO_CAST_TO_ASCII )
+
 
 set(headerthemeeditor_SRCS
   main.cpp

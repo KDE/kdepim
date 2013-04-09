@@ -32,7 +32,7 @@ int main( int argc, char **argv )
       KDEPIM_VERSION, ki18n("Header Theme Editor"), KAboutData::License_GPL_V2,
       ki18n("Copyright © 2013 headerthemeeditor authors"));
     aboutData.addAuthor(ki18n("Laurent Montel"), ki18n("Maintainer"), "montel@kde.org");
-    aboutData.setProgramIconName("kmail");
+    aboutData.setProgramIconName(QLatin1String("kmail"));
     KCmdLineArgs::init( argc, argv, &aboutData );
 
     KCmdLineOptions options;
