@@ -16,6 +16,8 @@
 */
 
 #include "sieveconditionwidgetlister.h"
+#include "sieveconditions/sieveconditionlist.h"
+#include "sieveconditions/sievecondition.h"
 #include "pimcommon/minimumcombobox.h"
 
 #include <KPushButton>
@@ -63,14 +65,27 @@ void SieveConditionWidget::initWidget()
 
     mComboBox = new PimCommon::MinimumComboBox;
     mComboBox->setEditable( false );
-    mComboBox->setMaxCount( mComboBox->count() );
-    mComboBox->adjustSize();
+
+    const QList<KSieveUi::SieveCondition*> list = KSieveUi::SieveConditionList::conditionList();
+    QList<KSieveUi::SieveCondition*>::const_iterator it;
+    QList<KSieveUi::SieveCondition*>::const_iterator end( list.constEnd() );
+    int index = 0;
+    for ( index = 0, it = list.constBegin(); it != end; ++it, ++index ) {
+        // append to the list of actions:
+        mActionList.append( *it );
+
+        // add (i18n-ized) name to combo box
+        mComboBox->addItem( (*it)->label(),(*it)->name() );
+    }
 
     mLayout->addWidget(mComboBox, 1, 1);
     connect( mComboBox, SIGNAL(activated(QString)),
              this, SLOT(slotActionChanged(QString)) );
 
-
+    mComboBox->setMaxCount( mComboBox->count() );
+    mComboBox->setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed ) );
+    setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed ) );
+    mComboBox->adjustSize();
 
     mAdd = new KPushButton( this );
     mAdd->setIcon( KIcon( QLatin1String("list-add") ) );

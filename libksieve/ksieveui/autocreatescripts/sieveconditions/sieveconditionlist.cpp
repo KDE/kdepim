@@ -21,7 +21,7 @@
 #include "sieveconditionaddress.h"
 #include "sieveconditionsize.h"
 
-QList<KSieveUi::SieveCondition *> KSieveUi::SieveActionList::conditionList()
+QList<KSieveUi::SieveCondition *> KSieveUi::SieveConditionList::conditionList()
 {
     QList<KSieveUi::SieveCondition*> list;
     list.append(new KSieveUi::SieveConditionHeader);

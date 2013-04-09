@@ -29,7 +29,7 @@ class MinimumComboBox;
 }
 
 namespace KSieveUi {
-
+class SieveCondition;
 class SieveConditionWidget : public QWidget
 {
     Q_OBJECT
@@ -53,6 +53,7 @@ private:
     KPushButton *mRemove;
     PimCommon::MinimumComboBox *mComboBox;
     QGridLayout *mLayout;
+    QList<KSieveUi::SieveCondition*> mActionList;
 };
 
 class SieveConditionWidgetLister : public KPIM::KWidgetLister

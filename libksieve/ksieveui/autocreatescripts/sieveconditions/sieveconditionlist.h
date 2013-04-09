@@ -22,7 +22,7 @@
 
 namespace KSieveUi {
 class SieveCondition;
-namespace SieveActionList {
+namespace SieveConditionList {
 QList<KSieveUi::SieveCondition *> conditionList();
 }
 }
