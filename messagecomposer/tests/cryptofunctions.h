@@ -22,6 +22,7 @@
 #define CRYPTO_FUNCTIONS_H
 
 #include <kleo/enum.h>
+#include <kmime/kmime_headers.h>
 #include <QByteArray>
 
 namespace KMime {
@@ -32,18 +33,24 @@ namespace ComposerTestUtil
 {
 
   /**
-  * Verifies that the given MIME content is signed and that the text is equal.
-  */
-  bool verifySignature( KMime::Content* content, QByteArray signedContent, Kleo::CryptoMessageFormat f );
+   * gate function to run verifySignature, verifyEncryption or verifySignatureAndEncryption.
+   */
+
+  bool verify( bool sign, bool encrypt, KMime::Content* content, QByteArray origContent, Kleo::CryptoMessageFormat f, KMime::Headers::contentEncoding encoding );
 
   /**
-  * Verifies that the given MIME content is encrypted, and that the text is equal
-  */
+   * Verifies that the given MIME content is signed and that the text is equal
+   */
+  bool verifySignature( KMime::Content* content, QByteArray signedContent, Kleo::CryptoMessageFormat f, KMime::Headers::contentEncoding encoding );
+
+  /**
+   * Verifies that the given MIME content is encrypted, and that the text is equal
+   */
   bool verifyEncryption( KMime::Content* content, QByteArray encrContent, Kleo::CryptoMessageFormat f );
 
   /**
-  * Verifies that the given MIME content is signed and then encrypted, and the original text is as specified
-  */
+   * Verifies that the given MIME content is signed and then encrypted, and the original text is as specified
+   */
   bool verifySignatureAndEncryption( KMime::Content* content, QByteArray origContent, Kleo::CryptoMessageFormat f, bool withAttachment = false );
 
 

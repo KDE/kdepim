@@ -69,7 +69,7 @@ void CryptoComposerTest::testSignOpenPGPMime()
   composer = 0;
 
   QVERIFY( ComposerTestUtil::verifySignature( message.get(), QString::fromLatin1( "All happy families are alike; each unhappy family is unhappy in its own way." ).toUtf8(),
-                                          Kleo::OpenPGPMIMEFormat ) );
+                                          Kleo::OpenPGPMIMEFormat, Headers::CE7Bit ) );
 
   QVERIFY( message->from()->asUnicodeString() == QString::fromLocal8Bit( "me@me.me" ) );
   QVERIFY( message->to()->asUnicodeString() == QString::fromLocal8Bit( "you@you.you" ) );
@@ -267,7 +267,7 @@ void CryptoComposerTest::testSignInlinePGP()
   kDebug() << message->encodedContent();
 
   QVERIFY( ComposerTestUtil::verifySignature( message.get(), QString::fromLatin1( "All happy families are alike; each unhappy family is unhappy in its own way." ).toUtf8(),
-                                          Kleo::InlineOpenPGPFormat ) );
+                                          Kleo::InlineOpenPGPFormat, Headers::CE7Bit ) );
                                           
 /*
   QVERIFY( ComposerTestUtil::verifySignature( message, QString::fromLatin1( "All happy families are alike; each unhappy family is unhappy in its own way." ).toUtf8(),
@@ -433,7 +433,7 @@ void CryptoComposerTest::runSMIMETest( bool sign, bool enc, bool opaque )
     kDebug() << "message:" << message->encodedContent();
 
     if( sign && !enc ) {
-      QVERIFY( ComposerTestUtil::verifySignature( message.get(), QString::fromLatin1( "All happy families are alike; each unhappy family is unhappy in its own way." ).toUtf8(),  f ) );
+      QVERIFY( ComposerTestUtil::verifySignature( message.get(), QString::fromLatin1( "All happy families are alike; each unhappy family is unhappy in its own way." ).toUtf8(),  f, Headers::CE7Bit ) );
     } else if( !sign && enc ) {
       QVERIFY( ComposerTestUtil::verifyEncryption( message.get(), QString::fromLatin1( "All happy families are alike; each unhappy family is unhappy in its own way." ).toUtf8(),  f ) );
     } else if( sign && enc ) {

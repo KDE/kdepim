@@ -135,8 +135,8 @@ bool SignJobTest::checkSignJob( Message::SignJob* sJob )
   Q_ASSERT( result );
   result->assemble();
 
-  return ComposerTestUtil::verifySignature( result, QString::fromLocal8Bit( "one flew over the cuckoo's nest" ).toUtf8(), Kleo::OpenPGPMIMEFormat );
-  
+  return ComposerTestUtil::verifySignature( result, QString::fromLocal8Bit( "one flew over the cuckoo's nest" ).toUtf8(), Kleo::OpenPGPMIMEFormat, KMime::Headers::CE7Bit );
+
 }
 
 #include "signjobtest.moc"

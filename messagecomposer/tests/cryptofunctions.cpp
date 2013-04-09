@@ -53,8 +53,19 @@ void nullMessageOutput(QtMsgType type, const char *msg)
   Q_UNUSED(msg);
 }
 
-bool ComposerTestUtil::verifySignature( KMime::Content* content, QByteArray signedContent, Kleo::CryptoMessageFormat f ) {
 
+bool ComposerTestUtil::verify( bool sign, bool encrypt, KMime::Content* content, QByteArray origContent, Kleo::CryptoMessageFormat f, KMime::Headers::contentEncoding encoding ) {
+  if ( sign && encrypt ) {
+    return verifySignatureAndEncryption( content, origContent, f, false );
+  } else if ( sign ) {
+    return verifySignature( content, origContent, f, encoding );
+  } else {
+    return verifyEncryption(  content, origContent, f );
+  }
+}
+
+bool ComposerTestUtil::verifySignature( KMime::Content* content, QByteArray signedContent, Kleo::CryptoMessageFormat f, KMime::Headers::contentEncoding encoding ) {
+  kDebug() << "verifySignature";
   // store it in a KMime::Message, that's what OTP needs
   KMime::Message* resultMessage =  new KMime::Message;
   resultMessage->setContent( content->encodedContent() );
@@ -70,41 +81,53 @@ bool ComposerTestUtil::verifySignature( KMime::Content* content, QByteArray sign
 
   // ensure the signed part exists and is parseable
   if( f & Kleo::OpenPGPMIMEFormat ) {
+    // process the result..
+
+    otp.parseObjectTree( resultMessage );
     KMime::Content* signedPart = MessageViewer::ObjectTreeParser::findType( resultMessage, "application", "pgp-signature", true, true );
     Q_ASSERT( signedPart );
+    Q_ASSERT( signedPart->contentTransferEncoding()->encoding() == KMime::Headers::CE7Bit );
     Q_UNUSED( signedPart );
 
-    // process the result..
-    otp.parseObjectTree( resultMessage );
     //Q_ASSERT( nh->signatureState( resultMessage ) == MessageViewer::KMMsgFullySigned );
 
     // make sure the good sig is of what we think it is
     Q_ASSERT( otp.plainTextContent().toUtf8() == signedContent );
     Q_UNUSED( signedContent );
 
+    Q_ASSERT( MessageCore::NodeHelper::firstChild(  resultMessage )->contentTransferEncoding()->encoding() == encoding );
+
     return true;
   } else if( f & Kleo::InlineOpenPGPFormat ) {
+    // process the result..
     qInstallMsgHandler(nullMessageOutput);
-    otp.processTextPlainSubtype( resultMessage, pResult );
+    otp.parseObjectTree( resultMessage );
     qInstallMsgHandler(0);
-    Q_ASSERT( pResult.inlineSignatureState() == MessageViewer::KMMsgFullySigned );
+    Q_ASSERT( nh->signatureState( resultMessage ) == MessageViewer::KMMsgFullySigned );
 
-    Q_ASSERT( otp.plainTextContent().trimmed().toUtf8() == signedContent );
+    Q_ASSERT( otp.plainTextContent().toUtf8() == signedContent );
     Q_UNUSED( signedContent );
+
+    Q_ASSERT( resultMessage->contentTransferEncoding()->encoding() == encoding );
 
     return true;
   } else if( f & Kleo::AnySMIME ) {
     if( f & Kleo::SMIMEFormat ) {
       KMime::Content* signedPart = MessageViewer::ObjectTreeParser::findType( resultMessage, "application", "pkcs7-signature", true, true );
       Q_ASSERT( signedPart );
+      Q_ASSERT( signedPart->contentTransferEncoding()->encoding() == KMime::Headers::CEbase64 );
       Q_UNUSED( signedPart );
+
+      Q_ASSERT( MessageCore::NodeHelper::firstChild( resultMessage )->contentTransferEncoding()->encoding() == encoding );
     } else if( f & Kleo::SMIMEOpaqueFormat ) {
       KMime::Content* signedPart = MessageViewer::ObjectTreeParser::findType( resultMessage, "application", "pkcs7-mime", true, true );
       Q_ASSERT( signedPart );
+      Q_ASSERT( signedPart->contentTransferEncoding()->encoding() == KMime::Headers::CEbase64 );
       Q_UNUSED( signedPart );
     }
     // process the result..
     otp.parseObjectTree( resultMessage );
+
     //Q_ASSERT( nh->signatureState( resultMessage ) == MessageViewer::KMMsgFullySigned );
 
     // make sure the good sig is of what we think it is
@@ -119,7 +142,6 @@ bool ComposerTestUtil::verifySignature( KMime::Content* content, QByteArray sign
 
 bool ComposerTestUtil::verifyEncryption( KMime::Content* content, QByteArray encrContent, Kleo::CryptoMessageFormat f )
 {
-
   // store it in a KMime::Message, that's what OTP needs
   KMime::Message* resultMessage =  new KMime::Message;
   resultMessage->setContent( content->encodedContent() );
@@ -209,8 +231,6 @@ bool ComposerTestUtil::verifySignatureAndEncryption( KMime::Content* content, QB
     kDebug() << "size:" << extra.size();
     Q_ASSERT( extra.size() == 1 );
     Q_ASSERT( nh->signatureState( extra[ 0 ]  ) == MessageViewer::KMMsgFullySigned );
-    kDebug() << "otp.plainTextContent().toUtf8():" << otp.plainTextContent().toUtf8();
-    kDebug() << "origContent" << origContent;
     Q_ASSERT( otp.plainTextContent().toUtf8() == origContent );
     Q_UNUSED( origContent );
 
@@ -222,7 +242,6 @@ bool ComposerTestUtil::verifySignatureAndEncryption( KMime::Content* content, QB
 
     Q_ASSERT( pResult.inlineEncryptionState() == MessageViewer::KMMsgFullyEncrypted );
     Q_ASSERT( pResult.inlineSignatureState() == MessageViewer::KMMsgFullySigned );
-
     Q_ASSERT( otp.plainTextContent().toUtf8() == origContent );
     Q_UNUSED( origContent );
 
