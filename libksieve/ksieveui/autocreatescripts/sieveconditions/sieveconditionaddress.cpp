@@ -44,3 +44,5 @@ QString SieveConditionAddress::code(QWidget *w) const
     //TODO
     return QString::fromLatin1("address:%1").arg(edit->text());
 }
+
+#include "sieveconditionaddress.moc"

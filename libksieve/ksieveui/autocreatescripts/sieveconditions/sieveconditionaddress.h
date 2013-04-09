@@ -23,6 +23,7 @@
 namespace KSieveUi {
 class SieveConditionAddress : public SieveCondition
 {
+    Q_OBJECT
 public:
     SieveConditionAddress(QObject *parent = 0);
 

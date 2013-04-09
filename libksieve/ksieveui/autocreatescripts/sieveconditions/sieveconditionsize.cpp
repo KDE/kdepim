@@ -42,3 +42,5 @@ QString SieveConditionSize::code(QWidget *parent) const
     //TODO
     return QString();
 }
+
+#include "sieveconditionsize.moc"
