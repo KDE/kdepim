@@ -38,7 +38,7 @@ KCMPimActivity::KCMPimActivity(QWidget *parent, const QVariantList &args)
                                         ki18n( "(c) 2013 Laurent Montel" ) );
 
     about->addAuthor( ki18n( "Laurent Montel" ), KLocalizedString(), "montel@kde.org" );
-    KGlobal::locale()->insertCatalog("libpimactivity");
+    KGlobal::locale()->insertCatalog(QLatin1String("libpimactivity"));
     setAboutData( about );
 
     initGUI();
