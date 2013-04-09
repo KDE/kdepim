@@ -37,6 +37,7 @@ set(ksieveui_LIB_SRCS
   autocreatescripts/sieveactions/sieveactionkeep.cpp
   autocreatescripts/sieveactions/sieveactionredirect.cpp
   autocreatescripts/sieveactions/sieveactionabstractflags.cpp
+  autocreatescripts/sieveactions/sieveactionremoveflags.cpp
   autocreatescripts/sieveconditions/sievecondition.cpp
   autocreatescripts/sieveconditions/sieveconditionheader.cpp
   autocreatescripts/sieveconditions/sieveconditionlist.cpp
