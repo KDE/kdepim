@@ -37,3 +37,5 @@ QString SieveActionRemoveFlags::flagsCode(QWidget *) const
     //TODO
     return QString();
 }
+
+#include "sieveactionremoveflags.moc"

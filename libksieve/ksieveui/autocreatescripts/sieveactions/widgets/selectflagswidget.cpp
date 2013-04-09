@@ -52,3 +52,5 @@ QString SelectFlagsWidget::code() const
     //TODO
     return QString();
 }
+
+#include "selectflagswidget.moc"
