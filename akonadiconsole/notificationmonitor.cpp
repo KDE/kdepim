@@ -25,6 +25,7 @@
 #include <KLocale>
 
 #include <QHeaderView>
+#include <QCheckBox>
 #include <QMenu>
 #include <QTreeView>
 #include <QVBoxLayout>
@@ -32,10 +33,18 @@
 NotificationMonitor::NotificationMonitor(QWidget* parent) :
   QWidget( parent )
 {
+  m_model = new NotificationModel( this );
+  m_model->setEnabled( false ); // since it can be slow, default to off
+
   QVBoxLayout *layout = new QVBoxLayout( this );
 
+  QCheckBox* enableCB = new QCheckBox( this );
+  enableCB->setText(i18n("Enable notification monitor"));
+  enableCB->setChecked(m_model->isEnabled());
+  connect( enableCB, SIGNAL(toggled(bool)), m_model, SLOT(setEnabled(bool)) );
+  layout->addWidget(enableCB);
+
   QTreeView *tv = new QTreeView( this );
-  m_model = new NotificationModel( this );
   tv->setModel( m_model );
   tv->expandAll();
   tv->setAlternatingRowColors( true );
@@ -43,7 +52,6 @@ NotificationMonitor::NotificationMonitor(QWidget* parent) :
   tv->header()->setResizeMode( QHeaderView::ResizeToContents );
   connect( tv, SIGNAL(customContextMenuRequested(QPoint)), SLOT(contextMenu(QPoint)) );
   layout->addWidget( tv );
-  m_model->setEnabled( false ); // since it can be slow, default to off
 
   Akonadi::Control::widgetNeedsAkonadi( this );
 }
@@ -52,12 +60,6 @@ void NotificationMonitor::contextMenu(const QPoint& pos)
 {
   QMenu menu;
   menu.addAction( i18n( "Clear View" ), m_model, SLOT(clear()) );
-  QAction *action = new QAction(&menu);
-  action->setCheckable( true );
-  action->setChecked( m_model->isEnabled() );
-  action->setText( i18n("Enabled") );
-  connect( action, SIGNAL(toggled(bool)), m_model, SLOT(setEnabled(bool)) );
-  menu.addAction( action );
   menu.exec( mapToGlobal( pos ) );
 }
 

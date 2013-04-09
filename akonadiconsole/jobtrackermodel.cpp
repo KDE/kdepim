@@ -31,7 +31,6 @@
 #include <QtCore/QDateTime>
 #include <QFont>
 #include <QPair>
-#include <QColor>
 
 #include <cassert>
 
@@ -39,9 +38,8 @@ class JobTrackerModel::Private
 {
 public:
   Private( const char *name, JobTrackerModel* _q )
-    : q( _q ), tracker( name ), currentColor( Qt::white )
+    : q( _q ), tracker( name )
   {
-
   }
 
   int rowForParentId( int parentid )
@@ -67,7 +65,6 @@ private:
   JobTrackerModel* const q;
 public:
   JobTracker tracker;
-  QColor currentColor;
 };
 
 JobTrackerModel::JobTrackerModel( const char *name, QObject* parent )
@@ -167,9 +164,6 @@ QVariant JobTrackerModel::data(const QModelIndex & idx, int role) const
       if ( info.state == JobInfo::Failed )
         return Qt::red;
     }
-    else if ( role == Qt::BackgroundColorRole ) {
-      return d->currentColor;
-    }
     else if ( role == Qt::FontRole ) {
       if ( info.state == JobInfo::Running ) {
         QFont f;
@@ -239,15 +233,6 @@ void JobTrackerModel::jobsAdded( const QList< QPair< int, int > > & jobs )
     beginInsertRows( parentIdx, pos, pos );
     endInsertRows();
     const QModelIndex idx = index( pos, 0, parentIdx );
-    if ( parentIdx.isValid() ) {
-      const int id = idx.internalId();
-      const JobInfo info = d->tracker.info( id );
-      if ( info.type == QLatin1String("Akonadi::TransactionBeginJob") ) {
-        d->currentColor.setRed( qMin( d->currentColor.red() + 25, 255 ) );
-      } else if ( info.type == QLatin1String("Akonadi::TransactionRollbackJob") || info.type == QLatin1String("Akonadi::TransactionCommitJob") ) {
-        d->currentColor.setRed( qMax( d->currentColor.red() - 25, 0 ) );
-      }
-    }
   }
 #undef PAIR
 }
