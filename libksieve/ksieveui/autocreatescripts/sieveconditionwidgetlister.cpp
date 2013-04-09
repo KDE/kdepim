@@ -73,11 +73,11 @@ void SieveConditionWidget::initWidget()
 
 
     mAdd = new KPushButton( this );
-    mAdd->setIcon( KIcon( "list-add" ) );
+    mAdd->setIcon( KIcon( QLatin1String("list-add") ) );
     mAdd->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
 
     mRemove = new KPushButton( this );
-    mRemove->setIcon( KIcon( "list-remove" ) );
+    mRemove->setIcon( KIcon( QLatin1String("list-remove") ) );
     mRemove->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
 
     mLayout->addWidget( mAdd, 1, 3 );

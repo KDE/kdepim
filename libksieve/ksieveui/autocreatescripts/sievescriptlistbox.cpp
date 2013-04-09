@@ -86,12 +86,12 @@ SieveScriptListBox::SieveScriptListBox(const QString &title, QWidget *parent)
     hb->setSpacing( 4 );
 
     mBtnNew = new QPushButton( QString(), hb );
-    mBtnNew->setIcon( KIcon( "document-new" ) );
+    mBtnNew->setIcon( KIcon( QLatin1String("document-new") ) );
     mBtnNew->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
     mBtnNew->setMinimumSize( mBtnNew->sizeHint() * 1.2 );
 
     mBtnDelete = new QPushButton( QString(), hb );
-    mBtnDelete->setIcon( KIcon( "edit-delete" ) );
+    mBtnDelete->setIcon( KIcon( QLatin1String("edit-delete") ) );
     mBtnDelete->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
     mBtnDelete->setMinimumSize( mBtnDelete->sizeHint() * 1.2 );
 

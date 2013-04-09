@@ -35,13 +35,13 @@ SieveAction *SieveActionRedirect::newAction()
 QWidget *SieveActionRedirect::createParamWidget( QWidget *parent ) const
 {
     KLineEdit *edit = new KLineEdit(parent);
-    edit->setObjectName("RedirectEdit");
+    edit->setObjectName(QLatin1String("RedirectEdit"));
     return edit;
 }
 
 QString SieveActionRedirect::code(QWidget *w) const
 {
-    const KLineEdit *edit = w->findChild<KLineEdit*>( "RedirectEdit" );
+    const KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("RedirectEdit") );
     const QString text = edit->text();
     return QString::fromLatin1("  redirect \"%1\";").arg(text);
 }

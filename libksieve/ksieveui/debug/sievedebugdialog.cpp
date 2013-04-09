@@ -284,7 +284,7 @@ void SieveDebugDialog::slotGetScript( KManageSieve::SieveJob * /* job */, bool s
 void SieveDebugDialog::slotGetScriptList( KManageSieve::SieveJob *job, bool success,
                                           const QStringList &scriptList, const QString &activeScript )
 {
-    kDebug() << "Success:" << success <<", List:" << scriptList.join("," ) <<
+    kDebug() << "Success:" << success <<", List:" << scriptList.join(QLatin1String(",") ) <<
                 ", active:" << activeScript;
     mSieveJob = 0; // job deletes itself after returning from this slot!
 
@@ -298,8 +298,8 @@ void SieveDebugDialog::slotGetScriptList( KManageSieve::SieveJob *job, bool succ
     {
         QStringList::const_iterator end = caps.constEnd();
         for ( QStringList::const_iterator it = caps.constBegin(); it !=end; ++it )
-            mEdit->append( "* " + *it + '\n' );
-        mEdit->append( "\n" );
+            mEdit->append( QLatin1String("* ") + *it + QLatin1Char('\n') );
+        mEdit->append( QLatin1String("\n") );
     }
 
     mEdit->append( i18n( "Available Sieve scripts:\n" ) );
@@ -313,8 +313,8 @@ void SieveDebugDialog::slotGetScriptList( KManageSieve::SieveJob *job, bool succ
         mScriptList = scriptList;
         QStringList::const_iterator end = scriptList.constEnd();
         for ( QStringList::const_iterator it = scriptList.constBegin(); it != end; ++it )
-            mEdit->append( "* " + *it + '\n' );
-        mEdit->append( "\n" );
+            mEdit->append( QLatin1String("* ") + *it + QLatin1Char('\n') );
+        mEdit->append( QLatin1String("\n") );
         mEdit->append( i18n( "Active script: %1\n\n", activeScript ) );
     }
 

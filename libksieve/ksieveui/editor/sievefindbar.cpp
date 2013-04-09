@@ -43,7 +43,7 @@ SieveFindBar::SieveFindBar( QPlainTextEdit * view, QWidget * parent )
     lay->setMargin( 2 );
 
     QToolButton * closeBtn = new QToolButton( this );
-    closeBtn->setIcon( KIcon( "dialog-close" ) );
+    closeBtn->setIcon( KIcon( QLatin1String("dialog-close") ) );
     closeBtn->setIconSize( QSize( 16, 16 ) );
     closeBtn->setToolTip( i18n( "Close" ) );
 
@@ -63,12 +63,12 @@ SieveFindBar::SieveFindBar( QPlainTextEdit * view, QWidget * parent )
     label->setBuddy( m_search );
     lay->addWidget( m_search );
 
-    m_findNextBtn = new QPushButton( KIcon( "go-down-search" ), i18nc( "Find and go to the next search match", "Next" ), this );
+    m_findNextBtn = new QPushButton( KIcon( QLatin1String("go-down-search") ), i18nc( "Find and go to the next search match", "Next" ), this );
     m_findNextBtn->setToolTip( i18n( "Jump to next match" ) );
     lay->addWidget( m_findNextBtn );
     m_findNextBtn->setEnabled( false );
 
-    m_findPrevBtn = new QPushButton( KIcon( "go-up-search" ), i18nc( "Find and go to the previous search match", "Previous" ), this );
+    m_findPrevBtn = new QPushButton( KIcon( QLatin1String("go-up-search") ), i18nc( "Find and go to the previous search match", "Previous" ), this );
     m_findPrevBtn->setToolTip( i18n( "Jump to previous match" ) );
     lay->addWidget( m_findPrevBtn );
     m_findPrevBtn->setEnabled( false );
@@ -163,7 +163,7 @@ void SieveFindBar::setFoundMatch( bool match )
 
         KStatefulBrush bgBrush(KColorScheme::View, bgColorScheme);
 
-        styleSheet = QString("QLineEdit{ background-color:%1 }")
+        styleSheet = QString::fromLatin1("QLineEdit{ background-color:%1 }")
                 .arg(bgBrush.brush(m_search).color().name());
     }
 

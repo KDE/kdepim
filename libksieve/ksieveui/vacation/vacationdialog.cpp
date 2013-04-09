@@ -70,7 +70,7 @@ VacationDialog::VacationDialog( const QString & caption, QWidget * parent,
     ++row;
     glay->setRowStretch( row, 1 );
     mTextEdit = new KTextEdit( frame );
-    mTextEdit->setObjectName( "mTextEdit" );
+    mTextEdit->setObjectName( QLatin1String("mTextEdit") );
     mTextEdit->setAcceptRichText( false );
     glay->addWidget( mTextEdit, row, 0, 1, 2 );
 
@@ -78,7 +78,7 @@ VacationDialog::VacationDialog( const QString & caption, QWidget * parent,
     ++row;
     int defDayInterval = 7; //default day interval
     mIntervalSpin = new KIntSpinBox( 1, 356, 1, defDayInterval, frame );
-    mIntervalSpin->setObjectName( "mIntervalSpin" );
+    mIntervalSpin->setObjectName( QLatin1String("mIntervalSpin") );
     mIntervalSpin->setSuffix( i18np(" day", " days", defDayInterval) );
     connect(mIntervalSpin, SIGNAL(valueChanged(int)), SLOT(slotIntervalSpinChanged(int)) );
     QLabel *label = new QLabel( i18n("&Resend notification only after:"), frame );
@@ -89,7 +89,7 @@ VacationDialog::VacationDialog( const QString & caption, QWidget * parent,
     // "Send responses for these addresses" lineedit and label:
     ++row;
     mMailAliasesEdit = new KLineEdit( frame );
-    mMailAliasesEdit->setObjectName( "mMailAliasesEdit" );
+    mMailAliasesEdit->setObjectName( QLatin1String("mMailAliasesEdit") );
     mMailAliasesEdit->setClearButtonShown( true );
     QLabel *tmpLabel = new QLabel( i18n("&Send responses for these addresses:"), frame );
     tmpLabel->setBuddy( mMailAliasesEdit );
@@ -99,20 +99,20 @@ VacationDialog::VacationDialog( const QString & caption, QWidget * parent,
     // "Send responses also to SPAM mail" checkbox:
     ++row;
     mSpamCheck = new QCheckBox( i18n("Do not send vacation replies to spam messages"), frame );
-    mSpamCheck->setObjectName( "mSpamCheck" );
+    mSpamCheck->setObjectName( QLatin1String("mSpamCheck") );
     mSpamCheck->setChecked( true );
     glay->addWidget( mSpamCheck, row, 0, 1, 2 );
 
     //  domain checkbox and linedit:
     ++row;
     mDomainCheck = new QCheckBox( i18n("Only react to mail coming from domain"), frame );
-    mDomainCheck->setObjectName( "mDomainCheck" );
+    mDomainCheck->setObjectName( QLatin1String("mDomainCheck") );
     mDomainCheck->setChecked( false );
     mDomainEdit = new KLineEdit( frame );
-    mDomainEdit->setObjectName( "mDomainEdit" );
+    mDomainEdit->setObjectName( QLatin1String("mDomainEdit") );
     mDomainEdit->setClearButtonShown( true );
     mDomainEdit->setEnabled( false );
-    mDomainEdit->setValidator( new QRegExpValidator( QRegExp( "[a-zA-Z0-9+-]+(?:\\.[a-zA-Z0-9+-]+)*" ), mDomainEdit ) );
+    mDomainEdit->setValidator( new QRegExpValidator( QRegExp( QLatin1String("[a-zA-Z0-9+-]+(?:\\.[a-zA-Z0-9+-]+)*") ), mDomainEdit ) );
     glay->addWidget( mDomainCheck, row, 0 );
     glay->addWidget( mDomainEdit, row, 1 );
     connect( mDomainCheck, SIGNAL(toggled(bool)),
@@ -173,7 +173,7 @@ void VacationDialog::setMailAliases( const AddrSpecList & aliases ) {
     AddrSpecList::const_iterator end(aliases.constEnd());
     for ( AddrSpecList::const_iterator it = aliases.constBegin() ; it != end; ++it )
         sl.push_back( (*it).asString() );
-    mMailAliasesEdit->setText( sl.join(", ") );
+    mMailAliasesEdit->setText( sl.join(QLatin1String(", ")) );
 }
 
 void VacationDialog::setMailAliases( const QString & aliases ) {

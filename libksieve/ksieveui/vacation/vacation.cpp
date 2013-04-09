@@ -170,7 +170,7 @@ private:
         assert( mState < mNodes.size() );
         if ( found )
             if ( const char * save_tag = expected.save_tag )
-                mResults[save_tag] = string;
+                mResults[QString::fromLatin1(save_tag)] = string;
         if ( !found && !mRecursionGuard.count( mState ) ) {
             doProcess( method, string );
         }
@@ -243,9 +243,9 @@ public:
     }
 
     bool found() const {
-        return mResults.count( "x-spam-flag" ) &&
-                mResults.count( "spam-flag-yes" ) &&
-                mResults.count( "stop" ) ;
+        return mResults.count( QLatin1String("x-spam-flag") ) &&
+                mResults.count( QLatin1String("spam-flag-yes") ) &&
+                mResults.count( QLatin1String("stop") ) ;
     }
 };
 
@@ -299,8 +299,8 @@ public:
     }
 
     QString domainName() /*not const, since map::op[] isn't const*/ {
-        return mResults.count( "stop" ) && mResults.count( "from" )
-                ? mResults["domainName"] : QString();
+        return mResults.count( QLatin1String("stop") ) && mResults.count( QLatin1String("from") )
+                ? mResults[QLatin1String("domainName")] : QString();
     }
 };
 
@@ -328,7 +328,7 @@ public:
 private:
     void commandStart( const QString & identifier ) {
         kDebug() << "( \"" << identifier <<"\" )";
-        if ( identifier != "vacation" )
+        if ( identifier != QLatin1String("vacation") )
             return;
         reset();
         mContext = VacationCommand;
@@ -357,9 +357,9 @@ private:
         kDebug() << "( \"" << tag <<"\" )";
         if ( mContext != VacationCommand )
             return;
-        if ( tag == "days" )
+        if ( tag == QLatin1String("days") )
             mContext = Days;
-        else if ( tag == "addresses" )
+        else if ( tag == QLatin1String("addresses") )
             mContext = Addresses;
     }
 
@@ -422,7 +422,7 @@ Vacation::Vacation( QObject * parent, bool checkOnly, const char * name )
     : QObject( parent ), mSieveJob( 0 ), mDialog( 0 ), mWasActive( false ),
       mCheckOnly( checkOnly )
 {
-    setObjectName( name );
+    setObjectName( QString::fromLatin1(name) );
     mUrl = findURL();
     kDebug() << "Vacation: found url \"" << mUrl.prettyUrl() <<"\"";
     if ( mUrl.isEmpty() ) // nothing to do...
@@ -442,10 +442,10 @@ Vacation::~Vacation() {
 }
 
 static inline QString dotstuff( QString s ) { // krazy:exclude=passbyvalue
-    if ( s.startsWith( '.' ) )
-        return '.' + s.replace( "\n.", "\n.." );
+    if ( s.startsWith( QLatin1Char('.') ) )
+        return QLatin1Char('.') + s.replace( QLatin1String("\n."), QLatin1String("\n..") );
     else
-        return s.replace( "\n.", "\n.." );
+        return s.replace( QLatin1String("\n."), QLatin1String("\n..") );
 }
 
 QString Vacation::composeScript( const QString & messageText,
@@ -456,14 +456,14 @@ QString Vacation::composeScript( const QString & messageText,
     QString addressesArgument;
     QStringList aliases;
     if ( !addrSpecs.empty() ) {
-        addressesArgument += ":addresses [ ";
+        addressesArgument += QLatin1String(":addresses [ ");
         QStringList sl;
         AddrSpecList::const_iterator end = addrSpecs.constEnd();
         for ( AddrSpecList::const_iterator it = addrSpecs.begin() ; it != end; ++it ) {
-            sl.push_back( '"' + (*it).asString().replace( '\\', "\\\\" ).replace( '"', "\\\"" ) + '"' );
+            sl.push_back( QLatin1Char('"') + (*it).asString().replace( QLatin1Char('\\'), QLatin1String("\\\\") ).replace( QLatin1Char('"'), QLatin1String("\\\"") ) + QLatin1Char('"') );
             aliases.push_back( (*it).asString() );
         }
-        addressesArgument += sl.join( ", " ) + " ] ";
+        addressesArgument += sl.join( QLatin1String(", ") ) + QLatin1String(" ] ");
     }
     QString script = QString::fromLatin1("require \"vacation\";\n\n" );
     if ( !sendForSpam )
@@ -473,7 +473,7 @@ QString Vacation::composeScript( const QString & messageText,
     if ( !domain.isEmpty() ) // FIXME
         script += QString::fromLatin1( "if not address :domain :contains \"from\" \"%1\" { keep; stop; }\n" ).arg( domain );
 
-    script += "vacation ";
+    script += QLatin1String("vacation ");
     script += addressesArgument;
     if ( notificationInterval > 0 )
         script += QString::fromLatin1(":days %1 ").arg( notificationInterval );
@@ -616,7 +616,7 @@ void Vacation::slotGetResult( KManageSieve::SieveJob * job, bool success,
         mDialog->setActivateVacation( active );
         mDialog->setMessageText( messageText );
         mDialog->setNotificationInterval( notificationInterval );
-        mDialog->setMailAliases( aliases.join(", ") );
+        mDialog->setMailAliases( aliases.join(QLatin1String(", ")) );
         mDialog->setSendForSpam( sendForSpam );
         mDialog->setDomainName( domainName );
         mDialog->enableDomainAndSendForSpam( !Settings::allowOutOfOfficeUploadButNoSettings() );
@@ -632,8 +632,8 @@ void Vacation::slotGetResult( KManageSieve::SieveJob * job, bool success,
     if ( mCheckOnly && mWasActive ) {
         if ( KMessageBox::questionYesNo( 0, i18n( "There is still an active out-of-office reply configured.\n"
                                                   "Do you want to edit it?"), i18n("Out-of-office reply still active"),
-                                         KGuiItem( i18n( "Edit"), "document-properties" ),
-                                         KGuiItem( i18n("Ignore"), "dialog-cancel" ) )
+                                         KGuiItem( i18n( "Edit"), QLatin1String("document-properties") ),
+                                         KGuiItem( i18n("Ignore"), QLatin1String("dialog-cancel") ) )
              == KMessageBox::Yes ) {
             emit requestEditVacation();
         }
@@ -646,7 +646,7 @@ void Vacation::slotDialogDefaults() {
     mDialog->setActivateVacation( true );
     mDialog->setMessageText( defaultMessageText() );
     mDialog->setNotificationInterval( defaultNotificationInterval() );
-    mDialog->setMailAliases( defaultMailAliases().join(", ") );
+    mDialog->setMailAliases( defaultMailAliases().join(QLatin1String(", ")) );
     mDialog->setSendForSpam( defaultSendForSpam() );
     mDialog->setDomainName( defaultDomainName() );
     mDialog->setDomainCheck( false );

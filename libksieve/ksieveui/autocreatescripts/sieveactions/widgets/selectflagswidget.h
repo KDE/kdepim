@@ -25,28 +25,39 @@ class KLineEdit;
 
 namespace KSieveUi {
 
-class SelectFlagsListDialog : public KDialog
-{
-    Q_OBJECT
-public:
-    explicit SelectFlagsListDialog(QWidget *parent);
-    ~SelectFlagsListDialog();
-};
-
 class SelectFlagsListWidget : public QListWidget
 {
     Q_OBJECT
 public:
-    explicit SelectFlagsListWidget(QWidget *parent);
+    explicit SelectFlagsListWidget(QWidget *parent = 0);
     ~SelectFlagsListWidget();
+
+    void setFlags(const QStringList& list);
+    QStringList flags() const;
 };
+
+
+class SelectFlagsListDialog : public KDialog
+{
+    Q_OBJECT
+public:
+    explicit SelectFlagsListDialog(QWidget *parent = 0);
+    ~SelectFlagsListDialog();
+
+    void setFlags(const QStringList& list);
+    QStringList flags() const;
+
+private:
+    SelectFlagsListWidget *mListWidget;
+};
+
 
 
 class SelectFlagsWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit SelectFlagsWidget(QWidget *parent);
+    explicit SelectFlagsWidget(QWidget *parent = 0);
     ~SelectFlagsWidget();
 
     QString code() const;

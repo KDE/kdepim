@@ -18,6 +18,7 @@
 #include "selectflagswidget.h"
 
 #include <KLineEdit>
+#include <KLocale>
 
 #include <QPushButton>
 #include <QHBoxLayout>
@@ -28,12 +29,26 @@ using namespace KSieveUi;
 SelectFlagsListDialog::SelectFlagsListDialog(QWidget *parent)
     : KDialog(parent)
 {
+    setCaption( i18n( "Flags" ) );
+    setButtons( Ok|Cancel );
+    setButtonFocus( Ok );
+    mListWidget = new SelectFlagsListWidget;
+    setMainWidget(mListWidget);
 }
 
 SelectFlagsListDialog::~SelectFlagsListDialog()
 {
 }
 
+void SelectFlagsListDialog::setFlags(const QStringList& list)
+{
+    mListWidget->setFlags(list);
+}
+
+QStringList SelectFlagsListDialog::flags() const
+{
+    return mListWidget->flags();
+}
 
 SelectFlagsListWidget::SelectFlagsListWidget(QWidget *parent)
     : QListWidget(parent)
@@ -45,6 +60,18 @@ SelectFlagsListWidget::~SelectFlagsListWidget()
 {
 }
 
+void SelectFlagsListWidget::setFlags(const QStringList& list)
+{
+    //TODO
+}
+
+QStringList SelectFlagsListWidget::flags() const
+{
+    //TODO
+    return QStringList();
+}
+
+
 
 SelectFlagsWidget::SelectFlagsWidget(QWidget *parent)
     : QWidget(parent)
@@ -53,7 +80,7 @@ SelectFlagsWidget::SelectFlagsWidget(QWidget *parent)
     mEdit = new KLineEdit;
     mEdit->setReadOnly(true);
     lay->addWidget(mEdit);
-    QPushButton *selectFlags = new QPushButton;
+    QPushButton *selectFlags = new QPushButton(i18n("..."));
     connect(selectFlags, SIGNAL(clicked(bool)), this, SLOT(slotSelectFlags()));
     lay->addWidget(selectFlags);
     setLayout(lay);
@@ -65,7 +92,11 @@ SelectFlagsWidget::~SelectFlagsWidget()
 
 void SelectFlagsWidget::slotSelectFlags()
 {
-    //TODO
+    QPointer<SelectFlagsListDialog> dialog = new SelectFlagsListDialog(this);
+    if (dialog->exec()) {
+        //TODO
+    }
+    delete dialog;
 }
 
 QString SelectFlagsWidget::code() const

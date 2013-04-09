@@ -16,8 +16,8 @@
 */
 
 #include "sieveactionabstractflags.h"
+#include "widgets/selectflagswidget.h"
 
-#include "pimcommon/minimumcombobox.h"
 
 #include <KLocale>
 
@@ -25,20 +25,19 @@ using namespace KSieveUi;
 SieveActionAbstractFlags::SieveActionAbstractFlags(const QString &name, const QString &label, QObject *parent)
     : SieveAction(name, label, parent)
 {
-    //TODO add flags
 }
 
 QWidget *SieveActionAbstractFlags::createParamWidget( QWidget *parent ) const
 {
-    PimCommon::MinimumComboBox *comboBox = new PimCommon::MinimumComboBox( parent );
-    comboBox->setObjectName("flags");
-    //TODO
-    return comboBox;
+    SelectFlagsWidget *flagsWidget = new SelectFlagsWidget(parent);
+    flagsWidget->setObjectName(QLatin1String("flagswidget"));
+    return flagsWidget;
 }
 
 QString SieveActionAbstractFlags::code(QWidget *w) const
 {
-    PimCommon::MinimumComboBox *comboBox = w->findChild<PimCommon::MinimumComboBox*>( "flags" );
+    SelectFlagsWidget *flagsWidget = w->findChild<SelectFlagsWidget*>( QLatin1String("flagswidget") );
+    QString flagCode = flagsWidget->code();
     QString str = flagsCode(w);
     //TODO
     return str;
