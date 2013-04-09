@@ -34,6 +34,7 @@ public:
 private:
     KLineEdit *mName;
     KLineEdit *mDescription;
+
 };
 
 #endif // DESKTOPFILEPAGE_H

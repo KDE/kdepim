@@ -16,16 +16,25 @@
 */
 
 #include "previewpage.h"
+#include "messageviewer/viewer.h"
+
+#include <QHBoxLayout>
 
 PreviewPage::PreviewPage(QWidget *parent)
     : QWidget(parent)
 {
-    //TODO use a MessageViewer
+    QHBoxLayout *lay = new QHBoxLayout;
+    mViewer = new MessageViewer::Viewer(this);
+    setLayout(lay);
 }
 
 PreviewPage::~PreviewPage()
 {
+}
 
+void PreviewPage::updateViewer()
+{
+    //TODO
 }
 
 #include "previewpage.moc"

@@ -21,12 +21,21 @@
 
 #include <QWidget>
 
+namespace MessageViewer {
+class Viewer;
+}
+
 class PreviewPage : public QWidget
 {
     Q_OBJECT
 public:
     explicit PreviewPage(QWidget *parent);
     ~PreviewPage();
+
+    void updateViewer();
+
+private:
+    MessageViewer::Viewer *mViewer;
 };
 
 #endif // PREVIEWPAGE_H

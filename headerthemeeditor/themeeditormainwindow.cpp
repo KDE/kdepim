@@ -21,7 +21,9 @@
 
 #include <KStandardAction>
 #include <KApplication>
+#include <KAction>
 #include <KActionCollection>
+#include <KLocalizedString>
 
 ThemeEditorMainWindow::ThemeEditorMainWindow()
     : KXmlGuiWindow()
@@ -30,7 +32,6 @@ ThemeEditorMainWindow::ThemeEditorMainWindow()
     setCentralWidget(mThemeEditor);
     setupActions();
     setupGUI();
-
 }
 
 ThemeEditorMainWindow::~ThemeEditorMainWindow()
@@ -40,7 +41,16 @@ ThemeEditorMainWindow::~ThemeEditorMainWindow()
 
 void ThemeEditorMainWindow::setupActions()
 {
+    mNewThemeAction = new KAction(i18n("New theme..."),this);
+    connect(mNewThemeAction, SIGNAL(triggered(bool)),SLOT(slotNewTheme()));
+    actionCollection()->addAction( QLatin1String( "new_theme" ), mNewThemeAction );
+
     KStandardAction::quit( kapp, SLOT(quit()), actionCollection() );
+}
+
+void ThemeEditorMainWindow::slotNewTheme()
+{
+    //TODO
 }
 
 #include "themeeditormainwindow.moc"

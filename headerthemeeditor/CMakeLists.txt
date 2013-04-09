@@ -15,7 +15,7 @@ set(headerthemeeditor_SRCS
 )
 
 kde4_add_executable(headerthemeeditor ${headerthemeeditor_SRCS} )
-TARGET_LINK_LIBRARIES(headerthemeeditor ${KDE4_KDEUI_LIBS} ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS} pimcommon )
+TARGET_LINK_LIBRARIES(headerthemeeditor ${KDE4_KDEUI_LIBS} ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS} pimcommon messageviewer)
 
 install(TARGETS headerthemeeditor ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES
