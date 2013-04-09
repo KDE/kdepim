@@ -68,6 +68,7 @@ public:
         q->setLayout(lay);
         q->connect(activateActivity, SIGNAL(toggled(bool)), activities, SLOT(setEnabled(bool)));
         q->connect(activateActivity, SIGNAL(toggled(bool)), tabWidget, SLOT(setEnabled(bool)));
+        q->connect(activateActivity, SIGNAL(toggled(bool)), q, SLOT(slotModified()));
 
         addPages();
         q->connect(activities, SIGNAL(activityChanged(QString)), q, SLOT(slotActivityChanged(QString)));
@@ -82,6 +83,11 @@ public:
         identity->setActivity(id);
         mailTransport->setActivity(id);
         collections->setActivity(id);
+    }
+
+    void slotModified()
+    {
+        //TODO
     }
 
     void readConfig()

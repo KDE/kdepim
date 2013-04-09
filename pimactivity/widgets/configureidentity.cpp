@@ -53,14 +53,14 @@ void ConfigureIdentity::init()
     for ( KPIMIdentities::IdentityManager::Iterator it = mManager->modifyBegin(); it != end; ++it ) {
         QListWidgetItem *item = new QListWidgetItem(mListIdentity);
         item->setCheckState(Qt::Checked);
-        //TODO check it or not.
-
+        item->setData(IdentityID, (*it).uoid());
         item->setText((*it).identityName());
     }
 }
 
 void ConfigureIdentity::readConfig(const QString &id)
 {
+
 }
 
 void ConfigureIdentity::writeConfig(const QString &id)
