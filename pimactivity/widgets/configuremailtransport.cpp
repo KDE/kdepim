@@ -47,6 +47,7 @@ void ConfigureMailtransport::init()
     int i = 0;
     Q_FOREACH (const QString &name, listNames) {
         QListWidgetItem *item = new QListWidgetItem(mListTransport);
+        item->setCheckState(Qt::Checked);
         //TODO check it or not.
         item->setText(name);
         item->setData(TransportID, listIds.at(i));

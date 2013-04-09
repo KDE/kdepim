@@ -45,6 +45,10 @@ private:
 Q_SIGNALS:
     void changed();
 private:
+    enum identityId {
+        IdentityID = Qt::UserRole +1
+    };
+
     void init();
     QListWidget *mListIdentity;
     KPIMIdentities::IdentityManager *mManager;
