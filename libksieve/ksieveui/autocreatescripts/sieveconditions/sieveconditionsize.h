@@ -23,6 +23,7 @@
 namespace KSieveUi {
 class SieveConditionSize : public SieveCondition
 {
+    Q_OBJECT
 public:
     SieveConditionSize(QObject *parent = 0);
 

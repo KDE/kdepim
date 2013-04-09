@@ -16,6 +16,7 @@
 */
 
 #include "sieveconditionaddress.h"
+#include <KLineEdit>
 #include <KLocale>
 
 using namespace KSieveUi;
@@ -32,12 +33,14 @@ SieveCondition *SieveConditionAddress::newAction()
 
 QWidget *SieveConditionAddress::createParamWidget( QWidget *parent ) const
 {
-    //TODO
-    return 0;
+    KLineEdit *edit = new KLineEdit(parent);
+    edit->setObjectName(QLatin1String("editaddress"));
+    return edit;
 }
 
-QString SieveConditionAddress::code(QWidget *parent) const
+QString SieveConditionAddress::code(QWidget *w) const
 {
+    KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("editaddress") );
     //TODO
-    return QString();
+    return QString::fromLatin1("address:%1").arg(edit->text());
 }
