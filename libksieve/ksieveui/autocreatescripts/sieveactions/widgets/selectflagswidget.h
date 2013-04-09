@@ -19,9 +19,29 @@
 #define SELECTFLAGSWIDGET_H
 
 #include <QWidget>
+#include <KDialog>
+#include <QListWidget>
 class KLineEdit;
 
 namespace KSieveUi {
+
+class SelectFlagsListDialog : public KDialog
+{
+    Q_OBJECT
+public:
+    explicit SelectFlagsListDialog(QWidget *parent);
+    ~SelectFlagsListDialog();
+};
+
+class SelectFlagsListWidget : public QListWidget
+{
+    Q_OBJECT
+public:
+    explicit SelectFlagsListWidget(QWidget *parent);
+    ~SelectFlagsListWidget();
+};
+
+
 class SelectFlagsWidget : public QWidget
 {
     Q_OBJECT

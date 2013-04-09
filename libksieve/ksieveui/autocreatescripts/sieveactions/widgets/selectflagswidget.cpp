@@ -25,6 +25,27 @@
 
 using namespace KSieveUi;
 
+SelectFlagsListDialog::SelectFlagsListDialog(QWidget *parent)
+    : KDialog(parent)
+{
+}
+
+SelectFlagsListDialog::~SelectFlagsListDialog()
+{
+}
+
+
+SelectFlagsListWidget::SelectFlagsListWidget(QWidget *parent)
+    : QListWidget(parent)
+{
+
+}
+
+SelectFlagsListWidget::~SelectFlagsListWidget()
+{
+}
+
+
 SelectFlagsWidget::SelectFlagsWidget(QWidget *parent)
     : QWidget(parent)
 {
