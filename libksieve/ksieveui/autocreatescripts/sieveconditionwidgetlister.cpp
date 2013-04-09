@@ -40,7 +40,7 @@ SieveConditionWidget::~SieveConditionWidget()
 {
 }
 
-void SieveConditionWidget::setFilterAction( QWidget *widget )
+void SieveConditionWidget::setFilterCondition( QWidget *widget )
 {
     if ( mLayout->itemAtPosition( 1, 2 ) ) {
         delete mLayout->itemAtPosition( 1, 2 )->widget();
@@ -79,8 +79,8 @@ void SieveConditionWidget::initWidget()
     }
 
     mLayout->addWidget(mComboBox, 1, 1);
-    connect( mComboBox, SIGNAL(activated(QString)),
-             this, SLOT(slotActionChanged(QString)) );
+    connect( mComboBox, SIGNAL(activated(int)),
+             this, SLOT(slotConditionChanged(int)) );
 
     mComboBox->setMaxCount( mComboBox->count() );
     mComboBox->setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed ) );
@@ -107,9 +107,11 @@ void SieveConditionWidget::initWidget()
              this, SLOT(slotRemoveWidget()) );
 }
 
-void SieveConditionWidget::slotActionChanged(const QString &action)
+void SieveConditionWidget::slotConditionChanged(int index)
 {
-
+    setFilterCondition( index < mActionList.count() ?
+                         mActionList.at( index )->createParamWidget( this ) :
+                         0 );
 }
 
 
@@ -125,7 +127,7 @@ void SieveConditionWidget::slotRemoveWidget()
 
 void SieveConditionWidget::reset()
 {
-
+    //TODO
 }
 
 void SieveConditionWidget::updateAddRemoveButton( bool addButtonEnabled, bool removeButtonEnabled )

@@ -41,13 +41,13 @@ public:
 private Q_SLOTS:
     void slotAddWidget();
     void slotRemoveWidget();
-    void slotActionChanged(const QString &action);
+    void slotConditionChanged(int index);
 Q_SIGNALS:
     void addWidget(QWidget *w);
     void removeWidget(QWidget *w);
 private:
     void initWidget();
-    void setFilterAction( QWidget *widget );
+    void setFilterCondition( QWidget *widget );
     void reset();
     KPushButton *mAdd;
     KPushButton *mRemove;
