@@ -16,6 +16,7 @@
 */
 
 #include "sieveconditionaddress.h"
+#include "widgets/selectaddresspartcombobox.h"
 
 #include <KLineEdit>
 #include <KLocale>
