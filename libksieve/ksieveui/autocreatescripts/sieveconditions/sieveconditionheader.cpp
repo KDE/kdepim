@@ -71,7 +71,7 @@ QString SieveConditionHeader::code(QWidget *w) const
     KLineEdit *value = w->findChild<KLineEdit*>( QLatin1String("value") );
     const QString valueStr = value->text();
 
-    return QString::fromLatin1("%1 %2 %3").arg(matchString).arg(headerStr).arg(valueStr);
+    return QString::fromLatin1("header %1 %2 %3").arg(matchString).arg(headerStr).arg(valueStr);
 }
 
 #include "sieveconditionheader.moc"
