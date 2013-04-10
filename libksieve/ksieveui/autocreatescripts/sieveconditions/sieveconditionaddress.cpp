@@ -17,11 +17,14 @@
 
 #include "sieveconditionaddress.h"
 #include "widgets/selectaddresspartcombobox.h"
+#include "widgets/selectmatchtypecombobox.h"
+#include "widgets/selectheadertypecombobox.h"
 
 #include <KLineEdit>
 #include <KLocale>
 
 #include <QHBoxLayout>
+#include <QLabel>
 #include <QDebug>
 
 using namespace KSieveUi;
@@ -41,6 +44,23 @@ QWidget *SieveConditionAddress::createParamWidget( QWidget *parent ) const
     QWidget *w = new QWidget(parent);
     QHBoxLayout *lay = new QHBoxLayout;
     w->setLayout(lay);
+
+
+    SelectAddressPartComboBox *selectAddressPart = new SelectAddressPartComboBox;
+    selectAddressPart->setObjectName(QLatin1String("addresspartcombobox"));
+    lay->addWidget(selectAddressPart);
+
+    SelectMatchTypeComboBox *selectMatchCombobox = new SelectMatchTypeComboBox;
+    selectMatchCombobox->setObjectName(QLatin1String("matchtypecombobox"));
+    lay->addWidget(selectMatchCombobox);
+
+    SelectHeaderTypeComboBox *selectHeaderType = new SelectHeaderTypeComboBox;
+    selectHeaderType->setObjectName(QLatin1String("headertypecombobox"));
+    lay->addWidget(selectHeaderType);
+
+    QLabel *lab = new QLabel(i18n("address:"));
+    lay->addWidget(lab);
+
     KLineEdit *edit = new KLineEdit;
     lay->addWidget(edit);
     edit->setObjectName(QLatin1String("editaddress"));
@@ -49,8 +69,19 @@ QWidget *SieveConditionAddress::createParamWidget( QWidget *parent ) const
 
 QString SieveConditionAddress::code(QWidget *w) const
 {
+    SelectMatchTypeComboBox *selectMatchCombobox = w->findChild<SelectMatchTypeComboBox*>(QLatin1String("matchtypecombobox"));
+    const QString matchTypeStr = selectMatchCombobox->code();
+
+    SelectAddressPartComboBox *selectAddressPart = w->findChild<SelectAddressPartComboBox*>(QLatin1String("addresspartcombobox"));
+    const QString selectAddressPartStr = selectAddressPart->code();
+
+    SelectHeaderTypeComboBox *selectHeaderType = w->findChild<SelectHeaderTypeComboBox*>(QLatin1String("headertypecombobox"));
+    const QString selectHeaderTypeStr = selectHeaderType->code();
+
+
     KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("editaddress") );
-    return QString::fromLatin1("address:%1").arg(edit->text());
+    const QString addressStr = edit->text();
+    return QString::fromLatin1("address %1 %2 \"%3\" \"%4\"").arg(selectAddressPartStr).arg(matchTypeStr).arg(selectHeaderTypeStr).arg(addressStr);
 }
 
 #include "sieveconditionaddress.moc"

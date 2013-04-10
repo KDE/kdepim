@@ -32,10 +32,11 @@ SieveAction* SieveActionFileInto::newAction()
   return new SieveActionFileInto;
 }
 
-QString SieveActionFileInto::code(QWidget *) const
+QString SieveActionFileInto::code(QWidget *w) const
 {
-    //TODO
-    return QString();
+    const KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("fileintolineedit") );
+    const QString text = edit->text();
+    return QString::fromLatin1("fileinto \"%1\";").arg(text);
 }
 
 QWidget *SieveActionFileInto::createParamWidget( QWidget *parent ) const
