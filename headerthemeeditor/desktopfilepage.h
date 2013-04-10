@@ -34,7 +34,7 @@ public:
     explicit DesktopFilePage(QWidget *parent = 0);
     ~DesktopFilePage();
 
-    void saveTheme();
+    void saveTheme(const QString &path);
 private:
     KLineEdit *mName;
     KLineEdit *mDescription;

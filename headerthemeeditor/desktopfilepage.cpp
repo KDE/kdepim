@@ -21,6 +21,7 @@
 
 #include <KLineEdit>
 #include <KLocale>
+#include <KDesktopFile>
 
 #include <QGridLayout>
 #include <QLabel>
@@ -48,9 +49,11 @@ DesktopFilePage::~DesktopFilePage()
 {
 }
 
-void DesktopFilePage::saveTheme()
+void DesktopFilePage::saveTheme(const QString &path)
 {
-
+    QString filename;
+    KDesktopFile desktopFile(filename);
+    //TODO
 }
 
 #include "desktopfilepage.moc"

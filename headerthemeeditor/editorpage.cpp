@@ -48,7 +48,7 @@ EditorPage::~EditorPage()
 {
 }
 
-void EditorPage::saveTheme()
+void EditorPage::saveTheme(const QString &path)
 {
 
 }

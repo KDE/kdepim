@@ -30,7 +30,7 @@ class EditorPage : public QWidget
 public:
     explicit EditorPage(QWidget *parent = 0);
     ~EditorPage();
-    void saveTheme();
+    void saveTheme(const QString &path);
 private:
     KTextEdit *mEditor;
     ThemeTemplateWidget *mThemeTemplate;
