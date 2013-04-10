@@ -56,10 +56,12 @@ void nullMessageOutput(QtMsgType type, const char *msg)
 
 bool ComposerTestUtil::verify( bool sign, bool encrypt, KMime::Content* content, QByteArray origContent, Kleo::CryptoMessageFormat f, KMime::Headers::contentEncoding encoding ) {
   if ( sign && encrypt ) {
+    Q_UNUSED( encoding );
     return verifySignatureAndEncryption( content, origContent, f, false );
   } else if ( sign ) {
     return verifySignature( content, origContent, f, encoding );
   } else {
+    Q_UNUSED( encoding );
     return verifyEncryption(  content, origContent, f );
   }
 }
@@ -243,6 +245,7 @@ bool ComposerTestUtil::verifySignatureAndEncryption( KMime::Content* content, QB
     // ensure the enc part exists and is parseable
     KMime::Content* encPart = MessageViewer::ObjectTreeParser::findType( resultMessage.get(), "application", "pgp-encrypted", true, true );
     Q_ASSERT( encPart );
+    Q_UNUSED( encPart );
 
     otp.parseObjectTree( resultMessage.get() );
     Q_ASSERT( nh->encryptionState( resultMessage.get() ) == MessageViewer::KMMsgFullyEncrypted );
