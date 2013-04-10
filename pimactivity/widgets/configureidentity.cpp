@@ -60,11 +60,29 @@ void ConfigureIdentity::init()
 
 void ConfigureIdentity::readConfig(const QString &id)
 {
-
+    KSharedConfigPtr conf = configFromActivity(id);
+    if (conf->hasGroup(QLatin1String("identity"))) {
+        KConfigGroup grp = conf->group(QLatin1String("identity"));
+        const QStringList list = grp.readEntry(QLatin1String("ActiveIdentity"), QStringList());
+        Q_FOREACH (const QString &l, list ) {
+            //TODO
+        }
+    }
 }
 
 void ConfigureIdentity::writeConfig(const QString &id)
 {
+    KSharedConfigPtr conf = configFromActivity(id);
+    KConfigGroup grp = conf->group(QLatin1String("identity"));
+    const int numberOfItems(mListIdentity->count());
+    QStringList lst;
+    for (int i = 0; i < numberOfItems; ++i) {
+        QListWidgetItem *item = mListIdentity->item(i);
+        if (item->checkState() == Qt::Checked) {
+            lst << item->data(IdentityID).toString();
+        }
+    }
+    grp.writeEntry(QLatin1String("ActiveIdentity"), lst);
 
 }
 

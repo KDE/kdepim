@@ -58,12 +58,29 @@ void ConfigureMailtransport::init()
 
 void ConfigureMailtransport::readConfig(const QString &id)
 {
-
+    KSharedConfigPtr conf = configFromActivity(id);
+    if (conf->hasGroup(QLatin1String("mailtransport"))) {
+        KConfigGroup grp = conf->group(QLatin1String("mailtransport"));
+        const QStringList list = grp.readEntry(QLatin1String("ActiveMailTransport"), QStringList());
+        Q_FOREACH (const QString &l, list ) {
+            //TODO
+        }
+    }
 }
 
 void ConfigureMailtransport::writeConfig(const QString &id)
 {
-
+    KSharedConfigPtr conf = configFromActivity(id);
+    KConfigGroup grp = conf->group(QLatin1String("mailtransport"));
+    const int numberOfItems(mListTransport->count());
+    QStringList lst;
+    for (int i = 0; i < numberOfItems; ++i) {
+        QListWidgetItem *item = mListTransport->item(i);
+        if (item->checkState() == Qt::Checked) {
+            lst << item->data(TransportID).toString();
+        }
+    }
+    grp.writeEntry(QLatin1String("ActiveMailTransport"), lst);
 }
 
 }
