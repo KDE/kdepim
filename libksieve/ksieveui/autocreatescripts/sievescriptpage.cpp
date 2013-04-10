@@ -93,10 +93,19 @@ void SieveScriptPage::generatedScript(QString &script)
     } else if (mMatchCondition == OrCondition) {
         script += QLatin1String("if anyof (");
     }
+    QStringList lstRequires;
     mScriptConditionLister->generatedScript(script);
     script += QLatin1String(") {\n");
-    mScriptActionLister->generatedScript(script);
+    mScriptActionLister->generatedScript(script, lstRequires);
     script += QLatin1String("}\n");
+
+    QString requires;
+    Q_FOREACH (const QString &r, lstRequires) {
+        requires += QString::fromLatin1("require \"%1\";\n").arg(r);
+    }
+    if (!requires.isEmpty()) {
+        script.prepend(requires);
+    }
 }
 
 }

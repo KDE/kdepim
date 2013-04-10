@@ -38,7 +38,7 @@ public:
     explicit SieveActionWidget(QWidget *);
     ~SieveActionWidget();
     void updateAddRemoveButton( bool addButtonEnabled, bool removeButtonEnabled );
-    void generatedScript(QString &script);
+    void generatedScript(QString &script, QStringList &requires);
 private Q_SLOTS:
     void slotAddWidget();
     void slotRemoveWidget();
@@ -64,7 +64,7 @@ public:
     explicit SieveActionWidgetLister(QWidget *parent = 0);
     ~SieveActionWidgetLister();
 
-    void generatedScript(QString &script);
+    void generatedScript(QString &script, QStringList &requires);
     int actionNumber() const;
 public Q_SLOTS:
     void slotAddWidget( QWidget *w );
