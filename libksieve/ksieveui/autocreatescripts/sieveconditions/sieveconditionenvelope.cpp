@@ -15,20 +15,36 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "sieveconditionlist.h"
-#include "sievecondition.h"
-#include "sieveconditionheader.h"
-#include "sieveconditionaddress.h"
-#include "sieveconditionsize.h"
 #include "sieveconditionenvelope.h"
 
-QList<KSieveUi::SieveCondition *> KSieveUi::SieveConditionList::conditionList()
+#include <KLineEdit>
+#include <KLocale>
+
+#include <QHBoxLayout>
+#include <QDebug>
+
+using namespace KSieveUi;
+
+SieveConditionEnvelope::SieveConditionEnvelope(QObject *parent)
+    : SieveCondition(QLatin1String("envelope"), i18n("Envelope"), parent)
 {
-    QList<KSieveUi::SieveCondition*> list;
-    list.append(new KSieveUi::SieveConditionHeader);
-    list.append(new KSieveUi::SieveConditionAddress);
-    list.append(new KSieveUi::SieveConditionSize);
-    list.append(new KSieveUi::SieveConditionEnvelope);
-    return list;
 }
 
+SieveCondition *SieveConditionEnvelope::newAction()
+{
+    return new SieveConditionEnvelope;
+}
+
+QWidget *SieveConditionEnvelope::createParamWidget( QWidget *parent ) const
+{
+    //TODO
+    return 0;
+}
+
+QString SieveConditionEnvelope::code(QWidget *w) const
+{
+    //TODO
+    return QString();
+}
+
+#include "sieveconditionenvelope.moc"

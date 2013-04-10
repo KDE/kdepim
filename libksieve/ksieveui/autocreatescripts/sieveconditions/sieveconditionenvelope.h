@@ -15,20 +15,28 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "sieveconditionlist.h"
-#include "sievecondition.h"
-#include "sieveconditionheader.h"
-#include "sieveconditionaddress.h"
-#include "sieveconditionsize.h"
-#include "sieveconditionenvelope.h"
 
-QList<KSieveUi::SieveCondition *> KSieveUi::SieveConditionList::conditionList()
+#ifndef SIEVECONDITIONENVELOPE_H
+#define SIEVECONDITIONENVELOPE_H
+
+#include "sievecondition.h"
+
+namespace KSieveUi {
+class SieveConditionEnvelope : public SieveCondition
 {
-    QList<KSieveUi::SieveCondition*> list;
-    list.append(new KSieveUi::SieveConditionHeader);
-    list.append(new KSieveUi::SieveConditionAddress);
-    list.append(new KSieveUi::SieveConditionSize);
-    list.append(new KSieveUi::SieveConditionEnvelope);
-    return list;
+    Q_OBJECT
+public:
+    SieveConditionEnvelope(QObject *parent = 0);
+
+    /**
+     * Static function that creates a filter action of this type.
+     */
+    static SieveCondition *newAction();
+
+    QWidget *createParamWidget( QWidget *parent ) const;
+
+    QString code(QWidget *w) const;
+};
 }
 
+#endif // SIEVECONDITIONENVELOPE_H
