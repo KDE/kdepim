@@ -57,7 +57,7 @@ void SieveActionWidget::setFilterAction( QWidget *widget )
 
 void SieveActionWidget::generatedScript(QString &script)
 {
-    script += mActionList.at(mComboBox->currentIndex())->code(mLayout->itemAtPosition( 1, 2 )->widget()) + QLatin1Char('\n');
+    script += QLatin1String("    ") + mActionList.at(mComboBox->currentIndex())->code(mLayout->itemAtPosition( 1, 2 )->widget()) + QLatin1Char('\n');
 }
 
 void SieveActionWidget::initWidget()
