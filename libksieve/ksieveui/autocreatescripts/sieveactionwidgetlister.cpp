@@ -213,5 +213,10 @@ QWidget *SieveActionWidgetLister::createWidget( QWidget *parent )
     return w;
 }
 
+int SieveActionWidgetLister::actionNumber() const
+{
+    return widgets().count();
+}
+
 
 #include "sieveactionwidgetlister.moc"

@@ -49,7 +49,7 @@ QString SieveActionRedirect::code(QWidget *w) const
 {
     const KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("RedirectEdit") );
     const QString text = edit->text();
-    return QString::fromLatin1("  redirect \"%1\";").arg(text);
+    return QString::fromLatin1("redirect \"%1\";").arg(text);
 }
 
 #include "sieveactionredirect.moc"

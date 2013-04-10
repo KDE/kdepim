@@ -53,7 +53,7 @@ QString SieveActionReject::code(QWidget *w) const
     const KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("RejectText") );
     const QString text = edit->text();
 
-    return QString::fromLatin1("  reject \"%1\";").arg(text);
+    return QString::fromLatin1("reject \"%1\";").arg(text);
 }
 
 QStringList SieveActionReject::needRequires() const

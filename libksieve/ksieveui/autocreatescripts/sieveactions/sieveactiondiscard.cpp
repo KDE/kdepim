@@ -31,7 +31,7 @@ SieveAction* SieveActionDiscard::newAction()
 
 QString SieveActionDiscard::code(QWidget *) const
 {
-    return QLatin1String("  discard;");
+    return QLatin1String("discard;");
 }
 
 #include "sieveactiondiscard.moc"

@@ -64,6 +64,9 @@ public:
     ~SieveConditionWidgetLister();
 
     void generatedScript(QString &script);
+    int conditionNumber() const;
+
+
 public Q_SLOTS:
     void slotAddWidget( QWidget *w );
     void slotRemoveWidget( QWidget *w );

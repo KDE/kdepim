@@ -225,5 +225,9 @@ void SieveConditionWidgetLister::generatedScript(QString &script)
     }
 }
 
+int SieveConditionWidgetLister::conditionNumber() const
+{
+    return widgets().count();
+}
 
 #include "sieveconditionwidgetlister.moc"

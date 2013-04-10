@@ -65,6 +65,7 @@ public:
     ~SieveActionWidgetLister();
 
     void generatedScript(QString &script);
+    int actionNumber() const;
 public Q_SLOTS:
     void slotAddWidget( QWidget *w );
     void slotRemoveWidget( QWidget *w );
