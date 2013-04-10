@@ -39,7 +39,7 @@ public:
     explicit SieveScriptPage(QWidget *parent = 0);
     ~SieveScriptPage();
 
-    void generatedScript(QString &script);
+    void generatedScript(QString &script, QStringList &requires);
 
     MatchCondition matchCondition() const;
 

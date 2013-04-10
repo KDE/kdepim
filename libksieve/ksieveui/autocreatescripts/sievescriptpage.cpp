@@ -84,7 +84,7 @@ void SieveScriptPage::slotRadioClicked(QAbstractButton* button)
     }
 }
 
-void SieveScriptPage::generatedScript(QString &script)
+void SieveScriptPage::generatedScript(QString &script, QStringList &requires)
 {
     if (mScriptConditionLister->conditionNumber() == 1) {
         script += QLatin1String("if (");
@@ -93,19 +93,10 @@ void SieveScriptPage::generatedScript(QString &script)
     } else if (mMatchCondition == OrCondition) {
         script += QLatin1String("if anyof (");
     }
-    QStringList lstRequires;
     mScriptConditionLister->generatedScript(script);
     script += QLatin1String(") {\n");
-    mScriptActionLister->generatedScript(script, lstRequires);
+    mScriptActionLister->generatedScript(script, requires);
     script += QLatin1String("}\n");
-
-    QString requires;
-    Q_FOREACH (const QString &r, lstRequires) {
-        requires += QString::fromLatin1("require \"%1\";\n").arg(r);
-    }
-    if (!requires.isEmpty()) {
-        script.prepend(requires);
-    }
 }
 
 }

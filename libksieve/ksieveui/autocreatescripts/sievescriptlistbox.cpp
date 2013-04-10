@@ -62,15 +62,15 @@ void SieveScriptListItem::setScriptPage(SieveScriptPage *page)
     mScriptPage = page;
 }
 
-QString SieveScriptListItem::generatedScript() const
+QString SieveScriptListItem::generatedScript(QStringList &requires) const
 {
     QString script;
     if (!mDescription.isEmpty()) {
-        script = QLatin1Char('#') + i18n("Description:") + QLatin1Char('\n') + mDescription;
+        script = QLatin1Char('#') + i18n("Description:") + QLatin1Char('\n') + mDescription + QLatin1Char('\n');
         script.replace(QLatin1Char('\n'), QLatin1String("\n#"));
     }
     if (mScriptPage) {
-        mScriptPage->generatedScript(script);
+        mScriptPage->generatedScript(script, requires);
     }
     return script;
 }
@@ -184,13 +184,23 @@ void SieveScriptListBox::slotEditDescription()
 QString SieveScriptListBox::generatedScript() const
 {
     QString resultScript;
+    QStringList lstRequires;
     for (int i = 0; i< mSieveListScript->count(); ++i) {
         SieveScriptListItem* item = static_cast<SieveScriptListItem*>(mSieveListScript->item(i));
         if (i != 0)
             resultScript += QLatin1Char('\n');
         resultScript += QLatin1Char('#') + i18n("Script name: %1",item->text()) + QLatin1Char('\n');
-        resultScript += item->generatedScript();
+        resultScript += item->generatedScript(lstRequires);
     }
+
+    QString requires;
+    Q_FOREACH (const QString &r, lstRequires) {
+        requires += QString::fromLatin1("require \"%1\";\n").arg(r);
+    }
+    if (!requires.isEmpty()) {
+        resultScript.prepend(requires);
+    }
+
     return resultScript;
 }
 
