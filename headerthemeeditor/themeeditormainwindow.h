@@ -32,11 +32,13 @@ public:
 
 private Q_SLOTS:
     void slotNewTheme();
+    void slotCloseTheme();
 
 private:
     void setupActions();
     ThemeEditorPage *mThemeEditor;
     KAction *mNewThemeAction;
+    KAction *mCloseThemeAction;
 };
 
 #endif // THEMEEDITORMAINWINDOW_H
