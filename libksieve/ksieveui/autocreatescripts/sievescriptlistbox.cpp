@@ -66,8 +66,9 @@ QString SieveScriptListItem::generatedScript(QStringList &requires) const
 {
     QString script;
     if (!mDescription.isEmpty()) {
-        script = QLatin1Char('#') + i18n("Description:") + QLatin1Char('\n') + mDescription + QLatin1Char('\n');
+        script = QLatin1Char('#') + i18n("Description:") + QLatin1Char('\n') + mDescription;
         script.replace(QLatin1Char('\n'), QLatin1String("\n#"));
+        script += QLatin1Char('\n');
     }
     if (mScriptPage) {
         mScriptPage->generatedScript(script, requires);
