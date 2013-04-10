@@ -1,3 +1,6 @@
+add_definitions( -DQT_NO_CAST_FROM_ASCII )
+add_definitions( -DQT_NO_CAST_TO_ASCII )
+
 include_directories(${CMAKE_SOURCE_DIR}/libksieve
 	${CMAKE_SOURCE_DIR}/pimcommon
 	${CMAKE_BINARY_DIR}/pimcommon
@@ -26,6 +29,28 @@ set(ksieveui_LIB_SRCS
   autocreatescripts/sievescriptdescriptiondialog.cpp
   autocreatescripts/sieveactionwidgetlister.cpp
   autocreatescripts/sievescriptpage.cpp
+  autocreatescripts/sieveactions/sieveactionlist.cpp
+  autocreatescripts/sieveactions/sieveaction.cpp
+  autocreatescripts/sieveactions/sieveactiondiscard.cpp
+  autocreatescripts/sieveactions/sieveactionstop.cpp
+  autocreatescripts/sieveactions/sieveactionsetflags.cpp
+  autocreatescripts/sieveactions/sieveactionaddflags.cpp
+  autocreatescripts/sieveactions/sieveactionfileinto.cpp
+  autocreatescripts/sieveactions/sieveactionreject.cpp
+  autocreatescripts/sieveactions/sieveactionkeep.cpp
+  autocreatescripts/sieveactions/sieveactionredirect.cpp
+  autocreatescripts/sieveactions/sieveactionabstractflags.cpp
+  autocreatescripts/sieveactions/sieveactionremoveflags.cpp
+  autocreatescripts/sieveactions/widgets/selectflagswidget.cpp
+  autocreatescripts/sieveconditions/sievecondition.cpp
+  autocreatescripts/sieveconditions/sieveconditionheader.cpp
+  autocreatescripts/sieveconditions/sieveconditionlist.cpp
+  autocreatescripts/sieveconditions/sieveconditionaddress.cpp
+  autocreatescripts/sieveconditions/sieveconditionsize.cpp
+  autocreatescripts/sieveconditions/sieveconditionenvelope.cpp
+  autocreatescripts/sieveconditions/widgets/selectmatchtypecombobox.cpp
+  autocreatescripts/sieveconditions/widgets/selectaddresspartcombobox.cpp
+  autocreatescripts/sieveconditions/widgets/selectheadertypecombobox.cpp
 )
 
 kde4_add_kcfg_files(ksieveui_LIB_SRCS settings.kcfgc)

@@ -379,7 +379,7 @@ QString IncidenceAlarm::stringForAlarm( const KCalCore::Alarm::Ptr &alarm )
       }
     }
   } else {
-    if ( useoffset > 0 ) {
+    if ( useoffset > 0 && alarm->hasStartOffset() ) {
       if ( mIsTodo ) {
         return i18n( "%1 %2 %3 after the to-do started %4 (Disabled)",
                      action, useoffset, offsetUnit, repeatStr );
@@ -388,7 +388,7 @@ QString IncidenceAlarm::stringForAlarm( const KCalCore::Alarm::Ptr &alarm )
                      action, useoffset, offsetUnit, repeatStr );
       }
 
-    } else if ( useoffset < 0 ) {
+    } else if ( useoffset < 0 && alarm->hasStartOffset() ) {
       if ( mIsTodo ) {
         return i18n( "%1 %2 %3 before the to-do starts %4 (Disabled)",
                      action, qAbs( useoffset ), offsetUnit, repeatStr );

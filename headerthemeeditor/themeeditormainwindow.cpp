@@ -19,16 +19,47 @@
 
 #include "themeeditorpage.h"
 
+#include <KStandardAction>
+#include <KApplication>
+#include <KAction>
+#include <KActionCollection>
+#include <KLocalizedString>
+
 ThemeEditorMainWindow::ThemeEditorMainWindow()
     : KXmlGuiWindow()
 {
     mThemeEditor = new ThemeEditorPage;
     setCentralWidget(mThemeEditor);
+    setupActions();
+    setupGUI();
 }
 
 ThemeEditorMainWindow::~ThemeEditorMainWindow()
 {
 
+}
+
+void ThemeEditorMainWindow::setupActions()
+{
+    mNewThemeAction = new KAction(i18n("New theme..."),this);
+    connect(mNewThemeAction, SIGNAL(triggered(bool)),SLOT(slotNewTheme()));
+    actionCollection()->addAction( QLatin1String( "new_theme" ), mNewThemeAction );
+
+    mCloseThemeAction = new KAction(i18n("Close"),this);
+    connect(mCloseThemeAction, SIGNAL(triggered(bool)),SLOT(slotCloseTheme()));
+    actionCollection()->addAction( QLatin1String( "new_theme" ), mCloseThemeAction );
+
+    KStandardAction::quit( kapp, SLOT(quit()), actionCollection() );
+}
+
+void ThemeEditorMainWindow::slotCloseTheme()
+{
+    //TODO
+}
+
+void ThemeEditorMainWindow::slotNewTheme()
+{
+    //TODO
 }
 
 #include "themeeditormainwindow.moc"

@@ -30,6 +30,8 @@ class ThemeEditorPage : public QWidget
 public:
     explicit ThemeEditorPage(QWidget *parent = 0);
     ~ThemeEditorPage();
+
+    void saveTheme();
 private:
     KTabWidget *mTabWidget;
     EditorPage *mEditorPage;

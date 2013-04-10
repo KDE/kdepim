@@ -47,6 +47,8 @@ public:
 private:
     friend class ConfigureActivityWidgetPrivate;
     ConfigureActivityWidgetPrivate * const d;
+    Q_PRIVATE_SLOT( d, void slotActivityChanged(const QString&))
+    Q_PRIVATE_SLOT( d, void slotModified())
 };
 }
 

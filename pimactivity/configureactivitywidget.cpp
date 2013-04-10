@@ -47,7 +47,7 @@ public:
     {
         QVBoxLayout * lay = new QVBoxLayout;
         activateActivity = new QCheckBox(i18n("Enable Support Activity"));
-
+        activateActivity->setChecked(true);
         lay->addWidget(activateActivity);
 
         lay->addWidget(new ActivityWarning(manager));
@@ -57,6 +57,7 @@ public:
         verticalLayout->addWidget(lab);
 
         activities = new ComboBoxActivity(manager, q);
+
         verticalLayout->addWidget(activities);
 
 
@@ -67,25 +68,41 @@ public:
         q->setLayout(lay);
         q->connect(activateActivity, SIGNAL(toggled(bool)), activities, SLOT(setEnabled(bool)));
         q->connect(activateActivity, SIGNAL(toggled(bool)), tabWidget, SLOT(setEnabled(bool)));
+        q->connect(activateActivity, SIGNAL(toggled(bool)), q, SLOT(slotModified()));
 
         addPages();
+        q->connect(activities, SIGNAL(activityChanged(QString)), q, SLOT(slotActivityChanged(QString)));
+        //TODO initialize activity
     }
     ~ConfigureActivityWidgetPrivate()
     {
     }
 
+    void slotActivityChanged(const QString &id)
+    {
+        identity->setActivity(id);
+        mailTransport->setActivity(id);
+        collections->setActivity(id);
+    }
+
+    void slotModified()
+    {
+        //TODO
+    }
+
     void readConfig()
     {
-        identity->readConfig();
-        mailTransport->readConfig();
-        collections->readConfig();
+        //TODO
     }
 
     void writeConfig()
     {
-        identity->writeConfig();
-        mailTransport->writeConfig();
-        collections->writeConfig();
+        //TODO
+    }
+
+    void setDefault()
+    {
+        //TODO
     }
 
     void addPages()
@@ -132,7 +149,7 @@ void ConfigureActivityWidget::writeConfig()
 
 void ConfigureActivityWidget::defaults()
 {
-    //TODO
+    d->setDefault();
 }
 
 }

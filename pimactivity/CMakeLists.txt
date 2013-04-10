@@ -6,6 +6,9 @@ set_package_properties(KActivities PROPERTIES DESCRIPTION "KActivities" URL "htt
 
 include_directories(${KACTIVITIES_INCLUDE_DIRS})
 
+add_definitions( -DQT_NO_CAST_FROM_ASCII )
+add_definitions( -DQT_NO_CAST_TO_ASCII )
+
 
 set(libpimactivity_SRCS
 	widgets/comboboxactivity.cpp
@@ -15,6 +18,7 @@ set(libpimactivity_SRCS
   	widgets/configurecollections.cpp
   	widgets/configuremailtransport.cpp
   	widgets/activitywarning.cpp
+        widgets/abstractconfigurewidget.cpp
 )
 
 kde4_add_library(pimactivity ${LIBRARY_TYPE} ${libpimactivity_SRCS})
@@ -25,6 +29,7 @@ target_link_libraries(pimactivity
     ${KDE4_KDEUI_LIBS}
     ${KACTIVITIES_LIBRARY}
     ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
+    ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
 )
 
 

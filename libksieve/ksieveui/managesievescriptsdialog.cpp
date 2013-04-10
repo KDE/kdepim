@@ -26,7 +26,7 @@
 
 using namespace KSieveUi;
 
-ManageSieveScriptsDialog::ManageSieveScriptsDialog( QWidget * parent, const char * name )
+ManageSieveScriptsDialog::ManageSieveScriptsDialog( QWidget * parent )
     : QDialog( parent ),
       mSieveEditor( 0 ),
       mIsNewScript( false ),
@@ -35,7 +35,6 @@ ManageSieveScriptsDialog::ManageSieveScriptsDialog( QWidget * parent, const char
       mClearAll( false )
 {
     setWindowTitle( i18n( "Manage Sieve Scripts" ) );
-    setObjectName( name );
     setModal( false );
     setAttribute( Qt::WA_GroupLeader );
     setAttribute( Qt::WA_DeleteOnClose );
@@ -183,7 +182,7 @@ void ManageSieveScriptsDialog::slotRefresh()
 
         last = new QTreeWidgetItem( mListView, last );
         last->setText( 0, type.name() );
-        last->setIcon( 0, SmallIcon( "network-server" ) );
+        last->setIcon( 0, SmallIcon( QLatin1String("network-server") ) );
 
         const KUrl u = KSieveUi::Util::findSieveUrlForAccount( type.identifier() );
         if ( u.isEmpty() ) {

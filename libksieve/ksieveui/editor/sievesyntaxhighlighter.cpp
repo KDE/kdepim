@@ -60,7 +60,7 @@ void SieveSyntaxHighlighter::init()
     keywordFormat.setForeground( Qt::darkMagenta );
     keywordFormat.setFontWeight( QFont::Bold );
     QStringList keywords;
-    keywords << QLatin1String( "\\brequire\\b" )<<QLatin1String( "\\bstop\\b" );
+    keywords << QLatin1String( "\\brequire\\b" );
     Q_FOREACH ( const QString & s, keywords ) {
         const QRegExp regex( s, Qt::CaseInsensitive );
         m_rules.append( Rule( regex, keywordFormat ) );
@@ -93,7 +93,7 @@ void SieveSyntaxHighlighter::init()
     actionFormat.setForeground( Qt::blue );
     actionFormat.setFontWeight( QFont::Bold );
     QStringList actionType;
-    actionType << QLatin1String( "\\bkeep\\b" )<<QLatin1String( "\\breject\\b" )<<QLatin1String( "\\bdiscard\\b" )<<QLatin1String( "\\bredirect\\b" )<<QLatin1String( "\\bfileinto\\b" )<<QLatin1String( "\\bsetflag\\b" )<<QLatin1String( "\\baddflag\\b" )<<QLatin1String("\\bvacation\\b");
+    actionType <<QLatin1String( "\\bstop\\b" ) << QLatin1String( "\\bkeep\\b" )<<QLatin1String( "\\breject\\b" )<<QLatin1String( "\\bdiscard\\b" )<<QLatin1String( "\\bredirect\\b" )<<QLatin1String( "\\bfileinto\\b" )<<QLatin1String( "\\bsetflag\\b" )<<QLatin1String( "\\baddflag\\b" )<<QLatin1String("\\bvacation\\b");
     Q_FOREACH ( const QString & s, actionType ) {
         const QRegExp regex( s, Qt::CaseInsensitive );
         m_rules.append( Rule( regex, actionFormat ) );

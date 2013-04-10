@@ -21,8 +21,8 @@
 #ifndef CONFIGUREIDENTITY_H
 #define CONFIGUREIDENTITY_H
 
+#include "abstractconfigurewidget.h"
 #include <QWidget>
-#include "pimactivity_export.h"
 
 class QListWidget;
 namespace KPIMIdentities {
@@ -31,18 +31,24 @@ class IdentityManager;
 
 namespace PimActivity {
 
-class PIMACTIVITY_EXPORT ConfigureIdentity : public QWidget
+class ConfigureIdentity : public QWidget, public AbstractConfigureWidget
 {
     Q_OBJECT
 public:
     explicit ConfigureIdentity(QWidget *parent);
     ~ConfigureIdentity();
 
-    void readConfig();
-    void writeConfig();
+private:
+    void readConfig(const QString &id);
+    void writeConfig(const QString &id);
+
 Q_SIGNALS:
     void changed();
 private:
+    enum identityId {
+        IdentityID = Qt::UserRole +1
+    };
+
     void init();
     QListWidget *mListIdentity;
     KPIMIdentities::IdentityManager *mManager;

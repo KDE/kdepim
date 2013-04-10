@@ -21,6 +21,7 @@
 #include "configureidentity.h"
 
 #include <KPIMIdentities/IdentityManager>
+#include <KPIMIdentities/Identity>
 
 
 #include <QVBoxLayout>
@@ -41,6 +42,7 @@ ConfigureIdentity::ConfigureIdentity(QWidget *parent)
 
 ConfigureIdentity::~ConfigureIdentity()
 {
+    delete mManager;
 }
 
 void ConfigureIdentity::init()
@@ -49,18 +51,38 @@ void ConfigureIdentity::init()
     KPIMIdentities::IdentityManager::Iterator end( mManager->modifyEnd() );
 
     for ( KPIMIdentities::IdentityManager::Iterator it = mManager->modifyBegin(); it != end; ++it ) {
-      //TODO
+        QListWidgetItem *item = new QListWidgetItem(mListIdentity);
+        item->setCheckState(Qt::Checked);
+        item->setData(IdentityID, (*it).uoid());
+        item->setText((*it).identityName());
     }
-
-    //TODO init list.
 }
 
-void ConfigureIdentity::readConfig()
+void ConfigureIdentity::readConfig(const QString &id)
 {
+    KSharedConfigPtr conf = configFromActivity(id);
+    if (conf->hasGroup(QLatin1String("identity"))) {
+        KConfigGroup grp = conf->group(QLatin1String("identity"));
+        const QStringList list = grp.readEntry(QLatin1String("ActiveIdentity"), QStringList());
+        Q_FOREACH (const QString &l, list ) {
+            //TODO
+        }
+    }
 }
 
-void ConfigureIdentity::writeConfig()
+void ConfigureIdentity::writeConfig(const QString &id)
 {
+    KSharedConfigPtr conf = configFromActivity(id);
+    KConfigGroup grp = conf->group(QLatin1String("identity"));
+    const int numberOfItems(mListIdentity->count());
+    QStringList lst;
+    for (int i = 0; i < numberOfItems; ++i) {
+        QListWidgetItem *item = mListIdentity->item(i);
+        if (item->checkState() == Qt::Checked) {
+            lst << item->data(IdentityID).toString();
+        }
+    }
+    grp.writeEntry(QLatin1String("ActiveIdentity"), lst);
 
 }
 

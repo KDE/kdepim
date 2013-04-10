@@ -23,40 +23,80 @@
 
 #include <QVBoxLayout>
 #include <QGroupBox>
+#include <QButtonGroup>
+#include <QRadioButton>
 
 namespace KSieveUi {
 SieveScriptPage::SieveScriptPage(QWidget *parent)
-    : QWidget(parent)
+    : QWidget(parent),
+      mMatchCondition(AndCondition)
 {
-    QVBoxLayout *vbox = new QVBoxLayout;
+    QVBoxLayout *topLayout = new QVBoxLayout;
 
     QGroupBox *conditions = new QGroupBox(i18n("Conditions"));
-    QVBoxLayout *hbox = new QVBoxLayout;
-    conditions->setLayout(hbox);
-    mScriptConditionLister = new SieveConditionWidgetLister;
-    hbox->addWidget(mScriptConditionLister);
+    QVBoxLayout *vbox = new QVBoxLayout;
 
-    vbox->addWidget(conditions);
+    mMatchAll = new QRadioButton( i18n( "Match a&ll of the following" ), this );
+    mMatchAny = new QRadioButton( i18n( "Match an&y of the following" ), this );
+
+    vbox->addWidget(mMatchAll);
+    vbox->addWidget(mMatchAny);
+    mMatchAll->setChecked( true );
+    mMatchAny->setChecked( false );
+
+    QButtonGroup *bg = new QButtonGroup( this );
+    bg->addButton( mMatchAll );
+    bg->addButton( mMatchAny );
+
+    connect( bg, SIGNAL(buttonClicked(QAbstractButton*)),
+             this, SLOT(slotRadioClicked(QAbstractButton*)) );
+    conditions->setLayout(vbox);
+
+    mScriptConditionLister = new SieveConditionWidgetLister;
+    vbox->addWidget(mScriptConditionLister);
+
+    topLayout->addWidget(conditions);
 
     QGroupBox *actions = new QGroupBox(i18n("Actions"));
-    hbox = new QVBoxLayout;
-    actions->setLayout(hbox);
+    vbox = new QVBoxLayout;
+    actions->setLayout(vbox);
     mScriptActionLister = new SieveActionWidgetLister;
-    hbox->addWidget(mScriptActionLister);
-    vbox->addWidget(actions);
-    setLayout(vbox);
+    vbox->addWidget(mScriptActionLister);
+    topLayout->addWidget(actions);
+    setLayout(topLayout);
 }
 
 SieveScriptPage::~SieveScriptPage()
 {
-
 }
 
-void SieveScriptPage::generatedScript(QString &script)
+SieveScriptPage::MatchCondition SieveScriptPage::matchCondition() const
 {
+    return mMatchCondition;
+}
+
+void SieveScriptPage::slotRadioClicked(QAbstractButton* button)
+{
+    if (button == mMatchAll) {
+        mMatchCondition = AndCondition;
+    } else {
+        mMatchCondition = OrCondition;
+    }
+}
+
+void SieveScriptPage::generatedScript(QString &script, QStringList &requires)
+{
+    if (mScriptConditionLister->conditionNumber() == 1) {
+        script += QLatin1String("if (");
+    } else if (mMatchCondition == AndCondition) {
+        script += QLatin1String("if allof (");
+    } else if (mMatchCondition == OrCondition) {
+        script += QLatin1String("if anyof (");
+    }
     mScriptConditionLister->generatedScript(script);
-    mScriptActionLister->generatedScript(script);
-    //TODO Close script here.
+    script += QLatin1String(") {\n");
+    mScriptActionLister->generatedScript(script, requires);
+    script += QLatin1String("}\n");
 }
 
 }

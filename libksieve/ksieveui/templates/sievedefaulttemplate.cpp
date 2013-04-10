@@ -19,10 +19,10 @@
 
 #include <KLocale>
 
-QList<KSieveUi::SieveDefaultTemplate::defaultTemplate> KSieveUi::SieveDefaultTemplate::defaultTemplates()
+QList<PimCommon::defaultTemplate> KSieveUi::SieveDefaultTemplate::defaultTemplates()
 {
-    QList<KSieveUi::SieveDefaultTemplate::defaultTemplate> lst;
-    KSieveUi::SieveDefaultTemplate::defaultTemplate tmp;
+    QList<PimCommon::defaultTemplate> lst;
+    PimCommon::defaultTemplate tmp;
     tmp.name = i18n("Filter on Mailing List-ID");
     tmp.text = QString::fromLatin1("require \"fileinto\";\n"
                                    "if header :contains \"List-ID\" [ \"examples.com\", \"examples.mail.com\" ] {\n"
@@ -50,7 +50,7 @@ QList<KSieveUi::SieveDefaultTemplate::defaultTemplate> KSieveUi::SieveDefaultTem
     tmp.name = i18n("Flag messages");
     tmp.text = QString::fromLatin1("require [\"imap4flags\"];\n"
                                    "if address \"From\" \"someone@example.org\" { \n"
-                                   "  setflag \"\\Seen\";\n"
+                                   "  setflag \"\\\\Seen\";\n"
                                    "}\n");
     lst << tmp;
 

@@ -31,18 +31,18 @@ static KCmdLineOptions kmail_options ()
 {
     KCmdLineOptions options;
     options.add("s");
-    options.add("subject <subject>",	ki18n("Set subject of message"));
+    options.add("subject <subject>", ki18n("Set subject of message"));
     options.add("c");
-    options.add("cc <address>",		ki18n("Send CC: to 'address'"));
+    options.add("cc <address>",      ki18n("Send CC: to 'address'"));
     options.add("b");
-    options.add("bcc <address>",		ki18n("Send BCC: to 'address'"));
+    options.add("bcc <address>",     ki18n("Send BCC: to 'address'"));
     options.add("h");
-    options.add("header <header>",	ki18n("Add 'header' to message"));
-    options.add("msg <file>",		ki18n("Read message body from 'file'"));
-    options.add("body <text>",		ki18n("Set body of message"));
-    options.add("attach <url>",		ki18n("Add an attachment to the mail. This can be repeated"));
-    options.add("composer",		ki18n("Only open composer window"));
-    options.add("+[address]",       ki18n("Address to send the message to"));
+    options.add("header <header>",   ki18n("Add 'header' to message"));
+    options.add("msg <file>",        ki18n("Read message body from 'file'"));
+    options.add("body <text>",       ki18n("Set body of message"));
+    options.add("attach <url>",      ki18n("Add an attachment to the mail. This can be repeated"));
+    options.add("composer",          ki18n("Only open composer window"));
+    options.add("+[address]",        ki18n("Address to send the message to"));
     return options;
 }
 

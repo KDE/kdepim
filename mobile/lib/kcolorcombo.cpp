@@ -192,9 +192,9 @@ class KColorComboPrivate
         void _k_slotHighlighted(int index);
 
         KColorCombo *q;
-	QList<QColor> colorList;
-	QColor customColor;
-	QColor internalcolor;
+        QList<QColor> colorList;
+        QColor customColor;
+        QColor internalcolor;
 };
 
 }
@@ -250,7 +250,7 @@ KColorCombo::KColorCombo( QWidget *parent )
 
 KColorCombo::~KColorCombo()
 {
-	delete d;
+        delete d;
 }
 
 void KColorCombo::setColors( const QList<QColor> &colors )
@@ -266,7 +266,7 @@ QList<QColor> KColorCombo::colors() const
         QList<QColor> list;
         for (int i = 0; i < STANDARD_PALETTE_SIZE; ++i) {
             list += standardColor(i);
-	}
+        }
         return list;
     } else {
         return d->colorList;

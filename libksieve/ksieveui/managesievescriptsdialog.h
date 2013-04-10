@@ -27,7 +27,7 @@ class KSIEVEUI_EXPORT ManageSieveScriptsDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit ManageSieveScriptsDialog( QWidget * parent=0, const char * name=0 );
+    explicit ManageSieveScriptsDialog( QWidget * parent=0 );
     ~ManageSieveScriptsDialog();
 
 private slots:

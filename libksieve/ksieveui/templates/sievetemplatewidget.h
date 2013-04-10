@@ -18,49 +18,26 @@
 #ifndef SIEVETEMPLATEWIDGET_H
 #define SIEVETEMPLATEWIDGET_H
 
-#include <QWidget>
-#include <QListWidget>
+#include "pimcommon/templatewidgets/templatelistwidget.h"
 
 namespace KSieveUi {
-
-class SieveTemplateListWidget : public QListWidget
+class SieveTemplateListWidget : public PimCommon::TemplateListWidget
 {
     Q_OBJECT
 public:
-    explicit SieveTemplateListWidget(QWidget *parent = 0);
+    explicit SieveTemplateListWidget(const QString &configName, QWidget *parent = 0);
     ~SieveTemplateListWidget();
 
-protected:
-    QStringList mimeTypes() const;
-    QMimeData *mimeData( const QList<QListWidgetItem *> items ) const;
-
-private Q_SLOTS:
-    void slotContextMenu(const QPoint &pos);
-    void slotRemove();
-    void slotAdd();
-    void slotModify();
-    void slotInsertTemplate();
-
-Q_SIGNALS:
-    void insertTemplate(const QString &);
-
-private:
-    enum SieveTemplateData {
-        SieveText = Qt::UserRole + 1,
-        DefaultTemplate = Qt::UserRole + 2
-    };
-
-    void createListWidgetItem(const QString &name, const QString &text, bool isDefaultTemplate);
-    void loadTemplates();
-    void saveTemplates();
-    bool mDirty;
+    QList<PimCommon::defaultTemplate> defaultTemplates();
+    bool addNewTemplate(QString &templateName, QString &templateScript);
+    bool modifyTemplate(QString &templateName, QString &templateScript, bool defaultTemplate);
 };
 
 class SieveTemplateWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit SieveTemplateWidget(QWidget *parent = 0);
+    explicit SieveTemplateWidget(const QString &title, QWidget *parent = 0);
     ~SieveTemplateWidget();
 Q_SIGNALS:
     void insertTemplate(const QString &);

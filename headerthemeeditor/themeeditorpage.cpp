@@ -42,6 +42,10 @@ ThemeEditorPage::ThemeEditorPage(QWidget *parent)
 
 ThemeEditorPage::~ThemeEditorPage()
 {
+}
+
+void ThemeEditorPage::saveTheme()
+{
 
 }
 

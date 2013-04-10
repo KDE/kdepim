@@ -23,15 +23,22 @@
 
 class KLineEdit;
 
+namespace PimCommon {
+class SimpleStringListEditor;
+}
+
 class DesktopFilePage : public QWidget
 {
     Q_OBJECT
 public:
     explicit DesktopFilePage(QWidget *parent = 0);
     ~DesktopFilePage();
+
+    void saveTheme(const QString &path);
 private:
     KLineEdit *mName;
     KLineEdit *mDescription;
+    PimCommon::SimpleStringListEditor *mExtraDisplayHeaders;
 };
 
 #endif // DESKTOPFILEPAGE_H

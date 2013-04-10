@@ -59,22 +59,22 @@ KUrl KSieveUi::Util::findSieveUrlForAccount( const QString &identifier )
     if ( interface->sieveReuseConfig() ) {
         // assemble Sieve url from the settings of the account:
         KUrl u;
-        u.setProtocol( "sieve" );
+        u.setProtocol( QLatin1String("sieve") );
         QString server;
         QDBusReply<QString> reply = interface->imapServer();
         if ( reply.isValid() ) {
             server = reply;
-            server = server.section( ':', 0, 0 );
+            server = server.section( QLatin1Char(':'), 0, 0 );
         } else {
             return KUrl();
         }
         u.setHost( server );
         u.setUser( interface->userName() );
 
-        QDBusInterface resourceSettings( QLatin1String( "org.freedesktop.Akonadi.Resource." ) + identifier, "/Settings", "org.kde.Akonadi.Imap.Wallet" );
+        QDBusInterface resourceSettings( QLatin1String( "org.freedesktop.Akonadi.Resource." ) + identifier, QLatin1String("/Settings"), QLatin1String("org.kde.Akonadi.Imap.Wallet") );
 
         QString pwd;
-        QDBusReply<QString> replyPass = resourceSettings.call( "password" );
+        QDBusReply<QString> replyPass = resourceSettings.call( QLatin1String("password") );
         if ( replyPass.isValid() ) {
             pwd = replyPass;
         }
@@ -105,15 +105,15 @@ KUrl KSieveUi::Util::findSieveUrlForAccount( const QString &identifier )
             authStr = QLatin1String("PLAIN");
             break;
         }
-        u.addQueryItem( "x-mech", authStr );
+        u.addQueryItem( QLatin1String("x-mech"), authStr );
         if ( interface->safety() == ( int )( KIMAP::LoginJob::Unencrypted ))
-            u.addQueryItem( "x-allow-unencrypted", "true" );
+            u.addQueryItem( QLatin1String("x-allow-unencrypted"), QLatin1String("true") );
         u.setFileName( interface->sieveVacationFilename() );
         return u;
     } else {
         KUrl u( interface->sieveAlternateUrl() );
-        if ( u.protocol().toLower() == QLatin1String("sieve") && ( interface->safety() == ( int )( KIMAP::LoginJob::Unencrypted ) ) && u.queryItem("x-allow-unencrypted").isEmpty() )
-            u.addQueryItem( "x-allow-unencrypted", "true" );
+        if ( u.protocol().toLower() == QLatin1String("sieve") && ( interface->safety() == ( int )( KIMAP::LoginJob::Unencrypted ) ) && u.queryItem(QLatin1String("x-allow-unencrypted")).isEmpty() )
+            u.addQueryItem( QLatin1String("x-allow-unencrypted"), QLatin1String("true") );
         u.setFileName( interface->sieveVacationFilename() );
         return u;
     }

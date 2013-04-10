@@ -861,10 +861,10 @@ void KNGroup::buildThreads(int cnt, KNJobData *job)
     if(idRef!=0) {
       while(idRef!=0) {
          art=byId(idRef);
-	 if (art) {
+         if (art) {
             tmpIdRef=art->idRef();
             idRef = (idRef!=tmpIdRef)? tmpIdRef : 0;
-	 }
+         }
       }
       if (art) {
         if (art->isIgnored()) {

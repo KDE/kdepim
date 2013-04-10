@@ -21,18 +21,22 @@
 #ifndef CONFIGURECOLLECTIONS_H
 #define CONFIGURECOLLECTIONS_H
 
+#include "abstractconfigurewidget.h"
 #include <QWidget>
 
 namespace PimActivity {
 
-class ConfigureCollections : public QWidget
+class ConfigureCollections : public QWidget, public AbstractConfigureWidget
 {
     Q_OBJECT
 public:
     explicit ConfigureCollections(QWidget *parent = 0);
     ~ConfigureCollections();
-    void readConfig();
-    void writeConfig();
+
+private:
+    void readConfig(const QString &id);
+    void writeConfig(const QString &id);
+
 Q_SIGNALS:
     void changed();
 

@@ -861,9 +861,9 @@ void AttachmentControllerBase::showAttachPublicKeyDialog()
   QPointer<KeySelectionDialog> dialog = new KeySelectionDialog(
       i18n( "Attach Public OpenPGP Key" ),
       i18n( "Select the public key which should be attached." ),
-			std::vector<GpgME::Key>(),
-			KeySelectionDialog::PublicKeys|KeySelectionDialog::OpenPGPKeys,
-			false /* no multi selection */,
+                        std::vector<GpgME::Key>(),
+                        KeySelectionDialog::PublicKeys|KeySelectionDialog::OpenPGPKeys,
+                        false /* no multi selection */,
       false /* no remember choice box */,
       d->wParent, "attach public key selection dialog" );
 

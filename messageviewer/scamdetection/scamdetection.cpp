@@ -84,7 +84,7 @@ void ScamDetection::scanPage(const QWebElement &rootElement)
         }
         //3) has form
         if (rootElement.findAll(QLatin1String("form")).count() > 0) {
-            mDetails += QLatin1String("<li>") + i18n("Message contains form element") + QLatin1String("</li>");
+            mDetails += QLatin1String("<li></b>") + i18n("Message contains form element") + QLatin1String("</b></li>");
             foundScam = true;
         }
         mDetails += QLatin1String("</ul>");

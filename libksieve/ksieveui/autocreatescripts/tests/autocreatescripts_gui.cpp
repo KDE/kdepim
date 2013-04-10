@@ -18,6 +18,7 @@
 #include <kdebug.h>
 #include <kcmdlineargs.h>
 #include <kapplication.h>
+#include <KDebug>
 
 #include "libksieve/ksieveui/autocreatescripts/autocreatescriptdialog.h"
 
@@ -27,9 +28,10 @@ int main (int argc, char **argv)
                        "1.0", ki18n("Test for autocreate script dialog"));
     KApplication app;
     KSieveUi::AutoCreateScriptDialog *dialog = new KSieveUi::AutoCreateScriptDialog;
-    dialog->show();
-
-    return app.exec();
-
+    if (dialog->exec() ) {
+        kDebug()<<"script:"<<dialog->script();
+    }
+    delete dialog;
+    return 0;
 }
 

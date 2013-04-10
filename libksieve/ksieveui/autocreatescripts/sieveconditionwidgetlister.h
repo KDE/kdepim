@@ -21,17 +21,39 @@
 
 #include <libkdepim/kwidgetlister.h>
 
-namespace KSieveUi {
+class KPushButton;
+class QGridLayout;
 
+namespace PimCommon {
+class MinimumComboBox;
+}
+
+namespace KSieveUi {
+class SieveCondition;
 class SieveConditionWidget : public QWidget
 {
     Q_OBJECT
 public:
     explicit SieveConditionWidget(QWidget *);
     ~SieveConditionWidget();
+    void updateAddRemoveButton( bool addButtonEnabled, bool removeButtonEnabled );
+    void generatedScript(QString &script);
+private Q_SLOTS:
+    void slotAddWidget();
+    void slotRemoveWidget();
+    void slotConditionChanged(int index);
+Q_SIGNALS:
+    void addWidget(QWidget *w);
+    void removeWidget(QWidget *w);
 private:
     void initWidget();
+    void setFilterCondition( QWidget *widget );
     void reset();
+    KPushButton *mAdd;
+    KPushButton *mRemove;
+    PimCommon::MinimumComboBox *mComboBox;
+    QGridLayout *mLayout;
+    QList<KSieveUi::SieveCondition*> mActionList;
 };
 
 class SieveConditionWidgetLister : public KPIM::KWidgetLister
@@ -42,10 +64,17 @@ public:
     ~SieveConditionWidgetLister();
 
     void generatedScript(QString &script);
+    int conditionNumber() const;
+
+
 public Q_SLOTS:
     void slotAddWidget( QWidget *w );
     void slotRemoveWidget( QWidget *w );
+protected:
+    void clearWidget( QWidget *aWidget );
+    QWidget *createWidget( QWidget *parent );
 private:
+    void reconnectWidget(SieveConditionWidget *w );
     void updateAddRemoveButton();
 };
 }

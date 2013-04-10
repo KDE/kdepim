@@ -224,10 +224,10 @@ void ExpireJob::slotMoveDone( KJob *job )
     if ( !lst.isEmpty() ) {
       QList<Akonadi::Item> newLst;
       Q_FOREACH( Akonadi::Item item, lst ) {
-	if(!item.hasFlag(Akonadi::MessageFlags::Seen) ) {
+        if(!item.hasFlag(Akonadi::MessageFlags::Seen) ) {
            item.setFlag( Akonadi::MessageFlags::Seen );
            newLst<<item;
-	}
+        }
       }
       if( !newLst.isEmpty() ) {
          Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( newLst, this );

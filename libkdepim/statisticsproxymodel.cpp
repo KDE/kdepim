@@ -141,7 +141,7 @@ class StatisticsProxyModel::Private
          !collection.attribute<EntityDisplayAttribute>()->iconName().isEmpty() ) {
          if ( !collection.attribute<EntityDisplayAttribute>()->activeIconName().isEmpty() && collection.statistics().unreadCount()> 0) {
            iconName = collection.attribute<EntityDisplayAttribute>()->activeIconName();
-	 }
+         }
          else
            iconName = collection.attribute<EntityDisplayAttribute>()->iconName();
       }
@@ -155,9 +155,9 @@ class StatisticsProxyModel::Private
       for ( int i = 0; i < 2; i++ ) {
         iconPath = KIconLoader::global()->iconPath( iconName, -iconSizes[ i ], true );
         if ( !iconPath.isEmpty() ) {
-	  icon_size_found = iconSizes[ i ];
+          icon_size_found = iconSizes[ i ];
           break;
-	}
+        }
       }
 
       if ( iconPath.isEmpty() ) {

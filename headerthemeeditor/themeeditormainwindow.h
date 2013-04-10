@@ -21,6 +21,7 @@
 #include <KXmlGuiWindow>
 
 class ThemeEditorPage;
+class KAction;
 
 class ThemeEditorMainWindow : public KXmlGuiWindow
 {
@@ -28,8 +29,16 @@ class ThemeEditorMainWindow : public KXmlGuiWindow
 public:
     explicit ThemeEditorMainWindow();
     ~ThemeEditorMainWindow();
+
+private Q_SLOTS:
+    void slotNewTheme();
+    void slotCloseTheme();
+
 private:
+    void setupActions();
     ThemeEditorPage *mThemeEditor;
+    KAction *mNewThemeAction;
+    KAction *mCloseThemeAction;
 };
 
 #endif // THEMEEDITORMAINWINDOW_H

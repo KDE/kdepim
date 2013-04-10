@@ -131,32 +131,32 @@ namespace Kleo {
   class MESSAGECOMPOSER_EXPORT KeyResolver {
   public:
     KeyResolver( bool encToSelf, bool showApproval, bool oppEncryption,
-		 unsigned int format,
-		 int encrKeyNearExpiryThresholdDays,
-		 int signKeyNearExpiryThresholdDays,
-		 int encrRootCertNearExpiryThresholdDays,
-		 int signRootCertNearExpiryThresholdDays,
-		 int encrChainCertNearExpiryThresholdDays,
-		 int signChainCertNearExpiryThresholdDays );
+                 unsigned int format,
+                 int encrKeyNearExpiryThresholdDays,
+                 int signKeyNearExpiryThresholdDays,
+                 int encrRootCertNearExpiryThresholdDays,
+                 int signRootCertNearExpiryThresholdDays,
+                 int encrChainCertNearExpiryThresholdDays,
+                 int signChainCertNearExpiryThresholdDays );
 
     ~KeyResolver();
 
     struct Item : public KeyApprovalDialog::Item {
       Item()
-	: KeyApprovalDialog::Item(),
-	  signPref( UnknownSigningPreference ),
-	  format( AutoFormat ),
-	  needKeys( true ) {}
+        : KeyApprovalDialog::Item(),
+          signPref( UnknownSigningPreference ),
+          format( AutoFormat ),
+          needKeys( true ) {}
       Item( const QString & a,
-	    EncryptionPreference e, SigningPreference s,
-	    CryptoMessageFormat f )
-	: KeyApprovalDialog::Item( a, std::vector<GpgME::Key>(), e ),
-	  signPref( s ), format( f ), needKeys( true ) {}
+            EncryptionPreference e, SigningPreference s,
+            CryptoMessageFormat f )
+        : KeyApprovalDialog::Item( a, std::vector<GpgME::Key>(), e ),
+          signPref( s ), format( f ), needKeys( true ) {}
       Item( const QString & a, const std::vector<GpgME::Key> & k,
-	    EncryptionPreference e, SigningPreference s,
-	    CryptoMessageFormat f )
-	: KeyApprovalDialog::Item( a, k, e ),
-	  signPref( s ), format( f ), needKeys( false ) {}
+            EncryptionPreference e, SigningPreference s,
+            CryptoMessageFormat f )
+        : KeyApprovalDialog::Item( a, k, e ),
+          signPref( s ), format( f ), needKeys( false ) {}
 
       SigningPreference signPref;
       CryptoMessageFormat format;
@@ -171,8 +171,8 @@ namespace Kleo {
     */
     Kpgp::Result setEncryptToSelfKeys( const QStringList & fingerprints );
     /**
-	Set the fingerprints of keys to be used for signing. Also
-	looks them up and complains if they're not usable or found.
+        Set the fingerprints of keys to be used for signing. Also
+        looks them up and complains if they're not usable or found.
     */
     Kpgp::Result setSigningKeys( const QStringList & fingerprints );
     /**
@@ -216,13 +216,13 @@ namespace Kleo {
       SplitInfo() {}
       SplitInfo( const QStringList & r ) : recipients( r ) {}
       SplitInfo( const QStringList & r, const std::vector<GpgME::Key> & k )
-	: recipients( r ), keys( k ) {}
+        : recipients( r ), keys( k ) {}
       QStringList recipients;
       std::vector<GpgME::Key> keys;
     };
     /** @return the found distinct sets of items for format \a f.  The
-	returned vector will contain more than one item only if
-	secondary recipients have been specified.
+        returned vector will contain more than one item only if
+        secondary recipients have been specified.
     */
     std::vector<SplitInfo> encryptionItems( CryptoMessageFormat f ) const;
 
@@ -239,9 +239,9 @@ namespace Kleo {
     Kpgp::Result resolveSigningKeysForEncryption();
     Kpgp::Result resolveSigningKeysForSigningOnly();
     Kpgp::Result checkKeyNearExpiry( const GpgME::Key & key,
-				     const char * dontAskAgainName, bool mine,
-				     bool sign, bool ca=false, int recurse_limit=100,
-				     const GpgME::Key & orig_key=GpgME::Key::null ) const;
+                                     const char * dontAskAgainName, bool mine,
+                                     bool sign, bool ca=false, int recurse_limit=100,
+                                     const GpgME::Key & orig_key=GpgME::Key::null ) const;
     void collapseAllSplitInfos();
     void addToAllSplitInfos( const std::vector<GpgME::Key> & keys, unsigned int formats );
     void addKeys( const std::vector<Item> & items, CryptoMessageFormat f );
@@ -255,7 +255,7 @@ namespace Kleo {
     bool haveTrustedEncryptionKey( const QString & person ) const;
 
     std::vector<GpgME::Key> selectKeys( const QString & person, const QString & msg,
-					const std::vector<GpgME::Key> & selectedKeys=std::vector<GpgME::Key>() ) const;
+                                        const std::vector<GpgME::Key> & selectedKeys=std::vector<GpgME::Key>() ) const;
 
     QStringList keysForAddress( const QString & address ) const;
     void setKeysForAddress( const QString & address, const QStringList& pgpKeyFingerprints, const QStringList& smimeCertFingerprints ) const;

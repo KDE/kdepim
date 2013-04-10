@@ -27,7 +27,6 @@
 #ifndef KDEPIM_ADDRESSEELINEEDIT_H
 #define KDEPIM_ADDRESSEELINEEDIT_H
 
-#include "kmailcompletion.h"
 #include "kdepim_export.h"
 
 #include "ldap/ldapclient.h"
@@ -48,10 +47,6 @@ namespace Akonadi {
 namespace KABC {
   class Addressee;
   class ContactGroup;
-}
-
-namespace KPIM {
-  typedef QMap< QString, QPair<int,int> > CompletionItemsMap;
 }
 
 namespace Nepomuk2 {

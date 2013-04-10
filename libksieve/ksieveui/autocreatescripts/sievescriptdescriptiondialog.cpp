@@ -32,9 +32,9 @@ SieveScriptDescriptionDialog::SieveScriptDescriptionDialog(QWidget *parent)
     setButtonFocus( Ok );
     mEdit = new KTextEdit;
     mEdit->setAcceptRichText(false);
-    mEdit->setFocus();
     setMainWidget(mEdit);
     readConfig();
+    mEdit->setFocus();
 }
 
 SieveScriptDescriptionDialog::~SieveScriptDescriptionDialog()

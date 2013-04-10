@@ -105,7 +105,7 @@ void AgentProgressMonitor::Private::instanceStatusChanged( const AgentInstance &
       case AgentInstance::Broken:
         item.data()->disconnect( q ); // avoid abort call
         item.data()->cancel();
-	if( item.data() )
+        if( item.data() )
            item.data()->setComplete();
         break;
       default:

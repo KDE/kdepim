@@ -19,7 +19,10 @@
 */
 #include "configuremailtransport.h"
 
+#include "mailtransport/transportmanager.h"
+
 #include <QListWidget>
+#include <QListWidgetItem>
 #include <QVBoxLayout>
 
 namespace PimActivity {
@@ -39,19 +42,46 @@ ConfigureMailtransport::~ConfigureMailtransport()
 
 void ConfigureMailtransport::init()
 {
-    //TODO
+    QStringList listNames = MailTransport::TransportManager::self()->transportNames();
+    QList<int> listIds = MailTransport::TransportManager::self()->transportIds();
+    int i = 0;
+    Q_FOREACH (const QString &name, listNames) {
+        QListWidgetItem *item = new QListWidgetItem(mListTransport);
+        item->setCheckState(Qt::Checked);
+        //TODO check it or not.
+        item->setText(name);
+        item->setData(TransportID, listIds.at(i));
+        ++i;
+    }
+
 }
 
-void ConfigureMailtransport::readConfig()
+void ConfigureMailtransport::readConfig(const QString &id)
 {
-
+    KSharedConfigPtr conf = configFromActivity(id);
+    if (conf->hasGroup(QLatin1String("mailtransport"))) {
+        KConfigGroup grp = conf->group(QLatin1String("mailtransport"));
+        const QStringList list = grp.readEntry(QLatin1String("ActiveMailTransport"), QStringList());
+        Q_FOREACH (const QString &l, list ) {
+            //TODO
+        }
+    }
 }
 
-void ConfigureMailtransport::writeConfig()
+void ConfigureMailtransport::writeConfig(const QString &id)
 {
-
+    KSharedConfigPtr conf = configFromActivity(id);
+    KConfigGroup grp = conf->group(QLatin1String("mailtransport"));
+    const int numberOfItems(mListTransport->count());
+    QStringList lst;
+    for (int i = 0; i < numberOfItems; ++i) {
+        QListWidgetItem *item = mListTransport->item(i);
+        if (item->checkState() == Qt::Checked) {
+            lst << item->data(TransportID).toString();
+        }
+    }
+    grp.writeEntry(QLatin1String("ActiveMailTransport"), lst);
 }
-
 
 }
 

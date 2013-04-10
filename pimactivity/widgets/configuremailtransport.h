@@ -21,23 +21,29 @@
 #ifndef CONFIGUREMAILTRANSPORT_H
 #define CONFIGUREMAILTRANSPORT_H
 
+#include "abstractconfigurewidget.h"
 #include <QWidget>
 class QListWidget;
 
 namespace PimActivity {
-class ConfigureMailtransport : public QWidget
+class ConfigureMailtransport : public QWidget, public AbstractConfigureWidget
 {
     Q_OBJECT
 public:
     explicit ConfigureMailtransport(QWidget *parent = 0);
     ~ConfigureMailtransport();
-    void readConfig();
-    void writeConfig();
+private:
+    void readConfig(const QString &id);
+    void writeConfig(const QString &id);
 
 Q_SIGNALS:
     void changed();
 
 private:
+    enum transportId {
+        TransportID = Qt::UserRole +1
+    };
+
     void init();
     QListWidget *mListTransport;
 };

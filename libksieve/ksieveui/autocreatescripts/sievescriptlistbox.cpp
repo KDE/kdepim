@@ -62,15 +62,16 @@ void SieveScriptListItem::setScriptPage(SieveScriptPage *page)
     mScriptPage = page;
 }
 
-QString SieveScriptListItem::generatedScript() const
+QString SieveScriptListItem::generatedScript(QStringList &requires) const
 {
     QString script;
     if (!mDescription.isEmpty()) {
         script = QLatin1Char('#') + i18n("Description:") + QLatin1Char('\n') + mDescription;
         script.replace(QLatin1Char('\n'), QLatin1String("\n#"));
+        script += QLatin1Char('\n');
     }
     if (mScriptPage) {
-        mScriptPage->generatedScript(script);
+        mScriptPage->generatedScript(script, requires);
     }
     return script;
 }
@@ -86,12 +87,12 @@ SieveScriptListBox::SieveScriptListBox(const QString &title, QWidget *parent)
     hb->setSpacing( 4 );
 
     mBtnNew = new QPushButton( QString(), hb );
-    mBtnNew->setIcon( KIcon( "document-new" ) );
+    mBtnNew->setIcon( KIcon( QLatin1String("document-new") ) );
     mBtnNew->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
     mBtnNew->setMinimumSize( mBtnNew->sizeHint() * 1.2 );
 
     mBtnDelete = new QPushButton( QString(), hb );
-    mBtnDelete->setIcon( KIcon( "edit-delete" ) );
+    mBtnDelete->setIcon( KIcon( QLatin1String("edit-delete") ) );
     mBtnDelete->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
     mBtnDelete->setMinimumSize( mBtnDelete->sizeHint() * 1.2 );
 
@@ -109,6 +110,7 @@ SieveScriptListBox::SieveScriptListBox(const QString &title, QWidget *parent)
     connect( mBtnDescription, SIGNAL(clicked()), this, SLOT(slotEditDescription()));
     connect( mSieveListScript, SIGNAL(itemSelectionChanged()), SLOT(updateButtons()));
     connect( mSieveListScript, SIGNAL(itemActivated(QListWidgetItem*)), SLOT(slotItemActived(QListWidgetItem*)));
+    connect( mSieveListScript, SIGNAL(itemDoubleClicked(QListWidgetItem*)), SLOT(slotEditDescription()));
     updateButtons();
 }
 
@@ -168,12 +170,13 @@ void SieveScriptListBox::slotRename()
 
 void SieveScriptListBox::slotEditDescription()
 {
-    if (mSieveListScript->currentItem()) {
-        SieveScriptListItem *item = static_cast<SieveScriptListItem*>(mSieveListScript->currentItem());
+    QListWidgetItem *item = mSieveListScript->currentItem();
+    if (item) {
+        SieveScriptListItem *sieveItem = static_cast<SieveScriptListItem*>(item);
         QPointer<SieveScriptDescriptionDialog> dlg = new SieveScriptDescriptionDialog(this);
-        dlg->setDescription(item->description());
+        dlg->setDescription(sieveItem->description());
         if (dlg->exec()) {
-            item->setDescription(dlg->description());
+            sieveItem->setDescription(dlg->description());
         }
         delete dlg;
     }
@@ -182,13 +185,23 @@ void SieveScriptListBox::slotEditDescription()
 QString SieveScriptListBox::generatedScript() const
 {
     QString resultScript;
+    QStringList lstRequires;
     for (int i = 0; i< mSieveListScript->count(); ++i) {
         SieveScriptListItem* item = static_cast<SieveScriptListItem*>(mSieveListScript->item(i));
         if (i != 0)
             resultScript += QLatin1Char('\n');
         resultScript += QLatin1Char('#') + i18n("Script name: %1",item->text()) + QLatin1Char('\n');
-        resultScript = item->generatedScript();
+        resultScript += item->generatedScript(lstRequires);
     }
+
+    QString requires;
+    Q_FOREACH (const QString &r, lstRequires) {
+        requires += QString::fromLatin1("require \"%1\";\n").arg(r);
+    }
+    if (!requires.isEmpty()) {
+        resultScript.prepend(requires);
+    }
+
     return resultScript;
 }
 

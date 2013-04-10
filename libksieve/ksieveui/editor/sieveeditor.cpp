@@ -71,7 +71,7 @@ SieveEditor::SieveEditor( QWidget * parent )
 
 
     //
-    SieveTemplateWidget *sieveTemplateWidget = new SieveTemplateWidget;
+    SieveTemplateWidget *sieveTemplateWidget = new SieveTemplateWidget(i18n("Sieve Template:"));
 
     QWidget *textEditWidget = new QWidget;
     QVBoxLayout * textEditLayout = new QVBoxLayout;

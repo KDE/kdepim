@@ -18,7 +18,7 @@
 
 */
 #include "configurecollections.h"
-
+#include <KConfigGroup>
 namespace PimActivity {
 
 ConfigureCollections::ConfigureCollections(QWidget *parent)
@@ -31,16 +31,19 @@ ConfigureCollections::~ConfigureCollections()
 
 }
 
-void ConfigureCollections::readConfig()
+void ConfigureCollections::readConfig(const QString &id)
 {
+    KSharedConfigPtr conf = configFromActivity(id);
+    //TODO
 
 }
 
-void ConfigureCollections::writeConfig()
+void ConfigureCollections::writeConfig(const QString &id)
 {
-
+    KSharedConfigPtr conf = configFromActivity(id);
+    KConfigGroup grp = conf->group(QLatin1String("collections"));
+    //TODO
 }
-
 
 }
 
