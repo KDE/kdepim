@@ -30,6 +30,10 @@
 
 using namespace KSieveUi;
 
+static int MINIMUMACTION = 1;
+static int MAXIMUMACTION = 8;
+
+
 SieveActionWidget::SieveActionWidget(QWidget *parent)
     : QWidget(parent)
 {
@@ -141,7 +145,7 @@ void SieveActionWidget::updateAddRemoveButton( bool addButtonEnabled, bool remov
 }
 
 SieveActionWidgetLister::SieveActionWidgetLister(QWidget *parent)
-    : KPIM::KWidgetLister(false, 1, 8, parent)
+    : KPIM::KWidgetLister(false, MINIMUMACTION, MAXIMUMACTION, parent)
 {
     slotClear();
     updateAddRemoveButton();

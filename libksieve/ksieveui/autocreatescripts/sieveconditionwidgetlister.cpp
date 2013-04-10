@@ -31,6 +31,9 @@
 
 using namespace KSieveUi;
 
+static int MINIMUMCONDITION = 1;
+static int MAXIMUMCONDITION = 8;
+
 SieveConditionWidget::SieveConditionWidget(QWidget *parent)
     : QWidget(parent)
 {
@@ -137,9 +140,8 @@ void SieveConditionWidget::updateAddRemoveButton( bool addButtonEnabled, bool re
     mRemove->setEnabled(removeButtonEnabled);
 }
 
-
 SieveConditionWidgetLister::SieveConditionWidgetLister(QWidget *parent)
-    : KPIM::KWidgetLister(false, 2, 8, parent)
+    : KPIM::KWidgetLister(false, MINIMUMCONDITION, MAXIMUMCONDITION, parent)
 {
     slotClear();
     updateAddRemoveButton();

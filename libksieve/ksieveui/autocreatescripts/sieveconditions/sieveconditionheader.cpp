@@ -16,6 +16,7 @@
 */
 
 #include "sieveconditionheader.h"
+#include "widgets/selectmatchtypecombobox.h"
 #include <KLocale>
 
 #include <QComboBox>
@@ -42,8 +43,12 @@ QWidget *SieveConditionHeader::createParamWidget( QWidget *parent ) const
 
     QComboBox *headerCondition = new QComboBox;
     headerCondition->setObjectName(QLatin1String("headercondition"));
-    //TODO
     lay->addWidget(headerCondition);
+
+    SelectMatchTypeComboBox *matchTypeCombo = new SelectMatchTypeComboBox;
+    matchTypeCombo->setObjectName(QLatin1String("matchtypecombobox"));
+    lay->addWidget(matchTypeCombo);
+
     //TODO
     return w;
 }
