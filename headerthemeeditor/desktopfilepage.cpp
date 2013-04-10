@@ -17,6 +17,7 @@
 
 
 #include "desktopfilepage.h"
+#include "pimcommon/simplestringlisteditor.h"
 
 #include <KLineEdit>
 #include <KLocale>
@@ -38,6 +39,8 @@ DesktopFilePage::DesktopFilePage(QWidget *parent)
     lay->addWidget(lab,1,0);
     lay->addWidget(mDescription,1,1);
 
+    mExtraDisplayHeaders = new PimCommon::SimpleStringListEditor;
+    lay->addWidget(mExtraDisplayHeaders, 2, 0, 2, 2);
     setLayout(lay);
 }
 

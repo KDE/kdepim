@@ -23,6 +23,10 @@
 
 class KLineEdit;
 
+namespace PimCommon {
+class SimpleStringListEditor;
+}
+
 class DesktopFilePage : public QWidget
 {
     Q_OBJECT
@@ -34,7 +38,7 @@ public:
 private:
     KLineEdit *mName;
     KLineEdit *mDescription;
-
+    PimCommon::SimpleStringListEditor *mExtraDisplayHeaders;
 };
 
 #endif // DESKTOPFILEPAGE_H
