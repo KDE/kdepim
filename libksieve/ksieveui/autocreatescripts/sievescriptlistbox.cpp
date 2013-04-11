@@ -281,24 +281,21 @@ void SieveScriptListBox::slotUp()
 }
 
 
-QString SieveScriptListBox::generatedScript() const
+QString SieveScriptListBox::generatedScript(QString &requires) const
 {
     QString resultScript;
     QStringList lstRequires;
-    for (int i = 0; i< mSieveListScript->count(); ++i) {
+    const int numberOfScripts(mSieveListScript->count());
+    for (int i = 0; i< numberOfScripts; ++i) {
         SieveScriptListItem* item = static_cast<SieveScriptListItem*>(mSieveListScript->item(i));
         if (i != 0)
             resultScript += QLatin1Char('\n');
-        resultScript += QLatin1Char('#') + i18n("Script name: %1",item->text()) + QLatin1Char('\n');
+        resultScript += QLatin1Char('#') + i18n("Script name: %1",item->text()) + QLatin1String("\n\n");
         resultScript += item->generatedScript(lstRequires);
     }
 
-    QString requires;
     Q_FOREACH (const QString &r, lstRequires) {
         requires += QString::fromLatin1("require \"%1\";\n").arg(r);
-    }
-    if (!requires.isEmpty()) {
-        resultScript.prepend(requires);
     }
 
     return resultScript;

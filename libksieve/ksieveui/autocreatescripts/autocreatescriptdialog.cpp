@@ -61,9 +61,9 @@ AutoCreateScriptDialog::~AutoCreateScriptDialog()
     writeConfig();
 }
 
-QString AutoCreateScriptDialog::script() const
+QString AutoCreateScriptDialog::script(QString &requires) const
 {
-    return mSieveScript->generatedScript();
+    return mSieveScript->generatedScript(requires);
 }
 
 void AutoCreateScriptDialog::slotAddScriptPage(QWidget *page)

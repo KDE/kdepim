@@ -32,7 +32,7 @@ class KSIEVEUI_EXPORT AutoCreateScriptDialog : public KDialog
 public:
     explicit AutoCreateScriptDialog(QWidget *parent = 0);
     ~AutoCreateScriptDialog();
-    QString script() const;
+    QString script(QString &requires) const;
 
 private Q_SLOTS:
     void slotAddScriptPage(QWidget *page);

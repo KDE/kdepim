@@ -142,8 +142,13 @@ void SieveEditor::slotAutoGenerateScripts()
 {
     QPointer<AutoCreateScriptDialog> dlg = new AutoCreateScriptDialog(this);
     if ( dlg->exec()) {
-        const QString script = dlg->script();
-        mTextEdit->insertPlainText(script);
+        QString requires;
+        const QString script = dlg->script(requires);
+        QString newPlainText = mTextEdit->toPlainText() + script;
+        if (!requires.isEmpty()) {
+            newPlainText.prepend(requires);
+        }
+        mTextEdit->setPlainText(newPlainText);
     }
     delete dlg;
 }

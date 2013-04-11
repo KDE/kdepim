@@ -29,7 +29,9 @@ int main (int argc, char **argv)
     KApplication app;
     KSieveUi::AutoCreateScriptDialog *dialog = new KSieveUi::AutoCreateScriptDialog;
     if (dialog->exec() ) {
-        kDebug()<<"script:"<<dialog->script();
+        QString requires;
+        const QString script = dialog->script(requires);
+        kDebug()<<" script :\n"<<requires<<script;
     }
     delete dialog;
     return 0;
