@@ -22,6 +22,7 @@
 #include <KLineEdit>
 #include <KLocale>
 #include <KDesktopFile>
+#include <KConfigGroup>
 
 #include <QGridLayout>
 #include <QLabel>
@@ -40,8 +41,16 @@ DesktopFilePage::DesktopFilePage(QWidget *parent)
     lay->addWidget(lab,1,0);
     lay->addWidget(mDescription,1,1);
 
+    lab = new QLabel(i18n("Filename:"));
+    mFilename = new KLineEdit;
+    lay->addWidget(lab,2,0);
+    lay->addWidget(mFilename,2,1);
+
+    lab = new QLabel(i18n("Extract Headers:"));
+    lay->addWidget(lab,3,0);
+
     mExtraDisplayHeaders = new PimCommon::SimpleStringListEditor;
-    lay->addWidget(mExtraDisplayHeaders, 2, 0, 2, 2);
+    lay->addWidget(mExtraDisplayHeaders, 4, 0, 4, 2);
     setLayout(lay);
 }
 
@@ -53,7 +62,12 @@ void DesktopFilePage::saveTheme(const QString &path)
 {
     QString filename;
     KDesktopFile desktopFile(filename);
-    //TODO
+    KConfigGroup grp = desktopFile.actionGroup(QLatin1String("Desktop Entry"));
+    grp.writeEntry(QLatin1String("Name"), mName->text());
+    grp.writeEntry(QLatin1String("Description"), mDescription->text());
+    grp.writeEntry(QLatin1String("FileName"), mFilename->text());
+    grp.writeEntry(QLatin1String("DisplayExtraHeaders"), mExtraDisplayHeaders->stringList());
+    grp.sync();
 }
 
 #include "desktopfilepage.moc"

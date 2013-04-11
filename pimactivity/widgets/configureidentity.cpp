@@ -64,8 +64,14 @@ void ConfigureIdentity::readConfig(const QString &id)
     if (conf->hasGroup(QLatin1String("identity"))) {
         KConfigGroup grp = conf->group(QLatin1String("identity"));
         const QStringList list = grp.readEntry(QLatin1String("ActiveIdentity"), QStringList());
-        Q_FOREACH (const QString &l, list ) {
-            //TODO
+        const int numberOfItems(mListIdentity->count());
+        for (int i = 0; i < numberOfItems; ++i) {
+            QListWidgetItem *item = mListIdentity->item(i);
+            if (list.contains(item->data(IdentityID).toString())) {
+                item->setCheckState(Qt::Checked);
+            } else {
+                item->setCheckState(Qt::Unchecked);
+            }
         }
     }
 }

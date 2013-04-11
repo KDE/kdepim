@@ -26,9 +26,11 @@
 #include <kmessagebox.h>
 #include <kfiledialog.h>
 #include <KTextEdit>
+#include <KPushButton>
 #include <errno.h>
 
 #include <QSplitter>
+#include <QDialogButtonBox>
 #include <QTextStream>
 #include <QPointer>
 #include <QVBoxLayout>
@@ -42,11 +44,28 @@ SieveEditor::SieveEditor( QWidget * parent )
     : KDialog( parent )
 {
     setCaption( i18n( "Edit Sieve Script" ) );
-    setButtons( Ok|Cancel|User1|User2|User3 );
-    setButtonText( User1, i18n( "Check Syntax" ) );
-    setButtonGuiItem( User2, KStandardGuiItem::saveAs() );
-    setButtonText( User3, i18n( "Import..." ) );
-    setDefaultButton( Ok );
+    setButtons( None );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+    mCheckSyntax = new KPushButton(i18n("Check Syntax"), this);
+    connect(mCheckSyntax, SIGNAL(clicked(bool)), SLOT(slotCheckSyntax()));
+    KPushButton *saveAs = new KPushButton(KStandardGuiItem::saveAs(), this);
+    connect(saveAs, SIGNAL(clicked(bool)), SLOT(slotSaveAs()));
+    KPushButton *import = new KPushButton(i18n( "Import..." ), this);
+    connect(import, SIGNAL(clicked(bool)), SLOT(slotImport()));
+    KPushButton *autogenerateScript = new KPushButton(i18n("Autogenerate Script..."), this);
+    connect(autogenerateScript, SIGNAL(clicked(bool)), SLOT(slotAutoGenerateScripts()));
+    mOkButton = buttonBox->button(QDialogButtonBox::Ok);
+
+    connect(buttonBox, SIGNAL(accepted()), this, SIGNAL(okClicked()));
+    connect(buttonBox, SIGNAL(rejected()), this, SIGNAL(cancelClicked()));
+    connect(this, SIGNAL(accepted()), this, SIGNAL(okClicked()));
+    connect(this, SIGNAL(rejected()), this, SIGNAL(cancelClicked()));
+
+    buttonBox->addButton(mCheckSyntax, QDialogButtonBox::ActionRole);
+    buttonBox->addButton(saveAs, QDialogButtonBox::ActionRole);
+    buttonBox->addButton(import, QDialogButtonBox::ActionRole);
+    buttonBox->addButton(autogenerateScript, QDialogButtonBox::ActionRole);
+
     setModal( true );
 
     QWidget *mainWidget = new QWidget;
@@ -100,14 +119,8 @@ SieveEditor::SieveEditor( QWidget * parent )
     splitter->setSizes( size );
     splitter->setChildrenCollapsible(false);
     connect( mTextEdit, SIGNAL(textChanged()), SLOT(slotTextChanged()) );
-    connect( this, SIGNAL(user2Clicked()), SLOT(slotSaveAs()) );
-    connect( this, SIGNAL(user3Clicked()), SLOT(slotImport()) );
 
-    //Temporary
-    shortcut = new QShortcut( this );
-    shortcut->setKey( Qt::Key_X+Qt::CTRL+Qt::SHIFT );
-    connect( shortcut, SIGNAL(activated()), SLOT(slotAutoGenerateScripts()) );
-
+    lay->addWidget(buttonBox);
     setMainWidget( mainWidget );
     KConfigGroup group( KGlobal::config(), "SieveEditor" );
     const QSize sizeDialog = group.readEntry( "Size", QSize() );
@@ -130,8 +143,13 @@ void SieveEditor::slotAutoGenerateScripts()
 {
     QPointer<AutoCreateScriptDialog> dlg = new AutoCreateScriptDialog(this);
     if ( dlg->exec()) {
-        const QString script = dlg->script();
-        mTextEdit->insertPlainText(script);
+        QString requires;
+        const QString script = dlg->script(requires);
+        QString newPlainText = mTextEdit->toPlainText() + script;
+        if (!requires.isEmpty()) {
+            newPlainText.prepend(requires);
+        }
+        mTextEdit->setPlainText(newPlainText);
     }
     delete dlg;
 }
@@ -229,7 +247,8 @@ bool SieveEditor::loadFromFile( const QString& filename )
 void SieveEditor::slotTextChanged()
 {
     const bool enabled = !script().isEmpty();
-    enableButton( User1, enabled );
+    mOkButton->setEnabled(enabled);
+    mCheckSyntax->setEnabled( enabled );
     enableButtonOk( enabled );
 }
 
@@ -257,6 +276,17 @@ void SieveEditor::setScriptName( const QString&name )
 {
     mScriptName->setText( name );
 }  
+
+void SieveEditor::resultDone()
+{
+    mCheckSyntax->setEnabled(true);
+}
+
+void SieveEditor::slotCheckSyntax()
+{
+    mCheckSyntax->setEnabled(false);
+    Q_EMIT checkSyntax();
+}
 
 #include "sieveeditor.moc"
 

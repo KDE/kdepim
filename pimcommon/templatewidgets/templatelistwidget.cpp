@@ -27,6 +27,7 @@
 #include <QListWidgetItem>
 #include <QPointer>
 #include <QMimeData>
+#include <QDropEvent>
 #include <QDebug>
 
 namespace PimCommon {
@@ -54,6 +55,16 @@ public:
         QString templateName;
         QString templateScript;
         if (q->addNewTemplate(templateName, templateScript) ) {
+            createListWidgetItem(templateName, templateScript, false);
+            dirty = true;
+        }
+    }
+
+    void slotInsertNewTemplate(const QString &newTemplateScript)
+    {
+        QString templateName;
+        QString templateScript = newTemplateScript;
+        if (q->modifyTemplate(templateName, templateScript, false) ) {
             createListWidgetItem(templateName, templateScript, false);
             dirty = true;
         }
@@ -180,11 +191,12 @@ TemplateListWidget::TemplateListWidget(const QString &configName, QWidget *paren
     : QListWidget(parent), d(new TemplateListWidgetPrivate(configName, this))
 {
     setContextMenuPolicy( Qt::CustomContextMenu );
-    setDragDropMode(QAbstractItemView::DragOnly);
+    setDragDropMode(QAbstractItemView::DragDrop);
 
     connect( this, SIGNAL(customContextMenuRequested(QPoint)),
              SLOT(slotContextMenu(QPoint)) );
     connect(this, SIGNAL(doubleClicked(QModelIndex)), SLOT(slotModify()));
+    connect(this, SIGNAL(insertNewTemplate(QString)), SLOT(slotInsertNewTemplate(QString)));
 }
 
 TemplateListWidget::~TemplateListWidget()
@@ -248,6 +260,20 @@ bool TemplateListWidget::modifyTemplate(QString &templateName, QString &template
     }
     delete dlg;
     return false;
+}
+
+void TemplateListWidget::dropEvent ( QDropEvent * event )
+{
+    if ( event->source() == this ) {
+        event->ignore();
+        return;
+    }
+     if (event->mimeData()->hasText()) {
+        event->setDropAction( Qt::CopyAction );
+        Q_EMIT insertNewTemplate(event->mimeData()->text());
+        event->accept();
+    }
+    QListWidget::dropEvent( event );
 }
 
 }

@@ -21,6 +21,7 @@
 #include "sieveconditionaddress.h"
 #include "sieveconditionsize.h"
 #include "sieveconditionenvelope.h"
+#include "sieveconditionexists.h"
 
 QList<KSieveUi::SieveCondition *> KSieveUi::SieveConditionList::conditionList()
 {
@@ -29,6 +30,7 @@ QList<KSieveUi::SieveCondition *> KSieveUi::SieveConditionList::conditionList()
     list.append(new KSieveUi::SieveConditionAddress);
     list.append(new KSieveUi::SieveConditionSize);
     list.append(new KSieveUi::SieveConditionEnvelope);
+    list.append(new KSieveUi::SieveConditionExists);
     return list;
 }
 

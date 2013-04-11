@@ -62,8 +62,14 @@ void ConfigureMailtransport::readConfig(const QString &id)
     if (conf->hasGroup(QLatin1String("mailtransport"))) {
         KConfigGroup grp = conf->group(QLatin1String("mailtransport"));
         const QStringList list = grp.readEntry(QLatin1String("ActiveMailTransport"), QStringList());
-        Q_FOREACH (const QString &l, list ) {
-            //TODO
+        const int numberOfItems(mListTransport->count());
+        for (int i = 0; i < numberOfItems; ++i) {
+            QListWidgetItem *item = mListTransport->item(i);
+            if (list.contains(item->data(TransportID).toString())) {
+                item->setCheckState(Qt::Checked);
+            } else {
+                item->setCheckState(Qt::Unchecked);
+            }
         }
     }
 }

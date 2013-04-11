@@ -18,7 +18,6 @@
 #ifndef SIEVEDEFAULTTEMPLATE_H
 #define SIEVEDEFAULTTEMPLATE_H
 
-#include <QString>
 #include "sievetemplatewidget.h"
 
 namespace KSieveUi

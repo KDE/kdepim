@@ -24,12 +24,14 @@
 
 int main (int argc, char **argv)
 {
-    KCmdLineArgs::init(argc, argv, "autocreatescripts_gui_gui", 0, ki18n("AutoCreateScripttest_Gui"),
+    KCmdLineArgs::init(argc, argv, "autocreatescripts_gui", 0, ki18n("AutoCreateScripttest_Gui"),
                        "1.0", ki18n("Test for autocreate script dialog"));
     KApplication app;
     KSieveUi::AutoCreateScriptDialog *dialog = new KSieveUi::AutoCreateScriptDialog;
     if (dialog->exec() ) {
-        kDebug()<<"script:"<<dialog->script();
+        QString requires;
+        const QString script = dialog->script(requires);
+        kDebug()<<" script :\n"<<requires<<script;
     }
     delete dialog;
     return 0;

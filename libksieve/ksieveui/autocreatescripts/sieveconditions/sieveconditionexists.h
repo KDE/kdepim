@@ -15,31 +15,27 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#ifndef SIEVECONDITIONEXISTS_H
+#define SIEVECONDITIONEXISTS_H
 
-#ifndef DESKTOPFILEPAGE_H
-#define DESKTOPFILEPAGE_H
+#include "sievecondition.h"
 
-#include <QWidget>
-
-class KLineEdit;
-
-namespace PimCommon {
-class SimpleStringListEditor;
-}
-
-class DesktopFilePage : public QWidget
+namespace KSieveUi {
+class SieveConditionExists : public SieveCondition
 {
     Q_OBJECT
 public:
-    explicit DesktopFilePage(QWidget *parent = 0);
-    ~DesktopFilePage();
+    SieveConditionExists(QObject *parent = 0);
 
-    void saveTheme(const QString &path);
-private:
-    KLineEdit *mName;
-    KLineEdit *mDescription;
-    KLineEdit *mFilename;
-    PimCommon::SimpleStringListEditor *mExtraDisplayHeaders;
+    /**
+     * Static function that creates a filter action of this type.
+     */
+    static SieveCondition *newAction();
+
+    QWidget *createParamWidget( QWidget *parent ) const;
+
+    QString code(QWidget *parent) const;
 };
+}
 
-#endif // DESKTOPFILEPAGE_H
+#endif // SIEVECONDITIONEXISTS_H

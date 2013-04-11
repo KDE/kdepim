@@ -45,10 +45,7 @@ void ThemeEditorMainWindow::setupActions()
     connect(mNewThemeAction, SIGNAL(triggered(bool)),SLOT(slotNewTheme()));
     actionCollection()->addAction( QLatin1String( "new_theme" ), mNewThemeAction );
 
-    mCloseThemeAction = new KAction(i18n("Close"),this);
-    connect(mCloseThemeAction, SIGNAL(triggered(bool)),SLOT(slotCloseTheme()));
-    actionCollection()->addAction( QLatin1String( "new_theme" ), mCloseThemeAction );
-
+    KStandardAction::close( this, SLOT(slotCloseTheme()), actionCollection());
     KStandardAction::quit( kapp, SLOT(quit()), actionCollection() );
 }
 

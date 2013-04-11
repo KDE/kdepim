@@ -16,6 +16,7 @@
 */
 
 #include "themetemplatewidget.h"
+#include "themedefaulttemplate.h"
 
 #include <KLocale>
 
@@ -34,10 +35,8 @@ ThemeTemplateListWidget::~ThemeTemplateListWidget()
 
 QList<PimCommon::defaultTemplate> ThemeTemplateListWidget::defaultTemplates()
 {
-    //TODO
-    return QList<PimCommon::defaultTemplate>();
+    return ThemeDefaultTemplate::defaultTemplates();
 }
-
 
 ThemeTemplateWidget::ThemeTemplateWidget(const QString &title, QWidget *parent)
     : QWidget(parent)
@@ -56,7 +55,5 @@ ThemeTemplateWidget::ThemeTemplateWidget(const QString &title, QWidget *parent)
 ThemeTemplateWidget::~ThemeTemplateWidget()
 {
 }
-
-
 
 #include "themetemplatewidget.moc"
