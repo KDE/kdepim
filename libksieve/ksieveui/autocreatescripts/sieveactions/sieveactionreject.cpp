@@ -43,14 +43,14 @@ QWidget *SieveActionReject::createParamWidget( QWidget *parent ) const
     lay->addWidget(lab);
 
     KLineEdit *edit = new KLineEdit;
-    edit->setObjectName( QLatin1String("RejectText") );
+    edit->setObjectName( QLatin1String("rejectmessage") );
     lay->addWidget(edit);
     return w;
 }
 
 QString SieveActionReject::code(QWidget *w) const
 {
-    const KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("RejectText") );
+    const KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("rejectmessage") );
     const QString text = edit->text();
 
     return QString::fromLatin1("reject \"%1\";").arg(text);
