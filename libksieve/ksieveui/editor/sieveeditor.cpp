@@ -58,6 +58,8 @@ SieveEditor::SieveEditor( QWidget * parent )
 
     connect(buttonBox, SIGNAL(accepted()), this, SIGNAL(okClicked()));
     connect(buttonBox, SIGNAL(rejected()), this, SIGNAL(cancelClicked()));
+    connect(this, SIGNAL(accepted()), this, SIGNAL(okClicked()));
+    connect(this, SIGNAL(rejected()), this, SIGNAL(cancelClicked()));
 
     buttonBox->addButton(mCheckSyntax, QDialogButtonBox::ActionRole);
     buttonBox->addButton(saveAs, QDialogButtonBox::ActionRole);
