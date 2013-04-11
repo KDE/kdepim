@@ -46,6 +46,9 @@ public:
     void setDebugScript( const QString& debug );
     void setScriptName( const QString&name );
 
+Q_SIGNALS:
+    void checkSyntax();
+
 private slots:
     void slotTextChanged();
     void slotImport();

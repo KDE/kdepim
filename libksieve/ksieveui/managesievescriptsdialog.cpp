@@ -443,7 +443,7 @@ void ManageSieveScriptsDialog::slotGetResult( KManageSieve::SieveJob *, bool suc
     mSieveEditor->setScript( script );
     connect( mSieveEditor, SIGNAL(okClicked()), this, SLOT(slotSieveEditorOkClicked()) );
     connect( mSieveEditor, SIGNAL(cancelClicked()), this, SLOT(slotSieveEditorCancelClicked()) );
-    connect( mSieveEditor, SIGNAL(user1Clicked()), this, SLOT(slotSieveEditorCheckSyntaxClicked()) );
+    connect( mSieveEditor, SIGNAL(checkSyntax()), this, SLOT(slotSieveEditorCheckSyntaxClicked()) );
     mSieveEditor->show();
     mWasActive = isActive;
 }
