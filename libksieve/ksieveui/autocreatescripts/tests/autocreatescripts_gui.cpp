@@ -24,7 +24,7 @@
 
 int main (int argc, char **argv)
 {
-    KCmdLineArgs::init(argc, argv, "autocreatescripts_gui_gui", 0, ki18n("AutoCreateScripttest_Gui"),
+    KCmdLineArgs::init(argc, argv, "autocreatescripts_gui", 0, ki18n("AutoCreateScripttest_Gui"),
                        "1.0", ki18n("Test for autocreate script dialog"));
     KApplication app;
     KSieveUi::AutoCreateScriptDialog *dialog = new KSieveUi::AutoCreateScriptDialog;
