@@ -22,6 +22,7 @@
 #include <KLineEdit>
 #include <KLocale>
 #include <KDesktopFile>
+#include <KConfigGroup>
 
 #include <QGridLayout>
 #include <QLabel>
@@ -53,7 +54,11 @@ void DesktopFilePage::saveTheme(const QString &path)
 {
     QString filename;
     KDesktopFile desktopFile(filename);
-    //TODO
+    KConfigGroup grp = desktopFile.actionGroup(QLatin1String("Desktop Entry"));
+    grp.writeEntry(QLatin1String("Name"), mName->text());
+    grp.writeEntry(QLatin1String("Description"), mDescription->text());
+    //TODO grp.writeEntry(QLatin1String("FileName"), mDescription->text());
+    grp.sync();
 }
 
 #include "desktopfilepage.moc"
