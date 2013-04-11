@@ -73,7 +73,7 @@ TrayIcon::~TrayIcon()
 void TrayIcon::slotSetUnread(int unread)
 {
     m_unread = unread;
-    this->setToolTip( m_defaultIcon.name(), i18n("Akregator2"), i18np( "1 unread article", "%1 unread articles", unread ) );
+    this->setToolTip( m_defaultIcon.name(), i18n("Akregator2"), unread == 0 ? i18n("There are no unread articles")  : i18np( "1 unread article", "%1 unread articles", unread ) );
     setStatus( unread > 0 ? KStatusNotifierItem::Active : KStatusNotifierItem::Passive );
 
     if (unread <= 0 || !Settings::enableTrayIconUnreadArticleCount())
