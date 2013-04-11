@@ -234,22 +234,50 @@ void SieveScriptListBox::slotEditDescription()
 
 void SieveScriptListBox::slotTop()
 {
-    //TODO
+    QListWidgetItem *item = mSieveListScript->currentItem();
+    if (item) {
+        const int currentIndex = mSieveListScript->currentRow();
+        if (currentIndex != 0) {
+            item = mSieveListScript->takeItem( currentIndex );
+            mSieveListScript->insertItem( 0, item );
+        }
+    }
 }
 
 void SieveScriptListBox::slotBottom()
 {
-    //TODO
+    QListWidgetItem *item = mSieveListScript->currentItem();
+    if (item) {
+        const int currentIndex = mSieveListScript->currentRow();
+        if (currentIndex != mSieveListScript->count() - 1 ) {
+            item = mSieveListScript->takeItem( currentIndex );
+            mSieveListScript->insertItem( mSieveListScript->count() - 1, item );
+        }
+    }
 }
 
 void SieveScriptListBox::slotDown()
 {
-    //TODO
+    QListWidgetItem *item = mSieveListScript->currentItem();
+    if (item) {
+        const int currentIndex = mSieveListScript->currentRow();
+        if (currentIndex < mSieveListScript->count() - 1 ) {
+            item = mSieveListScript->takeItem( currentIndex );
+            mSieveListScript->insertItem( currentIndex + 1, item );
+        }
+    }
 }
 
 void SieveScriptListBox::slotUp()
 {
-    //TODO
+    QListWidgetItem *item = mSieveListScript->currentItem();
+    if (item) {
+        const int currentIndex = mSieveListScript->currentRow();
+        if (currentIndex > 1 ) {
+            item = mSieveListScript->takeItem( currentIndex );
+            mSieveListScript->insertItem( currentIndex - 1, item );
+        }
+    }
 }
 
 
