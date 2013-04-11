@@ -12,6 +12,7 @@ set(headerthemeeditor_SRCS
   desktopfilepage.cpp
   editorpage.cpp
   themetemplatewidget.cpp
+  themedefaulttemplate.cpp
 )
 
 kde4_add_executable(headerthemeeditor ${headerthemeeditor_SRCS} )

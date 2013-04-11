@@ -16,30 +16,10 @@
 */
 
 
-#ifndef DESKTOPFILEPAGE_H
-#define DESKTOPFILEPAGE_H
+#include "themedefaulttemplate.h"
 
-#include <QWidget>
-
-class KLineEdit;
-
-namespace PimCommon {
-class SimpleStringListEditor;
+QList<PimCommon::defaultTemplate> ThemeDefaultTemplate::defaultTemplates()
+{
+    return QList<PimCommon::defaultTemplate>();
 }
 
-class DesktopFilePage : public QWidget
-{
-    Q_OBJECT
-public:
-    explicit DesktopFilePage(QWidget *parent = 0);
-    ~DesktopFilePage();
-
-    void saveTheme(const QString &path);
-private:
-    KLineEdit *mName;
-    KLineEdit *mDescription;
-    KLineEdit *mFilename;
-    PimCommon::SimpleStringListEditor *mExtraDisplayHeaders;
-};
-
-#endif // DESKTOPFILEPAGE_H
