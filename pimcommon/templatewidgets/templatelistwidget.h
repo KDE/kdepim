@@ -46,9 +46,11 @@ protected:
     QStringList mimeTypes() const;
     QMimeData *mimeData( const QList<QListWidgetItem *> items ) const;
 
+    void dropEvent ( QDropEvent * event );
+
 Q_SIGNALS:
     void insertTemplate(const QString &);
-
+    void insertNewTemplate(const QString &);
 private:
     friend class TemplateListWidgetPrivate;
     TemplateListWidgetPrivate * const d;
@@ -57,6 +59,7 @@ private:
     Q_PRIVATE_SLOT( d, void slotModify() )
     Q_PRIVATE_SLOT( d, void slotInsertTemplate() )
     Q_PRIVATE_SLOT( d, void slotContextMenu(const QPoint &pos) )
+    Q_PRIVATE_SLOT( d, void slotInsertNewTemplate(const QString&) )
 
     enum TemplateData {
         Text = Qt::UserRole + 1,
