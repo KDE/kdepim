@@ -21,7 +21,7 @@
 #include <QGroupBox>
 #include <QListWidgetItem>
 class QListWidget;
-class QPushButton;
+class KPushButton;
 
 namespace KSieveUi {
 class SieveScriptPage;
@@ -64,12 +64,20 @@ private Q_SLOTS:
     void updateButtons();
     void slotEditDescription();
     void slotItemActived(QListWidgetItem*);
+    void slotTop();
+    void slotBottom();
+    void slotDown();
+    void slotUp();
 private:
     QListWidget *mSieveListScript;
-    QPushButton *mBtnNew;
-    QPushButton *mBtnDelete;
-    QPushButton *mBtnRename;
-    QPushButton *mBtnDescription;
+    KPushButton *mBtnNew;
+    KPushButton *mBtnDelete;
+    KPushButton *mBtnRename;
+    KPushButton *mBtnDescription;
+    KPushButton *mBtnTop;
+    KPushButton *mBtnUp;
+    KPushButton *mBtnDown;
+    KPushButton *mBtnBottom;
 };
 }
 
