@@ -32,6 +32,7 @@ using namespace KSieveUi;
 
 static int MINIMUMACTION = 1;
 static int MAXIMUMACTION = 8;
+static QString INDENTACTION = QLatin1String("    ");
 
 
 SieveActionWidget::SieveActionWidget(QWidget *parent)
@@ -70,7 +71,7 @@ void SieveActionWidget::generatedScript(QString &script, QStringList &requires)
                 requires.append(r);
             }
         }
-        script += QLatin1String("    ") + widgetAction->code(mLayout->itemAtPosition( 1, 2 )->widget()) + QLatin1Char('\n');
+        script += INDENTACTION + widgetAction->code(mLayout->itemAtPosition( 1, 2 )->widget()) + QLatin1Char('\n');
     }
 }
 
