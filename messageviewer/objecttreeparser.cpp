@@ -3114,7 +3114,7 @@ void ObjectTreeParser::writeBodyStr( const QByteArray& aStr, const QTextCodec *a
     }
 
     if ( htmlWriter() ) {
-      htmlWriter()->queue( quotedHTML( mPlainTextContent, decorate ) );
+      htmlWriter()->queue( quotedHTML( plainText, decorate ) );
     }
   }
 }
