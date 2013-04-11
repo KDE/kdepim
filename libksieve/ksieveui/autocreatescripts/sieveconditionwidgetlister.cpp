@@ -59,7 +59,9 @@ void SieveConditionWidget::setFilterCondition( QWidget *widget )
 
 void SieveConditionWidget::generatedScript(QString &script)
 {
-    script += mActionList.at(mComboBox->currentIndex())->code(mLayout->itemAtPosition( 1, 2 )->widget()) + QLatin1Char('\n');
+    const int index = mComboBox->currentIndex();
+    if (index != mComboBox->count()-1)
+        script += mActionList.at(mComboBox->currentIndex())->code(mLayout->itemAtPosition( 1, 2 )->widget()) + QLatin1Char('\n');
 }
 
 void SieveConditionWidget::initWidget()
@@ -81,7 +83,8 @@ void SieveConditionWidget::initWidget()
         // add (i18n-ized) name to combo box
         mComboBox->addItem( (*it)->label(),(*it)->name() );
     }
-
+    mComboBox->addItem(QLatin1String(""));
+    mComboBox->setCurrentIndex(mComboBox->count()-1);
     mLayout->addWidget(mComboBox, 1, 1);
     connect( mComboBox, SIGNAL(activated(int)),
              this, SLOT(slotConditionChanged(int)) );
@@ -109,6 +112,7 @@ void SieveConditionWidget::initWidget()
              this, SLOT(slotAddWidget()) );
     connect( mRemove, SIGNAL(clicked()),
              this, SLOT(slotRemoveWidget()) );
+    setFilterCondition(0);
 }
 
 void SieveConditionWidget::slotConditionChanged(int index)
@@ -209,21 +213,24 @@ QWidget *SieveConditionWidgetLister::createWidget( QWidget *parent )
     return w;
 }
 
-
-
-void SieveConditionWidgetLister::generatedScript(QString &script)
+void SieveConditionWidgetLister::generatedScript(QString &script, int &numberOfCondition)
 {
     const QList<QWidget*> widgetList = widgets();
     QList<QWidget*>::ConstIterator wIt = widgetList.constBegin();
     QList<QWidget*>::ConstIterator wEnd = widgetList.constEnd();
     bool wasFirst = true;
     for ( ; wIt != wEnd ;++wIt ) {
-        if (!wasFirst) {
-            script += QLatin1String(", ");
-        }
+        QString condition;
         SieveConditionWidget *w = qobject_cast<SieveConditionWidget*>( *wIt );
-        w->generatedScript(script);
-        wasFirst = false;
+        w->generatedScript(condition);
+        if (!condition.isEmpty()) {
+            if (!wasFirst) {
+                script += QLatin1String(", ");
+            }
+            script += condition;
+            wasFirst = false;
+            ++numberOfCondition;
+        }
     }
 }
 

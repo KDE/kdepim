@@ -86,19 +86,28 @@ void SieveScriptPage::slotRadioClicked(QAbstractButton* button)
 
 void SieveScriptPage::generatedScript(QString &script, QStringList &requires)
 {
-    const bool hasUniqCondition = (mScriptConditionLister->conditionNumber() == 1);
-    if (mScriptConditionLister->conditionNumber() == 1) {
-        script += QLatin1String("if ");
+    QString conditionStr;
+    int numberOfCondition = 0;
+    mScriptConditionLister->generatedScript(conditionStr, numberOfCondition);
+    const bool hasUniqCondition = (numberOfCondition == 1);
+    QString filterStr;
+    if (hasUniqCondition == 1) {
+        filterStr += QLatin1String("if ");
     } else if (mMatchCondition == AndCondition) {
-        script += QLatin1String("if allof (");
+        filterStr += QLatin1String("if allof (");
     } else if (mMatchCondition == OrCondition) {
-        script += QLatin1String("if anyof (");
+        filterStr += QLatin1String("if anyof (");
     }
-    mScriptConditionLister->generatedScript(script);
+
+    if (conditionStr.isEmpty()) {
+        return;
+    } else {
+        script += filterStr + conditionStr;
+    }
     if (hasUniqCondition)
-        script += QLatin1String(" {\n");
+        script += QLatin1String("\n{\n");
     else
-        script += QLatin1String(") {\n");
+        script += QLatin1String(")\n{\n");
     mScriptActionLister->generatedScript(script, requires);
     script += QLatin1String("}\n");
 }
