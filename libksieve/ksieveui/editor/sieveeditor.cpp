@@ -54,6 +54,7 @@ SieveEditor::SieveEditor( QWidget * parent )
     connect(import, SIGNAL(clicked(bool)), SLOT(slotImport()));
     KPushButton *autogenerateScript = new KPushButton(i18n("Autogenerate Script..."), this);
     connect(autogenerateScript, SIGNAL(clicked(bool)), SLOT(slotAutoGenerateScripts()));
+    mOkButton = buttonBox->button(QDialogButtonBox::Ok);
 
     connect(buttonBox, SIGNAL(accepted()), this, SIGNAL(okClicked()));
     connect(buttonBox, SIGNAL(rejected()), this, SIGNAL(cancelClicked()));
@@ -116,8 +117,6 @@ SieveEditor::SieveEditor( QWidget * parent )
     splitter->setSizes( size );
     splitter->setChildrenCollapsible(false);
     connect( mTextEdit, SIGNAL(textChanged()), SLOT(slotTextChanged()) );
-    connect( this, SIGNAL(user2Clicked()), SLOT(slotSaveAs()) );
-    connect( this, SIGNAL(user3Clicked()), SLOT(slotImport()) );
 
     lay->addWidget(buttonBox);
     setMainWidget( mainWidget );
@@ -246,7 +245,8 @@ bool SieveEditor::loadFromFile( const QString& filename )
 void SieveEditor::slotTextChanged()
 {
     const bool enabled = !script().isEmpty();
-    enableButton( User1, enabled );
+    mOkButton->setEnabled(enabled);
+    mCheckSyntax->setEnabled( enabled );
     enableButtonOk( enabled );
 }
 

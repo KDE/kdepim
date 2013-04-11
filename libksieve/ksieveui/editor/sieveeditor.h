@@ -66,6 +66,7 @@ private:
     QLineEdit *mScriptName;
     SieveFindBar *mFindBar;
     KPushButton *mCheckSyntax;
+    QPushButton *mOkButton;
 };
 
 }
