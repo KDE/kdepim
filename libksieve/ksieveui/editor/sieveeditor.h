@@ -46,6 +46,7 @@ public:
     void setDebugScript( const QString& debug );
     void setScriptName( const QString&name );
 
+    void resultDone();
 Q_SIGNALS:
     void checkSyntax();
 
@@ -55,6 +56,7 @@ private slots:
     void slotSaveAs();
     void slotFind();
     void slotAutoGenerateScripts();
+    void slotCheckSyntax();
 
 private:
     bool saveToFile( const QString&filename );
@@ -63,6 +65,7 @@ private:
     KTextEdit *mDebugTextEdit;
     QLineEdit *mScriptName;
     SieveFindBar *mFindBar;
+    KPushButton *mCheckSyntax;
 };
 
 }

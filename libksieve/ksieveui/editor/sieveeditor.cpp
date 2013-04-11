@@ -46,8 +46,8 @@ SieveEditor::SieveEditor( QWidget * parent )
     setCaption( i18n( "Edit Sieve Script" ) );
     setButtons( None );
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
-    KPushButton *checkSyntax = new KPushButton(i18n("Check Syntax"), this);
-    connect(checkSyntax, SIGNAL(clicked(bool)), SIGNAL(checkSyntax()));
+    mCheckSyntax = new KPushButton(i18n("Check Syntax"), this);
+    connect(mCheckSyntax, SIGNAL(clicked(bool)), SLOT(slotCheckSyntax()));
     KPushButton *saveAs = new KPushButton(KStandardGuiItem::saveAs(), this);
     connect(saveAs, SIGNAL(clicked(bool)), SLOT(slotSaveAs()));
     KPushButton *import = new KPushButton(i18n( "Import..." ), this);
@@ -58,7 +58,7 @@ SieveEditor::SieveEditor( QWidget * parent )
     connect(buttonBox, SIGNAL(accepted()), this, SIGNAL(okClicked()));
     connect(buttonBox, SIGNAL(rejected()), this, SIGNAL(cancelClicked()));
 
-    buttonBox->addButton(checkSyntax, QDialogButtonBox::ActionRole);
+    buttonBox->addButton(mCheckSyntax, QDialogButtonBox::ActionRole);
     buttonBox->addButton(saveAs, QDialogButtonBox::ActionRole);
     buttonBox->addButton(import, QDialogButtonBox::ActionRole);
     buttonBox->addButton(autogenerateScript, QDialogButtonBox::ActionRole);
@@ -274,6 +274,17 @@ void SieveEditor::setScriptName( const QString&name )
 {
     mScriptName->setText( name );
 }  
+
+void SieveEditor::resultDone()
+{
+    mCheckSyntax->setEnabled(true);
+}
+
+void SieveEditor::slotCheckSyntax()
+{
+    mCheckSyntax->setEnabled(false);
+    Q_EMIT checkSyntax();
+}
 
 #include "sieveeditor.moc"
 

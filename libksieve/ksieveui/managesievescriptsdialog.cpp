@@ -488,6 +488,7 @@ void ManageSieveScriptsDialog::slotPutResultDebug(KManageSieve::SieveJob*,bool s
         else
             addFailedMessage( errorMsg );
     }
+    mSieveEditor->resultDone();
 }
 
 void ManageSieveScriptsDialog::slotPutResult( KManageSieve::SieveJob *, bool success )
