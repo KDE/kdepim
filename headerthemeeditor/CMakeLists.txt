@@ -6,6 +6,7 @@ add_definitions( -DQT_NO_CAST_TO_ASCII )
 
 set(headerthemeeditor_SRCS
   main.cpp
+  editor.cpp  
   themeeditormainwindow.cpp 
   themeeditorpage.cpp
   previewpage.cpp

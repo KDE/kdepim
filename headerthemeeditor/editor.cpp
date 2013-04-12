@@ -15,25 +15,19 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#include "editor.h"
 
-#ifndef EDITORPAGE_H
-#define EDITORPAGE_H
+#include <kpimtextedit/htmlhighlighter.h>
 
-#include <QWidget>
-
-class ThemeTemplateWidget;
-class Editor;
-
-class EditorPage : public QWidget
+Editor::Editor(QWidget *parent)
+    : KTextEdit(parent)
 {
-    Q_OBJECT
-public:
-    explicit EditorPage(QWidget *parent = 0);
-    ~EditorPage();
-    void saveTheme(const QString &path);
-private:
-    Editor *mEditor;
-    ThemeTemplateWidget *mThemeTemplate;
-};
+    new KPIMTextEdit::HtmlHighlighter(document());
+    setAcceptRichText(false);
+}
 
-#endif // EDITORPAGE_H
+Editor::~Editor()
+{
+}
+
+#include "editor.moc"

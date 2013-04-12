@@ -15,25 +15,17 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#ifndef EDITOR_H
+#define EDITOR_H
 
-#ifndef EDITORPAGE_H
-#define EDITORPAGE_H
+#include <KTextEdit>
 
-#include <QWidget>
-
-class ThemeTemplateWidget;
-class Editor;
-
-class EditorPage : public QWidget
+class Editor : public KTextEdit
 {
     Q_OBJECT
 public:
-    explicit EditorPage(QWidget *parent = 0);
-    ~EditorPage();
-    void saveTheme(const QString &path);
-private:
-    Editor *mEditor;
-    ThemeTemplateWidget *mThemeTemplate;
+    explicit Editor(QWidget *parent = 0);
+    ~Editor();
 };
 
-#endif // EDITORPAGE_H
+#endif // EDITOR_H
