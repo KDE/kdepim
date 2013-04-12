@@ -73,4 +73,10 @@ void ThemeEditorMainWindow::slotNewTheme()
     //TODO
 }
 
+void ThemeEditorMainWindow::closeEvent(QCloseEvent *e)
+{
+    savePreviousProject();
+    KXmlGuiWindow::closeEvent(e);
+}
+
 #include "themeeditormainwindow.moc"

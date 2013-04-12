@@ -30,6 +30,8 @@ public:
     explicit ThemeEditorMainWindow();
     ~ThemeEditorMainWindow();
 
+protected:
+    void closeEvent(QCloseEvent *);
 private Q_SLOTS:
     void slotNewTheme();
     void slotCloseTheme();
