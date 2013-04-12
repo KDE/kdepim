@@ -22,7 +22,7 @@
 #include <QDate>
 
 namespace ArchiveMailAgentUtil {
-  QDate diffDate(ArchiveMailInfo*info);
+QDate diffDate(ArchiveMailInfo*info);
 }
 
 #endif // ARCHIVEMAILAGENTUTIL_H

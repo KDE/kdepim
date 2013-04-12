@@ -21,18 +21,18 @@
 #include <mailcommon/mailinterfaces.h>
 
 namespace Akonadi {
-  class EntityTreeModel;
-  class EntityMimeTypeFilterModel;
+class EntityTreeModel;
+class EntityMimeTypeFilterModel;
 }
 
 namespace MailCommon {
-  class FolderCollectionMonitor;
-  class JobScheduler;
+class FolderCollectionMonitor;
+class JobScheduler;
 }
 
 class ArchiveMailKernel : public QObject, public MailCommon::IKernel, public MailCommon::ISettings
 {
-  public:
+public:
     explicit  ArchiveMailKernel( QObject *parent = 0 );
 
     KPIMIdentities::IdentityManager *identityManager();
@@ -53,7 +53,7 @@ class ArchiveMailKernel : public QObject, public MailCommon::IKernel, public Mai
     bool showPopupAfterDnD();
     
 
-  private:
+private:
     KPIMIdentities::IdentityManager *mIdentityManager;
     MailCommon::FolderCollectionMonitor *mFolderCollectionMonitor;
     Akonadi::EntityTreeModel *mEntityTreeModel;

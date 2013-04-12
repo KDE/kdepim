@@ -27,60 +27,60 @@
 class ArchiveMailInfo
 {
 public:
-  explicit ArchiveMailInfo();
-  explicit ArchiveMailInfo(const KConfigGroup& config);
-  ~ArchiveMailInfo();
+    explicit ArchiveMailInfo();
+    explicit ArchiveMailInfo(const KConfigGroup& config);
+    ~ArchiveMailInfo();
 
-  enum ArchiveUnit {
-    ArchiveDays = 0,
-    ArchiveWeeks,
-    ArchiveMonths,
-    ArchiveMaxUnits
-  };
+    enum ArchiveUnit {
+        ArchiveDays = 0,
+        ArchiveWeeks,
+        ArchiveMonths,
+        ArchiveMaxUnits
+    };
 
-  KUrl realUrl(const QString &folderName) const;
+    KUrl realUrl(const QString &folderName) const;
 
-  bool isEmpty() const;
+    bool isEmpty() const;
 
-  Akonadi::Collection::Id saveCollectionId() const;
-  void setSaveCollectionId(Akonadi::Collection::Id collectionId);
+    Akonadi::Collection::Id saveCollectionId() const;
+    void setSaveCollectionId(Akonadi::Collection::Id collectionId);
 
-  void setSaveSubCollection(bool b);
-  bool saveSubCollection() const;
+    void setSaveSubCollection(bool b);
+    bool saveSubCollection() const;
 
-  void setUrl(const KUrl& url);
-  KUrl url() const;
+    void setUrl(const KUrl& url);
+    KUrl url() const;
 
-  void readConfig(const KConfigGroup& config);
-  void writeConfig(KConfigGroup & config );
+    void readConfig(const KConfigGroup& config);
+    void writeConfig(KConfigGroup & config );
 
-  void setArchiveType( MailCommon::BackupJob::ArchiveType type );
-  MailCommon::BackupJob::ArchiveType archiveType() const;
+    void setArchiveType( MailCommon::BackupJob::ArchiveType type );
+    MailCommon::BackupJob::ArchiveType archiveType() const;
 
-  void setArchiveUnit( ArchiveMailInfo::ArchiveUnit unit );
-  ArchiveMailInfo::ArchiveUnit archiveUnit() const;
+    void setArchiveUnit( ArchiveMailInfo::ArchiveUnit unit );
+    ArchiveMailInfo::ArchiveUnit archiveUnit() const;
 
-  void setArchiveAge( int age );
-  int archiveAge() const;
+    void setArchiveAge( int age );
+    int archiveAge() const;
 
-  void setLastDateSaved( const QDate& date );
-  QDate lastDateSaved() const;
+    void setLastDateSaved( const QDate& date );
+    QDate lastDateSaved() const;
 
-  int maximumArchiveCount() const;
-  void setMaximumArchiveCount( int max );
+    int maximumArchiveCount() const;
+    void setMaximumArchiveCount( int max );
 
-  QStringList listOfArchive(const QString& foldername) const;
+    QStringList listOfArchive(const QString& foldername) const;
 
 private:
-  QString dirArchive() const;
-  QDate mLastDateSaved;
-  int mArchiveAge;
-  MailCommon::BackupJob::ArchiveType mArchiveType;
-  ArchiveUnit mArchiveUnit;
-  Akonadi::Collection::Id mSaveCollectionId;
-  KUrl mPath;
-  int mMaximumArchiveCount;
-  bool mSaveSubCollection;
+    QString dirArchive() const;
+    QDate mLastDateSaved;
+    int mArchiveAge;
+    MailCommon::BackupJob::ArchiveType mArchiveType;
+    ArchiveUnit mArchiveUnit;
+    Akonadi::Collection::Id mSaveCollectionId;
+    KUrl mPath;
+    int mMaximumArchiveCount;
+    bool mSaveSubCollection;
 };
 
 #endif // ARCHIVEMAILINFO_H

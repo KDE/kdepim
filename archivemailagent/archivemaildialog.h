@@ -21,59 +21,60 @@
 #include "ui_archivemailwidget.h"
 #include "archivemailinfo.h"
 #include <QTreeWidgetItem>
-#include <QTreeWidget>
+
+class QTreeWidget;
 
 class ArchiveMailItem : public QTreeWidgetItem
 {
 public:
-  explicit ArchiveMailItem(QTreeWidget *parent = 0);
-  ~ArchiveMailItem();
+    explicit ArchiveMailItem(QTreeWidget *parent = 0);
+    ~ArchiveMailItem();
 
-  void setInfo(ArchiveMailInfo *info);
-  ArchiveMailInfo *info() const;
+    void setInfo(ArchiveMailInfo *info);
+    ArchiveMailInfo *info() const;
 private:
-  ArchiveMailInfo *mInfo;
+    ArchiveMailInfo *mInfo;
 };
 
 class ArchiveMailWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit ArchiveMailWidget( QWidget *parent = 0 );
-  ~ArchiveMailWidget();
-  void save();
-  void saveTreeWidgetHeader(KConfigGroup& group);
-  void restoreTreeWidgetHeader(const QByteArray &group);
+    explicit ArchiveMailWidget( QWidget *parent = 0 );
+    ~ArchiveMailWidget();
+    void save();
+    void saveTreeWidgetHeader(KConfigGroup& group);
+    void restoreTreeWidgetHeader(const QByteArray &group);
 private:
-  void load();
-  void createOrUpdateItem(ArchiveMailInfo *info, ArchiveMailItem* item = 0);
+    void load();
+    void createOrUpdateItem(ArchiveMailInfo *info, ArchiveMailItem* item = 0);
 
-  bool verifyExistingArchive(ArchiveMailInfo *info) const;
+    bool verifyExistingArchive(ArchiveMailInfo *info) const;
 
 private Q_SLOTS:
-  void slotRemoveItem();
-  void slotModifyItem();
-  void slotAddItem();
-  void updateButtons();
-  void slotOpenFolder();
-  void customContextMenuRequested(const QPoint&);
+    void slotRemoveItem();
+    void slotModifyItem();
+    void slotAddItem();
+    void updateButtons();
+    void slotOpenFolder();
+    void customContextMenuRequested(const QPoint&);
 private:
-  Ui::ArchiveMailWidget *mWidget;
+    Ui::ArchiveMailWidget *mWidget;
 };
 
 class ArchiveMailDialog : public KDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit ArchiveMailDialog(QWidget *parent = 0);
-  ~ArchiveMailDialog();
+    explicit ArchiveMailDialog(QWidget *parent = 0);
+    ~ArchiveMailDialog();
 protected Q_SLOTS:
-  void slotSave();
+    void slotSave();
 
 private:
-  void writeConfig();
-  void readConfig();
-  ArchiveMailWidget *mWidget;
+    void writeConfig();
+    void readConfig();
+    ArchiveMailWidget *mWidget;
 };
 
 

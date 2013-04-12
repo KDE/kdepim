@@ -23,24 +23,24 @@
 class ArchiveMailKernel;
 class ArchiveMailInfo;
 namespace Akonadi {
-  class Collection;
+class Collection;
 }
 
 class ArchiveMailManager : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit ArchiveMailManager(QObject *parent = 0);
-  ~ArchiveMailManager();
-  void removeCollection(const Akonadi::Collection& collection);
-  void backupDone(ArchiveMailInfo *info);
-  void pause();
-  void resume();
+    explicit ArchiveMailManager(QObject *parent = 0);
+    ~ArchiveMailManager();
+    void removeCollection(const Akonadi::Collection& collection);
+    void backupDone(ArchiveMailInfo *info);
+    void pause();
+    void resume();
 public Q_SLOTS:
-  void load();
+    void load();
 private:
-  QList<ArchiveMailInfo *> mListArchiveInfo;
-  ArchiveMailKernel *mArchiveMailKernel;
+    QList<ArchiveMailInfo *> mListArchiveInfo;
+    ArchiveMailKernel *mArchiveMailKernel;
 };
 
 
