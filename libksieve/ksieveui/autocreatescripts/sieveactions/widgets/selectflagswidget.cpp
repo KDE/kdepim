@@ -120,11 +120,13 @@ void SelectFlagsWidget::slotSelectFlags()
         const QStringList lstFlags = dialog->flags();
         mCode.clear();
         if (!lstFlags.isEmpty()) {
+            bool wasFirst = true;
             mCode = QLatin1String("[");
             Q_FOREACH (const QString &flag, lstFlags) {
-                mCode +=QString::fromLatin1(" \"%1\"").arg(flag);
+                mCode += (wasFirst ? QString() : QLatin1String(",")) + QString::fromLatin1(" \"%1\"").arg(flag);
+                wasFirst = false;
             }
-            mCode += QLatin1String(" ]");
+            mCode += QLatin1String(" ];");
         }
     }
     mEdit->setText(mCode);
