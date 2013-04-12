@@ -62,18 +62,37 @@ SelectFlagsListWidget::~SelectFlagsListWidget()
 
 void SelectFlagsListWidget::init()
 {
+    QListWidgetItem *item = new QListWidgetItem(QLatin1String("\\\\Deleted"), this);
+    item->setCheckState(Qt::Unchecked);
+    item = new QListWidgetItem(QLatin1String("\\\\Answered"), this);
+    item->setCheckState(Qt::Unchecked);
+    item = new QListWidgetItem(QLatin1String("\\\\Flagged"), this);
+    item->setCheckState(Qt::Unchecked);
     //TODO
 }
 
 void SelectFlagsListWidget::setFlags(const QStringList& list)
 {
-    //TODO
+    const int numberOfItem = count();
+    for (int i = 0; i < numberOfItem; ++i) {
+        QListWidgetItem *it = item(i);
+        if (list.contains(it->text())) {
+            it->setCheckState(Qt::Checked);
+        }
+    }
 }
 
 QStringList SelectFlagsListWidget::flags() const
 {
-    //TODO
-    return QStringList();
+    QStringList result;
+    const int numberOfItem = count();
+    for (int i = 0; i < numberOfItem; ++i) {
+        QListWidgetItem *it = item(i);
+        if (it->checkState() == Qt::Checked) {
+            result<<it->text();
+        }
+    }
+    return result;
 }
 
 SelectFlagsWidget::SelectFlagsWidget(QWidget *parent)
@@ -96,13 +115,19 @@ SelectFlagsWidget::~SelectFlagsWidget()
 void SelectFlagsWidget::slotSelectFlags()
 {
     QPointer<SelectFlagsListDialog> dialog = new SelectFlagsListDialog(this);
+    //TODO dialog->setFlags();
     if (dialog->exec()) {
         const QStringList lstFlags = dialog->flags();
         mCode.clear();
-        Q_FOREACH (const QString &flag, lstFlags) {
-            //TODO
+        if (!lstFlags.isEmpty()) {
+            mCode = QLatin1String("[");
+            Q_FOREACH (const QString &flag, lstFlags) {
+                mCode +=QString::fromLatin1(" \"%1\"").arg(flag);
+            }
+            mCode += QLatin1String(" ]");
         }
     }
+    mEdit->setText(mCode);
     delete dialog;
 }
 

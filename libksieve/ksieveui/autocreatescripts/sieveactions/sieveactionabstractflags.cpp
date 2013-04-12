@@ -42,10 +42,9 @@ QWidget *SieveActionAbstractFlags::createParamWidget( QWidget *parent ) const
 QString SieveActionAbstractFlags::code(QWidget *w) const
 {
     SelectFlagsWidget *flagsWidget = w->findChild<SelectFlagsWidget*>( QLatin1String("flagswidget") );
-    QString flagCode = flagsWidget->code();
+    const QString flagCode = flagsWidget->code();
     QString str = flagsCode(w);
-    //TODO
-    return str;
+    return str + QLatin1Char(' ') + flagCode;
 }
 
 QStringList SieveActionAbstractFlags::needRequires() const

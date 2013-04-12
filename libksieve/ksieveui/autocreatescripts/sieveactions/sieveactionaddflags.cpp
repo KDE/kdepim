@@ -34,8 +34,7 @@ SieveAction* SieveActionAddFlags::newAction()
 
 QString SieveActionAddFlags::flagsCode(QWidget *) const
 {
-    //TODO
-    return QString();
+    return QString::fromLatin1("addflag");
 }
 
 #include "sieveactionaddflags.moc"
