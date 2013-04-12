@@ -6,7 +6,7 @@ set_package_properties(LinkGrammar PROPERTIES DESCRIPTION "Grammar checking Libr
                                               PURPOSE "Required by Grammar-Check plugin"
                       )
 
-if(LINK_GRAMMAR_FOUND)
-    macro_optional_add_subdirectory( linkgrammar )
+if(LinkGrammar_FOUND)
+  macro_optional_add_subdirectory(linkgrammar)
 endif()
 
