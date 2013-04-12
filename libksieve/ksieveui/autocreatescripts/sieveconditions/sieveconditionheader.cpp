@@ -65,6 +65,7 @@ QString SieveConditionHeader::code(QWidget *w) const
 {
     SelectMatchTypeComboBox *matchTypeCombo = w->findChild<SelectMatchTypeComboBox*>( QLatin1String("matchtypecombobox") );
     const QString matchString = matchTypeCombo->code();
+    const bool isNegative = matchTypeCombo->isNegative();
 
     SelectHeaderTypeComboBox *headerType = w->findChild<SelectHeaderTypeComboBox*>( QLatin1String("headertype") );
     const QString headerStr = headerType->code();
@@ -72,7 +73,7 @@ QString SieveConditionHeader::code(QWidget *w) const
     KLineEdit *value = w->findChild<KLineEdit*>( QLatin1String("value") );
     const QString valueStr = value->text();
 
-    return QString::fromLatin1("header %1 \"%2\" \"%3\"").arg(matchString).arg(headerStr).arg(valueStr);
+    return (isNegative ? QLatin1String("not ") : QString()) + QString::fromLatin1("header %1 \"%2\" \"%3\"").arg(matchString).arg(headerStr).arg(valueStr);
 }
 
 #include "sieveconditionheader.moc"

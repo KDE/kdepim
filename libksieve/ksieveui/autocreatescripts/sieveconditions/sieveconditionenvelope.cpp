@@ -71,6 +71,7 @@ QString SieveConditionEnvelope::code(QWidget *w) const
 {
     SelectMatchTypeComboBox *selectMatchCombobox = w->findChild<SelectMatchTypeComboBox*>(QLatin1String("matchtypecombobox"));
     const QString matchTypeStr = selectMatchCombobox->code();
+    const bool isNegative = selectMatchCombobox->isNegative();
 
     SelectAddressPartComboBox *selectAddressPart = w->findChild<SelectAddressPartComboBox*>(QLatin1String("addresspartcombobox"));
     const QString selectAddressPartStr = selectAddressPart->code();
@@ -81,9 +82,7 @@ QString SieveConditionEnvelope::code(QWidget *w) const
 
     KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("editaddress") );
     const QString addressStr = edit->text();
-    return QString::fromLatin1("envelope %1 %2 \"%3\" \"%4\"").arg(selectAddressPartStr).arg(matchTypeStr).arg(selectHeaderTypeStr).arg(addressStr);
-
-    return QString();
+    return (isNegative ? QLatin1String("not ") : QString()) + QString::fromLatin1("envelope %1 %2 \"%3\" \"%4\"").arg(selectAddressPartStr).arg(matchTypeStr).arg(selectHeaderTypeStr).arg(addressStr);
 }
 
 #include "sieveconditionenvelope.moc"

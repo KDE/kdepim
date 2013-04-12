@@ -29,6 +29,7 @@ public:
     ~SelectMatchTypeComboBox();
 
     QString code() const;
+    bool isNegative() const;
 private:
     void initialize();
 };
