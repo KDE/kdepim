@@ -20,12 +20,24 @@
 
 #include <KTextEdit>
 
+class QCompleter;
+
 class Editor : public KTextEdit
 {
     Q_OBJECT
 public:
     explicit Editor(QWidget *parent = 0);
     ~Editor();
+
+private Q_SLOTS:
+    void slotInsertCompletion( const QString &completion );
+
+protected:
+    void keyPressEvent(QKeyEvent* e);
+private:
+    void initCompleter();
+    QString wordUnderCursor() const;
+    QCompleter *m_completer;
 };
 
 #endif // EDITOR_H
