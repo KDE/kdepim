@@ -28,7 +28,7 @@ public:
     explicit SelectMatchTypeComboBox(QWidget *parent = 0);
     ~SelectMatchTypeComboBox();
 
-    QString code() const;
+    QString code(bool &negative) const;
     bool isNegative() const;
 private:
     void initialize();

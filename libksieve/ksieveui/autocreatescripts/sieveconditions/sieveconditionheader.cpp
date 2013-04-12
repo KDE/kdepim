@@ -64,8 +64,8 @@ QWidget *SieveConditionHeader::createParamWidget( QWidget *parent ) const
 QString SieveConditionHeader::code(QWidget *w) const
 {
     SelectMatchTypeComboBox *matchTypeCombo = w->findChild<SelectMatchTypeComboBox*>( QLatin1String("matchtypecombobox") );
-    const QString matchString = matchTypeCombo->code();
-    const bool isNegative = matchTypeCombo->isNegative();
+    bool isNegative = false;
+    const QString matchString = matchTypeCombo->code(isNegative);
 
     SelectHeaderTypeComboBox *headerType = w->findChild<SelectHeaderTypeComboBox*>( QLatin1String("headertype") );
     const QString headerStr = headerType->code();

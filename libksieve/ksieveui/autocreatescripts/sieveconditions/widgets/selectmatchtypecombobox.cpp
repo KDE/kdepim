@@ -31,11 +31,6 @@ SelectMatchTypeComboBox::~SelectMatchTypeComboBox()
 {
 }
 
-bool SelectMatchTypeComboBox::isNegative() const
-{
-    return itemData(currentIndex()).toString().startsWith(QLatin1String("[NOT]"));
-}
-
 void SelectMatchTypeComboBox::initialize()
 {
     addItem(i18n("is"), QLatin1String(":is"));
@@ -46,10 +41,12 @@ void SelectMatchTypeComboBox::initialize()
     addItem(i18n("not matches"), QLatin1String("[NOT]:matches"));
 }
 
-QString SelectMatchTypeComboBox::code() const
+QString SelectMatchTypeComboBox::code(bool &negative) const
 {
     QString value = itemData(currentIndex()).toString();
-    value = value.remove(QLatin1String("[NOT]"));
+    negative = value.startsWith(QLatin1String("[NOT]"));
+    if (negative)
+        value = value.remove(QLatin1String("[NOT]"));
     return value;
 }
 

@@ -70,8 +70,8 @@ QWidget *SieveConditionAddress::createParamWidget( QWidget *parent ) const
 QString SieveConditionAddress::code(QWidget *w) const
 {
     SelectMatchTypeComboBox *selectMatchCombobox = w->findChild<SelectMatchTypeComboBox*>(QLatin1String("matchtypecombobox"));
-    const QString matchTypeStr = selectMatchCombobox->code();
-    const bool isNegative = selectMatchCombobox->isNegative();
+    bool isNegative = false;
+    const QString matchTypeStr = selectMatchCombobox->code(isNegative);
 
     SelectAddressPartComboBox *selectAddressPart = w->findChild<SelectAddressPartComboBox*>(QLatin1String("addresspartcombobox"));
     const QString selectAddressPartStr = selectAddressPart->code();
