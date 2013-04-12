@@ -17,6 +17,7 @@
 
 #include "sieveconditionheader.h"
 #include "widgets/selectmatchtypecombobox.h"
+#include "widgets/selectheadertypecombobox.h"
 
 #include <KLocale>
 #include <KLineEdit>
@@ -47,7 +48,7 @@ QWidget *SieveConditionHeader::createParamWidget( QWidget *parent ) const
     matchTypeCombo->setObjectName(QLatin1String("matchtypecombobox"));
     lay->addWidget(matchTypeCombo);
 
-    KLineEdit *headerType = new KLineEdit;
+    SelectHeaderTypeComboBox *headerType = new SelectHeaderTypeComboBox;
     headerType->setObjectName(QLatin1String("headertype"));
     lay->addWidget(headerType);
 
@@ -65,8 +66,8 @@ QString SieveConditionHeader::code(QWidget *w) const
     SelectMatchTypeComboBox *matchTypeCombo = w->findChild<SelectMatchTypeComboBox*>( QLatin1String("matchtypecombobox") );
     const QString matchString = matchTypeCombo->code();
 
-    KLineEdit *headerType = w->findChild<KLineEdit*>( QLatin1String("headertype") );
-    const QString headerStr = headerType->text();
+    SelectHeaderTypeComboBox *headerType = w->findChild<SelectHeaderTypeComboBox*>( QLatin1String("headertype") );
+    const QString headerStr = headerType->code();
 
     KLineEdit *value = w->findChild<KLineEdit*>( QLatin1String("value") );
     const QString valueStr = value->text();
