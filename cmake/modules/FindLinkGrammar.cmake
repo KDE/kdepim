@@ -1,23 +1,10 @@
-FIND_PATH(LINK_GRAMMAR_INCLUDE_DIR link-grammar/link-includes.h )
 
-FIND_LIBRARY(LINK_GRAMMAR_LIBRARIES NAMES link-grammar )
 
-IF (LINK_GRAMMAR_INCLUDE_DIR AND LINK_GRAMMAR_LIBRARIES)
-    SET(LINK_GRAMMAR_FOUND TRUE)
-ENDIF (LINK_GRAMMAR_INCLUDE_DIR AND LINK_GRAMMAR_LIBRARIES)
+find_path(LinkGrammar_INCLUDE_DIR link-grammar/link-includes.h)
 
-IF (LINK_GRAMMAR_FOUND)
+find_library(LinkGrammar_LIBRARIES NAMES link-grammar)
 
-  IF (NOT link-grammar_FIND_QUIETLY)
-    MESSAGE(STATUS "Found link-grammar: ${LINK_GRAMMAR_LIBRARIES}")
-  ENDIF (NOT link-grammar_FIND_QUIETLY)
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(LinkGrammar DEFAULT_MSG LinkGrammar_LIBRARIES LinkGrammar_INCLUDE_DIR)
 
-ELSE (LINK_GRAMMAR_FOUND)
-
-  IF (link-grammar_FIND_REQUIRED)
-    MESSAGE(FATAL_ERROR "Could NOT find link-grammar")
-  ENDIF (link-grammar_FIND_REQUIRED)
-
-ENDIF (LINK_GRAMMAR_FOUND)
-
-MARK_AS_ADVANCED(LINK_GRAMMAR_INCLUDE_DIR LINK_GRAMMAR_LIBRARIES)
+mark_as_advanced(LinkGrammar_INCLUDE_DIR LinkGrammar_LIBRARIES)
