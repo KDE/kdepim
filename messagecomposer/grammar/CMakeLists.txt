@@ -6,3 +6,5 @@ if (LINK_GRAMMAR_FOUND)
     macro_optional_add_subdirectory( grammarcheck )
 endif (LINK_GRAMMAR_FOUND)
 
+add_subdirectory(tests)
+
