@@ -24,6 +24,7 @@
 #include <KAction>
 #include <KActionCollection>
 #include <KLocalizedString>
+#include <KMessageBox>
 
 ThemeEditorMainWindow::ThemeEditorMainWindow()
     : KXmlGuiWindow()
@@ -51,11 +52,24 @@ void ThemeEditorMainWindow::setupActions()
 
 void ThemeEditorMainWindow::slotCloseTheme()
 {
+    savePreviousProject();
     //TODO
+}
+
+void ThemeEditorMainWindow::savePreviousProject()
+{
+    if (!mProjectDirectory.isEmpty()) {
+        if (KMessageBox::questionYesNo(this, i18n("Do you want to save previous project?"), i18n("Save previous project")) == KMessageBox::Yes) {
+            mThemeEditor->saveTheme(mProjectDirectory);
+        }
+    }
+    mProjectDirectory.clear();
 }
 
 void ThemeEditorMainWindow::slotNewTheme()
 {
+    savePreviousProject();
+    //TODO select new project directory
     //TODO
 }
 

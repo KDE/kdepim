@@ -31,7 +31,7 @@ public:
     explicit ThemeEditorPage(QWidget *parent = 0);
     ~ThemeEditorPage();
 
-    void saveTheme();
+    void saveTheme(const QString &path);
 private:
     KTabWidget *mTabWidget;
     EditorPage *mEditorPage;

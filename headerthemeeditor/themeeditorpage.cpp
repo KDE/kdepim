@@ -44,7 +44,7 @@ ThemeEditorPage::~ThemeEditorPage()
 {
 }
 
-void ThemeEditorPage::saveTheme()
+void ThemeEditorPage::saveTheme(const QString &path)
 {
 
 }
