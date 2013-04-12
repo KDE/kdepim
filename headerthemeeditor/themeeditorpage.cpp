@@ -42,10 +42,25 @@ ThemeEditorPage::ThemeEditorPage(QWidget *parent)
 
 ThemeEditorPage::~ThemeEditorPage()
 {
+    qDeleteAll(mExtraPage);
+    mExtraPage.clear();
+}
+
+void ThemeEditorPage::addExtraPage(const QString &filename)
+{
+    EditorPage *extraPage = new EditorPage;
+    //TODO customize
+    mTabWidget->addTab(extraPage, filename);
+    mExtraPage.append(extraPage);
 }
 
 void ThemeEditorPage::saveTheme(const QString &path)
 {
+    mEditorPage->saveTheme(path);
+    Q_FOREACH (EditorPage *page, mExtraPage) {
+        page->saveTheme(path);
+    }
+    mDesktopPage->saveTheme(path);
 
 }
 

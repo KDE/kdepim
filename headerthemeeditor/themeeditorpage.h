@@ -32,10 +32,12 @@ public:
     ~ThemeEditorPage();
 
     void saveTheme(const QString &path);
+    void addExtraPage(const QString &filename);
 private:
     KTabWidget *mTabWidget;
     EditorPage *mEditorPage;
     DesktopFilePage *mDesktopPage;
+    QList<EditorPage*> mExtraPage;
 };
 
 #endif // THEMEEDITORPAGE_H
