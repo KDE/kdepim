@@ -1,7 +1,12 @@
 project(plugins)
 find_package(LinkGrammar)
-macro_log_feature(LINK_GRAMMAR_FOUND "link-grammar" "Grammar checking Library" "http://www.abisource.com/projects/link-grammar/" FALSE "" "Required by Grammar-Check plugin")
-if (LINK_GRAMMAR_FOUND)
+set_package_properties(LinkGrammar PROPERTIES DESCRIPTION "Grammar checking Library"
+                                              URL "http://www.abisource.com/projects/link-grammar/"
+                                              TYPE OPTIONAL
+                                              PURPOSE "Required by Grammar-Check plugin"
+                      )
+
+if(LINK_GRAMMAR_FOUND)
     macro_optional_add_subdirectory( linkgrammar )
-endif (LINK_GRAMMAR_FOUND)
+endif()
 
