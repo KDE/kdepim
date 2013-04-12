@@ -42,6 +42,7 @@ set(ksieveui_LIB_SRCS
   autocreatescripts/sieveactions/sieveactionabstractflags.cpp
   autocreatescripts/sieveactions/sieveactionremoveflags.cpp
   autocreatescripts/sieveactions/widgets/selectflagswidget.cpp
+  autocreatescripts/sieveactions/widgets/selectfileintowidget.cpp
   autocreatescripts/sieveconditions/sievecondition.cpp
   autocreatescripts/sieveconditions/sieveconditionheader.cpp
   autocreatescripts/sieveconditions/sieveconditionlist.cpp
@@ -49,6 +50,7 @@ set(ksieveui_LIB_SRCS
   autocreatescripts/sieveconditions/sieveconditionsize.cpp
   autocreatescripts/sieveconditions/sieveconditionenvelope.cpp
   autocreatescripts/sieveconditions/sieveconditionexists.cpp
+  autocreatescripts/sieveconditions/sieveconditiontrue.cpp
   autocreatescripts/sieveconditions/widgets/selectmatchtypecombobox.cpp
   autocreatescripts/sieveconditions/widgets/selectaddresspartcombobox.cpp
   autocreatescripts/sieveconditions/widgets/selectheadertypecombobox.cpp

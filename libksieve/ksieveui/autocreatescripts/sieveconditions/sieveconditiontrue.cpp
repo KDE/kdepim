@@ -15,24 +15,39 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "sieveconditionlist.h"
-#include "sievecondition.h"
-#include "sieveconditionheader.h"
-#include "sieveconditionaddress.h"
-#include "sieveconditionsize.h"
-#include "sieveconditionenvelope.h"
-#include "sieveconditionexists.h"
 #include "sieveconditiontrue.h"
 
-QList<KSieveUi::SieveCondition *> KSieveUi::SieveConditionList::conditionList()
+#include <KLocale>
+
+#include <QHBoxLayout>
+#include <QLabel>
+
+using namespace KSieveUi;
+
+SieveConditionTrue::SieveConditionTrue(QObject *parent)
+    : SieveCondition(QLatin1String("true"), i18n("True"), parent)
 {
-    QList<KSieveUi::SieveCondition*> list;
-    list.append(new KSieveUi::SieveConditionHeader);
-    list.append(new KSieveUi::SieveConditionAddress);
-    list.append(new KSieveUi::SieveConditionSize);
-    list.append(new KSieveUi::SieveConditionEnvelope);
-    list.append(new KSieveUi::SieveConditionExists);
-    list.append(new KSieveUi::SieveConditionTrue);
-    return list;
 }
 
+SieveCondition *SieveConditionTrue::newAction()
+{
+    return new SieveConditionTrue;
+}
+
+QWidget *SieveConditionTrue::createParamWidget( QWidget *parent ) const
+{
+    QWidget *w = new QWidget(parent);
+    QHBoxLayout *lay = new QHBoxLayout;
+    w->setLayout(lay);
+
+    QLabel *label = new QLabel(i18n("true"));
+    lay->addWidget(label);
+    return w;
+}
+
+QString SieveConditionTrue::code(QWidget *) const
+{
+    return QLatin1String("true");
+}
+
+#include "sieveconditiontrue.moc"
