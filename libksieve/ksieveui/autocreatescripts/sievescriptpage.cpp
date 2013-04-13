@@ -36,17 +36,21 @@ SieveScriptPage::SieveScriptPage(QWidget *parent)
     QGroupBox *conditions = new QGroupBox(i18n("Conditions"));
     QVBoxLayout *vbox = new QVBoxLayout;
 
+    mAllMessageRBtn = new QRadioButton( i18n( "Match all messages" ), this );
     mMatchAll = new QRadioButton( i18n( "Match a&ll of the following" ), this );
     mMatchAny = new QRadioButton( i18n( "Match an&y of the following" ), this );
 
     vbox->addWidget(mMatchAll);
     vbox->addWidget(mMatchAny);
+    vbox->addWidget(mAllMessageRBtn);
     mMatchAll->setChecked( true );
     mMatchAny->setChecked( false );
+    mAllMessageRBtn->setChecked( false );
 
     QButtonGroup *bg = new QButtonGroup( this );
     bg->addButton( mMatchAll );
     bg->addButton( mMatchAny );
+    bg->addButton(mAllMessageRBtn);
 
     connect( bg, SIGNAL(buttonClicked(QAbstractButton*)),
              this, SLOT(slotRadioClicked(QAbstractButton*)) );
@@ -79,35 +83,42 @@ void SieveScriptPage::slotRadioClicked(QAbstractButton* button)
 {
     if (button == mMatchAll) {
         mMatchCondition = AndCondition;
-    } else {
+    } else if (button == mMatchAny) {
         mMatchCondition = OrCondition;
+    } else {
+        mMatchCondition = AllCondition;
     }
+    mScriptConditionLister->setEnabled(mMatchCondition != AllCondition);
 }
 
 void SieveScriptPage::generatedScript(QString &script, QStringList &requires)
 {
-    QString conditionStr;
-    int numberOfCondition = 0;
-    mScriptConditionLister->generatedScript(conditionStr, numberOfCondition);
-    const bool hasUniqCondition = (numberOfCondition == 1);
-    QString filterStr;
-    if (hasUniqCondition == 1) {
-        filterStr += QLatin1String("if ");
-    } else if (mMatchCondition == AndCondition) {
-        filterStr += QLatin1String("if allof (");
-    } else if (mMatchCondition == OrCondition) {
-        filterStr += QLatin1String("if anyof (");
-    }
-
-    if (conditionStr.isEmpty()) {
-        return;
+    if (mMatchCondition == AllCondition) {
+        script += QLatin1String("if true {\n");
     } else {
-        script += filterStr + conditionStr;
+        QString conditionStr;
+        int numberOfCondition = 0;
+        mScriptConditionLister->generatedScript(conditionStr, numberOfCondition);
+        const bool hasUniqCondition = (numberOfCondition == 1);
+        QString filterStr;
+        if (hasUniqCondition == 1) {
+            filterStr += QLatin1String("if ");
+        } else if (mMatchCondition == AndCondition) {
+            filterStr += QLatin1String("if allof (");
+        } else if (mMatchCondition == OrCondition) {
+            filterStr += QLatin1String("if anyof (");
+        }
+
+        if (conditionStr.isEmpty()) {
+            return;
+        } else {
+            script += filterStr + conditionStr;
+        }
+        if (hasUniqCondition)
+            script += QLatin1String("\n{\n");
+        else
+            script += QLatin1String(")\n{\n");
     }
-    if (hasUniqCondition)
-        script += QLatin1String("\n{\n");
-    else
-        script += QLatin1String(")\n{\n");
     mScriptActionLister->generatedScript(script, requires);
     script += QLatin1String("}\n");
 }

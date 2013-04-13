@@ -33,7 +33,8 @@ public:
 
     enum MatchCondition {
         OrCondition,
-        AndCondition
+        AndCondition,
+        AllCondition
     };
 
     explicit SieveScriptPage(QWidget *parent = 0);
@@ -51,6 +52,7 @@ private:
     SieveActionWidgetLister *mScriptActionLister;
     QRadioButton *mMatchAll;
     QRadioButton *mMatchAny;
+    QRadioButton *mAllMessageRBtn;
 };
 }
 
