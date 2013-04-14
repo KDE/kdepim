@@ -5,6 +5,7 @@ add_definitions( -DQT_NO_CAST_TO_ASCII )
 set(libgrammar_SRCS 
     grammarhighlighter.cpp
     widgets/grammarcomboboxlanguage.cpp
+    widgets/grammarconfigurewidget.cpp
 )
 
 kde4_add_library(grammar ${LIBRARY_TYPE} ${libgrammar_SRCS})
