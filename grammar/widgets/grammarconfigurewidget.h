@@ -25,7 +25,7 @@
 namespace Grammar
 {
 class GrammarConfigureWidgetPrivate;
-class GrammarConfigureWidget : public QWidget
+class GRAMMAR_EXPORT GrammarConfigureWidget : public QWidget
 {
     Q_OBJECT
 public:
