@@ -19,8 +19,39 @@
 
 QStringList DefaultCompletion::defaultCompetion()
 {
-    //TODO
-    return QStringList();
+    QStringList lst;
+    lst <<QLatin1String("<div>")
+        <<QLatin1String("subjecti18n")
+        <<QLatin1String("subject")
+        <<QLatin1String("replyToi18n")
+        <<QLatin1String("replyTo")
+        <<QLatin1String("replyToStr")
+        <<QLatin1String("cci18n")
+        <<QLatin1String("cc")
+        <<QLatin1String("ccStr")
+        <<QLatin1String("bcci18n")
+        <<QLatin1String("bcc")
+        <<QLatin1String("bccStr")
+        <<QLatin1String("fromi18n")
+        <<QLatin1String( "from" )
+        <<QLatin1String( "fromStr" )
+        <<QLatin1String( "spamHTML" )
+        <<QLatin1String("datei18n")
+        <<QLatin1String( "dateshort" )
+        <<QLatin1String( "dateshort" )
+        <<QLatin1String( "date" )
+        <<QLatin1String( "useragent" )
+        <<QLatin1String( "x-mailer" )
+        <<QLatin1String( "resentfrom" )
+        <<QLatin1String( "organization" )
+        <<QLatin1String( "vcardname" )
+        <<QLatin1String( "activecolordark" )
+        <<QLatin1String( "fontcolor" )
+        <<QLatin1String( "linkcolor" )
+        <<QLatin1String( "photowidth" )
+        <<QLatin1String( "photoheight" )
+        <<QLatin1String( "photourl" );
+    return lst;
 }
 
 
