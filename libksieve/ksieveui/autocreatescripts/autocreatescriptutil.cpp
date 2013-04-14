@@ -18,7 +18,7 @@
 
 */
 
-#include "autocreatescriptutil.h"
+#include "autocreatescriptutil_p.h"
 
 QString AutoCreateScriptUtil::createList(const QString &str)
 {
