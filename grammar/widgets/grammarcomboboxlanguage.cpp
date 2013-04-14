@@ -41,8 +41,6 @@ GrammarComboBoxLanguage::GrammarComboBoxLanguage(QWidget *parent)
 {
     reloadList();
     connect( this, SIGNAL(activated(int)), this, SLOT(slotLanguageChanged(int)) );
-
-    //TODO
 }
 
 GrammarComboBoxLanguage::~GrammarComboBoxLanguage()
