@@ -16,6 +16,7 @@
 */
 
 #include "editor.h"
+#include "defaultcompletion.h"
 
 #include <kpimtextedit/htmlhighlighter.h>
 
@@ -40,7 +41,7 @@ void Editor::initCompleter()
 {
     QStringList listWord;
 
-    listWord << QLatin1String("<div>");
+    listWord << DefaultCompletion::defaultCompetion();
 
     m_completer = new QCompleter( this );
     m_completer->setModel( new QStringListModel( listWord, m_completer ) );

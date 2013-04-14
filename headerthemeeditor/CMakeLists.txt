@@ -14,6 +14,7 @@ set(headerthemeeditor_SRCS
   editorpage.cpp
   themetemplatewidget.cpp
   themedefaulttemplate.cpp
+  defaultcompletion.cpp
 )
 
 kde4_add_executable(headerthemeeditor ${headerthemeeditor_SRCS} )
