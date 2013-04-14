@@ -17,15 +17,26 @@
 
 #include "grammarhighlighter.h"
 
-using namespace Grammar;
+namespace Grammar {
+
+class GrammarPrivate {
+public:
+    GrammarPrivate(GrammarHighlighter *qq)
+        : q(qq)
+    {
+
+    }
+    GrammarHighlighter *q;
+};
 
 GrammarHighlighter::GrammarHighlighter(QTextEdit *textEdit)
-    : QSyntaxHighlighter(textEdit)
+    : QSyntaxHighlighter(textEdit), d(new GrammarPrivate(this))
 {
 }
 
 GrammarHighlighter::~GrammarHighlighter()
 {
+    delete d;
 }
-
+}
 #include "grammarhighlighter.moc"

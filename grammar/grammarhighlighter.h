@@ -24,12 +24,16 @@
 
 namespace Grammar
 {
+class GrammarPrivate;
 class GRAMMAR_EXPORT GrammarHighlighter : public QSyntaxHighlighter
 {
     Q_OBJECT
 public:
     explicit GrammarHighlighter(QTextEdit *textEdit);
     ~GrammarHighlighter();
+private:
+    friend class GrammarPrivate;
+    GrammarPrivate * const d;
 };
 }
 
