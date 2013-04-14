@@ -19,6 +19,7 @@
 
 QStringList DefaultCompletion::defaultCompetion()
 {
+    //TODO add to highlighter
     QStringList lst;
     lst <<QLatin1String("<div>")
         <<QLatin1String("subjecti18n")

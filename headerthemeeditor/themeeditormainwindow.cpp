@@ -25,6 +25,7 @@
 #include <KActionCollection>
 #include <KLocalizedString>
 #include <KMessageBox>
+#include <KFileDialog>
 
 ThemeEditorMainWindow::ThemeEditorMainWindow()
     : KXmlGuiWindow()
@@ -63,7 +64,14 @@ void ThemeEditorMainWindow::savePreviousProject()
             mThemeEditor->saveTheme(mProjectDirectory);
         }
     }
-    mProjectDirectory.clear();
+    delete mThemeEditor;
+    mProjectDirectory = KFileDialog::getExistingDirectory(KUrl(), this, i18n("Select theme directory"));
+    if (!mProjectDirectory.isEmpty()) {
+        mThemeEditor = new ThemeEditorPage;
+        setCentralWidget(mThemeEditor);
+    } else {
+        setCentralWidget(0);
+    }
 }
 
 void ThemeEditorMainWindow::slotNewTheme()
