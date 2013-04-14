@@ -387,6 +387,15 @@ void ObjectTreeParser::defaultHandling( KMime::Content * node, ProcessResult & r
     return;
   }
 
+  if (  node->contentType()->mimeType() == QByteArray( "application/octet-stream" ) &&
+      ( node->contentType()->name().endsWith( QString::fromLatin1( "p7m" ) ) ||
+        node->contentType()->name().endsWith( QString::fromLatin1( "p7s" ) ) ||
+        node->contentType()->name().endsWith( QString::fromLatin1( "p7c" ) )
+      ) &&
+      processApplicationPkcs7MimeSubtype( node, result ) ) {
+    return;
+  }
+
   const AttachmentStrategy *const as = attachmentStrategy();
   if ( as && as->defaultDisplay( node ) == AttachmentStrategy::None &&
         !showOnlyOneMimePart() &&
