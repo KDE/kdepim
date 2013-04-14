@@ -29,6 +29,7 @@ set(ksieveui_LIB_SRCS
   autocreatescripts/sievescriptdescriptiondialog.cpp
   autocreatescripts/sieveactionwidgetlister.cpp
   autocreatescripts/sievescriptpage.cpp
+  autocreatescripts/autocreatescriptutil.cpp
   autocreatescripts/sieveactions/sieveactionlist.cpp
   autocreatescripts/sieveactions/sieveaction.cpp
   autocreatescripts/sieveactions/sieveactiondiscard.cpp
