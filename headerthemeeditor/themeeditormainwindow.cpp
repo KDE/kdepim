@@ -28,10 +28,9 @@
 #include <KFileDialog>
 
 ThemeEditorMainWindow::ThemeEditorMainWindow()
-    : KXmlGuiWindow()
+    : KXmlGuiWindow(),
+      mThemeEditor(0)
 {
-    mThemeEditor = new ThemeEditorPage;
-    setCentralWidget(mThemeEditor);
     setupActions();
     setupGUI();
 }
@@ -73,7 +72,7 @@ void ThemeEditorMainWindow::savePreviousProject(bool close)
             mThemeEditor->saveTheme(mProjectDirectory);
         }
     }
-    if (!close)
+    if (close)
         return;
 
     delete mThemeEditor;
@@ -94,7 +93,7 @@ void ThemeEditorMainWindow::slotNewTheme()
 
 void ThemeEditorMainWindow::closeEvent(QCloseEvent *e)
 {
-    savePreviousProject();
+    savePreviousProject(true);
     KXmlGuiWindow::closeEvent(e);
 }
 
