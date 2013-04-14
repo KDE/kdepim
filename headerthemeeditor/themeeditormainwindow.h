@@ -37,7 +37,7 @@ private Q_SLOTS:
     void slotCloseTheme();
 
 private:
-    void savePreviousProject();
+    void savePreviousProject(bool close=false);
     void setupActions();
     QString mProjectDirectory;
     ThemeEditorPage *mThemeEditor;

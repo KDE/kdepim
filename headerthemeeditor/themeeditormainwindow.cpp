@@ -57,14 +57,18 @@ void ThemeEditorMainWindow::slotCloseTheme()
     //TODO
 }
 
-void ThemeEditorMainWindow::savePreviousProject()
+void ThemeEditorMainWindow::savePreviousProject(bool close)
 {
     if (!mProjectDirectory.isEmpty()) {
         if (KMessageBox::questionYesNo(this, i18n("Do you want to save previous project?"), i18n("Save previous project")) == KMessageBox::Yes) {
             mThemeEditor->saveTheme(mProjectDirectory);
         }
     }
+    if (!close)
+        return;
+
     delete mThemeEditor;
+
     mProjectDirectory = KFileDialog::getExistingDirectory(KUrl(), this, i18n("Select theme directory"));
     if (!mProjectDirectory.isEmpty()) {
         mThemeEditor = new ThemeEditorPage;
