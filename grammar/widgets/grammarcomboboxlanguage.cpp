@@ -18,16 +18,44 @@
 
 #include "grammarcomboboxlanguage.h"
 
-using namespace Grammar;
+namespace Grammar {
+class GrammarComboBoxLanguagePrivate {
+public:
+    GrammarComboBoxLanguagePrivate(GrammarComboBoxLanguage *qq)
+        : q(qq)
+    {
+
+    }
+
+    void slotLanguageChanged(int index)
+    {
+        Q_EMIT q->languageChanged( q->itemData( index ).toString() );
+    }
+
+    GrammarComboBoxLanguage *q;
+};
+
 
 GrammarComboBoxLanguage::GrammarComboBoxLanguage(QWidget *parent)
-    : KComboBox(parent)
+    : KComboBox(parent), d(new GrammarComboBoxLanguagePrivate(this))
 {
+    reloadList();
+    connect( this, SIGNAL(activated(int)), this, SLOT(slotLanguageChanged(int)) );
+
     //TODO
 }
 
 GrammarComboBoxLanguage::~GrammarComboBoxLanguage()
 {
+    delete d;
+}
+
+void GrammarComboBoxLanguage::reloadList()
+{
+    clear();
+    //TODO
+}
+
 }
 
 #include "grammarcomboboxlanguage.moc"

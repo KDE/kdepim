@@ -24,12 +24,22 @@
 
 namespace Grammar
 {
+class GrammarComboBoxLanguagePrivate;
 class GRAMMAR_EXPORT GrammarComboBoxLanguage : public KComboBox
 {
     Q_OBJECT
 public:
     explicit GrammarComboBoxLanguage(QWidget *parent = 0);
     ~GrammarComboBoxLanguage();
+
+Q_SIGNALS:
+    void languageChanged(const QString &language);
+
+private:
+    void reloadList();
+    friend class GrammarComboBoxLanguagePrivate;
+    GrammarComboBoxLanguagePrivate * const d;
+    Q_PRIVATE_SLOT(d, void slotLanguageChanged(int) )
 };
 }
 
