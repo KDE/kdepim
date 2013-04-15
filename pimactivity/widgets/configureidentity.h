@@ -43,7 +43,8 @@ private:
     void writeConfig(const QString &id);
 
 Q_SIGNALS:
-    void changed();
+    void changed(bool b);
+
 private:
     enum identityId {
         IdentityID = Qt::UserRole +1

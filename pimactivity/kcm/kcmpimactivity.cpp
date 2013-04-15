@@ -56,6 +56,7 @@ void KCMPimActivity::initGUI()
     setLayout(layout);
     mManager = new PimActivity::ActivityManager(this);
     mConfigure = new PimActivity::ConfigureActivityWidget(mManager);
+    connect(mConfigure, SIGNAL(changed(bool)), this, SIGNAL(changed(bool)));
     layout->addWidget(mConfigure);
 }
 

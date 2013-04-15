@@ -44,6 +44,10 @@ public:
     void readConfig();
     void writeConfig();
     void defaults();
+
+Q_SIGNALS:
+    void changed(bool);
+
 private:
     friend class ConfigureActivityWidgetPrivate;
     ConfigureActivityWidgetPrivate * const d;
