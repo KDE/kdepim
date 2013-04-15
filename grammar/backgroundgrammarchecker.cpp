@@ -17,6 +17,7 @@
 
 #include "backgroundgrammarchecker.h"
 
+using namespace Grammar;
 BackgroundGrammarChecker::BackgroundGrammarChecker(QObject *parent)
     : QObject(parent)
 {

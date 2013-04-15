@@ -20,6 +20,7 @@
 
 #include <QObject>
 
+namespace Grammar {
 class BackgroundGrammarChecker : QObject
 {
     Q_OBJECT
@@ -27,5 +28,6 @@ public:
     explicit BackgroundGrammarChecker(QObject *parent = 0);
     ~BackgroundGrammarChecker();
 };
+}
 
 #endif // BACKGROUNDGRAMMARCHECKER_H
