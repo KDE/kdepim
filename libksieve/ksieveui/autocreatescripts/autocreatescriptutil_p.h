@@ -25,7 +25,8 @@
 
 namespace AutoCreateScriptUtil
 {
-QString createList(const QString &str);
+QString createList(const QString &str, const QChar &separator);
+QString createList(const QStringList &lst);
 }
 
 #endif // AUTOCREATESCRIPTUTIL_H

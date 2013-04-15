@@ -16,6 +16,7 @@
 */
 
 #include "selectflagswidget.h"
+#include "autocreatescripts/autocreatescriptutil_p.h"
 
 #include <KLineEdit>
 #include <KLocale>
@@ -120,13 +121,7 @@ void SelectFlagsWidget::slotSelectFlags()
         const QStringList lstFlags = dialog->flags();
         mCode.clear();
         if (!lstFlags.isEmpty()) {
-            bool wasFirst = true;
-            mCode = QLatin1String("[");
-            Q_FOREACH (const QString &flag, lstFlags) {
-                mCode += (wasFirst ? QString() : QLatin1String(",")) + QString::fromLatin1(" \"%1\"").arg(flag);
-                wasFirst = false;
-            }
-            mCode += QLatin1String(" ];");
+            mCode = AutoCreateScriptUtil::createList(lstFlags);
         }
     }
     mEdit->setText(mCode);

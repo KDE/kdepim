@@ -19,9 +19,24 @@
 */
 
 #include "autocreatescriptutil_p.h"
+#include <QStringList>
 
-QString AutoCreateScriptUtil::createList(const QString &str)
+QString AutoCreateScriptUtil::createList(const QString &str, const QChar &separator)
 {
-    //TODO
-    return QString();
+    const QStringList lst = str.split(separator);
+    return createList(lst);
+}
+
+QString AutoCreateScriptUtil::createList(const QStringList &lst)
+{
+    QString result;
+    result = QLatin1String("[");
+    bool wasFirst = true;
+    Q_FOREACH (const QString &str, lst) {
+        result += (wasFirst ? QString() : QLatin1String(",")) + QString::fromLatin1(" \"%1\"").arg(str);
+        wasFirst = false;
+    }
+    result += QLatin1String(" ];");
+
+    return result;
 }
