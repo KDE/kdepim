@@ -59,7 +59,7 @@ void ThemeEditorMainWindow::setupActions()
     connect(mAddExtraPage, SIGNAL(triggered(bool)),SLOT(slotAddExtraPage()));
     actionCollection()->addAction( QLatin1String( "add_extra_page" ), mAddExtraPage );
 
-
+    mOpenAction = KStandardAction::open(this, SLOT(slotOpenTheme()), actionCollection());
     mCloseAction = KStandardAction::close( this, SLOT(slotCloseTheme()), actionCollection());
     KStandardAction::quit( kapp, SLOT(quit()), actionCollection() );
 }
@@ -67,6 +67,12 @@ void ThemeEditorMainWindow::setupActions()
 void ThemeEditorMainWindow::slotCloseTheme()
 {
     saveCurrentProject();
+}
+
+void ThemeEditorMainWindow::slotOpenTheme()
+{
+    saveCurrentProject();
+    //TODO
 }
 
 void ThemeEditorMainWindow::slotAddExtraPage()
@@ -97,6 +103,7 @@ void ThemeEditorMainWindow::saveCurrentProject(bool close)
             setCentralWidget(0);
         }
         delete dialog;
+        updateActions();
     }
 }
 
