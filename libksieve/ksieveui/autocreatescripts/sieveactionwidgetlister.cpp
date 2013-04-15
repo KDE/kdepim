@@ -130,9 +130,17 @@ void SieveActionWidget::initWidget()
 
 void SieveActionWidget::slotActionChanged(int index)
 {
-    setFilterAction( index < mActionList.count() ?
-                         mActionList.at( index )->createParamWidget( this ) :
-                         0 );
+    if (index < mActionList.count()) {
+        KSieveUi::SieveAction *action = mActionList.at( index );
+        setFilterAction( action->createParamWidget( this ) );
+
+        //All actions after stop will not execute => don't allow to add more actions.
+        const bool enableAddAction = (action->name() != QLatin1String("stop"));
+        mAdd->setEnabled(enableAddAction);
+    } else {
+        mAdd->setEnabled(true);
+        setFilterAction( 0 );
+    }
 }
 
 void SieveActionWidget::slotAddWidget()
