@@ -35,6 +35,8 @@ public:
     ~DesktopFilePage();
 
     void saveTheme(const QString &path);
+
+    QString filename() const;
 private:
     KLineEdit *mName;
     KLineEdit *mDescription;

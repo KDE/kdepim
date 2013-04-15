@@ -58,6 +58,11 @@ DesktopFilePage::~DesktopFilePage()
 {
 }
 
+QString DesktopFilePage::filename() const
+{
+    return mFilename->text();
+}
+
 void DesktopFilePage::saveTheme(const QString &path)
 {
     QString filename;

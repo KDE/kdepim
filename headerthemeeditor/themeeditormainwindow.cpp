@@ -62,7 +62,8 @@ void ThemeEditorMainWindow::slotCloseTheme()
 
 void ThemeEditorMainWindow::slotAddExtraPage()
 {
-    //TODO
+    if (mThemeEditor)
+        mThemeEditor->addExtraPage();
 }
 
 void ThemeEditorMainWindow::savePreviousProject(bool close)
@@ -72,17 +73,15 @@ void ThemeEditorMainWindow::savePreviousProject(bool close)
             mThemeEditor->saveTheme(mProjectDirectory);
         }
     }
-    if (close)
-        return;
-
-    delete mThemeEditor;
-
-    mProjectDirectory = KFileDialog::getExistingDirectory(KUrl(), this, i18n("Select theme directory"));
-    if (!mProjectDirectory.isEmpty()) {
-        mThemeEditor = new ThemeEditorPage;
-        setCentralWidget(mThemeEditor);
-    } else {
-        setCentralWidget(0);
+    if (!close) {
+        delete mThemeEditor;
+        mProjectDirectory = KFileDialog::getExistingDirectory(KUrl(), this, i18n("Select theme directory"));
+        if (!mProjectDirectory.isEmpty()) {
+            mThemeEditor = new ThemeEditorPage;
+            setCentralWidget(mThemeEditor);
+        } else {
+            setCentralWidget(0);
+        }
     }
 }
 
