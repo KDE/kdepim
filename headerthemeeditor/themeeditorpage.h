@@ -28,7 +28,7 @@ class ThemeEditorPage : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ThemeEditorPage(QWidget *parent = 0);
+    explicit ThemeEditorPage(const QString &themeName, QWidget *parent = 0);
     ~ThemeEditorPage();
 
     void saveTheme(const QString &path);

@@ -26,7 +26,7 @@
 
 #include <QHBoxLayout>
 
-ThemeEditorPage::ThemeEditorPage(QWidget *parent)
+ThemeEditorPage::ThemeEditorPage(const QString &themeName, QWidget *parent)
     : QWidget(parent)
 {
     QHBoxLayout *lay = new QHBoxLayout;
@@ -36,6 +36,7 @@ ThemeEditorPage::ThemeEditorPage(QWidget *parent)
     mTabWidget->addTab(mEditorPage, i18n("Editor"));
 
     mDesktopPage = new DesktopFilePage;
+    mDesktopPage->setThemeName(themeName);
     mTabWidget->addTab(mDesktopPage, i18n("Desktop File"));
 
     setLayout(lay);

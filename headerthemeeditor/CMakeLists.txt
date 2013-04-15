@@ -15,7 +15,9 @@ set(headerthemeeditor_SRCS
   themetemplatewidget.cpp
   themedefaulttemplate.cpp
   defaultcompletion.cpp
+  newthemedialog.cpp
 )
+
 
 kde4_add_executable(headerthemeeditor ${headerthemeeditor_SRCS} )
 TARGET_LINK_LIBRARIES(headerthemeeditor ${KDE4_KDEUI_LIBS} ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS} ${KDE4_KIO_LIBS} pimcommon messageviewer)

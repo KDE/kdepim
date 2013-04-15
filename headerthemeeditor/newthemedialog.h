@@ -15,33 +15,30 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#ifndef NEWTHEMEDIALOG_H
+#define NEWTHEMEDIALOG_H
 
-#ifndef DESKTOPFILEPAGE_H
-#define DESKTOPFILEPAGE_H
-
-#include <QWidget>
+#include <KDialog>
 
 class KLineEdit;
-
-namespace PimCommon {
-class SimpleStringListEditor;
-}
-
-class DesktopFilePage : public QWidget
+class KUrlRequester;
+class NewThemeDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit DesktopFilePage(QWidget *parent = 0);
-    ~DesktopFilePage();
+    explicit NewThemeDialog(QWidget *parent = 0);
+    ~NewThemeDialog();
 
-    void saveTheme(const QString &path);
-    void setThemeName(const QString &themeName);
-    QString filename() const;
+    QString themeName() const;
+
+    QString directory() const;
+
+private Q_SLOTS:
+    void slotUpdateOkButton();
+
 private:
-    KLineEdit *mName;
-    KLineEdit *mDescription;
-    KLineEdit *mFilename;
-    PimCommon::SimpleStringListEditor *mExtraDisplayHeaders;
+    KLineEdit *mThemeName;
+    KUrlRequester *mUrlRequester;
 };
 
-#endif // DESKTOPFILEPAGE_H
+#endif // NEWTHEMEDIALOG_H

@@ -33,6 +33,7 @@ DesktopFilePage::DesktopFilePage(QWidget *parent)
     QGridLayout *lay = new QGridLayout;
     QLabel *lab = new QLabel(i18n("Name:"));
     mName = new KLineEdit;
+    mName->setReadOnly(true);
     lay->addWidget(lab,0,0);
     lay->addWidget(mName,0,1);
 
@@ -56,6 +57,11 @@ DesktopFilePage::DesktopFilePage(QWidget *parent)
 
 DesktopFilePage::~DesktopFilePage()
 {
+}
+
+void DesktopFilePage::setThemeName(const QString &themeName)
+{
+    mName->setText(themeName);
 }
 
 QString DesktopFilePage::filename() const
