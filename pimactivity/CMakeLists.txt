@@ -30,6 +30,9 @@ target_link_libraries(pimactivity
     ${KACTIVITIES_LIBRARY}
     ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
     ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
+    ${KDEPIMLIBS_KMIME_LIBS}
+    ${KDEPIMLIBS_AKONADI_LIBS} 
+    akonadi_next
 )
 
 

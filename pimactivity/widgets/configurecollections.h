@@ -22,7 +22,19 @@
 #define CONFIGURECOLLECTIONS_H
 
 #include "abstractconfigurewidget.h"
+
+#include <KViewStateMaintainer>
+
 #include <QWidget>
+
+namespace Akonadi {
+  class EntityTreeModel;
+  class ChangeRecorder;
+  class ETMViewStateSaver;
+}
+
+class KCheckableProxyModel;
+class QTreeView;
 
 namespace PimActivity {
 
@@ -39,7 +51,14 @@ private:
 
 Q_SIGNALS:
     void changed(bool b);
-
+private:
+    void initCollections();
+    QTreeView *mFolderView;
+    QItemSelectionModel *mSelectionModel;
+    Akonadi::EntityTreeModel *mModel;
+    Akonadi::ChangeRecorder *mChangeRecorder;
+    KCheckableProxyModel *mCheckProxy;
+    KViewStateMaintainer<Akonadi::ETMViewStateSaver> *mModelState;
 };
 }
 
