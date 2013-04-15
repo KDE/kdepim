@@ -115,8 +115,6 @@ SieveScriptListBox::SieveScriptListBox(const QString &title, QWidget *parent)
 
     layout->addWidget( hb );
 
-
-
     hb = new KHBox( this );
     hb->setSpacing( 4 );
 
@@ -192,6 +190,7 @@ void SieveScriptListBox::slotNew()
         SieveScriptPage *page = new SieveScriptPage;
         item->setScriptPage(page);
         Q_EMIT addNewPage(page);
+        mSieveListScript->setCurrentItem(item);
         updateButtons();
     }
 }
