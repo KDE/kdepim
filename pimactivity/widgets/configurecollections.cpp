@@ -84,8 +84,6 @@ void ConfigureCollections::readConfig(const QString &id)
         mModelState->setSelectionModel( mSelectionModel );
     }
     mModelState->restoreState();
-    //TODO
-
 }
 
 void ConfigureCollections::writeConfig(const QString &id)
@@ -97,7 +95,6 @@ void ConfigureCollections::writeConfig(const QString &id)
         mModelState = new KViewStateMaintainer<Akonadi::ETMViewStateSaver>( grp, this );
         mModelState->saveState();
     }
-    //TODO
 }
 
 }
