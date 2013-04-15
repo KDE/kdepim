@@ -16,6 +16,7 @@ set(headerthemeeditor_SRCS
   themedefaulttemplate.cpp
   defaultcompletion.cpp
   newthemedialog.cpp
+  themesession.cpp
 )
 
 
