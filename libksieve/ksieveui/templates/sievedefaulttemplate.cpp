@@ -87,7 +87,7 @@ QList<PimCommon::defaultTemplate> KSieveUi::SieveDefaultTemplate::defaultTemplat
     tmp.text = QString::fromLatin1("require \"vacation\";\n\n"
                                    "if header :contains \"X-Spam-Flag\" \"YES\" { keep; stop; }\n"
                                    "vacation :addresses [ \"me@example.net\", \"other@example.net\" ] :days 7 text: \n%1"
-                                   "}\n").arg(Vacation::defaultMessageText());
+                                   "\n.\n;\n").arg(Vacation::defaultMessageText());
     lst << tmp;
 
 

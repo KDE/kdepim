@@ -32,6 +32,7 @@ using namespace KSieveUi;
 
 static int MINIMUMACTION = 1;
 static int MAXIMUMACTION = 8;
+static QString INDENTACTION = QLatin1String("    ");
 
 
 SieveActionWidget::SieveActionWidget(QWidget *parent)
@@ -61,14 +62,17 @@ void SieveActionWidget::setFilterAction( QWidget *widget )
 
 void SieveActionWidget::generatedScript(QString &script, QStringList &requires)
 {
-    KSieveUi::SieveAction *widgetAction = mActionList.at(mComboBox->currentIndex());
-    const QStringList lstRequires = widgetAction->needRequires();
-    Q_FOREACH (const QString &r, lstRequires) {
-        if (!requires.contains(r)) {
-            requires.append(r);
+    const int index = mComboBox->currentIndex();
+    if (index != mComboBox->count()-1) {
+        KSieveUi::SieveAction *widgetAction = mActionList.at(mComboBox->currentIndex());
+        const QStringList lstRequires = widgetAction->needRequires();
+        Q_FOREACH (const QString &r, lstRequires) {
+            if (!requires.contains(r)) {
+                requires.append(r);
+            }
         }
+        script += INDENTACTION + widgetAction->code(mLayout->itemAtPosition( 1, 2 )->widget()) + QLatin1Char('\n');
     }
-    script += QLatin1String("    ") + widgetAction->code(mLayout->itemAtPosition( 1, 2 )->widget()) + QLatin1Char('\n');
 }
 
 void SieveActionWidget::initWidget()
@@ -89,6 +93,8 @@ void SieveActionWidget::initWidget()
         // add (i18n-ized) name to combo box
         mComboBox->addItem( (*it)->label(),(*it)->name() );
     }
+    mComboBox->addItem(QLatin1String(""));
+    mComboBox->setCurrentIndex(mComboBox->count()-1);
 
     mComboBox->setMaxCount( mComboBox->count() );
     mComboBox->setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed ) );
@@ -119,6 +125,7 @@ void SieveActionWidget::initWidget()
              this, SLOT(slotAddWidget()) );
     connect( mRemove, SIGNAL(clicked()),
              this, SLOT(slotRemoveWidget()) );
+    setFilterAction(0);
 }
 
 void SieveActionWidget::slotActionChanged(int index)

@@ -25,7 +25,6 @@ using namespace KSieveUi;
 SieveActionSetFlags::SieveActionSetFlags(QObject *parent)
     : SieveActionAbstractFlags(QLatin1String("setflags"), i18n("Set Flags"), parent)
 {
-    //TODO add flags
 }
 
 SieveAction* SieveActionSetFlags::newAction()
@@ -35,8 +34,7 @@ SieveAction* SieveActionSetFlags::newAction()
 
 QString SieveActionSetFlags::flagsCode(QWidget *) const
 {
-    //TODO
-    return QString();
+    return QString::fromLatin1("setflag");
 }
 
 #include "sieveactionsetflags.moc"

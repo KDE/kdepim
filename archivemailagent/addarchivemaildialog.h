@@ -30,52 +30,52 @@ class QSpinBox;
 class KIntSpinBox;
 
 namespace MailCommon {
-  class FolderRequester;
+class FolderRequester;
 }
 
 
 class AddArchiveMailDialog : public KDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit AddArchiveMailDialog(ArchiveMailInfo *info, QWidget *parent = 0);
-  ~AddArchiveMailDialog();
+    explicit AddArchiveMailDialog(ArchiveMailInfo *info, QWidget *parent = 0);
+    ~AddArchiveMailDialog();
 
 
-  void setArchiveType(MailCommon::BackupJob::ArchiveType type);
-  MailCommon::BackupJob::ArchiveType archiveType() const;
+    void setArchiveType(MailCommon::BackupJob::ArchiveType type);
+    MailCommon::BackupJob::ArchiveType archiveType() const;
 
-  void setRecursive( bool b );
-  bool recursive() const;
+    void setRecursive( bool b );
+    bool recursive() const;
 
-  void setSelectedFolder(const Akonadi::Collection& collection);
-  Akonadi::Collection selectedFolder() const;
+    void setSelectedFolder(const Akonadi::Collection& collection);
+    Akonadi::Collection selectedFolder() const;
 
-  KUrl path() const;
-  void setPath(const KUrl&);
+    KUrl path() const;
+    void setPath(const KUrl&);
 
-  ArchiveMailInfo *info();
+    ArchiveMailInfo *info();
 
-  void setMaximumArchiveCount(int);
+    void setMaximumArchiveCount(int);
 
-  int maximumArchiveCount() const;
+    int maximumArchiveCount() const;
 
 
 private Q_SLOTS:
-  void slotFolderChanged(const Akonadi::Collection&);
-  void slotUpdateOkButton();
+    void slotFolderChanged(const Akonadi::Collection&);
+    void slotUpdateOkButton();
 
 private:
-  void load(ArchiveMailInfo *info);
-  MailCommon::FolderRequester *mFolderRequester;
-  KComboBox *mFormatComboBox;
-  KComboBox *mUnits;
-  QCheckBox *mRecursiveCheckBox;
-  KUrlRequester *mPath;
-  QSpinBox *mDays;
-  KIntSpinBox *mMaximumArchive;
+    void load(ArchiveMailInfo *info);
+    MailCommon::FolderRequester *mFolderRequester;
+    KComboBox *mFormatComboBox;
+    KComboBox *mUnits;
+    QCheckBox *mRecursiveCheckBox;
+    KUrlRequester *mPath;
+    QSpinBox *mDays;
+    KIntSpinBox *mMaximumArchive;
 
-  ArchiveMailInfo *mInfo;
+    ArchiveMailInfo *mInfo;
 };
 
 #endif // ADDARCHIVEMAILDIALOG_H

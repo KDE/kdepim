@@ -20,21 +20,21 @@
 
 QDate ArchiveMailAgentUtil::diffDate(ArchiveMailInfo*info)
 {
-  QDate diffDate(info->lastDateSaved());
-  switch(info->archiveUnit()) {
+    QDate diffDate(info->lastDateSaved());
+    switch(info->archiveUnit()) {
     case ArchiveMailInfo::ArchiveDays:
-      diffDate = diffDate.addDays(info->archiveAge());
-      break;
+        diffDate = diffDate.addDays(info->archiveAge());
+        break;
     case ArchiveMailInfo::ArchiveWeeks:
-      diffDate = diffDate.addDays(info->archiveAge()*7);
-      break;
+        diffDate = diffDate.addDays(info->archiveAge()*7);
+        break;
     case ArchiveMailInfo::ArchiveMonths:
-      diffDate = diffDate.addMonths(info->archiveAge());
-      break;
+        diffDate = diffDate.addMonths(info->archiveAge());
+        break;
     default:
-      kDebug()<<"archiveUnit not defined :"<<info->archiveUnit();
-      break;
-  }
-  return diffDate;
+        kDebug()<<"archiveUnit not defined :"<<info->archiveUnit();
+        break;
+    }
+    return diffDate;
 }
 

@@ -2,7 +2,11 @@
 <kpartgui name="headerthemeeditor" version="1">
  <MenuBar>
   <Menu name="file" >
-  <Action name="new_theme" />
+   <Action name="new_theme" />
+  </Menu>
+  <Menu noMerge="1" name="edit" >
+   <text>&amp;Edit</text>
+   <Action name="add_extra_page" />
   </Menu>
  </MenuBar>
 </kpartgui>

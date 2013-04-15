@@ -30,15 +30,22 @@ public:
     explicit ThemeEditorMainWindow();
     ~ThemeEditorMainWindow();
 
+protected:
+    void closeEvent(QCloseEvent *);
+
 private Q_SLOTS:
     void slotNewTheme();
     void slotCloseTheme();
+    void slotAddExtraPage();
 
 private:
+    void savePreviousProject(bool close=false);
     void setupActions();
+    QString mProjectDirectory;
     ThemeEditorPage *mThemeEditor;
     KAction *mNewThemeAction;
     KAction *mCloseThemeAction;
+    KAction *mAddExtraPage;
 };
 
 #endif // THEMEEDITORMAINWINDOW_H

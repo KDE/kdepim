@@ -24,12 +24,13 @@
 #include <KAction>
 #include <KActionCollection>
 #include <KLocalizedString>
+#include <KMessageBox>
+#include <KFileDialog>
 
 ThemeEditorMainWindow::ThemeEditorMainWindow()
-    : KXmlGuiWindow()
+    : KXmlGuiWindow(),
+      mThemeEditor(0)
 {
-    mThemeEditor = new ThemeEditorPage;
-    setCentralWidget(mThemeEditor);
     setupActions();
     setupGUI();
 }
@@ -45,18 +46,55 @@ void ThemeEditorMainWindow::setupActions()
     connect(mNewThemeAction, SIGNAL(triggered(bool)),SLOT(slotNewTheme()));
     actionCollection()->addAction( QLatin1String( "new_theme" ), mNewThemeAction );
 
+    mAddExtraPage = new KAction(i18n("Add Extra Page"), this);
+    connect(mAddExtraPage, SIGNAL(triggered(bool)),SLOT(slotAddExtraPage()));
+    actionCollection()->addAction( QLatin1String( "add_extra_page" ), mAddExtraPage );
+
+
     KStandardAction::close( this, SLOT(slotCloseTheme()), actionCollection());
     KStandardAction::quit( kapp, SLOT(quit()), actionCollection() );
 }
 
 void ThemeEditorMainWindow::slotCloseTheme()
 {
+    savePreviousProject();
+}
+
+void ThemeEditorMainWindow::slotAddExtraPage()
+{
     //TODO
+}
+
+void ThemeEditorMainWindow::savePreviousProject(bool close)
+{
+    if (!mProjectDirectory.isEmpty()) {
+        if (KMessageBox::questionYesNo(this, i18n("Do you want to save previous project?"), i18n("Save previous project")) == KMessageBox::Yes) {
+            mThemeEditor->saveTheme(mProjectDirectory);
+        }
+    }
+    if (close)
+        return;
+
+    delete mThemeEditor;
+
+    mProjectDirectory = KFileDialog::getExistingDirectory(KUrl(), this, i18n("Select theme directory"));
+    if (!mProjectDirectory.isEmpty()) {
+        mThemeEditor = new ThemeEditorPage;
+        setCentralWidget(mThemeEditor);
+    } else {
+        setCentralWidget(0);
+    }
 }
 
 void ThemeEditorMainWindow::slotNewTheme()
 {
-    //TODO
+    savePreviousProject();
+}
+
+void ThemeEditorMainWindow::closeEvent(QCloseEvent *e)
+{
+    savePreviousProject(true);
+    KXmlGuiWindow::closeEvent(e);
 }
 
 #include "themeeditormainwindow.moc"

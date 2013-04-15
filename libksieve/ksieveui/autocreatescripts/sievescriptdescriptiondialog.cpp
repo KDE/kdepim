@@ -34,6 +34,7 @@ SieveScriptDescriptionDialog::SieveScriptDescriptionDialog(QWidget *parent)
     mEdit->setAcceptRichText(false);
     setMainWidget(mEdit);
     readConfig();
+    setFocusProxy(mEdit);
     mEdit->setFocus();
 }
 

@@ -34,13 +34,20 @@ SelectMatchTypeComboBox::~SelectMatchTypeComboBox()
 void SelectMatchTypeComboBox::initialize()
 {
     addItem(i18n("is"), QLatin1String(":is"));
+    addItem(i18n("not is"), QLatin1String("[NOT]:is"));
     addItem(i18n("contains"), QLatin1String(":contains"));
+    addItem(i18n("not contains"), QLatin1String("[NOT]:contains"));
     addItem(i18n("matches"), QLatin1String(":matches"));
+    addItem(i18n("not matches"), QLatin1String("[NOT]:matches"));
 }
 
-QString SelectMatchTypeComboBox::code() const
+QString SelectMatchTypeComboBox::code(bool &negative) const
 {
-    return itemData(currentIndex()).toString();
+    QString value = itemData(currentIndex()).toString();
+    negative = value.startsWith(QLatin1String("[NOT]"));
+    if (negative)
+        value = value.remove(QLatin1String("[NOT]"));
+    return value;
 }
 
 #include "selectmatchtypecombobox.moc"

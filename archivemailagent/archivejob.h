@@ -27,32 +27,32 @@ class ArchiveMailManager;
 
 class ArchiveJob : public MailCommon::ScheduledJob
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit ArchiveJob(ArchiveMailManager *manager, ArchiveMailInfo *info, const Akonadi::Collection &folder, bool immediate);
-  virtual ~ArchiveJob();
+    explicit ArchiveJob(ArchiveMailManager *manager, ArchiveMailInfo *info, const Akonadi::Collection &folder, bool immediate);
+    virtual ~ArchiveJob();
 
-  virtual void execute();
-  virtual void kill();
+    virtual void execute();
+    virtual void kill();
 
 private Q_SLOTS:
-  void slotBackupDone(const QString& info);
-  void slotError(const QString& error);
+    void slotBackupDone(const QString& info);
+    void slotError(const QString& error);
 private:
-  ArchiveMailInfo *mInfo;
-  ArchiveMailManager *mManager;
+    ArchiveMailInfo *mInfo;
+    ArchiveMailManager *mManager;
 };
 
 /// A scheduled "expire mails in this folder" task.
 class ScheduledArchiveTask : public MailCommon::ScheduledTask
 {
-  public:
+public:
     /// If immediate is set, the job will execute synchronously. This is used when
     /// the user requests explicitly that the operation should happen immediately.
     ScheduledArchiveTask( ArchiveMailManager *manager, ArchiveMailInfo * info, const Akonadi::Collection &folder, bool immediate )
-      : MailCommon::ScheduledTask( folder, immediate )
-      , mInfo(info)
-      , mManager(manager)
+        : MailCommon::ScheduledTask( folder, immediate )
+        , mInfo(info)
+        , mManager(manager)
     {
     }
 
@@ -64,7 +64,7 @@ class ScheduledArchiveTask : public MailCommon::ScheduledTask
 
     virtual int taskTypeId() const
     {
-      return 2;
+        return 2;
     }
 private:
     ArchiveMailInfo *mInfo;

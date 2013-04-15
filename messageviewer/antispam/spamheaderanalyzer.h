@@ -69,11 +69,21 @@ enum SpamError {
 class SpamScore {
 public:
 
-    SpamScore() : mScore( -2.0 ), mConfidence( -2.0 ) {}
+    SpamScore()
+        : mScore( -2.0 ), mConfidence( -2.0 )
+    {
+    }
+
     SpamScore( const QString & agent, SpamError error, float score, float confidence,
                const QString & header, const QString & cheader )
-        : mAgent( agent ), mError( error ), mScore( score ), mConfidence( confidence ),
-          mHeader( header ), mConfidenceHeader( cheader ) {}
+        : mAgent( agent ),
+          mError( error ),
+          mScore( score ),
+          mConfidence( confidence ),
+          mHeader( header ),
+          mConfidenceHeader( cheader )
+    {
+    }
     QString agent() const { return mAgent; }
     float score() const { return mScore; }
     float confidence() const { return mConfidence; }

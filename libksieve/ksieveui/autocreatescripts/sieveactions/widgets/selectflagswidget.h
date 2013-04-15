@@ -18,7 +18,6 @@
 #ifndef SELECTFLAGSWIDGET_H
 #define SELECTFLAGSWIDGET_H
 
-#include <QWidget>
 #include <KDialog>
 #include <QListWidget>
 class KLineEdit;

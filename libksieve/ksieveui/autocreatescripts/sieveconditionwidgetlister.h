@@ -63,7 +63,7 @@ public:
     explicit SieveConditionWidgetLister(QWidget *parent = 0);
     ~SieveConditionWidgetLister();
 
-    void generatedScript(QString &script);
+    void generatedScript(QString &script, int &numberOfCondition);
     int conditionNumber() const;
 
 

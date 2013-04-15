@@ -16,6 +16,7 @@
 */
 
 #include "selectflagswidget.h"
+#include "autocreatescripts/autocreatescriptutil_p.h"
 
 #include <KLineEdit>
 #include <KLocale>
@@ -62,18 +63,37 @@ SelectFlagsListWidget::~SelectFlagsListWidget()
 
 void SelectFlagsListWidget::init()
 {
+    QListWidgetItem *item = new QListWidgetItem(QLatin1String("\\\\Deleted"), this);
+    item->setCheckState(Qt::Unchecked);
+    item = new QListWidgetItem(QLatin1String("\\\\Answered"), this);
+    item->setCheckState(Qt::Unchecked);
+    item = new QListWidgetItem(QLatin1String("\\\\Flagged"), this);
+    item->setCheckState(Qt::Unchecked);
     //TODO
 }
 
 void SelectFlagsListWidget::setFlags(const QStringList& list)
 {
-    //TODO
+    const int numberOfItem = count();
+    for (int i = 0; i < numberOfItem; ++i) {
+        QListWidgetItem *it = item(i);
+        if (list.contains(it->text())) {
+            it->setCheckState(Qt::Checked);
+        }
+    }
 }
 
 QStringList SelectFlagsListWidget::flags() const
 {
-    //TODO
-    return QStringList();
+    QStringList result;
+    const int numberOfItem = count();
+    for (int i = 0; i < numberOfItem; ++i) {
+        QListWidgetItem *it = item(i);
+        if (it->checkState() == Qt::Checked) {
+            result<<it->text();
+        }
+    }
+    return result;
 }
 
 SelectFlagsWidget::SelectFlagsWidget(QWidget *parent)
@@ -96,13 +116,15 @@ SelectFlagsWidget::~SelectFlagsWidget()
 void SelectFlagsWidget::slotSelectFlags()
 {
     QPointer<SelectFlagsListDialog> dialog = new SelectFlagsListDialog(this);
+    dialog->setFlags(AutoCreateScriptUtil::createListFromString(mEdit->text()));
     if (dialog->exec()) {
         const QStringList lstFlags = dialog->flags();
         mCode.clear();
-        Q_FOREACH (const QString &flag, lstFlags) {
-            //TODO
+        if (!lstFlags.isEmpty()) {
+            mCode = AutoCreateScriptUtil::createList(lstFlags);
         }
     }
+    mEdit->setText(mCode);
     delete dialog;
 }
 

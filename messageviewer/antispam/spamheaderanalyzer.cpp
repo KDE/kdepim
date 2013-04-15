@@ -130,17 +130,16 @@ SpamScores SpamHeaderAnalyzer::getSpamScores( KMime::Message *message ) {
 
                 // Find the threshold value.
                 QString thresholdString;
-                QRegExp thresholdPattern = (*it).thresholdPattern();
+                const QRegExp thresholdPattern = (*it).thresholdPattern();
                 if ( thresholdPattern.indexIn( mField ) != -1 ) {
                     thresholdString = thresholdPattern.cap( 1 );
-                }
-                else {
+                } else {
                     spamError = couldNotFindTheThresholdField;
                     kDebug() << "Threshold could not be extracted from header '"
                              << mField << "'";
                     break;
                 }
-                float threshold = thresholdString.toFloat( &floatValid );
+                const float threshold = thresholdString.toFloat( &floatValid );
                 if ( !floatValid || ( threshold <= 0.0 ) ) {
                     spamError = couldNotConvertThresholdToFloatOrThresholdIsNegative;
                     kDebug() << "Threshold (" << thresholdString << ") is no"
@@ -162,7 +161,7 @@ SpamScores SpamHeaderAnalyzer::getSpamScores( KMime::Message *message ) {
         }
         //Find the confidence
         float confidence = -2.0;
-        QString confidenceString = "-2.0";
+        QString confidenceString = QLatin1String("-2.0");
         bool confidenceValid = false;
         // Do we have the needed confidence field for this agent?
         const QByteArray confidenceHeaderName = (*it).confidenceHeader();

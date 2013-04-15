@@ -23,33 +23,33 @@
 class QTimer;
 
 namespace Akonadi {
-  class Monitor;
+class Monitor;
 }
 
 class ArchiveMailManager;
 
 class ArchiveMailAgent : public Akonadi::AgentBase, public Akonadi::AgentBase::ObserverV2
 {
-  Q_OBJECT
+    Q_OBJECT
 
 public:
-  explicit ArchiveMailAgent( const QString &id );
-  ~ArchiveMailAgent();
-  void showConfigureDialog(qlonglong windowId = 0);
+    explicit ArchiveMailAgent( const QString &id );
+    ~ArchiveMailAgent();
+    void showConfigureDialog(qlonglong windowId = 0);
 
 public Q_SLOTS:
-  void configure( WId windowId );
-  void reload();
-  void pause();
-  void resume();
+    void configure( WId windowId );
+    void reload();
+    void pause();
+    void resume();
 
 private Q_SLOTS:
-  void mailCollectionRemoved( const Akonadi::Collection& collection );
+    void mailCollectionRemoved( const Akonadi::Collection& collection );
 
 private:
-  QTimer *mTimer;
-  Akonadi::Monitor *m_collectionMonitor;
-  ArchiveMailManager *mArchiveManager;
+    QTimer *mTimer;
+    Akonadi::Monitor *m_collectionMonitor;
+    ArchiveMailManager *mArchiveManager;
 };
 
 
