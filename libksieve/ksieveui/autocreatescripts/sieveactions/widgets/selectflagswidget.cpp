@@ -116,7 +116,7 @@ SelectFlagsWidget::~SelectFlagsWidget()
 void SelectFlagsWidget::slotSelectFlags()
 {
     QPointer<SelectFlagsListDialog> dialog = new SelectFlagsListDialog(this);
-    //TODO dialog->setFlags();
+    dialog->setFlags(AutoCreateScriptUtil::createListFromString(mEdit->text()));
     if (dialog->exec()) {
         const QStringList lstFlags = dialog->flags();
         mCode.clear();

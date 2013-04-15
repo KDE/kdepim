@@ -20,6 +20,7 @@
 
 #include "autocreatescriptutil_p.h"
 #include <QStringList>
+#include <QDebug>
 
 QString AutoCreateScriptUtil::createList(const QString &str, const QChar &separator)
 {
@@ -40,3 +41,21 @@ QString AutoCreateScriptUtil::createList(const QStringList &lst)
 
     return result;
 }
+
+QStringList AutoCreateScriptUtil::createListFromString(QString str)
+{
+    QStringList lst;
+    if (str.startsWith(QLatin1Char('[')) && str.endsWith(QLatin1String("];"))) {
+        str.remove(0,1);
+        str.remove(str.length()-2, 2);
+        lst = str.split(QLatin1String(", "));
+        QStringList resultLst;
+        Q_FOREACH(QString s, lst) {
+            s.remove(QLatin1String("\""));
+            resultLst<<s.trimmed();
+        }
+        lst = resultLst;
+    }
+    return lst;
+}
+
