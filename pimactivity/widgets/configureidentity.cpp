@@ -38,6 +38,7 @@ ConfigureIdentity::ConfigureIdentity(QWidget *parent)
     lay->addWidget(mListIdentity);
     init();
     setLayout(lay);
+    connect(mListIdentity, SIGNAL(itemChanged(QListWidgetItem*)), SIGNAL(changed()));
 }
 
 ConfigureIdentity::~ConfigureIdentity()
@@ -74,6 +75,7 @@ void ConfigureIdentity::readConfig(const QString &id)
             }
         }
     }
+    emit changed(false);
 }
 
 void ConfigureIdentity::writeConfig(const QString &id)

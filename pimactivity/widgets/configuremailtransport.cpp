@@ -34,6 +34,7 @@ ConfigureMailtransport::ConfigureMailtransport(QWidget *parent)
     lay->addWidget(mListTransport);
     init();
     setLayout(lay);
+    connect(mListTransport, SIGNAL(itemChanged(QListWidgetItem*)), SIGNAL(changed()));
 }
 
 ConfigureMailtransport::~ConfigureMailtransport()

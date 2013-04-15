@@ -37,7 +37,7 @@ private:
     void writeConfig(const QString &id);
 
 Q_SIGNALS:
-    void changed(bool b);
+    void changed(bool b = true);
 
 private:
     enum transportId {
