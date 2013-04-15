@@ -44,6 +44,7 @@ DesktopFilePage::DesktopFilePage(QWidget *parent)
 
     lab = new QLabel(i18n("Filename:"));
     mFilename = new KLineEdit;
+    mFilename->setText(QLatin1String("header.html"));
     lay->addWidget(lab,2,0);
     lay->addWidget(mFilename,2,1);
 

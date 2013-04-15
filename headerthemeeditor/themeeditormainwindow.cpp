@@ -72,7 +72,10 @@ void ThemeEditorMainWindow::slotCloseTheme()
 void ThemeEditorMainWindow::slotOpenTheme()
 {
     saveCurrentProject();
-    //TODO
+    const QString fileName = KFileDialog::getOpenFileName(KUrl(), QString::fromLatin1("*.themerc"), this, i18n("Select theme"));
+    if (!fileName.isEmpty()) {
+        //TODO load it.
+    }
 }
 
 void ThemeEditorMainWindow::slotAddExtraPage()

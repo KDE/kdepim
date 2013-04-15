@@ -34,7 +34,7 @@ PreviewPage::~PreviewPage()
 
 void PreviewPage::updateViewer()
 {
-    //TODO
+    //TODO load a default message.
 }
 
 #include "previewpage.moc"

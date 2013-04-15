@@ -48,7 +48,6 @@ NewThemeDialog::NewThemeDialog(QWidget *parent)
     mUrlRequester = new KUrlRequester;
     mUrlRequester->setMode(KFile::Directory|KFile::LocalOnly);
     connect(mUrlRequester->lineEdit(), SIGNAL(textChanged(QString)), this, SLOT(slotUpdateOkButton()));
-    //TODO customize it.
     lay->addWidget(mUrlRequester);
 
     w->setLayout(lay);
