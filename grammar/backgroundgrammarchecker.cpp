@@ -17,15 +17,26 @@
 
 #include "backgroundgrammarchecker.h"
 
-using namespace Grammar;
+namespace Grammar {
+
+class BackgroundGrammarCheckerPrivate
+{
+public:
+    BackgroundGrammarCheckerPrivate()
+    {
+
+    }
+};
+
 BackgroundGrammarChecker::BackgroundGrammarChecker(QObject *parent)
-    : QObject(parent)
+    : QObject(parent), d(new BackgroundGrammarCheckerPrivate)
 {
 }
 
 BackgroundGrammarChecker::~BackgroundGrammarChecker()
 {
-
+    delete d;
+}
 }
 
 #include "backgroundgrammarchecker.moc"
