@@ -1,0 +1,14 @@
+[Desktop Entry]
+Type=Service
+X-KDE-ServiceTypes=Grammar/GrammarClient
+X-KDE-Library=grammar_link
+X-KDE-PluginInfo-Author=Laurent Montel
+X-KDE-PluginInfo-Email=montel@kde.org
+X-KDE-PluginInfo-Name=grammar_link
+X-KDE-PluginInfo-Version=0.0.1
+X-KDE-PluginInfo-Website=http://www.kde.org
+X-KDE-PluginInfo-Category=Clients
+X-KDE-PluginInfo-Depends=
+X-KDE-PluginInfo-License=LGPL
+X-KDE-PluginInfo-EnabledByDefault=true
+Name=GrammarLink
