@@ -30,7 +30,7 @@ class PreviewPage : public QWidget
 {
     Q_OBJECT
 public:
-    explicit PreviewPage(QWidget *parent);
+    explicit PreviewPage(QWidget *parent = 0);
     ~PreviewPage();
 
 public Q_SLOTS:

@@ -19,6 +19,8 @@
 #include "themeeditorpage.h"
 #include "newthemedialog.h"
 
+#include <knewstuff3/uploaddialog.h>
+
 #include <KStandardAction>
 #include <KApplication>
 #include <KAction>
@@ -71,6 +73,10 @@ void ThemeEditorMainWindow::setupActions()
 
 void ThemeEditorMainWindow::slotUploadTheme()
 {
+    QPointer<KNS3::UploadDialog> dialog = new KNS3::UploadDialog(this);
+    //TODO
+    dialog->exec();
+    delete dialog;
     //TODO
 }
 

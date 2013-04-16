@@ -16,9 +16,9 @@
 */
 
 #include "themeeditorpage.h"
-
 #include "desktopfilepage.h"
 #include "editorpage.h"
+#include "previewpage.h"
 
 #include <KTabWidget>
 #include <KLocale>
@@ -38,6 +38,9 @@ ThemeEditorPage::ThemeEditorPage(const QString &themeName, QWidget *parent)
     mDesktopPage = new DesktopFilePage;
     mDesktopPage->setThemeName(themeName);
     mTabWidget->addTab(mDesktopPage, i18n("Desktop File"));
+
+    mPreviewPage = new PreviewPage;
+    mTabWidget->addTab(mPreviewPage, i18n("Preview"));
 
     setLayout(lay);
 }
