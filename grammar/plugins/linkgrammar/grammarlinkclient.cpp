@@ -26,7 +26,7 @@ K_PLUGIN_FACTORY( GrammarLinkClientFactory, registerPlugin<GrammarLinkClient>();
 K_EXPORT_PLUGIN( GrammarLinkClientFactory( "grammar_link" ) )
 
 GrammarLinkClient::GrammarLinkClient(QObject *parent, const QVariantList& /* args */)
-    : GrammarLinkClient::Client(parent)
+    : Grammar::GrammarClient(parent)
 {
 }
 

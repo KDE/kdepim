@@ -22,7 +22,7 @@
 #include "grammar/grammarclient.h"
 #include <QtCore/QVariantList>
 
-class GrammarLinkClient : public GrammarLinkClient::Client
+class GrammarLinkClient : public Grammar::GrammarClient
 {
     Q_OBJECT
 public:

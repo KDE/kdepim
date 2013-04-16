@@ -5,7 +5,7 @@ set( linkgrammarchecker_SRCS grammarlinkclient.cpp )
 
 kde4_add_plugin(grammar_link ${linkgrammarchecker_SRCS})
 
-target_link_libraries(grammar_link  ${KDE4_KDECORE_LIBS} ${LinkGrammar_LIBRARIES} )
+target_link_libraries(grammar_link  ${KDE4_KDECORE_LIBS} ${LinkGrammar_LIBRARIES} grammar)
 
 install(TARGETS grammar_link  DESTINATION ${PLUGIN_INSTALL_DIR} )
 

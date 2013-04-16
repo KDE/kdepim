@@ -18,13 +18,15 @@
 #ifndef GRAMMARCLIENT_H
 #define GRAMMARCLIENT_H
 
+#include "grammar_export.h"
+
 #include <QObject>
 #include <QStringList>
 #include <QString>
 
-namespace Grammar {
 
-class GrammarClient : public QObject
+namespace Grammar {
+class GRAMMAR_EXPORT GrammarClient : public QObject
 {
     Q_OBJECT
 public:
