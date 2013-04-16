@@ -7,6 +7,7 @@ set(libgrammar_SRCS
     grammarclient.cpp
     backgroundgrammarchecker.cpp
     grammarsettings.cpp
+    grammarplugin.cpp
     widgets/grammarcomboboxlanguage.cpp
     widgets/grammarconfigurewidget.cpp
 )

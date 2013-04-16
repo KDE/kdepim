@@ -15,38 +15,34 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#include "grammarplugin.h"
 
-#include "grammarlinkclient.h"
+namespace Grammar {
 
-#include <link-grammar/link-includes.h>
-
-#include <kpluginfactory.h>
-#include <kpluginloader.h>
-#include <kdebug.h>
-
-K_PLUGIN_FACTORY( GrammarLinkClientFactory, registerPlugin<GrammarLinkClient>(); )
-K_EXPORT_PLUGIN( GrammarLinkClientFactory( "grammar_link" ) )
-
-GrammarLinkClient::GrammarLinkClient(QObject *parent, const QVariantList& /* args */)
-    : Grammar::GrammarClient(parent)
+class GrammarPluginPrivate
 {
+public:
+    GrammarPluginPrivate()
+    {
+
+    }
+    QString lang;
+};
+
+GrammarPlugin::GrammarPlugin(const QString &lang)
+    : d(new GrammarPluginPrivate)
+{
+    d->lang = lang;
 }
 
-GrammarLinkClient::~GrammarLinkClient()
+GrammarPlugin::~GrammarPlugin()
 {
-
+    delete d;
 }
 
-QStringList GrammarLinkClient::languages() const
+QString GrammarPlugin::language() const
 {
-    //TODO
-    return QStringList();
+    return d->lang;
 }
 
-QString GrammarLinkClient::name() const
-{
-    return QLatin1String("grammarlink");
 }
-
-
-#include "grammarlinkclient.moc"
