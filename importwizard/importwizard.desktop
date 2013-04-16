@@ -1,5 +1,13 @@
 [Desktop Entry]
 Name=Import Wizard
+Name[de]=Import-Assistent
+Name[fi]=Opastettu tuonti
+Name[nl]=Assistent voor importeren
+Name[pt]=Assistente de Importação
+Name[pt_BR]=Assistente de importação
+Name[sk]=Sprievodca importom
+Name[uk]=Майстер імпортування
+Name[x-test]=xxImport Wizardxx
 Exec=importwizard
 Type=Application
 Icon=kontact-import-wizard

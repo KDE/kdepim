@@ -2,6 +2,7 @@
 Name=KMail Header Theme Editor
 Name[de]=KMail-Designeditor für Vorspann
 Name[es]=Editor de temas de encabezados de KMail
+Name[fr]=Éditeur de thème d'en-tête KMail
 Name[hu]=KMail fejléctéma szerkesztő
 Name[nb]=Redigerer temaer for KMail hodelinjer
 Name[nl]=Editor van header-thema van KMail
@@ -20,6 +21,7 @@ Exec=headerthemeeditor
 GenericName=Mail Header Theme Editor
 GenericName[de]=Designeditor für E-Mail-Vorspann
 GenericName[es]=Editor de temas de encabezados de correo
+GenericName[fr]=Éditeur de thème d'en-tête de messagerie
 GenericName[hu]=Mail fejléctéma szerkesztő
 GenericName[nb]=Temaredigerer for e-post-hodelinjer
 GenericName[nl]=Editor van header-thema van Mail
