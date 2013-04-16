@@ -1,7 +1,7 @@
 project(linkgrammarchecker)
 
 include_directories(${LinkGrammar_INCLUDE_DIR})
-set( linkgrammarchecker_SRCS backgroundgrammarchecker.cpp grammarlinkclient.cpp )
+set( linkgrammarchecker_SRCS grammarlinkclient.cpp )
 
 kde4_add_plugin(grammar_link ${linkgrammarchecker_SRCS})
 
