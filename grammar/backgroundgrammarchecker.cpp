@@ -22,14 +22,16 @@ namespace Grammar {
 class BackgroundGrammarCheckerPrivate
 {
 public:
-    BackgroundGrammarCheckerPrivate()
+    BackgroundGrammarCheckerPrivate(BackgroundGrammarChecker *qq)
+        : q(qq)
     {
 
     }
+    BackgroundGrammarChecker *q;
 };
 
 BackgroundGrammarChecker::BackgroundGrammarChecker(QObject *parent)
-    : QObject(parent), d(new BackgroundGrammarCheckerPrivate)
+    : QObject(parent), d(new BackgroundGrammarCheckerPrivate(this))
 {
 }
 

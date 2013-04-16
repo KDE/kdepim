@@ -15,27 +15,13 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef GRAMMARPLUGIN_H
-#define GRAMMARPLUGIN_H
+#include "grammarlinkplugin.h"
 
-#include "grammar_export.h"
-
-#include <QString>
-
-namespace Grammar {
-class GrammarPluginPrivate;
-class GRAMMAR_EXPORT GrammarPlugin
+GrammarLinkPlugin::GrammarLinkPlugin(const QString &language)
+    : Grammar::GrammarPlugin(language)
 {
-public:
-    ~GrammarPlugin();
-
-    QString language() const;
-protected:
-    GrammarPlugin(const QString &lang);
-private:
-    friend class GrammarPluginPrivate;
-    GrammarPluginPrivate * const d;
-};
 }
 
-#endif // GRAMMARPLUGIN_H
+GrammarLinkPlugin::~GrammarLinkPlugin()
+{
+}
