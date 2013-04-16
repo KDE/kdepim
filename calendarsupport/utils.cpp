@@ -44,6 +44,7 @@
 #include <KCalCore/MemoryCalendar>
 #include <KCalCore/Todo>
 #include <KCalCore/ICalFormat>
+#include <KCalCore/FileStorage>
 
 #include <KCalUtils/DndFactory>
 #include <KCalUtils/ICalDrag>
@@ -834,3 +835,25 @@ QStringList CalendarSupport::categories( const KCalCore::Incidence::List &incide
   return cats;
 }
 
+bool CalendarSupport::mergeCalendar(const QString &srcFilename, const KCalCore::Calendar::Ptr &destCalendar)
+{
+    if (srcFilename.isEmpty()) {
+        kError() << "Empty filename.";
+        return false;
+    }
+
+    if (!QFile::exists(srcFilename)) {
+        kError() << "File'" << srcFilename << "' doesn't exist.";
+    }
+
+    bool loadedSuccesfully = true;
+
+    // merge in a file
+    destCalendar->startBatchAdding();
+    KCalCore::FileStorage storage(destCalendar);
+    storage.setFileName(srcFilename);
+    loadedSuccesfully = storage.load();
+    destCalendar->endBatchAdding();
+
+    return loadedSuccesfully;
+}
