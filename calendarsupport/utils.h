@@ -255,6 +255,8 @@ namespace CalendarSupport {
 
 
   CALENDARSUPPORT_EXPORT QStringList categories( const KCalCore::Incidence::List &incidences );
+
+  CALENDARSUPPORT_EXPORT bool mergeCalendar(const QString &srcFilename, const KCalCore::Calendar::Ptr &destCalendar);
 }
 
 #endif
