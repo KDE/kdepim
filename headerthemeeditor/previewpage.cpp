@@ -18,13 +18,20 @@
 #include "previewpage.h"
 #include "messageviewer/viewer.h"
 
-#include <QHBoxLayout>
+#include <KPushButton>
+#include <KLocale>
+
+#include <QVBoxLayout>
 
 PreviewPage::PreviewPage(QWidget *parent)
     : QWidget(parent)
 {
-    QHBoxLayout *lay = new QHBoxLayout;
+    QVBoxLayout *lay = new QVBoxLayout;
     mViewer = new MessageViewer::Viewer(this);
+    lay->addWidget(mViewer);
+    mUpdate = new KPushButton(i18n("Update view"));
+    connect(mUpdate, SIGNAL(clicked(bool)),SLOT(slotUpdateViewer()));
+    lay->addWidget(mUpdate);
     setLayout(lay);
 }
 
@@ -32,7 +39,7 @@ PreviewPage::~PreviewPage()
 {
 }
 
-void PreviewPage::updateViewer()
+void PreviewPage::slotUpdateViewer()
 {
     //TODO load a default message.
 }
