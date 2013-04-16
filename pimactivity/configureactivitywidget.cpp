@@ -87,7 +87,7 @@ public:
 
     void slotModified()
     {
-        //TODO
+        emit q->changed(true);
     }
 
     void readConfig()
