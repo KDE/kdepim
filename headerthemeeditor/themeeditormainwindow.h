@@ -38,6 +38,7 @@ private Q_SLOTS:
     void slotCloseTheme();
     void slotAddExtraPage();
     void slotOpenTheme();
+    void slotUploadTheme();
 
 private:
     void updateActions();
@@ -50,6 +51,7 @@ private:
     KAction *mAddExtraPage;
     KAction *mCloseAction;
     KAction *mOpenAction;
+    KAction *mUploadTheme;
 };
 
 #endif // THEMEEDITORMAINWINDOW_H

@@ -3,6 +3,8 @@
  <MenuBar>
   <Menu name="file" >
    <Action name="new_theme" />
+   <Separator />
+   <Action name="upload_theme"/>
   </Menu>
   <Menu noMerge="1" name="edit" >
    <text>&amp;Edit</text>

@@ -47,6 +47,7 @@ void ThemeEditorMainWindow::updateActions()
     const bool projectDirectoryIsEmpty = mProjectDirectory.isEmpty();
     mAddExtraPage->setEnabled(!projectDirectoryIsEmpty);
     mCloseAction->setEnabled(!projectDirectoryIsEmpty);
+    mUploadTheme->setEnabled(!projectDirectoryIsEmpty);
 }
 
 void ThemeEditorMainWindow::setupActions()
@@ -59,9 +60,18 @@ void ThemeEditorMainWindow::setupActions()
     connect(mAddExtraPage, SIGNAL(triggered(bool)),SLOT(slotAddExtraPage()));
     actionCollection()->addAction( QLatin1String( "add_extra_page" ), mAddExtraPage );
 
+    mUploadTheme = new KAction(i18n("Upload theme..."), this);
+    actionCollection()->addAction( QLatin1String( "upload_theme" ), mUploadTheme );
+    connect(mUploadTheme, SIGNAL(triggered(bool)), SLOT(slotUploadTheme()));
+
     mOpenAction = KStandardAction::open(this, SLOT(slotOpenTheme()), actionCollection());
     mCloseAction = KStandardAction::close( this, SLOT(slotCloseTheme()), actionCollection());
     KStandardAction::quit( kapp, SLOT(quit()), actionCollection() );
+}
+
+void ThemeEditorMainWindow::slotUploadTheme()
+{
+    //TODO
 }
 
 void ThemeEditorMainWindow::slotCloseTheme()
