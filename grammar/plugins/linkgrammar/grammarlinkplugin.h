@@ -15,7 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "grammar/grammarplugin.h"
+#include "grammar/grammarplugin_p.h"
 
 #ifndef GRAMMARLINKPLUGIN_H
 #define GRAMMARLINKPLUGIN_H

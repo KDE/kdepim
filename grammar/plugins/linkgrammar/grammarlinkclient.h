@@ -19,7 +19,7 @@
 #ifndef GRAMMARLINKCLIENT_H
 #define GRAMMARLINKCLIENT_H
 
-#include "grammar/grammarclient.h"
+#include "grammar/grammarclient_p.h"
 #include <QtCore/QVariantList>
 
 class GrammarLinkClient : public Grammar::GrammarClient
