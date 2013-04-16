@@ -16,7 +16,9 @@
 */
 
 #include "grammar/grammarplugin_p.h"
-
+extern "C" {
+#include <link-grammar/link-includes.h>
+}
 #ifndef GRAMMARLINKPLUGIN_H
 #define GRAMMARLINKPLUGIN_H
 
@@ -25,6 +27,9 @@ class GrammarLinkPlugin : public Grammar::GrammarPlugin
 public:
     GrammarLinkPlugin(const QString &language);
     ~GrammarLinkPlugin();
+private:
+    Dictionary mDict;
+    Parse_Options mOpts;
 };
 
 #endif // GRAMMARLINKPLUGIN_H

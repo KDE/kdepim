@@ -15,26 +15,27 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "grammarlinkplugin.h"
+#ifndef GRAMMARLOADER_H
+#define GRAMMARLOADER_H
+#include <QObject>
 
-#include <locale.h>
-#include <QDebug>
+#include "grammar_export.h"
 
-GrammarLinkPlugin::GrammarLinkPlugin(const QString &language)
-    : Grammar::GrammarPlugin(language)
+namespace Grammar {
+class GrammarLoaderPrivate;
+class GRAMMAR_EXPORT GrammarLoader : public QObject
 {
-    setlocale(LC_ALL, "");
-    mOpts = parse_options_create();
-    mDict = dictionary_create_lang(language.toLatin1());
-    if (!mDict) {
-        qDebug()<<" dictionary for language "<<language<<" not found";
-    }
+    Q_OBJECT
+public:
+    GrammarLoader();
+    ~GrammarLoader();
+
+    QStringList clients() const;
+
+private:
+    friend class GrammarLoaderPrivate;
+    GrammarLoaderPrivate * const d;
+};
 }
 
-GrammarLinkPlugin::~GrammarLinkPlugin()
-{
-    if (mDict)
-        dictionary_delete(mDict);
-    if (mOpts)
-        parse_options_delete(mOpts);
-}
+#endif // GRAMMARLOADER_H

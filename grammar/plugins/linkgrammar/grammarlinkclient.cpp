@@ -17,8 +17,7 @@
 
 
 #include "grammarlinkclient.h"
-
-#include <link-grammar/link-includes.h>
+#include "grammarlinkplugin.h"
 
 #include <kpluginfactory.h>
 #include <kpluginloader.h>
@@ -35,6 +34,12 @@ GrammarLinkClient::GrammarLinkClient(QObject *parent, const QVariantList& /* arg
 GrammarLinkClient::~GrammarLinkClient()
 {
 
+}
+
+Grammar::GrammarPlugin *GrammarLinkClient::createGrammarChecker(const QString &language)
+{
+    GrammarLinkPlugin *plugin = new GrammarLinkPlugin(language);
+    return plugin;
 }
 
 QStringList GrammarLinkClient::languages() const

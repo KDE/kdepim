@@ -26,6 +26,7 @@
 
 
 namespace Grammar {
+class GrammarPlugin;
 class GRAMMAR_EXPORT GrammarClient : public QObject
 {
     Q_OBJECT
@@ -35,6 +36,8 @@ public:
     virtual QStringList languages() const = 0;
 
     virtual QString name() const = 0;
+
+    virtual Grammar::GrammarPlugin *createGrammarChecker(const QString &language) = 0;
 };
 
 }

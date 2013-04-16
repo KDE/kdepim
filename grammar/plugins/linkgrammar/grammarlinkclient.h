@@ -20,6 +20,7 @@
 #define GRAMMARLINKCLIENT_H
 
 #include "grammar/grammarclient_p.h"
+#include "grammar/grammarplugin_p.h"
 #include <QtCore/QVariantList>
 
 class GrammarLinkClient : public Grammar::GrammarClient
@@ -28,6 +29,8 @@ class GrammarLinkClient : public Grammar::GrammarClient
 public:
     GrammarLinkClient(QObject *parent, const QVariantList &);
     ~GrammarLinkClient();
+
+    Grammar::GrammarPlugin *createGrammarChecker(const QString &language);
 
     QStringList languages() const;
 

@@ -25,3 +25,4 @@ GrammarClient::GrammarClient(QObject *parent)
 }
 
 }
+#include "grammarclient_p.moc"
