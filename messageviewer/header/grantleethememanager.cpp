@@ -150,9 +150,11 @@ public:
         QMapIterator<QString, GrantleeTheme> i(themes);
         while (i.hasNext()) {
             i.next();
-            KToggleAction *act = new KToggleAction(i.value().name(),q);
-            act->setData(i.value().dirName());
-            if (i.value().dirName() == themeActivated)
+            GrantleeTheme theme = i.value();
+            KToggleAction *act = new KToggleAction(theme.name(),q);
+            act->setToolTip(theme.description());
+            act->setData(theme.dirName());
+            if (theme.dirName() == themeActivated)
                 act->setChecked(true);
             themesActionList.append(act);
             actionGroup->addAction(act);
