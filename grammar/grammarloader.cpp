@@ -87,6 +87,12 @@ QStringList GrammarLoader::clients() const
     return d->clients;
 }
 
+QStringList GrammarLoader::languages() const
+{
+    //TODO
+    return QStringList();
+}
+
 
 }
 

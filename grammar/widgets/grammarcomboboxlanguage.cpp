@@ -54,6 +54,11 @@ void GrammarComboBoxLanguage::reloadList()
     //TODO
 }
 
+void GrammarComboBoxLanguage::setCurrentLanguage(const QString &lang)
+{
+    //TODO
+}
+
 }
 
 #include "grammarcomboboxlanguage.moc"
