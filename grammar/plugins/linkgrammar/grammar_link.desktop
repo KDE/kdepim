@@ -12,3 +12,7 @@ X-KDE-PluginInfo-Depends=
 X-KDE-PluginInfo-License=LGPL
 X-KDE-PluginInfo-EnabledByDefault=true
 Name=GrammarLink
+Name[sk]=Gramatický odkaz
+Name[sv]=Grammatiklänk
+Name[uk]=GrammarLink
+Name[x-test]=xxGrammarLinkxx
