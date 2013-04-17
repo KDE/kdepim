@@ -17,13 +17,37 @@
   02110-1301, USA.
 
 */
+
 #include "configurecollections.h"
+
+#include <Akonadi/EntityTreeModel>
+#include <Akonadi/ETMViewStateSaver>
+#include <Akonadi/ChangeRecorder>
+
+#include <KMime/KMimeMessage>
+
 #include <KConfigGroup>
+#include <KDialog>
+#include <KCheckableProxyModel>
+
+#include <QVBoxLayout>
+#include <QTreeView>
+
+
 namespace PimActivity {
 
 ConfigureCollections::ConfigureCollections(QWidget *parent)
-    : QWidget(parent)
+    : QWidget(parent), mModelState(0)
 {
+    QVBoxLayout *layout = new QVBoxLayout;
+    layout->setSpacing( KDialog::spacingHint() );
+    layout->setMargin( 0 );
+
+    mFolderView = new QTreeView( this );
+    mFolderView->setEditTriggers( QAbstractItemView::NoEditTriggers );
+    layout->addWidget( mFolderView );
+    setLayout(layout);
+    initCollections();
 }
 
 ConfigureCollections::~ConfigureCollections()
@@ -31,18 +55,46 @@ ConfigureCollections::~ConfigureCollections()
 
 }
 
+void ConfigureCollections::initCollections()
+{
+    // Create a new change recorder.
+    mChangeRecorder = new Akonadi::ChangeRecorder( this );
+    mChangeRecorder->setMimeTypeMonitored( KMime::Message::mimeType() );
+
+    mModel = new Akonadi::EntityTreeModel( mChangeRecorder, this );
+
+    // Set the model to show only collections, not items.
+    mModel->setItemPopulationStrategy( Akonadi::EntityTreeModel::NoItemPopulation );
+
+    // Create the Check proxy model.
+    mSelectionModel = new QItemSelectionModel( mModel );
+    mCheckProxy = new KCheckableProxyModel( this );
+    mCheckProxy->setSelectionModel( mSelectionModel );
+    mCheckProxy->setSourceModel( mModel );
+
+    mFolderView->setModel( mCheckProxy );
+
+}
+
 void ConfigureCollections::readConfig(const QString &id)
 {
     KSharedConfigPtr conf = configFromActivity(id);
-    //TODO
-
+    if (!mModelState) {
+        mModelState = new KViewStateMaintainer<Akonadi::ETMViewStateSaver>( conf->group( "collections" ), this );
+        mModelState->setSelectionModel( mSelectionModel );
+    }
+    mModelState->restoreState();
 }
 
 void ConfigureCollections::writeConfig(const QString &id)
 {
     KSharedConfigPtr conf = configFromActivity(id);
     KConfigGroup grp = conf->group(QLatin1String("collections"));
-    //TODO
+    if (mModelState) {
+        delete mModelState;
+        mModelState = new KViewStateMaintainer<Akonadi::ETMViewStateSaver>( grp, this );
+        mModelState->saveState();
+    }
 }
 
 }

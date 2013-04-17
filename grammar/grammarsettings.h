@@ -15,33 +15,21 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "previewpage.h"
-#include "messageviewer/viewer.h"
+#ifndef GRAMMARSETTINGS_H
+#define GRAMMARSETTINGS_H
 
-#include <KPushButton>
-#include <KLocale>
 
-#include <QVBoxLayout>
-
-PreviewPage::PreviewPage(QWidget *parent)
-    : QWidget(parent)
+namespace Grammar {
+class GrammarSettingsPrivate;
+class GrammarSettings
 {
-    QVBoxLayout *lay = new QVBoxLayout;
-    mViewer = new MessageViewer::Viewer(this);
-    lay->addWidget(mViewer);
-    mUpdate = new KPushButton(i18n("Update view"));
-    connect(mUpdate, SIGNAL(clicked(bool)),SLOT(slotUpdateViewer()));
-    lay->addWidget(mUpdate);
-    setLayout(lay);
+public:
+    GrammarSettings();
+    ~GrammarSettings();
+private:
+    friend class GrammarSettingsPrivate;
+    GrammarSettingsPrivate * const d;
+};
 }
 
-PreviewPage::~PreviewPage()
-{
-}
-
-void PreviewPage::slotUpdateViewer()
-{
-    //TODO load a default message.
-}
-
-#include "previewpage.moc"
+#endif // GRAMMARSETTINGS_H

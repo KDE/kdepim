@@ -34,6 +34,7 @@ ConfigureMailtransport::ConfigureMailtransport(QWidget *parent)
     lay->addWidget(mListTransport);
     init();
     setLayout(lay);
+    connect(mListTransport, SIGNAL(itemChanged(QListWidgetItem*)), SIGNAL(changed()));
 }
 
 ConfigureMailtransport::~ConfigureMailtransport()
@@ -48,12 +49,10 @@ void ConfigureMailtransport::init()
     Q_FOREACH (const QString &name, listNames) {
         QListWidgetItem *item = new QListWidgetItem(mListTransport);
         item->setCheckState(Qt::Checked);
-        //TODO check it or not.
         item->setText(name);
         item->setData(TransportID, listIds.at(i));
         ++i;
     }
-
 }
 
 void ConfigureMailtransport::readConfig(const QString &id)

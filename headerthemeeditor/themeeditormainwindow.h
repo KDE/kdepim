@@ -37,15 +37,21 @@ private Q_SLOTS:
     void slotNewTheme();
     void slotCloseTheme();
     void slotAddExtraPage();
+    void slotOpenTheme();
+    void slotUploadTheme();
 
 private:
-    void savePreviousProject(bool close=false);
+    void updateActions();
+    void saveCurrentProject(bool close=false);
     void setupActions();
     QString mProjectDirectory;
     ThemeEditorPage *mThemeEditor;
     KAction *mNewThemeAction;
     KAction *mCloseThemeAction;
     KAction *mAddExtraPage;
+    KAction *mCloseAction;
+    KAction *mOpenAction;
+    KAction *mUploadTheme;
 };
 
 #endif // THEMEEDITORMAINWINDOW_H

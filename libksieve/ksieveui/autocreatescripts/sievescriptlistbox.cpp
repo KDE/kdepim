@@ -115,8 +115,6 @@ SieveScriptListBox::SieveScriptListBox(const QString &title, QWidget *parent)
 
     layout->addWidget( hb );
 
-
-
     hb = new KHBox( this );
     hb->setSpacing( 4 );
 
@@ -192,6 +190,7 @@ void SieveScriptListBox::slotNew()
         SieveScriptPage *page = new SieveScriptPage;
         item->setScriptPage(page);
         Q_EMIT addNewPage(page);
+        mSieveListScript->setCurrentItem(item);
         updateButtons();
     }
 }
@@ -240,6 +239,7 @@ void SieveScriptListBox::slotTop()
         if (currentIndex != 0) {
             item = mSieveListScript->takeItem( currentIndex );
             mSieveListScript->insertItem( 0, item );
+            mSieveListScript->setCurrentItem(item);
         }
     }
 }
@@ -251,7 +251,8 @@ void SieveScriptListBox::slotBottom()
         const int currentIndex = mSieveListScript->currentRow();
         if (currentIndex != mSieveListScript->count() - 1 ) {
             item = mSieveListScript->takeItem( currentIndex );
-            mSieveListScript->insertItem( mSieveListScript->count() - 1, item );
+            mSieveListScript->insertItem( mSieveListScript->count() , item );
+            mSieveListScript->setCurrentItem(item);
         }
     }
 }
@@ -264,6 +265,7 @@ void SieveScriptListBox::slotDown()
         if (currentIndex < mSieveListScript->count() - 1 ) {
             item = mSieveListScript->takeItem( currentIndex );
             mSieveListScript->insertItem( currentIndex + 1, item );
+            mSieveListScript->setCurrentItem(item);
         }
     }
 }
@@ -273,9 +275,10 @@ void SieveScriptListBox::slotUp()
     QListWidgetItem *item = mSieveListScript->currentItem();
     if (item) {
         const int currentIndex = mSieveListScript->currentRow();
-        if (currentIndex > 1 ) {
+        if (currentIndex >= 1 ) {
             item = mSieveListScript->takeItem( currentIndex );
             mSieveListScript->insertItem( currentIndex - 1, item );
+            mSieveListScript->setCurrentItem(item);
         }
     }
 }

@@ -15,33 +15,30 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "previewpage.h"
-#include "messageviewer/viewer.h"
+#ifndef NEWTHEMEDIALOG_H
+#define NEWTHEMEDIALOG_H
 
-#include <KPushButton>
-#include <KLocale>
+#include <KDialog>
 
-#include <QVBoxLayout>
-
-PreviewPage::PreviewPage(QWidget *parent)
-    : QWidget(parent)
+class KLineEdit;
+class KUrlRequester;
+class NewThemeDialog : public KDialog
 {
-    QVBoxLayout *lay = new QVBoxLayout;
-    mViewer = new MessageViewer::Viewer(this);
-    lay->addWidget(mViewer);
-    mUpdate = new KPushButton(i18n("Update view"));
-    connect(mUpdate, SIGNAL(clicked(bool)),SLOT(slotUpdateViewer()));
-    lay->addWidget(mUpdate);
-    setLayout(lay);
-}
+    Q_OBJECT
+public:
+    explicit NewThemeDialog(QWidget *parent = 0);
+    ~NewThemeDialog();
 
-PreviewPage::~PreviewPage()
-{
-}
+    QString themeName() const;
 
-void PreviewPage::slotUpdateViewer()
-{
-    //TODO load a default message.
-}
+    QString directory() const;
 
-#include "previewpage.moc"
+private Q_SLOTS:
+    void slotUpdateOkButton();
+
+private:
+    KLineEdit *mThemeName;
+    KUrlRequester *mUrlRequester;
+};
+
+#endif // NEWTHEMEDIALOG_H

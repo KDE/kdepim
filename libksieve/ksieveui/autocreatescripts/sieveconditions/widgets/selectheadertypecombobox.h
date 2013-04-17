@@ -18,10 +18,44 @@
 #ifndef SELECTHEADERTYPECOMBOBOX_H
 #define SELECTHEADERTYPECOMBOBOX_H
 
-
 #include <KComboBox>
+#include <KDialog>
+
+#include <QListWidget>
 
 namespace KSieveUi {
+
+class SelectHeadersWidget : public QListWidget
+{
+    Q_OBJECT
+public:
+    explicit SelectHeadersWidget(QWidget *parent = 0);
+    ~SelectHeadersWidget();
+
+    QString headers() const;
+    void setListHeaders(const QMap<QString, QString> &lst);
+private:
+    enum HeaderEnum {
+        HeaderId = Qt::UserRole + 1
+    };
+
+    void init();
+};
+
+class SelectHeadersDialog : public KDialog
+{
+    Q_OBJECT
+public:
+    explicit SelectHeadersDialog(QWidget *parent = 0);
+    ~SelectHeadersDialog();
+
+    QString headers() const;
+    void setListHeaders(const QMap<QString, QString> &lst);
+private:
+    SelectHeadersWidget *mListWidget;
+};
+
+
 class SelectHeaderTypeComboBox : public KComboBox
 {
     Q_OBJECT
@@ -30,9 +64,16 @@ public:
     ~SelectHeaderTypeComboBox();
 
     QString code() const;
+
+private Q_SLOTS:
+    void slotSelectItem(const QString &str);
+
 private:
     void initialize();
+    void headerMap();
+    QMap<QString, QString> mHeaderMap;
 };
+
 }
 
 #endif // SELECTHEADERTYPECOMBOBOX_H

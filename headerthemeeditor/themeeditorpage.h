@@ -23,21 +23,23 @@
 class KTabWidget;
 class EditorPage;
 class DesktopFilePage;
+class PreviewPage;
 
 class ThemeEditorPage : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ThemeEditorPage(QWidget *parent = 0);
+    explicit ThemeEditorPage(const QString &themeName, QWidget *parent = 0);
     ~ThemeEditorPage();
 
     void saveTheme(const QString &path);
-    void addExtraPage(const QString &filename);
+    void addExtraPage();
 private:
+    QList<EditorPage*> mExtraPage;
     KTabWidget *mTabWidget;
     EditorPage *mEditorPage;
     DesktopFilePage *mDesktopPage;
-    QList<EditorPage*> mExtraPage;
+    PreviewPage *mPreviewPage;
 };
 
 #endif // THEMEEDITORPAGE_H

@@ -16,8 +16,10 @@
 */
 
 #include "themeeditormainwindow.h"
-
 #include "themeeditorpage.h"
+#include "newthemedialog.h"
+
+#include <knewstuff3/uploaddialog.h>
 
 #include <KStandardAction>
 #include <KApplication>
@@ -27,17 +29,27 @@
 #include <KMessageBox>
 #include <KFileDialog>
 
+#include <QPointer>
+
 ThemeEditorMainWindow::ThemeEditorMainWindow()
     : KXmlGuiWindow(),
       mThemeEditor(0)
 {
     setupActions();
     setupGUI();
+    updateActions();
 }
 
 ThemeEditorMainWindow::~ThemeEditorMainWindow()
 {
+}
 
+void ThemeEditorMainWindow::updateActions()
+{
+    const bool projectDirectoryIsEmpty = mProjectDirectory.isEmpty();
+    mAddExtraPage->setEnabled(!projectDirectoryIsEmpty);
+    mCloseAction->setEnabled(!projectDirectoryIsEmpty);
+    mUploadTheme->setEnabled(!projectDirectoryIsEmpty);
 }
 
 void ThemeEditorMainWindow::setupActions()
@@ -50,50 +62,78 @@ void ThemeEditorMainWindow::setupActions()
     connect(mAddExtraPage, SIGNAL(triggered(bool)),SLOT(slotAddExtraPage()));
     actionCollection()->addAction( QLatin1String( "add_extra_page" ), mAddExtraPage );
 
+    mUploadTheme = new KAction(i18n("Upload theme..."), this);
+    actionCollection()->addAction( QLatin1String( "upload_theme" ), mUploadTheme );
+    connect(mUploadTheme, SIGNAL(triggered(bool)), SLOT(slotUploadTheme()));
 
-    KStandardAction::close( this, SLOT(slotCloseTheme()), actionCollection());
+    mOpenAction = KStandardAction::open(this, SLOT(slotOpenTheme()), actionCollection());
+    mCloseAction = KStandardAction::close( this, SLOT(slotCloseTheme()), actionCollection());
     KStandardAction::quit( kapp, SLOT(quit()), actionCollection() );
+}
+
+void ThemeEditorMainWindow::slotUploadTheme()
+{
+    QPointer<KNS3::UploadDialog> dialog = new KNS3::UploadDialog(this);
+    //TODO
+    dialog->exec();
+    delete dialog;
+    //TODO
 }
 
 void ThemeEditorMainWindow::slotCloseTheme()
 {
-    savePreviousProject();
+    saveCurrentProject();
+}
+
+void ThemeEditorMainWindow::slotOpenTheme()
+{
+    saveCurrentProject();
+    const QString fileName = KFileDialog::getOpenFileName(KUrl(), QString::fromLatin1("*.themerc"), this, i18n("Select theme"));
+    if (!fileName.isEmpty()) {
+        //TODO load it.
+    }
 }
 
 void ThemeEditorMainWindow::slotAddExtraPage()
 {
-    //TODO
+    if (mThemeEditor)
+        mThemeEditor->addExtraPage();
 }
 
-void ThemeEditorMainWindow::savePreviousProject(bool close)
+void ThemeEditorMainWindow::saveCurrentProject(bool close)
 {
     if (!mProjectDirectory.isEmpty()) {
-        if (KMessageBox::questionYesNo(this, i18n("Do you want to save previous project?"), i18n("Save previous project")) == KMessageBox::Yes) {
+        if (KMessageBox::questionYesNo(this, i18n("Do you want to save current project?"), i18n("Save current project")) == KMessageBox::Yes) {
             mThemeEditor->saveTheme(mProjectDirectory);
         }
     }
-    if (close)
-        return;
-
-    delete mThemeEditor;
-
-    mProjectDirectory = KFileDialog::getExistingDirectory(KUrl(), this, i18n("Select theme directory"));
-    if (!mProjectDirectory.isEmpty()) {
-        mThemeEditor = new ThemeEditorPage;
-        setCentralWidget(mThemeEditor);
-    } else {
-        setCentralWidget(0);
+    if (!close) {
+        delete mThemeEditor;
+        QPointer<NewThemeDialog> dialog = new NewThemeDialog(this);
+        QString newTheme;
+        if (dialog->exec()) {
+            newTheme = dialog->themeName();
+            mProjectDirectory = dialog->directory();
+        }
+        if (!mProjectDirectory.isEmpty()) {
+            mThemeEditor = new ThemeEditorPage(newTheme);
+            setCentralWidget(mThemeEditor);
+        } else {
+            setCentralWidget(0);
+        }
+        delete dialog;
+        updateActions();
     }
 }
 
 void ThemeEditorMainWindow::slotNewTheme()
 {
-    savePreviousProject();
+    saveCurrentProject();
 }
 
 void ThemeEditorMainWindow::closeEvent(QCloseEvent *e)
 {
-    savePreviousProject(true);
+    saveCurrentProject(true);
     KXmlGuiWindow::closeEvent(e);
 }
 

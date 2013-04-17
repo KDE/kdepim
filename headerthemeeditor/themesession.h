@@ -15,16 +15,18 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "backgroundgrammarchecker.h"
+#ifndef THEMESESSION_H
+#define THEMESESSION_H
 
-BackgroundGrammarChecker::BackgroundGrammarChecker(QObject *parent)
-    : QObject(parent)
+#include <QString>
+
+class ThemeSession
 {
-}
+public:
+    ThemeSession();
+    ~ThemeSession();
+    void loadSession(const QString &session);
+    void writeSession(const QString &session);
+};
 
-BackgroundGrammarChecker::~BackgroundGrammarChecker()
-{
-
-}
-
-#include "backgroundgrammarchecker.moc"
+#endif // THEMESESSION_H

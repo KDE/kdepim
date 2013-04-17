@@ -20,6 +20,7 @@
 #define PREVIEWPAGE_H
 
 #include <QWidget>
+class KPushButton;
 
 namespace MessageViewer {
 class Viewer;
@@ -29,13 +30,15 @@ class PreviewPage : public QWidget
 {
     Q_OBJECT
 public:
-    explicit PreviewPage(QWidget *parent);
+    explicit PreviewPage(QWidget *parent = 0);
     ~PreviewPage();
 
-    void updateViewer();
+public Q_SLOTS:
+    void slotUpdateViewer();
 
 private:
     MessageViewer::Viewer *mViewer;
+    KPushButton *mUpdate;
 };
 
 #endif // PREVIEWPAGE_H

@@ -59,3 +59,18 @@ QStringList AutoCreateScriptUtil::createListFromString(QString str)
     return lst;
 }
 
+QString AutoCreateScriptUtil::createAddressList(const QString &str)
+{
+    const QStringList list = str.split(QLatin1Char(';'));
+    const int count = list.count();
+    switch(count) {
+    case 0:
+        return QString();
+    case 1:
+        return QLatin1String("\"") + list.first() + QLatin1String("\"");
+    default: {
+        const QString result = createList(list);
+        return result;
+    }
+    }
+}

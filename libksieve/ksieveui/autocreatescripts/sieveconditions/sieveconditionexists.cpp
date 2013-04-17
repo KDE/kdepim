@@ -16,6 +16,8 @@
 */
 
 #include "sieveconditionexists.h"
+#include "autocreatescripts/autocreatescriptutil_p.h"
+#include "widgets/selectheadertypecombobox.h"
 
 #include <KLocale>
 
@@ -52,7 +54,7 @@ QWidget *SieveConditionExists::createParamWidget( QWidget *parent ) const
     QLabel *lab = new QLabel(i18n("headers:"));
     lay->addWidget(lab);
 
-    KLineEdit *value = new KLineEdit;
+    SelectHeaderTypeComboBox *value = new SelectHeaderTypeComboBox;
     value->setObjectName(QLatin1String("headervalue"));
 
     lay->addWidget(value);
@@ -64,8 +66,8 @@ QString SieveConditionExists::code(QWidget *w) const
     QComboBox *combo = w->findChild<QComboBox*>( QLatin1String("existscheck") );
     const QString comparaison = combo->itemData(combo->currentIndex()).toString();
 
-    KLineEdit *value = w->findChild<KLineEdit*>( QLatin1String("headervalue") );
-    return QString::fromLatin1("%1 \"%2\"").arg(comparaison).arg(value->text());
+    SelectHeaderTypeComboBox *value = w->findChild<SelectHeaderTypeComboBox*>( QLatin1String("headervalue") );
+    return QString::fromLatin1("%1 %2").arg(comparaison).arg(value->code());
 }
 
 #include "sieveconditionexists.moc"

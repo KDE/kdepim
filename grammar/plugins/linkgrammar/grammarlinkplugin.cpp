@@ -15,17 +15,26 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef BACKGROUNDGRAMMARCHECKER_H
-#define BACKGROUNDGRAMMARCHECKER_H
+#include "grammarlinkplugin.h"
 
-#include <QObject>
+#include <locale.h>
+#include <QDebug>
 
-class BackgroundGrammarChecker : QObject
+GrammarLinkPlugin::GrammarLinkPlugin(const QString &language)
+    : Grammar::GrammarPlugin(language)
 {
-    Q_OBJECT
-public:
-    explicit BackgroundGrammarChecker(QObject *parent = 0);
-    ~BackgroundGrammarChecker();
-};
+    setlocale(LC_ALL, "");
+    mOpts = parse_options_create();
+    mDict = dictionary_create_lang(language.toLatin1());
+    if (!mDict) {
+        qDebug()<<" dictionary for language "<<language<<" not found";
+    }
+}
 
-#endif // BACKGROUNDGRAMMARCHECKER_H
+GrammarLinkPlugin::~GrammarLinkPlugin()
+{
+    if (mDict)
+        dictionary_delete(mDict);
+    if (mOpts)
+        parse_options_delete(mOpts);
+}

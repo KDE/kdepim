@@ -15,33 +15,23 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "previewpage.h"
-#include "messageviewer/viewer.h"
+#include "themesession.h"
 
-#include <KPushButton>
-#include <KLocale>
-
-#include <QVBoxLayout>
-
-PreviewPage::PreviewPage(QWidget *parent)
-    : QWidget(parent)
-{
-    QVBoxLayout *lay = new QVBoxLayout;
-    mViewer = new MessageViewer::Viewer(this);
-    lay->addWidget(mViewer);
-    mUpdate = new KPushButton(i18n("Update view"));
-    connect(mUpdate, SIGNAL(clicked(bool)),SLOT(slotUpdateViewer()));
-    lay->addWidget(mUpdate);
-    setLayout(lay);
-}
-
-PreviewPage::~PreviewPage()
+ThemeSession::ThemeSession()
 {
 }
 
-void PreviewPage::slotUpdateViewer()
+ThemeSession::~ThemeSession()
 {
-    //TODO load a default message.
 }
 
-#include "previewpage.moc"
+
+void ThemeSession::loadSession(const QString &session)
+{
+    //TODO
+}
+
+void ThemeSession::writeSession(const QString &session)
+{
+    //TODO
+}

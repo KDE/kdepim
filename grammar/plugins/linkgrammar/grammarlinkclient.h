@@ -15,33 +15,26 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "previewpage.h"
-#include "messageviewer/viewer.h"
 
-#include <KPushButton>
-#include <KLocale>
+#ifndef GRAMMARLINKCLIENT_H
+#define GRAMMARLINKCLIENT_H
 
-#include <QVBoxLayout>
+#include "grammar/grammarclient_p.h"
+#include "grammar/grammarplugin_p.h"
+#include <QtCore/QVariantList>
 
-PreviewPage::PreviewPage(QWidget *parent)
-    : QWidget(parent)
+class GrammarLinkClient : public Grammar::GrammarClient
 {
-    QVBoxLayout *lay = new QVBoxLayout;
-    mViewer = new MessageViewer::Viewer(this);
-    lay->addWidget(mViewer);
-    mUpdate = new KPushButton(i18n("Update view"));
-    connect(mUpdate, SIGNAL(clicked(bool)),SLOT(slotUpdateViewer()));
-    lay->addWidget(mUpdate);
-    setLayout(lay);
-}
+    Q_OBJECT
+public:
+    GrammarLinkClient(QObject *parent, const QVariantList &);
+    ~GrammarLinkClient();
 
-PreviewPage::~PreviewPage()
-{
-}
+    Grammar::GrammarPlugin *createGrammarChecker(const QString &language);
 
-void PreviewPage::slotUpdateViewer()
-{
-    //TODO load a default message.
-}
+    QStringList languages() const;
 
-#include "previewpage.moc"
+    QString name() const;
+};
+
+#endif // GRAMMARLINKCLIENT_H

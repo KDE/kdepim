@@ -4,6 +4,11 @@ add_definitions( -DQT_NO_CAST_TO_ASCII )
 
 set(libgrammar_SRCS 
     grammarhighlighter.cpp
+    grammarclient.cpp
+    backgroundgrammarchecker.cpp
+    grammarsettings.cpp
+    grammarplugin.cpp
+    grammarloader.cpp
     widgets/grammarcomboboxlanguage.cpp
     widgets/grammarconfigurewidget.cpp
 )

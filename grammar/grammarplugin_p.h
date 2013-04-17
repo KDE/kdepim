@@ -15,33 +15,27 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "previewpage.h"
-#include "messageviewer/viewer.h"
+#ifndef GRAMMARPLUGIN_H
+#define GRAMMARPLUGIN_H
 
-#include <KPushButton>
-#include <KLocale>
+#include "grammar_export.h"
 
-#include <QVBoxLayout>
+#include <QString>
 
-PreviewPage::PreviewPage(QWidget *parent)
-    : QWidget(parent)
+namespace Grammar {
+class GrammarPluginPrivate;
+class GRAMMAR_EXPORT GrammarPlugin
 {
-    QVBoxLayout *lay = new QVBoxLayout;
-    mViewer = new MessageViewer::Viewer(this);
-    lay->addWidget(mViewer);
-    mUpdate = new KPushButton(i18n("Update view"));
-    connect(mUpdate, SIGNAL(clicked(bool)),SLOT(slotUpdateViewer()));
-    lay->addWidget(mUpdate);
-    setLayout(lay);
+public:
+    ~GrammarPlugin();
+
+    QString language() const;
+protected:
+    GrammarPlugin(const QString &lang);
+private:
+    friend class GrammarPluginPrivate;
+    GrammarPluginPrivate * const d;
+};
 }
 
-PreviewPage::~PreviewPage()
-{
-}
-
-void PreviewPage::slotUpdateViewer()
-{
-    //TODO load a default message.
-}
-
-#include "previewpage.moc"
+#endif // GRAMMARPLUGIN_H

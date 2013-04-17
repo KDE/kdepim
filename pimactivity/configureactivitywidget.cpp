@@ -87,7 +87,7 @@ public:
 
     void slotModified()
     {
-        //TODO
+        emit q->changed(true);
     }
 
     void readConfig()
@@ -109,12 +109,15 @@ public:
     {
         identity = new ConfigureIdentity(q);
         tabWidget->addTab(identity, i18n("Identity"));
+        q->connect(identity, SIGNAL(changed(bool)), q, SIGNAL(changed(bool)));
 
         mailTransport = new ConfigureMailtransport;
         tabWidget->addTab(mailTransport, i18n("Transport"));
+        q->connect(mailTransport, SIGNAL(changed(bool)), q, SIGNAL(changed(bool)));
 
         collections = new ConfigureCollections;
         tabWidget->addTab(collections, i18n("Collections"));
+        q->connect(collections, SIGNAL(changed(bool)), q, SIGNAL(changed(bool)));
     }
 
     ConfigureActivityWidget *q;

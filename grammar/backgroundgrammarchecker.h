@@ -15,33 +15,23 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "previewpage.h"
-#include "messageviewer/viewer.h"
+#ifndef BACKGROUNDGRAMMARCHECKER_H
+#define BACKGROUNDGRAMMARCHECKER_H
 
-#include <KPushButton>
-#include <KLocale>
+#include <QObject>
 
-#include <QVBoxLayout>
-
-PreviewPage::PreviewPage(QWidget *parent)
-    : QWidget(parent)
+namespace Grammar {
+class BackgroundGrammarCheckerPrivate;
+class BackgroundGrammarChecker : QObject
 {
-    QVBoxLayout *lay = new QVBoxLayout;
-    mViewer = new MessageViewer::Viewer(this);
-    lay->addWidget(mViewer);
-    mUpdate = new KPushButton(i18n("Update view"));
-    connect(mUpdate, SIGNAL(clicked(bool)),SLOT(slotUpdateViewer()));
-    lay->addWidget(mUpdate);
-    setLayout(lay);
+    Q_OBJECT
+public:
+    explicit BackgroundGrammarChecker(QObject *parent = 0);
+    ~BackgroundGrammarChecker();
+private:
+    friend class BackgroundGrammarCheckerPrivate;
+    BackgroundGrammarCheckerPrivate * const d;
+};
 }
 
-PreviewPage::~PreviewPage()
-{
-}
-
-void PreviewPage::slotUpdateViewer()
-{
-    //TODO load a default message.
-}
-
-#include "previewpage.moc"
+#endif // BACKGROUNDGRAMMARCHECKER_H

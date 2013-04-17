@@ -16,6 +16,7 @@
 */
 
 #include "sieveconditionaddress.h"
+#include "autocreatescripts/autocreatescriptutil_p.h"
 #include "widgets/selectaddresspartcombobox.h"
 #include "widgets/selectmatchtypecombobox.h"
 #include "widgets/selectheadertypecombobox.h"
@@ -62,6 +63,8 @@ QWidget *SieveConditionAddress::createParamWidget( QWidget *parent ) const
     lay->addWidget(lab);
 
     KLineEdit *edit = new KLineEdit;
+    edit->setClearButtonShown(true);
+    edit->setClickMessage(i18n("Use ; to separate emails"));
     lay->addWidget(edit);
     edit->setObjectName(QLatin1String("editaddress"));
     return w;
@@ -81,8 +84,8 @@ QString SieveConditionAddress::code(QWidget *w) const
 
 
     KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("editaddress") );
-    const QString addressStr = edit->text();
-    return (isNegative ? QLatin1String("not ") : QString()) + QString::fromLatin1("address %1 %2 \"%3\" \"%4\"").arg(selectAddressPartStr).arg(matchTypeStr).arg(selectHeaderTypeStr).arg(addressStr);
+    const QString addressStr = AutoCreateScriptUtil::createAddressList(edit->text().trimmed());
+    return (isNegative ? QLatin1String("not ") : QString()) + QString::fromLatin1("address %1 %2 %3 %4").arg(selectAddressPartStr).arg(matchTypeStr).arg(selectHeaderTypeStr).arg(addressStr);
 }
 
 #include "sieveconditionaddress.moc"
