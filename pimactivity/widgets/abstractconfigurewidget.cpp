@@ -33,6 +33,14 @@ AbstractConfigureWidget::~AbstractConfigureWidget()
 {
 }
 
+void AbstractConfigureWidget::setCurrentActivity(const QString &id)
+{
+    if (mActivityId != id) {
+        mActivityId = id;
+        readConfig(id);
+    }
+}
+
 void AbstractConfigureWidget::setActivity(const QString &id)
 {
     if (mActivityId != id) {

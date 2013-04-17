@@ -34,6 +34,8 @@ public:
     void setActivity(const QString &id);
     QString activity() const;
 
+    void setCurrentActivity(const QString &id);
+
     virtual void readConfig(const QString &id) = 0;
     virtual void writeConfig(const QString &id) = 0;
 
