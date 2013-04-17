@@ -77,7 +77,6 @@ void ThemeEditorMainWindow::slotUploadTheme()
     //TODO
     dialog->exec();
     delete dialog;
-    //TODO
 }
 
 void ThemeEditorMainWindow::slotCloseTheme()

@@ -17,6 +17,11 @@
 
 #include "themesession.h"
 
+#include <KConfig>
+#include <KConfigGroup>
+
+#include <QDebug>
+
 ThemeSession::ThemeSession()
 {
 }
@@ -28,10 +33,19 @@ ThemeSession::~ThemeSession()
 
 void ThemeSession::loadSession(const QString &session)
 {
-    //TODO
+    KConfig config(session);
+    if (config.hasGroup(QLatin1String("Global"))) {
+        //TODO
+    } else {
+        qDebug()<<QString::fromLatin1("\"%1\" is not a session file").arg(session);
+    }
 }
 
 void ThemeSession::writeSession(const QString &session)
 {
+    KConfig config(session);
+    KConfigGroup global = config.group(QLatin1String("Global"));
+    //TODO
+    config.sync();
     //TODO
 }

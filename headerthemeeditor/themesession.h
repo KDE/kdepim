@@ -19,6 +19,7 @@
 #define THEMESESSION_H
 
 #include <QString>
+#include <QStringList>
 
 class ThemeSession
 {
@@ -27,6 +28,10 @@ public:
     ~ThemeSession();
     void loadSession(const QString &session);
     void writeSession(const QString &session);
+private:
+    QString mProjectPath;
+    QString mMainPath;
+    QStringList mExtraPage;
 };
 
 #endif // THEMESESSION_H
