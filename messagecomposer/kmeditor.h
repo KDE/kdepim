@@ -188,6 +188,8 @@ class MESSAGECOMPOSER_EXPORT KMeditor : public KPIMTextEdit::TextEdit
 
     void forcePlainTextMarkup(bool force);
 
+
+    void startExternalEditor();
   public Q_SLOTS:
 
     void slotAddQuotes();

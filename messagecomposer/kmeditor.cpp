@@ -244,6 +244,13 @@ void KMeditorPrivate::ensureCursorVisibleDelayed()
   static_cast<KPIMTextEdit::TextEdit*>( q )->ensureCursorVisible();
 }
 
+void KMeditor::startExternalEditor()
+{
+    if ( d->useExtEditor && !d->mExtEditorProcess ) {
+        d->startExternalEditor();
+    }
+}
+
 void KMeditor::keyPressEvent ( QKeyEvent *e )
 {
   if ( d->useExtEditor &&
