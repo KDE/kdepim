@@ -114,6 +114,14 @@ QStringList ActivityManager::listActivities() const
     return QStringList();
 }
 
+QString ActivityManager::currentActivity() const
+{
+    if (isActive()) {
+        return d->consumer->currentActivity();
+    }
+    return QString();
+}
+
 }
 
 #include "activitymanager.moc"

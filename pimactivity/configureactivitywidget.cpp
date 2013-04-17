@@ -72,7 +72,6 @@ public:
 
         addPages();
         q->connect(activities, SIGNAL(activityChanged(QString)), q, SLOT(slotActivityChanged(QString)));
-        //TODO initialize activity
     }
     ~ConfigureActivityWidgetPrivate()
     {
@@ -92,6 +91,7 @@ public:
 
     void readConfig()
     {
+
         //TODO
     }
 
