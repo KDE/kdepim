@@ -19,6 +19,7 @@
 #include "desktopfilepage.h"
 #include "editorpage.h"
 #include "previewpage.h"
+#include "themesession.h"
 
 #include <KTabWidget>
 #include <KLocale>
@@ -27,8 +28,10 @@
 #include <QHBoxLayout>
 
 ThemeEditorPage::ThemeEditorPage(const QString &themeName, QWidget *parent)
-    : QWidget(parent)
+    : QWidget(parent),
+      mThemeSession(0)
 {
+    mThemeSession = new ThemeSession;
     QHBoxLayout *lay = new QHBoxLayout;
     mTabWidget = new KTabWidget;
     lay->addWidget(mTabWidget);
@@ -49,6 +52,7 @@ ThemeEditorPage::~ThemeEditorPage()
 {
     qDeleteAll(mExtraPage);
     mExtraPage.clear();
+    delete mThemeSession;
 }
 
 void ThemeEditorPage::addExtraPage()
@@ -63,11 +67,15 @@ void ThemeEditorPage::addExtraPage()
 
 void ThemeEditorPage::saveTheme(const QString &path)
 {
+    if (mThemeSession) {
+        mThemeSession->setProjectPath(path);
+    }
     mEditorPage->saveTheme(path);
     Q_FOREACH (EditorPage *page, mExtraPage) {
         page->saveTheme(path);
     }
     mDesktopPage->saveTheme(path);
+    mThemeSession->writeSession();
 
 }
 

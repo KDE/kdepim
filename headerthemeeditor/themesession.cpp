@@ -21,6 +21,7 @@
 #include <KConfigGroup>
 
 #include <QDebug>
+#include <QDir>
 
 ThemeSession::ThemeSession()
 {
@@ -50,9 +51,10 @@ void ThemeSession::loadSession(const QString &session)
     }
 }
 
-void ThemeSession::writeSession(const QString &session)
+void ThemeSession::writeSession()
 {
-    KConfig config(session);
+    //TODO customize
+    KConfig config(mProjectPath + QDir::separator() + QLatin1String("theme.session"));
     KConfigGroup global = config.group(QLatin1String("Global"));
     //TODO
     config.sync();

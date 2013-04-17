@@ -24,6 +24,7 @@ class KTabWidget;
 class EditorPage;
 class DesktopFilePage;
 class PreviewPage;
+class ThemeSession;
 
 class ThemeEditorPage : public QWidget
 {
@@ -40,6 +41,7 @@ private:
     EditorPage *mEditorPage;
     DesktopFilePage *mDesktopPage;
     PreviewPage *mPreviewPage;
+    ThemeSession *mThemeSession;
 };
 
 #endif // THEMEEDITORPAGE_H

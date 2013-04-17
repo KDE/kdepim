@@ -27,7 +27,7 @@ public:
     ThemeSession();
     ~ThemeSession();
     void loadSession(const QString &session);
-    void writeSession(const QString &session);
+    void writeSession();
 
     void setProjectPath(const QString &path);
     QString projectPath() const;
