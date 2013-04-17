@@ -30,6 +30,15 @@ ThemeSession::~ThemeSession()
 {
 }
 
+void ThemeSession::setProjectPath(const QString &path)
+{
+    mProjectPath = path;
+}
+
+QString ThemeSession::projectPath() const
+{
+    return mProjectPath;
+}
 
 void ThemeSession::loadSession(const QString &session)
 {
