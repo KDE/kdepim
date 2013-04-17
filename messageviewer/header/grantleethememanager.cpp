@@ -255,9 +255,7 @@ QStringList GrantleeThemeManager::displayExtraHeader(const QString &themename) c
 
 GrantleeTheme GrantleeThemeManager::theme(const QString &themeName)
 {
-    qDebug()<<" themeName"<<themeName;
     if (d->themes.contains(themeName)) {
-        qDebug()<<" xxxxxxxxxxxx";
         return d->themes.value(themeName);
     }
     return GrantleeTheme();
