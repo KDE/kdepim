@@ -217,6 +217,8 @@ void KMeditorPrivate::startExternalEditor()
     delete mExtEditorTempFile;
     mExtEditorTempFile = 0;
     q->setUseExternalEditor( false );
+  } else {
+    emit q->externalEditorStarted();
   }
 }
 
@@ -232,9 +234,11 @@ void KMeditorPrivate::slotEditorFinished( int, QProcess::ExitStatus exitStatus )
       q->document()->setModified( true );
       localFile.close();
     }
+    emit q->externalEditorClosed();
   }
 
   q->killExternalEditor();   // cleanup...
+
 }
 
 void KMeditorPrivate::ensureCursorVisibleDelayed()

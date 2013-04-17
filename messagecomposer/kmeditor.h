@@ -214,6 +214,8 @@ class MESSAGECOMPOSER_EXPORT KMeditor : public KPIMTextEdit::TextEdit
     void focusUp();
 
     void insertModeChanged();
+    void externalEditorStarted();
+    void externalEditorClosed();
 
   protected:
 
