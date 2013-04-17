@@ -18,38 +18,30 @@
 
 */
 
-#ifndef CONFIGUREMAILTRANSPORT_H
-#define CONFIGUREMAILTRANSPORT_H
+#ifndef TRANSPORTCOMBOBOXACTIVITY_H
+#define TRANSPORTCOMBOBOXACTIVITY_H
 
-#include "abstractconfigurewidget.h"
-#include <QWidget>
-class QListWidget;
+#include "pimactivity_export.h"
+
+#include <Mailtransport/TransportComboBox>
 
 namespace PimActivity {
-class ConfigureMailtransport : public QWidget, public AbstractConfigureWidget
+class ActivityManager;
+class TransportComboboxActivityPrivate;
+class PIMACTIVITY_EXPORT TransportComboboxActivity : public MailTransport::TransportComboBox
 {
     Q_OBJECT
 public:
-    explicit ConfigureMailtransport(QWidget *parent = 0);
-    ~ConfigureMailtransport();
+    explicit TransportComboboxActivity(QWidget *parent = 0);
+    explicit TransportComboboxActivity(ActivityManager *manager, QWidget *parent = 0);
+    ~TransportComboboxActivity();
 
-    void writeConfig(const QString &id);
-
-private:
-    void readConfig(const QString &id);
-
-
-Q_SIGNALS:
-    void changed(bool b = true);
+    void setActivityManager(ActivityManager *manager);
 
 private:
-    enum transportId {
-        TransportID = Qt::UserRole +1
-    };
-
-    void init();
-    QListWidget *mListTransport;
+    friend class TransportComboboxActivityPrivate;
+    TransportComboboxActivityPrivate * const d;
 };
 }
 
-#endif // CONFIGUREMAILTRANSPORT_H
+#endif // TRANSPORTCOMBOBOXACTIVITY_H
