@@ -19,12 +19,14 @@
 #include "grammarclient_p.h"
 
 #include <kservicetypetrader.h>
+#include <KDebug>
 
 namespace Grammar {
 class GrammarLoaderPrivate
 {
 public:
-    GrammarLoaderPrivate()
+    GrammarLoaderPrivate(GrammarLoader *qq)
+        : q(qq)
     {
         loadPlugins();
     }
@@ -43,7 +45,7 @@ public:
     {
         QString error;
 
-        Grammar::GrammarClient *client = service->createInstance<Grammar::GrammarClient>(this, QVariantList(), &error);
+        Grammar::GrammarClient *client = service->createInstance<Grammar::GrammarClient>(q, QVariantList(), &error);
         if (client) {
             const QStringList languages = client->languages();
             clients.append(client->name());
@@ -66,10 +68,12 @@ public:
 
 
     KService::List plugins;
+    QStringList clients;
+    GrammarLoader *q;
 };
 
 GrammarLoader::GrammarLoader()
-    : d(new GrammarLoaderPrivate)
+    : d(new GrammarLoaderPrivate(this))
 {
 }
 

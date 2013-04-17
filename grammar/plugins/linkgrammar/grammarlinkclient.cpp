@@ -42,6 +42,11 @@ Grammar::GrammarPlugin *GrammarLinkClient::createGrammarChecker(const QString &l
     return plugin;
 }
 
+void GrammarLinkClient::searchLanguages()
+{
+    //TODO
+}
+
 QStringList GrammarLinkClient::languages() const
 {
     //TODO
