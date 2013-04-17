@@ -1203,7 +1203,7 @@ void ViewerPrivate::writeConfig( bool sync )
   GlobalSettings::self()->setUseFixedFont( mUseFixedFont );
   if ( headerStyle() ) {
     GlobalSettings::self()->setHeaderStyle( headerStyle()->name() );
-    GlobalSettings::self()->setGrantleeThemeName( headerStyle()->themeName() );
+    GlobalSettings::self()->setGrantleeThemeName( headerStyle()->theme().dirName() );
   }
   if ( headerStrategy() )
     GlobalSettings::self()->setHeaderSetDisplayed( headerStrategy()->name() );
@@ -2347,8 +2347,7 @@ void ViewerPrivate::slotGrantleeHeaders()
 void ViewerPrivate::initGrantleeThemeName()
 {
     const QString themeName = GlobalSettings::self()->grantleeThemeName();
-    headerStyle()->setThemeName(themeName);
-    headerStyle()->setDisplayExtraHeaders(mThemeManager->displayExtraHeader(themeName));
+    headerStyle()->setTheme(mThemeManager->theme(themeName));
 }
 
 void ViewerPrivate::slotIconicAttachments()

@@ -26,13 +26,14 @@ class Message;
 
 namespace MessageViewer {
 class GrantleeHeaderStyle;
+class GrantleeTheme;
 class GrantleeHeaderFormatter
 {
 public:
     explicit GrantleeHeaderFormatter();
     ~GrantleeHeaderFormatter();
 
-    QString toHtml(const QString &theme, const QStringList &extraHeader, bool isPrinting, const MessageViewer::GrantleeHeaderStyle *style, KMime::Message *message) const;
+    QString toHtml(const MessageViewer::GrantleeTheme &theme, bool isPrinting, const MessageViewer::GrantleeHeaderStyle *style, KMime::Message *message) const;
 
 private:
     class Private;
