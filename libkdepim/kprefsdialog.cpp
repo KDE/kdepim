@@ -305,6 +305,7 @@ KPrefsWidTime::KPrefsWidTime( KConfigSkeleton::ItemDateTime *item, QWidget *pare
   mTimeEdit = new KTimeComboBox( parent );
   mLabel->setBuddy( mTimeEdit );
   connect( mTimeEdit, SIGNAL(timeEdited(QTime)), SIGNAL(changed()) );
+  connect( mTimeEdit, SIGNAL(timeEntered(QTime)), SIGNAL(changed()) );
   QString toolTip = mItem->toolTip();
   if ( !toolTip.isEmpty() ) {
     mTimeEdit->setToolTip( toolTip );
