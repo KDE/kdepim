@@ -1834,9 +1834,14 @@ void Agenda::insertMultiItem( const Akonadi::Item &event, const KDateTime &occur
 
 QList<AgendaItem::QPtr> Agenda::agendaItems( const KCalCore::Incidence::Ptr &incidence ) const
 {
+  Q_ASSERT(incidence);
   QList<AgendaItem::QPtr> agendaItems;
   foreach ( const AgendaItem::QPtr &agendaItem, d->mItems ) {
-    if ( agendaItem && ( CalendarSupport::incidence( agendaItem->incidence() )->instanceIdentifier() == incidence->instanceIdentifier() ) ) {
+    if ( !agendaItem ) {
+      continue;
+    }
+    const KCalCore::Incidence::Ptr i = CalendarSupport::incidence( agendaItem->incidence() );
+    if ( i && ( i->instanceIdentifier() == incidence->instanceIdentifier() ) ) {
       agendaItems.push_back( agendaItem );
     }
   }
