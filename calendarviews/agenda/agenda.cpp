@@ -345,7 +345,7 @@ Akonadi::Item Agenda::selectedIncidence() const
 
 QDate Agenda::selectedIncidenceDate() const
 {
-  return ( d->mSelectedItem ? d->mSelectedItem->itemDate() : QDate() );
+  return ( d->mSelectedItem ? d->mSelectedItem->occurrenceDate() : QDate() );
 }
 
 Akonadi::Item::Id Agenda::lastSelectedItemId() const
@@ -650,7 +650,7 @@ bool Agenda::eventFilter_mouse( QObject *object, QMouseEvent *me )
         if ( d->mClickedItem ) {
           selectItem( d->mClickedItem );
           emit showIncidencePopupSignal( d->mClickedItem->incidence(),
-                                         d->mClickedItem->itemDate() );
+                                         d->mClickedItem->occurrenceDate() );
         }
       } else {
         AgendaItem::QPtr item = dynamic_cast<AgendaItem *>(object);
@@ -1034,7 +1034,7 @@ void Agenda::performItemAction( const QPoint &pos )
               newFirst->setParent( this );
               newFirst->move( cpos.x(), cpos.y() );
             } else {
-              newFirst = insertItem( moveItem->incidence(), moveItem->itemDate(),
+              newFirst = insertItem( moveItem->incidence(), moveItem->occurrenceDateTime(),
                                      moveItem->cellXLeft() - 1, rows() + newY, rows() - 1,
                                      moveItem->itemPos(), moveItem->itemCount(), false ) ;
             }
@@ -1085,7 +1085,7 @@ void Agenda::performItemAction( const QPoint &pos )
               newLast->setParent( this );
               newLast->move( cpos.x(), cpos.y() );
             } else {
-              newLast = insertItem( moveItem->incidence(), moveItem->itemDate(),
+              newLast = insertItem( moveItem->incidence(), moveItem->occurrenceDateTime(),
                                     moveItem->cellXLeft() + 1, 0, newY - rows() - 1,
                                     moveItem->itemPos(), moveItem->itemCount(), false ) ;
             }
@@ -1156,7 +1156,7 @@ void Agenda::endItemAction()
     bool modify = false;
     if ( incidence->recurs() ) {
       const int res = d->mAgendaView->showMoveRecurDialog(
-        CalendarSupport::incidence( d->mActionItem->incidence() ), d->mActionItem->itemDate() );
+        CalendarSupport::incidence( d->mActionItem->incidence() ), d->mActionItem->occurrenceDate() );
       switch ( res ) {
       case KCalUtils::RecurrenceActions::AllOccurrences: // All occurrences
         // Moving the whole sequene of events is handled by the itemModified below.
@@ -1170,7 +1170,7 @@ void Agenda::endItemAction()
         multiModify = true;
         d->mChanger->startAtomicOperation( i18n( "Dissociate event from recurrence" ) );
         KCalCore::Incidence::Ptr newInc( KCalCore::Calendar::createException(
-          incidence, KDateTime( d->mActionItem->itemDate(), incidence->dtStart().time(), incidence->dtStart().timeSpec() ), thisAndFuture ) );
+          incidence, d->mActionItem->occurrenceDateTime(), thisAndFuture ) );
         if ( newInc ) {
           // don't recreate items, they already have the correct position
           d->mAgendaView->enableAgendaUpdate( false );
@@ -1678,7 +1678,7 @@ void Agenda::setStartTime( const QTime &startHour )
 /*
   Insert AgendaItem into agenda.
 */
-AgendaItem::QPtr Agenda::insertItem( const Akonadi::Item &incidence, const QDate &qd,
+AgendaItem::QPtr Agenda::insertItem( const Akonadi::Item &incidence, const KDateTime &qd,
                                      int X, int YTop, int YBottom, int itemPos, int itemCount,
                                      bool isSelected )
 {
@@ -1728,7 +1728,7 @@ AgendaItem::QPtr Agenda::insertItem( const Akonadi::Item &incidence, const QDate
 /*
   Insert all-day AgendaItem into agenda.
 */
-AgendaItem::QPtr Agenda::insertAllDayItem( const Akonadi::Item &incidence, const QDate &qd,
+AgendaItem::QPtr Agenda::insertAllDayItem( const Akonadi::Item &incidence, const KDateTime &occurrenceDateTime,
                                            int XBegin, int XEnd, bool isSelected )
 {
   if ( !d->mAllDayMode ) {
@@ -1739,7 +1739,7 @@ AgendaItem::QPtr Agenda::insertAllDayItem( const Akonadi::Item &incidence, const
   d->mActionType = NOP;
 
   AgendaItem::QPtr agendaItem =
-    new AgendaItem( d->mAgendaView, d->mCalendar, incidence, 1, 1, qd, isSelected, this );
+    new AgendaItem( d->mAgendaView, d->mCalendar, incidence, 1, 1, occurrenceDateTime, isSelected, this );
   connect( agendaItem, SIGNAL(removeAgendaItem(AgendaItem::QPtr)),
            SLOT(removeAgendaItem(AgendaItem::QPtr)) );
   connect( agendaItem, SIGNAL(showAgendaItem(AgendaItem::QPtr)),
@@ -1767,7 +1767,7 @@ AgendaItem::QPtr Agenda::insertAllDayItem( const Akonadi::Item &incidence, const
   return agendaItem;
 }
 
-void Agenda::insertMultiItem( const Akonadi::Item &event, const QDate &qd, int XBegin,
+void Agenda::insertMultiItem( const Akonadi::Item &event, const KDateTime &occurrenceDateTime, int XBegin,
                               int XEnd, int YTop, int YBottom, bool isSelected )
 {
   KCalCore::Event::Ptr ev = CalendarSupport::event( event );
@@ -1802,7 +1802,7 @@ void Agenda::insertMultiItem( const Akonadi::Item &event, const QDate &qd, int X
       newtext = QString( "(%1/%2): " ).arg( count ).arg( width );
       newtext.append( ev->summary() );
 
-      current = insertItem( event, qd, cellX, cellYTop, cellYBottom, count, width, isSelected );
+      current = insertItem( event, occurrenceDateTime, cellX, cellYTop, cellYBottom, count, width, isSelected );
       current->setText( newtext );
       multiItems.append( current );
     }
@@ -2112,7 +2112,7 @@ void Agenda::selectItem( AgendaItem::QPtr item )
       item->select();
     }
   }
-  emit incidenceSelected( d->mSelectedItem->incidence(), d->mSelectedItem->itemDate() );
+  emit incidenceSelected( d->mSelectedItem->incidence(), d->mSelectedItem->occurrenceDate() );
 }
 
 void Agenda::selectItemByItemId( const Akonadi::Item::Id &id )

@@ -266,7 +266,7 @@ class AgendaView::Private : public Akonadi::ETMCalendar::CalendarObserver
 
     // insertAtDateTime is in the view's timezone
     void insertIncidence( const Akonadi::Item &,
-                          const QDateTime &insertAtDateTime, bool createSelected );
+                          const KDateTime &insertAtDateTime, bool createSelected );
     void reevaluateIncidence( const KCalCore::Incidence::Ptr &incidence );
 
   protected:
@@ -421,7 +421,7 @@ void AgendaView::Private::clearView()
 }
 
 void AgendaView::Private::insertIncidence( const Akonadi::Item &aitem,
-                                           const QDateTime &insertAtDateTime,
+                                           const KDateTime &insertAtDateTime,
                                            bool createSelected )
 {
   if ( !q->filterByCollectionSelection( aitem ) ) {
@@ -456,24 +456,20 @@ void AgendaView::Private::insertIncidence( const Akonadi::Item &aitem,
 
   int beginX;
   int endX;
-  QDate columnDate;
   if ( event ) {
     const QDate firstVisibleDate = mSelectedDates.first();
     // its crossing bounderies, lets calculate beginX and endX
     if ( insertAtDate < firstVisibleDate ) {
       beginX = curCol + firstVisibleDate.daysTo( insertAtDate );
       endX   = beginX + event->dtStart().daysTo( event->dtEnd() );
-      columnDate = firstVisibleDate;
     } else {
       beginX = curCol;
       endX   = beginX + event->dtStart().daysTo( event->dtEnd() );
-      columnDate = insertAtDate;
     }
   } else if ( todo ) {
     if ( !todo->hasDueDate() ) {
       return;  // todo shall not be displayed if it has no date
     }
-    columnDate = insertAtDate;
     beginX = endX = curCol;
   } else {
     return;
@@ -482,10 +478,10 @@ void AgendaView::Private::insertIncidence( const Akonadi::Item &aitem,
   const KDateTime::Spec timeSpec = q->preferences()->timeSpec();
   const QDate today = KDateTime::currentDateTime( timeSpec ).date();
   if ( todo && todo->isOverdue() && today >= insertAtDate ) {
-    mAllDayAgenda->insertAllDayItem( aitem, columnDate, curCol, curCol,
+    mAllDayAgenda->insertAllDayItem( aitem, insertAtDateTime, curCol, curCol,
                                      createSelected );
   } else if ( incidence->allDay() ) {
-    mAllDayAgenda->insertAllDayItem( aitem, columnDate, beginX, endX,
+    mAllDayAgenda->insertAllDayItem( aitem, insertAtDateTime, beginX, endX,
                                      createSelected );
   } else if ( event && event->isMultiDay( timeSpec ) ) {
     // TODO: We need a better isMultiDay(), one that receives the occurrence.
@@ -506,7 +502,7 @@ void AgendaView::Private::insertIncidence( const Akonadi::Item &aitem,
     }
     const int endY = mAgenda->timeToY( endTime ) - 1;
     if ( ( beginX <= 0 && curCol == 0 ) || beginX == curCol ) {
-      mAgenda->insertMultiItem( aitem, columnDate, beginX, endX, startY, endY,
+      mAgenda->insertMultiItem( aitem, insertAtDateTime, beginX, endX, startY, endY,
                                 createSelected );
     }
     if ( beginX == curCol ) {
@@ -577,7 +573,7 @@ void AgendaView::Private::insertIncidence( const Akonadi::Item &aitem,
     if ( endY < startY ) {
       endY = startY;
     }
-    mAgenda->insertItem( aitem, columnDate, curCol, startY, endY, 1, 1,
+    mAgenda->insertItem( aitem, insertAtDateTime, curCol, startY, endY, 1, 1,
                          createSelected );
     if ( startY < mMinY[curCol] ) {
       mMinY[curCol] = startY;
@@ -1299,13 +1295,12 @@ void AgendaView::updateEventDates( AgendaItem *item, bool addIncidence,
   } else {
     thisDate = d->mSelectedDates[ item->cellXLeft() ];
   }
-  QDate oldThisDate( item->itemDate() );
   int daysOffset = 0;
 
   // daysOffset should only be calculated if item->cellXLeft() is positive which doesn't happen
   // if the event's start isn't visible.
   if ( item->cellXLeft() >= 0 ) {
-    daysOffset = oldThisDate.daysTo( thisDate );
+    daysOffset = item->occurrenceDate().daysTo( thisDate );
   }
 
   int daysLength = 0;
@@ -1413,7 +1408,7 @@ void AgendaView::updateEventDates( AgendaItem *item, bool addIncidence,
     }
     td->setDtDue( endDt.toTimeSpec( td->dtDue().timeSpec() ) );
   }
-  item->setItemDate( startDt.toTimeSpec( preferences()->timeSpec() ).date() );
+  item->setOccurrenceDateTime( startDt );
 
   bool result;
   if ( addIncidence ) {
@@ -1666,7 +1661,7 @@ void AgendaView::displayIncidence( const Akonadi::Item &aitem, bool createSelect
       if ( rIt.occurrenceStartDate().toTimeSpec( timeSpec ).date() == today ) {
          alreadyAddedToday = true;
       }
-      d->insertIncidence( item, rIt.occurrenceStartDate().toTimeSpec( timeSpec ).dateTime(), createSelected );
+      d->insertIncidence( item, rIt.occurrenceStartDate().toTimeSpec( timeSpec ), createSelected );
     }
 
   } else {
@@ -1721,7 +1716,7 @@ void AgendaView::displayIncidence( const Akonadi::Item &aitem, bool createSelect
       busyEvents.append( event );
     }
 
-    d->insertIncidence( aitem, t->toTimeSpec( timeSpec ).dateTime(), createSelected );
+    d->insertIncidence( aitem, t->toTimeSpec( timeSpec ), createSelected );
   }
 
   // Can be multiday
