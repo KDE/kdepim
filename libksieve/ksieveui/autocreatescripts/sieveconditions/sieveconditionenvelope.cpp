@@ -90,4 +90,9 @@ QString SieveConditionEnvelope::code(QWidget *w) const
     return (isNegative ? QLatin1String("not ") : QString()) + QString::fromLatin1("envelope %1 %2 %3 %4").arg(selectAddressPartStr).arg(matchTypeStr).arg(selectHeaderTypeStr).arg(addressStr);
 }
 
+QStringList SieveConditionEnvelope::needRequires() const
+{
+    return QStringList() << QLatin1String("envelope");
+}
+
 #include "sieveconditionenvelope.moc"

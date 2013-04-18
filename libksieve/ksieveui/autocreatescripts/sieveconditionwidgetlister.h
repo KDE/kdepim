@@ -37,7 +37,7 @@ public:
     explicit SieveConditionWidget(QWidget *);
     ~SieveConditionWidget();
     void updateAddRemoveButton( bool addButtonEnabled, bool removeButtonEnabled );
-    void generatedScript(QString &script);
+    void generatedScript(QString &script, QStringList &requires);
 private Q_SLOTS:
     void slotAddWidget();
     void slotRemoveWidget();
@@ -53,7 +53,7 @@ private:
     KPushButton *mRemove;
     PimCommon::MinimumComboBox *mComboBox;
     QGridLayout *mLayout;
-    QList<KSieveUi::SieveCondition*> mActionList;
+    QList<KSieveUi::SieveCondition*> mConditionList;
 };
 
 class SieveConditionWidgetLister : public KPIM::KWidgetLister
@@ -63,7 +63,7 @@ public:
     explicit SieveConditionWidgetLister(QWidget *parent = 0);
     ~SieveConditionWidgetLister();
 
-    void generatedScript(QString &script, int &numberOfCondition);
+    void generatedScript(QString &script, int &numberOfCondition, QStringList &requires);
     int conditionNumber() const;
 
 

@@ -55,4 +55,9 @@ QString SieveCondition::code(QWidget *parent) const
     return QString();
 }
 
+QStringList SieveCondition::needRequires() const
+{
+    return QStringList();
+}
+
 #include "sievecondition.moc"

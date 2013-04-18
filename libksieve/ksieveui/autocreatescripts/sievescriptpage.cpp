@@ -98,7 +98,7 @@ void SieveScriptPage::generatedScript(QString &script, QStringList &requires)
     } else {
         QString conditionStr;
         int numberOfCondition = 0;
-        mScriptConditionLister->generatedScript(conditionStr, numberOfCondition);
+        mScriptConditionLister->generatedScript(conditionStr, numberOfCondition, requires);
         const bool hasUniqCondition = (numberOfCondition == 1);
         QString filterStr;
         if (hasUniqCondition == 1) {
