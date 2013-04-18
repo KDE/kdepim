@@ -16,6 +16,7 @@
 */
 
 #include "sieveactionredirect.h"
+#include "widgets/addresslineedit.h"
 
 #include <KLocale>
 #include <KLineEdit>
@@ -39,7 +40,7 @@ QWidget *SieveActionRedirect::createParamWidget( QWidget *parent ) const
     QWidget *w = new QWidget(parent);
     QHBoxLayout *lay = new QHBoxLayout;
     w->setLayout(lay);
-    KLineEdit *edit = new KLineEdit;
+    AddressLineEdit *edit = new AddressLineEdit;
     edit->setObjectName(QLatin1String("RedirectEdit"));
     lay->addWidget(edit);
     return w;
@@ -47,7 +48,7 @@ QWidget *SieveActionRedirect::createParamWidget( QWidget *parent ) const
 
 QString SieveActionRedirect::code(QWidget *w) const
 {
-    const KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("RedirectEdit") );
+    const KLineEdit *edit = w->findChild<AddressLineEdit*>( QLatin1String("RedirectEdit") );
     const QString text = edit->text();
     return QString::fromLatin1("redirect \"%1\";").arg(text);
 }

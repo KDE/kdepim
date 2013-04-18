@@ -44,6 +44,7 @@ set(ksieveui_LIB_SRCS
   autocreatescripts/sieveactions/sieveactionremoveflags.cpp
   autocreatescripts/sieveactions/widgets/selectflagswidget.cpp
   autocreatescripts/sieveactions/widgets/selectfileintowidget.cpp
+  autocreatescripts/sieveactions/widgets/addresslineedit.cpp
   autocreatescripts/sieveconditions/sievecondition.cpp
   autocreatescripts/sieveconditions/sieveconditionheader.cpp
   autocreatescripts/sieveconditions/sieveconditionlist.cpp
