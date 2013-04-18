@@ -38,6 +38,7 @@ ThemeEditorMainWindow::ThemeEditorMainWindow()
     setupActions();
     setupGUI();
     updateActions();
+    updateActions();
 }
 
 ThemeEditorMainWindow::~ThemeEditorMainWindow()
@@ -47,9 +48,9 @@ ThemeEditorMainWindow::~ThemeEditorMainWindow()
 void ThemeEditorMainWindow::updateActions()
 {
     const bool projectDirectoryIsEmpty = (mThemeEditor!=0);
-    mAddExtraPage->setEnabled(!projectDirectoryIsEmpty);
-    mCloseAction->setEnabled(!projectDirectoryIsEmpty);
-    mUploadTheme->setEnabled(!projectDirectoryIsEmpty);
+    mAddExtraPage->setEnabled(projectDirectoryIsEmpty);
+    mCloseAction->setEnabled(projectDirectoryIsEmpty);
+    mUploadTheme->setEnabled(projectDirectoryIsEmpty);
 }
 
 void ThemeEditorMainWindow::setupActions()
