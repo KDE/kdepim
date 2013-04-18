@@ -49,8 +49,8 @@ void GrammarLinkClient::searchLanguages()
 
 QStringList GrammarLinkClient::languages() const
 {
-    //TODO
-    return QStringList();
+    //TODO improve search
+    return QStringList() <<QLatin1String("de")<<QLatin1String("en")<<QLatin1String("lt");
 }
 
 QString GrammarLinkClient::name() const
