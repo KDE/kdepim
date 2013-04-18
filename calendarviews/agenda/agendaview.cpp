@@ -1646,9 +1646,10 @@ void AgendaView::displayIncidence( const Akonadi::Item &aitem, bool createSelect
     KCalCore::OccurrenceIterator rIt( *calendar(), incidence, startDateTimeWithOffset, lastVisibleDateTime );
     while ( rIt.hasNext() ) {
       rIt.next();
+      const KDateTime occurrenceDate( rIt.occurrenceStartDate().toTimeSpec( timeSpec ) );
       const bool makesDayBusy = preferences()->colorAgendaBusyDays() && makesWholeDayBusy( rIt.incidence() );
       if ( makesDayBusy ) {
-        KCalCore::Event::List &busyEvents = d->mBusyDays[rIt.occurrenceStartDate().date()];
+        KCalCore::Event::List &busyEvents = d->mBusyDays[occurrenceDate.date()];
         busyEvents.append( event );
       }
 
@@ -1658,10 +1659,10 @@ void AgendaView::displayIncidence( const Akonadi::Item &aitem, bool createSelect
         continue;
       }
       Q_ASSERT(item.hasPayload());
-      if ( rIt.occurrenceStartDate().toTimeSpec( timeSpec ).date() == today ) {
-         alreadyAddedToday = true;
+      if ( occurrenceDate.date() == today ) {
+        alreadyAddedToday = true;
       }
-      d->insertIncidence( item, rIt.occurrenceStartDate().toTimeSpec( timeSpec ), createSelected );
+      d->insertIncidence( item, occurrenceDate, createSelected );
     }
 
   } else {
