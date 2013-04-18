@@ -54,9 +54,9 @@ void ThemeSession::loadSession(const QString &session)
 void ThemeSession::writeSession()
 {
     //TODO customize
-    KConfig config(mProjectDirectory + QDir::separator() + QLatin1String("theme.session"));
+    KConfig config(mProjectDirectory + QDir::separator() + QLatin1String("theme.themerc"));
     KConfigGroup global = config.group(QLatin1String("Global"));
+    global.writeEntry(QLatin1String("path"), mProjectDirectory);
     //TODO
     config.sync();
-    //TODO
 }

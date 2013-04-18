@@ -55,6 +55,7 @@ NewThemeDialog::NewThemeDialog(QWidget *parent)
     setMainWidget(w);
     enableButtonOk(false);
     resize(400,200);
+    mThemeName->setFocus();
 }
 
 NewThemeDialog::~NewThemeDialog()
