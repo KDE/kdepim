@@ -118,13 +118,13 @@ class EVENTVIEWS_EXPORT Agenda : public QWidget
 
     void setStartTime( const QTime &startHour );
 
-    AgendaItem::QPtr insertItem ( const Akonadi::Item &incidence, const QDate &qd, int X, int YTop,
+    AgendaItem::QPtr insertItem ( const Akonadi::Item &incidence, const KDateTime &occurrenceDateTime, int X, int YTop,
                                   int YBottom, int itemPos, int itemCount, bool isSelected );
 
-    AgendaItem::QPtr insertAllDayItem ( const Akonadi::Item &event, const QDate &qd, int XBegin,
+    AgendaItem::QPtr insertAllDayItem ( const Akonadi::Item &event, const KDateTime &occurrenceDateTime, int XBegin,
                                         int XEnd, bool isSelected );
 
-    void insertMultiItem ( const Akonadi::Item &event, const QDate &qd, int XBegin, int XEnd,
+    void insertMultiItem ( const Akonadi::Item &event, const KDateTime &occurrenceDateTime, int XBegin, int XEnd,
                            int YTop, int YBottom, bool isSelected );
 
     /**
