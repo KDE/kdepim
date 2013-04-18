@@ -54,4 +54,11 @@ QStringList DefaultCompletion::defaultCompetion()
     return lst;
 }
 
-
+QStringList DefaultCompletion::defaultOptions()
+{
+    QStringList lst;
+    lst <<QLatin1String("showlink")
+        <<QLatin1String("nameonly")
+        <<QLatin1String("Safe");
+    return lst;
+}

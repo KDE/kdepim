@@ -23,6 +23,7 @@
 namespace DefaultCompletion
 {
 QStringList defaultCompetion();
+QStringList defaultOptions();
 }
 
 #endif // DEFAULTCOMPLETION_H

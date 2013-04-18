@@ -42,6 +42,7 @@ void Editor::initCompleter()
     QStringList listWord;
 
     listWord << DefaultCompletion::defaultCompetion();
+    listWord << DefaultCompletion::defaultOptions();
 
     m_completer = new QCompleter( this );
     m_completer->setModel( new QStringListModel( listWord, m_completer ) );
