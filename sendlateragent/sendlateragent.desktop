@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Send Later Agent
+Comment=Send Later Agent
+Type=AkonadiAgent
+Exec=akonadi_sendlater_agent
+Icon=kmail
+
+X-Akonadi-MimeTypes=message/rfc822
+X-Akonadi-Capabilities=Unique,Autostart
+X-Akonadi-Identifier=akonadi_sendlater_agent
