@@ -30,6 +30,7 @@ public:
     GrammarLinkClient(QObject *parent, const QVariantList &);
     ~GrammarLinkClient();
 
+    int reliability() const;
     Grammar::GrammarPlugin *createGrammarChecker(const QString &language);
 
     QStringList languages() const;

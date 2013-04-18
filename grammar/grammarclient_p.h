@@ -33,6 +33,8 @@ class GRAMMAR_EXPORT GrammarClient : public QObject
 public:
     explicit GrammarClient(QObject *parent = 0);
 
+    virtual int reliability() const = 0;
+
     virtual QStringList languages() const = 0;
 
     virtual QString name() const = 0;

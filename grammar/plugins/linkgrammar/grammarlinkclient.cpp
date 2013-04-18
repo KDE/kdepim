@@ -36,6 +36,11 @@ GrammarLinkClient::~GrammarLinkClient()
 
 }
 
+int GrammarLinkClient::reliability() const
+{
+    return 20;
+}
+
 Grammar::GrammarPlugin *GrammarLinkClient::createGrammarChecker(const QString &language)
 {
     GrammarLinkPlugin *plugin = new GrammarLinkPlugin(language);
