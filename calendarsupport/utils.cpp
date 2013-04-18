@@ -73,22 +73,16 @@ using namespace KCalCore;
 
 KCalCore::Incidence::Ptr CalendarSupport::incidence( const Akonadi::Item &item )
 {
-  try {
+  if (item.hasPayload<KCalCore::Incidence::Ptr>()) {
     return item.payload<KCalCore::Incidence::Ptr>();
-  } catch( Akonadi::PayloadException ) {
-    return KCalCore::Incidence::Ptr();
   }
+  return KCalCore::Incidence::Ptr();
 }
 
 KCalCore::Event::Ptr CalendarSupport::event( const Akonadi::Item &item )
 {
-  try {
-    KCalCore::Incidence::Ptr incidence = item.payload<KCalCore::Incidence::Ptr>();
-    if ( incidence && incidence->type() == KCalCore::Incidence::TypeEvent ) {
-      return item.payload<KCalCore::Event::Ptr>();
-    }
-  } catch( Akonadi::PayloadException ) {
-    return KCalCore::Event::Ptr();
+  if (item.hasPayload<KCalCore::Event::Ptr>()) {
+    return item.payload<KCalCore::Event::Ptr>();
   }
   return KCalCore::Event::Ptr();
 }
