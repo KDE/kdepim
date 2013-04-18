@@ -443,8 +443,10 @@ void IncidenceMonthItem::updateDates( int startOffset, int endOffset )
       case KCalUtils::RecurrenceActions::FutureOccurrences: // All future occurrences
       {
         const bool thisAndFuture = (res == KCalUtils::RecurrenceActions::FutureOccurrences);
+        KDateTime occurrenceDate( mIncidence->dtStart() );
+        occurrenceDate.setDate( startDate() );
         KCalCore::Incidence::Ptr newIncidence( KCalCore::Calendar::createException(
-          mIncidence, KDateTime( startDate(), mIncidence->dtStart().time(), mIncidence->dtStart().timeSpec() ), thisAndFuture ) );
+          mIncidence, occurrenceDate, thisAndFuture ) );
         if ( newIncidence ) {
           changer->startAtomicOperation( i18n( "Move occurrence(s)" ) );
           setNewDates( newIncidence, startOffset, endOffset );
