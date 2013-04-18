@@ -30,10 +30,14 @@ public:
     ~AddressLineEdit();
 protected:
     void focusOutEvent(QFocusEvent *ev);
+
+private Q_SLOTS:
+    void slotTextChanged();
+
 private:
     void verifyAddress();
-    QString mPositiveBackground;
     QString mNegativeBackground;
+    bool mIncorrectEmail;
 };
 }
 

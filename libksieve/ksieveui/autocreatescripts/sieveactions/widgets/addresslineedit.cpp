@@ -22,8 +22,10 @@
 using namespace KSieveUi;
 
 AddressLineEdit::AddressLineEdit(QWidget *parent)
-    : KLineEdit(parent)
+    : KLineEdit(parent),
+      mIncorrectEmail(false)
 {
+    connect(this, SIGNAL(textChanged(QString)),SLOT(slotTextChanged()));
 }
 
 AddressLineEdit::~AddressLineEdit()
@@ -31,22 +33,25 @@ AddressLineEdit::~AddressLineEdit()
 
 }
 
+void AddressLineEdit::slotTextChanged()
+{
+    if (mIncorrectEmail) {
+        verifyAddress();
+    }
+}
+
 void AddressLineEdit::verifyAddress()
 {
 #ifndef QT_NO_STYLE_STYLESHEET
     QString styleSheet;
     if (!text().isEmpty()) {
-        const bool isAnEmailAddress = text().contains(QLatin1Char('@'));
+        mIncorrectEmail = !text().contains(QLatin1Char('@'));
         //TODO improve check
         if (mNegativeBackground.isEmpty()) {
-            KStatefulBrush bgBrush(KColorScheme::View, KColorScheme::PositiveBackground);
-            mPositiveBackground = QString::fromLatin1("QLineEdit{ background-color:%1 }").arg(bgBrush.brush(this).color().name());
-            bgBrush = KStatefulBrush(KColorScheme::View, KColorScheme::NegativeBackground);
-            mNegativeBackground = QString::fromLatin1("QLineEdit{ background-color:%1 }").arg(bgBrush.brush(this).color().name());
+            KStatefulBrush bgBrush = KStatefulBrush(KColorScheme::View, KColorScheme::NegativeText);
+            mNegativeBackground = QString::fromLatin1("QLineEdit{ color:%1 }").arg(bgBrush.brush(this).color().name());
         }
-        if (isAnEmailAddress)
-            styleSheet = mPositiveBackground;
-        else
+        if (mIncorrectEmail)
             styleSheet = mNegativeBackground;
     }
     setStyleSheet(styleSheet);
