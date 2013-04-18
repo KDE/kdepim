@@ -40,4 +40,5 @@ target_link_libraries(pimactivity
 install(TARGETS pimactivity ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 add_subdirectory(kcm)
+add_subdirectory(tests)
 
