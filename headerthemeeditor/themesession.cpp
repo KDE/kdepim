@@ -41,6 +41,16 @@ QString ThemeSession::projectDirectory() const
     return mProjectDirectory;
 }
 
+void ThemeSession::addExtraPage(const QString &filename)
+{
+    mExtraPage.append(filename);
+}
+
+QStringList ThemeSession::extraPages() const
+{
+    return mExtraPage;
+}
+
 void ThemeSession::loadSession(const QString &session)
 {
     KConfig config(session);
@@ -53,7 +63,6 @@ void ThemeSession::loadSession(const QString &session)
 
 void ThemeSession::writeSession()
 {
-    //TODO customize
     KConfig config(mProjectDirectory + QDir::separator() + QLatin1String("theme.themerc"));
     KConfigGroup global = config.group(QLatin1String("Global"));
     global.writeEntry(QLatin1String("path"), mProjectDirectory);

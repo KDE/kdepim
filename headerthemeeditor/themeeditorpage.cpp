@@ -61,6 +61,7 @@ void ThemeEditorPage::addExtraPage()
     if (!filename.isEmpty()) {
         EditorPage *extraPage = new EditorPage;
         mTabWidget->addTab(extraPage, filename);
+        mThemeSession->addExtraPage(filename);
         mExtraPage.append(extraPage);
     }
 }

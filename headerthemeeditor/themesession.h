@@ -31,6 +31,10 @@ public:
 
     void setProjectDirectory(const QString &path);
     QString projectDirectory() const;
+
+    void addExtraPage(const QString &filename);
+    QStringList extraPages() const;
+
 private:
     QString mProjectDirectory;
     QString mMainPath;
