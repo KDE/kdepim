@@ -27,4 +27,11 @@
         {% endwith %}
         {% endwith %}
      {% endif %}
+     {% if header.datei18n %}
+        {% with header.datei18n as title %}
+        {% with header.dateshort|safe as value %}
+        {% include "header_row.html" %}
+        {% endwith %}
+        {% endwith %}
+     {% endif %}
 </div>

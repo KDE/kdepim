@@ -39,6 +39,7 @@ public:
         q->connect(consumer,SIGNAL(serviceStatusChanged(KActivities::Consumer::ServiceStatus)),q,SIGNAL(serviceStatusChanged(KActivities::Consumer::ServiceStatus)));
         q->connect(consumer,SIGNAL(activityAdded(QString)),q,SLOT(slotActivityAdded(QString)));
         q->connect(consumer,SIGNAL(activityRemoved(QString)),q,SLOT(slotActivityRemoved(QString)));
+        q->connect(consumer,SIGNAL(currentActivityChanged(QString)),q,SIGNAL(currentActivityChanged(QString)));
     }
     ~ActivityManagerPrivate()
     {
@@ -112,6 +113,14 @@ QStringList ActivityManager::listActivities() const
         return d->consumer->listActivities();
     }
     return QStringList();
+}
+
+QString ActivityManager::currentActivity() const
+{
+    if (isActive()) {
+        return d->consumer->currentActivity();
+    }
+    return QString();
 }
 
 }

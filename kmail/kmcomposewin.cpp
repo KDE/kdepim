@@ -52,6 +52,7 @@
 #include "pimcommon/translator/translatorwidget.h"
 #include "attachmentmissingwarning.h"
 #include "createnewcontactjob.h"
+#include "externaleditorwarning.h"
 
 // KDEPIM includes
 #include <libkpgp/kpgpblock.h>
@@ -433,6 +434,9 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, bool lastSignState,
   connect( m_verifyMissingAttachment, SIGNAL(timeout()), this, SLOT(slotVerifyMissingAttachmentTimeout()) );
   connect( attachmentController, SIGNAL(fileAttached()), mAttachmentMissing, SLOT(slotFileAttached()) );
 
+  mExternalEditorWarning = new ExternalEditorWarning(this);
+  v->addWidget(mExternalEditorWarning);
+
   readConfig();
   setupStatusBar(attachmentView->widget());
   setupActions();
@@ -463,8 +467,6 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, bool lastSignState,
     enableHtml();
   else
     disableHtml( Message::ComposerViewBase::LetUserConfirm );
-
-
 
   if ( GlobalSettings::self()->useExternalEditor() ) {
     editor->setUseExternalEditor( true );
@@ -1296,7 +1298,8 @@ void KMComposeWin::setupActions( void )
 
   connect( mComposerBase->editor(), SIGNAL(textModeChanged(KRichTextEdit::Mode)),
            this, SLOT(slotTextModeChanged(KRichTextEdit::Mode)) );
-
+  connect( mComposerBase->editor(), SIGNAL(externalEditorClosed()), mExternalEditorWarning, SLOT(hide()));
+  connect( mComposerBase->editor(), SIGNAL(externalEditorStarted()), mExternalEditorWarning, SLOT(show()));
   //these are checkable!!!
   markupAction = new KToggleAction( i18n("Formatting (HTML)"), this );
   markupAction->setIconText( i18n("HTML") );
@@ -1344,6 +1347,14 @@ void KMComposeWin::setupActions( void )
   action = new KAction( i18n("Insert Special Character..."), this );
   actionCollection()->addAction( "insert_special_character", action );
   connect( action, SIGNAL(triggered(bool)), this, SLOT(insertSpecialCharacter()) );
+
+  action = new KAction( i18n("Uppercase"), this );
+  actionCollection()->addAction( "change_to_uppercase", action );
+  connect( action, SIGNAL(triggered(bool)), this, SLOT(slotUpperCase()) );
+
+  action = new KAction( i18n("Lowercase"), this );
+  actionCollection()->addAction( "change_to_lowercase", action );
+  connect( action, SIGNAL(triggered(bool)), this, SLOT(slotLowerCase()) );
 
 
   mComposerBase->attachmentController()->createActions();
@@ -1751,6 +1762,7 @@ void KMComposeWin::setMessage( const KMime::Message::Ptr &newMsg, bool lastSignS
   mPreventFccOverwrite = ( !kmailFcc.isEmpty() && ident.fcc() != kmailFcc );
   QTimer::singleShot( 0, this, SLOT(forceAutoSaveMessage()) ); //Force autosaving to make sure this composer reappears if a crash happens before the autosave timer kicks in.
 
+  mComposerBase->editor()->startExternalEditor();
 }
 
 void KMComposeWin::setAutoSaveFileName(const QString& fileName)
@@ -3459,4 +3471,22 @@ void KMComposeWin::slotVerifyMissingAttachmentTimeout()
 void KMComposeWin::addExtraCustomHeaders( const QMap<QByteArray, QString> &headers)
 {
     mExtraHeaders = headers;
+}
+
+void KMComposeWin::slotUpperCase()
+{
+    QTextCursor textCursor = mComposerBase->editor()->textCursor();
+    if (textCursor.hasSelection()) {
+        const QString newText = textCursor.selectedText().toUpper();
+        textCursor.insertText(newText);
+    }
+}
+
+void KMComposeWin::slotLowerCase()
+{
+    QTextCursor textCursor = mComposerBase->editor()->textCursor();
+    if (textCursor.hasSelection()) {
+        const QString newText = textCursor.selectedText().toLower();
+        textCursor.insertText(newText);
+    }
 }

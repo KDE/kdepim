@@ -66,6 +66,7 @@ class KRecentFilesAction;
 class SnippetWidget;
 class SelectSpecialChar;
 class AttachmentMissingWarning;
+class ExternalEditorWarning;
 
 namespace boost {
   template <typename T> class shared_ptr;
@@ -441,6 +442,11 @@ class KMComposeWin : public KMail::Composer
     void slotCloseAttachMissingFile();
     void slotVerifyMissingAttachmentTimeout();
     void slotCheckSendNow();
+
+    void slotUpperCase();
+    void slotLowerCase();
+
+
   public: // kmcommand
     // FIXME we need to remove these, but they're pure virtual in Composer.
     void addAttach( KMime::Content *msgPart );
@@ -659,6 +665,7 @@ class KMComposeWin : public KMail::Composer
     PimCommon::TranslatorWidget *mTranslatorWidget;
     QPointer<KPIMTextEdit::SelectSpecialChar> mSelectSpecialChar;
     AttachmentMissingWarning *mAttachmentMissing;
+    ExternalEditorWarning *mExternalEditorWarning;
     QTimer *m_verifyMissingAttachment;
     QLabel *mSignatureStateIndicator;
     QLabel *mEncryptionStateIndicator;

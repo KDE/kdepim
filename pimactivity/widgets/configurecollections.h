@@ -45,9 +45,10 @@ public:
     explicit ConfigureCollections(QWidget *parent = 0);
     ~ConfigureCollections();
 
+    void writeConfig(const QString &id);
 private:
     void readConfig(const QString &id);
-    void writeConfig(const QString &id);
+
 
 Q_SIGNALS:
     void changed(bool b = true);

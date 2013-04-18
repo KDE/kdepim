@@ -15,6 +15,7 @@ set(libpimactivity_SRCS
   	widgets/configureidentity.cpp
   	activitymanager.cpp
   	configureactivitywidget.cpp
+        transportcomboboxactivity.cpp
   	widgets/configurecollections.cpp
   	widgets/configuremailtransport.cpp
   	widgets/activitywarning.cpp
@@ -39,4 +40,5 @@ target_link_libraries(pimactivity
 install(TARGETS pimactivity ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 add_subdirectory(kcm)
+add_subdirectory(tests)
 

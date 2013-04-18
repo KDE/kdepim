@@ -16,7 +16,6 @@
 */
 
 #include "grantleetheme.h"
-
 using namespace MessageViewer;
 
 GrantleeTheme::GrantleeTheme()

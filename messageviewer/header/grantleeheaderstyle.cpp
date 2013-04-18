@@ -44,7 +44,7 @@ QString GrantleeHeaderStyle::format( KMime::Message *message ) const {
     if ( !strategy )
         strategy = HeaderStrategy::grantlee();
 
-    return mGrantleeFormatter->toHtml(themeName(), displayExtraHeaders(), isPrinting(), this, message);
+    return mGrantleeFormatter->toHtml(theme(), isPrinting(), this, message);
 }
 
 }

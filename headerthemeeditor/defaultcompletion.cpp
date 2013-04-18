@@ -39,7 +39,6 @@ QStringList DefaultCompletion::defaultCompetion()
         <<QLatin1String( "spamHTML" )
         <<QLatin1String("datei18n")
         <<QLatin1String( "dateshort" )
-        <<QLatin1String( "dateshort" )
         <<QLatin1String( "date" )
         <<QLatin1String( "useragent" )
         <<QLatin1String( "x-mailer" )
@@ -55,4 +54,11 @@ QStringList DefaultCompletion::defaultCompetion()
     return lst;
 }
 
-
+QStringList DefaultCompletion::defaultOptions()
+{
+    QStringList lst;
+    lst <<QLatin1String("showlink")
+        <<QLatin1String("nameonly")
+        <<QLatin1String("Safe");
+    return lst;
+}

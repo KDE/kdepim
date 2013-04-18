@@ -69,12 +69,16 @@ GrantleeHeaderFormatter::~GrantleeHeaderFormatter()
     delete d;
 }
 
-QString GrantleeHeaderFormatter::toHtml(const QString &themeName, const QStringList &extraHeader, bool isPrinting, const MessageViewer::GrantleeHeaderStyle *style, KMime::Message *message) const
+QString GrantleeHeaderFormatter::toHtml(const GrantleeTheme &theme, bool isPrinting, const MessageViewer::GrantleeHeaderStyle *style, KMime::Message *message) const
 {
-    //TODO improve it.
-    d->templateLoader->setTemplateDirs( QStringList() << d->templatePath << d->templatePath + '/' + themeName );
-    Grantlee::Template headerTemplate = d->engine->loadByName( QString::fromLatin1("%1/header.html").arg(themeName) );
     QString errorMessage;
+    if (!theme.isValid()) {
+        errorMessage = i18n("Grantlee theme is not valid");
+        return errorMessage;
+    }
+    //TODO improve it.
+    d->templateLoader->setTemplateDirs( QStringList() << d->templatePath << d->templatePath + '/' + theme.dirName() );
+    Grantlee::Template headerTemplate = d->engine->loadByName( QString::fromLatin1("%1/%2").arg(theme.dirName()).arg(theme.filename()) );
     if ( headerTemplate->error() ) {
         errorMessage = headerTemplate->errorString();
         return errorMessage;
@@ -163,7 +167,7 @@ QString GrantleeHeaderFormatter::toHtml(const QString &themeName, const QStringL
         headerObject.insert( QLatin1String( "photourl" ) , xface.photoURL );
     }
 
-    Q_FOREACH (const QString &header, extraHeader) {
+    Q_FOREACH (const QString &header, theme.displayExtraHeaders()) {
         if (message->headerByType(header.toLocal8Bit()) ) {
             headerObject.insert( header , message->headerByType(header.toLocal8Bit())->asUnicodeString() );
         }

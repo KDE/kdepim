@@ -32,6 +32,8 @@ public:
 
     QStringList clients() const;
 
+    QStringList languages() const;
+
 private:
     friend class GrammarLoaderPrivate;
     GrammarLoaderPrivate * const d;

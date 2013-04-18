@@ -37,7 +37,7 @@ TemplateEditDialog::TemplateEditDialog(QWidget *parent, bool defaultTemplate)
     } else {
         setButtons( Ok |Cancel );
     }
-
+    setButtonFocus(Ok);
     QWidget *w = new QWidget;
     QVBoxLayout *vbox = new QVBoxLayout;
 

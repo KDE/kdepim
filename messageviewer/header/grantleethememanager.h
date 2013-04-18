@@ -45,6 +45,8 @@ public:
 
     QStringList displayExtraHeader(const QString &themename) const;
 
+    GrantleeTheme theme(const QString &themeName);
+
 Q_SIGNALS:
     void themesChanged();
     void grantleeThemeSelected();

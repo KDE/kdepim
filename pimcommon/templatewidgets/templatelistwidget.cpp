@@ -48,6 +48,7 @@ public:
         QListWidgetItem *item = new QListWidgetItem(name, q);
         item->setData(TemplateListWidget::Text, text);
         item->setData(TemplateListWidget::DefaultTemplate, isDefaultTemplate);
+        q->setCurrentItem(item);
     }
 
     void slotAdd()

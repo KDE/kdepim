@@ -32,6 +32,8 @@ public:
     explicit GrammarComboBoxLanguage(QWidget *parent = 0);
     ~GrammarComboBoxLanguage();
 
+    void setCurrentLanguage(const QString &lang);
+
 Q_SIGNALS:
     void languageChanged(const QString &language);
 

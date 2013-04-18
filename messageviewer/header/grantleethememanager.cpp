@@ -105,7 +105,8 @@ public:
             dirIt.next();
             const QString dirName = dirIt.fileName();
             const GrantleeTheme theme = loadTheme( dirIt.filePath(), dirName );
-            themes.insert( theme.name(), theme );
+            themes.insert( dirName, theme );
+            qDebug()<<" theme.name()"<<theme.name();
         }
 
         Q_EMIT q->themesChanged();
@@ -123,7 +124,7 @@ public:
         theme.setDirName(dirName);
         theme.setName( group.readEntry( "Name", QString() ) );
         theme.setDescription( group.readEntry( "Description", QString() ) );
-        theme.setFilename( themePath );
+        theme.setFilename( group.readEntry( "FileName" , QString() ) );
         theme.setDisplayExtraHeaders( group.readEntry( "DisplayExtraHeaders", QStringList() ) );
         return theme;
     }
@@ -150,9 +151,11 @@ public:
         QMapIterator<QString, GrantleeTheme> i(themes);
         while (i.hasNext()) {
             i.next();
-            KToggleAction *act = new KToggleAction(i.value().name(),q);
-            act->setData(i.value().dirName());
-            if (i.value().dirName() == themeActivated)
+            GrantleeTheme theme = i.value();
+            KToggleAction *act = new KToggleAction(theme.name(),q);
+            act->setToolTip(theme.description());
+            act->setData(theme.dirName());
+            if (theme.dirName() == themeActivated)
                 act->setChecked(true);
             themesActionList.append(act);
             actionGroup->addAction(act);
@@ -242,12 +245,21 @@ QStringList GrantleeThemeManager::displayExtraHeader(const QString &themename) c
 {
     QMapIterator<QString, GrantleeTheme> i(d->themes);
     while (i.hasNext()) {
-       i.next();
-       if (i.value().dirName() == themename) {
-           return i.value().displayExtraHeaders();
-       }
+        i.next();
+        if (i.value().dirName() == themename) {
+            return i.value().displayExtraHeaders();
+        }
     }
     return QStringList();
 }
+
+GrantleeTheme GrantleeThemeManager::theme(const QString &themeName)
+{
+    if (d->themes.contains(themeName)) {
+        return d->themes.value(themeName);
+    }
+    return GrantleeTheme();
+}
+
 
 #include "grantleethememanager.moc"

@@ -36,16 +36,26 @@ GrammarLinkClient::~GrammarLinkClient()
 
 }
 
+int GrammarLinkClient::reliability() const
+{
+    return 20;
+}
+
 Grammar::GrammarPlugin *GrammarLinkClient::createGrammarChecker(const QString &language)
 {
     GrammarLinkPlugin *plugin = new GrammarLinkPlugin(language);
     return plugin;
 }
 
-QStringList GrammarLinkClient::languages() const
+void GrammarLinkClient::searchLanguages()
 {
     //TODO
-    return QStringList();
+}
+
+QStringList GrammarLinkClient::languages() const
+{
+    //TODO improve search
+    return QStringList() <<QLatin1String("de")<<QLatin1String("en")<<QLatin1String("lt");
 }
 
 QString GrammarLinkClient::name() const

@@ -39,11 +39,12 @@ public:
 
     QStringList listActivities() const;
     QHash<QString, QString> listActivitiesWithRealName() const;
-
+    QString currentActivity() const;
 Q_SIGNALS:
     void serviceStatusChanged(KActivities::Consumer::ServiceStatus);
     void activityAdded(const QString&);
     void activityRemoved(const QString&);
+    void currentActivityChanged(const QString&);
 
 private:
     friend class ActivityManagerPrivate;

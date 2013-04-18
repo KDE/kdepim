@@ -32,9 +32,12 @@ class ConfigureMailtransport : public QWidget, public AbstractConfigureWidget
 public:
     explicit ConfigureMailtransport(QWidget *parent = 0);
     ~ConfigureMailtransport();
+
+    void writeConfig(const QString &id);
+
 private:
     void readConfig(const QString &id);
-    void writeConfig(const QString &id);
+
 
 Q_SIGNALS:
     void changed(bool b = true);

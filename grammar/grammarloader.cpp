@@ -19,14 +19,21 @@
 #include "grammarclient_p.h"
 
 #include <kservicetypetrader.h>
+#include <KDebug>
 
 namespace Grammar {
 class GrammarLoaderPrivate
 {
 public:
-    GrammarLoaderPrivate()
+    GrammarLoaderPrivate(GrammarLoader *qq)
+        : q(qq)
     {
         loadPlugins();
+    }
+
+    ~GrammarLoaderPrivate()
+    {
+        plugins.clear();
     }
 
     void loadPlugins()
@@ -43,21 +50,17 @@ public:
     {
         QString error;
 
-        Grammar::GrammarClient *client = service->createInstance<Grammar::GrammarClient>(this, QVariantList(), &error);
+        Grammar::GrammarClient *client = service->createInstance<Grammar::GrammarClient>(q, QVariantList(), &error);
         if (client) {
             const QStringList languages = client->languages();
             clients.append(client->name());
-#if 0
-            for (QStringList::const_iterator itr = languages.begin();
-                 itr != languages.end(); ++itr) {
-                if (!d->languageClients[*itr].isEmpty() &&
-                        client->reliability() <
-                        d->languageClients[*itr].first()->reliability())
-                    d->languageClients[*itr].append(client);
+            QStringList::const_iterator itrEnd(languages.end());
+            for (QStringList::const_iterator itr = languages.begin(); itr != itrEnd; ++itr) {
+                if (!languageClients[*itr].isEmpty() && (client->reliability() < languageClients[*itr].first()->reliability()))
+                    languageClients[*itr].append(client);
                 else
-                    d->languageClients[*itr].prepend(client);
+                    languageClients[*itr].prepend(client);
             }
-#endif
             //kDebug() << "Successfully loaded plugin:" << service->entryPath();
         } else {
             kDebug() << error;
@@ -66,10 +69,14 @@ public:
 
 
     KService::List plugins;
+    QStringList clients;
+    // <language, Clients with that language >
+    QMap<QString, QList<Grammar::GrammarClient*> > languageClients;
+    GrammarLoader *q;
 };
 
 GrammarLoader::GrammarLoader()
-    : d(new GrammarLoaderPrivate)
+    : d(new GrammarLoaderPrivate(this))
 {
 }
 
@@ -81,6 +88,11 @@ GrammarLoader::~GrammarLoader()
 QStringList GrammarLoader::clients() const
 {
     return d->clients;
+}
+
+QStringList GrammarLoader::languages() const
+{
+    return d->languageClients.keys();
 }
 
 

@@ -69,6 +69,7 @@ QString AutoCreateScriptDialog::script(QString &requires) const
 void AutoCreateScriptDialog::slotAddScriptPage(QWidget *page)
 {
     mStackWidget->addWidget(page);
+    mStackWidget->setCurrentWidget(page);
 }
 
 void AutoCreateScriptDialog::slotRemoveScriptPage(QWidget *page)

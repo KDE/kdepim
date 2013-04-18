@@ -17,6 +17,12 @@
 
 #include "themesession.h"
 
+#include <KConfig>
+#include <KConfigGroup>
+
+#include <QDebug>
+#include <QDir>
+
 ThemeSession::ThemeSession()
 {
 }
@@ -25,13 +31,41 @@ ThemeSession::~ThemeSession()
 {
 }
 
+void ThemeSession::setProjectDirectory(const QString &path)
+{
+    mProjectDirectory = path;
+}
+
+QString ThemeSession::projectDirectory() const
+{
+    return mProjectDirectory;
+}
+
+void ThemeSession::addExtraPage(const QString &filename)
+{
+    mExtraPage.append(filename);
+}
+
+QStringList ThemeSession::extraPages() const
+{
+    return mExtraPage;
+}
 
 void ThemeSession::loadSession(const QString &session)
 {
-    //TODO
+    KConfig config(session);
+    if (config.hasGroup(QLatin1String("Global"))) {
+        //TODO
+    } else {
+        qDebug()<<QString::fromLatin1("\"%1\" is not a session file").arg(session);
+    }
 }
 
-void ThemeSession::writeSession(const QString &session)
+void ThemeSession::writeSession()
 {
+    KConfig config(mProjectDirectory + QDir::separator() + QLatin1String("theme.themerc"));
+    KConfigGroup global = config.group(QLatin1String("Global"));
+    global.writeEntry(QLatin1String("path"), mProjectDirectory);
     //TODO
+    config.sync();
 }

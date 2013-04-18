@@ -72,7 +72,6 @@ public:
 
         addPages();
         q->connect(activities, SIGNAL(activityChanged(QString)), q, SLOT(slotActivityChanged(QString)));
-        //TODO initialize activity
     }
     ~ConfigureActivityWidgetPrivate()
     {
@@ -92,12 +91,22 @@ public:
 
     void readConfig()
     {
-        //TODO
+        const QString currentActivity = manager->currentActivity();
+        if (!currentActivity.isEmpty()) {
+            identity->setCurrentActivity(currentActivity);
+            mailTransport->setCurrentActivity(currentActivity);
+            collections->setCurrentActivity(currentActivity);
+        }
     }
 
     void writeConfig()
     {
-        //TODO
+        const QString currentActivity = manager->currentActivity();
+        if (!currentActivity.isEmpty()) {
+            identity->writeConfig(currentActivity);
+            mailTransport->writeConfig(currentActivity);
+            collections->writeConfig(currentActivity);
+        }
     }
 
     void setDefault()

@@ -24,6 +24,7 @@ class KTabWidget;
 class EditorPage;
 class DesktopFilePage;
 class PreviewPage;
+class ThemeSession;
 
 class ThemeEditorPage : public QWidget
 {
@@ -32,14 +33,19 @@ public:
     explicit ThemeEditorPage(const QString &themeName, QWidget *parent = 0);
     ~ThemeEditorPage();
 
-    void saveTheme(const QString &path);
+    void saveTheme();
     void addExtraPage();
+
+    QString projectDirectory() const;
+    void setProjectDirectory(const QString &dir);
+
 private:
     QList<EditorPage*> mExtraPage;
     KTabWidget *mTabWidget;
     EditorPage *mEditorPage;
     DesktopFilePage *mDesktopPage;
     PreviewPage *mPreviewPage;
+    ThemeSession *mThemeSession;
 };
 
 #endif // THEMEEDITORPAGE_H

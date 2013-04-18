@@ -19,6 +19,7 @@
 #include "desktopfilepage.h"
 #include "editorpage.h"
 #include "previewpage.h"
+#include "themesession.h"
 
 #include <KTabWidget>
 #include <KLocale>
@@ -27,8 +28,10 @@
 #include <QHBoxLayout>
 
 ThemeEditorPage::ThemeEditorPage(const QString &themeName, QWidget *parent)
-    : QWidget(parent)
+    : QWidget(parent),
+      mThemeSession(0)
 {
+    mThemeSession = new ThemeSession;
     QHBoxLayout *lay = new QHBoxLayout;
     mTabWidget = new KTabWidget;
     lay->addWidget(mTabWidget);
@@ -49,6 +52,7 @@ ThemeEditorPage::~ThemeEditorPage()
 {
     qDeleteAll(mExtraPage);
     mExtraPage.clear();
+    delete mThemeSession;
 }
 
 void ThemeEditorPage::addExtraPage()
@@ -57,18 +61,30 @@ void ThemeEditorPage::addExtraPage()
     if (!filename.isEmpty()) {
         EditorPage *extraPage = new EditorPage;
         mTabWidget->addTab(extraPage, filename);
+        mThemeSession->addExtraPage(filename);
         mExtraPage.append(extraPage);
     }
 }
 
-void ThemeEditorPage::saveTheme(const QString &path)
+void ThemeEditorPage::saveTheme()
 {
-    mEditorPage->saveTheme(path);
+    mEditorPage->saveTheme(projectDirectory());
     Q_FOREACH (EditorPage *page, mExtraPage) {
-        page->saveTheme(path);
+        page->saveTheme(projectDirectory());
     }
-    mDesktopPage->saveTheme(path);
-
+    mDesktopPage->saveTheme(projectDirectory());
+    mThemeSession->writeSession();
 }
+
+QString ThemeEditorPage::projectDirectory() const
+{
+    return mThemeSession->projectDirectory();
+}
+
+void ThemeEditorPage::setProjectDirectory(const QString &dir)
+{
+    mThemeSession->setProjectDirectory(dir);
+}
+
 
 #include "themeeditorpage.moc"
