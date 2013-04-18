@@ -39,6 +39,7 @@ public:
         q->connect(consumer,SIGNAL(serviceStatusChanged(KActivities::Consumer::ServiceStatus)),q,SIGNAL(serviceStatusChanged(KActivities::Consumer::ServiceStatus)));
         q->connect(consumer,SIGNAL(activityAdded(QString)),q,SLOT(slotActivityAdded(QString)));
         q->connect(consumer,SIGNAL(activityRemoved(QString)),q,SLOT(slotActivityRemoved(QString)));
+        q->connect(consumer,SIGNAL(currentActivityChanged(QString)),q,SIGNAL(currentActivityChanged(QString)));
     }
     ~ActivityManagerPrivate()
     {

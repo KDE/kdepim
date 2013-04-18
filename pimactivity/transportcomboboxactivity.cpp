@@ -19,6 +19,7 @@
 */
 
 #include "transportcomboboxactivity.h"
+#include "activitymanager.h"
 
 namespace PimActivity {
 
@@ -30,6 +31,19 @@ public:
           activityManager(manager)
     {
     }
+
+    void connectSignals()
+    {
+        if (activityManager) {
+            q->connect(activityManager, SIGNAL(currentActivityChanged(QString)), q, SLOT(slotCurrentActivityChanged(QString)));
+        }
+    }
+
+    void slotCurrentActivityChanged(const QString &id)
+    {
+        q->updateComboboxList();
+    }
+
     TransportComboboxActivity *q;
     ActivityManager *activityManager;
 };
@@ -42,6 +56,7 @@ TransportComboboxActivity::TransportComboboxActivity(QWidget *parent)
 TransportComboboxActivity::TransportComboboxActivity(ActivityManager *manager, QWidget *parent)
     : MailTransport::TransportComboBox(parent), d(new TransportComboboxActivityPrivate(manager, this))
 {
+    d->connectSignals();
 }
 
 TransportComboboxActivity::~TransportComboboxActivity()
@@ -52,6 +67,12 @@ TransportComboboxActivity::~TransportComboboxActivity()
 void TransportComboboxActivity::setActivityManager(ActivityManager *manager)
 {
     d->activityManager = manager;
+    d->connectSignals();
+}
+
+void TransportComboboxActivity::updateComboboxList()
+{
+    //TODO
 }
 
 }

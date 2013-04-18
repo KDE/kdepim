@@ -17,13 +17,13 @@
 
 #include "mainwindow.h"
 
-#include <QTextEdit>
+
 
 MainWindow::MainWindow()
     : QMainWindow()
 {
-    mEdit = new QTextEdit;
-    setCentralWidget(mEdit);
+    QWidget *w = new QWidget;
+    setCentralWidget(w);
 }
 
 #include "mainwindow.moc"

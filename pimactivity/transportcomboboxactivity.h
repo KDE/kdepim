@@ -38,9 +38,13 @@ public:
 
     void setActivityManager(ActivityManager *manager);
 
+protected Q_SLOTS:
+    void updateComboboxList();
+
 private:
     friend class TransportComboboxActivityPrivate;
     TransportComboboxActivityPrivate * const d;
+    Q_PRIVATE_SLOT( d, void slotCurrentActivityChanged(const QString&))
 };
 }
 
