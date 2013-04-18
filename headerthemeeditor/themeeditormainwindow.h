@@ -42,7 +42,7 @@ private Q_SLOTS:
 
 private:
     void updateActions();
-    void saveCurrentProject(bool close=false);
+    void saveCurrentProject(bool createNewTheme);
     void setupActions();
     ThemeEditorPage *mThemeEditor;
     KAction *mNewThemeAction;

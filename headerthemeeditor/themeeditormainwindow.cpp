@@ -81,12 +81,12 @@ void ThemeEditorMainWindow::slotUploadTheme()
 
 void ThemeEditorMainWindow::slotCloseTheme()
 {
-    saveCurrentProject();
+    saveCurrentProject(false);
 }
 
 void ThemeEditorMainWindow::slotOpenTheme()
 {
-    saveCurrentProject(true);
+    saveCurrentProject(false);
     const QString fileName = KFileDialog::getOpenFileName(KUrl(), QString::fromLatin1("*.themerc"), this, i18n("Select theme"));
     if (!fileName.isEmpty()) {
         //TODO load it.
@@ -99,14 +99,14 @@ void ThemeEditorMainWindow::slotAddExtraPage()
         mThemeEditor->addExtraPage();
 }
 
-void ThemeEditorMainWindow::saveCurrentProject(bool close)
+void ThemeEditorMainWindow::saveCurrentProject(bool createNewTheme)
 {
     if (mThemeEditor) {
         if (KMessageBox::questionYesNo(this, i18n("Do you want to save current project?"), i18n("Save current project")) == KMessageBox::Yes) {
             mThemeEditor->saveTheme();
         }
     }
-    if (!close) {
+    if (createNewTheme) {
         delete mThemeEditor;
         QPointer<NewThemeDialog> dialog = new NewThemeDialog(this);
         QString newTheme;
@@ -129,12 +129,12 @@ void ThemeEditorMainWindow::saveCurrentProject(bool close)
 
 void ThemeEditorMainWindow::slotNewTheme()
 {
-    saveCurrentProject();
+    saveCurrentProject(true);
 }
 
 void ThemeEditorMainWindow::closeEvent(QCloseEvent *e)
 {
-    saveCurrentProject(true);
+    saveCurrentProject(false);
     KXmlGuiWindow::closeEvent(e);
 }
 
