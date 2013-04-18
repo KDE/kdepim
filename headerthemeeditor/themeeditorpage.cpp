@@ -65,18 +65,25 @@ void ThemeEditorPage::addExtraPage()
     }
 }
 
-void ThemeEditorPage::saveTheme(const QString &path)
+void ThemeEditorPage::saveTheme()
 {
-    if (mThemeSession) {
-        mThemeSession->setProjectPath(path);
-    }
-    mEditorPage->saveTheme(path);
+    mEditorPage->saveTheme(projectDirectory());
     Q_FOREACH (EditorPage *page, mExtraPage) {
-        page->saveTheme(path);
+        page->saveTheme(projectDirectory());
     }
-    mDesktopPage->saveTheme(path);
+    mDesktopPage->saveTheme(projectDirectory());
     mThemeSession->writeSession();
-
 }
+
+QString ThemeEditorPage::projectDirectory() const
+{
+    return mThemeSession->projectDirectory();
+}
+
+void ThemeEditorPage::setProjectDirectory(const QString &dir)
+{
+    mThemeSession->setProjectDirectory(dir);
+}
+
 
 #include "themeeditorpage.moc"

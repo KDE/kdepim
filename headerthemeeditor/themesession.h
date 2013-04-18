@@ -29,10 +29,10 @@ public:
     void loadSession(const QString &session);
     void writeSession();
 
-    void setProjectPath(const QString &path);
-    QString projectPath() const;
+    void setProjectDirectory(const QString &path);
+    QString projectDirectory() const;
 private:
-    QString mProjectPath;
+    QString mProjectDirectory;
     QString mMainPath;
     QStringList mExtraPage;
 };

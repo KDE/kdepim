@@ -46,7 +46,7 @@ ThemeEditorMainWindow::~ThemeEditorMainWindow()
 
 void ThemeEditorMainWindow::updateActions()
 {
-    const bool projectDirectoryIsEmpty = mProjectDirectory.isEmpty();
+    const bool projectDirectoryIsEmpty = (mThemeEditor!=0);
     mAddExtraPage->setEnabled(!projectDirectoryIsEmpty);
     mCloseAction->setEnabled(!projectDirectoryIsEmpty);
     mUploadTheme->setEnabled(!projectDirectoryIsEmpty);
@@ -86,7 +86,7 @@ void ThemeEditorMainWindow::slotCloseTheme()
 
 void ThemeEditorMainWindow::slotOpenTheme()
 {
-    saveCurrentProject();
+    saveCurrentProject(true);
     const QString fileName = KFileDialog::getOpenFileName(KUrl(), QString::fromLatin1("*.themerc"), this, i18n("Select theme"));
     if (!fileName.isEmpty()) {
         //TODO load it.
@@ -101,21 +101,23 @@ void ThemeEditorMainWindow::slotAddExtraPage()
 
 void ThemeEditorMainWindow::saveCurrentProject(bool close)
 {
-    if (!mProjectDirectory.isEmpty()) {
+    if (mThemeEditor) {
         if (KMessageBox::questionYesNo(this, i18n("Do you want to save current project?"), i18n("Save current project")) == KMessageBox::Yes) {
-            mThemeEditor->saveTheme(mProjectDirectory);
+            mThemeEditor->saveTheme();
         }
     }
     if (!close) {
         delete mThemeEditor;
         QPointer<NewThemeDialog> dialog = new NewThemeDialog(this);
         QString newTheme;
+        QString projectDirectory;
         if (dialog->exec()) {
             newTheme = dialog->themeName();
-            mProjectDirectory = dialog->directory();
+            projectDirectory = dialog->directory();
         }
-        if (!mProjectDirectory.isEmpty()) {
+        if (!projectDirectory.isEmpty()) {
             mThemeEditor = new ThemeEditorPage(newTheme);
+            mThemeEditor->setProjectDirectory(projectDirectory);
             setCentralWidget(mThemeEditor);
         } else {
             setCentralWidget(0);

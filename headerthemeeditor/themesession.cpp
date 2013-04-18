@@ -31,14 +31,14 @@ ThemeSession::~ThemeSession()
 {
 }
 
-void ThemeSession::setProjectPath(const QString &path)
+void ThemeSession::setProjectDirectory(const QString &path)
 {
-    mProjectPath = path;
+    mProjectDirectory = path;
 }
 
-QString ThemeSession::projectPath() const
+QString ThemeSession::projectDirectory() const
 {
-    return mProjectPath;
+    return mProjectDirectory;
 }
 
 void ThemeSession::loadSession(const QString &session)
@@ -54,7 +54,7 @@ void ThemeSession::loadSession(const QString &session)
 void ThemeSession::writeSession()
 {
     //TODO customize
-    KConfig config(mProjectPath + QDir::separator() + QLatin1String("theme.session"));
+    KConfig config(mProjectDirectory + QDir::separator() + QLatin1String("theme.session"));
     KConfigGroup global = config.group(QLatin1String("Global"));
     //TODO
     config.sync();

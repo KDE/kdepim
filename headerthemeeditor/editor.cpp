@@ -63,7 +63,6 @@ void Editor::slotInsertCompletion( const QString &completion )
     tc.movePosition(QTextCursor::EndOfWord);
     tc.insertText(completion.right(extra));
     setTextCursor(tc);
-
 }
 
 void Editor::keyPressEvent(QKeyEvent* e)

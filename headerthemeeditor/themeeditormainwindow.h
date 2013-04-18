@@ -44,7 +44,6 @@ private:
     void updateActions();
     void saveCurrentProject(bool close=false);
     void setupActions();
-    QString mProjectDirectory;
     ThemeEditorPage *mThemeEditor;
     KAction *mNewThemeAction;
     KAction *mCloseThemeAction;

@@ -33,8 +33,12 @@ public:
     explicit ThemeEditorPage(const QString &themeName, QWidget *parent = 0);
     ~ThemeEditorPage();
 
-    void saveTheme(const QString &path);
+    void saveTheme();
     void addExtraPage();
+
+    QString projectDirectory() const;
+    void setProjectDirectory(const QString &dir);
+
 private:
     QList<EditorPage*> mExtraPage;
     KTabWidget *mTabWidget;
