@@ -73,7 +73,7 @@ QString GrantleeHeaderFormatter::toHtml(const GrantleeTheme &theme, bool isPrint
 {
     QString errorMessage;
     if (!theme.isValid()) {
-        errorMessage = i18n("Grantlee theme is not valide");
+        errorMessage = i18n("Grantlee theme is not valid");
         return errorMessage;
     }
     //TODO improve it.
