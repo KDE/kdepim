@@ -37,6 +37,10 @@ ScamDetectionWarningWidget::ScamDetectionWarningWidget(QWidget *parent)
     connect( action, SIGNAL(triggered(bool)), SIGNAL(showDetails()) );
     addAction( action );
 
+    action = new KAction( i18n( "Move to Trash" ), this );
+    connect( action, SIGNAL(triggered(bool)), SIGNAL(moveMessageToTrash()) );
+    addAction( action );
+
     action = new KAction( i18n( "Disable scam detection for all messages" ), this );
     connect( action, SIGNAL(triggered(bool)), SLOT(slotDisableScamDetection()) );
     addAction( action );

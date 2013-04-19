@@ -335,6 +335,7 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
   void setExternalWindow( bool b );
 
 signals:
+  void moveMessageToTrash();
   void changeDisplayMail(Viewer::ForceDisplayTo,bool);
 
   /**

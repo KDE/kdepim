@@ -33,6 +33,7 @@ public Q_SLOTS:
 
 Q_SIGNALS:
     void showDetails();
+    void moveMessageToTrash();
 
 private Q_SLOTS:
     void slotDisableScamDetection();
