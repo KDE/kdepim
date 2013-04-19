@@ -78,5 +78,9 @@ QStringList SieveConditionBody::needRequires() const
     return QStringList() << QLatin1String("body");
 }
 
+bool SieveConditionBody::needCheckIfServerHasCapability() const
+{
+    return true;
+}
 
 #include "sieveconditionbody.moc"

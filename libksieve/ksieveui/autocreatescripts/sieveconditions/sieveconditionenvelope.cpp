@@ -95,4 +95,9 @@ QStringList SieveConditionEnvelope::needRequires() const
     return QStringList() << QLatin1String("envelope");
 }
 
+bool SieveConditionEnvelope::needCheckIfServerHasCapability() const
+{
+    return true;
+}
+
 #include "sieveconditionenvelope.moc"

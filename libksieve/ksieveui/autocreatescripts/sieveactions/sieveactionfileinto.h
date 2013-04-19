@@ -30,6 +30,7 @@ public:
     QString code(QWidget *) const;
     QWidget *createParamWidget( QWidget *parent ) const;
     QStringList needRequires() const;
+    bool needCheckIfServerHasCapability() const;
 };
 }
 

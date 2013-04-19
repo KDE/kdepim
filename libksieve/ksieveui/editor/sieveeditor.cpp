@@ -142,6 +142,7 @@ SieveEditor::~SieveEditor()
 void SieveEditor::slotAutoGenerateScripts()
 {
     QPointer<AutoCreateScriptDialog> dlg = new AutoCreateScriptDialog(this);
+    dlg->setSieveCapabilities(mSieveCapabilities);
     if ( dlg->exec()) {
         QString requires;
         const QString script = dlg->script(requires);
@@ -286,6 +287,11 @@ void SieveEditor::slotCheckSyntax()
 {
     mCheckSyntax->setEnabled(false);
     Q_EMIT checkSyntax();
+}
+
+void SieveEditor::setSieveCapabilities( const QStringList &capabilities )
+{
+    mSieveCapabilities = capabilities;
 }
 
 #include "sieveeditor.moc"

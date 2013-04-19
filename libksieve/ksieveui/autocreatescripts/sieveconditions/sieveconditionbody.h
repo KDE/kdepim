@@ -38,6 +38,9 @@ public:
     QString code(QWidget *parent) const;
 
     QStringList needRequires() const;
+
+    bool needCheckIfServerHasCapability() const;
+
 };
 }
 

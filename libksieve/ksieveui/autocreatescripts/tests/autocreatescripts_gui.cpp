@@ -28,6 +28,10 @@ int main (int argc, char **argv)
                        "1.0", ki18n("Test for autocreate script dialog"));
     KApplication app;
     KSieveUi::AutoCreateScriptDialog *dialog = new KSieveUi::AutoCreateScriptDialog;
+    QStringList capabilities;
+    //Add all capabilities for testing
+    capabilities <<QLatin1String("body")<<QLatin1String("envelope")<<QLatin1String("redirect")<<QLatin1String("fileinto");
+    dialog->setSieveCapabilities(capabilities);
     if (dialog->exec() ) {
         QString requires;
         const QString script = dialog->script(requires);

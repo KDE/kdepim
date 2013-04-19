@@ -80,7 +80,8 @@ private:
 private:
     enum sieveServerStatus
     {
-        SIEVE_SERVER_ERROR = Qt::UserRole +1
+        SIEVE_SERVER_ERROR = Qt::UserRole +1,
+        SIEVE_SERVER_CAPABILITIES = Qt::UserRole +2
     };
 
     QTreeWidget* mListView;
@@ -92,6 +93,7 @@ private:
     QMap<QTreeWidgetItem*,QTreeWidgetItem*> mSelectedItems;
 
     KUrl mCurrentURL;
+    QStringList mCurrentCapabilities;
 
     KPushButton *mNewScript;
     KPushButton *mEditScript;

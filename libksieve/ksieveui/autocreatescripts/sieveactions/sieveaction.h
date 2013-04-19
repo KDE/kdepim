@@ -39,6 +39,9 @@ public:
 
     virtual QString code( QWidget *) const;
     virtual QStringList needRequires() const;
+
+    virtual bool needCheckIfServerHasCapability() const;
+
 private:
     QString mName;
     QString mLabel;

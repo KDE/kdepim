@@ -60,4 +60,9 @@ QStringList SieveAction::needRequires() const
     return QStringList();
 }
 
+bool SieveAction::needCheckIfServerHasCapability() const
+{
+    return false;
+}
+
 #include "sieveaction.moc"

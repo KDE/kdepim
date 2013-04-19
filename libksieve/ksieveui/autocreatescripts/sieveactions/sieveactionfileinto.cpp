@@ -57,5 +57,9 @@ QStringList SieveActionFileInto::needRequires() const
     return QStringList()<<QLatin1String("fileinto");
 }
 
+bool SieveActionFileInto::needCheckIfServerHasCapability() const
+{
+    return true;
+}
 
 #include "sieveactionfileinto.moc"

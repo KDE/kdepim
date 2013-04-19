@@ -41,12 +41,15 @@ public:
     ~SieveEditor();
 
     QString script() const;
-    void setScript( const QString & script );
-    void setDebugColor( const QColor& col );
-    void setDebugScript( const QString& debug );
-    void setScriptName( const QString&name );
+    void setScript( const QString &script );
+    void setDebugColor( const QColor&col );
+    void setDebugScript( const QString &debug );
+    void setScriptName( const QString &name );
 
     void resultDone();
+
+    void setSieveCapabilities( const QStringList &capabilities );
+
 Q_SIGNALS:
     void checkSyntax();
 
@@ -61,6 +64,7 @@ private slots:
 private:
     bool saveToFile( const QString&filename );
     bool loadFromFile( const QString& filename );
+    QStringList mSieveCapabilities;
     SieveTextEdit * mTextEdit;
     KTextEdit *mDebugTextEdit;
     QLineEdit *mScriptName;
