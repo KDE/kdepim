@@ -57,6 +57,7 @@ set(ksieveui_LIB_SRCS
   autocreatescripts/sieveconditions/widgets/selectmatchtypecombobox.cpp
   autocreatescripts/sieveconditions/widgets/selectaddresspartcombobox.cpp
   autocreatescripts/sieveconditions/widgets/selectheadertypecombobox.cpp
+  autocreatescripts/sieveconditions/widgets/selectbodytypecombobox.cpp
 )
 
 kde4_add_kcfg_files(ksieveui_LIB_SRCS settings.kcfgc)

@@ -70,4 +70,10 @@ QString SieveConditionBody::code(QWidget *w) const
 #endif
 }
 
+QStringList SieveConditionBody::needRequires() const
+{
+    return QStringList() << QLatin1String("body");
+}
+
+
 #include "sieveconditionbody.moc"

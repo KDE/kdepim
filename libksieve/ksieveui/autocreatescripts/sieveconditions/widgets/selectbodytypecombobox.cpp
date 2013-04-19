@@ -15,30 +15,33 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef SIEVECONDITIONBODY_H
-#define SIEVECONDITIONBODY_H
+#include "selectbodytypecombobox.h"
 
+#include <KLocale>
 
-#include "sievecondition.h"
+using namespace KSieveUi;
 
-namespace KSieveUi {
-class SieveConditionBody : public SieveCondition
+SelectBodyTypeComboBox::SelectBodyTypeComboBox(QWidget *parent)
+    : KComboBox(parent)
 {
-    Q_OBJECT
-public:
-    SieveConditionBody(QObject *parent = 0);
-
-    /**
-     * Static function that creates a filter action of this type.
-     */
-    static SieveCondition *newAction();
-
-    QWidget *createParamWidget( QWidget *parent ) const;
-
-    QString code(QWidget *parent) const;
-
-    QStringList needRequires() const;
-};
+    initialize();
 }
 
-#endif // SIEVECONDITIONBODY_H
+SelectBodyTypeComboBox::~SelectBodyTypeComboBox()
+{
+}
+
+void SelectBodyTypeComboBox::initialize()
+{
+    addItem(i18n("raw"), QLatin1String(":raw"));
+    addItem(i18n("content"), QLatin1String(":content"));
+    addItem(i18n("text"), QLatin1String(":text"));
+}
+
+QString SelectBodyTypeComboBox::code() const
+{
+    const QString value = itemData(currentIndex()).toString();
+    return value;
+}
+
+#include "selectbodytypecombobox.moc"
