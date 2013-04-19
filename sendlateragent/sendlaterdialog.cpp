@@ -27,4 +27,4 @@ SendLaterDialog::~SendLaterDialog()
 
 }
 
-#include "sendlateragent.moc"
+#include "sendlaterdialog.moc"
