@@ -18,17 +18,30 @@
 #include "selectimportancecombobox.h"
 
 #include <KComboBox>
+#include <KLocale>
 
 using namespace KSieveUi;
 
 SelectImportanceCombobox::SelectImportanceCombobox(QWidget *parent)
     : KComboBox(parent)
 {
+    initialize();
 }
 
 SelectImportanceCombobox::~SelectImportanceCombobox()
 {
+}
 
+void SelectImportanceCombobox::initialize()
+{
+    addItem(i18n("high importance"), QLatin1String("1"));
+    addItem(i18n("normal importance"), QLatin1String("2"));
+    addItem(i18n("low importance"), QLatin1String("3"));
+}
+
+QString SelectImportanceCombobox::code() const
+{
+    return itemData(currentIndex()).toString();
 }
 
 #include "selectimportancecombobox.moc"
