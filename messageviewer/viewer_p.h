@@ -449,6 +449,7 @@ public:
   void goResourceOnline();
 
 private slots:
+  void slotMessageMayBeAScam();
   void slotToggleCaretBrowsing(bool);
   void slotAtmDecryptWithChiasmusResult( const GpgME::Error &, const QVariant & );
   void slotAtmDecryptWithChiasmusUploadResult( KJob * );

@@ -29,6 +29,7 @@
 #include "messagedisplayformatattribute.h"
 #include "header/grantleethememanager.h"
 #include "scamdetection/scamdetectionwarningwidget.h"
+#include "scamdetection/scamattribute.h"
 
 #ifdef MESSAGEVIEWER_READER_HTML_DEBUG
 #include "filehtmlwriter.h"
@@ -214,7 +215,8 @@ ViewerPrivate::ViewerPrivate(Viewer *aParent, QWidget *mainWindow,
       mMainWindow = aParent;
     if ( _k_attributeInitialized.testAndSetAcquire( 0, 1 ) ) {
       Akonadi::AttributeFactory::registerAttribute<MessageViewer::MessageDisplayFormatAttribute>();
-     }
+      Akonadi::AttributeFactory::registerAttribute<MessageViewer::ScamAttribute>();
+    }
 
 
      mThemeManager = new MessageViewer::GrantleeThemeManager(mActionCollection, KStandardDirs::locate("data",QLatin1String("messageviewer/themes/")));
@@ -254,6 +256,7 @@ ViewerPrivate::ViewerPrivate(Viewer *aParent, QWidget *mainWindow,
      fs.fetchFullPayload();
      fs.fetchAttribute<MailTransport::ErrorAttribute>();
      fs.fetchAttribute<MessageViewer::MessageDisplayFormatAttribute>();
+     fs.fetchAttribute<MessageViewer::ScamAttribute>();
      mMonitor.setItemFetchScope( fs );
      connect( &mMonitor, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)),
               this, SLOT(slotItemChanged(Akonadi::Item,QSet<QByteArray>)) );
@@ -1089,7 +1092,7 @@ void ViewerPrivate::initHtmlWidget()
            this, SLOT(slotUrlOpen(QUrl)), Qt::QueuedConnection );
   connect( mViewer, SIGNAL(popupMenu(QUrl,QUrl,QPoint)),
            SLOT(slotUrlPopup(QUrl,QUrl,QPoint)) );
-  connect( mViewer, SIGNAL(messageMayBeAScam()), mScamDetectionWarning, SLOT(slotShowWarning()));
+  connect( mViewer, SIGNAL(messageMayBeAScam()), this, SLOT(slotMessageMayBeAScam()));
   connect( mScamDetectionWarning, SIGNAL(showDetails()), mViewer, SLOT(slotShowDetails()));
   connect( mScamDetectionWarning, SIGNAL(moveMessageToTrash()), this, SIGNAL(moveMessageToTrash()));
 }
@@ -3233,6 +3236,17 @@ void ViewerPrivate::slotResetMessageDisplayFormat()
             modify->disableRevisionCheck();
         }
     }
+}
+
+void ViewerPrivate::slotMessageMayBeAScam()
+{
+    if (mMessageItem.isValid()) {
+        if (mMessageItem.hasAttribute<MessageViewer::ScamAttribute>()) {
+            if (!mMessageItem.attribute<MessageViewer::ScamAttribute>()->isAScam())
+                return;
+        }
+    }
+    mScamDetectionWarning->slotShowWarning();
 }
 
 #include "viewer_p.moc"
