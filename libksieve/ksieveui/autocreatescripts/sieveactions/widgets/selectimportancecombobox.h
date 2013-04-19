@@ -14,25 +14,18 @@
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
+#ifndef SELECTIMPORTANCECOMBOBOX_H
+#define SELECTIMPORTANCECOMBOBOX_H
 
+#include <KComboBox>
 
-#ifndef SIEVEACTIONNOTIFY_H
-#define SIEVEACTIONNOTIFY_H
-
-
-#include "sieveaction.h"
 namespace KSieveUi {
-class SieveActionNotify : public SieveAction
+class SelectImportanceCombobox : public KComboBox
 {
     Q_OBJECT
 public:
-    SieveActionNotify(QObject *parent = 0);
-    static SieveAction* newAction();
-
-    QString code(QWidget *) const;
-    QString serverNeedsCapability() const;
-    bool needCheckIfServerHasCapability() const;
+    explicit SelectImportanceCombobox(QWidget *parent = 0);
+    ~SelectImportanceCombobox();
 };
 }
-
-#endif // SIEVEACTIONNOTIFY_H
+#endif // SELECTIMPORTANCECOMBOBOX_H

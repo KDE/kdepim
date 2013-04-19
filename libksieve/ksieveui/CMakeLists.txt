@@ -43,9 +43,14 @@ set(ksieveui_LIB_SRCS
   autocreatescripts/sieveactions/sieveactionabstractflags.cpp
   autocreatescripts/sieveactions/sieveactionremoveflags.cpp
   autocreatescripts/sieveactions/sieveactionnotify.cpp
+  autocreatescripts/sieveactions/sieveactionabstracteditheader.cpp
+  autocreatescripts/sieveactions/sieveactiondeleteheader.cpp
+  autocreatescripts/sieveactions/sieveactionaddheader.cpp
   autocreatescripts/sieveactions/widgets/selectflagswidget.cpp
   autocreatescripts/sieveactions/widgets/selectfileintowidget.cpp
   autocreatescripts/sieveactions/widgets/addresslineedit.cpp
+  autocreatescripts/sieveactions/widgets/selectaddheaderpositioncombobox.cpp
+  autocreatescripts/sieveactions/widgets/selectimportancecombobox.cpp
   autocreatescripts/sieveconditions/sievecondition.cpp
   autocreatescripts/sieveconditions/sieveconditionheader.cpp
   autocreatescripts/sieveconditions/sieveconditionlist.cpp

@@ -15,24 +15,20 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#include "selectimportancecombobox.h"
 
-#ifndef SIEVEACTIONNOTIFY_H
-#define SIEVEACTIONNOTIFY_H
+#include <KComboBox>
 
+using namespace KSieveUi;
 
-#include "sieveaction.h"
-namespace KSieveUi {
-class SieveActionNotify : public SieveAction
+SelectImportanceCombobox::SelectImportanceCombobox(QWidget *parent)
+    : KComboBox(parent)
 {
-    Q_OBJECT
-public:
-    SieveActionNotify(QObject *parent = 0);
-    static SieveAction* newAction();
-
-    QString code(QWidget *) const;
-    QString serverNeedsCapability() const;
-    bool needCheckIfServerHasCapability() const;
-};
 }
 
-#endif // SIEVEACTIONNOTIFY_H
+SelectImportanceCombobox::~SelectImportanceCombobox()
+{
+
+}
+
+#include "selectimportancecombobox.moc"

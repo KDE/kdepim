@@ -30,7 +30,14 @@ int main (int argc, char **argv)
     KSieveUi::AutoCreateScriptDialog *dialog = new KSieveUi::AutoCreateScriptDialog;
     QStringList capabilities;
     //Add all capabilities for testing
-    capabilities <<QLatin1String("body")<<QLatin1String("envelope")<<QLatin1String("redirect")<<QLatin1String("fileinto");
+    capabilities
+            <<QLatin1String("body")
+            <<QLatin1String("envelope")
+            <<QLatin1String("redirect")
+            <<QLatin1String("fileinto")
+            <<QLatin1String("editheader")
+            <<QLatin1String("reject")
+            <<QLatin1String("imapflags");
     dialog->setSieveCapabilities(capabilities);
     if (dialog->exec() ) {
         QString requires;

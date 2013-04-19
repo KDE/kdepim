@@ -15,24 +15,31 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#include "selectaddheaderpositioncombobox.h"
 
-#ifndef SIEVEACTIONNOTIFY_H
-#define SIEVEACTIONNOTIFY_H
+#include <KComboBox>
+#include <KLocale>
 
-
-#include "sieveaction.h"
-namespace KSieveUi {
-class SieveActionNotify : public SieveAction
+using namespace KSieveUi;
+SelectAddHeaderPositionCombobox::SelectAddHeaderPositionCombobox(QWidget *parent)
+    : KComboBox(parent)
 {
-    Q_OBJECT
-public:
-    SieveActionNotify(QObject *parent = 0);
-    static SieveAction* newAction();
-
-    QString code(QWidget *) const;
-    QString serverNeedsCapability() const;
-    bool needCheckIfServerHasCapability() const;
-};
+    initialize();
 }
 
-#endif // SIEVEACTIONNOTIFY_H
+SelectAddHeaderPositionCombobox::~SelectAddHeaderPositionCombobox()
+{
+}
+
+void SelectAddHeaderPositionCombobox::initialize()
+{
+    addItem(i18n("Insert at the beginning"), QString());
+    addItem(i18n("Append at the end"), QLatin1String(":last"));
+}
+
+QString SelectAddHeaderPositionCombobox::code() const
+{
+    return itemData(currentIndex()).toString();
+}
+
+#include "selectaddheaderpositioncombobox.moc"

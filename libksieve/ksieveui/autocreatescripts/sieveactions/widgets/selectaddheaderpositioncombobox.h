@@ -15,24 +15,21 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#ifndef SELECTADDHEADERPOSITIONCOMBOBOX_H
+#define SELECTADDHEADERPOSITIONCOMBOBOX_H
+#include <KComboBox>
 
-#ifndef SIEVEACTIONNOTIFY_H
-#define SIEVEACTIONNOTIFY_H
-
-
-#include "sieveaction.h"
 namespace KSieveUi {
-class SieveActionNotify : public SieveAction
+class SelectAddHeaderPositionCombobox : public KComboBox
 {
     Q_OBJECT
 public:
-    SieveActionNotify(QObject *parent = 0);
-    static SieveAction* newAction();
-
-    QString code(QWidget *) const;
-    QString serverNeedsCapability() const;
-    bool needCheckIfServerHasCapability() const;
+    explicit SelectAddHeaderPositionCombobox(QWidget *parent = 0);
+    ~SelectAddHeaderPositionCombobox();
+    QString code() const;
+private:
+    void initialize();
 };
 }
 
-#endif // SIEVEACTIONNOTIFY_H
+#endif // SELECTADDHEADERPOSITIONCOMBOBOX_H

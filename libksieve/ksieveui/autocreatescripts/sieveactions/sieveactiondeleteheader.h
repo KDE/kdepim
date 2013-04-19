@@ -15,24 +15,20 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#ifndef SIEVEACTIONDELETEHEADER_H
+#define SIEVEACTIONDELETEHEADER_H
 
-#ifndef SIEVEACTIONNOTIFY_H
-#define SIEVEACTIONNOTIFY_H
-
-
-#include "sieveaction.h"
+#include "sieveactionabstracteditheader.h"
 namespace KSieveUi {
-class SieveActionNotify : public SieveAction
+class SieveActionDeleteHeader : public SieveActionAbstractEditHeader
 {
     Q_OBJECT
 public:
-    SieveActionNotify(QObject *parent = 0);
+    SieveActionDeleteHeader(QObject *parent = 0);
     static SieveAction* newAction();
-
-    QString code(QWidget *) const;
-    QString serverNeedsCapability() const;
-    bool needCheckIfServerHasCapability() const;
+    QString code(QWidget *w) const;
+    QWidget *createParamWidget( QWidget *parent ) const;
 };
 }
 
-#endif // SIEVEACTIONNOTIFY_H
+#endif // SIEVEACTIONDELETEHEADER_H

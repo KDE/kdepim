@@ -38,4 +38,15 @@ QString SieveActionNotify::code(QWidget *) const
     return QString();
 }
 
+QString SieveActionNotify::serverNeedsCapability() const
+{
+    return QLatin1String("enotify");
+}
+
+bool SieveActionNotify::needCheckIfServerHasCapability() const
+{
+    return true;
+}
+
+
 #include "sieveactionnotify.moc"

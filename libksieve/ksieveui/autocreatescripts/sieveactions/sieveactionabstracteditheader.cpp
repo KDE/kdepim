@@ -15,24 +15,26 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#include "sieveactionabstracteditheader.h"
 
-#ifndef SIEVEACTIONNOTIFY_H
-#define SIEVEACTIONNOTIFY_H
+using namespace KSieveUi;
 
-
-#include "sieveaction.h"
-namespace KSieveUi {
-class SieveActionNotify : public SieveAction
+SieveActionAbstractEditHeader::SieveActionAbstractEditHeader(const QString &name, const QString &label, QObject *parent)
+    : SieveAction(name, label, parent)
 {
-    Q_OBJECT
-public:
-    SieveActionNotify(QObject *parent = 0);
-    static SieveAction* newAction();
-
-    QString code(QWidget *) const;
-    QString serverNeedsCapability() const;
-    bool needCheckIfServerHasCapability() const;
-};
 }
 
-#endif // SIEVEACTIONNOTIFY_H
+QStringList SieveActionAbstractEditHeader::needRequires() const
+{
+    return QStringList() <<QLatin1String("editheader");
+}
+
+bool SieveActionAbstractEditHeader::needCheckIfServerHasCapability() const
+{
+    return true;
+}
+
+QString SieveActionAbstractEditHeader::serverNeedsCapability() const
+{
+    return QLatin1String("editheader");
+}
