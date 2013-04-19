@@ -336,7 +336,6 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
 
 signals:
   void moveMessageToTrash();
-  void changeDisplayMail(Viewer::ForceDisplayTo,bool);
 
   /**
    * Emitted when a status bar message is shown. Note that the status bar message is also set to
