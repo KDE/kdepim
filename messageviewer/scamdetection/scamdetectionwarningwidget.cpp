@@ -41,6 +41,11 @@ ScamDetectionWarningWidget::ScamDetectionWarningWidget(QWidget *parent)
     connect( action, SIGNAL(triggered(bool)), SIGNAL(moveMessageToTrash()) );
     addAction( action );
 
+    action = new KAction( i18n( "I confirm it's not a scam" ), this );
+    connect( action, SIGNAL(triggered(bool)), SLOT(slotMessageIsNotAScam()) );
+    addAction( action );
+
+
     action = new KAction( i18n( "Disable scam detection for all messages" ), this );
     connect( action, SIGNAL(triggered(bool)), SLOT(slotDisableScamDetection()) );
     addAction( action );
@@ -48,6 +53,12 @@ ScamDetectionWarningWidget::ScamDetectionWarningWidget(QWidget *parent)
 
 ScamDetectionWarningWidget::~ScamDetectionWarningWidget()
 {
+}
+
+void ScamDetectionWarningWidget::slotMessageIsNotAScam()
+{
+    Q_EMIT messageIsNotAScam();
+    setVisible(false);
 }
 
 void ScamDetectionWarningWidget::slotShowWarning()

@@ -450,6 +450,7 @@ public:
 
 private slots:
   void slotMessageMayBeAScam();
+  void slotMessageIsNotAScam();
   void slotToggleCaretBrowsing(bool);
   void slotAtmDecryptWithChiasmusResult( const GpgME::Error &, const QVariant & );
   void slotAtmDecryptWithChiasmusUploadResult( KJob * );

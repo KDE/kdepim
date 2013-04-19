@@ -1095,6 +1095,7 @@ void ViewerPrivate::initHtmlWidget()
   connect( mViewer, SIGNAL(messageMayBeAScam()), this, SLOT(slotMessageMayBeAScam()));
   connect( mScamDetectionWarning, SIGNAL(showDetails()), mViewer, SLOT(slotShowDetails()));
   connect( mScamDetectionWarning, SIGNAL(moveMessageToTrash()), this, SIGNAL(moveMessageToTrash()));
+  connect( mScamDetectionWarning, SIGNAL(messageIsNotAScam()), this, SLOT(slotMessageIsNotAScam()));
 }
 
 bool ViewerPrivate::eventFilter( QObject *, QEvent *e )
@@ -3247,6 +3248,17 @@ void ViewerPrivate::slotMessageMayBeAScam()
         }
     }
     mScamDetectionWarning->slotShowWarning();
+}
+
+void ViewerPrivate::slotMessageIsNotAScam()
+{
+    if (mMessageItem.isValid()) {
+        MessageViewer::ScamAttribute *attr  = mMessageItem.attribute<MessageViewer::ScamAttribute>( Akonadi::Entity::AddIfMissing );
+        attr->setIsAScam(false);
+        Akonadi::ItemModifyJob *modify = new Akonadi::ItemModifyJob( mMessageItem );
+        modify->setIgnorePayload( true );
+        modify->disableRevisionCheck();
+    }
 }
 
 #include "viewer_p.moc"

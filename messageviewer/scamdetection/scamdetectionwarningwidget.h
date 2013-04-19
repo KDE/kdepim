@@ -34,9 +34,12 @@ public Q_SLOTS:
 Q_SIGNALS:
     void showDetails();
     void moveMessageToTrash();
+    void messageIsNotAScam();
+
 
 private Q_SLOTS:
     void slotDisableScamDetection();
+    void slotMessageIsNotAScam();
 };
 }
 
