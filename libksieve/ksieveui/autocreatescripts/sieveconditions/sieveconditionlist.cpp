@@ -23,6 +23,8 @@
 #include "sieveconditionenvelope.h"
 #include "sieveconditionexists.h"
 #include "sieveconditiontrue.h"
+//RFC5173 (extension)
+#include "sieveconditionbody.h"
 
 QList<KSieveUi::SieveCondition *> KSieveUi::SieveConditionList::conditionList()
 {
@@ -33,6 +35,7 @@ QList<KSieveUi::SieveCondition *> KSieveUi::SieveConditionList::conditionList()
     list.append(new KSieveUi::SieveConditionEnvelope);
     list.append(new KSieveUi::SieveConditionExists);
     list.append(new KSieveUi::SieveConditionTrue);
+    list.append(new KSieveUi::SieveConditionBody);
     return list;
 }
 

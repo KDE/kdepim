@@ -53,6 +53,7 @@ set(ksieveui_LIB_SRCS
   autocreatescripts/sieveconditions/sieveconditionenvelope.cpp
   autocreatescripts/sieveconditions/sieveconditionexists.cpp
   autocreatescripts/sieveconditions/sieveconditiontrue.cpp
+  autocreatescripts/sieveconditions/sieveconditionbody.cpp
   autocreatescripts/sieveconditions/widgets/selectmatchtypecombobox.cpp
   autocreatescripts/sieveconditions/widgets/selectaddresspartcombobox.cpp
   autocreatescripts/sieveconditions/widgets/selectheadertypecombobox.cpp
