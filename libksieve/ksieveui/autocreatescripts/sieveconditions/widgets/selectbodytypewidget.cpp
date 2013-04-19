@@ -55,10 +55,10 @@ void SelectBodyTypeWidget::initialize()
 
 QString SelectBodyTypeWidget::code() const
 {
-    qDebug()<<" thus "<<this;
     QString value = mBodyCombobox->itemData(mBodyCombobox->currentIndex()).toString();
-    if (mBodyLineEdit->isVisible())
+    if (value == QLatin1String(":content")) {
         value += QString::fromLatin1(" \"%1\"").arg(mBodyLineEdit->text());
+    }
     return value;
 }
 
