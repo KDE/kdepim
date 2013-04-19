@@ -31,6 +31,10 @@ public:
     QStringList needRequires() const;
 
     virtual QString flagsCode(QWidget *) const = 0;
+
+    bool needCheckIfServerHasCapability() const;
+
+    QString serverNeedsCapability() const;
 };
 }
 

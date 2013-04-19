@@ -29,7 +29,6 @@ public:
     SieveActionAddFlags(QObject *parent = 0);
     static SieveAction* newAction();
     QString flagsCode(QWidget *) const;
-
 };
 }
 #endif // SIEVEACTIONADDFLAGS_H

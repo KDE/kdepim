@@ -52,4 +52,15 @@ QStringList SieveActionAbstractFlags::needRequires() const
     return QStringList() <<QLatin1String("imapflags");
 }
 
+bool SieveActionAbstractFlags::needCheckIfServerHasCapability() const
+{
+    return true;
+}
+
+QString SieveActionAbstractFlags::serverNeedsCapability() const
+{
+    return QLatin1String("imapflags");
+}
+
+
 #include "sieveactionabstractflags.moc"
