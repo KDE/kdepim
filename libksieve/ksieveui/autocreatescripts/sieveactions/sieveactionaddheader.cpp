@@ -41,6 +41,7 @@ QWidget *SieveActionAddHeader::createParamWidget( QWidget *parent ) const
 {
     QWidget *w = new QWidget(parent);
     QHBoxLayout *lay = new QHBoxLayout;
+    lay->setMargin(0);
     w->setLayout(lay);
 
     SelectAddHeaderPositionCombobox *combo = new SelectAddHeaderPositionCombobox;

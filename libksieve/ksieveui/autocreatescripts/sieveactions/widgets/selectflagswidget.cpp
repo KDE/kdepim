@@ -100,6 +100,7 @@ SelectFlagsWidget::SelectFlagsWidget(QWidget *parent)
     : QWidget(parent)
 {
     QHBoxLayout *lay = new QHBoxLayout;
+    lay->setMargin(0);
     mEdit = new KLineEdit;
     mEdit->setReadOnly(true);
     lay->addWidget(mEdit);
