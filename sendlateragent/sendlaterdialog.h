@@ -26,6 +26,9 @@ class SendLaterDialog : public KDialog
 public:
     explicit SendLaterDialog(QWidget *parent);
     ~SendLaterDialog();
+private:
+    void readConfig();
+    void writeConfig();
 };
 
 #endif // SENDLATERDIALOG_H
