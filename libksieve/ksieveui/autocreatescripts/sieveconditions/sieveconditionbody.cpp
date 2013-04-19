@@ -16,11 +16,15 @@
 */
 
 #include "sieveconditionbody.h"
+#include "widgets/selectbodytypewidget.h"
+#include "widgets/selectmatchtypecombobox.h"
 
 #include <KLocale>
+#include <KLineEdit>
 
 #include <QWidget>
 #include <QHBoxLayout>
+#include <QDebug>
 
 using namespace KSieveUi;
 SieveConditionBody::SieveConditionBody(QObject *parent)
@@ -36,38 +40,37 @@ SieveCondition *SieveConditionBody::newAction()
 QWidget *SieveConditionBody::createParamWidget( QWidget *parent ) const
 {
     QWidget *w = new QWidget(parent);
-#if 0
     QHBoxLayout *lay = new QHBoxLayout;
     w->setLayout(lay);
 
-    QComboBox *combo = new QComboBox;
-    combo->setObjectName(QLatin1String("combosize"));
-    combo->addItem(i18n("under"), QLatin1String(":under"));
-    combo->addItem(i18n("over"), QLatin1String(":over"));
-    lay->addWidget(combo);
+    SelectBodyTypeWidget *bodyType = new SelectBodyTypeWidget;
+    bodyType->setObjectName(QLatin1String("bodytype"));
+    lay->addWidget(bodyType);
 
-    QSpinBox *spinbox = new QSpinBox;
-    spinbox->setMinimum(1);
-    spinbox->setMaximum(9999);
-    spinbox->setSuffix(i18n("kb"));
-    spinbox->setObjectName(QLatin1String("spinboxsize"));
+    SelectMatchTypeComboBox *matchType = new SelectMatchTypeComboBox;
+    bodyType->setObjectName(QLatin1String("matchtype"));
+    lay->addWidget(matchType);
 
-    lay->addWidget(spinbox);
-#endif
+    KLineEdit *edit = new KLineEdit;
+    edit->setClearButtonShown(true);
+    lay->addWidget(edit);
+    edit->setObjectName(QLatin1String("edit"));
+
     return w;
 }
 
 QString SieveConditionBody::code(QWidget *w) const
 {
-#if 0
-    QComboBox *combo = w->findChild<QComboBox*>( QLatin1String("combosize") );
-    const QString comparaison = combo->itemData(combo->currentIndex()).toString();
-    QSpinBox *spinbox = w->findChild<QSpinBox*>( QLatin1String("spinboxsize") );
-    return QString::fromLatin1("size %1 %2K").arg(comparaison).arg(spinbox->value());
-#else
-    //TODO
-    return QString();
-#endif
+    SelectBodyTypeWidget *bodyType =  w->findChild<SelectBodyTypeWidget*>( QLatin1String("bodytype") );
+    const QString bodyValue = bodyType->code();
+    SelectMatchTypeComboBox *matchType = w->findChild<SelectMatchTypeComboBox*>( QLatin1String("matchtype"));
+    bool isNegative = false;
+    const QString matchValue = matchType->code(isNegative);
+
+    KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("edit"));
+    const QString editValue = edit->text();
+
+    return (isNegative ? QLatin1String("not ") : QString()) + QString::fromLatin1("body %1 %2 %3").arg(bodyValue).arg(matchValue).arg(editValue);
 }
 
 QStringList SieveConditionBody::needRequires() const

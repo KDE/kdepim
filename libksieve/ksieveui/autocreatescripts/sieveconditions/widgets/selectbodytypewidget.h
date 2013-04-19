@@ -15,23 +15,32 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef SELECTBODYTYPECOMBOBOX_H
-#define SELECTBODYTYPECOMBOBOX_H
+#ifndef SELECTBODYTYPEWIDGET_H
+#define SELECTBODYTYPEWIDGET_H
 
-#include <KComboBox>
+#include <QWidget>
+
+class KComboBox;
+class KLineEdit;
 
 namespace KSieveUi {
-class SelectBodyTypeComboBox : public KComboBox
+class SelectBodyTypeWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit SelectBodyTypeComboBox(QWidget *parent = 0);
-    ~SelectBodyTypeComboBox();
+    explicit SelectBodyTypeWidget(QWidget *parent = 0);
+    ~SelectBodyTypeWidget();
 
     QString code() const;
+
+private Q_SLOTS:
+    void slotBodyTypeChanged(int);
+
 private:
     void initialize();
+    KComboBox *mBodyCombobox;
+    KLineEdit *mBodyLineEdit;
 };
 }
 
-#endif // SELECTBODYTYPECOMBOBOX_H
+#endif // SELECTBODYTYPEWIDGET_H
