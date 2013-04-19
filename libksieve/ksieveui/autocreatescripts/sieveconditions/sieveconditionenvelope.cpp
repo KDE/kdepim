@@ -100,4 +100,9 @@ bool SieveConditionEnvelope::needCheckIfServerHasCapability() const
     return true;
 }
 
+QString SieveConditionEnvelope::serverNeedsCapability() const
+{
+    return QLatin1String("envelope");
+}
+
 #include "sieveconditionenvelope.moc"

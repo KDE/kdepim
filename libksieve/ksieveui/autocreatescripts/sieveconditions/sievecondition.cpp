@@ -65,4 +65,9 @@ bool SieveCondition::needCheckIfServerHasCapability() const
     return false;
 }
 
+QString SieveCondition::serverNeedsCapability() const
+{
+    return QString();
+}
+
 #include "sievecondition.moc"

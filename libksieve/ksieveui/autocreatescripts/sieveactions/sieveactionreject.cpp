@@ -61,5 +61,14 @@ QStringList SieveActionReject::needRequires() const
     return QStringList() <<QLatin1String("reject");
 }
 
+QString SieveActionReject::serverNeedsCapability() const
+{
+    return QLatin1String("reject");
+}
+
+bool SieveActionReject::needCheckIfServerHasCapability() const
+{
+    return true;
+}
 
 #include "sieveactionreject.moc"

@@ -41,6 +41,7 @@ public:
 
     bool needCheckIfServerHasCapability() const;
 
+    QString serverNeedsCapability() const;
 };
 }
 

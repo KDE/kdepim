@@ -62,4 +62,9 @@ bool SieveActionFileInto::needCheckIfServerHasCapability() const
     return true;
 }
 
+QString SieveActionFileInto::serverNeedsCapability() const
+{
+    return QLatin1String("fileinto");
+}
+
 #include "sieveactionfileinto.moc"

@@ -86,7 +86,7 @@ void SieveConditionWidget::initWidget(const QStringList &capabilities)
     int index = 0;
     for ( index = 0, it = list.constBegin(); it != end; ++it, ++index ) {        
         if ((*it)->needCheckIfServerHasCapability()) {
-            if (capabilities.contains((*it)->name())) {
+            if (capabilities.contains((*it)->serverNeedsCapability())) {
                 // append to the list of actions:
                 mConditionList.append( *it );
 

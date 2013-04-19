@@ -83,4 +83,9 @@ bool SieveConditionBody::needCheckIfServerHasCapability() const
     return true;
 }
 
+QString SieveConditionBody::serverNeedsCapability() const
+{
+    return QLatin1String("body");
+}
+
 #include "sieveconditionbody.moc"

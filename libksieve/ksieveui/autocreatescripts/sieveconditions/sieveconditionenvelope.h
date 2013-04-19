@@ -40,6 +40,8 @@ public:
     QStringList needRequires() const;
 
     bool needCheckIfServerHasCapability() const;
+
+    QString serverNeedsCapability() const;
 };
 }
 
