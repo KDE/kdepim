@@ -48,8 +48,8 @@ QWidget *SieveConditionBody::createParamWidget( QWidget *parent ) const
     lay->addWidget(bodyType);
 
     SelectMatchTypeComboBox *matchType = new SelectMatchTypeComboBox;
-    bodyType->setObjectName(QLatin1String("matchtype"));
     lay->addWidget(matchType);
+    matchType->setObjectName(QLatin1String("matchtype"));
 
     KLineEdit *edit = new KLineEdit;
     edit->setClearButtonShown(true);
@@ -67,10 +67,10 @@ QString SieveConditionBody::code(QWidget *w) const
     bool isNegative = false;
     const QString matchValue = matchType->code(isNegative);
 
+
     KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("edit"));
     const QString editValue = edit->text();
-
-    return (isNegative ? QLatin1String("not ") : QString()) + QString::fromLatin1("body %1 %2 %3").arg(bodyValue).arg(matchValue).arg(editValue);
+    return (isNegative ? QLatin1String("not ") : QString()) + QString::fromLatin1("body %1 %2 \"%3\"").arg(bodyValue).arg(matchValue).arg(editValue);
 }
 
 QStringList SieveConditionBody::needRequires() const
