@@ -46,6 +46,7 @@ QWidget *SieveConditionEnvelope::createParamWidget( QWidget *parent ) const
 {
     QWidget *w = new QWidget(parent);
     QHBoxLayout *lay = new QHBoxLayout;
+    lay->setMargin(0);
     w->setLayout(lay);
 
     SelectAddressPartComboBox *selectAddressPart = new SelectAddressPartComboBox;
