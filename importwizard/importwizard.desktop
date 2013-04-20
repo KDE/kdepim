@@ -2,12 +2,17 @@
 Name=Import Wizard
 Name[de]=Import-Assistent
 Name[fi]=Opastettu tuonti
+Name[fr]=Assistant d'import de compte
 Name[lt]=&Importavimo vediklis...
 Name[nb]=Importveiviser
 Name[nl]=Assistent voor importeren
 Name[pt]=Assistente de Importação
 Name[pt_BR]=Assistente de importação
 Name[sk]=Sprievodca importom
+Name[sr]=Чаробњак за увоз
+Name[sr@ijekavian]=Чаробњак за увоз
+Name[sr@ijekavianlatin]=Čarobnjak za uvoz
+Name[sr@latin]=Čarobnjak za uvoz
 Name[sv]=Importguide
 Name[uk]=Майстер імпортування
 Name[x-test]=xxImport Wizardxx
