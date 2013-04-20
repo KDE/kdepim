@@ -1775,7 +1775,6 @@ void AgendaView::slotIncidencesDropped( const QList<KUrl> &items, const QPoint &
       if ( changer() ) {
         existingTodo->setDtDue( newTime );
         existingTodo->setAllDay( allDay );
-        existingTodo->setHasDueDate( true );
         changer()->modifyIncidence( existingTodoItem, oldTodo, this );
       } else {
         KMessageBox::sorry( this, i18n( "Unable to modify this to-do, "
@@ -1785,7 +1784,6 @@ void AgendaView::slotIncidencesDropped( const QList<KUrl> &items, const QPoint &
       kDebug() << "Drop new Todo";
       todo->setDtDue( newTime );
       todo->setAllDay( allDay );
-      todo->setHasDueDate( true );
       if ( !changer()->addIncidence( todo, this ) ) {
         KMessageBox::sorry( this,
                             i18n( "Unable to save %1 \"%2\".",
