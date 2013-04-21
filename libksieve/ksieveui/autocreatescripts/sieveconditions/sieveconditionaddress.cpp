@@ -73,18 +73,17 @@ QWidget *SieveConditionAddress::createParamWidget( QWidget *parent ) const
 
 QString SieveConditionAddress::code(QWidget *w) const
 {
-    SelectMatchTypeComboBox *selectMatchCombobox = w->findChild<SelectMatchTypeComboBox*>(QLatin1String("matchtypecombobox"));
+    const SelectMatchTypeComboBox *selectMatchCombobox = w->findChild<SelectMatchTypeComboBox*>(QLatin1String("matchtypecombobox"));
     bool isNegative = false;
     const QString matchTypeStr = selectMatchCombobox->code(isNegative);
 
-    SelectAddressPartComboBox *selectAddressPart = w->findChild<SelectAddressPartComboBox*>(QLatin1String("addresspartcombobox"));
+    const SelectAddressPartComboBox *selectAddressPart = w->findChild<SelectAddressPartComboBox*>(QLatin1String("addresspartcombobox"));
     const QString selectAddressPartStr = selectAddressPart->code();
 
-    SelectHeaderTypeComboBox *selectHeaderType = w->findChild<SelectHeaderTypeComboBox*>(QLatin1String("headertypecombobox"));
+    const SelectHeaderTypeComboBox *selectHeaderType = w->findChild<SelectHeaderTypeComboBox*>(QLatin1String("headertypecombobox"));
     const QString selectHeaderTypeStr = selectHeaderType->code();
 
-
-    KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("editaddress") );
+    const KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("editaddress") );
     const QString addressStr = AutoCreateScriptUtil::createAddressList(edit->text().trimmed());
     return (isNegative ? QLatin1String("not ") : QString()) + QString::fromLatin1("address %1 %2 %3 %4").arg(selectAddressPartStr).arg(matchTypeStr).arg(selectHeaderTypeStr).arg(addressStr);
 }

@@ -60,9 +60,9 @@ QWidget *SieveConditionSize::createParamWidget( QWidget *parent ) const
 
 QString SieveConditionSize::code(QWidget *w) const
 {
-    QComboBox *combo = w->findChild<QComboBox*>( QLatin1String("combosize") );
+    const QComboBox *combo = w->findChild<QComboBox*>( QLatin1String("combosize") );
     const QString comparaison = combo->itemData(combo->currentIndex()).toString();
-    QSpinBox *spinbox = w->findChild<QSpinBox*>( QLatin1String("spinboxsize") );
+    const QSpinBox *spinbox = w->findChild<QSpinBox*>( QLatin1String("spinboxsize") );
     return QString::fromLatin1("size %1 %2K").arg(comparaison).arg(spinbox->value());
 }
 

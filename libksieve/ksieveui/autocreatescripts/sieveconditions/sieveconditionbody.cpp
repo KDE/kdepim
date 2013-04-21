@@ -62,9 +62,9 @@ QWidget *SieveConditionBody::createParamWidget( QWidget *parent ) const
 
 QString SieveConditionBody::code(QWidget *w) const
 {
-    SelectBodyTypeWidget *bodyType =  w->findChild<SelectBodyTypeWidget*>( QLatin1String("bodytype") );
+    const SelectBodyTypeWidget *bodyType =  w->findChild<SelectBodyTypeWidget*>( QLatin1String("bodytype") );
     const QString bodyValue = bodyType->code();
-    SelectMatchTypeComboBox *matchType = w->findChild<SelectMatchTypeComboBox*>( QLatin1String("matchtype"));
+    const SelectMatchTypeComboBox *matchType = w->findChild<SelectMatchTypeComboBox*>( QLatin1String("matchtype"));
     bool isNegative = false;
     const QString matchValue = matchType->code(isNegative);
 
