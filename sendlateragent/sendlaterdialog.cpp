@@ -23,7 +23,9 @@ SendLaterDialog::SendLaterDialog(QWidget *parent)
     : KDialog(parent)
 {
     setCaption( i18n("Send Later") );
-    setButtons( Ok|Cancel );
+    setButtons( User1|User2|Cancel );
+    connect(this, SIGNAL(user1Clicked()), this, SLOT(slotSendLater()));
+    connect(this, SIGNAL(user1Clicked()), this, SLOT(slotSendNow()));
     QWidget *w = new QWidget;
     setMainWidget(w);
     readConfig();
@@ -51,5 +53,14 @@ void SendLaterDialog::writeConfig()
     group.writeEntry( "Size", size() );
 }
 
+void SendLaterDialog::slotSendLater()
+{
+
+}
+
+void SendLaterDialog::slotSendNow()
+{
+
+}
 
 #include "sendlaterdialog.moc"

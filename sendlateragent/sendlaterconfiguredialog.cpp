@@ -15,25 +15,15 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef SENDLATERDIALOG_H
-#define SENDLATERDIALOG_H
+#include "sendlaterconfiguredialog.h"
 
-#include <KDialog>
-
-class SendLaterDialog : public KDialog
+SendLaterConfigureDialog::SendLaterConfigureDialog(QWidget *parent)
+    : KDialog(parent)
 {
-    Q_OBJECT
-public:
-    explicit SendLaterDialog(QWidget *parent);
-    ~SendLaterDialog();
+}
 
-private Q_SLOTS:
-    void slotSendLater();
-    void slotSendNow();
+SendLaterConfigureDialog::~SendLaterConfigureDialog()
+{
+}
 
-private:
-    void readConfig();
-    void writeConfig();
-};
-
-#endif // SENDLATERDIALOG_H
+#include "sendlaterconfiguredialog.moc"
