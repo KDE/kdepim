@@ -17,6 +17,9 @@
 
 
 #include "sieveactionnotify.h"
+#include "widgets/selectimportancecombobox.h"
+
+#include <QHBoxLayout>
 
 #include <KLocale>
 
@@ -32,10 +35,27 @@ SieveAction* SieveActionNotify::newAction()
     return new SieveActionNotify;
 }
 
-QString SieveActionNotify::code(QWidget *) const
+QWidget *SieveActionNotify::createParamWidget( QWidget *parent ) const
 {
+    QWidget *w = new QWidget(parent);
+    QHBoxLayout *lay = new QHBoxLayout;
+    lay->setMargin(0);
+    w->setLayout(lay);
+
+    SelectImportanceCombobox *importanceCombobox = new SelectImportanceCombobox;
+    importanceCombobox->setObjectName(QLatin1String("importancecombo"));
+    lay->addWidget(importanceCombobox);
+
+    return w;
+}
+
+
+QString SieveActionNotify::code(QWidget *w) const
+{
+    const SelectImportanceCombobox *importance = w->findChild<SelectImportanceCombobox*>( QLatin1String("importancecombo") );
+    const QString importanceStr = importance->code();
     //TODO
-    return QString();
+    return QString::fromLatin1("notify :importance \"%1\"").arg(importanceStr);
 }
 
 QString SieveActionNotify::serverNeedsCapability() const

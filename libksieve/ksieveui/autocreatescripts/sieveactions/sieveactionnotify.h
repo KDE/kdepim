@@ -29,9 +29,11 @@ public:
     SieveActionNotify(QObject *parent = 0);
     static SieveAction* newAction();
 
+    QWidget *createParamWidget( QWidget *parent ) const;
     QString code(QWidget *) const;
     QString serverNeedsCapability() const;
     bool needCheckIfServerHasCapability() const;
+
 };
 }
 
