@@ -43,7 +43,7 @@ int main (int argc, char **argv)
     if (dialog->exec() ) {
         QString requires;
         const QString script = dialog->script(requires);
-        kDebug()<<" script :\n"<<requires<<script;
+        kDebug()<<" generated script :\n"<<requires<<"\n"<<script;
     }
     delete dialog;
     return 0;
