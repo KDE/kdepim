@@ -36,7 +36,6 @@ Q_SIGNALS:
     void moveMessageToTrash();
     void messageIsNotAScam();
 
-
 private Q_SLOTS:
     void slotDisableScamDetection();
     void slotMessageIsNotAScam();
