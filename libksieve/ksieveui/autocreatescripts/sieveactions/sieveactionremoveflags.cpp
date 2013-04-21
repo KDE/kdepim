@@ -31,7 +31,7 @@ SieveAction* SieveActionRemoveFlags::newAction()
     return new SieveActionRemoveFlags;
 }
 
-QString SieveActionRemoveFlags::flagsCode(QWidget *) const
+QString SieveActionRemoveFlags::flagsCode() const
 {
     return QString::fromLatin1("removeflag");
 }

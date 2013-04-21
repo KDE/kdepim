@@ -44,7 +44,7 @@ QString SieveActionAbstractFlags::code(QWidget *w) const
 {
     SelectFlagsWidget *flagsWidget = w->findChild<SelectFlagsWidget*>( QLatin1String("flagswidget") );
     const QString flagCode = flagsWidget->code();
-    QString str = flagsCode(w);
+    const QString str = flagsCode();
     return str + QLatin1Char(' ') + flagCode;
 }
 
