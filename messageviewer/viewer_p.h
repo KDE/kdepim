@@ -449,6 +449,7 @@ public:
   void goResourceOnline();
 
 private slots:
+  void slotModifyItemDone(KJob* job);
   void slotMessageMayBeAScam();
   void slotMessageIsNotAScam();
   void slotToggleCaretBrowsing(bool);

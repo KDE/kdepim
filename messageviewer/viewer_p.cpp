@@ -3224,6 +3224,7 @@ void ViewerPrivate::slotSaveMessageDisplayFormat()
         Akonadi::ItemModifyJob *modify = new Akonadi::ItemModifyJob( mMessageItem );
         modify->setIgnorePayload( true );
         modify->disableRevisionCheck();
+        connect( modify, SIGNAL(result(KJob*)), this, SLOT(slotModifyItemDone(KJob*)) );
     }
 }
 
@@ -3235,6 +3236,7 @@ void ViewerPrivate::slotResetMessageDisplayFormat()
             Akonadi::ItemModifyJob *modify = new Akonadi::ItemModifyJob( mMessageItem );
             modify->setIgnorePayload( true );
             modify->disableRevisionCheck();
+            connect( modify, SIGNAL(result(KJob*)), this, SLOT(slotModifyItemDone(KJob*)) );
         }
     }
 }
@@ -3258,6 +3260,15 @@ void ViewerPrivate::slotMessageIsNotAScam()
         Akonadi::ItemModifyJob *modify = new Akonadi::ItemModifyJob( mMessageItem );
         modify->setIgnorePayload( true );
         modify->disableRevisionCheck();
+        connect( modify, SIGNAL(result(KJob*)), this, SLOT(slotModifyItemDone(KJob*)) );
+    }
+}
+
+
+void ViewerPrivate::slotModifyItemDone(KJob* job)
+{
+    if ( job && job->error() ) {
+      kWarning() << " Error trying to change attribute:" << job->errorText();
     }
 }
 
