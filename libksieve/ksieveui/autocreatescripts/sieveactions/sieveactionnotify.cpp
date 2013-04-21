@@ -19,9 +19,12 @@
 #include "sieveactionnotify.h"
 #include "widgets/selectimportancecombobox.h"
 
-#include <QHBoxLayout>
-
 #include <KLocale>
+#include <KLineEdit>
+
+
+#include <QHBoxLayout>
+#include <QLabel>
 
 using namespace KSieveUi;
 
@@ -46,6 +49,13 @@ QWidget *SieveActionNotify::createParamWidget( QWidget *parent ) const
     importanceCombobox->setObjectName(QLatin1String("importancecombo"));
     lay->addWidget(importanceCombobox);
 
+    QLabel *lab = new QLabel(i18n("message:"));
+    lay->addWidget(lab);
+
+    KLineEdit *message = new KLineEdit;
+    message->setObjectName(QLatin1String("message"));
+    lay->addWidget(message);
+
     return w;
 }
 
@@ -54,8 +64,11 @@ QString SieveActionNotify::code(QWidget *w) const
 {
     const SelectImportanceCombobox *importance = w->findChild<SelectImportanceCombobox*>( QLatin1String("importancecombo") );
     const QString importanceStr = importance->code();
-    //TODO
-    return QString::fromLatin1("notify :importance \"%1\"").arg(importanceStr);
+
+    const KLineEdit *message = w->findChild<KLineEdit*>( QLatin1String("message") );
+    const QString messageStr = message->text();
+
+    return QString::fromLatin1("notify :importance \"%1\" :message\"%2\"").arg(importanceStr).arg(messageStr);
 }
 
 QString SieveActionNotify::serverNeedsCapability() const
