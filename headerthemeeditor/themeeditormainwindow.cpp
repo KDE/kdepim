@@ -88,8 +88,13 @@ void ThemeEditorMainWindow::slotCloseTheme()
 void ThemeEditorMainWindow::slotOpenTheme()
 {
     saveCurrentProject(false);
-    const QString fileName = KFileDialog::getOpenFileName(KUrl(), QString::fromLatin1("*.themerc"), this, i18n("Select theme"));
-    if (!fileName.isEmpty()) {
+    const QString directory = KFileDialog::getExistingDirectory(KUrl(), this, i18n("Select theme"));
+    if (!directory.isEmpty()) {
+        QFile file(directory + QDir::separator() + QLatin1String("theme.themerc"));
+        if (!file.exists()) {
+            KMessageBox::error(this, i18n("Directory doesn't contains a theme file. We can not load theme."));
+            return;
+        }
         //TODO load it.
     }
 }
