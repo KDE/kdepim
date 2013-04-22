@@ -21,6 +21,7 @@
 #include <QWidget>
 
 class KComboBox;
+class KLineEdit;
 namespace KSieveUi {
 class SelectDateWidget : public QWidget
 {
@@ -33,6 +34,7 @@ public:
 private:
     void initialize();
     KComboBox *mDateType;
+    KLineEdit *mDateEdit;
 };
 }
 

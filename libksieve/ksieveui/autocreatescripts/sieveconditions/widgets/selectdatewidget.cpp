@@ -19,8 +19,10 @@
 
 #include <KLocale>
 #include <KComboBox>
+#include <KLineEdit>
 
 #include <QHBoxLayout>
+#include <QLabel>
 
 using namespace KSieveUi;
 SelectDateWidget::SelectDateWidget(QWidget *parent)
@@ -53,12 +55,19 @@ void SelectDateWidget::initialize()
     mDateType->addItem(i18n("Zone"), QLatin1String("zone"));
     mDateType->addItem(i18n("Weekday"), QLatin1String("weekday"));
     lay->addWidget(mDateType);
+
+    QLabel *lab = new QLabel(i18n("value:"));
+    lay->addWidget(lab);
+
+    mDateEdit = new KLineEdit;
+    lay->addWidget(mDateEdit);
+
     setLayout(lay);
 }
 
 QString SelectDateWidget::code() const
 {
-    return QString();
+    return QString::fromLatin1("\"%1\" \"%2\"").arg(mDateType->itemData(mDateType->currentIndex()).toString()).arg(mDateEdit->text());
 }
 
 #include "selectdatewidget.moc"

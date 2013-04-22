@@ -17,6 +17,8 @@
 
 #include "sieveconditiondate.h"
 #include "widgets/selectmatchtypecombobox.h"
+#include "widgets/selectdatewidget.h"
+
 #include <KLocale>
 
 #include <QHBoxLayout>
@@ -49,13 +51,23 @@ QWidget *SieveConditionDate::createParamWidget( QWidget *parent ) const
     QLabel *lab = new QLabel(i18n("header"));
     lay->addWidget(lab);
 
+    SelectDateWidget *dateWidget = new SelectDateWidget;
+    dateWidget->setObjectName(QLatin1String("datewidget"));
+    lay->addWidget(dateWidget);
+
     return w;
 }
 
 QString SieveConditionDate::code(QWidget *w) const
 {
-    //TODO
-    return QString();
+    const SelectMatchTypeComboBox *selectMatchCombobox = w->findChild<SelectMatchTypeComboBox*>(QLatin1String("matchtype"));
+    bool isNegative = false;
+    const QString matchTypeStr = selectMatchCombobox->code(isNegative);
+
+    const SelectDateWidget *dateWidget = w->findChild<SelectDateWidget*>(QLatin1String("datewidget"));
+    const QString dateWidgetStr = dateWidget->code();
+
+    return (isNegative ? QLatin1String("not ") : QString()) + QString::fromLatin1("date %1 %2").arg(matchTypeStr).arg(dateWidgetStr);
 }
 
 bool SieveConditionDate::needCheckIfServerHasCapability() const
