@@ -38,7 +38,8 @@ int main (int argc, char **argv)
             <<QLatin1String("editheader")
             <<QLatin1String("reject")
             <<QLatin1String("imapflags")
-            <<QLatin1String("enotify");
+            <<QLatin1String("enotify")
+            <<QLatin1String("date");
     dialog->setSieveCapabilities(capabilities);
     if (dialog->exec() ) {
         QString requires;
