@@ -56,10 +56,6 @@ void ThemeEditorMainWindow::updateActions()
 
 void ThemeEditorMainWindow::setupActions()
 {
-    mNewThemeAction = new KAction(i18n("New theme..."),this);
-    connect(mNewThemeAction, SIGNAL(triggered(bool)),SLOT(slotNewTheme()));
-    actionCollection()->addAction( QLatin1String( "new_theme" ), mNewThemeAction );
-
     mAddExtraPage = new KAction(i18n("Add Extra Page"), this);
     connect(mAddExtraPage, SIGNAL(triggered(bool)),SLOT(slotAddExtraPage()));
     actionCollection()->addAction( QLatin1String( "add_extra_page" ), mAddExtraPage );
@@ -67,6 +63,9 @@ void ThemeEditorMainWindow::setupActions()
     mUploadTheme = new KAction(i18n("Upload theme..."), this);
     actionCollection()->addAction( QLatin1String( "upload_theme" ), mUploadTheme );
     connect(mUploadTheme, SIGNAL(triggered(bool)), SLOT(slotUploadTheme()));
+
+    mNewThemeAction = KStandardAction::openNew(this, SLOT(slotNewTheme()), actionCollection());
+    mNewThemeAction->setText(i18n("New theme..."));
 
     mOpenAction = KStandardAction::open(this, SLOT(slotOpenTheme()), actionCollection());
     mSaveAction = KStandardAction::save(this, SLOT(slotSaveTheme()), actionCollection());

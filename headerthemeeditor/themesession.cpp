@@ -19,8 +19,8 @@
 
 #include <KConfig>
 #include <KConfigGroup>
+#include <KDebug>
 
-#include <QDebug>
 #include <QDir>
 
 ThemeSession::ThemeSession()
@@ -51,13 +51,26 @@ QStringList ThemeSession::extraPages() const
     return mExtraPage;
 }
 
+void ThemeSession::setMainPageFileName(const QString &filename)
+{
+    mMainPageFileName = filename;
+}
+
+QString ThemeSession::mainPageFileName() const
+{
+    return mMainPageFileName;
+}
+
 void ThemeSession::loadSession(const QString &session)
 {
     KConfig config(session);
     if (config.hasGroup(QLatin1String("Global"))) {
-        //TODO
+        KConfigGroup global = config.group(QLatin1String("Global"));
+        mProjectDirectory = global.readEntry("path", QString());
+        mMainPageFileName = global.readEntry(QLatin1String("mainPageName"), QString());
+        mExtraPage = global.readEntry(QLatin1String("extraPagesName"), QStringList());
     } else {
-        qDebug()<<QString::fromLatin1("\"%1\" is not a session file").arg(session);
+        kDebug()<<QString::fromLatin1("\"%1\" is not a session file").arg(session);
     }
 }
 
@@ -66,6 +79,7 @@ void ThemeSession::writeSession()
     KConfig config(mProjectDirectory + QDir::separator() + QLatin1String("theme.themerc"));
     KConfigGroup global = config.group(QLatin1String("Global"));
     global.writeEntry(QLatin1String("path"), mProjectDirectory);
-    //TODO
+    global.writeEntry(QLatin1String("mainPageName"), mMainPageFileName);
+    global.writeEntry(QLatin1String("extraPagesName"), mExtraPage);
     config.sync();
 }

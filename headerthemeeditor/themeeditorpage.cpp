@@ -80,6 +80,7 @@ void ThemeEditorPage::saveTheme()
         page->saveTheme(projectDirectory());
     }
     mDesktopPage->saveTheme(projectDirectory());
+    mThemeSession->setMainPageFileName(mDesktopPage->filename());
     mThemeSession->writeSession();
 }
 

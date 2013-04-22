@@ -47,6 +47,19 @@ EditorPage::~EditorPage()
 {
 }
 
+void EditorPage::loadTheme(const QString &path)
+{
+    QFile file(path);
+    if (file.open(QIODevice::Text|QIODevice::ReadOnly)) {
+        QTextStream out(&file);
+        out.setCodec("UTF-8");
+        QString str;
+        out >> str;
+        file.close();
+        mEditor->setPlainText(str);
+    }
+}
+
 void EditorPage::saveTheme(const QString &path)
 {
     const QString filename = path + QDir::separator() + mPageFileName;
