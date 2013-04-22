@@ -110,6 +110,16 @@ public:
         }
     }
 
+    void slotImportTemplates()
+    {
+        //TODO
+    }
+
+    void slotExportTemplates()
+    {
+        //TODO
+    }
+
     void slotContextMenu(const QPoint &pos)
     {
         const QList<QListWidgetItem *> lstSelectedItems = q->selectedItems();
@@ -132,6 +142,11 @@ public:
                 menu->addAction( i18n("Remove"), q, SLOT(slotRemove()));
             }
         }
+        menu->addSeparator();
+        if (q->count()>0)
+            menu->addAction( i18n("Export..."), q, SLOT(slotExportTemplates()));
+        menu->addAction( i18n("Import..."), q, SLOT(slotImportTemplates()));
+
         menu->exec( q->mapToGlobal( pos ) );
         delete menu;
     }

@@ -60,7 +60,8 @@ private:
     Q_PRIVATE_SLOT( d, void slotInsertTemplate() )
     Q_PRIVATE_SLOT( d, void slotContextMenu(const QPoint &pos) )
     Q_PRIVATE_SLOT( d, void slotInsertNewTemplate(const QString&) )
-
+    Q_PRIVATE_SLOT( d, void slotExportTemplates() )
+    Q_PRIVATE_SLOT( d, void slotImportTemplates() )
     enum TemplateData {
         Text = Qt::UserRole + 1,
         DefaultTemplate = Qt::UserRole + 2
