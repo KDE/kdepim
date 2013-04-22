@@ -93,6 +93,11 @@ public:
     {
         const QString currentActivity = manager->currentActivity();
         if (!currentActivity.isEmpty()) {
+
+            KSharedConfigPtr conf = ActivityManager::configFromActivity(currentActivity);
+            KConfigGroup grp = conf->group(QLatin1String("Global"));
+            activateActivity->setChecked(grp.readEntry(QLatin1String("Enabled"), false));
+
             identity->setCurrentActivity(currentActivity);
             mailTransport->setCurrentActivity(currentActivity);
             collections->setCurrentActivity(currentActivity);
@@ -103,6 +108,10 @@ public:
     {
         const QString currentActivity = manager->currentActivity();
         if (!currentActivity.isEmpty()) {
+            KSharedConfigPtr conf = ActivityManager::configFromActivity(currentActivity);
+            KConfigGroup grp = conf->group(QLatin1String("Global"));
+            grp.writeEntry(QLatin1String("Enabled"), activateActivity->isChecked());
+
             identity->writeConfig(currentActivity);
             mailTransport->writeConfig(currentActivity);
             collections->writeConfig(currentActivity);
