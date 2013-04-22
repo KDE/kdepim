@@ -51,6 +51,7 @@ void ThemeEditorMainWindow::updateActions()
     mAddExtraPage->setEnabled(projectDirectoryIsEmpty);
     mCloseAction->setEnabled(projectDirectoryIsEmpty);
     mUploadTheme->setEnabled(projectDirectoryIsEmpty);
+    mSaveAction->setEnabled(projectDirectoryIsEmpty);
 }
 
 void ThemeEditorMainWindow::setupActions()
@@ -68,6 +69,7 @@ void ThemeEditorMainWindow::setupActions()
     connect(mUploadTheme, SIGNAL(triggered(bool)), SLOT(slotUploadTheme()));
 
     mOpenAction = KStandardAction::open(this, SLOT(slotOpenTheme()), actionCollection());
+    mSaveAction = KStandardAction::save(this, SLOT(slotSaveTheme()), actionCollection());
     mCloseAction = KStandardAction::close( this, SLOT(slotCloseTheme()), actionCollection());
     KStandardAction::quit(this, SLOT(slotQuitApp()), actionCollection() );
 }
@@ -78,6 +80,11 @@ void ThemeEditorMainWindow::slotUploadTheme()
     //TODO
     dialog->exec();
     delete dialog;
+}
+
+void ThemeEditorMainWindow::slotSaveTheme()
+{
+    mThemeEditor->saveTheme();
 }
 
 void ThemeEditorMainWindow::slotCloseTheme()
