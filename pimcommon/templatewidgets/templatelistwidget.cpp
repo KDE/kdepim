@@ -19,9 +19,11 @@
 #include "templateeditdialog.h"
 
 #include <KConfigGroup>
+#include <KSharedConfig>
 #include <KMessageBox>
 #include <KLocale>
 #include <KMenu>
+#include <KFileDialog>
 
 
 #include <QListWidgetItem>
@@ -41,8 +43,9 @@ public:
     }
     ~TemplateListWidgetPrivate()
     {
-        saveTemplates();
+        save();
     }
+
     void createListWidgetItem(const QString &name, const QString &text, bool isDefaultTemplate)
     {
         QListWidgetItem *item = new QListWidgetItem(name, q);
@@ -112,12 +115,20 @@ public:
 
     void slotImportTemplates()
     {
-        //TODO
+        const QString templateFile = KFileDialog::getOpenFileName();
+        if (!templateFile.isEmpty()) {
+            KConfig conf(templateFile);
+            loadTemplates(&conf);
+        }
     }
 
     void slotExportTemplates()
     {
-        //TODO
+        const QString templateFile = KFileDialog::getSaveFileName();
+        if (!templateFile.isEmpty()) {
+            KConfig conf(templateFile);
+            saveTemplates(&conf);
+        }
     }
 
     void slotContextMenu(const QPoint &pos)
@@ -151,50 +162,60 @@ public:
         delete menu;
     }
 
-    void loadTemplates()
+    void load()
     {
         q->clear();
         const QList<PimCommon::defaultTemplate> templatesLst = q->defaultTemplates();
         Q_FOREACH (const PimCommon::defaultTemplate &tmp, templatesLst) {
             createListWidgetItem(tmp.name, tmp.text, true);
         }
-        KConfigGroup group = config->group( "template" );
+        loadTemplates(&(*config));
+        dirty = false;
+    }
+
+    void loadTemplates(KConfig *configFile)
+    {
+        KConfigGroup group = configFile->group( "template" );
         if (group.hasKey(QLatin1String("templateCount"))) {
             const int numberTemplate = group.readEntry( "templateCount", 0 );
             for (int i = 0; i < numberTemplate; ++i) {
-                KConfigGroup group = config->group( QString::fromLatin1( "templateDefine_%1" ).arg ( i ) );
+                KConfigGroup group = configFile->group( QString::fromLatin1( "templateDefine_%1" ).arg ( i ) );
                 const QString name = group.readEntry( "Name", QString() );
                 const QString text = group.readEntry( "Text", QString() );
 
                 createListWidgetItem(name, text, false);
             }
-        }
-        dirty = false;
+        }   
     }
 
-    void saveTemplates()
+    void saveTemplates(KConfig *configFile)
     {
-        if (!dirty)
-            return;
-
         // clear everything
-        foreach ( const QString &group, config->groupList() ) {
-            config->deleteGroup( group );
+        foreach ( const QString &group, configFile->groupList() ) {
+            configFile->deleteGroup( group );
         }
 
         int numberOfTemplate = 0;
         for ( int i = 0; i < q->count(); ++i ) {
             QListWidgetItem *templateItem = q->item(i);
             if (templateItem->data(TemplateListWidget::DefaultTemplate).toBool() == false) {
-                KConfigGroup group = config->group( QString::fromLatin1( "templateDefine_%1" ).arg ( numberOfTemplate ) );
+                KConfigGroup group = configFile->group( QString::fromLatin1( "templateDefine_%1" ).arg ( numberOfTemplate ) );
                 group.writeEntry( "Name", templateItem->text() );
                 group.writeEntry( "Text", templateItem->data(TemplateListWidget::Text) );
                 ++numberOfTemplate;
             }
         }
-        KConfigGroup group = config->group( "template" );
+        KConfigGroup group = configFile->group( "template" );
         group.writeEntry( "templateCount", numberOfTemplate );
-        config->sync();
+        configFile->sync();
+    }
+
+    void save()
+    {
+        if (!dirty)
+            return;
+
+        saveTemplates(&(*config));
         dirty = false;
     }
     bool dirty;
@@ -222,7 +243,7 @@ TemplateListWidget::~TemplateListWidget()
 
 void TemplateListWidget::loadTemplates()
 {
-    d->loadTemplates();
+    d->load();
 }
 
 QList<PimCommon::defaultTemplate> TemplateListWidget::defaultTemplates()
