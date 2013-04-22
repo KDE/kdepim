@@ -17,13 +17,40 @@
 
 #include "sendlaterconfiguredialog.h"
 
+#include <KConfigGroup>
+#include <KLocale>
+
 SendLaterConfigureDialog::SendLaterConfigureDialog(QWidget *parent)
     : KDialog(parent)
 {
+    setCaption( i18n("Configure") );
+    setButtons( Ok|Cancel );
+    QWidget *w = new QWidget;
+    setMainWidget(w);
+    readConfig();
 }
 
 SendLaterConfigureDialog::~SendLaterConfigureDialog()
 {
+    writeConfig();
 }
+
+void SendLaterConfigureDialog::readConfig()
+{
+    KConfigGroup group( KGlobal::config(), "SendLaterConfigureDialog" );
+    const QSize sizeDialog = group.readEntry( "Size", QSize() );
+    if ( sizeDialog.isValid() ) {
+        resize( sizeDialog );
+    } else {
+        resize( 800,600);
+    }
+}
+
+void SendLaterConfigureDialog::writeConfig()
+{
+    KConfigGroup group( KGlobal::config(), "SendLaterConfigureDialog" );
+    group.writeEntry( "Size", size() );
+}
+
 
 #include "sendlaterconfiguredialog.moc"
