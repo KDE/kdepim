@@ -16,6 +16,7 @@ set(libpimactivity_SRCS
   	activitymanager.cpp
   	configureactivitywidget.cpp
         pimwidgets/transportcomboboxactivity.cpp
+        pimwidgets/identitycomboboxactivity.cpp
   	widgets/configurecollections.cpp
   	widgets/configuremailtransport.cpp
   	widgets/activitywarning.cpp
