@@ -43,6 +43,20 @@ void SieveSyntaxHighlighter::highlightBlock(const QString& text)
     }
 }
 
+void SieveSyntaxHighlighter::addCapabilities(const QStringList &capabilities)
+{
+    // capabilities
+    QTextCharFormat keywordFormat;
+    keywordFormat.setForeground( Qt::darkGreen );
+    keywordFormat.setFontWeight( QFont::Bold );
+    QStringList keywords;
+    keywords << capabilities;
+    Q_FOREACH ( const QString & s, keywords ) {
+        const QRegExp regex( s, Qt::CaseInsensitive );
+        m_rules.append( Rule( regex, keywordFormat ) );
+    }
+}
+
 void SieveSyntaxHighlighter::init()
 {
     // Comments

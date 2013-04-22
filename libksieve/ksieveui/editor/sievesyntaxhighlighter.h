@@ -39,6 +39,7 @@ public:
 
     void highlightBlock(const QString& text);
 
+    void addCapabilities(const QStringList &capabilities);
 private:
     void init();
 

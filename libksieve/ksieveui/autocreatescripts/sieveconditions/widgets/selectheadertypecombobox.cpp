@@ -125,8 +125,8 @@ void SelectHeaderTypeComboBox::headerMap()
     mHeaderMap.insert(QLatin1String("cc"), i18n("Cc"));
     mHeaderMap.insert(QLatin1String("bcc"), i18n("Bcc"));
     mHeaderMap.insert(QLatin1String("sender"), i18n("Sender"));
-    mHeaderMap.insert(QLatin1String("sender-from"), i18n("Sender-From"));
-    mHeaderMap.insert(QLatin1String("sender-to"), i18n("Sender-To"));
+    //mHeaderMap.insert(QLatin1String("sender-from"), i18n("Sender-From"));
+    //mHeaderMap.insert(QLatin1String("sender-to"), i18n("Sender-To"));
 }
 
 void SelectHeaderTypeComboBox::initialize()

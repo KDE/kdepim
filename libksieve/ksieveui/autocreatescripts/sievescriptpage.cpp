@@ -27,7 +27,7 @@
 #include <QRadioButton>
 
 namespace KSieveUi {
-SieveScriptPage::SieveScriptPage(QWidget *parent)
+SieveScriptPage::SieveScriptPage(const QStringList &capabilities, QWidget *parent)
     : QWidget(parent),
       mMatchCondition(AndCondition)
 {
@@ -56,7 +56,7 @@ SieveScriptPage::SieveScriptPage(QWidget *parent)
              this, SLOT(slotRadioClicked(QAbstractButton*)) );
     conditions->setLayout(vbox);
 
-    mScriptConditionLister = new SieveConditionWidgetLister;
+    mScriptConditionLister = new SieveConditionWidgetLister(capabilities);
     vbox->addWidget(mScriptConditionLister);
 
     topLayout->addWidget(conditions);
@@ -64,7 +64,7 @@ SieveScriptPage::SieveScriptPage(QWidget *parent)
     QGroupBox *actions = new QGroupBox(i18n("Actions"));
     vbox = new QVBoxLayout;
     actions->setLayout(vbox);
-    mScriptActionLister = new SieveActionWidgetLister;
+    mScriptActionLister = new SieveActionWidgetLister(capabilities);
     vbox->addWidget(mScriptActionLister);
     topLayout->addWidget(actions);
     setLayout(topLayout);

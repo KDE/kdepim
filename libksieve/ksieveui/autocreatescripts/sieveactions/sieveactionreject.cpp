@@ -38,6 +38,7 @@ QWidget *SieveActionReject::createParamWidget( QWidget *parent ) const
 {
     QWidget *w = new QWidget(parent);
     QHBoxLayout *lay = new QHBoxLayout;
+    lay->setMargin(0);
     w->setLayout(lay);
     QLabel *lab = new QLabel(i18n("text:"));
     lay->addWidget(lab);
@@ -61,5 +62,14 @@ QStringList SieveActionReject::needRequires() const
     return QStringList() <<QLatin1String("reject");
 }
 
+QString SieveActionReject::serverNeedsCapability() const
+{
+    return QLatin1String("reject");
+}
+
+bool SieveActionReject::needCheckIfServerHasCapability() const
+{
+    return true;
+}
 
 #include "sieveactionreject.moc"

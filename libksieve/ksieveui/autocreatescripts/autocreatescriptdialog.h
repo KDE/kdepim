@@ -34,6 +34,8 @@ public:
     ~AutoCreateScriptDialog();
     QString script(QString &requires) const;
 
+    void setSieveCapabilities( const QStringList &capabilities );
+
 private Q_SLOTS:
     void slotAddScriptPage(QWidget *page);
     void slotRemoveScriptPage(QWidget *page);

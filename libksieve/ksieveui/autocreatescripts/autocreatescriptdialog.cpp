@@ -61,6 +61,11 @@ AutoCreateScriptDialog::~AutoCreateScriptDialog()
     writeConfig();
 }
 
+void AutoCreateScriptDialog::setSieveCapabilities( const QStringList &capabilities )
+{
+    mSieveScript->setSieveCapabilities(capabilities);
+}
+
 QString AutoCreateScriptDialog::script(QString &requires) const
 {
     return mSieveScript->generatedScript(requires);

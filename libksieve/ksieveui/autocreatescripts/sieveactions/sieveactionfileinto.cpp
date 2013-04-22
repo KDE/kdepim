@@ -43,6 +43,7 @@ QWidget *SieveActionFileInto::createParamWidget( QWidget *parent ) const
 {
     QWidget *w = new QWidget(parent);
     QHBoxLayout *lay = new QHBoxLayout;
+    lay->setMargin(0);
     w->setLayout(lay);
 
     //TODO improve it.
@@ -57,5 +58,14 @@ QStringList SieveActionFileInto::needRequires() const
     return QStringList()<<QLatin1String("fileinto");
 }
 
+bool SieveActionFileInto::needCheckIfServerHasCapability() const
+{
+    return true;
+}
+
+QString SieveActionFileInto::serverNeedsCapability() const
+{
+    return QLatin1String("fileinto");
+}
 
 #include "sieveactionfileinto.moc"

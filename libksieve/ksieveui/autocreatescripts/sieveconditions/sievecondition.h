@@ -40,6 +40,10 @@ public:
     virtual QString code(QWidget *parent) const;
 
     virtual QStringList needRequires() const;
+
+    virtual bool needCheckIfServerHasCapability() const;
+
+    virtual QString serverNeedsCapability() const;
 private:
     QString mName;
     QString mLabel;

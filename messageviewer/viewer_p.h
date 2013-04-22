@@ -449,6 +449,9 @@ public:
   void goResourceOnline();
 
 private slots:
+  void slotModifyItemDone(KJob* job);
+  void slotMessageMayBeAScam();
+  void slotMessageIsNotAScam();
   void slotToggleCaretBrowsing(bool);
   void slotAtmDecryptWithChiasmusResult( const GpgME::Error &, const QVariant & );
   void slotAtmDecryptWithChiasmusUploadResult( KJob * );
@@ -602,6 +605,7 @@ signals:
   void makeResourceOnline(MessageViewer::Viewer::ResourceOnlineMode mode);
 
   void changeDisplayMail(Viewer::ForceDisplayTo,bool);
+  void moveMessageToTrash();
 private:
   QString attachmentInjectionHtml() const;
   QString recipientsQuickListLinkHtml( bool, const QString & ) const;

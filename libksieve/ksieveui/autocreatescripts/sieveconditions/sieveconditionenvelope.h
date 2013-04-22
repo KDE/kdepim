@@ -38,6 +38,10 @@ public:
     QString code(QWidget *w) const;
 
     QStringList needRequires() const;
+
+    bool needCheckIfServerHasCapability() const;
+
+    QString serverNeedsCapability() const;
 };
 }
 

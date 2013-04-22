@@ -28,6 +28,7 @@ class QCompleter;
 namespace KSieveUi {
 
 class SieveLineNumberArea;
+class SieveSyntaxHighlighter;
 
 class KSIEVEUI_EXPORT SieveTextEdit : public QPlainTextEdit
 {
@@ -39,6 +40,8 @@ public:
 
     void lineNumberAreaPaintEvent(QPaintEvent *event);
     int lineNumberAreaWidth() const;
+
+    void setSieveCapabilities( const QStringList &capabilities );
 
 private Q_SLOTS:
     void slotInsertCompletion( const QString& );
@@ -60,6 +63,7 @@ Q_SIGNALS:
 private:
     QCompleter *m_completer;
     SieveLineNumberArea *m_sieveLineNumberArea;
+    SieveSyntaxHighlighter *m_syntaxHighlighter;
 };
 
 }

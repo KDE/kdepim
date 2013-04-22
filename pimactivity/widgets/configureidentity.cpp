@@ -91,7 +91,6 @@ void ConfigureIdentity::writeConfig(const QString &id)
         }
     }
     grp.writeEntry(QLatin1String("ActiveIdentity"), lst);
-
 }
 
 }

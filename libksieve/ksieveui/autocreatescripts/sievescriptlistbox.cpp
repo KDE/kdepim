@@ -187,7 +187,7 @@ void SieveScriptListBox::slotNew()
     const QString newName = KInputDialog::getText(i18n("New Script"), i18n("Add new name:"));
     if (!newName.isEmpty()) {
         SieveScriptListItem *item = new SieveScriptListItem(newName, mSieveListScript);
-        SieveScriptPage *page = new SieveScriptPage;
+        SieveScriptPage *page = new SieveScriptPage(mSieveCapabilities);
         item->setScriptPage(page);
         Q_EMIT addNewPage(page);
         mSieveListScript->setCurrentItem(item);
@@ -199,7 +199,7 @@ void SieveScriptListBox::slotDelete()
 {
     QListWidgetItem *item = mSieveListScript->currentItem();
     if (item) {
-        if (KMessageBox::warningYesNo(this, i18n("Do you want to delete \"%1\" script?"), i18n("Delete script")) == KMessageBox::Yes) {
+        if (KMessageBox::warningYesNo(this, i18n("Do you want to delete \"%1\" script?", item->text()), i18n("Delete script")) == KMessageBox::Yes) {
             SieveScriptListItem *itemScript = static_cast<SieveScriptListItem*>(item);
             Q_EMIT removePage(itemScript->scriptPage());
             delete item;
@@ -304,6 +304,11 @@ QString SieveScriptListBox::generatedScript(QString &requires) const
     }
 
     return resultScript;
+}
+
+void SieveScriptListBox::setSieveCapabilities( const QStringList &capabilities )
+{
+    mSieveCapabilities = capabilities;
 }
 
 #include "sievescriptlistbox.moc"

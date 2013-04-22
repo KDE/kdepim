@@ -42,9 +42,15 @@ set(ksieveui_LIB_SRCS
   autocreatescripts/sieveactions/sieveactionredirect.cpp
   autocreatescripts/sieveactions/sieveactionabstractflags.cpp
   autocreatescripts/sieveactions/sieveactionremoveflags.cpp
+  autocreatescripts/sieveactions/sieveactionnotify.cpp
+  autocreatescripts/sieveactions/sieveactionabstracteditheader.cpp
+  autocreatescripts/sieveactions/sieveactiondeleteheader.cpp
+  autocreatescripts/sieveactions/sieveactionaddheader.cpp
   autocreatescripts/sieveactions/widgets/selectflagswidget.cpp
   autocreatescripts/sieveactions/widgets/selectfileintowidget.cpp
   autocreatescripts/sieveactions/widgets/addresslineedit.cpp
+  autocreatescripts/sieveactions/widgets/selectaddheaderpositioncombobox.cpp
+  autocreatescripts/sieveactions/widgets/selectimportancecombobox.cpp
   autocreatescripts/sieveconditions/sievecondition.cpp
   autocreatescripts/sieveconditions/sieveconditionheader.cpp
   autocreatescripts/sieveconditions/sieveconditionlist.cpp
@@ -53,9 +59,14 @@ set(ksieveui_LIB_SRCS
   autocreatescripts/sieveconditions/sieveconditionenvelope.cpp
   autocreatescripts/sieveconditions/sieveconditionexists.cpp
   autocreatescripts/sieveconditions/sieveconditiontrue.cpp
+  autocreatescripts/sieveconditions/sieveconditionbody.cpp
+  autocreatescripts/sieveconditions/sieveconditiondate.cpp
+  autocreatescripts/sieveconditions/widgets/selectdatewidget.cpp
   autocreatescripts/sieveconditions/widgets/selectmatchtypecombobox.cpp
   autocreatescripts/sieveconditions/widgets/selectaddresspartcombobox.cpp
   autocreatescripts/sieveconditions/widgets/selectheadertypecombobox.cpp
+  autocreatescripts/sieveconditions/widgets/selectbodytypewidget.cpp
+  autocreatescripts/sieveconditions/widgets/selectrelationalmatchtype.cpp
 )
 
 kde4_add_kcfg_files(ksieveui_LIB_SRCS settings.kcfgc)

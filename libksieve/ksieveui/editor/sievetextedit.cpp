@@ -49,7 +49,7 @@ SieveTextEdit::SieveTextEdit( QWidget *parent )
 {
     setWordWrapMode ( QTextOption::NoWrap );
     setFont( KGlobalSettings::fixedFont() );
-    (void) new SieveSyntaxHighlighter( document() );
+    m_syntaxHighlighter = new SieveSyntaxHighlighter( document() );
     m_sieveLineNumberArea = new SieveLineNumberArea(this);
 
     connect(this, SIGNAL(blockCountChanged(int)), this, SLOT(slotUpdateLineNumberAreaWidth(int)));
@@ -267,6 +267,12 @@ QString SieveTextEdit::wordUnderCursor() const
         tc.movePosition( QTextCursor::Left, QTextCursor::KeepAnchor );
     }
     return tc.selectedText();
+}
+
+void SieveTextEdit::setSieveCapabilities( const QStringList &capabilities )
+{
+    m_syntaxHighlighter->addCapabilities(capabilities);
+    //Add completion
 }
 
 #include "sievetextedit.moc"

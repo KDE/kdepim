@@ -26,6 +26,7 @@
 
 #include <QGridLayout>
 #include <QLabel>
+#include <QDir>
 
 DesktopFilePage::DesktopFilePage(QWidget *parent)
     : QWidget(parent)
@@ -70,16 +71,28 @@ QString DesktopFilePage::filename() const
     return mFilename->text();
 }
 
+void DesktopFilePage::loadTheme(const QString &path)
+{
+    const QString filename = path + QDir::separator() + QLatin1String("header.desktop");
+    KDesktopFile desktopFile(filename);
+    mName->setText(desktopFile.desktopGroup().readEntry(QLatin1String("Name")));
+    mDescription->setText(desktopFile.desktopGroup().readEntry(QLatin1String("Description")));
+    mFilename->setText(desktopFile.desktopGroup().readEntry(QLatin1String("FileName")));
+    const QStringList displayExtraHeaders = desktopFile.desktopGroup().readEntry(QLatin1String("DisplayExtraHeaders"),QStringList());
+    mExtraDisplayHeaders->setStringList(displayExtraHeaders);
+}
+
 void DesktopFilePage::saveTheme(const QString &path)
 {
-    QString filename;
+    const QString filename = path + QDir::separator() + QLatin1String("header.desktop");
     KDesktopFile desktopFile(filename);
-    KConfigGroup grp = desktopFile.actionGroup(QLatin1String("Desktop Entry"));
-    grp.writeEntry(QLatin1String("Name"), mName->text());
-    grp.writeEntry(QLatin1String("Description"), mDescription->text());
-    grp.writeEntry(QLatin1String("FileName"), mFilename->text());
-    grp.writeEntry(QLatin1String("DisplayExtraHeaders"), mExtraDisplayHeaders->stringList());
-    grp.sync();
+    desktopFile.desktopGroup().writeEntry(QLatin1String("Name"), mName->text());
+    desktopFile.desktopGroup().writeEntry(QLatin1String("Description"), mDescription->text());
+    desktopFile.desktopGroup().writeEntry(QLatin1String("FileName"), mFilename->text());
+    const QStringList displayExtraHeaders = mExtraDisplayHeaders->stringList();
+    if (!displayExtraHeaders.isEmpty())
+        desktopFile.desktopGroup().writeEntry(QLatin1String("DisplayExtraHeaders"), mExtraDisplayHeaders->stringList());
+    desktopFile.desktopGroup().sync();
 }
 
 #include "desktopfilepage.moc"

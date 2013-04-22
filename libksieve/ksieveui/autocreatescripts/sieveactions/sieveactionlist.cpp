@@ -26,6 +26,9 @@
 #include "sieveactionkeep.h"
 #include "sieveactionredirect.h"
 #include "sieveactionremoveflags.h"
+#include "sieveactionnotify.h"
+#include "sieveactiondeleteheader.h"
+#include "sieveactionaddheader.h"
 
 QList<KSieveUi::SieveAction *> KSieveUi::SieveActionList::actionList()
 {
@@ -39,6 +42,8 @@ QList<KSieveUi::SieveAction *> KSieveUi::SieveActionList::actionList()
     list.append(new KSieveUi::SieveActionReject);
     list.append(new KSieveUi::SieveActionKeep);
     list.append(new KSieveUi::SieveActionRedirect);
-
+    list.append(new KSieveUi::SieveActionNotify);
+    list.append(new KSieveUi::SieveActionDeleteHeader);
+    list.append(new KSieveUi::SieveActionAddHeader);
     return list;
 }

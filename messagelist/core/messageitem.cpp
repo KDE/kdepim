@@ -363,7 +363,7 @@ QColor MessageItem::textColor() const
 {
   Q_D( const MessageItem );
   const Tag *bestTag = d->bestTag();
-  if ( bestTag != 0 ) {
+  if ( bestTag != 0 && bestTag->textColor().isValid() ) {
     return bestTag->textColor();
   }
   QColor clr;

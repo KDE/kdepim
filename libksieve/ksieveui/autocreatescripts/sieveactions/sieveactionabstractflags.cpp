@@ -32,6 +32,7 @@ QWidget *SieveActionAbstractFlags::createParamWidget( QWidget *parent ) const
 {
     QWidget *w = new QWidget(parent);
     QHBoxLayout *lay = new QHBoxLayout;
+    lay->setMargin(0);
     w->setLayout(lay);
     SelectFlagsWidget *flagsWidget = new SelectFlagsWidget;
     flagsWidget->setObjectName(QLatin1String("flagswidget"));
@@ -41,9 +42,9 @@ QWidget *SieveActionAbstractFlags::createParamWidget( QWidget *parent ) const
 
 QString SieveActionAbstractFlags::code(QWidget *w) const
 {
-    SelectFlagsWidget *flagsWidget = w->findChild<SelectFlagsWidget*>( QLatin1String("flagswidget") );
+    const SelectFlagsWidget *flagsWidget = w->findChild<SelectFlagsWidget*>( QLatin1String("flagswidget") );
     const QString flagCode = flagsWidget->code();
-    QString str = flagsCode(w);
+    const QString str = flagsCode();
     return str + QLatin1Char(' ') + flagCode;
 }
 
@@ -51,5 +52,16 @@ QStringList SieveActionAbstractFlags::needRequires() const
 {
     return QStringList() <<QLatin1String("imapflags");
 }
+
+bool SieveActionAbstractFlags::needCheckIfServerHasCapability() const
+{
+    return true;
+}
+
+QString SieveActionAbstractFlags::serverNeedsCapability() const
+{
+    return QLatin1String("imapflags");
+}
+
 
 #include "sieveactionabstractflags.moc"

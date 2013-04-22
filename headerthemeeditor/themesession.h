@@ -35,9 +35,12 @@ public:
     void addExtraPage(const QString &filename);
     QStringList extraPages() const;
 
+    void setMainPageFileName(const QString &filename);
+    QString mainPageFileName() const;
+
 private:
     QString mProjectDirectory;
-    QString mMainPath;
+    QString mMainPageFileName;
     QStringList mExtraPage;
 };
 

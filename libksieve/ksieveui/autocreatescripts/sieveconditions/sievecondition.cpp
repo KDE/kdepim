@@ -60,4 +60,14 @@ QStringList SieveCondition::needRequires() const
     return QStringList();
 }
 
+bool SieveCondition::needCheckIfServerHasCapability() const
+{
+    return false;
+}
+
+QString SieveCondition::serverNeedsCapability() const
+{
+    return QString();
+}
+
 #include "sievecondition.moc"

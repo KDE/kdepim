@@ -35,10 +35,10 @@ static int MAXIMUMACTION = 8;
 static QString INDENTACTION = QLatin1String("    ");
 
 
-SieveActionWidget::SieveActionWidget(QWidget *parent)
+SieveActionWidget::SieveActionWidget(const QStringList &capabilities, QWidget *parent)
     : QWidget(parent)
 {
-    initWidget();
+    initWidget(capabilities);
 }
 
 SieveActionWidget::~SieveActionWidget()
@@ -75,7 +75,7 @@ void SieveActionWidget::generatedScript(QString &script, QStringList &requires)
     }
 }
 
-void SieveActionWidget::initWidget()
+void SieveActionWidget::initWidget(const QStringList &capabilities)
 {
     mLayout = new QGridLayout(this);
     mLayout->setContentsMargins( 0, 0, 0, 0 );
@@ -87,11 +87,21 @@ void SieveActionWidget::initWidget()
     QList<KSieveUi::SieveAction*>::const_iterator end( list.constEnd() );
     int index = 0;
     for ( index = 0, it = list.constBegin(); it != end; ++it, ++index ) {
-        // append to the list of actions:
-        mActionList.append( *it );
+        if ((*it)->needCheckIfServerHasCapability()) {
+            if (capabilities.contains((*it)->serverNeedsCapability())) {
+                // append to the list of actions:
+                mActionList.append( *it );
 
-        // add (i18n-ized) name to combo box
-        mComboBox->addItem( (*it)->label(),(*it)->name() );
+                // add (i18n-ized) name to combo box
+                mComboBox->addItem( (*it)->label(),(*it)->name() );
+            }
+        } else {
+            // append to the list of actions:
+            mActionList.append( *it );
+
+            // add (i18n-ized) name to combo box
+            mComboBox->addItem( (*it)->label(),(*it)->name() );
+        }
     }
     mComboBox->addItem(QLatin1String(""));
     mComboBox->setCurrentIndex(mComboBox->count()-1);
@@ -159,8 +169,9 @@ void SieveActionWidget::updateAddRemoveButton( bool addButtonEnabled, bool remov
     mRemove->setEnabled(removeButtonEnabled);
 }
 
-SieveActionWidgetLister::SieveActionWidgetLister(QWidget *parent)
-    : KPIM::KWidgetLister(false, MINIMUMACTION, MAXIMUMACTION, parent)
+SieveActionWidgetLister::SieveActionWidgetLister(const QStringList &capabilities, QWidget *parent)
+    : KPIM::KWidgetLister(false, MINIMUMACTION, MAXIMUMACTION, parent),
+      mSieveCapabilities(capabilities)
 {
     slotClear();
     updateAddRemoveButton();
@@ -234,7 +245,7 @@ void SieveActionWidgetLister::clearWidget( QWidget *aWidget )
 
 QWidget *SieveActionWidgetLister::createWidget( QWidget *parent )
 {
-    SieveActionWidget *w = new SieveActionWidget( parent);
+    SieveActionWidget *w = new SieveActionWidget( mSieveCapabilities, parent);
     reconnectWidget( w );
     return w;
 }

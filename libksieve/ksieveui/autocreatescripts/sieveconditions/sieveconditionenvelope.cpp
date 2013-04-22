@@ -46,6 +46,7 @@ QWidget *SieveConditionEnvelope::createParamWidget( QWidget *parent ) const
 {
     QWidget *w = new QWidget(parent);
     QHBoxLayout *lay = new QHBoxLayout;
+    lay->setMargin(0);
     w->setLayout(lay);
 
     SelectAddressPartComboBox *selectAddressPart = new SelectAddressPartComboBox;
@@ -74,18 +75,18 @@ QWidget *SieveConditionEnvelope::createParamWidget( QWidget *parent ) const
 
 QString SieveConditionEnvelope::code(QWidget *w) const
 {
-    SelectMatchTypeComboBox *selectMatchCombobox = w->findChild<SelectMatchTypeComboBox*>(QLatin1String("matchtypecombobox"));
+    const SelectMatchTypeComboBox *selectMatchCombobox = w->findChild<SelectMatchTypeComboBox*>(QLatin1String("matchtypecombobox"));
     bool isNegative = false;
     const QString matchTypeStr = selectMatchCombobox->code(isNegative);
 
-    SelectAddressPartComboBox *selectAddressPart = w->findChild<SelectAddressPartComboBox*>(QLatin1String("addresspartcombobox"));
+    const SelectAddressPartComboBox *selectAddressPart = w->findChild<SelectAddressPartComboBox*>(QLatin1String("addresspartcombobox"));
     const QString selectAddressPartStr = selectAddressPart->code();
 
-    SelectHeaderTypeComboBox *selectHeaderType = w->findChild<SelectHeaderTypeComboBox*>(QLatin1String("headertypecombobox"));
+    const SelectHeaderTypeComboBox *selectHeaderType = w->findChild<SelectHeaderTypeComboBox*>(QLatin1String("headertypecombobox"));
     const QString selectHeaderTypeStr = selectHeaderType->code();
 
 
-    KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("editaddress") );
+    const KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("editaddress") );
     const QString addressStr = AutoCreateScriptUtil::createAddressList(edit->text().trimmed());
     return (isNegative ? QLatin1String("not ") : QString()) + QString::fromLatin1("envelope %1 %2 %3 %4").arg(selectAddressPartStr).arg(matchTypeStr).arg(selectHeaderTypeStr).arg(addressStr);
 }
@@ -93,6 +94,16 @@ QString SieveConditionEnvelope::code(QWidget *w) const
 QStringList SieveConditionEnvelope::needRequires() const
 {
     return QStringList() << QLatin1String("envelope");
+}
+
+bool SieveConditionEnvelope::needCheckIfServerHasCapability() const
+{
+    return true;
+}
+
+QString SieveConditionEnvelope::serverNeedsCapability() const
+{
+    return QLatin1String("envelope");
 }
 
 #include "sieveconditionenvelope.moc"

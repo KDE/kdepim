@@ -43,6 +43,7 @@ QWidget *SieveConditionExists::createParamWidget( QWidget *parent ) const
 {
     QWidget *w = new QWidget(parent);
     QHBoxLayout *lay = new QHBoxLayout;
+    lay->setMargin(0);
     w->setLayout(lay);
 
     QComboBox *combo = new QComboBox;
@@ -63,10 +64,10 @@ QWidget *SieveConditionExists::createParamWidget( QWidget *parent ) const
 
 QString SieveConditionExists::code(QWidget *w) const
 {
-    QComboBox *combo = w->findChild<QComboBox*>( QLatin1String("existscheck") );
+    const QComboBox *combo = w->findChild<QComboBox*>( QLatin1String("existscheck") );
     const QString comparaison = combo->itemData(combo->currentIndex()).toString();
 
-    SelectHeaderTypeComboBox *value = w->findChild<SelectHeaderTypeComboBox*>( QLatin1String("headervalue") );
+    const SelectHeaderTypeComboBox *value = w->findChild<SelectHeaderTypeComboBox*>( QLatin1String("headervalue") );
     return QString::fromLatin1("%1 %2").arg(comparaison).arg(value->code());
 }
 

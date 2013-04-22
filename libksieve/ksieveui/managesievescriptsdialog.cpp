@@ -211,6 +211,9 @@ void ManageSieveScriptsDialog::slotResult( KManageSieve::SieveJob * job, bool su
     if ( !parent )
         return;
 
+    qDebug()<<" job->sieveCapabilities() :"<<job->sieveCapabilities() ;
+    if (success)
+        parent->setData( 0, SIEVE_SERVER_CAPABILITIES, job->sieveCapabilities() );
     mJobs.remove( job );
 
     mListView->expandItem( parent );
@@ -374,6 +377,7 @@ void ManageSieveScriptsDialog::slotEditScript()
         return;
     url.setFileName( currentItem->text(0) );
     mCurrentURL = url;
+    mCurrentCapabilities = parent->data(0, SIEVE_SERVER_CAPABILITIES).toStringList();
     mIsNewScript = false;
     KManageSieve::SieveJob * job = KManageSieve::SieveJob::get( url );
     connect( job, SIGNAL(result(KManageSieve::SieveJob*,bool,QString,bool)),
@@ -406,6 +410,7 @@ void ManageSieveScriptsDialog::slotNewScript()
 
     u.setFileName( name );
 
+    mCurrentCapabilities = currentItem->data(0, SIEVE_SERVER_CAPABILITIES).toStringList();
 
     QTreeWidgetItem * parentItem = currentItem;
     if (parentItem) {
@@ -440,6 +445,8 @@ void ManageSieveScriptsDialog::slotGetResult( KManageSieve::SieveJob *, bool suc
     disableManagerScriptsDialog(true);
     mSieveEditor = new SieveEditor;
     mSieveEditor->setScriptName( mCurrentURL.fileName() );
+    qDebug()<<" mCurrentCapabilities"<<mCurrentCapabilities;
+    mSieveEditor->setSieveCapabilities(mCurrentCapabilities);
     mSieveEditor->setScript( script );
     connect( mSieveEditor, SIGNAL(okClicked()), this, SLOT(slotSieveEditorOkClicked()) );
     connect( mSieveEditor, SIGNAL(cancelClicked()), this, SLOT(slotSieveEditorCancelClicked()) );

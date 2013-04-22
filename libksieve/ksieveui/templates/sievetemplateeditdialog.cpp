@@ -39,7 +39,7 @@ SieveTemplateEditDialog::SieveTemplateEditDialog(QWidget *parent, bool defaultTe
     } else {
         setButtons( Ok |Cancel );
     }
-
+    setDefaultButton(Ok);
     QWidget *w = new QWidget;
     QVBoxLayout *vbox = new QVBoxLayout;
 
@@ -49,6 +49,7 @@ SieveTemplateEditDialog::SieveTemplateEditDialog(QWidget *parent, bool defaultTe
 
     mTemplateNameEdit = new KLineEdit;
     mTemplateNameEdit->setEnabled(!defaultTemplate);
+    mTemplateNameEdit->setTrapReturnKey(true);
     hbox->addWidget(mTemplateNameEdit);
 
     vbox->addLayout(hbox);

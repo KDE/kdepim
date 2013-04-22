@@ -335,7 +335,7 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
   void setExternalWindow( bool b );
 
 signals:
-  void changeDisplayMail(Viewer::ForceDisplayTo,bool);
+  void moveMessageToTrash();
 
   /**
    * Emitted when a status bar message is shown. Note that the status bar message is also set to

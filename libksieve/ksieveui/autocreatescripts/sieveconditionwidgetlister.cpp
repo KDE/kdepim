@@ -34,10 +34,10 @@ using namespace KSieveUi;
 static int MINIMUMCONDITION = 1;
 static int MAXIMUMCONDITION = 8;
 
-SieveConditionWidget::SieveConditionWidget(QWidget *parent)
+SieveConditionWidget::SieveConditionWidget(const QStringList &capabilities, QWidget *parent)
     : QWidget(parent)
 {
-    initWidget();
+    initWidget(capabilities);
 }
 
 SieveConditionWidget::~SieveConditionWidget()
@@ -72,7 +72,7 @@ void SieveConditionWidget::generatedScript(QString &script, QStringList &require
     }
 }
 
-void SieveConditionWidget::initWidget()
+void SieveConditionWidget::initWidget(const QStringList &capabilities)
 {
     mLayout = new QGridLayout(this);
     mLayout->setContentsMargins( 0, 0, 0, 0 );
@@ -84,12 +84,22 @@ void SieveConditionWidget::initWidget()
     QList<KSieveUi::SieveCondition*>::const_iterator it;
     QList<KSieveUi::SieveCondition*>::const_iterator end( list.constEnd() );
     int index = 0;
-    for ( index = 0, it = list.constBegin(); it != end; ++it, ++index ) {
-        // append to the list of actions:
-        mConditionList.append( *it );
+    for ( index = 0, it = list.constBegin(); it != end; ++it, ++index ) {        
+        if ((*it)->needCheckIfServerHasCapability()) {
+            if (capabilities.contains((*it)->serverNeedsCapability())) {
+                // append to the list of actions:
+                mConditionList.append( *it );
 
-        // add (i18n-ized) name to combo box
-        mComboBox->addItem( (*it)->label(),(*it)->name() );
+                // add (i18n-ized) name to combo box
+                mComboBox->addItem( (*it)->label(),(*it)->name() );
+            }
+        } else {
+            // append to the list of actions:
+            mConditionList.append( *it );
+
+            // add (i18n-ized) name to combo box
+            mComboBox->addItem( (*it)->label(),(*it)->name() );
+        }
     }
     mComboBox->addItem(QLatin1String(""));
     mComboBox->setCurrentIndex(mComboBox->count()-1);
@@ -152,8 +162,9 @@ void SieveConditionWidget::updateAddRemoveButton( bool addButtonEnabled, bool re
     mRemove->setEnabled(removeButtonEnabled);
 }
 
-SieveConditionWidgetLister::SieveConditionWidgetLister(QWidget *parent)
-    : KPIM::KWidgetLister(false, MINIMUMCONDITION, MAXIMUMCONDITION, parent)
+SieveConditionWidgetLister::SieveConditionWidgetLister(const QStringList &capabilities, QWidget *parent)
+    : KPIM::KWidgetLister(false, MINIMUMCONDITION, MAXIMUMCONDITION, parent),
+      mSieveCapabilities(capabilities)
 {
     slotClear();
     updateAddRemoveButton();
@@ -216,7 +227,7 @@ void SieveConditionWidgetLister::clearWidget( QWidget *aWidget )
 
 QWidget *SieveConditionWidgetLister::createWidget( QWidget *parent )
 {
-    SieveConditionWidget *w = new SieveConditionWidget( parent);
+    SieveConditionWidget *w = new SieveConditionWidget( mSieveCapabilities, parent);
     reconnectWidget( w );
     return w;
 }

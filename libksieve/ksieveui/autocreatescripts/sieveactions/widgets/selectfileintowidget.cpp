@@ -50,6 +50,7 @@ SelectFileIntoWidget::SelectFileIntoWidget(QWidget *parent)
     : QWidget(parent)
 {
     QHBoxLayout *lay = new QHBoxLayout;
+    lay->setMargin(0);
     mLineEdit = new KLineEdit;
     lay->addWidget(mLineEdit);
     QPushButton *selectFileInfo = new QPushButton(i18n("..."));

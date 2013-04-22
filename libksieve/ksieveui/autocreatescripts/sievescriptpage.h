@@ -37,7 +37,7 @@ public:
         AllCondition
     };
 
-    explicit SieveScriptPage(QWidget *parent = 0);
+    explicit SieveScriptPage(const QStringList &capabilities, QWidget *parent = 0);
     ~SieveScriptPage();
 
     void generatedScript(QString &script, QStringList &requires);

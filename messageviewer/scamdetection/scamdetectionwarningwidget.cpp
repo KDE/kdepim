@@ -30,11 +30,16 @@ ScamDetectionWarningWidget::ScamDetectionWarningWidget(QWidget *parent)
     setCloseButtonVisible(true);
     setMessageType(Warning);
     setWordWrap(true);
-    setText(i18n("This message may be a scam."));
+    setText(i18n("This message may be a scam. <a href=\"scamdetails\">(Details...)</a>"));
 
+    connect(this, SIGNAL(linkActivated(QString)), SLOT(slotShowDetails(QString)));
 
-    KAction *action = new KAction( i18n( "Details" ), this );
-    connect( action, SIGNAL(triggered(bool)), SIGNAL(showDetails()) );
+    KAction *action = new KAction( i18n( "Move to Trash" ), this );
+    connect( action, SIGNAL(triggered(bool)), SIGNAL(moveMessageToTrash()) );
+    addAction( action );
+
+    action = new KAction( i18n( "I confirm it's not a scam" ), this );
+    connect( action, SIGNAL(triggered(bool)), SLOT(slotMessageIsNotAScam()) );
     addAction( action );
 
     action = new KAction( i18n( "Disable scam detection for all messages" ), this );
@@ -44,6 +49,19 @@ ScamDetectionWarningWidget::ScamDetectionWarningWidget(QWidget *parent)
 
 ScamDetectionWarningWidget::~ScamDetectionWarningWidget()
 {
+}
+
+void ScamDetectionWarningWidget::slotMessageIsNotAScam()
+{
+    Q_EMIT messageIsNotAScam();
+    setVisible(false);
+}
+
+void ScamDetectionWarningWidget::slotShowDetails(const QString &content)
+{
+    if (content == QLatin1String("scamdetails")) {
+        Q_EMIT showDetails();
+    }
 }
 
 void ScamDetectionWarningWidget::slotShowWarning()

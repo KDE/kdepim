@@ -42,6 +42,7 @@ QWidget *SieveConditionHeader::createParamWidget( QWidget *parent ) const
 {
     QWidget *w = new QWidget(parent);
     QHBoxLayout *lay = new QHBoxLayout;
+    lay->setMargin(0);
     w->setLayout(lay);
 
     SelectMatchTypeComboBox *matchTypeCombo = new SelectMatchTypeComboBox;
@@ -63,14 +64,14 @@ QWidget *SieveConditionHeader::createParamWidget( QWidget *parent ) const
 
 QString SieveConditionHeader::code(QWidget *w) const
 {
-    SelectMatchTypeComboBox *matchTypeCombo = w->findChild<SelectMatchTypeComboBox*>( QLatin1String("matchtypecombobox") );
+    const SelectMatchTypeComboBox *matchTypeCombo = w->findChild<SelectMatchTypeComboBox*>( QLatin1String("matchtypecombobox") );
     bool isNegative = false;
     const QString matchString = matchTypeCombo->code(isNegative);
 
-    SelectHeaderTypeComboBox *headerType = w->findChild<SelectHeaderTypeComboBox*>( QLatin1String("headertype") );
+    const SelectHeaderTypeComboBox *headerType = w->findChild<SelectHeaderTypeComboBox*>( QLatin1String("headertype") );
     const QString headerStr = headerType->code();
 
-    KLineEdit *value = w->findChild<KLineEdit*>( QLatin1String("value") );
+    const KLineEdit *value = w->findChild<KLineEdit*>( QLatin1String("value") );
     const QString valueStr = value->text();
 
     return (isNegative ? QLatin1String("not ") : QString()) + QString::fromLatin1("header %1 %2 \"%3\"").arg(matchString).arg(headerStr).arg(valueStr);

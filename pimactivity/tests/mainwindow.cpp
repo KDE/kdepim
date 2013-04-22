@@ -16,13 +16,18 @@
 */
 
 #include "mainwindow.h"
+#include "pimactivity/transportcomboboxactivity.h"
 
-
+#include <QVBoxLayout>
 
 MainWindow::MainWindow()
     : QMainWindow()
 {
     QWidget *w = new QWidget;
+    QVBoxLayout *lay = new QVBoxLayout;
+    PimActivity::TransportComboboxActivity *combobox = new PimActivity::TransportComboboxActivity;
+    lay->addWidget(combobox);
+    w->setLayout(lay);
     setCentralWidget(w);
 }
 
