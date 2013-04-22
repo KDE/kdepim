@@ -292,6 +292,7 @@ void SieveEditor::slotCheckSyntax()
 void SieveEditor::setSieveCapabilities( const QStringList &capabilities )
 {
     mSieveCapabilities = capabilities;
+    mTextEdit->setSieveCapabilities(mSieveCapabilities);
 }
 
 #include "sieveeditor.moc"
