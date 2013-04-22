@@ -30,7 +30,6 @@ static QString addWarningColor(const QString &url)
     return error;
 }
 
-
 ScamDetection::ScamDetection(QObject *parent)
     : QObject(parent)
 {

@@ -31,6 +31,9 @@ public:
 public Q_SLOTS:
     void slotShowWarning();
 
+private Q_SLOTS:
+    void slotShowDetails(const QString &content);
+
 Q_SIGNALS:
     void showDetails();
     void moveMessageToTrash();
