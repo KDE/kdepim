@@ -109,6 +109,7 @@ void ThemeEditorMainWindow::saveCurrentProject(bool createNewTheme)
     }
     if (createNewTheme) {
         delete mThemeEditor;
+        mThemeEditor = 0;
         QPointer<NewThemeDialog> dialog = new NewThemeDialog(this);
         QString newTheme;
         QString projectDirectory;
@@ -124,6 +125,11 @@ void ThemeEditorMainWindow::saveCurrentProject(bool createNewTheme)
             setCentralWidget(0);
         }
         delete dialog;
+        updateActions();
+    } else {
+        delete mThemeEditor;
+        mThemeEditor = 0;
+        setCentralWidget(0);
         updateActions();
     }
 }
