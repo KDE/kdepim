@@ -20,6 +20,7 @@
 
 #include <QWidget>
 
+class KComboBox;
 namespace KSieveUi {
 class SelectDateWidget : public QWidget
 {
@@ -27,6 +28,11 @@ class SelectDateWidget : public QWidget
 public:
     explicit SelectDateWidget(QWidget *parent = 0);
     ~SelectDateWidget();
+
+    QString code() const;
+private:
+    void initialize();
+    KComboBox *mDateType;
 };
 }
 

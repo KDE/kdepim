@@ -17,15 +17,48 @@
 
 #include "selectdatewidget.h"
 
+#include <KLocale>
+#include <KComboBox>
+
+#include <QHBoxLayout>
+
 using namespace KSieveUi;
 SelectDateWidget::SelectDateWidget(QWidget *parent)
     : QWidget(parent)
 {
+    initialize();
 }
 
 SelectDateWidget::~SelectDateWidget()
 {
 
+}
+
+void SelectDateWidget::initialize()
+{
+    QHBoxLayout *lay = new QHBoxLayout;
+
+    mDateType = new KComboBox;
+    mDateType->addItem(i18n("Year"), QLatin1String("year"));
+    mDateType->addItem(i18n("month"), QLatin1String("month"));
+    mDateType->addItem(i18n("Day"), QLatin1String("day"));
+    mDateType->addItem(i18n("Date"), QLatin1String("date"));
+    mDateType->addItem(i18n("Julian"), QLatin1String("julian"));
+    mDateType->addItem(i18n("Hour"), QLatin1String("hour"));
+    mDateType->addItem(i18n("Minute"), QLatin1String("minute"));
+    mDateType->addItem(i18n("Second"), QLatin1String("second"));
+    mDateType->addItem(i18n("Time"), QLatin1String("time"));
+    mDateType->addItem(i18n("iso8601"), QLatin1String("iso8601"));
+    mDateType->addItem(i18n("std11"), QLatin1String("std11"));
+    mDateType->addItem(i18n("Zone"), QLatin1String("zone"));
+    mDateType->addItem(i18n("Weekday"), QLatin1String("weekday"));
+    lay->addWidget(mDateType);
+    setLayout(lay);
+}
+
+QString SelectDateWidget::code() const
+{
+    return QString();
 }
 
 #include "selectdatewidget.moc"
