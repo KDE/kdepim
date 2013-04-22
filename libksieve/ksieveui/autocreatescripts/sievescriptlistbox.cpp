@@ -199,7 +199,7 @@ void SieveScriptListBox::slotDelete()
 {
     QListWidgetItem *item = mSieveListScript->currentItem();
     if (item) {
-        if (KMessageBox::warningYesNo(this, i18n("Do you want to delete \"%1\" script?"), i18n("Delete script")) == KMessageBox::Yes) {
+        if (KMessageBox::warningYesNo(this, i18n("Do you want to delete \"%1\" script?", item->text()), i18n("Delete script")) == KMessageBox::Yes) {
             SieveScriptListItem *itemScript = static_cast<SieveScriptListItem*>(item);
             Q_EMIT removePage(itemScript->scriptPage());
             delete item;
