@@ -16,6 +16,7 @@
 */
 
 #include "sieveconditiondate.h"
+#include "widgets/selectmatchtypecombobox.h"
 #include <KLocale>
 
 #include <QHBoxLayout>
@@ -41,11 +42,19 @@ QWidget *SieveConditionDate::createParamWidget( QWidget *parent ) const
     lay->setMargin(0);
     w->setLayout(lay);
 
+    SelectMatchTypeComboBox *matchTypeCombo = new SelectMatchTypeComboBox;
+    matchTypeCombo->setObjectName(QLatin1String("matchtype"));
+    lay->addWidget(matchTypeCombo);
+
+    QLabel *lab = new QLabel(i18n("header"));
+    lay->addWidget(lab);
+
     return w;
 }
 
 QString SieveConditionDate::code(QWidget *w) const
 {
+    //TODO
     return QString();
 }
 
