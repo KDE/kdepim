@@ -24,6 +24,8 @@
 
 #include <QSplitter>
 #include <QVBoxLayout>
+#include <QTextStream>
+#include <QDir>
 
 EditorPage::EditorPage(QWidget *parent)
     : QWidget(parent)
@@ -47,7 +49,25 @@ EditorPage::~EditorPage()
 
 void EditorPage::saveTheme(const QString &path)
 {
-
+    const QString filename = path + QDir::separator() + mPageFileName;
+    QFile file(filename);
+    if (file.open(QIODevice::WriteOnly|QIODevice::Text)) {
+        QTextStream out(&file);
+        out.setCodec("UTF-8");
+        out << mEditor->toPlainText();
+        file.close();
+    }
 }
+
+void EditorPage::setPageFileName(const QString &filename)
+{
+    mPageFileName = filename;
+}
+
+QString EditorPage::pageFileName() const
+{
+    return mPageFileName;
+}
+
 
 #include "editorpage.moc"

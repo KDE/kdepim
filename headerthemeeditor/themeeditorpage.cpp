@@ -60,6 +60,7 @@ void ThemeEditorPage::addExtraPage()
     const QString filename = KInputDialog::getText(i18n("Filename of extra page"), i18n("Filename:"));
     if (!filename.isEmpty()) {
         EditorPage *extraPage = new EditorPage;
+        extraPage->setPageFileName(filename);
         mTabWidget->addTab(extraPage, filename);
         mThemeSession->addExtraPage(filename);
         mExtraPage.append(extraPage);
@@ -68,7 +69,10 @@ void ThemeEditorPage::addExtraPage()
 
 void ThemeEditorPage::saveTheme()
 {
+    //set default page filename before saving
+    mEditorPage->setPageFileName(mDesktopPage->filename());
     mEditorPage->saveTheme(projectDirectory());
+
     Q_FOREACH (EditorPage *page, mExtraPage) {
         page->saveTheme(projectDirectory());
     }

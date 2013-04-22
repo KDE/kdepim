@@ -31,7 +31,12 @@ public:
     explicit EditorPage(QWidget *parent = 0);
     ~EditorPage();
     void saveTheme(const QString &path);
+
+    void setPageFileName(const QString &filename);
+    QString pageFileName() const;
+
 private:
+    QString mPageFileName;
     Editor *mEditor;
     ThemeTemplateWidget *mThemeTemplate;
 };
