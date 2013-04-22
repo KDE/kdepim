@@ -69,7 +69,12 @@ void SelectFlagsListWidget::init()
     item->setCheckState(Qt::Unchecked);
     item = new QListWidgetItem(QLatin1String("\\\\Flagged"), this);
     item->setCheckState(Qt::Unchecked);
-    //TODO
+    item = new QListWidgetItem(QLatin1String("\\\\Seen"), this);
+    item->setCheckState(Qt::Unchecked);
+    item = new QListWidgetItem(QLatin1String("\\\\Recent"), this);
+    item->setCheckState(Qt::Unchecked);
+    item = new QListWidgetItem(QLatin1String("\\\\Draft"), this);
+    item->setCheckState(Qt::Unchecked);
 }
 
 void SelectFlagsListWidget::setFlags(const QStringList& list)

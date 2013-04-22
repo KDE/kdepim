@@ -41,6 +41,7 @@ void SelectDateWidget::initialize()
     QHBoxLayout *lay = new QHBoxLayout;
 
     mDateType = new KComboBox;
+    connect(mDateType, SIGNAL(activated(int)), SLOT(slotDateTypeActivated(int)));
     mDateType->addItem(i18n("Year"), QLatin1String("year"));
     mDateType->addItem(i18n("month"), QLatin1String("month"));
     mDateType->addItem(i18n("Day"), QLatin1String("day"));
@@ -63,6 +64,14 @@ void SelectDateWidget::initialize()
     lay->addWidget(mDateEdit);
 
     setLayout(lay);
+}
+
+void SelectDateWidget::slotDateTypeActivated(int index)
+{
+    const QString itemData = mDateType->itemData(index).toString();
+    if (itemData == QLatin1String("year")) {
+        //TODO
+    }
 }
 
 QString SelectDateWidget::code() const

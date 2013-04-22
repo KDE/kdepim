@@ -15,29 +15,24 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef SELECTDATEWIDGET_H
-#define SELECTDATEWIDGET_H
+#ifndef SELECTRELATIONALMATCHTYPE_H
+#define SELECTRELATIONALMATCHTYPE_H
 
-#include <QWidget>
+#include <KComboBox>
 
-class KComboBox;
-class KLineEdit;
 namespace KSieveUi {
-class SelectDateWidget : public QWidget
+class SelectRelationalMatchType : public KComboBox
 {
     Q_OBJECT
 public:
-    explicit SelectDateWidget(QWidget *parent = 0);
-    ~SelectDateWidget();
+    explicit SelectRelationalMatchType(QWidget *parent = 0);
+    ~SelectRelationalMatchType();
 
     QString code() const;
-private Q_SLOTS:
-    void slotDateTypeActivated(int);
 private:
     void initialize();
-    KComboBox *mDateType;
-    KLineEdit *mDateEdit;
 };
 }
 
-#endif // SELECTDATEWIDGET_H
+
+#endif // SELECTRELATIONALMATCHTYPE_H
