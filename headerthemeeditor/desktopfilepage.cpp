@@ -78,7 +78,9 @@ void DesktopFilePage::saveTheme(const QString &path)
     desktopFile.desktopGroup().writeEntry(QLatin1String("Name"), mName->text());
     desktopFile.desktopGroup().writeEntry(QLatin1String("Description"), mDescription->text());
     desktopFile.desktopGroup().writeEntry(QLatin1String("FileName"), mFilename->text());
-    desktopFile.desktopGroup().writeEntry(QLatin1String("DisplayExtraHeaders"), mExtraDisplayHeaders->stringList());
+    const QStringList displayExtraHeaders = mExtraDisplayHeaders->stringList();
+    if (!displayExtraHeaders.isEmpty())
+        desktopFile.desktopGroup().writeEntry(QLatin1String("DisplayExtraHeaders"), mExtraDisplayHeaders->stringList());
     desktopFile.desktopGroup().sync();
 }
 

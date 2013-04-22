@@ -39,6 +39,7 @@ private Q_SLOTS:
     void slotAddExtraPage();
     void slotOpenTheme();
     void slotUploadTheme();
+    void slotQuitApp();
 
 private:
     void updateActions();

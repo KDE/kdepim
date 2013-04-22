@@ -69,7 +69,7 @@ void ThemeEditorMainWindow::setupActions()
 
     mOpenAction = KStandardAction::open(this, SLOT(slotOpenTheme()), actionCollection());
     mCloseAction = KStandardAction::close( this, SLOT(slotCloseTheme()), actionCollection());
-    KStandardAction::quit( kapp, SLOT(quit()), actionCollection() );
+    KStandardAction::quit(this, SLOT(slotQuitApp()), actionCollection() );
 }
 
 void ThemeEditorMainWindow::slotUploadTheme()
@@ -148,6 +148,12 @@ void ThemeEditorMainWindow::closeEvent(QCloseEvent *e)
 {
     saveCurrentProject(false);
     KXmlGuiWindow::closeEvent(e);
+}
+
+void ThemeEditorMainWindow::slotQuitApp()
+{
+    saveCurrentProject(false);
+    kapp->quit();
 }
 
 #include "themeeditormainwindow.moc"
