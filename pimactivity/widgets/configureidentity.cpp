@@ -19,6 +19,7 @@
 */
 
 #include "configureidentity.h"
+#include "activitymanager.h"
 
 #include <KPIMIdentities/IdentityManager>
 #include <KPIMIdentities/Identity>
@@ -61,7 +62,7 @@ void ConfigureIdentity::init()
 
 void ConfigureIdentity::readConfig(const QString &id)
 {
-    KSharedConfigPtr conf = configFromActivity(id);
+    KSharedConfigPtr conf = ActivityManager::configFromActivity(id);
     if (conf->hasGroup(QLatin1String("identity"))) {
         KConfigGroup grp = conf->group(QLatin1String("identity"));
         const QStringList list = grp.readEntry(QLatin1String("ActiveIdentity"), QStringList());
@@ -80,7 +81,7 @@ void ConfigureIdentity::readConfig(const QString &id)
 
 void ConfigureIdentity::writeConfig(const QString &id)
 {
-    KSharedConfigPtr conf = configFromActivity(id);
+    KSharedConfigPtr conf = ActivityManager::configFromActivity(id);
     KConfigGroup grp = conf->group(QLatin1String("identity"));
     const int numberOfItems(mListIdentity->count());
     QStringList lst;

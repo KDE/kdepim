@@ -20,6 +20,8 @@
 
 #include "activitymanager.h"
 
+#include <KStandardDirs>
+
 #include <QDebug>
 
 namespace PimActivity {
@@ -122,6 +124,13 @@ QString ActivityManager::currentActivity() const
     }
     return QString();
 }
+
+KSharedConfigPtr ActivityManager::configFromActivity(const QString &id)
+{
+    const QString configLocal = KStandardDirs::locateLocal( "data", QString::fromLatin1("activitymanager/activities/%1/config/pimactivityrc").arg(id) );
+    return KSharedConfig::openConfig( configLocal );
+}
+
 
 }
 

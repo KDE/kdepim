@@ -24,6 +24,8 @@
 #include "pimactivity_export.h"
 #include <kactivities/consumer.h>
 
+#include <KSharedConfig>
+
 #include <QObject>
 
 namespace PimActivity {
@@ -40,6 +42,9 @@ public:
     QStringList listActivities() const;
     QHash<QString, QString> listActivitiesWithRealName() const;
     QString currentActivity() const;
+
+    static KSharedConfigPtr configFromActivity(const QString &id);
+
 Q_SIGNALS:
     void serviceStatusChanged(KActivities::Consumer::ServiceStatus);
     void activityAdded(const QString&);

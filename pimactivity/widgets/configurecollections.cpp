@@ -19,6 +19,7 @@
 */
 
 #include "configurecollections.h"
+#include "activitymanager.h"
 
 #include <Akonadi/EntityTreeModel>
 #include <Akonadi/ETMViewStateSaver>
@@ -78,7 +79,7 @@ void ConfigureCollections::initCollections()
 
 void ConfigureCollections::readConfig(const QString &id)
 {
-    KSharedConfigPtr conf = configFromActivity(id);
+    KSharedConfigPtr conf = ActivityManager::configFromActivity(id);
     if (!mModelState) {
         mModelState = new KViewStateMaintainer<Akonadi::ETMViewStateSaver>( conf->group( "collections" ), this );
         mModelState->setSelectionModel( mSelectionModel );
@@ -88,7 +89,7 @@ void ConfigureCollections::readConfig(const QString &id)
 
 void ConfigureCollections::writeConfig(const QString &id)
 {
-    KSharedConfigPtr conf = configFromActivity(id);
+    KSharedConfigPtr conf = ActivityManager::configFromActivity(id);
     KConfigGroup grp = conf->group(QLatin1String("collections"));
     if (mModelState) {
         delete mModelState;

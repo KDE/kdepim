@@ -18,6 +18,7 @@
 
 */
 #include "configuremailtransport.h"
+#include "activitymanager.h"
 
 #include "mailtransport/transportmanager.h"
 
@@ -57,7 +58,7 @@ void ConfigureMailtransport::init()
 
 void ConfigureMailtransport::readConfig(const QString &id)
 {
-    KSharedConfigPtr conf = configFromActivity(id);
+    KSharedConfigPtr conf = ActivityManager::configFromActivity(id);
     if (conf->hasGroup(QLatin1String("mailtransport"))) {
         KConfigGroup grp = conf->group(QLatin1String("mailtransport"));
         const QStringList list = grp.readEntry(QLatin1String("ActiveMailTransport"), QStringList());
@@ -75,7 +76,7 @@ void ConfigureMailtransport::readConfig(const QString &id)
 
 void ConfigureMailtransport::writeConfig(const QString &id)
 {
-    KSharedConfigPtr conf = configFromActivity(id);
+    KSharedConfigPtr conf = ActivityManager::configFromActivity(id);
     KConfigGroup grp = conf->group(QLatin1String("mailtransport"));
     const int numberOfItems(mListTransport->count());
     QStringList lst;

@@ -56,9 +56,3 @@ QString AbstractConfigureWidget::activity() const
 {
     return mActivityId;
 }
-
-KSharedConfigPtr AbstractConfigureWidget::configFromActivity(const QString &id)
-{
-    const QString configLocal = KStandardDirs::locateLocal( "data", QString::fromLatin1("activitymanager/activities/%1/config/pimactivityrc").arg(id) );
-    return KSharedConfig::openConfig( configLocal );
-}
