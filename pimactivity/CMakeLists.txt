@@ -4,7 +4,7 @@ find_package(KActivities 6.2.0 QUIET CONFIG)
 set_package_properties(KActivities PROPERTIES DESCRIPTION "KActivities" URL "https://projects.kde.org/projects/kde/kdelibs/kactivities" TYPE REQUIRED PURPOSE "Required for Activities integration in kdepim." )
 
 
-include_directories(${KACTIVITIES_INCLUDE_DIRS})
+include_directories(${KACTIVITIES_INCLUDE_DIRS} .)
 
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
@@ -15,7 +15,7 @@ set(libpimactivity_SRCS
   	widgets/configureidentity.cpp
   	activitymanager.cpp
   	configureactivitywidget.cpp
-        transportcomboboxactivity.cpp
+        pimwidgets/transportcomboboxactivity.cpp
   	widgets/configurecollections.cpp
   	widgets/configuremailtransport.cpp
   	widgets/activitywarning.cpp

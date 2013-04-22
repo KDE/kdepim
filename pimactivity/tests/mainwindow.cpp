@@ -16,7 +16,7 @@
 */
 
 #include "mainwindow.h"
-#include "pimactivity/transportcomboboxactivity.h"
+#include "pimactivity/pimwidgets/transportcomboboxactivity.h"
 
 #include <QVBoxLayout>
 
