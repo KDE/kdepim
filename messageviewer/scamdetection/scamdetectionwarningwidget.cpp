@@ -42,7 +42,6 @@ ScamDetectionWarningWidget::ScamDetectionWarningWidget(QWidget *parent)
     connect( action, SIGNAL(triggered(bool)), SLOT(slotMessageIsNotAScam()) );
     addAction( action );
 
-
     action = new KAction( i18n( "Disable scam detection for all messages" ), this );
     connect( action, SIGNAL(triggered(bool)), SLOT(slotDisableScamDetection()) );
     addAction( action );
