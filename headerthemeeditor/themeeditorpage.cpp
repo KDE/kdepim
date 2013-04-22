@@ -57,8 +57,11 @@ ThemeEditorPage::~ThemeEditorPage()
 
 void ThemeEditorPage::addExtraPage()
 {
-    const QString filename = KInputDialog::getText(i18n("Filename of extra page"), i18n("Filename:"));
+    QString filename = KInputDialog::getText(i18n("Filename of extra page"), i18n("Filename:"));
     if (!filename.isEmpty()) {
+        if (!filename.endsWith(QLatin1String(".html"))) {
+            filename += QLatin1String(".html");
+        }
         EditorPage *extraPage = new EditorPage;
         extraPage->setPageFileName(filename);
         mTabWidget->addTab(extraPage, filename);
