@@ -115,7 +115,7 @@ void SieveScriptPage::generatedScript(QString &script, QStringList &requires)
             script += filterStr + conditionStr;
         }
         if (hasUniqCondition)
-            script += QLatin1String("\n{\n");
+            script += QLatin1String("{\n");
         else
             script += QLatin1String(")\n{\n");
     }
