@@ -26,6 +26,7 @@
 #include <KInputDialog>
 
 #include <QHBoxLayout>
+#include <QDir>
 
 ThemeEditorPage::ThemeEditorPage(const QString &themeName, QWidget *parent)
     : QWidget(parent),
@@ -82,6 +83,21 @@ void ThemeEditorPage::saveTheme()
     mDesktopPage->saveTheme(projectDirectory());
     mThemeSession->setMainPageFileName(mDesktopPage->filename());
     mThemeSession->writeSession();
+}
+
+void ThemeEditorPage::loadTheme(const QString &filename)
+{
+    mThemeSession->loadSession(filename);
+    mDesktopPage->loadTheme(mThemeSession->projectDirectory());
+    mEditorPage->loadTheme(mThemeSession->projectDirectory() + QDir::separator() + mThemeSession->mainPageFileName());
+    const QStringList lstExtraPages = mThemeSession->extraPages();
+    Q_FOREACH(const QString &page, lstExtraPages) {
+        EditorPage *extraPage = new EditorPage;
+        extraPage->setPageFileName(page);
+        mTabWidget->addTab(extraPage, page);
+        mExtraPage.append(extraPage);
+        extraPage->loadTheme(mThemeSession->projectDirectory() + QDir::separator() + page);
+    }
 }
 
 QString ThemeEditorPage::projectDirectory() const
