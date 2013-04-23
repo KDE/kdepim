@@ -118,7 +118,7 @@ void SieveSyntaxHighlighter::init()
     testFormat.setForeground( Qt::gray );
     testFormat.setFontWeight( QFont::Bold );
     QStringList testType;
-    testType << QLatin1String( "\\baddress\\b" )<<QLatin1String( "\\ballof\\b" )<<QLatin1String( "\\banyof\\b" )<<QLatin1String( "\\bexists\\b" )<<QLatin1String( "\\bfalse\\b" )<<QLatin1String( "\\bheader\\b" )<<QLatin1String("\\bnot\\b" )<<QLatin1String( "\\bsize\\b" )<<QLatin1String( "\\btrue\\b" );
+    testType << QLatin1String( "\\benvelope\\b" ) << QLatin1String( "\\baddress\\b" )<<QLatin1String( "\\ballof\\b" )<<QLatin1String( "\\banyof\\b" )<<QLatin1String( "\\bexists\\b" )<<QLatin1String( "\\bfalse\\b" )<<QLatin1String( "\\bheader\\b" )<<QLatin1String("\\bnot\\b" )<<QLatin1String( "\\bsize\\b" )<<QLatin1String( "\\btrue\\b" );
     Q_FOREACH ( const QString & s, testType ) {
         const QRegExp regex( s, Qt::CaseInsensitive );
         m_rules.append( Rule( regex, testFormat ) );
