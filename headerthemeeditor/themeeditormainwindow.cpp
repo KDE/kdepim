@@ -106,6 +106,7 @@ void ThemeEditorMainWindow::slotOpenTheme()
         mThemeEditor = new ThemeEditorPage(QString());
         mThemeEditor->loadTheme(filename);
         setCentralWidget(mThemeEditor);
+        updateActions();
     }
 }
 
