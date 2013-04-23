@@ -16,15 +16,19 @@
 */
 
 #include "sieveactionfileinto.h"
+#include "autocreatescripts/autocreatescriptdialog.h"
+
 #include <KLocale>
 #include <KLineEdit>
 
+#include <QCheckBox>
 #include <QHBoxLayout>
 
 using namespace KSieveUi;
 SieveActionFileInto::SieveActionFileInto(QObject *parent)
     : SieveAction(QLatin1String("fileinto"), i18n("File Into"), parent)
 {
+    mHasCopySupport = AutoCreateScriptDialog::sieveCapabilities().contains(QLatin1String("copy"));
 }
 
 SieveAction* SieveActionFileInto::newAction()
@@ -34,9 +38,15 @@ SieveAction* SieveActionFileInto::newAction()
 
 QString SieveActionFileInto::code(QWidget *w) const
 {
+    QString result = QString::fromLatin1("fileinto ");
     const KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("fileintolineedit") );
     const QString text = edit->text();
-    return QString::fromLatin1("fileinto \"%1\";").arg(text);
+    if (mHasCopySupport) {
+        const QCheckBox *copy = w->findChild<QCheckBox*>( QLatin1String("copy") );
+        if (copy->isChecked())
+            result += QLatin1String(":copy ");
+    }
+    return result + QString::fromLatin1("\"%1\";").arg(text);
 }
 
 QWidget *SieveActionFileInto::createParamWidget( QWidget *parent ) const
@@ -46,6 +56,11 @@ QWidget *SieveActionFileInto::createParamWidget( QWidget *parent ) const
     lay->setMargin(0);
     w->setLayout(lay);
 
+    if (mHasCopySupport) {
+        QCheckBox *copy = new QCheckBox(i18n("Keep a copy"));
+        copy->setObjectName(QLatin1String("copy"));
+        lay->addWidget(copy);
+    }
     //TODO improve it.
     KLineEdit *edit = new KLineEdit;
     lay->addWidget(edit);
@@ -55,7 +70,7 @@ QWidget *SieveActionFileInto::createParamWidget( QWidget *parent ) const
 
 QStringList SieveActionFileInto::needRequires() const
 {
-    return QStringList()<<QLatin1String("fileinto");
+    return QStringList()<<QLatin1String("fileinto") << QLatin1String("copy");
 }
 
 bool SieveActionFileInto::needCheckIfServerHasCapability() const

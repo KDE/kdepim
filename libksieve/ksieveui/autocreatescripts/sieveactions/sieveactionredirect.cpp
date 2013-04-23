@@ -16,18 +16,21 @@
 */
 
 #include "sieveactionredirect.h"
+#include "autocreatescripts/autocreatescriptdialog.h"
 #include "widgets/addresslineedit.h"
 
 #include <KLocale>
 #include <KLineEdit>
 
 #include <QHBoxLayout>
+#include <QCheckBox>
 
 using namespace KSieveUi;
 
 SieveActionRedirect::SieveActionRedirect(QObject *parent)
     : SieveAction(QLatin1String("redirect"), i18n("Redirect"), parent)
 {
+    mHasCopySupport = AutoCreateScriptDialog::sieveCapabilities().contains(QLatin1String("copy"));
 }
 
 SieveAction *SieveActionRedirect::newAction()
@@ -41,6 +44,11 @@ QWidget *SieveActionRedirect::createParamWidget( QWidget *parent ) const
     QHBoxLayout *lay = new QHBoxLayout;
     lay->setMargin(0);
     w->setLayout(lay);
+    if (mHasCopySupport) {
+        QCheckBox *copy = new QCheckBox(i18n("Keep a copy"));
+        copy->setObjectName(QLatin1String("copy"));
+        lay->addWidget(copy);
+    }
     AddressLineEdit *edit = new AddressLineEdit;
     edit->setObjectName(QLatin1String("RedirectEdit"));
     lay->addWidget(edit);
@@ -49,9 +57,25 @@ QWidget *SieveActionRedirect::createParamWidget( QWidget *parent ) const
 
 QString SieveActionRedirect::code(QWidget *w) const
 {
+    QString result = QLatin1String("redirect ");
     const KLineEdit *edit = w->findChild<AddressLineEdit*>( QLatin1String("RedirectEdit") );
     const QString text = edit->text();
-    return QString::fromLatin1("redirect \"%1\";").arg(text);
+
+    if (mHasCopySupport) {
+        const QCheckBox *copy = w->findChild<QCheckBox*>( QLatin1String("copy") );
+        if (copy->isChecked())
+            result += QLatin1String(":copy ");
+    }
+    return result + QString::fromLatin1("\"%1\";").arg(text);
 }
+
+QStringList SieveActionRedirect::needRequires() const
+{
+    if (mHasCopySupport) {
+        return QStringList() <<QLatin1String("copy");
+    }
+    return QStringList();
+}
+
 
 #include "sieveactionredirect.moc"
