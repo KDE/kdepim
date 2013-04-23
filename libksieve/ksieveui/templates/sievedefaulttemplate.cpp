@@ -74,7 +74,7 @@ QList<PimCommon::defaultTemplate> KSieveUi::SieveDefaultTemplate::defaultTemplat
     tmp.text = QString::fromLatin1("if header :contains [\"from\",\"cc\"]\n"
                                    "[\n"
                                    "\"from-foo@example.net\",\n"
-                                   "\"pub@foo.com\",\n"
+                                   "\"pub@foo.com\"\n"
                                    "]\n"
                                    "{\n"
                                    "  discard;\n"
