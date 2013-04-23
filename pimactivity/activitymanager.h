@@ -43,6 +43,9 @@ public:
     QHash<QString, QString> listActivitiesWithRealName() const;
     QString currentActivity() const;
 
+    void setEnabledActivity(bool enabled);
+    bool isEnabledActivity() const;
+
     static KSharedConfigPtr configFromActivity(const QString &id);
 
 Q_SIGNALS:

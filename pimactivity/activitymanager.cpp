@@ -21,6 +21,7 @@
 #include "activitymanager.h"
 
 #include <KStandardDirs>
+#include <KConfigGroup>
 
 #include <QDebug>
 
@@ -30,7 +31,8 @@ class ActivityManagerPrivate
 {
 public:
     ActivityManagerPrivate(ActivityManager *qq)
-        : q(qq)
+        : isEnabled(false),
+          q(qq)
     {
         consumer = new KActivities::Consumer;
         const QStringList activities = consumer->listActivities();
@@ -78,6 +80,7 @@ public:
         return result;
     }
 
+    bool isEnabled;
     QHash<QString, KActivities::Info*> activities;
     ActivityManager *q;
     KActivities::Consumer *consumer;
@@ -90,7 +93,12 @@ ActivityManager::ActivityManager(QObject *parent)
     if (KActivities::Consumer::serviceStatus() == KActivities::Consumer::NotRunning)  {
         qDebug()<<" kactivities is not running";
     }
-
+    const QString currentActivity = this->currentActivity();
+    if (!currentActivity.isEmpty()) {
+        KSharedConfigPtr conf = ActivityManager::configFromActivity(currentActivity);
+        KConfigGroup grp = conf->group(QLatin1String("Global"));
+        d->isEnabled =grp.readEntry(QLatin1String("Enabled"), false);
+    }
 }
 
 ActivityManager::~ActivityManager()
@@ -98,9 +106,18 @@ ActivityManager::~ActivityManager()
     delete d;
 }
 
+void ActivityManager::setEnabledActivity(bool enabled)
+{
+    d->isEnabled = enabled;
+}
+
+bool ActivityManager::isEnabledActivity() const
+{
+    return d->isEnabled;
+}
 
 bool ActivityManager::isActive() const
-{
+{       
     return (KActivities::Consumer::serviceStatus() == KActivities::Consumer::Running);
 }
 

@@ -107,15 +107,18 @@ public:
     void writeConfig()
     {
         const QString currentActivity = manager->currentActivity();
+        bool activityEnabled = false;
         if (!currentActivity.isEmpty()) {
             KSharedConfigPtr conf = ActivityManager::configFromActivity(currentActivity);
             KConfigGroup grp = conf->group(QLatin1String("Global"));
-            grp.writeEntry(QLatin1String("Enabled"), activateActivity->isChecked());
+            activityEnabled = activateActivity->isChecked();
+            grp.writeEntry(QLatin1String("Enabled"), activityEnabled);
 
             identity->writeConfig(currentActivity);
             mailTransport->writeConfig(currentActivity);
             collections->writeConfig(currentActivity);
         }
+        manager->setEnabledActivity(activityEnabled);
     }
 
     void setDefault()
