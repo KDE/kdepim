@@ -53,3 +53,5 @@ endif()
 if(BUILD_ktnef)
   add_subdirectory(ktnef)
 endif()
+
+  add_subdirectory(headerthemeeditor)
