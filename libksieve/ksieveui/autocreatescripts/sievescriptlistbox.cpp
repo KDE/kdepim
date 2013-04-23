@@ -187,7 +187,7 @@ void SieveScriptListBox::slotNew()
     const QString newName = KInputDialog::getText(i18n("New Script"), i18n("Add new name:"));
     if (!newName.isEmpty()) {
         SieveScriptListItem *item = new SieveScriptListItem(newName, mSieveListScript);
-        SieveScriptPage *page = new SieveScriptPage(mSieveCapabilities);
+        SieveScriptPage *page = new SieveScriptPage;
         item->setScriptPage(page);
         Q_EMIT addNewPage(page);
         mSieveListScript->setCurrentItem(item);
@@ -304,11 +304,6 @@ QString SieveScriptListBox::generatedScript(QString &requires) const
     }
 
     return resultScript;
-}
-
-void SieveScriptListBox::setSieveCapabilities( const QStringList &capabilities )
-{
-    mSieveCapabilities = capabilities;
 }
 
 #include "sievescriptlistbox.moc"

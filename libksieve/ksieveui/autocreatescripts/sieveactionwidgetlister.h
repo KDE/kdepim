@@ -35,7 +35,7 @@ class SieveActionWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit SieveActionWidget(const QStringList &capabilities, QWidget *parent);
+    explicit SieveActionWidget(QWidget *parent);
     ~SieveActionWidget();
     void updateAddRemoveButton( bool addButtonEnabled, bool removeButtonEnabled );
     void generatedScript(QString &script, QStringList &requires);
@@ -48,7 +48,7 @@ Q_SIGNALS:
     void removeWidget(QWidget *w);
 private:
     void setFilterAction( QWidget *widget );
-    void initWidget(const QStringList &capabilities);
+    void initWidget();
     KPushButton *mAdd;
     KPushButton *mRemove;
     PimCommon::MinimumComboBox *mComboBox;
@@ -61,7 +61,7 @@ class SieveActionWidgetLister : public KPIM::KWidgetLister
 {
     Q_OBJECT
 public:
-    explicit SieveActionWidgetLister(const QStringList &capabilities, QWidget *parent = 0);
+    explicit SieveActionWidgetLister(QWidget *parent = 0);
     ~SieveActionWidgetLister();
 
     void generatedScript(QString &script, QStringList &requires);
@@ -76,7 +76,6 @@ protected:
 private:
     void reconnectWidget(SieveActionWidget *w );
     void updateAddRemoveButton();
-    QStringList mSieveCapabilities;
 };
 }
 
