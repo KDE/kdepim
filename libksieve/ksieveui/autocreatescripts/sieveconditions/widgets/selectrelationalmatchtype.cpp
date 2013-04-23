@@ -18,12 +18,15 @@
 
 #include "selectrelationalmatchtype.h"
 
+#include <KComboBox>
+
 #include <KLocale>
+#include <QHBoxLayout>
 
 using namespace KSieveUi;
 
 SelectRelationalMatchType::SelectRelationalMatchType(QWidget *parent)
-    : KComboBox(parent)
+    : QWidget(parent)
 {
     initialize();
 }
@@ -35,17 +38,28 @@ SelectRelationalMatchType::~SelectRelationalMatchType()
 
 QString SelectRelationalMatchType::code() const
 {
-    return QString::fromLatin1("\"%1\"").arg(itemData(currentIndex()).toString());
+    return QString::fromLatin1("%1 \"%2\"").arg(mType->itemData(mType->currentIndex()).toString()).arg(mMatch->itemData(mMatch->currentIndex()).toString());
 }
 
 void SelectRelationalMatchType::initialize()
 {
-    addItem(i18n("Greater than"), QLatin1String("gt"));
-    addItem(i18n("Greater than or equal"), QLatin1String("ge"));
-    addItem(i18n("Less than"), QLatin1String("lt"));
-    addItem(i18n("Less than or equal"), QLatin1String("le"));
-    addItem(i18n("Equal to"), QLatin1String("eq"));
-    addItem(i18n("Not equal to"), QLatin1String("ne"));
+    QHBoxLayout *lay = new QHBoxLayout;
+    lay->setMargin(0);
+    setLayout(lay);
+
+    mType = new KComboBox;
+    mType->addItem(i18n("Value"), QLatin1String(":value"));
+    mType->addItem(i18n("Count"), QLatin1String(":count"));
+    lay->addWidget(mType);
+
+    mMatch = new KComboBox;
+    mMatch->addItem(i18n("Greater than"), QLatin1String("gt"));
+    mMatch->addItem(i18n("Greater than or equal"), QLatin1String("ge"));
+    mMatch->addItem(i18n("Less than"), QLatin1String("lt"));
+    mMatch->addItem(i18n("Less than or equal"), QLatin1String("le"));
+    mMatch->addItem(i18n("Equal to"), QLatin1String("eq"));
+    mMatch->addItem(i18n("Not equal to"), QLatin1String("ne"));
+    lay->addWidget(mMatch);
 }
 
 #include "selectrelationalmatchtype.moc"

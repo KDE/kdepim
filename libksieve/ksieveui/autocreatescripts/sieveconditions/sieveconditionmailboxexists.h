@@ -15,26 +15,33 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef SELECTRELATIONALMATCHTYPE_H
-#define SELECTRELATIONALMATCHTYPE_H
 
-#include <QWidget>
-class KComboBox;
+#ifndef SIEVECONDITIONMAILBOXEXISTS_H
+#define SIEVECONDITIONMAILBOXEXISTS_H
+
+#include "sievecondition.h"
+
 namespace KSieveUi {
-class SelectRelationalMatchType : public QWidget
+class SieveConditionMailboxExists : public SieveCondition
 {
     Q_OBJECT
 public:
-    explicit SelectRelationalMatchType(QWidget *parent = 0);
-    ~SelectRelationalMatchType();
+    SieveConditionMailboxExists(QObject *parent = 0);
 
-    QString code() const;
-private:
-    void initialize();
-    KComboBox *mType;
-    KComboBox *mMatch;
+    /**
+     * Static function that creates a filter action of this type.
+     */
+    static SieveCondition *newAction();
+
+    QWidget *createParamWidget( QWidget *parent ) const;
+
+    QString code(QWidget *parent) const;
+
+    QStringList needRequires() const;
+
+    bool needCheckIfServerHasCapability() const;
+
+    QString serverNeedsCapability() const;
 };
 }
-
-
-#endif // SELECTRELATIONALMATCHTYPE_H
+#endif // SIEVECONDITIONMAILBOXEXISTS_H
