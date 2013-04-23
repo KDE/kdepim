@@ -1,7 +1,7 @@
 <div>
      {% if header.subjecti18n %}
         {% with header.subjecti18n as title %}
-        {% with header.subject as value %}
+        {% with header.subject|safe as value %}
         {% include "header_row.html" %}
         {% endwith %}
         {% endwith %}
@@ -34,4 +34,9 @@
         {% endwith %}
         {% endwith %}
      {% endif %}
+
+     {% if header.spamHTML %}
+        {{ spamHTML|safe }}
+     {% endif %}
+
 </div>
