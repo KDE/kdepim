@@ -109,6 +109,7 @@ ActivityManager::~ActivityManager()
 void ActivityManager::setEnabledActivity(bool enabled)
 {
     d->isEnabled = enabled;
+    Q_EMIT enabledActivityChanged(enabled);
 }
 
 bool ActivityManager::isEnabledActivity() const

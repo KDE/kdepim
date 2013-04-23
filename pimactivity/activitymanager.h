@@ -53,6 +53,7 @@ Q_SIGNALS:
     void activityAdded(const QString&);
     void activityRemoved(const QString&);
     void currentActivityChanged(const QString&);
+    void enabledActivityChanged(bool enabled);
 
 private:
     friend class ActivityManagerPrivate;
