@@ -54,4 +54,11 @@ if(BUILD_ktnef)
   add_subdirectory(ktnef)
 endif()
 
+if(BUILD_headerthemeeditor)
   add_subdirectory(headerthemeeditor)
+endif()
+
+if(BUILD_archivemailagent)
+  add_subdirectory(archivemailagent)
+endif()
+
