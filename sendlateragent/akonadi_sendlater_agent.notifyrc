@@ -1,0 +1,8 @@
+[Global]
+IconName=kmail
+Comment=Send Later Agent
+
+[Event/mailsend]
+Name=Mail send
+Action=Popup
+
