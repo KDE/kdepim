@@ -55,12 +55,12 @@ void SendLaterDialog::writeConfig()
 
 void SendLaterDialog::slotSendLater()
 {
-
+    //TODO
 }
 
 void SendLaterDialog::slotSendNow()
 {
-
+    //TODO
 }
 
 #include "sendlaterdialog.moc"
