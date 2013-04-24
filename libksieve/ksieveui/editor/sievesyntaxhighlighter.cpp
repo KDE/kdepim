@@ -146,6 +146,9 @@ void SieveSyntaxHighlighter::init()
              <<QLatin1String( "\\bheader\\b" )
              <<QLatin1String( "\\bnot\\b" )
              <<QLatin1String( "\\bsize\\b" )
+             <<QLatin1String( "\\bdate\\b" )
+             <<QLatin1String( "\\bcurrentdate\\b" )
+             <<QLatin1String( "\\bmailboxexists\\b" )
              <<QLatin1String( "\\btrue\\b" );
     Q_FOREACH ( const QString & s, testType ) {
         const QRegExp regex( s, Qt::CaseInsensitive );
