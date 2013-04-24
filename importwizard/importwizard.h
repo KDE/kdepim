@@ -55,7 +55,6 @@ public:
     void addFinishError( const QString& log );
 
 private Q_SLOTS:
-    void help();
     void slotProgramSelected(const QString& program);
     void slotImportMailsClicked();
     void slotImportFiltersClicked();
