@@ -45,6 +45,7 @@ public:
     explicit ConfigureCollections(QWidget *parent = 0);
     ~ConfigureCollections();
 
+    void setDefault();
     void writeConfig(const QString &id);
 private:
     void readConfig(const QString &id);

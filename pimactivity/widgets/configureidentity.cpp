@@ -94,6 +94,15 @@ void ConfigureIdentity::writeConfig(const QString &id)
     grp.writeEntry(QLatin1String("ActiveIdentity"), lst);
 }
 
+void ConfigureIdentity::setDefault()
+{
+    const int numberOfItems(mListIdentity->count());
+    for (int i = 0; i < numberOfItems; ++i) {
+        QListWidgetItem *item = mListIdentity->item(i);
+        item->setCheckState(Qt::Checked);
+    }
+}
+
 }
 
 #include "configureidentity.moc"

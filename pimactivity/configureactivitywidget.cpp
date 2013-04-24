@@ -123,7 +123,10 @@ public:
 
     void setDefault()
     {
-        //TODO
+        activateActivity->setChecked(false);
+        identity->setDefault();
+        mailTransport->setDefault();
+        collections->setDefault();
     }
 
     void addPages()

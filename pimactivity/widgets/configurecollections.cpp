@@ -98,6 +98,11 @@ void ConfigureCollections::writeConfig(const QString &id)
     }
 }
 
+void ConfigureCollections::setDefault()
+{
+    //TODO
+}
+
 }
 
 #include "configurecollections.moc"

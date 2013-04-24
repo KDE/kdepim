@@ -16,27 +16,62 @@
 */
 
 #include "identitycomboboxactivity.h"
+#include "activitymanager.h"
 
 namespace PimActivity {
 class IdentityComboboxActivityPrivate
 {
 public:
-    IdentityComboboxActivityPrivate(IdentityComboboxActivity *qq)
-        : q(qq)
+    IdentityComboboxActivityPrivate(ActivityManager *manager, IdentityComboboxActivity *qq)
+        : activityManager(manager),
+          q(qq)
     {
     }
+
+    void connectSignals()
+    {
+        if (activityManager) {
+            q->connect(activityManager, SIGNAL(currentActivityChanged(QString)), q, SLOT(slotCurrentActivityChanged(QString)));
+        }
+    }
+
+    void slotCurrentActivityChanged(const QString &id)
+    {
+        //TODO
+        q->updateComboboxList(id);
+    }
+
+    ActivityManager *activityManager;
     IdentityComboboxActivity *q;
 };
 
 
 IdentityComboboxActivity::IdentityComboboxActivity(QWidget *parent)
-    : KComboBox(parent), d(new IdentityComboboxActivityPrivate(this))
+    : KComboBox(parent), d(new IdentityComboboxActivityPrivate(0, this))
 {
+}
+
+
+IdentityComboboxActivity::IdentityComboboxActivity(ActivityManager *manager, QWidget *parent)
+    : KComboBox(parent), d(new IdentityComboboxActivityPrivate(manager, this))
+{
+    d->connectSignals();
 }
 
 IdentityComboboxActivity::~IdentityComboboxActivity()
 {
     delete d;
+}
+
+void IdentityComboboxActivity::setActivityManager(ActivityManager *manager)
+{
+    d->activityManager = manager;
+    d->connectSignals();
+}
+
+void IdentityComboboxActivity::updateComboboxList(const QString &id)
+{
+    //TODO
 }
 
 

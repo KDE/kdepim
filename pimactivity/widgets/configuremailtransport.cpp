@@ -89,6 +89,16 @@ void ConfigureMailtransport::writeConfig(const QString &id)
     grp.writeEntry(QLatin1String("ActiveMailTransport"), lst);
 }
 
+void ConfigureMailtransport::setDefault()
+{
+    const int numberOfItems(mListTransport->count());
+    for (int i = 0; i < numberOfItems; ++i) {
+        QListWidgetItem *item = mListTransport->item(i);
+        item->setCheckState(Qt::Checked);
+    }
+}
+
+
 }
 
 #include "configuremailtransport.moc"
