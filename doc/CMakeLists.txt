@@ -62,3 +62,7 @@ if(BUILD_archivemailagent)
   add_subdirectory(akonadi_archivemail_agent)
 endif()
 
+if(BUILD_importwizard)
+  add_subdirectory(importwizard)
+endif()
+
