@@ -25,6 +25,7 @@
 #include <QLabel>
 #include <QStackedWidget>
 #include <QSpinBox>
+#include <QDateEdit>
 
 Q_DECLARE_METATYPE(KSieveUi::SelectDateWidget::DateType)
 
@@ -67,11 +68,17 @@ void SelectDateWidget::initialize()
     mStackWidget = new QStackedWidget;
     lay->addWidget(mStackWidget);
 
-    mDateEdit = new KLineEdit;
-    mStackWidget->addWidget(mDateEdit);
+    mDateLineEdit = new KLineEdit;
+    mStackWidget->addWidget(mDateLineEdit);
 
     mDateValue = new QSpinBox;
     mStackWidget->addWidget(mDateValue);
+
+    mDateEdit = new QDateEdit;
+    mStackWidget->addWidget(mDateEdit);
+
+    mTimeEdit = new QTimeEdit;
+    mStackWidget->addWidget(mTimeEdit);
 
     mStackWidget->setCurrentWidget(mDateEdit);
 
@@ -81,35 +88,109 @@ void SelectDateWidget::initialize()
 void SelectDateWidget::slotDateTypeActivated(int index)
 {
     const DateType type = mDateType->itemData(index).value<KSieveUi::SelectDateWidget::DateType>();
-    //TODO
     switch(type) {
     case Year:
+        mStackWidget->setCurrentWidget(mDateValue);
+        mDateValue->setMinimum(0);
+        mDateValue->setMaximum(9999);
         break;
     case Month:
+        mStackWidget->setCurrentWidget(mDateValue);
+        mDateValue->setMinimum(1);
+        mDateValue->setMaximum(12);
         break;
     case Day:
-        break;
-    case Date:
-        break;
-    case Julian:
+        mStackWidget->setCurrentWidget(mDateValue);
+        mDateValue->setMinimum(1);
+        mDateValue->setMaximum(31);
         break;
     case Hour:
+        mStackWidget->setCurrentWidget(mDateValue);
+        mDateValue->setMinimum(0);
+        mDateValue->setMaximum(23);
         break;
     case Minute:
+        mDateValue->setMinimum(0);
+        mDateValue->setMaximum(59);
+        mStackWidget->setCurrentWidget(mDateValue);
         break;
     case Second:
-        break;
-    case Time:
-        break;
-    case Iso8601:
-        break;
-    case Std11:
-        break;
-    case Zone:
+        mDateValue->setMinimum(0);
+        mDateValue->setMaximum(60);
+        mStackWidget->setCurrentWidget(mDateValue);
         break;
     case Weekday:
+        mDateValue->setMinimum(0);
+        mDateValue->setMaximum(6);
+        mStackWidget->setCurrentWidget(mDateValue);
+        break;
+    case Date:
+        mStackWidget->setCurrentWidget(mDateEdit);
+        break;
+    case Julian:
+        mStackWidget->setCurrentWidget(mDateLineEdit);
+        break;
+    case Time:
+        mStackWidget->setCurrentWidget(mTimeEdit);
+        break;
+    case Iso8601:
+        mStackWidget->setCurrentWidget(mDateLineEdit);
+        break;
+    case Std11:
+        mStackWidget->setCurrentWidget(mDateLineEdit);
+        break;
+    case Zone:
+        mStackWidget->setCurrentWidget(mDateLineEdit);
         break;
     }
+}
+
+QString SelectDateWidget::dateValue(SelectDateWidget::DateType type) const
+{
+    QString str;
+    switch(type) {
+    case Year:
+        str = QString::fromLatin1("%1").arg(mDateValue->value(),4, QLatin1Char('0'));
+        break;
+    case Month:
+        str = QString::fromLatin1("%1").arg(mDateValue->value(),2, QLatin1Char('0'));
+        break;
+    case Day:
+        str = QString::fromLatin1("%1").arg(mDateValue->value(),2, QLatin1Char('0'));
+        break;
+    case Date:
+        str = mDateEdit->date().toString();
+        break;
+    case Julian:
+        //TODO
+        str = mDateEdit->date().toString();
+        break;
+    case Hour:
+        str = QString::fromLatin1("%1").arg(mDateValue->value(),2, QLatin1Char('0'));
+        break;
+    case Minute:
+        str = QString::fromLatin1("%1").arg(mDateValue->value(),2, QLatin1Char('0'));
+        break;
+    case Second:
+        str = QString::fromLatin1("%1").arg(mDateValue->value(),2, QLatin1Char('0'));
+        break;
+    case Time:
+        str = mTimeEdit->time().toString();
+        break;
+    case Iso8601:
+        str = mDateEdit->date().toString();
+        break;
+    case Std11:
+        str = mDateEdit->date().toString();
+        break;
+    case Zone:
+        str = mDateEdit->date().toString();
+        break;
+    case Weekday:
+        str = QString::fromLatin1("%1").arg(mDateValue->value());
+        break;
+    }
+    return str;
 }
 
 QString SelectDateWidget::dateType(SelectDateWidget::DateType type) const
