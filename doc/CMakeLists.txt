@@ -59,6 +59,6 @@ if(BUILD_headerthemeeditor)
 endif()
 
 if(BUILD_archivemailagent)
-  add_subdirectory(archivemailagent)
+  add_subdirectory(akonadi_archivemail_agent)
 endif()
 
