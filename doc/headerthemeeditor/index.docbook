@@ -52,7 +52,7 @@
 <chapter id="introduction">
 <title>Introduction</title>
 
-<para>&kapplication; is a blogging client.</para>
+<para>&kapplication; is an editor for KMail headers based on Grantlee.</para>
 </chapter>
 
 <chapter id="using-kapp">
