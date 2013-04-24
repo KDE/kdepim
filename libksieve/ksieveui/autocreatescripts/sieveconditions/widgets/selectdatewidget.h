@@ -23,12 +23,28 @@
 class KComboBox;
 class KLineEdit;
 class QStackedWidget;
+class QSpinBox;
 
 namespace KSieveUi {
 class SelectDateWidget : public QWidget
 {
     Q_OBJECT
 public:
+    enum DateType {
+        Year = 0,
+        Month,
+        Day,
+        Date,
+        Julian,
+        Hour,
+        Minute,
+        Second,
+        Time,
+        Iso8601,
+        Std11,
+        Zone,
+        Weekday
+    };
     explicit SelectDateWidget(QWidget *parent = 0);
     ~SelectDateWidget();
 
@@ -37,8 +53,10 @@ private Q_SLOTS:
     void slotDateTypeActivated(int);
 private:
     void initialize();
+    QString dateType(DateType type) const;
     KComboBox *mDateType;
     KLineEdit *mDateEdit;
+    QSpinBox *mDateValue;
     QStackedWidget *mStackWidget;
 };
 }
