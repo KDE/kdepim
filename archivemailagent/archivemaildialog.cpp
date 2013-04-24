@@ -18,14 +18,22 @@
 #include "archivemaildialog.h"
 #include "addarchivemaildialog.h"
 #include "archivemailagentutil.h"
+
+#include "kdepim-version.h"
+
 #include <mailcommon/mailutil.h>
+
 #include <KGlobal>
 #include <KLocale>
 #include <KMessageBox>
-#include <QHBoxLayout>
 #include <KMenu>
 #include <KRun>
 #include <KAction>
+#include <KHelpMenu>
+#include <KAboutData>
+
+#include <QHBoxLayout>
+
 
 static QString archiveMailCollectionPattern = QLatin1String( "ArchiveMailCollection \\d+" );
 
@@ -34,7 +42,7 @@ ArchiveMailDialog::ArchiveMailDialog(QWidget *parent)
 {
     setCaption( i18n( "Configure Archive Mail Agent" ) );
     setWindowIcon( KIcon( "kmail" ) );
-    setButtons( Ok|Cancel );
+    setButtons( Help | Ok|Cancel );
     setDefaultButton( Ok );
     setModal( true );
     QWidget *mainWidget = new QWidget( this );
@@ -46,11 +54,32 @@ ArchiveMailDialog::ArchiveMailDialog(QWidget *parent)
     setMainWidget( mainWidget );
     connect(this,SIGNAL(okClicked()),SLOT(slotSave()));
     readConfig();
+
+    mAboutData = new KAboutData(
+                QByteArray( "archivemailagent" ),
+                QByteArray(),
+                ki18n( "Archive Mail Agent" ),
+                QByteArray( KDEPIM_VERSION ),
+                ki18n( "Archive automaticaly emails." ),
+                KAboutData::License_GPL_V2,
+                ki18n( "Copyright (C) 2012, 2013 Laurent Montel" ) );
+
+    mAboutData->addAuthor( ki18n( "Laurent Montel" ),
+                         ki18n( "Maintainer" ), "montel@kde.org" );
+
+    mAboutData->setProgramIconName( "kmail" );
+    mAboutData->setTranslator( ki18nc( "NAME OF TRANSLATORS", "Your names" ),
+                             ki18nc( "EMAIL OF TRANSLATORS", "Your emails" ) );
+
+
+    KHelpMenu *helpMenu = new KHelpMenu(this, mAboutData, true);
+    setButtonMenu( Help, helpMenu->menu() );
 }
 
 ArchiveMailDialog::~ArchiveMailDialog()
 {
     writeConfig();
+    delete mAboutData;
 }
 
 static const char *myConfigGroupName = "ArchiveMailDialog";
