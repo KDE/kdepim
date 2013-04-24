@@ -50,6 +50,7 @@ Grammar::GrammarPlugin *GrammarLinkClient::createGrammarChecker(const QString &l
 QStringList GrammarLinkClient::searchLanguages()
 {
     //TODO
+    return QStringList();
 }
 
 QStringList GrammarLinkClient::languages() const
