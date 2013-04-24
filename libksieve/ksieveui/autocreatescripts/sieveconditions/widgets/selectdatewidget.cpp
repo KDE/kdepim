@@ -23,6 +23,7 @@
 
 #include <QHBoxLayout>
 #include <QLabel>
+#include <QStackedWidget>
 
 using namespace KSieveUi;
 SelectDateWidget::SelectDateWidget(QWidget *parent)
@@ -43,7 +44,7 @@ void SelectDateWidget::initialize()
     mDateType = new KComboBox;
     connect(mDateType, SIGNAL(activated(int)), SLOT(slotDateTypeActivated(int)));
     mDateType->addItem(i18n("Year"), QLatin1String("year"));
-    mDateType->addItem(i18n("month"), QLatin1String("month"));
+    mDateType->addItem(i18n("Month"), QLatin1String("month"));
     mDateType->addItem(i18n("Day"), QLatin1String("day"));
     mDateType->addItem(i18n("Date"), QLatin1String("date"));
     mDateType->addItem(i18n("Julian"), QLatin1String("julian"));
@@ -60,8 +61,13 @@ void SelectDateWidget::initialize()
     QLabel *lab = new QLabel(i18n("value:"));
     lay->addWidget(lab);
 
+    mStackWidget = new QStackedWidget;
+    lay->addWidget(mStackWidget);
+
     mDateEdit = new KLineEdit;
-    lay->addWidget(mDateEdit);
+    mStackWidget->addWidget(mDateEdit);
+
+
 
     setLayout(lay);
 }
