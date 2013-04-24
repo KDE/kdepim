@@ -113,7 +113,7 @@ endif()
 find_package(KDE4 4.10 REQUIRED)
 include(KDE4Defaults)
 
-find_package(KdepimLibs 4.10.65)
+find_package(KdepimLibs 4.10.66)
 set_package_properties(KdepimLibs PROPERTIES DESCRIPTION "The KDEPIM libraries" URL "http://www.kde.org" TYPE REQUIRED)
 
 ############### Load the CTest options ###############
@@ -299,7 +299,7 @@ else()
   add_subdirectory(mailcommon) # TODO: does this make sense?!?
   add_subdirectory(mailfilteragent)
   macro_optional_add_subdirectory(kmail)
-  add_subdirectory(headerthemeeditor)
+  macro_optional_add_subdirectory(headerthemeeditor)
 
   if(KDEPIM_BUILD_MOBILE)
     add_subdirectory(mobile)
