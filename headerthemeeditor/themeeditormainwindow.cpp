@@ -30,6 +30,7 @@
 #include <KFileDialog>
 
 #include <QPointer>
+#include <QCloseEvent>
 
 ThemeEditorMainWindow::ThemeEditorMainWindow()
     : KXmlGuiWindow(),
@@ -158,7 +159,7 @@ void ThemeEditorMainWindow::slotNewTheme()
 void ThemeEditorMainWindow::closeEvent(QCloseEvent *e)
 {
     saveCurrentProject(false);
-    KXmlGuiWindow::closeEvent(e);
+    e->accept();
 }
 
 void ThemeEditorMainWindow::slotQuitApp()
