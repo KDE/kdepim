@@ -57,7 +57,7 @@ QWidget *SieveConditionEnvelope::createParamWidget( QWidget *parent ) const
     selectMatchCombobox->setObjectName(QLatin1String("matchtypecombobox"));
     lay->addWidget(selectMatchCombobox);
 
-    SelectHeaderTypeComboBox *selectHeaderType = new SelectHeaderTypeComboBox;
+    SelectHeaderTypeComboBox *selectHeaderType = new SelectHeaderTypeComboBox(true);
     selectHeaderType->setObjectName(QLatin1String("headertypecombobox"));
     lay->addWidget(selectHeaderType);
 

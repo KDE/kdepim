@@ -91,12 +91,12 @@ QString SelectHeadersWidget::headers() const
     return result;
 }
 
-SelectHeaderTypeComboBox::SelectHeaderTypeComboBox(QWidget *parent)
+SelectHeaderTypeComboBox::SelectHeaderTypeComboBox(bool onlyEnvelopType, QWidget *parent)
     : KComboBox(parent)
 {
     setEditable(true);
     //TODO add completion
-    initialize();
+    initialize(onlyEnvelopType);
     connect(this, SIGNAL(activated(QString)), SLOT(slotSelectItem(QString)));
 }
 
@@ -118,20 +118,22 @@ void SelectHeaderTypeComboBox::slotSelectItem(const QString &str)
     }
 }
 
-void SelectHeaderTypeComboBox::headerMap()
+void SelectHeaderTypeComboBox::headerMap(bool onlyEnvelopType)
 {
     mHeaderMap.insert(QLatin1String("from"), i18n("From"));
     mHeaderMap.insert(QLatin1String("to"), i18n("To"));
-    mHeaderMap.insert(QLatin1String("cc"), i18n("Cc"));
-    mHeaderMap.insert(QLatin1String("bcc"), i18n("Bcc"));
-    mHeaderMap.insert(QLatin1String("sender"), i18n("Sender"));
+    if (!onlyEnvelopType) {
+        mHeaderMap.insert(QLatin1String("cc"), i18n("Cc"));
+        mHeaderMap.insert(QLatin1String("bcc"), i18n("Bcc"));
+        mHeaderMap.insert(QLatin1String("sender"), i18n("Sender"));
+    }
     //mHeaderMap.insert(QLatin1String("sender-from"), i18n("Sender-From"));
     //mHeaderMap.insert(QLatin1String("sender-to"), i18n("Sender-To"));
 }
 
-void SelectHeaderTypeComboBox::initialize()
+void SelectHeaderTypeComboBox::initialize(bool onlyEnvelopType)
 {
-    headerMap();
+    headerMap(onlyEnvelopType);
     QMapIterator<QString, QString> i(mHeaderMap);
     while (i.hasNext()) {
         i.next();

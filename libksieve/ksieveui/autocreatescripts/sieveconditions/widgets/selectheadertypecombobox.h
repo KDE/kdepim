@@ -60,7 +60,7 @@ class SelectHeaderTypeComboBox : public KComboBox
 {
     Q_OBJECT
 public:
-    explicit SelectHeaderTypeComboBox(QWidget *parent = 0);
+    explicit SelectHeaderTypeComboBox(bool onlyEnvelopType = false, QWidget *parent = 0);
     ~SelectHeaderTypeComboBox();
 
     QString code() const;
@@ -69,8 +69,8 @@ private Q_SLOTS:
     void slotSelectItem(const QString &str);
 
 private:
-    void initialize();
-    void headerMap();
+    void initialize(bool onlyEnvelopType);
+    void headerMap(bool onlyEnvelopType);
     QMap<QString, QString> mHeaderMap;
 };
 

@@ -26,6 +26,7 @@
 #include <QStackedWidget>
 #include <QSpinBox>
 #include <QDateEdit>
+#include <QDebug>
 
 Q_DECLARE_METATYPE(KSieveUi::SelectDateWidget::DateType)
 
@@ -47,19 +48,19 @@ void SelectDateWidget::initialize()
 
     mDateType = new KComboBox;
     connect(mDateType, SIGNAL(activated(int)), SLOT(slotDateTypeActivated(int)));
-    mDateType->addItem(i18n("Year"), QLatin1String("year"));
-    mDateType->addItem(i18n("Month"), QLatin1String("month"));
-    mDateType->addItem(i18n("Day"), QLatin1String("day"));
-    mDateType->addItem(i18n("Date"), QLatin1String("date"));
-    mDateType->addItem(i18n("Julian"), QLatin1String("julian"));
-    mDateType->addItem(i18n("Hour"), QLatin1String("hour"));
-    mDateType->addItem(i18n("Minute"), QLatin1String("minute"));
-    mDateType->addItem(i18n("Second"), QLatin1String("second"));
-    mDateType->addItem(i18n("Time"), QLatin1String("time"));
-    mDateType->addItem(i18n("iso8601"), QLatin1String("iso8601"));
-    mDateType->addItem(i18n("std11"), QLatin1String("std11"));
-    mDateType->addItem(i18n("Zone"), QLatin1String("zone"));
-    mDateType->addItem(i18n("Weekday"), QLatin1String("weekday"));
+    mDateType->addItem(i18n("Year"), QVariant::fromValue(KSieveUi::SelectDateWidget::Year));
+    mDateType->addItem(i18n("Month"), QVariant::fromValue(KSieveUi::SelectDateWidget::Month));
+    mDateType->addItem(i18n("Day"), QVariant::fromValue(KSieveUi::SelectDateWidget::Day));
+    mDateType->addItem(i18n("Date"), QVariant::fromValue(KSieveUi::SelectDateWidget::Date));
+    mDateType->addItem(i18n("Julian"), QVariant::fromValue(KSieveUi::SelectDateWidget::Julian));
+    mDateType->addItem(i18n("Hour"), QVariant::fromValue(KSieveUi::SelectDateWidget::Hour));
+    mDateType->addItem(i18n("Minute"), QVariant::fromValue(KSieveUi::SelectDateWidget::Minute));
+    mDateType->addItem(i18n("Second"), QVariant::fromValue(KSieveUi::SelectDateWidget::Second));
+    mDateType->addItem(i18n("Time"), QVariant::fromValue(KSieveUi::SelectDateWidget::Time));
+    mDateType->addItem(i18n("iso8601"), QVariant::fromValue(KSieveUi::SelectDateWidget::Iso8601));
+    mDateType->addItem(i18n("std11"), QVariant::fromValue(KSieveUi::SelectDateWidget::Std11));
+    mDateType->addItem(i18n("Zone"), QVariant::fromValue(KSieveUi::SelectDateWidget::Zone));
+    mDateType->addItem(i18n("Weekday"), QVariant::fromValue(KSieveUi::SelectDateWidget::Weekday));
     lay->addWidget(mDateType);
 
     QLabel *lab = new QLabel(i18n("value:"));
@@ -80,7 +81,7 @@ void SelectDateWidget::initialize()
     mTimeEdit = new QTimeEdit;
     mStackWidget->addWidget(mTimeEdit);
 
-    mStackWidget->setCurrentWidget(mDateEdit);
+    mStackWidget->setCurrentWidget(mDateValue);
 
     setLayout(lay);
 }
@@ -150,13 +151,13 @@ QString SelectDateWidget::dateValue(SelectDateWidget::DateType type) const
     QString str;
     switch(type) {
     case Year:
-        str = QString::fromLatin1("%1").arg(mDateValue->value(),4, QLatin1Char('0'));
+        str = QString::fromLatin1("%1").arg(mDateValue->value(),4, 10, QLatin1Char('0'));
         break;
     case Month:
-        str = QString::fromLatin1("%1").arg(mDateValue->value(),2, QLatin1Char('0'));
+        str = QString::fromLatin1("%1").arg(mDateValue->value(),2,  10,QLatin1Char('0'));
         break;
     case Day:
-        str = QString::fromLatin1("%1").arg(mDateValue->value(),2, QLatin1Char('0'));
+        str = QString::fromLatin1("%1").arg(mDateValue->value(),2, 10, QLatin1Char('0'));
         break;
     case Date:
         str = mDateEdit->date().toString();
@@ -166,13 +167,13 @@ QString SelectDateWidget::dateValue(SelectDateWidget::DateType type) const
         str = mDateEdit->date().toString();
         break;
     case Hour:
-        str = QString::fromLatin1("%1").arg(mDateValue->value(),2, QLatin1Char('0'));
+        str = QString::fromLatin1("%1").arg(mDateValue->value(),2, 10, QLatin1Char('0'));
         break;
     case Minute:
-        str = QString::fromLatin1("%1").arg(mDateValue->value(),2, QLatin1Char('0'));
+        str = QString::fromLatin1("%1").arg(mDateValue->value(),2, 10, QLatin1Char('0'));
         break;
     case Second:
-        str = QString::fromLatin1("%1").arg(mDateValue->value(),2, QLatin1Char('0'));
+        str = QString::fromLatin1("%1").arg(mDateValue->value(),2, 10, QLatin1Char('0'));
         break;
     case Time:
         str = mTimeEdit->time().toString();
@@ -243,7 +244,7 @@ QString SelectDateWidget::dateType(SelectDateWidget::DateType type) const
 QString SelectDateWidget::code() const
 {
     const DateType type = mDateType->itemData(mDateType->currentIndex()).value<KSieveUi::SelectDateWidget::DateType>();
-    return QString::fromLatin1("\"%1\" \"%2\"").arg(dateType(type)).arg(mDateEdit->text());
+    return QString::fromLatin1("\"%1\" \"%2\"").arg(dateType(type)).arg(dateValue(type));
 }
 
 #include "selectdatewidget.moc"
