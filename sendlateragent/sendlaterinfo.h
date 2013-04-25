@@ -18,11 +18,20 @@
 #ifndef SENDLATERINFO_H
 #define SENDLATERINFO_H
 
+class KConfigGroup;
+
 class SendLaterInfo
 {
 public:
     explicit SendLaterInfo();
+    explicit SendLaterInfo(const KConfigGroup& config);
     ~SendLaterInfo();
+
+    bool isRecursive() const;
+    void setRecursive(bool b);
+
+private:
+    bool mRecursive;
 };
 
 #endif // SENDLATERINFO_H

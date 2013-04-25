@@ -19,9 +19,26 @@
 #include "sendlaterinfo.h"
 
 SendLaterInfo::SendLaterInfo()
+    : mRecursive(false)
 {
+}
+
+SendLaterInfo::SendLaterInfo(const KConfigGroup& config)
+    : mRecursive(false)
+{
+    //TODO
 }
 
 SendLaterInfo::~SendLaterInfo()
 {
+}
+
+bool SendLaterInfo::isRecursive() const
+{
+    return mRecursive;
+}
+
+void SendLaterInfo::setRecursive(bool b)
+{
+    mRecursive = b;
 }

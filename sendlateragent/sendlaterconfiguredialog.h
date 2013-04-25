@@ -19,8 +19,32 @@
 #define SENDLATERCONFIGUREDIALOG_H
 
 #include <KDialog>
+#include "ui_sendlaterwidget.h"
+
 
 class KAboutData;
+
+class SendLaterWidget : public QWidget
+{
+    Q_OBJECT
+public:
+    explicit SendLaterWidget( QWidget *parent = 0 );
+    ~SendLaterWidget();
+    void save();
+    void saveTreeWidgetHeader(KConfigGroup& group);
+    void restoreTreeWidgetHeader(const QByteArray &group);
+
+private Q_SLOTS:
+    void slotRemoveItem();
+    void slotModifyItem();
+    void slotAddItem();
+    void updateButtons();
+    void customContextMenuRequested(const QPoint&);
+private:
+    void load();
+    Ui::SendLaterWidget *mWidget;
+};
+
 
 class SendLaterConfigureDialog : public KDialog
 {
@@ -28,10 +52,13 @@ class SendLaterConfigureDialog : public KDialog
 public:
     explicit SendLaterConfigureDialog(QWidget *parent = 0);
     ~SendLaterConfigureDialog();
+private Q_SLOTS:
+    void slotSave();
 private:
     void readConfig();
     void writeConfig();
     KAboutData *mAboutData;
+    SendLaterWidget *mWidget;
 };
 
 #endif // SENDLATERCONFIGUREDIALOG_H

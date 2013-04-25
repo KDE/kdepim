@@ -24,6 +24,7 @@
 #include <KHelpMenu>
 #include <KMenu>
 #include <KAboutData>
+#include <KMessageBox>
 
 SendLaterConfigureDialog::SendLaterConfigureDialog(QWidget *parent)
     : KDialog(parent)
@@ -31,8 +32,16 @@ SendLaterConfigureDialog::SendLaterConfigureDialog(QWidget *parent)
     setCaption( i18n("Configure") );
     setWindowIcon( KIcon( "kmail" ) );
     setButtons( Help|Ok|Cancel );
-    QWidget *w = new QWidget;
-    setMainWidget(w);
+
+    QWidget *mainWidget = new QWidget( this );
+    QHBoxLayout *mainLayout = new QHBoxLayout( mainWidget );
+    mainLayout->setSpacing( KDialog::spacingHint() );
+    mainLayout->setMargin( KDialog::marginHint() );
+    mWidget = new SendLaterWidget(this);
+    mainLayout->addWidget(mWidget);
+    setMainWidget( mainWidget );
+    connect(this,SIGNAL(okClicked()),SLOT(slotSave()));
+
     readConfig();
     mAboutData = new KAboutData(
                 QByteArray( "archivemailagent" ),
@@ -61,6 +70,11 @@ SendLaterConfigureDialog::~SendLaterConfigureDialog()
     delete mAboutData;
 }
 
+void SendLaterConfigureDialog::slotSave()
+{
+    //TODO
+}
+
 void SendLaterConfigureDialog::readConfig()
 {
     KConfigGroup group( KGlobal::config(), "SendLaterConfigureDialog" );
@@ -70,13 +84,120 @@ void SendLaterConfigureDialog::readConfig()
     } else {
         resize( 800,600);
     }
+    mWidget->restoreTreeWidgetHeader(group.readEntry("HeaderState",QByteArray()));
 }
 
 void SendLaterConfigureDialog::writeConfig()
 {
     KConfigGroup group( KGlobal::config(), "SendLaterConfigureDialog" );
     group.writeEntry( "Size", size() );
+    mWidget->saveTreeWidgetHeader(group);
 }
+
+SendLaterWidget::SendLaterWidget( QWidget *parent )
+    : QWidget( parent )
+{
+    mWidget = new Ui::SendLaterWidget;
+    mWidget->setupUi( this );
+    QStringList headers;
+    //headers<<i18n("Name")<<i18n("Last archive")<<i18n("Next archive in");
+    mWidget->treeWidget->setHeaderLabels(headers);
+    mWidget->treeWidget->setSortingEnabled(true);
+    mWidget->treeWidget->setRootIsDecorated(false);
+    mWidget->treeWidget->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    mWidget->treeWidget->setContextMenuPolicy(Qt::CustomContextMenu);
+
+    connect(mWidget->treeWidget, SIGNAL(customContextMenuRequested(QPoint)),
+            this, SLOT(customContextMenuRequested(QPoint)));
+
+
+    load();
+    connect(mWidget->removeItem,SIGNAL(clicked(bool)),SLOT(slotRemoveItem()));
+    connect(mWidget->modifyItem,SIGNAL(clicked(bool)),SLOT(slotModifyItem()));
+    connect(mWidget->addItem,SIGNAL(clicked(bool)),SLOT(slotAddItem()));
+    connect(mWidget->treeWidget,SIGNAL(itemSelectionChanged()),SLOT(updateButtons()));
+    connect(mWidget->treeWidget,SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),SLOT(slotModifyItem()));
+    updateButtons();
+}
+
+SendLaterWidget::~SendLaterWidget()
+{
+    delete mWidget;
+}
+
+void SendLaterWidget::customContextMenuRequested(const QPoint&)
+{
+    const QList<QTreeWidgetItem *> listItems = mWidget->treeWidget->selectedItems();
+    KMenu menu;
+    menu.addAction(i18n("Add..."),this,SLOT(slotAddItem()));
+    if ( !listItems.isEmpty() ) {
+        if ( listItems.count() == 1) {
+            menu.addAction(i18n("Open Containing Folder..."),this,SLOT(slotOpenFolder()));
+        }
+        menu.addSeparator();
+        menu.addAction(i18n("Delete"),this,SLOT(slotRemoveItem()));
+    }
+    menu.exec(QCursor::pos());
+}
+
+void SendLaterWidget::restoreTreeWidgetHeader(const QByteArray& data)
+{
+    mWidget->treeWidget->header()->restoreState(data);
+}
+
+void SendLaterWidget::saveTreeWidgetHeader(KConfigGroup& group)
+{
+    group.writeEntry( "HeaderState", mWidget->treeWidget->header()->saveState() );
+}
+
+void SendLaterWidget::updateButtons()
+{
+    const QList<QTreeWidgetItem *> listItems = mWidget->treeWidget->selectedItems();
+    if (listItems.isEmpty()) {
+        mWidget->removeItem->setEnabled(false);
+        mWidget->modifyItem->setEnabled(false);
+    } else if (listItems.count() == 1) {
+        mWidget->removeItem->setEnabled(true);
+        mWidget->modifyItem->setEnabled(true);
+    } else {
+        mWidget->removeItem->setEnabled(true);
+        mWidget->modifyItem->setEnabled(false);
+    }
+}
+
+void SendLaterWidget::load()
+{
+    //TODO
+}
+
+
+void SendLaterWidget::save()
+{
+    //TODO
+}
+
+void SendLaterWidget::slotRemoveItem()
+{
+    const QList<QTreeWidgetItem *> listItems = mWidget->treeWidget->selectedItems();
+    if (KMessageBox::warningYesNo(this,i18n("Do you want to delete selected items? Do you want to continue?"),i18n("Remove items"))== KMessageBox::No)
+        return;
+
+    Q_FOREACH(QTreeWidgetItem *item,listItems) {
+        delete item;
+    }
+    updateButtons();
+}
+
+void SendLaterWidget::slotModifyItem()
+{
+    //TODO
+}
+
+void SendLaterWidget::slotAddItem()
+{
+    //TODO
+}
+
 
 
 #include "sendlaterconfiguredialog.moc"
