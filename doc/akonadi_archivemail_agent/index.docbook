@@ -39,7 +39,7 @@
 
 <abstract>
 <para>
-&kapplication; is a akonadi agent which allow to archive mails automaticaly.
+&kapplication; is a akonadi agent which allow to archive mails automatically.
 </para>
 </abstract>
 
@@ -53,7 +53,7 @@
 <chapter id="introduction">
 <title>Introduction</title>
 
-<para>&kapplication; allows to archive automaticaly mails.</para>
+<para>&kapplication; allows to archive mails automatically.</para>
 </chapter>
 
 <chapter id="using-kapp">
