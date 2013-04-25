@@ -16,6 +16,7 @@
 */
 
 #include "sendlateragent.h"
+#include "sendlatermanager.h"
 #include "sendlaterconfiguredialog.h"
 #include "sendlateragentadaptor.h"
 
@@ -29,10 +30,12 @@
 SendLaterAgent::SendLaterAgent(const QString &id)
     : Akonadi::AgentBase( id )
 {
+    mManager = new SendLaterManager(this);
     KGlobal::locale()->insertCatalog( "akonadi_sendlater_agent" );
     new SendLaterAgentAdaptor( this );
     Akonadi::DBusConnectionPool::threadConnection().registerObject( QLatin1String( "/SendLaterAgent" ), this, QDBusConnection::ExportAdaptors );
     Akonadi::DBusConnectionPool::threadConnection().registerService( QLatin1String( "org.freedesktop.Akonadi.SendLaterAgent" ) );
+    mManager->load();
 }
 
 SendLaterAgent::~SendLaterAgent()
@@ -55,7 +58,7 @@ void SendLaterAgent::showConfigureDialog(qlonglong windowId)
 #endif
     }
     if (dialog->exec()) {
-        //TODO
+        mManager->load();
     }
     delete dialog;
 }

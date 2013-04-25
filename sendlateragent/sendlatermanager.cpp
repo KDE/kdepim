@@ -27,4 +27,9 @@ SendLaterManager::~SendLaterManager()
 
 }
 
+void SendLaterManager::load()
+{
+    //TODO
+}
+
 #include "sendlatermanager.moc"

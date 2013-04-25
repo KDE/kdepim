@@ -25,6 +25,8 @@ class SendLaterManager : public QObject
 public:
     explicit SendLaterManager(QObject *parent);
     ~SendLaterManager();
+
+    void load();
 };
 
 #endif // SENDLATERMANAGER_H

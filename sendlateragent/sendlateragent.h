@@ -20,6 +20,8 @@
 
 #include <akonadi/agentbase.h>
 
+class SendLaterManager;
+
 class SendLaterAgent : public Akonadi::AgentBase, public Akonadi::AgentBase::ObserverV2
 {
     Q_OBJECT
@@ -31,7 +33,8 @@ public:
 
 public Q_SLOTS:
     void configure( WId windowId );
-
+private:
+    SendLaterManager *mManager;
 };
 
 #endif // SENDLATERAGENT_H
