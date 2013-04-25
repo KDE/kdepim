@@ -60,7 +60,7 @@ ArchiveMailDialog::ArchiveMailDialog(QWidget *parent)
                 QByteArray(),
                 ki18n( "Archive Mail Agent" ),
                 QByteArray( KDEPIM_VERSION ),
-                ki18n( "Archive automaticaly emails." ),
+                ki18n( "Archive emails automatically." ),
                 KAboutData::License_GPL_V2,
                 ki18n( "Copyright (C) 2012, 2013 Laurent Montel" ) );
 
