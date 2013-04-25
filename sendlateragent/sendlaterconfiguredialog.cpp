@@ -17,22 +17,48 @@
 
 #include "sendlaterconfiguredialog.h"
 
+#include "kdepim-version.h"
+
 #include <KConfigGroup>
 #include <KLocale>
+#include <KHelpMenu>
+#include <KMenu>
+#include <KAboutData>
 
 SendLaterConfigureDialog::SendLaterConfigureDialog(QWidget *parent)
     : KDialog(parent)
 {
     setCaption( i18n("Configure") );
-    setButtons( Ok|Cancel );
+    setWindowIcon( KIcon( "kmail" ) );
+    setButtons( Help|Ok|Cancel );
     QWidget *w = new QWidget;
     setMainWidget(w);
     readConfig();
+    mAboutData = new KAboutData(
+                QByteArray( "archivemailagent" ),
+                QByteArray(),
+                ki18n( "Archive Mail Agent" ),
+                QByteArray( KDEPIM_VERSION ),
+                ki18n( "Archive emails automatically." ),
+                KAboutData::License_GPL_V2,
+                ki18n( "Copyright (C) 2012, 2013 Laurent Montel" ) );
+
+    mAboutData->addAuthor( ki18n( "Laurent Montel" ),
+                         ki18n( "Maintainer" ), "montel@kde.org" );
+
+    mAboutData->setProgramIconName( "kmail" );
+    mAboutData->setTranslator( ki18nc( "NAME OF TRANSLATORS", "Your names" ),
+                             ki18nc( "EMAIL OF TRANSLATORS", "Your emails" ) );
+
+
+    KHelpMenu *helpMenu = new KHelpMenu(this, mAboutData, true);
+    setButtonMenu( Help, helpMenu->menu() );
 }
 
 SendLaterConfigureDialog::~SendLaterConfigureDialog()
 {
     writeConfig();
+    delete mAboutData;
 }
 
 void SendLaterConfigureDialog::readConfig()

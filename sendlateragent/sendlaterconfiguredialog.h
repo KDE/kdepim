@@ -20,6 +20,8 @@
 
 #include <KDialog>
 
+class KAboutData;
+
 class SendLaterConfigureDialog : public KDialog
 {
     Q_OBJECT
@@ -29,6 +31,7 @@ public:
 private:
     void readConfig();
     void writeConfig();
+    KAboutData *mAboutData;
 };
 
 #endif // SENDLATERCONFIGUREDIALOG_H

@@ -23,6 +23,7 @@ SendLaterDialog::SendLaterDialog(QWidget *parent)
     : KDialog(parent)
 {
     setCaption( i18n("Send Later") );
+    setWindowIcon( KIcon( "kmail" ) );
     setButtons( User1|User2|Cancel );
     connect(this, SIGNAL(user1Clicked()), this, SLOT(slotSendLater()));
     connect(this, SIGNAL(user1Clicked()), this, SLOT(slotSendNow()));
