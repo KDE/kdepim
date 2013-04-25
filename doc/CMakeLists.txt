@@ -66,3 +66,7 @@ if(BUILD_importwizard)
   add_subdirectory(importwizard)
 endif()
 
+
+if(BUILD_sendlateragent)
+  add_subdirectory(akonadi_sendlater_agent)
+endif()
