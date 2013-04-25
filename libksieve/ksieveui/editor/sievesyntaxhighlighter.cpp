@@ -93,7 +93,9 @@ void SieveSyntaxHighlighter::init()
               <<QLatin1String( "\\s:localpart\\b" )
               <<QLatin1String( "\\s:domain\\b" )
               <<QLatin1String( "\\s:all\\b" )
-              <<QLatin1String( "\\s:copy\\b" );
+              <<QLatin1String( "\\s:copy\\b" )
+              <<QLatin1String( "\\s:message\\b" )
+              <<QLatin1String( "\\s:importance\\b" );
     Q_FOREACH ( const QString & s, matchType ) {
         const QRegExp regex( s, Qt::CaseInsensitive );
         m_rules.append( Rule( regex, matchFormat ) );
@@ -126,6 +128,7 @@ void SieveSyntaxHighlighter::init()
                <<QLatin1String( "\\bremoveflag\\b" )
                <<QLatin1String( "\\bdeleteheader\\b" )
                <<QLatin1String( "\\baddheader\\b" )
+               <<QLatin1String( "\\notify\\b" )
                <<QLatin1String( "\\bvacation\\b" );
     Q_FOREACH ( const QString & s, actionType ) {
         const QRegExp regex( s, Qt::CaseInsensitive );

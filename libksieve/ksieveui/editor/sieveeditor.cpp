@@ -103,6 +103,7 @@ SieveEditor::SieveEditor( QWidget * parent )
     templateSplitter->addWidget(textEditWidget);
     templateSplitter->addWidget(sieveTemplateWidget);
     templateSplitter->setSizes( size );
+    templateSplitter->setChildrenCollapsible(false);
 
     connect(sieveTemplateWidget, SIGNAL(insertTemplate(QString)), mTextEdit, SLOT(insertPlainText(QString)));
 
