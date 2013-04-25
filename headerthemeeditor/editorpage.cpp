@@ -36,6 +36,10 @@ EditorPage::EditorPage(QWidget *parent)
     mEditor = new Editor;
 
     splitter->addWidget(mEditor);
+    QList<int> size;
+    size << 400 << 100;
+    splitter->setSizes(size);
+    splitter->setChildrenCollapsible(false);
     mThemeTemplate = new ThemeTemplateWidget(i18n("Theme Templates:"));
     connect(mThemeTemplate, SIGNAL(insertTemplate(QString)), mEditor, SLOT(insertPlainText(QString)));
     splitter->addWidget(mThemeTemplate);
