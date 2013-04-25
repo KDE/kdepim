@@ -3,6 +3,6 @@ IconName=kmail
 Comment=Send Later Agent
 
 [Event/mailsend]
-Name=Mail send
+Name=Mail is sent
 Action=Popup
 
