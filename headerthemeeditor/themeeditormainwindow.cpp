@@ -76,6 +76,8 @@ void ThemeEditorMainWindow::setupActions()
 
 void ThemeEditorMainWindow::slotUploadTheme()
 {
+    //Save before upload :)
+    slotSaveTheme();
     QPointer<KNS3::UploadDialog> dialog = new KNS3::UploadDialog(this);
     //TODO
     dialog->exec();
