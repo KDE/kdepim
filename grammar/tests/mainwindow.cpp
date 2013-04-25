@@ -17,13 +17,22 @@
 
 #include "mainwindow.h"
 
+#include "grammar/widgets/grammarcomboboxlanguage.h"
+
 #include <QTextEdit>
+#include <QVBoxLayout>
 
 MainWindow::MainWindow()
     : QMainWindow()
 {
+    QWidget *w = new QWidget;
+    QVBoxLayout *layout = new QVBoxLayout;
+    w->setLayout(layout);
+    Grammar::GrammarComboBoxLanguage *comboxbox = new Grammar::GrammarComboBoxLanguage;
+    layout->addWidget(comboxbox);
     mEdit = new QTextEdit;
-    setCentralWidget(mEdit);
+    layout->addWidget(mEdit);
+    setCentralWidget(w);
 }
 
 #include "mainwindow.moc"
