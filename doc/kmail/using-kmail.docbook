@@ -476,7 +476,7 @@ to remove a folder and all its messages and subfolders.</para>
 <para>The folder's <guilabel>Properties</guilabel> dialog lets you rename and move
 a folder and specify all of its properties. Note that most properties
 are only available for your own folders and not for default folder like
-<guilabel>inbox</guilabel> &etc;. Default folders also cannot be moved
+<guilabel>inbox</guilabel> &etc; Default folders also cannot be moved
 or renamed.</para>
 
 <sect3 id="folders-properties-general">
