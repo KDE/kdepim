@@ -234,11 +234,14 @@ void ManageSieveScriptsDialog::slotItem( KManageSieve::SieveJob * job, const QSt
   QTreeWidgetItem* item = new QTreeWidgetItem( parent );
   item->setFlags(item->flags() & (Qt::ItemIsUserCheckable|Qt::ItemIsEnabled|Qt::ItemIsSelectable));
 
+  const bool oldBlockSignal = mBlockSignal;
+  mBlockSignal = true; // don't trigger slotItemChanged
   item->setText(0,filename);
   item->setCheckState(0, isActive ? Qt::Checked : Qt::Unchecked);
   if ( isActive ) {
     mSelectedItems[parent] = item;
   }
+  mBlockSignal = false;
 }
 
 void ManageSieveScriptsDialog::slotContextMenuRequested( const QPoint& p )
