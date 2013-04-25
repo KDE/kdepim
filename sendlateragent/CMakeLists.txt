@@ -9,6 +9,9 @@ set(sendlateragent_SRCS
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
+qt4_add_dbus_adaptor(sendlateragent_SRCS org.freedesktop.Akonadi.SendLaterAgent.xml sendlateragent.h SendLaterAgent)
+
+kde4_add_ui_files(sendlateragent_SRCS ui/sendlaterwidget.ui )
 
 kde4_add_executable(akonadi_sendlater_agent ${sendlateragent_SRCS})
 

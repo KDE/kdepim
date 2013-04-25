@@ -26,6 +26,12 @@ class SendLaterAgent : public Akonadi::AgentBase, public Akonadi::AgentBase::Obs
 public:
     explicit SendLaterAgent(const QString &id);
     ~SendLaterAgent();
+
+    void showConfigureDialog(qlonglong windowId = 0);
+
+public Q_SLOTS:
+    void configure( WId windowId );
+
 };
 
 #endif // SENDLATERAGENT_H
