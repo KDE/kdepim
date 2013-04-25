@@ -110,7 +110,7 @@ if(DEFINED KDEPIM_DEV_VERSION)
   set(KDEPIM_DEV_VERSION " ${KDEPIM_DEV_VERSION}")
 endif()
 
-set(KDEPIM_VERSION "4.10.2${KDEPIM_DEV_VERSION}")
+set(KDEPIM_VERSION "4.10.3${KDEPIM_DEV_VERSION}")
 
 configure_file(kdepim-version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/kdepim-version.h @ONLY)
 
@@ -126,7 +126,7 @@ include(KDE4Defaults)
 include(MacroLibrary)
 include(CheckIncludeFiles)
 include(MacroBoolTo01)
-find_package(KdepimLibs 4.10.1 REQUIRED)
+find_package(KdepimLibs 4.10.3 REQUIRED)
 
 ############### Load the CTest options ###############
 
