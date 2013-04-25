@@ -16,6 +16,12 @@
 */
 
 #include "grammarconfigurewidget.h"
+#include "grammarcomboboxlanguage.h"
+
+#include <KLocale>
+
+#include <QHBoxLayout>
+#include <QLabel>
 
 namespace Grammar {
 
@@ -24,8 +30,21 @@ public:
     GrammarConfigureWidgetPrivate(GrammarConfigureWidget *qq)
         : q(qq)
     {
-
+        init();
     }
+
+    void init()
+    {
+        QHBoxLayout *lay = new QHBoxLayout;
+        QLabel *lab = new QLabel(i18n("Default language:"));
+        lay->addWidget(lab);
+
+        language = new GrammarComboBoxLanguage;
+        lay->addWidget(language);
+
+        q->setLayout(lay);
+    }
+    GrammarComboBoxLanguage *language;
     GrammarConfigureWidget *q;
 };
 
