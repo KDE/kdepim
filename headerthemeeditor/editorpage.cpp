@@ -51,10 +51,8 @@ void EditorPage::loadTheme(const QString &path)
 {
     QFile file(path);
     if (file.open(QIODevice::Text|QIODevice::ReadOnly)) {
-        QTextStream out(&file);
-        out.setCodec("UTF-8");
-        QString str;
-        out >> str;
+        QByteArray data = file.readAll();
+        const QString str = QString::fromUtf8(data);
         file.close();
         mEditor->setPlainText(str);
     }
