@@ -53,6 +53,9 @@ AutoCreateScriptDialog::AutoCreateScriptDialog(QWidget *parent)
 
     mStackWidget = new QStackedWidget;
     splitter->addWidget(mStackWidget);
+    QList<int> size;
+    size << 100 << 400;
+    splitter->setSizes(size);
 
     setMainWidget( mainWidget );
     readConfig();
