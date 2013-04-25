@@ -1575,6 +1575,18 @@ differences between your version of &kmail; and the previous one.</para>
 <varlistentry>
 <term>
 <menuchoice>
+<guimenu>Message</guimenu>
+<guimenuitem>New AddressBook Contact</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Creates a new addressbook contact.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
 <shortcut><keycombo action="simul">&Ctrl;<keycap>Return</keycap></keycombo></shortcut>
 <guimenu>Message</guimenu>
 <guimenuitem>Send Mail</guimenuitem>
