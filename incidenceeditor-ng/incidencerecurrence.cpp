@@ -95,8 +95,6 @@ IncidenceRecurrence::IncidenceRecurrence( IncidenceDateTime *dateTime, Ui::Event
 
   connect( mDateTime, SIGNAL(startDateChanged(QDate)),
            SLOT(handleStartDateChange(QDate)) );
-  connect( mDateTime, SIGNAL(endDateChanged(QDate)),
-           SLOT(handleEndDateChange(QDate)) );
 
   connect( mUi->mExceptionAddButton, SIGNAL(clicked()),
            SLOT(addException()));
@@ -505,10 +503,7 @@ void IncidenceRecurrence::fillCombos()
   // - the (month.weekCount() - i)th day of the month
   const int currentMonthlyIndex = mUi->mMonthlyCombo->currentIndex();
   mUi->mMonthlyCombo->clear();
-  const QDate date = ( mLoadedIncidence &&
-                       mLoadedIncidence->type() == KCalCore::Incidence::TypeTodo ) ?
-                         mDateTime->endDate() :
-                         mDateTime->startDate();
+  const QDate date = mDateTime->startDate();
 
   QString item = subsOrdinal(
     ki18nc( "example: the 30th", "the %1" ), dayOfMonthFromStart() ).toString();
@@ -1007,22 +1002,7 @@ RecurrenceType IncidenceRecurrence::currentRecurrenceType() const
 
 void IncidenceRecurrence::handleStartDateChange( const QDate &date )
 {
-  // If it's a to-do, recurrence is calculated from dtDue.
-  // ( not rfc compliant, but it's what we have now )
-  if ( currentDate().isValid() && !( mLoadedIncidence &&
-                                     mLoadedIncidence->type() == KCalCore::Incidence::TypeTodo ) ) {
-    fillCombos();
-    updateWeekDays( date );
-    mUi->mExceptionDateEdit->setDate( date );
-  }
-}
-
-void IncidenceRecurrence::handleEndDateChange( const QDate &date )
-{
-  // If it's a to-do, recurrence is calculated from dtDue, not dtStart.
-  // ( not rfc compliant, but it's what we have now )
-  if ( currentDate().isValid() && mLoadedIncidence &&
-       mLoadedIncidence->type() == KCalCore::Incidence::TypeTodo ) {
+  if ( currentDate().isValid() ) {
     fillCombos();
     updateWeekDays( date );
     mUi->mExceptionDateEdit->setDate( date );
@@ -1031,10 +1011,5 @@ void IncidenceRecurrence::handleEndDateChange( const QDate &date )
 
 QDate IncidenceRecurrence::currentDate() const
 {
-  // If it's a to-do, recurrence is calculated from dtDue, not dtStart.
-  // ( not rfc compliant, but it's what we have now )
-  return
-    ( mLoadedIncidence && mLoadedIncidence->type() == KCalCore::Incidence::TypeTodo ) ?
-      mDateTime->endDate():
-      mDateTime->startDate();
+  return mDateTime->startDate();
 }
