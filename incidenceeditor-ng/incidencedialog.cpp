@@ -236,6 +236,9 @@ void IncidenceDialogPrivate::handleRecurrenceChange( IncidenceEditorNG::Recurren
   case RecurrenceTypeYearly:
     tabText += i18nc( "@title:tab Yearly recurring event, capital first letter only", " (Y)" );
     break;
+  case RecurrenceTypeException:
+    tabText += i18nc( "@title:tab Exception to a recurring event, capital first letter only", " (E)" );
+    break;
   default:
     Q_ASSERT_X( false, "handleRecurrenceChange", "Fix your program" );
   }

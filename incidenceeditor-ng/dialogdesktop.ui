@@ -1039,6 +1039,13 @@
           </widget>
          </item>
          <item>
+          <widget class="QCheckBox" name="mThisAndFutureCheck">
+           <property name="text">
+            <string>This and future occurrences.</string>
+           </property>
+          </widget>
+         </item>
+         <item>
           <spacer name="horizontalSpacer_10">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
