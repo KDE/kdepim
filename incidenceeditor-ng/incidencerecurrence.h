@@ -77,7 +77,6 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceRecurrence : public IncidenceEditor
     void updateRemoveExceptionButton();
     void updateWeekDays( const QDate &newStartDate );
     void handleStartDateChange( const QDate & );
-    void handleEndDateChange( const QDate & );
 
   private:
 
