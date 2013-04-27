@@ -30,6 +30,7 @@
 #include <KFileDialog>
 
 #include <QPointer>
+#include <QCloseEvent>
 
 ThemeEditorMainWindow::ThemeEditorMainWindow()
     : KXmlGuiWindow(),
@@ -75,6 +76,8 @@ void ThemeEditorMainWindow::setupActions()
 
 void ThemeEditorMainWindow::slotUploadTheme()
 {
+    //Save before upload :)
+    slotSaveTheme();
     QPointer<KNS3::UploadDialog> dialog = new KNS3::UploadDialog(this);
     //TODO
     dialog->exec();
@@ -96,12 +99,17 @@ void ThemeEditorMainWindow::slotOpenTheme()
     saveCurrentProject(false);
     const QString directory = KFileDialog::getExistingDirectory(KUrl(), this, i18n("Select theme"));
     if (!directory.isEmpty()) {
-        QFile file(directory + QDir::separator() + QLatin1String("theme.themerc"));
+        const QString filename = directory + QDir::separator() + QLatin1String("theme.themerc");
+        QFile file(filename);
         if (!file.exists()) {
             KMessageBox::error(this, i18n("Directory doesn't contains a theme file. We can not load theme."));
             return;
         }
-        //TODO load it.
+
+        mThemeEditor = new ThemeEditorPage(QString());
+        mThemeEditor->loadTheme(filename);
+        setCentralWidget(mThemeEditor);
+        updateActions();
     }
 }
 
@@ -153,7 +161,7 @@ void ThemeEditorMainWindow::slotNewTheme()
 void ThemeEditorMainWindow::closeEvent(QCloseEvent *e)
 {
     saveCurrentProject(false);
-    KXmlGuiWindow::closeEvent(e);
+    e->accept();
 }
 
 void ThemeEditorMainWindow::slotQuitApp()

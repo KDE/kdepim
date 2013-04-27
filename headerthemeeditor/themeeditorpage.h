@@ -34,6 +34,8 @@ public:
     ~ThemeEditorPage();
 
     void saveTheme();
+    void loadTheme(const QString &filename);
+
     void addExtraPage();
 
     QString projectDirectory() const;

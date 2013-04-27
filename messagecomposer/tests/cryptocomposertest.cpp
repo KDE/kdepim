@@ -52,6 +52,11 @@ using MessageCore::AttachmentPart;
 
 QTEST_KDEMAIN( CryptoComposerTest, GUI )
 
+void CryptoComposerTest::initTestCase()
+{
+  MessageCore::Test::setupEnv();
+}
+
 void CryptoComposerTest::testSignOpenPGPMime()
 {
   Composer *composer = new Composer;

@@ -39,7 +39,9 @@ int main (int argc, char **argv)
             <<QLatin1String("reject")
             <<QLatin1String("imapflags")
             <<QLatin1String("enotify")
-            <<QLatin1String("date");
+            <<QLatin1String("date")
+            <<QLatin1String("copy")
+            <<QLatin1String("mailbox");
     dialog->setSieveCapabilities(capabilities);
     if (dialog->exec() ) {
         QString requires;

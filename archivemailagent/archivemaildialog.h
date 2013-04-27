@@ -23,7 +23,7 @@
 #include <QTreeWidgetItem>
 
 class QTreeWidget;
-
+class KAboutData;
 class ArchiveMailItem : public QTreeWidgetItem
 {
 public:
@@ -75,6 +75,7 @@ private:
     void writeConfig();
     void readConfig();
     ArchiveMailWidget *mWidget;
+    KAboutData *mAboutData;
 };
 
 

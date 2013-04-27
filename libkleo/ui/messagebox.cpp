@@ -50,8 +50,8 @@
 #include <ksavefile.h>
 #include <kguiitem.h>
 #include <kdebug.h>
+#include <ktextedit.h>
 
-#include <qtextedit.h>
 #include <qtextstream.h>
 
 #include <gpg-error.h>
@@ -83,7 +83,7 @@ static KGuiItem KGuiItem_showAuditLog() {
 AuditLogViewer::AuditLogViewer( const QString & log, QWidget * parent, Qt::WindowFlags f )
     : KDialog( parent, f ),
       m_log( /* sic */ ),
-      m_textEdit( new QTextEdit( this ) )
+      m_textEdit( new KTextEdit( this ) )
 {
     setCaption( i18n("View GnuPG Audit Log") );
     setButtons( Close

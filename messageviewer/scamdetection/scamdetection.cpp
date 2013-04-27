@@ -58,7 +58,7 @@ void ScamDetection::scanPage(const QWebElement &rootElement)
                         || title.startsWith(QLatin1String("www."))) {
                     if (href != title) {
                         foundScam = true;
-                        mDetails += QLatin1String("<li>") + i18n("This email contains a link where title definition in anchor '%1' is different from url definition in href '%2'. This is often the case in scam emails.", addWarningColor(title), addWarningColor(href)) + QLatin1String("</li>");
+                        mDetails += QLatin1String("<li>") + i18n("This email contains a link which reads as '%1' in the text, but actually points to '%2'. This is often the case in scam emails to mislead the recipient", addWarningColor(title), addWarningColor(href)) + QLatin1String("</li>");
                     }
                 }
             }

@@ -36,6 +36,10 @@ EditorPage::EditorPage(QWidget *parent)
     mEditor = new Editor;
 
     splitter->addWidget(mEditor);
+    QList<int> size;
+    size << 400 << 100;
+    splitter->setSizes(size);
+    splitter->setChildrenCollapsible(false);
     mThemeTemplate = new ThemeTemplateWidget(i18n("Theme Templates:"));
     connect(mThemeTemplate, SIGNAL(insertTemplate(QString)), mEditor, SLOT(insertPlainText(QString)));
     splitter->addWidget(mThemeTemplate);
@@ -51,10 +55,8 @@ void EditorPage::loadTheme(const QString &path)
 {
     QFile file(path);
     if (file.open(QIODevice::Text|QIODevice::ReadOnly)) {
-        QTextStream out(&file);
-        out.setCodec("UTF-8");
-        QString str;
-        out >> str;
+        QByteArray data = file.readAll();
+        const QString str = QString::fromUtf8(data);
         file.close();
         mEditor->setPlainText(str);
     }

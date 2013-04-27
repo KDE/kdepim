@@ -42,6 +42,11 @@
 
 QTEST_KDEMAIN( SignJobTest, GUI )
 
+void SignJobTest::initTestCase()
+{
+  MessageCore::Test::setupEnv();
+}
+
 void SignJobTest::testContentDirect() {
 
   std::vector< GpgME::Key > keys = MessageCore::Test::getKeys();

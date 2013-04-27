@@ -16,6 +16,7 @@
 */
 
 #include "sieveactionwidgetlister.h"
+#include "autocreatescriptdialog.h"
 #include "sieveactions/sieveaction.h"
 #include "sieveactions/sieveactionlist.h"
 #include "pimcommon/minimumcombobox.h"
@@ -35,10 +36,10 @@ static int MAXIMUMACTION = 8;
 static QString INDENTACTION = QLatin1String("    ");
 
 
-SieveActionWidget::SieveActionWidget(const QStringList &capabilities, QWidget *parent)
+SieveActionWidget::SieveActionWidget(QWidget *parent)
     : QWidget(parent)
 {
-    initWidget(capabilities);
+    initWidget();
 }
 
 SieveActionWidget::~SieveActionWidget()
@@ -75,7 +76,7 @@ void SieveActionWidget::generatedScript(QString &script, QStringList &requires)
     }
 }
 
-void SieveActionWidget::initWidget(const QStringList &capabilities)
+void SieveActionWidget::initWidget()
 {
     mLayout = new QGridLayout(this);
     mLayout->setContentsMargins( 0, 0, 0, 0 );
@@ -88,7 +89,7 @@ void SieveActionWidget::initWidget(const QStringList &capabilities)
     int index = 0;
     for ( index = 0, it = list.constBegin(); it != end; ++it, ++index ) {
         if ((*it)->needCheckIfServerHasCapability()) {
-            if (capabilities.contains((*it)->serverNeedsCapability())) {
+            if (AutoCreateScriptDialog::sieveCapabilities().contains((*it)->serverNeedsCapability())) {
                 // append to the list of actions:
                 mActionList.append( *it );
 
@@ -169,9 +170,8 @@ void SieveActionWidget::updateAddRemoveButton( bool addButtonEnabled, bool remov
     mRemove->setEnabled(removeButtonEnabled);
 }
 
-SieveActionWidgetLister::SieveActionWidgetLister(const QStringList &capabilities, QWidget *parent)
-    : KPIM::KWidgetLister(false, MINIMUMACTION, MAXIMUMACTION, parent),
-      mSieveCapabilities(capabilities)
+SieveActionWidgetLister::SieveActionWidgetLister(QWidget *parent)
+    : KPIM::KWidgetLister(false, MINIMUMACTION, MAXIMUMACTION, parent)
 {
     slotClear();
     updateAddRemoveButton();
@@ -245,7 +245,7 @@ void SieveActionWidgetLister::clearWidget( QWidget *aWidget )
 
 QWidget *SieveActionWidgetLister::createWidget( QWidget *parent )
 {
-    SieveActionWidget *w = new SieveActionWidget( mSieveCapabilities, parent);
+    SieveActionWidget *w = new SieveActionWidget( parent);
     reconnectWidget( w );
     return w;
 }

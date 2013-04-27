@@ -29,6 +29,7 @@
 #include <KWindowSystem>
 
 #include <QTimer>
+#include <QPointer>
 
 //#define DEBUG_ARCHIVEMAILAGENT 1
 
@@ -72,7 +73,7 @@ void ArchiveMailAgent::mailCollectionRemoved(const Akonadi::Collection& collecti
 
 void ArchiveMailAgent::showConfigureDialog(qlonglong windowId)
 {
-    ArchiveMailDialog *dialog = new ArchiveMailDialog();
+    QPointer<ArchiveMailDialog> dialog = new ArchiveMailDialog();
     if (windowId) {
 #ifndef Q_WS_WIN
         KWindowSystem::setMainWindow( dialog, windowId );

@@ -22,7 +22,6 @@
 #define ABSTRACTCONFIGUREWIDGET_H
 
 #include <QWidget>
-#include <KSharedConfig>
 
 namespace PimActivity {
 class AbstractConfigureWidget
@@ -39,7 +38,6 @@ public:
     virtual void readConfig(const QString &id) = 0;
     virtual void writeConfig(const QString &id) = 0;
 
-    KSharedConfigPtr configFromActivity(const QString &id);
 private:
     QString mActivityId;
 };

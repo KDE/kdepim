@@ -16,6 +16,7 @@
 */
 
 #include "sieveconditionwidgetlister.h"
+#include "autocreatescriptdialog.h"
 #include "sieveconditions/sieveconditionlist.h"
 #include "sieveconditions/sievecondition.h"
 #include "pimcommon/minimumcombobox.h"
@@ -34,10 +35,10 @@ using namespace KSieveUi;
 static int MINIMUMCONDITION = 1;
 static int MAXIMUMCONDITION = 8;
 
-SieveConditionWidget::SieveConditionWidget(const QStringList &capabilities, QWidget *parent)
+SieveConditionWidget::SieveConditionWidget(QWidget *parent)
     : QWidget(parent)
 {
-    initWidget(capabilities);
+    initWidget();
 }
 
 SieveConditionWidget::~SieveConditionWidget()
@@ -72,7 +73,7 @@ void SieveConditionWidget::generatedScript(QString &script, QStringList &require
     }
 }
 
-void SieveConditionWidget::initWidget(const QStringList &capabilities)
+void SieveConditionWidget::initWidget()
 {
     mLayout = new QGridLayout(this);
     mLayout->setContentsMargins( 0, 0, 0, 0 );
@@ -86,7 +87,7 @@ void SieveConditionWidget::initWidget(const QStringList &capabilities)
     int index = 0;
     for ( index = 0, it = list.constBegin(); it != end; ++it, ++index ) {        
         if ((*it)->needCheckIfServerHasCapability()) {
-            if (capabilities.contains((*it)->serverNeedsCapability())) {
+            if (AutoCreateScriptDialog::sieveCapabilities().contains((*it)->serverNeedsCapability())) {
                 // append to the list of actions:
                 mConditionList.append( *it );
 
@@ -162,9 +163,8 @@ void SieveConditionWidget::updateAddRemoveButton( bool addButtonEnabled, bool re
     mRemove->setEnabled(removeButtonEnabled);
 }
 
-SieveConditionWidgetLister::SieveConditionWidgetLister(const QStringList &capabilities, QWidget *parent)
-    : KPIM::KWidgetLister(false, MINIMUMCONDITION, MAXIMUMCONDITION, parent),
-      mSieveCapabilities(capabilities)
+SieveConditionWidgetLister::SieveConditionWidgetLister(QWidget *parent)
+    : KPIM::KWidgetLister(false, MINIMUMCONDITION, MAXIMUMCONDITION, parent)
 {
     slotClear();
     updateAddRemoveButton();
@@ -227,7 +227,7 @@ void SieveConditionWidgetLister::clearWidget( QWidget *aWidget )
 
 QWidget *SieveConditionWidgetLister::createWidget( QWidget *parent )
 {
-    SieveConditionWidget *w = new SieveConditionWidget( mSieveCapabilities, parent);
+    SieveConditionWidget *w = new SieveConditionWidget(parent);
     reconnectWidget( w );
     return w;
 }

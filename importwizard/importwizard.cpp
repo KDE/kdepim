@@ -46,6 +46,8 @@
 #include <klocale.h>
 #include <kdebug.h>
 #include <KMessageBox>
+#include <KHelpMenu>
+#include <KMenu>
 #include <akonadi/control.h>
 #include <mailcommon/mailkernel.h>
 
@@ -123,7 +125,6 @@ ImportWizard::ImportWizard(QWidget *parent)
     // Disable the 'next button to begin with.
     setValid( currentPage(), false );
 
-    connect(this,SIGNAL(helpClicked()),this,SLOT(help()));
     connect(mSelectProgramPage,SIGNAL(programSelected(QString)),this,SLOT(slotProgramSelected(QString)));
     connect(mSelectProgramPage, SIGNAL(doubleClicked()), this, SLOT(slotProgramDoubleClicked()) );
     connect(mImportMailPage,SIGNAL(importMailsClicked()),this,SLOT(slotImportMailsClicked()));
@@ -140,6 +141,8 @@ ImportWizard::ImportWizard(QWidget *parent)
 
     checkModules();
     KMessageBox::information(this,i18n("Close KMail before importing data. Some plugins will modify KMail config file."));
+    KHelpMenu *helpMenu = new KHelpMenu(this, KGlobal::mainComponent().aboutData(), true);
+    setButtonMenu( Help, helpMenu->menu() );
 }
 
 ImportWizard::~ImportWizard()
@@ -211,12 +214,6 @@ void ImportWizard::addImportModule(AbstractImporter *import)
         mlistImport.insert(import->name(),import);
     else
         delete import;
-}
-
-void ImportWizard::help()
-{
-    KAboutApplicationDialog a( KGlobal::mainComponent().aboutData(), this );
-    a.exec();
 }
 
 void ImportWizard::slotAtLeastOneComponentSelected( bool result )

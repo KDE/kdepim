@@ -458,7 +458,6 @@ void MainWindow::slotPublishPost()
         return;
     }
     toolbox->getFieldsValue( activePost->currentPost() );
-//     post.setPrivate( false );
     activePost->submitPost( mCurrentBlogId, *activePost->currentPost() );
 }
 

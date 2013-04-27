@@ -34,10 +34,10 @@ public:
     ~ConfigureMailtransport();
 
     void writeConfig(const QString &id);
+    void setDefault();
 
 private:
     void readConfig(const QString &id);
-
 
 Q_SIGNALS:
     void changed(bool b = true);

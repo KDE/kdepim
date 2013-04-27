@@ -47,13 +47,15 @@ Grammar::GrammarPlugin *GrammarLinkClient::createGrammarChecker(const QString &l
     return plugin;
 }
 
-void GrammarLinkClient::searchLanguages()
+QStringList GrammarLinkClient::searchLanguages()
 {
     //TODO
+    return QStringList();
 }
 
 QStringList GrammarLinkClient::languages() const
 {
+    //return searchLanguages();
     //TODO improve search
     return QStringList() <<QLatin1String("de")<<QLatin1String("en")<<QLatin1String("lt");
 }

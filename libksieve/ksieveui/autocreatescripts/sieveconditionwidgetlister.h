@@ -34,7 +34,7 @@ class SieveConditionWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit SieveConditionWidget(const QStringList &capabilities, QWidget *);
+    explicit SieveConditionWidget(QWidget *parent);
     ~SieveConditionWidget();
     void updateAddRemoveButton( bool addButtonEnabled, bool removeButtonEnabled );
     void generatedScript(QString &script, QStringList &requires);
@@ -46,7 +46,7 @@ Q_SIGNALS:
     void addWidget(QWidget *w);
     void removeWidget(QWidget *w);
 private:
-    void initWidget(const QStringList &capabilities);
+    void initWidget();
     void setFilterCondition( QWidget *widget );
     void reset();
     KPushButton *mAdd;
@@ -60,7 +60,7 @@ class SieveConditionWidgetLister : public KPIM::KWidgetLister
 {
     Q_OBJECT
 public:
-    explicit SieveConditionWidgetLister(const QStringList &capabilities, QWidget *parent = 0);
+    explicit SieveConditionWidgetLister(QWidget *parent = 0);
     ~SieveConditionWidgetLister();
 
     void generatedScript(QString &script, int &numberOfCondition, QStringList &requires);
@@ -75,7 +75,6 @@ protected:
 private:
     void reconnectWidget(SieveConditionWidget *w );
     void updateAddRemoveButton();
-    QStringList mSieveCapabilities;
 };
 }
 

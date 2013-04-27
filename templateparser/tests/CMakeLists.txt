@@ -1,5 +1,4 @@
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR})
-
 add_definitions(-DMAIL_DATA_DIR="\\"${CMAKE_CURRENT_SOURCE_DIR}/data\\"")
 
 include_directories(
@@ -8,6 +7,7 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/templateparser/
   ${CMAKE_BINARY_DIR}/templateparser/
 )
+include ( ${CMAKE_SOURCE_DIR}/cmake/modules/kde4_handle_crypto_rpath_for_executable.cmake )
 
 # convenience macro to add qtest unit tests
 macro(add_templateparser_unittest _source)
@@ -30,3 +30,4 @@ macro(add_templateparser_unittest _source)
 endmacro()
 
 add_templateparser_unittest(templateparsertest.cpp)
+kde4_handle_crypto_rpath_for_executable( templateparsertest )

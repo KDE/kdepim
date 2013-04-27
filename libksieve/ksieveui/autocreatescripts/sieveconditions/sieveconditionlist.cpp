@@ -27,6 +27,9 @@
 #include "sieveconditionbody.h"
 //rfc5260
 #include "sieveconditiondate.h"
+#include "sieveconditioncurrentdate.h"
+
+#include "sieveconditionmailboxexists.h"
 
 QList<KSieveUi::SieveCondition *> KSieveUi::SieveConditionList::conditionList()
 {
@@ -39,6 +42,8 @@ QList<KSieveUi::SieveCondition *> KSieveUi::SieveConditionList::conditionList()
     list.append(new KSieveUi::SieveConditionTrue);
     list.append(new KSieveUi::SieveConditionBody);
     list.append(new KSieveUi::SieveConditionDate);
+    list.append(new KSieveUi::SieveConditionCurrentDate);
+    list.append(new KSieveUi::SieveConditionMailboxExists);
     return list;
 }
 

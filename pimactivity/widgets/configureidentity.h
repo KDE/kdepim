@@ -40,6 +40,8 @@ public:
 
     void writeConfig(const QString &id);
 
+    void setDefault();
+
 private:
     void readConfig(const QString &id);
 

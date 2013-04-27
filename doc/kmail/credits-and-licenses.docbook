@@ -18,13 +18,13 @@
 </author>
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
-<date>2011-07-17</date>
-<releaseinfo>&kde; 4.7</releaseinfo>
+<date>2013-04-24</date>
+<releaseinfo>&kde; 4.11</releaseinfo>
 </chapterinfo>
 
 <title>Credits and License</title>
 
-<para>&kmail;: Copyright the &kmail; developers, 1997-2011</para>
+<para>&kmail;: Copyright the &kmail; developers, 1997-2013</para>
 
 &underGPL;
 &underFDL;
@@ -35,7 +35,8 @@
 
 <!-- don't modify manually, this list is generated: -->
 <itemizedlist>
-<listitem><para>Ingo Kl&ouml;cker (kloecker at kde org): Maintainer</para></listitem>
+<listitem><para>Laurent Montel (montel at kde org): Maintainer</para></listitem>
+<listitem><para>Ingo Kl&ouml;cker (kloecker at kde org): Former maintainer</para></listitem>
 <listitem><para>Don Sanders (sanders at kde org): Adopter and co-maintainer</para></listitem>
 <listitem><para>Stefan Taferner (taferner at kde org): Original author</para></listitem>
 <listitem><para>Michael H&auml;ckel (haeckel at kde org): Former maintainer</para></listitem>
@@ -63,7 +64,6 @@
 <listitem><para>Stephan Kulow (coolo at kde org)</para></listitem>
 <listitem><para>Guillaume Laurent (glaurent at telegraph-road org)</para></listitem>
 <listitem><para>Sam Magnuson (sam at trolltech com)</para></listitem>
-<listitem><para>Laurent Montel (montel at kde org)</para></listitem>
 <listitem><para>Matt Newell (newellm at proaxis com)</para></listitem>
 <listitem><para>Denis Perchine (dyp at perchine com)</para></listitem>
 <listitem><para>Samuel Penn (sam at bifrost demon co uk)</para></listitem>
@@ -105,6 +105,9 @@
 
 <sect1 id="documentation">
 <title>Documentation</title>
+
+<para>Update for &kmail; 4.11 by
+Laurent Montel <email>montel@kde.org</email>.</para>
 
 <para>Update for &kmail; 1.7 by
 Ingo Kl&ouml;cker <email>kloecker@kde.de</email> and

@@ -29,6 +29,8 @@
 
 using namespace KSieveUi;
 
+QStringList AutoCreateScriptDialog::sCapabilities = QStringList();
+
 AutoCreateScriptDialog::AutoCreateScriptDialog(QWidget *parent)
     : KDialog(parent)
 {
@@ -51,6 +53,9 @@ AutoCreateScriptDialog::AutoCreateScriptDialog(QWidget *parent)
 
     mStackWidget = new QStackedWidget;
     splitter->addWidget(mStackWidget);
+    QList<int> size;
+    size << 100 << 400;
+    splitter->setSizes(size);
 
     setMainWidget( mainWidget );
     readConfig();
@@ -63,7 +68,12 @@ AutoCreateScriptDialog::~AutoCreateScriptDialog()
 
 void AutoCreateScriptDialog::setSieveCapabilities( const QStringList &capabilities )
 {
-    mSieveScript->setSieveCapabilities(capabilities);
+    sCapabilities = capabilities;
+}
+
+QStringList AutoCreateScriptDialog::sieveCapabilities()
+{
+    return sCapabilities;
 }
 
 QString AutoCreateScriptDialog::script(QString &requires) const

@@ -19,6 +19,7 @@
 */
 
 #include "configureidentity.h"
+#include "activitymanager.h"
 
 #include <KPIMIdentities/IdentityManager>
 #include <KPIMIdentities/Identity>
@@ -61,7 +62,7 @@ void ConfigureIdentity::init()
 
 void ConfigureIdentity::readConfig(const QString &id)
 {
-    KSharedConfigPtr conf = configFromActivity(id);
+    KSharedConfigPtr conf = ActivityManager::configFromActivity(id);
     if (conf->hasGroup(QLatin1String("identity"))) {
         KConfigGroup grp = conf->group(QLatin1String("identity"));
         const QStringList list = grp.readEntry(QLatin1String("ActiveIdentity"), QStringList());
@@ -80,7 +81,7 @@ void ConfigureIdentity::readConfig(const QString &id)
 
 void ConfigureIdentity::writeConfig(const QString &id)
 {
-    KSharedConfigPtr conf = configFromActivity(id);
+    KSharedConfigPtr conf = ActivityManager::configFromActivity(id);
     KConfigGroup grp = conf->group(QLatin1String("identity"));
     const int numberOfItems(mListIdentity->count());
     QStringList lst;
@@ -91,6 +92,15 @@ void ConfigureIdentity::writeConfig(const QString &id)
         }
     }
     grp.writeEntry(QLatin1String("ActiveIdentity"), lst);
+}
+
+void ConfigureIdentity::setDefault()
+{
+    const int numberOfItems(mListIdentity->count());
+    for (int i = 0; i < numberOfItems; ++i) {
+        QListWidgetItem *item = mListIdentity->item(i);
+        item->setCheckState(Qt::Checked);
+    }
 }
 
 }

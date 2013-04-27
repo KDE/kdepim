@@ -21,7 +21,7 @@
 #include "ksieveui_export.h"
 
 #include <KDialog>
-
+#include <QStringList>
 class QStackedWidget;
 
 namespace KSieveUi {
@@ -34,7 +34,8 @@ public:
     ~AutoCreateScriptDialog();
     QString script(QString &requires) const;
 
-    void setSieveCapabilities( const QStringList &capabilities );
+    static void setSieveCapabilities( const QStringList &capabilities );
+    static QStringList sieveCapabilities();
 
 private Q_SLOTS:
     void slotAddScriptPage(QWidget *page);
@@ -46,6 +47,7 @@ private:
     void writeConfig();
 
 private:
+    static QStringList sCapabilities;
     SieveScriptListBox *mSieveScript;
     QStackedWidget *mStackWidget;
 };

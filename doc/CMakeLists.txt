@@ -53,3 +53,20 @@ endif()
 if(BUILD_ktnef)
   add_subdirectory(ktnef)
 endif()
+
+if(BUILD_headerthemeeditor)
+  add_subdirectory(headerthemeeditor)
+endif()
+
+if(BUILD_archivemailagent)
+  add_subdirectory(akonadi_archivemail_agent)
+endif()
+
+if(BUILD_importwizard)
+  add_subdirectory(importwizard)
+endif()
+
+
+if(BUILD_sendlateragent)
+  add_subdirectory(akonadi_sendlater_agent)
+endif()

@@ -93,6 +93,11 @@ public:
     {
         const QString currentActivity = manager->currentActivity();
         if (!currentActivity.isEmpty()) {
+
+            KSharedConfigPtr conf = ActivityManager::configFromActivity(currentActivity);
+            KConfigGroup grp = conf->group(QLatin1String("Global"));
+            activateActivity->setChecked(grp.readEntry(QLatin1String("Enabled"), false));
+
             identity->setCurrentActivity(currentActivity);
             mailTransport->setCurrentActivity(currentActivity);
             collections->setCurrentActivity(currentActivity);
@@ -102,16 +107,26 @@ public:
     void writeConfig()
     {
         const QString currentActivity = manager->currentActivity();
+        bool activityEnabled = false;
         if (!currentActivity.isEmpty()) {
+            KSharedConfigPtr conf = ActivityManager::configFromActivity(currentActivity);
+            KConfigGroup grp = conf->group(QLatin1String("Global"));
+            activityEnabled = activateActivity->isChecked();
+            grp.writeEntry(QLatin1String("Enabled"), activityEnabled);
+
             identity->writeConfig(currentActivity);
             mailTransport->writeConfig(currentActivity);
             collections->writeConfig(currentActivity);
         }
+        manager->setEnabledActivity(activityEnabled);
     }
 
     void setDefault()
     {
-        //TODO
+        activateActivity->setChecked(false);
+        identity->setDefault();
+        mailTransport->setDefault();
+        collections->setDefault();
     }
 
     void addPages()

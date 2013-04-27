@@ -20,6 +20,7 @@
 #include "widgets/selectdatewidget.h"
 
 #include <KLocale>
+#include <KLineEdit>
 
 #include <QHBoxLayout>
 #include <QLabel>
@@ -51,6 +52,10 @@ QWidget *SieveConditionDate::createParamWidget( QWidget *parent ) const
     QLabel *lab = new QLabel(i18n("header"));
     lay->addWidget(lab);
 
+    KLineEdit *header = new KLineEdit;
+    header->setObjectName(QLatin1String("header"));
+    lay->addWidget(header);
+
     SelectDateWidget *dateWidget = new SelectDateWidget;
     dateWidget->setObjectName(QLatin1String("datewidget"));
     lay->addWidget(dateWidget);
@@ -64,10 +69,13 @@ QString SieveConditionDate::code(QWidget *w) const
     bool isNegative = false;
     const QString matchTypeStr = selectMatchCombobox->code(isNegative);
 
+    const KLineEdit *header = w->findChild<KLineEdit*>(QLatin1String("header"));
+    const QString headerStr = header->text();
+
     const SelectDateWidget *dateWidget = w->findChild<SelectDateWidget*>(QLatin1String("datewidget"));
     const QString dateWidgetStr = dateWidget->code();
 
-    return (isNegative ? QLatin1String("not ") : QString()) + QString::fromLatin1("date %1 %2").arg(matchTypeStr).arg(dateWidgetStr);
+    return (isNegative ? QLatin1String("not ") : QString()) + QString::fromLatin1("date %1 \"%2\" %3").arg(matchTypeStr).arg(headerStr).arg(dateWidgetStr);
 }
 
 bool SieveConditionDate::needCheckIfServerHasCapability() const
@@ -79,6 +87,12 @@ QString SieveConditionDate::serverNeedsCapability() const
 {
     return QLatin1String("date");
 }
+
+QStringList SieveConditionDate::needRequires() const
+{
+    return QStringList() << QLatin1String("date");
+}
+
 
 #include "sieveconditiondate.moc"
 

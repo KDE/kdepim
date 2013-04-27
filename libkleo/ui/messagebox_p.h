@@ -36,7 +36,7 @@
 #include <KDialog>
 
 class QString;
-class QTextEdit;
+class KTextEdit;
 
 namespace Kleo {
 namespace Private {
@@ -60,7 +60,7 @@ namespace Private {
 
     private:
         QString m_log;
-        QTextEdit * m_textEdit;
+        KTextEdit * m_textEdit;
     };
 
 }

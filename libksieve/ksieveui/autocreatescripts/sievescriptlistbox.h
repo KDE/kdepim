@@ -52,8 +52,6 @@ public:
     ~SieveScriptListBox();
     QString generatedScript(QString &requires) const;
 
-    void setSieveCapabilities( const QStringList &capabilities );
-
 Q_SIGNALS:
     void addNewPage(QWidget *);
     void removePage(QWidget *);
@@ -71,7 +69,6 @@ private Q_SLOTS:
     void slotDown();
     void slotUp();
 private:
-    QStringList mSieveCapabilities;
     QListWidget *mSieveListScript;
     KPushButton *mBtnNew;
     KPushButton *mBtnDelete;

@@ -4,10 +4,15 @@ set(sendlateragent_SRCS
    sendlateragent.cpp
    sendlaterdialog.cpp
    sendlaterconfiguredialog.cpp
+   sendlaterinfo.cpp
+   sendlatermanager.cpp
 )
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
+qt4_add_dbus_adaptor(sendlateragent_SRCS org.freedesktop.Akonadi.SendLaterAgent.xml sendlateragent.h SendLaterAgent)
+
+kde4_add_ui_files(sendlateragent_SRCS ui/sendlaterwidget.ui )
 
 kde4_add_executable(akonadi_sendlater_agent ${sendlateragent_SRCS})
 
@@ -25,4 +30,5 @@ endif ()
 install(TARGETS akonadi_sendlater_agent ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 install(FILES sendlateragent.desktop DESTINATION "${CMAKE_INSTALL_PREFIX}/share/akonadi/agents")
+install(FILES akonadi_sendlater_agent.notifyrc DESTINATION "${DATA_INSTALL_DIR}/akonadi_sendlater_agent" )
 
