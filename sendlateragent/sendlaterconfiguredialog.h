@@ -37,7 +37,6 @@ public:
 private Q_SLOTS:
     void slotRemoveItem();
     void slotModifyItem();
-    void slotAddItem();
     void updateButtons();
     void customContextMenuRequested(const QPoint&);
 private:

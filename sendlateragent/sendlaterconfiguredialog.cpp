@@ -72,7 +72,7 @@ SendLaterConfigureDialog::~SendLaterConfigureDialog()
 
 void SendLaterConfigureDialog::slotSave()
 {
-    //TODO
+    mWidget->save();
 }
 
 void SendLaterConfigureDialog::readConfig()
@@ -113,7 +113,6 @@ SendLaterWidget::SendLaterWidget( QWidget *parent )
     load();
     connect(mWidget->removeItem,SIGNAL(clicked(bool)),SLOT(slotRemoveItem()));
     connect(mWidget->modifyItem,SIGNAL(clicked(bool)),SLOT(slotModifyItem()));
-    connect(mWidget->addItem,SIGNAL(clicked(bool)),SLOT(slotAddItem()));
     connect(mWidget->treeWidget,SIGNAL(itemSelectionChanged()),SLOT(updateButtons()));
     connect(mWidget->treeWidget,SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),SLOT(slotModifyItem()));
     updateButtons();
@@ -127,16 +126,15 @@ SendLaterWidget::~SendLaterWidget()
 void SendLaterWidget::customContextMenuRequested(const QPoint&)
 {
     const QList<QTreeWidgetItem *> listItems = mWidget->treeWidget->selectedItems();
-    KMenu menu;
-    menu.addAction(i18n("Add..."),this,SLOT(slotAddItem()));
     if ( !listItems.isEmpty() ) {
+        KMenu menu;
         if ( listItems.count() == 1) {
             menu.addAction(i18n("Open Containing Folder..."),this,SLOT(slotOpenFolder()));
         }
         menu.addSeparator();
         menu.addAction(i18n("Delete"),this,SLOT(slotRemoveItem()));
+        menu.exec(QCursor::pos());
     }
-    menu.exec(QCursor::pos());
 }
 
 void SendLaterWidget::restoreTreeWidgetHeader(const QByteArray& data)
@@ -191,12 +189,6 @@ void SendLaterWidget::slotModifyItem()
 {
     //TODO
 }
-
-void SendLaterWidget::slotAddItem()
-{
-    //TODO
-}
-
 
 
 #include "sendlaterconfiguredialog.moc"
