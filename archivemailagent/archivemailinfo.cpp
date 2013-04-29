@@ -42,9 +42,34 @@ ArchiveMailInfo::ArchiveMailInfo(const KConfigGroup& config)
     readConfig(config);
 }
 
+ArchiveMailInfo::ArchiveMailInfo(const ArchiveMailInfo &info)
+{
+    mLastDateSaved = info.lastDateSaved();
+    mArchiveAge = info.archiveAge();
+    mArchiveType = info.archiveType();
+    mArchiveUnit = info.archiveUnit();
+    mSaveCollectionId = info.saveCollectionId();
+    mMaximumArchiveCount = info.maximumArchiveCount();
+    mSaveSubCollection = info.saveSubCollection();
+    mPath = info.url();
+}
+
 
 ArchiveMailInfo::~ArchiveMailInfo()
 {
+}
+
+ArchiveMailInfo& ArchiveMailInfo::operator=( const ArchiveMailInfo &old )
+{
+    mLastDateSaved = old.lastDateSaved();
+    mArchiveAge = old.archiveAge();
+    mArchiveType = old.archiveType();
+    mArchiveUnit = old.archiveUnit();
+    mSaveCollectionId = old.saveCollectionId();
+    mMaximumArchiveCount = old.maximumArchiveCount();
+    mSaveSubCollection = old.saveSubCollection();
+    mPath = old.url();
+    return (*this);
 }
 
 QString normalizeFolderName(const QString& folderName)

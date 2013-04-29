@@ -53,8 +53,9 @@ void ArchiveMailManager::slotArchiveNow(ArchiveMailInfo *info)
 {
     if (!info)
         return;
-    mListArchiveInfo.append(info);
-    ScheduledArchiveTask *task = new ScheduledArchiveTask( this, info,Akonadi::Collection(info->saveCollectionId()), true /*immediat*/ );
+    ArchiveMailInfo *stockInfo = new ArchiveMailInfo(*info);
+    mListArchiveInfo.append(stockInfo);
+    ScheduledArchiveTask *task = new ScheduledArchiveTask( this, stockInfo,Akonadi::Collection(stockInfo->saveCollectionId()), true /*immediat*/ );
     mArchiveMailKernel->jobScheduler()->registerTask( task );
 }
 

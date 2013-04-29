@@ -296,7 +296,7 @@ void ArchiveMailWidget::slotModifyItem()
 
 void ArchiveMailWidget::slotAddItem()
 {
-    AddArchiveMailDialog *dialog = new AddArchiveMailDialog(0,this);
+    QPointer<AddArchiveMailDialog> dialog = new AddArchiveMailDialog(0,this);
     if ( dialog->exec() ) {
         ArchiveMailInfo *info = dialog->info();
         if (verifyExistingArchive(info)) {
