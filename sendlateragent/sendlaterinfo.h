@@ -37,10 +37,15 @@ public:
     void setRecursiveUnit(RecursiveUnit unit);
     RecursiveUnit recursiveUnit() const;
 
+    void setRecursiveEachValue(int value);
+    int recursiveEachValue() const;
+
+
     bool isRecursive() const;
     void setRecursive(bool b);
 
 private:
+    int mRecursiveEachValue;
     RecursiveUnit mRecursiveUnit;
     bool mRecursive;
 };

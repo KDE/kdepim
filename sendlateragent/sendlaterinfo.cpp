@@ -19,13 +19,15 @@
 #include "sendlaterinfo.h"
 
 SendLaterInfo::SendLaterInfo()
-    : mRecursiveUnit(None),
+    : mRecursiveEachValue(1),
+      mRecursiveUnit(None),
       mRecursive(false)
 {
 }
 
 SendLaterInfo::SendLaterInfo(const KConfigGroup& config)
-    : mRecursiveUnit(None),
+    : mRecursiveEachValue(1),
+      mRecursiveUnit(None),
       mRecursive(false)
 {
     //TODO
@@ -53,4 +55,14 @@ void SendLaterInfo::setRecursiveUnit(SendLaterInfo::RecursiveUnit unit)
 SendLaterInfo::RecursiveUnit SendLaterInfo::recursiveUnit() const
 {
     return mRecursiveUnit;
+}
+
+void SendLaterInfo::setRecursiveEachValue(int value)
+{
+    mRecursiveEachValue = value;
+}
+
+int SendLaterInfo::recursiveEachValue() const
+{
+    return mRecursiveEachValue;
 }
