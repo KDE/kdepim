@@ -20,7 +20,7 @@
 #include <QDir>
 
 ArchiveMailInfo::ArchiveMailInfo()
-  : mLastDateSaved(QDate::currentDate())
+  : mLastDateSaved(QDate())
   , mArchiveAge( 1 )
   , mArchiveType( MailCommon::BackupJob::Zip )
   , mArchiveUnit( ArchiveMailInfo::ArchiveDays ) 
@@ -31,7 +31,7 @@ ArchiveMailInfo::ArchiveMailInfo()
 }
 
 ArchiveMailInfo::ArchiveMailInfo(const KConfigGroup& config)
-  : mLastDateSaved(QDate::currentDate())
+  : mLastDateSaved(QDate())
   , mArchiveAge( 1 )
   , mArchiveType( MailCommon::BackupJob::Zip ) 
   , mArchiveUnit( ArchiveMailInfo::ArchiveDays ) 
@@ -144,7 +144,9 @@ QDate ArchiveMailInfo::lastDateSaved() const
 void ArchiveMailInfo::readConfig(const KConfigGroup& config)
 {
   mPath = config.readEntry("storePath",KUrl());
-  mLastDateSaved = QDate::fromString(config.readEntry("lastDateSaved"),Qt::ISODate);
+  if (config.hasKey(QLatin1String("lastDateSaved"))) {
+    mLastDateSaved = QDate::fromString(config.readEntry("lastDateSaved"),Qt::ISODate);
+  }
   mSaveSubCollection = config.readEntry("saveSubCollection",false);
   mArchiveType = static_cast<MailCommon::BackupJob::ArchiveType>( config.readEntry( "archiveType", ( int )MailCommon::BackupJob::Zip ) );
   mArchiveUnit = static_cast<ArchiveUnit>( config.readEntry( "archiveUnit", ( int )ArchiveDays ) );
@@ -162,7 +164,9 @@ void ArchiveMailInfo::writeConfig(KConfigGroup & config )
     return;
   }
   config.writeEntry("storePath",mPath);
-  config.writeEntry("lastDateSaved", mLastDateSaved.toString(Qt::ISODate) );
+  if (mLastDateSaved.isValid()) {
+    config.writeEntry("lastDateSaved", mLastDateSaved.toString(Qt::ISODate) );
+  }
   config.writeEntry("saveSubCollection",mSaveSubCollection);
   config.writeEntry("archiveType", ( int )mArchiveType );
   config.writeEntry("archiveUnit", ( int )mArchiveUnit );

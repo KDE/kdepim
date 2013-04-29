@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012-2013 Montel Laurent <montel.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
   
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -20,21 +20,32 @@
 
 QDate ArchiveMailAgentUtil::diffDate(ArchiveMailInfo*info)
 {
-  QDate diffDate(info->lastDateSaved());
-  switch(info->archiveUnit()) {
+    QDate diffDate(info->lastDateSaved());
+    switch(info->archiveUnit()) {
     case ArchiveMailInfo::ArchiveDays:
-      diffDate = diffDate.addDays(info->archiveAge());
-      break;
+        diffDate = diffDate.addDays(info->archiveAge());
+        break;
     case ArchiveMailInfo::ArchiveWeeks:
-      diffDate = diffDate.addDays(info->archiveAge()*7);
-      break;
+        diffDate = diffDate.addDays(info->archiveAge()*7);
+        break;
     case ArchiveMailInfo::ArchiveMonths:
-      diffDate = diffDate.addMonths(info->archiveAge());
-      break;
+        diffDate = diffDate.addMonths(info->archiveAge());
+        break;
     default:
-      kDebug()<<"archiveUnit not defined :"<<info->archiveUnit();
-      break;
-  }
-  return diffDate;
+        kDebug()<<"archiveUnit not defined :"<<info->archiveUnit();
+        break;
+    }
+    return diffDate;
 }
 
+bool ArchiveMailAgentUtil::needToArchive(ArchiveMailInfo*info)
+{
+    if (!info->lastDateSaved().isValid()) {
+        return true;
+    } else {
+        if (QDate::currentDate() >= diffDate(info)) {
+            return true;
+        }
+    }
+    return false;
+}
