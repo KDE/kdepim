@@ -50,6 +50,7 @@ ArchiveMailDialog::ArchiveMailDialog(QWidget *parent)
     mainLayout->setSpacing( KDialog::spacingHint() );
     mainLayout->setMargin( KDialog::marginHint() );
     mWidget = new ArchiveMailWidget(this);
+    connect(mWidget, SIGNAL(archiveNow(ArchiveMailInfo*)), this, SIGNAL(archiveNow(ArchiveMailInfo*)));
     mainLayout->addWidget(mWidget);
     setMainWidget( mainWidget );
     connect(this,SIGNAL(okClicked()),SLOT(slotSave()));
@@ -352,7 +353,7 @@ void ArchiveMailWidget::slotArchiveNow()
         ArchiveMailItem *archiveItem = static_cast<ArchiveMailItem*>(item);
         ArchiveMailInfo *archiveItemInfo = archiveItem->info();
         if (archiveItemInfo) {
-            //TODO
+            Q_EMIT archiveNow(archiveItemInfo);
         }
     }
 }

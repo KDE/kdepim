@@ -45,6 +45,10 @@ public:
     void save();
     void saveTreeWidgetHeader(KConfigGroup& group);
     void restoreTreeWidgetHeader(const QByteArray &group);
+
+Q_SIGNALS:
+    void archiveNow(ArchiveMailInfo *info);
+
 private:
     void load();
     void createOrUpdateItem(ArchiveMailInfo *info, ArchiveMailItem* item = 0);
@@ -70,6 +74,8 @@ class ArchiveMailDialog : public KDialog
 public:
     explicit ArchiveMailDialog(QWidget *parent = 0);
     ~ArchiveMailDialog();
+Q_SIGNALS:
+    void archiveNow(ArchiveMailInfo *info);
 protected Q_SLOTS:
     void slotSave();
 

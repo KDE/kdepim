@@ -81,6 +81,7 @@ void ArchiveMailAgent::showConfigureDialog(qlonglong windowId)
         KWindowSystem::setMainWindow( dialog, (HWND)windowId );
 #endif
     }
+    connect(dialog, SIGNAL(archiveNow(ArchiveMailInfo*)),mArchiveManager, SLOT(slotArchiveNow(ArchiveMailInfo*)));
     if (dialog->exec()) {
         mArchiveManager->load();
     }
@@ -108,7 +109,6 @@ void ArchiveMailAgent::resume()
 {
     mArchiveManager->resume();
 }
-
 
 AKONADI_AGENT_MAIN( ArchiveMailAgent )
 

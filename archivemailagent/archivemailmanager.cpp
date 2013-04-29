@@ -49,6 +49,15 @@ ArchiveMailManager::~ArchiveMailManager()
     qDeleteAll(mListArchiveInfo);
 }
 
+void ArchiveMailManager::slotArchiveNow(ArchiveMailInfo *info)
+{
+    if (!info)
+        return;
+    mListArchiveInfo.append(info);
+    ScheduledArchiveTask *task = new ScheduledArchiveTask( this, info,Akonadi::Collection(info->saveCollectionId()), true /*immediat*/ );
+    mArchiveMailKernel->jobScheduler()->registerTask( task );
+}
+
 void ArchiveMailManager::load()
 {
     qDeleteAll(mListArchiveInfo);

@@ -38,6 +38,7 @@ public:
     void resume();
 public Q_SLOTS:
     void load();
+    void slotArchiveNow(ArchiveMailInfo *info);
 private:
     QList<ArchiveMailInfo *> mListArchiveInfo;
     ArchiveMailKernel *mArchiveMailKernel;
