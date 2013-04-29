@@ -18,8 +18,18 @@
 
 #include "themedefaulttemplate.h"
 
+#include <KLocale>
+
 QList<PimCommon::defaultTemplate> ThemeDefaultTemplate::defaultTemplates()
 {
-    return QList<PimCommon::defaultTemplate>();
+    QList<PimCommon::defaultTemplate> lst;
+    PimCommon::defaultTemplate tmp;
+    tmp.name = i18n("Date");
+    tmp.text = QString::fromLatin1("{% if header.datei18n %}\n"
+                                   "   {{ header.dateshort|safe }}\n"
+                                   "{% endif %}\n");
+    lst << tmp;
+
+    return lst;
 }
 
