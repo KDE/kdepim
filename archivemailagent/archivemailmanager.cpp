@@ -71,8 +71,7 @@ void ArchiveMailManager::load()
         KConfigGroup group = config->group(collectionList.at(i));
         ArchiveMailInfo *info = new ArchiveMailInfo(group);
 
-        const QDate diffDate = ArchiveMailAgentUtil::diffDate(info);
-        if (QDate::currentDate() >= diffDate) {
+        if (ArchiveMailAgentUtil::needToArchive(info)) {
             Q_FOREACH(ArchiveMailInfo*oldInfo,mListArchiveInfo) {
                 if (oldInfo->saveCollectionId() == info->saveCollectionId()) {
                     //already in jobscheduler

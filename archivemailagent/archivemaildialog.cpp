@@ -226,14 +226,18 @@ void ArchiveMailWidget::createOrUpdateItem(ArchiveMailInfo *info, ArchiveMailIte
         item = new ArchiveMailItem(mWidget->treeWidget);
     }
     item->setText(0,i18n("Folder: %1",MailCommon::Util::fullCollectionPath(Akonadi::Collection(info->saveCollectionId()))));
-    item->setText(1,KGlobal::locale()->formatDate(info->lastDateSaved()));
-    const QDate diffDate = ArchiveMailAgentUtil::diffDate(info);
-    const int diff = QDate::currentDate().daysTo(diffDate);
-    item->setText(2,i18np("1 day", "%1 days",QString::number(diff)));
-    if (diff<0) {
-        item->setBackgroundColor(2,Qt::red);
+    if (info->lastDateSaved().isValid()) {
+        item->setText(1,KGlobal::locale()->formatDate(info->lastDateSaved()));
+        const QDate diffDate = ArchiveMailAgentUtil::diffDate(info);
+        const int diff = QDate::currentDate().daysTo(diffDate);
+        item->setText(2,i18np("1 day", "%1 days",QString::number(diff)));
+        if (diff<0) {
+            item->setBackgroundColor(2,Qt::red);
+        } else {
+            item->setToolTip(2,i18n("Archive will be done %1",KGlobal::locale()->formatDate(diffDate)));
+        }
     } else {
-        item->setToolTip(2,i18n("Archive will be done %1",KGlobal::locale()->formatDate(diffDate)));
+        item->setBackgroundColor(2,Qt::green);
     }
     item->setInfo(info);
 }

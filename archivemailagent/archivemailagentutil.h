@@ -23,6 +23,7 @@
 
 namespace ArchiveMailAgentUtil {
 QDate diffDate(ArchiveMailInfo*info);
+bool needToArchive(ArchiveMailInfo*info);
 }
 
 #endif // ARCHIVEMAILAGENTUTIL_H
