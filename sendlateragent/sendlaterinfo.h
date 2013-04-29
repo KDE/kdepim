@@ -27,10 +27,21 @@ public:
     explicit SendLaterInfo(const KConfigGroup& config);
     ~SendLaterInfo();
 
+    enum RecursiveUnit {
+        None = 0,
+        Days,
+        Weeks,
+        Months
+    };
+
+    void setRecursiveUnit(RecursiveUnit unit);
+    RecursiveUnit recursiveUnit() const;
+
     bool isRecursive() const;
     void setRecursive(bool b);
 
 private:
+    RecursiveUnit mRecursiveUnit;
     bool mRecursive;
 };
 
