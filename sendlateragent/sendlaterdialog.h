@@ -20,6 +20,10 @@
 
 #include <KDialog>
 
+class KComboBox;
+class QCheckBox;
+class QSpinBox;
+
 class SendLaterDialog : public KDialog
 {
     Q_OBJECT
@@ -30,10 +34,15 @@ public:
 private Q_SLOTS:
     void slotSendLater();
     void slotSendNow();
+    void slotRecursiveClicked(bool);
 
 private:
     void readConfig();
     void writeConfig();
+private:
+    KComboBox *mRecursiveComboBox;
+    QCheckBox *mRecursive;
+    QSpinBox *mRecursiveValue;
 };
 
 #endif // SENDLATERDIALOG_H

@@ -18,6 +18,13 @@
 #include "sendlaterdialog.h"
 
 #include <KLocale>
+#include <KComboBox>
+
+#include <QHBoxLayout>
+#include <QVBoxLayout>
+#include <QCheckBox>
+#include <QLabel>
+#include <QSpinBox>
 
 SendLaterDialog::SendLaterDialog(QWidget *parent)
     : KDialog(parent)
@@ -28,6 +35,30 @@ SendLaterDialog::SendLaterDialog(QWidget *parent)
     connect(this, SIGNAL(user1Clicked()), this, SLOT(slotSendLater()));
     connect(this, SIGNAL(user1Clicked()), this, SLOT(slotSendNow()));
     QWidget *w = new QWidget;
+    QVBoxLayout *lay = new QVBoxLayout;
+    mRecursive = new QCheckBox(i18n("Recursive"));
+    connect(mRecursive, SIGNAL(clicked(bool)), this, SLOT(slotRecursiveClicked(bool)));
+    lay->addWidget(mRecursive);
+
+    QHBoxLayout *hbox = new QHBoxLayout;
+    lay->addLayout(hbox);
+
+    QLabel *lab = new QLabel(i18n("Each:"));
+    hbox->addWidget(lab);
+
+    mRecursiveValue = new QSpinBox;
+    hbox->addWidget(mRecursiveValue);
+
+    mRecursiveComboBox = new KComboBox;
+    QStringList unitsList;
+    unitsList<<i18n("Days");
+    unitsList<<i18n("Weeks");
+    unitsList<<i18n("Months");
+    mRecursiveComboBox->addItems(unitsList);
+
+    hbox->addWidget(mRecursiveComboBox);
+
+    setLayout(lay);
     setMainWidget(w);
     readConfig();
 }
@@ -35,6 +66,11 @@ SendLaterDialog::SendLaterDialog(QWidget *parent)
 SendLaterDialog::~SendLaterDialog()
 {
     writeConfig();
+}
+
+void SendLaterDialog::slotRecursiveClicked(bool)
+{
+
 }
 
 void SendLaterDialog::readConfig()
