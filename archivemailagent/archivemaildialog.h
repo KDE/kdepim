@@ -58,6 +58,7 @@ private Q_SLOTS:
   void slotOpenFolder();
   void customContextMenuRequested(const QPoint&);
 private:
+  bool mChanged;
   Ui::ArchiveMailWidget *mWidget;
 };
 
