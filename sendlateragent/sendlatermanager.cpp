@@ -16,6 +16,12 @@
 */
 
 #include "sendlatermanager.h"
+#include "sendlaterinfo.h"
+
+#include <KSharedConfig>
+#include <KGlobal>
+
+#include <QStringList>
 
 SendLaterManager::SendLaterManager(QObject *parent)
     : QObject(parent)
@@ -24,11 +30,16 @@ SendLaterManager::SendLaterManager(QObject *parent)
 
 SendLaterManager::~SendLaterManager()
 {
-
+    qDeleteAll(mListSendLaterInfo);
 }
 
 void SendLaterManager::load()
 {
+    qDeleteAll(mListSendLaterInfo);
+    mListSendLaterInfo.clear();
+
+    KSharedConfig::Ptr config = KGlobal::config();
+    const QStringList itemList = config->groupList().filter( QRegExp( QLatin1String("SendLaterItem \\d+") ) );
     //TODO
 }
 

@@ -30,7 +30,14 @@ SendLaterInfo::SendLaterInfo(const KConfigGroup& config)
       mRecursiveUnit(None),
       mRecursive(false)
 {
-    //TODO
+    readConfig(config);
+}
+
+SendLaterInfo::SendLaterInfo(const SendLaterInfo &info)
+{
+    mRecursiveEachValue = info.recursiveEachValue();
+    mRecursiveUnit = info.recursiveUnit();
+    mRecursive = info.isRecursive();
 }
 
 SendLaterInfo::~SendLaterInfo()
@@ -65,4 +72,14 @@ void SendLaterInfo::setRecursiveEachValue(int value)
 int SendLaterInfo::recursiveEachValue() const
 {
     return mRecursiveEachValue;
+}
+
+void SendLaterInfo::readConfig(const KConfigGroup& config)
+{
+    //TODO
+}
+
+void SendLaterInfo::writeConfig(KConfigGroup & config )
+{
+    //TODO
 }

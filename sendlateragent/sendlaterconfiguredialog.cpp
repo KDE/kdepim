@@ -30,7 +30,7 @@ SendLaterConfigureDialog::SendLaterConfigureDialog(QWidget *parent)
     : KDialog(parent)
 {
     setCaption( i18n("Configure") );
-    setWindowIcon( KIcon( "kmail" ) );
+    setWindowIcon( KIcon( QLatin1String("kmail") ) );
     setButtons( Help|Ok|Cancel );
 
     QWidget *mainWidget = new QWidget( this );
@@ -46,16 +46,16 @@ SendLaterConfigureDialog::SendLaterConfigureDialog(QWidget *parent)
     mAboutData = new KAboutData(
                 QByteArray( "archivemailagent" ),
                 QByteArray(),
-                ki18n( "Archive Mail Agent" ),
+                ki18n( "Send Later Agent" ),
                 QByteArray( KDEPIM_VERSION ),
-                ki18n( "Archive emails automatically." ),
+                ki18n( "Send emails later agent." ),
                 KAboutData::License_GPL_V2,
                 ki18n( "Copyright (C) 2012, 2013 Laurent Montel" ) );
 
     mAboutData->addAuthor( ki18n( "Laurent Montel" ),
                          ki18n( "Maintainer" ), "montel@kde.org" );
 
-    mAboutData->setProgramIconName( "kmail" );
+    mAboutData->setProgramIconName( QLatin1String("kmail") );
     mAboutData->setTranslator( ki18nc( "NAME OF TRANSLATORS", "Your names" ),
                              ki18nc( "EMAIL OF TRANSLATORS", "Your emails" ) );
 
@@ -95,7 +95,8 @@ void SendLaterConfigureDialog::writeConfig()
 }
 
 SendLaterWidget::SendLaterWidget( QWidget *parent )
-    : QWidget( parent )
+    : QWidget( parent ),
+      mChanged(false)
 {
     mWidget = new Ui::SendLaterWidget;
     mWidget->setupUi( this );
@@ -170,6 +171,8 @@ void SendLaterWidget::load()
 
 void SendLaterWidget::save()
 {
+    if (!mChanged)
+        return;
     //TODO
 }
 
@@ -182,11 +185,13 @@ void SendLaterWidget::slotRemoveItem()
     Q_FOREACH(QTreeWidgetItem *item,listItems) {
         delete item;
     }
+    mChanged = true;
     updateButtons();
 }
 
 void SendLaterWidget::slotModifyItem()
 {
+    mChanged = true;
     //TODO
 }
 

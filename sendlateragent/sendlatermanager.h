@@ -18,7 +18,7 @@
 #ifndef SENDLATERMANAGER_H
 #define SENDLATERMANAGER_H
 #include <QObject>
-
+class SendLaterInfo;
 class SendLaterManager : public QObject
 {
     Q_OBJECT
@@ -27,6 +27,8 @@ public:
     ~SendLaterManager();
 
     void load();
+private:
+    QList<SendLaterInfo *> mListSendLaterInfo;
 };
 
 #endif // SENDLATERMANAGER_H

@@ -25,6 +25,7 @@ class SendLaterInfo
 public:
     explicit SendLaterInfo();
     explicit SendLaterInfo(const KConfigGroup& config);
+    SendLaterInfo(const SendLaterInfo &info);
     ~SendLaterInfo();
 
     enum RecursiveUnit {
@@ -42,6 +43,10 @@ public:
 
     bool isRecursive() const;
     void setRecursive(bool b);
+
+
+    void readConfig(const KConfigGroup& config);
+    void writeConfig(KConfigGroup & config );
 
 private:
     int mRecursiveEachValue;
