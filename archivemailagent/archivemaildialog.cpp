@@ -229,6 +229,7 @@ void ArchiveMailWidget::save()
     }
   }
   config->sync();
+  config->reparseConfiguration();
 }
 
 void ArchiveMailWidget::slotRemoveItem()
