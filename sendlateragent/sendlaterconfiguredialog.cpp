@@ -100,7 +100,7 @@ SendLaterWidget::SendLaterWidget( QWidget *parent )
     mWidget = new Ui::SendLaterWidget;
     mWidget->setupUi( this );
     QStringList headers;
-    //headers<<i18n("Name")<<i18n("Last archive")<<i18n("Next archive in");
+    headers << i18n("Subject")<<i18n("Date")<<i18n("Recursive");
     mWidget->treeWidget->setHeaderLabels(headers);
     mWidget->treeWidget->setSortingEnabled(true);
     mWidget->treeWidget->setRootIsDecorated(false);
@@ -109,7 +109,6 @@ SendLaterWidget::SendLaterWidget( QWidget *parent )
 
     connect(mWidget->treeWidget, SIGNAL(customContextMenuRequested(QPoint)),
             this, SLOT(customContextMenuRequested(QPoint)));
-
 
     load();
     connect(mWidget->removeItem,SIGNAL(clicked(bool)),SLOT(slotRemoveItem()));
