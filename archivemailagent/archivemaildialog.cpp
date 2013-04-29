@@ -134,7 +134,8 @@ ArchiveMailInfo* ArchiveMailItem::info() const
 
 
 ArchiveMailWidget::ArchiveMailWidget( QWidget *parent )
-    : QWidget( parent )
+    : QWidget( parent ),
+      mChanged(false)
 {
     mWidget = new Ui::ArchiveMailWidget;
     mWidget->setupUi( this );
@@ -236,6 +237,8 @@ void ArchiveMailWidget::createOrUpdateItem(ArchiveMailInfo *info, ArchiveMailIte
 
 void ArchiveMailWidget::save()
 {
+    if (!mChanged)
+        return;
     KSharedConfig::Ptr config = KGlobal::config();
 
     // first, delete all filter groups:
@@ -254,6 +257,7 @@ void ArchiveMailWidget::save()
         }
     }
     config->sync();
+    config->reparseConfiguration();
 }
 
 void ArchiveMailWidget::slotRemoveItem()
@@ -265,6 +269,7 @@ void ArchiveMailWidget::slotRemoveItem()
     Q_FOREACH(QTreeWidgetItem *item,listItems) {
         delete item;
     }
+    mChanged = true;
     updateButtons();
 }
 
@@ -280,6 +285,7 @@ void ArchiveMailWidget::slotModifyItem()
         if ( dialog->exec() ) {
             ArchiveMailInfo *info = dialog->info();
             createOrUpdateItem(info,archiveItem);
+            mChanged = true;
         }
         delete dialog;
     }
@@ -296,6 +302,7 @@ void ArchiveMailWidget::slotAddItem()
         } else {
             createOrUpdateItem(info);
             updateButtons();
+            mChanged = true;
         }
     }
     delete dialog;

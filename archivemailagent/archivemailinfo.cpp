@@ -158,6 +158,9 @@ void ArchiveMailInfo::readConfig(const KConfigGroup& config)
 
 void ArchiveMailInfo::writeConfig(KConfigGroup & config )
 {
+    if (mSaveCollectionId < 0) {
+        return;
+    }
     config.writeEntry("storePath",mPath);
     config.writeEntry("lastDateSaved", mLastDateSaved.toString(Qt::ISODate) );
     config.writeEntry("saveSubCollection",mSaveSubCollection);
