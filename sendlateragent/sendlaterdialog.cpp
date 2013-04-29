@@ -26,8 +26,9 @@
 #include <QLabel>
 #include <QSpinBox>
 
-SendLaterDialog::SendLaterDialog(QWidget *parent)
-    : KDialog(parent)
+SendLaterDialog::SendLaterDialog(SendLaterInfo *info, QWidget *parent)
+    : KDialog(parent),
+      mInfo(info)
 {
     setCaption( i18n("Send Later") );
     setWindowIcon( KIcon( "kmail" ) );
@@ -58,6 +59,8 @@ SendLaterDialog::SendLaterDialog(QWidget *parent)
 
     hbox->addWidget(mRecursiveComboBox);
 
+    //TODO update it.
+    slotRecursiveClicked(false);
     setLayout(lay);
     setMainWidget(w);
     readConfig();
@@ -68,9 +71,10 @@ SendLaterDialog::~SendLaterDialog()
     writeConfig();
 }
 
-void SendLaterDialog::slotRecursiveClicked(bool)
+void SendLaterDialog::slotRecursiveClicked(bool clicked)
 {
-
+    mRecursiveValue->setEnabled(!clicked);
+    mRecursiveComboBox->setEnabled(!clicked);
 }
 
 void SendLaterDialog::readConfig()

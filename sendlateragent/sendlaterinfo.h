@@ -40,7 +40,6 @@ public:
     void setRecursiveEachValue(int value);
     int recursiveEachValue() const;
 
-
     bool isRecursive() const;
     void setRecursive(bool b);
 

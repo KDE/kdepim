@@ -24,11 +24,13 @@ class KComboBox;
 class QCheckBox;
 class QSpinBox;
 
+class SendLaterInfo;
+
 class SendLaterDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit SendLaterDialog(QWidget *parent);
+    explicit SendLaterDialog(SendLaterInfo *info, QWidget *parent = 0);
     ~SendLaterDialog();
 
 private Q_SLOTS:
@@ -40,6 +42,7 @@ private:
     void readConfig();
     void writeConfig();
 private:
+    SendLaterInfo *mInfo;
     KComboBox *mRecursiveComboBox;
     QCheckBox *mRecursive;
     QSpinBox *mRecursiveValue;
