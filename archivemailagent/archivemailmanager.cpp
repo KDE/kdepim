@@ -65,7 +65,7 @@ void ArchiveMailManager::load()
     mListArchiveInfo.clear();
 
     KSharedConfig::Ptr config = KGlobal::config();
-    const QStringList collectionList = config->groupList().filter( QRegExp( "ArchiveMailCollection \\d+" ) );
+    const QStringList collectionList = config->groupList().filter( QRegExp( QLatin1String("ArchiveMailCollection \\d+") ) );
     const int numberOfCollection = collectionList.count();
     for(int i = 0 ; i < numberOfCollection; ++i) {
         KConfigGroup group = config->group(collectionList.at(i));

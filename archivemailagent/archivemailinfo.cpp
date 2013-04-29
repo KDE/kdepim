@@ -99,7 +99,7 @@ KUrl ArchiveMailInfo::realUrl(const QString& folderName) const
 
     const QString path = dirPath + QLatin1Char( '/' ) + i18nc( "Start of the filename for a mail archive file" , "Archive" )
             + QLatin1Char( '_' ) + normalizeFolderName(folderName) + QLatin1Char( '_' )
-            + QDate::currentDate().toString( Qt::ISODate ) + extensions[mArchiveType];
+            + QDate::currentDate().toString( Qt::ISODate ) + QString::fromLatin1(extensions[mArchiveType]);
     KUrl real(path);
     return real;
 }
@@ -115,7 +115,7 @@ QStringList ArchiveMailInfo::listOfArchive(const QString& folderName) const
 
     QStringList nameFilters;
     nameFilters << i18nc( "Start of the filename for a mail archive file" , "Archive" ) + QLatin1Char( '_' ) +
-                   normalizeFolderName(folderName) + QLatin1Char( '_' ) + QLatin1String("*") + extensions[mArchiveType];
+                   normalizeFolderName(folderName) + QLatin1Char( '_' ) + QLatin1String("*") + QString::fromLatin1(extensions[mArchiveType]);
     const QStringList lst = dir.entryList ( nameFilters, QDir::Files|QDir::NoDotAndDotDot, QDir::Time|QDir::Reversed );
     return lst;
 }

@@ -41,7 +41,7 @@ ArchiveMailDialog::ArchiveMailDialog(QWidget *parent)
     :KDialog(parent)
 {
     setCaption( i18n( "Configure Archive Mail Agent" ) );
-    setWindowIcon( KIcon( "kmail" ) );
+    setWindowIcon( KIcon( QLatin1String("kmail") ) );
     setButtons( Help | Ok|Cancel );
     setDefaultButton( Ok );
     setModal( true );
@@ -68,7 +68,7 @@ ArchiveMailDialog::ArchiveMailDialog(QWidget *parent)
     mAboutData->addAuthor( ki18n( "Laurent Montel" ),
                          ki18n( "Maintainer" ), "montel@kde.org" );
 
-    mAboutData->setProgramIconName( "kmail" );
+    mAboutData->setProgramIconName( QLatin1String("kmail") );
     mAboutData->setTranslator( ki18nc( "NAME OF TRANSLATORS", "Your names" ),
                              ki18nc( "EMAIL OF TRANSLATORS", "Your emails" ) );
 
