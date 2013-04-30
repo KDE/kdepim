@@ -70,3 +70,7 @@ endif()
 if(BUILD_sendlateragent)
   add_subdirectory(akonadi_sendlater_agent)
 endif()
+
+if(BUILD_pimsettingexporter)
+  add_subdirectory(pimsettingexporter)
+endif()
