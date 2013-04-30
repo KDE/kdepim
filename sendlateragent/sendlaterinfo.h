@@ -18,6 +18,8 @@
 #ifndef SENDLATERINFO_H
 #define SENDLATERINFO_H
 
+#include <Akonadi/Item>
+
 class KConfigGroup;
 
 class SendLaterInfo
@@ -35,6 +37,9 @@ public:
         Months
     };
 
+    void setItemId(Akonadi::Item::Id id);
+    Akonadi::Item::Id itemId() const;
+
     void setRecursiveUnit(RecursiveUnit unit);
     RecursiveUnit recursiveUnit() const;
 
@@ -49,6 +54,7 @@ public:
     void writeConfig(KConfigGroup & config );
 
 private:
+    Akonadi::Item::Id mId;
     int mRecursiveEachValue;
     RecursiveUnit mRecursiveUnit;
     bool mRecursive;
