@@ -17,11 +17,14 @@ set(libpimactivity_SRCS
   	configureactivitywidget.cpp
         pimwidgets/mailtransport/transportcomboboxactivity.cpp
         pimwidgets/identity/identitycomboboxactivity.cpp
+        pimwidgets/identity/identitymanageractivity.cpp
   	widgets/configurecollections.cpp
   	widgets/configuremailtransport.cpp
   	widgets/activitywarning.cpp
         widgets/abstractconfigurewidget.cpp
 )
+
+qt4_add_dbus_adaptor(libpimactivity_SRCS pimwidgets/identity/org.kde.pim.IdentityManagerActivity.xml pimwidgets/identity/identitymanageractivity.h PimActivity::IdentityManagerActivity )
 
 kde4_add_library(pimactivity ${LIBRARY_TYPE} ${libpimactivity_SRCS})
 
@@ -29,11 +32,13 @@ set_target_properties(pimactivity PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVE
 
 target_link_libraries(pimactivity
     ${KDE4_KDEUI_LIBS}
+    ${KDE4_KIO_LIBS}
     ${KACTIVITIES_LIBRARY}
     ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
     ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
     ${KDEPIMLIBS_KMIME_LIBS}
-    ${KDEPIMLIBS_AKONADI_LIBS} 
+    ${KDEPIMLIBS_AKONADI_LIBS}
+    ${KDEPIMLIBS_KPIMUTILS_LIBS} 
     akonadi_next
 )
 

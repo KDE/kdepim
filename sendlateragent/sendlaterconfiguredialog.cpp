@@ -16,6 +16,8 @@
 */
 
 #include "sendlaterconfiguredialog.h"
+#include "sendlaterdialog.h"
+#include "sendlaterinfo.h"
 
 #include "kdepim-version.h"
 
@@ -26,11 +28,14 @@
 #include <KAboutData>
 #include <KMessageBox>
 
+static QString sendLaterItemPattern = QLatin1String( "SendLaterItem \\d+" );
+
+
 SendLaterConfigureDialog::SendLaterConfigureDialog(QWidget *parent)
     : KDialog(parent)
 {
     setCaption( i18n("Configure") );
-    setWindowIcon( KIcon( "kmail" ) );
+    setWindowIcon( KIcon( QLatin1String("kmail") ) );
     setButtons( Help|Ok|Cancel );
 
     QWidget *mainWidget = new QWidget( this );
@@ -46,16 +51,16 @@ SendLaterConfigureDialog::SendLaterConfigureDialog(QWidget *parent)
     mAboutData = new KAboutData(
                 QByteArray( "archivemailagent" ),
                 QByteArray(),
-                ki18n( "Archive Mail Agent" ),
+                ki18n( "Send Later Agent" ),
                 QByteArray( KDEPIM_VERSION ),
-                ki18n( "Archive emails automatically." ),
+                ki18n( "Send emails later agent." ),
                 KAboutData::License_GPL_V2,
-                ki18n( "Copyright (C) 2012, 2013 Laurent Montel" ) );
+                ki18n( "Copyright (C) 2013 Laurent Montel" ) );
 
     mAboutData->addAuthor( ki18n( "Laurent Montel" ),
                          ki18n( "Maintainer" ), "montel@kde.org" );
 
-    mAboutData->setProgramIconName( "kmail" );
+    mAboutData->setProgramIconName( QLatin1String("kmail") );
     mAboutData->setTranslator( ki18nc( "NAME OF TRANSLATORS", "Your names" ),
                              ki18nc( "EMAIL OF TRANSLATORS", "Your emails" ) );
 
@@ -72,7 +77,7 @@ SendLaterConfigureDialog::~SendLaterConfigureDialog()
 
 void SendLaterConfigureDialog::slotSave()
 {
-    //TODO
+    mWidget->save();
 }
 
 void SendLaterConfigureDialog::readConfig()
@@ -94,13 +99,36 @@ void SendLaterConfigureDialog::writeConfig()
     mWidget->saveTreeWidgetHeader(group);
 }
 
+SendLaterItem::SendLaterItem(QTreeWidget *parent )
+    : QTreeWidgetItem(parent),
+      mInfo(0)
+{
+}
+
+SendLaterItem::~SendLaterItem()
+{
+    delete mInfo;
+}
+
+void SendLaterItem::setInfo(SendLaterInfo *info)
+{
+    mInfo = info;
+}
+
+SendLaterInfo* SendLaterItem::info() const
+{
+    return mInfo;
+}
+
+
 SendLaterWidget::SendLaterWidget( QWidget *parent )
-    : QWidget( parent )
+    : QWidget( parent ),
+      mChanged(false)
 {
     mWidget = new Ui::SendLaterWidget;
     mWidget->setupUi( this );
     QStringList headers;
-    //headers<<i18n("Name")<<i18n("Last archive")<<i18n("Next archive in");
+    headers << i18n("Subject")<<i18n("Date")<<i18n("Recursive");
     mWidget->treeWidget->setHeaderLabels(headers);
     mWidget->treeWidget->setSortingEnabled(true);
     mWidget->treeWidget->setRootIsDecorated(false);
@@ -110,11 +138,9 @@ SendLaterWidget::SendLaterWidget( QWidget *parent )
     connect(mWidget->treeWidget, SIGNAL(customContextMenuRequested(QPoint)),
             this, SLOT(customContextMenuRequested(QPoint)));
 
-
     load();
     connect(mWidget->removeItem,SIGNAL(clicked(bool)),SLOT(slotRemoveItem()));
     connect(mWidget->modifyItem,SIGNAL(clicked(bool)),SLOT(slotModifyItem()));
-    connect(mWidget->addItem,SIGNAL(clicked(bool)),SLOT(slotAddItem()));
     connect(mWidget->treeWidget,SIGNAL(itemSelectionChanged()),SLOT(updateButtons()));
     connect(mWidget->treeWidget,SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),SLOT(slotModifyItem()));
     updateButtons();
@@ -128,16 +154,15 @@ SendLaterWidget::~SendLaterWidget()
 void SendLaterWidget::customContextMenuRequested(const QPoint&)
 {
     const QList<QTreeWidgetItem *> listItems = mWidget->treeWidget->selectedItems();
-    KMenu menu;
-    menu.addAction(i18n("Add..."),this,SLOT(slotAddItem()));
     if ( !listItems.isEmpty() ) {
+        KMenu menu;
         if ( listItems.count() == 1) {
             menu.addAction(i18n("Open Containing Folder..."),this,SLOT(slotOpenFolder()));
         }
         menu.addSeparator();
         menu.addAction(i18n("Delete"),this,SLOT(slotRemoveItem()));
+        menu.exec(QCursor::pos());
     }
-    menu.exec(QCursor::pos());
 }
 
 void SendLaterWidget::restoreTreeWidgetHeader(const QByteArray& data)
@@ -173,7 +198,30 @@ void SendLaterWidget::load()
 
 void SendLaterWidget::save()
 {
-    //TODO
+    if (!mChanged)
+        return;
+    KSharedConfig::Ptr config = KGlobal::config();
+
+    // first, delete all filter groups:
+    const QStringList filterGroups =config->groupList().filter( QRegExp( sendLaterItemPattern ) );
+
+    foreach ( const QString &group, filterGroups ) {
+        config->deleteGroup( group );
+    }
+
+    const int numberOfItem(mWidget->treeWidget->topLevelItemCount());
+    for(int i = 0; i < numberOfItem; ++i) {
+        SendLaterItem *mailItem = static_cast<SendLaterItem *>(mWidget->treeWidget->topLevelItem(i));
+        if (mailItem->info()) {
+            //TODO
+            /*
+            KConfigGroup group = config->group(QString::fromLatin1("SendLaterItem %1").arg(mailItem->info()->saveCollectionId()));
+            mailItem->info()->writeConfig(group);
+            */
+        }
+    }
+    config->sync();
+    config->reparseConfiguration();
 }
 
 void SendLaterWidget::slotRemoveItem()
@@ -185,19 +233,15 @@ void SendLaterWidget::slotRemoveItem()
     Q_FOREACH(QTreeWidgetItem *item,listItems) {
         delete item;
     }
+    mChanged = true;
     updateButtons();
 }
 
 void SendLaterWidget::slotModifyItem()
 {
+    mChanged = true;
     //TODO
 }
-
-void SendLaterWidget::slotAddItem()
-{
-    //TODO
-}
-
 
 
 #include "sendlaterconfiguredialog.moc"

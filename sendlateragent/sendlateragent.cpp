@@ -18,6 +18,8 @@
 #include "sendlateragent.h"
 #include "sendlatermanager.h"
 #include "sendlaterconfiguredialog.h"
+#include "sendlaterdialog.h"
+#include "sendlaterinfo.h"
 #include "sendlateragentadaptor.h"
 
 #include <akonadi/dbusconnectionpool.h>
@@ -31,7 +33,7 @@ SendLaterAgent::SendLaterAgent(const QString &id)
     : Akonadi::AgentBase( id )
 {
     mManager = new SendLaterManager(this);
-    KGlobal::locale()->insertCatalog( "akonadi_sendlater_agent" );
+    KGlobal::locale()->insertCatalog( QLatin1String("akonadi_sendlater_agent") );
     new SendLaterAgentAdaptor( this );
     Akonadi::DBusConnectionPool::threadConnection().registerObject( QLatin1String( "/SendLaterAgent" ), this, QDBusConnection::ExportAdaptors );
     Akonadi::DBusConnectionPool::threadConnection().registerService( QLatin1String( "org.freedesktop.Akonadi.SendLaterAgent" ) );
@@ -40,6 +42,27 @@ SendLaterAgent::SendLaterAgent(const QString &id)
 
 SendLaterAgent::~SendLaterAgent()
 {
+}
+
+void SendLaterAgent::addSendLaterItem(qlonglong itemId, qlonglong windowId)
+{
+    SendLaterInfo *info = new SendLaterInfo;
+    info->setItemId(itemId);
+    QPointer<SendLaterDialog> dialog = new SendLaterDialog(info);
+    if (windowId) {
+#ifndef Q_WS_WIN
+        KWindowSystem::setMainWindow( dialog, windowId );
+#else
+        KWindowSystem::setMainWindow( dialog, (HWND)windowId );
+#endif
+    }
+    if (dialog->exec()) {
+        //Save ? Add ? Load ?
+        //mManager->load();
+    } else {
+        delete info;
+    }
+    delete dialog;
 }
 
 void SendLaterAgent::configure( WId windowId )

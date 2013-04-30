@@ -23,6 +23,15 @@
 <email>michel@klaralvdalens-datakonsult.se</email>
 </address></affiliation>
 </author>
+<author>
+<firstname>Laurent</firstname>
+<surname>Montel</surname>
+<affiliation><address>
+<email>montel@kde.org</email>
+</address></affiliation>
+</author>
+
+
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
 <date>2013-04-25</date>
@@ -96,6 +105,20 @@ messages from several email clients into &kmail;.
 </listitem>
 </varlistentry>
 
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>File</guimenu>
+<guimenuitem>Print Preview...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Display a dialog which show how your email will be printed.</para>
+</listitem>
+</varlistentry>
+
+
 <varlistentry>
 <term>
 <menuchoice>
@@ -108,19 +131,7 @@ messages from several email clients into &kmail;.
 <para>Display a dialog that lets you print the currently displayed message.</para>
 </listitem>
 </varlistentry>
-<!-- NOT IN 4.4.0
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>File</guimenu>
-<guimenuitem>Compact All Folders</guimenuitem>
-</menuchoice></term>
-<listitem>
-<para>Will compact all folders, &ie; it will really move and delete the messages
-on disk according to how you have moved and deleted them in &kmail;.</para>
-</listitem>
-</varlistentry>
--->
+
 <varlistentry>
 <term>
 <menuchoice>
@@ -134,18 +145,6 @@ each folder's <link linkend="folders-properties-window">Properties dialog</link>
 </listitem>
 </varlistentry>
 
- <varlistentry><!-- Only with IMAP?-->
-<term>
-<menuchoice>
-<guimenu>File</guimenu>
-<guimenuitem>Refresh Local &imap; Cache</guimenuitem>
-</menuchoice></term>
-<listitem>
-<para>This will remove all changes that you have done locally to your IMAP
-folders and redownload everything from the server. Use this if the local
-cache was corrupted.</para>
-</listitem>
-</varlistentry>
 
 <varlistentry>
 <term>
@@ -415,35 +414,7 @@ compressed files, will still be shown as an icon.
 </para>
 </listitem>
 </varlistentry>
-<!-- not in 440
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>View</guimenu>
-<guimenuitem>Unread Column</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Allows you to specify whether the number of unread messages should
-be shown in parentheses next to the folder name (<guilabel>View After Folder
-Name</guilabel>) or in a separate column (<guilabel>View in Separate
-Column</guilabel>)</para>
-</listitem>
-</varlistentry>
 
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>View</guimenu>
-<guimenuitem>Total Column</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Display a column in the list of folders which shows the number
-of messages per folder.</para>
-</listitem>
-</varlistentry>
--->
 <varlistentry>
 <term>
 <menuchoice>
@@ -556,6 +527,20 @@ dialog.</para>
 Pane. The default, <guilabel>Auto</guilabel>, should work in almost all cases.</para>
 </listitem>
 </varlistentry>
+
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>View</guimenu>
+<guisubmenu>Zoom</guisubmenu>
+</menuchoice>
+</term>
+<listitem>
+<para>Allows to zoom message in the Message Pane.</para>
+</listitem>
+</varlistentry>
+
 
 </variablelist>
 
@@ -1945,6 +1930,9 @@ edited message. The font to be used can be configured in the
 dialog.</para>
 </listitem>
 </varlistentry>
+
+
+
 <!-- Snippets missing  lueck 31.05.2011-->
 </variablelist>
 

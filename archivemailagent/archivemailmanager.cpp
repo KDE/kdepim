@@ -34,8 +34,6 @@
 #include <QFile>
 #include <QDir>
 
-static QString archivePattern = QLatin1String("ArchiveMailCollection %1");
-
 ArchiveMailManager::ArchiveMailManager(QObject *parent)
     : QObject( parent )
 {
@@ -49,20 +47,29 @@ ArchiveMailManager::~ArchiveMailManager()
     qDeleteAll(mListArchiveInfo);
 }
 
+void ArchiveMailManager::slotArchiveNow(ArchiveMailInfo *info)
+{
+    if (!info)
+        return;
+    ArchiveMailInfo *stockInfo = new ArchiveMailInfo(*info);
+    mListArchiveInfo.append(stockInfo);
+    ScheduledArchiveTask *task = new ScheduledArchiveTask( this, stockInfo,Akonadi::Collection(stockInfo->saveCollectionId()), true /*immediat*/ );
+    mArchiveMailKernel->jobScheduler()->registerTask( task );
+}
+
 void ArchiveMailManager::load()
 {
     qDeleteAll(mListArchiveInfo);
     mListArchiveInfo.clear();
 
     KSharedConfig::Ptr config = KGlobal::config();
-    const QStringList collectionList = config->groupList().filter( QRegExp( "ArchiveMailCollection \\d+" ) );
+    const QStringList collectionList = config->groupList().filter( QRegExp( QLatin1String("ArchiveMailCollection \\d+") ) );
     const int numberOfCollection = collectionList.count();
     for(int i = 0 ; i < numberOfCollection; ++i) {
         KConfigGroup group = config->group(collectionList.at(i));
         ArchiveMailInfo *info = new ArchiveMailInfo(group);
 
-        const QDate diffDate = ArchiveMailAgentUtil::diffDate(info);
-        if (QDate::currentDate() >= diffDate) {
+        if (ArchiveMailAgentUtil::needToArchive(info)) {
             Q_FOREACH(ArchiveMailInfo*oldInfo,mListArchiveInfo) {
                 if (oldInfo->saveCollectionId() == info->saveCollectionId()) {
                     //already in jobscheduler
@@ -86,7 +93,7 @@ void ArchiveMailManager::load()
 void ArchiveMailManager::removeCollection(const Akonadi::Collection& collection)
 {
     KSharedConfig::Ptr config = KGlobal::config();
-    const QString groupname = archivePattern.arg(collection.id());
+    const QString groupname = ArchiveMailAgentUtil::archivePattern.arg(collection.id());
     if (config->hasGroup(groupname)) {
         KConfigGroup group = config->group(groupname);
         group.deleteGroup();
@@ -103,7 +110,7 @@ void ArchiveMailManager::backupDone(ArchiveMailInfo *info)
 {
     info->setLastDateSaved(QDate::currentDate());
     KSharedConfig::Ptr config = KGlobal::config();
-    const QString groupname = archivePattern.arg(info->saveCollectionId());
+    const QString groupname = ArchiveMailAgentUtil::archivePattern.arg(info->saveCollectionId());
     //Don't store it if we removed this task
     if (config->hasGroup(groupname)) {
         KConfigGroup group = config->group(groupname);
@@ -136,5 +143,15 @@ void ArchiveMailManager::resume()
     mArchiveMailKernel->jobScheduler()->resume();
 }
 
+void ArchiveMailManager::printArchiveListInfo()
+{
+    Q_FOREACH (ArchiveMailInfo *info, mListArchiveInfo) {
+        kDebug()<<"info: collectionId:"<<info->saveCollectionId()
+                <<" saveSubCollection ?"<<info->saveSubCollection()
+                <<" lastDateSaved:"<<info->lastDateSaved()
+                <<" number of archive:"<<info->maximumArchiveCount()
+                <<" directory"<<info->url();
+    }
+}
 
 #include "archivemailmanager.moc"

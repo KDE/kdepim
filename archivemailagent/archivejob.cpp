@@ -55,7 +55,7 @@ void ArchiveJob::execute()
         backupJob->setRecursive( mInfo->saveSubCollection() );
         backupJob->setDisplayMessageBox(false);
         const QString summary = i18n("Start to archive %1",realPath );
-        const QPixmap pixmap = KIcon( "kmail" ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
+        const QPixmap pixmap = KIcon( QLatin1String("kmail") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
         KNotification::event( QLatin1String("archivemailstarted"),
                               summary,
                               pixmap,
@@ -71,7 +71,7 @@ void ArchiveJob::execute()
 
 void ArchiveJob::slotError(const QString& error)
 {
-    const QPixmap pixmap = KIcon( "kmail" ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
+    const QPixmap pixmap = KIcon( QLatin1String("kmail") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
 
     KNotification::event( QLatin1String("archivemailerror"),
                           error,
@@ -85,7 +85,7 @@ void ArchiveJob::slotError(const QString& error)
 
 void ArchiveJob::slotBackupDone(const QString& info)
 {
-    const QPixmap pixmap = KIcon( "kmail" ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
+    const QPixmap pixmap = KIcon( QLatin1String("kmail") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
 
     KNotification::event( QLatin1String("archivemailfinished"),
                           info,

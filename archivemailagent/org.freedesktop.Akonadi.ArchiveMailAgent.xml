@@ -6,5 +6,6 @@
     </method>
     <method name="pause"/>
     <method name="resume"/>
+    <method name="printArchiveListInfo"/>
   </interface>
 </node>

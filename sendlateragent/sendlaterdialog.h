@@ -20,20 +20,33 @@
 
 #include <KDialog>
 
+class KComboBox;
+class QCheckBox;
+class QSpinBox;
+
+class SendLaterInfo;
+
 class SendLaterDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit SendLaterDialog(QWidget *parent);
+    explicit SendLaterDialog(SendLaterInfo *info, QWidget *parent = 0);
     ~SendLaterDialog();
 
 private Q_SLOTS:
     void slotSendLater();
     void slotSendNow();
+    void slotRecursiveClicked(bool);
 
 private:
+    void load(SendLaterInfo *info);
     void readConfig();
     void writeConfig();
+private:
+    SendLaterInfo *mInfo;
+    KComboBox *mRecursiveComboBox;
+    QCheckBox *mRecursive;
+    QSpinBox *mRecursiveValue;
 };
 
 #endif // SENDLATERDIALOG_H

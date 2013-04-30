@@ -18,15 +18,31 @@
 
 #include "sendlaterinfo.h"
 
+#include <KConfigGroup>
+
 SendLaterInfo::SendLaterInfo()
-    : mRecursive(false)
+    : mId(-1),
+      mRecursiveEachValue(1),
+      mRecursiveUnit(None),
+      mRecursive(false)
 {
 }
 
 SendLaterInfo::SendLaterInfo(const KConfigGroup& config)
-    : mRecursive(false)
+    : mId(-1),
+      mRecursiveEachValue(1),
+      mRecursiveUnit(None),
+      mRecursive(false)
 {
-    //TODO
+    readConfig(config);
+}
+
+SendLaterInfo::SendLaterInfo(const SendLaterInfo &info)
+{
+    mId = info.itemId();
+    mRecursiveEachValue = info.recursiveEachValue();
+    mRecursiveUnit = info.recursiveUnit();
+    mRecursive = info.isRecursive();
 }
 
 SendLaterInfo::~SendLaterInfo()
@@ -41,4 +57,63 @@ bool SendLaterInfo::isRecursive() const
 void SendLaterInfo::setRecursive(bool b)
 {
     mRecursive = b;
+}
+
+void SendLaterInfo::setRecursiveUnit(SendLaterInfo::RecursiveUnit unit)
+{
+    mRecursiveUnit = unit;
+}
+
+SendLaterInfo::RecursiveUnit SendLaterInfo::recursiveUnit() const
+{
+    return mRecursiveUnit;
+}
+
+void SendLaterInfo::setRecursiveEachValue(int value)
+{
+    mRecursiveEachValue = value;
+}
+
+int SendLaterInfo::recursiveEachValue() const
+{
+    return mRecursiveEachValue;
+}
+
+void SendLaterInfo::setItemId(Akonadi::Item::Id id)
+{
+    mId = id;
+}
+
+Akonadi::Item::Id SendLaterInfo::itemId() const
+{
+    return mId;
+}
+
+void SendLaterInfo::setDateTime(const QDateTime &time)
+{
+    mDateTime = time;
+}
+
+QDateTime SendLaterInfo::dateTime() const
+{
+    return mDateTime;
+}
+
+void SendLaterInfo::readConfig(const KConfigGroup& config)
+{
+    mDateTime = config.readEntry("date", QDateTime());
+    mRecursive = config.readEntry("recursive", false);
+    mRecursiveEachValue = config.readEntry("recursiveValue",1);
+    mRecursiveUnit = static_cast<RecursiveUnit>(config.readEntry("recursiveUnit", (int)None));
+    mId = config.readEntry("itemId", -1);
+}
+
+void SendLaterInfo::writeConfig(KConfigGroup & config )
+{
+    config.writeEntry("date", mDateTime);
+    config.writeEntry("recursive", mRecursive);
+    config.writeEntry("recursiveValue", mRecursiveEachValue );
+    config.writeEntry("recursiveUnit", (int)mRecursiveUnit);
+    config.writeEntry("itemId", mId);
+    config.sync();
 }

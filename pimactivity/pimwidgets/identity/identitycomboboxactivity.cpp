@@ -32,7 +32,13 @@ public:
     {
         if (activityManager) {
             q->connect(activityManager, SIGNAL(currentActivityChanged(QString)), q, SLOT(slotCurrentActivityChanged(QString)));
+            initializeActivity();
         }
+    }
+
+    void initializeActivity()
+    {
+        slotCurrentActivityChanged(activityManager->currentActivity());
     }
 
     void slotCurrentActivityChanged(const QString &id)
@@ -71,6 +77,12 @@ void IdentityComboboxActivity::setActivityManager(ActivityManager *manager)
 
 void IdentityComboboxActivity::updateComboboxList(const QString &id)
 {
+    clear();
+    if (id.isEmpty()) {
+        //not activity => show all identity
+    } else {
+        //Show current identity from id.
+    }
     //TODO
 }
 

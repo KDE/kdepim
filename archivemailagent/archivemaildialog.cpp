@@ -41,7 +41,7 @@ ArchiveMailDialog::ArchiveMailDialog(QWidget *parent)
     :KDialog(parent)
 {
     setCaption( i18n( "Configure Archive Mail Agent" ) );
-    setWindowIcon( KIcon( "kmail" ) );
+    setWindowIcon( KIcon( QLatin1String("kmail") ) );
     setButtons( Help | Ok|Cancel );
     setDefaultButton( Ok );
     setModal( true );
@@ -50,6 +50,7 @@ ArchiveMailDialog::ArchiveMailDialog(QWidget *parent)
     mainLayout->setSpacing( KDialog::spacingHint() );
     mainLayout->setMargin( KDialog::marginHint() );
     mWidget = new ArchiveMailWidget(this);
+    connect(mWidget, SIGNAL(archiveNow(ArchiveMailInfo*)), this, SIGNAL(archiveNow(ArchiveMailInfo*)));
     mainLayout->addWidget(mWidget);
     setMainWidget( mainWidget );
     connect(this,SIGNAL(okClicked()),SLOT(slotSave()));
@@ -67,7 +68,7 @@ ArchiveMailDialog::ArchiveMailDialog(QWidget *parent)
     mAboutData->addAuthor( ki18n( "Laurent Montel" ),
                          ki18n( "Maintainer" ), "montel@kde.org" );
 
-    mAboutData->setProgramIconName( "kmail" );
+    mAboutData->setProgramIconName( QLatin1String("kmail") );
     mAboutData->setTranslator( ki18nc( "NAME OF TRANSLATORS", "Your names" ),
                              ki18nc( "EMAIL OF TRANSLATORS", "Your emails" ) );
 
@@ -122,7 +123,7 @@ ArchiveMailItem::~ArchiveMailItem()
     delete mInfo;
 }
 
-void ArchiveMailItem::setInfo(ArchiveMailInfo* info)
+void ArchiveMailItem::setInfo(ArchiveMailInfo *info)
 {
     mInfo = info;
 }
@@ -134,7 +135,8 @@ ArchiveMailInfo* ArchiveMailItem::info() const
 
 
 ArchiveMailWidget::ArchiveMailWidget( QWidget *parent )
-    : QWidget( parent )
+    : QWidget( parent ),
+      mChanged(false)
 {
     mWidget = new Ui::ArchiveMailWidget;
     mWidget->setupUi( this );
@@ -172,6 +174,8 @@ void ArchiveMailWidget::customContextMenuRequested(const QPoint&)
     if ( !listItems.isEmpty() ) {
         if ( listItems.count() == 1) {
             menu.addAction(i18n("Open Containing Folder..."),this,SLOT(slotOpenFolder()));
+            menu.addSeparator();
+            menu.addAction(i18n("Archive now"), this,SLOT(slotArchiveNow()));
         }
         menu.addSeparator();
         menu.addAction(i18n("Delete"),this,SLOT(slotRemoveItem()));
@@ -222,20 +226,26 @@ void ArchiveMailWidget::createOrUpdateItem(ArchiveMailInfo *info, ArchiveMailIte
         item = new ArchiveMailItem(mWidget->treeWidget);
     }
     item->setText(0,i18n("Folder: %1",MailCommon::Util::fullCollectionPath(Akonadi::Collection(info->saveCollectionId()))));
-    item->setText(1,KGlobal::locale()->formatDate(info->lastDateSaved()));
-    const QDate diffDate = ArchiveMailAgentUtil::diffDate(info);
-    const int diff = QDate::currentDate().daysTo(diffDate);
-    item->setText(2,i18np("1 day", "%1 days",QString::number(diff)));
-    if (diff<0) {
-        item->setBackgroundColor(2,Qt::red);
+    if (info->lastDateSaved().isValid()) {
+        item->setText(1,KGlobal::locale()->formatDate(info->lastDateSaved()));
+        const QDate diffDate = ArchiveMailAgentUtil::diffDate(info);
+        const int diff = QDate::currentDate().daysTo(diffDate);
+        item->setText(2,i18np("1 day", "%1 days",QString::number(diff)));
+        if (diff<0) {
+            item->setBackgroundColor(2,Qt::red);
+        } else {
+            item->setToolTip(2,i18n("Archive will be done %1",KGlobal::locale()->formatDate(diffDate)));
+        }
     } else {
-        item->setToolTip(2,i18n("Archive will be done %1",KGlobal::locale()->formatDate(diffDate)));
+        item->setBackgroundColor(2,Qt::green);
     }
     item->setInfo(info);
 }
 
 void ArchiveMailWidget::save()
 {
+    if (!mChanged)
+        return;
     KSharedConfig::Ptr config = KGlobal::config();
 
     // first, delete all filter groups:
@@ -249,11 +259,12 @@ void ArchiveMailWidget::save()
     for(int i = 0; i < numberOfItem; ++i) {
         ArchiveMailItem *mailItem = static_cast<ArchiveMailItem *>(mWidget->treeWidget->topLevelItem(i));
         if (mailItem->info()) {
-            KConfigGroup group = config->group(QString::fromLatin1("ArchiveMailCollection %1").arg(mailItem->info()->saveCollectionId()));
+            KConfigGroup group = config->group( ArchiveMailAgentUtil::archivePattern.arg(mailItem->info()->saveCollectionId()));
             mailItem->info()->writeConfig(group);
         }
     }
     config->sync();
+    config->reparseConfiguration();
 }
 
 void ArchiveMailWidget::slotRemoveItem()
@@ -265,6 +276,7 @@ void ArchiveMailWidget::slotRemoveItem()
     Q_FOREACH(QTreeWidgetItem *item,listItems) {
         delete item;
     }
+    mChanged = true;
     updateButtons();
 }
 
@@ -280,6 +292,7 @@ void ArchiveMailWidget::slotModifyItem()
         if ( dialog->exec() ) {
             ArchiveMailInfo *info = dialog->info();
             createOrUpdateItem(info,archiveItem);
+            mChanged = true;
         }
         delete dialog;
     }
@@ -287,7 +300,7 @@ void ArchiveMailWidget::slotModifyItem()
 
 void ArchiveMailWidget::slotAddItem()
 {
-    AddArchiveMailDialog *dialog = new AddArchiveMailDialog(0,this);
+    QPointer<AddArchiveMailDialog> dialog = new AddArchiveMailDialog(0,this);
     if ( dialog->exec() ) {
         ArchiveMailInfo *info = dialog->info();
         if (verifyExistingArchive(info)) {
@@ -296,6 +309,7 @@ void ArchiveMailWidget::slotAddItem()
         } else {
             createOrUpdateItem(info);
             updateButtons();
+            mChanged = true;
         }
     }
     delete dialog;
@@ -329,6 +343,21 @@ void ArchiveMailWidget::slotOpenFolder()
             const KUrl url = archiveItemInfo->url();
             KRun *runner = new KRun( url, this ); // will delete itself
             runner->setRunExecutables( false );
+        }
+    }
+}
+
+void ArchiveMailWidget::slotArchiveNow()
+{
+    const QList<QTreeWidgetItem *> listItems = mWidget->treeWidget->selectedItems();
+    if (listItems.count()==1) {
+        QTreeWidgetItem *item = listItems.at(0);
+        if (!item)
+            return;
+        ArchiveMailItem *archiveItem = static_cast<ArchiveMailItem*>(item);
+        ArchiveMailInfo *archiveItemInfo = archiveItem->info();
+        if (archiveItemInfo) {
+            Q_EMIT archiveNow(archiveItemInfo);
         }
     }
 }

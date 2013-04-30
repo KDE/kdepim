@@ -18,8 +18,36 @@
 
 #include "themedefaulttemplate.h"
 
+#include <KLocale>
+
 QList<PimCommon::defaultTemplate> ThemeDefaultTemplate::defaultTemplates()
 {
-    return QList<PimCommon::defaultTemplate>();
+    QList<PimCommon::defaultTemplate> lst;
+    PimCommon::defaultTemplate tmp;
+    tmp.name = i18n("Subject");
+    tmp.text = QString::fromLatin1("{% if header.subject %}\n"
+                                   "   {{ header.subject|safe }}\n"
+                                   "{% endif %}\n");
+    lst << tmp;
+
+    tmp.name = i18n("From");
+    tmp.text = QString::fromLatin1("{% if header.from %}\n"
+                                   "   {{ header.from|safe }}\n"
+                                   "{% endif %}\n");
+    lst << tmp;
+
+    tmp.name = i18n("To");
+    tmp.text = QString::fromLatin1("{% if header.to %}\n"
+                                   "   {{ header.to|safe }}\n"
+                                   "{% endif %}\n");
+    lst << tmp;
+
+    tmp.name = i18n("Cc");
+    tmp.text = QString::fromLatin1("{% if header.cc %}\n"
+                                   "   {{ header.cc|safe }}\n"
+                                   "{% endif %}\n");
+    lst << tmp;
+
+    return lst;
 }
 

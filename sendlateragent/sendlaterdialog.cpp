@@ -16,25 +16,68 @@
 */
 
 #include "sendlaterdialog.h"
+#include "sendlaterinfo.h"
 
 #include <KLocale>
+#include <KComboBox>
 
-SendLaterDialog::SendLaterDialog(QWidget *parent)
-    : KDialog(parent)
+#include <QHBoxLayout>
+#include <QVBoxLayout>
+#include <QCheckBox>
+#include <QLabel>
+#include <QSpinBox>
+
+SendLaterDialog::SendLaterDialog(SendLaterInfo *info, QWidget *parent)
+    : KDialog(parent),
+      mInfo(info)
 {
     setCaption( i18n("Send Later") );
-    setWindowIcon( KIcon( "kmail" ) );
+    setWindowIcon( KIcon( QLatin1String("kmail") ) );
     setButtons( User1|User2|Cancel );
     connect(this, SIGNAL(user1Clicked()), this, SLOT(slotSendLater()));
     connect(this, SIGNAL(user1Clicked()), this, SLOT(slotSendNow()));
     QWidget *w = new QWidget;
+    QVBoxLayout *lay = new QVBoxLayout;
+    mRecursive = new QCheckBox(i18n("Recursive"));
+    connect(mRecursive, SIGNAL(clicked(bool)), this, SLOT(slotRecursiveClicked(bool)));
+    lay->addWidget(mRecursive);
+
+    QHBoxLayout *hbox = new QHBoxLayout;
+    lay->addLayout(hbox);
+
+    QLabel *lab = new QLabel(i18n("Each:"));
+    hbox->addWidget(lab);
+
+    mRecursiveValue = new QSpinBox;
+    hbox->addWidget(mRecursiveValue);
+
+    mRecursiveComboBox = new KComboBox;
+    QStringList unitsList;
+    unitsList<<i18n("Days");
+    unitsList<<i18n("Weeks");
+    unitsList<<i18n("Months");
+    mRecursiveComboBox->addItems(unitsList);
+
+    hbox->addWidget(mRecursiveComboBox);
+
+    //TODO update it.
+    slotRecursiveClicked(false);
+    setLayout(lay);
     setMainWidget(w);
     readConfig();
+    if (info)
+        load(info);
 }
 
 SendLaterDialog::~SendLaterDialog()
 {
     writeConfig();
+}
+
+void SendLaterDialog::slotRecursiveClicked(bool clicked)
+{
+    mRecursiveValue->setEnabled(!clicked);
+    mRecursiveComboBox->setEnabled(!clicked);
 }
 
 void SendLaterDialog::readConfig()
@@ -52,6 +95,14 @@ void SendLaterDialog::writeConfig()
 {
     KConfigGroup group( KGlobal::config(), "SendLaterDialog" );
     group.writeEntry( "Size", size() );
+}
+
+void SendLaterDialog::load(SendLaterInfo *info)
+{
+    //TODO
+    mRecursive->setChecked(info->isRecursive());
+    mRecursiveValue->setValue(info->recursiveEachValue());
+    mRecursiveComboBox->setCurrentIndex((int)info->recursiveUnit());
 }
 
 void SendLaterDialog::slotSendLater()

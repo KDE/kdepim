@@ -38,3 +38,14 @@ QDate ArchiveMailAgentUtil::diffDate(ArchiveMailInfo*info)
     return diffDate;
 }
 
+bool ArchiveMailAgentUtil::needToArchive(ArchiveMailInfo*info)
+{
+    if (!info->lastDateSaved().isValid()) {
+        return true;
+    } else {
+        if (QDate::currentDate() >= diffDate(info)) {
+            return true;
+        }
+    }
+    return false;
+}

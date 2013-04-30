@@ -429,19 +429,15 @@ void KMeditor::slotAddQuotes()
 {
   QTextCursor cursor = textCursor();
   cursor.beginEditBlock();
+  QString selectedText;
   if ( !cursor.hasSelection() ) {
     cursor.select( QTextCursor::Document );
+    selectedText = cursor.selectedText();
+    cursor.removeSelectedText();
+  } else {
+      selectedText = cursor.selectedText();
   }
-
-  QTextBlock block = document()->findBlock( cursor.selectionStart() );
-  int selectionEnd = cursor.selectionEnd();
-  while ( block.isValid() && block.position() <= selectionEnd ) {
-    cursor.setPosition( block.position() );
-    cursor.insertText( defaultQuoteSign() );
-    selectionEnd += defaultQuoteSign().length();
-    block = block.next();
-  }
-  cursor.clearSelection();
+  insertPlainText( d->addQuotesToText( selectedText ) );
   cursor.endEditBlock();
 }
 

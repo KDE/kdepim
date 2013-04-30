@@ -27,6 +27,7 @@ class Monitor;
 }
 
 class ArchiveMailManager;
+class ArchiveMailInfo;
 
 class ArchiveMailAgent : public Akonadi::AgentBase, public Akonadi::AgentBase::ObserverV2
 {
@@ -37,15 +38,18 @@ public:
     ~ArchiveMailAgent();
     void showConfigureDialog(qlonglong windowId = 0);
 
+Q_SIGNALS:
+    void archiveNow(ArchiveMailInfo *info);
+
 public Q_SLOTS:
     void configure( WId windowId );
     void reload();
     void pause();
     void resume();
+    void printArchiveListInfo();
 
 private Q_SLOTS:
     void mailCollectionRemoved( const Akonadi::Collection& collection );
-
 private:
     QTimer *mTimer;
     Akonadi::Monitor *m_collectionMonitor;

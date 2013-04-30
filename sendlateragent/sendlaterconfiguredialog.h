@@ -21,8 +21,23 @@
 #include <KDialog>
 #include "ui_sendlaterwidget.h"
 
+#include <QTreeWidgetItem>
 
 class KAboutData;
+class SendLaterInfo;
+
+class SendLaterItem : public QTreeWidgetItem
+{
+public:
+    explicit SendLaterItem(QTreeWidget *parent = 0);
+    ~SendLaterItem();
+
+    void setInfo(SendLaterInfo *info);
+    SendLaterInfo *info() const;
+private:
+    SendLaterInfo *mInfo;
+};
+
 
 class SendLaterWidget : public QWidget
 {
@@ -37,11 +52,11 @@ public:
 private Q_SLOTS:
     void slotRemoveItem();
     void slotModifyItem();
-    void slotAddItem();
     void updateButtons();
     void customContextMenuRequested(const QPoint&);
 private:
     void load();
+    bool mChanged;
     Ui::SendLaterWidget *mWidget;
 };
 

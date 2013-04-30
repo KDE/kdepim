@@ -20,7 +20,7 @@
 #include <QDir>
 
 ArchiveMailInfo::ArchiveMailInfo()
-    : mLastDateSaved(QDate::currentDate())
+    : mLastDateSaved(QDate())
     , mArchiveAge( 1 )
     , mArchiveType( MailCommon::BackupJob::Zip )
     , mArchiveUnit( ArchiveMailInfo::ArchiveDays )
@@ -31,7 +31,7 @@ ArchiveMailInfo::ArchiveMailInfo()
 }
 
 ArchiveMailInfo::ArchiveMailInfo(const KConfigGroup& config)
-    : mLastDateSaved(QDate::currentDate())
+    : mLastDateSaved(QDate())
     , mArchiveAge( 1 )
     , mArchiveType( MailCommon::BackupJob::Zip )
     , mArchiveUnit( ArchiveMailInfo::ArchiveDays )
@@ -42,9 +42,34 @@ ArchiveMailInfo::ArchiveMailInfo(const KConfigGroup& config)
     readConfig(config);
 }
 
+ArchiveMailInfo::ArchiveMailInfo(const ArchiveMailInfo &info)
+{
+    mLastDateSaved = info.lastDateSaved();
+    mArchiveAge = info.archiveAge();
+    mArchiveType = info.archiveType();
+    mArchiveUnit = info.archiveUnit();
+    mSaveCollectionId = info.saveCollectionId();
+    mMaximumArchiveCount = info.maximumArchiveCount();
+    mSaveSubCollection = info.saveSubCollection();
+    mPath = info.url();
+}
+
 
 ArchiveMailInfo::~ArchiveMailInfo()
 {
+}
+
+ArchiveMailInfo& ArchiveMailInfo::operator=( const ArchiveMailInfo &old )
+{
+    mLastDateSaved = old.lastDateSaved();
+    mArchiveAge = old.archiveAge();
+    mArchiveType = old.archiveType();
+    mArchiveUnit = old.archiveUnit();
+    mSaveCollectionId = old.saveCollectionId();
+    mMaximumArchiveCount = old.maximumArchiveCount();
+    mSaveSubCollection = old.saveSubCollection();
+    mPath = old.url();
+    return (*this);
 }
 
 QString normalizeFolderName(const QString& folderName)
@@ -74,7 +99,7 @@ KUrl ArchiveMailInfo::realUrl(const QString& folderName) const
 
     const QString path = dirPath + QLatin1Char( '/' ) + i18nc( "Start of the filename for a mail archive file" , "Archive" )
             + QLatin1Char( '_' ) + normalizeFolderName(folderName) + QLatin1Char( '_' )
-            + QDate::currentDate().toString( Qt::ISODate ) + extensions[mArchiveType];
+            + QDate::currentDate().toString( Qt::ISODate ) + QString::fromLatin1(extensions[mArchiveType]);
     KUrl real(path);
     return real;
 }
@@ -90,7 +115,7 @@ QStringList ArchiveMailInfo::listOfArchive(const QString& folderName) const
 
     QStringList nameFilters;
     nameFilters << i18nc( "Start of the filename for a mail archive file" , "Archive" ) + QLatin1Char( '_' ) +
-                   normalizeFolderName(folderName) + QLatin1Char( '_' ) + QLatin1String("*") + extensions[mArchiveType];
+                   normalizeFolderName(folderName) + QLatin1Char( '_' ) + QLatin1String("*") + QString::fromLatin1(extensions[mArchiveType]);
     const QStringList lst = dir.entryList ( nameFilters, QDir::Files|QDir::NoDotAndDotDot, QDir::Time|QDir::Reversed );
     return lst;
 }
@@ -144,7 +169,10 @@ QDate ArchiveMailInfo::lastDateSaved() const
 void ArchiveMailInfo::readConfig(const KConfigGroup& config)
 {
     mPath = config.readEntry("storePath",KUrl());
-    mLastDateSaved = QDate::fromString(config.readEntry("lastDateSaved"),Qt::ISODate);
+
+    if (config.hasKey(QLatin1String("lastDateSaved"))) {
+        mLastDateSaved = QDate::fromString(config.readEntry("lastDateSaved"),Qt::ISODate);
+    }
     mSaveSubCollection = config.readEntry("saveSubCollection",false);
     mArchiveType = static_cast<MailCommon::BackupJob::ArchiveType>( config.readEntry( "archiveType", ( int )MailCommon::BackupJob::Zip ) );
     mArchiveUnit = static_cast<ArchiveUnit>( config.readEntry( "archiveUnit", ( int )ArchiveDays ) );
@@ -158,8 +186,15 @@ void ArchiveMailInfo::readConfig(const KConfigGroup& config)
 
 void ArchiveMailInfo::writeConfig(KConfigGroup & config )
 {
+    if (mSaveCollectionId < 0) {
+        return;
+    }
     config.writeEntry("storePath",mPath);
-    config.writeEntry("lastDateSaved", mLastDateSaved.toString(Qt::ISODate) );
+
+    if (mLastDateSaved.isValid()) {
+        config.writeEntry("lastDateSaved", mLastDateSaved.toString(Qt::ISODate) );
+    }
+
     config.writeEntry("saveSubCollection",mSaveSubCollection);
     config.writeEntry("archiveType", ( int )mArchiveType );
     config.writeEntry("archiveUnit", ( int )mArchiveUnit );

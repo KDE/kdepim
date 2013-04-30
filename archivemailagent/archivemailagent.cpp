@@ -37,8 +37,8 @@ ArchiveMailAgent::ArchiveMailAgent( const QString &id )
     : Akonadi::AgentBase( id )
 {
     mArchiveManager = new ArchiveMailManager(this);
-    KGlobal::locale()->insertCatalog( "libmailcommon" );
-    KGlobal::locale()->insertCatalog( "akonadi_archivemail_agent" );
+    KGlobal::locale()->insertCatalog( QLatin1String("libmailcommon") );
+    KGlobal::locale()->insertCatalog( QLatin1String("akonadi_archivemail_agent") );
 
     m_collectionMonitor = new Akonadi::Monitor( this );
     m_collectionMonitor->fetchCollection( true );
@@ -81,6 +81,7 @@ void ArchiveMailAgent::showConfigureDialog(qlonglong windowId)
         KWindowSystem::setMainWindow( dialog, (HWND)windowId );
 #endif
     }
+    connect(dialog, SIGNAL(archiveNow(ArchiveMailInfo*)),mArchiveManager, SLOT(slotArchiveNow(ArchiveMailInfo*)));
     if (dialog->exec()) {
         mArchiveManager->load();
     }
@@ -109,6 +110,10 @@ void ArchiveMailAgent::resume()
     mArchiveManager->resume();
 }
 
+void ArchiveMailAgent::printArchiveListInfo()
+{
+    mArchiveManager->printArchiveListInfo();
+}
 
 AKONADI_AGENT_MAIN( ArchiveMailAgent )
 

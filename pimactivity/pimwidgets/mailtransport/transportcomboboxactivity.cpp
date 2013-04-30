@@ -36,6 +36,8 @@ public:
     {
         if (activityManager) {
             q->connect(activityManager, SIGNAL(currentActivityChanged(QString)), q, SLOT(slotCurrentActivityChanged(QString)));
+            //Initialize it.
+            slotCurrentActivityChanged(activityManager->currentActivity());
         }
     }
 
