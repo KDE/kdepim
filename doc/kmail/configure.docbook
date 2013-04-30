@@ -33,10 +33,19 @@
 <email>michel@kdab.net</email>
 </address></affiliation>
 </author>
+
+<author>
+  <firstname>Laurent</firstname>
+<surname>Montel</surname>
+<affiliation><address>
+<email>montel@kde.org</email>
+</address></affiliation>
+</author>
+
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
-<date>2011-07-16</date>
-<releaseinfo>2.1.96 (&kde; 4.7)</releaseinfo>
+<date>2013-04-30</date>
+<releaseinfo>2.1.96 (&kde; 4.11)</releaseinfo>
 </chapterinfo>
 
 <title>Configure &kmail;</title>
@@ -396,8 +405,14 @@ of this setting, you should look at the <guilabel>Headers</guilabel> tab of the
 </listitem>
 </varlistentry>
 
-<!-- Dictionary missing-->
- 
+<varlistentry>
+<term><guilabel>Dictionary</guilabel></term>
+<listitem>
+<para>Select the default dictionary for current identity.</para>
+</listitem>
+</varlistentry>
+
+
 <varlistentry>
 <term><guilabel>Sent-mail folder</guilabel></term>
 <listitem>
