@@ -27,6 +27,10 @@ public:
     ~SendLaterManager();
 
     void load();
+
+private Q_SLOTS:
+    void sendDone();
+
 private:
     QList<SendLaterInfo *> mListSendLaterInfo;
 };

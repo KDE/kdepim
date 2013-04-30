@@ -18,6 +18,8 @@
 
 #include "sendlaterinfo.h"
 
+#include <KConfigGroup>
+
 SendLaterInfo::SendLaterInfo()
     : mRecursiveEachValue(1),
       mRecursiveUnit(None),
@@ -76,6 +78,7 @@ int SendLaterInfo::recursiveEachValue() const
 
 void SendLaterInfo::readConfig(const KConfigGroup& config)
 {
+    mRecursive = config.readEntry("recursive", false);
     //TODO
 }
 

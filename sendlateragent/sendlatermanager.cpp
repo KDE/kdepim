@@ -19,6 +19,7 @@
 #include "sendlaterinfo.h"
 
 #include <KSharedConfig>
+#include <KConfigGroup>
 #include <KGlobal>
 
 #include <QStringList>
@@ -40,6 +41,17 @@ void SendLaterManager::load()
 
     KSharedConfig::Ptr config = KGlobal::config();
     const QStringList itemList = config->groupList().filter( QRegExp( QLatin1String("SendLaterItem \\d+") ) );
+    const int numberOfItems = itemList.count();
+    for(int i = 0 ; i < numberOfItems; ++i) {
+        KConfigGroup group = config->group(itemList.at(i));
+        SendLaterInfo *info = new SendLaterInfo(group);
+        //TODO
+
+    }
+}
+
+void SendLaterManager::sendDone()
+{
     //TODO
 }
 

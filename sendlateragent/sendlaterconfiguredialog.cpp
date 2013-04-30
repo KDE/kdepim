@@ -16,6 +16,8 @@
 */
 
 #include "sendlaterconfiguredialog.h"
+#include "sendlaterdialog.h"
+#include "sendlaterinfo.h"
 
 #include "kdepim-version.h"
 
@@ -25,6 +27,7 @@
 #include <KMenu>
 #include <KAboutData>
 #include <KMessageBox>
+
 
 SendLaterConfigureDialog::SendLaterConfigureDialog(QWidget *parent)
     : KDialog(parent)
@@ -93,6 +96,28 @@ void SendLaterConfigureDialog::writeConfig()
     group.writeEntry( "Size", size() );
     mWidget->saveTreeWidgetHeader(group);
 }
+
+SendLaterItem::SendLaterItem(QTreeWidget *parent )
+    : QTreeWidgetItem(parent),
+      mInfo(0)
+{
+}
+
+SendLaterItem::~SendLaterItem()
+{
+    delete mInfo;
+}
+
+void SendLaterItem::setInfo(SendLaterInfo *info)
+{
+    mInfo = info;
+}
+
+SendLaterInfo* SendLaterItem::info() const
+{
+    return mInfo;
+}
+
 
 SendLaterWidget::SendLaterWidget( QWidget *parent )
     : QWidget( parent ),
