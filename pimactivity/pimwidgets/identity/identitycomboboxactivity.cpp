@@ -17,28 +17,29 @@
 
 #include "identitycomboboxactivity.h"
 #include "activitymanager.h"
+#include "identitymanageractivity.h"
 
 namespace PimActivity {
 class IdentityComboboxActivityPrivate
 {
 public:
-    IdentityComboboxActivityPrivate(ActivityManager *manager, IdentityComboboxActivity *qq)
-        : activityManager(manager),
+    IdentityComboboxActivityPrivate(IdentityManagerActivity *manager, IdentityComboboxActivity *qq)
+        : identityManagerActivity(manager),
           q(qq)
     {
     }
 
     void connectSignals()
     {
-        if (activityManager) {
-            q->connect(activityManager, SIGNAL(currentActivityChanged(QString)), q, SLOT(slotCurrentActivityChanged(QString)));
+        if (identityManagerActivity->activityManager()) {
+            q->connect(identityManagerActivity->activityManager(), SIGNAL(currentActivityChanged(QString)), q, SLOT(slotCurrentActivityChanged(QString)));
             initializeActivity();
         }
     }
 
     void initializeActivity()
     {
-        slotCurrentActivityChanged(activityManager->currentActivity());
+        slotCurrentActivityChanged(identityManagerActivity->activityManager()->currentActivity());
     }
 
     void slotCurrentActivityChanged(const QString &id)
@@ -47,18 +48,12 @@ public:
         q->updateComboboxList(id);
     }
 
-    ActivityManager *activityManager;
+    IdentityManagerActivity *identityManagerActivity;
     IdentityComboboxActivity *q;
 };
 
 
-IdentityComboboxActivity::IdentityComboboxActivity(QWidget *parent)
-    : KComboBox(parent), d(new IdentityComboboxActivityPrivate(0, this))
-{
-}
-
-
-IdentityComboboxActivity::IdentityComboboxActivity(ActivityManager *manager, QWidget *parent)
+IdentityComboboxActivity::IdentityComboboxActivity(IdentityManagerActivity *manager, QWidget *parent)
     : KComboBox(parent), d(new IdentityComboboxActivityPrivate(manager, this))
 {
     d->connectSignals();
@@ -67,12 +62,6 @@ IdentityComboboxActivity::IdentityComboboxActivity(ActivityManager *manager, QWi
 IdentityComboboxActivity::~IdentityComboboxActivity()
 {
     delete d;
-}
-
-void IdentityComboboxActivity::setActivityManager(ActivityManager *manager)
-{
-    d->activityManager = manager;
-    d->connectSignals();
 }
 
 void IdentityComboboxActivity::updateComboboxList(const QString &id)

@@ -23,16 +23,13 @@
 
 namespace PimActivity {
 class IdentityComboboxActivityPrivate;
-class ActivityManager;
+class IdentityManagerActivity;
 class PIMACTIVITY_EXPORT IdentityComboboxActivity : public KComboBox
 {
     Q_OBJECT
 public:
-    explicit IdentityComboboxActivity(QWidget *parent = 0);
-    explicit IdentityComboboxActivity(ActivityManager *manager, QWidget *parent = 0);
+    explicit IdentityComboboxActivity(IdentityManagerActivity *manager, QWidget *parent = 0);
     ~IdentityComboboxActivity();
-
-    void setActivityManager(ActivityManager *manager);
 
 protected Q_SLOTS:
     void updateComboboxList(const QString &id);
