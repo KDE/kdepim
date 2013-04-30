@@ -23,6 +23,15 @@
 <email>michel@klaralvdalens-datakonsult.se</email>
 </address></affiliation>
 </author>
+<author>
+<firstname>Laurent</firstname>
+<surname>Montel</surname>
+<affiliation><address>
+<email>montel@kde.org</email>
+</address></affiliation>
+</author>
+
+
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
 <date>2013-04-25</date>
@@ -95,6 +104,20 @@ messages from several email clients into &kmail;.
 </para>
 </listitem>
 </varlistentry>
+
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>File</guimenu>
+<guimenuitem>Print Preview...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Display a dialog which show how your email will be printed.</para>
+</listitem>
+</varlistentry>
+
 
 <varlistentry>
 <term>
