@@ -123,7 +123,7 @@ ArchiveMailItem::~ArchiveMailItem()
     delete mInfo;
 }
 
-void ArchiveMailItem::setInfo(ArchiveMailInfo* info)
+void ArchiveMailItem::setInfo(ArchiveMailInfo *info)
 {
     mInfo = info;
 }
