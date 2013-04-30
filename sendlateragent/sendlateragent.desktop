@@ -1,7 +1,10 @@
 [Desktop Entry]
 Name=Send Later Agent
 Name[de]=Agent zum späteren Senden
+Name[el]=Πράκτορας ετεροχρονισμένης αποστολής
+Name[es]=Agente de enviar después
 Name[fi]=Lähetä myöhemmin -ohjelma
+Name[fr]=Agent d'envoi différé
 Name[nl]=Agent voor later verzenden
 Name[pt]=Agente de Envio Posterior
 Name[pt_BR]=Agente de envio posterior
@@ -15,7 +18,9 @@ Name[uk]=Агент відкладеного надсилання
 Name[x-test]=xxSend Later Agentxx
 Comment=Send Later Agent
 Comment[de]=Agent zum späteren Senden
+Comment[el]=Πράκτορας ετεροχρονισμένης αποστολής
 Comment[fi]=Lähetä myöhemmin -ohjelma
+Comment[fr]=Agent d'envoi différé
 Comment[nl]=Agent voor later verzenden
 Comment[pt]=Agente de Envio Posterior
 Comment[pt_BR]=Agente de envio posterior
