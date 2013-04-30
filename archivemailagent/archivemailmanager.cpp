@@ -34,8 +34,6 @@
 #include <QFile>
 #include <QDir>
 
-static QString archivePattern = QLatin1String("ArchiveMailCollection %1");
-
 ArchiveMailManager::ArchiveMailManager(QObject *parent)
     : QObject( parent )
 {
@@ -95,7 +93,7 @@ void ArchiveMailManager::load()
 void ArchiveMailManager::removeCollection(const Akonadi::Collection& collection)
 {
     KSharedConfig::Ptr config = KGlobal::config();
-    const QString groupname = archivePattern.arg(collection.id());
+    const QString groupname = ArchiveMailAgentUtil::archivePattern.arg(collection.id());
     if (config->hasGroup(groupname)) {
         KConfigGroup group = config->group(groupname);
         group.deleteGroup();
@@ -112,7 +110,7 @@ void ArchiveMailManager::backupDone(ArchiveMailInfo *info)
 {
     info->setLastDateSaved(QDate::currentDate());
     KSharedConfig::Ptr config = KGlobal::config();
-    const QString groupname = archivePattern.arg(info->saveCollectionId());
+    const QString groupname = ArchiveMailAgentUtil::archivePattern.arg(info->saveCollectionId());
     //Don't store it if we removed this task
     if (config->hasGroup(groupname)) {
         KConfigGroup group = config->group(groupname);

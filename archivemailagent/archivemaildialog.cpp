@@ -259,7 +259,7 @@ void ArchiveMailWidget::save()
     for(int i = 0; i < numberOfItem; ++i) {
         ArchiveMailItem *mailItem = static_cast<ArchiveMailItem *>(mWidget->treeWidget->topLevelItem(i));
         if (mailItem->info()) {
-            KConfigGroup group = config->group(QString::fromLatin1("ArchiveMailCollection %1").arg(mailItem->info()->saveCollectionId()));
+            KConfigGroup group = config->group( ArchiveMailAgentUtil::archivePattern.arg(mailItem->info()->saveCollectionId()));
             mailItem->info()->writeConfig(group);
         }
     }
