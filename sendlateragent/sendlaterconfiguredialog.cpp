@@ -28,6 +28,8 @@
 #include <KAboutData>
 #include <KMessageBox>
 
+static QString sendLaterItemPattern = QLatin1String( "SendLaterItem \\d+" );
+
 
 SendLaterConfigureDialog::SendLaterConfigureDialog(QWidget *parent)
     : KDialog(parent)
@@ -198,7 +200,28 @@ void SendLaterWidget::save()
 {
     if (!mChanged)
         return;
-    //TODO
+    KSharedConfig::Ptr config = KGlobal::config();
+
+    // first, delete all filter groups:
+    const QStringList filterGroups =config->groupList().filter( QRegExp( sendLaterItemPattern ) );
+
+    foreach ( const QString &group, filterGroups ) {
+        config->deleteGroup( group );
+    }
+
+    const int numberOfItem(mWidget->treeWidget->topLevelItemCount());
+    for(int i = 0; i < numberOfItem; ++i) {
+        SendLaterItem *mailItem = static_cast<SendLaterItem *>(mWidget->treeWidget->topLevelItem(i));
+        if (mailItem->info()) {
+            //TODO
+            /*
+            KConfigGroup group = config->group(QString::fromLatin1("SendLaterItem %1").arg(mailItem->info()->saveCollectionId()));
+            mailItem->info()->writeConfig(group);
+            */
+        }
+    }
+    config->sync();
+    config->reparseConfiguration();
 }
 
 void SendLaterWidget::slotRemoveItem()

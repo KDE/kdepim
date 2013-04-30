@@ -16,6 +16,7 @@
 */
 
 #include "sendlaterdialog.h"
+#include "sendlaterinfo.h"
 
 #include <KLocale>
 #include <KComboBox>
@@ -64,6 +65,8 @@ SendLaterDialog::SendLaterDialog(SendLaterInfo *info, QWidget *parent)
     setLayout(lay);
     setMainWidget(w);
     readConfig();
+    if (info)
+        load(info);
 }
 
 SendLaterDialog::~SendLaterDialog()
@@ -92,6 +95,14 @@ void SendLaterDialog::writeConfig()
 {
     KConfigGroup group( KGlobal::config(), "SendLaterDialog" );
     group.writeEntry( "Size", size() );
+}
+
+void SendLaterDialog::load(SendLaterInfo *info)
+{
+    //TODO
+    mRecursive->setChecked(info->isRecursive());
+    mRecursiveValue->setValue(info->recursiveEachValue());
+    mRecursiveComboBox->setCurrentIndex((int)info->recursiveUnit());
 }
 
 void SendLaterDialog::slotSendLater()

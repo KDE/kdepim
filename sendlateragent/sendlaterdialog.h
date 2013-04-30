@@ -39,6 +39,7 @@ private Q_SLOTS:
     void slotRecursiveClicked(bool);
 
 private:
+    void load(SendLaterInfo *info);
     void readConfig();
     void writeConfig();
 private:
