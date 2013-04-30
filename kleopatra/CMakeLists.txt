@@ -335,6 +335,7 @@ kde4_add_ui_files(_kleopatra_SRCS
 kde4_add_kcfg_files(_kleopatra_SRCS
   kcfg/tooltippreferences.kcfgc
   kcfg/emailoperationspreferences.kcfgc
+  kcfg/fileoperationspreferences.kcfgc
   kcfg/smimevalidationpreferences.kcfgc
 )
 
