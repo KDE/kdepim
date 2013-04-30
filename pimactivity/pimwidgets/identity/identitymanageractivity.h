@@ -22,21 +22,23 @@
 #define IDENTITYMANAGERACTIVITY_H
 
 #include "pimactivity_export.h"
-#include <kconfiggroup.h>
-#include <QtCore/QObject>
 
-class KConfigBase;
-class KConfig;
+#include <QObject>
+
 class QStringList;
+
+namespace KPIMIdentities {
+class Identity;
+}
 
 namespace PimActivity
 {
-
-class Identity;
 /**
    * @short Manages the list of identities.
    * @author Marc Mutz <mutz@kde.org>
    **/
+class ActivityManager;
+class IdentityManagerActivityPrivate;
 class PIMACTIVITY_EXPORT IdentityManagerActivity : public QObject
 {
     Q_OBJECT
@@ -49,13 +51,13 @@ public:
        * the default identity created here will not be saved.
        * It is assumed that a minimum of one identity is always present.
        */
-    explicit IdentityManagerActivity( bool readonly = false, QObject *parent=0,
-                              const char *name=0 );
+    explicit IdentityManagerActivity( ActivityManager *manager, bool readonly = false, QObject *parent=0, const char *name=0 );
     virtual ~IdentityManagerActivity();
 
-public:
-    typedef QList<Identity>::Iterator Iterator;
-    typedef QList<Identity>::ConstIterator ConstIterator;
+    PimActivity::ActivityManager *activityManager() const;
+
+    typedef QList<KPIMIdentities::Identity>::Iterator Iterator;
+    typedef QList<KPIMIdentities::Identity>::ConstIterator ConstIterator;
 
     /**
        * Typedef for STL style iterator
@@ -106,7 +108,7 @@ public:
                   or @ref Identity::null if no such identity exists.
           @param addresses the string of addresses to scan for matches
       **/
-    const Identity &identityForAddress( const QString &addresses ) const;
+    const KPIMIdentities::Identity &identityForAddress( const QString &addresses ) const;
 
     /** @return true if @p addressList contains any of our addresses,
                   false otherwise.
@@ -119,7 +121,7 @@ public:
                   uoid or @ref Identity::null if not found.
           @param uoid the Unique Object Identifier to find identity with
        **/
-    const Identity &identityForUoid( uint uoid ) const;
+    const KPIMIdentities::Identity &identityForUoid( uint uoid ) const;
 
     /** Convenience menthod.
 
@@ -127,10 +129,10 @@ public:
                   uoid or the default identity if not found.
           @param uoid the Unique Object Identifier to find identity with
       **/
-    const Identity &identityForUoidOrDefault( uint uoid ) const;
+    const KPIMIdentities::Identity &identityForUoidOrDefault( uint uoid ) const;
 
     /** @return the default identity */
-    const Identity &defaultIdentity() const;
+    const KPIMIdentities::Identity &defaultIdentity() const;
 
     /** Sets the identity with Unique Object Identifier (UOID) @p uoid
           to be new the default identity. As usual, use @ref commit to
@@ -146,13 +148,13 @@ public:
           see this change, use @ref commit.
           @param identityName the identity name to return modifiable reference
       **/
-    Identity &modifyIdentityForName( const QString &identityName );
+    KPIMIdentities::Identity &modifyIdentityForName( const QString &identityName );
 
     /** @return the identity with Unique Object Identifier (UOID) @p uoid.
           This method returns a reference to the identity that can
           be modified. To let others see this change, use @ref commit.
       **/
-    Identity &modifyIdentityForUoid( uint uoid );
+    KPIMIdentities::Identity &modifyIdentityForUoid( uint uoid );
 
     /** Removes the identity with name @p identityName
           Will return false if the identity is not found,
@@ -172,17 +174,17 @@ public:
        */
     bool removeIdentityForced( const QString &identityName );
 
-    ConstIterator begin() const;
-    ConstIterator end() const;
+    QList<KPIMIdentities::Identity>::ConstIterator begin() const;
+    QList<KPIMIdentities::Identity>::ConstIterator end() const;
     /// Iterator used by the configuration dialog, which works on a separate list
     /// of identities, for modification. Changes are made effective by commit().
     Iterator modifyBegin();
     Iterator modifyEnd();
 
-    Identity &newFromScratch( const QString &name );
-    Identity &newFromControlCenter( const QString &name );
-    Identity &newFromExisting( const Identity &other,
-                               const QString &name=QString() );
+    KPIMIdentities::Identity &newFromScratch( const QString &name );
+    KPIMIdentities::Identity &newFromControlCenter( const QString &name );
+    KPIMIdentities::Identity &newFromExisting( const KPIMIdentities::Identity &other,
+                                               const QString &name=QString() );
 
     /** Returns the list of all email addresses (only name@host) from all
           identities */
@@ -207,6 +209,8 @@ Q_SIGNALS:
     /** Emitted on @ref commit() for each new identity */
     void added( const KPIMIdentities::Identity &ident );
 
+    void identitiesChanged( const QString &id );
+
 protected:
     /**
        * This is called when no identity has been defined, so we need to
@@ -220,31 +224,13 @@ protected:
 protected Q_SLOTS:
     void slotRollback();
 
-protected:
-    /** The list that will be seen by everyone */
-    QList<Identity> mIdentities;
-    /** The list that will be seen by the config dialog */
-    QList<Identity> mShadowIdentities;
-
-Q_SIGNALS:
-    void identitiesChanged( const QString &id );
-
 private Q_SLOTS:
     // Connected to the DBus signal
     void slotIdentitiesChanged( const QString &id );
 
 private:
-    void writeConfig() const;
-    void readConfig( KConfig *config );
-    QStringList groupList( KConfig *config ) const;
-    void createDefaultIdentity();
-
-    // returns a new Unique Object Identifier
-    int newUoid();
-
-private:
-    KConfig *mConfig;
-    bool mReadOnly;
+    friend class IdentityManagerActivityPrivate;
+    IdentityManagerActivityPrivate * const d;
 };
 
 } // namespace
