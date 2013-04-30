@@ -58,7 +58,7 @@ public:
 
 
 private:
-    QDateTime mTime;
+    QDateTime mDateTime;
     Akonadi::Item::Id mId;
     int mRecursiveEachValue;
     RecursiveUnit mRecursiveUnit;

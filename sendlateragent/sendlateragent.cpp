@@ -18,6 +18,8 @@
 #include "sendlateragent.h"
 #include "sendlatermanager.h"
 #include "sendlaterconfiguredialog.h"
+#include "sendlaterdialog.h"
+#include "sendlaterinfo.h"
 #include "sendlateragentadaptor.h"
 
 #include <akonadi/dbusconnectionpool.h>
@@ -40,6 +42,27 @@ SendLaterAgent::SendLaterAgent(const QString &id)
 
 SendLaterAgent::~SendLaterAgent()
 {
+}
+
+void SendLaterAgent::addSendLaterItem(qlonglong itemId, qlonglong windowId)
+{
+    SendLaterInfo *info = new SendLaterInfo;
+    info->setItemId(itemId);
+    QPointer<SendLaterDialog> dialog = new SendLaterDialog(info);
+    if (windowId) {
+#ifndef Q_WS_WIN
+        KWindowSystem::setMainWindow( dialog, windowId );
+#else
+        KWindowSystem::setMainWindow( dialog, (HWND)windowId );
+#endif
+    }
+    if (dialog->exec()) {
+        //Save ? Add ? Load ?
+        //mManager->load();
+    } else {
+        delete info;
+    }
+    delete dialog;
 }
 
 void SendLaterAgent::configure( WId windowId )
