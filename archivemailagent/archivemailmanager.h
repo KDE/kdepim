@@ -36,6 +36,8 @@ public:
     void backupDone(ArchiveMailInfo *info);
     void pause();
     void resume();
+
+    void printArchiveListInfo();
 public Q_SLOTS:
     void load();
     void slotArchiveNow(ArchiveMailInfo *info);

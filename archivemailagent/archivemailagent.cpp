@@ -110,6 +110,11 @@ void ArchiveMailAgent::resume()
     mArchiveManager->resume();
 }
 
+void ArchiveMailAgent::printArchiveListInfo()
+{
+    mArchiveManager->printArchiveListInfo();
+}
+
 AKONADI_AGENT_MAIN( ArchiveMailAgent )
 
 #include "archivemailagent.moc"

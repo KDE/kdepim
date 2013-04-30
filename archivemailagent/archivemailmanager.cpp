@@ -143,5 +143,15 @@ void ArchiveMailManager::resume()
     mArchiveMailKernel->jobScheduler()->resume();
 }
 
+void ArchiveMailManager::printArchiveListInfo()
+{
+    Q_FOREACH (ArchiveMailInfo *info, mListArchiveInfo) {
+        kDebug()<<"info: collectionId:"<<info->saveCollectionId()
+                <<" saveSubCollection ?"<<info->saveSubCollection()
+                <<" lastDateSaved:"<<info->lastDateSaved()
+                <<" number of archive:"<<info->maximumArchiveCount()
+                <<" directory"<<info->url();
+    }
+}
 
 #include "archivemailmanager.moc"

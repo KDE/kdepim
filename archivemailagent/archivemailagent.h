@@ -46,6 +46,7 @@ public Q_SLOTS:
     void reload();
     void pause();
     void resume();
+    void printArchiveListInfo();
 
 private Q_SLOTS:
     void mailCollectionRemoved( const Akonadi::Collection& collection );
