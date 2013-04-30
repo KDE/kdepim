@@ -528,6 +528,20 @@ Pane. The default, <guilabel>Auto</guilabel>, should work in almost all cases.</
 </listitem>
 </varlistentry>
 
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>View</guimenu>
+<guisubmenu>Zoom</guisubmenu>
+</menuchoice>
+</term>
+<listitem>
+<para>Allows to zoom message in the Message Pane.</para>
+</listitem>
+</varlistentry>
+
+
 </variablelist>
 
 </sect2>
@@ -1916,6 +1930,9 @@ edited message. The font to be used can be configured in the
 dialog.</para>
 </listitem>
 </varlistentry>
+
+
+
 <!-- Snippets missing  lueck 31.05.2011-->
 </variablelist>
 
