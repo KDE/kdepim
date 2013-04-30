@@ -89,6 +89,16 @@ Akonadi::Item::Id SendLaterInfo::itemId() const
     return mId;
 }
 
+void SendLaterInfo::setDateTime(const QDateTime &time)
+{
+    mTime = time;
+}
+
+QDateTime SendLaterInfo::dateTime() const
+{
+    return mTime;
+}
+
 void SendLaterInfo::readConfig(const KConfigGroup& config)
 {
     mRecursive = config.readEntry("recursive", false);

@@ -19,7 +19,7 @@
 #define SENDLATERINFO_H
 
 #include <Akonadi/Item>
-
+#include <QDateTime>
 class KConfigGroup;
 
 class SendLaterInfo
@@ -49,11 +49,16 @@ public:
     bool isRecursive() const;
     void setRecursive(bool b);
 
+    void setDateTime(const QDateTime &time);
+    QDateTime dateTime() const;
 
     void readConfig(const KConfigGroup& config);
     void writeConfig(KConfigGroup & config );
 
+
+
 private:
+    QDateTime mTime;
     Akonadi::Item::Id mId;
     int mRecursiveEachValue;
     RecursiveUnit mRecursiveUnit;
