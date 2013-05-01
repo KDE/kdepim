@@ -12,9 +12,9 @@ qt4_wrap_cpp(wk_HEADERS_MOC spellplugin/qwebkitplatformplugin.h)
 
 set(libcomposereditor_ng_SRCS 
     composereditor.cpp
+    composerview.cpp
     link/composerlinkdialog.cpp
     private/composerview_p.cpp
-    composerview.cpp
     pagecolor/pagecolorbackgrounddialog.cpp
     pagecolor/pagecolorbackgroundwidget.cpp
     extendattributes/extendattributesdialog.cpp
