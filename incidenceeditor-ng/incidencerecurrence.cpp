@@ -931,7 +931,7 @@ void IncidenceRecurrence::toggleRecurrenceWidgets( int recurrenceType )
 #ifndef KDEPIM_MOBILE_UI
   mUi->mRepeatLabel->setVisible(recurrenceType != RecurrenceTypeException);
   mUi->mRecurrenceEndLabel->setVisible( enable );
-  mUi->mOnLabel->setVisible( enable );
+  mUi->mOnLabel->setVisible( enable && recurrenceType != RecurrenceTypeDaily );
   if ( !enable ) {
     // So we can hide the exceptions labels and not trigger column resizing.
     mUi->mRepeatLabel->setMinimumSize( mUi->mExceptionsLabel->sizeHint() );
@@ -941,7 +941,7 @@ void IncidenceRecurrence::toggleRecurrenceWidgets( int recurrenceType )
   mUi->mFrequencyLabel->setVisible( enable );
   mUi->mFrequencyEdit->setVisible( enable );
   mUi->mRecurrenceRuleLabel->setVisible( enable );
-  mUi->mRepeatStack->setVisible( enable );
+  mUi->mRepeatStack->setVisible( enable && recurrenceType != RecurrenceTypeDaily );
   mUi->mRepeatStack->setCurrentIndex( recurrenceType );
   mUi->mRecurrenceEndCombo->setVisible( enable );
   mUi->mEndDurationEdit->setVisible( enable );
