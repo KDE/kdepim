@@ -103,7 +103,7 @@ void ImportWizardUtil::storeInKWallet(const QString &name, ImportWizardUtil::Res
             if ( !wallet->hasFolder( QLatin1String("imap") ) )
                 wallet->createFolder( QLatin1String("imap") );
             wallet->setFolder( QLatin1String("imap") );
-            wallet->writePassword( name+"rc", password );
+            wallet->writePassword( name+QLatin1String("rc"), password );
         }
         break;
     case Pop3:
