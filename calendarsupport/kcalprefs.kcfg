@@ -30,7 +30,7 @@
     <entry type="DateTime" name="DefaultDuration">
       <label>Default duration of new appointment (HH:MM)</label>
       <whatsthis>Enter default duration for events here. The default is used if you do not supply an end time.</whatsthis>
-      <default>QDateTime(QDate(1752,1,1), QTime(2,0))</default>
+      <default>QDateTime(QDate(1752,1,1), QTime(1,0))</default>
     </entry>
 
     <entry type="Bool" key="Enable Default Audio File" name="defaultAudioFileReminders">
