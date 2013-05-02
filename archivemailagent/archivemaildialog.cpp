@@ -334,7 +334,7 @@ void ArchiveMailWidget::slotOpenFolder()
 {
     const QList<QTreeWidgetItem *> listItems = mWidget->treeWidget->selectedItems();
     if (listItems.count()==1) {
-        QTreeWidgetItem *item = listItems.at(0);
+        QTreeWidgetItem *item = listItems.first();
         if (!item)
             return;
         ArchiveMailItem *archiveItem = static_cast<ArchiveMailItem*>(item);
@@ -351,7 +351,7 @@ void ArchiveMailWidget::slotArchiveNow()
 {
     const QList<QTreeWidgetItem *> listItems = mWidget->treeWidget->selectedItems();
     if (listItems.count()==1) {
-        QTreeWidgetItem *item = listItems.at(0);
+        QTreeWidgetItem *item = listItems.first();
         if (!item)
             return;
         ArchiveMailItem *archiveItem = static_cast<ArchiveMailItem*>(item);

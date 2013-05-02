@@ -20,6 +20,8 @@
 
 #include <QObject>
 
+#include <KSharedConfig>
+
 class ArchiveMailKernel;
 class ArchiveMailInfo;
 namespace Akonadi {
@@ -42,6 +44,7 @@ public Q_SLOTS:
     void load();
     void slotArchiveNow(ArchiveMailInfo *info);
 private:
+    KSharedConfig::Ptr mConfig;
     QList<ArchiveMailInfo *> mListArchiveInfo;
     ArchiveMailKernel *mArchiveMailKernel;
 };
