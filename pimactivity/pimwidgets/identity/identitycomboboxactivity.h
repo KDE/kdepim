@@ -21,6 +21,10 @@
 #include "pimactivity_export.h"
 #include <KComboBox>
 
+namespace KPIMIdentities {
+class Identity;
+}
+
 namespace PimActivity {
 class IdentityComboboxActivityPrivate;
 class IdentityManagerActivity;
@@ -30,6 +34,12 @@ class PIMACTIVITY_EXPORT IdentityComboboxActivity : public KComboBox
 public:
     explicit IdentityComboboxActivity(IdentityManagerActivity *manager, QWidget *parent = 0);
     ~IdentityComboboxActivity();
+    QString currentIdentityName() const;
+
+    uint currentIdentity() const;
+    void setCurrentIdentity( const QString &identityName );
+    void setCurrentIdentity( const KPIMIdentities::Identity &identity );
+    void setCurrentIdentity( uint uoid );
 
 protected Q_SLOTS:
     void updateComboboxList(const QString &id);

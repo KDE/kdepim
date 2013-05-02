@@ -19,6 +19,8 @@
 #include "activitymanager.h"
 #include "identitymanageractivity.h"
 
+#include <KPIMIdentities/Identity>
+
 namespace PimActivity {
 class IdentityComboboxActivityPrivate
 {
@@ -48,6 +50,7 @@ public:
         q->updateComboboxList(id);
     }
 
+    QList<uint> uoidList;
     IdentityManagerActivity *identityManagerActivity;
     IdentityComboboxActivity *q;
 };
@@ -75,6 +78,25 @@ void IdentityComboboxActivity::updateComboboxList(const QString &id)
     //TODO
 }
 
+uint IdentityComboboxActivity::currentIdentity() const
+{
+    return d->uoidList[ currentIndex()];
+}
+
+void IdentityComboboxActivity::setCurrentIdentity( const QString &identityName )
+{
+
+}
+
+void IdentityComboboxActivity::setCurrentIdentity( const KPIMIdentities::Identity &identity )
+{
+    setCurrentIdentity( identity.uoid() );
+}
+
+void IdentityComboboxActivity::setCurrentIdentity( uint uoid )
+{
+
+}
 
 }
 
