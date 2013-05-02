@@ -34,6 +34,7 @@ public:
 
 private Q_SLOTS:
     void sendDone();
+    void sendError();
 
 Q_SIGNALS:
     void error(const QString &err);

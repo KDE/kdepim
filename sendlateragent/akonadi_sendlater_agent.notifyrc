@@ -39,3 +39,7 @@ Name[uk]=Пошту надіслано
 Name[x-test]=xxMail is sentxx
 Action=Popup
 
+[Event/mailsendfailed]
+Name=Send mail failed
+Action=Popup
+

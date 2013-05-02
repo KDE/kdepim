@@ -19,6 +19,11 @@
 #include "sendlaterinfo.h"
 #include "sendlatermanager.h"
 
+#include <KNotification>
+#include <KLocale>
+#include <KGlobal>
+#include <KIcon>
+#include <KIconLoader>
 
 SendLaterJob::SendLaterJob(SendLaterManager *manager, SendLaterInfo *info, QObject *parent)
     : QObject(parent),
@@ -34,12 +39,37 @@ SendLaterJob::~SendLaterJob()
 
 void SendLaterJob::start()
 {
-    //TODO
+    if (mInfo) {
+        //TODO
+    }
 }
 
 void SendLaterJob::sendDone()
 {
+    const QPixmap pixmap = KIcon( QLatin1String("kmail") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
+
+    KNotification::event( QLatin1String("mailsend"),
+                          QString(), /*TODO*/
+                          pixmap,
+                          0,
+                          KNotification::CloseOnTimeout,
+                          KGlobal::mainComponent());
     //TODO
+    deleteLater();
+}
+
+void SendLaterJob::sendError()
+{
+    //TODO
+    const QPixmap pixmap = KIcon( QLatin1String("kmail") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
+
+    KNotification::event( QLatin1String("mailsendfailed"),
+                          QString(), /*TODO*/
+                          pixmap,
+                          0,
+                          KNotification::CloseOnTimeout,
+                          KGlobal::mainComponent());
+    deleteLater();
 }
 
 #include "sendlaterjob.moc"
