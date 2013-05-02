@@ -1,7 +1,9 @@
-<div class="fancy header" style="color: #000 ! important; padding: 0px ! important;border: solid #000000 1px ! important;border-bottom: solid #000 1px ! important;border-left: solid #000 1px ! important;border-right: solid #000 1px ! important;>
+<div class="fancy header" dir="ltr">
 
-    <div style="color:#fff; padding: 4px ! important;"> {{ header.subject|safe }} </div>
-<table width="100%" border-top: solid #000 1px ! important;">
+    <div dir="ltr"> {{ header.subject|safe }}
+    </div>
+<table class="outer">
+    <tbody>
     <tr>
     <td width="100%">
 
@@ -69,6 +71,7 @@
 
 {% if header.spamHTML %}
   <table width="100%" border-top: solid #000 1px ! important;" >
+  <tbody>
   <tr>
     <td>
       <div class="spamheader" >
@@ -77,9 +80,10 @@
       </div>
     </td>
   </tr>
+  </tbody>
   </table>
 {% endif %}
-
+</tbody>
 </table>
 
 </div>
