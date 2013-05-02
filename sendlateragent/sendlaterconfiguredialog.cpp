@@ -193,8 +193,18 @@ void SendLaterWidget::updateButtons()
 void SendLaterWidget::load()
 {
     //TODO
-}
+    KSharedConfig::Ptr config = KGlobal::config();
+    const QStringList filterGroups = config->groupList().filter( QRegExp( sendLaterItemPattern ) );
+    const int numberOfItem = filterGroups.count();
+    for(int i = 0 ; i < numberOfItem; ++i) {
+        KConfigGroup group = config->group(filterGroups.at(i));
+/*
+        ArchiveMailInfo *info = new ArchiveMailInfo(group);
+        createOrUpdateItem(info);
+        */
+    }
 
+}
 
 void SendLaterWidget::save()
 {
@@ -213,11 +223,8 @@ void SendLaterWidget::save()
     for(int i = 0; i < numberOfItem; ++i) {
         SendLaterItem *mailItem = static_cast<SendLaterItem *>(mWidget->treeWidget->topLevelItem(i));
         if (mailItem->info()) {
-            //TODO
-            /*
-            KConfigGroup group = config->group(QString::fromLatin1("SendLaterItem %1").arg(mailItem->info()->saveCollectionId()));
+            KConfigGroup group = config->group(QString::fromLatin1("SendLaterItem %1").arg(mailItem->info()->itemId()));
             mailItem->info()->writeConfig(group);
-            */
         }
     }
     config->sync();
