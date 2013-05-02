@@ -16,15 +16,30 @@
 */
 
 #include "sendlaterjob.h"
+#include "sendlaterinfo.h"
+#include "sendlatermanager.h"
 
-SendLaterJob::SendLaterJob(QObject *parent)
-    : QObject(parent)
+
+SendLaterJob::SendLaterJob(SendLaterManager *manager, SendLaterInfo *info, QObject *parent)
+    : QObject(parent),
+      mManager(manager),
+      mInfo(info)
 {
 }
 
 SendLaterJob::~SendLaterJob()
 {
 
+}
+
+void SendLaterJob::start()
+{
+    //TODO
+}
+
+void SendLaterJob::sendDone()
+{
+    //TODO
 }
 
 #include "sendlaterjob.moc"

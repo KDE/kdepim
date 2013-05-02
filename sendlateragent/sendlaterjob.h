@@ -18,14 +18,30 @@
 #ifndef SENDLATERJOB_H
 #define SENDLATERJOB_H
 
+
 #include <QObject>
+
+class SendLaterInfo;
+class SendLaterManager;
 
 class SendLaterJob : public QObject
 {
     Q_OBJECT
 public:
-    explicit SendLaterJob(QObject *parent);
+    explicit SendLaterJob(SendLaterManager *manager, SendLaterInfo *info, QObject *parent = 0);
     ~SendLaterJob();
+    void start();
+
+private Q_SLOTS:
+    void sendDone();
+
+Q_SIGNALS:
+    void error(const QString &err);
+    void done();
+
+private:
+   SendLaterManager *mManager;
+   SendLaterInfo *mInfo;
 };
 
 #endif // SENDLATERJOB_H

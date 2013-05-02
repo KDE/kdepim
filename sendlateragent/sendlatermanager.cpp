@@ -53,6 +53,8 @@ void SendLaterManager::load()
 void SendLaterManager::sendDone()
 {
     //TODO
+    //Remove item if not recursive.
+
 }
 
 #include "sendlatermanager.moc"
