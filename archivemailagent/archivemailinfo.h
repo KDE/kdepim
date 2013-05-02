@@ -74,6 +74,9 @@ public:
 
     QStringList listOfArchive(const QString& foldername) const;
 
+    bool isEnabled() const;
+    void setEnabled(bool b);
+
 private:
     QString dirArchive() const;
     QDate mLastDateSaved;
@@ -84,6 +87,7 @@ private:
     KUrl mPath;
     int mMaximumArchiveCount;
     bool mSaveSubCollection;
+    bool mIsEnabled;
 };
 
 #endif // ARCHIVEMAILINFO_H
