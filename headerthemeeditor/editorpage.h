@@ -37,7 +37,7 @@ public:
     void setPageFileName(const QString &filename);
     QString pageFileName() const;
 
-    void createZip(KZip *zip);
+    void createZip(const QString &themeName, KZip *zip);
     void saveAsFilename(const QString &filename);
 
 private:

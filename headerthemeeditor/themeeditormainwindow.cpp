@@ -90,10 +90,12 @@ void ThemeEditorMainWindow::slotUploadTheme()
     //force update for screenshot
     mThemeEditor->forceUpdateViewer();
     KTemporaryFile tmp;
+    tmp.open();
     KZip *zip = new KZip(tmp.fileName());
     if (zip->open(QIODevice::WriteOnly)) {
         mThemeEditor->createZip(zip);
         zip->close();
+        qDebug()<< "tmp.fileName()"<<tmp.fileName();
         QPointer<KNS3::UploadDialog> dialog = new KNS3::UploadDialog(QLatin1String("messageviewer_header_themes.knsrc"), this);
         //TODO
         dialog->exec();

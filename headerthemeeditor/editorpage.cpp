@@ -20,6 +20,7 @@
 #include "themetemplatewidget.h"
 
 #include <KTextEdit>
+#include <KTemporaryFile>
 #include <KLocale>
 #include <KZip>
 
@@ -52,16 +53,19 @@ EditorPage::~EditorPage()
 {
 }
 
-void EditorPage::createZip(KZip *zip)
+void EditorPage::createZip(const QString &themeName, KZip *zip)
 {
-    //TODO
+    KTemporaryFile tmp;
+    tmp.open();
+    saveAsFilename(tmp.fileName());
+    const bool fileAdded  = zip->addLocalFile(tmp.fileName(), themeName + QLatin1Char('/') + mPageFileName);
 }
 
 void EditorPage::loadTheme(const QString &path)
 {
     QFile file(path);
     if (file.open(QIODevice::Text|QIODevice::ReadOnly)) {
-        QByteArray data = file.readAll();
+        const QByteArray data = file.readAll();
         const QString str = QString::fromUtf8(data);
         file.close();
         mEditor->setPlainText(str);

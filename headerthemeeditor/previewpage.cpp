@@ -33,7 +33,6 @@ PreviewPage::PreviewPage(QWidget *parent)
     connect(update, SIGNAL(clicked(bool)),SLOT(slotUpdateViewer()));
     lay->addWidget(update);
     setLayout(lay);
-
 }
 
 PreviewPage::~PreviewPage()

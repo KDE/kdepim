@@ -24,6 +24,7 @@
 #include <KDesktopFile>
 #include <KConfigGroup>
 #include <KZip>
+#include <KTemporaryFile>
 
 #include <QGridLayout>
 #include <QLabel>
@@ -62,9 +63,12 @@ DesktopFilePage::~DesktopFilePage()
 {
 }
 
-void DesktopFilePage::createZip(KZip *zip)
+void DesktopFilePage::createZip(const QString &themeName, KZip *zip)
 {
-
+    KTemporaryFile tmp;
+    tmp.open();
+    saveAsFilename(tmp.fileName());
+    const bool fileAdded  = zip->addLocalFile(tmp.fileName(), themeName + QLatin1Char('/') + QLatin1String("header.desktop"));
 }
 
 void DesktopFilePage::setThemeName(const QString &themeName)
@@ -75,6 +79,11 @@ void DesktopFilePage::setThemeName(const QString &themeName)
 QString DesktopFilePage::filename() const
 {
     return mFilename->text();
+}
+
+QString DesktopFilePage::themeName() const
+{
+    return mName->text();
 }
 
 void DesktopFilePage::loadTheme(const QString &path)

@@ -41,7 +41,9 @@ public:
     void setThemeName(const QString &themeName);
     QString filename() const;
 
-    void createZip(KZip *zip);
+
+    QString themeName() const;
+    void createZip(const QString &themeName, KZip *zip);
 
 private:
     void saveAsFilename(const QString &filename);

@@ -19,6 +19,7 @@
 #define THEMECONFIGUREDIALOG_H
 
 #include <KDialog>
+class KUrlRequester;
 
 class ThemeConfigureDialog : public KDialog
 {
@@ -26,6 +27,11 @@ class ThemeConfigureDialog : public KDialog
 public:
     explicit ThemeConfigureDialog(QWidget *parent = 0);
     ~ThemeConfigureDialog();
+
+    void loadConfig();
+    void writeConfig();
+private:
+    KUrlRequester *mDefaultUrl;
 };
 
 #endif // THEMECONFIGUREDIALOG_H

@@ -59,12 +59,13 @@ ThemeEditorPage::~ThemeEditorPage()
 
 void ThemeEditorPage::createZip(KZip *zip)
 {
-    mEditorPage->createZip(zip);
+    const QString themename = mDesktopPage->themeName();
+    mEditorPage->createZip(themename, zip);
 
     Q_FOREACH (EditorPage *page, mExtraPage) {
-        page->createZip(zip);
+        page->createZip(themename, zip);
     }
-    mDesktopPage->createZip(zip);
+    mDesktopPage->createZip(themename, zip);
 }
 
 void ThemeEditorPage::forceUpdateViewer()

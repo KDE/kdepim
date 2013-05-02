@@ -17,12 +17,47 @@
 
 #include "themeconfiguredialog.h"
 
+#include <KLocale>
+#include <KUrlRequester>
+
+#include <QVBoxLayout>
+#include <QLabel>
+
 ThemeConfigureDialog::ThemeConfigureDialog(QWidget *parent)
     : KDialog(parent)
 {
-    //TODO
+    setCaption( i18n( "Configure" ) );
+    setButtons( Ok|Cancel );
+    setButtonFocus( Ok );
+    QWidget *w = new QWidget;
+
+    QVBoxLayout *lay = new QVBoxLayout;
+    w->setLayout(lay);
+
+    QHBoxLayout *hbox = new QHBoxLayout;
+    lay->addLayout(hbox);
+
+    QLabel *lab = new QLabel(i18n("Default theme path:"));
+    hbox->addWidget(lab);
+
+    mDefaultUrl = new KUrlRequester;
+    hbox->addWidget(mDefaultUrl);
+
+    setMainWidget(w);
 }
 
 ThemeConfigureDialog::~ThemeConfigureDialog()
 {
 }
+
+void ThemeConfigureDialog::loadConfig()
+{
+    //TODO
+}
+
+void ThemeConfigureDialog::writeConfig()
+{
+    //TODO
+}
+
+#include "themeconfiguredialog.moc"
