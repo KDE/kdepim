@@ -484,6 +484,7 @@ private slots:
 
 
   void saveSplitterSizes() const;
+  void slotGrantleeThemesUpdated();
 
 public slots:
   /** An URL has been activate with a click. */

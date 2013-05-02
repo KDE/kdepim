@@ -50,6 +50,7 @@ public:
 Q_SIGNALS:
     void themesChanged();
     void grantleeThemeSelected();
+    void updateThemes();
 
 private:
     Q_PRIVATE_SLOT( d, void directoryChanged() )
