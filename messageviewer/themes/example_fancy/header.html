@@ -70,13 +70,13 @@
     </tr>
 
 {% if header.spamHTML %}
-  <table width="100%" border-top: solid #000 1px ! important;" >
+  <table >
   <tbody>
   <tr>
     <td>
       <div class="spamheader" >
-      <span style="padding-top: 1px ! important;font-size: 10px;"><b>{{ header.spamstatusi18n }}</b></span>&nbsp;
-      <span style="padding-left: 20px; padding-top: 1px ! important;">{{ header.spamHTML|safe }}</span>
+      <span><b>{{ header.spamstatusi18n }}</b></span>&nbsp;
+      <span>{{ header.spamHTML|safe }}</span>
       </div>
     </td>
   </tr>
