@@ -55,8 +55,6 @@ public:
     void readConfig(const KConfigGroup& config);
     void writeConfig(KConfigGroup & config );
 
-
-
 private:
     QDateTime mDateTime;
     Akonadi::Item::Id mId;

@@ -23,6 +23,7 @@
 class KComboBox;
 class QCheckBox;
 class QSpinBox;
+class QDateTimeEdit;
 
 class SendLaterInfo;
 
@@ -43,6 +44,7 @@ private:
     void readConfig();
     void writeConfig();
 private:
+    QDateTimeEdit *mDateTime;
     SendLaterInfo *mInfo;
     KComboBox *mRecursiveComboBox;
     QCheckBox *mRecursive;
