@@ -184,8 +184,9 @@ QString GrantleeHeaderFormatter::toHtml(const GrantleeTheme &theme, bool isPrint
     }
 
     Q_FOREACH (const QString &header, theme.displayExtraHeaders()) {
-        if (message->headerByType(header.toLocal8Bit()) ) {
-            headerObject.insert( header , message->headerByType(header.toLocal8Bit())->asUnicodeString() );
+        const QByteArray baHeader = header.toLocal8Bit();
+        if (message->headerByType(baHeader) ) {
+            headerObject.insert( header , message->headerByType(baHeader)->asUnicodeString() );
         }
     }
 
