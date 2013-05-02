@@ -55,6 +55,7 @@ private Q_SLOTS:
     void updateButtons();
     void customContextMenuRequested(const QPoint&);
 private:
+    void createOrUpdateItem(SendLaterInfo *info);
     void load();
     bool mChanged;
     Ui::SendLaterWidget *mWidget;

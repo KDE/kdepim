@@ -192,18 +192,22 @@ void SendLaterWidget::updateButtons()
 
 void SendLaterWidget::load()
 {
-    //TODO
     KSharedConfig::Ptr config = KGlobal::config();
     const QStringList filterGroups = config->groupList().filter( QRegExp( sendLaterItemPattern ) );
     const int numberOfItem = filterGroups.count();
     for(int i = 0 ; i < numberOfItem; ++i) {
         KConfigGroup group = config->group(filterGroups.at(i));
-/*
-        ArchiveMailInfo *info = new ArchiveMailInfo(group);
+        SendLaterInfo *info = new SendLaterInfo(group);
         createOrUpdateItem(info);
-        */
     }
+}
 
+void SendLaterWidget::createOrUpdateItem(SendLaterInfo *info)
+{
+    SendLaterItem *item = new SendLaterItem(mWidget->treeWidget);
+    //TODO
+    //item->setText(0,i18n("Folder: %1",MailCommon::Util::fullCollectionPath(Akonadi::Collection(info->saveCollectionId()))));
+    item->setInfo(info);
 }
 
 void SendLaterWidget::save()
