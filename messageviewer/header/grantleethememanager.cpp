@@ -74,7 +74,7 @@ public:
     void slotDownloadHeaderThemes()
     {
         if (!downloadThemesDialog) {
-            downloadThemesDialog = new KNS3::DownloadDialog(QLatin1String("header_themes.knsrc"));
+            downloadThemesDialog = new KNS3::DownloadDialog(QLatin1String("messageviewer_header_themes.knsrc"));
         }
         downloadThemesDialog.data()->show();
     }
@@ -106,7 +106,7 @@ public:
             const QString dirName = dirIt.fileName();
             const GrantleeTheme theme = loadTheme( dirIt.filePath(), dirName );
             themes.insert( dirName, theme );
-            qDebug()<<" theme.name()"<<theme.name();
+            //qDebug()<<" theme.name()"<<theme.name();
         }
 
         Q_EMIT q->themesChanged();
