@@ -14,7 +14,7 @@
     <td style="font-size: 10px;">{{ header.from|safe }}
 
     {% if header.resentfrom %}
-      &nbsp; Resent-From: {{ header.resenfrom|safe }}
+      &nbsp; {{ header.resentfromi18n }}: {{ header.resentfrom|safe }}
     {% endif %}
 
     {% if vCardName %}

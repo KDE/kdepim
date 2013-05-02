@@ -98,6 +98,10 @@ QString GrantleeHeaderFormatter::toHtml(const GrantleeTheme &theme, bool isPrint
     headerObject.insert(QLatin1String("subjecti18n"), i18n("Subject:") );
     headerObject.insert(QLatin1String("subject"), MessageViewer::HeaderStyleUtil::subjectString( message ) );
 
+    headerObject.insert(QLatin1String("toi18n"), i18n("To:") );
+    headerObject.insert(QLatin1String("to"), StringUtil::emailAddrAsAnchor( message->to(), StringUtil::DisplayFullAddress ));
+    headerObject.insert(QLatin1String("toStr"), message->to()->asUnicodeString());
+
     if ( message->replyTo( false )) {
         headerObject.insert(QLatin1String("replyToi18n"), i18n("Reply to:") );
         headerObject.insert(QLatin1String("replyTo"), StringUtil::emailAddrAsAnchor( message->replyTo(), StringUtil::DisplayFullAddress ));
@@ -142,6 +146,7 @@ QString GrantleeHeaderFormatter::toHtml(const GrantleeTheme &theme, bool isPrint
     }
 
     if ( message->headerByType( "Resent-From" ) ) {
+        headerObject.insert( QLatin1String( "resentfromi18n"), i18n("resent from"));
         const QList<KMime::Types::Mailbox> resentFrom = MessageViewer::HeaderStyleUtil::resentFromList(message);
         headerObject.insert( QLatin1String( "resentfrom" ), StringUtil::emailAddrAsAnchor( resentFrom, StringUtil::DisplayFullAddress ) );
     }
