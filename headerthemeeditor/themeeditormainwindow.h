@@ -41,6 +41,7 @@ private Q_SLOTS:
     void slotUploadTheme();
     void slotQuitApp();
     void slotSaveTheme();
+    void slotConfigure();
 
 private:
     void updateActions();

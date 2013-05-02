@@ -15,40 +15,17 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#ifndef THEMECONFIGUREDIALOG_H
+#define THEMECONFIGUREDIALOG_H
 
-#ifndef DESKTOPFILEPAGE_H
-#define DESKTOPFILEPAGE_H
+#include <KDialog>
 
-#include <QWidget>
-
-class KLineEdit;
-class KZip;
-
-namespace PimCommon {
-class SimpleStringListEditor;
-}
-
-class DesktopFilePage : public QWidget
+class ThemeConfigureDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit DesktopFilePage(QWidget *parent = 0);
-    ~DesktopFilePage();
-
-    void saveTheme(const QString &path);
-    void loadTheme(const QString &path);
-
-    void setThemeName(const QString &themeName);
-    QString filename() const;
-
-    void createZip(KZip *zip);
-
-private:
-    void saveAsFilename(const QString &filename);
-    KLineEdit *mName;
-    KLineEdit *mDescription;
-    KLineEdit *mFilename;
-    PimCommon::SimpleStringListEditor *mExtraDisplayHeaders;
+    explicit ThemeConfigureDialog(QWidget *parent = 0);
+    ~ThemeConfigureDialog();
 };
 
-#endif // DESKTOPFILEPAGE_H
+#endif // THEMECONFIGUREDIALOG_H

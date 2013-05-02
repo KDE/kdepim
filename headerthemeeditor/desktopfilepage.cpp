@@ -91,6 +91,11 @@ void DesktopFilePage::loadTheme(const QString &path)
 void DesktopFilePage::saveTheme(const QString &path)
 {
     const QString filename = path + QDir::separator() + QLatin1String("header.desktop");
+    saveAsFilename(filename);
+}
+
+void DesktopFilePage::saveAsFilename(const QString &filename)
+{
     KDesktopFile desktopFile(filename);
     desktopFile.desktopGroup().writeEntry(QLatin1String("Name"), mName->text());
     desktopFile.desktopGroup().writeEntry(QLatin1String("Description"), mDescription->text());
