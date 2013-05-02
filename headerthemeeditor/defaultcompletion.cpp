@@ -51,6 +51,8 @@ QStringList DefaultCompletion::defaultCompetion()
         <<QLatin1String( "linkcolor" )
         <<QLatin1String( "photowidth" )
         <<QLatin1String( "photoheight" )
+        <<QLatin1String( "applicationDir" )
+        <<QLatin1String( "subjectDir" )
         <<QLatin1String( "photourl" );
     return lst;
 }
