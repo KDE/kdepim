@@ -1,0 +1,85 @@
+<div style="color: #000 ! important; padding: 0px ! important;border: solid #000000 1px ! important;border-bottom: solid #000 1px ! important;border-left: solid #000 1px ! important;border-right: solid #000 1px ! important;>
+
+    <div style="color:#fff; padding: 4px ! important;"> {{ subjecti18n|safe }} </div>
+<table width="100%" border-top: solid #000 1px ! important;">
+    <tr>
+    <td width="100%">
+
+    <table>
+
+    <tr>
+    <th align="left" style="font-size: 10px;">{{ fromi18n }}</th>
+    <td style="font-size: 10px;">{{ from|safe }}
+
+    {% if resentfrom %}
+      &nbsp; Resent-From: {{ resenfrom|safe }}
+    {% endif %}
+
+    {% if vCardName %}
+      &nbsp;&nbsp;<a href="{{ vcardname|safe }}">[vCard]</a>
+    {% endif %}
+
+    {% if organization %}
+      &nbsp;&nbsp;("{{ organization|safe }}")
+    {% endif %}
+
+    </td>
+    </tr>
+
+    <tr>
+    <th align="left" style="font-size: 10px;">{{ toi18n }}</th>
+    <td style="font-size: 10px;">{{ to|safe }}</td>
+    </tr>
+
+{% if cc %}
+    <tr>
+    <th align="left" style="font-size: 10px;"> {{ cci18n }} </th>
+    <td style="font-size: 10px;">{{ cc|safe }}</td>
+    </tr>
+{% endif %}
+
+{% if bcc %}
+    <tr>
+    <th align="left" style="font-size: 10px;"> {{ bcci18n }} </th>
+    <td style="font-size: 10px;">{{ bcc|safe }}</td>
+    </tr>
+{% endif %}
+
+    <tr>
+    <th align="left" style="font-size: 10px;">{{ datei18n }} </th>
+    <td dir="{{ dateDir }}" style="font-size: 10px;">{{ date|safe }}</td>
+    </tr>
+
+    <tr>
+    <td colspan="2"><div id="attachmentInjectionPoint"></div></td>
+    </tr>
+
+    </table>
+    </td>
+
+{% if photourl %}
+    <td align="center">
+    <div style="font-size:0.8em ! important;border:1px solid black ! important;background-color:#3384b3 ! important;">
+      <img src="{{ photourl }}" width="{{ photowidth }}" height="{{ photoheight }}">
+    </div>
+    </td>
+{% endif %}
+
+    </tr>
+
+{% if spamHTML %}
+  <table width="100%" border-top: solid #000 1px ! important;" >
+  <tr>
+    <td>
+      <div class="spamheader" >
+      <span style="padding-top: 1px ! important;font-size: 10px;"><b>Spam Status</b></span>&nbsp;
+      <span style="padding-left: 20px; padding-top: 1px ! important;">{{ spamHTML|safe }}</span>
+      </div>
+    </td>
+  </tr>
+  </table>
+{% endif %}
+
+</table>
+
+</div>
