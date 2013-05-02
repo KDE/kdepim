@@ -1,6 +1,6 @@
 <div style="color: #000 ! important; padding: 0px ! important;border: solid #000000 1px ! important;border-bottom: solid #000 1px ! important;border-left: solid #000 1px ! important;border-right: solid #000 1px ! important;>
 
-    <div style="color:#fff; padding: 4px ! important;"> {{ header.subjecti18n|safe }} </div>
+    <div style="color:#fff; padding: 4px ! important;"> {{ header.subject|safe }} </div>
 <table width="100%" border-top: solid #000 1px ! important;">
     <tr>
     <td width="100%">
@@ -72,7 +72,7 @@
   <tr>
     <td>
       <div class="spamheader" >
-      <span style="padding-top: 1px ! important;font-size: 10px;"><b>Spam Status</b></span>&nbsp;
+      <span style="padding-top: 1px ! important;font-size: 10px;"><b>{{ header.spamstatusi18n }}</b></span>&nbsp;
       <span style="padding-left: 20px; padding-top: 1px ! important;">{{ header.spamHTML|safe }}</span>
       </div>
     </td>

@@ -112,6 +112,7 @@ QString GrantleeHeaderFormatter::toHtml(const GrantleeTheme &theme, bool isPrint
 
     const QString spamHtml = MessageViewer::HeaderStyleUtil::spamStatus(message);
     if ( !spamHtml.isEmpty() ) {
+        headerObject.insert( QLatin1String("spamstatusi18n"), i18n("Spam Status:"));
         headerObject.insert( QLatin1String( "spamHTML" ), spamHtml );
     }
     headerObject.insert(QLatin1String("datei18n"), i18n("Date:"));
