@@ -22,6 +22,7 @@
 #include <QWidget>
 
 class KLineEdit;
+class KZip;
 
 namespace PimCommon {
 class SimpleStringListEditor;
@@ -39,6 +40,9 @@ public:
 
     void setThemeName(const QString &themeName);
     QString filename() const;
+
+    void createZip(KZip *zip);
+
 private:
     KLineEdit *mName;
     KLineEdit *mDescription;

@@ -21,6 +21,7 @@
 
 #include <knewstuff3/uploaddialog.h>
 
+#include <KTemporaryFile>
 #include <KStandardAction>
 #include <KApplication>
 #include <KAction>
@@ -28,6 +29,8 @@
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <KFileDialog>
+#include <KZip>
+#include <KDebug>
 
 #include <QPointer>
 #include <QCloseEvent>
@@ -78,10 +81,21 @@ void ThemeEditorMainWindow::slotUploadTheme()
 {
     //Save before upload :)
     slotSaveTheme();
-    QPointer<KNS3::UploadDialog> dialog = new KNS3::UploadDialog(this);
-    //TODO
-    dialog->exec();
-    delete dialog;
+    //force update for screenshot
+    mThemeEditor->forceUpdateViewer();
+    KTemporaryFile tmp;
+    KZip *zip = new KZip(tmp.fileName());
+    if (zip->open(QIODevice::WriteOnly)) {
+        mThemeEditor->createZip(zip);
+        zip->close();
+        QPointer<KNS3::UploadDialog> dialog = new KNS3::UploadDialog(QLatin1String("messageviewer_header_themes.knsrc"), this);
+        //TODO
+        dialog->exec();
+        delete dialog;
+    } else {
+        kDebug()<<" We can't open in zip write mode";
+    }
+    delete zip;
 }
 
 void ThemeEditorMainWindow::slotSaveTheme()

@@ -21,6 +21,7 @@
 
 #include <KTextEdit>
 #include <KLocale>
+#include <KZip>
 
 #include <QSplitter>
 #include <QVBoxLayout>
@@ -51,6 +52,11 @@ EditorPage::~EditorPage()
 {
 }
 
+void EditorPage::createZip(KZip *zip)
+{
+    //TODO
+}
+
 void EditorPage::loadTheme(const QString &path)
 {
     QFile file(path);
@@ -65,6 +71,11 @@ void EditorPage::loadTheme(const QString &path)
 void EditorPage::saveTheme(const QString &path)
 {
     const QString filename = path + QDir::separator() + mPageFileName;
+    saveAsFilename(filename);
+}
+
+void EditorPage::saveAsFilename(const QString &filename)
+{
     QFile file(filename);
     if (file.open(QIODevice::WriteOnly|QIODevice::Text)) {
         QTextStream out(&file);

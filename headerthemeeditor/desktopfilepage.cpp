@@ -23,6 +23,7 @@
 #include <KLocale>
 #include <KDesktopFile>
 #include <KConfigGroup>
+#include <KZip>
 
 #include <QGridLayout>
 #include <QLabel>
@@ -59,6 +60,11 @@ DesktopFilePage::DesktopFilePage(QWidget *parent)
 
 DesktopFilePage::~DesktopFilePage()
 {
+}
+
+void DesktopFilePage::createZip(KZip *zip)
+{
+
 }
 
 void DesktopFilePage::setThemeName(const QString &themeName)

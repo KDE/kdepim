@@ -23,6 +23,7 @@
 
 class ThemeTemplateWidget;
 class Editor;
+class KZip;
 
 class EditorPage : public QWidget
 {
@@ -35,6 +36,9 @@ public:
 
     void setPageFileName(const QString &filename);
     QString pageFileName() const;
+
+    void createZip(KZip *zip);
+    void saveAsFilename(const QString &filename);
 
 private:
     QString mPageFileName;

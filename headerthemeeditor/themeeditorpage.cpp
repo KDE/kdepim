@@ -24,6 +24,7 @@
 #include <KTabWidget>
 #include <KLocale>
 #include <KInputDialog>
+#include <KZip>
 
 #include <QHBoxLayout>
 #include <QDir>
@@ -54,6 +55,21 @@ ThemeEditorPage::~ThemeEditorPage()
     qDeleteAll(mExtraPage);
     mExtraPage.clear();
     delete mThemeSession;
+}
+
+void ThemeEditorPage::createZip(KZip *zip)
+{
+    mEditorPage->createZip(zip);
+
+    Q_FOREACH (EditorPage *page, mExtraPage) {
+        page->createZip(zip);
+    }
+    mDesktopPage->createZip(zip);
+}
+
+void ThemeEditorPage::forceUpdateViewer()
+{
+    mPreviewPage->slotUpdateViewer();
 }
 
 void ThemeEditorPage::addExtraPage()

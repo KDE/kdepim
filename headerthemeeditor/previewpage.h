@@ -20,8 +20,6 @@
 #define PREVIEWPAGE_H
 
 #include <QWidget>
-class KPushButton;
-
 namespace MessageViewer {
 class Viewer;
 }
@@ -38,7 +36,6 @@ public Q_SLOTS:
 
 private:
     MessageViewer::Viewer *mViewer;
-    KPushButton *mUpdate;
 };
 
 #endif // PREVIEWPAGE_H
