@@ -198,7 +198,7 @@ void ArchiveMailWidget::createOrUpdateItem(ArchiveMailInfo *info, ArchiveMailIte
         item->setText(1,KGlobal::locale()->formatDate(info->lastDateSaved()));
         const QDate diffDate = ArchiveMailAgentUtil::diffDate(info);
         const int diff = QDate::currentDate().daysTo(diffDate);
-        item->setText(2,i18np("1 day", "%1 days",QString::number(diff)));
+        item->setText(2,i18np("1 day", "%1 days",diff));
         if (diff<0) {
             item->setBackgroundColor(2,Qt::red);
         } else {
