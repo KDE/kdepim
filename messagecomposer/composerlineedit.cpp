@@ -171,9 +171,9 @@ void ComposerLineEdit::dropEvent(QDropEvent *event)
     }
     
     // Now, let the user choose which addressee to add.
-    KABC::Addressee::List::Iterator ait;
-    foreach( const KABC::Addressee& addressee, list )
+    foreach( const KABC::Addressee& addressee, list ) {
       insertEmails( addressee.emails() );
+    }
   }
 
   // Case three: Let AddresseeLineEdit deal with the rest
