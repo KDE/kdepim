@@ -633,7 +633,7 @@ void MailWebView::slotShowDetails()
 void MailWebView::saveMainFrameScreenshotInFile(const QString &filename)
 {
     QWebFrame *frame = page()->mainFrame();
-    QImage image(size(), QImage::Format_ARGB32_Premultiplied);
+    QImage image(frame->contentsSize(), QImage::Format_ARGB32_Premultiplied);
     image.fill(Qt::transparent);
 
     QPainter painter(&image);
