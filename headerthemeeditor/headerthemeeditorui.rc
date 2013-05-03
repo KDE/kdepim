@@ -9,6 +9,8 @@
   <Menu noMerge="1" name="edit" >
    <text>&amp;Edit</text>
    <Action name="add_extra_page" />
+   <Separator />
+   <Action name="install_theme" />
   </Menu>
  </MenuBar>
 </kpartgui>

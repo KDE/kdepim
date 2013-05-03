@@ -54,6 +54,7 @@ void ThemeEditorMainWindow::updateActions()
     mCloseAction->setEnabled(projectDirectoryIsEmpty);
     mUploadTheme->setEnabled(projectDirectoryIsEmpty);
     mSaveAction->setEnabled(projectDirectoryIsEmpty);
+    mInstallTheme->setEnabled(projectDirectoryIsEmpty);
 }
 
 void ThemeEditorMainWindow::setupActions()
@@ -74,10 +75,22 @@ void ThemeEditorMainWindow::setupActions()
     mCloseAction = KStandardAction::close( this, SLOT(slotCloseTheme()), actionCollection());
     KStandardAction::quit(this, SLOT(slotQuitApp()), actionCollection() );
     KStandardAction::preferences( this, SLOT(slotConfigure()), actionCollection() );
+
+    mInstallTheme = new KAction(i18n("Install theme"), this);
+    actionCollection()->addAction( QLatin1String( "install_theme" ), mInstallTheme );
+    connect(mInstallTheme, SIGNAL(triggered(bool)), SLOT(slotInstallTheme()));
 }
 
 void ThemeEditorMainWindow::slotConfigure()
 {
+
+}
+
+void ThemeEditorMainWindow::slotInstallTheme()
+{
+    //TODO
+    //Save before installing :)
+    slotSaveTheme();
 
 }
 
