@@ -41,11 +41,10 @@ public:
     QString projectDirectory() const;
     void setProjectDirectory(const QString &dir);
 
-    void forceUpdateViewer();
-
-    void createZip(KZip *zip);
+    void uploadTheme();
 
 private:
+    void createZip(const QString &themeName, KZip *zip);
     QList<EditorPage*> mExtraPage;
     KTabWidget *mTabWidget;
     EditorPage *mEditorPage;

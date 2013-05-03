@@ -21,13 +21,19 @@
 #include "previewpage.h"
 #include "themesession.h"
 
+#include <knewstuff3/uploaddialog.h>
+
 #include <KTabWidget>
 #include <KLocale>
 #include <KInputDialog>
 #include <KZip>
+#include <KTempDir>
+#include <KDebug>
 
 #include <QHBoxLayout>
 #include <QDir>
+#include <QPointer>
+#include <QDebug>
 
 ThemeEditorPage::ThemeEditorPage(const QString &themeName, QWidget *parent)
     : QWidget(parent),
@@ -57,20 +63,38 @@ ThemeEditorPage::~ThemeEditorPage()
     delete mThemeSession;
 }
 
-void ThemeEditorPage::createZip(KZip *zip)
+void ThemeEditorPage::uploadTheme()
 {
+    //force update for screenshot
+    mPreviewPage->slotUpdateViewer();
+    KTempDir tmp;
     const QString themename = mDesktopPage->themeName();
-    mEditorPage->createZip(themename, zip);
-
-    Q_FOREACH (EditorPage *page, mExtraPage) {
-        page->createZip(themename, zip);
+    const QString zipFileName = tmp.name() + QDir::separator() + themename + QLatin1String(".zip");
+    KZip *zip = new KZip(zipFileName);
+    if (zip->open(QIODevice::WriteOnly)) {
+        createZip(themename, zip);
+        zip->close();
+        qDebug()<< "zipFilename"<<zipFileName;
+        QPointer<KNS3::UploadDialog> dialog = new KNS3::UploadDialog(QLatin1String("messageviewer_header_themes.knsrc"), this);
+        dialog->setUploadFile(zipFileName);
+        //TODO
+        dialog->exec();
+        delete dialog;
+    } else {
+        kDebug()<<" We can't open in zip write mode";
     }
-    mDesktopPage->createZip(themename, zip);
+    delete zip;
+
 }
 
-void ThemeEditorPage::forceUpdateViewer()
+void ThemeEditorPage::createZip(const QString &themeName, KZip *zip)
 {
-    mPreviewPage->slotUpdateViewer();
+    mEditorPage->createZip(themeName, zip);
+
+    Q_FOREACH (EditorPage *page, mExtraPage) {
+        page->createZip(themeName, zip);
+    }
+    mDesktopPage->createZip(themeName, zip);
 }
 
 void ThemeEditorPage::addExtraPage()
