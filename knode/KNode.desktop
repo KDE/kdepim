@@ -1,6 +1,6 @@
 [Desktop Entry]
 Type=Application
-Exec=knode -caption "%c"
+Exec=knode -caption %c
 Icon=knode
 Terminal=false
 X-DocPath=knode/index.html
