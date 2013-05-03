@@ -294,7 +294,7 @@ void ArchiveMailWidget::slotModifyItem()
         if (!item)
             return;
         ArchiveMailItem *archiveItem = static_cast<ArchiveMailItem*>(item);
-        AddArchiveMailDialog *dialog = new AddArchiveMailDialog(archiveItem->info(), this);
+        QPointer<AddArchiveMailDialog> dialog = new AddArchiveMailDialog(archiveItem->info(), this);
         if ( dialog->exec() ) {
             ArchiveMailInfo *info = dialog->info();
             createOrUpdateItem(info,archiveItem);
