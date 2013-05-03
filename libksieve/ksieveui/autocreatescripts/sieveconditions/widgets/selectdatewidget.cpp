@@ -45,6 +45,7 @@ SelectDateWidget::~SelectDateWidget()
 void SelectDateWidget::initialize()
 {
     QHBoxLayout *lay = new QHBoxLayout;
+    lay->setMargin(0);
 
     mDateType = new KComboBox;
     connect(mDateType, SIGNAL(activated(int)), SLOT(slotDateTypeActivated(int)));
