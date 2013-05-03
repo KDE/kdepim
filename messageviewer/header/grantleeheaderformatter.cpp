@@ -190,6 +190,9 @@ QString GrantleeHeaderFormatter::toHtml(const GrantleeTheme &theme, bool isPrint
         }
     }
 
+    headerObject.insert( QLatin1String( "vcardi18n" ), i18n("[vcard]") );
+
+
     QVariantHash mapping;
     mapping.insert( "header", headerObject );
     Grantlee::Context context( mapping );

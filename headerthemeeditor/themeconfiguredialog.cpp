@@ -19,6 +19,7 @@
 
 #include <KLocale>
 #include <KUrlRequester>
+#include <KConfig>
 
 #include <QVBoxLayout>
 #include <QLabel>

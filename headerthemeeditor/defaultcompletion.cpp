@@ -57,7 +57,8 @@ QStringList DefaultCompletion::defaultCompetion()
         <<QLatin1String( "photoheight" )
         <<QLatin1String( "applicationDir" )
         <<QLatin1String( "subjectDir" )
-        <<QLatin1String( "photourl" );
+        <<QLatin1String( "photourl" )
+        <<QLatin1String( "vcardi18n" );
     return lst;
 }
 
