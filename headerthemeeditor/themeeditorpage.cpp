@@ -63,6 +63,21 @@ ThemeEditorPage::~ThemeEditorPage()
     delete mThemeSession;
 }
 
+bool ThemeEditorPage::themeWasChanged() const
+{
+    bool wasChanged = mEditorPage->wasChanged();
+    if (wasChanged)
+        return true;
+
+    Q_FOREACH (EditorPage *page, mExtraPage) {
+        wasChanged = page->wasChanged();
+        if (wasChanged)
+            return true;
+    }
+    wasChanged = mDesktopPage->wasChanged();
+    return wasChanged;
+}
+
 void ThemeEditorPage::uploadTheme()
 {
     //force update for screenshot
@@ -114,16 +129,18 @@ void ThemeEditorPage::addExtraPage()
 
 void ThemeEditorPage::saveTheme()
 {
-    //set default page filename before saving
-    mEditorPage->setPageFileName(mDesktopPage->filename());
-    mEditorPage->saveTheme(projectDirectory());
+    if (themeWasChanged()) {
+        //set default page filename before saving
+        mEditorPage->setPageFileName(mDesktopPage->filename());
+        mEditorPage->saveTheme(projectDirectory());
 
-    Q_FOREACH (EditorPage *page, mExtraPage) {
-        page->saveTheme(projectDirectory());
+        Q_FOREACH (EditorPage *page, mExtraPage) {
+            page->saveTheme(projectDirectory());
+        }
+        mDesktopPage->saveTheme(projectDirectory());
+        mThemeSession->setMainPageFileName(mDesktopPage->filename());
+        mThemeSession->writeSession();
     }
-    mDesktopPage->saveTheme(projectDirectory());
-    mThemeSession->setMainPageFileName(mDesktopPage->filename());
-    mThemeSession->writeSession();
 }
 
 void ThemeEditorPage::loadTheme(const QString &filename)

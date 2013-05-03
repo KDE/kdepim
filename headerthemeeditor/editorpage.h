@@ -40,10 +40,16 @@ public:
     void createZip(const QString &themeName, KZip *zip);
     void saveAsFilename(const QString &filename);
 
+    bool wasChanged() const;
+
+private Q_SLOTS:
+    void slotChanged();
+
 private:
     QString mPageFileName;
     Editor *mEditor;
     ThemeTemplateWidget *mThemeTemplate;
+    bool mChanged;
 };
 
 #endif // EDITORPAGE_H

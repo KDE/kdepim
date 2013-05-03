@@ -44,6 +44,7 @@ public:
     void uploadTheme();
 
 private:
+    bool themeWasChanged() const;
     void createZip(const QString &themeName, KZip *zip);
     QList<EditorPage*> mExtraPage;
     KTabWidget *mTabWidget;

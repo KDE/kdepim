@@ -30,7 +30,8 @@
 #include <QDir>
 
 EditorPage::EditorPage(QWidget *parent)
-    : QWidget(parent)
+    : QWidget(parent),
+      mChanged(false)
 {
     QVBoxLayout *lay = new QVBoxLayout;
     QSplitter *splitter = new QSplitter;
@@ -46,11 +47,17 @@ EditorPage::EditorPage(QWidget *parent)
     connect(mThemeTemplate, SIGNAL(insertTemplate(QString)), mEditor, SLOT(insertPlainText(QString)));
     splitter->addWidget(mThemeTemplate);
 
+    connect(mEditor, SIGNAL(textChanged()), this, SLOT(slotChanged()));
     setLayout(lay);
 }
 
 EditorPage::~EditorPage()
 {
+}
+
+void EditorPage::slotChanged()
+{
+    mChanged = true;
 }
 
 void EditorPage::createZip(const QString &themeName, KZip *zip)
@@ -69,6 +76,7 @@ void EditorPage::loadTheme(const QString &path)
         const QString str = QString::fromUtf8(data);
         file.close();
         mEditor->setPlainText(str);
+        mChanged = false;
     }
 }
 
@@ -76,6 +84,7 @@ void EditorPage::saveTheme(const QString &path)
 {
     const QString filename = path + QDir::separator() + mPageFileName;
     saveAsFilename(filename);
+    mChanged = false;
 }
 
 void EditorPage::saveAsFilename(const QString &filename)
@@ -99,5 +108,9 @@ QString EditorPage::pageFileName() const
     return mPageFileName;
 }
 
+bool EditorPage::wasChanged() const
+{
+    return mChanged;
+}
 
 #include "editorpage.moc"

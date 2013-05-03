@@ -18,6 +18,7 @@
 #include "themeeditormainwindow.h"
 #include "themeeditorpage.h"
 #include "newthemedialog.h"
+#include "themeconfiguredialog.h"
 
 #include <KTemporaryFile>
 #include <KTempDir>
@@ -83,7 +84,9 @@ void ThemeEditorMainWindow::setupActions()
 
 void ThemeEditorMainWindow::slotConfigure()
 {
-
+    QPointer<ThemeConfigureDialog> dialog = new ThemeConfigureDialog(this);
+    dialog->exec();
+    delete dialog;
 }
 
 void ThemeEditorMainWindow::slotInstallTheme()

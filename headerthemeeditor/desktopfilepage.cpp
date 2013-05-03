@@ -31,7 +31,8 @@
 #include <QDir>
 
 DesktopFilePage::DesktopFilePage(QWidget *parent)
-    : QWidget(parent)
+    : QWidget(parent),
+      mChanged(false)
 {
     QGridLayout *lay = new QGridLayout;
     QLabel *lab = new QLabel(i18n("Name:"));
@@ -57,10 +58,18 @@ DesktopFilePage::DesktopFilePage(QWidget *parent)
     mExtraDisplayHeaders = new PimCommon::SimpleStringListEditor;
     lay->addWidget(mExtraDisplayHeaders, 4, 0, 4, 2);
     setLayout(lay);
+    connect(mExtraDisplayHeaders, SIGNAL(changed()), this, SLOT(slotChanged()));
+    connect(mFilename, SIGNAL(textChanged(QString)), this, SLOT(slotChanged()));
+    connect(mDescription, SIGNAL(textChanged(QString)), this, SLOT(slotChanged()));
 }
 
 DesktopFilePage::~DesktopFilePage()
 {
+}
+
+void DesktopFilePage::slotChanged()
+{
+    mChanged = true;
 }
 
 void DesktopFilePage::createZip(const QString &themeName, KZip *zip)
@@ -95,12 +104,14 @@ void DesktopFilePage::loadTheme(const QString &path)
     mFilename->setText(desktopFile.desktopGroup().readEntry(QLatin1String("FileName")));
     const QStringList displayExtraHeaders = desktopFile.desktopGroup().readEntry(QLatin1String("DisplayExtraHeaders"),QStringList());
     mExtraDisplayHeaders->setStringList(displayExtraHeaders);
+    mChanged = false;
 }
 
 void DesktopFilePage::saveTheme(const QString &path)
 {
     const QString filename = path + QDir::separator() + QLatin1String("header.desktop");
     saveAsFilename(filename);
+    mChanged = false;
 }
 
 void DesktopFilePage::saveAsFilename(const QString &filename)
@@ -113,6 +124,11 @@ void DesktopFilePage::saveAsFilename(const QString &filename)
     if (!displayExtraHeaders.isEmpty())
         desktopFile.desktopGroup().writeEntry(QLatin1String("DisplayExtraHeaders"), mExtraDisplayHeaders->stringList());
     desktopFile.desktopGroup().sync();
+}
+
+bool DesktopFilePage::wasChanged() const
+{
+    return mChanged;
 }
 
 #include "desktopfilepage.moc"
