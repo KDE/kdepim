@@ -3278,4 +3278,11 @@ void ViewerPrivate::slotGrantleeThemesUpdated()
     update( Viewer::Force );
 }
 
+void ViewerPrivate::saveMainFrameScreenshotInFile(const QString &filename)
+{
+#ifndef KDEPIM_NO_WEBKIT
+    mViewer->saveMainFrameScreenshotInFile(filename);
+#endif
+}
+
 #include "viewer_p.moc"

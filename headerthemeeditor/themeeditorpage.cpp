@@ -29,6 +29,7 @@
 #include <KZip>
 #include <KTempDir>
 #include <KDebug>
+#include <KMessageBox>
 
 #include <QHBoxLayout>
 #include <QDir>
@@ -90,9 +91,16 @@ void ThemeEditorPage::uploadTheme()
         createZip(themename, zip);
         zip->close();
         qDebug()<< "zipFilename"<<zipFileName;
+
+        const QString previewFileName = tmp.name() + QDir::separator() + themename + QLatin1String("_preview.png");
+        qDebug()<<" previewFileName"<<previewFileName;
+        mPreviewPage->createScreenShot(previewFileName);
+
         QPointer<KNS3::UploadDialog> dialog = new KNS3::UploadDialog(QLatin1String("messageviewer_header_themes.knsrc"), this);
         dialog->setUploadFile(zipFileName);
-        //TODO add screenshot
+        dialog->setUploadName(themename);
+        dialog->setPreviewImageFile(0, KUrl(previewFileName));
+        dialog->setDescription(i18n("My favorite KMail header"));
         dialog->exec();
         delete dialog;
     } else {
@@ -130,16 +138,18 @@ void ThemeEditorPage::addExtraPage()
 void ThemeEditorPage::saveTheme()
 {
     if (themeWasChanged()) {
-        //set default page filename before saving
-        mEditorPage->setPageFileName(mDesktopPage->filename());
-        mEditorPage->saveTheme(projectDirectory());
+        if (KMessageBox::questionYesNo(this, i18n("Do you want to save current project?"), i18n("Save current project")) == KMessageBox::Yes) {
+            //set default page filename before saving
+            mEditorPage->setPageFileName(mDesktopPage->filename());
+            mEditorPage->saveTheme(projectDirectory());
 
-        Q_FOREACH (EditorPage *page, mExtraPage) {
-            page->saveTheme(projectDirectory());
+            Q_FOREACH (EditorPage *page, mExtraPage) {
+                page->saveTheme(projectDirectory());
+            }
+            mDesktopPage->saveTheme(projectDirectory());
+            mThemeSession->setMainPageFileName(mDesktopPage->filename());
+            mThemeSession->writeSession();
         }
-        mDesktopPage->saveTheme(projectDirectory());
-        mThemeSession->setMainPageFileName(mDesktopPage->filename());
-        mThemeSession->writeSession();
     }
 }
 

@@ -142,10 +142,8 @@ void ThemeEditorMainWindow::slotAddExtraPage()
 
 void ThemeEditorMainWindow::saveCurrentProject(bool createNewTheme)
 {
-    if (mThemeEditor && mThemeEditor->themeWasChanged()) {
-        if (KMessageBox::questionYesNo(this, i18n("Do you want to save current project?"), i18n("Save current project")) == KMessageBox::Yes) {
-            mThemeEditor->saveTheme();
-        }
+    if (mThemeEditor) {
+        mThemeEditor->saveTheme();
     }
     if (createNewTheme) {
         delete mThemeEditor;

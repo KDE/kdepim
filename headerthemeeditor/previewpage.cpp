@@ -60,14 +60,7 @@ void PreviewPage::slotUpdateViewer()
 
 void PreviewPage::createScreenShot(const QString &fileName)
 {
-    /*
-     //TODO
-    QImage image(mViewer->->size(), QImage::Format_ARGB32);
-    QPainter painter(&image);
-    this->render(&painter);
-    painter.end();
-    image.save(fileName);
-    */
+    mViewer->saveMainFrameScreenshotInFile(fileName);
 }
 
 #include "previewpage.moc"

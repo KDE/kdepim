@@ -273,6 +273,8 @@ public:
 
   void setZoomTextOnly( bool textOnly );
 
+  void saveMainFrameScreenshotInFile(const QString &filename);
+
 private:
   /** HTML initialization. */
   void initHtmlWidget();

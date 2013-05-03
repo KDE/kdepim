@@ -630,4 +630,19 @@ void MailWebView::slotShowDetails()
     mScamDetection->showDetails();
 }
 
+void MailWebView::saveMainFrameScreenshotInFile(const QString &filename)
+{
+    QWebFrame *frame = page()->mainFrame();
+    QImage image(size(), QImage::Format_ARGB32_Premultiplied);
+    image.fill(Qt::transparent);
+
+    QPainter painter(&image);
+    painter.setRenderHint(QPainter::Antialiasing, true);
+    painter.setRenderHint(QPainter::TextAntialiasing, true);
+    painter.setRenderHint(QPainter::SmoothPixmapTransform, true);
+    frame->documentElement().render(&painter);
+    painter.end();
+    image.save(filename);
+}
+
 #include "mailwebview.moc"
