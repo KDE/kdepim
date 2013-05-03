@@ -115,7 +115,8 @@ bool EditorPage::wasChanged() const
 
 void EditorPage::installTheme(const QString &themePath)
 {
-    //TODO
+    const QString filename = themePath + QDir::separator() + mPageFileName;
+    saveAsFilename(filename);
 }
 
 

@@ -81,12 +81,18 @@ bool ThemeEditorPage::themeWasChanged() const
 
 void ThemeEditorPage::installTheme(const QString &themePath)
 {
-    mEditorPage->installTheme(themePath);
+    QDir dir(themePath);
+    if (!dir.mkdir(mDesktopPage->themeName())) {
+        KMessageBox::error(this, i18n("Can not create theme folder."));
+    } else {
+        const QString newPath = themePath + QDir::separator() + mDesktopPage->themeName();
+        mEditorPage->installTheme(newPath);
 
-    Q_FOREACH (EditorPage *page, mExtraPage) {
-        page->installTheme(themePath);
+        Q_FOREACH (EditorPage *page, mExtraPage) {
+            page->installTheme(newPath);
+        }
+        mDesktopPage->installTheme(newPath);
     }
-    mDesktopPage->installTheme(themePath);
 }
 
 void ThemeEditorPage::uploadTheme()
