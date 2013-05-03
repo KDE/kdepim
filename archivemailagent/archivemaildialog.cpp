@@ -213,7 +213,7 @@ void ArchiveMailWidget::load()
     KSharedConfig::Ptr config = KGlobal::config();
     const QStringList collectionList = config->groupList().filter( QRegExp( archiveMailCollectionPattern ) );
     const int numberOfCollection = collectionList.count();
-    for(int i = 0 ; i < numberOfCollection; ++i) {
+    for (int i = 0 ; i < numberOfCollection; ++i) {
         KConfigGroup group = config->group(collectionList.at(i));
         ArchiveMailInfo *info = new ArchiveMailInfo(group);
         createOrUpdateItem(info);
@@ -262,7 +262,7 @@ void ArchiveMailWidget::save()
     }
 
     const int numberOfItem(mWidget->treeWidget->topLevelItemCount());
-    for(int i = 0; i < numberOfItem; ++i) {
+    for (int i = 0; i < numberOfItem; ++i) {
         ArchiveMailItem *mailItem = static_cast<ArchiveMailItem *>(mWidget->treeWidget->topLevelItem(i));
         if (mailItem->info()) {
             KConfigGroup group = config->group( ArchiveMailAgentUtil::archivePattern.arg(mailItem->info()->saveCollectionId()));
@@ -324,7 +324,7 @@ void ArchiveMailWidget::slotAddItem()
 bool ArchiveMailWidget::verifyExistingArchive(ArchiveMailInfo *info) const
 {
     const int numberOfItem(mWidget->treeWidget->topLevelItemCount());
-    for(int i = 0; i < numberOfItem; ++i) {
+    for (int i = 0; i < numberOfItem; ++i) {
         ArchiveMailItem *mailItem = static_cast<ArchiveMailItem *>(mWidget->treeWidget->topLevelItem(i));
         ArchiveMailInfo *archiveItemInfo = mailItem->info();
         if (archiveItemInfo) {

@@ -66,7 +66,7 @@ void ArchiveMailManager::load()
 
     const QStringList collectionList = mConfig->groupList().filter( QRegExp( QLatin1String("ArchiveMailCollection \\d+") ) );
     const int numberOfCollection = collectionList.count();
-    for(int i = 0 ; i < numberOfCollection; ++i) {
+    for (int i = 0 ; i < numberOfCollection; ++i) {
         KConfigGroup group = mConfig->group(collectionList.at(i));
         ArchiveMailInfo *info = new ArchiveMailInfo(group);
 
@@ -123,7 +123,7 @@ void ArchiveMailManager::backupDone(ArchiveMailInfo *info)
     if (info->maximumArchiveCount() != 0) {
         if (lst.count() > info->maximumArchiveCount()) {
             const int diff = (lst.count() - info->maximumArchiveCount());
-            for(int i = 0; i < diff; ++i) {
+            for (int i = 0; i < diff; ++i) {
                 const QString fileToRemove(info->url().path() + QDir::separator() + lst.at(i));
                 kDebug()<<" file to remove "<<fileToRemove;
                 QFile::remove(fileToRemove);
