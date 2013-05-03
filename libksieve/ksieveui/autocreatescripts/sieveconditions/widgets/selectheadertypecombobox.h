@@ -23,6 +23,8 @@
 
 #include <QListWidget>
 
+class KLineEdit;
+
 namespace KSieveUi {
 
 class SelectHeadersWidget : public QListWidget
@@ -34,6 +36,7 @@ public:
 
     QString headers() const;
     void setListHeaders(const QMap<QString, QString> &lst);
+    void addNewHeader(const QString &header);
 private:
     enum HeaderEnum {
         HeaderId = Qt::UserRole + 1
@@ -51,8 +54,15 @@ public:
 
     QString headers() const;
     void setListHeaders(const QMap<QString, QString> &lst);
+
+private Q_SLOTS:
+    void slotNewHeaderTextChanged(const QString &text);
+    void slotAddNewHeader();
+
 private:
     SelectHeadersWidget *mListWidget;
+    KLineEdit *mNewHeader;
+    KPushButton *mAddNewHeader;
 };
 
 
