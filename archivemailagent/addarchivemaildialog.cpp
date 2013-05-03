@@ -84,7 +84,7 @@ AddArchiveMailDialog::AddArchiveMailDialog(ArchiveMailInfo* info,QWidget *parent
     QLabel *pathLabel = new QLabel( i18n( "Path:" ), mainWidget );
     mainLayout->addWidget( pathLabel, row, 0 );
     mPath = new KUrlRequester(mainWidget);
-    connect(mPath,SIGNAL(textChanged(QString)),this,SLOT(slotUpdateOkButton()));
+    connect(mPath, SIGNAL(textChanged(QString)), this, SLOT(slotUpdateOkButton()));
     mPath->setMode(KFile::Directory);
     mainLayout->addWidget(mPath);
     row++;

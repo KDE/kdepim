@@ -53,7 +53,7 @@ ArchiveMailDialog::ArchiveMailDialog(QWidget *parent)
     connect(mWidget, SIGNAL(archiveNow(ArchiveMailInfo*)), this, SIGNAL(archiveNow(ArchiveMailInfo*)));
     mainLayout->addWidget(mWidget);
     setMainWidget( mainWidget );
-    connect(this,SIGNAL(okClicked()),SLOT(slotSave()));
+    connect(this, SIGNAL(okClicked()), SLOT(slotSave()));
     readConfig();
 
     mAboutData = new KAboutData(
@@ -153,12 +153,12 @@ ArchiveMailWidget::ArchiveMailWidget( QWidget *parent )
 
 
     load();
-    connect(mWidget->removeItem,SIGNAL(clicked(bool)),SLOT(slotRemoveItem()));
-    connect(mWidget->modifyItem,SIGNAL(clicked(bool)),SLOT(slotModifyItem()));
-    connect(mWidget->addItem,SIGNAL(clicked(bool)),SLOT(slotAddItem()));
-    connect(mWidget->treeWidget,SIGNAL(itemChanged(QTreeWidgetItem*,int)),SLOT(slotItemChanged(QTreeWidgetItem*,int)));
-    connect(mWidget->treeWidget,SIGNAL(itemSelectionChanged()),SLOT(updateButtons()));
-    connect(mWidget->treeWidget,SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),SLOT(slotModifyItem()));
+    connect(mWidget->removeItem, SIGNAL(clicked(bool)), SLOT(slotRemoveItem()));
+    connect(mWidget->modifyItem, SIGNAL(clicked(bool)), SLOT(slotModifyItem()));
+    connect(mWidget->addItem, SIGNAL(clicked(bool)), SLOT(slotAddItem()));
+    connect(mWidget->treeWidget, SIGNAL(itemChanged(QTreeWidgetItem*,int)), SLOT(slotItemChanged(QTreeWidgetItem*,int)));
+    connect(mWidget->treeWidget, SIGNAL(itemSelectionChanged()), SLOT(updateButtons()));
+    connect(mWidget->treeWidget, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)), SLOT(slotModifyItem()));
     updateButtons();
 }
 
@@ -174,12 +174,12 @@ void ArchiveMailWidget::customContextMenuRequested(const QPoint&)
     menu.addAction(i18n("Add..."),this,SLOT(slotAddItem()));
     if ( !listItems.isEmpty() ) {
         if ( listItems.count() == 1) {
-            menu.addAction(i18n("Open Containing Folder..."),this,SLOT(slotOpenFolder()));
+            menu.addAction(i18n("Open Containing Folder..."), this, SLOT(slotOpenFolder()));
             menu.addSeparator();
-            menu.addAction(i18n("Archive now"), this,SLOT(slotArchiveNow()));
+            menu.addAction(i18n("Archive now"), this, SLOT(slotArchiveNow()));
         }
         menu.addSeparator();
-        menu.addAction(i18n("Delete"),this,SLOT(slotRemoveItem()));
+        menu.addAction(i18n("Delete"), this, SLOT(slotRemoveItem()));
     }
     menu.exec(QCursor::pos());
 }

@@ -62,8 +62,8 @@ void ArchiveJob::execute()
                               0,
                               KNotification::CloseOnTimeout,
                               KGlobal::mainComponent());
-        connect(backupJob,SIGNAL(backupDone(QString)),this,SLOT(slotBackupDone(QString)));
-        connect(backupJob,SIGNAL(error(QString)),this,SLOT(slotError(QString)));
+        connect(backupJob, SIGNAL(backupDone(QString)), this, SLOT(slotBackupDone(QString)));
+        connect(backupJob, SIGNAL(error(QString)), this, SLOT(slotError(QString)));
         backupJob->start();
 
     }
