@@ -20,6 +20,7 @@ set(ksieveui_LIB_SRCS
   editor/sievetextedit.cpp
   editor/sieveeditor.cpp
   editor/sievelinenumberarea.cpp
+  editor/sieveinfowidget.cpp
   templates/sievetemplatewidget.cpp
   templates/sievedefaulttemplate.cpp 
   templates/sievetemplateeditdialog.cpp 

@@ -211,7 +211,6 @@ void ManageSieveScriptsDialog::slotResult( KManageSieve::SieveJob * job, bool su
     if ( !parent )
         return;
 
-    qDebug()<<" job->sieveCapabilities() :"<<job->sieveCapabilities() ;
     if (success)
         parent->setData( 0, SIEVE_SERVER_CAPABILITIES, job->sieveCapabilities() );
     mJobs.remove( job );
@@ -448,7 +447,6 @@ void ManageSieveScriptsDialog::slotGetResult( KManageSieve::SieveJob *, bool suc
     disableManagerScriptsDialog(true);
     mSieveEditor = new SieveEditor;
     mSieveEditor->setScriptName( mCurrentURL.fileName() );
-    qDebug()<<" mCurrentCapabilities"<<mCurrentCapabilities;
     mSieveEditor->setSieveCapabilities(mCurrentCapabilities);
     mSieveEditor->setScript( script );
     connect( mSieveEditor, SIGNAL(okClicked()), this, SLOT(slotSieveEditorOkClicked()) );
