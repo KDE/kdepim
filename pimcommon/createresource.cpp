@@ -90,7 +90,7 @@ QString CreateResource::createResource( const QString& resources, const QString&
 
   Q_EMIT createResourceInfo( i18n( "Creating resource instance for '%1'...", type.name() ) );
   AgentInstanceCreateJob *job = new AgentInstanceCreateJob( type, this );
-  if(job->exec()) {
+  if (job->exec()) {
     Akonadi::AgentInstance instance = job->instance();
 
     if ( !settings.isEmpty() ) {

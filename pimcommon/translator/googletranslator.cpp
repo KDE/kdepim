@@ -103,13 +103,13 @@ QMap<QString, QMap<QString, QString> > GoogleTranslator::initListLanguage(KCombo
     fullListLanguage.append(TranslatorUtil::cy);
     fullListLanguage.append(TranslatorUtil::yi);
     const int fullListLanguageSize(fullListLanguage.count());
-    for(int i=0;i<fullListLanguageSize;++i) {
+    for (int i=0;i<fullListLanguageSize;++i) {
         const QPair<QString, QString> currentLanguage = fullListLanguage.at(i);
         PimCommon::TranslatorUtil::addItemToFromComboBox( from, currentLanguage );
 
         QMap<QString, QString> toList;
-        for(int j=0;j<fullListLanguageSize;++j) {
-            if(j!=0 && j!=i) { //don't add auto and current language
+        for (int j=0;j<fullListLanguageSize;++j) {
+            if (j!=0 && j!=i) { //don't add auto and current language
                 PimCommon::TranslatorUtil::addPairToMap( toList, fullListLanguage.at(j) );
             }
         }
@@ -135,9 +135,9 @@ void GoogleTranslator::translate()
 
 void GoogleTranslator::slotLoadFinished(bool result)
 {
-    if(result) {
+    if (result) {
         QWebElement e = mWebPage->mainFrame()->findFirstElement("span#result_box");
-        if(e.isNull()) {
+        if (e.isNull()) {
             Q_EMIT translateFailed();
         } else {
             mResult = e.toPlainText();

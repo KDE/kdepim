@@ -155,11 +155,11 @@ void BabelFishTranslator::translate()
 void BabelFishTranslator::slotJobDone ( KJob *job )
 {
   KIO::StoredTransferJob *httpPostJob = dynamic_cast<KIO::StoredTransferJob *>(job);
-  if(httpPostJob) {
+  if (httpPostJob) {
     const QString data = QString::fromUtf8(httpPostJob->data());
     const QString startTag = QLatin1String("<div style=\"padding:0.6em;\">");
     int index = data.indexOf(startTag);
-    if(index != -1) {
+    if (index != -1) {
       QString newStr = data.right(data.length() - index - startTag.length());
       index = newStr.indexOf(QLatin1String("</div>"));
       mResult = newStr.left(index);
