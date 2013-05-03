@@ -21,6 +21,7 @@
 #include <QObject>
 
 class QWebElement;
+class QWebFrame;
 
 namespace MessageViewer {
 class ScamDetection : public QObject
@@ -30,12 +31,13 @@ public:
     explicit ScamDetection(QObject *parent = 0);
     ~ScamDetection();
 
-    void scanPage(const QWebElement &rootElement);
-
+    void scanPage(QWebFrame *frame);
     void showDetails();
+
 Q_SIGNALS:
     void messageMayBeAScam();
 private:
+    bool scanFrame(const QWebElement &rootElement);
     QString mDetails;
 };
 }

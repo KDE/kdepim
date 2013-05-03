@@ -621,8 +621,8 @@ void MailWebView::makeAccessKeyLabel(const QChar &accessKey, const QWebElement &
 
 void MailWebView::scamCheck()
 {
-    const QWebElement root = page()->mainFrame()->documentElement();
-    mScamDetection->scanPage(root);
+    QWebFrame *mainFrame = page()->mainFrame();
+    mScamDetection->scanPage(mainFrame);
 }
 
 void MailWebView::slotShowDetails()
