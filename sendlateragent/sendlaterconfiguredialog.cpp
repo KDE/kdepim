@@ -202,7 +202,7 @@ void SendLaterWidget::load()
     KSharedConfig::Ptr config = KGlobal::config();
     const QStringList filterGroups = config->groupList().filter( QRegExp( sendLaterItemPattern ) );
     const int numberOfItem = filterGroups.count();
-    for(int i = 0 ; i < numberOfItem; ++i) {
+    for (int i = 0 ; i < numberOfItem; ++i) {
         KConfigGroup group = config->group(filterGroups.at(i));
         SendLaterInfo *info = new SendLaterInfo(group);
         createOrUpdateItem(info);
@@ -231,7 +231,7 @@ void SendLaterWidget::save()
     }
 
     const int numberOfItem(mWidget->treeWidget->topLevelItemCount());
-    for(int i = 0; i < numberOfItem; ++i) {
+    for (int i = 0; i < numberOfItem; ++i) {
         SendLaterItem *mailItem = static_cast<SendLaterItem *>(mWidget->treeWidget->topLevelItem(i));
         if (mailItem->info()) {
             KConfigGroup group = config->group(QString::fromLatin1("SendLaterItem %1").arg(mailItem->info()->itemId()));
