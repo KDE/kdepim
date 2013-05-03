@@ -34,6 +34,8 @@ public:
     explicit SendLaterDialog(SendLaterInfo *info, QWidget *parent = 0);
     ~SendLaterDialog();
 
+    SendLaterInfo *info();
+
 private Q_SLOTS:
     void slotSendLater();
     void slotSendNow();

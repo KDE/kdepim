@@ -102,11 +102,23 @@ void SendLaterDialog::writeConfig()
 
 void SendLaterDialog::load(SendLaterInfo *info)
 {
-    //TODO
+    mDateTime->setDateTime(info->dateTime());
     mRecursive->setChecked(info->isRecursive());
     mRecursiveValue->setValue(info->recursiveEachValue());
     mRecursiveComboBox->setCurrentIndex((int)info->recursiveUnit());
 }
+
+SendLaterInfo* SendLaterDialog::info()
+{
+    if (!mInfo) {
+        mInfo = new SendLaterInfo();
+    }
+    mInfo->setRecursive(mRecursive->isChecked());
+    mInfo->setRecursiveEachValue(mRecursiveValue->value());
+    mInfo->setRecursiveUnit((SendLaterInfo::RecursiveUnit)mRecursiveComboBox->currentIndex());
+    return mInfo;
+}
+
 
 void SendLaterDialog::slotSendLater()
 {
