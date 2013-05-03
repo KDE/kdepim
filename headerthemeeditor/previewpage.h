@@ -30,6 +30,7 @@ class PreviewPage : public QWidget
 public:
     explicit PreviewPage(QWidget *parent = 0);
     ~PreviewPage();
+    void createScreenShot(const QString &fileName);
 
 public Q_SLOTS:
     void slotUpdateViewer();

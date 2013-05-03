@@ -77,7 +77,7 @@ void ThemeEditorPage::uploadTheme()
         qDebug()<< "zipFilename"<<zipFileName;
         QPointer<KNS3::UploadDialog> dialog = new KNS3::UploadDialog(QLatin1String("messageviewer_header_themes.knsrc"), this);
         dialog->setUploadFile(zipFileName);
-        //TODO
+        //TODO add screenshot
         dialog->exec();
         delete dialog;
     } else {
