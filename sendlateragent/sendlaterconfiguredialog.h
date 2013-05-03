@@ -34,6 +34,7 @@ public:
 
     void setInfo(SendLaterInfo *info);
     SendLaterInfo *info() const;
+
 private:
     SendLaterInfo *mInfo;
 };
@@ -45,6 +46,13 @@ class SendLaterWidget : public QWidget
 public:
     explicit SendLaterWidget( QWidget *parent = 0 );
     ~SendLaterWidget();
+
+    enum SendLaterColumn {
+        Subject = 0,
+        Date,
+        Recursive
+    };
+
     void save();
     void saveTreeWidgetHeader(KConfigGroup& group);
     void restoreTreeWidgetHeader(const QByteArray &group);
@@ -54,6 +62,8 @@ private Q_SLOTS:
     void slotModifyItem();
     void updateButtons();
     void customContextMenuRequested(const QPoint&);
+    void slotSendNow();
+
 private:
     void createOrUpdateItem(SendLaterInfo *info);
     void load();
@@ -68,8 +78,10 @@ class SendLaterConfigureDialog : public KDialog
 public:
     explicit SendLaterConfigureDialog(QWidget *parent = 0);
     ~SendLaterConfigureDialog();
+
 private Q_SLOTS:
     void slotSave();
+
 private:
     void readConfig();
     void writeConfig();

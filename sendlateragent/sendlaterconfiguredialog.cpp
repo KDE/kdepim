@@ -28,6 +28,8 @@
 #include <KAboutData>
 #include <KMessageBox>
 
+#include <QPointer>
+
 static QString sendLaterItemPattern = QLatin1String( "SendLaterItem \\d+" );
 
 
@@ -45,7 +47,7 @@ SendLaterConfigureDialog::SendLaterConfigureDialog(QWidget *parent)
     mWidget = new SendLaterWidget(this);
     mainLayout->addWidget(mWidget);
     setMainWidget( mainWidget );
-    connect(this,SIGNAL(okClicked()),SLOT(slotSave()));
+    connect(this, SIGNAL(okClicked()), SLOT(slotSave()));
 
     readConfig();
     mAboutData = new KAboutData(
@@ -139,10 +141,10 @@ SendLaterWidget::SendLaterWidget( QWidget *parent )
             this, SLOT(customContextMenuRequested(QPoint)));
 
     load();
-    connect(mWidget->removeItem,SIGNAL(clicked(bool)),SLOT(slotRemoveItem()));
-    connect(mWidget->modifyItem,SIGNAL(clicked(bool)),SLOT(slotModifyItem()));
-    connect(mWidget->treeWidget,SIGNAL(itemSelectionChanged()),SLOT(updateButtons()));
-    connect(mWidget->treeWidget,SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),SLOT(slotModifyItem()));
+    connect(mWidget->removeItem, SIGNAL(clicked(bool)), SLOT(slotRemoveItem()));
+    connect(mWidget->modifyItem, SIGNAL(clicked(bool)), SLOT(slotModifyItem()));
+    connect(mWidget->treeWidget, SIGNAL(itemSelectionChanged()), SLOT(updateButtons()));
+    connect(mWidget->treeWidget, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)), SLOT(slotModifyItem()));
     updateButtons();
 }
 
@@ -157,12 +159,17 @@ void SendLaterWidget::customContextMenuRequested(const QPoint&)
     if ( !listItems.isEmpty() ) {
         KMenu menu;
         if ( listItems.count() == 1) {
-            menu.addAction(i18n("Open Containing Folder..."),this,SLOT(slotOpenFolder()));
+            menu.addAction(i18n("Send now"), this, SLOT(slotSendNow()));
         }
         menu.addSeparator();
-        menu.addAction(i18n("Delete"),this,SLOT(slotRemoveItem()));
+        menu.addAction(i18n("Delete"), this, SLOT(slotRemoveItem()));
         menu.exec(QCursor::pos());
     }
+}
+
+void SendLaterWidget::slotSendNow()
+{
+    //TODO
 }
 
 void SendLaterWidget::restoreTreeWidgetHeader(const QByteArray& data)
@@ -250,8 +257,20 @@ void SendLaterWidget::slotRemoveItem()
 
 void SendLaterWidget::slotModifyItem()
 {
-    mChanged = true;
-    //TODO
+    const QList<QTreeWidgetItem *> listItems = mWidget->treeWidget->selectedItems();
+    if (listItems.count()==1) {
+        QTreeWidgetItem *item = listItems.first();
+        if (!item)
+            return;
+        SendLaterItem *mailItem = static_cast<SendLaterItem *>(item);
+
+        QPointer<SendLaterDialog> dialog = new SendLaterDialog(mailItem->info(), this);
+        if (dialog->exec()) {
+            //TODO
+            mChanged = true;
+        }
+        delete dialog;
+    }
 }
 
 
