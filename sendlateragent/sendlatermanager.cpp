@@ -45,13 +45,19 @@ void SendLaterManager::load()
     for (int i = 0 ; i < numberOfItems; ++i) {
         KConfigGroup group = mConfig->group(itemList.at(i));
         SendLaterInfo *info = new SendLaterInfo(group);
+        mListSendLaterInfo.append(info);
         //TODO
 
     }
 }
 
-void SendLaterManager::sendDone()
+void SendLaterManager::sendDone(SendLaterInfo *info)
 {
+    if (info) {
+        if (!info->isRecursive()) {
+
+        }
+    }
     //TODO
     //Remove item if not recursive.
 

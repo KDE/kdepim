@@ -54,7 +54,7 @@ void SendLaterJob::sendDone()
                           0,
                           KNotification::CloseOnTimeout,
                           KGlobal::mainComponent());
-    //TODO
+    mManager->sendDone(mInfo);
     deleteLater();
 }
 

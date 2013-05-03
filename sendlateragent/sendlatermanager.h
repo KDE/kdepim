@@ -32,8 +32,7 @@ public:
 
     void load();
 
-private Q_SLOTS:
-    void sendDone();
+    void sendDone(SendLaterInfo *info);
 
 private:
     KSharedConfig::Ptr mConfig;
