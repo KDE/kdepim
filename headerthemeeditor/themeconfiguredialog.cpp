@@ -20,6 +20,9 @@
 #include <KLocale>
 #include <KUrlRequester>
 #include <KConfig>
+#include <KGlobal>
+#include <KConfigGroup>
+#include <KTextEdit>
 
 #include <QVBoxLayout>
 #include <QLabel>
@@ -44,21 +47,42 @@ ThemeConfigureDialog::ThemeConfigureDialog(QWidget *parent)
     mDefaultUrl = new KUrlRequester;
     hbox->addWidget(mDefaultUrl);
 
+    lab = new QLabel(i18n("Default email:"));
+    lay->addWidget(lab);
+
+    mDefaultEmail = new KTextEdit;
+    lay->addWidget(mDefaultEmail);
+
     setMainWidget(w);
+    loadConfig();
+    connect(this, SIGNAL(okClicked()), this, SLOT(slotOkClicked()));
 }
 
 ThemeConfigureDialog::~ThemeConfigureDialog()
 {
 }
 
+void ThemeConfigureDialog::slotOkClicked()
+{
+    writeConfig();
+}
+
 void ThemeConfigureDialog::loadConfig()
 {
-    //TODO
+    KSharedConfig::Ptr config = KGlobal::config();
+    if (config->hasGroup(QLatin1String("Global"))) {
+        KConfigGroup group = config->group(QLatin1String("Global"));
+        mDefaultUrl->setUrl(group.readEntry("path", KUrl()));
+        mDefaultEmail->insertPlainText(group.readEntry("defaultEmail"));
+    }
 }
 
 void ThemeConfigureDialog::writeConfig()
 {
-    //TODO
+    KSharedConfig::Ptr config = KGlobal::config();
+    KConfigGroup group = config->group(QLatin1String("Global"));
+    group.writeEntry("path", mDefaultUrl->url());
+    group.writeEntry("defaultEmail", mDefaultEmail->toPlainText());
 }
 
 #include "themeconfiguredialog.moc"

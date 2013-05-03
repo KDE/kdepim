@@ -20,6 +20,7 @@
 
 #include <KDialog>
 class KUrlRequester;
+class KTextEdit;
 
 class ThemeConfigureDialog : public KDialog
 {
@@ -30,8 +31,13 @@ public:
 
     void loadConfig();
     void writeConfig();
+
+private Q_SLOTS:
+    void slotOkClicked();
+
 private:
     KUrlRequester *mDefaultUrl;
+    KTextEdit *mDefaultEmail;
 };
 
 #endif // THEMECONFIGUREDIALOG_H
