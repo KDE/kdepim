@@ -113,4 +113,10 @@ bool EditorPage::wasChanged() const
     return mChanged;
 }
 
+void EditorPage::installTheme(const QString &themePath)
+{
+    //TODO
+}
+
+
 #include "editorpage.moc"

@@ -79,6 +79,16 @@ bool ThemeEditorPage::themeWasChanged() const
     return wasChanged;
 }
 
+void ThemeEditorPage::installTheme(const QString &themePath)
+{
+    mEditorPage->installTheme(themePath);
+
+    Q_FOREACH (EditorPage *page, mExtraPage) {
+        page->installTheme(themePath);
+    }
+    mDesktopPage->installTheme(themePath);
+}
+
 void ThemeEditorPage::uploadTheme()
 {
     //force update for screenshot

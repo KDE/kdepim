@@ -44,6 +44,7 @@ public:
 
     QString themeName() const;
     void createZip(const QString &themeName, KZip *zip);
+    void installTheme(const QString &themePath);
 
     bool wasChanged() const;
 

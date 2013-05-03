@@ -131,4 +131,9 @@ bool DesktopFilePage::wasChanged() const
     return mChanged;
 }
 
+void DesktopFilePage::installTheme(const QString &themePath)
+{
+    //TODO
+}
+
 #include "desktopfilepage.moc"

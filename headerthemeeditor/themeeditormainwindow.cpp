@@ -30,6 +30,7 @@
 #include <KMessageBox>
 #include <KFileDialog>
 #include <KDebug>
+#include <KStandardDirs>
 
 #include <QPointer>
 #include <QCloseEvent>
@@ -94,7 +95,8 @@ void ThemeEditorMainWindow::slotInstallTheme()
     //TODO
     //Save before installing :)
     slotSaveTheme();
-
+    const QString localThemePath = KStandardDirs::locateLocal("data",QLatin1String("messageviewer/themes/"));
+    mThemeEditor->installTheme(localThemePath);
 }
 
 void ThemeEditorMainWindow::slotUploadTheme()

@@ -42,8 +42,10 @@ public:
     void setProjectDirectory(const QString &dir);
 
     void uploadTheme();
+    void installTheme(const QString &themePath);
 
     bool themeWasChanged() const;
+
 private:
     void createZip(const QString &themeName, KZip *zip);
     QList<EditorPage*> mExtraPage;
