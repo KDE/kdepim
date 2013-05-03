@@ -151,7 +151,6 @@ ArchiveMailWidget::ArchiveMailWidget( QWidget *parent )
     connect(mWidget->treeWidget, SIGNAL(customContextMenuRequested(QPoint)),
             this, SLOT(customContextMenuRequested(QPoint)));
 
-
     load();
     connect(mWidget->removeItem, SIGNAL(clicked(bool)), SLOT(slotRemoveItem()));
     connect(mWidget->modifyItem, SIGNAL(clicked(bool)), SLOT(slotModifyItem()));
@@ -226,13 +225,13 @@ void ArchiveMailWidget::createOrUpdateItem(ArchiveMailInfo *info, ArchiveMailIte
     if (!item) {
         item = new ArchiveMailItem(mWidget->treeWidget);
     }
-    item->setText(0,i18n("Folder: %1",MailCommon::Util::fullCollectionPath(Akonadi::Collection(info->saveCollectionId()))));
-    item->setCheckState(0, info->isEnabled() ? Qt::Checked : Qt::Unchecked);
+    item->setText(ArchiveMailWidget::Name,i18n("Folder: %1",MailCommon::Util::fullCollectionPath(Akonadi::Collection(info->saveCollectionId()))));
+    item->setCheckState(ArchiveMailWidget::Name, info->isEnabled() ? Qt::Checked : Qt::Unchecked);
     if (info->lastDateSaved().isValid()) {
-        item->setText(1,KGlobal::locale()->formatDate(info->lastDateSaved()));
+        item->setText(ArchiveMailWidget::LastArchiveDate,KGlobal::locale()->formatDate(info->lastDateSaved()));
         updateDiffDate(item, info);
     } else {
-        item->setBackgroundColor(2,Qt::green);
+        item->setBackgroundColor(ArchiveMailWidget::NextArchive,Qt::green);
     }
     item->setInfo(info);
 }
@@ -241,11 +240,11 @@ void ArchiveMailWidget::updateDiffDate(ArchiveMailItem *item, ArchiveMailInfo *i
 {
     const QDate diffDate = ArchiveMailAgentUtil::diffDate(info);
     const int diff = QDate::currentDate().daysTo(diffDate);
-    item->setText(2,i18np("1 day", "%1 days",diff));
+    item->setText(ArchiveMailWidget::NextArchive,i18np("1 day", "%1 days",diff));
     if (diff<0) {
-        item->setBackgroundColor(2,Qt::red);
+        item->setBackgroundColor(ArchiveMailWidget::NextArchive,Qt::red);
     } else {
-        item->setToolTip(2,i18n("Archive will be done %1",KGlobal::locale()->formatDate(diffDate)));
+        item->setToolTip(ArchiveMailWidget::NextArchive,i18n("Archive will be done %1",KGlobal::locale()->formatDate(diffDate)));
     }
 }
 
@@ -374,10 +373,10 @@ void ArchiveMailWidget::slotItemChanged(QTreeWidgetItem *item,int col)
     if (item) {
         ArchiveMailItem *archiveItem = static_cast<ArchiveMailItem*>(item);
         if (archiveItem->info()) {
-            if (col == 0) {
-                archiveItem->info()->setEnabled(archiveItem->checkState(0) == Qt::Checked);
+            if (col == ArchiveMailWidget::Name) {
+                archiveItem->info()->setEnabled(archiveItem->checkState(ArchiveMailWidget::Name) == Qt::Checked);
                 mChanged = true;
-            } else if (col == 2) {
+            } else if (col == ArchiveMailWidget::NextArchive) {
                 updateDiffDate(archiveItem, archiveItem->info());
             }
         }

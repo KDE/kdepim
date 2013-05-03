@@ -44,6 +44,12 @@ public:
     explicit ArchiveMailWidget( QWidget *parent = 0 );
     ~ArchiveMailWidget();
 
+    enum ArchiveMailColumn {
+        Name = 0,
+        LastArchiveDate,
+        NextArchive
+    };
+
     void save();
     void saveTreeWidgetHeader(KConfigGroup& group);
     void restoreTreeWidgetHeader(const QByteArray &group);
