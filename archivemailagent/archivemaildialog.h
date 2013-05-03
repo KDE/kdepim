@@ -32,6 +32,7 @@ public:
 
     void setInfo(ArchiveMailInfo *info);
     ArchiveMailInfo *info() const;
+
 private:
     ArchiveMailInfo *mInfo;
 };
@@ -42,6 +43,7 @@ class ArchiveMailWidget : public QWidget
 public:
     explicit ArchiveMailWidget( QWidget *parent = 0 );
     ~ArchiveMailWidget();
+
     void save();
     void saveTreeWidgetHeader(KConfigGroup& group);
     void restoreTreeWidgetHeader(const QByteArray &group);
@@ -52,7 +54,6 @@ Q_SIGNALS:
 private:
     void load();
     void createOrUpdateItem(ArchiveMailInfo *info, ArchiveMailItem* item = 0);
-
     bool verifyExistingArchive(ArchiveMailInfo *info) const;
     void updateDiffDate(ArchiveMailItem *item, ArchiveMailInfo *info);
 
@@ -65,6 +66,7 @@ private Q_SLOTS:
     void customContextMenuRequested(const QPoint&);
     void slotArchiveNow();
     void slotItemChanged(QTreeWidgetItem*item, int);
+
 private:
     bool mChanged;
     Ui::ArchiveMailWidget *mWidget;
@@ -76,8 +78,10 @@ class ArchiveMailDialog : public KDialog
 public:
     explicit ArchiveMailDialog(QWidget *parent = 0);
     ~ArchiveMailDialog();
+
 Q_SIGNALS:
     void archiveNow(ArchiveMailInfo *info);
+
 protected Q_SLOTS:
     void slotSave();
 
