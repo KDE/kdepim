@@ -3,6 +3,7 @@ project( headerthemeeditor )
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
 
 set(headerthemeeditor_SRCS
   main.cpp
@@ -17,11 +18,12 @@ set(headerthemeeditor_SRCS
   defaultcompletion.cpp
   newthemedialog.cpp
   themesession.cpp
+  themeconfiguredialog.cpp
 )
 
 
 kde4_add_executable(headerthemeeditor ${headerthemeeditor_SRCS} )
-TARGET_LINK_LIBRARIES(headerthemeeditor ${KDE4_KDEUI_LIBS} ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS} ${KDE4_KIO_LIBS} ${KDE4_KNEWSTUFF3_LIBS} pimcommon messageviewer)
+TARGET_LINK_LIBRARIES(headerthemeeditor ${KDEPIMLIBS_KMIME_LIBS} ${KDE4_KDEUI_LIBS} ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS} ${KDE4_KIO_LIBS} ${KDE4_KNEWSTUFF3_LIBS} pimcommon messageviewer)
 
 install(TARGETS headerthemeeditor ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES

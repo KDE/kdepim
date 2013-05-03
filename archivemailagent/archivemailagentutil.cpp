@@ -40,6 +40,10 @@ QDate ArchiveMailAgentUtil::diffDate(ArchiveMailInfo*info)
 
 bool ArchiveMailAgentUtil::needToArchive(ArchiveMailInfo*info)
 {
+    if (!info->isEnabled())
+        return false;
+    if (info->url().isEmpty())
+        return false;
     if (!info->lastDateSaved().isValid()) {
         return true;
     } else {

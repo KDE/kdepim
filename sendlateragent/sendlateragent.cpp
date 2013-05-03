@@ -57,8 +57,7 @@ void SendLaterAgent::addSendLaterItem(qlonglong itemId, qlonglong windowId)
 #endif
     }
     if (dialog->exec()) {
-        //Save ? Add ? Load ?
-        //mManager->load();
+        mManager->load();
     } else {
         delete info;
     }

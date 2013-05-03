@@ -25,6 +25,7 @@ AddressLineEdit::AddressLineEdit(QWidget *parent)
     : KLineEdit(parent),
       mIncorrectEmail(false)
 {
+    setClearButtonShown(true);
     connect(this, SIGNAL(textChanged(QString)),SLOT(slotTextChanged()));
 }
 

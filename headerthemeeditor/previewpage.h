@@ -20,8 +20,6 @@
 #define PREVIEWPAGE_H
 
 #include <QWidget>
-class KPushButton;
-
 namespace MessageViewer {
 class Viewer;
 }
@@ -32,13 +30,13 @@ class PreviewPage : public QWidget
 public:
     explicit PreviewPage(QWidget *parent = 0);
     ~PreviewPage();
+    void createScreenShot(const QString &fileName);
 
 public Q_SLOTS:
     void slotUpdateViewer();
 
 private:
     MessageViewer::Viewer *mViewer;
-    KPushButton *mUpdate;
 };
 
 #endif // PREVIEWPAGE_H

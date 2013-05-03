@@ -15,42 +15,26 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
-#ifndef EDITORPAGE_H
-#define EDITORPAGE_H
+#ifndef SIEVEINFOWIDGET_H
+#define SIEVEINFOWIDGET_H
 
 #include <QWidget>
 
-class ThemeTemplateWidget;
-class Editor;
-class KZip;
+class KTextEdit;
 
-class EditorPage : public QWidget
+namespace KSieveUi {
+class SieveInfoWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit EditorPage(QWidget *parent = 0);
-    ~EditorPage();
-    void saveTheme(const QString &path);
-    void loadTheme(const QString &path);
+    explicit SieveInfoWidget(QWidget *parent = 0);
+    ~SieveInfoWidget();
 
-    void setPageFileName(const QString &filename);
-    QString pageFileName() const;
-
-    void createZip(const QString &themeName, KZip *zip);
-    void saveAsFilename(const QString &filename);
-    void installTheme(const QString &themePath);
-
-    bool wasChanged() const;
-
-private Q_SLOTS:
-    void slotChanged();
+    void setServerInfo(const QStringList &info);
 
 private:
-    QString mPageFileName;
-    Editor *mEditor;
-    ThemeTemplateWidget *mThemeTemplate;
-    bool mChanged;
+    KTextEdit *mInfo;
 };
+}
 
-#endif // EDITORPAGE_H
+#endif // SIEVEINFOWIDGET_H

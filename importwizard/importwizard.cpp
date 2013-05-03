@@ -56,9 +56,9 @@ ImportWizard::ImportWizard(QWidget *parent)
 {
     setModal(true);
     setWindowTitle( i18n( "PIM Import Tool" ) );
-    KGlobal::locale()->insertCatalog( "libmailimporter" );
-    KGlobal::locale()->insertCatalog( "libmailcommon" );
-    KGlobal::locale()->insertCatalog( "libpimcommon" );
+    KGlobal::locale()->insertCatalog( QLatin1String("libmailimporter") );
+    KGlobal::locale()->insertCatalog( QLatin1String("libmailcommon") );
+    KGlobal::locale()->insertCatalog( QLatin1String("libpimcommon") );
 
     ImportWizardKernel *kernel = new ImportWizardKernel( this );
     CommonKernel->registerKernelIf( kernel ); //register KernelIf early, it is used by the Filter classes

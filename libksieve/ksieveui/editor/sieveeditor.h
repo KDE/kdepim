@@ -30,6 +30,7 @@ class KTextEdit;
 namespace KSieveUi {
 
 class SieveFindBar;
+class SieveInfoWidget;
 
 class KSIEVEUI_EXPORT SieveEditor : public KDialog
 {
@@ -71,6 +72,7 @@ private:
     SieveFindBar *mFindBar;
     KPushButton *mCheckSyntax;
     QPushButton *mOkButton;
+    SieveInfoWidget *mSieveInfo;
 };
 
 }

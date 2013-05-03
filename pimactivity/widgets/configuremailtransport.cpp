@@ -61,14 +61,14 @@ void ConfigureMailtransport::readConfig(const QString &id)
     KSharedConfigPtr conf = ActivityManager::configFromActivity(id);
     if (conf->hasGroup(QLatin1String("mailtransport"))) {
         KConfigGroup grp = conf->group(QLatin1String("mailtransport"));
-        const QStringList list = grp.readEntry(QLatin1String("ActiveMailTransport"), QStringList());
+        const QStringList list = grp.readEntry(QLatin1String("NoActiveMailTransport"), QStringList());
         const int numberOfItems(mListTransport->count());
         for (int i = 0; i < numberOfItems; ++i) {
             QListWidgetItem *item = mListTransport->item(i);
             if (list.contains(item->data(TransportID).toString())) {
-                item->setCheckState(Qt::Checked);
-            } else {
                 item->setCheckState(Qt::Unchecked);
+            } else {
+                item->setCheckState(Qt::Checked);
             }
         }
     }
@@ -82,11 +82,11 @@ void ConfigureMailtransport::writeConfig(const QString &id)
     QStringList lst;
     for (int i = 0; i < numberOfItems; ++i) {
         QListWidgetItem *item = mListTransport->item(i);
-        if (item->checkState() == Qt::Checked) {
+        if (item->checkState() == Qt::Unchecked) {
             lst << item->data(TransportID).toString();
         }
     }
-    grp.writeEntry(QLatin1String("ActiveMailTransport"), lst);
+    grp.writeEntry(QLatin1String("NoActiveMailTransport"), lst);
 }
 
 void ConfigureMailtransport::setDefault()

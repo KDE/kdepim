@@ -27,6 +27,7 @@
 SendLaterManager::SendLaterManager(QObject *parent)
     : QObject(parent)
 {
+    mConfig = KGlobal::config();
 }
 
 SendLaterManager::~SendLaterManager()
@@ -39,20 +40,27 @@ void SendLaterManager::load()
     qDeleteAll(mListSendLaterInfo);
     mListSendLaterInfo.clear();
 
-    KSharedConfig::Ptr config = KGlobal::config();
-    const QStringList itemList = config->groupList().filter( QRegExp( QLatin1String("SendLaterItem \\d+") ) );
+    const QStringList itemList = mConfig->groupList().filter( QRegExp( QLatin1String("SendLaterItem \\d+") ) );
     const int numberOfItems = itemList.count();
-    for(int i = 0 ; i < numberOfItems; ++i) {
-        KConfigGroup group = config->group(itemList.at(i));
+    for (int i = 0 ; i < numberOfItems; ++i) {
+        KConfigGroup group = mConfig->group(itemList.at(i));
         SendLaterInfo *info = new SendLaterInfo(group);
+        mListSendLaterInfo.append(info);
         //TODO
 
     }
 }
 
-void SendLaterManager::sendDone()
+void SendLaterManager::sendDone(SendLaterInfo *info)
 {
+    if (info) {
+        if (!info->isRecursive()) {
+
+        }
+    }
     //TODO
+    //Remove item if not recursive.
+
 }
 
 #include "sendlatermanager.moc"

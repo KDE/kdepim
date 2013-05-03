@@ -15,42 +15,29 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#ifndef THEMECONFIGUREDIALOG_H
+#define THEMECONFIGUREDIALOG_H
 
-#ifndef EDITORPAGE_H
-#define EDITORPAGE_H
+#include <KDialog>
+class KUrlRequester;
+class KTextEdit;
 
-#include <QWidget>
-
-class ThemeTemplateWidget;
-class Editor;
-class KZip;
-
-class EditorPage : public QWidget
+class ThemeConfigureDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit EditorPage(QWidget *parent = 0);
-    ~EditorPage();
-    void saveTheme(const QString &path);
-    void loadTheme(const QString &path);
+    explicit ThemeConfigureDialog(QWidget *parent = 0);
+    ~ThemeConfigureDialog();
 
-    void setPageFileName(const QString &filename);
-    QString pageFileName() const;
-
-    void createZip(const QString &themeName, KZip *zip);
-    void saveAsFilename(const QString &filename);
-    void installTheme(const QString &themePath);
-
-    bool wasChanged() const;
+    void loadConfig();
+    void writeConfig();
 
 private Q_SLOTS:
-    void slotChanged();
+    void slotOkClicked();
 
 private:
-    QString mPageFileName;
-    Editor *mEditor;
-    ThemeTemplateWidget *mThemeTemplate;
-    bool mChanged;
+    KUrlRequester *mDefaultUrl;
+    KTextEdit *mDefaultEmail;
 };
 
-#endif // EDITORPAGE_H
+#endif // THEMECONFIGUREDIALOG_H

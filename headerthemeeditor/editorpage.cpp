@@ -20,7 +20,9 @@
 #include "themetemplatewidget.h"
 
 #include <KTextEdit>
+#include <KTemporaryFile>
 #include <KLocale>
+#include <KZip>
 
 #include <QSplitter>
 #include <QVBoxLayout>
@@ -28,7 +30,8 @@
 #include <QDir>
 
 EditorPage::EditorPage(QWidget *parent)
-    : QWidget(parent)
+    : QWidget(parent),
+      mChanged(false)
 {
     QVBoxLayout *lay = new QVBoxLayout;
     QSplitter *splitter = new QSplitter;
@@ -44,6 +47,7 @@ EditorPage::EditorPage(QWidget *parent)
     connect(mThemeTemplate, SIGNAL(insertTemplate(QString)), mEditor, SLOT(insertPlainText(QString)));
     splitter->addWidget(mThemeTemplate);
 
+    connect(mEditor, SIGNAL(textChanged()), this, SLOT(slotChanged()));
     setLayout(lay);
 }
 
@@ -51,20 +55,40 @@ EditorPage::~EditorPage()
 {
 }
 
+void EditorPage::slotChanged()
+{
+    mChanged = true;
+}
+
+void EditorPage::createZip(const QString &themeName, KZip *zip)
+{
+    KTemporaryFile tmp;
+    tmp.open();
+    saveAsFilename(tmp.fileName());
+    const bool fileAdded  = zip->addLocalFile(tmp.fileName(), themeName + QLatin1Char('/') + mPageFileName);
+}
+
 void EditorPage::loadTheme(const QString &path)
 {
     QFile file(path);
     if (file.open(QIODevice::Text|QIODevice::ReadOnly)) {
-        QByteArray data = file.readAll();
+        const QByteArray data = file.readAll();
         const QString str = QString::fromUtf8(data);
         file.close();
         mEditor->setPlainText(str);
+        mChanged = false;
     }
 }
 
 void EditorPage::saveTheme(const QString &path)
 {
     const QString filename = path + QDir::separator() + mPageFileName;
+    saveAsFilename(filename);
+    mChanged = false;
+}
+
+void EditorPage::saveAsFilename(const QString &filename)
+{
     QFile file(filename);
     if (file.open(QIODevice::WriteOnly|QIODevice::Text)) {
         QTextStream out(&file);
@@ -82,6 +106,16 @@ void EditorPage::setPageFileName(const QString &filename)
 QString EditorPage::pageFileName() const
 {
     return mPageFileName;
+}
+
+bool EditorPage::wasChanged() const
+{
+    return mChanged;
+}
+
+void EditorPage::installTheme(const QString &themePath)
+{
+    //TODO
 }
 
 

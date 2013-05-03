@@ -23,6 +23,7 @@
 class KComboBox;
 class QCheckBox;
 class QSpinBox;
+class QDateTimeEdit;
 
 class SendLaterInfo;
 
@@ -32,6 +33,8 @@ class SendLaterDialog : public KDialog
 public:
     explicit SendLaterDialog(SendLaterInfo *info, QWidget *parent = 0);
     ~SendLaterDialog();
+
+    SendLaterInfo *info();
 
 private Q_SLOTS:
     void slotSendLater();
@@ -43,6 +46,7 @@ private:
     void readConfig();
     void writeConfig();
 private:
+    QDateTimeEdit *mDateTime;
     SendLaterInfo *mInfo;
     KComboBox *mRecursiveComboBox;
     QCheckBox *mRecursive;

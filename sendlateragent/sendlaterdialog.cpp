@@ -26,6 +26,7 @@
 #include <QCheckBox>
 #include <QLabel>
 #include <QSpinBox>
+#include <QDateTimeEdit>
 
 SendLaterDialog::SendLaterDialog(SendLaterInfo *info, QWidget *parent)
     : KDialog(parent),
@@ -38,6 +39,9 @@ SendLaterDialog::SendLaterDialog(SendLaterInfo *info, QWidget *parent)
     connect(this, SIGNAL(user1Clicked()), this, SLOT(slotSendNow()));
     QWidget *w = new QWidget;
     QVBoxLayout *lay = new QVBoxLayout;
+    mDateTime = new QDateTimeEdit;
+    lay->addWidget(mDateTime);
+
     mRecursive = new QCheckBox(i18n("Recursive"));
     connect(mRecursive, SIGNAL(clicked(bool)), this, SLOT(slotRecursiveClicked(bool)));
     lay->addWidget(mRecursive);
@@ -60,13 +64,12 @@ SendLaterDialog::SendLaterDialog(SendLaterInfo *info, QWidget *parent)
 
     hbox->addWidget(mRecursiveComboBox);
 
-    //TODO update it.
-    slotRecursiveClicked(false);
     setLayout(lay);
     setMainWidget(w);
     readConfig();
     if (info)
         load(info);
+    slotRecursiveClicked(false);
 }
 
 SendLaterDialog::~SendLaterDialog()
@@ -99,11 +102,23 @@ void SendLaterDialog::writeConfig()
 
 void SendLaterDialog::load(SendLaterInfo *info)
 {
-    //TODO
+    mDateTime->setDateTime(info->dateTime());
     mRecursive->setChecked(info->isRecursive());
     mRecursiveValue->setValue(info->recursiveEachValue());
     mRecursiveComboBox->setCurrentIndex((int)info->recursiveUnit());
 }
+
+SendLaterInfo* SendLaterDialog::info()
+{
+    if (!mInfo) {
+        mInfo = new SendLaterInfo();
+    }
+    mInfo->setRecursive(mRecursive->isChecked());
+    mInfo->setRecursiveEachValue(mRecursiveValue->value());
+    mInfo->setRecursiveUnit((SendLaterInfo::RecursiveUnit)mRecursiveComboBox->currentIndex());
+    return mInfo;
+}
+
 
 void SendLaterDialog::slotSendLater()
 {

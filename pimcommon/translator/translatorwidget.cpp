@@ -79,7 +79,7 @@ void TranslatorWidget::TranslatorWidgetPrivate::fillToCombobox( const QString& l
 
 void TranslatorWidget::TranslatorWidgetPrivate::initLanguage()
 {
-    if(!abstractTranslator) {
+    if (!abstractTranslator) {
         return;
     }
     listLanguage = abstractTranslator->initListLanguage(from);
@@ -93,8 +93,8 @@ TranslatorTextEdit::TranslatorTextEdit(QWidget *parent)
 
 void TranslatorTextEdit::dropEvent( QDropEvent *event )
 {
-    if(event->source() != this ) {
-        if( event->mimeData()->hasText() ) {
+    if (event->source() != this ) {
+        if ( event->mimeData()->hasText() ) {
             QTextCursor cursor = textCursor();
             cursor.beginEditBlock();
             cursor.insertText(event->mimeData()->text());

@@ -3,6 +3,7 @@ IconName=kmail
 Comment=Send Later Agent
 Comment[de]=Agent zum späteren Senden
 Comment[el]=Πράκτορας ετεροχρονισμένης αποστολής
+Comment[es]=Agente de enviar más tarde
 Comment[fi]=Lähetä myöhemmin -ohjelma
 Comment[fr]=Agent d'envoi différé
 Comment[nl]=Agent voor later verzenden
@@ -22,6 +23,9 @@ Name=Mail is sent
 Name[cs]=Pošta byla odeslána
 Name[de]=E-Mail wurde versendet
 Name[el]=το μήνυμα εσταλη
+Name[es]=Correo enviado
+Name[fi]=Posti on lähetetty
+Name[fr]=Courriel envoyé
 Name[nl]=E-mail is verzonden
 Name[pt]=O correio foi enviado
 Name[pt_BR]=E-mail enviado
@@ -33,5 +37,9 @@ Name[sr@latin]=Pošta je poslata
 Name[sv]=E-post har skickats
 Name[uk]=Пошту надіслано
 Name[x-test]=xxMail is sentxx
+Action=Popup
+
+[Event/mailsendfailed]
+Name=Send mail failed
 Action=Popup
 

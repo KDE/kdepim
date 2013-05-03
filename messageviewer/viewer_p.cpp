@@ -221,6 +221,7 @@ ViewerPrivate::ViewerPrivate(Viewer *aParent, QWidget *mainWindow,
 
      mThemeManager = new MessageViewer::GrantleeThemeManager(mActionCollection, KStandardDirs::locate("data",QLatin1String("messageviewer/themes/")));
      connect(mThemeManager, SIGNAL(grantleeThemeSelected()), this, SLOT(slotGrantleeHeaders()));
+     connect(mThemeManager, SIGNAL(updateThemes()), this, SLOT(slotGrantleeThemesUpdated()));
      mHtmlOverride = false;
      mHtmlLoadExtOverride = false;
      mHtmlLoadExternal = false;
@@ -3270,6 +3271,18 @@ void ViewerPrivate::slotModifyItemDone(KJob* job)
     if ( job && job->error() ) {
       kWarning() << " Error trying to change attribute:" << job->errorText();
     }
+}
+
+void ViewerPrivate::slotGrantleeThemesUpdated()
+{
+    update( Viewer::Force );
+}
+
+void ViewerPrivate::saveMainFrameScreenshotInFile(const QString &filename)
+{
+#ifndef KDEPIM_NO_WEBKIT
+    mViewer->saveMainFrameScreenshotInFile(filename);
+#endif
 }
 
 #include "viewer_p.moc"

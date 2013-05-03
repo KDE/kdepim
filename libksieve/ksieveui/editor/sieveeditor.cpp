@@ -18,6 +18,7 @@
 
 #include "sieveeditor.h"
 #include "sievefindbar.h"
+#include "sieveinfowidget.h"
 #include "templates/sievetemplatewidget.h"
 #include "autocreatescripts/autocreatescriptdialog.h"
 
@@ -92,6 +93,15 @@ SieveEditor::SieveEditor( QWidget * parent )
     //
     SieveTemplateWidget *sieveTemplateWidget = new SieveTemplateWidget(i18n("Sieve Template:"));
 
+    mSieveInfo = new SieveInfoWidget;
+
+    QSplitter *extraSplitter = new QSplitter;
+    extraSplitter->setOrientation( Qt::Vertical );
+
+    extraSplitter->addWidget(sieveTemplateWidget);
+    extraSplitter->addWidget(mSieveInfo);
+
+
     QWidget *textEditWidget = new QWidget;
     QVBoxLayout * textEditLayout = new QVBoxLayout;
     mTextEdit = new SieveTextEdit;
@@ -101,7 +111,7 @@ SieveEditor::SieveEditor( QWidget * parent )
     textEditWidget->setLayout(textEditLayout);
 
     templateSplitter->addWidget(textEditWidget);
-    templateSplitter->addWidget(sieveTemplateWidget);
+    templateSplitter->addWidget(extraSplitter);
     templateSplitter->setSizes( size );
     templateSplitter->setChildrenCollapsible(false);
 
@@ -294,6 +304,7 @@ void SieveEditor::setSieveCapabilities( const QStringList &capabilities )
 {
     mSieveCapabilities = capabilities;
     mTextEdit->setSieveCapabilities(mSieveCapabilities);
+    mSieveInfo->setServerInfo(capabilities);
 }
 
 #include "sieveeditor.moc"

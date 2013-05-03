@@ -22,6 +22,7 @@
 #include <QWidget>
 
 class KLineEdit;
+class KZip;
 
 namespace PimCommon {
 class SimpleStringListEditor;
@@ -39,11 +40,24 @@ public:
 
     void setThemeName(const QString &themeName);
     QString filename() const;
+
+
+    QString themeName() const;
+    void createZip(const QString &themeName, KZip *zip);
+    void installTheme(const QString &themePath);
+
+    bool wasChanged() const;
+
+private Q_SLOTS:
+    void slotChanged();
+
 private:
+    void saveAsFilename(const QString &filename);
     KLineEdit *mName;
     KLineEdit *mDescription;
     KLineEdit *mFilename;
     PimCommon::SimpleStringListEditor *mExtraDisplayHeaders;
+    bool mChanged;
 };
 
 #endif // DESKTOPFILEPAGE_H

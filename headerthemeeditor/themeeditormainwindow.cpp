@@ -18,9 +18,10 @@
 #include "themeeditormainwindow.h"
 #include "themeeditorpage.h"
 #include "newthemedialog.h"
+#include "themeconfiguredialog.h"
 
-#include <knewstuff3/uploaddialog.h>
-
+#include <KTemporaryFile>
+#include <KTempDir>
 #include <KStandardAction>
 #include <KApplication>
 #include <KAction>
@@ -28,6 +29,8 @@
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <KFileDialog>
+#include <KDebug>
+#include <KStandardDirs>
 
 #include <QPointer>
 #include <QCloseEvent>
@@ -53,6 +56,7 @@ void ThemeEditorMainWindow::updateActions()
     mCloseAction->setEnabled(projectDirectoryIsEmpty);
     mUploadTheme->setEnabled(projectDirectoryIsEmpty);
     mSaveAction->setEnabled(projectDirectoryIsEmpty);
+    mInstallTheme->setEnabled(projectDirectoryIsEmpty);
 }
 
 void ThemeEditorMainWindow::setupActions()
@@ -72,16 +76,35 @@ void ThemeEditorMainWindow::setupActions()
     mSaveAction = KStandardAction::save(this, SLOT(slotSaveTheme()), actionCollection());
     mCloseAction = KStandardAction::close( this, SLOT(slotCloseTheme()), actionCollection());
     KStandardAction::quit(this, SLOT(slotQuitApp()), actionCollection() );
+    KStandardAction::preferences( this, SLOT(slotConfigure()), actionCollection() );
+
+    mInstallTheme = new KAction(i18n("Install theme"), this);
+    actionCollection()->addAction( QLatin1String( "install_theme" ), mInstallTheme );
+    connect(mInstallTheme, SIGNAL(triggered(bool)), SLOT(slotInstallTheme()));
+}
+
+void ThemeEditorMainWindow::slotConfigure()
+{
+    QPointer<ThemeConfigureDialog> dialog = new ThemeConfigureDialog(this);
+    dialog->exec();
+    delete dialog;
+}
+
+void ThemeEditorMainWindow::slotInstallTheme()
+{
+    //TODO
+    //Save before installing :)
+    slotSaveTheme();
+    const QString localThemePath = KStandardDirs::locateLocal("data",QLatin1String("messageviewer/themes/"));
+    mThemeEditor->installTheme(localThemePath);
 }
 
 void ThemeEditorMainWindow::slotUploadTheme()
 {
     //Save before upload :)
     slotSaveTheme();
-    QPointer<KNS3::UploadDialog> dialog = new KNS3::UploadDialog(this);
-    //TODO
-    dialog->exec();
-    delete dialog;
+
+    mThemeEditor->uploadTheme();
 }
 
 void ThemeEditorMainWindow::slotSaveTheme()
@@ -122,9 +145,7 @@ void ThemeEditorMainWindow::slotAddExtraPage()
 void ThemeEditorMainWindow::saveCurrentProject(bool createNewTheme)
 {
     if (mThemeEditor) {
-        if (KMessageBox::questionYesNo(this, i18n("Do you want to save current project?"), i18n("Save current project")) == KMessageBox::Yes) {
-            mThemeEditor->saveTheme();
-        }
+        mThemeEditor->saveTheme();
     }
     if (createNewTheme) {
         delete mThemeEditor;

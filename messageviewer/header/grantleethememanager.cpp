@@ -74,15 +74,15 @@ public:
     void slotDownloadHeaderThemes()
     {
         if (!downloadThemesDialog) {
-            downloadThemesDialog = new KNS3::DownloadDialog(QLatin1String("header_themes.knsrc"));
+            downloadThemesDialog = new KNS3::DownloadDialog(QLatin1String("messageviewer_header_themes.knsrc"));
         }
         downloadThemesDialog.data()->show();
     }
 
     void directoryChanged()
     {
-        setThemesPath( themesPath );
         updateActionList();
+        Q_EMIT q->updateThemes();
     }
 
     void setThemesPath(const QString& path)
@@ -106,7 +106,7 @@ public:
             const QString dirName = dirIt.fileName();
             const GrantleeTheme theme = loadTheme( dirIt.filePath(), dirName );
             themes.insert( dirName, theme );
-            qDebug()<<" theme.name()"<<theme.name();
+            //qDebug()<<" theme.name()"<<theme.name();
         }
 
         Q_EMIT q->themesChanged();
@@ -133,6 +133,7 @@ public:
     {
         if (!actionGroup || !menu)
             return;
+        setThemesPath( themesPath );
         QString themeActivated;
         Q_FOREACH ( KToggleAction *action, themesActionList ) {
             if (action->isChecked())
@@ -224,7 +225,7 @@ void GrantleeThemeManager::setActionGroup( QActionGroup *actionGroup )
 {
     if (d->actionGroup != actionGroup) {
         d->actionGroup = actionGroup;
-        d->directoryChanged();
+        d->updateActionList();
     }
 }
 
@@ -237,7 +238,7 @@ void GrantleeThemeManager::setHeaderMenu(KActionMenu *menu)
 {
     if (d->menu != menu) {
         d->menu = menu;
-        d->directoryChanged();
+        d->updateActionList();
     }
 }
 

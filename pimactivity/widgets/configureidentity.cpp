@@ -65,14 +65,14 @@ void ConfigureIdentity::readConfig(const QString &id)
     KSharedConfigPtr conf = ActivityManager::configFromActivity(id);
     if (conf->hasGroup(QLatin1String("identity"))) {
         KConfigGroup grp = conf->group(QLatin1String("identity"));
-        const QStringList list = grp.readEntry(QLatin1String("ActiveIdentity"), QStringList());
+        const QStringList list = grp.readEntry(QLatin1String("NoActiveIdentity"), QStringList());
         const int numberOfItems(mListIdentity->count());
         for (int i = 0; i < numberOfItems; ++i) {
             QListWidgetItem *item = mListIdentity->item(i);
             if (list.contains(item->data(IdentityID).toString())) {
-                item->setCheckState(Qt::Checked);
-            } else {
                 item->setCheckState(Qt::Unchecked);
+            } else {
+                item->setCheckState(Qt::Checked);
             }
         }
     }
@@ -87,11 +87,11 @@ void ConfigureIdentity::writeConfig(const QString &id)
     QStringList lst;
     for (int i = 0; i < numberOfItems; ++i) {
         QListWidgetItem *item = mListIdentity->item(i);
-        if (item->checkState() == Qt::Checked) {
+        if (item->checkState() == Qt::Unchecked) {
             lst << item->data(IdentityID).toString();
         }
     }
-    grp.writeEntry(QLatin1String("ActiveIdentity"), lst);
+    grp.writeEntry(QLatin1String("NoActiveIdentity"), lst);
 }
 
 void ConfigureIdentity::setDefault()

@@ -27,6 +27,7 @@ ArchiveMailInfo::ArchiveMailInfo()
     , mSaveCollectionId(-1)
     , mMaximumArchiveCount(0)
     , mSaveSubCollection(false)
+    , mIsEnabled(true)
 {
 }
 
@@ -38,6 +39,7 @@ ArchiveMailInfo::ArchiveMailInfo(const KConfigGroup& config)
     , mSaveCollectionId(-1)
     , mMaximumArchiveCount(0)
     , mSaveSubCollection(false)
+    , mIsEnabled(true)
 {
     readConfig(config);
 }
@@ -52,6 +54,7 @@ ArchiveMailInfo::ArchiveMailInfo(const ArchiveMailInfo &info)
     mMaximumArchiveCount = info.maximumArchiveCount();
     mSaveSubCollection = info.saveSubCollection();
     mPath = info.url();
+    mIsEnabled = info.isEnabled();
 }
 
 
@@ -69,6 +72,7 @@ ArchiveMailInfo& ArchiveMailInfo::operator=( const ArchiveMailInfo &old )
     mMaximumArchiveCount = old.maximumArchiveCount();
     mSaveSubCollection = old.saveSubCollection();
     mPath = old.url();
+    mIsEnabled = old.isEnabled();
     return (*this);
 }
 
@@ -182,6 +186,7 @@ void ArchiveMailInfo::readConfig(const KConfigGroup& config)
     if ( tId >= 0 ) {
         mSaveCollectionId = tId;
     }
+    mIsEnabled = config.readEntry("enabled", true);
 }
 
 void ArchiveMailInfo::writeConfig(KConfigGroup & config )
@@ -201,6 +206,7 @@ void ArchiveMailInfo::writeConfig(KConfigGroup & config )
     config.writeEntry("saveCollectionId",mSaveCollectionId);
     config.writeEntry("archiveAge",mArchiveAge);
     config.writeEntry("maximumArchiveCount",mMaximumArchiveCount);
+    config.writeEntry("enabled",mIsEnabled);
     config.sync();
 }
 
@@ -243,3 +249,14 @@ void ArchiveMailInfo::setMaximumArchiveCount( int max )
 {
     mMaximumArchiveCount = max;
 }
+
+bool ArchiveMailInfo::isEnabled() const
+{
+    return mIsEnabled;
+}
+
+void ArchiveMailInfo::setEnabled(bool b)
+{
+    mIsEnabled = b;
+}
+

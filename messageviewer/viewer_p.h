@@ -273,6 +273,8 @@ public:
 
   void setZoomTextOnly( bool textOnly );
 
+  void saveMainFrameScreenshotInFile(const QString &filename);
+
 private:
   /** HTML initialization. */
   void initHtmlWidget();
@@ -484,6 +486,7 @@ private slots:
 
 
   void saveSplitterSizes() const;
+  void slotGrantleeThemesUpdated();
 
 public slots:
   /** An URL has been activate with a click. */

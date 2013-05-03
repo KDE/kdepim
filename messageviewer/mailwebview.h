@@ -103,6 +103,7 @@ public:
     Qt::ScrollBarPolicy scrollBarPolicy( Qt::Orientation orientation ) const;
 #ifndef KDEPIM_NO_WEBKIT
     void scamCheck();
+    void saveMainFrameScreenshotInFile(const QString &filename);
 #endif
 
 public Q_SLOTS:

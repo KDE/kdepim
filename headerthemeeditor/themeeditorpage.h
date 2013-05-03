@@ -25,7 +25,7 @@ class EditorPage;
 class DesktopFilePage;
 class PreviewPage;
 class ThemeSession;
-
+class KZip;
 class ThemeEditorPage : public QWidget
 {
     Q_OBJECT
@@ -41,7 +41,13 @@ public:
     QString projectDirectory() const;
     void setProjectDirectory(const QString &dir);
 
+    void uploadTheme();
+    void installTheme(const QString &themePath);
+
+    bool themeWasChanged() const;
+
 private:
+    void createZip(const QString &themeName, KZip *zip);
     QList<EditorPage*> mExtraPage;
     KTabWidget *mTabWidget;
     EditorPage *mEditorPage;

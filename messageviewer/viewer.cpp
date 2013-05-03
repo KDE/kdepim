@@ -649,6 +649,11 @@ KAction *Viewer::resetMessageDisplayFormatAction()
     return d->mResetMessageDisplayFormat;
 }
 
+void Viewer::saveMainFrameScreenshotInFile(const QString &filename)
+{
+    Q_D( Viewer );
+    return d->saveMainFrameScreenshotInFile(filename);
+}
 
 }
 

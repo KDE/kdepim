@@ -85,8 +85,22 @@ QString GrantleeHeaderFormatter::toHtml(const GrantleeTheme &theme, bool isPrint
     }
 
     QVariantHash headerObject;
+
+    // However, the direction of the message subject within the header is
+    // determined according to the contents of the subject itself. Since
+    // the "Re:" and "Fwd:" prefixes would always cause the subject to be
+    // considered left-to-right, they are ignored when determining its
+    // direction.
+
+    headerObject.insert(QLatin1String("applicationDir"), QApplication::isRightToLeft() ? QLatin1String("rtl") : QLatin1String("ltr"));
+    headerObject.insert(QLatin1String("subjectDir"), MessageViewer::HeaderStyleUtil::subjectDirectionString( message ));
+
     headerObject.insert(QLatin1String("subjecti18n"), i18n("Subject:") );
     headerObject.insert(QLatin1String("subject"), MessageViewer::HeaderStyleUtil::subjectString( message ) );
+
+    headerObject.insert(QLatin1String("toi18n"), i18n("To:") );
+    headerObject.insert(QLatin1String("to"), StringUtil::emailAddrAsAnchor( message->to(), StringUtil::DisplayFullAddress ));
+    headerObject.insert(QLatin1String("toStr"), message->to()->asUnicodeString());
 
     if ( message->replyTo( false )) {
         headerObject.insert(QLatin1String("replyToi18n"), i18n("Reply to:") );
@@ -112,13 +126,14 @@ QString GrantleeHeaderFormatter::toHtml(const GrantleeTheme &theme, bool isPrint
 
     const QString spamHtml = MessageViewer::HeaderStyleUtil::spamStatus(message);
     if ( !spamHtml.isEmpty() ) {
+        headerObject.insert( QLatin1String("spamstatusi18n"), i18n("Spam Status:"));
         headerObject.insert( QLatin1String( "spamHTML" ), spamHtml );
     }
     headerObject.insert(QLatin1String("datei18n"), i18n("Date:"));
 
     headerObject.insert( QLatin1String( "dateshort" ) , MessageViewer::HeaderStyleUtil::strToHtml( MessageViewer::HeaderStyleUtil::dateString(message, isPrinting,true ) ) );
     headerObject.insert( QLatin1String( "datelong" ) , MessageViewer::HeaderStyleUtil::strToHtml( MessageViewer::HeaderStyleUtil::dateString(message, isPrinting,false ) ) );
-    headerObject.insert( QLatin1String( "date" ), MessageViewer::HeaderStyleUtil::directionOf( MessageViewer::HeaderStyleUtil::dateStr( message->date()->dateTime() ) ) );
+    headerObject.insert( QLatin1String( "date" ), MessageViewer::HeaderStyleUtil::dateStr( message->date()->dateTime() ) );
 
     if ( GlobalSettings::self()->showUserAgent() ) {
         if ( message->headerByType("User-Agent") ) {
@@ -131,6 +146,7 @@ QString GrantleeHeaderFormatter::toHtml(const GrantleeTheme &theme, bool isPrint
     }
 
     if ( message->headerByType( "Resent-From" ) ) {
+        headerObject.insert( QLatin1String( "resentfromi18n"), i18n("resent from"));
         const QList<KMime::Types::Mailbox> resentFrom = MessageViewer::HeaderStyleUtil::resentFromList(message);
         headerObject.insert( QLatin1String( "resentfrom" ), StringUtil::emailAddrAsAnchor( resentFrom, StringUtil::DisplayFullAddress ) );
     }
@@ -168,10 +184,14 @@ QString GrantleeHeaderFormatter::toHtml(const GrantleeTheme &theme, bool isPrint
     }
 
     Q_FOREACH (const QString &header, theme.displayExtraHeaders()) {
-        if (message->headerByType(header.toLocal8Bit()) ) {
-            headerObject.insert( header , message->headerByType(header.toLocal8Bit())->asUnicodeString() );
+        const QByteArray baHeader = header.toLocal8Bit();
+        if (message->headerByType(baHeader) ) {
+            headerObject.insert( header , message->headerByType(baHeader)->asUnicodeString() );
         }
     }
+
+    headerObject.insert( QLatin1String( "vcardi18n" ), i18n("[vcard]") );
+
 
     QVariantHash mapping;
     mapping.insert( "header", headerObject );

@@ -23,13 +23,16 @@
 #include <KLocale>
 #include <KDesktopFile>
 #include <KConfigGroup>
+#include <KZip>
+#include <KTemporaryFile>
 
 #include <QGridLayout>
 #include <QLabel>
 #include <QDir>
 
 DesktopFilePage::DesktopFilePage(QWidget *parent)
-    : QWidget(parent)
+    : QWidget(parent),
+      mChanged(false)
 {
     QGridLayout *lay = new QGridLayout;
     QLabel *lab = new QLabel(i18n("Name:"));
@@ -55,10 +58,26 @@ DesktopFilePage::DesktopFilePage(QWidget *parent)
     mExtraDisplayHeaders = new PimCommon::SimpleStringListEditor;
     lay->addWidget(mExtraDisplayHeaders, 4, 0, 4, 2);
     setLayout(lay);
+    connect(mExtraDisplayHeaders, SIGNAL(changed()), this, SLOT(slotChanged()));
+    connect(mFilename, SIGNAL(textChanged(QString)), this, SLOT(slotChanged()));
+    connect(mDescription, SIGNAL(textChanged(QString)), this, SLOT(slotChanged()));
 }
 
 DesktopFilePage::~DesktopFilePage()
 {
+}
+
+void DesktopFilePage::slotChanged()
+{
+    mChanged = true;
+}
+
+void DesktopFilePage::createZip(const QString &themeName, KZip *zip)
+{
+    KTemporaryFile tmp;
+    tmp.open();
+    saveAsFilename(tmp.fileName());
+    const bool fileAdded  = zip->addLocalFile(tmp.fileName(), themeName + QLatin1Char('/') + QLatin1String("header.desktop"));
 }
 
 void DesktopFilePage::setThemeName(const QString &themeName)
@@ -71,6 +90,11 @@ QString DesktopFilePage::filename() const
     return mFilename->text();
 }
 
+QString DesktopFilePage::themeName() const
+{
+    return mName->text();
+}
+
 void DesktopFilePage::loadTheme(const QString &path)
 {
     const QString filename = path + QDir::separator() + QLatin1String("header.desktop");
@@ -80,11 +104,18 @@ void DesktopFilePage::loadTheme(const QString &path)
     mFilename->setText(desktopFile.desktopGroup().readEntry(QLatin1String("FileName")));
     const QStringList displayExtraHeaders = desktopFile.desktopGroup().readEntry(QLatin1String("DisplayExtraHeaders"),QStringList());
     mExtraDisplayHeaders->setStringList(displayExtraHeaders);
+    mChanged = false;
 }
 
 void DesktopFilePage::saveTheme(const QString &path)
 {
     const QString filename = path + QDir::separator() + QLatin1String("header.desktop");
+    saveAsFilename(filename);
+    mChanged = false;
+}
+
+void DesktopFilePage::saveAsFilename(const QString &filename)
+{
     KDesktopFile desktopFile(filename);
     desktopFile.desktopGroup().writeEntry(QLatin1String("Name"), mName->text());
     desktopFile.desktopGroup().writeEntry(QLatin1String("Description"), mDescription->text());
@@ -93,6 +124,16 @@ void DesktopFilePage::saveTheme(const QString &path)
     if (!displayExtraHeaders.isEmpty())
         desktopFile.desktopGroup().writeEntry(QLatin1String("DisplayExtraHeaders"), mExtraDisplayHeaders->stringList());
     desktopFile.desktopGroup().sync();
+}
+
+bool DesktopFilePage::wasChanged() const
+{
+    return mChanged;
+}
+
+void DesktopFilePage::installTheme(const QString &themePath)
+{
+    //TODO
 }
 
 #include "desktopfilepage.moc"

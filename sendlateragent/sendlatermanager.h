@@ -17,7 +17,11 @@
 
 #ifndef SENDLATERMANAGER_H
 #define SENDLATERMANAGER_H
+
 #include <QObject>
+
+#include <KSharedConfig>
+
 class SendLaterInfo;
 class SendLaterManager : public QObject
 {
@@ -28,10 +32,10 @@ public:
 
     void load();
 
-private Q_SLOTS:
-    void sendDone();
+    void sendDone(SendLaterInfo *info);
 
 private:
+    KSharedConfig::Ptr mConfig;
     QList<SendLaterInfo *> mListSendLaterInfo;
 };
 

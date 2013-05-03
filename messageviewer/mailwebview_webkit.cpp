@@ -621,13 +621,28 @@ void MailWebView::makeAccessKeyLabel(const QChar &accessKey, const QWebElement &
 
 void MailWebView::scamCheck()
 {
-    const QWebElement root = page()->mainFrame()->documentElement();
-    mScamDetection->scanPage(root);
+    QWebFrame *mainFrame = page()->mainFrame();
+    mScamDetection->scanPage(mainFrame);
 }
 
 void MailWebView::slotShowDetails()
 {
     mScamDetection->showDetails();
+}
+
+void MailWebView::saveMainFrameScreenshotInFile(const QString &filename)
+{
+    QWebFrame *frame = page()->mainFrame();
+    QImage image(frame->contentsSize(), QImage::Format_ARGB32_Premultiplied);
+    image.fill(Qt::transparent);
+
+    QPainter painter(&image);
+    painter.setRenderHint(QPainter::Antialiasing, true);
+    painter.setRenderHint(QPainter::TextAntialiasing, true);
+    painter.setRenderHint(QPainter::SmoothPixmapTransform, true);
+    frame->documentElement().render(&painter);
+    painter.end();
+    image.save(filename);
 }
 
 #include "mailwebview.moc"

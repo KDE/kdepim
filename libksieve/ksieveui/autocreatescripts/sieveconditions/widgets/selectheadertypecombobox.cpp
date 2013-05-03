@@ -19,6 +19,11 @@
 
 #include <KLocale>
 #include <KLineEdit>
+#include <KPushButton>
+
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QLabel>
 
 using namespace KSieveUi;
 
@@ -31,12 +36,50 @@ SelectHeadersDialog::SelectHeadersDialog(QWidget *parent)
     setCaption( i18n( "Headers" ) );
     setButtons( Ok|Cancel );
     setButtonFocus( Ok );
+    QWidget *w = new QWidget;
+    QVBoxLayout *lay = new QVBoxLayout;
+    w->setLayout(lay);
     mListWidget = new SelectHeadersWidget;
-    setMainWidget(mListWidget);
+    lay->addWidget(mListWidget);
+
+    QLabel *lab = new QLabel(i18n("Add new header:"));
+    lay->addWidget(lab);
+
+    QHBoxLayout *hbox = new QHBoxLayout;
+
+    mNewHeader = new KLineEdit;
+    mNewHeader->setClearButtonShown(true);
+    hbox->addWidget(mNewHeader);
+
+
+    mAddNewHeader = new KPushButton;
+    mAddNewHeader->setEnabled(false);
+    mAddNewHeader->setIcon( KIcon( QLatin1String("list-add") ) );
+    mAddNewHeader->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
+    connect(mAddNewHeader, SIGNAL(clicked(bool)), SLOT(slotAddNewHeader()));
+    connect(mNewHeader, SIGNAL(textChanged(QString)), this, SLOT(slotNewHeaderTextChanged(QString)));
+    hbox->addWidget(mAddNewHeader);
+
+    lay->addLayout(hbox);
+
+    setMainWidget(w);
+    resize(400,300);
 }
 
 SelectHeadersDialog::~SelectHeadersDialog()
 {
+}
+
+void SelectHeadersDialog::slotNewHeaderTextChanged(const QString &text)
+{
+    mAddNewHeader->setEnabled(!text.trimmed().isEmpty());
+}
+
+void SelectHeadersDialog::slotAddNewHeader()
+{
+    const QString headerText = mNewHeader->text().trimmed();
+    if (!headerText.isEmpty())
+        mListWidget->addNewHeader(headerText);
 }
 
 void SelectHeadersDialog::setListHeaders(const QMap<QString, QString> &lst)
@@ -58,9 +101,15 @@ SelectHeadersWidget::~SelectHeadersWidget()
 {
 }
 
+void SelectHeadersWidget::addNewHeader(const QString &header)
+{
+    QListWidgetItem *item = new QListWidgetItem(header, this);
+    item->setData(HeaderId, header);
+    item->setCheckState(Qt::Unchecked);
+}
+
 void SelectHeadersWidget::setListHeaders(const QMap<QString, QString> &lst)
 {
-
     QMapIterator<QString, QString> i(lst);
     while (i.hasNext()) {
         i.next();
