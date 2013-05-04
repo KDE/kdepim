@@ -439,7 +439,7 @@ void ImportMailJob::restoreMails()
             }
             if (QFile(newUrl.path()).exists()) {
                 QString newFileName = newUrl.path();
-                for(int i = 0;; ++i) {
+                for (int i = 0;; ++i) {
                     newFileName = newUrl.path() + QString::fromLatin1("_%1").arg(i);
                     if (!QFile(newFileName).exists()) {
                         break;
@@ -1087,7 +1087,7 @@ void ImportMailJob::mergeLdapConfig(const KArchiveFile * archivefile, const QStr
     grpExisting.writeEntry(QLatin1String("NumHosts"),(existingNumberHosts+importingNumberHosts));
     grpExisting.writeEntry(QLatin1String("NumSelectedHosts"),(existingNumberSelectedHosts+importingNumberSelectedHosts));
 
-    for(int i = 0; i<importingNumberSelectedHosts; ++i ) {
+    for (int i = 0; i<importingNumberSelectedHosts; ++i ) {
         const QString auth = grpImporting.readEntry(QString::fromLatin1("SelectedAuth%1").arg(i),QString());
         grpExisting.writeEntry(QString::fromLatin1("SelectedAuth%1").arg(existingNumberSelectedHosts+i+1),auth);
         grpExisting.writeEntry(QString::fromLatin1("SelectedBase%1").arg(existingNumberSelectedHosts+i+1),grpImporting.readEntry(QString::fromLatin1("SelectedBase%1").arg(i),QString()));
@@ -1104,7 +1104,7 @@ void ImportMailJob::mergeLdapConfig(const KArchiveFile * archivefile, const QStr
         grpExisting.writeEntry(QString::fromLatin1("SelectedVersion%1").arg(existingNumberSelectedHosts+i+1),grpImporting.readEntry(QString::fromLatin1("SelectedVersion%1").arg(i),0));
     }
 
-    for(int i = 0; i<importingNumberHosts; ++i ) {
+    for (int i = 0; i<importingNumberHosts; ++i ) {
         grpExisting.writeEntry(QString::fromLatin1("Auth%1").arg(existingNumberHosts+i+1),grpImporting.readEntry(QString::fromLatin1("Auth%1").arg(i),QString()));
         grpExisting.writeEntry(QString::fromLatin1("Base%1").arg(existingNumberHosts+i+1),grpImporting.readEntry(QString::fromLatin1("Base%1").arg(i),QString()));
         grpExisting.writeEntry(QString::fromLatin1("Bind%1").arg(existingNumberHosts+i+1),grpImporting.readEntry(QString::fromLatin1("Bind%1").arg(i),QString()));
