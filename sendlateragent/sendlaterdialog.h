@@ -45,6 +45,7 @@ private:
     void load(SendLaterInfo *info);
     void readConfig();
     void writeConfig();
+
 private:
     QDateTimeEdit *mDateTime;
     SendLaterInfo *mInfo;

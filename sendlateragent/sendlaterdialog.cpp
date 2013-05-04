@@ -60,6 +60,7 @@ SendLaterDialog::SendLaterDialog(SendLaterInfo *info, QWidget *parent)
     unitsList<<i18n("Days");
     unitsList<<i18n("Weeks");
     unitsList<<i18n("Months");
+    //Years ?
     mRecursiveComboBox->addItems(unitsList);
 
     hbox->addWidget(mRecursiveComboBox);
@@ -116,6 +117,7 @@ SendLaterInfo* SendLaterDialog::info()
     mInfo->setRecursive(mRecursive->isChecked());
     mInfo->setRecursiveEachValue(mRecursiveValue->value());
     mInfo->setRecursiveUnit((SendLaterInfo::RecursiveUnit)mRecursiveComboBox->currentIndex());
+    mInfo->setDateTime(mDateTime->dateTime());
     return mInfo;
 }
 
@@ -123,10 +125,12 @@ SendLaterInfo* SendLaterDialog::info()
 void SendLaterDialog::slotSendLater()
 {
     //TODO
+    accept();
 }
 
 void SendLaterDialog::slotSendNow()
 {
+    accept();
     //TODO
 }
 
