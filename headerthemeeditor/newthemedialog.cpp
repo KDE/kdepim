@@ -21,6 +21,8 @@
 #include <KLineEdit>
 #include <KLocale>
 #include <KUrlRequester>
+#include <KConfig>
+
 #include <QVBoxLayout>
 #include <QLabel>
 
@@ -56,10 +58,21 @@ NewThemeDialog::NewThemeDialog(QWidget *parent)
     enableButtonOk(false);
     resize(300,150);
     mThemeName->setFocus();
+    readConfig();
 }
 
 NewThemeDialog::~NewThemeDialog()
 {
+}
+
+void NewThemeDialog::readConfig()
+{
+    KSharedConfig::Ptr config = KGlobal::config();
+    if (config->hasGroup(QLatin1String("Global"))) {
+        KConfigGroup group = config->group(QLatin1String("Global"));
+        mUrlRequester->setUrl(group.readEntry("path", KUrl()));
+    }
+
 }
 
 QString NewThemeDialog::themeName() const

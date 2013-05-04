@@ -37,6 +37,7 @@ private Q_SLOTS:
     void slotUpdateOkButton();
 
 private:
+    void readConfig();
     KLineEdit *mThemeName;
     KUrlRequester *mUrlRequester;
 };

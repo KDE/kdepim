@@ -45,6 +45,7 @@ ThemeConfigureDialog::ThemeConfigureDialog(QWidget *parent)
     hbox->addWidget(lab);
 
     mDefaultUrl = new KUrlRequester;
+    mDefaultUrl->setMode(KFile::Directory);
     hbox->addWidget(mDefaultUrl);
 
     lab = new QLabel(i18n("Default email:"));
