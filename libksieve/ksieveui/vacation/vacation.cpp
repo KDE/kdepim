@@ -710,7 +710,7 @@ void Vacation::handlePutResult( KManageSieve::SieveJob *, bool success, bool act
 
 void Vacation::showVacationDialog()
 {
-    if(mDialog) {
+    if (mDialog) {
         mDialog->show();
         mDialog->raise();
         mDialog->activateWindow();

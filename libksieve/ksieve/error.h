@@ -116,7 +116,7 @@ namespace KSieve {
 
     QString asString() const;
 
-    /** So you can write <pre>if( error() )</pre> with e.g. @ref Lexer */
+    /** So you can write <pre>if ( error() )</pre> with e.g. @ref Lexer */
     operator bool() const {
       return type() != None;
     }

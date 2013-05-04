@@ -383,7 +383,7 @@ namespace KSieve {
           return true;
         case ',':
           consumeToken();
-          if( lastWasComma ) {
+          if ( lastWasComma ) {
             makeError( Error::ConsecutiveCommasInTestList );
             return false;
           }
