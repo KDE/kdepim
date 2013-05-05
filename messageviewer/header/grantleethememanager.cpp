@@ -37,8 +37,8 @@ using namespace MessageViewer;
 class GrantleeThemeManager::Private
 {
 public:
-    Private(KActionCollection *ac, const QString &path, GrantleeThemeManager *qq)
-        : themesPath(path),
+    Private(KActionCollection *ac, const QString &relativePath, GrantleeThemeManager *qq)
+        : themesPath(relativePath),
           actionGroup(0),
           menu(0),
           actionCollection(ac),
