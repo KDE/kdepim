@@ -24,7 +24,7 @@ using namespace MailImporter;
 
 FilterPlain::FilterPlain() :
   Filter(i18n("Import Plain Text Emails"),
-         "Laurence Anderson <p>( Filter accelerated by Danny Kukawka )</p>",
+         i18n("Laurence Anderson <p>( Filter accelerated by Danny Kukawka )</p>"),
          i18n("<p>Select the directory containing the emails on your system. "
               "The emails are placed in a folder with the same name as the "
               "directory they were in, prefixed by PLAIN-</p>"
@@ -45,7 +45,7 @@ void FilterPlain::import()
     return;
   }
   QDir dir (mailDir);
-  const QStringList files = dir.entryList(QStringList("*.[eE][mM][lL]")<<"*.[tT][xX][tT]"<<"*.[mM][sS][gG]", QDir::Files, QDir::Name);
+  const QStringList files = dir.entryList(QStringList()<<QLatin1String("*.[eE][mM][lL]")<<QLatin1String("*.[tT][xX][tT]")<<QLatin1String("*.[mM][sS][gG]"), QDir::Files, QDir::Name);
   // Count total number of files to be processed
   filterInfo()->addInfoLogEntry(i18n("Counting files..."));
   int totalFiles = files.count();

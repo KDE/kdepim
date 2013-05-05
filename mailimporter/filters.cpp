@@ -133,7 +133,7 @@ bool Filter::addAkonadiMessage( const Akonadi::Collection &collection,
 {
   Akonadi::Item item;
 
-  item.setMimeType( "message/rfc822" );
+  item.setMimeType( QLatin1String("message/rfc822") );
 
   if ( status.isOfUnknownStatus() ) {
     KMime::Headers::Base *statusHeaders = message->headerByType( "X-Status" );
@@ -200,7 +200,7 @@ Akonadi::Collection Filter::parseFolderString(const QString& folderParseString)
   }
 
   // The folder hasn't yet been created, create it now.
-  const QStringList folderList = folderParseString.split( '/', QString::SkipEmptyParts );
+  const QStringList folderList = folderParseString.split( QLatin1Char('/'), QString::SkipEmptyParts );
   bool isFirst = true;
   QString folderBuilder;
   Akonadi::Collection lastCollection;
@@ -387,9 +387,9 @@ int Filter::countDirectory(const QDir& dir, bool searchHiddenDirectory)
   int countDir = 0;
   QStringList subDirs;
   if ( searchHiddenDirectory )
-    subDirs = dir.entryList(QStringList("*"), QDir::Dirs | QDir::Hidden, QDir::Name);
+    subDirs = dir.entryList(QStringList(QLatin1String("*")), QDir::Dirs | QDir::Hidden, QDir::Name);
   else
-    subDirs = dir.entryList(QStringList("[^\\.]*"), QDir::Dirs, QDir::Name); // Removal of . and ..
+    subDirs = dir.entryList(QStringList(QLatin1String("[^\\.]*")), QDir::Dirs, QDir::Name); // Removal of . and ..
   
   QStringList::ConstIterator end = subDirs.constEnd();
   for (QStringList::ConstIterator filename = subDirs.constBegin() ; filename != end ; ++filename ) {
