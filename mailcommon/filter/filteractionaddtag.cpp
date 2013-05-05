@@ -94,7 +94,7 @@ bool FilterActionAddTag::argsFromStringInteractive( const QString &argsStr, cons
 {
   bool needUpdate = false;
   argsFromString( argsStr );
-  if( mList.isEmpty() )
+  if ( mList.isEmpty() )
     return false;
   const bool index = mList.contains( mParameter );
   if ( Nepomuk2::ResourceManager::instance()->initialized() ) {
@@ -113,7 +113,7 @@ bool FilterActionAddTag::argsFromStringInteractive( const QString &argsStr, cons
 
 FilterAction::ReturnCode FilterActionAddTag::process( ItemContext &context ) const
 {
-  if(!mList.contains(mParameter)) {
+  if (!mList.contains(mParameter)) {
     return ErrorButGoOn;
   }
   Nepomuk2::Resource resource( context.item().url() );
@@ -129,11 +129,11 @@ SearchRule::RequiredPart FilterActionAddTag::requiredPart() const
 
 void FilterActionAddTag::argsFromString( const QString &argsStr )
 {
-  if( mList.isEmpty() ) {
+  if ( mList.isEmpty() ) {
     mParameter = argsStr;
     return;
   }
-  if(mList.contains(argsStr)) {
+  if (mList.contains(argsStr)) {
       mParameter = argsStr;
       return;
   }
@@ -143,7 +143,7 @@ void FilterActionAddTag::argsFromString( const QString &argsStr )
 
 QString FilterActionAddTag::argsAsString() const
 {
-  if(!mList.contains(mParameter)) {
+  if (!mList.contains(mParameter)) {
      return QString();
   }
 

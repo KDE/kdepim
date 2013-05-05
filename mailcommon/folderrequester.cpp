@@ -121,7 +121,7 @@ void FolderRequester::setCollection( const Akonadi::Collection &collection, bool
 {
   mCollection = collection;
   if ( mCollection.isValid() ) {
-    if( fetchCollection ) {
+    if ( fetchCollection ) {
         Akonadi::CollectionFetchJob *job =
                 new Akonadi::CollectionFetchJob( mCollection, Akonadi::CollectionFetchJob::Base, this );
 

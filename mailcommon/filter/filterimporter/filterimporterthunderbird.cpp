@@ -66,7 +66,7 @@ MailCommon::MailFilter *FilterImporterThunderbird::parseLine( QTextStream &strea
             if ( line.startsWith( QLatin1String( "actionValue=" ) ) ) {
                 value = cleanArgument( line, QLatin1String( "actionValue=" ) );
                 //change priority
-                if(actionName == QLatin1String("Change priority")) {
+                if (actionName == QLatin1String("Change priority")) {
                     QStringList lstValue;
                     lstValue << QLatin1String("X-Priority");
                     if (value == QLatin1String("Highest")) {
@@ -83,11 +83,11 @@ MailCommon::MailFilter *FilterImporterThunderbird::parseLine( QTextStream &strea
                     lstValue << value;
                     value = lstValue.join(QLatin1String("\t"));
                     actionName = QLatin1String("add header");
-                } else if(actionName == QLatin1String("copy") || actionName == QLatin1String("transfer")) {
+                } else if (actionName == QLatin1String("copy") || actionName == QLatin1String("transfer")) {
                     KUrl url(value);
-                    if(url.isValid()) {
+                    if (url.isValid()) {
                         QString path = url.path();
-                        if(path.startsWith(QLatin1Char('/'))) {
+                        if (path.startsWith(QLatin1Char('/'))) {
                             path.remove(0,1); //Remove '/'
                         }
                         value = path;
@@ -307,7 +307,7 @@ bool FilterImporterThunderbird::splitConditions( const QString &cond,
         functionName = SearchRule::FuncNotEqual;
     }
 
-    if( functionName == SearchRule::FuncNone ) {
+    if ( functionName == SearchRule::FuncNone ) {
         kDebug() << " functionName not implemented: " << function;
     }
     QString contentsName;

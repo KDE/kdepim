@@ -90,7 +90,7 @@ void FavoriteCollectionWidget::paintEvent( QPaintEvent *event )
     font.setItalic( true );
     p.setFont( font );
 
-    if(!d->textColor.isValid()) {
+    if (!d->textColor.isValid()) {
         slotGeneralPaletteChanged();
     }
     p.setPen( d->textColor );

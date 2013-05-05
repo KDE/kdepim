@@ -194,7 +194,7 @@ Akonadi::Collection Filter::parseFolderString(const QString& folderParseString)
 {
   // Return an already created collection:
   QMap<QString, Akonadi::Collection>::const_iterator end(  d->messageFolderCollectionMap.constEnd() );
-  for( QMap<QString, Akonadi::Collection>::const_iterator it = d->messageFolderCollectionMap.constBegin(); it != end; it ++ ) {
+  for ( QMap<QString, Akonadi::Collection>::const_iterator it = d->messageFolderCollectionMap.constBegin(); it != end; it ++ ) {
     if( it.key() ==  folderParseString )
       return it.value();
   }
@@ -265,7 +265,7 @@ bool Filter::checkForDuplicates ( const QString& msgID,
 
   // Check if the contents of this collection have already been found.
   QMultiMap<QString, QString>::const_iterator end( d->messageFolderMessageIDMap.constEnd() );
-  for( QMultiMap<QString, QString>::const_iterator it = d->messageFolderMessageIDMap.constBegin(); it != end; it++ ) {
+  for ( QMultiMap<QString, QString>::const_iterator it = d->messageFolderMessageIDMap.constBegin(); it != end; it++ ) {
     if( it.key() == messageFolder ) {
       folderFound = true;
       break;
@@ -302,7 +302,7 @@ bool Filter::checkForDuplicates ( const QString& msgID,
 
   // Check if this message has a duplicate
   QMultiMap<QString, QString>::const_iterator endMsgID( d->messageFolderMessageIDMap.constEnd() );
-  for( QMultiMap<QString, QString>::const_iterator it = d->messageFolderMessageIDMap.constBegin();it !=endMsgID ; it++ ) {
+  for ( QMultiMap<QString, QString>::const_iterator it = d->messageFolderMessageIDMap.constBegin();it !=endMsgID ; it++ ) {
     if( it.key() == messageFolder &&
         it.value() == msgID )
       return true;
@@ -392,7 +392,7 @@ int Filter::countDirectory(const QDir& dir, bool searchHiddenDirectory)
     subDirs = dir.entryList(QStringList("[^\\.]*"), QDir::Dirs, QDir::Name); // Removal of . and ..
   
   QStringList::ConstIterator end = subDirs.constEnd();
-  for(QStringList::ConstIterator filename = subDirs.constBegin() ; filename != end ; ++filename ) {
+  for (QStringList::ConstIterator filename = subDirs.constBegin() ; filename != end ; ++filename ) {
     if(!(*filename == QLatin1String( "." ) || *filename == QLatin1String( ".." ))) {
       countDir += countDirectory( QDir( dir.filePath(*filename ) ), searchHiddenDirectory ) + 1;
     }

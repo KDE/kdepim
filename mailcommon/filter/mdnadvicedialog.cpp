@@ -142,7 +142,7 @@ QPair< bool, KMime::MDN::SendingMode > MDNAdviceHelper::checkAndSetMDNInfo(
   // has been issued on behalf of a recipient, no further MDNs may be
   // issued on behalf of that recipient, even if another disposition
   // is performed on the message.
-  if( item.hasAttribute< MessageCore::MDNStateAttribute >() &&
+  if ( item.hasAttribute< MessageCore::MDNStateAttribute >() &&
       item.attribute< MessageCore::MDNStateAttribute >()->mdnState() != MessageCore::MDNStateAttribute::MDNStateUnknown ) {
     // if already dealt with, don't do it again.
     return QPair< bool, KMime::MDN::SendingMode >( false, KMime::MDN::SentAutomatically );
@@ -154,7 +154,7 @@ QPair< bool, KMime::MDN::SendingMode > MDNAdviceHelper::checkAndSetMDNInfo(
   bool doSend = false;
   // default:
   int mode = MessageViewer::GlobalSettings::self()->defaultPolicy();
-  if( forceSend ) { //We must send it
+  if ( forceSend ) { //We must send it
     mode = 3;
   } else {
     if ( !mode || mode < 0 || mode > 3 ) {

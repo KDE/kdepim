@@ -78,7 +78,7 @@ bool FilterActionPlaySound::argsFromStringInteractive( const QString &argsStr, c
 {
   bool needUpdate = false;
   argsFromString( argsStr );
-  if(!QFile(mParameter).exists()){
+  if (!QFile(mParameter).exists()){
       QPointer<FilterActionMissingSoundUrlDialog> dlg = new FilterActionMissingSoundUrlDialog( filterName, argsStr );
       if ( dlg->exec() ) {
         mParameter = dlg->soundUrl();

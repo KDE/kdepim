@@ -75,7 +75,7 @@ void RegExpLineEdit::initWidget( const QString &str )
   connect( mLineEdit, SIGNAL(textChanged(QString)),
            this, SIGNAL(textChanged(QString)) );
 
-  if( !KServiceTypeTrader::self()->query( "KRegExpEditor/KRegExpEditor" ).isEmpty() ) {
+  if ( !KServiceTypeTrader::self()->query( "KRegExpEditor/KRegExpEditor" ).isEmpty() ) {
     mRegExpEditButton = new QPushButton( i18n( "Edit..." ), this );
     mRegExpEditButton->setObjectName( "mRegExpEditButton" );
     mRegExpEditButton->setSizePolicy( QSizePolicy::Minimum,

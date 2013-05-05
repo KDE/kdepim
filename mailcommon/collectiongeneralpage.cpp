@@ -484,12 +484,12 @@ void CollectionGeneralPage::save( Collection &collection )
         Akonadi::AgentInstance instance =
           Akonadi::AgentManager::self()->instance( collection.resource() );
         instance.setName( nameFolder );
-      } else if(canRenameFolder) {
+      } else if (canRenameFolder) {
         if ( collection.hasAttribute<Akonadi::EntityDisplayAttribute>() &&
              !collection.attribute<Akonadi::EntityDisplayAttribute>()->displayName().isEmpty() ) {
           collection.attribute<Akonadi::EntityDisplayAttribute>()->setDisplayName(
             nameFolder );
-        } else if( !nameFolder.isEmpty() ) {
+        } else if ( !nameFolder.isEmpty() ) {
           collection.setName( nameFolder );
         }
       }
@@ -545,7 +545,7 @@ void CollectionGeneralPage::save( Collection &collection )
       annotations[ KOLAB_FOLDERTYPE ] = kolabName;
     }
   }
-  if( annotations.isEmpty() ) {
+  if ( annotations.isEmpty() ) {
     collection.removeAttribute<CollectionAnnotationsAttribute>();
   } else {
     annotationsAttribute->setAnnotations( annotations );
@@ -597,7 +597,7 @@ void CollectionGeneralPage::slotNameChanged( const QString &name )
        name.endsWith( QLatin1Char('.') ) ||
        name.contains( QLatin1Char( '/' ) ) ||
        name.isEmpty() ) {
-    if(mColorName.isEmpty()) {
+    if (mColorName.isEmpty()) {
       const KColorScheme::BackgroundRole bgColorScheme( KColorScheme::NegativeBackground );
       KStatefulBrush bgBrush( KColorScheme::View, bgColorScheme );
       mColorName = bgBrush.brush( this ).color().name();

@@ -275,7 +275,7 @@ void SnippetsManager::Private::editSnippetGroup()
   if ( !dlg.exec() ) {
     return;
   }
-  if(oldGroupName == dlg.name()) {
+  if (oldGroupName == dlg.name()) {
     return;
   }
 

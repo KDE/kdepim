@@ -184,7 +184,7 @@ QList<MailFilter*> FilterImporterExporter::readFiltersFromConfig(
       filters.append( filter );
     }
   }
-  if( filterNeedUpdate ) {
+  if ( filterNeedUpdate ) {
      KSharedConfig::Ptr config = KSharedConfig::openConfig( "akonadi_mailfilter_agentrc" );
 
      // Now, write out the new stuff:
@@ -265,7 +265,7 @@ QList<MailFilter *> FilterImporterExporter::importFilters(
   QString fileName( filename );
 
   QFile file;
-  if(type != ThunderBirdFilter) {
+  if (type != ThunderBirdFilter) {
     if ( fileName.isEmpty() ) {
       QString title;
       QString defaultPath;
@@ -329,13 +329,13 @@ QList<MailFilter *> FilterImporterExporter::importFilters(
   }
   case ThunderBirdFilter:
   {
-    if(fileName.isEmpty()) {
+    if (fileName.isEmpty()) {
       SelectThunderbirdFilterFilesDialog * selectThunderBirdFileDialog = new SelectThunderbirdFilterFilesDialog(d->mParent);
       selectThunderBirdFileDialog->setStartDir(KUrl(MailCommon::FilterImporterThunderbird::defaultFiltersSettingsPath()));
-      if(selectThunderBirdFileDialog->exec()) {
+      if (selectThunderBirdFileDialog->exec()) {
         Q_FOREACH(const QString& url, selectThunderBirdFileDialog->selectedFiles()) {
           QFile fileThunderbird(url);
-          if(!fileThunderbird.open( QIODevice::ReadOnly )) {
+          if (!fileThunderbird.open( QIODevice::ReadOnly )) {
             KMessageBox::error(
               d->mParent,
               i18n( "The selected file is not readable. "
@@ -439,7 +439,7 @@ QList<MailFilter *> FilterImporterExporter::importFilters(
 void FilterImporterExporter::exportFilters( const QList<MailFilter*> &filters, const KUrl&fileName, bool saveAll )
 {
   KUrl saveUrl;
-  if(fileName.isEmpty()) {
+  if (fileName.isEmpty()) {
     saveUrl = KFileDialog::getSaveUrl(
           QDir::homePath(), QString(), d->mParent, i18n( "Export Filters" ) );
 
@@ -452,7 +452,7 @@ void FilterImporterExporter::exportFilters( const QList<MailFilter*> &filters, c
   }
 
   KSharedConfig::Ptr config = KSharedConfig::openConfig( saveUrl.toLocalFile() );
-  if(saveAll) {
+  if (saveAll) {
     writeFiltersToConfig( filters, config, true );
   } else {
     MessageViewer::AutoQPointer<FilterSelectionDialog> dlg( new FilterSelectionDialog( d->mParent ) );

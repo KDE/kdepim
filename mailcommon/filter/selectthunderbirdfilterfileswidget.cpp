@@ -36,7 +36,7 @@ SelectThunderbirdFilterFilesWidget::SelectThunderbirdFilterFilesWidget(QWidget *
   QMap<QString, QString>::const_iterator i = listProfile.constBegin();
   while (i != listProfile.constEnd()) {
     QString name = i.key();
-    if(i.value()==defaultProfile){
+    if (i.value()==defaultProfile){
       name+=i18n(" (default)");
     }
     ui->profiles->addItem(name,i.value());
@@ -55,7 +55,7 @@ SelectThunderbirdFilterFilesWidget::~SelectThunderbirdFilterFilesWidget()
 
 void SelectThunderbirdFilterFilesWidget::slotButtonClicked(QAbstractButton*button)
 {
-  if(button == ui->selectFile) {
+  if (button == ui->selectFile) {
     ui->fileUrl->setEnabled(true);
     ui->profiles->setEnabled(false);
     ui->listFiles->setEnabled(false);
@@ -68,7 +68,7 @@ void SelectThunderbirdFilterFilesWidget::slotButtonClicked(QAbstractButton*butto
 
 void SelectThunderbirdFilterFilesWidget::slotProfileChanged(int index)
 {
-  if(index >= ui->profiles->count()) {
+  if (index >= ui->profiles->count()) {
     return;
   }
 
@@ -82,7 +82,7 @@ void SelectThunderbirdFilterFilesWidget::slotProfileChanged(int index)
     const QStringList subDirMail = dirMail.entryList(QDir::AllDirs|QDir::NoDotAndDotDot,QDir::Name);
     Q_FOREACH( const QString& file, subDirMail ) {
       const QString filterFile(subMailPath +QLatin1Char('/')+ file + QLatin1String("/msgFilterRules.dat"));
-      if(QFile(filterFile).exists()) {
+      if (QFile(filterFile).exists()) {
           listFilterFiles<<filterFile;
       }
     }
@@ -94,7 +94,7 @@ void SelectThunderbirdFilterFilesWidget::slotProfileChanged(int index)
 QStringList SelectThunderbirdFilterFilesWidget::selectedFiles() const
 {
   QStringList listFiles;
-  if(ui->selectFile->isChecked()) {
+  if (ui->selectFile->isChecked()) {
     listFiles<<ui->fileUrl->url().path();
   } else {
      QList<QListWidgetItem *> list = ui->listFiles->selectedItems();

@@ -61,7 +61,7 @@ void FilterImporterBalsa::addFilter(const KConfigGroup &grp)
 
 
     const QString sound = grp.readEntry(QLatin1String("Sound"));
-    if(!sound.isEmpty()) {
+    if (!sound.isEmpty()) {
         const QString actionName = QLatin1String( "play sound" );
         createFilterAction( filter, actionName, sound );
     }
@@ -79,10 +79,10 @@ void FilterImporterBalsa::addFilter(const KConfigGroup &grp)
 void FilterImporterBalsa::parseCondition(const QString& condition,MailCommon::MailFilter *filter )
 {
     QStringList conditionList;
-    if(condition.startsWith(QLatin1String("OR "))) {
+    if (condition.startsWith(QLatin1String("OR "))) {
         conditionList = condition.split(QLatin1String("OR"));
         filter->pattern()->setOp( SearchPattern::OpOr );
-    } else if(condition.startsWith(QLatin1String("AND "))) {
+    } else if (condition.startsWith(QLatin1String("AND "))) {
         conditionList = condition.split(QLatin1String("AND"));
         filter->pattern()->setOp( SearchPattern::OpAnd );
     } else {
@@ -91,7 +91,7 @@ void FilterImporterBalsa::parseCondition(const QString& condition,MailCommon::Ma
     }
     Q_FOREACH(QString cond, conditionList) {
         cond = cond.trimmed();
-        if(cond.startsWith(QLatin1String("NOT"))) {
+        if (cond.startsWith(QLatin1String("NOT"))) {
             cond = cond.right(cond.length()-3);
             cond = cond.trimmed();
         }
@@ -99,15 +99,15 @@ void FilterImporterBalsa::parseCondition(const QString& condition,MailCommon::Ma
 
         //Date between
         QByteArray fieldName;
-        if(cond.startsWith(QLatin1String("DATE"))) {
+        if (cond.startsWith(QLatin1String("DATE"))) {
             fieldName = "<date>";
             cond = cond.right(cond.length()-4);
             cond = cond.trimmed();
             QStringList splitDate = cond.split(QLatin1Char(' '));
             qDebug()<<" splitDate "<<splitDate;
-        } else if(cond.startsWith(QLatin1String("FLAG"))) {
+        } else if (cond.startsWith(QLatin1String("FLAG"))) {
             qDebug()<<" FLAG :";
-        } else if(cond.startsWith(QLatin1String("STRING"))) {
+        } else if (cond.startsWith(QLatin1String("STRING"))) {
             qDebug()<<" STRING";
         } else {
             qDebug()<<" condition not implemented :"<<cond;
@@ -153,7 +153,7 @@ void FilterImporterBalsa::parseAction(int actionType, const QString& action,Mail
         qDebug()<<" unknown parse action type "<<actionType;
         break;
     }
-    if(!actionName.isEmpty()) {
+    if (!actionName.isEmpty()) {
         //TODO adapt actionStr
         createFilterAction( filter, actionName, actionStr );
     }

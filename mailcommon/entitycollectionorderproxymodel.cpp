@@ -59,8 +59,8 @@ class EntityCollectionOrderProxyModel::EntityCollectionOrderProxyModelPrivate
         rank = 6;
       } else if ( MailCommon::Util::isVirtualCollection( collection ) ) {
         rank = 200;
-      } else if( !topLevelOrder.isEmpty() ) {
-          if( collection.parentCollection() == Akonadi::Collection::root()) {
+      } else if ( !topLevelOrder.isEmpty() ) {
+          if ( collection.parentCollection() == Akonadi::Collection::root()) {
               const QString resource = collection.resource();
               if (resource.isEmpty()) {
                   qDebug()<<" collection has not resource: "<<collection;
@@ -68,7 +68,7 @@ class EntityCollectionOrderProxyModel::EntityCollectionOrderProxyModelPrivate
                   return rank;
               }
               const int order = topLevelOrder.indexOf(resource);
-              if( order != -1 ) {
+              if ( order != -1 ) {
                   rank = order;
               }
           }
