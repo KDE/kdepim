@@ -19,6 +19,7 @@ set(headerthemeeditor_SRCS
   newthemedialog.cpp
   themesession.cpp
   themeconfiguredialog.cpp
+  themeeditorutil.cpp
 )
 
 
