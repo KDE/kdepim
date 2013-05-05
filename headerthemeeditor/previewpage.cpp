@@ -21,7 +21,7 @@
 #include <KMime/Message>
 #include <KPushButton>
 #include <KLocale>
-
+#include <KConfigGroup>
 #include <QVBoxLayout>
 
 PreviewPage::PreviewPage(QWidget *parent)
@@ -34,17 +34,29 @@ PreviewPage::PreviewPage(QWidget *parent)
     connect(update, SIGNAL(clicked(bool)),SLOT(slotUpdateViewer()));
     lay->addWidget(update);
     setLayout(lay);
+    loadConfig();
 }
 
 PreviewPage::~PreviewPage()
 {
 }
 
+void PreviewPage::loadConfig()
+{
+    KSharedConfig::Ptr config = KGlobal::config();
+    if (config->hasGroup(QLatin1String("Global"))) {
+        KConfigGroup group = config->group(QLatin1String("Global"));
+        mDefaultEmail = group.readEntry("defaultEmail", themeeditorutil::defaultMail()).toLatin1();
+    } else {
+        mDefaultEmail = themeeditorutil::defaultMail().toLatin1();
+    }
+    slotUpdateViewer();
+}
+
 void PreviewPage::slotUpdateViewer()
 {
     KMime::Message *msg = new KMime::Message;
-    QByteArray mail = themeeditorutil::defaultMail().toLatin1();
-    msg->setContent( mail );
+    msg->setContent( mDefaultEmail );
     msg->parse();
     mViewer->setMessage(KMime::Message::Ptr(msg));
 }

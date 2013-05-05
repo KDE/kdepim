@@ -16,6 +16,7 @@
 */
 
 #include "themeconfiguredialog.h"
+#include "themeeditorutil.h"
 
 #include <KLocale>
 #include <KUrlRequester>
@@ -74,7 +75,9 @@ void ThemeConfigureDialog::loadConfig()
     if (config->hasGroup(QLatin1String("Global"))) {
         KConfigGroup group = config->group(QLatin1String("Global"));
         mDefaultUrl->setUrl(group.readEntry("path", KUrl()));
-        mDefaultEmail->insertPlainText(group.readEntry("defaultEmail"));
+        mDefaultEmail->insertPlainText(group.readEntry("defaultEmail",themeeditorutil::defaultMail()));
+    } else {
+        mDefaultEmail->insertPlainText(themeeditorutil::defaultMail());
     }
 }
 

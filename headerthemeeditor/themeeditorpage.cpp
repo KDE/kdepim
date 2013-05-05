@@ -201,5 +201,9 @@ void ThemeEditorPage::setProjectDirectory(const QString &dir)
     mThemeSession->setProjectDirectory(dir);
 }
 
+void ThemeEditorPage::reloadConfig()
+{
+    mPreviewPage->loadConfig();
+}
 
 #include "themeeditorpage.moc"
