@@ -386,7 +386,7 @@ static CardInfo get_card_status( const QString & fileName, unsigned int idx, sha
         ci.status = ReaderStatus::CardCanLearnKeys;
 
 #ifdef DEBUG_SCREADER
-    kdebug() << "get_card_status: ci.status " << prettyFlags[ci.status];
+    kDebug() << "get_card_status: ci.status " << prettyFlags[ci.status];
 #endif
 
     return ci;
