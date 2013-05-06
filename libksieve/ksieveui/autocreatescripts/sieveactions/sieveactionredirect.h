@@ -32,6 +32,9 @@ public:
     QWidget *createParamWidget( QWidget *parent ) const;
     QString code(QWidget *) const;
     QStringList needRequires() const;
+
+    bool needCheckIfServerHasCapability() const;
+    QString serverNeedsCapability() const;
 private:
     bool mHasCopySupport;
 };
