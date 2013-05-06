@@ -26,6 +26,7 @@
 
 class QLineEdit;
 class KTextEdit;
+class QSplitter;
 
 namespace KSieveUi {
 
@@ -75,6 +76,9 @@ private:
     KPushButton *mCheckSyntax;
     QPushButton *mOkButton;
     SieveInfoWidget *mSieveInfo;
+    QSplitter *mMainSplitter;
+    QSplitter *mExtraSplitter;
+    QSplitter *mTemplateSplitter;
 };
 
 }
