@@ -56,9 +56,10 @@ ThemeConfigureDialog::ThemeConfigureDialog(QWidget *parent)
     lay->addWidget(mDefaultEmail);
 
     setMainWidget(w);
-    loadConfig();
     connect(this, SIGNAL(defaultClicked()), this, SLOT(slotDefaultClicked()));
     connect(this, SIGNAL(okClicked()), this, SLOT(slotOkClicked()));
+    loadConfig();
+    resize(600,400);
 }
 
 ThemeConfigureDialog::~ThemeConfigureDialog()
