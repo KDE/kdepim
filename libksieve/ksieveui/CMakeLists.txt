@@ -64,6 +64,7 @@ set(ksieveui_LIB_SRCS
   autocreatescripts/sieveconditions/sieveconditiondate.cpp
   autocreatescripts/sieveconditions/sieveconditioncurrentdate.cpp
   autocreatescripts/sieveconditions/sieveconditionmailboxexists.cpp
+  autocreatescripts/sieveconditions/sieveconditionspamtest.cpp
   autocreatescripts/sieveconditions/widgets/selectdatewidget.cpp
   autocreatescripts/sieveconditions/widgets/selectmatchtypecombobox.cpp
   autocreatescripts/sieveconditions/widgets/selectaddresspartcombobox.cpp
