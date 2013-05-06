@@ -66,13 +66,14 @@ void SieveActionWidget::generatedScript(QString &script, QStringList &requires)
     const int index = mComboBox->currentIndex();
     if (index != mComboBox->count()-1) {
         KSieveUi::SieveAction *widgetAction = mActionList.at(mComboBox->currentIndex());
+        QWidget *currentWidget = mLayout->itemAtPosition( 1, 2 )->widget();
         const QStringList lstRequires = widgetAction->needRequires();
         Q_FOREACH (const QString &r, lstRequires) {
             if (!requires.contains(r)) {
                 requires.append(r);
             }
         }
-        script += INDENTACTION + widgetAction->code(mLayout->itemAtPosition( 1, 2 )->widget()) + QLatin1Char('\n');
+        script += INDENTACTION + widgetAction->code(currentWidget) + QLatin1Char('\n');
     }
 }
 

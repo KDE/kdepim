@@ -15,18 +15,17 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef SIEVECONDITIONBODY_H
-#define SIEVECONDITIONBODY_H
-
+#ifndef SIEVECONDITIONSPAMTESTPLUS_H
+#define SIEVECONDITIONSPAMTESTPLUS_H
 
 #include "sievecondition.h"
 
 namespace KSieveUi {
-class SieveConditionBody : public SieveCondition
+class SieveConditionSpamTestPlus : public SieveCondition
 {
     Q_OBJECT
 public:
-    SieveConditionBody(QObject *parent = 0);
+    SieveConditionSpamTestPlus(QObject *parent = 0);
 
     /**
      * Static function that creates a filter action of this type.
@@ -35,14 +34,14 @@ public:
 
     QWidget *createParamWidget( QWidget *parent ) const;
 
-    QString code(QWidget *parent) const;
-
-    QStringList needRequires(QWidget *parent) const;
+    QString code(QWidget *w) const;
 
     bool needCheckIfServerHasCapability() const;
 
     QString serverNeedsCapability() const;
+
+    QStringList needRequires(QWidget *parent) const;
 };
 }
 
-#endif // SIEVECONDITIONBODY_H
+#endif // SIEVECONDITIONSPAMTESTPLUS_H

@@ -63,13 +63,14 @@ void SieveConditionWidget::generatedScript(QString &script, QStringList &require
     const int index = mComboBox->currentIndex();
     if (index != mComboBox->count()-1) {
         KSieveUi::SieveCondition *widgetCondition = mConditionList.at(mComboBox->currentIndex());
-        const QStringList lstRequires = widgetCondition->needRequires();
+        QWidget *currentWidget = mLayout->itemAtPosition( 1, 2 )->widget();
+        const QStringList lstRequires = widgetCondition->needRequires(currentWidget);
         Q_FOREACH (const QString &r, lstRequires) {
             if (!requires.contains(r)) {
                 requires.append(r);
             }
         }
-        script += mConditionList.at(mComboBox->currentIndex())->code(mLayout->itemAtPosition( 1, 2 )->widget()) + QLatin1Char('\n');
+        script += mConditionList.at(mComboBox->currentIndex())->code(currentWidget) + QLatin1Char('\n');
     }
 }
 

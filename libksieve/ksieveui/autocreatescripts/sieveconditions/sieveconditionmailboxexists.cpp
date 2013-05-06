@@ -58,7 +58,7 @@ QString SieveConditionMailboxExists::code(QWidget *w) const
     return QString::fromLatin1("mailboxexists \"%1\"").arg(editValue);
 }
 
-QStringList SieveConditionMailboxExists::needRequires() const
+QStringList SieveConditionMailboxExists::needRequires(QWidget *) const
 {
     return QStringList() << QLatin1String("mailbox");
 }

@@ -15,35 +15,39 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "sieveconditionspamtest.h"
+#include "sieveconditionspamtestplus.h"
 #include "widgets/selectrelationalmatchtype.h"
 #include "widgets/selectcomparatorcombobox.h"
 
 #include <KLocale>
 
 #include <QHBoxLayout>
-#include <QLabel>
 #include <QSpinBox>
+#include <QCheckBox>
 #include <QDebug>
 
 using namespace KSieveUi;
 
-SieveConditionSpamTest::SieveConditionSpamTest(QObject *parent)
-    : SieveCondition(QLatin1String("spamtest"), i18n("Spam Test"), parent)
+SieveConditionSpamTestPlus::SieveConditionSpamTestPlus(QObject *parent)
+    : SieveCondition(QLatin1String("spamtestplus"), i18n("SpamTestPlus extension"), parent)
 {
 }
 
-SieveCondition *SieveConditionSpamTest::newAction()
+SieveCondition *SieveConditionSpamTestPlus::newAction()
 {
-    return new SieveConditionSpamTest;
+    return new SieveConditionSpamTestPlus;
 }
 
-QWidget *SieveConditionSpamTest::createParamWidget( QWidget *parent ) const
+QWidget *SieveConditionSpamTestPlus::createParamWidget( QWidget *parent ) const
 {
     QWidget *w = new QWidget(parent);
     QHBoxLayout *lay = new QHBoxLayout;
     lay->setMargin(0);
     w->setLayout(lay);
+
+    QCheckBox *percent = new QCheckBox(i18n("Percent"));
+    percent->setObjectName(QLatin1String("percent"));
+    lay->addWidget(percent);
 
     SelectRelationalMatchType *relation = new SelectRelationalMatchType;
     relation->setObjectName(QLatin1String("relation"));
@@ -54,15 +58,18 @@ QWidget *SieveConditionSpamTest::createParamWidget( QWidget *parent ) const
     lay->addWidget(comparator);
 
     QSpinBox *spinbox = new QSpinBox;
-    spinbox->setMaximum(10);
+    spinbox->setMaximum(100);
     spinbox->setMinimum(0);
     spinbox->setObjectName(QLatin1String("value"));
     lay->addWidget(spinbox);
     return w;
 }
 
-QString SieveConditionSpamTest::code(QWidget *w) const
+QString SieveConditionSpamTestPlus::code(QWidget *w) const
 {
+    const QCheckBox *checkbox = w->findChild<QCheckBox*>( QLatin1String("percent") );
+    const QString percentStr = checkbox->isChecked() ? QLatin1String(":percent") : QString();
+
     const SelectRelationalMatchType *relation = w->findChild<SelectRelationalMatchType*>( QLatin1String("relation") );
     const QString relationStr = relation->code();
 
@@ -72,24 +79,24 @@ QString SieveConditionSpamTest::code(QWidget *w) const
     const QSpinBox *spinbox = w->findChild<QSpinBox*>( QLatin1String("value") );
     const QString value = QString::number(spinbox->value());
 
-    return QString::fromLatin1("spamtest %1 %2 \"%3\"").arg(relationStr).arg(comparatorStr).arg(value);
+    return QString::fromLatin1("spamtest %1 %2 %3 \"%4\"").arg(percentStr).arg(relationStr).arg(comparatorStr).arg(value);
 }
 
-bool SieveConditionSpamTest::needCheckIfServerHasCapability() const
+bool SieveConditionSpamTestPlus::needCheckIfServerHasCapability() const
 {
     return true;
 }
 
-QString SieveConditionSpamTest::serverNeedsCapability() const
+QString SieveConditionSpamTestPlus::serverNeedsCapability() const
 {
-    return QLatin1String("spamtest");
+    return QLatin1String("spamtestplus");
 }
 
-QStringList SieveConditionSpamTest::needRequires(QWidget *w) const
+QStringList SieveConditionSpamTestPlus::needRequires(QWidget *w) const
 {
     const SelectComparatorComboBox *comparator = w->findChild<SelectComparatorComboBox*>( QLatin1String("comparator") );
-    return QStringList() << QLatin1String("spamtest") << QLatin1String("relational") << comparator->require();
+    return QStringList() << QLatin1String("spamtestplus") << QLatin1String("relational") << comparator->require();
 }
 
-#include "sieveconditionspamtest.moc"
+#include "sieveconditionspamtestplus.moc"
 

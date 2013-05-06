@@ -74,7 +74,7 @@ QString SieveConditionBody::code(QWidget *w) const
     return (isNegative ? QLatin1String("not ") : QString()) + QString::fromLatin1("body %1 %2 \"%3\"").arg(bodyValue).arg(matchValue).arg(editValue);
 }
 
-QStringList SieveConditionBody::needRequires() const
+QStringList SieveConditionBody::needRequires(QWidget *) const
 {
     return QStringList() << QLatin1String("body");
 }

@@ -75,7 +75,7 @@ QString SieveConditionCurrentDate::serverNeedsCapability() const
     return QLatin1String("date");
 }
 
-QStringList SieveConditionCurrentDate::needRequires() const
+QStringList SieveConditionCurrentDate::needRequires(QWidget *) const
 {
     return QStringList() << QLatin1String("date");
 }
