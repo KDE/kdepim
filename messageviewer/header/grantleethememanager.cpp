@@ -26,6 +26,7 @@
 #include <KLocale>
 #include <KNS3/DownloadDialog>
 #include <KActionMenu>
+#include <KStandardDirs>
 
 #include <QDir>
 #include <QAction>
@@ -38,14 +39,13 @@ class GrantleeThemeManager::Private
 {
 public:
     Private(KActionCollection *ac, const QString &relativePath, GrantleeThemeManager *qq)
-        : themesPath(relativePath),
-          actionGroup(0),
+        : actionGroup(0),
           menu(0),
           actionCollection(ac),
           q(qq)
     {
         watch = new KDirWatch( q );
-
+        initThemesDirectories(relativePath);
         downloadThemesAction = new KAction(i18n("Download new themes..."), q);
         if (actionCollection)
             actionCollection->addAction( "download_header_themes", downloadThemesAction );
@@ -85,32 +85,33 @@ public:
         Q_EMIT q->updateThemes();
     }
 
-    void setThemesPath(const QString& path)
+    void setThemesPath()
     {
-        if ( !themesPath.isEmpty() ) {
+        if ( !themesDirectories.isEmpty() ) {
             watch->stopScan();
-            watch->removeDir( themesPath );
+            Q_FOREACH (const QString &directory, themesDirectories) {
+                watch->removeDir( directory );
+            }
+        } else {
+            return;
         }
 
         // clear all previous theme information
         themes.clear();
-        if ( path.isEmpty() ) {
-            return;
-        }
 
-        themesPath = path;
-
-        QDirIterator dirIt( themesPath, QStringList(), QDir::AllDirs | QDir::NoDotAndDotDot );
-        while ( dirIt.hasNext() ) {
-            dirIt.next();
-            const QString dirName = dirIt.fileName();
-            const GrantleeTheme theme = loadTheme( dirIt.filePath(), dirName );
-            themes.insert( dirName, theme );
-            //qDebug()<<" theme.name()"<<theme.name();
+        Q_FOREACH (const QString &directory, themesDirectories) {
+            QDirIterator dirIt( directory, QStringList(), QDir::AllDirs | QDir::NoDotAndDotDot );
+            while ( dirIt.hasNext() ) {
+                dirIt.next();
+                const QString dirName = dirIt.fileName();
+                const GrantleeTheme theme = loadTheme( dirIt.filePath(), dirName );
+                themes.insert( dirName, theme );
+                //qDebug()<<" theme.name()"<<theme.name();
+            }
+            watch->addDir( directory );
         }
 
         Q_EMIT q->themesChanged();
-        watch->addDir( themesPath );
         watch->startScan();
     }
 
@@ -133,7 +134,7 @@ public:
     {
         if (!actionGroup || !menu)
             return;
-        setThemesPath( themesPath );
+        setThemesPath();
         QString themeActivated;
         Q_FOREACH ( KToggleAction *action, themesActionList ) {
             if (action->isChecked())
@@ -192,8 +193,21 @@ public:
         return 0;
     }
 
+    void initThemesDirectories(const QString &themesRelativePath)
+    {
+        if (!themesRelativePath.isEmpty()) {
+            themesDirectories = KGlobal::dirs()->findDirs("data", QLatin1String("messageviewer/themes/"));
+            if (themesDirectories.count() < 2) {
+                //Make sure to add local directory
+                const QString localDirectory = KStandardDirs::locateLocal("data",QLatin1String("messageviewer/themes/"));
+                if (!themesDirectories.contains(localDirectory)) {
+                    themesDirectories.append(localDirectory);
+                }
+            }
+        }
+    }
 
-    QString themesPath;
+    QStringList themesDirectories;
     QMap<QString, GrantleeTheme> themes;
     QList<KToggleAction*> themesActionList;
     KDirWatch *watch;
