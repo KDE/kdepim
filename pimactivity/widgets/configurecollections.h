@@ -47,12 +47,16 @@ public:
 
     void setDefault();
     void writeConfig(const QString &id);
+
 private:
     void readConfig(const QString &id);
 
+private Q_SLOTS:
+    void slotDataChanged();
 
 Q_SIGNALS:
     void changed(bool b = true);
+
 private:
     void initCollections();
     QTreeView *mFolderView;

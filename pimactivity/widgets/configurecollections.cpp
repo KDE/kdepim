@@ -73,8 +73,13 @@ void ConfigureCollections::initCollections()
     mCheckProxy->setSelectionModel( mSelectionModel );
     mCheckProxy->setSourceModel( mModel );
 
+    connect(mCheckProxy, SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(slotDataChanged()));
     mFolderView->setModel( mCheckProxy );
+}
 
+void ConfigureCollections::slotDataChanged()
+{
+    Q_EMIT(changed(true));
 }
 
 void ConfigureCollections::readConfig(const QString &id)
@@ -96,6 +101,7 @@ void ConfigureCollections::writeConfig(const QString &id)
         mModelState = new KViewStateMaintainer<Akonadi::ETMViewStateSaver>( grp, this );
         mModelState->saveState();
     }
+    Q_EMIT(changed(false));
 }
 
 void ConfigureCollections::setDefault()
