@@ -45,13 +45,13 @@ BalsaSettings::BalsaSettings(const QString &filename, ImportWizard *parent)
     }
 
     const QStringList mailBoxList = config.groupList().filter( QRegExp( "mailbox-\\+d" ) );
-    Q_FOREACH(const QString& mailBox,mailBoxList) {
+    Q_FOREACH (const QString& mailBox,mailBoxList) {
       KConfigGroup grp = config.group(mailBox);
       readAccount(grp,autoCheck,autoCheckDelay);
     }
 
     const QStringList smtpList = config.groupList().filter( QRegExp( "smtp-server-" ) );
-    Q_FOREACH(const QString& smtp,smtpList) {
+    Q_FOREACH (const QString& smtp,smtpList) {
       KConfigGroup grp = config.group(smtp);
       readTransport(grp);
     }

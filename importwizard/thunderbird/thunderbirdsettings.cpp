@@ -271,7 +271,7 @@ void ThunderbirdSettings::readTagSettings()
 void ThunderbirdSettings::readLdapSettings()
 {
     //qDebug()<<" mLdapAccountList:"<<mLdapAccountList;
-    Q_FOREACH(const QString& ldapAccountName, mLdapAccountList) {
+    Q_FOREACH (const QString& ldapAccountName, mLdapAccountList) {
         ldapStruct ldap;
         const QString ldapDescription = QString::fromLatin1("%1.description").arg(ldapAccountName);
         if (mHashConfig.contains(ldapDescription)) {
@@ -441,7 +441,7 @@ void ThunderbirdSettings::addAuth(QMap<QString, QVariant>& settings, const QStri
 
 void ThunderbirdSettings::readAccount()
 {
-    Q_FOREACH( const QString&account, mAccountList )
+    Q_FOREACH ( const QString&account, mAccountList )
     {
         const QString serverName = mHashConfig.value( QString::fromLatin1( "mail.account.%1" ).arg( account ) + QLatin1String( ".server" ) ).toString();
         const QString accountName = QString::fromLatin1( "mail.server.%1" ).arg( serverName );
@@ -613,7 +613,7 @@ void ThunderbirdSettings::readAccount()
         if ( mHashConfig.contains( identityConfig ) )
         {
             const QStringList idList = mHashConfig.value(identityConfig).toString().split(QLatin1Char(','));
-            Q_FOREACH(const QString& id, idList) {
+            Q_FOREACH (const QString& id, idList) {
                 readIdentity( id );
             }
         }
@@ -633,7 +633,7 @@ void ThunderbirdSettings::readTransport()
         defaultSmtp = smtpList.at(0);
     }
 
-    Q_FOREACH( const QString &smtp, smtpList )
+    Q_FOREACH ( const QString &smtp, smtpList )
     {
         const QString smtpName = QString::fromLatin1( "mail.smtpserver.%1" ).arg( smtp );
         MailTransport::Transport *mt = createTransport();

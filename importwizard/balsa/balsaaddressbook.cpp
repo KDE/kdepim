@@ -34,7 +34,7 @@ BalsaAddressBook::BalsaAddressBook(const QString &filename, ImportWizard *parent
 {
     KConfig config(filename);
     const QStringList addressBookList = config.groupList().filter( QRegExp( "address-book-\\+d" ) );
-    Q_FOREACH(const QString& addressbook,addressBookList) {
+    Q_FOREACH (const QString& addressbook,addressBookList) {
       KConfigGroup grp = config.group(addressbook);
       readAddressBook(grp);
     }
@@ -79,7 +79,7 @@ void BalsaAddressBook::readAddressBook(const KConfigGroup& grp)
         file.close();
 
         KABC::LDIFConverter::LDIFToAddressee( wholeFile, contacts, dtDefault );
-        Q_FOREACH(const KABC::Addressee&contact, contacts) {
+        Q_FOREACH (const KABC::Addressee&contact, contacts) {
           createContact( contact );
         }
       }
