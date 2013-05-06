@@ -90,7 +90,7 @@ bool ExpireCollectionAttribute::isAutoExpire() const
 
 void ExpireCollectionAttribute::setUnreadExpireAge( int age )
 {
-  if( age >= 0 && age != mUnreadExpireAge ) {
+  if ( age >= 0 && age != mUnreadExpireAge ) {
     mUnreadExpireAge = age;
   }
 }

@@ -51,7 +51,7 @@ FilterAction::ReturnCode FilterActionSetStatus::process( ItemContext &context ) 
   }
   else
     status.set( newStatus );
-  if( oldStatus != status ) {
+  if ( oldStatus != status ) {
     context.item().setFlags( status.statusFlags() );
     context.setNeedsFlagStore();
   }

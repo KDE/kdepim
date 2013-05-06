@@ -458,7 +458,7 @@ void ExportMailJob::writeDirectory(QString path, const QString& relativePath, KZ
     mailArchive->writeDir(path.remove(relativePath),"","");
     const QFileInfoList lst= dir.entryInfoList(QDir::NoDot|QDir::NoDotDot|QDir::Dirs|QDir::AllDirs|QDir::Hidden|QDir::Files);
     const int numberItems(lst.count());
-    for(int i = 0; i < numberItems;++i) {
+    for (int i = 0; i < numberItems;++i) {
         const QString filename(lst.at(i).fileName());
         if (lst.at(i).isDir()) {
             writeDirectory(relativePath + path + QLatin1Char('/') + filename,relativePath,mailArchive);

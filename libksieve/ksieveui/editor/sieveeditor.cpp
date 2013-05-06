@@ -133,6 +133,7 @@ SieveEditor::SieveEditor( QWidget * parent )
 
     lay->addWidget(buttonBox);
     setMainWidget( mainWidget );
+    //TODO restore splitter size
     KConfigGroup group( KGlobal::config(), "SieveEditor" );
     const QSize sizeDialog = group.readEntry( "Size", QSize() );
     if ( sizeDialog.isValid() ) {
@@ -148,6 +149,7 @@ SieveEditor::~SieveEditor()
 {
     KConfigGroup group( KGlobal::config(), "SieveEditor" );
     group.writeEntry( "Size", size() );
+    //TODO save splitter size
 }
 
 void SieveEditor::slotAutoGenerateScripts()
@@ -249,7 +251,7 @@ bool SieveEditor::loadFromFile( const QString& filename )
         if ( scriptText.isEmpty() )
             scriptText = line;
         else
-            scriptText += QLatin1String( "\n" ) + line;
+            scriptText += QLatin1Char( '\n' ) + line;
         line = in.readLine();
     }
     mTextEdit->setPlainText( scriptText );

@@ -15,28 +15,20 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "sieveactionabstracteditheader.h"
+#include "themeeditorutil.h"
 
-using namespace KSieveUi;
-
-SieveActionAbstractEditHeader::SieveActionAbstractEditHeader(const QString &name, const QString &label, QObject *parent)
-    : SieveAction(name, label, parent)
+QString themeeditorutil::defaultMail()
 {
+    QString mail = QString::fromLatin1("From: montel@example.com\n"
+            "To: kde@example.com\n"
+            "Sender: montel@example.com\n"
+            "MIME-Version: 1.0\n"
+            "Date: 28 Apr 2013 23:58:21 -0000\n"
+            "Subject: Test message\n"
+            "Content-Type: text/plain\n"
+            "X-Length: 0\n"
+            "X-UID: 6161\n"
+            "\n"
+            "Hello this is a test mail\n");
+    return mail;
 }
-
-QStringList SieveActionAbstractEditHeader::needRequires() const
-{
-    return QStringList() <<QLatin1String("editheader");
-}
-
-bool SieveActionAbstractEditHeader::needCheckIfServerHasCapability() const
-{
-    return true;
-}
-
-QString SieveActionAbstractEditHeader::serverNeedsCapability() const
-{
-    return QLatin1String("editheader");
-}
-
-#include "sieveactionabstracteditheader.moc"

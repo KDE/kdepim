@@ -16,11 +16,12 @@
 */
 
 #include "previewpage.h"
+#include "themeeditorutil.h"
 #include "messageviewer/viewer.h"
 #include <KMime/Message>
 #include <KPushButton>
 #include <KLocale>
-
+#include <KConfigGroup>
 #include <QVBoxLayout>
 
 PreviewPage::PreviewPage(QWidget *parent)
@@ -33,27 +34,29 @@ PreviewPage::PreviewPage(QWidget *parent)
     connect(update, SIGNAL(clicked(bool)),SLOT(slotUpdateViewer()));
     lay->addWidget(update);
     setLayout(lay);
+    loadConfig();
 }
 
 PreviewPage::~PreviewPage()
 {
 }
 
+void PreviewPage::loadConfig()
+{
+    KSharedConfig::Ptr config = KGlobal::config();
+    if (config->hasGroup(QLatin1String("Global"))) {
+        KConfigGroup group = config->group(QLatin1String("Global"));
+        mDefaultEmail = group.readEntry("defaultEmail", themeeditorutil::defaultMail()).toLatin1();
+    } else {
+        mDefaultEmail = themeeditorutil::defaultMail().toLatin1();
+    }
+    slotUpdateViewer();
+}
+
 void PreviewPage::slotUpdateViewer()
 {
     KMime::Message *msg = new KMime::Message;
-    QByteArray mail = "From: montel@example.com\n"
-            "To: kde@example.com\n"
-            "Sender: montel@example.com\n"
-            "MIME-Version: 1.0\n"
-            "Date: 28 Apr 2013 23:58:21 -0000\n"
-            "Subject: Test message\n"
-            "Content-Type: text/plain\n"
-            "X-Length: 0\n"
-            "X-UID: 6161\n"
-            "\n"
-            "Hello this is a test mail\n";
-    msg->setContent( mail );
+    msg->setContent( mDefaultEmail );
     msg->parse();
     mViewer->setMessage(KMime::Message::Ptr(msg));
 }

@@ -229,7 +229,7 @@ QVariant FolderTreeWidgetProxyModel::data( const QModelIndex &index, int role ) 
         return d->brokenAccountColor;
       }
     }
-  } else if( role == Qt::DisplayRole) {
+  } else if ( role == Qt::DisplayRole) {
     const QModelIndex sourceIndex = mapToSource( index );
     const QModelIndex rowIndex = sourceIndex.sibling( sourceIndex.row(), 0 );
     const Akonadi::Collection collection =
@@ -239,8 +239,8 @@ QVariant FolderTreeWidgetProxyModel::data( const QModelIndex &index, int role ) 
 
       const Akonadi::AgentInstance instance =
           Akonadi::AgentManager::self()->instance( collection.resource() );
-      if(collection.parentCollection() == Akonadi::Collection::root()) {
-         if(!instance.isOnline()) {
+      if (collection.parentCollection() == Akonadi::Collection::root()) {
+         if (!instance.isOnline()) {
             return i18n("%1 (Offline)",Akonadi::EntityRightsFilterModel::data(index,role).toString());
          }
       }

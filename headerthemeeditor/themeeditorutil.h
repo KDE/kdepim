@@ -15,28 +15,15 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "sieveactionabstracteditheader.h"
 
-using namespace KSieveUi;
+#ifndef THEMEEDITORUTIL_H
+#define THEMEEDITORUTIL_H
 
-SieveActionAbstractEditHeader::SieveActionAbstractEditHeader(const QString &name, const QString &label, QObject *parent)
-    : SieveAction(name, label, parent)
+#include <QString>
+
+namespace themeeditorutil
 {
+    QString defaultMail();
 }
 
-QStringList SieveActionAbstractEditHeader::needRequires() const
-{
-    return QStringList() <<QLatin1String("editheader");
-}
-
-bool SieveActionAbstractEditHeader::needCheckIfServerHasCapability() const
-{
-    return true;
-}
-
-QString SieveActionAbstractEditHeader::serverNeedsCapability() const
-{
-    return QLatin1String("editheader");
-}
-
-#include "sieveactionabstracteditheader.moc"
+#endif // THEMEEDITORUTIL_H

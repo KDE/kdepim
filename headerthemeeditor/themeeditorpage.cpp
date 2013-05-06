@@ -81,12 +81,25 @@ bool ThemeEditorPage::themeWasChanged() const
 
 void ThemeEditorPage::installTheme(const QString &themePath)
 {
-    mEditorPage->installTheme(themePath);
+    QDir dir(themePath);
+    QDir themeDir(themePath + QDir::separator() + mDesktopPage->themeName());
+    if (themeDir.exists()) {
+        if (KMessageBox::questionYesNo(this, i18n("Theme already exists. Do you want to overwrite it?"), i18n("Theme already exists")) == KMessageBox::No) {
+            return;
+        }
+    } else {
+        if (!dir.mkdir(mDesktopPage->themeName())) {
+            KMessageBox::error(this, i18n("Can not create theme folder."));
+            return;
+        }
+    }
+    const QString newPath = themePath + QDir::separator() + mDesktopPage->themeName();
+    mEditorPage->installTheme(newPath);
 
     Q_FOREACH (EditorPage *page, mExtraPage) {
-        page->installTheme(themePath);
+        page->installTheme(newPath);
     }
-    mDesktopPage->installTheme(themePath);
+    mDesktopPage->installTheme(newPath);
 }
 
 void ThemeEditorPage::uploadTheme()
@@ -188,5 +201,9 @@ void ThemeEditorPage::setProjectDirectory(const QString &dir)
     mThemeSession->setProjectDirectory(dir);
 }
 
+void ThemeEditorPage::reloadConfig()
+{
+    mPreviewPage->loadConfig();
+}
 
 #include "themeeditorpage.moc"

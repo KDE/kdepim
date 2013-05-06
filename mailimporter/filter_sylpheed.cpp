@@ -103,7 +103,7 @@ void FilterSylpheed::processDirectory( const QString& path)
   QDir dir(path);
   const QStringList rootSubDirs = dir.entryList(QStringList("[^\\.]*"), QDir::Dirs , QDir::Name);
   QStringList::ConstIterator end = rootSubDirs.constEnd();
-  for(QStringList::ConstIterator filename = rootSubDirs.constBegin() ; filename != end ; ++filename ) {
+  for (QStringList::ConstIterator filename = rootSubDirs.constBegin() ; filename != end ; ++filename ) {
     if(filterInfo()->shouldTerminate())
       break;
     importDirContents(dir.filePath(*filename));

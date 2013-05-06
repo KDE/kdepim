@@ -451,7 +451,7 @@ uint MailCommon::Util::folderIdentity( const Akonadi::Item &item )
   uint id = 0;
   if ( item.isValid() && item.parentCollection().isValid() ) {
     Akonadi::Collection col = item.parentCollection();
-    if( col.resource().isEmpty()) {
+    if ( col.resource().isEmpty()) {
       col = parentCollectionFromItem(item);
     }
     const QSharedPointer<FolderCollection> fd =
@@ -630,7 +630,7 @@ Akonadi::Collection::Id MailCommon::Util::convertFolderPathToCollectionId( const
 QString MailCommon::Util::convertFolderPathToCollectionStr( const QString& folder)
 {
   Akonadi::Collection::Id newFolderId= MailCommon::Util::convertFolderPathToCollectionId(folder);
-  if(newFolderId == -1 )
+  if (newFolderId == -1 )
     return QString();
   return QString::number(newFolderId);
 }

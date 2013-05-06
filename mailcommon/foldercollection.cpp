@@ -241,11 +241,11 @@ void FolderCollection::writeConfig() const
   }
 
   configGroup.writeEntry( "PutRepliesInSameFolder", mPutRepliesInSameFolder );
-  if(mHideInSelectionDialog)
+  if (mHideInSelectionDialog)
       configGroup.writeEntry( "HideInSelectionDialog", mHideInSelectionDialog );
   else
       configGroup.deleteEntry("HideInSelectionDialog");
-  if(mIgnoreNewMail)
+  if (mIgnoreNewMail)
       configGroup.writeEntry( "IgnoreNewMail", mIgnoreNewMail );
   else
       configGroup.deleteEntry("IgnoreNewMail");
@@ -296,7 +296,7 @@ uint FolderCollection::identity() const
 
     if ( imapSettingsInterface->isValid() ) {
       QDBusReply<bool> useDefault = imapSettingsInterface->useDefaultIdentity();
-      if( useDefault.isValid() && useDefault.value() ) {
+      if ( useDefault.isValid() && useDefault.value() ) {
         delete imapSettingsInterface;
         return mIdentity;
       }

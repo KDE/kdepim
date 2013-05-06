@@ -133,7 +133,8 @@ bool DesktopFilePage::wasChanged() const
 
 void DesktopFilePage::installTheme(const QString &themePath)
 {
-    //TODO
+    const QString filename = themePath + QDir::separator() + QLatin1String("header.desktop");
+    saveAsFilename(filename);
 }
 
 #include "desktopfilepage.moc"

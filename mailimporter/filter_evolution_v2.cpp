@@ -104,7 +104,7 @@ void FilterEvolution_v2::importMails( const QString& maildir )
     const QStringList rootSubDirs = dir.entryList(QStringList("[^\\.]*"), QDir::Dirs, QDir::Name); // Removal of . and ..
     int currentDir = 1, numSubDirs = rootSubDirs.size();
     QStringList::ConstIterator endFilename( rootSubDirs.constEnd() );
-    for(QStringList::ConstIterator filename = rootSubDirs.constBegin() ; filename != endFilename ; ++filename, ++currentDir) {
+    for (QStringList::ConstIterator filename = rootSubDirs.constBegin() ; filename != endFilename ; ++filename, ++currentDir) {
       if (filterInfo()->shouldTerminate())
         break;
       importDirContents(dir.filePath(*filename), *filename, *filename);
@@ -167,7 +167,7 @@ void FilterEvolution_v2::importDirContents(const QString& dirName, const QString
     QDir subfolders(dirName);
     const QStringList subDirs = subfolders.entryList(QStringList("[^\\.]*"), QDir::Dirs, QDir::Name);
     QStringList::ConstIterator end( subDirs.constEnd() );
-    for(QStringList::ConstIterator filename = subDirs.constBegin() ; filename != end; ++filename) {
+    for (QStringList::ConstIterator filename = subDirs.constBegin() ; filename != end; ++filename) {
         QString kSubDir;
         if(!KMailSubDir.isNull()) {
             kSubDir = KMailSubDir + '/' + *filename;

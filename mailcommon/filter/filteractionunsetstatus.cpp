@@ -46,7 +46,7 @@ FilterAction::ReturnCode FilterActionUnsetStatus::process( ItemContext &context 
   if ( newStatus == Akonadi::MessageStatus::statusUnread() ) {
     Akonadi::MessageStatus oldStatus = status;
     newStatus.setRead( true );
-    if( oldStatus != newStatus ) {
+    if ( oldStatus != newStatus ) {
       context.item().setFlags( newStatus.statusFlags() );
       context.setNeedsFlagStore();
     }

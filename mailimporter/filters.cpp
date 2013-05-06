@@ -133,7 +133,7 @@ bool Filter::addAkonadiMessage( const Akonadi::Collection &collection,
 {
   Akonadi::Item item;
 
-  item.setMimeType( "message/rfc822" );
+  item.setMimeType( QLatin1String("message/rfc822") );
 
   if ( status.isOfUnknownStatus() ) {
     KMime::Headers::Base *statusHeaders = message->headerByType( "X-Status" );
@@ -194,13 +194,13 @@ Akonadi::Collection Filter::parseFolderString(const QString& folderParseString)
 {
   // Return an already created collection:
   QMap<QString, Akonadi::Collection>::const_iterator end(  d->messageFolderCollectionMap.constEnd() );
-  for( QMap<QString, Akonadi::Collection>::const_iterator it = d->messageFolderCollectionMap.constBegin(); it != end; it ++ ) {
+  for ( QMap<QString, Akonadi::Collection>::const_iterator it = d->messageFolderCollectionMap.constBegin(); it != end; it ++ ) {
     if( it.key() ==  folderParseString )
       return it.value();
   }
 
   // The folder hasn't yet been created, create it now.
-  const QStringList folderList = folderParseString.split( '/', QString::SkipEmptyParts );
+  const QStringList folderList = folderParseString.split( QLatin1Char('/'), QString::SkipEmptyParts );
   bool isFirst = true;
   QString folderBuilder;
   Akonadi::Collection lastCollection;
@@ -265,7 +265,7 @@ bool Filter::checkForDuplicates ( const QString& msgID,
 
   // Check if the contents of this collection have already been found.
   QMultiMap<QString, QString>::const_iterator end( d->messageFolderMessageIDMap.constEnd() );
-  for( QMultiMap<QString, QString>::const_iterator it = d->messageFolderMessageIDMap.constBegin(); it != end; it++ ) {
+  for ( QMultiMap<QString, QString>::const_iterator it = d->messageFolderMessageIDMap.constBegin(); it != end; it++ ) {
     if( it.key() == messageFolder ) {
       folderFound = true;
       break;
@@ -302,7 +302,7 @@ bool Filter::checkForDuplicates ( const QString& msgID,
 
   // Check if this message has a duplicate
   QMultiMap<QString, QString>::const_iterator endMsgID( d->messageFolderMessageIDMap.constEnd() );
-  for( QMultiMap<QString, QString>::const_iterator it = d->messageFolderMessageIDMap.constBegin();it !=endMsgID ; it++ ) {
+  for ( QMultiMap<QString, QString>::const_iterator it = d->messageFolderMessageIDMap.constBegin();it !=endMsgID ; it++ ) {
     if( it.key() == messageFolder &&
         it.value() == msgID )
       return true;
@@ -387,12 +387,12 @@ int Filter::countDirectory(const QDir& dir, bool searchHiddenDirectory)
   int countDir = 0;
   QStringList subDirs;
   if ( searchHiddenDirectory )
-    subDirs = dir.entryList(QStringList("*"), QDir::Dirs | QDir::Hidden, QDir::Name);
+    subDirs = dir.entryList(QStringList(QLatin1String("*")), QDir::Dirs | QDir::Hidden, QDir::Name);
   else
-    subDirs = dir.entryList(QStringList("[^\\.]*"), QDir::Dirs, QDir::Name); // Removal of . and ..
+    subDirs = dir.entryList(QStringList(QLatin1String("[^\\.]*")), QDir::Dirs, QDir::Name); // Removal of . and ..
   
   QStringList::ConstIterator end = subDirs.constEnd();
-  for(QStringList::ConstIterator filename = subDirs.constBegin() ; filename != end ; ++filename ) {
+  for (QStringList::ConstIterator filename = subDirs.constBegin() ; filename != end ; ++filename ) {
     if(!(*filename == QLatin1String( "." ) || *filename == QLatin1String( ".." ))) {
       countDir += countDirectory( QDir( dir.filePath(*filename ) ), searchHiddenDirectory ) + 1;
     }

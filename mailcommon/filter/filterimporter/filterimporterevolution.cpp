@@ -127,7 +127,7 @@ void FilterImporterEvolution::parsePartAction( const QDomElement &ruleFilter,
                     } else {
                         kDebug() << " parttype part : name : not implemented :" << name;
                     }
-                    if(fieldName.isEmpty()) {
+                    if (fieldName.isEmpty()) {
                         kDebug()<<" parttype part : name : not implemented :" << name;
                         continue;
                     }
@@ -143,19 +143,19 @@ void FilterImporterEvolution::parsePartAction( const QDomElement &ruleFilter,
 
                             if ( valueFilter.hasAttribute( "name" ) ) {
                                 const QString name = valueFilter.attribute( "name" );
-                                if(name==QLatin1String("flag")) {
+                                if (name==QLatin1String("flag")) {
 
                                     const QString flag = valueFilter.attribute( "value" );
                                     kDebug()<<" flag :"<<flag;
-                                    if(flag==QLatin1String("Seen")) {
+                                    if (flag==QLatin1String("Seen")) {
                                         contents = QLatin1String("Read");
-                                    } else if(flag==QLatin1String("Answered")) {
+                                    } else if (flag==QLatin1String("Answered")) {
                                         contents = QLatin1String("Sent");
-                                    } else if(flag==QLatin1String("Draft")) {
+                                    } else if (flag==QLatin1String("Draft")) {
                                         //FIXME
-                                    } else if(flag==QLatin1String("Flagged")) { //Important
+                                    } else if (flag==QLatin1String("Flagged")) { //Important
                                         contents = QLatin1String("Important");
-                                    } else if(flag==QLatin1String("Junk")) {
+                                    } else if (flag==QLatin1String("Junk")) {
                                         contents = QLatin1String("Spam");
                                     } else {
                                         kDebug()<<" unknown status flags "<<flag;
@@ -167,7 +167,7 @@ void FilterImporterEvolution::parsePartAction( const QDomElement &ruleFilter,
                                 const QString name = valueFilter.attribute( "type" );
                                 if ( name == QLatin1String( "option" ) ){
                                     //Nothing we will look at value
-                                } else if( name == QLatin1String( "string" ) ) {
+                                } else if ( name == QLatin1String( "string" ) ) {
                                     QDomElement string = valueFilter.firstChildElement();
                                     contents = string.text();
                                 } else if ( name == QLatin1String( "folder" ) ) {
@@ -178,10 +178,10 @@ void FilterImporterEvolution::parsePartAction( const QDomElement &ruleFilter,
                                             contents.remove( QLatin1String( "folder://" ) );
                                         }
                                     }
-                                } else if( name == QLatin1String( "address" ) ) {
+                                } else if ( name == QLatin1String( "address" ) ) {
                                     QDomElement address = valueFilter.firstChildElement();
                                     contents = address.text();
-                                } else if( name == QLatin1String( "integer" ) ) {
+                                } else if ( name == QLatin1String( "integer" ) ) {
                                     if ( valueFilter.hasAttribute( "integer" ) ) {
                                         contents = valueFilter.attribute( "integer" );
                                         int val = contents.toInt();
@@ -299,7 +299,7 @@ void FilterImporterEvolution::parsePartAction( const QDomElement &ruleFilter,
                                         }
                                         kDebug() << " contents folder :" << value;
                                     }
-                                } else if( name == QLatin1String( "address" ) ) {
+                                } else if ( name == QLatin1String( "address" ) ) {
                                     //TODO
                                 }
 
@@ -323,7 +323,7 @@ void FilterImporterEvolution::parsePartAction( const QDomElement &ruleFilter,
 void FilterImporterEvolution::parseFilters( const QDomElement &e )
 {
     MailCommon::MailFilter *filter = new MailCommon::MailFilter();
-    if( e.hasAttribute( "enabled" ) ) {
+    if ( e.hasAttribute( "enabled" ) ) {
         const QString attr = e.attribute( "enabled" );
         if ( attr == QLatin1String( "false" ) ) {
             filter->setEnabled( false );

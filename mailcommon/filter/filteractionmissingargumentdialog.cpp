@@ -74,7 +74,7 @@ FilterActionMissingCollectionDialog::FilterActionMissingCollectionDialog(
 
   QLabel *label = new QLabel( this );
   label->setWordWrap(true);
-  if(filtername.isEmpty())
+  if (filtername.isEmpty())
     label->setText( i18n( "Please select a folder" ));
   else
     label->setText( i18n( "Filter folder is missing. "
@@ -376,7 +376,7 @@ QString FilterActionMissingTagDialog::selectedTag() const
 void FilterActionMissingTagDialog::slotAddTag()
 {
   QPointer<MailCommon::AddTagDialog> dlg = new MailCommon::AddTagDialog(QList<KActionCollection*>(),this);
-  if(dlg->exec())  {
+  if (dlg->exec())  {
     QListWidgetItem *item = new QListWidgetItem( dlg->label() );
     item->setData(UrlData, dlg->nepomukUrl());
     mTagList->addItem(item);

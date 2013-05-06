@@ -55,7 +55,7 @@ void FilterOpera::importRecursive(const QDir& mailDir, const QString &accountNam
   int numSubDirs = rootSubDirs.size();
   if ( numSubDirs > 0 ) {
     QStringList::ConstIterator end( rootSubDirs.constEnd() );
-    for(QStringList::ConstIterator filename = rootSubDirs.constBegin() ; filename != end ; ++filename, ++currentDir) {
+    for (QStringList::ConstIterator filename = rootSubDirs.constBegin() ; filename != end ; ++filename, ++currentDir) {
       QDir importDir ( mailDir.path() +QDir::separator()+ *filename );
       const QStringList files = importDir.entryList(QStringList("*.[mM][bB][sS]"), QDir::Files, QDir::Name);
       if ( files.isEmpty() ) {

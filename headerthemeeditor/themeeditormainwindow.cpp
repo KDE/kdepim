@@ -86,7 +86,12 @@ void ThemeEditorMainWindow::setupActions()
 void ThemeEditorMainWindow::slotConfigure()
 {
     QPointer<ThemeConfigureDialog> dialog = new ThemeConfigureDialog(this);
-    dialog->exec();
+    if (dialog->exec()) {
+        if (mThemeEditor) {
+            mThemeEditor->reloadConfig();
+        }
+    }
+
     delete dialog;
 }
 

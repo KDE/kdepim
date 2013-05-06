@@ -158,7 +158,7 @@ void FilterThunderbird::importMails( const QString & maildir )
     const QStringList rootSubDirs = dir.entryList(QStringList("[^\\.]*"), QDir::Dirs, QDir::Name); // Removal of . and ..
     int currentDir = 1, numSubDirs = rootSubDirs.size();
     QStringList::ConstIterator end = rootSubDirs.constEnd();
-    for(QStringList::ConstIterator filename = rootSubDirs.constBegin() ; filename != end; ++filename, ++currentDir) {
+    for (QStringList::ConstIterator filename = rootSubDirs.constBegin() ; filename != end; ++filename, ++currentDir) {
       if(filterInfo()->shouldTerminate())
         break;
       importDirContents(dir.filePath(*filename), *filename, *filename);
@@ -219,7 +219,7 @@ void FilterThunderbird::importDirContents(const QString& dirName, const QString&
   QDir subfolders(dirName);
   const QStringList subDirs = subfolders.entryList(QStringList("[^\\.]*"), QDir::Dirs, QDir::Name);
   QStringList::ConstIterator end = subDirs.constEnd();
-  for(QStringList::ConstIterator filename = subDirs.constBegin() ; filename != end; ++filename) {
+  for (QStringList::ConstIterator filename = subDirs.constBegin() ; filename != end; ++filename) {
     if(filterInfo()->shouldTerminate()) break;
     QString kSubDir;
     if(!KMailSubDir.isNull()) {

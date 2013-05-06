@@ -109,7 +109,7 @@ void FilterAction::sendMDN( const Akonadi::Item &item, KMime::MDN::DispositionTy
   if ( mdnSend.first ) {
     const int quote =  MessageViewer::GlobalSettings::self()->quoteMessage();
     QString receiptTo =  msg->headerByType("Disposition-Notification-To") ? msg->headerByType("Disposition-Notification-To")->asUnicodeString() : QString();
-    if( receiptTo.isEmpty() ) 
+    if ( receiptTo.isEmpty() ) 
       return;
     MessageComposer::MessageFactory factory( msg, Akonadi::Item().id() );
     factory.setIdentityManager( KernelIf->identityManager() );

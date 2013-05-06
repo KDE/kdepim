@@ -470,7 +470,7 @@ bool FolderTreeView::trySelectNextUnreadFolder( const QModelIndex &current,
 
     const Akonadi::Collection collection =
       index.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
-    if( collection == Kernel::self()->trashCollectionFolder() ||
+    if ( collection == Kernel::self()->trashCollectionFolder() ||
         collection == Kernel::self()->outboxCollectionFolder() )
       continue;
 
@@ -610,7 +610,7 @@ void FolderTreeView::mousePressEvent( QMouseEvent *e )
 
 void FolderTreeView::restoreHeaderState( const QByteArray &data )
 {
-  if(data.isEmpty()) {
+  if (data.isEmpty()) {
     const int nbColumn = header()->count();
     for ( int i = 1; i <nbColumn; ++i ) {
       setColumnHidden( i, true );

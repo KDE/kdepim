@@ -243,7 +243,7 @@ void ManageSieveScriptsDialog::slotItem( KManageSieve::SieveJob * job, const QSt
     if ( isActive ) {
         mSelectedItems[parent] = item;
     }
-    mBlockSignal = foldBlockSignal;
+    mBlockSignal = oldBlockSignal;
 }
 
 void ManageSieveScriptsDialog::slotContextMenuRequested( const QPoint& p )

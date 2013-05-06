@@ -469,7 +469,7 @@ bool SearchRuleString::matches( const Akonadi::Item &item ) const
   // Overwrite the value for complete messages and all headers!
   bool logContents = true;
 
-  if( kasciistricmp( field(), "<message>" ) == 0 ) {
+  if ( kasciistricmp( field(), "<message>" ) == 0 ) {
     msgContents = msg->encodedContent();
     logContents = false;
   } else if ( kasciistricmp( field(), "<body>" ) == 0 ) {
@@ -699,7 +699,7 @@ void SearchRuleString::addQueryTerms( Nepomuk2::Query::GroupTerm &groupTerm ) co
        addAndNegateTerm(Nepomuk2::Query::ComparisonTerm(Soprano::Vocabulary::NAO::hasTag(),Nepomuk2::Query::ResourceTerm( tag ), Nepomuk2::Query::ComparisonTerm::Equal ),groupTerm );
     } else {
       foreach ( const Nepomuk2::Tag &tag, Nepomuk2::Tag::allTags() ) {
-        if(tag.label() == contents()) {
+        if (tag.label() == contents()) {
             addAndNegateTerm(Nepomuk2::Query::ComparisonTerm(Soprano::Vocabulary::NAO::hasTag(),Nepomuk2::Query::ResourceTerm( tag ), Nepomuk2::Query::ComparisonTerm::Equal ),groupTerm );
             break;
         }
@@ -1213,7 +1213,7 @@ void SearchRuleStatus::addTagTerm( Nepomuk2::Query::GroupTerm &groupTerm,
 {
   // TODO handle function() == NOT
   const Nepomuk2::Tag tag( tagId );
-  if(tag.exists()) {
+  if (tag.exists()) {
     addAndNegateTerm(
       Nepomuk2::Query::ComparisonTerm(
         Soprano::Vocabulary::NAO::hasTag(),
@@ -1516,7 +1516,7 @@ static Nepomuk2::Query::GroupTerm makeGroupTerm( SearchPattern::Operator op )
 Nepomuk2::Query::ComparisonTerm SearchPattern::createChildTerm( const KUrl& url, bool& empty ) const
 {
   const Nepomuk2::Resource parentResource( url );
-  if( !parentResource.exists() ) {
+  if ( !parentResource.exists() ) {
     empty = true;
     return Nepomuk2::Query::ComparisonTerm();
   }
@@ -1565,7 +1565,7 @@ QString SearchPattern::asSparqlQuery(const KUrl::List& urlList) const
           allIsEmpty = false;
         }
       }
-      if(allIsEmpty)
+      if (allIsEmpty)
         return QString();
       const Nepomuk2::Query::OrTerm orTerm( term );
       const Nepomuk2::Query::AndTerm andTerm( orTerm, innerGroup );
