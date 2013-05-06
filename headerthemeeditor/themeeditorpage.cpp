@@ -157,10 +157,11 @@ void ThemeEditorPage::addExtraPage()
     }
 }
 
-void ThemeEditorPage::saveTheme()
+bool ThemeEditorPage::saveTheme()
 {
     if (themeWasChanged()) {
-        if (KMessageBox::questionYesNo(this, i18n("Do you want to save current project?"), i18n("Save current project")) == KMessageBox::Yes) {
+        const int result = KMessageBox::questionYesNoCancel(this, i18n("Do you want to save current project?"), i18n("Save current project"));
+        if (result == KMessageBox::Yes) {
             //set default page filename before saving
             mEditorPage->setPageFileName(mDesktopPage->filename());
             mEditorPage->saveTheme(projectDirectory());
@@ -171,8 +172,11 @@ void ThemeEditorPage::saveTheme()
             mDesktopPage->saveTheme(projectDirectory());
             mThemeSession->setMainPageFileName(mDesktopPage->filename());
             mThemeSession->writeSession();
+        } else if (result == KMessageBox::Cancel) {
+            return false;
         }
     }
+    return true;
 }
 
 void ThemeEditorPage::loadTheme(const QString &filename)
