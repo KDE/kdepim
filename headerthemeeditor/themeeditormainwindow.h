@@ -40,13 +40,13 @@ private Q_SLOTS:
     void slotOpenTheme();
     void slotUploadTheme();
     void slotQuitApp();
-    void slotSaveTheme();
+    bool slotSaveTheme();
     void slotConfigure();
     void slotInstallTheme();
 
 private:
     void updateActions();
-    void saveCurrentProject(bool createNewTheme);
+    bool saveCurrentProject(bool createNewTheme);
     void setupActions();
     ThemeEditorPage *mThemeEditor;
     KAction *mNewThemeAction;

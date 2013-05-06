@@ -32,7 +32,7 @@ ThemeConfigureDialog::ThemeConfigureDialog(QWidget *parent)
     : KDialog(parent)
 {
     setCaption( i18n( "Configure" ) );
-    setButtons( Ok|Cancel );
+    setButtons( Default|Ok|Cancel );
     setButtonFocus( Ok );
     QWidget *w = new QWidget;
 
@@ -56,12 +56,21 @@ ThemeConfigureDialog::ThemeConfigureDialog(QWidget *parent)
     lay->addWidget(mDefaultEmail);
 
     setMainWidget(w);
-    loadConfig();
+    connect(this, SIGNAL(defaultClicked()), this, SLOT(slotDefaultClicked()));
     connect(this, SIGNAL(okClicked()), this, SLOT(slotOkClicked()));
+    loadConfig();
+    resize(600,400);
 }
 
 ThemeConfigureDialog::~ThemeConfigureDialog()
 {
+}
+
+void ThemeConfigureDialog::slotDefaultClicked()
+{
+    mDefaultUrl->setUrl(KUrl());
+
+    mDefaultEmail->setPlainText(themeeditorutil::defaultMail());
 }
 
 void ThemeConfigureDialog::slotOkClicked()
@@ -75,9 +84,9 @@ void ThemeConfigureDialog::loadConfig()
     if (config->hasGroup(QLatin1String("Global"))) {
         KConfigGroup group = config->group(QLatin1String("Global"));
         mDefaultUrl->setUrl(group.readEntry("path", KUrl()));
-        mDefaultEmail->insertPlainText(group.readEntry("defaultEmail",themeeditorutil::defaultMail()));
+        mDefaultEmail->setPlainText(group.readEntry("defaultEmail",themeeditorutil::defaultMail()));
     } else {
-        mDefaultEmail->insertPlainText(themeeditorutil::defaultMail());
+        mDefaultEmail->setPlainText(themeeditorutil::defaultMail());
     }
 }
 

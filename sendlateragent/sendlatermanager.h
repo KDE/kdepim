@@ -30,9 +30,10 @@ public:
     explicit SendLaterManager(QObject *parent);
     ~SendLaterManager();
 
-    void load();
-
     void sendDone(SendLaterInfo *info);
+
+public Q_SLOTS:
+    void load();
 
 private:
     KSharedConfig::Ptr mConfig;

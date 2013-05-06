@@ -26,6 +26,7 @@
 
 class QLineEdit;
 class KTextEdit;
+class QSplitter;
 
 namespace KSieveUi {
 
@@ -63,6 +64,8 @@ private slots:
     void slotCheckSyntax();
 
 private:
+    void readConfig();
+    void writeConfig();
     bool saveToFile( const QString&filename );
     bool loadFromFile( const QString& filename );
     QStringList mSieveCapabilities;
@@ -73,6 +76,9 @@ private:
     KPushButton *mCheckSyntax;
     QPushButton *mOkButton;
     SieveInfoWidget *mSieveInfo;
+    QSplitter *mMainSplitter;
+    QSplitter *mExtraSplitter;
+    QSplitter *mTemplateSplitter;
 };
 
 }

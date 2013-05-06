@@ -39,7 +39,7 @@ public:
 
     virtual QString code(QWidget *parent) const;
 
-    virtual QStringList needRequires() const;
+    virtual QStringList needRequires(QWidget *parent) const;
 
     virtual bool needCheckIfServerHasCapability() const;
 

@@ -16,7 +16,10 @@
 */
 
 #include "mainwindow.h"
+#include "pimactivity/pimwidgets/identity/identitymanageractivity.h"
 #include "pimactivity/pimwidgets/mailtransport/transportcomboboxactivity.h"
+#include "pimactivity/pimwidgets/identity/identitycomboboxactivity.h"
+#include "pimactivity/activitymanager.h"
 
 #include <QVBoxLayout>
 
@@ -27,6 +30,13 @@ MainWindow::MainWindow()
     QVBoxLayout *lay = new QVBoxLayout;
     PimActivity::TransportComboboxActivity *combobox = new PimActivity::TransportComboboxActivity;
     lay->addWidget(combobox);
+
+    PimActivity::ActivityManager *manager = new PimActivity::ActivityManager(this);
+
+    PimActivity::IdentityManagerActivity *identityManager = new PimActivity::IdentityManagerActivity(manager,false, this, "identitymanager");
+    PimActivity::IdentityComboboxActivity *identityCombobox = new PimActivity::IdentityComboboxActivity(identityManager);
+    lay->addWidget(identityCombobox);
+
     w->setLayout(lay);
     setCentralWidget(w);
 }

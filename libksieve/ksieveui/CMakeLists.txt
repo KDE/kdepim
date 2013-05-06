@@ -64,12 +64,16 @@ set(ksieveui_LIB_SRCS
   autocreatescripts/sieveconditions/sieveconditiondate.cpp
   autocreatescripts/sieveconditions/sieveconditioncurrentdate.cpp
   autocreatescripts/sieveconditions/sieveconditionmailboxexists.cpp
+  autocreatescripts/sieveconditions/sieveconditionspamtest.cpp
+  autocreatescripts/sieveconditions/sieveconditionspamtestplus.cpp
+  autocreatescripts/sieveconditions/sieveconditionvirustest.cpp
   autocreatescripts/sieveconditions/widgets/selectdatewidget.cpp
   autocreatescripts/sieveconditions/widgets/selectmatchtypecombobox.cpp
   autocreatescripts/sieveconditions/widgets/selectaddresspartcombobox.cpp
   autocreatescripts/sieveconditions/widgets/selectheadertypecombobox.cpp
   autocreatescripts/sieveconditions/widgets/selectbodytypewidget.cpp
   autocreatescripts/sieveconditions/widgets/selectrelationalmatchtype.cpp
+  autocreatescripts/sieveconditions/widgets/selectcomparatorcombobox.cpp
 )
 
 kde4_add_kcfg_files(ksieveui_LIB_SRCS settings.kcfgc)

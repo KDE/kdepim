@@ -18,7 +18,7 @@
 #include "archivemailagentutil.h"
 #include <KDebug>
 
-QDate ArchiveMailAgentUtil::diffDate(ArchiveMailInfo*info)
+QDate ArchiveMailAgentUtil::diffDate(ArchiveMailInfo *info)
 {
     QDate diffDate(info->lastDateSaved());
     switch(info->archiveUnit()) {
@@ -38,7 +38,7 @@ QDate ArchiveMailAgentUtil::diffDate(ArchiveMailInfo*info)
     return diffDate;
 }
 
-bool ArchiveMailAgentUtil::needToArchive(ArchiveMailInfo*info)
+bool ArchiveMailAgentUtil::needToArchive(ArchiveMailInfo *info)
 {
     if (!info->isEnabled())
         return false;

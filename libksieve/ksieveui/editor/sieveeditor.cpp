@@ -80,26 +80,23 @@ SieveEditor::SieveEditor( QWidget * parent )
     nameLayout->addWidget( mScriptName );
     lay->addLayout( nameLayout );
 
-    QSplitter *splitter = new QSplitter;
-    splitter->setOrientation( Qt::Vertical );
-    lay->addWidget( splitter );
-    QList<int> size;
-    size << 400 << 100;
+    mMainSplitter = new QSplitter;
+    mMainSplitter->setOrientation( Qt::Vertical );
+    lay->addWidget( mMainSplitter );
 
-    QSplitter *templateSplitter = new QSplitter;
-    templateSplitter->setOrientation( Qt::Horizontal );
-
-
+    mTemplateSplitter = new QSplitter;
+    mTemplateSplitter->setOrientation( Qt::Horizontal );
     //
     SieveTemplateWidget *sieveTemplateWidget = new SieveTemplateWidget(i18n("Sieve Template:"));
 
     mSieveInfo = new SieveInfoWidget;
 
-    QSplitter *extraSplitter = new QSplitter;
-    extraSplitter->setOrientation( Qt::Vertical );
+    mExtraSplitter = new QSplitter;
+    mExtraSplitter->setOrientation( Qt::Vertical );
 
-    extraSplitter->addWidget(sieveTemplateWidget);
-    extraSplitter->addWidget(mSieveInfo);
+    mExtraSplitter->addWidget(sieveTemplateWidget);
+    mExtraSplitter->addWidget(mSieveInfo);
+    mExtraSplitter->setChildrenCollapsible(false);
 
 
     QWidget *textEditWidget = new QWidget;
@@ -110,10 +107,9 @@ SieveEditor::SieveEditor( QWidget * parent )
     textEditLayout->addWidget(mFindBar);
     textEditWidget->setLayout(textEditLayout);
 
-    templateSplitter->addWidget(textEditWidget);
-    templateSplitter->addWidget(extraSplitter);
-    templateSplitter->setSizes( size );
-    templateSplitter->setChildrenCollapsible(false);
+    mTemplateSplitter->addWidget(textEditWidget);
+    mTemplateSplitter->addWidget(mExtraSplitter);
+    mTemplateSplitter->setChildrenCollapsible(false);
 
     connect(sieveTemplateWidget, SIGNAL(insertTemplate(QString)), mTextEdit, SLOT(insertPlainText(QString)));
 
@@ -125,14 +121,34 @@ SieveEditor::SieveEditor( QWidget * parent )
 
     mDebugTextEdit = new KTextEdit;
     mDebugTextEdit->setReadOnly( true );
-    splitter->addWidget( templateSplitter );
-    splitter->addWidget( mDebugTextEdit );
-    splitter->setSizes( size );
-    splitter->setChildrenCollapsible(false);
+    mMainSplitter->addWidget( mTemplateSplitter );
+    mMainSplitter->addWidget( mDebugTextEdit );
+    mMainSplitter->setChildrenCollapsible(false);
     connect( mTextEdit, SIGNAL(textChanged()), SLOT(slotTextChanged()) );
 
     lay->addWidget(buttonBox);
     setMainWidget( mainWidget );
+    readConfig();
+
+    mTextEdit->setFocus();
+}
+
+SieveEditor::~SieveEditor()
+{
+    writeConfig();
+}
+
+void SieveEditor::writeConfig()
+{
+    KConfigGroup group( KGlobal::config(), "SieveEditor" );
+    group.writeEntry( "Size", size() );
+    group.writeEntry( "mainSplitter", mMainSplitter->sizes());
+    group.writeEntry( "extraSplitter", mExtraSplitter->sizes());
+    group.writeEntry( "templateSplitter", mTemplateSplitter->sizes());
+}
+
+void SieveEditor::readConfig()
+{
     //TODO restore splitter size
     KConfigGroup group( KGlobal::config(), "SieveEditor" );
     const QSize sizeDialog = group.readEntry( "Size", QSize() );
@@ -141,15 +157,12 @@ SieveEditor::SieveEditor( QWidget * parent )
     } else {
         resize( 800,600);
     }
+    QList<int> size;
+    size << 400 << 100;
 
-    mTextEdit->setFocus();
-}
-
-SieveEditor::~SieveEditor()
-{
-    KConfigGroup group( KGlobal::config(), "SieveEditor" );
-    group.writeEntry( "Size", size() );
-    //TODO save splitter size
+    mMainSplitter->setSizes(group.readEntry( "mainSplitter", size));
+    mExtraSplitter->setSizes(group.readEntry( "extraSplitter", size));
+    mTemplateSplitter->setSizes(group.readEntry( "templateSplitter", size));
 }
 
 void SieveEditor::slotAutoGenerateScripts()

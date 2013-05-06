@@ -11,6 +11,7 @@ set(sendlateragent_SRCS
    sendlaterinfo.cpp
    sendlatermanager.cpp
    sendlaterjob.cpp
+   sendlaterutil.cpp
 )
  
 

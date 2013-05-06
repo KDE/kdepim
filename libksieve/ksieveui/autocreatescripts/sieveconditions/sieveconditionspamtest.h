@@ -15,28 +15,33 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef SENDLATERAGENT_H
-#define SENDLATERAGENT_H
+#ifndef SIEVECONDITIONSPAMTEST_H
+#define SIEVECONDITIONSPAMTEST_H
 
-#include <akonadi/agentbase.h>
+#include "sievecondition.h"
 
-class SendLaterManager;
-
-class SendLaterAgent : public Akonadi::AgentBase, public Akonadi::AgentBase::ObserverV2
+namespace KSieveUi {
+class SieveConditionSpamTest : public SieveCondition
 {
     Q_OBJECT
 public:
-    explicit SendLaterAgent(const QString &id);
-    ~SendLaterAgent();
+    SieveConditionSpamTest(QObject *parent = 0);
 
-    void showConfigureDialog(qlonglong windowId = 0);
-    void addSendLaterItem(qlonglong itemId, qlonglong windowId = 0);
+    /**
+     * Static function that creates a filter action of this type.
+     */
+    static SieveCondition *newAction();
 
-public Q_SLOTS:
-    void configure( WId windowId );
+    QWidget *createParamWidget( QWidget *parent ) const;
 
-private:
-    SendLaterManager *mManager;
+    QString code(QWidget *w) const;
+
+    bool needCheckIfServerHasCapability() const;
+
+    QString serverNeedsCapability() const;
+
+    QStringList needRequires(QWidget *parent) const;
 };
+}
 
-#endif // SENDLATERAGENT_H
+#endif // SIEVECONDITIONSPAMTEST_H

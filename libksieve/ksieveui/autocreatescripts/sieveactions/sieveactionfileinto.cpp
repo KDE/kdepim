@@ -70,7 +70,11 @@ QWidget *SieveActionFileInto::createParamWidget( QWidget *parent ) const
 
 QStringList SieveActionFileInto::needRequires() const
 {
-    return QStringList()<<QLatin1String("fileinto") << QLatin1String("copy");
+    QStringList lst;
+    lst << QLatin1String("fileinto");
+    if (mHasCopySupport)
+        lst << QLatin1String("copy");
+    return lst;
 }
 
 bool SieveActionFileInto::needCheckIfServerHasCapability() const
@@ -80,6 +84,7 @@ bool SieveActionFileInto::needCheckIfServerHasCapability() const
 
 QString SieveActionFileInto::serverNeedsCapability() const
 {
+    //TODO fix capability (add copy when necessary)
     return QLatin1String("fileinto");
 }
 

@@ -74,3 +74,4 @@ Comment[zh_CN]=个人信息管理设置导出器可以保存所有个人信息�
 Comment[zh_TW]=PIM 設定匯出器可以將 PIM 應用程式裡的資料儲存並回復到其他系統中。
 Terminal=false
 Categories=Qt;KDE;Office;Network;Email;
+X-DocPath=pimsettingexporter/index.html

@@ -293,7 +293,7 @@ void KNode::NntpAccountConfDialog::slotButtonClicked( int button )
     }
 
     mAccount->setName( mName->text() );
-    mAccount->setServer( mServer->text().trimmed() );
+    mAccount->setServer( mServer->text().trimmed().remove(QLatin1String("news://")) );
     mAccount->setPort( mPort->value() );
     mAccount->setFetchDescriptions( mFetchDesc->isChecked() );
     mAccount->setNeedsLogon( mLogin->isChecked() );

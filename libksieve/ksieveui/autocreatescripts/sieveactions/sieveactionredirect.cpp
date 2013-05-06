@@ -78,4 +78,5 @@ QStringList SieveActionRedirect::needRequires() const
 }
 
 
+
 #include "sieveactionredirect.moc"

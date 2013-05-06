@@ -97,24 +97,26 @@ void ThemeEditorMainWindow::slotConfigure()
 
 void ThemeEditorMainWindow::slotInstallTheme()
 {
-    //TODO
     //Save before installing :)
-    slotSaveTheme();
-    const QString localThemePath = KStandardDirs::locateLocal("data",QLatin1String("messageviewer/themes/"));
-    mThemeEditor->installTheme(localThemePath);
+    if (slotSaveTheme()) {
+        const QString localThemePath = KStandardDirs::locateLocal("data",QLatin1String("messageviewer/themes/"));
+        mThemeEditor->installTheme(localThemePath);
+    }
 }
 
 void ThemeEditorMainWindow::slotUploadTheme()
 {
     //Save before upload :)
-    slotSaveTheme();
-
-    mThemeEditor->uploadTheme();
+    if (slotSaveTheme())
+        mThemeEditor->uploadTheme();
 }
 
-void ThemeEditorMainWindow::slotSaveTheme()
+bool ThemeEditorMainWindow::slotSaveTheme()
 {
-    mThemeEditor->saveTheme();
+    bool result = false;
+    if (mThemeEditor)
+        result = mThemeEditor->saveTheme();
+    return result;
 }
 
 void ThemeEditorMainWindow::slotCloseTheme()
@@ -124,7 +126,9 @@ void ThemeEditorMainWindow::slotCloseTheme()
 
 void ThemeEditorMainWindow::slotOpenTheme()
 {
-    saveCurrentProject(false);
+    if (!saveCurrentProject(false))
+        return;
+
     const QString directory = KFileDialog::getExistingDirectory(KUrl(), this, i18n("Select theme"));
     if (!directory.isEmpty()) {
         const QString filename = directory + QDir::separator() + QLatin1String("theme.themerc");
@@ -147,10 +151,11 @@ void ThemeEditorMainWindow::slotAddExtraPage()
         mThemeEditor->addExtraPage();
 }
 
-void ThemeEditorMainWindow::saveCurrentProject(bool createNewTheme)
+bool ThemeEditorMainWindow::saveCurrentProject(bool createNewTheme)
 {
     if (mThemeEditor) {
-        mThemeEditor->saveTheme();
+        if (!mThemeEditor->saveTheme())
+            return false;
     }
     if (createNewTheme) {
         delete mThemeEditor;
@@ -177,6 +182,7 @@ void ThemeEditorMainWindow::saveCurrentProject(bool createNewTheme)
         setCentralWidget(0);
         updateActions();
     }
+    return true;
 }
 
 void ThemeEditorMainWindow::slotNewTheme()
@@ -186,14 +192,16 @@ void ThemeEditorMainWindow::slotNewTheme()
 
 void ThemeEditorMainWindow::closeEvent(QCloseEvent *e)
 {
-    saveCurrentProject(false);
-    e->accept();
+    if (!saveCurrentProject(false))
+        e->ignore();
+    else
+        e->accept();
 }
 
 void ThemeEditorMainWindow::slotQuitApp()
 {
-    saveCurrentProject(false);
-    kapp->quit();
+    if (saveCurrentProject(false))
+        kapp->quit();
 }
 
 #include "themeeditormainwindow.moc"

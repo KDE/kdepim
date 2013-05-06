@@ -88,7 +88,7 @@ QString SieveConditionDate::serverNeedsCapability() const
     return QLatin1String("date");
 }
 
-QStringList SieveConditionDate::needRequires() const
+QStringList SieveConditionDate::needRequires(QWidget *) const
 {
     return QStringList() << QLatin1String("date");
 }

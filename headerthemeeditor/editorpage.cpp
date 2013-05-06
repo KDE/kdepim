@@ -23,6 +23,7 @@
 #include <KTemporaryFile>
 #include <KLocale>
 #include <KZip>
+#include <KConfigGroup>
 
 #include <QSplitter>
 #include <QVBoxLayout>
@@ -34,25 +35,30 @@ EditorPage::EditorPage(QWidget *parent)
       mChanged(false)
 {
     QVBoxLayout *lay = new QVBoxLayout;
-    QSplitter *splitter = new QSplitter;
-    lay->addWidget(splitter);
+    mMainSplitter = new QSplitter;
+    lay->addWidget(mMainSplitter);
     mEditor = new Editor;
 
-    splitter->addWidget(mEditor);
-    QList<int> size;
-    size << 400 << 100;
-    splitter->setSizes(size);
-    splitter->setChildrenCollapsible(false);
+    mMainSplitter->addWidget(mEditor);
+    mMainSplitter->setChildrenCollapsible(false);
     mThemeTemplate = new ThemeTemplateWidget(i18n("Theme Templates:"));
     connect(mThemeTemplate, SIGNAL(insertTemplate(QString)), mEditor, SLOT(insertPlainText(QString)));
-    splitter->addWidget(mThemeTemplate);
+    mMainSplitter->addWidget(mThemeTemplate);
 
     connect(mEditor, SIGNAL(textChanged()), this, SLOT(slotChanged()));
+
+    KConfigGroup group( KGlobal::config(), "EditorPage" );
+    QList<int> size;
+    size << 400 << 100;
+
+    mMainSplitter->setSizes(group.readEntry( "mainSplitter", size));
     setLayout(lay);
 }
 
 EditorPage::~EditorPage()
 {
+    KConfigGroup group( KGlobal::config(), "EditorPage" );
+    group.writeEntry( "mainSplitter", mMainSplitter->sizes());
 }
 
 void EditorPage::slotChanged()

@@ -55,7 +55,7 @@ QString SieveCondition::code(QWidget *parent) const
     return QString();
 }
 
-QStringList SieveCondition::needRequires() const
+QStringList SieveCondition::needRequires(QWidget *parent) const
 {
     return QStringList();
 }

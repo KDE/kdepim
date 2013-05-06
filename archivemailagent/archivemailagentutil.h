@@ -23,8 +23,8 @@
 
 namespace ArchiveMailAgentUtil {
 static QString archivePattern = QLatin1String("ArchiveMailCollection %1");
-QDate diffDate(ArchiveMailInfo*info);
-bool needToArchive(ArchiveMailInfo*info);
+QDate diffDate(ArchiveMailInfo *info);
+bool needToArchive(ArchiveMailInfo *info);
 }
 
 #endif // ARCHIVEMAILAGENTUTIL_H

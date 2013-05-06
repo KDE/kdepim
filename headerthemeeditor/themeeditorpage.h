@@ -33,7 +33,7 @@ public:
     explicit ThemeEditorPage(const QString &themeName, QWidget *parent = 0);
     ~ThemeEditorPage();
 
-    void saveTheme();
+    bool saveTheme();
     void loadTheme(const QString &filename);
 
     void addExtraPage();
@@ -47,6 +47,7 @@ public:
     bool themeWasChanged() const;
 
     void reloadConfig();
+
 private:
     void createZip(const QString &themeName, KZip *zip);
     QList<EditorPage*> mExtraPage;

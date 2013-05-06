@@ -31,6 +31,10 @@
 
 #include "sieveconditionmailboxexists.h"
 
+#include "sieveconditionspamtest.h"
+#include "sieveconditionspamtestplus.h"
+#include "sieveconditionvirustest.h"
+
 QList<KSieveUi::SieveCondition *> KSieveUi::SieveConditionList::conditionList()
 {
     QList<KSieveUi::SieveCondition*> list;
@@ -44,6 +48,9 @@ QList<KSieveUi::SieveCondition *> KSieveUi::SieveConditionList::conditionList()
     list.append(new KSieveUi::SieveConditionDate);
     list.append(new KSieveUi::SieveConditionCurrentDate);
     list.append(new KSieveUi::SieveConditionMailboxExists);
+    list.append(new KSieveUi::SieveConditionSpamTest);
+    list.append(new KSieveUi::SieveConditionSpamTestPlus);
+    list.append(new KSieveUi::SieveConditionVirusTest);
     return list;
 }
 

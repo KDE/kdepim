@@ -37,7 +37,7 @@ public:
 
     QString code(QWidget *parent) const;
 
-    QStringList needRequires() const;
+    QStringList needRequires(QWidget *parent) const;
 
     bool needCheckIfServerHasCapability() const;
 

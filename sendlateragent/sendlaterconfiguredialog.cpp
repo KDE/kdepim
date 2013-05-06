@@ -209,9 +209,13 @@ void SendLaterWidget::load()
     }
 }
 
-void SendLaterWidget::createOrUpdateItem(SendLaterInfo *info)
+void SendLaterWidget::createOrUpdateItem(SendLaterInfo *info, SendLaterItem *item)
 {
-    SendLaterItem *item = new SendLaterItem(mWidget->treeWidget);
+    if (!item) {
+        item = new SendLaterItem(mWidget->treeWidget);
+    }
+    item->setCheckState(Recursive, info->isRecursive() ? Qt::Checked : Qt::Unchecked);
+    //item->setText(Date, info->dateTime());
     //TODO
     //item->setText(0,i18n("Folder: %1",MailCommon::Util::fullCollectionPath(Akonadi::Collection(info->saveCollectionId()))));
     item->setInfo(info);
@@ -266,7 +270,8 @@ void SendLaterWidget::slotModifyItem()
 
         QPointer<SendLaterDialog> dialog = new SendLaterDialog(mailItem->info(), this);
         if (dialog->exec()) {
-            //TODO
+            SendLaterInfo *info = dialog->info();
+            createOrUpdateItem(info, mailItem);
             mChanged = true;
         }
         delete dialog;

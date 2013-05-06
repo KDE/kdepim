@@ -22,6 +22,7 @@ Name[uk]=Редактор тем заголовків повідомлень KMa
 Name[x-test]=xxKMail Header Theme Editorxx
 Type=Application
 Exec=headerthemeeditor
+X-DocPath=headerthemeeditor/index.html
 GenericName=Mail Header Theme Editor
 GenericName[de]=Designeditor für E-Mail-Vorspann
 GenericName[el]=Επεξεργαστής θεμάτων επικεφαλίδας μηνυμάτων

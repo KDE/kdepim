@@ -15,28 +15,11 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef SENDLATERAGENT_H
-#define SENDLATERAGENT_H
 
-#include <akonadi/agentbase.h>
+#include "sendlaterutil.h"
+#include "sendlaterinfo.h"
 
-class SendLaterManager;
-
-class SendLaterAgent : public Akonadi::AgentBase, public Akonadi::AgentBase::ObserverV2
+void SendLaterUtil::checkTime(SendLaterInfo *info)
 {
-    Q_OBJECT
-public:
-    explicit SendLaterAgent(const QString &id);
-    ~SendLaterAgent();
-
-    void showConfigureDialog(qlonglong windowId = 0);
-    void addSendLaterItem(qlonglong itemId, qlonglong windowId = 0);
-
-public Q_SLOTS:
-    void configure( WId windowId );
-
-private:
-    SendLaterManager *mManager;
-};
-
-#endif // SENDLATERAGENT_H
+    //TODO
+}
