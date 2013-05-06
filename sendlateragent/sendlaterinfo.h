@@ -55,8 +55,13 @@ public:
     void readConfig(const KConfigGroup& config);
     void writeConfig(KConfigGroup & config );
 
+    void setLastDateTimeSend( const QDateTime &date );
+    QDateTime lastDateTimeSend() const;
+
+
 private:
     QDateTime mDateTime;
+    QDateTime mLastDateTimeSend;
     Akonadi::Item::Id mId;
     int mRecursiveEachValue;
     RecursiveUnit mRecursiveUnit;

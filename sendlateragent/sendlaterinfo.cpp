@@ -99,8 +99,21 @@ QDateTime SendLaterInfo::dateTime() const
     return mDateTime;
 }
 
+void SendLaterInfo::setLastDateTimeSend( const QDateTime &dateTime )
+{
+    mLastDateTimeSend = dateTime;
+}
+
+QDateTime SendLaterInfo::lastDateTimeSend() const
+{
+    return mLastDateTimeSend;
+}
+
 void SendLaterInfo::readConfig(const KConfigGroup& config)
 {
+    if (config.hasKey(QLatin1String("lastDateTimeSend"))) {
+        mLastDateTimeSend = QDateTime::fromString(config.readEntry("lastDateTimeSend"),Qt::ISODate);
+    }
     mDateTime = config.readEntry("date", QDateTime());
     mRecursive = config.readEntry("recursive", false);
     mRecursiveEachValue = config.readEntry("recursiveValue",1);
@@ -110,6 +123,9 @@ void SendLaterInfo::readConfig(const KConfigGroup& config)
 
 void SendLaterInfo::writeConfig(KConfigGroup & config )
 {
+    if (mLastDateTimeSend.isValid()) {
+        config.writeEntry("lastDateTimeSend", mLastDateTimeSend.toString(Qt::ISODate) );
+    }
     config.writeEntry("date", mDateTime);
     config.writeEntry("recursive", mRecursive);
     config.writeEntry("recursiveValue", mRecursiveEachValue );
