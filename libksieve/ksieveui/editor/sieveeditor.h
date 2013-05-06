@@ -63,6 +63,8 @@ private slots:
     void slotCheckSyntax();
 
 private:
+    void readConfig();
+    void writeConfig();
     bool saveToFile( const QString&filename );
     bool loadFromFile( const QString& filename );
     QStringList mSieveCapabilities;

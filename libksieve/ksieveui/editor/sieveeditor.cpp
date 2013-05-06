@@ -88,8 +88,6 @@ SieveEditor::SieveEditor( QWidget * parent )
 
     QSplitter *templateSplitter = new QSplitter;
     templateSplitter->setOrientation( Qt::Horizontal );
-
-
     //
     SieveTemplateWidget *sieveTemplateWidget = new SieveTemplateWidget(i18n("Sieve Template:"));
 
@@ -133,6 +131,25 @@ SieveEditor::SieveEditor( QWidget * parent )
 
     lay->addWidget(buttonBox);
     setMainWidget( mainWidget );
+    readConfig();
+
+    mTextEdit->setFocus();
+}
+
+SieveEditor::~SieveEditor()
+{
+    writeConfig();
+}
+
+void SieveEditor::writeConfig()
+{
+    KConfigGroup group( KGlobal::config(), "SieveEditor" );
+    group.writeEntry( "Size", size() );
+    //TODO save splitter size
+}
+
+void SieveEditor::readConfig()
+{
     //TODO restore splitter size
     KConfigGroup group( KGlobal::config(), "SieveEditor" );
     const QSize sizeDialog = group.readEntry( "Size", QSize() );
@@ -141,15 +158,6 @@ SieveEditor::SieveEditor( QWidget * parent )
     } else {
         resize( 800,600);
     }
-
-    mTextEdit->setFocus();
-}
-
-SieveEditor::~SieveEditor()
-{
-    KConfigGroup group( KGlobal::config(), "SieveEditor" );
-    group.writeEntry( "Size", size() );
-    //TODO save splitter size
 }
 
 void SieveEditor::slotAutoGenerateScripts()
