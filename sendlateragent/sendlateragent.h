@@ -31,8 +31,10 @@ public:
 
     void showConfigureDialog(qlonglong windowId = 0);
     void addSendLaterItem(qlonglong itemId, qlonglong windowId = 0);
+
 public Q_SLOTS:
     void configure( WId windowId );
+
 private:
     SendLaterManager *mManager;
 };

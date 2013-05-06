@@ -58,7 +58,6 @@ public:
     void setLastDateTimeSend( const QDateTime &date );
     QDateTime lastDateTimeSend() const;
 
-
 private:
     QDateTime mDateTime;
     QDateTime mLastDateTimeSend;

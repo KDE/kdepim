@@ -17,10 +17,10 @@
 
 #ifndef SENDLATERUTIL_H
 #define SENDLATERUTIL_H
-
+class SendLaterInfo;
 namespace SendLaterUtil
 {
-    void checkTime();
+    void checkTime(SendLaterInfo *info);
 }
 
 #endif // SENDLATERUTIL_H

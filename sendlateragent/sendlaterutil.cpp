@@ -17,8 +17,9 @@
 
 
 #include "sendlaterutil.h"
+#include "sendlaterinfo.h"
 
-void SendLaterUtil::checkTime()
+void SendLaterUtil::checkTime(SendLaterInfo *info)
 {
     //TODO
 }
