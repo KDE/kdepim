@@ -21,8 +21,9 @@
 #include "ksieveui_export.h"
 
 #include <KDialog>
-#include <QStringList>
+
 class QStackedWidget;
+class QSplitter;
 
 namespace KSieveUi {
 class SieveScriptListBox;
@@ -50,6 +51,7 @@ private:
     static QStringList sCapabilities;
     SieveScriptListBox *mSieveScript;
     QStackedWidget *mStackWidget;
+    QSplitter *mSplitter;
 };
 }
 

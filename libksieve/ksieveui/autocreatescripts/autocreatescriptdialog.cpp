@@ -42,20 +42,17 @@ AutoCreateScriptDialog::AutoCreateScriptDialog(QWidget *parent)
     vlay->setSpacing( KDialog::spacingHint() );
     vlay->setMargin( KDialog::marginHint() );
 
-    QSplitter *splitter = new QSplitter;
-    splitter->setChildrenCollapsible(false);
+    mSplitter = new QSplitter;
+    mSplitter->setChildrenCollapsible(false);
     mSieveScript = new SieveScriptListBox( i18n("Sieve Script"));
     connect(mSieveScript, SIGNAL(addNewPage(QWidget*)), SLOT(slotAddScriptPage(QWidget*)));
     connect(mSieveScript, SIGNAL(removePage(QWidget*)), SLOT(slotRemoveScriptPage(QWidget*)));
     connect(mSieveScript, SIGNAL(activatePage(QWidget*)), SLOT(slotActivateScriptPage(QWidget*)));
-    splitter->addWidget(mSieveScript);
-    vlay->addWidget(splitter);
+    mSplitter->addWidget(mSieveScript);
+    vlay->addWidget(mSplitter);
 
     mStackWidget = new QStackedWidget;
-    splitter->addWidget(mStackWidget);
-    QList<int> size;
-    size << 100 << 400;
-    splitter->setSizes(size);
+    mSplitter->addWidget(mStackWidget);
 
     setMainWidget( mainWidget );
     readConfig();
@@ -106,12 +103,16 @@ void AutoCreateScriptDialog::readConfig()
     } else {
         resize( 800,600);
     }
+    QList<int> size;
+    size << 100 << 400;
+    mSplitter->setSizes(group.readEntry( "mainSplitter", size));
 }
 
 void AutoCreateScriptDialog::writeConfig()
 {
     KConfigGroup group( KGlobal::config(), "AutoCreateScriptDialog" );
     group.writeEntry( "Size", size() );
+    group.writeEntry( "mainSplitter", mSplitter->sizes());
 }
 
 #include "autocreatescriptdialog.moc"
