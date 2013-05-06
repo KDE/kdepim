@@ -29,6 +29,8 @@
 
 #include <QPointer>
 
+//#define DEBUG_SENDLATERAGENT 1
+
 SendLaterAgent::SendLaterAgent(const QString &id)
     : Akonadi::AgentBase( id )
 {
@@ -37,7 +39,12 @@ SendLaterAgent::SendLaterAgent(const QString &id)
     new SendLaterAgentAdaptor( this );
     Akonadi::DBusConnectionPool::threadConnection().registerObject( QLatin1String( "/SendLaterAgent" ), this, QDBusConnection::ExportAdaptors );
     Akonadi::DBusConnectionPool::threadConnection().registerService( QLatin1String( "org.freedesktop.Akonadi.SendLaterAgent" ) );
-    mManager->load();
+
+#ifdef DEBUG_SENDLATERAGENT
+    QTimer::singleShot(1000, mManager, SLOT(load()));
+#else
+    QTimer::singleShot(1000*60*4, mManager, SLOT(load()));
+#endif
 }
 
 SendLaterAgent::~SendLaterAgent()
