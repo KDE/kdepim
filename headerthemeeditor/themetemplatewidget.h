@@ -37,8 +37,10 @@ class ThemeTemplateWidget : public QWidget
 public:
     explicit ThemeTemplateWidget(const QString &title, QWidget *parent = 0);
     ~ThemeTemplateWidget();
+
 Q_SIGNALS:
     void insertTemplate(const QString&);
+
 private:
     ThemeTemplateListWidget *mListTemplate;
 };

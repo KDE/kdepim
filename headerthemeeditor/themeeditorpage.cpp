@@ -38,9 +38,8 @@
 
 ThemeEditorPage::ThemeEditorPage(const QString &themeName, QWidget *parent)
     : QWidget(parent),
-      mThemeSession(0)
+      mThemeSession(new ThemeSession)
 {
-    mThemeSession = new ThemeSession;
     QHBoxLayout *lay = new QHBoxLayout;
     mTabWidget = new KTabWidget;
     lay->addWidget(mTabWidget);

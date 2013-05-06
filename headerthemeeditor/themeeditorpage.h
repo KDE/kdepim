@@ -47,6 +47,7 @@ public:
     bool themeWasChanged() const;
 
     void reloadConfig();
+
 private:
     void createZip(const QString &themeName, KZip *zip);
     QList<EditorPage*> mExtraPage;
