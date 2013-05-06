@@ -96,6 +96,7 @@ SieveEditor::SieveEditor( QWidget * parent )
 
     mExtraSplitter->addWidget(sieveTemplateWidget);
     mExtraSplitter->addWidget(mSieveInfo);
+    mExtraSplitter->setChildrenCollapsible(false);
 
 
     QWidget *textEditWidget = new QWidget;
