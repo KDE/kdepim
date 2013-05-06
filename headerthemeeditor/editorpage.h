@@ -24,6 +24,7 @@
 class ThemeTemplateWidget;
 class Editor;
 class KZip;
+class QSplitter;
 
 class EditorPage : public QWidget
 {
@@ -50,6 +51,7 @@ private:
     QString mPageFileName;
     Editor *mEditor;
     ThemeTemplateWidget *mThemeTemplate;
+    QSplitter *mMainSplitter;
     bool mChanged;
 };
 
