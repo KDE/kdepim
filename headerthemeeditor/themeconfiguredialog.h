@@ -34,6 +34,7 @@ public:
 
 private Q_SLOTS:
     void slotOkClicked();
+    void slotDefaultClicked();
 
 private:
     KUrlRequester *mDefaultUrl;
