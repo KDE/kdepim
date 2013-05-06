@@ -77,18 +77,6 @@ QStringList SieveActionRedirect::needRequires() const
     return QStringList();
 }
 
-bool SieveActionRedirect::needCheckIfServerHasCapability() const
-{
-    return mHasCopySupport;
-}
-
-QString SieveActionRedirect::serverNeedsCapability() const
-{
-    if (mHasCopySupport)
-        return QLatin1String("copy");
-    return QString();
-}
-
 
 
 #include "sieveactionredirect.moc"
