@@ -65,7 +65,7 @@ private Q_SLOTS:
     void slotSendNow();
 
 private:
-    void createOrUpdateItem(SendLaterInfo *info);
+    void createOrUpdateItem(SendLaterInfo *info, SendLaterItem *item = 0);
     void load();
     bool mChanged;
     Ui::SendLaterWidget *mWidget;
