@@ -84,6 +84,7 @@ bool SieveActionFileInto::needCheckIfServerHasCapability() const
 
 QString SieveActionFileInto::serverNeedsCapability() const
 {
+    //TODO fix capability (add copy when necessary)
     return QLatin1String("fileinto");
 }
 
