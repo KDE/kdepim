@@ -97,7 +97,6 @@ void ThemeEditorMainWindow::slotConfigure()
 
 void ThemeEditorMainWindow::slotInstallTheme()
 {
-    //TODO
     //Save before installing :)
     slotSaveTheme();
     const QString localThemePath = KStandardDirs::locateLocal("data",QLatin1String("messageviewer/themes/"));
