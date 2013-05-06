@@ -53,9 +53,9 @@ ArchiveMailAgent::ArchiveMailAgent( const QString &id )
     connect( m_collectionMonitor, SIGNAL(collectionRemoved(Akonadi::Collection)),
              this, SLOT(mailCollectionRemoved(Akonadi::Collection)) );
 #ifdef DEBUG_ARCHIVEMAILAGENT
-    QTimer::singleShot(1000,mArchiveManager,SLOT(load()));
+    QTimer::singleShot(1000, mArchiveManager, SLOT(load()));
 #else
-    QTimer::singleShot(1000*60*5,mArchiveManager,SLOT(load()));
+    QTimer::singleShot(1000*60*5, mArchiveManager, SLOT(load()));
 #endif
     mTimer = new QTimer(this);
     connect(mTimer, SIGNAL(timeout()), this, SLOT(reload()));
