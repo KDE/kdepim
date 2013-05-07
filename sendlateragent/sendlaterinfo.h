@@ -26,7 +26,7 @@ class SendLaterInfo
 {
 public:
     explicit SendLaterInfo();
-    explicit SendLaterInfo(const KConfigGroup& config);
+    explicit SendLaterInfo(const KConfigGroup &config);
     SendLaterInfo(const SendLaterInfo &info);
     ~SendLaterInfo();
 
@@ -52,8 +52,8 @@ public:
     void setDateTime(const QDateTime &time);
     QDateTime dateTime() const;
 
-    void readConfig(const KConfigGroup& config);
-    void writeConfig(KConfigGroup & config );
+    void readConfig(const KConfigGroup &config);
+    void writeConfig(KConfigGroup &config );
 
     void setLastDateTimeSend( const QDateTime &date );
     QDateTime lastDateTimeSend() const;

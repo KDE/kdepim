@@ -54,14 +54,14 @@ public:
     };
 
     void save();
-    void saveTreeWidgetHeader(KConfigGroup& group);
+    void saveTreeWidgetHeader(KConfigGroup &group);
     void restoreTreeWidgetHeader(const QByteArray &group);
 
 private Q_SLOTS:
     void slotRemoveItem();
     void slotModifyItem();
     void updateButtons();
-    void customContextMenuRequested(const QPoint&);
+    void customContextMenuRequested(const QPoint &);
     void slotSendNow();
 
 private:

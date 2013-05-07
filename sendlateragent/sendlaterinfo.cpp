@@ -28,7 +28,7 @@ SendLaterInfo::SendLaterInfo()
 {
 }
 
-SendLaterInfo::SendLaterInfo(const KConfigGroup& config)
+SendLaterInfo::SendLaterInfo(const KConfigGroup &config)
     : mId(-1),
       mRecursiveEachValue(1),
       mRecursiveUnit(None),
@@ -109,7 +109,7 @@ QDateTime SendLaterInfo::lastDateTimeSend() const
     return mLastDateTimeSend;
 }
 
-void SendLaterInfo::readConfig(const KConfigGroup& config)
+void SendLaterInfo::readConfig(const KConfigGroup &config)
 {
     if (config.hasKey(QLatin1String("lastDateTimeSend"))) {
         mLastDateTimeSend = QDateTime::fromString(config.readEntry("lastDateTimeSend"),Qt::ISODate);
@@ -121,7 +121,7 @@ void SendLaterInfo::readConfig(const KConfigGroup& config)
     mId = config.readEntry("itemId", -1);
 }
 
-void SendLaterInfo::writeConfig(KConfigGroup & config )
+void SendLaterInfo::writeConfig(KConfigGroup &config )
 {
     if (mLastDateTimeSend.isValid()) {
         config.writeEntry("lastDateTimeSend", mLastDateTimeSend.toString(Qt::ISODate) );

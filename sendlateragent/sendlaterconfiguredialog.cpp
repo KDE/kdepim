@@ -153,7 +153,7 @@ SendLaterWidget::~SendLaterWidget()
     delete mWidget;
 }
 
-void SendLaterWidget::customContextMenuRequested(const QPoint&)
+void SendLaterWidget::customContextMenuRequested(const QPoint &)
 {
     const QList<QTreeWidgetItem *> listItems = mWidget->treeWidget->selectedItems();
     if ( !listItems.isEmpty() ) {
@@ -172,12 +172,12 @@ void SendLaterWidget::slotSendNow()
     //TODO
 }
 
-void SendLaterWidget::restoreTreeWidgetHeader(const QByteArray& data)
+void SendLaterWidget::restoreTreeWidgetHeader(const QByteArray &data)
 {
     mWidget->treeWidget->header()->restoreState(data);
 }
 
-void SendLaterWidget::saveTreeWidgetHeader(KConfigGroup& group)
+void SendLaterWidget::saveTreeWidgetHeader(KConfigGroup &group)
 {
     group.writeEntry( "HeaderState", mWidget->treeWidget->header()->saveState() );
 }
