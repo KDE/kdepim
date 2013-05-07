@@ -20,7 +20,7 @@
 #include <messagecore/stringutil.h>
 #include <grantlee/util.h>
 
-QVariant MessageHeaderEmailShowLink::doFilter(const QVariant& input, const QVariant& argument, bool autoescape) const
+QVariant MessageHeaderEmailShowLink::doFilter(const QVariant &input, const QVariant &argument, bool autoescape) const
 {
     Q_UNUSED(autoescape);
     Q_UNUSED(argument);
@@ -33,8 +33,7 @@ bool MessageHeaderEmailShowLink::isSafe() const
     return true;
 }
 
-
-QVariant MessageHeaderEmailNameOnly::doFilter(const QVariant& input, const QVariant& argument, bool autoescape) const
+QVariant MessageHeaderEmailNameOnly::doFilter(const QVariant &input, const QVariant &argument, bool autoescape) const
 {
     Q_UNUSED(autoescape);
     Q_UNUSED(argument);

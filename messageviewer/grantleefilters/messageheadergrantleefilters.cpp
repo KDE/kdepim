@@ -30,7 +30,7 @@ MessageHeaderGrantleeFilters::~MessageHeaderGrantleeFilters()
 }
 
 
-QHash< QString, Grantlee::Filter* > MessageHeaderGrantleeFilters::filters(const QString& name)
+QHash<QString, Grantlee::Filter*> MessageHeaderGrantleeFilters::filters(const QString &name)
 {
     Q_UNUSED(name);
 
