@@ -2348,6 +2348,7 @@ void ViewerPrivate::slotGrantleeHeaders()
   setHeaderStyleAndStrategy( HeaderStyle::grantlee(),
                              HeaderStrategy::grantlee(), true );
   initGrantleeThemeName();
+  update( Viewer::Force );
 }
 
 void ViewerPrivate::initGrantleeThemeName()
