@@ -66,7 +66,7 @@ ArchiveMailAgent::~ArchiveMailAgent()
 {
 }
 
-void ArchiveMailAgent::mailCollectionRemoved(const Akonadi::Collection& collection)
+void ArchiveMailAgent::mailCollectionRemoved(const Akonadi::Collection &collection)
 {
     mArchiveManager->removeCollection(collection);
 }

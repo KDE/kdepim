@@ -28,7 +28,7 @@ class ArchiveMailInfo
 {
 public:
     explicit ArchiveMailInfo();
-    explicit ArchiveMailInfo(const KConfigGroup& config);
+    explicit ArchiveMailInfo(const KConfigGroup &config);
     ArchiveMailInfo(const ArchiveMailInfo &info);
     ~ArchiveMailInfo();
 
@@ -54,8 +54,8 @@ public:
     void setUrl(const KUrl& url);
     KUrl url() const;
 
-    void readConfig(const KConfigGroup& config);
-    void writeConfig(KConfigGroup & config );
+    void readConfig(const KConfigGroup &config);
+    void writeConfig(KConfigGroup &config );
 
     void setArchiveType( MailCommon::BackupJob::ArchiveType type );
     MailCommon::BackupJob::ArchiveType archiveType() const;
@@ -66,13 +66,13 @@ public:
     void setArchiveAge( int age );
     int archiveAge() const;
 
-    void setLastDateSaved( const QDate& date );
+    void setLastDateSaved( const QDate &date );
     QDate lastDateSaved() const;
 
     int maximumArchiveCount() const;
     void setMaximumArchiveCount( int max );
 
-    QStringList listOfArchive(const QString& foldername) const;
+    QStringList listOfArchive(const QString &foldername) const;
 
     bool isEnabled() const;
     void setEnabled(bool b);

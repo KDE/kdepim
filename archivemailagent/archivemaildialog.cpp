@@ -166,7 +166,7 @@ ArchiveMailWidget::~ArchiveMailWidget()
     delete mWidget;
 }
 
-void ArchiveMailWidget::customContextMenuRequested(const QPoint&)
+void ArchiveMailWidget::customContextMenuRequested(const QPoint &)
 {
     const QList<QTreeWidgetItem *> listItems = mWidget->treeWidget->selectedItems();
     KMenu menu;
@@ -183,7 +183,7 @@ void ArchiveMailWidget::customContextMenuRequested(const QPoint&)
     menu.exec(QCursor::pos());
 }
 
-void ArchiveMailWidget::restoreTreeWidgetHeader(const QByteArray& data)
+void ArchiveMailWidget::restoreTreeWidgetHeader(const QByteArray &data)
 {
     mWidget->treeWidget->header()->restoreState(data);
 }
@@ -220,7 +220,7 @@ void ArchiveMailWidget::load()
     }
 }
 
-void ArchiveMailWidget::createOrUpdateItem(ArchiveMailInfo *info, ArchiveMailItem* item)
+void ArchiveMailWidget::createOrUpdateItem(ArchiveMailInfo *info, ArchiveMailItem *item)
 {
     if (!item) {
         item = new ArchiveMailItem(mWidget->treeWidget);

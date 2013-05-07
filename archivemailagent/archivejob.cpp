@@ -69,7 +69,7 @@ void ArchiveJob::execute()
     }
 }
 
-void ArchiveJob::slotError(const QString& error)
+void ArchiveJob::slotError(const QString &error)
 {
     const QPixmap pixmap = KIcon( QLatin1String("kmail") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
 
@@ -83,7 +83,7 @@ void ArchiveJob::slotError(const QString& error)
     deleteLater();
 }
 
-void ArchiveJob::slotBackupDone(const QString& info)
+void ArchiveJob::slotBackupDone(const QString &info)
 {
     const QPixmap pixmap = KIcon( QLatin1String("kmail") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
 

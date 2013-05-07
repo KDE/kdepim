@@ -31,7 +31,7 @@ ArchiveMailInfo::ArchiveMailInfo()
 {
 }
 
-ArchiveMailInfo::ArchiveMailInfo(const KConfigGroup& config)
+ArchiveMailInfo::ArchiveMailInfo(const KConfigGroup &config)
     : mLastDateSaved(QDate())
     , mArchiveAge( 1 )
     , mArchiveType( MailCommon::BackupJob::Zip )
@@ -76,7 +76,7 @@ ArchiveMailInfo& ArchiveMailInfo::operator=( const ArchiveMailInfo &old )
     return (*this);
 }
 
-QString normalizeFolderName(const QString& folderName)
+QString normalizeFolderName(const QString &folderName)
 {
     QString adaptFolderName(folderName);
     adaptFolderName.replace(QLatin1Char('/'),QLatin1Char('_'));
@@ -94,7 +94,7 @@ QString ArchiveMailInfo::dirArchive() const
     return dirPath;
 }
 
-KUrl ArchiveMailInfo::realUrl(const QString& folderName) const
+KUrl ArchiveMailInfo::realUrl(const QString &folderName) const
 {
     const int numExtensions = 4;
     // The extensions here are also sorted, like the enum order of BackupJob::ArchiveType
@@ -108,7 +108,7 @@ KUrl ArchiveMailInfo::realUrl(const QString& folderName) const
     return real;
 }
 
-QStringList ArchiveMailInfo::listOfArchive(const QString& folderName) const
+QStringList ArchiveMailInfo::listOfArchive(const QString &folderName) const
 {
     const int numExtensions = 4;
     // The extensions here are also sorted, like the enum order of BackupJob::ArchiveType
@@ -160,7 +160,7 @@ MailCommon::BackupJob::ArchiveType ArchiveMailInfo::archiveType() const
     return mArchiveType;
 }
 
-void ArchiveMailInfo::setLastDateSaved( const QDate& date )
+void ArchiveMailInfo::setLastDateSaved( const QDate &date )
 {
     mLastDateSaved = date;
 }
@@ -170,9 +170,9 @@ QDate ArchiveMailInfo::lastDateSaved() const
     return mLastDateSaved;
 }
 
-void ArchiveMailInfo::readConfig(const KConfigGroup& config)
+void ArchiveMailInfo::readConfig(const KConfigGroup &config)
 {
-    mPath = config.readEntry("storePath",KUrl());
+    mPath = config.readEntry("storePath", KUrl());
 
     if (config.hasKey(QLatin1String("lastDateSaved"))) {
         mLastDateSaved = QDate::fromString(config.readEntry("lastDateSaved"),Qt::ISODate);
@@ -215,7 +215,7 @@ KUrl ArchiveMailInfo::url() const
     return mPath;
 }
 
-void ArchiveMailInfo::setUrl(const KUrl& url)
+void ArchiveMailInfo::setUrl(const KUrl &url)
 {
     mPath = url;
 }

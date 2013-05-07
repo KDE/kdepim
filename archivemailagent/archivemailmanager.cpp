@@ -91,7 +91,7 @@ void ArchiveMailManager::load()
     }
 }
 
-void ArchiveMailManager::removeCollection(const Akonadi::Collection& collection)
+void ArchiveMailManager::removeCollection(const Akonadi::Collection &collection)
 {
     const QString groupname = ArchiveMailAgentUtil::archivePattern.arg(collection.id());
     if (mConfig->hasGroup(groupname)) {

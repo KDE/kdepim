@@ -29,7 +29,7 @@
 #include <QCheckBox>
 #include <QSpinBox>
 
-AddArchiveMailDialog::AddArchiveMailDialog(ArchiveMailInfo* info,QWidget *parent)
+AddArchiveMailDialog::AddArchiveMailDialog(ArchiveMailInfo *info,QWidget *parent)
     : KDialog(parent),
       mInfo(info)
 {
@@ -136,7 +136,7 @@ AddArchiveMailDialog::~AddArchiveMailDialog()
 
 }
 
-void AddArchiveMailDialog::load(ArchiveMailInfo* info)
+void AddArchiveMailDialog::load(ArchiveMailInfo *info)
 {
     mPath->setUrl(info->url());
     mRecursiveCheckBox->setChecked(info->saveSubCollection());
@@ -195,7 +195,7 @@ bool AddArchiveMailDialog::recursive() const
     return mRecursiveCheckBox->isChecked();
 }
 
-void AddArchiveMailDialog::setSelectedFolder(const Akonadi::Collection& collection)
+void AddArchiveMailDialog::setSelectedFolder(const Akonadi::Collection &collection)
 {
     mFolderRequester->setCollection(collection);
 }
@@ -210,7 +210,7 @@ KUrl AddArchiveMailDialog::path() const
     return mPath->url();
 }
 
-void AddArchiveMailDialog::setPath(const KUrl&url)
+void AddArchiveMailDialog::setPath(const KUrl &url)
 {
     mPath->setUrl(url);
 }
