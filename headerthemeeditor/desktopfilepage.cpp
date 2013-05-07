@@ -56,7 +56,7 @@ DesktopFilePage::DesktopFilePage(QWidget *parent)
     lay->addWidget(lab,3,0);
 
     mExtraDisplayHeaders = new PimCommon::SimpleStringListEditor;
-    lay->addWidget(mExtraDisplayHeaders, 4, 0, 4, 2);
+    lay->addWidget(mExtraDisplayHeaders, 4, 0, 1, 2);
     setLayout(lay);
     connect(mExtraDisplayHeaders, SIGNAL(changed()), this, SLOT(slotChanged()));
     connect(mFilename, SIGNAL(textChanged(QString)), this, SLOT(slotChanged()));
