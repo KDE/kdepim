@@ -34,9 +34,9 @@ namespace HeaderStyleUtil {
 //
 // Convenience functions:
 //
-QString directionOf( const QString & str );
+QString directionOf( const QString &str );
 
-QString strToHtml( const QString & str, int flags = LinkLocator::PreserveSpaces );
+QString strToHtml( const QString &str, int flags = LinkLocator::PreserveSpaces );
 
 QString dateString( KMime::Message *message, bool printing, bool shortDate );
 
@@ -45,7 +45,7 @@ QString subjectString( KMime::Message *message, int flags = LinkLocator::Preserv
 QString subjectDirectionString( KMime::Message *message );
 
 QString drawSpamMeter( SpamError spamError, double percent, double confidence,
-                              const QString & filterHeader, const QString & confidenceHeader );
+                              const QString &filterHeader, const QString &confidenceHeader );
 
 QString imgToDataUrl( const QImage &image );
 
