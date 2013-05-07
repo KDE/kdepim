@@ -67,7 +67,7 @@ GrantleeHeaderFormatter::~GrantleeHeaderFormatter()
     delete d;
 }
 
-QString GrantleeHeaderFormatter::toHtml(const GrantleeTheme &theme, bool isPrinting, const MessageViewer::GrantleeHeaderStyle *style, KMime::Message *message) const
+QString GrantleeHeaderFormatter::toHtml(const GrantleeTheme &theme, bool isPrinting, const MessageViewer::HeaderStyle *style, KMime::Message *message) const
 {
     QString errorMessage;
     if (!theme.isValid()) {

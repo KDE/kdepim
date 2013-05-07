@@ -18,11 +18,11 @@
 #ifndef GRANTLEEHEADERTESTSTYLE_H
 #define GRANTLEEHEADERTESTSTYLE_H
 
-#include "header/grantleeheaderstyle.h"
+#include "headerstyle.h"
 
 namespace MessageViewer {
 class GrantleeHeaderFormatter;
-class GrantleeHeaderTestStyle : public GrantleeHeaderStyle {
+class GrantleeHeaderTestStyle : public HeaderStyle {
     friend class GrantleeHeaderStyle;
 protected:
     GrantleeHeaderTestStyle();

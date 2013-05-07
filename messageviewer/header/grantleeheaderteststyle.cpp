@@ -27,7 +27,7 @@ using namespace MessageViewer;
 namespace MessageViewer {
 
 GrantleeHeaderTestStyle::GrantleeHeaderTestStyle()
-    : GrantleeHeaderStyle()
+    : HeaderStyle()
 {
     mGrantleeFormatter = new GrantleeHeaderFormatter;
 }
