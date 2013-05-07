@@ -71,9 +71,8 @@ void SendLaterAgent::addSendLaterItem(qlonglong itemId, qlonglong windowId)
         config->sync();
         config->reparseConfiguration();
         mManager->load();
-    } else {
-        delete info;
     }
+    delete info;
     delete dialog;
 }
 

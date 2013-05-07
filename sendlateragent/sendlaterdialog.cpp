@@ -35,11 +35,14 @@ SendLaterDialog::SendLaterDialog(SendLaterInfo *info, QWidget *parent)
     setCaption( i18n("Send Later") );
     setWindowIcon( KIcon( QLatin1String("kmail") ) );
     setButtons( User1|User2|Cancel );
+    setButtonText( User1, i18n("Send Later"));
+    setButtonText( User2, i18n("Send Now"));
     connect(this, SIGNAL(user1Clicked()), this, SLOT(slotSendLater()));
     connect(this, SIGNAL(user1Clicked()), this, SLOT(slotSendNow()));
     QWidget *w = new QWidget;
     QVBoxLayout *lay = new QVBoxLayout;
     mDateTime = new QDateTimeEdit;
+    mDateTime->setMinimumDateTime(QDateTime::currentDateTime());
     lay->addWidget(mDateTime);
 
     mRecursive = new QCheckBox(i18n("Recursive"));
@@ -53,6 +56,7 @@ SendLaterDialog::SendLaterDialog(SendLaterInfo *info, QWidget *parent)
     hbox->addWidget(lab);
 
     mRecursiveValue = new QSpinBox;
+    mRecursiveValue->setMinimum(1);
     hbox->addWidget(mRecursiveValue);
 
     mRecursiveComboBox = new KComboBox;
@@ -65,7 +69,7 @@ SendLaterDialog::SendLaterDialog(SendLaterInfo *info, QWidget *parent)
 
     hbox->addWidget(mRecursiveComboBox);
 
-    setLayout(lay);
+    w->setLayout(lay);
     setMainWidget(w);
     readConfig();
     if (info)
@@ -80,8 +84,8 @@ SendLaterDialog::~SendLaterDialog()
 
 void SendLaterDialog::slotRecursiveClicked(bool clicked)
 {
-    mRecursiveValue->setEnabled(!clicked);
-    mRecursiveComboBox->setEnabled(!clicked);
+    mRecursiveValue->setEnabled(clicked);
+    mRecursiveComboBox->setEnabled(clicked);
 }
 
 void SendLaterDialog::readConfig()
@@ -113,6 +117,7 @@ SendLaterInfo* SendLaterDialog::info()
 {
     if (!mInfo) {
         mInfo = new SendLaterInfo();
+        mInfo->setItemId(-1);
     }
     mInfo->setRecursive(mRecursive->isChecked());
     mInfo->setRecursiveEachValue(mRecursiveValue->value());
