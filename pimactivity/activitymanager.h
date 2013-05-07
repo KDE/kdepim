@@ -50,16 +50,16 @@ public:
 
 Q_SIGNALS:
     void serviceStatusChanged(KActivities::Consumer::ServiceStatus);
-    void activityAdded(const QString&);
-    void activityRemoved(const QString&);
-    void currentActivityChanged(const QString&);
+    void activityAdded(const QString &);
+    void activityRemoved(const QString &);
+    void currentActivityChanged(const QString &);
     void enabledActivityChanged(bool enabled);
 
 private:
     friend class ActivityManagerPrivate;
     ActivityManagerPrivate * const d;
-    Q_PRIVATE_SLOT( d, void slotActivityAdded(const QString&))
-    Q_PRIVATE_SLOT( d, void slotActivityRemoved(const QString&))
+    Q_PRIVATE_SLOT( d, void slotActivityAdded(const QString &))
+    Q_PRIVATE_SLOT( d, void slotActivityRemoved(const QString &))
 };
 }
 

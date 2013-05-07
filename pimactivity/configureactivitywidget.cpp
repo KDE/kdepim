@@ -37,7 +37,7 @@ namespace PimActivity {
 
 class ConfigureActivityWidgetPrivate {
 public:
-    ConfigureActivityWidgetPrivate(ActivityManager *activityManager, ConfigureActivityWidget * qq)
+    ConfigureActivityWidgetPrivate(ActivityManager *activityManager, ConfigureActivityWidget *qq)
         : q(qq),
           activateActivity( 0 ),
           tabWidget( 0 ),
