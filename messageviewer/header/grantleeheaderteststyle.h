@@ -19,12 +19,13 @@
 #define GRANTLEEHEADERTESTSTYLE_H
 
 #include "headerstyle.h"
+#include "messageviewer_export.h"
 
 namespace MessageViewer {
 class GrantleeHeaderFormatter;
-class GrantleeHeaderTestStyle : public HeaderStyle {
+class MESSAGEVIEWER_EXPORT GrantleeHeaderTestStyle : public HeaderStyle {
     friend class GrantleeHeaderStyle;
-protected:
+public:
     GrantleeHeaderTestStyle();
     ~GrantleeHeaderTestStyle();
 
@@ -32,7 +33,15 @@ public:
     const char * name() const { return "grantleetest"; }
 
     QString format( KMime::Message *message ) const;
+
+    void setAbsolutePath(const QString &);
+    void setMainFilename(const QString &);
+    void setExtraDisplayHeaders(const QStringList &);
+
 private:
+    QStringList mExtraDisplay;
+    QString mAbsolutePath;
+    QString mMainFilename;
     GrantleeHeaderFormatter *mGrantleeFormatter;
 };
 }

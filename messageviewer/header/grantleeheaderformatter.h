@@ -19,7 +19,7 @@
 #define GRANTLEEHEADERFORMATTER_H
 
 #include <QString>
-
+#include <grantlee/templateloader.h>
 namespace KMime {
 class Message;
 }
@@ -35,7 +35,9 @@ public:
 
     QString toHtml(const MessageViewer::GrantleeTheme &theme, bool isPrinting, const MessageViewer::HeaderStyle *style, KMime::Message *message) const;
 
+    QString toHtml(const QStringList &displayExtraHeaders, const QString &absolutPath, const QString &filename, const MessageViewer::HeaderStyle *style, KMime::Message *message) const;
 private:
+    QString format(Grantlee::Template headerTemplate, const QStringList &displayExtraHeaders, bool isPrinting, const MessageViewer::HeaderStyle *style, KMime::Message *message) const;
     class Private;
     Private *const d;
 };

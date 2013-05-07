@@ -22,6 +22,8 @@
 
 #include <kmime/kmime_message.h>
 
+#include <QDebug>
+
 using namespace MessageViewer;
 
 namespace MessageViewer {
@@ -44,7 +46,24 @@ QString GrantleeHeaderTestStyle::format( KMime::Message *message ) const {
     if ( !strategy )
         strategy = HeaderStrategy::grantlee();
 
-    return mGrantleeFormatter->toHtml(theme(), isPrinting(), this, message);
+    qDebug()<<" mAbsolutePath "<<mAbsolutePath<<"mMainFilename "<<mAbsolutePath;
+    return mGrantleeFormatter->toHtml(mExtraDisplay, mAbsolutePath, mMainFilename, this, message);
 }
+
+void GrantleeHeaderTestStyle::setAbsolutePath(const QString &path)
+{
+    mAbsolutePath = path;
+}
+
+void GrantleeHeaderTestStyle::setMainFilename(const QString &filename)
+{
+    mMainFilename = filename;
+}
+
+void GrantleeHeaderTestStyle::setExtraDisplayHeaders(const QStringList &extraDisplay)
+{
+    mExtraDisplay = extraDisplay;
+}
+
 
 }
