@@ -46,7 +46,6 @@ public:
         engine = new Grantlee::Engine;
         engine->setPluginPaths( QStringList() << GRANTLEE_PLUGIN_PATH << MESSAGEVIEWER_GRANTLEE_PLUGIN_PATH);
         templateLoader = Grantlee::FileSystemTemplateLoader::Ptr( new Grantlee::FileSystemTemplateLoader );
-        templatePath = KStandardDirs::locate("data",QLatin1String("messageviewer/themes/"));
         engine->addTemplateLoader( templateLoader );
     }
     ~Private()
@@ -54,7 +53,6 @@ public:
         delete engine;
     }
 
-    QString templatePath;
     Grantlee::FileSystemTemplateLoader::Ptr templateLoader;
     Grantlee::Engine *engine;
 };
@@ -73,12 +71,12 @@ QString GrantleeHeaderFormatter::toHtml(const GrantleeTheme &theme, bool isPrint
 {
     QString errorMessage;
     if (!theme.isValid()) {
-        errorMessage = i18n("Grantlee theme is not valid");
+        errorMessage = i18n("Grantlee theme \"%1\" is not valid.", theme.name());
         return errorMessage;
     }
     //TODO improve it.
-    d->templateLoader->setTemplateDirs( QStringList() << d->templatePath << d->templatePath + '/' + theme.dirName() );
-    Grantlee::Template headerTemplate = d->engine->loadByName( QString::fromLatin1("%1/%2").arg(theme.dirName()).arg(theme.filename()) );
+    d->templateLoader->setTemplateDirs( QStringList() << theme.absolutePath() );
+    Grantlee::Template headerTemplate = d->engine->loadByName( theme.filename() );
     if ( headerTemplate->error() ) {
         errorMessage = headerTemplate->errorString();
         return errorMessage;

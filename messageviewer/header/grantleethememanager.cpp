@@ -127,6 +127,7 @@ public:
         theme.setDescription( group.readEntry( "Description", QString() ) );
         theme.setFilename( group.readEntry( "FileName" , QString() ) );
         theme.setDisplayExtraHeaders( group.readEntry( "DisplayExtraHeaders", QStringList() ) );
+        theme.setAbsolutePath(themePath);
         return theme;
     }
 
