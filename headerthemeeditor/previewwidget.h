@@ -16,30 +16,35 @@
 */
 
 
-#ifndef PREVIEWPAGE_H
-#define PREVIEWPAGE_H
+#ifndef PREVIEWWIDGET_H
+#define PREVIEWWIDGET_H
 
 #include <QWidget>
 namespace MessageViewer {
 class Viewer;
+class GrantleeHeaderTestStyle;
 }
 
-class PreviewPage : public QWidget
+class PreviewWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit PreviewPage(QWidget *parent = 0);
-    ~PreviewPage();
+    explicit PreviewWidget(const QString &projectDirectory, QWidget *parent = 0);
+    ~PreviewWidget();
 
     void createScreenShot(const QString &fileName);
     void loadConfig();
+    void setThemePath(const QString &projectDirectory, const QString &mainPageFileName);
 
 public Q_SLOTS:
     void slotUpdateViewer();
+    void slotMainFileNameChanged(const QString &);
+    void slotExtraHeaderDisplayChanged(const QStringList &headers);
 
 private:
     QByteArray mDefaultEmail;
     MessageViewer::Viewer *mViewer;
+    MessageViewer::GrantleeHeaderTestStyle *mGrantleeHeaderStyle;
 };
 
-#endif // PREVIEWPAGE_H
+#endif // PREVIEWWIDGET_H

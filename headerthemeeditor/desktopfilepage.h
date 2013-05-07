@@ -48,8 +48,14 @@ public:
 
     bool wasChanged() const;
 
+Q_SIGNALS:
+    void mainFileNameChanged(const QString &filename);
+    void extraDisplayHeaderChanged(const QStringList &headers);
+
 private Q_SLOTS:
     void slotChanged();
+    void slotFileNameChanged(const QString &);
+    void slotExtraDisplayHeadersChanged();
 
 private:
     void saveAsFilename(const QString &filename);

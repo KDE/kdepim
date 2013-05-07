@@ -22,7 +22,7 @@
 #include <QWidget>
 
 class ThemeTemplateWidget;
-class Editor;
+class EditorWidget;
 class KZip;
 class QSplitter;
 
@@ -49,7 +49,7 @@ private Q_SLOTS:
 
 private:
     QString mPageFileName;
-    Editor *mEditor;
+    EditorWidget *mEditor;
     ThemeTemplateWidget *mThemeTemplate;
     QSplitter *mMainSplitter;
     bool mChanged;

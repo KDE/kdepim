@@ -58,13 +58,25 @@ DesktopFilePage::DesktopFilePage(QWidget *parent)
     mExtraDisplayHeaders = new PimCommon::SimpleStringListEditor;
     lay->addWidget(mExtraDisplayHeaders, 4, 0, 1, 2);
     setLayout(lay);
-    connect(mExtraDisplayHeaders, SIGNAL(changed()), this, SLOT(slotChanged()));
-    connect(mFilename, SIGNAL(textChanged(QString)), this, SLOT(slotChanged()));
+    connect(mExtraDisplayHeaders, SIGNAL(changed()), this, SLOT(slotExtraDisplayHeadersChanged()));
+    connect(mFilename, SIGNAL(textChanged(QString)), this, SLOT(slotFileNameChanged(QString)));
     connect(mDescription, SIGNAL(textChanged(QString)), this, SLOT(slotChanged()));
 }
 
 DesktopFilePage::~DesktopFilePage()
 {
+}
+
+void DesktopFilePage::slotExtraDisplayHeadersChanged()
+{
+    Q_EMIT extraDisplayHeaderChanged(mExtraDisplayHeaders->stringList());
+    mChanged = true;
+}
+
+void DesktopFilePage::slotFileNameChanged(const QString &filename)
+{
+    Q_EMIT mainFileNameChanged(filename);
+    mChanged = true;
 }
 
 void DesktopFilePage::slotChanged()

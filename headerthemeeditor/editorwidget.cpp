@@ -15,7 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "editor.h"
+#include "editorwidget.h"
 #include "defaultcompletion.h"
 
 #include <kpimtextedit/htmlhighlighter.h>
@@ -25,7 +25,7 @@
 #include <QKeyEvent>
 #include <QScrollBar>
 
-Editor::Editor(QWidget *parent)
+EditorWidget::EditorWidget(QWidget *parent)
     : KTextEdit(parent)
 {
     new KPIMTextEdit::HtmlHighlighter(document());
@@ -33,11 +33,11 @@ Editor::Editor(QWidget *parent)
     initCompleter();
 }
 
-Editor::~Editor()
+EditorWidget::~EditorWidget()
 {
 }
 
-void Editor::initCompleter()
+void EditorWidget::initCompleter()
 {
     QStringList listWord;
 
@@ -55,7 +55,7 @@ void Editor::initCompleter()
     connect( m_completer, SIGNAL(activated(QString)), this, SLOT(slotInsertCompletion(QString)) );
 }
 
-void Editor::slotInsertCompletion( const QString &completion )
+void EditorWidget::slotInsertCompletion( const QString &completion )
 {
     QTextCursor tc = textCursor();
     const int extra = completion.length() - m_completer->completionPrefix().length();
@@ -65,7 +65,7 @@ void Editor::slotInsertCompletion( const QString &completion )
     setTextCursor(tc);
 }
 
-void Editor::keyPressEvent(QKeyEvent* e)
+void EditorWidget::keyPressEvent(QKeyEvent* e)
 {
     if ( m_completer->popup()->isVisible() ) {
         switch (e->key()) {
@@ -93,7 +93,7 @@ void Editor::keyPressEvent(QKeyEvent* e)
     m_completer->complete( cr );
 }
 
-QString Editor::wordUnderCursor() const
+QString EditorWidget::wordUnderCursor() const
 {
     static QString eow = QLatin1String( "~!@#$%^&*()+{}|\"<>,./;'[]\\-= " ); // everything without ':', '?' and '_'
     QTextCursor tc = textCursor();
@@ -112,4 +112,4 @@ QString Editor::wordUnderCursor() const
     return tc.selectedText();
 }
 
-#include "editor.moc"
+#include "editorwidget.moc"

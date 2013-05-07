@@ -15,19 +15,19 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef EDITOR_H
-#define EDITOR_H
+#ifndef EDITORWIDGET_H
+#define EDITORWIDGET_H
 
 #include <KTextEdit>
 
 class QCompleter;
 
-class Editor : public KTextEdit
+class EditorWidget : public KTextEdit
 {
     Q_OBJECT
 public:
-    explicit Editor(QWidget *parent = 0);
-    ~Editor();
+    explicit EditorWidget(QWidget *parent = 0);
+    ~EditorWidget();
 
 private Q_SLOTS:
     void slotInsertCompletion( const QString &completion );
@@ -40,4 +40,4 @@ private:
     QCompleter *m_completer;
 };
 
-#endif // EDITOR_H
+#endif // EDITORWIDGET_H

@@ -115,7 +115,7 @@ bool ThemeEditorMainWindow::slotSaveTheme()
 {
     bool result = false;
     if (mThemeEditor)
-        result = mThemeEditor->saveTheme();
+        result = mThemeEditor->saveTheme(false);
     return result;
 }
 
@@ -138,7 +138,7 @@ void ThemeEditorMainWindow::slotOpenTheme()
             return;
         }
 
-        mThemeEditor = new ThemeEditorPage(QString());
+        mThemeEditor = new ThemeEditorPage(QString(), QString());
         mThemeEditor->loadTheme(filename);
         setCentralWidget(mThemeEditor);
         updateActions();
@@ -168,8 +168,7 @@ bool ThemeEditorMainWindow::saveCurrentProject(bool createNewTheme)
             projectDirectory = dialog->directory();
         }
         if (!projectDirectory.isEmpty()) {
-            mThemeEditor = new ThemeEditorPage(newTheme);
-            mThemeEditor->setProjectDirectory(projectDirectory);
+            mThemeEditor = new ThemeEditorPage(projectDirectory, newTheme);
             setCentralWidget(mThemeEditor);
         } else {
             setCentralWidget(0);

@@ -18,7 +18,7 @@
 #include "themeeditorpage.h"
 #include "desktopfilepage.h"
 #include "editorpage.h"
-#include "previewpage.h"
+#include "previewwidget.h"
 #include "themesession.h"
 
 #include <knewstuff3/uploaddialog.h>
@@ -36,9 +36,9 @@
 #include <QPointer>
 #include <QDebug>
 
-ThemeEditorPage::ThemeEditorPage(const QString &themeName, QWidget *parent)
+ThemeEditorPage::ThemeEditorPage(const QString &projectDir, const QString &themeName, QWidget *parent)
     : QWidget(parent),
-      mThemeSession(new ThemeSession)
+      mThemeSession(new ThemeSession(projectDir))
 {
     QHBoxLayout *lay = new QHBoxLayout;
     mTabWidget = new KTabWidget;
@@ -50,9 +50,11 @@ ThemeEditorPage::ThemeEditorPage(const QString &themeName, QWidget *parent)
     mDesktopPage->setThemeName(themeName);
     mTabWidget->addTab(mDesktopPage, i18n("Desktop File"));
 
-    mPreviewPage = new PreviewPage;
+    mPreviewPage = new PreviewWidget(projectDir);
     mTabWidget->addTab(mPreviewPage, i18n("Preview"));
 
+    connect(mDesktopPage, SIGNAL(mainFileNameChanged(QString)), mPreviewPage, SLOT(slotMainFileNameChanged(QString)));
+    connect(mDesktopPage, SIGNAL(extraDisplayHeaderChanged(QStringList)), mPreviewPage, SLOT(slotExtraHeaderDisplayChanged(QStringList)));
     setLayout(lay);
 }
 
@@ -157,23 +159,32 @@ void ThemeEditorPage::addExtraPage()
     }
 }
 
-bool ThemeEditorPage::saveTheme()
+void ThemeEditorPage::storeTheme()
+{
+    //set default page filename before saving
+    mEditorPage->setPageFileName(mDesktopPage->filename());
+    mEditorPage->saveTheme(projectDirectory());
+
+    Q_FOREACH (EditorPage *page, mExtraPage) {
+        page->saveTheme(projectDirectory());
+    }
+    mDesktopPage->saveTheme(projectDirectory());
+    mThemeSession->setMainPageFileName(mDesktopPage->filename());
+    mThemeSession->writeSession();
+}
+
+bool ThemeEditorPage::saveTheme(bool withConfirmation)
 {
     if (themeWasChanged()) {
-        const int result = KMessageBox::questionYesNoCancel(this, i18n("Do you want to save current project?"), i18n("Save current project"));
-        if (result == KMessageBox::Yes) {
-            //set default page filename before saving
-            mEditorPage->setPageFileName(mDesktopPage->filename());
-            mEditorPage->saveTheme(projectDirectory());
-
-            Q_FOREACH (EditorPage *page, mExtraPage) {
-                page->saveTheme(projectDirectory());
+        if (withConfirmation) {
+            const int result = KMessageBox::questionYesNoCancel(this, i18n("Do you want to save current project?"), i18n("Save current project"));
+            if (result == KMessageBox::Yes) {
+                storeTheme();
+            } else if (result == KMessageBox::Cancel) {
+                return false;
             }
-            mDesktopPage->saveTheme(projectDirectory());
-            mThemeSession->setMainPageFileName(mDesktopPage->filename());
-            mThemeSession->writeSession();
-        } else if (result == KMessageBox::Cancel) {
-            return false;
+        } else {
+            storeTheme();
         }
     }
     return true;
@@ -184,6 +195,7 @@ void ThemeEditorPage::loadTheme(const QString &filename)
     mThemeSession->loadSession(filename);
     mDesktopPage->loadTheme(mThemeSession->projectDirectory());
     mEditorPage->loadTheme(mThemeSession->projectDirectory() + QDir::separator() + mThemeSession->mainPageFileName());
+    mPreviewPage->setThemePath(mThemeSession->projectDirectory(), mThemeSession->mainPageFileName());
     const QStringList lstExtraPages = mThemeSession->extraPages();
     Q_FOREACH(const QString &page, lstExtraPages) {
         EditorPage *extraPage = new EditorPage;
@@ -194,19 +206,15 @@ void ThemeEditorPage::loadTheme(const QString &filename)
     }
 }
 
+void ThemeEditorPage::reloadConfig()
+{
+    mPreviewPage->loadConfig();
+}
+
 QString ThemeEditorPage::projectDirectory() const
 {
     return mThemeSession->projectDirectory();
 }
 
-void ThemeEditorPage::setProjectDirectory(const QString &dir)
-{
-    mThemeSession->setProjectDirectory(dir);
-}
-
-void ThemeEditorPage::reloadConfig()
-{
-    mPreviewPage->loadConfig();
-}
 
 #include "themeeditorpage.moc"

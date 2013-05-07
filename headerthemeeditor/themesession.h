@@ -24,12 +24,11 @@
 class ThemeSession
 {
 public:
-    ThemeSession();
+    ThemeSession(const QString &projectDirectory);
     ~ThemeSession();
     void loadSession(const QString &session);
     void writeSession();
 
-    void setProjectDirectory(const QString &path);
     QString projectDirectory() const;
 
     void addExtraPage(const QString &filename);

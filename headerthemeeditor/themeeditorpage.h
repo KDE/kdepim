@@ -23,23 +23,20 @@
 class KTabWidget;
 class EditorPage;
 class DesktopFilePage;
-class PreviewPage;
+class PreviewWidget;
 class ThemeSession;
 class KZip;
 class ThemeEditorPage : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ThemeEditorPage(const QString &themeName, QWidget *parent = 0);
+    explicit ThemeEditorPage(const QString &projectDir, const QString &themeName, QWidget *parent = 0);
     ~ThemeEditorPage();
 
-    bool saveTheme();
+    bool saveTheme(bool withConfirmation = true);
     void loadTheme(const QString &filename);
 
     void addExtraPage();
-
-    QString projectDirectory() const;
-    void setProjectDirectory(const QString &dir);
 
     void uploadTheme();
     void installTheme(const QString &themePath);
@@ -49,12 +46,14 @@ public:
     void reloadConfig();
 
 private:
+    void storeTheme();
+    QString projectDirectory() const;
     void createZip(const QString &themeName, KZip *zip);
     QList<EditorPage*> mExtraPage;
     KTabWidget *mTabWidget;
     EditorPage *mEditorPage;
     DesktopFilePage *mDesktopPage;
-    PreviewPage *mPreviewPage;
+    PreviewWidget *mPreviewPage;
     ThemeSession *mThemeSession;
 };
 

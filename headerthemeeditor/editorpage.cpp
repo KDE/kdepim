@@ -16,7 +16,7 @@
 */
 
 #include "editorpage.h"
-#include "editor.h"
+#include "editorwidget.h"
 #include "themetemplatewidget.h"
 
 #include <KTextEdit>
@@ -37,7 +37,7 @@ EditorPage::EditorPage(QWidget *parent)
     QVBoxLayout *lay = new QVBoxLayout;
     mMainSplitter = new QSplitter;
     lay->addWidget(mMainSplitter);
-    mEditor = new Editor;
+    mEditor = new EditorWidget;
 
     mMainSplitter->addWidget(mEditor);
     mMainSplitter->setChildrenCollapsible(false);
