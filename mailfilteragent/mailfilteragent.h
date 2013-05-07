@@ -72,6 +72,7 @@ class MailFilterAgent : public Akonadi::AgentBase, public Akonadi::AgentBase::Ob
     void emitProgress(int percent = 0);
     void emitProgressMessage(const QString &message);
     void itemsReceiviedForFiltering( const Akonadi::Item::List &items );
+    void clearMessage();
 
   private:
     FilterManager *m_filterManager;

@@ -141,6 +141,13 @@ void MailFilterAgent::initialCollectionFetchingDone( KJob *job )
       changeRecorder()->setCollectionMonitored( collection, true );
   }
   emit status(AgentBase::Idle, i18n("Ready") );
+  emit percent(100);
+  QTimer::singleShot( 2000, this, SLOT(clearMessage()) );
+}
+
+void MailFilterAgent::clearMessage()
+{
+  emit status(AgentBase::Idle, "" );
 }
 
 void MailFilterAgent::itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection )
