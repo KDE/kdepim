@@ -251,7 +251,7 @@ void ComposerView::contextMenuEvent(QContextMenuEvent *event)
 
 void ComposerView::setActionsEnabled(bool enabled)
 {
-    Q_FOREACH (QAction* action, d->htmlEditorActionList)
+    Q_FOREACH (QAction *action, d->htmlEditorActionList)
         action->setEnabled(enabled);
 }
 
