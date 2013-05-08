@@ -17,6 +17,7 @@
 
 #include "editorpage.h"
 #include "editorwidget.h"
+#include "previewwidget.h"
 #include "themetemplatewidget.h"
 
 #include <KTextEdit>
@@ -35,8 +36,15 @@ EditorPage::EditorPage(QWidget *parent)
       mChanged(false)
 {
     QVBoxLayout *lay = new QVBoxLayout;
+
+    mWidgetSplitter = new QSplitter;
+    mWidgetSplitter->setOrientation(Qt::Vertical);
+    lay->addWidget(mWidgetSplitter);
+
+
     mMainSplitter = new QSplitter;
-    lay->addWidget(mMainSplitter);
+    mWidgetSplitter->addWidget(mMainSplitter);
+
     mEditor = new EditorWidget;
 
     mMainSplitter->addWidget(mEditor);
@@ -46,6 +54,11 @@ EditorPage::EditorPage(QWidget *parent)
     mMainSplitter->addWidget(mThemeTemplate);
 
     connect(mEditor, SIGNAL(textChanged()), this, SLOT(slotChanged()));
+
+    //TODO
+    mPreview = new PreviewWidget(QString());
+    mWidgetSplitter->addWidget(mPreview);
+
 
     KConfigGroup group( KGlobal::config(), "EditorPage" );
     QList<int> size;
