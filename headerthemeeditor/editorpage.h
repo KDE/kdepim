@@ -31,7 +31,7 @@ class EditorPage : public QWidget
 {
     Q_OBJECT
 public:
-    explicit EditorPage(QWidget *parent = 0);
+    explicit EditorPage(bool showPreview = true, QWidget *parent = 0);
     ~EditorPage();
     void saveTheme(const QString &path);
     void loadTheme(const QString &path);

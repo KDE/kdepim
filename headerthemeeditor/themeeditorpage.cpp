@@ -151,7 +151,7 @@ void ThemeEditorPage::addExtraPage()
         if (!filename.endsWith(QLatin1String(".html"))) {
             filename += QLatin1String(".html");
         }
-        EditorPage *extraPage = new EditorPage;
+        EditorPage *extraPage = new EditorPage(false);
         extraPage->setPageFileName(filename);
         mTabWidget->addTab(extraPage, filename);
         mThemeSession->addExtraPage(filename);
@@ -198,7 +198,7 @@ void ThemeEditorPage::loadTheme(const QString &filename)
     mPreviewPage->setThemePath(mThemeSession->projectDirectory(), mThemeSession->mainPageFileName());
     const QStringList lstExtraPages = mThemeSession->extraPages();
     Q_FOREACH(const QString &page, lstExtraPages) {
-        EditorPage *extraPage = new EditorPage;
+        EditorPage *extraPage = new EditorPage(false);
         extraPage->setPageFileName(page);
         mTabWidget->addTab(extraPage, page);
         mExtraPage.append(extraPage);

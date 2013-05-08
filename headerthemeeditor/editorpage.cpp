@@ -31,20 +31,28 @@
 #include <QTextStream>
 #include <QDir>
 
-EditorPage::EditorPage(QWidget *parent)
+EditorPage::EditorPage(bool showPreview, QWidget *parent)
     : QWidget(parent),
+      mWidgetSplitter(0),
       mChanged(false)
 {
     QVBoxLayout *lay = new QVBoxLayout;
 
-    mWidgetSplitter = new QSplitter;
-    mWidgetSplitter->setOrientation(Qt::Vertical);
-    lay->addWidget(mWidgetSplitter);
-
-
     mMainSplitter = new QSplitter;
-    mWidgetSplitter->addWidget(mMainSplitter);
+    if (showPreview) {
+        mWidgetSplitter = new QSplitter;
+        mWidgetSplitter->setOrientation(Qt::Vertical);
+        mWidgetSplitter->setChildrenCollapsible(false);
+        lay->addWidget(mWidgetSplitter);
 
+        mWidgetSplitter->addWidget(mMainSplitter);
+
+        //TODO
+        mPreview = new PreviewWidget(QString());
+        mWidgetSplitter->addWidget(mPreview);
+    } else {
+        lay->addWidget(mMainSplitter);
+    }
     mEditor = new EditorWidget;
 
     mMainSplitter->addWidget(mEditor);
@@ -55,9 +63,6 @@ EditorPage::EditorPage(QWidget *parent)
 
     connect(mEditor, SIGNAL(textChanged()), this, SLOT(slotChanged()));
 
-    //TODO
-    mPreview = new PreviewWidget(QString());
-    mWidgetSplitter->addWidget(mPreview);
 
 
     KConfigGroup group( KGlobal::config(), "EditorPage" );
