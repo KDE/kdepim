@@ -23,6 +23,7 @@
 #include <KComboBox>
 #include <KUrlRequester>
 #include <KIntSpinBox>
+#include <KSeparator>
 
 #include <QGridLayout>
 #include <QLabel>
@@ -118,6 +119,7 @@ AddArchiveMailDialog::AddArchiveMailDialog(ArchiveMailInfo *info,QWidget *parent
     mainLayout->addWidget( mMaximumArchive, row, 1 );
     row++;
 
+    mainLayout->addWidget(new KSeparator, row, 0, row, 2);
     mainLayout->setColumnStretch( 1, 1 );
     mainLayout->addItem( new QSpacerItem( 1, 1, QSizePolicy::Expanding, QSizePolicy::Expanding ), row, 0 );
 
