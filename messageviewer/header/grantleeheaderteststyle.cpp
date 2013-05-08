@@ -46,7 +46,6 @@ QString GrantleeHeaderTestStyle::format( KMime::Message *message ) const {
     if ( !strategy )
         strategy = HeaderStrategy::grantlee();
 
-    qDebug()<<" mAbsolutePath "<<mAbsolutePath<<"mMainFilename "<<mAbsolutePath;
     return mGrantleeFormatter->toHtml(mExtraDisplay, mAbsolutePath, mMainFilename, this, message);
 }
 
