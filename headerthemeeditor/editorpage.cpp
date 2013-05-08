@@ -69,6 +69,9 @@ EditorPage::EditorPage(const QString &projectDirectory, bool showPreview, QWidge
     size << 400 << 100;
 
     mMainSplitter->setSizes(group.readEntry( "mainSplitter", size));
+    if (mWidgetSplitter) {
+        mWidgetSplitter->setSizes(group.readEntry( "widgetSplitter", size));
+    }
     setLayout(lay);
 }
 
@@ -76,6 +79,9 @@ EditorPage::~EditorPage()
 {
     KConfigGroup group( KGlobal::config(), "EditorPage" );
     group.writeEntry( "mainSplitter", mMainSplitter->sizes());
+    if (mWidgetSplitter) {
+        group.writeEntry("widgetSplitter", mWidgetSplitter->sizes());
+    }
 }
 
 void EditorPage::slotChanged()
