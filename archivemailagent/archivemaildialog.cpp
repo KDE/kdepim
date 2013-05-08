@@ -240,7 +240,7 @@ void ArchiveMailWidget::updateDiffDate(ArchiveMailItem *item, ArchiveMailInfo *i
 {
     const QDate diffDate = ArchiveMailAgentUtil::diffDate(info);
     const int diff = QDate::currentDate().daysTo(diffDate);
-    item->setText(ArchiveMailWidget::NextArchive,i18np("1 day", "%1 days",diff));
+    item->setText(ArchiveMailWidget::NextArchive,i18np("Tomorrow", "%1 days",diff));
     if (diff<0) {
         item->setBackgroundColor(ArchiveMailWidget::NextArchive,Qt::red);
     } else {
