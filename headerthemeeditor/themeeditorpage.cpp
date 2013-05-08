@@ -43,18 +43,15 @@ ThemeEditorPage::ThemeEditorPage(const QString &projectDir, const QString &theme
     QHBoxLayout *lay = new QHBoxLayout;
     mTabWidget = new KTabWidget;
     lay->addWidget(mTabWidget);
-    mEditorPage = new EditorPage;
+    mEditorPage = new EditorPage(projectDir);
     mTabWidget->addTab(mEditorPage, i18n("Editor"));
 
     mDesktopPage = new DesktopFilePage;
     mDesktopPage->setThemeName(themeName);
     mTabWidget->addTab(mDesktopPage, i18n("Desktop File"));
 
-    mPreviewPage = new PreviewWidget(projectDir);
-    mTabWidget->addTab(mPreviewPage, i18n("Preview"));
-
-    connect(mDesktopPage, SIGNAL(mainFileNameChanged(QString)), mPreviewPage, SLOT(slotMainFileNameChanged(QString)));
-    connect(mDesktopPage, SIGNAL(extraDisplayHeaderChanged(QStringList)), mPreviewPage, SLOT(slotExtraHeaderDisplayChanged(QStringList)));
+    connect(mDesktopPage, SIGNAL(mainFileNameChanged(QString)), mEditorPage->preview(), SLOT(slotMainFileNameChanged(QString)));
+    connect(mDesktopPage, SIGNAL(extraDisplayHeaderChanged(QStringList)), mEditorPage->preview(), SLOT(slotExtraHeaderDisplayChanged(QStringList)));
     setLayout(lay);
 }
 
@@ -106,7 +103,7 @@ void ThemeEditorPage::installTheme(const QString &themePath)
 void ThemeEditorPage::uploadTheme()
 {
     //force update for screenshot
-    mPreviewPage->slotUpdateViewer();
+    mEditorPage->preview()->slotUpdateViewer();
     KTempDir tmp;
     const QString themename = mDesktopPage->themeName();
     const QString zipFileName = tmp.name() + QDir::separator() + themename + QLatin1String(".zip");
@@ -114,11 +111,11 @@ void ThemeEditorPage::uploadTheme()
     if (zip->open(QIODevice::WriteOnly)) {
         createZip(themename, zip);
         zip->close();
-        qDebug()<< "zipFilename"<<zipFileName;
+        //qDebug()<< "zipFilename"<<zipFileName;
 
         const QString previewFileName = tmp.name() + QDir::separator() + themename + QLatin1String("_preview.png");
-        qDebug()<<" previewFileName"<<previewFileName;
-        mPreviewPage->createScreenShot(previewFileName);
+        //qDebug()<<" previewFileName"<<previewFileName;
+        mEditorPage->preview()->createScreenShot(previewFileName);
 
         QPointer<KNS3::UploadDialog> dialog = new KNS3::UploadDialog(QLatin1String("messageviewer_header_themes.knsrc"), this);
         dialog->setUploadFile(zipFileName);
@@ -151,7 +148,7 @@ void ThemeEditorPage::addExtraPage()
         if (!filename.endsWith(QLatin1String(".html"))) {
             filename += QLatin1String(".html");
         }
-        EditorPage *extraPage = new EditorPage(false);
+        EditorPage *extraPage = new EditorPage(QString(), false);
         extraPage->setPageFileName(filename);
         mTabWidget->addTab(extraPage, filename);
         mThemeSession->addExtraPage(filename);
@@ -195,10 +192,11 @@ void ThemeEditorPage::loadTheme(const QString &filename)
     mThemeSession->loadSession(filename);
     mDesktopPage->loadTheme(mThemeSession->projectDirectory());
     mEditorPage->loadTheme(mThemeSession->projectDirectory() + QDir::separator() + mThemeSession->mainPageFileName());
-    mPreviewPage->setThemePath(mThemeSession->projectDirectory(), mThemeSession->mainPageFileName());
+    mEditorPage->preview()->setThemePath(mThemeSession->projectDirectory(), mThemeSession->mainPageFileName());
+
     const QStringList lstExtraPages = mThemeSession->extraPages();
     Q_FOREACH(const QString &page, lstExtraPages) {
-        EditorPage *extraPage = new EditorPage(false);
+        EditorPage *extraPage = new EditorPage(QString(), false);
         extraPage->setPageFileName(page);
         mTabWidget->addTab(extraPage, page);
         mExtraPage.append(extraPage);
@@ -208,7 +206,7 @@ void ThemeEditorPage::loadTheme(const QString &filename)
 
 void ThemeEditorPage::reloadConfig()
 {
-    mPreviewPage->loadConfig();
+    mEditorPage->preview()->loadConfig();
 }
 
 QString ThemeEditorPage::projectDirectory() const

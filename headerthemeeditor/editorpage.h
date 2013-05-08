@@ -31,7 +31,7 @@ class EditorPage : public QWidget
 {
     Q_OBJECT
 public:
-    explicit EditorPage(bool showPreview = true, QWidget *parent = 0);
+    explicit EditorPage(const QString &projectDirectory, bool showPreview = true, QWidget *parent = 0);
     ~EditorPage();
     void saveTheme(const QString &path);
     void loadTheme(const QString &path);
@@ -44,6 +44,8 @@ public:
     void installTheme(const QString &themePath);
 
     bool wasChanged() const;
+
+    PreviewWidget *preview() const;
 
 private Q_SLOTS:
     void slotChanged();

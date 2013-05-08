@@ -31,7 +31,7 @@
 #include <QTextStream>
 #include <QDir>
 
-EditorPage::EditorPage(bool showPreview, QWidget *parent)
+EditorPage::EditorPage(const QString &projectDirectory, bool showPreview, QWidget *parent)
     : QWidget(parent),
       mWidgetSplitter(0),
       mChanged(false)
@@ -47,8 +47,7 @@ EditorPage::EditorPage(bool showPreview, QWidget *parent)
 
         mWidgetSplitter->addWidget(mMainSplitter);
 
-        //TODO
-        mPreview = new PreviewWidget(QString());
+        mPreview = new PreviewWidget(projectDirectory);
         mWidgetSplitter->addWidget(mPreview);
     } else {
         lay->addWidget(mMainSplitter);
@@ -143,5 +142,9 @@ void EditorPage::installTheme(const QString &themePath)
     saveAsFilename(filename);
 }
 
+PreviewWidget *EditorPage::preview() const
+{
+    return mPreview;
+}
 
 #include "editorpage.moc"

@@ -23,9 +23,9 @@
 class KTabWidget;
 class EditorPage;
 class DesktopFilePage;
-class PreviewWidget;
 class ThemeSession;
 class KZip;
+
 class ThemeEditorPage : public QWidget
 {
     Q_OBJECT
@@ -53,7 +53,6 @@ private:
     KTabWidget *mTabWidget;
     EditorPage *mEditorPage;
     DesktopFilePage *mDesktopPage;
-    PreviewWidget *mPreviewPage;
     ThemeSession *mThemeSession;
 };
 
