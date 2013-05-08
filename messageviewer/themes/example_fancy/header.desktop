@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Example fancy
+Name[es]=Ejemplo elegante
 Name[nl]=Voorbeeld van elegant
 Name[pt]=Exemplo bonito
 Name[pt_BR]=Exemplo bonito
@@ -8,6 +9,7 @@ Name[sv]=Snyggt exempel
 Name[uk]=Приклад складної
 Name[x-test]=xxExample fancyxx
 Description=Create fancy theme with grantlee.
+Description[es]=Crear tema elegante con grantlee.
 Description[nl]=Elegant thema maken met grantlee.
 Description[pt]=Cria um tema bonito com o Grantlee.
 Description[pt_BR]=Cria um tema bonito com o Grantlee.
