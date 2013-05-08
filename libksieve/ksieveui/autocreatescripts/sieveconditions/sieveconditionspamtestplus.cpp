@@ -29,7 +29,7 @@
 using namespace KSieveUi;
 
 SieveConditionSpamTestPlus::SieveConditionSpamTestPlus(QObject *parent)
-    : SieveCondition(QLatin1String("spamtestplus"), i18n("SpamTestPlus extension"), parent)
+    : SieveCondition(QLatin1String("spamtestplus"), i18n("Spam Test Plus extension"), parent)
 {
 }
 
