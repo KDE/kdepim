@@ -36,6 +36,7 @@
 #include "ui_cryptooperationsconfigwidget.h"
 
 #include "emailoperationspreferences.h"
+#include "fileoperationspreferences.h"
 
 #include <kleo/checksumdefinition.h>
 
@@ -73,6 +74,7 @@ private:
             connect( quickSignCB,    SIGNAL(toggled(bool)), q, SIGNAL(changed()) );
             connect( quickEncryptCB, SIGNAL(toggled(bool)), q, SIGNAL(changed()) );
             connect( checksumDefinitionCB, SIGNAL(currentIndexChanged(int)), q, SIGNAL(changed()) );
+            connect( pgpFileExtCB, SIGNAL(toggled(bool)), q, SIGNAL(changed()) );
         }
 
     } ui;
@@ -93,6 +95,11 @@ void CryptoOperationsConfigWidget::defaults() {
     emailPrefs.setDefaults();
     d->ui.quickSignCB->setChecked( emailPrefs.quickSignEMail() );
     d->ui.quickEncryptCB->setChecked( emailPrefs.quickEncryptEMail() );
+
+    FileOperationsPreferences filePrefs;
+    filePrefs.setDefaults();
+    d->ui.pgpFileExtCB->setChecked( filePrefs.usePGPFileExt() );
+
     if ( d->ui.checksumDefinitionCB->count() )
         d->ui.checksumDefinitionCB->setCurrentIndex( 0 );
 }
@@ -104,6 +111,9 @@ void CryptoOperationsConfigWidget::load() {
     const EMailOperationsPreferences emailPrefs;
     d->ui.quickSignCB   ->setChecked( emailPrefs.quickSignEMail()    );
     d->ui.quickEncryptCB->setChecked( emailPrefs.quickEncryptEMail() );
+
+    const FileOperationsPreferences filePrefs;
+    d->ui.pgpFileExtCB->setChecked( filePrefs.usePGPFileExt() );
 
     const std::vector< shared_ptr<ChecksumDefinition> > cds = ChecksumDefinition::getChecksumDefinitions();
     const shared_ptr<ChecksumDefinition> default_cd = ChecksumDefinition::getDefaultChecksumDefinition( cds );
@@ -123,6 +133,10 @@ void CryptoOperationsConfigWidget::save() {
     emailPrefs.setQuickSignEMail   ( d->ui.quickSignCB   ->isChecked() );
     emailPrefs.setQuickEncryptEMail( d->ui.quickEncryptCB->isChecked() );
     emailPrefs.writeConfig();
+
+    FileOperationsPreferences filePrefs;
+    filePrefs.setUsePGPFileExt( d->ui.pgpFileExtCB->isChecked() );
+    filePrefs.writeConfig();
 
     const int idx = d->ui.checksumDefinitionCB->currentIndex();
     if ( idx < 0 )

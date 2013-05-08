@@ -57,27 +57,43 @@
       <attribute name="title">
        <string>File Operations</string>
       </attribute>
-      <layout class="QFormLayout" name="formLayout">
-       <item row="0" column="0">
-        <widget class="QLabel" name="label">
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QCheckBox" name="pgpFileExtCB">
          <property name="whatsThis">
-          <string comment="@info:whatsthis">&lt;p&gt;Choose here which of the configured checksum programs should be used when creating checksum files.&lt;/p&gt;
-&lt;p&gt;When verifying checksums, the program to use is automatically found, based on the names of the checksum files found.&lt;/p&gt;
+          <string comment="@info:whatsthis">&lt;p&gt;Check this if you want to have OpenPGP encrypted files created by Kleopatra have the .pgp file extension.&lt;/p&gt;
+&lt;p&gt;This will not modify any contens of the created files.&lt;/p&gt;
 </string>
          </property>
          <property name="text">
-          <string>Checksum program to use:</string>
+          <string>Create OpenPGP encrypted files with &quot;.pgp&quot; file extensions instead of &quot;.gpg&quot;</string>
          </property>
         </widget>
        </item>
-       <item row="0" column="1">
-        <widget class="QComboBox" name="checksumDefinitionCB">
-         <property name="whatsThis">
-          <string comment="@info:whatsthis">&lt;p&gt;Choose here which of the configured checksum programs should be used when creating checksum files.&lt;/p&gt;
+       <item>
+        <layout class="QFormLayout" name="formLayout">
+         <item row="0" column="0">
+          <widget class="QLabel" name="label">
+           <property name="whatsThis">
+            <string comment="@info:whatsthis">&lt;p&gt;Choose here which of the configured checksum programs should be used when creating checksum files.&lt;/p&gt;
 &lt;p&gt;When verifying checksums, the program to use is automatically found, based on the names of the checksum files found.&lt;/p&gt;
 </string>
-         </property>
-        </widget>
+           </property>
+           <property name="text">
+            <string>Checksum program to use:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QComboBox" name="checksumDefinitionCB">
+           <property name="whatsThis">
+            <string comment="@info:whatsthis">&lt;p&gt;Choose here which of the configured checksum programs should be used when creating checksum files.&lt;/p&gt;
+&lt;p&gt;When verifying checksums, the program to use is automatically found, based on the names of the checksum files found.&lt;/p&gt;
+</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </item>
       </layout>
      </widget>

@@ -101,6 +101,25 @@ public:
         ui.certificationsTV->setModel( &certificationsModel );
         connect( ui.certificationsTV->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
                  q, SLOT(slotCertificationSelectionChanged()) );
+        connect( ui.changePassphrasePB, SIGNAL(clicked()),
+                 q, SLOT(slotChangePassphraseClicked()) );
+        connect( ui.changeTrustLevelPB, SIGNAL(clicked()),
+                 q, SLOT(slotChangeTrustLevelClicked()) );
+        connect( ui.changeExpiryDatePB, SIGNAL(clicked()),
+                 q, SLOT(slotChangeExpiryDateClicked()) );
+        connect( ui.revokeCertificationPB, SIGNAL(clicked()),
+                 q, SLOT(slotRevokeCertificationClicked()) );
+        connect( ui.addUserIDPB, SIGNAL(clicked()),
+                 q, SLOT(slotAddUserIDClicked()) );
+        connect( ui.revokeUserIDPB, SIGNAL(clicked()),
+                 q, SLOT(slotRevokeUserIDClicked()) );
+        connect( ui.certifyUserIDPB, SIGNAL(clicked()),
+                 q, SLOT(slotCertifyUserIDClicked()) );
+        connect( ui.revokeCertificationPB, SIGNAL(clicked()),
+                 q, SLOT(slotRevokeCertificationClicked()) );
+        connect( ui.showCertificationsPB, SIGNAL(clicked()),
+                 q, SLOT(slotShowCertificationsClicked()) );
+
 
         ui.subkeyTV->setModel( &subkeysModel );
         // no selection (yet)

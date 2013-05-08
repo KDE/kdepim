@@ -34,6 +34,8 @@
 
 #include "classify.h"
 
+#include "fileoperationspreferences.h"
+
 #include <QString>
 #include <QStringList>
 #include <QFile>
@@ -288,6 +290,14 @@ QString Kleo::outputFileName( const QString & inputFileName ) {
   \a classification, or NULL if none such exists.
 */
 const char * Kleo::outputFileExtension( unsigned int classification ) {
+
+    if ( classification & OpenPGP ) {
+        FileOperationsPreferences filePrefs;
+        if ( filePrefs.usePGPFileExt() ) {
+            return "pgp";
+        }
+    }
+
     for ( unsigned int i = 0 ; i < sizeof classifications / sizeof *classifications ; ++i )
         if ( ( classifications[i].classification & classification ) == classification )
             return classifications[i].extension;

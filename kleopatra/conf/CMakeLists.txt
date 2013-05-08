@@ -59,6 +59,7 @@ kde4_add_ui_files(kcm_kleopatra_PART_SRCS
 kde4_add_kcfg_files(kcm_kleopatra_PART_SRCS
   ${CMAKE_SOURCE_DIR}/kleopatra/kcfg/tooltippreferences.kcfgc
   ${CMAKE_SOURCE_DIR}/kleopatra/kcfg/emailoperationspreferences.kcfgc
+  ${CMAKE_SOURCE_DIR}/kleopatra/kcfg/fileoperationspreferences.kcfgc
 )
 
 if(KLEO_STATIC_KCMODULES)
