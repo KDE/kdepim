@@ -41,18 +41,24 @@ SendLaterDialog::SendLaterDialog(SendLaterInfo *info, QWidget *parent)
     connect(this, SIGNAL(user1Clicked()), this, SLOT(slotSendNow()));
     QWidget *w = new QWidget;
     QVBoxLayout *lay = new QVBoxLayout;
+    QHBoxLayout *hbox = new QHBoxLayout;
+    lay->addLayout(hbox);
+
+    QLabel *lab = new QLabel(i18n("Send at:"));
+
     mDateTime = new QDateTimeEdit;
     mDateTime->setMinimumDateTime(QDateTime::currentDateTime());
-    lay->addWidget(mDateTime);
+    hbox->addWidget(lab);
+    hbox->addWidget(mDateTime);
 
     mRecursive = new QCheckBox(i18n("Recursive"));
     connect(mRecursive, SIGNAL(clicked(bool)), this, SLOT(slotRecursiveClicked(bool)));
     lay->addWidget(mRecursive);
 
-    QHBoxLayout *hbox = new QHBoxLayout;
+    hbox = new QHBoxLayout;
     lay->addLayout(hbox);
 
-    QLabel *lab = new QLabel(i18n("Each:"));
+    lab = new QLabel(i18n("Each:"));
     hbox->addWidget(lab);
 
     mRecursiveValue = new QSpinBox;
