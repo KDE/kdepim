@@ -40,6 +40,9 @@ private Q_SLOTS:
     void slotSendLater();
     void slotSendNow();
     void slotRecursiveClicked(bool);
+    void slotSendIn30Minutes();
+    void slotSendIn1Hour();
+    void slotSendIn2Hours();
 
 private:
     void load(SendLaterInfo *info);
@@ -52,6 +55,9 @@ private:
     KComboBox *mRecursiveComboBox;
     QCheckBox *mRecursive;
     QSpinBox *mRecursiveValue;
+    KPushButton *mSendIn30Minutes;
+    KPushButton *mSendIn1Hour;
+    KPushButton *mSendIn2Hours;
 };
 
 #endif // SENDLATERDIALOG_H

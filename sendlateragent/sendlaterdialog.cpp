@@ -20,6 +20,8 @@
 
 #include <KLocale>
 #include <KComboBox>
+#include <KPushButton>
+#include <KSeparator>
 
 #include <QHBoxLayout>
 #include <QVBoxLayout>
@@ -75,6 +77,23 @@ SendLaterDialog::SendLaterDialog(SendLaterInfo *info, QWidget *parent)
 
     hbox->addWidget(mRecursiveComboBox);
 
+    hbox = new QHBoxLayout;
+
+    mSendIn30Minutes = new KPushButton(i18n("30 minutes later"));
+    connect(mSendIn30Minutes, SIGNAL(clicked()), SLOT(slotSendIn30Minutes()));
+    hbox->addWidget(mSendIn30Minutes);
+
+    mSendIn1Hour = new KPushButton(i18n("1 hour later"));
+    connect(mSendIn1Hour, SIGNAL(clicked()), SLOT(slotSendIn1Hour()));
+    hbox->addWidget(mSendIn1Hour);
+
+    mSendIn2Hours = new KPushButton(i18n("2 hour later"));
+    connect(mSendIn2Hours, SIGNAL(clicked()), SLOT(slotSendIn2Hours()));
+    hbox->addWidget(mSendIn2Hours);
+    lay->addLayout(hbox);
+
+    lay->addWidget(new KSeparator);
+
     w->setLayout(lay);
     setMainWidget(w);
     readConfig();
@@ -86,6 +105,21 @@ SendLaterDialog::SendLaterDialog(SendLaterInfo *info, QWidget *parent)
 SendLaterDialog::~SendLaterDialog()
 {
     writeConfig();
+}
+
+void SendLaterDialog::slotSendIn2Hours()
+{
+
+}
+
+void SendLaterDialog::slotSendIn1Hour()
+{
+
+}
+
+void SendLaterDialog::slotSendIn30Minutes()
+{
+
 }
 
 void SendLaterDialog::slotRecursiveClicked(bool clicked)
