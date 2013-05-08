@@ -33,6 +33,7 @@ class EditorPage : public QWidget
 public:
     explicit EditorPage(const QString &projectDirectory, bool showPreview = true, QWidget *parent = 0);
     ~EditorPage();
+
     void saveTheme(const QString &path);
     void loadTheme(const QString &path);
 

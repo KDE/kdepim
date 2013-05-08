@@ -52,6 +52,7 @@ EditorPage::EditorPage(const QString &projectDirectory, bool showPreview, QWidge
     } else {
         lay->addWidget(mMainSplitter);
     }
+
     mEditor = new EditorWidget;
 
     mMainSplitter->addWidget(mEditor);
@@ -61,8 +62,6 @@ EditorPage::EditorPage(const QString &projectDirectory, bool showPreview, QWidge
     mMainSplitter->addWidget(mThemeTemplate);
 
     connect(mEditor, SIGNAL(textChanged()), this, SLOT(slotChanged()));
-
-
 
     KConfigGroup group( KGlobal::config(), "EditorPage" );
     QList<int> size;
