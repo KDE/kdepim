@@ -62,6 +62,11 @@ ThemeEditorPage::~ThemeEditorPage()
     delete mThemeSession;
 }
 
+void ThemeEditorPage::importFile()
+{
+    //TODO
+}
+
 bool ThemeEditorPage::themeWasChanged() const
 {
     bool wasChanged = mEditorPage->wasChanged();

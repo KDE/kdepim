@@ -91,7 +91,7 @@ void ThemeEditorMainWindow::setupActions()
 
 void ThemeEditorMainWindow::slotImportFile()
 {
-    //TODO
+    mThemeEditor->importFile();
 }
 
 void ThemeEditorMainWindow::slotConfigure()

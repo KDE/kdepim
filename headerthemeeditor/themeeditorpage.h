@@ -45,6 +45,8 @@ public:
 
     void reloadConfig();
 
+    void importFile();
+
 private:
     void storeTheme();
     QString projectDirectory() const;
