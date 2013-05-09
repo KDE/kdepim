@@ -24,6 +24,7 @@
 
 #include <QHBoxLayout>
 #include <QLabel>
+#include <QSpinBox>
 
 using namespace KSieveUi;
 
@@ -44,14 +45,25 @@ QWidget *SieveActionVacation::createParamWidget( QWidget *parent ) const
     lay->setMargin(0);
     w->setLayout(lay);
 
+    QLabel *lab = new QLabel(i18n("day:"));
+    lay->addWidget(lab);
+
+    QSpinBox *day = new QSpinBox;
+    day->setMinimum(7);
+    day->setObjectName(QLatin1String("day"));
+    //TODO
+    lay->addWidget(day);
 
     return w;
 }
 
 QString SieveActionVacation::code(QWidget *w) const
 {
+    const QSpinBox *day = w->findChild<QSpinBox*>( QLatin1String("day") );
+    const QString dayStr = QString::number(day->value());
+
     //TODO
-    return QString();
+    return QString::fromLatin1("vacation :days %1").arg(dayStr);
 }
 
 QString SieveActionVacation::serverNeedsCapability() const
