@@ -33,7 +33,7 @@
 #include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/utils.h>
 
-#include <kcalcore/occurrenceiterator.h>
+#include <KCalCore/OccurrenceIterator>
 #include <KCheckableProxyModel>
 #include <KIcon>
 
@@ -505,27 +505,27 @@ void MonthView::reloadIncidences()
   KDateTime::Spec timeSpec = CalendarSupport::KCalPrefs::instance()->timeSpec();
   const bool colorMonthBusyDays = preferences()->colorMonthBusyDays();
 
-  KCalCore::OccurrenceIterator rIt( *calendar(), actualStartDateTime(), actualEndDateTime() );
-  while ( rIt.hasNext() ) {
-    rIt.next();
+  KCalCore::OccurrenceIterator occurIter( *calendar(), actualStartDateTime(), actualEndDateTime() );
+  while ( occurIter.hasNext() ) {
+    occurIter.next();
 
     // Remove the two checks when filtering is done through a proxyModel, when using calendar search
     if ( !preferences()->showTodosMonthView() &&
-         rIt.incidence()->type() == KCalCore::Incidence::TypeTodo ) {
+         occurIter.incidence()->type() == KCalCore::Incidence::TypeTodo ) {
       continue;
     }
     if ( !preferences()->showJournalsMonthView() &&
-         rIt.incidence()->type() == KCalCore::Incidence::TypeJournal ) {
+         occurIter.incidence()->type() == KCalCore::Incidence::TypeJournal ) {
       continue;
     }
 
-    const bool busyDay = colorMonthBusyDays && makesWholeDayBusy( rIt.incidence() );
+    const bool busyDay = colorMonthBusyDays && makesWholeDayBusy( occurIter.incidence() );
     if ( busyDay ) {
-      QStringList &list = d->mBusyDays[rIt.occurrenceStartDate().date()];
-      list.append( rIt.incidence()->uid() );
+      QStringList &list = d->mBusyDays[occurIter.occurrenceStartDate().date()];
+      list.append( occurIter.incidence()->uid() );
     }
 
-    const Akonadi::Item item = calendar()->item( rIt.incidence() );
+    const Akonadi::Item item = calendar()->item( occurIter.incidence() );
     if ( !item.isValid() ) {
       continue;
     }
@@ -534,8 +534,8 @@ void MonthView::reloadIncidences()
     MonthItem *manager = new IncidenceMonthItem( d->scene,
         calendar(),
         item,
-        rIt.incidence(),
-        rIt.occurrenceStartDate().toTimeSpec( timeSpec ).date() );
+        occurIter.incidence(),
+        occurIter.occurrenceStartDate().toTimeSpec( timeSpec ).date() );
     d->scene->mManagerList << manager;
     if ( d->selectedItemId == item.id() &&
         manager->realStartDate() == d->selectedItemDate ) {
