@@ -109,17 +109,17 @@ SendLaterDialog::~SendLaterDialog()
 
 void SendLaterDialog::slotSendIn2Hours()
 {
-
+    mSendDateTime = QDateTime::currentDateTime().addSecs(60*60*2);
 }
 
 void SendLaterDialog::slotSendIn1Hour()
 {
-
+    mSendDateTime = QDateTime::currentDateTime().addSecs(60*60);
 }
 
 void SendLaterDialog::slotSendIn30Minutes()
 {
-
+    mSendDateTime = QDateTime::currentDateTime().addSecs(60*30);
 }
 
 void SendLaterDialog::slotRecursiveClicked(bool clicked)
@@ -162,7 +162,10 @@ SendLaterInfo* SendLaterDialog::info()
     mInfo->setRecursive(mRecursive->isChecked());
     mInfo->setRecursiveEachValue(mRecursiveValue->value());
     mInfo->setRecursiveUnit((SendLaterInfo::RecursiveUnit)mRecursiveComboBox->currentIndex());
-    mInfo->setDateTime(mDateTime->dateTime());
+    if (mSendDateTime.isValid())
+        mInfo->setDateTime(mSendDateTime);
+    else
+        mInfo->setDateTime(mDateTime->dateTime());
     return mInfo;
 }
 

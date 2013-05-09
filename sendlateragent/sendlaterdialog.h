@@ -50,6 +50,7 @@ private:
     void writeConfig();
 
 private:
+    QDateTime mSendDateTime;
     QDateTimeEdit *mDateTime;
     SendLaterInfo *mInfo;
     KComboBox *mRecursiveComboBox;
