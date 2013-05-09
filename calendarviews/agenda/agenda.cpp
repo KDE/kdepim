@@ -1840,8 +1840,8 @@ QList<AgendaItem::QPtr> Agenda::agendaItems( const KCalCore::Incidence::Ptr &inc
     if ( !agendaItem ) {
       continue;
     }
-    const KCalCore::Incidence::Ptr i = CalendarSupport::incidence( agendaItem->incidence() );
-    if ( i && ( i->instanceIdentifier() == incidence->instanceIdentifier() ) ) {
+    const KCalCore::Incidence::Ptr tmpInc = CalendarSupport::incidence( agendaItem->incidence() );
+    if ( tmpInc && ( tmpInc->instanceIdentifier() == incidence->instanceIdentifier() ) ) {
       agendaItems.push_back( agendaItem );
     }
   }

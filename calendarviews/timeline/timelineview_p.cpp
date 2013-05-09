@@ -32,7 +32,7 @@
 #include <calendarsupport/utils.h>
 #include <calendarsupport/kcalprefs.h>
 #include <Akonadi/Calendar/IncidenceChanger>
-#include <kcalcore/occurrenceiterator.h>
+#include <KCalCore/OccurrenceIterator>
 
 #include <QStandardItemModel>
 #include <QResizeEvent>
@@ -125,12 +125,12 @@ void TimelineView::Private::insertIncidence( const Akonadi::Item &aitem, const Q
   }
 
   if ( incidence->recurs() ) {
-    KCalCore::OccurrenceIterator rIt( *(q->calendar()), incidence, KDateTime( day, QTime( 0, 0 ,0 ) ), KDateTime( day, QTime( 23, 59, 59 ) ) );
-    while ( rIt.hasNext() ) {
-      rIt.next();
-      const Akonadi::Item akonadiItem = q->calendar()->item( rIt.incidence() );
-      const KDateTime startOfOccurrence = rIt.occurrenceStartDate();
-      const KDateTime endOfOccurrence = rIt.incidence()->endDateForStart( startOfOccurrence );
+    KCalCore::OccurrenceIterator occurIter( *(q->calendar()), incidence, KDateTime( day, QTime( 0, 0 ,0 ) ), KDateTime( day, QTime( 23, 59, 59 ) ) );
+    while ( occurIter.hasNext() ) {
+      occurIter.next();
+      const Akonadi::Item akonadiItem = q->calendar()->item( occurIter.incidence() );
+      const KDateTime startOfOccurrence = occurIter.occurrenceStartDate();
+      const KDateTime endOfOccurrence = occurIter.incidence()->endDateForStart( startOfOccurrence );
       const KDateTime::Spec spec = CalendarSupport::KCalPrefs::instance()->timeSpec();
       item->insertIncidence( akonadiItem, startOfOccurrence.toTimeSpec( spec ),  endOfOccurrence.toTimeSpec( spec ) );
     }

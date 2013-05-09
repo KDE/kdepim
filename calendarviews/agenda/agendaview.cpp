@@ -41,7 +41,7 @@
 
 #include <KCalCore/CalFilter>
 #include <KCalCore/CalFormat>
-#include <kcalcore/occurrenceiterator.h>
+#include <KCalCore/OccurrenceIterator>
 
 #include <KCalendarSystem>
 #include <KIconLoader> // for SmallIcon()
