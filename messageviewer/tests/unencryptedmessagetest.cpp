@@ -98,6 +98,7 @@ void UnencryptedMessageTest::testForwardedOpenPGPSignedEncrypted()
 
   // Now, test that the unencrypted message is generated correctly
   KMime::Message::Ptr unencryptedMessage = nodeHelper.unencryptedMessage( originalMessage );
+  QVERIFY( unencryptedMessage.get() );
   QCOMPARE( unencryptedMessage->contentType()->mimeType().data(), "multipart/mixed" );
   QCOMPARE( unencryptedMessage->contents().size(), 2 );
   QCOMPARE( unencryptedMessage->contents().first()->contentType()->mimeType().data(), "text/plain" );
