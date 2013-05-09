@@ -29,6 +29,7 @@
 #include "sieveactionnotify.h"
 #include "sieveactiondeleteheader.h"
 #include "sieveactionaddheader.h"
+#include "sieveactionvacation.h"
 
 QList<KSieveUi::SieveAction *> KSieveUi::SieveActionList::actionList()
 {
@@ -45,5 +46,6 @@ QList<KSieveUi::SieveAction *> KSieveUi::SieveActionList::actionList()
     list.append(new KSieveUi::SieveActionNotify);
     list.append(new KSieveUi::SieveActionDeleteHeader);
     list.append(new KSieveUi::SieveActionAddHeader);
+    list.append(new KSieveUi::SieveActionVacation);
     return list;
 }
