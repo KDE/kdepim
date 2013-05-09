@@ -63,12 +63,12 @@ EditorPage::EditorPage(const QString &projectDirectory, bool showPreview, QWidge
 
     connect(mEditor, SIGNAL(textChanged()), this, SLOT(slotChanged()));
 
-    KConfigGroup group( KGlobal::config(), "EditorPage" );
-    QList<int> size;
-    size << 400 << 100;
 
-    mMainSplitter->setSizes(group.readEntry( "mainSplitter", size));
     if (mWidgetSplitter) {
+        KConfigGroup group( KGlobal::config(), "EditorPage" );
+        QList<int> size;
+        size << 400 << 100;
+        mMainSplitter->setSizes(group.readEntry( "mainSplitter", size));
         mWidgetSplitter->setSizes(group.readEntry( "widgetSplitter", size));
     }
     setLayout(lay);
@@ -76,9 +76,9 @@ EditorPage::EditorPage(const QString &projectDirectory, bool showPreview, QWidge
 
 EditorPage::~EditorPage()
 {
-    KConfigGroup group( KGlobal::config(), "EditorPage" );
-    group.writeEntry( "mainSplitter", mMainSplitter->sizes());
     if (mWidgetSplitter) {
+        KConfigGroup group( KGlobal::config(), "EditorPage" );
+        group.writeEntry( "mainSplitter", mMainSplitter->sizes());
         group.writeEntry("widgetSplitter", mWidgetSplitter->sizes());
     }
 }
