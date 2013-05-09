@@ -57,6 +57,7 @@ void ThemeEditorMainWindow::updateActions()
     mUploadTheme->setEnabled(projectDirectoryIsEmpty);
     mSaveAction->setEnabled(projectDirectoryIsEmpty);
     mInstallTheme->setEnabled(projectDirectoryIsEmpty);
+    mImportFile->setEnabled(projectDirectoryIsEmpty);
 }
 
 void ThemeEditorMainWindow::setupActions()
@@ -81,6 +82,16 @@ void ThemeEditorMainWindow::setupActions()
     mInstallTheme = new KAction(i18n("Install theme"), this);
     actionCollection()->addAction( QLatin1String( "install_theme" ), mInstallTheme );
     connect(mInstallTheme, SIGNAL(triggered(bool)), SLOT(slotInstallTheme()));
+
+    mImportFile = new KAction(i18n("Import File..."), this);
+    actionCollection()->addAction( QLatin1String( "import_file" ), mImportFile );
+    connect(mImportFile, SIGNAL(triggered(bool)), SLOT(slotImportFile()));
+
+}
+
+void ThemeEditorMainWindow::slotImportFile()
+{
+    //TODO
 }
 
 void ThemeEditorMainWindow::slotConfigure()

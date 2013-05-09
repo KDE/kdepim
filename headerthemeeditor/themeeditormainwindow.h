@@ -43,6 +43,7 @@ private Q_SLOTS:
     bool slotSaveTheme();
     void slotConfigure();
     void slotInstallTheme();
+    void slotImportFile();
 
 private:
     void updateActions();
@@ -57,6 +58,7 @@ private:
     KAction *mUploadTheme;
     KAction *mSaveAction;
     KAction *mInstallTheme;
+    KAction *mImportFile;
 };
 
 #endif // THEMEEDITORMAINWINDOW_H
