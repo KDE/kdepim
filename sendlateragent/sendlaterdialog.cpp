@@ -32,6 +32,7 @@
 
 SendLaterDialog::SendLaterDialog(SendLaterInfo *info, QWidget *parent)
     : KDialog(parent),
+      mAction(SendNow),
       mInfo(info)
 {
     setCaption( i18n("Send Later") );
@@ -110,16 +111,22 @@ SendLaterDialog::~SendLaterDialog()
 void SendLaterDialog::slotSendIn2Hours()
 {
     mSendDateTime = QDateTime::currentDateTime().addSecs(60*60*2);
+    mAction = SendLater;
+    accept();
 }
 
 void SendLaterDialog::slotSendIn1Hour()
 {
     mSendDateTime = QDateTime::currentDateTime().addSecs(60*60);
+    mAction = SendLater;
+    accept();
 }
 
 void SendLaterDialog::slotSendIn30Minutes()
 {
     mSendDateTime = QDateTime::currentDateTime().addSecs(60*30);
+    mAction = SendLater;
+    accept();
 }
 
 void SendLaterDialog::slotRecursiveClicked(bool clicked)
@@ -172,15 +179,19 @@ SendLaterInfo* SendLaterDialog::info()
 
 void SendLaterDialog::slotSendLater()
 {
-    //TODO
+    mAction = SendLater;
     accept();
 }
 
 void SendLaterDialog::slotSendNow()
 {
+    mAction = SendNow;
     accept();
-    //TODO
 }
 
+SendLaterDialog::SendLaterAction SendLaterDialog::action() const
+{
+    return mAction;
+}
 
 #include "sendlaterdialog.moc"

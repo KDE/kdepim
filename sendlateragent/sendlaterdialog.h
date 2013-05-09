@@ -31,10 +31,17 @@ class SendLaterDialog : public KDialog
 {
     Q_OBJECT
 public:
+    enum SendLaterAction {
+        SendNow = 0,
+        SendLater
+    };
+
     explicit SendLaterDialog(SendLaterInfo *info, QWidget *parent = 0);
     ~SendLaterDialog();
 
     SendLaterInfo *info();
+
+    SendLaterAction action() const;
 
 private Q_SLOTS:
     void slotSendLater();
@@ -51,6 +58,7 @@ private:
 
 private:
     QDateTime mSendDateTime;
+    SendLaterAction mAction;
     QDateTimeEdit *mDateTime;
     SendLaterInfo *mInfo;
     KComboBox *mRecursiveComboBox;
