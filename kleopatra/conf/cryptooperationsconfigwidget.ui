@@ -62,7 +62,7 @@
         <widget class="QCheckBox" name="pgpFileExtCB">
          <property name="whatsThis">
           <string comment="@info:whatsthis">&lt;p&gt;Check this if you want to have OpenPGP encrypted files created by Kleopatra have the .pgp file extension.&lt;/p&gt;
-&lt;p&gt;This will not modify any contens of the created files.&lt;/p&gt;
+&lt;p&gt;This will not modify any contents of the created files.&lt;/p&gt;
 </string>
          </property>
          <property name="text">
