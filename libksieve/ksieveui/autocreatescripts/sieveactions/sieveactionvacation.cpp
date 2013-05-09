@@ -21,6 +21,7 @@
 #include <KLocale>
 #include <KLineEdit>
 
+#include <KTextEdit>
 
 #include <QHBoxLayout>
 #include <QLabel>
@@ -51,6 +52,14 @@ QWidget *SieveActionVacation::createParamWidget( QWidget *parent ) const
     QSpinBox *day = new QSpinBox;
     day->setMinimum(7);
     day->setObjectName(QLatin1String("day"));
+
+    lab = new QLabel(i18n("Text:"));
+    lay->addWidget(lab);
+
+    KTextEdit *text = new KTextEdit;
+    text->setObjectName(QLatin1String("text"));
+    lay->addWidget(text);
+
     //TODO
     lay->addWidget(day);
 
@@ -62,8 +71,11 @@ QString SieveActionVacation::code(QWidget *w) const
     const QSpinBox *day = w->findChild<QSpinBox*>( QLatin1String("day") );
     const QString dayStr = QString::number(day->value());
 
+    const KTextEdit *text = w->findChild<KTextEdit*>( QLatin1String("text") );
+    const QString textStr = text->toPlainText();
+
     //TODO
-    return QString::fromLatin1("vacation :days %1").arg(dayStr);
+    return QString::fromLatin1("vacation :days %1 text: %2").arg(dayStr).arg(textStr);
 }
 
 QString SieveActionVacation::serverNeedsCapability() const
