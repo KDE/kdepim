@@ -52,7 +52,7 @@ QWidget *SieveActionVacation::createParamWidget( QWidget *parent ) const
     lay->addWidget(lab);
 
     QSpinBox *day = new QSpinBox;
-    day->setMinimum(7);
+    day->setMinimum(1);
     day->setObjectName(QLatin1String("day"));
     lay->addWidget(day);
 
