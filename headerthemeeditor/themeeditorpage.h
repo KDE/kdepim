@@ -45,7 +45,7 @@ public:
 
     void reloadConfig();
 
-    void importFile();
+    void insertFile();
 
 private:
     void storeTheme();

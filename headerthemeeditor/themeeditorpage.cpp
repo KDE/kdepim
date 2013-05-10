@@ -30,6 +30,7 @@
 #include <KTempDir>
 #include <KDebug>
 #include <KMessageBox>
+#include <KFileDialog>
 
 #include <QHBoxLayout>
 #include <QDir>
@@ -62,9 +63,12 @@ ThemeEditorPage::~ThemeEditorPage()
     delete mThemeSession;
 }
 
-void ThemeEditorPage::importFile()
+void ThemeEditorPage::insertFile()
 {
-    //TODO
+    const QString fileName = KFileDialog::getOpenFileName(KUrl(), QLatin1String("*"), this);
+    if (!fileName.isEmpty()) {
+
+    }
 }
 
 bool ThemeEditorPage::themeWasChanged() const
