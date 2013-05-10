@@ -25,6 +25,7 @@
 #include <KLocale>
 #include <KZip>
 #include <KConfigGroup>
+#include <KMessageBox>
 
 #include <QSplitter>
 #include <QVBoxLayout>
@@ -99,6 +100,9 @@ void EditorPage::createZip(const QString &themeName, KZip *zip)
     tmp.open();
     saveAsFilename(tmp.fileName());
     const bool fileAdded  = zip->addLocalFile(tmp.fileName(), themeName + QLatin1Char('/') + mPageFileName);
+    if (!fileAdded) {
+        KMessageBox::error(this, i18n("We can not add file in zip file"), i18n("Failed to add file."));
+    }
 }
 
 void EditorPage::loadTheme(const QString &path)
