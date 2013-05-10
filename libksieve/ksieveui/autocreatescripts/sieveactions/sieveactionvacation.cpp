@@ -93,8 +93,16 @@ QString SieveActionVacation::code(QWidget *w) const
 
     const KLineEdit *addresses = w->findChild<KLineEdit*>( QLatin1String("addresses") );
     const QString addressesStr = addresses->text();
-
-    return QString::fromLatin1("vacation :days %1 text: %2 :subject %3 :addresses %4").arg(dayStr).arg(textStr).arg(subjectStr).arg(addressesStr);
+    QString result = QString::fromLatin1("vacation");
+    if (!dayStr.isEmpty())
+        result += QString::fromLatin1(" :days %1").arg(dayStr);
+    if (!textStr.isEmpty())
+        result += QString::fromLatin1(" :text %1").arg(textStr);
+    if (!subjectStr.isEmpty())
+        result += QString::fromLatin1(" :subject %1").arg(subjectStr);
+    if (!addressesStr.isEmpty())
+        result += QString::fromLatin1(" :addresses %1").arg(addressesStr);
+    return result;
 }
 
 QString SieveActionVacation::serverNeedsCapability() const
