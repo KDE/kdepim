@@ -43,6 +43,7 @@ public:
     void createZip(const QString &themeName, KZip *zip);
     void saveAsFilename(const QString &filename);
     void installTheme(const QString &themePath);
+    void insertFile();
 
     bool wasChanged() const;
 

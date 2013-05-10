@@ -83,6 +83,11 @@ EditorPage::~EditorPage()
     }
 }
 
+void EditorPage::insertFile()
+{
+    //TODO
+}
+
 void EditorPage::slotChanged()
 {
     mChanged = true;

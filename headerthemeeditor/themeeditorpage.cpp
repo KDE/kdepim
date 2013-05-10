@@ -67,7 +67,8 @@ void ThemeEditorPage::insertFile()
 {
     const QString fileName = KFileDialog::getOpenFileName(KUrl(), QLatin1String("*"), this);
     if (!fileName.isEmpty()) {
-
+        //TODO
+        mEditorPage->insertFile();
     }
 }
 
