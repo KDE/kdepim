@@ -140,7 +140,7 @@ void ThemeEditorMainWindow::slotOpenTheme()
     if (!saveCurrentProject(false))
         return;
 
-    const QString directory = KFileDialog::getExistingDirectory(KUrl(), this, i18n("Select theme"));
+    const QString directory = KFileDialog::getExistingDirectory(KUrl( "kfiledialog:///OpenTheme" ), this, i18n("Select theme"));
     if (!directory.isEmpty()) {
         const QString filename = directory + QDir::separator() + QLatin1String("theme.themerc");
         QFile file(filename);
