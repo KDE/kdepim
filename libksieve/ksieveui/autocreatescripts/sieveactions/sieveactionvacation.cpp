@@ -54,16 +54,28 @@ QWidget *SieveActionVacation::createParamWidget( QWidget *parent ) const
     QSpinBox *day = new QSpinBox;
     day->setMinimum(7);
     day->setObjectName(QLatin1String("day"));
+    lay->addWidget(day);
 
-    lab = new QLabel(i18n("Text:"));
+    lab = new QLabel(i18n("Vacation reason:"));
     lay->addWidget(lab);
 
     MultiLineEdit *text = new MultiLineEdit;
     text->setObjectName(QLatin1String("text"));
     lay->addWidget(text);
 
-    //TODO
-    lay->addWidget(day);
+    lab = new QLabel(i18n("Message subject:"));
+    lay->addWidget(lab);
+
+    KLineEdit *subject = new KLineEdit;
+    subject->setObjectName(QLatin1String("subject"));
+    lay->addWidget(subject);
+
+    lab = new QLabel(i18n("Additional email:"));
+    lay->addWidget(lab);
+
+    KLineEdit *addresses = new KLineEdit;
+    addresses->setObjectName(QLatin1String("addresses"));
+    lay->addWidget(addresses);
 
     return w;
 }
@@ -76,8 +88,13 @@ QString SieveActionVacation::code(QWidget *w) const
     const MultiLineEdit *text = w->findChild<MultiLineEdit*>( QLatin1String("text") );
     const QString textStr = text->toPlainText();
 
-    //TODO
-    return QString::fromLatin1("vacation :days %1 text: %2").arg(dayStr).arg(textStr);
+    const KLineEdit *subject = w->findChild<KLineEdit*>( QLatin1String("subject") );
+    const QString subjectStr = subject->text();
+
+    const KLineEdit *addresses = w->findChild<KLineEdit*>( QLatin1String("addresses") );
+    const QString addressesStr = addresses->text();
+
+    return QString::fromLatin1("vacation :days %1 text: %2 :subject %3 :addresses %4").arg(dayStr).arg(textStr).arg(subjectStr).arg(addressesStr);
 }
 
 QString SieveActionVacation::serverNeedsCapability() const
