@@ -29,100 +29,100 @@ ImapAclAttribute::ImapAclAttribute()
 
 ImapAclAttribute::ImapAclAttribute( const QMap<QByteArray, KIMAP::Acl::Rights> &rights,
                                     const QMap<QByteArray, KIMAP::Acl::Rights> &oldRights )
-  : mRights( rights ), mOldRights( oldRights )
+    : mRights( rights ), mOldRights( oldRights )
 {
 }
 
 void ImapAclAttribute::setRights( const QMap<QByteArray, KIMAP::Acl::Rights> &rights )
 {
-  mOldRights = mRights;
-  mRights = rights;
+    mOldRights = mRights;
+    mRights = rights;
 }
 
 QMap<QByteArray, KIMAP::Acl::Rights> ImapAclAttribute::rights() const
 {
-  return mRights;
+    return mRights;
 }
 
 QMap<QByteArray, KIMAP::Acl::Rights> ImapAclAttribute::oldRights() const
 {
-  return mOldRights;
+    return mOldRights;
 }
 
 QByteArray ImapAclAttribute::type() const
 {
-  return "imapacl";
+    return "imapacl";
 }
 
 Akonadi::Attribute *ImapAclAttribute::clone() const
 {
-  return new ImapAclAttribute( mRights, mOldRights );
+    return new ImapAclAttribute( mRights, mOldRights );
 }
 
 QByteArray ImapAclAttribute::serialized() const
 {
-  QByteArray result = "";
+    QByteArray result = "";
 
-  bool added = false;
-  foreach ( const QByteArray &id, mRights.keys() ) { //krazy:exclude=foreach
-    result += id;
-    result += ' ';
-    result += KIMAP::Acl::rightsToString( mRights[id] );
-    result += " % "; // We use this separator as '%' is not allowed in keys or values
-    added = true;
-  }
+    bool added = false;
+    foreach ( const QByteArray &id, mRights.keys() ) { //krazy:exclude=foreach
+        result += id;
+        result += ' ';
+        result += KIMAP::Acl::rightsToString( mRights[id] );
+        result += " % "; // We use this separator as '%' is not allowed in keys or values
+        added = true;
+    }
 
-  if ( added ) {
-    result.chop( 3 );
-  }
+    if ( added ) {
+        result.chop( 3 );
+    }
 
-  result += " %% ";
+    result += " %% ";
 
-  added = false;
-  foreach ( const QByteArray &id, mOldRights.keys() ) { //krazy:exclude=foreach
-    result += id;
-    result += ' ';
-    result += KIMAP::Acl::rightsToString( mOldRights[id] );
-    result += " % "; // We use this separator as '%' is not allowed in keys or values
-    added = true;
-  }
+    added = false;
+    foreach ( const QByteArray &id, mOldRights.keys() ) { //krazy:exclude=foreach
+        result += id;
+        result += ' ';
+        result += KIMAP::Acl::rightsToString( mOldRights[id] );
+        result += " % "; // We use this separator as '%' is not allowed in keys or values
+        added = true;
+    }
 
-  if ( added ) {
-    result.chop( 3 );
-  }
+    if ( added ) {
+        result.chop( 3 );
+    }
 
-  return result;
+    return result;
 }
 
 static void fillRightsMap( const QList<QByteArray> &rights, QMap <QByteArray, KIMAP::Acl::Rights> &map )
 {
-  foreach ( const QByteArray &right, rights ) {
-    const QByteArray trimmed = right.trimmed();
-    const int wsIndex = trimmed.indexOf( ' ' );
-    const QByteArray id = trimmed.mid( 0, wsIndex ).trimmed();
-    if ( !id.isEmpty() ) {
-      const bool noValue = ( wsIndex == -1 );
-      if ( noValue ) {
-        map[id] = KIMAP::Acl::None;
-      } else {
-        const QByteArray value = trimmed.mid( wsIndex + 1, right.length() - wsIndex ).trimmed();
-        map[id] = KIMAP::Acl::rightsFromString( value );
-      }
+    foreach ( const QByteArray &right, rights ) {
+        const QByteArray trimmed = right.trimmed();
+        const int wsIndex = trimmed.indexOf( ' ' );
+        const QByteArray id = trimmed.mid( 0, wsIndex ).trimmed();
+        if ( !id.isEmpty() ) {
+            const bool noValue = ( wsIndex == -1 );
+            if ( noValue ) {
+                map[id] = KIMAP::Acl::None;
+            } else {
+                const QByteArray value = trimmed.mid( wsIndex + 1, right.length() - wsIndex ).trimmed();
+                map[id] = KIMAP::Acl::rightsFromString( value );
+            }
+        }
     }
-  }
 }
 
 void ImapAclAttribute::deserialize( const QByteArray &data )
 {
-  mRights.clear();
-  mOldRights.clear();
-  const int pos = data.indexOf( " %% " );
-  if ( pos == -1 ) {
-    return;
-  }
+    mRights.clear();
+    mOldRights.clear();
+    const int pos = data.indexOf( " %% " );
+    if ( pos == -1 ) {
+        return;
+    }
 
-  const QByteArray leftPart = data.left( pos );
-  const QByteArray rightPart = data.mid( pos + 4 );
-  fillRightsMap( leftPart.split( '%' ), mRights );
-  fillRightsMap( rightPart.split( '%' ), mOldRights );
+    const QByteArray leftPart = data.left( pos );
+    const QByteArray rightPart = data.mid( pos + 4 );
+    fillRightsMap( leftPart.split( '%' ), mRights );
+    fillRightsMap( rightPart.split( '%' ), mOldRights );
 }

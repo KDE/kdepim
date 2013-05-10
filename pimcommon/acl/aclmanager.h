@@ -34,16 +34,16 @@ namespace PimCommon {
 
 class PIMCOMMON_EXPORT AclManager : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  Q_PROPERTY( Akonadi::Collection collection READ collection WRITE setCollection NOTIFY collectionChanged )
-  Q_PROPERTY( QAbstractItemModel *model READ model )
-  Q_PROPERTY( QItemSelectionModel *selectionModel READ selectionModel )
-  Q_PROPERTY( QAction *addAction READ addAction )
-  Q_PROPERTY( QAction *editAction READ editAction )
-  Q_PROPERTY( QAction *deleteAction READ deleteAction )
+    Q_PROPERTY( Akonadi::Collection collection READ collection WRITE setCollection NOTIFY collectionChanged )
+    Q_PROPERTY( QAbstractItemModel *model READ model )
+    Q_PROPERTY( QItemSelectionModel *selectionModel READ selectionModel )
+    Q_PROPERTY( QAction *addAction READ addAction )
+    Q_PROPERTY( QAction *editAction READ editAction )
+    Q_PROPERTY( QAction *deleteAction READ deleteAction )
 
-  public:
+public:
     /**
      * Creates a new ACL manager.
      *
@@ -92,20 +92,20 @@ class PIMCOMMON_EXPORT AclManager : public QObject
      */
     QAction *deleteAction() const;
 
-  public Q_SLOTS:
+public Q_SLOTS:
     /**
      * Saves the changes of the ACL back to the collection.
      */
     void save();
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /**
      * This signal is emitted whenever the collection whose ACL will
      * be managed has changed.
      */
     void collectionChanged( const Akonadi::Collection &collection );
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
     Private *const d;

@@ -32,7 +32,7 @@ namespace PimCommon {
 
 class PIMCOMMON_EXPORT ImapAclAttribute : public Akonadi::Attribute
 {
-  public:
+public:
     ImapAclAttribute();
     ImapAclAttribute( const QMap<QByteArray, KIMAP::Acl::Rights> &rights,
                       const QMap<QByteArray, KIMAP::Acl::Rights> &oldRights );
@@ -44,7 +44,7 @@ class PIMCOMMON_EXPORT ImapAclAttribute : public Akonadi::Attribute
     virtual QByteArray serialized() const;
     virtual void deserialize( const QByteArray &data );
 
-  private:
+private:
     QMap<QByteArray, KIMAP::Acl::Rights> mRights;
     QMap<QByteArray, KIMAP::Acl::Rights> mOldRights;
 };

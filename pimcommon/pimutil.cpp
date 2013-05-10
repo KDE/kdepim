@@ -42,8 +42,8 @@
 
 OrgKdeAkonadiImapSettingsInterface *PimCommon::Util::createImapSettingsInterface( const QString &ident )
 {
-  return
-    new OrgKdeAkonadiImapSettingsInterface(
-      "org.freedesktop.Akonadi.Resource." + ident, "/Settings", QDBusConnection::sessionBus() );
+    return
+            new OrgKdeAkonadiImapSettingsInterface(
+                "org.freedesktop.Akonadi.Resource." + ident, "/Settings", QDBusConnection::sessionBus() );
 }
 
