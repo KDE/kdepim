@@ -83,9 +83,9 @@ EditorPage::~EditorPage()
     }
 }
 
-void EditorPage::insertFile()
+void EditorPage::insertFile(const QString &filename)
 {
-    //TODO
+    mEditor->insertFile(filename);
 }
 
 void EditorPage::slotChanged()

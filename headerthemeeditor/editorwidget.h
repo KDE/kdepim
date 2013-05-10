@@ -29,11 +29,14 @@ public:
     explicit EditorWidget(QWidget *parent = 0);
     ~EditorWidget();
 
+    void insertFile(const QString &filename);
+
 private Q_SLOTS:
     void slotInsertCompletion( const QString &completion );
 
 protected:
     void keyPressEvent(QKeyEvent* e);
+
 private:
     void initCompleter();
     QString wordUnderCursor() const;

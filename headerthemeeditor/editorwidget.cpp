@@ -37,6 +37,19 @@ EditorWidget::~EditorWidget()
 {
 }
 
+void EditorWidget::insertFile(const QString &filename)
+{
+    if (!filename.isEmpty()) {
+        QFile file( filename );
+
+        if ( file.open( QIODevice::ReadOnly ) ) {
+            const QByteArray data = file.readAll();
+            const QString str = QString::fromUtf8(data);
+            insertPlainText(str);
+        }
+    }
+}
+
 void EditorWidget::initCompleter()
 {
     QStringList listWord;
