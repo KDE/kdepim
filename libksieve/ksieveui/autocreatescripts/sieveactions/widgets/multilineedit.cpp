@@ -17,17 +17,45 @@
 
 #include "multilineedit.h"
 
+#include <QStyleOptionFrameV2>
+#include <QApplication>
+
 using namespace KSieveUi;
 
 MultiLineEdit::MultiLineEdit(QWidget *parent)
     : KTextEdit(parent)
 {
-
+    setAcceptRichText(false);
+    setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding,QSizePolicy::Fixed));
 }
 
 MultiLineEdit::~MultiLineEdit()
 {
 
 }
+
+QSize MultiLineEdit::sizeHint() const
+{
+    QFontMetrics fm(font());
+
+    const int h = document()->size().toSize().height() - fm.descent() + 2 * frameWidth();
+
+    QStyleOptionFrameV2 opt;
+    opt.initFrom(this);
+    opt.rect = QRect(0, 0, 100, h);
+    opt.lineWidth = lineWidth();
+    opt.midLineWidth = 0;
+    opt.state |= QStyle::State_Sunken;
+
+    QSize s = style()->sizeFromContents(QStyle::CT_LineEdit, &opt, QSize(100, h).expandedTo(QApplication::globalStrut()), this);
+
+    return s;
+}
+
+QSize MultiLineEdit::minimumSizeHint() const
+{
+    return sizeHint();
+}
+
 
 #include "multilineedit.h"

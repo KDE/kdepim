@@ -17,6 +17,7 @@
 
 
 #include "sieveactionvacation.h"
+#include "widgets/multilineedit.h"
 
 #include <KLocale>
 #include <KLineEdit>
@@ -43,6 +44,7 @@ QWidget *SieveActionVacation::createParamWidget( QWidget *parent ) const
 {
     QWidget *w = new QWidget(parent);
     QHBoxLayout *lay = new QHBoxLayout;
+    lay->setAlignment(Qt::AlignBottom);
     lay->setMargin(0);
     w->setLayout(lay);
 
@@ -56,7 +58,7 @@ QWidget *SieveActionVacation::createParamWidget( QWidget *parent ) const
     lab = new QLabel(i18n("Text:"));
     lay->addWidget(lab);
 
-    KTextEdit *text = new KTextEdit;
+    MultiLineEdit *text = new MultiLineEdit;
     text->setObjectName(QLatin1String("text"));
     lay->addWidget(text);
 
@@ -71,7 +73,7 @@ QString SieveActionVacation::code(QWidget *w) const
     const QSpinBox *day = w->findChild<QSpinBox*>( QLatin1String("day") );
     const QString dayStr = QString::number(day->value());
 
-    const KTextEdit *text = w->findChild<KTextEdit*>( QLatin1String("text") );
+    const MultiLineEdit *text = w->findChild<MultiLineEdit*>( QLatin1String("text") );
     const QString textStr = text->toPlainText();
 
     //TODO
