@@ -19,10 +19,11 @@
 #define SIEVESCRIPTPAGE_H
 
 #include <QWidget>
+#include "sievescriptblockwidget.h"
 class KTabWidget;
 
 namespace KSieveUi {
-
+class SieveScriptBlockWidget;
 class SieveScriptPage : public QWidget
 {
     Q_OBJECT
@@ -31,7 +32,12 @@ public:
     ~SieveScriptPage();
 
     void generatedScript(QString &script, QStringList &requires);
+
+private Q_SLOTS:
+    void slotAddNewBlock(QWidget* widget,KSieveUi::SieveScriptBlockWidget::BlockType type);
+
 private:
+    SieveScriptBlockWidget *createScriptBlock(KSieveUi::SieveScriptBlockWidget::BlockType type);
     KTabWidget *mTabWidget;
 };
 }

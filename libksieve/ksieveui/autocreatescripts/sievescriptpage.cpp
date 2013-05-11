@@ -16,7 +16,6 @@
 */
 
 #include "sievescriptpage.h"
-#include "sievescriptblockwidget.h"
 
 #include <KLocale>
 #include <KTabWidget>
@@ -29,8 +28,7 @@ SieveScriptPage::SieveScriptPage(QWidget *parent)
 {
     QVBoxLayout *topLayout = new QVBoxLayout;
     mTabWidget = new KTabWidget;
-    SieveScriptBlockWidget *blockWidget = new SieveScriptBlockWidget;
-    blockWidget->setBlockType(SieveScriptBlockWidget::BlockIf);
+    SieveScriptBlockWidget *blockWidget = createScriptBlock(SieveScriptBlockWidget::BlockIf);
     mTabWidget->addTab(blockWidget, i18n("Main block"));
     topLayout->addWidget(mTabWidget);
     setLayout(topLayout);
@@ -40,6 +38,21 @@ SieveScriptPage::~SieveScriptPage()
 {
 }
 
+SieveScriptBlockWidget *SieveScriptPage::createScriptBlock(KSieveUi::SieveScriptBlockWidget::BlockType type)
+{
+    SieveScriptBlockWidget *blockWidget = new SieveScriptBlockWidget;
+    connect(blockWidget, SIGNAL(addNewBlock(QWidget*,KSieveUi::SieveScriptBlockWidget::BlockType)), SLOT(slotAddNewBlock(QWidget*,KSieveUi::SieveScriptBlockWidget::BlockType)));
+    blockWidget->setBlockType(type);
+    return blockWidget;
+}
+
+void SieveScriptPage::slotAddNewBlock(QWidget* widget,KSieveUi::SieveScriptBlockWidget::BlockType type)
+{
+
+    SieveScriptBlockWidget *blockWidget = createScriptBlock(type);
+    mTabWidget->insertTab(mTabWidget->indexOf(widget)+1, blockWidget, i18n("Block"));
+    //TODO
+}
 
 void SieveScriptPage::generatedScript(QString &script, QStringList &requires)
 {
