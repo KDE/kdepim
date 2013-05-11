@@ -47,6 +47,9 @@ public:
 
     void insertFile();
 
+private Q_SLOTS:
+    void slotUpdateViewer();
+
 private:
     void storeTheme();
     QString projectDirectory() const;

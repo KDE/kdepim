@@ -45,6 +45,7 @@ ThemeEditorPage::ThemeEditorPage(const QString &projectDir, const QString &theme
     mTabWidget = new KTabWidget;
     lay->addWidget(mTabWidget);
     mEditorPage = new EditorPage(projectDir);
+    connect(mEditorPage, SIGNAL(needUpdateViewer()), this, SLOT(slotUpdateViewer()));
     mTabWidget->addTab(mEditorPage, i18n("Editor"));
 
     mDesktopPage = new DesktopFilePage;
@@ -61,6 +62,14 @@ ThemeEditorPage::~ThemeEditorPage()
     qDeleteAll(mExtraPage);
     mExtraPage.clear();
     delete mThemeSession;
+}
+
+void ThemeEditorPage::slotUpdateViewer()
+{
+    if (themeWasChanged()) {
+        saveTheme(false);
+    }
+    mEditorPage->preview()->updateViewer();
 }
 
 void ThemeEditorPage::insertFile()
@@ -112,7 +121,7 @@ void ThemeEditorPage::installTheme(const QString &themePath)
 void ThemeEditorPage::uploadTheme()
 {
     //force update for screenshot
-    mEditorPage->preview()->slotUpdateViewer();
+    mEditorPage->preview()->updateViewer();
     KTempDir tmp;
     const QString themename = mDesktopPage->themeName();
     const QString zipFileName = tmp.name() + QDir::separator() + themename + QLatin1String(".zip");

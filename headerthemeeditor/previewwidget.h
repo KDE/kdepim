@@ -35,11 +35,15 @@ public:
     void createScreenShot(const QString &fileName);
     void loadConfig();
     void setThemePath(const QString &projectDirectory, const QString &mainPageFileName);
+    void updateViewer();
+
+Q_SIGNALS:
+    void needUpdateViewer();
 
 public Q_SLOTS:
-    void slotUpdateViewer();
     void slotMainFileNameChanged(const QString &);
     void slotExtraHeaderDisplayChanged(const QStringList &headers);
+
 
 private:
     QByteArray mDefaultEmail;

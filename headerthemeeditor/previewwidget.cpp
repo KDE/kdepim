@@ -43,7 +43,7 @@ PreviewWidget::PreviewWidget(const QString &projectDirectory, QWidget *parent)
                                        MessageViewer::HeaderStrategy::create(QString()));
     lay->addWidget(mViewer);
     KPushButton *update = new KPushButton(i18n("Update view"));
-    connect(update, SIGNAL(clicked(bool)),SLOT(slotUpdateViewer()));
+    connect(update, SIGNAL(clicked(bool)), this, SIGNAL(needUpdateViewer()));
     lay->addWidget(update);
     setLayout(lay);
     loadConfig();
@@ -57,13 +57,13 @@ PreviewWidget::~PreviewWidget()
 void PreviewWidget::slotExtraHeaderDisplayChanged(const QStringList &headers)
 {
     mGrantleeHeaderStyle->setExtraDisplayHeaders(headers);
-    slotUpdateViewer();
+    updateViewer();
 }
 
 void PreviewWidget::slotMainFileNameChanged(const QString &filename)
 {
     mGrantleeHeaderStyle->setMainFilename(filename);
-    slotUpdateViewer();
+    updateViewer();
 }
 
 void PreviewWidget::loadConfig()
@@ -75,16 +75,17 @@ void PreviewWidget::loadConfig()
     } else {
         mDefaultEmail = themeeditorutil::defaultMail().toLatin1();
     }
-    slotUpdateViewer();
+    updateViewer();
 }
 
-void PreviewWidget::slotUpdateViewer()
+void PreviewWidget::updateViewer()
 {
     KMime::Message *msg = new KMime::Message;
     msg->setContent( mDefaultEmail );
     msg->parse();
     mViewer->setMessage(KMime::Message::Ptr(msg));
 }
+
 
 void PreviewWidget::createScreenShot(const QString &fileName)
 {
@@ -95,7 +96,7 @@ void PreviewWidget::setThemePath(const QString &projectDirectory, const QString 
 {
     mGrantleeHeaderStyle->setAbsolutePath(projectDirectory);
     mGrantleeHeaderStyle->setMainFilename(mainPageFileName);
-    slotUpdateViewer();
+    updateViewer();
 }
 
 #include "previewwidget.moc"

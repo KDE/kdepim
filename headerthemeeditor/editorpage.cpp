@@ -50,6 +50,7 @@ EditorPage::EditorPage(const QString &projectDirectory, bool showPreview, QWidge
 
         mPreview = new PreviewWidget(projectDirectory);
         mWidgetSplitter->addWidget(mPreview);
+        connect(mPreview, SIGNAL(needUpdateViewer()), this, SIGNAL(needUpdateViewer()));
     } else {
         lay->addWidget(mMainSplitter);
     }

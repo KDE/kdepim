@@ -49,6 +49,9 @@ public:
 
     PreviewWidget *preview() const;
 
+Q_SIGNALS:
+    void needUpdateViewer();
+
 private Q_SLOTS:
     void slotChanged();
 
