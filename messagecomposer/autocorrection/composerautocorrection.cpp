@@ -128,7 +128,7 @@ void ComposerAutoCorrection::autocorrect(bool htmlMode, QTextDocument& document,
 
     if (mCursor.selectedText() != mWord)
         mCursor.insertText(mWord);
-     mCursor.endEditBlock();
+    mCursor.endEditBlock();
 }
 
 void ComposerAutoCorrection::readConfig()

@@ -23,7 +23,7 @@ using namespace MessageComposer;
 
 
 ComposerAutoCorrectionTreeWidget::ComposerAutoCorrectionTreeWidget(QWidget *parent)
-  : QTreeWidget(parent)
+    : QTreeWidget(parent)
 {
 }
 
@@ -34,9 +34,9 @@ ComposerAutoCorrectionTreeWidget::~ComposerAutoCorrectionTreeWidget()
 
 void ComposerAutoCorrectionTreeWidget::keyPressEvent( QKeyEvent *event )
 {
-  if ( event->key() == Qt::Key_Delete ) {
-    Q_EMIT deleteSelectedItems();
-  }
+    if ( event->key() == Qt::Key_Delete ) {
+        Q_EMIT deleteSelectedItems();
+    }
 }
 
 #include "composerautocorrectiontreewidget.moc"
