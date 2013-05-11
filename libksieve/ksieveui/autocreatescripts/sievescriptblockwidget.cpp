@@ -182,9 +182,9 @@ void SieveScriptBlockWidget::generatedScript(QString &script, QStringList &requi
         if (hasUniqCondition == 1) {
             filterStr += blockStr;
         } else if (mMatchCondition == AndCondition) {
-            filterStr += QLatin1String("allof (");
+            filterStr += blockStr + QLatin1String("allof (");
         } else if (mMatchCondition == OrCondition) {
-            filterStr += QLatin1String("anyof (");
+            filterStr += blockStr + QLatin1String("anyof (");
         }
 
         if (conditionStr.isEmpty()) {
