@@ -37,7 +37,7 @@ SieveScriptBlockWidget::SieveScriptBlockWidget(QWidget *parent)
 {
     QVBoxLayout *topLayout = new QVBoxLayout;
 
-    QGroupBox *conditions = new QGroupBox(i18n("Conditions"));
+    mConditions = new QGroupBox(i18n("Conditions"));
     QVBoxLayout *vbox = new QVBoxLayout;
 
     mAllMessageRBtn = new QRadioButton( i18n( "Match all messages" ), this );
@@ -58,12 +58,12 @@ SieveScriptBlockWidget::SieveScriptBlockWidget(QWidget *parent)
 
     connect( bg, SIGNAL(buttonClicked(QAbstractButton*)),
              this, SLOT(slotRadioClicked(QAbstractButton*)) );
-    conditions->setLayout(vbox);
+    mConditions->setLayout(vbox);
 
     mScriptConditionLister = new SieveConditionWidgetLister;
     vbox->addWidget(mScriptConditionLister);
 
-    topLayout->addWidget(conditions);
+    topLayout->addWidget(mConditions);
 
     QGroupBox *actions = new QGroupBox(i18n("Actions"));
     vbox = new QVBoxLayout;
@@ -114,7 +114,20 @@ void SieveScriptBlockWidget::setBlockType(BlockType type)
 {
     if (mType != type) {
         mType = type;
-        //TODO update GUI
+        switch(mType) {
+        case BlockIf:
+            mAllMessageRBtn->show();
+            mConditions->show();
+            break;
+        case BlockElsIf:
+            mAllMessageRBtn->hide();
+            mConditions->show();
+            break;
+        case BlockElse:
+            mAllMessageRBtn->hide();
+            mConditions->hide();
+            break;
+        }
     }
 }
 

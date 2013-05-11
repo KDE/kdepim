@@ -21,6 +21,7 @@
 #include <QWidget>
 
 class QRadioButton;
+class QGroupBox;
 class QAbstractButton;
 class KComboBox;
 class KPushButton;
@@ -65,6 +66,7 @@ private Q_SLOTS:
 private:
     BlockType mType;
     MatchCondition mMatchCondition;
+    QGroupBox *mConditions;
     SieveConditionWidgetLister *mScriptConditionLister;
     SieveActionWidgetLister *mScriptActionLister;
     QRadioButton *mMatchAll;
