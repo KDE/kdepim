@@ -20,11 +20,14 @@
 #include "sieveconditionwidgetlister.h"
 
 #include <KLocale>
+#include <KComboBox>
+#include <KPushButton>
 
 #include <QVBoxLayout>
 #include <QGroupBox>
 #include <QButtonGroup>
 #include <QRadioButton>
+#include <QLabel>
 
 namespace KSieveUi {
 SieveScriptBlockWidget::SieveScriptBlockWidget(QWidget *parent)
@@ -68,12 +71,43 @@ SieveScriptBlockWidget::SieveScriptBlockWidget(QWidget *parent)
     mScriptActionLister = new SieveActionWidgetLister;
     vbox->addWidget(mScriptActionLister);
     topLayout->addWidget(actions);
+
+    QHBoxLayout *newBlockLayout = new QHBoxLayout;
+    QLabel *lab = new QLabel(i18n("Add new block:"));
+    newBlockLayout->addWidget(lab);
+    mNewBlockType = new KComboBox;
+    newBlockLayout->addWidget(mNewBlockType);
+    mNewBlockType->addItem(i18n("\"elsif\" block"));
+    mNewBlockType->addItem(i18n("\"else\" block"));
+
+    mAddBlockType = new KPushButton;
+    mAddBlockType->setIcon( KIcon( QLatin1String("list-add") ) );
+    mAddBlockType->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
+    newBlockLayout->addWidget(mAddBlockType);
+    connect(mAddBlockType, SIGNAL(clicked(bool)), SLOT(slotAddBlock()));
+
+    topLayout->addLayout(newBlockLayout);
+
     setLayout(topLayout);
 }
 
 SieveScriptBlockWidget::~SieveScriptBlockWidget()
 {
+}
 
+void SieveScriptBlockWidget::slotAddBlock()
+{
+    KSieveUi::SieveScriptBlockWidget::BlockType type;
+    switch(mNewBlockType->currentIndex()) {
+    case 0:
+        type = BlockElsIf;
+        break;
+    case 1:
+        type = BlockElse;
+        break;
+    }
+
+    Q_EMIT addNewBlock(this, type);
 }
 
 void SieveScriptBlockWidget::setBlockType(BlockType type)

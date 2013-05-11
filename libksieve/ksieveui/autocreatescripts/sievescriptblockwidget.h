@@ -22,6 +22,8 @@
 
 class QRadioButton;
 class QAbstractButton;
+class KComboBox;
+class KPushButton;
 
 namespace KSieveUi {
 class SieveConditionWidgetLister;
@@ -54,10 +56,11 @@ public:
     MatchCondition matchCondition() const;
 
 Q_SIGNALS:
-    void addNewBlock(KSieveUi::SieveScriptBlockWidget::BlockType type);
+    void addNewBlock(QWidget *widget, KSieveUi::SieveScriptBlockWidget::BlockType type);
 
 private Q_SLOTS:
     void slotRadioClicked(QAbstractButton*);
+    void slotAddBlock();
 
 private:
     BlockType mType;
@@ -67,6 +70,8 @@ private:
     QRadioButton *mMatchAll;
     QRadioButton *mMatchAny;
     QRadioButton *mAllMessageRBtn;
+    KComboBox *mNewBlockType;
+    KPushButton *mAddBlockType;
 };
 }
 
