@@ -116,12 +116,29 @@ void SieveScriptBlockWidget::generatedScript(QString &script, QStringList &requi
         mScriptConditionLister->generatedScript(conditionStr, numberOfCondition, requires);
         const bool hasUniqCondition = (numberOfCondition == 1);
         QString filterStr;
-        if (hasUniqCondition == 1) {
-            filterStr += QLatin1String("if ");
-        } else if (mMatchCondition == AndCondition) {
-            filterStr += QLatin1String("if allof (");
+        QString blockStr;
+        switch (mType) {
+        case BlockIf:
+            blockStr = QLatin1String("if ");
+            break;
+        case BlockElsIf:
+            blockStr = QLatin1String("elsif ");
+            break;
+        case BlockElse:
+            blockStr = QLatin1String("else");
+            break;
+        }
+
+        if (mType == BlockElse) {
+            filterStr += blockStr;
+        } else if (hasUniqCondition == 1) {
+            filterStr += blockStr;
+        }
+
+        if (mMatchCondition == AndCondition) {
+            filterStr += QLatin1String("allof (");
         } else if (mMatchCondition == OrCondition) {
-            filterStr += QLatin1String("if anyof (");
+            filterStr += QLatin1String("anyof (");
         }
 
         if (conditionStr.isEmpty()) {
