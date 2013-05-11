@@ -160,7 +160,7 @@ void SieveScriptBlockWidget::generatedScript(QString &script, QStringList &requi
     if (mMatchCondition == AllCondition) {
         script += QLatin1String("if true {\n");
     } else if (mType == BlockElse) {
-        script += QLatin1String("} else {\n");
+        script += QLatin1String("else {\n");
     } else {
         QString conditionStr;
         int numberOfCondition = 0;
