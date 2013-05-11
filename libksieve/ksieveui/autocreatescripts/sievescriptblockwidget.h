@@ -53,6 +53,9 @@ public:
 
     MatchCondition matchCondition() const;
 
+Q_SIGNALS:
+    void addNewBlock(KSieveUi::SieveScriptBlockWidget::BlockType type);
+
 private Q_SLOTS:
     void slotRadioClicked(QAbstractButton*);
 

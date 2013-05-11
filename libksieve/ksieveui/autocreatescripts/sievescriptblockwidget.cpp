@@ -110,6 +110,8 @@ void SieveScriptBlockWidget::generatedScript(QString &script, QStringList &requi
 {
     if (mMatchCondition == AllCondition) {
         script += QLatin1String("if true {\n");
+    } else if (mType == BlockElse) {
+        script += QLatin1String("} else {\n");
     } else {
         QString conditionStr;
         int numberOfCondition = 0;
@@ -125,17 +127,12 @@ void SieveScriptBlockWidget::generatedScript(QString &script, QStringList &requi
             blockStr = QLatin1String("elsif ");
             break;
         case BlockElse:
-            blockStr = QLatin1String("else");
             break;
         }
 
-        if (mType == BlockElse) {
+        if (hasUniqCondition == 1) {
             filterStr += blockStr;
-        } else if (hasUniqCondition == 1) {
-            filterStr += blockStr;
-        }
-
-        if (mMatchCondition == AndCondition) {
+        } else if (mMatchCondition == AndCondition) {
             filterStr += QLatin1String("allof (");
         } else if (mMatchCondition == OrCondition) {
             filterStr += QLatin1String("anyof (");
@@ -154,9 +151,6 @@ void SieveScriptBlockWidget::generatedScript(QString &script, QStringList &requi
     mScriptActionLister->generatedScript(script, requires);
     script += QLatin1String("}\n");
 }
-
-
-
 }
 
 #include "sievescriptblockwidget.moc"
