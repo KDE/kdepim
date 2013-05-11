@@ -20,13 +20,50 @@
 
 #include <QWidget>
 
+class QRadioButton;
+class QAbstractButton;
+
 namespace KSieveUi {
+class SieveConditionWidgetLister;
+class SieveActionWidgetLister;
+
 class SieveScriptBlockWidget : public QWidget
 {
     Q_OBJECT
 public:
+    enum BlockType {
+        BlockIf = 0,
+        BlockElsIf = 1,
+        BlockElse = 2
+    };
+
+    enum MatchCondition {
+        OrCondition,
+        AndCondition,
+        AllCondition
+    };
+
     explicit SieveScriptBlockWidget(QWidget *parent = 0);
     ~SieveScriptBlockWidget();
+
+    void setBlockType(BlockType type);
+    BlockType blockType() const;
+
+    void generatedScript(QString &script, QStringList &requires);
+
+    MatchCondition matchCondition() const;
+
+private Q_SLOTS:
+    void slotRadioClicked(QAbstractButton*);
+
+private:
+    BlockType mType;
+    MatchCondition mMatchCondition;
+    SieveConditionWidgetLister *mScriptConditionLister;
+    SieveActionWidgetLister *mScriptActionLister;
+    QRadioButton *mMatchAll;
+    QRadioButton *mMatchAny;
+    QRadioButton *mAllMessageRBtn;
 };
 }
 
