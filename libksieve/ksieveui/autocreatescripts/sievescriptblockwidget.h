@@ -23,6 +23,7 @@
 class QRadioButton;
 class QGroupBox;
 class QAbstractButton;
+class QHBoxLayout;
 class KComboBox;
 class KPushButton;
 
@@ -74,6 +75,7 @@ private:
     QRadioButton *mAllMessageRBtn;
     KComboBox *mNewBlockType;
     KPushButton *mAddBlockType;
+    QHBoxLayout *mNewBlockLayout;
 };
 }
 

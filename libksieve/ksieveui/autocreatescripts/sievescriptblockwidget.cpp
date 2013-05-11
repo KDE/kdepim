@@ -72,21 +72,21 @@ SieveScriptBlockWidget::SieveScriptBlockWidget(QWidget *parent)
     vbox->addWidget(mScriptActionLister);
     topLayout->addWidget(actions);
 
-    QHBoxLayout *newBlockLayout = new QHBoxLayout;
+    mNewBlockLayout = new QHBoxLayout;
     QLabel *lab = new QLabel(i18n("Add new block:"));
-    newBlockLayout->addWidget(lab);
+    mNewBlockLayout->addWidget(lab);
     mNewBlockType = new KComboBox;
-    newBlockLayout->addWidget(mNewBlockType);
+    mNewBlockLayout->addWidget(mNewBlockType);
     mNewBlockType->addItem(i18n("\"elsif\" block"));
     mNewBlockType->addItem(i18n("\"else\" block"));
 
     mAddBlockType = new KPushButton;
     mAddBlockType->setIcon( KIcon( QLatin1String("list-add") ) );
     mAddBlockType->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
-    newBlockLayout->addWidget(mAddBlockType);
+    mNewBlockLayout->addWidget(mAddBlockType);
     connect(mAddBlockType, SIGNAL(clicked(bool)), SLOT(slotAddBlock()));
 
-    topLayout->addLayout(newBlockLayout);
+    topLayout->addLayout(mNewBlockLayout);
 
     setLayout(topLayout);
 }
@@ -118,14 +118,16 @@ void SieveScriptBlockWidget::setBlockType(BlockType type)
         case BlockIf:
             mAllMessageRBtn->show();
             mConditions->show();
+            mNewBlockLayout->setEnabled(true);
             break;
         case BlockElsIf:
             mAllMessageRBtn->hide();
             mConditions->show();
+            mNewBlockLayout->setEnabled(true);
             break;
         case BlockElse:
             mAllMessageRBtn->hide();
-            mConditions->hide();
+            mConditions->setEnabled(false);
             break;
         }
     }
