@@ -48,15 +48,14 @@ SieveScriptBlockWidget *SieveScriptPage::createScriptBlock(KSieveUi::SieveScript
 
 void SieveScriptPage::slotAddNewBlock(QWidget* widget,KSieveUi::SieveScriptBlockWidget::BlockType type)
 {
-
     SieveScriptBlockWidget *blockWidget = createScriptBlock(type);
     mTabWidget->insertTab(mTabWidget->indexOf(widget)+1, blockWidget, i18n("Block"));
-    //TODO
 }
 
 void SieveScriptPage::generatedScript(QString &script, QStringList &requires)
 {
-    for (int i = 0; i < mTabWidget->count(); ++i) {
+    const int numberOfTab(mTabWidget->count());
+    for (int i = 0; i < numberOfTab; ++i) {
         static_cast<SieveScriptBlockWidget*>(mTabWidget->widget(i))->generatedScript(script, requires);
     }
 }
