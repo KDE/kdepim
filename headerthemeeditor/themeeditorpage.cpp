@@ -116,6 +116,7 @@ void ThemeEditorPage::installTheme(const QString &themePath)
         page->installTheme(newPath);
     }
     mDesktopPage->installTheme(newPath);
+    KMessageBox::information(this, i18n("Theme installed in \"%1\"", themeDir.absolutePath()));
 }
 
 void ThemeEditorPage::uploadTheme()
