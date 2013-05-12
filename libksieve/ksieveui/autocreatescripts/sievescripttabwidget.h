@@ -15,32 +15,22 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef SIEVESCRIPTPAGE_H
-#define SIEVESCRIPTPAGE_H
+#ifndef SIEVESCRIPTTABWIDGET_H
+#define SIEVESCRIPTTABWIDGET_H
 
-#include <QWidget>
-#include "sievescriptblockwidget.h"
+#include <KTabWidget>
 
 namespace KSieveUi {
-class SieveScriptBlockWidget;
-class SieveScriptTabWidget;
-class SieveScriptPage : public QWidget
+class SieveScriptTabWidget : public KTabWidget
 {
     Q_OBJECT
 public:
-    explicit SieveScriptPage(QWidget *parent = 0);
-    ~SieveScriptPage();
-
-    void generatedScript(QString &script, QStringList &requires);
+    explicit SieveScriptTabWidget(QWidget *parent = 0);
+    ~SieveScriptTabWidget();
 
 private Q_SLOTS:
-    void slotAddNewBlock(QWidget* widget,KSieveUi::SieveScriptBlockWidget::BlockType type);
-    void slotCloseTab(int);
-
-private:
-    SieveScriptBlockWidget *createScriptBlock(KSieveUi::SieveScriptBlockWidget::BlockType type);
-    SieveScriptTabWidget *mTabWidget;
+    void slotTabContextMenuRequest(const QPoint &);
 };
 }
 
-#endif // SIEVESCRIPTPAGE_H
+#endif // SIEVESCRIPTTABWIDGET_H

@@ -16,6 +16,7 @@
 */
 
 #include "sievescriptpage.h"
+#include "sievescripttabwidget.h"
 
 #include <KLocale>
 #include <KTabWidget>
@@ -27,7 +28,8 @@ SieveScriptPage::SieveScriptPage(QWidget *parent)
     : QWidget(parent)
 {
     QVBoxLayout *topLayout = new QVBoxLayout;
-    mTabWidget = new KTabWidget;
+    mTabWidget = new SieveScriptTabWidget;
+    connect(mTabWidget, SIGNAL(tabCloseRequested(int)), this, SLOT(slotCloseTab(int)));
     SieveScriptBlockWidget *blockWidget = createScriptBlock(SieveScriptBlockWidget::BlockIf);
     mTabWidget->addTab(blockWidget, i18n("Main block"));
     topLayout->addWidget(mTabWidget);
@@ -58,6 +60,11 @@ void SieveScriptPage::generatedScript(QString &script, QStringList &requires)
     for (int i = 0; i < numberOfTab; ++i) {
         static_cast<SieveScriptBlockWidget*>(mTabWidget->widget(i))->generatedScript(script, requires);
     }
+}
+
+void SieveScriptPage::slotCloseTab(int index)
+{
+    mTabWidget->removeTab(index);
 }
 
 }

@@ -31,6 +31,7 @@ set(ksieveui_LIB_SRCS
   autocreatescripts/sieveactionwidgetlister.cpp
   autocreatescripts/sievescriptpage.cpp
   autocreatescripts/sievescriptblockwidget.cpp
+  autocreatescripts/sievescripttabwidget.cpp
   autocreatescripts/autocreatescriptutil.cpp
   autocreatescripts/sieveactions/sieveactionlist.cpp
   autocreatescripts/sieveactions/sieveaction.cpp
