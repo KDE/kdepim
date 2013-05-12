@@ -95,7 +95,9 @@ void SieveSyntaxHighlighter::init()
               <<QLatin1String( "\\s:all\\b" )
               <<QLatin1String( "\\s:copy\\b" )
               <<QLatin1String( "\\s:message\\b" )
-              <<QLatin1String( "\\s:importance\\b" );
+              <<QLatin1String( "\\s:importance\\b" )
+              <<QLatin1String( "\\s:seconds\\b" )
+              <<QLatin1String( "\\s:days\\b" );
     Q_FOREACH ( const QString & s, matchType ) {
         const QRegExp regex( s, Qt::CaseInsensitive );
         m_rules.append( Rule( regex, matchFormat ) );
