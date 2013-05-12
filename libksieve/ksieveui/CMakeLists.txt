@@ -56,6 +56,7 @@ set(ksieveui_LIB_SRCS
   autocreatescripts/sieveactions/widgets/selectaddheaderpositioncombobox.cpp
   autocreatescripts/sieveactions/widgets/selectimportancecombobox.cpp
   autocreatescripts/sieveactions/widgets/multilineedit.cpp
+  autocreatescripts/sieveactions/widgets/selectvacationcombobox.cpp
   autocreatescripts/sieveconditions/sievecondition.cpp
   autocreatescripts/sieveconditions/sieveconditionheader.cpp
   autocreatescripts/sieveconditions/sieveconditionlist.cpp

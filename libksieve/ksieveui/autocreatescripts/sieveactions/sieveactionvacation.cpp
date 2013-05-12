@@ -17,7 +17,10 @@
 
 
 #include "sieveactionvacation.h"
+#include "autocreatescripts/autocreatescriptdialog.h"
 #include "widgets/multilineedit.h"
+#include "widgets/selectvacationcombobox.h"
+
 
 #include <KLocale>
 #include <KLineEdit>
@@ -33,6 +36,7 @@ using namespace KSieveUi;
 SieveActionVacation::SieveActionVacation(QObject *parent)
     : SieveAction(QLatin1String("vacation"), i18n("Vacation"), parent)
 {
+    mHasVacationSecondsSupport = AutoCreateScriptDialog::sieveCapabilities().contains(QLatin1String("vacation-seconds"));
 }
 
 SieveAction* SieveActionVacation::newAction()
@@ -48,8 +52,15 @@ QWidget *SieveActionVacation::createParamWidget( QWidget *parent ) const
     lay->setMargin(0);
     w->setLayout(lay);
 
-    QLabel *lab = new QLabel(i18n("day:"));
-    lay->addWidget(lab);
+    QLabel *lab = 0;
+    if (mHasVacationSecondsSupport) {
+        SelectVacationComboBox *vacation = new SelectVacationComboBox;
+        vacation->setObjectName(QLatin1String("vacationcombobox"));
+        lay->addWidget(vacation);
+    } else {
+        lab = new QLabel(i18n("day:"));
+        lay->addWidget(lab);
+    }
 
     QSpinBox *day = new QSpinBox;
     day->setMinimum(1);
@@ -82,6 +93,11 @@ QWidget *SieveActionVacation::createParamWidget( QWidget *parent ) const
 
 QString SieveActionVacation::code(QWidget *w) const
 {
+    QString vacationTypeStr = QLatin1String(":days");
+    if (mHasVacationSecondsSupport) {
+        const SelectVacationComboBox *vacationcombobox = w->findChild<SelectVacationComboBox*>(QLatin1String("vacationcombobox"));
+        vacationTypeStr = vacationcombobox->code();
+    }
     const QSpinBox *day = w->findChild<QSpinBox*>( QLatin1String("day") );
     const QString dayStr = QString::number(day->value());
 
@@ -95,7 +111,7 @@ QString SieveActionVacation::code(QWidget *w) const
     const QString addressesStr = addresses->text();
     QString result = QString::fromLatin1("vacation");
     if (!dayStr.isEmpty())
-        result += QString::fromLatin1(" :days %1").arg(dayStr);
+        result += QString::fromLatin1(" %1 %2").arg(vacationTypeStr).arg(dayStr);
     if (!textStr.isEmpty())
         result += QString::fromLatin1(" :text %1").arg(textStr);
     if (!subjectStr.isEmpty())

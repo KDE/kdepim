@@ -46,6 +46,7 @@ int main (int argc, char **argv)
             <<QLatin1String("spamtestplus")
             <<QLatin1String("virustest")
             <<QLatin1String("vacation")
+            <<QLatin1String("vacation-seconds")
             <<QLatin1String("comparator-i;ascii-numeric");
     dialog->setSieveCapabilities(capabilities);
     if (dialog->exec() ) {

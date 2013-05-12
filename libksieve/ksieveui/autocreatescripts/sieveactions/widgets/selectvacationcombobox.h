@@ -15,27 +15,21 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#ifndef SELECTVACATIONCOMBOBOX_H
+#define SELECTVACATIONCOMBOBOX_H
+#include <KComboBox>
 
-#ifndef SIEVEACTIONVACATION_H
-#define SIEVEACTIONVACATION_H
-
-#include "sieveaction.h"
 namespace KSieveUi {
-class SieveActionVacation : public SieveAction
+class SelectVacationComboBox : public KComboBox
 {
     Q_OBJECT
 public:
-    SieveActionVacation(QObject *parent = 0);
-    static SieveAction* newAction();
-
-    QWidget *createParamWidget( QWidget *parent ) const;
-    QString code(QWidget *) const;
-    QString serverNeedsCapability() const;
-    bool needCheckIfServerHasCapability() const;
-    QStringList needRequires() const;
+    explicit SelectVacationComboBox(QWidget *parent = 0);
+    ~SelectVacationComboBox();
+    QString code() const;
 private:
-    bool mHasVacationSecondsSupport;
+    void initialize();
 };
 }
 
-#endif // SIEVEACTIONVACATION_H
+#endif // SELECTVACATIONCOMBOBOX_H

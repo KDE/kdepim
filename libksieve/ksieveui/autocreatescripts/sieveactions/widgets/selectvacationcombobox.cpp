@@ -14,28 +14,32 @@
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
+#include "selectvacationcombobox.h"
 
+#include <KLocale>
 
-#ifndef SIEVEACTIONVACATION_H
-#define SIEVEACTIONVACATION_H
-
-#include "sieveaction.h"
 namespace KSieveUi {
-class SieveActionVacation : public SieveAction
+SelectVacationComboBox::SelectVacationComboBox(QWidget *parent)
+    : KComboBox(parent)
 {
-    Q_OBJECT
-public:
-    SieveActionVacation(QObject *parent = 0);
-    static SieveAction* newAction();
-
-    QWidget *createParamWidget( QWidget *parent ) const;
-    QString code(QWidget *) const;
-    QString serverNeedsCapability() const;
-    bool needCheckIfServerHasCapability() const;
-    QStringList needRequires() const;
-private:
-    bool mHasVacationSecondsSupport;
-};
+    initialize();
 }
 
-#endif // SIEVEACTIONVACATION_H
+SelectVacationComboBox::~SelectVacationComboBox()
+{
+}
+
+void SelectVacationComboBox::initialize()
+{
+    addItem(i18n("days"), QLatin1String(":days"));
+    addItem(i18n("seconds"), QLatin1String(":seconds"));
+}
+
+QString SelectVacationComboBox::code() const
+{
+    return itemData(currentIndex()).toString();
+}
+
+}
+
+#include "selectvacationcombobox.moc"
