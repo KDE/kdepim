@@ -38,6 +38,7 @@ private Q_SLOTS:
     void slotCloseTab(int);
 
 private:
+    QString blockName(KSieveUi::SieveScriptBlockWidget::BlockType type) const;
     SieveScriptBlockWidget *createScriptBlock(KSieveUi::SieveScriptBlockWidget::BlockType type);
     SieveScriptTabWidget *mTabWidget;
 };

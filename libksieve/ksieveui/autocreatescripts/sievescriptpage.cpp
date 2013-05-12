@@ -31,7 +31,7 @@ SieveScriptPage::SieveScriptPage(QWidget *parent)
     mTabWidget = new SieveScriptTabWidget;
     connect(mTabWidget, SIGNAL(tabCloseRequested(int)), this, SLOT(slotCloseTab(int)));
     SieveScriptBlockWidget *blockWidget = createScriptBlock(SieveScriptBlockWidget::BlockIf);
-    mTabWidget->addTab(blockWidget, i18n("Main block"));
+    mTabWidget->addTab(blockWidget, blockName(KSieveUi::SieveScriptBlockWidget::BlockIf));
     topLayout->addWidget(mTabWidget);
     setLayout(topLayout);
 }
@@ -48,10 +48,23 @@ SieveScriptBlockWidget *SieveScriptPage::createScriptBlock(KSieveUi::SieveScript
     return blockWidget;
 }
 
-void SieveScriptPage::slotAddNewBlock(QWidget* widget,KSieveUi::SieveScriptBlockWidget::BlockType type)
+void SieveScriptPage::slotAddNewBlock(QWidget* widget, KSieveUi::SieveScriptBlockWidget::BlockType type)
 {
     SieveScriptBlockWidget *blockWidget = createScriptBlock(type);
-    mTabWidget->insertTab(mTabWidget->indexOf(widget)+1, blockWidget, i18n("Block"));
+    mTabWidget->insertTab(mTabWidget->indexOf(widget)+1, blockWidget, blockName(type));
+}
+
+QString SieveScriptPage::blockName(KSieveUi::SieveScriptBlockWidget::BlockType type) const
+{
+    switch(type) {
+    case KSieveUi::SieveScriptBlockWidget::BlockIf:
+        return i18n("Main block");
+    case KSieveUi::SieveScriptBlockWidget::BlockElsIf:
+        return i18n("Block \"Elsif\"");
+    case KSieveUi::SieveScriptBlockWidget::BlockElse:
+        return i18n("Block \"Else\"");
+    }
+    return QString();
 }
 
 void SieveScriptPage::generatedScript(QString &script, QStringList &requires)
