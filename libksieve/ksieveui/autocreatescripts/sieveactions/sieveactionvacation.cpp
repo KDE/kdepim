@@ -133,7 +133,12 @@ bool SieveActionVacation::needCheckIfServerHasCapability() const
 
 QStringList SieveActionVacation::needRequires() const
 {
-    return QStringList() <<QLatin1String("vacation");
+    QStringList lst;
+    if (mHasVacationSecondsSupport) {
+        lst << QLatin1String("vacation-seconds");
+    }
+    lst << QLatin1String("vacation");
+    return lst;
 }
 
 
