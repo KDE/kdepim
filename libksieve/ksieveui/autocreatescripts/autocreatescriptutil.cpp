@@ -24,7 +24,7 @@
 
 QString AutoCreateScriptUtil::createList(const QString &str, const QChar &separator)
 {
-    const QStringList list = str.split(separator);
+    const QStringList list = str.trimmed().split(separator);
     const int count = list.count();
     switch(count) {
     case 0:
