@@ -174,14 +174,21 @@ void ThemeEditorPage::addExtraPage()
         if (!filename.endsWith(QLatin1String(".html"))) {
             filename += QLatin1String(".html");
         }
-        EditorPage *extraPage = new EditorPage(EditorPage::ExtraPage, QString());
-        connect(extraPage, SIGNAL(changed()), SLOT(slotChanged()));
-        extraPage->setPageFileName(filename);
-        mTabWidget->addTab(extraPage, filename);
+        createExtraPage(filename);
         mThemeSession->addExtraPage(filename);
-        mExtraPage.append(extraPage);
+
         mChanged = true;
     }
+}
+
+EditorPage *ThemeEditorPage::createExtraPage(const QString &filename)
+{
+    EditorPage *extraPage = new EditorPage(EditorPage::ExtraPage, QString());
+    connect(extraPage, SIGNAL(changed()), SLOT(slotChanged()));
+    extraPage->setPageFileName(filename);
+    mTabWidget->addTab(extraPage, filename);
+    mExtraPage.append(extraPage);
+    return extraPage;
 }
 
 void ThemeEditorPage::storeTheme()
@@ -226,11 +233,7 @@ void ThemeEditorPage::loadTheme(const QString &filename)
 
     const QStringList lstExtraPages = mThemeSession->extraPages();
     Q_FOREACH(const QString &page, lstExtraPages) {
-        EditorPage *extraPage = new EditorPage(EditorPage::ExtraPage, QString());
-        connect(extraPage, SIGNAL(changed()), SLOT(slotChanged()));
-        extraPage->setPageFileName(page);
-        mTabWidget->addTab(extraPage, page);
-        mExtraPage.append(extraPage);
+        EditorPage *extraPage = createExtraPage(page);
         extraPage->loadTheme(mThemeSession->projectDirectory() + QDir::separator() + page);
     }
     mChanged = false;

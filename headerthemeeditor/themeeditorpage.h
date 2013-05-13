@@ -56,6 +56,7 @@ private:
     void storeTheme();
     QString projectDirectory() const;
     void createZip(const QString &themeName, KZip *zip);
+    EditorPage *createExtraPage(const QString &filename);
     QList<EditorPage*> mExtraPage;
     ThemeEditorTabWidget *mTabWidget;
     EditorPage *mEditorPage;
