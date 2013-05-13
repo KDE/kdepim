@@ -18,17 +18,21 @@
 #include "sendlatermanager.h"
 #include "sendlaterinfo.h"
 #include "sendlaterutil.h"
+#include "sendlaterjob.h"
 
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <KGlobal>
 
 #include <QStringList>
+#include <QTimer>
 
 SendLaterManager::SendLaterManager(QObject *parent)
     : QObject(parent)
 {
     mConfig = KGlobal::config();
+    mTimer = new QTimer(this);
+    connect(mTimer, SIGNAL(timeout()), this, SLOT(slotCreateJob()));
 }
 
 SendLaterManager::~SendLaterManager()
@@ -38,6 +42,7 @@ SendLaterManager::~SendLaterManager()
 
 void SendLaterManager::load()
 {
+    stopTimer();
     qDeleteAll(mListSendLaterInfo);
     mListSendLaterInfo.clear();
 
@@ -49,6 +54,20 @@ void SendLaterManager::load()
         mListSendLaterInfo.append(info);
     }
     qSort(mListSendLaterInfo.begin(), mListSendLaterInfo.end(), SendLaterUtil::compareSendLaterInfo);
+    if (!mListSendLaterInfo.isEmpty()) {
+
+    }
+}
+
+void SendLaterManager::stopTimer()
+{
+    if (mTimer->isActive())
+        mTimer->stop();
+}
+
+void SendLaterManager::slotCreateJob()
+{
+    //TODO
 }
 
 void SendLaterManager::sendDone(SendLaterInfo *info)
