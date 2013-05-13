@@ -74,6 +74,7 @@ void ThemeEditorMainWindow::setupActions()
     mNewThemeAction->setText(i18n("New theme..."));
 
     mOpenAction = KStandardAction::open(this, SLOT(slotOpenTheme()), actionCollection());
+    mOpenAction->setText(i18n("Open theme..."));
     mSaveAction = KStandardAction::save(this, SLOT(slotSaveTheme()), actionCollection());
     mCloseAction = KStandardAction::close( this, SLOT(slotCloseTheme()), actionCollection());
     KStandardAction::quit(this, SLOT(slotQuitApp()), actionCollection() );
@@ -140,12 +141,12 @@ void ThemeEditorMainWindow::slotOpenTheme()
     if (!saveCurrentProject(false))
         return;
 
-    const QString directory = KFileDialog::getExistingDirectory(KUrl( "kfiledialog:///OpenTheme" ), this, i18n("Select theme"));
+    const QString directory = KFileDialog::getExistingDirectory(KUrl( "kfiledialog:///OpenTheme" ), this, i18n("Select theme directory"));
     if (!directory.isEmpty()) {
         const QString filename = directory + QDir::separator() + QLatin1String("theme.themerc");
         QFile file(filename);
         if (!file.exists()) {
-            KMessageBox::error(this, i18n("Directory doesn't contains a theme file. We can not load theme."));
+            KMessageBox::error(this, i18n("Directory does not contain a theme file. We can not load theme."));
             return;
         }
 
