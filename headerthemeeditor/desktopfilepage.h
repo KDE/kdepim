@@ -47,14 +47,12 @@ public:
     void createZip(const QString &themeName, KZip *zip);
     void installTheme(const QString &themePath);
 
-    bool wasChanged() const;
-
 Q_SIGNALS:
     void mainFileNameChanged(const QString &filename);
     void extraDisplayHeaderChanged(const QStringList &headers);
+    void changed();
 
 private Q_SLOTS:
-    void slotChanged();
     void slotFileNameChanged(const QString &);
     void slotExtraDisplayHeadersChanged();
 
@@ -64,7 +62,6 @@ private:
     KLineEdit *mDescription;
     KLineEdit *mFilename;
     PimCommon::SimpleStringListEditor *mExtraDisplayHeaders;
-    bool mChanged;
 };
 
 #endif // DESKTOPFILEPAGE_H

@@ -35,8 +35,7 @@
 EditorPage::EditorPage(PageType type, const QString &projectDirectory, QWidget *parent)
     : QWidget(parent),
       mType(type),
-      mWidgetSplitter(0),
-      mChanged(false)
+      mWidgetSplitter(0)
 {
     QVBoxLayout *lay = new QVBoxLayout;
 
@@ -64,7 +63,7 @@ EditorPage::EditorPage(PageType type, const QString &projectDirectory, QWidget *
     connect(mThemeTemplate, SIGNAL(insertTemplate(QString)), mEditor, SLOT(insertPlainText(QString)));
     mMainSplitter->addWidget(mThemeTemplate);
 
-    connect(mEditor, SIGNAL(textChanged()), this, SLOT(slotChanged()));
+    connect(mEditor, SIGNAL(textChanged()), this, SIGNAL(changed()));
 
 
     if (mType == MainPage) {
@@ -91,11 +90,6 @@ void EditorPage::insertFile(const QString &filename)
     mEditor->insertFile(filename);
 }
 
-void EditorPage::slotChanged()
-{
-    mChanged = true;
-}
-
 void EditorPage::createZip(const QString &themeName, KZip *zip)
 {
     KTemporaryFile tmp;
@@ -115,7 +109,6 @@ void EditorPage::loadTheme(const QString &path)
         const QString str = QString::fromUtf8(data);
         file.close();
         mEditor->setPlainText(str);
-        mChanged = false;
     }
 }
 
@@ -123,7 +116,6 @@ void EditorPage::saveTheme(const QString &path)
 {
     const QString filename = path + QDir::separator() + mPageFileName;
     saveAsFilename(filename);
-    mChanged = false;
 }
 
 void EditorPage::saveAsFilename(const QString &filename)
@@ -145,11 +137,6 @@ void EditorPage::setPageFileName(const QString &filename)
 QString EditorPage::pageFileName() const
 {
     return mPageFileName;
-}
-
-bool EditorPage::wasChanged() const
-{
-    return mChanged;
 }
 
 void EditorPage::installTheme(const QString &themePath)

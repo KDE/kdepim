@@ -32,8 +32,7 @@
 #include <QDir>
 
 DesktopFilePage::DesktopFilePage(QWidget *parent)
-    : QWidget(parent),
-      mChanged(false)
+    : QWidget(parent)
 {
     QGridLayout *lay = new QGridLayout;
     QLabel *lab = new QLabel(i18n("Name:"));
@@ -61,7 +60,7 @@ DesktopFilePage::DesktopFilePage(QWidget *parent)
     setLayout(lay);
     connect(mExtraDisplayHeaders, SIGNAL(changed()), this, SLOT(slotExtraDisplayHeadersChanged()));
     connect(mFilename, SIGNAL(textChanged(QString)), this, SLOT(slotFileNameChanged(QString)));
-    connect(mDescription, SIGNAL(textChanged(QString)), this, SLOT(slotChanged()));
+    connect(mDescription, SIGNAL(textChanged(QString)), this, SIGNAL(changed()));
 }
 
 DesktopFilePage::~DesktopFilePage()
@@ -71,19 +70,15 @@ DesktopFilePage::~DesktopFilePage()
 void DesktopFilePage::slotExtraDisplayHeadersChanged()
 {
     Q_EMIT extraDisplayHeaderChanged(mExtraDisplayHeaders->stringList());
-    mChanged = true;
+    Q_EMIT changed();
 }
 
 void DesktopFilePage::slotFileNameChanged(const QString &filename)
 {
     Q_EMIT mainFileNameChanged(filename);
-    mChanged = true;
+    Q_EMIT changed();
 }
 
-void DesktopFilePage::slotChanged()
-{
-    mChanged = true;
-}
 
 void DesktopFilePage::createZip(const QString &themeName, KZip *zip)
 {
@@ -120,14 +115,12 @@ void DesktopFilePage::loadTheme(const QString &path)
     mFilename->setText(desktopFile.desktopGroup().readEntry(QLatin1String("FileName")));
     const QStringList displayExtraHeaders = desktopFile.desktopGroup().readEntry(QLatin1String("DisplayExtraHeaders"),QStringList());
     mExtraDisplayHeaders->setStringList(displayExtraHeaders);
-    mChanged = false;
 }
 
 void DesktopFilePage::saveTheme(const QString &path)
 {
     const QString filename = path + QDir::separator() + QLatin1String("header.desktop");
     saveAsFilename(filename);
-    mChanged = false;
 }
 
 void DesktopFilePage::saveAsFilename(const QString &filename)
@@ -140,11 +133,6 @@ void DesktopFilePage::saveAsFilename(const QString &filename)
     if (!displayExtraHeaders.isEmpty())
         desktopFile.desktopGroup().writeEntry(QLatin1String("DisplayExtraHeaders"), mExtraDisplayHeaders->stringList());
     desktopFile.desktopGroup().sync();
-}
-
-bool DesktopFilePage::wasChanged() const
-{
-    return mChanged;
 }
 
 void DesktopFilePage::installTheme(const QString &themePath)

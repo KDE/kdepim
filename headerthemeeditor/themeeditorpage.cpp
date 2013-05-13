@@ -48,6 +48,7 @@ ThemeEditorPage::ThemeEditorPage(const QString &projectDir, const QString &theme
     lay->addWidget(mTabWidget);
     mEditorPage = new EditorPage(EditorPage::MainPage, projectDir);
     connect(mEditorPage, SIGNAL(needUpdateViewer()), this, SLOT(slotUpdateViewer()));
+    connect(mEditorPage, SIGNAL(changed()), SLOT(slotChanged()));
     mTabWidget->addTab(mEditorPage, i18n("Editor"));
 
     mDesktopPage = new DesktopFilePage;
@@ -56,6 +57,7 @@ ThemeEditorPage::ThemeEditorPage(const QString &projectDir, const QString &theme
 
     connect(mDesktopPage, SIGNAL(mainFileNameChanged(QString)), mEditorPage->preview(), SLOT(slotMainFileNameChanged(QString)));
     connect(mDesktopPage, SIGNAL(extraDisplayHeaderChanged(QStringList)), mEditorPage->preview(), SLOT(slotExtraHeaderDisplayChanged(QStringList)));
+    connect(mDesktopPage, SIGNAL(changed()), SLOT(slotChanged()));
     connect(mTabWidget, SIGNAL(tabCloseRequested(int)), SLOT(slotCloseTab(int)));
     setLayout(lay);
 }
@@ -65,6 +67,11 @@ ThemeEditorPage::~ThemeEditorPage()
     qDeleteAll(mExtraPage);
     mExtraPage.clear();
     delete mThemeSession;
+}
+
+void ThemeEditorPage::slotChanged()
+{
+    mChanged = true;
 }
 
 void ThemeEditorPage::slotUpdateViewer()
@@ -91,19 +98,7 @@ void ThemeEditorPage::insertFile()
 
 bool ThemeEditorPage::themeWasChanged() const
 {
-    if (mChanged)
-        return true;
-    bool wasChanged = mEditorPage->wasChanged();
-    if (wasChanged)
-        return true;
-
-    Q_FOREACH (EditorPage *page, mExtraPage) {
-        wasChanged = page->wasChanged();
-        if (wasChanged)
-            return true;
-    }
-    wasChanged = mDesktopPage->wasChanged();
-    return wasChanged;
+    return mChanged;
 }
 
 void ThemeEditorPage::installTheme(const QString &themePath)
@@ -180,6 +175,7 @@ void ThemeEditorPage::addExtraPage()
             filename += QLatin1String(".html");
         }
         EditorPage *extraPage = new EditorPage(EditorPage::ExtraPage, QString());
+        connect(extraPage, SIGNAL(changed()), SLOT(slotChanged()));
         extraPage->setPageFileName(filename);
         mTabWidget->addTab(extraPage, filename);
         mThemeSession->addExtraPage(filename);
@@ -231,6 +227,7 @@ void ThemeEditorPage::loadTheme(const QString &filename)
     const QStringList lstExtraPages = mThemeSession->extraPages();
     Q_FOREACH(const QString &page, lstExtraPages) {
         EditorPage *extraPage = new EditorPage(EditorPage::ExtraPage, QString());
+        connect(extraPage, SIGNAL(changed()), SLOT(slotChanged()));
         extraPage->setPageFileName(page);
         mTabWidget->addTab(extraPage, page);
         mExtraPage.append(extraPage);

@@ -52,15 +52,11 @@ public:
     void installTheme(const QString &themePath);
     void insertFile(const QString &filename);
 
-    bool wasChanged() const;
-
     PreviewWidget *preview() const;
 
 Q_SIGNALS:
     void needUpdateViewer();
-
-private Q_SLOTS:
-    void slotChanged();
+    void changed();
 
 private:
     PageType mType;
@@ -70,7 +66,6 @@ private:
     ThemeTemplateWidget *mThemeTemplate;
     QSplitter *mMainSplitter;
     QSplitter *mWidgetSplitter;
-    bool mChanged;
 };
 
 #endif // EDITORPAGE_H

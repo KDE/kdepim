@@ -50,6 +50,7 @@ public:
 private Q_SLOTS:
     void slotUpdateViewer();
     void slotCloseTab(int);
+    void slotChanged();
 
 private:
     void storeTheme();
