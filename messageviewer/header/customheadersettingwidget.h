@@ -52,8 +52,7 @@ private:
     QStringList mHeadersToHide;
     QRadioButton *mCbHeaderToHide;
     QRadioButton *mCbHeaderToShow;
-    PimCommon::SimpleStringListEditor *mHeaderToHide;
-    PimCommon::SimpleStringListEditor *mHeaderToShow;
+    PimCommon::SimpleStringListEditor *mHeaders;
     QButtonGroup *mHeaderGroup;
 };
 
