@@ -20,7 +20,7 @@
 
 #include <QWidget>
 
-class KTabWidget;
+class ThemeEditorTabWidget;
 class EditorPage;
 class DesktopFilePage;
 class ThemeSession;
@@ -49,13 +49,14 @@ public:
 
 private Q_SLOTS:
     void slotUpdateViewer();
+    void slotCloseTab(int);
 
 private:
     void storeTheme();
     QString projectDirectory() const;
     void createZip(const QString &themeName, KZip *zip);
     QList<EditorPage*> mExtraPage;
-    KTabWidget *mTabWidget;
+    ThemeEditorTabWidget *mTabWidget;
     EditorPage *mEditorPage;
     DesktopFilePage *mDesktopPage;
     ThemeSession *mThemeSession;

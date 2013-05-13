@@ -20,6 +20,7 @@
 #include "editorpage.h"
 #include "previewwidget.h"
 #include "themesession.h"
+#include "themeeditortabwidget.h"
 
 #include <knewstuff3/uploaddialog.h>
 
@@ -42,7 +43,7 @@ ThemeEditorPage::ThemeEditorPage(const QString &projectDir, const QString &theme
       mThemeSession(new ThemeSession(projectDir))
 {
     QHBoxLayout *lay = new QHBoxLayout;
-    mTabWidget = new KTabWidget;
+    mTabWidget = new ThemeEditorTabWidget;
     lay->addWidget(mTabWidget);
     mEditorPage = new EditorPage(EditorPage::MainPage, projectDir);
     connect(mEditorPage, SIGNAL(needUpdateViewer()), this, SLOT(slotUpdateViewer()));
@@ -54,6 +55,7 @@ ThemeEditorPage::ThemeEditorPage(const QString &projectDir, const QString &theme
 
     connect(mDesktopPage, SIGNAL(mainFileNameChanged(QString)), mEditorPage->preview(), SLOT(slotMainFileNameChanged(QString)));
     connect(mDesktopPage, SIGNAL(extraDisplayHeaderChanged(QStringList)), mEditorPage->preview(), SLOT(slotExtraHeaderDisplayChanged(QStringList)));
+    connect(mTabWidget, SIGNAL(tabCloseRequested(int)), SLOT(slotCloseTab(int)));
     setLayout(lay);
 }
 
@@ -70,6 +72,11 @@ void ThemeEditorPage::slotUpdateViewer()
         saveTheme(false);
     }
     mEditorPage->preview()->updateViewer();
+}
+
+void ThemeEditorPage::slotCloseTab(int index)
+{
+    mTabWidget->removeTab(index);
 }
 
 void ThemeEditorPage::insertFile()
