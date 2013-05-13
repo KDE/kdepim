@@ -60,6 +60,7 @@ private:
     EditorPage *mEditorPage;
     DesktopFilePage *mDesktopPage;
     ThemeSession *mThemeSession;
+    bool mChanged;
 };
 
 #endif // THEMEEDITORPAGE_H
