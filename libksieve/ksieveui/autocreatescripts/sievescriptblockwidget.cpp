@@ -129,7 +129,7 @@ void SieveScriptBlockWidget::setBlockType(BlockType type)
             break;
         case BlockElse:
             mAllMessageRBtn->hide();
-            mConditions->setEnabled(false);
+            mConditions->hide();
             mAddBlockType->setEnabled(false);
             mNewBlockType->setEnabled(false);
             break;
