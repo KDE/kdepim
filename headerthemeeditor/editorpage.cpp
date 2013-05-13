@@ -32,15 +32,16 @@
 #include <QTextStream>
 #include <QDir>
 
-EditorPage::EditorPage(const QString &projectDirectory, bool showPreview, QWidget *parent)
+EditorPage::EditorPage(PageType type, const QString &projectDirectory, QWidget *parent)
     : QWidget(parent),
+      mType(type),
       mWidgetSplitter(0),
       mChanged(false)
 {
     QVBoxLayout *lay = new QVBoxLayout;
 
     mMainSplitter = new QSplitter;
-    if (showPreview) {
+    if (mType == MainPage) {
         mWidgetSplitter = new QSplitter;
         mWidgetSplitter->setOrientation(Qt::Vertical);
         mWidgetSplitter->setChildrenCollapsible(false);
@@ -66,7 +67,7 @@ EditorPage::EditorPage(const QString &projectDirectory, bool showPreview, QWidge
     connect(mEditor, SIGNAL(textChanged()), this, SLOT(slotChanged()));
 
 
-    if (mWidgetSplitter) {
+    if (mType == MainPage) {
         KConfigGroup group( KGlobal::config(), "EditorPage" );
         QList<int> size;
         size << 400 << 100;
@@ -78,7 +79,7 @@ EditorPage::EditorPage(const QString &projectDirectory, bool showPreview, QWidge
 
 EditorPage::~EditorPage()
 {
-    if (mWidgetSplitter) {
+    if (mType == MainPage) {
         KConfigGroup group( KGlobal::config(), "EditorPage" );
         group.writeEntry( "mainSplitter", mMainSplitter->sizes());
         group.writeEntry("widgetSplitter", mWidgetSplitter->sizes());
@@ -160,6 +161,11 @@ void EditorPage::installTheme(const QString &themePath)
 PreviewWidget *EditorPage::preview() const
 {
     return mPreview;
+}
+
+EditorPage::PageType EditorPage::pageType() const
+{
+    return mType;
 }
 
 #include "editorpage.moc"

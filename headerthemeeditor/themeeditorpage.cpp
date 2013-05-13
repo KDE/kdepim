@@ -44,7 +44,7 @@ ThemeEditorPage::ThemeEditorPage(const QString &projectDir, const QString &theme
     QHBoxLayout *lay = new QHBoxLayout;
     mTabWidget = new KTabWidget;
     lay->addWidget(mTabWidget);
-    mEditorPage = new EditorPage(projectDir);
+    mEditorPage = new EditorPage(EditorPage::MainPage, projectDir);
     connect(mEditorPage, SIGNAL(needUpdateViewer()), this, SLOT(slotUpdateViewer()));
     mTabWidget->addTab(mEditorPage, i18n("Editor"));
 
@@ -167,7 +167,7 @@ void ThemeEditorPage::addExtraPage()
         if (!filename.endsWith(QLatin1String(".html"))) {
             filename += QLatin1String(".html");
         }
-        EditorPage *extraPage = new EditorPage(QString(), false);
+        EditorPage *extraPage = new EditorPage(EditorPage::ExtraPage, QString());
         extraPage->setPageFileName(filename);
         mTabWidget->addTab(extraPage, filename);
         mThemeSession->addExtraPage(filename);
@@ -215,7 +215,7 @@ void ThemeEditorPage::loadTheme(const QString &filename)
 
     const QStringList lstExtraPages = mThemeSession->extraPages();
     Q_FOREACH(const QString &page, lstExtraPages) {
-        EditorPage *extraPage = new EditorPage(QString(), false);
+        EditorPage *extraPage = new EditorPage(EditorPage::ExtraPage, QString());
         extraPage->setPageFileName(page);
         mTabWidget->addTab(extraPage, page);
         mExtraPage.append(extraPage);

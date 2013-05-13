@@ -31,7 +31,12 @@ class EditorPage : public QWidget
 {
     Q_OBJECT
 public:
-    explicit EditorPage(const QString &projectDirectory, bool showPreview = true, QWidget *parent = 0);
+    enum PageType {
+        MainPage = 0,
+        ExtraPage = 1
+    };
+
+    explicit EditorPage(PageType type, const QString &projectDirectory, QWidget *parent = 0);
     ~EditorPage();
 
     void saveTheme(const QString &path);
@@ -39,6 +44,8 @@ public:
 
     void setPageFileName(const QString &filename);
     QString pageFileName() const;
+
+    PageType pageType() const;
 
     void createZip(const QString &themeName, KZip *zip);
     void saveAsFilename(const QString &filename);
@@ -56,6 +63,7 @@ private Q_SLOTS:
     void slotChanged();
 
 private:
+    PageType mType;
     QString mPageFileName;
     EditorWidget *mEditor;
     PreviewWidget *mPreview;
