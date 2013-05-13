@@ -26,7 +26,7 @@
 
 #include <KDE/KUrl>
 
-#include <messagecore/attachmentpart.h>
+#include <messagecore/attachment/attachmentpart.h>
 #include <akonadi/item.h>
 
 namespace Message {

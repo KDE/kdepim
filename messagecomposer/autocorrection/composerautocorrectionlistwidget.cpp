@@ -23,7 +23,7 @@ using namespace MessageComposer;
 
 
 ComposerAutoCorrectionListWidget::ComposerAutoCorrectionListWidget(QWidget *parent)
-  : QListWidget(parent)
+    : QListWidget(parent)
 {
 }
 
@@ -34,9 +34,9 @@ ComposerAutoCorrectionListWidget::~ComposerAutoCorrectionListWidget()
 
 void ComposerAutoCorrectionListWidget::keyPressEvent( QKeyEvent *event )
 {
-  if ( event->key() == Qt::Key_Delete ) {
-    Q_EMIT deleteSelectedItems();
-  }
+    if ( event->key() == Qt::Key_Delete ) {
+        Q_EMIT deleteSelectedItems();
+    }
 }
 
 #include "composerautocorrectionlistwidget.moc"

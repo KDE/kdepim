@@ -6,6 +6,7 @@ Comment[el]=Πράκτορας ετεροχρονισμένης αποστολή
 Comment[es]=Agente de enviar más tarde
 Comment[fi]=Lähetä myöhemmin -ohjelma
 Comment[fr]=Agent d'envoi différé
+Comment[nb]=Send senere-agent
 Comment[nl]=Agent voor later verzenden
 Comment[pt]=Agente de Envio Posterior
 Comment[pt_BR]=Agente de envio posterior
@@ -17,6 +18,7 @@ Comment[sr@latin]=Agent za kasnije slanje
 Comment[sv]=Skicka senare-modul
 Comment[uk]=Агент відкладеного надсилання
 Comment[x-test]=xxSend Later Agentxx
+Comment[zh_TW]=稍後傳送代理程式
 
 [Event/mailsend]
 Name=Mail is sent
@@ -26,6 +28,7 @@ Name[el]=το μήνυμα εσταλη
 Name[es]=Correo enviado
 Name[fi]=Posti on lähetetty
 Name[fr]=Courriel envoyé
+Name[nb]=E-post er sendt
 Name[nl]=E-mail is verzonden
 Name[pt]=O correio foi enviado
 Name[pt_BR]=E-mail enviado
@@ -37,12 +40,15 @@ Name[sr@latin]=Pošta je poslata
 Name[sv]=E-post har skickats
 Name[uk]=Пошту надіслано
 Name[x-test]=xxMail is sentxx
+Name[zh_TW]=郵件已送出
 Action=Popup
 
 [Event/mailsendfailed]
 Name=Send mail failed
 Name[cs]=Odesílání e-mailu selhalo
 Name[de]=Das Versenden der E-Mail ist fehlgeschlagen
+Name[es]=Falló el envío del correo
+Name[fi]=Postin lähetys epäonnistui
 Name[nl]=Verzenden van e-mail is mislukt
 Name[pt]=O envio do correio foi mal-sucedido
 Name[pt_BR]=Ocorreu um erro no envio do e-mail
@@ -50,5 +56,6 @@ Name[sk]=Poslanie mailu zlyhalo
 Name[sv]=Misslyckades skicka brev
 Name[uk]=Спроба надсилання зазнала невдачі
 Name[x-test]=xxSend mail failedxx
+Name[zh_TW]=傳送郵件失敗
 Action=Popup
 

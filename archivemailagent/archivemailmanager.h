@@ -34,7 +34,7 @@ class ArchiveMailManager : public QObject
 public:
     explicit ArchiveMailManager(QObject *parent = 0);
     ~ArchiveMailManager();
-    void removeCollection(const Akonadi::Collection& collection);
+    void removeCollection(const Akonadi::Collection &collection);
     void backupDone(ArchiveMailInfo *info);
     void pause();
     void resume();

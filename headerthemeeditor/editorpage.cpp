@@ -16,7 +16,8 @@
 */
 
 #include "editorpage.h"
-#include "editor.h"
+#include "editorwidget.h"
+#include "previewwidget.h"
 #include "themetemplatewidget.h"
 
 #include <KTextEdit>
@@ -24,20 +25,37 @@
 #include <KLocale>
 #include <KZip>
 #include <KConfigGroup>
+#include <KMessageBox>
 
 #include <QSplitter>
 #include <QVBoxLayout>
 #include <QTextStream>
 #include <QDir>
 
-EditorPage::EditorPage(QWidget *parent)
+EditorPage::EditorPage(PageType type, const QString &projectDirectory, QWidget *parent)
     : QWidget(parent),
-      mChanged(false)
+      mType(type),
+      mWidgetSplitter(0)
 {
     QVBoxLayout *lay = new QVBoxLayout;
+
     mMainSplitter = new QSplitter;
-    lay->addWidget(mMainSplitter);
-    mEditor = new Editor;
+    if (mType == MainPage) {
+        mWidgetSplitter = new QSplitter;
+        mWidgetSplitter->setOrientation(Qt::Vertical);
+        mWidgetSplitter->setChildrenCollapsible(false);
+        lay->addWidget(mWidgetSplitter);
+
+        mWidgetSplitter->addWidget(mMainSplitter);
+
+        mPreview = new PreviewWidget(projectDirectory);
+        mWidgetSplitter->addWidget(mPreview);
+        connect(mPreview, SIGNAL(needUpdateViewer()), this, SIGNAL(needUpdateViewer()));
+    } else {
+        lay->addWidget(mMainSplitter);
+    }
+
+    mEditor = new EditorWidget;
 
     mMainSplitter->addWidget(mEditor);
     mMainSplitter->setChildrenCollapsible(false);
@@ -45,25 +63,31 @@ EditorPage::EditorPage(QWidget *parent)
     connect(mThemeTemplate, SIGNAL(insertTemplate(QString)), mEditor, SLOT(insertPlainText(QString)));
     mMainSplitter->addWidget(mThemeTemplate);
 
-    connect(mEditor, SIGNAL(textChanged()), this, SLOT(slotChanged()));
+    connect(mEditor, SIGNAL(textChanged()), this, SIGNAL(changed()));
 
-    KConfigGroup group( KGlobal::config(), "EditorPage" );
-    QList<int> size;
-    size << 400 << 100;
 
-    mMainSplitter->setSizes(group.readEntry( "mainSplitter", size));
+    if (mType == MainPage) {
+        KConfigGroup group( KGlobal::config(), "EditorPage" );
+        QList<int> size;
+        size << 400 << 100;
+        mMainSplitter->setSizes(group.readEntry( "mainSplitter", size));
+        mWidgetSplitter->setSizes(group.readEntry( "widgetSplitter", size));
+    }
     setLayout(lay);
 }
 
 EditorPage::~EditorPage()
 {
-    KConfigGroup group( KGlobal::config(), "EditorPage" );
-    group.writeEntry( "mainSplitter", mMainSplitter->sizes());
+    if (mType == MainPage) {
+        KConfigGroup group( KGlobal::config(), "EditorPage" );
+        group.writeEntry( "mainSplitter", mMainSplitter->sizes());
+        group.writeEntry("widgetSplitter", mWidgetSplitter->sizes());
+    }
 }
 
-void EditorPage::slotChanged()
+void EditorPage::insertFile(const QString &filename)
 {
-    mChanged = true;
+    mEditor->insertFile(filename);
 }
 
 void EditorPage::createZip(const QString &themeName, KZip *zip)
@@ -72,6 +96,9 @@ void EditorPage::createZip(const QString &themeName, KZip *zip)
     tmp.open();
     saveAsFilename(tmp.fileName());
     const bool fileAdded  = zip->addLocalFile(tmp.fileName(), themeName + QLatin1Char('/') + mPageFileName);
+    if (!fileAdded) {
+        KMessageBox::error(this, i18n("We can not add file in zip file"), i18n("Failed to add file."));
+    }
 }
 
 void EditorPage::loadTheme(const QString &path)
@@ -82,7 +109,6 @@ void EditorPage::loadTheme(const QString &path)
         const QString str = QString::fromUtf8(data);
         file.close();
         mEditor->setPlainText(str);
-        mChanged = false;
     }
 }
 
@@ -90,7 +116,6 @@ void EditorPage::saveTheme(const QString &path)
 {
     const QString filename = path + QDir::separator() + mPageFileName;
     saveAsFilename(filename);
-    mChanged = false;
 }
 
 void EditorPage::saveAsFilename(const QString &filename)
@@ -114,16 +139,20 @@ QString EditorPage::pageFileName() const
     return mPageFileName;
 }
 
-bool EditorPage::wasChanged() const
-{
-    return mChanged;
-}
-
 void EditorPage::installTheme(const QString &themePath)
 {
     const QString filename = themePath + QDir::separator() + mPageFileName;
     saveAsFilename(filename);
 }
 
+PreviewWidget *EditorPage::preview() const
+{
+    return mPreview;
+}
+
+EditorPage::PageType EditorPage::pageType() const
+{
+    return mType;
+}
 
 #include "editorpage.moc"

@@ -17,7 +17,7 @@
 
 #ifndef AUTORESIZEIMAGEUTIL_H
 #define AUTORESIZEIMAGEUTIL_H
-#include <messagecore/attachmentpart.h>
+#include <messagecore/attachment/attachmentpart.h>
 
 namespace MessageComposer {
 namespace Utils {

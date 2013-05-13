@@ -57,6 +57,7 @@ void ThemeEditorMainWindow::updateActions()
     mUploadTheme->setEnabled(projectDirectoryIsEmpty);
     mSaveAction->setEnabled(projectDirectoryIsEmpty);
     mInstallTheme->setEnabled(projectDirectoryIsEmpty);
+    mInsertFile->setEnabled(projectDirectoryIsEmpty);
 }
 
 void ThemeEditorMainWindow::setupActions()
@@ -73,6 +74,7 @@ void ThemeEditorMainWindow::setupActions()
     mNewThemeAction->setText(i18n("New theme..."));
 
     mOpenAction = KStandardAction::open(this, SLOT(slotOpenTheme()), actionCollection());
+    mOpenAction->setText(i18n("Open theme..."));
     mSaveAction = KStandardAction::save(this, SLOT(slotSaveTheme()), actionCollection());
     mCloseAction = KStandardAction::close( this, SLOT(slotCloseTheme()), actionCollection());
     KStandardAction::quit(this, SLOT(slotQuitApp()), actionCollection() );
@@ -81,6 +83,16 @@ void ThemeEditorMainWindow::setupActions()
     mInstallTheme = new KAction(i18n("Install theme"), this);
     actionCollection()->addAction( QLatin1String( "install_theme" ), mInstallTheme );
     connect(mInstallTheme, SIGNAL(triggered(bool)), SLOT(slotInstallTheme()));
+
+    mInsertFile = new KAction(i18n("Insert File..."), this);
+    actionCollection()->addAction( QLatin1String( "insert_file" ), mInsertFile );
+    connect(mInsertFile, SIGNAL(triggered(bool)), SLOT(slotInsertFile()));
+
+}
+
+void ThemeEditorMainWindow::slotInsertFile()
+{
+    mThemeEditor->insertFile();
 }
 
 void ThemeEditorMainWindow::slotConfigure()
@@ -115,7 +127,7 @@ bool ThemeEditorMainWindow::slotSaveTheme()
 {
     bool result = false;
     if (mThemeEditor)
-        result = mThemeEditor->saveTheme();
+        result = mThemeEditor->saveTheme(false);
     return result;
 }
 
@@ -129,16 +141,16 @@ void ThemeEditorMainWindow::slotOpenTheme()
     if (!saveCurrentProject(false))
         return;
 
-    const QString directory = KFileDialog::getExistingDirectory(KUrl(), this, i18n("Select theme"));
+    const QString directory = KFileDialog::getExistingDirectory(KUrl( "kfiledialog:///OpenTheme" ), this, i18n("Select theme directory"));
     if (!directory.isEmpty()) {
         const QString filename = directory + QDir::separator() + QLatin1String("theme.themerc");
         QFile file(filename);
         if (!file.exists()) {
-            KMessageBox::error(this, i18n("Directory doesn't contains a theme file. We can not load theme."));
+            KMessageBox::error(this, i18n("Directory does not contain a theme file. We can not load theme."));
             return;
         }
 
-        mThemeEditor = new ThemeEditorPage(QString());
+        mThemeEditor = new ThemeEditorPage(QString(), QString());
         mThemeEditor->loadTheme(filename);
         setCentralWidget(mThemeEditor);
         updateActions();
@@ -168,8 +180,7 @@ bool ThemeEditorMainWindow::saveCurrentProject(bool createNewTheme)
             projectDirectory = dialog->directory();
         }
         if (!projectDirectory.isEmpty()) {
-            mThemeEditor = new ThemeEditorPage(newTheme);
-            mThemeEditor->setProjectDirectory(projectDirectory);
+            mThemeEditor = new ThemeEditorPage(projectDirectory, newTheme);
             setCentralWidget(mThemeEditor);
         } else {
             setCentralWidget(0);

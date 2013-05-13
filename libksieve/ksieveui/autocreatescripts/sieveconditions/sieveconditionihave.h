@@ -15,31 +15,34 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#ifndef SIEVECONDITIONIHAVE_H
+#define SIEVECONDITIONIHAVE_H
 
-#ifndef PREVIEWPAGE_H
-#define PREVIEWPAGE_H
+#include "sievecondition.h"
 
-#include <QWidget>
-namespace MessageViewer {
-class Viewer;
-}
-
-class PreviewPage : public QWidget
+namespace KSieveUi {
+class SieveConditionIhave : public SieveCondition
 {
     Q_OBJECT
 public:
-    explicit PreviewPage(QWidget *parent = 0);
-    ~PreviewPage();
+    SieveConditionIhave(QObject *parent = 0);
 
-    void createScreenShot(const QString &fileName);
-    void loadConfig();
+    /**
+     * Static function that creates a filter action of this type.
+     */
+    static SieveCondition *newAction();
 
-public Q_SLOTS:
-    void slotUpdateViewer();
+    QWidget *createParamWidget( QWidget *parent ) const;
 
-private:
-    QByteArray mDefaultEmail;
-    MessageViewer::Viewer *mViewer;
+    QString code(QWidget *parent) const;
+
+    QStringList needRequires(QWidget *parent) const;
+
+    bool needCheckIfServerHasCapability() const;
+
+    QString serverNeedsCapability() const;
 };
+}
 
-#endif // PREVIEWPAGE_H
+
+#endif // SIEVECONDITIONIHAVE_H

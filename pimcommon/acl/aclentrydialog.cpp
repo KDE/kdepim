@@ -39,12 +39,12 @@ using namespace PimCommon;
 
 class AclEntryDialog::Private
 {
-  public:
+public:
     Private( AclEntryDialog *qq )
-      : q( qq ),
-        mButtonGroup(0),
-        mUserIdLineEdit(0),
-        mButtonLayout(0)
+        : q( qq ),
+          mButtonGroup(0),
+          mUserIdLineEdit(0),
+          mButtonLayout(0)
     {
     }
 
@@ -60,129 +60,129 @@ class AclEntryDialog::Private
 
 void AclEntryDialog::Private::slotChanged()
 {
-  q->enableButtonOk( !mUserIdLineEdit->text().isEmpty() && mButtonGroup->checkedButton() != 0 );
+    q->enableButtonOk( !mUserIdLineEdit->text().isEmpty() && mButtonGroup->checkedButton() != 0 );
 }
 
 void AclEntryDialog::Private::slotSelectAddresses()
 {
-  Akonadi::EmailAddressSelectionDialog dlg;
+    Akonadi::EmailAddressSelectionDialog dlg;
 
-  if ( !dlg.exec() ) {
-    return;
-  }
+    if ( !dlg.exec() ) {
+        return;
+    }
 
-  const QString text = !dlg.selectedAddresses().isEmpty() ?
-                         dlg.selectedAddresses().first().quotedEmail() :
-                         QString();
+    const QString text = !dlg.selectedAddresses().isEmpty() ?
+                dlg.selectedAddresses().first().quotedEmail() :
+                QString();
 
-  mUserIdLineEdit->setText( text );
+    mUserIdLineEdit->setText( text );
 }
 
 AclEntryDialog::AclEntryDialog( QWidget *parent )
-  : KDialog( parent ), d( new Private( this ) )
+    : KDialog( parent ), d( new Private( this ) )
 {
-  setButtons( Ok | Cancel );
+    setButtons( Ok | Cancel );
 
-  QWidget *page = new QWidget( this );
-  setMainWidget( page );
+    QWidget *page = new QWidget( this );
+    setMainWidget( page );
 
-  QGridLayout *layout = new QGridLayout( page );
-  layout->setSpacing( spacingHint() );
-  layout->setMargin( 0 );
+    QGridLayout *layout = new QGridLayout( page );
+    layout->setSpacing( spacingHint() );
+    layout->setMargin( 0 );
 
-  QLabel *label = new QLabel( i18n( "&User identifier:" ), page );
-  layout->addWidget( label, 0, 0 );
+    QLabel *label = new QLabel( i18n( "&User identifier:" ), page );
+    layout->addWidget( label, 0, 0 );
 
-  d->mUserIdLineEdit = new KPIM::AddresseeLineEdit( page );
-  layout->addWidget( d->mUserIdLineEdit, 0, 1 );
-  label->setBuddy( d->mUserIdLineEdit );
-  d->mUserIdLineEdit->setWhatsThis(
-    i18nc( "@info:whatsthis",
-           "The User Identifier is the login of the user on the IMAP server. "
-           "This can be a simple user name or the full email address of the user; "
-           "the login for your own account on the server will tell you which one it is." ) );
+    d->mUserIdLineEdit = new KPIM::AddresseeLineEdit( page );
+    layout->addWidget( d->mUserIdLineEdit, 0, 1 );
+    label->setBuddy( d->mUserIdLineEdit );
+    d->mUserIdLineEdit->setWhatsThis(
+                i18nc( "@info:whatsthis",
+                       "The User Identifier is the login of the user on the IMAP server. "
+                       "This can be a simple user name or the full email address of the user; "
+                       "the login for your own account on the server will tell you which one it is." ) );
 
-  QPushButton *button = new QPushButton( i18nc( "select an email address", "Se&lect..." ), page );
-  layout->addWidget( button, 0, 2 );
+    QPushButton *button = new QPushButton( i18nc( "select an email address", "Se&lect..." ), page );
+    layout->addWidget( button, 0, 2 );
 
-  QGroupBox *groupBox = new QGroupBox( i18n( "Permissions" ), page );
-  d->mButtonLayout = new QVBoxLayout( groupBox );
+    QGroupBox *groupBox = new QGroupBox( i18n( "Permissions" ), page );
+    d->mButtonLayout = new QVBoxLayout( groupBox );
 
-  d->mButtonGroup = new QButtonGroup( groupBox );
+    d->mButtonGroup = new QButtonGroup( groupBox );
 
-  for ( unsigned int i = 0; i < AclUtils::standardPermissionsCount(); ++i ) {
-    const KIMAP::Acl::Rights permissions = AclUtils::permissionsForIndex( i );
+    for ( unsigned int i = 0; i < AclUtils::standardPermissionsCount(); ++i ) {
+        const KIMAP::Acl::Rights permissions = AclUtils::permissionsForIndex( i );
 
-    QRadioButton *radioButton =
-      new QRadioButton( AclUtils::permissionsToUserString( permissions ), groupBox );
-    d->mButtonLayout->addWidget( radioButton );
-    d->mButtonGroup->addButton( radioButton, permissions );
-  }
+        QRadioButton *radioButton =
+                new QRadioButton( AclUtils::permissionsToUserString( permissions ), groupBox );
+        d->mButtonLayout->addWidget( radioButton );
+        d->mButtonGroup->addButton( radioButton, permissions );
+    }
 
-  d->mButtonLayout->addStretch( 1 );
-  layout->addWidget( groupBox, 1, 0, 1, 3 );
+    d->mButtonLayout->addStretch( 1 );
+    layout->addWidget( groupBox, 1, 0, 1, 3 );
 
-  label =
-    new QLabel(
-      i18n( "<b>Note: </b>Renaming requires write permissions on the parent folder." ), page );
-  layout->addWidget( label, 2, 0, 1, 3 );
-  layout->setRowStretch( 2, 10 );
+    label =
+            new QLabel(
+                i18n( "<b>Note: </b>Renaming requires write permissions on the parent folder." ), page );
+    layout->addWidget( label, 2, 0, 1, 3 );
+    layout->setRowStretch( 2, 10 );
 
-  connect( d->mUserIdLineEdit, SIGNAL(textChanged(QString)), SLOT(slotChanged()) );
-  connect( button, SIGNAL(clicked()), SLOT(slotSelectAddresses()) );
-  connect( d->mButtonGroup, SIGNAL(buttonClicked(int)), SLOT(slotChanged()) );
-  enableButtonOk( false );
+    connect( d->mUserIdLineEdit, SIGNAL(textChanged(QString)), SLOT(slotChanged()) );
+    connect( button, SIGNAL(clicked()), SLOT(slotSelectAddresses()) );
+    connect( d->mButtonGroup, SIGNAL(buttonClicked(int)), SLOT(slotChanged()) );
+    enableButtonOk( false );
 
-  d->mUserIdLineEdit->setFocus();
+    d->mUserIdLineEdit->setFocus();
 
-  // Ensure the lineedit is rather wide so that email addresses can be read in it
-  incrementInitialSize( QSize( 200, 0 ) );
+    // Ensure the lineedit is rather wide so that email addresses can be read in it
+    incrementInitialSize( QSize( 200, 0 ) );
 }
 
 AclEntryDialog::~AclEntryDialog()
 {
-  delete d;
+    delete d;
 }
 
 void AclEntryDialog::setUserId( const QString &userId )
 {
-  d->mUserIdLineEdit->setText( userId );
+    d->mUserIdLineEdit->setText( userId );
 
-  enableButtonOk( !userId.isEmpty() );
+    enableButtonOk( !userId.isEmpty() );
 }
 
 QString AclEntryDialog::userId() const
 {
-  return d->mUserIdLineEdit->text();
+    return d->mUserIdLineEdit->text();
 }
 
 void AclEntryDialog::setPermissions( KIMAP::Acl::Rights permissions )
 {
-  QAbstractButton *button = d->mButtonGroup->button( KIMAP::Acl::normalizedRights( permissions ) );
+    QAbstractButton *button = d->mButtonGroup->button( KIMAP::Acl::normalizedRights( permissions ) );
 
-  if ( button ) {
-    button->setChecked( true );
-  } else {
-    QRadioButton *radioButton =
-      new QRadioButton( AclUtils::permissionsToUserString( permissions ) );
+    if ( button ) {
+        button->setChecked( true );
+    } else {
+        QRadioButton *radioButton =
+                new QRadioButton( AclUtils::permissionsToUserString( permissions ) );
 
-    d->mButtonLayout->addWidget( radioButton );
-    d->mButtonGroup->addButton( radioButton, permissions );
-  }
+        d->mButtonLayout->addWidget( radioButton );
+        d->mButtonGroup->addButton( radioButton, permissions );
+    }
 
-  d->mCustomPermissions = permissions;
+    d->mCustomPermissions = permissions;
 }
 
 KIMAP::Acl::Rights AclEntryDialog::permissions() const
 {
-  QAbstractButton *button = d->mButtonGroup->checkedButton();
+    QAbstractButton *button = d->mButtonGroup->checkedButton();
 
-  if ( !button ) {
-    return d->mCustomPermissions;
-  }
+    if ( !button ) {
+        return d->mCustomPermissions;
+    }
 
-  return KIMAP::Acl::denormalizedRights(
-    static_cast<KIMAP::Acl::Rights>( d->mButtonGroup->id( button ) ) );
+    return KIMAP::Acl::denormalizedRights(
+                static_cast<KIMAP::Acl::Rights>( d->mButtonGroup->id( button ) ) );
 }
 
 #include "aclentrydialog_p.moc"

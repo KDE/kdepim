@@ -52,6 +52,7 @@ int main( int argc, char *argv[] )
     KUniqueApplication app;
     global_init();
     KGlobal::locale()->insertCatalog("libkblog");
+    KGlobal::locale()->insertCatalog("libkxmlrpcclient");
 
     MainWindow *bilbo = new MainWindow;
 

@@ -19,40 +19,28 @@
 #define SIEVESCRIPTPAGE_H
 
 #include <QWidget>
-class QRadioButton;
-class QAbstractButton;
+#include "sievescriptblockwidget.h"
 
 namespace KSieveUi {
-class SieveConditionWidgetLister;
-class SieveActionWidgetLister;
-
+class SieveScriptBlockWidget;
+class SieveScriptTabWidget;
 class SieveScriptPage : public QWidget
 {
     Q_OBJECT
 public:
-
-    enum MatchCondition {
-        OrCondition,
-        AndCondition,
-        AllCondition
-    };
-
     explicit SieveScriptPage(QWidget *parent = 0);
     ~SieveScriptPage();
 
     void generatedScript(QString &script, QStringList &requires);
 
-    MatchCondition matchCondition() const;
-
 private Q_SLOTS:
-    void slotRadioClicked(QAbstractButton*);
+    void slotAddNewBlock(QWidget* widget,KSieveUi::SieveScriptBlockWidget::BlockType type);
+    void slotCloseTab(int);
+
 private:
-    MatchCondition mMatchCondition;
-    SieveConditionWidgetLister *mScriptConditionLister;
-    SieveActionWidgetLister *mScriptActionLister;
-    QRadioButton *mMatchAll;
-    QRadioButton *mMatchAny;
-    QRadioButton *mAllMessageRBtn;
+    QString blockName(KSieveUi::SieveScriptBlockWidget::BlockType type) const;
+    SieveScriptBlockWidget *createScriptBlock(KSieveUi::SieveScriptBlockWidget::BlockType type);
+    SieveScriptTabWidget *mTabWidget;
 };
 }
 

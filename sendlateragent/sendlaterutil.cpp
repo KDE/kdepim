@@ -19,7 +19,19 @@
 #include "sendlaterutil.h"
 #include "sendlaterinfo.h"
 
+bool SendLaterUtil::mailWillSendToday(SendLaterInfo *info)
+{
+    //TODO
+    return true;
+}
+
 void SendLaterUtil::checkTime(SendLaterInfo *info)
 {
     //TODO
+}
+
+
+bool SendLaterUtil::compareSendLaterInfo(SendLaterInfo *left, SendLaterInfo *right)
+{
+  return left->dateTime() < right->dateTime();
 }

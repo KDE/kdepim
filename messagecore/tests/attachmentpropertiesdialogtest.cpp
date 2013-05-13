@@ -32,8 +32,8 @@
 #include <kmime/kmime_content.h>
 using namespace KMime;
 
-#include <messagecore/attachmentpart.h>
-#include <messagecore/attachmentpropertiesdialog.h>
+#include <messagecore/attachment/attachmentpart.h>
+#include <messagecore/attachment/attachmentpropertiesdialog.h>
 using namespace MessageCore;
 
 QTEST_KDEMAIN( AttachmentPropertiesDialogTest, GUI )

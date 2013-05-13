@@ -25,7 +25,7 @@
 #include "templatesconfiguration.h"
 #endif
 
-#include <messagecore/attachmentcollector.h>
+#include <messagecore/attachment/attachmentcollector.h>
 #include <messagecore/imagecollector.h>
 #include <messagecore/stringutil.h>
 

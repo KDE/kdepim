@@ -66,28 +66,28 @@ PostsTabWidget::~PostsTabWidget()
 
 void PostsTabWidget::slotTabContextMenuRequest( const QPoint &pos )
 {
-  QTabBar *bar = tabBar();
-  if ( count() < 1 ) return;
+    QTabBar *bar = tabBar();
+    if ( count() < 1 ) return;
 
-  const int indexBar = bar->tabAt( bar->mapFrom( this, pos ) );
-  if ( indexBar == -1 )
-      return;
+    const int indexBar = bar->tabAt( bar->mapFrom( this, pos ) );
+    if ( indexBar == -1 )
+        return;
 
-  KMenu menu( this );
-  QAction *closeTab = menu.addAction( i18nc( "@action:inmenu", "Close Tab" ) );
-  closeTab->setIcon( KIcon( QLatin1String( "tab-close" ) ) );
+    KMenu menu( this );
+    QAction *closeTab = menu.addAction( i18nc( "@action:inmenu", "Close Tab" ) );
+    closeTab->setIcon( KIcon( QLatin1String( "tab-close" ) ) );
 
-  QAction *allOther = menu.addAction( i18nc("@action:inmenu", "Close All Other Tabs" ) );
-  allOther->setEnabled( count() > 1 );
-  allOther->setIcon( KIcon( QLatin1String( "tab-close-other" ) ) );
+    QAction *allOther = menu.addAction( i18nc("@action:inmenu", "Close All Other Tabs" ) );
+    allOther->setEnabled( count() > 1 );
+    allOther->setIcon( KIcon( QLatin1String( "tab-close-other" ) ) );
 
-  QAction *action = menu.exec( mapToGlobal( pos ) );
+    QAction *action = menu.exec( mapToGlobal( pos ) );
 
-  if ( action == allOther ) { // Close all other tabs
-      Q_EMIT tabRemoveAllExclude(indexBar);
-  } else if (action == closeTab) {
-      Q_EMIT tabCloseRequested(indexBar);
-  }
+    if ( action == allOther ) { // Close all other tabs
+        Q_EMIT tabRemoveAllExclude(indexBar);
+    } else if (action == closeTab) {
+        Q_EMIT tabCloseRequested(indexBar);
+    }
 }
 
 

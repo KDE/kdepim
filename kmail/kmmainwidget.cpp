@@ -55,6 +55,7 @@
 #include "tagselectdialog.h"
 #include "archivemailagentinterface.h"
 #include "createnewcontactjob.h"
+#include "sendlateragentinterface.h"
 
 #include "pimcommon/acl/collectionaclpage.h"
 #include "mailcommon/collectiongeneralpage.h"
@@ -392,11 +393,11 @@ void KMMainWidget::destruct()
   delete mMoveOrCopyToDialog;
   delete mSelectFromAllFoldersDialog;
 
-  disconnect( kmkernel->folderCollectionMonitor(), SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection)), 0, 0);
-  disconnect( kmkernel->folderCollectionMonitor(), SIGNAL(itemRemoved(Akonadi::Item)), 0, 0);
-  disconnect( kmkernel->folderCollectionMonitor(), SIGNAL(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)), 0, 0);
-  disconnect( kmkernel->folderCollectionMonitor(), SIGNAL(collectionChanged(Akonadi::Collection,QSet<QByteArray>)), 0, 0);
-  disconnect( kmkernel->folderCollectionMonitor(), SIGNAL(collectionStatisticsChanged(Akonadi::Collection::Id,Akonadi::CollectionStatistics)), 0, 0);
+  disconnect( kmkernel->folderCollectionMonitor(), SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection)), this, 0);
+  disconnect( kmkernel->folderCollectionMonitor(), SIGNAL(itemRemoved(Akonadi::Item)), this, 0);
+  disconnect( kmkernel->folderCollectionMonitor(), SIGNAL(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)), this, 0);
+  disconnect( kmkernel->folderCollectionMonitor(), SIGNAL(collectionChanged(Akonadi::Collection,QSet<QByteArray>)), this, 0);
+  disconnect( kmkernel->folderCollectionMonitor(), SIGNAL(collectionStatisticsChanged(Akonadi::Collection::Id,Akonadi::CollectionStatistics)), this, 0);
 
   mDestructed = true;
 }
@@ -654,7 +655,7 @@ void KMMainWidget::folderSelected( const Akonadi::Collection & col )
 
 void KMMainWidget::slotShowSelectedFolderInPane()
 {
-  if ( mCurrentFolder ) {
+  if ( mCurrentFolder && mCurrentFolder->collection().isValid() ) {
     mMessagePane->setCurrentFolder( mCurrentFolder->collection(), false , mPreSelectionMode );
   }
 }
@@ -1733,7 +1734,7 @@ void KMMainWidget::slotEmptyFolder()
 //-----------------------------------------------------------------------------
 void KMMainWidget::slotArchiveFolder()
 {
-  if ( mCurrentFolder ) {
+  if ( mCurrentFolder && mCurrentFolder->collection().isValid() ) {
     KMail::ArchiveFolderDialog archiveDialog;
     archiveDialog.setFolder( mCurrentFolder->collection() );
     archiveDialog.exec();
@@ -1744,6 +1745,7 @@ void KMMainWidget::slotArchiveFolder()
 void KMMainWidget::slotRemoveFolder()
 {
   if ( !mCurrentFolder ) return;
+  if ( !mCurrentFolder->collection().isValid() ) return;
   if ( mCurrentFolder->isSystemFolder() ) return;
   if ( mCurrentFolder->isReadOnly() ) return;
 
@@ -2462,7 +2464,7 @@ void KMMainWidget::slotApplyFilters()
 
 void KMMainWidget::slotApplyFiltersOnFolder()
 {
-    if ( mCurrentFolder ) {
+    if ( mCurrentFolder && mCurrentFolder->collection().isValid() ) {
         Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( mCurrentFolder->collection(), this );
         connect( job, SIGNAL(result(KJob*)), this, SLOT(slotFetchItemsForFolderDone(KJob*)) );
     }
@@ -3273,6 +3275,12 @@ void KMMainWidget::setupActions()
     KAction *action = new KAction(i18n("&Configure Automatic Archiving..."), this);
     actionCollection()->addAction("tools_automatic_archiving", action );
     connect(action, SIGNAL(triggered(bool)), SLOT(slotConfigureAutomaticArchiving()));
+  }
+
+  {
+    KAction *action = new KAction(i18n("&Configure send later agent..."), this);
+    actionCollection()->addAction("tools_configure_sendlater", action );
+    connect(action, SIGNAL(triggered(bool)), SLOT(slotConfigureSendLater()));
   }
 
   // Disable the standard action delete key sortcut.
@@ -4144,7 +4152,7 @@ void KMMainWidget::slotAkonadiStandardActionUpdated()
     multiFolder = mFolderTreeWidget->selectedCollections().count() > 1;
   }
   if ( mCollectionProperties ) {
-      if ( mCurrentFolder ) {
+      if ( mCurrentFolder && mCurrentFolder->collection().isValid() ) {
         const Akonadi::AgentInstance instance =
             Akonadi::AgentManager::self()->instance( mCurrentFolder->collection().resource() );
 
@@ -4904,6 +4912,16 @@ void KMMainWidget::slotConfigureAutomaticArchiving()
   } else {
       KMessageBox::error(this,i18n("Archive Mail Agent was not registered."));
   }
+}
+
+void KMMainWidget::slotConfigureSendLater()
+{
+    OrgFreedesktopAkonadiSendLaterAgentInterface sendLaterInterface(QLatin1String("org.freedesktop.Akonadi.SendLaterAgent"), QLatin1String("/SendLaterAgent"),QDBusConnection::sessionBus(), this);
+    if (sendLaterInterface.isValid()) {
+        sendLaterInterface.showConfigureDialog( (qlonglong)winId() );
+    } else {
+        KMessageBox::error(this,i18n("Send Later Agent was not registered."));
+    }
 }
 
 void KMMainWidget::updatePaneTagComboBox()

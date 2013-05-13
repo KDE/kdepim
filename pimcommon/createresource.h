@@ -26,16 +26,16 @@
 namespace PimCommon {
 class PIMCOMMON_EXPORT CreateResource  : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit CreateResource();
-  ~CreateResource();
+    explicit CreateResource();
+    ~CreateResource();
 
-  QString createResource( const QString& resources, const QString& name, const QMap<QString, QVariant>& settings );
+    QString createResource( const QString& resources, const QString& name, const QMap<QString, QVariant>& settings );
 
 Q_SIGNALS:
-  void createResourceInfo(const QString&);
-  void createResourceError(const QString&);
+    void createResourceInfo(const QString&);
+    void createResourceError(const QString&);
 };
 }
 

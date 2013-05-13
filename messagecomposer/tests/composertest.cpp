@@ -34,7 +34,7 @@ using namespace KMime;
 #include <messagecomposer/textpart.h>
 using namespace Message;
 
-#include <messagecore/attachmentpart.h>
+#include <messagecore/attachment/attachmentpart.h>
 #include <boost/shared_ptr.hpp>
 using MessageCore::AttachmentPart;
 

@@ -92,12 +92,10 @@ public slots:
     void setMode( Util::HtmlMode m, UpdateMode mode = Update );
 
 signals:
-
     /** The user has clicked the status bar. */
     void clicked();
 
 protected:
-
     void mousePressEvent( QMouseEvent * event );
 
 private:

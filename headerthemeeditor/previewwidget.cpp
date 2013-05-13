@@ -15,33 +15,58 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "previewpage.h"
+#include "previewwidget.h"
 #include "themeeditorutil.h"
 #include "messageviewer/viewer.h"
+#include "messageviewer/headerstrategy.h"
+#include "messageviewer/header/grantleeheaderteststyle.h"
+
 #include <KMime/Message>
 #include <KPushButton>
 #include <KLocale>
 #include <KConfigGroup>
-#include <QVBoxLayout>
 
-PreviewPage::PreviewPage(QWidget *parent)
+#include <QVBoxLayout>
+#include <QDir>
+#include <QDebug>
+
+PreviewWidget::PreviewWidget(const QString &projectDirectory, QWidget *parent)
     : QWidget(parent)
 {
     QVBoxLayout *lay = new QVBoxLayout;
     mViewer = new MessageViewer::Viewer(this);
+    mGrantleeHeaderStyle = new MessageViewer::GrantleeHeaderTestStyle;
+    mGrantleeHeaderStyle->setAbsolutePath(projectDirectory);
+    //Default
+    mGrantleeHeaderStyle->setMainFilename(QLatin1String("header.html"));
+    mViewer->setHeaderStyleAndStrategy(mGrantleeHeaderStyle,
+                                       MessageViewer::HeaderStrategy::create(QString()));
     lay->addWidget(mViewer);
     KPushButton *update = new KPushButton(i18n("Update view"));
-    connect(update, SIGNAL(clicked(bool)),SLOT(slotUpdateViewer()));
+    connect(update, SIGNAL(clicked(bool)), this, SIGNAL(needUpdateViewer()));
     lay->addWidget(update);
     setLayout(lay);
     loadConfig();
 }
 
-PreviewPage::~PreviewPage()
+PreviewWidget::~PreviewWidget()
 {
+    delete mGrantleeHeaderStyle;
 }
 
-void PreviewPage::loadConfig()
+void PreviewWidget::slotExtraHeaderDisplayChanged(const QStringList &headers)
+{
+    mGrantleeHeaderStyle->setExtraDisplayHeaders(headers);
+    updateViewer();
+}
+
+void PreviewWidget::slotMainFileNameChanged(const QString &filename)
+{
+    mGrantleeHeaderStyle->setMainFilename(filename);
+    updateViewer();
+}
+
+void PreviewWidget::loadConfig()
 {
     KSharedConfig::Ptr config = KGlobal::config();
     if (config->hasGroup(QLatin1String("Global"))) {
@@ -50,10 +75,10 @@ void PreviewPage::loadConfig()
     } else {
         mDefaultEmail = themeeditorutil::defaultMail().toLatin1();
     }
-    slotUpdateViewer();
+    updateViewer();
 }
 
-void PreviewPage::slotUpdateViewer()
+void PreviewWidget::updateViewer()
 {
     KMime::Message *msg = new KMime::Message;
     msg->setContent( mDefaultEmail );
@@ -61,9 +86,17 @@ void PreviewPage::slotUpdateViewer()
     mViewer->setMessage(KMime::Message::Ptr(msg));
 }
 
-void PreviewPage::createScreenShot(const QString &fileName)
+
+void PreviewWidget::createScreenShot(const QString &fileName)
 {
     mViewer->saveMainFrameScreenshotInFile(fileName);
 }
 
-#include "previewpage.moc"
+void PreviewWidget::setThemePath(const QString &projectDirectory, const QString &mainPageFileName)
+{
+    mGrantleeHeaderStyle->setAbsolutePath(projectDirectory);
+    mGrantleeHeaderStyle->setMainFilename(mainPageFileName);
+    updateViewer();
+}
+
+#include "previewwidget.moc"

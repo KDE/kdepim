@@ -70,6 +70,12 @@ set(libmessageviewer_SRCS
   header/entrepriseheaderstyle.cpp
   header/headerstyle_util.cpp
   header/fancyheaderstyle.cpp
+  header/customheadersettingwidget.cpp
+  header/grantleeheaderformatter.cpp
+  header/grantleethememanager.cpp
+  header/grantleetheme.cpp
+  header/grantleeheaderteststyle.cpp
+  header/kxface.cpp
   htmlquotecolorer.cpp
   widgets/htmlstatusbar.cpp
   widgets/vcardviewer.cpp
@@ -93,11 +99,6 @@ set(libmessageviewer_SRCS
   viewer.cpp
   viewer_p.cpp
   webkitparthtmlwriter.cpp
-  header/customheadersettingwidget.cpp
-  header/grantleeheaderformatter.cpp
-  header/grantleethememanager.cpp
-  header/grantleetheme.cpp
-  header/kxface.cpp
   messagedisplayformatattribute.cpp
   scamdetection/scamdetectionwarningwidget.cpp
   scamdetection/scamdetection.cpp
@@ -137,6 +138,7 @@ target_link_libraries(messageviewer messagecore kdepim kpgp kleo
 )
 
 include_directories(
+    ${CMAKE_SOURCE_DIR}/messagecore
     ${CMAKE_SOURCE_DIR}/pimcommon
     ${CMAKE_SOURCE_DIR}/libkleo
     ${Boost_INCLUDE_DIR}

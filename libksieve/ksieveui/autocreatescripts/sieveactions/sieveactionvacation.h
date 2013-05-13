@@ -15,29 +15,27 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef EDITOR_H
-#define EDITOR_H
 
-#include <KTextEdit>
+#ifndef SIEVEACTIONVACATION_H
+#define SIEVEACTIONVACATION_H
 
-class QCompleter;
-
-class Editor : public KTextEdit
+#include "sieveaction.h"
+namespace KSieveUi {
+class SieveActionVacation : public SieveAction
 {
     Q_OBJECT
 public:
-    explicit Editor(QWidget *parent = 0);
-    ~Editor();
+    SieveActionVacation(QObject *parent = 0);
+    static SieveAction* newAction();
 
-private Q_SLOTS:
-    void slotInsertCompletion( const QString &completion );
-
-protected:
-    void keyPressEvent(QKeyEvent* e);
+    QWidget *createParamWidget( QWidget *parent ) const;
+    QString code(QWidget *) const;
+    QString serverNeedsCapability() const;
+    bool needCheckIfServerHasCapability() const;
+    QStringList needRequires() const;
 private:
-    void initCompleter();
-    QString wordUnderCursor() const;
-    QCompleter *m_completer;
+    bool mHasVacationSecondsSupport;
 };
+}
 
-#endif // EDITOR_H
+#endif // SIEVEACTIONVACATION_H

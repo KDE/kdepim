@@ -23,17 +23,13 @@
 
 #include <QDir>
 
-ThemeSession::ThemeSession()
+ThemeSession::ThemeSession(const QString &projectDirectory)
+    : mProjectDirectory(projectDirectory)
 {
 }
 
 ThemeSession::~ThemeSession()
 {
-}
-
-void ThemeSession::setProjectDirectory(const QString &path)
-{
-    mProjectDirectory = path;
 }
 
 QString ThemeSession::projectDirectory() const

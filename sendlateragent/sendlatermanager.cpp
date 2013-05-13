@@ -17,6 +17,7 @@
 
 #include "sendlatermanager.h"
 #include "sendlaterinfo.h"
+#include "sendlaterutil.h"
 
 #include <KSharedConfig>
 #include <KConfigGroup>
@@ -44,11 +45,10 @@ void SendLaterManager::load()
     const int numberOfItems = itemList.count();
     for (int i = 0 ; i < numberOfItems; ++i) {
         KConfigGroup group = mConfig->group(itemList.at(i));
-        SendLaterInfo *info = new SendLaterInfo(group);
+        SendLaterInfo *info = new SendLaterInfo(group);        
         mListSendLaterInfo.append(info);
-        //TODO
-
     }
+    qSort(mListSendLaterInfo.begin(), mListSendLaterInfo.end(), SendLaterUtil::compareSendLaterInfo);
 }
 
 void SendLaterManager::sendDone(SendLaterInfo *info)

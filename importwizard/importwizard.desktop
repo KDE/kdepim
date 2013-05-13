@@ -19,6 +19,7 @@ Name[sr@latin]=Čarobnjak za uvoz
 Name[sv]=Importguide
 Name[uk]=Майстер імпортування
 Name[x-test]=xxImport Wizardxx
+Name[zh_TW]=匯入精靈
 Exec=importwizard
 Type=Application
 Icon=kontact-import-wizard

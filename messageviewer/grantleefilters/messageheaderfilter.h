@@ -25,7 +25,7 @@
 class MessageHeaderEmailShowLink : public Grantlee::Filter
 {
 public:
-    QVariant doFilter(const QVariant& input, const QVariant& argument = QVariant(), bool autoescape = false) const;
+    QVariant doFilter(const QVariant &input, const QVariant &argument = QVariant(), bool autoescape = false) const;
 
     bool isSafe() const;
 };
@@ -33,7 +33,7 @@ public:
 class MessageHeaderEmailNameOnly : public Grantlee::Filter
 {
 public:
-    QVariant doFilter(const QVariant& input, const QVariant& argument = QVariant(), bool autoescape = false) const;
+    QVariant doFilter(const QVariant &input, const QVariant &argument = QVariant(), bool autoescape = false) const;
 
     bool isSafe() const;
 };

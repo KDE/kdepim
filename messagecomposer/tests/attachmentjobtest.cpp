@@ -32,8 +32,8 @@ using namespace KMime;
 #include <messagecomposer/attachmentjob.h>
 using namespace Message;
 
-#include <messagecore/attachmentfromurljob.h>
-#include <messagecore/attachmentpart.h>
+#include <messagecore/attachment/attachmentfromurljob.h>
+#include <messagecore/attachment/attachmentpart.h>
 #include <boost/shared_ptr.hpp>
 using namespace MessageCore;
 

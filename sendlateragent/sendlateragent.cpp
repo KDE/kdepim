@@ -68,12 +68,13 @@ void SendLaterAgent::addSendLaterItem(qlonglong itemId, qlonglong windowId)
         KSharedConfig::Ptr config = KGlobal::config();
         KConfigGroup group = config->group(QString::fromLatin1("SendLaterItem %1").arg(info->itemId()));
         info->writeConfig(group);
+        SendLaterDialog::SendLaterAction action = dialog->action();
+        //TODO
         config->sync();
         config->reparseConfiguration();
         mManager->load();
-    } else {
-        delete info;
     }
+    delete info;
     delete dialog;
 }
 

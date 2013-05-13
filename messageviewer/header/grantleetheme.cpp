@@ -81,3 +81,12 @@ QString GrantleeTheme::dirName() const
     return mDirName;
 }
 
+void GrantleeTheme::setAbsolutePath(const QString &absPath)
+{
+    mAbsolutePath = absPath;
+}
+
+QString GrantleeTheme::absolutePath() const
+{
+    return mAbsolutePath;
+}

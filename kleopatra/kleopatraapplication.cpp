@@ -233,6 +233,7 @@ KleopatraApplication::KleopatraApplication()
     d->sysTray.show();
 #endif
     setQuitOnLastWindowClosed( false );
+    KWindowSystem::allowExternalProcessWindowActivation();
 }
 
 KleopatraApplication::~KleopatraApplication() {

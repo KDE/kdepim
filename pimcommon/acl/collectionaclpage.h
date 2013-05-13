@@ -47,9 +47,9 @@ class AclManager;
  */
 class PIMCOMMON_EXPORT CollectionAclPage : public Akonadi::CollectionPropertiesPage
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     explicit CollectionAclPage( QWidget *parent = 0 );
 
     void load( const Akonadi::Collection &collection );
@@ -57,10 +57,10 @@ class PIMCOMMON_EXPORT CollectionAclPage : public Akonadi::CollectionPropertiesP
 
     bool canHandle( const Akonadi::Collection &collection ) const;
 
-  protected:
+protected:
     void init();
 
-  private:
+private:
     PimCommon::AclManager *mAclManager;
     // The widget containing the ACL widgets (listview and buttons)
     KHBox* mACLWidget;

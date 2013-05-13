@@ -59,11 +59,14 @@ ThemeConfigureDialog::ThemeConfigureDialog(QWidget *parent)
     connect(this, SIGNAL(defaultClicked()), this, SLOT(slotDefaultClicked()));
     connect(this, SIGNAL(okClicked()), this, SLOT(slotOkClicked()));
     loadConfig();
-    resize(600,400);
 }
 
 ThemeConfigureDialog::~ThemeConfigureDialog()
 {
+    KSharedConfig::Ptr config = KGlobal::config();
+
+    KConfigGroup group = config->group( QLatin1String("ThemeConfigureDialog") );
+    group.writeEntry( "Size", size() );
 }
 
 void ThemeConfigureDialog::slotDefaultClicked()
@@ -87,6 +90,14 @@ void ThemeConfigureDialog::loadConfig()
         mDefaultEmail->setPlainText(group.readEntry("defaultEmail",themeeditorutil::defaultMail()));
     } else {
         mDefaultEmail->setPlainText(themeeditorutil::defaultMail());
+    }
+
+    KConfigGroup group = KConfigGroup( config, "ThemeConfigureDialog" );
+    const QSize sizeDialog = group.readEntry( "Size", QSize() );
+    if ( sizeDialog.isValid() ) {
+        resize( sizeDialog );
+    } else {
+        resize( 600,400);
     }
 }
 

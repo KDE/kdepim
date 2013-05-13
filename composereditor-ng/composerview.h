@@ -34,7 +34,7 @@ class COMPOSEREDITORNG_EXPORT ComposerView : public KWebView
 {
     Q_OBJECT
 public:
-    explicit ComposerView(QWidget * parent = 0);
+    explicit ComposerView(QWidget *parent = 0);
     ~ComposerView();
 
     /**
@@ -92,15 +92,15 @@ public:
 
     virtual void addCreatedActionsToActionCollection(KActionCollection *actionCollection);
 
-    void createActions(const QList<ComposerViewAction>&);
+    void createActions(const QList<ComposerViewAction> &);
 
     void createAllActions();
 
-    void createToolBar(const QList<ComposerViewAction>&lstAction, KToolBar *toolbar);
+    void createToolBar(const QList<ComposerViewAction> &lstAction, KToolBar *toolbar);
 
     void setActionsEnabled(bool enabled);
 
-    void setHtmlContent( const QString& html );
+    void setHtmlContent( const QString &html );
 
     QAction *action(ComposerViewAction actionType) const;
 
@@ -108,15 +108,15 @@ public:
      * @brief evaluateJavascript
      * @param javascript evaluate javascript function.
      */
-    void evaluateJavascript( const QString& javascript);
+    void evaluateJavascript( const QString &javascript);
 
     QMap<QString, QString> localImages() const;
 
 protected:
-    void contextMenuEvent(QContextMenuEvent* event);
-    void mousePressEvent(QMouseEvent * event);
-    void keyPressEvent(QKeyEvent * event);
-    void wheelEvent(QWheelEvent * event);
+    void contextMenuEvent(QContextMenuEvent *event);
+    void mousePressEvent(QMouseEvent *event);
+    void keyPressEvent(QKeyEvent *event);
+    void wheelEvent(QWheelEvent *event);
     void mouseDoubleClickEvent(QMouseEvent *);
 
 Q_SIGNALS:
@@ -129,7 +129,7 @@ private:
     Q_PRIVATE_SLOT( d, void _k_slotSpeakText() )
     Q_PRIVATE_SLOT( d, void _k_slotAdjustActions() )
     Q_PRIVATE_SLOT( d, void _k_setFormatType(QAction *) )
-    Q_PRIVATE_SLOT( d, void _k_slotAddEmoticon(const QString&) )
+    Q_PRIVATE_SLOT( d, void _k_slotAddEmoticon(const QString &) )
     Q_PRIVATE_SLOT( d, void _k_slotInsertHtml() )
     Q_PRIVATE_SLOT( d, void _k_slotAddImage() )
     Q_PRIVATE_SLOT( d, void _k_slotInsertTable() )
@@ -138,11 +138,11 @@ private:
     Q_PRIVATE_SLOT( d, void _k_slotInsertHorizontalRule() )
     Q_PRIVATE_SLOT( d, void _k_insertLink() )
     Q_PRIVATE_SLOT( d, void _k_setFontSize(int) )
-    Q_PRIVATE_SLOT( d, void _k_setFontFamily(const QString&) )
+    Q_PRIVATE_SLOT( d, void _k_setFontFamily(const QString &) )
     Q_PRIVATE_SLOT( d, void _k_slotSpellCheck() )
-    Q_PRIVATE_SLOT( d, void _k_spellCheckerCorrected(const QString& original, int pos, const QString& replacement) )
-    Q_PRIVATE_SLOT( d, void _k_spellCheckerMisspelling(const QString&, int) )
-    Q_PRIVATE_SLOT( d, void _k_slotSpellCheckDone(const QString&) )
+    Q_PRIVATE_SLOT( d, void _k_spellCheckerCorrected(const QString &original, int pos, const QString &replacement) )
+    Q_PRIVATE_SLOT( d, void _k_spellCheckerMisspelling(const QString &, int) )
+    Q_PRIVATE_SLOT( d, void _k_slotSpellCheckDone(const QString &) )
     Q_PRIVATE_SLOT( d, void _k_slotFind() )
     Q_PRIVATE_SLOT( d, void _k_slotReplace() )
     Q_PRIVATE_SLOT( d, void _k_slotDeleteText() )

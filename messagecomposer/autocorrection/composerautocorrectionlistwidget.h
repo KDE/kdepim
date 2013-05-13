@@ -26,12 +26,12 @@ class ComposerAutoCorrectionListWidget : public QListWidget
 {
     Q_OBJECT
 public:
-  explicit ComposerAutoCorrectionListWidget(QWidget *parent = 0);
-  ~ComposerAutoCorrectionListWidget();
+    explicit ComposerAutoCorrectionListWidget(QWidget *parent = 0);
+    ~ComposerAutoCorrectionListWidget();
 protected:
-  void keyPressEvent( QKeyEvent *event );
+    void keyPressEvent( QKeyEvent *event );
 Q_SIGNALS:
-  void deleteSelectedItems();
+    void deleteSelectedItems();
 };
 
 }

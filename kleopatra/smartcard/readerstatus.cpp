@@ -227,13 +227,17 @@ static ReaderStatus::PinState parse_pin_state( const std::string & s ) {
 }
 
 static std::auto_ptr<DefaultAssuanTransaction> gpgagent_transact( shared_ptr<Context> & gpgAgent, const char * command, Error & err ) {
+#ifdef DEBUG_SCREADER
     kDebug() << "gpgagent_transact(" << command << ")";
+#endif
     const AssuanResult res = gpgAgent->assuanTransact( command );
     err = res.error();
     if ( !err.code() )
         err = res.assuanError();
     if ( err.code() ) {
+#ifdef DEBUG_SCREADER
         kDebug() << "gpgagent_transact(" << command << "):" << QString::fromLocal8Bit( err.asString() );
+#endif
         if ( err.code() >= GPG_ERR_ASS_GENERAL && err.code() <= GPG_ERR_ASS_UNKNOWN_INQUIRE ) {
             kDebug() << "Assuan problem, killing context";
             gpgAgent.reset();
@@ -271,7 +275,9 @@ static unsigned int get_event_counter( shared_ptr<Context> & gpgAgent ) {
     if ( err.code() )
         kDebug() << "get_event_counter(): got error" << err.asString();
     if ( t.get() ) {
+#ifdef DEBUG_SCREADER
         kDebug() << "get_event_counter(): got" << t->statusLines();
+#endif
         return parse_event_counter( t->firstStatusLine( "EVENTCOUNTER" ) );
     } else {
         kDebug() << "scd_getattr_status(): t == NULL";
@@ -310,7 +316,9 @@ static bool parse_keypairinfo_and_lookup_key( Context * ctx, const std::string &
 }
 
 static CardInfo get_card_status( const QString & fileName, unsigned int idx, shared_ptr<Context> & gpg_agent ) {
+#ifdef DEBUG_SCREADER
     kDebug() << "get_card_status(" << fileName << ',' << idx << ',' << gpg_agent.get() << ')';
+#endif
     CardInfo ci( fileName, ReaderStatus::CardUsable );
     if ( idx != 0 || !gpg_agent )
         return ci;
@@ -377,20 +385,25 @@ static CardInfo get_card_status( const QString & fileName, unsigned int idx, sha
     if ( kdtools::any( keyPairInfos, !boost::bind( &parse_keypairinfo_and_lookup_key, klc.get(), _1 ) ) )
         ci.status = ReaderStatus::CardCanLearnKeys;
 
+#ifdef DEBUG_SCREADER
     kDebug() << "get_card_status: ci.status " << prettyFlags[ci.status];
+#endif
 
     return ci;
 }
 
 static std::vector<CardInfo> update_cardinfo( const QString & gnupgHomePath, shared_ptr<Context> & gpgAgent ) {
+#ifdef DEBUG_SCREADER
     kDebug() << "<update_cardinfo>";
+#endif
     const QDir gnupgHome( gnupgHomePath );
     if ( !gnupgHome.exists() )
         kWarning() << "gnupg home" << gnupgHomePath << "does not exist!";
 
     const CardInfo ci = get_card_status( gnupgHome.absoluteFilePath( QLatin1String( "reader_0.status" ) ), 0, gpgAgent );
-
+#ifdef DEBUG_SCREADER
     kDebug() << "</update_cardinfo>";
+#endif
     return std::vector<CardInfo>( 1, ci );
 }
 
@@ -398,7 +411,9 @@ static bool check_event_counter_changed( shared_ptr<Context> & gpg_agent, unsign
     const unsigned int oldCounter = counter;
     counter = get_event_counter( gpg_agent );
     if ( oldCounter != counter ) {
+#ifdef DEBUG_SCREADER
         kDebug() << "ReaderStatusThread[2nd]: events:" << oldCounter << "->" << counter ;
+#endif
         return true;
     } else {
         return false;
@@ -539,10 +554,14 @@ namespace {
 
                     while ( m_transactions.empty() ) {
                         // go to sleep waiting for more work:
+#ifdef DEBUG_SCREADER
                         kDebug() << "ReaderStatusThread[2nd]: .zZZ";
+#endif
                         if ( !m_waitForTransactions.wait( &m_mutex, CHECK_INTERVAL ) )
                             m_transactions.push_front( checkTransaction );
+#ifdef DEBUG_SCREADER
                         kDebug() << "ReaderStatusThread[2nd]: .oOO";
+#endif
                     }
 
                     // splice off the first transaction without
@@ -559,8 +578,9 @@ namespace {
                     oldCardInfos = m_cardInfos;
                 }
 
+#ifdef DEBUG_SCREADER
                 kDebug() << "ReaderStatusThread[2nd]: new iteration command=" << command << " ; nullSlot=" << nullSlot;
-
+#endif
                 // now, let's see what we got:
 
                 if ( nullSlot && command == quitTransaction.command )
@@ -591,7 +611,9 @@ namespace {
                     bool anyError = false;
                     while ( nit != nend && oit != oend ) {
                         if ( nit->status != oit->status ) {
+#ifdef DEBUG_SCREADER
                             kDebug() << "ReaderStatusThread[2nd]: slot" << idx << ":" << prettyFlags[oit->status] << "->" << prettyFlags[nit->status];
+#endif
                             emit cardStatusChanged( idx, nit->status );
                         }
                         if ( nit->status == ReaderStatus::CardCanLearnKeys )
@@ -629,8 +651,9 @@ namespace {
                     eventCounter = get_event_counter( gpgAgent );
                 else
                     eventCounter = -1;
-
+#ifdef DEBUG_SCREADER
                 kDebug() << "eventCounter:" << eventCounter;
+#endif
 
             }
         }

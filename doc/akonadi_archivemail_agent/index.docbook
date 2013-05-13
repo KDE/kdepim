@@ -54,6 +54,9 @@
 <title>Introduction</title>
 
 <para>&kapplication; allows to archive mails automatically.</para>
+<para>With this application we can define which folder we will archive and when do it.</para>
+<para>We can specify if we want archive subfolder too</para>
+
 </chapter>
 
 <chapter id="using-kapp">

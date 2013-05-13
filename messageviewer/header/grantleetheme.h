@@ -43,12 +43,16 @@ public:
     void setDirName(const QString &name);
     QString dirName() const;
 
+    void setAbsolutePath(const QString &absPath);
+    QString absolutePath() const;
+
 private:
     QStringList mDisplayExtraHeaders;
     QString mFileName;
     QString mDescription;
     QString mName;
     QString mDirName;
+    QString mAbsolutePath;
 };
 }
 

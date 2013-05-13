@@ -30,6 +30,8 @@ set(ksieveui_LIB_SRCS
   autocreatescripts/sievescriptdescriptiondialog.cpp
   autocreatescripts/sieveactionwidgetlister.cpp
   autocreatescripts/sievescriptpage.cpp
+  autocreatescripts/sievescriptblockwidget.cpp
+  autocreatescripts/sievescripttabwidget.cpp
   autocreatescripts/autocreatescriptutil.cpp
   autocreatescripts/sieveactions/sieveactionlist.cpp
   autocreatescripts/sieveactions/sieveaction.cpp
@@ -47,11 +49,14 @@ set(ksieveui_LIB_SRCS
   autocreatescripts/sieveactions/sieveactionabstracteditheader.cpp
   autocreatescripts/sieveactions/sieveactiondeleteheader.cpp
   autocreatescripts/sieveactions/sieveactionaddheader.cpp
+  autocreatescripts/sieveactions/sieveactionvacation.cpp
   autocreatescripts/sieveactions/widgets/selectflagswidget.cpp
   autocreatescripts/sieveactions/widgets/selectfileintowidget.cpp
   autocreatescripts/sieveactions/widgets/addresslineedit.cpp
   autocreatescripts/sieveactions/widgets/selectaddheaderpositioncombobox.cpp
   autocreatescripts/sieveactions/widgets/selectimportancecombobox.cpp
+  autocreatescripts/sieveactions/widgets/multilineedit.cpp
+  autocreatescripts/sieveactions/widgets/selectvacationcombobox.cpp
   autocreatescripts/sieveconditions/sievecondition.cpp
   autocreatescripts/sieveconditions/sieveconditionheader.cpp
   autocreatescripts/sieveconditions/sieveconditionlist.cpp
@@ -67,6 +72,7 @@ set(ksieveui_LIB_SRCS
   autocreatescripts/sieveconditions/sieveconditionspamtest.cpp
   autocreatescripts/sieveconditions/sieveconditionspamtestplus.cpp
   autocreatescripts/sieveconditions/sieveconditionvirustest.cpp
+  autocreatescripts/sieveconditions/sieveconditionihave.cpp
   autocreatescripts/sieveconditions/widgets/selectdatewidget.cpp
   autocreatescripts/sieveconditions/widgets/selectmatchtypecombobox.cpp
   autocreatescripts/sieveconditions/widgets/selectaddresspartcombobox.cpp

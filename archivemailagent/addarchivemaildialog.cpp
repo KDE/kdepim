@@ -23,13 +23,14 @@
 #include <KComboBox>
 #include <KUrlRequester>
 #include <KIntSpinBox>
+#include <KSeparator>
 
 #include <QGridLayout>
 #include <QLabel>
 #include <QCheckBox>
 #include <QSpinBox>
 
-AddArchiveMailDialog::AddArchiveMailDialog(ArchiveMailInfo* info,QWidget *parent)
+AddArchiveMailDialog::AddArchiveMailDialog(ArchiveMailInfo *info,QWidget *parent)
     : KDialog(parent),
       mInfo(info)
 {
@@ -118,6 +119,7 @@ AddArchiveMailDialog::AddArchiveMailDialog(ArchiveMailInfo* info,QWidget *parent
     mainLayout->addWidget( mMaximumArchive, row, 1 );
     row++;
 
+    mainLayout->addWidget(new KSeparator, row, 0, row, 2);
     mainLayout->setColumnStretch( 1, 1 );
     mainLayout->addItem( new QSpacerItem( 1, 1, QSizePolicy::Expanding, QSizePolicy::Expanding ), row, 0 );
 
@@ -136,7 +138,7 @@ AddArchiveMailDialog::~AddArchiveMailDialog()
 
 }
 
-void AddArchiveMailDialog::load(ArchiveMailInfo* info)
+void AddArchiveMailDialog::load(ArchiveMailInfo *info)
 {
     mPath->setUrl(info->url());
     mRecursiveCheckBox->setChecked(info->saveSubCollection());
@@ -195,7 +197,7 @@ bool AddArchiveMailDialog::recursive() const
     return mRecursiveCheckBox->isChecked();
 }
 
-void AddArchiveMailDialog::setSelectedFolder(const Akonadi::Collection& collection)
+void AddArchiveMailDialog::setSelectedFolder(const Akonadi::Collection &collection)
 {
     mFolderRequester->setCollection(collection);
 }
@@ -210,7 +212,7 @@ KUrl AddArchiveMailDialog::path() const
     return mPath->url();
 }
 
-void AddArchiveMailDialog::setPath(const KUrl&url)
+void AddArchiveMailDialog::setPath(const KUrl &url)
 {
     mPath->setUrl(url);
 }

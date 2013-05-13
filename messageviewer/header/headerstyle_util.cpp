@@ -42,11 +42,11 @@ namespace HeaderStyleUtil {
 //
 // Convenience functions:
 //
-QString directionOf( const QString & str ) {
+QString directionOf( const QString &str ) {
     return str.isRightToLeft() ? QLatin1String("rtl") : QLatin1String("ltr");
 }
 
-QString strToHtml( const QString & str, int flags ) {
+QString strToHtml( const QString &str, int flags ) {
     return LinkLocator::convertToHtml( str, flags );
 }
 
@@ -106,7 +106,7 @@ QString spamStatus(KMime::Message *message)
 
 
 QString drawSpamMeter( SpamError spamError, double percent, double confidence,
-                       const QString & filterHeader, const QString & confidenceHeader )
+                       const QString &filterHeader, const QString &confidenceHeader )
 {
     static const int meterWidth = 20;
     static const int meterHeight = 5;

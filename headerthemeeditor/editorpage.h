@@ -22,37 +22,50 @@
 #include <QWidget>
 
 class ThemeTemplateWidget;
-class Editor;
+class EditorWidget;
 class KZip;
 class QSplitter;
+class PreviewWidget;
 
 class EditorPage : public QWidget
 {
     Q_OBJECT
 public:
-    explicit EditorPage(QWidget *parent = 0);
+    enum PageType {
+        MainPage = 0,
+        ExtraPage = 1
+    };
+
+    explicit EditorPage(PageType type, const QString &projectDirectory, QWidget *parent = 0);
     ~EditorPage();
+
     void saveTheme(const QString &path);
     void loadTheme(const QString &path);
 
     void setPageFileName(const QString &filename);
     QString pageFileName() const;
 
+    PageType pageType() const;
+
     void createZip(const QString &themeName, KZip *zip);
     void saveAsFilename(const QString &filename);
     void installTheme(const QString &themePath);
+    void insertFile(const QString &filename);
 
-    bool wasChanged() const;
+    PreviewWidget *preview() const;
 
-private Q_SLOTS:
-    void slotChanged();
+Q_SIGNALS:
+    void needUpdateViewer();
+    void changed();
 
 private:
+    PageType mType;
     QString mPageFileName;
-    Editor *mEditor;
+    EditorWidget *mEditor;
+    PreviewWidget *mPreview;
     ThemeTemplateWidget *mThemeTemplate;
     QSplitter *mMainSplitter;
-    bool mChanged;
+    QSplitter *mWidgetSplitter;
 };
 
 #endif // EDITORPAGE_H

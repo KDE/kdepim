@@ -48,11 +48,11 @@ public:
     void setRecursive( bool b );
     bool recursive() const;
 
-    void setSelectedFolder(const Akonadi::Collection& collection);
+    void setSelectedFolder(const Akonadi::Collection &collection);
     Akonadi::Collection selectedFolder() const;
 
     KUrl path() const;
-    void setPath(const KUrl&);
+    void setPath(const KUrl &);
 
     ArchiveMailInfo *info();
 

@@ -20,16 +20,16 @@ install(FILES  messagetag.trig ${CMAKE_CURRENT_BINARY_DIR}/messagetag.ontology D
 set(messagecore_LIB_SRCS
 
    asyncnepomukresourceretriever.cpp
-   attachmentcollector.cpp
    imagecollector.cpp
-   attachmentcompressjob.cpp
-   attachmentfromfolderjob.cpp
-   attachmentfrommimecontentjob.cpp
-   attachmentfromurlbasejob.cpp
-   attachmentfromurljob.cpp
-   attachmentloadjob.cpp
-   attachmentpart.cpp
-   attachmentpropertiesdialog.cpp
+   attachment/attachmentcollector.cpp
+   attachment/attachmentcompressjob.cpp
+   attachment/attachmentfromfolderjob.cpp
+   attachment/attachmentfrommimecontentjob.cpp
+   attachment/attachmentfromurlbasejob.cpp
+   attachment/attachmentfromurljob.cpp
+   attachment/attachmentloadjob.cpp
+   attachment/attachmentpart.cpp
+   attachment/attachmentpropertiesdialog.cpp
    emailaddressrequester.cpp
    globalsettings.cpp
    mailinglist.cpp
@@ -51,8 +51,8 @@ kde4_add_kcfg_files(messagecore_LIB_SRCS
 )
 
 kde4_add_ui_files(messagecore_LIB_SRCS
-  attachmentpropertiesdialog.ui
-  attachmentpropertiesdialog_readonly.ui
+  attachment/attachmentpropertiesdialog.ui
+  attachment/attachmentpropertiesdialog_readonly.ui
 )
 
 kde4_add_library(messagecore ${LIBRARY_TYPE} ${messagecore_LIB_SRCS})

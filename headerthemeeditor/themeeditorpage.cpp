@@ -18,8 +18,9 @@
 #include "themeeditorpage.h"
 #include "desktopfilepage.h"
 #include "editorpage.h"
-#include "previewpage.h"
+#include "previewwidget.h"
 #include "themesession.h"
+#include "themeeditortabwidget.h"
 
 #include <knewstuff3/uploaddialog.h>
 
@@ -30,29 +31,34 @@
 #include <KTempDir>
 #include <KDebug>
 #include <KMessageBox>
+#include <KFileDialog>
 
 #include <QHBoxLayout>
 #include <QDir>
 #include <QPointer>
 #include <QDebug>
 
-ThemeEditorPage::ThemeEditorPage(const QString &themeName, QWidget *parent)
+ThemeEditorPage::ThemeEditorPage(const QString &projectDir, const QString &themeName, QWidget *parent)
     : QWidget(parent),
-      mThemeSession(new ThemeSession)
+      mThemeSession(new ThemeSession(projectDir)),
+      mChanged(false)
 {
     QHBoxLayout *lay = new QHBoxLayout;
-    mTabWidget = new KTabWidget;
+    mTabWidget = new ThemeEditorTabWidget;
     lay->addWidget(mTabWidget);
-    mEditorPage = new EditorPage;
+    mEditorPage = new EditorPage(EditorPage::MainPage, projectDir);
+    connect(mEditorPage, SIGNAL(needUpdateViewer()), this, SLOT(slotUpdateViewer()));
+    connect(mEditorPage, SIGNAL(changed()), SLOT(slotChanged()));
     mTabWidget->addTab(mEditorPage, i18n("Editor"));
 
     mDesktopPage = new DesktopFilePage;
     mDesktopPage->setThemeName(themeName);
     mTabWidget->addTab(mDesktopPage, i18n("Desktop File"));
 
-    mPreviewPage = new PreviewPage;
-    mTabWidget->addTab(mPreviewPage, i18n("Preview"));
-
+    connect(mDesktopPage, SIGNAL(mainFileNameChanged(QString)), mEditorPage->preview(), SLOT(slotMainFileNameChanged(QString)));
+    connect(mDesktopPage, SIGNAL(extraDisplayHeaderChanged(QStringList)), mEditorPage->preview(), SLOT(slotExtraHeaderDisplayChanged(QStringList)));
+    connect(mDesktopPage, SIGNAL(changed()), SLOT(slotChanged()));
+    connect(mTabWidget, SIGNAL(tabCloseRequested(int)), SLOT(slotCloseTab(int)));
     setLayout(lay);
 }
 
@@ -63,19 +69,36 @@ ThemeEditorPage::~ThemeEditorPage()
     delete mThemeSession;
 }
 
+void ThemeEditorPage::slotChanged()
+{
+    mChanged = true;
+}
+
+void ThemeEditorPage::slotUpdateViewer()
+{
+    if (themeWasChanged()) {
+        saveTheme(false);
+    }
+    mEditorPage->preview()->updateViewer();
+}
+
+void ThemeEditorPage::slotCloseTab(int index)
+{
+    mTabWidget->removeTab(index);
+    mChanged = true;
+}
+
+void ThemeEditorPage::insertFile()
+{
+    const QString fileName = KFileDialog::getOpenFileName(KUrl(), QLatin1String("*"), this);
+    if (!fileName.isEmpty()) {
+        mEditorPage->insertFile(fileName);
+    }
+}
+
 bool ThemeEditorPage::themeWasChanged() const
 {
-    bool wasChanged = mEditorPage->wasChanged();
-    if (wasChanged)
-        return true;
-
-    Q_FOREACH (EditorPage *page, mExtraPage) {
-        wasChanged = page->wasChanged();
-        if (wasChanged)
-            return true;
-    }
-    wasChanged = mDesktopPage->wasChanged();
-    return wasChanged;
+    return mChanged;
 }
 
 void ThemeEditorPage::installTheme(const QString &themePath)
@@ -99,12 +122,13 @@ void ThemeEditorPage::installTheme(const QString &themePath)
         page->installTheme(newPath);
     }
     mDesktopPage->installTheme(newPath);
+    KMessageBox::information(this, i18n("Theme installed in \"%1\"", themeDir.absolutePath()));
 }
 
 void ThemeEditorPage::uploadTheme()
 {
     //force update for screenshot
-    mPreviewPage->slotUpdateViewer();
+    mEditorPage->preview()->updateViewer();
     KTempDir tmp;
     const QString themename = mDesktopPage->themeName();
     const QString zipFileName = tmp.name() + QDir::separator() + themename + QLatin1String(".zip");
@@ -112,17 +136,18 @@ void ThemeEditorPage::uploadTheme()
     if (zip->open(QIODevice::WriteOnly)) {
         createZip(themename, zip);
         zip->close();
-        qDebug()<< "zipFilename"<<zipFileName;
+        //qDebug()<< "zipFilename"<<zipFileName;
 
         const QString previewFileName = tmp.name() + QDir::separator() + themename + QLatin1String("_preview.png");
-        qDebug()<<" previewFileName"<<previewFileName;
-        mPreviewPage->createScreenShot(previewFileName);
+        //qDebug()<<" previewFileName"<<previewFileName;
+        mEditorPage->preview()->createScreenShot(previewFileName);
 
         QPointer<KNS3::UploadDialog> dialog = new KNS3::UploadDialog(QLatin1String("messageviewer_header_themes.knsrc"), this);
         dialog->setUploadFile(zipFileName);
         dialog->setUploadName(themename);
         dialog->setPreviewImageFile(0, KUrl(previewFileName));
-        dialog->setDescription(i18n("My favorite KMail header"));
+        const QString description = mDesktopPage->description();
+        dialog->setDescription(description.isEmpty() ? i18n("My favorite KMail header") : description);
         dialog->exec();
         delete dialog;
     } else {
@@ -149,33 +174,46 @@ void ThemeEditorPage::addExtraPage()
         if (!filename.endsWith(QLatin1String(".html"))) {
             filename += QLatin1String(".html");
         }
-        EditorPage *extraPage = new EditorPage;
+        EditorPage *extraPage = new EditorPage(EditorPage::ExtraPage, QString());
+        connect(extraPage, SIGNAL(changed()), SLOT(slotChanged()));
         extraPage->setPageFileName(filename);
         mTabWidget->addTab(extraPage, filename);
         mThemeSession->addExtraPage(filename);
         mExtraPage.append(extraPage);
+        mChanged = true;
     }
 }
 
-bool ThemeEditorPage::saveTheme()
+void ThemeEditorPage::storeTheme()
+{
+    //set default page filename before saving
+    mEditorPage->setPageFileName(mDesktopPage->filename());
+    mEditorPage->saveTheme(projectDirectory());
+
+    Q_FOREACH (EditorPage *page, mExtraPage) {
+        page->saveTheme(projectDirectory());
+    }
+    mDesktopPage->saveTheme(projectDirectory());
+    mThemeSession->setMainPageFileName(mDesktopPage->filename());
+    mThemeSession->writeSession();
+    mChanged = false;
+}
+
+bool ThemeEditorPage::saveTheme(bool withConfirmation)
 {
     if (themeWasChanged()) {
-        const int result = KMessageBox::questionYesNoCancel(this, i18n("Do you want to save current project?"), i18n("Save current project"));
-        if (result == KMessageBox::Yes) {
-            //set default page filename before saving
-            mEditorPage->setPageFileName(mDesktopPage->filename());
-            mEditorPage->saveTheme(projectDirectory());
-
-            Q_FOREACH (EditorPage *page, mExtraPage) {
-                page->saveTheme(projectDirectory());
+        if (withConfirmation) {
+            const int result = KMessageBox::questionYesNoCancel(this, i18n("Do you want to save current project?"), i18n("Save current project"));
+            if (result == KMessageBox::Yes) {
+                storeTheme();
+            } else if (result == KMessageBox::Cancel) {
+                return false;
             }
-            mDesktopPage->saveTheme(projectDirectory());
-            mThemeSession->setMainPageFileName(mDesktopPage->filename());
-            mThemeSession->writeSession();
-        } else if (result == KMessageBox::Cancel) {
-            return false;
+        } else {
+            storeTheme();
         }
     }
+    mChanged = false;
     return true;
 }
 
@@ -184,14 +222,23 @@ void ThemeEditorPage::loadTheme(const QString &filename)
     mThemeSession->loadSession(filename);
     mDesktopPage->loadTheme(mThemeSession->projectDirectory());
     mEditorPage->loadTheme(mThemeSession->projectDirectory() + QDir::separator() + mThemeSession->mainPageFileName());
+    mEditorPage->preview()->setThemePath(mThemeSession->projectDirectory(), mThemeSession->mainPageFileName());
+
     const QStringList lstExtraPages = mThemeSession->extraPages();
     Q_FOREACH(const QString &page, lstExtraPages) {
-        EditorPage *extraPage = new EditorPage;
+        EditorPage *extraPage = new EditorPage(EditorPage::ExtraPage, QString());
+        connect(extraPage, SIGNAL(changed()), SLOT(slotChanged()));
         extraPage->setPageFileName(page);
         mTabWidget->addTab(extraPage, page);
         mExtraPage.append(extraPage);
         extraPage->loadTheme(mThemeSession->projectDirectory() + QDir::separator() + page);
     }
+    mChanged = false;
+}
+
+void ThemeEditorPage::reloadConfig()
+{
+    mEditorPage->preview()->loadConfig();
 }
 
 QString ThemeEditorPage::projectDirectory() const
@@ -199,14 +246,5 @@ QString ThemeEditorPage::projectDirectory() const
     return mThemeSession->projectDirectory();
 }
 
-void ThemeEditorPage::setProjectDirectory(const QString &dir)
-{
-    mThemeSession->setProjectDirectory(dir);
-}
-
-void ThemeEditorPage::reloadConfig()
-{
-    mPreviewPage->loadConfig();
-}
 
 #include "themeeditorpage.moc"

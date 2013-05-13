@@ -20,6 +20,8 @@
 
 #include <KLocale>
 #include <KComboBox>
+#include <KPushButton>
+#include <KSeparator>
 
 #include <QHBoxLayout>
 #include <QVBoxLayout>
@@ -30,29 +32,40 @@
 
 SendLaterDialog::SendLaterDialog(SendLaterInfo *info, QWidget *parent)
     : KDialog(parent),
+      mAction(SendNow),
       mInfo(info)
 {
     setCaption( i18n("Send Later") );
     setWindowIcon( KIcon( QLatin1String("kmail") ) );
     setButtons( User1|User2|Cancel );
+    setButtonText( User1, i18n("Send Later"));
+    setButtonText( User2, i18n("Send Now"));
     connect(this, SIGNAL(user1Clicked()), this, SLOT(slotSendLater()));
     connect(this, SIGNAL(user1Clicked()), this, SLOT(slotSendNow()));
     QWidget *w = new QWidget;
     QVBoxLayout *lay = new QVBoxLayout;
+    QHBoxLayout *hbox = new QHBoxLayout;
+    lay->addLayout(hbox);
+
+    QLabel *lab = new QLabel(i18n("Send at:"));
+
     mDateTime = new QDateTimeEdit;
-    lay->addWidget(mDateTime);
+    mDateTime->setMinimumDateTime(QDateTime::currentDateTime());
+    hbox->addWidget(lab);
+    hbox->addWidget(mDateTime);
 
     mRecursive = new QCheckBox(i18n("Recursive"));
     connect(mRecursive, SIGNAL(clicked(bool)), this, SLOT(slotRecursiveClicked(bool)));
     lay->addWidget(mRecursive);
 
-    QHBoxLayout *hbox = new QHBoxLayout;
+    hbox = new QHBoxLayout;
     lay->addLayout(hbox);
 
-    QLabel *lab = new QLabel(i18n("Each:"));
+    lab = new QLabel(i18n("Each:"));
     hbox->addWidget(lab);
 
     mRecursiveValue = new QSpinBox;
+    mRecursiveValue->setMinimum(1);
     hbox->addWidget(mRecursiveValue);
 
     mRecursiveComboBox = new KComboBox;
@@ -65,7 +78,24 @@ SendLaterDialog::SendLaterDialog(SendLaterInfo *info, QWidget *parent)
 
     hbox->addWidget(mRecursiveComboBox);
 
-    setLayout(lay);
+    hbox = new QHBoxLayout;
+
+    mSendIn30Minutes = new KPushButton(i18n("30 minutes later"));
+    connect(mSendIn30Minutes, SIGNAL(clicked()), SLOT(slotSendIn30Minutes()));
+    hbox->addWidget(mSendIn30Minutes);
+
+    mSendIn1Hour = new KPushButton(i18n("1 hour later"));
+    connect(mSendIn1Hour, SIGNAL(clicked()), SLOT(slotSendIn1Hour()));
+    hbox->addWidget(mSendIn1Hour);
+
+    mSendIn2Hours = new KPushButton(i18n("2 hour later"));
+    connect(mSendIn2Hours, SIGNAL(clicked()), SLOT(slotSendIn2Hours()));
+    hbox->addWidget(mSendIn2Hours);
+    lay->addLayout(hbox);
+
+    lay->addWidget(new KSeparator);
+
+    w->setLayout(lay);
     setMainWidget(w);
     readConfig();
     if (info)
@@ -78,10 +108,31 @@ SendLaterDialog::~SendLaterDialog()
     writeConfig();
 }
 
+void SendLaterDialog::slotSendIn2Hours()
+{
+    mSendDateTime = QDateTime::currentDateTime().addSecs(60*60*2);
+    mAction = SendLater;
+    accept();
+}
+
+void SendLaterDialog::slotSendIn1Hour()
+{
+    mSendDateTime = QDateTime::currentDateTime().addSecs(60*60);
+    mAction = SendLater;
+    accept();
+}
+
+void SendLaterDialog::slotSendIn30Minutes()
+{
+    mSendDateTime = QDateTime::currentDateTime().addSecs(60*30);
+    mAction = SendLater;
+    accept();
+}
+
 void SendLaterDialog::slotRecursiveClicked(bool clicked)
 {
-    mRecursiveValue->setEnabled(!clicked);
-    mRecursiveComboBox->setEnabled(!clicked);
+    mRecursiveValue->setEnabled(clicked);
+    mRecursiveComboBox->setEnabled(clicked);
 }
 
 void SendLaterDialog::readConfig()
@@ -113,26 +164,34 @@ SendLaterInfo* SendLaterDialog::info()
 {
     if (!mInfo) {
         mInfo = new SendLaterInfo();
+        mInfo->setItemId(-1);
     }
     mInfo->setRecursive(mRecursive->isChecked());
     mInfo->setRecursiveEachValue(mRecursiveValue->value());
     mInfo->setRecursiveUnit((SendLaterInfo::RecursiveUnit)mRecursiveComboBox->currentIndex());
-    mInfo->setDateTime(mDateTime->dateTime());
+    if (mSendDateTime.isValid())
+        mInfo->setDateTime(mSendDateTime);
+    else
+        mInfo->setDateTime(mDateTime->dateTime());
     return mInfo;
 }
 
 
 void SendLaterDialog::slotSendLater()
 {
-    //TODO
+    mAction = SendLater;
     accept();
 }
 
 void SendLaterDialog::slotSendNow()
 {
+    mAction = SendNow;
     accept();
-    //TODO
 }
 
+SendLaterDialog::SendLaterAction SendLaterDialog::action() const
+{
+    return mAction;
+}
 
 #include "sendlaterdialog.moc"

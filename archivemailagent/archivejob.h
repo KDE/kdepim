@@ -36,8 +36,8 @@ public:
     virtual void kill();
 
 private Q_SLOTS:
-    void slotBackupDone(const QString& info);
-    void slotError(const QString& error);
+    void slotBackupDone(const QString &info);
+    void slotError(const QString &error);
 private:
     ArchiveMailInfo *mInfo;
     ArchiveMailManager *mManager;
@@ -49,7 +49,7 @@ class ScheduledArchiveTask : public MailCommon::ScheduledTask
 public:
     /// If immediate is set, the job will execute synchronously. This is used when
     /// the user requests explicitly that the operation should happen immediately.
-    ScheduledArchiveTask( ArchiveMailManager *manager, ArchiveMailInfo * info, const Akonadi::Collection &folder, bool immediate )
+    ScheduledArchiveTask( ArchiveMailManager *manager, ArchiveMailInfo *info, const Akonadi::Collection &folder, bool immediate )
         : MailCommon::ScheduledTask( folder, immediate )
         , mInfo(info)
         , mManager(manager)

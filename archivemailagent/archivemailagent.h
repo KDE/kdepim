@@ -49,7 +49,7 @@ public Q_SLOTS:
     void printArchiveListInfo();
 
 private Q_SLOTS:
-    void mailCollectionRemoved( const Akonadi::Collection& collection );
+    void mailCollectionRemoved( const Akonadi::Collection &collection );
 private:
     QTimer *mTimer;
     Akonadi::Monitor *m_collectionMonitor;
