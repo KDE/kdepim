@@ -19,7 +19,7 @@
 #include "sievescripttabwidget.h"
 
 #include <KLocale>
-#include <KTabWidget>
+#include <KMessageBox>
 
 #include <QVBoxLayout>
 
@@ -48,8 +48,22 @@ SieveScriptBlockWidget *SieveScriptPage::createScriptBlock(KSieveUi::SieveScript
     return blockWidget;
 }
 
+bool SieveScriptPage::hasAnElseBlock() const
+{
+    const int numberOfTab(mTabWidget->count());
+    for (int i = 0; i < numberOfTab; ++i) {
+        if (static_cast<SieveScriptBlockWidget*>(mTabWidget->widget(i))->blockType() == SieveScriptBlockWidget::BlockElse)
+            return true;
+    }
+    return false;
+}
+
 void SieveScriptPage::slotAddNewBlock(QWidget* widget, KSieveUi::SieveScriptBlockWidget::BlockType type)
 {
+    if ( (type == KSieveUi::SieveScriptBlockWidget::BlockElse) && hasAnElseBlock() ) {
+        KMessageBox::error(this, i18n("Script has always a \"Else\" block. We can not add an other one."));
+        return;
+    }
     SieveScriptBlockWidget *blockWidget = createScriptBlock(type);
     mTabWidget->insertTab(mTabWidget->indexOf(widget)+1, blockWidget, blockName(type));
 }

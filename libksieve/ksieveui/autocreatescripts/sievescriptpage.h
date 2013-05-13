@@ -33,11 +33,13 @@ public:
 
     void generatedScript(QString &script, QStringList &requires);
 
+
 private Q_SLOTS:
     void slotAddNewBlock(QWidget* widget,KSieveUi::SieveScriptBlockWidget::BlockType type);
     void slotCloseTab(int);
 
 private:
+    bool hasAnElseBlock() const;
     QString blockName(KSieveUi::SieveScriptBlockWidget::BlockType type) const;
     SieveScriptBlockWidget *createScriptBlock(KSieveUi::SieveScriptBlockWidget::BlockType type);
     SieveScriptTabWidget *mTabWidget;

@@ -15,25 +15,27 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef SELECTADDRESSPARTCOMBOBOX_H
-#define SELECTADDRESSPARTCOMBOBOX_H
+#ifndef SIEVECONDITIONFALSE_H
+#define SIEVECONDITIONFALSE_H
 
-#include <KComboBox>
+#include "sievecondition.h"
 
 namespace KSieveUi {
-class SelectAddressPartComboBox : public KComboBox
+class SieveConditionFalse : public SieveCondition
 {
     Q_OBJECT
 public:
-    explicit SelectAddressPartComboBox(QWidget *parent = 0);
-    ~SelectAddressPartComboBox();
+    SieveConditionFalse(QObject *parent = 0);
 
-    QString code() const;
-    QString extraRequire() const;
-private:
-    void initialize();
-    bool mHasSubaddressCapability;
+    /**
+     * Static function that creates a filter action of this type.
+     */
+    static SieveCondition *newAction();
+
+    QWidget *createParamWidget( QWidget *parent ) const;
+
+    QString code(QWidget *w) const;
 };
 }
 
-#endif // SELECTADDRESSPARTCOMBOBOX_H
+#endif // SIEVECONDITIONFALSE_H
