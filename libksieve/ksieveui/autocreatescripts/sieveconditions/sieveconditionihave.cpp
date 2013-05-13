@@ -17,6 +17,7 @@
 
 
 #include "sieveconditionihave.h"
+#include "autocreatescripts/autocreatescriptutil_p.h"
 
 #include <KLocale>
 #include <KLineEdit>
@@ -43,7 +44,6 @@ QWidget *SieveConditionIhave::createParamWidget( QWidget *parent ) const
     lay->setMargin(0);
     w->setLayout(lay);
 
-    //List
     KLineEdit *edit = new KLineEdit;
     edit->setClearButtonShown(true);
     lay->addWidget(edit);
@@ -56,7 +56,7 @@ QString SieveConditionIhave::code(QWidget *w) const
 {
     KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("edit"));
     const QString editValue = edit->text();
-    return QString::fromLatin1("ihave \"%1\"").arg(editValue);
+    return QString::fromLatin1("ihave %1").arg(AutoCreateScriptUtil::createList(editValue, QLatin1Char(',')));
 }
 
 QStringList SieveConditionIhave::needRequires(QWidget *) const
