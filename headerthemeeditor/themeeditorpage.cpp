@@ -151,7 +151,8 @@ void ThemeEditorPage::uploadTheme()
         dialog->setUploadFile(zipFileName);
         dialog->setUploadName(themename);
         dialog->setPreviewImageFile(0, KUrl(previewFileName));
-        dialog->setDescription(i18n("My favorite KMail header"));
+        const QString description = mDesktopPage->description();
+        dialog->setDescription(description.isEmpty() ? i18n("My favorite KMail header") : description);
         dialog->exec();
         delete dialog;
     } else {

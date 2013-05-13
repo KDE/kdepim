@@ -153,4 +153,9 @@ void DesktopFilePage::installTheme(const QString &themePath)
     saveAsFilename(filename);
 }
 
+QString DesktopFilePage::description() const
+{
+    return mDescription->text();
+}
+
 #include "desktopfilepage.moc"
