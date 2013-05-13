@@ -72,6 +72,7 @@ set(ksieveui_LIB_SRCS
   autocreatescripts/sieveconditions/sieveconditionspamtest.cpp
   autocreatescripts/sieveconditions/sieveconditionspamtestplus.cpp
   autocreatescripts/sieveconditions/sieveconditionvirustest.cpp
+  autocreatescripts/sieveconditions/sieveconditionihave.cpp
   autocreatescripts/sieveconditions/widgets/selectdatewidget.cpp
   autocreatescripts/sieveconditions/widgets/selectmatchtypecombobox.cpp
   autocreatescripts/sieveconditions/widgets/selectaddresspartcombobox.cpp
