@@ -56,11 +56,11 @@
 #include <libkleo/kleo/cryptobackendfactory.h>
 #include <libkleo/ui/keyselectiondialog.h>
 
-#include <messagecore/attachmentcompressjob.h>
-#include <messagecore/attachmentfromfolderjob.h>
-#include <messagecore/attachmentfrommimecontentjob.h>
-#include <messagecore/attachmentfromurljob.h>
-#include <messagecore/attachmentpropertiesdialog.h>
+#include <messagecore/attachment/attachmentcompressjob.h>
+#include <messagecore/attachment/attachmentfromfolderjob.h>
+#include <messagecore/attachment/attachmentfrommimecontentjob.h>
+#include <messagecore/attachment/attachmentfromurljob.h>
+#include <messagecore/attachment/attachmentpropertiesdialog.h>
 #include <messagecomposersettings.h>
 #include <KIO/Job>
 

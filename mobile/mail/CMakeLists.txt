@@ -14,6 +14,7 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/kmail/kcm_kpimidentities/
   ${CMAKE_SOURCE_DIR}/templateparser
   ${CMAKE_BINARY_DIR}/templateparser
+  ${CMAKE_SOURCE_DIR}/messagecore
   ${CMAKE_SOURCE_DIR}/messagecomposer
   ${CMAKE_BINARY_DIR}/messagecomposer
   ${CMAKE_SOURCE_DIR}/messageviewer

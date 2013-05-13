@@ -23,7 +23,7 @@
 #include "contentjobbase.h"
 #include "messagecomposer_export.h"
 
-#include <messagecore/attachmentpart.h>
+#include <messagecore/attachment/attachmentpart.h>
 
 namespace boost {
   template <typename T> class shared_ptr;

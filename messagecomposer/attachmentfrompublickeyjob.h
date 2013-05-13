@@ -21,7 +21,7 @@
 #ifndef MESSAGE_ATTACHMENTFROMPUBLICKEY_H
 #define MESSAGE_ATTACHMENTFROMPUBLICKEY_H
 
-#include <messagecore/attachmentloadjob.h>
+#include <messagecore/attachment/attachmentloadjob.h>
 
 #include "messagecomposer_export.h"
 

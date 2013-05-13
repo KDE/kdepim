@@ -44,7 +44,7 @@ using namespace Message;
 #include <messageviewer/nodehelper.h>
 
 
-#include <messagecore/attachmentpart.h>
+#include <messagecore/attachment/attachmentpart.h>
 #include <boost/shared_ptr.hpp>
 using MessageCore::AttachmentPart;
 

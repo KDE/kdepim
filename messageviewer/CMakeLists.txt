@@ -138,6 +138,7 @@ target_link_libraries(messageviewer messagecore kdepim kpgp kleo
 )
 
 include_directories(
+    ${CMAKE_SOURCE_DIR}/messagecore
     ${CMAKE_SOURCE_DIR}/pimcommon
     ${CMAKE_SOURCE_DIR}/libkleo
     ${Boost_INCLUDE_DIR}

@@ -43,7 +43,7 @@
 #include <akonadi/itemcreatejob.h>
 #include <akonadi/collectionfetchjob.h>
 #include <kpimidentities/identitycombo.h>
-#include <messagecore/attachmentcollector.h>
+#include <messagecore/attachment/attachmentcollector.h>
 #include <messagecore/nodehelper.h>
 #ifndef QT_NO_CURSOR
 #include <messageviewer/kcursorsaver.h>

@@ -5,6 +5,7 @@ include_directories(
     ${SOPRANO_INCLUDE_DIR}
     ${CMAKE_SOURCE_DIR}/libkdepim
     ${CMAKE_SOURCE_DIR}/libkleo
+    ${CMAKE_SOURCE_DIR}/messagecore
 )
 
 add_definitions( -DQT_NO_CAST_FROM_ASCII )

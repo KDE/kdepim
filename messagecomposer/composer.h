@@ -29,7 +29,7 @@
 
 #include <kmime/kmime_message.h>
 
-#include <messagecore/attachmentpart.h>
+#include <messagecore/attachment/attachmentpart.h>
 
 #include <vector>
 #include <gpgme++/key.h>

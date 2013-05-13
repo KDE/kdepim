@@ -28,7 +28,7 @@
 #include <KDE/KUrl>
 
 #include <KPIMIdentities/Identity>
-#include <messagecore/attachmentpart.h>
+#include <messagecore/attachment/attachmentpart.h>
 #include <akonadi/item.h>
 #include <KJob>
 #include <KService>
