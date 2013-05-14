@@ -38,6 +38,8 @@
 #include "sieveconditionihave.h"
 #include "sieveconditionenvironment.h"
 
+#include "sieveconditionhasflag.h"
+
 QList<KSieveUi::SieveCondition *> KSieveUi::SieveConditionList::conditionList()
 {
     QList<KSieveUi::SieveCondition*> list;
@@ -57,6 +59,7 @@ QList<KSieveUi::SieveCondition *> KSieveUi::SieveConditionList::conditionList()
     list.append(new KSieveUi::SieveConditionVirusTest);
     list.append(new KSieveUi::SieveConditionIhave);
     list.append(new KSieveUi::SieveConditionEnvironment);
+    list.append(new KSieveUi::SieveConditionHasFlag);
     return list;
 }
 

@@ -50,6 +50,7 @@ int main (int argc, char **argv)
             <<QLatin1String("ihave")
             <<QLatin1String("subaddress")
             <<QLatin1String("environment")
+            <<QLatin1String("imap4flags")
             <<QLatin1String("comparator-i;ascii-numeric");
     dialog->setSieveCapabilities(capabilities);
     if (dialog->exec() ) {
