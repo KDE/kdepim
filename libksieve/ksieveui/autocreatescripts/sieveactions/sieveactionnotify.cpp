@@ -67,7 +67,7 @@ QString SieveActionNotify::code(QWidget *w) const
     const KLineEdit *message = w->findChild<KLineEdit*>( QLatin1String("message") );
     const QString messageStr = message->text();
 
-    return QString::fromLatin1("notify :importance \"%1\" :message \"%2\"").arg(importanceStr).arg(messageStr);
+    return QString::fromLatin1("notify :importance \"%1\" :message \"%2\";").arg(importanceStr).arg(messageStr);
 }
 
 QString SieveActionNotify::serverNeedsCapability() const
