@@ -42,6 +42,10 @@ ScamDetectionWarningWidget::ScamDetectionWarningWidget(QWidget *parent)
     connect( action, SIGNAL(triggered(bool)), SLOT(slotMessageIsNotAScam()) );
     addAction( action );
 
+    action = new KAction( i18n( "Add email to whitelist" ), this );
+    connect( action, SIGNAL(triggered(bool)), SLOT(slotAddToWhiteList()) );
+    addAction( action );
+
     action = new KAction( i18n( "Disable scam detection for all messages" ), this );
     connect( action, SIGNAL(triggered(bool)), SLOT(slotDisableScamDetection()) );
     addAction( action );
@@ -74,6 +78,12 @@ void ScamDetectionWarningWidget::slotDisableScamDetection()
     MessageViewer::GlobalSettings::self()->setScamDetectionEnabled( false );
     MessageViewer::GlobalSettings::self()->writeConfig();
     setVisible(false);
+}
+
+void ScamDetectionWarningWidget::slotAddToWhiteList()
+{
+    setVisible(false);
+    Q_EMIT addToWhiteList();
 }
 
 #include "scamdetectionwarningwidget.moc"

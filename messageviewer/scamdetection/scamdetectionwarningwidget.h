@@ -33,11 +33,13 @@ public Q_SLOTS:
 
 private Q_SLOTS:
     void slotShowDetails(const QString &content);
+    void slotAddToWhiteList();
 
 Q_SIGNALS:
     void showDetails();
     void moveMessageToTrash();
     void messageIsNotAScam();
+    void addToWhiteList();
 
 private Q_SLOTS:
     void slotDisableScamDetection();
