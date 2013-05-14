@@ -17,14 +17,12 @@
 
 #include "sieveconditionenvironment.h"
 
-#include "widgets/selectbodytypewidget.h"
-#include "widgets/selectmatchtypecombobox.h"
-
 #include <KLocale>
 #include <KLineEdit>
 
 #include <QWidget>
 #include <QHBoxLayout>
+#include <QLabel>
 #include <QDebug>
 
 using namespace KSieveUi;
@@ -44,14 +42,32 @@ QWidget *SieveConditionEnvironment::createParamWidget( QWidget *parent ) const
     QHBoxLayout *lay = new QHBoxLayout;
     lay->setMargin(0);
     w->setLayout(lay);
+    QLabel *lab = new QLabel(i18n("Item:"));
+    lay->addWidget(lab);
+
+    KLineEdit *item = new KLineEdit;
+    item->setObjectName(QLatin1String("item"));
+    lay->addWidget(item);
+
+    lab = new QLabel(i18n("Value:"));
+    lay->addWidget(lab);
+
+    KLineEdit *value = new KLineEdit;
+    value->setObjectName(QLatin1String("value"));
+    lay->addWidget(value);
 
     return w;
 }
 
 QString SieveConditionEnvironment::code(QWidget *w) const
 {
-    //TODO
-    return QString::fromLatin1("environment");
+    const KLineEdit *item =  w->findChild<KLineEdit*>( QLatin1String("item") );
+    const QString itemStr = item->text();
+
+    const KLineEdit *value =  w->findChild<KLineEdit*>( QLatin1String("value") );
+    const QString valueStr = value->text();
+
+    return QString::fromLatin1("environment \"%1\" \"%2\"").arg(itemStr).arg(valueStr);
 }
 
 QStringList SieveConditionEnvironment::needRequires(QWidget *) const
