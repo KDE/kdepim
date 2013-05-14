@@ -61,7 +61,7 @@ bool SieveScriptPage::hasAnElseBlock() const
 void SieveScriptPage::slotAddNewBlock(QWidget* widget, KSieveUi::SieveScriptBlockWidget::BlockType type)
 {
     if ( (type == KSieveUi::SieveScriptBlockWidget::BlockElse) && hasAnElseBlock() ) {
-        KMessageBox::error(this, i18n("Script has always a \"Else\" block. We can not add an other one."));
+        KMessageBox::error(this, i18n("Script should always have just one \"Else\" block. We cannot add another one."));
         return;
     }
     SieveScriptBlockWidget *blockWidget = createScriptBlock(type);
