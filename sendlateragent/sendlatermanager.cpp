@@ -28,7 +28,9 @@
 #include <QTimer>
 
 SendLaterManager::SendLaterManager(QObject *parent)
-    : QObject(parent)
+    : QObject(parent),
+      mCurrentInfo(0),
+      mCurrentJob(0)
 {
     mConfig = KGlobal::config();
     mTimer = new QTimer(this);
@@ -37,7 +39,9 @@ SendLaterManager::SendLaterManager(QObject *parent)
 
 SendLaterManager::~SendLaterManager()
 {
+    stopTimer();
     qDeleteAll(mListSendLaterInfo);
+    delete mCurrentJob;
 }
 
 void SendLaterManager::load()
@@ -53,9 +57,23 @@ void SendLaterManager::load()
         SendLaterInfo *info = new SendLaterInfo(group);        
         mListSendLaterInfo.append(info);
     }
+    createSendInfoList();
+}
+
+void SendLaterManager::createSendInfoList()
+{
+    mCurrentInfo = 0;
     qSort(mListSendLaterInfo.begin(), mListSendLaterInfo.end(), SendLaterUtil::compareSendLaterInfo);
     if (!mListSendLaterInfo.isEmpty()) {
-
+        mCurrentInfo = mListSendLaterInfo.first();
+        const QDateTime now = QDateTime::currentDateTime();
+        const int seconds = now.secsTo(mCurrentInfo->dateTime());
+        if (seconds > 0) {
+            mTimer->start(seconds*1000);
+        } else {
+            //Create job when seconds <0
+            slotCreateJob();
+        }
     }
 }
 
@@ -67,19 +85,31 @@ void SendLaterManager::stopTimer()
 
 void SendLaterManager::slotCreateJob()
 {
-    //TODO
+    mCurrentJob = new SendLaterJob(this, mCurrentInfo);
+    mCurrentJob->start();
+}
+
+void SendLaterManager::sendError(SendLaterInfo *info)
+{
+    //TODO ask if we want to resend it here.
+    if (info) {
+        if (!info->isRecursive()) {
+            mListSendLaterInfo.removeAll(mCurrentInfo);
+        }
+    }
+    delete mCurrentJob;
+    createSendInfoList();
 }
 
 void SendLaterManager::sendDone(SendLaterInfo *info)
 {
     if (info) {
         if (!info->isRecursive()) {
-
+            mListSendLaterInfo.removeAll(mCurrentInfo);
         }
     }
-    //TODO
-    //Remove item if not recursive.
-
+    delete mCurrentJob;
+    createSendInfoList();
 }
 
 #include "sendlatermanager.moc"

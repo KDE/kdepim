@@ -40,6 +40,9 @@ SendLaterJob::~SendLaterJob()
 void SendLaterJob::start()
 {
     if (mInfo) {
+        if (mInfo->itemId() > -1) {
+
+        }
         //TODO fetch item.
     }
 }
@@ -55,7 +58,6 @@ void SendLaterJob::sendDone()
                           KNotification::CloseOnTimeout,
                           KGlobal::mainComponent());
     mManager->sendDone(mInfo);
-    deleteLater();
 }
 
 void SendLaterJob::sendError()
@@ -69,7 +71,7 @@ void SendLaterJob::sendError()
                           0,
                           KNotification::CloseOnTimeout,
                           KGlobal::mainComponent());
-    deleteLater();
+    mManager->sendError(mInfo);
 }
 
 #include "sendlaterjob.moc"
