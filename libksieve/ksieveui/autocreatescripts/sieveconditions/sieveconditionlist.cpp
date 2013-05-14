@@ -36,6 +36,7 @@
 #include "sieveconditionspamtestplus.h"
 #include "sieveconditionvirustest.h"
 #include "sieveconditionihave.h"
+#include "sieveconditionenvironment.h"
 
 QList<KSieveUi::SieveCondition *> KSieveUi::SieveConditionList::conditionList()
 {
@@ -55,6 +56,7 @@ QList<KSieveUi::SieveCondition *> KSieveUi::SieveConditionList::conditionList()
     list.append(new KSieveUi::SieveConditionSpamTestPlus);
     list.append(new KSieveUi::SieveConditionVirusTest);
     list.append(new KSieveUi::SieveConditionIhave);
+    list.append(new KSieveUi::SieveConditionEnvironment);
     return list;
 }
 
