@@ -71,7 +71,13 @@ ThemeEditorPage::~ThemeEditorPage()
 
 void ThemeEditorPage::slotChanged()
 {
-    mChanged = true;
+    setChanged(true);
+}
+
+void ThemeEditorPage::setChanged(bool b)
+{
+    mChanged = b;
+    Q_EMIT changed(b);
 }
 
 void ThemeEditorPage::slotUpdateViewer()
@@ -85,7 +91,7 @@ void ThemeEditorPage::slotUpdateViewer()
 void ThemeEditorPage::slotCloseTab(int index)
 {
     mTabWidget->removeTab(index);
-    mChanged = true;
+    setChanged(true);
 }
 
 void ThemeEditorPage::insertFile()
@@ -176,8 +182,7 @@ void ThemeEditorPage::addExtraPage()
         }
         createExtraPage(filename);
         mThemeSession->addExtraPage(filename);
-
-        mChanged = true;
+        setChanged(true);
     }
 }
 
@@ -203,7 +208,7 @@ void ThemeEditorPage::storeTheme()
     mDesktopPage->saveTheme(projectDirectory());
     mThemeSession->setMainPageFileName(mDesktopPage->filename());
     mThemeSession->writeSession();
-    mChanged = false;
+    setChanged(false);
 }
 
 bool ThemeEditorPage::saveTheme(bool withConfirmation)
@@ -220,7 +225,7 @@ bool ThemeEditorPage::saveTheme(bool withConfirmation)
             storeTheme();
         }
     }
-    mChanged = false;
+    setChanged(false);
     return true;
 }
 
@@ -236,7 +241,7 @@ void ThemeEditorPage::loadTheme(const QString &filename)
         EditorPage *extraPage = createExtraPage(page);
         extraPage->loadTheme(mThemeSession->projectDirectory() + QDir::separator() + page);
     }
-    mChanged = false;
+    setChanged(false);
 }
 
 void ThemeEditorPage::reloadConfig()

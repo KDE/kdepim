@@ -47,12 +47,16 @@ public:
 
     void insertFile();
 
+Q_SIGNALS:
+    void changed(bool);
+
 private Q_SLOTS:
     void slotUpdateViewer();
     void slotCloseTab(int);
     void slotChanged();
 
 private:
+    void setChanged(bool b);
     void storeTheme();
     QString projectDirectory() const;
     void createZip(const QString &themeName, KZip *zip);
