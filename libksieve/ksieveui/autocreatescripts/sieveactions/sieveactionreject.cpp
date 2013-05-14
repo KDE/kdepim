@@ -16,8 +16,9 @@
 */
 
 #include "sieveactionreject.h"
+#include "widgets/multilineedit.h"
+#include "autocreatescripts/autocreatescriptutil_p.h"
 
-#include <KLineEdit>
 #include <KLocale>
 
 #include <QLabel>
@@ -43,7 +44,7 @@ QWidget *SieveActionReject::createParamWidget( QWidget *parent ) const
     QLabel *lab = new QLabel(i18n("text:"));
     lay->addWidget(lab);
 
-    KLineEdit *edit = new KLineEdit;
+    MultiLineEdit *edit = new MultiLineEdit;
     edit->setObjectName( QLatin1String("rejectmessage") );
     lay->addWidget(edit);
     return w;
@@ -51,10 +52,10 @@ QWidget *SieveActionReject::createParamWidget( QWidget *parent ) const
 
 QString SieveActionReject::code(QWidget *w) const
 {
-    const KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("rejectmessage") );
-    const QString text = edit->text();
+    const MultiLineEdit *edit = w->findChild<MultiLineEdit*>( QLatin1String("rejectmessage") );
+    const QString text = edit->toPlainText();
 
-    return QString::fromLatin1("reject \"%1\";").arg(text);
+    return QString::fromLatin1("reject text:%1;").arg(AutoCreateScriptUtil::createMultiLine(text));
 }
 
 QStringList SieveActionReject::needRequires() const
