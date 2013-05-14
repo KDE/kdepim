@@ -34,6 +34,7 @@ public:
     QString serverNeedsCapability() const;
 private:
     bool mHasCopySupport;
+    bool mHasMailBoxSupport;
 };
 }
 
