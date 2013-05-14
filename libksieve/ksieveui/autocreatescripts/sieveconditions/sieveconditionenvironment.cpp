@@ -23,6 +23,7 @@
 #include <QWidget>
 #include <QHBoxLayout>
 #include <QLabel>
+#include <QCompleter>
 #include <QDebug>
 
 using namespace KSieveUi;
@@ -46,6 +47,19 @@ QWidget *SieveConditionEnvironment::createParamWidget( QWidget *parent ) const
     lay->addWidget(lab);
 
     KLineEdit *item = new KLineEdit;
+    QStringList itemList;
+    itemList << QLatin1String("domain")
+             << QLatin1String("host")
+             << QLatin1String("location")
+             << QLatin1String("name")
+             << QLatin1String("phase")
+             << QLatin1String("remote-host")
+             << QLatin1String("remote-ip")
+             << QLatin1String("version");
+    QCompleter *completer = new QCompleter(itemList, w);
+    completer->setCaseSensitivity(Qt::CaseInsensitive);
+    item->setCompleter(completer);
+
     item->setObjectName(QLatin1String("item"));
     lay->addWidget(item);
 
