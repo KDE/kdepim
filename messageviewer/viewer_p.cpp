@@ -3301,6 +3301,8 @@ void ViewerPrivate::slotAddToWhiteList()
             KMime::Message::Ptr message = mMessageItem.payload<KMime::Message::Ptr>();
             const QString email = KPIMUtils::firstEmailAddress( message->from()->as7BitString(false) );
             QStringList lst = MessageViewer::GlobalSettings::self()->scamDetectionWhiteList();
+            if (lst.contains(email))
+                return;
             lst << email;
             MessageViewer::GlobalSettings::self()->setScamDetectionWhiteList( lst );
             MessageViewer::GlobalSettings::self()->writeConfig();
