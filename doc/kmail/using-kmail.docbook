@@ -658,9 +658,7 @@ want to send a message to the email address and select
 <para>Alternatively to invoking the handler for 
 <guilabel>Post to List</guilabel> you can send a new message to the
 mailing list via <menuchoice><guimenu>Message</guimenu><guimenuitem>New
-Message to Mailing-List...</guimenuitem></menuchoice> or by clicking with
-the <mousebutton>middle</mousebutton> mousebutton on the folder in the folder
-list.</para>
+Message to Mailing-List...</guimenuitem></menuchoice></para>
 
 </sect2>
 
