@@ -17,11 +17,13 @@
 
 
 #include "sieveactionenclose.h"
+#include "widgets/multilineedit.h"
+#include "autocreatescripts/autocreatescriptutil_p.h"
 
 #include <KLocale>
 #include <KLineEdit>
 
-#include <QCheckBox>
+#include <QLabel>
 #include <QHBoxLayout>
 
 using namespace KSieveUi;
@@ -35,11 +37,6 @@ SieveAction* SieveActionEnclose::newAction()
   return new SieveActionEnclose;
 }
 
-QString SieveActionEnclose::code(QWidget *w) const
-{
-    //TODO
-    return QString();
-}
 
 QWidget *SieveActionEnclose::createParamWidget( QWidget *parent ) const
 {
@@ -47,9 +44,56 @@ QWidget *SieveActionEnclose::createParamWidget( QWidget *parent ) const
     QHBoxLayout *lay = new QHBoxLayout;
     lay->setMargin(0);
     w->setLayout(lay);
-    //TODO
+
+    QLabel *lab = new QLabel(i18n("Subject:"));
+    lay->addWidget(lab);
+
+    KLineEdit *subject = new KLineEdit;
+    subject->setObjectName(QLatin1String("subject"));
+    lay->addWidget(subject);
+
+    lab = new QLabel(i18n("headers:"));
+    lay->addWidget(lab);
+
+    KLineEdit *headers = new KLineEdit;
+    headers->setObjectName(QLatin1String("headers"));
+    lay->addWidget(headers);
+
+    lab = new QLabel(i18n("text:"));
+    lay->addWidget(lab);
+
+    MultiLineEdit *text = new MultiLineEdit;
+    text->setObjectName(QLatin1String("text"));
+    lay->addWidget(text);
+
     return w;
 }
+
+QString SieveActionEnclose::code(QWidget *w) const
+{
+    QString result = QLatin1String("enclose ");
+    const KLineEdit *subject = w->findChild<KLineEdit*>(QLatin1String("subject"));
+    const QString subjectStr = subject->text();
+    if (!subjectStr.isEmpty()) {
+        result += QString::fromLatin1(":subject \"%1\" ").arg(subjectStr);
+    }
+
+    const KLineEdit *headers = w->findChild<KLineEdit*>(QLatin1String("headers"));
+    const QString headersStr = headers->text();
+    if (!headersStr.isEmpty()) {
+        result += QString::fromLatin1(":headers \"%1\" ").arg(headersStr);
+    }
+
+
+    const MultiLineEdit *edit = w->findChild<MultiLineEdit*>( QLatin1String("text") );
+    const QString text = edit->toPlainText();
+    if (!text.isEmpty()) {
+        result += QString::fromLatin1("text:%1").arg(AutoCreateScriptUtil::createMultiLine(text));
+    }
+
+    return result;
+}
+
 
 QStringList SieveActionEnclose::needRequires() const
 {
