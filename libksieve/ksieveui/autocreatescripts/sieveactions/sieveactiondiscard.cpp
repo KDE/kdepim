@@ -34,4 +34,9 @@ QString SieveActionDiscard::code(QWidget *) const
     return QLatin1String("discard;");
 }
 
+QString SieveActionDiscard::help() const
+{
+    return i18n("Discard is used to silently throw away the message.");
+}
+
 #include "sieveactiondiscard.moc"

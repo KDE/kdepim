@@ -18,6 +18,8 @@
 #include "sieveincludewidget.h"
 
 #include <KPushButton>
+#include <KLocale>
+#include <KLineEdit>
 
 #include <QGridLayout>
 #include <QCheckBox>
@@ -25,7 +27,7 @@
 
 
 namespace KSieveUi {
-static int MINIMUMINCLUDEACTION = 0;
+static int MINIMUMINCLUDEACTION = 1;
 static int MAXIMUMINCLUDEACTION = 8;
 
 SieveIncludeLocation::SieveIncludeLocation(QWidget *parent)
@@ -40,7 +42,13 @@ SieveIncludeLocation::~SieveIncludeLocation()
 
 void SieveIncludeLocation::initialize()
 {
+    addItem(i18n("personal"), QLatin1String(":personal"));
+    addItem(i18n("global"), QLatin1String(":global"));
+}
 
+QString SieveIncludeLocation::code() const
+{
+    return itemData(currentIndex()).toString();
 }
 
 SieveIncludeActionWidget::SieveIncludeActionWidget(QWidget *parent)
@@ -54,15 +62,43 @@ SieveIncludeActionWidget::~SieveIncludeActionWidget()
 
 }
 
-void SieveIncludeActionWidget::generatedScript(QString &script, QStringList &requires)
+void SieveIncludeActionWidget::generatedScript(QString &script)
 {
-    //TODO
+    const QString includeName = mIncludeName->text();
+    if (includeName.isEmpty())
+        return;
+    script += QLatin1String("include ");
+    script += mLocation->code() + QLatin1Char(' ');
+    if (mOptional->isChecked()) {
+        script += QLatin1String(":optional ");
+    }
+    if (mOnce->isChecked()) {
+        script += QLatin1String(":optional ");
+    }
+    script += QString::fromLatin1("\"%1\";").arg(includeName);
 }
 
 void SieveIncludeActionWidget::initWidget()
 {
     mLayout = new QGridLayout(this);
     mLayout->setContentsMargins( 0, 0, 0, 0 );
+
+    QLabel *lab = new QLabel(i18n("Include:"));
+    mLayout->addWidget( lab, 1, 0 );
+    mLocation = new SieveIncludeLocation;
+    mLayout->addWidget( mLocation, 1, 1 );
+
+    mOptional = new QCheckBox(i18n("Optional"));
+    mLayout->addWidget( mOptional, 1, 2 );
+
+    mOnce = new QCheckBox(i18n("Once"));
+    mLayout->addWidget( mOnce, 1, 3 );
+
+    lab = new QLabel(i18n("Name:"));
+    mLayout->addWidget( lab, 1, 4 );
+
+    mIncludeName = new KLineEdit;
+    mLayout->addWidget( mIncludeName, 1, 5 );
 
     mAdd = new KPushButton( this );
     mAdd->setIcon( KIcon( QLatin1String("list-add") ) );
@@ -71,8 +107,8 @@ void SieveIncludeActionWidget::initWidget()
     mRemove = new KPushButton( this );
     mRemove->setIcon( KIcon( QLatin1String("list-remove") ) );
     mRemove->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
-    mLayout->addWidget( mAdd, 1, 3 );
-    mLayout->addWidget( mRemove, 1, 4 );
+    mLayout->addWidget( mAdd, 1, 6 );
+    mLayout->addWidget( mRemove, 1, 7 );
 
     connect( mAdd, SIGNAL(clicked()),
              this, SLOT(slotAddWidget()) );
@@ -96,15 +132,28 @@ void SieveIncludeActionWidget::updateAddRemoveButton( bool addButtonEnabled, boo
     mRemove->setEnabled(removeButtonEnabled);
 }
 
-
 SieveIncludeWidget::SieveIncludeWidget(QWidget *parent)
-    : QWidget(parent)
+    : SieveWidgetPageAbstract(parent)
 {
+    QHBoxLayout *lay = new QHBoxLayout;
+    mIncludeLister = new SieveIncludeWidgetLister;
+    lay->addWidget(mIncludeLister);
+    setLayout(lay);
 }
 
 SieveIncludeWidget::~SieveIncludeWidget()
 {
+}
 
+void SieveIncludeWidget::generatedScript(QString &script, QStringList &requires)
+{
+    QString result;
+    QStringList lst;
+    mIncludeLister->generatedScript(result, lst);
+    if (!result.isEmpty()) {
+        script += result;
+        requires << lst;
+    }
 }
 
 SieveIncludeWidgetLister::SieveIncludeWidgetLister(QWidget *parent)
@@ -158,12 +207,13 @@ void SieveIncludeWidgetLister::updateAddRemoveButton()
 
 void SieveIncludeWidgetLister::generatedScript(QString &script, QStringList &requires)
 {
+    requires << QLatin1String("include");
     const QList<QWidget*> widgetList = widgets();
     QList<QWidget*>::ConstIterator wIt = widgetList.constBegin();
     QList<QWidget*>::ConstIterator wEnd = widgetList.constEnd();
     for ( ; wIt != wEnd ;++wIt ) {
         SieveIncludeActionWidget *w = qobject_cast<SieveIncludeActionWidget*>( *wIt );
-        w->generatedScript(script, requires);
+        w->generatedScript(script);
     }
 }
 

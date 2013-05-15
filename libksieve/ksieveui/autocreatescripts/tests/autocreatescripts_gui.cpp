@@ -53,6 +53,8 @@ int main (int argc, char **argv)
             <<QLatin1String("imap4flags")
             <<QLatin1String("enclose")
             <<QLatin1String("replace")
+            <<QLatin1String("include")
+            <<QLatin1String("extracttext")
             <<QLatin1String("comparator-i;ascii-numeric");
     dialog->setSieveCapabilities(capabilities);
     if (dialog->exec() ) {

@@ -27,6 +27,7 @@ public:
     static SieveAction* newAction();
 
     QString code(QWidget *) const;
+    QString help() const;
 };
 }
 #endif // SIEVEACTIONKEEP_H

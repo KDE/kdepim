@@ -31,8 +31,7 @@
 
 namespace KSieveUi {
 SieveScriptBlockWidget::SieveScriptBlockWidget(QWidget *parent)
-    : QWidget(parent),
-      mType(BlockIf),
+    : SieveWidgetPageAbstract(parent),
       mMatchCondition(AndCondition)
 {
     QVBoxLayout *topLayout = new QVBoxLayout;
@@ -97,7 +96,7 @@ SieveScriptBlockWidget::~SieveScriptBlockWidget()
 
 void SieveScriptBlockWidget::slotAddBlock()
 {
-    KSieveUi::SieveScriptBlockWidget::BlockType type;
+    KSieveUi::SieveWidgetPageAbstract::PageType type;
     switch(mNewBlockType->currentIndex()) {
     case 0:
         type = BlockElsIf;
@@ -110,11 +109,12 @@ void SieveScriptBlockWidget::slotAddBlock()
     Q_EMIT addNewBlock(this, type);
 }
 
-void SieveScriptBlockWidget::setBlockType(BlockType type)
+void SieveScriptBlockWidget::setPageType(PageType type)
 {
-    if (mType != type) {
-        mType = type;
-        switch(mType) {
+
+    if (pageType() != type) {
+        SieveWidgetPageAbstract::setPageType(type);
+        switch(type) {
         case BlockIf:
             mAllMessageRBtn->show();
             mConditions->show();
@@ -133,14 +133,12 @@ void SieveScriptBlockWidget::setBlockType(BlockType type)
             mAddBlockType->setEnabled(false);
             mNewBlockType->setEnabled(false);
             break;
+        default:
+            break;
         }
     }
 }
 
-SieveScriptBlockWidget::BlockType SieveScriptBlockWidget::blockType() const
-{
-    return mType;
-}
 
 SieveScriptBlockWidget::MatchCondition SieveScriptBlockWidget::matchCondition() const
 {
@@ -163,7 +161,7 @@ void SieveScriptBlockWidget::generatedScript(QString &script, QStringList &requi
 {
     if (mMatchCondition == AllCondition) {
         script += QLatin1String("if true {\n");
-    } else if (mType == BlockElse) {
+    } else if (pageType() == BlockElse) {
         script += QLatin1String("else {\n");
     } else {
         QString conditionStr;
@@ -172,7 +170,7 @@ void SieveScriptBlockWidget::generatedScript(QString &script, QStringList &requi
         const bool hasUniqCondition = (numberOfCondition == 1);
         QString filterStr;
         QString blockStr;
-        switch (mType) {
+        switch (pageType()) {
         case BlockIf:
             blockStr = QLatin1String("if ");
             break;
@@ -180,6 +178,9 @@ void SieveScriptBlockWidget::generatedScript(QString &script, QStringList &requi
             blockStr = QLatin1String("elsif ");
             break;
         case BlockElse:
+            break;
+        default:
+            //We can got here.
             break;
         }
 

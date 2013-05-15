@@ -17,6 +17,10 @@
 
 #include "sievescriptpage.h"
 #include "sievescripttabwidget.h"
+#include "sieveincludewidget.h"
+
+#include "sievewidgetpageabstract.h"
+#include "autocreatescripts/autocreatescriptdialog.h"
 
 #include <KLocale>
 #include <KMessageBox>
@@ -25,11 +29,19 @@
 
 namespace KSieveUi {
 SieveScriptPage::SieveScriptPage(QWidget *parent)
-    : QWidget(parent)
+    : QWidget(parent),
+      mIncludeWidget(0)
 {
     QVBoxLayout *topLayout = new QVBoxLayout;
     mTabWidget = new SieveScriptTabWidget;
     connect(mTabWidget, SIGNAL(tabCloseRequested(int)), this, SLOT(slotCloseTab(int)));
+
+    if (AutoCreateScriptDialog::sieveCapabilities().contains(QLatin1String("include"))) {
+        mIncludeWidget = new SieveIncludeWidget;
+        mIncludeWidget->setPageType(KSieveUi::SieveScriptBlockWidget::Include);
+        mTabWidget->addTab(mIncludeWidget, i18n("Includes"));
+    }
+
     SieveScriptBlockWidget *blockWidget = createScriptBlock(SieveScriptBlockWidget::BlockIf);
     mTabWidget->addTab(blockWidget, blockName(KSieveUi::SieveScriptBlockWidget::BlockIf));
     topLayout->addWidget(mTabWidget);
@@ -40,11 +52,11 @@ SieveScriptPage::~SieveScriptPage()
 {
 }
 
-SieveScriptBlockWidget *SieveScriptPage::createScriptBlock(KSieveUi::SieveScriptBlockWidget::BlockType type)
+SieveScriptBlockWidget *SieveScriptPage::createScriptBlock(KSieveUi::SieveWidgetPageAbstract::PageType type)
 {
     SieveScriptBlockWidget *blockWidget = new SieveScriptBlockWidget;
-    connect(blockWidget, SIGNAL(addNewBlock(QWidget*,KSieveUi::SieveScriptBlockWidget::BlockType)), SLOT(slotAddNewBlock(QWidget*,KSieveUi::SieveScriptBlockWidget::BlockType)));
-    blockWidget->setBlockType(type);
+    connect(blockWidget, SIGNAL(addNewBlock(QWidget*,KSieveUi::SieveWidgetPageAbstract::PageType)), SLOT(slotAddNewBlock(QWidget*,KSieveUi::SieveWidgetPageAbstract::PageType)));
+    blockWidget->setPageType(type);
     return blockWidget;
 }
 
@@ -52,23 +64,26 @@ bool SieveScriptPage::hasAnElseBlock() const
 {
     const int numberOfTab(mTabWidget->count());
     for (int i = 0; i < numberOfTab; ++i) {
-        if (static_cast<SieveScriptBlockWidget*>(mTabWidget->widget(i))->blockType() == SieveScriptBlockWidget::BlockElse)
+        if (static_cast<SieveWidgetPageAbstract*>(mTabWidget->widget(i))->pageType() == SieveScriptBlockWidget::BlockElse)
             return true;
     }
     return false;
 }
 
-void SieveScriptPage::slotAddNewBlock(QWidget* widget, KSieveUi::SieveScriptBlockWidget::BlockType type)
+void SieveScriptPage::slotAddNewBlock(QWidget* widget, KSieveUi::SieveWidgetPageAbstract::PageType type)
 {
     if ( (type == KSieveUi::SieveScriptBlockWidget::BlockElse) && hasAnElseBlock() ) {
         KMessageBox::error(this, i18n("Script should always have just one \"Else\" block. We cannot add another one."));
         return;
     }
     SieveScriptBlockWidget *blockWidget = createScriptBlock(type);
-    mTabWidget->insertTab(mTabWidget->indexOf(widget)+1, blockWidget, blockName(type));
+    if (type == KSieveUi::SieveScriptBlockWidget::BlockElse) //Insert at the end of tabwidget
+        mTabWidget->insertTab(mTabWidget->count(), blockWidget, blockName(type));
+    else
+        mTabWidget->insertTab(mTabWidget->indexOf(widget)+1, blockWidget, blockName(type));
 }
 
-QString SieveScriptPage::blockName(KSieveUi::SieveScriptBlockWidget::BlockType type) const
+QString SieveScriptPage::blockName(KSieveUi::SieveWidgetPageAbstract::PageType type) const
 {
     switch(type) {
     case KSieveUi::SieveScriptBlockWidget::BlockIf:
@@ -77,6 +92,8 @@ QString SieveScriptPage::blockName(KSieveUi::SieveScriptBlockWidget::BlockType t
         return i18n("Block \"Elsif\"");
     case KSieveUi::SieveScriptBlockWidget::BlockElse:
         return i18n("Block \"Else\"");
+    default:
+        break;
     }
     return QString();
 }
@@ -85,7 +102,7 @@ void SieveScriptPage::generatedScript(QString &script, QStringList &requires)
 {
     const int numberOfTab(mTabWidget->count());
     for (int i = 0; i < numberOfTab; ++i) {
-        static_cast<SieveScriptBlockWidget*>(mTabWidget->widget(i))->generatedScript(script, requires);
+        static_cast<SieveWidgetPageAbstract*>(mTabWidget->widget(i))->generatedScript(script, requires);
     }
 }
 

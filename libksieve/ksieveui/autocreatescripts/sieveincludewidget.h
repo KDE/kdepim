@@ -18,10 +18,12 @@
 #ifndef SIEVEINCLUDEWIDGET_H
 #define SIEVEINCLUDEWIDGET_H
 
-#include <QWidget>
+#include "sievewidgetpageabstract.h"
 #include <libkdepim/kwidgetlister.h>
 #include <KComboBox>
+
 class KPushButton;
+class KLineEdit;
 class QGridLayout;
 class QCheckBox;
 namespace KSieveUi {
@@ -32,6 +34,7 @@ class SieveIncludeLocation : public KComboBox
 public:
     explicit SieveIncludeLocation(QWidget *parent = 0);
     ~SieveIncludeLocation();
+    QString code() const;
 private:
     void initialize();
 };
@@ -43,7 +46,7 @@ public:
     explicit SieveIncludeActionWidget(QWidget *parent = 0);
     ~SieveIncludeActionWidget();
 
-    void generatedScript(QString &script, QStringList &requires);
+    void generatedScript(QString &script);
     void updateAddRemoveButton( bool addButtonEnabled, bool removeButtonEnabled );
 
 private Q_SLOTS:
@@ -61,6 +64,8 @@ private:
     QGridLayout *mLayout;
     QCheckBox *mOptional;
     QCheckBox *mOnce;
+    SieveIncludeLocation *mLocation;
+    KLineEdit *mIncludeName;
 };
 
 class SieveIncludeWidgetLister : public KPIM::KWidgetLister
@@ -84,12 +89,17 @@ private:
 };
 
 
-class SieveIncludeWidget : public QWidget
+class SieveIncludeWidget : public SieveWidgetPageAbstract
 {
     Q_OBJECT
 public:
     explicit SieveIncludeWidget(QWidget *parent = 0);
     ~SieveIncludeWidget();
+
+    void generatedScript(QString &script, QStringList &requires);
+
+private:
+    SieveIncludeWidgetLister *mIncludeLister;
 };
 }
 

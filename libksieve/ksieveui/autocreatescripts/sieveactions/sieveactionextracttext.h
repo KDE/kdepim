@@ -15,30 +15,25 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "sieveactionstop.h"
 
-#include <KLocale>
+#ifndef SIEVEACTIONEXTRACTTEXT_H
+#define SIEVEACTIONEXTRACTTEXT_H
 
-using namespace KSieveUi;
-
-SieveActionStop::SieveActionStop(QObject *parent)
-    : SieveAction(QLatin1String("stop"), i18n("Stop"), parent)
+#include "sieveaction.h"
+namespace KSieveUi {
+class SieveActionExtractText : public SieveAction
 {
+    Q_OBJECT
+public:
+    SieveActionExtractText(QObject *parent = 0);
+    static SieveAction* newAction();
+    QWidget *createParamWidget( QWidget *parent ) const;
+    QString code(QWidget *) const;
+    QStringList needRequires() const;
+    bool needCheckIfServerHasCapability() const;
+    QString serverNeedsCapability() const;
+};
 }
 
-SieveAction* SieveActionStop::newAction()
-{
-    return new SieveActionStop;
-}
 
-QString SieveActionStop::code(QWidget *) const
-{
-    return QLatin1String("stop;");
-}
-
-QString SieveActionStop::help() const
-{
-    return i18n("The \"stop\" action ends all processing.  If the implicit keep has not been cancelled, then it is taken.");
-}
-
-#include "sieveactionstop.moc"
+#endif // SIEVEACTIONEXTRACTTEXT_H

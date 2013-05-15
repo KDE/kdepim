@@ -15,30 +15,34 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "sieveactionstop.h"
+#ifndef SIEVEWIDGETPAGEABSTRACT_H
+#define SIEVEWIDGETPAGEABSTRACT_H
 
-#include <KLocale>
+#include <QWidget>
 
-using namespace KSieveUi;
-
-SieveActionStop::SieveActionStop(QObject *parent)
-    : SieveAction(QLatin1String("stop"), i18n("Stop"), parent)
+namespace KSieveUi {
+class SieveWidgetPageAbstract : public QWidget
 {
+    Q_OBJECT
+public:
+    enum PageType {
+        BlockIf = 0,
+        BlockElsIf = 1,
+        BlockElse = 2,
+        Include = 3
+    };
+
+    explicit SieveWidgetPageAbstract(QWidget *parent = 0);
+    ~SieveWidgetPageAbstract();
+
+    virtual void generatedScript(QString &script, QStringList &requires) = 0;
+
+    virtual void setPageType(PageType type);
+    PageType pageType() const;
+
+private:
+    PageType mType;
+};
 }
 
-SieveAction* SieveActionStop::newAction()
-{
-    return new SieveActionStop;
-}
-
-QString SieveActionStop::code(QWidget *) const
-{
-    return QLatin1String("stop;");
-}
-
-QString SieveActionStop::help() const
-{
-    return i18n("The \"stop\" action ends all processing.  If the implicit keep has not been cancelled, then it is taken.");
-}
-
-#include "sieveactionstop.moc"
+#endif // SIEVEWIDGETPAGEABSTRACT_H
