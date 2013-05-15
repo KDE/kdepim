@@ -43,6 +43,9 @@ public:
     virtual bool needCheckIfServerHasCapability() const;
 
     virtual QString serverNeedsCapability() const;
+
+    virtual QString help() const;
+
 private:
     QString mName;
     QString mLabel;

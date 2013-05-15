@@ -70,4 +70,9 @@ QString SieveCondition::serverNeedsCapability() const
     return QString();
 }
 
+QString SieveCondition::help() const
+{
+    return QString();
+}
+
 #include "sievecondition.moc"
