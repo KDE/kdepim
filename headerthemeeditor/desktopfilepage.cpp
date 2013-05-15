@@ -43,6 +43,7 @@ DesktopFilePage::DesktopFilePage(QWidget *parent)
 
     lab = new QLabel(i18n("Description:"));
     mDescription = new KLineEdit;
+    mDescription->setClearButtonShown(true);
     lay->addWidget(lab,1,0);
     lay->addWidget(mDescription,1,1);
 
