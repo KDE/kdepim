@@ -23,6 +23,7 @@
 
 class KPushButton;
 class QGridLayout;
+class QToolButton;
 
 namespace PimCommon {
 class MinimumComboBox;
@@ -36,24 +37,30 @@ class SieveConditionWidget : public QWidget
 public:
     explicit SieveConditionWidget(QWidget *parent);
     ~SieveConditionWidget();
+
     void updateAddRemoveButton( bool addButtonEnabled, bool removeButtonEnabled );
     void generatedScript(QString &script, QStringList &requires);
+
 private Q_SLOTS:
     void slotAddWidget();
     void slotRemoveWidget();
     void slotConditionChanged(int index);
+    void slotHelp();
+
 Q_SIGNALS:
     void addWidget(QWidget *w);
     void removeWidget(QWidget *w);
+
 private:
     void initWidget();
     void setFilterCondition( QWidget *widget );
     void reset();
+    QList<KSieveUi::SieveCondition*> mConditionList;
     KPushButton *mAdd;
     KPushButton *mRemove;
     PimCommon::MinimumComboBox *mComboBox;
     QGridLayout *mLayout;
-    QList<KSieveUi::SieveCondition*> mConditionList;
+    QToolButton *mHelpButton;
 };
 
 class SieveConditionWidgetLister : public KPIM::KWidgetLister
@@ -69,9 +76,11 @@ public:
 public Q_SLOTS:
     void slotAddWidget( QWidget *w );
     void slotRemoveWidget( QWidget *w );
+
 protected:
     void clearWidget( QWidget *aWidget );
     QWidget *createWidget( QWidget *parent );
+
 private:
     void reconnectWidget(SieveConditionWidget *w );
     void updateAddRemoveButton();

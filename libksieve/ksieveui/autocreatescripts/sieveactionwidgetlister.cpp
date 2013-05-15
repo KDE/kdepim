@@ -28,6 +28,7 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QDebug>
+#include <QToolButton>
 
 using namespace KSieveUi;
 
@@ -105,6 +106,13 @@ void SieveActionWidget::initWidget()
             mComboBox->addItem( (*it)->label(),(*it)->name() );
         }
     }
+
+    mHelpButton = new QToolButton;
+    mHelpButton->setEnabled(false);
+    mLayout->addWidget( mHelpButton, 1, 0 );
+    mHelpButton->setIcon( KIcon( QLatin1String("help-hint") ) );
+    connect(mHelpButton, SIGNAL(clicked()), this, SLOT(slotHelp()));
+
     mComboBox->addItem(QLatin1String(""));
     mComboBox->setCurrentIndex(mComboBox->count()-1);
 
@@ -140,18 +148,26 @@ void SieveActionWidget::initWidget()
     setFilterAction(0);
 }
 
+
+void SieveActionWidget::slotHelp()
+{
+    //TODO
+}
+
 void SieveActionWidget::slotActionChanged(int index)
 {
     if (index < mActionList.count()) {
-        KSieveUi::SieveAction *action = mActionList.at( index );
-        setFilterAction( action->createParamWidget( this ) );
-
+        KSieveUi::SieveAction* action = mActionList.at( index );
+        mHelpButton->setEnabled(!action->help().isEmpty());
+        setFilterAction( action->createParamWidget(this) );
         //All actions after stop will not execute => don't allow to add more actions.
         const bool enableAddAction = (action->name() != QLatin1String("stop"));
         mAdd->setEnabled(enableAddAction);
+
     } else {
         mAdd->setEnabled(true);
         setFilterAction( 0 );
+        mHelpButton->setEnabled(false);
     }
 }
 
