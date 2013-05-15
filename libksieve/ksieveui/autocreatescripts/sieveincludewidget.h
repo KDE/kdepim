@@ -19,8 +19,38 @@
 #define SIEVEINCLUDEWIDGET_H
 
 #include <QWidget>
+#include <libkdepim/kwidgetlister.h>
 
 namespace KSieveUi {
+class SieveIncludeActionWidget : public QWidget
+{
+    Q_OBJECT
+public:
+    explicit SieveIncludeActionWidget(QWidget *parent = 0);
+    ~SieveIncludeActionWidget();
+};
+
+class SieveIncludeWidgetLister : public KPIM::KWidgetLister
+{
+    Q_OBJECT
+public:
+    explicit SieveIncludeWidgetLister(QWidget *parent = 0);
+    ~SieveIncludeWidgetLister();
+
+    void generatedScript(QString &script, QStringList &requires);
+public Q_SLOTS:
+    void slotAddWidget( QWidget *w );
+    void slotRemoveWidget( QWidget *w );
+
+protected:
+    void clearWidget( QWidget *aWidget );
+    QWidget *createWidget( QWidget *parent );
+private:
+    void reconnectWidget(SieveIncludeActionWidget *w );
+    void updateAddRemoveButton();
+};
+
+
 class SieveIncludeWidget : public QWidget
 {
     Q_OBJECT
