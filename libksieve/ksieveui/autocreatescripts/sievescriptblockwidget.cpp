@@ -62,13 +62,13 @@ SieveScriptBlockWidget::SieveScriptBlockWidget(QWidget *parent)
     mScriptConditionLister = new SieveConditionWidgetLister;
     vbox->addWidget(mScriptConditionLister);
 
-    topLayout->addWidget(mConditions);
+    topLayout->addWidget(mConditions,0, Qt::AlignTop);
 
     QGroupBox *actions = new QGroupBox(i18n("Actions"));
     vbox = new QVBoxLayout;
     actions->setLayout(vbox);
     mScriptActionLister = new SieveActionWidgetLister;
-    vbox->addWidget(mScriptActionLister);
+    vbox->addWidget(mScriptActionLister,0, Qt::AlignTop);
     topLayout->addWidget(actions);
 
     QHBoxLayout *newBlockLayout = new QHBoxLayout;

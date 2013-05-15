@@ -137,7 +137,7 @@ SieveIncludeWidget::SieveIncludeWidget(QWidget *parent)
 {
     QHBoxLayout *lay = new QHBoxLayout;
     mIncludeLister = new SieveIncludeWidgetLister;
-    lay->addWidget(mIncludeLister);
+    lay->addWidget(mIncludeLister,0, Qt::AlignTop);
     setLayout(lay);
 }
 
