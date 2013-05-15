@@ -77,8 +77,11 @@ bool ScamDetection::scanFrame(const QWebElement &rootElement)
                     || title.startsWith(QLatin1String("https:"))
                     || title.startsWith(QLatin1String("www."))) {
                 if (href != title) {
-                    foundScam = true;
-                    mDetails += QLatin1String("<li>") + i18n("This email contains a link which reads as '%1' in the text, but actually points to '%2'. This is often the case in scam emails to mislead the recipient", addWarningColor(title), addWarningColor(href)) + QLatin1String("</li>");
+                    // http://www.kde.org == http://www.kde.org/
+                    if (href != (title + QLatin1Char('/'))) {
+                        foundScam = true;
+                        mDetails += QLatin1String("<li>") + i18n("This email contains a link which reads as '%1' in the text, but actually points to '%2'. This is often the case in scam emails to mislead the recipient", addWarningColor(title), addWarningColor(href)) + QLatin1String("</li>");
+                    }
                 }
             }
         }
