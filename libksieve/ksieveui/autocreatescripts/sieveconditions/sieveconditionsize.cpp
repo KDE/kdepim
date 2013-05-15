@@ -66,4 +66,9 @@ QString SieveConditionSize::code(QWidget *w) const
     return QString::fromLatin1("size %1 %2K").arg(comparaison).arg(spinbox->value());
 }
 
+QString SieveConditionSize::help() const
+{
+    return i18n("The \"size\" test deals with the size of a message.  It takes either a tagged argument of \":over\" or \":under\", followed by a number representing the size of the message.");
+}
+
 #include "sieveconditionsize.moc"

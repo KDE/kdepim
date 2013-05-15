@@ -29,6 +29,7 @@
 #include <QLabel>
 #include <QDebug>
 #include <QToolButton>
+#include <QWhatsThis>
 
 using namespace KSieveUi;
 
@@ -108,6 +109,7 @@ void SieveActionWidget::initWidget()
     }
 
     mHelpButton = new QToolButton;
+    mHelpButton->setToolTip(i18n("Help"));
     mHelpButton->setEnabled(false);
     mLayout->addWidget( mHelpButton, 1, 0 );
     mHelpButton->setIcon( KIcon( QLatin1String("help-hint") ) );
@@ -151,7 +153,12 @@ void SieveActionWidget::initWidget()
 
 void SieveActionWidget::slotHelp()
 {
-    //TODO
+    const int index = mComboBox->currentIndex();
+    if (index < mActionList.count()) {
+        KSieveUi::SieveAction* action = mActionList.at( index );
+        const QString help = action->help();
+        QWhatsThis::showText( QCursor::pos(), help );
+    }
 }
 
 void SieveActionWidget::slotActionChanged(int index)

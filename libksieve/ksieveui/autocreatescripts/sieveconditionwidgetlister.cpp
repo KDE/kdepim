@@ -29,6 +29,7 @@
 #include <QLabel>
 #include <QStackedWidget>
 #include <QToolButton>
+#include <QWhatsThis>
 #include <QDebug>
 
 using namespace KSieveUi;
@@ -106,6 +107,7 @@ void SieveConditionWidget::initWidget()
     }
 
     mHelpButton = new QToolButton;
+    mHelpButton->setToolTip(i18n("Help"));
     mHelpButton->setEnabled(false);
     mLayout->addWidget( mHelpButton, 1, 0 );
     mHelpButton->setIcon( KIcon( QLatin1String("help-hint") ) );
@@ -145,7 +147,12 @@ void SieveConditionWidget::initWidget()
 
 void SieveConditionWidget::slotHelp()
 {
-    //TODO
+    const int index = mComboBox->currentIndex();
+    if (index < mConditionList.count()) {
+        KSieveUi::SieveCondition* condition = mConditionList.at( index );
+        const QString help = condition->help();
+        QWhatsThis::showText( QCursor::pos(), help );
+    }
 }
 
 void SieveConditionWidget::slotConditionChanged(int index)
@@ -159,7 +166,6 @@ void SieveConditionWidget::slotConditionChanged(int index)
         mHelpButton->setEnabled(false);
     }
 }
-
 
 void SieveConditionWidget::slotAddWidget()
 {
