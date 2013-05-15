@@ -53,19 +53,31 @@ void SendLaterJob::start()
             mFetchScope.setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
             fetch->setFetchScope( mFetchScope );
             connect( fetch, SIGNAL(itemsReceived(Akonadi::Item::List)), SLOT(slotMessageTransfered(Akonadi::Item::List)) );
-            connect( fetch, SIGNAL(result(KJob*)), SLOT(slotJobFinished()) );
+            connect( fetch, SIGNAL(result(KJob*)), SLOT(slotJobFinished(KJob*)) );
             fetch->start();
         }
     }
 }
 
-void SendLaterJob::slotMessageTransfered(const Akonadi::Item::List& )
+void SendLaterJob::slotMessageTransfered(const Akonadi::Item::List& items)
 {
-    //TODO
+    if (items.count() == 1) {
+        mItem = items.first();
+        return;
+    }
+    //TODO error
 }
 
-void SendLaterJob::slotJobFinished()
+void SendLaterJob::slotJobFinished(KJob* job)
 {
+    if ( job->error() ) {
+        sendError(i18n("Can not fetch message. %1", job->errorString() ));
+        kDebug()<<"Can not fetch message: "<<job->errorString();
+        return;
+    }
+    if (mItem.isValid()) {
+        //Send it :)
+    }
     //TODO
 }
 
@@ -82,13 +94,11 @@ void SendLaterJob::sendDone()
     mManager->sendDone(mInfo);
 }
 
-void SendLaterJob::sendError()
+void SendLaterJob::sendError(const QString &error)
 {
-    //TODO
     const QPixmap pixmap = KIcon( QLatin1String("kmail") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
-
     KNotification::event( QLatin1String("mailsendfailed"),
-                          QString(), /*TODO*/
+                          error,
                           pixmap,
                           0,
                           KNotification::CloseOnTimeout,
