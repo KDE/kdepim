@@ -20,14 +20,47 @@
 
 #include <QWidget>
 #include <libkdepim/kwidgetlister.h>
-
+#include <KComboBox>
+class KPushButton;
+class QGridLayout;
+class QCheckBox;
 namespace KSieveUi {
+
+class SieveIncludeLocation : public KComboBox
+{
+    Q_OBJECT
+public:
+    explicit SieveIncludeLocation(QWidget *parent = 0);
+    ~SieveIncludeLocation();
+private:
+    void initialize();
+};
+
 class SieveIncludeActionWidget : public QWidget
 {
     Q_OBJECT
 public:
     explicit SieveIncludeActionWidget(QWidget *parent = 0);
     ~SieveIncludeActionWidget();
+
+    void generatedScript(QString &script, QStringList &requires);
+    void updateAddRemoveButton( bool addButtonEnabled, bool removeButtonEnabled );
+
+private Q_SLOTS:
+    void slotAddWidget();
+    void slotRemoveWidget();
+
+Q_SIGNALS:
+    void addWidget(QWidget *w);
+    void removeWidget(QWidget *w);
+
+private:
+    void initWidget();
+    KPushButton *mAdd;
+    KPushButton *mRemove;
+    QGridLayout *mLayout;
+    QCheckBox *mOptional;
+    QCheckBox *mOnce;
 };
 
 class SieveIncludeWidgetLister : public KPIM::KWidgetLister

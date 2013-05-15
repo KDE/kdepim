@@ -17,19 +17,85 @@
 
 #include "sieveincludewidget.h"
 
+#include <KPushButton>
+
+#include <QGridLayout>
+#include <QCheckBox>
+#include <QLabel>
+
+
 namespace KSieveUi {
-static int MINIMUMINCLUDEACTION = 1;
+static int MINIMUMINCLUDEACTION = 0;
 static int MAXIMUMINCLUDEACTION = 8;
+
+SieveIncludeLocation::SieveIncludeLocation(QWidget *parent)
+    : KComboBox(parent)
+{
+    initialize();
+}
+
+SieveIncludeLocation::~SieveIncludeLocation()
+{
+}
+
+void SieveIncludeLocation::initialize()
+{
+
+}
+
 SieveIncludeActionWidget::SieveIncludeActionWidget(QWidget *parent)
     : QWidget(parent)
 {
-
+    initWidget();
 }
 
 SieveIncludeActionWidget::~SieveIncludeActionWidget()
 {
 
 }
+
+void SieveIncludeActionWidget::generatedScript(QString &script, QStringList &requires)
+{
+    //TODO
+}
+
+void SieveIncludeActionWidget::initWidget()
+{
+    mLayout = new QGridLayout(this);
+    mLayout->setContentsMargins( 0, 0, 0, 0 );
+
+    mAdd = new KPushButton( this );
+    mAdd->setIcon( KIcon( QLatin1String("list-add") ) );
+    mAdd->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
+
+    mRemove = new KPushButton( this );
+    mRemove->setIcon( KIcon( QLatin1String("list-remove") ) );
+    mRemove->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
+    mLayout->addWidget( mAdd, 1, 3 );
+    mLayout->addWidget( mRemove, 1, 4 );
+
+    connect( mAdd, SIGNAL(clicked()),
+             this, SLOT(slotAddWidget()) );
+    connect( mRemove, SIGNAL(clicked()),
+             this, SLOT(slotRemoveWidget()) );
+}
+
+void SieveIncludeActionWidget::slotAddWidget()
+{
+    emit addWidget( this );
+}
+
+void SieveIncludeActionWidget::slotRemoveWidget()
+{
+    emit removeWidget( this );
+}
+
+void SieveIncludeActionWidget::updateAddRemoveButton( bool addButtonEnabled, bool removeButtonEnabled )
+{
+    mAdd->setEnabled(addButtonEnabled);
+    mRemove->setEnabled(removeButtonEnabled);
+}
+
 
 SieveIncludeWidget::SieveIncludeWidget(QWidget *parent)
     : QWidget(parent)
@@ -86,8 +152,7 @@ void SieveIncludeWidgetLister::updateAddRemoveButton()
     QList<QWidget*>::ConstIterator wEnd = widgetList.constEnd();
     for ( ; wIt != wEnd ;++wIt ) {
         SieveIncludeActionWidget *w = qobject_cast<SieveIncludeActionWidget*>( *wIt );
-        //TODO
-        //w->updateAddRemoveButton( addButtonEnabled, removeButtonEnabled );
+        w->updateAddRemoveButton( addButtonEnabled, removeButtonEnabled );
     }
 }
 
@@ -98,8 +163,7 @@ void SieveIncludeWidgetLister::generatedScript(QString &script, QStringList &req
     QList<QWidget*>::ConstIterator wEnd = widgetList.constEnd();
     for ( ; wIt != wEnd ;++wIt ) {
         SieveIncludeActionWidget *w = qobject_cast<SieveIncludeActionWidget*>( *wIt );
-        //TOOD
-        //w->generatedScript(script, requires);
+        w->generatedScript(script, requires);
     }
 }
 
