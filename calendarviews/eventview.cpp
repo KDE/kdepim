@@ -645,7 +645,12 @@ QColor EventView::itemFrameColor( const QColor &color, bool selected )
 
 void EventView::removeFilteredOccurrences( const KCalCore::Todo::Ptr &todo, QList<KDateTime> &list )
 {
-  Q_ASSERT( todo );
+
+  if ( !todo ) {
+    kError() << "Todo is 0. This shouldn't happen.";
+    Q_ASSERT( false );
+    return;
+  }
 
   if ( todo->recurs() && calendar()->filter() &&
        ( calendar()->filter()->criteria() & KCalCore::CalFilter::HideCompletedTodos ) ) {
