@@ -431,6 +431,8 @@ void Pane::Private::onSelectionChanged( const QItemSelection &selected, const QI
   Widget *w = static_cast<Widget*>( q->currentWidget() );
   QItemSelectionModel * s = mWidgetSelectionHash[w];
 
+  w->saveCurrentSelection();
+
   // Deselect old before we select new - so that the messagelist can clear first.
   s->select( mapSelectionToSource( deselected ), QItemSelectionModel::Deselect );
   s->select( mapSelectionToSource( selected ), QItemSelectionModel::Select );

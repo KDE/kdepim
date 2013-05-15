@@ -393,10 +393,12 @@ void Widget::saveCurrentSelection()
   {
     // Save the current selection
     MessageItem * lastSelectedMessageItem = d->mView->currentMessageItem( false );
-    Manager::instance()->savePreSelectedMessageForStorageModelId(
+    if ( lastSelectedMessageItem ) {
+      Manager::instance()->savePreSelectedMessageForStorageModelId(
         d->mLastStorageModelId,
         lastSelectedMessageItem ? lastSelectedMessageItem->uniqueId() : 0
       );
+    }
   }
 }
 
