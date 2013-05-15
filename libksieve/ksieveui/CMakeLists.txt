@@ -51,6 +51,7 @@ set(ksieveui_LIB_SRCS
   autocreatescripts/sieveactions/sieveactionaddheader.cpp
   autocreatescripts/sieveactions/sieveactionvacation.cpp
   autocreatescripts/sieveactions/sieveactionenclose.cpp
+  autocreatescripts/sieveactions/sieveactionreplace.cpp
   autocreatescripts/sieveactions/widgets/selectflagswidget.cpp
   autocreatescripts/sieveactions/widgets/selectfileintowidget.cpp
   autocreatescripts/sieveactions/widgets/addresslineedit.cpp
