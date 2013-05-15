@@ -19,6 +19,11 @@
 #include "sendlaterinfo.h"
 #include "sendlatermanager.h"
 
+#include <mailtransport/transportattribute.h>
+#include <mailtransport/sentbehaviourattribute.h>
+
+#include <Akonadi/ItemFetchJob>
+
 #include <KNotification>
 #include <KLocale>
 #include <KGlobal>
@@ -41,10 +46,27 @@ void SendLaterJob::start()
 {
     if (mInfo) {
         if (mInfo->itemId() > -1) {
-
+            const Akonadi::Item item = Akonadi::Item(mInfo->itemId());
+            Akonadi::ItemFetchJob *fetch = new Akonadi::ItemFetchJob( item, this );
+            mFetchScope.fetchAttribute<MailTransport::TransportAttribute>();
+            mFetchScope.fetchAttribute<MailTransport::SentBehaviourAttribute>();
+            mFetchScope.setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
+            fetch->setFetchScope( mFetchScope );
+            connect( fetch, SIGNAL(itemsReceived(Akonadi::Item::List)), SLOT(slotMessageTransfered(Akonadi::Item::List)) );
+            connect( fetch, SIGNAL(result(KJob*)), SLOT(slotJobFinished()) );
+            fetch->start();
         }
-        //TODO fetch item.
     }
+}
+
+void SendLaterJob::slotMessageTransfered(const Akonadi::Item::List& )
+{
+    //TODO
+}
+
+void SendLaterJob::slotJobFinished()
+{
+    //TODO
 }
 
 void SendLaterJob::sendDone()

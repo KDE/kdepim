@@ -20,6 +20,8 @@
 
 
 #include <QObject>
+#include <Akonadi/ItemFetchScope>
+#include <Akonadi/Item>
 
 class SendLaterInfo;
 class SendLaterManager;
@@ -35,14 +37,17 @@ public:
 private Q_SLOTS:
     void sendDone();
     void sendError();
+    void slotMessageTransfered(const Akonadi::Item::List& );
+    void slotJobFinished();
 
 Q_SIGNALS:
     void error(const QString &err);
     void done();
 
 private:
-   SendLaterManager *mManager;
-   SendLaterInfo *mInfo;
+    Akonadi::ItemFetchScope mFetchScope;
+    SendLaterManager *mManager;
+    SendLaterInfo *mInfo;
 };
 
 #endif // SENDLATERJOB_H
