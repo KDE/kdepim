@@ -73,4 +73,9 @@ bool SieveActionReject::needCheckIfServerHasCapability() const
     return true;
 }
 
+QString SieveActionReject::help() const
+{
+    return i18n(" The \"reject\" action cancels the implicit keep and refuses delivery of a message.");
+}
+
 #include "sieveactionreject.moc"

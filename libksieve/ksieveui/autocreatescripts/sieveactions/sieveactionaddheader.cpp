@@ -79,5 +79,9 @@ QString SieveActionAddHeader::code(QWidget *w) const
     return QString::fromLatin1("addheader %1 \"%2\" \"%3\";").arg(position).arg(headerStr).arg(valueStr);
 }
 
+QString SieveActionAddHeader::help() const
+{
+    return i18n("The addheader action adds a header field to the existing message header.");
+}
 
 #include "sieveactionaddheader.moc"

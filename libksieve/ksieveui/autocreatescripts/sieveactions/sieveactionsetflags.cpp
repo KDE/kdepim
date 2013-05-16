@@ -37,4 +37,9 @@ QString SieveActionSetFlags::flagsCode() const
     return QString::fromLatin1("setflag");
 }
 
+QString SieveActionSetFlags::help() const
+{
+    return i18n("Setflag is used for setting [IMAP] system flags or keywords. Setflag replaces any previously set flags.");
+}
+
 #include "sieveactionsetflags.moc"

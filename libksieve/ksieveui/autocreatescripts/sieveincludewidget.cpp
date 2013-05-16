@@ -88,17 +88,17 @@ void SieveIncludeActionWidget::initWidget()
     mLocation = new SieveIncludeLocation;
     mLayout->addWidget( mLocation, 1, 1 );
 
-    mOptional = new QCheckBox(i18n("Optional"));
-    mLayout->addWidget( mOptional, 1, 2 );
-
-    mOnce = new QCheckBox(i18n("Once"));
-    mLayout->addWidget( mOnce, 1, 3 );
-
     lab = new QLabel(i18n("Name:"));
-    mLayout->addWidget( lab, 1, 4 );
+    mLayout->addWidget( lab, 1, 2 );
 
     mIncludeName = new KLineEdit;
-    mLayout->addWidget( mIncludeName, 1, 5 );
+    mLayout->addWidget( mIncludeName, 1, 3 );
+
+    mOptional = new QCheckBox(i18n("Optional"));
+    mLayout->addWidget( mOptional, 1, 4 );
+
+    mOnce = new QCheckBox(i18n("Once"));
+    mLayout->addWidget( mOnce, 1, 5 );
 
     mAdd = new KPushButton( this );
     mAdd->setIcon( KIcon( QLatin1String("list-add") ) );

@@ -15,21 +15,33 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#ifndef SIEVECONDITIONMETADATA_H
+#define SIEVECONDITIONMETADATA_H
 
-#ifndef SIEVEACTIONSETFLAGS_H
-#define SIEVEACTIONSETFLAGS_H
+#include "sievecondition.h"
 
-#include "sieveactionabstractflags.h"
 namespace KSieveUi {
-class SieveActionSetFlags : public SieveActionAbstractFlags
+class SieveConditionMetaData : public SieveCondition
 {
     Q_OBJECT
 public:
-    SieveActionSetFlags(QObject *parent = 0);
-    static SieveAction* newAction();
-    QString flagsCode() const;
-    QString help() const;
+    SieveConditionMetaData(QObject *parent = 0);
+
+    /**
+     * Static function that creates a filter action of this type.
+     */
+    static SieveCondition *newAction();
+
+    QWidget *createParamWidget( QWidget *parent ) const;
+
+    QString code(QWidget *parent) const;
+
+    QStringList needRequires(QWidget *parent) const;
+
+    bool needCheckIfServerHasCapability() const;
+
+    QString serverNeedsCapability() const;
 };
 }
 
-#endif // SIEVEACTIONSETFLAGS_H
+#endif // SIEVECONDITIONMETADATA_H

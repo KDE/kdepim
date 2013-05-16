@@ -36,7 +36,7 @@ SieveTreeWidgetProgress::~SieveTreeWidgetProgress()
 void SieveTreeWidgetProgress::slotTimerDone()
 {
     mItem->setProgressAnimation(mProgressPix.frameAt(mProgressCount));
-    mProgressCount++;
+    ++mProgressCount;
     if (mProgressCount == 8)
         mProgressCount = 0;
 
@@ -55,7 +55,6 @@ void SieveTreeWidgetProgress::stopAnimation()
         mProgressTimer->stop();
     mItem->setDefaultIcon();
 }
-
 
 SieveTreeWidgetItem::SieveTreeWidgetItem(QTreeWidget *treeWidget, QTreeWidgetItem *item)
     : QTreeWidgetItem(treeWidget, item)
