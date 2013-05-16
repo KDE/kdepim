@@ -34,6 +34,10 @@ public:
     const char * name() const { return "grantlee"; }
 
     QString format( KMime::Message *message ) const;
+
+    bool hasAttachmentQuickList() const {
+        return true;
+    }
 private:
     GrantleeHeaderFormatter *mGrantleeFormatter;
 };
