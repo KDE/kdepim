@@ -83,9 +83,9 @@ ManageSieveScriptsDialog::ManageSieveScriptsDialog( QWidget * parent )
     connect( mDeactivateScript, SIGNAL(clicked()), SLOT(slotDeactivateScript()) );
     buttonLayout->addWidget( mDeactivateScript );
 
-    KPushButton *mClose = new KPushButton( KStandardGuiItem::close() );
-    connect( mClose, SIGNAL(clicked()), this, SLOT(accept()) );
-    buttonLayout->addWidget( mClose );
+    KPushButton *close = new KPushButton( KStandardGuiItem::close() );
+    connect( close, SIGNAL(clicked()), this, SLOT(accept()) );
+    buttonLayout->addWidget( close );
 
     KConfigGroup group( KGlobal::config(), "ManageSieveScriptsDialog" );
     const QSize size = group.readEntry( "Size", QSize() );
@@ -149,16 +149,13 @@ void ManageSieveScriptsDialog::slotUpdateButtons()
         enabled = false;
     else if ( !item->parent() && !mUrls.count( item ))
         enabled = false;
-    if ( !enabled )
-    {
+    if ( !enabled ) {
         mNewScript->setEnabled( false );
         mEditScript->setEnabled( false );
         mDeleteScript->setEnabled( false );
         mDeactivateScript->setEnabled( false );
-    }
-    else
-    {
-        if ( serverHasError(item) )
+    } else {
+        if ( serverHasError(item) || !mJobs.keys(item).isEmpty())
             mNewScript->setEnabled( false );
         else
             mNewScript->setEnabled( mUrls.count( item ) );
@@ -264,7 +261,7 @@ void ManageSieveScriptsDialog::slotContextMenuRequested( const QPoint& p )
         }
     } else if ( !item->parent() ) {
         // top-levels:
-        if ( !serverHasError(item) )
+        if ( !serverHasError(item) && mJobs.keys(item).isEmpty())
             menu.addAction( i18n( "New Script..." ), this, SLOT(slotNewScript()) );
     }
     if ( !menu.actions().isEmpty() )
