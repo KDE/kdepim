@@ -70,7 +70,7 @@ void ScamDetectionWarningWidget::slotShowDetails(const QString &content)
 
 void ScamDetectionWarningWidget::slotShowWarning()
 {
-    setVisible(true);
+    animatedShow();
 }
 
 void ScamDetectionWarningWidget::slotDisableScamDetection()
