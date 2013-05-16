@@ -40,6 +40,8 @@ KMail1ImportData::~KMail1ImportData()
 
 bool KMail1ImportData::foundMailer() const
 {
+    //TODO uncomment when implemented.
+    return false;
     QFile file( mPath );
     if ( file.exists() )
         return true;
