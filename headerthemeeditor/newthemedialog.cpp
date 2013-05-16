@@ -71,7 +71,6 @@ void NewThemeDialog::readConfig()
         KConfigGroup group = config->group(QLatin1String("Global"));
         mUrlRequester->setUrl(group.readEntry("path", KUrl()));
     }
-
 }
 
 QString NewThemeDialog::themeName() const

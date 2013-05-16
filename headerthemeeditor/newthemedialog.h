@@ -30,7 +30,6 @@ public:
     ~NewThemeDialog();
 
     QString themeName() const;
-
     QString directory() const;
 
 private Q_SLOTS:
