@@ -62,6 +62,7 @@ void SendLaterJob::start()
 void SendLaterJob::slotMessageTransfered(const Akonadi::Item::List& items)
 {
     if (items.count() == 1) {
+        //Success
         mItem = items.first();
         return;
     }
