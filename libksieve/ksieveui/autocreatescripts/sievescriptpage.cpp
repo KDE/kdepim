@@ -45,6 +45,7 @@ SieveScriptPage::SieveScriptPage(QWidget *parent)
     SieveScriptBlockWidget *blockWidget = createScriptBlock(SieveScriptBlockWidget::BlockIf);
     mTabWidget->addTab(blockWidget, blockName(KSieveUi::SieveScriptBlockWidget::BlockIf));
     topLayout->addWidget(mTabWidget);
+    mTabWidget->setCurrentWidget(blockWidget);
     setLayout(topLayout);
 }
 
