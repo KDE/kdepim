@@ -17,11 +17,75 @@
 
 #include "sievetreewidgetitem.h"
 
-SieveTreeWidgetItem::SieveTreeWidgetItem()
-    : QTreeWidgetItem()
+#include <QTimer>
+
+SieveTreeWidgetProgress::SieveTreeWidgetProgress(SieveTreeWidgetItem *item, QObject *parent)
+    : QObject(parent),
+      mProgressCount(0),
+      mItem(item)
 {
+    mProgressPix = KPixmapSequence(QLatin1String("process-working"), KIconLoader::SizeSmallMedium);
+    mProgressTimer = new QTimer(this);
+    connect(mProgressTimer, SIGNAL(timeout()), this, SLOT(slotTimerDone()));
+}
+
+SieveTreeWidgetProgress::~SieveTreeWidgetProgress()
+{
+}
+
+void SieveTreeWidgetProgress::slotTimerDone()
+{
+    mItem->setProgressAnimation(mProgressPix.frameAt(mProgressCount));
+    mProgressCount++;
+    if (mProgressCount == 8)
+        mProgressCount = 0;
+
+    mProgressTimer->start(300);
+}
+
+void SieveTreeWidgetProgress::startAnimation()
+{
+    mProgressCount = 0;
+    mProgressTimer->start(300);
+}
+
+void SieveTreeWidgetProgress::stopAnimation()
+{
+    if (mProgressTimer->isActive())
+        mProgressTimer->stop();
+    mItem->setDefaultIcon();
+}
+
+
+SieveTreeWidgetItem::SieveTreeWidgetItem(QTreeWidget *treeWidget, QTreeWidgetItem *item)
+    : QTreeWidgetItem(treeWidget, item)
+{
+    mProgress = new SieveTreeWidgetProgress(this);
 }
 
 SieveTreeWidgetItem::~SieveTreeWidgetItem()
 {
+    delete mProgress;
 }
+
+void SieveTreeWidgetItem::startAnimation()
+{
+    mProgress->startAnimation();
+}
+
+void SieveTreeWidgetItem::stopAnimation()
+{
+    mProgress->stopAnimation();
+}
+
+void SieveTreeWidgetItem::setProgressAnimation(const QPixmap& pix)
+{
+    setIcon(0, QIcon(pix));
+}
+
+void SieveTreeWidgetItem::setDefaultIcon()
+{
+    setIcon( 0, SmallIcon( QLatin1String("network-server") ) );
+}
+
+#include "sievetreewidgetitem.moc"

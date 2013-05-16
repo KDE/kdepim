@@ -2,6 +2,7 @@
 #include "managesievescriptsdialog.h"
 #include "editor/sievetextedit.h"
 #include "editor/sieveeditor.h"
+#include "widgets/sievetreewidgetitem.h"
 
 #include <klocale.h>
 #include <kiconloader.h>
@@ -171,13 +172,13 @@ void ManageSieveScriptsDialog::slotRefresh()
 {
     mBlockSignal = true;
     clear();
-    QTreeWidgetItem *last = 0;
+    SieveTreeWidgetItem *last = 0;
     Akonadi::AgentInstance::List lst = KSieveUi::Util::imapAgentInstances();
     foreach ( const Akonadi::AgentInstance& type, lst ) {
         if ( type.status() == Akonadi::AgentInstance::Broken )
             continue;
 
-        last = new QTreeWidgetItem( mListView, last );
+        last = new SieveTreeWidgetItem( mListView, last );
         last->setText( 0, type.name() );
         last->setIcon( 0, SmallIcon( QLatin1String("network-server") ) );
 
@@ -195,6 +196,7 @@ void ManageSieveScriptsDialog::slotRefresh()
                      this, SLOT(slotResult(KManageSieve::SieveJob*,bool,QString,bool)) );
             mJobs.insert( job, last );
             mUrls.insert( last, u );
+            last->startAnimation();
         }
     }
     slotUpdateButtons();
@@ -207,7 +209,7 @@ void ManageSieveScriptsDialog::slotResult( KManageSieve::SieveJob * job, bool su
     QTreeWidgetItem * parent = mJobs[job];
     if ( !parent )
         return;
-
+    (static_cast<SieveTreeWidgetItem*>(parent))->stopAnimation();
     if (success)
         parent->setData( 0, SIEVE_SERVER_CAPABILITIES, job->sieveCapabilities() );
     mJobs.remove( job );

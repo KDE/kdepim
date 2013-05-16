@@ -18,13 +18,48 @@
 #ifndef SIEVETREEWIDGETITEM_H
 #define SIEVETREEWIDGETITEM_H
 
+#include <KPixmapSequence>
 #include <QTreeWidgetItem>
 
+
+class QTimer;
+class QTreeWidget;
+class QTreeWidgetItem;
+class SieveTreeWidgetProgress;
 class SieveTreeWidgetItem : public QTreeWidgetItem
 {
 public:
-    SieveTreeWidgetItem();
+    SieveTreeWidgetItem(QTreeWidget *treeWidget, QTreeWidgetItem *item);
     ~SieveTreeWidgetItem();
+
+    void startAnimation();
+    void stopAnimation();
+    void setDefaultIcon();
+    void setProgressAnimation(const QPixmap& pix);
+
+private:
+    SieveTreeWidgetProgress *mProgress;
 };
+
+class SieveTreeWidgetProgress : public QObject
+{
+    Q_OBJECT
+public:
+    explicit SieveTreeWidgetProgress(SieveTreeWidgetItem *item, QObject *parent = 0);
+    ~SieveTreeWidgetProgress();
+
+    void startAnimation();
+    void stopAnimation();
+
+private Q_SLOTS:
+    void slotTimerDone();
+
+private:
+    int mProgressCount;
+    KPixmapSequence mProgressPix;
+    QTimer *mProgressTimer;
+    SieveTreeWidgetItem *mItem;
+};
+
 
 #endif // SIEVETREEWIDGETITEM_H

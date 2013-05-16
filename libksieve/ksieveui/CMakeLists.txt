@@ -11,6 +11,7 @@ add_subdirectory(tests)
 
 set(ksieveui_LIB_SRCS
   managesievescriptsdialog.cpp
+  widgets/sievetreewidgetitem.cpp
   debug/sievedebugdialog.cpp
   util.cpp
   vacation/vacation.cpp
