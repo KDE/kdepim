@@ -43,11 +43,11 @@ SieveScriptTabWidget::~SieveScriptTabWidget()
 void SieveScriptTabWidget::slotTabContextMenuRequest( const QPoint &pos )
 {
     QTabBar *bar = tabBar();
-    if ( count() <= 1 )
+    if ( count() <= 2 )
         return;
 
     const int indexBar = bar->tabAt( bar->mapFrom( this, pos ) );
-    if ( indexBar == -1 || indexBar == 0 )
+    if ( indexBar < 2 )
         return;
 
     KMenu menu( this );
