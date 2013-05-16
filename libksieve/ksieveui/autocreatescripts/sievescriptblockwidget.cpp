@@ -203,7 +203,7 @@ void SieveScriptBlockWidget::generatedScript(QString &script, QStringList &requi
             script += QLatin1String(")\n{\n");
     }
     mScriptActionLister->generatedScript(script, requires);
-    script += QLatin1String("}\n");
+    script += QLatin1String("} ");
 }
 }
 
