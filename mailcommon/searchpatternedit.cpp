@@ -538,6 +538,7 @@ void SearchRuleWidgetLister::regenerateRuleListFromWidgets()
 SearchPatternEdit::SearchPatternEdit( QWidget *parent, SearchPatternEditOptions options )
   : QWidget( parent ), mAllMessageRBtn( 0 )
 {
+  setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed );
   setObjectName( "SearchPatternEdit" );
   initLayout( options );
 }
@@ -549,6 +550,7 @@ SearchPatternEdit::~SearchPatternEdit()
 void SearchPatternEdit::initLayout( SearchPatternEditOptions options )
 {
   QVBoxLayout *layout = new QVBoxLayout( this );
+  layout->setMargin( 0 );
 
   const bool matchAllMessages = ( options & MailCommon::SearchPatternEdit::MatchAllMessages );
   //------------the radio buttons
