@@ -33,5 +33,11 @@ void SendLaterUtil::checkTime(SendLaterInfo *info)
 
 bool SendLaterUtil::compareSendLaterInfo(SendLaterInfo *left, SendLaterInfo *right)
 {
-  return left->dateTime() < right->dateTime();
+    if (left->dateTime() == right->dateTime()) {
+        //Set no recursive first.
+        if (left->isRecursive())  {
+            return false;
+        }
+    }
+    return left->dateTime() < right->dateTime();
 }

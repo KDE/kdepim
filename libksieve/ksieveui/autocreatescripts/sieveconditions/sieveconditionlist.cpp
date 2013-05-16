@@ -23,6 +23,7 @@
 #include "sieveconditionenvelope.h"
 #include "sieveconditionexists.h"
 #include "sieveconditiontrue.h"
+#include "sieveconditionfalse.h"
 //RFC5173 (extension)
 #include "sieveconditionbody.h"
 //rfc5260
@@ -35,6 +36,9 @@
 #include "sieveconditionspamtestplus.h"
 #include "sieveconditionvirustest.h"
 #include "sieveconditionihave.h"
+#include "sieveconditionenvironment.h"
+
+#include "sieveconditionhasflag.h"
 
 QList<KSieveUi::SieveCondition *> KSieveUi::SieveConditionList::conditionList()
 {
@@ -45,6 +49,7 @@ QList<KSieveUi::SieveCondition *> KSieveUi::SieveConditionList::conditionList()
     list.append(new KSieveUi::SieveConditionEnvelope);
     list.append(new KSieveUi::SieveConditionExists);
     list.append(new KSieveUi::SieveConditionTrue);
+    list.append(new KSieveUi::SieveConditionFalse);
     list.append(new KSieveUi::SieveConditionBody);
     list.append(new KSieveUi::SieveConditionDate);
     list.append(new KSieveUi::SieveConditionCurrentDate);
@@ -53,6 +58,8 @@ QList<KSieveUi::SieveCondition *> KSieveUi::SieveConditionList::conditionList()
     list.append(new KSieveUi::SieveConditionSpamTestPlus);
     list.append(new KSieveUi::SieveConditionVirusTest);
     list.append(new KSieveUi::SieveConditionIhave);
+    list.append(new KSieveUi::SieveConditionEnvironment);
+    list.append(new KSieveUi::SieveConditionHasFlag);
     return list;
 }
 

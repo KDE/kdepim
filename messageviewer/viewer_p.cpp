@@ -1097,6 +1097,7 @@ void ViewerPrivate::initHtmlWidget()
   connect( mScamDetectionWarning, SIGNAL(showDetails()), mViewer, SLOT(slotShowDetails()));
   connect( mScamDetectionWarning, SIGNAL(moveMessageToTrash()), this, SIGNAL(moveMessageToTrash()));
   connect( mScamDetectionWarning, SIGNAL(messageIsNotAScam()), this, SLOT(slotMessageIsNotAScam()));
+  connect( mScamDetectionWarning, SIGNAL(addToWhiteList()), this, SLOT(slotAddToWhiteList()));
 }
 
 bool ViewerPrivate::eventFilter( QObject *, QEvent *e )
@@ -3250,6 +3251,13 @@ void ViewerPrivate::slotMessageMayBeAScam()
             if (!mMessageItem.attribute<MessageViewer::ScamAttribute>()->isAScam())
                 return;
         }
+        if ( mMessageItem.hasPayload<KMime::Message::Ptr>() ) {
+            KMime::Message::Ptr message = mMessageItem.payload<KMime::Message::Ptr>();
+            const QString email = KPIMUtils::firstEmailAddress( message->from()->as7BitString(false) );
+            const QStringList lst = MessageViewer::GlobalSettings::self()->scamDetectionWhiteList();
+            if (lst.contains(email))
+                return;
+        }
     }
     mScamDetectionWarning->slotShowWarning();
 }
@@ -3284,6 +3292,22 @@ void ViewerPrivate::saveMainFrameScreenshotInFile(const QString &filename)
 #ifndef KDEPIM_NO_WEBKIT
     mViewer->saveMainFrameScreenshotInFile(filename);
 #endif
+}
+
+void ViewerPrivate::slotAddToWhiteList()
+{
+    if (mMessageItem.isValid()) {
+        if ( mMessageItem.hasPayload<KMime::Message::Ptr>() ) {
+            KMime::Message::Ptr message = mMessageItem.payload<KMime::Message::Ptr>();
+            const QString email = KPIMUtils::firstEmailAddress( message->from()->as7BitString(false) );
+            QStringList lst = MessageViewer::GlobalSettings::self()->scamDetectionWhiteList();
+            if (lst.contains(email))
+                return;
+            lst << email;
+            MessageViewer::GlobalSettings::self()->setScamDetectionWhiteList( lst );
+            MessageViewer::GlobalSettings::self()->writeConfig();
+        }
+    }
 }
 
 #include "viewer_p.moc"

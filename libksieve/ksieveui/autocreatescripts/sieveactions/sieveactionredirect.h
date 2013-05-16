@@ -32,6 +32,7 @@ public:
     QWidget *createParamWidget( QWidget *parent ) const;
     QString code(QWidget *) const;
     QStringList needRequires() const;
+    QString help() const;
 
 private:
     bool mHasCopySupport;

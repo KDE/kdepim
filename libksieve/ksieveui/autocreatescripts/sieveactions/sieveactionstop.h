@@ -28,6 +28,7 @@ public:
     SieveActionStop(QObject *parent = 0);
     static SieveAction* newAction();
     QString code(QWidget *) const;
+    QString help() const;
 };
 }
 

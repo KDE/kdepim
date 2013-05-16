@@ -19,6 +19,11 @@
 #include "sendlaterinfo.h"
 #include "sendlatermanager.h"
 
+#include <mailtransport/transportattribute.h>
+#include <mailtransport/sentbehaviourattribute.h>
+
+#include <Akonadi/ItemFetchJob>
+
 #include <KNotification>
 #include <KLocale>
 #include <KGlobal>
@@ -40,8 +45,41 @@ SendLaterJob::~SendLaterJob()
 void SendLaterJob::start()
 {
     if (mInfo) {
-        //TODO fetch item.
+        if (mInfo->itemId() > -1) {
+            const Akonadi::Item item = Akonadi::Item(mInfo->itemId());
+            Akonadi::ItemFetchJob *fetch = new Akonadi::ItemFetchJob( item, this );
+            mFetchScope.fetchAttribute<MailTransport::TransportAttribute>();
+            mFetchScope.fetchAttribute<MailTransport::SentBehaviourAttribute>();
+            mFetchScope.setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
+            fetch->setFetchScope( mFetchScope );
+            connect( fetch, SIGNAL(itemsReceived(Akonadi::Item::List)), SLOT(slotMessageTransfered(Akonadi::Item::List)) );
+            connect( fetch, SIGNAL(result(KJob*)), SLOT(slotJobFinished(KJob*)) );
+            fetch->start();
+        }
     }
+}
+
+void SendLaterJob::slotMessageTransfered(const Akonadi::Item::List& items)
+{
+    if (items.count() == 1) {
+        //Success
+        mItem = items.first();
+        return;
+    }
+    //TODO error
+}
+
+void SendLaterJob::slotJobFinished(KJob* job)
+{
+    if ( job->error() ) {
+        sendError(i18n("Can not fetch message. %1", job->errorString() ));
+        kDebug()<<"Can not fetch message: "<<job->errorString();
+        return;
+    }
+    if (mItem.isValid()) {
+        //Send it :)
+    }
+    //TODO
 }
 
 void SendLaterJob::sendDone()
@@ -55,21 +93,18 @@ void SendLaterJob::sendDone()
                           KNotification::CloseOnTimeout,
                           KGlobal::mainComponent());
     mManager->sendDone(mInfo);
-    deleteLater();
 }
 
-void SendLaterJob::sendError()
+void SendLaterJob::sendError(const QString &error)
 {
-    //TODO
     const QPixmap pixmap = KIcon( QLatin1String("kmail") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
-
     KNotification::event( QLatin1String("mailsendfailed"),
-                          QString(), /*TODO*/
+                          error,
                           pixmap,
                           0,
                           KNotification::CloseOnTimeout,
                           KGlobal::mainComponent());
-    deleteLater();
+    mManager->sendError(mInfo);
 }
 
 #include "sendlaterjob.moc"

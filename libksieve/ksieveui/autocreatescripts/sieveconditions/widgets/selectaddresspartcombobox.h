@@ -29,8 +29,10 @@ public:
     ~SelectAddressPartComboBox();
 
     QString code() const;
+    QString extraRequire() const;
 private:
     void initialize();
+    bool mHasSubaddressCapability;
 };
 }
 

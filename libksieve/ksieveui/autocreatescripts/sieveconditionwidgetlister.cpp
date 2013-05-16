@@ -28,6 +28,8 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QStackedWidget>
+#include <QToolButton>
+#include <QWhatsThis>
 #include <QDebug>
 
 using namespace KSieveUi;
@@ -103,6 +105,14 @@ void SieveConditionWidget::initWidget()
             mComboBox->addItem( (*it)->label(),(*it)->name() );
         }
     }
+
+    mHelpButton = new QToolButton;
+    mHelpButton->setToolTip(i18n("Help"));
+    mHelpButton->setEnabled(false);
+    mLayout->addWidget( mHelpButton, 1, 0 );
+    mHelpButton->setIcon( KIcon( QLatin1String("help-hint") ) );
+    connect(mHelpButton, SIGNAL(clicked()), this, SLOT(slotHelp()));
+
     mComboBox->addItem(QLatin1String(""));
     mComboBox->setCurrentIndex(mComboBox->count()-1);
     mLayout->addWidget(mComboBox, 1, 1);
@@ -135,13 +145,27 @@ void SieveConditionWidget::initWidget()
     setFilterCondition(0);
 }
 
-void SieveConditionWidget::slotConditionChanged(int index)
+void SieveConditionWidget::slotHelp()
 {
-    setFilterCondition( index < mConditionList.count() ?
-                         mConditionList.at( index )->createParamWidget( this ) :
-                         0 );
+    const int index = mComboBox->currentIndex();
+    if (index < mConditionList.count()) {
+        KSieveUi::SieveCondition* condition = mConditionList.at( index );
+        const QString help = condition->help();
+        QWhatsThis::showText( QCursor::pos(), help );
+    }
 }
 
+void SieveConditionWidget::slotConditionChanged(int index)
+{
+    if (index < mConditionList.count()) {
+        KSieveUi::SieveCondition* condition = mConditionList.at( index );
+        mHelpButton->setEnabled(!condition->help().isEmpty());
+        setFilterCondition( condition->createParamWidget(this) );
+    } else {
+        setFilterCondition( 0 );
+        mHelpButton->setEnabled(false);
+    }
+}
 
 void SieveConditionWidget::slotAddWidget()
 {

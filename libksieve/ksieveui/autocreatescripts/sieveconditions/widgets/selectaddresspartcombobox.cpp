@@ -16,6 +16,7 @@
 */
 
 #include "selectaddresspartcombobox.h"
+#include "autocreatescripts/autocreatescriptdialog.h"
 
 #include <KLocale>
 
@@ -24,6 +25,7 @@ using namespace KSieveUi;
 SelectAddressPartComboBox::SelectAddressPartComboBox(QWidget *parent)
     : KComboBox(parent)
 {
+    mHasSubaddressCapability = AutoCreateScriptDialog::sieveCapabilities().contains(QLatin1String("subaddress"));
     initialize();
 }
 
@@ -36,11 +38,23 @@ void SelectAddressPartComboBox::initialize()
     addItem(i18n("all"), QLatin1String(":all"));
     addItem(i18n("localpart"), QLatin1String(":localpart"));
     addItem(i18n("domain"), QLatin1String(":domain"));
+    if (mHasSubaddressCapability) {
+        addItem(i18n("user"), QLatin1String(":user"));
+        addItem(i18n("detail"), QLatin1String(":detail"));
+    }
 }
 
 QString SelectAddressPartComboBox::code() const
 {
     return itemData(currentIndex()).toString();
+}
+
+QString SelectAddressPartComboBox::extraRequire() const
+{
+    if (mHasSubaddressCapability) {
+        return QLatin1String("subaddress");
+    }
+    return QString();
 }
 
 #include "selectaddresspartcombobox.moc"

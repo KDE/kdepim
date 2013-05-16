@@ -23,6 +23,8 @@
 #include <KSharedConfig>
 
 class SendLaterInfo;
+class QTimer;
+class SendLaterJob;
 class SendLaterManager : public QObject
 {
     Q_OBJECT
@@ -31,13 +33,22 @@ public:
     ~SendLaterManager();
 
     void sendDone(SendLaterInfo *info);
+    void sendError(SendLaterInfo *info);
 
 public Q_SLOTS:
     void load();
 
+private Q_SLOTS:
+    void slotCreateJob();
+
 private:
+    void createSendInfoList();
+    void stopTimer();
     KSharedConfig::Ptr mConfig;
     QList<SendLaterInfo *> mListSendLaterInfo;
+    SendLaterInfo *mCurrentInfo;
+    SendLaterJob *mCurrentJob;
+    QTimer *mTimer;
 };
 
 #endif // SENDLATERMANAGER_H

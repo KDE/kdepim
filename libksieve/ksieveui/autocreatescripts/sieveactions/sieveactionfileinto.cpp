@@ -29,6 +29,7 @@ SieveActionFileInto::SieveActionFileInto(QObject *parent)
     : SieveAction(QLatin1String("fileinto"), i18n("File Into"), parent)
 {
     mHasCopySupport = AutoCreateScriptDialog::sieveCapabilities().contains(QLatin1String("copy"));
+    mHasMailBoxSupport = AutoCreateScriptDialog::sieveCapabilities().contains(QLatin1String("mailbox"));
 }
 
 SieveAction* SieveActionFileInto::newAction()
@@ -46,6 +47,11 @@ QString SieveActionFileInto::code(QWidget *w) const
         if (copy->isChecked())
             result += QLatin1String(":copy ");
     }
+    if (mHasMailBoxSupport) {
+        const QCheckBox *create = w->findChild<QCheckBox*>( QLatin1String("create") );
+        if (create->isChecked())
+            result += QLatin1String(":create ");
+    }
     return result + QString::fromLatin1("\"%1\";").arg(text);
 }
 
@@ -61,6 +67,12 @@ QWidget *SieveActionFileInto::createParamWidget( QWidget *parent ) const
         copy->setObjectName(QLatin1String("copy"));
         lay->addWidget(copy);
     }
+    if (mHasMailBoxSupport) {
+        QCheckBox *create = new QCheckBox(i18n("Create folder"));
+        create->setObjectName(QLatin1String("create"));
+        lay->addWidget(create);
+    }
+
     //TODO improve it.
     KLineEdit *edit = new KLineEdit;
     lay->addWidget(edit);
@@ -74,6 +86,8 @@ QStringList SieveActionFileInto::needRequires() const
     lst << QLatin1String("fileinto");
     if (mHasCopySupport)
         lst << QLatin1String("copy");
+    if (mHasMailBoxSupport)
+        lst << QLatin1String("mailbox");
     return lst;
 }
 
@@ -84,8 +98,12 @@ bool SieveActionFileInto::needCheckIfServerHasCapability() const
 
 QString SieveActionFileInto::serverNeedsCapability() const
 {
-    //TODO fix capability (add copy when necessary)
     return QLatin1String("fileinto");
+}
+
+QString SieveActionFileInto::help() const
+{
+    return i18n("The \"fileinto\" action delivers the message into the specified mailbox.");
 }
 
 #include "sieveactionfileinto.moc"

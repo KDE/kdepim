@@ -27,6 +27,7 @@ kde4_add_executable(akonadi_sendlater_agent ${sendlateragent_SRCS})
 target_link_libraries(akonadi_sendlater_agent
   ${KDEPIMLIBS_AKONADI_LIBS}
   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
+  ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
 )
 
 if (Q_WS_MAC)

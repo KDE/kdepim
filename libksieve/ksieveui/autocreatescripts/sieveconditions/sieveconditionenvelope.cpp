@@ -91,9 +91,10 @@ QString SieveConditionEnvelope::code(QWidget *w) const
     return (isNegative ? QLatin1String("not ") : QString()) + QString::fromLatin1("envelope %1 %2 %3 %4").arg(selectAddressPartStr).arg(matchTypeStr).arg(selectHeaderTypeStr).arg(addressStr);
 }
 
-QStringList SieveConditionEnvelope::needRequires(QWidget *) const
+QStringList SieveConditionEnvelope::needRequires(QWidget *w) const
 {
-    return QStringList() << QLatin1String("envelope");
+    const SelectAddressPartComboBox *selectAddressPart = w->findChild<SelectAddressPartComboBox*>(QLatin1String("addresspartcombobox"));
+    return QStringList() << QLatin1String("envelope") << selectAddressPart->extraRequire();
 }
 
 bool SieveConditionEnvelope::needCheckIfServerHasCapability() const

@@ -151,6 +151,7 @@ void ThemeEditorMainWindow::slotOpenTheme()
         }
 
         mThemeEditor = new ThemeEditorPage(QString(), QString());
+        connect(mThemeEditor, SIGNAL(changed(bool)), mSaveAction, SLOT(setEnabled(bool)));
         mThemeEditor->loadTheme(filename);
         setCentralWidget(mThemeEditor);
         updateActions();
@@ -181,6 +182,7 @@ bool ThemeEditorMainWindow::saveCurrentProject(bool createNewTheme)
         }
         if (!projectDirectory.isEmpty()) {
             mThemeEditor = new ThemeEditorPage(projectDirectory, newTheme);
+            connect(mThemeEditor, SIGNAL(changed(bool)), mSaveAction, SLOT(setEnabled(bool)));
             setCentralWidget(mThemeEditor);
         } else {
             setCentralWidget(0);

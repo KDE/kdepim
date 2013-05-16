@@ -35,6 +35,8 @@ public:
     QWidget *createParamWidget( QWidget *parent ) const;
 
     QString code(QWidget *w) const;
+
+    QStringList needRequires(QWidget *parent) const;
 };
 }
 

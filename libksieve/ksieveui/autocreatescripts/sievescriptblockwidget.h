@@ -18,7 +18,7 @@
 #ifndef SIEVESCRIPTBLOCKWIDGET_H
 #define SIEVESCRIPTBLOCKWIDGET_H
 
-#include <QWidget>
+#include "sievewidgetpageabstract.h"
 
 class QRadioButton;
 class QGroupBox;
@@ -30,16 +30,10 @@ namespace KSieveUi {
 class SieveConditionWidgetLister;
 class SieveActionWidgetLister;
 
-class SieveScriptBlockWidget : public QWidget
+class SieveScriptBlockWidget : public SieveWidgetPageAbstract
 {
     Q_OBJECT
 public:
-    enum BlockType {
-        BlockIf = 0,
-        BlockElsIf = 1,
-        BlockElse = 2
-    };
-
     enum MatchCondition {
         OrCondition,
         AndCondition,
@@ -49,22 +43,20 @@ public:
     explicit SieveScriptBlockWidget(QWidget *parent = 0);
     ~SieveScriptBlockWidget();
 
-    void setBlockType(BlockType type);
-    BlockType blockType() const;
+    void setPageType(PageType type);
 
     void generatedScript(QString &script, QStringList &requires);
 
     MatchCondition matchCondition() const;
 
 Q_SIGNALS:
-    void addNewBlock(QWidget *widget, KSieveUi::SieveScriptBlockWidget::BlockType type);
+    void addNewBlock(QWidget *widget, KSieveUi::SieveWidgetPageAbstract::PageType type);
 
 private Q_SLOTS:
     void slotRadioClicked(QAbstractButton*);
     void slotAddBlock();
 
 private:
-    BlockType mType;
     MatchCondition mMatchCondition;
     QGroupBox *mConditions;
     SieveConditionWidgetLister *mScriptConditionLister;

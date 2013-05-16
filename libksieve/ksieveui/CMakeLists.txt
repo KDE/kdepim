@@ -33,6 +33,8 @@ set(ksieveui_LIB_SRCS
   autocreatescripts/sievescriptblockwidget.cpp
   autocreatescripts/sievescripttabwidget.cpp
   autocreatescripts/autocreatescriptutil.cpp
+  autocreatescripts/sieveincludewidget.cpp
+  autocreatescripts/sievewidgetpageabstract.cpp
   autocreatescripts/sieveactions/sieveactionlist.cpp
   autocreatescripts/sieveactions/sieveaction.cpp
   autocreatescripts/sieveactions/sieveactiondiscard.cpp
@@ -50,6 +52,9 @@ set(ksieveui_LIB_SRCS
   autocreatescripts/sieveactions/sieveactiondeleteheader.cpp
   autocreatescripts/sieveactions/sieveactionaddheader.cpp
   autocreatescripts/sieveactions/sieveactionvacation.cpp
+  autocreatescripts/sieveactions/sieveactionenclose.cpp
+  autocreatescripts/sieveactions/sieveactionreplace.cpp
+  autocreatescripts/sieveactions/sieveactionextracttext.cpp
   autocreatescripts/sieveactions/widgets/selectflagswidget.cpp
   autocreatescripts/sieveactions/widgets/selectfileintowidget.cpp
   autocreatescripts/sieveactions/widgets/addresslineedit.cpp
@@ -73,6 +78,9 @@ set(ksieveui_LIB_SRCS
   autocreatescripts/sieveconditions/sieveconditionspamtestplus.cpp
   autocreatescripts/sieveconditions/sieveconditionvirustest.cpp
   autocreatescripts/sieveconditions/sieveconditionihave.cpp
+  autocreatescripts/sieveconditions/sieveconditionfalse.cpp
+  autocreatescripts/sieveconditions/sieveconditionenvironment.cpp
+  autocreatescripts/sieveconditions/sieveconditionhasflag.cpp
   autocreatescripts/sieveconditions/widgets/selectdatewidget.cpp
   autocreatescripts/sieveconditions/widgets/selectmatchtypecombobox.cpp
   autocreatescripts/sieveconditions/widgets/selectaddresspartcombobox.cpp

@@ -454,6 +454,7 @@ private slots:
   void slotModifyItemDone(KJob* job);
   void slotMessageMayBeAScam();
   void slotMessageIsNotAScam();
+  void slotAddToWhiteList();
   void slotToggleCaretBrowsing(bool);
   void slotAtmDecryptWithChiasmusResult( const GpgME::Error &, const QVariant & );
   void slotAtmDecryptWithChiasmusUploadResult( KJob * );

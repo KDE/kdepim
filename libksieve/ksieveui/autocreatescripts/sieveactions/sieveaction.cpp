@@ -70,5 +70,9 @@ QString SieveAction::serverNeedsCapability() const
     return QString();
 }
 
+QString SieveAction::help() const
+{
+    return QString();
+}
 
 #include "sieveaction.moc"

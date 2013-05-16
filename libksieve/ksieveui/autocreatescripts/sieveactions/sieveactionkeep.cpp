@@ -34,4 +34,9 @@ QString SieveActionKeep::code(QWidget *) const
     return QLatin1String("keep;");
 }
 
+QString SieveActionKeep::help() const
+{
+    return i18n("The \"keep\" action is whatever action is taken in lieu of all other actions, if no filtering happens at all; generally, this simply means to file the message into the user's main mailbox.");
+}
+
 #include "sieveactionkeep.moc"

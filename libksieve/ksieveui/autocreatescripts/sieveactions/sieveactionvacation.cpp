@@ -18,6 +18,7 @@
 
 #include "sieveactionvacation.h"
 #include "autocreatescripts/autocreatescriptdialog.h"
+#include "autocreatescripts/autocreatescriptutil_p.h"
 #include "widgets/multilineedit.h"
 #include "widgets/selectvacationcombobox.h"
 
@@ -67,12 +68,6 @@ QWidget *SieveActionVacation::createParamWidget( QWidget *parent ) const
     day->setObjectName(QLatin1String("day"));
     lay->addWidget(day);
 
-    lab = new QLabel(i18n("Vacation reason:"));
-    lay->addWidget(lab);
-
-    MultiLineEdit *text = new MultiLineEdit;
-    text->setObjectName(QLatin1String("text"));
-    lay->addWidget(text);
 
     lab = new QLabel(i18n("Message subject:"));
     lay->addWidget(lab);
@@ -87,6 +82,13 @@ QWidget *SieveActionVacation::createParamWidget( QWidget *parent ) const
     KLineEdit *addresses = new KLineEdit;
     addresses->setObjectName(QLatin1String("addresses"));
     lay->addWidget(addresses);
+
+    lab = new QLabel(i18n("Vacation reason:"));
+    lay->addWidget(lab);
+
+    MultiLineEdit *text = new MultiLineEdit;
+    text->setObjectName(QLatin1String("text"));
+    lay->addWidget(text);
 
     return w;
 }
@@ -112,12 +114,12 @@ QString SieveActionVacation::code(QWidget *w) const
     QString result = QString::fromLatin1("vacation");
     if (!dayStr.isEmpty())
         result += QString::fromLatin1(" %1 %2").arg(vacationTypeStr).arg(dayStr);
-    if (!textStr.isEmpty())
-        result += QString::fromLatin1(" :text %1").arg(textStr);
     if (!subjectStr.isEmpty())
-        result += QString::fromLatin1(" :subject %1").arg(subjectStr);
+        result += QString::fromLatin1(" :subject \"%1\"").arg(subjectStr);
     if (!addressesStr.isEmpty())
-        result += QString::fromLatin1(" :addresses %1").arg(addressesStr);
+        result += QString::fromLatin1(" :addresses %1").arg(AutoCreateScriptUtil::createAddressList(addressesStr));
+    if (!textStr.isEmpty())
+        result += QString::fromLatin1(" text:%1").arg(AutoCreateScriptUtil::createMultiLine(textStr));
     return result;
 }
 

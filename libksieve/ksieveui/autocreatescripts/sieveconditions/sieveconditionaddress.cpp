@@ -88,4 +88,10 @@ QString SieveConditionAddress::code(QWidget *w) const
     return (isNegative ? QLatin1String("not ") : QString()) + QString::fromLatin1("address %1 %2 %3 %4").arg(selectAddressPartStr).arg(matchTypeStr).arg(selectHeaderTypeStr).arg(addressStr);
 }
 
+QStringList SieveConditionAddress::needRequires(QWidget *w) const
+{
+    const SelectAddressPartComboBox *selectAddressPart = w->findChild<SelectAddressPartComboBox*>(QLatin1String("addresspartcombobox"));
+    return QStringList() << selectAddressPart->extraRequire();
+}
+
 #include "sieveconditionaddress.moc"

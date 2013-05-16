@@ -24,6 +24,7 @@
 namespace KSieveUi {
 class SieveScriptBlockWidget;
 class SieveScriptTabWidget;
+class SieveIncludeWidget;
 class SieveScriptPage : public QWidget
 {
     Q_OBJECT
@@ -33,14 +34,17 @@ public:
 
     void generatedScript(QString &script, QStringList &requires);
 
+
 private Q_SLOTS:
-    void slotAddNewBlock(QWidget* widget,KSieveUi::SieveScriptBlockWidget::BlockType type);
+    void slotAddNewBlock(QWidget* widget,KSieveUi::SieveWidgetPageAbstract::PageType type);
     void slotCloseTab(int);
 
 private:
-    QString blockName(KSieveUi::SieveScriptBlockWidget::BlockType type) const;
-    SieveScriptBlockWidget *createScriptBlock(KSieveUi::SieveScriptBlockWidget::BlockType type);
+    bool hasAnElseBlock() const;
+    QString blockName(SieveWidgetPageAbstract::PageType type) const;
+    SieveScriptBlockWidget *createScriptBlock(KSieveUi::SieveWidgetPageAbstract::PageType type);
     SieveScriptTabWidget *mTabWidget;
+    SieveIncludeWidget *mIncludeWidget;
 };
 }
 
