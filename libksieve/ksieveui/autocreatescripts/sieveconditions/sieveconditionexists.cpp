@@ -71,4 +71,9 @@ QString SieveConditionExists::code(QWidget *w) const
     return QString::fromLatin1("%1 %2").arg(comparaison).arg(value->code());
 }
 
+QString SieveConditionExists::help() const
+{
+    return i18n("The \"exists\" test is true if the headers listed in the header-names argument exist within the message.  All of the headers must exist or the test is false.");
+}
+
 #include "sieveconditionexists.moc"

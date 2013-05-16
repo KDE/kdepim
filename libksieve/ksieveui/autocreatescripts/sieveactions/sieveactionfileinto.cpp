@@ -101,4 +101,9 @@ QString SieveActionFileInto::serverNeedsCapability() const
     return QLatin1String("fileinto");
 }
 
+QString SieveActionFileInto::help() const
+{
+    return i18n("The \"fileinto\" action delivers the message into the specified mailbox.");
+}
+
 #include "sieveactionfileinto.moc"

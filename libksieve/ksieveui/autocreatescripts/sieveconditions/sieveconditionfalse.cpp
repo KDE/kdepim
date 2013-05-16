@@ -51,4 +51,9 @@ QString SieveConditionFalse::code(QWidget *) const
     return QLatin1String("false");
 }
 
+QString SieveConditionFalse::help() const
+{
+    return i18n("The \"false\" test always evaluates to false.");
+}
+
 #include "sieveconditionfalse.moc"

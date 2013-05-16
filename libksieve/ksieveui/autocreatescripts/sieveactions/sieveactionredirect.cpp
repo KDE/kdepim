@@ -77,6 +77,11 @@ QStringList SieveActionRedirect::needRequires() const
     return QStringList();
 }
 
+QString SieveActionRedirect::help() const
+{
+    //TODO add copy info
+    return i18n("The \"redirect\" action is used to send the message to another user at a supplied address, as a mail forwarding feature does.  The \"redirect\" action makes no changes to the message body or existing headers, but it may add new headers.");
+}
 
 
 #include "sieveactionredirect.moc"
