@@ -34,6 +34,7 @@
 #include "sieveactionreplace.h"
 #include "sieveactionextracttext.h"
 #include "sieveactionbreak.h"
+#include "sieveactionconvert.h"
 
 QList<KSieveUi::SieveAction *> KSieveUi::SieveActionList::actionList()
 {
@@ -55,5 +56,6 @@ QList<KSieveUi::SieveAction *> KSieveUi::SieveActionList::actionList()
     list.append(new KSieveUi::SieveActionReplace);
     list.append(new KSieveUi::SieveActionExtractText);
     list.append(new KSieveUi::SieveActionBreak);
+    list.append(new KSieveUi::SieveActionConvert);
     return list;
 }

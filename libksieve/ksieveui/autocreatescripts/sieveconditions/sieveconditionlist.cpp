@@ -40,6 +40,7 @@
 
 #include "sieveconditionhasflag.h"
 #include "sieveconditionmetadata.h"
+#include "sieveconditionconvert.h"
 
 QList<KSieveUi::SieveCondition *> KSieveUi::SieveConditionList::conditionList()
 {
@@ -62,6 +63,7 @@ QList<KSieveUi::SieveCondition *> KSieveUi::SieveConditionList::conditionList()
     list.append(new KSieveUi::SieveConditionEnvironment);
     list.append(new KSieveUi::SieveConditionHasFlag);
     list.append(new KSieveUi::SieveConditionMetaData);
+    list.append(new KSieveUi::SieveConditionConvert);
     return list;
 }
 

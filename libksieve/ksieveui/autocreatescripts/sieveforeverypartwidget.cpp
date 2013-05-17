@@ -28,8 +28,11 @@ namespace KSieveUi {
 SieveForEveryPartWidget::SieveForEveryPartWidget(QWidget *parent)
     : SieveWidgetPageAbstract(parent)
 {
-    QHBoxLayout *lay = new QHBoxLayout;
+    QHBoxLayout *topLayout = new QHBoxLayout;
 
+    QWidget *w = new QWidget;
+    QHBoxLayout *lay = new QHBoxLayout;
+    w->setLayout(lay);
     mForLoop = new QCheckBox(i18n("Add ForEveryPart loop"));
     lay->addWidget(mForLoop);
 
@@ -39,7 +42,9 @@ SieveForEveryPartWidget::SieveForEveryPartWidget(QWidget *parent)
     mName = new KLineEdit;
     lay->addWidget(mName);
 
-    setLayout(lay);
+    topLayout->addWidget(w,0, Qt::AlignTop);
+
+    setLayout(topLayout);
 }
 
 SieveForEveryPartWidget::~SieveForEveryPartWidget()
