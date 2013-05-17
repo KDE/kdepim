@@ -50,7 +50,8 @@ public:
     enum SendLaterColumn {
         Subject = 0,
         Date,
-        Recursive
+        Recursive,
+        MessageId
     };
 
     void save();
