@@ -18,6 +18,7 @@
 #include "themeeditorpage.h"
 #include "desktopfilepage.h"
 #include "editorpage.h"
+#include "editorwidget.h"
 #include "previewwidget.h"
 #include "themesession.h"
 #include "themeeditortabwidget.h"
@@ -56,7 +57,7 @@ ThemeEditorPage::ThemeEditorPage(const QString &projectDir, const QString &theme
     mTabWidget->addTab(mDesktopPage, i18n("Desktop File"));
 
     connect(mDesktopPage, SIGNAL(mainFileNameChanged(QString)), mEditorPage->preview(), SLOT(slotMainFileNameChanged(QString)));
-    connect(mDesktopPage, SIGNAL(extraDisplayHeaderChanged(QStringList)), mEditorPage->preview(), SLOT(slotExtraHeaderDisplayChanged(QStringList)));
+    connect(mDesktopPage, SIGNAL(extraDisplayHeaderChanged(QStringList)), this, SLOT(slotExtraHeaderDisplayChanged(QStringList)));
     connect(mDesktopPage, SIGNAL(changed()), SLOT(slotChanged()));
     connect(mTabWidget, SIGNAL(tabCloseRequested(int)), SLOT(slotCloseTab(int)));
     setLayout(lay);
@@ -67,6 +68,22 @@ ThemeEditorPage::~ThemeEditorPage()
     qDeleteAll(mExtraPage);
     mExtraPage.clear();
     delete mThemeSession;
+}
+
+void ThemeEditorPage::slotExtraHeaderDisplayChanged(const QStringList &extraHeaders)
+{
+    mEditorPage->preview()->slotExtraHeaderDisplayChanged(extraHeaders);
+
+    QStringList result;
+    Q_FOREACH(QString var, extraHeaders) {
+        var = QLatin1String("header.") + var.remove(QLatin1Char('-'));
+        result <<var;
+    }
+
+    mEditorPage->editor()->createCompleterList(result);
+    Q_FOREACH (EditorPage *page, mExtraPage) {
+        page->editor()->createCompleterList(result);
+    }
 }
 
 void ThemeEditorPage::slotChanged()

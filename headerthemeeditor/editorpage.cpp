@@ -155,4 +155,9 @@ EditorPage::PageType EditorPage::pageType() const
     return mType;
 }
 
+EditorWidget *EditorPage::editor() const
+{
+    return mEditor;
+}
+
 #include "editorpage.moc"
