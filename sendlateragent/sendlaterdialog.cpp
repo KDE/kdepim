@@ -176,7 +176,6 @@ SendLaterInfo* SendLaterDialog::info()
     return mInfo;
 }
 
-
 void SendLaterDialog::slotSendLater()
 {
     mAction = SendLater;
