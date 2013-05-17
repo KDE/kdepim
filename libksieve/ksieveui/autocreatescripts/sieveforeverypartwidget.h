@@ -19,14 +19,22 @@
 #define SIEVEFOREVERYPARTWIDGET_H
 
 #include "sievewidgetpageabstract.h"
+class QCheckBox;
+class KLineEdit;
 
 namespace KSieveUi {
 class SieveForEveryPartWidget : public SieveWidgetPageAbstract
 {
+    Q_OBJECT
 public:
     explicit SieveForEveryPartWidget(QWidget *parent = 0);
     ~SieveForEveryPartWidget();
+
     void generatedScript(QString &script, QStringList &requires);
+
+private:
+    QCheckBox *mForLoop;
+    KLineEdit *mName;
 };
 }
 

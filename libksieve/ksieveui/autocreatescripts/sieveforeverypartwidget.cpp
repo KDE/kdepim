@@ -17,11 +17,29 @@
 
 #include "sieveforeverypartwidget.h"
 
+#include <KLocale>
+#include <KLineEdit>
+
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QCheckBox>
 
 namespace KSieveUi {
 SieveForEveryPartWidget::SieveForEveryPartWidget(QWidget *parent)
     : SieveWidgetPageAbstract(parent)
 {
+    QHBoxLayout *lay = new QHBoxLayout;
+
+    mForLoop = new QCheckBox(i18n("Add ForEveryPart loop"));
+    lay->addWidget(mForLoop);
+
+    QLabel *lab = new QLabel(i18n("Name (optional):"));
+    lay->addWidget(lab);
+
+    mName = new KLineEdit;
+    lay->addWidget(mName);
+
+    setLayout(lay);
 }
 
 SieveForEveryPartWidget::~SieveForEveryPartWidget()
@@ -31,7 +49,16 @@ SieveForEveryPartWidget::~SieveForEveryPartWidget()
 
 void SieveForEveryPartWidget::generatedScript(QString &script, QStringList &requires)
 {
-    //TODO
+    if (mForLoop->isChecked()) {
+        requires << QLatin1String("foreverypart");
+        const QString loopName = mName->text();
+        if (loopName.isEmpty()) {
+            script += QLatin1String("foreverypart {");
+        } else {
+            const QString nameStr = QString::fromLatin1(":name \"%1\"").arg(loopName);
+            script += QString::fromLatin1("foreverypart %1 {").arg(nameStr);
+        }
+    }
 }
 
 }
