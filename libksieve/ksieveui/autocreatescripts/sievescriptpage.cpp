@@ -89,6 +89,7 @@ void SieveScriptPage::slotAddNewBlock(QWidget* widget, KSieveUi::SieveWidgetPage
         mTabWidget->insertTab(mTabWidget->count(), blockWidget, blockName(type));
     else
         mTabWidget->insertTab(mTabWidget->indexOf(widget)+1, blockWidget, blockName(type));
+    mTabWidget->setCurrentWidget(blockWidget);
 }
 
 QString SieveScriptPage::blockName(KSieveUi::SieveWidgetPageAbstract::PageType type) const
