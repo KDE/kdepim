@@ -685,6 +685,8 @@ void LdapSearchDialog::Private::restoreSettings()
 
     mModel->clear();
   }
+  KConfigGroup groupHeader( config, "Headers" );
+  mResultView->horizontalHeader()->restoreState(groupHeader.readEntry("HeaderState",QByteArray()));
 }
 
 void LdapSearchDialog::Private::saveSettings()
@@ -692,6 +694,10 @@ void LdapSearchDialog::Private::saveSettings()
   KConfig *config = KLDAP::LdapClientSearchConfig::config();
   KConfigGroup group( config, "LDAPSearch" );
   group.writeEntry( "SearchType", mSearchType->currentIndex() );
+
+  KConfigGroup groupHeader( config, "Headers" );
+  groupHeader.writeEntry( "HeaderState", mResultView->horizontalHeader()->saveState());
+  groupHeader.sync();
   group.sync();
 }
 
