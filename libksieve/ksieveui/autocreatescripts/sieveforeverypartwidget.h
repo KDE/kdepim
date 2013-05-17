@@ -15,35 +15,20 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef SIEVEWIDGETPAGEABSTRACT_H
-#define SIEVEWIDGETPAGEABSTRACT_H
+#ifndef SIEVEFOREVERYPARTWIDGET_H
+#define SIEVEFOREVERYPARTWIDGET_H
 
-#include <QWidget>
+#include "sievewidgetpageabstract.h"
 
 namespace KSieveUi {
-class SieveWidgetPageAbstract : public QWidget
+class SieveForEveryPartWidget : public SieveWidgetPageAbstract
 {
-    Q_OBJECT
 public:
-    enum PageType {
-        BlockIf = 0,
-        BlockElsIf = 1,
-        BlockElse = 2,
-        Include = 3,
-        ForEveryPart = 4
-    };
-
-    explicit SieveWidgetPageAbstract(QWidget *parent = 0);
-    ~SieveWidgetPageAbstract();
-
-    virtual void generatedScript(QString &script, QStringList &requires) = 0;
-
-    virtual void setPageType(PageType type);
-    PageType pageType() const;
-
-private:
-    PageType mType;
+    explicit SieveForEveryPartWidget(QWidget *parent = 0);
+    ~SieveForEveryPartWidget();
+    void generatedScript(QString &script, QStringList &requires);
 };
 }
 
-#endif // SIEVEWIDGETPAGEABSTRACT_H
+
+#endif // SIEVEFOREVERYPARTWIDGET_H
