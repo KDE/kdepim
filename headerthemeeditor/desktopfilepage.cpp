@@ -56,8 +56,12 @@ DesktopFilePage::DesktopFilePage(QWidget *parent)
     lab = new QLabel(i18n("Extract Headers:"));
     lay->addWidget(lab,3,0);
 
+    lab = new QLabel(QLatin1String("<qt><b>") +i18n("Be carefull, Grantlee does not support '-' in variable name. So when you want to add extra header as \"X-Original-To\" add \"X-Original-To\" in list, but use \"XOriginalTo\" as variable in Grantlee (remove '-' in name).")+QLatin1String("</b></qt>"));
+    lab->setWordWrap(true);
+    lay->addWidget(lab,4,0,1,2);
+
     mExtraDisplayHeaders = new PimCommon::SimpleStringListEditor;
-    lay->addWidget(mExtraDisplayHeaders, 4, 0, 1, 2);
+    lay->addWidget(mExtraDisplayHeaders, 5, 0, 1, 2);
     setLayout(lay);
     connect(mExtraDisplayHeaders, SIGNAL(changed()), this, SLOT(slotExtraDisplayHeadersChanged()));
     connect(mFilename, SIGNAL(textChanged(QString)), this, SLOT(slotFileNameChanged(QString)));
