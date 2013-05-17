@@ -195,9 +195,12 @@ QString GrantleeHeaderFormatter::format(Grantlee::Template headerTemplate, const
         headerObject.insert( QLatin1String( "photourl" ) , xface.photoURL );
     }
 
-    Q_FOREACH (const QString &header, displayExtraHeaders) {
+    Q_FOREACH (QString header, displayExtraHeaders) {
         const QByteArray baHeader = header.toLocal8Bit();
         if (message->headerByType(baHeader) ) {
+            //Grantlee doesn't support '-' in variable name => remove it.
+            header = header.remove(QLatin1Char('-'));
+            qDebug()<<" header"<<header;
             headerObject.insert( header , message->headerByType(baHeader)->asUnicodeString() );
         }
     }
