@@ -84,7 +84,6 @@ void DesktopFilePage::slotFileNameChanged(const QString &filename)
     Q_EMIT changed();
 }
 
-
 void DesktopFilePage::createZip(const QString &themeName, KZip *zip)
 {
     KTemporaryFile tmp;
