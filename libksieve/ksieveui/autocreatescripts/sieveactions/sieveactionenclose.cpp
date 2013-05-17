@@ -110,5 +110,10 @@ QString SieveActionEnclose::serverNeedsCapability() const
     return QLatin1String("enclose");
 }
 
+QString SieveActionEnclose::help() const
+{
+    return i18n("Enclose action command is defined to allow an entire message to be enclosed as an attachment to a new message.");
+}
+
 
 #include "sieveactionenclose.moc"

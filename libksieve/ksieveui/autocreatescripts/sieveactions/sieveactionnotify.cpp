@@ -80,5 +80,9 @@ bool SieveActionNotify::needCheckIfServerHasCapability() const
     return true;
 }
 
+QString SieveActionNotify::help() const
+{
+    return i18n("The \"notify\" action specifies that a notification should be sent to a user.");
+}
 
 #include "sieveactionnotify.moc"
