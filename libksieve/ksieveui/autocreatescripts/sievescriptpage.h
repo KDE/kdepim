@@ -25,6 +25,7 @@ namespace KSieveUi {
 class SieveScriptBlockWidget;
 class SieveScriptTabWidget;
 class SieveIncludeWidget;
+class SieveForEveryPartWidget;
 class SieveScriptPage : public QWidget
 {
     Q_OBJECT
@@ -45,6 +46,7 @@ private:
     SieveScriptBlockWidget *createScriptBlock(KSieveUi::SieveWidgetPageAbstract::PageType type);
     SieveScriptTabWidget *mTabWidget;
     SieveIncludeWidget *mIncludeWidget;
+    SieveForEveryPartWidget *mForEveryPartWidget;
 };
 }
 
