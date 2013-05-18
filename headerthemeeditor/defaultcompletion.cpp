@@ -58,6 +58,7 @@ QStringList DefaultCompletion::defaultCompetion()
         <<QLatin1String( "header.applicationDir" )
         <<QLatin1String( "header.subjectDir" )
         <<QLatin1String( "header.photourl" )
+        <<QLatin1String( "header.isprinting" )
         <<QLatin1String( "header.vcardi18n" );
     return lst;
 }
