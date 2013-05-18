@@ -169,6 +169,11 @@ QString GrantleeHeaderFormatter::format(Grantlee::Template headerTemplate, const
     if ( !style->vCardName().isEmpty() )
         headerObject.insert( QLatin1String( "vcardname" ) , style->vCardName() );
 
+    if ( isPrinting ) {
+        //provide a bit more left padding when printing
+        //kolab/issue3254 (printed mail cut at the left side)
+        headerObject.insert( QLatin1String( "isPrinting" ) , QLatin1String("isPrinting") );
+    }
 
     // colors depend on if it is encapsulated or not
     QColor fontColor( Qt::white );
