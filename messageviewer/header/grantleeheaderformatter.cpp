@@ -172,7 +172,8 @@ QString GrantleeHeaderFormatter::format(Grantlee::Template headerTemplate, const
     if ( isPrinting ) {
         //provide a bit more left padding when printing
         //kolab/issue3254 (printed mail cut at the left side)
-        headerObject.insert( QLatin1String( "isprinting" ) , QLatin1String("isPrinting") );
+        //Use it just for testing if we are in printing mode
+        headerObject.insert( QLatin1String( "isprinting" ) , i18n("Printing mode") );
     }
 
     // colors depend on if it is encapsulated or not
