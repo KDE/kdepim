@@ -25,6 +25,7 @@
 #include <KStandardAction>
 #include <KApplication>
 #include <KAction>
+#include <KToggleAction>
 #include <KActionCollection>
 #include <KLocalizedString>
 #include <KMessageBox>
@@ -35,6 +36,7 @@
 
 #include <QPointer>
 #include <QCloseEvent>
+#include <QActionGroup>
 
 ThemeEditorMainWindow::ThemeEditorMainWindow()
     : KXmlGuiWindow(),
@@ -59,6 +61,8 @@ void ThemeEditorMainWindow::updateActions()
     mSaveAction->setEnabled(projectDirectoryIsEmpty);
     mInstallTheme->setEnabled(projectDirectoryIsEmpty);
     mInsertFile->setEnabled(projectDirectoryIsEmpty);
+    mPrintingMode->setEnabled(projectDirectoryIsEmpty);
+    mNormalMode->setEnabled(projectDirectoryIsEmpty);
 }
 
 void ThemeEditorMainWindow::setupActions()
@@ -87,6 +91,28 @@ void ThemeEditorMainWindow::setupActions()
     actionCollection()->addAction( QLatin1String( "insert_file" ), mInsertFile );
     connect(mInsertFile, SIGNAL(triggered(bool)), SLOT(slotInsertFile()));
 
+    QActionGroup *group = new QActionGroup( this );
+
+    mPrintingMode  = new KToggleAction(i18n("Printing mode"), this);
+    actionCollection()->addAction(QLatin1String("printing_mode"), mPrintingMode );
+    connect(mPrintingMode, SIGNAL(triggered(bool)), SLOT(slotPrintingMode()));
+    group->addAction( mPrintingMode );
+
+    mNormalMode  = new KToggleAction(i18n("Normal mode"), this);
+    mNormalMode->setChecked(true);
+    actionCollection()->addAction(QLatin1String("normal_mode"), mNormalMode );
+    connect(mNormalMode, SIGNAL(triggered(bool)), SLOT(slotNormalMode()));
+    group->addAction( mNormalMode );
+}
+
+void ThemeEditorMainWindow::slotNormalMode()
+{
+    mThemeEditor->setPrinting(false);
+}
+
+void ThemeEditorMainWindow::slotPrintingMode()
+{
+    mThemeEditor->setPrinting(true);
 }
 
 void ThemeEditorMainWindow::slotInsertFile()

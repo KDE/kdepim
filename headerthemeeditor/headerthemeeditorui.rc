@@ -14,6 +14,11 @@
    <Separator />
    <Action name="install_theme" />
   </Menu>
+  <Menu name="Display" >
+   <text>&amp;Display</text>
+   <Action name="normal_mode" />
+   <Action name="printing_mode" />
+  </Menu>
  </MenuBar>
 </kpartgui>
 

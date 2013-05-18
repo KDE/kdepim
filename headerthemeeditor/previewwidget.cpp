@@ -31,7 +31,8 @@
 #include <QDebug>
 
 PreviewWidget::PreviewWidget(const QString &projectDirectory, QWidget *parent)
-    : QWidget(parent)
+    : QWidget(parent),
+      mPrinting(false)
 {
     QVBoxLayout *lay = new QVBoxLayout;
     mViewer = new MessageViewer::Viewer(this);
@@ -52,6 +53,19 @@ PreviewWidget::PreviewWidget(const QString &projectDirectory, QWidget *parent)
 PreviewWidget::~PreviewWidget()
 {
     delete mGrantleeHeaderStyle;
+}
+
+void PreviewWidget::setPrinting(bool printMode)
+{
+    if (mPrinting != printMode) {
+        mPrinting = printMode;
+        updateViewer();
+    }
+}
+
+bool PreviewWidget::printing() const
+{
+    return mPrinting;
 }
 
 void PreviewWidget::slotExtraHeaderDisplayChanged(const QStringList &headers)
@@ -83,9 +97,9 @@ void PreviewWidget::updateViewer()
     KMime::Message *msg = new KMime::Message;
     msg->setContent( mDefaultEmail );
     msg->parse();
+    mViewer->setPrinting(mPrinting);
     mViewer->setMessage(KMime::Message::Ptr(msg));
 }
-
 
 void PreviewWidget::createScreenShot(const QString &fileName)
 {
