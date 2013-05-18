@@ -990,7 +990,7 @@ int IncidenceRecurrence::weekdayCountForMonth( const QDate &date ) const
 
 RecurrenceType IncidenceRecurrence::currentRecurrenceType() const
 {
-  if ( !mUi->mRecurrenceTypeCombo->isVisible() ) {
+  if (mLoadedIncidence && mLoadedIncidence->hasRecurrenceId()) {
     return RecurrenceTypeException;
   }
 
