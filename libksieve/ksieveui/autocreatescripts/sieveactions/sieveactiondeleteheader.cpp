@@ -79,5 +79,9 @@ QString SieveActionDeleteHeader::code(QWidget *w) const
     return QString::fromLatin1("deleteheader %1 \"%2\" \"%3\";").arg((isNegative ? QLatin1String("not ") + matchTypeStr : matchTypeStr )).arg(headerStr).arg(valueStr);
 }
 
+QString SieveActionDeleteHeader::help() const
+{
+    return i18n("By default, the deleteheader action deletes all occurrences of the named header field.");
+}
 
 #include "sieveactiondeleteheader.moc"

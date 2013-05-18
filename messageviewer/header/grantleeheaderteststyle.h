@@ -32,7 +32,7 @@ public:
 public:
     const char * name() const { return "grantleetest"; }
 
-    QString format( KMime::Message *message ) const;
+    QString format(KMime::Message *message) const;
 
     void setAbsolutePath(const QString &);
     void setMainFilename(const QString &);

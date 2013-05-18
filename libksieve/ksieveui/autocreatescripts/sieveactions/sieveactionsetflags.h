@@ -28,6 +28,7 @@ public:
     SieveActionSetFlags(QObject *parent = 0);
     static SieveAction* newAction();
     QString flagsCode() const;
+    QString help() const;
 };
 }
 

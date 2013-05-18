@@ -53,7 +53,7 @@ class MESSAGEVIEWER_EXPORT MarkMessageReadHandler : public QObject, public Abstr
     /**
      * @copydoc AbstractMessageLoadedHandler::setItem()
      */
-    virtual void setItem( const Akonadi::Item &item );
+    void setItem( const Akonadi::Item &item );
 
   private:
     //@cond PRIVATE

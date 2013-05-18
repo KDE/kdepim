@@ -44,7 +44,6 @@ public Q_SLOTS:
     void slotMainFileNameChanged(const QString &);
     void slotExtraHeaderDisplayChanged(const QStringList &headers);
 
-
 private:
     QByteArray mDefaultEmail;
     MessageViewer::Viewer *mViewer;

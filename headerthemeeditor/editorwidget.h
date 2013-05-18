@@ -30,6 +30,7 @@ public:
     ~EditorWidget();
 
     void insertFile(const QString &filename);
+    void createCompleterList(const QStringList &extraHeaders = QStringList());
 
 private Q_SLOTS:
     void slotInsertCompletion( const QString &completion );

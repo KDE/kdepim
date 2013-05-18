@@ -29,7 +29,11 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="QTableView" name="resultView"/>
+         <widget class="QTableView" name="resultView">
+          <property name="contextMenuPolicy">
+           <enum>Qt::ActionsContextMenu</enum>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -84,19 +88,16 @@
     </widget>
    </item>
   </layout>
-  <zorder>splitter</zorder>
-  <zorder>resultStack</zorder>
-  <zorder>execButton</zorder>
  </widget>
  <customwidgets>
   <customwidget>
    <class>KPushButton</class>
-   <extends></extends>
+   <extends>QPushButton</extends>
    <header>kpushbutton.h</header>
   </customwidget>
   <customwidget>
    <class>KTextEdit</class>
-   <extends></extends>
+   <extends>QTextEdit</extends>
    <header>ktextedit.h</header>
   </customwidget>
  </customwidgets>

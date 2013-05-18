@@ -31,6 +31,7 @@
 #include <KFileDialog>
 #include <KDebug>
 #include <KStandardDirs>
+#include <KNS3/KNewStuffAction>
 
 #include <QPointer>
 #include <QCloseEvent>
@@ -66,9 +67,7 @@ void ThemeEditorMainWindow::setupActions()
     connect(mAddExtraPage, SIGNAL(triggered(bool)),SLOT(slotAddExtraPage()));
     actionCollection()->addAction( QLatin1String( "add_extra_page" ), mAddExtraPage );
 
-    mUploadTheme = new KAction(i18n("Upload theme..."), this);
-    actionCollection()->addAction( QLatin1String( "upload_theme" ), mUploadTheme );
-    connect(mUploadTheme, SIGNAL(triggered(bool)), SLOT(slotUploadTheme()));
+    mUploadTheme = KNS3::standardAction(i18n("Upload theme..."), this, SLOT(slotUploadTheme()), actionCollection(), "upload_theme");
 
     mNewThemeAction = KStandardAction::openNew(this, SLOT(slotNewTheme()), actionCollection());
     mNewThemeAction->setText(i18n("New theme..."));

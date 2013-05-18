@@ -53,6 +53,7 @@ public:
     void insertFile(const QString &filename);
 
     PreviewWidget *preview() const;
+    EditorWidget *editor() const;
 
 Q_SIGNALS:
     void needUpdateViewer();

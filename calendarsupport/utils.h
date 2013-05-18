@@ -248,12 +248,6 @@ namespace CalendarSupport {
   CALENDARSUPPORT_EXPORT void saveAttachments( const Akonadi::Item &item,
                                                QWidget *parentWidget = 0 );
 
-  CALENDARSUPPORT_EXPORT KCalCore::Incidence::Ptr dissociateOccurrence( const Akonadi::Item &item,
-                                                                        const QDate &date,
-                                                                        const KDateTime::Spec &spec,
-                                                                        bool single = true );
-
-
   CALENDARSUPPORT_EXPORT QStringList categories( const KCalCore::Incidence::List &incidences );
 
   CALENDARSUPPORT_EXPORT bool mergeCalendar(const QString &srcFilename, const KCalCore::Calendar::Ptr &destCalendar);

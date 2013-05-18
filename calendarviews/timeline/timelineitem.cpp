@@ -48,17 +48,14 @@ void TimelineItem::insertIncidence( const Akonadi::Item &aitem,
                                     const KDateTime &_start, const KDateTime &_end )
 {
   const Incidence::Ptr incidence = CalendarSupport::incidence( aitem );
-  KDateTime start =
-    incidence->dtStart().toTimeSpec( CalendarSupport::KCalPrefs::instance()->timeSpec() );
-  KDateTime end =
-    incidence->dateTime( Incidence::RoleEnd ).toTimeSpec(
-      CalendarSupport::KCalPrefs::instance()->timeSpec() );
-
-  if ( _start.isValid() ) {
-    start = _start;
+  KDateTime start(_start);
+  KDateTime end(_end);
+  if ( !start.isValid() ) {
+    start = incidence->dtStart().toTimeSpec( CalendarSupport::KCalPrefs::instance()->timeSpec() );
   }
-  if ( _end.isValid() ) {
-    end = _end;
+  if ( !end.isValid() ) {
+    end = incidence->dateTime( Incidence::RoleEnd ).toTimeSpec(
+      CalendarSupport::KCalPrefs::instance()->timeSpec() );
   }
   if ( incidence->allDay() ) {
     end = end.addDays( 1 );

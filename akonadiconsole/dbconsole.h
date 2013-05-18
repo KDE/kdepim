@@ -32,6 +32,7 @@ class DbConsole : public QWidget
 
   private slots:
     void execClicked();
+    void copyCell();
 
   private:
     Ui::DbConsole ui;

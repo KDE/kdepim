@@ -49,7 +49,7 @@ set(libmessageviewer_SRCS
   bodypartformatter.cpp
   bodypartformatterfactory.cpp
   chiasmuskeyselector.cpp
-  configurewidget.cpp
+  widgets/configurewidget.cpp
   contactdisplaymessagememento.cpp
   csshelper.cpp
   csshelperbase.cpp

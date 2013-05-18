@@ -2,6 +2,7 @@
 #include "managesievescriptsdialog.h"
 #include "editor/sievetextedit.h"
 #include "editor/sieveeditor.h"
+#include "widgets/sievetreewidgetitem.h"
 
 #include <klocale.h>
 #include <kiconloader.h>
@@ -83,9 +84,9 @@ ManageSieveScriptsDialog::ManageSieveScriptsDialog( QWidget * parent )
     connect( mDeactivateScript, SIGNAL(clicked()), SLOT(slotDeactivateScript()) );
     buttonLayout->addWidget( mDeactivateScript );
 
-    KPushButton *mClose = new KPushButton( KStandardGuiItem::close() );
-    connect( mClose, SIGNAL(clicked()), this, SLOT(accept()) );
-    buttonLayout->addWidget( mClose );
+    KPushButton *close = new KPushButton( KStandardGuiItem::close() );
+    connect( close, SIGNAL(clicked()), this, SLOT(accept()) );
+    buttonLayout->addWidget( close );
 
     KConfigGroup group( KGlobal::config(), "ManageSieveScriptsDialog" );
     const QSize size = group.readEntry( "Size", QSize() );
@@ -149,16 +150,13 @@ void ManageSieveScriptsDialog::slotUpdateButtons()
         enabled = false;
     else if ( !item->parent() && !mUrls.count( item ))
         enabled = false;
-    if ( !enabled )
-    {
+    if ( !enabled ) {
         mNewScript->setEnabled( false );
         mEditScript->setEnabled( false );
         mDeleteScript->setEnabled( false );
         mDeactivateScript->setEnabled( false );
-    }
-    else
-    {
-        if ( serverHasError(item) )
+    } else {
+        if ( serverHasError(item) || !mJobs.keys(item).isEmpty())
             mNewScript->setEnabled( false );
         else
             mNewScript->setEnabled( mUrls.count( item ) );
@@ -174,13 +172,13 @@ void ManageSieveScriptsDialog::slotRefresh()
 {
     mBlockSignal = true;
     clear();
-    QTreeWidgetItem *last = 0;
+    SieveTreeWidgetItem *last = 0;
     Akonadi::AgentInstance::List lst = KSieveUi::Util::imapAgentInstances();
     foreach ( const Akonadi::AgentInstance& type, lst ) {
         if ( type.status() == Akonadi::AgentInstance::Broken )
             continue;
 
-        last = new QTreeWidgetItem( mListView, last );
+        last = new SieveTreeWidgetItem( mListView, last );
         last->setText( 0, type.name() );
         last->setIcon( 0, SmallIcon( QLatin1String("network-server") ) );
 
@@ -198,6 +196,7 @@ void ManageSieveScriptsDialog::slotRefresh()
                      this, SLOT(slotResult(KManageSieve::SieveJob*,bool,QString,bool)) );
             mJobs.insert( job, last );
             mUrls.insert( last, u );
+            last->startAnimation();
         }
     }
     slotUpdateButtons();
@@ -210,7 +209,7 @@ void ManageSieveScriptsDialog::slotResult( KManageSieve::SieveJob * job, bool su
     QTreeWidgetItem * parent = mJobs[job];
     if ( !parent )
         return;
-
+    (static_cast<SieveTreeWidgetItem*>(parent))->stopAnimation();
     if (success)
         parent->setData( 0, SIEVE_SERVER_CAPABILITIES, job->sieveCapabilities() );
     mJobs.remove( job );
@@ -264,7 +263,7 @@ void ManageSieveScriptsDialog::slotContextMenuRequested( const QPoint& p )
         }
     } else if ( !item->parent() ) {
         // top-levels:
-        if ( !serverHasError(item) )
+        if ( !serverHasError(item) && mJobs.keys(item).isEmpty())
             menu.addAction( i18n( "New Script..." ), this, SLOT(slotNewScript()) );
     }
     if ( !menu.actions().isEmpty() )

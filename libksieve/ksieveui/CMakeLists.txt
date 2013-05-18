@@ -11,6 +11,7 @@ add_subdirectory(tests)
 
 set(ksieveui_LIB_SRCS
   managesievescriptsdialog.cpp
+  widgets/sievetreewidgetitem.cpp
   debug/sievedebugdialog.cpp
   util.cpp
   vacation/vacation.cpp
@@ -34,6 +35,7 @@ set(ksieveui_LIB_SRCS
   autocreatescripts/sievescripttabwidget.cpp
   autocreatescripts/autocreatescriptutil.cpp
   autocreatescripts/sieveincludewidget.cpp
+  autocreatescripts/sieveforeverypartwidget.cpp
   autocreatescripts/sievewidgetpageabstract.cpp
   autocreatescripts/sieveactions/sieveactionlist.cpp
   autocreatescripts/sieveactions/sieveaction.cpp
@@ -55,6 +57,8 @@ set(ksieveui_LIB_SRCS
   autocreatescripts/sieveactions/sieveactionenclose.cpp
   autocreatescripts/sieveactions/sieveactionreplace.cpp
   autocreatescripts/sieveactions/sieveactionextracttext.cpp
+  autocreatescripts/sieveactions/sieveactionbreak.cpp
+  autocreatescripts/sieveactions/sieveactionconvert.cpp
   autocreatescripts/sieveactions/widgets/selectflagswidget.cpp
   autocreatescripts/sieveactions/widgets/selectfileintowidget.cpp
   autocreatescripts/sieveactions/widgets/addresslineedit.cpp
@@ -81,6 +85,8 @@ set(ksieveui_LIB_SRCS
   autocreatescripts/sieveconditions/sieveconditionfalse.cpp
   autocreatescripts/sieveconditions/sieveconditionenvironment.cpp
   autocreatescripts/sieveconditions/sieveconditionhasflag.cpp
+  autocreatescripts/sieveconditions/sieveconditionmetadata.cpp
+  autocreatescripts/sieveconditions/sieveconditionconvert.cpp
   autocreatescripts/sieveconditions/widgets/selectdatewidget.cpp
   autocreatescripts/sieveconditions/widgets/selectmatchtypecombobox.cpp
   autocreatescripts/sieveconditions/widgets/selectaddresspartcombobox.cpp

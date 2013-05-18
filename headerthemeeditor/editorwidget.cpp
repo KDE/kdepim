@@ -52,13 +52,8 @@ void EditorWidget::insertFile(const QString &filename)
 
 void EditorWidget::initCompleter()
 {
-    QStringList listWord;
-
-    listWord << DefaultCompletion::defaultCompetion();
-    listWord << DefaultCompletion::defaultOptions();
-
     m_completer = new QCompleter( this );
-    m_completer->setModel( new QStringListModel( listWord, m_completer ) );
+    createCompleterList();
     m_completer->setModelSorting( QCompleter::CaseSensitivelySortedModel );
     m_completer->setCaseSensitivity( Qt::CaseInsensitive );
 
@@ -66,6 +61,16 @@ void EditorWidget::initCompleter()
     m_completer->setCompletionMode( QCompleter::PopupCompletion );
 
     connect( m_completer, SIGNAL(activated(QString)), this, SLOT(slotInsertCompletion(QString)) );
+}
+
+void EditorWidget::createCompleterList(const QStringList &extraHeaders)
+{
+    QStringList listWord;
+
+    listWord << DefaultCompletion::defaultCompetion();
+    listWord << DefaultCompletion::defaultOptions();
+    listWord << extraHeaders;
+    m_completer->setModel( new QStringListModel( listWord, m_completer ) );
 }
 
 void EditorWidget::slotInsertCompletion( const QString &completion )

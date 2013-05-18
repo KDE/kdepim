@@ -66,7 +66,8 @@ void SendLaterJob::slotMessageTransfered(const Akonadi::Item::List& items)
         mItem = items.first();
         return;
     }
-    //TODO error
+    kDebug()<<"Error during fetching message.";
+    sendError(i18n("Error during fetching message."));
 }
 
 void SendLaterJob::slotJobFinished(KJob* job)
@@ -77,9 +78,17 @@ void SendLaterJob::slotJobFinished(KJob* job)
         return;
     }
     if (mItem.isValid()) {
-        //Send it :)
+        if (mInfo->isRecursive()) {
+            const MailTransport::SentBehaviourAttribute *sentAttribute = mItem.attribute<MailTransport::SentBehaviourAttribute>();
+            QString fcc;
+            if ( sentAttribute && ( sentAttribute->sentBehaviour() == MailTransport::SentBehaviourAttribute::MoveToCollection ) )
+              fcc =  QString::number( sentAttribute->moveToCollection().id() );
+
+            //TODO create new message
+        } else {
+            //Send current Message
+        }
     }
-    //TODO
 }
 
 void SendLaterJob::sendDone()

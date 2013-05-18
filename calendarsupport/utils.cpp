@@ -74,6 +74,7 @@ using namespace KCalCore;
 
 KCalCore::Incidence::Ptr CalendarSupport::incidence( const Akonadi::Item &item )
 {
+  //relying on exception for performance reasons
   try {
     return item.payload<KCalCore::Incidence::Ptr>();
   } catch( Akonadi::PayloadException ) {
@@ -83,6 +84,7 @@ KCalCore::Incidence::Ptr CalendarSupport::incidence( const Akonadi::Item &item )
 
 KCalCore::Event::Ptr CalendarSupport::event( const Akonadi::Item &item )
 {
+  //relying on exception for performance reasons
   try {
     KCalCore::Incidence::Ptr incidence = item.payload<KCalCore::Incidence::Ptr>();
     if ( incidence && incidence->type() == KCalCore::Incidence::TypeEvent ) {
@@ -737,85 +739,6 @@ void CalendarSupport::saveAttachments( const Akonadi::Item &item, QWidget *paren
       KMessageBox::error( parentWidget, KIO::NetAccess::lastErrorString() );
     }
   }
-}
-
-KCalCore::Incidence::Ptr CalendarSupport::dissociateOccurrence( const Akonadi::Item &item,
-                                                                const QDate &date,
-                                                                const KDateTime::Spec &spec,
-                                                                bool single )
-{
-  if ( !item.isValid() ) {
-    return KCalCore::Incidence::Ptr();
-  }
-
-  const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( item );
-  if ( !incidence || !incidence->recurs() ) {
-    return KCalCore::Incidence::Ptr();
-  }
-
-  KCalCore::Incidence::Ptr newInc = KCalCore::Incidence::Ptr( incidence->clone() );
-  newInc->recreate();
-  // Do not call setRelatedTo() when dissociating recurring to-dos, otherwise the new to-do
-  // will appear as a child.  Originally, we planned to set a relation with reltype SIBLING
-  // when dissociating to-dos, but currently kcal only supports reltype PARENT.
-  // We can uncomment the following line when we support the PARENT reltype.
-  //newInc->setRelatedTo( incidence );
-  KCalCore::Recurrence *recur = newInc->recurrence();
-  if ( single ) {
-    recur->clear();
-  } else {
-    // Adjust the recurrence for the future incidences. In particular adjust
-    // the "end after n occurrences" rules! "No end date" and "end by ..."
-    // don't need to be modified.
-    int duration = recur->duration();
-    if ( duration > 0 ) {
-      int doneduration = recur->durationTo( date.addDays( -1 ) );
-      if ( doneduration >= duration ) {
-        kDebug() << "The dissociated event already occurred more often"
-                 << "than it was supposed to ever occur. ERROR!";
-        recur->clear();
-      } else {
-        recur->setDuration( duration - doneduration );
-      }
-    }
-  }
-  // Adjust the date of the incidence
-  if ( incidence->type() == KCalCore::IncidenceBase::TypeEvent ) {
-    KCalCore::Event::Ptr ev = newInc.staticCast<KCalCore::Event>();
-    KDateTime start( ev->dtStart() );
-    int daysTo = start.toTimeSpec( spec ).date().daysTo( date );
-    ev->setDtStart( start.addDays( daysTo ) );
-    ev->setDtEnd( ev->dtEnd().addDays( daysTo ) );
-  } else if ( incidence->type() == KCalCore::IncidenceBase::TypeTodo ) {
-    KCalCore::Todo::Ptr td = newInc.staticCast<KCalCore::Todo>();
-    bool haveOffset = false;
-    int daysTo = 0;
-    if ( td->hasDueDate() ) {
-      KDateTime due( td->dtDue() );
-      daysTo = due.toTimeSpec( spec ).date().daysTo( date );
-      td->setDtDue( due.addDays( daysTo ), true );
-      haveOffset = true;
-    }
-    if ( td->hasStartDate() ) {
-      KDateTime start( td->dtStart() );
-      if ( !haveOffset ) {
-        daysTo = start.toTimeSpec( spec ).date().daysTo( date );
-      }
-      td->setDtStart( start.addDays( daysTo ) );
-      haveOffset = true;
-    }
-  }
-  recur = incidence->recurrence();
-  if ( recur ) {
-    if ( single ) {
-      recur->addExDate( date );
-    } else {
-      // Make sure the recurrence of the past events ends
-      // at the corresponding day
-      recur->setEndDate( date.addDays(-1) );
-    }
-  }
-  return KCalCore::Incidence::Ptr( newInc );
 }
 
 QStringList CalendarSupport::categories( const KCalCore::Incidence::List &incidences )

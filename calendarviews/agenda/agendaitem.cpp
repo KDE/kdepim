@@ -65,9 +65,9 @@ QPixmap *AgendaItem::eventPxmp = 0;
 AgendaItem::AgendaItem( EventView *eventView, const Akonadi::ETMCalendar::Ptr &calendar,
                         const Akonadi::Item &item,
                         int itemPos, int itemCount,
-                        const QDate &qd, bool isSelected, QWidget *parent )
+                        const KDateTime &qd, bool isSelected, QWidget *parent )
   : QWidget( parent ), mEventView( eventView ), mCalendar( calendar ), mIncidence( item ),
-    mDate( qd ), mValid( true ), mCloned( false ), mSelected( isSelected ), mSpecialEvent( false )
+    mOccurrenceDateTime( qd ), mValid( true ), mCloned( false ), mSelected( isSelected ), mSpecialEvent( false )
 {
   if ( !CalendarSupport::hasIncidence( mIncidence ) ) {
     mValid = false;
@@ -78,7 +78,7 @@ AgendaItem::AgendaItem( EventView *eventView, const Akonadi::ETMCalendar::Ptr &c
   Q_ASSERT( incidence );
   if ( incidence->customProperty( "KABC", "BIRTHDAY" ) == "YES" ||
        incidence->customProperty( "KABC", "ANNIVERSARY" ) == "YES" ) {
-    const int years = EventViews::yearDiff( incidence->dtStart().date(), qd );
+    const int years = EventViews::yearDiff( incidence->dtStart().date(), qd.toTimeSpec( mEventView->preferences()->timeSpec() ).date() );
     if ( years > 0 ) {
       incidence = KCalCore::Incidence::Ptr( incidence->clone() );
       incidence->setReadOnly( false );
@@ -128,7 +128,7 @@ void AgendaItem::updateIcons()
   KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( mIncidence );
   Q_ASSERT( incidence );
   mIconReadonly = incidence->isReadOnly();
-  mIconRecur = incidence->recurs();
+  mIconRecur = incidence->recurs() || incidence->hasRecurrenceId();
   mIconAlarm = incidence->hasEnabledAlarms();
   if ( incidence->attendeeCount() > 1 ) {
     if ( mEventView->kcalPreferences()->thatIsMe( incidence->organizer()->email() ) ) {
@@ -233,9 +233,14 @@ int AgendaItem::cellWidth() const
   return mCellXRight - mCellXLeft + 1;
 }
 
-void AgendaItem::setItemDate( const QDate &qd )
+void AgendaItem::setOccurrenceDateTime(const KDateTime& qd)
 {
-  mDate = qd;
+  mOccurrenceDateTime = qd;
+}
+
+QDate AgendaItem::occurrenceDate() const
+{
+  return mOccurrenceDateTime.toTimeSpec( mEventView->preferences()->timeSpec() ).date();
 }
 
 void AgendaItem::setCellXY( int X, int YTop, int YBottom )
@@ -766,9 +771,7 @@ void AgendaItem::paintIcons( QPainter *p, int &x, int y, int ft )
   const bool isTodo = incidence && incidence->type() == Incidence::TypeTodo;
 
   if ( isTodo && icons.contains( EventViews::EventView::TaskIcon ) ) {
-    KDateTime occurrenceDateTime = incidence->dateTime( Incidence::RoleRecurrenceStart );
-    occurrenceDateTime.setDate( mDate );
-    const QString iconName = incidence->iconName( occurrenceDateTime );
+    const QString iconName = incidence->iconName( mOccurrenceDateTime.toTimeSpec( incidence->dtStart().timeSpec() ) );
     conditionalPaint( p, !mSpecialEvent, x, y, ft, SmallIcon( iconName ) );
   }
 
@@ -848,9 +851,10 @@ void AgendaItem::paintEvent( QPaintEvent *ev )
       todo->dtDue().toTimeSpec( CalendarSupport::KCalPrefs::instance()->timeSpec() ).date();
     const QDate today =
       KDateTime::currentDateTime( CalendarSupport::KCalPrefs::instance()->timeSpec() ).date();
-    if ( todo->isOverdue() && today >= mDate ) {
+    const QDate occurrenceDate = mOccurrenceDateTime.toTimeSpec( CalendarSupport::KCalPrefs::instance()->timeSpec() ).date();
+    if ( todo->isOverdue() && today >= occurrenceDate ) {
       bgColor = mEventView->preferences()->todoOverdueColor();
-    } else if ( dueDate == today && dueDate == mDate ) {
+    } else if ( dueDate == today && dueDate == occurrenceDate ) {
       bgColor = mEventView->preferences()->todoDueTodayColor();
     }
   }
@@ -1369,7 +1373,7 @@ bool AgendaItem::event( QEvent *event )
         KCalUtils::IncidenceFormatter::toolTipStr(
           CalendarSupport::displayName( mCalendar.data(), mIncidence.parentCollection() ),
           CalendarSupport::incidence( mIncidence ),
-          mDate, true, mEventView->preferences()->timeSpec() ),
+          mOccurrenceDateTime.toTimeSpec( mEventView->preferences()->timeSpec() ).date(), true, mEventView->preferences()->timeSpec() ),
         this );
     }
   }

@@ -1637,50 +1637,39 @@ void CalendarView::dissociateOccurrences( const Akonadi::Item &item, const QDate
   }
 
   if ( doOnlyThis ) {
-    dissociateOccurrence( item, date );
+    dissociateOccurrence( item, date, false );
   } else if ( doFuture ) {
-    dissociateFutureOccurrence( item, date );
+    dissociateOccurrence( item, date, true );
   }
 }
-void CalendarView::dissociateOccurrence( const Akonadi::Item &item, const QDate &date )
+void CalendarView::dissociateOccurrence( const Akonadi::Item &item, const QDate &date, bool thisAndFuture )
 {
   const Incidence::Ptr incidence = CalendarSupport::incidence( item );
 
-  startMultiModify( i18n( "Dissociate occurrence" ) );
-  Incidence::Ptr oldincidence( incidence->clone() );
-  Incidence::Ptr newInc(
-    CalendarSupport::dissociateOccurrence( item, date, CalendarSupport::KCalPrefs::instance()->timeSpec(), true ) );
-  if ( newInc ) {
-    if ( mChanger->modifyIncidence( item, oldincidence, this ) != -1 )
-      mChanger->createIncidence( newInc, item.parentCollection(), this );
+  if ( thisAndFuture ) {
+    startMultiModify( i18n( "Dissociate future occurrences" ) );
   } else {
-    KMessageBox::sorry(
-      this,
-      i18n( "Dissociating the occurrence failed." ),
-      i18n( "Dissociating Failed" ) );
+    startMultiModify( i18n( "Dissociate occurrence" ) );
   }
-
-  endMultiModify();
-}
-
-void CalendarView::dissociateFutureOccurrence( const Akonadi::Item &item, const QDate &date )
-{
-  const Incidence::Ptr incidence = CalendarSupport::incidence( item );
-
-  startMultiModify( i18n( "Dissociate future occurrences" ) );
-  Incidence::Ptr oldincidence( incidence->clone() );
-
-  Incidence::Ptr newInc(
-    CalendarSupport::dissociateOccurrence( item, date,
-                                     CalendarSupport::KCalPrefs::instance()->timeSpec(), false ) );
+  KDateTime occurrenceDate( incidence->dtStart() );
+  occurrenceDate.setDate(date);
+  kDebug() << "create exception: " << occurrenceDate;
+  KCalCore::Incidence::Ptr newInc( KCalCore::Calendar::createException(
+      incidence, occurrenceDate, thisAndFuture) );
   if ( newInc ) {
-    if ( mChanger->modifyIncidence( item, oldincidence, this ) != -1 )
-      mChanger->createIncidence( newInc, item.parentCollection(), this );
+    mChanger->createIncidence( newInc, item.parentCollection(), this );
   } else {
-    KMessageBox::sorry(
-      this,
-      i18n( "Dissociating the future occurrences failed." ),
-      i18n( "Dissociating Failed" ) );
+    if ( thisAndFuture ) {
+      KMessageBox::sorry(
+        this,
+        i18n( "Dissociating the future occurrences failed." ),
+        i18n( "Dissociating Failed" ) );
+    } else {
+      KMessageBox::sorry(
+        this,
+        i18n( "Dissociating the occurrence failed." ),
+        i18n( "Dissociating Failed" ) );
+    }
   }
   endMultiModify();
 }
@@ -1835,16 +1824,15 @@ void CalendarView::printPreview()
 
 void CalendarView::exportWeb()
 {
-  // FIXME: Get rid of the settings object. When can I delete it???
   KOrg::HTMLExportSettings *settings = new KOrg::HTMLExportSettings( "KOrganizer" );
+  Q_ASSERT(settings);
   // Manually read in the config, because parameterized kconfigxt objects don't
   // seem to load the config theirselves
-  if ( settings ) {
-    settings->readConfig();
-  }
+  settings->readConfig();
   ExportWebDialog *dlg = new ExportWebDialog( settings, this );
   connect( dlg, SIGNAL(exportHTML(KOrg::HTMLExportSettings*)),
            this, SIGNAL(exportHTML(KOrg::HTMLExportSettings*)) );
+  connect(dlg, SIGNAL(destroyed(QObject*)), settings, SLOT(deleteLater()), Qt::QueuedConnection);
   dlg->show();
 }
 
@@ -2671,7 +2659,6 @@ void CalendarView::addIncidenceOn( const Akonadi::Item &itemadd, const QDate &dt
     due.setDate( dt );
 
     todo->setDtDue( due );
-    todo->setHasDueDate( true );
   }
 
   mChanger->createIncidence( incidence, Akonadi::Collection(), this );
@@ -2712,7 +2699,6 @@ void CalendarView::moveIncidenceTo( const Akonadi::Item &itemmove, const QDate &
     due.setDate( dt );
 
     todo->setDtDue( due );
-    todo->setHasDueDate( true );
   }
   mChanger->modifyIncidence( itemmove, oldIncidence, this );
 }

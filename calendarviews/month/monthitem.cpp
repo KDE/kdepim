@@ -298,9 +298,10 @@ QList<MonthGraphicsItem *> EventViews::MonthItem::monthGraphicsItems() const
 IncidenceMonthItem::IncidenceMonthItem( MonthScene *monthScene,
                                         const Akonadi::ETMCalendar::Ptr &calendar,
                                         const Akonadi::Item &aitem,
+                                        const KCalCore::Incidence::Ptr &incidence,
                                         const QDate &recurStartDate )
   : MonthItem( monthScene ), mCalendar( calendar ),
-    mIncidence( aitem.payload<Incidence::Ptr>() ),
+    mIncidence( incidence ),
     mAkonadiItemId( aitem.id() )
 {
   mIsEvent = CalendarSupport::hasEvent( aitem );
@@ -439,42 +440,22 @@ void IncidenceMonthItem::updateDates( int startOffset, int endOffset )
         break;
       }
       case KCalUtils::RecurrenceActions::SelectedOccurrence: // Just this occurrence
+      case KCalUtils::RecurrenceActions::FutureOccurrences: // All future occurrences
       {
-        KCalCore::Incidence::Ptr oldIncidenceSaved( mIncidence->clone() );
-        KCalCore::Incidence::Ptr newIncidence( CalendarSupport::dissociateOccurrence(
-            item, startDate(), CalendarSupport::KCalPrefs::instance()->timeSpec() ) );
+        const bool thisAndFuture = (res == KCalUtils::RecurrenceActions::FutureOccurrences);
+        KDateTime occurrenceDate( mIncidence->dtStart() );
+        occurrenceDate.setDate( startDate() );
+        KCalCore::Incidence::Ptr newIncidence( KCalCore::Calendar::createException(
+          mIncidence, occurrenceDate, thisAndFuture ) );
         if ( newIncidence ) {
-          changer->startAtomicOperation( i18n( "Move single occurrence" ) );
-          if ( changer->modifyIncidence( item, oldIncidenceSaved ) != -1 ) {
-            setNewDates( newIncidence, startOffset, endOffset );
-            changer->createIncidence( newIncidence, item.parentCollection(), parentWidget() );
-          }
+          changer->startAtomicOperation( i18n( "Move occurrence(s)" ) );
+          setNewDates( newIncidence, startOffset, endOffset );
+          changer->createIncidence( newIncidence, item.parentCollection(), parentWidget() );
           changer->endAtomicOperation();
         } else {
           KMessageBox::sorry(
             parentWidget(),
             i18n( "Unable to add the exception item to the calendar. "
-                  "No change will be done." ),
-            i18n( "Error Occurred" ) );
-        }
-        break;
-      }
-      case KCalUtils::RecurrenceActions::FutureOccurrences: // All future occurrences
-      {
-        KCalCore::Incidence::Ptr oldIncidenceSaved( mIncidence->clone() );
-        KCalCore::Incidence::Ptr newIncidence( CalendarSupport::dissociateOccurrence(
-            item, startDate(), CalendarSupport::KCalPrefs::instance()->timeSpec(), false ) );
-        if ( newIncidence ) {
-          changer->startAtomicOperation( i18n( "Move future occurrences" ) );
-          if ( changer->modifyIncidence( item, oldIncidenceSaved ) != -1 ) {
-            setNewDates( newIncidence, startOffset, endOffset );
-            changer->createIncidence( newIncidence, item.parentCollection(), parentWidget() );
-          }
-          changer->endAtomicOperation();
-        } else {
-          KMessageBox::sorry(
-            parentWidget(),
-            i18n( "Unable to add the future items to the calendar. "
                   "No change will be done." ),
             i18n( "Error Occurred" ) );
         }
@@ -690,7 +671,7 @@ QColor IncidenceMonthItem::frameColor() const
 Akonadi::Item IncidenceMonthItem::akonadiItem() const
 {
   if ( mIncidence ) {
-    return monthScene()->mMonthView->calendar()->item( mIncidence->uid() );
+    return monthScene()->mMonthView->calendar()->item( mIncidence );
   } else {
     return Akonadi::Item();
   }

@@ -590,7 +590,6 @@ LdapSearchDialog::LdapSearchDialog( QWidget *parent )
 
   topLayout->addWidget( buttons );
 
-  resize( QSize( 600, 400 ).expandedTo( minimumSizeHint() ) );
 
   setButtonText( User1, i18n( "Add Selected" ) );
 #ifndef _WIN32_WCE
@@ -685,6 +684,16 @@ void LdapSearchDialog::Private::restoreSettings()
 
     mModel->clear();
   }
+  KConfigGroup groupHeader( config, "Headers" );
+  mResultView->horizontalHeader()->restoreState(groupHeader.readEntry("HeaderState",QByteArray()));
+
+  KConfigGroup groupSize( config, "Size" );
+  const QSize dialogSize = groupSize.readEntry( "Size", QSize() );
+  if ( dialogSize.isValid() ) {
+      q->resize( dialogSize );
+  } else {
+      q->resize( QSize( 600, 400 ).expandedTo( q->minimumSizeHint() ) );
+  }
 }
 
 void LdapSearchDialog::Private::saveSettings()
@@ -692,6 +701,15 @@ void LdapSearchDialog::Private::saveSettings()
   KConfig *config = KLDAP::LdapClientSearchConfig::config();
   KConfigGroup group( config, "LDAPSearch" );
   group.writeEntry( "SearchType", mSearchType->currentIndex() );
+
+  KConfigGroup groupHeader( config, "Headers" );
+  groupHeader.writeEntry( "HeaderState", mResultView->horizontalHeader()->saveState());
+  groupHeader.sync();
+
+  KConfigGroup size( config, "Size" );
+  size.writeEntry( "Size", q->size());
+  size.sync();
+
   group.sync();
 }
 

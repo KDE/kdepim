@@ -55,6 +55,9 @@ int main (int argc, char **argv)
             <<QLatin1String("replace")
             <<QLatin1String("include")
             <<QLatin1String("extracttext")
+            <<QLatin1String("metadata")
+            <<QLatin1String("convert")
+            <<QLatin1String("foreverypart")
             <<QLatin1String("comparator-i;ascii-numeric");
     dialog->setSieveCapabilities(capabilities);
     if (dialog->exec() ) {

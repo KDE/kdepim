@@ -47,6 +47,20 @@
     </tr>
 {% endif %}
 
+{% if header.Sender %}
+    <tr>
+    <th align="left" style="font-size: 10px;"> Sender: </th>
+    <td style="font-size: 10px;">{{ header.Sender|safe }}</td>
+    </tr>
+{% endif %}
+
+{% if header.ListId %}
+    <tr>
+    <th align="left" style="font-size: 10px;"> List-Id: </th>
+    <td style="font-size: 10px;">{{ header.ListId }}</td>
+    </tr>
+{% endif %}
+
     <tr>
     <th align="left" style="font-size: 10px;">{{ header.datei18n }} </th>
     <td dir="{{ dateDir }}" style="font-size: 10px;">{{ header.dateshort }}</td>

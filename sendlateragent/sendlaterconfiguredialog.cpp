@@ -130,7 +130,7 @@ SendLaterWidget::SendLaterWidget( QWidget *parent )
     mWidget = new Ui::SendLaterWidget;
     mWidget->setupUi( this );
     QStringList headers;
-    headers << i18n("Subject")<<i18n("Date")<<i18n("Recursive");
+    headers << i18n("Subject")<<i18n("Date")<<i18n("Recursive")<<i18n("Message Id");
     mWidget->treeWidget->setHeaderLabels(headers);
     mWidget->treeWidget->setSortingEnabled(true);
     mWidget->treeWidget->setRootIsDecorated(false);
@@ -215,9 +215,9 @@ void SendLaterWidget::createOrUpdateItem(SendLaterInfo *info, SendLaterItem *ite
         item = new SendLaterItem(mWidget->treeWidget);
     }
     item->setCheckState(Recursive, info->isRecursive() ? Qt::Checked : Qt::Unchecked);
-    //item->setText(Date, info->dateTime());
+    item->setText(MessageId, QString::number(info->itemId()));
+    item->setText(Date, info->dateTime().toString());
     //TODO
-    //item->setText(0,i18n("Folder: %1",MailCommon::Util::fullCollectionPath(Akonadi::Collection(info->saveCollectionId()))));
     item->setInfo(info);
 }
 

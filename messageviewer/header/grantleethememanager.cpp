@@ -47,6 +47,7 @@ public:
         watch = new KDirWatch( q );
         initThemesDirectories(relativePath);
         downloadThemesAction = new KAction(i18n("Download new themes..."), q);
+        downloadThemesAction->setIcon(KIcon(QLatin1String("get-hot-new-stuff")));
         if (actionCollection)
             actionCollection->addAction( "download_header_themes", downloadThemesAction );
         separatorAction = new QAction(q);
@@ -216,6 +217,7 @@ public:
     KActionMenu *menu;
     KActionCollection *actionCollection;
     QAction *separatorAction;
+
     KAction *downloadThemesAction;
     QWeakPointer<KNS3::DownloadDialog> downloadThemesDialog;
     GrantleeThemeManager *q;

@@ -118,13 +118,13 @@ class EVENTVIEWS_EXPORT Agenda : public QWidget
 
     void setStartTime( const QTime &startHour );
 
-    AgendaItem::QPtr insertItem ( const Akonadi::Item &incidence, const QDate &qd, int X, int YTop,
+    AgendaItem::QPtr insertItem ( const Akonadi::Item &incidence, const KDateTime &occurrenceDateTime, int X, int YTop,
                                   int YBottom, int itemPos, int itemCount, bool isSelected );
 
-    AgendaItem::QPtr insertAllDayItem ( const Akonadi::Item &event, const QDate &qd, int XBegin,
+    AgendaItem::QPtr insertAllDayItem ( const Akonadi::Item &event, const KDateTime &occurrenceDateTime, int XBegin,
                                         int XEnd, bool isSelected );
 
-    void insertMultiItem ( const Akonadi::Item &event, const QDate &qd, int XBegin, int XEnd,
+    void insertMultiItem ( const Akonadi::Item &event, const KDateTime &occurrenceDateTime, int XBegin, int XEnd,
                            int YTop, int YBottom, bool isSelected );
 
     /**
@@ -134,7 +134,7 @@ class EVENTVIEWS_EXPORT Agenda : public QWidget
       slot deleteItemsToDelete() (called by QTimer::singleShot ).
       @param incidence The pointer to the incidence that should be removed.
     */
-    void removeIncidence( const QString &uid );
+    void removeIncidence( const KCalCore::Incidence::Ptr &incidence );
 
     void changeColumns( int columns );
 
@@ -160,7 +160,7 @@ class EVENTVIEWS_EXPORT Agenda : public QWidget
 
     void setIncidenceChanger( Akonadi::IncidenceChanger *changer );
 
-    QList<AgendaItem::QPtr> agendaItems( const QString &uid ) const;
+    QList<AgendaItem::QPtr> agendaItems( const KCalCore::Incidence::Ptr &inc ) const;
 
   public Q_SLOTS:
     void scrollUp();

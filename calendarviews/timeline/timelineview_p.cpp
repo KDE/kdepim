@@ -32,6 +32,7 @@
 #include <calendarsupport/utils.h>
 #include <calendarsupport/kcalprefs.h>
 #include <Akonadi/Calendar/IncidenceChanger>
+#include <KCalCore/OccurrenceIterator>
 
 #include <QStandardItemModel>
 #include <QResizeEvent>
@@ -124,15 +125,14 @@ void TimelineView::Private::insertIncidence( const Akonadi::Item &aitem, const Q
   }
 
   if ( incidence->recurs() ) {
-    QList<KDateTime> l = incidence->startDateTimesForDate( day );
-    if ( l.isEmpty() ) {
-      // strange, but seems to happen for some recurring events...
-      item->insertIncidence( aitem, KDateTime( day, incidence->dtStart().time() ),
-                             KDateTime( day, incidence->dateTime( Incidence::RoleEnd ).time() ) );
-    } else {
-      for ( QList<KDateTime>::ConstIterator it = l.constBegin(); it != l.constEnd(); ++it ) {
-        item->insertIncidence( aitem, *it, incidence->endDateForStart( *it ) );
-      }
+    KCalCore::OccurrenceIterator occurIter( *(q->calendar()), incidence, KDateTime( day, QTime( 0, 0 ,0 ) ), KDateTime( day, QTime( 23, 59, 59 ) ) );
+    while ( occurIter.hasNext() ) {
+      occurIter.next();
+      const Akonadi::Item akonadiItem = q->calendar()->item( occurIter.incidence() );
+      const KDateTime startOfOccurrence = occurIter.occurrenceStartDate();
+      const KDateTime endOfOccurrence = occurIter.incidence()->endDateForStart( startOfOccurrence );
+      const KDateTime::Spec spec = CalendarSupport::KCalPrefs::instance()->timeSpec();
+      item->insertIncidence( akonadiItem, startOfOccurrence.toTimeSpec( spec ),  endOfOccurrence.toTimeSpec( spec ) );
     }
   } else {
     if ( incidence->dtStart().date() == day ||
@@ -163,7 +163,7 @@ void TimelineView::Private::insertIncidence( const Akonadi::Item &incidence )
       //PENDING(AKONADI_PORT) check if correct. also check the original if,
       //was inside the for loop (unnecessarily)
       foreach( const KCalCore::Event::Ptr &i, events ) {
-        Akonadi::Item item = q->calendar()->item( i->uid() );
+        Akonadi::Item item = q->calendar()->item( i );
         insertIncidence( item, day );
       }
     }

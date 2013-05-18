@@ -27,7 +27,7 @@
 
 #include "viewer.h"
 #include "viewer_p.h"
-#include "configurewidget.h"
+#include "widgets/configurewidget.h"
 #include "csshelper.h"
 #include "globalsettings.h"
 #include "mailwebview.h"
