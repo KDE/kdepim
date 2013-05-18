@@ -56,7 +56,7 @@ DesktopFilePage::DesktopFilePage(QWidget *parent)
     lab = new QLabel(i18n("Extract Headers:"));
     lay->addWidget(lab,3,0);
 
-    lab = new QLabel(QLatin1String("<qt><b>") +i18n("Be carefull, Grantlee does not support '-' in variable name. So when you want to add extra header as \"X-Original-To\" add \"X-Original-To\" in list, but use \"XOriginalTo\" as variable in Grantlee (remove '-' in name).")+QLatin1String("</b></qt>"));
+    lab = new QLabel(QLatin1String("<qt><b>") +i18n("Be careful, Grantlee does not support '-' in variable name. So when you want to add extra header as \"X-Original-To\" add \"X-Original-To\" in list, but use \"XOriginalTo\" as variable in Grantlee (remove '-' in name).")+QLatin1String("</b></qt>"));
     lab->setWordWrap(true);
     lay->addWidget(lab,4,0,1,2);
 
