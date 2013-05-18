@@ -67,14 +67,14 @@ GrantleeHeaderFormatter::~GrantleeHeaderFormatter()
     delete d;
 }
 
-QString GrantleeHeaderFormatter::toHtml(const QStringList &displayExtraHeaders, const QString &absolutPath, const QString &filename, const MessageViewer::HeaderStyle *style, KMime::Message *message) const
+QString GrantleeHeaderFormatter::toHtml(const QStringList &displayExtraHeaders, const QString &absolutPath, const QString &filename, const MessageViewer::HeaderStyle *style, KMime::Message *message, bool isPrinting) const
 {
     d->templateLoader->setTemplateDirs( QStringList() << absolutPath );
     Grantlee::Template headerTemplate = d->engine->loadByName( filename );
     if ( headerTemplate->error() ) {
         return headerTemplate->errorString();
     }
-    return format(headerTemplate, displayExtraHeaders, false, style, message);
+    return format(headerTemplate, displayExtraHeaders, isPrinting, style, message);
 }
 
 QString GrantleeHeaderFormatter::toHtml(const GrantleeTheme &theme, bool isPrinting, const MessageViewer::HeaderStyle *style, KMime::Message *message) const
