@@ -685,6 +685,11 @@ void IncidenceDateTime::save( const KCalCore::Todo::Ptr &todo )
     todo->setDtStart( currentStartDateTime() );
     // Set allday must be executed after setDtStart
     todo->setAllDay( mUi->mWholeDayCheck->isChecked() );
+    if ( currentStartDateTime() != mInitialStartDT ) {
+      // We don't offer any way to edit the current completed occurrence.
+      // So, if the start date changes, reset the dtRecurrence
+      todo->setDtRecurrence( currentStartDateTime() );
+    }
   } else {
     todo->setHasStartDate( false );
   }
@@ -693,12 +698,6 @@ void IncidenceDateTime::save( const KCalCore::Todo::Ptr &todo )
     todo->setDtDue( currentEndDateTime(), true/** first */ );
     // Set allday must be executed after setDtDue
     todo->setAllDay( mUi->mWholeDayCheck->isChecked() );
-
-    if ( currentEndDateTime() != mInitialEndDT ) {
-      // We don't offer any way to edit the current completed occurrence.
-      // So, if the due date changes, reset the dtRecurrence
-      todo->setDtRecurrence( currentEndDateTime() );
-    }
   } else {
     todo->setHasDueDate( false );
   }
