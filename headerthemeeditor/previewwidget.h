@@ -36,6 +36,8 @@ public:
     void loadConfig();
     void setThemePath(const QString &projectDirectory, const QString &mainPageFileName);
     void updateViewer();
+    void setPrinting(bool printMode);
+    bool printing() const;
 
 Q_SIGNALS:
     void needUpdateViewer();
@@ -46,6 +48,7 @@ public Q_SLOTS:
 
 private:
     QByteArray mDefaultEmail;
+    bool mPrinting;
     MessageViewer::Viewer *mViewer;
     MessageViewer::GrantleeHeaderTestStyle *mGrantleeHeaderStyle;
 };

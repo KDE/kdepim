@@ -545,24 +545,6 @@ void IncidenceDateTime::load( const KCalCore::Event::Ptr &event )
   if ( !isTemplate ) {
     KDateTime startDT = event->dtStart();
     KDateTime endDT = event->dtEnd();
-    /*
-    if ( event->recurs() && mActiveDate.isValid() ) {
-      // Consider the active date when editing recurring Events.
-      KDateTime kdt( mActiveDate, QTime( 0, 0, 0 ), KSystemTimeZones::local() );
-      const int eventLength = startDT.daysTo( endDT );
-      kdt = kdt.addSecs( -1 );
-      startDT.setDate( event->recurrence()->getNextDateTime( kdt ).date() );
-      if ( event->hasEndDate() ) {
-        endDT.setDate( startDT.addDays( eventLength ).date() );
-      } else {
-        if ( event->hasDuration() ) {
-          endDT = startDT.addSecs( event->duration().asSeconds() );
-        } else {
-          endDT = startDT;
-        }
-      }
-    }
-    */
 
     setDateTimes( startDT, endDT );
   } else {
@@ -610,14 +592,6 @@ void IncidenceDateTime::load( const KCalCore::Journal::Ptr &journal )
   if ( !isTemplate ) {
     KDateTime startDT = journal->dtStart();
 
-    /*
-    if ( journal->recurs() && mActiveDate.isValid() ) {
-      // Consider the active date when editing recurring journals
-      KDateTime kdt( mActiveDate, QTime( 0, 0, 0 ), KSystemTimeZones::local() );
-      kdt = kdt.addSecs( -1 );
-      startDT.setDate( journal->recurrence()->getNextDateTime( kdt ).date() );
-    }
-    */
     // Convert UTC to local timezone, if needed (i.e. for kolab #204059)
     if ( startDT.isUtc() ) {
       startDT = startDT.toLocalZone();
@@ -711,22 +685,21 @@ void IncidenceDateTime::save( const KCalCore::Todo::Ptr &todo )
     todo->setDtStart( currentStartDateTime() );
     // Set allday must be executed after setDtStart
     todo->setAllDay( mUi->mWholeDayCheck->isChecked() );
+    if ( currentStartDateTime() != mInitialStartDT ) {
+      // We don't offer any way to edit the current completed occurrence.
+      // So, if the start date changes, reset the dtRecurrence
+      todo->setDtRecurrence( currentStartDateTime() );
+    }
   } else {
-    todo->setHasStartDate( false );
+    todo->setDtStart( KDateTime() );
   }
 
   if ( mUi->mEndCheck->isChecked() ) {
     todo->setDtDue( currentEndDateTime(), true/** first */ );
     // Set allday must be executed after setDtDue
     todo->setAllDay( mUi->mWholeDayCheck->isChecked() );
-
-    if ( currentEndDateTime() != mInitialEndDT ) {
-      // We don't offer any way to edit the current completed occurrence.
-      // So, if the due date changes, reset the dtRecurrence
-      todo->setDtRecurrence( currentEndDateTime() );
-    }
   } else {
-    todo->setHasDueDate( false );
+    todo->setDtDue( KDateTime() );
   }
 }
 

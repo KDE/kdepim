@@ -47,6 +47,8 @@ public:
 
     void insertFile();
 
+    void setPrinting(bool print);
+
 Q_SIGNALS:
     void changed(bool);
 

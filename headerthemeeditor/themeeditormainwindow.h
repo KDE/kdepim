@@ -22,6 +22,7 @@
 
 class ThemeEditorPage;
 class KAction;
+class KToggleAction;
 
 class ThemeEditorMainWindow : public KXmlGuiWindow
 {
@@ -44,6 +45,8 @@ private Q_SLOTS:
     void slotConfigure();
     void slotInstallTheme();
     void slotInsertFile();
+    void slotPrintingMode();
+    void slotNormalMode();
 
 private:
     void updateActions();
@@ -59,6 +62,8 @@ private:
     KAction *mSaveAction;
     KAction *mInstallTheme;
     KAction *mInsertFile;
+    KToggleAction *mPrintingMode;
+    KToggleAction *mNormalMode;
 };
 
 #endif // THEMEEDITORMAINWINDOW_H

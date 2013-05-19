@@ -90,7 +90,7 @@ IncidenceRecurrence::IncidenceRecurrence( IncidenceDateTime *dateTime, Ui::Event
   toggleRecurrenceWidgets( RecurrenceTypeNone );
   fillCombos();
 
-  connect( mDateTime, SIGNAL(endDateTimeToggled(bool)),
+  connect( mDateTime, SIGNAL(startDateTimeToggled(bool)),
            SLOT(handleDateTimeToggle()) );
 
   connect( mDateTime, SIGNAL(startDateChanged(QDate)),
@@ -580,7 +580,7 @@ void IncidenceRecurrence::handleDateTimeToggle()
 {
   QWidget *parent = mUi->mRepeatStack->parentWidget(); // Take the parent of a toplevel widget;
   if ( parent ) {
-    parent->setEnabled( mDateTime->endDateTimeEnabled() );
+    parent->setEnabled( mDateTime->startDateTimeEnabled() );
   }
 }
 
@@ -990,7 +990,7 @@ int IncidenceRecurrence::weekdayCountForMonth( const QDate &date ) const
 
 RecurrenceType IncidenceRecurrence::currentRecurrenceType() const
 {
-  if ( !mUi->mRecurrenceTypeCombo->isVisible() ) {
+  if (mLoadedIncidence && mLoadedIncidence->hasRecurrenceId()) {
     return RecurrenceTypeException;
   }
 

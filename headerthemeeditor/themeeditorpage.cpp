@@ -70,6 +70,11 @@ ThemeEditorPage::~ThemeEditorPage()
     delete mThemeSession;
 }
 
+void ThemeEditorPage::setPrinting(bool print)
+{
+    mEditorPage->preview()->setPrinting(print);
+}
+
 void ThemeEditorPage::slotExtraHeaderDisplayChanged(const QStringList &extraHeaders)
 {
     mEditorPage->preview()->slotExtraHeaderDisplayChanged(extraHeaders);
