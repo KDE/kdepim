@@ -29,7 +29,7 @@ namespace MessageCore {
 namespace Test {
 
   /**
-  * setup a enviroment variables for tests:
+  * setup a environment variables for tests:
   * * set LC_ALL to C
   * * set KDEHOME
   */

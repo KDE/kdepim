@@ -492,7 +492,7 @@ bool ExportMailJob::backupMailData(const KUrl& url,const QString& archivePath)
     }
     mailArchive->close();
 
-    //TODO: store as an uniq file
+    //TODO: store as an unique file
     mailArchive->setCompression(KZip::NoCompression);
     const bool fileAdded = archive()->addLocalFile(tmp.fileName(), archivePath + filename);
     mailArchive->setCompression(KZip::DeflateCompression);

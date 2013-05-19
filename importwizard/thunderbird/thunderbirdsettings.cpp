@@ -650,10 +650,10 @@ void ThunderbirdSettings::readTransport()
         switch(authMethod) {
         case 0:
             break;
-        case 1: //No authentification
+        case 1: //No authentication
             mt->setAuthenticationType(MailTransport::Transport::EnumAuthenticationType::PLAIN); //????
             break;
-        case 3: //Uncrypted password
+        case 3: //Unencrypted password
             mt->setAuthenticationType(MailTransport::Transport::EnumAuthenticationType::CLEAR); //???
             break;
         case 4: //crypted password

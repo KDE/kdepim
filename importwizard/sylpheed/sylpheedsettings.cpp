@@ -527,7 +527,7 @@ QString SylpheedSettings::readTransport( const KConfigGroup& accountConfig )
                 mt->setAuthenticationType(MailTransport::Transport::EnumAuthenticationType::PLAIN);
                 break;
             default:
-                kDebug()<<" smtp authentification unknown :"<<authMethod;
+                kDebug()<<" smtp authentication unknown :"<<authMethod;
             }
         }
         const int sslSmtp = accountConfig.readEntry( QLatin1String( "ssl_smtp" ), 0 );

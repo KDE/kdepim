@@ -331,9 +331,9 @@ void Message::ComposerViewBase::readyForSending()
 void Message::ComposerViewBase::slotEmailAddressResolved ( KJob* job )
 {
   if ( job->error() ) {
-    qWarning() << "An error occured while resolving the email addresses:" << job->errorString();
+    qWarning() << "An error occurred while resolving the email addresses:" << job->errorString();
     // This error could be caused by a broken search infrastructure, so we ignore it for now
-    // to not block sending emails completly.
+    // to not block sending emails completely.
   }
 
   bool autoresizeImage = MessageComposer::MessageComposerSettings::self()->autoResizeImageEnabled();
