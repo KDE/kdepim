@@ -691,7 +691,7 @@ void IncidenceDateTime::save( const KCalCore::Todo::Ptr &todo )
       todo->setDtRecurrence( currentStartDateTime() );
     }
   } else {
-    todo->setHasStartDate( false );
+    todo->setDtStart( KDateTime() );
   }
 
   if ( mUi->mEndCheck->isChecked() ) {
@@ -699,7 +699,7 @@ void IncidenceDateTime::save( const KCalCore::Todo::Ptr &todo )
     // Set allday must be executed after setDtDue
     todo->setAllDay( mUi->mWholeDayCheck->isChecked() );
   } else {
-    todo->setHasDueDate( false );
+    todo->setDtDue( KDateTime() );
   }
 }
 
