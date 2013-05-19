@@ -78,6 +78,13 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDialog : public KDialog
     */
     void setInitiallyDirty( bool initiallyDirty );
 
+  Q_SIGNALS:
+    /**
+     * This signal is emitted when an incidence is created.
+     * @param collection The collection where it was created.
+     */
+    void incidenceCreated(const Akonadi::Item &);
+
   protected Q_SLOTS:
     virtual void slotButtonClicked( int button );
     void handleSelectedCollectionChange( const Akonadi::Collection &collection );

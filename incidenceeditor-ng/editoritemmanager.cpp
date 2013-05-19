@@ -381,6 +381,12 @@ void EditorItemManager::setIsCounterProposal( bool isCounterProposal )
   d->mIsCounterProposal = isCounterProposal;
 }
 
+Akonadi::Collection EditorItemManager::collection() const
+{
+  Q_D( const ItemEditor );
+  return d->mChanger->lastCollectionUsed();
+}
+
 ItemEditorUi::~ItemEditorUi()
 {
 }

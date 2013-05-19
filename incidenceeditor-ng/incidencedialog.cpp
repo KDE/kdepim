@@ -460,7 +460,7 @@ void IncidenceDialogPrivate::handleItemSaveFail( EditorItemManager::SaveAction,
   }
 }
 
-void IncidenceDialogPrivate::handleItemSaveFinish( EditorItemManager::SaveAction )
+void IncidenceDialogPrivate::handleItemSaveFinish( EditorItemManager::SaveAction saveAction)
 {
   Q_Q( IncidenceDialog );
 
@@ -480,6 +480,10 @@ void IncidenceDialogPrivate::handleItemSaveFinish( EditorItemManager::SaveAction
     q->enableButtonOk( true );
     q->enableButtonCancel( true );
     q->enableButtonApply( isDirty() );
+  }
+
+  if ( saveAction == EditorItemManager::Create ) {
+    emit q->incidenceCreated(mItemManager->item());
   }
 }
 
