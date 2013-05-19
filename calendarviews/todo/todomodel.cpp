@@ -262,9 +262,15 @@ QVariant TodoModel::data( const QModelIndex &index, int role ) const
     case SummaryColumn:
       return QVariant( todo->summary() );
     case RecurColumn:
-      return QVariant( todo->recurs() ?
-                       i18nc( "yes, recurring to-do", "Yes" ) :
-                       i18nc( "no, not a recurring to-do", "No" ) );
+      if (todo->recurs()) {
+        if (todo->hasRecurrenceId()) {
+          return i18nc( "yes, an exception to a recurring to-do", "Exception" );
+        } else {
+          return i18nc( "yes, recurring to-do", "Yes" );
+        }
+      } else {
+        return i18nc( "no, not a recurring to-do", "No" );
+      }
     case PriorityColumn:
       if ( todo->priority() == 0 ) {
         return QVariant( QString::fromLatin1( "--" ) );
