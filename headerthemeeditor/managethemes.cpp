@@ -19,6 +19,8 @@
 
 #include <KLocale>
 
+#include <QLabel>
+#include <QListWidget>
 #include <QVBoxLayout>
 
 ManageThemes::ManageThemes(QWidget *parent)
@@ -30,7 +32,14 @@ ManageThemes::ManageThemes(QWidget *parent)
 
     QVBoxLayout *lay = new QVBoxLayout;
 
+    QLabel *lab = new QLabel(i18n("Local themes:"));
+    lay->addWidget(lab);
+
+    mListThemes = new QListWidget;
+    lay->addWidget(mListThemes);
     w->setLayout(lay);
+
+    initialize();
 
     setMainWidget(w);
     resize(300,150);
@@ -38,7 +47,11 @@ ManageThemes::ManageThemes(QWidget *parent)
 
 ManageThemes::~ManageThemes()
 {
+}
 
+void ManageThemes::initialize()
+{
+    //TODO
 }
 
 #include "managethemes.moc"

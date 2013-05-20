@@ -20,12 +20,16 @@
 
 #include <KDialog>
 
+class QListWidget;
 class ManageThemes : public KDialog
 {
     Q_OBJECT
 public:
     explicit ManageThemes(QWidget *parent = 0);
     ~ManageThemes();
+private:
+    void initialize();
+    QListWidget *mListThemes;
 };
 
 #endif // MANAGETHEMES_H
