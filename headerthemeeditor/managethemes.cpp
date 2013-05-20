@@ -55,11 +55,29 @@ ManageThemes::ManageThemes(QWidget *parent)
     initialize();
 
     setMainWidget(w);
-    resize(300,150);
+    readConfig();
 }
 
 ManageThemes::~ManageThemes()
 {
+    writeConfig();
+}
+
+void ManageThemes::readConfig()
+{
+    KConfigGroup group( KGlobal::config(), "ManageThemesDialog" );
+    const QSize sizeDialog = group.readEntry( "Size", QSize() );
+    if ( sizeDialog.isValid() ) {
+        resize( sizeDialog );
+    } else {
+        resize(300, 150);
+    }
+}
+
+void ManageThemes::writeConfig()
+{
+    KConfigGroup group( KGlobal::config(), "ManageThemesDialog" );
+    group.writeEntry( "Size", size() );
 }
 
 void ManageThemes::slotDeleteTheme()
@@ -68,6 +86,7 @@ void ManageThemes::slotDeleteTheme()
         if (KMessageBox::questionYesNo(this, i18n("Do you want to remove selected theme?"), i18n("Remove theme")) == KMessageBox::Yes) {
             const QString localDirectory = KStandardDirs::locateLocal("data",QLatin1String("messageviewer/themes/"));
             QDir themeDir(localDirectory);
+            //TODO verify it.
             if( themeDir.rmpath(mListThemes->currentItem()->text())) {
                 delete mListThemes->currentItem();
             } else {

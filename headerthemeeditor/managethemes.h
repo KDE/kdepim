@@ -35,6 +35,8 @@ private Q_SLOTS:
     void slotDeleteTheme();
 
 private:
+    void readConfig();
+    void writeConfig();
     void initialize();
     QListWidget *mListThemes;
     KPushButton *mDeleteTheme;
