@@ -19,6 +19,7 @@
 #include "themeeditorpage.h"
 #include "newthemedialog.h"
 #include "themeconfiguredialog.h"
+#include "managethemes.h"
 
 #include <KTemporaryFile>
 #include <KTempDir>
@@ -103,6 +104,17 @@ void ThemeEditorMainWindow::setupActions()
     actionCollection()->addAction(QLatin1String("normal_mode"), mNormalMode );
     connect(mNormalMode, SIGNAL(triggered(bool)), SLOT(slotNormalMode()));
     group->addAction( mNormalMode );
+
+    mManageTheme = new KAction(i18n("Manage themes..."), this);
+    connect(mManageTheme, SIGNAL(triggered(bool)),SLOT(slotManageTheme()));
+    actionCollection()->addAction( QLatin1String( "manage_themes" ), mManageTheme );
+}
+
+void ThemeEditorMainWindow::slotManageTheme()
+{
+    QPointer<ManageThemes> dialog = new ManageThemes(this);
+    dialog->exec();
+    delete dialog;
 }
 
 void ThemeEditorMainWindow::slotNormalMode()
