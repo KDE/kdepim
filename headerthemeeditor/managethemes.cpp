@@ -17,9 +17,23 @@
 
 #include "managethemes.h"
 
+#include <KLocale>
+
+#include <QVBoxLayout>
+
 ManageThemes::ManageThemes(QWidget *parent)
     : KDialog(parent)
 {
+    setCaption( i18n( "Manage Theme" ) );
+    setButtons( Ok|Cancel );
+    QWidget *w = new QWidget;
+
+    QVBoxLayout *lay = new QVBoxLayout;
+
+    w->setLayout(lay);
+
+    setMainWidget(w);
+    resize(300,150);
 }
 
 ManageThemes::~ManageThemes()
