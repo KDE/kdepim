@@ -69,6 +69,7 @@ void ManageThemes::slotDeleteTheme()
             const QString localDirectory = KStandardDirs::locateLocal("data",QLatin1String("messageviewer/themes/"));
             QDir themeDir(localDirectory);
             themeDir.remove(mListThemes->currentItem()->text());
+            delete mListThemes->currentItem();
         }
     }
 }
@@ -76,7 +77,6 @@ void ManageThemes::slotDeleteTheme()
 void ManageThemes::initialize()
 {
     const QString localDirectory = KStandardDirs::locateLocal("data",QLatin1String("messageviewer/themes/"));
-    qDebug()<<" localDirectory"<<localDirectory;
     QDir dir(localDirectory);
     if (dir.exists()) {
         QDirIterator dirIt( localDirectory, QStringList(), QDir::AllDirs | QDir::NoDotAndDotDot );
