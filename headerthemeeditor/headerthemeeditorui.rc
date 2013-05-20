@@ -7,6 +7,8 @@
    <Action name="insert_file" />
    <Separator />
    <Action name="upload_theme"/>
+   <Separator />
+   <Action name="manage_themes"/>
   </Menu>
   <Menu noMerge="1" name="edit" >
    <text>&amp;Edit</text>
