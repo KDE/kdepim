@@ -18,10 +18,13 @@
 #include "managethemes.h"
 
 #include <KLocale>
+#include <KStandardDirs>
 
 #include <QLabel>
 #include <QListWidget>
 #include <QVBoxLayout>
+#include <QDir>
+#include <QDirIterator>
 
 ManageThemes::ManageThemes(QWidget *parent)
     : KDialog(parent)
@@ -51,6 +54,22 @@ ManageThemes::~ManageThemes()
 
 void ManageThemes::initialize()
 {
+    const QString localDirectory = KStandardDirs::locateLocal("data",QLatin1String("messageviewer/themes/"));
+    QDir dir(localDirectory);
+    if (dir.exists()) {
+         Q_FOREACH (const QString &directory, localDirectory) {
+         QDirIterator dirIt( directory, QStringList(), QDir::AllDirs | QDir::NoDotAndDotDot );
+          while ( dirIt.hasNext() ) {
+             dirIt.next();
+             const QString dirName = dirIt.fileName();
+             new QListWidgetItem(dirName, mListThemes);
+            }
+        }
+
+       enableButtonOk(true);
+    } else {
+       enableButtonOk(false);
+    }
     //TODO
 }
 
