@@ -68,8 +68,11 @@ void ManageThemes::slotDeleteTheme()
         if (KMessageBox::questionYesNo(this, i18n("Do you want to remove selected theme?"), i18n("Remove theme")) == KMessageBox::Yes) {
             const QString localDirectory = KStandardDirs::locateLocal("data",QLatin1String("messageviewer/themes/"));
             QDir themeDir(localDirectory);
-            themeDir.remove(mListThemes->currentItem()->text());
-            delete mListThemes->currentItem();
+            if( themeDir.rmpath(mListThemes->currentItem()->text())) {
+                delete mListThemes->currentItem();
+            } else {
+                KMessageBox::error(this, i18n("Can not delete theme. Please contact your administrator."), i18n("Delete theme failed"));
+            }
         }
     }
 }
