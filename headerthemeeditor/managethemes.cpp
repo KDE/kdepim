@@ -27,6 +27,7 @@
 #include <QVBoxLayout>
 #include <QDir>
 #include <QDirIterator>
+#include <QDebug>
 
 ManageThemes::ManageThemes(QWidget *parent)
     : KDialog(parent)
@@ -64,33 +65,30 @@ ManageThemes::~ManageThemes()
 void ManageThemes::slotDeleteTheme()
 {
     if (mListThemes->currentItem()) {
-       if (KMessageBox::questionYesNo(this, i18n("Do you want to remove selected theme?"), i18n("Remove theme")) == KMessageBox::Yes) {
-          const QString localDirectory = KStandardDirs::locateLocal("data",QLatin1String("messageviewer/themes/"));
-          QDir themeDir(localDirectory);
-          themeDir.remove(mListThemes->currentItem()->text());
-       }
+        if (KMessageBox::questionYesNo(this, i18n("Do you want to remove selected theme?"), i18n("Remove theme")) == KMessageBox::Yes) {
+            const QString localDirectory = KStandardDirs::locateLocal("data",QLatin1String("messageviewer/themes/"));
+            QDir themeDir(localDirectory);
+            themeDir.remove(mListThemes->currentItem()->text());
+        }
     }
 }
 
 void ManageThemes::initialize()
 {
     const QString localDirectory = KStandardDirs::locateLocal("data",QLatin1String("messageviewer/themes/"));
+    qDebug()<<" localDirectory"<<localDirectory;
     QDir dir(localDirectory);
     if (dir.exists()) {
-         Q_FOREACH (const QString &directory, localDirectory) {
-         QDirIterator dirIt( directory, QStringList(), QDir::AllDirs | QDir::NoDotAndDotDot );
-          while ( dirIt.hasNext() ) {
-             dirIt.next();
-             const QString dirName = dirIt.fileName();
-             new QListWidgetItem(dirName, mListThemes);
-            }
+        QDirIterator dirIt( localDirectory, QStringList(), QDir::AllDirs | QDir::NoDotAndDotDot );
+        while ( dirIt.hasNext() ) {
+            dirIt.next();
+            const QString dirName = dirIt.fileName();
+            new QListWidgetItem(dirName, mListThemes);
         }
-
-       enableButtonOk(true);
+        enableButtonOk(true);
     } else {
-       enableButtonOk(false);
+        enableButtonOk(false);
     }
-    //TODO
 }
 
 void ManageThemes::slotItemSelected(QListWidgetItem* item)

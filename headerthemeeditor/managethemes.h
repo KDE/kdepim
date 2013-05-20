@@ -30,7 +30,7 @@ public:
     explicit ManageThemes(QWidget *parent = 0);
     ~ManageThemes();
 
-private:
+private Q_SLOTS:
     void slotItemSelected(QListWidgetItem*);
     void slotDeleteTheme();
 
