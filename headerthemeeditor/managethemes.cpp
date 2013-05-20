@@ -19,6 +19,8 @@
 
 #include <KLocale>
 #include <KStandardDirs>
+#include <KPushButton>
+#include <KMessageBox>
 
 #include <QLabel>
 #include <QListWidget>
@@ -39,7 +41,14 @@ ManageThemes::ManageThemes(QWidget *parent)
     lay->addWidget(lab);
 
     mListThemes = new QListWidget;
+    connect(mListThemes, SIGNAL(itemActivated(QListWidgetItem*)), this, SLOT(slotItemSelected(QListWidgetItem*)));
     lay->addWidget(mListThemes);
+
+    mDeleteTheme = new KPushButton(i18n("Delete theme"));
+    connect(mDeleteTheme, SIGNAL(clicked()), this, SLOT(slotDeleteTheme()));
+    mDeleteTheme->setEnabled(false);
+    lay->addWidget(mDeleteTheme);
+
     w->setLayout(lay);
 
     initialize();
@@ -50,6 +59,13 @@ ManageThemes::ManageThemes(QWidget *parent)
 
 ManageThemes::~ManageThemes()
 {
+}
+
+void ManageThemes::slotDeleteTheme()
+{
+    if (mListThemes->currentItem()) {
+       //KMessageBox::questionYesNo();
+    }
 }
 
 void ManageThemes::initialize()
@@ -71,6 +87,11 @@ void ManageThemes::initialize()
        enableButtonOk(false);
     }
     //TODO
+}
+
+void ManageThemes::slotItemSelected(QListWidgetItem* item)
+{
+    mDeleteTheme->setEnabled(item);
 }
 
 #include "managethemes.moc"

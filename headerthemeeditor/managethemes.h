@@ -21,15 +21,23 @@
 #include <KDialog>
 
 class QListWidget;
+class QListWidgetItem;
+class KPushButton;
 class ManageThemes : public KDialog
 {
     Q_OBJECT
 public:
     explicit ManageThemes(QWidget *parent = 0);
     ~ManageThemes();
+
+private:
+    void slotItemSelected(QListWidgetItem*);
+    void slotDeleteTheme();
+
 private:
     void initialize();
     QListWidget *mListThemes;
+    KPushButton *mDeleteTheme;
 };
 
 #endif // MANAGETHEMES_H
