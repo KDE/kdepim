@@ -47,11 +47,23 @@ ThemeEditorMainWindow::ThemeEditorMainWindow()
     setupGUI();
     updateActions();
     updateActions();
-    resize(800,600);
+    KSharedConfig::Ptr config = KGlobal::config();
+    KConfigGroup group = KConfigGroup( config, "ThemeEditorMainWindow" );
+    const QSize sizeDialog = group.readEntry( "Size", QSize() );
+    if ( sizeDialog.isValid() ) {
+        resize( sizeDialog );
+    } else {
+        resize( 600,400);
+    }
+
 }
 
 ThemeEditorMainWindow::~ThemeEditorMainWindow()
 {
+    KSharedConfig::Ptr config = KGlobal::config();
+
+    KConfigGroup group = config->group( QLatin1String("ThemeEditorMainWindow") );
+    group.writeEntry( "Size", size() );
 }
 
 void ThemeEditorMainWindow::updateActions()
@@ -141,7 +153,6 @@ void ThemeEditorMainWindow::slotConfigure()
             mThemeEditor->reloadConfig();
         }
     }
-
     delete dialog;
 }
 
