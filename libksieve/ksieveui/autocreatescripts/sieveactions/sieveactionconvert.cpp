@@ -16,7 +16,7 @@
 */
 
 #include "sieveactionconvert.h"
-#include "widgets/selectconvertparameterwidget.h"
+#include "autocreatescripts/commonwidgets/selectconvertparameterwidget.h"
 
 #include <KLocale>
 #include <KLineEdit>
