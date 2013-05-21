@@ -58,7 +58,7 @@ ThemeConfigureDialog::ThemeConfigureDialog(QWidget *parent)
     setMainWidget(w);
     connect(this, SIGNAL(defaultClicked()), this, SLOT(slotDefaultClicked()));
     connect(this, SIGNAL(okClicked()), this, SLOT(slotOkClicked()));
-    loadConfig();
+    readConfig();
 }
 
 ThemeConfigureDialog::~ThemeConfigureDialog()
@@ -81,7 +81,7 @@ void ThemeConfigureDialog::slotOkClicked()
     writeConfig();
 }
 
-void ThemeConfigureDialog::loadConfig()
+void ThemeConfigureDialog::readConfig()
 {
     KSharedConfig::Ptr config = KGlobal::config();
     if (config->hasGroup(QLatin1String("Global"))) {

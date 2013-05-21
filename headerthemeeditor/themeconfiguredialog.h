@@ -29,7 +29,7 @@ public:
     explicit ThemeConfigureDialog(QWidget *parent = 0);
     ~ThemeConfigureDialog();
 
-    void loadConfig();
+    void readConfig();
     void writeConfig();
 
 private Q_SLOTS:
