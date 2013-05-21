@@ -27,6 +27,8 @@ class SelectConvertParameterWidget : public QWidget
 public:
     explicit SelectConvertParameterWidget(QWidget *parent = 0);
     ~SelectConvertParameterWidget();
+
+    QString code() const;
 private:
     void initialize();
     QSpinBox *mWidth;

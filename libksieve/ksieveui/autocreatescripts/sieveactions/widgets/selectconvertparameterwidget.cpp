@@ -17,8 +17,11 @@
 
 #include "selectconvertparameterwidget.h"
 
+#include <KLocale>
+
 #include <QHBoxLayout>
 #include <QLabel>
+#include <QSpinBox>
 
 namespace KSieveUi {
 SelectConvertParameterWidget::SelectConvertParameterWidget(QWidget *parent)
@@ -32,9 +35,24 @@ SelectConvertParameterWidget::~SelectConvertParameterWidget()
 
 }
 
+QString SelectConvertParameterWidget::code() const
+{
+    //TODO
+    return QString();
+}
+
 void SelectConvertParameterWidget::initialize()
 {
     QBoxLayout *hbox = new QHBoxLayout;
+    mWidth = new QSpinBox;
+    hbox->addWidget(mWidth);
+
+    QLabel *lab = new QLabel(i18n("x"));
+    hbox->addWidget(lab);
+
+    mHeight = new QSpinBox;
+    hbox->addWidget(mHeight);
+
     setLayout(hbox);
 }
 
