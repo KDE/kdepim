@@ -16,6 +16,7 @@
 */
 
 #include "sieveactionconvert.h"
+#include "widgets/selectconvertparameterwidget.h"
 
 #include <KLocale>
 #include <KLineEdit>
@@ -58,7 +59,7 @@ QWidget *SieveActionConvert::createParamWidget( QWidget *parent ) const
     lab = new QLabel(i18n("Parameters:"));
     lay->addWidget(lab);
 
-    KLineEdit *params = new KLineEdit;
+    SelectConvertParameterWidget *params = new SelectConvertParameterWidget;
     params->setObjectName(QLatin1String("params"));
     lay->addWidget(params);
 
@@ -76,8 +77,8 @@ QString SieveActionConvert::code(QWidget *w) const
     const QString toMimeTypeStr = toMimeType->text();
     result += QString::fromLatin1("\"%1\" ").arg(toMimeTypeStr);
 
-    const KLineEdit *params = w->findChild<KLineEdit*>( QLatin1String("params") );
-    const QString paramsStr = params->text();
+    const SelectConvertParameterWidget *params = w->findChild<SelectConvertParameterWidget*>( QLatin1String("params") );
+    const QString paramsStr = params->code();
     if (!paramsStr.isEmpty()) {
         result += QString::fromLatin1("\"%1\";").arg(paramsStr);
     } else {

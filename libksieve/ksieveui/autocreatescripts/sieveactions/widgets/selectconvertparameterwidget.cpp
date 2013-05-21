@@ -46,7 +46,8 @@ void SelectConvertParameterWidget::initialize()
     mWidth = new QSpinBox;
     mWidth->setSuffix(i18n(" px"));
     mWidth->setMinimum(1);
-    mWidth->setMinimum(9999);
+    mWidth->setMaximum(9999);
+    mWidth->setValue(300);
     hbox->addWidget(mWidth);
 
     QLabel *lab = new QLabel(i18n("x"));
@@ -55,7 +56,8 @@ void SelectConvertParameterWidget::initialize()
     mHeight = new QSpinBox;
     mHeight->setSuffix(i18n(" px"));
     mHeight->setMinimum(1);
-    mHeight->setMinimum(9999);
+    mHeight->setMaximum(9999);
+    mHeight->setValue(200);
     hbox->addWidget(mHeight);
 
     setLayout(hbox);
