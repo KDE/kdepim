@@ -21,6 +21,7 @@
 #include <KStandardDirs>
 #include <KPushButton>
 #include <KMessageBox>
+#include <KTempDir>
 
 #include <QLabel>
 #include <QListWidget>
@@ -85,9 +86,7 @@ void ManageThemes::slotDeleteTheme()
     if (mListThemes->currentItem()) {
         if (KMessageBox::questionYesNo(this, i18n("Do you want to remove selected theme?"), i18n("Remove theme")) == KMessageBox::Yes) {
             const QString localDirectory = KStandardDirs::locateLocal("data",QLatin1String("messageviewer/themes/"));
-            QDir themeDir(localDirectory);
-            //TODO verify it.
-            if( themeDir.rmpath(mListThemes->currentItem()->text())) {
+            if (KTempDir::removeDir(localDirectory + QDir::separator() + mListThemes->currentItem()->text())) {
                 delete mListThemes->currentItem();
             } else {
                 KMessageBox::error(this, i18n("Can not delete theme. Please contact your administrator."), i18n("Delete theme failed"));
@@ -95,6 +94,7 @@ void ManageThemes::slotDeleteTheme()
         }
     }
 }
+
 
 void ManageThemes::initialize()
 {
