@@ -37,20 +37,25 @@ SelectConvertParameterWidget::~SelectConvertParameterWidget()
 
 QString SelectConvertParameterWidget::code() const
 {
-    //TODO
-    return QString();
+    return QString::fromLatin1("[\"pix-x=%1\",\"pix-y=%2\"]").arg(mWidth->value()).arg(mHeight->value());
 }
 
 void SelectConvertParameterWidget::initialize()
 {
     QBoxLayout *hbox = new QHBoxLayout;
     mWidth = new QSpinBox;
+    mWidth->setSuffix(i18n(" px"));
+    mWidth->setMinimum(1);
+    mWidth->setMinimum(9999);
     hbox->addWidget(mWidth);
 
     QLabel *lab = new QLabel(i18n("x"));
     hbox->addWidget(lab);
 
     mHeight = new QSpinBox;
+    mHeight->setSuffix(i18n(" px"));
+    mHeight->setMinimum(1);
+    mHeight->setMinimum(9999);
     hbox->addWidget(mHeight);
 
     setLayout(hbox);
