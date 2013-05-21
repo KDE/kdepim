@@ -47,6 +47,7 @@ ThemeEditorMainWindow::ThemeEditorMainWindow()
     setupGUI();
     updateActions();
     updateActions();
+    resize(800,600);
 }
 
 ThemeEditorMainWindow::~ThemeEditorMainWindow()
