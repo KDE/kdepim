@@ -96,6 +96,7 @@ set(ksieveui_LIB_SRCS
   autocreatescripts/sieveconditions/widgets/selectbodytypewidget.cpp
   autocreatescripts/sieveconditions/widgets/selectrelationalmatchtype.cpp
   autocreatescripts/sieveconditions/widgets/selectcomparatorcombobox.cpp
+  autocreatescripts/sieveconditions/widgets/selectmimecombobox.cpp
 )
 
 kde4_add_kcfg_files(ksieveui_LIB_SRCS settings.kcfgc)
