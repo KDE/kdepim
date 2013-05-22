@@ -17,6 +17,7 @@
 
 #include "sieveconditionconvert.h"
 #include "autocreatescripts/commonwidgets/selectconvertparameterwidget.h"
+#include "autocreatescripts/commonwidgets/selectmimetypecombobox.h"
 
 #include <KLocale>
 #include <KLineEdit>
@@ -46,14 +47,14 @@ QWidget *SieveConditionConvert::createParamWidget( QWidget *parent ) const
     QLabel *lab = new QLabel(i18n("From:"));
     lay->addWidget(lab);
 
-    KLineEdit *fromMimeType = new KLineEdit;
+    SelectMimeTypeComboBox *fromMimeType = new SelectMimeTypeComboBox;
     fromMimeType->setObjectName(QLatin1String("from"));
     lay->addWidget(fromMimeType);
 
     lab = new QLabel(i18n("To:"));
     lay->addWidget(lab);
 
-    KLineEdit *toMimeType = new KLineEdit;
+    SelectMimeTypeComboBox *toMimeType = new SelectMimeTypeComboBox;
     toMimeType->setObjectName(QLatin1String("to"));
     lay->addWidget(toMimeType);
 
@@ -69,13 +70,13 @@ QWidget *SieveConditionConvert::createParamWidget( QWidget *parent ) const
 QString SieveConditionConvert::code(QWidget *w) const
 {
     QString result = QLatin1String("convert ");
-    const KLineEdit *fromMimeType = w->findChild<KLineEdit*>( QLatin1String("from") );
-    const QString fromMimeTypeStr = fromMimeType->text();
-    result += QString::fromLatin1("\"%1\" ").arg(fromMimeTypeStr);
+    const SelectMimeTypeComboBox *fromMimeType = w->findChild<SelectMimeTypeComboBox*>( QLatin1String("from") );
+    const QString fromMimeTypeStr = fromMimeType->code();
+    result += QString::fromLatin1("%1 ").arg(fromMimeTypeStr);
 
-    const KLineEdit *toMimeType = w->findChild<KLineEdit*>( QLatin1String("to") );
-    const QString toMimeTypeStr = toMimeType->text();
-    result += QString::fromLatin1("\"%1\" ").arg(toMimeTypeStr);
+    const SelectMimeTypeComboBox *toMimeType = w->findChild<SelectMimeTypeComboBox*>( QLatin1String("to") );
+    const QString toMimeTypeStr = toMimeType->code();
+    result += QString::fromLatin1("%1 ").arg(toMimeTypeStr);
 
     const SelectConvertParameterWidget *params = w->findChild<SelectConvertParameterWidget*>( QLatin1String("params") );
     const QString paramsStr = params->code();
