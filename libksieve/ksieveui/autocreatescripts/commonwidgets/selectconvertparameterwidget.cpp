@@ -32,7 +32,6 @@ SelectConvertParameterWidget::SelectConvertParameterWidget(QWidget *parent)
 
 SelectConvertParameterWidget::~SelectConvertParameterWidget()
 {
-
 }
 
 QString SelectConvertParameterWidget::code() const
@@ -43,6 +42,7 @@ QString SelectConvertParameterWidget::code() const
 void SelectConvertParameterWidget::initialize()
 {
     QBoxLayout *hbox = new QHBoxLayout;
+    hbox->setMargin(0);
     mWidth = new QSpinBox;
     mWidth->setSuffix(i18n(" px"));
     mWidth->setMinimum(1);
