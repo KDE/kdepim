@@ -67,6 +67,7 @@ set(ksieveui_LIB_SRCS
   autocreatescripts/sieveactions/widgets/multilineedit.cpp
   autocreatescripts/sieveactions/widgets/selectvacationcombobox.cpp
   autocreatescripts/commonwidgets/selectconvertparameterwidget.cpp
+  autocreatescripts/commonwidgets/selectmatchtypecombobox.cpp
   autocreatescripts/sieveconditions/sievecondition.cpp
   autocreatescripts/sieveconditions/sieveconditionheader.cpp
   autocreatescripts/sieveconditions/sieveconditionlist.cpp
@@ -89,7 +90,6 @@ set(ksieveui_LIB_SRCS
   autocreatescripts/sieveconditions/sieveconditionmetadata.cpp
   autocreatescripts/sieveconditions/sieveconditionconvert.cpp
   autocreatescripts/sieveconditions/widgets/selectdatewidget.cpp
-  autocreatescripts/sieveconditions/widgets/selectmatchtypecombobox.cpp
   autocreatescripts/sieveconditions/widgets/selectaddresspartcombobox.cpp
   autocreatescripts/sieveconditions/widgets/selectheadertypecombobox.cpp
   autocreatescripts/sieveconditions/widgets/selectbodytypewidget.cpp

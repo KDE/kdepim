@@ -16,7 +16,7 @@
 */
 
 #include "sieveactiondeleteheader.h"
-#include "autocreatescripts/sieveconditions/widgets/selectmatchtypecombobox.h"
+#include "autocreatescripts/commonwidgets/selectmatchtypecombobox.h"
 
 #include <KLocale>
 #include <KLineEdit>

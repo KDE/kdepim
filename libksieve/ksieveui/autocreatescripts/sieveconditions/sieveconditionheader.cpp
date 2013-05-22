@@ -16,7 +16,7 @@
 */
 
 #include "sieveconditionheader.h"
-#include "widgets/selectmatchtypecombobox.h"
+#include "autocreatescripts/commonwidgets/selectmatchtypecombobox.h"
 #include "widgets/selectheadertypecombobox.h"
 
 #include <KLocale>

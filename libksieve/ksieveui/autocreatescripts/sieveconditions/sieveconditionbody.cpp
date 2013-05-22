@@ -17,7 +17,7 @@
 
 #include "sieveconditionbody.h"
 #include "widgets/selectbodytypewidget.h"
-#include "widgets/selectmatchtypecombobox.h"
+#include "autocreatescripts/commonwidgets/selectmatchtypecombobox.h"
 
 #include <KLocale>
 #include <KLineEdit>

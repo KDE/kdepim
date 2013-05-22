@@ -16,7 +16,7 @@
 */
 
 #include "sieveconditiondate.h"
-#include "widgets/selectmatchtypecombobox.h"
+#include "autocreatescripts/commonwidgets/selectmatchtypecombobox.h"
 #include "widgets/selectdatewidget.h"
 
 #include <KLocale>

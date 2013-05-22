@@ -19,7 +19,7 @@
 #include "autocreatescripts/autocreatescriptutil_p.h"
 
 #include "widgets/selectaddresspartcombobox.h"
-#include "widgets/selectmatchtypecombobox.h"
+#include "autocreatescripts/commonwidgets/selectmatchtypecombobox.h"
 #include "widgets/selectheadertypecombobox.h"
 
 
