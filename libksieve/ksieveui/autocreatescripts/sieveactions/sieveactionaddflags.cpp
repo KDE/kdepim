@@ -17,7 +17,6 @@
 
 
 #include "sieveactionaddflags.h"
-#include "pimcommon/minimumcombobox.h"
 
 #include <KLocale>
 
