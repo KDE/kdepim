@@ -316,7 +316,7 @@ bool ManageSieveScriptsDialog::isFileNameItem( QTreeWidgetItem *item ) const
 {
     if ( !item || !item->parent() )
         return false;
-    return (item->flags() & Qt::ItemIsUserCheckable);
+    return (item->flags() & Qt::ItemIsEnabled);
 }
 
 void ManageSieveScriptsDialog::clear( bool disconnect )
