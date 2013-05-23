@@ -89,6 +89,15 @@ IncidenceRecurrence::IncidenceRecurrence( IncidenceDateTime *dateTime, Ui::Event
   handleEndAfterOccurrencesChange( 1 );
   toggleRecurrenceWidgets( RecurrenceTypeNone );
   fillCombos();
+#ifndef KDEPIM_MOBILE_UI
+  QList<QLineEdit*> lineEdits;
+  lineEdits << mUi->mExceptionDateEdit->lineEdit() << mUi->mRecurrenceEndDate->lineEdit();
+  foreach( QLineEdit *lineEdit, lineEdits ) {
+    KLineEdit *klineEdit = qobject_cast<KLineEdit*>( lineEdit );
+    if ( klineEdit )
+        klineEdit->setClearButtonShown( false );
+  }
+#endif
 
   connect( mDateTime, SIGNAL(startDateTimeToggled(bool)),
            SLOT(handleDateTimeToggle()) );
