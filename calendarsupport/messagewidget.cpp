@@ -22,25 +22,42 @@
   without including the source code for Qt in the source distribution.
 */
 
-#ifndef KO_MESSAGEWIDGET_H
-#define KO_MESSAGEWIDGET_H
+#include "messagewidget.h"
 
-#include <KMessageWidget>
+#include <QApplication>
+#include <QMouseEvent>
 
-/**
- * Even less instrusive message dialog.
- * This one goes away when you click somewhere, doesn't need a close button.
- */
-class KOMessageWidget : public KMessageWidget
+using namespace CalendarSupport;
+
+MessageWidget::MessageWidget(QWidget *parent) : KMessageWidget(parent)
 {
-    Q_OBJECT
-public:
-    explicit KOMessageWidget(QWidget *parent = 0);
-    ~KOMessageWidget();
-    /**reimp*/ bool eventFilter(QObject *watched, QEvent *event);
-    /**reimp*/ void showEvent(QShowEvent *event);
-    /**reimp*/ void hideEvent(QHideEvent *event);
-};
+    hide();
+    setCloseButtonVisible(false);
+    setWordWrap(true);
+}
 
+MessageWidget::~MessageWidget()
+{
+}
 
-#endif
+void MessageWidget::showEvent(QShowEvent *event)
+{
+    qApp->installEventFilter(this);
+    KMessageWidget::showEvent(event);
+}
+
+void MessageWidget::hideEvent(QHideEvent *event)
+{
+    // No need to spend cycles on an event-filter when this is going to
+    // me hidden most of the time
+    qApp->removeEventFilter(this);
+    KMessageWidget::hideEvent(event);
+}
+
+bool MessageWidget::eventFilter(QObject *, QEvent *event)
+{
+    if (event->type() == QEvent::MouseButtonPress)
+        hide();
+
+    return false; // we don't want it
+}
