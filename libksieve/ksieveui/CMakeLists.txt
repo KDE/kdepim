@@ -66,6 +66,7 @@ set(ksieveui_LIB_SRCS
   autocreatescripts/sieveactions/widgets/selectimportancecombobox.cpp
   autocreatescripts/sieveactions/widgets/multilineedit.cpp
   autocreatescripts/sieveactions/widgets/selectvacationcombobox.cpp
+  autocreatescripts/sieveactions/widgets/selectvariablemodifiercombobox.cpp
   autocreatescripts/commonwidgets/selectconvertparameterwidget.cpp
   autocreatescripts/commonwidgets/selectmatchtypecombobox.cpp
   autocreatescripts/commonwidgets/selectmimetypecombobox.cpp
