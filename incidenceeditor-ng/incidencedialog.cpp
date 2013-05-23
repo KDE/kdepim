@@ -608,7 +608,7 @@ IncidenceDialog::IncidenceDialog( Akonadi::IncidenceChanger *changer,
   Q_D( IncidenceDialog );
   setAttribute( Qt::WA_DeleteOnClose );
 
-  resize( QSize( 600, 500 ).expandedTo( minimumSizeHint() ) );
+  resize( QSize( 500, 500 ).expandedTo( minimumSizeHint() ) );
   d->mUi->mTabWidget->setCurrentIndex( 0 );
   d->mUi->mSummaryEdit->setFocus();
 
