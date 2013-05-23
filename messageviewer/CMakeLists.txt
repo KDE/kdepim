@@ -80,7 +80,7 @@ set(libmessageviewer_SRCS
   widgets/htmlstatusbar.cpp
   widgets/vcardviewer.cpp
   iconnamecache.cpp
-  invitationsettings.cpp
+  widgets/invitationsettings.cpp
   kleojobexecutor.cpp
   mailsourceviewer.cpp
   markmessagereadhandler.cpp
