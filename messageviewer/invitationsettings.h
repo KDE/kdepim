@@ -38,23 +38,23 @@ namespace MessageViewer {
 
 class  MESSAGEVIEWER_EXPORT InvitationSettings : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit InvitationSettings( QWidget * parent=0 );
-  ~InvitationSettings();
-  /*reimp*/ void save();
-  QString helpAnchor() const;
-  /*reimp*/ void doLoadFromGlobalSettings();
-  void doResetToDefaultsOther();
+    explicit InvitationSettings( QWidget * parent=0 );
+    ~InvitationSettings();
+    /*reimp*/ void save();
+    QString helpAnchor() const;
+    /*reimp*/ void doLoadFromGlobalSettings();
+    void doResetToDefaultsOther();
 
 private slots:
-  void slotLegacyBodyInvitesToggled( bool on );
+    void slotLegacyBodyInvitesToggled( bool on );
 
 Q_SIGNALS:
-  void changed();
+    void changed();
 
 private:
-  Ui_InvitationSettings *mInvitationUi;
+    Ui_InvitationSettings *mInvitationUi;
 };
 
 }

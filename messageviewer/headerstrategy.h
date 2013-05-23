@@ -42,46 +42,46 @@ namespace MessageViewer {
 class MESSAGEVIEWER_EXPORT HeaderStrategy
 {
 protected:
-  HeaderStrategy();
-  virtual ~HeaderStrategy();
+    HeaderStrategy();
+    virtual ~HeaderStrategy();
 
 public:
-  //
-  // Factory methods:
-  //
-  enum Type { All,
-              Rich,
-              Standard,
-              Brief,
-              Custom,
-              Grantlee
-            };
+    //
+    // Factory methods:
+    //
+    enum Type { All,
+                Rich,
+                Standard,
+                Brief,
+                Custom,
+                Grantlee
+              };
 
-  static HeaderStrategy *create( Type type );
-  static HeaderStrategy *create( const QString & type );
+    static HeaderStrategy *create( Type type );
+    static HeaderStrategy *create( const QString & type );
 
-  static HeaderStrategy * all();
-  static HeaderStrategy * rich();
-  static HeaderStrategy * standard();
-  static HeaderStrategy * brief();
-  static HeaderStrategy * custom();
-  static HeaderStrategy * grantlee();
+    static HeaderStrategy * all();
+    static HeaderStrategy * rich();
+    static HeaderStrategy * standard();
+    static HeaderStrategy * brief();
+    static HeaderStrategy * custom();
+    static HeaderStrategy * grantlee();
 
-  //
-  // Methods for handling the strategies:
-  //
-  virtual const char * name() const = 0;
+    //
+    // Methods for handling the strategies:
+    //
+    virtual const char * name() const = 0;
 
-  void readConfig();
-  //
-  // HeaderStrategy interface:
-  //
-  enum DefaultPolicy { Display, Hide };
+    void readConfig();
+    //
+    // HeaderStrategy interface:
+    //
+    enum DefaultPolicy { Display, Hide };
 
-  virtual QStringList headersToDisplay() const;
-  virtual QStringList headersToHide() const;
-  virtual DefaultPolicy defaultPolicy() const = 0;
-  virtual bool showHeader( const QString & header ) const;
+    virtual QStringList headersToDisplay() const;
+    virtual QStringList headersToHide() const;
+    virtual DefaultPolicy defaultPolicy() const = 0;
+    virtual bool showHeader( const QString & header ) const;
 };
 
 }

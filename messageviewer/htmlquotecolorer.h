@@ -52,7 +52,6 @@ class HTMLQuoteColorer
     QString process(const QString &htmlSource , QString &extraHead);
 
   private:
-
     QColor mQuoteColors[3];
 };
 

@@ -52,48 +52,48 @@ HeaderStrategy::~HeaderStrategy() {
 }
 
 QStringList HeaderStrategy::headersToDisplay() const {
-  return QStringList();
+    return QStringList();
 }
 
 QStringList HeaderStrategy::headersToHide() const {
-  return QStringList();
+    return QStringList();
 }
 
 bool HeaderStrategy::showHeader( const QString & header ) const {
-  if ( headersToDisplay().contains( header.toLower() ) ) return true;
-  if ( headersToHide().contains( header.toLower() ) ) return false;
-  return defaultPolicy() == Display;
+    if ( headersToDisplay().contains( header.toLower() ) ) return true;
+    if ( headersToHide().contains( header.toLower() ) ) return false;
+    return defaultPolicy() == Display;
 }
 
 HeaderStrategy * HeaderStrategy::create( Type type ) {
-  switch ( type ) {
-  case All:  return all();
-  case Rich:   return rich();
-  case Standard: return standard();
-  case Brief:  return brief();
-  case Custom:  return custom();
-  case Grantlee:  return grantlee();
-  }
-  kFatal() << "Unknown header strategy ( type ==" << (int)type << ") requested!";
-  return 0; // make compiler happy
+    switch ( type ) {
+    case All:  return all();
+    case Rich:   return rich();
+    case Standard: return standard();
+    case Brief:  return brief();
+    case Custom:  return custom();
+    case Grantlee:  return grantlee();
+    }
+    kFatal() << "Unknown header strategy ( type ==" << (int)type << ") requested!";
+    return 0; // make compiler happy
 }
 
 HeaderStrategy * HeaderStrategy::create( const QString & type ) {
-  const QString lowerType = type.toLower();
-  if ( lowerType == QLatin1String( "all" ) )
-      return all();
-  else if ( lowerType == QLatin1String( "rich" ) )
-      return HeaderStrategy::rich();
-  //if ( lowerType == "standard" ) return standard(); // not needed, see below
-  else if ( lowerType == QLatin1String( "brief" ) )
-      return brief();
-  else if ( lowerType == QLatin1String( "custom" ) )
-      return custom();
-  else if ( lowerType == QLatin1String( "grantlee" ) )
-      return grantlee();
-  // don't kFatal here, b/c the strings are user-provided
-  // (KConfig), so fail gracefully to the default:
-  return standard();
+    const QString lowerType = type.toLower();
+    if ( lowerType == QLatin1String( "all" ) )
+        return all();
+    else if ( lowerType == QLatin1String( "rich" ) )
+        return HeaderStrategy::rich();
+    //if ( lowerType == "standard" ) return standard(); // not needed, see below
+    else if ( lowerType == QLatin1String( "brief" ) )
+        return brief();
+    else if ( lowerType == QLatin1String( "custom" ) )
+        return custom();
+    else if ( lowerType == QLatin1String( "grantlee" ) )
+        return grantlee();
+    // don't kFatal here, b/c the strings are user-provided
+    // (KConfig), so fail gracefully to the default:
+    return standard();
 }
 
 static HeaderStrategy * allStrategy = 0;
@@ -104,33 +104,33 @@ static HeaderStrategy * customStrategy = 0;
 static HeaderStrategy * grantleeStrategy = 0;
 
 HeaderStrategy * HeaderStrategy::all() {
-  if ( !allStrategy )
-    allStrategy = new MessageViewer::AllHeaderStrategy();
-  return allStrategy;
+    if ( !allStrategy )
+        allStrategy = new MessageViewer::AllHeaderStrategy();
+    return allStrategy;
 }
 
 HeaderStrategy * HeaderStrategy::rich() {
-  if ( !richStrategy )
-    richStrategy = new MessageViewer::RichHeaderStrategy();
-  return richStrategy;
+    if ( !richStrategy )
+        richStrategy = new MessageViewer::RichHeaderStrategy();
+    return richStrategy;
 }
 
 HeaderStrategy * HeaderStrategy::standard() {
-  if ( !standardStrategy )
-    standardStrategy = new MessageViewer::StandardHeaderStrategy();
-  return standardStrategy;
+    if ( !standardStrategy )
+        standardStrategy = new MessageViewer::StandardHeaderStrategy();
+    return standardStrategy;
 }
 
 HeaderStrategy * HeaderStrategy::brief() {
-  if ( !briefStrategy )
-    briefStrategy = new MessageViewer::BriefHeaderStrategy();
-  return briefStrategy;
+    if ( !briefStrategy )
+        briefStrategy = new MessageViewer::BriefHeaderStrategy();
+    return briefStrategy;
 }
 
 HeaderStrategy * HeaderStrategy::custom() {
-  if ( !customStrategy )
-    customStrategy = new MessageViewer::CustomHeaderStrategy();
-  return customStrategy;
+    if ( !customStrategy )
+        customStrategy = new MessageViewer::CustomHeaderStrategy();
+    return customStrategy;
 }
 
 void HeaderStrategy::readConfig() {
@@ -140,9 +140,9 @@ void HeaderStrategy::readConfig() {
 }
 
 HeaderStrategy * HeaderStrategy::grantlee() {
-  if ( !grantleeStrategy )
-    grantleeStrategy = new MessageViewer::GrantleeHeaderStrategy();
-  return grantleeStrategy;
+    if ( !grantleeStrategy )
+        grantleeStrategy = new MessageViewer::GrantleeHeaderStrategy();
+    return grantleeStrategy;
 }
 
 }

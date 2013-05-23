@@ -36,6 +36,7 @@ public:
 
 Q_SIGNALS:
     void messageMayBeAScam();
+
 private:
     bool scanFrame(const QWebElement &rootElement);
     QString mDetails;
