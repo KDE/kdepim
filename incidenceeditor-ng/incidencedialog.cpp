@@ -95,6 +95,7 @@ class IncidenceDialogPrivate : public ItemEditorUi
     void updateAttachmentCount( int newCount );
     void updateAttendeeCount( int newCount );
     void updateButtonStatus( bool isDirty );
+    void showMessage( const QString &text, KMessageWidget::MessageType type);
 
     /// ItemEditorUi methods
     virtual bool containsPayloadIdentifiers( const QSet<QByteArray> &partIdentifiers ) const;
@@ -128,7 +129,6 @@ IncidenceDialogPrivate::IncidenceDialogPrivate( Akonadi::IncidenceChanger *chang
   QGridLayout *layout = new QGridLayout( mUi->mCalSelectorPlaceHolder );
   layout->setSpacing( 0 );
   layout->addWidget( mCalSelector );
-
   mCalSelector->setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
 
   q->connect( mCalSelector, SIGNAL(currentChanged(Akonadi::Collection)),
@@ -189,6 +189,13 @@ IncidenceDialogPrivate::~IncidenceDialogPrivate()
   delete mItemManager;
   delete mEditor;
   delete mUi;
+}
+
+void IncidenceDialogPrivate::showMessage( const QString &text, KMessageWidget::MessageType type)
+{
+    mUi->mMessageWidget->setText(text);
+    mUi->mMessageWidget->setMessageType(type);
+    mUi->mMessageWidget->show();
 }
 
 void IncidenceDialogPrivate::handleAlarmCountChange( int newCount )
