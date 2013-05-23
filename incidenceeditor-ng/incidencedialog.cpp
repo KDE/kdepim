@@ -20,7 +20,6 @@
 */
 
 #include "incidencedialog.h"
-#include "categoryeditdialog.h"
 #include "combinedincidenceeditor.h"
 #include "editorconfig.h"
 #include "incidencealarm.h"
@@ -36,7 +35,6 @@
 #include "templatemanagementdialog.h"
 #include "ui_dialogdesktop.h"
 
-#include <calendarsupport/categoryconfig.h>
 #include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/utils.h>
 
@@ -76,7 +74,6 @@ class IncidenceDialogPrivate : public ItemEditorUi
 
     EditorItemManager *mItemManager;
     CombinedIncidenceEditor *mEditor;
-    IncidenceCategories *mIeCategories;
     IncidenceDateTime *mIeDateTime;
     IncidenceAttendee *mIeAttendee;
     IncidenceRecurrence *mIeRecurrence;
@@ -93,7 +90,6 @@ class IncidenceDialogPrivate : public ItemEditorUi
     void handleRecurrenceChange( IncidenceEditorNG::RecurrenceType type );
     void loadTemplate( const QString &templateName );
     void manageTemplates();
-    void manageCategories();
     void saveTemplate( const QString &templateName );
     void storeTemplatesInConfig( const QStringList &newTemplates );
     void updateAttachmentCount( int newCount );
@@ -143,8 +139,8 @@ IncidenceDialogPrivate::IncidenceDialogPrivate( Akonadi::IncidenceChanger *chang
   IncidenceWhatWhere *ieGeneral = new IncidenceWhatWhere( mUi );
   mEditor->combine( ieGeneral );
 
-  mIeCategories = new IncidenceCategories( mUi );
-  mEditor->combine( mIeCategories );
+  IncidenceCategories *ieCategories = new IncidenceCategories( mUi );
+  mEditor->combine( ieCategories );
 
   mIeDateTime = new IncidenceDateTime( mUi );
   mEditor->combine( mIeDateTime );
@@ -371,28 +367,6 @@ void IncidenceDialogPrivate::storeTemplatesInConfig( const QStringList &template
   // be changed by adding a setTemplates method.
   IncidenceEditorNG::EditorConfig::instance()->templates( mEditor->type() ) = templateNames;
   IncidenceEditorNG::EditorConfig::instance()->config()->writeConfig();
-}
-
-void IncidenceDialogPrivate::manageCategories()
-{
-  Q_Q( IncidenceDialog );
-
-  CalendarSupport::CategoryConfig cc( EditorConfig::instance()->config() );
-
-  QPointer<CategoryEditDialog> dialog = new CategoryEditDialog( &cc, q );
-
-  dialog->setModal( true );
-  dialog->enableButtonApply( false );
-  dialog->setHelp( "categories-view", "korganizer" );
-
-  if ( dialog->exec() == KDialog::Accepted ) {
-    IncidenceCategories *ieCats = new IncidenceCategories( mUi );
-    ieCats->setCategories( mIeCategories->categories() );
-    mIeCategories->setCategories( QStringList() );
-    mIeCategories = ieCats; //leak
-    mEditor->combine( mIeCategories );
-  }
-  delete dialog;
 }
 
 void IncidenceDialogPrivate::updateAttachmentCount( int newCount )
@@ -638,7 +612,7 @@ IncidenceDialog::IncidenceDialog( Akonadi::IncidenceChanger *changer,
   d->mUi->mTabWidget->setCurrentIndex( 0 );
   d->mUi->mSummaryEdit->setFocus();
 
-  setButtons( KDialog::Ok | KDialog::Apply | KDialog::Cancel | KDialog::Default | KDialog::Reset );
+  setButtons( KDialog::Ok | KDialog::Apply | KDialog::Cancel | KDialog::Default );
   setButtonToolTip( KDialog::Apply,
                     i18nc( "@info:tooltip", "Save current changes" ) );
   setButtonToolTip( KDialog::Ok,
@@ -660,16 +634,6 @@ IncidenceDialog::IncidenceDialog( Akonadi::IncidenceChanger *changer,
                              "can make creating new items easier and faster "
                              "by putting your favorite default values into "
                              "the editor automatically." ) );
-
-  setButtonText( Reset, i18nc( "@action:button", "&Categories..." ) );
-  setButtonIcon( Reset, KIcon( "document-properties" ) );
-  setButtonToolTip( Reset,
-                    i18nc( "@info:tooltip",
-                           "Manage categories for this item" ) );
-  setButtonWhatsThis( Default,
-                      i18nc( "@info:whatsthis",
-                             "Push this button to show a dialog that helps "
-                             "you manage your categories." ) );
 
   setModal( false );
   showButtonSeparator( false );
@@ -770,9 +734,6 @@ void IncidenceDialog::slotButtonClicked( int button )
     break;
   case KDialog::Default:
     d->manageTemplates();
-    break;
-  case KDialog::Reset:
-    d->manageCategories();
     break;
   default:
     Q_ASSERT( false ); // Shouldn't happen
