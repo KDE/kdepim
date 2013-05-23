@@ -93,6 +93,8 @@ void ThemeEditorMainWindow::setupActions()
     mOpenAction = KStandardAction::open(this, SLOT(slotOpenTheme()), actionCollection());
     mOpenAction->setText(i18n("Open theme..."));
     mSaveAction = KStandardAction::save(this, SLOT(slotSaveTheme()), actionCollection());
+    mSaveAction->setText(i18n("Save theme..."));
+
     mCloseAction = KStandardAction::close( this, SLOT(slotCloseTheme()), actionCollection());
     KStandardAction::quit(this, SLOT(slotQuitApp()), actionCollection() );
     KStandardAction::preferences( this, SLOT(slotConfigure()), actionCollection() );
