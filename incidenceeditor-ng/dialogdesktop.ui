@@ -12,13 +12,6 @@
   </property>
   <layout class="QVBoxLayout" name="mainVerticalLayout">
     <item>
-      <widget class="KMessageWidget" name="mMessageWidget">
-        <property name="visible">
-          <bool>false</bool>
-        </property>
-      </widget>
-    </item>
-    <item>
   <layout class="QGridLayout" name="gridLayout">
    <property name="margin">
     <number>0</number>
@@ -1493,13 +1486,20 @@
    </item>
   </layout>
   </item>
+    <item>
+      <widget class="CalendarSupport::MessageWidget" name="mMessageWidget">
+        <property name="visible">
+          <bool>false</bool>
+        </property>
+      </widget>
+    </item>
   </layout>
   </widget>
  <customwidgets>
   <customwidget>
-   <class>KMessageWidget</class>
-   <extends>QDialog</extends>
-   <header>kmessagewidget.h</header>
+   <class>CalendarSupport::MessageWidget</class>
+   <extends>KMessageWidget</extends>
+   <header>calendarsupport/messagewidget.h</header>
   </customwidget>
   <customwidget>
    <class>KTimeComboBox</class>
