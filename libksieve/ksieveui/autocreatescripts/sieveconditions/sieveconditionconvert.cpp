@@ -33,7 +33,7 @@ SieveConditionConvert::SieveConditionConvert(QObject *parent)
 
 SieveCondition *SieveConditionConvert::newAction()
 {
-  return new SieveConditionConvert;
+    return new SieveConditionConvert;
 }
 
 QWidget *SieveConditionConvert::createParamWidget( QWidget *parent ) const

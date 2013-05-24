@@ -34,7 +34,7 @@ SieveActionReplace::SieveActionReplace(QObject *parent)
 
 SieveAction* SieveActionReplace::newAction()
 {
-  return new SieveActionReplace;
+    return new SieveActionReplace;
 }
 
 QWidget *SieveActionReplace::createParamWidget( QWidget *parent ) const

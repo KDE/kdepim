@@ -32,7 +32,7 @@ SieveActionExtractText::SieveActionExtractText(QObject *parent)
 
 SieveAction* SieveActionExtractText::newAction()
 {
-  return new SieveActionExtractText;
+    return new SieveActionExtractText;
 }
 
 QWidget *SieveActionExtractText::createParamWidget( QWidget *parent ) const

@@ -32,7 +32,7 @@ SieveActionSetVariable::SieveActionSetVariable(QObject *parent)
 
 SieveAction* SieveActionSetVariable::newAction()
 {
-  return new SieveActionSetVariable;
+    return new SieveActionSetVariable;
 }
 
 QWidget *SieveActionSetVariable::createParamWidget( QWidget *parent ) const

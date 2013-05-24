@@ -34,7 +34,7 @@ SieveActionFileInto::SieveActionFileInto(QObject *parent)
 
 SieveAction* SieveActionFileInto::newAction()
 {
-  return new SieveActionFileInto;
+    return new SieveActionFileInto;
 }
 
 QString SieveActionFileInto::code(QWidget *w) const

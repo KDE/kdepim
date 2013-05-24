@@ -31,7 +31,7 @@ SieveActionBreak::SieveActionBreak(QObject *parent)
 
 SieveAction* SieveActionBreak::newAction()
 {
-  return new SieveActionBreak;
+    return new SieveActionBreak;
 }
 
 QWidget *SieveActionBreak::createParamWidget( QWidget *parent ) const

@@ -33,7 +33,7 @@ SieveActionConvert::SieveActionConvert(QObject *parent)
 
 SieveAction* SieveActionConvert::newAction()
 {
-  return new SieveActionConvert;
+    return new SieveActionConvert;
 }
 
 QWidget *SieveActionConvert::createParamWidget( QWidget *parent ) const
