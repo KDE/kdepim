@@ -190,7 +190,7 @@ void SieveTextEdit::slotUpdateLineNumberArea(const QRect &rect, int dy)
         slotUpdateLineNumberAreaWidth(0);
 }
 
-void SieveTextEdit::initCompleter()
+QStringList SieveTextEdit::completerList() const
 {
     QStringList listWord;
 
@@ -200,6 +200,18 @@ void SieveTextEdit::initCompleter()
     listWord << QLatin1String( "keep" ) <<QLatin1String( "reject" ) <<QLatin1String( "discard" ) <<QLatin1String( "redirect" ) <<QLatin1String( "fileinto" ) <<QLatin1String( "addflag" ) <<QLatin1String( "setflag" ) <<QLatin1String("vacation");
     listWord << QLatin1String( "address" ) <<QLatin1String( "allof" ) <<QLatin1String( "anyof" ) <<QLatin1String( "exists" ) <<QLatin1String( "false" ) <<QLatin1String( "header" ) <<QLatin1String("not" ) <<QLatin1String( "size" ) <<QLatin1String( "true" );
     listWord << QLatin1String( ":days" ) <<QLatin1String(":seconds") <<QLatin1String(":subject") <<QLatin1String(":addresses") <<QLatin1String(":text");
+
+    return listWord;
+}
+
+void SieveTextEdit::setCompleterList(const QStringList &list)
+{
+    m_completer->setModel( new QStringListModel( list, m_completer ) );
+}
+
+void SieveTextEdit::initCompleter()
+{
+    QStringList listWord = completerList();
 
     m_completer = new QCompleter( this );
     m_completer->setModel( new QStringListModel( listWord, m_completer ) );
@@ -273,7 +285,7 @@ QString SieveTextEdit::wordUnderCursor() const
 void SieveTextEdit::setSieveCapabilities( const QStringList &capabilities )
 {
     m_syntaxHighlighter->addCapabilities(capabilities);
-    //Add completion
+    setCompleterList(completerList() + capabilities);
 }
 
 #include "sievetextedit.moc"
