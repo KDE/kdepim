@@ -85,11 +85,6 @@ QString SieveActionSetVariable::code(QWidget *w) const
     return result;
 }
 
-QString SieveActionSetVariable::help() const
-{
-    return i18n("The \"set\" action stores the specified value in the variable identified by name.");
-}
-
 QStringList SieveActionSetVariable::needRequires() const
 {
     return QStringList() << QLatin1String("variables");
@@ -105,3 +100,7 @@ QString SieveActionSetVariable::serverNeedsCapability() const
     return QLatin1String("variables");
 }
 
+QString SieveActionSetVariable::help() const
+{
+    return i18n("The \"set\" action stores the specified value in the variable identified by name.");
+}

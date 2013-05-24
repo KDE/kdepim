@@ -143,6 +143,10 @@ QStringList SieveActionVacation::needRequires() const
     return lst;
 }
 
+QString SieveActionVacation::help() const
+{
+    return i18n("The \"vacation\" action implements a vacation autoresponder similar to the vacation command available under many versions of Unix. Its purpose is to provide correspondents with notification that the user is away for an extended period of time and that they should not expect quick responses.");
+}
 
 #include "sieveactionvacation.moc"
 
