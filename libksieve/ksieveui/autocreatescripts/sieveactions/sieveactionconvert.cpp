@@ -81,7 +81,7 @@ QString SieveActionConvert::code(QWidget *w) const
     const SelectConvertParameterWidget *params = w->findChild<SelectConvertParameterWidget*>( QLatin1String("params") );
     const QString paramsStr = params->code();
     if (!paramsStr.isEmpty()) {
-        result += QString::fromLatin1("\"%1\";").arg(paramsStr);
+        result += QString::fromLatin1("%1;").arg(paramsStr);
     } else {
         result += QLatin1Char(';');
     }
