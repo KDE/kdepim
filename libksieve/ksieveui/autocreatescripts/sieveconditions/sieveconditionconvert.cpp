@@ -108,3 +108,5 @@ QString SieveConditionConvert::help() const
 {
     return i18n("The \"convert\" action specifies that all body parts with a media type equal to \"media-type\" be converted to the media type in \"media-type\" using conversion parameters.");
 }
+
+#include "sieveconditionconvert.moc"

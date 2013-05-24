@@ -104,3 +104,5 @@ QString SieveActionSetVariable::help() const
 {
     return i18n("The \"set\" action stores the specified value in the variable identified by name.");
 }
+
+#include "sieveactionsetvariable.moc"

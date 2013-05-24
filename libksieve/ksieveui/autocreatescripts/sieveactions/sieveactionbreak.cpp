@@ -81,3 +81,5 @@ QString SieveActionBreak::serverNeedsCapability() const
     return QLatin1String("foreverypart");
 }
 
+
+#include "sieveactionbreak.moc"
