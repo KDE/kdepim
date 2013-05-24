@@ -170,9 +170,16 @@ void EventView::setCalendar( const Akonadi::ETMCalendar::Ptr &calendar )
 {
   Q_D( EventView );
   if ( d->calendar != calendar ) {
+    if (d->calendar)
+      disconnect(d->calendar.data());
+
     d->calendar = calendar;
-    if ( calendar && d->collectionSelectionModel ) {
-      d->collectionSelectionModel->setSourceModel( calendar->model() );
+    if ( calendar ) {
+      if ( d->collectionSelectionModel )
+        d->collectionSelectionModel->setSourceModel( calendar->model() );
+
+      connect( calendar.data(), SIGNAL(collectionChanged(Akonadi::Collection,QSet<QByteArray>)),
+               SLOT(onCollectionChanged(Akonadi::Collection,QSet<QByteArray>)) );
     }
   }
 }
@@ -653,6 +660,15 @@ QString EventView::iconForItem( const Akonadi::Item &item )
   }
 
   return iconName;
+}
+
+void EventView::onCollectionChanged(const Akonadi::Collection &collection,
+                                    const QSet<QByteArray> &changedAttributes)
+{
+  if (changedAttributes.contains("AccessRights")) {
+      setChanges(changes() | EventViews::EventView::ResourcesChanged);
+      updateView();
+  }
 }
 
 #include "eventview.moc"
