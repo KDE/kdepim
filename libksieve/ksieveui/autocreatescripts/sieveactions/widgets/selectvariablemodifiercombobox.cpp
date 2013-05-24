@@ -38,7 +38,7 @@ void SelectVariableModifierComboBox::initialize()
     addItem(i18n("Upper"), QLatin1String(":upper"));
     addItem(i18n("Lower first letter"), QLatin1String(":lowerfirst"));
     addItem(i18n("Upper first letter"), QLatin1String(":upperfirst"));
-    addItem(i18n("Qute wildcard"), QLatin1String(":quotewilcard"));
+    addItem(i18n("Quote wildcard"), QLatin1String(":quotewilcard"));
     addItem(i18n("length"), QLatin1String(":length"));
 }
 
