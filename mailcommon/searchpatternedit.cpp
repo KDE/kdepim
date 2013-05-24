@@ -275,6 +275,11 @@ void SearchRuleWidget::slotValueChanged()
   emit contentsChanged( prettyValue );
 }
 
+void SearchRuleWidget::slotReturnPressed()
+{
+  emit returnPressed();
+}
+
 QByteArray SearchRuleWidget::ruleFieldToEnglish( const QString & i18nVal )
 {
   for ( int i = 0; i < SpecialRuleFieldsCount; ++i ) {
@@ -603,6 +608,8 @@ void SearchPatternEdit::initLayout( SearchPatternEditOptions options )
                this, SLOT(slotAutoNameHack()) );
       connect( srw, SIGNAL(contentsChanged(QString)),
                this, SLOT(slotAutoNameHack()) );
+      connect( srw, SIGNAL(returnPressed()),
+               this, SIGNAL(returnPressed()) );
     }
   } else {
     kDebug() << "No first SearchRuleWidget, though slotClear() has been called!";
@@ -684,6 +691,7 @@ void SearchPatternEdit::slotRuleAdded( QWidget *newRuleWidget )
   SearchRuleWidget *srw = static_cast<SearchRuleWidget*>( newRuleWidget );
   connect( srw, SIGNAL(fieldChanged(QString)), this, SLOT(slotAutoNameHack()) );
   connect( srw, SIGNAL(contentsChanged(QString)), this, SLOT(slotAutoNameHack()) );
+  connect( srw, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()) );
   emit patternChanged();
 }
 #include "searchpatternedit.moc"

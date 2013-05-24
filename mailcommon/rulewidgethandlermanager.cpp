@@ -638,6 +638,8 @@ QWidget *TextRuleWidgetHandler::createValueWidget( int number,
     lineEdit->setObjectName( "regExpLineEdit" );
     QObject::connect( lineEdit, SIGNAL(textChanged(QString)),
                       receiver, SLOT(slotValueChanged()) );
+    QObject::connect( lineEdit, SIGNAL(returnPressed()),
+                      receiver, SLOT(slotReturnPressed()) );
     return lineEdit;
   }
 
@@ -955,6 +957,8 @@ QWidget *MessageRuleWidgetHandler::createValueWidget( int number,
     lineEdit->setObjectName( "regExpLineEdit" );
     QObject::connect( lineEdit, SIGNAL(textChanged(QString)),
                       receiver, SLOT(slotValueChanged()) );
+    QObject::connect( lineEdit, SIGNAL(returnPressed()),
+                      receiver, SLOT(slotReturnPressed()) );
     return lineEdit;
   }
 
@@ -1478,6 +1482,8 @@ QWidget *TagRuleWidgetHandler::createValueWidget( int number,
     lineEdit->setObjectName( "tagRuleRegExpLineEdit" );
     QObject::connect( lineEdit, SIGNAL(textChanged(QString)),
                       receiver, SLOT(slotValueChanged()) );
+    QObject::connect( lineEdit, SIGNAL(returnPressed()),
+                      receiver, SLOT(slotReturnPressed()) );
     return lineEdit;
   }
 
