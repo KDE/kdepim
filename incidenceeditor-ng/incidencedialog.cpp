@@ -166,6 +166,8 @@ IncidenceDialogPrivate::IncidenceDialogPrivate( Akonadi::IncidenceChanger *chang
   mIeAttendee = new IncidenceAttendee( qq, mIeDateTime, mUi );
   mEditor->combine( mIeAttendee );
 
+  q->connect( mEditor, SIGNAL(showMessage(QString,KMessageWidget::MessageType)),
+              SLOT(showMessage(QString,KMessageWidget::MessageType)) );
   q->connect( mEditor, SIGNAL(dirtyStatusChanged(bool)),
               SLOT(updateButtonStatus(bool)) );
   q->connect( mItemManager,
