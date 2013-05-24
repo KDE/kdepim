@@ -59,5 +59,13 @@ bool MessageWidget::eventFilter(QObject *, QEvent *event)
     if (event->type() == QEvent::MouseButtonPress)
         hide();
 
+    if (event->type() == QEvent::KeyPress) {
+        QKeyEvent *ev = dynamic_cast<QKeyEvent*>(event);
+        if (ev->key() == Qt::Key_Escape) {
+            hide();
+            return true; // We eat this one, it's for us
+        }
+    }
+
     return false; // we don't want it
 }
