@@ -25,6 +25,8 @@
 class QTimer;
 class QTreeWidget;
 class QTreeWidgetItem;
+
+namespace KSieveUi {
 class SieveTreeWidgetProgress;
 class SieveTreeWidgetItem : public QTreeWidgetItem
 {
@@ -60,6 +62,7 @@ private:
     QTimer *mProgressTimer;
     SieveTreeWidgetItem *mItem;
 };
+}
 
 
 #endif // SIEVETREEWIDGETITEM_H
