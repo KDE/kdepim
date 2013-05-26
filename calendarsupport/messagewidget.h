@@ -22,25 +22,29 @@
   without including the source code for Qt in the source distribution.
 */
 
-#ifndef KO_MESSAGEWIDGET_H
-#define KO_MESSAGEWIDGET_H
+#ifndef CALENDARSUPPORT_MESSAGEWIDGET_H
+#define CALENDARSUPPORT_MESSAGEWIDGET_H
+
+#include "calendarsupport_export.h"
 
 #include <KMessageWidget>
+
+namespace CalendarSupport {
 
 /**
  * Even less instrusive message dialog.
  * This one goes away when you click somewhere, doesn't need a close button.
  */
-class KOMessageWidget : public KMessageWidget
+class CALENDARSUPPORT_EXPORT MessageWidget : public KMessageWidget
 {
     Q_OBJECT
 public:
-    explicit KOMessageWidget(QWidget *parent = 0);
-    ~KOMessageWidget();
+    explicit MessageWidget(QWidget *parent = 0);
+    ~MessageWidget();
     /**reimp*/ bool eventFilter(QObject *watched, QEvent *event);
     /**reimp*/ void showEvent(QShowEvent *event);
     /**reimp*/ void hideEvent(QHideEvent *event);
 };
-
+}
 
 #endif

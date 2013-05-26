@@ -34,7 +34,7 @@ SieveActionEnclose::SieveActionEnclose(QObject *parent)
 
 SieveAction* SieveActionEnclose::newAction()
 {
-  return new SieveActionEnclose;
+    return new SieveActionEnclose;
 }
 
 

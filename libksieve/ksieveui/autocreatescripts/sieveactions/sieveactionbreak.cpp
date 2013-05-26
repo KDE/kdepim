@@ -31,7 +31,7 @@ SieveActionBreak::SieveActionBreak(QObject *parent)
 
 SieveAction* SieveActionBreak::newAction()
 {
-  return new SieveActionBreak;
+    return new SieveActionBreak;
 }
 
 QWidget *SieveActionBreak::createParamWidget( QWidget *parent ) const
@@ -81,3 +81,5 @@ QString SieveActionBreak::serverNeedsCapability() const
     return QLatin1String("foreverypart");
 }
 
+
+#include "sieveactionbreak.moc"

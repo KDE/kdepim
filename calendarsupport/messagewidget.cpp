@@ -22,27 +22,31 @@
   without including the source code for Qt in the source distribution.
 */
 
-#include "komessagewidget.h"
+#include "messagewidget.h"
+
 #include <QApplication>
 #include <QMouseEvent>
 
-KOMessageWidget::KOMessageWidget(QWidget *parent) : KMessageWidget(parent)
+using namespace CalendarSupport;
+
+MessageWidget::MessageWidget(QWidget *parent) : KMessageWidget(parent)
 {
     hide();
     setCloseButtonVisible(false);
+    setWordWrap(true);
 }
 
-KOMessageWidget::~KOMessageWidget()
+MessageWidget::~MessageWidget()
 {
 }
 
-void KOMessageWidget::showEvent(QShowEvent *event)
+void MessageWidget::showEvent(QShowEvent *event)
 {
     qApp->installEventFilter(this);
     KMessageWidget::showEvent(event);
 }
 
-void KOMessageWidget::hideEvent(QHideEvent *event)
+void MessageWidget::hideEvent(QHideEvent *event)
 {
     // No need to spend cycles on an event-filter when this is going to
     // me hidden most of the time
@@ -50,10 +54,18 @@ void KOMessageWidget::hideEvent(QHideEvent *event)
     KMessageWidget::hideEvent(event);
 }
 
-bool KOMessageWidget::eventFilter(QObject *, QEvent *event)
+bool MessageWidget::eventFilter(QObject *, QEvent *event)
 {
     if (event->type() == QEvent::MouseButtonPress)
         hide();
+
+    if (event->type() == QEvent::KeyPress) {
+        QKeyEvent *ev = dynamic_cast<QKeyEvent*>(event);
+        if (ev->key() == Qt::Key_Escape) {
+            hide();
+            return true; // We eat this one, it's for us
+        }
+    }
 
     return false; // we don't want it
 }

@@ -23,16 +23,17 @@
 
 #include <QLabel>
 #include <QHBoxLayout>
+#include <QSpinBox>
 
 using namespace KSieveUi;
 SieveActionExtractText::SieveActionExtractText(QObject *parent)
-    : SieveAction(QLatin1String("extracttext"), i18n("Extra Text"), parent)
+    : SieveAction(QLatin1String("extracttext"), i18n("Extract Text"), parent)
 {
 }
 
 SieveAction* SieveActionExtractText::newAction()
 {
-  return new SieveActionExtractText;
+    return new SieveActionExtractText;
 }
 
 QWidget *SieveActionExtractText::createParamWidget( QWidget *parent ) const
@@ -41,14 +42,35 @@ QWidget *SieveActionExtractText::createParamWidget( QWidget *parent ) const
     QHBoxLayout *lay = new QHBoxLayout;
     lay->setMargin(0);
     w->setLayout(lay);
-    //TODO
+
+    QLabel *lab = new QLabel(i18n("Number of characters:"));
+    lay->addWidget(lab);
+
+    QSpinBox *nbCharacters = new QSpinBox;
+    nbCharacters->setMinimum(1);
+    nbCharacters->setMaximum(99999);
+    nbCharacters->setObjectName(QLatin1String("numberOfCharacters"));
+    lay->addWidget(nbCharacters);
+
+    lab = new QLabel(i18n("Stored in variable name:"));
+    lay->addWidget(lab);
+
+    KLineEdit *variableName = new KLineEdit;
+    variableName->setObjectName(QLatin1String("variablename"));
+    lay->addWidget(variableName);
+
     return w;
 }
 
 QString SieveActionExtractText::code(QWidget *w) const
 {
-    QString result = QLatin1String("extracttext ");
-    //TODO
+    const QSpinBox *numberOfCharacters = w->findChild<QSpinBox*>(QLatin1String("numberOfCharacters"));
+    const QString numberOfCharactersStr = QString::number(numberOfCharacters->value());
+
+    const KLineEdit *variableName = w->findChild<KLineEdit*>(QLatin1String("variablename"));
+    const QString variableNameStr = variableName->text();
+
+    const QString result = QString::fromLatin1("extracttext :first %1 \"%2\";").arg(numberOfCharactersStr).arg(variableNameStr);
     return result;
 }
 
@@ -68,5 +90,9 @@ QString SieveActionExtractText::serverNeedsCapability() const
     return QLatin1String("extracttext");
 }
 
+QString SieveActionExtractText::help() const
+{
+    return i18n("The \"extracttext\" action may be used within the context of a \"foreverypart\" loop and is used to store text into a variable");
+}
 
 #include "sieveactionextracttext.moc"

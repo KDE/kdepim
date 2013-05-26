@@ -24,6 +24,8 @@
 #include "incidenceeditors-ng_export.h"
 #include "incidenceeditor-ng.h"
 
+#include <KMessageWidget>
+
 namespace IncidenceEditorNG {
 
 /**
@@ -59,8 +61,11 @@ class INCIDENCEEDITORS_NG_EXPORT CombinedIncidenceEditor : public IncidenceEdito
     virtual void load( const KCalCore::Incidence::Ptr &incidence );
     virtual void save( const KCalCore::Incidence::Ptr &incidence );
 
-  private slots:
+  private Q_SLOTS:
     void handleDirtyStatusChange( bool isDirty );
+
+  Q_SIGNALS:
+    void showMessage( const QString &reason, KMessageWidget::MessageType ) const;
 
   private:
     QVector<IncidenceEditor*> mCombinedEditors;

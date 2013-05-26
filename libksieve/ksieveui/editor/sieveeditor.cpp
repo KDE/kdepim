@@ -149,7 +149,6 @@ void SieveEditor::writeConfig()
 
 void SieveEditor::readConfig()
 {
-    //TODO restore splitter size
     KConfigGroup group( KGlobal::config(), "SieveEditor" );
     const QSize sizeDialog = group.readEntry( "Size", QSize() );
     if ( sizeDialog.isValid() ) {

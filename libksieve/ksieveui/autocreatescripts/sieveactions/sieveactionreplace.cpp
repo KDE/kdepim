@@ -34,7 +34,7 @@ SieveActionReplace::SieveActionReplace(QObject *parent)
 
 SieveAction* SieveActionReplace::newAction()
 {
-  return new SieveActionReplace;
+    return new SieveActionReplace;
 }
 
 QWidget *SieveActionReplace::createParamWidget( QWidget *parent ) const
@@ -109,5 +109,9 @@ QString SieveActionReplace::serverNeedsCapability() const
     return QLatin1String("replace");
 }
 
+QString SieveActionReplace::help() const
+{
+    return i18n("The \"replace\" command is defined to allow a MIME part to be replaced with the text supplied in the command.");
+}
 
 #include "sieveactionreplace.moc"

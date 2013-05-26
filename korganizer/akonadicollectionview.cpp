@@ -157,13 +157,8 @@ class ColorProxyModel : public QSortFilterProxyModel
           }
           return font;
         }
-      } else if ( role == Qt::CheckStateRole ) {
-        // Don't show the checkbox if the collection can't contain incidences
-        const Akonadi::Collection collection = CalendarSupport::collectionFromIndex( index );
-        if ( AkonadiCollectionView::isStructuralCollection( collection ) ) {
-          return QVariant();
-        }
       }
+
       return QSortFilterProxyModel::data( index, role );
     }
 
@@ -579,23 +574,6 @@ void AkonadiCollectionView::rowsInserted( const QModelIndex &, int, int )
   restoreTreeState();
 }
 
-/** static */
-bool AkonadiCollectionView::isStructuralCollection( const Akonadi::Collection &collection )
-{
-  QStringList mimeTypes;
-  mimeTypes << QLatin1String( "text/calendar" )
-            << KCalCore::Event::eventMimeType()
-            << KCalCore::Todo::todoMimeType()
-            << KCalCore::Journal::journalMimeType();
-  const QStringList collectionMimeTypes = collection.contentMimeTypes();
-  foreach ( const QString &mimeType, mimeTypes ) {
-    if ( collectionMimeTypes.contains( mimeType ) ) {
-      return false;
-    }
-  }
-  return true;
-}
-
 Akonadi::Collection AkonadiCollectionView::selectedCollection() const
 {
   Akonadi::Collection collection;
@@ -631,6 +609,25 @@ Akonadi::Collection::List AkonadiCollectionView::checkedCollections() const
   return collections;
 }
 
+bool AkonadiCollectionView::isChecked(const Akonadi::Collection &collection) const
+{
+    if (!mSelectionProxyModel)
+        return false;
+    QItemSelectionModel *selectionModel = mSelectionProxyModel->selectionModel();
+    if (!selectionModel)
+        return false;
+    QModelIndexList indexes = selectionModel->selectedIndexes();
+    foreach(const QModelIndex &index, indexes) {
+        if (index.isValid()) {
+            Akonadi::Collection c = index.data(Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
+            if (c.id() == collection.id()) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 Akonadi::EntityTreeModel *AkonadiCollectionView::entityTreeModel() const
 {
   QAbstractProxyModel *proxy = qobject_cast<QAbstractProxyModel*>( mCollectionview->model() );
@@ -653,14 +650,12 @@ void AkonadiCollectionView::checkNewCalendar( const QModelIndex &parent, int beg
   if ( etm && entityTreeModel()->isCollectionTreeFetched() ) {
     for( int row=begin; row<=end; ++row ) {
       QModelIndex index = mCollectionview->model()->index( row, 0, parent );
-      if ( index.isValid() ) {
+      if ( index.isValid() )
         mCollectionview->model()->setData( index, Qt::Checked, Qt::CheckStateRole );
-      }
     }
-  }
-
-  if ( parent.isValid() ) {
-    mCollectionview->setExpanded( parent, true );
+    if ( parent.isValid() ) {
+      mCollectionview->setExpanded( parent, true );
+    }
   }
 }
 

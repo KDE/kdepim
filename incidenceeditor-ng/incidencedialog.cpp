@@ -20,7 +20,6 @@
 */
 
 #include "incidencedialog.h"
-#include "categoryeditdialog.h"
 #include "combinedincidenceeditor.h"
 #include "editorconfig.h"
 #include "incidencealarm.h"
@@ -36,7 +35,6 @@
 #include "templatemanagementdialog.h"
 #include "ui_dialogdesktop.h"
 
-#include <calendarsupport/categoryconfig.h>
 #include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/utils.h>
 
@@ -76,7 +74,6 @@ class IncidenceDialogPrivate : public ItemEditorUi
 
     EditorItemManager *mItemManager;
     CombinedIncidenceEditor *mEditor;
-    IncidenceCategories *mIeCategories;
     IncidenceDateTime *mIeDateTime;
     IncidenceAttendee *mIeAttendee;
     IncidenceRecurrence *mIeRecurrence;
@@ -93,12 +90,12 @@ class IncidenceDialogPrivate : public ItemEditorUi
     void handleRecurrenceChange( IncidenceEditorNG::RecurrenceType type );
     void loadTemplate( const QString &templateName );
     void manageTemplates();
-    void manageCategories();
     void saveTemplate( const QString &templateName );
     void storeTemplatesInConfig( const QStringList &newTemplates );
     void updateAttachmentCount( int newCount );
     void updateAttendeeCount( int newCount );
     void updateButtonStatus( bool isDirty );
+    void showMessage( const QString &text, KMessageWidget::MessageType type);
 
     /// ItemEditorUi methods
     virtual bool containsPayloadIdentifiers( const QSet<QByteArray> &partIdentifiers ) const;
@@ -132,7 +129,6 @@ IncidenceDialogPrivate::IncidenceDialogPrivate( Akonadi::IncidenceChanger *chang
   QGridLayout *layout = new QGridLayout( mUi->mCalSelectorPlaceHolder );
   layout->setSpacing( 0 );
   layout->addWidget( mCalSelector );
-
   mCalSelector->setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
 
   q->connect( mCalSelector, SIGNAL(currentChanged(Akonadi::Collection)),
@@ -143,8 +139,8 @@ IncidenceDialogPrivate::IncidenceDialogPrivate( Akonadi::IncidenceChanger *chang
   IncidenceWhatWhere *ieGeneral = new IncidenceWhatWhere( mUi );
   mEditor->combine( ieGeneral );
 
-  mIeCategories = new IncidenceCategories( mUi );
-  mEditor->combine( mIeCategories );
+  IncidenceCategories *ieCategories = new IncidenceCategories( mUi );
+  mEditor->combine( ieCategories );
 
   mIeDateTime = new IncidenceDateTime( mUi );
   mEditor->combine( mIeDateTime );
@@ -170,6 +166,8 @@ IncidenceDialogPrivate::IncidenceDialogPrivate( Akonadi::IncidenceChanger *chang
   mIeAttendee = new IncidenceAttendee( qq, mIeDateTime, mUi );
   mEditor->combine( mIeAttendee );
 
+  q->connect( mEditor, SIGNAL(showMessage(QString,KMessageWidget::MessageType)),
+              SLOT(showMessage(QString,KMessageWidget::MessageType)) );
   q->connect( mEditor, SIGNAL(dirtyStatusChanged(bool)),
               SLOT(updateButtonStatus(bool)) );
   q->connect( mItemManager,
@@ -193,6 +191,13 @@ IncidenceDialogPrivate::~IncidenceDialogPrivate()
   delete mItemManager;
   delete mEditor;
   delete mUi;
+}
+
+void IncidenceDialogPrivate::showMessage( const QString &text, KMessageWidget::MessageType type)
+{
+    mUi->mMessageWidget->setText(text);
+    mUi->mMessageWidget->setMessageType(type);
+    mUi->mMessageWidget->show();
 }
 
 void IncidenceDialogPrivate::handleAlarmCountChange( int newCount )
@@ -373,28 +378,6 @@ void IncidenceDialogPrivate::storeTemplatesInConfig( const QStringList &template
   IncidenceEditorNG::EditorConfig::instance()->config()->writeConfig();
 }
 
-void IncidenceDialogPrivate::manageCategories()
-{
-  Q_Q( IncidenceDialog );
-
-  CalendarSupport::CategoryConfig cc( EditorConfig::instance()->config() );
-
-  QPointer<CategoryEditDialog> dialog = new CategoryEditDialog( &cc, q );
-
-  dialog->setModal( true );
-  dialog->enableButtonApply( false );
-  dialog->setHelp( "categories-view", "korganizer" );
-
-  if ( dialog->exec() == KDialog::Accepted ) {
-    IncidenceCategories *ieCats = new IncidenceCategories( mUi );
-    ieCats->setCategories( mIeCategories->categories() );
-    mIeCategories->setCategories( QStringList() );
-    mIeCategories = ieCats; //leak
-    mEditor->combine( mIeCategories );
-  }
-  delete dialog;
-}
-
 void IncidenceDialogPrivate::updateAttachmentCount( int newCount )
 {
   if ( newCount > 0 ) {
@@ -460,7 +443,7 @@ void IncidenceDialogPrivate::handleItemSaveFail( EditorItemManager::SaveAction,
   }
 }
 
-void IncidenceDialogPrivate::handleItemSaveFinish( EditorItemManager::SaveAction )
+void IncidenceDialogPrivate::handleItemSaveFinish( EditorItemManager::SaveAction saveAction)
 {
   Q_Q( IncidenceDialog );
 
@@ -480,6 +463,10 @@ void IncidenceDialogPrivate::handleItemSaveFinish( EditorItemManager::SaveAction
     q->enableButtonOk( true );
     q->enableButtonCancel( true );
     q->enableButtonApply( isDirty() );
+  }
+
+  if ( saveAction == EditorItemManager::Create ) {
+    emit q->incidenceCreated(mItemManager->item());
   }
 }
 
@@ -630,11 +617,11 @@ IncidenceDialog::IncidenceDialog( Akonadi::IncidenceChanger *changer,
   Q_D( IncidenceDialog );
   setAttribute( Qt::WA_DeleteOnClose );
 
-  resize( QSize( 600, 500 ).expandedTo( minimumSizeHint() ) );
+  resize( QSize( 500, 500 ).expandedTo( minimumSizeHint() ) );
   d->mUi->mTabWidget->setCurrentIndex( 0 );
   d->mUi->mSummaryEdit->setFocus();
 
-  setButtons( KDialog::Ok | KDialog::Apply | KDialog::Cancel | KDialog::Default | KDialog::Reset );
+  setButtons( KDialog::Ok | KDialog::Apply | KDialog::Cancel | KDialog::Default );
   setButtonToolTip( KDialog::Apply,
                     i18nc( "@info:tooltip", "Save current changes" ) );
   setButtonToolTip( KDialog::Ok,
@@ -656,16 +643,6 @@ IncidenceDialog::IncidenceDialog( Akonadi::IncidenceChanger *changer,
                              "can make creating new items easier and faster "
                              "by putting your favorite default values into "
                              "the editor automatically." ) );
-
-  setButtonText( Reset, i18nc( "@action:button", "&Categories..." ) );
-  setButtonIcon( Reset, KIcon( "document-properties" ) );
-  setButtonToolTip( Reset,
-                    i18nc( "@info:tooltip",
-                           "Manage categories for this item" ) );
-  setButtonWhatsThis( Default,
-                      i18nc( "@info:whatsthis",
-                             "Push this button to show a dialog that helps "
-                             "you manage your categories." ) );
 
   setModal( false );
   showButtonSeparator( false );
@@ -766,9 +743,6 @@ void IncidenceDialog::slotButtonClicked( int button )
     break;
   case KDialog::Default:
     d->manageTemplates();
-    break;
-  case KDialog::Reset:
-    d->manageCategories();
     break;
   default:
     Q_ASSERT( false ); // Shouldn't happen

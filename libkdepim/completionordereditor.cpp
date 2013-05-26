@@ -161,8 +161,8 @@ class SimpleCompletionItem : public CompletionItem
 class CompletionViewItem : public QTreeWidgetItem
 {
   public:
-    CompletionViewItem( QTreeWidget *parent, CompletionItem* item, QTreeWidgetItem *preceeding )
-      : QTreeWidgetItem( parent, preceeding )
+    CompletionViewItem( QTreeWidget *parent, CompletionItem* item, QTreeWidgetItem *preceding )
+      : QTreeWidgetItem( parent, preceding )
     {
       setItem( item );
     }

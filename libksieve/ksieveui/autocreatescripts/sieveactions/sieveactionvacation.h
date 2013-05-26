@@ -33,6 +33,8 @@ public:
     QString serverNeedsCapability() const;
     bool needCheckIfServerHasCapability() const;
     QStringList needRequires() const;
+    QString help() const;
+
 private:
     bool mHasVacationSecondsSupport;
 };

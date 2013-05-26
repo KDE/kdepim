@@ -206,7 +206,6 @@ QString GrantleeHeaderFormatter::format(Grantlee::Template headerTemplate, const
         if (message->headerByType(baHeader) ) {
             //Grantlee doesn't support '-' in variable name => remove it.
             header = header.remove(QLatin1Char('-'));
-            qDebug()<<" header"<<header;
             headerObject.insert( header , message->headerByType(baHeader)->asUnicodeString() );
         }
     }

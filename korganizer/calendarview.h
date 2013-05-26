@@ -52,6 +52,7 @@ namespace KOrg {
 
 namespace CalendarSupport {
   class IncidenceViewer;
+  class MessageWidget;
 }
 
 namespace IncidenceEditorNG {
@@ -65,7 +66,6 @@ namespace Akonadi {
 }
 
 class KVBox;
-class KOMessageWidget;
 
 class QSplitter;
 class QStackedWidget;
@@ -259,6 +259,7 @@ class KORGANIZERPRIVATE_EXPORT CalendarView : public KOrg::CalendarViewBase,
     /** Calendar configuration was changed, so refresh categories list
     */
     void updateCategories();
+    void handleIncidenceCreated(const Akonadi::Item &item);
 
     /**
       Load calendar from file \a filename. If \a merge is true, load
@@ -664,6 +665,7 @@ class KORGANIZERPRIVATE_EXPORT CalendarView : public KOrg::CalendarViewBase,
     int msgItemDelete( const Akonadi::Item &incidence );
 
     Akonadi::Item selectedTodo();
+    IncidenceEditorNG::IncidenceDialog *incidenceDialog(const Akonadi::Item &);
 
     void warningChangeFailed( const Akonadi::Item & );
     void checkForFilteredChange( const Akonadi::Item &incidence );
@@ -717,7 +719,7 @@ class KORGANIZERPRIVATE_EXPORT CalendarView : public KOrg::CalendarViewBase,
     QSplitter *mLeftSplitter;
     QWidget *mLeftFrame;
     QStackedWidget *mRightFrame;
-    KOMessageWidget *mMessageWidget;
+    CalendarSupport::MessageWidget *mMessageWidget;
 
     // This navigator bar is used when in full window month view
     // It has nothing to do with the date navigator

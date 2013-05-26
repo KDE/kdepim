@@ -23,6 +23,7 @@
 #define KMAIL_SEARCHWINDOW_H
 
 #include "mailcommon/searchpattern.h"
+#include <ui_searchwindow.h>
 
 #include <akonadi/collection.h>
 #include <akonadi/item.h>
@@ -40,7 +41,6 @@ class KActionMenu;
 class KJob;
 class KLineEdit;
 class KMMainWidget;
-class KStatusBar;
 class KMSearchMessageModel;
 class QAbstractItemModel;
 class QModelIndex;
@@ -171,18 +171,12 @@ class SearchWindow: public KDialog, virtual public KXMLGUIClient
     Akonadi::Collection mFolder;
     KJob *mSearchJob;
 
-    // GC'd by Qt
-    QRadioButton *mChkbxAllFolders;
-    QRadioButton *mChkbxSpecificFolders;
-    MailCommon::FolderRequester *mCbxFolders;
-    QCheckBox *mChkSubFolders;
     KMSearchMessageModel *mResultModel;
-    Akonadi::EntityTreeView *mLbxMatches;
-    QLabel *mSearchFolderLbl;
-    KLineEdit *mSearchFolderEdt;
-    KPushButton *mSearchFolderOpenBtn;
-    KPushButton *mSearchResultOpenBtn;
-    KStatusBar* mStatusBar;
+    Ui_SearchWindow mUi;
+    KGuiItem mStartSearchGuiItem;
+    KGuiItem mStopSearchGuiItem;
+    KPushButton *mSearchButton;
+
     QWidget* mLastFocus; // to remember the position of the focus
     QAction *mReplyAction, *mReplyAllAction, *mReplyListAction, *mSaveAsAction,
       *mForwardInlineAction, *mForwardAttachedAction, *mPrintAction, *mClearAction,
@@ -192,7 +186,6 @@ class SearchWindow: public KDialog, virtual public KXMLGUIClient
     QByteArray mHeaderState;
     // not owned by us
     KMMainWidget* mKMMainWidget;
-    MailCommon::SearchPatternEdit *mPatternEdit;
     MailCommon::SearchPattern mSearchPattern;
 
     Akonadi::StandardMailActionManager *mAkonadiStandardAction;

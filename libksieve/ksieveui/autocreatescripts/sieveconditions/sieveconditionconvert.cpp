@@ -16,6 +16,8 @@
 */
 
 #include "sieveconditionconvert.h"
+#include "autocreatescripts/commonwidgets/selectconvertparameterwidget.h"
+#include "autocreatescripts/commonwidgets/selectmimetypecombobox.h"
 
 #include <KLocale>
 #include <KLineEdit>
@@ -31,7 +33,7 @@ SieveConditionConvert::SieveConditionConvert(QObject *parent)
 
 SieveCondition *SieveConditionConvert::newAction()
 {
-  return new SieveConditionConvert;
+    return new SieveConditionConvert;
 }
 
 QWidget *SieveConditionConvert::createParamWidget( QWidget *parent ) const
@@ -45,43 +47,41 @@ QWidget *SieveConditionConvert::createParamWidget( QWidget *parent ) const
     QLabel *lab = new QLabel(i18n("From:"));
     lay->addWidget(lab);
 
-    KLineEdit *fromMimeType = new KLineEdit;
+    SelectMimeTypeComboBox *fromMimeType = new SelectMimeTypeComboBox;
     fromMimeType->setObjectName(QLatin1String("from"));
     lay->addWidget(fromMimeType);
 
     lab = new QLabel(i18n("To:"));
     lay->addWidget(lab);
 
-    KLineEdit *toMimeType = new KLineEdit;
+    SelectMimeTypeComboBox *toMimeType = new SelectMimeTypeComboBox;
     toMimeType->setObjectName(QLatin1String("to"));
     lay->addWidget(toMimeType);
 
     lab = new QLabel(i18n("Parameters:"));
     lay->addWidget(lab);
 
-    KLineEdit *params = new KLineEdit;
+    SelectConvertParameterWidget *params = new SelectConvertParameterWidget;
     params->setObjectName(QLatin1String("params"));
     lay->addWidget(params);
-    //TODO create widget parameters.
-
     return w;
 }
 
 QString SieveConditionConvert::code(QWidget *w) const
 {
     QString result = QLatin1String("convert ");
-    const KLineEdit *fromMimeType = w->findChild<KLineEdit*>( QLatin1String("from") );
-    const QString fromMimeTypeStr = fromMimeType->text();
-    result += QString::fromLatin1("\"%1\" ").arg(fromMimeTypeStr);
+    const SelectMimeTypeComboBox *fromMimeType = w->findChild<SelectMimeTypeComboBox*>( QLatin1String("from") );
+    const QString fromMimeTypeStr = fromMimeType->code();
+    result += QString::fromLatin1("%1 ").arg(fromMimeTypeStr);
 
-    const KLineEdit *toMimeType = w->findChild<KLineEdit*>( QLatin1String("to") );
-    const QString toMimeTypeStr = toMimeType->text();
-    result += QString::fromLatin1("\"%1\" ").arg(toMimeTypeStr);
+    const SelectMimeTypeComboBox *toMimeType = w->findChild<SelectMimeTypeComboBox*>( QLatin1String("to") );
+    const QString toMimeTypeStr = toMimeType->code();
+    result += QString::fromLatin1("%1 ").arg(toMimeTypeStr);
 
-    const KLineEdit *params = w->findChild<KLineEdit*>( QLatin1String("params") );
-    const QString paramsStr = params->text();
+    const SelectConvertParameterWidget *params = w->findChild<SelectConvertParameterWidget*>( QLatin1String("params") );
+    const QString paramsStr = params->code();
     if (!paramsStr.isEmpty()) {
-        result += QString::fromLatin1("\"%1\";").arg(paramsStr);
+        result += QString::fromLatin1("%1;").arg(paramsStr);
     } else {
         result += QLatin1Char(';');
     }
@@ -108,3 +108,5 @@ QString SieveConditionConvert::help() const
 {
     return i18n("The \"convert\" action specifies that all body parts with a media type equal to \"media-type\" be converted to the media type in \"media-type\" using conversion parameters.");
 }
+
+#include "sieveconditionconvert.moc"

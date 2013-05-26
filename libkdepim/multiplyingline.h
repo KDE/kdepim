@@ -33,7 +33,7 @@
 #include <QSharedPointer>
 
 namespace KPIM {
-  
+
 /**
   @short ABC representing line data
   @author Casey Link
@@ -63,7 +63,7 @@ class KDEPIM_EXPORT MultiplyingLineData
 */
 class KDEPIM_EXPORT MultiplyingLine : public QWidget
 {
-  
+
     Q_OBJECT
   public:
     explicit MultiplyingLine( QWidget *parent );
@@ -88,7 +88,7 @@ class KDEPIM_EXPORT MultiplyingLine : public QWidget
     */
     virtual bool isModified() const = 0;
 
-    /** 
+    /**
       Resets the modified flag to false.
     */
     virtual void clearModified() = 0;
@@ -124,10 +124,10 @@ class KDEPIM_EXPORT MultiplyingLine : public QWidget
     /**
       Used to set setup the correct chain of widgets to focus on
       when the user presses tab.
-      @param previous the previous widget (probably from the preceeding line)
-      
+      @param previous the previous widget (probably from the preceding line)
+
       Example with a 3 widget line:
-      
+
       void YourLine::fixTabOrder( QWidget *previous ) {
         setTabOrder( previous, mLeftMost );
         setTabOrder( mLeftMost, mMiddle);
@@ -210,7 +210,7 @@ class KDEPIM_EXPORT MultiplyingLine : public QWidget
     void slotReturnPressed();
     void slotFocusUp();
     void slotFocusDown();
-    
+
 
   protected:
     /**

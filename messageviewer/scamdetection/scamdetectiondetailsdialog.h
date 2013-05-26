@@ -31,8 +31,10 @@ public:
     ~ScamDetectionDetailsDialog();
 
     void setDetails(const QString &details);
+
 private Q_SLOTS:
     void slotSaveAs();
+
 private:
     void writeConfig();
     void readConfig();

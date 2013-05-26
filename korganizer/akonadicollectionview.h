@@ -76,12 +76,12 @@ class AkonadiCollectionView : public CalendarViewExtension
 
     KCheckableProxyModel *collectionSelectionProxyModel() const;
     void setCollectionSelectionProxyModel( KCheckableProxyModel * );
-    static bool isStructuralCollection( const Akonadi::Collection & );
 
     Akonadi::Collection selectedCollection() const;
     Akonadi::Collection::List checkedCollections() const;
+    bool isChecked(const Akonadi::Collection &) const;
 
-  signals:
+  Q_SIGNALS:
     void resourcesChanged( bool enabled );
     void resourcesAddedRemoved();
     void defaultResourceChanged( const Akonadi::Collection & );

@@ -68,7 +68,7 @@ public:
     bool replyAll;   ///< If true, the "reply all" template was used, otherwise the normal reply
                      ///  template
   };
-  
+
   explicit MessageFactory( const KMime::Message::Ptr& origMsg, Akonadi::Item::Id id, const Akonadi::Collection&col = Akonadi::Collection() );
   virtual ~MessageFactory();
 
@@ -183,8 +183,8 @@ public:
 
   /**
    * Set extra mailinglist addresses to send the created message to.
-   *    Any mailing-list addresses specifed in the original message
-   *    itself will be added by MessageFactory, so no need to add those manually.
+   * Any mailing-list addresses specified in the original message
+   * itself will be added by MessageFactory, so no need to add those manually.
    */
   void setMailingListAddresses( const KMime::Types::Mailbox::List& listAddresses );
 

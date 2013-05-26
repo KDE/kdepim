@@ -26,7 +26,7 @@ SieveActionDiscard::SieveActionDiscard(QObject *parent)
 
 SieveAction* SieveActionDiscard::newAction()
 {
-  return new SieveActionDiscard;
+    return new SieveActionDiscard;
 }
 
 QString SieveActionDiscard::code(QWidget *) const

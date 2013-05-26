@@ -26,6 +26,7 @@ set(headerthemeeditor_SRCS
   themeconfiguredialog.cpp
   themeeditorutil.cpp
   themeeditortabwidget.cpp
+  managethemes.cpp
 )
 
 

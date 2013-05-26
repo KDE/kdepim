@@ -18,7 +18,7 @@
 #include <kdebug.h>
 #include <kcmdlineargs.h>
 #include <kapplication.h>
-#include <KDebug>
+#include <QDebug>
 
 #include "libksieve/ksieveui/autocreatescripts/autocreatescriptdialog.h"
 
@@ -58,12 +58,13 @@ int main (int argc, char **argv)
             <<QLatin1String("metadata")
             <<QLatin1String("convert")
             <<QLatin1String("foreverypart")
+            <<QLatin1String("variables")
             <<QLatin1String("comparator-i;ascii-numeric");
     dialog->setSieveCapabilities(capabilities);
     if (dialog->exec() ) {
         QString requires;
         const QString script = dialog->script(requires);
-        kDebug()<<" generated script :\n"<<requires<<"\n"<<script;
+        qDebug()<<" generated script :\n"<<requires<<"\n"<<script;
     }
     delete dialog;
     return 0;

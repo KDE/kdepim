@@ -57,12 +57,12 @@ namespace MessageViewer {
 //
 
 HeaderStyle::HeaderStyle()
-  : mStrategy( 0 ),
-    mPrinting( false ),
-    mTopLevel( true ),
-    mNodeHelper( 0 ),
-    mAllowAsync( false ),
-    mSourceObject( 0 )
+    : mStrategy( 0 ),
+      mPrinting( false ),
+      mTopLevel( true ),
+      mNodeHelper( 0 ),
+      mAllowAsync( false ),
+      mSourceObject( 0 )
 {
 }
 
@@ -72,37 +72,37 @@ HeaderStyle::~HeaderStyle() {
 
 bool HeaderStyle::hasAttachmentQuickList() const
 {
-  return false;
+    return false;
 }
 
 HeaderStyle * HeaderStyle::create( Type type ) {
-  switch ( type ) {
-  case Brief:  return brief();
-  case Plain:  return plain();
-  case Fancy:   return fancy();
-  case Enterprise: return enterprise();
-  case Mobile: return mobile();
-  case MobileExtended: return mobileExtended();
-  case Custom: return custom();
-  case Grantlee: return grantlee();
-  }
-  kFatal() << "Unknown header style ( type ==" << (int)type << ") requested!";
-  return 0; // make compiler happy
+    switch ( type ) {
+    case Brief:  return brief();
+    case Plain:  return plain();
+    case Fancy:   return fancy();
+    case Enterprise: return enterprise();
+    case Mobile: return mobile();
+    case MobileExtended: return mobileExtended();
+    case Custom: return custom();
+    case Grantlee: return grantlee();
+    }
+    kFatal() << "Unknown header style ( type ==" << (int)type << ") requested!";
+    return 0; // make compiler happy
 }
 
 HeaderStyle * HeaderStyle::create( const QString & type ) {
-  const QString lowerType = type.toLower();
-  if ( lowerType == QLatin1String("brief") ) return brief();
-  else if ( lowerType == QLatin1String("plain") )  return plain();
-  else if ( lowerType == QLatin1String("enterprise") )  return enterprise();
-  else if ( lowerType == QLatin1String("mobile") )  return mobile();
-  else if ( lowerType == QLatin1String("mobileExtended") )  return mobileExtended();
-  else if ( lowerType == QLatin1String("custom") )  return custom();
-  else if ( lowerType == QLatin1String("grantlee")) return grantlee();
-  //if ( lowerType == "fancy" ) return fancy(); // not needed, see below
-  // don't kFatal here, b/c the strings are user-provided
-  // (KConfig), so fail gracefully to the default:
-  return fancy();
+    const QString lowerType = type.toLower();
+    if ( lowerType == QLatin1String("brief") ) return brief();
+    else if ( lowerType == QLatin1String("plain") )  return plain();
+    else if ( lowerType == QLatin1String("enterprise") )  return enterprise();
+    else if ( lowerType == QLatin1String("mobile") )  return mobile();
+    else if ( lowerType == QLatin1String("mobileExtended") )  return mobileExtended();
+    else if ( lowerType == QLatin1String("custom") )  return custom();
+    else if ( lowerType == QLatin1String("grantlee")) return grantlee();
+    //if ( lowerType == "fancy" ) return fancy(); // not needed, see below
+    // don't kFatal here, b/c the strings are user-provided
+    // (KConfig), so fail gracefully to the default:
+    return fancy();
 }
 
 HeaderStyle * briefStyle = 0;
@@ -115,51 +115,51 @@ HeaderStyle * customStyle = 0;
 HeaderStyle * grantleeStyle = 0;
 
 HeaderStyle * HeaderStyle::brief() {
-  if ( !briefStyle )
-    briefStyle = new BriefHeaderStyle();
-  return briefStyle;
+    if ( !briefStyle )
+        briefStyle = new BriefHeaderStyle();
+    return briefStyle;
 }
 
 HeaderStyle * HeaderStyle::plain() {
-  if ( !plainStyle )
-    plainStyle = new MessageViewer::PlainHeaderStyle();
-  return plainStyle;
+    if ( !plainStyle )
+        plainStyle = new MessageViewer::PlainHeaderStyle();
+    return plainStyle;
 }
 
 HeaderStyle * HeaderStyle::fancy() {
-  if ( !fancyStyle )
-    fancyStyle = new MessageViewer::FancyHeaderStyle();
-  return fancyStyle;
+    if ( !fancyStyle )
+        fancyStyle = new MessageViewer::FancyHeaderStyle();
+    return fancyStyle;
 }
 
 HeaderStyle * HeaderStyle::enterprise() {
-  if ( !enterpriseStyle )
-    enterpriseStyle = new MessageViewer::EnterpriseHeaderStyle();
-  return enterpriseStyle;
+    if ( !enterpriseStyle )
+        enterpriseStyle = new MessageViewer::EnterpriseHeaderStyle();
+    return enterpriseStyle;
 }
 
 HeaderStyle * HeaderStyle::mobile() {
-  if ( !mobileStyle )
-    mobileStyle = new MessageViewer::MobileHeaderStyle();
-  return mobileStyle;
+    if ( !mobileStyle )
+        mobileStyle = new MessageViewer::MobileHeaderStyle();
+    return mobileStyle;
 }
 
 HeaderStyle * HeaderStyle::mobileExtended() {
-  if ( !mobileExtendedStyle )
-    mobileExtendedStyle = new MessageViewer::MobileExtendedHeaderStyle;
-  return mobileExtendedStyle;
+    if ( !mobileExtendedStyle )
+        mobileExtendedStyle = new MessageViewer::MobileExtendedHeaderStyle;
+    return mobileExtendedStyle;
 }
 
 HeaderStyle * HeaderStyle::custom() {
-  if ( !customStyle )
-    customStyle = new MessageViewer::CustomHeaderStyle;
-  return customStyle;
+    if ( !customStyle )
+        customStyle = new MessageViewer::CustomHeaderStyle;
+    return customStyle;
 }
 
 HeaderStyle * HeaderStyle::grantlee() {
-  if ( !grantleeStyle )
-    grantleeStyle = new MessageViewer::GrantleeHeaderStyle;
-  return grantleeStyle;
+    if ( !grantleeStyle )
+        grantleeStyle = new MessageViewer::GrantleeHeaderStyle;
+    return grantleeStyle;
 }
 
 }

@@ -19,6 +19,7 @@
 #include "themeeditorpage.h"
 #include "newthemedialog.h"
 #include "themeconfiguredialog.h"
+#include "managethemes.h"
 
 #include <KTemporaryFile>
 #include <KTempDir>
@@ -46,10 +47,23 @@ ThemeEditorMainWindow::ThemeEditorMainWindow()
     setupGUI();
     updateActions();
     updateActions();
+    KSharedConfig::Ptr config = KGlobal::config();
+    KConfigGroup group = KConfigGroup( config, "ThemeEditorMainWindow" );
+    const QSize sizeDialog = group.readEntry( "Size", QSize() );
+    if ( sizeDialog.isValid() ) {
+        resize( sizeDialog );
+    } else {
+        resize( 600,400);
+    }
+
 }
 
 ThemeEditorMainWindow::~ThemeEditorMainWindow()
 {
+    KSharedConfig::Ptr config = KGlobal::config();
+
+    KConfigGroup group = config->group( QLatin1String("ThemeEditorMainWindow") );
+    group.writeEntry( "Size", size() );
 }
 
 void ThemeEditorMainWindow::updateActions()
@@ -79,6 +93,8 @@ void ThemeEditorMainWindow::setupActions()
     mOpenAction = KStandardAction::open(this, SLOT(slotOpenTheme()), actionCollection());
     mOpenAction->setText(i18n("Open theme..."));
     mSaveAction = KStandardAction::save(this, SLOT(slotSaveTheme()), actionCollection());
+    mSaveAction->setText(i18n("Save theme..."));
+
     mCloseAction = KStandardAction::close( this, SLOT(slotCloseTheme()), actionCollection());
     KStandardAction::quit(this, SLOT(slotQuitApp()), actionCollection() );
     KStandardAction::preferences( this, SLOT(slotConfigure()), actionCollection() );
@@ -103,6 +119,17 @@ void ThemeEditorMainWindow::setupActions()
     actionCollection()->addAction(QLatin1String("normal_mode"), mNormalMode );
     connect(mNormalMode, SIGNAL(triggered(bool)), SLOT(slotNormalMode()));
     group->addAction( mNormalMode );
+
+    mManageTheme = new KAction(i18n("Manage themes..."), this);
+    connect(mManageTheme, SIGNAL(triggered(bool)),SLOT(slotManageTheme()));
+    actionCollection()->addAction( QLatin1String( "manage_themes" ), mManageTheme );
+}
+
+void ThemeEditorMainWindow::slotManageTheme()
+{
+    QPointer<ManageThemes> dialog = new ManageThemes(this);
+    dialog->exec();
+    delete dialog;
 }
 
 void ThemeEditorMainWindow::slotNormalMode()
@@ -128,7 +155,6 @@ void ThemeEditorMainWindow::slotConfigure()
             mThemeEditor->reloadConfig();
         }
     }
-
     delete dialog;
 }
 

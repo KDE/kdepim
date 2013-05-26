@@ -24,7 +24,7 @@
 #include "incidenceeditors-ng_export.h"
 
 #include <Akonadi/Calendar/IncidenceChanger>
-
+#include <Akonadi/Collection>
 #include <QObject>
 
 namespace Akonadi {
@@ -111,6 +111,12 @@ class INCIDENCEEDITORS_NG_EXPORT EditorItemManager : public QObject
      * @see setFetchScope() for replacing the current item fetch scope
      */
     Akonadi::ItemFetchScope &fetchScope();
+
+    /**
+     * Returns the collection where the last item was created.
+     * Or an invalid collection if none was created.
+     */
+    Akonadi::Collection collection() const;
 
     enum SaveAction {
       Create, /**< A new item was created */

@@ -23,7 +23,7 @@ import Qt 4.7
 
 Rectangle {
   id : _topContext
-  color: "#00000000" // Set a transparant color.
+  color: "#00000000" // Set a transparent color.
 //   property int currentNoteRow : -1
   anchors.fill : parent
 

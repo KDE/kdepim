@@ -26,6 +26,7 @@ set(calendarsupport_LIB_SRCS
   incidenceattachmentmodel.cpp
   kcalmodel.cpp
   kcalprefs.cpp
+  messagewidget.cpp
   utils.cpp
 
   next/incidencefetchjob.cpp

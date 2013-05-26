@@ -36,6 +36,8 @@
 #include <KCalCore/Todo>
 
 #include <QWidget>
+#include <QSet>
+#include <QByteArray>
 
 namespace boost {
   template <typename T> class shared_ptr;
@@ -475,6 +477,9 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
 
   protected Q_SLOTS:
     virtual void calendarReset();
+
+  private Q_SLOTS:
+    void onCollectionChanged(const Akonadi::Collection &, const QSet<QByteArray> &);
 
   protected:
     bool makesWholeDayBusy( const KCalCore::Incidence::Ptr &incidence ) const;

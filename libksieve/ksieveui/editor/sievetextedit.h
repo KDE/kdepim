@@ -61,6 +61,9 @@ Q_SIGNALS:
     void findText();
 
 private:
+    QStringList completerList() const;
+    void setCompleterList(const QStringList &list);
+
     QCompleter *m_completer;
     SieveLineNumberArea *m_sieveLineNumberArea;
     SieveSyntaxHighlighter *m_syntaxHighlighter;

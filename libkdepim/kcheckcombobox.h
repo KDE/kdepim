@@ -93,7 +93,7 @@ class KDEPIM_EXPORT KCheckComboBox : public KComboBox
     void setAlwaysShowDefaultText( bool always );
 
     /**
-     * Returns wether or not the text will be squeezed to fit in the combo's line
+     * Returns whether or not the text will be squeezed to fit in the combo's line
      * edit. This property is false by default.
      *
      * @see KSqueezedTextLabel
@@ -101,7 +101,7 @@ class KDEPIM_EXPORT KCheckComboBox : public KComboBox
     bool squeezeText() const;
 
     /**
-     * Sets wheter or not the text must be squeezed
+     * Sets whether or not the text must be squeezed.
      *
      * @param squeeze The new squeeze status
      */
@@ -135,15 +135,15 @@ class KDEPIM_EXPORT KCheckComboBox : public KComboBox
     void setItemCheckState( int index, Qt::CheckState state );
 
     /**
-     * Returns the current seperator used to seperate the selected items in the
+     * Returns the current separator used to separate the selected items in the
      * line edit of the combo box.
      */
     QString separator() const;
 
     /**
-     * Sets the seperator used to seperate items in the line edit.
+     * Sets the separator used to separate items in the line edit.
      *
-     * @param seperator The new seperator
+     * @param separator The new separator
      */
     void setSeparator( const QString &separator );
 
