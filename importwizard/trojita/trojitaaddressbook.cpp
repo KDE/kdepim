@@ -28,6 +28,7 @@ TrojitaAddressBook::TrojitaAddressBook(const QString& filename, ImportWizard *pa
   : AbstractAddressBook( parent )
 {
     settings = new QSettings(filename,QSettings::IniFormat,this);
+    settings->setIniCodec("UTF-8");
     readAddressBook();
 }
 
@@ -38,5 +39,8 @@ TrojitaAddressBook::~TrojitaAddressBook()
 
 void TrojitaAddressBook::readAddressBook()
 {
-    //TODO
+    const QStringList contacts = settings->childGroups();
+    foreach (const QString &contact, contacts) {
+        //TODO
+    }
 }
