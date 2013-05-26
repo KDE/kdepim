@@ -256,8 +256,9 @@ int ModelInvariantRowMapper::modelInvariantIndexToModelIndexRow( ModelInvariantI
   // mRowShiftList at that time had at most invariantShiftSerial items.
   Q_ASSERT( invariant );
 
-  if ( invariant->d->rowMapper() != this )
+  if ( invariant->d->rowMapper() != this || !d->mRowShiftList ) {
     return -1;
+  }
 
   if ( invariant->d->rowMapperSerial() == d->mCurrentShiftSerial )
   {
@@ -316,8 +317,6 @@ int ModelInvariantRowMapper::modelInvariantIndexToModelIndexRow( ModelInvariantI
   // serial we need to offset them by the removed rows.
 
   uint invariantShiftIndex = invariant->d->rowMapperSerial() - d->mRemovedShiftCount;
-
-  Q_ASSERT( d->mRowShiftList );
 
   // For the reasoning above invariantShiftIndex is surely < than mRowShiftList.count()
 
