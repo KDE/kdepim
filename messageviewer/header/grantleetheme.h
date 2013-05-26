@@ -46,6 +46,12 @@ public:
     void setAbsolutePath(const QString &absPath);
     QString absolutePath() const;
 
+    void setAuthor(const QString &);
+    QString author() const;
+
+    void setAuthorEmail(const QString &);
+    QString authorEmail() const;
+
 private:
     QStringList mDisplayExtraHeaders;
     QString mFileName;
@@ -53,6 +59,8 @@ private:
     QString mName;
     QString mDirName;
     QString mAbsolutePath;
+    QString mAuthor;
+    QString mEmail;
 };
 }
 

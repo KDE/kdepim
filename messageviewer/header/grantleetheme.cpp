@@ -90,3 +90,23 @@ QString GrantleeTheme::absolutePath() const
 {
     return mAbsolutePath;
 }
+
+void GrantleeTheme::setAuthor(const QString &author)
+{
+    mAuthor = author;
+}
+
+QString GrantleeTheme::author() const
+{
+    return mAuthor;
+}
+
+void GrantleeTheme::setAuthorEmail(const QString &email)
+{
+    mEmail = email;
+}
+
+QString GrantleeTheme::authorEmail() const
+{
+    return mEmail;
+}
