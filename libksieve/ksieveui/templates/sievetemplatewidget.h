@@ -39,8 +39,10 @@ class SieveTemplateWidget : public QWidget
 public:
     explicit SieveTemplateWidget(const QString &title, QWidget *parent = 0);
     ~SieveTemplateWidget();
+
 Q_SIGNALS:
     void insertTemplate(const QString &);
+
 private:
     SieveTemplateListWidget *mListTemplate;
 };
