@@ -41,27 +41,40 @@ DesktopFilePage::DesktopFilePage(QWidget *parent)
     lay->addWidget(lab,0,0);
     lay->addWidget(mName,0,1);
 
+
+    lab = new QLabel(i18n("Author:"));
+    mAuthor = new KLineEdit;
+    mAuthor->setClearButtonShown(true);
+    lay->addWidget(lab,1,0);
+    lay->addWidget(mAuthor,1,1);
+
+    lab = new QLabel(i18n("Email:"));
+    mEmail = new KLineEdit;
+    mEmail->setClearButtonShown(true);
+    lay->addWidget(lab,2,0);
+    lay->addWidget(mEmail,2,1);
+
     lab = new QLabel(i18n("Description:"));
     mDescription = new KLineEdit;
     mDescription->setClearButtonShown(true);
-    lay->addWidget(lab,1,0);
-    lay->addWidget(mDescription,1,1);
+    lay->addWidget(lab,3,0);
+    lay->addWidget(mDescription,3,1);
 
     lab = new QLabel(i18n("Filename:"));
     mFilename = new KLineEdit;
     mFilename->setText(QLatin1String("header.html"));
-    lay->addWidget(lab,2,0);
-    lay->addWidget(mFilename,2,1);
+    lay->addWidget(lab,4,0);
+    lay->addWidget(mFilename,4,1);
 
     lab = new QLabel(i18n("Extract Headers:"));
-    lay->addWidget(lab,3,0);
+    lay->addWidget(lab,5,0);
 
     lab = new QLabel(QLatin1String("<qt><b>") +i18n("Be careful, Grantlee does not support '-' in variable name. So when you want to add extra header as \"X-Original-To\" add \"X-Original-To\" in list, but use \"XOriginalTo\" as variable in Grantlee (remove '-' in name).")+QLatin1String("</b></qt>"));
     lab->setWordWrap(true);
-    lay->addWidget(lab,4,0,1,2);
+    lay->addWidget(lab,6,0,1,2);
 
     mExtraDisplayHeaders = new PimCommon::SimpleStringListEditor;
-    lay->addWidget(mExtraDisplayHeaders, 5, 0, 1, 2);
+    lay->addWidget(mExtraDisplayHeaders, 7, 0, 1, 2);
     setLayout(lay);
     connect(mExtraDisplayHeaders, SIGNAL(changed()), this, SLOT(slotExtraDisplayHeadersChanged()));
     connect(mFilename, SIGNAL(textChanged(QString)), this, SLOT(slotFileNameChanged(QString)));
@@ -117,6 +130,8 @@ void DesktopFilePage::loadTheme(const QString &path)
     mName->setText(desktopFile.desktopGroup().readEntry(QLatin1String("Name")));
     mDescription->setText(desktopFile.desktopGroup().readEntry(QLatin1String("Description")));
     mFilename->setText(desktopFile.desktopGroup().readEntry(QLatin1String("FileName")));
+    mAuthor->setText(desktopFile.desktopGroup().readEntry(QLatin1String("Author")));
+    mEmail->setText(desktopFile.desktopGroup().readEntry(QLatin1String("AuthorEmail")));
     const QStringList displayExtraHeaders = desktopFile.desktopGroup().readEntry(QLatin1String("DisplayExtraHeaders"),QStringList());
     mExtraDisplayHeaders->setStringList(displayExtraHeaders);
 }
@@ -136,6 +151,9 @@ void DesktopFilePage::saveAsFilename(const QString &filename)
     const QStringList displayExtraHeaders = mExtraDisplayHeaders->stringList();
     if (!displayExtraHeaders.isEmpty())
         desktopFile.desktopGroup().writeEntry(QLatin1String("DisplayExtraHeaders"), mExtraDisplayHeaders->stringList());
+
+    desktopFile.desktopGroup().writeEntry(QLatin1String("Author"), mAuthor->text());
+    desktopFile.desktopGroup().writeEntry(QLatin1String("AuthorEmail"), mEmail->text());
     desktopFile.desktopGroup().sync();
 }
 

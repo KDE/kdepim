@@ -61,6 +61,8 @@ private:
     KLineEdit *mName;
     KLineEdit *mDescription;
     KLineEdit *mFilename;
+    KLineEdit *mAuthor;
+    KLineEdit *mEmail;
     PimCommon::SimpleStringListEditor *mExtraDisplayHeaders;
 };
 
