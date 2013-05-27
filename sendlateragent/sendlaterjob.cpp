@@ -38,7 +38,6 @@ SendLaterJob::SendLaterJob(SendLaterManager *manager, SendLaterInfo *info, QObje
 
 SendLaterJob::~SendLaterJob()
 {
-
 }
 
 void SendLaterJob::start()
