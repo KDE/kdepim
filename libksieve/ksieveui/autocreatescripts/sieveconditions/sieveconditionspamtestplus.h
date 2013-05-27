@@ -41,6 +41,8 @@ public:
     QString serverNeedsCapability() const;
 
     QStringList needRequires(QWidget *parent) const;
+
+    QString help() const;
 };
 }
 

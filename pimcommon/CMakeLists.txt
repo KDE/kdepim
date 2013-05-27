@@ -51,3 +51,16 @@ target_link_libraries(pimcommon
 set_target_properties(pimcommon PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 install(TARGETS pimcommon ${INSTALL_TARGETS_DEFAULT_ARGS})
 
+if (QT_QTDESIGNER_FOUND)
+  set(pimcommonwidgets_PART_SRCS)
+  kde4_add_widget_files(pimcommonwidgets_PART_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/pimcommon.widgets)
+
+  kde4_add_plugin(pimcommonwidgets ${pimcommonwidgets_PART_SRCS})
+
+
+  target_link_libraries(pimcommonwidgets  ${KDE4_KIO_LIBS} pimcommon)
+
+  install(TARGETS pimcommonwidgets  DESTINATION ${PLUGIN_INSTALL_DIR}/plugins/designer)
+endif ()
+
+

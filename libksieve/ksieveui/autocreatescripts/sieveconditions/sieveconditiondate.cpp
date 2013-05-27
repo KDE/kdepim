@@ -93,6 +93,10 @@ QStringList SieveConditionDate::needRequires(QWidget *) const
     return QStringList() << QLatin1String("date");
 }
 
+QString SieveConditionDate::help() const
+{
+    return i18n("The date test matches date/time information derived from headers containing date-time values.");
+}
 
 #include "sieveconditiondate.moc"
 

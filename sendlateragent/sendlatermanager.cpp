@@ -23,6 +23,8 @@
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <KGlobal>
+#include <KMessageBox>
+#include <KLocale>
 
 #include <QStringList>
 #include <QTimer>
@@ -89,12 +91,30 @@ void SendLaterManager::slotCreateJob()
     mCurrentJob->start();
 }
 
-void SendLaterManager::sendError(SendLaterInfo *info)
+void SendLaterManager::removeInfo(Akonadi::Item::Id id)
 {
-    //TODO ask if we want to resend it here.
+    KConfigGroup group = mConfig->group(QString::fromLatin1("SendLaterItem %1").arg(id));
+    group.deleteGroup();
+    group.sync();
+}
+
+void SendLaterManager::sendError(SendLaterInfo *info, ErrorType type)
+{
     if (info) {
-        if (!info->isRecursive()) {
+        if (type == ItemNotFound) {
+            //Don't try to resend it. Remove it.
             mListSendLaterInfo.removeAll(mCurrentInfo);
+            removeInfo(info->itemId());
+        } else {
+            if (KMessageBox::Yes == KMessageBox::questionYesNo(0, i18n("An error was found. Do you want to resend it?"), i18n("Error found"))) {
+                if (!info->isRecursive()) {
+                    mListSendLaterInfo.removeAll(mCurrentInfo);
+                    removeInfo(info->itemId());
+                }
+            } else {
+                mListSendLaterInfo.removeAll(mCurrentInfo);
+                removeInfo(info->itemId());
+            }
         }
     }
     delete mCurrentJob;
@@ -106,6 +126,7 @@ void SendLaterManager::sendDone(SendLaterInfo *info)
     if (info) {
         if (!info->isRecursive()) {
             mListSendLaterInfo.removeAll(mCurrentInfo);
+            removeInfo(info->itemId());
         }
     }
     delete mCurrentJob;

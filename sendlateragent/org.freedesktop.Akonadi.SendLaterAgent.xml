@@ -7,6 +7,7 @@
     <method name="addSendLaterItem" >
       <arg name="item" type="x" direction="in"/>
       <arg direction="in" type="x" name="windowId" />
+      <arg direction="out" type="x" />
     </method>
   </interface>
 </node>

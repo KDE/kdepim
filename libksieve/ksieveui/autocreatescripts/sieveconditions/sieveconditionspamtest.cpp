@@ -91,5 +91,10 @@ QStringList SieveConditionSpamTest::needRequires(QWidget *w) const
     return QStringList() << QLatin1String("spamtest") << QLatin1String("relational") << comparator->require();
 }
 
+QString SieveConditionSpamTest::help() const
+{
+    return i18n("Sieve implementations that implement the \"spamtest\" test use an identifier of either \"spamtest\" or \"spamtestplus\" for use with the capability mechanism.");
+}
+
 #include "sieveconditionspamtest.moc"
 

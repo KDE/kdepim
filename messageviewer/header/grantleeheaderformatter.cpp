@@ -84,7 +84,6 @@ QString GrantleeHeaderFormatter::toHtml(const GrantleeTheme &theme, bool isPrint
         errorMessage = i18n("Grantlee theme \"%1\" is not valid.", theme.name());
         return errorMessage;
     }
-    //TODO improve it.
     d->templateLoader->setTemplateDirs( QStringList() << theme.absolutePath() );
     Grantlee::Template headerTemplate = d->engine->loadByName( theme.filename() );
     if ( headerTemplate->error() ) {
@@ -153,7 +152,7 @@ QString GrantleeHeaderFormatter::format(Grantlee::Template headerTemplate, const
         }
 
         if ( message->headerByType("X-Mailer") ) {
-            headerObject.insert( QLatin1String( "x-mailer" ), MessageViewer::HeaderStyleUtil::strToHtml( message->headerByType("X-Mailer")->as7BitString() ) );
+            headerObject.insert( QLatin1String( "xmailer" ), MessageViewer::HeaderStyleUtil::strToHtml( message->headerByType("X-Mailer")->as7BitString() ) );
         }
     }
 

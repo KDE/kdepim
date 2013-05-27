@@ -18,7 +18,6 @@
 #include "sendlateragent.h"
 #include "sendlatermanager.h"
 #include "sendlaterconfiguredialog.h"
-#include "sendlaterdialog.h"
 #include "sendlaterinfo.h"
 #include "sendlateragentadaptor.h"
 
@@ -51,11 +50,12 @@ SendLaterAgent::~SendLaterAgent()
 {
 }
 
-void SendLaterAgent::addSendLaterItem(qlonglong itemId, qlonglong windowId)
+SendLaterDialog::SendLaterAction SendLaterAgent::addSendLaterItem(qlonglong itemId, qlonglong windowId)
 {
     SendLaterInfo *info = new SendLaterInfo;
     info->setItemId(itemId);
     QPointer<SendLaterDialog> dialog = new SendLaterDialog(info);
+    SendLaterDialog::SendLaterAction action = SendLaterDialog::Canceled;
     if (windowId) {
 #ifndef Q_WS_WIN
         KWindowSystem::setMainWindow( dialog, windowId );
@@ -68,7 +68,7 @@ void SendLaterAgent::addSendLaterItem(qlonglong itemId, qlonglong windowId)
         KSharedConfig::Ptr config = KGlobal::config();
         KConfigGroup group = config->group(QString::fromLatin1("SendLaterItem %1").arg(info->itemId()));
         info->writeConfig(group);
-        SendLaterDialog::SendLaterAction action = dialog->action();
+        action = dialog->action();
         //TODO
         config->sync();
         config->reparseConfiguration();
@@ -76,6 +76,7 @@ void SendLaterAgent::addSendLaterItem(qlonglong itemId, qlonglong windowId)
     }
     delete info;
     delete dialog;
+    return action;
 }
 
 void SendLaterAgent::configure( WId windowId )

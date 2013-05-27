@@ -33,7 +33,8 @@ class SendLaterDialog : public KDialog
 public:
     enum SendLaterAction {
         SendNow = 0,
-        SendLater
+        SendLater = 1,
+        Canceled = 2
     };
 
     explicit SendLaterDialog(SendLaterInfo *info, QWidget *parent = 0);

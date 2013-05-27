@@ -148,14 +148,7 @@ void ImageScalingWidget::slotComboboxChanged(int index)
 void ImageScalingWidget::initComboBox(KComboBox *combo)
 {
     QList<int> size;
-    size <<240
-        <<320
-       <<512
-      <<640
-     <<800
-    <<1024
-    <<1600
-    <<2048;
+    size <<240 <<320 <<512 <<640 <<800 <<1024 <<1600 <<2048;
     Q_FOREACH(int val, size) {
         combo->addItem(QString::number(val), val);
     }
@@ -170,6 +163,7 @@ void ImageScalingWidget::initWriteImageFormat()
         ui->WriteToImageFormat->addItem(QString::fromLatin1(format));
     }
     */
+    //known by several mailer.
     ui->WriteToImageFormat->addItem(QString::fromLatin1("JPG"));
     ui->WriteToImageFormat->addItem(QString::fromLatin1("PNG"));
 }

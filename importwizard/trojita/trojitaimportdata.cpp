@@ -77,7 +77,6 @@ AbstractImporter::TypeSupportedOptions TrojitaImportData::supportedOption()
     TypeSupportedOptions options;
     //options |=AbstractImporter::Mails;
     options |=AbstractImporter::Settings;
-    //Laurent disable for the moment
-    //options |=AbstractImporter::AddressBooks;
+    options |=AbstractImporter::AddressBooks;
     return options;
 }

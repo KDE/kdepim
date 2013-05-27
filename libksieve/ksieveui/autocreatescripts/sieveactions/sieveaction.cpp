@@ -42,12 +42,12 @@ QString SieveAction::label() const
 
 SieveAction* SieveAction::newAction()
 {
-  return 0;
+    return 0;
 }
 
 QWidget* SieveAction::createParamWidget( QWidget *parent ) const
 {
-  return new QWidget( parent );
+    return new QWidget( parent );
 }
 
 QString SieveAction::code(QWidget *) const

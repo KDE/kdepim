@@ -18,13 +18,14 @@
 #ifndef SENDLATERJOB_H
 #define SENDLATERJOB_H
 
-
 #include <QObject>
+
+#include "sendlatermanager.h"
+
 #include <Akonadi/ItemFetchScope>
 #include <Akonadi/Item>
 
 class SendLaterInfo;
-class SendLaterManager;
 class KJob;
 class SendLaterJob : public QObject
 {
@@ -36,7 +37,7 @@ public:
 
 private Q_SLOTS:
     void sendDone();
-    void sendError(const QString &error);
+    void sendError(const QString &error, SendLaterManager::ErrorType type);
     void slotMessageTransfered(const Akonadi::Item::List& );
     void slotJobFinished(KJob*);
 

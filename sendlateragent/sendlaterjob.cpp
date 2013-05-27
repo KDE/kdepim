@@ -17,7 +17,6 @@
 
 #include "sendlaterjob.h"
 #include "sendlaterinfo.h"
-#include "sendlatermanager.h"
 
 #include <mailtransport/transportattribute.h>
 #include <mailtransport/sentbehaviourattribute.h>
@@ -39,7 +38,6 @@ SendLaterJob::SendLaterJob(SendLaterManager *manager, SendLaterInfo *info, QObje
 
 SendLaterJob::~SendLaterJob()
 {
-
 }
 
 void SendLaterJob::start()
@@ -61,19 +59,22 @@ void SendLaterJob::start()
 
 void SendLaterJob::slotMessageTransfered(const Akonadi::Item::List& items)
 {
-    if (items.count() == 1) {
+    if (items.isEmpty()) {
+        sendError(i18n("Not message found."), SendLaterManager::ItemNotFound);
+        return;
+    } else if (items.count() == 1) {
         //Success
         mItem = items.first();
         return;
     }
     kDebug()<<"Error during fetching message.";
-    sendError(i18n("Error during fetching message."));
+    sendError(i18n("Error during fetching message."), SendLaterManager::TooManyItemFound);
 }
 
 void SendLaterJob::slotJobFinished(KJob* job)
 {
     if ( job->error() ) {
-        sendError(i18n("Can not fetch message. %1", job->errorString() ));
+        sendError(i18n("Can not fetch message. %1", job->errorString() ), SendLaterManager::CanNotFetchItem);
         kDebug()<<"Can not fetch message: "<<job->errorString();
         return;
     }
@@ -104,7 +105,7 @@ void SendLaterJob::sendDone()
     mManager->sendDone(mInfo);
 }
 
-void SendLaterJob::sendError(const QString &error)
+void SendLaterJob::sendError(const QString &error, SendLaterManager::ErrorType type)
 {
     const QPixmap pixmap = KIcon( QLatin1String("kmail") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
     KNotification::event( QLatin1String("mailsendfailed"),
@@ -113,7 +114,7 @@ void SendLaterJob::sendError(const QString &error)
                           0,
                           KNotification::CloseOnTimeout,
                           KGlobal::mainComponent());
-    mManager->sendError(mInfo);
+    mManager->sendError(mInfo, type);
 }
 
 #include "sendlaterjob.moc"

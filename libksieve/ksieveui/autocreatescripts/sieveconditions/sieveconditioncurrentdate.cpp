@@ -80,4 +80,9 @@ QStringList SieveConditionCurrentDate::needRequires(QWidget *) const
     return QStringList() << QLatin1String("date");
 }
 
+QString SieveConditionCurrentDate::help() const
+{
+    return i18n("The currentdate test is similar to the date test, except that it operates on the current date/time rather than a value extracted from the message header.");
+}
+
 #include "sieveconditioncurrentdate.moc"

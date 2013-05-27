@@ -76,7 +76,6 @@ protected:
     QCheckBox   * mSpamCheck;
     QCheckBox   * mDomainCheck;
     KLineEdit   * mDomainEdit;
-
 };
 
 }

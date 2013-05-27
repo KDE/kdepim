@@ -21,6 +21,9 @@
 #include <KDialog>
 #include "ui_sendlaterwidget.h"
 
+
+#include <Akonadi/Item>
+
 #include <QTreeWidgetItem>
 
 class KAboutData;
@@ -65,6 +68,9 @@ private Q_SLOTS:
     void customContextMenuRequested(const QPoint &);
     void slotSendNow();
 
+Q_SIGNALS:
+    void sendNow(Akonadi::Item::Id);
+
 private:
     void createOrUpdateItem(SendLaterInfo *info, SendLaterItem *item = 0);
     void load();
@@ -82,6 +88,9 @@ public:
 
 private Q_SLOTS:
     void slotSave();
+
+Q_SIGNALS:
+    void sendNow(Akonadi::Item::Id);
 
 private:
     void readConfig();
