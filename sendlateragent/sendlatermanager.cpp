@@ -89,7 +89,7 @@ void SendLaterManager::slotCreateJob()
     mCurrentJob->start();
 }
 
-void SendLaterManager::sendError(SendLaterInfo *info)
+void SendLaterManager::sendError(SendLaterInfo *info, ErrorType type)
 {
     //TODO ask if we want to resend it here.
     if (info) {

@@ -29,11 +29,17 @@ class SendLaterManager : public QObject
 {
     Q_OBJECT
 public:
+    enum ErrorType {
+        ItemNotFound = 0,
+        TooManyItemFound = 1,
+        CanNotFetchItem = 2
+    };
+
     explicit SendLaterManager(QObject *parent);
     ~SendLaterManager();
 
     void sendDone(SendLaterInfo *info);
-    void sendError(SendLaterInfo *info);
+    void sendError(SendLaterInfo *info, ErrorType type);
 
 public Q_SLOTS:
     void load();
