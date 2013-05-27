@@ -45,6 +45,7 @@ SendLaterConfigureDialog::SendLaterConfigureDialog(QWidget *parent)
     mainLayout->setSpacing( KDialog::spacingHint() );
     mainLayout->setMargin( KDialog::marginHint() );
     mWidget = new SendLaterWidget(this);
+    connect(mWidget, SIGNAL(sendNow(Akonadi::Item::Id)), SIGNAL(sendNow(Akonadi::Item::Id)));
     mainLayout->addWidget(mWidget);
     setMainWidget( mainWidget );
     connect(this, SIGNAL(okClicked()), SLOT(slotSave()));
@@ -169,7 +170,11 @@ void SendLaterWidget::customContextMenuRequested(const QPoint &)
 
 void SendLaterWidget::slotSendNow()
 {
-    //TODO
+    const QList<QTreeWidgetItem *> listItems = mWidget->treeWidget->selectedItems();
+    if (listItems.count() == 1) {
+        SendLaterItem *mailItem = static_cast<SendLaterItem *>(listItems.first());
+        Q_EMIT sendNow(mailItem->info()->itemId());
+    }
 }
 
 void SendLaterWidget::restoreTreeWidgetHeader(const QByteArray &data)
