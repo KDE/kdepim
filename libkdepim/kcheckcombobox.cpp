@@ -46,7 +46,7 @@ class KCheckComboBox::Private
   public:
     Private( KCheckComboBox *qq )
       : q( qq )
-      , mSeparator( QLatin1String( "," ) )
+      , mSeparator( QLatin1Char( ',' ) )
       , mSqueezeText( false )
       , mIgnoreHide( false )
       , mAlwaysShowDefaultText( false )
