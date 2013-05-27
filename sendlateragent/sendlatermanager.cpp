@@ -23,6 +23,8 @@
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <KGlobal>
+#include <KMessageBox>
+#include <KLocale>
 
 #include <QStringList>
 #include <QTimer>
@@ -104,8 +106,12 @@ void SendLaterManager::sendError(SendLaterInfo *info, ErrorType type)
             mListSendLaterInfo.removeAll(mCurrentInfo);
             removeInfo(info->itemId());
         } else {
-            //TODO ask if we want to resend it here.
-            if (!info->isRecursive()) {
+            if (KMessageBox::Yes == KMessageBox::questionYesNo(0, i18n("An error was found. Do you want to resend it?"), i18n("Error found"))) {
+                if (!info->isRecursive()) {
+                    mListSendLaterInfo.removeAll(mCurrentInfo);
+                    removeInfo(info->itemId());
+                }
+            } else {
                 mListSendLaterInfo.removeAll(mCurrentInfo);
                 removeInfo(info->itemId());
             }
