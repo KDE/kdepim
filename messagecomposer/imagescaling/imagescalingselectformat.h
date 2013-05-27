@@ -31,6 +31,7 @@ class ImageScalingSelectFormatDialog : public KDialog
 public:
     explicit ImageScalingSelectFormatDialog(QWidget *parent);
     ~ImageScalingSelectFormatDialog();
+
     void setFormat(const QString &format);
     QString format() const;
 
