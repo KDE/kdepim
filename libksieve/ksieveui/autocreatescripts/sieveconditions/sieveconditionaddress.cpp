@@ -94,4 +94,9 @@ QStringList SieveConditionAddress::needRequires(QWidget *w) const
     return QStringList() << selectAddressPart->extraRequire();
 }
 
+QString SieveConditionAddress::help() const
+{
+    return i18n("The \"address\" test matches Internet addresses in structured headers that contain addresses.  It returns true if any header contains any key in the specified part of the address, as modified by the comparator and the match keyword.");
+}
+
 #include "sieveconditionaddress.moc"

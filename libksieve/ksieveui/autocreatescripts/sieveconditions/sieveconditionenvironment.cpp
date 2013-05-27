@@ -99,4 +99,9 @@ QString SieveConditionEnvironment::serverNeedsCapability() const
     return QLatin1String("environment");
 }
 
+QString SieveConditionEnvironment::help() const
+{
+    return i18n("The environment test retrieves the item of environment information specified by the name string and matches it to the values specified in the key-list argument.");
+}
+
 #include "sieveconditionenvironment.moc"

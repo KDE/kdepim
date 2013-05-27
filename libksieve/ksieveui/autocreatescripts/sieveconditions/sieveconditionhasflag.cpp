@@ -24,6 +24,9 @@
 #include <QHBoxLayout>
 #include <QDebug>
 
+
+//TODO need implement
+
 using namespace KSieveUi;
 SieveConditionHasFlag::SieveConditionHasFlag(QObject *parent)
     : SieveCondition(QLatin1String("hasflag"), i18n("Has Flag"), parent)
@@ -64,6 +67,11 @@ bool SieveConditionHasFlag::needCheckIfServerHasCapability() const
 QString SieveConditionHasFlag::serverNeedsCapability() const
 {
     return QLatin1String("imap4flags");
+}
+
+QString SieveConditionHasFlag::help() const
+{
+    return i18n("The hasflag test evaluates to true if any of the variables matches any flag name.");
 }
 
 #include "sieveconditionhasflag.moc"

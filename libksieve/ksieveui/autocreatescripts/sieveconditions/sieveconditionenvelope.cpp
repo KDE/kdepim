@@ -107,4 +107,9 @@ QString SieveConditionEnvelope::serverNeedsCapability() const
     return QLatin1String("envelope");
 }
 
+QString SieveConditionEnvelope::help() const
+{
+    return i18n("The \"envelope\" test is true if the specified part of the [SMTP] (or equivalent) envelope matches the specified key.");
+}
+
 #include "sieveconditionenvelope.moc"

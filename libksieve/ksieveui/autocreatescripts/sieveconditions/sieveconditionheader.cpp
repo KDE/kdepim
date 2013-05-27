@@ -77,4 +77,9 @@ QString SieveConditionHeader::code(QWidget *w) const
     return (isNegative ? QLatin1String("not ") : QString()) + QString::fromLatin1("header %1 %2 \"%3\"").arg(matchString).arg(headerStr).arg(valueStr);
 }
 
+QString SieveConditionHeader::help() const
+{
+    return i18n("The \"header\" test evaluates to true if the value of any of the named headers, ignoring leading and trailing whitespace, matches any key.");
+}
+
 #include "sieveconditionheader.moc"
