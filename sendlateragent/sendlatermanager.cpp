@@ -98,17 +98,17 @@ void SendLaterManager::removeInfo(Akonadi::Item::Id id)
 
 void SendLaterManager::sendError(SendLaterInfo *info, ErrorType type)
 {
-    if (type == ItemNotFound) {
-        //Don't try to resend it. Remove it.
-        mListSendLaterInfo.removeAll(mCurrentInfo);
-        if (info) {
-            removeInfo(info->itemId());
-        }
-    } else if (info) {
-    //TODO ask if we want to resend it here.
-        if (!info->isRecursive()) {
+    if (info) {
+        if (type == ItemNotFound) {
+            //Don't try to resend it. Remove it.
             mListSendLaterInfo.removeAll(mCurrentInfo);
             removeInfo(info->itemId());
+        } else {
+            //TODO ask if we want to resend it here.
+            if (!info->isRecursive()) {
+                mListSendLaterInfo.removeAll(mCurrentInfo);
+                removeInfo(info->itemId());
+            }
         }
     }
     delete mCurrentJob;
