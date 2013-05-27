@@ -377,7 +377,7 @@ bool EventView::processKeyEvent( QKeyEvent *ke )
                        ke->text(),
                        ke->isAutoRepeat(),
                        static_cast<ushort>( ke->count() ) ) );
-      if ( !d->mTypeAhead && !collectionSelection()->selectedCollections().isEmpty() ) {
+      if ( !d->mTypeAhead ) {
         d->mTypeAhead = true;
         emit newEventSignal();
       }
