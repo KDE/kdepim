@@ -61,7 +61,10 @@ void SendLaterJob::start()
 
 void SendLaterJob::slotMessageTransfered(const Akonadi::Item::List& items)
 {
-    if (items.count() == 1) {
+    if (items.isEmpty()) {
+        sendError(i18n("Not message found."));
+        return;
+    } else if (items.count() == 1) {
         //Success
         mItem = items.first();
         return;
