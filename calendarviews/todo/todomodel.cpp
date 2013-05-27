@@ -454,7 +454,6 @@ bool TodoModel::setData( const QModelIndex &index, const QVariant &value, int ro
             KDateTime tmp = todo->dtDue();
             tmp.setDate( value.toDate() );
             todo->setDtDue( tmp );
-            todo->setHasDueDate( value.toDate().isValid() );
           }
           break;
         case CategoriesColumn:
