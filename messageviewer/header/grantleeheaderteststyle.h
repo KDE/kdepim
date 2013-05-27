@@ -38,6 +38,10 @@ public:
     void setMainFilename(const QString &);
     void setExtraDisplayHeaders(const QStringList &);
 
+    bool hasAttachmentQuickList() const {
+        return true;
+    }
+
 private:
     QStringList mExtraDisplay;
     QString mAbsolutePath;
