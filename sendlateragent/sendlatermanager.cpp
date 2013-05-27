@@ -91,8 +91,17 @@ void SendLaterManager::slotCreateJob()
 
 void SendLaterManager::sendError(SendLaterInfo *info, ErrorType type)
 {
+    if (type == ItemNotFound) {
+        //Don't try to resend it. Remove it.
+        mListSendLaterInfo.removeAll(mCurrentInfo);
+        if (info) {
+            KConfigGroup group = mConfig->group(QString::fromLatin1("SendLaterItem %1").arg(info->itemId()));
+            group.deleteGroup();
+            group.sync();
+        }
+
+    } else if (info) {
     //TODO ask if we want to resend it here.
-    if (info) {
         if (!info->isRecursive()) {
             mListSendLaterInfo.removeAll(mCurrentInfo);
         }
