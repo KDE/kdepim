@@ -20,7 +20,10 @@
 
 #include <QObject>
 
+#include <Akonadi/Item>
+
 #include <KSharedConfig>
+
 
 class SendLaterInfo;
 class QTimer;
@@ -50,6 +53,7 @@ private Q_SLOTS:
 private:
     void createSendInfoList();
     void stopTimer();
+    void removeInfo(Akonadi::Item::Id id);
     KSharedConfig::Ptr mConfig;
     QList<SendLaterInfo *> mListSendLaterInfo;
     SendLaterInfo *mCurrentInfo;

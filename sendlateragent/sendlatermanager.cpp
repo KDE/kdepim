@@ -89,21 +89,26 @@ void SendLaterManager::slotCreateJob()
     mCurrentJob->start();
 }
 
+void SendLaterManager::removeInfo(Akonadi::Item::Id id)
+{
+    KConfigGroup group = mConfig->group(QString::fromLatin1("SendLaterItem %1").arg(id));
+    group.deleteGroup();
+    group.sync();
+}
+
 void SendLaterManager::sendError(SendLaterInfo *info, ErrorType type)
 {
     if (type == ItemNotFound) {
         //Don't try to resend it. Remove it.
         mListSendLaterInfo.removeAll(mCurrentInfo);
         if (info) {
-            KConfigGroup group = mConfig->group(QString::fromLatin1("SendLaterItem %1").arg(info->itemId()));
-            group.deleteGroup();
-            group.sync();
+            removeInfo(info->itemId());
         }
-
     } else if (info) {
     //TODO ask if we want to resend it here.
         if (!info->isRecursive()) {
             mListSendLaterInfo.removeAll(mCurrentInfo);
+            removeInfo(info->itemId());
         }
     }
     delete mCurrentJob;
@@ -115,6 +120,7 @@ void SendLaterManager::sendDone(SendLaterInfo *info)
     if (info) {
         if (!info->isRecursive()) {
             mListSendLaterInfo.removeAll(mCurrentInfo);
+            removeInfo(info->itemId());
         }
     }
     delete mCurrentJob;
