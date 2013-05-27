@@ -464,7 +464,7 @@ bool IncidenceRecurrence::isValid() const
         return false;
       }
     } else {
-      mLastErrorString = i18n( "The event's start date or the to-do's due date is invalid." );
+      mLastErrorString = i18n( "The incidence's start date is invalid." );
       kDebug() << mLastErrorString;
       return false;
     }
