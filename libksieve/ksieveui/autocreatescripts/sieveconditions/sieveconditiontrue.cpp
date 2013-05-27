@@ -51,4 +51,9 @@ QString SieveConditionTrue::code(QWidget *) const
     return QLatin1String("true");
 }
 
+QString SieveConditionTrue::help() const
+{
+    return i18n("The \"true\" test always evaluates to true.");
+}
+
 #include "sieveconditiontrue.moc"

@@ -92,5 +92,10 @@ QStringList SieveConditionVirusTest::needRequires(QWidget *w) const
     return QStringList() << QLatin1String("spamtest") << QLatin1String("relational") << comparator->require();
 }
 
+QString SieveConditionVirusTest::help() const
+{
+    return i18n("Sieve implementations that implement the \"virustest\" test have an identifier of \"virustest\" for use with the capability mechanism.");
+}
+
 #include "sieveconditionvirustest.moc"
 

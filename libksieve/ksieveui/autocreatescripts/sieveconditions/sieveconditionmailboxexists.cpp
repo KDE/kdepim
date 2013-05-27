@@ -73,4 +73,9 @@ QString SieveConditionMailboxExists::serverNeedsCapability() const
     return QLatin1String("mailbox");
 }
 
+QString SieveConditionMailboxExists::help() const
+{
+    return i18n("The \"mailboxexists\" test is true if all mailboxes listed in the \"mailbox-names\" argument exist in the mailstore, and each allows the user in whose context the Sieve script runs to \"deliver\" messages into it.");
+}
+
 #include "sieveconditionmailboxexists.moc"

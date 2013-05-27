@@ -26,7 +26,7 @@
 
 using namespace KSieveUi;
 SieveConditionMetaData::SieveConditionMetaData(QObject *parent)
-    : SieveCondition(QLatin1String("hasflag"), i18n("Has Flag"), parent)
+    : SieveCondition(QLatin1String("metadata"), i18n("Meta Data"), parent)
 {
 }
 
