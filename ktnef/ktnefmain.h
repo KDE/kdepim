@@ -42,7 +42,7 @@ class KTNEFMain : public KXmlGuiWindow
 
   protected:
     /** @reimp */
-    virtual void contextMenuEvent( QContextMenuEvent *event );
+    void contextMenuEvent( QContextMenuEvent *event );
 
   protected slots:
     void openFile();
