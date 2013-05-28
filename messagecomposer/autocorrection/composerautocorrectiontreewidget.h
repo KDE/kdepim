@@ -28,8 +28,10 @@ class ComposerAutoCorrectionTreeWidget : public QTreeWidget
 public:
     explicit ComposerAutoCorrectionTreeWidget(QWidget *parent = 0);
     ~ComposerAutoCorrectionTreeWidget();
+
 protected:
     void keyPressEvent( QKeyEvent *event );
+
 Q_SIGNALS:
     void deleteSelectedItems();
 };
