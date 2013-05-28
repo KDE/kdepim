@@ -93,6 +93,8 @@ set(ksieveui_LIB_SRCS
   autocreatescripts/sieveconditions/sieveconditionmetadata.cpp
   autocreatescripts/sieveconditions/sieveconditionconvert.cpp
   autocreatescripts/sieveconditions/sieveconditionmetadataexists.cpp
+  autocreatescripts/sieveconditions/sieveconditionservermetadata.cpp
+  autocreatescripts/sieveconditions/sieveconditionservermetadataexists.cpp
   autocreatescripts/sieveconditions/widgets/selectdatewidget.cpp
   autocreatescripts/sieveconditions/widgets/selectaddresspartcombobox.cpp
   autocreatescripts/sieveconditions/widgets/selectheadertypecombobox.cpp

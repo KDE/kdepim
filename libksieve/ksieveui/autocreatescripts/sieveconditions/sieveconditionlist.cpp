@@ -42,6 +42,8 @@
 #include "sieveconditionmetadata.h"
 #include "sieveconditionconvert.h"
 #include "sieveconditionmetadataexists.h"
+#include "sieveconditionservermetadata.h"
+#include "sieveconditionservermetadataexists.h"
 
 QList<KSieveUi::SieveCondition *> KSieveUi::SieveConditionList::conditionList()
 {
@@ -66,6 +68,8 @@ QList<KSieveUi::SieveCondition *> KSieveUi::SieveConditionList::conditionList()
     list.append(new KSieveUi::SieveConditionMetaData);
     list.append(new KSieveUi::SieveConditionConvert);
     list.append(new KSieveUi::SieveConditionMetaDataExists);
+    list.append(new KSieveUi::SieveConditionServerMetaData);
+    list.append(new KSieveUi::SieveConditionServerMetaDataExists);
     return list;
 }
 
