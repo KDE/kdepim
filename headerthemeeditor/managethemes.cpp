@@ -34,7 +34,7 @@ ManageThemes::ManageThemes(QWidget *parent)
     : KDialog(parent)
 {
     setCaption( i18n( "Manage Theme" ) );
-    setButtons( Ok|Cancel );
+    setButtons( Close );
     QWidget *w = new QWidget;
 
     QVBoxLayout *lay = new QVBoxLayout;
