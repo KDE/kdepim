@@ -16,11 +16,13 @@
 */
 
 #include "sieveconditionmetadata.h"
+#include "autocreatescripts/commonwidgets/selectmatchtypecombobox.h"
 
 #include <KLocale>
 #include <KLineEdit>
 
 #include <QWidget>
+#include <QLabel>
 #include <QHBoxLayout>
 #include <QDebug>
 
@@ -42,14 +44,58 @@ QWidget *SieveConditionMetaData::createParamWidget( QWidget *parent ) const
     QHBoxLayout *lay = new QHBoxLayout;
     lay->setMargin(0);
     w->setLayout(lay);
+    SelectMatchTypeComboBox *selectType = new SelectMatchTypeComboBox;
+    selectType->setObjectName(QLatin1String("selecttype"));
+    lay->addWidget(selectType);
+
+    QLabel *lab = new QLabel(i18n("Mailbox:"));
+    lay->addWidget(lab);
+
+    KLineEdit *mailbox = new KLineEdit;
+    mailbox->setObjectName(QLatin1String("mailbox"));
+    lay->addWidget(mailbox);
+
+    lab = new QLabel(i18n("Annotations:"));
+    lay->addWidget(lab);
+
+    KLineEdit *annotation = new KLineEdit;
+    annotation->setObjectName(QLatin1String("annotation"));
+    lay->addWidget(annotation);
+
+    lab = new QLabel(i18n("Value:"));
+    lay->addWidget(lab);
+
+    KLineEdit *value = new KLineEdit;
+    value->setObjectName(QLatin1String("value"));
+    lay->addWidget(value);
 
     return w;
 }
 
 QString SieveConditionMetaData::code(QWidget *w) const
 {
-    //TODO
-    return QString::fromLatin1("metadata");
+    const SelectMatchTypeComboBox *selectType = w->findChild<SelectMatchTypeComboBox*>( QLatin1String("selecttype"));
+    bool isNegative = false;
+    const QString matchString = selectType->code(isNegative);
+
+    QString result = (isNegative ? QLatin1String("not ") : QString()) + QString::fromLatin1("metadata %1 ").arg(matchString);
+
+
+    const KLineEdit *mailbox = w->findChild<KLineEdit*>( QLatin1String("mailbox"));
+    const QString mailboxStr = mailbox->text();
+
+    result += QString::fromLatin1("\"%1\" ").arg(mailboxStr);
+
+    const KLineEdit *annotation = w->findChild<KLineEdit*>( QLatin1String("annotation"));
+    const QString annotationStr = annotation->text();
+
+    result += QString::fromLatin1("\"%1\" ").arg(annotationStr);
+
+    const KLineEdit *value = w->findChild<KLineEdit*>( QLatin1String("value"));
+    const QString valueStr = value->text();
+
+    result += QString::fromLatin1("\"%1\";").arg(valueStr);
+    return result;
 }
 
 QStringList SieveConditionMetaData::needRequires(QWidget *) const
