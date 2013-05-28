@@ -44,7 +44,9 @@ void ImportLibreOfficeAutocorrection::closeArchive()
         mArchive->close();
     }
     delete mArchive;
+    mArchive = 0;
     delete mTempDir;
+    mTempDir = 0;
 }
 
 bool ImportLibreOfficeAutocorrection::import(const QString& fileName, LoadAttribute loadAttribute)
