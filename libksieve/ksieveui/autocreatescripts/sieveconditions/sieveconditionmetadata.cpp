@@ -24,6 +24,7 @@
 #include <QHBoxLayout>
 #include <QDebug>
 
+//TODO implement it
 using namespace KSieveUi;
 SieveConditionMetaData::SieveConditionMetaData(QObject *parent)
     : SieveCondition(QLatin1String("metadata"), i18n("Meta Data"), parent)
