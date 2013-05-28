@@ -67,4 +67,9 @@ QString SieveConditionServerMetaDataExists::serverNeedsCapability() const
     return QLatin1String("servermetadata");
 }
 
+QString SieveConditionServerMetaDataExists::help() const
+{
+    return i18n("The \"servermetadataexists\" test is true if all of the server annotations listed in the \"annotation-names\" argument exist.");
+}
+
 #include "sieveconditionservermetadataexists.moc"
