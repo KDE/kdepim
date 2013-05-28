@@ -29,6 +29,7 @@ public:
     ~SelectConvertParameterWidget();
 
     QString code() const;
+
 private:
     void initialize();
     QSpinBox *mWidth;
