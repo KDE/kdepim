@@ -95,7 +95,6 @@ void ManageThemes::slotDeleteTheme()
     }
 }
 
-
 void ManageThemes::initialize()
 {
     const QString localDirectory = KStandardDirs::locateLocal("data",QLatin1String("messageviewer/themes/"));
