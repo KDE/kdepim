@@ -20,11 +20,10 @@
 #include <KLocale>
 #include <KLineEdit>
 
-#include <QWidget>
 #include <QHBoxLayout>
+#include <QLabel>
 #include <QDebug>
 
-//TODO implement it
 using namespace KSieveUi;
 SieveConditionMetaDataExists::SieveConditionMetaDataExists(QObject *parent)
     : SieveCondition(QLatin1String("metadataexists"), i18n("Metadata exists"), parent)
@@ -43,13 +42,31 @@ QWidget *SieveConditionMetaDataExists::createParamWidget( QWidget *parent ) cons
     lay->setMargin(0);
     w->setLayout(lay);
 
+    QLabel *lab = new QLabel(i18n("Mailbox:"));
+    lay->addWidget(lab);
+
+    KLineEdit *mailbox = new KLineEdit;
+    mailbox->setObjectName(QLatin1String("mailbox"));
+    lay->addWidget(mailbox);
+
+    lab = new QLabel(i18n("Annotation:"));
+    lay->addWidget(lab);
+
+    KLineEdit *value = new KLineEdit;
+    value->setObjectName(QLatin1String("value"));
+    lay->addWidget(value);
+
     return w;
 }
 
 QString SieveConditionMetaDataExists::code(QWidget *w) const
 {
-    //TODO
-    return QString::fromLatin1("metadataexists");
+    const KLineEdit *mailbox = w->findChild<KLineEdit*>( QLatin1String("mailbox") );
+    const QString mailboxStr = mailbox->text();
+
+    const KLineEdit *value = w->findChild<KLineEdit*>( QLatin1String("value") );
+    const QString valueStr = value->text();
+    return QString::fromLatin1("metadataexists \"%1\" \"%2\";").arg(mailboxStr).arg(valueStr);
 }
 
 QStringList SieveConditionMetaDataExists::needRequires(QWidget *) const

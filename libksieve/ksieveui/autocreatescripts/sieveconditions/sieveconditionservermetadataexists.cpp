@@ -20,11 +20,10 @@
 #include <KLocale>
 #include <KLineEdit>
 
-#include <QWidget>
 #include <QHBoxLayout>
 #include <QDebug>
+#include <QLabel>
 
-//TODO implement it
 using namespace KSieveUi;
 SieveConditionServerMetaDataExists::SieveConditionServerMetaDataExists(QObject *parent)
     : SieveCondition(QLatin1String("servermetadataexists"), i18n("Server Meta Data Exists"), parent)
@@ -43,13 +42,21 @@ QWidget *SieveConditionServerMetaDataExists::createParamWidget( QWidget *parent 
     lay->setMargin(0);
     w->setLayout(lay);
 
+    QLabel *lab = new QLabel(i18n("Annotation:"));
+    lay->addWidget(lab);
+
+    KLineEdit *value = new KLineEdit;
+    value->setObjectName(QLatin1String("value"));
+    lay->addWidget(value);
+
     return w;
 }
 
 QString SieveConditionServerMetaDataExists::code(QWidget *w) const
 {
-    //TODO
-    return QString::fromLatin1("servermetadata;");
+    const KLineEdit *value = w->findChild<KLineEdit*>( QLatin1String("value") );
+    const QString valueStr = value->text();
+    return QString::fromLatin1("servermetadataexists \"%1\";").arg(valueStr);
 }
 
 QStringList SieveConditionServerMetaDataExists::needRequires(QWidget *) const
