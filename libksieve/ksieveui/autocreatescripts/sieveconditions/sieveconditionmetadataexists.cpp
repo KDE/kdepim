@@ -66,7 +66,7 @@ QString SieveConditionMetaDataExists::code(QWidget *w) const
 
     const KLineEdit *value = w->findChild<KLineEdit*>( QLatin1String("value") );
     const QString valueStr = value->text();
-    return QString::fromLatin1("metadataexists \"%1\" \"%2\";").arg(mailboxStr).arg(valueStr);
+    return QString::fromLatin1("metadataexists \"%1\" \"%2\"").arg(mailboxStr).arg(valueStr);
 }
 
 QStringList SieveConditionMetaDataExists::needRequires(QWidget *) const

@@ -62,7 +62,7 @@ QString SieveConditionCurrentDate::code(QWidget *w) const
     const SelectDateWidget *dateWidget = w->findChild<SelectDateWidget*>(QLatin1String("datewidget"));
     const QString dateWidgetStr = dateWidget->code();
 
-    return (isNegative ? QLatin1String("not ") : QString()) + QString::fromLatin1("currentdate %1  %3").arg(matchTypeStr).arg(dateWidgetStr);
+    return (isNegative ? QLatin1String("not ") : QString()) + QString::fromLatin1("currentdate %1 %2").arg(matchTypeStr).arg(dateWidgetStr);
 }
 
 bool SieveConditionCurrentDate::needCheckIfServerHasCapability() const

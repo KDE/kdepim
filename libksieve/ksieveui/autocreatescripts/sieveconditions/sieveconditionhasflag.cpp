@@ -80,7 +80,7 @@ QString SieveConditionHasFlag::code(QWidget *w) const
 
     const KLineEdit *value = w->findChild<KLineEdit*>(QLatin1String("value"));
     const QString valueStr = value->text();
-    result += valueStr + QLatin1Char(';');
+    result += valueStr;
     return result;
 }
 

@@ -93,7 +93,7 @@ QString SieveConditionMetaData::code(QWidget *w) const
     const KLineEdit *value = w->findChild<KLineEdit*>( QLatin1String("value"));
     const QString valueStr = value->text();
 
-    result += QString::fromLatin1("\"%1\";").arg(valueStr);
+    result += QString::fromLatin1("\"%1\"").arg(valueStr);
     return result;
 }
 

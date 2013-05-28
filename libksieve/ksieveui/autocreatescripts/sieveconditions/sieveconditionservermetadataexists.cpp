@@ -56,7 +56,7 @@ QString SieveConditionServerMetaDataExists::code(QWidget *w) const
 {
     const KLineEdit *value = w->findChild<KLineEdit*>( QLatin1String("value") );
     const QString valueStr = value->text();
-    return QString::fromLatin1("servermetadataexists \"%1\";").arg(valueStr);
+    return QString::fromLatin1("servermetadataexists \"%1\"").arg(valueStr);
 }
 
 QStringList SieveConditionServerMetaDataExists::needRequires(QWidget *) const
