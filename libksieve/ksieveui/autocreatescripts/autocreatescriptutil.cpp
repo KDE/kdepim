@@ -79,3 +79,9 @@ QString AutoCreateScriptUtil::createAddressList(const QString &str)
 {
     return createList(str, QLatin1Char(';'));
 }
+
+
+QString AutoCreateScriptUtil::negativeString(bool isNegative)
+{
+    return (isNegative ? QLatin1String("not ") : QString());
+}

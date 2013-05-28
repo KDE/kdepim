@@ -18,6 +18,7 @@
 #include "sieveconditionbody.h"
 #include "widgets/selectbodytypewidget.h"
 #include "autocreatescripts/commonwidgets/selectmatchtypecombobox.h"
+#include "autocreatescripts/autocreatescriptutil_p.h"
 
 #include <KLocale>
 #include <KLineEdit>
@@ -71,7 +72,7 @@ QString SieveConditionBody::code(QWidget *w) const
 
     KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("edit"));
     const QString editValue = edit->text();
-    return (isNegative ? QLatin1String("not ") : QString()) + QString::fromLatin1("body %1 %2 \"%3\"").arg(bodyValue).arg(matchValue).arg(editValue);
+    return AutoCreateScriptUtil::negativeString(isNegative) + QString::fromLatin1("body %1 %2 \"%3\"").arg(bodyValue).arg(matchValue).arg(editValue);
 }
 
 QStringList SieveConditionBody::needRequires(QWidget *) const

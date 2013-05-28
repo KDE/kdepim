@@ -17,7 +17,7 @@
 
 #include "sieveconditionhasflag.h"
 #include "autocreatescripts/commonwidgets/selectmatchtypecombobox.h"
-
+#include "autocreatescripts/autocreatescriptutil_p.h"
 #include <KLocale>
 #include <KLineEdit>
 
@@ -70,7 +70,7 @@ QString SieveConditionHasFlag::code(QWidget *w) const
     bool isNegative = false;
     const QString matchString = matchTypeCombo->code(isNegative);
 
-    QString result = (isNegative ? QLatin1String("not ") : QString()) + QString::fromLatin1("hasflag %1").arg(matchString);
+    QString result = AutoCreateScriptUtil::negativeString(isNegative) + QString::fromLatin1("hasflag %1").arg(matchString);
 
     const KLineEdit *variableName = w->findChild<KLineEdit*>(QLatin1String("variablename"));
     const QString variableNameStr = variableName->text();

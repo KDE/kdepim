@@ -17,6 +17,7 @@
 
 #include "sieveconditioncurrentdate.h"
 #include "autocreatescripts/commonwidgets/selectmatchtypecombobox.h"
+#include "autocreatescripts/autocreatescriptutil_p.h"
 #include "widgets/selectdatewidget.h"
 
 #include <KLocale>
@@ -62,7 +63,7 @@ QString SieveConditionCurrentDate::code(QWidget *w) const
     const SelectDateWidget *dateWidget = w->findChild<SelectDateWidget*>(QLatin1String("datewidget"));
     const QString dateWidgetStr = dateWidget->code();
 
-    return (isNegative ? QLatin1String("not ") : QString()) + QString::fromLatin1("currentdate %1 %2").arg(matchTypeStr).arg(dateWidgetStr);
+    return AutoCreateScriptUtil::negativeString(isNegative) + QString::fromLatin1("currentdate %1 %2").arg(matchTypeStr).arg(dateWidgetStr);
 }
 
 bool SieveConditionCurrentDate::needCheckIfServerHasCapability() const

@@ -16,6 +16,7 @@
 */
 
 #include "sieveconditionmetadata.h"
+#include "autocreatescripts/autocreatescriptutil_p.h"
 #include "autocreatescripts/commonwidgets/selectmatchtypecombobox.h"
 
 #include <KLocale>
@@ -77,7 +78,7 @@ QString SieveConditionMetaData::code(QWidget *w) const
     bool isNegative = false;
     const QString matchString = selectType->code(isNegative);
 
-    QString result = (isNegative ? QLatin1String("not ") : QString()) + QString::fromLatin1("metadata %1 ").arg(matchString);
+    QString result = AutoCreateScriptUtil::negativeString(isNegative) + QString::fromLatin1("metadata %1 ").arg(matchString);
 
 
     const KLineEdit *mailbox = w->findChild<KLineEdit*>( QLatin1String("mailbox"));

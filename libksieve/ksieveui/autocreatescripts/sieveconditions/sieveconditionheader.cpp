@@ -17,6 +17,7 @@
 
 #include "sieveconditionheader.h"
 #include "autocreatescripts/commonwidgets/selectmatchtypecombobox.h"
+#include "autocreatescripts/autocreatescriptutil_p.h"
 #include "widgets/selectheadertypecombobox.h"
 
 #include <KLocale>
@@ -74,7 +75,7 @@ QString SieveConditionHeader::code(QWidget *w) const
     const KLineEdit *value = w->findChild<KLineEdit*>( QLatin1String("value") );
     const QString valueStr = value->text();
 
-    return (isNegative ? QLatin1String("not ") : QString()) + QString::fromLatin1("header %1 %2 \"%3\"").arg(matchString).arg(headerStr).arg(valueStr);
+    return AutoCreateScriptUtil::negativeString(isNegative) + QString::fromLatin1("header %1 %2 \"%3\"").arg(matchString).arg(headerStr).arg(valueStr);
 }
 
 QString SieveConditionHeader::help() const
