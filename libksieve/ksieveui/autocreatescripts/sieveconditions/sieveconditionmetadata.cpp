@@ -67,4 +67,9 @@ QString SieveConditionMetaData::serverNeedsCapability() const
     return QLatin1String("mboxmetadata");
 }
 
+QString SieveConditionMetaData::help() const
+{
+    return i18n("This test retrieves the value of the mailbox annotation \"annotation-name\" for the mailbox \"mailbox\". The retrieved value is compared to the \"key-list\". The test returns true if the annotation exists and its value matches any of the keys.");
+}
+
 #include "sieveconditionmetadata.moc"
