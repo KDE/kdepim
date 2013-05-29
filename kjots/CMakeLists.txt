@@ -106,6 +106,7 @@ set(kjots_SRCS
    KJotsMain.cpp
    ${kjots_common_SRCS}
 )
+kde4_add_app_icon(kjots_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/icons/hi*-apps-kjots.png")
 
 kde4_add_executable(kjots ${kjots_SRCS})
 
