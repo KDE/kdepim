@@ -30,7 +30,7 @@ set(libmailcommon_SRCS
   entitycollectionorderproxymodel.cpp
   expirecollectionattribute.cpp
   expirejob.cpp
-  favoritecollectionwidget.cpp
+  widgets/favoritecollectionwidget.cpp
   filter/filteraction.cpp
   filter/filteractionaddheader.cpp
   filter/filteractionaddtag.cpp
@@ -96,7 +96,7 @@ set(libmailcommon_SRCS
   jobscheduler.cpp
   mailkernel.cpp
   mailutil.cpp
-  redirectdialog.cpp
+  widgets/redirectdialog.cpp
   regexplineedit.cpp
   rulewidgethandlermanager.cpp
   searchpattern.cpp
