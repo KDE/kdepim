@@ -20,7 +20,7 @@
 #include "filteractionrewriteheader.h"
 
 #include "widgets/regexplineedit.h"
-#include <pimcommon/minimumcombobox.h>
+#include <pimcommon/widgets/minimumcombobox.h>
 
 #include <KDE/KLineEdit>
 #include <KDE/KLocale>

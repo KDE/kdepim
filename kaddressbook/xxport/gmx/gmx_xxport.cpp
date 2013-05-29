@@ -78,7 +78,7 @@
 */
 
 #include "gmx_xxport.h"
-#include "pimcommon/renamefiledialog.h"
+#include "pimcommon/widgets/renamefiledialog.h"
 
 #include <KCodecs>
 #include <KDebug>

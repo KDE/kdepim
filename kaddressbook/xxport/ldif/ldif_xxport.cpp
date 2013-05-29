@@ -35,7 +35,7 @@
 
 #include "ldif_xxport.h"
 
-#include "pimcommon/renamefiledialog.h"
+#include "pimcommon/widgets/renamefiledialog.h"
 
 #include <KABC/LDIFConverter>
 

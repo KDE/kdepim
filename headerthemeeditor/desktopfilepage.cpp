@@ -17,7 +17,7 @@
 
 
 #include "desktopfilepage.h"
-#include "pimcommon/simplestringlisteditor.h"
+#include "pimcommon/widgets/simplestringlisteditor.h"
 
 #include <KLineEdit>
 #include <KLocale>

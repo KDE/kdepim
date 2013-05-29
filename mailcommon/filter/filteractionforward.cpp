@@ -23,7 +23,7 @@
 #include "../mailutil.h"
 #include "filteractionmissingargumentdialog.h"
 
-#include <pimcommon/minimumcombobox.h>
+#include <pimcommon/widgets/minimumcombobox.h>
 #include <messagecomposer/messagefactory.h>
 #include <messagecomposer/messagesender.h>
 #include <messagecore/emailaddressrequester.h>

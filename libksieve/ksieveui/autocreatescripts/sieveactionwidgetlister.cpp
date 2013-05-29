@@ -19,7 +19,7 @@
 #include "autocreatescriptdialog.h"
 #include "sieveactions/sieveaction.h"
 #include "sieveactions/sieveactionlist.h"
-#include "pimcommon/minimumcombobox.h"
+#include "pimcommon/widgets/minimumcombobox.h"
 
 #include <KPushButton>
 #include <KDialog>

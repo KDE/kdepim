@@ -19,7 +19,7 @@
 
 #include "filteractionaddheader.h"
 
-#include <pimcommon/minimumcombobox.h>
+#include <pimcommon/widgets/minimumcombobox.h>
 
 #include <KLineEdit>
 #include <KLocale>

@@ -12,15 +12,15 @@ set(libpimcommon_SRCS
   acl/imapaclattribute.cpp
   createresource.cpp
   pimutil.cpp
-  minimumcombobox.cpp
+  widgets/minimumcombobox.cpp
   translator/translatorutil.cpp
   translator/translatorwidget.cpp
   translator/abstracttranslator.cpp
   #Laurent: disable it we can't use it directly now
   #translator/babelfishtranslator.cpp
   translator/googletranslator.cpp
-  renamefiledialog.cpp
-  simplestringlisteditor.cpp
+  widgets/renamefiledialog.cpp
+  widgets/simplestringlisteditor.cpp
   templatewidgets/templatelistwidget.cpp
   templatewidgets/templateeditdialog.cpp
 )

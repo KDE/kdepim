@@ -19,7 +19,7 @@
 
 #include "vcard_xxport.h"
 
-#include "pimcommon/renamefiledialog.h"
+#include "pimcommon/widgets/renamefiledialog.h"
 
 #include <Akonadi/Contact/ContactViewer>
 
