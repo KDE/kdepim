@@ -23,7 +23,7 @@
 
 #include "messagecomposer_export.h"
 #include "messagesender.h"
-#include "recipient.h"
+#include "messagecomposer/recipient/recipient.h"
 
 #include <akonadi/collection.h>
 #include <KDE/KMime/Message>
