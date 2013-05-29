@@ -10,6 +10,7 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/tag/
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_SOURCE_DIR}/snippets
+  ${CMAKE_CURRENT_SOURCE_DIR}/folder
   ${SOPRANO_INCLUDE_DIR}
   ${NEPOMUK_CORE_INCLUDE_DIR}
 )
@@ -84,14 +85,14 @@ set(libmailcommon_SRCS
   filter/selectthunderbirdfilterfilesdialog.cpp
   filter/selectthunderbirdfilterfileswidget.cpp
   filter/mdnadvicedialog.cpp
-  foldercollection.cpp
-  foldercollectionmonitor.cpp
+  folder/foldercollection.cpp
+  folder/foldercollectionmonitor.cpp
   folderjob.cpp
-  folderrequester.cpp
-  folderselectiondialog.cpp
-  foldertreeview.cpp
-  foldertreewidget.cpp
-  foldertreewidgetproxymodel.cpp
+  folder/folderrequester.cpp
+  folder/folderselectiondialog.cpp
+  folder/foldertreeview.cpp
+  folder/foldertreewidget.cpp
+  folder/foldertreewidgetproxymodel.cpp
   jobscheduler.cpp
   mailkernel.cpp
   mailutil.cpp

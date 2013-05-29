@@ -15,7 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 #include "addarchivemaildialog.h"
-#include "mailcommon/folderrequester.h"
+#include "mailcommon/folder/folderrequester.h"
 
 #include <Akonadi/Collection>
 
