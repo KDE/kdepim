@@ -165,11 +165,11 @@ void ThemeEditorPage::uploadTheme()
         const QString previewFileName = tmp.name() + QDir::separator() + themename + QLatin1String("_preview.png");
         //qDebug()<<" previewFileName"<<previewFileName;
         mEditorPage->preview()->createScreenShot(previewFileName);
+
         const bool fileAdded  = zip->addLocalFile(previewFileName, themename + QLatin1Char('/') + QLatin1String("theme_preview.png"));
         if (!fileAdded) {
             KMessageBox::error(this, i18n("We can not add preview file in zip file"), i18n("Failed to add file."));
         }
-
 
         createZip(themename, zip);
         zip->close();
@@ -187,7 +187,6 @@ void ThemeEditorPage::uploadTheme()
         kDebug()<<" We can't open in zip write mode";
     }
     delete zip;
-
 }
 
 void ThemeEditorPage::createZip(const QString &themeName, KZip *zip)
