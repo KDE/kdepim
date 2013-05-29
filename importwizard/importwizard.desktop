@@ -1,26 +1,5 @@
 [Desktop Entry]
-Name=Import Wizard
-Name[cs]=Průvodce importem
-Name[de]=Import-Assistent
-Name[el]=Οδηγός εισαγωγής
-Name[es]=Asistente de importación
-Name[fi]=Opastettu tuonti
-Name[fr]=Assistant d'import de compte
-Name[ia]=Assistente de Importar 
-Name[lt]=&Importavimo vediklis...
-Name[nb]=Importveiviser
-Name[nl]=Assistent voor importeren
-Name[pt]=Assistente de Importação
-Name[pt_BR]=Assistente de importação
-Name[sk]=Sprievodca importom
-Name[sr]=Чаробњак за увоз
-Name[sr@ijekavian]=Чаробњак за увоз
-Name[sr@ijekavianlatin]=Čarobnjak za uvoz
-Name[sr@latin]=Čarobnjak za uvoz
-Name[sv]=Importguide
-Name[uk]=Майстер імпортування
-Name[x-test]=xxImport Wizardxx
-Name[zh_TW]=匯入精靈
+Name=KMail Import Wizard
 Exec=importwizard
 Type=Application
 Icon=kontact-import-wizard
