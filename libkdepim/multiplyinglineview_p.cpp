@@ -180,7 +180,8 @@ void MultiplyingLineView::slotDeleteLine()
   line->setParent( 0 );
   line->deleteLater();
 
-  emit lineDeleted( pos );
+  if( pos > 0 )
+    emit lineDeleted( pos );
 
   resizeView();
 }
