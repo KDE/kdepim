@@ -180,3 +180,17 @@ install(TARGETS mailcommon ${INSTALL_TARGETS_DEFAULT_ARGS})
 add_subdirectory(filter/filterimporter/tests)
 
 #install(FILES viewer.h attachmentstrategy.h headerstrategy.h messageviewer_export.h DESTINATION ${INCLUDE_INSTALL_DIR}/messageviewer COMPONENT devel)
+
+if (QT_QTDESIGNER_FOUND)
+  set(mailcommonwidgets_PART_SRCS)
+  kde4_add_widget_files(mailcommonwidgets_PART_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/mailcommon.widgets)
+
+  kde4_add_plugin(mailcommonwidgets ${mailcommonwidgets_PART_SRCS})
+
+
+  target_link_libraries(mailcommonwidgets  ${KDE4_KIO_LIBS} mailcommon)
+
+  install(TARGETS mailcommonwidgets  DESTINATION ${PLUGIN_INSTALL_DIR}/plugins/designer)
+endif ()
+
+
