@@ -1,4 +1,14 @@
 
+Wednesday 10 April 2013
+
+Problems addressed
+------------------
+
+* kolab/issue4251: Wish for option: Remove own Identities from reply list for reply to all (rt#10097)
+* kolab/issue4796: Use folder-specific sender-identity as organizer-identity for new events/to-dos (rt#10104)
+
+
+
 Friday 16 November 2012
 
 Problems addressed
