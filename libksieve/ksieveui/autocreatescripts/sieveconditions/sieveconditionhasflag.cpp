@@ -16,16 +16,15 @@
 */
 
 #include "sieveconditionhasflag.h"
-
+#include "autocreatescripts/commonwidgets/selectmatchtypecombobox.h"
+#include "autocreatescripts/autocreatescriptutil_p.h"
 #include <KLocale>
 #include <KLineEdit>
 
 #include <QWidget>
 #include <QHBoxLayout>
 #include <QDebug>
-
-
-//TODO need implement
+#include <QLabel>
 
 using namespace KSieveUi;
 SieveConditionHasFlag::SieveConditionHasFlag(QObject *parent)
@@ -44,14 +43,45 @@ QWidget *SieveConditionHasFlag::createParamWidget( QWidget *parent ) const
     QHBoxLayout *lay = new QHBoxLayout;
     lay->setMargin(0);
     w->setLayout(lay);
+    SelectMatchTypeComboBox *selecttype = new SelectMatchTypeComboBox;
+    selecttype->setObjectName(QLatin1String("matchtype"));
+    lay->addWidget(selecttype);
+
+    QLabel *lab = new QLabel(i18n("Variable name (if empty it uses internal variable):"));
+    lay->addWidget(lab);
+
+    KLineEdit *variableName = new KLineEdit;
+    variableName->setObjectName(QLatin1String("variablename"));
+    lay->addWidget(variableName);
+
+    lab = new QLabel(i18n("Value:"));
+    lay->addWidget(lab);
+
+    KLineEdit *value = new KLineEdit;
+    value->setObjectName(QLatin1String("value"));
+    lay->addWidget(value);
 
     return w;
 }
 
 QString SieveConditionHasFlag::code(QWidget *w) const
 {
-    //TODO
-    return QString::fromLatin1("hasflag");
+    const SelectMatchTypeComboBox *matchTypeCombo = w->findChild<SelectMatchTypeComboBox*>( QLatin1String("matchtype") );
+    bool isNegative = false;
+    const QString matchString = matchTypeCombo->code(isNegative);
+
+    QString result = AutoCreateScriptUtil::negativeString(isNegative) + QString::fromLatin1("hasflag %1").arg(matchString);
+
+    const KLineEdit *variableName = w->findChild<KLineEdit*>(QLatin1String("variablename"));
+    const QString variableNameStr = variableName->text();
+    if (!variableNameStr.isEmpty()) {
+        result += variableNameStr + QLatin1Char(' ');
+    }
+
+    const KLineEdit *value = w->findChild<KLineEdit*>(QLatin1String("value"));
+    const QString valueStr = value->text();
+    result += valueStr;
+    return result;
 }
 
 QStringList SieveConditionHasFlag::needRequires(QWidget *) const

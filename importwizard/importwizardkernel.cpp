@@ -20,7 +20,7 @@
 #include <kglobal.h>
 #include <kpimidentities/identitymanager.h>
 #include <messagecomposer/akonadisender.h>
-#include <mailcommon/foldercollectionmonitor.h>
+#include <mailcommon/folder/foldercollectionmonitor.h>
 #include <akonadi/session.h>
 #include <akonadi/entitytreemodel.h>
 #include <akonadi/entitymimetypefiltermodel.h>

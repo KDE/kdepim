@@ -30,6 +30,7 @@ public:
 
     QString code(bool &negative) const;
     bool isNegative() const;
+
 private:
     void initialize();
 };

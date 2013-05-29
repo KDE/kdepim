@@ -97,7 +97,7 @@ void SendLaterJob::sendDone()
     const QPixmap pixmap = KIcon( QLatin1String("kmail") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
 
     KNotification::event( QLatin1String("mailsend"),
-                          QString(), /*TODO*/
+                          i18n("Message sent"),
                           pixmap,
                           0,
                           KNotification::CloseOnTimeout,

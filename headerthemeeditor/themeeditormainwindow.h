@@ -50,6 +50,7 @@ private Q_SLOTS:
     void slotManageTheme();
 
 private:
+    void readConfig();
     void updateActions();
     bool saveCurrentProject(bool createNewTheme);
     void setupActions();

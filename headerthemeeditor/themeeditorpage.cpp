@@ -162,13 +162,18 @@ void ThemeEditorPage::uploadTheme()
     const QString zipFileName = tmp.name() + QDir::separator() + themename + QLatin1String(".zip");
     KZip *zip = new KZip(zipFileName);
     if (zip->open(QIODevice::WriteOnly)) {
-        createZip(themename, zip);
-        zip->close();
-        //qDebug()<< "zipFilename"<<zipFileName;
-
         const QString previewFileName = tmp.name() + QDir::separator() + themename + QLatin1String("_preview.png");
         //qDebug()<<" previewFileName"<<previewFileName;
         mEditorPage->preview()->createScreenShot(previewFileName);
+
+        const bool fileAdded  = zip->addLocalFile(previewFileName, themename + QLatin1Char('/') + QLatin1String("theme_preview.png"));
+        if (!fileAdded) {
+            KMessageBox::error(this, i18n("We can not add preview file in zip file"), i18n("Failed to add file."));
+        }
+
+        createZip(themename, zip);
+        zip->close();
+        //qDebug()<< "zipFilename"<<zipFileName;
 
         QPointer<KNS3::UploadDialog> dialog = new KNS3::UploadDialog(QLatin1String("messageviewer_header_themes.knsrc"), this);
         dialog->setUploadFile(zipFileName);
@@ -182,7 +187,6 @@ void ThemeEditorPage::uploadTheme()
         kDebug()<<" We can't open in zip write mode";
     }
     delete zip;
-
 }
 
 void ThemeEditorPage::createZip(const QString &themeName, KZip *zip)

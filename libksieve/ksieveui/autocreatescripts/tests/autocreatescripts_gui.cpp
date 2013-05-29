@@ -59,6 +59,7 @@ int main (int argc, char **argv)
             <<QLatin1String("convert")
             <<QLatin1String("foreverypart")
             <<QLatin1String("variables")
+            <<QLatin1String("servermetadata")
             <<QLatin1String("comparator-i;ascii-numeric");
     dialog->setSieveCapabilities(capabilities);
     if (dialog->exec() ) {

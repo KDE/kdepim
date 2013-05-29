@@ -10,6 +10,7 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/tag/
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_SOURCE_DIR}/snippets
+  ${CMAKE_CURRENT_SOURCE_DIR}/folder
   ${SOPRANO_INCLUDE_DIR}
   ${NEPOMUK_CORE_INCLUDE_DIR}
 )
@@ -84,14 +85,14 @@ set(libmailcommon_SRCS
   filter/selectthunderbirdfilterfilesdialog.cpp
   filter/selectthunderbirdfilterfileswidget.cpp
   filter/mdnadvicedialog.cpp
-  foldercollection.cpp
-  foldercollectionmonitor.cpp
+  folder/foldercollection.cpp
+  folder/foldercollectionmonitor.cpp
   folderjob.cpp
-  folderrequester.cpp
-  folderselectiondialog.cpp
-  foldertreeview.cpp
-  foldertreewidget.cpp
-  foldertreewidgetproxymodel.cpp
+  folder/folderrequester.cpp
+  folder/folderselectiondialog.cpp
+  folder/foldertreeview.cpp
+  folder/foldertreewidget.cpp
+  folder/foldertreewidgetproxymodel.cpp
   jobscheduler.cpp
   mailkernel.cpp
   mailutil.cpp
@@ -124,7 +125,7 @@ qt4_add_dbus_interfaces(libmailcommon_SRCS
   ${CMAKE_SOURCE_DIR}/mailfilteragent/org.freedesktop.Akonadi.MailFilterAgent.xml
 )
 
-kde4_add_ui_files(libmailcommon_SRCS filter/filterconfigwidget.ui snippets/snippetdialog.ui filter/selectthunderbirdfilterfileswidget.ui)
+kde4_add_ui_files(libmailcommon_SRCS filter/ui/filterconfigwidget.ui snippets/ui/snippetdialog.ui filter/ui/selectthunderbirdfilterfileswidget.ui)
 
 if(NOT WINCE)
   set(libmailcommon_SRCS ${libmailcommon_SRCS} filter/soundtestwidget.cpp)
@@ -180,3 +181,17 @@ install(TARGETS mailcommon ${INSTALL_TARGETS_DEFAULT_ARGS})
 add_subdirectory(filter/filterimporter/tests)
 
 #install(FILES viewer.h attachmentstrategy.h headerstrategy.h messageviewer_export.h DESTINATION ${INCLUDE_INSTALL_DIR}/messageviewer COMPONENT devel)
+
+if (QT_QTDESIGNER_FOUND)
+  set(mailcommonwidgets_PART_SRCS)
+  kde4_add_widget_files(mailcommonwidgets_PART_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/mailcommon.widgets)
+
+  kde4_add_plugin(mailcommonwidgets ${mailcommonwidgets_PART_SRCS})
+
+
+  target_link_libraries(mailcommonwidgets  ${KDE4_KIO_LIBS} mailcommon)
+
+  install(TARGETS mailcommonwidgets  DESTINATION ${PLUGIN_INSTALL_DIR}/plugins/designer)
+endif ()
+
+

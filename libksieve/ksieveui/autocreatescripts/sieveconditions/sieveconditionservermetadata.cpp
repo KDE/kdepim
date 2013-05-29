@@ -15,35 +15,35 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "sieveconditionmetadata.h"
-#include "autocreatescripts/autocreatescriptutil_p.h"
+#include "sieveconditionservermetadata.h"
 #include "autocreatescripts/commonwidgets/selectmatchtypecombobox.h"
 
 #include <KLocale>
 #include <KLineEdit>
 
 #include <QWidget>
-#include <QLabel>
 #include <QHBoxLayout>
 #include <QDebug>
+#include <QLabel>
 
 using namespace KSieveUi;
-SieveConditionMetaData::SieveConditionMetaData(QObject *parent)
-    : SieveCondition(QLatin1String("metadata"), i18n("Meta Data"), parent)
+SieveConditionServerMetaData::SieveConditionServerMetaData(QObject *parent)
+    : SieveCondition(QLatin1String("servermetadata"), i18n("Server Meta Data"), parent)
 {
 }
 
-SieveCondition *SieveConditionMetaData::newAction()
+SieveCondition *SieveConditionServerMetaData::newAction()
 {
-    return new SieveConditionMetaData;
+    return new SieveConditionServerMetaData;
 }
 
-QWidget *SieveConditionMetaData::createParamWidget( QWidget *parent ) const
+QWidget *SieveConditionServerMetaData::createParamWidget( QWidget *parent ) const
 {
     QWidget *w = new QWidget(parent);
     QHBoxLayout *lay = new QHBoxLayout;
     lay->setMargin(0);
     w->setLayout(lay);
+
     SelectMatchTypeComboBox *selectType = new SelectMatchTypeComboBox;
     selectType->setObjectName(QLatin1String("selecttype"));
     lay->addWidget(selectType);
@@ -72,13 +72,13 @@ QWidget *SieveConditionMetaData::createParamWidget( QWidget *parent ) const
     return w;
 }
 
-QString SieveConditionMetaData::code(QWidget *w) const
+QString SieveConditionServerMetaData::code(QWidget *w) const
 {
     const SelectMatchTypeComboBox *selectType = w->findChild<SelectMatchTypeComboBox*>( QLatin1String("selecttype"));
     bool isNegative = false;
     const QString matchString = selectType->code(isNegative);
 
-    QString result = AutoCreateScriptUtil::negativeString(isNegative) + QString::fromLatin1("metadata %1 ").arg(matchString);
+    QString result = (isNegative ? QLatin1String("not ") : QString()) + QString::fromLatin1("servermetadata %1 ").arg(matchString);
 
 
     const KLineEdit *mailbox = w->findChild<KLineEdit*>( QLatin1String("mailbox"));
@@ -98,24 +98,24 @@ QString SieveConditionMetaData::code(QWidget *w) const
     return result;
 }
 
-QStringList SieveConditionMetaData::needRequires(QWidget *) const
+QStringList SieveConditionServerMetaData::needRequires(QWidget *) const
 {
-    return QStringList() << QLatin1String("mboxmetadata");
+    return QStringList() << QLatin1String("servermetadata");
 }
 
-bool SieveConditionMetaData::needCheckIfServerHasCapability() const
+bool SieveConditionServerMetaData::needCheckIfServerHasCapability() const
 {
     return true;
 }
 
-QString SieveConditionMetaData::serverNeedsCapability() const
+QString SieveConditionServerMetaData::serverNeedsCapability() const
 {
-    return QLatin1String("mboxmetadata");
+    return QLatin1String("servermetadata");
 }
 
-QString SieveConditionMetaData::help() const
+QString SieveConditionServerMetaData::help() const
 {
-    return i18n("This test retrieves the value of the mailbox annotation \"annotation-name\" for the mailbox \"mailbox\". The retrieved value is compared to the \"key-list\". The test returns true if the annotation exists and its value matches any of the keys.");
+    return i18n("This test retrieves the value of the server annotation \"annotation-name\".  The retrieved value is compared to the \"key-list\". The test returns true if the annotation exists and its value matches any of the keys.");
 }
 
-#include "sieveconditionmetadata.moc"
+#include "sieveconditionservermetadata.moc"

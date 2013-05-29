@@ -44,22 +44,22 @@ namespace KPIM {
 class KDEPIM_EXPORT RecentAddressDialog : public KDialog
 {
     Q_OBJECT
-  public:
+public:
     explicit RecentAddressDialog( QWidget *parent );
     void setAddresses( const QStringList &addrs );
     QStringList addresses() const;
     void addAddresses(KConfig *config);
 
-  private slots:
+private slots:
     void slotAddItem();
     void slotRemoveItem();
     void slotSelectionChanged();
     void slotTypedSomething(const QString&);
-  protected:
+protected:
     void updateButtonState();
     bool eventFilter( QObject* o, QEvent* e );
 
-  private:
+private:
     KPushButton* mNewButton, *mRemoveButton;
     QListWidget *mListView;
     KLineEdit *mLineEdit;
@@ -74,7 +74,7 @@ class KDEPIM_EXPORT RecentAddressDialog : public KDialog
 
 class KDEPIM_EXPORT RecentAddresses
 {
-  public:
+public:
     ~RecentAddresses();
     /**
      * @returns the only possible instance of this class.
@@ -130,7 +130,7 @@ class KDEPIM_EXPORT RecentAddresses
      */
     void clear();
 
-  private:
+private:
     explicit RecentAddresses( KConfig *config = 0 );
 
     KABC::Addressee::List m_addresseeList;

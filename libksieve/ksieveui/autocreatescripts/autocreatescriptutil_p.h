@@ -30,6 +30,7 @@ QString createList(const QString &str, const QChar &separator);
 QString createList(const QStringList &lst);
 QStringList createListFromString(QString str);
 QString createAddressList(const QString &str);
+QString negativeString(bool isNegative);
 }
 
 #endif // AUTOCREATESCRIPTUTIL_H

@@ -44,7 +44,7 @@ ComposerAutoCorrectionLanguage::~ComposerAutoCorrectionLanguage()
 
 QString ComposerAutoCorrectionLanguage::language() const
 {
-    return itemData ( currentIndex() ).toString();
+    return itemData(currentIndex()).toString();
 }
 
 void ComposerAutoCorrectionLanguage::setLanguage(const QString &language)

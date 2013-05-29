@@ -47,15 +47,7 @@ ThemeEditorMainWindow::ThemeEditorMainWindow()
     setupGUI();
     updateActions();
     updateActions();
-    KSharedConfig::Ptr config = KGlobal::config();
-    KConfigGroup group = KConfigGroup( config, "ThemeEditorMainWindow" );
-    const QSize sizeDialog = group.readEntry( "Size", QSize() );
-    if ( sizeDialog.isValid() ) {
-        resize( sizeDialog );
-    } else {
-        resize( 600,400);
-    }
-
+    readConfig();
 }
 
 ThemeEditorMainWindow::~ThemeEditorMainWindow()
@@ -64,6 +56,18 @@ ThemeEditorMainWindow::~ThemeEditorMainWindow()
 
     KConfigGroup group = config->group( QLatin1String("ThemeEditorMainWindow") );
     group.writeEntry( "Size", size() );
+}
+
+void ThemeEditorMainWindow::readConfig()
+{
+    KSharedConfig::Ptr config = KGlobal::config();
+    KConfigGroup group = KConfigGroup( config, "ThemeEditorMainWindow" );
+    const QSize sizeDialog = group.readEntry( "Size", QSize() );
+    if ( sizeDialog.isValid() ) {
+        resize( sizeDialog );
+    } else {
+        resize( 600,400);
+    }
 }
 
 void ThemeEditorMainWindow::updateActions()

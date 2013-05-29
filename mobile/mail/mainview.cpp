@@ -99,7 +99,7 @@
 #include <kselectionproxymodel.h>
 #include <kstandarddirs.h>
 #include <mailcommon/filter/filteraction.h>
-#include <mailcommon/foldercollection.h>
+#include <mailcommon/folder/foldercollection.h>
 #include <mailcommon/mailutil.h>
 #include <pimcommon/pimutil.h>
 #include <mailtransport/transportmanager.h>

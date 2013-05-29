@@ -15,24 +15,35 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef SELECTMIMETYPECOMBOBOX_H
-#define SELECTMIMETYPECOMBOBOX_H
+#ifndef SIEVECONDITIONSERVERMETADATA_H
+#define SIEVECONDITIONSERVERMETADATA_H
 
-#include <KComboBox>
+#include "sievecondition.h"
 
 namespace KSieveUi {
-class SelectMimeTypeComboBox : public KComboBox
+class SieveConditionServerMetaData : public SieveCondition
 {
     Q_OBJECT
 public:
-    explicit SelectMimeTypeComboBox(QWidget *parent = 0);
-    ~SelectMimeTypeComboBox();
+    SieveConditionServerMetaData(QObject *parent = 0);
 
-    QString code() const;
+    /**
+     * Static function that creates a filter action of this type.
+     */
+    static SieveCondition *newAction();
 
-private:
-    void initialize();
+    QWidget *createParamWidget( QWidget *parent ) const;
+
+    QString code(QWidget *parent) const;
+
+    QStringList needRequires(QWidget *parent) const;
+
+    bool needCheckIfServerHasCapability() const;
+
+    QString serverNeedsCapability() const;
+
+    QString help() const;
 };
 }
 
-#endif // SELECTMIMETYPECOMBOBOX_H
+#endif // SIEVECONDITIONSERVERMETADATA_H

@@ -952,11 +952,7 @@ void TodoView::setNewDate( const QDate &date )
       dt.setTime( todo->dtDue().time() );
     }
 
-    if ( date.isNull() ) {
-      todo->setHasDueDate( false );
-    } else {
-      todo->setDtDue( dt );
-    }
+    todo->setDtDue( dt );
 
     changer()->modifyIncidence( todoItem, oldTodo, this );
   } else {
