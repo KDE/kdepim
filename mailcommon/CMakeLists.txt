@@ -124,7 +124,7 @@ qt4_add_dbus_interfaces(libmailcommon_SRCS
   ${CMAKE_SOURCE_DIR}/mailfilteragent/org.freedesktop.Akonadi.MailFilterAgent.xml
 )
 
-kde4_add_ui_files(libmailcommon_SRCS filter/filterconfigwidget.ui snippets/snippetdialog.ui filter/selectthunderbirdfilterfileswidget.ui)
+kde4_add_ui_files(libmailcommon_SRCS filter/ui/filterconfigwidget.ui snippets/ui/snippetdialog.ui filter/ui/selectthunderbirdfilterfileswidget.ui)
 
 if(NOT WINCE)
   set(libmailcommon_SRCS ${libmailcommon_SRCS} filter/soundtestwidget.cpp)
