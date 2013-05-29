@@ -6,6 +6,9 @@ Problems addressed
 
 * kolab/issue4251: Wish for option: Remove own Identities from reply list for reply to all (rt#10097)
 * kolab/issue4796: Use folder-specific sender-identity as organizer-identity for new events/to-dos (rt#10104)
+* kolab/issue4861: Add option to filter for "matches all of the selected categories" in Kaddressbook
+* kolab/issue4862: Crash on mail with empty Content-Disposition Header
+* kolab/issue4863: Kleopatra key generation wizard defaults to 1024 bits instead of 2048
 
 
 
