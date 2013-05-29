@@ -97,7 +97,7 @@ set(libmailcommon_SRCS
   mailkernel.cpp
   mailutil.cpp
   widgets/redirectdialog.cpp
-  regexplineedit.cpp
+  widgets/regexplineedit.cpp
   rulewidgethandlermanager.cpp
   searchpattern.cpp
   searchpatternedit.cpp

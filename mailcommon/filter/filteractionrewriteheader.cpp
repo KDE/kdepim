@@ -19,7 +19,7 @@
 
 #include "filteractionrewriteheader.h"
 
-#include "../regexplineedit.h"
+#include "widgets/regexplineedit.h"
 #include <pimcommon/minimumcombobox.h>
 
 #include <KDE/KLineEdit>
