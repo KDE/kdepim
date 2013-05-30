@@ -6,6 +6,7 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/libkdepim
     ${CMAKE_SOURCE_DIR}/libkleo
     ${CMAKE_SOURCE_DIR}/messagecore
+    ${CMAKE_SOURCE_DIR}/messagecomposer/recipient/
 )
 
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
@@ -51,11 +52,13 @@ set( messagecomposer_src
      inserttextfilejob.cpp
      signaturecontroller.cpp
      composerlineedit.cpp
-     recipientspicker.cpp
-     recipient.cpp
-     recipientline.cpp
-     recipientseditor.cpp
-     recipientseditorsidewidget.cpp
+
+     recipient/recipientspicker.cpp
+     recipient/recipient.cpp
+     recipient/recipientline.cpp
+     recipient/recipientseditor.cpp
+     recipient/recipientseditorsidewidget.cpp
+
      kwindowpositioner.cpp
 
      aliasesexpandjob.cpp

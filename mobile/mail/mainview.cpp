@@ -41,7 +41,7 @@
 #include "mailcommon/collectionexpirypage.h"
 #include "mailcommon/filter/filtermanager.h"
 #include "mailcommon/mailkernel.h"
-#include "mailcommon/redirectdialog.h"
+#include "mailcommon/widgets/redirectdialog.h"
 #include "mailcommon/sendmdnhandler.h"
 #include "mailthreadgroupercomparator.h"
 #include "messagecomposer/messagehelper.h"

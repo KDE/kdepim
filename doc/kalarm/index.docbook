@@ -42,7 +42,7 @@
 <!-- Don't change format of date and version of the documentation -->
 
 <date>2013-05-28</date>
-<releaseinfo>2.10.00 (&kde; 4.10)</releaseinfo>
+<releaseinfo>2.10.03 (&kde; 4.11)</releaseinfo>
 
 <abstract>
 <para>&kalarm; is a personal alarm message, command and email scheduler for &kde;.</para>

@@ -21,7 +21,6 @@ class SendLaterInfo;
 namespace SendLaterUtil
 {
     void checkTime(SendLaterInfo *info);
-    bool mailWillSendToday(SendLaterInfo *info);
     bool compareSendLaterInfo(SendLaterInfo *left, SendLaterInfo *right);
 }
 

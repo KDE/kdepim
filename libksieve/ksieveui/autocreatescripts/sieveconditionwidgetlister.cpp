@@ -19,7 +19,7 @@
 #include "autocreatescriptdialog.h"
 #include "sieveconditions/sieveconditionlist.h"
 #include "sieveconditions/sievecondition.h"
-#include "pimcommon/minimumcombobox.h"
+#include "pimcommon/widgets/minimumcombobox.h"
 
 #include <KPushButton>
 #include <KDialog>

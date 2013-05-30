@@ -19,8 +19,8 @@
 
 #include "filteractionrewriteheader.h"
 
-#include "../regexplineedit.h"
-#include <pimcommon/minimumcombobox.h>
+#include "widgets/regexplineedit.h"
+#include <pimcommon/widgets/minimumcombobox.h>
 
 #include <KDE/KLineEdit>
 #include <KDE/KLocale>

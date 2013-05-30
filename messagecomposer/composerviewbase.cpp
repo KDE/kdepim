@@ -49,7 +49,7 @@
 #include <messageviewer/kcursorsaver.h>
 #endif
 #include <mailtransport/transportmanager.h>
-#include <messagecomposer/recipientseditor.h>
+#include <messagecomposer/recipient/recipientseditor.h>
 #include <akonadi/collectioncombobox.h>
 #include <kpimidentities/identitymanager.h>
 #include <kpimutils/email.h>

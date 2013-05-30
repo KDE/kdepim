@@ -197,9 +197,11 @@ QStringList SieveTextEdit::completerList() const
     listWord << QLatin1String( "require" ) <<QLatin1String( "stop" );
     listWord << QLatin1String( ":contains" ) <<QLatin1String( ":matches" ) <<QLatin1String( ":is" ) <<QLatin1String( ":over" ) <<QLatin1String( ":under" ) <<QLatin1String( ":all" ) <<QLatin1String( ":domain" ) <<QLatin1String( ":localpart" );
     listWord << QLatin1String( "if" ) <<QLatin1String( "elsif" ) <<QLatin1String( "else" );
-    listWord << QLatin1String( "keep" ) <<QLatin1String( "reject" ) <<QLatin1String( "discard" ) <<QLatin1String( "redirect" ) <<QLatin1String( "fileinto" ) <<QLatin1String( "addflag" ) <<QLatin1String( "setflag" ) <<QLatin1String("vacation");
+    listWord << QLatin1String( "keep" ) <<QLatin1String( "reject" ) <<QLatin1String( "discard" ) <<QLatin1String( "redirect" )  <<QLatin1String( "addflag" ) <<QLatin1String( "setflag" );
     listWord << QLatin1String( "address" ) <<QLatin1String( "allof" ) <<QLatin1String( "anyof" ) <<QLatin1String( "exists" ) <<QLatin1String( "false" ) <<QLatin1String( "header" ) <<QLatin1String("not" ) <<QLatin1String( "size" ) <<QLatin1String( "true" );
     listWord << QLatin1String( ":days" ) <<QLatin1String(":seconds") <<QLatin1String(":subject") <<QLatin1String(":addresses") <<QLatin1String(":text");
+    listWord << QLatin1String(":name") << QLatin1String(":headers") <<QLatin1String(":first") <<QLatin1String(":importance");
+    listWord << QLatin1String(":message") << QLatin1String(":from");
 
     return listWord;
 }

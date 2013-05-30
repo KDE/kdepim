@@ -21,7 +21,7 @@
 #ifndef MESSAGECOMPOSER_DISTRIBUTIONLISTDIALOG_H
 #define MESSAGECOMPOSER_DISTRIBUTIONLISTDIALOG_H
 
-#include <messagecomposer/recipient.h>
+#include <messagecomposer/recipient/recipient.h>
 #include <kdialog.h>
 
 class KJob;

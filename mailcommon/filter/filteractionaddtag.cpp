@@ -20,7 +20,7 @@
 #include "filteractionaddtag.h"
 #include "filtermanager.h"
 #include "filteractionmissingargumentdialog.h"
-#include "pimcommon/minimumcombobox.h"
+#include "pimcommon/widgets/minimumcombobox.h"
 
 #include <Nepomuk2/Tag>
 #include <Nepomuk2/Resource>

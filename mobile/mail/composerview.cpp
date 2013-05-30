@@ -48,7 +48,7 @@
 #include <messagecomposer/attachmentmodel.h>
 #include <messagecomposer/kleo_util.h>
 #include <messagecomposer/messagecomposersettings.h>
-#include <messagecomposer/recipientseditor.h>
+#include <messagecomposer/recipient/recipientseditor.h>
 #include <messagecomposer/util.h>
 #include <akonadi/collectioncombobox.h>
 

@@ -46,7 +46,7 @@
 #include "messagecore/nodehelper.h"
 #include "messagecore/stringutil.h"
 
-#include "pimcommon/renamefiledialog.h"
+#include "pimcommon/widgets/renamefiledialog.h"
 
 #include <akonadi/item.h>
 

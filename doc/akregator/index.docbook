@@ -402,7 +402,7 @@ The post will have the title of the article and a link to it</para>
 </mediaobject>
 </screenshot>
 
-<para>Select a <guilabel>Service URL</guilabel> and end enter your <guilabel>Username</guilabel>
+<para>Select a <guilabel>Service URL</guilabel> and enter your <guilabel>Username</guilabel>
 for this service.
 </para>
 
@@ -632,8 +632,8 @@ are not sure about their effect, you can just leave the default ones.</para>
 <variablelist>
 <varlistentry>
 <term><guilabel>Archive backend:</guilabel></term>
-<listitem><para>&akregator; currently only uses the Metakit database
-<!--but for &kde; 4, &akregator; will offer other database backends-->.</para>
+<listitem><para>&akregator; currently only uses the Metakit database.
+<!--but for &kde; 4, &akregator; will offer other database backends--></para>
 </listitem>
 </varlistentry>
 </variablelist>

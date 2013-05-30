@@ -32,7 +32,7 @@
 #include "interfaces/rulewidgethandler.h"
 
 #include <messageviewer/stl_util.h>
-#include <pimcommon/minimumcombobox.h>
+#include <pimcommon/widgets/minimumcombobox.h>
 
 #include <Nepomuk2/Tag>
 
@@ -564,7 +564,7 @@ void MailCommon::RuleWidgetHandlerManager::update( const QByteArray &field,
 // these includes are temporary and should not be needed for the code
 // above this line, so they appear only here:
 #include "searchpattern.h"
-#include "regexplineedit.h"
+#include "widgets/regexplineedit.h"
 using MailCommon::RegExpLineEdit;
 
 #include <KLocale>

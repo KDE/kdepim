@@ -19,7 +19,7 @@
 
 #include "filteractionaddtoaddressbook.h"
 
-#include "pimcommon/minimumcombobox.h"
+#include "pimcommon/widgets/minimumcombobox.h"
 
 #include "libkdepim/addcontactjob.h"
 

@@ -17,7 +17,7 @@
 */
 
 #include "translatorwidget.h"
-#include "minimumcombobox.h"
+#include "widgets/minimumcombobox.h"
 #include "translatorutil.h"
 #include "googletranslator.h"
 #include <KTextEdit>
