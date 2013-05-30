@@ -33,7 +33,6 @@ SelectMimeComboBox::~SelectMimeComboBox()
 
 void SelectMimeComboBox::initialize()
 {
-    //TODO verify
     addItem(i18n("Type"), QLatin1String(":type"));
     addItem(i18n("Subtype"), QLatin1String(":subtype"));
     addItem(i18n("Anychild"), QLatin1String(":anychild"));
