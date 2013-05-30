@@ -84,6 +84,7 @@ soprano_add_ontology(importwizard_SRCS
     "trig"
   )
 
+kde4_add_app_icon(importwizard_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/icons/hi*-app-kontact-import-wizard.png")
 
 kde4_add_executable(importwizard ${importwizard_SRCS})
 
