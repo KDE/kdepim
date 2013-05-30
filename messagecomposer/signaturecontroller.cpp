@@ -130,6 +130,9 @@ void SignatureController::insertSignatureHelper ( KPIMIdentities::Signature::Pla
   if ( MessageComposer::MessageComposerSettings::self()->dashDashSignature() )
     addedText |= KPIMIdentities::Signature::AddSeparator;
   signature.insertIntoTextEdit( placement, addedText, m_editor );
+  if ((placement == KPIMIdentities::Signature::Start) || (placement == KPIMIdentities::Signature::End)) {
+    emit signatureAdded();
+  }
 }
 
 void SignatureController::applySignature( const KPIMIdentities::Signature &signature )
