@@ -45,4 +45,9 @@ QString SelectMimeComboBox::code() const
     return QString::fromLatin1("\"%1\"").arg(itemData(currentIndex()).toString());
 }
 
+QString SelectMimeComboBox::require() const
+{
+    return QLatin1String("mime");
+}
+
 #include "selectmimecombobox.moc"

@@ -28,6 +28,7 @@ public:
     ~SelectMimeComboBox();
 
     QString code() const;
+    QString require() const;
 private:
     void initialize();
 };
