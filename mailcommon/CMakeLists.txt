@@ -25,10 +25,10 @@ set(libmailcommon_SRCS
   attributeregistrar.cpp
   backupjob.cpp
   collectionannotationsattribute.cpp
-  collectiongeneralpage.cpp
-  collectionexpirypage.cpp
+  collectionpage/collectiongeneralpage.cpp
+  collectionpage/collectionexpirypage.cpp
+  collectionpage/expirecollectionattribute.cpp
   entitycollectionorderproxymodel.cpp
-  expirecollectionattribute.cpp
   expirejob.cpp
   widgets/favoritecollectionwidget.cpp
   filter/filteraction.cpp

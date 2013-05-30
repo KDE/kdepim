@@ -26,7 +26,7 @@
  *  your version.
  */
 #include "expirejob.h"
-#include "expirecollectionattribute.h"
+#include "collectionpage/expirecollectionattribute.h"
 #include "mailkernel.h"
 
 #include <libkdepim/broadcaststatus.h>
