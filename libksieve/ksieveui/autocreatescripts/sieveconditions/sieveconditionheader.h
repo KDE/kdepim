@@ -28,9 +28,6 @@ class SieveConditionHeader : public SieveCondition
 public:
     SieveConditionHeader(QObject *parent = 0);
 
-    /**
-     * Static function that creates a filter action of this type.
-     */
     static SieveCondition *newAction();
 
     QWidget *createParamWidget( QWidget *parent ) const;
