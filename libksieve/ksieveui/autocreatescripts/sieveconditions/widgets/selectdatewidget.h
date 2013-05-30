@@ -51,8 +51,10 @@ public:
     ~SelectDateWidget();
 
     QString code() const;
+
 private Q_SLOTS:
     void slotDateTypeActivated(int);
+
 private:
     void initialize();
     QString dateType(DateType type) const;
