@@ -118,6 +118,7 @@ class SearchRuleWidget : public QWidget
   public slots:
     void slotFunctionChanged();
     void slotValueChanged();
+    void slotReturnPressed();
 
   signals:
     /**
@@ -132,6 +133,8 @@ class SearchRuleWidget : public QWidget
      * of the rule.
      */
     void contentsChanged( const QString & );
+
+    void returnPressed();
 
     void addWidget( QWidget * );
     void removeWidget( QWidget * );
@@ -297,6 +300,8 @@ class MAILCOMMON_EXPORT SearchPatternEdit : public QWidget
      * This signal is emitted wherenever the search pattern changes in some way.
      */
     void patternChanged();
+
+    void returnPressed();
 
   private slots:
     void slotRadioClicked( QAbstractButton *aRBtn );
