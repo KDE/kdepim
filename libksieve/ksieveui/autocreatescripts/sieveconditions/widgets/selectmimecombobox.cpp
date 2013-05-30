@@ -42,7 +42,7 @@ void SelectMimeComboBox::initialize()
 
 QString SelectMimeComboBox::code() const
 {
-    return QString::fromLatin1("\"%1\"").arg(itemData(currentIndex()).toString());
+    return QString::fromLatin1(":mime \"%1\"").arg(itemData(currentIndex()).toString());
 }
 
 QString SelectMimeComboBox::require() const
