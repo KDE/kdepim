@@ -28,7 +28,6 @@ set(libmailcommon_SRCS
   collectionpage/collectiongeneralpage.cpp
   collectionpage/collectionexpirypage.cpp
   collectionpage/expirecollectionattribute.cpp
-  entitycollectionorderproxymodel.cpp
   expirejob.cpp
   widgets/favoritecollectionwidget.cpp
   filter/filteraction.cpp
@@ -93,6 +92,7 @@ set(libmailcommon_SRCS
   folder/foldertreeview.cpp
   folder/foldertreewidget.cpp
   folder/foldertreewidgetproxymodel.cpp
+  folder/entitycollectionorderproxymodel.cpp
   jobscheduler.cpp
   mailkernel.cpp
   mailutil.cpp
