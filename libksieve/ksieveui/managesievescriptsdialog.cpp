@@ -134,11 +134,13 @@ void ManageSieveScriptsDialog::slotItemChanged(QTreeWidgetItem*item, int col)
     if ( !isFileNameItem( item ) )
         return;
     QTreeWidgetItem *parent = item->parent();
-    if ( itemIsActived( item ) && mSelectedItems[parent] != item ) {
+    if ( (mSelectedItems[parent] != item) && itemIsActived( item )) {
         mSelectedItems[parent] = item;
         changeActiveScript( parent, true );
+    } else {
+        mSelectedItems[parent] = item;
+        changeActiveScript( parent, false );
     }
-
 }
 
 void ManageSieveScriptsDialog::slotUpdateButtons()
