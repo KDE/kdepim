@@ -23,12 +23,12 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
 
 set(libmailcommon_SRCS
   attributeregistrar.cpp
-  backupjob.cpp
+  job/backupjob.cpp
   collectionannotationsattribute.cpp
   collectionpage/collectiongeneralpage.cpp
   collectionpage/collectionexpirypage.cpp
   collectionpage/expirecollectionattribute.cpp
-  expirejob.cpp
+  job/expirejob.cpp
   widgets/favoritecollectionwidget.cpp
   filter/filteraction.cpp
   filter/filteractionaddheader.cpp
@@ -86,14 +86,14 @@ set(libmailcommon_SRCS
   filter/mdnadvicedialog.cpp
   folder/foldercollection.cpp
   folder/foldercollectionmonitor.cpp
-  folderjob.cpp
+  job/folderjob.cpp
   folder/folderrequester.cpp
   folder/folderselectiondialog.cpp
   folder/foldertreeview.cpp
   folder/foldertreewidget.cpp
   folder/foldertreewidgetproxymodel.cpp
   folder/entitycollectionorderproxymodel.cpp
-  jobscheduler.cpp
+  job/jobscheduler.cpp
   mailkernel.cpp
   mailutil.cpp
   widgets/redirectdialog.cpp

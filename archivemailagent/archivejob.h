@@ -19,7 +19,7 @@
 #define ARCHIVEJOB_H
 
 
-#include <mailcommon/jobscheduler.h>
+#include <mailcommon/job/jobscheduler.h>
 #include <Akonadi/Collection>
 
 class ArchiveMailInfo;
