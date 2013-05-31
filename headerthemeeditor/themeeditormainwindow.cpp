@@ -85,7 +85,7 @@ void ThemeEditorMainWindow::updateActions()
 
 void ThemeEditorMainWindow::setupActions()
 {
-    mAddExtraPage = new KAction(i18n("Add Extra Page"), this);
+    mAddExtraPage = new KAction(i18n("Add Extra Page..."), this);
     connect(mAddExtraPage, SIGNAL(triggered(bool)),SLOT(slotAddExtraPage()));
     actionCollection()->addAction( QLatin1String( "add_extra_page" ), mAddExtraPage );
 
