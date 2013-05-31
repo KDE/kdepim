@@ -1,5 +1,6 @@
 include_directories(
   ${CMAKE_SOURCE_DIR}/libkdepim
+  ${CMAKE_CURRENT_SOURCE_DIR}/util/
 )
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
@@ -10,8 +11,8 @@ set(libpimcommon_SRCS
   acl/aclutils.cpp
   acl/collectionaclpage.cpp
   acl/imapaclattribute.cpp
-  createresource.cpp
-  pimutil.cpp
+  util/createresource.cpp
+  util/pimutil.cpp
   widgets/minimumcombobox.cpp
   translator/translatorutil.cpp
   translator/translatorwidget.cpp
@@ -34,7 +35,7 @@ macro(add_resource_iface _kcfgFile _ifaceName _className)
   )
 endmacro()
 
-add_resource_iface(imapresource.kcfg org.kde.Akonadi.Imap.Settings ImapSettings)
+add_resource_iface(util/imapresource.kcfg org.kde.Akonadi.Imap.Settings ImapSettings)
 
 kde4_add_library(pimcommon ${LIBRARY_TYPE} ${libpimcommon_SRCS})
 
@@ -53,7 +54,7 @@ install(TARGETS pimcommon ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 if (QT_QTDESIGNER_FOUND)
   set(pimcommonwidgets_PART_SRCS)
-  kde4_add_widget_files(pimcommonwidgets_PART_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/pimcommon.widgets)
+  kde4_add_widget_files(pimcommonwidgets_PART_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/designer/pimcommon.widgets)
 
   kde4_add_plugin(pimcommonwidgets ${pimcommonwidgets_PART_SRCS})
 

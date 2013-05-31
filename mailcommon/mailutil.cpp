@@ -40,7 +40,7 @@
 #include "mailutil_p.h"
 
 #include "calendarinterface.h"
-#include "expirejob.h"
+#include "job/expirejob.h"
 #include "foldercollection.h"
 #include "pop3settings.h"
 #include "mailkernel.h"

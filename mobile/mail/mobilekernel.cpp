@@ -22,7 +22,7 @@
 #include <messagecomposer/autocorrection/composerautocorrection.h>
 #include <mailcommon/filter/filteraction.h>
 #include <mailcommon/mailkernel.h>
-#include <mailcommon/jobscheduler.h>
+#include <mailcommon/job/jobscheduler.h>
 #include <kpimidentities/identitymanager.h>
 #include <messagecomposer/akonadisender.h>
 

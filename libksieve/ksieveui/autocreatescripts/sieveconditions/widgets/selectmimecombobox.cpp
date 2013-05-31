@@ -33,7 +33,6 @@ SelectMimeComboBox::~SelectMimeComboBox()
 
 void SelectMimeComboBox::initialize()
 {
-    //TODO verify
     addItem(i18n("Type"), QLatin1String(":type"));
     addItem(i18n("Subtype"), QLatin1String(":subtype"));
     addItem(i18n("Anychild"), QLatin1String(":anychild"));
@@ -42,7 +41,12 @@ void SelectMimeComboBox::initialize()
 
 QString SelectMimeComboBox::code() const
 {
-    return QString::fromLatin1("\"%1\"").arg(itemData(currentIndex()).toString());
+    return QString::fromLatin1(":mime \"%1\"").arg(itemData(currentIndex()).toString());
+}
+
+QString SelectMimeComboBox::require() const
+{
+    return QLatin1String("mime");
 }
 
 #include "selectmimecombobox.moc"

@@ -60,6 +60,7 @@ class MAILCOMMON_EXPORT RegExpLineEdit : public QWidget
 
   signals:
     void textChanged( const QString & );
+    void returnPressed();
 
   protected slots:
     void slotEditRegExp();

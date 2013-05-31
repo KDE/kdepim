@@ -87,6 +87,7 @@ class MESSAGECOMPOSER_EXPORT SignatureController : public QObject
      * A HTML signature is about to be inserted, so enable HTML support in the editor.
      */
     void enableHtml();
+    void signatureAdded();
 
   private:
     /**

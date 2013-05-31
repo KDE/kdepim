@@ -17,7 +17,7 @@
 #ifndef ARCHIVEMAILINFO_H
 #define ARCHIVEMAILINFO_H
 
-#include "mailcommon/backupjob.h"
+#include "mailcommon/job/backupjob.h"
 #include <KConfigGroup>
 #include <Akonadi/Collection>
 #include <KUrl>

@@ -24,7 +24,7 @@
 #include "mailutil.h"
 
 #include "pimcommon/acl/imapaclattribute.h"
-#include "pimcommon/pimutil.h"
+#include "pimcommon/util/pimutil.h"
 
 #include <akonadi_next/quotacolorproxymodel.h>
 

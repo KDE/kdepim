@@ -18,7 +18,7 @@
 #ifndef ADDARCHIVEMAILDIALOG_H
 #define ADDARCHIVEMAILDIALOG_H
 
-#include "mailcommon/backupjob.h"
+#include "mailcommon/job/backupjob.h"
 #include "archivemailinfo.h"
 #include <kdialog.h>
 #include <Akonadi/Collection>

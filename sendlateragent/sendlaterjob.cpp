@@ -20,6 +20,10 @@
 
 #include <mailtransport/transportattribute.h>
 #include <mailtransport/sentbehaviourattribute.h>
+#include <mailtransport/messagequeuejob.h>
+#include <mailtransport/transport.h>
+#include <mailtransport/transportmanager.h>
+
 
 #include <Akonadi/ItemFetchJob>
 
@@ -78,12 +82,16 @@ void SendLaterJob::slotJobFinished(KJob* job)
         kDebug()<<"Can not fetch message: "<<job->errorString();
         return;
     }
+    //TODO use "AkonadiSender" ?
     if (mItem.isValid()) {
+        const MailTransport::SentBehaviourAttribute *sentAttribute = mItem.attribute<MailTransport::SentBehaviourAttribute>();
+        QString fcc;
+        if ( sentAttribute && ( sentAttribute->sentBehaviour() == MailTransport::SentBehaviourAttribute::MoveToCollection ) )
+            fcc =  QString::number( sentAttribute->moveToCollection().id() );
+
         if (mInfo->isRecursive()) {
-            const MailTransport::SentBehaviourAttribute *sentAttribute = mItem.attribute<MailTransport::SentBehaviourAttribute>();
-            QString fcc;
-            if ( sentAttribute && ( sentAttribute->sentBehaviour() == MailTransport::SentBehaviourAttribute::MoveToCollection ) )
-              fcc =  QString::number( sentAttribute->moveToCollection().id() );
+            MailTransport::MessageQueueJob *qjob = new MailTransport::MessageQueueJob( this );
+            //Need to have KMime::Message::Ptr
 
             //TODO create new message
         } else {

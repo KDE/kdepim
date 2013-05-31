@@ -63,6 +63,7 @@ private:
     KLineEdit *mFilename;
     KLineEdit *mAuthor;
     KLineEdit *mEmail;
+    KLineEdit *mVersion;
     PimCommon::SimpleStringListEditor *mExtraDisplayHeaders;
 };
 

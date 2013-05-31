@@ -28,9 +28,6 @@ class SieveConditionMailboxExists : public SieveCondition
 public:
     SieveConditionMailboxExists(QObject *parent = 0);
 
-    /**
-     * Static function that creates a filter action of this type.
-     */
     static SieveCondition *newAction();
 
     QWidget *createParamWidget( QWidget *parent ) const;

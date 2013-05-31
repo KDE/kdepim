@@ -21,7 +21,7 @@
 #include "imapsettings.h"
 #include "pop3settings.h"
 
-#include "pimcommon/pimutil.h"
+#include "pimcommon/util/pimutil.h"
 
 #include <Akonadi/AgentInstance>
 #include <Akonadi/AgentManager>

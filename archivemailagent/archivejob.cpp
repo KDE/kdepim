@@ -21,7 +21,7 @@
 
 #include "mailcommon/mailutil.h"
 
-#include <mailcommon/backupjob.h>
+#include <mailcommon/job/backupjob.h>
 
 #include <KNotification>
 #include <KLocale>

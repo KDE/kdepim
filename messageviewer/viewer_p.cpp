@@ -1805,6 +1805,7 @@ void ViewerPrivate::createActions()
            SLOT(slotCopyImageLocation()) );
 
   mTranslateAction = new KAction(i18n("Translate..."),this);
+  mTranslateAction->setShortcut(QKeySequence(Qt::CTRL + Qt::ALT + Qt::Key_T));
   mTranslateAction->setIcon(KIcon("preferences-desktop-locale"));
   ac->addAction("translate_text", mTranslateAction);
   connect( mTranslateAction, SIGNAL(triggered(bool)),

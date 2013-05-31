@@ -27,9 +27,6 @@ class SieveConditionCurrentDate : public SieveCondition
 public:
     SieveConditionCurrentDate(QObject *parent = 0);
 
-    /**
-     * Static function that creates a filter action of this type.
-     */
     static SieveCondition *newAction();
 
     QWidget *createParamWidget( QWidget *parent ) const;

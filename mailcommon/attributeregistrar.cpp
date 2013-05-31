@@ -18,7 +18,7 @@
 */
 
 #include "collectionannotationsattribute.h"
-#include "expirecollectionattribute.h"
+#include "collectionpage/expirecollectionattribute.h"
 
 #include <akonadi/attributefactory.h>
 

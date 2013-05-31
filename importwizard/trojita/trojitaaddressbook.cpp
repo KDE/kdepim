@@ -40,7 +40,34 @@ TrojitaAddressBook::~TrojitaAddressBook()
 void TrojitaAddressBook::readAddressBook()
 {
     const QStringList contacts = settings->childGroups();
-    foreach (const QString &contact, contacts) {
+    Q_FOREACH (const QString &contact, contacts) {
+        KABC::Addressee contactABC;
+        settings->beginGroup(contact);
+        contactABC.setEmails(QStringList() << settings->value(QLatin1String("email")).toString());
+
+        KABC::Address homeAddr = KABC::Address( KABC::Address::Home );
+        homeAddr.setLocality(settings->value(QLatin1String("city")).toString());
+        homeAddr.setRegion(settings->value(QLatin1String("state")).toString());
+        homeAddr.setPostalCode(settings->value(QLatin1String("zip")).toString());
+        homeAddr.setCountry(settings->value(QLatin1String("country")).toString());
+        homeAddr.setStreet(settings->value(QLatin1String("address")).toString());
+        if (!homeAddr.isEmpty())
+            contactABC.insertAddress(homeAddr);
+
+        contactABC.insertPhoneNumber( KABC::PhoneNumber( settings->value(QLatin1String("phone")).toString(), KABC::PhoneNumber::Home ) );
+        contactABC.insertPhoneNumber( KABC::PhoneNumber( settings->value(QLatin1String("workphone")).toString(), KABC::PhoneNumber::Work ) );
+        contactABC.insertPhoneNumber( KABC::PhoneNumber( settings->value(QLatin1String("fax")).toString(), KABC::PhoneNumber::Fax ) );
+        contactABC.insertPhoneNumber( KABC::PhoneNumber( settings->value(QLatin1String("mobile")).toString(), KABC::PhoneNumber::Cell ) );
+        contactABC.setNickName(settings->value(QLatin1String("nick")).toString());
+        contactABC.setUrl(KUrl(settings->value(QLatin1String("url")).toString()));
+
+        const QDateTime birthDate( QDate::fromString(settings->value(QLatin1String("anniversary")).toString()));
+        if (birthDate.isValid()) {
+            contactABC.setBirthday( birthDate );
+        }
         //TODO
+        //ADD(Photo, "photo");
+        createContact(contactABC);
+        settings->endGroup();
     }
 }

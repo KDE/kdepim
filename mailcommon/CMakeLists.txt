@@ -5,6 +5,7 @@ include_directories(
   ${CMAKE_BINARY_DIR}/templateparser
   ${CMAKE_BINARY_DIR}/pimcommon
   ${CMAKE_SOURCE_DIR}/pimcommon
+  ${CMAKE_SOURCE_DIR}/pimcommon/util/
   ${CMAKE_CURRENT_BINARY_DIR}/../ontologies
   ${CMAKE_CURRENT_SOURCE_DIR}/filter
   ${CMAKE_CURRENT_SOURCE_DIR}/tag/
@@ -23,13 +24,12 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
 
 set(libmailcommon_SRCS
   attributeregistrar.cpp
-  backupjob.cpp
+  job/backupjob.cpp
   collectionannotationsattribute.cpp
-  collectiongeneralpage.cpp
-  collectionexpirypage.cpp
-  entitycollectionorderproxymodel.cpp
-  expirecollectionattribute.cpp
-  expirejob.cpp
+  collectionpage/collectiongeneralpage.cpp
+  collectionpage/collectionexpirypage.cpp
+  collectionpage/expirecollectionattribute.cpp
+  job/expirejob.cpp
   widgets/favoritecollectionwidget.cpp
   filter/filteraction.cpp
   filter/filteractionaddheader.cpp
@@ -87,13 +87,14 @@ set(libmailcommon_SRCS
   filter/mdnadvicedialog.cpp
   folder/foldercollection.cpp
   folder/foldercollectionmonitor.cpp
-  folderjob.cpp
+  job/folderjob.cpp
   folder/folderrequester.cpp
   folder/folderselectiondialog.cpp
   folder/foldertreeview.cpp
   folder/foldertreewidget.cpp
   folder/foldertreewidgetproxymodel.cpp
-  jobscheduler.cpp
+  folder/entitycollectionorderproxymodel.cpp
+  job/jobscheduler.cpp
   mailkernel.cpp
   mailutil.cpp
   widgets/redirectdialog.cpp
@@ -184,7 +185,7 @@ add_subdirectory(filter/filterimporter/tests)
 
 if (QT_QTDESIGNER_FOUND)
   set(mailcommonwidgets_PART_SRCS)
-  kde4_add_widget_files(mailcommonwidgets_PART_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/mailcommon.widgets)
+  kde4_add_widget_files(mailcommonwidgets_PART_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/designer/mailcommon.widgets)
 
   kde4_add_plugin(mailcommonwidgets ${mailcommonwidgets_PART_SRCS})
 

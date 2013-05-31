@@ -20,7 +20,7 @@
 #include "mailkernel.h"
 #include "mailutil.h"
 #include "imapsettings.h"
-#include "pimcommon/pimutil.h"
+#include "pimcommon/util/pimutil.h"
 
 #include <Akonadi/ItemFetchJob>
 #include <Akonadi/ItemFetchScope>

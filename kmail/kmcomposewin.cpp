@@ -379,6 +379,8 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, bool lastSignState,
 
   mHeadersToEditorSplitter->addWidget( mSplitter );
   editor->setAcceptDrops( true );
+  connect(sigController, SIGNAL(signatureAdded()), mComposerBase->editor(), SLOT(startExternalEditor()));
+
   connect( mDictionaryCombo, SIGNAL(dictionaryChanged(QString)),
            this, SLOT(slotSpellCheckingLanguage(QString)) );
 
@@ -1050,7 +1052,6 @@ void KMComposeWin::slotDelayedApplyTemplate( KJob *job )
   }
   mComposerBase->updateTemplate( mMsg );
   updateSignature(uoid, uOldId);
-
 }
 
 void KMComposeWin::updateSignature(uint uoid, uint uOldId)
@@ -1297,8 +1298,8 @@ void KMComposeWin::setupActions( void )
 
   connect( mComposerBase->editor(), SIGNAL(textModeChanged(KRichTextEdit::Mode)),
            this, SLOT(slotTextModeChanged(KRichTextEdit::Mode)) );
-  connect( mComposerBase->editor(), SIGNAL(externalEditorClosed()), mExternalEditorWarning, SLOT(hide()));
-  connect( mComposerBase->editor(), SIGNAL(externalEditorStarted()), mExternalEditorWarning, SLOT(show()));
+  connect( mComposerBase->editor(), SIGNAL(externalEditorClosed()), this, SLOT(slotExternalEditorClosed()));
+  connect( mComposerBase->editor(), SIGNAL(externalEditorStarted()), this, SLOT(slotExternalEditorStarted()));
   //these are checkable!!!
   markupAction = new KToggleAction( i18n("Formatting (HTML)"), this );
   markupAction->setIconText( i18n("HTML") );
@@ -1370,6 +1371,7 @@ void KMComposeWin::setupActions( void )
   connect( action, SIGNAL(triggered(bool)), SLOT(slotSpellcheckConfig()) );
 
   mTranslateAction = new KToggleAction( i18n("&Translator"), this );
+  action->setShortcut( QKeySequence( Qt::CTRL + Qt::ALT + Qt::Key_T ) );
   actionCollection()->addAction( "translator", mTranslateAction );
   mTranslateAction->setChecked(false);
   connect(mTranslateAction, SIGNAL(triggered(bool)), mTranslatorWidget,SLOT(setVisible(bool)));
@@ -1753,6 +1755,8 @@ void KMComposeWin::setMessage( const KMime::Message::Ptr &newMsg, bool lastSignS
     } else {
       QTimer::singleShot( 0, mComposerBase->signatureController(), SLOT(appendSignature()) );
     }
+  } else {
+      mComposerBase->editor()->startExternalEditor();
   }
 
   setModified( isModified );
@@ -1760,8 +1764,6 @@ void KMComposeWin::setMessage( const KMime::Message::Ptr &newMsg, bool lastSignS
   // honor "keep reply in this folder" setting even when the identity is changed later on
   mPreventFccOverwrite = ( !kmailFcc.isEmpty() && ident.fcc() != kmailFcc );
   QTimer::singleShot( 0, this, SLOT(forceAutoSaveMessage()) ); //Force autosaving to make sure this composer reappears if a crash happens before the autosave timer kicks in.
-
-  mComposerBase->editor()->startExternalEditor();
 }
 
 void KMComposeWin::setAutoSaveFileName(const QString& fileName)
@@ -3489,3 +3491,16 @@ void KMComposeWin::slotLowerCase()
         textCursor.insertText(newText);
     }
 }
+
+void KMComposeWin::slotExternalEditorStarted()
+{
+    mComposerBase->identityCombo()->setEnabled(false);
+    mExternalEditorWarning->show();
+}
+
+void KMComposeWin::slotExternalEditorClosed()
+{
+    mComposerBase->identityCombo()->setEnabled(true);
+    mExternalEditorWarning->hide();
+}
+

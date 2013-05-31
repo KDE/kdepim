@@ -1,5 +1,14 @@
 [Desktop Entry]
 Name=KMail Import Wizard
+Name[cs]=Průvodce importem KMailu
+Name[fi]=KMailin opastettu tuonti
+Name[nl]=Assistent van KMail voor importeren
+Name[pt]=Assistente de Importação do KMail
+Name[pt_BR]=Assistente de importação do KMail
+Name[sk]=Sprievodca importom KMail
+Name[uk]=Майстер імпортування KMail
+Name[x-test]=xxKMail Import Wizardxx
+Name[zh_TW]=KMail 匯入精靈
 Exec=importwizard
 Type=Application
 Icon=kontact-import-wizard

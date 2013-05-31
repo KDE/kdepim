@@ -136,7 +136,7 @@ void JobTracker::jobCreated( const QString & session, const QString & job, const
 
   if ( !parent.isEmpty() && !d->jobs.contains( parent ) )
   {
-    qWarning() << "JobTracker: Job arrived before it's parent! Fix the library!";
+    qWarning() << "JobTracker: Job arrived before its parent! Fix the library!";
     jobCreated( session, parent, QString(),"dummy job type" );
   }
   // check if it's a new session, if so, add it

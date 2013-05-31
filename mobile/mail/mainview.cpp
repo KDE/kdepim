@@ -37,8 +37,8 @@
 #include "emailsguistatemanager.h"
 #include "emailsimporthandler.h"
 #include "mailactionmanager.h"
-#include "mailcommon/collectiongeneralpage.h"
-#include "mailcommon/collectionexpirypage.h"
+#include "mailcommon/collectionpage/collectiongeneralpage.h"
+#include "mailcommon/collectionpage/collectionexpirypage.h"
 #include "mailcommon/filter/filtermanager.h"
 #include "mailcommon/mailkernel.h"
 #include "mailcommon/widgets/redirectdialog.h"
@@ -101,7 +101,7 @@
 #include <mailcommon/filter/filteraction.h>
 #include <mailcommon/folder/foldercollection.h>
 #include <mailcommon/mailutil.h>
-#include <pimcommon/pimutil.h>
+#include <pimcommon/util/pimutil.h>
 #include <mailtransport/transportmanager.h>
 #include <messagecomposer/akonadisender.h>
 #include <messagecore/stringutil.h>

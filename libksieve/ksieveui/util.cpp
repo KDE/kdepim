@@ -38,7 +38,7 @@
 
 
 #include "util.h"
-#include "pimcommon/pimutil.h"
+#include "pimcommon/util/pimutil.h"
 #include "imapsettings.h"
 #include "settings.h"
 

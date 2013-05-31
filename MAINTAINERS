@@ -35,6 +35,7 @@ libksieve             Laurent Montel <montel@kde.org>
 mailcommon            <kmail maintainer>
 mailfilteragent       ?
 pimsettingexporter    Laurent Montel <montel@kde.org>
+pimactivity           Laurent Montel <montel@kde.org>  
 messagecomposer       <kmail maintainer>
 messagecore           <kmail maintainer>
 messagelist           <kmail maintainer>

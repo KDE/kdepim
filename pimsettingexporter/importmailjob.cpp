@@ -22,7 +22,7 @@
 #include "mailcommon/filter/filtermanager.h"
 #include "mailcommon/filter/filterimporterexporter.h"
 #include "mailcommon/mailutil.h"
-#include "pimcommon/createresource.h"
+#include "pimcommon/util/createresource.h"
 
 #include "messageviewer/kcursorsaver.h"
 

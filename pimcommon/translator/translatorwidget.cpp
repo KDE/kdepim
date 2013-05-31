@@ -63,6 +63,7 @@ public:
     MinimumComboBox *to;
     KPushButton *translate;
     PimCommon::AbstractTranslator *abstractTranslator;
+    QSplitter *splitter;
 };
 
 void TranslatorWidget::TranslatorWidgetPrivate::fillToCombobox( const QString& lang )
@@ -132,6 +133,7 @@ void TranslatorWidget::writeConfig()
     KConfigGroup myGroup( KGlobal::config(), "TranslatorWidget" );
     myGroup.writeEntry( QLatin1String( "FromLanguage" ), d->from->itemData(d->from->currentIndex()).toString() );
     myGroup.writeEntry( "ToLanguage", d->to->itemData(d->to->currentIndex()).toString() );
+    myGroup.writeEntry( "mainSplitter", d->splitter->sizes());
     myGroup.sync();
 }
 
@@ -150,6 +152,9 @@ void TranslatorWidget::readConfig()
     if ( indexTo != -1 ) {
         d->to->setCurrentIndex( indexTo );
     }
+    QList<int> size;
+    size << 100 << 400;
+    d->splitter->setSizes(myGroup.readEntry( "mainSplitter", size));
 }
 
 void TranslatorWidget::init()
@@ -208,19 +213,19 @@ void TranslatorWidget::init()
 
     layout->addLayout( hboxLayout );
 
-    QSplitter *splitter = new QSplitter;
-    splitter->setChildrenCollapsible( false );
+    d->splitter = new QSplitter;
+    d->splitter->setChildrenCollapsible( false );
     d->inputText = new TranslatorTextEdit;
     d->inputText->setAcceptRichText(false);
     d->inputText->setClickMessage(i18n("Drag text that you want to translate."));
     connect( d->inputText, SIGNAL(textChanged()), SLOT(slotTextChanged()) );
 
-    splitter->addWidget( d->inputText );
+    d->splitter->addWidget( d->inputText );
     d->translatedText = new KTextEdit;
     d->translatedText->setReadOnly( true );
-    splitter->addWidget( d->translatedText );
+    d->splitter->addWidget( d->translatedText );
 
-    layout->addWidget( splitter );
+    layout->addWidget( d->splitter );
 
     d->initLanguage();
     connect( d->from, SIGNAL(currentIndexChanged(int)), SLOT(slotFromLanguageChanged(int)) );
