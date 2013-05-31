@@ -40,7 +40,7 @@ TrojitaAddressBook::~TrojitaAddressBook()
 void TrojitaAddressBook::readAddressBook()
 {
     const QStringList contacts = settings->childGroups();
-    foreach (const QString &contact, contacts) {
+    Q_FOREACH (const QString &contact, contacts) {
         KABC::Addressee contactABC;
         settings->beginGroup(contact);
         contactABC.setEmails(QStringList() << settings->value(QLatin1String("email")).toString());
@@ -67,7 +67,6 @@ void TrojitaAddressBook::readAddressBook()
         }
         //TODO
         //ADD(Photo, "photo");
-
         createContact(contactABC);
         settings->endGroup();
     }
