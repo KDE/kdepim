@@ -31,11 +31,12 @@ public:
 
     QWidget *createParamWidget( QWidget *parent ) const;
     QString code(QWidget *) const;
-    QStringList needRequires() const;
+    QStringList needRequires(QWidget *parent) const;
     QString help() const;
 
 private:
     bool mHasCopySupport;
+    bool mHasListSupport;
 };
 }
 

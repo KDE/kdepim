@@ -66,7 +66,7 @@ QString SieveActionBreak::help() const
     return i18n("The break command terminates the closest enclosing loop.");
 }
 
-QStringList SieveActionBreak::needRequires() const
+QStringList SieveActionBreak::needRequires(QWidget */*parent*/) const
 {
     return QStringList() << QLatin1String("foreverypart");
 }

@@ -95,7 +95,7 @@ QString SieveActionEnclose::code(QWidget *w) const
 }
 
 
-QStringList SieveActionEnclose::needRequires() const
+QStringList SieveActionEnclose::needRequires(QWidget *parent) const
 {
     return QStringList() << QLatin1String("enclose");
 }

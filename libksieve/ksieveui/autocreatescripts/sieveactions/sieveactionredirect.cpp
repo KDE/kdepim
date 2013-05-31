@@ -31,6 +31,7 @@ SieveActionRedirect::SieveActionRedirect(QObject *parent)
     : SieveAction(QLatin1String("redirect"), i18n("Redirect"), parent)
 {
     mHasCopySupport = AutoCreateScriptDialog::sieveCapabilities().contains(QLatin1String("copy"));
+    mHasListSupport = AutoCreateScriptDialog::sieveCapabilities().contains(QLatin1String("extlists"));
 }
 
 SieveAction *SieveActionRedirect::newAction()
@@ -49,6 +50,11 @@ QWidget *SieveActionRedirect::createParamWidget( QWidget *parent ) const
         copy->setObjectName(QLatin1String("copy"));
         lay->addWidget(copy);
     }
+    if (mHasListSupport) {
+        QCheckBox *list = new QCheckBox(i18n("Use list"));
+        list->setObjectName(QLatin1String("list"));
+        lay->addWidget(list);
+    }
     AddressLineEdit *edit = new AddressLineEdit;
     edit->setObjectName(QLatin1String("RedirectEdit"));
     lay->addWidget(edit);
@@ -66,20 +72,36 @@ QString SieveActionRedirect::code(QWidget *w) const
         if (copy->isChecked())
             result += QLatin1String(":copy ");
     }
+
+    if (mHasListSupport) {
+        const QCheckBox *list = w->findChild<QCheckBox*>( QLatin1String("list") );
+        if (list->isChecked())
+            result += QLatin1String(":list ");
+    }
+
     return result + QString::fromLatin1("\"%1\";").arg(text);
 }
 
-QStringList SieveActionRedirect::needRequires() const
+QStringList SieveActionRedirect::needRequires(QWidget *parent) const
 {
+    QStringList lst;
     if (mHasCopySupport) {
-        return QStringList() <<QLatin1String("copy");
+        const QCheckBox *copy = parent->findChild<QCheckBox*>( QLatin1String("copy") );
+        if (copy->isChecked())
+            lst <<QLatin1String("copy");
     }
-    return QStringList();
+    if (mHasListSupport) {
+        const QCheckBox *list = parent->findChild<QCheckBox*>( QLatin1String("list") );
+        if (list->isChecked())
+            lst <<QLatin1String("extlists");
+    }
+    return lst;
 }
 
 QString SieveActionRedirect::help() const
 {
     //TODO add copy info
+    //TODO add list info
     return i18n("The \"redirect\" action is used to send the message to another user at a supplied address, as a mail forwarding feature does.  The \"redirect\" action makes no changes to the message body or existing headers, but it may add new headers.");
 }
 

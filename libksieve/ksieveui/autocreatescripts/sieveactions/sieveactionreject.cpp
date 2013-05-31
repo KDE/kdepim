@@ -58,7 +58,7 @@ QString SieveActionReject::code(QWidget *w) const
     return QString::fromLatin1("reject text:%1;").arg(AutoCreateScriptUtil::createMultiLine(text));
 }
 
-QStringList SieveActionReject::needRequires() const
+QStringList SieveActionReject::needRequires(QWidget *) const
 {
     return QStringList() <<QLatin1String("reject");
 }

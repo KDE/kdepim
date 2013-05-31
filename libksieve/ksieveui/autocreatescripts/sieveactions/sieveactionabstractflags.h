@@ -28,7 +28,7 @@ public:
 
     QWidget *createParamWidget( QWidget *parent ) const;
     QString code(QWidget *) const;
-    QStringList needRequires() const;
+    QStringList needRequires(QWidget *parent) const;
 
     virtual QString flagsCode() const = 0;
 

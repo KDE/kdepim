@@ -89,7 +89,7 @@ QString SieveActionConvert::code(QWidget *w) const
 }
 
 
-QStringList SieveActionConvert::needRequires() const
+QStringList SieveActionConvert::needRequires(QWidget *parent) const
 {
     return QStringList() << QLatin1String("convert");
 }
