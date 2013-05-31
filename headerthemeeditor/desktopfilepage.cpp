@@ -66,15 +66,20 @@ DesktopFilePage::DesktopFilePage(QWidget *parent)
     lay->addWidget(lab,4,0);
     lay->addWidget(mFilename,4,1);
 
-    lab = new QLabel(i18n("Extract Headers:"));
+    lab = new QLabel(i18n("Version:"));
+    mVersion = new KLineEdit;
     lay->addWidget(lab,5,0);
+    lay->addWidget(mVersion,5,1);
+
+    lab = new QLabel(i18n("Extract Headers:"));
+    lay->addWidget(lab,6,0);
 
     lab = new QLabel(QLatin1String("<qt><b>") +i18n("Be careful, Grantlee does not support '-' in variable name. So when you want to add extra header as \"X-Original-To\" add \"X-Original-To\" in list, but use \"XOriginalTo\" as variable in Grantlee (remove '-' in name).")+QLatin1String("</b></qt>"));
     lab->setWordWrap(true);
-    lay->addWidget(lab,6,0,1,2);
+    lay->addWidget(lab,7,0,1,2);
 
     mExtraDisplayHeaders = new PimCommon::SimpleStringListEditor;
-    lay->addWidget(mExtraDisplayHeaders, 7, 0, 1, 2);
+    lay->addWidget(mExtraDisplayHeaders, 8, 0, 1, 2);
     setLayout(lay);
     connect(mExtraDisplayHeaders, SIGNAL(changed()), this, SLOT(slotExtraDisplayHeadersChanged()));
     connect(mFilename, SIGNAL(textChanged(QString)), this, SLOT(slotFileNameChanged(QString)));
@@ -132,6 +137,7 @@ void DesktopFilePage::loadTheme(const QString &path)
     mFilename->setText(desktopFile.desktopGroup().readEntry(QLatin1String("FileName")));
     mAuthor->setText(desktopFile.desktopGroup().readEntry(QLatin1String("Author")));
     mEmail->setText(desktopFile.desktopGroup().readEntry(QLatin1String("AuthorEmail")));
+    mVersion->setText(desktopFile.desktopGroup().readEntry(QLatin1String("ThemeVersion")));
     const QStringList displayExtraHeaders = desktopFile.desktopGroup().readEntry(QLatin1String("DisplayExtraHeaders"),QStringList());
     mExtraDisplayHeaders->setStringList(displayExtraHeaders);
 }
@@ -154,6 +160,7 @@ void DesktopFilePage::saveAsFilename(const QString &filename)
 
     desktopFile.desktopGroup().writeEntry(QLatin1String("Author"), mAuthor->text());
     desktopFile.desktopGroup().writeEntry(QLatin1String("AuthorEmail"), mEmail->text());
+    desktopFile.desktopGroup().writeEntry(QLatin1String("ThemeVersion"), mVersion->text());
     desktopFile.desktopGroup().sync();
 }
 
