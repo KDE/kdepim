@@ -234,7 +234,7 @@ in the context menu of the note titlebar.</para>
 <varlistentry>
 <term>Saving a note:</term>
 <listitem>
-<para>To save a note to select <guimenuitem>Save As...</guimenuitem> 
+<para>To save a note select <guimenuitem>Save As...</guimenuitem> 
 in the context menu of the note titlebar. The note can be saved as a plain text file 
 or in &HTML; format, if <guilabel>Rich text</guilabel> is enabled.</para>
 </listitem>
