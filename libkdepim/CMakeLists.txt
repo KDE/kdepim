@@ -110,7 +110,7 @@ install(TARGETS kdepim ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 if (QT_QTDESIGNER_FOUND)
   set(kdepimwidgets_PART_SRCS)
-  kde4_add_widget_files(kdepimwidgets_PART_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/kdepim.widgets)
+  kde4_add_widget_files(kdepimwidgets_PART_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/designer/kdepim.widgets)
 
   kde4_add_plugin(kdepimwidgets ${kdepimwidgets_PART_SRCS})
 

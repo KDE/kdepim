@@ -53,7 +53,7 @@ install(TARGETS pimcommon ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 if (QT_QTDESIGNER_FOUND)
   set(pimcommonwidgets_PART_SRCS)
-  kde4_add_widget_files(pimcommonwidgets_PART_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/pimcommon.widgets)
+  kde4_add_widget_files(pimcommonwidgets_PART_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/designer/pimcommon.widgets)
 
   kde4_add_plugin(pimcommonwidgets ${pimcommonwidgets_PART_SRCS})
 

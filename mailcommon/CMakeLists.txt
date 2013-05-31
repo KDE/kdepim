@@ -184,7 +184,7 @@ add_subdirectory(filter/filterimporter/tests)
 
 if (QT_QTDESIGNER_FOUND)
   set(mailcommonwidgets_PART_SRCS)
-  kde4_add_widget_files(mailcommonwidgets_PART_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/mailcommon.widgets)
+  kde4_add_widget_files(mailcommonwidgets_PART_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/designer/mailcommon.widgets)
 
   kde4_add_plugin(mailcommonwidgets ${mailcommonwidgets_PART_SRCS})
 
