@@ -22,7 +22,7 @@
 #include "mailkernel.h"
 #include "mailutil.h"
 
-#include "pimcommon/pimutil.h"
+#include "pimcommon/util/pimutil.h"
 #include <Akonadi/AgentManager>
 #include <Akonadi/AttributeFactory>
 #include <Akonadi/Collection>

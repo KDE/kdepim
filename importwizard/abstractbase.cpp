@@ -16,7 +16,7 @@
 */
 
 #include "abstractbase.h"
-#include "pimcommon/createresource.h"
+#include "pimcommon/util/createresource.h"
 
 #include <KLocale>
 #include <KDebug>

@@ -5,6 +5,7 @@ include_directories(
   ${CMAKE_BINARY_DIR}/templateparser
   ${CMAKE_BINARY_DIR}/pimcommon
   ${CMAKE_SOURCE_DIR}/pimcommon
+  ${CMAKE_SOURCE_DIR}/pimcommon/util/
   ${CMAKE_CURRENT_BINARY_DIR}/../ontologies
   ${CMAKE_CURRENT_SOURCE_DIR}/filter
   ${CMAKE_CURRENT_SOURCE_DIR}/tag/

@@ -101,7 +101,7 @@
 #include <mailcommon/filter/filteraction.h>
 #include <mailcommon/folder/foldercollection.h>
 #include <mailcommon/mailutil.h>
-#include <pimcommon/pimutil.h>
+#include <pimcommon/util/pimutil.h>
 #include <mailtransport/transportmanager.h>
 #include <messagecomposer/akonadisender.h>
 #include <messagecore/stringutil.h>
