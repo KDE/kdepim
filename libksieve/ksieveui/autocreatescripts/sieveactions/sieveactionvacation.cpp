@@ -133,7 +133,7 @@ bool SieveActionVacation::needCheckIfServerHasCapability() const
     return true;
 }
 
-QStringList SieveActionVacation::needRequires() const
+QStringList SieveActionVacation::needRequires(QWidget *) const
 {
     QStringList lst;
     if (mHasVacationSecondsSupport) {

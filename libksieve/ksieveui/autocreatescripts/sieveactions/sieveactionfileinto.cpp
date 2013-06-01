@@ -80,14 +80,20 @@ QWidget *SieveActionFileInto::createParamWidget( QWidget *parent ) const
     return w;
 }
 
-QStringList SieveActionFileInto::needRequires() const
+QStringList SieveActionFileInto::needRequires(QWidget *parent) const
 {
     QStringList lst;
     lst << QLatin1String("fileinto");
-    if (mHasCopySupport)
-        lst << QLatin1String("copy");
-    if (mHasMailBoxSupport)
-        lst << QLatin1String("mailbox");
+    if (mHasCopySupport) {
+        const QCheckBox *create = parent->findChild<QCheckBox*>( QLatin1String("copy") );
+        if (create->isChecked())
+            lst << QLatin1String("copy");
+    }
+    if (mHasMailBoxSupport) {
+        const QCheckBox *create = parent->findChild<QCheckBox*>( QLatin1String("create") );
+        if (create->isChecked())
+            lst << QLatin1String("mailbox");
+    }
     return lst;
 }
 
@@ -103,7 +109,12 @@ QString SieveActionFileInto::serverNeedsCapability() const
 
 QString SieveActionFileInto::help() const
 {
-    return i18n("The \"fileinto\" action delivers the message into the specified mailbox.");
+    QString helpStr = i18n("The \"fileinto\" action delivers the message into the specified mailbox.");
+    if (mHasMailBoxSupport) {
+        helpStr += QLatin1Char('\n') + i18n("If the optional \":create\" argument is specified, it instructs the Sieve interpreter to create the specified mailbox, if needed, before attempting to deliver the message into the specified mailbox.");
+    }
+    //TODO add copy support
+    return helpStr;
 }
 
 #include "sieveactionfileinto.moc"

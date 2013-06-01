@@ -21,9 +21,9 @@
  */
 
 // This must be first
-#include "configuredialog.h"
-#include "configuredialog_p.h"
-#include "identitypage.h"
+#include "configuredialog/configuredialog.h"
+#include "configuredialog/configuredialog_p.h"
+#include "identity/identitypage.h"
 #include <kcmodule.h>
 #include <kcomponentdata.h>
 

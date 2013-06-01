@@ -176,12 +176,12 @@ void CollectionExpiryPage::load( const Akonadi::Collection &collection )
 void CollectionExpiryPage::save( Akonadi::Collection &collection )
 {
   if ( mChanged)
-    saveAndExpire( collection, false );
+    saveAndExpire( collection, false, true );
 }
 
-void CollectionExpiryPage::saveAndExpire( Akonadi::Collection &collection, bool saveSettings )
+void CollectionExpiryPage::saveAndExpire( Akonadi::Collection &collection, bool saveSettings, bool _expireNow )
 {
-  bool expireNow = saveSettings;
+  bool expireNow = _expireNow;
   bool enableGlobally = expireReadMailCB->isChecked() || expireUnreadMailCB->isChecked();
   const Akonadi::Collection expireToFolder = folderSelector->collection();
   if ( enableGlobally && moveToRB->isChecked() && !expireToFolder.isValid() ) {
@@ -224,13 +224,17 @@ void CollectionExpiryPage::saveAndExpire( Akonadi::Collection &collection, bool 
       Akonadi::CollectionModifyJob *job = new Akonadi::CollectionModifyJob( collection, this );
       job->setProperty( "expireNow", expireNow );
       connect( job, SIGNAL(result(KJob*)), this, SLOT(slotCollectionModified(KJob*)) );
+  } else {
+      if (expireNow) {
+          MailCommon::Util::expireOldMessages( collection, true /*immediate*/);
+      }
   }
   mChanged = false;
 }
 
 void CollectionExpiryPage::slotSaveAndExpire()
 {
-  saveAndExpire( mCollection, true );                        // save and start expire job
+  saveAndExpire( mCollection, true, true );                        // save and start expire job
 }
 
 void CollectionExpiryPage::slotCollectionModified(KJob* job)

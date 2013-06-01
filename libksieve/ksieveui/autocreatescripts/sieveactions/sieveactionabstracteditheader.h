@@ -27,7 +27,7 @@ class SieveActionAbstractEditHeader : public SieveAction
 public:
     SieveActionAbstractEditHeader(const QString &name, const QString &label, QObject *parent = 0);
 
-    QStringList needRequires() const;
+    QStringList needRequires(QWidget *parent) const;
 
     bool needCheckIfServerHasCapability() const;
 

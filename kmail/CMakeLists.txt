@@ -64,29 +64,29 @@ if (NOT WINCE AND KDEPIM_BUILD_DESKTOP)
 
   set(kmailprivate_LIB_SRCS
      collectionpane.cpp
-     collectiontemplatespage.cpp
-     collectionmaintenancepage.cpp
-     collectionviewpage.cpp
-     collectionquotapage.cpp
-     collectionquotapage_p.cpp
-     collectionmailinglistpage.cpp
-     collectionshortcutpage.cpp
-     colorlistbox.cpp
+     collectionpage/collectiontemplatespage.cpp
+     collectionpage/collectionmaintenancepage.cpp
+     collectionpage/collectionviewpage.cpp
+     collectionpage/collectionquotapage.cpp
+     collectionpage/collectionquotapage_p.cpp
+     collectionpage/collectionmailinglistpage.cpp
+     collectionpage/collectionshortcutpage.cpp
+     configuredialog/colorlistbox.cpp
      kmmainwin.cpp
-     configagentdelegate.cpp
-     configuredialoglistview.cpp
-     configuredialog.cpp
-     configuredialog_p.cpp
-     identitylistview.cpp
-     identitydialog.cpp
+     configuredialog/configagentdelegate.cpp
+     configuredialog/configuredialoglistview.cpp
+     configuredialog/configuredialog.cpp
+     configuredialog/configuredialog_p.cpp
+     identity/identitylistview.cpp
+     identity/identitydialog.cpp
      globalsettings.cpp
      snippetwidget.cpp
      kmreaderwin.cpp
      kmsystemtray.cpp
-     xfaceconfigurator.cpp
+     identity/xfaceconfigurator.cpp
      undostack.cpp
      kmkernel.cpp
-     searchwindow.cpp
+     searchdialog/searchwindow.cpp
      kmcommands.cpp
      kmreadermainwin.cpp
      kmstartup.cpp
@@ -106,19 +106,19 @@ if (NOT WINCE AND KDEPIM_BUILD_DESKTOP)
      attachmentcontroller.cpp
      attachmentview.cpp
      archivefolderdialog.cpp
-     searchdescriptionattribute.cpp
+     searchdialog/searchdescriptionattribute.cpp
      tagactionmanager.cpp
      foldershortcutactionmanager.cpp
      addressvalidationjob.cpp
-     identitypage.cpp
-     newidentitydialog.cpp
-     kmsearchmessagemodel.cpp
-     kmsearchfilterproxymodel.cpp
+     identity/identitypage.cpp
+     identity/newidentitydialog.cpp
+     searchdialog/kmsearchmessagemodel.cpp
+     searchdialog/kmsearchfilterproxymodel.cpp
      kmknotify.cpp
      tagselectdialog.cpp
-     accountconfigorderdialog.cpp
-     identityeditvcarddialog.cpp
-     identityaddvcarddialog.cpp
+     configuredialog/accountconfigorderdialog.cpp
+     identity/identityeditvcarddialog.cpp
+     identity/identityaddvcarddialog.cpp
      attachmentmissingwarning.cpp
      createnewcontactjob.cpp
      externaleditorwarning.cpp

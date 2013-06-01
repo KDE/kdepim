@@ -85,7 +85,7 @@ QString SieveActionSetVariable::code(QWidget *w) const
     return result;
 }
 
-QStringList SieveActionSetVariable::needRequires() const
+QStringList SieveActionSetVariable::needRequires(QWidget *) const
 {
     return QStringList() << QLatin1String("variables");
 }

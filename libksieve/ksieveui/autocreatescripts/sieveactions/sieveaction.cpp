@@ -55,7 +55,7 @@ QString SieveAction::code(QWidget *) const
     return QString();
 }
 
-QStringList SieveAction::needRequires() const
+QStringList SieveAction::needRequires(QWidget *parent) const
 {
     return QStringList();
 }

@@ -94,7 +94,7 @@ QString SieveActionReplace::code(QWidget *w) const
 }
 
 
-QStringList SieveActionReplace::needRequires() const
+QStringList SieveActionReplace::needRequires(QWidget *) const
 {
     return QStringList() << QLatin1String("replace");
 }

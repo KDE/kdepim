@@ -22,7 +22,7 @@
 // KMail includes
 #include "kmreadermainwin.h"
 #include "composer.h"
-#include "searchwindow.h"
+#include "searchdialog/searchwindow.h"
 #include "antispamwizard.h"
 #include "statusbarlabel.h"
 #include "undostack.h"
@@ -46,12 +46,12 @@
     using KSieveUi::SieveDebugDialog;
 #endif
 
-#include "collectionmaintenancepage.h"
-#include "collectionquotapage.h"
-#include "collectiontemplatespage.h"
-#include "collectionshortcutpage.h"
-#include "collectionviewpage.h"
-#include "collectionmailinglistpage.h"
+#include "collectionpage/collectionmaintenancepage.h"
+#include "collectionpage/collectionquotapage.h"
+#include "collectionpage/collectiontemplatespage.h"
+#include "collectionpage/collectionshortcutpage.h"
+#include "collectionpage/collectionviewpage.h"
+#include "collectionpage/collectionmailinglistpage.h"
 #include "tagselectdialog.h"
 #include "archivemailagentinterface.h"
 #include "createnewcontactjob.h"
