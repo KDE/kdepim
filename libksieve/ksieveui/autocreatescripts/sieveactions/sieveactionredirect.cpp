@@ -102,7 +102,7 @@ QString SieveActionRedirect::help() const
 {
     QString helpStr = i18n("The \"redirect\" action is used to send the message to another user at a supplied address, as a mail forwarding feature does.  The \"redirect\" action makes no changes to the message body or existing headers, but it may add new headers.");
     if (mHasCopySupport) {
-        helpStr += i18n("If the optional \":copy\" keyword is specified, the tagged command does not cancel the implicit \"keep\". Instead, it redirects a copy in addition to whatever else is happening to the message.");
+        helpStr += QLatin1Char(' ') + i18n("If the optional \":copy\" keyword is specified, the tagged command does not cancel the implicit \"keep\". Instead, it redirects a copy in addition to whatever else is happening to the message.");
     }
     //TODO add list info
     return helpStr;
