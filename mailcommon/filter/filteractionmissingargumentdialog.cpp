@@ -20,7 +20,7 @@
 #include "kmfilterdialog.h"
 #include "folderrequester.h"
 #include "mailkernel.h"
-#include "mailutil.h"
+#include "util/mailutil.h"
 #include "addtagdialog.h"
 
 #include <Akonadi/EntityMimeTypeFilterModel>

@@ -22,7 +22,7 @@
 
 #include "../mailkernel.h"
 #include "mdnadvicedialog.h"
-#include "../mailutil.h"
+#include "util/mailutil.h"
 
 #include <messagecomposer/messagefactory.h>
 #include <messagecomposer/messagesender.h>

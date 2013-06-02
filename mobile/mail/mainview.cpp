@@ -100,7 +100,7 @@
 #include <kstandarddirs.h>
 #include <mailcommon/filter/filteraction.h>
 #include <mailcommon/folder/foldercollection.h>
-#include <mailcommon/mailutil.h>
+#include <mailcommon/util/mailutil.h>
 #include <pimcommon/util/pimutil.h>
 #include <mailtransport/transportmanager.h>
 #include <messagecomposer/akonadisender.h>

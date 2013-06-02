@@ -2,6 +2,7 @@
 include_directories(
   ${CMAKE_SOURCE_DIR}/calendarsupport
   ${CMAKE_SOURCE_DIR}/messageviewer
+  ${CMAKE_SOURCE_DIR}/mailcommon/
   ${Boost_INCLUDE_DIRS}
 )
 

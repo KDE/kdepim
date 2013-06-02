@@ -21,7 +21,7 @@
 #include "expirecollectionattribute.h"
 #include "folderrequester.h"
 #include "foldercollection.h"
-#include "mailutil.h"
+#include "util/mailutil.h"
 #include "mailkernel.h"
 
 #include <Akonadi/CollectionModifyJob>

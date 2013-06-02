@@ -21,7 +21,7 @@
 
 #include "mailcommon/filter/filtermanager.h"
 #include "mailcommon/filter/filterimporterexporter.h"
-#include "mailcommon/mailutil.h"
+#include "mailcommon/util/mailutil.h"
 #include "pimcommon/util/createresource.h"
 
 #include "messageviewer/kcursorsaver.h"

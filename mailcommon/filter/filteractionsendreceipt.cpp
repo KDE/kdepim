@@ -20,7 +20,7 @@
 #include "filteractionsendreceipt.h"
 
 #include "../mailkernel.h"
-#include "../mailutil.h"
+#include "util/mailutil.h"
 
 #include "messagecomposer/messagefactory.h"
 #include "messagecomposer/messagesender.h"

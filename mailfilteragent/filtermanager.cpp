@@ -39,7 +39,7 @@
 #include <mailcommon/filter/filterimporterexporter.h>
 #include <mailcommon/filter/filterlog.h>
 #include <mailcommon/filter/mailfilter.h>
-#include <mailcommon/mailutil.h>
+#include <mailcommon/util/mailutil.h>
 
 #include <QtCore/QTimer>
 #include <QApplication>

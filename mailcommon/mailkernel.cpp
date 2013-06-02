@@ -17,7 +17,7 @@
 */
 
 #include "mailkernel.h"
-#include "mailutil.h"
+#include "util/mailutil.h"
 #include "imapsettings.h"
 #include "pop3settings.h"
 

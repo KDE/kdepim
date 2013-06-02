@@ -21,7 +21,7 @@
 
 #include "mailcommon_export.h"
 #include "foldertreewidget.h"
-#include "mailutil.h"
+#include "util/mailutil.h"
 
 #include <Akonadi/EntityTreeView>
 #include <Akonadi/Collection>

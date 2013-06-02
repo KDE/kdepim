@@ -22,7 +22,7 @@
 #include "archivemailagentutil.h"
 
 #include <mailcommon/mailkernel.h>
-#include <mailcommon/mailutil.h>
+#include <mailcommon/util/mailutil.h>
 
 #include <Akonadi/Collection>
 

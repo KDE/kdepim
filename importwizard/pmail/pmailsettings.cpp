@@ -19,7 +19,7 @@
 #include "importwizardutil.h"
 
 #include <mailtransport/transportmanager.h>
-#include "mailcommon/mailutil.h"
+#include "mailcommon/util/mailutil.h"
 
 #include <kpimidentities/identity.h>
 #include <kpimidentities/signature.h>

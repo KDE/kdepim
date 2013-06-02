@@ -19,7 +19,7 @@
 #include "archivemailinfo.h"
 #include "archivemailmanager.h"
 
-#include "mailcommon/mailutil.h"
+#include "mailcommon/util/mailutil.h"
 
 #include <mailcommon/job/backupjob.h>
 

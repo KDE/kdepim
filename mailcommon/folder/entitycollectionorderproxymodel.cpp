@@ -18,7 +18,7 @@
 
 #include "entitycollectionorderproxymodel.h"
 #include "mailkernel.h"
-#include "mailutil.h"
+#include "util/mailutil.h"
 
 #include <Akonadi/Collection>
 #include <Akonadi/EntityTreeModel>

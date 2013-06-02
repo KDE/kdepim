@@ -17,7 +17,7 @@
 
 #include "evolutionsettings.h"
 #include "evolutionutil.h"
-#include "mailcommon/mailutil.h"
+#include "mailcommon/util/mailutil.h"
 #include "importwizardutil.h"
 
 #include <kpimidentities/identity.h>

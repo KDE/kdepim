@@ -16,7 +16,7 @@
 */
 
 #include "foldercollectionmonitor.h"
-#include "mailutil.h"
+#include "util/mailutil.h"
 #include "foldercollection.h"
 #include "collectionpage/expirecollectionattribute.h"
 
