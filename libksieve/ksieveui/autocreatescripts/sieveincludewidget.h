@@ -98,6 +98,9 @@ public:
 
     void generatedScript(QString &script, QStringList &requires);
 
+private Q_SLOTS:
+    void slotHelp();
+
 private:
     SieveIncludeWidgetLister *mIncludeLister;
 };

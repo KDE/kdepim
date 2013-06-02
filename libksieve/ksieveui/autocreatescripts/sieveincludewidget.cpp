@@ -24,6 +24,8 @@
 #include <QGridLayout>
 #include <QCheckBox>
 #include <QLabel>
+#include <QToolButton>
+#include <QWhatsThis>
 
 
 namespace KSieveUi {
@@ -135,7 +137,13 @@ void SieveIncludeActionWidget::updateAddRemoveButton( bool addButtonEnabled, boo
 SieveIncludeWidget::SieveIncludeWidget(QWidget *parent)
     : SieveWidgetPageAbstract(parent)
 {
-    QHBoxLayout *lay = new QHBoxLayout;
+    QVBoxLayout *lay = new QVBoxLayout;
+    QToolButton *helpButton = new QToolButton;
+    helpButton->setToolTip(i18n("Help"));
+    lay->addWidget( helpButton );
+    helpButton->setIcon( KIcon( QLatin1String("help-hint") ) );
+    connect(helpButton, SIGNAL(clicked()), this, SLOT(slotHelp()));
+
     mIncludeLister = new SieveIncludeWidgetLister;
     lay->addWidget(mIncludeLister,0, Qt::AlignTop);
     setLayout(lay);
@@ -143,6 +151,12 @@ SieveIncludeWidget::SieveIncludeWidget(QWidget *parent)
 
 SieveIncludeWidget::~SieveIncludeWidget()
 {
+}
+
+void SieveIncludeWidget::slotHelp()
+{
+    const QString help = i18n("The \"include\" command takes an optional \"location\" parameter, an optional \":once\" parameter, an optional \":optional\" parameter, and a single string argument representing the name of the script to include for processing at that point.");
+    QWhatsThis::showText( QCursor::pos(), help );
 }
 
 void SieveIncludeWidget::generatedScript(QString &script, QStringList &requires)
