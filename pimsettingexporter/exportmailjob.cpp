@@ -49,8 +49,20 @@ ExportMailJob::~ExportMailJob()
 {
 }
 
+bool ExportMailJob::checkProgram()
+{
+    if (KStandardDirs::findExe(QLatin1String("mysqldump")).isEmpty()) {
+        Q_EMIT error(i18n("mysqldump not found. Export data aborted"));
+        return false;
+    }
+    return true;
+}
+
 void ExportMailJob::start()
 {
+    if (!checkProgram())
+        return;
+
     createProgressDialog();
 
     if (mTypeSelected & BackupMailUtil::Identity) {
