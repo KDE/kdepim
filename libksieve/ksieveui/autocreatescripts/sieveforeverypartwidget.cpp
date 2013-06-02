@@ -35,7 +35,7 @@ SieveForEveryPartWidget::SieveForEveryPartWidget(QWidget *parent)
     QVBoxLayout *topLayout = new QVBoxLayout;
 
     QWidget *w = new QWidget;
-    QVBoxLayout *lay = new QVBoxLayout;
+    QHBoxLayout *lay = new QHBoxLayout;
     lay->setMargin(0);
     w->setLayout(lay);
 
