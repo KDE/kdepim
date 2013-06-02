@@ -36,6 +36,7 @@ SieveForEveryPartWidget::SieveForEveryPartWidget(QWidget *parent)
 
     QWidget *w = new QWidget;
     QVBoxLayout *lay = new QVBoxLayout;
+    lay->setMargin(0);
     w->setLayout(lay);
 
     QToolButton *helpButton = new QToolButton;
