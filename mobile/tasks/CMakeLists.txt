@@ -31,7 +31,7 @@ if (RUNTIME_PLUGINS_STATIC)
   add_definitions(-DKCALCORE_SERIALIZER_PLUGIN_STATIC)
 endif (RUNTIME_PLUGINS_STATIC)
 
-kde4_add_app_icon(mobile_tasks_srcs "${CMAKE_CURRENT_SOURCE_DIR}/hi*-apps-tasks-mobile.png")
+kde4_add_app_icon(mobile_tasks_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/hi*-apps-tasks-mobile.png")
 
 kde4_add_executable(tasks-mobile ${mobile_tasks_SRCS} )
 if (WINCE)
