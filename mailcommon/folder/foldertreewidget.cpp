@@ -21,7 +21,7 @@
 #include "foldertreeview.h"
 #include "foldertreewidgetproxymodel.h"
 #include "mailkernel.h"
-#include "mailutil.h"
+#include "util/mailutil.h"
 
 #include "pimcommon/acl/imapaclattribute.h"
 #include "pimcommon/util/pimutil.h"

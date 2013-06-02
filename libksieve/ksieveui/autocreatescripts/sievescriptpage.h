@@ -26,6 +26,8 @@ class SieveScriptBlockWidget;
 class SieveScriptTabWidget;
 class SieveIncludeWidget;
 class SieveForEveryPartWidget;
+class SieveGlobalVariableWidget;
+
 class SieveScriptPage : public QWidget
 {
     Q_OBJECT
@@ -47,6 +49,7 @@ private:
     SieveScriptTabWidget *mTabWidget;
     SieveIncludeWidget *mIncludeWidget;
     SieveForEveryPartWidget *mForEveryPartWidget;
+    SieveGlobalVariableWidget *mGlobalVariableWidget;
 };
 }
 

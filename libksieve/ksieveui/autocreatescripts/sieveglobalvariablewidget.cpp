@@ -15,7 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "sieveincludewidget.h"
+#include "sieveglobalvariablewidget.h"
 #include "sievescriptblockwidget.h"
 
 #include <KPushButton>
@@ -30,78 +30,39 @@
 
 
 namespace KSieveUi {
-static int MINIMUMINCLUDEACTION = 1;
-static int MAXIMUMINCLUDEACTION = 8;
+static int MINIMUMGLOBALVARIABLEACTION = 1;
+static int MAXIMUMGLOBALVARIABLEACTION = 15;
 
-SieveIncludeLocation::SieveIncludeLocation(QWidget *parent)
-    : KComboBox(parent)
-{
-    initialize();
-}
-
-SieveIncludeLocation::~SieveIncludeLocation()
-{
-}
-
-void SieveIncludeLocation::initialize()
-{
-    addItem(i18n("personal"), QLatin1String(":personal"));
-    addItem(i18n("global"), QLatin1String(":global"));
-}
-
-QString SieveIncludeLocation::code() const
-{
-    return itemData(currentIndex()).toString();
-}
-
-SieveIncludeActionWidget::SieveIncludeActionWidget(QWidget *parent)
+SieveGlobalVariableActionWidget::SieveGlobalVariableActionWidget(QWidget *parent)
     : QWidget(parent)
 {
     initWidget();
 }
 
-SieveIncludeActionWidget::~SieveIncludeActionWidget()
+SieveGlobalVariableActionWidget::~SieveGlobalVariableActionWidget()
 {
 
 }
 
-void SieveIncludeActionWidget::generatedScript(QString &script)
+void SieveGlobalVariableActionWidget::generatedScript(QString &script)
 {
-    const QString includeName = mIncludeName->text();
-    if (includeName.isEmpty())
+    const QString variableName = mVariableName->text();
+    if (variableName.isEmpty())
         return;
-    script += QLatin1String("include ");
-    script += mLocation->code() + QLatin1Char(' ');
-    if (mOptional->isChecked()) {
-        script += QLatin1String(":optional ");
-    }
-    if (mOnce->isChecked()) {
-        script += QLatin1String(":optional ");
-    }
-    script += QString::fromLatin1("\"%1\";\n").arg(includeName);
+    script += QLatin1String("global ");
+    script += QString::fromLatin1("\"%1\";\n").arg(variableName);
 }
 
-void SieveIncludeActionWidget::initWidget()
+void SieveGlobalVariableActionWidget::initWidget()
 {
     mLayout = new QGridLayout(this);
     mLayout->setContentsMargins( 0, 0, 0, 0 );
 
-    QLabel *lab = new QLabel(i18n("Include:"));
+    QLabel *lab = new QLabel(i18n("Variable name:"));
     mLayout->addWidget( lab, 1, 0 );
-    mLocation = new SieveIncludeLocation;
-    mLayout->addWidget( mLocation, 1, 1 );
 
-    lab = new QLabel(i18n("Name:"));
-    mLayout->addWidget( lab, 1, 2 );
-
-    mIncludeName = new KLineEdit;
-    mLayout->addWidget( mIncludeName, 1, 3 );
-
-    mOptional = new QCheckBox(i18n("Optional"));
-    mLayout->addWidget( mOptional, 1, 4 );
-
-    mOnce = new QCheckBox(i18n("Once"));
-    mLayout->addWidget( mOnce, 1, 5 );
+    mVariableName = new KLineEdit;
+    mLayout->addWidget( mVariableName, 1, 1 );
 
     mAdd = new KPushButton( this );
     mAdd->setIcon( KIcon( QLatin1String("list-add") ) );
@@ -110,8 +71,8 @@ void SieveIncludeActionWidget::initWidget()
     mRemove = new KPushButton( this );
     mRemove->setIcon( KIcon( QLatin1String("list-remove") ) );
     mRemove->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
-    mLayout->addWidget( mAdd, 1, 6 );
-    mLayout->addWidget( mRemove, 1, 7 );
+    mLayout->addWidget( mAdd, 1, 2 );
+    mLayout->addWidget( mRemove, 1, 3 );
 
     connect( mAdd, SIGNAL(clicked()),
              this, SLOT(slotAddWidget()) );
@@ -119,23 +80,23 @@ void SieveIncludeActionWidget::initWidget()
              this, SLOT(slotRemoveWidget()) );
 }
 
-void SieveIncludeActionWidget::slotAddWidget()
+void SieveGlobalVariableActionWidget::slotAddWidget()
 {
     emit addWidget( this );
 }
 
-void SieveIncludeActionWidget::slotRemoveWidget()
+void SieveGlobalVariableActionWidget::slotRemoveWidget()
 {
     emit removeWidget( this );
 }
 
-void SieveIncludeActionWidget::updateAddRemoveButton( bool addButtonEnabled, bool removeButtonEnabled )
+void SieveGlobalVariableActionWidget::updateAddRemoveButton( bool addButtonEnabled, bool removeButtonEnabled )
 {
     mAdd->setEnabled(addButtonEnabled);
     mRemove->setEnabled(removeButtonEnabled);
 }
 
-SieveIncludeWidget::SieveIncludeWidget(QWidget *parent)
+SieveGlobalVariableWidget::SieveGlobalVariableWidget(QWidget *parent)
     : SieveWidgetPageAbstract(parent)
 {
     QVBoxLayout *lay = new QVBoxLayout;
@@ -145,23 +106,23 @@ SieveIncludeWidget::SieveIncludeWidget(QWidget *parent)
     helpButton->setIcon( KIcon( QLatin1String("help-hint") ) );
     connect(helpButton, SIGNAL(clicked()), this, SLOT(slotHelp()));
 
-    mIncludeLister = new SieveIncludeWidgetLister;
+    mIncludeLister = new SieveGlobalVariableLister;
     lay->addWidget(mIncludeLister,0, Qt::AlignTop);
-    setPageType(KSieveUi::SieveScriptBlockWidget::Include);
+    setPageType(KSieveUi::SieveScriptBlockWidget::GlobalVariable);
     setLayout(lay);
 }
 
-SieveIncludeWidget::~SieveIncludeWidget()
+SieveGlobalVariableWidget::~SieveGlobalVariableWidget()
 {
 }
 
-void SieveIncludeWidget::slotHelp()
+void SieveGlobalVariableWidget::slotHelp()
 {
-    const QString help = i18n("The \"include\" command takes an optional \"location\" parameter, an optional \":once\" parameter, an optional \":optional\" parameter, and a single string argument representing the name of the script to include for processing at that point.");
+    const QString help = i18n("A variable has global scope in all scripts that have declared it with the \"global\" command.  If a script uses that variable name without declaring it global, the name specifies a separate, non-global variable within that script.");
     QWhatsThis::showText( QCursor::pos(), help );
 }
 
-void SieveIncludeWidget::generatedScript(QString &script, QStringList &requires)
+void SieveGlobalVariableWidget::generatedScript(QString &script, QStringList &requires)
 {
     QString result;
     QStringList lst;
@@ -172,32 +133,32 @@ void SieveIncludeWidget::generatedScript(QString &script, QStringList &requires)
     }
 }
 
-SieveIncludeWidgetLister::SieveIncludeWidgetLister(QWidget *parent)
-    : KPIM::KWidgetLister(false, MINIMUMINCLUDEACTION, MAXIMUMINCLUDEACTION, parent)
+SieveGlobalVariableLister::SieveGlobalVariableLister(QWidget *parent)
+    : KPIM::KWidgetLister(false, MINIMUMGLOBALVARIABLEACTION, MAXIMUMGLOBALVARIABLEACTION, parent)
 {
     slotClear();
     updateAddRemoveButton();
 }
 
-SieveIncludeWidgetLister::~SieveIncludeWidgetLister()
+SieveGlobalVariableLister::~SieveGlobalVariableLister()
 {
 
 }
 
-void SieveIncludeWidgetLister::slotAddWidget( QWidget *w )
+void SieveGlobalVariableLister::slotAddWidget( QWidget *w )
 {
     addWidgetAfterThisWidget( w );
     updateAddRemoveButton();
 }
 
-void SieveIncludeWidgetLister::slotRemoveWidget( QWidget *w )
+void SieveGlobalVariableLister::slotRemoveWidget( QWidget *w )
 {
     removeWidget( w );
     updateAddRemoveButton();
 }
 
 
-void SieveIncludeWidgetLister::updateAddRemoveButton()
+void SieveGlobalVariableLister::updateAddRemoveButton()
 {
     QList<QWidget*> widgetList = widgets();
     const int numberOfWidget( widgetList.count() );
@@ -216,24 +177,24 @@ void SieveIncludeWidgetLister::updateAddRemoveButton()
     QList<QWidget*>::ConstIterator wIt = widgetList.constBegin();
     QList<QWidget*>::ConstIterator wEnd = widgetList.constEnd();
     for ( ; wIt != wEnd ;++wIt ) {
-        SieveIncludeActionWidget *w = qobject_cast<SieveIncludeActionWidget*>( *wIt );
+        SieveGlobalVariableActionWidget *w = qobject_cast<SieveGlobalVariableActionWidget*>( *wIt );
         w->updateAddRemoveButton( addButtonEnabled, removeButtonEnabled );
     }
 }
 
-void SieveIncludeWidgetLister::generatedScript(QString &script, QStringList &requires)
+void SieveGlobalVariableLister::generatedScript(QString &script, QStringList &requires)
 {
     requires << QLatin1String("include");
     const QList<QWidget*> widgetList = widgets();
     QList<QWidget*>::ConstIterator wIt = widgetList.constBegin();
     QList<QWidget*>::ConstIterator wEnd = widgetList.constEnd();
     for ( ; wIt != wEnd ;++wIt ) {
-        SieveIncludeActionWidget *w = qobject_cast<SieveIncludeActionWidget*>( *wIt );
+        SieveGlobalVariableActionWidget *w = qobject_cast<SieveGlobalVariableActionWidget*>( *wIt );
         w->generatedScript(script);
     }
 }
 
-void SieveIncludeWidgetLister::reconnectWidget(SieveIncludeActionWidget *w )
+void SieveGlobalVariableLister::reconnectWidget(SieveGlobalVariableActionWidget *w )
 {
     connect( w, SIGNAL(addWidget(QWidget*)),
              this, SLOT(slotAddWidget(QWidget*)), Qt::UniqueConnection );
@@ -241,18 +202,18 @@ void SieveIncludeWidgetLister::reconnectWidget(SieveIncludeActionWidget *w )
              this, SLOT(slotRemoveWidget(QWidget*)), Qt::UniqueConnection );
 }
 
-void SieveIncludeWidgetLister::clearWidget( QWidget *aWidget )
+void SieveGlobalVariableLister::clearWidget( QWidget *aWidget )
 {
     //TODO
 }
 
-QWidget *SieveIncludeWidgetLister::createWidget( QWidget *parent )
+QWidget *SieveGlobalVariableLister::createWidget( QWidget *parent )
 {
-    SieveIncludeActionWidget *w = new SieveIncludeActionWidget( parent);
+    SieveGlobalVariableActionWidget *w = new SieveGlobalVariableActionWidget( parent);
     reconnectWidget( w );
     return w;
 }
 
 }
 
-#include "sieveincludewidget.moc"
+#include "sieveglobalvariablewidget.moc"

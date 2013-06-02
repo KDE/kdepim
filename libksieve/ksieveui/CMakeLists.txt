@@ -38,6 +38,7 @@ set(ksieveui_LIB_SRCS
   autocreatescripts/sieveincludewidget.cpp
   autocreatescripts/sieveforeverypartwidget.cpp
   autocreatescripts/sievewidgetpageabstract.cpp
+  autocreatescripts/sieveglobalvariablewidget.cpp
   autocreatescripts/sieveactions/sieveactionlist.cpp
   autocreatescripts/sieveactions/sieveaction.cpp
   autocreatescripts/sieveactions/sieveactiondiscard.cpp
@@ -61,6 +62,7 @@ set(ksieveui_LIB_SRCS
   autocreatescripts/sieveactions/sieveactionbreak.cpp
   autocreatescripts/sieveactions/sieveactionconvert.cpp
   autocreatescripts/sieveactions/sieveactionsetvariable.cpp
+  autocreatescripts/sieveactions/sieveactionreturn.cpp
   autocreatescripts/sieveactions/widgets/selectflagswidget.cpp
   autocreatescripts/sieveactions/widgets/selectfileintowidget.cpp
   autocreatescripts/sieveactions/widgets/addresslineedit.cpp

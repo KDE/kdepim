@@ -43,7 +43,7 @@
 #include <messageviewer/interfaces/bodypart.h>
 #include <messageviewer/interfaces/bodypartformatter.h>
 #include <messageviewer/interfaces/bodyparturlhandler.h>
-#include <mailcommon/mailutil.h>
+#include <mailcommon/util/mailutil.h>
 #include <messageviewer/webkitparthtmlwriter.h>
 using namespace MessageViewer;
 

@@ -19,6 +19,7 @@
 #include "sievescripttabwidget.h"
 #include "sieveincludewidget.h"
 #include "sieveforeverypartwidget.h"
+#include "sieveglobalvariablewidget.h"
 
 #include "sievewidgetpageabstract.h"
 #include "autocreatescripts/autocreatescriptdialog.h"
@@ -32,7 +33,8 @@ namespace KSieveUi {
 SieveScriptPage::SieveScriptPage(QWidget *parent)
     : QWidget(parent),
       mIncludeWidget(0),
-      mForEveryPartWidget(0)
+      mForEveryPartWidget(0),
+      mGlobalVariableWidget(0)
 {
     QVBoxLayout *topLayout = new QVBoxLayout;
     mTabWidget = new SieveScriptTabWidget;
@@ -40,13 +42,14 @@ SieveScriptPage::SieveScriptPage(QWidget *parent)
 
     if (AutoCreateScriptDialog::sieveCapabilities().contains(QLatin1String("include"))) {
         mIncludeWidget = new SieveIncludeWidget;
-        mIncludeWidget->setPageType(KSieveUi::SieveScriptBlockWidget::Include);
         mTabWidget->addTab(mIncludeWidget, i18n("Includes"));
+
+        mGlobalVariableWidget = new SieveGlobalVariableWidget;
+        mTabWidget->addTab(mGlobalVariableWidget, i18n("Global Variable"));
     }
 
     if (AutoCreateScriptDialog::sieveCapabilities().contains(QLatin1String("foreverypart"))) {
         mForEveryPartWidget = new SieveForEveryPartWidget;
-        mForEveryPartWidget->setPageType(KSieveUi::SieveScriptBlockWidget::ForEveryPart);
         mTabWidget->addTab(mForEveryPartWidget, i18n("ForEveryPart"));
     }
 

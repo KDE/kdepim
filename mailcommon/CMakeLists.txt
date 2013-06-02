@@ -12,6 +12,7 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_SOURCE_DIR}/snippets
   ${CMAKE_CURRENT_SOURCE_DIR}/folder
+  ${CMAKE_CURRENT_SOURCE_DIR}/util
   ${SOPRANO_INCLUDE_DIR}
   ${NEPOMUK_CORE_INCLUDE_DIR}
 )
@@ -96,7 +97,7 @@ set(libmailcommon_SRCS
   folder/entitycollectionorderproxymodel.cpp
   job/jobscheduler.cpp
   mailkernel.cpp
-  mailutil.cpp
+  util/mailutil.cpp
   widgets/redirectdialog.cpp
   widgets/regexplineedit.cpp
   rulewidgethandlermanager.cpp

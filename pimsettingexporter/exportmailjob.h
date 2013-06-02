@@ -35,7 +35,6 @@ public:
     void start();
 
 private:
-
     KUrl subdirPath(const KUrl &url ) const;
 
     void backupTransports();
@@ -50,7 +49,7 @@ private:
     KUrl resourcePath(const Akonadi::AgentInstance& agent) const;
     void backupFile(const QString&filename, const QString& path, const QString&storedName);
     bool backupMailData(const KUrl& url, const QString& archivePath);
-
+    bool checkProgram();
 };
 
 #endif // ExportMailJob_H

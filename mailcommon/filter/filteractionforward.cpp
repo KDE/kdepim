@@ -20,7 +20,7 @@
 #include "filteractionforward.h"
 
 #include "../mailkernel.h"
-#include "../mailutil.h"
+#include "util/mailutil.h"
 #include "filteractionmissingargumentdialog.h"
 
 #include <pimcommon/widgets/minimumcombobox.h>

@@ -20,7 +20,7 @@
 #include "foldertreewidgetproxymodel.h"
 #include "foldercollection.h"
 #include "mailkernel.h"
-#include "mailutil.h"
+#include "util/mailutil.h"
 
 #include <messagecore/globalsettings.h>
 

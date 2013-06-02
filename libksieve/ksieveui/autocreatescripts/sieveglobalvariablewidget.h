@@ -15,36 +15,25 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef SIEVEINCLUDEWIDGET_H
-#define SIEVEINCLUDEWIDGET_H
+#ifndef SIEVEGLOBALVARIABLEWIDGET_H
+#define SIEVEGLOBALVARIABLEWIDGET_H
 
 #include "sievewidgetpageabstract.h"
 #include <libkdepim/kwidgetlister.h>
-#include <KComboBox>
 
 class KPushButton;
 class KLineEdit;
 class QGridLayout;
 class QCheckBox;
 namespace KSieveUi {
+class SieveGlobalVariableWidget;
 
-class SieveIncludeLocation : public KComboBox
+class SieveGlobalVariableActionWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit SieveIncludeLocation(QWidget *parent = 0);
-    ~SieveIncludeLocation();
-    QString code() const;
-private:
-    void initialize();
-};
-
-class SieveIncludeActionWidget : public QWidget
-{
-    Q_OBJECT
-public:
-    explicit SieveIncludeActionWidget(QWidget *parent = 0);
-    ~SieveIncludeActionWidget();
+    explicit SieveGlobalVariableActionWidget(QWidget *parent = 0);
+    ~SieveGlobalVariableActionWidget();
 
     void generatedScript(QString &script);
     void updateAddRemoveButton( bool addButtonEnabled, bool removeButtonEnabled );
@@ -62,18 +51,15 @@ private:
     KPushButton *mAdd;
     KPushButton *mRemove;
     QGridLayout *mLayout;
-    QCheckBox *mOptional;
-    QCheckBox *mOnce;
-    SieveIncludeLocation *mLocation;
-    KLineEdit *mIncludeName;
+    KLineEdit *mVariableName;
 };
 
-class SieveIncludeWidgetLister : public KPIM::KWidgetLister
+class SieveGlobalVariableLister : public KPIM::KWidgetLister
 {
     Q_OBJECT
 public:
-    explicit SieveIncludeWidgetLister(QWidget *parent = 0);
-    ~SieveIncludeWidgetLister();
+    explicit SieveGlobalVariableLister(QWidget *parent = 0);
+    ~SieveGlobalVariableLister();
 
     void generatedScript(QString &script, QStringList &requires);
 public Q_SLOTS:
@@ -84,17 +70,17 @@ protected:
     void clearWidget( QWidget *aWidget );
     QWidget *createWidget( QWidget *parent );
 private:
-    void reconnectWidget(SieveIncludeActionWidget *w );
+    void reconnectWidget(SieveGlobalVariableActionWidget *w );
     void updateAddRemoveButton();
 };
 
 
-class SieveIncludeWidget : public SieveWidgetPageAbstract
+class SieveGlobalVariableWidget : public SieveWidgetPageAbstract
 {
     Q_OBJECT
 public:
-    explicit SieveIncludeWidget(QWidget *parent = 0);
-    ~SieveIncludeWidget();
+    explicit SieveGlobalVariableWidget(QWidget *parent = 0);
+    ~SieveGlobalVariableWidget();
 
     void generatedScript(QString &script, QStringList &requires);
 
@@ -102,8 +88,15 @@ private Q_SLOTS:
     void slotHelp();
 
 private:
-    SieveIncludeWidgetLister *mIncludeLister;
+    SieveGlobalVariableLister *mIncludeLister;
 };
 }
 
-#endif // SIEVEINCLUDEWIDGET_H
+
+class SieveGlobalVariableWidget
+{
+public:
+    SieveGlobalVariableWidget();
+};
+
+#endif // SIEVEGLOBALVARIABLEWIDGET_H

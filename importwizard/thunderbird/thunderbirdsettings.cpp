@@ -17,7 +17,7 @@
 
 #include "thunderbirdsettings.h"
 #include <mailtransport/transportmanager.h>
-#include "mailcommon/mailutil.h"
+#include "mailcommon/util/mailutil.h"
 #include "importwizardutil.h"
 
 #include <kpimidentities/identity.h>
