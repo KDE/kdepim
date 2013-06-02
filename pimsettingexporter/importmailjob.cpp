@@ -311,7 +311,7 @@ void ImportMailJob::restoreResources()
           if(leaveOnserver.hasKey(QLatin1String("downloadLater"))) {
             settings.insert(QLatin1String("DownloadLater"),leaveOnserver.readEntry("downloadLater",QStringList()));
           }
-          const QString newResource = mCreateResource->createResource( QString::fromLatin1("akonadi_imap_resource"), filename, settings );
+          const QString newResource = mCreateResource->createResource( QString::fromLatin1("akonadi_pop3_resource"), filename, settings );
           if(!newResource.isEmpty())
             mHashResources.insert(filename,newResource);
         } else if(filename.contains(QLatin1String("imap"))) {
@@ -400,7 +400,7 @@ void ImportMailJob::restoreResources()
           }
 
 
-          const QString newResource = mCreateResource->createResource( QString::fromLatin1("akonadi_pop3_resource"), filename, settings );
+          const QString newResource = mCreateResource->createResource( QString::fromLatin1("akonadi_imap_resource"), filename, settings );
           if(!newResource.isEmpty())
             mHashResources.insert(filename,newResource);
         } else {
