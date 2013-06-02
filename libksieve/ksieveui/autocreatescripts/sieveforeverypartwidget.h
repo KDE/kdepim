@@ -32,6 +32,9 @@ public:
 
     void generatedScript(QString &script, QStringList &requires);
 
+private Q_SLOTS:
+    void slotHelp();
+
 private:
     QCheckBox *mForLoop;
     KLineEdit *mName;
