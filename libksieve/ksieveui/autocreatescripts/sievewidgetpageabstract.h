@@ -30,7 +30,8 @@ public:
         BlockElsIf = 1,
         BlockElse = 2,
         Include = 3,
-        ForEveryPart = 4
+        ForEveryPart = 4,
+        GlobalVariable = 5
     };
 
     explicit SieveWidgetPageAbstract(QWidget *parent = 0);
