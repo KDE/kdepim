@@ -48,8 +48,7 @@ void SieveGlobalVariableActionWidget::generatedScript(QString &script)
     const QString variableName = mVariableName->text();
     if (variableName.isEmpty())
         return;
-    script += QLatin1String("include ");
-    //TODO
+    script += QLatin1String("global ");
     script += QString::fromLatin1("\"%1\";\n").arg(variableName);
 }
 
@@ -59,10 +58,10 @@ void SieveGlobalVariableActionWidget::initWidget()
     mLayout->setContentsMargins( 0, 0, 0, 0 );
 
     QLabel *lab = new QLabel(i18n("Variable name:"));
-    mLayout->addWidget( lab, 0, 0 );
+    mLayout->addWidget( lab, 1, 0 );
 
     mVariableName = new KLineEdit;
-    mLayout->addWidget( mVariableName, 0, 1 );
+    mLayout->addWidget( mVariableName, 1, 1 );
 
     mAdd = new KPushButton( this );
     mAdd->setIcon( KIcon( QLatin1String("list-add") ) );
@@ -71,8 +70,8 @@ void SieveGlobalVariableActionWidget::initWidget()
     mRemove = new KPushButton( this );
     mRemove->setIcon( KIcon( QLatin1String("list-remove") ) );
     mRemove->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
-    mLayout->addWidget( mAdd, 1, 6 );
-    mLayout->addWidget( mRemove, 1, 7 );
+    mLayout->addWidget( mAdd, 1, 2 );
+    mLayout->addWidget( mRemove, 1, 3 );
 
     connect( mAdd, SIGNAL(clicked()),
              this, SLOT(slotAddWidget()) );
@@ -117,7 +116,7 @@ SieveGlobalVariableWidget::~SieveGlobalVariableWidget()
 
 void SieveGlobalVariableWidget::slotHelp()
 {
-    const QString help = i18n("The \"include\" command takes an optional \"location\" parameter, an optional \":once\" parameter, an optional \":optional\" parameter, and a single string argument representing the name of the script to include for processing at that point.");
+    const QString help = i18n("A variable has global scope in all scripts that have declared it with the \"global\" command.  If a script uses that variable name without declaring it global, the name specifies a separate, non-global variable within that script.");
     QWhatsThis::showText( QCursor::pos(), help );
 }
 
