@@ -42,17 +42,14 @@ SieveScriptPage::SieveScriptPage(QWidget *parent)
 
     if (AutoCreateScriptDialog::sieveCapabilities().contains(QLatin1String("include"))) {
         mIncludeWidget = new SieveIncludeWidget;
-        mIncludeWidget->setPageType(KSieveUi::SieveScriptBlockWidget::Include);
         mTabWidget->addTab(mIncludeWidget, i18n("Includes"));
 
         mGlobalVariableWidget = new SieveGlobalVariableWidget;
-        mGlobalVariableWidget->setPageType(KSieveUi::SieveScriptBlockWidget::GlobalVariable);
         mTabWidget->addTab(mGlobalVariableWidget, i18n("Global Variable"));
     }
 
     if (AutoCreateScriptDialog::sieveCapabilities().contains(QLatin1String("foreverypart"))) {
         mForEveryPartWidget = new SieveForEveryPartWidget;
-        mForEveryPartWidget->setPageType(KSieveUi::SieveScriptBlockWidget::ForEveryPart);
         mTabWidget->addTab(mForEveryPartWidget, i18n("ForEveryPart"));
     }
 

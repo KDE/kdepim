@@ -16,6 +16,7 @@
 */
 
 #include "sieveforeverypartwidget.h"
+#include "sievescriptblockwidget.h"
 
 #include <KLocale>
 #include <KLineEdit>
@@ -44,6 +45,7 @@ SieveForEveryPartWidget::SieveForEveryPartWidget(QWidget *parent)
 
     topLayout->addWidget(w,0, Qt::AlignTop);
 
+    setPageType(KSieveUi::SieveScriptBlockWidget::ForEveryPart);
     setLayout(topLayout);
 }
 

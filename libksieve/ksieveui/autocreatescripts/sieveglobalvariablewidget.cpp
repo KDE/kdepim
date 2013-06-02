@@ -16,6 +16,7 @@
 */
 
 #include "sieveglobalvariablewidget.h"
+#include "sievescriptblockwidget.h"
 
 #include <KPushButton>
 #include <KLocale>
@@ -30,7 +31,7 @@
 
 namespace KSieveUi {
 static int MINIMUMGLOBALVARIABLEACTION = 1;
-static int MAXIMUMGLOBALVARIABLEACTION = 8;
+static int MAXIMUMGLOBALVARIABLEACTION = 15;
 
 SieveGlobalVariableActionWidget::SieveGlobalVariableActionWidget(QWidget *parent)
     : QWidget(parent)
@@ -107,6 +108,7 @@ SieveGlobalVariableWidget::SieveGlobalVariableWidget(QWidget *parent)
 
     mIncludeLister = new SieveGlobalVariableLister;
     lay->addWidget(mIncludeLister,0, Qt::AlignTop);
+    setPageType(KSieveUi::SieveScriptBlockWidget::GlobalVariable);
     setLayout(lay);
 }
 

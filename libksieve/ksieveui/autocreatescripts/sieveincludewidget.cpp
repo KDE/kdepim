@@ -16,6 +16,7 @@
 */
 
 #include "sieveincludewidget.h"
+#include "sievescriptblockwidget.h"
 
 #include <KPushButton>
 #include <KLocale>
@@ -146,6 +147,7 @@ SieveIncludeWidget::SieveIncludeWidget(QWidget *parent)
 
     mIncludeLister = new SieveIncludeWidgetLister;
     lay->addWidget(mIncludeLister,0, Qt::AlignTop);
+    setPageType(KSieveUi::SieveScriptBlockWidget::Include);
     setLayout(lay);
 }
 
