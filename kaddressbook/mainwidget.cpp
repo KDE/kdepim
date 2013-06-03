@@ -73,6 +73,7 @@
 #include <KToolBar>
 #include <KXmlGuiWindow>
 #include <KCMultiDialog>
+#include <kdeprintdialog.h>
 
 #include <QAction>
 #include <QActionGroup>
@@ -609,7 +610,8 @@ void MainWidget::print()
   printer.setOutputFormat( QPrinter::PdfFormat );
   printer.setCollateCopies( true );
 
-  QPrintDialog printDialog( &printer, this );
+  QPrintDialog printDialog(KdePrint::createPrintDialog(&printer));
+
   printDialog.setWindowTitle( i18n( "Print Contacts" ) );
   if ( !printDialog.exec() ) { //krazy:exclude=crashy
     return;
