@@ -33,13 +33,13 @@ set(kdepim_LIB_SRCS
    ldap/ldapsearchdialog.cpp
    ldap/ldapclientsearch.cpp
    ldap/ldapclientsearchconfig.cpp
-   overlaywidget.cpp
-   progressmanager.cpp
-   progressmanager_akonadiagent.cpp
-   agentprogressmonitor.cpp
-   progressdialog.cpp
-   statusbarprogresswidget.cpp
-   ssllabel.cpp
+   progresswidget/overlaywidget.cpp
+   progresswidget/progressmanager.cpp
+   progresswidget/progressmanager_akonadiagent.cpp
+   progresswidget/agentprogressmonitor.cpp
+   progresswidget/progressdialog.cpp
+   progresswidget/statusbarprogresswidget.cpp
+   progresswidget/ssllabel.cpp
    broadcaststatus.cpp
    kwidgetlister.cpp
    recentaddresses.cpp

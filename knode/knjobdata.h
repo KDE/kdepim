@@ -22,7 +22,7 @@
 #include <kio/global.h>
 #include <QObject>
 #include <QList>
-#include <libkdepim/progressmanager.h>
+#include <libkdepim/progresswidget/progressmanager.h>
 
 
 class KJob;

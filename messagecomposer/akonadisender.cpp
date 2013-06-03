@@ -29,7 +29,7 @@
 #include <kmime/kmime_message.h>
 #include <boost/shared_ptr.hpp>
 
-#include <progressmanager.h>
+#include <progresswidget/progressmanager.h>
 
 #include <mailtransport/dispatcherinterface.h>
 #include <mailtransport/messagequeuejob.h>

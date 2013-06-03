@@ -3,6 +3,10 @@
 
 
 ########### next target ###############
+include_directories(
+  ${CMAKE_SOURCE_DIR}/libkdepim/
+)
+
 
 set(kcal_resourceremote_LIB_SRCS resourceremote.cpp resourceremoteconfig.cpp )
 
