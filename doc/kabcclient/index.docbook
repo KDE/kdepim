@@ -123,7 +123,7 @@ option. &kabcclient; will list all contacts in the &kde; address book, writing t
 </para>
 
 <para>
-<informalexample><para>To get just one line per contact, e.g. for counting, simply run:</para>
+<informalexample><para>To get just one line per contact, &eg; for counting, simply run:</para>
 
 <para>
 <screen>
@@ -135,7 +135,7 @@ option. &kabcclient; will list all contacts in the &kde; address book, writing t
 </para>
 
 <para>
-<informalexample><para>In this next example, we list all e-mail addresses:</para>
+<informalexample><para>In this next example, we list all email addresses:</para>
 
 <para>
 <screen>
@@ -155,7 +155,7 @@ option. &kabcclient; will list all contacts in the &kde; address book, writing t
 </para>
 
 <para>
-<informalexample><para>In the following example, all contacts with <replaceable>jane</replaceable> as part of any name field or e-mail address will be written to the program's standard output, formatted as vCards (since this is the default for the <option>--output-format</option> option):</para>
+<informalexample><para>In the following example, all contacts with <replaceable>jane</replaceable> as part of any name field or email address will be written to the program's standard output, formatted as vCards (since this is the default for the <option>--output-format</option> option):</para>
 
 <para>
 <screen><prompt>%</prompt><userinput> <command>kabcclient</command> <option>--search</option> <replaceable>jane</replaceable></userinput></screen>
@@ -183,7 +183,7 @@ The data can either be passed as additional command line arguments or read from 
 </para>
 
 <para>
-<informalexample><para>Add a contact with name and e-mail address by interpreting an additional command line argument as the input data:</para>
+<informalexample><para>Add a contact with name and email address by interpreting an additional command line argument as the input data:</para>
 
 <para>
 <screen><prompt>%</prompt><userinput> <command>kabcclient</command> <option>--add</option> <option>--input-format <replaceable>email</replaceable> </option><replaceable>"John Doe &lt;j.doe@example.com&gt;"</replaceable></userinput></screen>
@@ -213,7 +213,7 @@ On success the removed contacts will be written to the program's standard output
 you cannot reverse the deletion. It's gone for good.</para></warning>
 
 <para>
-<informalexample><para>Test removing all contacts with <replaceable>jane</replaceable> in any contact name field or any e-mail address:</para>
+<informalexample><para>Test removing all contacts with <replaceable>jane</replaceable> in any contact name field or any email address:</para>
 
 <para>
 <screen><prompt>%</prompt><userinput> <command>kabcclient</command> <option>--remove</option> <option>--nosave</option> <replaceable>jane</replaceable></userinput></screen>
