@@ -52,8 +52,8 @@ class SSLLabel;
 
 class TransactionItemView : public QScrollArea
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit TransactionItemView( QWidget * parent = 0, const char * name = 0 );
 
     virtual ~TransactionItemView() {}
@@ -62,20 +62,20 @@ class TransactionItemView : public QScrollArea
     QSize sizeHint() const;
     QSize minimumSizeHint() const;
 
-  public Q_SLOTS:
+public Q_SLOTS:
     void slotLayoutFirstItem();
 
-  protected:
+protected:
     virtual void resizeEvent ( QResizeEvent *event );
 
-  private:
+private:
     KVBox *mBigBox;
 };
 
 class TransactionItem : public KVBox
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     TransactionItem( QWidget *parent, ProgressItem *item, bool first );
 
     ~TransactionItem();
@@ -100,10 +100,10 @@ class TransactionItem : public KVBox
     // so better not use mItem during this time.
     void setItemComplete() { mItem = 0; }
 
-  public Q_SLOTS:
+public Q_SLOTS:
     void slotItemCanceled();
 
-  protected:
+protected:
     QProgressBar *mProgress;
     QPushButton  *mCancelButton;
     QLabel       *mItemLabel;
@@ -115,16 +115,16 @@ class TransactionItem : public KVBox
 
 class KDEPIM_EXPORT ProgressDialog : public OverlayWidget
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     ProgressDialog( QWidget *alignWidget, QWidget *parent, const char *name = 0 );
     ~ProgressDialog();
     void setVisible( bool b );
 
-  public Q_SLOTS:
+public Q_SLOTS:
     void slotToggleVisibility();
 
-  protected Q_SLOTS:
+protected Q_SLOTS:
     void slotTransactionAdded( KPIM::ProgressItem *item );
     void slotTransactionCompleted( KPIM::ProgressItem *item );
     void slotTransactionCanceled( KPIM::ProgressItem *item );
@@ -138,10 +138,10 @@ class KDEPIM_EXPORT ProgressDialog : public OverlayWidget
     void slotShow();
     void slotHide();
 
-  Q_SIGNALS:
+Q_SIGNALS:
     void visibilityChanged( bool );
 
-  protected:
+protected:
     virtual void closeEvent( QCloseEvent * );
 
     TransactionItemView *mScrollView;

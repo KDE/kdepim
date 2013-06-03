@@ -55,8 +55,8 @@
 #include "utils/filedialog.h"
 
 // from libkdepim
-#include "statusbarprogresswidget.h"
-#include "progressdialog.h"
+#include "progresswidget/statusbarprogresswidget.h"
+#include "progresswidget/progressdialog.h"
 
 #include <KActionCollection>
 #include <KLocale>

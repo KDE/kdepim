@@ -11,6 +11,7 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/libkleo
   ${Boost_INCLUDE_DIR}
   ${CMAKE_SOURCE_DIR}/messageviewer
+  ${CMAKE_SOURCE_DIR}/libkdepim/
 )
 
 add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS)

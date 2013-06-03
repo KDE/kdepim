@@ -35,7 +35,7 @@ SieveForEveryPartWidget::SieveForEveryPartWidget(QWidget *parent)
     QVBoxLayout *topLayout = new QVBoxLayout;
 
     QWidget *w = new QWidget;
-    QVBoxLayout *lay = new QVBoxLayout;
+    QHBoxLayout *lay = new QHBoxLayout;
     lay->setMargin(0);
     w->setLayout(lay);
 
@@ -45,9 +45,8 @@ SieveForEveryPartWidget::SieveForEveryPartWidget(QWidget *parent)
     helpButton->setIcon( KIcon( QLatin1String("help-hint") ) );
     connect(helpButton, SIGNAL(clicked()), this, SLOT(slotHelp()));
 
-
     mForLoop = new QCheckBox(i18n("Add ForEveryPart loop"));
-    lay->addWidget(mForLoop);
+    topLayout->addWidget(mForLoop);
 
     QLabel *lab = new QLabel(i18n("Name (optional):"));
     lay->addWidget(lab);
@@ -63,7 +62,6 @@ SieveForEveryPartWidget::SieveForEveryPartWidget(QWidget *parent)
 
 SieveForEveryPartWidget::~SieveForEveryPartWidget()
 {
-
 }
 
 void SieveForEveryPartWidget::slotHelp()

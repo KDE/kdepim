@@ -22,7 +22,7 @@
 #define MAILCOMMON_BACKUPJOB_H
 
 #include "mailcommon_export.h"
-#include "progressmanager.h"
+#include "progresswidget/progressmanager.h"
 
 #include <Akonadi/Collection>
 #include <Akonadi/Item>

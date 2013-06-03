@@ -62,6 +62,7 @@ class KADDRESSBOOK_EXPORT MainWidget : public QWidget
     void newContact();
     void newGroup();
     void print();
+    void printPreview();
     void configure();
 
   private Q_SLOTS:

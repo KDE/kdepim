@@ -27,6 +27,7 @@
 #include <kio/job.h>
 #include <KDebug>
 #include <KConfigGroup>
+#include <KSeparator>
 
 #include <QPair>
 #include <QHBoxLayout>
@@ -188,6 +189,10 @@ void TranslatorWidget::init()
     d->to = new MinimumComboBox;
     connect( d->to, SIGNAL(currentIndexChanged(int)), SLOT(slotTranslate()) );
     hboxLayout->addWidget( d->to );
+
+    KSeparator *separator = new KSeparator;
+    separator->setOrientation(Qt::Vertical);
+    hboxLayout->addWidget( separator );
 
     KPushButton *invert = new KPushButton(
                 i18nc("Invert language choices so that from becomes to and to becomes from", "Invert"),this);

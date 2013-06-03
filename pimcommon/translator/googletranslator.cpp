@@ -26,7 +26,8 @@
 using namespace PimCommon;
 
 GoogleTranslator::GoogleTranslator()
-    :AbstractTranslator(), mWebPage(0)
+    : AbstractTranslator(),
+      mWebPage(0)
 {
 }
 
@@ -128,8 +129,7 @@ void GoogleTranslator::translate()
     mWebPage->settings()->setAttribute( QWebSettings::PluginsEnabled, false );
     connect(mWebPage,SIGNAL(loadFinished(bool)),SLOT(slotLoadFinished(bool)));
 
-
-    QString url = QString::fromLatin1("http://translate.google.com/#%1|%2|%3").arg(mFrom, mTo,mInputText);
+    const QString url = QString::fromLatin1("http://translate.google.com/#%1|%2|%3").arg(mFrom, mTo,mInputText);
     mWebPage->mainFrame()->load(QUrl(url));
 }
 

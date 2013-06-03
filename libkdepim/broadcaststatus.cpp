@@ -23,7 +23,7 @@
 */
 
 #include "broadcaststatus.h"
-#include "progressmanager.h"
+#include "progresswidget/progressmanager.h"
 
 #include <KLocale>
 #include <KGlobal>

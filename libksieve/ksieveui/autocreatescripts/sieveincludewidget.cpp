@@ -76,7 +76,7 @@ void SieveIncludeActionWidget::generatedScript(QString &script)
         script += QLatin1String(":optional ");
     }
     if (mOnce->isChecked()) {
-        script += QLatin1String(":optional ");
+        script += QLatin1String(":once ");
     }
     script += QString::fromLatin1("\"%1\";\n").arg(includeName);
 }

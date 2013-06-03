@@ -1,2 +1,3 @@
 #! /bin/sh
-$XGETTEXT *.cpp ldap/*.cpp -o $podir/libkdepim.pot
+$XGETTEXT `find . -name '*.h' -o -name '*.cpp' | grep -v '/tests/'` -o $podir/libkdepim.pot
+

@@ -29,31 +29,64 @@
  *  your version.
  */
 
-#ifndef KDEPIM_SSLLABEL_H
-#define KDEPIM_SSLLABEL_H
+#include "ssllabel.h"
+
+#include <KLocale>
+#include <KIconLoader>
 
 #include <QLabel>
+#include <QPixmap>
 
 namespace KPIM {
 
-  class SSLLabel : public QLabel
-  {
-  public:
-    enum State {
-      Encrypted,
-      Unencrypted,
-      Clean,
-      Done
-    };
-    explicit SSLLabel( QWidget* parent );
-
-    void setEncrypted( bool enc=true );
-    void setState( State state );
-    State lastState() const;
-  private:
-    State m_lastEncryptionState;
-  };
-
+SSLLabel::SSLLabel( QWidget* parent )
+    : QLabel( parent )
+{
+    setState( Done );
 }
 
-#endif
+void SSLLabel::setEncrypted( bool enc )
+{
+    if ( enc ) {
+        m_lastEncryptionState = Encrypted;
+    } else {
+        m_lastEncryptionState = Unencrypted;
+    }
+}
+
+SSLLabel::State SSLLabel::lastState() const
+{
+    return m_lastEncryptionState;
+}
+
+void SSLLabel::setState( State state )
+{
+    switch( state ) {
+    case Encrypted:
+        this->setToolTip( i18n("Connection is encrypted") );
+        setPixmap( SmallIcon( "security-high" ) );
+        show();
+        break;
+    case Unencrypted:
+        this->setToolTip( i18n("Connection is unencrypted") );
+        setPixmap( SmallIcon( "security-low" ) );
+        show();
+        break;
+    case Done:
+        this->setToolTip("");
+        hide();
+        break;
+    case Clean:
+    default:
+        this->setToolTip("");
+        hide();
+        //we return because we do not save the state as the only
+        //action we want to perform is to hide ourself
+        return;
+    }
+    m_lastEncryptionState = state;
+}
+
+
+} //end namespace KPIM
+
