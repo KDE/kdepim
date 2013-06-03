@@ -74,6 +74,7 @@
 #include <KXmlGuiWindow>
 #include <KCMultiDialog>
 #include <kdeprintdialog.h>
+#include <KPrintPreview>
 
 #include <QAction>
 #include <QActionGroup>
@@ -508,6 +509,9 @@ void MainWidget::setupActions( KActionCollection *collection )
     i18nc( "@info:whatsthis",
            "Print the complete address book or a selected number of contacts." ) );
 
+  if(KPrintPreview::isAvailable())
+    KStandardAction::printPreview( this, SLOT(printPreview()), collection );
+
   action = collection->addAction( "quick_search" );
   action->setText( i18n( "Quick search" ) );
   action->setDefaultWidget( mQuickSearchWidget );
@@ -600,6 +604,23 @@ void MainWidget::setupActions( KActionCollection *collection )
   action->setText( i18n( "Export GMX file..." ) );
   action->setWhatsThis( i18n( "Export contacts to a GMX address book file." ) );
   mXXPortManager->addExportAction( action, "gmx" );
+}
+
+void MainWidget::printPreview()
+{
+    QPrinter printer;
+    printer.setDocName( i18n( "Address Book" ) );
+    printer.setOutputFileName( Settings::self()->defaultFileName() );
+    printer.setOutputFormat( QPrinter::PdfFormat );
+    printer.setCollateCopies( true );
+
+    KPrintPreview previewdlg( &printer, this );
+    KABPrinting::PrintingWizard wizard( &printer, mItemView->selectionModel(), this );
+    wizard.setDefaultAddressBook( currentAddressBook() );
+
+    wizard.exec(); //krazy:exclude=crashy
+
+    previewdlg.exec();
 }
 
 void MainWidget::print()

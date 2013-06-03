@@ -99,6 +99,7 @@ target_link_libraries(kaddressbookprivate
   ${KDEPIMLIBS_AKONADI_CONTACT_LIBS}
   ${KDEPIMLIBS_KLDAP_LIBS}
   ${KDE4_KCMUTILS_LIBS}
+  ${KDE4_KPRINTUTILS_LIBS}
 )
 
 if(QGPGME_FOUND)
