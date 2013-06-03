@@ -43,7 +43,7 @@
 #include "framemanager.h"
 #include "kernel.h"
 #include "openurlrequest.h"
-#include <libkdepim/progressmanager.h>
+#include <libkdepim/progresswidget/progressmanager.h>
 
 #include "searchbar.h"
 #include "selectioncontroller.h"

@@ -56,7 +56,7 @@
 #include <QWidget>
 #include <QApplication>
 
-#include <libkdepim/progressmanager.h>
+#include <libkdepim/progresswidget/progressmanager.h>
 
 #include <boost/shared_ptr.hpp>
 

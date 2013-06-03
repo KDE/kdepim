@@ -27,8 +27,8 @@
 #include "akregator2config.h"
 #include "trayicon.h"
 
-#include <libkdepim/progressdialog.h>
-#include <libkdepim/statusbarprogresswidget.h>
+#include <libkdepim/progresswidget/progressdialog.h>
+#include <libkdepim/progresswidget/statusbarprogresswidget.h>
 #include <libkdepim/broadcaststatus.h>
 
 #include <KAction>

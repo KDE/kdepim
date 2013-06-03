@@ -25,7 +25,7 @@
 #include "kernel.h"
 
 #include "framemanager.h"
-#include <libkdepim/progressmanager.h>
+#include <libkdepim/progresswidget/progressmanager.h>
 
 #include <QPointer>
 #include <QStringList>
