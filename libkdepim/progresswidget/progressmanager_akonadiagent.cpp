@@ -41,15 +41,15 @@ ProgressItem *ProgressManager::createProgressItemForAgent( ProgressItem *parent,
                                                            bool cancellable,
                                                            bool usesCrypto )
 {
-  const bool itemAlreadyExists = ( mTransactions.value( id ) != 0 );
-  ProgressItem *t = createProgressItemImpl( parent, id, label, status, cancellable, usesCrypto );
-  // TODO ^ emits progressItemAdded() before I'm done connecting the signals.
-  // Should I block that and emit it when I'm done?
+    const bool itemAlreadyExists = ( mTransactions.value( id ) != 0 );
+    ProgressItem *t = createProgressItemImpl( parent, id, label, status, cancellable, usesCrypto );
+    // TODO ^ emits progressItemAdded() before I'm done connecting the signals.
+    // Should I block that and emit it when I'm done?
 
-  if (!itemAlreadyExists) {
-//    kDebug() << "Created ProgressItem for agent" << instance.name();
-    new AgentProgressMonitor( instance, t );
-  }
-  return t;
+    if (!itemAlreadyExists) {
+        //    kDebug() << "Created ProgressItem for agent" << instance.name();
+        new AgentProgressMonitor( instance, t );
+    }
+    return t;
 }
 

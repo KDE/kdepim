@@ -33,7 +33,7 @@
 #include <QWeakPointer>
 #include <QPointer>
 namespace Akonadi {
-  class AgentInstance;
+class AgentInstance;
 }
 
 namespace KPIM {
@@ -44,10 +44,10 @@ typedef QMap<ProgressItem *, bool> ProgressItemMap;
 
 class KDEPIM_EXPORT ProgressItem : public QObject
 {
-  Q_OBJECT
-  friend class ProgressManager;
+    Q_OBJECT
+    friend class ProgressManager;
 
-  public:
+public:
 
     /**
      * @return The id string which uniquely identifies the operation
@@ -136,9 +136,9 @@ class KDEPIM_EXPORT ProgressItem : public QObject
      */
     void reset()
     {
-      setProgress( 0 );
-      setStatus( QString() );
-      mCompleted = 0;
+        setProgress( 0 );
+        setStatus( QString() );
+        mCompleted = 0;
     }
 
     void cancel();
@@ -155,7 +155,7 @@ class KDEPIM_EXPORT ProgressItem : public QObject
      */
     void updateProgress()
     {
-      setProgress( mTotal? mCompleted * 100 / mTotal : 0 );
+        setProgress( mTotal? mCompleted * 100 / mTotal : 0 );
     }
 
     void addChild( ProgressItem *kiddo );
@@ -163,7 +163,7 @@ class KDEPIM_EXPORT ProgressItem : public QObject
 
     bool canceled() const { return mCanceled; }
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /**
      * Emitted when a new ProgressItem is added.
      * @param The ProgressItem that was added.
@@ -230,13 +230,13 @@ class KDEPIM_EXPORT ProgressItem : public QObject
      */
     void progressItemUsesBusyIndicator( KPIM::ProgressItem *item, bool value );
 
-  protected:
+protected:
     /* Only to be used by our good friend the ProgressManager */
     ProgressItem( ProgressItem *parent, const QString &id, const QString &label,
                   const QString &status, bool isCancellable, bool usesCrypto );
     virtual ~ProgressItem();
 
-  private:
+private:
     QString mId;
     QString mLabel;
     QString mStatus;
@@ -278,11 +278,11 @@ struct ProgressManagerPrivate;
 class KDEPIM_EXPORT ProgressManager : public QObject
 {
 
-  Q_OBJECT
+    Q_OBJECT
 
-  friend struct ProgressManagerPrivate;
+    friend struct ProgressManagerPrivate;
 
-  public:
+public:
     virtual ~ProgressManager();
 
     /**
@@ -298,18 +298,18 @@ class KDEPIM_EXPORT ProgressManager : public QObject
      */
     static QString getUniqueID()
     {
-      return QString::number( ++uID );
+        return QString::number( ++uID );
     }
 
-     /**
+    /**
       * Creates a ProgressItem with a unique id and the given label.
       * This is the simplest way to acquire a progress item. It will not
       * have a parent and will be set to be cancellable and not using crypto.
       */
     static ProgressItem *createProgressItem( const QString &label )
     {
-      return instance()->createProgressItemImpl( 0, getUniqueID(), label,
-                                                 QString(), true, false );
+        return instance()->createProgressItemImpl( 0, getUniqueID(), label,
+                                                   QString(), true, false );
     }
 
     /**
@@ -333,8 +333,8 @@ class KDEPIM_EXPORT ProgressManager : public QObject
                                              bool canBeCanceled = true,
                                              bool usesCrypto = false )
     {
-      return instance()->createProgressItemImpl( parent, id, label, status,
-                                                 canBeCanceled, usesCrypto );
+        return instance()->createProgressItemImpl( parent, id, label, status,
+                                                   canBeCanceled, usesCrypto );
     }
 
     /**
@@ -348,8 +348,8 @@ class KDEPIM_EXPORT ProgressManager : public QObject
                                              bool canBeCanceled = true,
                                              bool usesCrypto = false )
     {
-      return instance()->createProgressItemImpl( parent, id, label,
-                                                 status, canBeCanceled, usesCrypto );
+        return instance()->createProgressItemImpl( parent, id, label,
+                                                   status, canBeCanceled, usesCrypto );
     }
 
     /**
@@ -361,8 +361,8 @@ class KDEPIM_EXPORT ProgressManager : public QObject
                                              bool canBeCanceled = true,
                                              bool usesCrypto = false )
     {
-      return instance()->createProgressItemImpl( 0, id, label, status,
-                                                 canBeCanceled, usesCrypto );
+        return instance()->createProgressItemImpl( 0, id, label, status,
+                                                   canBeCanceled, usesCrypto );
     }
 
     /**
@@ -378,8 +378,8 @@ class KDEPIM_EXPORT ProgressManager : public QObject
                                              bool canBeCanceled = true,
                                              bool usesCrypto = false )
     {
-      return instance()->createProgressItemForAgent( parent, agent, id, label,
-                                                     status, canBeCanceled, usesCrypto );
+        return instance()->createProgressItemForAgent( parent, agent, id, label,
+                                                       status, canBeCanceled, usesCrypto );
     }
 
     /**
@@ -387,7 +387,7 @@ class KDEPIM_EXPORT ProgressManager : public QObject
      */
     bool isEmpty() const
     {
-      return mTransactions.isEmpty();
+        return mTransactions.isEmpty();
     }
 
     /**
@@ -405,10 +405,10 @@ class KDEPIM_EXPORT ProgressManager : public QObject
      */
     static void emitShowProgressDialog()
     {
-       instance()->emitShowProgressDialogImpl();
+        instance()->emitShowProgressDialogImpl();
     }
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /** @see ProgressItem::progressItemAdded() */
     void progressItemAdded( KPIM::ProgressItem * );
     /** @see ProgressItem::progressItemProgress() */
@@ -432,7 +432,7 @@ class KDEPIM_EXPORT ProgressManager : public QObject
      */
     void showProgressDialog();
 
-  public Q_SLOTS:
+public Q_SLOTS:
 
     /**
      * Calls setCompleted() on the item, to make sure it goes away.
@@ -446,12 +446,12 @@ class KDEPIM_EXPORT ProgressManager : public QObject
      */
     void slotAbortAll();
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void slotTransactionCompleted( KPIM::ProgressItem *item );
 
-  private:
+private:
     ProgressManager();
-     // prevent unsolicited copies
+    // prevent unsolicited copies
     ProgressManager( const ProgressManager & );
 
     virtual ProgressItem *createProgressItemImpl( ProgressItem *parent,

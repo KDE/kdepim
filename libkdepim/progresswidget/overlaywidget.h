@@ -48,24 +48,24 @@ namespace KPIM {
  */
 class KDEPIM_EXPORT OverlayWidget : public KHBox
 {
-  Q_OBJECT
+    Q_OBJECT
 
 public:
-  OverlayWidget( QWidget* alignWidget, QWidget* parent, const char* name = 0 );
-  ~OverlayWidget();
+    OverlayWidget( QWidget* alignWidget, QWidget* parent, const char* name = 0 );
+    ~OverlayWidget();
 
-  QWidget * alignWidget() { return mAlignWidget; }
-  void setAlignWidget( QWidget * alignWidget );
+    QWidget * alignWidget() { return mAlignWidget; }
+    void setAlignWidget( QWidget * alignWidget );
 
 protected:
-  void resizeEvent( QResizeEvent* ev );
-  bool eventFilter( QObject* o, QEvent* e);
+    void resizeEvent( QResizeEvent* ev );
+    bool eventFilter( QObject* o, QEvent* e);
 
 private:
-  void reposition();
+    void reposition();
 
 private:
-  QWidget * mAlignWidget;
+    QWidget * mAlignWidget;
 };
 
 } // namespace

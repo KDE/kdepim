@@ -35,15 +35,15 @@ namespace KPIM {
  */
 class AgentProgressMonitor : public QObject
 {
-  Q_OBJECT
-  friend class ProgressManager;
+    Q_OBJECT
+    friend class ProgressManager;
 
-  protected:
+protected:
     // used by our friend ProgressManager
     AgentProgressMonitor( const Akonadi::AgentInstance &agent, ProgressItem *item );
     ~AgentProgressMonitor();
 
-  private:
+private:
     class Private;
     Private *const d;
 
