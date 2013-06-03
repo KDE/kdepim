@@ -48,10 +48,9 @@ QString AbstractTranslator::resultTranslate() const
     return mResult;
 }
 
-QString AbstractTranslator::debug()
+void AbstractTranslator::debug()
 {
     qDebug()<<" not implemented";
-    return QString();
 }
 
 #include "abstracttranslator.moc"

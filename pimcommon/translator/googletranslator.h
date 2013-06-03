@@ -33,7 +33,7 @@ public:
 
     QMap<QString, QMap<QString, QString> > initListLanguage(KComboBox* from);
     void translate();
-    QString debug();
+    void debug();
 
 protected Q_SLOTS:
     void slotLoadFinished(bool result);

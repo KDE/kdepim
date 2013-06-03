@@ -36,6 +36,7 @@
 #include <QRegExp>
 #include <QToolButton>
 #include <QKeyEvent>
+#include <QShortcut>
 #include <QSplitter>
 
 using namespace PimCommon;
@@ -210,8 +211,16 @@ void TranslatorWidget::init()
 #ifndef QT_NO_ACCESSIBILITY
     d->translate->setAccessibleName( i18n("Translate") );
 #endif
+
+
     hboxLayout->addWidget( d->translate );
     connect( d->translate, SIGNAL(clicked()), SLOT(slotTranslate()) );
+
+#if !defined(NDEBUG)
+    KPushButton *debug = new KPushButton(i18n("Debug"));
+    connect(debug,SIGNAL(clicked()),this,SLOT(slotDebug()));
+    hboxLayout->addWidget( debug );
+#endif
 
 
     hboxLayout->addItem( new QSpacerItem( 5, 5, QSizePolicy::MinimumExpanding, QSizePolicy::Minimum ) );
@@ -240,6 +249,12 @@ void TranslatorWidget::init()
     slotTextChanged();
     readConfig();
     hide();
+
+
+#if !defined(NDEBUG)
+    QShortcut *shortcut = new QShortcut( QKeySequence(Qt::Key_5), this );
+    connect(shortcut, SIGNAL(activated()), this, SLOT(slotDebug()));
+#endif
 }
 
 void TranslatorWidget::slotTextChanged()
@@ -342,6 +357,11 @@ void TranslatorWidget::slotClear()
 {
     d->inputText->clear();
     d->translatedText->clear();
+}
+
+void TranslatorWidget::slotDebug()
+{
+    d->abstractTranslator->debug();
 }
 
 #include "translatorwidget.moc"
