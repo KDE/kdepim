@@ -148,4 +148,12 @@ void GoogleTranslator::slotLoadFinished(bool result)
     }
 }
 
+QString GoogleTranslator::debug()
+{
+    if (mWebPage) {
+        return mWebPage->mainFrame()->toHtml();
+    }
+    return QString();
+}
+
 #include "googletranslator.moc"
