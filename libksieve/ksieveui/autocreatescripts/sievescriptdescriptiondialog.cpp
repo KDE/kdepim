@@ -29,12 +29,10 @@ SieveScriptDescriptionDialog::SieveScriptDescriptionDialog(QWidget *parent)
 {
     setCaption( i18n( "Description" ) );
     setButtons( Ok|Cancel );
-    setButtonFocus( Ok );
     mEdit = new KTextEdit;
     mEdit->setAcceptRichText(false);
     setMainWidget(mEdit);
     readConfig();
-    setFocusProxy(mEdit);
     mEdit->setFocus();
 }
 
