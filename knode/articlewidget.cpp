@@ -942,7 +942,7 @@ QString ArticleWidget::toHtmlString( const QString &line, int flags )
   QString text = line;
   if ( flags & ArticleWidget::AllowROT13 ) {
     if ( mRot13 )
-      text = Message::Util::rot13( line );
+      text = MessageComposer::Util::rot13( line );
   }
   return KPIMUtils::LinkLocator::convertToHtml( text, llflags );
 }

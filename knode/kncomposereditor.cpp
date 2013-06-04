@@ -57,7 +57,7 @@ void KNComposerEditor::slotRot13()
 {
   QTextCursor cursor = textCursor();
   if ( cursor.hasSelection() )
-    insertPlainText( Message::Util::rot13( cursor.selectedText() ) );
+    insertPlainText( MessageComposer::Util::rot13( cursor.selectedText() ) );
   //FIXME: breaks HTML formatting
 }
 
@@ -127,5 +127,5 @@ void KNComposerEditor::slotRemoveBox()
 
 void KNComposerEditor::slotAddBox()
 {
-  Message::Util::addTextBox(this);
+  MessageComposer::Util::addTextBox(this);
 }
