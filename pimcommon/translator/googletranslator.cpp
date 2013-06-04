@@ -25,6 +25,7 @@
 
 using namespace PimCommon;
 
+//TODO move in separate thread
 GoogleTranslator::GoogleTranslator()
     : AbstractTranslator(),
       mWebPage(0)
