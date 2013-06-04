@@ -29,9 +29,9 @@
 
 #include <kconfigdialogmanager.h>
 #include <klocale.h>
-#include <libkdepim/completionordereditor.h>
+#include <libkdepim/addressline/completionordereditor.h>
 #include <libkdepim/ldap/ldapclientsearch.h>
-#include <libkdepim/recentaddresses.h>
+#include <libkdepim/addressline/recentaddresses.h>
 
 #include <QLineEdit>
 

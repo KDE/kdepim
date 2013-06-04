@@ -64,7 +64,7 @@
 #include <QTimer>
 #include <QUuid>
 #include <QtCore/QTextCodec>
-#include <recentaddresses.h>
+#include <addressline/recentaddresses.h>
 #include "messagecomposersettings.h"
 #include "messagehelper.h"
 #include "util.h"
