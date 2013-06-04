@@ -24,9 +24,9 @@ include_directories(
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
 
 set(libmailcommon_SRCS
-  attributeregistrar.cpp
+  collectionpage/attributeregistrar.cpp
   job/backupjob.cpp
-  collectionannotationsattribute.cpp
+  collectionpage/collectionannotationsattribute.cpp
   collectionpage/collectiongeneralpage.cpp
   collectionpage/collectionexpirypage.cpp
   collectionpage/expirecollectionattribute.cpp

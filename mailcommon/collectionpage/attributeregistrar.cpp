@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include "collectionannotationsattribute.h"
+#include "collectionpage/collectionannotationsattribute.h"
 #include "collectionpage/expirecollectionattribute.h"
 
 #include <akonadi/attributefactory.h>
