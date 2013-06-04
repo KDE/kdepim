@@ -125,6 +125,6 @@ class MESSAGECOMPOSER_EXPORT AttachmentControllerBase : public QObject
     Q_PRIVATE_SLOT( d, void slotAttachmentContentCreated( KJob * ) )
 };
 
-} // namespace KMail
+} //
 
 #endif // KMAIL_ATTACHMENTCONTROLLERBASE_H

@@ -52,6 +52,6 @@ class MESSAGECOMPOSER_EXPORT AttachmentFromPublicKeyJob : public MessageCore::At
     Q_PRIVATE_SLOT( d, void exportResult( GpgME::Error, QByteArray ) )
 };
 
-} // namespace KMail
+} //
 
 #endif
