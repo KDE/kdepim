@@ -22,6 +22,7 @@ set(libpimcommon_SRCS
   translator/googletranslator.cpp
   widgets/renamefiledialog.cpp
   widgets/simplestringlisteditor.cpp
+  widgets/progressindicatorwidget.cpp
   templatewidgets/templatelistwidget.cpp
   templatewidgets/templateeditdialog.cpp
 )
