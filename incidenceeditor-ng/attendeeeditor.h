@@ -24,7 +24,7 @@
 #include "attendeeline.h"
 #include "attendeedata.h"
 
-#include <libkdepim/multiplyinglineeditor.h>
+#include <libkdepim/multiplyingline/multiplyinglineeditor.h>
 
 namespace IncidenceEditorNG {
 

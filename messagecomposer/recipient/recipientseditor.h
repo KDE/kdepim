@@ -28,7 +28,7 @@
 
 #include "recipientline.h"
 
-#include <libkdepim/multiplyinglineeditor.h>
+#include <libkdepim/multiplyingline/multiplyinglineeditor.h>
 
 namespace KMime {
   namespace Types {

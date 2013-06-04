@@ -45,9 +45,9 @@ set(kdepim_LIB_SRCS
    addressline/recentaddresses.cpp
    addressline/kmailcompletion.cpp
    pimmessagebox.cpp
-   multiplyingline.cpp
-   multiplyinglineeditor.cpp
-   multiplyinglineview_p.cpp
+   multiplyingline/multiplyingline.cpp
+   multiplyingline/multiplyinglineeditor.cpp
+   multiplyingline/multiplyinglineview_p.cpp
    uistatesaver.cpp
    nepomukwarning.cpp
    statisticsproxymodel.cpp

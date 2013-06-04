@@ -23,7 +23,7 @@
 
 #include "incidenceeditors-ng_export.h"
 
-#include <libkdepim/multiplyingline.h>
+#include <libkdepim/multiplyingline/multiplyingline.h>
 
 #include <KCalCore/Attendee>
 
