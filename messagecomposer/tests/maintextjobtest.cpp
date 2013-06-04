@@ -32,7 +32,7 @@ using namespace KMime;
 #include <messagecomposer/globalpart.h>
 #include <messagecomposer/maintextjob.h>
 #include <messagecomposer/textpart.h>
-using namespace Message;
+using namespace MessageComposer;
 
 #include <kpimtextedit/textedit.h>
 

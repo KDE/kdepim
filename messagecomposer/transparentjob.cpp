@@ -25,9 +25,9 @@
 #include <kdebug.h>
 #include <kmime/kmime_message.h>
 #include <kmime/kmime_content.h>
-using namespace Message;
+using namespace MessageComposer;
 
-class Message::TransparentJobPrivate : public ContentJobBasePrivate
+class MessageComposer::TransparentJobPrivate : public MessageComposer::ContentJobBasePrivate
 {
   public:
     TransparentJobPrivate( TransparentJob *qq )
@@ -42,7 +42,7 @@ class Message::TransparentJobPrivate : public ContentJobBasePrivate
 };
 
 TransparentJob::TransparentJob( QObject *parent )
-  : ContentJobBase( *new TransparentJobPrivate( this ), parent )
+  : MessageComposer::ContentJobBase( *new TransparentJobPrivate( this ), parent )
 {
 }
 

@@ -19,7 +19,7 @@
 
 #include "globalpart.h"
 
-using namespace Message;
+using namespace MessageComposer;
 
 class GlobalPart::Private
 {

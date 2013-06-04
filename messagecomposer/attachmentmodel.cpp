@@ -34,7 +34,7 @@
 
 #include <kpimutils/kfileio.h>
 
-using namespace Message;
+using namespace MessageComposer;
 using namespace MessageCore;
 
 static Qt::CheckState boolToCheckState( bool checked ) // local
@@ -46,7 +46,7 @@ static Qt::CheckState boolToCheckState( bool checked ) // local
   }
 }
 
-class Message::AttachmentModel::Private
+class MessageComposer::AttachmentModel::Private
 {
   public:
     Private( AttachmentModel *qq );

@@ -19,7 +19,7 @@
 
 #include "infopart.h"
 
-using namespace Message;
+using namespace MessageComposer;
 
 class InfoPart::Private
 {

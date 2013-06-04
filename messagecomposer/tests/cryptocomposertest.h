@@ -23,7 +23,7 @@
 
 #include <QtCore/QObject>
 
-namespace Message {
+namespace MessageComposer {
   class Composer;
 }
 
@@ -61,8 +61,8 @@ class CryptoComposerTest : public QObject
     // TODO test the code for autodetecting the charset of a text attachment.
     // TODO figure out what CTE testing has to be done.
   private:
-    void fillComposerData( Message::Composer* composer );
-    void fillComposerCryptoData( Message::Composer* composer );
+    void fillComposerData( MessageComposer::Composer* composer );
+    void fillComposerCryptoData( MessageComposer::Composer* composer );
 
     // convenience, shared code
     void runSMIMETest( bool sign, bool enc, bool opaque );

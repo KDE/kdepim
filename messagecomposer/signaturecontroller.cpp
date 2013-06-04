@@ -30,7 +30,7 @@
 #include <kpimidentities/identitycombo.h>
 #include <kpimidentities/identitymanager.h>
 
-using namespace Message;
+using namespace MessageComposer;
 
 SignatureController::SignatureController ( QObject* parent ) :
   QObject ( parent ),

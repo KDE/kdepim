@@ -66,10 +66,10 @@
 
 #include <KMime/Content>
 
-using namespace Message;
+using namespace MessageComposer;
 using namespace MessageCore;
 
-class Message::AttachmentControllerBase::Private
+class MessageComposer::AttachmentControllerBase::Private
 {
   public:
     Private( AttachmentControllerBase *qq );
@@ -95,7 +95,7 @@ class Message::AttachmentControllerBase::Private
     AttachmentControllerBase *const q;
     bool encryptEnabled;
     bool signEnabled;
-    Message::AttachmentModel *model;
+    MessageComposer::AttachmentModel *model;
     QWidget *wParent;
     QHash<MessageViewer::EditorWatcher*,AttachmentPart::Ptr> editorPart;
     QHash<MessageViewer::EditorWatcher*,KTemporaryFile*> editorTempFile;
@@ -354,7 +354,7 @@ void AttachmentControllerBase::exportPublicKey( const QString &fingerprint )
     return;
   }
 
-  Message::AttachmentFromPublicKeyJob *ajob = new Message::AttachmentFromPublicKeyJob( fingerprint, this );
+  MessageComposer::AttachmentFromPublicKeyJob *ajob = new MessageComposer::AttachmentFromPublicKeyJob( fingerprint, this );
   connect( ajob, SIGNAL(result(KJob*)), this, SLOT(attachPublicKeyJobResult(KJob*)) );
   ajob->start();
 }
@@ -369,8 +369,8 @@ void AttachmentControllerBase::Private::attachPublicKeyJobResult( KJob *job )
     return;
   }
 
-  Q_ASSERT( dynamic_cast<Message::AttachmentFromPublicKeyJob*>( job ) );
-  Message::AttachmentFromPublicKeyJob *ajob = static_cast<Message::AttachmentFromPublicKeyJob*>( job );
+  Q_ASSERT( dynamic_cast<MessageComposer::AttachmentFromPublicKeyJob*>( job ) );
+  MessageComposer::AttachmentFromPublicKeyJob *ajob = static_cast<MessageComposer::AttachmentFromPublicKeyJob*>( job );
   AttachmentPart::Ptr part = ajob->attachmentPart();
   q->addAttachment( part );
 }
@@ -395,7 +395,7 @@ static KTemporaryFile *dumpAttachmentToTempFile( const AttachmentPart::Ptr part 
 
 
 
-AttachmentControllerBase::AttachmentControllerBase( Message::AttachmentModel *model, QWidget *wParent, KActionCollection *actionCollection )
+AttachmentControllerBase::AttachmentControllerBase( MessageComposer::AttachmentModel *model, QWidget *wParent, KActionCollection *actionCollection )
   : QObject( wParent )
   , d( new Private( this ) )
 {
@@ -647,9 +647,9 @@ void AttachmentControllerBase::openAttachment( AttachmentPart::Ptr part )
 
 void AttachmentControllerBase::viewAttachment( AttachmentPart::Ptr part )
 {
-  Message::Composer *composer = new Message::Composer;
+  MessageComposer::Composer *composer = new MessageComposer::Composer;
   composer->globalPart()->setFallbackCharsetEnabled( true );
-  Message::AttachmentJob *attachmentJob = new Message::AttachmentJob( part, composer );
+  MessageComposer::AttachmentJob *attachmentJob = new MessageComposer::AttachmentJob( part, composer );
   connect( attachmentJob, SIGNAL(result(KJob*)),
            this, SLOT(slotAttachmentContentCreated(KJob*)) );
   attachmentJob->start();
@@ -658,7 +658,7 @@ void AttachmentControllerBase::viewAttachment( AttachmentPart::Ptr part )
 void AttachmentControllerBase::Private::slotAttachmentContentCreated( KJob *job )
 {
   if ( !job->error() ) {
-    const Message::AttachmentJob * const attachmentJob = dynamic_cast<Message::AttachmentJob*>( job );
+    const MessageComposer::AttachmentJob * const attachmentJob = dynamic_cast<MessageComposer::AttachmentJob*>( job );
     Q_ASSERT( attachmentJob );
     emit q->showAttachment( attachmentJob->content(), QByteArray() );
   } else {

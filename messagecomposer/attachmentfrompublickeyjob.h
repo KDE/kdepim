@@ -25,7 +25,7 @@
 
 #include "messagecomposer_export.h"
 
-namespace Message {
+namespace MessageComposer {
 
 /**
 */

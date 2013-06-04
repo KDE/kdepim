@@ -769,7 +769,7 @@ bool KMeditor::replaceSignature( const KPIMIdentities::Signature &oldSig,
   return found;
 }
 
-void KMeditor::fillComposerTextPart ( Message::TextPart* textPart ) const
+void KMeditor::fillComposerTextPart ( MessageComposer::TextPart* textPart ) const
 {
   if( isFormattingUsed() && MessageComposer::MessageComposerSettings::self()->improvePlainTextOfHtmlMessage() ) {
     Grantlee::PlainTextMarkupBuilder *pb = new Grantlee::PlainTextMarkupBuilder();

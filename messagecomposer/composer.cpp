@@ -43,10 +43,10 @@
 #include <KDebug>
 #include <klocalizedstring.h>
 
-using namespace Message;
+using namespace MessageComposer;
 using MessageCore::AttachmentPart;
 
-class Message::ComposerPrivate : public JobBasePrivate
+class MessageComposer::ComposerPrivate : public JobBasePrivate
 {
   public:
     ComposerPrivate( Composer *qq )
@@ -484,7 +484,7 @@ void ComposerPrivate::composeWithLateAttachments( KMime::Message* headers, KMime
   multiJob->setMultipartSubtype( "mixed" );
 
   // wrap the content into a job for the multijob to handle it
-  TransparentJob* tJob = new TransparentJob( q );
+  MessageComposer::TransparentJob* tJob = new MessageComposer::TransparentJob( q );
   tJob->setContent( content );
   multiJob->appendSubjob( tJob );
   multiJob->setExtraContent( headers );

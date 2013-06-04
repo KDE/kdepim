@@ -24,7 +24,7 @@
 
 #include <KDebug>
 
-using namespace Message;
+using namespace MessageComposer;
 
 JobBase::JobBase( QObject *parent )
   : KCompositeJob( parent )

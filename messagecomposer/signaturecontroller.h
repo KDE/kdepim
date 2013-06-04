@@ -38,7 +38,7 @@ namespace MessageComposer {
 class KMeditor;
 }
 
-namespace Message {
+namespace MessageComposer {
 
 
 

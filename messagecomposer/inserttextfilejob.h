@@ -32,7 +32,7 @@ namespace KIO {
   class Job;
 }
 
-namespace Message {
+namespace MessageComposer {
 
 /**
  * A job that downloads a given URL, interprets the result as a text file with the

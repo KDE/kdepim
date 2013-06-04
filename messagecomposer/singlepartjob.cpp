@@ -30,9 +30,9 @@
 #include <kmime/kmime_content.h>
 #include <kmime/kmime_headers.h>
 
-using namespace Message;
+using namespace MessageComposer;
 
-class Message::SinglepartJobPrivate : public ContentJobBasePrivate
+class MessageComposer::SinglepartJobPrivate : public ContentJobBasePrivate
 {
   public:
     SinglepartJobPrivate( SinglepartJob *qq )

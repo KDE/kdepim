@@ -38,9 +38,9 @@
 #include <kmime/kmime_message.h>
 #include <kpimutils/email.h>
 
-using namespace Message;
+using namespace MessageComposer;
 
-class Message::SkeletonMessageJobPrivate : public JobBasePrivate
+class MessageComposer::SkeletonMessageJobPrivate : public JobBasePrivate
 {
   public:
     SkeletonMessageJobPrivate( SkeletonMessageJob *qq )

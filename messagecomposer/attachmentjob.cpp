@@ -33,10 +33,10 @@
 
 #include <KDebug>
 
-using namespace Message;
+using namespace MessageComposer;
 using namespace MessageCore;
 
-class Message::AttachmentJobPrivate : public ContentJobBasePrivate
+class MessageComposer::AttachmentJobPrivate : public ContentJobBasePrivate
 {
   public:
     AttachmentJobPrivate( AttachmentJob *qq )
@@ -121,7 +121,7 @@ void AttachmentJob::doStart()
 
   // Figure out a charset to encode parts of the headers with.
   const QString dataToEncode = d->part->name() + d->part->description() + d->part->fileName();
-  const QByteArray charset = Util::selectCharset( globalPart()->charsets( true ), dataToEncode );
+  const QByteArray charset = MessageComposer::Util::selectCharset( globalPart()->charsets( true ), dataToEncode );
   
   // Set up the headers.
   // rfc822 forwarded messages have 7bit CTE, the message itself will have

@@ -27,7 +27,7 @@
 
 
 
-namespace Message {
+namespace MessageComposer {
 
 class TransparentJobPrivate;
 
@@ -35,7 +35,7 @@ class TransparentJobPrivate;
   A job that just wraps some KMime::Content into a job object
   for use as a subjob in another job.
  */
-class MESSAGECOMPOSER_EXPORT TransparentJob : public ContentJobBase
+class MESSAGECOMPOSER_EXPORT TransparentJob : public MessageComposer::ContentJobBase
 {
   Q_OBJECT
 

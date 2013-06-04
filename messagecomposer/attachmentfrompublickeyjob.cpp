@@ -35,10 +35,10 @@
 #include <libkleo/ui/progressdialog.h>
 #endif
 
-using namespace Message;
+using namespace MessageComposer;
 using MessageCore::AttachmentPart;
 
-class Message::AttachmentFromPublicKeyJob::Private
+class MessageComposer::AttachmentFromPublicKeyJob::Private
 {
   public:
     Private( AttachmentFromPublicKeyJob *qq );

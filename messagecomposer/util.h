@@ -37,7 +37,7 @@ namespace MailTransport {
   class MessageQueueJob;
 }
 
-namespace Message {
+namespace MessageComposer {
 
 namespace Util {
 

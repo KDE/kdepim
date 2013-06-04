@@ -29,7 +29,7 @@
 #include <messagecore/attachment/attachmentpart.h>
 #include <akonadi/item.h>
 
-namespace Message {
+namespace MessageComposer {
 
 /**
   Columns:

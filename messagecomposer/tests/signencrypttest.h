@@ -25,7 +25,7 @@
 
 class KJob;
 
-namespace Message {
+namespace MessageComposer {
   class EncryptJob;
 }
 

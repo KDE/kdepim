@@ -38,9 +38,9 @@
 #include <gpgme++/encryptionresult.h>
 #include <sstream>
 
-using namespace Message;
+using namespace MessageComposer;
 
-class Message::SignEncryptJobPrivate : public ContentJobBasePrivate
+class MessageComposer::SignEncryptJobPrivate : public ContentJobBasePrivate
 {
   public:
     SignEncryptJobPrivate( SignEncryptJob *qq )
@@ -206,7 +206,7 @@ void SignEncryptJob::process()
   job->deleteLater();
   QByteArray signatureHashAlgo =  res.first.createdSignature( 0 ).hashAlgorithmAsString();
 
-  d->resultContent = Message::Util::composeHeadersAndBody( d->content, encBody, d->format, true, signatureHashAlgo );
+  d->resultContent = MessageComposer::Util::composeHeadersAndBody( d->content, encBody, d->format, true, signatureHashAlgo );
 
   emitResult();
 }

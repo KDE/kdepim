@@ -21,7 +21,7 @@
 
 #include <KDebug>
 
-using namespace Message;
+using namespace MessageComposer;
 
 class MessagePart::Private
 {

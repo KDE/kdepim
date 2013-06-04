@@ -27,7 +27,7 @@
 
 #include <kmime/kmime_content.h>
 
-using namespace Message;
+using namespace MessageComposer;
 
 void ContentJobBasePrivate::init( QObject *parent )
 {

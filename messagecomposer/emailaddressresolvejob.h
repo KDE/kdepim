@@ -1,5 +1,4 @@
-
-class Composer;/*
+/*
  * This file is part of KMail.
  *
  * Copyright (c) 2010 KDAB
@@ -32,7 +31,7 @@ class Composer;/*
 #include <QtCore/QStringList>
 #include <QtCore/QVariant>
 
-namespace Message {
+namespace MessageComposer {
   class Composer;
 }
 

@@ -26,7 +26,7 @@
 
 #include <KDE/KCompositeJob>
 
-namespace Message {
+namespace MessageComposer {
 
 class GlobalPart;
 class JobBasePrivate;
