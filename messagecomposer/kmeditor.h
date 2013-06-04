@@ -27,10 +27,6 @@
 
 #include <KPIMTextEdit/TextEdit>
 
-namespace MessageComposer {
-  class ComposerAutoCorrection;
-}
-
 namespace KPIMIdentities {
   class Signature;
 }
@@ -40,7 +36,7 @@ class TextPart;
 }
 
 namespace MessageComposer {
-
+class ComposerAutoCorrection;
 class KMeditorPrivate;
 
 /**

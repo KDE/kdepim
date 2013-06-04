@@ -74,8 +74,6 @@ class Composer;
 class AttachmentControllerBase;
 class AttachmentModel;
 class SignatureController;
-}
-namespace MessageComposer {
 /**
  *
  */

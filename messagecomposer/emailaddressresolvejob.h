@@ -32,10 +32,7 @@
 #include <QtCore/QVariant>
 
 namespace MessageComposer {
-  class Composer;
-}
-
-namespace MessageComposer {
+class Composer;
 
 /**
  * @short A job to resolve nicknames, distribution lists and email addresses for queued emails.

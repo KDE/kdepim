@@ -36,11 +36,6 @@ class IdentityCombo;
 
 namespace MessageComposer {
 class KMeditor;
-}
-
-namespace MessageComposer {
-
-
 
 /** Controls signature (the footer thing, not the crypto thing) operations
  *  happening on a KMEditor triggerd by identity selection or menu actions.
