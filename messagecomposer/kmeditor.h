@@ -36,8 +36,11 @@ namespace KPIMIdentities {
 }
 
 namespace Message {
-
 class TextPart;
+}
+
+namespace MessageComposer {
+
 class KMeditorPrivate;
 
 /**

@@ -34,9 +34,12 @@ namespace KPIMIdentities
 class IdentityCombo;
 }
 
+namespace MessageComposer {
+class KMeditor;
+}
+
 namespace Message {
 
-class KMeditor;
 
 
 /** Controls signature (the footer thing, not the crypto thing) operations
@@ -49,7 +52,7 @@ class MESSAGECOMPOSER_EXPORT SignatureController : public QObject
   public:
     explicit SignatureController( QObject* parent = 0 );
 
-    void setEditor( KMeditor* editor );
+    void setEditor( MessageComposer::KMeditor* editor );
     void setIdentityCombo( KPIMIdentities::IdentityCombo* combo );
 
     /** Temporarily disable identity tracking, useful for initial loading for example. */
@@ -101,7 +104,7 @@ class MESSAGECOMPOSER_EXPORT SignatureController : public QObject
     void identityChanged ( uint id );
 
   private:
-    KMeditor* m_editor;
+    MessageComposer::KMeditor* m_editor;
     KPIMIdentities::IdentityCombo* m_identityCombo;
     uint m_currentIdentityId;
 };

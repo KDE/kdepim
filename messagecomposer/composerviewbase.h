@@ -58,6 +58,7 @@ namespace KPIMIdentities
 namespace MessageComposer
 {
   class RecipientsEditor;
+  class KMeditor;
 }
 
 namespace Kleo
@@ -70,7 +71,6 @@ namespace Message {
 class InfoPart;
 class GlobalPart;
 class Composer;
-class KMeditor;
 class AttachmentControllerBase;
 class AttachmentModel;
 class SignatureController;
@@ -150,8 +150,8 @@ public:
   void setIdentityManager( KPIMIdentities::IdentityManager* identMan );
   KPIMIdentities::IdentityManager* identityManager();
 
-  void setEditor( Message::KMeditor* editor );
-  Message::KMeditor* editor();
+  void setEditor( MessageComposer::KMeditor* editor );
+  MessageComposer::KMeditor* editor();
 
   void setTransportCombo( MailTransport::TransportComboBox* transpCombo );
   MailTransport::TransportComboBox* transportComboBox();
@@ -311,7 +311,7 @@ private:
   MessageComposer::RecipientsEditor * m_recipientsEditor;
   KPIMIdentities::IdentityCombo *m_identityCombo;
   KPIMIdentities::IdentityManager* m_identMan;
-  Message::KMeditor* m_editor;
+  MessageComposer::KMeditor* m_editor;
   MailTransport::TransportComboBox* m_transport;
   Akonadi::CollectionComboBox* m_fccCombo;
   Akonadi::Collection m_fccCollection;

@@ -48,7 +48,7 @@
 
 using namespace KPIMTextEdit;
 
-namespace Message {
+namespace MessageComposer {
 
 class KMeditorPrivate
 {
@@ -116,7 +116,7 @@ class KMeditorPrivate
 
 }
 
-using namespace Message;
+using namespace MessageComposer;
 
 void KMeditorPrivate::slotAddAutoCorrect(const QString&currentWord, const QString&replaceWord)
 {
@@ -769,7 +769,7 @@ bool KMeditor::replaceSignature( const KPIMIdentities::Signature &oldSig,
   return found;
 }
 
-void KMeditor::fillComposerTextPart ( TextPart* textPart ) const
+void KMeditor::fillComposerTextPart ( Message::TextPart* textPart ) const
 {
   if( isFormattingUsed() && MessageComposer::MessageComposerSettings::self()->improvePlainTextOfHtmlMessage() ) {
     Grantlee::PlainTextMarkupBuilder *pb = new Grantlee::PlainTextMarkupBuilder();

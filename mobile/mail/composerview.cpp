@@ -71,7 +71,7 @@
 #include <mailtransport/transportmanagementwidget.h>
 #endif
 
-class DeclarativeEditor : public DeclarativeWidgetBase<Message::KMeditor, ComposerView, &ComposerView::setEditor>
+class DeclarativeEditor : public DeclarativeWidgetBase<MessageComposer::KMeditor, ComposerView, &ComposerView::setEditor>
 {
    Q_OBJECT
    Q_PROPERTY( int availableScreenHeight READ availableScreenHeight WRITE setAvailableScreenHeight )
@@ -514,7 +514,7 @@ void ComposerView::identityChanged( uint newIdentity )
   m_currentIdentity = newIdentity;
 }
 
-void ComposerView::setEditor( Message::KMeditor* editor )
+void ComposerView::setEditor( MessageComposer::KMeditor* editor )
 {
     new ComposerAutoResizer(editor);
     m_composerBase->setEditor( editor );

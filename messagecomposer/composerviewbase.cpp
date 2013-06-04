@@ -1364,7 +1364,7 @@ void Message::ComposerViewBase::identityChanged ( const KPIMIdentities::Identity
   m_editor->setAutocorrectionLanguage(ident.autocorrectionLanguage());
 }
 
-void Message::ComposerViewBase::setEditor ( Message::KMeditor* editor )
+void Message::ComposerViewBase::setEditor ( MessageComposer::KMeditor* editor )
 {
   m_editor = editor;
 
@@ -1383,7 +1383,7 @@ void Message::ComposerViewBase::setEditor ( Message::KMeditor* editor )
 
 }
 
-Message::KMeditor* Message::ComposerViewBase::editor()
+MessageComposer::KMeditor* Message::ComposerViewBase::editor()
 {
   return m_editor;
 }
