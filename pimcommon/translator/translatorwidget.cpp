@@ -18,6 +18,7 @@
 
 #include "translatorwidget.h"
 #include "widgets/minimumcombobox.h"
+#include "widgets/progressindicatorwidget.h"
 #include "translatorutil.h"
 #include "googletranslator.h"
 #include <KTextEdit>
@@ -65,6 +66,7 @@ public:
     MinimumComboBox *to;
     KPushButton *translate;
     PimCommon::AbstractTranslator *abstractTranslator;
+    PimCommon::ProgressIndicatorWidget *progressIndictor;
     QSplitter *splitter;
 };
 
@@ -222,6 +224,8 @@ void TranslatorWidget::init()
     hboxLayout->addWidget( debug );
 #endif
 
+    d->progressIndictor = new ProgressIndicatorWidget(this);
+    hboxLayout->addWidget( d->progressIndictor );
 
     hboxLayout->addItem( new QSpacerItem( 5, 5, QSizePolicy::MinimumExpanding, QSizePolicy::Minimum ) );
 
@@ -294,6 +298,7 @@ void TranslatorWidget::slotTranslate()
     const QString from = d->from->itemData(d->from->currentIndex()).toString();
     const QString to = d->to->itemData(d->to->currentIndex()).toString();
     d->translate->setEnabled( false );
+    d->progressIndictor->start();
 
     d->abstractTranslator->setFrom(from);
     d->abstractTranslator->setTo(to);
@@ -304,12 +309,14 @@ void TranslatorWidget::slotTranslate()
 void TranslatorWidget::slotTranslateDone()
 {
     d->translate->setEnabled( true );
+    d->progressIndictor->stop();
     d->translatedText->setPlainText(d->abstractTranslator->resultTranslate());
 }
 
 void TranslatorWidget::slotTranslateFailed()
 {
     d->translate->setEnabled( true );
+    d->progressIndictor->stop();
     d->translatedText->clear();
 }
 
@@ -332,6 +339,7 @@ void TranslatorWidget::slotCloseWidget()
 {
     d->inputText->clear();
     d->translatedText->clear();
+    d->progressIndictor->stop();
     hide();
     Q_EMIT translatorWasClosed();
 }

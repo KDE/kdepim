@@ -89,12 +89,12 @@ ProgressIndicatorWidget::~ProgressIndicatorWidget()
 
 void ProgressIndicatorWidget::start()
 {
-    //TODO
+    d->indicator->startAnimation();
 }
 
 void ProgressIndicatorWidget::stop()
 {
-    //TODO
+    d->indicator->stopAnimation();
 }
 
 }
