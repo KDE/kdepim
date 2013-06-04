@@ -80,7 +80,7 @@ class QuickSearchWidget : public QWidget
     void delayedTextChanged();
 
   protected:
-    virtual void keyPressEvent( QKeyEvent * );
+    void keyPressEvent( QKeyEvent * );
 
   private:
     KLineEdit *mEdit;
