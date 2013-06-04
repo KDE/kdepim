@@ -43,7 +43,7 @@ set(kdepim_LIB_SRCS
    broadcaststatus.cpp
    kwidgetlister.cpp
    addressline/recentaddresses.cpp
-   kmailcompletion.cpp
+   addressline/kmailcompletion.cpp
    pimmessagebox.cpp
    multiplyingline.cpp
    multiplyinglineeditor.cpp
