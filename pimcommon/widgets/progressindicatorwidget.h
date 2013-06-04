@@ -20,9 +20,33 @@
 
 #include "pimcommon_export.h"
 
+#include <KPixmapSequence>
+
 #include <QLabel>
 
+class QTimer;
 namespace PimCommon {
+class ProgressIndicatorWidget;
+class IndicatorProgress : public QObject
+{
+    Q_OBJECT
+public:
+    explicit IndicatorProgress(ProgressIndicatorWidget *widget, QObject *parent = 0);
+    ~IndicatorProgress();
+
+    void startAnimation();
+    void stopAnimation();
+
+private Q_SLOTS:
+    void slotTimerDone();
+
+private:
+    int mProgressCount;
+    KPixmapSequence mProgressPix;
+    QTimer *mProgressTimer;
+    ProgressIndicatorWidget *mIndicator;
+};
+
 class ProgressIndicatorWidgetPrivate;
 class PIMCOMMON_EXPORT ProgressIndicatorWidget : public QLabel
 {
@@ -31,7 +55,10 @@ public:
     explicit ProgressIndicatorWidget(QWidget *parent = 0);
     ~ProgressIndicatorWidget();
 
+public Q_SLOTS:
     void start();
+    void stop();
+
 private:
     friend class ProgressIndicatorWidgetPrivate;
     ProgressIndicatorWidgetPrivate * const d;

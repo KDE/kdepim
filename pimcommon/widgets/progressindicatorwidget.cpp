@@ -17,7 +17,46 @@
 
 #include "progressindicatorwidget.h"
 
+#include <QTimer>
+
 namespace PimCommon {
+
+IndicatorProgress::IndicatorProgress(ProgressIndicatorWidget *widget, QObject *parent)
+    : QObject(parent),
+      mProgressCount(0),
+      mIndicator(widget)
+{
+    mProgressPix = KPixmapSequence(QLatin1String("process-working"), KIconLoader::SizeSmallMedium);
+    mProgressTimer = new QTimer(this);
+    connect(mProgressTimer, SIGNAL(timeout()), this, SLOT(slotTimerDone()));
+}
+
+IndicatorProgress::~IndicatorProgress()
+{
+}
+
+void IndicatorProgress::slotTimerDone()
+{
+    mIndicator->setPixmap(mProgressPix.frameAt(mProgressCount));
+    ++mProgressCount;
+    if (mProgressCount == 8)
+        mProgressCount = 0;
+
+    mProgressTimer->start(300);
+}
+
+void IndicatorProgress::startAnimation()
+{
+    mProgressCount = 0;
+    mProgressTimer->start(300);
+}
+
+void IndicatorProgress::stopAnimation()
+{
+    if (mProgressTimer->isActive())
+        mProgressTimer->stop();
+    mIndicator->clear();
+}
 
 class ProgressIndicatorWidgetPrivate
 {
@@ -25,8 +64,15 @@ public:
     ProgressIndicatorWidgetPrivate(ProgressIndicatorWidget *qq)
         : q(qq)
     {
-
+        indicator = new IndicatorProgress(q);
     }
+
+    ~ProgressIndicatorWidgetPrivate()
+    {
+        delete indicator;
+    }
+
+    IndicatorProgress *indicator;
     ProgressIndicatorWidget *q;
 };
 
@@ -45,6 +91,12 @@ void ProgressIndicatorWidget::start()
 {
     //TODO
 }
+
+void ProgressIndicatorWidget::stop()
+{
+    //TODO
+}
+
 }
 
 #include "progressindicatorwidget.moc"
