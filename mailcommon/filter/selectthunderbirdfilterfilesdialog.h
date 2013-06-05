@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
   
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -19,25 +19,24 @@
 #define SELECTTHUNDERBIRDFILTERFILESDIALOG_H
 
 #include <KDialog>
-#include <KUrl>
+class KUrl;
 class SelectThunderbirdFilterFilesWidget;
 
 namespace MailCommon {
 class SelectThunderbirdFilterFilesDialog : public KDialog
 {
 public:
-  explicit SelectThunderbirdFilterFilesDialog(QWidget *parent);
-  ~SelectThunderbirdFilterFilesDialog();
-  QStringList selectedFiles() const;
+    explicit SelectThunderbirdFilterFilesDialog(QWidget *parent);
+    ~SelectThunderbirdFilterFilesDialog();
 
+    QStringList selectedFiles() const;
 
-  void setStartDir(const KUrl&);
+    void setStartDir(const KUrl&);
 
 private:
-  void readConfig();
-  void writeConfig();
-  SelectThunderbirdFilterFilesWidget *mSelectFilterFilesWidget;
-
+    void readConfig();
+    void writeConfig();
+    SelectThunderbirdFilterFilesWidget *mSelectFilterFilesWidget;
 };
 }
 
