@@ -147,13 +147,15 @@ void TranslatorTextEdit::dropEvent( QDropEvent *event )
 
 
 TranslatorWidget::TranslatorWidget( QWidget* parent )
-    :QWidget( parent ), d( new TranslatorWidgetPrivate )
+    : QWidget( parent ),
+      d( new TranslatorWidgetPrivate )
 {
     init();
 }
 
 TranslatorWidget::TranslatorWidget( const QString& text, QWidget* parent )
-    :QWidget( parent ), d( new TranslatorWidgetPrivate )
+    : QWidget( parent ),
+      d( new TranslatorWidgetPrivate )
 {
     init();
     d->inputText->setPlainText( text );
@@ -197,8 +199,8 @@ void TranslatorWidget::readConfig()
 void TranslatorWidget::init()
 {
     d->abstractTranslator = new /*BabelFishTranslator*/GoogleTranslator();
-    connect(d->abstractTranslator,SIGNAL(translateDone()),SLOT(slotTranslateDone()));
-    connect(d->abstractTranslator,SIGNAL(translateFailed()),SLOT(slotTranslateFailed()));
+    connect(d->abstractTranslator, SIGNAL(translateDone()), SLOT(slotTranslateDone()));
+    connect(d->abstractTranslator, SIGNAL(translateFailed()), SLOT(slotTranslateFailed()));
 
     QVBoxLayout *layout = new QVBoxLayout( this );
     layout->setMargin( 0 );
@@ -232,14 +234,14 @@ void TranslatorWidget::init()
 
     KPushButton *invert = new KPushButton(
                 i18nc("Invert language choices so that from becomes to and to becomes from", "Invert"),this);
-    connect(invert,SIGNAL(clicked()),this,SLOT(slotInvertLanguage()));
+    connect(invert, SIGNAL(clicked()), this, SLOT(slotInvertLanguage()));
     hboxLayout->addWidget(invert);
 
     KPushButton *clear = new KPushButton(i18n("Clear"),this);
 #ifndef QT_NO_ACCESSIBILITY
     clear->setAccessibleName( i18n("Clear") );
 #endif
-    connect(clear,SIGNAL(clicked()),this,SLOT(slotClear()));
+    connect(clear, SIGNAL(clicked()), this, SLOT(slotClear()));
     hboxLayout->addWidget(clear);
 
     d->translate = new KPushButton( i18n( "Translate" ) );
@@ -287,7 +289,6 @@ void TranslatorWidget::init()
     readConfig();
     hide();
     setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed ) );
-
 }
 
 void TranslatorWidget::slotTextChanged()

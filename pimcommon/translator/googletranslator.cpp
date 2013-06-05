@@ -127,7 +127,7 @@ void GoogleTranslator::translate()
     mWebPage = new QWebPage;
     mWebPage->settings()->setAttribute( QWebSettings::JavaEnabled, false );
     mWebPage->settings()->setAttribute( QWebSettings::PluginsEnabled, false );
-    connect(mWebPage,SIGNAL(loadFinished(bool)),SLOT(slotLoadFinished(bool)));
+    connect(mWebPage, SIGNAL(loadFinished(bool)), SLOT(slotLoadFinished(bool)));
 
     const QString url = QString::fromLatin1("http://translate.google.com/#%1|%2|%3").arg(mFrom, mTo,mInputText);
     mWebPage->mainFrame()->load(QUrl(url));
