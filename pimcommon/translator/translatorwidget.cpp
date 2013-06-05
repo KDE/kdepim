@@ -38,6 +38,7 @@
 #include <QToolButton>
 #include <QKeyEvent>
 #include <QShortcut>
+#include <QPainter>
 #include <QSplitter>
 
 using namespace PimCommon;
@@ -61,7 +62,7 @@ public:
     QMap<QString, QMap<QString, QString> > listLanguage;
     QByteArray data;
     TranslatorTextEdit *inputText;
-    KTextEdit *translatedText;
+    TranslatorResultTextEdit *translatedText;
     MinimumComboBox *from;
     MinimumComboBox *to;
     KPushButton *translate;
@@ -91,8 +92,40 @@ void TranslatorWidget::TranslatorWidgetPrivate::initLanguage()
 }
 
 
+TranslatorResultTextEdit::TranslatorResultTextEdit(QWidget *parent)
+    : KTextEdit(parent),
+      mResultFailed(false)
+{
+    setReadOnly( true );
+}
+
+void TranslatorResultTextEdit::setResultFailed(bool failed)
+{
+    if (mResultFailed != failed) {
+        mResultFailed = failed;
+        update();
+    }
+}
+
+void TranslatorResultTextEdit::paintEvent( QPaintEvent *event )
+{
+    if ( mResultFailed ) {
+        QPainter p( viewport() );
+
+        QFont font = p.font();
+        font.setItalic( true );
+        p.setFont( font );
+
+        p.setPen( Qt::red );
+
+        p.drawText( QRect( 0, 0, width(), height() ), Qt::AlignCenter, i18n( "Problem when connecting to the translator web site." ) );
+    } else {
+        KTextEdit::paintEvent( event );
+    }
+}
+
 TranslatorTextEdit::TranslatorTextEdit(QWidget *parent)
-    :KTextEdit(parent)
+    : KTextEdit(parent)
 {
 }
 
@@ -239,7 +272,7 @@ void TranslatorWidget::init()
     connect( d->inputText, SIGNAL(textChanged()), SLOT(slotTextChanged()) );
 
     d->splitter->addWidget( d->inputText );
-    d->translatedText = new KTextEdit;
+    d->translatedText = new TranslatorResultTextEdit;
     d->translatedText->setReadOnly( true );
     d->splitter->addWidget( d->translatedText );
 
@@ -306,6 +339,7 @@ void TranslatorWidget::slotTranslateDone()
 {
     d->translate->setEnabled( true );
     d->progressIndictor->stop();
+    d->translatedText->setResultFailed(false);
     d->translatedText->setPlainText(d->abstractTranslator->resultTranslate());
 }
 
@@ -313,6 +347,7 @@ void TranslatorWidget::slotTranslateFailed()
 {
     d->translate->setEnabled( true );
     d->progressIndictor->stop();
+    d->translatedText->setResultFailed(true);
     d->translatedText->clear();
 }
 
