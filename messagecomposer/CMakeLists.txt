@@ -58,8 +58,7 @@ set( messagecomposer_src
      recipient/recipientline.cpp
      recipient/recipientseditor.cpp
      recipient/recipientseditorsidewidget.cpp
-
-     kwindowpositioner.cpp
+     recipient/kwindowpositioner.cpp
 
      aliasesexpandjob.cpp
      emailaddressresolvejob.cpp
