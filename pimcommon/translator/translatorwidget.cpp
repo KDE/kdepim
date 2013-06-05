@@ -253,12 +253,8 @@ void TranslatorWidget::init()
     slotTextChanged();
     readConfig();
     hide();
+    setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed ) );
 
-
-#if !defined(NDEBUG)
-    QShortcut *shortcut = new QShortcut( QKeySequence(Qt::Key_5), this );
-    connect(shortcut, SIGNAL(activated()), this, SLOT(slotDebug()));
-#endif
 }
 
 void TranslatorWidget::slotTextChanged()
