@@ -111,7 +111,7 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
       <max>998</max>
     </entry>
     <entry name="ImprovePlainTextOfHtmlMessage" type="Bool" key="improve-plain-text-html-message">
-      <label>Improve Plain Text of HTML message</label>
+      <label>Improve plain text version of HTML message</label>
       <default>true</default>
     </entry>
     <entry name="CryptoWarningUnencrypted" type="Bool" key="crypto-warning-unencrypted">

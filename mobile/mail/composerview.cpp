@@ -238,7 +238,7 @@ void ComposerView::doDelayedInit()
   connect( action, SIGNAL(triggered(bool)), SLOT(setCryptoFormat()) );
 
   actionCollection()->action( "attach_public_key" )->setText( i18n( "Attach Public Key" ) );
-  actionCollection()->action( "composer_insert_signature" )->setText( i18n( "Insert Signature At Cursor Position" ) );
+  actionCollection()->action( "composer_insert_signature" )->setText( i18n( "Insert Signature at Cursor Position" ) );
 }
 
 void ComposerView::setIdentityCombo( KPIMIdentities::IdentityCombo* combo )

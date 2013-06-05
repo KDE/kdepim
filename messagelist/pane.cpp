@@ -234,7 +234,7 @@ void Pane::setXmlGuiClient( KXMLGUIClient *xmlGuiClient )
 
     d->mActionMenu->addSeparator();
 
-    KAction *action = new KAction( i18n("Create new tab"), this );
+    KAction *action = new KAction( i18n("Create New Tab"), this );
     action->setShortcut( QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_T ) );
     d->mXmlGuiClient->actionCollection()->addAction( QLatin1String( "create_new_tab" ), action );
     connect( action, SIGNAL(triggered(bool)), SLOT(onNewTabClicked()) );
@@ -246,7 +246,7 @@ void Pane::setXmlGuiClient( KXMLGUIClient *xmlGuiClient )
     }
 
 
-    d->mCloseTabAction = new KAction( i18n("Close tab"), this );
+    d->mCloseTabAction = new KAction( i18n("Close Tab"), this );
     d->mCloseTabAction->setShortcut( QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_W ) );
     d->mXmlGuiClient->actionCollection()->addAction( QLatin1String( "close_current_tab" ), d->mCloseTabAction );
     connect( d->mCloseTabAction, SIGNAL(triggered(bool)), SLOT(onCloseTabClicked()) );
