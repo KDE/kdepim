@@ -35,16 +35,12 @@
 #include "messagecomposer_export.h"
 class KActionCollection;
 class QAction;
-namespace MessageComposer {
-class AttachmentModel;
-}
-
 namespace MessageCore {
 class AttachmentFromUrlBaseJob;
 }
 
 namespace MessageComposer {
-
+class AttachmentModel;
 class MESSAGECOMPOSER_EXPORT AttachmentControllerBase : public QObject
 {
   Q_OBJECT

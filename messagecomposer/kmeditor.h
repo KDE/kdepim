@@ -33,9 +33,6 @@ namespace KPIMIdentities {
 
 namespace MessageComposer {
 class TextPart;
-}
-
-namespace MessageComposer {
 class ComposerAutoCorrection;
 class KMeditorPrivate;
 

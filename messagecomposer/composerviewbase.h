@@ -55,19 +55,14 @@ namespace KPIMIdentities
   class IdentityManager;
 }
 
-namespace MessageComposer
-{
-  class RecipientsEditor;
-  class KMeditor;
-}
-
 namespace Kleo
 {
   class KeyResolver;
 }
 
 namespace MessageComposer {
-
+class RecipientsEditor;
+class KMeditor;
 class InfoPart;
 class GlobalPart;
 class Composer;
