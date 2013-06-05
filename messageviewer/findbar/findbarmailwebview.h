@@ -45,6 +45,7 @@ private:
     void searchText( bool backward, bool isAutoSearch );
     void updateHighLight(bool);
     void updateSensitivity( bool sensitivity );
+
 private:
     MailWebView *mView;
 #ifndef MESSAGEVIEWER_FINDBAR_NO_HIGHLIGHT_ALL

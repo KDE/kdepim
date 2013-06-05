@@ -57,6 +57,7 @@ public slots:
     void autoSearch( const QString& str );
     void slotSearchText( bool backward = false, bool isAutoSearch = true );
     void closeBar();
+
 private slots:
     void caseSensitivityChanged(bool);
     void slotHighlightAllChanged(bool);

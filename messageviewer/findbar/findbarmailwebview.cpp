@@ -75,9 +75,9 @@ void FindBarMailWebView::updateHighLight(bool highLight)
             searchOptions |= MailWebView::FindCaseSensitively;
         searchOptions |= MailWebView::HighlightAllOccurrences;
         found = mView->findText(mLastSearchStr, searchOptions);
-    }
-    else
+    } else {
         found = mView->findText(QString(), MailWebView::HighlightAllOccurrences);
+    }
     setFoundMatch( found );
 #endif
 }
