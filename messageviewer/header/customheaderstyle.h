@@ -30,8 +30,8 @@ protected:
 
 public:
     const char * name() const { return "custom"; }
-private:
 
+private:
     QString format( KMime::Message *message ) const;
     QString formatAllMessageHeaders(KMime::Message *message , const QStringList &headersToHide) const;
 };
