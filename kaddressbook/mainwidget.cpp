@@ -570,7 +570,7 @@ void MainWidget::setupActions( KActionCollection *collection )
   mXXPortManager->addImportAction( action, "ldif" );
 
   action = collection->addAction( "file_import_ldap" );
-  action->setText( i18n( "Import from LDAP server..." ) );
+  action->setText( i18n( "Import From LDAP server..." ) );
   action->setWhatsThis( i18n( "Import contacts from an LDAP server." ) );
   mXXPortManager->addImportAction( action, "ldap" );
 
