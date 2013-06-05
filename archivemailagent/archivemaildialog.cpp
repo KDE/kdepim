@@ -141,7 +141,7 @@ ArchiveMailWidget::ArchiveMailWidget( QWidget *parent )
     mWidget = new Ui::ArchiveMailWidget;
     mWidget->setupUi( this );
     QStringList headers;
-    headers<<i18n("Name")<<i18n("Last archive")<<i18n("Next archive in");
+    headers<<i18n("Name")<<i18n("Last archive")<<i18n("Next archive in")<<i18n("Storage directory");
     mWidget->treeWidget->setHeaderLabels(headers);
     mWidget->treeWidget->setSortingEnabled(true);
     mWidget->treeWidget->setRootIsDecorated(false);
@@ -227,6 +227,7 @@ void ArchiveMailWidget::createOrUpdateItem(ArchiveMailInfo *info, ArchiveMailIte
     }
     item->setText(ArchiveMailWidget::Name,i18n("Folder: %1",MailCommon::Util::fullCollectionPath(Akonadi::Collection(info->saveCollectionId()))));
     item->setCheckState(ArchiveMailWidget::Name, info->isEnabled() ? Qt::Checked : Qt::Unchecked);
+    item->setText(ArchiveMailWidget::StorageDirectory, info->url().prettyUrl());
     if (info->lastDateSaved().isValid()) {
         item->setText(ArchiveMailWidget::LastArchiveDate,KGlobal::locale()->formatDate(info->lastDateSaved()));
         updateDiffDate(item, info);

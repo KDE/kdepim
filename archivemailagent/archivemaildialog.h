@@ -47,7 +47,8 @@ public:
     enum ArchiveMailColumn {
         Name = 0,
         LastArchiveDate,
-        NextArchive
+        NextArchive,
+        StorageDirectory
     };
 
     void save();
