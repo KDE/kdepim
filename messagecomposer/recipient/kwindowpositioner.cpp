@@ -28,6 +28,7 @@
 #include <QApplication>
 #include <QDesktopWidget>
 
+namespace MessageComposer {
 KWindowPositioner::KWindowPositioner( QWidget *master, QWidget *slave,
   Mode mode )
   : QObject( master ), mMaster( master ), mSlave( slave ), mMode( mode )
@@ -64,6 +65,7 @@ void KWindowPositioner::reposition()
 
   mSlave->move( pos );
   mSlave->raise();
+}
 }
 
 #include "kwindowpositioner.moc"

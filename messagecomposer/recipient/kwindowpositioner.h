@@ -23,7 +23,7 @@
 
 #include <QWidget>
 
-
+namespace MessageComposer {
 class KWindowPositioner : public QObject
 {
     Q_OBJECT
@@ -40,5 +40,6 @@ class KWindowPositioner : public QObject
     
     Mode mMode;
 };
+}
 
 #endif

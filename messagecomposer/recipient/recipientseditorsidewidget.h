@@ -29,9 +29,9 @@
 
 class QLabel;
 class QPushButton;
-class KWindowPositioner;
 
 namespace MessageComposer {
+class KWindowPositioner;
 
 class RecipientsPicker;
  
@@ -63,7 +63,7 @@ class RecipientsEditorSideWidget : public QWidget
       only through picker() */
     mutable MessageComposer::RecipientsPicker *mRecipientPicker;
     /** lazy loaded, don't access directly, unless you've called picker() */
-    mutable KWindowPositioner *mPickerPositioner;
+    mutable MessageComposer::KWindowPositioner *mPickerPositioner;
 };
 }
 
