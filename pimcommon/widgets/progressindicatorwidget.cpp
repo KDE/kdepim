@@ -80,6 +80,7 @@ ProgressIndicatorWidget::ProgressIndicatorWidget(QWidget *parent)
     : QLabel(parent),
       d(new ProgressIndicatorWidgetPrivate(this))
 {
+    setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed ) );
 }
 
 ProgressIndicatorWidget::~ProgressIndicatorWidget()
