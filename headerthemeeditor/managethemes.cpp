@@ -43,7 +43,7 @@ ManageThemes::ManageThemes(QWidget *parent)
     lay->addWidget(lab);
 
     mListThemes = new QListWidget;
-    connect(mListThemes, SIGNAL(itemActivated(QListWidgetItem*)), this, SLOT(slotItemSelected(QListWidgetItem*)));
+    connect(mListThemes, SIGNAL(itemSelectionChanged()), this, SLOT(slotItemSelectionChanged()));
     lay->addWidget(mListThemes);
 
     mDeleteTheme = new KPushButton(i18n("Delete theme"));
@@ -114,9 +114,9 @@ void ManageThemes::initialize()
     }
 }
 
-void ManageThemes::slotItemSelected(QListWidgetItem* item)
+void ManageThemes::slotItemSelectionChanged()
 {
-    mDeleteTheme->setEnabled(item);
+    mDeleteTheme->setEnabled(mListThemes->currentItem());
 }
 
 #include "managethemes.moc"
