@@ -169,6 +169,8 @@ void ThemeEditorPage::uploadTheme()
         const bool fileAdded  = zip->addLocalFile(previewFileName, themename + QLatin1Char('/') + QLatin1String("theme_preview.png"));
         if (!fileAdded) {
             KMessageBox::error(this, i18n("We can not add preview file in zip file"), i18n("Failed to add file."));
+            delete zip;
+            return;
         }
 
         createZip(themename, zip);
