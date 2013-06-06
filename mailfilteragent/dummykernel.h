@@ -1,7 +1,7 @@
 #ifndef DUMMYKERNEL_H
 #define DUMMYKERNEL_H
 
-#include <mailcommon/mailinterfaces.h>
+#include <mailcommon/interfaces/mailinterfaces.h>
 
 namespace Akonadi {
 class EntityTreeModel;

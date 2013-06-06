@@ -20,7 +20,7 @@
 #define MAILCOMMON_MAILKERNEL_H
 
 #include "mailcommon_export.h"
-#include "mailinterfaces.h"
+#include "interfaces/mailinterfaces.h"
 
 #include <Akonadi/Collection>
 #include <Akonadi/KMime/SpecialMailCollections>
