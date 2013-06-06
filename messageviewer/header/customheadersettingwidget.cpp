@@ -35,6 +35,7 @@ CustomHeaderSettingWidget::CustomHeaderSettingWidget(QWidget *parent)
     : QWidget(parent)
 {
     QVBoxLayout *topLayout = new QVBoxLayout;
+    topLayout->setContentsMargins( 0, 0, 0, 0 );
     mCbHeaderToShow = new QRadioButton(i18n("Only show the headers listed below"));
     topLayout->addWidget(mCbHeaderToShow);
 
