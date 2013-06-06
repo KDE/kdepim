@@ -32,7 +32,7 @@
 #ifndef Q_OS_WINCE
 #include <messagecomposer/distributionlistdialog.h>
 #endif
-#include "messageviewer/autoqpointer.h"
+#include "messageviewer/utils/autoqpointer.h"
 
 #include <KDebug>
 #include <KMime/Headers>

@@ -107,7 +107,7 @@
 #include <kleo/specialjob.h>
 
 #include "chiasmuskeyselector.h"
-#include "autoqpointer.h"
+#include "utils/autoqpointer.h"
 
 
 //own includes

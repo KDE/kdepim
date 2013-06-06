@@ -38,7 +38,7 @@
 
 #include "objecttreeparser_p.h"
 #include "objecttreesourceif.h"
-#include "autoqpointer.h"
+#include "utils/autoqpointer.h"
 #include "viewer_p.h"
 #include "partmetadata.h"
 #include "attachmentstrategy.h"

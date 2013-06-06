@@ -32,7 +32,7 @@
 #include "util/mailutil.h"
 #include "mailkernel.h"
 
-#include <messageviewer/autoqpointer.h>
+#include <messageviewer/utils/autoqpointer.h>
 
 #include <Akonadi/CollectionFetchJob>
 

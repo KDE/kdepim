@@ -40,7 +40,7 @@
 #include "filterimporter/filterimporterclawsmail_p.h"
 #include "selectthunderbirdfilterfilesdialog.h"
 
-#include <messageviewer/autoqpointer.h>
+#include <messageviewer/utils/autoqpointer.h>
 #include <messageviewer/utils/util.h>
 
 #include <KConfig>

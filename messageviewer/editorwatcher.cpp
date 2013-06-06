@@ -18,7 +18,7 @@
 
 #include <config-messageviewer.h>
 #include "editorwatcher.h"
-#include "autoqpointer.h"
+#include "utils/autoqpointer.h"
 
 #include <kdebug.h>
 #include <klocale.h>

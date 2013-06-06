@@ -31,7 +31,7 @@
 
 #include <messagecomposer/composerlineedit.h>
 
-#include <messageviewer/autoqpointer.h>
+#include <messageviewer/utils/autoqpointer.h>
 
 #include <Akonadi/Contact/EmailAddressSelectionDialog>
 
