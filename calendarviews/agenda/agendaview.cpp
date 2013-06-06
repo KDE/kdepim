@@ -1606,15 +1606,19 @@ void AgendaView::fillAgenda()
 
 void AgendaView::displayIncidence( const Akonadi::Item &aitem, bool createSelected )
 {
-  const QDate today = QDate::currentDate();
-  KCalCore::DateTimeList::iterator t;
-
   KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( aitem );
-  KCalCore::Todo::Ptr todo = CalendarSupport::todo( aitem );
-  KCalCore::Event::Ptr event = CalendarSupport::event( aitem );
   if ( incidence->hasRecurrenceId() ) {
     return;
   }
+
+  KCalCore::Todo::Ptr todo = CalendarSupport::todo( aitem );
+  if ( todo && ( !preferences()->showTodosAgendaView() || !todo->hasDueDate() ) ) {
+    return;
+  }
+
+  KCalCore::Event::Ptr event = CalendarSupport::event( aitem );
+  const QDate today = QDate::currentDate();
+  KCalCore::DateTimeList::iterator t;
 
   const KDateTime::Spec timeSpec = preferences()->timeSpec();
 
@@ -1628,9 +1632,6 @@ void AgendaView::displayIncidence( const Akonadi::Item &aitem, bool createSelect
   const KDateTime incDtStart = incidence->dtStart().toTimeSpec( timeSpec );
   const KDateTime incDtEnd = incidence->dateTime( KCalCore::Incidence::RoleEnd ).toTimeSpec( timeSpec );
 
-  if ( todo && ( !preferences()->showTodosAgendaView() || !todo->hasDueDate() ) ) {
-    return;
-  }
   bool alreadyAddedToday = false;
 
   if ( incidence->recurs() ) {
