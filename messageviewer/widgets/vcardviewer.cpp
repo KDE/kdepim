@@ -31,7 +31,7 @@ using KABC::Addressee;
 
 #include <klocale.h>
 
-#include <libkdepim/addcontactjob.h>
+#include <libkdepim/job/addcontactjob.h>
 
 
 #ifndef KABC_ADDRESSEE_METATYPE_DEFINED

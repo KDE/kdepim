@@ -21,7 +21,7 @@
 
 #include "pimcommon/widgets/minimumcombobox.h"
 
-#include "libkdepim/addcontactjob.h"
+#include "libkdepim/job/addcontactjob.h"
 
 #include <KDE/Akonadi/CollectionComboBox>
 #include <KDE/KABC/Addressee>

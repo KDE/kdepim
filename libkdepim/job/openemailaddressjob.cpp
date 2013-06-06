@@ -19,7 +19,7 @@
 
 #include "openemailaddressjob.h"
 
-#include "addemailaddressjob.h"
+#include "job/addemailaddressjob.h"
 
 #include <akonadi/collectiondialog.h>
 #include <akonadi/contact/contacteditordialog.h>
