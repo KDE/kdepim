@@ -20,7 +20,7 @@
 
 #include "filteraction.h"
 
-#include "../mailkernel.h"
+#include "../kernel/mailkernel.h"
 #include "mdnadvicedialog.h"
 #include "util/mailutil.h"
 

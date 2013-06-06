@@ -20,7 +20,7 @@
 #include "archivemaildialog.h"
 #include "archivemailmanager.h"
 
-#include <mailcommon/mailkernel.h>
+#include <mailcommon/kernel/mailkernel.h>
 #include <akonadi/dbusconnectionpool.h>
 #include <Akonadi/Monitor>
 #include <Akonadi/Session>

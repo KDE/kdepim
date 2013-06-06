@@ -30,7 +30,7 @@
 
 #include "antispamwizard.h"
 #ifndef QT_NO_CURSOR
-#include "messageviewer/kcursorsaver.h"
+#include "messageviewer/utils/kcursorsaver.h"
 #endif
 #include "kmkernel.h"
 #include "kmmainwin.h"
@@ -41,7 +41,7 @@
 #include "mailcommon/pop3settings.h"
 #include "mailcommon/util/mailutil.h"
 #include "pimcommon/imapsettings.h"
-#include "mailcommon/mailkernel.h"
+#include "mailcommon/kernel/mailkernel.h"
 #include "mailcommon/filter/mailfilter.h"
 #include "mailcommon/filter/filteraction.h"
 #include "mailcommon/filter/filteractiondict.h"

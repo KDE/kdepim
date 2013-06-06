@@ -43,12 +43,12 @@
 #include "viewer_p.h"
 #include "mailwebview.h"
 #include "nodehelper.h"
-#include "util.h"
+#include "utils/util.h"
 #include "stl_util.h"
 
 #include <messagecore/stringutil.h>
 #include <libkdepim/broadcaststatus.h>
-#include <libkdepim/openemailaddressjob.h>
+#include <libkdepim/job/openemailaddressjob.h>
 
 #include <akonadi/contact/contactsearchjob.h>
 

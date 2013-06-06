@@ -19,13 +19,15 @@ endif ()
 ########### next target ###############
 
 set(kdepim_LIB_SRCS
-   addemailaddressjob.cpp
-   addcontactjob.cpp
+   job/addemailaddressjob.cpp
+   job/addcontactjob.cpp
+   job/openemailaddressjob.cpp
    addressline/completionordereditor.cpp
-   openemailaddressjob.cpp
+   addressline/addresseelineedit.cpp
+   addressline/recentaddresses.cpp
+   addressline/kmailcompletion.cpp
    kprefsdialog.cpp
    maillistdrag.cpp
-   addressline/addresseelineedit.cpp
    kdatepickerpopup.cpp
    kcheckcombobox.cpp
    kweekdaycheckcombo.cpp
@@ -42,8 +44,6 @@ set(kdepim_LIB_SRCS
    progresswidget/ssllabel.cpp
    broadcaststatus.cpp
    kwidgetlister.cpp
-   addressline/recentaddresses.cpp
-   addressline/kmailcompletion.cpp
    pimmessagebox.cpp
    multiplyingline/multiplyingline.cpp
    multiplyingline/multiplyinglineeditor.cpp

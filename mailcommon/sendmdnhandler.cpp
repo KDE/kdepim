@@ -20,8 +20,8 @@
 
 #include "sendmdnhandler.h"
 
-#include "mailinterfaces.h"
-#include "mailkernel.h"
+#include "interfaces/mailinterfaces.h"
+#include "kernel/mailkernel.h"
 #include "util/mailutil.h"
 #include "mdnadvicedialog.h"
 

@@ -17,7 +17,7 @@
 
 #include "selectthunderbirdfilterfilesdialog.h"
 #include "selectthunderbirdfilterfileswidget.h"
-#include "mailkernel.h"
+#include "kernel/mailkernel.h"
 #include <KLocale>
 
 #include <QHBoxLayout>

@@ -17,7 +17,7 @@
 */
 
 #include "favoritecollectionwidget.h"
-#include "mailkernel.h"
+#include "kernel/mailkernel.h"
 
 #include <messagecore/globalsettings.h>
 

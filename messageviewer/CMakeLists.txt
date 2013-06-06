@@ -95,7 +95,7 @@ set(libmessageviewer_SRCS
   pluginloaderbase.cpp
   teehtmlwriter.cpp
   urlhandlermanager.cpp
-  util.cpp
+  utils/util.cpp
   viewer.cpp
   viewer_p.cpp
   webkitparthtmlwriter.cpp
@@ -140,6 +140,7 @@ target_link_libraries(messageviewer messagecore kdepim kpgp kleo
 include_directories(
     ${CMAKE_SOURCE_DIR}/messagecore
     ${CMAKE_SOURCE_DIR}/pimcommon
+    ${CMAKE_SOURCE_DIR}/libkdepim
     ${CMAKE_SOURCE_DIR}/libkleo
     ${Boost_INCLUDE_DIR}
     ${GPGME_INCLUDES}

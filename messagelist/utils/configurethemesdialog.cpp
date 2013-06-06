@@ -99,6 +99,7 @@ ConfigureThemesDialog::ConfigureThemesDialog( QWidget *parent )
   setMainWidget( base );
 
   QGridLayout * g = new QGridLayout( base );
+  g->setContentsMargins( 0, 0, 0, 0 );
 
   d->mThemeList = new ThemeListWidget( base );
   d->mThemeList->setSelectionMode(QAbstractItemView::ExtendedSelection);

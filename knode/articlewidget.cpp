@@ -51,8 +51,8 @@
 #include <kicon.h>
 #include <kde_file.h>
 
-#include <libkdepim/addemailaddressjob.h>
-#include <libkdepim/openemailaddressjob.h>
+#include <libkdepim/job/addemailaddressjob.h>
+#include <libkdepim/job/openemailaddressjob.h>
 
 #include <libkpgp/kpgp.h>
 #include <libkpgp/kpgpblock.h>

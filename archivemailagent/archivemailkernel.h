@@ -18,7 +18,7 @@
 #ifndef ARCHIVEMAILKERNEL_H
 #define ARCHIVEMAILKERNEL_H
 
-#include <mailcommon/mailinterfaces.h>
+#include <mailcommon/interfaces/mailinterfaces.h>
 
 namespace Akonadi {
 class EntityTreeModel;

@@ -32,7 +32,7 @@
 
 
 #include "mailsourceviewer.h"
-#include "util.h"
+#include "utils/util.h"
 #include "errno.h"
 #include "findbar/findbarsourceview.h"
 #include "kpimtextedit/htmlhighlighter.h"

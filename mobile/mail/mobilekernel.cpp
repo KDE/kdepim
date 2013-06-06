@@ -21,7 +21,7 @@
 #include "mobilekernel.h"
 #include <messagecomposer/autocorrection/composerautocorrection.h>
 #include <mailcommon/filter/filteraction.h>
-#include <mailcommon/mailkernel.h>
+#include <mailcommon/kernel/mailkernel.h>
 #include <mailcommon/job/jobscheduler.h>
 #include <kpimidentities/identitymanager.h>
 #include <messagecomposer/akonadisender.h>

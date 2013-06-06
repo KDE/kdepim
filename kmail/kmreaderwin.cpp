@@ -25,12 +25,12 @@
 #include "globalsettings.h"
 #include "kmmainwidget.h"
 #include "kmreadermainwin.h"
-#include "mailkernel.h"
+#include "kernel/mailkernel.h"
 
 #include "kdepim-version.h"
 #include <kpimutils/email.h>
-#include <libkdepim/addemailaddressjob.h>
-#include <libkdepim/openemailaddressjob.h>
+#include <libkdepim/job/addemailaddressjob.h>
+#include <libkdepim/job/openemailaddressjob.h>
 #include <libkdepim/broadcaststatus.h>
 #include "kmcommands.h"
 #include "mailcommon/sendmdnhandler.h"

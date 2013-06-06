@@ -6,6 +6,7 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/libkdepim
     ${CMAKE_SOURCE_DIR}/libkleo
     ${CMAKE_SOURCE_DIR}/messagecore
+    ${CMAKE_SOURCE_DIR}/messageviewer
     ${CMAKE_SOURCE_DIR}/messagecomposer/recipient/
 )
 

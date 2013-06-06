@@ -40,7 +40,7 @@
 using MessageViewer::Interface::BodyPart;
 #include "messageviewer/webkitparthtmlwriter.h"
 
-#include <libkdepim/addcontactjob.h>
+#include <libkdepim/job/addcontactjob.h>
 
 #include <Akonadi/Contact/ContactViewer>
 #include <Akonadi/Contact/StandardContactFormatter>

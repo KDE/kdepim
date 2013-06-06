@@ -24,7 +24,7 @@
 #include "mailcommon/util/mailutil.h"
 #include "pimcommon/util/createresource.h"
 
-#include "messageviewer/kcursorsaver.h"
+#include "messageviewer/utils/kcursorsaver.h"
 
 
 #include <mailtransport/transportmanager.h>

@@ -17,7 +17,7 @@
 #ifndef BACKUPMAILKERNEL_H
 #define BACKUPMAILKERNEL_H
 
-#include <mailcommon/mailinterfaces.h>
+#include <mailcommon/interfaces/mailinterfaces.h>
 
 namespace Akonadi {
 class EntityTreeModel;

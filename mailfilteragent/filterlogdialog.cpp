@@ -29,7 +29,7 @@
 
 #include "filterlogdialog.h"
 #include <mailcommon/filter/filterlog.h>
-#include <messageviewer/autoqpointer.h>
+#include <messageviewer/utils/autoqpointer.h>
 
 #include <kdebug.h>
 #include <kfiledialog.h>

@@ -17,7 +17,7 @@
 */
 
 #include "mdnadvicedialog.h"
-#include "mailkernel.h"
+#include "kernel/mailkernel.h"
 
 #include <messagecore/messagehelpers.h>
 #include <messagecore/mdnstateattribute.h>
@@ -27,7 +27,7 @@ using MessageComposer::MessageFactory;
 
 #include <messageviewer/globalsettings.h>
 #ifndef QT_NO_CURSOR
-#include <messageviewer/kcursorsaver.h>
+#include <messageviewer/utils/kcursorsaver.h>
 #endif
 #include <messageviewer/objecttreeparser.h>
 

@@ -17,7 +17,7 @@
 
 #include "exportmailjob.h"
 #include "akonadidatabase.h"
-#include "messageviewer/kcursorsaver.h"
+#include "messageviewer/utils/kcursorsaver.h"
 #include "mailcommon/util/mailutil.h"
 #include "mailcommon/filter/filtermanager.h"
 #include "mailcommon/filter/filterimporterexporter.h"

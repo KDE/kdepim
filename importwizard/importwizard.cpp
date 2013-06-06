@@ -49,7 +49,7 @@
 #include <KHelpMenu>
 #include <KMenu>
 #include <akonadi/control.h>
-#include <mailcommon/mailkernel.h>
+#include <mailcommon/kernel/mailkernel.h>
 
 ImportWizard::ImportWizard(QWidget *parent)
     : KAssistantDialog(parent), mSelectedPim( 0 )

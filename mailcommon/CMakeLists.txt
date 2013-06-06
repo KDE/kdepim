@@ -96,7 +96,7 @@ set(libmailcommon_SRCS
   folder/foldertreewidgetproxymodel.cpp
   folder/entitycollectionorderproxymodel.cpp
   job/jobscheduler.cpp
-  mailkernel.cpp
+  kernel/mailkernel.cpp
   util/mailutil.cpp
   widgets/redirectdialog.cpp
   widgets/regexplineedit.cpp

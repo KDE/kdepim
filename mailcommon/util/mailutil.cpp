@@ -43,7 +43,7 @@
 #include "job/expirejob.h"
 #include "foldercollection.h"
 #include "pop3settings.h"
-#include "mailkernel.h"
+#include "kernel/mailkernel.h"
 #include "filter/filteractionmissingargumentdialog.h"
 
 #include "mailimporter/filterbalsa.h"

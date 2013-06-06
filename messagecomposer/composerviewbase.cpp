@@ -46,7 +46,7 @@
 #include <messagecore/attachment/attachmentcollector.h>
 #include <messagecore/nodehelper.h>
 #ifndef QT_NO_CURSOR
-#include <messageviewer/kcursorsaver.h>
+#include <messageviewer/utils/kcursorsaver.h>
 #endif
 #include <mailtransport/transportmanager.h>
 #include <messagecomposer/recipient/recipientseditor.h>

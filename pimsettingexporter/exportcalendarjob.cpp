@@ -17,7 +17,7 @@
 
 #include "exportcalendarjob.h"
 
-#include "messageviewer/kcursorsaver.h"
+#include "messageviewer/utils/kcursorsaver.h"
 
 
 #include <KLocale>

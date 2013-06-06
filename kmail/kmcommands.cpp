@@ -45,7 +45,7 @@
 
 #include "kmcommands.h"
 #include "collectionpane.h"
-#include "mailkernel.h"
+#include "kernel/mailkernel.h"
 #include "util/mailutil.h"
 
 #include <unistd.h> // link()
@@ -82,11 +82,11 @@
 #include "kmmainwidget.h"
 #include "undostack.h"
 #ifndef QT_NO_CURSOR
-#include "messageviewer/kcursorsaver.h"
+#include "messageviewer/utils/kcursorsaver.h"
 #endif
 #include "messageviewer/objecttreeparser.h"
 #include "messageviewer/csshelper.h"
-#include "messageviewer/util.h"
+#include "messageviewer/utils/util.h"
 #include "messageviewer/mailsourceviewer.h"
 #include "messageviewer/viewer.h"
 #include "messageviewer/headerstrategy.h"
@@ -100,7 +100,7 @@ using MessageViewer::EditorWatcher;
 #include "broadcaststatus.h"
 #include "globalsettings.h"
 #include "stringutil.h"
-#include "messageviewer/autoqpointer.h"
+#include "messageviewer/utils/autoqpointer.h"
 #include "messageviewer/globalsettings.h"
 #include "messagecore/globalsettings.h"
 

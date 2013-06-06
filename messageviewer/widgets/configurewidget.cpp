@@ -20,7 +20,7 @@
 #include "configurewidget.h"
 
 #include "ui_settings.h"
-#include "util.h"
+#include "utils/util.h"
 #include "globalsettings.h"
 #include "nodehelper.h"
 
@@ -35,6 +35,7 @@ ConfigureWidget::ConfigureWidget( QWidget *parent )
 {
   mSettingsUi = new Ui_Settings;
   mSettingsUi->setupUi( this );
+  layout()->setContentsMargins( 0, 0, 0, 0 );
 
   QStringList encodings = NodeHelper::supportedEncodings( false );
   mSettingsUi->fallbackCharacterEncoding->addItems( encodings );
@@ -53,8 +54,6 @@ ConfigureWidget::ConfigureWidget( QWidget *parent )
   mSettingsUi->kcfg_ShowExpandQuotesMark->setWhatsThis(
       GlobalSettings::self()->showExpandQuotesMarkItem()->whatsThis() );
 
-  connect( mSettingsUi->kcfg_ShowExpandQuotesMark, SIGNAL(toggled(bool)),
-           mSettingsUi->kcfg_CollapseQuoteLevelSpin, SLOT(setEnabled(bool)) );
   connect( mSettingsUi->fallbackCharacterEncoding, SIGNAL(currentIndexChanged(int)),
            this, SIGNAL(settingsChanged()) );
   connect( mSettingsUi->overrideCharacterEncoding, SIGNAL(currentIndexChanged(int)),

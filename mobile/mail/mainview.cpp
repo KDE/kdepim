@@ -40,7 +40,7 @@
 #include "mailcommon/collectionpage/collectiongeneralpage.h"
 #include "mailcommon/collectionpage/collectionexpirypage.h"
 #include "mailcommon/filter/filtermanager.h"
-#include "mailcommon/mailkernel.h"
+#include "mailcommon/kernel/mailkernel.h"
 #include "mailcommon/widgets/redirectdialog.h"
 #include "mailcommon/sendmdnhandler.h"
 #include "mailthreadgroupercomparator.h"

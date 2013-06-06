@@ -32,7 +32,7 @@
 #ifndef _MESSAGEVIEWER_HTMLSTATUSBAR_H_
 #define _MESSAGEVIEWER_HTMLSTATUSBAR_H_
 
-#include "util.h"
+#include "utils/util.h"
 #include <QLabel>
 class QMouseEvent;
 

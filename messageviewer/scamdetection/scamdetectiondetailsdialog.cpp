@@ -17,7 +17,7 @@
 
 #include "scamdetectiondetailsdialog.h"
 #include "globalsettings.h"
-#include "autoqpointer.h"
+#include "utils/autoqpointer.h"
 
 #include <KLocale>
 

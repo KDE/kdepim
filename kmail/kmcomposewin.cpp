@@ -39,14 +39,14 @@
 #include "kmmainwidget.h"
 #include "mailcomposeradaptor.h" // TODO port all D-Bus stuff...
 #include "messageviewer/stl_util.h"
-#include "messageviewer/util.h"
+#include "messageviewer/utils/util.h"
 #include "messagecore/stringutil.h"
 #include "messagecore/attachment/attachmentcollector.h"
 #include "util.h"
 #include "snippetwidget.h"
 #include "templatesconfiguration_kfg.h"
 #include "foldercollectionmonitor.h"
-#include "mailkernel.h"
+#include "kernel/mailkernel.h"
 #include "custommimeheader.h"
 #include <libkdepim/spellchecklineedit.h>
 #include "pimcommon/translator/translatorwidget.h"
@@ -64,7 +64,7 @@
 #include <messageviewer/objecttreeemptysource.h>
 
 #ifndef QT_NO_CURSOR
-#include <messageviewer/kcursorsaver.h>
+#include <messageviewer/utils/kcursorsaver.h>
 #endif
 
 #include <messageviewer/objecttreeparser.h>
@@ -3162,7 +3162,7 @@ void KMComposeWin::slotIdentityChanged( uint uoid, bool initalChange )
 //-----------------------------------------------------------------------------
 void KMComposeWin::slotSpellcheckConfig()
 {
-  mComposerBase->editor()->showSpellConfigDialog( "kmail2rc" );
+  static_cast<KMComposerEditor *>(mComposerBase->editor())->showSpellConfigDialog( "kmail2rc" );
 }
 
 //-----------------------------------------------------------------------------

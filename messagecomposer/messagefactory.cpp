@@ -24,7 +24,7 @@
 
 #include <akonadi/item.h>
 #ifndef QT_NO_CURSOR
-#include <messageviewer/kcursorsaver.h>
+#include <messageviewer/utils/kcursorsaver.h>
 #endif
 #include <kpimidentities/identitymanager.h>
 #include <kpimidentities/identity.h>

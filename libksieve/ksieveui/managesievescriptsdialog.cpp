@@ -30,7 +30,7 @@ using namespace KSieveUi;
 
 ManageSieveTreeView::ManageSieveTreeView(QWidget *parent)
     : QTreeWidget(parent),
-      mImapFound(false)
+      mImapFound(true)
 {
     connect( KGlobalSettings::self(), SIGNAL(kdisplayFontChanged()),
              this, SLOT(slotGeneralFontChanged()));
@@ -232,6 +232,7 @@ void ManageSieveScriptsDialog::slotRefresh()
     clear();
     SieveTreeWidgetItem *last = 0;
     Akonadi::AgentInstance::List lst = KSieveUi::Util::imapAgentInstances();
+    bool imapFound = false;
     foreach ( const Akonadi::AgentInstance& type, lst ) {
         if ( type.status() == Akonadi::AgentInstance::Broken )
             continue;
@@ -256,8 +257,10 @@ void ManageSieveScriptsDialog::slotRefresh()
             mUrls.insert( last, u );
             last->startAnimation();
         }
+        imapFound = true;
     }
     slotUpdateButtons();
+    mListView->setImapFound(imapFound);
 }
 
 void ManageSieveScriptsDialog::slotResult( KManageSieve::SieveJob * job, bool success, const QString &, bool )
@@ -283,7 +286,7 @@ void ManageSieveScriptsDialog::slotResult( KManageSieve::SieveJob * job, bool su
             new QTreeWidgetItem( parent );
     item->setText( 0, i18n( "Failed to fetch the list of scripts" ) );
     item->setFlags( item->flags() & ~Qt::ItemIsEnabled );
-    mListView->setImapFound(true);
+
 }
 
 void ManageSieveScriptsDialog::slotItem( KManageSieve::SieveJob * job, const QString & filename, bool isActive )

@@ -27,7 +27,7 @@
  */
 #include "expirejob.h"
 #include "collectionpage/expirecollectionattribute.h"
-#include "mailkernel.h"
+#include "kernel/mailkernel.h"
 
 #include <libkdepim/broadcaststatus.h>
 using KPIM::BroadcastStatus;

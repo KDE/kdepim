@@ -38,7 +38,7 @@
 
 #include "objecttreeparser_p.h"
 #include "objecttreesourceif.h"
-#include "autoqpointer.h"
+#include "utils/autoqpointer.h"
 #include "viewer_p.h"
 #include "partmetadata.h"
 #include "attachmentstrategy.h"
@@ -50,7 +50,7 @@
 #include "partnodebodypart.h"
 #include "interfaces/bodypartformatter.h"
 #include "globalsettings.h"
-#include "util.h"
+#include "utils/util.h"
 #include "kleojobexecutor.h"
 #include "nodehelper.h"
 #include "iconnamecache.h"

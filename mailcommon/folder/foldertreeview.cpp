@@ -17,7 +17,7 @@
 */
 
 #include "foldertreeview.h"
-#include "mailkernel.h"
+#include "kernel/mailkernel.h"
 
 #include <Akonadi/CollectionStatistics>
 #include <Akonadi/CollectionStatisticsDelegate>

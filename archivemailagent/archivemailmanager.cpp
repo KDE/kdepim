@@ -21,7 +21,7 @@
 #include "archivemailkernel.h"
 #include "archivemailagentutil.h"
 
-#include <mailcommon/mailkernel.h>
+#include <mailcommon/kernel/mailkernel.h>
 #include <mailcommon/util/mailutil.h>
 
 #include <Akonadi/Collection>

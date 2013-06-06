@@ -34,7 +34,7 @@
 #include "foldertreewidget.h"
 #include "util.h"
 #include "util/mailutil.h"
-#include "mailkernel.h"
+#include "kernel/mailkernel.h"
 #include "archivefolderdialog.h"
 #include "globalsettings.h"
 #include "foldertreeview.h"
@@ -68,14 +68,14 @@
 // Other PIM includes
 #include "kdepim-version.h"
 
-#include "messageviewer/autoqpointer.h"
+#include "messageviewer/utils/autoqpointer.h"
 #include "messageviewer/globalsettings.h"
 #include "messageviewer/viewer.h"
 #include "messageviewer/attachmentstrategy.h"
 #include "messageviewer/headerstrategy.h"
 #include "messageviewer/headerstyle.h"
 #ifndef QT_NO_CURSOR
-#include "messageviewer/kcursorsaver.h"
+#include "messageviewer/utils/kcursorsaver.h"
 #endif
 
 #include "messagecomposer/messagesender.h"

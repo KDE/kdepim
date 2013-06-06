@@ -107,7 +107,7 @@
 #include <kleo/specialjob.h>
 
 #include "chiasmuskeyselector.h"
-#include "autoqpointer.h"
+#include "utils/autoqpointer.h"
 
 
 //own includes
@@ -125,7 +125,7 @@
 #include "nodehelper.h"
 #include "objecttreeparser.h"
 #include "urlhandlermanager.h"
-#include "util.h"
+#include "utils/util.h"
 #include "widgets/vcardviewer.h"
 #include "mailwebview.h"
 #include "findbar/findbarmailwebview.h"
