@@ -51,7 +51,7 @@ QWidget *SieveConditionSize::createParamWidget( QWidget *parent ) const
     QSpinBox *spinbox = new QSpinBox;
     spinbox->setMinimum(1);
     spinbox->setMaximum(9999);
-    spinbox->setSuffix(QLatin1Char(' ') + i18n("kb"));
+    spinbox->setSuffix(i18n(" KB"));
     spinbox->setObjectName(QLatin1String("spinboxsize"));
 
     lay->addWidget(spinbox);
