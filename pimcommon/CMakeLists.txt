@@ -22,7 +22,6 @@ set(libpimcommon_SRCS
   translator/googletranslator.cpp
   widgets/renamefiledialog.cpp
   widgets/simplestringlisteditor.cpp
-  widgets/progressindicatorwidget.cpp
   templatewidgets/templatelistwidget.cpp
   templatewidgets/templateeditdialog.cpp
 )
@@ -45,6 +44,7 @@ target_link_libraries(pimcommon
     ${KDEPIMLIBS_AKONADI_CONTACT_LIBS}
     ${KDEPIMLIBS_AKONADI_LIBS}
     ${KDEPIMLIBS_KIMAP_LIBS}
+    ${KDEPIMLIBS_KPIMUTILS_LIBS}
     ${KDE4_KDEUI_LIBS}
     ${QT_QTWEBKIT_LIBRARY}
     kdepim
