@@ -44,10 +44,10 @@ ManageSieveTreeView::~ManageSieveTreeView()
 
 void ManageSieveTreeView::slotGeneralPaletteChanged()
 {
-  const QPalette palette = viewport()->palette();
-  QColor color = palette.text().color();
-  color.setAlpha( 128 );
-  mTextColor = color;
+    const QPalette palette = viewport()->palette();
+    QColor color = palette.text().color();
+    color.setAlpha( 128 );
+    mTextColor = color;
 }
 
 void ManageSieveTreeView::slotGeneralFontChanged()
