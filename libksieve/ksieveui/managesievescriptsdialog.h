@@ -4,6 +4,7 @@
 
 #include "ksieveui_export.h"
 
+#include <QTreeWidget>
 #include <qdialog.h>
 #include <kurl.h>
 
@@ -12,7 +13,7 @@
 class QButtonGroup;
 class QTreeWidgetItem;
 class KPushButton;
-class QTreeWidget;
+
 namespace KManageSieve {
 class SieveJob;
 }
@@ -21,6 +22,27 @@ namespace KSieveUi {
 
 class SieveEditor;
 class TreeWidgetWithContextMenu;
+
+class ManageSieveTreeView : public QTreeWidget
+{
+    Q_OBJECT
+public:
+    explicit ManageSieveTreeView(QWidget *parent = 0);
+    ~ManageSieveTreeView();
+
+    void setImapFound(bool found);
+
+private Q_SLOTS:
+    void slotGeneralPaletteChanged();
+    void slotGeneralFontChanged();
+
+protected:
+    void paintEvent( QPaintEvent *event );
+
+private:
+    QColor mTextColor;
+    bool mImapFound;
+};
 
 class KSIEVEUI_EXPORT ManageSieveScriptsDialog : public QDialog
 {
@@ -84,7 +106,7 @@ private:
         SIEVE_SERVER_CAPABILITIES = Qt::UserRole +2
     };
 
-    QTreeWidget* mListView;
+    ManageSieveTreeView* mListView;
     SieveEditor * mSieveEditor;
     QMap<KManageSieve::SieveJob*,QTreeWidgetItem*> mJobs;
     QMap<QTreeWidgetItem*,KUrl> mUrls;
