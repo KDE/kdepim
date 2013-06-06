@@ -60,7 +60,7 @@ class ComposerView : public KDeclarativeFullScreenView
 
     void setIdentityCombo( KPIMIdentities::IdentityCombo* combo );
 
-    void setEditor( Message::KMeditor* editor );
+    void setEditor( MessageComposer::KMeditor* editor );
     void setRecipientsEditor( MessageComposer::RecipientsEditor *editor );
 
     QString subject() const;
@@ -91,7 +91,7 @@ class ComposerView : public KDeclarativeFullScreenView
     void sendSuccessful();
 
     void enableHtml();
-    void disableHtml( Message::ComposerViewBase::Confirmation confirmation );
+    void disableHtml( MessageComposer::ComposerViewBase::Confirmation confirmation );
     void addAttachment( KMime::Content* part );
 
   signals:
@@ -125,7 +125,7 @@ class ComposerView : public KDeclarativeFullScreenView
     void closeEvent ( QCloseEvent * event );
 
   private:
-    Message::ComposerViewBase* m_composerBase;
+    MessageComposer::ComposerViewBase* m_composerBase;
     QString m_subject;
     KMime::Message::Ptr m_message;
     int m_jobCount;

@@ -22,7 +22,7 @@
 
 #include "jobbase.h"
 
-namespace Message {
+namespace MessageComposer {
 
 class JobBasePrivate
 {

@@ -19,7 +19,7 @@
 
 
 
-#include <attachmentdialog.h>
+#include "attachmentdialog.h"
 
 #include <kdialog.h>
 #include <kmessagebox.h>

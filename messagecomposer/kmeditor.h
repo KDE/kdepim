@@ -27,17 +27,13 @@
 
 #include <KPIMTextEdit/TextEdit>
 
-namespace MessageComposer {
-  class ComposerAutoCorrection;
-}
-
 namespace KPIMIdentities {
   class Signature;
 }
 
-namespace Message {
-
+namespace MessageComposer {
 class TextPart;
+class ComposerAutoCorrection;
 class KMeditorPrivate;
 
 /**
@@ -175,10 +171,10 @@ class MESSAGECOMPOSER_EXPORT KMeditor : public KPIMTextEdit::TextEdit
                            const KPIMIdentities::Signature &newSig );
 
     /**
-     * Fill the given composer Message::TextPart with what's in the editor currently.
-     * @param textPart The Message::TextPart to fill.
+     * Fill the given composer MessageComposer::TextPart with what's in the editor currently.
+     * @param textPart The MessageComposer::TextPart to fill.
      */
-    void fillComposerTextPart( Message::TextPart* textPart ) const;
+    void fillComposerTextPart( MessageComposer::TextPart* textPart ) const;
 
     MessageComposer::ComposerAutoCorrection* autocorrection() const;
 

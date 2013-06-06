@@ -38,9 +38,9 @@
 
 #include <kpimtextedit/textedit.h>
 
-using namespace Message;
+using namespace MessageComposer;
 
-class Message::MainTextJobPrivate : public ContentJobBasePrivate
+class MessageComposer::MainTextJobPrivate : public ContentJobBasePrivate
 {
   public:
     MainTextJobPrivate( MainTextJob *qq )
@@ -106,7 +106,7 @@ bool MainTextJobPrivate::chooseCharsetAndEncode()
   if( textPart->isHtmlUsed() ) {
     toTry = textPart->cleanHtml();
   }
-  chosenCharset = Util::selectCharset( charsets, toTry );
+  chosenCharset = MessageComposer::Util::selectCharset( charsets, toTry );
   if( !chosenCharset.isEmpty() ) {
     // Good, found a charset that encodes the data without loss.
     return encodeTexts();
@@ -199,7 +199,7 @@ SinglepartJob *MainTextJobPrivate::createImageJob( const QSharedPointer<KPIMText
   // The image is a PNG encoded with base64.
   SinglepartJob *cjob = new SinglepartJob; // No parent.
   cjob->contentType()->setMimeType( "image/png" );
-  const QByteArray charset = Util::selectCharset( q->globalPart()->charsets( true ), image->imageName );
+  const QByteArray charset = MessageComposer::Util::selectCharset( q->globalPart()->charsets( true ), image->imageName );
   Q_ASSERT( !charset.isEmpty() );
   cjob->contentType()->setName( image->imageName, charset );
   cjob->contentTransferEncoding()->setEncoding( KMime::Headers::CEbase64 );

@@ -39,9 +39,9 @@ namespace MessageComposer {
 // ### temporary export
 class MESSAGECOMPOSER_EXPORT RecipientsPicker : public KDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     explicit RecipientsPicker( QWidget *parent );
     ~RecipientsPicker();
 
@@ -49,10 +49,10 @@ class MESSAGECOMPOSER_EXPORT RecipientsPicker : public KDialog
 
     void setDefaultType( Recipient::Type );
 
-  Q_SIGNALS:
+Q_SIGNALS:
     void pickedRecipient( const Recipient & );
 
-  protected:
+protected:
     void readConfig();
     void writeConfig();
 
@@ -60,7 +60,7 @@ class MESSAGECOMPOSER_EXPORT RecipientsPicker : public KDialog
 
     void keyPressEvent( QKeyEvent* );
 
-  protected Q_SLOTS:
+protected Q_SLOTS:
     void slotToClicked();
     void slotCcClicked();
     void slotBccClicked();
@@ -69,7 +69,7 @@ class MESSAGECOMPOSER_EXPORT RecipientsPicker : public KDialog
     void ldapSearchResult();
     void slotSelectionChanged();
 
-  private:
+private:
     Akonadi::EmailAddressSelectionWidget *mView;
 
     KLDAP::LdapSearchDialog *mLdapSearchDialog;

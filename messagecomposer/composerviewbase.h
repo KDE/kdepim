@@ -55,26 +55,20 @@ namespace KPIMIdentities
   class IdentityManager;
 }
 
-namespace MessageComposer
-{
-  class RecipientsEditor;
-}
-
 namespace Kleo
 {
   class KeyResolver;
 }
 
-namespace Message {
-
+namespace MessageComposer {
+class RecipientsEditor;
+class KMeditor;
 class InfoPart;
 class GlobalPart;
 class Composer;
-class KMeditor;
 class AttachmentControllerBase;
 class AttachmentModel;
 class SignatureController;
-
 /**
  *
  */
@@ -116,7 +110,7 @@ public:
   void addAttachment ( const QString& name, const QString& filename, const QString& charset, const QByteArray& data, const QByteArray& mimeType );
   void addAttachmentPart( KMime::Content* part );
 
-  Composer* createSimpleComposer();
+  MessageComposer::Composer* createSimpleComposer();
 
   /**
     * Header fields in recipients editor.
@@ -132,17 +126,17 @@ public:
    * The following are for setting the various options and widgets in the
    *  composer.
    */
-  void setAttachmentModel( AttachmentModel* model );
-  AttachmentModel* attachmentModel();
+  void setAttachmentModel( MessageComposer::AttachmentModel* model );
+  MessageComposer::AttachmentModel* attachmentModel();
 
-  void setAttachmentController( AttachmentControllerBase* controller );
-  AttachmentControllerBase* attachmentController();
+  void setAttachmentController( MessageComposer::AttachmentControllerBase* controller );
+  MessageComposer::AttachmentControllerBase* attachmentController();
 
   void setRecipientsEditor( MessageComposer::RecipientsEditor* recEditor );
   MessageComposer::RecipientsEditor* recipientsEditor();
 
-  void setSignatureController( SignatureController* sigController );
-  SignatureController* signatureController();
+  void setSignatureController( MessageComposer::SignatureController* sigController );
+  MessageComposer::SignatureController* signatureController();
 
   void setIdentityCombo( KPIMIdentities::IdentityCombo* identCombo );
   KPIMIdentities::IdentityCombo* identityCombo();
@@ -150,8 +144,8 @@ public:
   void setIdentityManager( KPIMIdentities::IdentityManager* identMan );
   KPIMIdentities::IdentityManager* identityManager();
 
-  void setEditor( Message::KMeditor* editor );
-  Message::KMeditor* editor();
+  void setEditor( MessageComposer::KMeditor* editor );
+  MessageComposer::KMeditor* editor();
 
   void setTransportCombo( MailTransport::TransportComboBox* transpCombo );
   MailTransport::TransportComboBox* transportComboBox();
@@ -230,7 +224,7 @@ signals:
   /**
    * Message sending failed with given error message.
    */
-  void failed( const QString& errorMessage, Message::ComposerViewBase::FailedType type = Sending );
+  void failed( const QString& errorMessage, MessageComposer::ComposerViewBase::FailedType type = Sending );
 
   /**
    * The composer was modified. This can happen behind the users' back
@@ -243,7 +237,7 @@ signals:
    *  by various client options, so when that would otherwise happen,
    *  hand it off to the client to enact it for real.
    */
-  void disableHtml( Message::ComposerViewBase::Confirmation );
+  void disableHtml( MessageComposer::ComposerViewBase::Confirmation );
   void enableHtml();
 
 private slots:
@@ -271,12 +265,12 @@ private:
   void readyForSending();
 
   enum RecipientExpansion { UseExpandedRecipients, UseUnExpandedRecipients };
-  QList< Message::Composer* > generateCryptoMessages();
-  void fillGlobalPart( Message::GlobalPart *globalPart );
-  void fillInfoPart( Message::InfoPart *part, RecipientExpansion expansion );
-  void queueMessage( KMime::Message::Ptr message, Composer* composer );
+  QList< MessageComposer::Composer* > generateCryptoMessages();
+  void fillGlobalPart( MessageComposer::GlobalPart *globalPart );
+  void fillInfoPart( MessageComposer::InfoPart *part, RecipientExpansion expansion );
+  void queueMessage( KMime::Message::Ptr message, MessageComposer::Composer* composer );
   void saveMessage( KMime::Message::Ptr message, MessageSender::SaveIn saveIn );
-  void fillQueueJobHeaders( MailTransport::MessageQueueJob* qjob, KMime::Message::Ptr message, const Message::InfoPart* infoPart );
+  void fillQueueJobHeaders( MailTransport::MessageQueueJob* qjob, KMime::Message::Ptr message, const MessageComposer::InfoPart* infoPart );
   QStringList cleanEmailList( const QStringList& emails );
   void saveRecentAddresses( KMime::Message::Ptr ptr );
   void updateRecipients( const KPIMIdentities::Identity &ident, const KPIMIdentities::Identity &oldIdent, MessageComposer::Recipient::Type type );
@@ -305,13 +299,13 @@ private:
 
 
   KMime::Message::Ptr m_msg;
-  AttachmentControllerBase* m_attachmentController;
-  AttachmentModel* m_attachmentModel;
-  SignatureController* m_signatureController;
+  MessageComposer::AttachmentControllerBase* m_attachmentController;
+  MessageComposer::AttachmentModel* m_attachmentModel;
+  MessageComposer::SignatureController* m_signatureController;
   MessageComposer::RecipientsEditor * m_recipientsEditor;
   KPIMIdentities::IdentityCombo *m_identityCombo;
   KPIMIdentities::IdentityManager* m_identMan;
-  Message::KMeditor* m_editor;
+  MessageComposer::KMeditor* m_editor;
   MailTransport::TransportComboBox* m_transport;
   Akonadi::CollectionComboBox* m_fccCombo;
   Akonadi::Collection m_fccCollection;
@@ -320,7 +314,7 @@ private:
   // List of active composer jobs. For example, saving as draft, autosaving and printing
   // all create a composer, which is added to this list as long as it is active.
   // Used mainly to prevent closing the window if a composer is active
-  QList< Message::Composer* > m_composers;
+  QList< MessageComposer::Composer* > m_composers;
 
   bool m_sign, m_encrypt, m_neverEncrypt, m_mdnRequested, m_urgent;
   Kleo::CryptoMessageFormat m_cryptoMessageFormat;

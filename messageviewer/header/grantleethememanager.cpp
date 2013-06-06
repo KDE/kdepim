@@ -46,7 +46,7 @@ public:
     {
         watch = new KDirWatch( q );
         initThemesDirectories(relativePath);
-        downloadThemesAction = new KAction(i18n("Download new themes..."), q);
+        downloadThemesAction = new KAction(i18n("Download New Themes..."), q);
         downloadThemesAction->setIcon(KIcon(QLatin1String("get-hot-new-stuff")));
         if (actionCollection)
             actionCollection->addAction( "download_header_themes", downloadThemesAction );

@@ -241,7 +241,7 @@ KPrefsWidFont::KPrefsWidFont( KConfigSkeleton::ItemFont *item,
   mLabel = new QLabel( mItem->label() + QLatin1Char( ':' ), parent );
 
   mPreview = new QLabel( sampleText, parent );
-  mPreview->setFrameStyle( QFrame::Panel | QFrame::Sunken );
+  mPreview->setFrameStyle( QFrame::StyledPanel | QFrame::Sunken );
 
   mButton = new QPushButton( i18n( "Choose..." ), parent );
   connect( mButton, SIGNAL(clicked()), SLOT(selectFont()) );

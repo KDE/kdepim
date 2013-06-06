@@ -31,7 +31,7 @@ public:
     ~ManageThemes();
 
 private Q_SLOTS:
-    void slotItemSelected(QListWidgetItem*);
+    void slotItemSelectionChanged();
     void slotDeleteTheme();
 
 private:

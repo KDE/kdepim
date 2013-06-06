@@ -21,11 +21,11 @@ endif ()
 set(kdepim_LIB_SRCS
    addemailaddressjob.cpp
    addcontactjob.cpp
-   completionordereditor.cpp
+   addressline/completionordereditor.cpp
    openemailaddressjob.cpp
    kprefsdialog.cpp
    maillistdrag.cpp
-   addresseelineedit.cpp
+   addressline/addresseelineedit.cpp
    kdatepickerpopup.cpp
    kcheckcombobox.cpp
    kweekdaycheckcombo.cpp
@@ -42,12 +42,12 @@ set(kdepim_LIB_SRCS
    progresswidget/ssllabel.cpp
    broadcaststatus.cpp
    kwidgetlister.cpp
-   recentaddresses.cpp
-   kmailcompletion.cpp
+   addressline/recentaddresses.cpp
+   addressline/kmailcompletion.cpp
    pimmessagebox.cpp
-   multiplyingline.cpp
-   multiplyinglineeditor.cpp
-   multiplyinglineview_p.cpp
+   multiplyingline/multiplyingline.cpp
+   multiplyingline/multiplyinglineeditor.cpp
+   multiplyingline/multiplyinglineview_p.cpp
    uistatesaver.cpp
    nepomukwarning.cpp
    statisticsproxymodel.cpp

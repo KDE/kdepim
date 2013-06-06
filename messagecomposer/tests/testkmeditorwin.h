@@ -24,7 +24,7 @@
 
 #include <messagecomposer/kmeditor.h>
 
-using namespace Message;
+using namespace MessageComposer;
 
 class testKMeditorWindow  : public QMainWindow
 {

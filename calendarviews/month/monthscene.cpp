@@ -734,11 +734,11 @@ void MonthScene::removeIncidence( const QString &uid )
   foreach ( MonthItem *manager, mManagerList ) {
     IncidenceMonthItem *imi = qobject_cast<IncidenceMonthItem*>( manager );
     if ( !imi )
-      return;
+      continue;
 
     KCalCore::Incidence::Ptr incidence = imi->incidence();
     if ( !incidence )
-      return;
+      continue;
     if ( incidence->uid() == uid ) {
       foreach ( MonthGraphicsItem *gitem, imi->monthGraphicsItems() ) {
         removeItem( gitem );

@@ -26,7 +26,7 @@
 
 #include <QTextCodec>
 
-using namespace Message;
+using namespace MessageComposer;
 
 InsertTextFileJob::InsertTextFileJob( QTextEdit *editor, const KUrl &url )
   : KJob( editor ), mEditor( editor ), mUrl( url )

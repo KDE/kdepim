@@ -28,7 +28,7 @@
 
 class KJob;
 
-namespace Message {
+namespace MessageComposer {
   class EncryptJob;
 }
 
@@ -45,7 +45,7 @@ class EncryptJobTest : public QObject
     void testHeaders();
 
   private:
-    bool checkEncryption( Message::EncryptJob* eJob );
+    bool checkEncryption( MessageComposer::EncryptJob* eJob );
 
 };
 

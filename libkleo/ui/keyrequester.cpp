@@ -112,7 +112,7 @@ void Kleo::KeyRequester::init()
 
   // the label where the key id is to be displayed:
   mLabel = new QLabel( this );
-  mLabel->setFrameStyle( QFrame::Panel | QFrame::Sunken );
+  mLabel->setFrameStyle( QFrame::StyledPanel | QFrame::Sunken );
 
   // the button to unset any key:
   mEraseButton = new KPushButton( this );

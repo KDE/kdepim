@@ -14,7 +14,7 @@
    <item>
     <widget class="QCheckBox" name="enabledAutoResize">
      <property name="text">
-      <string>Enabled Auto Resize Image</string>
+      <string>Automatically resize images</string>
      </property>
     </widget>
    </item>
@@ -31,7 +31,7 @@
        <item row="0" column="0">
         <widget class="QCheckBox" name="KeepImageRatio">
          <property name="text">
-          <string>Keep Ratio</string>
+          <string>Keep ratio</string>
          </property>
         </widget>
        </item>

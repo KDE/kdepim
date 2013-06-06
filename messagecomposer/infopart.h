@@ -28,9 +28,9 @@
 #include <kmime/kmime_headers.h>
 #include <boost/shared_ptr.hpp>
 
-namespace Message {
+namespace MessageComposer {
 
-class MESSAGECOMPOSER_EXPORT InfoPart : public MessagePart
+class MESSAGECOMPOSER_EXPORT InfoPart : public MessageComposer::MessagePart
 {
   Q_OBJECT
 

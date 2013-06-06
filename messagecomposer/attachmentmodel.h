@@ -29,7 +29,7 @@
 #include <messagecore/attachment/attachmentpart.h>
 #include <akonadi/item.h>
 
-namespace Message {
+namespace MessageComposer {
 
 /**
   Columns:
@@ -134,6 +134,6 @@ class MESSAGECOMPOSER_EXPORT AttachmentModel : public QAbstractItemModel
     Private *const d;
 };
 
-} // namespace KMail
+} //
 
 #endif // KMAIL_ATTACHMENTMODEL_H

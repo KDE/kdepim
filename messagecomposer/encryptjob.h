@@ -41,7 +41,7 @@ namespace GpgME {
 }
 
 
-namespace Message {
+namespace MessageComposer {
 
 class EncryptJobPrivate;
 

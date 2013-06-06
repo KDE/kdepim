@@ -23,22 +23,23 @@
 
 #include <QWidget>
 
-
+namespace MessageComposer {
 class KWindowPositioner : public QObject
 {
     Q_OBJECT
-  public:
+public:
     enum Mode { Right, Bottom };
 
     KWindowPositioner( QWidget *master, QWidget *slave, Mode mode = Bottom );
 
     void reposition();
     
-  private:
+private:
     QWidget *mMaster;
     QWidget *mSlave;
     
     Mode mMode;
 };
+}
 
 #endif

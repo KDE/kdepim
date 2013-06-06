@@ -14,7 +14,7 @@
    <item row="0" column="0">
     <widget class="QCheckBox" name="enabledAutocorrection">
      <property name="text">
-      <string>Enabled autocorrection</string>
+      <string>Enable autocorrection</string>
      </property>
     </widget>
    </item>

@@ -6,7 +6,7 @@ Init=new KComponentData("kdepimwidgets");
 [KPIM::AddresseeLineEdit]
 ToolTip=Addressee Line Edit (KDE-PIM)
 WhatsThis=A line edit which lets you select addressees from the addressbook
-IncludeFile=libkdepim/addresseelineedit.h
+IncludeFile=libkdepim/addressline/addresseelineedit.h
 Group=Input (KDE-PIM)
 
 [KPIM::KCheckComboBox]

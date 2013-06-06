@@ -50,9 +50,9 @@
 #include "custommimeheader.h"
 #include <libkdepim/spellchecklineedit.h>
 #include "pimcommon/translator/translatorwidget.h"
-#include "attachmentmissingwarning.h"
+#include "warningwidgets/attachmentmissingwarning.h"
 #include "createnewcontactjob.h"
-#include "externaleditorwarning.h"
+#include "warningwidgets/externaleditorwarning.h"
 
 // KDEPIM includes
 #include <libkpgp/kpgpblock.h>
@@ -92,7 +92,7 @@
 
 // LIBKDEPIM includes
 #include <libkdepim/nepomukwarning.h>
-#include <libkdepim/recentaddresses.h>
+#include <libkdepim/addressline/recentaddresses.h>
 
 // KDEPIMLIBS includes
 #include <akonadi/changerecorder.h>
@@ -161,7 +161,7 @@ using Sonnet::DictionaryComboBox;
 using MailTransport::TransportManager;
 using MailTransport::Transport;
 using KPIM::RecentAddresses;
-using Message::KMeditor;
+using MessageComposer::KMeditor;
 
 KMail::Composer *KMail::makeComposer( const KMime::Message::Ptr &msg, bool lastSignState, bool lastEncryptState, Composer::TemplateContext context,
                                       uint identity, const QString & textSelection,
@@ -209,15 +209,15 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, bool lastSignState,
     mWasModified( false )
 {
 
-  mComposerBase = new Message::ComposerViewBase( this, this );
+  mComposerBase = new MessageComposer::ComposerViewBase( this, this );
   mComposerBase->setIdentityManager( kmkernel->identityManager() );
 
-  connect( mComposerBase, SIGNAL(disableHtml(Message::ComposerViewBase::Confirmation)),
-           this, SLOT(disableHtml(Message::ComposerViewBase::Confirmation)) );
+  connect( mComposerBase, SIGNAL(disableHtml(MessageComposer::ComposerViewBase::Confirmation)),
+           this, SLOT(disableHtml(MessageComposer::ComposerViewBase::Confirmation)) );
 
   connect( mComposerBase, SIGNAL(enableHtml()),
            this, SLOT(enableHtml()) );
-  connect( mComposerBase, SIGNAL(failed(QString,Message::ComposerViewBase::FailedType)), this, SLOT(slotSendFailed(QString,Message::ComposerViewBase::FailedType)) );
+  connect( mComposerBase, SIGNAL(failed(QString,MessageComposer::ComposerViewBase::FailedType)), this, SLOT(slotSendFailed(QString,MessageComposer::ComposerViewBase::FailedType)) );
   connect( mComposerBase, SIGNAL(sentSuccessfully()), this, SLOT(slotSendSuccessful()) );
   connect( mComposerBase, SIGNAL(modified(bool)), this, SLOT(setModified(bool)) );
 
@@ -225,7 +225,7 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, bool lastSignState,
   mdbusObjectPath = "/Composer_" + QString::number( ++s_composerNumber );
   QDBusConnection::sessionBus().registerObject( mdbusObjectPath, this );
 
-  Message::SignatureController* sigController = new Message::SignatureController( this );
+  MessageComposer::SignatureController* sigController = new MessageComposer::SignatureController( this );
   connect( sigController, SIGNAL(enableHtml()), SLOT(enableHtml()) );
   mComposerBase->setSignatureController( sigController );
 
@@ -417,7 +417,7 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, bool lastSignState,
   connect(mTranslatorWidget,SIGNAL(translatorWasClosed()),this,SLOT(slotTranslatorWasClosed()));
   mSplitter->addWidget(mTranslatorWidget);
 
-  Message::AttachmentModel* attachmentModel = new Message::AttachmentModel( this );
+  MessageComposer::AttachmentModel* attachmentModel = new MessageComposer::AttachmentModel( this );
   KMail::AttachmentView *attachmentView = new KMail::AttachmentView( attachmentModel, mSplitter );
   attachmentView->hideIfEmpty();
   connect(attachmentView,SIGNAL(modified(bool)),SLOT(setModified(bool)));
@@ -427,11 +427,13 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, bool lastSignState,
   mComposerBase->setAttachmentController( attachmentController );
 
   mAttachmentMissing = new AttachmentMissingWarning(this);
-  connect(mAttachmentMissing,SIGNAL(attachMissingFile()),this,SLOT(slotAttachMissingFile()));
-  connect(mAttachmentMissing,SIGNAL(closeAttachMissingFile()),this,SLOT(slotCloseAttachMissingFile()));
+  connect(mAttachmentMissing, SIGNAL(attachMissingFile()), this, SLOT(slotAttachMissingFile()));
+  connect(mAttachmentMissing, SIGNAL(closeAttachMissingFile()), this, SLOT(slotCloseAttachMissingFile()));
+  connect(mAttachmentMissing, SIGNAL(explicitClosedMissingAttachment()), this, SLOT(slotExplicitClosedMissingAttachment()));
   v->addWidget(mAttachmentMissing);
+
   m_verifyMissingAttachment = new QTimer(this);
-  m_verifyMissingAttachment->start(1000*30);
+  m_verifyMissingAttachment->start(1000*5);
   connect( m_verifyMissingAttachment, SIGNAL(timeout()), this, SLOT(slotVerifyMissingAttachmentTimeout()) );
   connect( attachmentController, SIGNAL(fileAttached()), mAttachmentMissing, SLOT(slotFileAttached()) );
 
@@ -467,7 +469,7 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, bool lastSignState,
   if ( GlobalSettings::self()->useHtmlMarkup() )
     enableHtml();
   else
-    disableHtml( Message::ComposerViewBase::LetUserConfirm );
+    disableHtml( MessageComposer::ComposerViewBase::LetUserConfirm );
 
   if ( GlobalSettings::self()->useExternalEditor() ) {
     editor->setUseExternalEditor( true );
@@ -483,7 +485,7 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, bool lastSignState,
 
   mDone = true;
 
-  mDummyComposer = new Message::Composer( this );
+  mDummyComposer = new MessageComposer::Composer( this );
   mDummyComposer->globalPart()->setParentWidgetForGui( this );
 }
 
@@ -684,7 +686,7 @@ void KMComposeWin::writeConfig( void )
   KMKernel::self()->slotSyncConfig();
 }
 
-Message::Composer* KMComposeWin::createSimpleComposer()
+MessageComposer::Composer* KMComposeWin::createSimpleComposer()
 {
   QList< QByteArray > charsets = mCodecAction->mimeCharsets();
   if( !mOriginalPreferredCharset.isEmpty() ) {
@@ -1301,8 +1303,10 @@ void KMComposeWin::setupActions( void )
   connect( mComposerBase->editor(), SIGNAL(externalEditorClosed()), this, SLOT(slotExternalEditorClosed()));
   connect( mComposerBase->editor(), SIGNAL(externalEditorStarted()), this, SLOT(slotExternalEditorStarted()));
   //these are checkable!!!
-  markupAction = new KToggleAction( i18n("Formatting (HTML)"), this );
-  markupAction->setIconText( i18n("HTML") );
+  markupAction = new KToggleAction( i18n("Rich Text Editing"), this );
+  markupAction->setIcon( KIcon( "text-html" ) );
+  markupAction->setIconText( i18n("Rich Text") );
+  markupAction->setToolTip( i18n( "Toggle rich text editing mode" ) );
   actionCollection()->addAction( "html", markupAction );
   connect( markupAction, SIGNAL(triggered(bool)), SLOT(slotToggleMarkup()) );
 
@@ -1496,20 +1500,20 @@ void KMComposeWin::setupEditor( void )
 //-----------------------------------------------------------------------------
 QString KMComposeWin::subject() const
 {
-  return Message::Util::cleanedUpHeaderString( mEdtSubject->toPlainText() );
+  return MessageComposer::Util::cleanedUpHeaderString( mEdtSubject->toPlainText() );
 }
 
 //-----------------------------------------------------------------------------
 QString KMComposeWin::from() const
 {
-  return Message::Util::cleanedUpHeaderString( mEdtFrom->text() );
+  return MessageComposer::Util::cleanedUpHeaderString( mEdtFrom->text() );
 }
 
 //-----------------------------------------------------------------------------
 QString KMComposeWin::replyTo() const
 {
   if ( mEdtReplyTo ) {
-    return Message::Util::cleanedUpHeaderString( mEdtReplyTo->text() );
+    return MessageComposer::Util::cleanedUpHeaderString( mEdtReplyTo->text() );
   } else {
     return QString();
   }
@@ -1880,15 +1884,15 @@ bool KMComposeWin::queryClose ()
 }
 
 //-----------------------------------------------------------------------------
-Message::ComposerViewBase::MissingAttachment KMComposeWin::userForgotAttachment()
+MessageComposer::ComposerViewBase::MissingAttachment KMComposeWin::userForgotAttachment()
 {
   bool checkForForgottenAttachments = mCheckForForgottenAttachments && GlobalSettings::self()->showForgottenAttachmentWarning();
 
   if ( !checkForForgottenAttachments )
-    return Message::ComposerViewBase::NoMissingAttachmentFound;
+    return MessageComposer::ComposerViewBase::NoMissingAttachmentFound;
 
   mComposerBase->setSubject( subject() ); //be sure the composer knows the subject
-  Message::ComposerViewBase::MissingAttachment missingAttachments = mComposerBase->checkForMissingAttachments( GlobalSettings::self()->attachmentKeywords() );
+  MessageComposer::ComposerViewBase::MissingAttachment missingAttachments = mComposerBase->checkForMissingAttachments( GlobalSettings::self()->attachmentKeywords() );
 
   return missingAttachments;
 }
@@ -1920,12 +1924,12 @@ bool KMComposeWin::encryptToSelf()
 
 
 
-void KMComposeWin::slotSendFailed( const QString& msg,Message::ComposerViewBase::FailedType type)
+void KMComposeWin::slotSendFailed( const QString& msg,MessageComposer::ComposerViewBase::FailedType type)
 {
   //   setModified( false );
   setEnabled( true );
   KMessageBox::sorry( mMainWidget, msg,
-                      (type == Message::ComposerViewBase::AutoSave) ? i18n( "Autosave Message Failed" ) : i18n( "Sending Message Failed" ) );
+                      (type == MessageComposer::ComposerViewBase::AutoSave) ? i18n( "Autosave Message Failed" ) : i18n( "Sending Message Failed" ) );
 }
 
 void KMComposeWin::slotSendSuccessful()
@@ -2084,7 +2088,7 @@ void KMComposeWin::slotInsertRecentFile( const KUrl &u )
   }
 
 
-  Message::InsertTextFileJob *job = new Message::InsertTextFileJob( mComposerBase->editor(), u );
+  MessageComposer::InsertTextFileJob *job = new MessageComposer::InsertTextFileJob( mComposerBase->editor(), u );
   job->setEncoding( encoding );
   job->start();
   // Don't care about the result for now
@@ -2558,7 +2562,7 @@ void KMComposeWin::disableWordWrap()
 void KMComposeWin::forceDisableHtml()
 {
   mForceDisableHtml = true;
-  disableHtml( Message::ComposerViewBase::NoConfirmationNeeded );
+  disableHtml( MessageComposer::ComposerViewBase::NoConfirmationNeeded );
   markupAction->setEnabled( false );
   // FIXME: Remove the toggle toolbar action somehow
 }
@@ -2592,7 +2596,7 @@ void KMComposeWin::slotPrintPreview()
 
 void KMComposeWin::printComposer(bool preview)
 {
-  Message::Composer* composer = createSimpleComposer();
+  MessageComposer::Composer* composer = createSimpleComposer();
   mMiscComposers.append( composer );
   composer->setProperty("preview",preview);
   connect( composer, SIGNAL(result(KJob*)),
@@ -2608,12 +2612,12 @@ void KMComposeWin::slotPrintComposeResult( KJob *job )
 
 void KMComposeWin::printComposeResult( KJob *job, bool preview )
 {
-  Q_ASSERT( dynamic_cast< Message::Composer* >( job ) );
-  Message::Composer* composer = dynamic_cast< Message::Composer* >( job );
+  Q_ASSERT( dynamic_cast< MessageComposer::Composer* >( job ) );
+  MessageComposer::Composer* composer = dynamic_cast< MessageComposer::Composer* >( job );
   Q_ASSERT( mMiscComposers.contains( composer ) );
   mMiscComposers.removeAll( composer );
 
-  if( composer->error() == Message::Composer::NoError ) {
+  if( composer->error() == MessageComposer::Composer::NoError ) {
 
     Q_ASSERT( composer->resultMessages().size() == 1 );
     Akonadi::Item printItem;
@@ -2639,7 +2643,7 @@ void KMComposeWin::doSend( MessageSender::SendMethod method,
 {
   // TODO integrate with MDA online status
   if ( method == MessageSender::SendImmediate ) {
-    if( !Message::Util::sendMailDispatcherIsOnline() ) {
+    if( !MessageComposer::Util::sendMailDispatcherIsOnline() ) {
       method = MessageSender::SendLater;
     }
   }
@@ -2695,9 +2699,9 @@ void KMComposeWin::doSend( MessageSender::SendMethod method,
       }
     }
 
-    const Message::ComposerViewBase::MissingAttachment forgotAttachment = userForgotAttachment();
-    if ( (forgotAttachment == Message::ComposerViewBase::FoundMissingAttachmentAndAddedAttachment) ||
-         (forgotAttachment == Message::ComposerViewBase::FoundMissingAttachmentAndCancel) ) {
+    const MessageComposer::ComposerViewBase::MissingAttachment forgotAttachment = userForgotAttachment();
+    if ( (forgotAttachment == MessageComposer::ComposerViewBase::FoundMissingAttachmentAndAddedAttachment) ||
+         (forgotAttachment == MessageComposer::ComposerViewBase::FoundMissingAttachmentAndCancel) ) {
       return;
     }
 
@@ -2750,7 +2754,7 @@ void KMComposeWin::slotDoDelayedSend( KJob *job )
   doDelayedSend( method, saveIn );
 }
 
-void KMComposeWin::applyComposerSetting( Message::ComposerViewBase* mComposerBase )
+void KMComposeWin::applyComposerSetting( MessageComposer::ComposerViewBase* mComposerBase )
 {
 
   QList< QByteArray > charsets = mCodecAction->mimeCharsets();
@@ -2773,7 +2777,7 @@ void KMComposeWin::doDelayedSend( MessageSender::SendMethod method, MessageSende
 #endif
   applyComposerSetting( mComposerBase );
   if ( mForceDisableHtml )
-    disableHtml( Message::ComposerViewBase::NoConfirmationNeeded );
+    disableHtml( MessageComposer::ComposerViewBase::NoConfirmationNeeded );
   bool sign = mSignAction->isChecked();
   bool encrypt = mEncryptAction->isChecked();
 
@@ -2916,7 +2920,7 @@ void KMComposeWin::slotHelp()
 void KMComposeWin::enableHtml()
 {
   if ( mForceDisableHtml ) {
-    disableHtml( Message::ComposerViewBase::NoConfirmationNeeded );
+    disableHtml( MessageComposer::ComposerViewBase::NoConfirmationNeeded );
     return;
   }
 
@@ -2938,10 +2942,10 @@ void KMComposeWin::enableHtml()
 
 
 //-----------------------------------------------------------------------------
-void KMComposeWin::disableHtml( Message::ComposerViewBase::Confirmation confirmation )
+void KMComposeWin::disableHtml( MessageComposer::ComposerViewBase::Confirmation confirmation )
 {
   bool forcePlainTextMarkup = false;
-  if ( confirmation == Message::ComposerViewBase::LetUserConfirm && mComposerBase->editor()->isFormattingUsed() && !mForceDisableHtml ) {
+  if ( confirmation == MessageComposer::ComposerViewBase::LetUserConfirm && mComposerBase->editor()->isFormattingUsed() && !mForceDisableHtml ) {
     int choice = KMessageBox::warningYesNoCancel( this, i18n( "Turning HTML mode off "
         "will cause the text to lose the formatting. Are you sure?" ),
         i18n( "Lose the formatting?" ), KGuiItem( i18n( "Lose Formatting" ) ), KGuiItem( i18n( "Add Markup Plain Text" ) ) , KStandardGuiItem::cancel(),
@@ -2979,10 +2983,10 @@ void KMComposeWin::slotToggleMarkup()
 }
 
 //-----------------------------------------------------------------------------
-void KMComposeWin::slotTextModeChanged( Message::KMeditor::Mode mode )
+void KMComposeWin::slotTextModeChanged( MessageComposer::KMeditor::Mode mode )
 {
   if ( mode == KMeditor::Plain )
-    disableHtml( Message::ComposerViewBase::NoConfirmationNeeded ); // ### Can this happen at all?
+    disableHtml( MessageComposer::ComposerViewBase::NoConfirmationNeeded ); // ### Can this happen at all?
   else
     enableHtml();
 }
@@ -2993,7 +2997,7 @@ void KMComposeWin::htmlToolBarVisibilityChanged( bool visible )
   if ( visible )
     enableHtml();
   else
-    disableHtml( Message::ComposerViewBase::LetUserConfirm );
+    disableHtml( MessageComposer::ComposerViewBase::LetUserConfirm );
 }
 
 //-----------------------------------------------------------------------------
@@ -3453,21 +3457,27 @@ void KMComposeWin::slotAttachMissingFile()
 void KMComposeWin::slotCloseAttachMissingFile()
 {
   if(m_verifyMissingAttachment) {
-    m_verifyMissingAttachment->stop();
-    delete m_verifyMissingAttachment;
-    m_verifyMissingAttachment = 0;
+    m_verifyMissingAttachment->start();
   }
 }
 
 void KMComposeWin::slotVerifyMissingAttachmentTimeout()
 {
   if( mComposerBase->hasMissingAttachments( GlobalSettings::self()->attachmentKeywords() )) {
-    mAttachmentMissing->setVisible(true);
+    mAttachmentMissing->animatedShow();
   } else {
     m_verifyMissingAttachment->start();
   }
 }
 
+void KMComposeWin::slotExplicitClosedMissingAttachment()
+{
+  if(m_verifyMissingAttachment) {
+      m_verifyMissingAttachment->stop();
+      delete m_verifyMissingAttachment;
+      m_verifyMissingAttachment = 0;
+  }
+}
 
 void KMComposeWin::addExtraCustomHeaders( const QMap<QByteArray, QString> &headers)
 {

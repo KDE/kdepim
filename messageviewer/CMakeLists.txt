@@ -44,7 +44,7 @@ else()
 endif()
 
 set(libmessageviewer_SRCS
-  attachmentdialog.cpp
+  widgets/attachmentdialog.cpp
   attachmentstrategy.cpp
   bodypartformatter.cpp
   bodypartformatterfactory.cpp

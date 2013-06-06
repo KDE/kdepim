@@ -29,32 +29,32 @@
 
 class QLabel;
 class QPushButton;
-class KWindowPositioner;
 
 namespace MessageComposer {
+class KWindowPositioner;
 
 class RecipientsPicker;
- 
+
 class RecipientsEditorSideWidget : public QWidget
 {
     Q_OBJECT
-  public:
+public:
     explicit RecipientsEditorSideWidget( RecipientsEditor *editor, QWidget *parent );
     ~RecipientsEditorSideWidget();
 
     MessageComposer::RecipientsPicker* picker() const;
 
-  public slots:
+public slots:
     void setTotal( int recipients, int lines );
     void setFocus();
     void updateTotalToolTip();
     void pickRecipient();
 
-  signals:
+signals:
     void pickedRecipient( const Recipient & );
     void saveDistributionList();
 
-  private:
+private:
     RecipientsEditor *mEditor;
     QLabel *mTotalLabel;
     QPushButton *mDistributionListButton;
@@ -63,7 +63,7 @@ class RecipientsEditorSideWidget : public QWidget
       only through picker() */
     mutable MessageComposer::RecipientsPicker *mRecipientPicker;
     /** lazy loaded, don't access directly, unless you've called picker() */
-    mutable KWindowPositioner *mPickerPositioner;
+    mutable MessageComposer::KWindowPositioner *mPickerPositioner;
 };
 }
 

@@ -61,7 +61,7 @@
 
 #include "messagecomposer/autocorrection/composerautocorrectionlanguage.h"
 
-#include <libkdepim/addresseelineedit.h>
+#include <libkdepim/addressline/addresseelineedit.h>
 // libkleopatra:
 #include "libkleo/ui/keyrequester.h"
 #include "kleo/cryptobackendfactory.h"
@@ -488,7 +488,7 @@ IdentityDialog::IdentityDialog( QWidget * parent )
     ++row;
     mAutoCorrectionLanguage = new MessageComposer::ComposerAutoCorrectionLanguage(tab);
     glay->addWidget( mAutoCorrectionLanguage, row, 1 );
-    label = new QLabel( i18n("Autocorrection Language:"), tab );
+    label = new QLabel( i18n("Autocorrection language:"), tab );
     label->setBuddy( mAutoCorrectionLanguage );
     glay->addWidget( label, row, 0 );
 

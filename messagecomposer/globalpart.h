@@ -25,9 +25,9 @@
 #include <QtCore/QByteArray>
 #include <QtCore/QList>
 
-namespace Message {
+namespace MessageComposer {
 
-class MESSAGECOMPOSER_EXPORT GlobalPart : public MessagePart
+class MESSAGECOMPOSER_EXPORT GlobalPart : public MessageComposer::MessagePart
 {
   Q_OBJECT
 

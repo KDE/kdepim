@@ -951,7 +951,7 @@ void MessageFactory::applyCharset( const KMime::Message::Ptr msg )
       foreach ( const QString &charset, charsets )
         chars << charset.toLatin1();
 
-      QByteArray fallbackCharset = Message::Util::selectCharset( chars, body );
+      QByteArray fallbackCharset = MessageComposer::Util::selectCharset( chars, body );
       if ( fallbackCharset.isEmpty() ) // UTF-8 as fall-through
         fallbackCharset = "UTF-8";
 

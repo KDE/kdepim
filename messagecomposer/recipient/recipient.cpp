@@ -31,77 +31,77 @@ using namespace KPIM;
 using namespace MessageComposer;
 
 Recipient::Recipient( const QString &email, Recipient::Type type )
-  : mEmail( email ), mType( type )
+    : mEmail( email ), mType( type )
 {
 }
 
 void Recipient::setType( Type type )
 {
-  mType = type;
+    mType = type;
 }
 
 Recipient::Type Recipient::type() const
 {
-  return mType;
+    return mType;
 }
 
 void Recipient::setEmail( const QString &email )
 {
-  mEmail = email;
+    mEmail = email;
 }
 
 QString Recipient::email() const
 {
-  return mEmail;
+    return mEmail;
 }
 
 bool Recipient::isEmpty() const
 {
-  return mEmail.isEmpty();
+    return mEmail.isEmpty();
 }
 
 void Recipient::clear()
 {
-  mEmail.clear();
-  mType = Recipient::To;
+    mEmail.clear();
+    mType = Recipient::To;
 }
 
 int Recipient::typeToId( Recipient::Type type )
 {
-  return static_cast<int>( type );
+    return static_cast<int>( type );
 }
 
 Recipient::Type Recipient::idToType( int id )
 {
-  return static_cast<Type>( id );
+    return static_cast<Type>( id );
 }
 
 QString Recipient::typeLabel() const
 {
-  return typeLabel( mType );
+    return typeLabel( mType );
 }
 
 QString Recipient::typeLabel( Recipient::Type type )
 {
-  switch( type ) {
+    switch( type ) {
     case To:
-      return i18nc("@label:listbox Recipient of an email message.", "To");
+        return i18nc("@label:listbox Recipient of an email message.", "To");
     case Cc:
-      return i18nc("@label:listbox Carbon Copy recipient of an email message.", "CC");
+        return i18nc("@label:listbox Carbon Copy recipient of an email message.", "CC");
     case Bcc:
-      return i18nc("@label:listbox Blind carbon copy recipient of an email message.", "BCC");
+        return i18nc("@label:listbox Blind carbon copy recipient of an email message.", "BCC");
     case Undefined:
-      break;
-  }
+        break;
+    }
 
-  return i18nc("@label:listbox", "<placeholder>Undefined Recipient Type</placeholder>");
+    return i18nc("@label:listbox", "<placeholder>Undefined Recipient Type</placeholder>");
 }
 
 QStringList Recipient::allTypeLabels()
 {
-  QStringList types;
-  types.append( typeLabel( To ) );
-  types.append( typeLabel( Cc ) );
-  types.append( typeLabel( Bcc ) );
-  return types;
+    QStringList types;
+    types.append( typeLabel( To ) );
+    types.append( typeLabel( Cc ) );
+    types.append( typeLabel( Bcc ) );
+    return types;
 }

@@ -25,6 +25,21 @@
 
 namespace PimCommon {
 
+class TranslatorResultTextEdit : public KTextEdit
+{
+    Q_OBJECT
+public:
+    explicit TranslatorResultTextEdit(QWidget *parent = 0);
+
+    void setResultFailed(bool failed);
+
+protected:
+    void paintEvent( QPaintEvent *event );
+
+private:
+    bool mResultFailed;
+};
+
 class TranslatorTextEdit : public KTextEdit
 {
     Q_OBJECT
@@ -57,6 +72,7 @@ private Q_SLOTS:
     void slotClear();
     void slotTranslateDone();
     void slotTranslateFailed();
+    void slotDebug();
 
 protected:
     bool event(QEvent* e);

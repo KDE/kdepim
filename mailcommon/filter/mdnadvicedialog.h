@@ -90,7 +90,7 @@ class MDNAdviceDialog : public KDialog
   protected:
 
     // Reimplemented
-    virtual void slotButtonClicked( int button );
+    void slotButtonClicked( int button );
 };
 
 }

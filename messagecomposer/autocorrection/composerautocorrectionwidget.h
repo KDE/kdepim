@@ -94,6 +94,7 @@ private:
     void addAutoCorrectEntries();
     void loadAutoCorrectionAndException();
     void loadGlobalAutoCorrectionAndException();
+    void setLanguage(const QString &lang);
     ComposerAutoCorrection::TypographicQuotes m_singleQuotes;
     ComposerAutoCorrection::TypographicQuotes m_doubleQuotes;
     QSet<QString> m_upperCaseExceptions;

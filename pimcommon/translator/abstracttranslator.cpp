@@ -16,6 +16,7 @@
 */
 
 #include "abstracttranslator.h"
+#include <QDebug>
 
 using namespace PimCommon;
 
@@ -45,6 +46,11 @@ void AbstractTranslator::setTo(const QString& language)
 QString AbstractTranslator::resultTranslate() const
 {
     return mResult;
+}
+
+void AbstractTranslator::debug()
+{
+    qDebug()<<" not implemented";
 }
 
 #include "abstracttranslator.moc"

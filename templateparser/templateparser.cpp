@@ -1129,10 +1129,20 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
       } else if ( cmd.startsWith( QLatin1String( "CURSOR" ) ) ) {
         // turn on debug
         kDebug() << "Command: CURSOR";
+        int oldI = i;
         i += strlen( "CURSOR" );
         KMime::Headers::Generic *header =
           new KMime::Headers::Generic( "X-KMail-CursorPos", mMsg.get(),
                                        QString::number( plainBody.length() ), "utf-8" );
+        /* if template is:
+         *  FOOBAR
+         *  %CURSOR
+         *
+         * Make sure there is an empty line for the cursor otherwise it will be placed at the end of FOOBAR
+         */
+        if ( oldI > 0 && tmpl[ oldI - 1 ] == '\n' && i == tmpl_len - 1 ) {
+          plainBody.append( '\n' );
+        }
         mMsg->setHeader( header );
         //FIXME HTML part for header remaining
       } else if ( cmd.startsWith( QLatin1String( "SIGNATURE" ) ) ) {

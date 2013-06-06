@@ -108,4 +108,4 @@ namespace MessageViewer {
 
   }
 
-} // namespace KMail
+} // 

@@ -45,7 +45,7 @@
 #include <akonadi/agentmanager.h>
 #include <messagecore/messagehelpers.h>
 
-KMime::Content* Message::Util::composeHeadersAndBody( KMime::Content* orig, QByteArray encodedBody, Kleo::CryptoMessageFormat format, bool sign, QByteArray hashAlgo )
+KMime::Content* MessageComposer::Util::composeHeadersAndBody( KMime::Content* orig, QByteArray encodedBody, Kleo::CryptoMessageFormat format, bool sign, QByteArray hashAlgo )
 {
 
   KMime::Content* result = new KMime::Content;
@@ -103,8 +103,8 @@ KMime::Content* Message::Util::composeHeadersAndBody( KMime::Content* orig, QByt
       }
       else {
         // fixing ContentTransferEncoding
-        Composer composer;
-        SinglepartJob cjob( &composer );
+        MessageComposer::Composer composer;
+        MessageComposer::SinglepartJob cjob( &composer );
         cjob.contentType()->setMimeType( orig->contentType()->mimeType() );
         cjob.contentType()->setCharset( orig->contentType()->charset() );
         cjob.setData( encodedBody );
@@ -133,8 +133,8 @@ KMime::Content* Message::Util::composeHeadersAndBody( KMime::Content* orig, QByt
     }
 
     // fixing ContentTransferEncoding
-    Composer composer;
-    SinglepartJob cjob( &composer );
+    MessageComposer::Composer composer;
+    MessageComposer::SinglepartJob cjob( &composer );
     cjob.contentType()->setMimeType( orig->contentType()->mimeType() );
     cjob.contentType()->setCharset( orig->contentType()->charset() );
     cjob.setData( resultingBody );
@@ -152,7 +152,7 @@ KMime::Content* Message::Util::composeHeadersAndBody( KMime::Content* orig, QByt
 }
 
 // set the correct top-level ContentType on the message
-void Message::Util::makeToplevelContentType( KMime::Content* content, Kleo::CryptoMessageFormat format, bool sign, QByteArray hashAlgo )
+void MessageComposer::Util::makeToplevelContentType( KMime::Content* content, Kleo::CryptoMessageFormat format, bool sign, QByteArray hashAlgo )
 {
   switch ( format ) {
     default:
@@ -194,7 +194,7 @@ void Message::Util::makeToplevelContentType( KMime::Content* content, Kleo::Cryp
 }
 
 
-void Message::Util::setNestedContentType( KMime::Content* content, Kleo::CryptoMessageFormat format, bool sign )
+void MessageComposer::Util::setNestedContentType( KMime::Content* content, Kleo::CryptoMessageFormat format, bool sign )
 {
   switch( format ){
     case Kleo::OpenPGPMIMEFormat:
@@ -221,7 +221,7 @@ void Message::Util::setNestedContentType( KMime::Content* content, Kleo::CryptoM
 }
 
 
-void Message::Util::setNestedContentDisposition( KMime::Content* content, Kleo::CryptoMessageFormat format, bool sign )
+void MessageComposer::Util::setNestedContentDisposition( KMime::Content* content, Kleo::CryptoMessageFormat format, bool sign )
 {
   if ( !sign && format & Kleo::OpenPGPMIMEFormat ) {
     content->contentDisposition()->setDisposition( KMime::Headers::CDinline );
@@ -233,7 +233,7 @@ void Message::Util::setNestedContentDisposition( KMime::Content* content, Kleo::
 }
 
 
-bool Message::Util::makeMultiMime( Kleo::CryptoMessageFormat format, bool sign )
+bool MessageComposer::Util::makeMultiMime( Kleo::CryptoMessageFormat format, bool sign )
 {
   switch ( format ) {
     default:
@@ -244,12 +244,12 @@ bool Message::Util::makeMultiMime( Kleo::CryptoMessageFormat format, bool sign )
   }
 }
 
-bool Message::Util::makeMultiPartSigned( Kleo::CryptoMessageFormat f )
+bool MessageComposer::Util::makeMultiPartSigned( Kleo::CryptoMessageFormat f )
 {
   return makeMultiMime( f, true );
 }
 
-QByteArray Message::Util::selectCharset( const QList<QByteArray> &charsets, const QString &text )
+QByteArray MessageComposer::Util::selectCharset( const QList<QByteArray> &charsets, const QString &text )
 {
   foreach( const QByteArray &name, charsets ) {
     // We use KCharsets::codecForName() instead of QTextCodec::codecForName() here, because
@@ -272,7 +272,7 @@ QByteArray Message::Util::selectCharset( const QList<QByteArray> &charsets, cons
   return QByteArray();
 }
 
-QStringList Message::Util::AttachmentKeywords()
+QStringList MessageComposer::Util::AttachmentKeywords()
 {
   return i18nc(
     "comma-separated list of keywords that are used to detect whether "
@@ -280,7 +280,7 @@ QStringList Message::Util::AttachmentKeywords()
     "attachment,attached" ).split( QLatin1Char( ',' ) );
 }
 
-QString Message::Util::cleanedUpHeaderString( const QString &s )
+QString MessageComposer::Util::cleanedUpHeaderString( const QString &s )
 {
   // remove invalid characters from the header strings
   QString res( s );
@@ -289,7 +289,7 @@ QString Message::Util::cleanedUpHeaderString( const QString &s )
   return res.trimmed();
 }
 
-void Message::Util::addSendReplyForwardAction(const KMime::Message::Ptr &message, MailTransport::MessageQueueJob *qjob)
+void MessageComposer::Util::addSendReplyForwardAction(const KMime::Message::Ptr &message, MailTransport::MessageQueueJob *qjob)
 {
   QList<Akonadi::Item::Id> originalMessageId;
   QList<Akonadi::MessageStatus> linkStatus;
@@ -305,7 +305,7 @@ void Message::Util::addSendReplyForwardAction(const KMime::Message::Ptr &message
   }
 }
 
-bool Message::Util::sendMailDispatcherIsOnline( QWidget *parent )
+bool MessageComposer::Util::sendMailDispatcherIsOnline( QWidget *parent )
 {
   Akonadi::AgentInstance instance = Akonadi::AgentManager::self()->instance( QLatin1String( "akonadi_maildispatcher_agent" ) );
   if( !instance.isValid() ) {
@@ -332,7 +332,7 @@ bool Message::Util::sendMailDispatcherIsOnline( QWidget *parent )
   return false;
 }
   
-QString Message::Util::rot13(const QString &s)
+QString MessageComposer::Util::rot13(const QString &s)
 {
   QString r(s);
 
@@ -352,7 +352,7 @@ QString Message::Util::rot13(const QString &s)
   return r;
 }
 
-void Message::Util::addTextBox(QTextEdit *edit)
+void MessageComposer::Util::addTextBox(QTextEdit *edit)
 {
   QTextCursor cursor = edit->textCursor();
   if ( cursor.hasSelection() )

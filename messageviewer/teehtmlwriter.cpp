@@ -94,4 +94,4 @@ namespace MessageViewer {
       (*it)->embedPart( contentId, url );
   }
   void TeeHtmlWriter::extraHead( const QString& ) {}
-} // namespace KMail
+} // 

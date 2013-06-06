@@ -46,7 +46,7 @@
 
 #include "libkdepim/uistatesaver.h"
 #include "libkdepim/broadcaststatus.h"
-#include "libkdepim/recentaddresses.h"
+#include "libkdepim/addressline/recentaddresses.h"
 using KPIM::BroadcastStatus;
 using KPIM::RecentAddresses;
 

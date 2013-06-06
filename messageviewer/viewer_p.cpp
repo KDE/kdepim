@@ -111,7 +111,7 @@
 
 
 //own includes
-#include "attachmentdialog.h"
+#include "widgets/attachmentdialog.h"
 #include "attachmentstrategy.h"
 #include "csshelper.h"
 #include "editorwatcher.h"

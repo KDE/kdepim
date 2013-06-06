@@ -89,7 +89,7 @@ bool ScamDetection::scanFrame(const QWebElement &rootElement)
         const QUrl url(href);
         const QString hostname = url.host();
         const QString path = url.path();
-        if (hostname.contains(ip4regExp)) {
+        if (hostname.contains(ip4regExp) && !hostname.contains(QLatin1String("127.0.0.1"))) { //hostname
             mDetails += QLatin1String("<li>") + i18n("This email contains a link which points to a numerical IP address (%1) instead of a typical textual website address. This is often the case in scam emails.", addWarningColor(hostname))+QLatin1String("</li>");
             foundScam = true;
         } else if (hostname.contains(QLatin1Char('%'))) { //Hexa value for ip

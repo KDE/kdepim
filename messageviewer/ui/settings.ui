@@ -37,7 +37,7 @@
    <item row="0" column="0">
     <widget class="QCheckBox" name="kcfg_AccessKeyEnabled">
      <property name="text">
-      <string>Enable Access Key</string>
+      <string>Enable access key</string>
      </property>
     </widget>
    </item>

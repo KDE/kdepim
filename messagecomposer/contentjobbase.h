@@ -29,7 +29,7 @@ namespace KMime {
   class Content;
 }
 
-namespace Message {
+namespace MessageComposer {
 
 class ContentJobBasePrivate;
 

@@ -27,7 +27,7 @@
 
 #include "messagecomposer_export.h"
 
-#include <libkdepim/multiplyingline.h>
+#include <libkdepim/multiplyingline/multiplyingline.h>
 
 #include <QString>
 #include <QSharedPointer>
@@ -36,7 +36,7 @@ namespace MessageComposer {
 /** Represents a mail recipient. */
 class MESSAGECOMPOSER_EXPORT Recipient : public KPIM::MultiplyingLineData
 {
-  public:
+public:
     typedef QSharedPointer<Recipient> Ptr;
     typedef QList<Recipient::Ptr> List;
 
@@ -60,7 +60,7 @@ class MESSAGECOMPOSER_EXPORT Recipient : public KPIM::MultiplyingLineData
     static QString typeLabel( Type type );
     static QStringList allTypeLabels();
 
-  private:
+private:
     QString mEmail;
     Type mType;
 };

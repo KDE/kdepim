@@ -27,7 +27,7 @@
 #include <klocale.h>
 #include <kcmdlineargs.h>
 
-#include "../addresseelineedit.h"
+#include "../addressline/addresseelineedit.h"
 
 int main(int argc, char* argv[])
 {

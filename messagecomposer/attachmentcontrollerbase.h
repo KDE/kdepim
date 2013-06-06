@@ -35,22 +35,18 @@
 #include "messagecomposer_export.h"
 class KActionCollection;
 class QAction;
-namespace Message {
-class AttachmentModel;
-}
-
 namespace MessageCore {
 class AttachmentFromUrlBaseJob;
 }
 
-namespace Message {
-
+namespace MessageComposer {
+class AttachmentModel;
 class MESSAGECOMPOSER_EXPORT AttachmentControllerBase : public QObject
 {
   Q_OBJECT
 
   public:
-    AttachmentControllerBase( Message::AttachmentModel *model, QWidget *wParent, KActionCollection *actionCollection );
+    AttachmentControllerBase( MessageComposer::AttachmentModel *model, QWidget *wParent, KActionCollection *actionCollection );
     ~AttachmentControllerBase();
 
     void createActions();
@@ -125,6 +121,6 @@ class MESSAGECOMPOSER_EXPORT AttachmentControllerBase : public QObject
     Q_PRIVATE_SLOT( d, void slotAttachmentContentCreated( KJob * ) )
 };
 
-} // namespace KMail
+} //
 
 #endif // KMAIL_ATTACHMENTCONTROLLERBASE_H

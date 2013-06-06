@@ -28,7 +28,7 @@
 
 class KJob;
 
-namespace Message {
+namespace MessageComposer {
   class SignJob;
 }
 
@@ -45,7 +45,7 @@ class SignJobTest : public QObject
     void testHeaders();
 
   private:
-    bool checkSignJob( Message::SignJob* sJob );
+    bool checkSignJob( MessageComposer::SignJob* sJob );
 
 };
 

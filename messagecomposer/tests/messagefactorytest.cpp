@@ -52,7 +52,7 @@
 #include "templateparser/globalsettings_base.h"
 #include "templateparser/templateparser_export.h"
 
-using namespace Message;
+using namespace MessageComposer;
 using namespace MessageComposer;
 
 

@@ -23,7 +23,7 @@
 #define KNCOMPOSEREDITOR_H
 
 #include <messagecomposer/kmeditor.h>
-using namespace Message;
+using namespace MessageComposer;
 
 class KNComposerEditor : public KMeditor
 {

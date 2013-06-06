@@ -570,7 +570,7 @@ void MainWidget::setupActions( KActionCollection *collection )
   mXXPortManager->addImportAction( action, "ldif" );
 
   action = collection->addAction( "file_import_ldap" );
-  action->setText( i18n( "Import from LDAP server..." ) );
+  action->setText( i18n( "Import From LDAP server..." ) );
   action->setWhatsThis( i18n( "Import contacts from an LDAP server." ) );
   mXXPortManager->addImportAction( action, "ldap" );
 
@@ -618,9 +618,8 @@ void MainWidget::printPreview()
     KABPrinting::PrintingWizard wizard( &printer, mItemView->selectionModel(), this );
     wizard.setDefaultAddressBook( currentAddressBook() );
 
-    wizard.exec(); //krazy:exclude=crashy
-
-    previewdlg.exec();
+    if (wizard.exec())
+        previewdlg.exec();
 }
 
 void MainWidget::print()

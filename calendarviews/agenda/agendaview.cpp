@@ -326,8 +326,10 @@ void AgendaView::Private::calendarIncidenceAdded( const KCalCore::Incidence::Ptr
   Q_ASSERT( !incidence->uid().isEmpty() );
   Akonadi::Item item = q->calendar()->item( incidence );
   if ( incidence->hasRecurrenceId() ) {
-      //Reevaluate the main event instead
-      reevaluateIncidence(q->calendar()->incidence(incidence->uid()));
+      // Reevaluate the main event instead, if it was inserted before this one
+      KCalCore::Incidence::Ptr mainIncidence = q->calendar()->incidence(incidence->uid());
+      if (mainIncidence)
+        reevaluateIncidence(mainIncidence);
       return;
   }
 

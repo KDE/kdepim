@@ -30,7 +30,7 @@
 #include <kpimidentities/identitycombo.h>
 #include <kpimidentities/identitymanager.h>
 
-using namespace Message;
+using namespace MessageComposer;
 
 SignatureController::SignatureController ( QObject* parent ) :
   QObject ( parent ),
@@ -40,7 +40,7 @@ SignatureController::SignatureController ( QObject* parent ) :
 {
 }
 
-void SignatureController::setEditor ( KMeditor* editor )
+void SignatureController::setEditor ( MessageComposer::KMeditor* editor )
 {
   m_editor = editor;
 }
