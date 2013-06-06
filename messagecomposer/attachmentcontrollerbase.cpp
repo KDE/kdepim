@@ -29,7 +29,7 @@
 #include "messagecomposer/globalpart.h"
 #include "messageviewer/editorwatcher.h"
 #include "messageviewer/nodehelper.h"
-#include "messageviewer/util.h"
+#include "messageviewer/utils/util.h"
 
 #include <akonadi/itemfetchjob.h>
 #include <kio/jobuidelegate.h>

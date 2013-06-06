@@ -21,7 +21,7 @@
 #define MAILVIEWER_OBJECTTREESOURCE_IF_H
 
 #include "messageviewer_export.h"
-#include "util.h"
+#include "utils/util.h"
 
 #include <KMime/Message>
 

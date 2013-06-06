@@ -19,7 +19,7 @@
 
 
 
-#include "util.h"
+#include "utils/util.h"
 #include "mimetreemodel.h"
 
 #include "nodehelper.h"

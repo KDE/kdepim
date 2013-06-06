@@ -95,7 +95,7 @@ set(libmessageviewer_SRCS
   pluginloaderbase.cpp
   teehtmlwriter.cpp
   urlhandlermanager.cpp
-  util.cpp
+  utils/util.cpp
   viewer.cpp
   viewer_p.cpp
   webkitparthtmlwriter.cpp

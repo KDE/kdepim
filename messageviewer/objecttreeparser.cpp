@@ -50,7 +50,7 @@
 #include "partnodebodypart.h"
 #include "interfaces/bodypartformatter.h"
 #include "globalsettings.h"
-#include "util.h"
+#include "utils/util.h"
 #include "kleojobexecutor.h"
 #include "nodehelper.h"
 #include "iconnamecache.h"

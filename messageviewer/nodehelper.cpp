@@ -23,7 +23,7 @@
 #include "globalsettings.h"
 #include "partmetadata.h"
 #include "interfaces/bodypart.h"
-#include "util.h"
+#include "utils/util.h"
 #include "attachmenttemporaryfilesdirs.h"
 
 #include <messagecore/nodehelper.h>

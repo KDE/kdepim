@@ -125,7 +125,7 @@
 #include "nodehelper.h"
 #include "objecttreeparser.h"
 #include "urlhandlermanager.h"
-#include "util.h"
+#include "utils/util.h"
 #include "widgets/vcardviewer.h"
 #include "mailwebview.h"
 #include "findbar/findbarmailwebview.h"
