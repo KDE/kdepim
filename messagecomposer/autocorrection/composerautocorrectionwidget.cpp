@@ -106,7 +106,7 @@ ComposerAutoCorrectionWidget::ComposerAutoCorrectionWidget(QWidget *parent) :
     connect( menu, SIGNAL(triggered(QAction*)), SLOT(slotImportAutoCorrection(QAction*)) );
 
     connect(ui->exportAutoCorrection,SIGNAL(clicked()),SLOT(slotExportAutoCorrection()));
-
+    setLanguage(ui->autocorrectionLanguage->language());
 }
 
 ComposerAutoCorrectionWidget::~ComposerAutoCorrectionWidget()
@@ -566,6 +566,13 @@ void ComposerAutoCorrectionWidget::slotImportAutoCorrection(QAction* act)
             delete importAutoCorrection;
         }
     }
+}
+
+void ComposerAutoCorrectionWidget::setLanguage(const QString &lang)
+{
+    mAutoCorrection->setLanguage(lang);
+    loadAutoCorrectionAndException();
+    mWasChanged = false;
 }
 
 void ComposerAutoCorrectionWidget::changeLanguage(int index)
