@@ -22,7 +22,7 @@
 #include "foldertreeview.h"
 #include "foldertreewidget.h"
 #include "foldertreewidgetproxymodel.h"
-#include "mailkernel.h"
+#include "kernel/mailkernel.h"
 
 #include <Akonadi/Collection>
 #include <Akonadi/CollectionCreateJob>

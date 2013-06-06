@@ -19,7 +19,7 @@
 
 #include "collectionannotationsattribute.h"
 #include "foldercollection.h"
-#include "mailkernel.h"
+#include "kernel/mailkernel.h"
 #include "util/mailutil.h"
 
 #include "pimcommon/util/pimutil.h"

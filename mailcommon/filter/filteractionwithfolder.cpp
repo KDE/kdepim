@@ -20,7 +20,7 @@
 #include "filteractionwithfolder.h"
 
 #include "folderrequester.h"
-#include "../mailkernel.h"
+#include "kernel/mailkernel.h"
 #include "util/mailutil.h"
 #include "filteractionmissingargumentdialog.h"
 

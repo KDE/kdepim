@@ -21,7 +21,7 @@
 #include <filters.h>
 #include "kmailcvtfilterinfogui.h"
 #include "kmailcvtkernel.h"
-#include <mailcommon/mailkernel.h>
+#include <mailcommon/kernel/mailkernel.h>
 
 
 // KDE includes

@@ -30,7 +30,7 @@
 #include "folderrequester.h"
 #include "folderselectiondialog.h"
 #include "util/mailutil.h"
-#include "mailkernel.h"
+#include "kernel/mailkernel.h"
 
 #include <messageviewer/utils/autoqpointer.h>
 

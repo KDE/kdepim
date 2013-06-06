@@ -24,7 +24,7 @@
 #include "backupmailutil.h"
 #include "archivestorage.h"
 
-#include <mailcommon/mailkernel.h>
+#include <mailcommon/kernel/mailkernel.h>
 
 #include <Akonadi/Control>
 

@@ -33,7 +33,7 @@
 #include <akonadi/kmime/messageparts.h>
 #include <akonadi/kmime/messagestatus.h>
 #include <akonadi/session.h>
-#include <mailcommon/mailkernel.h>
+#include <mailcommon/kernel/mailkernel.h>
 #include <KLocalizedString>
 #include <KMime/Message>
 #include <KNotification>

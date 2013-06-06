@@ -20,7 +20,7 @@
 #include "entitycollectionorderproxymodel.h"
 #include "foldertreeview.h"
 #include "foldertreewidgetproxymodel.h"
-#include "mailkernel.h"
+#include "kernel/mailkernel.h"
 #include "util/mailutil.h"
 
 #include "pimcommon/acl/imapaclattribute.h"

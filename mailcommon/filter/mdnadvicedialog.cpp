@@ -17,7 +17,7 @@
 */
 
 #include "mdnadvicedialog.h"
-#include "mailkernel.h"
+#include "kernel/mailkernel.h"
 
 #include <messagecore/messagehelpers.h>
 #include <messagecore/mdnstateattribute.h>

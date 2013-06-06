@@ -27,7 +27,7 @@
 */
 
 #include "redirectdialog.h"
-#include "mailkernel.h"
+#include "kernel/mailkernel.h"
 
 #include <messagecomposer/composerlineedit.h>
 

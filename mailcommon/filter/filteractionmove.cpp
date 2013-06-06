@@ -19,7 +19,7 @@
 
 #include "filteractionmove.h"
 
-#include "../mailkernel.h"
+#include "kernel/mailkernel.h"
 
 #include <KDE/KLocale>
 

@@ -22,7 +22,7 @@
 #include "folderrequester.h"
 #include "foldercollection.h"
 #include "util/mailutil.h"
-#include "mailkernel.h"
+#include "kernel/mailkernel.h"
 
 #include <Akonadi/CollectionModifyJob>
 
