@@ -31,20 +31,20 @@
 #include <libkdepim/multiplyingline/multiplyinglineeditor.h>
 
 namespace KMime {
-  namespace Types {
-    class Mailbox;
-  }
+namespace Types {
+class Mailbox;
+}
 }
 namespace MessageComposer {
 
 class MESSAGECOMPOSER_EXPORT RecipientLineFactory : public KPIM::MultiplyingLineFactory
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit RecipientLineFactory( QObject* parent ) : KPIM::MultiplyingLineFactory( parent ) {}
     virtual KPIM::MultiplyingLine* newLine(  QWidget *parent )
     {
-      return new RecipientLineNG( parent );
+        return new RecipientLineNG( parent );
     }
 };
 
@@ -55,7 +55,7 @@ class RecipientsEditorSideWidget;
 class MESSAGECOMPOSER_EXPORT RecipientsEditor : public KPIM::MultiplyingLineEditor
 {
     Q_OBJECT
-  public:
+public:
     explicit RecipientsEditor( QWidget *parent = 0 );
     ~RecipientsEditor();
 
@@ -85,20 +85,20 @@ class MESSAGECOMPOSER_EXPORT RecipientsEditor : public KPIM::MultiplyingLineEdit
      */
     void setRecentAddressConfig( KConfig *config );
 
-  public slots:
+public slots:
     void selectRecipients();
     void saveDistributionList();
 
-  protected slots:
+protected slots:
     void slotPickedRecipient( const Recipient & );
     void slotLineAdded( KPIM::MultiplyingLine* );
     void slotLineDeleted( int pos );
     void slotCalculateTotal();
 
-  protected:
-  virtual RecipientLineNG* activeLine() const;
+protected:
+    virtual RecipientLineNG* activeLine() const;
 
-  private:
+private:
     KConfig *mRecentAddressConfig;
     RecipientsEditorSideWidget* mSideWidget;
 };

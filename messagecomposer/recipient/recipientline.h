@@ -35,35 +35,35 @@ namespace MessageComposer {
 class RecipientComboBox : public KComboBox
 {
     Q_OBJECT
-  public:
+public:
     explicit RecipientComboBox( QWidget *parent );
 
-  signals:
+signals:
     void rightPressed();
 
-  protected:
+protected:
     void keyPressEvent( QKeyEvent *ev );
 };
 
 class RecipientLineEdit : public MessageComposer::ComposerLineEdit
 {
     Q_OBJECT
-  public:
+public:
     explicit RecipientLineEdit( QWidget * parent );
 
-  signals:
+signals:
     void deleteMe();
     void leftPressed();
     void rightPressed();
 
-  protected:
+protected:
     void keyPressEvent( QKeyEvent *ev );
 };
 
 class RecipientLineNG : public KPIM::MultiplyingLine
 {
     Q_OBJECT
-  public:
+public:
     explicit RecipientLineNG( QWidget* parent );
     virtual ~RecipientLineNG(){}
 
@@ -99,16 +99,16 @@ class RecipientLineNG : public KPIM::MultiplyingLine
      */
     void setRecentAddressConfig( KConfig *config );
 
-  signals:
+signals:
     void typeModified( RecipientLineNG* );
     void countChanged();
 
-  protected slots:
+protected slots:
     void slotEditingFinished();
     void slotTypeModified();
     void analyzeLine( const QString & );
 
-  private:
+private:
     void dataFromFields();
     void fieldsFromData();
     RecipientComboBox *mCombo;
