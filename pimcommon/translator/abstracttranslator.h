@@ -45,7 +45,7 @@ public:
 
 Q_SIGNALS:
     void translateDone();
-    void translateFailed();
+    void translateFailed(bool result);
 
 protected:
     QString mInputText;

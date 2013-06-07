@@ -201,7 +201,7 @@ void TranslatorWidget::init()
 {
     d->abstractTranslator = new /*BabelFishTranslator*/GoogleTranslator();
     connect(d->abstractTranslator, SIGNAL(translateDone()), SLOT(slotTranslateDone()));
-    connect(d->abstractTranslator, SIGNAL(translateFailed()), SLOT(slotTranslateFailed()));
+    connect(d->abstractTranslator, SIGNAL(translateFailed(bool)), SLOT(slotTranslateFailed(bool)));
 
     QVBoxLayout *layout = new QVBoxLayout( this );
     layout->setMargin( 0 );
@@ -345,11 +345,11 @@ void TranslatorWidget::slotTranslateDone()
     d->translatedText->setPlainText(d->abstractTranslator->resultTranslate());
 }
 
-void TranslatorWidget::slotTranslateFailed()
+void TranslatorWidget::slotTranslateFailed(bool signalFailed)
 {
     d->translate->setEnabled( true );
     d->progressIndictor->stop();
-    d->translatedText->setResultFailed(true);
+    d->translatedText->setResultFailed(signalFailed);
     d->translatedText->clear();
 }
 
