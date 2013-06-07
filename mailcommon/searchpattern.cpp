@@ -571,7 +571,7 @@ void SearchRuleString::addPersonTerm( Nepomuk2::Query::GroupTerm &groupTerm,
   // TODO split contents() into address/name and adapt the query accordingly
   const Nepomuk2::Query::ComparisonTerm valueTerm(
     Vocabulary::NCO::emailAddress(),
-    Nepomuk2::Query::LiteralTerm( contents() ),
+    Nepomuk2::Query::LiteralTerm( contents().toLower() ),
     nepomukComparator() );
 
   const Nepomuk2::Query::ComparisonTerm addressTerm(
