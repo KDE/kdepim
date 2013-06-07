@@ -27,7 +27,7 @@ using namespace KMime;
 
 #include <messagecomposer/composer.h>
 #include <messagecomposer/globalpart.h>
-#include <messagecomposer/singlepartjob.h>
+#include <messagecomposer/job/singlepartjob.h>
 using namespace MessageComposer;
 
 QTEST_KDEMAIN( SinglepartJobTest, NoGUI )

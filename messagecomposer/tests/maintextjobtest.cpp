@@ -30,7 +30,7 @@ using namespace KMime;
 
 #include <messagecomposer/composer.h>
 #include <messagecomposer/globalpart.h>
-#include <messagecomposer/maintextjob.h>
+#include <messagecomposer/job/maintextjob.h>
 #include <messagecomposer/textpart.h>
 using namespace MessageComposer;
 

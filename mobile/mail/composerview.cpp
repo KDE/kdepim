@@ -43,7 +43,7 @@
 #include <messagecomposer/globalpart.h>
 #include <messagecomposer/infopart.h>
 #include <messagecomposer/textpart.h>
-#include <messagecomposer/emailaddressresolvejob.h>
+#include <messagecomposer/job/emailaddressresolvejob.h>
 #include <messagecomposer/attachmentcontrollerbase.h>
 #include <messagecomposer/attachmentmodel.h>
 #include <messagecomposer/kleo_util.h>

@@ -35,9 +35,9 @@
 #include <kjob.h>
 
 #include <messagecomposer/composer.h>
-#include <messagecomposer/encryptjob.h>
-#include <messagecomposer/maintextjob.h>
-#include <messagecomposer/signjob.h>
+#include <messagecomposer/job/encryptjob.h>
+#include <messagecomposer/job/maintextjob.h>
+#include <messagecomposer/job/signjob.h>
 #include <messagecomposer/globalpart.h>
 #include <messagecomposer/textpart.h>
 

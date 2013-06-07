@@ -20,7 +20,7 @@
 #ifndef MESSAGECOMPOSER_COMPOSER_H
 #define MESSAGECOMPOSER_COMPOSER_H
 
-#include "jobbase.h"
+#include "messagecomposer/job/jobbase.h"
 #include "kleo/enum.h"
 
 #include "messagecomposer_export.h"
