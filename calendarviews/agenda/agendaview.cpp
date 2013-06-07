@@ -1625,6 +1625,27 @@ void AgendaView::displayIncidence( const Akonadi::Item &aitem, bool createSelect
   KDateTime firstVisibleDateTime( d->mSelectedDates.first(), timeSpec );
   KDateTime lastVisibleDateTime( d->mSelectedDates.last(), timeSpec );
 
+  {
+    // Optimization block:
+    // KDateTime::toTimeSpec() is expensive, so lets first compare only the date, to see if the incidence is visible
+    // If it's more than 48h of diff, then for sure it won't be visible, independenty of timezone. The biggest difference
+    // between two timezones is around 24 hours.
+
+    if ( !incidence->recurs() ) {
+      // If DTEND/DTDUE is before the 1st visible column
+      if ( incidence->dateTime( KCalCore::Incidence::RoleEnd ).date().daysTo( firstVisibleDateTime.date() ) > 2 )
+        return;
+
+      // if DTSTART is after the last visible column
+      if ( !todo && lastVisibleDateTime.date().daysTo( incidence->dtStart().date() ) > 2 )
+        return;
+
+      // if DTDUE is after the last visible column
+      if ( todo && lastVisibleDateTime.date().daysTo( todo->dtDue().date() ) > 2 )
+        return;
+    }
+  }
+
   lastVisibleDateTime.setTime( QTime( 23, 59, 59, 59 ) );
   firstVisibleDateTime.setTime( QTime( 0, 0 ) );
   KCalCore::DateTimeList dateTimeList;
