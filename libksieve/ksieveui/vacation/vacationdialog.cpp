@@ -121,40 +121,47 @@ VacationDialog::VacationDialog( const QString & caption, QWidget * parent,
     ++row;
     KSeparator *separator = new KSeparator;
     glay->addWidget( separator, row, 0, 1, 2 );
-
 }
 
-VacationDialog::~VacationDialog() {
+VacationDialog::~VacationDialog()
+{
     kDebug() << "~VacationDialog()";
 }
 
-bool VacationDialog::activateVacation() const {
+bool VacationDialog::activateVacation() const
+{
     return mActiveCheck->isChecked();
 }
 
-void VacationDialog::setActivateVacation( bool activate ) {
+void VacationDialog::setActivateVacation( bool activate )
+{
     mActiveCheck->setChecked( activate );
 }
 
-QString VacationDialog::messageText() const {
+QString VacationDialog::messageText() const
+{
     return mTextEdit->toPlainText().trimmed();
 }
 
-void VacationDialog::setMessageText( const QString & text ) {
+void VacationDialog::setMessageText( const QString & text )
+{
     mTextEdit->setText( text );
     const int height = ( mTextEdit->fontMetrics().lineSpacing() + 1 ) * 11;
     mTextEdit->setMinimumHeight( height );
 }
 
-int VacationDialog::notificationInterval() const {
+int VacationDialog::notificationInterval() const
+{
     return mIntervalSpin->value();
 }
 
-void VacationDialog::setNotificationInterval( int days ) {
+void VacationDialog::setNotificationInterval( int days )
+{
     mIntervalSpin->setValue( days );
 }
 
-AddrSpecList VacationDialog::mailAliases() const {
+AddrSpecList VacationDialog::mailAliases() const
+{
     QByteArray text = mMailAliasesEdit->text().toLatin1(); // ### IMAA: !ok
     AddressList al;
     const char * s = text.begin();
@@ -170,7 +177,8 @@ AddrSpecList VacationDialog::mailAliases() const {
     return asl;
 }
 
-void VacationDialog::setMailAliases( const AddrSpecList & aliases ) {
+void VacationDialog::setMailAliases( const AddrSpecList & aliases )
+{
     QStringList sl;
     AddrSpecList::const_iterator end(aliases.constEnd());
     for ( AddrSpecList::const_iterator it = aliases.constBegin() ; it != end; ++it )
@@ -178,38 +186,46 @@ void VacationDialog::setMailAliases( const AddrSpecList & aliases ) {
     mMailAliasesEdit->setText( sl.join(QLatin1String(", ")) );
 }
 
-void VacationDialog::setMailAliases( const QString & aliases ) {
+void VacationDialog::setMailAliases( const QString & aliases )
+{
     mMailAliasesEdit->setText( aliases );
 }
 
-void VacationDialog::slotIntervalSpinChanged ( int value ) {
+void VacationDialog::slotIntervalSpinChanged ( int value )
+{
     mIntervalSpin->setSuffix( i18np(" day", " days", value) );
 }
 
-QString VacationDialog::domainName() const {
+QString VacationDialog::domainName() const
+{
     return mDomainCheck->isChecked() ? mDomainEdit->text() : QString() ;
 }
 
-void VacationDialog::setDomainName( const QString & domain ) {
+void VacationDialog::setDomainName( const QString & domain )
+{
     if ( !domain.isEmpty() ) {
         mDomainEdit->setText( domain );
         mDomainCheck->setChecked( true );
     }
 }
 
-bool VacationDialog::domainCheck() const {
+bool VacationDialog::domainCheck() const
+{
     return mDomainCheck->isChecked();
 }
 
-void VacationDialog::setDomainCheck( bool check ) {
+void VacationDialog::setDomainCheck( bool check )
+{
     mDomainCheck->setChecked( check );
 }
 
-bool VacationDialog::sendForSpam() const {
+bool VacationDialog::sendForSpam() const
+{
     return !mSpamCheck->isChecked();
 }
 
-void VacationDialog::setSendForSpam( bool enable ) {
+void VacationDialog::setSendForSpam( bool enable )
+{
     mSpamCheck->setChecked( !enable );
 }
 
