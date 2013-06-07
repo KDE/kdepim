@@ -22,6 +22,7 @@
 #include <knuminput.h>
 #include <ktextedit.h>
 #include <kwindowsystem.h>
+#include <KSeparator>
 
 #include <QtCore/QByteArray>
 #include <QApplication>
@@ -47,7 +48,6 @@ VacationDialog::VacationDialog( const QString & caption, QWidget * parent,
     QFrame *frame = new QFrame( this );
     setMainWidget( frame );
     KWindowSystem::setIcons( winId(), qApp->windowIcon().pixmap(IconSize(KIconLoader::Desktop),IconSize(KIconLoader::Desktop)), qApp->windowIcon().pixmap(IconSize(KIconLoader::Small),IconSize(KIconLoader::Small)) );
-    static const int rows = 7;
     int row = -1;
 
     QGridLayout * glay = new QGridLayout( frame );
@@ -118,8 +118,10 @@ VacationDialog::VacationDialog( const QString & caption, QWidget * parent,
     connect( mDomainCheck, SIGNAL(toggled(bool)),
              mDomainEdit, SLOT(setEnabled(bool)) );
 
-    Q_ASSERT( row == rows - 1 );
-    Q_UNUSED( rows );
+    ++row;
+    KSeparator *separator = new KSeparator;
+    glay->addWidget( separator, row, 0, 1, 2 );
+
 }
 
 VacationDialog::~VacationDialog() {
