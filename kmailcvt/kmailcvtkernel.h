@@ -35,7 +35,7 @@ class KMailCVTKernel : public QObject, public MailCommon::IKernel, public MailCo
     explicit  KMailCVTKernel( QObject *parent = 0 );
 
     KPIMIdentities::IdentityManager *identityManager();
-    MessageSender *msgSender();
+    MessageComposer::MessageSender *msgSender();
 
     Akonadi::EntityMimeTypeFilterModel *collectionModel() const;
     KSharedConfig::Ptr config();

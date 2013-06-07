@@ -23,7 +23,9 @@
 
 #include <KSharedConfig>
 
+namespace MessageComposer {
 class MessageSender;
+}
 
 namespace Akonadi {
   class ChangeRecorder;
@@ -60,7 +62,7 @@ class IKernel
     virtual JobScheduler *jobScheduler() const = 0;
     virtual Akonadi::ChangeRecorder *folderCollectionMonitor() const = 0;
     virtual void updateSystemTray() = 0;
-    virtual MessageSender *msgSender() = 0;
+    virtual MessageComposer::MessageSender *msgSender() = 0;
 
     virtual ~IKernel()
     {

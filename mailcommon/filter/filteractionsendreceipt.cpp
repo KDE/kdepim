@@ -48,7 +48,7 @@ FilterAction::ReturnCode FilterActionSendReceipt::process( ItemContext &context 
 
   // Queue message. This is a) so that the user can check
   // the receipt before sending and b) for speed reasons.
-  KernelIf->msgSender()->send( receipt, MessageSender::SendLater );
+  KernelIf->msgSender()->send( receipt, MessageComposer::MessageSender::SendLater );
 
   return GoOn;
 }

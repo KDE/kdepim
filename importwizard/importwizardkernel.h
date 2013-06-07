@@ -34,7 +34,7 @@ public:
     explicit ImportWizardKernel( QObject *parent = 0 );
 
     KPIMIdentities::IdentityManager *identityManager();
-    MessageSender *msgSender();
+    MessageComposer::MessageSender *msgSender();
 
     Akonadi::EntityMimeTypeFilterModel *collectionModel() const;
     KSharedConfig::Ptr config();
@@ -53,7 +53,7 @@ public:
 
 private:
     KPIMIdentities::IdentityManager *mIdentityManager;
-    MessageSender *mMessageSender;
+    MessageComposer::MessageSender *mMessageSender;
     MailCommon::FolderCollectionMonitor *mFolderCollectionMonitor;
     Akonadi::EntityTreeModel *mEntityTreeModel;
     Akonadi::EntityMimeTypeFilterModel *mCollectionModel;

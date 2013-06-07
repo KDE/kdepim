@@ -35,7 +35,7 @@
 #include <QString>
 
 #include <kmime/kmime_message.h>
-
+namespace MessageComposer {
 class MessageSender {
 protected:
   virtual ~MessageSender() = 0;
@@ -85,7 +85,7 @@ protected:
 };
 
 inline MessageSender::~MessageSender() {}
-
+}
 
 #endif /* __KMAIL_MESSAGESENDER_H__ */
 

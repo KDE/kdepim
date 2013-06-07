@@ -37,7 +37,7 @@ MobileKernel::MobileKernel() : mMonitor( 0 ), mCollectionModel( 0 ), mMessageSen
   mJobScheduler = new JobScheduler(0);
   mIdentityManager = new KPIMIdentities::IdentityManager( false, 0, "mIdentityManager" );
   mAutoCorrection = new MessageComposer::ComposerAutoCorrection();
-  mMessageSender = new AkonadiSender;
+  mMessageSender = new MessageComposer::AkonadiSender;
   CommonKernel->registerKernelIf( this ); //register KernelIf early, it is used by the Filter classes
 
   CommonKernel->registerFilterIf( this );
@@ -91,7 +91,7 @@ KPIMIdentities::IdentityManager* MobileKernel::identityManager()
   return mIdentityManager;
 }
 
-MessageSender* MobileKernel::msgSender()
+MessageComposer::MessageSender* MobileKernel::msgSender()
 {
   return mMessageSender;
 }

@@ -29,7 +29,7 @@
 BackupMailKernel::BackupMailKernel( QObject *parent )
     : QObject( parent )
 {
-    mMessageSender = new AkonadiSender( this );
+    mMessageSender = new MessageComposer::AkonadiSender( this );
     mIdentityManager = new KPIMIdentities::IdentityManager( false, this );
     mFolderCollectionMonitor = new MailCommon::FolderCollectionMonitor( this );
 
@@ -52,7 +52,7 @@ KPIMIdentities::IdentityManager *BackupMailKernel::identityManager()
     return mIdentityManager;
 }
 
-MessageSender *BackupMailKernel::msgSender()
+MessageComposer::MessageSender *BackupMailKernel::msgSender()
 {
     return mMessageSender;
 }

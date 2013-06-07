@@ -12,7 +12,7 @@
 DummyKernel::DummyKernel( QObject *parent )
   : QObject( parent )
 {
-  mMessageSender = new AkonadiSender( this );
+  mMessageSender = new MessageComposer::AkonadiSender( this );
   mIdentityManager = new KPIMIdentities::IdentityManager( false, this );
   mFolderCollectionMonitor = new MailCommon::FolderCollectionMonitor( this );
 
@@ -35,7 +35,7 @@ KPIMIdentities::IdentityManager *DummyKernel::identityManager()
   return mIdentityManager;
 }
 
-MessageSender *DummyKernel::msgSender()
+MessageComposer::MessageSender *DummyKernel::msgSender()
 {
   return mMessageSender;
 }

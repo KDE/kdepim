@@ -34,7 +34,7 @@ public:
     explicit BackupMailKernel( QObject *parent = 0 );
 
     virtual KPIMIdentities::IdentityManager *identityManager();
-    virtual MessageSender *msgSender();
+    virtual MessageComposer::MessageSender *msgSender();
 
     virtual Akonadi::EntityMimeTypeFilterModel *collectionModel() const;
     virtual KSharedConfig::Ptr config();
@@ -53,7 +53,7 @@ public:
 
 private:
     KPIMIdentities::IdentityManager *mIdentityManager;
-    MessageSender *mMessageSender;
+    MessageComposer::MessageSender *mMessageSender;
     MailCommon::FolderCollectionMonitor *mFolderCollectionMonitor;
     Akonadi::EntityTreeModel *mEntityTreeModel;
     Akonadi::EntityMimeTypeFilterModel *mCollectionModel;

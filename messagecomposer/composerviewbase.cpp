@@ -216,7 +216,7 @@ void MessageComposer::ComposerViewBase::updateTemplate ( const KMime::Message::P
   delete msgContent;
 }
 
-void MessageComposer::ComposerViewBase::send ( MessageSender::SendMethod method, MessageSender::SaveIn saveIn )
+void MessageComposer::ComposerViewBase::send ( MessageComposer::MessageSender::SendMethod method, MessageComposer::MessageSender::SaveIn saveIn )
 {
   mSendMethod = method;
   mSaveIn = saveIn;
@@ -279,7 +279,7 @@ void MessageComposer::ComposerViewBase::send ( MessageSender::SendMethod method,
     }
   }
 
-  if ( m_neverEncrypt && saveIn != MessageSender::SaveInNone ) {
+  if ( m_neverEncrypt && saveIn != MessageComposer::MessageSender::SaveInNone ) {
       // we can't use the state of the mail itself, to remember the
       // signing and encryption state, so let's add a header instead
     m_msg->setHeader( new KMime::Headers::Generic( "X-KMail-SignatureActionEnabled", m_msg.get(),
@@ -293,7 +293,7 @@ void MessageComposer::ComposerViewBase::send ( MessageSender::SendMethod method,
     m_msg->removeHeader( "X-KMail-CryptoMessageFormat" );
   }
 
-  if( mSendMethod == MessageSender::SendImmediate )
+  if( mSendMethod == MessageComposer::MessageSender::SendImmediate )
     MessageComposer::Util::sendMailDispatcherIsOnline( m_parentWidget );
 
   readyForSending();
@@ -339,7 +339,7 @@ void MessageComposer::ComposerViewBase::slotEmailAddressResolved ( KJob* job )
   bool autoresizeImage = MessageComposer::MessageComposerSettings::self()->autoResizeImageEnabled();
 
   const MessageComposer::EmailAddressResolveJob *resolveJob = qobject_cast<MessageComposer::EmailAddressResolveJob*>( job );
-  if( mSaveIn == MessageSender::SaveInNone ) {
+  if( mSaveIn == MessageComposer::MessageSender::SaveInNone ) {
     mExpandedFrom = resolveJob->expandedFrom();
     mExpandedTo = resolveJob->expandedTo();
     mExpandedCc = resolveJob->expandedCc();
@@ -389,7 +389,7 @@ void MessageComposer::ComposerViewBase::slotEmailAddressResolved ( KJob* job )
   // we first figure out if we need to create multiple messages with different crypto formats
   // if so, we create a composer per format
   // if we aren't signing or encrypting, this just returns a single empty message
-  if( m_neverEncrypt && mSaveIn != MessageSender::SaveInNone ) {
+  if( m_neverEncrypt && mSaveIn != MessageComposer::MessageSender::SaveInNone ) {
     MessageComposer::Composer* composer = new MessageComposer::Composer;
     composer->setNoCrypto( true );
     m_composers.append( composer );
@@ -771,7 +771,7 @@ void MessageComposer::ComposerViewBase::slotSendComposeResult( KJob* job )
     kDebug() << "NoError.";
     const int numberOfMessage( composer->resultMessages().size() );
     for( int i = 0; i < numberOfMessage; ++i ) {
-      if ( mSaveIn == MessageSender::SaveInNone ) {
+      if ( mSaveIn == MessageComposer::MessageSender::SaveInNone ) {
         queueMessage( composer->resultMessages().at( i ), composer );
       } else {
         saveMessage( composer->resultMessages().at( i ), mSaveIn );
@@ -813,7 +813,7 @@ void MessageComposer::ComposerViewBase::queueMessage( KMime::Message::Ptr messag
   MailTransport::MessageQueueJob *qjob = new MailTransport::MessageQueueJob( this );
   qjob->setMessage( message );
   qjob->transportAttribute().setTransportId( infoPart->transportId() );
-  if( mSendMethod == MessageSender::SendLater )
+  if( mSendMethod == MessageComposer::MessageSender::SendLater )
     qjob->dispatchModeAttribute().setDispatchMode( MailTransport::DispatchModeAttribute::Manual );
 
 
@@ -1069,7 +1069,7 @@ void MessageComposer::ComposerViewBase::writeAutoSaveToDisk( const KMime::Messag
   }
 }
 
-void MessageComposer::ComposerViewBase::saveMessage( KMime::Message::Ptr message, MessageSender::SaveIn saveIn )
+void MessageComposer::ComposerViewBase::saveMessage( KMime::Message::Ptr message, MessageComposer::MessageSender::SaveIn saveIn )
 {
   Akonadi::Collection target;
   const KPIMIdentities::Identity identity = identityManager()->identityForUoid( m_identityCombo->currentIdentity() );
@@ -1080,7 +1080,7 @@ void MessageComposer::ComposerViewBase::saveMessage( KMime::Message::Ptr message
   item.setMimeType( QLatin1String( "message/rfc822" ) );
   item.setPayload( message );
   if ( !identity.isNull() ) { // we have a valid identity
-    if ( saveIn == MessageSender::SaveInTemplates ) {
+    if ( saveIn == MessageComposer::MessageSender::SaveInTemplates ) {
       if ( !identity.templates().isEmpty() ) { // the user has specified a custom templates collection
         target = Akonadi::Collection( identity.templates().toLongLong() );
       }
@@ -1094,7 +1094,7 @@ void MessageComposer::ComposerViewBase::saveMessage( KMime::Message::Ptr message
     QObject::connect( saveMessageJob, SIGNAL(result(KJob*)), this, SLOT(slotSaveMessage(KJob*)) );
   } else {
     // preinitialize with the default collections
-    if ( saveIn == MessageSender::SaveInTemplates ) {
+    if ( saveIn == MessageComposer::MessageSender::SaveInTemplates ) {
       target = Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Templates );
     } else {
       target = Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Drafts );
@@ -1126,7 +1126,7 @@ void MessageComposer::ComposerViewBase::slotSaveMessage( KJob* job )
 Akonadi::Collection MessageComposer::ComposerViewBase::defaultSpecialTarget() const
 {
   Akonadi::Collection target;
-  if ( mSaveIn == MessageSender::SaveInTemplates ) {
+  if ( mSaveIn == MessageComposer::MessageSender::SaveInTemplates ) {
     target = Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Templates );
   } else {
     target = Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Drafts );
