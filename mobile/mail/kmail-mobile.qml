@@ -159,15 +159,6 @@ KPIM.MainView {
     anchors.left: parent.left
     anchors.right : parent.right
 
-    QML.Image {
-      id: backgroundImage
-      x: 0
-      y: 0
-// FIXME: too big, costs about 1.5Mb RAM
-//      source: "kmail-mobile-background.png"
-      visible: collectionView.visible
-    }
-
     Akonadi.AkonadiBreadcrumbNavigationView {
       id : collectionView
       anchors.top: parent.top

@@ -138,7 +138,6 @@ install(FILES
   kmail-mobile.qml
   KMailActions.qml
   KMailComposerActions.qml
-  kmail-mobile-background.png
   kmail-mobile.notifyrc
   next-unread-mail.png
   SnippetsEditor.qml
