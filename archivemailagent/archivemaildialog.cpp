@@ -74,7 +74,10 @@ ArchiveMailDialog::ArchiveMailDialog(QWidget *parent)
 
 
     KHelpMenu *helpMenu = new KHelpMenu(this, mAboutData, true);
-    setButtonMenu( Help, helpMenu->menu() );
+    //Initialize menu
+    KMenu *menu = helpMenu->menu();
+    helpMenu->action(KHelpMenu::menuAboutApp)->setIcon(KIcon(QLatin1String("kmail")));
+    setButtonMenu( Help, menu );
 }
 
 ArchiveMailDialog::~ArchiveMailDialog()
