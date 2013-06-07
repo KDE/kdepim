@@ -48,6 +48,7 @@ private Q_SLOTS:
     void slotPrintingMode();
     void slotNormalMode();
     void slotManageTheme();
+    void slotUpdateView();
 
 private:
     void readConfig();
@@ -65,6 +66,7 @@ private:
     KAction *mInstallTheme;
     KAction *mInsertFile;
     KAction *mManageTheme;
+    KAction *mUpdateView;
     KToggleAction *mPrintingMode;
     KToggleAction *mNormalMode;
 };
