@@ -235,15 +235,14 @@ RecentAddressDialog::~RecentAddressDialog()
 void RecentAddressDialog::slotTypedSomething(const QString& text)
 {
     if (mListView->currentItem()) {
-        if (mListView->currentItem()->text() != mLineEdit->text() && !mLineEdit->text().isEmpty())
-        {
+        if (mListView->currentItem()->text() != mLineEdit->text() && !mLineEdit->text().isEmpty()) {
             // IMHO changeItem() shouldn't do anything with the value
             // of currentItem() ... like changing it or emitting signals ...
             // but TT disagree with me on this one (it's been that way since ages ... grrr)
             bool block = mListView->signalsBlocked();
             mListView->blockSignals( true );
             QListWidgetItem *currentIndex = mListView->currentItem();
-            if ( currentIndex ){
+            if ( currentIndex ) {
                 currentIndex->setText(text);
             }
             mListView->blockSignals( block );
@@ -256,7 +255,7 @@ void RecentAddressDialog::slotAddItem()
     QStringList lst = addresses();
     mListView->blockSignals(true);
     QStringList newList;
-    newList << QString()<<lst;
+    newList << QString() << lst;
     setAddresses(newList);
     mListView->blockSignals(false);
     mListView->setCurrentRow(0);
@@ -307,7 +306,7 @@ QStringList RecentAddressDialog::addresses() const
 {
     QStringList lst;
     const int numberOfItem(mListView->count());
-    for(int i = 0; i < numberOfItem; ++i){
+    for(int i = 0; i < numberOfItem; ++i) {
         lst<<mListView->item(i)->text();
     }
     return lst;
