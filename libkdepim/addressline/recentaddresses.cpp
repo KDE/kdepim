@@ -224,7 +224,12 @@ RecentAddressDialog::RecentAddressDialog( QWidget *parent )
             SLOT(slotSelectionChanged()));
     // maybe supplied lineedit has some text already
     slotTypedSomething( mLineEdit->text() );
+    readConfig();
+}
 
+RecentAddressDialog::~RecentAddressDialog()
+{
+    writeConfig();
 }
 
 void RecentAddressDialog::slotTypedSomething(const QString& text)
@@ -328,4 +333,25 @@ void RecentAddressDialog::addAddresses(KConfig *config)
         KPIM::RecentAddresses::self( config )->add( mListView->item(i)->text() );
     }
 }
+
+void RecentAddressDialog::readConfig()
+{
+    KConfigGroup group( KGlobal::config(), "RecentAddressDialog" );
+    const QSize size = group.readEntry( "Size", QSize() );
+    if ( size.isValid() ) {
+        resize( size );
+    } else {
+        resize( 600, 400 );
+    }
+}
+
+void RecentAddressDialog::writeConfig()
+{
+    KConfigGroup group( KGlobal::config(), "RecentAddressDialog" );
+    group.writeEntry( "Size", size() );
+    group.sync();
+}
+
+
+
 #include "recentaddresses.moc"
