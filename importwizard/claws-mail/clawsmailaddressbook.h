@@ -27,8 +27,8 @@ class ImportWizard;
 class ClawsMailAddressBook : public SylpheedAddressBook
 {
 public:
-  explicit ClawsMailAddressBook(const QDir &dir, ImportWizard *parent);
-  ~ClawsMailAddressBook();
+    explicit ClawsMailAddressBook(const QDir &dir, ImportWizard *parent);
+    ~ClawsMailAddressBook();
 };
 
 #endif // ClawsMailAddressBook_H

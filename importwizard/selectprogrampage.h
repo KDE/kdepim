@@ -23,29 +23,29 @@
 class QListWidgetItem;
 
 namespace Ui {
-  class SelectProgramPage;
+class SelectProgramPage;
 }
 
 class SelectProgramPage : public QWidget
 {
-  Q_OBJECT
-  
+    Q_OBJECT
+
 public:
-  explicit SelectProgramPage(QWidget *parent = 0);
-  ~SelectProgramPage();
-  void setFoundProgram(const QStringList& list);
-  void disableSelectProgram();
+    explicit SelectProgramPage(QWidget *parent = 0);
+    ~SelectProgramPage();
+    void setFoundProgram(const QStringList& list);
+    void disableSelectProgram();
 
 private Q_SLOTS:
-  void slotItemSelectionChanged();
-  void slotItemDoubleClicked( QListWidgetItem*item );
+    void slotItemSelectionChanged();
+    void slotItemDoubleClicked( QListWidgetItem*item );
 
 Q_SIGNALS:
-  void programSelected(const QString&);
-  void doubleClicked();
-  
+    void programSelected(const QString&);
+    void doubleClicked();
+
 private:
-  Ui::SelectProgramPage *ui;
+    Ui::SelectProgramPage *ui;
 };
 
 #endif // SELECTPROGRAMPAGE_H

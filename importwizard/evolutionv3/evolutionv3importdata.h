@@ -23,19 +23,19 @@ class ImportWizard;
 class Evolutionv3ImportData : public AbstractImporter
 {
 public:
-  explicit Evolutionv3ImportData(ImportWizard *parent);
-  ~Evolutionv3ImportData();
+    explicit Evolutionv3ImportData(ImportWizard *parent);
+    ~Evolutionv3ImportData();
     
-  TypeSupportedOptions supportedOption();
-  bool foundMailer() const;
-  
-  bool importSettings();
-  bool importMails();
-  bool importFilters();
-  bool importAddressBook();
-  bool importCalendar();
+    TypeSupportedOptions supportedOption();
+    bool foundMailer() const;
 
-  QString name() const;
+    bool importSettings();
+    bool importMails();
+    bool importFilters();
+    bool importAddressBook();
+    bool importCalendar();
+
+    QString name() const;
 };
 
 #endif /* Evolutionv3ImportData_H */

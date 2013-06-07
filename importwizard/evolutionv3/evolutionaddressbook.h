@@ -24,12 +24,12 @@ class ImportWizard;
 
 class EvolutionAddressBook: public AbstractAddressBook
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit EvolutionAddressBook(ImportWizard *parent);
-  ~EvolutionAddressBook();
+    explicit EvolutionAddressBook(ImportWizard *parent);
+    ~EvolutionAddressBook();
 private:
-  void exportEvolutionAddressBook();
+    void exportEvolutionAddressBook();
 
 };
 

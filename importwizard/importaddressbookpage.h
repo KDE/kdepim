@@ -21,24 +21,24 @@
 #include <QWidget>
 
 namespace Ui {
-  class ImportAddressbookPage;
+class ImportAddressbookPage;
 }
 
 class ImportAddressbookPage : public QWidget
 {
-  Q_OBJECT
-  
+    Q_OBJECT
+
 public:
-  explicit ImportAddressbookPage(QWidget *parent = 0);
-  ~ImportAddressbookPage();
-  void addImportInfo( const QString& log );
-  void addImportError( const QString& log );
-  void setImportButtonEnabled(bool enabled);
+    explicit ImportAddressbookPage(QWidget *parent = 0);
+    ~ImportAddressbookPage();
+    void addImportInfo( const QString& log );
+    void addImportError( const QString& log );
+    void setImportButtonEnabled(bool enabled);
 
 Q_SIGNALS:
-  void importAddressbookClicked();
+    void importAddressbookClicked();
 private:
-  Ui::ImportAddressbookPage *ui;
+    Ui::ImportAddressbookPage *ui;
 };
 
 #endif // IMPORTADDRESSBOOKPAGE_H

@@ -21,29 +21,29 @@
 #include "abstractimporter.h"
 
 namespace Ui {
-  class SelectComponentPage;
+class SelectComponentPage;
 }
 
 class SelectComponentPage : public QWidget
 {
-  Q_OBJECT
-  
+    Q_OBJECT
+
 public:
-  explicit SelectComponentPage(QWidget *parent = 0);
-  ~SelectComponentPage();
+    explicit SelectComponentPage(QWidget *parent = 0);
+    ~SelectComponentPage();
     void setEnabledComponent(AbstractImporter::TypeSupportedOptions options);
     AbstractImporter::TypeSupportedOptions selectedComponents() const;
 
 private Q_SLOTS:
-  void slotEverythingClicked( bool clicked );
-  void slotComponentClicked();
+    void slotEverythingClicked( bool clicked );
+    void slotComponentClicked();
 
 Q_SIGNALS:
-  void atLeastOneComponentSelected(bool componentSelected);
+    void atLeastOneComponentSelected(bool componentSelected);
 
 private:
-  AbstractImporter::TypeSupportedOptions mOptions;
-  Ui::SelectComponentPage *ui;
+    AbstractImporter::TypeSupportedOptions mOptions;
+    Ui::SelectComponentPage *ui;
 };
 
 #endif // SELECTCOMPONENTPAGE_H

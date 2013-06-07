@@ -23,17 +23,17 @@ class ImportWizard;
 class BalsaImportData : public AbstractImporter
 {
 public:
-  explicit BalsaImportData(ImportWizard *parent);
-  ~BalsaImportData();
+    explicit BalsaImportData(ImportWizard *parent);
+    ~BalsaImportData();
     
-  TypeSupportedOptions supportedOption();
-  bool foundMailer() const;
-  
-  bool importMails();
-  bool importAddressBook();
-  bool importSettings();
-  bool importFilters();
-  QString name() const;
+    TypeSupportedOptions supportedOption();
+    bool foundMailer() const;
+
+    bool importMails();
+    bool importAddressBook();
+    bool importSettings();
+    bool importFilters();
+    QString name() const;
 
 };
 

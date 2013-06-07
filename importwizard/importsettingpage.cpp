@@ -19,31 +19,31 @@
 #include "ui_importsettingpage.h"
 
 ImportSettingPage::ImportSettingPage(QWidget *parent) :
-  QWidget(parent),
-  ui(new Ui::ImportSettingPage)
+    QWidget(parent),
+    ui(new Ui::ImportSettingPage)
 {
-  ui->setupUi(this);
-  connect( ui->importSettings, SIGNAL(clicked()), SIGNAL(importSettingsClicked()));
+    ui->setupUi(this);
+    connect( ui->importSettings, SIGNAL(clicked()), SIGNAL(importSettingsClicked()));
 }
 
 ImportSettingPage::~ImportSettingPage()
 {
-  delete ui;
+    delete ui;
 }
 
 void ImportSettingPage::addImportInfo( const QString& log )
 {
-  ui->logSettings->addInfoLogEntry( log );
+    ui->logSettings->addInfoLogEntry( log );
 }
 
 void ImportSettingPage::addImportError( const QString& log )
 {
-  ui->logSettings->addErrorLogEntry( log );
+    ui->logSettings->addErrorLogEntry( log );
 }
 
 void ImportSettingPage::setImportButtonEnabled(bool enabled)
 {
-  ui->importSettings->setEnabled(enabled);
+    ui->importSettings->setEnabled(enabled);
 }
 
 #include "importsettingpage.moc"

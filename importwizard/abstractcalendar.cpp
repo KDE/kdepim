@@ -21,7 +21,7 @@
 
 
 AbstractCalendar::AbstractCalendar(ImportWizard *parent)
-  : mImportWizard(parent)
+    : mImportWizard(parent)
 {
 }
 
@@ -31,19 +31,19 @@ AbstractCalendar::~AbstractCalendar()
 
 void AbstractCalendar::addImportInfo( const QString& log )
 {
-  mImportWizard->importCalendarPage()->addImportInfo( log );
+    mImportWizard->importCalendarPage()->addImportInfo( log );
 }
 
 void AbstractCalendar::addImportError( const QString& log )
 {
-  mImportWizard->importCalendarPage()->addImportError( log );
+    mImportWizard->importCalendarPage()->addImportError( log );
 }
 
 //eventviewsrc for calendar color for example
 void AbstractCalendar::addEvenViewConfig( const QString& groupName, const QString& key, const QString& value)
 {
-  KSharedConfigPtr eventViewConfig = KSharedConfig::openConfig( QLatin1String( "eventviewsrc" ) );
-  KConfigGroup group = eventViewConfig->group(groupName);
-  group.writeEntry(key,value);
-  group.sync();
+    KSharedConfigPtr eventViewConfig = KSharedConfig::openConfig( QLatin1String( "eventviewsrc" ) );
+    KConfigGroup group = eventViewConfig->group(groupName);
+    group.writeEntry(key,value);
+    group.sync();
 }

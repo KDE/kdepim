@@ -23,14 +23,14 @@ class ImportWizard;
 class MailAppImportData : public AbstractImporter
 {
 public:
-  explicit MailAppImportData(ImportWizard *parent);
-  ~MailAppImportData();
+    explicit MailAppImportData(ImportWizard *parent);
+    ~MailAppImportData();
     
-  TypeSupportedOptions supportedOption();
-  bool foundMailer() const;
-  
-  bool importMails();
-  QString name() const;
+    TypeSupportedOptions supportedOption();
+    bool foundMailer() const;
+
+    bool importMails();
+    QString name() const;
 
 };
 

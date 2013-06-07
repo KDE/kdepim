@@ -26,13 +26,13 @@ class KConfigGroup;
 class OperaSettings : public AbstractSettings
 {
 public:
-  explicit OperaSettings(const QString& filename, ImportWizard *parent);
-  ~OperaSettings();
+    explicit OperaSettings(const QString& filename, ImportWizard *parent);
+    ~OperaSettings();
 private:
-  void readAccount(const KConfigGroup &grp);
-  void readTransport(const KConfigGroup &grp);
-  void readGlobalAccount(const KConfigGroup &grp);
-  void readIdentity(const KConfigGroup &grp);
+    void readAccount(const KConfigGroup &grp);
+    void readTransport(const KConfigGroup &grp);
+    void readGlobalAccount(const KConfigGroup &grp);
+    void readIdentity(const KConfigGroup &grp);
 };
 
 #endif // OPERASETTINGS_H

@@ -26,14 +26,16 @@ class ImportWizard;
 class AbstractCalendar : public AbstractBase
 {
 public:
-  explicit AbstractCalendar(ImportWizard *parent);
-  virtual ~AbstractCalendar();
+    explicit AbstractCalendar(ImportWizard *parent);
+    virtual ~AbstractCalendar();
+
 protected:
-  void addEvenViewConfig( const QString& groupName, const QString& key, const QString& value);
-  void addImportInfo( const QString& log );
-  void addImportError( const QString& log );
+    void addEvenViewConfig( const QString& groupName, const QString& key, const QString& value);
+    void addImportInfo( const QString& log );
+    void addImportError( const QString& log );
+
 private:
-  ImportWizard *mImportWizard;
+    ImportWizard *mImportWizard;
 };
 
 #endif // ABSTRACTCALENDAR_H

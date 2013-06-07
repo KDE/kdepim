@@ -29,21 +29,21 @@ class QDomElement;
 class EvolutionSettings : public AbstractSettings
 {
 public:
-  explicit EvolutionSettings(ImportWizard *parent );
-  ~EvolutionSettings();
-  void loadAccount(const QString& filename);
-  void loadLdap(const QString& filename);
+    explicit EvolutionSettings(ImportWizard *parent );
+    ~EvolutionSettings();
+    void loadAccount(const QString& filename);
+    void loadLdap(const QString& filename);
 private:
-  void readAccount(const QDomElement &account);
-  void readLdap(const QString &account);
-  void extractAccountInfo(const QString& info);
-  void readSignatures(const QDomElement &account);
-  void extractSignatureInfo( const QString&info );
-  QString getSecurityMethod(const QStringList &listArgument, bool & found );
-  QString getAuthMethod( const QString& path, bool & found);
-  void addAuth(QMap<QString, QVariant>& settings, const QString & argument, const QString& userName);
-  
-  QMap<QString, KPIMIdentities::Signature> mMapSignature;
+    void readAccount(const QDomElement &account);
+    void readLdap(const QString &account);
+    void extractAccountInfo(const QString& info);
+    void readSignatures(const QDomElement &account);
+    void extractSignatureInfo( const QString&info );
+    QString getSecurityMethod(const QStringList &listArgument, bool & found );
+    QString getAuthMethod( const QString& path, bool & found);
+    void addAuth(QMap<QString, QVariant>& settings, const QString & argument, const QString& userName);
+
+    QMap<QString, KPIMIdentities::Signature> mMapSignature;
 };
 
 #endif /* EVOLUTIONSETTINGS_H */

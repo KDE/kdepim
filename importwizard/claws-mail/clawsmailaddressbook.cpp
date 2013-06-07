@@ -19,7 +19,7 @@
 #include "importwizardutil.h"
 
 ClawsMailAddressBook::ClawsMailAddressBook(const QDir& dir, ImportWizard *parent)
-  : SylpheedAddressBook( dir, parent )
+    : SylpheedAddressBook( dir, parent )
 {
 }
 

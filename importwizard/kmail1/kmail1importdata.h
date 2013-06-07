@@ -23,17 +23,17 @@ class ImportWizard;
 class KMail1ImportData : public AbstractImporter
 {
 public:
-  explicit KMail1ImportData(ImportWizard *parent);
-  ~KMail1ImportData();
+    explicit KMail1ImportData(ImportWizard *parent);
+    ~KMail1ImportData();
     
-  TypeSupportedOptions supportedOption();
-  bool foundMailer() const;
-  
-  bool importMails();
-  bool importSettings();
-  bool importAddressBook();
+    TypeSupportedOptions supportedOption();
+    bool foundMailer() const;
 
-  QString name() const;
+    bool importMails();
+    bool importSettings();
+    bool importAddressBook();
+
+    QString name() const;
 
 };
 

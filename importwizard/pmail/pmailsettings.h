@@ -26,10 +26,10 @@ class KConfigGroup;
 class PMailSettings : public AbstractSettings
 {
 public:
-  explicit PMailSettings(const QString &filename, ImportWizard *parent);
-  ~PMailSettings();
+    explicit PMailSettings(const QString &filename, ImportWizard *parent);
+    ~PMailSettings();
 private:
-  void readIdentity( const KConfigGroup& group );
+    void readIdentity( const KConfigGroup& group );
 };
 
 #endif // ClawsMailSettings_H

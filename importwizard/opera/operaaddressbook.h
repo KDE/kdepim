@@ -25,10 +25,10 @@ class ImportWizard;
 class OperaAddressBook : public AbstractAddressBook
 {
 public:
-  explicit OperaAddressBook(const QString &filename, ImportWizard *parent);
-  ~OperaAddressBook();
+    explicit OperaAddressBook(const QString &filename, ImportWizard *parent);
+    ~OperaAddressBook();
 private:
-  void appendContact(KABC::Addressee *contact);
+    void appendContact(KABC::Addressee *contact);
 };
 
 #endif // OPERAADDRESSBOOK_H

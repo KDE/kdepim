@@ -21,24 +21,24 @@
 #include <QWidget>
 
 namespace Ui {
-  class ImportFilterPage;
+class ImportFilterPage;
 }
 
 class ImportFilterPage : public QWidget
 {
-  Q_OBJECT
-  
+    Q_OBJECT
+
 public:
-  explicit ImportFilterPage(QWidget *parent = 0);
-  ~ImportFilterPage();
-  void addImportInfo( const QString& log );
-  void addImportError( const QString& log );
-  void setImportButtonEnabled(bool enabled);
+    explicit ImportFilterPage(QWidget *parent = 0);
+    ~ImportFilterPage();
+    void addImportInfo( const QString& log );
+    void addImportError( const QString& log );
+    void setImportButtonEnabled(bool enabled);
 Q_SIGNALS:
-  void importFiltersClicked();
-  
+    void importFiltersClicked();
+
 private:
-  Ui::ImportFilterPage *ui;
+    Ui::ImportFilterPage *ui;
 };
 
 #endif // IMPORTFILTERPAGE_H

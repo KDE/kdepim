@@ -23,14 +23,14 @@ class ImportWizard;
 class OeImportData : public AbstractImporter
 {
 public:
-  explicit OeImportData(ImportWizard *parent);
-  ~OeImportData();
+    explicit OeImportData(ImportWizard *parent);
+    ~OeImportData();
     
-  TypeSupportedOptions supportedOption();
-  bool foundMailer() const;
-  
-  bool importMails();
-  QString name() const;
+    TypeSupportedOptions supportedOption();
+    bool foundMailer() const;
+
+    bool importMails();
+    QString name() const;
 
 };
 

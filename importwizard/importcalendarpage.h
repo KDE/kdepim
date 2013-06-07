@@ -21,23 +21,23 @@
 #include <QWidget>
 
 namespace Ui {
-  class ImportCalendarPage;
+class ImportCalendarPage;
 }
 
 class ImportCalendarPage : public QWidget
 {
-  Q_OBJECT
-  
+    Q_OBJECT
+
 public:
-  explicit ImportCalendarPage(QWidget *parent = 0);
-  ~ImportCalendarPage();
-  void addImportInfo( const QString& log );
-  void addImportError( const QString& log );
-  void setImportButtonEnabled(bool enabled);
+    explicit ImportCalendarPage(QWidget *parent = 0);
+    ~ImportCalendarPage();
+    void addImportInfo( const QString& log );
+    void addImportError( const QString& log );
+    void setImportButtonEnabled(bool enabled);
 Q_SIGNALS:
-  void importCalendarClicked();
+    void importCalendarClicked();
 private:
-  Ui::ImportCalendarPage *ui;
+    Ui::ImportCalendarPage *ui;
 };
 
 #endif // IMPORTCALENDARPAGE_H
