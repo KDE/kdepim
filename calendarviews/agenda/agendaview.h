@@ -218,11 +218,6 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
     void setHolidayMasks();
 
     void removeIncidence( const KCalCore::Incidence::Ptr &inc );
-    /**
-      Updates the event indicators after a certain incidence was modified or
-      removed.
-    */
-    void updateEventIndicators();
 
     virtual void resizeEvent( QResizeEvent *resizeEvent );
 
@@ -234,7 +229,12 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
     void newTimeSpanSelected( const QPoint &start, const QPoint &end );
     /** Updates data for selected timespan for all day event*/
     void newTimeSpanSelectedAllDay( const QPoint &start, const QPoint &end );
-
+    /**
+      Updates the event indicators after a certain incidence was modified or
+      removed.
+    */
+    void updateEventIndicators();
+    void scheduleUpdateEventIndicators();
     void updateDayLabelSizes();
 
     void alignAgendas();

@@ -195,7 +195,8 @@ class AgendaView::Private : public Akonadi::ETMCalendar::CalendarObserver
         mDummyAllDayLeft( 0 ),
         mUpdateAllDayAgenda( true ),
         mUpdateAgenda( true ),
-        mIsInteractive( isInteractive )
+        mIsInteractive( isInteractive ),
+        mUpdateEventIndicatorsScheduled( false )
     {
     }
 
@@ -243,6 +244,7 @@ class AgendaView::Private : public Akonadi::ETMCalendar::CalendarObserver
     bool mUpdateAllDayAgenda;
     bool mUpdateAgenda;
     bool mIsInteractive;
+    bool mUpdateEventIndicatorsScheduled;
 
     // Contains days that have at least one all-day Event with TRANSP: OPAQUE ( busy )
     // that has you as organizer or attendee so we can color background with a different
@@ -376,7 +378,7 @@ void AgendaView::Private::calendarIncidenceAdded( const KCalCore::Incidence::Ptr
     // No need to call setChanges(), that triggers a fillAgenda()
     if (q->displayIncidence( item, false )) {
       mAgenda->checkScrollBoundaries();
-      q->updateEventIndicators();
+      q->scheduleUpdateEventIndicators();
     }
   } else {
     kError() << "AgendaView::Private::calendarIncidenceAdded() Invalid item.";
@@ -418,7 +420,7 @@ void AgendaView::Private::calendarIncidenceDeleted( const KCalCore::Incidence::P
       // No need to call setChanges(), that triggers a fillAgenda()
       q->removeIncidence( incidence );
       mAgenda->checkScrollBoundaries();
-      q->updateEventIndicators();
+      q->scheduleUpdateEventIndicators();
     }
   } else {
     kError() << "AgendaView::Private::calendarIncidenceDeleted() Invalid item.";
@@ -2037,6 +2039,7 @@ void AgendaView::removeIncidence( const KCalCore::Incidence::Ptr &inc )
 
 void AgendaView::updateEventIndicators()
 {
+  d->mUpdateEventIndicatorsScheduled = false;
   d->mMinY = d->mAgenda->minContentsY();
   d->mMaxY = d->mAgenda->maxContentsY();
 
@@ -2141,6 +2144,15 @@ void AgendaView::setChanges( EventView::Changes changes )
 {
   d->setChanges( changes );
 }
+
+void AgendaView::scheduleUpdateEventIndicators()
+{
+  if ( !d->mUpdateEventIndicatorsScheduled ) {
+    d->mUpdateEventIndicatorsScheduled = true;
+    QTimer::singleShot( 0, this, SLOT(updateEventIndicators()) );
+  }
+}
+
 
 #include "agendaview.moc"
 
