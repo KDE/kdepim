@@ -19,7 +19,7 @@
 
 #include "messagehelper.h"
 #include "kdepim-version.h"
-#include "util.h"
+#include "utils/util.h"
 #include "messagecomposersettings.h"
 
 #include "messagecore/mailinglist.h"

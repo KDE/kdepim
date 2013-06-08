@@ -30,7 +30,7 @@
 #include "kleo_util.h"
 #include "infopart.h"
 #include "composer.h"
-#include "util.h"
+#include "utils/util.h"
 #include "imagescaling/imagescalingutils.h"
 
 #include <messageviewer/objecttreeemptysource.h>
@@ -67,7 +67,6 @@
 #include <addressline/recentaddresses.h>
 #include "messagecomposersettings.h"
 #include "messagehelper.h"
-#include "util.h"
 
 static QStringList encodeIdn( const QStringList &emails )
 {

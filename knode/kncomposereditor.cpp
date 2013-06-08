@@ -26,7 +26,7 @@
 #include <KPIMTextEdit/EMailQuoteHighlighter>
 #include <KConfigGroup>
 #include <QApplication>
-#include <messagecomposer/util.h>
+#include <messagecomposer/utils/util.h>
 
 KNComposerEditor::KNComposerEditor( QWidget *parent)
  :KMeditor(parent)

@@ -58,7 +58,7 @@
 #include <libkpgp/kpgpblock.h>
 
 #include <messageviewer/header/kxface.h>
-#include <messagecomposer/util.h>
+#include <messagecomposer/utils/util.h>
 #include <kpimutils/kfileio.h>
 #include <kpimutils/linklocator.h>
 #include <kpimutils/email.h>
