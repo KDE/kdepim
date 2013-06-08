@@ -46,7 +46,7 @@
 #include <messagecomposer/job/emailaddressresolvejob.h>
 #include <messagecomposer/attachmentcontrollerbase.h>
 #include <messagecomposer/attachmentmodel.h>
-#include <messagecomposer/kleo_util.h>
+#include <messagecomposer/utils/kleo_util.h>
 #include <messagecomposer/messagecomposersettings.h>
 #include <messagecomposer/recipient/recipientseditor.h>
 #include <messagecomposer/utils/util.h>
