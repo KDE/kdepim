@@ -65,9 +65,7 @@ void AkonadiDataBase::init()
             m_dboptions.append( "--username=" + settings.value( "User", "" ).toString() );
         }
         settings.endGroup();
-    }
-
-    else if ( m_dbdriver == QLatin1String("QMYSQL") ) {
+    } else if ( m_dbdriver == QLatin1String("QMYSQL") ) {
         m_dbname = settings.value( "Name", "akonadi" ).toString();
         // If the server is started by the user, we don't need to know the username/password.
         bool startServer = settings.value( "StartServer", "" ).toBool();
@@ -75,8 +73,7 @@ void AkonadiDataBase::init()
             m_dboptions.append( "--host=" + settings.value( "Host", "" ).toString() );
             m_dboptions.append( "--user=" + settings.value( "User", "" ).toString() );
             m_dboptions.append( "--password=" + settings.value( "Password", "" ).toString() );
-        }
-        else {
+        } else {
             const QString options = settings.value( "Options", "" ).toString();
             const QStringList list = options.split( QLatin1Char('=') );
             m_dboptions.append( "--socket=" + list.at( 1 ) );
