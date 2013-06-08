@@ -46,6 +46,8 @@ class KDEPIM_EXPORT RecentAddressDialog : public KDialog
     Q_OBJECT
 public:
     explicit RecentAddressDialog( QWidget *parent );
+    ~RecentAddressDialog();
+
     void setAddresses( const QStringList &addrs );
     QStringList addresses() const;
     void addAddresses(KConfig *config);
@@ -55,11 +57,14 @@ private slots:
     void slotRemoveItem();
     void slotSelectionChanged();
     void slotTypedSomething(const QString&);
+
 protected:
     void updateButtonState();
     bool eventFilter( QObject* o, QEvent* e );
 
 private:
+    void readConfig();
+    void writeConfig();
     KPushButton* mNewButton, *mRemoveButton;
     QListWidget *mListView;
     KLineEdit *mLineEdit;

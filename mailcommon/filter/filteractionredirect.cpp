@@ -57,7 +57,7 @@ FilterAction::ReturnCode FilterActionRedirect::process( ItemContext &context ) c
 
   sendMDN( context.item(), KMime::MDN::Dispatched );
 
-  if ( !KernelIf->msgSender()->send( rmsg, MessageSender::SendLater ) ) {
+  if ( !KernelIf->msgSender()->send( rmsg, MessageComposer::MessageSender::SendLater ) ) {
     kDebug() << "FilterAction: could not redirect message (sending failed)";
     return ErrorButGoOn; // error: couldn't send
   }

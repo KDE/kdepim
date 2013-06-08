@@ -27,7 +27,7 @@
 #include <messagecomposer/composer.h>
 #include <messagecomposer/infopart.h>
 #include <messagecomposer/globalpart.h>
-#include <messagecomposer/skeletonmessagejob.h>
+#include <messagecomposer/job/skeletonmessagejob.h>
 using namespace MessageComposer;
 
 QTEST_KDEMAIN( SkeletonMessageJobTest, NoGUI )

@@ -19,31 +19,31 @@
 #include "ui_importaddressbookpage.h"
 
 ImportAddressbookPage::ImportAddressbookPage(QWidget *parent) :
-  QWidget(parent),
-  ui(new Ui::ImportAddressbookPage)
+    QWidget(parent),
+    ui(new Ui::ImportAddressbookPage)
 {
-  ui->setupUi(this);
-  connect( ui->importAddressBook, SIGNAL(clicked()), SIGNAL(importAddressbookClicked()));
+    ui->setupUi(this);
+    connect( ui->importAddressBook, SIGNAL(clicked()), SIGNAL(importAddressbookClicked()));
 }
 
 ImportAddressbookPage::~ImportAddressbookPage()
 {
-  delete ui;
+    delete ui;
 }
 
 void ImportAddressbookPage::addImportInfo( const QString& log )
 {
-  ui->logAddressbook->addInfoLogEntry( log );
+    ui->logAddressbook->addInfoLogEntry( log );
 }
 
 void ImportAddressbookPage::addImportError( const QString& log )
 {
-  ui->logAddressbook->addErrorLogEntry( log );
+    ui->logAddressbook->addErrorLogEntry( log );
 }
 
 void ImportAddressbookPage::setImportButtonEnabled(bool enabled)
 {
-  ui->importAddressBook->setEnabled(enabled);
+    ui->importAddressBook->setEnabled(enabled);
 }
 
 #include "importaddressbookpage.moc"

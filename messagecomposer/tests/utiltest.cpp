@@ -21,7 +21,7 @@
 
 #include <qtest_kde.h>
 
-#include <messagecomposer/util.h>
+#include <messagecomposer/utils/util.h>
 using namespace MessageComposer;
 
 QTEST_KDEMAIN( UtilTest, NoGUI )

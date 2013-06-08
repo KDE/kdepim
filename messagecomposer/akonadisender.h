@@ -30,7 +30,7 @@
 
 class KJob;
 
-
+namespace MessageComposer {
 class MESSAGECOMPOSER_EXPORT AkonadiSender: public QObject, public MessageSender
 {
   Q_OBJECT
@@ -62,7 +62,7 @@ private:
   /**
     Queue or send immediately one message using MailTransport::MessageQueueJob.
   */
-  void sendOrQueueMessage( const KMime::Message::Ptr &msg, MessageSender::SendMethod method = MessageSender::SendDefault );
+  void sendOrQueueMessage( const KMime::Message::Ptr &msg, MessageComposer::MessageSender::SendMethod method = MessageComposer::MessageSender::SendDefault );
 
 private slots:
   void queueJobResult( KJob *job );
@@ -72,5 +72,5 @@ private:
   QSet<KJob*> mPendingJobs;
 
 };
-
+}
 #endif /* AKONADISENDER_H */

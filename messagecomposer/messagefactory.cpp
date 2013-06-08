@@ -20,7 +20,7 @@
 #include "messagefactory.h"
 
 #include "messagecomposersettings.h"
-#include "util.h"
+#include "messagecomposer/utils/util.h"
 
 #include <akonadi/item.h>
 #ifndef QT_NO_CURSOR

@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -80,49 +80,50 @@ AccountConfigOrderDialog::AccountConfigOrderDialog(QWidget *parent)
     connect( mListAccount->model(), SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)),SLOT(slotEnableControls()) );
 
     connect( this, SIGNAL(okClicked()), SLOT(slotOk()) );
+    readConfig();
     init();
 }
 
 AccountConfigOrderDialog::~AccountConfigOrderDialog()
 {
-
+    writeConfig();
 }
 
 void AccountConfigOrderDialog::slotMoveUp()
 {
-  if ( !mListAccount->currentItem() )
-    return;
-  const int pos = mListAccount->row( mListAccount->currentItem() );
-  mListAccount->blockSignals( true );
-  QListWidgetItem *item = mListAccount->takeItem( pos );
-  // now selected item is at idx(idx-1), so
-  // insert the other item at idx, ie. above(below).
-  mListAccount->insertItem( pos -1,  item );
-  mListAccount->blockSignals( false );
-  mListAccount->setCurrentRow( pos - 1 );
+    if ( !mListAccount->currentItem() )
+        return;
+    const int pos = mListAccount->row( mListAccount->currentItem() );
+    mListAccount->blockSignals( true );
+    QListWidgetItem *item = mListAccount->takeItem( pos );
+    // now selected item is at idx(idx-1), so
+    // insert the other item at idx, ie. above(below).
+    mListAccount->insertItem( pos -1,  item );
+    mListAccount->blockSignals( false );
+    mListAccount->setCurrentRow( pos - 1 );
 }
 
 void AccountConfigOrderDialog::slotMoveDown()
 {
-  if ( !mListAccount->currentItem() )
-    return;
-  const int pos = mListAccount->row( mListAccount->currentItem() );
-  mListAccount->blockSignals( true );
-  QListWidgetItem *item = mListAccount->takeItem( pos );
-  // now selected item is at idx(idx-1), so
-  // insert the other item at idx, ie. above(below).
-  mListAccount->insertItem( pos +1 , item );
-  mListAccount->blockSignals( false );
-  mListAccount->setCurrentRow( pos + 1 );
+    if ( !mListAccount->currentItem() )
+        return;
+    const int pos = mListAccount->row( mListAccount->currentItem() );
+    mListAccount->blockSignals( true );
+    QListWidgetItem *item = mListAccount->takeItem( pos );
+    // now selected item is at idx(idx-1), so
+    // insert the other item at idx, ie. above(below).
+    mListAccount->insertItem( pos +1 , item );
+    mListAccount->blockSignals( false );
+    mListAccount->setCurrentRow( pos + 1 );
 }
 
 
 void AccountConfigOrderDialog::slotEnableControls()
 {
-  QListWidgetItem *item = mListAccount->currentItem();
+    QListWidgetItem *item = mListAccount->currentItem();
 
-  mUpButton->setEnabled( item && mListAccount->currentRow()!=0 );
-  mDownButton->setEnabled( item && mListAccount->currentRow()!=mListAccount->count()-1 );
+    mUpButton->setEnabled( item && mListAccount->currentRow()!=0 );
+    mDownButton->setEnabled( item && mListAccount->currentRow()!=mListAccount->count()-1 );
 }
 
 void AccountConfigOrderDialog::init()
@@ -171,15 +172,38 @@ void AccountConfigOrderDialog::init()
 
 void AccountConfigOrderDialog::slotOk()
 {
+    KConfigGroup group( KMKernel::self()->config(), "AccountOrder" );
+
     QStringList order;
     const int numberOfItems(mListAccount->count());
     for (int i = 0; i<numberOfItems; ++i) {
-        order<<mListAccount->item(i)->data(AccountConfigOrderDialog::IdentifierAccount).toString();
+        order << mListAccount->item(i)->data(AccountConfigOrderDialog::IdentifierAccount).toString();
     }
-    KConfigGroup group( KMKernel::self()->config(), "AccountOrder" );
+
     group.writeEntry("order",order);
     group.sync();
+
     KDialog::accept();
 }
+
+void AccountConfigOrderDialog::readConfig()
+{
+    KConfigGroup accountConfigDialog( KMKernel::self()->config(), "AccountConfigOrderDialog" );
+    const QSize size = accountConfigDialog.readEntry( "Size", QSize() );
+    if ( size.isValid() ) {
+        resize( size );
+    } else {
+        resize( 600, 400 );
+    }
+}
+
+void AccountConfigOrderDialog::writeConfig()
+{
+    KConfigGroup accountConfigDialog( KMKernel::self()->config(), "AccountConfigOrderDialog" );
+    accountConfigDialog.writeEntry( "Size", size() );
+    accountConfigDialog.sync();
+}
+
+
 
 #include "accountconfigorderdialog.moc"

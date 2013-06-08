@@ -24,7 +24,7 @@
 
 #include "messagehelper.h"
 #include "messagecomposersettings.h"
-#include "util.h"
+#include "messagecomposer/utils/util.h"
 
 #include <kmime/kmime_message.h>
 #include <boost/shared_ptr.hpp>
@@ -41,7 +41,7 @@
 using namespace KMime::Types;
 using namespace KPIM;
 using namespace MailTransport;
-
+using namespace MessageComposer;
 
 static QStringList addrSpecListToStringList( const AddrSpecList &l, bool allowEmpty = false )
 {
@@ -83,9 +83,9 @@ bool AkonadiSender::doSend( const KMime::Message::Ptr &aMsg, short sendNow  )
     sendNow = MessageComposer::MessageComposerSettings::self()->sendImmediate(); // -1 == use default setting
   }
   if ( !sendNow ) {
-    sendOrQueueMessage( aMsg, MessageSender::SendLater );
+    sendOrQueueMessage( aMsg, MessageComposer::MessageSender::SendLater );
   } else {
-    sendOrQueueMessage( aMsg, MessageSender::SendImmediate );
+    sendOrQueueMessage( aMsg, MessageComposer::MessageSender::SendImmediate );
   }
   return true;
 }
@@ -108,7 +108,7 @@ bool AkonadiSender::doSendQueued( const QString &customTransport )
   return true;
 }
 
-void AkonadiSender::sendOrQueueMessage( const KMime::Message::Ptr &message, MessageSender::SendMethod method )
+void AkonadiSender::sendOrQueueMessage( const KMime::Message::Ptr &message, MessageComposer::MessageSender::SendMethod method )
 {
   Q_ASSERT( message );
   kDebug() << "KMime::Message: \n[\n" << message->encodedContent().left( 1000 ) << "\n]\n";
@@ -140,14 +140,14 @@ void AkonadiSender::sendOrQueueMessage( const KMime::Message::Ptr &message, Mess
       kDebug()<<" No transport defined. Need to create it";
       return;
   }
-  if ( (method == MessageSender::SendImmediate) && !MessageComposer::Util::sendMailDispatcherIsOnline() )
+  if ( (method == MessageComposer::MessageSender::SendImmediate) && !MessageComposer::Util::sendMailDispatcherIsOnline() )
     return;
   
   kDebug() << "Using transport (" << transport->name() << "," << transport->id() << ")";
   qjob->transportAttribute().setTransportId( transport->id() );
 
   // if we want to manually queue it for sending later, then do it
-  if( method == MessageSender::SendLater )
+  if( method == MessageComposer::MessageSender::SendLater )
     qjob->dispatchModeAttribute().setDispatchMode( MailTransport::DispatchModeAttribute::Manual );
 
   // Get addresses.

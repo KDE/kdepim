@@ -52,7 +52,7 @@ KPIMIdentities::IdentityManager *KMailCVTKernel::identityManager()
   return mIdentityManager;
 }
 
-MessageSender *KMailCVTKernel::msgSender()
+MessageComposer::MessageSender *KMailCVTKernel::msgSender()
 {
   return 0;
 }

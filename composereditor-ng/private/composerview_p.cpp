@@ -328,7 +328,7 @@ void ComposerViewPrivate::createAction(ComposerView::ComposerViewAction type)
     case ComposerView::InsertTable:
     {
         if (!action_insert_table) {
-            action_insert_table = new KAction( KIcon( QLatin1String( "table" ) ), i18n( "Table..." ), q);
+            action_insert_table = new KAction( KIcon( QLatin1String( "insert-table" ) ), i18n( "Table..." ), q);
             htmlEditorActionList.append(action_insert_table);
             q->connect( action_insert_table, SIGNAL(triggered(bool)), SLOT(_k_slotInsertTable()) );
         }

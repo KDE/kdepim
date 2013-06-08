@@ -31,17 +31,20 @@ class AccountConfigOrderDialog : public KDialog
 public:
     explicit AccountConfigOrderDialog(QWidget *parent);
     ~AccountConfigOrderDialog();
-    enum Type {
-        IdentifierAccount = Qt::UserRole+1
-    };
 
 private Q_SLOTS:
     void slotOk();
     void slotMoveUp();
     void slotMoveDown();
     void slotEnableControls();
-  
+
 private:
+    enum Type {
+        IdentifierAccount = Qt::UserRole+1
+    };
+
+    void writeConfig();
+    void readConfig();
     void init();
     QListWidget *mListAccount;
     KPushButton *mUpButton;

@@ -8,6 +8,8 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/messagecore
     ${CMAKE_SOURCE_DIR}/messageviewer
     ${CMAKE_SOURCE_DIR}/messagecomposer/recipient/
+    ${CMAKE_SOURCE_DIR}/messagecomposer/job
+    ${CMAKE_SOURCE_DIR}/messagecomposer/utils/
 )
 
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
@@ -19,11 +21,11 @@ include_directories(${Grantlee_INCLUDE_DIRS})
 set( messagecomposer_src
 
      composer.cpp
-     util.cpp
+     utils/util.cpp
 
      attachmentcontrollerbase.cpp
      attachmentmodel.cpp
-     attachmentfrompublickeyjob.cpp
+     job/attachmentfrompublickeyjob.cpp
 
      akonadisender.cpp
      messagehelper.cpp
@@ -36,21 +38,21 @@ set( messagecomposer_src
      infopart.cpp
      textpart.cpp
 
-     jobbase.cpp
-     contentjobbase.cpp
-     attachmentjob.cpp
-     singlepartjob.cpp
-     multipartjob.cpp
-     maintextjob.cpp
-     signjob.cpp
-     encryptjob.cpp
-     signencryptjob.cpp
-     transparentjob.cpp
+     job/jobbase.cpp
+     job/contentjobbase.cpp
+     job/attachmentjob.cpp
+     job/singlepartjob.cpp
+     job/multipartjob.cpp
+     job/maintextjob.cpp
+     job/signjob.cpp
+     job/encryptjob.cpp
+     job/signencryptjob.cpp
+     job/transparentjob.cpp
 
-     skeletonmessagejob.cpp
+     job/skeletonmessagejob.cpp
 
      kmeditor.cpp
-     inserttextfilejob.cpp
+     job/inserttextfilejob.cpp
      signaturecontroller.cpp
      composerlineedit.cpp
 
@@ -61,8 +63,8 @@ set( messagecomposer_src
      recipient/recipientseditorsidewidget.cpp
      recipient/kwindowpositioner.cpp
 
-     aliasesexpandjob.cpp
-     emailaddressresolvejob.cpp
+     job/aliasesexpandjob.cpp
+     job/emailaddressresolvejob.cpp
 
      keyresolver.cpp
      autocorrection/composerautocorrection.cpp

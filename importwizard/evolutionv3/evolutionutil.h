@@ -22,8 +22,8 @@ class QFile;
 class QDomDocument;
 
 namespace EvolutionUtil {
-  bool loadInDomDocument( QFile *file, QDomDocument & doc );
-  bool loadInDomDocument( const QString &file, QDomDocument & doc );
+bool loadInDomDocument( QFile *file, QDomDocument & doc );
+bool loadInDomDocument( const QString &file, QDomDocument & doc );
 }
 
 #endif // EVOLUTIONUTIL_H

@@ -37,31 +37,31 @@
 using namespace Akonadi;
 
 AbstractSettings::AbstractSettings(ImportWizard *parent)
-  :mImportWizard(parent)
+    :mImportWizard(parent)
 {
-  mManager = new KPIMIdentities::IdentityManager( false, this, "mIdentityManager" );
-  mKmailConfig = KSharedConfig::openConfig( QLatin1String( "kmail2rc" ) );
+    mManager = new KPIMIdentities::IdentityManager( false, this, "mIdentityManager" );
+    mKmailConfig = KSharedConfig::openConfig( QLatin1String( "kmail2rc" ) );
 }
 
 AbstractSettings::~AbstractSettings()
 {  
-  syncKmailConfig();
-  delete mManager;
+    syncKmailConfig();
+    delete mManager;
 }
 
 KPIMIdentities::Identity* AbstractSettings::createIdentity(QString& name)
 {
-  name = uniqueIdentityName(name);
-  KPIMIdentities::Identity* identity = &mManager->newFromScratch( name );
-  addImportInfo(i18n("Setting up identity..."));
-  return identity;
+    name = uniqueIdentityName(name);
+    KPIMIdentities::Identity* identity = &mManager->newFromScratch( name );
+    addImportInfo(i18n("Setting up identity..."));
+    return identity;
 }
 
 void AbstractSettings::storeIdentity(KPIMIdentities::Identity* identity)
 {
-  mManager->setAsDefault( identity->uoid() );
-  mManager->commit();
-  addImportInfo(i18n("Identity set up."));
+    mManager->setAsDefault( identity->uoid() );
+    mManager->commit();
+    addImportInfo(i18n("Identity set up."));
 }
 
 QString AbstractSettings::uniqueIdentityName(const QString& name)
@@ -77,98 +77,98 @@ QString AbstractSettings::uniqueIdentityName(const QString& name)
 
 MailTransport::Transport *AbstractSettings::createTransport()
 {
-  MailTransport::Transport* mt = MailTransport::TransportManager::self()->createTransport();
-  addImportInfo(i18n("Setting up transport..."));
-  return mt;
+    MailTransport::Transport* mt = MailTransport::TransportManager::self()->createTransport();
+    addImportInfo(i18n("Setting up transport..."));
+    return mt;
 }
 
 void AbstractSettings::storeTransport(MailTransport::Transport * mt, bool isDefault )
 {
-  mt->forceUniqueName();
-  mt->writeConfig();
-  MailTransport::TransportManager::self()->addTransport( mt );
-  if ( isDefault )
-    MailTransport::TransportManager::self()->setDefaultTransport( mt->id() );
-  addImportInfo(i18n("Transport set up."));
+    mt->forceUniqueName();
+    mt->writeConfig();
+    MailTransport::TransportManager::self()->addTransport( mt );
+    if ( isDefault )
+        MailTransport::TransportManager::self()->setDefaultTransport( mt->id() );
+    addImportInfo(i18n("Transport set up."));
 }
 
 void AbstractSettings::addImportInfo( const QString& log )
 {
-  mImportWizard->importSettingPage()->addImportInfo( log );
+    mImportWizard->importSettingPage()->addImportInfo( log );
 }
 
 void AbstractSettings::addImportError( const QString& log )
 {
-  mImportWizard->importSettingPage()->addImportError( log );
+    mImportWizard->importSettingPage()->addImportError( log );
 }
 
 void AbstractSettings::addCheckMailOnStartup(const QString& agentIdentifyName,bool loginAtStartup)
 {
-  if(agentIdentifyName.isEmpty())
-    return;
-  const QString groupName = QString::fromLatin1("Resource %1").arg(agentIdentifyName);
-  addKmailConfig(groupName,QLatin1String("CheckOnStartup"), loginAtStartup);
+    if (agentIdentifyName.isEmpty())
+        return;
+    const QString groupName = QString::fromLatin1("Resource %1").arg(agentIdentifyName);
+    addKmailConfig(groupName,QLatin1String("CheckOnStartup"), loginAtStartup);
 }
 
 void AbstractSettings::addToManualCheck(const QString& agentIdentifyName,bool manualCheck)
 {
-  if(agentIdentifyName.isEmpty())
-    return;
-  const QString groupName = QString::fromLatin1("Resource %1").arg(agentIdentifyName);
-  addKmailConfig(groupName,QLatin1String("IncludeInManualChecks"), manualCheck);
+    if (agentIdentifyName.isEmpty())
+        return;
+    const QString groupName = QString::fromLatin1("Resource %1").arg(agentIdentifyName);
+    addKmailConfig(groupName,QLatin1String("IncludeInManualChecks"), manualCheck);
 }
 
 
 void AbstractSettings::addComposerHeaderGroup( const QString& groupName, const QString& name, const QString& value )
 {
-  KConfigGroup group = mKmailConfig->group(groupName);
-  group.writeEntry(QLatin1String("name"),name);
-  group.writeEntry(QLatin1String("value"),value);
+    KConfigGroup group = mKmailConfig->group(groupName);
+    group.writeEntry(QLatin1String("name"),name);
+    group.writeEntry(QLatin1String("value"),value);
 }
 
 void AbstractSettings::addKmailConfig( const QString& groupName, const QString& key, const QString& value)
 {
-  KConfigGroup group = mKmailConfig->group(groupName);
-  group.writeEntry(key,value);
+    KConfigGroup group = mKmailConfig->group(groupName);
+    group.writeEntry(key,value);
 }
 
 void AbstractSettings::addKmailConfig( const QString& groupName, const QString& key, bool value)
 {
-  KConfigGroup group = mKmailConfig->group(groupName);
-  group.writeEntry(key,value);
+    KConfigGroup group = mKmailConfig->group(groupName);
+    group.writeEntry(key,value);
 }
 
 void AbstractSettings::addKmailConfig( const QString& groupName, const QString& key, int value)
 {
-  KConfigGroup group = mKmailConfig->group(groupName);
-  group.writeEntry(key,value);
+    KConfigGroup group = mKmailConfig->group(groupName);
+    group.writeEntry(key,value);
 }
 
 void AbstractSettings::syncKmailConfig()
 {
-  mKmailConfig->sync();
+    mKmailConfig->sync();
 }
 
 void AbstractSettings::addKNodeConfig(const QString& groupName, const QString& key, bool value)
 {
-  Q_UNUSED( groupName );
-  Q_UNUSED( key );
-  Q_UNUSED( value );
-  //TODO
+    Q_UNUSED( groupName );
+    Q_UNUSED( key );
+    Q_UNUSED( value );
+    //TODO
 }
 
 void AbstractSettings::addAkregatorConfig(const QString& groupName, const QString& key, bool value)
 {
-  Q_UNUSED( groupName );
-  Q_UNUSED( key );
-  Q_UNUSED( value );
-  //TODO
+    Q_UNUSED( groupName );
+    Q_UNUSED( key );
+    Q_UNUSED( value );
+    //TODO
 }
 
 
 int AbstractSettings::readKmailSettings( const QString&groupName, const QString& key)
 {
-  KConfigGroup group = mKmailConfig->group(groupName);
-  int value = group.readEntry(key,-1);
-  return value;
+    KConfigGroup group = mKmailConfig->group(groupName);
+    int value = group.readEntry(key,-1);
+    return value;
 }

@@ -27,4 +27,8 @@ Root
 |       |---------<archive akonadi>
 |-----nepomuk
 |       |---------<archive nepomuk>
+|
+|
+|-----data
+|       |---------<autocorrection xml file>
 

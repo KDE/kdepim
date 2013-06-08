@@ -23,18 +23,18 @@ class ImportWizard;
 class ClawsMailImportData : public AbstractImporter
 {
 public:
-  explicit ClawsMailImportData(ImportWizard *parent);
-  ~ClawsMailImportData();
+    explicit ClawsMailImportData(ImportWizard *parent);
+    ~ClawsMailImportData();
     
-  TypeSupportedOptions supportedOption();
-  bool foundMailer() const;
-  
-  bool importMails();
-  bool importAddressBook();
-  bool importSettings();
-  bool importFilters();
+    TypeSupportedOptions supportedOption();
+    bool foundMailer() const;
 
-  QString name() const;
+    bool importMails();
+    bool importAddressBook();
+    bool importSettings();
+    bool importFilters();
+
+    QString name() const;
 
 };
 

@@ -228,7 +228,7 @@ ComposerTableActionMenu::ComposerTableActionMenu(const QWebElement& element,QObj
     KActionMenu *insertMenu = new KActionMenu( i18n( "Insert" ), this );
     addAction( insertMenu );
 
-    d->action_insert_table = new KAction( KIcon(QLatin1String("table")), i18nc( "@item:inmenu Insert", "Table..." ), this );
+    d->action_insert_table = new KAction( KIcon(QLatin1String("insert-table")), i18nc( "@item:inmenu Insert", "Table..." ), this );
     insertMenu->addAction( d->action_insert_table );
     connect( d->action_insert_table, SIGNAL(triggered(bool)), SIGNAL(insertNewTable()) );
 

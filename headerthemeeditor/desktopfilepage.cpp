@@ -68,6 +68,7 @@ DesktopFilePage::DesktopFilePage(QWidget *parent)
 
     lab = new QLabel(i18n("Version:"));
     mVersion = new KLineEdit;
+    mVersion->setText(QLatin1String("0.1"));
     lay->addWidget(lab,5,0);
     lay->addWidget(mVersion,5,1);
 

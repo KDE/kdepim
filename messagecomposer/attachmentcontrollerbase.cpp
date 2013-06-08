@@ -23,9 +23,10 @@
 #include "attachmentcontrollerbase.h"
 
 #include "messagecomposer/attachmentmodel.h"
-#include "messagecomposer/attachmentjob.h"
-#include "messagecomposer/attachmentfrompublickeyjob.h"
+#include "messagecomposer/job/attachmentjob.h"
+#include "messagecomposer/job/attachmentfrompublickeyjob.h"
 #include "messagecomposer/composer.h"
+
 #include "messagecomposer/globalpart.h"
 #include "messageviewer/editorwatcher.h"
 #include "messageviewer/nodehelper.h"

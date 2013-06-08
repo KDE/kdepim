@@ -23,17 +23,17 @@ class ImportWizard;
 class OperaImportData : public AbstractImporter
 {
 public:
-  explicit OperaImportData(ImportWizard *parent);
-  ~OperaImportData();
+    explicit OperaImportData(ImportWizard *parent);
+    ~OperaImportData();
     
-  TypeSupportedOptions supportedOption();
-  bool foundMailer() const;
-  
-  bool importMails();
-  bool importAddressBook();
-  bool importSettings();
+    TypeSupportedOptions supportedOption();
+    bool foundMailer() const;
 
-  QString name() const;
+    bool importMails();
+    bool importAddressBook();
+    bool importSettings();
+
+    QString name() const;
 
 };
 

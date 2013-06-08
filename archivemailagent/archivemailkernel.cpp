@@ -54,7 +54,7 @@ KPIMIdentities::IdentityManager *ArchiveMailKernel::identityManager()
     return mIdentityManager;
 }
 
-MessageSender *ArchiveMailKernel::msgSender()
+MessageComposer::MessageSender *ArchiveMailKernel::msgSender()
 {
     return 0;
 }

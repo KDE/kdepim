@@ -18,31 +18,31 @@
 #include "ui_importfilterpage.h"
 
 ImportFilterPage::ImportFilterPage(QWidget *parent) :
-  QWidget(parent),
-  ui(new Ui::ImportFilterPage)
+    QWidget(parent),
+    ui(new Ui::ImportFilterPage)
 {
-  ui->setupUi(this);
-  connect( ui->importFilters, SIGNAL(clicked()), SIGNAL(importFiltersClicked()));
+    ui->setupUi(this);
+    connect( ui->importFilters, SIGNAL(clicked()), SIGNAL(importFiltersClicked()));
 }
 
 ImportFilterPage::~ImportFilterPage()
 {
-  delete ui;
+    delete ui;
 }
 
 void ImportFilterPage::addImportInfo( const QString& log )
 {
-  ui->logFilters->addInfoLogEntry( log );
+    ui->logFilters->addInfoLogEntry( log );
 }
 
 void ImportFilterPage::addImportError( const QString& log )
 {
-  ui->logFilters->addErrorLogEntry( log );
+    ui->logFilters->addErrorLogEntry( log );
 }
 
 void ImportFilterPage::setImportButtonEnabled(bool enabled)
 {
-  ui->importFilters->setEnabled(enabled);
+    ui->importFilters->setEnabled(enabled);
 }
 
 #include "importfilterpage.moc"

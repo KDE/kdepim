@@ -30,7 +30,6 @@ ArchiveStorage::~ArchiveStorage()
     delete mArchive;
 }
 
-
 void ArchiveStorage::closeArchive()
 {
     if (mArchive && mArchive->isOpen()) {

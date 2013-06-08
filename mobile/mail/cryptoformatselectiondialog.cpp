@@ -22,7 +22,7 @@
 #include "cryptoformatselectiondialog.h"
 
 #include <kcombobox.h>
-#include <messagecomposer/kleo_util.h>
+#include <messagecomposer/utils/kleo_util.h>
 
 CryptoFormatSelectionDialog::CryptoFormatSelectionDialog( QWidget *parent )
   : KDialog( parent )

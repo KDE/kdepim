@@ -43,13 +43,13 @@
 #include <messagecomposer/globalpart.h>
 #include <messagecomposer/infopart.h>
 #include <messagecomposer/textpart.h>
-#include <messagecomposer/emailaddressresolvejob.h>
+#include <messagecomposer/job/emailaddressresolvejob.h>
 #include <messagecomposer/attachmentcontrollerbase.h>
 #include <messagecomposer/attachmentmodel.h>
-#include <messagecomposer/kleo_util.h>
+#include <messagecomposer/utils/kleo_util.h>
 #include <messagecomposer/messagecomposersettings.h>
 #include <messagecomposer/recipient/recipientseditor.h>
-#include <messagecomposer/util.h>
+#include <messagecomposer/utils/util.h>
 #include <akonadi/collectioncombobox.h>
 
 #include <klocalizedstring.h>
@@ -328,7 +328,7 @@ void ComposerView::setMessage(const KMime::Message::Ptr& msg, bool mayAutoSign)
   emit changed();
 }
 
-void ComposerView::send( MessageSender::SendMethod method, MessageSender::SaveIn saveIn )
+void ComposerView::send( MessageComposer::MessageSender::SendMethod method, MessageComposer::MessageSender::SaveIn saveIn )
 {
   kDebug();
 
@@ -336,14 +336,14 @@ void ComposerView::send( MessageSender::SendMethod method, MessageSender::SaveIn
     return;
 
   if ( m_composerBase->recipientsEditor()->recipients().isEmpty()
-    &&  saveIn != MessageSender::SaveInDrafts && saveIn != MessageSender::SaveInTemplates ) {
+    &&  saveIn != MessageComposer::MessageSender::SaveInDrafts && saveIn != MessageComposer::MessageSender::SaveInTemplates ) {
       KMessageBox::sorry( this,
                           i18n("You should specify at least one recipient for this message."),
                           i18n("No recipients found"));
       return;
   }
 
-  if ( m_subject.isEmpty() && saveIn != MessageSender::SaveInDrafts && saveIn != MessageSender::SaveInTemplates ) {
+  if ( m_subject.isEmpty() && saveIn != MessageComposer::MessageSender::SaveInDrafts && saveIn != MessageComposer::MessageSender::SaveInTemplates ) {
       const int rc = KMessageBox::questionYesNo( this,
                                                  i18n("You did not specify a subject. Do you want to send the message without specifying one?"),
                                                  i18n("No subject"));
@@ -568,23 +568,23 @@ void ComposerView::closeEvent( QCloseEvent * event )
 
 void ComposerView::sendLater()
 {
-  const MessageSender::SendMethod method = MessageSender::SendLater;
-  const MessageSender::SaveIn saveIn = MessageSender::SaveInNone;
+  const MessageComposer::MessageSender::SendMethod method = MessageComposer::MessageSender::SendLater;
+  const MessageComposer::MessageSender::SaveIn saveIn = MessageComposer::MessageSender::SaveInNone;
   send ( method, saveIn );
 }
 
 void ComposerView::saveDraft()
 {
-  const MessageSender::SendMethod method = MessageSender::SendLater;
-  const MessageSender::SaveIn saveIn = MessageSender::SaveInDrafts;
+  const MessageComposer::MessageSender::SendMethod method = MessageComposer::MessageSender::SendLater;
+  const MessageComposer::MessageSender::SaveIn saveIn = MessageComposer::MessageSender::SaveInDrafts;
   m_draft = true;
   send ( method, saveIn );
 }
 
 void ComposerView::saveAsTemplate()
 {
-  const MessageSender::SendMethod method = MessageSender::SendLater;
-  const MessageSender::SaveIn saveIn = MessageSender::SaveInTemplates;
+  const MessageComposer::MessageSender::SendMethod method = MessageComposer::MessageSender::SendLater;
+  const MessageComposer::MessageSender::SaveIn saveIn = MessageComposer::MessageSender::SaveInTemplates;
   send ( method, saveIn );
 }
 

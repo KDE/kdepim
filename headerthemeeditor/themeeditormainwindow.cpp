@@ -81,6 +81,7 @@ void ThemeEditorMainWindow::updateActions()
     mInsertFile->setEnabled(projectDirectoryIsEmpty);
     mPrintingMode->setEnabled(projectDirectoryIsEmpty);
     mNormalMode->setEnabled(projectDirectoryIsEmpty);
+    mUpdateView->setEnabled(projectDirectoryIsEmpty);
 }
 
 void ThemeEditorMainWindow::setupActions()
@@ -127,6 +128,11 @@ void ThemeEditorMainWindow::setupActions()
     mManageTheme = new KAction(i18n("Manage themes..."), this);
     connect(mManageTheme, SIGNAL(triggered(bool)),SLOT(slotManageTheme()));
     actionCollection()->addAction( QLatin1String( "manage_themes" ), mManageTheme );
+
+    mUpdateView = new KAction(i18n("Update view"), this);
+    mUpdateView->setShortcut(QKeySequence( Qt::Key_F5 ));
+    connect(mUpdateView, SIGNAL(triggered(bool)),SLOT(slotUpdateView()));
+    actionCollection()->addAction( QLatin1String( "update_view" ), mUpdateView );
 }
 
 void ThemeEditorMainWindow::slotManageTheme()
@@ -270,6 +276,12 @@ void ThemeEditorMainWindow::slotQuitApp()
 {
     if (saveCurrentProject(false))
         kapp->quit();
+}
+
+void ThemeEditorMainWindow::slotUpdateView()
+{
+    if (mThemeEditor)
+        mThemeEditor->updatePreview();
 }
 
 #include "themeeditormainwindow.moc"

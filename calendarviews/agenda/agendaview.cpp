@@ -195,7 +195,8 @@ class AgendaView::Private : public Akonadi::ETMCalendar::CalendarObserver
         mDummyAllDayLeft( 0 ),
         mUpdateAllDayAgenda( true ),
         mUpdateAgenda( true ),
-        mIsInteractive( isInteractive )
+        mIsInteractive( isInteractive ),
+        mUpdateEventIndicatorsScheduled( false )
     {
     }
 
@@ -243,6 +244,7 @@ class AgendaView::Private : public Akonadi::ETMCalendar::CalendarObserver
     bool mUpdateAllDayAgenda;
     bool mUpdateAgenda;
     bool mIsInteractive;
+    bool mUpdateEventIndicatorsScheduled;
 
     // Contains days that have at least one all-day Event with TRANSP: OPAQUE ( busy )
     // that has you as organizer or attendee so we can color background with a different
@@ -269,12 +271,51 @@ class AgendaView::Private : public Akonadi::ETMCalendar::CalendarObserver
                           const KDateTime &insertAtDateTime, bool createSelected );
     void reevaluateIncidence( const KCalCore::Incidence::Ptr &incidence );
 
+
+    /**
+     * Returns false if the incidence is for sure outside of the visible timespan.
+     * Returns true if it might be, meaning that to be sure, timezones must be
+     * taken into account.
+     * This is a very fast way of discarding incidences that are outside of the
+     * timespan and only performing expensive timezone operations on the ones
+     * that might be viisble
+     */
+    bool mightBeVisible(const KCalCore::Incidence::Ptr &incidence) const;
+
   protected:
     /* reimplemented from KCalCore::Calendar::CalendarObserver */
     void calendarIncidenceAdded( const KCalCore::Incidence::Ptr &incidence );
     void calendarIncidenceChanged( const KCalCore::Incidence::Ptr &incidence );
     void calendarIncidenceDeleted( const KCalCore::Incidence::Ptr &incidence );
 };
+
+bool AgendaView::Private::mightBeVisible(const KCalCore::Incidence::Ptr &incidence) const
+{
+  KCalCore::Todo::Ptr todo = incidence.dynamicCast<KCalCore::Todo>();
+  const KDateTime::Spec timeSpec = q->preferences()->timeSpec();
+  KDateTime firstVisibleDateTime( mSelectedDates.first(), timeSpec );
+  KDateTime lastVisibleDateTime( mSelectedDates.last(), timeSpec );
+
+  // KDateTime::toTimeSpec() is expensive, so lets first compare only the date, to see if the incidence is visible
+  // If it's more than 48h of diff, then for sure it won't be visible, independenty of timezone. The biggest difference
+  // between two timezones is around 24 hours.
+  if ( !incidence->recurs() ) {
+    // If DTEND/DTDUE is before the 1st visible column
+    if ( incidence->dateTime( KCalCore::Incidence::RoleEnd ).date().daysTo( firstVisibleDateTime.date() ) > 2 )
+      return false;
+
+    // if DTSTART is after the last visible column
+    if ( !todo && lastVisibleDateTime.date().daysTo( incidence->dtStart().date() ) > 2 )
+      return false;
+
+    // if DTDUE is after the last visible column
+    if ( todo && lastVisibleDateTime.date().daysTo( todo->dtDue().date() ) > 2 )
+      return false;
+  }
+
+  return true;
+}
+
 
 void AgendaView::Private::changeColumns( int numColumns )
 {
@@ -335,9 +376,10 @@ void AgendaView::Private::calendarIncidenceAdded( const KCalCore::Incidence::Ptr
 
   if ( item.isValid() ) {
     // No need to call setChanges(), that triggers a fillAgenda()
-    q->displayIncidence( item, false );
-    mAgenda->checkScrollBoundaries();
-    q->updateEventIndicators();
+    if (q->displayIncidence( item, false )) {
+      mAgenda->checkScrollBoundaries();
+      q->scheduleUpdateEventIndicators();
+    }
   } else {
     kError() << "AgendaView::Private::calendarIncidenceAdded() Invalid item.";
   }
@@ -374,10 +416,12 @@ void AgendaView::Private::calendarIncidenceDeleted( const KCalCore::Incidence::P
       return;
   }
   if ( !incidence->uid().isEmpty() ) {
-    // No need to call setChanges(), that triggers a fillAgenda()
-    q->removeIncidence( incidence );
-    mAgenda->checkScrollBoundaries();
-    q->updateEventIndicators();
+    if ( mightBeVisible( incidence ) ) {
+      // No need to call setChanges(), that triggers a fillAgenda()
+      q->removeIncidence( incidence );
+      mAgenda->checkScrollBoundaries();
+      q->scheduleUpdateEventIndicators();
+    }
   } else {
     kError() << "AgendaView::Private::calendarIncidenceDeleted() Invalid item.";
   }
@@ -1604,22 +1648,30 @@ void AgendaView::fillAgenda()
   }
 }
 
-void AgendaView::displayIncidence( const Akonadi::Item &aitem, bool createSelected )
+bool AgendaView::displayIncidence( const Akonadi::Item &aitem, bool createSelected )
 {
+  KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( aitem );
+  if ( incidence->hasRecurrenceId() ) {
+    return false;
+  }
+
+  KCalCore::Todo::Ptr todo = CalendarSupport::todo( aitem );
+  if ( todo && ( !preferences()->showTodosAgendaView() || !todo->hasDueDate() ) ) {
+    return false;
+  }
+
+  KCalCore::Event::Ptr event = CalendarSupport::event( aitem );
   const QDate today = QDate::currentDate();
   KCalCore::DateTimeList::iterator t;
-
-  KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( aitem );
-  KCalCore::Todo::Ptr todo = CalendarSupport::todo( aitem );
-  KCalCore::Event::Ptr event = CalendarSupport::event( aitem );
-  if ( incidence->hasRecurrenceId() ) {
-    return;
-  }
 
   const KDateTime::Spec timeSpec = preferences()->timeSpec();
 
   KDateTime firstVisibleDateTime( d->mSelectedDates.first(), timeSpec );
   KDateTime lastVisibleDateTime( d->mSelectedDates.last(), timeSpec );
+
+  // Optimization, very cheap operation that discards incidences that aren't in the timespan
+  if ( !d->mightBeVisible( incidence ) )
+    return false;
 
   lastVisibleDateTime.setTime( QTime( 23, 59, 59, 59 ) );
   firstVisibleDateTime.setTime( QTime( 0, 0 ) );
@@ -1628,9 +1680,6 @@ void AgendaView::displayIncidence( const Akonadi::Item &aitem, bool createSelect
   const KDateTime incDtStart = incidence->dtStart().toTimeSpec( timeSpec );
   const KDateTime incDtEnd = incidence->dateTime( KCalCore::Incidence::RoleEnd ).toTimeSpec( timeSpec );
 
-  if ( todo && ( !preferences()->showTodosAgendaView() || !todo->hasDueDate() ) ) {
-    return;
-  }
   bool alreadyAddedToday = false;
 
   if ( incidence->recurs() ) {
@@ -1732,6 +1781,8 @@ void AgendaView::displayIncidence( const Akonadi::Item &aitem, bool createSelect
       busyEvents.append( event );
     }
   }
+
+  return !dateTimeList.isEmpty();
 }
 
 void AgendaView::updateEventIndicatorTop( int newY )
@@ -1988,6 +2039,7 @@ void AgendaView::removeIncidence( const KCalCore::Incidence::Ptr &inc )
 
 void AgendaView::updateEventIndicators()
 {
+  d->mUpdateEventIndicatorsScheduled = false;
   d->mMinY = d->mAgenda->minContentsY();
   d->mMaxY = d->mAgenda->maxContentsY();
 
@@ -2092,6 +2144,15 @@ void AgendaView::setChanges( EventView::Changes changes )
 {
   d->setChanges( changes );
 }
+
+void AgendaView::scheduleUpdateEventIndicators()
+{
+  if ( !d->mUpdateEventIndicatorsScheduled ) {
+    d->mUpdateEventIndicatorsScheduled = true;
+    QTimer::singleShot( 0, this, SLOT(updateEventIndicators()) );
+  }
+}
+
 
 #include "agendaview.moc"
 

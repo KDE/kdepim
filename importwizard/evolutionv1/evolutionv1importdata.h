@@ -23,14 +23,14 @@ class ImportWizard;
 class Evolutionv1ImportData : public AbstractImporter
 {
 public:
-  explicit Evolutionv1ImportData(ImportWizard *parent);
-  ~Evolutionv1ImportData();
+    explicit Evolutionv1ImportData(ImportWizard *parent);
+    ~Evolutionv1ImportData();
     
-  TypeSupportedOptions supportedOption();
-  bool foundMailer() const;
-  
-  bool importMails();
-  QString name() const;
+    TypeSupportedOptions supportedOption();
+    bool foundMailer() const;
+
+    bool importMails();
+    QString name() const;
 };
 
 #endif /* Evolutionv1ImportData_H */

@@ -36,7 +36,7 @@ public:
     explicit  ArchiveMailKernel( QObject *parent = 0 );
 
     KPIMIdentities::IdentityManager *identityManager();
-    MessageSender *msgSender();
+    MessageComposer::MessageSender *msgSender();
 
     Akonadi::EntityMimeTypeFilterModel *collectionModel() const;
     KSharedConfig::Ptr config();

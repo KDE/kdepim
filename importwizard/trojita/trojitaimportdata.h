@@ -23,17 +23,17 @@ class ImportWizard;
 class TrojitaImportData : public AbstractImporter
 {
 public:
-  explicit TrojitaImportData(ImportWizard *parent);
-  ~TrojitaImportData();
+    explicit TrojitaImportData(ImportWizard *parent);
+    ~TrojitaImportData();
     
-  TypeSupportedOptions supportedOption();
-  bool foundMailer() const;
-  
-  bool importMails();
-  bool importSettings();
-  bool importAddressBook();
+    TypeSupportedOptions supportedOption();
+    bool foundMailer() const;
 
-  QString name() const;
+    bool importMails();
+    bool importSettings();
+    bool importAddressBook();
+
+    QString name() const;
 
 };
 

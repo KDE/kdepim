@@ -20,7 +20,7 @@
     02110-1301, USA.
 */
 
-import Qt 4.7 as QML
+import QtQuick 1.1 as QML
 import org.kde 4.5
 import org.kde.akonadi 4.5 as Akonadi
 import org.kde.messageviewer 4.5 as MessageViewer
@@ -158,15 +158,6 @@ KPIM.MainView {
     anchors.bottom: parent.bottom
     anchors.left: parent.left
     anchors.right : parent.right
-
-    QML.Image {
-      id: backgroundImage
-      x: 0
-      y: 0
-// FIXME: too big, costs about 1.5Mb RAM
-//      source: "kmail-mobile-background.png"
-      visible: collectionView.visible
-    }
 
     Akonadi.AkonadiBreadcrumbNavigationView {
       id : collectionView

@@ -17,7 +17,7 @@
 
 #include "backupmailwidget.h"
 
-#include "libkdepim/customlogwidget.h"
+#include "libkdepim/widgets/customlogwidget.h"
 
 #include <QHBoxLayout>
 #include <QListWidget>

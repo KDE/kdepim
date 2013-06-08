@@ -33,8 +33,8 @@
 #include <kjob.h>
 
 #include <messagecomposer/composer.h>
-#include <messagecomposer/signjob.h>
-#include <messagecomposer/transparentjob.h>
+#include <messagecomposer/job/signjob.h>
+#include <messagecomposer/job/transparentjob.h>
 
 #include <messagecore/tests/util.h>
 

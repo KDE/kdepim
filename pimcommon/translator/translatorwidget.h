@@ -71,7 +71,7 @@ private Q_SLOTS:
     void slotInvertLanguage();
     void slotClear();
     void slotTranslateDone();
-    void slotTranslateFailed();
+    void slotTranslateFailed(bool result);
     void slotDebug();
 
 protected:

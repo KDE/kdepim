@@ -950,9 +950,9 @@ void MainView::forwardFetchResult( KJob* job )
     if ( !status.isRead() )
       MailCommon::FilterAction::sendMDN( item, KMime::MDN::Dispatched );
 
-    const MessageSender::SendMethod method = (dlg.sendMode() == MailCommon::RedirectDialog::SendNow)
-                                               ? MessageSender::SendImmediate
-                                               : MessageSender::SendLater;
+    const MessageComposer::MessageSender::SendMethod method = (dlg.sendMode() == MailCommon::RedirectDialog::SendNow)
+                                               ? MessageComposer::MessageSender::SendImmediate
+                                               : MessageComposer::MessageSender::SendLater;
 
     MobileKernel::self()->msgSender()->send( redirectMessage, method );
 

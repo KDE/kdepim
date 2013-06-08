@@ -49,6 +49,8 @@ public:
 
     void setPrinting(bool print);
 
+    void updatePreview();
+
 Q_SIGNALS:
     void changed(bool);
 

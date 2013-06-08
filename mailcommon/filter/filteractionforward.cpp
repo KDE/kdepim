@@ -69,7 +69,7 @@ FilterAction::ReturnCode FilterActionForward::process( ItemContext &context ) co
 
   KMime::Message::Ptr fwdMsg = factory.createForward();
   fwdMsg->to()->fromUnicodeString( fwdMsg->to()->asUnicodeString() + QLatin1Char( ',' ) + mParameter, "utf-8" );
-  if ( !KernelIf->msgSender()->send( fwdMsg, MessageSender::SendDefault ) ) {
+  if ( !KernelIf->msgSender()->send( fwdMsg, MessageComposer::MessageSender::SendDefault ) ) {
     kWarning() << "FilterAction: could not forward message (sending failed)";
     return ErrorButGoOn; // error: couldn't send
   } else

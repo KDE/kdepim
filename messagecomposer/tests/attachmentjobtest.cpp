@@ -29,7 +29,7 @@ using namespace KMime;
 
 #include <messagecomposer/composer.h>
 #include <messagecomposer/globalpart.h>
-#include <messagecomposer/attachmentjob.h>
+#include <messagecomposer/job/attachmentjob.h>
 using namespace MessageComposer;
 
 #include <messagecore/attachment/attachmentfromurljob.h>

@@ -34,8 +34,9 @@
 #include <KFileDialog>
 #include <KMessageBox>
 #include <KStandardDirs>
-
 #include <KLocale>
+
+#include <QPointer>
 
 BackupMailWindow::BackupMailWindow(QWidget *parent)
     : KXmlGuiWindow(parent),mBackupData(0),mRestoreData(0)
@@ -89,7 +90,7 @@ void BackupMailWindow::slotBackupData()
     const QString filename = KFileDialog::getSaveFileName(KUrl("kfiledialog:///backupMail"),QLatin1String("*.zip"),this,i18n("Create backup"),KFileDialog::ConfirmOverwrite);
     if (filename.isEmpty())
         return;
-    SelectionTypeDialog *dialog = new SelectionTypeDialog(this);
+    QPointer<SelectionTypeDialog> dialog = new SelectionTypeDialog(this);
     if (dialog->exec()) {
         int numberOfStep = 0;
         BackupMailUtil::BackupTypes typeSelected = dialog->backupTypesSelected(numberOfStep);
@@ -136,7 +137,7 @@ void BackupMailWindow::slotRestoreData()
     if (filename.isEmpty())
         return;
 
-    SelectionTypeDialog *dialog = new SelectionTypeDialog(this);
+    QPointer<SelectionTypeDialog> dialog = new SelectionTypeDialog(this);
     if (dialog->exec()) {
         int numberOfStep = 0;
         BackupMailUtil::BackupTypes typeSelected = dialog->backupTypesSelected(numberOfStep);

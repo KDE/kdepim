@@ -25,39 +25,39 @@
 class ImportWizard;
 
 namespace KABC {
-  class Addressee;
-  class ContactGroup;
+class Addressee;
+class ContactGroup;
 }
 
 class KJob;
 
 class AbstractAddressBook: public AbstractBase
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit AbstractAddressBook(ImportWizard *parent);
-  ~AbstractAddressBook();
+    explicit AbstractAddressBook(ImportWizard *parent);
+    ~AbstractAddressBook();
 protected:
-  void createGroup(const KABC::ContactGroup& group);
-  void createContact( const KABC::Addressee& address );
-  
+    void createGroup(const KABC::ContactGroup& group);
+    void createContact( const KABC::Addressee& address );
 
-  void addImportInfo( const QString& log );
-  void addImportError( const QString& log );
 
-  void addAddressBookImportInfo( const QString& log );
-  void addAddressBookImportError( const QString& log );
-  void cleanUp();
+    void addImportInfo( const QString& log );
+    void addImportError( const QString& log );
+
+    void addAddressBookImportInfo( const QString& log );
+    void addAddressBookImportError( const QString& log );
+    void cleanUp();
 
 private Q_SLOTS:
-  void slotStoreDone(KJob*job);
+    void slotStoreDone(KJob*job);
 
 protected:
-  ImportWizard *mImportWizard;
+    ImportWizard *mImportWizard;
 
 private:
-  bool selectAddressBook();
-  Akonadi::Collection mCollection;
+    bool selectAddressBook();
+    Akonadi::Collection mCollection;
 };
 
 #endif // ABSTRACTADDRESSBOOK_H

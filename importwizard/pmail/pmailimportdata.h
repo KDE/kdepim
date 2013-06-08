@@ -23,16 +23,16 @@ class ImportWizard;
 class PMailImportData : public AbstractImporter
 {
 public:
-  explicit PMailImportData(ImportWizard *parent);
-  ~PMailImportData();
+    explicit PMailImportData(ImportWizard *parent);
+    ~PMailImportData();
     
-  TypeSupportedOptions supportedOption();
-  bool foundMailer() const;
-  
-  bool importMails();
-  bool importSettings();
+    TypeSupportedOptions supportedOption();
+    bool foundMailer() const;
 
-  QString name() const;
+    bool importMails();
+    bool importSettings();
+
+    QString name() const;
 
 };
 

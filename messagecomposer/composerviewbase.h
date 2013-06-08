@@ -95,7 +95,7 @@ public:
   /**
    * Send the message with the specified method, saving it in the specified folder.
    */
-  void send( MessageSender::SendMethod method, MessageSender::SaveIn saveIn );
+  void send( MessageComposer::MessageSender::SendMethod method, MessageComposer::MessageSender::SaveIn saveIn );
 
   /**
    * Returns true if there is at least one composer job running.
@@ -269,7 +269,7 @@ private:
   void fillGlobalPart( MessageComposer::GlobalPart *globalPart );
   void fillInfoPart( MessageComposer::InfoPart *part, RecipientExpansion expansion );
   void queueMessage( KMime::Message::Ptr message, MessageComposer::Composer* composer );
-  void saveMessage( KMime::Message::Ptr message, MessageSender::SaveIn saveIn );
+  void saveMessage( KMime::Message::Ptr message, MessageComposer::MessageSender::SaveIn saveIn );
   void fillQueueJobHeaders( MailTransport::MessageQueueJob* qjob, KMime::Message::Ptr message, const MessageComposer::InfoPart* infoPart );
   QStringList cleanEmailList( const QStringList& emails );
   void saveRecentAddresses( KMime::Message::Ptr ptr );
@@ -330,8 +330,8 @@ private:
   bool m_autoSaveErrorShown; // Stops an error message being shown every time autosave is executed.
   int m_autoSaveInterval;
 
-  MessageSender::SendMethod mSendMethod;
-  MessageSender::SaveIn mSaveIn;
+  MessageComposer::MessageSender::SendMethod mSendMethod;
+  MessageComposer::MessageSender::SaveIn mSaveIn;
 };
 
 } // namespace

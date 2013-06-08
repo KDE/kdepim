@@ -20,6 +20,8 @@
    <text>&amp;Display</text>
    <Action name="normal_mode" />
    <Action name="printing_mode" />
+   <Separator />
+   <Action name="update_view" />
   </Menu>
  </MenuBar>
 </kpartgui>

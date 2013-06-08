@@ -70,6 +70,11 @@ ThemeEditorPage::~ThemeEditorPage()
     delete mThemeSession;
 }
 
+void ThemeEditorPage::updatePreview()
+{
+    mEditorPage->preview()->updateViewer();
+}
+
 void ThemeEditorPage::setPrinting(bool print)
 {
     mEditorPage->preview()->setPrinting(print);

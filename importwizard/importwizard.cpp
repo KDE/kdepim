@@ -197,7 +197,7 @@ void ImportWizard::slotImportCalendarClicked()
 
 void ImportWizard::slotProgramSelected(const QString& program)
 {
-    if(mlistImport.contains(program)) {
+    if (mlistImport.contains(program)) {
         mSelectedPim = mlistImport.value( program );
         setValid( currentPage(), true );
     }
@@ -233,27 +233,27 @@ void ImportWizard::setAppropriatePage(AbstractImporter::TypeSupportedOptions opt
 
 void ImportWizard::next()
 {
-    if( currentPage() == mPage1 ) {
+    if ( currentPage() == mPage1 ) {
         KAssistantDialog::next();
         mSelectProgramPage->disableSelectProgram();
         mSelectComponentPage->setEnabledComponent(mSelectedPim->supportedOption());
-    } else if( currentPage() == mPage2 ) {
+    } else if ( currentPage() == mPage2 ) {
         setAppropriatePage(mSelectComponentPage->selectedComponents());
         KAssistantDialog::next();
         setValid(mPage3,false);
-    } else if( currentPage() == mPage3 ) {
+    } else if ( currentPage() == mPage3 ) {
         KAssistantDialog::next();
         setValid(mPage4,false);
-    } else if( currentPage() == mPage4 ) {
+    } else if ( currentPage() == mPage4 ) {
         KAssistantDialog::next();
         setValid(mPage5,false);
-    } else if( currentPage() == mPage5 ) {
+    } else if ( currentPage() == mPage5 ) {
         KAssistantDialog::next();
         setValid(mPage6,false);
-    } else if( currentPage() == mPage6 ) {
+    } else if ( currentPage() == mPage6 ) {
         KAssistantDialog::next();
         setValid(mPage7,false);
-    } else if( currentPage() == mPage7 ) {
+    } else if ( currentPage() == mPage7 ) {
         KAssistantDialog::next();
         setValid(mPage8,true);
     } else {
@@ -272,9 +272,9 @@ void ImportWizard::enableAllImportButton()
 
 void ImportWizard::back()
 {
-    if( currentPage() == mPage1 ) {
+    if ( currentPage() == mPage1 ) {
         return;
-    } else if( currentPage() == mPage4 ||
+    } else if ( currentPage() == mPage4 ||
                currentPage() == mPage5 ||
                currentPage() == mPage6 ||
                currentPage() == mPage7 ||

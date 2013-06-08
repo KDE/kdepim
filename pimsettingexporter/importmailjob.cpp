@@ -434,7 +434,7 @@ void ImportMailJob::restoreMails()
 
             KUrl newUrl = url;
             if (!url.path().contains(QDir::homePath())) {
-                qDebug()<<" url "<<url.path();
+                //qDebug()<<" url "<<url.path();
                 newUrl.setPath(QDir::homePath() + QLatin1Char('/') + storeMails + url.fileName());
             }
             if (QFile(newUrl.path()).exists()) {
@@ -668,10 +668,6 @@ void ImportMailJob::restoreConfig()
             importTemplatesConfig(templatesconfiguration, templatesconfigurationrc, templatesconfigurationrcStr, BackupMailUtil::configsPath());
         }
     }
-
-
-
-
 
     const QString kmailStr("kmail2rc");
     const KArchiveEntry* kmail2rcentry  = mArchiveDirectory->entry(BackupMailUtil::configsPath() + kmailStr);

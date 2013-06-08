@@ -138,13 +138,13 @@ void GoogleTranslator::slotLoadFinished(bool result)
     if (result) {
         QWebElement e = mWebPage->mainFrame()->findFirstElement("span#result_box");
         if (e.isNull()) {
-            Q_EMIT translateFailed();
+            Q_EMIT translateFailed(result);
         } else {
             mResult = e.toPlainText();
             Q_EMIT translateDone();
         }
     } else {
-        Q_EMIT translateFailed();
+        Q_EMIT translateFailed(result);
     }
 }
 

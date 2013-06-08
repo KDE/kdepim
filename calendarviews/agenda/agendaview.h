@@ -218,11 +218,6 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
     void setHolidayMasks();
 
     void removeIncidence( const KCalCore::Incidence::Ptr &inc );
-    /**
-      Updates the event indicators after a certain incidence was modified or
-      removed.
-    */
-    void updateEventIndicators();
 
     virtual void resizeEvent( QResizeEvent *resizeEvent );
 
@@ -234,7 +229,12 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
     void newTimeSpanSelected( const QPoint &start, const QPoint &end );
     /** Updates data for selected timespan for all day event*/
     void newTimeSpanSelectedAllDay( const QPoint &start, const QPoint &end );
-
+    /**
+      Updates the event indicators after a certain incidence was modified or
+      removed.
+    */
+    void updateEventIndicators();
+    void scheduleUpdateEventIndicators();
     void updateDayLabelSizes();
 
     void alignAgendas();
@@ -243,7 +243,7 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
     void init( const QDate &start, const QDate &end );
     bool filterByCollectionSelection( const Akonadi::Item &incidence );
     void setupTimeLabel( TimeLabels *timeLabel );
-    void displayIncidence( const Akonadi::Item &incidence, bool createSelected );
+    bool displayIncidence( const Akonadi::Item &incidence, bool createSelected );
 
 #ifndef EVENTVIEWS_NODECOS
     typedef QList<EventViews::CalendarDecoration::Decoration *> DecorationList;

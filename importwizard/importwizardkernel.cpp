@@ -29,7 +29,7 @@
 ImportWizardKernel::ImportWizardKernel( QObject *parent )
     : QObject( parent )
 {
-    mMessageSender = new AkonadiSender( this );
+    mMessageSender = new MessageComposer::AkonadiSender( this );
     mIdentityManager = new KPIMIdentities::IdentityManager( false, this );
     mFolderCollectionMonitor = new MailCommon::FolderCollectionMonitor( this );
 
@@ -52,7 +52,7 @@ KPIMIdentities::IdentityManager *ImportWizardKernel::identityManager()
     return mIdentityManager;
 }
 
-MessageSender *ImportWizardKernel::msgSender()
+MessageComposer::MessageSender *ImportWizardKernel::msgSender()
 {
     return mMessageSender;
 }
