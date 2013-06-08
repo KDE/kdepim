@@ -54,8 +54,6 @@ class MOBILEUI_EXPORT KDeclarativeFullScreenView : public QDeclarativeView
 #endif
 
   public Q_SLOTS:
-    /** Triggers de-fullscreen/task switcher */
-    void triggerTaskSwitcher();
 
     /** Get an action based on name. If the @param argument is not empty, it sets that
      * as the data member of the action, see QAction::setData().
