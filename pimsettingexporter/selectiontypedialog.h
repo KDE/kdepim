@@ -30,6 +30,7 @@ public:
     explicit SelectionTypeDialog(QWidget * parent);
     ~SelectionTypeDialog();
     BackupMailUtil::BackupTypes backupTypesSelected(int &numberOfStep) const;
+
 private Q_SLOTS:
     void slotItemSelected(bool selected);
 
