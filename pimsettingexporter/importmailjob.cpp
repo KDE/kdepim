@@ -669,10 +669,6 @@ void ImportMailJob::restoreConfig()
         }
     }
 
-
-
-
-
     const QString kmailStr("kmail2rc");
     const KArchiveEntry* kmail2rcentry  = mArchiveDirectory->entry(BackupMailUtil::configsPath() + kmailStr);
     if (kmail2rcentry && kmail2rcentry->isFile()) {
