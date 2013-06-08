@@ -30,11 +30,13 @@ class BackupMailWindow: public KXmlGuiWindow
 public:
     explicit BackupMailWindow(QWidget *parent=0);
     ~BackupMailWindow();
+
 private Q_SLOTS:
     void slotBackupData();
     void slotRestoreData();
     void slotAddInfo(const QString& info);
     void slotAddError(const QString& info);
+
 private:
     bool canZip() const;
     void setupActions(bool canZipFile);
