@@ -243,7 +243,7 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
     void init( const QDate &start, const QDate &end );
     bool filterByCollectionSelection( const Akonadi::Item &incidence );
     void setupTimeLabel( TimeLabels *timeLabel );
-    void displayIncidence( const Akonadi::Item &incidence, bool createSelected );
+    bool displayIncidence( const Akonadi::Item &incidence, bool createSelected );
 
 #ifndef EVENTVIEWS_NODECOS
     typedef QList<EventViews::CalendarDecoration::Decoration *> DecorationList;

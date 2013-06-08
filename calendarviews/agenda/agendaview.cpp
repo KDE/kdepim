@@ -335,9 +335,10 @@ void AgendaView::Private::calendarIncidenceAdded( const KCalCore::Incidence::Ptr
 
   if ( item.isValid() ) {
     // No need to call setChanges(), that triggers a fillAgenda()
-    q->displayIncidence( item, false );
-    mAgenda->checkScrollBoundaries();
-    q->updateEventIndicators();
+    if (q->displayIncidence( item, false )) {
+      mAgenda->checkScrollBoundaries();
+      q->updateEventIndicators();
+    }
   } else {
     kError() << "AgendaView::Private::calendarIncidenceAdded() Invalid item.";
   }
@@ -1604,16 +1605,16 @@ void AgendaView::fillAgenda()
   }
 }
 
-void AgendaView::displayIncidence( const Akonadi::Item &aitem, bool createSelected )
+bool AgendaView::displayIncidence( const Akonadi::Item &aitem, bool createSelected )
 {
   KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( aitem );
   if ( incidence->hasRecurrenceId() ) {
-    return;
+    return false;
   }
 
   KCalCore::Todo::Ptr todo = CalendarSupport::todo( aitem );
   if ( todo && ( !preferences()->showTodosAgendaView() || !todo->hasDueDate() ) ) {
-    return;
+    return false;
   }
 
   KCalCore::Event::Ptr event = CalendarSupport::event( aitem );
@@ -1634,15 +1635,15 @@ void AgendaView::displayIncidence( const Akonadi::Item &aitem, bool createSelect
     if ( !incidence->recurs() ) {
       // If DTEND/DTDUE is before the 1st visible column
       if ( incidence->dateTime( KCalCore::Incidence::RoleEnd ).date().daysTo( firstVisibleDateTime.date() ) > 2 )
-        return;
+        return false;
 
       // if DTSTART is after the last visible column
       if ( !todo && lastVisibleDateTime.date().daysTo( incidence->dtStart().date() ) > 2 )
-        return;
+        return false;
 
       // if DTDUE is after the last visible column
       if ( todo && lastVisibleDateTime.date().daysTo( todo->dtDue().date() ) > 2 )
-        return;
+        return false;
     }
   }
 
@@ -1754,6 +1755,8 @@ void AgendaView::displayIncidence( const Akonadi::Item &aitem, bool createSelect
       busyEvents.append( event );
     }
   }
+
+  return !dateTimeList.isEmpty();
 }
 
 void AgendaView::updateEventIndicatorTop( int newY )
