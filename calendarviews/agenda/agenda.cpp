@@ -1974,7 +1974,7 @@ void Agenda::resizeAllContents()
   }
   checkScrollBoundaries();
   marcus_bains();
-  repaint();
+  update();
 }
 
 void Agenda::scrollUp()
