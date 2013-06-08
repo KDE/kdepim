@@ -23,7 +23,7 @@
 #include "mailcommon_export.h"
 #include "searchpattern.h"
 
-#include <libkdepim/kwidgetlister.h>
+#include <libkdepim/widgets/kwidgetlister.h>
 
 #include <QByteArray>
 #include <QGroupBox>

@@ -19,7 +19,7 @@
 #ifndef SIEVEACTIONWIDGETLISTER_H
 #define SIEVEACTIONWIDGETLISTER_H
 
-#include <libkdepim/kwidgetlister.h>
+#include <libkdepim/widgets/kwidgetlister.h>
 
 class KPushButton;
 
