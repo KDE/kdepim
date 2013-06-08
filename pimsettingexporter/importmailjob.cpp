@@ -434,7 +434,7 @@ void ImportMailJob::restoreMails()
 
             KUrl newUrl = url;
             if (!url.path().contains(QDir::homePath())) {
-                qDebug()<<" url "<<url.path();
+                //qDebug()<<" url "<<url.path();
                 newUrl.setPath(QDir::homePath() + QLatin1Char('/') + storeMails + url.fileName());
             }
             if (QFile(newUrl.path()).exists()) {
