@@ -269,12 +269,51 @@ class AgendaView::Private : public Akonadi::ETMCalendar::CalendarObserver
                           const KDateTime &insertAtDateTime, bool createSelected );
     void reevaluateIncidence( const KCalCore::Incidence::Ptr &incidence );
 
+
+    /**
+     * Returns false if the incidence is for sure outside of the visible timespan.
+     * Returns true if it might be, meaning that to be sure, timezones must be
+     * taken into account.
+     * This is a very fast way of discarding incidences that are outside of the
+     * timespan and only performing expensive timezone operations on the ones
+     * that might be viisble
+     */
+    bool mightBeVisible(const KCalCore::Incidence::Ptr &incidence) const;
+
   protected:
     /* reimplemented from KCalCore::Calendar::CalendarObserver */
     void calendarIncidenceAdded( const KCalCore::Incidence::Ptr &incidence );
     void calendarIncidenceChanged( const KCalCore::Incidence::Ptr &incidence );
     void calendarIncidenceDeleted( const KCalCore::Incidence::Ptr &incidence );
 };
+
+bool AgendaView::Private::mightBeVisible(const KCalCore::Incidence::Ptr &incidence) const
+{
+  KCalCore::Todo::Ptr todo = incidence.dynamicCast<KCalCore::Todo>();
+  const KDateTime::Spec timeSpec = q->preferences()->timeSpec();
+  KDateTime firstVisibleDateTime( mSelectedDates.first(), timeSpec );
+  KDateTime lastVisibleDateTime( mSelectedDates.last(), timeSpec );
+
+  // KDateTime::toTimeSpec() is expensive, so lets first compare only the date, to see if the incidence is visible
+  // If it's more than 48h of diff, then for sure it won't be visible, independenty of timezone. The biggest difference
+  // between two timezones is around 24 hours.
+  if ( !incidence->recurs() ) {
+    // If DTEND/DTDUE is before the 1st visible column
+    if ( incidence->dateTime( KCalCore::Incidence::RoleEnd ).date().daysTo( firstVisibleDateTime.date() ) > 2 )
+      return false;
+
+    // if DTSTART is after the last visible column
+    if ( !todo && lastVisibleDateTime.date().daysTo( incidence->dtStart().date() ) > 2 )
+      return false;
+
+    // if DTDUE is after the last visible column
+    if ( todo && lastVisibleDateTime.date().daysTo( todo->dtDue().date() ) > 2 )
+      return false;
+  }
+
+  return true;
+}
+
 
 void AgendaView::Private::changeColumns( int numColumns )
 {
@@ -1626,26 +1665,9 @@ bool AgendaView::displayIncidence( const Akonadi::Item &aitem, bool createSelect
   KDateTime firstVisibleDateTime( d->mSelectedDates.first(), timeSpec );
   KDateTime lastVisibleDateTime( d->mSelectedDates.last(), timeSpec );
 
-  {
-    // Optimization block:
-    // KDateTime::toTimeSpec() is expensive, so lets first compare only the date, to see if the incidence is visible
-    // If it's more than 48h of diff, then for sure it won't be visible, independenty of timezone. The biggest difference
-    // between two timezones is around 24 hours.
-
-    if ( !incidence->recurs() ) {
-      // If DTEND/DTDUE is before the 1st visible column
-      if ( incidence->dateTime( KCalCore::Incidence::RoleEnd ).date().daysTo( firstVisibleDateTime.date() ) > 2 )
-        return false;
-
-      // if DTSTART is after the last visible column
-      if ( !todo && lastVisibleDateTime.date().daysTo( incidence->dtStart().date() ) > 2 )
-        return false;
-
-      // if DTDUE is after the last visible column
-      if ( todo && lastVisibleDateTime.date().daysTo( todo->dtDue().date() ) > 2 )
-        return false;
-    }
-  }
+  // Optimization, very cheap operation that discards incidences that aren't in the timespan
+  if ( !d->mightBeVisible( incidence ) )
+    return false;
 
   lastVisibleDateTime.setTime( QTime( 23, 59, 59, 59 ) );
   firstVisibleDateTime.setTime( QTime( 0, 0 ) );
