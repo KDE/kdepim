@@ -62,6 +62,7 @@ include_directories(${CMAKE_SOURCE_DIR}/mailimporter
 		    ${CMAKE_SOURCE_DIR}/pimcommon
 		    ${CMAKE_SOURCE_DIR}/mailcommon/filter/
                     ${CMAKE_SOURCE_DIR}/messageviewer/
+		    ${CMAKE_SOURCE_DIR}/libkdepim/
                     ${NEPOMUK_CORE_INCLUDE_DIR}
                     ${SOPRANO_INCLUDE_DIR})
 

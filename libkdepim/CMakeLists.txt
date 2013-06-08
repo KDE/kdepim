@@ -51,7 +51,7 @@ set(kdepim_LIB_SRCS
    uistatesaver.cpp
    widgets/nepomukwarning.cpp
    statisticsproxymodel.cpp
-   customlogwidget.cpp
+   widgets/customlogwidget.cpp
    spellchecklineedit.cpp
 )
 
