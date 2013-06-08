@@ -50,6 +50,8 @@
 #include <KStandardDirs>
 #include <KSystemTimeZones>
 
+#include <QCloseEvent>
+
 using namespace IncidenceEditorNG;
 
 namespace IncidenceEditorNG {
@@ -628,7 +630,7 @@ IncidenceDialog::IncidenceDialog( Akonadi::IncidenceChanger *changer,
                     i18nc( "@action:button", "Save changes and close dialog" ) );
   setButtonToolTip( KDialog::Cancel,
                     i18nc( "@action:button", "Discard changes and close dialog" ) );
-  setDefaultButton( Ok );
+  setDefaultButton( KDialog::Ok );
   enableButton( Apply, false );
 
   setButtonText( Default, i18nc( "@action:button", "&Templates..." ) );
@@ -748,6 +750,21 @@ void IncidenceDialog::slotButtonClicked( int button )
     Q_ASSERT( false ); // Shouldn't happen
     break;
   }
+}
+
+void IncidenceDialog::closeEvent( QCloseEvent *event )
+{
+  Q_D( IncidenceDialog );
+  if ( d->isDirty() &&
+    KMessageBox::questionYesNo(
+      this,
+      i18nc( "@info", "Do you really want to cancel?" ),
+      i18nc( "@title:window", "KOrganizer Confirmation" ) ) == KMessageBox::Yes ) {
+    KDialog::reject(); // Discard current changes
+  } else if ( !d->isDirty() ) {
+    KDialog::reject(); // No pending changes, just close the dialog.
+  }
+  event->ignore();
 }
 
 void IncidenceDialog::setInitiallyDirty( bool initiallyDirty )
