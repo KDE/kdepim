@@ -414,10 +414,12 @@ void AgendaView::Private::calendarIncidenceDeleted( const KCalCore::Incidence::P
       return;
   }
   if ( !incidence->uid().isEmpty() ) {
-    // No need to call setChanges(), that triggers a fillAgenda()
-    q->removeIncidence( incidence );
-    mAgenda->checkScrollBoundaries();
-    q->updateEventIndicators();
+    if ( mightBeVisible( incidence ) ) {
+      // No need to call setChanges(), that triggers a fillAgenda()
+      q->removeIncidence( incidence );
+      mAgenda->checkScrollBoundaries();
+      q->updateEventIndicators();
+    }
   } else {
     kError() << "AgendaView::Private::calendarIncidenceDeleted() Invalid item.";
   }
