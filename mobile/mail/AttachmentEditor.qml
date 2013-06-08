@@ -19,7 +19,7 @@
     02110-1301, USA.
 */
 
-import Qt 4.7
+import QtQuick 1.1
 import org.kde.pim.mobileui 4.5 as KPIM
 
 KPIM.ReorderListContainer {
