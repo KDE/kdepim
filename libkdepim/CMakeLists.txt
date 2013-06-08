@@ -49,7 +49,7 @@ set(kdepim_LIB_SRCS
    multiplyingline/multiplyinglineeditor.cpp
    multiplyingline/multiplyinglineview_p.cpp
    uistatesaver.cpp
-   nepomukwarning.cpp
+   widgets/nepomukwarning.cpp
    statisticsproxymodel.cpp
    customlogwidget.cpp
    spellchecklineedit.cpp
