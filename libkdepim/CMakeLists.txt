@@ -44,7 +44,7 @@ set(kdepim_LIB_SRCS
    progresswidget/ssllabel.cpp
    broadcaststatus.cpp
    widgets/kwidgetlister.cpp
-   pimmessagebox.cpp
+   widgets/pimmessagebox.cpp
    multiplyingline/multiplyingline.cpp
    multiplyingline/multiplyinglineeditor.cpp
    multiplyingline/multiplyinglineview_p.cpp
