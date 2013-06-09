@@ -12,7 +12,7 @@ Group=Input (KDE-PIM)
 [KPIM::KCheckComboBox]
 ToolTip=Combobox with checkable items (KDE-PIM)
 WhatsThis=A combobox that allows the user to check the items in the drop down menu
-IncludeFile=libkdepim/kcheckcombobox.h
+IncludeFile=libkdepim/widgets/kcheckcombobox.h
 ConstructorArgs=(parent)
 Group=Input (KDE-PIM)
 

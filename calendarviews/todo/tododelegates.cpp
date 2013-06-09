@@ -31,7 +31,7 @@
 #include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/categoryhierarchyreader.h>
 
-#include <libkdepim/kcheckcombobox.h>
+#include <libkdepim/widgets/kcheckcombobox.h>
 
 #include <KCalCore/CalFilter>
 

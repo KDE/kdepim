@@ -23,6 +23,7 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/calendarsupport
   ${CMAKE_BINARY_DIR}/calendarsupport
   ${CMAKE_SOURCE_DIR}/calendarviews
+  ${CMAKE_SOURCE_DIR}/libkdepim/
   ${ZLIB_INCLUDE_DIRS}
 )
 

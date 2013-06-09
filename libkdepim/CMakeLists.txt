@@ -29,7 +29,7 @@ set(kdepim_LIB_SRCS
    kprefsdialog.cpp
    maillistdrag.cpp
    kdatepickerpopup.cpp
-   kcheckcombobox.cpp
+   widgets/kcheckcombobox.cpp
    kweekdaycheckcombo.cpp
    ldap/ldapclient.cpp
    ldap/ldapsearchdialog.cpp

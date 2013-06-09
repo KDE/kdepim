@@ -25,7 +25,7 @@
 #include <klocale.h>
 #include <kcmdlineargs.h>
 
-#include "../kcheckcombobox.h"
+#include "../widgets/kcheckcombobox.h"
 
 int main(int argc, char* argv[])
 {
