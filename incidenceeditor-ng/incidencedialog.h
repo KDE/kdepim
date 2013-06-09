@@ -18,8 +18,8 @@
   02110-1301, USA.
 */
 
-#ifndef INCIDENCEEDITOR_EVENTORTODODIALOG_H
-#define INCIDENCEEDITOR_EVENTORTODODIALOG_H
+#ifndef INCIDENCEEDITOR_INCIDENCEDIALOG_H
+#define INCIDENCEEDITOR_INCIDENCEDIALOG_H
 
 #include "incidenceeditors-ng_export.h"
 #include "editoritemmanager.h"
@@ -83,7 +83,10 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDialog : public KDialog
      * This signal is emitted when an incidence is created.
      * @param collection The collection where it was created.
      */
-    void incidenceCreated(const Akonadi::Item &);
+    void incidenceCreated( const Akonadi::Item & );
+
+  protected:
+    virtual void closeEvent( QCloseEvent *event );
 
   protected Q_SLOTS:
     virtual void slotButtonClicked( int button );

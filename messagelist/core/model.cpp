@@ -908,47 +908,6 @@ void Model::abortMessagePreSelection()
   d->mLastSelectedMessageInFolder = 0;
 }
 
-void Model::activateMessageAfterLoading( unsigned long uniqueIdOfMessage, int row )
-{
-  Q_ASSERT( d->mLoading ); // you did it: read the docs in the header.
-
-  // Ok. we're still loading.
-  // We can have three cases now.
-
-  // 1) The message hasn't been read from the storage yet. We don't have a MessageItem for it.
-  //    We must then use the pre-selection mechanism to activate the message when loading finishes.
-  // 2) The message has already been read from the storage.
-  //    2a) We're in "disconnected UI" state or the message item is not viewable.
-  //        The Qt side of the model/view framework doesn't know about the MessageItem yet.
-  //        That is, we can't get a valid QModelIndex for the message.
-  //        We again must use the pre-selection method.
-  //    2b) No disconnected UI and MessageItem is viewable. Qt knows about it and we can
-  //        get the QModelIndex. We can select it NOW.
-
-  MessageItem * mi = messageItemByStorageRow( row );
-
-  if( mi )
-  {
-    if( mi->isViewable() && d->mModelForItemFunctions )
-    {
-      // No disconnected UI and the MessageItem is viewable. Activate it now.
-      d->mView->setCurrentMessageItem( mi );
-
-      // Also abort any pending pre-selection.
-      abortMessagePreSelection();
-      return;
-    }
-  }
-
-  // Use the pre-selection method.
-
-  d->mPreSelectionMode = PreSelectLastSelected;
-
-  d->mUniqueIdOfLastSelectedMessageInFolder = mi ? 0 : uniqueIdOfMessage;
-  d->mLastSelectedMessageInFolder = mi;
-}
-
-
 //
 // The "view fill" algorithm implemented in the functions below is quite smart but also quite complex.
 // It's governed by the following goals:
