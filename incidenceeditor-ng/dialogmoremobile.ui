@@ -886,7 +886,7 @@
   <customwidget>
    <class>KPIM::KWeekdayCheckCombo</class>
    <extends>KPIM::KCheckComboBox</extends>
-   <header>libkdepim/kweekdaycheckcombo.h</header>
+   <header>libkdepim/widgets/kweekdaycheckcombo.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
