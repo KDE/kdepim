@@ -55,38 +55,31 @@ BackupMailUtil::BackupTypes SelectTypeWidget::backupTypesSelected(int & numberOf
 {
     numberOfStep = 0;
     BackupMailUtil::BackupTypes types = BackupMailUtil::None;
-    if (ui->resources->isChecked())
-    {
+    if (ui->resources->isChecked()) {
         types|= BackupMailUtil::Resources;
         numberOfStep++;
     }
-    if (ui->mailtransport->isChecked())
-    {
+    if (ui->mailtransport->isChecked()) {
         types|= BackupMailUtil::MailTransport;
         numberOfStep++;
     }
-    if (ui->config->isChecked())
-    {
+    if (ui->config->isChecked()) {
         types|= BackupMailUtil::Config;
         numberOfStep++;
     }
-    if (ui->identity->isChecked())
-    {
+    if (ui->identity->isChecked()) {
         types|= BackupMailUtil::Identity;
         numberOfStep++;
     }
-    if (ui->mails->isChecked())
-    {
+    if (ui->mails->isChecked()) {
         types|= BackupMailUtil::Mails;
         numberOfStep++;
     }
-    if (ui->akonadi->isChecked())
-    {
+    if (ui->akonadi->isChecked()) {
         types|= BackupMailUtil::AkonadiDb;
         numberOfStep++;
     }
-    if (ui->nepomuk->isChecked())
-    {
+    if (ui->nepomuk->isChecked()) {
         types|= BackupMailUtil::Nepomuk;
         numberOfStep++;
     }
