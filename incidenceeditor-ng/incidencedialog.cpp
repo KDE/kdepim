@@ -97,7 +97,7 @@ class IncidenceDialogPrivate : public ItemEditorUi
     void updateAttachmentCount( int newCount );
     void updateAttendeeCount( int newCount );
     void updateButtonStatus( bool isDirty );
-    void showMessage( const QString &text, KMessageWidget::MessageType type);
+    void showMessage( const QString &text, KMessageWidget::MessageType type );
 
     /// ItemEditorUi methods
     virtual bool containsPayloadIdentifiers( const QSet<QByteArray> &partIdentifiers ) const;
@@ -195,11 +195,11 @@ IncidenceDialogPrivate::~IncidenceDialogPrivate()
   delete mUi;
 }
 
-void IncidenceDialogPrivate::showMessage( const QString &text, KMessageWidget::MessageType type)
+void IncidenceDialogPrivate::showMessage( const QString &text, KMessageWidget::MessageType type )
 {
-    mUi->mMessageWidget->setText(text);
-    mUi->mMessageWidget->setMessageType(type);
-    mUi->mMessageWidget->show();
+  mUi->mMessageWidget->setText(text);
+  mUi->mMessageWidget->setMessageType(type);
+  mUi->mMessageWidget->show();
 }
 
 void IncidenceDialogPrivate::handleAlarmCountChange( int newCount )
@@ -445,7 +445,7 @@ void IncidenceDialogPrivate::handleItemSaveFail( EditorItemManager::SaveAction,
   }
 }
 
-void IncidenceDialogPrivate::handleItemSaveFinish( EditorItemManager::SaveAction saveAction)
+void IncidenceDialogPrivate::handleItemSaveFinish( EditorItemManager::SaveAction saveAction )
 {
   Q_Q( IncidenceDialog );
 
@@ -468,7 +468,7 @@ void IncidenceDialogPrivate::handleItemSaveFinish( EditorItemManager::SaveAction
   }
 
   if ( saveAction == EditorItemManager::Create ) {
-    emit q->incidenceCreated(mItemManager->item());
+    emit q->incidenceCreated( mItemManager->item() );
   }
 }
 
@@ -613,8 +613,8 @@ void IncidenceDialogPrivate::reject( RejectReason reason, const QString &errorMe
 
 IncidenceDialog::IncidenceDialog( Akonadi::IncidenceChanger *changer,
                                   QWidget *parent, Qt::WFlags flags )
-                       : KDialog( parent, flags )
-                       , d_ptr( new IncidenceDialogPrivate( changer, this ) )
+                       : KDialog( parent, flags ),
+                         d_ptr( new IncidenceDialogPrivate( changer, this ) )
 {
   Q_D( IncidenceDialog );
   setAttribute( Qt::WA_DeleteOnClose );
