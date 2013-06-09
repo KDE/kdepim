@@ -49,7 +49,6 @@ FolderCollectionMonitor::FolderCollectionMonitor( QObject *parent )
 #ifdef MERGE_KNODE_IN_KMAIL
   mMonitor->setMimeTypeMonitored( QString::fromLatin1("message/news") );
 #endif
-  mMonitor->setMimeTypeMonitored(QString::fromLatin1( "inode/directory" ));
   mMonitor->setResourceMonitored( "akonadi_search_resource", true );
   mMonitor->setResourceMonitored( "akonadi_nepomuktag_resource", true );
   mMonitor->itemFetchScope().fetchPayloadPart( Akonadi::MessagePart::Envelope );
