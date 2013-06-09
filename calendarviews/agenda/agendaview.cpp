@@ -1584,6 +1584,12 @@ void AgendaView::fillAgenda()
   if ( changes() == NothingChanged ) {
     return;
   }
+
+  if ( !calendar() ) {
+    kWarning() << "No calendar is set";
+    return;
+  }
+
   /*
   kDebug() << "changes = " << changes()
            << "; mUpdateAgenda = " << d->mUpdateAgenda
@@ -1611,9 +1617,7 @@ void AgendaView::fillAgenda()
   setChanges( NothingChanged );
 
   bool somethingReselected = false;
-  const KCalCore::Incidence::List incidences = calendar() ?
-                                               calendar()->incidences() :
-                                               KCalCore::Incidence::List();
+  const KCalCore::Incidence::List incidences = calendar()->incidences();
 
   foreach ( const KCalCore::Incidence::Ptr &incidence, incidences ) {
     Q_ASSERT( incidence );
