@@ -25,7 +25,7 @@
 #include <kmime/kmime_content.h>
 using namespace KMime;
 
-#include <messagecomposer/composer.h>
+#include <messagecomposer/composer/composer.h>
 #include <messagecomposer/globalpart.h>
 #include <messagecomposer/job/singlepartjob.h>
 #include <messagecomposer/job/multipartjob.h>

@@ -34,7 +34,7 @@
 #include <kleo/cryptobackendfactory.h>
 #include <kjob.h>
 
-#include <messagecomposer/composer.h>
+#include <messagecomposer/composer/composer.h>
 #include <messagecomposer/job/encryptjob.h>
 #include <messagecomposer/job/maintextjob.h>
 #include <messagecomposer/job/signjob.h>

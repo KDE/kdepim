@@ -1,6 +1,7 @@
 include_directories(
   ${CMAKE_SOURCE_DIR}/libkdepim
   ${CMAKE_SOURCE_DIR}/messageviewer
+  ${CMAKE_SOURCE_DIR}/messagecomposer/
   ${CMAKE_SOURCE_DIR}/templateparser
   ${CMAKE_BINARY_DIR}/templateparser
   ${CMAKE_BINARY_DIR}/pimcommon

@@ -29,7 +29,7 @@
 #include "redirectdialog.h"
 #include "kernel/mailkernel.h"
 
-#include <messagecomposer/composerlineedit.h>
+#include <messagecomposer/composer/composerlineedit.h>
 
 #include <messageviewer/utils/autoqpointer.h>
 
