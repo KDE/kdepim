@@ -28,6 +28,7 @@ class OperaSettings : public AbstractSettings
 public:
     explicit OperaSettings(const QString& filename, ImportWizard *parent);
     ~OperaSettings();
+
 private:
     void readAccount(const KConfigGroup &grp);
     void readTransport(const KConfigGroup &grp);
