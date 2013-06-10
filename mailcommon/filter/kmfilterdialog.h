@@ -27,7 +27,7 @@
 #include "filteraction.h"
 #include "filterimporterexporter.h"
 #include "mailfilter.h"
-#include "searchpattern.h"
+#include "search/searchpattern.h"
 
 #include <KDialog>
 

@@ -1,5 +1,6 @@
 include_directories(
   ${CMAKE_SOURCE_DIR}/libkdepim
+  ${CMAKE_SOURCE_DIR}/mailcommon/search/
   ${CMAKE_SOURCE_DIR}/messageviewer
   ${CMAKE_SOURCE_DIR}/messagecomposer/
   ${CMAKE_SOURCE_DIR}/templateparser
@@ -102,8 +103,8 @@ set(libmailcommon_SRCS
   widgets/redirectdialog.cpp
   widgets/regexplineedit.cpp
   rulewidgethandlermanager.cpp
-  searchpattern.cpp
-  searchpatternedit.cpp
+  search/searchpattern.cpp
+  search/searchpatternedit.cpp
   sendmdnhandler.cpp
   snippets/snippetdialog.cpp
   snippets/snippetsmanager.cpp

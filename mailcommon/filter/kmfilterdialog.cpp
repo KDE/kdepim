@@ -30,7 +30,7 @@ using MailCommon::FilterImporterExporter;
 #include "folderrequester.h"
 #include "kernel/mailkernel.h"
 #include "util/mailutil.h"
-#include "searchpatternedit.h"
+#include "search/searchpatternedit.h"
 
 #include <Akonadi/AgentInstance>
 #include <Akonadi/AgentType>

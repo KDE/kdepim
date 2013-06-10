@@ -22,7 +22,7 @@
 #include "filteractionwidget.h"
 #include "filtermanager.h"
 #include "mailfilter.h"
-#include "searchpatternedit.h"
+#include "search/searchpatternedit.h"
 #include "ui_filterconfigwidget.h"
 
 using namespace MailCommon;
