@@ -205,7 +205,7 @@
   <customwidget>
    <class>KPIM::KCheckComboBox</class>
    <extends>KComboBox</extends>
-   <header>libkdepim/kcheckcombobox.h</header>
+   <header>libkdepim/widgets/kcheckcombobox.h</header>
   </customwidget>
   <customwidget>
    <class>KDateComboBox</class>
@@ -220,7 +220,7 @@
   <customwidget>
    <class>KPIM::KWeekdayCheckCombo</class>
    <extends>KPIM::KCheckComboBox</extends>
-   <header>libkdepim/kweekdaycheckcombo.h</header>
+   <header>libkdepim/widgets/kweekdaycheckcombo.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

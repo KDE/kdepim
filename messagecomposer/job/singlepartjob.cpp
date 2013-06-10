@@ -19,7 +19,7 @@
 
 #include "singlepartjob.h"
 
-#include "composer.h"
+#include "composer/composer.h"
 #include "contentjobbase_p.h"
 #include "globalpart.h"
 #include "util.h"

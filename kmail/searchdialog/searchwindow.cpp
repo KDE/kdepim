@@ -27,7 +27,7 @@
 #include "kmcommands.h"
 #include "kmmainwidget.h"
 #include "mailcommon/kernel/mailkernel.h"
-#include "mailcommon/searchpatternedit.h"
+#include "mailcommon/search/searchpatternedit.h"
 #include "mailcommon/widgets/regexplineedit.h"
 #include "searchdescriptionattribute.h"
 #include "foldertreeview.h"
@@ -452,6 +452,7 @@ void SearchWindow::searchDone( KJob* job )
         if ( mSearchJob ) {
             mSearchJob = 0;
         }
+        enableGUI();
     }
     else
     {

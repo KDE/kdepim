@@ -41,7 +41,7 @@
 #include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/utils.h>
 
-#include <libkdepim/kdatepickerpopup.h>
+#include <libkdepim/widgets/kdatepickerpopup.h>
 
 #include <Akonadi/EntityMimeTypeFilterModel>
 #include <Akonadi/ETMViewStateSaver>

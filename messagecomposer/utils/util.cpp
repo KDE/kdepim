@@ -23,7 +23,7 @@
 
 #include "util.h"
 
-#include "composer.h"
+#include "composer/composer.h"
 #include "singlepartjob.h"
 
 #include <QTextCodec>

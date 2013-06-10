@@ -25,7 +25,7 @@
 #include <messagecore/stringutil.h>
 #include <messagecore/nodehelper.h>
 
-#include "messagecomposer/composer.h"
+#include "messagecomposer/composer/composer.h"
 #include "messagecomposer/messagefactory.h"
 #include "messagecomposer/globalpart.h"
 #include "messagecomposer/messagecomposersettings.h"

@@ -28,9 +28,9 @@ set(kdepim_LIB_SRCS
    addressline/kmailcompletion.cpp
    kprefsdialog.cpp
    maillistdrag.cpp
-   kdatepickerpopup.cpp
-   kcheckcombobox.cpp
-   kweekdaycheckcombo.cpp
+   widgets/kdatepickerpopup.cpp
+   widgets/kcheckcombobox.cpp
+   widgets/kweekdaycheckcombo.cpp
    ldap/ldapclient.cpp
    ldap/ldapsearchdialog.cpp
    ldap/ldapclientsearch.cpp
@@ -44,7 +44,7 @@ set(kdepim_LIB_SRCS
    progresswidget/ssllabel.cpp
    broadcaststatus.cpp
    widgets/kwidgetlister.cpp
-   pimmessagebox.cpp
+   widgets/pimmessagebox.cpp
    multiplyingline/multiplyingline.cpp
    multiplyingline/multiplyinglineeditor.cpp
    multiplyingline/multiplyinglineview_p.cpp
@@ -52,7 +52,7 @@ set(kdepim_LIB_SRCS
    widgets/nepomukwarning.cpp
    statisticsproxymodel.cpp
    widgets/customlogwidget.cpp
-   spellchecklineedit.cpp
+   widgets/spellchecklineedit.cpp
 )
 
 if (KDEPIMLIBS_KRESOURCES_LIBS)

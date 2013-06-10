@@ -26,7 +26,7 @@
 #include "aliasesexpandjob.h"
 #include "messagecomposersettings.h"
 
-#include "messagecomposer/composer.h"
+#include "messagecomposer/composer/composer.h"
 #include "messagecomposer/infopart.h"
 
 #include <KPIMUtils/Email>

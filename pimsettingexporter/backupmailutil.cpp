@@ -49,6 +49,16 @@ QString BackupMailUtil::akonadiPath()
     return QLatin1String("akonadi/");
 }
 
+QString BackupMailUtil::dataPath()
+{
+    return QLatin1String("data/");
+}
+
+QString BackupMailUtil::calendarPath()
+{
+    return QLatin1String("calendar/");
+}
+
 KUrl BackupMailUtil::resourcePath(KSharedConfigPtr resourceConfig)
 {
     KConfigGroup group = resourceConfig->group(QLatin1String("General"));

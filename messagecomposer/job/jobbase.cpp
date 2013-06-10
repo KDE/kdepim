@@ -19,7 +19,7 @@
 
 #include "jobbase.h"
 
-#include "composer.h"
+#include "composer/composer.h"
 #include "jobbase_p.h"
 
 #include <KDebug>

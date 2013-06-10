@@ -103,8 +103,6 @@ void mailreaderView::slotConfigure()
                   i18n("Message List"),
                   "kmail");
 
-  connect( dialog, SIGNAL(settingsChanged(QString)),
-         widget, SLOT(slotSettingsChanged()) );
   dialog->setAttribute( Qt::WA_DeleteOnClose );
   dialog->show();
 }

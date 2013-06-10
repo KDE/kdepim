@@ -23,7 +23,7 @@
 #include <akonadi/collection.h>
 #include <akonadi/item.h>
 
-#include "mailcommon/searchpattern.h"
+#include "mailcommon/search/searchpattern.h"
 
 namespace MailCommon {
 class MailFilter;

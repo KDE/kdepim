@@ -77,7 +77,7 @@ RecipientsPicker::RecipientsPicker( QWidget *parent )
     if ( !numHosts )
         searchLDAPButton->setVisible( false );
 
-    setButtons( Cancel|User1|User2|User3 );
+    setButtons( Close|User1|User2|User3 );
     setButtonText( User3, i18n("Add as &To") );
     setButtonText( User2, i18n("Add as CC") );
     setButtonText( User1, i18n("Add as &BCC") );
@@ -165,8 +165,6 @@ void RecipientsPicker::pick( Recipient::Type type )
 
         emit pickedRecipient( recipient );
     }
-
-    close();
 }
 
 void RecipientsPicker::keyPressEvent( QKeyEvent *event )

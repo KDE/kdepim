@@ -38,7 +38,7 @@
 #include "composer/bilbobrowser.h"
 #include "composer/htmleditor.h"
 
-#include <libkdepim/spellchecklineedit.h>
+#include <libkdepim/widgets/spellchecklineedit.h>
 
 
 #include <kdebug.h>

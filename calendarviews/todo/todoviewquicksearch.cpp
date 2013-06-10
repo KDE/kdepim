@@ -31,7 +31,7 @@
 #include <Akonadi/Calendar/ETMCalendar>
 #include <calendarsupport/categoryconfig.h>
 
-#include <libkdepim/kcheckcombobox.h>
+#include <libkdepim/widgets/kcheckcombobox.h>
 
 #include <calendarsupport/categoryhierarchyreader.h>
 

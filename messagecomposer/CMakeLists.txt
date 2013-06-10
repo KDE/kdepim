@@ -10,6 +10,7 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/messagecomposer/recipient/
     ${CMAKE_SOURCE_DIR}/messagecomposer/job
     ${CMAKE_SOURCE_DIR}/messagecomposer/utils/
+    ${CMAKE_SOURCE_DIR}/messagecomposer/composer/
 )
 
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
@@ -20,7 +21,7 @@ include_directories(${Grantlee_INCLUDE_DIRS})
 
 set( messagecomposer_src
 
-     composer.cpp
+     composer/composer.cpp
      utils/util.cpp
 
      attachmentcontrollerbase.cpp
@@ -31,7 +32,7 @@ set( messagecomposer_src
      messagehelper.cpp
      messagefactory.cpp
      messagecomposersettings.cpp
-     composerviewbase.cpp
+     composer/composerviewbase.cpp
 
      messagepart.cpp
      globalpart.cpp
@@ -54,7 +55,7 @@ set( messagecomposer_src
      kmeditor.cpp
      job/inserttextfilejob.cpp
      signaturecontroller.cpp
-     composerlineedit.cpp
+     composer/composerlineedit.cpp
 
      recipient/recipientspicker.cpp
      recipient/recipient.cpp

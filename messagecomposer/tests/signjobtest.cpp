@@ -32,7 +32,7 @@
 #include <kleo/cryptobackendfactory.h>
 #include <kjob.h>
 
-#include <messagecomposer/composer.h>
+#include <messagecomposer/composer/composer.h>
 #include <messagecomposer/job/signjob.h>
 #include <messagecomposer/job/transparentjob.h>
 

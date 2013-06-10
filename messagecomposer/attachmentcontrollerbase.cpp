@@ -25,7 +25,7 @@
 #include "messagecomposer/attachmentmodel.h"
 #include "messagecomposer/job/attachmentjob.h"
 #include "messagecomposer/job/attachmentfrompublickeyjob.h"
-#include "messagecomposer/composer.h"
+#include "messagecomposer/composer/composer.h"
 
 #include "messagecomposer/globalpart.h"
 #include "messageviewer/editorwatcher.h"

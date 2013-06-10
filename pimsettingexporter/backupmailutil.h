@@ -43,5 +43,7 @@ QString identitiesPath();
 QString mailsPath();
 QString configsPath();
 QString akonadiPath();
+QString dataPath();
+QString calendarPath();
 }
 #endif // UTIL_H
