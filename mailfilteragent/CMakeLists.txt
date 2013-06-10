@@ -16,6 +16,7 @@ set(akonadi_mailfilter_agent_SRCS
   filterlogdialog.cpp
   filtermanager.cpp
   mailfilteragent.cpp
+  pop3resourceattribute.cpp
 )
 
 qt4_add_dbus_adaptor(akonadi_mailfilter_agent_SRCS org.freedesktop.Akonadi.MailFilterAgent.xml mailfilteragent.h MailFilterAgent)

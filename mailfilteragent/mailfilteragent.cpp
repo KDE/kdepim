@@ -24,6 +24,7 @@
 #include "filterlogdialog.h"
 #include "filtermanager.h"
 #include "mailfilteragentadaptor.h"
+#include "pop3resourceattribute.h"
 
 #include <akonadi/changerecorder.h>
 #include <akonadi/collectionfetchjob.h>
@@ -40,6 +41,7 @@
 #include <KWindowSystem>
 #include <Akonadi/AgentManager>
 #include <Akonadi/ItemFetchJob>
+#include <Akonadi/AttributeFactory>
 
 #include <QtCore/QVector>
 #include <QtCore/QTimer>
@@ -55,6 +57,7 @@ MailFilterAgent::MailFilterAgent( const QString &id )
   : Akonadi::AgentBase( id ),
     m_filterLogDialog( 0 )
 {
+  Akonadi::AttributeFactory::registerAttribute<Pop3ResourceAttribute>();
   DummyKernel *kernel = new DummyKernel( this );
   CommonKernel->registerKernelIf( kernel ); //register KernelIf early, it is used by the Filter classes
   CommonKernel->registerSettingsIf( kernel ); //SettingsIf is used in FolderTreeWidget
@@ -173,6 +176,7 @@ void MailFilterAgent::itemAdded( const Akonadi::Item &item, const Akonadi::Colle
     job->fetchScope().fetchPayloadPart( Akonadi::MessagePart::Envelope, true );
   }
   job->fetchScope().setAncestorRetrieval(Akonadi::ItemFetchScope::Parent);
+  job->fetchScope().fetchAttribute<Pop3ResourceAttribute>();
   job->setProperty( "resource", collection.resource() );
 
   //TODO: Error handling?
@@ -200,7 +204,12 @@ void MailFilterAgent::itemsReceiviedForFiltering (const Akonadi::Item::List& ite
     return;
   }
 
-  const QString resource = sender()->property("resource").toString();
+  QString resource = sender()->property("resource").toString();
+  const Pop3ResourceAttribute *pop3ResourceAttribute = item.attribute<Pop3ResourceAttribute>();
+  if ( pop3ResourceAttribute ) {
+      resource = pop3ResourceAttribute->pop3AccountName();
+  }
+
   emitProgressMessage(i18n("Filtering in %1",Akonadi::AgentManager::self()->instance(resource).name()) );
   m_filterManager->process( item, m_filterManager->requiredPart(resource), FilterManager::Inbound, true, resource );
 
