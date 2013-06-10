@@ -6,7 +6,6 @@ install(FILES
         long-press-indicator.png
         movedown-button.png
         moveup-button.png
-        top.png
         splashscreenstatic.png
         built-on-the-kde-platform.png
         DESTINATION ${DATA_INSTALL_DIR}/mobileui)

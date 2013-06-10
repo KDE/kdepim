@@ -49,13 +49,6 @@ KPIM.ActionList {
   }
 
   KPIM.ActionListItem {
-    name : "wm_task_switch"
-    onPressAndHold: {
-      longPressed(name);
-    }
-  }
-
-  KPIM.ActionListItem {
     id: addNewAction
     onPressAndHold: {
       longPressed(name);
