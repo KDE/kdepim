@@ -165,8 +165,6 @@ void RecipientsPicker::pick( Recipient::Type type )
 
         emit pickedRecipient( recipient );
     }
-
-    close();
 }
 
 void RecipientsPicker::keyPressEvent( QKeyEvent *event )
