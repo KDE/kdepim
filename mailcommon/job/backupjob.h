@@ -39,7 +39,7 @@ class KJob;
 class QWidget;
 
 namespace Akonadi {
-  class ItemFetchJob;
+class ItemFetchJob;
 }
 
 namespace MailCommon {
@@ -53,15 +53,15 @@ namespace MailCommon {
  */
 class  MAILCOMMON_EXPORT BackupJob : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     // These enum values have to stay in sync with the format combobox of ArchiveFolderDialog!
     enum ArchiveType {
-      Zip = 0,
-      Tar = 1,
-      TarBz2 = 2,
-      TarGz = 3
+        Zip = 0,
+        Tar = 1,
+        TarBz2 = 2,
+        TarGz = 3
     };
 
     explicit BackupJob( QWidget *parent = 0 );
@@ -76,18 +76,18 @@ class  MAILCOMMON_EXPORT BackupJob : public QObject
 
 
     void start();
-  signals:
+signals:
     void backupDone(const QString&);
     void error(const QString&);
 
-  private slots:
+private slots:
     void itemFetchJobResult( KJob *job );
     void cancelJob();
     void archiveNextFolder();
     void onArchiveNextFolderDone( KJob *job );
     void archiveNextMessage();
 
-  private:
+private:
     bool queueFolders( const Akonadi::Collection &root );
     void processMessage( const Akonadi::Item &item );
     QString pathForCollection( const Akonadi::Collection &collection ) const;
