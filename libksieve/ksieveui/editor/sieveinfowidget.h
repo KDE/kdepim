@@ -30,7 +30,7 @@ public:
     explicit SieveInfoWidget(QWidget *parent = 0);
     ~SieveInfoWidget();
 
-    void setServerInfo(const QStringList &info);
+    void setServerInfo(QStringList info);
 
 private:
     KTextEdit *mInfo;
