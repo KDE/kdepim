@@ -594,7 +594,7 @@ void ComposerAutoCorrection::advancedAutocorrect()
     const int startPos = mCursor.selectionStart();
     const int length = mWord.length();
 
-    const QString trimmedWord = mWord.toLower().trimmed();
+    const QString trimmedWord = mWord.trimmed();
     QString actualWord = trimmedWord;
 
     if (actualWord.isEmpty())
@@ -609,14 +609,30 @@ void ComposerAutoCorrection::advancedAutocorrect()
         actualWord.chop(1);
     }
 
-    if (mAutocorrectEntries.contains(actualWord)) {
-        int pos = mWord.toLower().indexOf(trimmedWord);
-        QString replacement = mAutocorrectEntries.value(actualWord);
+    QString actualWordWithFirstUpperCase = actualWord;
+    actualWordWithFirstUpperCase[0] = actualWordWithFirstUpperCase[0].toUpper();
+    if (mAutocorrectEntries.contains(actualWord) ||
+            mAutocorrectEntries.contains(actualWord.toLower() ) ||
+            mAutocorrectEntries.contains(actualWordWithFirstUpperCase)) {
+        int pos = mWord.indexOf(trimmedWord);
+        QString replacement = mAutocorrectEntries.value(actualWord, QString());
+        if (replacement.isEmpty()) {
+            replacement = mAutocorrectEntries.value(actualWord.toLower());
+            if (replacement.isEmpty()) {
+                replacement = mAutocorrectEntries.value(actualWordWithFirstUpperCase);
+            }
+        }
+
         // Keep capitalized words capitalized.
         // (Necessary to make sure the first letters match???)
         if (actualWord.at(0) == replacement.at(0).toLower()) {
             if (mWord.at(0).isUpper()) {
                 replacement[0] = replacement[0].toUpper();
+            } else {
+                //Don't replace toUpper letter
+                if (replacement.at(0).isLower()) {
+                    replacement[0] = replacement[0].toLower();
+                }
             }
         }
 
