@@ -120,6 +120,8 @@ QString SieveActionVacation::code(QWidget *w) const
         result += QString::fromLatin1(" :addresses %1").arg(AutoCreateScriptUtil::createAddressList(addressesStr));
     if (!textStr.isEmpty())
         result += QString::fromLatin1(" text:%1").arg(AutoCreateScriptUtil::createMultiLine(textStr));
+    else
+        result += QLatin1Char(';'); //Be sure to have ";"
     return result;
 }
 

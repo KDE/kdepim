@@ -85,8 +85,8 @@ QStringList SieveActionFileInto::needRequires(QWidget *parent) const
     QStringList lst;
     lst << QLatin1String("fileinto");
     if (mHasCopySupport) {
-        const QCheckBox *create = parent->findChild<QCheckBox*>( QLatin1String("copy") );
-        if (create->isChecked())
+        const QCheckBox *copy = parent->findChild<QCheckBox*>( QLatin1String("copy") );
+        if (copy->isChecked())
             lst << QLatin1String("copy");
     }
     if (mHasMailBoxSupport) {
