@@ -41,9 +41,11 @@
 #include <QTimer>
 
 using namespace MailCommon;
+static const mode_t archivePerms = S_IFREG | 0644;
 
 BackupJob::BackupJob( QWidget *parent )
     : QObject( parent ),
+      mArchiveTime(QDateTime::currentDateTime().toTime_t()),
       mArchiveType( Zip ),
       mRootFolder( 0 ),
       mArchive( 0 ),
@@ -253,7 +255,7 @@ void BackupJob::processMessage( const Akonadi::Item &item )
 
     // PORT ME: user and group!
     kDebug() << "AKONDI PORT: disabled code here!";
-    if ( !mArchive->writeFile( fileName, QLatin1String("user"), QLatin1String("group"), messageData, messageSize ) ) {
+    if ( !mArchive->writeFile( fileName, QLatin1String("user"), QLatin1String("group"), messageData, messageSize, archivePerms, mArchiveTime, mArchiveTime, mArchiveTime) ) {
         abort( i18n( "Failed to write a message into the archive folder '%1'.",
                      mCurrentFolder.name() ) );
         return;
@@ -292,7 +294,7 @@ bool BackupJob::writeDirHelper( const QString &directoryPath )
 {
     // PORT ME: Correct user/group
     kDebug() << "AKONDI PORT: Disabled code here!";
-    return mArchive->writeDir( directoryPath, QLatin1String("user"), QLatin1String("group") );
+    return mArchive->writeDir( directoryPath, QLatin1String("user"), QLatin1String("group"), 040755, mArchiveTime, mArchiveTime, mArchiveTime );
 }
 
 QString BackupJob::collectionName( const Akonadi::Collection &collection ) const

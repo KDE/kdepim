@@ -104,6 +104,7 @@ private:
     QString collectionName( const Akonadi::Collection &collection ) const;
 
     KUrl mMailArchivePath;
+    time_t mArchiveTime;
     ArchiveType mArchiveType;
     Akonadi::Collection mRootFolder;
     KArchive *mArchive;
