@@ -48,11 +48,11 @@ class MESSAGECORE_EXPORT AttachmentFromUrlJob : public AttachmentFromUrlBaseJob
     /**
      * Destroys the job.
      */
-    virtual ~AttachmentFromUrlJob();
+    ~AttachmentFromUrlJob();
 
 
   protected Q_SLOTS:
-    virtual void doStart();
+    void doStart();
 
   private:
     //@cond PRIVATE
