@@ -52,7 +52,7 @@ set(kdepim_LIB_SRCS
    widgets/nepomukwarning.cpp
    statisticsproxymodel.cpp
    widgets/customlogwidget.cpp
-   spellchecklineedit.cpp
+   widgets/spellchecklineedit.cpp
 )
 
 if (KDEPIMLIBS_KRESOURCES_LIBS)
