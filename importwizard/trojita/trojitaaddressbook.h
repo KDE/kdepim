@@ -31,8 +31,10 @@ class TrojitaAddressBook : public AbstractAddressBook
 public:
     explicit TrojitaAddressBook(const QString &filename, ImportWizard *parent);
     ~TrojitaAddressBook();
-private:
+
     void readAddressBook();
+
+private:
     QSettings *settings;
 };
 

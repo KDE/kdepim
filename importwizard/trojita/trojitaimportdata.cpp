@@ -68,6 +68,7 @@ bool TrojitaImportData::importAddressBook()
 {
     const QString addressbookPath = QDir::homePath() + QLatin1String("/.abook/addressbook");
     TrojitaAddressBook addressBooks(addressbookPath, mImportWizard);
+    addressBooks.readAddressBook();
     return true;
 }
 
