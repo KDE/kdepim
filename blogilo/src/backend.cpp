@@ -199,7 +199,6 @@ void Backend::uploadMedia( BilboMedia * media )
             kDebug() << "Emitting sigError...";
             Q_EMIT sigMediaError( tmp, media );
             return;
-            break;
         case BilboBlog::METAWEBLOG_API:
         case BilboBlog::MOVABLETYPE_API:
         case BilboBlog::WORDPRESSBUGGY_API:
