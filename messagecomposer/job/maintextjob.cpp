@@ -20,10 +20,10 @@
 #include "maintextjob.h"
 
 #include "contentjobbase_p.h"
-#include "globalpart.h"
+#include "part/globalpart.h"
 #include "multipartjob.h"
 #include "singlepartjob.h"
-#include "textpart.h"
+#include "part/textpart.h"
 #include "util.h"
 
 #include <QTextCodec>

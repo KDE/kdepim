@@ -27,11 +27,11 @@
 
 #include "messagecomposer/composer/composer.h"
 #include "messagecomposer/messagefactory.h"
-#include "messagecomposer/globalpart.h"
+#include "messagecomposer/part/globalpart.h"
 #include "messagecomposer/messagecomposersettings.h"
 
-#include "messagecomposer/infopart.h"
-#include "messagecomposer/textpart.h"
+#include "messagecomposer/part/infopart.h"
+#include "messagecomposer/part/textpart.h"
 
 #include "testhtmlwriter.h"
 #include "testcsshelper.h"

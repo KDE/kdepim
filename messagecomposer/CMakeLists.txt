@@ -34,10 +34,10 @@ set( messagecomposer_src
      messagecomposersettings.cpp
      composer/composerviewbase.cpp
 
-     messagepart.cpp
-     globalpart.cpp
-     infopart.cpp
-     textpart.cpp
+     part/messagepart.cpp
+     part/globalpart.cpp
+     part/infopart.cpp
+     part/textpart.cpp
 
      job/jobbase.cpp
      job/contentjobbase.cpp
@@ -124,10 +124,10 @@ install( TARGETS messagecomposer ${INSTALL_TARGETS_DEFAULT_ARGS} )
 #install( FILES
 #         messagecomposer_export.h
 #         composer.h
-#         globalpart.h
-#         infopart.h
+#         part/globalpart.h
+#         part/infopart.h
 #         messagepart.h
-#         textpart.h
+#         part/textpart.h
 #         jobbase.h
 #         contentjobbase.h
 #         attachmentjob.h

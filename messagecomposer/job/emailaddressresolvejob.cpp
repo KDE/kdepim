@@ -27,7 +27,7 @@
 #include "messagecomposersettings.h"
 
 #include "messagecomposer/composer/composer.h"
-#include "messagecomposer/infopart.h"
+#include "messagecomposer/part/infopart.h"
 
 #include <KPIMUtils/Email>
 

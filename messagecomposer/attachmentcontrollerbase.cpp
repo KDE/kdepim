@@ -27,7 +27,7 @@
 #include "messagecomposer/job/attachmentfrompublickeyjob.h"
 #include "messagecomposer/composer/composer.h"
 
-#include "messagecomposer/globalpart.h"
+#include "messagecomposer/part/globalpart.h"
 #include "messageviewer/editorwatcher.h"
 #include "messageviewer/nodehelper.h"
 #include "messageviewer/utils/util.h"

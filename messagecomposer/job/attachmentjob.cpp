@@ -27,7 +27,7 @@
 #include <KEncodingProber>
 
 #include "contentjobbase_p.h"
-#include "globalpart.h"
+#include "part/globalpart.h"
 #include "singlepartjob.h"
 #include "util.h"
 

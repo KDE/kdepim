@@ -21,7 +21,7 @@
 
 #include "composer/composer.h"
 #include "contentjobbase_p.h"
-#include "globalpart.h"
+#include "part/globalpart.h"
 #include "util.h"
 
 #include <KDebug>

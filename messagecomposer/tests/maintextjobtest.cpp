@@ -29,9 +29,9 @@
 using namespace KMime;
 
 #include <messagecomposer/composer/composer.h>
-#include <messagecomposer/globalpart.h>
+#include <messagecomposer/part/globalpart.h>
 #include <messagecomposer/job/maintextjob.h>
-#include <messagecomposer/textpart.h>
+#include <messagecomposer/part/textpart.h>
 using namespace MessageComposer;
 
 #include <kpimtextedit/textedit.h>

@@ -23,7 +23,7 @@
 
 #include "abstractencryptjob.h"
 #include "contentjobbase.h"
-#include "infopart.h"
+#include "part/infopart.h"
 #include "messagecomposer_export.h"
 #include "kleo/enum.h"
 

@@ -38,8 +38,8 @@
 #include <messagecomposer/job/encryptjob.h>
 #include <messagecomposer/job/maintextjob.h>
 #include <messagecomposer/job/signjob.h>
-#include <messagecomposer/globalpart.h>
-#include <messagecomposer/textpart.h>
+#include <messagecomposer/part/globalpart.h>
+#include <messagecomposer/part/textpart.h>
 
 #include <messageviewer/nodehelper.h>
 #include <messagecore/tests/util.h>

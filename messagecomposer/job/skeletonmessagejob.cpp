@@ -21,8 +21,8 @@
 #include "skeletonmessagejob.h"
 #include "kdepim-version.h"
 
-#include "infopart.h"
-#include "globalpart.h"
+#include "part/infopart.h"
+#include "part/globalpart.h"
 #include "jobbase_p.h"
 
 #include <QTextCodec>
