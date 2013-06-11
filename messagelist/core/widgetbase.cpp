@@ -302,15 +302,10 @@ void Widget::populateStatusFilterCombo()
   d->mFirstTagInComboIndex = d->mStatusFilterCombo->count();
   fillMessageTagCombo( d->mStatusFilterCombo );
 
-  const bool needToUpdateView = (currentIndex>=d->mStatusFilterCombo->count());
-  if (!needToUpdateView)
-      d->mStatusFilterCombo->setCurrentIndex(currentIndex);
-
   connect( d->mStatusFilterCombo, SIGNAL(currentIndexChanged(int)),
            this, SLOT(statusSelected(int)) );
 
-  if (needToUpdateView)
-      d->mStatusFilterCombo->setCurrentIndex(0);
+  d->mStatusFilterCombo->setCurrentIndex(currentIndex>=d->mStatusFilterCombo->count() ? 0 : currentIndex );
 }
 
 MessageItem *Widget::currentMessageItem() const
