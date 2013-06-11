@@ -29,6 +29,8 @@
 #include <kglobal.h>
 #include <klocale.h>
 #include <kdebug.h>
+#include <KHelpMenu>
+#include <KMenu>
 
 // Qt includes
 #include <QPushButton>
@@ -55,7 +57,6 @@ KMailCVT::KMailCVT(QWidget *parent)
     importpage = new KImportPage;
     page2 = new KPageWidgetItem( importpage, i18n( "Step 2: Importing..." ) );
     addPage( page2 );
-    connect(this,SIGNAL(helpClicked()),this,SLOT(help()));
 
     // Disable the 'next button to begin with.
     setValid( currentPage(), false );
@@ -64,6 +65,8 @@ KMailCVT::KMailCVT(QWidget *parent)
              this, SLOT(collectionChanged(Akonadi::Collection)) );
     Akonadi::Control::widgetNeedsAkonadi(this);
     readConfig();
+    KHelpMenu *helpMenu = new KHelpMenu(this, KGlobal::mainComponent().aboutData(), true);
+    setButtonMenu( Help, helpMenu->menu() );
 }
 
 KMailCVT::~KMailCVT()
@@ -138,12 +141,6 @@ void KMailCVT::collectionChanged( const Akonadi::Collection& selectedCollection 
     } else {
         setValid( currentPage(), false );
     }
-}
-
-void KMailCVT::help()
-{
-    KAboutApplicationDialog a( KGlobal::mainComponent().aboutData(), this );
-    a.exec();
 }
 
 #include "kmailcvt.moc"

@@ -34,7 +34,6 @@ public:
     void reject();
 
 private slots:
-    void help();
     void collectionChanged( const Akonadi::Collection& selectedCollection );
 
 private:
