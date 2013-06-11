@@ -37,7 +37,6 @@ SelectionTypeDialog::SelectionTypeDialog(QWidget *parent)
     setMainWidget( mainWidget );
     enableButtonOk(false);
     connect(mWidget,SIGNAL(itemSelected(bool)),SLOT(slotItemSelected(bool)));
-
 }
 
 SelectionTypeDialog::~SelectionTypeDialog()

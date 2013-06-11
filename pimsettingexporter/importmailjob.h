@@ -36,7 +36,9 @@ class ImportMailJob : public AbstractImportExportJob
 public:
     explicit ImportMailJob(QWidget *widget, BackupMailUtil::BackupTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep);
     ~ImportMailJob();
+
     void start();
+
 private:
     void restoreTransports();
     void restoreResources();

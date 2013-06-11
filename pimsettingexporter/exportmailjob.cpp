@@ -159,6 +159,8 @@ void ExportMailJob::backupResources()
                 //Store just pop3/imap account. Store other config when we copy data.
                 if (identifier.contains(QLatin1String("pop3")) || identifier.contains(QLatin1String("imap"))) {
                     storeResources(identifier,BackupMailUtil::resourcesPath());
+                } else {
+                    qDebug()<<" resource \""<<identifier<<"\" will not store";
                 }
             }
         }
