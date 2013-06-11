@@ -248,6 +248,9 @@ void Widget::changeQuicksearchVisibility(bool show)
 
 void Widget::populateStatusFilterCombo()
 {
+  const int currentIndex = (d->mStatusFilterCombo->currentIndex() != -1) ?  d->mStatusFilterCombo->currentIndex() : 0;
+  disconnect( d->mStatusFilterCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(statusSelected(int)) );
+
   d->mStatusFilterCombo->clear();
 
   d->mStatusFilterCombo->addItem( SmallIcon(QLatin1String( "system-run" )), i18n( "Any Status" ), 0 );
@@ -299,8 +302,7 @@ void Widget::populateStatusFilterCombo()
   d->mFirstTagInComboIndex = d->mStatusFilterCombo->count();
   fillMessageTagCombo( d->mStatusFilterCombo );
 
-  disconnect( d->mStatusFilterCombo, SIGNAL(currentIndexChanged(int)),
-             this, SLOT(statusSelected(int)) );
+  d->mStatusFilterCombo->setCurrentIndex(currentIndex);
   connect( d->mStatusFilterCombo, SIGNAL(currentIndexChanged(int)),
            this, SLOT(statusSelected(int)) );
 }
