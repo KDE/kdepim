@@ -692,11 +692,10 @@ void ImportMailJob::restoreConfig()
         if (QFile(sievetemplaterc).exists()) {
             //TODO 4.11 allow to merge config.
             if (KMessageBox::warningYesNo(mParent,i18n("\"%1\" already exists. Do you want to overwrite it?",sievetemplatercStr),i18n("Restore"))== KMessageBox::Yes) {
-                //FIXME
-                //importTemplatesConfig(sievetemplateconfiguration, sievetemplaterc, sievetemplatercStr, BackupMailUtil::configsPath());
+                importArchiveConfig(sievetemplateconfiguration, sievetemplaterc, sievetemplatercStr, BackupMailUtil::configsPath());
             }
         } else {
-            //importTemplatesConfig(sievetemplateconfiguration, sievetemplaterc, sievetemplatercStr, BackupMailUtil::configsPath());
+            importArchiveConfig(sievetemplateconfiguration, sievetemplaterc, sievetemplatercStr, BackupMailUtil::configsPath());
         }
     }
 
@@ -709,15 +708,12 @@ void ImportMailJob::restoreConfig()
         if (QFile(customtemplaterc).exists()) {
             //TODO 4.11 allow to merge config.
             if (KMessageBox::warningYesNo(mParent,i18n("\"%1\" already exists. Do you want to overwrite it?", customTemplateStr),i18n("Restore"))== KMessageBox::Yes) {
-                //FIXME
-                //importTemplatesConfig(sievetemplateconfiguration, sievetemplaterc, sievetemplatercStr, BackupMailUtil::configsPath());
+                importArchiveConfig(customtemplateconfiguration, customtemplaterc, customTemplateStr, BackupMailUtil::configsPath());
             }
         } else {
-            //importTemplatesConfig(sievetemplateconfiguration, sievetemplaterc, sievetemplatercStr, BackupMailUtil::configsPath());
+            importArchiveConfig(customtemplateconfiguration, customtemplaterc, customTemplateStr, BackupMailUtil::configsPath());
         }
     }
-
-
 
     Q_EMIT info(i18n("Config restored."));
 }
