@@ -34,7 +34,8 @@ public:
     enum SendLaterAction {
         SendNow = 0,
         SendLater = 1,
-        Canceled = 2
+        Canceled = 2,
+        SendDeliveryAtTime = 3
     };
 
     explicit SendLaterDialog(SendLaterInfo *info, QWidget *parent = 0);
@@ -51,6 +52,8 @@ private Q_SLOTS:
     void slotSendIn30Minutes();
     void slotSendIn1Hour();
     void slotSendIn2Hours();
+    void slotDateTimeChanged(const QDateTime &);
+    void slotSendAtTime();
 
 private:
     void load(SendLaterInfo *info);
@@ -68,6 +71,7 @@ private:
     KPushButton *mSendIn30Minutes;
     KPushButton *mSendIn1Hour;
     KPushButton *mSendIn2Hours;
+    KPushButton *mSendAtTime;
 };
 
 #endif // SENDLATERDIALOG_H
