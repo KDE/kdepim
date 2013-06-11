@@ -24,7 +24,8 @@ class KImportPage;
 
 
 /** KMailCVT is the base class of the project */
-class KMailCVT : public KAssistantDialog {
+class KMailCVT : public KAssistantDialog
+{
     Q_OBJECT
 public:
     explicit KMailCVT(QWidget* parent=0);

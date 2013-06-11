@@ -24,7 +24,8 @@ namespace MailImporter {
 class Filter;
 }
 
-class KSelFilterPage : public QWidget  {
+class KSelFilterPage : public QWidget
+{
     Q_OBJECT
 public:
     explicit KSelFilterPage(QWidget *parent=0);

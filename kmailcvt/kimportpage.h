@@ -20,7 +20,8 @@
 
 #include "ui_kimportpagedlg.h"
 
-class KImportPage : public QWidget  {
+class KImportPage : public QWidget
+{
     Q_OBJECT
 public:
     explicit KImportPage(QWidget *parent=0);
