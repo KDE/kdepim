@@ -52,7 +52,7 @@ set( messagecomposer_src
 
      job/skeletonmessagejob.cpp
 
-     kmeditor.cpp
+     composer/kmeditor.cpp
      job/inserttextfilejob.cpp
      signaturecontroller.cpp
      composer/composerlineedit.cpp

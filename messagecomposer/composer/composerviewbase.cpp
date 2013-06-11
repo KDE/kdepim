@@ -23,7 +23,7 @@
 #include "attachmentcontrollerbase.h"
 #include "attachmentmodel.h"
 #include "signaturecontroller.h"
-#include "kmeditor.h"
+#include "composer/kmeditor.h"
 #include "emailaddressresolvejob.h"
 #include "keyresolver.h"
 #include "globalpart.h"

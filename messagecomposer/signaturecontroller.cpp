@@ -23,7 +23,7 @@
  */
 
 #include "signaturecontroller.h"
-#include "kmeditor.h"
+#include "composer/kmeditor.h"
 #include "messagecomposersettings.h"
 
 #include <kpimidentities/identity.h>

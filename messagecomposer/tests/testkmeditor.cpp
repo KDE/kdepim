@@ -20,7 +20,7 @@
 #include <kapplication.h>
 #include <kcmdlineargs.h>
 
-#include <messagecomposer/kmeditor.h>
+#include <messagecomposer/composer/kmeditor.h>
 
 #include <QtCore/QFile>
 

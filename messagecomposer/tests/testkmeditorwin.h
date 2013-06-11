@@ -22,7 +22,7 @@
 
 #include <QMainWindow>
 
-#include <messagecomposer/kmeditor.h>
+#include <messagecomposer/composer/kmeditor.h>
 
 using namespace MessageComposer;
 
