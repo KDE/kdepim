@@ -19,7 +19,7 @@
     02110-1301, USA.
 */
 
-import Qt 4.7 as QML
+import QtQuick 1.1 as QML
 import org.kde.pim.mobileui 4.5 as KPIM
 import org.kde.akonadi 4.5 as Akonadi
 

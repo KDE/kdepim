@@ -18,7 +18,7 @@
     02110-1301, USA.
 */
 
-import Qt 4.7
+import QtQuick 1.1
 import ClockHelper 4.5
 
 Image {
