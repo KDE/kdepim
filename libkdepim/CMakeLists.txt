@@ -26,7 +26,7 @@ set(kdepim_LIB_SRCS
    addressline/addresseelineedit.cpp
    addressline/recentaddresses.cpp
    addressline/kmailcompletion.cpp
-   kprefsdialog.cpp
+   prefs/kprefsdialog.cpp
    maillistdrag.cpp
    widgets/kdatepickerpopup.cpp
    widgets/kcheckcombobox.cpp
@@ -57,7 +57,7 @@ set(kdepim_LIB_SRCS
 
 if (KDEPIMLIBS_KRESOURCES_LIBS)
   set(kdepim_LIB_SRCS ${kdepim_LIB_SRCS}
-    kresourceprefs.cpp
+    prefs/kresourceprefs.cpp
   )
 endif ()
 
