@@ -652,8 +652,6 @@ void ImportMailJob::restoreConfig()
         }
     }
 
-
-
     const QString templatesconfigurationrcStr("templatesconfigurationrc");
     const KArchiveEntry* templatesconfigurationentry  = mArchiveDirectory->entry(BackupMailUtil::configsPath() + templatesconfigurationrcStr);
     if ( templatesconfigurationentry &&  templatesconfigurationentry->isFile()) {
@@ -712,6 +710,26 @@ void ImportMailJob::restoreConfig()
             }
         } else {
             importArchiveConfig(customtemplateconfiguration, customtemplaterc, customTemplateStr, BackupMailUtil::configsPath());
+        }
+    }
+
+    const KArchiveEntry* autocorrectionEntry  = mArchiveDirectory->entry(BackupMailUtil::dataPath() + QLatin1String( "autocorrect/" ) );
+    if (autocorrectionEntry && autocorrectionEntry->isDirectory()) {
+        const KArchiveDirectory *autoCorrectionDir = static_cast<const KArchiveDirectory*>(autocorrectionEntry);
+        Q_FOREACH(const QString& entryName, autoCorrectionDir->entries()) {
+            const KArchiveEntry *entry = autoCorrectionDir->entry(entryName);
+            if (entry && entry->isFile()) {
+                const KArchiveFile* autocorrectionFile = static_cast<const KArchiveFile*>(entry);
+                const QString name = autocorrectionFile->name();
+                const QString autocorrectionPath = KGlobal::dirs()->findResource("data", QString::fromLatin1("autocorrect/%1").arg(name));
+                if (QFile(autocorrectionPath).exists()) {
+                    if (KMessageBox::warningYesNo(mParent,i18n("\"%1\" already exists. Do you want to overwrite it?", name),i18n("Restore"))== KMessageBox::Yes) {
+                        importArchiveConfig(autocorrectionFile, autocorrectionPath, name, BackupMailUtil::dataPath() + QLatin1String( "autocorrect/" ));
+                    }
+                } else {
+                    importArchiveConfig(autocorrectionFile, autocorrectionPath, name, BackupMailUtil::dataPath() + QLatin1String( "autocorrect/" ));
+                }
+            }
         }
     }
 

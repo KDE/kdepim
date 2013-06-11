@@ -271,6 +271,14 @@ void ExportMailJob::backupConfig()
         backupFile(tmp.fileName(), BackupMailUtil::configsPath(), templatesconfigurationrcStr);
     }
 
+    QDir autocorrectDirectory( KStandardDirs::locateLocal( "data", QLatin1String( "autocorrect/" ) ) );
+    if (autocorrectDirectory.exists()) {
+        QFileInfoList listFileInfo = autocorrectDirectory.entryInfoList(QStringList()<< QLatin1String("*.xml"), QDir::Files);
+        for (int i = 0; i < listFileInfo.size(); ++i) {
+            backupFile(listFileInfo.at(i).absoluteFilePath(), BackupMailUtil::dataPath() + QLatin1String( "autocorrect/" ) , listFileInfo.at(i).fileName());
+        }
+    }
+
     const QString kmailStr("kmail2rc");
     const QString kmail2rc = KStandardDirs::locateLocal( "config",  kmailStr);
     if (QFile(kmail2rc).exists()) {
@@ -405,9 +413,13 @@ void ExportMailJob::backupIdentity()
             if (!vcardFileName.isEmpty()) {
                 const int uoid = group.readEntry(QLatin1String("uoid"),-1);
                 QFile file(vcardFileName);
-                const bool fileAdded  = archive()->addLocalFile(vcardFileName, BackupMailUtil::identitiesPath() + QString::number(uoid) + QDir::separator() + file.fileName());
-                if (fileAdded)
-                    Q_EMIT error(i18n("vCard file \"%1\" cannot be saved.",file.fileName()));
+                if (file.exists()) {
+                    const bool fileAdded  = archive()->addLocalFile(vcardFileName, BackupMailUtil::identitiesPath() + QString::number(uoid) + QDir::separator() + file.fileName());
+                    if (fileAdded)
+                        Q_EMIT error(i18n("vCard file \"%1\" cannot be saved.",file.fileName()));
+                } else {
+                    group.deleteEntry(vcard);
+                }
             }
         }
     }

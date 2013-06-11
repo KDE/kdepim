@@ -8,16 +8,14 @@ Import/Export config:
 - kabldaprc (DONE)
 - kmail2rc (DONE)
 - emailidentities (DONE)
-
+- autocorrection file (DONE)
 
 
 
 TODO 4.11:
 ----------
-
 - Allow to merge ldap config (DONE)
 - Allow to merge KMail Snippet config
-- Allow to merge akonadi_archivemail_agentrc config (DONE)
 
 - Import/Export KAddressBook config
 - Import/Export KOrganizer config
