@@ -42,7 +42,7 @@
 #include "mailcommon/filter/filtermanager.h"
 #include "mailcommon/kernel/mailkernel.h"
 #include "mailcommon/widgets/redirectdialog.h"
-#include "mailcommon/sendmdnhandler.h"
+#include "mailcommon/mdn/sendmdnhandler.h"
 #include "mailthreadgroupercomparator.h"
 #include "messagecomposer/messagehelper.h"
 #include "messagecomposer/messagecomposersettings.h"

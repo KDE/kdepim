@@ -105,7 +105,7 @@ set(libmailcommon_SRCS
   search/rulewidgethandlermanager.cpp
   search/searchpattern.cpp
   search/searchpatternedit.cpp
-  sendmdnhandler.cpp
+  mdn/sendmdnhandler.cpp
   snippets/snippetdialog.cpp
   snippets/snippetsmanager.cpp
   snippets/snippetsmodel.cpp
