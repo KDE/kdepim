@@ -692,12 +692,31 @@ void ImportMailJob::restoreConfig()
         if (QFile(sievetemplaterc).exists()) {
             //TODO 4.11 allow to merge config.
             if (KMessageBox::warningYesNo(mParent,i18n("\"%1\" already exists. Do you want to overwrite it?",sievetemplatercStr),i18n("Restore"))== KMessageBox::Yes) {
-                importTemplatesConfig(sievetemplateconfiguration, sievetemplaterc, sievetemplatercStr, BackupMailUtil::configsPath());
+                //FIXME
+                //importTemplatesConfig(sievetemplateconfiguration, sievetemplaterc, sievetemplatercStr, BackupMailUtil::configsPath());
             }
         } else {
-            importTemplatesConfig(sievetemplateconfiguration, sievetemplaterc, sievetemplatercStr, BackupMailUtil::configsPath());
+            //importTemplatesConfig(sievetemplateconfiguration, sievetemplaterc, sievetemplatercStr, BackupMailUtil::configsPath());
         }
     }
+
+
+    const QString customTemplateStr("customtemplatesrc");
+    const KArchiveEntry* customtemplatentry  = mArchiveDirectory->entry(BackupMailUtil::configsPath() + customTemplateStr);
+    if ( customtemplatentry &&  customtemplatentry->isFile()) {
+        const KArchiveFile* customtemplateconfiguration = static_cast<const KArchiveFile*>(customtemplatentry);
+        const QString customtemplaterc = KStandardDirs::locateLocal( "config",  customTemplateStr);
+        if (QFile(customtemplaterc).exists()) {
+            //TODO 4.11 allow to merge config.
+            if (KMessageBox::warningYesNo(mParent,i18n("\"%1\" already exists. Do you want to overwrite it?", customTemplateStr),i18n("Restore"))== KMessageBox::Yes) {
+                //FIXME
+                //importTemplatesConfig(sievetemplateconfiguration, sievetemplaterc, sievetemplatercStr, BackupMailUtil::configsPath());
+            }
+        } else {
+            //importTemplatesConfig(sievetemplateconfiguration, sievetemplaterc, sievetemplatercStr, BackupMailUtil::configsPath());
+        }
+    }
+
 
 
     Q_EMIT info(i18n("Config restored."));

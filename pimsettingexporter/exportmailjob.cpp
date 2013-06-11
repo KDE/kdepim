@@ -204,6 +204,12 @@ void ExportMailJob::backupConfig()
         backupFile(sieveTemplaterc, BackupMailUtil::configsPath(), sieveTemplateStr);
     }
 
+    const QString customTemplateStr("customtemplatesrc");
+    const QString customTemplaterc = KStandardDirs::locateLocal( "config",  customTemplateStr);
+    if (QFile(customTemplaterc).exists()) {
+        backupFile(customTemplaterc, BackupMailUtil::configsPath(), customTemplateStr);
+    }
+
     const QString archiveMailAgentConfigurationStr("akonadi_archivemail_agentrc");
     const QString archiveMailAgentconfigurationrc = KStandardDirs::locateLocal( "config", archiveMailAgentConfigurationStr );
     if (QFile(archiveMailAgentconfigurationrc).exists()) {
