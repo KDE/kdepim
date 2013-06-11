@@ -36,6 +36,7 @@ class COMPOSEREDITORNG_EXPORT DomTreeWidget : public QWidget
 public:
     explicit DomTreeWidget(QWebView *view, QWidget *parent = 0);
     ~DomTreeWidget();
+
 private:
     friend class DomTreeWidgetPrivate;
     DomTreeWidgetPrivate * const d;

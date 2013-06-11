@@ -52,6 +52,7 @@ public:
 
     explicit ExtendAttributesDialog(const QWebElement& element, ExtendType type,QWidget *parent);
     ~ExtendAttributesDialog();
+
 private:
     friend class ExtendAttributesDialogPrivate;
     ExtendAttributesDialogPrivate * const d;

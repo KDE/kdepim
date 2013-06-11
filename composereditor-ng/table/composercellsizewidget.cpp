@@ -67,7 +67,6 @@ public:
         size->setEnabled(false);
         typeSize->setEnabled(false);
         q->setLayout(layout);
-
     }
 
     void slotTypeChanged(int index);
