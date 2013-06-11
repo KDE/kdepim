@@ -213,7 +213,7 @@ void Widget::fillMessageTagCombo( KComboBox * combo )
   if(tagSelected.isEmpty()) {
     return;
   }
-  const QStringList tagSelectedLst = tagSelected.split(QLatin1String(","));
+  const QStringList tagSelectedLst = tagSelected.split(QLatin1Char(','));
   foreach( const Nepomuk2::Tag &nepomukTag, Nepomuk2::Tag::allTags() ) {
     const QString id = nepomukTag.uri().toString();
     if(tagSelectedLst.contains(id)) {
