@@ -55,12 +55,6 @@ set(kdepim_LIB_SRCS
    widgets/spellchecklineedit.cpp
 )
 
-if (KDEPIMLIBS_KRESOURCES_LIBS)
-  set(kdepim_LIB_SRCS ${kdepim_LIB_SRCS}
-    prefs/kresourceprefs.cpp
-  )
-endif ()
-
 if (KDEPIM_INPROCESS_LDAP)
   set(kdepim_LIB_SRCS ${kdepim_LIB_SRCS}
     ldap/ldapsession.cpp
