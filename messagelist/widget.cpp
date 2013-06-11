@@ -209,7 +209,7 @@ void Widget::focusQuickSearch()
 void Widget::fillMessageTagCombo( KComboBox * combo )
 {
   KConfigGroup conf( MessageList::Core::Settings::self()->config(),"MessageListView");
-  QString tagSelected= conf.readEntry(QLatin1String("TagSelected"));
+  const QString tagSelected= conf.readEntry(QLatin1String("TagSelected"));
   if(tagSelected.isEmpty()) {
     return;
   }
