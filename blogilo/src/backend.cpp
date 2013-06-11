@@ -254,7 +254,6 @@ void Backend::uploadMedia( BilboMedia * media )
                      this, SLOT(slotMediaError(KBlog::Blog::ErrorType,QString,KBlog::BlogMedia*)) );
             MWBlog->createMedia( m );
             return;
-            break;
     }
     kError() << "Api type isn't set correctly!";
     tmp = i18n( "API type is not set correctly." );
