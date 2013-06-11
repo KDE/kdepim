@@ -3,6 +3,7 @@
     Copyright (c) 2010 Bertjan Broeksema <broeksema@kde.org>
     Copyright (C) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
     Copyright (c) 2010 Andras Mantia <amantia@kdab.com>
+    Copyright (C) 2013 Michael Bohlender <michael.bohlender@kdemail.net>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -34,6 +35,11 @@ PlasmaComponents.Page {
 
   //BEGIN Tools
   tools: PlasmaComponents.ToolBarLayout{
+    PlasmaComponents.ToolButton {
+      iconSource: "mail-message-new"
+
+      onClicked: application.startComposer()
+    }
 
   }
   //END Tools
