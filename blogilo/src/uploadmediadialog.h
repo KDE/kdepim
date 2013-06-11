@@ -50,7 +50,7 @@ private Q_SLOTS:
     void slotMediaObjectUploaded(KJob *);
     void slotMediaObjectUploaded(BilboMedia*);
     void slotError( const QString &msg );
-    void slotOkClicked();
+    void slotButtonClicked(int button);
 private:
     const BilboBlog *mCurrentBlog;
     Ui::UploadMediaBase ui;
