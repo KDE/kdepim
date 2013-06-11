@@ -23,7 +23,6 @@ set(blogilo_SRCS
  poststabwidget.cpp
  composer/htmleditor.cpp
  composer/stylegetter.cpp
- composer/dialogs/addmediadialog.cpp
 
  composer/blogilocomposerview.cpp
  composer/blogilocomposereditor.cpp
@@ -43,7 +42,6 @@ kde4_add_ui_files(
   ui/waitwidgetbase.ui
   ui/blogsettingsbase.ui
   ui/uploadmediabase.ui
-  composer/dialogs/addmediadialogbase.ui
 )
 
 kde4_add_kcfg_files( blogilo_SRCS settings.kcfgc)
