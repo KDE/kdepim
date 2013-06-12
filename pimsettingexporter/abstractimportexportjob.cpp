@@ -85,4 +85,14 @@ KZip *AbstractImportExportJob::archive()
     return mArchiveStorage->archive();
 }
 
+void AbstractImportExportJob::backupFile(const QString&filename, const QString& path, const QString&storedName)
+{
+    const bool fileAdded  = archive()->addLocalFile(filename, path + storedName);
+    if (fileAdded)
+        Q_EMIT info(i18n("\"%1\" backup done.",storedName));
+    else
+        Q_EMIT error(i18n("\"%1\" cannot be exported.",storedName));
+}
+
+
 #include "abstractimportexportjob.moc"

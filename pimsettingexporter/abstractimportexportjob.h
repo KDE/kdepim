@@ -46,6 +46,7 @@ Q_SIGNALS:
     void error(const QString&);
 
 protected:
+    void backupFile(const QString&filename, const QString& path, const QString&storedName);
     KZip *archive();
 
     QProgressDialog *progressDialog();

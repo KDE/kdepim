@@ -627,15 +627,6 @@ void ExportMailJob::storeResources(const QString&identifier, const QString& path
         Q_EMIT error(i18n("Resource file \"%1\" cannot be added to backup file.", agentFileName));
 }
 
-void ExportMailJob::backupFile(const QString&filename, const QString& path, const QString&storedName)
-{
-    const bool fileAdded  = archive()->addLocalFile(filename, path + storedName);
-    if (fileAdded)
-        Q_EMIT info(i18n("\"%1\" backup done.",storedName));
-    else
-        Q_EMIT error(i18n("\"%1\" cannot be exported.",storedName));
-}
-
 KUrl ExportMailJob::subdirPath( const KUrl& url) const
 {
     const QString filename(url.fileName());
