@@ -67,7 +67,7 @@ set( messagecomposer_src
      job/aliasesexpandjob.cpp
      job/emailaddressresolvejob.cpp
 
-     keyresolver.cpp
+     composer/keyresolver.cpp
      autocorrection/composerautocorrection.cpp
      autocorrection/composerautocorrectionwidget.cpp
      autocorrection/composerautocorrectionlistwidget.cpp
