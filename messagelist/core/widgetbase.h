@@ -275,6 +275,7 @@ protected slots:
   void slotLockSearchClicked(bool b);
 
 private:
+  void defaultFilterStatus();
   class Private;
   Private * const d;
 };

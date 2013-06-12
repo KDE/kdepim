@@ -23,12 +23,12 @@
 #include "attachmentcontrollerbase.h"
 #include "attachmentmodel.h"
 #include "signaturecontroller.h"
-#include "kmeditor.h"
+#include "composer/kmeditor.h"
 #include "emailaddressresolvejob.h"
 #include "keyresolver.h"
-#include "globalpart.h"
+#include "part/globalpart.h"
 #include "kleo_util.h"
-#include "infopart.h"
+#include "part/infopart.h"
 #include "composer.h"
 #include "utils/util.h"
 #include "imagescaling/imagescalingutils.h"
@@ -899,7 +899,7 @@ void MessageComposer::ComposerViewBase::initAutoSave()
 {
   kDebug() << "initalising autosave";
 
-  // Ensure that the autosave directory exsits.
+  // Ensure that the autosave directory exists.
   QDir dataDirectory( KStandardDirs::locateLocal( "data", QLatin1String( "kmail2/" ) ) );
   if( !dataDirectory.exists( QLatin1String( "autosave" ) ) ) {
     kDebug() << "Creating autosave directory.";

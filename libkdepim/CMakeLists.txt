@@ -26,7 +26,7 @@ set(kdepim_LIB_SRCS
    addressline/addresseelineedit.cpp
    addressline/recentaddresses.cpp
    addressline/kmailcompletion.cpp
-   kprefsdialog.cpp
+   prefs/kprefsdialog.cpp
    maillistdrag.cpp
    widgets/kdatepickerpopup.cpp
    widgets/kcheckcombobox.cpp
@@ -54,12 +54,6 @@ set(kdepim_LIB_SRCS
    widgets/customlogwidget.cpp
    widgets/spellchecklineedit.cpp
 )
-
-if (KDEPIMLIBS_KRESOURCES_LIBS)
-  set(kdepim_LIB_SRCS ${kdepim_LIB_SRCS}
-    kresourceprefs.cpp
-  )
-endif ()
 
 if (KDEPIM_INPROCESS_LDAP)
   set(kdepim_LIB_SRCS ${kdepim_LIB_SRCS}

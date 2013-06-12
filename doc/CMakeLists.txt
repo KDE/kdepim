@@ -74,3 +74,8 @@ endif()
 if(BUILD_pimsettingexporter)
   add_subdirectory(pimsettingexporter)
 endif()
+
+if(BUILD_kmailcvt)
+  add_subdirectory(kmailcvt)
+endif()
+

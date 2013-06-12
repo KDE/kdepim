@@ -20,14 +20,16 @@
 
 #include "ui_kimportpagedlg.h"
 
-class KImportPage : public QWidget  {
-  Q_OBJECT
+class KImportPage : public QWidget
+{
+    Q_OBJECT
 public:
-  explicit KImportPage(QWidget *parent=0);
-  ~KImportPage();
+    explicit KImportPage(QWidget *parent=0);
+    ~KImportPage();
+
     Ui::KImportPageDlg *widget();
 private:
-  Ui::KImportPageDlg *mWidget;
+    Ui::KImportPageDlg *mWidget;
 };
 
 #endif

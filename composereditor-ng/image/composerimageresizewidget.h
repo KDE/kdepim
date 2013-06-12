@@ -42,7 +42,6 @@ protected:
     void mouseReleaseEvent( QMouseEvent * event );
     void paintEvent( QPaintEvent * event );
 
-
 private:
     friend class ComposerImageResizeWidgetPrivate;
     ComposerImageResizeWidgetPrivate * const d;

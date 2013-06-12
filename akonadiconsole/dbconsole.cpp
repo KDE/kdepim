@@ -37,7 +37,7 @@ DbConsole::DbConsole(QWidget* parent) :
 {
   ui.setupUi( this );
 
-  KAction *copyAction = KStandardAction::copy( this, SLOT( copyCell() ), this );
+  KAction *copyAction = KStandardAction::copy( this, SLOT(copyCell()), this );
   ui.resultView->addAction( copyAction );
 
   ui.execButton->setIcon( KIcon( "application-x-executable" ) );

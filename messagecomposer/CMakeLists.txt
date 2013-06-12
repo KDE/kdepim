@@ -34,10 +34,10 @@ set( messagecomposer_src
      messagecomposersettings.cpp
      composer/composerviewbase.cpp
 
-     messagepart.cpp
-     globalpart.cpp
-     infopart.cpp
-     textpart.cpp
+     part/messagepart.cpp
+     part/globalpart.cpp
+     part/infopart.cpp
+     part/textpart.cpp
 
      job/jobbase.cpp
      job/contentjobbase.cpp
@@ -52,7 +52,7 @@ set( messagecomposer_src
 
      job/skeletonmessagejob.cpp
 
-     kmeditor.cpp
+     composer/kmeditor.cpp
      job/inserttextfilejob.cpp
      signaturecontroller.cpp
      composer/composerlineedit.cpp
@@ -67,7 +67,7 @@ set( messagecomposer_src
      job/aliasesexpandjob.cpp
      job/emailaddressresolvejob.cpp
 
-     keyresolver.cpp
+     composer/keyresolver.cpp
      autocorrection/composerautocorrection.cpp
      autocorrection/composerautocorrectionwidget.cpp
      autocorrection/composerautocorrectionlistwidget.cpp
@@ -91,7 +91,7 @@ kde4_add_ui_files(messagecomposer_src
 if (NOT WINCE)
   # disabled due to no QTreeWidget
   set( messagecomposer_src ${messagecomposer_src}
-     distributionlistdialog.cpp
+     recipient/distributionlistdialog.cpp
   )
 endif ()
 
@@ -124,10 +124,10 @@ install( TARGETS messagecomposer ${INSTALL_TARGETS_DEFAULT_ARGS} )
 #install( FILES
 #         messagecomposer_export.h
 #         composer.h
-#         globalpart.h
-#         infopart.h
+#         part/globalpart.h
+#         part/infopart.h
 #         messagepart.h
-#         textpart.h
+#         part/textpart.h
 #         jobbase.h
 #         contentjobbase.h
 #         attachmentjob.h

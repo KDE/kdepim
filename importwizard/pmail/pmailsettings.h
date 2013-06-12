@@ -28,6 +28,7 @@ class PMailSettings : public AbstractSettings
 public:
     explicit PMailSettings(const QString &filename, ImportWizard *parent);
     ~PMailSettings();
+
 private:
     void readIdentity( const KConfigGroup& group );
 };

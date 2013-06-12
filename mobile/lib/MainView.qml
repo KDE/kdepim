@@ -25,10 +25,4 @@ QML.Rectangle {
   height: 480
   width: 800
   color : "#FAFAFA"
-
-  KPIM.WindowBar {
-    z: 100
-    anchors.top: parent.top
-    anchors.left: parent.left
-  }
 }

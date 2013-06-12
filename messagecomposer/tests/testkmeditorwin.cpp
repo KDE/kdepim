@@ -17,7 +17,7 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <messagecomposer/kmeditor.h>
+#include <messagecomposer/composer/kmeditor.h>
 #include <KApplication>
 #include <kcmdlineargs.h>
 #include <QAction>

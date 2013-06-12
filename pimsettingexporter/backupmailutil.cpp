@@ -59,10 +59,16 @@ QString BackupMailUtil::calendarPath()
     return QLatin1String("calendar/");
 }
 
+QString BackupMailUtil::addressbookPath()
+{
+    return QLatin1String("addressbook/");
+}
+
+
 KUrl BackupMailUtil::resourcePath(KSharedConfigPtr resourceConfig)
 {
     KConfigGroup group = resourceConfig->group(QLatin1String("General"));
     QString url = group.readEntry(QLatin1String("Path"),QString());
-    url.replace("$HOME", QDir::homePath());
+    url.replace(QLatin1String("$HOME"), QDir::homePath());
     return KUrl(url);
 }

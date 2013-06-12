@@ -22,10 +22,10 @@
 #include "composer.h"
 
 #include "attachmentjob.h"
-#include "globalpart.h"
-#include "infopart.h"
+#include "part/globalpart.h"
+#include "part/infopart.h"
 #include "jobbase_p.h"
-#include "textpart.h"
+#include "part/textpart.h"
 #include "maintextjob.h"
 #include "multipartjob.h"
 #include "signjob.h"

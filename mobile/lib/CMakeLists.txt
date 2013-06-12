@@ -115,7 +115,6 @@ install(FILES
   ScriptActionItem.qml
   StartCanvas.qml
   Spinner.qml
-  WindowBar.qml
   VerticalSelector.qml
   Clock.qml
   Calendar.qml

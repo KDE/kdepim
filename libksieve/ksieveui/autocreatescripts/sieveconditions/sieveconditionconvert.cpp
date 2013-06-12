@@ -43,7 +43,6 @@ QWidget *SieveConditionConvert::createParamWidget( QWidget *parent ) const
     lay->setMargin(0);
     w->setLayout(lay);
 
-    //TODO create a combobox with mimetype element
     QLabel *lab = new QLabel(i18n("From:"));
     lay->addWidget(lab);
 

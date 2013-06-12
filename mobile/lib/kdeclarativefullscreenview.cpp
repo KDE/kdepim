@@ -31,7 +31,6 @@
 #include <KAction>
 #include <KActionCollection>
 #include <KCmdLineArgs>
-#include <KWindowSystem>
 
 #include <QtCore/QDir>
 #include <QtCore/QTimer>
@@ -170,10 +169,6 @@ void KDeclarativeFullScreenView::delayedInit()
   connect( action, SIGNAL(triggered()), SLOT(closeAkonadi()) );
   mActionCollection->addAction( QLatin1String( "quit_akonadi" ), action );
 
-  action = new KAction( i18n( "Minimize Window" ), this );
-  connect( action, SIGNAL(triggered()), SLOT(triggerTaskSwitcher()) );
-  mActionCollection->addAction( QLatin1String( "wm_task_switch" ), action );
-
   if ( debugTiming ) {
     kWarning() << "KDeclarativeFullScreenView ctor done" << t.elapsed() << &t << QDateTime::currentDateTime();
   }
@@ -266,21 +261,6 @@ bool KDeclarativeFullScreenView::winEvent ( MSG * message, long * result )
   return false;
 }
 #endif
-
-void KDeclarativeFullScreenView::triggerTaskSwitcher()
-{
-#ifdef Q_WS_MAEMO_5
-  QDBusConnection::sessionBus().call( QDBusMessage::createSignal( QLatin1String( "/" ), QLatin1String( "com.nokia.hildon_desktop" ), QLatin1String( "exit_app_view" ) ), QDBus::NoBlock );
-#elif defined(_WIN32_WCE)
-  HWND hWnd = ::FindWindow( _T( "DesktopExplorerWindow" ), NULL );
-  if (hWnd != NULL){
-    ::ShowWindow( hWnd, SW_SHOW );
-    ::SetForegroundWindow(hWnd);
-  }
-#else
-  KWindowSystem::minimizeWindow( effectiveWinId() );
-#endif
-}
 
 void KDeclarativeFullScreenView::slotStatusChanged ( QDeclarativeView::Status status )
 {

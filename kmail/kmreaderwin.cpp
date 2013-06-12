@@ -33,7 +33,7 @@
 #include <libkdepim/job/openemailaddressjob.h>
 #include <libkdepim/broadcaststatus.h>
 #include "kmcommands.h"
-#include "mailcommon/sendmdnhandler.h"
+#include "mailcommon/mdn/sendmdnhandler.h"
 #include <QVBoxLayout>
 #include "messageviewer/headerstrategy.h"
 #include "messageviewer/headerstyle.h"
@@ -55,8 +55,8 @@ using namespace MessageViewer;
 #include "messagecomposer/messagesender.h"
 #include "messagecomposer/messagefactory.h"
 #include "messagecomposer/composer/composer.h"
-#include "messagecomposer/textpart.h"
-#include "messagecomposer/infopart.h"
+#include "messagecomposer/part/textpart.h"
+#include "messagecomposer/part/infopart.h"
 #include <KIO/JobUiDelegate>
 using MessageComposer::MessageFactory;
 

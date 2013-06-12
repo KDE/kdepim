@@ -30,10 +30,10 @@ class ArchiveJob : public MailCommon::ScheduledJob
     Q_OBJECT
 public:
     explicit ArchiveJob(ArchiveMailManager *manager, ArchiveMailInfo *info, const Akonadi::Collection &folder, bool immediate);
-    virtual ~ArchiveJob();
+    ~ArchiveJob();
 
-    virtual void execute();
-    virtual void kill();
+    void execute();
+    void kill();
 
 private Q_SLOTS:
     void slotBackupDone(const QString &info);

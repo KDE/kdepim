@@ -26,7 +26,7 @@
 using namespace KMime;
 
 #include <messagecomposer/composer/composer.h>
-#include <messagecomposer/globalpart.h>
+#include <messagecomposer/part/globalpart.h>
 #include <messagecomposer/job/singlepartjob.h>
 #include <messagecomposer/job/multipartjob.h>
 using namespace MessageComposer;

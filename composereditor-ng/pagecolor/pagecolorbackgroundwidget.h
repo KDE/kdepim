@@ -59,6 +59,7 @@ public:
 
     KUrl backgroundImageUrl() const;
     void setBackgroundImageUrl(const KUrl& url);
+
 private:
     Ui::PageColorBackgroundWidget *ui;
 };

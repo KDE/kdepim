@@ -199,7 +199,6 @@ void Backend::uploadMedia( BilboMedia * media )
             kDebug() << "Emitting sigError...";
             Q_EMIT sigMediaError( tmp, media );
             return;
-            break;
         case BilboBlog::METAWEBLOG_API:
         case BilboBlog::MOVABLETYPE_API:
         case BilboBlog::WORDPRESSBUGGY_API:
@@ -255,7 +254,6 @@ void Backend::uploadMedia( BilboMedia * media )
                      this, SLOT(slotMediaError(KBlog::Blog::ErrorType,QString,KBlog::BlogMedia*)) );
             MWBlog->createMedia( m );
             return;
-            break;
     }
     kError() << "Api type isn't set correctly!";
     tmp = i18n( "API type is not set correctly." );

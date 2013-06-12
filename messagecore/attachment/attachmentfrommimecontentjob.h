@@ -51,7 +51,7 @@ class MESSAGECORE_EXPORT AttachmentFromMimeContentJob : public AttachmentLoadJob
     /**
      * Destroys the job.
      */
-    virtual ~AttachmentFromMimeContentJob();
+    ~AttachmentFromMimeContentJob();
 
     /**
      * Sets the mime @p content to load the attachment from.
@@ -64,7 +64,7 @@ class MESSAGECORE_EXPORT AttachmentFromMimeContentJob : public AttachmentLoadJob
     const KMime::Content *mimeContent() const;
 
   protected Q_SLOTS:
-    virtual void doStart();
+    void doStart();
 
   private:
     //@cond PRIVATE

@@ -21,21 +21,21 @@
 #include <kstandarddirs.h>
 
 KImportPage::KImportPage(QWidget *parent )
-  : QWidget(parent)
+    : QWidget(parent)
 {
-  mWidget = new Ui::KImportPageDlg;
-  mWidget->setupUi( this ); 
-  mWidget->mIntroSidebar->setPixmap(KStandardDirs::locate("data", "kmailcvt/pics/step1.png"));
+    mWidget = new Ui::KImportPageDlg;
+    mWidget->setupUi( this );
+    mWidget->mIntroSidebar->setPixmap(KStandardDirs::locate("data", "kmailcvt/pics/step1.png"));
 }
 
 KImportPage::~KImportPage()
 {
-  delete mWidget;
+    delete mWidget;
 }
 
 Ui::KImportPageDlg *KImportPage::widget()
 {
-  return mWidget;
+    return mWidget;
 }
 
 #include "kimportpage.moc"

@@ -52,31 +52,31 @@ void AkonadiDataBase::init()
     const QString serverConfigFile = Akonadi::XdgBaseDirs::akonadiServerConfigFile( Akonadi::XdgBaseDirs::ReadWrite );
     QSettings settings( serverConfigFile, QSettings::IniFormat );
 
-    m_dbdriver = settings.value( "General/Driver", "QMYSQL" ).toString();
+    m_dbdriver = settings.value( QLatin1String("General/Driver"), QLatin1String("QMYSQL") ).toString();
     settings.beginGroup( m_dbdriver );
 
     if ( m_dbdriver == QLatin1String("QPSQL") ) {
-        m_dbname = settings.value( "Name", "akonadi" ).toString();
-        m_dboptions.append( "--host=" + settings.value( "Host", "" ).toString() );
+        m_dbname = settings.value( QLatin1String("Name"), QLatin1String("akonadi") ).toString();
+        m_dboptions.append( QLatin1String("--host=") + settings.value( QLatin1String("Host"), QString() ).toString() );
         // If the server is started by the user, we don't need to know the username/password.
-        bool startServer = settings.value( "StartServer", "true" ).toBool();
+        bool startServer = settings.value( QLatin1String("StartServer"), QLatin1String("true") ).toBool();
         if ( !startServer ) {
             // TODO: postgres will always ask for the user password ! implement .pgpass
-            m_dboptions.append( "--username=" + settings.value( "User", "" ).toString() );
+            m_dboptions.append( QLatin1String("--username=") + settings.value( QLatin1String("User"), QString() ).toString() );
         }
         settings.endGroup();
     } else if ( m_dbdriver == QLatin1String("QMYSQL") ) {
-        m_dbname = settings.value( "Name", "akonadi" ).toString();
+        m_dbname = settings.value( QLatin1String("Name"), QLatin1String("akonadi") ).toString();
         // If the server is started by the user, we don't need to know the username/password.
-        bool startServer = settings.value( "StartServer", "" ).toBool();
+        bool startServer = settings.value( QLatin1String("StartServer"), QString() ).toBool();
         if ( !startServer ) {
-            m_dboptions.append( "--host=" + settings.value( "Host", "" ).toString() );
-            m_dboptions.append( "--user=" + settings.value( "User", "" ).toString() );
-            m_dboptions.append( "--password=" + settings.value( "Password", "" ).toString() );
+            m_dboptions.append( QLatin1String("--host=") + settings.value( QLatin1String("Host"), QString() ).toString() );
+            m_dboptions.append( QLatin1String("--user=") + settings.value( QLatin1String("User"), QString() ).toString() );
+            m_dboptions.append( QLatin1String("--password=") + settings.value( QLatin1String("Password"), QString() ).toString() );
         } else {
-            const QString options = settings.value( "Options", "" ).toString();
+            const QString options = settings.value( QLatin1String("Options"), QString() ).toString();
             const QStringList list = options.split( QLatin1Char('=') );
-            m_dboptions.append( "--socket=" + list.at( 1 ) );
+            m_dboptions.append( QLatin1String("--socket=") + list.at( 1 ) );
         }
 
         settings.endGroup();

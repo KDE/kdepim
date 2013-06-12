@@ -37,12 +37,12 @@
 #include <messageviewer/globalsettings.h>
 #include <messageviewer/objecttreeemptysource.h>
 #include <messageviewer/objecttreeparser.h>
-#include <messagecomposer/kmeditor.h>
+#include <messagecomposer/composer/kmeditor.h>
 #include <messagecomposer/signaturecontroller.h>
 #include <messagecomposer/composer/composer.h>
-#include <messagecomposer/globalpart.h>
-#include <messagecomposer/infopart.h>
-#include <messagecomposer/textpart.h>
+#include <messagecomposer/part/globalpart.h>
+#include <messagecomposer/part/infopart.h>
+#include <messagecomposer/part/textpart.h>
 #include <messagecomposer/job/emailaddressresolvejob.h>
 #include <messagecomposer/attachmentcontrollerbase.h>
 #include <messagecomposer/attachmentmodel.h>

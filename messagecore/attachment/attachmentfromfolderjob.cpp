@@ -26,6 +26,7 @@
 #include <QtCore/QDir>
 #include <QtCore/QScopedPointer>
 
+static const mode_t archivePerms = S_IFREG | 0644;
 
 using namespace MessageCore;
 
@@ -43,12 +44,14 @@ class AttachmentFromFolderJob::Private
     KZip::Compression mCompression;
     AttachmentPart::Ptr mCompressedFolder;
     QScopedPointer<KZip> mZip;
+    time_t mArchiveTime;
 };
 
 AttachmentFromFolderJob::Private::Private( AttachmentFromFolderJob* qq ) :
         q( qq ),
         mCompression( KZip::DeflateCompression ),
-        mZip(0)
+        mZip(0),
+        mArchiveTime(QDateTime::currentDateTime().toTime_t())
 {
 }
 
@@ -66,7 +69,7 @@ void AttachmentFromFolderJob::Private::compressFolder()
         return;
     }
     mZip->setCompression( mCompression );
-    mZip->writeDir( mUrl.fileName(),QString(),QString() );
+    mZip->writeDir( mUrl.fileName(),QString(),QString(), 040755, mArchiveTime, mArchiveTime, mArchiveTime );
     kDebug() << "writing root directory : " << mUrl.fileName();
     addEntity(  QDir( mUrl.path() ).entryInfoList( QDir::Dirs | QDir::NoDotAndDotDot |
                 QDir::NoSymLinks | QDir::Files, QDir::DirsFirst ), fileName + '/' );
@@ -103,7 +106,7 @@ void AttachmentFromFolderJob::Private::addEntity( const QFileInfoList &f, const 
 
     if ( info.isDir() ) {
       kDebug() << "adding directory " << info.fileName() << "to zip";
-      if ( !mZip->writeDir( path+info.fileName(), QString(), QString() ) ) {
+      if ( !mZip->writeDir( path+info.fileName(), QString(), QString(), 040755, mArchiveTime, mArchiveTime, mArchiveTime ) ) {
         q->setError( KJob::UserDefinedError );
         q->setErrorText( i18n( "Could not add %1 to the archive", info.fileName() ) );
         q->emitResult();
@@ -121,7 +124,7 @@ void AttachmentFromFolderJob::Private::addEntity( const QFileInfoList &f, const 
         q->emitResult();
       }
       if ( !mZip->writeFile( path+info.fileName(), QString(),QString(),
-                             file.readAll().constData(),file.size() ) ) {
+                             file.readAll().constData(),file.size(), archivePerms, mArchiveTime, mArchiveTime, mArchiveTime ) ) {
         q->setError( KJob::UserDefinedError );
         q->setErrorText( i18n( "Could not add %1 to the archive", file.fileName() ) );
         q->emitResult();

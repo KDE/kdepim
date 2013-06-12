@@ -34,6 +34,7 @@ public:
     ~ComposerTableDialog();
 
     QString html() const;
+
 private:
     friend class ComposerTableDialogPrivate;
     ComposerTableDialogPrivate * const d;

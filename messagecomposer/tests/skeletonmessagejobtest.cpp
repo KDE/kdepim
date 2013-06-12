@@ -25,8 +25,8 @@
 #include <kmime/kmime_message.h>
 
 #include <messagecomposer/composer/composer.h>
-#include <messagecomposer/infopart.h>
-#include <messagecomposer/globalpart.h>
+#include <messagecomposer/part/infopart.h>
+#include <messagecomposer/part/globalpart.h>
 #include <messagecomposer/job/skeletonmessagejob.h>
 using namespace MessageComposer;
 

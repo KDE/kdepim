@@ -30,7 +30,7 @@
 
 #include "messagecomposersettings.h"
 #ifndef Q_OS_WINCE
-#include <messagecomposer/distributionlistdialog.h>
+#include <messagecomposer/recipient/distributionlistdialog.h>
 #endif
 #include "messageviewer/utils/autoqpointer.h"
 

@@ -50,7 +50,7 @@ class MESSAGECORE_EXPORT AttachmentFromFolderJob : public AttachmentFromUrlBaseJ
     * Destroys the job.
     */
 
-    virtual ~AttachmentFromFolderJob();
+    ~AttachmentFromFolderJob();
 
     /**
      * Sets the @p compression method, either KZip::Deflate or KZip::NoCompression.
@@ -64,7 +64,7 @@ class MESSAGECORE_EXPORT AttachmentFromFolderJob : public AttachmentFromUrlBaseJ
 
 
   protected Q_SLOTS:
-    virtual void doStart();
+    void doStart();
 
   private:
     //@cond PRIVATE

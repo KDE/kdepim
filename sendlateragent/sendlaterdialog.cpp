@@ -51,6 +51,7 @@ SendLaterDialog::SendLaterDialog(SendLaterInfo *info, QWidget *parent)
 
     mDateTime = new QDateTimeEdit;
     mDateTime->setMinimumDateTime(QDateTime::currentDateTime());
+    connect(mDateTime, SIGNAL(dateTimeChanged(QDateTime)), SLOT(slotDateTimeChanged(QDateTime)));
     hbox->addWidget(lab);
     hbox->addWidget(mDateTime);
 
@@ -77,6 +78,10 @@ SendLaterDialog::SendLaterDialog(SendLaterInfo *info, QWidget *parent)
     mRecursiveComboBox->addItems(unitsList);
 
     hbox->addWidget(mRecursiveComboBox);
+
+    mSendAtTime = new KPushButton;
+    connect(mSendAtTime, SIGNAL(clicked()), SLOT(slotSendAtTime()));
+    hbox->addWidget(mSendAtTime);
 
     hbox = new QHBoxLayout;
 
@@ -111,21 +116,21 @@ SendLaterDialog::~SendLaterDialog()
 void SendLaterDialog::slotSendIn2Hours()
 {
     mSendDateTime = QDateTime::currentDateTime().addSecs(60*60*2);
-    mAction = SendLater;
+    mAction = SendDeliveryAtTime;
     accept();
 }
 
 void SendLaterDialog::slotSendIn1Hour()
 {
     mSendDateTime = QDateTime::currentDateTime().addSecs(60*60);
-    mAction = SendLater;
+    mAction = SendDeliveryAtTime;
     accept();
 }
 
 void SendLaterDialog::slotSendIn30Minutes()
 {
     mSendDateTime = QDateTime::currentDateTime().addSecs(60*30);
-    mAction = SendLater;
+    mAction = SendDeliveryAtTime;
     accept();
 }
 
@@ -191,6 +196,18 @@ void SendLaterDialog::slotSendNow()
 SendLaterDialog::SendLaterAction SendLaterDialog::action() const
 {
     return mAction;
+}
+
+void SendLaterDialog::slotDateTimeChanged(const QDateTime &datetime)
+{
+    mSendAtTime->setText(i18n("Send around %1", KGlobal::locale()->formatDateTime(datetime)));
+}
+
+void SendLaterDialog::slotSendAtTime()
+{
+    mSendDateTime = mDateTime->dateTime();
+    mAction = SendDeliveryAtTime;
+    accept();
 }
 
 #include "sendlaterdialog.moc"

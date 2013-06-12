@@ -63,8 +63,6 @@ ExtendAttributesButton::~ExtendAttributesButton()
 {
     delete d;
 }
-
-
 }
 
 #include "extendattributesbutton.moc"

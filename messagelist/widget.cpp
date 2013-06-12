@@ -209,11 +209,11 @@ void Widget::focusQuickSearch()
 void Widget::fillMessageTagCombo( KComboBox * combo )
 {
   KConfigGroup conf( MessageList::Core::Settings::self()->config(),"MessageListView");
-  QString tagSelected= conf.readEntry(QLatin1String("TagSelected"));
+  const QString tagSelected= conf.readEntry(QLatin1String("TagSelected"));
   if(tagSelected.isEmpty()) {
     return;
   }
-  const QStringList tagSelectedLst = tagSelected.split(QLatin1String(","));
+  const QStringList tagSelectedLst = tagSelected.split(QLatin1Char(','));
   foreach( const Nepomuk2::Tag &nepomukTag, Nepomuk2::Tag::allTags() ) {
     const QString id = nepomukTag.uri().toString();
     if(tagSelectedLst.contains(id)) {

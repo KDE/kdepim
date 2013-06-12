@@ -18,7 +18,7 @@
  */
 #include "inserttextfilejob.h"
 
-#include "kmeditor.h"
+#include "composer/kmeditor.h"
 
 #include <KCharsets>
 #include <KDebug>

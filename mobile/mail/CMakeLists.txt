@@ -142,6 +142,7 @@ install(FILES
   next-unread-mail.png
   SnippetsEditor.qml
   SnippetsList.qml
+  StartPage.qml
   VacationScriptIndicator.qml
   add-attachment-button.png
   remove-attachment-button.png
