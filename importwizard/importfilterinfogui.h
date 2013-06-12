@@ -26,6 +26,7 @@ class ImportFilterInfoGui : public MailImporter::FilterInfoGui
 public:
     explicit ImportFilterInfoGui(ImportMailPage *parent);
     ~ImportFilterInfoGui();
+
     void setStatusMessage( const QString& status );
     void setFrom( const QString& from );
     void setTo( const QString& to );
@@ -37,6 +38,7 @@ public:
     void clear();
     void alert( const QString& message );
     QWidget *parent();
+
 private:
     ImportMailPage *m_parent;
 };

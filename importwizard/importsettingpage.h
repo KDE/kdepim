@@ -27,15 +27,16 @@ class ImportSettingPage;
 class ImportSettingPage : public QWidget
 {
     Q_OBJECT
-
 public:
     explicit ImportSettingPage(QWidget *parent = 0);
     ~ImportSettingPage();
     void addImportInfo( const QString& log );
     void addImportError( const QString& log );
     void setImportButtonEnabled(bool enabled);
+
 Q_SIGNALS:
     void importSettingsClicked();
+
 private:
     Ui::ImportSettingPage *ui;
 };

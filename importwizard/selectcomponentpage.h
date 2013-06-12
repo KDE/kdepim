@@ -31,6 +31,7 @@ class SelectComponentPage : public QWidget
 public:
     explicit SelectComponentPage(QWidget *parent = 0);
     ~SelectComponentPage();
+
     void setEnabledComponent(AbstractImporter::TypeSupportedOptions options);
     AbstractImporter::TypeSupportedOptions selectedComponents() const;
 

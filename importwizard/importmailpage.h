@@ -35,7 +35,6 @@ class ImportMailsWidget;
 class ImportMailPage : public QWidget
 {
     Q_OBJECT
-
 public:
     explicit ImportMailPage(QWidget *parent = 0);
     ~ImportMailPage();

@@ -27,13 +27,14 @@ class ImportFilterPage;
 class ImportFilterPage : public QWidget
 {
     Q_OBJECT
-
 public:
     explicit ImportFilterPage(QWidget *parent = 0);
     ~ImportFilterPage();
+
     void addImportInfo( const QString& log );
     void addImportError( const QString& log );
     void setImportButtonEnabled(bool enabled);
+
 Q_SIGNALS:
     void importFiltersClicked();
 

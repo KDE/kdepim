@@ -33,6 +33,7 @@ class SelectProgramPage : public QWidget
 public:
     explicit SelectProgramPage(QWidget *parent = 0);
     ~SelectProgramPage();
+
     void setFoundProgram(const QStringList& list);
     void disableSelectProgram();
 
