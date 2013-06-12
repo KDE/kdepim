@@ -91,7 +91,7 @@ kde4_add_ui_files(messagecomposer_src
 if (NOT WINCE)
   # disabled due to no QTreeWidget
   set( messagecomposer_src ${messagecomposer_src}
-     distributionlistdialog.cpp
+     recipient/distributionlistdialog.cpp
   )
 endif ()
 
