@@ -200,8 +200,7 @@ SendLaterDialog::SendLaterAction SendLaterDialog::action() const
 
 void SendLaterDialog::slotDateTimeChanged(const QDateTime &datetime)
 {
-    //TODO fix it.
-    mSendAtTime->setText(i18n("Send around %1", datetime.toString()));
+    mSendAtTime->setText(i18n("Send around %1", KGlobal::locale()->formatDateTime(datetime)));
 }
 
 void SendLaterDialog::slotSendAtTime()
