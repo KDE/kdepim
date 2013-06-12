@@ -31,6 +31,7 @@ public:
 
 private:
     void restoreResources();
+    void restoreConfig();
 };
 
 #endif // IMPORTCALENDARJOB_H

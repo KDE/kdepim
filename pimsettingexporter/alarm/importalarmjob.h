@@ -31,6 +31,7 @@ public:
 
 private:
     void restoreResources();
+    void restoreConfig();
 };
 
 #endif // IMPORTALARMJOB_H

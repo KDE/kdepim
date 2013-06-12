@@ -38,3 +38,8 @@ void ImportAddressbookJob::restoreResources()
 {
     //TODO
 }
+
+void ImportAddressbookJob::restoreConfig()
+{
+    //TODO
+}

@@ -38,3 +38,8 @@ void ImportCalendarJob::restoreResources()
 {
     //TODO
 }
+
+void ImportCalendarJob::restoreConfig()
+{
+    //TODO
+}

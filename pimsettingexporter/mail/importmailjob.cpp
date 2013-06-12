@@ -872,8 +872,7 @@ void ImportMailJob::restoreAkonadiDb()
                    << QLatin1String("--no-owner")
                    << QLatin1String("--no-privileges")
                    << tmp.fileName();
-        }
-        else if (dbDriver == QLatin1String("QMYSQL") ) {
+        } else if (dbDriver == QLatin1String("QMYSQL") ) {
             dbRestoreAppName = QLatin1String("mysql");
             params << akonadiDataBase.options()
                    << QLatin1String("--database=") + akonadiDataBase.name();

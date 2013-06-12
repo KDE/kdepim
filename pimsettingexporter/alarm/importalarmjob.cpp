@@ -39,3 +39,8 @@ void ImportAlarmJob::restoreResources()
 {
     //TODO
 }
+
+void ImportAlarmJob::restoreConfig()
+{
+    //TODO
+}
