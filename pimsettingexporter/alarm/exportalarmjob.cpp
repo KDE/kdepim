@@ -49,4 +49,9 @@ void ExportAlarmJob::backupResources()
     Q_EMIT info(i18n("Resources backup done."));
 }
 
+void ExportAlarmJob::backupConfig()
+{
+
+}
+
 #include "exportalarmjob.moc"

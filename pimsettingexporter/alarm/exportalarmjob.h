@@ -34,6 +34,7 @@ public:
 
 private:
     void backupResources();
+    void backupConfig();
 };
 
 #endif // EXPORTALARMJOB_H

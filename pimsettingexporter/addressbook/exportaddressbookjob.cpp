@@ -49,4 +49,9 @@ void ExportAddressbookJob::backupResources()
     Q_EMIT info(i18n("Resources backup done."));
 }
 
+void ExportAddressbookJob::backupConfig()
+{
+
+}
+
 #include "exportaddressbookjob.moc"
