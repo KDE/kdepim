@@ -1,4 +1,6 @@
 project(pimsettingexporter)
+add_definitions( -DQT_NO_CAST_FROM_ASCII )
+add_definitions( -DQT_NO_CAST_TO_ASCII )
 
 include_directories(${AKONADI_INCLUDE_DIR} 
                     ${SOPRANO_INCLUDE_DIR} 

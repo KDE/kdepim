@@ -39,10 +39,12 @@
 #include <QPointer>
 
 BackupMailWindow::BackupMailWindow(QWidget *parent)
-    : KXmlGuiWindow(parent),mBackupData(0),mRestoreData(0)
+    : KXmlGuiWindow(parent),
+      mBackupData(0),
+      mRestoreData(0)
 {
-    KGlobal::locale()->insertCatalog( "libmailcommon" );
-    KGlobal::locale()->insertCatalog( "libpimcommon" );
+    KGlobal::locale()->insertCatalog( QLatin1String("libmailcommon") );
+    KGlobal::locale()->insertCatalog( QLatin1String("libpimcommon") );
 
     BackupMailKernel *kernel = new BackupMailKernel( this );
     CommonKernel->registerKernelIf( kernel ); //register KernelIf early, it is used by the Filter classes
@@ -50,7 +52,7 @@ BackupMailWindow::BackupMailWindow(QWidget *parent)
 
     bool canZipFile = canZip();
     setupActions(canZipFile);
-    setupGUI(Keys | StatusBar | Save | Create,"pimsettingexporter.rc");
+    setupGUI(Keys | StatusBar | Save | Create, QLatin1String("pimsettingexporter.rc"));
     mBackupMailWidget = new BackupMailWidget(this);
 
     setCentralWidget(mBackupMailWidget);
@@ -71,11 +73,11 @@ void BackupMailWindow::setupActions(bool canZipFile)
 {
     KActionCollection* ac=actionCollection();
 
-    KAction *backupAction = ac->addAction("backup",this,SLOT(slotBackupData()));
+    KAction *backupAction = ac->addAction(QLatin1String("backup"), this, SLOT(slotBackupData()));
     backupAction->setText(i18n("Back Up Data..."));
     backupAction->setEnabled(canZipFile);
 
-    KAction *restoreAction = ac->addAction("restore",this,SLOT(slotRestoreData()));
+    KAction *restoreAction = ac->addAction(QLatin1String("restore"), this, SLOT(slotRestoreData()));
     restoreAction->setText(i18n("Restore Data..."));
     restoreAction->setEnabled(canZipFile);
 
@@ -112,7 +114,6 @@ void BackupMailWindow::slotBackupData()
         mBackupData = 0;
         archiveStorage->closeArchive();
         delete archiveStorage;
-
     } else {
         delete dialog;
     }
@@ -166,7 +167,7 @@ void BackupMailWindow::slotRestoreData()
 
 bool BackupMailWindow::canZip() const
 {
-    const QString zip = KStandardDirs::findExe( "zip" );
+    const QString zip = KStandardDirs::findExe( QLatin1String("zip") );
     if (zip.isEmpty()) {
         return false;
     }

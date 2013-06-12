@@ -159,7 +159,7 @@ void ImportMailJob::restoreTransports()
             defaultTransport = group.readEntry(QLatin1String("default-transport"),-1);
         }
 
-        const QStringList transportList = transportConfig->groupList().filter( QRegExp( "Transport \\d+" ) );
+        const QStringList transportList = transportConfig->groupList().filter( QRegExp( QLatin1String("Transport \\d+") ) );
         Q_FOREACH(const QString&transport, transportList) {
             KConfigGroup group = transportConfig->group(transport);
             const int transportId = group.readEntry(QLatin1String("id"), -1);
@@ -552,10 +552,10 @@ void ImportMailJob::restoreConfig()
         fileFilter->copyTo(mTempDirName);
         const QString filterFileName(mTempDirName + QLatin1Char('/') +QLatin1String("filters"));
         KSharedConfig::Ptr filtersConfig = KSharedConfig::openConfig(filterFileName);
-        const QStringList filterList = filtersConfig->groupList().filter( QRegExp( "Filter #\\d+" ) );
+        const QStringList filterList = filtersConfig->groupList().filter( QRegExp( QLatin1String("Filter #\\d+") ) );
         Q_FOREACH(const QString&filterStr, filterList) {
             KConfigGroup group = filtersConfig->group(filterStr);
-            const QString accountStr("accounts-set");
+            const QString accountStr(QLatin1String("accounts-set"));
             if (group.hasKey(accountStr)) {
                 const QString accounts = group.readEntry(accountStr);
                 if (!accounts.isEmpty()) {
@@ -604,7 +604,7 @@ void ImportMailJob::restoreConfig()
             MailCommon::FilterManager::instance()->appendFilters(lstFilter);
         }
     }
-    const QString kmailsnippetrcStr("kmailsnippetrc");
+    const QString kmailsnippetrcStr(QLatin1String("kmailsnippetrc"));
     const KArchiveEntry* kmailsnippetentry  = mArchiveDirectory->entry(BackupMailUtil::configsPath() + kmailsnippetrcStr);
     if (kmailsnippetentry && kmailsnippetentry->isFile()) {
         const KArchiveFile* kmailsnippet = static_cast<const KArchiveFile*>(kmailsnippetentry);
@@ -619,7 +619,7 @@ void ImportMailJob::restoreConfig()
         }
     }
 
-    const QString labldaprcStr("kabldaprc");
+    const QString labldaprcStr(QLatin1String("kabldaprc"));
     const KArchiveEntry* kabldapentry  = mArchiveDirectory->entry(BackupMailUtil::configsPath() + labldaprcStr);
     if (kabldapentry && kabldapentry->isFile()) {
         const KArchiveFile* kabldap= static_cast<const KArchiveFile*>(kabldapentry);
@@ -635,7 +635,7 @@ void ImportMailJob::restoreConfig()
             copyToFile(kabldap, kabldaprc, labldaprcStr,BackupMailUtil::configsPath());
         }
     }
-    const QString archiveconfigurationrcStr("akonadi_archivemail_agentrc");
+    const QString archiveconfigurationrcStr(QLatin1String("akonadi_archivemail_agentrc"));
     const KArchiveEntry* archiveconfigurationentry  = mArchiveDirectory->entry(BackupMailUtil::configsPath() + archiveconfigurationrcStr);
     if ( archiveconfigurationentry &&  archiveconfigurationentry->isFile()) {
         const KArchiveFile* archiveconfiguration = static_cast<const KArchiveFile*>(archiveconfigurationentry);
@@ -652,7 +652,7 @@ void ImportMailJob::restoreConfig()
         }
     }
 
-    const QString templatesconfigurationrcStr("templatesconfigurationrc");
+    const QString templatesconfigurationrcStr(QLatin1String("templatesconfigurationrc"));
     const KArchiveEntry* templatesconfigurationentry  = mArchiveDirectory->entry(BackupMailUtil::configsPath() + templatesconfigurationrcStr);
     if ( templatesconfigurationentry &&  templatesconfigurationentry->isFile()) {
         const KArchiveFile* templatesconfiguration = static_cast<const KArchiveFile*>(templatesconfigurationentry);
@@ -667,7 +667,7 @@ void ImportMailJob::restoreConfig()
         }
     }
 
-    const QString kmailStr("kmail2rc");
+    const QString kmailStr(QLatin1String("kmail2rc"));
     const KArchiveEntry* kmail2rcentry  = mArchiveDirectory->entry(BackupMailUtil::configsPath() + kmailStr);
     if (kmail2rcentry && kmail2rcentry->isFile()) {
         const KArchiveFile* kmailrc = static_cast<const KArchiveFile*>(kmail2rcentry);
@@ -682,7 +682,7 @@ void ImportMailJob::restoreConfig()
     }
 
 
-    const QString sievetemplatercStr("sievetemplaterc");
+    const QString sievetemplatercStr(QLatin1String("sievetemplaterc"));
     const KArchiveEntry* sievetemplatentry  = mArchiveDirectory->entry(BackupMailUtil::configsPath() + sievetemplatercStr);
     if ( sievetemplatentry &&  sievetemplatentry->isFile()) {
         const KArchiveFile* sievetemplateconfiguration = static_cast<const KArchiveFile*>(sievetemplatentry);
@@ -698,7 +698,7 @@ void ImportMailJob::restoreConfig()
     }
 
 
-    const QString customTemplateStr("customtemplatesrc");
+    const QString customTemplateStr(QLatin1String("customtemplatesrc"));
     const KArchiveEntry* customtemplatentry  = mArchiveDirectory->entry(BackupMailUtil::configsPath() + customTemplateStr);
     if ( customtemplatentry &&  customtemplatentry->isFile()) {
         const KArchiveFile* customtemplateconfiguration = static_cast<const KArchiveFile*>(customtemplatentry);
@@ -753,11 +753,11 @@ void ImportMailJob::restoreIdentity()
         KConfigGroup general = identityConfig->group(QLatin1String("General"));
         const int defaultIdentity = general.readEntry(QLatin1String("Default Identity"),-1);
 
-        const QStringList identityList = identityConfig->groupList().filter( QRegExp( "Identity #\\d+" ) );
+        const QStringList identityList = identityConfig->groupList().filter( QRegExp( QLatin1String("Identity #\\d+") ) );
         Q_FOREACH(const QString&identityStr, identityList) {
             KConfigGroup group = identityConfig->group(identityStr);
             int oldUid = -1;
-            const QString uidStr("uoid");
+            const QString uidStr(QLatin1String("uoid"));
             if (group.hasKey(uidStr)) {
                 oldUid = group.readEntry(uidStr).toUInt();
                 group.deleteEntry(uidStr);
@@ -1004,7 +1004,7 @@ void ImportMailJob::importKmailConfig(const KArchiveFile* kmailsnippet, const QS
             oldGroup.deleteGroup();
         }
     }
-    const QString accountOrder("AccountOrder");
+    const QString accountOrder(QLatin1String("AccountOrder"));
     if (kmailConfig->hasGroup(accountOrder)) {
         KConfigGroup group = kmailConfig->group(accountOrder);
         QStringList orderList = group.readEntry(QLatin1String("order"),QStringList());
@@ -1020,10 +1020,10 @@ void ImportMailJob::importKmailConfig(const KArchiveFile* kmailsnippet, const QS
         }
     }
 
-    const QString composerStr("Composer");
+    const QString composerStr(QLatin1String("Composer"));
     if (kmailConfig->hasGroup(composerStr)) {
         KConfigGroup composerGroup = kmailConfig->group(composerStr);
-        const QString previousStr("previous-fcc");
+        const QString previousStr(QLatin1String("previous-fcc"));
         if (composerGroup.hasKey(previousStr)) {
             const QString path = composerGroup.readEntry(previousStr);
             if (!path.isEmpty()) {
@@ -1035,7 +1035,7 @@ void ImportMailJob::importKmailConfig(const KArchiveFile* kmailsnippet, const QS
                 }
             }
         }
-        const QString previousIdentityStr("previous-identity");
+        const QString previousIdentityStr(QLatin1String("previous-identity"));
         if (composerGroup.hasKey(previousIdentityStr)) {
             const int identityValue = composerGroup.readEntry(previousIdentityStr, -1);
             if (identityValue!=-1) {
@@ -1048,10 +1048,10 @@ void ImportMailJob::importKmailConfig(const KArchiveFile* kmailsnippet, const QS
         }
     }
 
-    const QString generalStr("General");
+    const QString generalStr(QLatin1String("General"));
     if (kmailConfig->hasGroup(generalStr)) {
         KConfigGroup generalGroup = kmailConfig->group(generalStr);
-        const QString startupFolderStr("startupFolder");
+        const QString startupFolderStr(QLatin1String("startupFolder"));
         if (generalGroup.hasKey(startupFolderStr)) {
             const QString path = generalGroup.readEntry(startupFolderStr);
             if (!path.isEmpty()) {

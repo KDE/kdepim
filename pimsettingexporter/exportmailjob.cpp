@@ -121,7 +121,7 @@ void ExportMailJob::backupTransports()
     showInfo(i18n("Backing up transports..."));
     MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
 
-    const QString mailtransportsStr("mailtransports");
+    const QString mailtransportsStr(QLatin1String("mailtransports"));
     const QString maitransportsrc = KStandardDirs::locateLocal( "config",  mailtransportsStr);
     if (!QFile(maitransportsrc).exists()) {
         Q_EMIT info(i18n("Transports backup done."));
@@ -151,9 +151,9 @@ void ExportMailJob::backupResources()
     foreach( const Akonadi::AgentInstance &agent, list ) {
         const QStringList capabilities( agent.type().capabilities() );
         if (agent.type().mimeTypes().contains( KMime::Message::mimeType())) {
-            if ( capabilities.contains( "Resource" ) &&
-                 !capabilities.contains( "Virtual" ) &&
-                 !capabilities.contains( "MailTransport" ) )
+            if ( capabilities.contains( QLatin1String("Resource") ) &&
+                 !capabilities.contains( QLatin1String("Virtual") ) &&
+                 !capabilities.contains( QLatin1String("MailTransport") ) )
             {
                 const QString identifier = agent.identifier();
                 //Store just pop3/imap account. Store other config when we copy data.
@@ -186,31 +186,31 @@ void ExportMailJob::backupConfig()
         else
             Q_EMIT error(i18n("Filters cannot be exported."));
     }
-    const QString labldaprcStr("kabldaprc");
+    const QString labldaprcStr(QLatin1String("kabldaprc"));
     const QString labldaprc = KStandardDirs::locateLocal( "config", labldaprcStr);
     if (QFile(labldaprc).exists()) {
         backupFile(labldaprc, BackupMailUtil::configsPath(), labldaprcStr);
     }
 
-    const QString kmailsnippetrcStr("kmailsnippetrc");
+    const QString kmailsnippetrcStr(QLatin1String("kmailsnippetrc"));
     const QString kmailsnippetrc = KStandardDirs::locateLocal( "config",  kmailsnippetrcStr);
     if (QFile(kmailsnippetrc).exists()) {
         backupFile(kmailsnippetrc, BackupMailUtil::configsPath(), kmailsnippetrcStr);
     }
 
-    const QString sieveTemplateStr("sievetemplaterc");
+    const QString sieveTemplateStr(QLatin1String("sievetemplaterc"));
     const QString sieveTemplaterc = KStandardDirs::locateLocal( "config",  sieveTemplateStr);
     if (QFile(sieveTemplaterc).exists()) {
         backupFile(sieveTemplaterc, BackupMailUtil::configsPath(), sieveTemplateStr);
     }
 
-    const QString customTemplateStr("customtemplatesrc");
+    const QString customTemplateStr(QLatin1String("customtemplatesrc"));
     const QString customTemplaterc = KStandardDirs::locateLocal( "config",  customTemplateStr);
     if (QFile(customTemplaterc).exists()) {
         backupFile(customTemplaterc, BackupMailUtil::configsPath(), customTemplateStr);
     }
 
-    const QString archiveMailAgentConfigurationStr("akonadi_archivemail_agentrc");
+    const QString archiveMailAgentConfigurationStr(QLatin1String("akonadi_archivemail_agentrc"));
     const QString archiveMailAgentconfigurationrc = KStandardDirs::locateLocal( "config", archiveMailAgentConfigurationStr );
     if (QFile(archiveMailAgentconfigurationrc).exists()) {
         KSharedConfigPtr archivemailrc = KSharedConfig::openConfig(archiveMailAgentConfigurationStr);
@@ -219,7 +219,7 @@ void ExportMailJob::backupConfig()
         tmp.open();
 
         KConfig *archiveConfig = archivemailrc->copyTo( tmp.fileName() );
-        const QStringList archiveList = archiveConfig->groupList().filter( QRegExp( "ArchiveMailCollection \\d+" ) );
+        const QStringList archiveList = archiveConfig->groupList().filter( QRegExp( QLatin1String("ArchiveMailCollection \\d+") ) );
         const QString archiveGroupPattern = QLatin1String( "ArchiveMailCollection " );
 
         Q_FOREACH(const QString& str, archiveList) {
@@ -242,7 +242,7 @@ void ExportMailJob::backupConfig()
         backupFile(tmp.fileName(), BackupMailUtil::configsPath(), archiveMailAgentConfigurationStr);
     }
 
-    const QString templatesconfigurationrcStr("templatesconfigurationrc");
+    const QString templatesconfigurationrcStr(QLatin1String("templatesconfigurationrc"));
     const QString templatesconfigurationrc = KStandardDirs::locateLocal( "config",  templatesconfigurationrcStr);
     if (QFile(templatesconfigurationrc).exists()) {
         KSharedConfigPtr templaterc = KSharedConfig::openConfig(templatesconfigurationrcStr);
@@ -252,7 +252,7 @@ void ExportMailJob::backupConfig()
 
         KConfig *templateConfig = templaterc->copyTo( tmp.fileName() );
         const QString templateGroupPattern = QLatin1String( "Templates #" );
-        const QStringList templateList = templateConfig->groupList().filter( QRegExp( "Templates #\\d+" ) );
+        const QStringList templateList = templateConfig->groupList().filter( QRegExp( QLatin1String("Templates #\\d+") ) );
         Q_FOREACH(const QString& str, templateList) {
             bool found = false;
             const int collectionId = str.right(str.length()-templateGroupPattern.length()).toInt(&found);
@@ -279,7 +279,7 @@ void ExportMailJob::backupConfig()
         }
     }
 
-    const QString kmailStr("kmail2rc");
+    const QString kmailStr(QLatin1String("kmail2rc"));
     const QString kmail2rc = KStandardDirs::locateLocal( "config",  kmailStr);
     if (QFile(kmail2rc).exists()) {
         KSharedConfigPtr kmailrc = KSharedConfig::openConfig(kmail2rc);
@@ -289,7 +289,7 @@ void ExportMailJob::backupConfig()
 
         KConfig *kmailConfig = kmailrc->copyTo( tmp.fileName() );
         const QString folderGroupPattern = QLatin1String( "Folder-" );
-        const QStringList folderList = kmailConfig->groupList().filter( QRegExp( "Folder-\\d+" ) );
+        const QStringList folderList = kmailConfig->groupList().filter( QRegExp( QLatin1String("Folder-\\d+") ) );
         Q_FOREACH(const QString& str, folderList) {
             bool found = false;
             const int collectionId = str.right(str.length()-folderGroupPattern.length()).toInt(&found);
@@ -303,10 +303,10 @@ void ExportMailJob::backupConfig()
                 oldGroup.deleteGroup();
             }
         }
-        const QString composerStr("Composer");
+        const QString composerStr(QLatin1String("Composer"));
         if (kmailConfig->hasGroup(composerStr)) {
             KConfigGroup composerGroup = kmailConfig->group(composerStr);
-            const QString previousStr("previous-fcc");
+            const QString previousStr(QLatin1String("previous-fcc"));
             if (composerGroup.hasKey(previousStr)) {
                 const int collectionId = composerGroup.readEntry(previousStr,-1);
                 if (collectionId!=-1) {
@@ -316,10 +316,10 @@ void ExportMailJob::backupConfig()
             }
         }
 
-        const QString generalStr("General");
+        const QString generalStr(QLatin1String("General"));
         if (kmailConfig->hasGroup(generalStr)) {
             KConfigGroup generalGroup = kmailConfig->group(generalStr);
-            const QString startupFolderStr("startupFolder");
+            const QString startupFolderStr(QLatin1String("startupFolder"));
             if (generalGroup.hasKey(startupFolderStr)) {
                 const int collectionId = generalGroup.readEntry(startupFolderStr,-1);
                 if (collectionId!=-1) {
@@ -329,11 +329,11 @@ void ExportMailJob::backupConfig()
             }
         }
 
-        const QString storageModelSelectedMessageStr("MessageListView::StorageModelSelectedMessages");
+        const QString storageModelSelectedMessageStr(QLatin1String("MessageListView::StorageModelSelectedMessages"));
         if (kmailConfig->hasGroup(storageModelSelectedMessageStr)) {
             KConfigGroup storageGroup = kmailConfig->group(storageModelSelectedMessageStr);
-            const QString storageModelSelectedPattern("MessageUniqueIdForStorageModel");
-            const QStringList storageList = storageGroup.keyList().filter( QRegExp( "MessageUniqueIdForStorageModel\\d+" ) );
+            const QString storageModelSelectedPattern(QLatin1String("MessageUniqueIdForStorageModel"));
+            const QStringList storageList = storageGroup.keyList().filter( QRegExp( QLatin1String("MessageUniqueIdForStorageModel\\d+") ) );
             Q_FOREACH(const QString& str, storageList) {
                 bool found = false;
                 const int collectionId = str.right(str.length()-storageModelSelectedPattern.length()).toInt(&found);
@@ -347,10 +347,10 @@ void ExportMailJob::backupConfig()
                 }
             }
         }
-        const QString favoriteCollectionStr("FavoriteCollections");
+        const QString favoriteCollectionStr(QLatin1String("FavoriteCollections"));
         if (kmailConfig->hasGroup(favoriteCollectionStr)) {
             KConfigGroup favoriteGroup = kmailConfig->group(favoriteCollectionStr);
-            const QString favoriteCollectionIdsStr("FavoriteCollectionIds");
+            const QString favoriteCollectionIdsStr(QLatin1String("FavoriteCollectionIds"));
             if (favoriteGroup.hasKey(favoriteCollectionIdsStr)) {
                 const QStringList value = favoriteGroup.readEntry(favoriteCollectionIdsStr,QStringList());
                 QStringList newValue;
@@ -380,7 +380,7 @@ void ExportMailJob::backupIdentity()
 {
     showInfo(i18n("Backing up identity..."));
     MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
-    const QString emailidentitiesStr("emailidentities");
+    const QString emailidentitiesStr(QLatin1String("emailidentities"));
     const QString emailidentitiesrc = KStandardDirs::locateLocal( "config",  emailidentitiesStr);
     if (!QFile(emailidentitiesrc).exists()) {
         return;
@@ -392,7 +392,7 @@ void ExportMailJob::backupIdentity()
     tmp.open();
 
     KConfig *identityConfig = identity->copyTo( tmp.fileName() );
-    const QStringList accountList = identityConfig->groupList().filter( QRegExp( "Identity #\\d+" ) );
+    const QStringList accountList = identityConfig->groupList().filter( QRegExp( QLatin1String("Identity #\\d+") ) );
     Q_FOREACH(const QString& account, accountList) {
         KConfigGroup group = identityConfig->group(account);
         const QString fcc =QLatin1String("Fcc");
@@ -451,9 +451,9 @@ void ExportMailJob::backupMails()
     foreach( const Akonadi::AgentInstance &agent, list ) {
         const QStringList capabilities( agent.type().capabilities() );
         if (agent.type().mimeTypes().contains( KMime::Message::mimeType())) {
-            if ( capabilities.contains( "Resource" ) &&
-                 !capabilities.contains( "Virtual" ) &&
-                 !capabilities.contains( "MailTransport" ) )
+            if ( capabilities.contains( QLatin1String("Resource") ) &&
+                 !capabilities.contains( QLatin1String("Virtual") ) &&
+                 !capabilities.contains( QLatin1String("MailTransport") ) )
             {
                 const QString identifier = agent.identifier();
                 const QString archivePath = BackupMailUtil::mailsPath() + identifier + QDir::separator();
@@ -487,7 +487,7 @@ void ExportMailJob::backupMails()
 void ExportMailJob::writeDirectory(QString path, const QString& relativePath, KZip *mailArchive)
 {
     QDir dir(path);
-    mailArchive->writeDir(path.remove(relativePath),"","");
+    mailArchive->writeDir(path.remove(relativePath),QLatin1String(""),QLatin1String(""));
     const QFileInfoList lst= dir.entryInfoList(QDir::NoDot|QDir::NoDotDot|QDir::Dirs|QDir::AllDirs|QDir::Hidden|QDir::Files);
     const int numberItems(lst.count());
     for (int i = 0; i < numberItems;++i) {
@@ -642,6 +642,6 @@ KUrl ExportMailJob::subdirPath( const KUrl& url) const
     QString path = url.path();
     const int parentDirEndIndex = path.lastIndexOf( filename );
     path = path.left( parentDirEndIndex );
-    path.append( '.' + filename + ".directory" );
+    path.append( QLatin1Char('.') + filename + QLatin1String(".directory") );
     return KUrl(path);
 }
