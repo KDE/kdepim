@@ -27,7 +27,7 @@ set(kdepim_LIB_SRCS
    addressline/recentaddresses.cpp
    addressline/kmailcompletion.cpp
    prefs/kprefsdialog.cpp
-   maillistdrag.cpp
+   misc/maillistdrag.cpp
    widgets/kdatepickerpopup.cpp
    widgets/kcheckcombobox.cpp
    widgets/kweekdaycheckcombo.cpp
