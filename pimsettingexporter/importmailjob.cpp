@@ -611,7 +611,7 @@ void ImportMailJob::restoreConfig()
         const QString kmailsnippetrc = KStandardDirs::locateLocal( "config",  kmailsnippetrcStr);
         if (QFile(kmailsnippetrc).exists()) {
             //TODO 4.11 allow to merge config.
-            if (KMessageBox::warningYesNo(mParent,i18n("\"%1\" already exists. Do you want to overwrite it?",kmailsnippetrcStr),i18n("Restore"))== KMessageBox::Yes) {
+            if (overwriteConfigMessageBox(kmailsnippetrcStr)) {
                 copyToFile(kmailsnippet, kmailsnippetrc,kmailsnippetrcStr,BackupMailUtil::configsPath());
             }
         } else {
@@ -625,7 +625,7 @@ void ImportMailJob::restoreConfig()
         const KArchiveFile* kabldap= static_cast<const KArchiveFile*>(kabldapentry);
         const QString kabldaprc = KStandardDirs::locateLocal( "config",  labldaprcStr);
         if (QFile(kabldaprc).exists()) {
-            const int result = mergeMessageBox(labldaprcStr);
+            const int result = mergeConfigMessageBox(labldaprcStr);
             if ( result == KMessageBox::Yes) {
                 copyToFile(kabldap, kabldaprc, labldaprcStr,BackupMailUtil::configsPath());
             } else if (result == KMessageBox::No) {
@@ -641,7 +641,7 @@ void ImportMailJob::restoreConfig()
         const KArchiveFile* archiveconfiguration = static_cast<const KArchiveFile*>(archiveconfigurationentry);
         const QString archiveconfigurationrc = KStandardDirs::locateLocal( "config",  archiveconfigurationrcStr);
         if (QFile(archiveconfigurationrc).exists()) {
-            const int result = mergeMessageBox(archiveconfigurationrcStr);
+            const int result = mergeConfigMessageBox(archiveconfigurationrcStr);
             if ( result == KMessageBox::Yes) {
                 importArchiveConfig(archiveconfiguration, archiveconfigurationrc, archiveconfigurationrcStr, BackupMailUtil::configsPath());
             } else if (result == KMessageBox::No) {
@@ -659,7 +659,7 @@ void ImportMailJob::restoreConfig()
         const QString templatesconfigurationrc = KStandardDirs::locateLocal( "config",  templatesconfigurationrcStr);
         if (QFile(templatesconfigurationrc).exists()) {
             //TODO 4.12 allow to merge config.
-            if (KMessageBox::warningYesNo(mParent,i18n("\"%1\" already exists. Do you want to overwrite it?",templatesconfigurationrcStr),i18n("Restore"))== KMessageBox::Yes) {
+            if (overwriteConfigMessageBox(templatesconfigurationrcStr)) {
                 importTemplatesConfig(templatesconfiguration, templatesconfigurationrc, templatesconfigurationrcStr, BackupMailUtil::configsPath());
             }
         } else {
@@ -673,7 +673,7 @@ void ImportMailJob::restoreConfig()
         const KArchiveFile* kmailrc = static_cast<const KArchiveFile*>(kmail2rcentry);
         const QString kmail2rc = KStandardDirs::locateLocal( "config",  kmailStr);
         if (QFile(kmail2rc).exists()) {
-            if (KMessageBox::warningYesNo(mParent,i18n("\"%1\" already exists. Do you want to overwrite it?",kmailStr),i18n("Restore"))== KMessageBox::Yes) {
+            if (overwriteConfigMessageBox(kmailStr)) {
                 importKmailConfig(kmailrc,kmail2rc,kmailStr,BackupMailUtil::configsPath());
             }
         } else {
@@ -689,7 +689,7 @@ void ImportMailJob::restoreConfig()
         const QString sievetemplaterc = KStandardDirs::locateLocal( "config",  sievetemplatercStr);
         if (QFile(sievetemplaterc).exists()) {
             //TODO 4.11 allow to merge config.
-            if (KMessageBox::warningYesNo(mParent,i18n("\"%1\" already exists. Do you want to overwrite it?",sievetemplatercStr),i18n("Restore"))== KMessageBox::Yes) {
+            if (overwriteConfigMessageBox(sievetemplatercStr)) {
                 importArchiveConfig(sievetemplateconfiguration, sievetemplaterc, sievetemplatercStr, BackupMailUtil::configsPath());
             }
         } else {
@@ -705,7 +705,7 @@ void ImportMailJob::restoreConfig()
         const QString customtemplaterc = KStandardDirs::locateLocal( "config",  customTemplateStr);
         if (QFile(customtemplaterc).exists()) {
             //TODO 4.11 allow to merge config.
-            if (KMessageBox::warningYesNo(mParent,i18n("\"%1\" already exists. Do you want to overwrite it?", customTemplateStr),i18n("Restore"))== KMessageBox::Yes) {
+            if (overwriteConfigMessageBox(customTemplateStr)) {
                 importArchiveConfig(customtemplateconfiguration, customtemplaterc, customTemplateStr, BackupMailUtil::configsPath());
             }
         } else {
@@ -723,7 +723,7 @@ void ImportMailJob::restoreConfig()
                 const QString name = autocorrectionFile->name();
                 const QString autocorrectionPath = KGlobal::dirs()->findResource("data", QString::fromLatin1("autocorrect/%1").arg(name));
                 if (QFile(autocorrectionPath).exists()) {
-                    if (KMessageBox::warningYesNo(mParent,i18n("\"%1\" already exists. Do you want to overwrite it?", name),i18n("Restore"))== KMessageBox::Yes) {
+                    if (overwriteConfigMessageBox(name)) {
                         importArchiveConfig(autocorrectionFile, autocorrectionPath, name, BackupMailUtil::dataPath() + QLatin1String( "autocorrect/" ));
                     }
                 } else {
@@ -1190,7 +1190,12 @@ void ImportMailJob::mergeSieveTemplate(const KArchiveFile * archivefile, const Q
 }
 
 
-int ImportMailJob::mergeMessageBox(const QString &configName) const
+int ImportMailJob::mergeConfigMessageBox(const QString &configName) const
 {
     return KMessageBox::warningYesNoCancel(mParent,i18n("\"%1\" already exists. Do you want to overwrite it or merge it?", configName),i18n("Restore"),KGuiItem(i18n("Overwrite")),KGuiItem(i18n("Merge")) );
+}
+
+bool ImportMailJob::overwriteConfigMessageBox(const QString &configName) const
+{
+    return (KMessageBox::warningYesNo(mParent,i18n("\"%1\" already exists. Do you want to overwrite it?", configName),i18n("Restore")) == KMessageBox::Yes);
 }
