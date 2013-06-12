@@ -30,6 +30,11 @@ ImportAlarmJob::~ImportAlarmJob()
 }
 
 
+void ImportAlarmJob::start()
+{
+    //TODO
+}
+
 void ImportAlarmJob::restoreResources()
 {
     //TODO

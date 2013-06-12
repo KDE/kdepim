@@ -27,7 +27,9 @@ public:
     explicit ImportAlarmJob(QWidget *parent, ArchiveStorage *archiveStorage);
     ~ImportAlarmJob();
 
+    void start();
 
+private:
     void restoreResources();
 };
 

@@ -27,7 +27,9 @@ public:
     explicit ImportCalendarJob(QWidget *parent, ArchiveStorage *archiveStorage);
     ~ImportCalendarJob();
 
+    void start();
 
+private:
     void restoreResources();
 };
 

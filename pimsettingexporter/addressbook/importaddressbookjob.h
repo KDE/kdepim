@@ -27,7 +27,9 @@ public:
     explicit ImportAddressbookJob(QWidget *parent, ArchiveStorage *archiveStorage);
     ~ImportAddressbookJob();
 
+    void start();
 
+private:
     void restoreResources();
 };
 

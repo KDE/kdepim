@@ -29,6 +29,10 @@ ImportCalendarJob::~ImportCalendarJob()
 
 }
 
+void ImportCalendarJob::start()
+{
+    //TODO
+}
 
 void ImportCalendarJob::restoreResources()
 {
