@@ -42,15 +42,15 @@ set(kdepim_LIB_SRCS
    progresswidget/progressdialog.cpp
    progresswidget/statusbarprogresswidget.cpp
    progresswidget/ssllabel.cpp
-   broadcaststatus.cpp
+   misc/broadcaststatus.cpp
    widgets/kwidgetlister.cpp
    widgets/pimmessagebox.cpp
    multiplyingline/multiplyingline.cpp
    multiplyingline/multiplyinglineeditor.cpp
    multiplyingline/multiplyinglineview_p.cpp
-   uistatesaver.cpp
+   misc/uistatesaver.cpp
    widgets/nepomukwarning.cpp
-   statisticsproxymodel.cpp
+   misc/statisticsproxymodel.cpp
    widgets/customlogwidget.cpp
    widgets/spellchecklineedit.cpp
 )

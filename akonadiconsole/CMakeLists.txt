@@ -6,6 +6,7 @@ include_directories(
   ${SOPRANO_INCLUDE_DIR}
   ${NEPOMUK_CORE_INCLUDE_DIR}
   ${NEPOMUK_WIDGETS_INCLUDE_DIR}
+  ${CMAKE_SOURCE_DIR}/libkdepim/
 )
 
 include_directories(BEFORE ${CMAKE_CURRENT_BINARY_DIR})

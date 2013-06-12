@@ -21,7 +21,7 @@
 
 #include "mainwindow.h"
 
-#include <libkdepim/uistatesaver.h>
+#include <libkdepim/misc/uistatesaver.h>
 
 #include <KActionCollection>
 #include <KConfigGroup>
