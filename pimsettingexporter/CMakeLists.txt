@@ -19,17 +19,17 @@ set(pimsettingexporter_SRCS
   abstractimportexportjob.cpp
   backupmailwindow.cpp
   backupmailwidget.cpp
-  exportmailjob.cpp
-  importmailjob.cpp
+  mail/exportmailjob.cpp
+  mail/importmailjob.cpp
   backupmailkernel.cpp
   backupmailutil.cpp
   selecttypewidget.cpp
   selectiontypedialog.cpp
   akonadidatabase.cpp
-  exportcalendarjob.cpp
-  importcalendarjob.cpp
-  exportaddressbookjob.cpp
-  importaddressbookjob.cpp
+  calendar/exportcalendarjob.cpp
+  calendar/importcalendarjob.cpp
+  addressbook/exportaddressbookjob.cpp
+  addressbook/importaddressbookjob.cpp
   archivestorage.cpp
 )
 

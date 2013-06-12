@@ -17,8 +17,8 @@
 
 #include "backupmailwindow.h"
 #include "backupmailwidget.h"
-#include "exportmailjob.h"
-#include "importmailjob.h"
+#include "mail/exportmailjob.h"
+#include "mail/importmailjob.h"
 #include "backupmailkernel.h"
 #include "selectiontypedialog.h"
 #include "backupmailutil.h"
