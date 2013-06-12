@@ -28,6 +28,8 @@ set(pimsettingexporter_SRCS
   akonadidatabase.cpp
   exportcalendarjob.cpp
   importcalendarjob.cpp
+  exportaddressbookjob.cpp
+  importaddressbookjob.cpp
   archivestorage.cpp
 )
 

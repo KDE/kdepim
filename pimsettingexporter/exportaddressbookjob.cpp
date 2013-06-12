@@ -15,25 +15,38 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef EXPORTCALENDARJOB_H
-#define EXPORTCALENDARJOB_H
+#include "exportaddressbookjob.h"
 
-#include "abstractimportexportjob.h"
+#include "messageviewer/utils/kcursorsaver.h"
 
-class QWidget;
-class ArchiveStorage;
 
-class ExportCalendarJob : public AbstractImportExportJob
+#include <KLocale>
+
+#include <QWidget>
+
+
+ExportAddressbookJob::ExportAddressbookJob(QWidget *parent, ArchiveStorage *archiveStorage)
+    :AbstractImportExportJob(parent,archiveStorage,/*typeSelected,numberOfStep*/0,0 /*TODO fix it*/)
 {
-    Q_OBJECT
-public:
-    explicit ExportCalendarJob(QWidget *parent, ArchiveStorage *archiveStorage);
-    ~ExportCalendarJob();
+}
 
-    void start();
+ExportAddressbookJob::~ExportAddressbookJob()
+{
 
-private:
-    void backupResources();
-};
+}
 
-#endif // EXPORTCALENDARJOB_H
+void ExportAddressbookJob::start()
+{
+    //TODO
+}
+
+
+void ExportAddressbookJob::backupResources()
+{
+    showInfo(i18n("Backing up resources..."));
+    MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+    //TODO backup calendar
+    Q_EMIT info(i18n("Resources backup done."));
+}
+
+#include "exportaddressbookjob.moc"

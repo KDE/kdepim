@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013 Montel Laurent <montel@kde.org>
   
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -15,25 +15,22 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef EXPORTCALENDARJOB_H
-#define EXPORTCALENDARJOB_H
+#include "importaddressbookjob.h"
+#include "archivestorage.h"
 
-#include "abstractimportexportjob.h"
-
-class QWidget;
-class ArchiveStorage;
-
-class ExportCalendarJob : public AbstractImportExportJob
+ImportAddressbookJob::ImportAddressbookJob(QWidget *parent, ArchiveStorage *archiveStorage)
 {
-    Q_OBJECT
-public:
-    explicit ExportCalendarJob(QWidget *parent, ArchiveStorage *archiveStorage);
-    ~ExportCalendarJob();
+    Q_UNUSED( parent );
+    Q_UNUSED( archiveStorage );
+}
 
-    void start();
+ImportAddressbookJob::~ImportAddressbookJob()
+{
 
-private:
-    void backupResources();
-};
+}
 
-#endif // EXPORTCALENDARJOB_H
+
+void ImportAddressbookJob::restoreResources()
+{
+    //TODO
+}
