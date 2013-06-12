@@ -625,7 +625,7 @@ void ImportMailJob::restoreConfig()
         const KArchiveFile* kabldap= static_cast<const KArchiveFile*>(kabldapentry);
         const QString kabldaprc = KStandardDirs::locateLocal( "config",  labldaprcStr);
         if (QFile(kabldaprc).exists()) {
-            const int result = KMessageBox::warningYesNoCancel(mParent,i18n("\"%1\" already exists. Do you want to overwrite it or merge it?",labldaprcStr),i18n("Restore"),KGuiItem(i18n("Overwrite")),KGuiItem(i18n("Merge")) );
+            const int result = mergeMessageBox(labldaprcStr);
             if ( result == KMessageBox::Yes) {
                 copyToFile(kabldap, kabldaprc, labldaprcStr,BackupMailUtil::configsPath());
             } else if (result == KMessageBox::No) {
@@ -641,7 +641,7 @@ void ImportMailJob::restoreConfig()
         const KArchiveFile* archiveconfiguration = static_cast<const KArchiveFile*>(archiveconfigurationentry);
         const QString archiveconfigurationrc = KStandardDirs::locateLocal( "config",  archiveconfigurationrcStr);
         if (QFile(archiveconfigurationrc).exists()) {
-            const int result = KMessageBox::warningYesNoCancel(mParent,i18n("\"%1\" already exists. Do you want to overwrite it or merge it?",labldaprcStr),i18n("Restore"),KGuiItem(i18n("Overwrite")),KGuiItem(i18n("Merge")) );
+            const int result = mergeMessageBox(archiveconfigurationrcStr);
             if ( result == KMessageBox::Yes) {
                 importArchiveConfig(archiveconfiguration, archiveconfigurationrc, archiveconfigurationrcStr, BackupMailUtil::configsPath());
             } else if (result == KMessageBox::No) {
@@ -1187,4 +1187,10 @@ void ImportMailJob::mergeArchiveMailAgentConfig(const KArchiveFile * archivefile
 void ImportMailJob::mergeSieveTemplate(const KArchiveFile * archivefile, const QString&filename, const QString&prefix)
 {
     //TODO
+}
+
+
+int ImportMailJob::mergeMessageBox(const QString &configName) const
+{
+    return KMessageBox::warningYesNoCancel(mParent,i18n("\"%1\" already exists. Do you want to overwrite it or merge it?", configName),i18n("Restore"),KGuiItem(i18n("Overwrite")),KGuiItem(i18n("Merge")) );
 }
