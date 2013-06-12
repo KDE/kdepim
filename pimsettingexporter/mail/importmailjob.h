@@ -61,8 +61,6 @@ private:
     void copyArchiveMailAgentConfigGroup(KSharedConfig::Ptr archiveConfigOrigin, KSharedConfig::Ptr archiveConfigDestination);
     void mergeSieveTemplate(const KArchiveFile * archivefile, const QString&filename, const QString&prefix);
     QString uniqueIdentityName(const QString& name);
-    int mergeConfigMessageBox(const QString &configName) const;
-    bool overwriteConfigMessageBox(const QString &configName) const;
 
     Akonadi::Collection::Id convertPathToId(const QString& path);
 

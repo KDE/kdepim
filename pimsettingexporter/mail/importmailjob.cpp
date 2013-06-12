@@ -1188,14 +1188,3 @@ void ImportMailJob::mergeSieveTemplate(const KArchiveFile * archivefile, const Q
 {
     //TODO
 }
-
-
-int ImportMailJob::mergeConfigMessageBox(const QString &configName) const
-{
-    return KMessageBox::warningYesNoCancel(mParent,i18n("\"%1\" already exists. Do you want to overwrite it or merge it?", configName),i18n("Restore"),KGuiItem(i18n("Overwrite")),KGuiItem(i18n("Merge")) );
-}
-
-bool ImportMailJob::overwriteConfigMessageBox(const QString &configName) const
-{
-    return (KMessageBox::warningYesNo(mParent,i18n("\"%1\" already exists. Do you want to overwrite it?", configName),i18n("Restore")) == KMessageBox::Yes);
-}

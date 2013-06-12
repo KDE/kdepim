@@ -47,6 +47,9 @@ Q_SIGNALS:
 
 protected:
     void backupFile(const QString&filename, const QString& path, const QString&storedName);
+    int mergeConfigMessageBox(const QString &configName) const;
+    bool overwriteConfigMessageBox(const QString &configName) const;
+
     KZip *archive();
 
     QProgressDialog *progressDialog();
