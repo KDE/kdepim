@@ -52,7 +52,7 @@ SendLaterConfigureDialog::SendLaterConfigureDialog(QWidget *parent)
 
     readConfig();
     mAboutData = new KAboutData(
-                QByteArray( "archivemailagent" ),
+                QByteArray( "sendlateragent" ),
                 QByteArray(),
                 ki18n( "Send Later Agent" ),
                 QByteArray( KDEPIM_VERSION ),
