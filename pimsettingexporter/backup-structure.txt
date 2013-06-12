@@ -22,9 +22,14 @@ Root
 |       |---------filters
 |       |---------kmail2rc
 |       |---------sievetemplaterc
+|       |---------customtemplatesrc
+|       |---------akonadi_archivemail_agentrc
+|       |---------kabldaprc
+|       |---------templatesconfigurationrc
 |
 |-----akonadi
 |       |---------<archive akonadi>
+|
 |-----nepomuk
 |       |---------<archive nepomuk>
 |
