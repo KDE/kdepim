@@ -30,8 +30,7 @@ enum BackupType {
     Resources = 8,
     Config = 16,
     AkonadiDb = 32,
-    Nepomuk = 64,
-    Calendar = 128
+    Nepomuk = 64
     //TODO add more type to import/export
 };
 Q_DECLARE_FLAGS(BackupTypes, BackupType )
@@ -45,5 +44,6 @@ QString configsPath();
 QString akonadiPath();
 QString dataPath();
 QString calendarPath();
+QString addressbookPath();
 }
 #endif // UTIL_H

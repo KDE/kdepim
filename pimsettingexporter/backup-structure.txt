@@ -1,4 +1,4 @@
-2013-03-27:
+2013-06-11:
 -----------
 Zip structure is :
 Root
@@ -33,3 +33,5 @@ Root
 |       |---------<autocorrection xml file>
 |
 |-----calendar
+|
+|-----addressbook

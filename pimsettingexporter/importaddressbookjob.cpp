@@ -29,7 +29,6 @@ ImportAddressbookJob::~ImportAddressbookJob()
 
 }
 
-
 void ImportAddressbookJob::restoreResources()
 {
     //TODO
