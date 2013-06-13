@@ -796,8 +796,12 @@ void ImportMailJob::restoreIdentity()
                         const KArchiveEntry* vcardEntry = mArchiveDirectory->entry(BackupMailUtil::identitiesPath() + QString::number(oldUid) + QDir::separator() + file.fileName());
                         if (vcardEntry && vcardEntry->isFile()) {
                             const KArchiveFile* vcardFile = static_cast<const KArchiveFile*>(vcardEntry);
-                            const QString vcardFilePath = KStandardDirs::locateLocal("appdata",file.fileName() );
-
+                            QString vcardFilePath = KStandardDirs::locateLocal("appdata",file.fileName() );
+                            int i = 1;
+                            while(QFile(vcardFileName).exists()) {
+                                vcardFilePath = KStandardDirs::locateLocal("appdata", QString::fromLatin1("%1_%2").arg(i).arg(file.fileName()) );
+                                ++i;
+                            }
                             vcardFile->copyTo(vcardFilePath);
                             group.writeEntry(vcard, vcardFilePath);
                         }

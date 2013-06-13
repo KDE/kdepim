@@ -50,7 +50,7 @@ bool ArchiveStorage::openArchive(bool write)
     return result;
 }
 
-KZip *ArchiveStorage::archive()
+KZip *ArchiveStorage::archive() const
 {
     return mArchive;
 }
