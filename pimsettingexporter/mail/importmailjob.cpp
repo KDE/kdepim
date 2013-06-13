@@ -681,7 +681,6 @@ void ImportMailJob::restoreConfig()
         }
     }
 
-
     const QString sievetemplatercStr(QLatin1String("sievetemplaterc"));
     const KArchiveEntry* sievetemplatentry  = mArchiveDirectory->entry(BackupMailUtil::configsPath() + sievetemplatercStr);
     if ( sievetemplatentry &&  sievetemplatentry->isFile()) {
@@ -698,7 +697,6 @@ void ImportMailJob::restoreConfig()
             importArchiveConfig(sievetemplateconfiguration, sievetemplaterc, sievetemplatercStr, BackupMailUtil::configsPath());
         }
     }
-
 
     const QString customTemplateStr(QLatin1String("customtemplatesrc"));
     const KArchiveEntry* customtemplatentry  = mArchiveDirectory->entry(BackupMailUtil::configsPath() + customTemplateStr);
@@ -1155,7 +1153,7 @@ void ImportMailJob::mergeKmailSnippetConfig(const KArchiveFile * archivefile, co
 }
 
 
-void ImportMailJob::mergeArchiveMailAgentConfig(const KArchiveFile * archivefile, const QString&filename, const QString&prefix)
+void ImportMailJob::mergeArchiveMailAgentConfig(const KArchiveFile *archivefile, const QString &filename, const QString &prefix)
 {
     QDir dir(mTempDirName);
     dir.mkdir(prefix);
@@ -1172,7 +1170,7 @@ void ImportMailJob::mergeArchiveMailAgentConfig(const KArchiveFile * archivefile
 }
 
 
-void ImportMailJob::mergeSieveTemplate(const KArchiveFile * archivefile, const QString &filename, const QString &prefix)
+void ImportMailJob::mergeSieveTemplate(const KArchiveFile *archivefile, const QString &filename, const QString &prefix)
 {
     QDir dir(mTempDirName);
     dir.mkdir(prefix);
