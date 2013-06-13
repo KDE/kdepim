@@ -31,6 +31,7 @@ public:
     ~ImportCalendarJob();
 
     void start();
+    QString componentName() const;
 
 private:
     void restoreResources();

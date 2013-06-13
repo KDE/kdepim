@@ -37,6 +37,8 @@ ExportAddressbookJob::~ExportAddressbookJob()
 
 void ExportAddressbookJob::start()
 {
+    mArchiveDirectory = archive()->directory();
+    backupConfig();
     //TODO
 }
 
@@ -52,6 +54,11 @@ void ExportAddressbookJob::backupResources()
 void ExportAddressbookJob::backupConfig()
 {
 
+}
+
+QString ExportAddressbookJob::componentName() const
+{
+    return QLatin1String("KAddressBook");
 }
 
 #include "exportaddressbookjob.moc"

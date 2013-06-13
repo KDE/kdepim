@@ -32,6 +32,8 @@ public:
 
     void start();
 
+    QString componentName() const;
+
 private:
     void restoreResources();
     void restoreConfig();

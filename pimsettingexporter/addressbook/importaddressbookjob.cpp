@@ -32,6 +32,8 @@ ImportAddressbookJob::~ImportAddressbookJob()
 
 void ImportAddressbookJob::start()
 {
+    mArchiveDirectory = archive()->directory();
+    restoreConfig();
     //TODO
 }
 
@@ -43,6 +45,11 @@ void ImportAddressbookJob::restoreResources()
 void ImportAddressbookJob::restoreConfig()
 {
     //TODO
+}
+
+QString ImportAddressbookJob::componentName() const
+{
+    return QLatin1String("KAddressBook");
 }
 
 #include "importaddressbookjob.moc"

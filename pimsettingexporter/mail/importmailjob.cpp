@@ -55,8 +55,7 @@ using namespace Akonadi;
 static const QString storeMails = QLatin1String("backupmail/");
 
 ImportMailJob::ImportMailJob(QWidget *parent, BackupMailUtil::BackupTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep)
-    : AbstractImportExportJob(parent,archiveStorage,typeSelected,numberOfStep),
-      mArchiveDirectory(0)
+    : AbstractImportExportJob(parent,archiveStorage,typeSelected,numberOfStep)
 {
     mTempDir = new KTempDir();
     mTempDirName = mTempDir->name();
@@ -1251,4 +1250,9 @@ void ImportMailJob::mergeSieveTemplate(const KArchiveFile *archivefile, const QS
     }
     grpExisting.writeEntry(QLatin1String("templateCount"), numberOfExistingTemplate);
     grpExisting.sync();
+}
+
+QString ImportMailJob::componentName() const
+{
+    return QLatin1String("KMail");
 }

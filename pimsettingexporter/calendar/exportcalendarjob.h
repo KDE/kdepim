@@ -31,6 +31,7 @@ public:
     ~ExportCalendarJob();
 
     void start();
+    QString componentName() const;
 
 private:
     void backupResources();

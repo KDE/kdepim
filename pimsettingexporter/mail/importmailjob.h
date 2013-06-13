@@ -38,6 +38,7 @@ public:
     ~ImportMailJob();
 
     void start();
+    QString componentName() const;
 
 private:
     void restoreTransports();
@@ -68,7 +69,6 @@ private:
     QHash<QString, QString> mHashResources;
     QStringList mFileList;
     QString mTempDirName;
-    const KArchiveDirectory* mArchiveDirectory;
     KTempDir *mTempDir;
     PimCommon::CreateResource *mCreateResource;
 };

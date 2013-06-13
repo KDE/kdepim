@@ -37,6 +37,8 @@ ExportCalendarJob::~ExportCalendarJob()
 
 void ExportCalendarJob::start()
 {
+    mArchiveDirectory = archive()->directory();
+    backupConfig();
     //TODO
 }
 
@@ -52,6 +54,11 @@ void ExportCalendarJob::backupResources()
 void ExportCalendarJob::backupConfig()
 {
     //TODO: korgacrc  korganizer_printing.rc  korganizerrc
+}
+
+QString ExportCalendarJob::componentName() const
+{
+    return QLatin1String("KOrganizer");
 }
 
 #include "exportcalendarjob.moc"

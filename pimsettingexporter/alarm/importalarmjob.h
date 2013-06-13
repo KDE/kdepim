@@ -31,6 +31,7 @@ public:
     ~ImportAlarmJob();
 
     void start();
+    QString componentName() const;
 
 private:
     void restoreResources();

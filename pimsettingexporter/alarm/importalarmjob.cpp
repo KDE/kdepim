@@ -33,6 +33,8 @@ ImportAlarmJob::~ImportAlarmJob()
 
 void ImportAlarmJob::start()
 {
+    mArchiveDirectory = archive()->directory();
+    restoreConfig();
     //TODO
 }
 
@@ -44,6 +46,11 @@ void ImportAlarmJob::restoreResources()
 void ImportAlarmJob::restoreConfig()
 {
     //TODO
+}
+
+QString ImportAlarmJob::componentName() const
+{
+    return QLatin1String("KAlarm");
 }
 
 #include "importalarmjob.moc"
