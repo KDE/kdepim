@@ -126,7 +126,7 @@ void ThunderbirdSettings::readExtensionsSettings()
     }
 
     //Default is true.
-    const QString reduceImageStr("extensions.AutoResizeImage.reduceImages");
+    const QString reduceImageStr(QLatin1String("extensions.AutoResizeImage.reduceImages"));
     if (mHashConfig.contains(reduceImageStr)) {
         const bool reduce = mHashConfig.value(reduceImageStr).toBool();
         addKmailConfig(QLatin1String("AutoResizeImage"), QLatin1String("reduce-image-to-maximum"), reduce );
@@ -134,24 +134,24 @@ void ThunderbirdSettings::readExtensionsSettings()
         addKmailConfig(QLatin1String("AutoResizeImage"), QLatin1String("reduce-image-to-maximum"), false );
     }
 
-    const QString filterMinimumStr("extensions.AutoResizeImage.filterMinimumSize");
+    const QString filterMinimumStr(QLatin1String("extensions.AutoResizeImage.filterMinimumSize"));
     if (mHashConfig.contains(filterMinimumStr)) {
         const bool filterMinimum = mHashConfig.value(filterMinimumStr).toBool();
         addKmailConfig(QLatin1String("AutoResizeImage"), QLatin1String("skip-image-lower-size-enabled"), filterMinimum );
     }
-    const QString skipMinimumSizeStr("extensions.AutoResizeImage.minimumSize");
+    const QString skipMinimumSizeStr(QLatin1String("extensions.AutoResizeImage.minimumSize"));
     if (mHashConfig.contains(skipMinimumSizeStr)) {
         const int skipMinimumSize = mHashConfig.value(skipMinimumSizeStr).toInt();
         addKmailConfig(QLatin1String("AutoResizeImage"), QLatin1String("skip-image-lower-size"), skipMinimumSize );
     }
-    const QString confirmBeforeResizingStr("extensions.AutoResizeImage.confirmResizing");
+    const QString confirmBeforeResizingStr(QLatin1String("extensions.AutoResizeImage.confirmResizing"));
     if (mHashConfig.contains(confirmBeforeResizingStr)) {
         const bool confirmBeforeResizing = mHashConfig.value(confirmBeforeResizingStr).toBool();
         addKmailConfig(QLatin1String("AutoResizeImage"), QLatin1String("ask-before-resizing"), confirmBeforeResizing );
     }
     //extensions.AutoResizeImage.convertImages : not implemented in kmail
 
-    const QString conversionFormatStr("extensions.AutoResizeImage.conversionFormat");
+    const QString conversionFormatStr(QLatin1String("extensions.AutoResizeImage.conversionFormat"));
     if (mHashConfig.contains(conversionFormatStr)) {
         QString conversionFormat = mHashConfig.value(conversionFormatStr).toString();
         if (conversionFormat == QLatin1String("png")) {
@@ -162,7 +162,7 @@ void ThunderbirdSettings::readExtensionsSettings()
         addKmailConfig(QLatin1String("AutoResizeImage"), QLatin1String("write-format"), conversionFormat );
     }
 
-    const QString filterRecipientsStr("extensions.AutoResizeImage.filterRecipients");
+    const QString filterRecipientsStr(QLatin1String("extensions.AutoResizeImage.filterRecipients"));
     if (mHashConfig.contains(filterRecipientsStr)) {
         const int filterRecipients = mHashConfig.value(filterRecipientsStr).toInt();
         switch(filterRecipients) {
@@ -187,19 +187,19 @@ void ThunderbirdSettings::readExtensionsSettings()
         }
     }
 
-    const QString filteringRecipientsPatternsWhiteListStr("extensions.AutoResizeImage.filteringRecipientsPatternsWhiteList");
+    const QString filteringRecipientsPatternsWhiteListStr(QLatin1String("extensions.AutoResizeImage.filteringRecipientsPatternsWhiteList"));
     if (mHashConfig.contains(filteringRecipientsPatternsWhiteListStr)) {
         const QString filteringRecipientsPatternsWhiteList = mHashConfig.value(filteringRecipientsPatternsWhiteListStr).toString();
         addKmailConfig(QLatin1String("AutoResizeImage"), QLatin1String("resize-emails-pattern"), filteringRecipientsPatternsWhiteList );
     }
 
-    const QString filteringRecipientsPatternsBlackListStr("extensions.AutoResizeImage.filteringRecipientsPatternsBlackList");
+    const QString filteringRecipientsPatternsBlackListStr(QLatin1String("extensions.AutoResizeImage.filteringRecipientsPatternsBlackList"));
     if (mHashConfig.contains(filteringRecipientsPatternsBlackListStr)) {
         const QString filteringRecipientsPatternsBlackList = mHashConfig.value(filteringRecipientsPatternsBlackListStr).toString();
         addKmailConfig(QLatin1String("AutoResizeImage"), QLatin1String("do-not-resize-emails-pattern"), filteringRecipientsPatternsBlackList );
     }
 
-    const QString filteringRenamingPatternStr("extensions.AutoResizeImage.renamingPattern");
+    const QString filteringRenamingPatternStr(QLatin1String("extensions.AutoResizeImage.renamingPattern"));
     if (mHashConfig.contains(filteringRenamingPatternStr)) {
         QString filteringRenamingPattern = mHashConfig.value(filteringRenamingPatternStr).toString();
         filteringRenamingPattern.replace(QLatin1String("%3Fn"), QLatin1String("%n"));
@@ -209,19 +209,19 @@ void ThunderbirdSettings::readExtensionsSettings()
         addKmailConfig(QLatin1String("AutoResizeImage"), QLatin1String("rename-resized-images-pattern"), filteringRenamingPattern);
     }
 
-    const QString filteringRenamingImageStr("extensions.AutoResizeImage.renameResizedImages");
+    const QString filteringRenamingImageStr(QLatin1String("extensions.AutoResizeImage.renameResizedImages"));
     if (mHashConfig.contains(filteringRenamingImageStr)) {
         addKmailConfig(QLatin1String("AutoResizeImage"), QLatin1String("rename-resized-images"), true);
     }
 
-    const QString filteringImageFormatsStr("extensions.AutoResizeImage.imageFormats");
+    const QString filteringImageFormatsStr(QLatin1String("extensions.AutoResizeImage.imageFormats"));
     if (mHashConfig.contains(filteringImageFormatsStr)) {
         const QString filteringImageFormats = mHashConfig.value(filteringImageFormatsStr).toString();
         //convert it.
         addKmailConfig(QLatin1String("AutoResizeImage"), QLatin1String("resize-image-with-formats-type"), filteringImageFormats);
     }
 
-    const QString filteringImageFormatsEnabledStr("extensions.AutoResizeImage.filterFormats");
+    const QString filteringImageFormatsEnabledStr(QLatin1String("extensions.AutoResizeImage.filterFormats"));
     if (mHashConfig.contains(filteringImageFormatsEnabledStr)) {
         const bool filteringImageFormatsEnabled = mHashConfig.value(filteringImageFormatsEnabledStr).toBool();
         addKmailConfig(QLatin1String("AutoResizeImage"), QLatin1String("resize-image-with-formats"), filteringImageFormatsEnabled);
@@ -521,7 +521,7 @@ void ThunderbirdSettings::readAccount()
                 settings.insert(QLatin1String("TrashCollection"),MailCommon::Util::convertFolderPathToCollectionId(mHashConfig.value(trashFolderStr).toString()));
             }
 
-            const QString agentIdentifyName = AbstractBase::createResource( "akonadi_imap_resource", name,settings );
+            const QString agentIdentifyName = AbstractBase::createResource( QLatin1String("akonadi_imap_resource"), name,settings );
             addCheckMailOnStartup(agentIdentifyName,loginAtStartup);
             //Not find a method to disable it in thunderbird
             addToManualCheck(agentIdentifyName,true);
@@ -585,7 +585,7 @@ void ThunderbirdSettings::readAccount()
                 settings.insert(QLatin1String("IntervalCheckInterval"), 10 );
             }
 
-            const QString agentIdentifyName = AbstractBase::createResource( "akonadi_pop3_resource", name, settings );
+            const QString agentIdentifyName = AbstractBase::createResource( QLatin1String("akonadi_pop3_resource"), name, settings );
             addCheckMailOnStartup(agentIdentifyName,loginAtStartup);
             //Not find a method to disable it in thunderbird
             addToManualCheck(agentIdentifyName,true);

@@ -26,13 +26,13 @@ ThunderBirdAddressBook::ThunderBirdAddressBook(const QDir& dir, ImportWizard *pa
 {
     readAddressBook(dir.path() + QLatin1String( "/impab.mab" ) );
 
-    const QStringList filesimportab = dir.entryList(QStringList("impab-[0-9]*.map" ), QDir::Files, QDir::Name);
+    const QStringList filesimportab = dir.entryList(QStringList(QLatin1String("impab-[0-9]*.map") ), QDir::Files, QDir::Name);
     Q_FOREACH ( const QString& file, filesimportab ) {
         readAddressBook( dir.path() + QLatin1Char( '/' ) + file );
     }
     readAddressBook(dir.path() + QLatin1String( "/abook.mab" ) );
 
-    const QStringList files = dir.entryList(QStringList("abook-[0-9]*.map" ), QDir::Files, QDir::Name);
+    const QStringList files = dir.entryList(QStringList(QLatin1String("abook-[0-9]*.map") ), QDir::Files, QDir::Name);
     Q_FOREACH ( const QString& file, files ) {
         readAddressBook( dir.path() + QLatin1Char( '/' ) + file );
     }
@@ -217,13 +217,13 @@ void ThunderBirdAddressBook::readAddressBook( const QString& filename )
                                 } else if ( column == QLatin1String("BirthDay" ) ) {
                                     birthday = value.toInt();
                                 } else if ( column == QLatin1String("Custom1" ) ) {
-                                    contact.insertCustom( QLatin1String( "KADDRESSBOOK" ), "Custom1", value );
+                                    contact.insertCustom( QLatin1String( "KADDRESSBOOK" ), QLatin1String("Custom1"), value );
                                 } else if ( column == QLatin1String("Custom2" ) ) {
-                                    contact.insertCustom( QLatin1String( "KADDRESSBOOK" ), "Custom2", value );
+                                    contact.insertCustom( QLatin1String( "KADDRESSBOOK" ), QLatin1String("Custom2"), value );
                                 } else if ( column == QLatin1String("Custom3" ) ) {
-                                    contact.insertCustom( QLatin1String( "KADDRESSBOOK" ), "Custom3", value );
+                                    contact.insertCustom( QLatin1String( "KADDRESSBOOK" ), QLatin1String("Custom3"), value );
                                 } else if ( column == QLatin1String("Custom4" ) ) {
-                                    contact.insertCustom( QLatin1String( "KADDRESSBOOK" ), "Custom4", value );
+                                    contact.insertCustom( QLatin1String( "KADDRESSBOOK" ), QLatin1String("Custom4"), value );
                                 } else if ( column == QLatin1String("Notes" ) ) {
                                     contact.setNote(value);
                                 } else {
