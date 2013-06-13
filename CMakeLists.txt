@@ -194,7 +194,7 @@ else()
   find_package(QGpgme)
   set_package_properties(QGpgme PROPERTIES DESCRIPTION "The QGpgMe library" URL "http://www.kde.org" TYPE RECOMMENDED PURPOSE "QGpgME is required to build KMail, KOrganizer and Kleopatra")
 
-  find_package(SharedDesktopOntologies 0.10)
+  find_package(SharedDesktopOntologies 0.11)
   set_package_properties(SharedDesktopOntologies PROPERTIES DESCRIPTION "Shared Desktop Ontologies" URL "http://oscaf.sourceforge.net" TYPE REQUIRED PURPOSE "Ontologies necessary for the Nepomuk semantic desktop")
 
   find_package(Soprano 2.9.0)
