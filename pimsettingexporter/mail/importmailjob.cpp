@@ -988,6 +988,13 @@ void ImportMailJob::importKmailConfig(const KArchiveFile* kmailsnippet, const QS
     copyToFile(kmailsnippet,kmail2rc,filename,prefix);
     KSharedConfig::Ptr kmailConfig = KSharedConfig::openConfig(kmail2rc);
 
+    //Be sure to delete Search group
+    const QString search(QLatin1String("Search"));
+    if (kmailConfig->hasGroup(search)) {
+        KConfigGroup searchGroup = kmailConfig->group(search);
+        searchGroup.deleteGroup();
+    }
+
     //adapt folder id
     const QString folderGroupPattern = QLatin1String( "Folder-" );
     const QStringList folderList = kmailConfig->groupList().filter( folderGroupPattern );
@@ -1050,6 +1057,12 @@ void ImportMailJob::importKmailConfig(const KArchiveFile* kmailsnippet, const QS
     const QString generalStr(QLatin1String("General"));
     if (kmailConfig->hasGroup(generalStr)) {
         KConfigGroup generalGroup = kmailConfig->group(generalStr);
+        //Be sure to delete default domain
+        const QString defaultDomainStr(QLatin1String("Default domain"));
+        if (generalGroup.hasKey(defaultDomainStr)) {
+            generalGroup.deleteEntry(defaultDomainStr);
+        }
+
         const QString startupFolderStr(QLatin1String("startupFolder"));
         if (generalGroup.hasKey(startupFolderStr)) {
             const QString path = generalGroup.readEntry(startupFolderStr);
