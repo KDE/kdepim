@@ -28,7 +28,7 @@
 
 #include <akonadi_next/quotacolorproxymodel.h>
 
-#include <libkdepim/statisticsproxymodel.h>
+#include <libkdepim/misc/statisticsproxymodel.h>
 
 #include <messageviewer/globalsettings.h>
 

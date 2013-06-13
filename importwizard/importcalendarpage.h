@@ -31,11 +31,14 @@ class ImportCalendarPage : public QWidget
 public:
     explicit ImportCalendarPage(QWidget *parent = 0);
     ~ImportCalendarPage();
+
     void addImportInfo( const QString& log );
     void addImportError( const QString& log );
     void setImportButtonEnabled(bool enabled);
+
 Q_SIGNALS:
     void importCalendarClicked();
+
 private:
     Ui::ImportCalendarPage *ui;
 };

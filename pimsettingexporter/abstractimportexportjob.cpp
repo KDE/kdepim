@@ -21,6 +21,8 @@
 #include <kpimidentities/identitymanager.h>
 #include <KZip>
 #include <KLocale>
+#include <KMessageBox>
+
 #include <QWidget>
 #include <QProgressDialog>
 
@@ -84,5 +86,25 @@ KZip *AbstractImportExportJob::archive()
 {
     return mArchiveStorage->archive();
 }
+
+void AbstractImportExportJob::backupFile(const QString&filename, const QString& path, const QString&storedName)
+{
+    const bool fileAdded  = archive()->addLocalFile(filename, path + storedName);
+    if (fileAdded)
+        Q_EMIT info(i18n("\"%1\" backup done.",storedName));
+    else
+        Q_EMIT error(i18n("\"%1\" cannot be exported.",storedName));
+}
+
+int AbstractImportExportJob::mergeConfigMessageBox(const QString &configName) const
+{
+    return KMessageBox::warningYesNoCancel(mParent,i18n("\"%1\" already exists. Do you want to overwrite it or merge it?", configName),i18n("Restore"),KGuiItem(i18n("Overwrite")),KGuiItem(i18n("Merge")) );
+}
+
+bool AbstractImportExportJob::overwriteConfigMessageBox(const QString &configName) const
+{
+    return (KMessageBox::warningYesNo(mParent,i18n("\"%1\" already exists. Do you want to overwrite it?", configName),i18n("Restore")) == KMessageBox::Yes);
+}
+
 
 #include "abstractimportexportjob.moc"

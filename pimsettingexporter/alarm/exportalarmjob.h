@@ -15,37 +15,26 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef ABSTRACTBASE_H
-#define ABSTRACTBASE_H
+#ifndef EXPORTALARMJOB_H
+#define EXPORTALARMJOB_H
 
-#include <QObject>
-#include <QString>
-#include <QMap>
-#include <QVariant>
+#include "abstractimportexportjob.h"
 
-namespace PimCommon {
-class CreateResource;
-}
+class QWidget;
+class ArchiveStorage;
 
-class AbstractBase : public QObject
+class ExportAlarmJob : public AbstractImportExportJob
 {
     Q_OBJECT
 public:
-    explicit AbstractBase();
-    virtual ~AbstractBase();
+    explicit ExportAlarmJob(QWidget *parent, ArchiveStorage *archiveStorage);
+    ~ExportAlarmJob();
 
-    QString createResource(const QString& resources , const QString& name, const QMap<QString, QVariant> &settings);
-
-private Q_SLOTS:
-    void slotCreateResourceError(const QString&);
-    void slotCreateResourceInfo(const QString&);
-
-protected:
-    virtual void addImportInfo( const QString& log ) = 0;
-    virtual void addImportError( const QString& log ) = 0;
+    void start();
 
 private:
-    PimCommon::CreateResource *mCreateResource;
+    void backupResources();
+    void backupConfig();
 };
 
-#endif // ABSTRACTBASE_H
+#endif // EXPORTALARMJOB_H

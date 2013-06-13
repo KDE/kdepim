@@ -21,7 +21,7 @@
 
 #include "backupjob.h"
 
-#include <libkdepim/broadcaststatus.h>
+#include <libkdepim/misc/broadcaststatus.h>
 
 #include <Akonadi/CollectionDeleteJob>
 #include <Akonadi/CollectionFetchJob>

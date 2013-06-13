@@ -15,7 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "exportaddressbookjob.h"
+#include "exportalarmjob.h"
 
 #include "messageviewer/utils/kcursorsaver.h"
 
@@ -25,23 +25,23 @@
 #include <QWidget>
 
 
-ExportAddressbookJob::ExportAddressbookJob(QWidget *parent, ArchiveStorage *archiveStorage)
+ExportAlarmJob::ExportAlarmJob(QWidget *parent, ArchiveStorage *archiveStorage)
     :AbstractImportExportJob(parent,archiveStorage,/*typeSelected,numberOfStep*/0,0 /*TODO fix it*/)
 {
 }
 
-ExportAddressbookJob::~ExportAddressbookJob()
+ExportAlarmJob::~ExportAlarmJob()
 {
 
 }
 
-void ExportAddressbookJob::start()
+void ExportAlarmJob::start()
 {
     //TODO
 }
 
 
-void ExportAddressbookJob::backupResources()
+void ExportAlarmJob::backupResources()
 {
     showInfo(i18n("Backing up resources..."));
     MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
@@ -49,9 +49,9 @@ void ExportAddressbookJob::backupResources()
     Q_EMIT info(i18n("Resources backup done."));
 }
 
-void ExportAddressbookJob::backupConfig()
+void ExportAlarmJob::backupConfig()
 {
 
 }
 
-#include "exportaddressbookjob.moc"
+#include "exportalarmjob.moc"

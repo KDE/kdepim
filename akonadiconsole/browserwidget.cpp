@@ -45,7 +45,7 @@
 #include <akonadi/etmviewstatesaver.h>
 #include <akonadi/favoritecollectionsmodel.h>
 #include <akonadi_next/quotacolorproxymodel.h>
-#include <libkdepim/statisticsproxymodel.h>
+#include <libkdepim/misc/statisticsproxymodel.h>
 #include <kviewstatemaintainer.h>
 
 #include <kabc/addressee.h>

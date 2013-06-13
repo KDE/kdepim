@@ -30,6 +30,8 @@ set(pimsettingexporter_SRCS
   calendar/importcalendarjob.cpp
   addressbook/exportaddressbookjob.cpp
   addressbook/importaddressbookjob.cpp
+  alarm/exportalarmjob.cpp
+  alarm/importalarmjob.cpp
   archivestorage.cpp
 )
 

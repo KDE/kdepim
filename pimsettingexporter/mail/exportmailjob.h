@@ -47,7 +47,6 @@ private:
     void writeDirectory(QString path, const QString &relativePath, KZip *mailArchive);
     void storeResources(const QString&identifier, const QString& path);
     KUrl resourcePath(const Akonadi::AgentInstance& agent) const;
-    void backupFile(const QString&filename, const QString& path, const QString&storedName);
     bool backupMailData(const KUrl& url, const QString& archivePath);
     bool checkProgram();
 };

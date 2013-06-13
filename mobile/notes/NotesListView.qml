@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-import Qt 4.7 as QML
+import QtQuick 1.0
 import org.kde.pim.mobileui 4.5 as KPIM
 
 /** Akonadi Note List View
@@ -35,7 +35,7 @@ KPIM.ItemListView {
       navigationModel : _top.navigationModel
       height : _top.itemHeight
       summaryContent : [
-        QML.Text {
+        Text {
           id: titleLabel
           anchors.top : parent.top
           anchors.topMargin : 1
@@ -48,7 +48,7 @@ KPIM.ItemListView {
           font.pixelSize: 16
           elide: "ElideRight"
         },
-        QML.Text {
+        Text {
           id: subjectLabel
           anchors.top : titleLabel.bottom
           anchors.topMargin : 1
@@ -62,7 +62,7 @@ KPIM.ItemListView {
           elide: "ElideRight"
           clip: true
         }, /*
-        QML.Image {
+        Image {
           id : importantFlagImage
           anchors.verticalCenter : parent.verticalCenter;
           anchors.left : parent.left
@@ -70,7 +70,7 @@ KPIM.ItemListView {
           source : "important-email.png"
           opacity : model.is_important ? 0.25 : 0
         },
-        QML.Image {
+        Image {
           id : actionFlagImage
           anchors.verticalCenter : parent.verticalCenter;
           anchors.left : importantFlagImage.right
@@ -97,42 +97,42 @@ KPIM.ItemListView {
       ]
 
       states : [
-        QML.State {
+        State {
           name : "deleteFaded"
           when : itemListView.flicking
-          QML.PropertyChanges {
+          PropertyChanges {
             target : deleteAction;
             opacity : 0
           }
-          QML.PropertyChanges {
+          PropertyChanges {
             target : deleteAction.anchors;
             rightMargin : -deleteAction.width
           }
         }
       ]
       transitions : [
-        QML.Transition {
+        Transition {
           from : ""
           to   : "deleteFaded"
-          QML.PropertyAnimation {
+          PropertyAnimation {
             target : deleteAction
             properties : "opacity"
             duration: 500
             easing.type: "OutQuad"
           }
         },
-        QML.Transition {
+        Transition {
           from : "deleteFaded"
           to   : ""
-          QML.SequentialAnimation {
-            QML.PauseAnimation {
+          SequentialAnimation {
+            PauseAnimation {
               // delay a bit
               duration: {
                 // TODO: figure out how to do this.
                 0
               }
             }
-            QML.PropertyAnimation {
+            PropertyAnimation {
               target : deleteAction.anchors
               properties : "rightMargin"
               duration: 500

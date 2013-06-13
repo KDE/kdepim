@@ -29,7 +29,7 @@
 #include "collectionpage/expirecollectionattribute.h"
 #include "kernel/mailkernel.h"
 
-#include <libkdepim/broadcaststatus.h>
+#include <libkdepim/misc/broadcaststatus.h>
 using KPIM::BroadcastStatus;
 
 #include <KDebug>

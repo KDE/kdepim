@@ -24,8 +24,8 @@ set( messagecomposer_src
      composer/composer.cpp
      utils/util.cpp
 
-     attachmentcontrollerbase.cpp
-     attachmentmodel.cpp
+     attachment/attachmentcontrollerbase.cpp
+     attachment/attachmentmodel.cpp
      job/attachmentfrompublickeyjob.cpp
 
      akonadisender.cpp

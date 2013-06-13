@@ -37,10 +37,10 @@ class AbstractAddressBook: public AbstractBase
 public:
     explicit AbstractAddressBook(ImportWizard *parent);
     ~AbstractAddressBook();
+
 protected:
     void createGroup(const KABC::ContactGroup& group);
     void createContact( const KABC::Addressee& address );
-
 
     void addImportInfo( const QString& log );
     void addImportError( const QString& log );

@@ -22,7 +22,7 @@
 
 #include "attachmentcontrollerbase.h"
 
-#include "messagecomposer/attachmentmodel.h"
+#include "messagecomposer/attachment/attachmentmodel.h"
 #include "messagecomposer/job/attachmentjob.h"
 #include "messagecomposer/job/attachmentfrompublickeyjob.h"
 #include "messagecomposer/composer/composer.h"

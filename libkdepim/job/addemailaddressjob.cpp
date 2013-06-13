@@ -19,7 +19,7 @@
 */
 
 #include "addemailaddressjob.h"
-#include "broadcaststatus.h"
+#include "misc/broadcaststatus.h"
 
 
 #include <Akonadi/CollectionDialog>

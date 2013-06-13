@@ -32,7 +32,7 @@
 #include "grantleecontactgroupformatter.h"
 #endif
 
-#include "libkdepim/uistatesaver.h"
+#include "libkdepim/misc/uistatesaver.h"
 
 #include <pimcommon/acl/collectionaclpage.h>
 #include <pimcommon/acl/imapaclattribute.h>

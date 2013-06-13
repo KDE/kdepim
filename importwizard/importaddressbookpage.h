@@ -31,12 +31,14 @@ class ImportAddressbookPage : public QWidget
 public:
     explicit ImportAddressbookPage(QWidget *parent = 0);
     ~ImportAddressbookPage();
+
     void addImportInfo( const QString& log );
     void addImportError( const QString& log );
     void setImportButtonEnabled(bool enabled);
 
 Q_SIGNALS:
     void importAddressbookClicked();
+
 private:
     Ui::ImportAddressbookPage *ui;
 };

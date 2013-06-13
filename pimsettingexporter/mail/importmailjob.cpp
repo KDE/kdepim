@@ -872,8 +872,7 @@ void ImportMailJob::restoreAkonadiDb()
                    << QLatin1String("--no-owner")
                    << QLatin1String("--no-privileges")
                    << tmp.fileName();
-        }
-        else if (dbDriver == QLatin1String("QMYSQL") ) {
+        } else if (dbDriver == QLatin1String("QMYSQL") ) {
             dbRestoreAppName = QLatin1String("mysql");
             params << akonadiDataBase.options()
                    << QLatin1String("--database=") + akonadiDataBase.name();
@@ -1187,15 +1186,4 @@ void ImportMailJob::mergeArchiveMailAgentConfig(const KArchiveFile * archivefile
 void ImportMailJob::mergeSieveTemplate(const KArchiveFile * archivefile, const QString&filename, const QString&prefix)
 {
     //TODO
-}
-
-
-int ImportMailJob::mergeConfigMessageBox(const QString &configName) const
-{
-    return KMessageBox::warningYesNoCancel(mParent,i18n("\"%1\" already exists. Do you want to overwrite it or merge it?", configName),i18n("Restore"),KGuiItem(i18n("Overwrite")),KGuiItem(i18n("Merge")) );
-}
-
-bool ImportMailJob::overwriteConfigMessageBox(const QString &configName) const
-{
-    return (KMessageBox::warningYesNo(mParent,i18n("\"%1\" already exists. Do you want to overwrite it?", configName),i18n("Restore")) == KMessageBox::Yes);
 }

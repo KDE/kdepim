@@ -45,5 +45,6 @@ QString akonadiPath();
 QString dataPath();
 QString calendarPath();
 QString addressbookPath();
+QString alarmPath();
 }
 #endif // UTIL_H

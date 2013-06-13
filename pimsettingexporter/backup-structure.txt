@@ -11,7 +11,7 @@ Root
 |                   |--------- vcard file
 |
 |-----resources
-|       |---------<resource name> (just pop3/imap4)
+|       |---------<resource name>
 |
 |-----mails
 |       |---------<resource name>
@@ -22,16 +22,31 @@ Root
 |       |---------filters
 |       |---------kmail2rc
 |       |---------sievetemplaterc
+|       |---------customtemplatesrc
+|       |---------akonadi_archivemail_agentrc
+|       |---------kabldaprc
+|       |---------templatesconfigurationrc
 |
 |-----akonadi
 |       |---------<archive akonadi>
+|
 |-----nepomuk
 |       |---------<archive nepomuk>
-|
 |
 |-----data
 |       |---------<autocorrection xml file>
 |
 |-----calendar
+|       |---------<resource name>
+|                   |---------<resource config file>
+|                   |---------<archive resource>
+|------addressbook
+|       |---------<resource name>
+|                   |---------<resource config file>
+|                   |---------<archive resource>
 |
-|-----addressbook
+|------alarm
+|       |---------<resource name>
+|                   |---------<resource config file>
+|                   |---------<archive resource>
+

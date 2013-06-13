@@ -64,6 +64,11 @@ QString BackupMailUtil::addressbookPath()
     return QLatin1String("addressbook/");
 }
 
+QString BackupMailUtil::alarmPath()
+{
+    return QLatin1String("alarm/");
+}
+
 
 KUrl BackupMailUtil::resourcePath(KSharedConfigPtr resourceConfig)
 {

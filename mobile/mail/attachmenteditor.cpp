@@ -25,8 +25,8 @@
 #include <kfiledialog.h>
 #include <kicon.h>
 #include <klocale.h>
-#include <messagecomposer/attachmentcontrollerbase.h>
-#include <messagecomposer/attachmentmodel.h>
+#include <messagecomposer/attachment/attachmentcontrollerbase.h>
+#include <messagecomposer/attachment/attachmentmodel.h>
 
 #include <QtCore/QAbstractItemModel>
 #include <QAction>

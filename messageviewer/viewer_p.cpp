@@ -95,7 +95,7 @@
 
 
 //libkdepim
-#include "libkdepim/broadcaststatus.h"
+#include "libkdepim/misc/broadcaststatus.h"
 #include <messagecore/attachment/attachmentpropertiesdialog.h>
 
 #include <akonadi/collection.h>
