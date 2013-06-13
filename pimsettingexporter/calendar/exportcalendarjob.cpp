@@ -49,4 +49,9 @@ void ExportCalendarJob::backupResources()
     Q_EMIT info(i18n("Resources backup done."));
 }
 
+void ExportCalendarJob::backupConfig()
+{
+    //TODO: korgacrc  korganizer_printing.rc  korganizerrc
+}
+
 #include "exportcalendarjob.moc"
