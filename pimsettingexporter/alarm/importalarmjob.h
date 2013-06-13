@@ -18,11 +18,14 @@
 #ifndef IMPORTALARMJOB_H
 #define IMPORTALARMJOB_H
 
+#include "abstractimportexportjob.h"
+
 class ArchiveStorage;
 class QWidget;
 
-class ImportAlarmJob
+class ImportAlarmJob : public AbstractImportExportJob
 {
+    Q_OBJECT
 public:
     explicit ImportAlarmJob(QWidget *parent, ArchiveStorage *archiveStorage);
     ~ImportAlarmJob();

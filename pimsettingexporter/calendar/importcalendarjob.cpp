@@ -19,6 +19,7 @@
 #include "archivestorage.h"
 
 ImportCalendarJob::ImportCalendarJob(QWidget *parent, ArchiveStorage *archiveStorage)
+    : AbstractImportExportJob(parent,archiveStorage,/*typeSelected,numberOfStep*/0,0 /*TODO fix it*/)
 {
     Q_UNUSED( parent );
     Q_UNUSED( archiveStorage );
@@ -43,3 +44,5 @@ void ImportCalendarJob::restoreConfig()
 {
     //TODO
 }
+
+#include "importcalendarjob.moc"
