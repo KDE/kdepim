@@ -19,7 +19,7 @@
 
 #include "filteractionwithaddress.h"
 
-#include <messagecore/emailaddressrequester.h>
+#include <messagecore/widgets/emailaddressrequester.h>
 
 using namespace MailCommon;
 

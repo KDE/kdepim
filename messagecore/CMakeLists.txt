@@ -30,7 +30,7 @@ set(messagecore_LIB_SRCS
    attachment/attachmentloadjob.cpp
    attachment/attachmentpart.cpp
    attachment/attachmentpropertiesdialog.cpp
-   emailaddressrequester.cpp
+   widgets/emailaddressrequester.cpp
    globalsettings.cpp
    mailinglist.cpp
    mdnstateattribute.cpp
@@ -42,7 +42,7 @@ set(messagecore_LIB_SRCS
 if (NOT WINCE)
   set(messagecore_LIB_SRCS
      ${messagecore_LIB_SRCS}
-     annotationdialog.cpp
+     widgets/annotationdialog.cpp
   )
 endif ()
 

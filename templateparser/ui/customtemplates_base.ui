@@ -341,7 +341,7 @@
   <customwidget>
    <class>MessageCore::EmailAddressRequester</class>
    <extends>QWidget</extends>
-   <header>emailaddressrequester.h</header>
+   <header>widgets/emailaddressrequester.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
