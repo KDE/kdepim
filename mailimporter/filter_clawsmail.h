@@ -30,16 +30,16 @@ class MAILIMPORTER_EXPORT FilterClawsMail : public FilterSylpheed
 {
 
 public:
-  explicit FilterClawsMail();
-  ~FilterClawsMail();
+    explicit FilterClawsMail();
+    ~FilterClawsMail();
 
-  static QString defaultSettingsPath();
+    static QString defaultSettingsPath();
 
-  /* return local mail dir from folderlist.xml*/
-  virtual QString localMailDirPath();
-  virtual bool excludeFile(const QString& file);
-  virtual QString defaultInstallFolder() const;
-  virtual QString markFile() const;
+    /* return local mail dir from folderlist.xml*/
+    virtual QString localMailDirPath();
+    virtual bool excludeFile(const QString& file);
+    virtual QString defaultInstallFolder() const;
+    virtual QString markFile() const;
 };
 }
 

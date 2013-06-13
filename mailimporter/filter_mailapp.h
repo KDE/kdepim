@@ -3,11 +3,11 @@
                              -------------------
     copyright            : (C) 2004 by Chris Howells
     email                : howells@kde.org
- 
+
     Derived from code by:
     copyright            : (C) 2003 by Laurence Anderson
     email                : l.d.anderson@warwick.ac.uk
- 
+
  ***************************************************************************/
 
 #ifndef MAILIMPORTER_FILTER_MAILAPP_HXX
@@ -22,14 +22,14 @@ namespace MailImporter {
 class MAILIMPORTER_EXPORT FilterMailApp : public Filter
 {
 public:
-  explicit FilterMailApp();
-  ~FilterMailApp();
+    explicit FilterMailApp();
+    ~FilterMailApp();
 
-  void import();
-  void importMails( const QString & maildir );
+    void import();
+    void importMails( const QString & maildir );
 private:
-  QStringList mMboxFiles;
-  void traverseDirectory(const QString &);
+    QStringList mMboxFiles;
+    void traverseDirectory(const QString &);
 };
 }
 

@@ -28,16 +28,16 @@ namespace MailImporter {
 class MAILIMPORTER_EXPORT FilterOpera : public Filter
 {
 public:
-  explicit FilterOpera();
-  ~FilterOpera();
+    explicit FilterOpera();
+    ~FilterOpera();
 
-  void import();
-  void importMails( const QString &maildir );
-  static QString defaultSettingsPath();
+    void import();
+    void importMails( const QString &maildir );
+    static QString defaultSettingsPath();
 
 private:
-  void importBox( const QDir & importDir, const QStringList & , const QString & accountName = QString());
-  void importRecursive(const QDir& maildir, const QString &accountName = QString() );
+    void importBox( const QDir & importDir, const QStringList & , const QString & accountName = QString());
+    void importRecursive(const QDir& maildir, const QString &accountName = QString() );
 };
 }
 

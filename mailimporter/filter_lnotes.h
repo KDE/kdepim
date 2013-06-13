@@ -27,24 +27,24 @@ namespace MailImporter{
 class MAILIMPORTER_EXPORT FilterLNotes : public Filter
 {
 public:
-  explicit FilterLNotes();
-  ~FilterLNotes();
-  /** Standard import filter... starting line for our import */
-  void import();
+    explicit FilterLNotes();
+    ~FilterLNotes();
+    /** Standard import filter... starting line for our import */
+    void import();
 
 private:
-  /** the working directory */
-  QDir dir;
-  /** which file (of totalFiles) is now in the work? */
-  int currentFile;
-  /** total number of files that get imported */
-  int totalFiles;
+    /** the working directory */
+    QDir dir;
+    /** which file (of totalFiles) is now in the work? */
+    int currentFile;
+    /** total number of files that get imported */
+    int totalFiles;
 
-  /** 
-   * This is were all the real action is gonna be handled.  
-   * Gets called once for EACH file imported 
+    /**
+   * This is were all the real action is gonna be handled.
+   * Gets called once for EACH file imported
    */
-  void ImportLNotes(const QString& file );
+    void ImportLNotes(const QString& file );
     
 };
 }

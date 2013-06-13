@@ -38,54 +38,54 @@ ImportMailsWidget::~ImportMailsWidget()
     delete ui;
 }
 
-void ImportMailsWidget::setStatusMessage( const QString& status )
+void ImportMailsWidget::setStatusMessage( const QString &status )
 {
     ui->textStatus->setText( status );
 }
 
-void ImportMailsWidget::setFrom( const QString& from )
+void ImportMailsWidget::setFrom( const QString &from )
 {
-  ui->from->setText( from );
+    ui->from->setText( from );
 }
 
-void ImportMailsWidget::setTo( const QString& to )
+void ImportMailsWidget::setTo( const QString &to )
 {
-  ui->to->setText( to );
+    ui->to->setText( to );
 }
 
-void ImportMailsWidget::setCurrent( const QString& current )
+void ImportMailsWidget::setCurrent( const QString &current )
 {
-  ui->current->setText( current );
+    ui->current->setText( current );
 }
 
 void  ImportMailsWidget::setCurrent( int percent )
 {
-  ui->done_current->setValue( percent );
+    ui->done_current->setValue( percent );
 }
 
 void  ImportMailsWidget::setOverall( int percent )
 {
-  ui->done_overall->setValue( percent );
+    ui->done_overall->setValue( percent );
 }
 
 void ImportMailsWidget::addItem( QListWidgetItem* item )
 {
-  ui->log->addItem(item);
+    ui->log->addItem(item);
 }
 
 void ImportMailsWidget::setLastCurrentItem()
 {
-  ui->log->setCurrentItem(ui->log->item(ui->log->count() - 1 ));
+    ui->log->setCurrentItem(ui->log->item(ui->log->count() - 1 ));
 }
 
-void ImportMailsWidget::addInfoLogEntry( const QString& log )
+void ImportMailsWidget::addInfoLogEntry( const QString &log )
 {
-  ui->log->addInfoLogEntry( log );
+    ui->log->addInfoLogEntry( log );
 }
 
-void ImportMailsWidget::addErrorLogEntry( const QString& log )
+void ImportMailsWidget::addErrorLogEntry( const QString &log )
 {
-  ui->log->addErrorLogEntry( log );
+    ui->log->addErrorLogEntry( log );
 }
 
 void ImportMailsWidget::clear()

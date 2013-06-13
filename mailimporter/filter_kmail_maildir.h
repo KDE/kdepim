@@ -28,19 +28,19 @@ namespace MailImporter {
 class MAILIMPORTER_EXPORT FilterKMail_maildir : public Filter
 {
 public:
-  explicit FilterKMail_maildir();
-  ~FilterKMail_maildir();
+    explicit FilterKMail_maildir();
+    ~FilterKMail_maildir();
 
-  void import();
-  void importMails( const QString& maildir );
+    void import();
+    void importMails( const QString& maildir );
 
 private:
-  void processDirectory( const QString& path);
+    void processDirectory( const QString& path);
 
-  void importDirContents(const QString&);
-  void importFiles(const QString&);
-  int mImportDirDone;
-  int mTotalDir;
+    void importDirContents(const QString&);
+    void importFiles(const QString&);
+    int mImportDirDone;
+    int mTotalDir;
 };
 }
 

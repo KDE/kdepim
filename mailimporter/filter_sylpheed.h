@@ -31,29 +31,29 @@ class MAILIMPORTER_EXPORT FilterSylpheed : public Filter
 {
 
 public:
-  explicit FilterSylpheed();
-  ~FilterSylpheed();
+    explicit FilterSylpheed();
+    ~FilterSylpheed();
 
-  static QString defaultSettingsPath();
+    static QString defaultSettingsPath();
 
-  virtual void import();
-  virtual void importMails( const QString& maildir );
+    virtual void import();
+    virtual void importMails( const QString& maildir );
 
-  /* return local mail dir from folderlist.xml*/
-  virtual QString localMailDirPath();
-  virtual bool excludeFile(const QString& file);
-  virtual QString defaultInstallFolder() const;
-  virtual QString markFile() const;
+    /* return local mail dir from folderlist.xml*/
+    virtual QString localMailDirPath();
+    virtual bool excludeFile(const QString& file);
+    virtual QString defaultInstallFolder() const;
+    virtual QString markFile() const;
 private:
 
-  void importDirContents(const QString&);
-  void importFiles(const QString&);
-  void processDirectory( const QString& path);
-  
-  void readMarkFile( const QString&, QHash<QString,unsigned long>&);
-  Akonadi::MessageStatus msgFlagsToString(unsigned long flags);
-  int mImportDirDone;
-  int mTotalDir;
+    void importDirContents(const QString&);
+    void importFiles(const QString&);
+    void processDirectory( const QString& path);
+
+    void readMarkFile( const QString&, QHash<QString,unsigned long>&);
+    Akonadi::MessageStatus msgFlagsToString(unsigned long flags);
+    int mImportDirDone;
+    int mTotalDir;
 
 };
 }
