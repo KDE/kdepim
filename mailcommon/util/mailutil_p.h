@@ -72,7 +72,7 @@ class AttachmentSelectionDialog : public KDialog
     }
 
   protected Q_SLOTS:
-    virtual void slotButtonClicked( int button )
+    void slotButtonClicked( int button )
     {
       mButtonCode = static_cast<KDialog::ButtonCode>( button );
 
