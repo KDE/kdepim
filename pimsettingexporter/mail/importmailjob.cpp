@@ -1054,6 +1054,41 @@ void ImportMailJob::importKmailConfig(const KArchiveFile* kmailsnippet, const QS
         }
     }
 
+    const QString collectionFolderViewStr(QLatin1String("CollectionFolderView"));
+    if (kmailConfig->hasGroup(collectionFolderViewStr)) {
+        KConfigGroup favoriteGroup = kmailConfig->group(collectionFolderViewStr);
+        const QString currentKey(QLatin1String("Current"));
+        if (favoriteGroup.hasKey(currentKey)) {
+            const QString path = favoriteGroup.readEntry(currentKey);
+            if (!path.isEmpty()) {
+                const Akonadi::Collection::Id id = convertPathToId(path);
+                if (id != -1) {
+                    favoriteGroup.writeEntry(currentKey,QString::fromLatin1("c%1").arg(id));
+                } else {
+                    favoriteGroup.deleteEntry(currentKey);
+                }
+            }
+        }
+        const QString expensionKey(QLatin1String("Expansion"));
+        if (favoriteGroup.hasKey(expensionKey)) {
+            const QStringList listExpension = favoriteGroup.readEntry(expensionKey, QStringList());
+            QStringList result;
+            if (!listExpension.isEmpty()) {
+                Q_FOREACH (QString collection, listExpension) {
+                    const Akonadi::Collection::Id id = convertPathToId(collection);
+                    if (id != -1 ) {
+                        result<< QString::fromLatin1("c%1").arg(id);
+                    }
+                }
+                if (result.isEmpty()) {
+                    favoriteGroup.deleteEntry(expensionKey);
+                } else {
+                    favoriteGroup.writeEntry(expensionKey, result);
+                }
+            }
+        }
+    }
+
     const QString generalStr(QLatin1String("General"));
     if (kmailConfig->hasGroup(generalStr)) {
         KConfigGroup generalGroup = kmailConfig->group(generalStr);
