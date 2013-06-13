@@ -650,11 +650,15 @@ QColor EventView::itemFrameColor( const QColor &color, bool selected )
   }
 }
 
-/** static */
 QString EventView::iconForItem( const Akonadi::Item &item )
 {
   QString iconName;
-  const Akonadi::Collection collection = item.parentCollection();
+  Akonadi::Collection collection = item.parentCollection();
+  while ( collection.parentCollection().isValid() &&
+          collection.parentCollection() != Akonadi::Collection::root() ) {
+    collection = calendar()->collection( collection.parentCollection().id() );
+  }
+
   if ( collection.isValid() && collection.hasAttribute<Akonadi::EntityDisplayAttribute>() ) {
     iconName = collection.attribute<Akonadi::EntityDisplayAttribute>()->iconName();
   }

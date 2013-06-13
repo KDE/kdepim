@@ -67,14 +67,6 @@ PlasmaComponents.Page {
   }
 
   QML.Loader {
-    id: newMailPage
-    visible: false
-    anchors.fill: parent
-    z: 1
-    source: visible ? "NewMailPage.qml" : ""
-  }
-
-  QML.Loader {
     id: replyOptionsPage
     visible: false
     anchors.fill: parent

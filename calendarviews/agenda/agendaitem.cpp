@@ -761,7 +761,7 @@ void AgendaItem::paintIcons( QPainter *p, int &x, int y, int ft )
   QSet<EventView::ItemIcon> icons = mEventView->preferences()->agendaViewIcons();
 
   if ( icons.contains( EventViews::EventView::CalendarCustomIcon ) ) {
-    const QString iconName = EventView::iconForItem( mIncidence );
+    const QString iconName = mEventView->iconForItem( mIncidence );
     if ( !iconName.isEmpty() && iconName != "view-calendar" && iconName != "office-calendar" ) {
       conditionalPaint( p, true, x, y, ft, SmallIcon( iconName ) );
     }
