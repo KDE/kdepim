@@ -62,13 +62,10 @@ private:
     void mergeSieveTemplate(const KArchiveFile * archivefile, const QString&filename, const QString&prefix);
     QString uniqueIdentityName(const QString& name);
 
-    Akonadi::Collection::Id convertPathToId(const QString& path);
-
     QHash<QString, QString> mHashMailArchive;
     QHash<uint, uint> mHashIdentity;
     QHash<int, int> mHashTransport;
     QHash<QString, QString> mHashResources;
-    QHash<QString, Akonadi::Collection::Id> mHashConvertPathCollectionId;
     QStringList mFileList;
     QString mTempDirName;
     const KArchiveDirectory* mArchiveDirectory;

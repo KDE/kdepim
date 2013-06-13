@@ -1081,19 +1081,6 @@ void ImportMailJob::importKmailConfig(const KArchiveFile* kmailsnippet, const QS
     kmailConfig->sync();
 }
 
-Akonadi::Collection::Id ImportMailJob::convertPathToId(const QString& path)
-{
-    if (mHashConvertPathCollectionId.contains(path)) {
-        return mHashConvertPathCollectionId.value(path);
-    }
-    const Akonadi::Collection::Id id = MailCommon::Util::convertFolderPathToCollectionId(path);
-    if (id != -1) {
-        mHashConvertPathCollectionId.insert(path,id);
-    }
-    return id;
-}
-
-
 void ImportMailJob::mergeLdapConfig(const KArchiveFile * archivefile, const QString&filename, const QString&prefix)
 {
     QDir dir(mTempDirName);

@@ -19,6 +19,7 @@
 #define ABSTRACTIMPORTEXPORTJOB_H
 
 #include "backupmailutil.h"
+#include <Akonadi/Collection>
 
 class KZip;
 class QWidget;
@@ -49,6 +50,7 @@ protected:
     void backupFile(const QString&filename, const QString& path, const QString&storedName);
     int mergeConfigMessageBox(const QString &configName) const;
     bool overwriteConfigMessageBox(const QString &configName) const;
+    Akonadi::Collection::Id convertPathToId(const QString& path);
 
     KZip *archive();
 
@@ -57,6 +59,8 @@ protected:
     void createProgressDialog();
 
     void showInfo(const QString&text);
+
+    QHash<QString, Akonadi::Collection::Id> mHashConvertPathCollectionId;
 
     BackupMailUtil::BackupTypes mTypeSelected;
     ArchiveStorage *mArchiveStorage;
