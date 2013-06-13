@@ -18,6 +18,7 @@
 #include "scamdetection.h"
 #include "scamdetectiondetailsdialog.h"
 #include "globalsettings.h"
+
 #include <QWebElement>
 #include <QWebFrame>
 #include <QDebug>
