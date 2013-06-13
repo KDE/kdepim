@@ -56,13 +56,13 @@ public:
     {
     }
 
-    virtual ~ScheduledArchiveTask()
+    ~ScheduledArchiveTask()
     {
     }
 
-    virtual MailCommon::ScheduledJob *run();
+    MailCommon::ScheduledJob *run();
 
-    virtual int taskTypeId() const
+    int taskTypeId() const
     {
         return 2;
     }
