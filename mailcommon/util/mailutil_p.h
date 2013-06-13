@@ -23,8 +23,10 @@
 
 #include <KDialog>
 #include <KLocale>
+#include <KSeparator>
 
 #include <QLabel>
+#include <QVBoxLayout>
 
 namespace MailCommon {
 
@@ -48,7 +50,12 @@ class AttachmentSelectionDialog : public KDialog
       setButtonText( User1, i18n( "Attach inline without attachments" ) );
       setButtonText( User2, i18n( "Attach &inline" ) );
       setButtonText( User3, i18n( "Attach as &link" ) );
-      setMainWidget( new QLabel( i18n( "How should the email be attached?" ) ) );
+      QVBoxLayout *lay = new QVBoxLayout;
+      QWidget *w = new QWidget;
+      w->setLayout(lay);
+      lay->addWidget(new QLabel( i18n( "How should the email be attached?" ) ));
+      lay->addWidget(new KSeparator);
+      setMainWidget( w );
     }
 
     Type attachmentType() const
