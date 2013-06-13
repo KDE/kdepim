@@ -32,6 +32,7 @@ class ExportMailJob : public AbstractImportExportJob
 public:
     explicit ExportMailJob(QWidget *parent, BackupMailUtil::BackupTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep);
     ~ExportMailJob();
+
     void start();
 
 private:

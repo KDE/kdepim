@@ -688,9 +688,11 @@ void ImportMailJob::restoreConfig()
         const KArchiveFile* sievetemplateconfiguration = static_cast<const KArchiveFile*>(sievetemplatentry);
         const QString sievetemplaterc = KStandardDirs::locateLocal( "config",  sievetemplatercStr);
         if (QFile(sievetemplaterc).exists()) {
-            //TODO 4.11 allow to merge config.
-            if (overwriteConfigMessageBox(sievetemplatercStr)) {
+            const int result = mergeConfigMessageBox(sievetemplatercStr);
+            if ( result == KMessageBox::Yes) {
                 importArchiveConfig(sievetemplateconfiguration, sievetemplaterc, sievetemplatercStr, BackupMailUtil::configsPath());
+            } else if (result == KMessageBox::No) {
+                mergeSieveTemplate(sievetemplateconfiguration, sievetemplatercStr,BackupMailUtil::configsPath());
             }
         } else {
             importArchiveConfig(sievetemplateconfiguration, sievetemplaterc, sievetemplatercStr, BackupMailUtil::configsPath());
@@ -1170,7 +1172,33 @@ void ImportMailJob::mergeArchiveMailAgentConfig(const KArchiveFile * archivefile
 }
 
 
-void ImportMailJob::mergeSieveTemplate(const KArchiveFile * archivefile, const QString&filename, const QString&prefix)
+void ImportMailJob::mergeSieveTemplate(const KArchiveFile * archivefile, const QString &filename, const QString &prefix)
 {
-    //TODO
+    QDir dir(mTempDirName);
+    dir.mkdir(prefix);
+
+    const QString copyToDirName(mTempDirName + QLatin1Char('/') + prefix);
+    archivefile->copyTo(copyToDirName);
+
+    KSharedConfig::Ptr existingConfig = KSharedConfig::openConfig(filename);
+
+    KSharedConfig::Ptr importingSieveTemplateConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + filename);
+
+    KConfigGroup grpExisting = existingConfig->group(QLatin1String("template"));
+    int numberOfExistingTemplate = grpExisting.readEntry(QLatin1String("templateCount"), 0);
+
+    KConfigGroup grpImportExisting = importingSieveTemplateConfig->group(QLatin1String("template"));
+    const int numberOfImportingTemplate = grpImportExisting.readEntry(QLatin1String("templateCount"), 0);
+
+    for (int i = 0; i <numberOfImportingTemplate; ++i) {
+        KConfigGroup templateDefine = importingSieveTemplateConfig->group(QString::fromLatin1("templateDefine_%1").arg(i));
+
+        KConfigGroup newTemplateDefineGrp = existingConfig->group(QString::fromLatin1("templateDefine_%1").arg(numberOfExistingTemplate));
+        newTemplateDefineGrp.writeEntry(QLatin1String("Name"), templateDefine.readEntry(QLatin1String("Name")));
+        newTemplateDefineGrp.writeEntry(QLatin1String("Text"), templateDefine.readEntry(QLatin1String("Text")));
+        ++numberOfExistingTemplate;
+        newTemplateDefineGrp.sync();
+    }
+    grpExisting.writeEntry(QLatin1String("templateCount"), numberOfExistingTemplate);
+    grpExisting.sync();
 }
