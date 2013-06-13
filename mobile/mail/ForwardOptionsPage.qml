@@ -3,6 +3,7 @@
     Copyright (c) 2010 Bertjan Broeksema <broeksema@kde.org>
     Copyright (C) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
     Copyright (c) 2010 Andras Mantia <amantia@kdab.com>
+    Copyright (C) 2013 Michael Bohlender <michael.bohlender@kdemail.net>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -23,25 +24,31 @@
 import QtQuick 1.1 as QML
 import org.kde 4.5
 import org.kde.pim.mobileui 4.5 as KPIM
+import org.kde.plasma.components 0.1 as PlasmaComponents
 
-QML.Rectangle {
-  id: root
+PlasmaComponents.Page {
+
   anchors.fill: parent
-  color: "white"
-  z: 10
 
-  QML.MouseArea {
-    anchors.fill : parent
-    onClicked : {} // do nothing
+  tools: PlasmaComponents.ToolBarLayout {
+
+    PlasmaComponents.ToolButton {
+
+      anchors.left: parent.left
+
+      iconSource: "go-previous"
+
+      onClicked: pageStack.pop()
+    }
   }
 
   QML.Rectangle {
-    anchors.right : parent.right
-    anchors.rightMargin : 70
-    anchors.left : parent. left
-    anchors.leftMargin : 70
-    anchors.top : parent.top
-    anchors.topMargin : 70
+    anchors.right: parent.right
+    anchors.rightMargin: 70
+    anchors.left: parent.left
+    anchors.leftMargin: 70
+    anchors.top: parent.top
+    anchors.topMargin: 70
     color: "lightgray"
     //how to calculate the height needed for buttons?
     height: 145
@@ -50,25 +57,18 @@ QML.Rectangle {
       anchors.fill: parent
       KPIM.Button2 {
         width: parent.width
-        buttonText : KDE.i18n( "Forward as Attachment" )
-        onClicked : {
+        buttonText: KDE.i18n( "Forward as Attachment" )
+        onClicked: {
           application.getAction("message_forward_as_attachment", "").trigger();
-          root.parent.visible = false
+          pageStack.pop()
         }
       }
       KPIM.Button2 {
         width: parent.width
-        buttonText : KDE.i18n( "Redirect" )
-        onClicked : {
+        buttonText: KDE.i18n( "Redirect" )
+        onClicked: {
           application.getAction("message_redirect", "").trigger();
-          root.parent.visible = false
-        }
-      }
-      KPIM.Button2 {
-        width: parent.width
-        buttonText : KDE.i18n( "Discard" )
-        onClicked : {
-          root.parent.visible = false
+          pageStack.pop()
         }
       }
     }

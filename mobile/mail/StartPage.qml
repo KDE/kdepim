@@ -67,22 +67,6 @@ PlasmaComponents.Page {
   }
 
   QML.Loader {
-    id: replyOptionsPage
-    visible: false
-    anchors.fill: parent
-    z: 1
-    source: visible ? "ReplyOptionsPage.qml" : ""
-  }
-
-  QML.Loader {
-    id: forwardOptionsPage
-    visible: false
-    anchors.fill: parent
-    z: 1
-    source: visible ? "ForwardOptionsPage.qml" : ""
-  }
-
-  QML.Loader {
     id: markOptionsPage
     visible: false
     anchors.fill: parent
