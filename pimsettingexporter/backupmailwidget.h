@@ -29,6 +29,7 @@ class BackupMailWidget : public QWidget
 public:
     explicit BackupMailWidget(QWidget *parent);
     ~BackupMailWidget();
+
     void addInfoLogEntry( const QString& log );
     void addErrorLogEntry( const QString& log );
     void clear();
