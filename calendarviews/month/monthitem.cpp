@@ -531,7 +531,7 @@ QList<QPixmap *> IncidenceMonthItem::icons() const
 
   QString customIconName;
   if ( icons.contains( EventViews::EventView::CalendarCustomIcon ) ) {
-    const QString iconName = EventView::iconForItem( item );
+    const QString iconName = monthScene()->monthView()->iconForItem( item );
     if ( !iconName.isEmpty() && iconName != "view-calendar" && iconName != "office-calendar" ) {
       customIconName = iconName;
       ret << new QPixmap( cachedSmallIcon( iconName ) );
