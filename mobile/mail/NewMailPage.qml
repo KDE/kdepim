@@ -29,6 +29,17 @@ PlasmaComponents.Page {
 
   anchors.fill: parent
 
+  tools: PlasmaComponents.ToolBarLayout {
+    PlasmaComponents.ToolButton {
+
+      anchors.left: parent.left
+
+      iconSource: "go-previous"
+
+      onClicked: pageStack.pop()
+    }
+  }
+
   QML.Rectangle {
     anchors.right : parent.right
     anchors.rightMargin : 70
@@ -54,14 +65,6 @@ PlasmaComponents.Page {
             }
           }
         ]
-      }
-
-      KPIM.Button2 {
-        width: parent.width
-        buttonText : KDE.i18n( "Discard" )
-        onClicked : {
-          pageStack.pop()
-        }
       }
     }
 
