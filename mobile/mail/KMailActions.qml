@@ -223,7 +223,7 @@ ActionMenuContainer {
 
     onLongPressed : {
       if ( actionName == "add_new_mail" ) {
-          newMailPage.visible = true
+          pageStack.push(Qt.createComponent("NewMailPage.qml") )
           actionPanel.collapse()
       }
     }

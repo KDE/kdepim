@@ -23,17 +23,11 @@
 import QtQuick 1.1 as QML
 import org.kde 4.5
 import org.kde.pim.mobileui 4.5 as KPIM
+import org.kde.plasma.components 0.1 as PlasmaComponents
 
-QML.Rectangle { // work around strange anchoring behaviour inside Loader
-  id : root
+PlasmaComponents.Page {
+
   anchors.fill: parent
-  color: "white"
-  z: 10
-
-  QML.MouseArea {
-    anchors.fill : parent
-    onClicked : {} // do nothing
-  }
 
   QML.Rectangle {
     anchors.right : parent.right
@@ -56,7 +50,7 @@ QML.Rectangle { // work around strange anchoring behaviour inside Loader
             buttonText : display
             onClicked : {
               application.newMessageFromTemplate( index );
-              root.parent.visible = false
+              pageStack.pop()
             }
           }
         ]
@@ -66,7 +60,7 @@ QML.Rectangle { // work around strange anchoring behaviour inside Loader
         width: parent.width
         buttonText : KDE.i18n( "Discard" )
         onClicked : {
-          root.parent.visible = false
+          pageStack.pop()
         }
       }
     }
