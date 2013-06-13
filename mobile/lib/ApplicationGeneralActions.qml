@@ -72,14 +72,6 @@ KPIM.ActionList {
     name : "configure"
   }
 
-  KPIM.ActionListItem {
-    name : "open_manual"
-    title: KDE.i18n( "First Steps" )
-    onPressAndHold: {
-      longPressed(name);
-    }
-  }
-
   KPIM.ScriptActionItem  {
     name : "show_about_dialog"
     title : KDE.i18n( "About Kontact Touch" )
