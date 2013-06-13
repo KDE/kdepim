@@ -19,7 +19,7 @@
     02110-1301, USA.
 */
 
-import Qt 4.7 as QML
+import QtQuick 1.1 as QML
 
 QML.Item {
   id : _top
