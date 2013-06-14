@@ -530,7 +530,7 @@ void ExportMailJob::backupMails()
     Q_EMIT info(i18n("Mails backup done."));
 }
 
-void ExportMailJob::writeDirectory(QString path, const QString& relativePath, KZip *mailArchive)
+void ExportMailJob::writeDirectory(QString path, const QString &relativePath, KZip *mailArchive)
 {
     QDir dir(path);
     mailArchive->writeDir(path.remove(relativePath),QLatin1String(""),QLatin1String(""));
@@ -546,7 +546,7 @@ void ExportMailJob::writeDirectory(QString path, const QString& relativePath, KZ
     }
 }
 
-bool ExportMailJob::backupMailData(const KUrl& url,const QString& archivePath)
+bool ExportMailJob::backupMailData(const KUrl& url,const QString &archivePath)
 {
     const QString filename = url.fileName();
     KTemporaryFile tmp;
