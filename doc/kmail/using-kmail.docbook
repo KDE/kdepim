@@ -9,6 +9,13 @@
 <email>daniel.naber@t-online.de</email>
 </address></affiliation>
 </author>
+<author>
+  <firstname>Scarlett</firstname>
+  <surname>Clark</surname>
+  <affiliation><address>
+    <email>scarlett@scarlettgatelyclark.com</email>
+  </address></affiliation>
+</author>
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
 <date>2011-07-16</date>
@@ -189,10 +196,24 @@ window.</para>
 
 <para>To write your message, fill in the appropriate fields in the
 composer window. Use the <guimenu>View</guimenu> menu
-to select which header fields are displayed. The <guimenuitem>Identity</guimenuitem>
-field offers a <guibutton>Sticky</guibutton> option; if it is checked,
-the current identity will become the default identity when you open
-a new composer next time.</para>
+to select which header fields are displayed. Some field options offer a
+<guibutton>Sticky</guibutton> checkbox, that if checked, your selection will remain as the default when you open a
+new composer window.
+The <guimenuitem>Identity</guimenuitem> field allows you to select an identity
+to use.
+The <guimenuitem>Dictionary</guimenuitem> field allows you to choose your
+dictionary of choice for use with
+spellchecking.
+The <guimenuitem>Sent-Mail folder</guimenuitem> allows you to
+change the location to save sent emails.
+The <guimenuitem>Mail transport</guimenuitem> allows you to select the outgoing
+mail server you would like to use.
+The <guimenuitem>Snippets</guimenuitem> allows you to show the snippets window
+to store and use often used parts of text.
+The <guimenuitem>Translator</guimenuitem> allows you to translate your text
+within the composer window.
+
+</para>
 
 <para>There are a variety of shortcuts to help
 you with writing your messages. The <guibutton>Select...</guibutton> buttons next to
@@ -394,7 +415,18 @@ snippetDelimiter=$
 </para>
 
 </sect2>
-
+<sect2 id="using-the-translator">
+  <title>Using the Built-in Translator</title>
+  <para>&kmail; 2 composer provides a built-in translator that can be accessed by selecting
+    <menuchoice><guimenu>View</guimenu><guimenuitem>Translator</guimenuitem></menuchoice> from the
+      menubar. A new panel will appear at the bottom of the composer.</para>
+      <para> To translate a section of text, first select the text you would like translated to the
+        box with the "Drag text...". Select the language it currently is, in the <guilabel>From:</guilabel> dropdown box.
+          Select the language you would like to translate to in the <guilabel>To:</guilabel> dropdown box, and click the <guibutton>Translate</guibutton> button.
+          Your translated text will appear in the next box. If you need to translate
+            in the other direction you can just click the <guibutton>Invert</guibutton> button.
+              To clear all text, click the <guibutton>Clear</guibutton> button. </para>
+            </sect2>
 </sect1>
 
 <sect1 id="folders">
