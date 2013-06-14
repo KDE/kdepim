@@ -51,6 +51,9 @@ void SieveGlobalVariableActionWidget::generatedScript(QString &script)
         return;
     script += QLatin1String("global ");
     script += QString::fromLatin1("\"%1\";\n").arg(variableName);
+    if (mSetValueTo->isChecked()) {
+        script += QString::fromLatin1("set \"%1\" \"%2\";\n").arg(variableName).arg(mVariableValue->text());
+    }
 }
 
 void SieveGlobalVariableActionWidget::initWidget()
@@ -64,6 +67,16 @@ void SieveGlobalVariableActionWidget::initWidget()
     mVariableName = new KLineEdit;
     mLayout->addWidget( mVariableName, 1, 1 );
 
+    mSetValueTo = new QCheckBox(i18n("Set value to:"));
+    mLayout->addWidget( mSetValueTo, 1, 2 );
+    mSetValueTo->setChecked(false);
+
+    mVariableValue = new KLineEdit;
+    mVariableValue->setEnabled(false);
+    mLayout->addWidget( mVariableValue, 1, 3 );
+
+    connect(mSetValueTo, SIGNAL(clicked(bool)), mVariableValue, SLOT(setEnabled(bool)));
+
     mAdd = new KPushButton( this );
     mAdd->setIcon( KIcon( QLatin1String("list-add") ) );
     mAdd->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
@@ -71,8 +84,8 @@ void SieveGlobalVariableActionWidget::initWidget()
     mRemove = new KPushButton( this );
     mRemove->setIcon( KIcon( QLatin1String("list-remove") ) );
     mRemove->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
-    mLayout->addWidget( mAdd, 1, 2 );
-    mLayout->addWidget( mRemove, 1, 3 );
+    mLayout->addWidget( mAdd, 1, 4 );
+    mLayout->addWidget( mRemove, 1, 5 );
 
     connect( mAdd, SIGNAL(clicked()),
              this, SLOT(slotAddWidget()) );
