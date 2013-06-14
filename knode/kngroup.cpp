@@ -353,7 +353,7 @@ bool KNGroup::loadHdrs()
 
   // restore "New" - flags
   if( f_irstNew > -1 ) {
-    for( int i = f_irstNew; i < length(); i++ ) {
+    for( int i = f_irstNew; i < length(); ++i ) {
       at(i)->setNew(true);
     }
   }
@@ -641,7 +641,7 @@ void KNGroup::syncDynamicData()
 
       sOfData=sizeof(data);
 
-      for(int i=0; i<length(); i++) {
+      for(int i=0; i<length(); ++i) {
         art=at(i);
 
         if(art->hasChanged() && !art->isExpired()) {
@@ -1044,7 +1044,7 @@ void KNGroup::showProperties()
 int KNGroup::statThrWithNew()
 {
   int cnt=0;
-  for(int i=0; i<length(); i++)
+  for(int i=0; i<length(); ++i)
     if( (at(i)->idRef()==0) && (at(i)->hasNewFollowUps()) ) cnt++;
   return cnt;
 }
@@ -1053,7 +1053,7 @@ int KNGroup::statThrWithNew()
 int KNGroup::statThrWithUnread()
 {
   int cnt=0;
-  for(int i=0; i<length(); i++)
+  for(int i=0; i<length(); ++i)
     if( (at(i)->idRef()==0) && (at(i)->hasUnreadFollowUps()) ) cnt++;
   return cnt;
 }

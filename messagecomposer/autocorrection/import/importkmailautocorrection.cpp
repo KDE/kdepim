@@ -52,7 +52,7 @@ bool ImportKMailAutocorrection::import(const QString& fileName, LoadAttribute lo
         const QDomElement upper = de.namedItem(QLatin1String("UpperCaseExceptions")).toElement();
         if (!upper.isNull()) {
             const QDomNodeList nl = upper.childNodes();
-            for (int i = 0; i < nl.count(); i++)
+            for (int i = 0; i < nl.count(); ++i)
                 mUpperCaseExceptions += nl.item(i).toElement().attribute(QLatin1String("exception"));
         }
 
@@ -70,7 +70,7 @@ bool ImportKMailAutocorrection::import(const QString& fileName, LoadAttribute lo
         {
             const QDomNodeList nl = item.childNodes();
             const int numberOfElement(nl.count());
-            for (int i = 0; i < numberOfElement; i++) {
+            for (int i = 0; i < numberOfElement; ++i) {
                 const QDomElement element = nl.item(i).toElement();
                 const QString find = element.attribute(QLatin1String("find"));
                 const QString replace = element.attribute(QLatin1String("replace"));

@@ -229,13 +229,13 @@ const QString HTMLPrettyFormatter::reformat( const QString &src )
     tmpSource = source.split('\n', QString::SkipEmptyParts );
 
     // Then clean any leading whitespace
-    for( int i = 0; i != tmpSource.length(); i++ )
+    for( int i = 0; i != tmpSource.length(); ++i )
     {
         tmpSource[i] = tmpSource[i].remove( cleanLeadingWhitespace );
     }
 
     // Then indent as appropriate
-    for( int i = 0; i != tmpSource.length(); i++ )  {
+    for( int i = 0; i != tmpSource.length(); ++i )  {
         if( htmlTagRegExp.indexIn( tmpSource.at(i) ) != -1 ) // A tag
         {
             if( htmlTagRegExp.cap( 3 ) == QLatin1String( "/" ) ||

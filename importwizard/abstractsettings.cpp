@@ -70,7 +70,7 @@ QString AbstractSettings::uniqueIdentityName(const QString& name)
     int i = 0;
     while(!mManager->isUnique( newName )) {
         newName = QString::fromLatin1("%1_%2").arg(name).arg(i);
-        i++;
+        ++i;
     }
     return newName;
 }

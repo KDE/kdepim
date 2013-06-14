@@ -666,7 +666,7 @@ void KNArticleFactory::sendOutbox()
   }
 
   ob=knGlobals.folderManager()->outbox();
-  for(int i=0; i< ob->length(); i++)
+  for(int i=0; i< ob->length(); ++i)
     lst.append(ob->at(i));
 
   sendArticles( lst, true );

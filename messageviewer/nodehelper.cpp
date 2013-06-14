@@ -777,7 +777,7 @@ QByteArray NodeHelper::toUsAscii(const QString& _str, bool *ok)
   bool all_ok =true;
   QString result = _str;
   const int len = result.length();
-  for (int i = 0; i < len; i++)
+  for (int i = 0; i < len; ++i)
     if (result.at(i).unicode() >= 128) {
       result[i] = '?';
       all_ok = false;

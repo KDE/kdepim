@@ -111,7 +111,7 @@ void ConfigureWidget::readCurrentFallbackCodec()
       found = true;
       break;
     }
-    i++;
+    ++i;
   }
   if ( !found ) // nothing matched, use latin9
     mSettingsUi->fallbackCharacterEncoding->setCurrentIndex( indexOfLatin9 );
@@ -134,7 +134,7 @@ void ConfigureWidget::readCurrentOverrideCodec()
       mSettingsUi->overrideCharacterEncoding->setCurrentIndex( i );
       break;
     }
-    i++;
+    ++i;
   }
   if ( i == encodings.size() ) {
     // the current value of overrideCharacterEncoding is an unknown encoding => reset to Auto

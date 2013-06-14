@@ -107,7 +107,7 @@ void KTimeZoneComboBox::selectTimeSpec( const KDateTime::Spec &spec )
       nCurrentlySet = i;
       break;
     }
-    i++;
+    ++i;
   }
 
   if ( nCurrentlySet == -1 ) {

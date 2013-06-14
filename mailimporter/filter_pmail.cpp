@@ -306,7 +306,7 @@ bool FilterPMail::parseFolderMatrix( const QString  &chosendir )
             QStringList tmpList = QString::fromLatin1(tmpRead).split(QLatin1Char(','), QString::SkipEmptyParts);
             int i = 0;
             QStringList::ConstIterator end( tmpList.constEnd() );
-            for ( QStringList::ConstIterator it = tmpList.constBegin(); it != end; ++it, i++) {
+            for ( QStringList::ConstIterator it = tmpList.constBegin(); it != end; ++it, ++i) {
                 QString _tmp = *it;
                 if(i < 5) tmpArray[i] = _tmp.remove(QLatin1Char('\"'));
                 else {

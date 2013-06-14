@@ -120,7 +120,7 @@ QDomElement KnowItImporter::addNote( const KnowItNote& note)
           contents.chop( 14 );
         }
         contents.append( "<br /><br /><p><b>Links:</b></p>\n<ul>\n" );
-        for ( int i = 0; i < note.links.size(); i++ ) {
+        for ( int i = 0; i < note.links.size(); ++i ) {
           kDebug() << "link" << note.links[i].first << note.links[i].second;
           contents.append( QString( "<li><a href=\"%1\">%2</a></li>\n" )
               .arg( note.links[i].first )

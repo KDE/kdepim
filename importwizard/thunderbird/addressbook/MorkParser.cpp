@@ -94,7 +94,7 @@ bool MorkParser::parse()
 	{
 		if ( !isWhiteSpace( cur ) )
 		{
-			i++;
+			++i;
 			// Figure out what a term
 			switch ( cur )
 			{

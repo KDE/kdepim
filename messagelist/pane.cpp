@@ -587,7 +587,7 @@ void Pane::Private::closeTab( QWidget *w )
 
 void Pane::Private::changeQuicksearchVisibility(bool show)
 {
-    for ( int i=0; i<q->count(); i++ ) {
+    for ( int i=0; i<q->count(); ++i ) {
       Widget *w = qobject_cast<Widget *>( q->widget( i ) );
       w->changeQuicksearchVisibility(show);
     }
@@ -649,7 +649,7 @@ void Pane::Private::onTabContextMenuRequest( const QPoint &pos )
     QList<Widget *> widgets;
     const int index = q->indexOf( w );
 
-    for ( int i=0; i<q->count(); i++ ) {
+    for ( int i=0; i<q->count(); ++i ) {
       if ( i==index) continue; // Skip the current one
 
       Widget *other = qobject_cast<Widget *>( q->widget( i ) );
@@ -988,7 +988,7 @@ void Pane::setPreferEmptyTab( bool emptyTab )
 
 void Pane::saveCurrentSelection()
 {
-  for ( int i=0; i<count(); i++ ) {
+  for ( int i=0; i<count(); ++i ) {
     Widget *w = qobject_cast<Widget *>( widget( i ) );
     w->saveCurrentSelection();
   }
@@ -996,7 +996,7 @@ void Pane::saveCurrentSelection()
 
 void Pane::updateTagComboBox()
 {
-  for ( int i=0; i<count(); i++ ) {
+  for ( int i=0; i<count(); ++i ) {
     Widget *w = qobject_cast<Widget *>( widget( i ) );
     w->populateStatusFilterCombo();
   }
@@ -1015,7 +1015,7 @@ void Pane::writeConfig()
   conf.writeEntry(QLatin1String("currentIndex"),currentIndex());
   conf.writeEntry(QLatin1String("tabNumber"),count());
 
-  for ( int i=0; i<count(); i++ ) {
+  for ( int i=0; i<count(); ++i ) {
     Widget *w = qobject_cast<Widget *>( widget( i ) );
     KConfigGroup grp(MessageList::Core::Settings::self()->config(),QString::fromLatin1("MessageListTab%1").arg(i));
     grp.writeEntry(QLatin1String("collectionId"),w->currentCollection().id());

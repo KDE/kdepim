@@ -54,7 +54,7 @@ ComposerAutoCorrection::ComposerAutoCorrection()
     readConfig();
 
     KLocale *locale = KGlobal::locale();
-    for (int i = 1; i <=7; i++)
+    for (int i = 1; i <=7; ++i)
         mCacheNameOfDays.append(locale->calendar()->weekDayName(i).toLower());
 }
 

@@ -1579,7 +1579,7 @@ KeyApprovalDialog::slotOk()
 
   if( mPrefsChanged ) {
     // store the changed preferences
-    for( int i = 0; i < mAddressLabels.size(); i++ ) {
+    for( int i = 0; i < mAddressLabels.size(); ++i ) {
       // traverse all Address and Encryption Preference widgets
       EncryptPref encrPref;
       switch( mEncrPrefCombos[i]->currentIndex() ) {

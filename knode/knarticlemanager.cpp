@@ -209,7 +209,7 @@ void KNArticleManager::showHdrs(bool clear)
     if(f_ilter)
       f_ilter->doFilter(g_roup);
     else
-      for(int i=0; i<g_roup->length(); i++) {
+      for(int i=0; i<g_roup->length(); ++i) {
         art=g_roup->at(i);
         art->setFilterResult(true);
         art->setFiltered(true);
@@ -221,7 +221,7 @@ void KNArticleManager::showHdrs(bool clear)
 
     d_isableExpander=true;
 
-    for(int i=0; i<g_roup->length(); i++) {
+    for(int i=0; i<g_roup->length(); ++i) {
 
       art=g_roup->at(i);
       art->setThreadMode(showThreads);
@@ -305,7 +305,7 @@ void KNArticleManager::showHdrs(bool clear)
     if(f_ilter) {
       f_ilter->doFilter(f_older);
     } else {
-      for(int i=0; i<f_older->length(); i++) {
+      for(int i=0; i<f_older->length(); ++i) {
         art=f_older->at(i);
         art->setFilterResult(true);
       }
@@ -347,7 +347,7 @@ void KNArticleManager::updateListViewItems()
   if(g_roup) {
     KNRemoteArticle::Ptr art;
 
-    for(int i=0; i<g_roup->length(); i++) {
+    for(int i=0; i<g_roup->length(); ++i) {
       art=g_roup->at(i);
       if(art->listItem())
         art->updateListItem();
@@ -615,7 +615,7 @@ void KNArticleManager::setAllRead( bool read, int lastcount )
     offset = groupLength;
 
   KNRemoteArticle::Ptr a;
-  for ( int i = groupLength - offset; i < groupLength; i++ ) {
+  for ( int i = groupLength - offset; i < groupLength; ++i ) {
     a = g_roup->at( i );
     if ( a->getReadFlag() != read && !a->isIgnored() ) {
       a->setRead( read );
@@ -971,7 +971,7 @@ void KNArticleManager::createCompleteThread( KNRemoteArticle::Ptr a )
   if (!top->listItem())  // shouldn't happen
     return;
 
-  for(int i=0; i<g_roup->count(); i++) {
+  for(int i=0; i<g_roup->count(); ++i) {
     art=g_roup->at(i);
     if(art->filterResult() && !art->listItem()) {
 
@@ -1065,7 +1065,7 @@ void KNArticleManager::slotItemExpanded(Q3ListViewItem *p)
   if (p->childCount() == 0) {
     ScopedCursorOverride cursor( Qt::WaitCursor );
 
-    for(int i=0; i<g_roup->count(); i++) {
+    for(int i=0; i<g_roup->count(); ++i) {
       art=g_roup->at(i);
       if(art->filterResult() && !art->listItem()) {
 

@@ -203,7 +203,7 @@ bool CalendarHelper::isCurrentDay( const QString &text ) const
 void CalendarHelper::registerItems( QObject *obj )
 {
   // we expect to receive the item that has all the days and weeks as children
-  for( int i = 0; i < obj->children().size(); i++) {
+  for( int i = 0; i < obj->children().size(); ++i) {
     // check for days and weeks
     QObject *item = obj->children().at(i);
     QVariant currentDay = item->property("currentDay");
@@ -255,7 +255,7 @@ void CalendarHelper::updateDays()
   QDate today = QDate::currentDate();
   bool disableCurrentDay = !( m_month == today.month() );
 
-  for( int i = 0; i < m_days.size(); i++) {
+  for( int i = 0; i < m_days.size(); ++i) {
     QObject *item = m_days.at(i);
     QVariant position = item->property( "dayPos" );
 
@@ -276,7 +276,7 @@ void CalendarHelper::updateDays()
 
 void CalendarHelper::updateWeeks()
 {
-  for( int i = 0; i < m_weeks.size(); i++ ) {
+  for( int i = 0; i < m_weeks.size(); ++i ) {
     QObject *item = m_weeks.at( i );
     QVariant position = item->property( "weekPos" );
 

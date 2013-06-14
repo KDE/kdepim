@@ -284,7 +284,7 @@ QString skipKeyword( const QString& aStr, QChar sepChar,
 
   unsigned int i = 0, maxChars = 3;
   unsigned int strLength(str.length());
-  for (i=0; i < strLength && i < maxChars; i++)
+  for (i=0; i < strLength && i < maxChars; ++i)
   {
     if (str[i] < QChar::fromLatin1('A') || str[i] == sepChar) break;
   }
@@ -292,7 +292,7 @@ QString skipKeyword( const QString& aStr, QChar sepChar,
   if (str[i] == sepChar) // skip following spaces too
   {
     do {
-      i++;
+      ++i;
     } while (str[i] == QChar::fromLatin1(' '));
     if (hasKeyword) *hasKeyword=true;
     return str.mid(i);

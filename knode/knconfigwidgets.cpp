@@ -910,7 +910,7 @@ KNode::DisplayedHeaderConfDialog::DisplayedHeaderConfDialog( KNDisplayedHeader *
   h_drC->addItems( KNDisplayedHeader::predefs() );
   h_drC->lineEdit()->setText(h->header());
   n_ameE->setText(h->translatedName());
-  for(int i=0; i<4; i++) {
+  for(int i=0; i<4; ++i) {
     n_ameCB[i]->setChecked(h->flag(i));
     v_alueCB[i]->setChecked(h->flag(i+4));
   }
@@ -936,7 +936,7 @@ void KNode::DisplayedHeaderConfDialog::slotOk()
 {
   h_dr->setHeader(h_drC->currentText());
   h_dr->setTranslatedName(n_ameE->text());
-  for(int i=0; i<4; i++) {
+  for(int i=0; i<4; ++i) {
     if(h_dr->hasName())
       h_dr->setFlag(i, n_ameCB[i]->isChecked());
     else
@@ -957,7 +957,7 @@ void KNode::DisplayedHeaderConfDialog::slotActivated(int pos)
 // disable the name format options when the name is empty
 void KNode::DisplayedHeaderConfDialog::slotNameChanged(const QString& str)
 {
-  for(int i=0; i<4; i++)
+  for(int i=0; i<4; ++i)
       n_ameCB[i]->setEnabled(!str.isEmpty());
 }
 

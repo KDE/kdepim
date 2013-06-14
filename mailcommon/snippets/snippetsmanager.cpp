@@ -459,7 +459,7 @@ void SnippetsManager::Private::loadFromOldFormat( const KConfigGroup &group )
   //if entry doesn't get found, this will return -1 which we will need a bit later
   int iCount = group.readEntry( "snippetGroupCount", -1 );
   QMap< int, QModelIndex> listGroup;
-  for ( int i=0; i<iCount; i++ ) {  //read the group-list
+  for ( int i=0; i<iCount; ++i ) {  //read the group-list
     const QString strNameVal =
       group.readEntry( QString::fromLatin1( "snippetGroupName_%1" ).arg( i ), QString() );
 
@@ -483,7 +483,7 @@ void SnippetsManager::Private::loadFromOldFormat( const KConfigGroup &group )
 
   if ( iCount != -1 ) {
     iCount = group.readEntry( "snippetCount", 0 );
-    for ( int i=0; i<iCount; i++ ) {  //read the snippet-list
+    for ( int i=0; i<iCount; ++i ) {  //read the snippet-list
       const QString snippetName =
         group.readEntry( QString::fromLatin1( "snippetName_%1" ).arg( i ), QString() );
 

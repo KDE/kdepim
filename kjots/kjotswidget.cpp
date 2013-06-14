@@ -1563,7 +1563,7 @@ void KJotsWidget::onRepeatReplace()
                                         Qt::CaseSensitive : Qt::CaseInsensitive, QRegExp::RegExp2 );
       regExp.indexIn(cursor.selectedText());
       int capCount = regExp.numCaptures();
-      for ( int i=0; i <= capCount; i++ ) {
+      for ( int i=0; i <= capCount; ++i ) {
         QString c = QString( "\\%1" ).arg( i );
         replacementText.replace( c, regExp.cap( i ) );
       }
