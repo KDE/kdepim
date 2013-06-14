@@ -60,6 +60,7 @@ SimpleStringListEditor::SimpleStringListEditor( QWidget * parent,
       mAddDialogLabel( addDialogLabel.isEmpty() ?
                            i18n("New entry:") : addDialogLabel )
 {
+    setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding );
     QHBoxLayout * hlay = new QHBoxLayout( this );
     hlay->setSpacing( KDialog::spacingHint() );
     hlay->setMargin( 0 );
@@ -70,7 +71,6 @@ SimpleStringListEditor::SimpleStringListEditor( QWidget * parent,
     connect( mListBox, SIGNAL(customContextMenuRequested(QPoint)),
              SLOT(slotContextMenu(QPoint)) );
 
-
     mListBox->setSelectionMode(QAbstractItemView::ExtendedSelection);
     hlay->addWidget( mListBox, 1 );
 
@@ -79,8 +79,8 @@ SimpleStringListEditor::SimpleStringListEditor( QWidget * parent,
                     "Consider using a plain QListBox instead!";
     }
 
-    QVBoxLayout * vlay = new QVBoxLayout(); // inherits spacing
-    hlay->addLayout( vlay );
+    mButtonLayout = new QVBoxLayout(); // inherits spacing
+    hlay->addLayout( mButtonLayout );
 
     if ( buttons & Add ) {
         if ( addLabel.isEmpty() )
@@ -88,7 +88,7 @@ SimpleStringListEditor::SimpleStringListEditor( QWidget * parent,
         else
             mAddButton = new QPushButton( addLabel, this );
         mAddButton->setAutoDefault( false );
-        vlay->addWidget( mAddButton );
+        mButtonLayout->addWidget( mAddButton );
         connect( mAddButton, SIGNAL(clicked()),
                  this, SLOT(slotAdd()) );
     }
@@ -101,7 +101,7 @@ SimpleStringListEditor::SimpleStringListEditor( QWidget * parent,
             mModifyButton = new QPushButton( modifyLabel, this );
         mModifyButton->setAutoDefault( false );
         mModifyButton->setEnabled( false ); // no selection yet
-        vlay->addWidget( mModifyButton );
+        mButtonLayout->addWidget( mModifyButton );
         connect( mModifyButton, SIGNAL(clicked()),
                  this, SLOT(slotModify()) );
         connect( mListBox, SIGNAL(itemDoubleClicked(QListWidgetItem*)),
@@ -115,7 +115,7 @@ SimpleStringListEditor::SimpleStringListEditor( QWidget * parent,
             mRemoveButton = new QPushButton( removeLabel, this );
         mRemoveButton->setAutoDefault( false );
         mRemoveButton->setEnabled( false ); // no selection yet
-        vlay->addWidget( mRemoveButton );
+        mButtonLayout->addWidget( mRemoveButton );
         connect( mRemoveButton, SIGNAL(clicked()),
                  this, SLOT(slotRemove()) );
     }
@@ -130,7 +130,7 @@ SimpleStringListEditor::SimpleStringListEditor( QWidget * parent,
         mUpButton->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
         mUpButton->setAutoDefault( false );
         mUpButton->setEnabled( false ); // no selection yet
-        vlay->addWidget( mUpButton );
+        mButtonLayout->addWidget( mUpButton );
         connect( mUpButton, SIGNAL(clicked()),
                  this, SLOT(slotUp()) );
     }
@@ -145,12 +145,12 @@ SimpleStringListEditor::SimpleStringListEditor( QWidget * parent,
         mDownButton->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
         mDownButton->setAutoDefault( false );
         mDownButton->setEnabled( false ); // no selection yet
-        vlay->addWidget( mDownButton );
+        mButtonLayout->addWidget( mDownButton );
         connect( mDownButton, SIGNAL(clicked()),
                  this, SLOT(slotDown()) );
     }
 
-    vlay->addStretch( 1 ); // spacer
+    mButtonLayout->addStretch( 1 ); // spacer
 
     connect( mListBox, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
              this, SLOT(slotSelectionChanged()) );
@@ -380,6 +380,17 @@ void SimpleStringListEditor::slotContextMenu(const QPoint&pos)
     menu->exec( mListBox->mapToGlobal( pos ) );
     delete menu;
 }
+
+QSize SimpleStringListEditor::sizeHint() const
+{
+    // Override height because we want the widget to be tall enough to fit the
+    // button columns, but we want to allow it to be made smaller than list
+    // sizeHint().height()
+    QSize sh = QWidget::sizeHint();
+    sh.setHeight( mButtonLayout->minimumSize().height() );
+    return sh;
+}
+
 }
 
 

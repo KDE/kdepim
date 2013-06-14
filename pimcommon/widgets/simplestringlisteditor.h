@@ -42,6 +42,7 @@
 class QListWidget;
 class QListWidgetItem;
 class QPushButton;
+class QVBoxLayout;
 
 //
 //
@@ -83,6 +84,8 @@ public:
     /** Sets the text of button @p button to @p text */
     void setButtonText( ButtonCode button, const QString & text );
 
+    QSize sizeHint() const;
+
 signals:
     /** Connected slots can alter the argument to be added or set the
       argument to QString() to suppress adding.
@@ -110,6 +113,7 @@ private:
     QPushButton   *mModifyButton;
     QPushButton   *mUpButton;
     QPushButton   *mDownButton;
+    QVBoxLayout   *mButtonLayout;
     const QString mAddDialogLabel;
 };
 
