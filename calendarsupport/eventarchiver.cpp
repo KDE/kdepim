@@ -46,6 +46,24 @@ using namespace KCalCore;
 using namespace KCalUtils;
 using namespace CalendarSupport;
 
+class GroupwareScoppedDisabler {
+public:
+  GroupwareScoppedDisabler(Akonadi::IncidenceChanger *changer) : m_changer(changer)
+  {
+    m_wasEnabled = m_changer->groupwareCommunication();
+    m_changer->setGroupwareCommunication(false);
+  }
+
+  ~GroupwareScoppedDisabler()
+  {
+    m_changer->setGroupwareCommunication(m_wasEnabled);
+  }
+
+  bool m_wasEnabled;
+  Akonadi::IncidenceChanger *m_changer;
+};
+
+
 EventArchiver::EventArchiver( QObject *parent )
  : QObject( parent )
 {
@@ -89,6 +107,8 @@ void EventArchiver::run( const Akonadi::ETMCalendar::Ptr &calendar,
                          const QDate &limitDate, QWidget *widget,
                          bool withGUI, bool errorIfNone )
 {
+  GroupwareScoppedDisabler disabler(changer); // Disables groupware communication temporarily
+
   // We need to use rawEvents, otherwise events hidden by filters will not be archived.
   KCalCore::Event::List events;
   KCalCore::Todo::List todos;
