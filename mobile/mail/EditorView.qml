@@ -18,53 +18,50 @@
 */
 
 import QtQuick 1.1
-import org.kde 4.5
 import org.kde.pim.mobileui 4.5 as KPIM
 import org.kde.kpimidentities 4.5 as KPIMIdentities
 import org.kde.messagecomposer 4.5 as MessageComposer
 import "../mobileui/ScreenFunctions.js" as Screen
+import org.kde.plasma.components 0.1 as PlasmaComponents
 
 Item {
   id: root
-  property int contentHeight: subject.height + messageContent.height + bottomContainer.height + 20;
+  property int contentHeight: subjectInput.height + messageContent.height + bottomContainer.height + 20;
   property int screenHeight: 480
   anchors.topMargin: 12
   anchors.leftMargin: 48
   anchors.rightMargin: 2
 
-  Text {
+  PlasmaComponents.Label {
     id: subjectLabel
-    text: KDE.i18n( "Subject:" );
-    anchors.leftMargin: 48
-    anchors.verticalCenter: subject.verticalCenter
-    anchors.left: parent.left
-  }
 
-  Rectangle {
-    id: subject
     anchors {
-      left: subjectLabel.right
-      top: parent.top
-      right: parent.right
+      verticalCenter: subjectInput.verticalCenter
+      left: parent.left
     }
-    height: subjectInput.height + 8 // padding
-    border { color: "grey"; width: 2; }
-    radius: 8
 
-    TextInput {
-      id: subjectInput
-      anchors.fill: parent
-      anchors.margins: 4
-      text: window.subject
-    }
+    text: KDE.i18n( "Subject:" )
   }
+
+  PlasmaComponents.TextField {
+      id: subjectInput
+
+      anchors {
+        left: subjectLabel.right
+        top: parent.top
+        right: parent.right
+      }
+
+      text: window.subject
+      clearButtonShown: true
+    }
 
   Binding { target: window; property: "subject"; value: subjectInput.text }
 
   Rectangle {
     id: cryptoIndicator
     visible: window.isSigned || window.isEncrypted
-    anchors.top: subject.bottom
+    anchors.top: subjectInput.bottom
     anchors.topMargin: 2
     anchors.left: parent.left
     anchors.right: parent.right
@@ -106,7 +103,7 @@ Item {
 
   MessageComposer.Editor {
     id: messageContent
-    availableScreenHeight: root.screenHeight - bottomContainer.height - subject.height - cryptoIndicator.height - cryptoIndicator.anchors.topMargin - root.anchors.topMargin - 2
+    availableScreenHeight: root.screenHeight - bottomContainer.height - subjectInput.height - cryptoIndicator.height - cryptoIndicator.anchors.topMargin - root.anchors.topMargin - 2
     anchors {
       top: cryptoIndicator.bottom
       left: parent.left
@@ -124,14 +121,14 @@ Item {
         top: messageContent.bottom
     }
 
-    Text {
+    PlasmaComponents.Label {
       id: identityLabel
       anchors {
         left: parent.left
         bottom: parent.bottom
         top: parent.top
       }
-      text: KDE.i18n( "Identity:" );
+      text: KDE.i18n( "Identity:" )
       verticalAlignment: Text.AlignVCenter
     }
 
