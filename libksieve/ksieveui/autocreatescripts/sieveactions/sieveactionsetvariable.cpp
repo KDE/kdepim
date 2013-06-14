@@ -26,7 +26,7 @@
 
 using namespace KSieveUi;
 SieveActionSetVariable::SieveActionSetVariable(QObject *parent)
-    : SieveAction(QLatin1String("variables"), i18n("Variables"), parent)
+    : SieveAction(QLatin1String("variable"), i18n("Variable"), parent)
 {
 }
 
