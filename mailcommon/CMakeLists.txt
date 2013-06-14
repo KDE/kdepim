@@ -117,7 +117,7 @@ set(libmailcommon_SRCS
 )
 
 soprano_add_ontology(libmailcommon_SRCS
-  ${CMAKE_SOURCE_DIR}/messagecore/messagetag.trig
+  ${CMAKE_SOURCE_DIR}/messagecore/ontology/messagetag.trig
   "MessageTag"
   "Vocabulary"
   "trig"

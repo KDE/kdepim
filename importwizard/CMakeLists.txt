@@ -79,7 +79,7 @@ kde4_add_ui_files(importwizard_SRCS
 		  ui/importcalendarpage.ui)
 
 soprano_add_ontology(importwizard_SRCS
-    ${CMAKE_SOURCE_DIR}/messagecore/messagetag.trig
+    ${CMAKE_SOURCE_DIR}/messagecore/ontology/messagetag.trig
     "MessageTag"
     "Vocabulary"
     "trig"

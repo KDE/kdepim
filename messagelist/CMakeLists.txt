@@ -86,7 +86,7 @@ set(libmessagelist_HEADERS
 )
 
 soprano_add_ontology(libmessagelist_SRCS
-  ${CMAKE_SOURCE_DIR}/messagecore/messagetag.trig
+  ${CMAKE_SOURCE_DIR}/messagecore/ontology/messagetag.trig
   "MessageTag"
   "Vocabulary"
   "trig"
