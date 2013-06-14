@@ -16,11 +16,11 @@
 */
 
 #include "exportaddressbookjob.h"
-
 #include "messageviewer/utils/kcursorsaver.h"
 
-
 #include <KLocale>
+#include <KStandardDirs>
+#include <KTemporaryFile>
 
 #include <QWidget>
 
@@ -54,6 +54,23 @@ void ExportAddressbookJob::backupResources()
 void ExportAddressbookJob::backupConfig()
 {
     //kaddressbookrc
+    showInfo(i18n("Backing up config..."));
+    MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+
+    const QString kaddressbookStr(QLatin1String("kaddressbookrc"));
+    const QString kaddressbookrc = KStandardDirs::locateLocal( "config", kaddressbookStr);
+    if (QFile(kaddressbookrc).exists()) {
+        KSharedConfigPtr kaddressbook = KSharedConfig::openConfig(kaddressbookrc);
+
+        KTemporaryFile tmp;
+        tmp.open();
+
+        //TODO adapt collection path
+        KConfig *kaddressBookConfig = kaddressbook->copyTo( tmp.fileName() );
+        kaddressBookConfig->sync();
+        backupFile(tmp.fileName(), BackupMailUtil::configsPath(), kaddressbookStr);
+    }
+    Q_EMIT info(i18n("Config backup done."));
 }
 
 QString ExportAddressbookJob::componentName() const
