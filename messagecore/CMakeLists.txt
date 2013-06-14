@@ -36,7 +36,7 @@ set(messagecore_LIB_SRCS
    mdnstateattribute.cpp
    messagehelpers.cpp
    nodehelper.cpp
-   stringutil.cpp
+   utils/stringutil.cpp
 )
 
 if (NOT WINCE)

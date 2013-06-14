@@ -58,7 +58,7 @@
 #include <incidenceeditor-ng/globalsettings.h>
 #include <incidenceeditor-ng/incidencedialogfactory.h>
 
-#include <messagecore/stringutil.h>
+#include <messagecore/utils/stringutil.h>
 #include <messagecore/messagehelpers.h>
 
 #include <messagecomposer/messagehelper.h>

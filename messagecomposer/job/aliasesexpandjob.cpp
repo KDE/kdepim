@@ -29,7 +29,7 @@
 
 #include <KPIMUtils/Email>
 
-#include <messagecore/stringutil.h>
+#include <messagecore/utils/stringutil.h>
 
 using namespace MessageComposer;
 

@@ -58,7 +58,7 @@
 #include "chiasmuskeyselector.h"
 
 // KDEPIM includes
-#include <messagecore/stringutil.h>
+#include <messagecore/utils/stringutil.h>
 #include <kleo/specialjob.h>
 #include <kleo/cryptobackendfactory.h>
 #include <kleo/decryptverifyjob.h>

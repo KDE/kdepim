@@ -28,7 +28,7 @@ using KPIMUtils::LinkLocator;
 #include "nodehelper.h"
 
 #include <kpimutils/email.h>
-#include <messagecore/stringutil.h>
+#include <messagecore/utils/stringutil.h>
 
 #include <kdebug.h>
 #include <klocale.h>

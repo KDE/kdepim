@@ -26,7 +26,7 @@
 #include "messagecomposersettings.h"
 #include "messageviewer/utils/autoqpointer.h"
 
-#include <messagecore/stringutil.h>
+#include <messagecore/utils/stringutil.h>
 
 #include <kpimutils/email.h>
 #include <kabc/vcarddrag.h>

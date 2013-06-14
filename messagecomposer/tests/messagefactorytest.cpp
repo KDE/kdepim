@@ -22,7 +22,7 @@
 
 #include "cryptofunctions.h"
 
-#include <messagecore/stringutil.h>
+#include <messagecore/utils/stringutil.h>
 #include <messagecore/nodehelper.h>
 
 #include "messagecomposer/composer/composer.h"

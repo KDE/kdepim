@@ -17,7 +17,7 @@
 
 #include "messageheaderfilter.h"
 
-#include <messagecore/stringutil.h>
+#include <messagecore/utils/stringutil.h>
 #include <grantlee/util.h>
 
 QVariant MessageHeaderEmailShowLink::doFilter(const QVariant &input, const QVariant &argument, bool autoescape) const

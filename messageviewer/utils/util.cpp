@@ -44,7 +44,7 @@
 
 #include "messagecore/globalsettings.h"
 #include "messagecore/nodehelper.h"
-#include "messagecore/stringutil.h"
+#include "messagecore/utils/stringutil.h"
 
 #include "pimcommon/widgets/renamefiledialog.h"
 

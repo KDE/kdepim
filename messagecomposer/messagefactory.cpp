@@ -34,7 +34,7 @@
 #include <KPIMUtils/Email>
 #include <messagecore/mailinglist.h>
 #include <messagecore/messagehelpers.h>
-#include <messagecore/stringutil.h>
+#include <messagecore/utils/stringutil.h>
 #include "messagehelper.h"
 #include "templateparser/templateparser.h"
 #include <KLocalizedString>
