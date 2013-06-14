@@ -28,15 +28,15 @@ class KJotsLockAttribute : public Akonadi::Attribute
 {
 public:
   KJotsLockAttribute();
-  virtual ~KJotsLockAttribute();
+  ~KJotsLockAttribute();
 
-  virtual QByteArray type() const;
+  QByteArray type() const;
 
-  virtual KJotsLockAttribute* clone() const;
+  KJotsLockAttribute* clone() const;
 
-  virtual QByteArray serialized() const;
+  QByteArray serialized() const;
 
-  virtual void deserialize( const QByteArray &data );
+  void deserialize( const QByteArray &data );
 
 };
 

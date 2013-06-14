@@ -66,3 +66,5 @@ void KJotsReplaceNextDialog::onHandleReplace()
     m_answer = User3;
     accept();
 }
+
+#include "kjotsreplacenextdialog.moc"

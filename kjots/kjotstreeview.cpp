@@ -220,3 +220,5 @@ void KJotsTreeView::changeColor()
     model()->setData(idx, myColor, Qt::BackgroundRole );
   }
 }
+
+#include "kjotstreeview.moc"

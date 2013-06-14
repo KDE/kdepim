@@ -384,3 +384,5 @@ void AkonotesNoteApplet::itemRemoved()
 {
   destroy();
 }
+
+#include "akonotes_noteapplet.moc"
