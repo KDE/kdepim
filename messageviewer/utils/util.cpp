@@ -43,7 +43,7 @@
 #include "nodehelper.h"
 
 #include "messagecore/globalsettings.h"
-#include "messagecore/nodehelper.h"
+#include "messagecore/helpers/nodehelper.h"
 #include "messagecore/utils/stringutil.h"
 
 #include "pimcommon/widgets/renamefiledialog.h"

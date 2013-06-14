@@ -139,7 +139,7 @@
 #include <kio/jobuidelegate.h>
 
 #include <gpgme++/error.h>
-#include <messagecore/nodehelper.h>
+#include <messagecore/helpers/nodehelper.h>
 #include "messagecore/globalsettings.h"
 #include <akonadi/agentinstance.h>
 #include <akonadi/agentmanager.h>

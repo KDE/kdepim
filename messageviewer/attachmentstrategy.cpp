@@ -40,7 +40,7 @@
 #include <kmime/kmime_content.h>
 #include <kdebug.h>
 
-#include <messagecore/nodehelper.h>
+#include <messagecore/helpers/nodehelper.h>
 
 namespace MessageViewer {
 

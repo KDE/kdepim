@@ -33,7 +33,7 @@
 
 #include "imagecollector.h"
 
-#include "nodehelper.h"
+#include "helpers/nodehelper.h"
 
 #include <kdebug.h>
 #include <kmime/kmime_content.h>

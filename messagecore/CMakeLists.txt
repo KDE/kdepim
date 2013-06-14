@@ -35,7 +35,7 @@ set(messagecore_LIB_SRCS
    mailinglist.cpp
    mdnstateattribute.cpp
    helpers/messagehelpers.cpp
-   nodehelper.cpp
+   helpers/nodehelper.cpp
    utils/stringutil.cpp
 )
 
