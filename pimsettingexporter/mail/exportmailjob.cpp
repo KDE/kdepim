@@ -644,7 +644,7 @@ void ExportMailJob::backupNepomuk()
     Q_EMIT info(i18n("Nepomuk Database backup done."));
 }
 
-void ExportMailJob::storeResources(const QString&identifier, const QString& path)
+void ExportMailJob::storeResources(const QString &identifier, const QString &path)
 {
     const QString agentFileName = identifier + QLatin1String("rc");
     const QString configFileName = KStandardDirs::locateLocal( "config", agentFileName );
@@ -666,6 +666,8 @@ void ExportMailJob::storeResources(const QString&identifier, const QString& path
         if (group.hasKey(trash)) {
             group.writeEntry(trash,MailCommon::Util::fullCollectionPath(Akonadi::Collection(group.readEntry(trash).toLongLong())));
         }
+    } else {
+        qDebug()<<" Resource not supported :"<<identifier;
     }
     config->sync();
     const bool fileAdded  = archive()->addLocalFile(tmp.fileName(), path + agentFileName);

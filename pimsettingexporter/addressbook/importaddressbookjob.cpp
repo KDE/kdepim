@@ -45,6 +45,7 @@ void ImportAddressbookJob::restoreResources()
 void ImportAddressbookJob::restoreConfig()
 {
     //TODO
+    //kaddressbookrc
 }
 
 QString ImportAddressbookJob::componentName() const

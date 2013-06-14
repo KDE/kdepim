@@ -53,7 +53,7 @@ void ExportAlarmJob::backupResources()
 
 void ExportAlarmJob::backupConfig()
 {
-
+    //kalarmrc
 }
 
 QString ExportAlarmJob::componentName() const

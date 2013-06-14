@@ -53,7 +53,7 @@ void ExportAddressbookJob::backupResources()
 
 void ExportAddressbookJob::backupConfig()
 {
-
+    //kaddressbookrc
 }
 
 QString ExportAddressbookJob::componentName() const

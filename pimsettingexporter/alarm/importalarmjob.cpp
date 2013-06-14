@@ -46,6 +46,7 @@ void ImportAlarmJob::restoreResources()
 void ImportAlarmJob::restoreConfig()
 {
     //TODO
+    //kalarmrc
 }
 
 QString ImportAlarmJob::componentName() const

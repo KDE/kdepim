@@ -47,6 +47,7 @@ void ImportCalendarJob::restoreResources()
 void ImportCalendarJob::restoreConfig()
 {
     //TODO
+    //TODO: korgacrc  korganizer_printing.rc  korganizerrc
 }
 
 QString ImportCalendarJob::componentName() const
