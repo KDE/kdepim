@@ -25,8 +25,8 @@
 #include <QWidget>
 
 
-ExportAddressbookJob::ExportAddressbookJob(QWidget *parent, ArchiveStorage *archiveStorage)
-    :AbstractImportExportJob(parent,archiveStorage,/*typeSelected,numberOfStep*/0,0 /*TODO fix it*/)
+ExportAddressbookJob::ExportAddressbookJob(QWidget *parent, BackupMailUtil::BackupTypes typeSelected, ArchiveStorage *archiveStorage,int numberOfStep)
+    : AbstractImportExportJob(parent, archiveStorage, typeSelected, numberOfStep)
 {
 }
 
@@ -38,8 +38,9 @@ ExportAddressbookJob::~ExportAddressbookJob()
 void ExportAddressbookJob::start()
 {
     mArchiveDirectory = archive()->directory();
+    //FIXME
     backupConfig();
-    //TODO
+    backupResources();
 }
 
 
@@ -47,7 +48,7 @@ void ExportAddressbookJob::backupResources()
 {
     showInfo(i18n("Backing up resources..."));
     MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
-    //TODO backup calendar
+    //TODO backup addressbook resources
     Q_EMIT info(i18n("Resources backup done."));
 }
 

@@ -18,11 +18,9 @@
 #include "importalarmjob.h"
 #include "archivestorage.h"
 
-ImportAlarmJob::ImportAlarmJob(QWidget *parent, ArchiveStorage *archiveStorage)
-    : AbstractImportExportJob(parent,archiveStorage,/*typeSelected,numberOfStep*/0,0 /*TODO fix it*/)
+ImportAlarmJob::ImportAlarmJob(QWidget *parent, BackupMailUtil::BackupTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep)
+    : AbstractImportExportJob(parent, archiveStorage, typeSelected, numberOfStep)
 {
-    Q_UNUSED( parent );
-    Q_UNUSED( archiveStorage );
 }
 
 ImportAlarmJob::~ImportAlarmJob()

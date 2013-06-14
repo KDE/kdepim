@@ -25,8 +25,8 @@
 #include <QWidget>
 
 
-ExportCalendarJob::ExportCalendarJob(QWidget *parent, ArchiveStorage *archiveStorage)
-    :AbstractImportExportJob(parent,archiveStorage,/*typeSelected,numberOfStep*/0,0 /*TODO fix it*/)
+ExportCalendarJob::ExportCalendarJob(QWidget *parent, BackupMailUtil::BackupTypes typeSelected, ArchiveStorage *archiveStorage,int numberOfStep)
+    :AbstractImportExportJob(parent, archiveStorage, typeSelected, numberOfStep)
 {
 }
 
@@ -53,6 +53,9 @@ void ExportCalendarJob::backupResources()
 
 void ExportCalendarJob::backupConfig()
 {
+    showInfo(i18n("Backing up config..."));
+    MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+    Q_EMIT info(i18n("Config backup done."));
     //TODO: korgacrc  korganizer_printing.rc  korganizerrc
 }
 

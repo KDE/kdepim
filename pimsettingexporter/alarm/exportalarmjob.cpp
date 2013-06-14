@@ -25,8 +25,8 @@
 #include <QWidget>
 
 
-ExportAlarmJob::ExportAlarmJob(QWidget *parent, ArchiveStorage *archiveStorage)
-    :AbstractImportExportJob(parent,archiveStorage,/*typeSelected,numberOfStep*/0,0 /*TODO fix it*/)
+ExportAlarmJob::ExportAlarmJob(QWidget *parent, BackupMailUtil::BackupTypes typeSelected, ArchiveStorage *archiveStorage,int numberOfStep)
+    : AbstractImportExportJob(parent, archiveStorage, typeSelected, numberOfStep)
 {
 }
 
@@ -54,6 +54,10 @@ void ExportAlarmJob::backupResources()
 void ExportAlarmJob::backupConfig()
 {
     //kalarmrc
+    showInfo(i18n("Backing up config..."));
+    MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+    Q_EMIT info(i18n("Config backup done."));
+
 }
 
 QString ExportAlarmJob::componentName() const

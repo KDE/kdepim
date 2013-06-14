@@ -18,8 +18,8 @@
 #include "importaddressbookjob.h"
 #include "archivestorage.h"
 
-ImportAddressbookJob::ImportAddressbookJob(QWidget *parent, ArchiveStorage *archiveStorage)
-    : AbstractImportExportJob(parent,archiveStorage,/*typeSelected,numberOfStep*/0,0 /*TODO fix it*/)
+ImportAddressbookJob::ImportAddressbookJob(QWidget *parent, BackupMailUtil::BackupTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep)
+    : AbstractImportExportJob(parent, archiveStorage, typeSelected, numberOfStep)
 {
     Q_UNUSED( parent );
     Q_UNUSED( archiveStorage );

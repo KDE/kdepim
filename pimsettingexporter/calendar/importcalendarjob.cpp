@@ -20,11 +20,9 @@
 
 #include <KZip>
 
-ImportCalendarJob::ImportCalendarJob(QWidget *parent, ArchiveStorage *archiveStorage)
-    : AbstractImportExportJob(parent,archiveStorage,/*typeSelected,numberOfStep*/0,0 /*TODO fix it*/)
+ImportCalendarJob::ImportCalendarJob(QWidget *parent, BackupMailUtil::BackupTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep)
+    : AbstractImportExportJob(parent, archiveStorage, typeSelected, numberOfStep)
 {
-    Q_UNUSED( parent );
-    Q_UNUSED( archiveStorage );
 }
 
 ImportCalendarJob::~ImportCalendarJob()

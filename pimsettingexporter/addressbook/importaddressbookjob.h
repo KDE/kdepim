@@ -27,7 +27,7 @@ class ImportAddressbookJob : public AbstractImportExportJob
 {
     Q_OBJECT
 public:
-    explicit ImportAddressbookJob(QWidget *parent, ArchiveStorage *archiveStorage);
+    explicit ImportAddressbookJob(QWidget *parent, BackupMailUtil::BackupTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep);
     ~ImportAddressbookJob();
 
     void start();

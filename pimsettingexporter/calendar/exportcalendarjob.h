@@ -27,7 +27,7 @@ class ExportCalendarJob : public AbstractImportExportJob
 {
     Q_OBJECT
 public:
-    explicit ExportCalendarJob(QWidget *parent, ArchiveStorage *archiveStorage);
+    explicit ExportCalendarJob(QWidget *parent, BackupMailUtil::BackupTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep);
     ~ExportCalendarJob();
 
     void start();
