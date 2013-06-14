@@ -35,7 +35,7 @@
 
 #include <messageviewer/objecttreeemptysource.h>
 #include <messageviewer/objecttreeparser.h>
-#include <messagecore/messagehelpers.h>
+#include <messagecore/helpers/messagehelpers.h>
 #include <messagecore/utils/stringutil.h>
 #include <mailtransport/transportcombobox.h>
 #include <mailtransport/messagequeuejob.h>

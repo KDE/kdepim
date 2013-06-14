@@ -24,7 +24,7 @@
 
 #include <messagecomposer/messagefactory.h>
 #include <messagecomposer/messagesender.h>
-#include <messagecore/messagehelpers.h>
+#include <messagecore/helpers/messagehelpers.h>
 
 #include <KDE/KLocale>
 
