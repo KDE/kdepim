@@ -14,7 +14,6 @@
 #ifndef KMAILCVT_H
 #define KMAILCVT_H
 
-#include <kapplication.h>
 #include <KAssistantDialog>
 #include <Akonadi/Collection>
 

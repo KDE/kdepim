@@ -31,6 +31,7 @@
 #include <kdebug.h>
 #include <KHelpMenu>
 #include <KMenu>
+#include <KComponentData>
 
 // Qt includes
 #include <QPushButton>
