@@ -199,9 +199,9 @@ composer window. Use the <guimenu>View</guimenu> menu
 to select which header fields are displayed. Some field options offer a
 <guibutton>Sticky</guibutton> checkbox, that if checked, your selection will remain as the default when you open a
 new composer window.
-The <guimenuitem>Identity</guimenuitem> field allows you to select an identity
+The <guimenuitem>Identity</guimenuitem> drop down box allows you to select an identity
 to use.
-The <guimenuitem>Dictionary</guimenuitem> field allows you to choose your
+The <guimenuitem>Dictionary</guimenuitem> drop down box allows you to choose your
 dictionary of choice for use with
 spellchecking.
 The <guimenuitem>Sent-Mail folder</guimenuitem> allows you to
@@ -421,8 +421,8 @@ snippetDelimiter=$
     <menuchoice><guimenu>View</guimenu><guimenuitem>Translator</guimenuitem></menuchoice> from the
       menubar. A new panel will appear at the bottom of the composer.</para>
       <para> To translate a section of text, first select the text you would like translated to the
-        box with the "Drag text...". Select the language it currently is, in the <guilabel>From:</guilabel> dropdown box.
-          Select the language you would like to translate to in the <guilabel>To:</guilabel> dropdown box, and click the <guibutton>Translate</guibutton> button.
+	box with the <quote>Drag text...</quote>. Select the language it currently is, in the <guilabel>From:</guilabel> drop down box.
+          Select the language you would like to translate to in the <guilabel>To:</guilabel> drop down box, and click the <guibutton>Translate</guibutton> button.
           Your translated text will appear in the next box. If you need to translate
             in the other direction you can just click the <guibutton>Invert</guibutton> button.
               To clear all text, click the <guibutton>Clear</guibutton> button. </para>
