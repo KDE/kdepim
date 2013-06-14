@@ -55,7 +55,7 @@
 
 #include <akonadi/item.h>
 #include <akonadi/kmime/messagestatus.h>
-#include "messagecore/stringutil.h"
+#include "messagecore/utils/stringutil.h"
 
 #include <QApplication>
 #include <QTimer>
@@ -3589,7 +3589,7 @@ static void resetStats()
   layoutChangeTime = 0;
   expandingTreeTime = 0;
   lastPass = -1;
-  for ( int i = 0; i < numberOfPasses; i++ ) {
+  for ( int i = 0; i < numberOfPasses; ++i ) {
     numElements[i] = 0;
     totalTime[i] = 0;
     chunks[i] = 0;
@@ -3603,7 +3603,7 @@ void ModelPrivate::printStatistics()
   using namespace Stats;
   int totalTotalTime = 0;
   int completeTime = firstStartTime.elapsed();
-  for ( int i = 0; i < numberOfPasses; i++ )
+  for ( int i = 0; i < numberOfPasses; ++i )
     totalTotalTime += totalTime[i];
 
   float msgPerSecond = totalMessages / ( totalTotalTime / 1000.0f );
@@ -3648,7 +3648,7 @@ void ModelPrivate::printStatistics()
   kDebug();
   kDebug() << "Now follows a breakdown of the jobs.";
   kDebug();
-  for ( int i = 0; i < numberOfPasses; i++ ) {
+  for ( int i = 0; i < numberOfPasses; ++i ) {
     if ( totalTime[i] == 0 )
       continue;
     float elementsPerSecond = numElements[i] / ( totalTime[i] / 1000.0f );

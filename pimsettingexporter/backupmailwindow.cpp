@@ -112,6 +112,8 @@ void BackupMailWindow::slotBackupData()
         mBackupData->start();
         delete mBackupData;
         mBackupData = 0;
+
+        //At the end
         archiveStorage->closeArchive();
         delete archiveStorage;
     } else {

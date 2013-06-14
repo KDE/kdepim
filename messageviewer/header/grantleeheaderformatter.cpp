@@ -22,7 +22,7 @@
 #include "config-messageviewer.h"
 
 #include <kpimutils/email.h>
-#include <messagecore/stringutil.h>
+#include <messagecore/utils/stringutil.h>
 
 #include <kmime/kmime_message.h>
 #include <kmime/kmime_dateformatter.h>

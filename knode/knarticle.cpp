@@ -183,7 +183,7 @@ void KNRemoteArticle::thread(KNRemoteArticle::List &l)
   topID=ref->id();
   l.append(ref);
 
-  for(int i=0; i<g->length(); i++) {
+  for(int i=0; i<g->length(); ++i) {
     tmp=g->at(i);
     if(tmp->idRef()!=0) {
       idRef=tmp->idRef();

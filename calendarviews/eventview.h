@@ -307,7 +307,7 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
      */
     static QColor itemFrameColor( const QColor &color, bool selected );
 
-    static QString iconForItem( const Akonadi::Item &);
+    QString iconForItem( const Akonadi::Item &);
 
   public Q_SLOTS:
     /**

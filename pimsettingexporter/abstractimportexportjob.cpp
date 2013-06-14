@@ -17,6 +17,7 @@
 
 #include "abstractimportexportjob.h"
 #include "archivestorage.h"
+#include "mailcommon/util/mailutil.h"
 
 #include <kpimidentities/identitymanager.h>
 #include <KZip>
@@ -33,6 +34,7 @@ AbstractImportExportJob::AbstractImportExportJob(QWidget *parent, ArchiveStorage
       mIdentityManager(new KPIMIdentities::IdentityManager( false, this, "mIdentityManager" )),
       mParent(parent),
       mProgressDialog(0),
+      mArchiveDirectory(0),
       mNumberOfStep(numberOfStep)
 {
 }
@@ -106,5 +108,16 @@ bool AbstractImportExportJob::overwriteConfigMessageBox(const QString &configNam
     return (KMessageBox::warningYesNo(mParent,i18n("\"%1\" already exists. Do you want to overwrite it?", configName),i18n("Restore")) == KMessageBox::Yes);
 }
 
+Akonadi::Collection::Id AbstractImportExportJob::convertPathToId(const QString& path)
+{
+    if (mHashConvertPathCollectionId.contains(path)) {
+        return mHashConvertPathCollectionId.value(path);
+    }
+    const Akonadi::Collection::Id id = MailCommon::Util::convertFolderPathToCollectionId(path);
+    if (id != -1) {
+        mHashConvertPathCollectionId.insert(path,id);
+    }
+    return id;
+}
 
 #include "abstractimportexportjob.moc"

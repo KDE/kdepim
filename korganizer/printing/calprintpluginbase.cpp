@@ -175,7 +175,7 @@ void CalPrintPluginBase::doPrint( QPrinter *printer )
 void CalPrintPluginBase::doLoadConfig()
 {
   if ( mConfig ) {
-    KConfigGroup group( mConfig, description() );
+    KConfigGroup group( mConfig, groupName() );
     mConfig->sync();
     QDateTime dt = QDateTime::currentDateTime();
     mFromDate = group.readEntry( "FromDate", dt ).date();
@@ -193,7 +193,7 @@ void CalPrintPluginBase::doLoadConfig()
 void CalPrintPluginBase::doSaveConfig()
 {
   if ( mConfig ) {
-    KConfigGroup group( mConfig, description() );
+    KConfigGroup group( mConfig, groupName() );
     saveConfig();
     QDateTime dt = QDateTime::currentDateTime(); // any valid QDateTime will do
     dt.setDate( mFromDate );
@@ -714,7 +714,7 @@ void CalPrintPluginBase::drawDaysOfWeek( QPainter &p,
     dateBox.setRight( box.left() + int( ( i + 1 ) * cellWidth ) );
     drawDaysOfWeekBox( p, cellDate, dateBox );
     cellDate = cellDate.addDays( 1 );
-    i++;
+    ++i;
   }
 }
 
@@ -1370,7 +1370,7 @@ void CalPrintPluginBase::drawWeek( QPainter &p, const QDate &qd,
   int weekdayCol = weekdayColumn( qd.dayOfWeek() );
   weekDate = qd.addDays( -weekdayCol );
 
-  for ( int i = 0; i < 7; i++, weekDate = weekDate.addDays(1) ) {
+  for ( int i = 0; i < 7; ++i, weekDate = weekDate.addDays(1) ) {
     // Saturday and sunday share a cell, so we have to special-case sunday
     int hpos = ( ( i < 6 ) ? i : ( i - 1 ) ) / vcells;
     int vpos = ( ( i < 6 ) ? i : ( i - 1 ) ) % vcells;
@@ -1496,7 +1496,7 @@ void CalPrintPluginBase::drawTimeTable( QPainter &p,
                       dayBox, includeDescription, excludeTime,
                       excludeConfidential, excludePrivate, workDays );
 
-    i++;
+    ++i;
     curDate = curDate.addDays(1);
   }
 }
@@ -1765,7 +1765,7 @@ void CalPrintPluginBase::drawMonthTable( QPainter &p, const QDate &qd,
   // Precalculate the grid...
   // rows is at most 6, so using 8 entries in the array is fine, too!
   int coledges[8], rowedges[8];
-  for ( int i = 0; i <= 7; i++ ) {
+  for ( int i = 0; i <= 7; ++i ) {
     rowedges[i] = int( box.top() + yoffset + i * cellHeight );
     coledges[i] = int( box.left() + xoffset + i * cellWidth );
   }

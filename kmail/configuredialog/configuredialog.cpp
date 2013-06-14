@@ -814,7 +814,7 @@ AppearancePageFontsTab::AppearancePageFontsTab( QWidget * parent )
   mFontLocationCombo->setEnabled( false ); // !mCustomFontCheck->isChecked()
 
   QStringList fontDescriptions;
-  for ( int i = 0 ; i < numFontNames ; i++ )
+  for ( int i = 0 ; i < numFontNames ; ++i )
     fontDescriptions << i18n( fontNames[i].displayName );
   mFontLocationCombo->addItems( fontDescriptions );
 
@@ -858,7 +858,7 @@ void AppearancePage::FontsTab::slotFontSelectorChanged( int index )
   if( mActiveFontIndex == 0 ) {
     mFont[0] = mFontChooser->font();
     // hardcode the family and size of "message body" dependant fonts:
-    for ( int i = 0 ; i < numFontNames ; i++ )
+    for ( int i = 0 ; i < numFontNames ; ++i )
       if ( !fontNames[i].enableFamilyAndSize ) {
         // ### shall we copy the font and set the save and re-set
         // {regular,italic,bold,bold italic} property or should we
@@ -893,7 +893,7 @@ void AppearancePage::FontsTab::doLoadOther()
   mFont[0] = KGlobalSettings::generalFont();
   QFont fixedFont = KGlobalSettings::fixedFont();
 
-  for ( int i = 0 ; i < numFontNames ; i++ ) {
+  for ( int i = 0 ; i < numFontNames ; ++i ) {
     const QString configName = fontNames[i].configName;
     if ( configName == QLatin1String( "MessageListFont" ) ||
          configName == QLatin1String( "UnreadMessageFont" ) ||
@@ -923,7 +923,7 @@ void AppearancePage::FontsTab::save()
   const bool customFonts = mCustomFontCheck->isChecked();
   MessageCore::GlobalSettings::self()->setUseDefaultFonts( !customFonts );
 
-  for ( int i = 0 ; i < numFontNames ; i++ ) {
+  for ( int i = 0 ; i < numFontNames ; ++i ) {
     const QString configName = fontNames[i].configName;
     if ( configName == QLatin1String( "MessageListFont" ) ||
          configName == QLatin1String( "UnreadMessageFont" ) ||
@@ -1001,7 +1001,7 @@ AppearancePageColorsTab::AppearancePageColorsTab( QWidget * parent )
   // color list box:
   mColorList = new ColorListBox( this );
   mColorList->setEnabled( false ); // since !mCustomColorCheck->isChecked()
-  for ( int i = 0 ; i < numColorNames ; i++ )
+  for ( int i = 0 ; i < numColorNames ; ++i )
     mColorList->addColor( i18n(colorNames[i].displayName) );
   vlay->addWidget( mColorList, 1 );
 
@@ -1082,7 +1082,7 @@ void AppearancePage::ColorsTab::loadColor( bool loadFromConfig )
     scheme.background().color() // reader background color
   };
 
-  for ( int i = 0 ; i < numColorNames ; i++ ) {
+  for ( int i = 0 ; i < numColorNames ; ++i ) {
     if ( loadFromConfig ) {
       const QString configName = colorNames[i].configName;
       if ( configName == QLatin1String( "UnreadMessageColor" ) ||
@@ -1118,7 +1118,7 @@ void AppearancePage::ColorsTab::save()
 
   KColorScheme scheme( QPalette::Active, KColorScheme::View );
 
-  for ( int i = 0 ; i < numColorNames ; i++ ) {
+  for ( int i = 0 ; i < numColorNames ; ++i ) {
     // Don't write color info when we use default colors, but write
     // if it's already there:
     const QString configName = colorNames[i].configName;
@@ -1357,7 +1357,7 @@ AppearancePageHeadersTab::AppearancePageHeadersTab( QWidget * parent )
   gvlay = new QVBoxLayout( mDateDisplay );
   gvlay->setSpacing( KDialog::spacingHint() );
 
-  for ( int i = 0 ; i < numDateDisplayConfig ; i++ ) {
+  for ( int i = 0 ; i < numDateDisplayConfig ; ++i ) {
     const char *label = dateDisplayConfig[i].displayName;
     QString buttonLabel;
     if ( QString(label).contains("%1") )
@@ -1502,7 +1502,7 @@ void AppearancePage::HeadersTab::setDateDisplay( int num, const QString & format
   if ( dateDisplay == DateFormatter::Custom )
     mCustomDateFormatEdit->setText( format );
 
-  for ( int i = 0 ; i < numDateDisplayConfig ; i++ )
+  for ( int i = 0 ; i < numDateDisplayConfig ; ++i )
     if ( dateDisplay == dateDisplayConfig[i].dateDisplay ) {
       mDateDisplay->setSelected( i );
       return;
@@ -1554,53 +1554,32 @@ AppearancePageReaderTab::AppearancePageReaderTab( QWidget * parent )
     QVBoxLayout *topLayout = new QVBoxLayout(this);
     topLayout->setSpacing( KDialog::spacingHint() );
     topLayout->setMargin( KDialog::marginHint() );
-    QGroupBox *box = new QGroupBox(i18n("General"));
-    topLayout->addWidget(box);
-
-    QVBoxLayout *vlay = new QVBoxLayout;
-    vlay->setSpacing( KDialog::spacingHint() );
-    vlay->setMargin( KDialog::marginHint() );
-    box->setLayout(vlay);
 
     // "Close message window after replying or forwarding" check box:
     populateCheckBox( mCloseAfterReplyOrForwardCheck = new QCheckBox( this ),
                       GlobalSettings::self()->closeAfterReplyOrForwardItem() );
     mCloseAfterReplyOrForwardCheck->setToolTip(
                 i18n( "Close the standalone message window after replying or forwarding the message" ) );
-    vlay->addWidget( mCloseAfterReplyOrForwardCheck );
+    topLayout->addWidget( mCloseAfterReplyOrForwardCheck );
     connect( mCloseAfterReplyOrForwardCheck, SIGNAL (stateChanged(int)),
              this, SLOT(slotEmitChanged()) );
 
     mViewerSettings = new MessageViewer::ConfigureWidget;
     connect( mViewerSettings, SIGNAL(settingsChanged()),
              this, SLOT(slotEmitChanged()) );
-    vlay->addWidget( mViewerSettings );
+    topLayout->addWidget( mViewerSettings );
 
-    box = new QGroupBox(i18n("Custom Headers Style"));
-    topLayout->addWidget(box);
-
-    mCustomHeaderSettings = new MessageViewer::CustomHeaderSettingWidget;
-    connect( mCustomHeaderSettings, SIGNAL (changed()), this, SLOT(slotEmitChanged()) );
-
-    vlay = new QVBoxLayout;
-    vlay->setSpacing( KDialog::spacingHint() );
-    vlay->setMargin( KDialog::marginHint() );
-    box->setLayout(vlay);
-    vlay->addWidget(mCustomHeaderSettings);
-
-    vlay->addStretch( 100 ); // spacer
+    topLayout->addStretch( 100 ); // spacer
 }
 
 void AppearancePage::ReaderTab::doResetToDefaultsOther()
 {
-    mCustomHeaderSettings->resetToDefault();
 }
 
 void AppearancePage::ReaderTab::doLoadOther()
 {
   loadWidget( mCloseAfterReplyOrForwardCheck, GlobalSettings::self()->closeAfterReplyOrForwardItem() );
   mViewerSettings->readConfig();
-  mCustomHeaderSettings->readConfig();
 }
 
 
@@ -1608,7 +1587,6 @@ void AppearancePage::ReaderTab::save()
 {
   saveCheckBox( mCloseAfterReplyOrForwardCheck, GlobalSettings::self()->closeAfterReplyOrForwardItem() );
   mViewerSettings->writeConfig();
-  mCustomHeaderSettings->writeConfig();
 }
 
 QString AppearancePage::SystemTrayTab::helpAnchor() const
@@ -2209,6 +2187,10 @@ ComposerPage::ComposerPage( const KComponentData &instance, QWidget *parent )
   mAutoImageResizeTab = new AutoImageResizeTab();
   addTab( mAutoImageResizeTab, i18n("Auto Resize Image") );
 
+  //
+  // "external editor" tab:
+  mExternalEditorTab = new ExternalEditorTab();
+  addTab( mExternalEditorTab, i18n("External Editor") );
 }
 
 QString ComposerPage::GeneralTab::helpAnchor() const
@@ -2222,9 +2204,7 @@ ComposerPageGeneralTab::ComposerPageGeneralTab( QWidget * parent )
   // tmp. vars:
   QVBoxLayout *vlay;
   QHBoxLayout *hlay;
-  QGroupBox   *group;
   QLabel      *label;
-  KHBox       *hbox;
 
   vlay = new QVBoxLayout( this );
   vlay->setSpacing( KDialog::spacingHint() );
@@ -2441,55 +2421,6 @@ ComposerPageGeneralTab::ComposerPageGeneralTab( QWidget * parent )
            this, SLOT(slotConfigureRecentAddresses()) );
   hlay->addWidget( recentAddressesBtn );
   hlay->addItem( new QSpacerItem(0, 0) );
-
-  // The "external editor" group:
-  group = new QGroupBox( i18n("External Editor"), this );
-  QLayout *layout = new QVBoxLayout( group );
-  group->layout()->setSpacing( KDialog::spacingHint() );
-
-  mExternalEditorCheck = new QCheckBox(
-           GlobalSettings::self()->useExternalEditorItem()->label(), group);
-  mExternalEditorCheck->setObjectName( "kcfg_UseExternalEditor" );
-  connect( mExternalEditorCheck, SIGNAL(toggled(bool)),
-           this, SLOT(slotEmitChanged()) );
-
-  hbox = new KHBox( group );
-  label = new QLabel( GlobalSettings::self()->externalEditorItem()->label(),
-                   hbox );
-  mEditorRequester = new KUrlRequester( hbox );
-  //Laurent 25/10/2011 fix #Bug 256655 - A "save changes?" dialog appears ALWAYS when leaving composer settings, even when unchanged.
-  //mEditorRequester->setObjectName( "kcfg_ExternalEditor" );
-  connect( mEditorRequester, SIGNAL(urlSelected(KUrl)),
-           this, SLOT(slotEmitChanged()) );
-  connect( mEditorRequester, SIGNAL(textChanged(QString)),
-           this, SLOT(slotEmitChanged()) );
-
-  hbox->setStretchFactor( mEditorRequester, 1 );
-  label->setBuddy( mEditorRequester );
-  label->setEnabled( false ); // since !mExternalEditorCheck->isChecked()
-  // ### FIXME: allow only executables (x-bit when available..)
-  mEditorRequester->setFilter( "application/x-executable "
-                               "application/x-shellscript "
-                               "application/x-desktop" );
-  mEditorRequester->setMode(KFile::File|KFile::ExistingOnly|KFile::LocalOnly);
-  mEditorRequester->setEnabled( false ); // !mExternalEditorCheck->isChecked()
-  connect( mExternalEditorCheck, SIGNAL(toggled(bool)),
-           label, SLOT(setEnabled(bool)) );
-  connect( mExternalEditorCheck, SIGNAL(toggled(bool)),
-           mEditorRequester, SLOT(setEnabled(bool)) );
-
-  label = new QLabel( i18n("<b>%f</b> will be replaced with the "
-                           "filename to edit.<br />"
-                           "<b>%w</b> will be replaced with the window id.<br />"
-                           "<b>%l</b> will be replaced with the line number."), group );
-  label->setEnabled( false ); // see above
-  connect( mExternalEditorCheck, SIGNAL(toggled(bool)),
-           label, SLOT(setEnabled(bool)) );
-  layout->addWidget( mExternalEditorCheck );
-  layout->addWidget( hbox );
-  layout->addWidget( label );
-
-  vlay->addWidget( group );
   vlay->addStretch( 100 );
 }
 
@@ -2552,9 +2483,6 @@ void ComposerPage::GeneralTab::doLoadFromGlobalSettings()
 #endif
 
   mMaximumRecentAddress->setValue(RecentAddresses::self(  MessageComposer::MessageComposerSettings::self()->config() )->maxCount());
-  // editor group:
-  mExternalEditorCheck->setChecked( GlobalSettings::self()->useExternalEditor() );
-  mEditorRequester->setText( GlobalSettings::self()->externalEditor() );
 }
 
 void ComposerPage::GeneralTab::save() {
@@ -2578,10 +2506,6 @@ void ComposerPage::GeneralTab::save() {
   GlobalSettings::self()->setRecipientThreshold( mRecipientSpin->value() );
   GlobalSettings::self()->setForwardingInlineByDefault( mForwardTypeCombo->currentIndex() == 0 );
 #endif
-
-  // editor group:
-  GlobalSettings::self()->setUseExternalEditor( mExternalEditorCheck->isChecked() );
-  GlobalSettings::self()->setExternalEditor( mEditorRequester->text() );
 
   RecentAddresses::self(  MessageComposer::MessageComposerSettings::self()->config() )->setMaxCount( mMaximumRecentAddress->value() );
 
@@ -2608,6 +2532,72 @@ void ComposerPage::GeneralTab::slotConfigureCompletionOrder()
   KLDAP::LdapClientSearch search;
   KPIM::CompletionOrderEditor editor( &search, this );
   editor.exec();
+}
+
+QString ComposerPage::ExternalEditorTab::helpAnchor() const
+{
+  return QString::fromLatin1("configure-composer-externaleditor");
+}
+
+ComposerPageExternalEditorTab::ComposerPageExternalEditorTab( QWidget * parent )
+  : ConfigModuleTab( parent )
+{
+  QVBoxLayout *layout = new QVBoxLayout( this );
+
+  mExternalEditorCheck = new QCheckBox(
+           GlobalSettings::self()->useExternalEditorItem()->label(), this);
+  mExternalEditorCheck->setObjectName( "kcfg_UseExternalEditor" );
+  connect( mExternalEditorCheck, SIGNAL(toggled(bool)),
+           this, SLOT(slotEmitChanged()) );
+
+  KHBox *hbox = new KHBox( this );
+  QLabel *label = new QLabel( GlobalSettings::self()->externalEditorItem()->label(),
+                   hbox );
+  mEditorRequester = new KUrlRequester( hbox );
+  //Laurent 25/10/2011 fix #Bug 256655 - A "save changes?" dialog appears ALWAYS when leaving composer settings, even when unchanged.
+  //mEditorRequester->setObjectName( "kcfg_ExternalEditor" );
+  connect( mEditorRequester, SIGNAL(urlSelected(KUrl)),
+           this, SLOT(slotEmitChanged()) );
+  connect( mEditorRequester, SIGNAL(textChanged(QString)),
+           this, SLOT(slotEmitChanged()) );
+
+  hbox->setStretchFactor( mEditorRequester, 1 );
+  label->setBuddy( mEditorRequester );
+  label->setEnabled( false ); // since !mExternalEditorCheck->isChecked()
+  // ### FIXME: allow only executables (x-bit when available..)
+  mEditorRequester->setFilter( "application/x-executable "
+                               "application/x-shellscript "
+                               "application/x-desktop" );
+  mEditorRequester->setMode(KFile::File|KFile::ExistingOnly|KFile::LocalOnly);
+  mEditorRequester->setEnabled( false ); // !mExternalEditorCheck->isChecked()
+  connect( mExternalEditorCheck, SIGNAL(toggled(bool)),
+           label, SLOT(setEnabled(bool)) );
+  connect( mExternalEditorCheck, SIGNAL(toggled(bool)),
+           mEditorRequester, SLOT(setEnabled(bool)) );
+
+  label = new QLabel( i18n("<b>%f</b> will be replaced with the "
+                           "filename to edit.<br />"
+                           "<b>%w</b> will be replaced with the window id.<br />"
+                           "<b>%l</b> will be replaced with the line number."), this );
+  label->setEnabled( false ); // see above
+  connect( mExternalEditorCheck, SIGNAL(toggled(bool)),
+           label, SLOT(setEnabled(bool)) );
+  layout->addWidget( mExternalEditorCheck );
+  layout->addWidget( hbox );
+  layout->addWidget( label );
+  layout->addStretch();
+}
+
+void ComposerPage::ExternalEditorTab::doLoadFromGlobalSettings()
+{
+  mExternalEditorCheck->setChecked( GlobalSettings::self()->useExternalEditor() );
+  mEditorRequester->setText( GlobalSettings::self()->externalEditor() );
+}
+
+void ComposerPage::ExternalEditorTab::save()
+{
+  GlobalSettings::self()->setUseExternalEditor( mExternalEditorCheck->isChecked() );
+  GlobalSettings::self()->setExternalEditor( mEditorRequester->text() );
 }
 
 QString ComposerPage::TemplatesTab::helpAnchor() const
@@ -3104,7 +3094,7 @@ void ComposerPage::HeadersTab::doLoadOther()
   QTreeWidgetItem * item = 0;
 
   const int count = GlobalSettings::self()->customMessageHeadersCount();
-  for ( int i = 0 ; i < count ; i++ ) {
+  for ( int i = 0 ; i < count ; ++i ) {
     KConfigGroup config( KMKernel::self()->config(),
                          QString("Mime #") + QString::number(i) );
     const QString name  = config.readEntry( "name" );

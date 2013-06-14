@@ -23,7 +23,7 @@
 
 #include "core/item.h"
 
-#include "messagecore/stringutil.h"
+#include "messagecore/utils/stringutil.h"
 
 // See the MessageList::ItemPrivate::insertChildItem() function below for an explaination of this macro.
 #if __GNUC__ >= 3  //krazy:exclude=cpp

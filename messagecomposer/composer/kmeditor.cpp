@@ -175,7 +175,7 @@ void KMeditorPrivate::startExternalEditor()
          command<<arg;
          arg.clear();
         }
-        i++; //look at next char
+        ++i; //look at next char
         const QChar nextChar(commandLine.at(i));
         if( nextChar == QLatin1Char('f') ) {
           filenameAdded = true;

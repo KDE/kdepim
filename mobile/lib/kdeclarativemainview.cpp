@@ -250,10 +250,6 @@ void KDeclarativeMainView::doDelayedInitInternal()
   connect( action, SIGNAL(triggered(bool)), SLOT(reportBug()) );
   actionCollection()->addAction( QLatin1String( "report_bug" ), action );
 
-  action = new KAction( i18n( "Manual" ), this );
-  connect( action, SIGNAL(triggered(bool)), SLOT(openManual()) );
-  actionCollection()->addAction( QLatin1String( "open_manual" ), action );
-
   setupStandardActionManager( regularSelectionModel(), d->mItemActionSelectionModel );
 
   connect( qApp, SIGNAL(aboutToQuit()), d, SLOT(saveState()) );

@@ -58,7 +58,7 @@
 #include "chiasmuskeyselector.h"
 
 // KDEPIM includes
-#include <messagecore/stringutil.h>
+#include <messagecore/utils/stringutil.h>
 #include <kleo/specialjob.h>
 #include <kleo/cryptobackendfactory.h>
 #include <kleo/decryptverifyjob.h>
@@ -1224,7 +1224,7 @@ bool ObjectTreeParser::processTextHtmlSubtype( KMime::Content * curNode, Process
 
       HTMLQuoteColorer colorer;
       QString extraHead;
-      for ( int i = 0; i < 3; i++ )
+      for ( int i = 0; i < 3; ++i )
         colorer.setQuoteColor( i, cssHelper()->quoteColor( i ) );
       bodyText = colorer.process( bodyText, extraHead );
       mNodeHelper->setNodeDisplayedEmbedded( curNode, true );

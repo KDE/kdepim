@@ -636,7 +636,7 @@ BaseG::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
         case 11: // signature class (always empty except for key signatures)
           break;
         case 12: // key capabilities
-          for( int i=pos; i<pos2; i++ )
+          for( int i=pos; i<pos2; ++i )
             switch( output[i] )
             {
             case 'e':
@@ -811,7 +811,7 @@ BaseG::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
 
       // search the fingerprint (it's in the 10th field)
       int pos = index + 4;
-      for( int i = 0; i < 8; i++ )
+      for( int i = 0; i < 8; ++i )
         pos = output.indexOf( ':', pos ) + 1;
       int pos2 = output.indexOf( ':', pos );
 

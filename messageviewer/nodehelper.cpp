@@ -27,7 +27,7 @@
 #include "attachmenttemporaryfilesdirs.h"
 
 #include <messagecore/nodehelper.h>
-#include <messagecore/stringutil.h>
+#include <messagecore/utils/stringutil.h>
 #include "messagecore/globalsettings.h"
 
 #include <kmime/kmime_content.h>
@@ -777,7 +777,7 @@ QByteArray NodeHelper::toUsAscii(const QString& _str, bool *ok)
   bool all_ok =true;
   QString result = _str;
   const int len = result.length();
-  for (int i = 0; i < len; i++)
+  for (int i = 0; i < len; ++i)
     if (result.at(i).unicode() >= 128) {
       result[i] = '?';
       all_ok = false;

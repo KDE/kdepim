@@ -33,6 +33,7 @@
 #include <KGlobal>
 #include <KLocale>
 #include <KStringHandler>
+#include <KConfigGroup>
 
 #include <QtCore/QSet>
 #include <QtCore/QRegExp>
@@ -413,6 +414,14 @@ QString GrantleeContactFormatter::toHtml( HtmlForm form ) const
 
   contactObject.insert( QLatin1String( "customFields" ), customFields );
   contactObject.insert( QLatin1String( "customFieldsUrl" ), customFieldsUrl );
+
+#if defined(HAVE_PRISON)
+  KConfig config( QLatin1String( "akonadi_contactrc" ) );
+  KConfigGroup group( &config, QLatin1String( "View" ) );
+  if (group.readEntry( "QRCodes", true )) {
+     contactObject.insert( QLatin1String( "hasqrcode" ), QLatin1String("true") );
+  }
+#endif
 
   QVariantHash colorsObject;
 

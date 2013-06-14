@@ -18,16 +18,21 @@
 #ifndef IMPORTADDRESSBOOKJOB_H
 #define IMPORTADDRESSBOOKJOB_H
 
+#include "abstractimportexportjob.h"
+
 class ArchiveStorage;
 class QWidget;
 
-class ImportAddressbookJob
+class ImportAddressbookJob : public AbstractImportExportJob
 {
+    Q_OBJECT
 public:
     explicit ImportAddressbookJob(QWidget *parent, ArchiveStorage *archiveStorage);
     ~ImportAddressbookJob();
 
     void start();
+
+    QString componentName() const;
 
 private:
     void restoreResources();

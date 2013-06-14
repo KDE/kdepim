@@ -11,9 +11,9 @@ include_directories( ${Boost_INCLUDE_DIR}
 
 ########### next target ###############
 
-configure_file(messagetag.ontology.in ${CMAKE_CURRENT_BINARY_DIR}/messagetag.ontology)
+configure_file(ontology/messagetag.ontology.in ${CMAKE_CURRENT_BINARY_DIR}/messagetag.ontology)
 
-install(FILES  messagetag.trig ${CMAKE_CURRENT_BINARY_DIR}/messagetag.ontology DESTINATION ${CMAKE_INSTALL_PREFIX}/share/ontology/kde)
+install(FILES  ontology/messagetag.trig ${CMAKE_CURRENT_BINARY_DIR}/messagetag.ontology DESTINATION ${CMAKE_INSTALL_PREFIX}/share/ontology/kde)
 
 
 
@@ -30,19 +30,19 @@ set(messagecore_LIB_SRCS
    attachment/attachmentloadjob.cpp
    attachment/attachmentpart.cpp
    attachment/attachmentpropertiesdialog.cpp
-   emailaddressrequester.cpp
+   widgets/emailaddressrequester.cpp
    globalsettings.cpp
    mailinglist.cpp
    mdnstateattribute.cpp
    messagehelpers.cpp
    nodehelper.cpp
-   stringutil.cpp
+   utils/stringutil.cpp
 )
 
 if (NOT WINCE)
   set(messagecore_LIB_SRCS
      ${messagecore_LIB_SRCS}
-     annotationdialog.cpp
+     widgets/annotationdialog.cpp
   )
 endif ()
 

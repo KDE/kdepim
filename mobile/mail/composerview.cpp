@@ -38,7 +38,7 @@
 #include <messageviewer/objecttreeemptysource.h>
 #include <messageviewer/objecttreeparser.h>
 #include <messagecomposer/composer/kmeditor.h>
-#include <messagecomposer/signaturecontroller.h>
+#include <messagecomposer/composer/signaturecontroller.h>
 #include <messagecomposer/composer/composer.h>
 #include <messagecomposer/part/globalpart.h>
 #include <messagecomposer/part/infopart.h>

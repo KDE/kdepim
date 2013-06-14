@@ -1816,7 +1816,7 @@ Module::readAddressData()
   int num = general.readEntry( "addressEntries", 0 );
 
   addressDataDict.clear();
-  for( int i=1; i<=num; i++ ) {
+  for( int i=1; i<=num; ++i ) {
     KConfigGroup addrGroup( config, QString("Address #%1").arg(i) );
     address = addrGroup.readEntry( "Address" );
     data.keyIds = KeyIDList::fromStringList( addrGroup.readEntry( "Key IDs" , QStringList() ) );
@@ -1841,7 +1841,7 @@ Module::writeAddressData()
   AddressDataDict::Iterator it;
   for ( i=1, it = addressDataDict.begin();
         it != addressDataDict.end();
-        ++it, i++ ) {
+        ++it, ++i ) {
     KConfigGroup addrGroup( config, QString("Address #%1").arg(i));
     addrGroup.writeEntry( "Address", it.key() );
     addrGroup.writeEntry( "Key IDs", it.value().keyIds.toStringList() );

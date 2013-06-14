@@ -55,8 +55,7 @@ using namespace Akonadi;
 static const QString storeMails = QLatin1String("backupmail/");
 
 ImportMailJob::ImportMailJob(QWidget *parent, BackupMailUtil::BackupTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep)
-    : AbstractImportExportJob(parent,archiveStorage,typeSelected,numberOfStep),
-      mArchiveDirectory(0)
+    : AbstractImportExportJob(parent,archiveStorage,typeSelected,numberOfStep)
 {
     mTempDir = new KTempDir();
     mTempDirName = mTempDir->name();
@@ -681,22 +680,22 @@ void ImportMailJob::restoreConfig()
         }
     }
 
-
     const QString sievetemplatercStr(QLatin1String("sievetemplaterc"));
     const KArchiveEntry* sievetemplatentry  = mArchiveDirectory->entry(BackupMailUtil::configsPath() + sievetemplatercStr);
     if ( sievetemplatentry &&  sievetemplatentry->isFile()) {
         const KArchiveFile* sievetemplateconfiguration = static_cast<const KArchiveFile*>(sievetemplatentry);
         const QString sievetemplaterc = KStandardDirs::locateLocal( "config",  sievetemplatercStr);
         if (QFile(sievetemplaterc).exists()) {
-            //TODO 4.11 allow to merge config.
-            if (overwriteConfigMessageBox(sievetemplatercStr)) {
+            const int result = mergeConfigMessageBox(sievetemplatercStr);
+            if ( result == KMessageBox::Yes) {
                 importArchiveConfig(sievetemplateconfiguration, sievetemplaterc, sievetemplatercStr, BackupMailUtil::configsPath());
+            } else if (result == KMessageBox::No) {
+                mergeSieveTemplate(sievetemplateconfiguration, sievetemplatercStr,BackupMailUtil::configsPath());
             }
         } else {
             importArchiveConfig(sievetemplateconfiguration, sievetemplaterc, sievetemplatercStr, BackupMailUtil::configsPath());
         }
     }
-
 
     const QString customTemplateStr(QLatin1String("customtemplatesrc"));
     const KArchiveEntry* customtemplatentry  = mArchiveDirectory->entry(BackupMailUtil::configsPath() + customTemplateStr);
@@ -796,8 +795,12 @@ void ImportMailJob::restoreIdentity()
                         const KArchiveEntry* vcardEntry = mArchiveDirectory->entry(BackupMailUtil::identitiesPath() + QString::number(oldUid) + QDir::separator() + file.fileName());
                         if (vcardEntry && vcardEntry->isFile()) {
                             const KArchiveFile* vcardFile = static_cast<const KArchiveFile*>(vcardEntry);
-                            const QString vcardFilePath = KStandardDirs::locateLocal("appdata",file.fileName() );
-
+                            QString vcardFilePath = KStandardDirs::locateLocal("appdata",file.fileName() );
+                            int i = 1;
+                            while(QFile(vcardFileName).exists()) {
+                                vcardFilePath = KStandardDirs::locateLocal("appdata", QString::fromLatin1("%1_%2").arg(i).arg(file.fileName()) );
+                                ++i;
+                            }
                             vcardFile->copyTo(vcardFilePath);
                             group.writeEntry(vcard, vcardFilePath);
                         }
@@ -832,7 +835,7 @@ QString ImportMailJob::uniqueIdentityName(const QString& name)
     int i = 0;
     while(!mIdentityManager->isUnique( newName )) {
         newName = QString::fromLatin1("%1_%2").arg(name).arg(i);
-        i++;
+        ++i;
     }
     return newName;
 }
@@ -988,6 +991,13 @@ void ImportMailJob::importKmailConfig(const KArchiveFile* kmailsnippet, const QS
     copyToFile(kmailsnippet,kmail2rc,filename,prefix);
     KSharedConfig::Ptr kmailConfig = KSharedConfig::openConfig(kmail2rc);
 
+    //Be sure to delete Search group
+    const QString search(QLatin1String("Search"));
+    if (kmailConfig->hasGroup(search)) {
+        KConfigGroup searchGroup = kmailConfig->group(search);
+        searchGroup.deleteGroup();
+    }
+
     //adapt folder id
     const QString folderGroupPattern = QLatin1String( "Folder-" );
     const QStringList folderList = kmailConfig->groupList().filter( folderGroupPattern );
@@ -1047,9 +1057,50 @@ void ImportMailJob::importKmailConfig(const KArchiveFile* kmailsnippet, const QS
         }
     }
 
+    const QString collectionFolderViewStr(QLatin1String("CollectionFolderView"));
+    if (kmailConfig->hasGroup(collectionFolderViewStr)) {
+        KConfigGroup favoriteGroup = kmailConfig->group(collectionFolderViewStr);
+        const QString currentKey(QLatin1String("Current"));
+        if (favoriteGroup.hasKey(currentKey)) {
+            const QString path = favoriteGroup.readEntry(currentKey);
+            if (!path.isEmpty()) {
+                const Akonadi::Collection::Id id = convertPathToId(path);
+                if (id != -1) {
+                    favoriteGroup.writeEntry(currentKey,QString::fromLatin1("c%1").arg(id));
+                } else {
+                    favoriteGroup.deleteEntry(currentKey);
+                }
+            }
+        }
+        const QString expensionKey(QLatin1String("Expansion"));
+        if (favoriteGroup.hasKey(expensionKey)) {
+            const QStringList listExpension = favoriteGroup.readEntry(expensionKey, QStringList());
+            QStringList result;
+            if (!listExpension.isEmpty()) {
+                Q_FOREACH (QString collection, listExpension) {
+                    const Akonadi::Collection::Id id = convertPathToId(collection);
+                    if (id != -1 ) {
+                        result<< QString::fromLatin1("c%1").arg(id);
+                    }
+                }
+                if (result.isEmpty()) {
+                    favoriteGroup.deleteEntry(expensionKey);
+                } else {
+                    favoriteGroup.writeEntry(expensionKey, result);
+                }
+            }
+        }
+    }
+
     const QString generalStr(QLatin1String("General"));
     if (kmailConfig->hasGroup(generalStr)) {
         KConfigGroup generalGroup = kmailConfig->group(generalStr);
+        //Be sure to delete default domain
+        const QString defaultDomainStr(QLatin1String("Default domain"));
+        if (generalGroup.hasKey(defaultDomainStr)) {
+            generalGroup.deleteEntry(defaultDomainStr);
+        }
+
         const QString startupFolderStr(QLatin1String("startupFolder"));
         if (generalGroup.hasKey(startupFolderStr)) {
             const QString path = generalGroup.readEntry(startupFolderStr);
@@ -1080,19 +1131,6 @@ void ImportMailJob::importKmailConfig(const KArchiveFile* kmailsnippet, const QS
 
     kmailConfig->sync();
 }
-
-Akonadi::Collection::Id ImportMailJob::convertPathToId(const QString& path)
-{
-    if (mHashConvertPathCollectionId.contains(path)) {
-        return mHashConvertPathCollectionId.value(path);
-    }
-    const Akonadi::Collection::Id id = MailCommon::Util::convertFolderPathToCollectionId(path);
-    if (id != -1) {
-        mHashConvertPathCollectionId.insert(path,id);
-    }
-    return id;
-}
-
 
 void ImportMailJob::mergeLdapConfig(const KArchiveFile * archivefile, const QString&filename, const QString&prefix)
 {
@@ -1166,7 +1204,7 @@ void ImportMailJob::mergeKmailSnippetConfig(const KArchiveFile * archivefile, co
 }
 
 
-void ImportMailJob::mergeArchiveMailAgentConfig(const KArchiveFile * archivefile, const QString&filename, const QString&prefix)
+void ImportMailJob::mergeArchiveMailAgentConfig(const KArchiveFile *archivefile, const QString &filename, const QString &prefix)
 {
     QDir dir(mTempDirName);
     dir.mkdir(prefix);
@@ -1183,7 +1221,38 @@ void ImportMailJob::mergeArchiveMailAgentConfig(const KArchiveFile * archivefile
 }
 
 
-void ImportMailJob::mergeSieveTemplate(const KArchiveFile * archivefile, const QString&filename, const QString&prefix)
+void ImportMailJob::mergeSieveTemplate(const KArchiveFile *archivefile, const QString &filename, const QString &prefix)
 {
-    //TODO
+    QDir dir(mTempDirName);
+    dir.mkdir(prefix);
+
+    const QString copyToDirName(mTempDirName + QLatin1Char('/') + prefix);
+    archivefile->copyTo(copyToDirName);
+
+    KSharedConfig::Ptr existingConfig = KSharedConfig::openConfig(filename);
+
+    KSharedConfig::Ptr importingSieveTemplateConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + filename);
+
+    KConfigGroup grpExisting = existingConfig->group(QLatin1String("template"));
+    int numberOfExistingTemplate = grpExisting.readEntry(QLatin1String("templateCount"), 0);
+
+    KConfigGroup grpImportExisting = importingSieveTemplateConfig->group(QLatin1String("template"));
+    const int numberOfImportingTemplate = grpImportExisting.readEntry(QLatin1String("templateCount"), 0);
+
+    for (int i = 0; i <numberOfImportingTemplate; ++i) {
+        KConfigGroup templateDefine = importingSieveTemplateConfig->group(QString::fromLatin1("templateDefine_%1").arg(i));
+
+        KConfigGroup newTemplateDefineGrp = existingConfig->group(QString::fromLatin1("templateDefine_%1").arg(numberOfExistingTemplate));
+        newTemplateDefineGrp.writeEntry(QLatin1String("Name"), templateDefine.readEntry(QLatin1String("Name")));
+        newTemplateDefineGrp.writeEntry(QLatin1String("Text"), templateDefine.readEntry(QLatin1String("Text")));
+        ++numberOfExistingTemplate;
+        newTemplateDefineGrp.sync();
+    }
+    grpExisting.writeEntry(QLatin1String("templateCount"), numberOfExistingTemplate);
+    grpExisting.sync();
+}
+
+QString ImportMailJob::componentName() const
+{
+    return QLatin1String("KMail");
 }

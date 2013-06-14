@@ -32,7 +32,7 @@
 #include <messageviewer/interfaces/bodyparturlhandler.h>
 #include <messageviewer/interfaces/htmlwriter.h>
 #include <messageviewer/nodehelper.h>
-#include <messagecore/stringutil.h>
+#include <messagecore/utils/stringutil.h>
 #include <messageviewer/utils/util.h>
 
 #include <KPIMUtils/KFileIO>

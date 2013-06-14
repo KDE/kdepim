@@ -18,7 +18,7 @@ using KPIM::RecentAddresses;
 #include "configuredialog/configuredialog.h"
 #include "kmcommands.h"
 #include "kmsystemtray.h"
-#include "stringutil.h"
+#include "utils/stringutil.h"
 #include "util/mailutil.h"
 #include "mailcommon/pop3settings.h"
 #include "mailcommon/folder/foldertreeview.h"
@@ -453,7 +453,7 @@ bool KMKernel::handleCommandLine( bool noArgsOpensReader )
     // only read additional command line arguments if kmail/kontact is
     // not called with "-session foo"
     const int nbArgs = args->count();
-    for (int i= 0; i < nbArgs; i++)
+    for (int i= 0; i < nbArgs; ++i)
     {
       if ( args->arg(i).startsWith( QLatin1String( "mailto:" ), Qt::CaseInsensitive ) ) {
         QMap<QString, QString> values = MessageCore::StringUtil::parseMailtoUrl( args->url( i ) );

@@ -2,6 +2,7 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/libkdepim
   ${CMAKE_SOURCE_DIR}/mailcommon/search/
   ${CMAKE_SOURCE_DIR}/messageviewer
+  ${CMAKE_SOURCE_DIR}/messagecore/
   ${CMAKE_SOURCE_DIR}/messagecomposer/
   ${CMAKE_SOURCE_DIR}/templateparser
   ${CMAKE_BINARY_DIR}/templateparser
@@ -116,7 +117,7 @@ set(libmailcommon_SRCS
 )
 
 soprano_add_ontology(libmailcommon_SRCS
-  ${CMAKE_SOURCE_DIR}/messagecore/messagetag.trig
+  ${CMAKE_SOURCE_DIR}/messagecore/ontology/messagetag.trig
   "MessageTag"
   "Vocabulary"
   "trig"

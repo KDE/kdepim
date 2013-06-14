@@ -52,6 +52,8 @@ private:
     KPushButton *mRemove;
     QGridLayout *mLayout;
     KLineEdit *mVariableName;
+    QCheckBox *mSetValueTo;
+    KLineEdit *mVariableValue;
 };
 
 class SieveGlobalVariableLister : public KPIM::KWidgetLister

@@ -35,7 +35,7 @@
 #include <mailtransport/messagequeuejob.h>
 #include <mailtransport/transport.h>
 #include <mailtransport/transportmanager.h>
-#include <messagecore/stringutil.h>
+#include <messagecore/utils/stringutil.h>
 #include <messagecore/messagehelpers.h>
 
 using namespace KMime::Types;

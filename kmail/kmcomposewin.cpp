@@ -40,7 +40,7 @@
 #include "mailcomposeradaptor.h" // TODO port all D-Bus stuff...
 #include "messageviewer/stl_util.h"
 #include "messageviewer/utils/util.h"
-#include "messagecore/stringutil.h"
+#include "messagecore/utils/stringutil.h"
 #include "messagecore/attachment/attachmentcollector.h"
 #include "util.h"
 #include "snippetwidget.h"
@@ -77,7 +77,7 @@
 #include <messagecomposer/part/textpart.h>
 #include <messagecomposersettings.h>
 #include <messagecomposer/messagehelper.h>
-#include <messagecomposer/signaturecontroller.h>
+#include <messagecomposer/composer/signaturecontroller.h>
 #include <messagecomposer/job/inserttextfilejob.h>
 #include <messagecomposer/composer/composerlineedit.h>
 #include <messagecore/attachment/attachmentpart.h>

@@ -22,7 +22,7 @@
 #include "mailthreadgroupercomparator.h"
 
 #include <akonadi/kmime/messageflags.h>
-#include <messagecore/stringutil.h>
+#include <messagecore/utils/stringutil.h>
 
 #include <klocale.h>
 #include <kglobal.h>

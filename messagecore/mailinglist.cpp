@@ -315,7 +315,7 @@ QString MailingList::name( const KMime::Message::Ptr &message,
   if ( !message )
     return QString();
 
-  for ( int i = 0; i < num_detectors; i++ ) {
+  for ( int i = 0; i < num_detectors; ++i ) {
     mailingList = magic_detector[i]( message, headerName, headerValue );
     if ( !mailingList.isNull() )
       return mailingList;

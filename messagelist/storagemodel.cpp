@@ -18,7 +18,7 @@
 
 #include "storagemodel.h"
 
-#include <messagecore/stringutil.h>
+#include <messagecore/utils/stringutil.h>
 #include <messagecore/globalsettings.h>
 #include <messagecore/nodehelper.h>
 

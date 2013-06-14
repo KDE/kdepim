@@ -26,8 +26,8 @@
 #include <pimcommon/widgets/minimumcombobox.h>
 #include <messagecomposer/messagefactory.h>
 #include <messagecomposer/messagesender.h>
-#include <messagecore/emailaddressrequester.h>
-#include <messagecore/stringutil.h>
+#include <messagecore/widgets/emailaddressrequester.h>
+#include <messagecore/utils/stringutil.h>
 #include <templateparser/customtemplates.h>
 #include <templateparser/customtemplates_kfg.h>
 

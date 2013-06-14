@@ -32,11 +32,15 @@ class SelectTypeWidget : public QWidget
 public:
     explicit SelectTypeWidget(QWidget *parent = 0);
     ~SelectTypeWidget();
+
     BackupMailUtil::BackupTypes backupTypesSelected(int &numberOfStep) const;
+
 private Q_SLOTS:
     void slotTypeClicked();
+
 Q_SIGNALS:
     void itemSelected(bool);
+
 private:
     Ui::SelectTypeWidget *ui;
 };

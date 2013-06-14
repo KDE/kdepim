@@ -24,9 +24,12 @@
 #include "globalsettings.h"
 #include "nodehelper.h"
 
+#include "header/customheadersettingwidget.h"
+
 #include "messagecore/globalsettings.h"
 
 #include <KConfigDialogManager>
+#include <KDialog>
 
 using namespace MessageViewer;
 
@@ -58,6 +61,9 @@ ConfigureWidget::ConfigureWidget( QWidget *parent )
            this, SIGNAL(settingsChanged()) );
   connect( mSettingsUi->overrideCharacterEncoding, SIGNAL(currentIndexChanged(int)),
            this, SIGNAL(settingsChanged()) );
+
+  connect( mSettingsUi->configureCustomHeadersButton, SIGNAL(clicked()),
+           this, SLOT(showCustomHeadersDialog()) );
 }
 
 ConfigureWidget::~ConfigureWidget()
@@ -105,7 +111,7 @@ void ConfigureWidget::readCurrentFallbackCodec()
       found = true;
       break;
     }
-    i++;
+    ++i;
   }
   if ( !found ) // nothing matched, use latin9
     mSettingsUi->fallbackCharacterEncoding->setCurrentIndex( indexOfLatin9 );
@@ -128,7 +134,7 @@ void ConfigureWidget::readCurrentOverrideCodec()
       mSettingsUi->overrideCharacterEncoding->setCurrentIndex( i );
       break;
     }
-    i++;
+    ++i;
   }
   if ( i == encodings.size() ) {
     // the current value of overrideCharacterEncoding is an unknown encoding => reset to Auto
@@ -136,6 +142,20 @@ void ConfigureWidget::readCurrentOverrideCodec()
                << ". Resetting to Auto.";
     mSettingsUi->overrideCharacterEncoding->setCurrentIndex( 0 );
     MessageCore::GlobalSettings::self()->setOverrideCharacterEncoding( QString() );
+  }
+}
+
+void ConfigureWidget::showCustomHeadersDialog()
+{
+  KDialog dialog( this );
+  dialog.setButtons( KDialog::Default | KDialog::Ok | KDialog::Cancel );
+  CustomHeaderSettingWidget *widget = new CustomHeaderSettingWidget();
+  connect( &dialog, SIGNAL(defaultClicked()), widget, SLOT(resetToDefault()) );
+  widget->readConfig();
+  dialog.setMainWidget( widget );
+  if ( dialog.exec() == QDialog::Accepted ) {
+    widget->writeConfig();
+    settingsChanged();
   }
 }
 

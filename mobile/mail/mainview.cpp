@@ -104,7 +104,7 @@
 #include <pimcommon/util/pimutil.h>
 #include <mailtransport/transportmanager.h>
 #include <messagecomposer/akonadisender.h>
-#include <messagecore/stringutil.h>
+#include <messagecore/utils/stringutil.h>
 #include <qmllistselectionmodel.h>
 #include <qmlcheckableproxymodel.h>
 

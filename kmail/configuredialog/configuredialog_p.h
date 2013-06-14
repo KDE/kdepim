@@ -69,7 +69,6 @@ namespace MessageList {
 namespace MessageViewer {
   class ConfigureWidget;
   class InvitationSettings;
-  class CustomHeaderSettingWidget;
 }
 
 namespace TemplateParser {
@@ -366,7 +365,6 @@ private:
 private: // data
   QCheckBox *mCloseAfterReplyOrForwardCheck;
   MessageViewer::ConfigureWidget *mViewerSettings;
-  MessageViewer::CustomHeaderSettingWidget *mCustomHeaderSettings;
 };
 
 
@@ -541,8 +539,6 @@ private:
   QCheckBox     *mWordWrapCheck;
   KIntSpinBox   *mWrapColumnSpin;
   KIntSpinBox   *mAutoSave;
-  QCheckBox     *mExternalEditorCheck;
-  KUrlRequester *mEditorRequester;
   KIntSpinBox   *mMaximumRecipients;
   QCheckBox     *mImprovePlainTextOfHtmlMessage;
   KIntNumInput  *mMaximumRecentAddress;
@@ -551,6 +547,22 @@ private:
   QCheckBox     *mRecipientCheck;
   KIntSpinBox   *mRecipientSpin;
 #endif
+};
+
+class ComposerPageExternalEditorTab : public ConfigModuleTab {
+  Q_OBJECT
+public:
+  explicit ComposerPageExternalEditorTab( QWidget * parent = 0 );
+  QString helpAnchor() const;
+
+  void save();
+
+private:
+  void doLoadFromGlobalSettings();
+
+private:
+  QCheckBox     *mExternalEditorCheck;
+  KUrlRequester *mEditorRequester;
 };
 
 class ComposerPageTemplatesTab : public ConfigModuleTab {
@@ -730,6 +742,7 @@ public:
   typedef ComposerPageAttachmentsTab AttachmentsTab;
   typedef ComposerPageAutoCorrectionTab AutoCorrectionTab;
   typedef ComposerPageAutoImageResizeTab AutoImageResizeTab;
+  typedef ComposerPageExternalEditorTab ExternalEditorTab;
 private:
   GeneralTab  *mGeneralTab;
   TemplatesTab  *mTemplatesTab;
@@ -740,6 +753,7 @@ private:
   AttachmentsTab  *mAttachmentsTab;
   AutoCorrectionTab *mAutoCorrectionTab;
   AutoImageResizeTab *mAutoImageResizeTab;
+  ExternalEditorTab *mExternalEditorTab;
 };
 
 //

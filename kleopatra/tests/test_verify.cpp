@@ -170,7 +170,7 @@ class VerifyTest : public QObject
     void testParallelVerifyAndKeyListJobs()
     {
       // ### Increasing 10 to 500 makes the verify jobs fail!
-      for ( int i = 0; i < 10; i++ ) {
+      for ( int i = 0; i < 10; ++i ) {
         Kleo::VerifyDetachedJob *job = mBackend->verifyDetachedJob();
         mParallelVerifyJobs.append( job );
         QVERIFY( !job->start( mSignature, mSignedData ) );

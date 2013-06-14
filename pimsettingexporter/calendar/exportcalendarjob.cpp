@@ -37,6 +37,8 @@ ExportCalendarJob::~ExportCalendarJob()
 
 void ExportCalendarJob::start()
 {
+    mArchiveDirectory = archive()->directory();
+    backupConfig();
     //TODO
 }
 
@@ -47,6 +49,16 @@ void ExportCalendarJob::backupResources()
     MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
     //TODO backup calendar
     Q_EMIT info(i18n("Resources backup done."));
+}
+
+void ExportCalendarJob::backupConfig()
+{
+    //TODO: korgacrc  korganizer_printing.rc  korganizerrc
+}
+
+QString ExportCalendarJob::componentName() const
+{
+    return QLatin1String("KOrganizer");
 }
 
 #include "exportcalendarjob.moc"

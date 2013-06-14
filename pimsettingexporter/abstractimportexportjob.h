@@ -19,11 +19,14 @@
 #define ABSTRACTIMPORTEXPORTJOB_H
 
 #include "backupmailutil.h"
+#include <Akonadi/Collection>
 
-class KZip;
+#include <KZip>
+
 class QWidget;
 class QProgressDialog;
 class ArchiveStorage;
+class KArchiveDirectory;
 namespace KPIMIdentities {
 class Identity;
 class IdentityManager;
@@ -40,15 +43,17 @@ public:
 
     bool wasCanceled() const;
 
+    virtual QString componentName() const = 0;
 
 Q_SIGNALS:
-    void info(const QString&);
-    void error(const QString&);
+    void info(const QString &);
+    void error(const QString &);
 
 protected:
-    void backupFile(const QString&filename, const QString& path, const QString&storedName);
+    void backupFile(const QString &filename, const QString &path, const QString &storedName);
     int mergeConfigMessageBox(const QString &configName) const;
     bool overwriteConfigMessageBox(const QString &configName) const;
+    Akonadi::Collection::Id convertPathToId(const QString &path);
 
     KZip *archive();
 
@@ -56,13 +61,16 @@ protected:
     void increaseProgressDialog();
     void createProgressDialog();
 
-    void showInfo(const QString&text);
+    void showInfo(const QString &text);
+
+    QHash<QString, Akonadi::Collection::Id> mHashConvertPathCollectionId;
 
     BackupMailUtil::BackupTypes mTypeSelected;
     ArchiveStorage *mArchiveStorage;
     KPIMIdentities::IdentityManager *mIdentityManager;
     QWidget *mParent;
     QProgressDialog *mProgressDialog;
+    const KArchiveDirectory* mArchiveDirectory;
     int mNumberOfStep;
 };
 

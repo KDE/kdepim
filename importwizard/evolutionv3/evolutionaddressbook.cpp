@@ -72,7 +72,7 @@ void EvolutionAddressBook::exportEvolutionAddressBook()
                     name = arg;
                     name = name.remove(0,1);
                     name = name.remove(name.length()-1,1);
-                    i++;
+                    ++i;
                     //name
                     break;
                 case 1:
@@ -80,7 +80,7 @@ void EvolutionAddressBook::exportEvolutionAddressBook()
                     displayname = displayname.remove(0,1);
                     displayname = displayname.remove(displayname.length()-1,1);
                     //display name
-                    i++;
+                    ++i;
                     break;
                 case 2:
                     if (!displayname.isEmpty()&&!name.isEmpty()) {

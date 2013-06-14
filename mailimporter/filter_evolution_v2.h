@@ -28,17 +28,17 @@ namespace MailImporter {
 class MAILIMPORTER_EXPORT FilterEvolution_v2 : public Filter
 {
 public:
-  explicit FilterEvolution_v2();
-  ~FilterEvolution_v2();
+    explicit FilterEvolution_v2();
+    ~FilterEvolution_v2();
 
-  void import();
-  void importMails( const QString& maildir );
-  static QString defaultSettingsPath();
-  
+    void import();
+    void importMails( const QString& maildir );
+    static QString defaultSettingsPath();
+
 private:
-  void importDirContents(const QString&, const QString&, const QString&);
-  void importMBox(const QString&, const QString&, const QString&);
-  bool excludeFiles( const QString & file );
+    void importDirContents(const QString&, const QString&, const QString&);
+    void importMBox(const QString&, const QString&, const QString&);
+    bool excludeFiles( const QString & file );
 
 };
 }

@@ -91,7 +91,7 @@ void KNComposerEditor::slotRemoveBox()
     if ((x>=0)&&(textLine(x).left(5)==",----")) {
       removeLine(x);
       l--;
-      for (int i=x;i<=l;i++) {     // remove quotation
+      for (int i=x;i<=l;++i) {     // remove quotation
         s = textLine(i);
         if (s.left(2) == "| ") {
           s.remove(0,2);
@@ -107,7 +107,7 @@ void KNComposerEditor::slotRemoveBox()
       x++;
     if ((x<numLines())&&(textLine(x).left(5)=="`----")) {
       removeLine(x);
-      for (int i=l+1;i<x;i++) {     // remove quotation
+      for (int i=l+1;i<x;++i) {     // remove quotation
         s = textLine(i);
         if (s.left(2) == "| ") {
           s.remove(0,2);

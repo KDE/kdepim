@@ -134,7 +134,7 @@
 #include "interfaces/bodypart.h"
 #include "interfaces/htmlwriter.h"
 
-#include <messagecore/stringutil.h>
+#include <messagecore/utils/stringutil.h>
 
 #include <kio/jobuidelegate.h>
 

@@ -19,7 +19,7 @@
 #include "nodehelper.h"
 #include "headerstyle.h"
 
-#include <messagecore/stringutil.h>
+#include <messagecore/utils/stringutil.h>
 
 #include "messagecore/globalsettings.h"
 #include "globalsettings.h"

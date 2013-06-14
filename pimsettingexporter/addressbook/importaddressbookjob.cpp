@@ -19,6 +19,7 @@
 #include "archivestorage.h"
 
 ImportAddressbookJob::ImportAddressbookJob(QWidget *parent, ArchiveStorage *archiveStorage)
+    : AbstractImportExportJob(parent,archiveStorage,/*typeSelected,numberOfStep*/0,0 /*TODO fix it*/)
 {
     Q_UNUSED( parent );
     Q_UNUSED( archiveStorage );
@@ -31,6 +32,8 @@ ImportAddressbookJob::~ImportAddressbookJob()
 
 void ImportAddressbookJob::start()
 {
+    mArchiveDirectory = archive()->directory();
+    restoreConfig();
     //TODO
 }
 
@@ -42,4 +45,12 @@ void ImportAddressbookJob::restoreResources()
 void ImportAddressbookJob::restoreConfig()
 {
     //TODO
+    //kaddressbookrc
 }
+
+QString ImportAddressbookJob::componentName() const
+{
+    return QLatin1String("KAddressBook");
+}
+
+#include "importaddressbookjob.moc"

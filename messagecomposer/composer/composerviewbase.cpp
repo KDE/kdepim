@@ -22,7 +22,7 @@
 
 #include "attachment/attachmentcontrollerbase.h"
 #include "attachment/attachmentmodel.h"
-#include "signaturecontroller.h"
+#include "composer/signaturecontroller.h"
 #include "composer/kmeditor.h"
 #include "emailaddressresolvejob.h"
 #include "keyresolver.h"
@@ -36,7 +36,7 @@
 #include <messageviewer/objecttreeemptysource.h>
 #include <messageviewer/objecttreeparser.h>
 #include <messagecore/messagehelpers.h>
-#include <messagecore/stringutil.h>
+#include <messagecore/utils/stringutil.h>
 #include <mailtransport/transportcombobox.h>
 #include <mailtransport/messagequeuejob.h>
 #include <akonadi/kmime/specialmailcollections.h>

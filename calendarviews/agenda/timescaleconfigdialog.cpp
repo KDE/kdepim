@@ -135,7 +135,7 @@ void TimeScaleConfigDialog::okClicked()
 void TimeScaleConfigDialog::add()
 {
   // Do not add duplicates
-  for ( int i=0; i < listWidget->count(); i++ ) {
+  for ( int i=0; i < listWidget->count(); ++i ) {
     if ( listWidget->item( i )->text() == zoneCombo->currentText() ) {
       return;
     }
@@ -170,7 +170,7 @@ void TimeScaleConfigDialog::down()
 QStringList TimeScaleConfigDialog::zones()
 {
   QStringList list;
-  for ( int i=0; i < listWidget->count(); i++ ) {
+  for ( int i=0; i < listWidget->count(); ++i ) {
     list << tzWithOutUTC( listWidget->item( i )->text() );
   }
   return list;

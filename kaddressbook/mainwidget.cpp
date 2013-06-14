@@ -713,12 +713,12 @@ void MainWidget::setQRCodeShow( bool on )
   KConfig config( QLatin1String( "akonadi_contactrc" ) );
   KConfigGroup group( &config, QLatin1String( "View" ) );
   group.writeEntry( "QRCodes", on );
-
   if ( mItemView->model() ) {
     mItemView->setCurrentIndex( mItemView->model()->index( 0, 0 ) );
   }
+#else
+    Q_UNUSED( on );
 #endif
-  Q_UNUSED( on );
 }
 
 Akonadi::Collection MainWidget::currentAddressBook() const

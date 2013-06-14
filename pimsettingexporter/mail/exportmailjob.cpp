@@ -347,6 +347,52 @@ void ExportMailJob::backupConfig()
                 }
             }
         }
+
+        const QString collectionFolderViewStr(QLatin1String("CollectionFolderView"));
+        if (kmailConfig->hasGroup(collectionFolderViewStr)) {
+            KConfigGroup favoriteGroup = kmailConfig->group(collectionFolderViewStr);
+            const QString currentKey(QLatin1String("Current"));
+            if (favoriteGroup.hasKey(currentKey)) {
+                QString collectionId = favoriteGroup.readEntry(currentKey);
+                if (collectionId.isEmpty()) {
+                    favoriteGroup.deleteEntry(currentKey);
+                } else {
+                    collectionId = collectionId.remove(QLatin1Char('c'));
+                    bool found = false;
+                    const int collectionValue = collectionId.toInt(&found);
+                    if (found && collectionValue != -1) {
+                        const QString realPath = MailCommon::Util::fullCollectionPath(Akonadi::Collection( collectionValue ));
+                        favoriteGroup.writeEntry(currentKey,realPath);
+                    } else {
+                        favoriteGroup.deleteEntry(currentKey);
+                    }
+                }
+            }
+            const QString expensionKey(QLatin1String("Expansion"));
+            if (favoriteGroup.hasKey(expensionKey)) {
+                const QStringList listExpension = favoriteGroup.readEntry(expensionKey, QStringList());
+                if (listExpension.isEmpty()) {
+                    favoriteGroup.deleteEntry(expensionKey);
+                } else {
+                    QStringList result;
+                    Q_FOREACH (QString collection, listExpension) {
+                        collection = collection.remove(QLatin1Char('c'));
+                        bool found = false;
+                        const int collectionValue = collection.toInt(&found);
+                        if (found && collectionValue != -1) {
+                            const QString realPath = MailCommon::Util::fullCollectionPath(Akonadi::Collection( collectionValue ));
+                            result << realPath;
+                        }
+                    }
+                    if (result.isEmpty()) {
+                        favoriteGroup.deleteEntry(expensionKey);
+                    } else {
+                        favoriteGroup.writeEntry(expensionKey,result);
+                    }
+                }
+            }
+        }
+
         const QString favoriteCollectionStr(QLatin1String("FavoriteCollections"));
         if (kmailConfig->hasGroup(favoriteCollectionStr)) {
             KConfigGroup favoriteGroup = kmailConfig->group(favoriteCollectionStr);
@@ -484,7 +530,7 @@ void ExportMailJob::backupMails()
     Q_EMIT info(i18n("Mails backup done."));
 }
 
-void ExportMailJob::writeDirectory(QString path, const QString& relativePath, KZip *mailArchive)
+void ExportMailJob::writeDirectory(QString path, const QString &relativePath, KZip *mailArchive)
 {
     QDir dir(path);
     mailArchive->writeDir(path.remove(relativePath),QLatin1String(""),QLatin1String(""));
@@ -500,7 +546,7 @@ void ExportMailJob::writeDirectory(QString path, const QString& relativePath, KZ
     }
 }
 
-bool ExportMailJob::backupMailData(const KUrl& url,const QString& archivePath)
+bool ExportMailJob::backupMailData(const KUrl& url,const QString &archivePath)
 {
     const QString filename = url.fileName();
     KTemporaryFile tmp;
@@ -598,7 +644,7 @@ void ExportMailJob::backupNepomuk()
     Q_EMIT info(i18n("Nepomuk Database backup done."));
 }
 
-void ExportMailJob::storeResources(const QString&identifier, const QString& path)
+void ExportMailJob::storeResources(const QString &identifier, const QString &path)
 {
     const QString agentFileName = identifier + QLatin1String("rc");
     const QString configFileName = KStandardDirs::locateLocal( "config", agentFileName );
@@ -620,6 +666,8 @@ void ExportMailJob::storeResources(const QString&identifier, const QString& path
         if (group.hasKey(trash)) {
             group.writeEntry(trash,MailCommon::Util::fullCollectionPath(Akonadi::Collection(group.readEntry(trash).toLongLong())));
         }
+    } else {
+        qDebug()<<" Resource not supported :"<<identifier;
     }
     config->sync();
     const bool fileAdded  = archive()->addLocalFile(tmp.fileName(), path + agentFileName);
@@ -635,4 +683,9 @@ KUrl ExportMailJob::subdirPath( const KUrl& url) const
     path = path.left( parentDirEndIndex );
     path.append( QLatin1Char('.') + filename + QLatin1String(".directory") );
     return KUrl(path);
+}
+
+QString ExportMailJob::componentName() const
+{
+    return QLatin1String("KMail");
 }

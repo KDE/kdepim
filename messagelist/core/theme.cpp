@@ -625,7 +625,7 @@ bool Theme::Column::load( QDataStream &stream, int themeVersion )
     return false; // senseless
   }
 
-  for ( int i = 0; i < val ; i++ )
+  for ( int i = 0; i < val ; ++i )
   {
     Row * row = new Row();
     if ( !row->load( stream, themeVersion ) )
@@ -646,7 +646,7 @@ bool Theme::Column::load( QDataStream &stream, int themeVersion )
     return false; // senseless
   }
 
-  for ( int i = 0; i < val ; i++ )
+  for ( int i = 0; i < val ; ++i )
   {
     Row * row = new Row();
     if ( !row->load( stream, themeVersion ) )
@@ -887,7 +887,7 @@ bool Theme::load( QDataStream &stream )
   if ( val < 1 || val > 50 )
     return false; // plain b0rken ( negative, zero or more than 50 columns )
 
-  for ( int i = 0; i < val ; i++ )
+  for ( int i = 0; i < val ; ++i )
   {
     Column * col = new Column();
     if ( !col->load( stream, themeVersion ) )
@@ -916,7 +916,7 @@ void Theme::save( QDataStream &stream ) const
   stream << (int)cnt;
 
 
-  for ( int i = 0; i < cnt ; i++ )
+  for ( int i = 0; i < cnt ; ++i )
   {
     Column * col = mColumns.at( i );
     col->save( stream );

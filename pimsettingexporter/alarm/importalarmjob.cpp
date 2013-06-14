@@ -19,6 +19,7 @@
 #include "archivestorage.h"
 
 ImportAlarmJob::ImportAlarmJob(QWidget *parent, ArchiveStorage *archiveStorage)
+    : AbstractImportExportJob(parent,archiveStorage,/*typeSelected,numberOfStep*/0,0 /*TODO fix it*/)
 {
     Q_UNUSED( parent );
     Q_UNUSED( archiveStorage );
@@ -32,6 +33,8 @@ ImportAlarmJob::~ImportAlarmJob()
 
 void ImportAlarmJob::start()
 {
+    mArchiveDirectory = archive()->directory();
+    restoreConfig();
     //TODO
 }
 
@@ -43,4 +46,12 @@ void ImportAlarmJob::restoreResources()
 void ImportAlarmJob::restoreConfig()
 {
     //TODO
+    //kalarmrc
 }
+
+QString ImportAlarmJob::componentName() const
+{
+    return QLatin1String("KAlarm");
+}
+
+#include "importalarmjob.moc"

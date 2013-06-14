@@ -154,7 +154,7 @@ ActionMenuContainer {
     ActionListItem {
       name : "message_reply"
       onPressAndHold: {
-          replyOptionsPage.visible = true
+          pageStack.push(Qt.createComponent("ReplyOptionsPage.qml") )
           actionPanel.collapse()
       }
       reactsOnLongPressed : true
@@ -163,7 +163,7 @@ ActionMenuContainer {
     ActionListItem {
       name : "message_forward"
       onPressAndHold: {
-          forwardOptionsPage.visible = true
+          pageStack.push(Qt.createComponent("ForwardOptionsPage.qml") )
           actionPanel.collapse()
       }
       reactsOnLongPressed : true
@@ -223,7 +223,7 @@ ActionMenuContainer {
 
     onLongPressed : {
       if ( actionName == "add_new_mail" ) {
-          newMailPage.visible = true
+          pageStack.push(Qt.createComponent("NewMailPage.qml") )
           actionPanel.collapse()
       }
     }

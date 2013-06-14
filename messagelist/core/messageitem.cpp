@@ -23,7 +23,7 @@
 #include "messageitem_p.h"
 
 #include "messagetag.h"
-#include "messagecore/annotationdialog.h"
+#include "messagecore/widgets/annotationdialog.h"
 #include "core/callbacknepomukresourceretriever.h"
 #include "theme.h"
 

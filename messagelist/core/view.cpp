@@ -32,7 +32,7 @@
 #include "core/widgetbase.h"
 #include "messagelistutil.h"
 
-#include "messagecore/stringutil.h"
+#include "messagecore/utils/stringutil.h"
 
 #include <Nepomuk2/ResourceManager>
 

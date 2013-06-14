@@ -30,7 +30,7 @@ SelectTypeWidget::SelectTypeWidget(QWidget *parent) :
     connect(ui->mails,SIGNAL(clicked(bool)),SLOT(slotTypeClicked()));
     connect(ui->akonadi,SIGNAL(clicked(bool)),SLOT(slotTypeClicked()));
     connect(ui->nepomuk,SIGNAL(clicked(bool)),SLOT(slotTypeClicked()));
-    //TODO: implement it for 4.11 or 4.12 ;)
+    //TODO: implement it for 4.12 ;)
     ui->nepomuk->hide();
 }
 

@@ -23,7 +23,7 @@
 #include "core/groupheaderitem.h"
 #include "core/manager.h"
 
-#include "messagecore/stringutil.h"
+#include "messagecore/utils/stringutil.h"
 
 #include <QStyle>
 #include <QPainter>

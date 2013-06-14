@@ -24,21 +24,21 @@ namespace MailImporter
 class MAILIMPORTER_EXPORT FilterBalsa : public Filter
 {
 public:
-  explicit FilterBalsa();
-  ~FilterBalsa();
+    explicit FilterBalsa();
+    ~FilterBalsa();
 
-  void import();
-  void importMails( const QString& maildir );
-  static QString defaultSettingsPath();
-  QString localMailDirPath();
+    void import();
+    void importMails( const QString &maildir );
+    static QString defaultSettingsPath();
+    QString localMailDirPath();
 private:
-  void importDirContents(const QString&);
-  void importFiles(const QString&);
-  void processDirectory( const QString& path);
+    void importDirContents(const QString&);
+    void importFiles(const QString&);
+    void processDirectory( const QString &path);
 
-  Akonadi::MessageStatus statusFromFile( const QString& filename);
-  int mImportDirDone;
-  int mTotalDir;
+    Akonadi::MessageStatus statusFromFile( const QString &filename);
+    int mImportDirDone;
+    int mTotalDir;
 
 };
 }

@@ -511,7 +511,7 @@ void TodoView::saveLayout( KConfig *config, const QString &group ) const
   QVariantList columnVisibility;
   QVariantList columnOrder;
   QVariantList columnWidths;
-  for ( int i = 0; i < header->count(); i++ ) {
+  for ( int i = 0; i < header->count(); ++i ) {
     columnVisibility << QVariant( !mView->isColumnHidden( i ) );
     columnWidths << QVariant( header->sectionSize( i ) );
     columnOrder << QVariant( header->visualIndex( i ) );

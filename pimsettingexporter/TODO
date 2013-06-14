@@ -1,7 +1,7 @@
 Import/Export config:
 --------------------
 - templatesconfigurationrc (Need to merge in existing config file)
-- sievetemplaterc (Need to merge in existing config file)
+- sievetemplaterc (DONE)
 - akonadi_archivemail_agentrc (Need to merge in existing config file)
 - kmailsnippetrc (Need to merge in existing config file)
 - filters (DONE)
@@ -17,8 +17,10 @@ TODO 4.11:
 - Allow to merge ldap config (DONE)
 - Allow to merge KMail Snippet config
 
-- Import/Export KAddressBook config
-- Import/Export KOrganizer config
-- Rename it.
-
+TODO 4.12:
+----------
+- Import/Export KAddressBook config/resources
+- Import/Export KOrganizer config/resources
+- Import/Export KAlarm config/resources
 - Add export mode 
+- Allow to write a report.

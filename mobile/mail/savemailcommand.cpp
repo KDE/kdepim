@@ -19,7 +19,7 @@
 
 
 #include "savemailcommand_p.h"
-#include "messagecore/stringutil.h"
+#include "messagecore/utils/stringutil.h"
 #include "messageviewer/nodehelper.h"
 
 #include <akonadi/collection.h>

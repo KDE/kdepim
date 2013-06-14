@@ -35,7 +35,7 @@ class StatusFilter
     ~StatusFilter();
 
     StatusFilter& operator=( const StatusFilter &sf )
-      { for(int i=0; i<8; i++) data.setBit(i, sf.data.at(i)); return (*this); }
+      { for(int i=0; i<8; ++i) data.setBit(i, sf.data.at(i)); return (*this); }
 
     void load(const KConfigGroup &conf);
     void save(KConfigGroup &conf);

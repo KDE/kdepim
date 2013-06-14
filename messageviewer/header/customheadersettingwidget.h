@@ -39,6 +39,8 @@ public:
 
     void readConfig();
     void writeConfig();
+
+public Q_SLOTS:
     void resetToDefault();
 
 Q_SIGNALS:

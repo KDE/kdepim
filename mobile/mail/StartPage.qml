@@ -3,6 +3,7 @@
     Copyright (c) 2010 Bertjan Broeksema <broeksema@kde.org>
     Copyright (C) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
     Copyright (c) 2010 Andras Mantia <amantia@kdab.com>
+    Copyright (C) 2013 Michael Bohlender <michael.bohlender@kdemail.net>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -34,6 +35,11 @@ PlasmaComponents.Page {
 
   //BEGIN Tools
   tools: PlasmaComponents.ToolBarLayout{
+    PlasmaComponents.ToolButton {
+      iconSource: "mail-message-new"
+
+      onClicked: application.startComposer()
+    }
 
   }
   //END Tools
@@ -58,30 +64,6 @@ PlasmaComponents.Page {
     } else if ( guiStateManager.inViewSingleItemState ) {
       kmailActions.showOnlyCategory( "mail_viewer" )
     }
-  }
-
-  QML.Loader {
-    id: newMailPage
-    visible: false
-    anchors.fill: parent
-    z: 1
-    source: visible ? "NewMailPage.qml" : ""
-  }
-
-  QML.Loader {
-    id: replyOptionsPage
-    visible: false
-    anchors.fill: parent
-    z: 1
-    source: visible ? "ReplyOptionsPage.qml" : ""
-  }
-
-  QML.Loader {
-    id: forwardOptionsPage
-    visible: false
-    anchors.fill: parent
-    z: 1
-    source: visible ? "ForwardOptionsPage.qml" : ""
   }
 
   QML.Loader {

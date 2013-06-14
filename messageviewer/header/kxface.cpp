@@ -202,7 +202,7 @@ int KXFace::BigPop(register const Prob *p)
     while ((tmp < p->p_offset) || (tmp >= p->p_range + p->p_offset))
     {
         p++;
-        i++;
+        ++i;
     }
     BigMul(p->p_range);
     BigAdd(tmp - p->p_offset);
@@ -313,7 +313,7 @@ void KXFace::BigAdd(unsigned char a)
         c += (COMP)*w;
         *w++ = (unsigned char)(c & WORDMASK);
         c >>= BITSPERWORD;
-        i++;
+        ++i;
     }
     if ((i == B.b_words) && c)
     {

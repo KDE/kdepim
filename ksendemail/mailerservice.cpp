@@ -180,7 +180,7 @@ void MailerService::processArgs( KCmdLineArgs *args )
     // only read additional command line arguments if kmail/kontact is
     // not called with "-session foo"
         const int numberOfArgs(args->count());
-        for(int i= 0; i < numberOfArgs; i++)
+        for(int i= 0; i < numberOfArgs; ++i)
         {
             if (args->arg(i).startsWith(QLatin1String("mailto:"), Qt::CaseInsensitive))
                 to += args->url(i).path() + ", ";

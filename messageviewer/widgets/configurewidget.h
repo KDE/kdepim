@@ -60,6 +60,9 @@ signals:
    */
   void settingsChanged();
 
+private Q_SLOTS:
+  void showCustomHeadersDialog();
+
 private:
   void readCurrentFallbackCodec();
   void readCurrentOverrideCodec();

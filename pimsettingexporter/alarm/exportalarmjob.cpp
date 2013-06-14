@@ -37,6 +37,8 @@ ExportAlarmJob::~ExportAlarmJob()
 
 void ExportAlarmJob::start()
 {
+    mArchiveDirectory = archive()->directory();
+    backupConfig();
     //TODO
 }
 
@@ -51,7 +53,12 @@ void ExportAlarmJob::backupResources()
 
 void ExportAlarmJob::backupConfig()
 {
+    //kalarmrc
+}
 
+QString ExportAlarmJob::componentName() const
+{
+    return QLatin1String("KAlarm");
 }
 
 #include "exportalarmjob.moc"

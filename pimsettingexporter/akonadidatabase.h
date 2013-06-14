@@ -30,6 +30,7 @@ public:
     QStringList options() const;
     QString driver() const;
     QString name() const;
+
 private:
     void init();
     QStringList m_dboptions;

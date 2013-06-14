@@ -101,7 +101,7 @@ void formatProperties( const QMap<int,KTNEFProperty*>& props, QTreeWidget *lv,
                         QLatin1String(" [") + QString::number( value.toList().count() ) + QLatin1Char(']') );
       int i = 0;
       for ( QList<QVariant>::ConstIterator lit = value.toList().constBegin();
-            lit != value.toList().constEnd(); ++lit, i++ ) {
+            lit != value.toList().constEnd(); ++lit, ++i ) {
         new QTreeWidgetItem( newItem,
                              QStringList()
                                << QLatin1Char( '[' )  + QString::number( i ) + QLatin1Char( ']' )

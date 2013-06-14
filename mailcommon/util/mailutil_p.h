@@ -23,60 +23,67 @@
 
 #include <KDialog>
 #include <KLocale>
+#include <KSeparator>
 
 #include <QLabel>
+#include <QVBoxLayout>
 
 namespace MailCommon {
 
 class AttachmentSelectionDialog : public KDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     enum Type {
-      AttachAsLink,
-      AttachInline,
-      AttachWithoutAttachments
+        AttachAsLink,
+        AttachInline,
+        AttachWithoutAttachments
     };
 
     explicit AttachmentSelectionDialog( QWidget *parent = 0 )
-      : KDialog( parent ),
-        mButtonCode( KDialog::Cancel )
+        : KDialog( parent ),
+          mButtonCode( KDialog::Cancel )
     {
-      setButtons( User1 | User2 | User3 | Cancel );
-      setWindowTitle( i18n( "Create Todo/Reminder" ) );
-      setButtonText( User1, i18n( "Attach inline without attachments" ) );
-      setButtonText( User2, i18n( "Attach &inline" ) );
-      setButtonText( User3, i18n( "Attach as &link" ) );
-      setMainWidget( new QLabel( i18n( "How should the email be attached?" ) ) );
+        setButtons( User1 | User2 | User3 | Cancel );
+        setWindowTitle( i18n( "Create Todo/Reminder" ) );
+        setButtonText( User1, i18n( "Attach inline without attachments" ) );
+        setButtonText( User2, i18n( "Attach &inline" ) );
+        setButtonText( User3, i18n( "Attach as &link" ) );
+        QVBoxLayout *lay = new QVBoxLayout;
+        QWidget *w = new QWidget;
+        w->setLayout(lay);
+        lay->addWidget(new QLabel( i18n( "How should the email be attached?" ) ));
+        lay->addWidget(new KSeparator);
+        setMainWidget( w );
     }
 
     Type attachmentType() const
     {
-      switch ( mButtonCode ) {
+        switch ( mButtonCode ) {
         case User1:
-          return AttachWithoutAttachments;
+            return AttachWithoutAttachments;
         case User2:
-          return AttachInline;
+            return AttachInline;
         case User3:
         default:
-          return AttachAsLink;
-      }
+            return AttachAsLink;
+        }
     }
 
-  protected Q_SLOTS:
-    virtual void slotButtonClicked( int button )
+protected Q_SLOTS:
+    void slotButtonClicked( int button )
     {
-      mButtonCode = static_cast<KDialog::ButtonCode>( button );
+        mButtonCode = static_cast<KDialog::ButtonCode>( button );
 
-      if ( mButtonCode == User1 || mButtonCode == User2 || mButtonCode == User3 ) {
-        accept();
-      }
+        if ( mButtonCode == User1 || mButtonCode == User2 || mButtonCode == User3 ) {
+            accept();
+        }
 
-      KDialog::slotButtonClicked( button );
+        KDialog::slotButtonClicked( button );
     }
 
-  private:
+private:
     KDialog::ButtonCode mButtonCode;
 };
 

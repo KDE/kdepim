@@ -18,7 +18,10 @@
 #include "importcalendarjob.h"
 #include "archivestorage.h"
 
+#include <KZip>
+
 ImportCalendarJob::ImportCalendarJob(QWidget *parent, ArchiveStorage *archiveStorage)
+    : AbstractImportExportJob(parent,archiveStorage,/*typeSelected,numberOfStep*/0,0 /*TODO fix it*/)
 {
     Q_UNUSED( parent );
     Q_UNUSED( archiveStorage );
@@ -31,6 +34,8 @@ ImportCalendarJob::~ImportCalendarJob()
 
 void ImportCalendarJob::start()
 {
+    mArchiveDirectory = archive()->directory();
+    restoreConfig();
     //TODO
 }
 
@@ -42,4 +47,12 @@ void ImportCalendarJob::restoreResources()
 void ImportCalendarJob::restoreConfig()
 {
     //TODO
+    //TODO: korgacrc  korganizer_printing.rc  korganizerrc
 }
+
+QString ImportCalendarJob::componentName() const
+{
+    return QLatin1String("KOrganizer");
+}
+
+#include "importcalendarjob.moc"

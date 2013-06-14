@@ -54,7 +54,7 @@ set( messagecomposer_src
 
      composer/kmeditor.cpp
      job/inserttextfilejob.cpp
-     signaturecontroller.cpp
+     composer/signaturecontroller.cpp
      composer/composerlineedit.cpp
 
      recipient/recipientspicker.cpp

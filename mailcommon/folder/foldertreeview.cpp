@@ -162,7 +162,7 @@ void FolderTreeView::slotHeaderContextMenuRequested( const QPoint &pnt )
 
   QActionGroup *grp = new QActionGroup( &menu );
   const int nbElement( (int)( sizeof( icon_sizes ) / sizeof( int ) ) );
-  for ( int i = 0; i < nbElement; i++ ) {
+  for ( int i = 0; i < nbElement; ++i ) {
     act = menu.addAction( QString( "%1x%2" ).arg( icon_sizes[ i ] ).arg( icon_sizes[ i ] ) );
     act->setCheckable( true );
     grp->addAction( act );

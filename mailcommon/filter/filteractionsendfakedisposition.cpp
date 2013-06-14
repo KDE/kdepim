@@ -99,7 +99,7 @@ void FilterActionSendFakeDisposition::argsFromString( const QString &argsStr )
       return;
     }
 
-    for ( int i = 0 ; i < numMDNs ; i++ ) {
+    for ( int i = 0 ; i < numMDNs ; ++i ) {
       if ( char( mdns[ i ] ) == argsStr[ 0 ] ) { // send
         mParameter = mParameterList.at( i + 2 );
         return;

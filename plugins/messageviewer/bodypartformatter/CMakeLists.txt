@@ -3,6 +3,7 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/calendarsupport
   ${CMAKE_SOURCE_DIR}/messageviewer
   ${CMAKE_SOURCE_DIR}/mailcommon/
+  ${CMAKE_SOURCE_DIR}/messagecore/
   ${CMAKE_SOURCE_DIR}/libkdepim/
   ${Boost_INCLUDE_DIRS}
 )
