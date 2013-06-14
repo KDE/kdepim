@@ -5,6 +5,7 @@ find_package(Akonadi REQUIRED)
 find_package(KdepimLibs REQUIRED)
 
 include_directories(
+  ${CMAKE_SOURCE_DIR}/libkdepim
   ${AKONADI_INCLUDE_DIR}
   ${KDE4_INCLUDES}
   ${KDEPIMLIBS_INCLUDE_DIRS}

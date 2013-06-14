@@ -12,7 +12,7 @@
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/entitymimetypefiltermodel.h>
 #include <akonadi/session.h>
-#include <libkdepim/statisticsproxymodel.h>
+#include <libkdepim/misc/statisticsproxymodel.h>
 #include <akonadi/kmime/messageparts.h>
 
 #include <KDE/KAction>
