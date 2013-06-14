@@ -35,7 +35,7 @@
 #include "trayicon.h"
 #include "kernel.h"
 
-#include <libkdepim/broadcaststatus.h>
+#include <libkdepim/misc/broadcaststatus.h>
 #include "kdepim-version.h"
 
 #include <KCmdLineArgs>

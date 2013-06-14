@@ -29,7 +29,7 @@
 
 #include <libkdepim/progresswidget/progressdialog.h>
 #include <libkdepim/progresswidget/statusbarprogresswidget.h>
-#include <libkdepim/broadcaststatus.h>
+#include <libkdepim/misc/broadcaststatus.h>
 
 #include <KAction>
 #include <KActionCollection>
