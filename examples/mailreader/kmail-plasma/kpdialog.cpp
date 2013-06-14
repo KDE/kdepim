@@ -26,7 +26,7 @@
 #include <akonadi/monitor.h>
 #include <akonadi/selectionproxymodel.h>
 #include <akonadi/session.h>
-#include <libkdepim/statisticsproxymodel.h>
+#include <libkdepim/misc/statisticsproxymodel.h>
 
 #include <messagelist/pane.h>
 
