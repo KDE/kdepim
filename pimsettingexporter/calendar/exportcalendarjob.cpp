@@ -88,9 +88,19 @@ void ExportCalendarJob::backupConfig()
         backupFile(tmp.fileName(), BackupMailUtil::configsPath(), korganizerStr);
     }
 
+    const QString korganizerPrintingStr(QLatin1String("korganizer_printing.rc"));
+    const QString korganizerPrintingrc = KStandardDirs::locateLocal( "config",  korganizerPrintingStr);
+    if (QFile(korganizerPrintingrc).exists()) {
+        backupFile(korganizerPrintingrc, BackupMailUtil::configsPath(), korganizerPrintingStr);
+    }
+
+    const QString korgacStr(QLatin1String("korgacrc"));
+    const QString korgacrc = KStandardDirs::locateLocal( "config", korgacStr );
+    if (QFile(korgacrc).exists()) {
+        backupFile(korgacrc, BackupMailUtil::configsPath(), korgacStr);
+    }
 
     Q_EMIT info(i18n("Config backup done."));
-    //TODO: korgacrc  korganizer_printing.rc  korganizerrc
 }
 
 QString ExportCalendarJob::componentName() const
