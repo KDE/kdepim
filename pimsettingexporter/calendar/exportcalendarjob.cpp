@@ -21,7 +21,10 @@
 
 
 #include <KLocale>
+#include <KStandardDirs>
+#include <KTemporaryFile>
 
+#include <QFile>
 #include <QWidget>
 
 
@@ -69,6 +72,23 @@ void ExportCalendarJob::backupConfig()
 {
     showInfo(i18n("Backing up config..."));
     MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+
+    const QString korganizerStr(QLatin1String("korganizerrc"));
+    const QString korganizerrc = KStandardDirs::locateLocal( "config", korganizerStr);
+    if (QFile(korganizerrc).exists()) {
+        KSharedConfigPtr korganizer = KSharedConfig::openConfig(korganizerrc);
+
+        KTemporaryFile tmp;
+        tmp.open();
+
+        KConfig *korganizerConfig = korganizer->copyTo( tmp.fileName() );
+
+        //TODO adapt collection
+        korganizerConfig->sync();
+        backupFile(tmp.fileName(), BackupMailUtil::configsPath(), korganizerStr);
+    }
+
+
     Q_EMIT info(i18n("Config backup done."));
     //TODO: korgacrc  korganizer_printing.rc  korganizerrc
 }

@@ -66,7 +66,6 @@ void ExportAddressbookJob::backupResources()
 
 void ExportAddressbookJob::backupConfig()
 {
-    //kaddressbookrc
     showInfo(i18n("Backing up config..."));
     MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
 
