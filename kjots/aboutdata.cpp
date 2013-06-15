@@ -23,18 +23,12 @@
 */
 
 #include "aboutdata.h"
-#ifdef KJOTSKONTACTPLUGIN
 #include <kdepim-version.h>
-#endif
 #include <klocale.h>
 
 AboutData::AboutData()
   : KAboutData( "kjots", 0, ki18n( "KJots" ),
-#ifdef KJOTSKONTACTPLUGIN
                 KDEPIM_VERSION,
-#else
-                "trunk",
-#endif
                 ki18n( "KDE note taking utility" ),
                 KAboutData::License_GPL,
                 ki18n("Copyright © 1997–2010 KJots authors" ),

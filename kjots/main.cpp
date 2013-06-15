@@ -26,11 +26,7 @@
 #include "KJotsMain.h"
 #include "aboutdata.h"
 
-#ifdef KJOTSKONTACTPLUGIN
 #include <kontactinterface/pimuniqueapplication.h>
-#else
-#include <kuniqueapplication.h>
-#endif
 
 #include <kcmdlineargs.h>
 #include <kconfig.h>
@@ -44,23 +40,12 @@ int main( int argc, char **argv )
     AboutData aboutData;
     KCmdLineArgs::init(argc, argv, &aboutData);
 
-#ifdef KJOTSKONTACTPLUGIN
     KontactInterface::PimUniqueApplication::addCmdLineOptions();
     if (!KontactInterface::PimUniqueApplication::start()) {
         kWarning() << "kjots is already running!";
         exit(0);
     }
     KontactInterface::PimUniqueApplication a;
-#else
-    
-    KUniqueApplication::addCmdLineOptions();
-    if (!KUniqueApplication::start()) {
-        kWarning() << "kjots is already running!";
-        exit(0);
-    }
-    KUniqueApplication a;
-#endif
-
 
     // backwards compatibility code to convert "old" user font settings
     // to the new config settings
