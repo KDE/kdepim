@@ -19,6 +19,7 @@
 
 #include "messageviewer/utils/kcursorsaver.h"
 
+#include <Akonadi/AgentManager>
 
 #include <KLocale>
 #include <KStandardDirs>
@@ -64,6 +65,30 @@ void ExportCalendarJob::backupResources()
 {
     showInfo(i18n("Backing up resources..."));
     MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+
+    Akonadi::AgentManager *manager = Akonadi::AgentManager::self();
+    const Akonadi::AgentInstance::List list = manager->instances();
+    foreach( const Akonadi::AgentInstance &agent, list ) {
+        const QStringList capabilities( agent.type().capabilities() );
+#if 0
+        if (agent.type().mimeTypes().contains( KMime::Message::mimeType())) {
+            if ( capabilities.contains( QLatin1String("Resource") ) &&
+                 !capabilities.contains( QLatin1String("Virtual") ) &&
+                 !capabilities.contains( QLatin1String("MailTransport") ) )
+            {
+                const QString identifier = agent.identifier();
+                //Need to store other resources
+                if (identifier.contains(QLatin1String("ical"))) {
+                    storeResources(identifier,BackupMailUtil::resourcesPath());
+                } else {
+                    qDebug()<<" resource \""<<identifier<<"\" will not store";
+                }
+            }
+        }
+#endif
+    }
+
+
     //TODO backup calendar
     Q_EMIT info(i18n("Resources backup done."));
 }
