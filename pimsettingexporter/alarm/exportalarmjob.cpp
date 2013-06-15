@@ -38,8 +38,20 @@ ExportAlarmJob::~ExportAlarmJob()
 void ExportAlarmJob::start()
 {
     mArchiveDirectory = archive()->directory();
-    backupConfig();
-    //TODO
+    if (mTypeSelected & BackupMailUtil::Resources) {
+        backupResources();
+        increaseProgressDialog();
+        if (wasCanceled()) {
+            return;
+        }
+    }
+    if (mTypeSelected & BackupMailUtil::Config) {
+        backupConfig();
+        increaseProgressDialog();
+        if (wasCanceled()) {
+            return;
+        }
+    }
 }
 
 

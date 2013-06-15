@@ -38,8 +38,22 @@ ExportCalendarJob::~ExportCalendarJob()
 void ExportCalendarJob::start()
 {
     mArchiveDirectory = archive()->directory();
-    backupConfig();
-    //TODO
+    createProgressDialog();
+
+    if (mTypeSelected & BackupMailUtil::Resources) {
+        backupResources();
+        increaseProgressDialog();
+        if (wasCanceled()) {
+            return;
+        }
+    }
+    if (mTypeSelected & BackupMailUtil::Config) {
+        backupConfig();
+        increaseProgressDialog();
+        if (wasCanceled()) {
+            return;
+        }
+    }
 }
 
 

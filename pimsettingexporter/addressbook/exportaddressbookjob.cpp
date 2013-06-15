@@ -21,6 +21,7 @@
 #include <KLocale>
 #include <KStandardDirs>
 #include <KTemporaryFile>
+#include <KConfigGroup>
 
 #include <QWidget>
 
@@ -38,9 +39,20 @@ ExportAddressbookJob::~ExportAddressbookJob()
 void ExportAddressbookJob::start()
 {
     mArchiveDirectory = archive()->directory();
-    //FIXME
-    backupConfig();
-    backupResources();
+    if (mTypeSelected & BackupMailUtil::Resources) {
+        backupResources();
+        increaseProgressDialog();
+        if (wasCanceled()) {
+            return;
+        }
+    }
+    if (mTypeSelected & BackupMailUtil::Config) {
+        backupConfig();
+        increaseProgressDialog();
+        if (wasCanceled()) {
+            return;
+        }
+    }
 }
 
 
@@ -66,8 +78,27 @@ void ExportAddressbookJob::backupConfig()
         KTemporaryFile tmp;
         tmp.open();
 
-        //TODO adapt collection path
         KConfig *kaddressBookConfig = kaddressbook->copyTo( tmp.fileName() );
+
+        const QString collectionViewCheckStateStr(QLatin1String("CollectionViewCheckState"));
+        if (kaddressBookConfig->hasGroup(collectionViewCheckStateStr)) {
+            KConfigGroup group = kaddressBookConfig->group(collectionViewCheckStateStr);
+            const QString selectionKey(QLatin1String("Selection"));
+            BackupMailUtil::convertCollectionListToRealPath(group, selectionKey);
+        }
+
+        const QString collectionViewStateStr(QLatin1String("CollectionViewState"));
+        if (kaddressBookConfig->hasGroup(collectionViewStateStr)) {
+            KConfigGroup group = kaddressBookConfig->group(collectionViewStateStr);
+            QString currentKey(QLatin1String("Current"));
+            BackupMailUtil::convertCollectionToRealPath(group, currentKey);
+
+            currentKey = QLatin1String("Expansion");
+            BackupMailUtil::convertCollectionToRealPath(group, currentKey);
+
+            currentKey = QLatin1String("Selection");
+            BackupMailUtil::convertCollectionToRealPath(group, currentKey);
+        }
         kaddressBookConfig->sync();
         backupFile(tmp.fileName(), BackupMailUtil::configsPath(), kaddressbookStr);
     }

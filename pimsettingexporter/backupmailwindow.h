@@ -21,8 +21,7 @@
 #include <kxmlguiwindow.h>
 
 class BackupMailWidget;
-class ExportMailJob;
-class ImportMailJob;
+class AbstractImportExportJob;
 
 class BackupMailWindow: public KXmlGuiWindow
 {
@@ -41,8 +40,8 @@ private:
     bool canZip() const;
     void setupActions(bool canZipFile);
     BackupMailWidget *mBackupMailWidget;
-    ExportMailJob *mBackupData;
-    ImportMailJob *mRestoreData;
+    AbstractImportExportJob *mBackupData;
+    AbstractImportExportJob *mRestoreData;
 };
 
 

@@ -16,6 +16,9 @@
 */
 
 #include "backupmailkernel.h"
+#include <kabc/addressee.h>
+#include <kabc/contactgroup.h>
+
 
 #include <kglobal.h>
 #include <kpimidentities/identitymanager.h>

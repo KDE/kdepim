@@ -19,6 +19,9 @@
 #include "backupmailwidget.h"
 #include "mail/exportmailjob.h"
 #include "mail/importmailjob.h"
+
+#include "addressbook/exportaddressbookjob.h"
+
 #include "backupmailkernel.h"
 #include "selectiontypedialog.h"
 #include "backupmailutil.h"
@@ -112,6 +115,14 @@ void BackupMailWindow::slotBackupData()
         mBackupData->start();
         delete mBackupData;
         mBackupData = 0;
+
+        mBackupData = new ExportAddressbookJob(this,typeSelected,archiveStorage,numberOfStep);
+        connect(mBackupData,SIGNAL(info(QString)),SLOT(slotAddInfo(QString)));
+        connect(mBackupData,SIGNAL(error(QString)),SLOT(slotAddError(QString)));
+        mBackupData->start();
+        delete mBackupData;
+        mBackupData = 0;
+
 
         //At the end
         archiveStorage->closeArchive();

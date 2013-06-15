@@ -351,46 +351,12 @@ void ExportMailJob::backupConfig()
         const QString collectionFolderViewStr(QLatin1String("CollectionFolderView"));
         if (kmailConfig->hasGroup(collectionFolderViewStr)) {
             KConfigGroup favoriteGroup = kmailConfig->group(collectionFolderViewStr);
+
             const QString currentKey(QLatin1String("Current"));
-            if (favoriteGroup.hasKey(currentKey)) {
-                QString collectionId = favoriteGroup.readEntry(currentKey);
-                if (collectionId.isEmpty()) {
-                    favoriteGroup.deleteEntry(currentKey);
-                } else {
-                    collectionId = collectionId.remove(QLatin1Char('c'));
-                    bool found = false;
-                    const int collectionValue = collectionId.toInt(&found);
-                    if (found && collectionValue != -1) {
-                        const QString realPath = MailCommon::Util::fullCollectionPath(Akonadi::Collection( collectionValue ));
-                        favoriteGroup.writeEntry(currentKey,realPath);
-                    } else {
-                        favoriteGroup.deleteEntry(currentKey);
-                    }
-                }
-            }
+            BackupMailUtil::convertCollectionToRealPath(favoriteGroup, currentKey);
+
             const QString expensionKey(QLatin1String("Expansion"));
-            if (favoriteGroup.hasKey(expensionKey)) {
-                const QStringList listExpension = favoriteGroup.readEntry(expensionKey, QStringList());
-                if (listExpension.isEmpty()) {
-                    favoriteGroup.deleteEntry(expensionKey);
-                } else {
-                    QStringList result;
-                    Q_FOREACH (QString collection, listExpension) {
-                        collection = collection.remove(QLatin1Char('c'));
-                        bool found = false;
-                        const int collectionValue = collection.toInt(&found);
-                        if (found && collectionValue != -1) {
-                            const QString realPath = MailCommon::Util::fullCollectionPath(Akonadi::Collection( collectionValue ));
-                            result << realPath;
-                        }
-                    }
-                    if (result.isEmpty()) {
-                        favoriteGroup.deleteEntry(expensionKey);
-                    } else {
-                        favoriteGroup.writeEntry(expensionKey,result);
-                    }
-                }
-            }
+            BackupMailUtil::convertCollectionListToRealPath(favoriteGroup, expensionKey);
         }
 
         const QString favoriteCollectionStr(QLatin1String("FavoriteCollections"));

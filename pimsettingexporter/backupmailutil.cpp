@@ -16,6 +16,9 @@
 */
 
 #include "backupmailutil.h"
+
+#include "mailcommon/util/mailutil.h"
+
 #include <KConfigGroup>
 #include <QDir>
 
@@ -76,4 +79,50 @@ KUrl BackupMailUtil::resourcePath(KSharedConfigPtr resourceConfig)
     QString url = group.readEntry(QLatin1String("Path"),QString());
     url.replace(QLatin1String("$HOME"), QDir::homePath());
     return KUrl(url);
+}
+
+void BackupMailUtil::convertCollectionListToRealPath(KConfigGroup &group, const QString &currentKey)
+{
+    if (group.hasKey(currentKey)) {
+        const QStringList listExpension = group.readEntry(currentKey, QStringList());
+        if (listExpension.isEmpty()) {
+            group.deleteEntry(currentKey);
+        } else {
+            QStringList result;
+            Q_FOREACH (QString collection, listExpension) {
+                collection = collection.remove(QLatin1Char('c'));
+                bool found = false;
+                const int collectionValue = collection.toInt(&found);
+                if (found && collectionValue != -1) {
+                    const QString realPath = MailCommon::Util::fullCollectionPath(Akonadi::Collection( collectionValue ));
+                    result << realPath;
+                }
+            }
+            if (result.isEmpty()) {
+                group.deleteEntry(currentKey);
+            } else {
+                group.writeEntry(currentKey, result);
+            }
+        }
+    }
+}
+
+void BackupMailUtil::convertCollectionToRealPath(KConfigGroup &group, const QString &currentKey)
+{
+    if (group.hasKey(currentKey)) {
+        QString collectionId = group.readEntry(currentKey);
+        if (collectionId.isEmpty()) {
+            group.deleteEntry(currentKey);
+        } else {
+            collectionId = collectionId.remove(QLatin1Char('c'));
+            bool found = false;
+            const int collectionValue = collectionId.toInt(&found);
+            if (found && collectionValue != -1) {
+                const QString realPath = MailCommon::Util::fullCollectionPath(Akonadi::Collection( collectionValue ));
+                group.writeEntry(currentKey,realPath);
+            } else {
+                group.deleteEntry(currentKey);
+            }
+        }
+    }
 }
