@@ -95,7 +95,8 @@ void BackupMailUtil::convertCollectionListToRealPath(KConfigGroup &group, const 
                 const int collectionValue = collection.toInt(&found);
                 if (found && collectionValue != -1) {
                     const QString realPath = MailCommon::Util::fullCollectionPath(Akonadi::Collection( collectionValue ));
-                    result << realPath;
+                    if (!realPath.isEmpty())
+                        result << realPath;
                 }
             }
             if (result.isEmpty()) {
