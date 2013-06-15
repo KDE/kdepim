@@ -97,12 +97,9 @@ target_link_libraries(kjots
   ${Grantlee_CORE_LIBRARIES}
   ${Grantlee_GUI_LIBRARIES}
   ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS}
+  ${KDEPIMLIBS_KONTACTINTERFACE_LIBS}
   akonadi_next
 )
-
-if(KJOTS_BUILD_KONTACT_PLUGIN)
-  target_link_libraries(kjots ${KDEPIMLIBS_KONTACTINTERFACE_LIBS} )
-endif()
 
 
 install(TARGETS kjots  ${INSTALL_TARGETS_DEFAULT_ARGS} )
