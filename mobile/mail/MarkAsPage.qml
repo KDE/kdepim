@@ -40,6 +40,7 @@ PlasmaComponents.Page {
       onClicked: pageStack.pop()
     }
   }
+  //END Tools
 
   QML.Rectangle {
     anchors.right : root.right
