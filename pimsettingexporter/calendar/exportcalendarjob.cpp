@@ -26,6 +26,7 @@
 #include <KTemporaryFile>
 
 #include <QFile>
+#include <QDir>
 #include <QWidget>
 
 
@@ -69,27 +70,28 @@ void ExportCalendarJob::backupResources()
     Akonadi::AgentManager *manager = Akonadi::AgentManager::self();
     const Akonadi::AgentInstance::List list = manager->instances();
     foreach( const Akonadi::AgentInstance &agent, list ) {
-        const QStringList capabilities( agent.type().capabilities() );
-#if 0
-        if (agent.type().mimeTypes().contains( KMime::Message::mimeType())) {
-            if ( capabilities.contains( QLatin1String("Resource") ) &&
-                 !capabilities.contains( QLatin1String("Virtual") ) &&
-                 !capabilities.contains( QLatin1String("MailTransport") ) )
-            {
-                const QString identifier = agent.identifier();
-                //Need to store other resources
-                if (identifier.contains(QLatin1String("ical"))) {
-                    storeResources(identifier,Utils::resourcesPath());
+        const QString identifier = agent.identifier();
+        //TODO look at if we have other resources
+        if (identifier.contains(QLatin1String("akonadi_ical_resource_"))) {
+            const QString identifier = agent.identifier();
+            const QString archivePath = Utils::calendarPath() + identifier + QDir::separator();
+
+            KUrl url = Utils::resourcePath(agent);
+            if (!url.isEmpty()) {
+                const QString filename = url.fileName();
+                const bool fileAdded  = archive()->addLocalFile(url.path(), archivePath + filename);
+                if (fileAdded) {
+                    const QString errorStr = Utils::storeResources(archive(), identifier, archivePath);
+                    if (!errorStr.isEmpty())
+                        Q_EMIT error(errorStr);
+                    Q_EMIT info(i18n("\"%1\" was backuped.",filename));
                 } else {
-                    qDebug()<<" resource \""<<identifier<<"\" will not store";
+                    Q_EMIT error(i18n("\"%1\" file cannot be added to backup file.",filename));
                 }
             }
         }
-#endif
     }
 
-
-    //TODO backup calendar
     Q_EMIT info(i18n("Resources backup done."));
 }
 
