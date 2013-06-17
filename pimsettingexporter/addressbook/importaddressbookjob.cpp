@@ -20,6 +20,7 @@
 
 #include <KTempDir>
 #include <KStandardDirs>
+#include <KLocale>
 
 #include <QFile>
 
@@ -47,14 +48,37 @@ void ImportAddressbookJob::start()
 void ImportAddressbookJob::restoreResources()
 {
     //TODO
+    Q_EMIT info(i18n("Restore resources..."));
+    Q_EMIT info(i18n("Resources restored."));
 }
 
 void ImportAddressbookJob::restoreConfig()
 {
+    const QString kaddressbookStr(QLatin1String("kaddressbookrc"));
+    const KArchiveEntry* kaddressbookrcentry  = mArchiveDirectory->entry(Utils::configsPath() + kaddressbookStr);
+    if (kaddressbookrcentry && kaddressbookrcentry->isFile()) {
+        const KArchiveFile* kaddressbookrcFile = static_cast<const KArchiveFile*>(kaddressbookrcentry);
+        const QString kaddressbookrc = KStandardDirs::locateLocal( "config",  kaddressbookStr);
+        if (QFile(kaddressbookrc).exists()) {
+            if (overwriteConfigMessageBox(kaddressbookStr)) {
+                importkalarmConfig(kaddressbookrcFile, kaddressbookrc, kaddressbookStr, Utils::configsPath());
+            }
+        } else {
+            importkalarmConfig(kaddressbookrcFile, kaddressbookrc, kaddressbookStr, Utils::configsPath());
+        }
+    }
+    Q_EMIT info(i18n("Config restored."));
+}
+
+void ImportAddressbookJob::importkalarmConfig(const KArchiveFile* file, const QString &config, const QString &filename,const QString &prefix)
+{
+    copyToFile(file, config, filename, prefix);
+    KSharedConfig::Ptr kaddressbookConfig = KSharedConfig::openConfig(config);
 
     //TODO
-    //kaddressbookrc
+    kaddressbookConfig->sync();
 }
+
 
 QString ImportAddressbookJob::componentName() const
 {

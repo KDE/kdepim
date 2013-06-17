@@ -20,8 +20,8 @@
 
 #include <KTempDir>
 #include <KStandardDirs>
-
 #include <KArchive>
+#include <KLocale>
 
 #include <QFile>
 
@@ -48,6 +48,9 @@ void ImportAlarmJob::start()
 
 void ImportAlarmJob::restoreResources()
 {
+    Q_EMIT info(i18n("Restore resources..."));
+    Q_EMIT info(i18n("Resources restored."));
+
     //TODO
 }
 
@@ -66,6 +69,7 @@ void ImportAlarmJob::restoreConfig()
             importkalarmConfig(kalarmrcFile,kalarmrc,kalarmStr,Utils::configsPath());
         }
     }
+    Q_EMIT info(i18n("Config restored."));
 }
 
 void ImportAlarmJob::importkalarmConfig(const KArchiveFile* kalarmFile, const QString &kalarmrc, const QString &filename,const QString &prefix)
@@ -76,8 +80,6 @@ void ImportAlarmJob::importkalarmConfig(const KArchiveFile* kalarmFile, const QS
     //TODO
     kalarmConfig->sync();
 }
-
-
 
 QString ImportAlarmJob::componentName() const
 {

@@ -21,6 +21,7 @@
 #include <KZip>
 #include <KTempDir>
 #include <KStandardDirs>
+#include <KLocale>
 
 #include <QFile>
 
@@ -47,6 +48,8 @@ void ImportCalendarJob::start()
 void ImportCalendarJob::restoreResources()
 {
     //TODO
+    Q_EMIT info(i18n("Restore resources..."));
+    Q_EMIT info(i18n("Resources restored."));
 }
 
 void ImportCalendarJob::restoreConfig()
@@ -58,12 +61,13 @@ void ImportCalendarJob::restoreConfig()
         const QString korganizerPrinterrc = KStandardDirs::locateLocal( "config",  korganizerPrinterrcStr);
         if (QFile(korganizerPrinterrc).exists()) {
             if (overwriteConfigMessageBox(korganizerPrinterrcStr)) {
-                copyToFile(korganizerFile, korganizerPrinterrc,korganizerPrinterrcStr,Utils::configsPath());
+                copyToFile(korganizerFile, korganizerPrinterrc, korganizerPrinterrcStr, Utils::configsPath());
             }
         } else {
             copyToFile(korganizerFile, korganizerPrinterrc, korganizerPrinterrcStr, Utils::configsPath());
         }
     }
+    Q_EMIT info(i18n("Config restored."));
     //TODO: korgacrc  korganizerrc
 }
 

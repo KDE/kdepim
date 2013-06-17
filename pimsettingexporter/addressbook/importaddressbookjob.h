@@ -22,6 +22,7 @@
 
 class ArchiveStorage;
 class QWidget;
+class KArchiveFile;
 
 class ImportAddressbookJob : public AbstractImportExportJob
 {
@@ -35,6 +36,7 @@ public:
     QString componentName() const;
 
 private:
+    void importkalarmConfig(const KArchiveFile* file, const QString &config, const QString &filename,const QString &prefix);
     void restoreResources();
     void restoreConfig();
 };
