@@ -49,9 +49,25 @@ void SelectionTypeDialog::slotItemSelected(bool selected)
     //enableButtonOk(selected);
 }
 
-Utils::StoredTypes SelectionTypeDialog::backupTypesSelected(int &numberOfStep) const
+Utils::StoredTypes SelectionTypeDialog::kmailTypesSelected(int &numberOfStep) const
 {
     return mSelectionTreeWidget->kmailStoredType(numberOfStep);
 }
+
+Utils::StoredTypes SelectionTypeDialog::kaddressbookTypesSelected(int &numberOfStep) const
+{
+    return mSelectionTreeWidget->kaddressbookStoredType(numberOfStep);
+}
+
+Utils::StoredTypes SelectionTypeDialog::kalarmTypesSelected(int &numberOfStep) const
+{
+    return mSelectionTreeWidget->kalarmStoredType(numberOfStep);
+}
+
+Utils::StoredTypes SelectionTypeDialog::korganizerTypesSelected(int &numberOfStep) const
+{
+    return mSelectionTreeWidget->korganizerStoredType(numberOfStep);
+}
+
 
 #include "selectiontypedialog.moc"

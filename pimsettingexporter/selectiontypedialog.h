@@ -31,7 +31,10 @@ public:
     explicit SelectionTypeDialog(QWidget * parent);
     ~SelectionTypeDialog();
 
-    Utils::StoredTypes backupTypesSelected(int &numberOfStep) const;
+    Utils::StoredTypes kmailTypesSelected(int &numberOfStep) const;
+    Utils::StoredTypes kaddressbookTypesSelected(int &numberOfStep) const;
+    Utils::StoredTypes kalarmTypesSelected(int &numberOfStep) const;
+    Utils::StoredTypes korganizerTypesSelected(int &numberOfStep) const;
 
 private Q_SLOTS:
     void slotItemSelected(bool selected);
