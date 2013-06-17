@@ -18,12 +18,147 @@
 
 #include "selectiontypetreewidget.h"
 
+#include <KLocale>
+
+#include <QDebug>
+
 SelectionTypeTreeWidget::SelectionTypeTreeWidget(QWidget *parent)
     : QTreeWidget(parent)
 {
+    initialize();
 }
 
 SelectionTypeTreeWidget::~SelectionTypeTreeWidget()
 {
 
 }
+
+void SelectionTypeTreeWidget::initialize()
+{
+    mKmailItem = new QTreeWidgetItem(this);
+    mKmailItem->setText(0, QLatin1String("KMail"));
+    createSubItem(mKmailItem, Utils::Identity);
+    createSubItem(mKmailItem, Utils::Mails);
+    createSubItem(mKmailItem, Utils::MailTransport);
+    createSubItem(mKmailItem, Utils::Resources);
+    createSubItem(mKmailItem, Utils::Config);
+    createSubItem(mKmailItem, Utils::AkonadiDb);
+
+    mKaddressbookItem = new QTreeWidgetItem(this);
+    mKaddressbookItem->setText(0, QLatin1String("KAddressBook"));
+    createSubItem(mKaddressbookItem, Utils::Resources);
+    createSubItem(mKaddressbookItem, Utils::Config);
+
+    mKalarmItem = new QTreeWidgetItem(this);
+    mKalarmItem->setText(0, QLatin1String("KAlarm"));
+    createSubItem(mKalarmItem, Utils::Resources);
+    createSubItem(mKalarmItem, Utils::Config);
+
+    mKorganizerItem = new QTreeWidgetItem(this);
+    mKorganizerItem->setText(0, QLatin1String("KOrganizer"));
+    createSubItem(mKorganizerItem, Utils::Resources);
+    createSubItem(mKorganizerItem, Utils::Config);
+}
+
+
+Utils::StoredTypes SelectionTypeTreeWidget::typeChecked(QTreeWidgetItem *parent, int &numberOfStep) const
+{
+    numberOfStep = 0;
+    Utils::StoredTypes types = Utils::None;
+    for (int i = 0; i<parent->childCount(); ++i) {
+        QTreeWidgetItem *item = parent->child(i);
+        if (item->checkState(0) == Qt::Checked) {
+            types |= static_cast<Utils::StoredType>(item->data(0, action).toInt());
+        }
+    }
+    return types;
+}
+
+Utils::StoredTypes SelectionTypeTreeWidget::kmailStoredType(int &numberOfStep) const
+{
+    return typeChecked(mKmailItem, numberOfStep);
+}
+
+Utils::StoredTypes SelectionTypeTreeWidget::kaddressbookStoredType(int &numberOfStep) const
+{
+    return typeChecked(mKaddressbookItem, numberOfStep);
+}
+
+Utils::StoredTypes SelectionTypeTreeWidget::kalarmStoredType(int &numberOfStep) const
+{
+    return typeChecked(mKalarmItem, numberOfStep);
+}
+
+Utils::StoredTypes SelectionTypeTreeWidget::korganizerStoredType(int &numberOfStep) const
+{
+    return typeChecked(mKorganizerItem, numberOfStep);
+}
+
+
+void SelectionTypeTreeWidget::createSubItem(QTreeWidgetItem *parent, Utils::StoredType type)
+{
+    switch (type) {
+    case Utils::None:
+        break;
+    case Utils::Identity:
+    {
+        QTreeWidgetItem *item = new QTreeWidgetItem(parent);
+        item->setText(0, i18n("Identity"));
+        item->setCheckState(0, Qt::Unchecked);
+        item->setData(0, action, type);
+        break;
+    }
+    case Utils::Mails:
+    {
+        QTreeWidgetItem *item = new QTreeWidgetItem(parent);
+        item->setText(0, i18n("Mails"));
+        item->setCheckState(0, Qt::Unchecked);
+        item->setData(0, action, type);
+        break;
+    }
+    case Utils::MailTransport:
+    {
+        QTreeWidgetItem *item = new QTreeWidgetItem(parent);
+        item->setText(0, i18n("Mail Transport"));
+        item->setCheckState(0, Qt::Unchecked);
+        item->setData(0, action, type);
+        break;
+    }
+    case Utils::Resources:
+    {
+        QTreeWidgetItem *item = new QTreeWidgetItem(parent);
+        item->setText(0, i18n("Resources"));
+        item->setCheckState(0, Qt::Unchecked);
+        item->setData(0, action, type);
+        break;
+    }
+    case Utils::Config:
+    {
+        QTreeWidgetItem *item = new QTreeWidgetItem(parent);
+        item->setText(0, i18n("Config"));
+        item->setCheckState(0, Qt::Unchecked);
+        item->setData(0, action, type);
+        break;
+    }
+    case Utils::AkonadiDb:
+    {
+        QTreeWidgetItem *item = new QTreeWidgetItem(parent);
+        item->setText(0, i18n("Akonadi Database"));
+        item->setCheckState(0, Qt::Unchecked);
+        item->setData(0, action, type);
+        break;
+    }
+    case Utils::Nepomuk:
+    {
+        QTreeWidgetItem *item = new QTreeWidgetItem(parent);
+        item->setText(0, i18n("Nepomuk Database"));
+        item->setCheckState(0, Qt::Unchecked);
+        item->setData(0, action, type);
+        break;
+    }
+    default:
+        qDebug()<<" Type not supported: "<<type;
+    }
+}
+
+#include "selectiontypetreewidget.moc"

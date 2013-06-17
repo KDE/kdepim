@@ -20,12 +20,35 @@
 
 #include <QTreeWidget>
 
+#include "utils.h"
+
+class QTreeWidgetItem;
+
 class SelectionTypeTreeWidget : public QTreeWidget
 {
     Q_OBJECT
 public:
     explicit SelectionTypeTreeWidget(QWidget *parent=0);
     ~SelectionTypeTreeWidget();
+
+    Utils::StoredTypes kmailStoredType(int &numberOfStep) const;
+    Utils::StoredTypes kaddressbookStoredType(int &numberOfStep) const;
+    Utils::StoredTypes kalarmStoredType(int &numberOfStep) const;
+    Utils::StoredTypes korganizerStoredType(int &numberOfStep) const;
+
+private:
+    enum ActionType {
+        action = Qt::UserRole + 1
+    };
+
+    void initialize();
+    void createSubItem(QTreeWidgetItem *parent, Utils::StoredType type);
+    Utils::StoredTypes typeChecked(QTreeWidgetItem *parent, int &numberOfStep) const;
+
+    QTreeWidgetItem *mKmailItem;
+    QTreeWidgetItem *mKalarmItem;
+    QTreeWidgetItem *mKaddressbookItem;
+    QTreeWidgetItem *mKorganizerItem;
 };
 
 #endif // SELECTIONTYPETREEWIDGET_H
