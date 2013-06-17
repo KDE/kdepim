@@ -24,7 +24,6 @@ set(pimsettingexporter_SRCS
   mail/importmailjob.cpp
   pimsettingexporterkernel.cpp
   utils.cpp
-  selecttypewidget.cpp
   selectiontypedialog.cpp
   akonadidatabase.cpp
   calendar/exportcalendarjob.cpp
@@ -37,8 +36,6 @@ set(pimsettingexporter_SRCS
 )
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
-
-kde4_add_ui_files(pimsettingexporter_SRCS ui/selecttypewidget.ui )
 
 kde4_add_executable(pimsettingexporter ${pimsettingexporter_SRCS})
 

@@ -17,7 +17,6 @@
 
 #include "selectiontypedialog.h"
 #include "selectiontypetreewidget.h"
-//#include "selecttypewidget.h"
 
 #include <KLocale>
 #include <QHBoxLayout>
@@ -38,7 +37,7 @@ SelectionTypeDialog::SelectionTypeDialog(QWidget *parent)
     setMainWidget(mainWidget);
     //enableButtonOk(false);
     //connect(mWidget, SIGNAL(itemSelected(bool)), SLOT(slotItemSelected(bool)));
-    resize(400, 200);
+    resize(600, 400);
 }
 
 SelectionTypeDialog::~SelectionTypeDialog()

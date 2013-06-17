@@ -26,6 +26,7 @@ SelectionTypeTreeWidget::SelectionTypeTreeWidget(QWidget *parent)
     : QTreeWidget(parent)
 {
     initialize();
+    expandAll();
 }
 
 SelectionTypeTreeWidget::~SelectionTypeTreeWidget()
