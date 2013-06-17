@@ -46,6 +46,7 @@ TagWidget::TagWidget(const QList<KActionCollection*>& actionCollections, QWidget
 
     //First row for renaming
     mTagNameLineEdit = new KLineEdit( this );
+    mTagNameLineEdit->setClearButtonShown(true);
     mTagNameLineEdit->setTrapReturnKey( true );
     settings->addWidget( mTagNameLineEdit, 1, 1 );
 
