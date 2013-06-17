@@ -30,6 +30,8 @@
 
 #include <QWidget>
 #include <QProgressDialog>
+#include <QFile>
+#include <QDir>
 
 AbstractImportExportJob::AbstractImportExportJob(QWidget *parent, ArchiveStorage *archiveStorage, Utils::StoredTypes typeSelected, int numberOfStep)
     : QObject(parent),
@@ -136,5 +138,21 @@ void AbstractImportExportJob::initializeImportJob()
     connect(mCreateResource,SIGNAL(createResourceInfo(QString)),SIGNAL(info(QString)));
     connect(mCreateResource,SIGNAL(createResourceError(QString)),SIGNAL(error(QString)));
 }
+
+void AbstractImportExportJob::copyToFile(const KArchiveFile *archivefile, const QString &dest, const QString &filename, const QString &prefix)
+{
+    QDir dir(mTempDirName);
+    dir.mkdir(prefix);
+
+    const QString copyToDirName(mTempDirName + QLatin1Char('/') + prefix);
+    archivefile->copyTo(copyToDirName);
+    QFile file;
+    file.setFileName(copyToDirName + QLatin1Char('/') + filename);
+
+    if (!file.copy(dest)) {
+        KMessageBox::error(mParent,i18n("File \"%1\" can not be copied to \"%2\".",filename,dest),i18n("Copy file"));
+    }
+}
+
 
 #include "abstractimportexportjob.moc"

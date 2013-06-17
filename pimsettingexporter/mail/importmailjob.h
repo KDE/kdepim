@@ -53,7 +53,6 @@ private:
     void searchAllFiles(const KArchiveDirectory *dir,const QString &prefix);
     void storeMailArchiveResource(const KArchiveDirectory*dir, const QString &prefix);
 
-    void copyToFile(const KArchiveFile *file, const QString &dest, const QString &filename,const QString &prefix);
     void mergeLdapConfig(const KArchiveFile *archivefile, const QString &filename, const QString &prefix);
     void mergeKmailSnippetConfig(const KArchiveFile *archivefile, const QString &filename, const QString &prefix);
     void mergeArchiveMailAgentConfig(const KArchiveFile *archivefile, const QString &filename, const QString &prefix);

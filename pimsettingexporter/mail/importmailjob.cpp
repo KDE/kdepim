@@ -515,21 +515,6 @@ void ImportMailJob::restoreMails()
     Q_EMIT info(i18n("Mails restored."));
 }
 
-void ImportMailJob::copyToFile(const KArchiveFile * archivefile, const QString& dest, const QString&filename, const QString&prefix)
-{
-    QDir dir(mTempDirName);
-    dir.mkdir(prefix);
-
-    const QString copyToDirName(mTempDirName + QLatin1Char('/') + prefix);
-    archivefile->copyTo(copyToDirName);
-    QFile file;
-    file.setFileName(copyToDirName + QLatin1Char('/') + filename);
-
-    if (!file.copy(dest)) {
-        KMessageBox::error(mParent,i18n("File \"%1\" can not be copied to \"%2\".",filename,dest),i18n("Copy file"));
-    }
-}
-
 void ImportMailJob::restoreConfig()
 {
     const QString filtersPath(Utils::configsPath() + QLatin1String("filters"));
