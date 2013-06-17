@@ -77,8 +77,9 @@ void ExportAlarmJob::backupResources()
                 const QString filename = url.fileName();
                 const bool fileAdded  = archive()->addLocalFile(url.path(), archivePath + filename);
                 if (fileAdded) {
-                    //TODO
-                    //storeResources(identifier, archivePath );
+                    const QString errorStr = BackupMailUtil::storeResources(archive(), identifier, archivePath);
+                    if (!errorStr.isEmpty())
+                        Q_EMIT error(errorStr);
                     Q_EMIT info(i18n("\"%1\" was backuped.",filename));
                 }
                 else
