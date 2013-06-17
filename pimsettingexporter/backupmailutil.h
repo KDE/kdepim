@@ -21,6 +21,10 @@
 #include <KUrl>
 #include <KSharedConfig>
 
+namespace Akonadi {
+class AgentInstance;
+}
+
 namespace BackupMailUtil {
 enum BackupType {
     None = 0,
@@ -48,5 +52,6 @@ QString addressbookPath();
 QString alarmPath();
 void convertCollectionListToRealPath(KConfigGroup &group, const QString &currentKey);
 void convertCollectionToRealPath(KConfigGroup &group, const QString &currentKey);
+KUrl resourcePath(const Akonadi::AgentInstance &agent);
 }
 #endif // UTIL_H

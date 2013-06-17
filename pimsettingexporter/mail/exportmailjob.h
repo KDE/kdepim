@@ -48,7 +48,6 @@ private:
     void backupNepomuk();
     void writeDirectory(QString path, const QString &relativePath, KZip *mailArchive);
     void storeResources(const QString&identifier, const QString &path);
-    KUrl resourcePath(const Akonadi::AgentInstance &agent) const;
     bool backupMailData(const KUrl &url, const QString &archivePath);
     bool checkProgram();
 };

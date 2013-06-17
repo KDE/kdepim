@@ -20,6 +20,8 @@
 #include "mailcommon/util/mailutil.h"
 
 #include <KConfigGroup>
+#include <KStandardDirs>
+#include <KSharedConfig>
 #include <QDir>
 
 QString BackupMailUtil::transportsPath()
@@ -127,3 +129,14 @@ void BackupMailUtil::convertCollectionToRealPath(KConfigGroup &group, const QStr
         }
     }
 }
+
+KUrl BackupMailUtil::resourcePath(const Akonadi::AgentInstance &agent)
+{
+    const QString agentFileName = agent.identifier() + QLatin1String("rc");
+    const QString configFileName = KStandardDirs::locateLocal( "config", agentFileName );
+
+    KSharedConfigPtr resourceConfig = KSharedConfig::openConfig( configFileName );
+    KUrl url = BackupMailUtil::resourcePath(resourceConfig);
+    return url;
+}
+

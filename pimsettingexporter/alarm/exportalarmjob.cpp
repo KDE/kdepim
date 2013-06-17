@@ -19,6 +19,7 @@
 
 #include "messageviewer/utils/kcursorsaver.h"
 
+#include <Akonadi/AgentManager>
 
 #include <KLocale>
 #include <KStandardDirs>
@@ -26,7 +27,7 @@
 
 #include <QWidget>
 #include <QFile>
-
+#include <QDir>
 
 ExportAlarmJob::ExportAlarmJob(QWidget *parent, BackupMailUtil::BackupTypes typeSelected, ArchiveStorage *archiveStorage,int numberOfStep)
     : AbstractImportExportJob(parent, archiveStorage, typeSelected, numberOfStep)
@@ -62,7 +63,32 @@ void ExportAlarmJob::backupResources()
 {
     showInfo(i18n("Backing up resources..."));
     MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
-    //TODO backup calendar
+
+    Akonadi::AgentManager *manager = Akonadi::AgentManager::self();
+    const Akonadi::AgentInstance::List list = manager->instances();
+    foreach( const Akonadi::AgentInstance &agent, list ) {
+        const QString identifier = agent.identifier();
+        if (identifier.contains(QLatin1String("akonadi_kalarm_resource_"))) {
+            const QString identifier = agent.identifier();
+            const QString archivePath = BackupMailUtil::alarmPath() + identifier + QDir::separator();
+
+            KUrl url = BackupMailUtil::resourcePath(agent);
+            if (!url.isEmpty()) {
+                const QString filename = url.fileName();
+                const bool fileAdded  = archive()->addLocalFile(url.path(), archivePath + filename);
+                if (fileAdded) {
+                    //TODO
+                    //storeResources(identifier, archivePath );
+                    Q_EMIT info(i18n("\"%1\" was backuped.",filename));
+                }
+                else
+                    Q_EMIT error(i18n("\"%1\" file cannot be added to backup file.",filename));
+            }
+
+            //Store settings + store files
+        }
+    }
+
     Q_EMIT info(i18n("Resources backup done."));
 }
 
