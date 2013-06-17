@@ -20,6 +20,7 @@
 
 #include <KLocale>
 
+#include <QHeaderView>
 #include <QDebug>
 
 SelectionTypeTreeWidget::SelectionTypeTreeWidget(QWidget *parent)
@@ -27,6 +28,7 @@ SelectionTypeTreeWidget::SelectionTypeTreeWidget(QWidget *parent)
 {
     initialize();
     expandAll();
+    header()->hide();
 }
 
 SelectionTypeTreeWidget::~SelectionTypeTreeWidget()
