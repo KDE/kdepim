@@ -1,4 +1,4 @@
-2013-06-11:
+2013-06-17:
 -----------
 Zip structure is :
 Root
@@ -26,6 +26,11 @@ Root
 |       |---------akonadi_archivemail_agentrc
 |       |---------kabldaprc
 |       |---------templatesconfigurationrc
+|       |---------kalarmrc
+|       |---------korganizerrc
+|       |---------korganizer_printing.rc 
+|       |---------korgacrc
+|       |---------kaddressbookrc
 |
 |-----akonadi
 |       |---------<archive akonadi>

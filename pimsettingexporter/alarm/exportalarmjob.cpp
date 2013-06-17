@@ -85,8 +85,6 @@ void ExportAlarmJob::backupResources()
                 else
                     Q_EMIT error(i18n("\"%1\" file cannot be added to backup file.",filename));
             }
-
-            //Store settings + store files
         }
     }
 
