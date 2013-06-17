@@ -16,6 +16,7 @@ include_directories(${AKONADI_INCLUDE_DIR}
 
 set(pimsettingexporter_SRCS
   main.cpp
+  selectiontypetreewidget.cpp
   abstractimportexportjob.cpp
   pimsettingexporterwindow.cpp
   backupmailwidget.cpp
