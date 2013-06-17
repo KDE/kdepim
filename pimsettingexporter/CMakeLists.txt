@@ -22,7 +22,7 @@ set(pimsettingexporter_SRCS
   logwidget.cpp
   mail/exportmailjob.cpp
   mail/importmailjob.cpp
-  backupmailkernel.cpp
+  pimsettingexporterkernel.cpp
   utils.cpp
   selecttypewidget.cpp
   selectiontypedialog.cpp

@@ -27,7 +27,7 @@
 
 #include "alarm/exportalarmjob.h"
 
-#include "backupmailkernel.h"
+#include "pimsettingexporterkernel.h"
 #include "selectiontypedialog.h"
 #include "utils.h"
 #include "archivestorage.h"
@@ -54,7 +54,7 @@ PimSettingExporterWindow::PimSettingExporterWindow(QWidget *parent)
     KGlobal::locale()->insertCatalog( QLatin1String("libmailcommon") );
     KGlobal::locale()->insertCatalog( QLatin1String("libpimcommon") );
 
-    BackupMailKernel *kernel = new BackupMailKernel( this );
+    PimSettingExporterKernel *kernel = new PimSettingExporterKernel( this );
     CommonKernel->registerKernelIf( kernel ); //register KernelIf early, it is used by the Filter classes
     CommonKernel->registerSettingsIf( kernel ); //SettingsIf is used in FolderTreeWidget
 

@@ -15,10 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "backupmailkernel.h"
-#include <kabc/addressee.h>
-#include <kabc/contactgroup.h>
-
+#include "pimsettingexporterkernel.h"
 
 #include <kglobal.h>
 #include <kpimidentities/identitymanager.h>
@@ -29,7 +26,7 @@
 #include <akonadi/entitymimetypefiltermodel.h>
 #include <akonadi/changerecorder.h>
 
-BackupMailKernel::BackupMailKernel( QObject *parent )
+PimSettingExporterKernel::PimSettingExporterKernel( QObject *parent )
     : QObject( parent )
 {
     mMessageSender = new MessageComposer::AkonadiSender( this );
@@ -50,76 +47,76 @@ BackupMailKernel::BackupMailKernel( QObject *parent )
     mCollectionModel->setSortCaseSensitivity( Qt::CaseInsensitive );
 }
 
-KPIMIdentities::IdentityManager *BackupMailKernel::identityManager()
+KPIMIdentities::IdentityManager *PimSettingExporterKernel::identityManager()
 {
     return mIdentityManager;
 }
 
-MessageComposer::MessageSender *BackupMailKernel::msgSender()
+MessageComposer::MessageSender *PimSettingExporterKernel::msgSender()
 {
     return mMessageSender;
 }
 
-Akonadi::EntityMimeTypeFilterModel *BackupMailKernel::collectionModel() const
+Akonadi::EntityMimeTypeFilterModel *PimSettingExporterKernel::collectionModel() const
 {
     return mCollectionModel;
 }
 
-KSharedConfig::Ptr BackupMailKernel::config()
+KSharedConfig::Ptr PimSettingExporterKernel::config()
 {
     return KGlobal::config();
 }
 
-void BackupMailKernel::syncConfig()
+void PimSettingExporterKernel::syncConfig()
 {
     Q_ASSERT( false );
 }
 
-MailCommon::JobScheduler* BackupMailKernel::jobScheduler() const
+MailCommon::JobScheduler* PimSettingExporterKernel::jobScheduler() const
 {
     Q_ASSERT( false );
     return 0;
 }
 
-Akonadi::ChangeRecorder *BackupMailKernel::folderCollectionMonitor() const
+Akonadi::ChangeRecorder *PimSettingExporterKernel::folderCollectionMonitor() const
 {
     return mFolderCollectionMonitor->monitor();
 }
 
-void BackupMailKernel::updateSystemTray()
+void PimSettingExporterKernel::updateSystemTray()
 {
     Q_ASSERT( false );
 }
 
-bool BackupMailKernel::showPopupAfterDnD()
+bool PimSettingExporterKernel::showPopupAfterDnD()
 {
     return false;
 }
 
-qreal BackupMailKernel::closeToQuotaThreshold()
+qreal PimSettingExporterKernel::closeToQuotaThreshold()
 {
     return 80;
 }
 
-QStringList BackupMailKernel::customTemplates()
+QStringList PimSettingExporterKernel::customTemplates()
 {
     Q_ASSERT( false );
     return QStringList();
 }
 
-bool BackupMailKernel::excludeImportantMailFromExpiry()
+bool PimSettingExporterKernel::excludeImportantMailFromExpiry()
 {
     Q_ASSERT( false );
     return true;
 }
 
-Akonadi::Entity::Id BackupMailKernel::lastSelectedFolder()
+Akonadi::Entity::Id PimSettingExporterKernel::lastSelectedFolder()
 {
     Q_ASSERT( false );
     return Akonadi::Entity::Id();
 }
 
-void BackupMailKernel::setLastSelectedFolder(const Akonadi::Entity::Id& col)
+void PimSettingExporterKernel::setLastSelectedFolder(const Akonadi::Entity::Id& col)
 {
     Q_UNUSED(col);
 }
