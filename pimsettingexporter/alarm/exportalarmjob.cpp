@@ -21,8 +21,11 @@
 
 
 #include <KLocale>
+#include <KStandardDirs>
+#include <KTemporaryFile>
 
 #include <QWidget>
+#include <QFile>
 
 
 ExportAlarmJob::ExportAlarmJob(QWidget *parent, BackupMailUtil::BackupTypes typeSelected, ArchiveStorage *archiveStorage,int numberOfStep)
@@ -65,9 +68,24 @@ void ExportAlarmJob::backupResources()
 
 void ExportAlarmJob::backupConfig()
 {
-    //kalarmrc
     showInfo(i18n("Backing up config..."));
     MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+    const QString kalarmStr(QLatin1String("kalarmrc"));
+    const QString kalarmrc = KStandardDirs::locateLocal( "config", kalarmStr);
+    if (QFile(kalarmrc).exists()) {
+        KSharedConfigPtr kalarm = KSharedConfig::openConfig(kalarmrc);
+
+        KTemporaryFile tmp;
+        tmp.open();
+
+        KConfig *kalarmConfig = kalarm->copyTo( tmp.fileName() );
+
+        //TODO adapt collection
+        kalarmConfig->sync();
+        backupFile(tmp.fileName(), BackupMailUtil::configsPath(), kalarmStr);
+    }
+
+
     Q_EMIT info(i18n("Config backup done."));
 
 }
