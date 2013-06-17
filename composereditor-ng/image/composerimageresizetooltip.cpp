@@ -63,7 +63,7 @@ ComposerImageResizeToolTip::~ComposerImageResizeToolTip()
     delete d;
 }
 
-void ComposerImageResizeToolTip::displaySize(const QSize& s)
+void ComposerImageResizeToolTip::displaySize(const QSize &s)
 {
     d->displaySize(s);
 }

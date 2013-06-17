@@ -606,7 +606,7 @@ void ComposerViewPrivate::_k_slotInsertHtml()
 void ComposerViewPrivate::_k_setTextBackgroundColor()
 {
     QColor newColor = ComposerEditorNG::Utils::convertRgbToQColor(evaluateJavascript(QLatin1String("getTextBackgroundColor()")).toString());
-    const int result = KColorDialog::getColor(newColor,q);
+    const int result = KColorDialog::getColor(newColor, q);
     if (result == QDialog::Accepted) {
         execCommand(QLatin1String("hiliteColor"), newColor.name());
     }
@@ -625,7 +625,7 @@ void ComposerViewPrivate::_k_slotDeleteText()
 void ComposerViewPrivate::_k_setTextForegroundColor()
 {
     QColor newColor = ComposerEditorNG::Utils::convertRgbToQColor(evaluateJavascript(QLatin1String("getTextForegroundColor()")).toString());
-    const int result = KColorDialog::getColor(newColor,q);
+    const int result = KColorDialog::getColor(newColor, q);
     if (result == QDialog::Accepted) {
         execCommand(QLatin1String("foreColor"), newColor.name());
     }

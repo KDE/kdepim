@@ -28,7 +28,7 @@ static QString TABLE = QLatin1String("table");
 static QString ROW = QLatin1String("tr");
 static QString CELL = QLatin1String("td");
 
-QWebElement TableHelper::tableBodyWebElement(const QWebElement&element)
+QWebElement TableHelper::tableBodyWebElement(const QWebElement &element)
 {
     const QString tagName(element.tagName().toLower());
     if (tagName == TABLE) {
@@ -51,7 +51,7 @@ QWebElement TableHelper::tableBodyWebElement(const QWebElement&element)
     }
 }
 
-QWebElement TableHelper::rowWebElement(const QWebElement&element)
+QWebElement TableHelper::rowWebElement(const QWebElement &element)
 {
     const QString tagName(element.tagName().toLower());
     if (tagName == TABLE) {
@@ -68,7 +68,7 @@ QWebElement TableHelper::rowWebElement(const QWebElement&element)
     return QWebElement();
 }
 
-QWebElement TableHelper::tableWebElement(const QWebElement&element)
+QWebElement TableHelper::tableWebElement(const QWebElement &element)
 {
     if (element.tagName().toLower() == TABLE) {
         return element;
@@ -81,7 +81,7 @@ QWebElement TableHelper::tableWebElement(const QWebElement&element)
     }
 }
 
-QWebElement TableHelper::nextCell(const QWebElement& element)
+QWebElement TableHelper::nextCell(const QWebElement &element)
 {
     QWebElement cellElement = element.nextSibling();
     //Next cell
@@ -101,7 +101,7 @@ QWebElement TableHelper::nextCell(const QWebElement& element)
     return QWebElement();
 }
 
-QWebElement TableHelper::previousCell(const QWebElement& element)
+QWebElement TableHelper::previousCell(const QWebElement &element)
 {
     QWebElement cellElement = element.previousSibling();
     //previous cell
@@ -112,7 +112,7 @@ QWebElement TableHelper::previousCell(const QWebElement& element)
     return QWebElement();
 }
 
-int TableHelper::tableRowCount(const QWebElement& element)
+int TableHelper::tableRowCount(const QWebElement &element)
 {
     int numberOfRow = 0;
     QWebElement tableBodyElement = tableBodyWebElement(element);
@@ -129,7 +129,7 @@ int TableHelper::tableRowCount(const QWebElement& element)
     return numberOfRow;
 }
 
-int TableHelper::tableColumnCount(const QWebElement& element)
+int TableHelper::tableColumnCount(const QWebElement &element)
 {
     int numberColumn = 0;
     QWebElement tableBodyElement = tableBodyWebElement(element);
@@ -155,7 +155,7 @@ int TableHelper::tableColumnCount(const QWebElement& element)
 }
 
 
-int TableHelper::currentColumn(const QWebElement& element)
+int TableHelper::currentColumn(const QWebElement &element)
 {
     QWebElement e = element;
     do {
@@ -166,7 +166,7 @@ int TableHelper::currentColumn(const QWebElement& element)
     return 0;
 }
 
-void TableHelper::removeCellContentsFromCurrentRow(const QWebElement& element)
+void TableHelper::removeCellContentsFromCurrentRow(const QWebElement &element)
 {
     QWebElement e = element;
     do {
@@ -183,7 +183,7 @@ void TableHelper::removeCellContentsFromCurrentRow(const QWebElement& element)
     }
 }
 
-int TableHelper::currentCellColSpan(const QWebElement& element)
+int TableHelper::currentCellColSpan(const QWebElement &element)
 {
     QWebElement e = element;
     if (e.tagName().toLower() == CELL) {
@@ -194,7 +194,7 @@ int TableHelper::currentCellColSpan(const QWebElement& element)
     return -1;
 }
 
-int TableHelper::currentCellRowSpan(const QWebElement& element)
+int TableHelper::currentCellRowSpan(const QWebElement &element)
 {
     QWebElement e = element;
     if (e.tagName().toLower() == CELL) {

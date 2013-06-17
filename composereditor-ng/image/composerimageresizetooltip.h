@@ -33,7 +33,7 @@ public:
     explicit ComposerImageResizeToolTip(QWidget *parent);
     ~ComposerImageResizeToolTip();
 
-    void displaySize(const QSize& s);
+    void displaySize(const QSize &s);
 
 private:
     friend class ComposerImageResizeToolTipPrivate;

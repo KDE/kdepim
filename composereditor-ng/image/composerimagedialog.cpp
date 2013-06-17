@@ -224,7 +224,7 @@ ComposerImageDialog::ComposerImageDialog(QWidget *parent)
     d->initialize();
 }
 
-ComposerImageDialog::ComposerImageDialog(const QWebElement& element, QWidget *parent)
+ComposerImageDialog::ComposerImageDialog(const QWebElement &element, QWidget *parent)
     : KDialog(parent), d(new ComposerImageDialogPrivate(this))
 {
     d->webElement = element;
