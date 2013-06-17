@@ -15,7 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "backupmailwindow.h"
+#include "pimsettingexporterwindow.h"
 #include "backupmailwidget.h"
 #include "mail/exportmailjob.h"
 #include "mail/importmailjob.h"
@@ -45,7 +45,7 @@
 
 #include <QPointer>
 
-BackupMailWindow::BackupMailWindow(QWidget *parent)
+PimSettingExporterWindow::PimSettingExporterWindow(QWidget *parent)
     : KXmlGuiWindow(parent),
       mBackupData(0),
       mRestoreData(0)
@@ -70,13 +70,13 @@ BackupMailWindow::BackupMailWindow(QWidget *parent)
     }
 }
 
-BackupMailWindow::~BackupMailWindow()
+PimSettingExporterWindow::~PimSettingExporterWindow()
 {
     delete mRestoreData;
     delete mBackupData;
 }
 
-void BackupMailWindow::setupActions(bool canZipFile)
+void PimSettingExporterWindow::setupActions(bool canZipFile)
 {
     KActionCollection* ac=actionCollection();
 
@@ -91,7 +91,7 @@ void BackupMailWindow::setupActions(bool canZipFile)
     KStandardAction::quit( this, SLOT(close()), ac );
 }
 
-void BackupMailWindow::slotBackupData()
+void PimSettingExporterWindow::slotBackupData()
 {
     if (KMessageBox::warningYesNo(this,i18n("Before to backup data, close all kdepim applications. Do you want to continue?"),i18n("Backup"))== KMessageBox::No)
         return;
@@ -149,18 +149,18 @@ void BackupMailWindow::slotBackupData()
     }
 }
 
-void BackupMailWindow::slotAddInfo(const QString& info)
+void PimSettingExporterWindow::slotAddInfo(const QString& info)
 {
     mBackupMailWidget->addInfoLogEntry(info);
 }
 
-void BackupMailWindow::slotAddError(const QString& info)
+void PimSettingExporterWindow::slotAddError(const QString& info)
 {
     mBackupMailWidget->addErrorLogEntry(info);
 }
 
 
-void BackupMailWindow::slotRestoreData()
+void PimSettingExporterWindow::slotRestoreData()
 {
     if (KMessageBox::warningYesNo(this,i18n("Before to restore data, close all kdepim applications. Do you want to continue?"),i18n("Backup"))== KMessageBox::No)
         return;
@@ -195,7 +195,7 @@ void BackupMailWindow::slotRestoreData()
     }
 }
 
-bool BackupMailWindow::canZip() const
+bool PimSettingExporterWindow::canZip() const
 {
     const QString zip = KStandardDirs::findExe( QLatin1String("zip") );
     if (zip.isEmpty()) {
@@ -204,4 +204,4 @@ bool BackupMailWindow::canZip() const
     return true;
 }
 
-#include "backupmailwindow.moc"
+#include "pimsettingexporterwindow.moc"

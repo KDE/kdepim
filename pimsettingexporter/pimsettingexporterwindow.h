@@ -16,19 +16,19 @@
 */
 
 
-#ifndef BACKUPMAILWINDOW_H
-#define BACKUPMAILWINDOW_H
+#ifndef PIMSETTINGEXPORTERWINDOW_H
+#define PIMSETTINGEXPORTERWINDOW_H
 #include <kxmlguiwindow.h>
 
 class BackupMailWidget;
 class AbstractImportExportJob;
 
-class BackupMailWindow: public KXmlGuiWindow
+class PimSettingExporterWindow: public KXmlGuiWindow
 {
     Q_OBJECT
 public:
-    explicit BackupMailWindow(QWidget *parent=0);
-    ~BackupMailWindow();
+    explicit PimSettingExporterWindow(QWidget *parent=0);
+    ~PimSettingExporterWindow();
 
 private Q_SLOTS:
     void slotBackupData();
@@ -45,5 +45,5 @@ private:
 };
 
 
-#endif /* BackupMailWindow_H */
+#endif /* PIMSETTINGEXPORTERWINDOW_H */
 
