@@ -19,7 +19,11 @@
 #include "archivestorage.h"
 
 #include <KTempDir>
+#include <KStandardDirs>
 
+#include <KArchive>
+
+#include <QFile>
 
 ImportAlarmJob::ImportAlarmJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep)
     : AbstractImportExportJob(parent, archiveStorage, typeSelected, numberOfStep)
@@ -49,9 +53,31 @@ void ImportAlarmJob::restoreResources()
 
 void ImportAlarmJob::restoreConfig()
 {
-    //TODO
-    //kalarmrc
+    const QString kalarmStr(QLatin1String("kalarmrc"));
+    const KArchiveEntry* kalarmrcentry  = mArchiveDirectory->entry(Utils::configsPath() + kalarmStr);
+    if (kalarmrcentry && kalarmrcentry->isFile()) {
+        const KArchiveFile* kalarmrcFile = static_cast<const KArchiveFile*>(kalarmrcentry);
+        const QString kalarmrc = KStandardDirs::locateLocal( "config",  kalarmStr);
+        if (QFile(kalarmrc).exists()) {
+            if (overwriteConfigMessageBox(kalarmStr)) {
+                importkalarmConfig(kalarmrcFile, kalarmrc, kalarmStr, Utils::configsPath());
+            }
+        } else {
+            importkalarmConfig(kalarmrcFile,kalarmrc,kalarmStr,Utils::configsPath());
+        }
+    }
 }
+
+void ImportAlarmJob::importkalarmConfig(const KArchiveFile* kalarmFile, const QString &kalarmrc, const QString &filename,const QString &prefix)
+{
+    copyToFile(kalarmFile, kalarmrc, filename, prefix);
+    KSharedConfig::Ptr kalarmConfig = KSharedConfig::openConfig(kalarmrc);
+
+    //TODO
+    kalarmConfig->sync();
+}
+
+
 
 QString ImportAlarmJob::componentName() const
 {

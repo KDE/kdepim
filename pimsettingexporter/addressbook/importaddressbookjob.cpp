@@ -51,19 +51,6 @@ void ImportAddressbookJob::restoreResources()
 
 void ImportAddressbookJob::restoreConfig()
 {
-    const QString korganizerPrinterrcStr(QLatin1String("korganizer_printing.rc"));
-    const KArchiveEntry* korganizerPrinterEntry  = mArchiveDirectory->entry(Utils::configsPath() + korganizerPrinterrcStr);
-    if (korganizerPrinterEntry && korganizerPrinterEntry->isFile()) {
-        const KArchiveFile* kmailsnippet = static_cast<const KArchiveFile*>(korganizerPrinterEntry);
-        const QString korganizerPrinterrc = KStandardDirs::locateLocal( "config",  korganizerPrinterrcStr);
-        if (QFile(korganizerPrinterrc).exists()) {
-            if (overwriteConfigMessageBox(korganizerPrinterrcStr)) {
-                copyToFile(kmailsnippet, korganizerPrinterrc,korganizerPrinterrcStr,Utils::configsPath());
-            }
-        } else {
-            copyToFile(kmailsnippet, korganizerPrinterrc,korganizerPrinterrcStr,Utils::configsPath());
-        }
-    }
 
     //TODO
     //kaddressbookrc

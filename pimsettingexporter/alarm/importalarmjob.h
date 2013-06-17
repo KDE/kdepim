@@ -34,6 +34,7 @@ public:
     QString componentName() const;
 
 private:
+    void importkalarmConfig(const KArchiveFile* kalarmFile, const QString &kalarmrc, const QString &filename,const QString &prefix);
     void restoreResources();
     void restoreConfig();
 };

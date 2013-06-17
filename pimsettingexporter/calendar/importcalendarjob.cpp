@@ -20,6 +20,9 @@
 
 #include <KZip>
 #include <KTempDir>
+#include <KStandardDirs>
+
+#include <QFile>
 
 ImportCalendarJob::ImportCalendarJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep)
     : AbstractImportExportJob(parent, archiveStorage, typeSelected, numberOfStep)
@@ -48,8 +51,20 @@ void ImportCalendarJob::restoreResources()
 
 void ImportCalendarJob::restoreConfig()
 {
-    //TODO
-    //TODO: korgacrc  korganizer_printing.rc  korganizerrc
+    const QString korganizerPrinterrcStr(QLatin1String("korganizer_printing.rc"));
+    const KArchiveEntry* korganizerPrinterEntry  = mArchiveDirectory->entry(Utils::configsPath() + korganizerPrinterrcStr);
+    if (korganizerPrinterEntry && korganizerPrinterEntry->isFile()) {
+        const KArchiveFile* korganizerFile = static_cast<const KArchiveFile*>(korganizerPrinterEntry);
+        const QString korganizerPrinterrc = KStandardDirs::locateLocal( "config",  korganizerPrinterrcStr);
+        if (QFile(korganizerPrinterrc).exists()) {
+            if (overwriteConfigMessageBox(korganizerPrinterrcStr)) {
+                copyToFile(korganizerFile, korganizerPrinterrc,korganizerPrinterrcStr,Utils::configsPath());
+            }
+        } else {
+            copyToFile(korganizerFile, korganizerPrinterrc, korganizerPrinterrcStr, Utils::configsPath());
+        }
+    }
+    //TODO: korgacrc  korganizerrc
 }
 
 QString ImportCalendarJob::componentName() const
