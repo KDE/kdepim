@@ -28,7 +28,7 @@
 
 #include "backupmailkernel.h"
 #include "selectiontypedialog.h"
-#include "backupmailutil.h"
+#include "utils.h"
 #include "archivestorage.h"
 
 #include <mailcommon/kernel/mailkernel.h>
@@ -102,7 +102,7 @@ void BackupMailWindow::slotBackupData()
     QPointer<SelectionTypeDialog> dialog = new SelectionTypeDialog(this);
     if (dialog->exec()) {
         int numberOfStep = 0;
-        BackupMailUtil::BackupTypes typeSelected = dialog->backupTypesSelected(numberOfStep);
+        Utils::StoredTypes typeSelected = dialog->backupTypesSelected(numberOfStep);
         delete dialog;
         mBackupMailWidget->clear();
         delete mBackupData;
@@ -171,7 +171,7 @@ void BackupMailWindow::slotRestoreData()
     QPointer<SelectionTypeDialog> dialog = new SelectionTypeDialog(this);
     if (dialog->exec()) {
         int numberOfStep = 0;
-        BackupMailUtil::BackupTypes typeSelected = dialog->backupTypesSelected(numberOfStep);
+        Utils::StoredTypes typeSelected = dialog->backupTypesSelected(numberOfStep);
         delete dialog;
         mBackupMailWidget->clear();
         delete mRestoreData;

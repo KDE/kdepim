@@ -15,7 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "backupmailutil.h"
+#include "utils.h"
 
 #include "mailcommon/util/mailutil.h"
 
@@ -29,58 +29,58 @@
 #include <QDir>
 
 
-QString BackupMailUtil::transportsPath()
+QString Utils::transportsPath()
 {
     return QLatin1String("transports/");
 }
 
-QString BackupMailUtil::resourcesPath()
+QString Utils::resourcesPath()
 {
     return QLatin1String("resources/");
 }
 
-QString BackupMailUtil::identitiesPath()
+QString Utils::identitiesPath()
 {
     return QLatin1String("identities/");
 }
 
-QString BackupMailUtil::mailsPath()
+QString Utils::mailsPath()
 {
     return QLatin1String("mails/");
 }
 
-QString BackupMailUtil::configsPath()
+QString Utils::configsPath()
 {
     return QLatin1String("configs/");
 }
 
-QString BackupMailUtil::akonadiPath()
+QString Utils::akonadiPath()
 {
     return QLatin1String("akonadi/");
 }
 
-QString BackupMailUtil::dataPath()
+QString Utils::dataPath()
 {
     return QLatin1String("data/");
 }
 
-QString BackupMailUtil::calendarPath()
+QString Utils::calendarPath()
 {
     return QLatin1String("calendar/");
 }
 
-QString BackupMailUtil::addressbookPath()
+QString Utils::addressbookPath()
 {
     return QLatin1String("addressbook/");
 }
 
-QString BackupMailUtil::alarmPath()
+QString Utils::alarmPath()
 {
     return QLatin1String("alarm/");
 }
 
 
-KUrl BackupMailUtil::resourcePath(KSharedConfigPtr resourceConfig)
+KUrl Utils::resourcePath(KSharedConfigPtr resourceConfig)
 {
     KConfigGroup group = resourceConfig->group(QLatin1String("General"));
     QString url = group.readEntry(QLatin1String("Path"),QString());
@@ -88,7 +88,7 @@ KUrl BackupMailUtil::resourcePath(KSharedConfigPtr resourceConfig)
     return KUrl(url);
 }
 
-void BackupMailUtil::convertCollectionListToRealPath(KConfigGroup &group, const QString &currentKey)
+void Utils::convertCollectionListToRealPath(KConfigGroup &group, const QString &currentKey)
 {
     if (group.hasKey(currentKey)) {
         const QStringList listExpension = group.readEntry(currentKey, QStringList());
@@ -115,7 +115,7 @@ void BackupMailUtil::convertCollectionListToRealPath(KConfigGroup &group, const 
     }
 }
 
-void BackupMailUtil::convertCollectionToRealPath(KConfigGroup &group, const QString &currentKey)
+void Utils::convertCollectionToRealPath(KConfigGroup &group, const QString &currentKey)
 {
     if (group.hasKey(currentKey)) {
         QString collectionId = group.readEntry(currentKey);
@@ -135,17 +135,17 @@ void BackupMailUtil::convertCollectionToRealPath(KConfigGroup &group, const QStr
     }
 }
 
-KUrl BackupMailUtil::resourcePath(const Akonadi::AgentInstance &agent)
+KUrl Utils::resourcePath(const Akonadi::AgentInstance &agent)
 {
     const QString agentFileName = agent.identifier() + QLatin1String("rc");
     const QString configFileName = KStandardDirs::locateLocal( "config", agentFileName );
 
     KSharedConfigPtr resourceConfig = KSharedConfig::openConfig( configFileName );
-    KUrl url = BackupMailUtil::resourcePath(resourceConfig);
+    KUrl url = Utils::resourcePath(resourceConfig);
     return url;
 }
 
-QString BackupMailUtil::storeResources(KZip *archive, const QString &identifier, const QString &path)
+QString Utils::storeResources(KZip *archive, const QString &identifier, const QString &path)
 {
     const QString agentFileName = identifier + QLatin1String("rc");
     const QString configFileName = KStandardDirs::locateLocal( "config", agentFileName );

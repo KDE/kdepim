@@ -19,7 +19,7 @@
 #define SELECTIONTYPEDIALOG_H
 
 #include <KDialog>
-#include "backupmailutil.h"
+#include "utils.h"
 
 class SelectTypeWidget;
 
@@ -30,7 +30,7 @@ public:
     explicit SelectionTypeDialog(QWidget * parent);
     ~SelectionTypeDialog();
 
-    BackupMailUtil::BackupTypes backupTypesSelected(int &numberOfStep) const;
+    Utils::StoredTypes backupTypesSelected(int &numberOfStep) const;
 
 private Q_SLOTS:
     void slotItemSelected(bool selected);

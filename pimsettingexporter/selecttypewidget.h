@@ -20,7 +20,7 @@
 #define SELECTTYPEWIDGET_H
 
 #include <QWidget>
-#include "backupmailutil.h"
+#include "utils.h"
 namespace Ui {
 class SelectTypeWidget;
 }
@@ -33,7 +33,7 @@ public:
     explicit SelectTypeWidget(QWidget *parent = 0);
     ~SelectTypeWidget();
 
-    BackupMailUtil::BackupTypes backupTypesSelected(int &numberOfStep) const;
+    Utils::StoredTypes backupTypesSelected(int &numberOfStep) const;
 
 private Q_SLOTS:
     void slotTypeClicked();

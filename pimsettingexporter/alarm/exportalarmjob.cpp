@@ -29,7 +29,7 @@
 #include <QFile>
 #include <QDir>
 
-ExportAlarmJob::ExportAlarmJob(QWidget *parent, BackupMailUtil::BackupTypes typeSelected, ArchiveStorage *archiveStorage,int numberOfStep)
+ExportAlarmJob::ExportAlarmJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage,int numberOfStep)
     : AbstractImportExportJob(parent, archiveStorage, typeSelected, numberOfStep)
 {
 }
@@ -42,14 +42,14 @@ ExportAlarmJob::~ExportAlarmJob()
 void ExportAlarmJob::start()
 {
     mArchiveDirectory = archive()->directory();
-    if (mTypeSelected & BackupMailUtil::Resources) {
+    if (mTypeSelected & Utils::Resources) {
         backupResources();
         increaseProgressDialog();
         if (wasCanceled()) {
             return;
         }
     }
-    if (mTypeSelected & BackupMailUtil::Config) {
+    if (mTypeSelected & Utils::Config) {
         backupConfig();
         increaseProgressDialog();
         if (wasCanceled()) {
@@ -70,14 +70,14 @@ void ExportAlarmJob::backupResources()
         const QString identifier = agent.identifier();
         if (identifier.contains(QLatin1String("akonadi_kalarm_resource_"))) {
             const QString identifier = agent.identifier();
-            const QString archivePath = BackupMailUtil::alarmPath() + identifier + QDir::separator();
+            const QString archivePath = Utils::alarmPath() + identifier + QDir::separator();
 
-            KUrl url = BackupMailUtil::resourcePath(agent);
+            KUrl url = Utils::resourcePath(agent);
             if (!url.isEmpty()) {
                 const QString filename = url.fileName();
                 const bool fileAdded  = archive()->addLocalFile(url.path(), archivePath + filename);
                 if (fileAdded) {
-                    const QString errorStr = BackupMailUtil::storeResources(archive(), identifier, archivePath);
+                    const QString errorStr = Utils::storeResources(archive(), identifier, archivePath);
                     if (!errorStr.isEmpty())
                         Q_EMIT error(errorStr);
                     Q_EMIT info(i18n("\"%1\" was backuped.",filename));
@@ -107,7 +107,7 @@ void ExportAlarmJob::backupConfig()
 
         //TODO adapt collection
         kalarmConfig->sync();
-        backupFile(tmp.fileName(), BackupMailUtil::configsPath(), kalarmStr);
+        backupFile(tmp.fileName(), Utils::configsPath(), kalarmStr);
     }
 
 

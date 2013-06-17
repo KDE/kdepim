@@ -50,7 +50,7 @@ void SelectionTypeDialog::slotItemSelected(bool selected)
     enableButtonOk(selected);
 }
 
-BackupMailUtil::BackupTypes SelectionTypeDialog::backupTypesSelected(int &numberOfStep) const
+Utils::StoredTypes SelectionTypeDialog::backupTypesSelected(int &numberOfStep) const
 {
     return mWidget->backupTypesSelected(numberOfStep);
 }

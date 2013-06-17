@@ -34,7 +34,7 @@ class CreateResource;
 class ImportMailJob : public AbstractImportExportJob
 {
 public:
-    explicit ImportMailJob(QWidget *widget, BackupMailUtil::BackupTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep);
+    explicit ImportMailJob(QWidget *widget, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep);
     ~ImportMailJob();
 
     void start();

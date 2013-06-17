@@ -26,7 +26,7 @@
 #include <QWidget>
 
 
-ExportAddressbookJob::ExportAddressbookJob(QWidget *parent, BackupMailUtil::BackupTypes typeSelected, ArchiveStorage *archiveStorage,int numberOfStep)
+ExportAddressbookJob::ExportAddressbookJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage,int numberOfStep)
     : AbstractImportExportJob(parent, archiveStorage, typeSelected, numberOfStep)
 {
 }
@@ -39,14 +39,14 @@ ExportAddressbookJob::~ExportAddressbookJob()
 void ExportAddressbookJob::start()
 {
     mArchiveDirectory = archive()->directory();
-    if (mTypeSelected & BackupMailUtil::Resources) {
+    if (mTypeSelected & Utils::Resources) {
         backupResources();
         increaseProgressDialog();
         if (wasCanceled()) {
             return;
         }
     }
-    if (mTypeSelected & BackupMailUtil::Config) {
+    if (mTypeSelected & Utils::Config) {
         backupConfig();
         increaseProgressDialog();
         if (wasCanceled()) {
@@ -83,23 +83,23 @@ void ExportAddressbookJob::backupConfig()
         if (kaddressBookConfig->hasGroup(collectionViewCheckStateStr)) {
             KConfigGroup group = kaddressBookConfig->group(collectionViewCheckStateStr);
             const QString selectionKey(QLatin1String("Selection"));
-            BackupMailUtil::convertCollectionListToRealPath(group, selectionKey);
+            Utils::convertCollectionListToRealPath(group, selectionKey);
         }
 
         const QString collectionViewStateStr(QLatin1String("CollectionViewState"));
         if (kaddressBookConfig->hasGroup(collectionViewStateStr)) {
             KConfigGroup group = kaddressBookConfig->group(collectionViewStateStr);
             QString currentKey(QLatin1String("Current"));
-            BackupMailUtil::convertCollectionToRealPath(group, currentKey);
+            Utils::convertCollectionToRealPath(group, currentKey);
 
             currentKey = QLatin1String("Expansion");
-            BackupMailUtil::convertCollectionToRealPath(group, currentKey);
+            Utils::convertCollectionToRealPath(group, currentKey);
 
             currentKey = QLatin1String("Selection");
-            BackupMailUtil::convertCollectionToRealPath(group, currentKey);
+            Utils::convertCollectionToRealPath(group, currentKey);
         }
         kaddressBookConfig->sync();
-        backupFile(tmp.fileName(), BackupMailUtil::configsPath(), kaddressbookStr);
+        backupFile(tmp.fileName(), Utils::configsPath(), kaddressbookStr);
     }
     Q_EMIT info(i18n("Config backup done."));
 }

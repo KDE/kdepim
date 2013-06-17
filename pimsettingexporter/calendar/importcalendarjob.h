@@ -27,7 +27,7 @@ class ImportCalendarJob : public AbstractImportExportJob
 {
     Q_OBJECT
 public:
-    explicit ImportCalendarJob(QWidget *parent, BackupMailUtil::BackupTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep);
+    explicit ImportCalendarJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep);
     ~ImportCalendarJob();
 
     void start();

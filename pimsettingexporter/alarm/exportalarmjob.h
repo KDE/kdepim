@@ -27,7 +27,7 @@ class ExportAlarmJob : public AbstractImportExportJob
 {
     Q_OBJECT
 public:
-    explicit ExportAlarmJob(QWidget *parent, BackupMailUtil::BackupTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep);
+    explicit ExportAlarmJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep);
     ~ExportAlarmJob();
 
     void start();

@@ -30,7 +30,7 @@ class AgentInstance;
 class ExportMailJob : public AbstractImportExportJob
 {
 public:
-    explicit ExportMailJob(QWidget *parent, BackupMailUtil::BackupTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep);
+    explicit ExportMailJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep);
     ~ExportMailJob();
 
     void start();

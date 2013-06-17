@@ -18,7 +18,7 @@
 #ifndef ABSTRACTIMPORTEXPORTJOB_H
 #define ABSTRACTIMPORTEXPORTJOB_H
 
-#include "backupmailutil.h"
+#include "utils.h"
 #include <Akonadi/Collection>
 
 #include <KZip>
@@ -36,7 +36,7 @@ class AbstractImportExportJob : public QObject
 {
     Q_OBJECT
 public:
-    explicit AbstractImportExportJob(QWidget *parent, ArchiveStorage *archiveStorage, BackupMailUtil::BackupTypes typeSelected, int numberOfStep);
+    explicit AbstractImportExportJob(QWidget *parent, ArchiveStorage *archiveStorage, Utils::StoredTypes typeSelected, int numberOfStep);
     ~AbstractImportExportJob();
 
     virtual void start() = 0;
@@ -65,7 +65,7 @@ protected:
 
     QHash<QString, Akonadi::Collection::Id> mHashConvertPathCollectionId;
 
-    BackupMailUtil::BackupTypes mTypeSelected;
+    Utils::StoredTypes mTypeSelected;
     ArchiveStorage *mArchiveStorage;
     KPIMIdentities::IdentityManager *mIdentityManager;
     QWidget *mParent;

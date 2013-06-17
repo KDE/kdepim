@@ -29,7 +29,7 @@
 #include <QWidget>
 
 
-ExportCalendarJob::ExportCalendarJob(QWidget *parent, BackupMailUtil::BackupTypes typeSelected, ArchiveStorage *archiveStorage,int numberOfStep)
+ExportCalendarJob::ExportCalendarJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage,int numberOfStep)
     :AbstractImportExportJob(parent, archiveStorage, typeSelected, numberOfStep)
 {
 }
@@ -44,14 +44,14 @@ void ExportCalendarJob::start()
     mArchiveDirectory = archive()->directory();
     createProgressDialog();
 
-    if (mTypeSelected & BackupMailUtil::Resources) {
+    if (mTypeSelected & Utils::Resources) {
         backupResources();
         increaseProgressDialog();
         if (wasCanceled()) {
             return;
         }
     }
-    if (mTypeSelected & BackupMailUtil::Config) {
+    if (mTypeSelected & Utils::Config) {
         backupConfig();
         increaseProgressDialog();
         if (wasCanceled()) {
@@ -79,7 +79,7 @@ void ExportCalendarJob::backupResources()
                 const QString identifier = agent.identifier();
                 //Need to store other resources
                 if (identifier.contains(QLatin1String("ical"))) {
-                    storeResources(identifier,BackupMailUtil::resourcesPath());
+                    storeResources(identifier,Utils::resourcesPath());
                 } else {
                     qDebug()<<" resource \""<<identifier<<"\" will not store";
                 }
@@ -110,19 +110,19 @@ void ExportCalendarJob::backupConfig()
 
         //TODO adapt collection
         korganizerConfig->sync();
-        backupFile(tmp.fileName(), BackupMailUtil::configsPath(), korganizerStr);
+        backupFile(tmp.fileName(), Utils::configsPath(), korganizerStr);
     }
 
     const QString korganizerPrintingStr(QLatin1String("korganizer_printing.rc"));
     const QString korganizerPrintingrc = KStandardDirs::locateLocal( "config",  korganizerPrintingStr);
     if (QFile(korganizerPrintingrc).exists()) {
-        backupFile(korganizerPrintingrc, BackupMailUtil::configsPath(), korganizerPrintingStr);
+        backupFile(korganizerPrintingrc, Utils::configsPath(), korganizerPrintingStr);
     }
 
     const QString korgacStr(QLatin1String("korgacrc"));
     const QString korgacrc = KStandardDirs::locateLocal( "config", korgacStr );
     if (QFile(korgacrc).exists()) {
-        backupFile(korgacrc, BackupMailUtil::configsPath(), korgacStr);
+        backupFile(korgacrc, Utils::configsPath(), korgacStr);
     }
 
     Q_EMIT info(i18n("Config backup done."));

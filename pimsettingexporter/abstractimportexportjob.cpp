@@ -27,7 +27,7 @@
 #include <QWidget>
 #include <QProgressDialog>
 
-AbstractImportExportJob::AbstractImportExportJob(QWidget *parent, ArchiveStorage *archiveStorage, BackupMailUtil::BackupTypes typeSelected, int numberOfStep)
+AbstractImportExportJob::AbstractImportExportJob(QWidget *parent, ArchiveStorage *archiveStorage, Utils::StoredTypes typeSelected, int numberOfStep)
     : QObject(parent),
       mTypeSelected(typeSelected),
       mArchiveStorage(archiveStorage),
