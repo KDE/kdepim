@@ -22,7 +22,12 @@
 #include <KConfigGroup>
 #include <KStandardDirs>
 #include <KSharedConfig>
+#include <KTemporaryFile>
+#include <KLocale>
+#include <KZip>
+
 #include <QDir>
+
 
 QString BackupMailUtil::transportsPath()
 {
@@ -138,5 +143,36 @@ KUrl BackupMailUtil::resourcePath(const Akonadi::AgentInstance &agent)
     KSharedConfigPtr resourceConfig = KSharedConfig::openConfig( configFileName );
     KUrl url = BackupMailUtil::resourcePath(resourceConfig);
     return url;
+}
+
+QString BackupMailUtil::storeResources(KZip *archive, const QString &identifier, const QString &path)
+{
+    const QString agentFileName = identifier + QLatin1String("rc");
+    const QString configFileName = KStandardDirs::locateLocal( "config", agentFileName );
+
+    KSharedConfigPtr resourceConfig = KSharedConfig::openConfig( configFileName );
+    KTemporaryFile tmp;
+    tmp.open();
+    KConfig * config = resourceConfig->copyTo( tmp.fileName() );
+
+    if (identifier.contains(QLatin1String("akonadi_pop3_resource"))) {
+        const QString targetCollection = QLatin1String("targetCollection");
+        KConfigGroup group = config->group("General");
+        if (group.hasKey(targetCollection)) {
+            group.writeEntry(targetCollection,MailCommon::Util::fullCollectionPath(Akonadi::Collection(group.readEntry(targetCollection).toLongLong())));
+        }
+    } else if (identifier.contains(QLatin1String("akonadi_imap_resource"))) {
+        const QString trash = QLatin1String("TrashCollection");
+        KConfigGroup group = config->group("cache");
+        if (group.hasKey(trash)) {
+            group.writeEntry(trash,MailCommon::Util::fullCollectionPath(Akonadi::Collection(group.readEntry(trash).toLongLong())));
+        }
+    }
+    //Customize resource if necessary here.
+    config->sync();
+    const bool fileAdded  = archive->addLocalFile(tmp.fileName(), path + agentFileName);
+    if (!fileAdded)
+        return i18n("Resource file \"%1\" cannot be added to backup file.", agentFileName);
+    return QString();
 }
 

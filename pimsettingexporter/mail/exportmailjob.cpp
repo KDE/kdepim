@@ -158,7 +158,11 @@ void ExportMailJob::backupResources()
                 const QString identifier = agent.identifier();
                 //Store just pop3/imap account. Store other config when we copy data.
                 if (identifier.contains(QLatin1String("pop3")) || identifier.contains(QLatin1String("imap"))) {
-                    storeResources(identifier,BackupMailUtil::resourcesPath());
+                    const QString errorStr = BackupMailUtil::storeResources(archive(), identifier, BackupMailUtil::resourcesPath());
+                    if (!errorStr.isEmpty()) {
+                        Q_EMIT error(errorStr);
+                    }
+
                 } else {
                     qDebug()<<" resource \""<<identifier<<"\" will not store";
                 }
@@ -465,7 +469,10 @@ void ExportMailJob::backupMails()
                         const QString filename = url.fileName();
                         const bool fileAdded  = archive()->addLocalFile(url.path(), archivePath + filename);
                         if (fileAdded) {
-                            storeResources(identifier, archivePath );
+                            const QString errorStr = BackupMailUtil::storeResources(archive(), identifier, archivePath );
+                            if (!errorStr.isEmpty()) {
+                                Q_EMIT error(errorStr);
+                            }
                             Q_EMIT info(i18n("MBox \"%1\" was backuped.",filename));
                         }
                         else
@@ -476,7 +483,10 @@ void ExportMailJob::backupMails()
                     const KUrl url = BackupMailUtil::resourcePath(agent);
 
                     if (backupMailData(url, archivePath)) {
-                        storeResources(identifier, archivePath );
+                        const QString errorStr = BackupMailUtil::storeResources(archive(), identifier, archivePath );
+                        if (!errorStr.isEmpty()) {
+                            Q_EMIT error(errorStr);
+                        }
                     }
                 }
             }
@@ -598,37 +608,6 @@ void ExportMailJob::backupNepomuk()
     showInfo(i18n("Backing up Nepomuk Database..."));
     MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
     Q_EMIT info(i18n("Nepomuk Database backup done."));
-}
-
-void ExportMailJob::storeResources(const QString &identifier, const QString &path)
-{
-    const QString agentFileName = identifier + QLatin1String("rc");
-    const QString configFileName = KStandardDirs::locateLocal( "config", agentFileName );
-
-    KSharedConfigPtr resourceConfig = KSharedConfig::openConfig( configFileName );
-    KTemporaryFile tmp;
-    tmp.open();
-    KConfig * config = resourceConfig->copyTo( tmp.fileName() );
-
-    if (identifier.contains(QLatin1String("akonadi_pop3_resource"))) {
-        const QString targetCollection = QLatin1String("targetCollection");
-        KConfigGroup group = config->group("General");
-        if (group.hasKey(targetCollection)) {
-            group.writeEntry(targetCollection,MailCommon::Util::fullCollectionPath(Akonadi::Collection(group.readEntry(targetCollection).toLongLong())));
-        }
-    } else if (identifier.contains(QLatin1String("akonadi_imap_resource"))) {
-        const QString trash = QLatin1String("TrashCollection");
-        KConfigGroup group = config->group("cache");
-        if (group.hasKey(trash)) {
-            group.writeEntry(trash,MailCommon::Util::fullCollectionPath(Akonadi::Collection(group.readEntry(trash).toLongLong())));
-        }
-    } else {
-        qDebug()<<" Resource not supported :"<<identifier;
-    }
-    config->sync();
-    const bool fileAdded  = archive()->addLocalFile(tmp.fileName(), path + agentFileName);
-    if (!fileAdded)
-        Q_EMIT error(i18n("Resource file \"%1\" cannot be added to backup file.", agentFileName));
 }
 
 KUrl ExportMailJob::subdirPath( const KUrl& url) const
