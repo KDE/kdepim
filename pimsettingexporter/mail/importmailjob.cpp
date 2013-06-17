@@ -667,12 +667,12 @@ void ImportMailJob::restoreConfig()
         if (QFile(sievetemplaterc).exists()) {
             const int result = mergeConfigMessageBox(sievetemplatercStr);
             if ( result == KMessageBox::Yes) {
-                importArchiveConfig(sievetemplateconfiguration, sievetemplaterc, sievetemplatercStr, Utils::configsPath());
+                copyToFile(sievetemplateconfiguration, sievetemplaterc, sievetemplatercStr, Utils::configsPath());
             } else if (result == KMessageBox::No) {
                 mergeSieveTemplate(sievetemplateconfiguration, sievetemplatercStr,Utils::configsPath());
             }
         } else {
-            importArchiveConfig(sievetemplateconfiguration, sievetemplaterc, sievetemplatercStr, Utils::configsPath());
+            copyToFile(sievetemplateconfiguration, sievetemplaterc, sievetemplatercStr, Utils::configsPath());
         }
     }
 
@@ -684,10 +684,10 @@ void ImportMailJob::restoreConfig()
         if (QFile(customtemplaterc).exists()) {
             //TODO 4.11 allow to merge config.
             if (overwriteConfigMessageBox(customTemplateStr)) {
-                importArchiveConfig(customtemplateconfiguration, customtemplaterc, customTemplateStr, Utils::configsPath());
+                copyToFile(customtemplateconfiguration, customtemplaterc, customTemplateStr, Utils::configsPath());
             }
         } else {
-            importArchiveConfig(customtemplateconfiguration, customtemplaterc, customTemplateStr, Utils::configsPath());
+            copyToFile(customtemplateconfiguration, customtemplaterc, customTemplateStr, Utils::configsPath());
         }
     }
 
@@ -702,10 +702,10 @@ void ImportMailJob::restoreConfig()
                 const QString autocorrectionPath = KGlobal::dirs()->findResource("data", QString::fromLatin1("autocorrect/%1").arg(name));
                 if (QFile(autocorrectionPath).exists()) {
                     if (overwriteConfigMessageBox(name)) {
-                        importArchiveConfig(autocorrectionFile, autocorrectionPath, name, Utils::dataPath() + QLatin1String( "autocorrect/" ));
+                        copyToFile(autocorrectionFile, autocorrectionPath, name, Utils::dataPath() + QLatin1String( "autocorrect/" ));
                     }
                 } else {
-                    importArchiveConfig(autocorrectionFile, autocorrectionPath, name, Utils::dataPath() + QLatin1String( "autocorrect/" ));
+                    copyToFile(autocorrectionFile, autocorrectionPath, name, Utils::dataPath() + QLatin1String( "autocorrect/" ));
                 }
             }
         }
