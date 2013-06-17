@@ -6,7 +6,7 @@
 <firstname>Daniel</firstname>
 <surname>Naber</surname>
 <affiliation><address>
-+&Daniel.Naber.mail;
+&Daniel.Naber.mail;
 </address></affiliation>
 </author>
 <author>
@@ -422,8 +422,8 @@ snippetDelimiter=$
     <menuchoice><guimenu>View</guimenu><guimenuitem>Translator</guimenuitem></menuchoice> from the
       menubar. A new panel will appear at the bottom of the composer.</para>
       <para> To translate a section of text, first select the text you would like translated to the
-	box with the <guilabel>Drag text...</guilabel>. Select the language it currently is, in the <guilabel>From:</guilabel> dropdown box.
-          Select the language you would like to translate to in the <guilabel>To:</guilabel> dropdown box, and click the <guibutton>Translate</guibutton> button.
+	box with the <guilabel>Drag text...</guilabel>. Select the language it currently is, in the <guilabel>From:</guilabel> drop down box.
+          Select the language you would like to translate to in the <guilabel>To:</guilabel> drop down box, and click the <guibutton>Translate</guibutton> button.
           Your translated text will appear in the next box. If you need to translate
             in the other direction you can just click the <guibutton>Invert</guibutton> button.
               To clear all text, click the <guibutton>Clear</guibutton> button. </para>
@@ -1385,7 +1385,7 @@ receipt) to the sender of the message.</para>
 <varlistentry>
 <term><guilabel>Set Transport To</guilabel></term>
 <listitem>
-<para>This will set the method of transport (&eg; <acronym>&SMTP;</acronym>)
+<para>This will set the method of transport (&eg; &SMTP;)
 that will be used if you reply to the message.</para>
 </listitem>
 </varlistentry> 
