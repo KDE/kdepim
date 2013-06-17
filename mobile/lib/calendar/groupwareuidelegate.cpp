@@ -40,7 +40,9 @@ void GroupwareUiDelegate::setCalendar( const Akonadi::ETMCalendar::Ptr &calendar
 
 void GroupwareUiDelegate::createCalendar()
 {
-  mCalendar = Akonadi::ETMCalendar::Ptr( new Akonadi::ETMCalendar() );
+  QStringList mimeTypes;
+  mimeTypes << KCalCore::Event::eventMimeType() << KCalCore::Todo::todoMimeType();
+  mCalendar = Akonadi::ETMCalendar::Ptr( new Akonadi::ETMCalendar( mimeTypes ) );
   mCalendar->setObjectName( "Groupware calendar" );
   mCalendar->setOwner( KCalCore::Person::Ptr( new KCalCore::Person( CalendarSupport::KCalPrefs::instance()->fullName(),
                                          CalendarSupport::KCalPrefs::instance()->email() ) ) );
