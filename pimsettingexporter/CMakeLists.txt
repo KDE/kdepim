@@ -19,7 +19,7 @@ set(pimsettingexporter_SRCS
   selectiontypetreewidget.cpp
   abstractimportexportjob.cpp
   pimsettingexporterwindow.cpp
-  backupmailwidget.cpp
+  logwidget.cpp
   mail/exportmailjob.cpp
   mail/importmailjob.cpp
   backupmailkernel.cpp

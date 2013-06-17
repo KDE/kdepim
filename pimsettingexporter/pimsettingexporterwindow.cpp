@@ -16,7 +16,8 @@
 */
 
 #include "pimsettingexporterwindow.h"
-#include "backupmailwidget.h"
+#include "logwidget.h"
+
 #include "mail/exportmailjob.h"
 #include "mail/importmailjob.h"
 
@@ -60,9 +61,9 @@ PimSettingExporterWindow::PimSettingExporterWindow(QWidget *parent)
     bool canZipFile = canZip();
     setupActions(canZipFile);
     setupGUI(Keys | StatusBar | Save | Create, QLatin1String("pimsettingexporter.rc"));
-    mBackupMailWidget = new BackupMailWidget(this);
+    mLogWidget = new LogWidget(this);
 
-    setCentralWidget(mBackupMailWidget);
+    setCentralWidget(mLogWidget);
     resize( 640, 480 );
     Akonadi::Control::widgetNeedsAkonadi(this);
     if (!canZipFile) {
@@ -104,7 +105,7 @@ void PimSettingExporterWindow::slotBackupData()
         int numberOfStep = 0;
         Utils::StoredTypes typeSelected = dialog->backupTypesSelected(numberOfStep);
         delete dialog;
-        mBackupMailWidget->clear();
+        mLogWidget->clear();
         delete mBackupData;
 
         ArchiveStorage *archiveStorage = new ArchiveStorage(filename,this);
@@ -151,12 +152,12 @@ void PimSettingExporterWindow::slotBackupData()
 
 void PimSettingExporterWindow::slotAddInfo(const QString& info)
 {
-    mBackupMailWidget->addInfoLogEntry(info);
+    mLogWidget->addInfoLogEntry(info);
 }
 
 void PimSettingExporterWindow::slotAddError(const QString& info)
 {
-    mBackupMailWidget->addErrorLogEntry(info);
+    mLogWidget->addErrorLogEntry(info);
 }
 
 
@@ -173,7 +174,7 @@ void PimSettingExporterWindow::slotRestoreData()
         int numberOfStep = 0;
         Utils::StoredTypes typeSelected = dialog->backupTypesSelected(numberOfStep);
         delete dialog;
-        mBackupMailWidget->clear();
+        mLogWidget->clear();
         delete mRestoreData;
 
         ArchiveStorage *archiveStorage = new ArchiveStorage(filename,this);

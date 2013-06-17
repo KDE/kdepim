@@ -15,40 +15,27 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "backupmailwidget.h"
+#ifndef LOGWIDGET_H
+#define LOGWIDGET_H
 
-#include "libkdepim/widgets/customlogwidget.h"
+#include <QWidget>
 
-#include <QHBoxLayout>
-#include <QListWidget>
-
-
-BackupMailWidget::BackupMailWidget(QWidget * parent)
-    :QWidget(parent)
-{
-    QHBoxLayout *layout = new QHBoxLayout;
-    mCustomLogWidget = new KPIM::CustomLogWidget;
-    layout->addWidget(mCustomLogWidget);
-    setLayout(layout);
+namespace KPIM {
+class CustomLogWidget;
 }
 
-BackupMailWidget::~BackupMailWidget()
+class LogWidget : public QWidget
 {
+public:
+    explicit LogWidget(QWidget *parent);
+    ~LogWidget();
 
-}
+    void addInfoLogEntry( const QString& log );
+    void addErrorLogEntry( const QString& log );
+    void clear();
 
-void BackupMailWidget::clear()
-{
-    mCustomLogWidget->clear();
-}
+private:
+    KPIM::CustomLogWidget *mCustomLogWidget;
+};
 
-void BackupMailWidget::addInfoLogEntry( const QString& log )
-{
-    mCustomLogWidget->addInfoLogEntry(log);
-}
-
-void BackupMailWidget::addErrorLogEntry( const QString& log )
-{
-    mCustomLogWidget->addErrorLogEntry(log);
-}
-
+#endif // LOGWIDGET_H

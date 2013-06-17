@@ -20,7 +20,7 @@
 #define PIMSETTINGEXPORTERWINDOW_H
 #include <kxmlguiwindow.h>
 
-class BackupMailWidget;
+class LogWidget;
 class AbstractImportExportJob;
 
 class PimSettingExporterWindow: public KXmlGuiWindow
@@ -39,7 +39,7 @@ private Q_SLOTS:
 private:
     bool canZip() const;
     void setupActions(bool canZipFile);
-    BackupMailWidget *mBackupMailWidget;
+    LogWidget *mLogWidget;
     AbstractImportExportJob *mBackupData;
     AbstractImportExportJob *mRestoreData;
 };
