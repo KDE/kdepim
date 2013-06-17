@@ -62,7 +62,7 @@
 #include <messagecore/attachment/attachmentfrommimecontentjob.h>
 #include <messagecore/attachment/attachmentfromurljob.h>
 #include <messagecore/attachment/attachmentpropertiesdialog.h>
-#include <messagecomposersettings.h>
+#include <settings/messagecomposersettings.h>
 #include <KIO/Job>
 
 #include <KMime/Content>

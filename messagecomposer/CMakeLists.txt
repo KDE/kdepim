@@ -28,10 +28,10 @@ set( messagecomposer_src
      attachment/attachmentmodel.cpp
      job/attachmentfrompublickeyjob.cpp
 
-     akonadisender.cpp
-     messagehelper.cpp
-     messagefactory.cpp
-     messagecomposersettings.cpp
+     sender/akonadisender.cpp
+     helper/messagehelper.cpp
+     helper/messagefactory.cpp
+     settings/messagecomposersettings.cpp
      composer/composerviewbase.cpp
 
      part/messagepart.cpp
@@ -103,10 +103,10 @@ else()
   set(ALLOW_SEMICOLON_AS_ADDRESS_SEPARATOR_DEFAULT false)
 endif()
 
-configure_file(messagecomposer.kcfg.cmake ${CMAKE_CURRENT_BINARY_DIR}/messagecomposer.kcfg)
+configure_file(settings/messagecomposer.kcfg.cmake ${CMAKE_CURRENT_BINARY_DIR}/messagecomposer.kcfg)
 
 kde4_add_kcfg_files(messagecomposer_src
-  messagecomposersettings_base.kcfgc 
+  settings/messagecomposersettings_base.kcfgc 
 )
 
 kde4_add_library( messagecomposer ${LIBRARY_TYPE} ${messagecomposer_src} )

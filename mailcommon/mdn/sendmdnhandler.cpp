@@ -25,8 +25,8 @@
 #include "util/mailutil.h"
 #include "mdnadvicedialog.h"
 
-#include <messagecomposer/messagefactory.h>
-#include <messagecomposer/messagesender.h>
+#include <messagecomposer/helper/messagefactory.h>
+#include <messagecomposer/sender/messagesender.h>
 #include <messagecore/helpers/messagehelpers.h>
 #include <messageviewer/globalsettings.h>
 

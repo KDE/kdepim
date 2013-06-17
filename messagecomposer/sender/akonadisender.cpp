@@ -22,8 +22,8 @@
 #include <KLocale>
 #include <KDebug>
 
-#include "messagehelper.h"
-#include "messagecomposersettings.h"
+#include "helper/messagehelper.h"
+#include "settings/messagecomposersettings.h"
 #include "messagecomposer/utils/util.h"
 
 #include <kmime/kmime_message.h>

@@ -60,6 +60,7 @@ kmail1/kmail1settings.cpp
 include_directories(${CMAKE_SOURCE_DIR}/mailimporter 
                     ${CMAKE_SOURCE_DIR}/mailcommon 
 		    ${CMAKE_SOURCE_DIR}/pimcommon
+                    ${CMAKE_SOURCE_DIR}/messagecomposer/
 		    ${CMAKE_SOURCE_DIR}/mailcommon/filter/
                     ${CMAKE_SOURCE_DIR}/messageviewer/
 		    ${CMAKE_SOURCE_DIR}/libkdepim/

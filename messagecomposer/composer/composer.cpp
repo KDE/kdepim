@@ -35,7 +35,7 @@
 #include "transparentjob.h"
 #include "imagescaling/imagescalingjob.h"
 #include "imagescaling/imagescalingutils.h"
-#include "messagecomposersettings.h"
+#include "settings/messagecomposersettings.h"
 
 
 #include <QTimer>

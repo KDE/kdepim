@@ -17,7 +17,7 @@
 */
 
 #include "composerautocorrection.h"
-#include "messagecomposersettings.h"
+#include "settings/messagecomposersettings.h"
 #include "import/importkmailautocorrection.h"
 #include <KLocale>
 #include <KGlobal>

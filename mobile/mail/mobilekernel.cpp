@@ -24,7 +24,7 @@
 #include <mailcommon/kernel/mailkernel.h>
 #include <mailcommon/job/jobscheduler.h>
 #include <kpimidentities/identitymanager.h>
-#include <messagecomposer/akonadisender.h>
+#include <messagecomposer/sender/akonadisender.h>
 
 using namespace MailCommon;
 

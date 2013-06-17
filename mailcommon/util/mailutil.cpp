@@ -61,7 +61,7 @@
 #include <messagecore/utils/stringutil.h>
 #include <messagecore/helpers/messagehelpers.h>
 
-#include <messagecomposer/messagehelper.h>
+#include <messagecomposer/helper/messagehelper.h>
 
 #include <Akonadi/AgentManager>
 #include <Akonadi/EntityMimeTypeFilterModel>

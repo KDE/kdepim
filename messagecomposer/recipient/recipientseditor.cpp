@@ -28,7 +28,7 @@
 #include "recipientline.h"
 #include "recipientseditorsidewidget.h"
 
-#include "messagecomposersettings.h"
+#include "settings/messagecomposersettings.h"
 #ifndef Q_OS_WINCE
 #include <messagecomposer/recipient/distributionlistdialog.h>
 #endif

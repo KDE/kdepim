@@ -24,7 +24,7 @@
 #include "part/textpart.h"
 #include "messageviewer/nodehelper.h"
 #include "autocorrection/composerautocorrection.h"
-#include "messagecomposersettings.h"
+#include "settings/messagecomposersettings.h"
 
 
 #include <grantlee/plaintextmarkupbuilder.h>

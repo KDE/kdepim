@@ -44,8 +44,8 @@
 #include "mailcommon/widgets/redirectdialog.h"
 #include "mailcommon/mdn/sendmdnhandler.h"
 #include "mailthreadgroupercomparator.h"
-#include "messagecomposer/messagehelper.h"
-#include "messagecomposer/messagecomposersettings.h"
+#include "messagecomposer/helper/messagehelper.h"
+#include "messagecomposer/settings/messagecomposersettings.h"
 #include "messagecore/helpers/messagehelpers.h"
 #include "messagelistproxy.h"
 #include "messagelistsettingscontroller.h"
@@ -103,7 +103,7 @@
 #include <mailcommon/util/mailutil.h>
 #include <pimcommon/util/pimutil.h>
 #include <mailtransport/transportmanager.h>
-#include <messagecomposer/akonadisender.h>
+#include <messagecomposer/sender/akonadisender.h>
 #include <messagecore/utils/stringutil.h>
 #include <qmllistselectionmodel.h>
 #include <qmlcheckableproxymodel.h>

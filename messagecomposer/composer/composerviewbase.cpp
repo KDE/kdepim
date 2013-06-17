@@ -65,8 +65,8 @@
 #include <QUuid>
 #include <QtCore/QTextCodec>
 #include <addressline/recentaddresses.h>
-#include "messagecomposersettings.h"
-#include "messagehelper.h"
+#include "settings/messagecomposersettings.h"
+#include "helper/messagehelper.h"
 
 static QStringList encodeIdn( const QStringList &emails )
 {

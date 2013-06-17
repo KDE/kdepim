@@ -19,7 +19,7 @@
 
 #include "messagefactory.h"
 
-#include "messagecomposersettings.h"
+#include "settings/messagecomposersettings.h"
 #include "messagecomposer/utils/util.h"
 
 #include <akonadi/item.h>
@@ -35,7 +35,7 @@
 #include <messagecore/mailinglist.h>
 #include <messagecore/helpers/messagehelpers.h>
 #include <messagecore/utils/stringutil.h>
-#include "messagehelper.h"
+#include "helper/messagehelper.h"
 #include "templateparser/templateparser.h"
 #include <KLocalizedString>
 #include <kcharsets.h>

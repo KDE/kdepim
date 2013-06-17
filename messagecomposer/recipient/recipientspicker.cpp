@@ -21,7 +21,7 @@
 
 
 #include "recipientspicker.h"
-#include "messagecomposersettings.h"
+#include "settings/messagecomposersettings.h"
 
 #include <akonadi/contact/emailaddressselectionwidget.h>
 #include <kabc/contactgroup.h>
