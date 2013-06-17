@@ -33,8 +33,10 @@ ImportCalendarJob::~ImportCalendarJob()
 void ImportCalendarJob::start()
 {
     mArchiveDirectory = archive()->directory();
-    restoreConfig();
-    //TODO
+    if (mTypeSelected & Utils::Resources)
+        restoreResources();
+    if (mTypeSelected & Utils::Config)
+        restoreConfig();
 }
 
 void ImportCalendarJob::restoreResources()

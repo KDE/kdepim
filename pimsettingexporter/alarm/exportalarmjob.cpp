@@ -81,9 +81,9 @@ void ExportAlarmJob::backupResources()
                     if (!errorStr.isEmpty())
                         Q_EMIT error(errorStr);
                     Q_EMIT info(i18n("\"%1\" was backuped.",filename));
-                }
-                else
+                } else {
                     Q_EMIT error(i18n("\"%1\" file cannot be added to backup file.",filename));
+                }
             }
         }
     }

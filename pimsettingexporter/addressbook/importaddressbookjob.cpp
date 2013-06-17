@@ -33,8 +33,10 @@ ImportAddressbookJob::~ImportAddressbookJob()
 void ImportAddressbookJob::start()
 {
     mArchiveDirectory = archive()->directory();
-    restoreConfig();
-    //TODO
+    if (mTypeSelected & Utils::Resources)
+        restoreResources();
+    if (mTypeSelected & Utils::Config)
+        restoreConfig();
 }
 
 void ImportAddressbookJob::restoreResources()
