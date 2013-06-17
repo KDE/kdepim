@@ -59,6 +59,9 @@ namespace Private {
 #endif
 
     private:
+        void writeConfig();
+        void readConfig();
+
         QString m_log;
         KTextEdit * m_textEdit;
     };
