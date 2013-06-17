@@ -27,9 +27,15 @@ class QWidget;
 class QProgressDialog;
 class ArchiveStorage;
 class KArchiveDirectory;
+class KTempDir;
+
 namespace KPIMIdentities {
 class Identity;
 class IdentityManager;
+}
+
+namespace PimCommon {
+class CreateResource;
 }
 
 class AbstractImportExportJob : public QObject
@@ -50,6 +56,7 @@ Q_SIGNALS:
     void error(const QString &);
 
 protected:
+    void initializeImportJob();
     void backupFile(const QString &filename, const QString &path, const QString &storedName);
     int mergeConfigMessageBox(const QString &configName) const;
     bool overwriteConfigMessageBox(const QString &configName) const;
@@ -65,13 +72,16 @@ protected:
 
     QHash<QString, Akonadi::Collection::Id> mHashConvertPathCollectionId;
 
+    QString mTempDirName;
     Utils::StoredTypes mTypeSelected;
     ArchiveStorage *mArchiveStorage;
     KPIMIdentities::IdentityManager *mIdentityManager;
     QWidget *mParent;
+    KTempDir *mTempDir;
     QProgressDialog *mProgressDialog;
     const KArchiveDirectory* mArchiveDirectory;
     int mNumberOfStep;
+    PimCommon::CreateResource *mCreateResource;
 };
 
 #endif // ABSTRACTIMPORTEXPORTJOB_H

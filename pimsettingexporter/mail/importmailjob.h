@@ -27,9 +27,6 @@ class KArchiveDirectory;
 class KArchiveFile;
 class KTempDir;
 class ArchiveStorage;
-namespace PimCommon {
-class CreateResource;
-}
 
 class ImportMailJob : public AbstractImportExportJob
 {
@@ -69,9 +66,6 @@ private:
     QHash<int, int> mHashTransport;
     QHash<QString, QString> mHashResources;
     QStringList mFileList;
-    QString mTempDirName;
-    KTempDir *mTempDir;
-    PimCommon::CreateResource *mCreateResource;
 };
 
 #endif // ImportMailJob_H

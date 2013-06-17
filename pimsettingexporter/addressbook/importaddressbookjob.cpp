@@ -18,11 +18,12 @@
 #include "importaddressbookjob.h"
 #include "archivestorage.h"
 
+#include <KTempDir>
+
 ImportAddressbookJob::ImportAddressbookJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep)
     : AbstractImportExportJob(parent, archiveStorage, typeSelected, numberOfStep)
 {
-    Q_UNUSED( parent );
-    Q_UNUSED( archiveStorage );
+    initializeImportJob();
 }
 
 ImportAddressbookJob::~ImportAddressbookJob()

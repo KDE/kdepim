@@ -17,10 +17,14 @@
 
 #include "abstractimportexportjob.h"
 #include "archivestorage.h"
+
 #include "mailcommon/util/mailutil.h"
+
+#include "pimcommon/util/createresource.h"
 
 #include <kpimidentities/identitymanager.h>
 #include <KZip>
+#include <KTempDir>
 #include <KLocale>
 #include <KMessageBox>
 
@@ -33,15 +37,19 @@ AbstractImportExportJob::AbstractImportExportJob(QWidget *parent, ArchiveStorage
       mArchiveStorage(archiveStorage),
       mIdentityManager(new KPIMIdentities::IdentityManager( false, this, "mIdentityManager" )),
       mParent(parent),
+      mTempDir(0),
       mProgressDialog(0),
       mArchiveDirectory(0),
-      mNumberOfStep(numberOfStep)
+      mNumberOfStep(numberOfStep),
+      mCreateResource(0)
 {
 }
 
 AbstractImportExportJob::~AbstractImportExportJob()
 {
+    delete mCreateResource;
     delete mIdentityManager;
+    delete mTempDir;
 }
 
 QProgressDialog *AbstractImportExportJob::progressDialog()
@@ -118,6 +126,15 @@ Akonadi::Collection::Id AbstractImportExportJob::convertPathToId(const QString& 
         mHashConvertPathCollectionId.insert(path,id);
     }
     return id;
+}
+
+void AbstractImportExportJob::initializeImportJob()
+{
+    mTempDir = new KTempDir();
+    mTempDirName = mTempDir->name();
+    mCreateResource = new PimCommon::CreateResource();
+    connect(mCreateResource,SIGNAL(createResourceInfo(QString)),SIGNAL(info(QString)));
+    connect(mCreateResource,SIGNAL(createResourceError(QString)),SIGNAL(error(QString)));
 }
 
 #include "abstractimportexportjob.moc"

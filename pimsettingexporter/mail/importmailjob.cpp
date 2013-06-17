@@ -57,17 +57,11 @@ static const QString storeMails = QLatin1String("backupmail/");
 ImportMailJob::ImportMailJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep)
     : AbstractImportExportJob(parent,archiveStorage,typeSelected,numberOfStep)
 {
-    mTempDir = new KTempDir();
-    mTempDirName = mTempDir->name();
-    mCreateResource = new PimCommon::CreateResource();
-    connect(mCreateResource,SIGNAL(createResourceInfo(QString)),SIGNAL(info(QString)));
-    connect(mCreateResource,SIGNAL(createResourceError(QString)),SIGNAL(error(QString)));
+    initializeImportJob();
 }
 
 ImportMailJob::~ImportMailJob()
 {
-    delete mTempDir;
-    delete mCreateResource;
 }
 
 void ImportMailJob::start()

@@ -18,9 +18,13 @@
 #include "importalarmjob.h"
 #include "archivestorage.h"
 
+#include <KTempDir>
+
+
 ImportAlarmJob::ImportAlarmJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep)
     : AbstractImportExportJob(parent, archiveStorage, typeSelected, numberOfStep)
 {
+    initializeImportJob();
 }
 
 ImportAlarmJob::~ImportAlarmJob()
@@ -32,8 +36,10 @@ ImportAlarmJob::~ImportAlarmJob()
 void ImportAlarmJob::start()
 {
     mArchiveDirectory = archive()->directory();
-    restoreConfig();
-    //TODO
+    if (mTypeSelected & Utils::Resources)
+        restoreResources();
+    if (mTypeSelected & Utils::Config)
+        restoreConfig();
 }
 
 void ImportAlarmJob::restoreResources()

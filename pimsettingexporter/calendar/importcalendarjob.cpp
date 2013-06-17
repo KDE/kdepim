@@ -19,10 +19,12 @@
 #include "archivestorage.h"
 
 #include <KZip>
+#include <KTempDir>
 
 ImportCalendarJob::ImportCalendarJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep)
     : AbstractImportExportJob(parent, archiveStorage, typeSelected, numberOfStep)
 {
+    initializeImportJob();
 }
 
 ImportCalendarJob::~ImportCalendarJob()
