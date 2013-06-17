@@ -22,6 +22,7 @@
 #include "utils.h"
 
 class SelectTypeWidget;
+class SelectionTypeTreeWidget;
 
 class SelectionTypeDialog : public KDialog
 {
@@ -36,7 +37,7 @@ private Q_SLOTS:
     void slotItemSelected(bool selected);
 
 private:
-    SelectTypeWidget *mWidget;
+    SelectionTypeTreeWidget *mSelectionTreeWidget;
 };
 
 #endif // SELECTIONTYPEDIALOG_H

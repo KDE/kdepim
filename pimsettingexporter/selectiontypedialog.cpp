@@ -16,7 +16,8 @@
 */
 
 #include "selectiontypedialog.h"
-#include "selecttypewidget.h"
+#include "selectiontypetreewidget.h"
+//#include "selecttypewidget.h"
 
 #include <KLocale>
 #include <QHBoxLayout>
@@ -32,27 +33,26 @@ SelectionTypeDialog::SelectionTypeDialog(QWidget *parent)
     QHBoxLayout *mainLayout = new QHBoxLayout( mainWidget );
     mainLayout->setSpacing( KDialog::spacingHint() );
     mainLayout->setMargin( KDialog::marginHint() );
-    mWidget = new SelectTypeWidget(this);
-    mainLayout->addWidget(mWidget);
-    setMainWidget( mainWidget );
-    enableButtonOk(false);
-    connect(mWidget,SIGNAL(itemSelected(bool)),SLOT(slotItemSelected(bool)));
+    mSelectionTreeWidget = new SelectionTypeTreeWidget(this);
+    mainLayout->addWidget(mSelectionTreeWidget);
+    setMainWidget(mainWidget);
+    //enableButtonOk(false);
+    //connect(mWidget, SIGNAL(itemSelected(bool)), SLOT(slotItemSelected(bool)));
     resize(400, 200);
 }
 
 SelectionTypeDialog::~SelectionTypeDialog()
 {
-
 }
 
 void SelectionTypeDialog::slotItemSelected(bool selected)
 {
-    enableButtonOk(selected);
+    //enableButtonOk(selected);
 }
 
 Utils::StoredTypes SelectionTypeDialog::backupTypesSelected(int &numberOfStep) const
 {
-    return mWidget->backupTypesSelected(numberOfStep);
+    return mSelectionTreeWidget->kmailStoredType(numberOfStep);
 }
 
 #include "selectiontypedialog.moc"
