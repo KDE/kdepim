@@ -8,6 +8,7 @@ include_directories(${AKONADI_INCLUDE_DIR}
                     ${CMAKE_SOURCE_DIR}/mailcommon
                     ${CMAKE_SOURCE_DIR}/messageviewer
                     ${CMAKE_SOURCE_DIR}/pimcommon
+                    ${CMAKE_SOURCE_DIR}/messagecomposer/
                     ${NEPOMUK_CORE_INCLUDE_DIR}
 )
 

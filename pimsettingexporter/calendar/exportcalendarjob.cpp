@@ -127,6 +127,12 @@ void ExportCalendarJob::backupConfig()
         backupFile(korgacrc, Utils::configsPath(), korgacStr);
     }
 
+    const QString freebusyurlsStr(QLatin1String("korganizer/freebusyurls"));
+    const QString freebusyurls = KStandardDirs::locateLocal( "data", freebusyurlsStr );
+    if (QFile(freebusyurls).exists()) {
+        backupFile(freebusyurls, Utils::dataPath(), freebusyurlsStr);
+    }
+
     Q_EMIT info(i18n("Config backup done."));
 }
 

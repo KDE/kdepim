@@ -924,7 +924,6 @@ void ImportMailJob::copyArchiveMailAgentConfigGroup(KSharedConfig::Ptr archiveCo
     }
 }
 
-
 void ImportMailJob::importTemplatesConfig(const KArchiveFile* templatesconfiguration, const QString& templatesconfigurationrc, const QString&filename,const QString& prefix)
 {
     copyToFile(templatesconfiguration,templatesconfigurationrc,filename,prefix);

@@ -52,6 +52,7 @@ AbstractImportExportJob::~AbstractImportExportJob()
     delete mCreateResource;
     delete mIdentityManager;
     delete mTempDir;
+    delete mProgressDialog;
 }
 
 QProgressDialog *AbstractImportExportJob::progressDialog()

@@ -40,6 +40,7 @@ Root
 |
 |-----data
 |       |---------<autocorrection xml file>
+|       |---------korganizer/freebusyurls
 |
 |-----calendar
 |       |---------<resource name>
