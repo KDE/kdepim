@@ -6,14 +6,14 @@
 <firstname>Daniel</firstname>
 <surname>Naber</surname>
 <affiliation><address>
-<email>daniel.naber@t-online.de</email>
+&Daniel.Naber.mail;
 </address></affiliation>
 </author>
 <author>
 <firstname>David</firstname>
 <surname>Rugge</surname>
 <affiliation><address>
-<email>davidrugge@mediaone.net</email>
+&David.Rugge.mail;
 </address></affiliation>
 </author>
 <author>
@@ -22,7 +22,7 @@
 <affiliation>
 <orgname>Klar&auml;lvdalens Datakonsult AB</orgname>
 <address>
-<email>mutz@kde.org</email>
+&Marc.Mutz.mail;
 </address>
 </affiliation>
 </author>
@@ -33,7 +33,6 @@
 <email>michel@kdab.net</email>
 </address></affiliation>
 </author>
-
 <author>
   <firstname>Laurent</firstname>
 <surname>Montel</surname>
@@ -41,7 +40,13 @@
 <email>montel@kde.org</email>
 </address></affiliation>
 </author>
-
+ <author>
+  <firstname>Scarlett</firstname>
+  <surname>Clark</surname>
+  <affiliation><address>
+    <email>scarlett@scarlettgatelyclark.com</email>
+  </address></affiliation>
+</author>
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
 <date>2013-04-30</date>
@@ -446,7 +451,7 @@ on their drafts at a different location.</para>
 <varlistentry>
 <term><guilabel>Special transport</guilabel></term>
 <listitem>
-<para>Select or enter an alternative SMTP server to be used when sending
+  <para>Select or enter an alternative &SMTP; server to be used when sending
 messages using this identity.</para>
 
 <note><para>You need to configure outgoing mail servers first, before
@@ -544,7 +549,7 @@ It is shown in the recipient's mail client (if supported).</para>
 <varlistentry>
 <term><guilabel>Send picture with every message</guilabel></term>
 <listitem>
-<para>Check this box if you want KMail to add a so-called X-Face header to 
+<para>Check this box if you want &kmail; to add a so-called X-Face header to
 messages written with this identity. An X-Face is a small (48x48 pixels) 
 black and white image that some mail clients are able to display.</para>
 </listitem>
@@ -622,10 +627,10 @@ linkend="sending-mail">Setting up your Account: Sending</link>.</para>
 <para>When you click <guibutton>Add...</guibutton> or
 <guibutton>Modify...</guibutton> the <guilabel>Create Outgoing 
 Account</guilabel> or <guilabel>Configure account</guilabel> dialogs
-will open respectively. For sending via <application>sendmail</application>
+will open respectively. For sending via &Sendmail;
 or similar programs
 you can specify a name and the location of the
-<command>sendmail</command> program.  For <acronym>SMTP</acronym> you
+&sendmail; program.  For &SMTP; you
 can specify <guilabel>Name</guilabel>, <guilabel>Outgoing mail server</guilabel>, and
 <guilabel>Port</guilabel> of the server.  <guilabel>Server requires
 authentication</guilabel> will enable the <guilabel>Login</guilabel>
@@ -888,7 +893,7 @@ information</guilabel> option.</para>
 <title>Message Window</title>
 
 <para>If the <guilabel>Close message window after replying or forwarding</guilabel> option is
-activated, KMail will close the message window after replying to or forwarding the message that
+activated, &kmail; will close the message window after replying to or forwarding the message that
 is displayed in the window. This only applies to the separate message window, not to the embedded
 message preview pane.</para>
 
@@ -1075,7 +1080,7 @@ folder will be selected in &kmail;'s main window.
       </term>
       <listitem>
         <para>
-          If the number of recipients is larger than this value, KMail will
+          If the number of recipients is larger than this value, &kmail; will
           warn and ask for a confirmation before sending the mail.
           The default is to warn if there are more than <literal>5</literal> recipients.
           This warning can be turned off.
@@ -1231,11 +1236,11 @@ is only useful for advanced users.</para>
 
 <para>If you have to send attachments with filenames containing non-English
 characters to users of
-<application><trademark class="trade">Outlook</trademark></application> or
-<application><trademark class="trade">Outlook Express</trademark></application>
+<application>&Microsoft; Outlook</application> or
+<application>&Microsoft; Outlook Express</application>
 then you might want to check the <guilabel>Outlook-compatible attachment naming</guilabel>
 option. &kmail; will then encode the attachment names in a non-standard way that
-is understood by <application><trademark class="trade">Outlook</trademark></application>.
+is understood by <application>&Microsoft; Outlook</application>.
 </para>
 <para>Note that &kmail; will create non-standard compliant messages, and
 consequently it is possible that your messages will not be understood by
@@ -1250,9 +1255,42 @@ of key words can be modified.</para>
 
 </sect2>
 
+ <sect2 id="configure-composer-autocorrection">
+   <title>Autocorrection</title>
+   <para>To enable the feature, check the <guilabel>Enable autocorrection</guilabel> option. In the
+     drop down box choose the language you would like to use.You can import settings from <application>LibreOffice</application> or another &kmail; installation by selecting the
+       appropriate choice from the <guilabel>Import</guilabel> drop down box. If you need to save your settings for another installation or application, select the <guibutton>Export</guibutton> button.
+       </para>
+       <para>
+	<varlistentry><title>Autocorrect Options</title>
+	  <listitem>
+	    <guilabel>Simple Autocorrection</guilabel>
+	      This allows you to configure &kmail; to autocorrect various simple corrections.
+	      Check the box next to the autocorrect feature you would like to enable.
+	  </listitem>
+	  <listitem><guilabel>Custom Quotes</guilabel>
+	    You can replace double or single quotes with typographical quotes by checking the appropriate box.
+	    You can also add non breaking space before specific punctuation marks in french text by selecting the option.
+	  </listitem>
+	  <listitem><guilabel>Advanced Autocorrection</guilabel>
+	    You can enter custom automatic word replacement by checking this option. To enter a custom string to replace automatically
+	    enter the word to be replaced in the <guilabel>Find</guilabel> box, and the replacement word in the <guilabel>Replace</guilabel> box and click the add button.
+	    To remove a custom word replacement string, highlight the string and click remove.
+	  </listitem>
+	  <listitem><guilabel>Exceptions</guilabel>
+	    This allows you to set exceptions where you would like &kmail; to ignore your autocorrect selections for end of sentence and two uppercase letters. Enter the exception and click add.
+	    To remove the exception, highlight the string and click remove.
+	  </listitem>
+	</varlistentry>
+      </para>
+      <para>
+	Once you have made all of your autocorrect selections click the <guibutton>Apply</guibutton> button.
+      </para>
+ </sect2>
+
 </sect1>
 
-  <sect1 id="configure-security">
+<sect1 id="configure-security">
     <title>
       Security Page
     </title>
@@ -1806,7 +1844,7 @@ of key words can be modified.</para>
               (<acronym>OCSP</acronym>).
             </para>
             <para>
-              Fill in the <acronym>URL</acronym> of the <acronym>OCSP</acronym>
+              Fill in the &URL; of the <acronym>OCSP</acronym>
               responder in the field reserved at this effect.
 	    </para>
 	  </listitem>
@@ -1814,12 +1852,12 @@ of key words can be modified.</para>
 
 	<varlistentry id="configure-smime-online-certificate-responder-url">
 	  <term>
-	    <guilabel>OCSP responder URL</guilabel>
+	    <guilabel><acronym>OCSP</acronym> responder &URL;</guilabel>
           </term>
          <listitem>
 	      <para>
 		Enter the address of the server for online validation
-		of certificates. The <acronym>URL</acronym>
+		of certificates. The &URL;
                 is usually starting with <emphasis>http://</emphasis>.
 	      </para>
 	  </listitem>
@@ -1838,7 +1876,7 @@ of key words can be modified.</para>
 
 	<varlistentry id="configure-smime-online-certificate-responder-ignore">
 	  <term>
-	    <guilabel>Ignore service URL of certificates</guilabel>
+	    <guilabel>Ignore service &URL; of certificates</guilabel>
 	  </term>
 	  <listitem>
 	    <para>
@@ -1889,11 +1927,11 @@ of key words can be modified.</para>
 
 	<varlistentry id="configure-smime-certificate-http-requests">
 	  <term>
-	    <guilabel>Do not perform any HTTP requests</guilabel>
+	    <guilabel>Do not perform any &HTTP; requests</guilabel>
 	  </term>
 	  <listitem>
 	    <para>
-	     Entirely disables the use of <acronym>HTTP</acronym> for
+	     Entirely disables the use of &HTTP; for
              <acronym>&smime;</acronym>.
 	    </para>
 	  </listitem>
@@ -1901,17 +1939,17 @@ of key words can be modified.</para>
 
 	<varlistentry id="configure-smime-certificate-http-ignore-distribution-point">
 	  <term>
-	    <guilabel>Ignore HTTP CRL Distribution Point of certificates</guilabel>
+	    <guilabel>Ignore &HTTP; CRL Distribution Point of certificates</guilabel>
 	  </term>
 	  <listitem>
 	    <para>
-	     When looking for the location of a <acronym>CRL</acronym>,
-             <quote>the "to-be-tested"</quote>certificate usually contains
+	     When looking for the location of a CRL,
+             the <quote>to-be-tested</quote> certificate usually contains
              what are known as CRL Distribution Point (<acronym>DP</acronym>) entries,
-             which are <acronym>URLs</acronym> describing the way to access
-             the <acronym>URL</acronym>. The first found <acronym>DP</acronym>
+             which are &URL;s describing the way to access
+             the &URL;. The first found <acronym>DP</acronym>
              entry is used.
-             With this option all entries using the <acronym>HTTP</acronym>
+             With this option all entries using the &HTTP;
              scheme are ignored when looking for a suitable
              <acronym>DP</acronym>.
 	    </para>
@@ -1920,28 +1958,28 @@ of key words can be modified.</para>
 
 	<varlistentry id="configure-smime-certificate-http-proxy">
 	  <term>
-	    <guilabel>Use system HTTP proxy</guilabel>
+	    <guilabel>Use system &HTTP; proxy</guilabel>
 	  </term>
 	  <listitem>
 	    <para>
 	     If this option is selected, the value of the
-             <acronym>HTTP</acronym> proxy shown on the right
-             (which comes from the environment variable http_proxy)
-             will be used for any <acronym>HTTP</acronym> request.
+             &HTTP; proxy shown on the right
+	       (which comes from the environment variable <varname>http_proxy</varname>)
+             will be used for any &HTTP; request.
 	    </para>
 	  </listitem>
 	</varlistentry>
 
 	<varlistentry id="configure-smime-certificate-http-requests-proxy">
 	  <term>
-	    <guilabel>Use this proxy for HTTP requests</guilabel>
+	    <guilabel>Use this proxy for &HTTP; requests</guilabel>
 	  </term>
 	  <listitem>
 	    <para>
-	      Enter here the location of your <acronym>HTTP</acronym> Proxy,
-              which will be used for all <acronym>HTTP</acronym> requests
-              relating to <acronym>&smime;</acronym>.
-              The syntax is <quote>"host:port"</quote>, for instance
+	      Enter here the location of your &HTTP; Proxy,
+              which will be used for all &HTTP; requests
+	      relating to &smime;
+              The syntax is <quote>host:port</quote>, for instance
               <emphasis>myproxy.nowhere.com:3128</emphasis>.
 	    </para>
 	  </listitem>
@@ -1949,27 +1987,27 @@ of key words can be modified.</para>
 
 	<varlistentry id="configure-smime-certificate-ldap-requests">
 	  <term>
-	    <guilabel>Do not perform any LDAP requests</guilabel>
+	    <guilabel>Do not perform any <acronym>LDAP</acronym> requests</guilabel>
 	  </term>
 	  <listitem>
 	    <para>
 	     Entirely disables the use of <acronym>LDAP</acronym> for
-             <acronym>&smime;</acronym>.
+	     &smime;.
 	    </para>
 	  </listitem>
 	</varlistentry>
 
 	<varlistentry id="configure-smime-certificate-ldap-distribution-point">
 	  <term>
-	    <guilabel>Ignore LDAP CRL Distribution Point of certificates</guilabel>
+	    <guilabel>Ignore <acronym>LDAP</acronym> CRL Distribution Point of certificates</guilabel>
 	  </term>
 	  <listitem>
 	    <para>
 	     When looking for the location of a <acronym>CRL</acronym>,
-             the <quote>"to-be-tested"</quote> certificate usually contains
+             the <quote>to-be-tested</quote> certificate usually contains
              what are known as CRL Distribution Point (<acronym>DP</acronym>) entries,
-             which are <acronym>URLs</acronym> describing the way to access
-             the <acronym>URL</acronym>.
+             which are &URL;s describing the way to access
+             the &URL;.
              The first found <acronym>DP</acronym> entry is used.
              With this option all entries using the <acronym>LDAP</acronym>
              scheme are ignored when looking for a suitable
@@ -1980,16 +2018,16 @@ of key words can be modified.</para>
 
 	<varlistentry id="configure-smime-certificate-ldap-proxy-host">
 	  <term>
-	    <guilabel>Primary host for LDAP requests</guilabel>
+	    <guilabel>Primary host for <acronym>LDAP</acronym> requests</guilabel>
 	  </term>
 	  <listitem>
 	    <para>
 	     Entering a <acronym>LDAP</acronym> server here will make all
              <acronym>LDAP</acronym> requests go to that server first.
              More precisely, this setting overrides any specified host
-             and port part in a <acronym>LDAP URL</acronym> and will also
+             and port part in a <acronym>LDAP</acronym> &URL; and will also
              be used if host and port have been omitted from the
-             <acronym>URL</acronym>. Other <acronym>LDAP</acronym> servers
+             &URL;. Other <acronym>LDAP</acronym> servers
              will be used only if the connection to the
              <emphasis>proxy</emphasis> failed.
              The syntax is <acronym>HOST</acronym> or
@@ -2002,63 +2040,6 @@ of key words can be modified.</para>
 
       </variablelist>
     </sect2>
-
-    <!-- no Crypto Backends in kmail 2.0.97 lueck 31.05.2011
-    This is now available via GnuPG Settings + Ciasmus Settings buttons on the Miscellaneous tab
-    sect2 id="configure-security-crypto-backends">
-      <title>
-	Crypto Backends
-      </title>
-
-      <para>
-	On this tab you can configure which crypto backends are to be
-	used for &openpgp; and &smime; cryptographic operations (such
-	as signing and encrypting).
-      </para>
-
-      <para>
-	On the right-hand side, you see a list of available
-	backends. Below each backend entry, you can see what protocols
-	(&openpgp; and/or &smime;) the backend supports. If a protocol
-	is not listed, the backend does not support it. If it is
-	listed, but grayed out, the backend supports the protocol, but
-	some required programs were not found, or other errors
-	occurred during initialization. If you press
-	<guibutton>Rescan</guibutton>, a dialog box will appear that
-	lists reasons for the initialization failure.
-      </para>
-
-      <para id="configure-security-crypto-backends-configure">
-	To configure a backend, select it in the list of available
-	backends and press <guibutton>Configure...</guibutton>. The
-	per-backend configuration dialog is dynamically created from
-	the information returned by the backend. It may therefore
-	change if you update the backend applications, although
-	&kmail; itself is unchanged. If the
-	<guibutton>Configure...</guibutton> button is disabled, the
-	backend does not support a backend configuration dialog.
-      </para>
-
-      <para>
-	Please refer to the manuals of the applications underlying
-	each backend for a description of the options presented in the
-	backend configuration dialogs.
-      </para>
-
-      <para>
-	In front of each backend's protocol entries, you can see a
-	checkbox, with which you select which backend is to be used
-	for a given protocol. These checkboxes are exclusive per
-	protocol, meaning that if you select a backend to perform
-	&openpgp; operations, any previously selected &openpgp;
-	implementation will be unselected, but the &smime; backend
-	selection will be unchanged. If no backend is selected for a
-	given protocol, that protocol is effectively disabled for use
-	in &kmail;.
-      </para>
-
-    </sect2 -->
-
   </sect1> <!-- configure-security -->
 
 <sect1 id="configure-misc">
@@ -2121,11 +2102,6 @@ Correspondingly, if you ask &kmail; to go to the previous unread message.
 <listitem>
 <para>This option controls what happens if you open a folder.
 <itemizedlist>
-<!-- not in kmail 2.0.96 listitem>
-<para>If <guilabel>Jump to First New Message</guilabel> is selected then &kmail; will select the
-first message it finds that is marked as new.
-</para>
-</listitem-->
 <listitem>
 <para>If <guilabel>Jump to First Unread Message</guilabel> is selected then &kmail; will
 select the first message it finds that is marked as unread.
@@ -2203,55 +2179,6 @@ option is selected.</para>
 
 </sect2>
 
- <!-- not in kmail 2.0.96 or does this appear only with an imap account? 
-no strings in the translation templates, so this is apparently obsolete lueck
-Revision 1039026 Remove the no longer needed IMAP groupware interface config
-sect2 id="configure-misc-groupware">
-<title>Groupware</title>
-
-<variablelist>
-
-<varlistentry>
-<term><guilabel>Enable IMAP resource functionality</guilabel></term>
-<listitem>
-<para>Makes it possible to store the entries from the Kontact applications (KOrganizer, KAddressBook and KNotes). This option has to be set whenever you are configuring Kontact as a <guilabel>KDE Kolab client</guilabel>. This option being enabled you will also need to add the appropriate resources from the <guilabel>KDE Control Center</guilabel> (kcontrol) in the <guilabel>KDE Resources Configuration</guilabel> section. <guilabel>Kolab</guilabel> resources have to be added in case the resource functionality applies to a <guilabel>KDE Kolab client</guilabel> set-up.</para>
-</listitem>
-</varlistentry>
-<varlistentry id="configure-misc-format-groupware-folders">
-<term><guilabel>Format used for the groupware folders</guilabel></term>
-<listitem>
-<para>Choose the storage format for the groupware folders</para>
-<itemizedlist>
-<listitem>
-<para>Default format is <guilabel>Standard (Ical/Vcard)</guilabel> for calendar folders (Ical) and addressbook folders (Vcard). This makes all Kontact features available.</para>
-</listitem>
-<listitem>
-<para><guilabel>Kolab</guilabel> users should choose <guilabel>Kolab XML</guilabel>. This format uses a custom model that matches more closely to the one used in <application><trademark class="trade">Microsoft Outlook</trademark></application> and gives better compatibility.</para>
-</listitem>
-</itemizedlist>
-</listitem>
-</varlistentry>
-<varlistentry>
-<term><guilabel>Language of the groupware folders</guilabel></term>
-<listitem>
-<para>Choose between the available languages to set the folder names of the <guilabel>IMAP</guilabel> storage to your local language. Note that this option is only aimed for compatibility with <application><trademark class="trade">Microsoft Outlook</trademark></application>. It is not recommended to change its default unless you have to, since it makes changing languages impossible.</para>
-</listitem>
-</varlistentry>
-<varlistentry>
-<term><guilabel>Resource folders are in account</guilabel></term>
-<listitem>
-<para>Select the parent of the <guilabel>IMAP</guilabel> resource folders. You should select the name of your <guilabel>IMAP/DIMAP</guilabel> account. By default the <guilabel>Kolab</guilabel> server sets the <guilabel>IMAP</guilabel> inbox to be the parent.</para>
-</listitem>
-</varlistentry>
-<varlistentry>
-<term><guilabel>Hide groupware folders</guilabel></term>
-<listitem>
-<para>You should not need to see the folders that hold the  <guilabel>IMAP</guilabel> resources. However if you want to see them, you can set that by enabling this option.</para>
-</listitem>
-</varlistentry>
-</variablelist>
-</sect2>
--->
 <sect2 id="configure-misc-invitation">
 <title>Invitations</title>
 
@@ -2260,37 +2187,37 @@ sect2 id="configure-misc-groupware">
 <varlistentry>
 <term><guilabel>Mangle From:/To: headers in replies to invitations</guilabel></term>
 <listitem>
-<para>Enable this option to make <application><trademark class="trade">Microsoft Outlook</trademark></application> understand your answers to invitations replies.</para>
+<para>Enable this option to make <application>&Microsoft; Outlook</application> understand your answers to invitations replies.</para>
 </listitem>
 </varlistentry>
 <varlistentry>
 <term><guilabel>Send invitations in the mail body</guilabel></term>
 <listitem>
-<para>Invitations are usually sent as attachments to a mail. When this option is enabled, invitation are sent in the text of the mail, which is necessary to send invitations and replies to <application><trademark class="trade">Microsoft Outlook</trademark></application>.</para>
+<para>Invitations are usually sent as attachments to a mail. When this option is enabled, invitation are sent in the text of the mail, which is necessary to send invitations and replies to <application>&Microsoft; Outlook</application>.</para>
 </listitem>
 </varlistentry>
 <varlistentry>
 <term><guilabel>Exchange compatible invitations naming</guilabel></term>
 <listitem>
-<para><application><trademark class="trade">Microsoft Outlook</trademark></application>, when used in combination with a Microsoft Exchange
+<para><application>&Microsoft; Outlook</application>, when used in combination with a &Microsoft; Exchange
 server, has a problem understanding standards-compliant groupware e-mail.
-Enable this option to send groupware invitations in a way that Microsoft
+Enable this option to send groupware invitations in a way that &Microsoft;
 Exchange understands. The invitation will be sent as an attachment with name <filename>ical.ics</filename>.</para>
 </listitem>
 </varlistentry>
 <varlistentry>
 <term><guilabel>Outlook compatible invitation reply comments</guilabel></term>
 <listitem>
-<para>When the user provides comments when responding to invitations, send the comment in a way that <application><trademark class="trade">Microsoft Outlook</trademark></application> understands. If this option is not enabled, the response comments will not be seen in Outlook.</para>
+<para>When the user provides comments when responding to invitations, send the comment in a way that <application>&Microsoft; Outlook</application> understands. If this option is not enabled, the response comments will not be seen in Outlook.</para>
 </listitem>
 </varlistentry>
 <varlistentry>
 <term><guilabel>Show invitation update differences in the Outlook style</guilabel></term>
 <listitem>
 <para>When viewing updated invitations, this option enables the differences between the previous
-and current invitations to be displayed in a way very much like <application><trademark class="trade">Microsoft Outlook</trademark></application>. 
+and current invitations to be displayed in a way very much like <application>&Microsoft; Outlook</application>.
 This is the default. The user can turn this option off if they want to see the invitation
-update differences shown in the "classic" KMail style.
+  update differences shown in the <quote>classic</quote> &kmail; style.
 </para>
 </listitem>
 </varlistentry>
@@ -2321,7 +2248,7 @@ will be moved to the Trash folder, once the reply has been successfully sent.</p
 <para>
 Apart from the options presented in the configuration dialog, some options
 can only be set directly in the &kmail; configuration file or through KIOSK.
-These so called "hidden" configuration options cannot be changed via
+  These so called <quote>hidden</quote> configuration options cannot be changed via
 the normal &kmail; Settings dialog; they must be made by modifying the
 configuration file using a text editor or the <command>kwriteconfig</command>
 program.
@@ -2354,11 +2281,11 @@ enable this feature, add a line reading:
 
 SendMDNsWithEmptySender=true
 
-to the [MDN] section of the kmail configuration file. If there is no such section, simply add "[MDN]" on
+ to the [MDN] section of the &kmail; configuration file. If there is no such section, simply add <quote>[MDN]</quote> on
 a line by itself just above the option.
 
-Note that the default setting of "false" strictly speaking violates Internet standards, but is
-set that way for practical reasons, to avoid servers rejecting MDNs that KMail
+ Note that the default setting of <quote>false</quote> strictly speaking violates Internet standards, but is
+set that way for practical reasons, to avoid servers rejecting MDNs that &kmail;
 generates because they think they are SPAM.
 </para>
 <para>
@@ -2371,7 +2298,7 @@ generates because they think they are SPAM.
 <term><guilabel>MaximumAttachmentSize</guilabel></term>
 <listitem>
 <para>
-This allows the maximum file size allowed for attachments in the mail
+This allows the maximum filesize allowed for attachments in the mail
 composer to be limited.
 
 To limit attachments to 20 MB in size, for example, add a line reading (under [Composer] section):
@@ -2406,7 +2333,7 @@ To enable the feature, add a line reading (under [General] section):
 <term><guilabel>CheckOutOfOfficeOnStartup</guilabel></term>
 <listitem>
 <para>
-With this option enabled, KMail will check on every startup if there is an
+With this option enabled, &kmail; will check on every startup if there is an
 active out-of-office configured and show a warning if this is the case.
 
 To disable the feature, add a line reading (under [OutOfOffice] section):
@@ -2429,7 +2356,7 @@ the server you can add:
 </para>
 <programlisting>AllowOutOfOfficeSettings=false
 </programlisting><para>
-to the [OutOfOffice] section of the kmail configuration file. If there is no such section, simply add "[OutOfOffice]" on
+  to the [OutOfOffice] section of the &kmail; configuration file. If there is no such section, simply add <quote>[OutOfOffice]</quote> on
 a line by itself just above the option.
 </para>
 </listitem>
@@ -2444,7 +2371,7 @@ able to change the domain to react to and the react-to-spam setting, you can add
 </para>
 <programlisting>AllowOutOfOfficeUploadButNoSettings=true
 </programlisting><para>
-to the [OutOfOffice] section of the kmail configuration file. If there is no such section, simply add "[OutOfOffice]" on
+  to the [OutOfOffice] section of the &kmail; configuration file. If there is no such section, simply add <quote>[OutOfOffice]</quote> on
 a line by itself just above the option.
 </para>
 </listitem>
@@ -2460,7 +2387,7 @@ value, add
 </para>
 <programlisting>OutOfOfficeDomain=myMailDomain.test
 </programlisting><para>
-to the [OutOfOffice] section of the kmail configuration file. If there is no such section, simply add "[OutOfOffice]" on
+  to the [OutOfOffice] section of the &kmail; configuration file. If there is no such section, simply add <quote>[OutOfOffice]</quote> on
 a line by itself just above the option.
 
 Applying defaults to the out-of-office configuration dialog via the corresponding
@@ -2478,7 +2405,7 @@ behavior, add
 </para>
 <programlisting>OutOfOfficeReactToSpam=true
 </programlisting><para>
-to the [OutOfOffice] section of the kmail configuration file. If there is no such section, simply add "[OutOfOffice]" on
+  to the [OutOfOffice] section of the &kmail; configuration file. If there is no such section, simply add <quote>[OutOfOffice]</quote> on
 a line by itself just above the option.
 
 Applying defaults to the out-of-office configuration dialog via the corresponding
