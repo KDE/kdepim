@@ -19,7 +19,7 @@
 #include "favoritecollectionwidget.h"
 #include "kernel/mailkernel.h"
 
-#include <messagecore/globalsettings.h>
+#include <messagecore/settings/globalsettings.h>
 
 #include <KDE/KGlobalSettings>
 #include <KDE/KLocale>

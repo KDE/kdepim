@@ -19,7 +19,7 @@
 #include "storagemodel.h"
 
 #include <messagecore/utils/stringutil.h>
-#include <messagecore/globalsettings.h>
+#include <messagecore/settings/globalsettings.h>
 #include <messagecore/helpers/nodehelper.h>
 
 #include <akonadi/attributefactory.h>

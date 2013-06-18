@@ -33,7 +33,7 @@
 #include "csshelper.h"
 #include "globalsettings.h"
 
-#include "messagecore/globalsettings.h"
+#include "messagecore/settings/globalsettings.h"
 
 #include <kconfig.h>
 #include <kconfiggroup.h>

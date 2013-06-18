@@ -44,7 +44,7 @@
 #include <KGlobal>
 #include <KLocale>
 
-#include "messagecore/globalsettings.h"
+#include "messagecore/settings/globalsettings.h"
 
 using namespace MessageCore;
 

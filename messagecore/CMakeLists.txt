@@ -31,7 +31,7 @@ set(messagecore_LIB_SRCS
    attachment/attachmentpart.cpp
    attachment/attachmentpropertiesdialog.cpp
    widgets/emailaddressrequester.cpp
-   globalsettings.cpp
+   settings/globalsettings.cpp
    mailinglist.cpp
    mdnstateattribute.cpp
    helpers/messagehelpers.cpp
@@ -47,7 +47,7 @@ if (NOT WINCE)
 endif ()
 
 kde4_add_kcfg_files(messagecore_LIB_SRCS
-  globalsettings_base.kcfgc
+  settings/globalsettings_base.kcfgc
 )
 
 kde4_add_ui_files(messagecore_LIB_SRCS
