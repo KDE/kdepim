@@ -23,17 +23,24 @@
 import QtQuick 1.1 as QML
 import org.kde 4.5
 import org.kde.pim.mobileui 4.5 as KPIM
+import org.kde.plasma.components 0.1 as PlasmaComponents
 
-QML.Rectangle {
+
+PlasmaComponents.Page {
   id: root
-  anchors.fill: parent
-  color: "white"
-  z: 10
 
-  QML.MouseArea {
-    anchors.fill : parent
-    onClicked : {} // do nothing
+  anchors.fill: parent
+
+  //BEGIN Tools
+  tools: PlasmaComponents.ToolBarLayout {
+    PlasmaComponents.ToolButton {
+
+      iconSource: "go-previous"
+
+      onClicked: pageStack.pop()
+    }
   }
+  //END Tools
 
   QML.Rectangle {
     anchors.right : root.right
@@ -53,7 +60,7 @@ QML.Rectangle {
         buttonText : application.getAction("akonadi_mark_as_read", "").text.replace("&", "");
         onClicked : {
           application.getAction("akonadi_mark_as_read", "").trigger();
-          root.parent.visible = false
+          pageStack.pop()
         }
       }
       KPIM.Button2 {
@@ -61,7 +68,7 @@ QML.Rectangle {
         buttonText : application.getAction("akonadi_mark_as_important", "").text.replace("&", "");
         onClicked : {
           application.getAction("akonadi_mark_as_important", "").trigger();
-          root.parent.visible = false
+          pageStack.pop()
         }
       }
       KPIM.Button2 {
@@ -69,14 +76,7 @@ QML.Rectangle {
         buttonText : application.getAction("akonadi_mark_as_action_item", "").text.replace("&", "");
         onClicked : {
           application.getAction("akonadi_mark_as_action_item", "").trigger();
-          root.parent.visible = false
-        }
-      }
-      KPIM.Button2 {
-        width: parent.width
-        buttonText : KDE.i18n( "Discard" )
-        onClicked : {
-          root.parent.visible = false
+          pageStack.pop()
         }
       }
     }
