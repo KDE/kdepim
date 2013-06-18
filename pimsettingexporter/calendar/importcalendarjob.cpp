@@ -89,10 +89,10 @@ void ImportCalendarJob::restoreConfig()
         const QString korgacrc = KStandardDirs::locateLocal( "config",  korgacStr);
         if (QFile(korgacrc).exists()) {
             if (overwriteConfigMessageBox(korgacStr)) {
-                importkorgacConfig(korgacrcFile, korgacrc, korgacStr, Utils::configsPath());
+                copyToFile(korgacrcFile, korgacrc, korgacStr, Utils::configsPath());
             }
         } else {
-            importkorgacConfig(korgacrcFile, korgacrc, korgacStr, Utils::configsPath());
+            copyToFile(korgacrcFile, korgacrc, korgacStr, Utils::configsPath());
         }
     }
 
@@ -105,19 +105,9 @@ void ImportCalendarJob::importkorganizerConfig(const KArchiveFile* file, const Q
     copyToFile(file, config, filename, prefix);
     KSharedConfig::Ptr korganizerConfig = KSharedConfig::openConfig(config);
 
-    //TODO
+    //TODO adapt collection name
     korganizerConfig->sync();
 }
-
-void ImportCalendarJob::importkorgacConfig(const KArchiveFile* file, const QString &config, const QString &filename,const QString &prefix)
-{
-    copyToFile(file, config, filename, prefix);
-    KSharedConfig::Ptr korgacConfig = KSharedConfig::openConfig(config);
-
-    //TODO
-    korgacConfig->sync();
-}
-
 
 QString ImportCalendarJob::componentName() const
 {
