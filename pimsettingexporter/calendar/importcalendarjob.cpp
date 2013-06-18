@@ -67,9 +67,35 @@ void ImportCalendarJob::restoreConfig()
             copyToFile(korganizerFile, korganizerPrinterrc, korganizerPrinterrcStr, Utils::configsPath());
         }
     }
+
+    const QString korganizerStr(QLatin1String("korganizerrc"));
+    const KArchiveEntry* korganizerrcentry  = mArchiveDirectory->entry(Utils::configsPath() + korganizerStr);
+    if (korganizerrcentry && korganizerrcentry->isFile()) {
+        const KArchiveFile* korganizerrcFile = static_cast<const KArchiveFile*>(korganizerrcentry);
+        const QString korganizerrc = KStandardDirs::locateLocal( "config",  korganizerStr);
+        if (QFile(korganizerrc).exists()) {
+            if (overwriteConfigMessageBox(korganizerStr)) {
+                importkorganizerConfig(korganizerrcFile, korganizerrc, korganizerStr, Utils::configsPath());
+            }
+        } else {
+            importkorganizerConfig(korganizerrcFile, korganizerrc, korganizerStr, Utils::configsPath());
+        }
+    }
+
+
     Q_EMIT info(i18n("Config restored."));
-    //TODO: korgacrc  korganizerrc
+    //TODO: korgacrc
 }
+
+void ImportCalendarJob::importkorganizerConfig(const KArchiveFile* file, const QString &config, const QString &filename,const QString &prefix)
+{
+    copyToFile(file, config, filename, prefix);
+    KSharedConfig::Ptr korganizerConfig = KSharedConfig::openConfig(config);
+
+    //TODO
+    korganizerConfig->sync();
+}
+
 
 QString ImportCalendarJob::componentName() const
 {
