@@ -19,7 +19,7 @@ install(FILES  ontology/messagetag.trig ${CMAKE_CURRENT_BINARY_DIR}/messagetag.o
 
 set(messagecore_LIB_SRCS
 
-   asyncnepomukresourceretriever.cpp
+   nepomukutil/asyncnepomukresourceretriever.cpp
    imagecollector.cpp
    attachment/attachmentcollector.cpp
    attachment/attachmentcompressjob.cpp
