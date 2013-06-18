@@ -626,6 +626,13 @@ void FolderTreeView::updatePalette()
   mCollectionStatisticsDelegate->updatePalette();
 }
 
+void FolderTreeView::keyboardSearch( const QString & )
+{
+  // Disable keyboardSearch: it interfers with filtering in the
+  // FolderSelectionDialog. We don't want it in KMail main window
+  // either because KMail has one-letter keyboard shortcuts.
+}
+
 }
 
 #include "foldertreeview.moc"

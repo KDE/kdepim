@@ -67,6 +67,8 @@ class MAILCOMMON_EXPORT FolderTreeView : public Akonadi::EntityTreeView
     void readConfig();
 
     void updatePalette();
+
+    void keyboardSearch( const QString & ); // reimp
   protected:
     enum Move {
       Next = 0,
