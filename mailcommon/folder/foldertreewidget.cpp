@@ -199,9 +199,7 @@ void FolderTreeWidget::selectCollectionFolder( const Akonadi::Collection &collec
   const QModelIndex index =
     Akonadi::EntityTreeModel::modelIndexForCollection( d->folderTreeView->model(), collection );
 
-  d->folderTreeView->selectionModel()->select( index,
-                                               QItemSelectionModel::SelectCurrent |
-                                               QItemSelectionModel::Rows );
+  d->folderTreeView->setCurrentIndex( index );
   d->folderTreeView->setExpanded( index, true );
   d->folderTreeView->scrollTo( index );
 }
