@@ -162,6 +162,7 @@ void SelectionTypeTreeWidget::createSubItem(QTreeWidgetItem *parent, Utils::Stor
     }
     default:
         qDebug()<<" Type not supported: "<<type;
+        break;
     }
 }
 

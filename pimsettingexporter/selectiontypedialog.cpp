@@ -35,18 +35,11 @@ SelectionTypeDialog::SelectionTypeDialog(QWidget *parent)
     mSelectionTreeWidget = new SelectionTypeTreeWidget(this);
     mainLayout->addWidget(mSelectionTreeWidget);
     setMainWidget(mainWidget);
-    //enableButtonOk(false);
-    //connect(mWidget, SIGNAL(itemSelected(bool)), SLOT(slotItemSelected(bool)));
     resize(600, 400);
 }
 
 SelectionTypeDialog::~SelectionTypeDialog()
 {
-}
-
-void SelectionTypeDialog::slotItemSelected(bool selected)
-{
-    //enableButtonOk(selected);
 }
 
 Utils::StoredTypes SelectionTypeDialog::kmailTypesSelected(int &numberOfStep) const

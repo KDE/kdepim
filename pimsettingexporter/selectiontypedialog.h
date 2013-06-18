@@ -36,9 +36,6 @@ public:
     Utils::StoredTypes kalarmTypesSelected(int &numberOfStep) const;
     Utils::StoredTypes korganizerTypesSelected(int &numberOfStep) const;
 
-private Q_SLOTS:
-    void slotItemSelected(bool selected);
-
 private:
     SelectionTypeTreeWidget *mSelectionTreeWidget;
 };
