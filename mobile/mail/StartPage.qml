@@ -66,14 +66,6 @@ PlasmaComponents.Page {
     }
   }
 
-  QML.Loader {
-    id: markOptionsPage
-    visible: false
-    anchors.fill: parent
-    z: 1
-    source: visible ? "MarkAsPage.qml" : ""
-  }
-
   //BEGIN MessageView
   MessageViewer.MessageView {
     id: messageView
@@ -420,7 +412,7 @@ PlasmaComponents.Page {
                 name : "mark_as_dialog"
                 script : {
                   actionPanel.collapse();
-                  markOptionsPage.visible = true;
+                  pageStack.push(Qt.createComponent("MarkAsPage.qml") )
                 }
               },
               KPIM.ScriptAction {
