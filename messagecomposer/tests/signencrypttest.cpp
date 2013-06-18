@@ -44,7 +44,7 @@
 #include <messageviewer/nodehelper.h>
 #include <messagecore/tests/util.h>
 
-#include <messagecore/nodehelper.h>
+#include <messagecore/helpers/nodehelper.h>
 
 QTEST_KDEMAIN( SignEncryptTest, GUI )
 

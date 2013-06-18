@@ -75,18 +75,18 @@
 #include <messagecomposer/part/globalpart.h>
 #include <messagecomposer/part/infopart.h>
 #include <messagecomposer/part/textpart.h>
-#include <messagecomposersettings.h>
-#include <messagecomposer/messagehelper.h>
+#include <settings/messagecomposersettings.h>
+#include <messagecomposer/helper/messagehelper.h>
 #include <messagecomposer/composer/signaturecontroller.h>
 #include <messagecomposer/job/inserttextfilejob.h>
 #include <messagecomposer/composer/composerlineedit.h>
 #include <messagecore/attachment/attachmentpart.h>
-#include "messagecore/globalsettings.h"
+#include "messagecore/settings/globalsettings.h"
 #include <templateparser/templateparser.h>
 #include <templatesconfiguration.h>
-#include "messagecore/nodehelper.h"
+#include "messagecore/helpers/nodehelper.h"
 #include <akonadi/kmime/messagestatus.h>
-#include "messagecore/messagehelpers.h"
+#include "messagecore/helpers/messagehelpers.h"
 #include "mailcommon/folder/folderrequester.h"
 #include "mailcommon/folder/foldercollection.h"
 

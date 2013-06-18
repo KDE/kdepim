@@ -78,14 +78,14 @@
 #include "messageviewer/utils/kcursorsaver.h"
 #endif
 
-#include "messagecomposer/messagesender.h"
-#include "messagecomposer/messagehelper.h"
+#include "messagecomposer/sender/messagesender.h"
+#include "messagecomposer/helper/messagehelper.h"
 
 #include "templateparser/templateparser.h"
 
-#include "messagecore/globalsettings.h"
-#include "messagecore/mailinglist.h"
-#include "messagecore/messagehelpers.h"
+#include "messagecore/settings/globalsettings.h"
+#include "messagecore/misc/mailinglist.h"
+#include "messagecore/helpers/messagehelpers.h"
 
 #include "kmknotify.h"
 

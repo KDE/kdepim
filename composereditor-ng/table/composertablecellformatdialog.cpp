@@ -219,7 +219,7 @@ void ComposerTableCellFormatDialogPrivate::_k_slotOkClicked()
 }
 
 ComposerTableCellFormatDialog::ComposerTableCellFormatDialog(const QWebElement& element, QWidget *parent)
-    :KDialog(parent), d(new ComposerTableCellFormatDialogPrivate(element, this))
+    : KDialog(parent), d(new ComposerTableCellFormatDialogPrivate(element, this))
 {
 }
 

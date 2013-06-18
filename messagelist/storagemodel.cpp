@@ -19,8 +19,8 @@
 #include "storagemodel.h"
 
 #include <messagecore/utils/stringutil.h>
-#include <messagecore/globalsettings.h>
-#include <messagecore/nodehelper.h>
+#include <messagecore/settings/globalsettings.h>
+#include <messagecore/helpers/nodehelper.h>
 
 #include <akonadi/attributefactory.h>
 #include <akonadi/collection.h>

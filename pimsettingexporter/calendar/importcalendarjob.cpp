@@ -19,12 +19,16 @@
 #include "archivestorage.h"
 
 #include <KZip>
+#include <KTempDir>
+#include <KStandardDirs>
+#include <KLocale>
 
-ImportCalendarJob::ImportCalendarJob(QWidget *parent, ArchiveStorage *archiveStorage)
-    : AbstractImportExportJob(parent,archiveStorage,/*typeSelected,numberOfStep*/0,0 /*TODO fix it*/)
+#include <QFile>
+
+ImportCalendarJob::ImportCalendarJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep)
+    : AbstractImportExportJob(parent, archiveStorage, typeSelected, numberOfStep)
 {
-    Q_UNUSED( parent );
-    Q_UNUSED( archiveStorage );
+    initializeImportJob();
 }
 
 ImportCalendarJob::~ImportCalendarJob()
@@ -35,19 +39,36 @@ ImportCalendarJob::~ImportCalendarJob()
 void ImportCalendarJob::start()
 {
     mArchiveDirectory = archive()->directory();
-    restoreConfig();
-    //TODO
+    if (mTypeSelected & Utils::Resources)
+        restoreResources();
+    if (mTypeSelected & Utils::Config)
+        restoreConfig();
 }
 
 void ImportCalendarJob::restoreResources()
 {
     //TODO
+    Q_EMIT info(i18n("Restore resources..."));
+    Q_EMIT info(i18n("Resources restored."));
 }
 
 void ImportCalendarJob::restoreConfig()
 {
-    //TODO
-    //TODO: korgacrc  korganizer_printing.rc  korganizerrc
+    const QString korganizerPrinterrcStr(QLatin1String("korganizer_printing.rc"));
+    const KArchiveEntry* korganizerPrinterEntry  = mArchiveDirectory->entry(Utils::configsPath() + korganizerPrinterrcStr);
+    if (korganizerPrinterEntry && korganizerPrinterEntry->isFile()) {
+        const KArchiveFile* korganizerFile = static_cast<const KArchiveFile*>(korganizerPrinterEntry);
+        const QString korganizerPrinterrc = KStandardDirs::locateLocal( "config",  korganizerPrinterrcStr);
+        if (QFile(korganizerPrinterrc).exists()) {
+            if (overwriteConfigMessageBox(korganizerPrinterrcStr)) {
+                copyToFile(korganizerFile, korganizerPrinterrc, korganizerPrinterrcStr, Utils::configsPath());
+            }
+        } else {
+            copyToFile(korganizerFile, korganizerPrinterrc, korganizerPrinterrcStr, Utils::configsPath());
+        }
+    }
+    Q_EMIT info(i18n("Config restored."));
+    //TODO: korgacrc  korganizerrc
 }
 
 QString ImportCalendarJob::componentName() const

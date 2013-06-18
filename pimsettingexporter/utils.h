@@ -15,14 +15,18 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef BACKUPMAILUTIL_H
-#define BACKUPMAILUTIL_H
+#ifndef UTILS_H
+#define UTILS_H
 #include <QString>
 #include <KUrl>
 #include <KSharedConfig>
+class KZip;
+namespace Akonadi {
+class AgentInstance;
+}
 
-namespace BackupMailUtil {
-enum BackupType {
+namespace Utils {
+enum StoredType {
     None = 0,
     Identity = 1,
     Mails = 2,
@@ -33,7 +37,7 @@ enum BackupType {
     Nepomuk = 64
     //TODO add more type to import/export
 };
-Q_DECLARE_FLAGS(BackupTypes, BackupType )
+Q_DECLARE_FLAGS(StoredTypes, StoredType)
 
 KUrl resourcePath(KSharedConfigPtr resourceConfig);
 QString transportsPath();
@@ -46,5 +50,9 @@ QString dataPath();
 QString calendarPath();
 QString addressbookPath();
 QString alarmPath();
+void convertCollectionListToRealPath(KConfigGroup &group, const QString &currentKey);
+void convertCollectionToRealPath(KConfigGroup &group, const QString &currentKey);
+KUrl resourcePath(const Akonadi::AgentInstance &agent);
+QString storeResources(KZip *archive, const QString &identifier, const QString &path);
 }
-#endif // UTIL_H
+#endif // UTILS_H

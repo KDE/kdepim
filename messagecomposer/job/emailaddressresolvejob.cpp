@@ -24,7 +24,7 @@
 #include "emailaddressresolvejob.h"
 
 #include "aliasesexpandjob.h"
-#include "messagecomposersettings.h"
+#include "settings/messagecomposersettings.h"
 
 #include "messagecomposer/composer/composer.h"
 #include "messagecomposer/part/infopart.h"

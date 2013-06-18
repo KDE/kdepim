@@ -26,9 +26,9 @@
 #include "utils/util.h"
 #include "attachmenttemporaryfilesdirs.h"
 
-#include <messagecore/nodehelper.h>
+#include <messagecore/helpers/nodehelper.h>
 #include <messagecore/utils/stringutil.h>
-#include "messagecore/globalsettings.h"
+#include "messagecore/settings/globalsettings.h"
 
 #include <kmime/kmime_content.h>
 #include <kmime/kmime_message.h>

@@ -15,40 +15,35 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "backupmailwidget.h"
 
-#include "libkdepim/widgets/customlogwidget.h"
+#ifndef PIMSETTINGEXPORTERWINDOW_H
+#define PIMSETTINGEXPORTERWINDOW_H
+#include <kxmlguiwindow.h>
 
-#include <QHBoxLayout>
-#include <QListWidget>
+class LogWidget;
+class AbstractImportExportJob;
 
-
-BackupMailWidget::BackupMailWidget(QWidget * parent)
-    :QWidget(parent)
+class PimSettingExporterWindow: public KXmlGuiWindow
 {
-    QHBoxLayout *layout = new QHBoxLayout;
-    mCustomLogWidget = new KPIM::CustomLogWidget;
-    layout->addWidget(mCustomLogWidget);
-    setLayout(layout);
-}
+    Q_OBJECT
+public:
+    explicit PimSettingExporterWindow(QWidget *parent=0);
+    ~PimSettingExporterWindow();
 
-BackupMailWidget::~BackupMailWidget()
-{
+private Q_SLOTS:
+    void slotBackupData();
+    void slotRestoreData();
+    void slotAddInfo(const QString& info);
+    void slotAddError(const QString& info);
 
-}
+private:
+    bool canZip() const;
+    void setupActions(bool canZipFile);
+    LogWidget *mLogWidget;
+    AbstractImportExportJob *mBackupData;
+    AbstractImportExportJob *mRestoreData;
+};
 
-void BackupMailWidget::clear()
-{
-    mCustomLogWidget->clear();
-}
 
-void BackupMailWidget::addInfoLogEntry( const QString& log )
-{
-    mCustomLogWidget->addInfoLogEntry(log);
-}
-
-void BackupMailWidget::addErrorLogEntry( const QString& log )
-{
-    mCustomLogWidget->addErrorLogEntry(log);
-}
+#endif /* PIMSETTINGEXPORTERWINDOW_H */
 

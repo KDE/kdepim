@@ -17,31 +17,42 @@
 
 #include "abstractimportexportjob.h"
 #include "archivestorage.h"
+
 #include "mailcommon/util/mailutil.h"
+
+#include "pimcommon/util/createresource.h"
 
 #include <kpimidentities/identitymanager.h>
 #include <KZip>
+#include <KTempDir>
 #include <KLocale>
 #include <KMessageBox>
 
 #include <QWidget>
 #include <QProgressDialog>
+#include <QFile>
+#include <QDir>
 
-AbstractImportExportJob::AbstractImportExportJob(QWidget *parent, ArchiveStorage *archiveStorage, BackupMailUtil::BackupTypes typeSelected, int numberOfStep)
+AbstractImportExportJob::AbstractImportExportJob(QWidget *parent, ArchiveStorage *archiveStorage, Utils::StoredTypes typeSelected, int numberOfStep)
     : QObject(parent),
       mTypeSelected(typeSelected),
       mArchiveStorage(archiveStorage),
       mIdentityManager(new KPIMIdentities::IdentityManager( false, this, "mIdentityManager" )),
       mParent(parent),
+      mTempDir(0),
       mProgressDialog(0),
       mArchiveDirectory(0),
-      mNumberOfStep(numberOfStep)
+      mNumberOfStep(numberOfStep),
+      mCreateResource(0)
 {
 }
 
 AbstractImportExportJob::~AbstractImportExportJob()
 {
+    delete mCreateResource;
     delete mIdentityManager;
+    delete mTempDir;
+    delete mProgressDialog;
 }
 
 QProgressDialog *AbstractImportExportJob::progressDialog()
@@ -119,5 +130,30 @@ Akonadi::Collection::Id AbstractImportExportJob::convertPathToId(const QString& 
     }
     return id;
 }
+
+void AbstractImportExportJob::initializeImportJob()
+{
+    mTempDir = new KTempDir();
+    mTempDirName = mTempDir->name();
+    mCreateResource = new PimCommon::CreateResource();
+    connect(mCreateResource,SIGNAL(createResourceInfo(QString)),SIGNAL(info(QString)));
+    connect(mCreateResource,SIGNAL(createResourceError(QString)),SIGNAL(error(QString)));
+}
+
+void AbstractImportExportJob::copyToFile(const KArchiveFile *archivefile, const QString &dest, const QString &filename, const QString &prefix)
+{
+    QDir dir(mTempDirName);
+    dir.mkdir(prefix);
+
+    const QString copyToDirName(mTempDirName + QLatin1Char('/') + prefix);
+    archivefile->copyTo(copyToDirName);
+    QFile file;
+    file.setFileName(copyToDirName + QLatin1Char('/') + filename);
+
+    if (!file.copy(dest)) {
+        KMessageBox::error(mParent,i18n("File \"%1\" can not be copied to \"%2\".",filename,dest),i18n("Copy file"));
+    }
+}
+
 
 #include "abstractimportexportjob.moc"

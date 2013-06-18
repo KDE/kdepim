@@ -24,8 +24,8 @@
 #include "filteractionmissingargumentdialog.h"
 
 #include <pimcommon/widgets/minimumcombobox.h>
-#include <messagecomposer/messagefactory.h>
-#include <messagecomposer/messagesender.h>
+#include <messagecomposer/helper/messagefactory.h>
+#include <messagecomposer/sender/messagesender.h>
 #include <messagecore/widgets/emailaddressrequester.h>
 #include <messagecore/utils/stringutil.h>
 #include <templateparser/customtemplates.h>

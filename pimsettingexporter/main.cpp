@@ -16,7 +16,7 @@
 */
 
 
-#include "backupmailwindow.h"
+#include "pimsettingexporterwindow.h"
 
 #include <kcmdlineargs.h>
 #include <kaboutdata.h>
@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
         return (0);
     }
     KUniqueApplication a;
-    BackupMailWindow *backupMailWin = new BackupMailWindow();
+    PimSettingExporterWindow *backupMailWin = new PimSettingExporterWindow();
     a.setTopWidget(backupMailWin);
     backupMailWin->show();
 

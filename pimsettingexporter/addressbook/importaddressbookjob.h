@@ -22,12 +22,13 @@
 
 class ArchiveStorage;
 class QWidget;
+class KArchiveFile;
 
 class ImportAddressbookJob : public AbstractImportExportJob
 {
     Q_OBJECT
 public:
-    explicit ImportAddressbookJob(QWidget *parent, ArchiveStorage *archiveStorage);
+    explicit ImportAddressbookJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep);
     ~ImportAddressbookJob();
 
     void start();
@@ -35,6 +36,7 @@ public:
     QString componentName() const;
 
 private:
+    void importkalarmConfig(const KArchiveFile* file, const QString &config, const QString &filename,const QString &prefix);
     void restoreResources();
     void restoreConfig();
 };

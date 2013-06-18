@@ -37,7 +37,7 @@ using namespace KMime;
 #include <messagecomposer/part/textpart.h>
 using namespace MessageComposer;
 
-#include <messagecore/nodehelper.h>
+#include <messagecore/helpers/nodehelper.h>
 
 #include <messageviewer/objecttreeparser.h>
 #include <messagecore/tests/util.h>

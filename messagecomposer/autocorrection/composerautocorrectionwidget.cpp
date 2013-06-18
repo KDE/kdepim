@@ -22,7 +22,7 @@
 #include "import/importkmailautocorrection.h"
 #include "import/importabstractautocorrection.h"
 
-#include "messagecomposersettings.h"
+#include "settings/messagecomposersettings.h"
 #include <kpimtextedit/selectspecialchar.h>
 
 #include <KFileDialog>

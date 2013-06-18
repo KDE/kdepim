@@ -73,7 +73,7 @@
 
 #include "foldercollection.h"
 
-#include "messagecore/mailinglist.h"
+#include "messagecore/misc/mailinglist.h"
 #include "composer.h"
 #include "mailcommon/filter/filteraction.h"
 #include "mailcommon/filter/filtermanager.h"
@@ -102,7 +102,7 @@ using MessageViewer::EditorWatcher;
 #include "utils/stringutil.h"
 #include "messageviewer/utils/autoqpointer.h"
 #include "messageviewer/globalsettings.h"
-#include "messagecore/globalsettings.h"
+#include "messagecore/settings/globalsettings.h"
 
 #include <kpimutils/kfileio.h>
 
@@ -122,12 +122,12 @@ using MailTransport::TransportManager;
 #include "messageviewer/objecttreeemptysource.h"
 
 #include "messagecore/utils/stringutil.h"
-#include "messagecore/messagehelpers.h"
+#include "messagecore/helpers/messagehelpers.h"
 
-#include "messagecomposer/messagesender.h"
-#include "messagecomposer/messagehelper.h"
-#include "messagecomposer/messagecomposersettings.h"
-#include "messagecomposer/messagefactory.h"
+#include "messagecomposer/sender/messagesender.h"
+#include "messagecomposer/helper/messagehelper.h"
+#include "messagecomposer/settings/messagecomposersettings.h"
+#include "messagecomposer/helper/messagefactory.h"
 using MessageComposer::MessageFactory;
 
 

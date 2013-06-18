@@ -22,7 +22,7 @@
 #include "kernel/mailkernel.h"
 #include "util/mailutil.h"
 
-#include <messagecore/globalsettings.h>
+#include <messagecore/settings/globalsettings.h>
 
 #include <Akonadi/AgentInstance>
 #include <Akonadi/AgentManager>

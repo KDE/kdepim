@@ -30,7 +30,7 @@ class AgentInstance;
 class ExportMailJob : public AbstractImportExportJob
 {
 public:
-    explicit ExportMailJob(QWidget *parent, BackupMailUtil::BackupTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep);
+    explicit ExportMailJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep);
     ~ExportMailJob();
 
     void start();
@@ -47,8 +47,6 @@ private:
     void backupAkonadiDb();
     void backupNepomuk();
     void writeDirectory(QString path, const QString &relativePath, KZip *mailArchive);
-    void storeResources(const QString&identifier, const QString &path);
-    KUrl resourcePath(const Akonadi::AgentInstance &agent) const;
     bool backupMailData(const KUrl &url, const QString &archivePath);
     bool checkProgram();
 };

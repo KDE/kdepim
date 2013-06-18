@@ -27,14 +27,11 @@ class KArchiveDirectory;
 class KArchiveFile;
 class KTempDir;
 class ArchiveStorage;
-namespace PimCommon {
-class CreateResource;
-}
 
 class ImportMailJob : public AbstractImportExportJob
 {
 public:
-    explicit ImportMailJob(QWidget *widget, BackupMailUtil::BackupTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep);
+    explicit ImportMailJob(QWidget *widget, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep);
     ~ImportMailJob();
 
     void start();
@@ -56,7 +53,6 @@ private:
     void searchAllFiles(const KArchiveDirectory *dir,const QString &prefix);
     void storeMailArchiveResource(const KArchiveDirectory*dir, const QString &prefix);
 
-    void copyToFile(const KArchiveFile *file, const QString &dest, const QString &filename,const QString &prefix);
     void mergeLdapConfig(const KArchiveFile *archivefile, const QString &filename, const QString &prefix);
     void mergeKmailSnippetConfig(const KArchiveFile *archivefile, const QString &filename, const QString &prefix);
     void mergeArchiveMailAgentConfig(const KArchiveFile *archivefile, const QString &filename, const QString &prefix);
@@ -69,9 +65,6 @@ private:
     QHash<int, int> mHashTransport;
     QHash<QString, QString> mHashResources;
     QStringList mFileList;
-    QString mTempDirName;
-    KTempDir *mTempDir;
-    PimCommon::CreateResource *mCreateResource;
 };
 
 #endif // ImportMailJob_H

@@ -19,7 +19,7 @@
 
 #include "configwidget.h"
 
-#include "messagecomposer/messagecomposersettings.h"
+#include "messagecomposer/settings/messagecomposersettings.h"
 #include "messagelistsettings.h"
 #include "messageviewer/globalsettings.h"
 #include "settings.h"

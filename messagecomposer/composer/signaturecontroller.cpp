@@ -24,7 +24,7 @@
 
 #include "signaturecontroller.h"
 #include "composer/kmeditor.h"
-#include "messagecomposersettings.h"
+#include "settings/messagecomposersettings.h"
 
 #include <kpimidentities/identity.h>
 #include <kpimidentities/identitycombo.h>

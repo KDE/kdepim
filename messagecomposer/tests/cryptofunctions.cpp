@@ -34,7 +34,7 @@
 #include <messageviewer/nodehelper.h>
 #include <messageviewer/csshelper.h>
 
-#include <messagecore/nodehelper.h>
+#include <messagecore/helpers/nodehelper.h>
 
 #include <KDebug>
 #include <QDir>

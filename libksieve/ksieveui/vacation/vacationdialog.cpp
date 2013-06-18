@@ -121,11 +121,21 @@ VacationDialog::VacationDialog( const QString & caption, QWidget * parent,
     ++row;
     KSeparator *separator = new KSeparator;
     glay->addWidget( separator, row, 0, 1, 2 );
+
+    KConfigGroup group( KGlobal::config(), "VacationDialog" );
+    const QSize size = group.readEntry( "Size", QSize() );
+    if ( size.isValid() ) {
+        resize( size );
+    } else {
+        resize( sizeHint().width(), sizeHint().height() );
+    }
 }
 
 VacationDialog::~VacationDialog()
 {
     kDebug() << "~VacationDialog()";
+    KConfigGroup group( KGlobal::config(), "VacationDialog" );
+    group.writeEntry( "Size", size() );
 }
 
 bool VacationDialog::activateVacation() const

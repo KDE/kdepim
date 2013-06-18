@@ -32,7 +32,7 @@
 
 #include <messageviewer/globalsettings.h>
 
-#include <messagecore/globalsettings.h>
+#include <messagecore/settings/globalsettings.h>
 
 #include <Akonadi/AttributeFactory>
 #include <Akonadi/ChangeRecorder>

@@ -19,7 +19,7 @@
 
 #include "filteractionsendfakedisposition.h"
 
-#include <messagecore/mdnstateattribute.h>
+#include <messagecore/misc/mdnstateattribute.h>
 
 #include <KDE/KLocale>
 

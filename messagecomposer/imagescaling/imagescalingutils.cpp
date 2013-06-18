@@ -17,7 +17,7 @@
 
 
 #include "imagescalingutils.h"
-#include "messagecomposersettings.h"
+#include "settings/messagecomposersettings.h"
 
 #include <QFileInfo>
 

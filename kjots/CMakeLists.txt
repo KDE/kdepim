@@ -2,23 +2,6 @@ project(kjots)
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
-if("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}")
-  find_package(KDE4 REQUIRED)
-  find_package(Akonadi REQUIRED)
-  find_package(KdepimLibs 4.4.60 REQUIRED)
-  find_package(Grantlee NO_MODULE REQUIRED)
-  include(KDE4Defaults)
-  include(MacroLibrary)
-  include(CheckIncludeFiles)
-
-  set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
-  include_directories( ../akonadi/akonadi_next )
-
-  set(KJOTS_BUILD_KONTACT_PLUGIN FALSE)
-else()
-  option(KJOTS_BUILD_KONTACT_PLUGIN "Build kjots with support for kontact" TRUE)
-endif()
-
 include_directories(
   ${KDE4_INCLUDES}
   ${KDEPIMLIBS_INCLUDE_DIRS}
@@ -26,12 +9,7 @@ include_directories(
   ${Grantlee_INCLUDE_DIRS}
 )
 
-set(kjotsLibs ${KDE4_KIO_LIBS})
-
-if(KJOTS_BUILD_KONTACT_PLUGIN)
-  add_definitions(-DKJOTSKONTACTPLUGIN)
-  set(kjotsLibs ${kjotsLibs} kdepim)
-endif()
+set(kjotsLibs ${KDE4_KIO_LIBS} kdepim)
 
 add_subdirectory( icons )
 add_subdirectory( plasmoid )
@@ -119,12 +97,9 @@ target_link_libraries(kjots
   ${Grantlee_CORE_LIBRARIES}
   ${Grantlee_GUI_LIBRARIES}
   ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS}
+  ${KDEPIMLIBS_KONTACTINTERFACE_LIBS}
   akonadi_next
 )
-
-if(KJOTS_BUILD_KONTACT_PLUGIN)
-  target_link_libraries(kjots ${KDEPIMLIBS_KONTACTINTERFACE_LIBS} )
-endif()
 
 
 install(TARGETS kjots  ${INSTALL_TARGETS_DEFAULT_ARGS} )
@@ -140,14 +115,6 @@ install(DIRECTORY themes DESTINATION ${DATA_INSTALL_DIR}/kjots PATTERN *.svn EXC
 
 
 
-
-# If building kontact plugin:
-if ( KJOTS_BUILD_KONTACT_PLUGIN  )
-  #########################################################################
-  # KPART SECTION
-  #########################################################################
-
-  # This part is loaded by kontact if kjots is embedded in it.
 
   set(kjotspart_PART_SRCS
     kjotspart.cpp
@@ -191,7 +158,3 @@ if ( KJOTS_BUILD_KONTACT_PLUGIN  )
   install(FILES
         kjots_config_misc.desktop
         DESTINATION ${SERVICES_INSTALL_DIR})
-
-
-
-endif ()

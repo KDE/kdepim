@@ -15,36 +15,27 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#ifndef LOGWIDGET_H
+#define LOGWIDGET_H
 
-#ifndef BACKUPMAILWINDOW_H
-#define BACKUPMAILWINDOW_H
-#include <kxmlguiwindow.h>
+#include <QWidget>
 
-class BackupMailWidget;
-class ExportMailJob;
-class ImportMailJob;
+namespace KPIM {
+class CustomLogWidget;
+}
 
-class BackupMailWindow: public KXmlGuiWindow
+class LogWidget : public QWidget
 {
-    Q_OBJECT
 public:
-    explicit BackupMailWindow(QWidget *parent=0);
-    ~BackupMailWindow();
+    explicit LogWidget(QWidget *parent);
+    ~LogWidget();
 
-private Q_SLOTS:
-    void slotBackupData();
-    void slotRestoreData();
-    void slotAddInfo(const QString& info);
-    void slotAddError(const QString& info);
+    void addInfoLogEntry( const QString& log );
+    void addErrorLogEntry( const QString& log );
+    void clear();
 
 private:
-    bool canZip() const;
-    void setupActions(bool canZipFile);
-    BackupMailWidget *mBackupMailWidget;
-    ExportMailJob *mBackupData;
-    ImportMailJob *mRestoreData;
+    KPIM::CustomLogWidget *mCustomLogWidget;
 };
 
-
-#endif /* BackupMailWindow_H */
-
+#endif // LOGWIDGET_H

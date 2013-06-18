@@ -19,9 +19,10 @@
 #define SELECTIONTYPEDIALOG_H
 
 #include <KDialog>
-#include "backupmailutil.h"
+#include "utils.h"
 
 class SelectTypeWidget;
+class SelectionTypeTreeWidget;
 
 class SelectionTypeDialog : public KDialog
 {
@@ -30,13 +31,16 @@ public:
     explicit SelectionTypeDialog(QWidget * parent);
     ~SelectionTypeDialog();
 
-    BackupMailUtil::BackupTypes backupTypesSelected(int &numberOfStep) const;
+    Utils::StoredTypes kmailTypesSelected(int &numberOfStep) const;
+    Utils::StoredTypes kaddressbookTypesSelected(int &numberOfStep) const;
+    Utils::StoredTypes kalarmTypesSelected(int &numberOfStep) const;
+    Utils::StoredTypes korganizerTypesSelected(int &numberOfStep) const;
 
 private Q_SLOTS:
     void slotItemSelected(bool selected);
 
 private:
-    SelectTypeWidget *mWidget;
+    SelectionTypeTreeWidget *mSelectionTreeWidget;
 };
 
 #endif // SELECTIONTYPEDIALOG_H

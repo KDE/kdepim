@@ -35,7 +35,7 @@
 
 #include <messageviewer/objecttreeemptysource.h>
 #include <messageviewer/objecttreeparser.h>
-#include <messagecore/messagehelpers.h>
+#include <messagecore/helpers/messagehelpers.h>
 #include <messagecore/utils/stringutil.h>
 #include <mailtransport/transportcombobox.h>
 #include <mailtransport/messagequeuejob.h>
@@ -44,7 +44,7 @@
 #include <akonadi/collectionfetchjob.h>
 #include <kpimidentities/identitycombo.h>
 #include <messagecore/attachment/attachmentcollector.h>
-#include <messagecore/nodehelper.h>
+#include <messagecore/helpers/nodehelper.h>
 #ifndef QT_NO_CURSOR
 #include <messageviewer/utils/kcursorsaver.h>
 #endif
@@ -65,8 +65,8 @@
 #include <QUuid>
 #include <QtCore/QTextCodec>
 #include <addressline/recentaddresses.h>
-#include "messagecomposersettings.h"
-#include "messagehelper.h"
+#include "settings/messagecomposersettings.h"
+#include "helper/messagehelper.h"
 
 static QStringList encodeIdn( const QStringList &emails )
 {

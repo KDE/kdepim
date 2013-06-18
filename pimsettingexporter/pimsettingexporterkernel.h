@@ -14,8 +14,8 @@
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
-#ifndef BACKUPMAILKERNEL_H
-#define BACKUPMAILKERNEL_H
+#ifndef PIMSETTINGEXPORTERKERNEL_H
+#define PIMSETTINGEXPORTERKERNEL_H
 
 #include <mailcommon/interfaces/mailinterfaces.h>
 
@@ -28,10 +28,10 @@ namespace MailCommon {
 class FolderCollectionMonitor;
 }
 
-class BackupMailKernel : public QObject, public MailCommon::IKernel, public MailCommon::ISettings
+class PimSettingExporterKernel : public QObject, public MailCommon::IKernel, public MailCommon::ISettings
 {
 public:
-    explicit BackupMailKernel( QObject *parent = 0 );
+    explicit PimSettingExporterKernel( QObject *parent = 0 );
 
     KPIMIdentities::IdentityManager *identityManager();
     MessageComposer::MessageSender *msgSender();
@@ -49,7 +49,6 @@ public:
     Akonadi::Entity::Id lastSelectedFolder();
     void setLastSelectedFolder(const Akonadi::Entity::Id& col);
     bool showPopupAfterDnD();
-    
 
 private:
     KPIMIdentities::IdentityManager *mIdentityManager;

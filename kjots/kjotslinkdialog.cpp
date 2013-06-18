@@ -179,3 +179,5 @@ QString KJotsLinkDialog::linkUrl() const
         return linkUrlLineEdit->text();
     }
 }
+
+#include "kjotslinkdialog.moc"

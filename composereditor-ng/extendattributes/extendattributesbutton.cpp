@@ -32,7 +32,7 @@ namespace ComposerEditorNG
 class ExtendAttributesButtonPrivate
 {
 public:
-    ExtendAttributesButtonPrivate(const QWebElement& element, ExtendAttributesDialog::ExtendType type, ExtendAttributesButton *qq)
+    ExtendAttributesButtonPrivate(const QWebElement &element, ExtendAttributesDialog::ExtendType type, ExtendAttributesButton *qq)
         : webElement(element), extendType(type), q(qq)
     {
         q->setText(i18n("Advanced"));
@@ -54,7 +54,7 @@ void ExtendAttributesButtonPrivate::_k_slotClicked()
     delete dlg;
 }
 
-ExtendAttributesButton::ExtendAttributesButton(const QWebElement& element, ExtendAttributesDialog::ExtendType type, QWidget *parent)
+ExtendAttributesButton::ExtendAttributesButton(const QWebElement &element, ExtendAttributesDialog::ExtendType type, QWidget *parent)
     : QPushButton(parent), d(new ExtendAttributesButtonPrivate(element, type, this))
 {
 }

@@ -26,7 +26,7 @@
 #endif
 
 #include <messagecore/attachment/attachmentcollector.h>
-#include <messagecore/imagecollector.h>
+#include <messagecore/misc/imagecollector.h>
 #include <messagecore/utils/stringutil.h>
 
 #include <messageviewer/objecttreeparser.h>

@@ -19,8 +19,8 @@ install(FILES  ontology/messagetag.trig ${CMAKE_CURRENT_BINARY_DIR}/messagetag.o
 
 set(messagecore_LIB_SRCS
 
-   asyncnepomukresourceretriever.cpp
-   imagecollector.cpp
+   nepomukutil/asyncnepomukresourceretriever.cpp
+   misc/imagecollector.cpp
    attachment/attachmentcollector.cpp
    attachment/attachmentcompressjob.cpp
    attachment/attachmentfromfolderjob.cpp
@@ -31,11 +31,11 @@ set(messagecore_LIB_SRCS
    attachment/attachmentpart.cpp
    attachment/attachmentpropertiesdialog.cpp
    widgets/emailaddressrequester.cpp
-   globalsettings.cpp
-   mailinglist.cpp
-   mdnstateattribute.cpp
-   messagehelpers.cpp
-   nodehelper.cpp
+   settings/globalsettings.cpp
+   misc/mailinglist.cpp
+   misc/mdnstateattribute.cpp
+   helpers/messagehelpers.cpp
+   helpers/nodehelper.cpp
    utils/stringutil.cpp
 )
 
@@ -47,7 +47,7 @@ if (NOT WINCE)
 endif ()
 
 kde4_add_kcfg_files(messagecore_LIB_SRCS
-  globalsettings_base.kcfgc
+  settings/globalsettings_base.kcfgc
 )
 
 kde4_add_ui_files(messagecore_LIB_SRCS

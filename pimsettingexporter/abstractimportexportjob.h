@@ -18,7 +18,7 @@
 #ifndef ABSTRACTIMPORTEXPORTJOB_H
 #define ABSTRACTIMPORTEXPORTJOB_H
 
-#include "backupmailutil.h"
+#include "utils.h"
 #include <Akonadi/Collection>
 
 #include <KZip>
@@ -27,16 +27,22 @@ class QWidget;
 class QProgressDialog;
 class ArchiveStorage;
 class KArchiveDirectory;
+class KTempDir;
+
 namespace KPIMIdentities {
 class Identity;
 class IdentityManager;
+}
+
+namespace PimCommon {
+class CreateResource;
 }
 
 class AbstractImportExportJob : public QObject
 {
     Q_OBJECT
 public:
-    explicit AbstractImportExportJob(QWidget *parent, ArchiveStorage *archiveStorage, BackupMailUtil::BackupTypes typeSelected, int numberOfStep);
+    explicit AbstractImportExportJob(QWidget *parent, ArchiveStorage *archiveStorage, Utils::StoredTypes typeSelected, int numberOfStep);
     ~AbstractImportExportJob();
 
     virtual void start() = 0;
@@ -50,6 +56,8 @@ Q_SIGNALS:
     void error(const QString &);
 
 protected:
+    void copyToFile(const KArchiveFile * archivefile, const QString &dest, const QString &filename, const QString &prefix);
+    void initializeImportJob();
     void backupFile(const QString &filename, const QString &path, const QString &storedName);
     int mergeConfigMessageBox(const QString &configName) const;
     bool overwriteConfigMessageBox(const QString &configName) const;
@@ -65,13 +73,16 @@ protected:
 
     QHash<QString, Akonadi::Collection::Id> mHashConvertPathCollectionId;
 
-    BackupMailUtil::BackupTypes mTypeSelected;
+    QString mTempDirName;
+    Utils::StoredTypes mTypeSelected;
     ArchiveStorage *mArchiveStorage;
     KPIMIdentities::IdentityManager *mIdentityManager;
     QWidget *mParent;
+    KTempDir *mTempDir;
     QProgressDialog *mProgressDialog;
     const KArchiveDirectory* mArchiveDirectory;
     int mNumberOfStep;
+    PimCommon::CreateResource *mCreateResource;
 };
 
 #endif // ABSTRACTIMPORTEXPORTJOB_H

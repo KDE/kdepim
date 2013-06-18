@@ -28,7 +28,7 @@
 #include <akonadi/entitytreemodel.h>
 #include <akonadi/kmime/specialmailcollections.h>
 #include <akonadi/selectionproxymodel.h>
-#include <messagecomposer/messagefactory.h>
+#include <messagecomposer/helper/messagefactory.h>
 #include <kpimutils/networkaccesshelper.h>
 
 namespace Akonadi {

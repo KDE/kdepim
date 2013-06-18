@@ -16,7 +16,7 @@
 */
 
 #include "selectiontypedialog.h"
-#include "selecttypewidget.h"
+#include "selectiontypetreewidget.h"
 
 #include <KLocale>
 #include <QHBoxLayout>
@@ -32,27 +32,42 @@ SelectionTypeDialog::SelectionTypeDialog(QWidget *parent)
     QHBoxLayout *mainLayout = new QHBoxLayout( mainWidget );
     mainLayout->setSpacing( KDialog::spacingHint() );
     mainLayout->setMargin( KDialog::marginHint() );
-    mWidget = new SelectTypeWidget(this);
-    mainLayout->addWidget(mWidget);
-    setMainWidget( mainWidget );
-    enableButtonOk(false);
-    connect(mWidget,SIGNAL(itemSelected(bool)),SLOT(slotItemSelected(bool)));
-    resize(400, 200);
+    mSelectionTreeWidget = new SelectionTypeTreeWidget(this);
+    mainLayout->addWidget(mSelectionTreeWidget);
+    setMainWidget(mainWidget);
+    //enableButtonOk(false);
+    //connect(mWidget, SIGNAL(itemSelected(bool)), SLOT(slotItemSelected(bool)));
+    resize(600, 400);
 }
 
 SelectionTypeDialog::~SelectionTypeDialog()
 {
-
 }
 
 void SelectionTypeDialog::slotItemSelected(bool selected)
 {
-    enableButtonOk(selected);
+    //enableButtonOk(selected);
 }
 
-BackupMailUtil::BackupTypes SelectionTypeDialog::backupTypesSelected(int &numberOfStep) const
+Utils::StoredTypes SelectionTypeDialog::kmailTypesSelected(int &numberOfStep) const
 {
-    return mWidget->backupTypesSelected(numberOfStep);
+    return mSelectionTreeWidget->kmailStoredType(numberOfStep);
 }
+
+Utils::StoredTypes SelectionTypeDialog::kaddressbookTypesSelected(int &numberOfStep) const
+{
+    return mSelectionTreeWidget->kaddressbookStoredType(numberOfStep);
+}
+
+Utils::StoredTypes SelectionTypeDialog::kalarmTypesSelected(int &numberOfStep) const
+{
+    return mSelectionTreeWidget->kalarmStoredType(numberOfStep);
+}
+
+Utils::StoredTypes SelectionTypeDialog::korganizerTypesSelected(int &numberOfStep) const
+{
+    return mSelectionTreeWidget->korganizerStoredType(numberOfStep);
+}
+
 
 #include "selectiontypedialog.moc"

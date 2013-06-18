@@ -15,7 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 #include "imagescalingjob.h"
-#include "messagecomposersettings.h"
+#include "settings/messagecomposersettings.h"
 
 #include <QBuffer>
 #include <QImage>

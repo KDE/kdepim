@@ -43,7 +43,7 @@
 #include <akonadi/agentinstance.h>
 #include <akonadi/agentinstancecreatejob.h>
 #include <akonadi/agentmanager.h>
-#include <messagecore/messagehelpers.h>
+#include <messagecore/helpers/messagehelpers.h>
 
 KMime::Content* MessageComposer::Util::composeHeadersAndBody( KMime::Content* orig, QByteArray encodedBody, Kleo::CryptoMessageFormat format, bool sign, QByteArray hashAlgo )
 {

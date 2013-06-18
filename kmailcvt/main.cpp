@@ -18,6 +18,7 @@
 #include <kcmdlineargs.h>
 #include <kaboutdata.h>
 #include <klocale.h>
+#include <KApplication>
 
 #include "kmailcvt.h"
 #include "kdepim-version.h"

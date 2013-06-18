@@ -19,14 +19,19 @@
 
 #include "messageviewer/utils/kcursorsaver.h"
 
+#include <Akonadi/AgentManager>
 
 #include <KLocale>
+#include <KStandardDirs>
+#include <KTemporaryFile>
 
+#include <QFile>
+#include <QDir>
 #include <QWidget>
 
 
-ExportCalendarJob::ExportCalendarJob(QWidget *parent, ArchiveStorage *archiveStorage)
-    :AbstractImportExportJob(parent,archiveStorage,/*typeSelected,numberOfStep*/0,0 /*TODO fix it*/)
+ExportCalendarJob::ExportCalendarJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage,int numberOfStep)
+    :AbstractImportExportJob(parent, archiveStorage, typeSelected, numberOfStep)
 {
 }
 
@@ -38,8 +43,22 @@ ExportCalendarJob::~ExportCalendarJob()
 void ExportCalendarJob::start()
 {
     mArchiveDirectory = archive()->directory();
-    backupConfig();
-    //TODO
+    createProgressDialog();
+
+    if (mTypeSelected & Utils::Resources) {
+        backupResources();
+        increaseProgressDialog();
+        if (wasCanceled()) {
+            return;
+        }
+    }
+    if (mTypeSelected & Utils::Config) {
+        backupConfig();
+        increaseProgressDialog();
+        if (wasCanceled()) {
+            return;
+        }
+    }
 }
 
 
@@ -47,13 +66,74 @@ void ExportCalendarJob::backupResources()
 {
     showInfo(i18n("Backing up resources..."));
     MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
-    //TODO backup calendar
+
+    Akonadi::AgentManager *manager = Akonadi::AgentManager::self();
+    const Akonadi::AgentInstance::List list = manager->instances();
+    foreach( const Akonadi::AgentInstance &agent, list ) {
+        const QString identifier = agent.identifier();
+        //TODO look at if we have other resources
+        if (identifier.contains(QLatin1String("akonadi_ical_resource_"))) {
+            const QString identifier = agent.identifier();
+            const QString archivePath = Utils::calendarPath() + identifier + QDir::separator();
+
+            KUrl url = Utils::resourcePath(agent);
+            if (!url.isEmpty()) {
+                const QString filename = url.fileName();
+                const bool fileAdded  = archive()->addLocalFile(url.path(), archivePath + filename);
+                if (fileAdded) {
+                    const QString errorStr = Utils::storeResources(archive(), identifier, archivePath);
+                    if (!errorStr.isEmpty())
+                        Q_EMIT error(errorStr);
+                    Q_EMIT info(i18n("\"%1\" was backuped.",filename));
+                } else {
+                    Q_EMIT error(i18n("\"%1\" file cannot be added to backup file.",filename));
+                }
+            }
+        }
+    }
+
     Q_EMIT info(i18n("Resources backup done."));
 }
 
 void ExportCalendarJob::backupConfig()
 {
-    //TODO: korgacrc  korganizer_printing.rc  korganizerrc
+    showInfo(i18n("Backing up config..."));
+    MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+
+    const QString korganizerStr(QLatin1String("korganizerrc"));
+    const QString korganizerrc = KStandardDirs::locateLocal( "config", korganizerStr);
+    if (QFile(korganizerrc).exists()) {
+        KSharedConfigPtr korganizer = KSharedConfig::openConfig(korganizerrc);
+
+        KTemporaryFile tmp;
+        tmp.open();
+
+        KConfig *korganizerConfig = korganizer->copyTo( tmp.fileName() );
+
+        //TODO adapt collection
+        korganizerConfig->sync();
+        backupFile(tmp.fileName(), Utils::configsPath(), korganizerStr);
+    }
+
+    const QString korganizerPrintingStr(QLatin1String("korganizer_printing.rc"));
+    const QString korganizerPrintingrc = KStandardDirs::locateLocal( "config",  korganizerPrintingStr);
+    if (QFile(korganizerPrintingrc).exists()) {
+        backupFile(korganizerPrintingrc, Utils::configsPath(), korganizerPrintingStr);
+    }
+
+    const QString korgacStr(QLatin1String("korgacrc"));
+    const QString korgacrc = KStandardDirs::locateLocal( "config", korgacStr );
+    if (QFile(korgacrc).exists()) {
+        backupFile(korgacrc, Utils::configsPath(), korgacStr);
+    }
+
+    const QString freebusyurlsStr(QLatin1String("korganizer/freebusyurls"));
+    const QString freebusyurls = KStandardDirs::locateLocal( "data", freebusyurlsStr );
+    if (QFile(freebusyurls).exists()) {
+        backupFile(freebusyurls, Utils::dataPath(), freebusyurlsStr);
+    }
+
+    Q_EMIT info(i18n("Config backup done."));
 }
 
 QString ExportCalendarJob::componentName() const

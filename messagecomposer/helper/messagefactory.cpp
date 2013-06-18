@@ -19,7 +19,7 @@
 
 #include "messagefactory.h"
 
-#include "messagecomposersettings.h"
+#include "settings/messagecomposersettings.h"
 #include "messagecomposer/utils/util.h"
 
 #include <akonadi/item.h>
@@ -32,10 +32,10 @@
 #include <akonadi/kmime/messagestatus.h>
 #include <kmime/kmime_dateformatter.h>
 #include <KPIMUtils/Email>
-#include <messagecore/mailinglist.h>
-#include <messagecore/messagehelpers.h>
+#include <messagecore/misc/mailinglist.h>
+#include <messagecore/helpers/messagehelpers.h>
 #include <messagecore/utils/stringutil.h>
-#include "messagehelper.h"
+#include "helper/messagehelper.h"
 #include "templateparser/templateparser.h"
 #include <KLocalizedString>
 #include <kcharsets.h>

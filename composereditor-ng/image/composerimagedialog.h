@@ -33,7 +33,7 @@ class ComposerImageDialog : public KDialog
     Q_OBJECT
 public:
     explicit ComposerImageDialog(QWidget *parent);
-    explicit ComposerImageDialog(const QWebElement& element, QWidget *parent);
+    explicit ComposerImageDialog(const QWebElement &element, QWidget *parent);
     ~ComposerImageDialog();
 
     /**

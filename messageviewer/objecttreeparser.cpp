@@ -117,7 +117,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <memory>
-#include <messagecore/nodehelper.h>
+#include <messagecore/helpers/nodehelper.h>
 #include <qtextdocument.h>
 
 using KPIMUtils::LinkLocator;

@@ -19,10 +19,10 @@
 #include "mdnadvicedialog.h"
 #include "kernel/mailkernel.h"
 
-#include <messagecore/messagehelpers.h>
-#include <messagecore/mdnstateattribute.h>
+#include <messagecore/helpers/messagehelpers.h>
+#include <messagecore/misc/mdnstateattribute.h>
 
-#include <messagecomposer/messagefactory.h>
+#include <messagecomposer/helper/messagefactory.h>
 using MessageComposer::MessageFactory;
 
 #include <messageviewer/globalsettings.h>

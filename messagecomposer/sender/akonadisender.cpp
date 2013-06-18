@@ -22,8 +22,8 @@
 #include <KLocale>
 #include <KDebug>
 
-#include "messagehelper.h"
-#include "messagecomposersettings.h"
+#include "helper/messagehelper.h"
+#include "settings/messagecomposersettings.h"
 #include "messagecomposer/utils/util.h"
 
 #include <kmime/kmime_message.h>
@@ -36,7 +36,7 @@
 #include <mailtransport/transport.h>
 #include <mailtransport/transportmanager.h>
 #include <messagecore/utils/stringutil.h>
-#include <messagecore/messagehelpers.h>
+#include <messagecore/helpers/messagehelpers.h>
 
 using namespace KMime::Types;
 using namespace KPIM;

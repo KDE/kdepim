@@ -17,7 +17,7 @@
   02110-1301, USA.
 */
 
-#include "messagecomposersettings.h"
+#include "settings/messagecomposersettings.h"
 #include "skeletonmessagejob.h"
 #include "kdepim-version.h"
 

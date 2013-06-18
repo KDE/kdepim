@@ -49,18 +49,18 @@ using MessageViewer::CSSHelper;
 
 #include "messageviewer/viewer.h"
 using namespace MessageViewer;
-#include <messagecore/globalsettings.h>
+#include <messagecore/settings/globalsettings.h>
 
 #include "messageviewer/attachmentstrategy.h"
-#include "messagecomposer/messagesender.h"
-#include "messagecomposer/messagefactory.h"
+#include "messagecomposer/sender/messagesender.h"
+#include "messagecomposer/helper/messagefactory.h"
 #include "messagecomposer/composer/composer.h"
 #include "messagecomposer/part/textpart.h"
 #include "messagecomposer/part/infopart.h"
 #include <KIO/JobUiDelegate>
 using MessageComposer::MessageFactory;
 
-#include "messagecore/messagehelpers.h"
+#include "messagecore/helpers/messagehelpers.h"
 
 #include <Akonadi/Contact/ContactEditorDialog>
 

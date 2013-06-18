@@ -28,9 +28,9 @@
 #include "customtemplatesmenu.h"
 
 #include "messagecore/widgets/annotationdialog.h"
-#include "messagecore/globalsettings.h"
-#include "messagecore/mailinglist.h"
-#include "messagecore/messagehelpers.h"
+#include "messagecore/settings/globalsettings.h"
+#include "messagecore/misc/mailinglist.h"
+#include "messagecore/helpers/messagehelpers.h"
 #include "messageviewer/csshelper.h"
 #include "messageviewer/globalsettings.h"
 
@@ -59,7 +59,7 @@
 #include <akonadi/collection.h>
 #include <Akonadi/Monitor>
 #include <util/mailutil.h>
-#include <asyncnepomukresourceretriever.h>
+#include <nepomukutil/asyncnepomukresourceretriever.h>
 #include <nepomuk2/resourcemanager.h>
 #include <Soprano/Vocabulary/NAO>
 

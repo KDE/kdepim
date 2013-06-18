@@ -108,7 +108,9 @@ void MainView::doDelayedInit()
   qmlRegisterType<DeclarativeConfigWidget>( "org.kde.akonadi.tasks", 4, 5, "ConfigWidget" );
   qmlRegisterType<DeclarativeSearchWidget>( "org.kde.akonadi.tasks", 4, 5, "SearchWidget" );
 
-  mCalendar = Akonadi::ETMCalendar::Ptr( new Akonadi::ETMCalendar() );
+  QStringList mimeTypes;
+  mimeTypes << KCalCore::Todo::todoMimeType();
+  mCalendar = Akonadi::ETMCalendar::Ptr( new Akonadi::ETMCalendar( mimeTypes ) );
 
   mChanger = new Akonadi::IncidenceChanger( this );
 

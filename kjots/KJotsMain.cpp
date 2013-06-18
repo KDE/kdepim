@@ -103,3 +103,5 @@ void KJotsMain::onQuit()
     qApp->quit();
 }
 
+
+#include "KJotsMain.moc"

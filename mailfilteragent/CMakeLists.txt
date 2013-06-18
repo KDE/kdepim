@@ -7,6 +7,7 @@ include_directories(
   ${SOPRANO_INCLUDE_DIR}
   ${NEPOMUK_CORE_INCLUDE_DIR}
   ${CMAKE_SOURCE_DIR}/mailcommon
+  ${CMAKE_SOURCE_DIR}/messagecomposer
 )
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )

@@ -68,3 +68,5 @@ void KJotsLockJob::slotResult(KJob* job)
   if ( !hasSubjobs() )
     emitResult();
 }
+
+#include "kjotslockjob.moc"

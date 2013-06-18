@@ -17,7 +17,7 @@
 
 #include "imagescalingwidget.h"
 #include "ui_imagescalingwidget.h"
-#include "messagecomposersettings.h"
+#include "settings/messagecomposersettings.h"
 
 #include <KComboBox>
 #include <KLocale>

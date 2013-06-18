@@ -48,8 +48,7 @@ public:
         q->connect(button, SIGNAL(webElementChanged()), q, SLOT(_k_slotWebElementChanged()));
         layout->addWidget( button );
 
-        KSeparator *sep = new KSeparator;
-        layout->addWidget( sep );
+        layout->addWidget( new KSeparator );
 
         q->connect(q, SIGNAL(okClicked()), q, SLOT(_k_slotOkClicked()));
         q->connect(q, SIGNAL(applyClicked()), q, SLOT(_k_slotApplyClicked()));
