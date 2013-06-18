@@ -35,6 +35,7 @@ public:
 
 private:
     void importkorganizerConfig(const KArchiveFile* file, const QString &config, const QString &filename,const QString &prefix);
+    void importkorgacConfig(const KArchiveFile* file, const QString &config, const QString &filename,const QString &prefix);
     void restoreResources();
     void restoreConfig();
 };
