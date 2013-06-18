@@ -20,7 +20,7 @@ install(FILES  ontology/messagetag.trig ${CMAKE_CURRENT_BINARY_DIR}/messagetag.o
 set(messagecore_LIB_SRCS
 
    nepomukutil/asyncnepomukresourceretriever.cpp
-   imagecollector.cpp
+   misc/imagecollector.cpp
    attachment/attachmentcollector.cpp
    attachment/attachmentcompressjob.cpp
    attachment/attachmentfromfolderjob.cpp
@@ -32,8 +32,8 @@ set(messagecore_LIB_SRCS
    attachment/attachmentpropertiesdialog.cpp
    widgets/emailaddressrequester.cpp
    settings/globalsettings.cpp
-   mailinglist.cpp
-   mdnstateattribute.cpp
+   misc/mailinglist.cpp
+   misc/mdnstateattribute.cpp
    helpers/messagehelpers.cpp
    helpers/nodehelper.cpp
    utils/stringutil.cpp

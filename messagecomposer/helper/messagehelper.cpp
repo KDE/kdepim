@@ -22,7 +22,7 @@
 #include "utils/util.h"
 #include "settings/messagecomposersettings.h"
 
-#include "messagecore/mailinglist.h"
+#include "messagecore/misc/mailinglist.h"
 #include "messagecore/utils/stringutil.h"
 
 #include <KDateTime>

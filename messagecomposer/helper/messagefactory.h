@@ -29,7 +29,7 @@
 #include <Akonadi/Collection>
 
 #include <akonadi/kmime/messagestatus.h>
-#include <messagecore/mdnstateattribute.h>
+#include <messagecore/misc/mdnstateattribute.h>
 
 namespace KPIMIdentities {
   class IdentityManager;
