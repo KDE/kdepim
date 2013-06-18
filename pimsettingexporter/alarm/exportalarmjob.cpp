@@ -24,6 +24,7 @@
 #include <KLocale>
 #include <KStandardDirs>
 #include <KTemporaryFile>
+#include <KConfigGroup>
 
 #include <QWidget>
 #include <QFile>
@@ -105,7 +106,13 @@ void ExportAlarmJob::backupConfig()
 
         KConfig *kalarmConfig = kalarm->copyTo( tmp.fileName() );
 
-        //TODO adapt collection
+        const QString collectionsStr(QLatin1String("Collections"));
+        if (kalarmConfig->hasGroup(collectionsStr)) {
+            KConfigGroup group = kalarmConfig->group(collectionsStr);
+            const QString selectionKey(QLatin1String("FavoriteCollectionIds"));
+            Utils::convertCollectionIds(group, selectionKey);
+        }
+
         kalarmConfig->sync();
         backupFile(tmp.fileName(), Utils::configsPath(), kalarmStr);
     }
