@@ -75,7 +75,7 @@ void ImportAddressbookJob::importkalarmConfig(const KArchiveFile* file, const QS
     copyToFile(file, config, filename, prefix);
     KSharedConfig::Ptr kaddressbookConfig = KSharedConfig::openConfig(config);
 
-    //TODO
+    //TODO adapt collection
     kaddressbookConfig->sync();
 }
 
