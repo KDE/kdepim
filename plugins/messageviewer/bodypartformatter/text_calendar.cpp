@@ -44,7 +44,7 @@
 #include <messageviewer/interfaces/bodypartformatter.h>
 #include <messageviewer/interfaces/bodyparturlhandler.h>
 #include <mailcommon/util/mailutil.h>
-#include <messageviewer/webkitparthtmlwriter.h>
+#include <messageviewer/htmlwriter/webkitparthtmlwriter.h>
 using namespace MessageViewer;
 
 #include <KCalCore/ICalFormat>

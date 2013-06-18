@@ -17,7 +17,7 @@
   02110-1301, USA.
 */
 
-#include "filehtmlwriter.h"
+#include "htmlwriter/filehtmlwriter.h"
 #include "objecttreeparser.h"
 #include "csshelper.h"
 #include "messagecore/tests/util.h"

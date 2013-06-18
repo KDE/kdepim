@@ -54,7 +54,7 @@ set(libmessageviewer_SRCS
   csshelper.cpp
   csshelperbase.cpp
   editorwatcher.cpp
-  filehtmlwriter.cpp
+  htmlwriter/filehtmlwriter.cpp
   findbar/findbarbase.cpp
   findbar/findbarmailwebview.cpp
   findbar/findbarsourceview.cpp
@@ -93,12 +93,12 @@ set(libmessageviewer_SRCS
   objecttreeviewersource.cpp
   partnodebodypart.cpp
   pluginloaderbase.cpp
-  teehtmlwriter.cpp
+  htmlwriter/teehtmlwriter.cpp
   urlhandlermanager.cpp
   utils/util.cpp
   viewer.cpp
   viewer_p.cpp
-  webkitparthtmlwriter.cpp
+  htmlwriter/webkitparthtmlwriter.cpp
   messagedisplayformatattribute.cpp
   scamdetection/scamdetectionwarningwidget.cpp
   scamdetection/scamdetection.cpp

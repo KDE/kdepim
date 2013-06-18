@@ -32,8 +32,8 @@
 #include "scamdetection/scamattribute.h"
 
 #ifdef MESSAGEVIEWER_READER_HTML_DEBUG
-#include "filehtmlwriter.h"
-#include "teehtmlwriter.h"
+#include "htmlwriter/filehtmlwriter.h"
+#include "htmlwriter/teehtmlwriter.h"
 #endif
 #include <unistd.h> // link()
 #include <errno.h>
@@ -119,7 +119,7 @@
 #include "headerstyle.h"
 #include "headerstrategy.h"
 #include "widgets/htmlstatusbar.h"
-#include "webkitparthtmlwriter.h"
+#include "htmlwriter/webkitparthtmlwriter.h"
 #include "mailsourceviewer.h"
 #include "mimetreemodel.h"
 #include "nodehelper.h"

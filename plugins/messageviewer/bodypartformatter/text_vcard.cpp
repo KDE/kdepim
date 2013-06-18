@@ -38,7 +38,7 @@
 #include "vcardmemento.h"
 
 using MessageViewer::Interface::BodyPart;
-#include "messageviewer/webkitparthtmlwriter.h"
+#include "messageviewer/htmlwriter/webkitparthtmlwriter.h"
 
 #include <libkdepim/job/addcontactjob.h>
 
