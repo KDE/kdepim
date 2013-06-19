@@ -99,7 +99,7 @@ set(libmessageviewer_SRCS
   viewer/viewer.cpp
   viewer/viewer_p.cpp
   htmlwriter/webkitparthtmlwriter.cpp
-  messagedisplayformatattribute.cpp
+  viewer/messagedisplayformatattribute.cpp
   scamdetection/scamdetectionwarningwidget.cpp
   scamdetection/scamdetection.cpp
   scamdetection/scamdetectiondetailsdialog.cpp
