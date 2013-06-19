@@ -1258,7 +1258,7 @@ of key words can be modified.</para>
  <sect2 id="configure-composer-autocorrection">
    <title>Autocorrection</title>
    <para>To enable the feature, check the <guilabel>Enable autocorrection</guilabel> option. In the
-     drop down box choose the language you would like to use.You can import settings from <application>LibreOffice</application> or another &kmail; installation by selecting the
+     drop down box choose the language you would like to use. You can import settings from <application>LibreOffice</application> or another &kmail; installation by selecting the
        appropriate choice from the <guilabel>Import</guilabel> drop down box. If you need to save your settings for another installation or application, select the <guibutton>Export</guibutton> button.
        </para>
        <para>
@@ -1926,7 +1926,7 @@ of key words can be modified.</para>
 	  <listitem>
 	    <para>
 	      If this option is checked, Certificate Revocation Lists are
-              never used to validate <acronym>&smime;</acronym> certificates.
+              never used to validate &smime; certificates.
 	    </para>
 	  </listitem>
 	</varlistentry>
@@ -1951,7 +1951,7 @@ of key words can be modified.</para>
 	  <listitem>
 	    <para>
 	     Entirely disables the use of &HTTP; for
-             <acronym>&smime;</acronym>.
+             &smime;.
 	    </para>
 	  </listitem>
 	</varlistentry>
