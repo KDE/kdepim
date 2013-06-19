@@ -39,6 +39,7 @@ ImportAddressbookJob::~ImportAddressbookJob()
 void ImportAddressbookJob::start()
 {
     mArchiveDirectory = archive()->directory();
+    searchAllFiles(mArchiveDirectory, QString());
     if (mTypeSelected & Utils::Resources)
         restoreResources();
     if (mTypeSelected & Utils::Config)
@@ -50,6 +51,44 @@ void ImportAddressbookJob::restoreResources()
     //TODO
     Q_EMIT info(i18n("Restore resources..."));
     Q_EMIT info(i18n("Resources restored."));
+}
+
+void ImportAddressbookJob::searchAllFiles(const KArchiveDirectory *dir,const QString &prefix)
+{
+    Q_FOREACH(const QString& entryName, dir->entries()) {
+        const KArchiveEntry *entry = dir->entry(entryName);
+        if (entry && entry->isDirectory()) {
+            const QString newPrefix = (prefix.isEmpty() ? prefix : prefix + QLatin1Char('/')) + entryName;
+            if (entryName == QLatin1String("addressbook")) {
+                storeAddressBookArchiveResource(static_cast<const KArchiveDirectory*>(entry),entryName);
+            } else {
+                searchAllFiles(static_cast<const KArchiveDirectory*>(entry), newPrefix);
+            }
+        }
+    }
+}
+
+void ImportAddressbookJob::storeAddressBookArchiveResource(const KArchiveDirectory *dir, const QString &prefix)
+{
+    Q_FOREACH(const QString& entryName, dir->entries()) {
+        const KArchiveEntry *entry = dir->entry(entryName);
+        if (entry && entry->isDirectory()) {
+            const KArchiveDirectory*resourceDir = static_cast<const KArchiveDirectory*>(entry);
+            const QStringList lst = resourceDir->entries();
+            if (lst.count() == 2) {
+                const QString archPath(prefix + QLatin1Char('/') + entryName + QLatin1Char('/'));
+                const QString name(lst.at(0));
+                if (name.endsWith(QLatin1String("rc"))&&(name.contains(QLatin1String("akonadi_ical_resource_")))) {
+                    mHashAddressBookArchive.insert(archPath + name,archPath +lst.at(1));
+                } else {
+                    mHashAddressBookArchive.insert(archPath +lst.at(1),archPath + name);
+                }
+            } else {
+                kDebug()<<" lst.at(0)"<<lst.at(0);
+                kDebug()<<" Problem in archive. number of file "<<lst.count();
+            }
+        }
+    }
 }
 
 void ImportAddressbookJob::restoreConfig()

@@ -40,6 +40,7 @@ ImportCalendarJob::~ImportCalendarJob()
 void ImportCalendarJob::start()
 {
     mArchiveDirectory = archive()->directory();
+    searchAllFiles(mArchiveDirectory, QString());
     if (mTypeSelected & Utils::Resources)
         restoreResources();
     if (mTypeSelected & Utils::Config)
@@ -52,6 +53,45 @@ void ImportCalendarJob::restoreResources()
     Q_EMIT info(i18n("Restore resources..."));
     Q_EMIT info(i18n("Resources restored."));
 }
+
+void ImportCalendarJob::searchAllFiles(const KArchiveDirectory *dir,const QString &prefix)
+{
+    Q_FOREACH(const QString& entryName, dir->entries()) {
+        const KArchiveEntry *entry = dir->entry(entryName);
+        if (entry && entry->isDirectory()) {
+            const QString newPrefix = (prefix.isEmpty() ? prefix : prefix + QLatin1Char('/')) + entryName;
+            if (entryName == QLatin1String("calendar")) {
+                storeCalendarArchiveResource(static_cast<const KArchiveDirectory*>(entry),entryName);
+            } else {
+                searchAllFiles(static_cast<const KArchiveDirectory*>(entry), newPrefix);
+            }
+        }
+    }
+}
+
+void ImportCalendarJob::storeCalendarArchiveResource(const KArchiveDirectory *dir, const QString &prefix)
+{
+    Q_FOREACH(const QString& entryName, dir->entries()) {
+        const KArchiveEntry *entry = dir->entry(entryName);
+        if (entry && entry->isDirectory()) {
+            const KArchiveDirectory*resourceDir = static_cast<const KArchiveDirectory*>(entry);
+            const QStringList lst = resourceDir->entries();
+            if (lst.count() == 2) {
+                const QString archPath(prefix + QLatin1Char('/') + entryName + QLatin1Char('/'));
+                const QString name(lst.at(0));
+                if (name.endsWith(QLatin1String("rc"))&&(name.contains(QLatin1String("akonadi_calendar_resource_")))) {
+                    mHashCalendarArchive.insert(archPath + name,archPath +lst.at(1));
+                } else {
+                    mHashCalendarArchive.insert(archPath +lst.at(1),archPath + name);
+                }
+            } else {
+                kDebug()<<" lst.at(0)"<<lst.at(0);
+                kDebug()<<" Problem in archive. number of file "<<lst.count();
+            }
+        }
+    }
+}
+
 
 void ImportCalendarJob::restoreConfig()
 {
