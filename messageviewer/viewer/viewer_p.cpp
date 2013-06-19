@@ -120,7 +120,7 @@
 #include "header/headerstrategy.h"
 #include "widgets/htmlstatusbar.h"
 #include "htmlwriter/webkitparthtmlwriter.h"
-#include "mailsourceviewer.h"
+#include "viewer/mailsourceviewer.h"
 #include "mimetreemodel.h"
 #include "nodehelper.h"
 #include "objecttreeparser.h"

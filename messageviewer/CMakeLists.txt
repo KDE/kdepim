@@ -82,7 +82,7 @@ set(libmessageviewer_SRCS
   iconnamecache.cpp
   widgets/invitationsettings.cpp
   kleojobexecutor.cpp
-  mailsourceviewer.cpp
+  viewer/mailsourceviewer.cpp
   markmessagereadhandler.cpp
   mimetreemodel.cpp
   nodehelper.cpp
