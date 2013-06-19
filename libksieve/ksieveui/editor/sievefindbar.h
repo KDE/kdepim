@@ -35,7 +35,7 @@ class SieveFindBar : public QWidget
     Q_OBJECT
 
 public:
-    explicit SieveFindBar( QPlainTextEdit * view, QWidget * parent = 0 );
+    explicit SieveFindBar( QPlainTextEdit *view, QWidget *parent = 0 );
     ~SieveFindBar();
 
     QString text() const;
@@ -56,7 +56,7 @@ protected:
 public slots:
     void findNext();
     void findPrev();
-    void autoSearch( const QString& str );
+    void autoSearch( const QString &str );
     void slotSearchText( bool backward = false, bool isAutoSearch = true );
     void closeBar();
 
@@ -67,12 +67,12 @@ private slots:
 
 private:
     QString mLastSearchStr;
-    KLineEdit * m_search;
-    QAction * m_caseSensitiveAct;
+    KLineEdit *mSearch;
+    QAction *mCaseSensitiveAct;
 
-    QPushButton *m_findPrevBtn;
-    QPushButton *m_findNextBtn;
-    QPlainTextEdit * m_view;
+    QPushButton *mFindPrevBtn;
+    QPushButton *mFindNextBtn;
+    QPlainTextEdit *mView;
 
 };
 

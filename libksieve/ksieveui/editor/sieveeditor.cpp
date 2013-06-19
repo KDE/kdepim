@@ -250,7 +250,7 @@ void SieveEditor::slotImport()
     delete fdlg;
 }
 
-bool SieveEditor::loadFromFile( const QString& filename )
+bool SieveEditor::loadFromFile( const QString &filename )
 {
     QFile file( filename );
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
@@ -283,22 +283,22 @@ QString SieveEditor::script() const
     return mTextEdit->toPlainText();
 }
 
-void SieveEditor::setScript( const QString & script )
+void SieveEditor::setScript( const QString &script )
 {
     mTextEdit->setPlainText( script );
 }
 
-void SieveEditor::setDebugColor( const QColor& col )
+void SieveEditor::setDebugColor( const QColor &col )
 {
     mDebugTextEdit->setTextColor( col );
 }
 
-void SieveEditor::setDebugScript( const QString& debug )
+void SieveEditor::setDebugScript( const QString &debug )
 {
     mDebugTextEdit->setText( debug );
 }
 
-void SieveEditor::setScriptName( const QString&name )
+void SieveEditor::setScriptName( const QString &name )
 {
     mScriptName->setText( name );
 }  

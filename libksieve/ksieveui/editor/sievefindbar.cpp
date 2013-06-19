@@ -1,4 +1,4 @@
-/* Copyright (C) 2012 Laurent Montel <montel@kde.org>
+/* Copyright (C) 2012, 2013 Laurent Montel <montel@kde.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -37,7 +37,7 @@
 using namespace KSieveUi;
 
 SieveFindBar::SieveFindBar( QPlainTextEdit * view, QWidget * parent )
-    : QWidget( parent ), m_view( view )
+    : QWidget( parent ), mView( view )
 {
     QHBoxLayout * lay = new QHBoxLayout( this );
     lay->setMargin( 2 );
@@ -57,38 +57,38 @@ SieveFindBar::SieveFindBar( QPlainTextEdit * view, QWidget * parent )
     QLabel * label = new QLabel( i18nc( "Find text", "F&ind:" ), this );
     lay->addWidget( label );
 
-    m_search = new KLineEdit( this );
-    m_search->setToolTip( i18n( "Text to search for" ) );
-    m_search->setClearButtonShown( true );
-    label->setBuddy( m_search );
-    lay->addWidget( m_search );
+    mSearch = new KLineEdit( this );
+    mSearch->setToolTip( i18n( "Text to search for" ) );
+    mSearch->setClearButtonShown( true );
+    label->setBuddy( mSearch );
+    lay->addWidget( mSearch );
 
-    m_findNextBtn = new QPushButton( KIcon( QLatin1String("go-down-search") ), i18nc( "Find and go to the next search match", "Next" ), this );
-    m_findNextBtn->setToolTip( i18n( "Jump to next match" ) );
-    lay->addWidget( m_findNextBtn );
-    m_findNextBtn->setEnabled( false );
+    mFindNextBtn = new QPushButton( KIcon( QLatin1String("go-down-search") ), i18nc( "Find and go to the next search match", "Next" ), this );
+    mFindNextBtn->setToolTip( i18n( "Jump to next match" ) );
+    lay->addWidget( mFindNextBtn );
+    mFindNextBtn->setEnabled( false );
 
-    m_findPrevBtn = new QPushButton( KIcon( QLatin1String("go-up-search") ), i18nc( "Find and go to the previous search match", "Previous" ), this );
-    m_findPrevBtn->setToolTip( i18n( "Jump to previous match" ) );
-    lay->addWidget( m_findPrevBtn );
-    m_findPrevBtn->setEnabled( false );
+    mFindPrevBtn = new QPushButton( KIcon( QLatin1String("go-up-search") ), i18nc( "Find and go to the previous search match", "Previous" ), this );
+    mFindPrevBtn->setToolTip( i18n( "Jump to previous match" ) );
+    lay->addWidget( mFindPrevBtn );
+    mFindPrevBtn->setEnabled( false );
 
     QPushButton * optionsBtn = new QPushButton( this );
     optionsBtn->setText( i18n( "Options" ) );
     optionsBtn->setToolTip( i18n( "Modify search behavior" ) );
     QMenu *optionsMenu = new QMenu( optionsBtn );
-    m_caseSensitiveAct = optionsMenu->addAction( i18n( "Case sensitive" ) );
-    m_caseSensitiveAct->setCheckable( true );
+    mCaseSensitiveAct = optionsMenu->addAction( i18n( "Case sensitive" ) );
+    mCaseSensitiveAct->setCheckable( true );
 
     optionsBtn->setMenu( optionsMenu );
     lay->addWidget( optionsBtn );
 
     connect( closeBtn, SIGNAL(clicked()), this, SLOT(closeBar()) );
-    connect( m_findNextBtn, SIGNAL(clicked()), this, SLOT(findNext()) );
-    connect( m_findPrevBtn, SIGNAL(clicked()), this, SLOT(findPrev()) );
-    connect( m_caseSensitiveAct, SIGNAL(toggled(bool)), this, SLOT(caseSensitivityChanged(bool)) );
-    connect( m_search, SIGNAL(textChanged(QString)), this, SLOT(autoSearch(QString)) );
-    connect( m_search, SIGNAL(clearButtonClicked()), this, SLOT(slotClearSearch()) );
+    connect( mFindNextBtn, SIGNAL(clicked()), this, SLOT(findNext()) );
+    connect( mFindPrevBtn, SIGNAL(clicked()), this, SLOT(findPrev()) );
+    connect( mCaseSensitiveAct, SIGNAL(toggled(bool)), this, SLOT(caseSensitivityChanged(bool)) );
+    connect( mSearch, SIGNAL(textChanged(QString)), this, SLOT(autoSearch(QString)) );
+    connect( mSearch, SIGNAL(clearButtonClicked()), this, SLOT(slotClearSearch()) );
     setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed ) );
     hide();
 }
@@ -99,19 +99,19 @@ SieveFindBar::~SieveFindBar()
 
 void SieveFindBar::setText( const QString&text )
 {
-    m_search->setText( text );
+    mSearch->setText( text );
 }
 
 QString SieveFindBar::text() const
 {
-    return m_search->text();
+    return mSearch->text();
 }
 
 void SieveFindBar::focusAndSetCursor()
 {
     setFocus();
-    m_search->selectAll();
-    m_search->setFocus();
+    mSearch->selectAll();
+    mSearch->setFocus();
 }
 
 void SieveFindBar::slotClearSearch()
@@ -122,10 +122,10 @@ void SieveFindBar::slotClearSearch()
 void SieveFindBar::autoSearch( const QString& str )
 {
     const bool isNotEmpty = ( !str.isEmpty() );
-    m_findPrevBtn->setEnabled( isNotEmpty );
-    m_findNextBtn->setEnabled( isNotEmpty );
+    mFindPrevBtn->setEnabled( isNotEmpty );
+    mFindNextBtn->setEnabled( isNotEmpty );
     if ( isNotEmpty ) {
-        m_view->moveCursor(QTextCursor::Start);
+        mView->moveCursor(QTextCursor::Start);
         QTimer::singleShot( 0, this, SLOT(slotSearchText()) );
     }
     else
@@ -153,7 +153,7 @@ void SieveFindBar::setFoundMatch( bool match )
 {
     QString styleSheet;
 
-    if (!m_search->text().isEmpty()) {
+    if (!mSearch->text().isEmpty()) {
         KColorScheme::BackgroundRole bgColorScheme;
 
         if (match)
@@ -164,11 +164,11 @@ void SieveFindBar::setFoundMatch( bool match )
         KStatefulBrush bgBrush(KColorScheme::View, bgColorScheme);
 
         styleSheet = QString::fromLatin1("QLineEdit{ background-color:%1 }")
-                .arg(bgBrush.brush(m_search).color().name());
+                .arg(bgBrush.brush(mSearch).color().name());
     }
 
 #ifndef QT_NO_STYLE_STYLESHEET
-    m_search->setStyleSheet(styleSheet);
+    mSearch->setStyleSheet(styleSheet);
 #endif
 
 }
@@ -178,21 +178,21 @@ void SieveFindBar::searchText( bool backward, bool isAutoSearch )
     QTextDocument::FindFlags searchOptions = 0;
     if ( backward )
         searchOptions |= QTextDocument::FindBackward;
-    if ( m_caseSensitiveAct->isChecked() )
+    if ( mCaseSensitiveAct->isChecked() )
         searchOptions |= QTextDocument::FindCaseSensitively;
 
     if ( isAutoSearch )
     {
-        QTextCursor cursor = m_view->textCursor();
+        QTextCursor cursor = mView->textCursor();
         cursor.setPosition( cursor.selectionStart() );
-        m_view->setTextCursor( cursor );
+        mView->setTextCursor( cursor );
     }
-    else if ( !mLastSearchStr.contains( m_search->text(), Qt::CaseSensitive ))
+    else if ( !mLastSearchStr.contains( mSearch->text(), Qt::CaseSensitive ))
     {
         clearSelections();
     }
-    mLastSearchStr = m_search->text();
-    const bool found = m_view->find( mLastSearchStr, searchOptions );
+    mLastSearchStr = mSearch->text();
+    const bool found = mView->find( mLastSearchStr, searchOptions );
 
     setFoundMatch( found );
     messageInfo( backward, isAutoSearch, found );
@@ -218,10 +218,10 @@ void SieveFindBar::caseSensitivityChanged(bool b)
 void SieveFindBar::updateSensitivity( bool )
 {
     QTextDocument::FindFlags searchOptions = 0;
-    if ( m_caseSensitiveAct->isChecked() )
+    if ( mCaseSensitiveAct->isChecked() )
         searchOptions |= QTextDocument::FindCaseSensitively;
-    mLastSearchStr = m_search->text();
-    const bool found = m_view->find( mLastSearchStr, searchOptions );
+    mLastSearchStr = mSearch->text();
+    const bool found = mView->find( mLastSearchStr, searchOptions );
     setFoundMatch( found );
 
 }
@@ -233,10 +233,10 @@ void SieveFindBar::slotHighlightAllChanged(bool b)
 
 void SieveFindBar::updateHighLight( bool )
 {
-    QTextCursor textCursor = m_view->textCursor();
+    QTextCursor textCursor = mView->textCursor();
     textCursor.clearSelection();
     textCursor.setPosition( 0 );
-    m_view->setTextCursor( textCursor );
+    mView->setTextCursor( textCursor );
     clearSelections();
 }
 
@@ -248,7 +248,7 @@ void SieveFindBar::clearSelections()
 void SieveFindBar::closeBar()
 {
     // Make sure that all old searches are cleared
-    m_search->setText( QString() );
+    mSearch->setText( QString() );
     clearSelections();
     hide();
 }
