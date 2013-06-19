@@ -188,33 +188,6 @@ PlasmaComponents.Page {
       }
     }
 
-    KPIM.StartCanvas {
-      id : startPage
-      visible: !collectionView.hasSelection
-      anchors.left : collectionView.right
-      anchors.top : parent.top
-      anchors.bottom : parent.bottom
-      anchors.right : parent.right
-      anchors.leftMargin : 10
-      anchors.rightMargin : 10
-      showAccountsList : false
-      favoritesModel : favoritesList
-
-      contextActions : [
-        QML.Column {
-          anchors.fill: parent
-          height : 70
-          KPIM.Button2 {
-            width: parent.width
-            buttonText : KDE.i18n( "Write new Email" )
-            onClicked : {
-              application.startComposer();
-            }
-          }
-        }
-      ]
-    }
-
     QML.Rectangle {
       id : emptyFolderPage
       visible: (!application.isLoadingSelected && !guiStateManager.inHomeScreenState && collectionView.hasBreadcrumbs && threadView.count == 0)
@@ -521,21 +494,6 @@ PlasmaComponents.Page {
     }
 
     resultText: KDE.i18np( "One message found", "%1 messages found", searchMessageListView.count )
-  }
-
-  QML.Connections {
-    target: startPage
-    onAccountSelected : {
-      application.setSelectedAccount(row);
-      startPanel.collapse();
-      folderPanel.expand();
-    }
-  }
-  QML.Connections {
-    target: startPage
-    onFavoriteSelected : {
-      application.loadFavorite(favName);
-    }
   }
 
   QML.Connections {
