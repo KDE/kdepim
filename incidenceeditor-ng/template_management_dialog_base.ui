@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>403</width>
-    <height>362</height>
+    <width>664</width>
+    <height>390</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -30,16 +30,10 @@
    <item row="1" column="0">
     <widget class="QListWidget" name="m_listBox">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+      <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>300</width>
-       <height>250</height>
-      </size>
      </property>
      <property name="toolTip">
       <string>The list of managed templates</string>
