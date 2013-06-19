@@ -820,7 +820,26 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
             }
             result = true;
           }
-          showCalendar( incidence->dtStart().date() );
+          if ( !incidence->dtStart().isValid() ) {
+            // Should not happen according to RFC5546 every published
+            // event should have a dtstart. But there are some clients
+            // like Kontact in some versions that do this anyhow.
+            // So we should try to handle it gracefully.
+            if ( incidence->type() == "Todo" ) {
+              Todo * const todo = dynamic_cast<Todo *>( incidence );
+
+              // in RFC2445 VTODO's do not need to have a start date
+              // this might be hitting us here
+              if ( todo && todo->hasDueDate() ) {
+                showCalendar( todo->dtDue().date() );
+              }
+            } else {
+              // mmh no idea.
+              kdWarning() << "Incidence has no start and no due something is wrong here." << endl;
+            }
+          } else {
+            showCalendar( incidence->dtStart().date() );
+          }
           break;
         }
       }
