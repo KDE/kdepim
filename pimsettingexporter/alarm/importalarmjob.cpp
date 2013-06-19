@@ -51,6 +51,10 @@ void ImportAlarmJob::start()
 void ImportAlarmJob::restoreResources()
 {
     Q_EMIT info(i18n("Restore resources..."));
+    if (!mHashAlarmArchive.isEmpty()) {
+
+    }
+
     Q_EMIT info(i18n("Resources restored."));
 
     //TODO

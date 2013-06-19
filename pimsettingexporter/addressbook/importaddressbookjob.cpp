@@ -50,6 +50,13 @@ void ImportAddressbookJob::restoreResources()
 {
     //TODO
     Q_EMIT info(i18n("Restore resources..."));
+    if (!mHashAddressBookArchive.isEmpty()) {
+        QHashIterator<QString, QString> i(mHashAddressBookArchive);
+        while (i.hasNext()) {
+            i.next();
+            qDebug() << i.key() << ": " << i.value() << endl;
+        }
+    }
     Q_EMIT info(i18n("Resources restored."));
 }
 

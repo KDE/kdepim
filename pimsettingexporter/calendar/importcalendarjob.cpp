@@ -51,6 +51,13 @@ void ImportCalendarJob::restoreResources()
 {
     //TODO
     Q_EMIT info(i18n("Restore resources..."));
+    if (!mHashCalendarArchive.isEmpty()) {
+        QHashIterator<QString, QString> i(mHashCalendarArchive);
+        while (i.hasNext()) {
+            i.next();
+            qDebug() << i.key() << ": " << i.value() << endl;
+        }
+    }
     Q_EMIT info(i18n("Resources restored."));
 }
 
@@ -79,7 +86,7 @@ void ImportCalendarJob::storeCalendarArchiveResource(const KArchiveDirectory *di
             if (lst.count() == 2) {
                 const QString archPath(prefix + QLatin1Char('/') + entryName + QLatin1Char('/'));
                 const QString name(lst.at(0));
-                if (name.endsWith(QLatin1String("rc"))&&(name.contains(QLatin1String("akonadi_calendar_resource_")))) {
+                if (name.endsWith(QLatin1String("rc"))&&(name.contains(QLatin1String("akonadi_ical_resource_")))) {
                     mHashCalendarArchive.insert(archPath + name,archPath +lst.at(1));
                 } else {
                     mHashCalendarArchive.insert(archPath +lst.at(1),archPath + name);
