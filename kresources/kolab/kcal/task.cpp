@@ -472,4 +472,19 @@ void Task::saveTo( KCal::Todo* task )
 
   if ( hasCompletedDate() && task->percentComplete() == 100 )
     task->setCompleted( utcToLocal( mCompletedDate ) );
+
+  // Fix for kolab issue4864
+  if ( recurrence().rangeType == "number" || mRecurrence.rangeType == "date" ) {
+    if ( !task->recurrence()->startDateTime().isValid() ) {
+      kdDebug() << "Limited recurrence without start date. Using due date." << endl;
+      // Having a recurrence with a range but no start leads
+      // to undefined behavior so we use the due date in that case.
+      if ( hasDueDate() ) {
+        task->recurrence()->setStartDateTime( dueDate() );
+      } else {
+        // should not happen.
+        kdWarning() << "Recurrence for task without start and end." << endl;
+      }
+    }
+  }
 }
