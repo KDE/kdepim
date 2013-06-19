@@ -18,7 +18,7 @@
 #ifndef GRANTLEEHEADERTESTSTYLE_H
 #define GRANTLEEHEADERTESTSTYLE_H
 
-#include "headerstyle.h"
+#include "header/headerstyle.h"
 #include "messageviewer_export.h"
 
 namespace MessageViewer {

@@ -59,9 +59,9 @@ set(libmessageviewer_SRCS
   findbar/findbarmailwebview.cpp
   findbar/findbarsourceview.cpp
   globalsettings.cpp
-  headerstrategy.cpp
+  header/headerstrategy.cpp
   header/headerstrategy_p.cpp
-  headerstyle.cpp
+  header/headerstyle.cpp
   header/briefheaderstyle.cpp
   header/grantleeheaderstyle.cpp
   header/customheaderstyle.cpp
@@ -149,7 +149,7 @@ include_directories(
 set_target_properties( messageviewer PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS messageviewer ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
-#install( FILES viewer/viewer.h attachmentstrategy.h headerstrategy.h messageviewer_export.h DESTINATION  ${INCLUDE_INSTALL_DIR}/messageviewer COMPONENT devel)
+#install( FILES viewer/viewer.h attachmentstrategy.h header/headerstrategy.h messageviewer_export.h DESTINATION  ${INCLUDE_INSTALL_DIR}/messageviewer COMPONENT devel)
 
 
 install(DIRECTORY themes DESTINATION ${DATA_INSTALL_DIR}/messageviewer )

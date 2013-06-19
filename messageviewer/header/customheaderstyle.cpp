@@ -19,7 +19,7 @@
 #include "customheaderstyle.h"
 #include "header/headerstyle_util.h"
 
-#include "headerstrategy.h"
+#include "header/headerstrategy.h"
 #include <kpimutils/linklocator.h>
 using KPIMUtils::LinkLocator;
 #include "globalsettings.h"

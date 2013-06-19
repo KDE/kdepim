@@ -19,7 +19,7 @@
 #ifndef GRANTLEEHEADERSTYLE_H
 #define GRANTLEEHEADERSTYLE_H
 
-#include "headerstyle.h"
+#include "header/headerstyle.h"
 
 namespace MessageViewer {
 class GrantleeHeaderFormatter;

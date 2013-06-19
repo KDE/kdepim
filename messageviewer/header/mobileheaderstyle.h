@@ -17,7 +17,7 @@
 
 #ifndef MOBILEHEADERSTYLE_H
 #define MOBILEHEADERSTYLE_H
-#include "headerstyle.h"
+#include "header/headerstyle.h"
 
 namespace MessageViewer {
 class MobileHeaderStyle : public HeaderStyle {

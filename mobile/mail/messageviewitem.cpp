@@ -28,8 +28,8 @@
 
 #include <kdescendantsproxymodel.h>
 
-#include <messageviewer/headerstyle.h>
-#include <messageviewer/headerstrategy.h>
+#include <messageviewer/header/headerstyle.h>
+#include <messageviewer/header/headerstrategy.h>
 #include <messageviewer/mailwebview.h>
 #include <messageviewer/markmessagereadhandler.h>
 #include <messageviewer/viewer/viewer.h>

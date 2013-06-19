@@ -18,7 +18,7 @@
 #include "grantleeheaderteststyle.h"
 
 #include "header/grantleeheaderformatter.h"
-#include "headerstrategy.h"
+#include "header/headerstrategy.h"
 
 #include <kmime/kmime_message.h>
 
