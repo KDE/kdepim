@@ -42,7 +42,6 @@ ContactDisplayMessageMemento::~ContactDisplayMessageMemento()
 {
 }
 
-
 void ContactDisplayMessageMemento::slotSearchJobFinished( KJob *job )
 {
     mFinished = true;
