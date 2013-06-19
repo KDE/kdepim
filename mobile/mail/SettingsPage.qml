@@ -38,11 +38,16 @@ PlasmaComponents.Page {
   }
   //END: Tools
 
-  PlasmaComponents.Label {
-
+  Column {
     anchors.centerIn: parent
 
-    text: "Settings"
+    spacing: 20
+
+    PlasmaComponents.Button {
+      text: i18n("Identities")
+
+      onClicked: application.configureIdentity()
+    }
   }
 
 }
