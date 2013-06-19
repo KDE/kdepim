@@ -18,7 +18,7 @@
 */
 
 #include <QFile>
-#include "viewer.h"
+#include "viewer/viewer.h"
 #include "headerstyle.h"
 #include "headerstrategy.h"
 

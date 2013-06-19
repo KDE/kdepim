@@ -96,8 +96,8 @@ set(libmessageviewer_SRCS
   htmlwriter/teehtmlwriter.cpp
   urlhandlermanager.cpp
   utils/util.cpp
-  viewer.cpp
-  viewer_p.cpp
+  viewer/viewer.cpp
+  viewer/viewer_p.cpp
   htmlwriter/webkitparthtmlwriter.cpp
   messagedisplayformatattribute.cpp
   scamdetection/scamdetectionwarningwidget.cpp
@@ -149,7 +149,7 @@ include_directories(
 set_target_properties( messageviewer PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS messageviewer ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
-#install( FILES viewer.h attachmentstrategy.h headerstrategy.h messageviewer_export.h DESTINATION  ${INCLUDE_INSTALL_DIR}/messageviewer COMPONENT devel)
+#install( FILES viewer/viewer.h attachmentstrategy.h headerstrategy.h messageviewer_export.h DESTINATION  ${INCLUDE_INSTALL_DIR}/messageviewer COMPONENT devel)
 
 
 install(DIRECTORY themes DESTINATION ${DATA_INSTALL_DIR}/messageviewer )

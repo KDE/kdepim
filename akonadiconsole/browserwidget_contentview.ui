@@ -466,7 +466,7 @@
   <customwidget>
    <class>MessageViewer::Viewer</class>
    <extends>KTextBrowser</extends>
-   <header location="global">messageviewer/viewer.h</header>
+   <header location="global">messageviewer/viewer/viewer.h</header>
   </customwidget>
   <customwidget>
    <class>Nepomuk2::TagWidget</class>

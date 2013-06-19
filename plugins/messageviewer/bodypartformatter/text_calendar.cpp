@@ -39,7 +39,7 @@
 #include <incidenceeditor-ng/groupwareintegration.h>
 
 #include <messageviewer/globalsettings.h>
-#include <messageviewer/viewer.h>
+#include <messageviewer/viewer/viewer.h>
 #include <messageviewer/interfaces/bodypart.h>
 #include <messageviewer/interfaces/bodypartformatter.h>
 #include <messageviewer/interfaces/bodyparturlhandler.h>

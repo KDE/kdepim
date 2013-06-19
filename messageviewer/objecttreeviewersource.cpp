@@ -20,7 +20,7 @@
 
 
 #include "objecttreeviewersource.h"
-#include "viewer_p.h"
+#include "viewer/viewer_p.h"
 #include "widgets/htmlstatusbar.h"
 
 namespace MessageViewer {

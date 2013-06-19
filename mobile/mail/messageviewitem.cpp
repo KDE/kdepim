@@ -32,8 +32,8 @@
 #include <messageviewer/headerstrategy.h>
 #include <messageviewer/mailwebview.h>
 #include <messageviewer/markmessagereadhandler.h>
-#include <messageviewer/viewer.h>
-#include <messageviewer/viewer_p.h>
+#include <messageviewer/viewer/viewer.h>
+#include <messageviewer/viewer/viewer_p.h>
 #include "attachmentproxymodel.h"
 #include <KAction>
 

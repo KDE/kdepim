@@ -17,7 +17,7 @@
 
 #include "previewwidget.h"
 #include "themeeditorutil.h"
-#include "messageviewer/viewer.h"
+#include "messageviewer/viewer/viewer.h"
 #include "messageviewer/headerstrategy.h"
 #include "messageviewer/header/grantleeheaderteststyle.h"
 

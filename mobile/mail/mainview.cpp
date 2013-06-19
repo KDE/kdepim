@@ -53,7 +53,7 @@
 #include "messageviewer/headerstrategy.h"
 #include "messageviewer/headerstyle.h"
 #include "messageviewer/nodehelper.h"
-#include "messageviewer/viewer.h"
+#include "messageviewer/viewer/viewer.h"
 #include "messageviewitem.h"
 #include "mobilekernel.h"
 #include "savemailcommand_p.h"

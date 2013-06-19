@@ -40,7 +40,7 @@
 #include "interfaces/urlhandler.h"
 #include "interfaces/bodyparturlhandler.h"
 #include "partnodebodypart.h"
-#include "viewer_p.h"
+#include "viewer/viewer_p.h"
 #include "mailwebview.h"
 #include "nodehelper.h"
 #include "utils/util.h"
