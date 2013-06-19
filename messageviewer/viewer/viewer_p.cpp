@@ -121,7 +121,7 @@
 #include "widgets/htmlstatusbar.h"
 #include "htmlwriter/webkitparthtmlwriter.h"
 #include "viewer/mailsourceviewer.h"
-#include "mimetreemodel.h"
+#include "viewer/mimetreemodel.h"
 #include "nodehelper.h"
 #include "objecttreeparser.h"
 #include "urlhandlermanager.h"

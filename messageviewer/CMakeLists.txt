@@ -84,7 +84,7 @@ set(libmessageviewer_SRCS
   kleojobexecutor.cpp
   viewer/mailsourceviewer.cpp
   markmessagereadhandler.cpp
-  mimetreemodel.cpp
+  viewer/mimetreemodel.cpp
   nodehelper.cpp
   attachmenttemporaryfilesdirs.cpp
   objecttreeemptysource.cpp

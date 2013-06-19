@@ -31,7 +31,7 @@
 #include "csshelper.h"
 #include "globalsettings.h"
 #include "mailwebview.h"
-#include "mimetreemodel.h"
+#include "viewer/mimetreemodel.h"
 
 #include <akonadi/kmime/messageparts.h>
 #include <akonadi/itemfetchjob.h>
