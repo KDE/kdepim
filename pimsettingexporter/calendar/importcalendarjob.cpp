@@ -22,6 +22,7 @@
 #include <KTempDir>
 #include <KStandardDirs>
 #include <KLocale>
+#include <KConfigGroup>
 
 #include <QFile>
 
@@ -105,7 +106,13 @@ void ImportCalendarJob::importkorganizerConfig(const KArchiveFile* file, const Q
     copyToFile(file, config, filename, prefix);
     KSharedConfig::Ptr korganizerConfig = KSharedConfig::openConfig(config);
 
-    //TODO adapt collection name
+
+    const QString collectionsStr(QLatin1String("GlobalCollectionSelection"));
+    if (korganizerConfig->hasGroup(collectionsStr)) {
+        KConfigGroup group = korganizerConfig->group(collectionsStr);
+        const QString selectionKey(QLatin1String("Selection"));
+        convertRealPathToCollectionList(group, selectionKey, true);
+    }
     korganizerConfig->sync();
 }
 
