@@ -114,7 +114,7 @@
 #include "widgets/attachmentdialog.h"
 #include "attachmentstrategy.h"
 #include "csshelper.h"
-#include "editorwatcher.h"
+#include "viewer/editorwatcher.h"
 #include "globalsettings.h"
 #include "header/headerstyle.h"
 #include "header/headerstrategy.h"

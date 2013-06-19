@@ -53,7 +53,7 @@ set(libmessageviewer_SRCS
   header/contactdisplaymessagememento.cpp
   csshelper.cpp
   csshelperbase.cpp
-  editorwatcher.cpp
+  viewer/editorwatcher.cpp
   htmlwriter/filehtmlwriter.cpp
   findbar/findbarbase.cpp
   findbar/findbarmailwebview.cpp
