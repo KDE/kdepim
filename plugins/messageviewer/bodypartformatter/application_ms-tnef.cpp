@@ -31,7 +31,7 @@
 #include <messageviewer/interfaces/bodypart.h>
 #include <messageviewer/interfaces/bodyparturlhandler.h>
 #include <messageviewer/interfaces/htmlwriter.h>
-#include <messageviewer/nodehelper.h>
+#include <messageviewer/viewer/nodehelper.h>
 #include <messagecore/utils/stringutil.h>
 #include <messageviewer/utils/util.h>
 

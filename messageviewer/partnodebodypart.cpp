@@ -35,7 +35,7 @@
 
 
 #include "partnodebodypart.h"
-#include "nodehelper.h"
+#include "viewer/nodehelper.h"
 
 #include <kurl.h>
 

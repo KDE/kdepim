@@ -24,8 +24,8 @@
 
 #include "viewer_p.h"
 #include "viewer.h"
-#include "objecttreeemptysource.h"
-#include "objecttreeviewersource.h"
+#include "viewer/objecttreeemptysource.h"
+#include "viewer/objecttreeviewersource.h"
 #include "messagedisplayformatattribute.h"
 #include "header/grantleethememanager.h"
 #include "scamdetection/scamdetectionwarningwidget.h"
@@ -112,7 +112,7 @@
 
 //own includes
 #include "widgets/attachmentdialog.h"
-#include "attachmentstrategy.h"
+#include "viewer/attachmentstrategy.h"
 #include "csshelper.h"
 #include "viewer/editorwatcher.h"
 #include "globalsettings.h"
@@ -122,12 +122,12 @@
 #include "htmlwriter/webkitparthtmlwriter.h"
 #include "viewer/mailsourceviewer.h"
 #include "viewer/mimetreemodel.h"
-#include "nodehelper.h"
-#include "objecttreeparser.h"
+#include "viewer/nodehelper.h"
+#include "viewer/objecttreeparser.h"
 #include "urlhandlermanager.h"
 #include "utils/util.h"
 #include "widgets/vcardviewer.h"
-#include "mailwebview.h"
+#include "viewer/mailwebview.h"
 #include "findbar/findbarmailwebview.h"
 #include "pimcommon/translator/translatorwidget.h"
 

@@ -36,7 +36,7 @@
 #include "bodypartformatterfactory_p.h"
 #include "interfaces/bodypartformatter.h"
 
-#include "objecttreeparser.h"
+#include "viewer/objecttreeparser.h"
 
 #include <kmime/kmime_content.h>
 

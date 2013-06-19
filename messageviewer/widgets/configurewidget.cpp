@@ -22,7 +22,7 @@
 #include "ui_settings.h"
 #include "utils/util.h"
 #include "globalsettings.h"
-#include "nodehelper.h"
+#include "viewer/nodehelper.h"
 
 #include "header/customheadersettingwidget.h"
 

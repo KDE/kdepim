@@ -16,7 +16,7 @@
 */
 
 #include "headerstyle_util.h"
-#include "nodehelper.h"
+#include "viewer/nodehelper.h"
 #include "header/headerstyle.h"
 
 #include <messagecore/utils/stringutil.h>

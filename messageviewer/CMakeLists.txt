@@ -33,10 +33,10 @@ if(DEBUG_SIGNATURE)
 endif()
 
 if(KDEPIM_NO_WEBKIT)
-  set(_mailwebview_cpp mailwebview_textbrowser.cpp )
+  set(_mailwebview_cpp viewer/mailwebview_textbrowser.cpp )
   set(_mailwebview_lib )
 else()
-  set(_mailwebview_cpp mailwebview_webkit.cpp )
+  set(_mailwebview_cpp viewer/mailwebview_webkit.cpp )
   if(NOT WINCE)
     set(_mailwebview_lib ${KDE4_KDEWEBKIT_LIBRARY} ${QT_QTWEBKIT_LIBRARY})
     add_subdirectory(a11y)
@@ -45,7 +45,7 @@ endif()
 
 set(libmessageviewer_SRCS
   widgets/attachmentdialog.cpp
-  attachmentstrategy.cpp
+  viewer/attachmentstrategy.cpp
   bodypartformatter.cpp
   bodypartformatterfactory.cpp
   chiasmuskeyselector.cpp
@@ -76,7 +76,7 @@ set(libmessageviewer_SRCS
   header/grantleetheme.cpp
   header/grantleeheaderteststyle.cpp
   header/kxface.cpp
-  htmlquotecolorer.cpp
+  viewer/htmlquotecolorer.cpp
   widgets/htmlstatusbar.cpp
   widgets/vcardviewer.cpp
   iconnamecache.cpp
@@ -85,12 +85,12 @@ set(libmessageviewer_SRCS
   viewer/mailsourceviewer.cpp
   markmessagereadhandler.cpp
   viewer/mimetreemodel.cpp
-  nodehelper.cpp
-  attachmenttemporaryfilesdirs.cpp
-  objecttreeemptysource.cpp
-  objecttreeparser.cpp
-  objecttreeparser_p.cpp
-  objecttreeviewersource.cpp
+  viewer/nodehelper.cpp
+  viewer/attachmenttemporaryfilesdirs.cpp
+  viewer/objecttreeemptysource.cpp
+  viewer/objecttreeparser.cpp
+  viewer/objecttreeparser_p.cpp
+  viewer/objecttreeviewersource.cpp
   partnodebodypart.cpp
   pluginloaderbase.cpp
   htmlwriter/teehtmlwriter.cpp
@@ -149,7 +149,7 @@ include_directories(
 set_target_properties( messageviewer PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS messageviewer ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
-#install( FILES viewer/viewer.h attachmentstrategy.h header/headerstrategy.h messageviewer_export.h DESTINATION  ${INCLUDE_INSTALL_DIR}/messageviewer COMPONENT devel)
+#install( FILES viewer/viewer.h viewer/attachmentstrategy.h header/headerstrategy.h messageviewer_export.h DESTINATION  ${INCLUDE_INSTALL_DIR}/messageviewer COMPONENT devel)
 
 
 install(DIRECTORY themes DESTINATION ${DATA_INSTALL_DIR}/messageviewer )

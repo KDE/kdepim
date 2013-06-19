@@ -23,7 +23,7 @@
 #include <kpimutils/linklocator.h>
 using KPIMUtils::LinkLocator;
 #include "globalsettings.h"
-#include "nodehelper.h"
+#include "viewer/nodehelper.h"
 
 #include <kpimutils/email.h>
 #include <messagecore/utils/stringutil.h>

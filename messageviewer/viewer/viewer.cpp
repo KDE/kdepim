@@ -30,7 +30,7 @@
 #include "widgets/configurewidget.h"
 #include "csshelper.h"
 #include "globalsettings.h"
-#include "mailwebview.h"
+#include "viewer/mailwebview.h"
 #include "viewer/mimetreemodel.h"
 
 #include <akonadi/kmime/messageparts.h>

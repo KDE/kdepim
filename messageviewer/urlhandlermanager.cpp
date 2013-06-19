@@ -41,8 +41,8 @@
 #include "interfaces/bodyparturlhandler.h"
 #include "partnodebodypart.h"
 #include "viewer/viewer_p.h"
-#include "mailwebview.h"
-#include "nodehelper.h"
+#include "viewer/mailwebview.h"
+#include "viewer/nodehelper.h"
 #include "utils/util.h"
 #include "stl_util.h"
 

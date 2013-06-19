@@ -19,8 +19,8 @@
 #include "objecttreeparsertest.h"
 #include "util.h"
 
-#include "objecttreeparser.h"
-#include "objecttreeemptysource.h"
+#include "viewer/objecttreeparser.h"
+#include "viewer/objecttreeemptysource.h"
 #include "interfaces/htmlwriter.h"
 #include "messageviewer/csshelper.h"
 

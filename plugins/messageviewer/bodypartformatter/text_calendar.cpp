@@ -226,7 +226,7 @@ class Formatter : public Interface::BodyPartFormatter
 
           When the memento finishes, this is called a second time, and we can proceed.
 
-          BodyPartMementos are documented in objecttreeparser.h
+          BodyPartMementos are documented in viewer/objecttreeparser.h
       */
       MemoryCalendarMemento *memento = dynamic_cast<MemoryCalendarMemento*>( bodyPart->memento() );
 

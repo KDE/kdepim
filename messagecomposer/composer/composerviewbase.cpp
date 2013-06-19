@@ -33,8 +33,8 @@
 #include "utils/util.h"
 #include "imagescaling/imagescalingutils.h"
 
-#include <messageviewer/objecttreeemptysource.h>
-#include <messageviewer/objecttreeparser.h>
+#include <messageviewer/viewer/objecttreeemptysource.h>
+#include <messageviewer/viewer/objecttreeparser.h>
 #include <messagecore/helpers/messagehelpers.h>
 #include <messagecore/utils/stringutil.h>
 #include <mailtransport/transportcombobox.h>

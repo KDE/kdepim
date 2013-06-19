@@ -35,7 +35,7 @@
 
 #include "attachmentstrategy.h"
 
-#include "nodehelper.h"
+#include "viewer/nodehelper.h"
 
 #include <kmime/kmime_content.h>
 #include <kdebug.h>

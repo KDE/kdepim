@@ -16,10 +16,10 @@
   Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
   02110-1301, USA.
 */
-#include "objecttreeparser.h"
+#include "viewer/objecttreeparser.h"
 #include "util.h"
 
-#include "objecttreeemptysource.h"
+#include "viewer/objecttreeemptysource.h"
 
 #include <messagecore/tests/util.h>
 

@@ -18,7 +18,7 @@
 */
 
 #include "htmlwriter/filehtmlwriter.h"
-#include "objecttreeparser.h"
+#include "viewer/objecttreeparser.h"
 #include "csshelper.h"
 #include "messagecore/tests/util.h"
 

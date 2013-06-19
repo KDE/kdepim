@@ -21,7 +21,7 @@
 #define MESSAGEVIEWER_MAILWEBVIEW_H
 
 #include <qglobal.h> // make sure we have Q_OS_WINCE defined
-#include "globalsettings.h"
+#include "messageviewer/globalsettings.h"
 
 #ifdef KDEPIM_NO_WEBKIT
 # include <QTextBrowser>

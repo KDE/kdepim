@@ -21,7 +21,7 @@
 #ifndef MAILVIEWER_P_H
 #define MAILVIEWER_P_H
 
-#include "nodehelper.h"
+#include "viewer/nodehelper.h"
 #include "viewer.h" //not so nice, it is actually for the enums from MailViewer
 
 #include <akonadi/item.h>

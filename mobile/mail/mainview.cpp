@@ -52,7 +52,7 @@
 #include "messageviewer/globalsettings.h"
 #include "messageviewer/header/headerstrategy.h"
 #include "messageviewer/header/headerstyle.h"
-#include "messageviewer/nodehelper.h"
+#include "messageviewer/viewer/nodehelper.h"
 #include "messageviewer/viewer/viewer.h"
 #include "messageviewitem.h"
 #include "mobilekernel.h"
