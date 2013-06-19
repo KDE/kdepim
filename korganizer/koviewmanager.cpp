@@ -430,7 +430,14 @@ void KOViewManager::showDayView()
 {
   mAgendaMode = AGENDA_DAY;
   showAgendaView();
-  mMainView->dateNavigator()->selectDates( 1 );
+  if ( currentSelectionDate().isValid() ) {
+    mMainView->dateNavigator()->selectDates( currentSelectionDate(), 1 );
+  } else if (mCurrentView && mCurrentView->selectionStart().isValid()) {
+    mMainView->dateNavigator()->selectDates( mCurrentView->selectionStart().date(), 1 );
+  } else {
+    mMainView->dateNavigator()->selectDates( 1 );
+  }
+
 }
 
 void KOViewManager::showWorkWeekView()
