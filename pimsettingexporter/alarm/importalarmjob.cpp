@@ -41,6 +41,7 @@ ImportAlarmJob::~ImportAlarmJob()
 void ImportAlarmJob::start()
 {
     mArchiveDirectory = archive()->directory();
+    searchAllFiles(mArchiveDirectory ,QString());
     if (mTypeSelected & Utils::Resources)
         restoreResources();
     if (mTypeSelected & Utils::Config)
@@ -54,6 +55,45 @@ void ImportAlarmJob::restoreResources()
 
     //TODO
 }
+
+void ImportAlarmJob::searchAllFiles(const KArchiveDirectory *dir,const QString &prefix)
+{
+    Q_FOREACH(const QString& entryName, dir->entries()) {
+        const KArchiveEntry *entry = dir->entry(entryName);
+        if (entry && entry->isDirectory()) {
+            const QString newPrefix = (prefix.isEmpty() ? prefix : prefix + QLatin1Char('/')) + entryName;
+            if (entryName == QLatin1String("addressbook")) {
+                storeAlarmArchiveResource(static_cast<const KArchiveDirectory*>(entry),entryName);
+            } else {
+                searchAllFiles(static_cast<const KArchiveDirectory*>(entry), newPrefix);
+            }
+        }
+    }
+}
+
+void ImportAlarmJob::storeAlarmArchiveResource(const KArchiveDirectory *dir, const QString &prefix)
+{
+    Q_FOREACH(const QString& entryName, dir->entries()) {
+        const KArchiveEntry *entry = dir->entry(entryName);
+        if (entry && entry->isDirectory()) {
+            const KArchiveDirectory*resourceDir = static_cast<const KArchiveDirectory*>(entry);
+            const QStringList lst = resourceDir->entries();
+            if (lst.count() == 2) {
+                const QString archPath(prefix + QLatin1Char('/') + entryName + QLatin1Char('/'));
+                const QString name(lst.at(0));
+                if (name.endsWith(QLatin1String("rc"))&&(name.contains(QLatin1String("akonadi_alarm_resource_")))) {
+                    mHashAlarmArchive.insert(archPath + name,archPath +lst.at(1));
+                } else {
+                    mHashAlarmArchive.insert(archPath +lst.at(1),archPath + name);
+                }
+            } else {
+                kDebug()<<" lst.at(0)"<<lst.at(0);
+                kDebug()<<" Problem in archive. number of file "<<lst.count();
+            }
+        }
+    }
+}
+
 
 void ImportAlarmJob::restoreConfig()
 {
