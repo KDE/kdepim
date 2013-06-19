@@ -630,7 +630,7 @@ Account</guilabel> or <guilabel>Configure account</guilabel> dialogs
 will open respectively. For sending via &Sendmail;
 or similar programs
 you can specify a name and the location of the
-&sendmail; program.  For &SMTP; you
+&Sendmail; program.  For &SMTP; you
 can specify <guilabel>Name</guilabel>, <guilabel>Outgoing mail server</guilabel>, and
 <guilabel>Port</guilabel> of the server.  <guilabel>Server requires
 authentication</guilabel> will enable the <guilabel>Login</guilabel>
@@ -1261,6 +1261,7 @@ of key words can be modified.</para>
      drop down box choose the language you would like to use.You can import settings from <application>LibreOffice</application> or another &kmail; installation by selecting the
        appropriate choice from the <guilabel>Import</guilabel> drop down box. If you need to save your settings for another installation or application, select the <guibutton>Export</guibutton> button.
        </para>
+<!-- broken markup inside list
        <para>
 	<varlistentry><title>Autocorrect Options</title>
 	  <listitem>
@@ -1283,6 +1284,7 @@ of key words can be modified.</para>
 	  </listitem>
 	</varlistentry>
       </para>
+-->
       <para>
 	Once you have made all of your autocorrect selections click the <guibutton>Apply</guibutton> button.
       </para>
@@ -1852,7 +1854,7 @@ of key words can be modified.</para>
 
 	<varlistentry id="configure-smime-online-certificate-responder-url">
 	  <term>
-	    <guilabel><acronym>OCSP</acronym> responder &URL;</guilabel>
+	    <guilabel>OCSP responder &URL;</guilabel>
           </term>
          <listitem>
 	      <para>
@@ -1987,11 +1989,11 @@ of key words can be modified.</para>
 
 	<varlistentry id="configure-smime-certificate-ldap-requests">
 	  <term>
-	    <guilabel>Do not perform any <acronym>LDAP</acronym> requests</guilabel>
+	    <guilabel>Do not perform any LDAP requests</guilabel>
 	  </term>
 	  <listitem>
 	    <para>
-	     Entirely disables the use of <acronym>LDAP</acronym> for
+	     Entirely disables the use of LDAP for
 	     &smime;.
 	    </para>
 	  </listitem>
@@ -1999,7 +2001,7 @@ of key words can be modified.</para>
 
 	<varlistentry id="configure-smime-certificate-ldap-distribution-point">
 	  <term>
-	    <guilabel>Ignore <acronym>LDAP</acronym> CRL Distribution Point of certificates</guilabel>
+	    <guilabel>Ignore LDAP CRL Distribution Point of certificates</guilabel>
 	  </term>
 	  <listitem>
 	    <para>
@@ -2018,7 +2020,7 @@ of key words can be modified.</para>
 
 	<varlistentry id="configure-smime-certificate-ldap-proxy-host">
 	  <term>
-	    <guilabel>Primary host for <acronym>LDAP</acronym> requests</guilabel>
+	    <guilabel>Primary host for LDAP requests</guilabel>
 	  </term>
 	  <listitem>
 	    <para>
