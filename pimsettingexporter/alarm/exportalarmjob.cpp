@@ -110,7 +110,7 @@ void ExportAlarmJob::backupConfig()
         if (kalarmConfig->hasGroup(collectionsStr)) {
             KConfigGroup group = kalarmConfig->group(collectionsStr);
             const QString selectionKey(QLatin1String("FavoriteCollectionIds"));
-            Utils::convertCollectionIds(group, selectionKey);
+            Utils::convertCollectionIdsToRealPath(group, selectionKey);
         }
 
         kalarmConfig->sync();

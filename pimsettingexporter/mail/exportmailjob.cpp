@@ -368,7 +368,7 @@ void ExportMailJob::backupConfig()
             KConfigGroup favoriteGroup = kmailConfig->group(favoriteCollectionStr);
 
             const QString favoriteCollectionIdsStr(QLatin1String("FavoriteCollectionIds"));
-            Utils::convertCollectionIds(favoriteGroup, favoriteCollectionIdsStr);
+            Utils::convertCollectionIdsToRealPath(favoriteGroup, favoriteCollectionIdsStr);
         }
 
         kmailConfig->sync();

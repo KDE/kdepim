@@ -138,16 +138,20 @@ void AbstractImportExportJob::convertRealPathToCollection(KConfigGroup &group, c
     }
 }
 
-void AbstractImportExportJob::convertRealPathToCollectionList(KConfigGroup &group, const QString &currentKey)
+void AbstractImportExportJob::convertRealPathToCollectionList(KConfigGroup &group, const QString &currentKey, bool addCollectionPrefix)
 {
     if (group.hasKey(currentKey)) {
         const QStringList listExpension = group.readEntry(currentKey, QStringList());
         QStringList result;
         if (!listExpension.isEmpty()) {
-            Q_FOREACH (QString collection, listExpension) {
+            Q_FOREACH (const QString &collection, listExpension) {
                 const Akonadi::Collection::Id id = convertPathToId(collection);
                 if (id != -1 ) {
-                    result<< QString::fromLatin1("c%1").arg(id);
+                    if (addCollectionPrefix) {
+                        result<< QString::fromLatin1("c%1").arg(id);
+                    } else {
+                        result<< QString::fromLatin1("%1").arg(id);
+                    }
                 }
             }
             if (result.isEmpty()) {

@@ -57,7 +57,7 @@ Q_SIGNALS:
 
 protected:
     void convertRealPathToCollection(KConfigGroup &group, const QString &currentKey, bool addCollectionPrefix=false);
-    void convertRealPathToCollectionList(KConfigGroup &group, const QString &currentKey);
+    void convertRealPathToCollectionList(KConfigGroup &group, const QString &currentKey, bool addCollectionPrefix=true);
     void copyToFile(const KArchiveFile * archivefile, const QString &dest, const QString &filename, const QString &prefix);
     void initializeImportJob();
     void backupFile(const QString &filename, const QString &path, const QString &storedName);

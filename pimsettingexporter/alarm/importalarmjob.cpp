@@ -22,6 +22,7 @@
 #include <KStandardDirs>
 #include <KArchive>
 #include <KLocale>
+#include <KConfigGroup>
 
 #include <QFile>
 
@@ -77,7 +78,13 @@ void ImportAlarmJob::importkalarmConfig(const KArchiveFile* kalarmFile, const QS
     copyToFile(kalarmFile, kalarmrc, filename, prefix);
     KSharedConfig::Ptr kalarmConfig = KSharedConfig::openConfig(kalarmrc);
 
-    //TODO
+    const QString collectionsStr(QLatin1String("Collections"));
+    if (kalarmConfig->hasGroup(collectionsStr)) {
+        KConfigGroup group = kalarmConfig->group(collectionsStr);
+        const QString selectionKey(QLatin1String("FavoriteCollectionIds"));
+        convertRealPathToCollectionList(group, selectionKey, false);
+    }
+
     kalarmConfig->sync();
 }
 
