@@ -43,7 +43,7 @@ public:
 
     KUrl realUrl(const QString &folderName) const;
 
-    bool isEmpty() const;
+    bool isValid() const;
 
     Akonadi::Collection::Id saveCollectionId() const;
     void setSaveCollectionId(Akonadi::Collection::Id collectionId);

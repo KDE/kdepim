@@ -60,7 +60,7 @@ AddArchiveMailDialog::AddArchiveMailDialog(ArchiveMailInfo *info,QWidget *parent
         mFolderRequester->setEnabled( false );
     folderLabel->setBuddy( mFolderRequester );
     mainLayout->addWidget( mFolderRequester, row, 1 );
-    row++;
+    ++row;
 
     QLabel *formatLabel = new QLabel( i18n( "F&ormat:" ), mainWidget );
     mainLayout->addWidget( formatLabel, row, 0 );
@@ -75,12 +75,12 @@ AddArchiveMailDialog::AddArchiveMailDialog(ArchiveMailInfo *info,QWidget *parent
     mFormatComboBox->addItem( i18n( "GZ-Compressed Tar Archive (.tar.gz)" ) );
     mFormatComboBox->setCurrentIndex( 2 );
     mainLayout->addWidget( mFormatComboBox, row, 1 );
-    row++;
+    ++row;
 
     mRecursiveCheckBox = new QCheckBox( i18n( "Archive all subfolders" ), mainWidget );
     mainLayout->addWidget( mRecursiveCheckBox, row, 0, 1, 2, Qt::AlignLeft );
     mRecursiveCheckBox->setChecked( true );
-    row++;
+    ++row;
 
     QLabel *pathLabel = new QLabel( i18n( "Path:" ), mainWidget );
     mainLayout->addWidget( pathLabel, row, 0 );
@@ -88,7 +88,7 @@ AddArchiveMailDialog::AddArchiveMailDialog(ArchiveMailInfo *info,QWidget *parent
     connect(mPath, SIGNAL(textChanged(QString)), this, SLOT(slotUpdateOkButton()));
     mPath->setMode(KFile::Directory);
     mainLayout->addWidget(mPath);
-    row++;
+    ++row;
 
     QLabel *dateLabel = new QLabel( i18n( "Backup each:" ), mainWidget );
     mainLayout->addWidget( dateLabel, row, 0 );
@@ -108,7 +108,7 @@ AddArchiveMailDialog::AddArchiveMailDialog(ArchiveMailInfo *info,QWidget *parent
     hlayout->addWidget(mUnits);
 
     mainLayout->addLayout(hlayout, row, 1);
-    row++;
+    ++row;
 
     QLabel *maxCountlabel = new QLabel( i18n( "Maximum number of archive:" ), mainWidget );
     mainLayout->addWidget( maxCountlabel, row, 0 );
@@ -117,7 +117,7 @@ AddArchiveMailDialog::AddArchiveMailDialog(ArchiveMailInfo *info,QWidget *parent
     mMaximumArchive->setSpecialValueText(i18n("unlimited"));
     maxCountlabel->setBuddy( mMaximumArchive );
     mainLayout->addWidget( mMaximumArchive, row, 1 );
-    row++;
+    ++row;
 
     mainLayout->addWidget(new KSeparator, row, 0, row, 2);
     mainLayout->setColumnStretch( 1, 1 );

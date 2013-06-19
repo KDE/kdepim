@@ -99,7 +99,7 @@ KUrl ArchiveMailInfo::realUrl(const QString &folderName) const
     const int numExtensions = 4;
     // The extensions here are also sorted, like the enum order of BackupJob::ArchiveType
     const char *extensions[numExtensions] = { ".zip", ".tar", ".tar.bz2", ".tar.gz" };
-    QString dirPath = dirArchive();
+    const QString dirPath = dirArchive();
 
     const QString path = dirPath + QLatin1Char( '/' ) + i18nc( "Start of the filename for a mail archive file" , "Archive" )
             + QLatin1Char( '_' ) + normalizeFolderName(folderName) + QLatin1Char( '_' )
@@ -124,9 +124,9 @@ QStringList ArchiveMailInfo::listOfArchive(const QString &folderName) const
     return lst;
 }
 
-bool ArchiveMailInfo::isEmpty() const
+bool ArchiveMailInfo::isValid() const
 {
-    return (mSaveCollectionId==-1);
+    return (mSaveCollectionId!=-1);
 }
 
 
@@ -191,7 +191,7 @@ void ArchiveMailInfo::readConfig(const KConfigGroup &config)
 
 void ArchiveMailInfo::writeConfig(KConfigGroup & config )
 {
-    if (mSaveCollectionId < 0) {
+    if (!isValid()) {
         return;
     }
     config.writeEntry("storePath",mPath);
