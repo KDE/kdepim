@@ -1261,30 +1261,47 @@ of key words can be modified.</para>
      drop down box choose the language you would like to use.You can import settings from <application>LibreOffice</application> or another &kmail; installation by selecting the
        appropriate choice from the <guilabel>Import</guilabel> drop down box. If you need to save your settings for another installation or application, select the <guibutton>Export</guibutton> button.
        </para>
-<!-- broken markup inside list
        <para>
-	<varlistentry><title>Autocorrect Options</title>
-	  <listitem>
-	    <guilabel>Simple Autocorrection</guilabel>
-	      This allows you to configure &kmail; to autocorrect various simple corrections.
-	      Check the box next to the autocorrect feature you would like to enable.
-	  </listitem>
-	  <listitem><guilabel>Custom Quotes</guilabel>
-	    You can replace double or single quotes with typographical quotes by checking the appropriate box.
-	    You can also add non breaking space before specific punctuation marks in french text by selecting the option.
-	  </listitem>
-	  <listitem><guilabel>Advanced Autocorrection</guilabel>
-	    You can enter custom automatic word replacement by checking this option. To enter a custom string to replace automatically
-	    enter the word to be replaced in the <guilabel>Find</guilabel> box, and the replacement word in the <guilabel>Replace</guilabel> box and click the add button.
-	    To remove a custom word replacement string, highlight the string and click remove.
-	  </listitem>
-	  <listitem><guilabel>Exceptions</guilabel>
-	    This allows you to set exceptions where you would like &kmail; to ignore your autocorrect selections for end of sentence and two uppercase letters. Enter the exception and click add.
-	    To remove the exception, highlight the string and click remove.
-	  </listitem>
-	</varlistentry>
+         <variablelist><title>Autocorrect Options</title>
+           <varlistentry>
+             <term><guilabel>Simple Autocorrection</guilabel></term>
+             <listitem>
+               <para>
+               This allows you to configure &kmail; to autocorrect various simple corrections.
+               Check the box next to the autocorrect feature you would like to enable.
+               </para>
+             </listitem>
+           </varlistentry>
+           <varlistentry>
+             <term><guilabel>Custom Quotes</guilabel></term>
+             <listitem>
+               <para>
+               You can replace double or single quotes with typographical quotes by checking the appropriate box.
+               You can also add non breaking space before specific punctuation marks in french text by selecting the option.
+               </para>
+             </listitem>
+           </varlistentry>
+           <varlistentry>
+             <term><guilabel>Advanced Autocorrection</guilabel></term>
+             <listitem>
+               <para>
+               You can enter custom automatic word replacement by checking this option. To enter a custom string to replace automatically
+               enter the word to be replaced in the <guilabel>Find</guilabel> box, and the replacement word in the <guilabel>Replace</guilabel> box and click the add button.
+               To remove a custom word replacement string, highlight the string and click remove.
+               </para>
+             </listitem>
+           </varlistentry>
+           <varlistentry>
+             <term><guilabel>Exceptions</guilabel></term>
+             <listitem>
+               <para>
+               This allows you to set exceptions where you would like &kmail; to ignore your autocorrect selections for end of sentence and two uppercase letters. Enter the exception and click add.
+               To remove the exception, highlight the string and click remove.
+               </para>
+             </listitem>
+           </varlistentry>
+        </variablelist>
       </para>
--->
       <para>
 	Once you have made all of your autocorrect selections click the <guibutton>Apply</guibutton> button.
       </para>
