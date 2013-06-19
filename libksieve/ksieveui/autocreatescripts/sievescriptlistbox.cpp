@@ -35,7 +35,6 @@ SieveScriptListItem::SieveScriptListItem( const QString &text, QListWidget *pare
     : QListWidgetItem( text, parent ),
       mScriptPage(0)
 {
-
 }
 
 SieveScriptListItem::~SieveScriptListItem()
