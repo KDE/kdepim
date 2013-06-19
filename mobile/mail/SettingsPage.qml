@@ -25,6 +25,19 @@ PlasmaComponents.Page {
 
   anchors.fill: parent
 
+  //BEGIN: Tools
+  tools: PlasmaComponents.ToolBarLayout {
+    PlasmaComponents.ToolButton {
+
+      anchors.left: parent.left
+
+      iconSource: "go-previous"
+
+      onClicked: pageStack.pop()
+    }
+  }
+  //END: Tools
+
   PlasmaComponents.Label {
 
     anchors.centerIn: parent
