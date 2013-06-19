@@ -49,22 +49,17 @@ void ContactDisplayMessageMemento::slotSearchJobFinished( KJob *job )
     Akonadi::ContactSearchJob *searchJob = static_cast<Akonadi::ContactSearchJob*>( job );
     if ( searchJob->error() ) {
         kWarning() << "Unable to fetch contact:" << searchJob->errorText();
+        emit update( Viewer::Delayed );
         return;
     }
 
     const int contactSize( searchJob->contacts().size() );
-    if ( contactSize == 1 ) {
-
+    if ( contactSize >= 1 ) {
         KABC::Addressee addressee = searchJob->contacts().first();
         processAddress( addressee );
         emit update( Viewer::Delayed );
-
-    } else if ( contactSize > 1 ) {
-        kDebug()<<" more than 1 contact was found we return first contact";
-        KABC::Addressee addressee = searchJob->contacts().first();
-        processAddress( addressee );
-        emit update( Viewer::Delayed );
-        // TODO: Figure out something here...
+        if (contactSize>1)
+            kDebug()<<" more than 1 contact was found we return first contact";
     }
 }
 
