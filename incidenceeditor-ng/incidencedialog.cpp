@@ -619,7 +619,6 @@ IncidenceDialog::IncidenceDialog( Akonadi::IncidenceChanger *changer,
   Q_D( IncidenceDialog );
   setAttribute( Qt::WA_DeleteOnClose );
 
-  resize( QSize( 500, 500 ).expandedTo( minimumSizeHint() ) );
   d->mUi->mTabWidget->setCurrentIndex( 0 );
   d->mUi->mSummaryEdit->setFocus();
 
@@ -657,10 +656,21 @@ IncidenceDialog::IncidenceDialog( Akonadi::IncidenceChanger *changer,
            d->mIeAttendee, SLOT(declineForMe()) );
   connect( d->mUi->mDeclineInvitationButton, SIGNAL(clicked()),
            d->mUi->mInvitationBar, SLOT(hide()) );
+  KConfigGroup group( KGlobal::config(), "IncidenceDialog" );
+  const QSize size = group.readEntry( "Size", QSize() );
+  if ( size.isValid() ) {
+      resize( size );
+  } else {
+      resize( QSize( 500, 500 ).expandedTo( minimumSizeHint() ) );
+  }
+
+
 }
 
 IncidenceDialog::~IncidenceDialog()
 {
+  KConfigGroup group( KGlobal::config(), "IncidenceDialog" );
+  group.writeEntry( "Size", size() );
   delete d_ptr;
 }
 
