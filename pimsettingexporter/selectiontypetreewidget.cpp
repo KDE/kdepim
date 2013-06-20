@@ -20,6 +20,7 @@
 
 #include <KLocale>
 
+#include <QTreeWidgetItem>
 #include <QHeaderView>
 #include <QDebug>
 
@@ -33,7 +34,6 @@ SelectionTypeTreeWidget::SelectionTypeTreeWidget(QWidget *parent)
 
 SelectionTypeTreeWidget::~SelectionTypeTreeWidget()
 {
-
 }
 
 void SelectionTypeTreeWidget::initialize()
@@ -61,6 +61,13 @@ void SelectionTypeTreeWidget::initialize()
     mKorganizerItem->setText(0, QLatin1String("KOrganizer"));
     createSubItem(mKorganizerItem, Utils::Resources);
     createSubItem(mKorganizerItem, Utils::Config);
+
+    mKjotsItem = new QTreeWidgetItem(this);
+    mKjotsItem->setText(0, QLatin1String("KJots"));
+    createSubItem(mKjotsItem, Utils::Resources);
+    createSubItem(mKjotsItem, Utils::Config);
+    //TODO remove it when implemented.
+    mKjotsItem->setHidden(true);
 }
 
 
@@ -98,6 +105,10 @@ Utils::StoredTypes SelectionTypeTreeWidget::korganizerStoredType(int &numberOfSt
     return typeChecked(mKorganizerItem, numberOfStep);
 }
 
+Utils::StoredTypes SelectionTypeTreeWidget::kjotsStoredType(int &numberOfStep) const
+{
+    return typeChecked(mKjotsItem, numberOfStep);
+}
 
 void SelectionTypeTreeWidget::createSubItem(QTreeWidgetItem *parent, Utils::StoredType type)
 {
