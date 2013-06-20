@@ -149,6 +149,7 @@ void ConfigureWidget::showCustomHeadersDialog()
 {
   KDialog dialog( this );
   dialog.setButtons( KDialog::Default | KDialog::Ok | KDialog::Cancel );
+  dialog.resize(500,250);
   CustomHeaderSettingWidget *widget = new CustomHeaderSettingWidget();
   connect( &dialog, SIGNAL(defaultClicked()), widget, SLOT(resetToDefault()) );
   widget->readConfig();
