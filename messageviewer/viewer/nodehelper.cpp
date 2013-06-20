@@ -19,7 +19,7 @@
 
 
 #include "nodehelper.h"
-#include "iconnamecache.h"
+#include "utils/iconnamecache.h"
 #include "globalsettings.h"
 #include "partmetadata.h"
 #include "interfaces/bodypart.h"

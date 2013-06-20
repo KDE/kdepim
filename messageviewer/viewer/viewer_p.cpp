@@ -124,7 +124,7 @@
 #include "viewer/mimetreemodel.h"
 #include "viewer/nodehelper.h"
 #include "viewer/objecttreeparser.h"
-#include "urlhandlermanager.h"
+#include "viewer/urlhandlermanager.h"
 #include "utils/util.h"
 #include "widgets/vcardviewer.h"
 #include "viewer/mailwebview.h"

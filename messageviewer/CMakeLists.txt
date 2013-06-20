@@ -79,7 +79,7 @@ set(libmessageviewer_SRCS
   viewer/htmlquotecolorer.cpp
   widgets/htmlstatusbar.cpp
   widgets/vcardviewer.cpp
-  iconnamecache.cpp
+  utils/iconnamecache.cpp
   widgets/invitationsettings.cpp
   kleojobexecutor.cpp
   viewer/mailsourceviewer.cpp
@@ -91,10 +91,10 @@ set(libmessageviewer_SRCS
   viewer/objecttreeparser.cpp
   viewer/objecttreeparser_p.cpp
   viewer/objecttreeviewersource.cpp
-  partnodebodypart.cpp
-  pluginloaderbase.cpp
+  viewer/partnodebodypart.cpp
+  viewer/pluginloaderbase.cpp
   htmlwriter/teehtmlwriter.cpp
-  urlhandlermanager.cpp
+  viewer/urlhandlermanager.cpp
   utils/util.cpp
   viewer/viewer.cpp
   viewer/viewer_p.cpp
