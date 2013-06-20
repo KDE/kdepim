@@ -56,6 +56,7 @@ void ImportCalendarJob::restoreResources()
         while (i.hasNext()) {
             i.next();
             qDebug() << i.key() << ": " << i.value() << endl;
+            QMap<QString, QVariant> settings;
         }
     }
     Q_EMIT info(i18n("Resources restored."));

@@ -79,6 +79,26 @@ QString Utils::alarmPath()
     return QLatin1String("alarm/");
 }
 
+KUrl Utils::adaptResourcePath(KSharedConfigPtr resourceConfig, const QString &storedData)
+{
+    const KUrl url = Utils::resourcePath(resourceConfig);
+    KUrl newUrl = url;
+    if (!url.path().contains(QDir::homePath())) {
+        //qDebug()<<" url "<<url.path();
+        newUrl.setPath(QDir::homePath() + QLatin1Char('/') + storedData + url.fileName());
+    }
+    if (QFile(newUrl.path()).exists()) {
+        QString newFileName = newUrl.path();
+        for (int i = 0;; ++i) {
+            newFileName = newUrl.path() + QString::fromLatin1("_%1").arg(i);
+            if (!QFile(newFileName).exists()) {
+                break;
+            }
+        }
+        newUrl=KUrl(newFileName);
+    }
+    return newUrl;
+}
 
 KUrl Utils::resourcePath(KSharedConfigPtr resourceConfig)
 {

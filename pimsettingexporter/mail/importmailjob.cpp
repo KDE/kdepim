@@ -421,25 +421,11 @@ void ImportMailJob::restoreMails()
             const KArchiveFile* file = static_cast<const KArchiveFile*>(fileResouceEntry);
             file->copyTo(copyToDirName);
             const QString resourceName(file->name());
-            KSharedConfig::Ptr resourceConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + resourceName);
-            const KUrl url = Utils::resourcePath(resourceConfig);
             const QString filename(file->name());
 
-            KUrl newUrl = url;
-            if (!url.path().contains(QDir::homePath())) {
-                //qDebug()<<" url "<<url.path();
-                newUrl.setPath(QDir::homePath() + QLatin1Char('/') + storeMails + url.fileName());
-            }
-            if (QFile(newUrl.path()).exists()) {
-                QString newFileName = newUrl.path();
-                for (int i = 0;; ++i) {
-                    newFileName = newUrl.path() + QString::fromLatin1("_%1").arg(i);
-                    if (!QFile(newFileName).exists()) {
-                        break;
-                    }
-                }
-                newUrl=KUrl(newFileName);
-            }
+            KSharedConfig::Ptr resourceConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + resourceName);
+
+            KUrl newUrl = Utils::adaptResourcePath(resourceConfig, storeMails);
             QMap<QString, QVariant> settings;
             if (resourceName.contains(QLatin1String("akonadi_mbox_resource_"))) {
                 const QString dataFile = res.value();
