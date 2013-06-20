@@ -47,7 +47,7 @@ set(libmessageviewer_SRCS
   widgets/attachmentdialog.cpp
   viewer/attachmentstrategy.cpp
   bodypartformatter.cpp
-  bodypartformatterfactory.cpp
+  viewer/bodypartformatterfactory.cpp
   chiasmuskeyselector.cpp
   widgets/configurewidget.cpp
   header/contactdisplaymessagememento.cpp

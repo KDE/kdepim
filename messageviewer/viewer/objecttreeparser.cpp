@@ -46,7 +46,7 @@
 #include "widgets/htmlstatusbar.h"
 #include "csshelper.h"
 #include "bodypartformatter.h"
-#include "bodypartformatterfactory.h"
+#include "viewer/bodypartformatterfactory.h"
 #include "partnodebodypart.h"
 #include "interfaces/bodypartformatter.h"
 #include "globalsettings.h"

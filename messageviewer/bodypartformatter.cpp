@@ -33,7 +33,7 @@
 
 
 #include "bodypartformatter.h"
-#include "bodypartformatterfactory_p.h"
+#include "viewer/bodypartformatterfactory_p.h"
 #include "interfaces/bodypartformatter.h"
 
 #include "viewer/objecttreeparser.h"
