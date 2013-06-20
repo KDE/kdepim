@@ -46,9 +46,9 @@ endif()
 set(libmessageviewer_SRCS
   widgets/attachmentdialog.cpp
   viewer/attachmentstrategy.cpp
-  bodypartformatter.cpp
+  viewer/bodypartformatter.cpp
   viewer/bodypartformatterfactory.cpp
-  chiasmuskeyselector.cpp
+  viewer/chiasmuskeyselector.cpp
   widgets/configurewidget.cpp
   header/contactdisplaymessagememento.cpp
   csshelper.cpp
@@ -81,9 +81,9 @@ set(libmessageviewer_SRCS
   widgets/vcardviewer.cpp
   utils/iconnamecache.cpp
   widgets/invitationsettings.cpp
-  kleojobexecutor.cpp
+  viewer/kleojobexecutor.cpp
   viewer/mailsourceviewer.cpp
-  markmessagereadhandler.cpp
+  utils/markmessagereadhandler.cpp
   viewer/mimetreemodel.cpp
   viewer/nodehelper.cpp
   viewer/attachmenttemporaryfilesdirs.cpp
