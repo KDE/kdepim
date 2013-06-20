@@ -123,6 +123,7 @@ endif()
 install(TARGETS kmail-mobile ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(PROGRAMS kmail-mobile.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
 install(FILES
+  AboutPage.qml
   AclEditor.qml
   AttachmentEditor.qml
   BulkActionComponent.qml

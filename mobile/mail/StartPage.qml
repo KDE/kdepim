@@ -352,13 +352,6 @@ PlasmaComponents.Page {
 
             scriptActions : [
               KPIM.ScriptAction {
-                name : "show_about_dialog"
-                script : {
-                  actionPanel.collapse();
-                  aboutDialog.visible = true
-                }
-              },
-              KPIM.ScriptAction {
                 name : "configure"
                 script : {
                   actionPanel.collapse();
@@ -508,15 +501,6 @@ PlasmaComponents.Page {
          guiStateManager.popState();
     }
   }
-
-  QML.Loader {
-    id : aboutDialog
-    anchors.fill: parent
-    visible: false
-    source: visible ? KDE.locate( "module", "imports/org/kde/pim/mobileui/AboutDialog.qml" ) : ""
-    onLoaded: { item.backgroundSource = backgroundImage.source; }
-  }
-
 
   QML.Loader {
     anchors.fill: parent
