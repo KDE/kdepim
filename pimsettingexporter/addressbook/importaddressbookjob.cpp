@@ -55,6 +55,12 @@ void ImportAddressbookJob::restoreResources()
         while (i.hasNext()) {
             i.next();
             qDebug() << i.key() << ": " << i.value() << endl;
+            QMap<QString, QVariant> settings;
+            //FIXME
+            if (i.key().contains(QLatin1String("akonadi_???_resource_"))) {
+                //TODO
+            }
+
         }
     }
     Q_EMIT info(i18n("Resources restored."));

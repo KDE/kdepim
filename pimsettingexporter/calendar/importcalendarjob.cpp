@@ -57,6 +57,9 @@ void ImportCalendarJob::restoreResources()
             i.next();
             qDebug() << i.key() << ": " << i.value() << endl;
             QMap<QString, QVariant> settings;
+            if (i.key().contains(QLatin1String("akonadi_ical_resource_"))) {
+                //TODO
+            }
         }
     }
     Q_EMIT info(i18n("Resources restored."));
