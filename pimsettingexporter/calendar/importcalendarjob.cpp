@@ -144,6 +144,19 @@ void ImportCalendarJob::restoreConfig()
         }
     }
 
+    const QString freebusyStr(QLatin1String("freebusyurls"));
+    const KArchiveEntry* freebusyentry  = mArchiveDirectory->entry(Utils::dataPath() + freebusyStr);
+    if (freebusyentry && freebusyentry->isFile()) {
+        const KArchiveFile* freebusyrcFile = static_cast<const KArchiveFile*>(freebusyentry);
+        const QString freebusypath = KStandardDirs::locateLocal( "data",  QLatin1String("korganizer/") + freebusyStr);
+        if (QFile(freebusypath).exists()) {
+            if (overwriteConfigMessageBox(freebusyStr)) {
+                copyToFile(freebusyrcFile, freebusypath, freebusyStr, Utils::dataPath());
+            }
+        } else {
+            copyToFile(freebusyrcFile, freebusypath, freebusyStr, Utils::dataPath());
+        }
+    }
 
     Q_EMIT info(i18n("Config restored."));
 }
