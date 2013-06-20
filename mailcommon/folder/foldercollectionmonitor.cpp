@@ -35,11 +35,12 @@
 
 namespace MailCommon {
 
-FolderCollectionMonitor::FolderCollectionMonitor( QObject *parent )
+FolderCollectionMonitor::FolderCollectionMonitor( Akonadi::Session *session, QObject *parent )
   : QObject( parent )
 {
   // monitor collection changes
   mMonitor = new Akonadi::ChangeRecorder( this );
+  mMonitor->setSession(session);
   mMonitor->setCollectionMonitored( Akonadi::Collection::root() );
   mMonitor->fetchCollectionStatistics( true );
   mMonitor->collectionFetchScope().setIncludeStatistics( true );

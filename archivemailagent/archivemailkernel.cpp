@@ -32,10 +32,9 @@ ArchiveMailKernel::ArchiveMailKernel( QObject *parent )
     : QObject( parent )
 {
     mIdentityManager = new KPIMIdentities::IdentityManager( false, this );
-    mFolderCollectionMonitor = new MailCommon::FolderCollectionMonitor( this );
-
     Akonadi::Session *session = new Akonadi::Session( "Archive Mail Kernel ETM", this );
-    folderCollectionMonitor()->setSession( session );
+    mFolderCollectionMonitor = new MailCommon::FolderCollectionMonitor( session, this );
+
     mEntityTreeModel = new Akonadi::EntityTreeModel( folderCollectionMonitor(), this );
     mEntityTreeModel->setIncludeUnsubscribed( false );
     mEntityTreeModel->setItemPopulationStrategy( Akonadi::EntityTreeModel::LazyPopulation );

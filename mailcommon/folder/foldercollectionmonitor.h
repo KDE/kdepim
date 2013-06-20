@@ -31,6 +31,7 @@ class QAbstractItemModel;
 namespace Akonadi {
   class ChangeRecorder;
   class Collection;
+  class Session;
 }
 
 namespace MailCommon {
@@ -40,7 +41,7 @@ class MAILCOMMON_EXPORT FolderCollectionMonitor : public QObject
   Q_OBJECT
 
   public:
-    explicit FolderCollectionMonitor( QObject *parent = 0 );
+    explicit FolderCollectionMonitor(Akonadi::Session *session, QObject *parent = 0 );
     ~FolderCollectionMonitor();
 
     Akonadi::ChangeRecorder * monitor() const;
