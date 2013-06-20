@@ -20,7 +20,7 @@
 
 #include "nodehelper.h"
 #include "utils/iconnamecache.h"
-#include "globalsettings.h"
+#include "settings/globalsettings.h"
 #include "partmetadata.h"
 #include "interfaces/bodypart.h"
 #include "utils/util.h"

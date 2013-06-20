@@ -17,7 +17,7 @@
 
 #include "scamdetection.h"
 #include "scamdetectiondetailsdialog.h"
-#include "globalsettings.h"
+#include "settings/globalsettings.h"
 
 #include <QWebElement>
 #include <QWebFrame>

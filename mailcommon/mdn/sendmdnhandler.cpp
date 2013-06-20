@@ -28,7 +28,7 @@
 #include <messagecomposer/helper/messagefactory.h>
 #include <messagecomposer/sender/messagesender.h>
 #include <messagecore/helpers/messagehelpers.h>
-#include <messageviewer/globalsettings.h>
+#include <messageviewer/settings/globalsettings.h>
 
 #include <Akonadi/Collection>
 #include <Akonadi/Item>

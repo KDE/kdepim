@@ -21,7 +21,7 @@
 #ifndef TEST_CSS_HELPER_H
 #define TEST_CSS_HELPER_H
 
-#include <messageviewer/csshelper.h>
+#include <messageviewer/viewer/csshelper.h>
 
 // Objecttreeparser needs a valid css helper othewise it crashes
 class TestCSSHelper : public MessageViewer::CSSHelper {

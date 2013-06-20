@@ -18,7 +18,7 @@ else()
   set(OUTLOOK_COMPATIBLE_INVITATION_REPLY_COMMENTS false)
 endif()
 
-configure_file(messageviewer.kcfg.cmake ${CMAKE_CURRENT_BINARY_DIR}/messageviewer.kcfg)
+configure_file(settings/messageviewer.kcfg.cmake ${CMAKE_CURRENT_BINARY_DIR}/messageviewer.kcfg)
 
 check_include_files(sys/inotify.h SYS_INOTIFY_H_FOUND)
 macro_bool_to_01(SYS_INOTIFY_H_FOUND HAVE_SYS_INOTIFY_H)
@@ -51,14 +51,14 @@ set(libmessageviewer_SRCS
   viewer/chiasmuskeyselector.cpp
   widgets/configurewidget.cpp
   header/contactdisplaymessagememento.cpp
-  csshelper.cpp
-  csshelperbase.cpp
+  viewer/csshelper.cpp
+  viewer/csshelperbase.cpp
   viewer/editorwatcher.cpp
   htmlwriter/filehtmlwriter.cpp
   findbar/findbarbase.cpp
   findbar/findbarmailwebview.cpp
   findbar/findbarsourceview.cpp
-  globalsettings.cpp
+  settings/globalsettings.cpp
   header/headerstrategy.cpp
   header/headerstrategy_p.cpp
   header/headerstyle.cpp
@@ -110,7 +110,7 @@ set(libmessageviewer_SRCS
 )
 
 kde4_add_kcfg_files(libmessageviewer_SRCS
-  globalsettings_base.kcfgc
+  settings/globalsettings_base.kcfgc
 )
 
 kde4_add_ui_files(libmessageviewer_SRCS

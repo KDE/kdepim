@@ -38,7 +38,7 @@
 #include <akonadi/calendar/itiphandler.h>
 #include <incidenceeditor-ng/groupwareintegration.h>
 
-#include <messageviewer/globalsettings.h>
+#include <messageviewer/settings/globalsettings.h>
 #include <messageviewer/viewer/viewer.h>
 #include <messageviewer/interfaces/bodypart.h>
 #include <messageviewer/interfaces/bodypartformatter.h>

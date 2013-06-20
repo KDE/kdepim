@@ -14,7 +14,7 @@
 #ifndef KNODE_CSSHELPER_H
 #define KNODE_CSSHELPER_H
 
-#include <messageviewer/csshelperbase.h>
+#include <messageviewer/viewer/csshelperbase.h>
 
 namespace KNode {
 

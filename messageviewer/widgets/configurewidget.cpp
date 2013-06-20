@@ -21,7 +21,7 @@
 
 #include "ui_settings.h"
 #include "utils/util.h"
-#include "globalsettings.h"
+#include "settings/globalsettings.h"
 #include "viewer/nodehelper.h"
 
 #include "header/customheadersettingwidget.h"

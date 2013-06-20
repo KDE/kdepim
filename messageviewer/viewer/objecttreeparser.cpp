@@ -49,7 +49,7 @@
 #include "viewer/bodypartformatterfactory.h"
 #include "viewer/partnodebodypart.h"
 #include "interfaces/bodypartformatter.h"
-#include "globalsettings.h"
+#include "settings/globalsettings.h"
 #include "utils/util.h"
 #include "kleojobexecutor.h"
 #include "viewer/nodehelper.h"

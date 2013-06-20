@@ -30,7 +30,7 @@
 
 #include <libkdepim/misc/statisticsproxymodel.h>
 
-#include <messageviewer/globalsettings.h>
+#include <messageviewer/settings/globalsettings.h>
 
 #include <messagecore/settings/globalsettings.h>
 

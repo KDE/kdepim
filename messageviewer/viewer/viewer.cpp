@@ -29,7 +29,7 @@
 #include "viewer_p.h"
 #include "widgets/configurewidget.h"
 #include "csshelper.h"
-#include "globalsettings.h"
+#include "settings/globalsettings.h"
 #include "viewer/mailwebview.h"
 #include "viewer/mimetreemodel.h"
 

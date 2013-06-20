@@ -18,7 +18,7 @@
 #include "grantleeheaderformatter.h"
 #include "grantleeheaderstyle.h"
 #include "headerstyle_util.h"
-#include "globalsettings.h"
+#include "settings/globalsettings.h"
 #include "config-messageviewer.h"
 
 #include <kpimutils/email.h>

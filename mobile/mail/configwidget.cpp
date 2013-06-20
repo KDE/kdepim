@@ -21,7 +21,7 @@
 
 #include "messagecomposer/settings/messagecomposersettings.h"
 #include "messagelistsettings.h"
-#include "messageviewer/globalsettings.h"
+#include "messageviewer/settings/globalsettings.h"
 #include "settings.h"
 #include "stylesheetloader.h"
 #include "templateparser/globalsettings_base.h"

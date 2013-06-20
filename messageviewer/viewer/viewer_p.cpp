@@ -115,7 +115,7 @@
 #include "viewer/attachmentstrategy.h"
 #include "csshelper.h"
 #include "viewer/editorwatcher.h"
-#include "globalsettings.h"
+#include "settings/globalsettings.h"
 #include "header/headerstyle.h"
 #include "header/headerstrategy.h"
 #include "widgets/htmlstatusbar.h"
