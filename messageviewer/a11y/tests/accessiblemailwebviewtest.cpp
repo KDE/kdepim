@@ -19,7 +19,7 @@
 
 #define QT_GUI_LIB
 
-#include "messageviewer/mailwebview.h"
+#include "messageviewer/viewer/mailwebview.h"
 
 #include <QTest>
 #include <QAccessible>

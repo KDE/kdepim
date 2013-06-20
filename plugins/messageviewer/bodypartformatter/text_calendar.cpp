@@ -39,12 +39,12 @@
 #include <incidenceeditor-ng/groupwareintegration.h>
 
 #include <messageviewer/globalsettings.h>
-#include <messageviewer/viewer.h>
+#include <messageviewer/viewer/viewer.h>
 #include <messageviewer/interfaces/bodypart.h>
 #include <messageviewer/interfaces/bodypartformatter.h>
 #include <messageviewer/interfaces/bodyparturlhandler.h>
 #include <mailcommon/util/mailutil.h>
-#include <messageviewer/webkitparthtmlwriter.h>
+#include <messageviewer/htmlwriter/webkitparthtmlwriter.h>
 using namespace MessageViewer;
 
 #include <KCalCore/ICalFormat>
@@ -226,7 +226,7 @@ class Formatter : public Interface::BodyPartFormatter
 
           When the memento finishes, this is called a second time, and we can proceed.
 
-          BodyPartMementos are documented in objecttreeparser.h
+          BodyPartMementos are documented in viewer/objecttreeparser.h
       */
       MemoryCalendarMemento *memento = dynamic_cast<MemoryCalendarMemento*>( bodyPart->memento() );
 

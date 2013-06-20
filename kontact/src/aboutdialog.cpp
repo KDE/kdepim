@@ -41,8 +41,8 @@ AboutDialog::AboutDialog( KontactInterface::Core *core )
   : KPageDialog( core ), mCore( core )
 {
   setCaption( i18n( "About Kontact" ) );
-  setButtons( Ok );
-  setDefaultButton( Ok );
+  setButtons( Close );
+  setDefaultButton( Close );
   setModal( false );
   showButtonSeparator( true );
   setFaceType( KPageDialog::List );
@@ -120,7 +120,7 @@ void AboutDialog::addAboutData( const QString &title, const QString &icon,
       Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard | Qt::LinksAccessibleByMouse );
     topLayout->addWidget( label );
 
-    QTextEdit *personView = new QTextEdit( topFrame ); //krazy:exclude=qclasses
+    KTextBrowser *personView = new KTextBrowser( topFrame );
     personView->setReadOnly( true );
     topLayout->addWidget( personView, 1 );
 

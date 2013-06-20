@@ -20,7 +20,7 @@
 #include "header/headerstyle_util.h"
 
 
-#include "headerstrategy.h"
+#include "header/headerstrategy.h"
 
 #include <kpimutils/email.h>
 #include <messagecore/utils/stringutil.h>

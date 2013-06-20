@@ -117,6 +117,9 @@ void PimSettingExporterWindow::slotBackupData()
         mLogWidget->clear();
         delete mBackupData;
 
+        if ((kmailNumberOfStep==0) && (korganizerNumberOfStep==0) && (kalarmNumberOfStep==0) && (kaddressbookNumberOfStep==0))
+            return;
+
         ArchiveStorage *archiveStorage = new ArchiveStorage(filename,this);
         if (!archiveStorage->openArchive(true)) {
             delete archiveStorage;
@@ -199,6 +202,9 @@ void PimSettingExporterWindow::slotRestoreData()
         delete dialog;
         mLogWidget->clear();
         delete mRestoreData;
+
+        if ((kmailNumberOfStep==0) && (korganizerNumberOfStep==0) && (kalarmNumberOfStep==0) && (kaddressbookNumberOfStep==0))
+            return;
 
         ArchiveStorage *archiveStorage = new ArchiveStorage(filename,this);
         if (!archiveStorage->openArchive(false)) {

@@ -150,7 +150,8 @@ void ArchiveMailManager::printArchiveListInfo()
                 <<" saveSubCollection ?"<<info->saveSubCollection()
                 <<" lastDateSaved:"<<info->lastDateSaved()
                 <<" number of archive:"<<info->maximumArchiveCount()
-                <<" directory"<<info->url();
+                <<" directory"<<info->url()
+                <<" enabled ?"<<info->isEnabled();
     }
 }
 

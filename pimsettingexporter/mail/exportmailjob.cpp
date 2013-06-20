@@ -366,22 +366,9 @@ void ExportMailJob::backupConfig()
         const QString favoriteCollectionStr(QLatin1String("FavoriteCollections"));
         if (kmailConfig->hasGroup(favoriteCollectionStr)) {
             KConfigGroup favoriteGroup = kmailConfig->group(favoriteCollectionStr);
+
             const QString favoriteCollectionIdsStr(QLatin1String("FavoriteCollectionIds"));
-            if (favoriteGroup.hasKey(favoriteCollectionIdsStr)) {
-                const QStringList value = favoriteGroup.readEntry(favoriteCollectionIdsStr,QStringList());
-                QStringList newValue;
-                Q_FOREACH(const QString&str,value) {
-                    bool found = false;
-                    const int collectionId = str.toInt(&found);
-                    if (found) {
-                        const QString realPath = MailCommon::Util::fullCollectionPath(Akonadi::Collection( collectionId ));
-                        if (!realPath.isEmpty()) {
-                            newValue<<realPath;
-                        }
-                    }
-                }
-                favoriteGroup.writeEntry(favoriteCollectionIdsStr,newValue);
-            }
+            Utils::convertCollectionIdsToRealPath(favoriteGroup, favoriteCollectionIdsStr);
         }
 
         kmailConfig->sync();

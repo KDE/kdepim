@@ -17,15 +17,15 @@
 
 #include "fancyheaderstyle.h"
 
-#include "headerstyle.h"
+#include "header/headerstyle.h"
 #include "header/headerstyle_util.h"
 
 
-#include "headerstrategy.h"
+#include "header/headerstrategy.h"
 #include <kpimutils/linklocator.h>
 using KPIMUtils::LinkLocator;
 #include "globalsettings.h"
-#include "nodehelper.h"
+#include "viewer/nodehelper.h"
 
 #include <kpimutils/email.h>
 #include <messagecore/utils/stringutil.h>

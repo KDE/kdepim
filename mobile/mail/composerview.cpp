@@ -35,8 +35,8 @@
 #include <mailtransport/transportcombobox.h>
 #include <mailtransport/transportmanager.h>
 #include <messageviewer/globalsettings.h>
-#include <messageviewer/objecttreeemptysource.h>
-#include <messageviewer/objecttreeparser.h>
+#include <messageviewer/viewer/objecttreeemptysource.h>
+#include <messageviewer/viewer/objecttreeparser.h>
 #include <messagecomposer/composer/kmeditor.h>
 #include <messagecomposer/composer/signaturecontroller.h>
 #include <messagecomposer/composer/composer.h>

@@ -36,7 +36,7 @@
 
 #include "messageviewer_export.h"
 
-#include "nodehelper.h"
+#include "viewer/nodehelper.h"
 #include "objecttreesourceif.h"
 
 #include <libkleo/kleo/cryptobackend.h>

@@ -22,6 +22,7 @@
 #include <KStandardDirs>
 #include <KArchive>
 #include <KLocale>
+#include <KConfigGroup>
 
 #include <QFile>
 
@@ -40,6 +41,7 @@ ImportAlarmJob::~ImportAlarmJob()
 void ImportAlarmJob::start()
 {
     mArchiveDirectory = archive()->directory();
+    searchAllFiles(mArchiveDirectory ,QString());
     if (mTypeSelected & Utils::Resources)
         restoreResources();
     if (mTypeSelected & Utils::Config)
@@ -49,10 +51,53 @@ void ImportAlarmJob::start()
 void ImportAlarmJob::restoreResources()
 {
     Q_EMIT info(i18n("Restore resources..."));
+    if (!mHashAlarmArchive.isEmpty()) {
+
+    }
+
     Q_EMIT info(i18n("Resources restored."));
 
     //TODO
 }
+
+void ImportAlarmJob::searchAllFiles(const KArchiveDirectory *dir,const QString &prefix)
+{
+    Q_FOREACH(const QString& entryName, dir->entries()) {
+        const KArchiveEntry *entry = dir->entry(entryName);
+        if (entry && entry->isDirectory()) {
+            const QString newPrefix = (prefix.isEmpty() ? prefix : prefix + QLatin1Char('/')) + entryName;
+            if (entryName == QLatin1String("addressbook")) {
+                storeAlarmArchiveResource(static_cast<const KArchiveDirectory*>(entry),entryName);
+            } else {
+                searchAllFiles(static_cast<const KArchiveDirectory*>(entry), newPrefix);
+            }
+        }
+    }
+}
+
+void ImportAlarmJob::storeAlarmArchiveResource(const KArchiveDirectory *dir, const QString &prefix)
+{
+    Q_FOREACH(const QString& entryName, dir->entries()) {
+        const KArchiveEntry *entry = dir->entry(entryName);
+        if (entry && entry->isDirectory()) {
+            const KArchiveDirectory*resourceDir = static_cast<const KArchiveDirectory*>(entry);
+            const QStringList lst = resourceDir->entries();
+            if (lst.count() == 2) {
+                const QString archPath(prefix + QLatin1Char('/') + entryName + QLatin1Char('/'));
+                const QString name(lst.at(0));
+                if (name.endsWith(QLatin1String("rc"))&&(name.contains(QLatin1String("akonadi_alarm_resource_")))) {
+                    mHashAlarmArchive.insert(archPath + name,archPath +lst.at(1));
+                } else {
+                    mHashAlarmArchive.insert(archPath +lst.at(1),archPath + name);
+                }
+            } else {
+                kDebug()<<" lst.at(0)"<<lst.at(0);
+                kDebug()<<" Problem in archive. number of file "<<lst.count();
+            }
+        }
+    }
+}
+
 
 void ImportAlarmJob::restoreConfig()
 {
@@ -77,7 +122,13 @@ void ImportAlarmJob::importkalarmConfig(const KArchiveFile* kalarmFile, const QS
     copyToFile(kalarmFile, kalarmrc, filename, prefix);
     KSharedConfig::Ptr kalarmConfig = KSharedConfig::openConfig(kalarmrc);
 
-    //TODO
+    const QString collectionsStr(QLatin1String("Collections"));
+    if (kalarmConfig->hasGroup(collectionsStr)) {
+        KConfigGroup group = kalarmConfig->group(collectionsStr);
+        const QString selectionKey(QLatin1String("FavoriteCollectionIds"));
+        convertRealPathToCollectionList(group, selectionKey, false);
+    }
+
     kalarmConfig->sync();
 }
 

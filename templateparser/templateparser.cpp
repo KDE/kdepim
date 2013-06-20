@@ -29,7 +29,7 @@
 #include <messagecore/misc/imagecollector.h>
 #include <messagecore/utils/stringutil.h>
 
-#include <messageviewer/objecttreeparser.h>
+#include <messageviewer/viewer/objecttreeparser.h>
 
 #include <KPIMIdentities/Identity>
 #include <KPIMIdentities/IdentityManager>

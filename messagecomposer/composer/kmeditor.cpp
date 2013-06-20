@@ -22,7 +22,7 @@
 
 #include "kmeditor.h"
 #include "part/textpart.h"
-#include "messageviewer/nodehelper.h"
+#include "messageviewer/viewer/nodehelper.h"
 #include "autocorrection/composerautocorrection.h"
 #include "settings/messagecomposersettings.h"
 

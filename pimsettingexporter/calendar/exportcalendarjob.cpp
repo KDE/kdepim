@@ -24,6 +24,7 @@
 #include <KLocale>
 #include <KStandardDirs>
 #include <KTemporaryFile>
+#include <KConfigGroup>
 
 #include <QFile>
 #include <QDir>
@@ -110,7 +111,14 @@ void ExportCalendarJob::backupConfig()
 
         KConfig *korganizerConfig = korganizer->copyTo( tmp.fileName() );
 
-        //TODO adapt collection
+
+        const QString globalCollectionsStr(QLatin1String("GlobalCollectionSelection"));
+        if (korganizerConfig->hasGroup(globalCollectionsStr)) {
+            KConfigGroup group = korganizerConfig->group(globalCollectionsStr);
+            const QString selectionKey(QLatin1String("Selection"));
+            Utils::convertCollectionListToRealPath(group, selectionKey);
+        }
+
         korganizerConfig->sync();
         backupFile(tmp.fileName(), Utils::configsPath(), korganizerStr);
     }

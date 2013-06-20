@@ -17,6 +17,10 @@
 
 #include "pimsettingexporterkernel.h"
 
+#include <KABC/Addressee>
+#include <KABC/ContactGroup>
+
+#include <kalarmcal/kacalendar.h>
 #include <kglobal.h>
 #include <kpimidentities/identitymanager.h>
 #include <messagecomposer/sender/akonadisender.h>
@@ -32,6 +36,11 @@ PimSettingExporterKernel::PimSettingExporterKernel( QObject *parent )
     mMessageSender = new MessageComposer::AkonadiSender( this );
     mIdentityManager = new KPIMIdentities::IdentityManager( false, this );
     mFolderCollectionMonitor = new MailCommon::FolderCollectionMonitor( this );
+    mFolderCollectionMonitor->monitor()->setMimeTypeMonitored( KABC::Addressee::mimeType(), true );
+    mFolderCollectionMonitor->monitor()->setMimeTypeMonitored( KABC::ContactGroup::mimeType(), true );
+    mFolderCollectionMonitor->monitor()->setMimeTypeMonitored(KAlarmCal::MIME_ACTIVE);
+    mFolderCollectionMonitor->monitor()->setMimeTypeMonitored(KAlarmCal::MIME_ARCHIVED);
+    mFolderCollectionMonitor->monitor()->setMimeTypeMonitored(KAlarmCal::MIME_TEMPLATE);
 
     Akonadi::Session *session = new Akonadi::Session( "Backup Mail Kernel ETM", this );
     folderCollectionMonitor()->setSession( session );

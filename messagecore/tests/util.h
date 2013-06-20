@@ -22,7 +22,7 @@
 #define MESSAGECORE_TESTS_UTIL_H
 
 #include <gpgme++/key.h>
-#include <messageviewer/objecttreeemptysource.h>
+#include <messageviewer/viewer/objecttreeemptysource.h>
 
 namespace MessageCore {
 

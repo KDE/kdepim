@@ -50,8 +50,12 @@ QString dataPath();
 QString calendarPath();
 QString addressbookPath();
 QString alarmPath();
+
 void convertCollectionListToRealPath(KConfigGroup &group, const QString &currentKey);
 void convertCollectionToRealPath(KConfigGroup &group, const QString &currentKey);
+
+void convertCollectionIdsToRealPath(KConfigGroup &group, const QString &currentKey);
+
 KUrl resourcePath(const Akonadi::AgentInstance &agent);
 QString storeResources(KZip *archive, const QString &identifier, const QString &path);
 }

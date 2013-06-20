@@ -24,16 +24,16 @@
 
 #include "viewer_p.h"
 #include "viewer.h"
-#include "objecttreeemptysource.h"
-#include "objecttreeviewersource.h"
+#include "viewer/objecttreeemptysource.h"
+#include "viewer/objecttreeviewersource.h"
 #include "messagedisplayformatattribute.h"
 #include "header/grantleethememanager.h"
 #include "scamdetection/scamdetectionwarningwidget.h"
 #include "scamdetection/scamattribute.h"
 
 #ifdef MESSAGEVIEWER_READER_HTML_DEBUG
-#include "filehtmlwriter.h"
-#include "teehtmlwriter.h"
+#include "htmlwriter/filehtmlwriter.h"
+#include "htmlwriter/teehtmlwriter.h"
 #endif
 #include <unistd.h> // link()
 #include <errno.h>
@@ -112,22 +112,22 @@
 
 //own includes
 #include "widgets/attachmentdialog.h"
-#include "attachmentstrategy.h"
+#include "viewer/attachmentstrategy.h"
 #include "csshelper.h"
-#include "editorwatcher.h"
+#include "viewer/editorwatcher.h"
 #include "globalsettings.h"
-#include "headerstyle.h"
-#include "headerstrategy.h"
+#include "header/headerstyle.h"
+#include "header/headerstrategy.h"
 #include "widgets/htmlstatusbar.h"
-#include "webkitparthtmlwriter.h"
-#include "mailsourceviewer.h"
-#include "mimetreemodel.h"
-#include "nodehelper.h"
-#include "objecttreeparser.h"
+#include "htmlwriter/webkitparthtmlwriter.h"
+#include "viewer/mailsourceviewer.h"
+#include "viewer/mimetreemodel.h"
+#include "viewer/nodehelper.h"
+#include "viewer/objecttreeparser.h"
 #include "urlhandlermanager.h"
 #include "utils/util.h"
 #include "widgets/vcardviewer.h"
-#include "mailwebview.h"
+#include "viewer/mailwebview.h"
 #include "findbar/findbarmailwebview.h"
 #include "pimcommon/translator/translatorwidget.h"
 

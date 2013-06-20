@@ -1,5 +1,5 @@
 /*  -*- c++ -*-
-    headerstrategy.h
+    header/headerstrategy.h
 
     This file is part of KMail, the KDE mail client.
     Copyright (c) 2003 Marc Mutz <mutz@kde.org>
@@ -33,7 +33,7 @@
 
 #ifndef HEADERSTRATEGY_P_H
 #define HEADERSTRATEGY_P_H
-#include "headerstrategy.h"
+#include "header/headerstrategy.h"
 #include <QStringList>
 //
 // AllHeaderStrategy:

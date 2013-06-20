@@ -741,29 +741,14 @@ void ImportMailJob::restoreIdentity()
                 group.deleteEntry(uidStr);
             }
             const QString fcc(QLatin1String("Fcc"));
-            if (group.hasKey(fcc)) {
-                const Akonadi::Collection::Id fccId = convertPathToId(group.readEntry(fcc));
-                if (fccId != -1 )
-                    group.writeEntry(fcc,fccId);
-                else
-                    group.deleteEntry(fcc);
-            }
+            convertRealPathToCollection(group, fcc);
+
             const QString draft = QLatin1String("Drafts");
-            if (group.hasKey(draft)) {
-                const Akonadi::Collection::Id draftId = convertPathToId(group.readEntry(draft));
-                if (draftId != -1)
-                    group.writeEntry(draft,draftId);
-                else
-                    group.deleteEntry(draft);
-            }
+            convertRealPathToCollection(group, draft);
+
             const QString templates = QLatin1String("Templates");
-            if (group.hasKey(templates)) {
-                const Akonadi::Collection::Id templateId = convertPathToId(group.readEntry(templates));
-                if (templateId != -1)
-                    group.writeEntry(templates,templateId);
-                else
-                    group.deleteEntry(templates);
-            }
+            convertRealPathToCollection(group, templates);
+
             if (oldUid != -1) {
                 const QString vcard = QLatin1String("VCardFile");
                 if (group.hasKey(vcard)) {
@@ -1011,17 +996,8 @@ void ImportMailJob::importKmailConfig(const KArchiveFile* kmailsnippet, const QS
     if (kmailConfig->hasGroup(composerStr)) {
         KConfigGroup composerGroup = kmailConfig->group(composerStr);
         const QString previousStr(QLatin1String("previous-fcc"));
-        if (composerGroup.hasKey(previousStr)) {
-            const QString path = composerGroup.readEntry(previousStr);
-            if (!path.isEmpty()) {
-                const Akonadi::Collection::Id id = convertPathToId(path);
-                if (id != -1) {
-                    composerGroup.writeEntry(previousStr,id);
-                } else {
-                    composerGroup.deleteEntry(previousStr);
-                }
-            }
-        }
+        convertRealPathToCollection(composerGroup, previousStr);
+
         const QString previousIdentityStr(QLatin1String("previous-identity"));
         if (composerGroup.hasKey(previousIdentityStr)) {
             const int identityValue = composerGroup.readEntry(previousIdentityStr, -1);
@@ -1039,35 +1015,10 @@ void ImportMailJob::importKmailConfig(const KArchiveFile* kmailsnippet, const QS
     if (kmailConfig->hasGroup(collectionFolderViewStr)) {
         KConfigGroup favoriteGroup = kmailConfig->group(collectionFolderViewStr);
         const QString currentKey(QLatin1String("Current"));
-        if (favoriteGroup.hasKey(currentKey)) {
-            const QString path = favoriteGroup.readEntry(currentKey);
-            if (!path.isEmpty()) {
-                const Akonadi::Collection::Id id = convertPathToId(path);
-                if (id != -1) {
-                    favoriteGroup.writeEntry(currentKey,QString::fromLatin1("c%1").arg(id));
-                } else {
-                    favoriteGroup.deleteEntry(currentKey);
-                }
-            }
-        }
+        convertRealPathToCollection(favoriteGroup, currentKey, true);
+
         const QString expensionKey(QLatin1String("Expansion"));
-        if (favoriteGroup.hasKey(expensionKey)) {
-            const QStringList listExpension = favoriteGroup.readEntry(expensionKey, QStringList());
-            QStringList result;
-            if (!listExpension.isEmpty()) {
-                Q_FOREACH (QString collection, listExpension) {
-                    const Akonadi::Collection::Id id = convertPathToId(collection);
-                    if (id != -1 ) {
-                        result<< QString::fromLatin1("c%1").arg(id);
-                    }
-                }
-                if (result.isEmpty()) {
-                    favoriteGroup.deleteEntry(expensionKey);
-                } else {
-                    favoriteGroup.writeEntry(expensionKey, result);
-                }
-            }
-        }
+        convertRealPathToCollectionList(favoriteGroup, expensionKey);
     }
 
     const QString generalStr(QLatin1String("General"));
@@ -1080,17 +1031,7 @@ void ImportMailJob::importKmailConfig(const KArchiveFile* kmailsnippet, const QS
         }
 
         const QString startupFolderStr(QLatin1String("startupFolder"));
-        if (generalGroup.hasKey(startupFolderStr)) {
-            const QString path = generalGroup.readEntry(startupFolderStr);
-            if (!path.isEmpty()) {
-                const Akonadi::Collection::Id id = convertPathToId(path);
-                if (id != -1) {
-                    generalGroup.writeEntry(startupFolderStr,id);
-                } else {
-                    generalGroup.deleteEntry(startupFolderStr);
-                }
-            }
-        }
+        convertRealPathToCollection(generalGroup, startupFolderStr);
     }
 
     const QString resourceGroupPattern = QLatin1String( "Resource " );

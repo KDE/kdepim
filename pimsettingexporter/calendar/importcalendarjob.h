@@ -34,8 +34,12 @@ public:
     QString componentName() const;
 
 private:
+    void searchAllFiles(const KArchiveDirectory *dir,const QString &prefix);
+    void storeCalendarArchiveResource(const KArchiveDirectory *dir, const QString &prefix);
+    void importkorganizerConfig(const KArchiveFile* file, const QString &config, const QString &filename,const QString &prefix);
     void restoreResources();
     void restoreConfig();
+    QHash<QString, QString> mHashCalendarArchive;
 };
 
 #endif // IMPORTCALENDARJOB_H

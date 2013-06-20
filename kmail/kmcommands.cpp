@@ -84,19 +84,17 @@
 #ifndef QT_NO_CURSOR
 #include "messageviewer/utils/kcursorsaver.h"
 #endif
-#include "messageviewer/objecttreeparser.h"
+#include "messageviewer/viewer/objecttreeparser.h"
 #include "messageviewer/csshelper.h"
 #include "messageviewer/utils/util.h"
-#include "messageviewer/mailsourceviewer.h"
-#include "messageviewer/viewer.h"
-#include "messageviewer/headerstrategy.h"
-#include "messageviewer/headerstyle.h"
+#include "messageviewer/viewer/mailsourceviewer.h"
+#include "messageviewer/viewer/viewer.h"
+#include "messageviewer/header/headerstrategy.h"
+#include "messageviewer/header/headerstyle.h"
 #include "kmreadermainwin.h"
 #include "secondarywindow.h"
 using KMail::SecondaryWindow;
 #include "util.h"
-#include "messageviewer/editorwatcher.h"
-using MessageViewer::EditorWatcher;
 #include "misc/broadcaststatus.h"
 #include "globalsettings.h"
 #include "utils/stringutil.h"
@@ -118,8 +116,8 @@ using MessageViewer::EditorWatcher;
 using MailTransport::TransportManager;
 
 
-#include "messageviewer/nodehelper.h"
-#include "messageviewer/objecttreeemptysource.h"
+#include "messageviewer/viewer/nodehelper.h"
+#include "messageviewer/viewer/objecttreeemptysource.h"
 
 #include "messagecore/utils/stringutil.h"
 #include "messagecore/helpers/messagehelpers.h"

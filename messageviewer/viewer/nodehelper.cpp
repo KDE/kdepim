@@ -24,7 +24,7 @@
 #include "partmetadata.h"
 #include "interfaces/bodypart.h"
 #include "utils/util.h"
-#include "attachmenttemporaryfilesdirs.h"
+#include "viewer/attachmenttemporaryfilesdirs.h"
 
 #include <messagecore/helpers/nodehelper.h>
 #include <messagecore/utils/stringutil.h>

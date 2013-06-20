@@ -37,7 +37,7 @@ class VacationDialog : public KDialog
     Q_OBJECT
 
 public:
-    explicit VacationDialog( const QString & caption, QWidget * parent=0,
+    explicit VacationDialog( const QString &caption, QWidget * parent=0,
                              bool modal=true );
     ~VacationDialog();
 
@@ -50,17 +50,17 @@ public:
     void setDomainCheck( bool check );
 
     QString messageText() const;
-    void setMessageText( const QString & text );
+    void setMessageText( const QString &text );
 
     int notificationInterval() const;
     void setNotificationInterval( int days );
 
     KMime::Types::AddrSpecList mailAliases() const;
     void setMailAliases( const KMime::Types::AddrSpecList & aliases );
-    void setMailAliases( const QString & aliases );
+    void setMailAliases( const QString &aliases );
 
     QString domainName() const;
-    void setDomainName( const QString & domain );
+    void setDomainName( const QString &domain );
 
     bool sendForSpam() const;
     void setSendForSpam( bool enable );

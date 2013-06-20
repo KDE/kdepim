@@ -44,7 +44,7 @@ public:
 
     QString script() const;
     void setScript( const QString &script );
-    void setDebugColor( const QColor&col );
+    void setDebugColor( const QColor &col );
     void setDebugScript( const QString &debug );
     void setScriptName( const QString &name );
 
@@ -66,8 +66,8 @@ private slots:
 private:
     void readConfig();
     void writeConfig();
-    bool saveToFile( const QString&filename );
-    bool loadFromFile( const QString& filename );
+    bool saveToFile( const QString &filename );
+    bool loadFromFile( const QString &filename );
     QStringList mSieveCapabilities;
     SieveTextEdit * mTextEdit;
     KTextEdit *mDebugTextEdit;

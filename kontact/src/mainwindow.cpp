@@ -74,6 +74,7 @@ using namespace Kontact;
 #include <QTimer>
 #include <QVBoxLayout>
 #include <QWebSettings>
+#include <QShortcut>
 
 // Define the maximum time Kontact waits for KSycoca to become available.
 static const int KSYCOCA_WAIT_TIMEOUT = 10;
@@ -278,7 +279,7 @@ MainWindow::~MainWindow()
   ServiceStarter::setPluginList( 0 );
   saveSettings();
 
-  QList<KParts::Part*> parts = mPartManager->parts();
+  //QList<KParts::Part*> parts = mPartManager->parts();
 
 //  Q_FOREACH( KParts::Part *p, parts ) {
 //    delete p;
@@ -299,8 +300,10 @@ MainWindow::~MainWindow()
 // Called by main().
 void MainWindow::setInitialActivePluginModule( const QString &module )
 {
-  mInitialActiveModule = module;
-  activateInitialPluginModule();
+    if (mInitialActiveModule != module) {
+        mInitialActiveModule = module;
+        activateInitialPluginModule();
+    }
 }
 
 bool MainWindow::pluginActionWeightLessThan( const QAction *left, const QAction *right )
@@ -491,6 +494,9 @@ void MainWindow::setupActions()
            "you use this program more effectively." ) );
   actionCollection()->addAction( "help_tipofday", action );
   connect( action, SIGNAL(triggered(bool)), SLOT(slotShowTip()) );
+  //TODO 4.12: add description
+  QShortcut *shortcut = new QShortcut( QKeySequence(Qt::Key_F9), this );
+  connect(shortcut, SIGNAL(activated()), this, SLOT(slotShowHideSideBar()));
 }
 
 bool MainWindow::isPluginLoaded( const KPluginInfo &info )
@@ -572,7 +578,7 @@ void MainWindow::loadPlugins()
   }
 
   const int numberOfPlugins( plugins.count() );
-  for ( i = 0; i < numberOfPlugins; ++ i ) {
+  for ( i = 0; i < numberOfPlugins; ++i ) {
     KontactInterface::Plugin *plugin = plugins.at( i );
 
     const QList<KAction*> actionList = plugin->newActions();
@@ -593,7 +599,7 @@ void MainWindow::loadPlugins()
     addPlugin( plugin );
   }
 
-  const bool state = ( mPlugins.size() != 0 );
+  const bool state = ( !mPlugins.isEmpty() );
   mNewActions->setEnabled( state );
   if ( mSyncActionsEnabled ) {
     mSyncActions->setEnabled( state );
@@ -1265,6 +1271,19 @@ QString MainWindow::introductionString()
     subs( "exec:/switch" ).
     toString();
   return info;
+}
+
+void MainWindow::slotShowHideSideBar()
+{
+    QList<int> sizes = mSplitter->sizes();
+    if (!sizes.isEmpty()) {
+        if (sizes.at(0) != 0) {
+            sizes[0] = 0;
+        } else {
+            sizes[0] = 10;
+        }
+        mSplitter->setSizes(sizes);
+    }
 }
 
 #include "mainwindow.moc"

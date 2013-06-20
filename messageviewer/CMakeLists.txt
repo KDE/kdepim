@@ -33,10 +33,10 @@ if(DEBUG_SIGNATURE)
 endif()
 
 if(KDEPIM_NO_WEBKIT)
-  set(_mailwebview_cpp mailwebview_textbrowser.cpp )
+  set(_mailwebview_cpp viewer/mailwebview_textbrowser.cpp )
   set(_mailwebview_lib )
 else()
-  set(_mailwebview_cpp mailwebview_webkit.cpp )
+  set(_mailwebview_cpp viewer/mailwebview_webkit.cpp )
   if(NOT WINCE)
     set(_mailwebview_lib ${KDE4_KDEWEBKIT_LIBRARY} ${QT_QTWEBKIT_LIBRARY})
     add_subdirectory(a11y)
@@ -45,23 +45,23 @@ endif()
 
 set(libmessageviewer_SRCS
   widgets/attachmentdialog.cpp
-  attachmentstrategy.cpp
+  viewer/attachmentstrategy.cpp
   bodypartformatter.cpp
   bodypartformatterfactory.cpp
   chiasmuskeyselector.cpp
   widgets/configurewidget.cpp
-  contactdisplaymessagememento.cpp
+  header/contactdisplaymessagememento.cpp
   csshelper.cpp
   csshelperbase.cpp
-  editorwatcher.cpp
-  filehtmlwriter.cpp
+  viewer/editorwatcher.cpp
+  htmlwriter/filehtmlwriter.cpp
   findbar/findbarbase.cpp
   findbar/findbarmailwebview.cpp
   findbar/findbarsourceview.cpp
   globalsettings.cpp
-  headerstrategy.cpp
+  header/headerstrategy.cpp
   header/headerstrategy_p.cpp
-  headerstyle.cpp
+  header/headerstyle.cpp
   header/briefheaderstyle.cpp
   header/grantleeheaderstyle.cpp
   header/customheaderstyle.cpp
@@ -76,30 +76,30 @@ set(libmessageviewer_SRCS
   header/grantleetheme.cpp
   header/grantleeheaderteststyle.cpp
   header/kxface.cpp
-  htmlquotecolorer.cpp
+  viewer/htmlquotecolorer.cpp
   widgets/htmlstatusbar.cpp
   widgets/vcardviewer.cpp
   iconnamecache.cpp
   widgets/invitationsettings.cpp
   kleojobexecutor.cpp
-  mailsourceviewer.cpp
+  viewer/mailsourceviewer.cpp
   markmessagereadhandler.cpp
-  mimetreemodel.cpp
-  nodehelper.cpp
-  attachmenttemporaryfilesdirs.cpp
-  objecttreeemptysource.cpp
-  objecttreeparser.cpp
-  objecttreeparser_p.cpp
-  objecttreeviewersource.cpp
+  viewer/mimetreemodel.cpp
+  viewer/nodehelper.cpp
+  viewer/attachmenttemporaryfilesdirs.cpp
+  viewer/objecttreeemptysource.cpp
+  viewer/objecttreeparser.cpp
+  viewer/objecttreeparser_p.cpp
+  viewer/objecttreeviewersource.cpp
   partnodebodypart.cpp
   pluginloaderbase.cpp
-  teehtmlwriter.cpp
+  htmlwriter/teehtmlwriter.cpp
   urlhandlermanager.cpp
   utils/util.cpp
-  viewer.cpp
-  viewer_p.cpp
-  webkitparthtmlwriter.cpp
-  messagedisplayformatattribute.cpp
+  viewer/viewer.cpp
+  viewer/viewer_p.cpp
+  htmlwriter/webkitparthtmlwriter.cpp
+  viewer/messagedisplayformatattribute.cpp
   scamdetection/scamdetectionwarningwidget.cpp
   scamdetection/scamdetection.cpp
   scamdetection/scamdetectiondetailsdialog.cpp
@@ -149,7 +149,7 @@ include_directories(
 set_target_properties( messageviewer PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS messageviewer ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
-#install( FILES viewer.h attachmentstrategy.h headerstrategy.h messageviewer_export.h DESTINATION  ${INCLUDE_INSTALL_DIR}/messageviewer COMPONENT devel)
+#install( FILES viewer/viewer.h viewer/attachmentstrategy.h header/headerstrategy.h messageviewer_export.h DESTINATION  ${INCLUDE_INSTALL_DIR}/messageviewer COMPONENT devel)
 
 
 install(DIRECTORY themes DESTINATION ${DATA_INSTALL_DIR}/messageviewer )

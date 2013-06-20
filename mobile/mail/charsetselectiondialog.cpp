@@ -21,7 +21,7 @@
 
 #include "charsetselectiondialog.h"
 
-#include <messageviewer/nodehelper.h>
+#include <messageviewer/viewer/nodehelper.h>
 
 #include <klocale.h>
 #include <kcombobox.h>

@@ -37,7 +37,7 @@ using KMime::HeaderParsing::parseAddressList;
 
 using namespace KSieveUi;
 
-VacationDialog::VacationDialog( const QString & caption, QWidget * parent,
+VacationDialog::VacationDialog( const QString &caption, QWidget * parent,
                                 bool modal )
     : KDialog( parent )
 {
@@ -153,7 +153,7 @@ QString VacationDialog::messageText() const
     return mTextEdit->toPlainText().trimmed();
 }
 
-void VacationDialog::setMessageText( const QString & text )
+void VacationDialog::setMessageText( const QString &text )
 {
     mTextEdit->setText( text );
     const int height = ( mTextEdit->fontMetrics().lineSpacing() + 1 ) * 11;
@@ -187,7 +187,7 @@ AddrSpecList VacationDialog::mailAliases() const
     return asl;
 }
 
-void VacationDialog::setMailAliases( const AddrSpecList & aliases )
+void VacationDialog::setMailAliases( const AddrSpecList &aliases )
 {
     QStringList sl;
     AddrSpecList::const_iterator end(aliases.constEnd());
@@ -196,7 +196,7 @@ void VacationDialog::setMailAliases( const AddrSpecList & aliases )
     mMailAliasesEdit->setText( sl.join(QLatin1String(", ")) );
 }
 
-void VacationDialog::setMailAliases( const QString & aliases )
+void VacationDialog::setMailAliases( const QString &aliases )
 {
     mMailAliasesEdit->setText( aliases );
 }
@@ -211,7 +211,7 @@ QString VacationDialog::domainName() const
     return mDomainCheck->isChecked() ? mDomainEdit->text() : QString() ;
 }
 
-void VacationDialog::setDomainName( const QString & domain )
+void VacationDialog::setDomainName( const QString &domain )
 {
     if ( !domain.isEmpty() ) {
         mDomainEdit->setText( domain );

@@ -199,9 +199,7 @@ void FolderTreeWidget::selectCollectionFolder( const Akonadi::Collection &collec
   const QModelIndex index =
     Akonadi::EntityTreeModel::modelIndexForCollection( d->folderTreeView->model(), collection );
 
-  d->folderTreeView->selectionModel()->select( index,
-                                               QItemSelectionModel::SelectCurrent |
-                                               QItemSelectionModel::Rows );
+  d->folderTreeView->setCurrentIndex( index );
   d->folderTreeView->setExpanded( index, true );
   d->folderTreeView->scrollTo( index );
 }
@@ -369,6 +367,16 @@ void FolderTreeWidget::applyFilter( const QString &filter )
 
   d->readableproxy->setFilterFolder( filter );
   d->folderTreeView->expandAll();
+  QAbstractItemModel *model = d->folderTreeView->model();
+  QModelIndex current = d->folderTreeView->currentIndex();
+  QModelIndex start = current.isValid() ? current : model->index(0, 0);
+  QModelIndexList list = model->match( start, Qt::DisplayRole, d->filter, 1 /* stop at first hit */,
+                                       Qt::MatchContains | Qt::MatchWrap | Qt::MatchRecursive );
+  if ( !list.isEmpty() ) {
+    current = list.first();
+    d->folderTreeView->setCurrentIndex( current );
+    d->folderTreeView->scrollTo( current );
+  }
 }
 
 void FolderTreeWidget::clearFilter()

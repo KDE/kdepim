@@ -21,6 +21,7 @@
 #define MAILVIEWER_OBJECTTREEEMPTYSOURCE_H
 
 #include "objecttreesourceif.h"
+#include "utils/util.h"
 
 class QString;
 
@@ -35,7 +36,7 @@ class MESSAGEVIEWER_EXPORT EmptySource : public ObjectTreeSourceIf {
   bool decryptMessage();
   bool htmlLoadExternal();
   bool showSignatureDetails();
-  void setHtmlMode( Util::HtmlMode mode );
+  void setHtmlMode( MessageViewer::Util::HtmlMode mode );
   void setAllowDecryption( bool allowDecryption );
   int levelQuote();
   const QTextCodec * overrideCodec();

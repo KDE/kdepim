@@ -185,7 +185,7 @@ install(TARGETS mailcommon ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 add_subdirectory(filter/filterimporter/tests)
 
-#install(FILES viewer.h attachmentstrategy.h headerstrategy.h messageviewer_export.h DESTINATION ${INCLUDE_INSTALL_DIR}/messageviewer COMPONENT devel)
+#install(FILES viewer/viewer.h viewer/attachmentstrategy.h header/headerstrategy.h messageviewer_export.h DESTINATION ${INCLUDE_INSTALL_DIR}/messageviewer COMPONENT devel)
 
 if (QT_QTDESIGNER_FOUND)
   set(mailcommonwidgets_PART_SRCS)

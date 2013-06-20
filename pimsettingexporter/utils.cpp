@@ -88,6 +88,25 @@ KUrl Utils::resourcePath(KSharedConfigPtr resourceConfig)
     return KUrl(url);
 }
 
+void Utils::convertCollectionIdsToRealPath(KConfigGroup &group, const QString &currentKey)
+{
+    if (group.hasKey(currentKey)) {
+        const QStringList value = group.readEntry(currentKey,QStringList());
+        QStringList newValue;
+        Q_FOREACH(const QString &str,value) {
+            bool found = false;
+            const int collectionId = str.toInt(&found);
+            if (found) {
+                const QString realPath = MailCommon::Util::fullCollectionPath(Akonadi::Collection( collectionId ));
+                if (!realPath.isEmpty()) {
+                    newValue<<realPath;
+                }
+            }
+        }
+        group.writeEntry(currentKey,newValue);
+    }
+}
+
 void Utils::convertCollectionListToRealPath(KConfigGroup &group, const QString &currentKey)
 {
     if (group.hasKey(currentKey)) {

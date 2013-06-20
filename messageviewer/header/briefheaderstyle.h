@@ -1,5 +1,5 @@
 /*  -*- c++ -*-
-    headerstyle.h
+    header/headerstyle.h
 
     This file is part of KMail, the KDE mail client.
     Copyright (c) 2003 Marc Mutz <mutz@kde.org>
@@ -34,7 +34,7 @@
 #ifndef BRIEFHEADERSTYLE_H
 #define BRIEFHEADERSTYLE_H
 
-#include "headerstyle.h"
+#include "header/headerstyle.h"
 
 namespace MessageViewer {
 

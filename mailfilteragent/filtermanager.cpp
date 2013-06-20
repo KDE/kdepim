@@ -115,7 +115,7 @@ void FilterManager::Private::slotItemsFetchedForFilter( const Akonadi::Item::Lis
   bool needsFullPayload = q->sender()->property( "needsFullPayload" ).toBool();
 
   foreach ( const Akonadi::Item &item, items ) {
-    mCurrentProgressCount++;
+    ++mCurrentProgressCount;
 
     if ((mTotalProgressCount > 0) && (mCurrentProgressCount != mTotalProgressCount)) {
       const QString statusMsg =
@@ -555,8 +555,8 @@ QString FilterManager::createUniqueName( const QString &name ) const
         found = true;
         ++counter;
         uniqueName = name;
-        uniqueName += QString( " (" ) + QString::number( counter )
-                    + QString( ")" );
+        uniqueName += QString::fromLatin1( " (" ) + QString::number( counter )
+                    + QString::fromLatin1( ")" );
         break;
       }
     }

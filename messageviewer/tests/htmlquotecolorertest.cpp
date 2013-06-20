@@ -18,7 +18,7 @@
 */
 #include "htmlquotecolorertest.h"
 
-#include "../htmlquotecolorer.cpp"
+#include "viewer/htmlquotecolorer.cpp"
 
 #include "qtest_kde.h"
 

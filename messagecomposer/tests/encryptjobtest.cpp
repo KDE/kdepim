@@ -38,9 +38,9 @@
 #include <messagecomposer/part/textpart.h>
 #include <messagecomposer/part/globalpart.h>
 
-#include <messageviewer/objecttreeparser.h>
-#include <messageviewer/objecttreeemptysource.h>
-#include <messageviewer/nodehelper.h>
+#include <messageviewer/viewer/objecttreeparser.h>
+#include <messageviewer/viewer/objecttreeemptysource.h>
+#include <messageviewer/viewer/nodehelper.h>
 #include <messagecore/tests/util.h>
 
 #include <stdlib.h>

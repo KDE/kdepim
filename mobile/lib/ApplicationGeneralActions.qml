@@ -35,13 +35,6 @@ KPIM.ActionList {
   signal longPressed(string actionName)
 
   KPIM.ActionListItem {
-    name : "quit"
-    onPressAndHold: {
-      longPressed(name);
-    }
-  }
-
-  KPIM.ActionListItem {
     name : "quit_akonadi"
     onPressAndHold: {
       longPressed(name);

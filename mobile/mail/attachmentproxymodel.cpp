@@ -19,7 +19,7 @@
 
 #include "attachmentproxymodel.h"
 
-#include <messageviewer/nodehelper.h>
+#include <messageviewer/viewer/nodehelper.h>
 
 #include <QtCore/QStringList>
 

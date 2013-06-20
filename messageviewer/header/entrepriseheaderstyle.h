@@ -18,7 +18,7 @@
 #ifndef ENTREPRISEHEADERSTYLE_H
 #define ENTREPRISEHEADERSTYLE_H
 
-#include "headerstyle.h"
+#include "header/headerstyle.h"
 
 namespace MessageViewer {
 

@@ -28,8 +28,8 @@
 #include "messagecomposer/composer/composer.h"
 
 #include "messagecomposer/part/globalpart.h"
-#include "messageviewer/editorwatcher.h"
-#include "messageviewer/nodehelper.h"
+#include "messageviewer/viewer/editorwatcher.h"
+#include "messageviewer/viewer/nodehelper.h"
 #include "messageviewer/utils/util.h"
 
 #include <akonadi/itemfetchjob.h>

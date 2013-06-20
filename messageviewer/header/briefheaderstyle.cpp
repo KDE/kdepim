@@ -1,5 +1,5 @@
 /*  -*- c++ -*-
-    headerstyle.h
+    header/headerstyle.h
 
     This file is part of KMail, the KDE mail client.
     Copyright (c) 2003 Marc Mutz <mutz@kde.org>
@@ -32,10 +32,10 @@
 */
 
 #include "briefheaderstyle.h"
-#include "headerstyle.h"
+#include "header/headerstyle.h"
 #include "header/headerstyle_util.h"
 
-#include "headerstrategy.h"
+#include "header/headerstrategy.h"
 #include <kpimutils/linklocator.h>
 using KPIMUtils::LinkLocator;
 

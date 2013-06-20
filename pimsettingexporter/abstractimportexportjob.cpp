@@ -119,6 +119,50 @@ bool AbstractImportExportJob::overwriteConfigMessageBox(const QString &configNam
     return (KMessageBox::warningYesNo(mParent,i18n("\"%1\" already exists. Do you want to overwrite it?", configName),i18n("Restore")) == KMessageBox::Yes);
 }
 
+void AbstractImportExportJob::convertRealPathToCollection(KConfigGroup &group, const QString &currentKey, bool addCollectionPrefix)
+{
+    if (group.hasKey(currentKey)) {
+        const QString path = group.readEntry(currentKey);
+        if (!path.isEmpty()) {
+            const Akonadi::Collection::Id id = convertPathToId(path);
+            if (id != -1) {
+                if (addCollectionPrefix) {
+                    group.writeEntry(currentKey, QString::fromLatin1("c%1").arg(id));
+                } else {
+                    group.writeEntry(currentKey, id);
+                }
+            } else {
+                group.deleteEntry(currentKey);
+            }
+        }
+    }
+}
+
+void AbstractImportExportJob::convertRealPathToCollectionList(KConfigGroup &group, const QString &currentKey, bool addCollectionPrefix)
+{
+    if (group.hasKey(currentKey)) {
+        const QStringList listExpension = group.readEntry(currentKey, QStringList());
+        QStringList result;
+        if (!listExpension.isEmpty()) {
+            Q_FOREACH (const QString &collection, listExpension) {
+                const Akonadi::Collection::Id id = convertPathToId(collection);
+                if (id != -1 ) {
+                    if (addCollectionPrefix) {
+                        result<< QString::fromLatin1("c%1").arg(id);
+                    } else {
+                        result<< QString::fromLatin1("%1").arg(id);
+                    }
+                }
+            }
+            if (result.isEmpty()) {
+                group.deleteEntry(currentKey);
+            } else {
+                group.writeEntry(currentKey, result);
+            }
+        }
+    }
+}
+
 Akonadi::Collection::Id AbstractImportExportJob::convertPathToId(const QString& path)
 {
     if (mHashConvertPathCollectionId.contains(path)) {

@@ -27,12 +27,12 @@
 #include <klocale.h>
 
 AboutData::AboutData()
-  : KAboutData( "kjots", 0, ki18n( "KJots" ),
-                KDEPIM_VERSION,
-                ki18n( "KDE note taking utility" ),
-                KAboutData::License_GPL,
-                ki18n("Copyright © 1997–2010 KJots authors" ),
-                KLocalizedString() )
+    : KAboutData( "kjots", 0, ki18n( "KJots" ),
+                  KDEPIM_VERSION,
+                  ki18n( "KDE note taking utility" ),
+                  KAboutData::License_GPL,
+                  ki18n("Copyright © 1997–2010 KJots authors" ),
+                  KLocalizedString() )
 {
 
     addAuthor(ki18n("Stephen Kelly"), ki18n("Current maintainer"), "steveire@gmail.com");

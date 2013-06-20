@@ -23,7 +23,7 @@
 
 #include "mailcommon_export.h"
 
-#include <messageviewer/viewer.h>
+#include <messageviewer/viewer/viewer.h>
 
 #include <QObject>
 

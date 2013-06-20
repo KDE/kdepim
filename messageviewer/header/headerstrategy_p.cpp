@@ -1,5 +1,5 @@
 /*  -*- c++ -*-
-    headerstrategy.h
+    header/headerstrategy.h
 
     This file is part of KMail, the KDE mail client.
     Copyright (c) 2003 Marc Mutz <mutz@kde.org>

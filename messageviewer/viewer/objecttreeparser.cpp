@@ -39,7 +39,7 @@
 #include "objecttreeparser_p.h"
 #include "objecttreesourceif.h"
 #include "utils/autoqpointer.h"
-#include "viewer_p.h"
+#include "viewer/viewer_p.h"
 #include "partmetadata.h"
 #include "attachmentstrategy.h"
 #include "interfaces/htmlwriter.h"
@@ -52,9 +52,9 @@
 #include "globalsettings.h"
 #include "utils/util.h"
 #include "kleojobexecutor.h"
-#include "nodehelper.h"
+#include "viewer/nodehelper.h"
 #include "iconnamecache.h"
-#include "htmlquotecolorer.h"
+#include "viewer/htmlquotecolorer.h"
 #include "chiasmuskeyselector.h"
 
 // KDEPIM includes

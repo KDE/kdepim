@@ -7,6 +7,7 @@ include_directories(
   ${NEPOMUK_CORE_INCLUDE_DIR}
   ${NEPOMUK_WIDGETS_INCLUDE_DIR}
   ${CMAKE_SOURCE_DIR}/libkdepim/
+  ${CMAKE_SOURCE_DIR}/messageviewer/
 )
 
 include_directories(BEFORE ${CMAKE_CURRENT_BINARY_DIR})

@@ -17,7 +17,7 @@
  */
 
 #include "findbarmailwebview.h"
-#include "mailwebview.h"
+#include "viewer/mailwebview.h"
 
 #include <KLocale>
 #include <KLineEdit>

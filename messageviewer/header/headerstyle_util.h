@@ -25,7 +25,7 @@
 #include <kmime/kmime_dateformatter.h>
 #include "antispam/spamheaderanalyzer.h"
 
-#include "headerstyle.h"
+#include "header/headerstyle.h"
 
 using KPIMUtils::LinkLocator;
 

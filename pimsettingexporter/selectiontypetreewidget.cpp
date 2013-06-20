@@ -72,6 +72,7 @@ Utils::StoredTypes SelectionTypeTreeWidget::typeChecked(QTreeWidgetItem *parent,
         QTreeWidgetItem *item = parent->child(i);
         if (item->checkState(0) == Qt::Checked) {
             types |= static_cast<Utils::StoredType>(item->data(0, action).toInt());
+            ++numberOfStep;
         }
     }
     return types;
@@ -161,6 +162,7 @@ void SelectionTypeTreeWidget::createSubItem(QTreeWidgetItem *parent, Utils::Stor
     }
     default:
         qDebug()<<" Type not supported: "<<type;
+        break;
     }
 }
 

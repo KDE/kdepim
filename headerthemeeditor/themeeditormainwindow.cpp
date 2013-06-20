@@ -280,8 +280,10 @@ void ThemeEditorMainWindow::slotQuitApp()
 
 void ThemeEditorMainWindow::slotUpdateView()
 {
-    if (mThemeEditor)
+    if (mThemeEditor) {
+        mThemeEditor->saveTheme(false);
         mThemeEditor->updatePreview();
+    }
 }
 
 #include "themeeditormainwindow.moc"

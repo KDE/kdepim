@@ -48,8 +48,8 @@
 
 <legalnotice>&FDLNotice;</legalnotice>
 
-<date>2010-07-15</date>
-<releaseinfo>4.5.beta1 (&kde; 4.5)</releaseinfo>
+<date>2013-05-27</date>
+<releaseinfo>4.11 pre (&kde; 4.11)</releaseinfo>
 
 <abstract><para>This handbook describes how to use &kjots;, a small
 program which is handy for keeping and organizing miscellaneous
@@ -71,11 +71,36 @@ notes.</para></abstract>
 <para>&kjots; has two basic items used to organize your notes -
 <quote>Books</quote> and <quote>Pages</quote>.</para>
 
+<screenshot>
+<screeninfo>&kjots; Main Window</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="mainwindow.png" format="PNG" />
+</imageobject>
+<textobject>
+<phrase>&kjots; Main Window</phrase>
+</textobject>
+</mediaobject>
+</screenshot>
+
 <para>You can create a number of books in &kjots;, and each book can
 contain a number of pages, where you actually type your notes. Each book
 should be given a name (so you can find what you are looking for), as
 should each page. Although you aren't forced to give a page a name, it
 is sensible to do so.</para>
+
+<para>The left pane of the main window shows the <guilabel>Local Notes</guilabel> 
+and all books and pages in a tree view. 
+</para>
+<para>If <guilabel>Local Notes</guilabel> or book items are selected, the editor 
+in the right pane and displays tables of contents with 
+titles of books and pages as links, which allow to navigate quickly through
+the notes and read the pages.
+</para>
+<para>The content of pages is shown in read only mode. 
+Only if a page is selected in the tree view or by clicking on a page title in the 
+editor pane, the page content can be edited.
+</para>
 
 <sect1 id="kjots-books">
 <title>Using Books</title>
@@ -123,13 +148,20 @@ Remember to go to the shops!
 ################
 # The third page
 ################
-This is the third page and is an example for KJots.</screen>
+This is the third page and is an example for &kjots;.</screen>
 
 <para>Remember that the dialog where you are prompted for a filename is 
 a standard &kde; dialog. That means it is just as easy to store the file 
 on your local hard disk as it is to save it on a web server, ftp server 
 or USB memory stick. So you can export as html and save it on a webserver;
 this way you always have your notes available to you.</para>
+
+<tip><para>You can import &kjots; notes in the book file format with an extension 
+<filename class="extension">.book</filename>.
+Copy this file to <filename>$<envar>KDEHOME</envar>/share/apps/kjots</filename>. 
+Now start <userinput><command>kjotsmigrator <option>--interactive</option></command></userinput>
+and the data is imported as <guilabel>Book</guilabel> into &kjots;.</para></tip>
+<!-- data is in hidden dirs in ~/.local/share/notes in kde > 4.9-->
 </sect1>
 
 <sect1 id="kjots-pages">

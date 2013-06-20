@@ -39,9 +39,9 @@ using namespace MessageComposer;
 
 #include <messagecore/helpers/nodehelper.h>
 
-#include <messageviewer/objecttreeparser.h>
+#include <messageviewer/viewer/objecttreeparser.h>
 #include <messagecore/tests/util.h>
-#include <messageviewer/nodehelper.h>
+#include <messageviewer/viewer/nodehelper.h>
 
 
 #include <messagecore/attachment/attachmentpart.h>
