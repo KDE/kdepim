@@ -145,16 +145,18 @@ void ImportCalendarJob::restoreConfig()
     }
 
     const QString freebusyStr(QLatin1String("freebusyurls"));
-    const KArchiveEntry* freebusyentry  = mArchiveDirectory->entry(Utils::dataPath() + freebusyStr);
+    const KArchiveEntry* freebusyentry  = mArchiveDirectory->entry(Utils::dataPath() + QLatin1String("korganizer/") + freebusyStr);
     if (freebusyentry && freebusyentry->isFile()) {
         const KArchiveFile* freebusyrcFile = static_cast<const KArchiveFile*>(freebusyentry);
-        const QString freebusypath = KStandardDirs::locateLocal( "data",  QLatin1String("korganizer/") + freebusyStr);
+
+        const QString freebusypath = KGlobal::dirs()->findResource("data", QLatin1String("korganizer/") + freebusyStr);
         if (QFile(freebusypath).exists()) {
+            //TODO 4.12 merge it.
             if (overwriteConfigMessageBox(freebusyStr)) {
-                copyToFile(freebusyrcFile, freebusypath, freebusyStr, Utils::dataPath());
+                copyToFile(freebusyrcFile, freebusypath, freebusyStr, Utils::dataPath() + QLatin1String("korganizer/") );
             }
         } else {
-            copyToFile(freebusyrcFile, freebusypath, freebusyStr, Utils::dataPath());
+            copyToFile(freebusyrcFile, freebusypath, freebusyStr, Utils::dataPath() + QLatin1String("korganizer/"));
         }
     }
 
