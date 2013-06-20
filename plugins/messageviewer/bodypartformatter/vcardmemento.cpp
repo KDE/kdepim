@@ -56,15 +56,15 @@ void VcardMemento::slotSearchJobFinished( KJob *job )
   }
 
   const int contactSize( searchJob->contacts().size() );
-  if ( contactSize == 1 ) {
+  if ( contactSize >= 1 ) {
     VCard vcard = mVCardList.at(mIndex);
     vcard.found = true;
     vcard.address = searchJob->contacts().first();
     mVCardList[mIndex] = vcard;
-  } else if ( contactSize > 1 ) {
-    kDebug()<<" more than 1 contact was found";
-    // TODO: Figure out something here...
+    if (contactSize>1)
+        kDebug()<<" more than 1 contact was found";
   }
+
   mIndex++;
   continueToCheckEmail();
 }
