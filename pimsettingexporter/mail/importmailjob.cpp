@@ -426,6 +426,8 @@ void ImportMailJob::restoreMails()
             KSharedConfig::Ptr resourceConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + resourceName);
 
             KUrl newUrl = Utils::adaptResourcePath(resourceConfig, storeMails);
+
+
             QMap<QString, QVariant> settings;
             if (resourceName.contains(QLatin1String("akonadi_mbox_resource_"))) {
                 const QString dataFile = res.value();
