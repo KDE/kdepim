@@ -79,6 +79,12 @@ QString Utils::alarmPath()
     return QLatin1String("alarm/");
 }
 
+QString Utils::jotPath()
+{
+    return QLatin1String("jot/");
+}
+
+
 KUrl Utils::adaptResourcePath(KSharedConfigPtr resourceConfig, const QString &storedData)
 {
     const KUrl url = Utils::resourcePath(resourceConfig);

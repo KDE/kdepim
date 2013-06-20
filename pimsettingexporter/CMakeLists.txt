@@ -33,6 +33,8 @@ set(pimsettingexporter_SRCS
   addressbook/importaddressbookjob.cpp
   alarm/exportalarmjob.cpp
   alarm/importalarmjob.cpp
+  jot/exportjotjob.cpp
+  jot/importjotjob.cpp
   archivestorage.cpp
 )
 

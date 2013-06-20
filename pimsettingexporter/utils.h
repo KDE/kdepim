@@ -50,6 +50,7 @@ QString dataPath();
 QString calendarPath();
 QString addressbookPath();
 QString alarmPath();
+QString jotPath();
 
 void convertCollectionListToRealPath(KConfigGroup &group, const QString &currentKey);
 void convertCollectionToRealPath(KConfigGroup &group, const QString &currentKey);
