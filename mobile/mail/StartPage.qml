@@ -35,6 +35,11 @@ PlasmaComponents.Page {
 
   //BEGIN Tools
   tools: PlasmaComponents.ToolBarLayout{
+    PlasmaComponents.ToolButton{
+      iconSource: "preferences-system"
+
+      onClicked: pageStack.push(Qt.createComponent("SettingsPage.qml") )
+    }
     PlasmaComponents.ToolButton {
       iconSource: "mail-message-new"
 

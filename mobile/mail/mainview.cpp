@@ -527,11 +527,7 @@ void MainView::doDelayedInit()
 
   connect( itemSelectionModel()->model(), SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(dataChanged()) );
 
-  KAction *action = new KAction( i18n( "Identities" ), this );
-  connect( action, SIGNAL(triggered(bool)), SLOT(configureIdentity()) );
-  actionCollection()->addAction( "kmail_mobile_identities", action );
-
-  action = new KAction( i18n( "New Email" ), this );
+  KAction *action = new KAction( i18n( "New Email" ), this );
   connect( action, SIGNAL(triggered(bool)), SLOT(startComposer()) );
   actionCollection()->addAction( "add_new_mail", action );
 

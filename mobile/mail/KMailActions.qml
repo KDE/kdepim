@@ -71,11 +71,6 @@ ActionMenuContainer {
     model: filterModel
   }
 
-  ActionListItem {
-    category : "home"
-    name : "kmail_mobile_identities"
-  }
-
   ActionList {
     category : "account"
     name : "account_menu"
