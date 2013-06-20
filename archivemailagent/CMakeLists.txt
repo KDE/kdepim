@@ -21,7 +21,6 @@ set(archivemailagent_SRCS
 
 qt4_add_dbus_adaptor(archivemailagent_SRCS org.freedesktop.Akonadi.ArchiveMailAgent.xml archivemailagent.h ArchiveMailAgent)
 
-#include_directories(${Boost_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/mailimporter )
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
 kde4_add_ui_files(archivemailagent_SRCS ui/archivemailwidget.ui )
