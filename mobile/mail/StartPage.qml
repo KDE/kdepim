@@ -221,6 +221,7 @@ PlasmaComponents.Page {
       visible : application.isLoadingSelected
     }
 
+    //BEGIN EmailList
     QML.Rectangle {
       id : emailListPage
       visible: { guiStateManager.inAccountScreenState ||
@@ -320,6 +321,7 @@ PlasmaComponents.Page {
         }
       }
     }
+    //END EmailList
   }
   //END MainWorkView
 
