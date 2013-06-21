@@ -32,7 +32,7 @@
 */
 
 #include "htmlstatusbar.h"
-#include "globalsettings.h"
+#include "settings/globalsettings.h"
 
 #include "messagecore/settings/globalsettings.h"
 

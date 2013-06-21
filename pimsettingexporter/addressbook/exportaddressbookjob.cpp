@@ -66,9 +66,48 @@ void ExportAddressbookJob::backupResources()
     const Akonadi::AgentInstance::List list = manager->instances();
     foreach( const Akonadi::AgentInstance &agent, list ) {
         const QString identifier = agent.identifier();
-        if (identifier.contains(QLatin1String("akonadi_contact_resource_"))) {
+        if (identifier.contains(QLatin1String("akonadi_vcarddir_resource_"))) {
             const QString identifier = agent.identifier();
-            const QString archivePath = Utils::alarmPath() + identifier + QDir::separator();
+            const QString archivePath = Utils::addressbookPath() + identifier + QDir::separator();
+
+            KUrl url = Utils::resourcePath(agent);
+            if (!url.isEmpty()) {
+                KTemporaryFile tmp;
+                tmp.open();
+                KZip *vcarddirArchive = new KZip(tmp.fileName());
+                vcarddirArchive->setCompression(KZip::NoCompression);
+                bool result = vcarddirArchive->open(QIODevice::WriteOnly);
+                if (!result) {
+                    continue;
+                }
+                //TODO add MessageBox
+
+                const QString filename = url.fileName();
+
+                const bool vcarddirAdded = vcarddirArchive->addLocalDirectory(url.path(), QString());
+                //TODO add MessageBox
+                if (!vcarddirAdded) {
+                    delete vcarddirArchive;
+                    continue;
+                }
+                vcarddirArchive->setCompression(KZip::DeflateCompression);
+                vcarddirArchive->close();
+                tmp.close();
+
+                const bool fileAdded = archive()->addLocalFile(tmp.fileName(), archivePath  + QLatin1String("addressbook.zip"));
+                if (fileAdded) {
+                    const QString errorStr = Utils::storeResources(archive(), identifier, archivePath);
+                    if (!errorStr.isEmpty())
+                        Q_EMIT error(errorStr);
+                    Q_EMIT info(i18n("\"%1\" was backuped.",filename));
+                } else {
+                    Q_EMIT error(i18n("\"%1\" file cannot be added to backup file.",filename));
+                }
+                delete vcarddirArchive;
+            }
+        } else if (identifier.contains(QLatin1String("akonadi_vcard_resource_"))) {
+            const QString identifier = agent.identifier();
+            const QString archivePath = Utils::addressbookPath() + identifier + QDir::separator();
 
             KUrl url = Utils::resourcePath(agent);
             if (!url.isEmpty()) {
@@ -124,13 +163,9 @@ void ExportAddressbookJob::backupConfig()
         }
         kaddressBookConfig->sync();
         backupFile(tmp.fileName(), Utils::configsPath(), kaddressbookStr);
+        delete kaddressBookConfig;
     }
     Q_EMIT info(i18n("Config backup done."));
-}
-
-QString ExportAddressbookJob::componentName() const
-{
-    return QLatin1String("KAddressBook");
 }
 
 #include "exportaddressbookjob.moc"

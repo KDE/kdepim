@@ -35,6 +35,7 @@ public:
     Utils::StoredTypes kaddressbookStoredType(int &numberOfStep) const;
     Utils::StoredTypes kalarmStoredType(int &numberOfStep) const;
     Utils::StoredTypes korganizerStoredType(int &numberOfStep) const;
+    Utils::StoredTypes kjotsStoredType(int &numberOfStep) const;
 
 private:
     enum ActionType {
@@ -49,6 +50,7 @@ private:
     QTreeWidgetItem *mKalarmItem;
     QTreeWidgetItem *mKaddressbookItem;
     QTreeWidgetItem *mKorganizerItem;
+    QTreeWidgetItem *mKjotsItem;
 };
 
 #endif // SELECTIONTYPETREEWIDGET_H

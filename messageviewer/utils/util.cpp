@@ -39,7 +39,7 @@
 
 #include "utils/util.h"
 
-#include "iconnamecache.h"
+#include "utils/iconnamecache.h"
 #include "viewer/nodehelper.h"
 
 #include "messagecore/settings/globalsettings.h"

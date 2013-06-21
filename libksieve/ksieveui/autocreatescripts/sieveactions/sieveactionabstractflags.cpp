@@ -48,7 +48,7 @@ QString SieveActionAbstractFlags::code(QWidget *w) const
     return str + QLatin1Char(' ') + flagCode;
 }
 
-QStringList SieveActionAbstractFlags::needRequires(QWidget *parent) const
+QStringList SieveActionAbstractFlags::needRequires(QWidget *) const
 {
     return QStringList() <<QLatin1String("imapflags");
 }

@@ -63,17 +63,22 @@ SelectFlagsListWidget::~SelectFlagsListWidget()
 
 void SelectFlagsListWidget::init()
 {
-    QListWidgetItem *item = new QListWidgetItem(QLatin1String("\\\\Deleted"), this);
+    QListWidgetItem *item = new QListWidgetItem(i18n("Deleted"), this);
+    item->setData(FlagsRealName, QLatin1String("\\\\Deleted"));
     item->setCheckState(Qt::Unchecked);
-    item = new QListWidgetItem(QLatin1String("\\\\Answered"), this);
+    item = new QListWidgetItem(i18n("Answered"), this);
+    item->setData(FlagsRealName, QLatin1String("\\\\Answered"));
     item->setCheckState(Qt::Unchecked);
-    item = new QListWidgetItem(QLatin1String("\\\\Flagged"), this);
+    item = new QListWidgetItem(i18n("Flagged"), this);
+    item->setData(FlagsRealName, QLatin1String("\\\\Flagged"));
     item->setCheckState(Qt::Unchecked);
-    item = new QListWidgetItem(QLatin1String("\\\\Seen"), this);
+    item = new QListWidgetItem(i18n("Seen"), this);
+    item->setData(FlagsRealName, QLatin1String("\\\\Seen"));
     item->setCheckState(Qt::Unchecked);
     //item = new QListWidgetItem(QLatin1String("\\\\Recent"), this);
     //item->setCheckState(Qt::Unchecked);
-    item = new QListWidgetItem(QLatin1String("\\\\Draft"), this);
+    item = new QListWidgetItem(i18n("Draft"), this);
+    item->setData(FlagsRealName, QLatin1String("\\\\Draft"));
     item->setCheckState(Qt::Unchecked);
 }
 
@@ -82,7 +87,7 @@ void SelectFlagsListWidget::setFlags(const QStringList& list)
     const int numberOfItem = count();
     for (int i = 0; i < numberOfItem; ++i) {
         QListWidgetItem *it = item(i);
-        if (list.contains(it->text())) {
+        if (list.contains(it->data(FlagsRealName).toString())) {
             it->setCheckState(Qt::Checked);
         }
     }
@@ -95,7 +100,7 @@ QStringList SelectFlagsListWidget::flags() const
     for (int i = 0; i < numberOfItem; ++i) {
         QListWidgetItem *it = item(i);
         if (it->checkState() == Qt::Checked) {
-            result<<it->text();
+            result<<it->data(FlagsRealName).toString();
         }
     }
     return result;

@@ -49,7 +49,7 @@
 #include "messagecore/helpers/messagehelpers.h"
 #include "messagelistproxy.h"
 #include "messagelistsettingscontroller.h"
-#include "messageviewer/globalsettings.h"
+#include "messageviewer/settings/globalsettings.h"
 #include "messageviewer/header/headerstrategy.h"
 #include "messageviewer/header/headerstyle.h"
 #include "messageviewer/viewer/nodehelper.h"
@@ -527,11 +527,7 @@ void MainView::doDelayedInit()
 
   connect( itemSelectionModel()->model(), SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(dataChanged()) );
 
-  KAction *action = new KAction( i18n( "Identities" ), this );
-  connect( action, SIGNAL(triggered(bool)), SLOT(configureIdentity()) );
-  actionCollection()->addAction( "kmail_mobile_identities", action );
-
-  action = new KAction( i18n( "New Email" ), this );
+  KAction *action = new KAction( i18n( "New Email" ), this );
   connect( action, SIGNAL(triggered(bool)), SLOT(startComposer()) );
   actionCollection()->addAction( "add_new_mail", action );
 

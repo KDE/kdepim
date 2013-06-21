@@ -32,7 +32,7 @@
 #include <messageviewer/viewer/objecttreeparser.h>
 #include <messageviewer/viewer/objecttreeemptysource.h>
 #include <messageviewer/viewer/nodehelper.h>
-#include <messageviewer/csshelper.h>
+#include <messageviewer/viewer/csshelper.h>
 
 #include <messagecore/helpers/nodehelper.h>
 

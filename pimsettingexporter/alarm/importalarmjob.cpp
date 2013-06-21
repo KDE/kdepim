@@ -52,12 +52,20 @@ void ImportAlarmJob::restoreResources()
 {
     Q_EMIT info(i18n("Restore resources..."));
     if (!mHashAlarmArchive.isEmpty()) {
+        QHashIterator<QString, QString> i(mHashAlarmArchive);
+        while (i.hasNext()) {
+            i.next();
+            qDebug() << i.key() << ": " << i.value() << endl;
+            QMap<QString, QVariant> settings;
+            //FIXME
+            if (i.key().contains(QLatin1String("akonadi_kalarm_resource_"))) {
+                //TODO
+            }
 
+        }
     }
 
     Q_EMIT info(i18n("Resources restored."));
-
-    //TODO
 }
 
 void ImportAlarmJob::searchAllFiles(const KArchiveDirectory *dir,const QString &prefix)
@@ -66,7 +74,7 @@ void ImportAlarmJob::searchAllFiles(const KArchiveDirectory *dir,const QString &
         const KArchiveEntry *entry = dir->entry(entryName);
         if (entry && entry->isDirectory()) {
             const QString newPrefix = (prefix.isEmpty() ? prefix : prefix + QLatin1Char('/')) + entryName;
-            if (entryName == QLatin1String("addressbook")) {
+            if (entryName == QLatin1String("alarm")) {
                 storeAlarmArchiveResource(static_cast<const KArchiveDirectory*>(entry),entryName);
             } else {
                 searchAllFiles(static_cast<const KArchiveDirectory*>(entry), newPrefix);
@@ -130,11 +138,6 @@ void ImportAlarmJob::importkalarmConfig(const KArchiveFile* kalarmFile, const QS
     }
 
     kalarmConfig->sync();
-}
-
-QString ImportAlarmJob::componentName() const
-{
-    return QLatin1String("KAlarm");
 }
 
 #include "importalarmjob.moc"

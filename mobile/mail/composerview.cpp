@@ -34,7 +34,7 @@
 #include <mailtransport/messagequeuejob.h>
 #include <mailtransport/transportcombobox.h>
 #include <mailtransport/transportmanager.h>
-#include <messageviewer/globalsettings.h>
+#include <messageviewer/settings/globalsettings.h>
 #include <messageviewer/viewer/objecttreeemptysource.h>
 #include <messageviewer/viewer/objecttreeparser.h>
 #include <messagecomposer/composer/kmeditor.h>

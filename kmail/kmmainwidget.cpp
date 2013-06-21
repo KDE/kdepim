@@ -69,7 +69,7 @@
 #include "kdepim-version.h"
 
 #include "messageviewer/utils/autoqpointer.h"
-#include "messageviewer/globalsettings.h"
+#include "messageviewer/settings/globalsettings.h"
 #include "messageviewer/viewer/viewer.h"
 #include "messageviewer/viewer/attachmentstrategy.h"
 #include "messageviewer/header/headerstrategy.h"
@@ -1339,11 +1339,13 @@ void KMMainWidget::slotCollectionChanged( const Akonadi::Collection&collection, 
 
 void KMMainWidget::slotItemAdded( const Akonadi::Item &msg, const Akonadi::Collection &col )
 {
+
   if ( col.isValid() ) {
     if ( col == CommonKernel->outboxCollectionFolder() ) {
       startUpdateMessageActionsTimer();
     } else {
       if ( !CommonKernel->folderIsSentMailFolder(col ) ) {
+          qDebug()<<" KMMainWidget::slotItemAdded col:"<<col.id()<<" msg.id"<<msg.id();
           addInfoInNotification( col,msg.id() );
       }
     }
@@ -1357,14 +1359,12 @@ void KMMainWidget::slotItemRemoved( const Akonadi::Item & item)
   }
 }
 
-void KMMainWidget::slotItemMoved( Akonadi::Item item, Akonadi::Collection from, Akonadi::Collection to )
+void KMMainWidget::slotItemMoved( const Akonadi::Item &item, const Akonadi::Collection &from, const Akonadi::Collection &to )
 {
   if ( item.isValid() && ( ( from.id() == CommonKernel->outboxCollectionFolder().id() )
-                          || to.id() == CommonKernel->outboxCollectionFolder().id() ) )
-  {
+                          || to.id() == CommonKernel->outboxCollectionFolder().id() ) ) {
     startUpdateMessageActionsTimer();
-  }
-  else{
+  } else {
     updateInfoInNotification( from, to, item.id() );
   }
 }

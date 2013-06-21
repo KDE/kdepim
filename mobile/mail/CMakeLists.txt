@@ -123,6 +123,7 @@ endif()
 install(TARGETS kmail-mobile ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(PROGRAMS kmail-mobile.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
 install(FILES
+  AboutPage.qml
   AclEditor.qml
   AttachmentEditor.qml
   BulkActionComponent.qml
@@ -140,6 +141,7 @@ install(FILES
   KMailComposerActions.qml
   kmail-mobile.notifyrc
   next-unread-mail.png
+  SettingsPage.qml
   SnippetsEditor.qml
   SnippetsList.qml
   StartPage.qml

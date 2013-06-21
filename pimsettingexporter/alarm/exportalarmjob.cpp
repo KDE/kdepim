@@ -115,16 +115,12 @@ void ExportAlarmJob::backupConfig()
 
         kalarmConfig->sync();
         backupFile(tmp.fileName(), Utils::configsPath(), kalarmStr);
+        delete kalarmConfig;
     }
 
 
     Q_EMIT info(i18n("Config backup done."));
 
-}
-
-QString ExportAlarmJob::componentName() const
-{
-    return QLatin1String("KAlarm");
 }
 
 #include "exportalarmjob.moc"

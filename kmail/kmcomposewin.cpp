@@ -38,7 +38,7 @@
 #include "kmmainwin.h"
 #include "kmmainwidget.h"
 #include "mailcomposeradaptor.h" // TODO port all D-Bus stuff...
-#include "messageviewer/stl_util.h"
+#include "messageviewer/viewer/stl_util.h"
 #include "messageviewer/utils/util.h"
 #include "messagecore/utils/stringutil.h"
 #include "messagecore/attachment/attachmentcollector.h"
@@ -69,8 +69,8 @@
 
 #include <messageviewer/viewer/objecttreeparser.h>
 #include <messageviewer/viewer/nodehelper.h>
-#include "messageviewer/chiasmuskeyselector.h"
-#include <messageviewer/globalsettings.h>
+//#include "messageviewer/chiasmuskeyselector.h"
+#include <messageviewer/settings/globalsettings.h>
 #include <messagecomposer/composer/composer.h>
 #include <messagecomposer/part/globalpart.h>
 #include <messagecomposer/part/infopart.h>

@@ -21,7 +21,7 @@
 
 
 #include "vcardviewer.h"
-#include "globalsettings.h"
+#include "settings/globalsettings.h"
 
 #include <akonadi/contact/contactviewer.h>
 

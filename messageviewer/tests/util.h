@@ -17,7 +17,7 @@
   02110-1301, USA.
 */
 #include "interfaces/htmlwriter.h"
-#include "csshelper.h"
+#include "viewer/csshelper.h"
 
 #include <KMime/Message>
 

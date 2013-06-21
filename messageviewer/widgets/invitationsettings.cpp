@@ -30,7 +30,7 @@
 #include "invitationsettings.h"
 #include "invitationsettings.moc"
 #include "ui_invitationsettings.h"
-#include "globalsettings.h"
+#include "settings/globalsettings.h"
 
 #include <KLocale>
 #include <KMessageBox>

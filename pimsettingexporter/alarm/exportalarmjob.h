@@ -31,7 +31,6 @@ public:
     ~ExportAlarmJob();
 
     void start();
-    QString componentName() const;
 
 private:
     void backupResources();

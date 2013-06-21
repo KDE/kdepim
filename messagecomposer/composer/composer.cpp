@@ -624,6 +624,7 @@ void Composer::addAttachmentPart( AttachmentPart::Ptr part, bool autoresizeImage
               if(autoResizeJob->resizeImage()) {
                   part->setData(autoResizeJob->imageArray());
                   part->setMimeType(autoResizeJob->mimetype());
+                  MessageComposer::Utils::changeFileName(part);
               }
           }
           delete autoResizeJob;

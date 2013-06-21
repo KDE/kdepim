@@ -22,7 +22,7 @@
 #include "viewer/objecttreeparser.h"
 #include "viewer/objecttreeemptysource.h"
 #include "interfaces/htmlwriter.h"
-#include "messageviewer/csshelper.h"
+#include "messageviewer/viewer/csshelper.h"
 
 #include <akonadi/item.h>
 

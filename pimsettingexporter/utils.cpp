@@ -79,6 +79,32 @@ QString Utils::alarmPath()
     return QLatin1String("alarm/");
 }
 
+QString Utils::jotPath()
+{
+    return QLatin1String("jot/");
+}
+
+
+KUrl Utils::adaptResourcePath(KSharedConfigPtr resourceConfig, const QString &storedData)
+{
+    const KUrl url = Utils::resourcePath(resourceConfig);
+    KUrl newUrl = url;
+    if (!url.path().contains(QDir::homePath())) {
+        //qDebug()<<" url "<<url.path();
+        newUrl.setPath(QDir::homePath() + QLatin1Char('/') + storedData + url.fileName());
+    }
+    if (QFile(newUrl.path()).exists()) {
+        QString newFileName = newUrl.path();
+        for (int i = 0;; ++i) {
+            newFileName = newUrl.path() + QString::fromLatin1("_%1").arg(i);
+            if (!QFile(newFileName).exists()) {
+                break;
+            }
+        }
+        newUrl=KUrl(newFileName);
+    }
+    return newUrl;
+}
 
 KUrl Utils::resourcePath(KSharedConfigPtr resourceConfig)
 {
@@ -190,6 +216,7 @@ QString Utils::storeResources(KZip *archive, const QString &identifier, const QS
     //Customize resource if necessary here.
     config->sync();
     const bool fileAdded  = archive->addLocalFile(tmp.fileName(), path + agentFileName);
+    delete config;
     if (!fileAdded)
         return i18n("Resource file \"%1\" cannot be added to backup file.", agentFileName);
     return QString();

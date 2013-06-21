@@ -31,7 +31,6 @@ public:
     ~ImportCalendarJob();
 
     void start();
-    QString componentName() const;
 
 private:
     void searchAllFiles(const KArchiveDirectory *dir,const QString &prefix);

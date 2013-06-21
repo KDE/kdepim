@@ -35,6 +35,11 @@ PlasmaComponents.Page {
 
   //BEGIN Tools
   tools: PlasmaComponents.ToolBarLayout{
+    PlasmaComponents.ToolButton{
+      iconSource: "preferences-system"
+
+      onClicked: pageStack.push(Qt.createComponent("SettingsPage.qml") )
+    }
     PlasmaComponents.ToolButton {
       iconSource: "mail-message-new"
 
@@ -186,33 +191,6 @@ PlasmaComponents.Page {
         application.persistCurrentSelection("preFavSelection");
         guiStateManager.pushState( KPIM.GuiStateManager.MultipleFolderSelectionScreenState )
       }
-    }
-
-    KPIM.StartCanvas {
-      id : startPage
-      visible: !collectionView.hasSelection
-      anchors.left : collectionView.right
-      anchors.top : parent.top
-      anchors.bottom : parent.bottom
-      anchors.right : parent.right
-      anchors.leftMargin : 10
-      anchors.rightMargin : 10
-      showAccountsList : false
-      favoritesModel : favoritesList
-
-      contextActions : [
-        QML.Column {
-          anchors.fill: parent
-          height : 70
-          KPIM.Button2 {
-            width: parent.width
-            buttonText : KDE.i18n( "Write new Email" )
-            onClicked : {
-              application.startComposer();
-            }
-          }
-        }
-      ]
     }
 
     QML.Rectangle {
@@ -374,13 +352,6 @@ PlasmaComponents.Page {
 
             scriptActions : [
               KPIM.ScriptAction {
-                name : "show_about_dialog"
-                script : {
-                  actionPanel.collapse();
-                  aboutDialog.visible = true
-                }
-              },
-              KPIM.ScriptAction {
                 name : "configure"
                 script : {
                   actionPanel.collapse();
@@ -524,36 +495,12 @@ PlasmaComponents.Page {
   }
 
   QML.Connections {
-    target: startPage
-    onAccountSelected : {
-      application.setSelectedAccount(row);
-      startPanel.collapse();
-      folderPanel.expand();
-    }
-  }
-  QML.Connections {
-    target: startPage
-    onFavoriteSelected : {
-      application.loadFavorite(favName);
-    }
-  }
-
-  QML.Connections {
     target: messageView
     onMailRemoved : {
        if (guiStateManager.inViewSingleItemState)
          guiStateManager.popState();
     }
   }
-
-  QML.Loader {
-    id : aboutDialog
-    anchors.fill: parent
-    visible: false
-    source: visible ? KDE.locate( "module", "imports/org/kde/pim/mobileui/AboutDialog.qml" ) : ""
-    onLoaded: { item.backgroundSource = backgroundImage.source; }
-  }
-
 
   QML.Loader {
     anchors.fill: parent

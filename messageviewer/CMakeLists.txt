@@ -18,7 +18,7 @@ else()
   set(OUTLOOK_COMPATIBLE_INVITATION_REPLY_COMMENTS false)
 endif()
 
-configure_file(messageviewer.kcfg.cmake ${CMAKE_CURRENT_BINARY_DIR}/messageviewer.kcfg)
+configure_file(settings/messageviewer.kcfg.cmake ${CMAKE_CURRENT_BINARY_DIR}/messageviewer.kcfg)
 
 check_include_files(sys/inotify.h SYS_INOTIFY_H_FOUND)
 macro_bool_to_01(SYS_INOTIFY_H_FOUND HAVE_SYS_INOTIFY_H)
@@ -46,19 +46,19 @@ endif()
 set(libmessageviewer_SRCS
   widgets/attachmentdialog.cpp
   viewer/attachmentstrategy.cpp
-  bodypartformatter.cpp
-  bodypartformatterfactory.cpp
-  chiasmuskeyselector.cpp
+  viewer/bodypartformatter.cpp
+  viewer/bodypartformatterfactory.cpp
+  viewer/chiasmuskeyselector.cpp
   widgets/configurewidget.cpp
   header/contactdisplaymessagememento.cpp
-  csshelper.cpp
-  csshelperbase.cpp
+  viewer/csshelper.cpp
+  viewer/csshelperbase.cpp
   viewer/editorwatcher.cpp
   htmlwriter/filehtmlwriter.cpp
   findbar/findbarbase.cpp
   findbar/findbarmailwebview.cpp
   findbar/findbarsourceview.cpp
-  globalsettings.cpp
+  settings/globalsettings.cpp
   header/headerstrategy.cpp
   header/headerstrategy_p.cpp
   header/headerstyle.cpp
@@ -79,11 +79,11 @@ set(libmessageviewer_SRCS
   viewer/htmlquotecolorer.cpp
   widgets/htmlstatusbar.cpp
   widgets/vcardviewer.cpp
-  iconnamecache.cpp
+  utils/iconnamecache.cpp
   widgets/invitationsettings.cpp
-  kleojobexecutor.cpp
+  viewer/kleojobexecutor.cpp
   viewer/mailsourceviewer.cpp
-  markmessagereadhandler.cpp
+  utils/markmessagereadhandler.cpp
   viewer/mimetreemodel.cpp
   viewer/nodehelper.cpp
   viewer/attachmenttemporaryfilesdirs.cpp
@@ -91,10 +91,10 @@ set(libmessageviewer_SRCS
   viewer/objecttreeparser.cpp
   viewer/objecttreeparser_p.cpp
   viewer/objecttreeviewersource.cpp
-  partnodebodypart.cpp
-  pluginloaderbase.cpp
+  viewer/partnodebodypart.cpp
+  viewer/pluginloaderbase.cpp
   htmlwriter/teehtmlwriter.cpp
-  urlhandlermanager.cpp
+  viewer/urlhandlermanager.cpp
   utils/util.cpp
   viewer/viewer.cpp
   viewer/viewer_p.cpp
@@ -110,7 +110,7 @@ set(libmessageviewer_SRCS
 )
 
 kde4_add_kcfg_files(libmessageviewer_SRCS
-  globalsettings_base.kcfgc
+  settings/globalsettings_base.kcfgc
 )
 
 kde4_add_ui_files(libmessageviewer_SRCS

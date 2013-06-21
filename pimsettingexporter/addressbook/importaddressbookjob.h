@@ -33,12 +33,10 @@ public:
 
     void start();
 
-    QString componentName() const;
-
 private:
     void searchAllFiles(const KArchiveDirectory *dir,const QString &prefix);
     void storeAddressBookArchiveResource(const KArchiveDirectory *dir, const QString &prefix);
-    void importkalarmConfig(const KArchiveFile* file, const QString &config, const QString &filename,const QString &prefix);
+    void importkaddressBookConfig(const KArchiveFile* file, const QString &config, const QString &filename,const QString &prefix);
     void restoreResources();
     void restoreConfig();
     QHash<QString, QString> mHashAddressBookArchive;

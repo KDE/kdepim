@@ -24,7 +24,7 @@
 #include "header/headerstrategy.h"
 #include <kpimutils/linklocator.h>
 using KPIMUtils::LinkLocator;
-#include "globalsettings.h"
+#include "settings/globalsettings.h"
 #include "viewer/nodehelper.h"
 
 #include <kpimutils/email.h>

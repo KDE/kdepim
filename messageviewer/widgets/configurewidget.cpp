@@ -21,7 +21,7 @@
 
 #include "ui_settings.h"
 #include "utils/util.h"
-#include "globalsettings.h"
+#include "settings/globalsettings.h"
 #include "viewer/nodehelper.h"
 
 #include "header/customheadersettingwidget.h"
@@ -149,6 +149,7 @@ void ConfigureWidget::showCustomHeadersDialog()
 {
   KDialog dialog( this );
   dialog.setButtons( KDialog::Default | KDialog::Ok | KDialog::Cancel );
+  dialog.resize(500,250);
   CustomHeaderSettingWidget *widget = new CustomHeaderSettingWidget();
   connect( &dialog, SIGNAL(defaultClicked()), widget, SLOT(resetToDefault()) );
   widget->readConfig();
