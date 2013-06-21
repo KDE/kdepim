@@ -31,7 +31,7 @@
 #include "rulewidgethandlermanager.h"
 #include "interfaces/rulewidgethandler.h"
 
-#include <messageviewer/stl_util.h>
+#include <messageviewer/viewer/stl_util.h>
 #include <pimcommon/widgets/minimumcombobox.h>
 
 #include <Nepomuk2/Tag>
