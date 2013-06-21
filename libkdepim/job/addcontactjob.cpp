@@ -19,7 +19,6 @@
 
 #include "addcontactjob.h"
 
-#include <akonadi/collectiondialog.h>
 #include <akonadi/contact/contactsearchjob.h>
 #include <akonadi/item.h>
 #include <akonadi/itemcreatejob.h>
@@ -30,6 +29,44 @@
 #include <QtCore/QPointer>
 
 using namespace KPIM;
+
+SelectedCollectionDialog::SelectedCollectionDialog(QWidget *parent)
+    : Akonadi::CollectionDialog (parent)
+{
+    const QStringList mimeTypes( KABC::Addressee::mimeType() );
+    setMimeTypeFilter( mimeTypes );
+    setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
+    setCaption( i18nc( "@title:window", "Select Address Book" ) );
+    setDescription(
+                i18nc( "@info",
+                       "Select the address book where the contact will be saved:" ) );
+    changeCollectionDialogOptions( Akonadi::CollectionDialog::KeepTreeExpanded );
+    readConfig();
+    qDebug()<<" SelectedCollectionDialog::SelectedCollectionDialog";
+}
+
+SelectedCollectionDialog::~SelectedCollectionDialog()
+{
+    writeConfig();
+}
+
+void SelectedCollectionDialog::readConfig()
+{
+    KConfigGroup group( KGlobal::config(), "SelectedCollectionDialog" );
+    const QSize size = group.readEntry( "Size", QSize() );
+    if ( size.isValid() ) {
+        resize( size );
+    } else {
+        resize( 600, 400 );
+    }
+}
+
+void SelectedCollectionDialog::writeConfig()
+{
+    KConfigGroup group( KGlobal::config(), "SelectedCollectionDialog" );
+    group.writeEntry( "Size", size() );
+    group.sync();
+}
 
 class AddContactJob::Private
 {
@@ -73,15 +110,7 @@ class AddContactJob::Private
 
       if ( !mCollection.isValid() ) {
         // ask user in which address book the new contact shall be stored
-        const QStringList mimeTypes( KABC::Addressee::mimeType() );
-        QPointer<Akonadi::CollectionDialog> dlg = new Akonadi::CollectionDialog( mParentWidget );
-        dlg->setMimeTypeFilter( mimeTypes );
-        dlg->setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
-        dlg->setCaption( i18nc( "@title:window", "Select Address Book" ) );
-        dlg->setDescription(
-          i18nc( "@info",
-                 "Select the address book where the contact will be saved:" ) );
-        dlg->changeCollectionDialogOptions( Akonadi::CollectionDialog::KeepTreeExpanded );
+        QPointer<SelectedCollectionDialog> dlg = new SelectedCollectionDialog( mParentWidget );
 
         bool gotIt = true;
         if ( !dlg->exec() ) {
