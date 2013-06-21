@@ -68,7 +68,7 @@ void ExportAddressbookJob::backupResources()
         const QString identifier = agent.identifier();
         if (identifier.contains(QLatin1String("akonadi_vcarddir_resource_"))) {
             const QString identifier = agent.identifier();
-            const QString archivePath = Utils::alarmPath() + identifier + QDir::separator();
+            const QString archivePath = Utils::addressbookPath() + identifier + QDir::separator();
 
             KUrl url = Utils::resourcePath(agent);
             if (!url.isEmpty()) {
