@@ -91,7 +91,7 @@ void ImportAddressbookJob::storeAddressBookArchiveResource(const KArchiveDirecto
             if (lst.count() == 2) {
                 const QString archPath(prefix + QLatin1Char('/') + entryName + QLatin1Char('/'));
                 const QString name(lst.at(0));
-                if (name.endsWith(QLatin1String("rc"))&&(name.contains(QLatin1String("akonadi_ical_resource_")))) {
+                if (name.endsWith(QLatin1String("rc"))&&(name.contains(QLatin1String("akonadi_vcarddir_resource_")))) {
                     mHashAddressBookArchive.insert(archPath + name,archPath +lst.at(1));
                 } else {
                     mHashAddressBookArchive.insert(archPath +lst.at(1),archPath + name);

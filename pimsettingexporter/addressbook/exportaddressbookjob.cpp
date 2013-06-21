@@ -66,7 +66,7 @@ void ExportAddressbookJob::backupResources()
     const Akonadi::AgentInstance::List list = manager->instances();
     foreach( const Akonadi::AgentInstance &agent, list ) {
         const QString identifier = agent.identifier();
-        if (identifier.contains(QLatin1String("akonadi_contact_resource_"))) {
+        if (identifier.contains(QLatin1String("akonadi_vcarddir_resource_"))) {
             const QString identifier = agent.identifier();
             const QString archivePath = Utils::alarmPath() + identifier + QDir::separator();
 
