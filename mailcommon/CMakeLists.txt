@@ -33,6 +33,7 @@ set(libmailcommon_SRCS
   collectionpage/collectiongeneralpage.cpp
   collectionpage/collectionexpirypage.cpp
   collectionpage/expirecollectionattribute.cpp
+  collectionpage/newmailnotifierattribute.cpp
   job/expirejob.cpp
   widgets/favoritecollectionwidget.cpp
   filter/filteraction.cpp

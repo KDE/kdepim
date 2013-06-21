@@ -18,6 +18,7 @@
 #include "collectiongeneralpage.h"
 
 #include "collectionannotationsattribute.h"
+#include "newmailnotifierattribute.h"
 #include "foldercollection.h"
 #include "kernel/mailkernel.h"
 #include "util/mailutil.h"
@@ -495,6 +496,9 @@ void CollectionGeneralPage::save( Collection &collection )
       }
     }
   }
+
+  MailCommon::NewMailNotifierAttribute *newMailNotifierAttr = collection.attribute<MailCommon::NewMailNotifierAttribute>( Akonadi::Entity::AddIfMissing );
+  newMailNotifierAttr->setIgnoreNewMail(!mNotifyOnNewMailCheckBox->isChecked());
 
   CollectionAnnotationsAttribute *annotationsAttribute =
     collection.attribute<CollectionAnnotationsAttribute>( Entity::AddIfMissing );
