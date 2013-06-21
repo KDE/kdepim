@@ -57,7 +57,8 @@ void ImportAddressbookJob::restoreResources()
             qDebug() << i.key() << ": " << i.value() << endl;
             QMap<QString, QVariant> settings;
             //FIXME
-            if (i.key().contains(QLatin1String("akonadi_???_resource_"))) {
+            if (i.key().contains(QLatin1String("akonadi_vcarddir_resource_")) ||
+                    i.key().contains(QLatin1String("akonadi_vcard_resource_"))) {
                 //TODO
             }
 

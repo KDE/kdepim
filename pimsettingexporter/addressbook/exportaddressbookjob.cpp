@@ -83,6 +83,23 @@ void ExportAddressbookJob::backupResources()
                     Q_EMIT error(i18n("\"%1\" file cannot be added to backup file.",filename));
                 }
             }
+        } else if (identifier.contains(QLatin1String("akonadi_vcard_resource_"))) {
+            const QString identifier = agent.identifier();
+            const QString archivePath = Utils::addressbookPath() + identifier + QDir::separator();
+
+            KUrl url = Utils::resourcePath(agent);
+            if (!url.isEmpty()) {
+                const QString filename = url.fileName();
+                const bool fileAdded  = archive()->addLocalFile(url.path(), archivePath + filename);
+                if (fileAdded) {
+                    const QString errorStr = Utils::storeResources(archive(), identifier, archivePath);
+                    if (!errorStr.isEmpty())
+                        Q_EMIT error(errorStr);
+                    Q_EMIT info(i18n("\"%1\" was backuped.",filename));
+                } else {
+                    Q_EMIT error(i18n("\"%1\" file cannot be added to backup file.",filename));
+                }
+            }
         }
     }
     Q_EMIT info(i18n("Resources backup done."));
