@@ -121,6 +121,7 @@ void ExportCalendarJob::backupConfig()
 
         korganizerConfig->sync();
         backupFile(tmp.fileName(), Utils::configsPath(), korganizerStr);
+        delete korganizerConfig;
     }
 
     const QString korganizerPrintingStr(QLatin1String("korganizer_printing.rc"));

@@ -115,6 +115,7 @@ void ExportAlarmJob::backupConfig()
 
         kalarmConfig->sync();
         backupFile(tmp.fileName(), Utils::configsPath(), kalarmStr);
+        delete kalarmConfig;
     }
 
 

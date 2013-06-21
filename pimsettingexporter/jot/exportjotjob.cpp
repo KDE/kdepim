@@ -69,7 +69,7 @@ void ExportJotJob::backupResources()
     const Akonadi::AgentInstance::List list = manager->instances();
     foreach( const Akonadi::AgentInstance &agent, list ) {
         const QString identifier = agent.identifier();
-        if (identifier.contains(QLatin1String("akonadi_kjot_resource_"))) {
+        if (identifier.contains(QLatin1String("akonadi_akonotes_resource_"))) {
             const QString identifier = agent.identifier();
             const QString archivePath = Utils::jotPath() + identifier + QDir::separator();
 
@@ -118,6 +118,7 @@ void ExportJotJob::backupConfig()
 
         kjotConfig->sync();
         backupFile(tmp.fileName(), Utils::configsPath(), kjotStr);
+        delete kjotConfig;
     }
 
 

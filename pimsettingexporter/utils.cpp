@@ -216,6 +216,7 @@ QString Utils::storeResources(KZip *archive, const QString &identifier, const QS
     //Customize resource if necessary here.
     config->sync();
     const bool fileAdded  = archive->addLocalFile(tmp.fileName(), path + agentFileName);
+    delete config;
     if (!fileAdded)
         return i18n("Resource file \"%1\" cannot be added to backup file.", agentFileName);
     return QString();

@@ -135,6 +135,7 @@ void ExportMailJob::backupTransports()
 
     config->sync();
     const bool fileAdded  = archive()->addLocalFile(tmp.fileName(), Utils::transportsPath() + QLatin1String("mailtransports"));
+    delete config;
     if (fileAdded)
         Q_EMIT info(i18n("Transports backup done."));
     else
@@ -244,6 +245,7 @@ void ExportMailJob::backupConfig()
         archiveConfig->sync();
 
         backupFile(tmp.fileName(), Utils::configsPath(), archiveMailAgentConfigurationStr);
+        delete archiveConfig;
     }
 
     const QString templatesconfigurationrcStr(QLatin1String("templatesconfigurationrc"));
@@ -273,6 +275,7 @@ void ExportMailJob::backupConfig()
         templateConfig->sync();
 
         backupFile(tmp.fileName(), Utils::configsPath(), templatesconfigurationrcStr);
+        delete templateConfig;
     }
 
     QDir autocorrectDirectory( KStandardDirs::locateLocal( "data", QLatin1String( "autocorrect/" ) ) );
@@ -373,6 +376,7 @@ void ExportMailJob::backupConfig()
 
         kmailConfig->sync();
         backupFile(tmp.fileName(), Utils::configsPath(), kmailStr);
+        delete kmailConfig;
     }
 
     Q_EMIT info(i18n("Config backup done."));
@@ -429,6 +433,7 @@ void ExportMailJob::backupIdentity()
 
     identityConfig->sync();
     const bool fileAdded  = archive()->addLocalFile(tmp.fileName(), Utils::identitiesPath() + QLatin1String("emailidentities"));
+    delete identityConfig;
     if (fileAdded)
         Q_EMIT info(i18n("Identity backup done."));
     else

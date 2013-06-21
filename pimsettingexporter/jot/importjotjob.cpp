@@ -56,7 +56,7 @@ void ImportJotJob::restoreResources()
             qDebug() << i.key() << ": " << i.value() << endl;
             QMap<QString, QVariant> settings;
             //FIXME
-            if (i.key().contains(QLatin1String("akonadi_jot_resource_"))) {
+            if (i.key().contains(QLatin1String("akonadi_akonotes_resource_"))) {
                 //TODO
             }
 
