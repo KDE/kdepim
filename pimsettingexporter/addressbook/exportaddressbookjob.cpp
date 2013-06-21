@@ -72,8 +72,29 @@ void ExportAddressbookJob::backupResources()
 
             KUrl url = Utils::resourcePath(agent);
             if (!url.isEmpty()) {
+                KTemporaryFile tmp;
+                tmp.open();
+                KZip *vcarddirArchive = new KZip(tmp.fileName());
+                vcarddirArchive->setCompression(KZip::NoCompression);
+                bool result = vcarddirArchive->open(QIODevice::WriteOnly);
+                if (!result) {
+                    continue;
+                }
+                //TODO add MessageBox
+
                 const QString filename = url.fileName();
-                const bool fileAdded  = archive()->addLocalDirectory(url.path(), archivePath + filename);
+
+                const bool vcarddirAdded = vcarddirArchive->addLocalDirectory(url.path(), QString());
+                //TODO add MessageBox
+                if (!vcarddirAdded) {
+                    delete vcarddirArchive;
+                    continue;
+                }
+                vcarddirArchive->setCompression(KZip::DeflateCompression);
+                vcarddirArchive->close();
+                tmp.close();
+
+                const bool fileAdded = archive()->addLocalFile(tmp.fileName(), archivePath  + QLatin1String("addressbook.zip"));
                 if (fileAdded) {
                     const QString errorStr = Utils::storeResources(archive(), identifier, archivePath);
                     if (!errorStr.isEmpty())
@@ -82,6 +103,7 @@ void ExportAddressbookJob::backupResources()
                 } else {
                     Q_EMIT error(i18n("\"%1\" file cannot be added to backup file.",filename));
                 }
+                delete vcarddirArchive;
             }
         } else if (identifier.contains(QLatin1String("akonadi_vcard_resource_"))) {
             const QString identifier = agent.identifier();
@@ -141,6 +163,7 @@ void ExportAddressbookJob::backupConfig()
         }
         kaddressBookConfig->sync();
         backupFile(tmp.fileName(), Utils::configsPath(), kaddressbookStr);
+        delete kaddressBookConfig;
     }
     Q_EMIT info(i18n("Config backup done."));
 }

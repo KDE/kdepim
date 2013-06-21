@@ -21,6 +21,7 @@
 #include <KTempDir>
 #include <KStandardDirs>
 #include <KLocale>
+#include <KConfigGroup>
 
 #include <QFile>
 
@@ -57,8 +58,9 @@ void ImportAddressbookJob::restoreResources()
             qDebug() << i.key() << ": " << i.value() << endl;
             QMap<QString, QVariant> settings;
             //FIXME
-            if (i.key().contains(QLatin1String("akonadi_vcarddir_resource_")) ||
-                    i.key().contains(QLatin1String("akonadi_vcard_resource_"))) {
+            if (i.key().contains(QLatin1String("akonadi_vcarddir_resource_"))) {
+                //TODO unzip it
+            } else if ( i.key().contains(QLatin1String("akonadi_vcard_resource_"))) {
                 //TODO
             }
 
@@ -67,7 +69,7 @@ void ImportAddressbookJob::restoreResources()
     Q_EMIT info(i18n("Resources restored."));
 }
 
-void ImportAddressbookJob::searchAllFiles(const KArchiveDirectory *dir,const QString &prefix)
+void ImportAddressbookJob::searchAllFiles(const KArchiveDirectory *dir, const QString &prefix)
 {
     Q_FOREACH(const QString& entryName, dir->entries()) {
         const KArchiveEntry *entry = dir->entry(entryName);
@@ -92,7 +94,8 @@ void ImportAddressbookJob::storeAddressBookArchiveResource(const KArchiveDirecto
             if (lst.count() == 2) {
                 const QString archPath(prefix + QLatin1Char('/') + entryName + QLatin1Char('/'));
                 const QString name(lst.at(0));
-                if (name.endsWith(QLatin1String("rc"))&&(name.contains(QLatin1String("akonadi_vcarddir_resource_")))) {
+                if (name.endsWith(QLatin1String("rc"))&&(name.contains(QLatin1String("akonadi_vcarddir_resource_")) ||
+                                                         name.contains(QLatin1String("akonadi_vcard_resource_")))) {
                     mHashAddressBookArchive.insert(archPath + name,archPath +lst.at(1));
                 } else {
                     mHashAddressBookArchive.insert(archPath +lst.at(1),archPath + name);
@@ -126,10 +129,30 @@ void ImportAddressbookJob::restoreConfig()
 void ImportAddressbookJob::importkaddressBookConfig(const KArchiveFile* file, const QString &config, const QString &filename,const QString &prefix)
 {
     copyToFile(file, config, filename, prefix);
-    KSharedConfig::Ptr kaddressbookConfig = KSharedConfig::openConfig(config);
+    KSharedConfig::Ptr kaddressBookConfig = KSharedConfig::openConfig(config);
 
-    //TODO adapt collection
-    kaddressbookConfig->sync();
+
+    const QString collectionViewCheckStateStr(QLatin1String("CollectionViewCheckState"));
+    if (kaddressBookConfig->hasGroup(collectionViewCheckStateStr)) {
+        KConfigGroup group = kaddressBookConfig->group(collectionViewCheckStateStr);
+        const QString selectionKey(QLatin1String("Selection"));
+        convertRealPathToCollectionList(group, selectionKey, true);
+    }
+
+    const QString collectionViewStateStr(QLatin1String("CollectionViewState"));
+    if (kaddressBookConfig->hasGroup(collectionViewStateStr)) {
+        KConfigGroup group = kaddressBookConfig->group(collectionViewStateStr);
+        QString currentKey(QLatin1String("Current"));
+        convertRealPathToCollection(group, currentKey, true);
+
+        currentKey = QLatin1String("Expansion");
+        convertRealPathToCollection(group, currentKey, true);
+
+        currentKey = QLatin1String("Selection");
+        convertRealPathToCollection(group, currentKey, true);
+    }
+
+    kaddressBookConfig->sync();
 }
 
 
