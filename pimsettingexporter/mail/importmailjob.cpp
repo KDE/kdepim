@@ -471,6 +471,9 @@ void ImportMailJob::restoreMails()
                 const QString newResource = mCreateResource->createResource( QString::fromLatin1("akonadi_mbox_resource"), filename, settings );
                 if (!newResource.isEmpty())
                     mHashResources.insert(filename,newResource);
+                const QString mailFile = res.value();
+                //TODO import it.
+
             } else if (resourceName.contains(QLatin1String("akonadi_maildir_resource_")) ||
                       resourceName.contains(QLatin1String("akonadi_mixedmaildir_resource_"))) {
                 settings.insert(QLatin1String("Path"),newUrl.path());

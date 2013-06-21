@@ -18,13 +18,18 @@
 #include "importaddressbookjob.h"
 #include "archivestorage.h"
 
+#include "pimcommon/util/createresource.h"
+
 #include <KTempDir>
 #include <KStandardDirs>
 #include <KLocale>
 #include <KConfigGroup>
 
 #include <QFile>
+#include <QDir>
 
+
+static const QString storeAddressbook = QLatin1String("backupcalendar/");
 
 ImportAddressbookJob::ImportAddressbookJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep)
     : AbstractImportExportJob(parent, archiveStorage, typeSelected, numberOfStep)
@@ -49,18 +54,71 @@ void ImportAddressbookJob::start()
 
 void ImportAddressbookJob::restoreResources()
 {
-    //TODO
     Q_EMIT info(i18n("Restore resources..."));
     if (!mHashAddressBookArchive.isEmpty()) {
         QHashIterator<QString, QString> i(mHashAddressBookArchive);
+        QDir dir(mTempDirName);
+        dir.mkdir(Utils::mailsPath());
+        const QString copyToDirName(mTempDirName + QLatin1Char('/') + Utils::addressbookPath());
         while (i.hasNext()) {
             i.next();
             qDebug() << i.key() << ": " << i.value() << endl;
             QMap<QString, QVariant> settings;
             //FIXME
             if (i.key().contains(QLatin1String("akonadi_vcarddir_resource_"))) {
+                const KArchiveEntry* fileResouceEntry = mArchiveDirectory->entry(i.key());
+                if (fileResouceEntry && fileResouceEntry->isFile()) {
+                    const KArchiveFile* file = static_cast<const KArchiveFile*>(fileResouceEntry);
+                    file->copyTo(copyToDirName);
+                    const QString resourceName(file->name());
+                    const QString filename(file->name());
+
+                    KSharedConfig::Ptr resourceConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + resourceName);
+
+                    KUrl newUrl = Utils::adaptResourcePath(resourceConfig, storeAddressbook);
+
+                    const QString dataFile = i.value();
+                    const KArchiveEntry* dataResouceEntry = mArchiveDirectory->entry(dataFile);
+                    if (dataResouceEntry->isFile()) {
+                        const KArchiveFile* file = static_cast<const KArchiveFile*>(dataResouceEntry);
+                        file->copyTo(newUrl.path());
+                    }
+                    settings.insert(QLatin1String("Path"),newUrl.path());
+                    const QString newResource = mCreateResource->createResource( QString::fromLatin1("akonadi_vcarddir_resource"), filename, settings );
+
+                    const QString mailFile = i.value();
+                    //TODO import it.
+
+                }
                 //TODO unzip it
             } else if ( i.key().contains(QLatin1String("akonadi_vcard_resource_"))) {
+                const KArchiveEntry* fileResouceEntry = mArchiveDirectory->entry(i.key());
+                if (fileResouceEntry && fileResouceEntry->isFile()) {
+                    const KArchiveFile* file = static_cast<const KArchiveFile*>(fileResouceEntry);
+                    file->copyTo(copyToDirName);
+                    const QString resourceName(file->name());
+                    const QString filename(file->name());
+
+                    KSharedConfig::Ptr resourceConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + resourceName);
+
+                    KUrl newUrl = Utils::adaptResourcePath(resourceConfig, storeAddressbook);
+
+                    const QString dataFile = i.value();
+                    const KArchiveEntry* dataResouceEntry = mArchiveDirectory->entry(dataFile);
+                    if (dataResouceEntry->isFile()) {
+                        const KArchiveFile* file = static_cast<const KArchiveFile*>(dataResouceEntry);
+                        file->copyTo(newUrl.path());
+                    }
+                    settings.insert(QLatin1String("Path"),newUrl.path());
+                    const QString newResource = mCreateResource->createResource( QString::fromLatin1("akonadi_vcard_resource"), filename, settings );
+                    //TODO restore it.
+
+                    const KArchiveEntry* fileDataEntry = mArchiveDirectory->entry(i.value());
+                    if (fileDataEntry && fileDataEntry->isFile()) {
+                        const KArchiveFile* fileData = static_cast<const KArchiveFile*>(fileDataEntry);
+                        //
+                    }
+                }
                 //TODO
             }
 
