@@ -138,9 +138,4 @@ void ImportJotJob::importjotConfig(const KArchiveFile* jotFile, const QString &j
     jotConfig->sync();
 }
 
-QString ImportJotJob::componentName() const
-{
-    return QLatin1String("KJot");
-}
-
 #include "importjotjob.moc"

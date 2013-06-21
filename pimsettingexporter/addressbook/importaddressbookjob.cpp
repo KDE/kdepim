@@ -113,16 +113,16 @@ void ImportAddressbookJob::restoreConfig()
         const QString kaddressbookrc = KStandardDirs::locateLocal( "config",  kaddressbookStr);
         if (QFile(kaddressbookrc).exists()) {
             if (overwriteConfigMessageBox(kaddressbookStr)) {
-                importkalarmConfig(kaddressbookrcFile, kaddressbookrc, kaddressbookStr, Utils::configsPath());
+                importkaddressBookConfig(kaddressbookrcFile, kaddressbookrc, kaddressbookStr, Utils::configsPath());
             }
         } else {
-            importkalarmConfig(kaddressbookrcFile, kaddressbookrc, kaddressbookStr, Utils::configsPath());
+            importkaddressBookConfig(kaddressbookrcFile, kaddressbookrc, kaddressbookStr, Utils::configsPath());
         }
     }
     Q_EMIT info(i18n("Config restored."));
 }
 
-void ImportAddressbookJob::importkalarmConfig(const KArchiveFile* file, const QString &config, const QString &filename,const QString &prefix)
+void ImportAddressbookJob::importkaddressBookConfig(const KArchiveFile* file, const QString &config, const QString &filename,const QString &prefix)
 {
     copyToFile(file, config, filename, prefix);
     KSharedConfig::Ptr kaddressbookConfig = KSharedConfig::openConfig(config);
@@ -131,10 +131,5 @@ void ImportAddressbookJob::importkalarmConfig(const KArchiveFile* file, const QS
     kaddressbookConfig->sync();
 }
 
-
-QString ImportAddressbookJob::componentName() const
-{
-    return QLatin1String("KAddressBook");
-}
 
 #include "importaddressbookjob.moc"

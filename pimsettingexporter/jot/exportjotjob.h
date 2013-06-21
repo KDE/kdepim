@@ -31,7 +31,6 @@ public:
     ~ExportJotJob();
 
     void start();
-    QString componentName() const;
 
 private:
     void backupResources();

@@ -128,9 +128,4 @@ void ExportAddressbookJob::backupConfig()
     Q_EMIT info(i18n("Config backup done."));
 }
 
-QString ExportAddressbookJob::componentName() const
-{
-    return QLatin1String("KAddressBook");
-}
-
 #include "exportaddressbookjob.moc"

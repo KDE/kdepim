@@ -49,8 +49,6 @@ public:
 
     bool wasCanceled() const;
 
-    virtual QString componentName() const = 0;
-
 Q_SIGNALS:
     void info(const QString &);
     void error(const QString &);

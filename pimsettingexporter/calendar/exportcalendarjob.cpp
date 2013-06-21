@@ -144,9 +144,4 @@ void ExportCalendarJob::backupConfig()
     Q_EMIT info(i18n("Config backup done."));
 }
 
-QString ExportCalendarJob::componentName() const
-{
-    return QLatin1String("KOrganizer");
-}
-
 #include "exportcalendarjob.moc"

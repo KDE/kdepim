@@ -31,7 +31,6 @@ public:
     ~ImportAlarmJob();
 
     void start();
-    QString componentName() const;
 
 private:
     void storeAlarmArchiveResource(const KArchiveDirectory *dir, const QString &prefix);

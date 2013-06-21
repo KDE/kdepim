@@ -140,9 +140,4 @@ void ImportAlarmJob::importkalarmConfig(const KArchiveFile* kalarmFile, const QS
     kalarmConfig->sync();
 }
 
-QString ImportAlarmJob::componentName() const
-{
-    return QLatin1String("KAlarm");
-}
-
 #include "importalarmjob.moc"

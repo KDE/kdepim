@@ -122,9 +122,4 @@ void ExportAlarmJob::backupConfig()
 
 }
 
-QString ExportAlarmJob::componentName() const
-{
-    return QLatin1String("KAlarm");
-}
-
 #include "exportalarmjob.moc"

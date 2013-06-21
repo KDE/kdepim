@@ -210,9 +210,5 @@ void ImportCalendarJob::importkorganizerConfig(const KArchiveFile* file, const Q
     korganizerConfig->sync();
 }
 
-QString ImportCalendarJob::componentName() const
-{
-    return QLatin1String("KOrganizer");
-}
 
 #include "importcalendarjob.moc"

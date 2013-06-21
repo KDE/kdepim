@@ -106,12 +106,15 @@ void ExportJotJob::backupConfig()
 
         KConfig *kjotConfig = kjot->copyTo( tmp.fileName() );
 
-        const QString collectionsStr(QLatin1String("Collections"));
+        //TODO implement it
+#if 0
+        const QString collectionsStr(QLatin1String("KJotsEntityOrder"));
         if (kjotConfig->hasGroup(collectionsStr)) {
             KConfigGroup group = kjotConfig->group(collectionsStr);
             const QString selectionKey(QLatin1String("FavoriteCollectionIds"));
             Utils::convertCollectionIdsToRealPath(group, selectionKey);
         }
+#endif
 
         kjotConfig->sync();
         backupFile(tmp.fileName(), Utils::configsPath(), kjotStr);
@@ -120,11 +123,6 @@ void ExportJotJob::backupConfig()
 
     Q_EMIT info(i18n("Config backup done."));
 
-}
-
-QString ExportJotJob::componentName() const
-{
-    return QLatin1String("KAlarm");
 }
 
 #include "exportjotjob.moc"
