@@ -34,9 +34,7 @@ ImportJotJob::ImportJotJob(QWidget *parent, Utils::StoredTypes typeSelected, Arc
 
 ImportJotJob::~ImportJotJob()
 {
-
 }
-
 
 void ImportJotJob::start()
 {
@@ -74,7 +72,7 @@ void ImportJotJob::searchAllFiles(const KArchiveDirectory *dir,const QString &pr
         const KArchiveEntry *entry = dir->entry(entryName);
         if (entry && entry->isDirectory()) {
             const QString newPrefix = (prefix.isEmpty() ? prefix : prefix + QLatin1Char('/')) + entryName;
-            if (entryName == QLatin1String("addressbook")) {
+            if (entryName == QLatin1String("jot")) {
                 storeAlarmArchiveResource(static_cast<const KArchiveDirectory*>(entry),entryName);
             } else {
                 searchAllFiles(static_cast<const KArchiveDirectory*>(entry), newPrefix);

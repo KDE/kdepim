@@ -74,7 +74,7 @@ void ImportAlarmJob::searchAllFiles(const KArchiveDirectory *dir,const QString &
         const KArchiveEntry *entry = dir->entry(entryName);
         if (entry && entry->isDirectory()) {
             const QString newPrefix = (prefix.isEmpty() ? prefix : prefix + QLatin1Char('/')) + entryName;
-            if (entryName == QLatin1String("addressbook")) {
+            if (entryName == QLatin1String("alarm")) {
                 storeAlarmArchiveResource(static_cast<const KArchiveDirectory*>(entry),entryName);
             } else {
                 searchAllFiles(static_cast<const KArchiveDirectory*>(entry), newPrefix);
