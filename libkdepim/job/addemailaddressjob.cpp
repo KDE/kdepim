@@ -20,6 +20,7 @@
 
 #include "addemailaddressjob.h"
 #include "misc/broadcaststatus.h"
+#include "widgets/selectedcollectiondialog.h"
 
 
 #include <Akonadi/CollectionDialog>
@@ -172,15 +173,7 @@ class AddEmailAddressJob::Private
         addressBook = canCreateItemCollections[0];
       } else {
         // ask user in which address book the new contact shall be stored
-        const QStringList mimeTypes( KABC::Addressee::mimeType() );
-        QPointer<Akonadi::CollectionDialog> dlg = new Akonadi::CollectionDialog;
-        dlg->setMimeTypeFilter( mimeTypes );
-        dlg->setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
-        dlg->setCaption( i18nc( "@title:window", "Select Address Book" ) );
-        dlg->setDescription(
-          i18nc( "@info",
-                 "Select the address book where the contact will be saved:" ) );
-        dlg->changeCollectionDialogOptions( Akonadi::CollectionDialog::KeepTreeExpanded );
+        QPointer<SelectedCollectionDialog> dlg = new SelectedCollectionDialog( mParentWidget );
 
         bool gotIt = true;
         if ( dlg->exec() ) {

@@ -22,8 +22,6 @@
 
 #include "kdepim_export.h"
 
-#include <Akonadi/CollectionDialog>
-
 #include <kjob.h>
 
 namespace Akonadi {
@@ -35,18 +33,6 @@ class Addressee;
 }
 
 namespace KPIM {
-
-class SelectedCollectionDialog : public Akonadi::CollectionDialog
-{
-    Q_OBJECT
-public:
-    explicit SelectedCollectionDialog(QWidget *parent = 0);
-    ~SelectedCollectionDialog();
-
-private:
-    void readConfig();
-    void writeConfig();
-};
 
 /**
  * @short A job to add a new contact to Akonadi.

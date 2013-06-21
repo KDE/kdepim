@@ -53,6 +53,7 @@ set(kdepim_LIB_SRCS
    misc/statisticsproxymodel.cpp
    widgets/customlogwidget.cpp
    widgets/spellchecklineedit.cpp
+   widgets/selectedcollectiondialog.cpp
 )
 
 if (KDEPIM_INPROCESS_LDAP)

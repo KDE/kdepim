@@ -18,6 +18,8 @@
 */
 
 #include "addcontactjob.h"
+#include <Akonadi/Collection>
+#include "widgets/selectedcollectiondialog.h"
 
 #include <akonadi/contact/contactsearchjob.h>
 #include <akonadi/item.h>
@@ -29,44 +31,6 @@
 #include <QtCore/QPointer>
 
 using namespace KPIM;
-
-SelectedCollectionDialog::SelectedCollectionDialog(QWidget *parent)
-    : Akonadi::CollectionDialog (parent)
-{
-    const QStringList mimeTypes( KABC::Addressee::mimeType() );
-    setMimeTypeFilter( mimeTypes );
-    setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
-    setCaption( i18nc( "@title:window", "Select Address Book" ) );
-    setDescription(
-                i18nc( "@info",
-                       "Select the address book where the contact will be saved:" ) );
-    changeCollectionDialogOptions( Akonadi::CollectionDialog::KeepTreeExpanded );
-    readConfig();
-    qDebug()<<" SelectedCollectionDialog::SelectedCollectionDialog";
-}
-
-SelectedCollectionDialog::~SelectedCollectionDialog()
-{
-    writeConfig();
-}
-
-void SelectedCollectionDialog::readConfig()
-{
-    KConfigGroup group( KGlobal::config(), "SelectedCollectionDialog" );
-    const QSize size = group.readEntry( "Size", QSize() );
-    if ( size.isValid() ) {
-        resize( size );
-    } else {
-        resize( 600, 400 );
-    }
-}
-
-void SelectedCollectionDialog::writeConfig()
-{
-    KConfigGroup group( KGlobal::config(), "SelectedCollectionDialog" );
-    group.writeEntry( "Size", size() );
-    group.sync();
-}
 
 class AddContactJob::Private
 {
