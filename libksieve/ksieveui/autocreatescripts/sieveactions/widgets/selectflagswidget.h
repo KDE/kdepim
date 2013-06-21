@@ -34,6 +34,9 @@ public:
     void setFlags(const QStringList& list);
     QStringList flags() const;
 private:
+    enum Type {
+        FlagsRealName = Qt::UserRole+1
+    };
     void init();
 };
 
