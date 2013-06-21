@@ -73,7 +73,7 @@ void ExportAddressbookJob::backupResources()
             KUrl url = Utils::resourcePath(agent);
             if (!url.isEmpty()) {
                 const QString filename = url.fileName();
-                const bool fileAdded  = archive()->addLocalFile(url.path(), archivePath + filename);
+                const bool fileAdded  = archive()->addLocalDirectory(url.path(), archivePath + filename);
                 if (fileAdded) {
                     const QString errorStr = Utils::storeResources(archive(), identifier, archivePath);
                     if (!errorStr.isEmpty())
