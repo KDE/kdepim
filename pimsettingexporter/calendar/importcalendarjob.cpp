@@ -85,6 +85,7 @@ void ImportCalendarJob::restoreResources()
                     }
                     settings.insert(QLatin1String("Path"),newUrl.path());
                     const QString newResource = mCreateResource->createResource( QString::fromLatin1("akonadi_ical_resource"), filename, settings );
+                    qDebug()<<" newResource"<<newResource;
 
                     const KArchiveEntry* fileDataEntry = mArchiveDirectory->entry(i.value());
                     if (fileDataEntry && fileDataEntry->isFile()) {
