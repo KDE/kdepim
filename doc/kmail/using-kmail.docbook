@@ -74,7 +74,7 @@ which allows you to show or hide several columns in the list.
          If you prefer to view your email in &HTML; format instead of plain text (Default) click on the bar located on the left hand side of the pane. The text on the bar will inform you which view you are in. If this bar is missing you can enable it in the <menuchoice><guimenu>Settings</guimenu></menuchoice><guisubmenu>Configure &kmail;...</guisubmenu> and select the <guiicon>Appearance</guiicon> icon. From there
          you want the <guilabel>Message Window</guilabel> tab, and select <guilabel>Show &HTML; status bar</guilabel>.</para>
        <para>You may choose how attachments appear in your messages through <menuchoice><guimenu>View</guimenu><guisubmenu>Attachments</guisubmenu></menuchoice>.
-         Your choices are:
+         Your choices are:</para>
          <itemizedlist>
            <listitem><para><guimenuitem>As Icons</guimenuitem> This choice will list all, attachments as icons, click to see them.</para></listitem>
            <listitem><para><guimenuitem>Smart</guimenuitem> This choice will show attachments as suggested by sender.</para></listitem>
@@ -82,7 +82,7 @@ which allows you to show or hide several columns in the list.
            <listitem><para><guimenuitem>Hide</guimenuitem> This will prevent all attachments to be shown in the message viewer.</para></listitem>
            <listitem><para><guimenuitem>In Header Only</guimenuitem> This will show attachments in the Header section only.</para></listitem>
          </itemizedlist>
-
+         <para>
             For complex messages you can show the the structure of the message of the message by selecting <menuchoice><guimenu>View</guimenu><guimenuitem>Show Message Structure</guimenuitem></menuchoice>,
             this will show in the message structure viewer below the preview pane.</para>
           <para>You can scroll through the message page-by-page using the <keycap>Page Up</keycap> and <keycap>Page Down</keycap> keys, or line-by-line using the
