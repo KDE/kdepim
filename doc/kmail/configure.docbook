@@ -896,18 +896,20 @@ information</guilabel> option.</para>
 activated, &kmail; will close the message window after replying to or forwarding the message that
 is displayed in the window. This only applies to the separate message window, not to the embedded
 message preview pane.</para>
-
+<para>By default, <guilabel>Enable access key</guilabel> is enabled. Access keys allow you to use the keyboard keys for functions which would perhaps normally be done with the mouse, such as following links.
+  For more information on access keys please see <ulink url="http://docs.kde.org/stable/en/applications/konqueror/accesskeys.html">Access keys</ulink></para>
 <para><guilabel>Show HTML status bar</guilabel> activates a bar at the left side of the reader
 pane that tells you if a message is &html; or not. This is important because
 &html; messages might imitate the look of a signed and encrypted message, so
 you should be aware of the fact that you are reading an &html; message. The &html;
 status bar itself cannot be influenced by the &html; code of the message.</para>
-
- <!-- Show spam status in fancy headers missing -->
  
 <para>Enable <guilabel>Replace smileys by emoticons</guilabel> if you want smileys 
 like <userinput>:-)</userinput> appearing in the message text to be 
-replaced by emoticons (small pictures).</para>
+replaced by emoticons (small pictures) such as
+<inlinemediaobject><imageobject>
+<imagedata fileref="smile.png" format="PNG"/></imageobject>
+</inlinemediaobject>.</para>
 
 <para>Enable <guilabel>Reduce font size for quoted text</guilabel> to show quoted 
 text with a smaller font.</para>
@@ -926,33 +928,17 @@ the world. As a default the encoding configured for the whole system is used.</p
 <para><guilabel>Override character encoding</guilabel>: 
 Changing this from its default <guilabel>Auto</guilabel> will force the use of the specified 
 encoding for all emails, regardless of what they specify themselves.</para>
+
+<para><guilabel>Minimum font size:</guilabel> This option allows you to set the smallest size a font will show as.
+  This can be helpful if you have a hard time reading really small fonts.</para>
+
+<para>To customize which headers you would like to view in the message window (&eg; subject, from, to, cc, bcc, date), click the <guibutton>Configure Custom Headers</guibutton> button next to <guilabel>Headers:</guilabel>.
+  Add your selection in the dialog that pops up. If you are using fancy headers, you can enable <guilabel>Show spam status in fancy headers</guilabel> here. Please note that if your email provider does not provide <application>Spamassassin</application>
+  services to check your email for spam, you will need to install it on your computer. &eg; through a package manager (Yast on &SuSE;, &ubuntu; Software Center on &ubuntu; &etc;).
+  For more information see: <link linkend="the-anti-spam-wizard">Anti-Spam Wizard</link> to set up spamassassin with &kmail;.</para>
 </sect2>
-<!-- completely changed lueck 31.05.2011
-<sect2 id="configure-appearance-headers">
-<title>Headers</title>
 
-<para>With <guilabel>Display message sizes</guilabel> selected there will be another
-column in the header pane that shows the messages' size.</para>
 
-<para><guilabel>Show crypto icons</guilabel> will add more status information
-to the <guilabel>Subject</guilabel> columns in the header pane: every message
-that has been signed will have a small <guiicon>Signed</guiicon> icon in front
-of the subject, every message that has been encrypted will have a small
-<guiicon>Encrypted</guiicon> icon in front of the subject. Note that you have
-to select a message once before these icons will appear, until then only
-question marks will be displayed.</para>
-
-<para><guilabel>Thread list of message headers</guilabel> will put all the messages
-in the header pane in a kind of tree list, so that the replies to a message are
-directly below that message.</para>
-
-<para>With <guilabel>Message header threading options</guilabel> you can select
-whether threads should appear expanded (<guilabel>open</guilabel>) by
-default or whether they should be collapsed (<guilabel>closed</guilabel>).
-You can of course still open/close threads using the  <guilabel>+</guilabel>/<guilabel>-</guilabel>
-buttons.</para>
-</sect2>
--->
 
 <sect2 id="configure-appearance-systemtray">
 <title>System Tray</title>
@@ -1113,28 +1099,7 @@ folder will be selected in &kmail;'s main window.
 	  </listitem>
 	</varlistentry-->
 	<!--missing: Configure Completion Order + Edit Recent Addresses -->
-	<varlistentry id="configure-composer-general-external-editor">
-	  <term>
-	    <guilabel>External Editor</guilabel>
-	  </term>
-	  <listitem>
-	    <para>
-	      If you do not like the Composer you can use a different
-	      editor. Note that the composer window will still open
-	      and the external editor will open as soon as you type
-	      just one character in the body of the message. If you are
-	      done, save the text and exit the editor. The text will
-	      now appear in the composer window, where you can send
-	      it. Note that your editor may not return immediately,
-	      you have to use &eg;
-	      <userinput>
-		<command>
-		  gvim <option>-f</option> <varname>%f</varname>
-		</command>
-	      </userinput> for <application>gvim</application>.
-	    </para>
-	  </listitem>
-	</varlistentry>
+
       </variablelist>
 
     </sect2>
@@ -1306,6 +1271,84 @@ of key words can be modified.</para>
 	Once you have made all of your autocorrect selections click the <guibutton>Apply</guibutton> button.
       </para>
  </sect2>
+  <sect2 id="configure-resize-image">
+   <title>Auto Resize Image</title>
+   <para>In some circumstances you may need to have &kmail; automatically resize image attachments on outgoing emails. &eg; Mail server limits. To do so, select <guilabel>Automatically resize images</guilabel>.
+     There are several options that come with this feature.</para>
+   <variablelist>
+     <varlistentry><term><guilabel>General</guilabel></term>
+       <listitem>
+         <para>Some general options for auto image resizing are as follows: If you need your images to keep the ratio of length and width intact &eg;
+           Photographs, select <guilabel>Keep ratio</guilabel>. The default behavior is for &kmail; to prompt and ask if you want to resize before resizing, if you want it to resize
+           without asking, unselect <guilabel>Ask before resizing</guilabel>. &kmail; will save the file in <acronym>JPG</acronym>, if you would rather have them save in
+           <acronym>PNG</acronym> format, select it from the <guilabel>Write to format</guilabel> drop down box.</para>
+        </listitem>
+     </varlistentry>
+     <varlistentry><term><guilabel>Image</guilabel></term>
+       <listitem>
+         <para> Say you have a relative that can only recieve image files of a certain size due to their email providers limits, you can use the <guilabel>Reduce image to maximum dimension:</guilabel> option
+           to select a size to reduce the image to and enter their email into the filters on the <guilabel>Recipients</guilabel> tab. The recipients tab is discussed in further detail at the end of this section.
+           If you need a custom size, choose the last option <guilabel>Custom</guilabel> from the width and height drop down boxes, and enter the number in the text box. You can also enlarge images by selecting
+           <guilabel>Enlarge image to minimum dimension</guilabel>. The last option allows you to skip images of a certain filesize (this will verify image size by width x height only).</para>
+       </listitem>
+     </varlistentry>
+     <varlistentry><term><guilabel>Filename</guilabel></term>
+       <listitem>
+         <variablelist>
+           <varlistentry><term><guilabel>Source filter</guilabel></term>
+             <listitem><para>If you would like the resizing to be done based on the name of the file, you would select the appropriate filter here. &eg; You need to send your boss multiple images daily,
+                 and your boss requires them to be the same size. You could name all of your work images work1, work2 &etc; then select <guilabel>Include all files whose names contains one of the patterns</guilabel> and
+                 enter work into the <guilabel>Pattern:</guilabel> text box. You can also exclude files in the same way by selecting
+                 <guilabel>Exclude all files whose names contains one of the patterns</guilabel>. The default behavior is no filtering.</para>
+             </listitem>
+           </varlistentry>
+           <varlistentry><term><guilabel>Image Format</guilabel></term>
+             <listitem>
+               <para> Select <guilabel>Resize all images with one of these formats</guilabel> to set a specific format to resize the image to.</para>
+               <itemizedlist>
+                 <listitem><para>When this option is enabled you must select the <guibutton>Select Format...</guibutton> button and select a format from the dialog.</para></listitem>
+               </itemizedlist>
+             </listitem>
+           </varlistentry>
+           <varlistentry><term><guilabel>Resize filename</guilabel></term>
+             <listitem>
+             <para>Select <guilabel>Rename resized images with the following pattern</guilabel> if you would like your resized images to be renamed with a specific pattern. Enter the pattern into the text box. You can use:
+               <simplelist>
+                 <member>%t set current time</member>
+                 <member>%d set current date</member>
+                 <member>%n original filename</member>
+                 <member>%e original extension</member>
+                 <member>%x new extension</member>
+                 </simplelist></para>
+             </listitem>
+           </varlistentry>
+         </variablelist>
+         </listitem>
+       </varlistentry>
+     <varlistentry><term><guilabel>Recipients</guilabel></term>
+       <listitem>
+       <para>This tab is where you would specify recipients that need to have resized images. &eg; grandma@myfamily.net; boss@mywork.com.
+         You need to decide if you need multiple or only one, and enter the email(s) into the text box using the <quote>;</quote> as a seperator when you have multiple. You can also specify
+         if you do not want certain recipient(s) images to be resized. The default is no filtering.</para>
+       </listitem>
+     </varlistentry>
+   </variablelist>
+ </sect2>
+
+ <sect2 id="configure-composer-general-external-editor">
+   <title>External Editor</title>
+   <variablelist>
+     <varlistentry>
+       <term><guilabel>Use external editor instead of composer</guilabel></term>
+       <listitem>
+         <para>This selection allows you to use a different editor. Please note that the composer window will still open,
+           and the external editor will open on top of the composer window. When you are  done, save the text and exit the editor.
+           The text will now appear in the composer window, where you can send it. Note that your editor may not return immediately, you have to use &eg;
+           <userinput><command> gvim <option>-f</option> <varname>%f</varname></command></userinput> for <application>gvim</application>.</para>
+       </listitem>
+     </varlistentry>
+   </variablelist>
+</sect2>
 
 </sect1>
 
