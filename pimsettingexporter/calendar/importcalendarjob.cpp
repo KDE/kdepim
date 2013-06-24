@@ -57,7 +57,7 @@ void ImportCalendarJob::restoreResources()
     Q_EMIT info(i18n("Restore resources..."));
     if (!mHashCalendarArchive.isEmpty()) {
         QDir dir(mTempDirName);
-        dir.mkdir(Utils::mailsPath());
+        dir.mkdir(Utils::calendarPath());
         const QString copyToDirName(mTempDirName + QLatin1Char('/') + Utils::calendarPath());
 
         QHashIterator<QString, QString> i(mHashCalendarArchive);
@@ -90,6 +90,7 @@ void ImportCalendarJob::restoreResources()
                     const KArchiveEntry* fileDataEntry = mArchiveDirectory->entry(i.value());
                     if (fileDataEntry && fileDataEntry->isFile()) {
                         const KArchiveFile* fileData = static_cast<const KArchiveFile*>(fileDataEntry);
+                        //fileData->copyTo(copyToDirName);
                         //
                     }
                     //TODO store newResource name ?

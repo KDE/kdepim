@@ -59,7 +59,7 @@ void ImportAlarmJob::restoreResources()
     if (!mHashAlarmArchive.isEmpty()) {
         QHashIterator<QString, QString> i(mHashAlarmArchive);
         QDir dir(mTempDirName);
-        dir.mkdir(Utils::mailsPath());
+        dir.mkdir(Utils::alarmPath());
         const QString copyToDirName(mTempDirName + QLatin1Char('/') + Utils::alarmPath());
 
         while (i.hasNext()) {

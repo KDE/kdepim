@@ -58,7 +58,7 @@ void ImportAddressbookJob::restoreResources()
     if (!mHashAddressBookArchive.isEmpty()) {
         QHashIterator<QString, QString> i(mHashAddressBookArchive);
         QDir dir(mTempDirName);
-        dir.mkdir(Utils::mailsPath());
+        dir.mkdir(Utils::calendarPath());
         const QString copyToDirName(mTempDirName + QLatin1Char('/') + Utils::addressbookPath());
         while (i.hasNext()) {
             i.next();
