@@ -49,6 +49,8 @@
 
 #include "kmknotify.h"
 
+#include "newmailnotifierinterface.h"
+
 #include "addressline/recentaddresses.h"
 using KPIM::RecentAddresses;
 #include "addressline/completionordereditor.h"
@@ -430,6 +432,10 @@ QString AccountsPage::ReceivingTab::helpAnchor() const
 AccountsPageReceivingTab::AccountsPageReceivingTab( QWidget * parent )
   : ConfigModuleTab( parent )
 {
+  mNewMailNotifierInterface = new OrgFreedesktopAkonadiNewMailNotifierInterface(QLatin1String("org.freedesktop.Akonadi.NewMailNotifierAgent"), QLatin1String("/NewMailNotifierAgent"), QDBusConnection::sessionBus(), this);
+  if (!mNewMailNotifierInterface->isValid()) {
+      kDebug()<<" org.freedesktop.Akonadi.NewMailNotifierAgent not found. Please verify your installation";
+  }
   mAccountsReceiving.setupUi( this );
 
   mAccountsReceiving.vlay->setSpacing( KDialog::spacingHint() );
@@ -482,8 +488,6 @@ AccountsPageReceivingTab::AccountsPageReceivingTab( QWidget * parent )
   connect( mAccountsReceiving.mBeepNewMailCheck, SIGNAL(stateChanged(int)),
            this, SLOT(slotEmitChanged()) );
 
-  mAccountsReceiving.mVerboseNotificationCheck->setWhatsThis(
-  GlobalSettings::self()->verboseNewMailNotificationItem()->whatsThis() );
   connect( mAccountsReceiving.mVerboseNotificationCheck, SIGNAL(stateChanged(int)),
            this, SLOT(slotEmitChanged()) );
 
@@ -497,6 +501,7 @@ AccountsPageReceivingTab::AccountsPageReceivingTab( QWidget * parent )
 
 AccountsPageReceivingTab::~AccountsPageReceivingTab()
 {
+  delete mNewMailNotifierInterface;
   mRetrievalHash.clear();
 }
 
@@ -674,19 +679,19 @@ void AccountsPage::ReceivingTab::slotEditNotifications()
 
 void AccountsPage::ReceivingTab::doLoadFromGlobalSettings()
 {
-  mAccountsReceiving.mVerboseNotificationCheck->setChecked( GlobalSettings::self()->verboseNewMailNotification() );
+  mAccountsReceiving.mVerboseNotificationCheck->setChecked( mNewMailNotifierInterface->verboseMailNotification() );
 }
 
 void AccountsPage::ReceivingTab::doLoadOther()
 {
-  mAccountsReceiving.mBeepNewMailCheck->setChecked( GlobalSettings::self()->beepOnMail() );
+  mAccountsReceiving.mBeepNewMailCheck->setChecked( mNewMailNotifierInterface->beepOnNewMails() );
 }
 
 void AccountsPage::ReceivingTab::save()
 {
   // Save Mail notification settings
-  GlobalSettings::self()->setBeepOnMail( mAccountsReceiving.mBeepNewMailCheck->isChecked() );
-  GlobalSettings::self()->setVerboseNewMailNotification( mAccountsReceiving.mVerboseNotificationCheck->isChecked() );
+  mNewMailNotifierInterface->setBeepOnNewMails( mAccountsReceiving.mBeepNewMailCheck->isChecked() );
+  mNewMailNotifierInterface->setVerboseMailNotification( mAccountsReceiving.mVerboseNotificationCheck->isChecked() );
 
   const QString resourceGroupPattern( "Resource %1" );
   QHashIterator<QString, QSharedPointer<RetrievalOptions> > it( mRetrievalHash );

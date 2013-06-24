@@ -18,13 +18,18 @@
 #include "importalarmjob.h"
 #include "archivestorage.h"
 
+#include "pimcommon/util/createresource.h"
+
 #include <KTempDir>
 #include <KStandardDirs>
 #include <KArchive>
 #include <KLocale>
 #include <KConfigGroup>
 
+#include <QDir>
 #include <QFile>
+
+static const QString storeAlarm = QLatin1String("backupalarm/");
 
 ImportAlarmJob::ImportAlarmJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep)
     : AbstractImportExportJob(parent, archiveStorage, typeSelected, numberOfStep)
@@ -53,12 +58,37 @@ void ImportAlarmJob::restoreResources()
     Q_EMIT info(i18n("Restore resources..."));
     if (!mHashAlarmArchive.isEmpty()) {
         QHashIterator<QString, QString> i(mHashAlarmArchive);
+        QDir dir(mTempDirName);
+        dir.mkdir(Utils::mailsPath());
+        const QString copyToDirName(mTempDirName + QLatin1Char('/') + Utils::alarmPath());
+
         while (i.hasNext()) {
             i.next();
             qDebug() << i.key() << ": " << i.value() << endl;
             QMap<QString, QVariant> settings;
             //FIXME
             if (i.key().contains(QLatin1String("akonadi_kalarm_resource_"))) {
+                const KArchiveEntry* fileResouceEntry = mArchiveDirectory->entry(i.key());
+                if (fileResouceEntry && fileResouceEntry->isFile()) {
+                    const KArchiveFile* file = static_cast<const KArchiveFile*>(fileResouceEntry);
+                    file->copyTo(copyToDirName);
+                    const QString resourceName(file->name());
+                    const QString filename(file->name());
+
+                    KSharedConfig::Ptr resourceConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + resourceName);
+
+                    KUrl newUrl = Utils::adaptResourcePath(resourceConfig, storeAlarm);
+
+                    const QString dataFile = i.value();
+                    const KArchiveEntry* dataResouceEntry = mArchiveDirectory->entry(dataFile);
+                    if (dataResouceEntry->isFile()) {
+                        const KArchiveFile* file = static_cast<const KArchiveFile*>(dataResouceEntry);
+                        file->copyTo(newUrl.path());
+                    }
+                    settings.insert(QLatin1String("Path"),newUrl.path());
+                    const QString newResource = mCreateResource->createResource( QString::fromLatin1("akonadi_ical_resource"), filename, settings );
+                    qDebug()<<" newResource"<<newResource;
+                }
                 //TODO
             }
 

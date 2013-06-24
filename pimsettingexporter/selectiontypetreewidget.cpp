@@ -66,8 +66,6 @@ void SelectionTypeTreeWidget::initialize()
     mKjotsItem->setText(0, QLatin1String("KJots"));
     createSubItem(mKjotsItem, Utils::Resources);
     createSubItem(mKjotsItem, Utils::Config);
-    //TODO remove it when implemented.
-    mKjotsItem->setHidden(true);
 }
 
 

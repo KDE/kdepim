@@ -344,7 +344,7 @@ K_GLOBAL_STATIC( KMMainWidget::PtrList, theMainWidgetList )
 
   m_notificationTimer.setInterval( 3 * 1000 );
   m_notificationTimer.setSingleShot( true );
-  connect( &m_notificationTimer, SIGNAL(timeout()), SLOT(slotShowNotification()) );
+  connect( &m_notificationTimer, SIGNAL(timeout()), SLOT(slotUpdateActionsAfterMailChecking()) );
 
 }
 
@@ -416,14 +416,13 @@ void KMMainWidget::slotEndCheckMail()
     m_notificationTimer.start();
 }
 
-void KMMainWidget::slotShowNotification()
+void KMMainWidget::slotUpdateActionsAfterMailChecking()
 {
-  if ( mCheckMailInProgress )
-    mCheckMailInProgress = false;
-  showNotifications();
+  mCheckMailInProgress = false;
+  updateActionsAfterMailChecking();
 }
 
-void KMMainWidget::showNotifications()
+void KMMainWidget::updateActionsAfterMailChecking()
 {
   if ( mCheckMailInProgress  )
     return;
@@ -434,92 +433,9 @@ void KMMainWidget::showNotifications()
   if ( !kmkernel->isOffline() && ( sendOnAll || (sendOnManual /*&& sendOnCheck*/ ) ) ) {
     slotSendQueued();
   }
-  if (  mCheckMail.isEmpty() )
-    return;
-
-  Akonadi::Collection::List collections;
-  QMap<Akonadi::Collection::Id, QList<Akonadi::Item::Id> >::const_iterator it = mCheckMail.constBegin();
-  QMap<Akonadi::Collection::Id, QList<Akonadi::Item::Id> >::const_iterator end = mCheckMail.constEnd();
-  while ( it != end ) {
-    Akonadi::Collection collection( it.key() );
-    if ( !it.value().isEmpty() )
-      collections << collection;
-    ++it;
-  }
-  if ( collections.isEmpty() )
-    return;
-
-  Akonadi::CollectionFetchJob *job = new Akonadi::CollectionFetchJob( collections, Akonadi::CollectionFetchJob::Base );
-  connect( job, SIGNAL(finished(KJob*)), this, SLOT(slotEndCheckFetchCollectionsDone(KJob*)) );
-}
-
-void KMMainWidget::slotEndCheckFetchCollectionsDone(KJob* job)
-{
-
-  // build summary for new mail message
-  bool showNotification = false;
-  QString summary;
-
-  if ( job && !job->error() ) {
-
-    Akonadi::CollectionFetchJob *colJob = static_cast<Akonadi::CollectionFetchJob *>(job);
-    Akonadi::Collection::List collections = colJob->collections();
-
-
-    Q_FOREACH( const Akonadi::Collection& collection, collections ) {
-      const QSharedPointer<FolderCollection> fd = FolderCollection::forCollection( collection,false );
-
-      if ( fd && !fd->ignoreNewMail() ) {
-        showNotification = true;
-        if ( GlobalSettings::self()->verboseNewMailNotification() ) {
-          const QString folderPath( MailCommon::Util::fullCollectionPath( collection ) );
-          const int numberOfMails = mCheckMail[ collection.id() ].count();
-          summary += "<br />" + i18np( "1 new message in %2",
-                                      "%1 new messages in %2",
-                                      numberOfMails, folderPath );
-        } else {
-          break;
-        }
-      }
-    }
-  }
-
   // update folder menus in case some mail got filtered to trash/current folder
   // and we can enable "empty trash/move all to trash" action etc.
   updateFolderMenu();
-
-  if ( !showNotification ) {
-    mCheckMail.clear();
-    return;
-  }
-
-  if ( GlobalSettings::self()->verboseNewMailNotification() ) {
-    summary = i18nc( "%1 is a list of the number of new messages per folder",
-                     "<b>New mail arrived</b><br />%1",
-                     summary );
-  } else {
-    summary = i18n( "New mail arrived" );
-  }
-
-  if ( kmkernel->xmlGuiInstance().isValid() ) {
-    KNotification::event( "new-mail-arrived",
-                          summary,
-                          QPixmap(),
-                          window(),
-                          KNotification::CloseOnTimeout,
-                          kmkernel->xmlGuiInstance() );
-  } else {
-    KNotification::event( "new-mail-arrived",
-                          summary,
-                          QPixmap(),
-                          window(),
-                          KNotification::CloseOnTimeout );
-  }
-
-  if ( GlobalSettings::self()->beepOnMail() ) {
-    KNotification::beep();
-  }
-  mCheckMail.clear();
 }
 
 void KMMainWidget::slotCollectionFetched( int collectionId )
@@ -617,11 +533,7 @@ void KMMainWidget::folderSelected( const Akonadi::Collection & col )
 
   mCurrentFolder = FolderCollection::forCollection( col );
 
-  if ( col.isValid() && folderIsAnImap
-#if 0 //PORT TO AKONADI
-       && ( !mMessageListView->isFolderOpen( mFolder ) )
-#endif
-       ) {
+  if ( col.isValid() && folderIsAnImap ) {
     if ( !isImapResourceOnline )
     {
         //mMessageListView->setCurrentFolder( 0 ); <-- useless in the new view: just do nothing
@@ -1343,11 +1255,6 @@ void KMMainWidget::slotItemAdded( const Akonadi::Item &msg, const Akonadi::Colle
   if ( col.isValid() ) {
     if ( col == CommonKernel->outboxCollectionFolder() ) {
       startUpdateMessageActionsTimer();
-    } else {
-      if ( !CommonKernel->folderIsSentMailFolder(col ) ) {
-          qDebug()<<" KMMainWidget::slotItemAdded col:"<<col.id()<<" msg.id"<<msg.id();
-          addInfoInNotification( col,msg.id() );
-      }
     }
   }
 }
@@ -1364,45 +1271,7 @@ void KMMainWidget::slotItemMoved( const Akonadi::Item &item, const Akonadi::Coll
   if ( item.isValid() && ( ( from.id() == CommonKernel->outboxCollectionFolder().id() )
                           || to.id() == CommonKernel->outboxCollectionFolder().id() ) ) {
     startUpdateMessageActionsTimer();
-  } else {
-    updateInfoInNotification( from, to, item.id() );
   }
-}
-
-void KMMainWidget::updateInfoInNotification( const Akonadi::Collection& from, const Akonadi::Collection& to, Akonadi::Item::Id id )
-{
-  if ( mCheckMail.contains( from.id() ) ) {
-    QList<Akonadi::Item::Id> idListFrom = mCheckMail[ from.id() ];
-    if ( idListFrom.contains( id ) ) {
-      idListFrom.removeAll( id );
-      mCheckMail[ from.id() ] = idListFrom;
-      if ( mCheckMail[from.id()].isEmpty() )
-        mCheckMail.remove( from.id() );
-    }
-    if ( !excludeSpecialFolder( to ) ) {
-      QList<Akonadi::Item::Id> idListTo = mCheckMail[ to.id() ];
-      idListTo.append( id );
-      mCheckMail[ to.id() ]=idListTo;
-    }
-  }
-}
-
-bool KMMainWidget::excludeSpecialFolder( const Akonadi::Collection &collection )
-{
-  if ( CommonKernel->outboxCollectionFolder() == collection ||
-       CommonKernel->sentCollectionFolder() == collection ||
-       CommonKernel->templatesCollectionFolder() == collection ||
-       CommonKernel->trashCollectionFolder() == collection ||
-       CommonKernel->draftsCollectionFolder() == collection )
-    return true;
-  return false;
-}
-
-void KMMainWidget::addInfoInNotification( const Akonadi::Collection &collection, Akonadi::Item::Id id)
-{
-  if ( excludeSpecialFolder( collection ) )
-    return;
-  mCheckMail[ collection.id() ].append( id );
 }
 
 //-------------------------------------------------------------------------

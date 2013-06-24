@@ -473,7 +473,7 @@ private slots:
   /** Updates identities when a transport has been renamed. */
   void transportRenamed( int id, const QString &oldName, const QString &newName );
   void itemDispatchStarted();
-  void instanceStatusChanged( Akonadi::AgentInstance );
+  void instanceStatusChanged( const Akonadi::AgentInstance &);
 
   void akonadiStateChanged( Akonadi::ServerManager::State );
   void slotProgressItemCompletedOrCanceled( KPIM::ProgressItem * item);
@@ -484,6 +484,7 @@ private slots:
   void slotDeleteIdentity( uint identity);
   void slotInstanceRemoved(const Akonadi::AgentInstance&);
   void slotSystemNetworkStatusChanged( Solid::Networking::Status );
+  void slotCollectionChanged(const Akonadi::Collection &, const QSet<QByteArray> &set);
   
 private:
   void resourceGoOnLine();

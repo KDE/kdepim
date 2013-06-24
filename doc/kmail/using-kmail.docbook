@@ -64,68 +64,30 @@ which allows you to show or hide several columns in the list.
 </para>
 </listitem>
 </varlistentry>
-  <varlistentry>
-    <term>Message preview pane (in the lower right by default)</term>
-      <listitem>
-       <para>This pane displays the currently selected message. You may choose how attachments appear in your messages through
-        <menuchoice><guimenu>View</guimenu><guisubmenu>Attachments</guisubmenu></menuchoice>. Your options are:</para>
-        <variablelist>
-          <varlistentry>
-            <term>
-              <guimenuitem>As Icons</guimenuitem>
-            </term>
-            <listitem>
-              <para>
-                This choice will list all, attachments as icons, click to see them.
-              </para>
-            </listitem>
-          </varlistentry>
-          <varlistentry>
-            <term>
-              <guimenuitem>Smart</guimenuitem>
-            </term>
-            <listitem>
-              <para>
-                This choice will show attachments as suggested by sender.
-              </para>
-            </listitem>
-          </varlistentry>
-          <varlistentry>
-            <term>
-              <guimenuitem>Inline</guimenuitem>
-            </term>
-            <listitem>
-              <para>
-                This choice will show all attachments inline if possible.
-              </para>
-            </listitem>
-          </varlistentry>
-          <varlistentry>
-            <term>
-              <guimenuitem>Hide</guimenuitem>
-            </term>
-            <listitem>
-              <para>
-                This will prevent all attachments to be shown in the message viewer.
-              </para>
-            </listitem>
-          </varlistentry>
-          <varlistentry>
-            <term>
-              <guimenuitem>In Header Only</guimenuitem>
-            </term>
-            <listitem>
-              <para>
-                This will show attachments in the Header section only.
-              </para>
-            </listitem>
-          </varlistentry>
-        </variablelist>
-	    <para>For complex messages you can show the the structure of the message of the message by selecting <menuchoice><guimenu>View</guimenu><guimenuitem>Show Message Structure</guimenuitem></menuchoice>,
-            this will show in the message structure viewer below the preview pane. You can scroll through the message page-by-page using the
-            <keycap>Page Up</keycap> and <keycap>Page Down</keycap> keys, or line-by-line using the <keycap>up arrow</keycap> and <keycap>down arrow</keycap>
-            keys; you can also use <link linkend="keyboard-shortcuts">keyboard shortcuts</link> to skip through your messages without having to use the mouse.</para>
-       </listitem>
+  <varlistentry><term>Message preview pane (in the lower right by default)</term>
+    <listitem>
+       <para>This pane displays the currently selected message. There are several options to change the view of this pane.
+         There are many header views (the top of the message) to choose from. Go to <menuchoice><guimenu>View</guimenu><guisubmenu>Headers</guisubmenu></menuchoice> and try them out until you find one you like!
+         If you decide that you need a custom header, you must configure it through <menuchoice><guimenu>Settings</guimenu><guisubmenu>Configure &kmail;...</guisubmenu></menuchoice> and select the <guiicon>Appearance</guiicon> icon. From there
+         you want the <guilabel>Message Window</guilabel> tab, and you will find the settings at the bottom with the label <guilabel>Headers:</guilabel>. For more information see: <link linkend="configure-appearance-message-window">Message Window configuration</link>.
+         If you do not care for any of the &kmail; provided options, you can download header themes through the last option <menuchoice><guimenu>View</guimenu><guisubmenu>Headers</guisubmenu><guimenuitem>Download New Themes</guimenuitem></menuchoice>.
+         If you prefer to view your email in &HTML; format instead of plain text (Default) click on the bar located on the left hand side of the pane. The text on the bar will inform you which view you are in. If this bar is missing you can enable it in the <menuchoice><guimenu>Settings</guimenu></menuchoice><guisubmenu>Configure &kmail;...</guisubmenu> and select the <guiicon>Appearance</guiicon> icon. From there
+         you want the <guilabel>Message Window</guilabel> tab, and select <guilabel>Show &HTML; status bar</guilabel>.</para>
+       <para>You may choose how attachments appear in your messages through <menuchoice><guimenu>View</guimenu><guisubmenu>Attachments</guisubmenu></menuchoice>.
+         Your choices are:</para>
+         <itemizedlist>
+           <listitem><para><guimenuitem>As Icons</guimenuitem> This choice will list all, attachments as icons, click to see them.</para></listitem>
+           <listitem><para><guimenuitem>Smart</guimenuitem> This choice will show attachments as suggested by sender.</para></listitem>
+           <listitem><para><guimenuitem>Inline</guimenuitem> This choice will show all attachments inline if possible.</para></listitem>
+           <listitem><para><guimenuitem>Hide</guimenuitem> This will prevent all attachments to be shown in the message viewer.</para></listitem>
+           <listitem><para><guimenuitem>In Header Only</guimenuitem> This will show attachments in the Header section only.</para></listitem>
+         </itemizedlist>
+         <para>
+            For complex messages you can show the the structure of the message of the message by selecting <menuchoice><guimenu>View</guimenu><guimenuitem>Show Message Structure</guimenuitem></menuchoice>,
+            this will show in the message structure viewer below the preview pane.</para>
+          <para>You can scroll through the message page-by-page using the <keycap>Page Up</keycap> and <keycap>Page Down</keycap> keys, or line-by-line using the
+            <keycap>Up arrow</keycap> and <keycap>Down arrow</keycap> keys; you can also use <link linkend="keyboard-shortcuts">keyboard shortcuts</link> to skip through your messages without having to use the mouse.</para>
+      </listitem>
   </varlistentry>
 </variablelist>
 

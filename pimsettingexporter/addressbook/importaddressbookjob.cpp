@@ -86,6 +86,7 @@ void ImportAddressbookJob::restoreResources()
                     settings.insert(QLatin1String("Path"),newUrl.path());
                     const QString newResource = mCreateResource->createResource( QString::fromLatin1("akonadi_vcarddir_resource"), filename, settings );
 
+                    qDebug()<<" newResource"<<newResource;
                     const QString mailFile = i.value();
                     //TODO import it.
 
@@ -111,6 +112,7 @@ void ImportAddressbookJob::restoreResources()
                     }
                     settings.insert(QLatin1String("Path"),newUrl.path());
                     const QString newResource = mCreateResource->createResource( QString::fromLatin1("akonadi_vcard_resource"), filename, settings );
+                    qDebug()<<" newResource"<<newResource;
                     //TODO restore it.
 
                     const KArchiveEntry* fileDataEntry = mArchiveDirectory->entry(i.value());

@@ -6,14 +6,14 @@
 <firstname>Daniel</firstname>
 <surname>Naber</surname>
 <affiliation><address>
-<email>daniel.naber@t-online.de</email>
+&Daniel.Naber.mail;
 </address></affiliation>
 </author>
 <author>
 <firstname>David</firstname>
 <surname>Rugge</surname>
 <affiliation><address>
-<email>davidrugge@mediaone.net</email>
+&David.Rugge.mail;
 </address></affiliation>
 </author>
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
@@ -107,29 +107,30 @@
 <title>Documentation</title>
 
 <para>Update for &kmail; 4.11 by
-Laurent Montel <email>montel@kde.org</email>.</para>
+Laurent Montel <email>montel@kde.org</email>.
+Scarlett Clark <email>scarlett@scarlettgatelyclark.com</email></para>
 
 <para>Update for &kmail; 1.7 by
-Ingo Kl&ouml;cker <email>kloecker@kde.de</email> and
-Marc Mutz <email>mutz@kde.org</email>,
-Anti-Spam Wizard chapter by Andreas Gungl <email>a.gungl@gmx.de</email>,
-section about filter log by Andreas Gungl <email>a.gungl@gmx.de</email> and
-Brad Hards <email>bradh@frogmouth.net</email>,
-additional changes by Daniel Naber <email>daniel.naber@t-online.de</email>.</para>
+Ingo Kl&ouml;cker &Ingo.Kloecker.mail; and
+&Marc.Mutz; &Marc.Mutz.mail;,
+Anti-Spam Wizard chapter by &Andreas.Gungl; &Andreas.Gungl.mail;,
+section about filter log by &Andreas.Gungl; &Andreas.Gungl.mail; and
+&Brad.Hards; &Brad.Hards.mail;,
+additional changes by &Daniel.Naber; &Daniel.Naber.mail;.</para>
 
-<para>Update for &kmail; 1.2 to 1.5 by Daniel Naber
-<email>daniel.naber@t-online.de</email>,
-<application>OpenPGP</application> chapter by Andreas Gungl
-<email>a.gungl@gmx.de</email> and Ingo Kl&ouml;cker <email>kloecker@kde.de</email>,
-message filter chapter by Marc Mutz
-<email>mutz@kde.org</email>, download filter chapter by Thorsten
-Zachmann <email>T.Zachmann@zagge.de</email>. Other parts have been
+<para>Update for &kmail; 1.2 to 1.5 by &Daniel.Naber;
+&Daniel.Naber.mail;,
+<application>OpenPGP</application> chapter by &Andreas.Gungl;
+&Andreas.Gungl.mail; and Ingo Kl&ouml;cker &Ingo.Kloecker.mail;,
+message filter chapter by &Marc.Mutz;
+&Marc.Mutz.mail;, download filter chapter by &Thorsten.Zachmann;
+&Thorsten.Zachmann.mail;. Other parts have been
 contributed by various &kmail; developers.</para>
 
 <para>&kmail; 1.0
-documentation by David Rugge <email>davidrugge@mediaone.net</email>.
+documentation by &David.Rugge; &David.Rugge.mail;.
 Original documentation by Markus Wuebben
-<email>markus.wuebben@kde.org</email>, Robert Williams
+<email>markus.&Bernd.Johannes.Wuebben.mail;</email>, Robert Williams
 <email>rwilliams@kde.org</email> (Editor).</para>
 
 <para>Thanks to Michael Elkins <email>me@cs.hmc.edu</email> for his excellent
