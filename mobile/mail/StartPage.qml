@@ -325,6 +325,7 @@ PlasmaComponents.Page {
   }
   //END MainWorkView
 
+   //BEGIN: SlideoutPanels
   SlideoutPanelContainer {
     anchors.fill: parent
     z: 100
@@ -449,6 +450,7 @@ PlasmaComponents.Page {
       ]
     }
   }
+  //END: SlideoutPanels
 
   QML.Loader {
     anchors.fill: parent
