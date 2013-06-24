@@ -167,6 +167,8 @@ void FolderSelectionDialog::showEvent( QShowEvent *event )
 {
   if ( !event->spontaneous () ) {
     focusTreeView();
+    FolderTreeView *view = d->folderTreeWidget->folderTreeView();
+    view->scrollTo( view->currentIndex() );
   }
   KDialog::showEvent( event );
 }
