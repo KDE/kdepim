@@ -128,6 +128,8 @@ namespace Util {
 
   MAILCOMMON_EXPORT bool foundMailer();
   MAILCOMMON_EXPORT bool isLocalCollection( const QString &resource );
+
+  MAILCOMMON_EXPORT bool ignoreNewMailInFolder(const Akonadi::Collection &collection);
 }
 
 }

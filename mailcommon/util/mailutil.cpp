@@ -38,6 +38,7 @@
 
 #include "mailutil.h"
 #include "mailutil_p.h"
+#include "mailcommon/collectionpage/newmailnotifierattribute.h"
 
 #include "calendarinterface.h"
 #include "job/expirejob.h"
@@ -561,11 +562,7 @@ QModelIndex MailCommon::Util::nextUnreadCollection( QAbstractItemModel *model,
         if ( ignoreCollectionCallback && ignoreCollectionCallback( collection ) ) {
           continue;
         }
-
-        const QSharedPointer<FolderCollection> fCollection =
-          FolderCollection::forCollection( collection, false );
-
-        if ( !fCollection->ignoreNewMail() ) {
+        if ( !ignoreNewMailInFolder(collection) ) {
           return index; // we found the next unread collection
         }
       }
@@ -573,6 +570,16 @@ QModelIndex MailCommon::Util::nextUnreadCollection( QAbstractItemModel *model,
   }
 
   return QModelIndex(); // no unread collection found
+}
+
+bool MailCommon::Util::ignoreNewMailInFolder(const Akonadi::Collection &collection)
+{
+    if ( collection.hasAttribute<NewMailNotifierAttribute>() ) {
+        if (collection.attribute<NewMailNotifierAttribute>()->ignoreNewMail()) {
+            return true;
+        }
+    }
+    return false;
 }
 
 Akonadi::Collection MailCommon::Util::parentCollectionFromItem( const Akonadi::Item &item )
