@@ -21,9 +21,11 @@
 #include "util/mailutil.h"
 #include "imapsettings.h"
 #include "pimcommon/util/pimutil.h"
+#include "mailcommon/collectionpage/newmailnotifierattribute.h"
 
 #include <Akonadi/ItemFetchJob>
 #include <Akonadi/ItemFetchScope>
+#include <Akonadi/CollectionModifyJob>
 
 using namespace Akonadi;
 
@@ -176,7 +178,7 @@ QString FolderCollection::configGroupName( const Akonadi::Collection &col )
 
 void FolderCollection::readConfig()
 {
-  const KConfigGroup configGroup( KernelIf->config(), configGroupName( mCollection ) );
+  KConfigGroup configGroup( KernelIf->config(), configGroupName( mCollection ) );
   mMailingListEnabled = configGroup.readEntry( "MailingListEnabled", false );
   mMailingList.readConfig( configGroup );
 
@@ -187,6 +189,17 @@ void FolderCollection::readConfig()
 
   mPutRepliesInSameFolder = configGroup.readEntry( "PutRepliesInSameFolder", false );
   mHideInSelectionDialog = configGroup.readEntry( "HideInSelectionDialog", false );
+
+  if (configGroup.hasKey(QLatin1String("IgnoreNewMail"))) {
+      if ( configGroup.readEntry( QLatin1String("IgnoreNewMail"), false ) ) {
+          //migrate config.
+          MailCommon::NewMailNotifierAttribute *newMailNotifierAttr = mCollection.attribute<MailCommon::NewMailNotifierAttribute>( Akonadi::Entity::AddIfMissing );
+          newMailNotifierAttr->setIgnoreNewMail(true);
+          new Akonadi::CollectionModifyJob( mCollection, this );
+          //TODO verify if it works;
+      }
+      configGroup.deleteEntry("IgnoreNewMail");
+  }
 
   const QString shortcut( configGroup.readEntry( "Shortcut" ) );
   if ( !shortcut.isEmpty() ) {
