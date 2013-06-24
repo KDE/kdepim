@@ -134,19 +134,6 @@ class MAILCOMMON_EXPORT FolderCollection : public QObject
       mHideInSelectionDialog = hide;
     }
 
-    /**
-     * Returns true if the user doesn't want to get notified about new mail
-     * in this folder.
-     */
-    bool ignoreNewMail() const
-    {
-      return mIgnoreNewMail;
-    }
-    void setIgnoreNewMail( bool b )
-    {
-      mIgnoreNewMail = b;
-    }
-
     QString mailingListPostAddress() const;
 
   protected slots:
@@ -164,9 +151,6 @@ class MAILCOMMON_EXPORT FolderCollection : public QObject
     bool mUseDefaultIdentity;
     uint mIdentity;
 
-    /** Should new mail in this folder be ignored? */
-    bool mIgnoreNewMail;
-
     /** Should replies to messages in this folder be put in here? */
     bool mPutRepliesInSameFolder;
 
@@ -176,8 +160,6 @@ class MAILCOMMON_EXPORT FolderCollection : public QObject
     /** shortcut associated with this folder or null, if none is configured. */
     KShortcut mShortcut;
     bool mWriteConfig;
-
-    bool mOldIgnoreNewMail;
 };
 
 }

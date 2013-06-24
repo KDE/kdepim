@@ -63,11 +63,9 @@ QSharedPointer<FolderCollection> FolderCollection::forCollection(
 
 FolderCollection::FolderCollection( const Akonadi::Collection & col, bool writeconfig )
   : mCollection( col ),
-    mIgnoreNewMail( false ),
     mPutRepliesInSameFolder( false ),
     mHideInSelectionDialog( false ),
-    mWriteConfig( writeconfig ),
-    mOldIgnoreNewMail( false )
+    mWriteConfig( writeconfig )
 {
   Q_ASSERT( col.isValid() );
   mIdentity = KernelIf->identityManager()->defaultIdentity().uoid();
@@ -189,8 +187,6 @@ void FolderCollection::readConfig()
 
   mPutRepliesInSameFolder = configGroup.readEntry( "PutRepliesInSameFolder", false );
   mHideInSelectionDialog = configGroup.readEntry( "HideInSelectionDialog", false );
-  mIgnoreNewMail = configGroup.readEntry( "IgnoreNewMail", false );
-  mOldIgnoreNewMail = mIgnoreNewMail;
 
   const QString shortcut( configGroup.readEntry( "Shortcut" ) );
   if ( !shortcut.isEmpty() ) {
@@ -245,10 +241,6 @@ void FolderCollection::writeConfig() const
       configGroup.writeEntry( "HideInSelectionDialog", mHideInSelectionDialog );
   else
       configGroup.deleteEntry("HideInSelectionDialog");
-  if (mIgnoreNewMail)
-      configGroup.writeEntry( "IgnoreNewMail", mIgnoreNewMail );
-  else
-      configGroup.deleteEntry("IgnoreNewMail");
 
   if ( !mShortcut.isEmpty() ) {
     configGroup.writeEntry( "Shortcut", mShortcut.toString() );
@@ -256,9 +248,12 @@ void FolderCollection::writeConfig() const
     configGroup.deleteEntry( "Shortcut" );
   }
 
+  //TODO reimplement
+#if 0
   if ( mIgnoreNewMail != mOldIgnoreNewMail ) {
     KernelIf->updateSystemTray();
   }
+#endif
 }
 
 void FolderCollection::setShortcut( const KShortcut &sc )

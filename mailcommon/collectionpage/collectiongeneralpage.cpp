@@ -447,7 +447,7 @@ void CollectionGeneralPage::load( const Akonadi::Collection &collection )
   mUseDefaultIdentityCheckBox->setChecked( mFolderCollection->useDefaultIdentity() );
 
   // ignore new mail
-  mNotifyOnNewMailCheckBox->setChecked( !mFolderCollection->ignoreNewMail() );
+  mNotifyOnNewMailCheckBox->setChecked( !Util::ignoreNewMailInFolder(collection) );
 
   const bool keepInFolder = ( mFolderCollection->canCreateMessages() &&
                               mFolderCollection->putRepliesInSameFolder() );
@@ -559,7 +559,6 @@ void CollectionGeneralPage::save( Collection &collection )
     mFolderCollection->setIdentity( mIdentityComboBox->currentIdentity() );
     mFolderCollection->setUseDefaultIdentity( mUseDefaultIdentityCheckBox->isChecked() );
 
-    mFolderCollection->setIgnoreNewMail( !mNotifyOnNewMailCheckBox->isChecked() );
     mFolderCollection->setPutRepliesInSameFolder( mKeepRepliesInSameFolderCheckBox->isChecked() );
     mFolderCollection->setHideInSelectionDialog( mHideInSelectionDialogCheckBox->isChecked() );
     mFolderCollection->writeConfig();
