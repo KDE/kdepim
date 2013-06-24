@@ -260,13 +260,6 @@ void FolderCollection::writeConfig() const
   } else {
     configGroup.deleteEntry( "Shortcut" );
   }
-
-  //TODO reimplement
-#if 0
-  if ( mIgnoreNewMail != mOldIgnoreNewMail ) {
-    KernelIf->updateSystemTray();
-  }
-#endif
 }
 
 void FolderCollection::setShortcut( const KShortcut &sc )
