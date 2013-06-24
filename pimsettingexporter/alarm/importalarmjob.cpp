@@ -86,7 +86,7 @@ void ImportAlarmJob::restoreResources()
                         file->copyTo(newUrl.path());
                     }
                     settings.insert(QLatin1String("Path"),newUrl.path());
-                    const QString newResource = mCreateResource->createResource( QString::fromLatin1("akonadi_ical_resource"), filename, settings );
+                    const QString newResource = mCreateResource->createResource( QString::fromLatin1("akonadi_kalarm_resource"), filename, settings );
                     qDebug()<<" newResource"<<newResource;
                 }
                 //TODO
