@@ -9,5 +9,6 @@
       <arg direction="in" type="x" name="windowId" />
       <arg direction="out" type="x" />
     </method>
+    <method name="printDebugInfo" />
   </interface>
 </node>

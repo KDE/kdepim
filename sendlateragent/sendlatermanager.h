@@ -43,6 +43,7 @@ public:
 
     void sendDone(SendLaterInfo *info);
     void sendError(SendLaterInfo *info, ErrorType type);
+    void printDebugInfo();
 
 public Q_SLOTS:
     void load();

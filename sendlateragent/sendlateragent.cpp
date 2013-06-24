@@ -100,6 +100,11 @@ void SendLaterAgent::showConfigureDialog(qlonglong windowId)
     delete dialog;
 }
 
+void SendLaterAgent::printDebugInfo()
+{
+    mManager->printDebugInfo();
+}
+
 
 AKONADI_AGENT_MAIN( SendLaterAgent )
 

@@ -40,17 +40,17 @@ ArchiveMailAgent::ArchiveMailAgent( const QString &id )
     KGlobal::locale()->insertCatalog( QLatin1String("libmailcommon") );
     KGlobal::locale()->insertCatalog( QLatin1String("akonadi_archivemail_agent") );
 
-    m_collectionMonitor = new Akonadi::Monitor( this );
-    m_collectionMonitor->fetchCollection( true );
-    m_collectionMonitor->ignoreSession( Akonadi::Session::defaultSession() );
-    m_collectionMonitor->collectionFetchScope().setAncestorRetrieval( Akonadi::CollectionFetchScope::All );
-    m_collectionMonitor->setMimeTypeMonitored( KMime::Message::mimeType() );
+    Akonadi::Monitor *collectionMonitor = new Akonadi::Monitor( this );
+    collectionMonitor->fetchCollection( true );
+    collectionMonitor->ignoreSession( Akonadi::Session::defaultSession() );
+    collectionMonitor->collectionFetchScope().setAncestorRetrieval( Akonadi::CollectionFetchScope::All );
+    collectionMonitor->setMimeTypeMonitored( KMime::Message::mimeType() );
 
 
     new ArchiveMailAgentAdaptor( this );
     Akonadi::DBusConnectionPool::threadConnection().registerObject( QLatin1String( "/ArchiveMailAgent" ), this, QDBusConnection::ExportAdaptors );
     Akonadi::DBusConnectionPool::threadConnection().registerService( QLatin1String( "org.freedesktop.Akonadi.ArchiveMailAgent" ) );
-    connect( m_collectionMonitor, SIGNAL(collectionRemoved(Akonadi::Collection)),
+    connect( collectionMonitor, SIGNAL(collectionRemoved(Akonadi::Collection)),
              this, SLOT(mailCollectionRemoved(Akonadi::Collection)) );
 #ifdef DEBUG_ARCHIVEMAILAGENT
     QTimer::singleShot(1000, mArchiveManager, SLOT(load()));

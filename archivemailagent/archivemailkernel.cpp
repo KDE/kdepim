@@ -35,6 +35,8 @@ ArchiveMailKernel::ArchiveMailKernel( QObject *parent )
     Akonadi::Session *session = new Akonadi::Session( "Archive Mail Kernel ETM", this );
     mFolderCollectionMonitor = new MailCommon::FolderCollectionMonitor( session, this );
 
+    mFolderCollectionMonitor->monitor()->setChangeRecordingEnabled(false);
+
     mEntityTreeModel = new Akonadi::EntityTreeModel( folderCollectionMonitor(), this );
     mEntityTreeModel->setIncludeUnsubscribed( false );
     mEntityTreeModel->setItemPopulationStrategy( Akonadi::EntityTreeModel::LazyPopulation );

@@ -133,4 +133,9 @@ void SendLaterManager::sendDone(SendLaterInfo *info)
     createSendInfoList();
 }
 
+void SendLaterManager::printDebugInfo()
+{
+    //TODO
+}
+
 #include "sendlatermanager.moc"

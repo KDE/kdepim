@@ -29,7 +29,7 @@
 #include <QDir>
 
 
-static const QString storeAddressbook = QLatin1String("backupcalendar/");
+static const QString storeAddressbook = QLatin1String("backupaddressbook/");
 
 ImportAddressbookJob::ImportAddressbookJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep)
     : AbstractImportExportJob(parent, archiveStorage, typeSelected, numberOfStep)
@@ -58,13 +58,12 @@ void ImportAddressbookJob::restoreResources()
     if (!mHashAddressBookArchive.isEmpty()) {
         QHashIterator<QString, QString> i(mHashAddressBookArchive);
         QDir dir(mTempDirName);
-        dir.mkdir(Utils::mailsPath());
+        dir.mkdir(Utils::addressbookPath());
         const QString copyToDirName(mTempDirName + QLatin1Char('/') + Utils::addressbookPath());
         while (i.hasNext()) {
             i.next();
             qDebug() << i.key() << ": " << i.value() << endl;
             QMap<QString, QVariant> settings;
-            //FIXME
             if (i.key().contains(QLatin1String("akonadi_vcarddir_resource_"))) {
                 const KArchiveEntry* fileResouceEntry = mArchiveDirectory->entry(i.key());
                 if (fileResouceEntry && fileResouceEntry->isFile()) {
@@ -87,7 +86,14 @@ void ImportAddressbookJob::restoreResources()
                     const QString newResource = mCreateResource->createResource( QString::fromLatin1("akonadi_vcarddir_resource"), filename, settings );
 
                     qDebug()<<" newResource"<<newResource;
-                    const QString mailFile = i.value();
+                    const KArchiveEntry* fileDataEntry = mArchiveDirectory->entry(i.value());
+                    if (fileDataEntry && fileDataEntry->isFile()) {
+                        const KArchiveFile* fileData = static_cast<const KArchiveFile*>(fileDataEntry);
+                        //TODO save and extract file.
+                        //fileData->copyTo(copyToDirName);
+                        //
+                    }
+
                     //TODO import it.
 
                 }
@@ -118,10 +124,9 @@ void ImportAddressbookJob::restoreResources()
                     const KArchiveEntry* fileDataEntry = mArchiveDirectory->entry(i.value());
                     if (fileDataEntry && fileDataEntry->isFile()) {
                         const KArchiveFile* fileData = static_cast<const KArchiveFile*>(fileDataEntry);
-                        //
+                        fileData->copyTo(newUrl.path());
                     }
                 }
-                //TODO
             }
 
         }
