@@ -29,7 +29,7 @@
 #include <QDir>
 
 
-static const QString storeAddressbook = QLatin1String("backupcalendar/");
+static const QString storeAddressbook = QLatin1String("backupaddressbook/");
 
 ImportAddressbookJob::ImportAddressbookJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep)
     : AbstractImportExportJob(parent, archiveStorage, typeSelected, numberOfStep)
@@ -58,7 +58,7 @@ void ImportAddressbookJob::restoreResources()
     if (!mHashAddressBookArchive.isEmpty()) {
         QHashIterator<QString, QString> i(mHashAddressBookArchive);
         QDir dir(mTempDirName);
-        dir.mkdir(Utils::calendarPath());
+        dir.mkdir(Utils::addressbookPath());
         const QString copyToDirName(mTempDirName + QLatin1Char('/') + Utils::addressbookPath());
         while (i.hasNext()) {
             i.next();
