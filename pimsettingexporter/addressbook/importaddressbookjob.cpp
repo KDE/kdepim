@@ -55,82 +55,97 @@ void ImportAddressbookJob::start()
 void ImportAddressbookJob::restoreResources()
 {
     Q_EMIT info(i18n("Restore resources..."));
-    if (!mHashAddressBookArchive.isEmpty()) {
-        QHashIterator<QString, QString> i(mHashAddressBookArchive);
+    if (!mListAddressBook.isEmpty()) {
         QDir dir(mTempDirName);
         dir.mkdir(Utils::addressbookPath());
         const QString copyToDirName(mTempDirName + QLatin1Char('/') + Utils::addressbookPath());
-        while (i.hasNext()) {
-            i.next();
-            qDebug() << i.key() << ": " << i.value() << endl;
+
+        for (int i = 0; i < mListAddressBook.size(); ++i) {
+            resourceFiles value = mListAddressBook.at(i);
             QMap<QString, QVariant> settings;
-            if (i.key().contains(QLatin1String("akonadi_vcarddir_resource_"))) {
-                const KArchiveEntry* fileResouceEntry = mArchiveDirectory->entry(i.key());
+            if (value.akonadiConfigFile.contains(QLatin1String("akonadi_vcarddir_resource_"))) {
+                const KArchiveEntry* fileResouceEntry = mArchiveDirectory->entry(value.akonadiConfigFile);
                 if (fileResouceEntry && fileResouceEntry->isFile()) {
                     const KArchiveFile* file = static_cast<const KArchiveFile*>(fileResouceEntry);
                     file->copyTo(copyToDirName);
-                    const QString resourceName(file->name());
-                    const QString filename(file->name());
+                    QString resourceName(file->name());
+
+                    QString filename(file->name());
+                    //TODO adapt filename otherwise it will use all the time the same filename.
+                    qDebug()<<" filename :"<<filename;
 
                     KSharedConfig::Ptr resourceConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + resourceName);
 
-                    KUrl newUrl = Utils::adaptResourcePath(resourceConfig, storeAddressbook);
+                    const KUrl newUrl = Utils::adaptResourcePath(resourceConfig, storeAddressbook);
 
-                    const QString dataFile = i.value();
+                    const QString dataFile = value.akonadiResources;
                     const KArchiveEntry* dataResouceEntry = mArchiveDirectory->entry(dataFile);
                     if (dataResouceEntry->isFile()) {
                         const KArchiveFile* file = static_cast<const KArchiveFile*>(dataResouceEntry);
                         file->copyTo(newUrl.path());
                     }
-                    settings.insert(QLatin1String("Path"),newUrl.path());
+                    settings.insert(QLatin1String("Path"), newUrl.path());
+
+                    const QString agentConfigFile = value.akonadiAgentConfigFile;
+                    if (!agentConfigFile.isEmpty()) {
+                        const KArchiveEntry *akonadiAgentConfigEntry = mArchiveDirectory->entry(agentConfigFile);
+                        if (akonadiAgentConfigEntry->isFile()) {
+                            const KArchiveFile* file = static_cast<const KArchiveFile*>(akonadiAgentConfigEntry);
+                            //TODO extract zip
+                            file->copyTo(copyToDirName);
+                            resourceName = file->name();
+                            KSharedConfig::Ptr akonadiAgentConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + resourceName);
+                            filename = Utils::akonadiAgentName(akonadiAgentConfig);
+                        }
+                    }
+
                     const QString newResource = mCreateResource->createResource( QString::fromLatin1("akonadi_vcarddir_resource"), filename, settings );
-
                     qDebug()<<" newResource"<<newResource;
-                    const KArchiveEntry* fileDataEntry = mArchiveDirectory->entry(i.value());
-                    if (fileDataEntry && fileDataEntry->isFile()) {
-                        const KArchiveFile* fileData = static_cast<const KArchiveFile*>(fileDataEntry);
-                        //TODO save and extract file.
-                        //fileData->copyTo(copyToDirName);
-                        //
-                    }
-
-                    //TODO import it.
-
+                    //TODO extract zip
                 }
-                //TODO unzip it
-            } else if ( i.key().contains(QLatin1String("akonadi_vcard_resource_"))) {
-                const KArchiveEntry* fileResouceEntry = mArchiveDirectory->entry(i.key());
+            } else if (value.akonadiConfigFile.contains(QLatin1String("akonadi_vcard_resource_"))) {
+                //TODO
+                const KArchiveEntry* fileResouceEntry = mArchiveDirectory->entry(value.akonadiConfigFile);
                 if (fileResouceEntry && fileResouceEntry->isFile()) {
                     const KArchiveFile* file = static_cast<const KArchiveFile*>(fileResouceEntry);
                     file->copyTo(copyToDirName);
-                    const QString resourceName(file->name());
-                    const QString filename(file->name());
+                    QString resourceName(file->name());
+
+                    QString filename(file->name());
+                    //TODO adapt filename otherwise it will use all the time the same filename.
+                    qDebug()<<" filename :"<<filename;
 
                     KSharedConfig::Ptr resourceConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + resourceName);
 
-                    KUrl newUrl = Utils::adaptResourcePath(resourceConfig, storeAddressbook);
+                    const KUrl newUrl = Utils::adaptResourcePath(resourceConfig, storeAddressbook);
 
-                    const QString dataFile = i.value();
+                    const QString dataFile = value.akonadiResources;
                     const KArchiveEntry* dataResouceEntry = mArchiveDirectory->entry(dataFile);
                     if (dataResouceEntry->isFile()) {
                         const KArchiveFile* file = static_cast<const KArchiveFile*>(dataResouceEntry);
                         file->copyTo(newUrl.path());
                     }
-                    settings.insert(QLatin1String("Path"),newUrl.path());
+                    settings.insert(QLatin1String("Path"), newUrl.path());
+
+                    const QString agentConfigFile = value.akonadiAgentConfigFile;
+                    if (!agentConfigFile.isEmpty()) {
+                        const KArchiveEntry *akonadiAgentConfigEntry = mArchiveDirectory->entry(agentConfigFile);
+                        if (akonadiAgentConfigEntry->isFile()) {
+                            const KArchiveFile* file = static_cast<const KArchiveFile*>(akonadiAgentConfigEntry);
+                            file->copyTo(copyToDirName);
+                            resourceName = file->name();
+                            KSharedConfig::Ptr akonadiAgentConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + resourceName);
+                            filename = Utils::akonadiAgentName(akonadiAgentConfig);
+                        }
+                    }
+
                     const QString newResource = mCreateResource->createResource( QString::fromLatin1("akonadi_vcard_resource"), filename, settings );
                     qDebug()<<" newResource"<<newResource;
-                    //TODO restore it.
-
-                    const KArchiveEntry* fileDataEntry = mArchiveDirectory->entry(i.value());
-                    if (fileDataEntry && fileDataEntry->isFile()) {
-                        const KArchiveFile* fileData = static_cast<const KArchiveFile*>(fileDataEntry);
-                        fileData->copyTo(newUrl.path());
-                    }
                 }
             }
-
         }
     }
+
     Q_EMIT info(i18n("Resources restored."));
 }
 
@@ -154,17 +169,23 @@ void ImportAddressbookJob::storeAddressBookArchiveResource(const KArchiveDirecto
     Q_FOREACH(const QString& entryName, dir->entries()) {
         const KArchiveEntry *entry = dir->entry(entryName);
         if (entry && entry->isDirectory()) {
-            const KArchiveDirectory*resourceDir = static_cast<const KArchiveDirectory*>(entry);
+            const KArchiveDirectory *resourceDir = static_cast<const KArchiveDirectory*>(entry);
             const QStringList lst = resourceDir->entries();
-            if (lst.count() == 2) {
+
+            if (lst.count() >= 2) {
                 const QString archPath(prefix + QLatin1Char('/') + entryName + QLatin1Char('/'));
-                const QString name(lst.at(0));
-                if (name.endsWith(QLatin1String("rc")) && (name.contains(QLatin1String("akonadi_vcarddir_resource_")) ||
-                                                         name.contains(QLatin1String("akonadi_vcard_resource_")))) {
-                    mHashAddressBookArchive.insert(archPath + name,archPath +lst.at(1));
-                } else {
-                    mHashAddressBookArchive.insert(archPath +lst.at(1),archPath + name);
+                resourceFiles files;
+                Q_FOREACH(const QString &name, lst) {
+                    if (name.endsWith(QLatin1String("rc")) && (name.contains(QLatin1String("akonadi_vcarddir_resource_")) ||
+                                                               name.contains(QLatin1String("akonadi_vcard_resource_")))) {
+                        files.akonadiConfigFile = archPath + name;
+                    } else if (name.startsWith(Utils::prefixAkonadiConfigFile())) {
+                        files.akonadiAgentConfigFile = archPath + name;
+                    } else {
+                        files.akonadiResources = archPath + name;
+                    }
                 }
+                mListAddressBook.append(files);
             } else {
                 kDebug()<<" Problem in archive. number of file "<<lst.count();
             }

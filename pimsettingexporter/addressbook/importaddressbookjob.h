@@ -38,8 +38,8 @@ private:
     void storeAddressBookArchiveResource(const KArchiveDirectory *dir, const QString &prefix);
     void importkaddressBookConfig(const KArchiveFile* file, const QString &config, const QString &filename,const QString &prefix);
     void restoreResources();
-    void restoreConfig();
-    QHash<QString, QString> mHashAddressBookArchive;
+    void restoreConfig();    
+    QList<resourceFiles> mListAddressBook;
 };
 
 #endif // IMPORTADDRESSBOOKJOB_H
