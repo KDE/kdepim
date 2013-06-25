@@ -39,7 +39,6 @@ ImportCalendarJob::ImportCalendarJob(QWidget *parent, Utils::StoredTypes typeSel
 
 ImportCalendarJob::~ImportCalendarJob()
 {
-
 }
 
 void ImportCalendarJob::start()
@@ -55,47 +54,51 @@ void ImportCalendarJob::start()
 void ImportCalendarJob::restoreResources()
 {
     Q_EMIT info(i18n("Restore resources..."));
-    if (!mHashCalendarArchive.isEmpty()) {
+    if (!mListCalendarArchive.isEmpty()) {
         QDir dir(mTempDirName);
         dir.mkdir(Utils::calendarPath());
         const QString copyToDirName(mTempDirName + QLatin1Char('/') + Utils::calendarPath());
 
-        QHashIterator<QString, QString> i(mHashCalendarArchive);
-        while (i.hasNext()) {
-            i.next();
-            qDebug() << i.key() << ": " << i.value() << endl;
+        for (int i = 0; i < mListCalendarArchive.size(); ++i) {
+            resourceFiles value = mListCalendarArchive.at(i);
             QMap<QString, QVariant> settings;
-            if (i.key().contains(QLatin1String("akonadi_ical_resource_"))) {
-                const KArchiveEntry* fileResouceEntry = mArchiveDirectory->entry(i.key());
+            if (value.akonadiConfigFile.contains(QLatin1String("akonadi_ical_resource_"))) {
+                const KArchiveEntry* fileResouceEntry = mArchiveDirectory->entry(value.akonadiConfigFile);
                 if (fileResouceEntry && fileResouceEntry->isFile()) {
                     const KArchiveFile* file = static_cast<const KArchiveFile*>(fileResouceEntry);
                     file->copyTo(copyToDirName);
-                    const QString resourceName(file->name());
-                    const QString filename(file->name());
+                    QString resourceName(file->name());
+
+                    QString filename(file->name());
                     //TODO adapt filename otherwise it will use all the time the same filename.
                     qDebug()<<" filename :"<<filename;
 
                     KSharedConfig::Ptr resourceConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + resourceName);
 
-                    KUrl newUrl = Utils::adaptResourcePath(resourceConfig, storeCalendar);
+                    const KUrl newUrl = Utils::adaptResourcePath(resourceConfig, storeCalendar);
 
-
-                    const QString dataFile = i.value();
+                    const QString dataFile = value.akonadiResources;
                     const KArchiveEntry* dataResouceEntry = mArchiveDirectory->entry(dataFile);
                     if (dataResouceEntry->isFile()) {
                         const KArchiveFile* file = static_cast<const KArchiveFile*>(dataResouceEntry);
                         file->copyTo(newUrl.path());
                     }
                     settings.insert(QLatin1String("Path"), newUrl.path());
-                    const QString newResource = mCreateResource->createResource( QString::fromLatin1("akonadi_ical_resource"), QLatin1String("sssssssssssss"), settings );
-                    qDebug()<<" newResource"<<newResource;
 
-                    const KArchiveEntry* fileDataEntry = mArchiveDirectory->entry(i.value());
-                    if (fileDataEntry && fileDataEntry->isFile()) {
-                        const KArchiveFile* fileData = static_cast<const KArchiveFile*>(fileDataEntry);
-                        fileData->copyTo(newUrl.path());
+                    const QString agentConfigFile = value.akonadiAgentConfigFile;
+                    if (!agentConfigFile.isEmpty()) {
+                        const KArchiveEntry *akonadiAgentConfigEntry = mArchiveDirectory->entry(agentConfigFile);
+                        if (akonadiAgentConfigEntry->isFile()) {
+                            const KArchiveFile* file = static_cast<const KArchiveFile*>(akonadiAgentConfigEntry);
+                            file->copyTo(copyToDirName);
+                            resourceName = file->name();
+                            KSharedConfig::Ptr akonadiAgentConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + resourceName);
+                            filename = Utils::akonadiAgentName(akonadiAgentConfig);
+                        }
                     }
-                    //TODO store newResource name ?
+
+                    const QString newResource = mCreateResource->createResource( QString::fromLatin1("akonadi_ical_resource"), filename, settings );
+                    qDebug()<<" newResource"<<newResource;
                 }
             }
         }
@@ -123,20 +126,23 @@ void ImportCalendarJob::storeCalendarArchiveResource(const KArchiveDirectory *di
     Q_FOREACH(const QString& entryName, dir->entries()) {
         const KArchiveEntry *entry = dir->entry(entryName);
         if (entry && entry->isDirectory()) {
-            const KArchiveDirectory*resourceDir = static_cast<const KArchiveDirectory*>(entry);
+            const KArchiveDirectory *resourceDir = static_cast<const KArchiveDirectory*>(entry);
             const QStringList lst = resourceDir->entries();
 
-            //TODO adapt it.
             if (lst.count() >= 2) {
                 const QString archPath(prefix + QLatin1Char('/') + entryName + QLatin1Char('/'));
-                const QString name(lst.at(0));
-                if (name.endsWith(QLatin1String("rc"))&&(name.contains(QLatin1String("akonadi_ical_resource_")))) {
-                    mHashCalendarArchive.insert(archPath + name,archPath +lst.at(1));
-                } else {
-                    mHashCalendarArchive.insert(archPath +lst.at(1),archPath + name);
+                resourceFiles files;
+                Q_FOREACH(const QString &name, lst) {
+                    if (name.endsWith(QLatin1String("rc")) && (name.contains(QLatin1String("akonadi_ical_resource_")))) {
+                        files.akonadiConfigFile = archPath + name;
+                    } else if (name.startsWith(Utils::prefixAkonadiConfigFile())) {
+                        files.akonadiAgentConfigFile = archPath + name;
+                    } else {
+                        files.akonadiResources = archPath + name;
+                    }
                 }
+                mListCalendarArchive.append(files);
             } else {
-                kDebug()<<" lst.at(0)"<<lst.at(0);
                 kDebug()<<" Problem in archive. number of file "<<lst.count();
             }
         }

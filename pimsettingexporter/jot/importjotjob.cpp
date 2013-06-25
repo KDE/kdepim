@@ -97,7 +97,6 @@ void ImportJotJob::storeAlarmArchiveResource(const KArchiveDirectory *dir, const
                     mHashJotArchive.insert(archPath +lst.at(1),archPath + name);
                 }
             } else {
-                kDebug()<<" lst.at(0)"<<lst.at(0);
                 kDebug()<<" Problem in archive. number of file "<<lst.count();
             }
         }

@@ -242,3 +242,11 @@ KUrl Utils::akonadiAgentConfigPath(const QString &identifier)
         return KUrl(configFile);
     return KUrl();
 }
+
+QString Utils::akonadiAgentName(KSharedConfig::Ptr config)
+{
+    KConfigGroup group = config->group(QLatin1String("Agent"));
+    const QString name = group.readEntry(QLatin1String("Name"),QString());
+    return name;
+}
+

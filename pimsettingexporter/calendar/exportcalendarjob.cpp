@@ -79,13 +79,16 @@ void ExportCalendarJob::backupResources()
 
             KUrl url = Utils::resourcePath(agent);
             if (!url.isEmpty()) {
+
                 QString filename = url.fileName();
                 const bool fileAdded  = archive()->addLocalFile(url.path(), archivePath + filename);
                 if (fileAdded) {
                     const QString errorStr = Utils::storeResources(archive(), identifier, archivePath);
                     if (!errorStr.isEmpty())
                         Q_EMIT error(errorStr);
+
                     Q_EMIT info(i18n("\"%1\" was backuped.",filename));
+
                     url = Utils::akonadiAgentConfigPath(identifier);
                     if (!url.isEmpty()) {
                         filename = url.fileName();
@@ -95,6 +98,7 @@ void ExportCalendarJob::backupResources()
                         else
                             Q_EMIT info(i18n("\"%1\" was backuped.",filename));
                     }
+
                 } else {
                     Q_EMIT error(i18n("\"%1\" file cannot be added to backup file.",filename));
                 }

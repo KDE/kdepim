@@ -25,6 +25,14 @@ namespace Akonadi {
 class AgentInstance;
 }
 
+
+struct resourceFiles
+{
+    QString akonadiConfigFile;
+    QString akonadiResources;
+    QString akonadiAgentConfigFile;
+};
+
 namespace Utils {
 enum StoredType {
     None = 0,
@@ -52,6 +60,7 @@ QString addressbookPath();
 QString alarmPath();
 QString jotPath();
 QString prefixAkonadiConfigFile();
+QString akonadiAgentName(KSharedConfig::Ptr config);
 
 void convertCollectionListToRealPath(KConfigGroup &group, const QString &currentKey);
 void convertCollectionToRealPath(KConfigGroup &group, const QString &currentKey);
