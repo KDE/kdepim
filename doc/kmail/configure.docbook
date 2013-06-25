@@ -1286,7 +1286,7 @@ of key words can be modified.</para>
      </varlistentry>
      <varlistentry><term><guilabel>Image</guilabel></term>
        <listitem>
-         <para> Say you have a relative that can only recieve image files of a certain size due to their email providers limits, you can use the <guilabel>Reduce image to maximum dimension:</guilabel> option
+         <para> Say you have a relative that can only receive image files of a certain size due to their email providers limits, you can use the <guilabel>Reduce image to maximum dimension:</guilabel> option
            to select a size to reduce the image to and enter their email into the filters on the <guilabel>Recipients</guilabel> tab. The recipients tab is discussed in further detail at the end of this section.
            If you need a custom size, choose the last option <guilabel>Custom</guilabel> from the width and height drop down boxes, and enter the number in the text box. You can also enlarge images by selecting
            <guilabel>Enlarge image to minimum dimension</guilabel>. The last option allows you to skip images of a certain filesize (this will verify image size by width x height only).</para>
@@ -1328,7 +1328,7 @@ of key words can be modified.</para>
      <varlistentry><term><guilabel>Recipients</guilabel></term>
        <listitem>
        <para>This tab is where you would specify recipients that need to have resized images. &eg; grandma@myfamily.net; boss@mywork.com.
-         You need to decide if you need multiple or only one, and enter the email(s) into the text box using the <quote>;</quote> as a seperator when you have multiple. You can also specify
+         You need to decide if you need multiple or only one, and enter the email(s) into the text box using the <quote>;</quote> as a separator when you have multiple. You can also specify
          if you do not want certain recipient(s) images to be resized. The default is no filtering.</para>
        </listitem>
      </varlistentry>
