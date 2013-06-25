@@ -1,5 +1,5 @@
 /* -*- mode: C++; c-file-style: "gnu" -*-
-  Copyright (c) 2009 Montel Laurent <montel@kde.org>
+  Copyright (c) 2009-2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -77,9 +77,6 @@ class MAILCOMMON_EXPORT CollectionGeneralPage : public Akonadi::CollectionProper
     KComboBox *mContentsComboBox;
     KComboBox *mIncidencesForComboBox;
     QCheckBox *mSharedSeenFlagsCheckBox;
-  #if 0
-    QCheckBox   *mNewMailCheckBox;
-  #endif
     QCheckBox   *mNotifyOnNewMailCheckBox;
     QCheckBox   *mKeepRepliesInSameFolderCheckBox;
     QCheckBox   *mHideInSelectionDialogCheckBox;
