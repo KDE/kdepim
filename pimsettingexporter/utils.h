@@ -61,5 +61,6 @@ KUrl resourcePath(const Akonadi::AgentInstance &agent);
 KUrl adaptResourcePath(KSharedConfigPtr resourceConfig, const QString &storedData);
 QString storeResources(KZip *archive, const QString &identifier, const QString &path);
 QString createResourceUniqueName(const QString &originalName);
+QString akonadiAgentConfigPath(const QString &identifier);
 }
 #endif // UTILS_H

@@ -19,6 +19,8 @@
 
 #include "mailcommon/util/mailutil.h"
 
+#include <akonadi/private/xdgbasedirs_p.h>
+
 #include <KConfigGroup>
 #include <KStandardDirs>
 #include <KSharedConfig>
@@ -228,4 +230,9 @@ QString Utils::createResourceUniqueName(const QString &originalName)
     return QString();
 }
 
-
+QString Utils::akonadiAgentConfigPath(const QString &identifier)
+{
+    const QString relativeFileName = QString::fromLatin1("akonadi/agent_config_%1").arg(identifier);
+    const QString configFile = Akonadi::XdgBaseDirs::findResourceFile( "config", relativeFileName );
+    return configFile;
+}
