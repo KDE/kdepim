@@ -28,7 +28,7 @@ namespace MailCommon {
 
 class CollectionAnnotationsAttribute : public Akonadi::Attribute
 {
-  public:
+public:
     CollectionAnnotationsAttribute();
     CollectionAnnotationsAttribute( const QMap<QByteArray, QByteArray> &annotations );
 
@@ -40,7 +40,7 @@ class CollectionAnnotationsAttribute : public Akonadi::Attribute
     QByteArray serialized() const;
     void deserialize( const QByteArray &data );
 
-  private:
+private:
     QMap<QByteArray, QByteArray> mAnnotations;
 };
 
