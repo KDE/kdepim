@@ -18,6 +18,8 @@
 #include "importjotjob.h"
 #include "archivestorage.h"
 
+#include "pimcommon/util/createresource.h"
+
 #include <KTempDir>
 #include <KStandardDirs>
 #include <KArchive>
@@ -25,6 +27,9 @@
 #include <KConfigGroup>
 
 #include <QFile>
+#include <QDir>
+
+static const QString storeJot = QLatin1String("backupjot/");
 
 ImportJotJob::ImportJotJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep)
     : AbstractImportExportJob(parent, archiveStorage, typeSelected, numberOfStep)
@@ -49,20 +54,55 @@ void ImportJotJob::start()
 void ImportJotJob::restoreResources()
 {
     Q_EMIT info(i18n("Restore resources..."));
-    if (!mHashJotArchive.isEmpty()) {
-        QHashIterator<QString, QString> i(mHashJotArchive);
-        while (i.hasNext()) {
-            i.next();
-            qDebug() << i.key() << ": " << i.value() << endl;
-            QMap<QString, QVariant> settings;
-            //FIXME
-            if (i.key().contains(QLatin1String("akonadi_akonotes_resource_"))) {
-                //TODO
-            }
+    if (!mListJotArchive.isEmpty()) {
+        QDir dir(mTempDirName);
+        dir.mkdir(Utils::jotPath());
+        const QString copyToDirName(mTempDirName + QLatin1Char('/') + Utils::jotPath());
 
+        for (int i = 0; i < mListJotArchive.size(); ++i) {
+            resourceFiles value = mListJotArchive.at(i);
+            QMap<QString, QVariant> settings;
+            if (value.akonadiConfigFile.contains(QLatin1String("akonadi_akonotes_resource_"))) {
+                const KArchiveEntry* fileResouceEntry = mArchiveDirectory->entry(value.akonadiConfigFile);
+                if (fileResouceEntry && fileResouceEntry->isFile()) {
+                    const KArchiveFile* file = static_cast<const KArchiveFile*>(fileResouceEntry);
+                    file->copyTo(copyToDirName);
+                    QString resourceName(file->name());
+
+                    QString filename(file->name());
+                    //TODO adapt filename otherwise it will use all the time the same filename.
+                    qDebug()<<" filename :"<<filename;
+
+                    KSharedConfig::Ptr resourceConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + resourceName);
+
+                    const KUrl newUrl = Utils::adaptResourcePath(resourceConfig, storeJot);
+
+                    const QString dataFile = value.akonadiResources;
+                    const KArchiveEntry* dataResouceEntry = mArchiveDirectory->entry(dataFile);
+                    if (dataResouceEntry->isFile()) {
+                        const KArchiveFile* file = static_cast<const KArchiveFile*>(dataResouceEntry);
+                        file->copyTo(newUrl.path());
+                    }
+                    settings.insert(QLatin1String("Path"), newUrl.path());
+
+                    const QString agentConfigFile = value.akonadiAgentConfigFile;
+                    if (!agentConfigFile.isEmpty()) {
+                        const KArchiveEntry *akonadiAgentConfigEntry = mArchiveDirectory->entry(agentConfigFile);
+                        if (akonadiAgentConfigEntry->isFile()) {
+                            const KArchiveFile* file = static_cast<const KArchiveFile*>(akonadiAgentConfigEntry);
+                            file->copyTo(copyToDirName);
+                            resourceName = file->name();
+                            KSharedConfig::Ptr akonadiAgentConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + resourceName);
+                            filename = Utils::akonadiAgentName(akonadiAgentConfig);
+                        }
+                    }
+
+                    const QString newResource = mCreateResource->createResource( QString::fromLatin1("akonadi_akonotes_resource"), filename, settings );
+                    qDebug()<<" newResource"<<newResource;
+                }
+            }
         }
     }
-
     Q_EMIT info(i18n("Resources restored."));
 }
 
@@ -86,16 +126,22 @@ void ImportJotJob::storeAlarmArchiveResource(const KArchiveDirectory *dir, const
     Q_FOREACH(const QString& entryName, dir->entries()) {
         const KArchiveEntry *entry = dir->entry(entryName);
         if (entry && entry->isDirectory()) {
-            const KArchiveDirectory*resourceDir = static_cast<const KArchiveDirectory*>(entry);
+            const KArchiveDirectory *resourceDir = static_cast<const KArchiveDirectory*>(entry);
             const QStringList lst = resourceDir->entries();
-            if (lst.count() == 2) {
+
+            if (lst.count() >= 2) {
                 const QString archPath(prefix + QLatin1Char('/') + entryName + QLatin1Char('/'));
-                const QString name(lst.at(0));
-                if (name.endsWith(QLatin1String("rc"))&&(name.contains(QLatin1String("akonadi_alarm_resource_")))) {
-                    mHashJotArchive.insert(archPath + name,archPath +lst.at(1));
-                } else {
-                    mHashJotArchive.insert(archPath +lst.at(1),archPath + name);
+                resourceFiles files;
+                Q_FOREACH(const QString &name, lst) {
+                    if (name.endsWith(QLatin1String("rc")) && (name.contains(QLatin1String("akonadi_akonotes_resource")))) {
+                        files.akonadiConfigFile = archPath + name;
+                    } else if (name.startsWith(Utils::prefixAkonadiConfigFile())) {
+                        files.akonadiAgentConfigFile = archPath + name;
+                    } else {
+                        files.akonadiResources = archPath + name;
+                    }
                 }
+                mListJotArchive.append(files);
             } else {
                 kDebug()<<" Problem in archive. number of file "<<lst.count();
             }

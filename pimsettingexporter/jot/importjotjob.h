@@ -38,7 +38,7 @@ private:
     void importjotConfig(const KArchiveFile* kalarmFile, const QString &kalarmrc, const QString &filename,const QString &prefix);
     void restoreResources();
     void restoreConfig();
-    QHash<QString, QString> mHashJotArchive;
+    QList<resourceFiles> mListJotArchive;
 };
 
 #endif // IMPORTJOTJOB_H
