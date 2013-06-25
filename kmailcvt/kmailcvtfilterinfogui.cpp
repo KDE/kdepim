@@ -20,7 +20,7 @@
 #include <KApplication>
 #include <QListWidgetItem>
 
-KMailCvtFilterInfoGui::KMailCvtFilterInfoGui(KImportPage* dlg, QWidget* parent)
+KMailCvtFilterInfoGui::KMailCvtFilterInfoGui(KImportPage *dlg, QWidget *parent)
     : MailImporter::FilterInfoGui(),
       m_parent( parent ),
       m_dlg( dlg )
@@ -31,22 +31,22 @@ KMailCvtFilterInfoGui::~KMailCvtFilterInfoGui()
 {
 }
 
-void KMailCvtFilterInfoGui::setStatusMessage( const QString& status )
+void KMailCvtFilterInfoGui::setStatusMessage( const QString &status )
 {
     m_dlg->widget()->mMailImporterWidget->setStatusMessage( status );
 }
 
-void KMailCvtFilterInfoGui::setFrom( const QString& from )
+void KMailCvtFilterInfoGui::setFrom( const QString &from )
 {
     m_dlg->widget()->mMailImporterWidget->setFrom( from );
 }
 
-void KMailCvtFilterInfoGui::setTo( const QString& to )
+void KMailCvtFilterInfoGui::setTo( const QString &to )
 {
     m_dlg->widget()->mMailImporterWidget->setTo( to );
 }
 
-void KMailCvtFilterInfoGui::setCurrent( const QString& current )
+void KMailCvtFilterInfoGui::setCurrent( const QString &current )
 {
     m_dlg->widget()->mMailImporterWidget->setCurrent( current );
     kapp->processEvents();
@@ -63,14 +63,14 @@ void  KMailCvtFilterInfoGui::setOverall( int percent )
     m_dlg->widget()->mMailImporterWidget->setOverall( percent );
 }
 
-void KMailCvtFilterInfoGui::addInfoLogEntry( const QString& log )
+void KMailCvtFilterInfoGui::addInfoLogEntry( const QString &log )
 {
     m_dlg->widget()->mMailImporterWidget->addInfoLogEntry( log );
     m_dlg->widget()->mMailImporterWidget->setLastCurrentItem();
     kapp->processEvents();
 }
 
-void KMailCvtFilterInfoGui::addErrorLogEntry( const QString& log )
+void KMailCvtFilterInfoGui::addErrorLogEntry( const QString &log )
 {
     m_dlg->widget()->mMailImporterWidget->addErrorLogEntry( log );
     m_dlg->widget()->mMailImporterWidget->setLastCurrentItem();
@@ -83,7 +83,7 @@ void KMailCvtFilterInfoGui::clear()
     m_dlg->widget()->mMailImporterWidget->clear();
 }
 
-void KMailCvtFilterInfoGui::alert( const QString& message )
+void KMailCvtFilterInfoGui::alert( const QString &message )
 {
     KMessageBox::information( m_parent, message );
 }
