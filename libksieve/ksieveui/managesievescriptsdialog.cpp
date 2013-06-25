@@ -477,7 +477,8 @@ void ManageSieveScriptsDialog::slotNewScript()
 
     QTreeWidgetItem * parentItem = currentItem;
     if (parentItem) {
-        for (int i = 0; i <parentItem->childCount(); ++i) {
+        const int numberOfElement(parentItem->childCount());
+        for (int i = 0; i <numberOfElement; ++i) {
             if (parentItem->child(i)->text(0) == name) {
                 KMessageBox::error(
                             this,
@@ -565,24 +566,25 @@ void ManageSieveScriptsDialog::slotPutResult( KManageSieve::SieveJob *, bool suc
     if ( success ) {
         KMessageBox::information( this, i18n( "The Sieve script was successfully uploaded." ),
                                   i18n( "Sieve Script Upload" ) );
-        mSieveEditor->deleteLater(); mSieveEditor = 0;
+        mSieveEditor->deleteLater();
+        mSieveEditor = 0;
         mCurrentURL = KUrl();
     } else {
         mSieveEditor->show();
     }
 }
 
-void ManageSieveScriptsDialog::addFailedMessage( const QString & err )
+void ManageSieveScriptsDialog::addFailedMessage( const QString &err )
 {
-    addMessageEntry( err,QColor( Qt::darkRed ) );
+    addMessageEntry( err, QColor( Qt::darkRed ) );
 }
 
-void ManageSieveScriptsDialog::addOkMessage( const QString & err )
+void ManageSieveScriptsDialog::addOkMessage( const QString &err )
 {
     addMessageEntry( err, QColor( Qt::darkGreen ) );
 }
 
-void ManageSieveScriptsDialog::addMessageEntry( const QString & errorMsg, const QColor& color )
+void ManageSieveScriptsDialog::addMessageEntry( const QString &errorMsg, const QColor &color )
 {
     mSieveEditor->setDebugColor( color );
     mSieveEditor->setDebugScript( errorMsg );
