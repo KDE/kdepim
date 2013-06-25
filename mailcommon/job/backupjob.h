@@ -73,6 +73,7 @@ public:
     void setDeleteFoldersAfterCompletion( bool deleteThem );
     void setRecursive( bool recursive );
     void setDisplayMessageBox(bool display);
+    void setRealPath(const QString &path);
 
 
     void start();
@@ -103,6 +104,7 @@ private:
     // we can just look it up there.
     QString collectionName( const Akonadi::Collection &collection ) const;
 
+    QString mRealPath;
     KUrl mMailArchivePath;
     time_t mArchiveTime;
     ArchiveType mArchiveType;

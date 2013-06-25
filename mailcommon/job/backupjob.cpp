@@ -74,6 +74,11 @@ void BackupJob::setRootFolder( const Akonadi::Collection &rootFolder )
     mRootFolder = rootFolder;
 }
 
+void BackupJob::setRealPath(const QString &path)
+{
+    mRealPath = path;
+}
+
 void BackupJob::setSaveLocation( const KUrl &savePath )
 {
     mMailArchivePath = savePath;
@@ -197,7 +202,7 @@ void BackupJob::finish()
     QFileInfo archiveFileInfo( mMailArchivePath.path() );
     QString text = i18n( "Archiving folder '%1' successfully completed. "
                          "The archive was written to the file '%2'.",
-                         mRootFolder.name(), mMailArchivePath.path() );
+                         mRealPath.isEmpty() ? mRootFolder.name() : mRealPath, mMailArchivePath.path() );
     text += QLatin1Char('\n') + i18np( "1 message of size %2 was archived.",
                                        "%1 messages with the total size of %2 were archived.",
                                        mArchivedMessages, KIO::convertSize( mArchivedSize ) );

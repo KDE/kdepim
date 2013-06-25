@@ -54,6 +54,7 @@ void ArchiveJob::execute()
         backupJob->setDeleteFoldersAfterCompletion( false );
         backupJob->setRecursive( mInfo->saveSubCollection() );
         backupJob->setDisplayMessageBox(false);
+        backupJob->setRealPath(realPath);
         const QString summary = i18n("Start to archive %1",realPath );
         const QPixmap pixmap = KIcon( QLatin1String("kmail") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
         KNotification::event( QLatin1String("archivemailstarted"),
