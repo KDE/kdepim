@@ -33,8 +33,8 @@ public:
     explicit AttachmentTemporaryFilesDirs(QObject *parent = 0);
     ~AttachmentTemporaryFilesDirs();
 
-    void addTempFile( const QString& file );
-    void addTempDir( const QString& dir );
+    void addTempFile( const QString &file );
+    void addTempDir( const QString &dir );
     QStringList temporaryFiles() const;
     void removeTempFiles();
     void forceCleanTempFiles();
