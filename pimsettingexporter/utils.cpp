@@ -86,6 +86,10 @@ QString Utils::jotPath()
     return QLatin1String("jot/");
 }
 
+QString Utils::prefixAkonadiConfigFile()
+{
+    return QLatin1String("agent_config_");
+}
 
 KUrl Utils::adaptResourcePath(KSharedConfigPtr resourceConfig, const QString &storedData)
 {
@@ -230,9 +234,11 @@ QString Utils::createResourceUniqueName(const QString &originalName)
     return QString();
 }
 
-QString Utils::akonadiAgentConfigPath(const QString &identifier)
+KUrl Utils::akonadiAgentConfigPath(const QString &identifier)
 {
-    const QString relativeFileName = QString::fromLatin1("akonadi/agent_config_%1").arg(identifier);
+    const QString relativeFileName = QString::fromLatin1("akonadi/%1%2").arg(Utils::prefixAkonadiConfigFile()).arg(identifier);
     const QString configFile = Akonadi::XdgBaseDirs::findResourceFile( "config", relativeFileName );
-    return configFile;
+    if (!configFile.isEmpty())
+        return KUrl(configFile);
+    return KUrl();
 }

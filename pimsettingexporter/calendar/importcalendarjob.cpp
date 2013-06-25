@@ -87,7 +87,7 @@ void ImportCalendarJob::restoreResources()
                         file->copyTo(newUrl.path());
                     }
                     settings.insert(QLatin1String("Path"), newUrl.path());
-                    const QString newResource = mCreateResource->createResource( QString::fromLatin1("akonadi_ical_resource"), filename, settings );
+                    const QString newResource = mCreateResource->createResource( QString::fromLatin1("akonadi_ical_resource"), QLatin1String("sssssssssssss"), settings );
                     qDebug()<<" newResource"<<newResource;
 
                     const KArchiveEntry* fileDataEntry = mArchiveDirectory->entry(i.value());
@@ -125,7 +125,9 @@ void ImportCalendarJob::storeCalendarArchiveResource(const KArchiveDirectory *di
         if (entry && entry->isDirectory()) {
             const KArchiveDirectory*resourceDir = static_cast<const KArchiveDirectory*>(entry);
             const QStringList lst = resourceDir->entries();
-            if (lst.count() == 2) {
+
+            //TODO adapt it.
+            if (lst.count() >= 2) {
                 const QString archPath(prefix + QLatin1Char('/') + entryName + QLatin1Char('/'));
                 const QString name(lst.at(0));
                 if (name.endsWith(QLatin1String("rc"))&&(name.contains(QLatin1String("akonadi_ical_resource_")))) {
