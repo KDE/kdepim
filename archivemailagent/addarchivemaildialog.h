@@ -60,7 +60,6 @@ public:
 
     int maximumArchiveCount() const;
 
-
 private Q_SLOTS:
     void slotFolderChanged(const Akonadi::Collection&);
     void slotUpdateOkButton();

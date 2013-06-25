@@ -40,9 +40,14 @@ public:
     void resume();
 
     void printArchiveListInfo();
+
 public Q_SLOTS:
     void load();
     void slotArchiveNow(ArchiveMailInfo *info);
+
+Q_SIGNALS:
+    void needUpdateConfigDialogBox();
+
 private:
     KSharedConfig::Ptr mConfig;
     QList<ArchiveMailInfo *> mListArchiveInfo;

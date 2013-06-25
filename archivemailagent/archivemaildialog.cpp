@@ -86,6 +86,11 @@ ArchiveMailDialog::~ArchiveMailDialog()
     delete mAboutData;
 }
 
+void ArchiveMailDialog::slotNeedReloadConfig()
+{
+    mWidget->needReloadConfig();
+}
+
 static const char *myConfigGroupName = "ArchiveMailDialog";
 
 void ArchiveMailDialog::readConfig()
@@ -209,6 +214,12 @@ void ArchiveMailWidget::updateButtons()
         mWidget->removeItem->setEnabled(true);
         mWidget->modifyItem->setEnabled(false);
     }
+}
+
+void ArchiveMailWidget::needReloadConfig()
+{
+    mWidget->treeWidget->clear();
+    load();
 }
 
 void ArchiveMailWidget::load()
@@ -369,6 +380,7 @@ void ArchiveMailWidget::slotArchiveNow()
             return;
         ArchiveMailItem *archiveItem = static_cast<ArchiveMailItem*>(item);
         ArchiveMailInfo *archiveItemInfo = archiveItem->info();
+        save();
         if (archiveItemInfo) {
             Q_EMIT archiveNow(archiveItemInfo);
         }
