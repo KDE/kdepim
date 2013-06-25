@@ -192,10 +192,10 @@ void ImportCalendarJob::restoreConfig()
         if (QFile(freebusypath + freebusyStr).exists()) {
             //TODO 4.12 merge it.
             if (overwriteConfigMessageBox(freebusyStr)) {
-                copyToFile(freebusyrcFile, freebusypath, freebusyStr, Utils::dataPath() + QLatin1String("korganizer/") );
+                copyToFile(freebusyrcFile, freebusypath + freebusyStr, freebusyStr, Utils::dataPath() + QLatin1String("korganizer/") );
             }
         } else {
-            copyToFile(freebusyrcFile, freebusypath, freebusyStr, Utils::dataPath() + QLatin1String("korganizer/"));
+            copyToFile(freebusyrcFile, freebusypath + freebusyStr, freebusyStr, Utils::dataPath() + QLatin1String("korganizer/"));
         }
     }
 
