@@ -188,8 +188,8 @@ void ImportCalendarJob::restoreConfig()
     if (freebusyentry && freebusyentry->isFile()) {
         const KArchiveFile* freebusyrcFile = static_cast<const KArchiveFile*>(freebusyentry);
 
-        const QString freebusypath = KGlobal::dirs()->findResource("data", QLatin1String("korganizer/") + freebusyStr);
-        if (QFile(freebusypath).exists()) {
+        const QString freebusypath = KGlobal::dirs()->findResource("data", QLatin1String("korganizer/"));
+        if (QFile(freebusypath + freebusyStr).exists()) {
             //TODO 4.12 merge it.
             if (overwriteConfigMessageBox(freebusyStr)) {
                 copyToFile(freebusyrcFile, freebusypath, freebusyStr, Utils::dataPath() + QLatin1String("korganizer/") );

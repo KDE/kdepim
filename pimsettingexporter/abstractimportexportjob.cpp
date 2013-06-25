@@ -194,6 +194,11 @@ void AbstractImportExportJob::copyToFile(const KArchiveFile *archivefile, const 
     QFile file;
     file.setFileName(copyToDirName + QLatin1Char('/') + filename);
 
+    //QFile doesn't overwrite => remove old file before
+    QFile destination(dest);
+    if (destination.exists()) {
+        destination.remove();
+    }
     if (!file.copy(dest)) {
         KMessageBox::error(mParent,i18n("File \"%1\" can not be copied to \"%2\".",filename,dest),i18n("Copy file"));
     }
