@@ -260,7 +260,7 @@ void ArchiveMailWidget::updateDiffDate(ArchiveMailItem *item, ArchiveMailInfo *i
         if (info->isEnabled())
             item->setBackgroundColor(ArchiveMailWidget::NextArchive,Qt::red);
         else
-            item->setBackgroundColor(ArchiveMailWidget::NextArchive,Qt::blue);
+            item->setBackgroundColor(ArchiveMailWidget::NextArchive,Qt::lightGray);
     } else {
         item->setToolTip(ArchiveMailWidget::NextArchive,i18n("Archive will be done %1",KGlobal::locale()->formatDate(diffDate)));
     }
