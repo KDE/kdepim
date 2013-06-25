@@ -60,6 +60,7 @@ public:
     void save();
     void saveTreeWidgetHeader(KConfigGroup &group);
     void restoreTreeWidgetHeader(const QByteArray &group);
+    void needToReload();
 
 private Q_SLOTS:
     void slotRemoveItem();
@@ -85,6 +86,9 @@ class SendLaterConfigureDialog : public KDialog
 public:
     explicit SendLaterConfigureDialog(QWidget *parent = 0);
     ~SendLaterConfigureDialog();
+
+public Q_SLOTS:
+    void slotNeedToReloadConfig();
 
 private Q_SLOTS:
     void slotSave();

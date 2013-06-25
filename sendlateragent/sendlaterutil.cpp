@@ -19,11 +19,6 @@
 #include "sendlaterutil.h"
 #include "sendlaterinfo.h"
 
-void SendLaterUtil::checkTime(SendLaterInfo *info)
-{
-    //TODO
-}
-
 
 bool SendLaterUtil::compareSendLaterInfo(SendLaterInfo *left, SendLaterInfo *right)
 {

@@ -86,6 +86,11 @@ void SendLaterConfigureDialog::slotSave()
     mWidget->save();
 }
 
+void SendLaterConfigureDialog::slotNeedToReloadConfig()
+{
+    mWidget->needToReload();
+}
+
 void SendLaterConfigureDialog::readConfig()
 {
     KConfigGroup group( KGlobal::config(), "SendLaterConfigureDialog" );
@@ -286,5 +291,11 @@ void SendLaterWidget::slotModifyItem()
     }
 }
 
+void SendLaterWidget::needToReload()
+{
+    //TODO
+    mWidget->treeWidget->clear();
+
+}
 
 #include "sendlaterconfiguredialog.moc"

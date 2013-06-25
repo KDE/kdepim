@@ -34,6 +34,7 @@ SendLaterAgent::SendLaterAgent(const QString &id)
     : Akonadi::AgentBase( id )
 {
     mManager = new SendLaterManager(this);
+    connect(mManager, SIGNAL(needUpdateConfigDialogBox()), SIGNAL(needUpdateConfigDialogBox()));
     KGlobal::locale()->insertCatalog( QLatin1String("akonadi_sendlater_agent") );
     new SendLaterAgentAdaptor( this );
     Akonadi::DBusConnectionPool::threadConnection().registerObject( QLatin1String( "/SendLaterAgent" ), this, QDBusConnection::ExportAdaptors );
@@ -94,6 +95,7 @@ void SendLaterAgent::showConfigureDialog(qlonglong windowId)
         KWindowSystem::setMainWindow( dialog, (HWND)windowId );
 #endif
     }
+    connect(this, SIGNAL(needUpdateConfigDialogBox()), dialog, SLOT(slotNeedToReloadConfig()));
     if (dialog->exec()) {
         mManager->load();
     }
@@ -104,7 +106,6 @@ void SendLaterAgent::printDebugInfo()
 {
     mManager->printDebugInfo();
 }
-
 
 AKONADI_AGENT_MAIN( SendLaterAgent )
 

@@ -35,6 +35,9 @@ public:
 
     void printDebugInfo();
 
+Q_SIGNALS:
+    void needUpdateConfigDialogBox();
+
 public Q_SLOTS:
     void configure( WId windowId );
 

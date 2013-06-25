@@ -45,6 +45,9 @@ public:
     void sendError(SendLaterInfo *info, ErrorType type);
     void printDebugInfo();
 
+Q_SIGNALS:
+    void needUpdateConfigDialogBox();
+
 public Q_SLOTS:
     void load();
 
