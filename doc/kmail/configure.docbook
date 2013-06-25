@@ -1353,56 +1353,59 @@ of key words can be modified.</para>
 </sect1>
 
 <sect1 id="configure-security">
-    <title>
-      Security Page
-    </title>
-
-    <sect2 id="configure-security-reading">
-      <title>
-	Reading
-      </title>
-
-      <para>
-	On this tab you can configure security-relevant options for
-	reading messages.
-      </para>
-
+  <title>Security Page</title>
+  <sect2 id="configure-security-reading">
+    <title>Reading</title>
+    <para>On this tab you can configure security-relevant options for
+	reading messages.</para>
       <variablelist>
-
-	<varlistentry id="configure-security-reading-prefer-html">
-	  <term>
-	    <guilabel>Prefer HTML to plain text</guilabel>
-	  </term>
+        <varlistentry id="configure-security-reading-prefer-html">
+	  <term><guilabel>Prefer HTML to plain text</guilabel></term>
 	  <listitem>
-	    <para>
-	      If checked, &kmail; will show &html; messages with their
-	      &html; formatting and layout. We strongly recommend to
-	      leave this option off, as security problems with &html;
-	      might show up. When this option is off, you can still
-	      read &html; messages, but only as plain text.
-	    </para>
+            <para>
+	      By default &kmail; will show &html; messages in plain text. If you prefer to view messages with
+              &html; formatting and layout automatically, select this option. However, we recommend leaving this option off,
+              as security problems with &html; might show up.</para>
+            <para>You can still easily view messages in &html; format per email by
+              clicking the plain message/html message toggle bar on the left hand side of the message window. Please see <link linkend="configure-appearance-message-window">Message Window</link>
+              to enable this feature.</para>
 	  </listitem>
 	</varlistentry>
 
 	<varlistentry id="configure-security-reading-external-references">
-	  <term>
-	    <guilabel>Allow messages to load external references from the Internet</guilabel>
-	  </term>
+	  <term><guilabel>Allow messages to load external references from the Internet</guilabel></term>
 	  <listitem>
-	    <para>
-	      If checked, &kmail; can load external images, style
-	      sheets &etc; from the Internet when you look at an
-	      &html; message. We strongly recommend to leave this
-	      option off (although it has no effect if you only view
-	      plain text messages). By adding external references to
-	      their messages, people sending spam can detect that and
-	      when you have looked at their message. Note that this
-	      option has no effect on &Java;, JavaScript and Plugins -
-	      these are disabled anyway and cannot be enabled at all.
-	    </para>
+            <para>If checked, &kmail; can load external images, stylesheets &etc; from the Internet
+              when you look at an &html; message. We strongly recommend to leave this option off (although it has no effect if you only view
+              plain text messages).</para>
+            <para>By adding external references to their messages, people sending spam can detect when you have looked at their message, your location, and
+              alot of other information that gets logged on web servers. Note that this option has no effect on &Java;, JavaScript and Plugins as
+	      these are not supported in &kmail; at all, which is a good thing, as most viruses propagate through these.</para>
 	  </listitem>
 	</varlistentry>
-	<!-- missing Attempt decryption of encrypted messages when viewing-->
+         <varlistentry id="configure-security-email-scams">
+          <term><guilabel>Informs if message reading is a suspected email scam</guilabel></term>
+          <listitem>
+            <para>With the popularity of email, unfortunately comes the popularity of email scams. Email scams can include emails made to appear as though they come from legitimate companies,
+              but they really link to malicious web sites requesting your personal information. This can lead to identity theft and worse. By default &kmail; analyzes messages for common scams,
+              and will inform you if the email is a suspected scam. It is highly advised to keep this feature enabled. If you wish to disable this great feature, uncheck
+              <guilabel>Informs if message reading is a suspected email scam</guilabel>.</para>
+            <para>If you have legitimate emails being flagged, &eg; from trusted friends, you can add their email to the <guilabel>Whitelist:</guilabel> by clicking
+              the <guibutton>Add...</guibutton> and enter the email into the dialog that pops up. Please note that at this time, only individual emails are supported.</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term><guilabel>Encrypted messages</guilabel></term>
+          <listitem>
+            <para>By default, &kmail; will automatically attempt to decrypt encrypted messages when you view them. I you prefer to do it manually, unselect this option.</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term><guilabel>Certificate &amp; Key Bundle Attachments</guilabel></term>
+          <listitem>
+            <para>If you would like to have &kmail; to <guilabel>Automatically import keys and certificate</guilabel> from incoming messages for decryption, select this option.</para>
+          </listitem>
+        </varlistentry>
 	<varlistentry id="configure-security-reading-mdns">
 	  <term>
 	    <guilabel>Message Disposition Notifications</guilabel>
