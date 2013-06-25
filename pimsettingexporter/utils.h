@@ -60,5 +60,6 @@ void convertCollectionIdsToRealPath(KConfigGroup &group, const QString &currentK
 KUrl resourcePath(const Akonadi::AgentInstance &agent);
 KUrl adaptResourcePath(KSharedConfigPtr resourceConfig, const QString &storedData);
 QString storeResources(KZip *archive, const QString &identifier, const QString &path);
+QString createResourceUniqueName(const QString &originalName);
 }
 #endif // UTILS_H

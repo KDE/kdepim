@@ -222,3 +222,10 @@ QString Utils::storeResources(KZip *archive, const QString &identifier, const QS
     return QString();
 }
 
+QString Utils::createResourceUniqueName(const QString &originalName)
+{
+    //TODO
+    return QString();
+}
+
+
