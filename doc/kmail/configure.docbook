@@ -1397,7 +1397,7 @@ of key words can be modified.</para>
         <varlistentry>
           <term><guilabel>Encrypted messages</guilabel></term>
           <listitem>
-            <para>By default, &kmail; will automatically attempt to decrypt encrypted messages when you view them. I you prefer to do it manually, unselect this option.</para>
+            <para>By default, &kmail; will automatically attempt to decrypt encrypted messages when you view them. If you prefer to do it manually, unselect this option.</para>
           </listitem>
         </varlistentry>
         <varlistentry>
