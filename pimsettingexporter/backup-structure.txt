@@ -15,6 +15,7 @@ Root
 |
 |-----mails
 |       |---------<resource name>
+|                   |---------<akonadi agent config file>
 |                   |---------<resource config file>
 |                   |---------<archive resource>
 |
@@ -39,25 +40,29 @@ Root
 |       |---------<archive nepomuk>
 |
 |-----data
-|       |---------<autocorrection xml file>
+|       |---------autocorrect/<autocorrection xml file>
 |       |---------korganizer/freebusyurls
 |
 |-----calendar
 |       |---------<resource name>
+|                   |---------<akonadi agent config file>
 |                   |---------<resource config file>
 |                   |---------<archive resource>
 |------addressbook
 |       |---------<resource name>
+|                   |---------<akonadi agent config file>
 |                   |---------<resource config file>
 |                   |---------<archive resource>
 |
 |------alarm
 |       |---------<resource name>
+|                   |---------<akonadi agent config file>
 |                   |---------<resource config file>
 |                   |---------<archive resource>
 |
 |------jot
 |       |---------<resource name>
+|                   |---------<akonadi agent config file>
 |                   |---------<resource config file>
 |                   |---------<archive resource>
 
