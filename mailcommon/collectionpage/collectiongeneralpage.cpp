@@ -497,8 +497,12 @@ void CollectionGeneralPage::save( Collection &collection )
     }
   }
 
-  MailCommon::NewMailNotifierAttribute *newMailNotifierAttr = collection.attribute<MailCommon::NewMailNotifierAttribute>( Akonadi::Entity::AddIfMissing );
-  newMailNotifierAttr->setIgnoreNewMail(!mNotifyOnNewMailCheckBox->isChecked());
+  if (!mNotifyOnNewMailCheckBox->isChecked()) {
+      MailCommon::NewMailNotifierAttribute *newMailNotifierAttr = collection.attribute<MailCommon::NewMailNotifierAttribute>( Akonadi::Entity::AddIfMissing );
+      newMailNotifierAttr->setIgnoreNewMail(true);
+  } else {
+      collection.removeAttribute<MailCommon::NewMailNotifierAttribute>();
+  }
 
   CollectionAnnotationsAttribute *annotationsAttribute =
     collection.attribute<CollectionAnnotationsAttribute>( Entity::AddIfMissing );
