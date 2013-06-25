@@ -177,11 +177,15 @@ Akonadi::Collection::Id AbstractImportExportJob::convertPathToId(const QString& 
 
 void AbstractImportExportJob::initializeImportJob()
 {
-    mTempDir = new KTempDir();
-    mTempDirName = mTempDir->name();
-    mCreateResource = new PimCommon::CreateResource();
-    connect(mCreateResource,SIGNAL(createResourceInfo(QString)),SIGNAL(info(QString)));
-    connect(mCreateResource,SIGNAL(createResourceError(QString)),SIGNAL(error(QString)));
+    if (mTempDir) {
+        qDebug()<<" initializeImportJob already called";
+    } else {
+        mTempDir = new KTempDir();
+        mTempDirName = mTempDir->name();
+        mCreateResource = new PimCommon::CreateResource();
+        connect(mCreateResource,SIGNAL(createResourceInfo(QString)),SIGNAL(info(QString)));
+        connect(mCreateResource,SIGNAL(createResourceError(QString)),SIGNAL(error(QString)));
+    }
 }
 
 void AbstractImportExportJob::copyToFile(const KArchiveFile *archivefile, const QString &dest, const QString &filename, const QString &prefix)
