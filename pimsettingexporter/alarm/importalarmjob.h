@@ -38,6 +38,7 @@ private:
     void importkalarmConfig(const KArchiveFile* kalarmFile, const QString &kalarmrc, const QString &filename,const QString &prefix);
     void restoreResources();
     void restoreConfig();
+    void addSpecificResourceSettings(KSharedConfig::Ptr resourceConfig, const QString &resourceName, QMap<QString, QVariant> &settings);
 };
 
 #endif // IMPORTALARMJOB_H

@@ -65,6 +65,9 @@ protected:
     void backupResourceFile(const Akonadi::AgentInstance &agent, const QString &defaultPath);
     void restoreResourceFile(const QString &resourceName, const QString &defaultPath, const QString &storePath);
 
+    virtual void addSpecificResourceSettings(KSharedConfig::Ptr resourceConfig, const QString &resourceName, QMap<QString, QVariant> &settings);
+
+
     KZip *archive();
 
     QProgressDialog *progressDialog();

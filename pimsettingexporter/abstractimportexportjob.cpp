@@ -285,13 +285,19 @@ void AbstractImportExportJob::restoreResourceFile(const QString &resourceName, c
                         }
                     }
 
+                    addSpecificResourceSettings(resourceConfig, resourceName, settings);
+
                     const QString newResource = mCreateResource->createResource( QString::fromLatin1("akonadi_akonotes_resource"), filename, settings );
                     qDebug()<<" newResource"<<newResource;
                 }
             }
         }
     }
+}
 
+void AbstractImportExportJob::addSpecificResourceSettings(KSharedConfig::Ptr /*resourceConfig*/, const QString &/*resourceName*/, QMap<QString, QVariant> &/*settings*/)
+{
+    //Redefine it in subclass
 }
 
 #include "abstractimportexportjob.moc"

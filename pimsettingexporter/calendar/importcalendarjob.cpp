@@ -58,6 +58,22 @@ void ImportCalendarJob::restoreResources()
     Q_EMIT info(i18n("Resources restored."));
 }
 
+void ImportCalendarJob::addSpecificResourceSettings(KSharedConfig::Ptr resourceConfig, const QString &resourceName, QMap<QString, QVariant> &settings)
+{
+    if (resourceName == QLatin1String("akonadi_ical_resource")) {
+        KConfigGroup general = resourceConfig->group(QLatin1String("General"));
+        if (general.hasKey(QLatin1String("DisplayName"))) {
+            settings.insert(QLatin1String("DisplayName"), general.readEntry(QLatin1String("DisplayName")));
+        }
+        if (general.hasKey(QLatin1String("ReadOnly"))) {
+            settings.insert(QLatin1String("ReadOnly"), general.readEntry(QLatin1String("ReadOnly"), false));
+        }
+        if (general.hasKey(QLatin1String("MonitorFile"))) {
+            settings.insert(QLatin1String("MonitorFile"), general.readEntry(QLatin1String("MonitorFile"), true));
+        }
+    }
+}
+
 void ImportCalendarJob::searchAllFiles(const KArchiveDirectory *dir,const QString &prefix)
 {
     Q_FOREACH(const QString& entryName, dir->entries()) {

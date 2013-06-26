@@ -58,6 +58,11 @@ void ImportJotJob::restoreResources()
     Q_EMIT info(i18n("Resources restored."));
 }
 
+void ImportJotJob::addSpecificResourceSettings(KSharedConfig::Ptr resourceConfig, const QString &resourceName, QMap<QString, QVariant> &settings)
+{
+
+}
+
 void ImportJotJob::searchAllFiles(const KArchiveDirectory *dir,const QString &prefix)
 {
     Q_FOREACH(const QString& entryName, dir->entries()) {

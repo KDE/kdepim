@@ -100,6 +100,11 @@ void ImportAlarmJob::restoreResources()
 #endif
 }
 
+void ImportAlarmJob::addSpecificResourceSettings(KSharedConfig::Ptr resourceConfig, const QString &resourceName, QMap<QString, QVariant> &settings)
+{
+
+}
+
 void ImportAlarmJob::searchAllFiles(const KArchiveDirectory *dir,const QString &prefix)
 {
     Q_FOREACH(const QString& entryName, dir->entries()) {
