@@ -37,6 +37,7 @@ void SelectMimeTypeComboBox::initialize()
     addItem(i18n("JPEG"), QLatin1String("image/jpeg"));
     addItem(i18n("TIFF"), QLatin1String("image/tiff"));
     addItem(i18n("PNG"), QLatin1String("image/png"));
+    addItem(i18n("BMP"), QLatin1String("image/bmp"));
 }
 
 QString SelectMimeTypeComboBox::code() const
