@@ -23,6 +23,10 @@
   <!ENTITY openpgp "<acronym>OpenPGP</acronym>">
   <!ENTITY smime "<acronym>S/MIME</acronym>">
   <!ENTITY kolab "<acronym>Kolab</acronym>">
+  <!ENTITY Laurent.Montel '<personname><firstname>Laurent</firstname><surname>Montel</surname></personname>'>
+  <!ENTITY Laurent.Montel.mail '<email>montel@kde.org</email>'>
+  <!ENTITY Scarlett.Clark '<personname><firstname>Scarlett</firstname><surname>Clark</surname></personname>'>
+  <!ENTITY Scarlett.Clark.mail '<email>scarlett@scarlettgatelyclark.com</email>'>
 ]>
 <book id="kmail" lang="&language;">
 <bookinfo>
@@ -76,6 +80,23 @@
 </address></affiliation>
 </author>
 
+<author>
+<firstname>Laurent</firstname>
+<surname>Montel</surname>
+<affiliation><address>
+&Laurent.Montel.mail;
+</address></affiliation>
+</author>
+
+<author>
+<firstname>Scarlett</firstname>
+<surname>Clark</surname>
+<affiliation><address>
+&Scarlett.Clark.mail;
+</address></affiliation>
+</author>
+
+
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
 
@@ -95,10 +116,14 @@
 <holder>&Daniel.Naber;</holder>
 <holder>Ingo Kl&ouml;cker</holder>
 </copyright>
+<copyright>
+<year>2013</year>
+<holder>&Laurent.Montel;</holder>
+</copyright>
 
 <legalnotice>&FDLNotice;</legalnotice>
-<date>2011-07-15</date>
-<releaseinfo>2.1.96 (&kde; 4.7)</releaseinfo>
+<date>2013-06-26</date>
+<releaseinfo>4.10.8 (&kde; 4.11)</releaseinfo>
 
 <abstract>
 
@@ -122,8 +147,8 @@
 
  &kmail-intro; <!-- 4.7-->
 &kmail-getting-started; <!-- 4.7-->
-&kmail-using-kmail; <!-- 4.7-->
-&kmail-configure;  <!-- 4.7 except Message List-->
+&kmail-using-kmail; <!-- 4.11 -->
+&kmail-configure;  <!-- 4.11 -->
 &kmail-menus;  <!-- 4.7 except missing menu items and Mark Message table-->
 &kmail-faq;  <!-- updated by Yuri with topics from userbase -->
 &kmail-importing; <!-- not reviewed -->
