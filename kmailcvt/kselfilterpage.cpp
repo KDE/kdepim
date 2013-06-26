@@ -113,7 +113,7 @@ bool KSelFilterPage::removeDupMsg_checked() const
     return mWidget->remDupMsg->isChecked();
 }
 
-Filter * KSelFilterPage::getSelectedFilter(void)
+Filter *KSelFilterPage::getSelectedFilter()
 {
     return mFilterList.at(mWidget->mFilterCombo->currentIndex());
 }
