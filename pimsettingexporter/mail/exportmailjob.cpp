@@ -469,6 +469,7 @@ void ExportMailJob::backupMails()
                         }
                         else
                             Q_EMIT error(i18n("MBox \"%1\" file cannot be added to backup file.",filename));
+                        //TODO store agent config file
                     }
                 } else if (identifier.contains(QLatin1String("akonadi_maildir_resource_")) ||
                           identifier.contains(QLatin1String("akonadi_mixedmaildir_resource_"))) {
