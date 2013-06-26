@@ -70,7 +70,6 @@ void ImportCalendarJob::restoreResources()
                     QString resourceName(file->name());
 
                     QString filename(file->name());
-                    //TODO adapt filename otherwise it will use all the time the same filename.
                     qDebug()<<" filename :"<<filename;
 
                     KSharedConfig::Ptr resourceConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + resourceName);

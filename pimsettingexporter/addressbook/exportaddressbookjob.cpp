@@ -97,7 +97,6 @@ void ExportAddressbookJob::backupResources()
                 const bool fileAdded = archive()->addLocalFile(tmp.fileName(), archivePath  + QLatin1String("addressbook.zip"));
                 if (fileAdded) {
                     const QString errorStr = Utils::storeResources(archive(), identifier, archivePath);
-                    qDebug()<<" Util :::::"<<Utils::akonadiAgentConfigPath(identifier);
                     if (!errorStr.isEmpty())
                         Q_EMIT error(errorStr);
                     Q_EMIT info(i18n("\"%1\" was backuped.",filename));
@@ -116,7 +115,6 @@ void ExportAddressbookJob::backupResources()
                 const bool fileAdded  = archive()->addLocalFile(url.path(), archivePath + filename);
                 if (fileAdded) {
                     const QString errorStr = Utils::storeResources(archive(), identifier, archivePath);
-                    qDebug()<<" Util :::::"<<Utils::akonadiAgentConfigPath(identifier);
                     if (!errorStr.isEmpty())
                         Q_EMIT error(errorStr);
                     Q_EMIT info(i18n("\"%1\" was backuped.",filename));
