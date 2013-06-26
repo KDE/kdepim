@@ -456,23 +456,10 @@ void ExportMailJob::backupMails()
                 const QString identifier = agent.identifier();
                 const QString archivePath = Utils::mailsPath() + identifier + QDir::separator();
                 if (identifier.contains(QLatin1String("akonadi_mbox_resource_"))) {
-                    KUrl url = Utils::resourcePath(agent);
-                    if (!url.isEmpty()) {
-                        const QString filename = url.fileName();
-                        const bool fileAdded  = archive()->addLocalFile(url.path(), archivePath + filename);
-                        if (fileAdded) {
-                            const QString errorStr = Utils::storeResources(archive(), identifier, archivePath );
-                            if (!errorStr.isEmpty()) {
-                                Q_EMIT error(errorStr);
-                            }
-                            Q_EMIT info(i18n("MBox \"%1\" was backuped.",filename));
-                        }
-                        else
-                            Q_EMIT error(i18n("MBox \"%1\" file cannot be added to backup file.",filename));
-                        //TODO store agent config file
-                    }
+                    backupResourceFile(agent, Utils::mailsPath());
                 } else if (identifier.contains(QLatin1String("akonadi_maildir_resource_")) ||
                           identifier.contains(QLatin1String("akonadi_mixedmaildir_resource_"))) {
+                    //Store akonadi agent config
                     const KUrl url = Utils::resourcePath(agent);
 
                     if (backupMailData(url, archivePath)) {
