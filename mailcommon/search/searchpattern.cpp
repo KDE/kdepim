@@ -736,6 +736,10 @@ void SearchRuleString::addQueryTerms( Nepomuk2::Query::GroupTerm &groupTerm ) co
 // helper, does the actual comparing
 bool SearchRuleString::matchesInternal( const QString &msgContents ) const
 {
+  if( msgContents.isEmpty()) {
+    return false;
+  }
+
   switch ( function() ) {
   case SearchRule::FuncEquals:
     return ( QString::compare( msgContents.toLower(), contents().toLower() ) == 0 );
