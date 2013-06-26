@@ -358,6 +358,8 @@ void TranslatorWidget::slotInvertLanguage()
     const QString toLanguage = d->to->itemData(d->to->currentIndex()).toString();
     const QString fromLanguage = d->from->itemData(d->from->currentIndex()).toString();
 
+    d->from->blockSignals(true);
+    d->to->blockSignals(true);
     const int indexFrom = d->from->findData( toLanguage );
     if ( indexFrom != -1 ) {
         d->from->setCurrentIndex( indexFrom );
@@ -366,6 +368,9 @@ void TranslatorWidget::slotInvertLanguage()
     if ( indexTo != -1 ) {
         d->to->setCurrentIndex( indexTo );
     }
+    d->from->blockSignals(false);
+    d->to->blockSignals(false);
+    slotTranslate();
 }
 
 void TranslatorWidget::slotCloseWidget()
