@@ -241,7 +241,7 @@ void ArchiveMailWidget::createOrUpdateItem(ArchiveMailInfo *info, ArchiveMailIte
     }
     item->setText(ArchiveMailWidget::Name,i18n("Folder: %1",MailCommon::Util::fullCollectionPath(Akonadi::Collection(info->saveCollectionId()))));
     item->setCheckState(ArchiveMailWidget::Name, info->isEnabled() ? Qt::Checked : Qt::Unchecked);
-    item->setText(ArchiveMailWidget::StorageDirectory, info->url().prettyUrl());
+    item->setText(ArchiveMailWidget::StorageDirectory, info->url().toLocalFile());
     if (info->lastDateSaved().isValid()) {
         item->setText(ArchiveMailWidget::LastArchiveDate,KGlobal::locale()->formatDate(info->lastDateSaved()));
         updateDiffDate(item, info);
