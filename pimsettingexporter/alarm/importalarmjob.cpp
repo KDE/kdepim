@@ -55,9 +55,10 @@ void ImportAlarmJob::start()
 
 void ImportAlarmJob::restoreResources()
 {
+#if 0 //PORT ME
     Q_EMIT info(i18n("Restore resources..."));
-    if (!mHashAlarmArchive.isEmpty()) {
-        QHashIterator<QString, QString> i(mHashAlarmArchive);
+    if (!mListResourceFile.isEmpty()) {
+        QHashIterator<QString, QString> i(mListResourceFile);
         QDir dir(mTempDirName);
         dir.mkdir(Utils::alarmPath());
         const QString copyToDirName(mTempDirName + QLatin1Char('/') + Utils::alarmPath());
@@ -96,6 +97,7 @@ void ImportAlarmJob::restoreResources()
     }
 
     Q_EMIT info(i18n("Resources restored."));
+#endif
 }
 
 void ImportAlarmJob::searchAllFiles(const KArchiveDirectory *dir,const QString &prefix)
@@ -115,6 +117,7 @@ void ImportAlarmJob::searchAllFiles(const KArchiveDirectory *dir,const QString &
 
 void ImportAlarmJob::storeAlarmArchiveResource(const KArchiveDirectory *dir, const QString &prefix)
 {
+#if 0 //PORT ME
     Q_FOREACH(const QString& entryName, dir->entries()) {
         const KArchiveEntry *entry = dir->entry(entryName);
         if (entry && entry->isDirectory()) {
@@ -124,15 +127,16 @@ void ImportAlarmJob::storeAlarmArchiveResource(const KArchiveDirectory *dir, con
                 const QString archPath(prefix + QLatin1Char('/') + entryName + QLatin1Char('/'));
                 const QString name(lst.at(0));
                 if (name.endsWith(QLatin1String("rc"))&&(name.contains(QLatin1String("akonadi_alarm_resource_")))) {
-                    mHashAlarmArchive.insert(archPath + name,archPath +lst.at(1));
+                    mListResourceFile.insert(archPath + name,archPath +lst.at(1));
                 } else {
-                    mHashAlarmArchive.insert(archPath +lst.at(1),archPath + name);
+                    mListResourceFile.insert(archPath +lst.at(1),archPath + name);
                 }
             } else {
                 kDebug()<<" Problem in archive. number of file "<<lst.count();
             }
         }
     }
+#endif
 }
 
 

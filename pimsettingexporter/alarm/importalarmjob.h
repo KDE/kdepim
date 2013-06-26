@@ -38,7 +38,6 @@ private:
     void importkalarmConfig(const KArchiveFile* kalarmFile, const QString &kalarmrc, const QString &filename,const QString &prefix);
     void restoreResources();
     void restoreConfig();
-    QHash<QString, QString> mHashAlarmArchive;
 };
 
 #endif // IMPORTALARMJOB_H

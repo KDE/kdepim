@@ -39,7 +39,6 @@ private:
     void importkaddressBookConfig(const KArchiveFile* file, const QString &config, const QString &filename,const QString &prefix);
     void restoreResources();
     void restoreConfig();    
-    QList<resourceFiles> mListAddressBook;
 };
 
 #endif // IMPORTADDRESSBOOKJOB_H

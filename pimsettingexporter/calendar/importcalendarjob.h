@@ -38,7 +38,6 @@ private:
     void importkorganizerConfig(const KArchiveFile* file, const QString &config, const QString &filename,const QString &prefix);
     void restoreResources();
     void restoreConfig();
-    QList<resourceFiles> mListCalendarArchive;
 };
 
 #endif // IMPORTCALENDARJOB_H

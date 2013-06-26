@@ -54,13 +54,13 @@ void ImportJotJob::start()
 void ImportJotJob::restoreResources()
 {
     Q_EMIT info(i18n("Restore resources..."));
-    if (!mListJotArchive.isEmpty()) {
+    if (!mListResourceFile.isEmpty()) {
         QDir dir(mTempDirName);
         dir.mkdir(Utils::jotPath());
         const QString copyToDirName(mTempDirName + QLatin1Char('/') + Utils::jotPath());
 
-        for (int i = 0; i < mListJotArchive.size(); ++i) {
-            resourceFiles value = mListJotArchive.at(i);
+        for (int i = 0; i < mListResourceFile.size(); ++i) {
+            resourceFiles value = mListResourceFile.at(i);
             QMap<QString, QVariant> settings;
             if (value.akonadiConfigFile.contains(QLatin1String("akonadi_akonotes_resource_"))) {
                 const KArchiveEntry* fileResouceEntry = mArchiveDirectory->entry(value.akonadiConfigFile);
@@ -141,7 +141,7 @@ void ImportJotJob::storeAlarmArchiveResource(const KArchiveDirectory *dir, const
                         files.akonadiResources = archPath + name;
                     }
                 }
-                mListJotArchive.append(files);
+                mListResourceFile.append(files);
             } else {
                 kDebug()<<" Problem in archive. number of file "<<lst.count();
             }

@@ -55,13 +55,13 @@ void ImportAddressbookJob::start()
 void ImportAddressbookJob::restoreResources()
 {
     Q_EMIT info(i18n("Restore resources..."));
-    if (!mListAddressBook.isEmpty()) {
+    if (!mListResourceFile.isEmpty()) {
         QDir dir(mTempDirName);
         dir.mkdir(Utils::addressbookPath());
         const QString copyToDirName(mTempDirName + QLatin1Char('/') + Utils::addressbookPath());
 
-        for (int i = 0; i < mListAddressBook.size(); ++i) {
-            resourceFiles value = mListAddressBook.at(i);
+        for (int i = 0; i < mListResourceFile.size(); ++i) {
+            resourceFiles value = mListResourceFile.at(i);
             QMap<QString, QVariant> settings;
             if (value.akonadiConfigFile.contains(QLatin1String("akonadi_vcarddir_resource_"))) {
                 const KArchiveEntry* fileResouceEntry = mArchiveDirectory->entry(value.akonadiConfigFile);
@@ -185,7 +185,7 @@ void ImportAddressbookJob::storeAddressBookArchiveResource(const KArchiveDirecto
                         files.akonadiResources = archPath + name;
                     }
                 }
-                mListAddressBook.append(files);
+                mListResourceFile.append(files);
             } else {
                 kDebug()<<" Problem in archive. number of file "<<lst.count();
             }
