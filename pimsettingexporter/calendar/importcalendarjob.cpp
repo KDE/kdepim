@@ -54,54 +54,7 @@ void ImportCalendarJob::start()
 void ImportCalendarJob::restoreResources()
 {
     Q_EMIT info(i18n("Restore resources..."));
-    if (!mListResourceFile.isEmpty()) {
-        QDir dir(mTempDirName);
-        dir.mkdir(Utils::calendarPath());
-        const QString copyToDirName(mTempDirName + QLatin1Char('/') + Utils::calendarPath());
-
-        for (int i = 0; i < mListResourceFile.size(); ++i) {
-            resourceFiles value = mListResourceFile.at(i);
-            QMap<QString, QVariant> settings;
-            if (value.akonadiConfigFile.contains(QLatin1String("akonadi_ical_resource_"))) {
-                const KArchiveEntry* fileResouceEntry = mArchiveDirectory->entry(value.akonadiConfigFile);
-                if (fileResouceEntry && fileResouceEntry->isFile()) {
-                    const KArchiveFile* file = static_cast<const KArchiveFile*>(fileResouceEntry);
-                    file->copyTo(copyToDirName);
-                    QString resourceName(file->name());
-
-                    QString filename(file->name());
-                    qDebug()<<" filename :"<<filename;
-
-                    KSharedConfig::Ptr resourceConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + resourceName);
-
-                    const KUrl newUrl = Utils::adaptResourcePath(resourceConfig, storeCalendar);
-
-                    const QString dataFile = value.akonadiResources;
-                    const KArchiveEntry* dataResouceEntry = mArchiveDirectory->entry(dataFile);
-                    if (dataResouceEntry->isFile()) {
-                        const KArchiveFile* file = static_cast<const KArchiveFile*>(dataResouceEntry);
-                        file->copyTo(newUrl.path());
-                    }
-                    settings.insert(QLatin1String("Path"), newUrl.path());
-
-                    const QString agentConfigFile = value.akonadiAgentConfigFile;
-                    if (!agentConfigFile.isEmpty()) {
-                        const KArchiveEntry *akonadiAgentConfigEntry = mArchiveDirectory->entry(agentConfigFile);
-                        if (akonadiAgentConfigEntry->isFile()) {
-                            const KArchiveFile* file = static_cast<const KArchiveFile*>(akonadiAgentConfigEntry);
-                            file->copyTo(copyToDirName);
-                            resourceName = file->name();
-                            KSharedConfig::Ptr akonadiAgentConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + resourceName);
-                            filename = Utils::akonadiAgentName(akonadiAgentConfig);
-                        }
-                    }
-
-                    const QString newResource = mCreateResource->createResource( QString::fromLatin1("akonadi_ical_resource"), filename, settings );
-                    qDebug()<<" newResource"<<newResource;
-                }
-            }
-        }
-    }
+    restoreResourceFile(QString::fromLatin1("akonadi_ical_resource"), Utils::calendarPath(), storeCalendar);
     Q_EMIT info(i18n("Resources restored."));
 }
 

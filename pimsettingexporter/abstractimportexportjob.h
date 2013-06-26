@@ -63,6 +63,7 @@ protected:
     bool overwriteConfigMessageBox(const QString &configName) const;
     Akonadi::Collection::Id convertPathToId(const QString &path);
     void backupResourceFile(const Akonadi::AgentInstance &agent, const QString &defaultPath);
+    void restoreResourceFile(const QString &resourceName, const QString &defaultPath, const QString &storePath);
 
     KZip *archive();
 
