@@ -32,7 +32,7 @@ public:
     ~KSelFilterPage();
 
     void  addFilter(MailImporter::Filter *f);
-    MailImporter::Filter *getSelectedFilter(void);
+    MailImporter::Filter *getSelectedFilter();
     bool removeDupMsg_checked() const;
 
     Ui::KSelFilterPageDlg *widget();
