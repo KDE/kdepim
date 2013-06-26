@@ -111,7 +111,8 @@ void ImportMailJob::storeMailArchiveResource(const KArchiveDirectory*dir, const 
         if (entry && entry->isDirectory()) {
             const KArchiveDirectory*resourceDir = static_cast<const KArchiveDirectory*>(entry);
             const QStringList lst = resourceDir->entries();
-            if (lst.count() == 2) {
+            //TODO implement it
+            if (lst.count() >= 2) {
                 const QString archPath(prefix + QLatin1Char('/') + entryName + QLatin1Char('/'));
                 const QString name(lst.at(0));
                 if (name.endsWith(QLatin1String("rc"))&&
@@ -468,10 +469,9 @@ void ImportMailJob::restoreMails()
                     }
                 }
                 const QString newResource = mCreateResource->createResource( QString::fromLatin1("akonadi_mbox_resource"), filename, settings );
-                if (!newResource.isEmpty())
+                if (!newResource.isEmpty()) {
                     mHashResources.insert(filename,newResource);
-                const QString mailFile = res.value();
-                //TODO import it.
+                }
 
             } else if (resourceName.contains(QLatin1String("akonadi_maildir_resource_")) ||
                       resourceName.contains(QLatin1String("akonadi_mixedmaildir_resource_"))) {

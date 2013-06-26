@@ -96,7 +96,7 @@ void ExportCalendarJob::backupResources()
                         if (fileAdded)
                             Q_EMIT info(i18n("\"%1\" was backuped.",filename));
                         else
-                            Q_EMIT info(i18n("\"%1\" was backuped.",filename));
+                            Q_EMIT error(i18n("\"%1\" file cannot be added to backup file.",filename));
                     }
 
                 } else {
