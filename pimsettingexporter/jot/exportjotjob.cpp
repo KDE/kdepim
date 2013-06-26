@@ -70,7 +70,6 @@ void ExportJotJob::backupResources()
     foreach( const Akonadi::AgentInstance &agent, list ) {
         const QString identifier = agent.identifier();
         if (identifier.contains(QLatin1String("akonadi_akonotes_resource_"))) {
-            const QString identifier = agent.identifier();
             const QString archivePath = Utils::jotPath() + identifier + QDir::separator();
 
             KUrl url = Utils::resourcePath(agent);
@@ -92,8 +91,6 @@ void ExportJotJob::backupResources()
                         else
                             Q_EMIT error(i18n("\"%1\" file cannot be added to backup file.",filename));
                     }
-
-
                 } else {
                     Q_EMIT error(i18n("\"%1\" file cannot be added to backup file.",filename));
                 }

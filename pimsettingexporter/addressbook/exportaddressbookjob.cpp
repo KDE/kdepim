@@ -67,7 +67,6 @@ void ExportAddressbookJob::backupResources()
     foreach( const Akonadi::AgentInstance &agent, list ) {
         const QString identifier = agent.identifier();
         if (identifier.contains(QLatin1String("akonadi_vcarddir_resource_"))) {
-            const QString identifier = agent.identifier();
             const QString archivePath = Utils::addressbookPath() + identifier + QDir::separator();
 
             KUrl url = Utils::resourcePath(agent);
@@ -115,7 +114,6 @@ void ExportAddressbookJob::backupResources()
                 delete vcarddirArchive;
             }
         } else if (identifier.contains(QLatin1String("akonadi_vcard_resource_"))) {
-            const QString identifier = agent.identifier();
             const QString archivePath = Utils::addressbookPath() + identifier + QDir::separator();
 
             KUrl url = Utils::resourcePath(agent);

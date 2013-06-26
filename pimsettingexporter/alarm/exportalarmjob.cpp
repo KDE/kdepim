@@ -70,7 +70,6 @@ void ExportAlarmJob::backupResources()
     foreach( const Akonadi::AgentInstance &agent, list ) {
         const QString identifier = agent.identifier();
         if (identifier.contains(QLatin1String("akonadi_kalarm_resource_"))) {
-            const QString identifier = agent.identifier();
             const QString archivePath = Utils::alarmPath() + identifier + QDir::separator();
 
             KUrl url = Utils::resourcePath(agent);
