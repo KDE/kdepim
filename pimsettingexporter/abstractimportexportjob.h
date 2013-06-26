@@ -62,6 +62,7 @@ protected:
     int mergeConfigMessageBox(const QString &configName) const;
     bool overwriteConfigMessageBox(const QString &configName) const;
     Akonadi::Collection::Id convertPathToId(const QString &path);
+    void backupResourceFile(const Akonadi::AgentInstance &agent, const QString &defaultPath);
 
     KZip *archive();
 
