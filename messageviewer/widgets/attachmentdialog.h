@@ -32,32 +32,32 @@ namespace MessageViewer {
  */
 class AttachmentDialog : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /// returncodes for exec()
     enum
     {
-      Save = 2,
-      Open,
-      OpenWith,
-      Cancel
+        Save = 2,
+        Open,
+        OpenWith,
+        Cancel
     };
 
     // if @application is non-empty, the "open with <application>" button will also be shown,
     // otherwise only save, open with, cancel
-    AttachmentDialog( QWidget *parent, const QString &filenameText, const QString &application,
+    explicit AttachmentDialog( QWidget *parent, const QString &filenameText, const QString &application,
                       const QString &dontAskAgainName );
 
     // executes the modal dialog
     int exec();
 
-  private slots:
+private slots:
     void saveClicked();
     void openClicked();
     void openWithClicked();
 
-  private:
+private:
     QString text, dontAskName;
     KDialog *dialog;
 };

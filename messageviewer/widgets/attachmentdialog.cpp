@@ -31,79 +31,79 @@ using namespace MessageViewer;
 
 AttachmentDialog::AttachmentDialog( QWidget *parent, const QString &filenameText,
                                     const QString &application, const QString &dontAskAgainName )
-  : dontAskName( dontAskAgainName )
+    : dontAskName( dontAskAgainName )
 {
-  text = i18n( "Open attachment '%1'?\n"
-               "Note that opening an attachment may compromise "
-               "your system's security.",
-               filenameText );
+    text = i18n( "Open attachment '%1'?\n"
+                 "Note that opening an attachment may compromise "
+                 "your system's security.",
+                 filenameText );
 
-  dialog = new KDialog( parent );
-  dialog->setCaption( i18n("Open Attachment?") );
-  dialog->setObjectName( "attachmentSaveOpen" );
+    dialog = new KDialog( parent );
+    dialog->setCaption( i18n("Open Attachment?") );
+    dialog->setObjectName( "attachmentSaveOpen" );
 
-  if ( application.isEmpty() )
-    dialog->setButtons( KDialog::User3 | KDialog::User1 | KDialog::Cancel );
-  else {
-    dialog->setButtons( KDialog::User3 | KDialog::User2 | KDialog::User1 | KDialog::Cancel );
-    dialog->setButtonText( KDialog::User2, i18n("&Open with '%1'", application ) );
-  }
+    if ( application.isEmpty() )
+        dialog->setButtons( KDialog::User3 | KDialog::User1 | KDialog::Cancel );
+    else {
+        dialog->setButtons( KDialog::User3 | KDialog::User2 | KDialog::User1 | KDialog::Cancel );
+        dialog->setButtonText( KDialog::User2, i18n("&Open with '%1'", application ) );
+    }
 
-  dialog->setButtonGuiItem( KDialog::User3, KStandardGuiItem::saveAs() );
-  dialog->setButtonText( KDialog::User1, i18n("&Open With...") );
-  dialog->setDefaultButton( KDialog::User3 );
+    dialog->setButtonGuiItem( KDialog::User3, KStandardGuiItem::saveAs() );
+    dialog->setButtonText( KDialog::User1, i18n("&Open With...") );
+    dialog->setDefaultButton( KDialog::User3 );
 
-  connect( dialog, SIGNAL(user3Clicked()), this, SLOT(saveClicked()) );
-  connect( dialog, SIGNAL(user2Clicked()), this, SLOT(openClicked()) );
-  connect( dialog, SIGNAL(user1Clicked()), this, SLOT(openWithClicked()) );
+    connect( dialog, SIGNAL(user3Clicked()), this, SLOT(saveClicked()) );
+    connect( dialog, SIGNAL(user2Clicked()), this, SLOT(openClicked()) );
+    connect( dialog, SIGNAL(user1Clicked()), this, SLOT(openWithClicked()) );
 }
 
 //---------------------------------------------------------------------
 
 int AttachmentDialog::exec()
 {
-  KConfigGroup cg( KGlobal::config().data(), "Notification Messages" );
-  if ( cg.hasKey( dontAskName ) )
-    return cg.readEntry( dontAskName, int(0) );
+    KConfigGroup cg( KGlobal::config().data(), "Notification Messages" );
+    if ( cg.hasKey( dontAskName ) )
+        return cg.readEntry( dontAskName, 0 );
 
-  bool again = false;
-  const int ret =
-    KMessageBox::createKMessageBox( dialog, QMessageBox::Question, text, QStringList(),
-                                    i18n( "Do not ask again" ), &again, 0 );
+    bool again = false;
+    const int ret =
+            KMessageBox::createKMessageBox( dialog, QMessageBox::Question, text, QStringList(),
+                                            i18n( "Do not ask again" ), &again, 0 );
 
-  if ( ret == QDialog::Rejected )
-    return Cancel;
-  else {
-    if ( again ) {
-      KConfigGroup::WriteConfigFlags flags = KConfig::Persistent;
-      KConfigGroup cg( KGlobal::config().data(), "Notification Messages" );
-      cg.writeEntry( dontAskName, ret, flags );
-      cg.sync();
+    if ( ret == QDialog::Rejected )
+        return Cancel;
+    else {
+        if ( again ) {
+            KConfigGroup::WriteConfigFlags flags = KConfig::Persistent;
+            KConfigGroup cg( KGlobal::config().data(), "Notification Messages" );
+            cg.writeEntry( dontAskName, ret, flags );
+            cg.sync();
+        }
+
+        return ret;
     }
-
-    return ret;
-  }
 }
 
 //---------------------------------------------------------------------
 
 void AttachmentDialog::saveClicked()
 {
-  dialog->done( Save );
+    dialog->done( Save );
 }
 
 //---------------------------------------------------------------------
 
 void AttachmentDialog::openClicked()
 {
-  dialog->done( Open );
+    dialog->done( Open );
 }
 
 //---------------------------------------------------------------------
 
 void AttachmentDialog::openWithClicked()
 {
-  dialog->done( OpenWith );
+    dialog->done( OpenWith );
 }
 
 //---------------------------------------------------------------------
