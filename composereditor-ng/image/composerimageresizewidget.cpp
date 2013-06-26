@@ -231,6 +231,7 @@ void ComposerImageResizeWidget::paintEvent( QPaintEvent * )
     if (d->imageElement.isNull())
         return;
 
+    //TODO fix when we scroll area
     const int width = d->imageElement.geometry().width();
     const int height = d->imageElement.geometry().height();
     QPainter painter(this);
