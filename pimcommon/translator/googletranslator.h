@@ -19,7 +19,7 @@
 #define GOOGLETRANSLATOR_H
 
 #include "abstracttranslator.h"
-
+#include <QUrl>
 class QWebPage;
 class KComboBox;
 
@@ -39,6 +39,7 @@ protected Q_SLOTS:
     void slotLoadFinished(bool result);
 
 private:
+    QUrl mUrl;
     QWebPage *mWebPage;
 };
 }

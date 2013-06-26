@@ -398,6 +398,7 @@ void TranslatorWidget::slotClear()
 {
     d->inputText->clear();
     d->translatedText->clear();
+    d->translate->setEnabled( false );
 }
 
 void TranslatorWidget::slotDebug()
