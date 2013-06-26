@@ -30,6 +30,7 @@
 TheBatImportData::TheBatImportData(ImportWizard*parent)
     :AbstractImporter(parent)
 {
+    //TODO fix it
     mPath = QDir::homePath();
 }
 
