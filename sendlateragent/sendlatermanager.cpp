@@ -138,7 +138,10 @@ void SendLaterManager::sendDone(SendLaterInfo *info)
 void SendLaterManager::printDebugInfo()
 {
     Q_FOREACH (SendLaterInfo *info, mListSendLaterInfo) {
-        kDebug()<<" recusive "<<info->isRecursive()<< " id :"<<info->itemId()<<" date :"<<info->dateTime().toString();
+        kDebug() <<" recusive "<<info->isRecursive() <<
+                   " id :"<<info->itemId()<<
+                   " date :"<<info->dateTime().toString()<<
+                   " last saved date"<<info->lastDateTimeSend().toString();
     }
 }
 
