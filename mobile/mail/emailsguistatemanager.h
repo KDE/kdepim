@@ -29,25 +29,18 @@ class EmailsGuiStateManager : public GuiStateManager
   Q_OBJECT
 
   Q_PROPERTY( bool inManageAclsState READ inManageAclsState NOTIFY guiStateChanged )
-  Q_PROPERTY( bool inManageFiltersState READ inManageFiltersState NOTIFY guiStateChanged )
 
   Q_ENUMS( GuiState )
 
   public:
     enum GuiState {
       ManageAclsState = GuiStateManager::UserState,
-      ManageFiltersState
     };
 
     /**
      * Returns whether the current state is the manage acls state.
      */
     bool inManageAclsState() const;
-
-    /**
-     * Returns whether the current state is the manage filters state.
-     */
-    bool inManageFiltersState() const;
 
   Q_SIGNALS:
     void guiStateChanged();
