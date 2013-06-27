@@ -26,11 +26,6 @@ bool EmailsGuiStateManager::inManageAclsState() const
   return (currentState() == ManageAclsState);
 }
 
-bool EmailsGuiStateManager::inManageFiltersState() const
-{
-  return (currentState() == ManageFiltersState);
-}
-
 void EmailsGuiStateManager::emitChangedSignal()
 {
   GuiStateManager::emitChangedSignal();

@@ -334,8 +334,7 @@ PlasmaComponents.Page {
              !guiStateManager.inMultipleFolderSelectionScreenState &&
              !guiStateManager.inConfigScreenState &&
              !guiStateManager.inSearchScreenState &&
-             !guiStateManager.inManageAclsState &&
-             !guiStateManager.inManageFiltersState
+             !guiStateManager.inManageAclsState
 
     SlideoutPanel {
       id: actionPanel
@@ -518,13 +517,6 @@ PlasmaComponents.Page {
     searchWidget: Mail.SearchWidget {
       anchors.fill: parent
     }
-  }
-
-  QML.Loader {
-    anchors.fill: parent
-    source: guiStateManager.inManageFiltersState ? "FilterConfigDialog.qml" : ""
-    focus: guiStateManager.inManageFiltersState
-    onLoaded: item.filterModel = _filterModel
   }
 
   QML.Loader {
