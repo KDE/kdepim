@@ -22,8 +22,8 @@
 #include "incidencedialogfactory.h"
 #include "korganizereditorconfig.h"
 
-#include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/utils.h>
+#include <calendarsupport/calendarsingleton.h>
 
 #include <Akonadi/Calendar/ITIPHandler>
 
@@ -50,10 +50,7 @@ class GroupwareUiDelegate : public QObject, public Akonadi::GroupwareUiDelegate
     {
       QStringList mimeTypes;
       mimeTypes << KCalCore::Event::eventMimeType() << KCalCore::Todo::todoMimeType();
-      mCalendar = Akonadi::ETMCalendar::Ptr( new Akonadi::ETMCalendar( mimeTypes ) );
-      mCalendar->setObjectName( "Groupware calendar" );
-      mCalendar->setOwner( KCalCore::Person::Ptr( new KCalCore::Person( CalendarSupport::KCalPrefs::instance()->fullName(),
-                                                                        CalendarSupport::KCalPrefs::instance()->email() ) ) );
+      mCalendar = CalendarSupport::calendarSingleton();
     }
 
     void requestIncidenceEditor( const Akonadi::Item &item )

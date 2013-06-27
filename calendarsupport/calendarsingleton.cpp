@@ -21,6 +21,8 @@
 */
 
 #include "calendarsingleton.h"
+#include "kcalprefs.h"
+#include <KCalCore/Person>
 #include <QWeakPointer>
 
 /**
@@ -35,7 +37,9 @@ Akonadi::ETMCalendar::Ptr CalendarSupport::calendarSingleton()
     Akonadi::ETMCalendar::Ptr strongRef = weakRef;
     if (!strongRef) {
         strongRef = Akonadi::ETMCalendar::Ptr(new Akonadi::ETMCalendar());
-        strongRef->setCollectionFilteringEnabled( false );
+        strongRef->setCollectionFilteringEnabled(false);
+        strongRef->setOwner(KCalCore::Person::Ptr(new KCalCore::Person(KCalPrefs::instance()->fullName(),
+                                                                       KCalPrefs::instance()->email())));
         weakRef = strongRef;
     }
 
