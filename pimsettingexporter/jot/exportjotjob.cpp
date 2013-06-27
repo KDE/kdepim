@@ -91,15 +91,12 @@ void ExportJotJob::backupConfig()
 
         KConfig *kjotConfig = kjot->copyTo( tmp.fileName() );
 
-        //TODO implement it
-#if 0
-        const QString collectionsStr(QLatin1String("KJotsEntityOrder"));
+        const QString collectionsStr(QLatin1String("TreeState"));
         if (kjotConfig->hasGroup(collectionsStr)) {
             KConfigGroup group = kjotConfig->group(collectionsStr);
-            const QString selectionKey(QLatin1String("FavoriteCollectionIds"));
+            const QString selectionKey(QLatin1String("Expansion"));
             Utils::convertCollectionIdsToRealPath(group, selectionKey);
         }
-#endif
 
         kjotConfig->sync();
         backupFile(tmp.fileName(), Utils::configsPath(), kjotStr);

@@ -130,15 +130,13 @@ void ImportJotJob::importjotConfig(const KArchiveFile* jotFile, const QString &j
     copyToFile(jotFile, jotrc, filename, prefix);
     KSharedConfig::Ptr jotConfig = KSharedConfig::openConfig(jotrc);
 
-#if 0
-    //TODO
-    const QString collectionsStr(QLatin1String("Collections"));
-    if (jotConfig->hasGroup(collectionsStr)) {
-        KConfigGroup group = jotConfig->group(collectionsStr);
-        const QString selectionKey(QLatin1String("FavoriteCollectionIds"));
-        convertRealPathToCollectionList(group, selectionKey, false);
+    const QString collectionsStr(QLatin1String("TreeState"));
+    if (kjotConfig->hasGroup(collectionsStr)) {
+        KConfigGroup group = kjotConfig->group(collectionsStr);
+        const QString selectionKey(QLatin1String("Expansion"));
+        Utils::convertCollectionIdsToRealPath(group, selectionKey);
     }
-#endif
+
     jotConfig->sync();
 }
 

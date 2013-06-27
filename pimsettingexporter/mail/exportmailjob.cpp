@@ -460,13 +460,24 @@ void ExportMailJob::backupMails()
                 } else if (identifier.contains(QLatin1String("akonadi_maildir_resource_")) ||
                           identifier.contains(QLatin1String("akonadi_mixedmaildir_resource_"))) {
                     //Store akonadi agent config
-                    const KUrl url = Utils::resourcePath(agent);
+                    KUrl url = Utils::resourcePath(agent);
 
                     if (backupMailData(url, archivePath)) {
                         const QString errorStr = Utils::storeResources(archive(), identifier, archivePath );
                         if (!errorStr.isEmpty()) {
                             Q_EMIT error(errorStr);
                         }
+                        Q_EMIT info(i18n("\"%1\" was backuped.",url.fileName()));
+                        url = Utils::akonadiAgentConfigPath(identifier);
+                        if (!url.isEmpty()) {
+                            const QString filename = url.fileName();
+                            const bool fileAdded  = archive()->addLocalFile(url.path(), archivePath + filename);
+                            if (fileAdded)
+                                Q_EMIT info(i18n("\"%1\" was backuped.",filename));
+                            else
+                                Q_EMIT error(i18n("\"%1\" file cannot be added to backup file.",filename));
+                        }
+
                     }
                 }
             }
