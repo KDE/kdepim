@@ -59,7 +59,6 @@ static PreNode::List sortedPrenodes( const PreNode::List &nodes )
       const QString uid = node->incidence->instanceIdentifier();
       const QString parentUid = node->incidence->relatedTo();
       if ( parentUid.isEmpty() ) { // toplevel todo
-        Q_ASSERT( !prenodeByUid.contains( uid ) );
         prenodeByUid.insert( uid, node );
         remainingNodes.removeAll( node );
         node->depth = 0;
@@ -327,7 +326,12 @@ void IncidenceTreeModel::Private::insertNode( const PreNode::Ptr &prenode, bool 
   //kDebug() << "New node " << node.data() << node->uid << node->id;
   node->parentUid = incidence->relatedTo();
   Q_ASSERT( node->uid != node->parentUid );
-  Q_ASSERT( !m_uidMap.contains( node->uid ) );
+
+  if (m_uidMap.contains(node->uid)) {
+    kWarning() << "Duplicate incidence detected. File a bug against the resource. collection=" << item.storageCollectionId();
+    return;
+  }
+
   Q_ASSERT( !m_nodeMap.contains( node->id ) );
   m_uidMap.insert( node->uid, node );
   m_nodeMap.insert( item.id(), node );
