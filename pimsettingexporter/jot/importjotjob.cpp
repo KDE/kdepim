@@ -128,7 +128,7 @@ void ImportJotJob::restoreConfig()
 void ImportJotJob::importjotConfig(const KArchiveFile* jotFile, const QString &jotrc, const QString &filename,const QString &prefix)
 {
     copyToFile(jotFile, jotrc, filename, prefix);
-    KSharedConfig::Ptr jotConfig = KSharedConfig::openConfig(jotrc);
+    KSharedConfig::Ptr kjotConfig = KSharedConfig::openConfig(jotrc);
 
     const QString collectionsStr(QLatin1String("TreeState"));
     if (kjotConfig->hasGroup(collectionsStr)) {
@@ -137,7 +137,7 @@ void ImportJotJob::importjotConfig(const KArchiveFile* jotFile, const QString &j
         Utils::convertCollectionIdsToRealPath(group, selectionKey);
     }
 
-    jotConfig->sync();
+    kjotConfig->sync();
 }
 
 #include "importjotjob.moc"
