@@ -35,6 +35,7 @@ public:
     Utils::StoredTypes kaddressbookTypesSelected(int &numberOfStep) const;
     Utils::StoredTypes kalarmTypesSelected(int &numberOfStep) const;
     Utils::StoredTypes korganizerTypesSelected(int &numberOfStep) const;
+    Utils::StoredTypes kjotsTypesSelected(int &numberOfStep) const;
 
 private:
     SelectionTypeTreeWidget *mSelectionTreeWidget;
