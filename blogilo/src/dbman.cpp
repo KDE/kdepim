@@ -507,7 +507,7 @@ bool DBMan::removePost( int id )
     return res;
 }
 
-bool DBMan::removePost( int blog_id, QString postId)
+bool DBMan::removePost( int blog_id, const QString &postId)
 {
     QSqlQuery q;
     q.prepare( "DELETE FROM post WHERE blog_id=? AND postId=?" );

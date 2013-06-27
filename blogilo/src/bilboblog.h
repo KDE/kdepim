@@ -31,7 +31,6 @@
 #include <kblog/blog.h>
 
 #include <QObject>
-#include <QHash>
 /**
 Blog definition class!
 
