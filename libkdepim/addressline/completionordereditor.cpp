@@ -350,7 +350,7 @@ void CompletionOrderEditor::slotOk()
 {
   if ( mDirty ) {
     int w = 100;
-    for ( int itemIndex = 0; itemIndex < mListView->topLevelItemCount(); itemIndex++ ) {
+    for ( int itemIndex = 0; itemIndex < mListView->topLevelItemCount(); ++itemIndex ) {
       CompletionViewItem *item =
           static_cast<CompletionViewItem *>( mListView->topLevelItem( itemIndex ) );
       item->item()->setCompletionWeight( w );

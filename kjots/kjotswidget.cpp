@@ -1163,7 +1163,7 @@ void KJotsWidget::printSelection()
       for (int copy = 0; copy < docCopies; ++copy) {
 
         int lastPage = layout->pageCount();
-        for ( int page = 1; page <= lastPage ; page++ ) {
+        for ( int page = 1; page <= lastPage ; ++page ) {
           p.save();
           p.translate(body.left(), body.top() - (page - 1) * body.height());
           QRectF view(0, (page - 1) * body.height(), body.width(), body.height());

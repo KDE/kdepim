@@ -963,7 +963,7 @@ QString formatString( const QString &wildString, const QString &fromAddr )
         for ( ; str[j]>' '; j++ )
           ;
         unsigned int strLength( str.length() );
-        for ( ; j < strLength && str[j] <= ' '; j++ )
+        for ( ; j < strLength && str[j] <= ' '; ++j )
           ;
         result += str[0];
         if ( str[j] > ' ' ) {
