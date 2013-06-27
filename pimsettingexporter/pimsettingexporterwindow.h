@@ -37,6 +37,8 @@ private Q_SLOTS:
     void slotAddError(const QString& info);
 
 private:
+    void executeExportJob();
+    void executeImportJob();
     bool canZip() const;
     void setupActions(bool canZipFile);
     LogWidget *mLogWidget;

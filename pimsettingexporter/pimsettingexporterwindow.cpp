@@ -133,47 +133,27 @@ void PimSettingExporterWindow::slotBackupData()
 
         if (kmailNumberOfStep != 0) {
             mBackupData = new ExportMailJob(this, kmailTypeSelected, archiveStorage, kmailNumberOfStep);
-            connect(mBackupData,SIGNAL(info(QString)),SLOT(slotAddInfo(QString)));
-            connect(mBackupData,SIGNAL(error(QString)),SLOT(slotAddError(QString)));
-            mBackupData->start();
-            delete mBackupData;
-            mBackupData = 0;
+            executeExportJob();
         }
 
         if (kaddressbookNumberOfStep != 0) {
             mBackupData = new ExportAddressbookJob(this, kaddressbookTypeSelected, archiveStorage, kaddressbookNumberOfStep);
-            connect(mBackupData,SIGNAL(info(QString)),SLOT(slotAddInfo(QString)));
-            connect(mBackupData,SIGNAL(error(QString)),SLOT(slotAddError(QString)));
-            mBackupData->start();
-            delete mBackupData;
-            mBackupData = 0;
+            executeExportJob();
         }
 
         if (korganizerNumberOfStep != 0) {
             mBackupData = new ExportCalendarJob(this, korganizerTypeSelected, archiveStorage, korganizerNumberOfStep);
-            connect(mBackupData,SIGNAL(info(QString)),SLOT(slotAddInfo(QString)));
-            connect(mBackupData,SIGNAL(error(QString)),SLOT(slotAddError(QString)));
-            mBackupData->start();
-            delete mBackupData;
-            mBackupData = 0;
+            executeExportJob();
         }
 
         if (kalarmNumberOfStep != 0) {
             mBackupData = new ExportAlarmJob(this, kalarmTypeSelected, archiveStorage, kalarmNumberOfStep);
-            connect(mBackupData,SIGNAL(info(QString)),SLOT(slotAddInfo(QString)));
-            connect(mBackupData,SIGNAL(error(QString)),SLOT(slotAddError(QString)));
-            mBackupData->start();
-            delete mBackupData;
-            mBackupData = 0;
+            executeExportJob();
         }
 
         if (kjotsNumberOfStep != 0) {
             mBackupData = new ExportJotJob(this, kjotsTypeSelected, archiveStorage, kjotsNumberOfStep);
-            connect(mBackupData,SIGNAL(info(QString)),SLOT(slotAddInfo(QString)));
-            connect(mBackupData,SIGNAL(error(QString)),SLOT(slotAddError(QString)));
-            mBackupData->start();
-            delete mBackupData;
-            mBackupData = 0;
+            executeExportJob();
         }
 
         //At the end
@@ -182,6 +162,15 @@ void PimSettingExporterWindow::slotBackupData()
     } else {
         delete dialog;
     }
+}
+
+void PimSettingExporterWindow::executeExportJob()
+{
+    connect(mBackupData,SIGNAL(info(QString)),SLOT(slotAddInfo(QString)));
+    connect(mBackupData,SIGNAL(error(QString)),SLOT(slotAddError(QString)));
+    mBackupData->start();
+    delete mBackupData;
+    mBackupData = 0;
 }
 
 void PimSettingExporterWindow::slotAddInfo(const QString& info)
@@ -231,47 +220,27 @@ void PimSettingExporterWindow::slotRestoreData()
 
         if (kmailNumberOfStep != 0) {
             mRestoreData = new ImportMailJob(this, kmailTypeSelected, archiveStorage, kmailNumberOfStep);
-            connect(mRestoreData,SIGNAL(info(QString)),SLOT(slotAddInfo(QString)));
-            connect(mRestoreData,SIGNAL(error(QString)),SLOT(slotAddError(QString)));
-            mRestoreData->start();
-            delete mRestoreData;
-            mRestoreData = 0;
+            executeImportJob();
         }
 
         if (kaddressbookNumberOfStep != 0) {
             mRestoreData = new ImportAddressbookJob(this, kaddressbookTypeSelected, archiveStorage, kaddressbookNumberOfStep);
-            connect(mRestoreData,SIGNAL(info(QString)),SLOT(slotAddInfo(QString)));
-            connect(mRestoreData,SIGNAL(error(QString)),SLOT(slotAddError(QString)));
-            mRestoreData->start();
-            delete mRestoreData;
-            mRestoreData = 0;
+            executeImportJob();
         }
 
         if (korganizerNumberOfStep != 0) {
             mRestoreData = new ImportCalendarJob(this, korganizerTypeSelected, archiveStorage, korganizerNumberOfStep);
-            connect(mRestoreData,SIGNAL(info(QString)),SLOT(slotAddInfo(QString)));
-            connect(mRestoreData,SIGNAL(error(QString)),SLOT(slotAddError(QString)));
-            mRestoreData->start();
-            delete mRestoreData;
-            mRestoreData = 0;
+            executeImportJob();
         }
 
         if (kalarmNumberOfStep != 0) {
             mRestoreData = new ImportAlarmJob(this, kalarmTypeSelected, archiveStorage, kalarmNumberOfStep);
-            connect(mRestoreData,SIGNAL(info(QString)),SLOT(slotAddInfo(QString)));
-            connect(mRestoreData,SIGNAL(error(QString)),SLOT(slotAddError(QString)));
-            mRestoreData->start();
-            delete mRestoreData;
-            mRestoreData = 0;
+            executeImportJob();
         }
 
         if (kjotsNumberOfStep != 0) {
             mRestoreData = new ImportJotJob(this, kjotsTypeSelected, archiveStorage, kjotsNumberOfStep);
-            connect(mRestoreData,SIGNAL(info(QString)),SLOT(slotAddInfo(QString)));
-            connect(mRestoreData,SIGNAL(error(QString)),SLOT(slotAddError(QString)));
-            mRestoreData->start();
-            delete mRestoreData;
-            mRestoreData = 0;
+            executeImportJob();
         }
 
         archiveStorage->closeArchive();
@@ -279,6 +248,15 @@ void PimSettingExporterWindow::slotRestoreData()
     } else {
         delete dialog;
     }
+}
+
+void PimSettingExporterWindow::executeImportJob()
+{
+    connect(mRestoreData,SIGNAL(info(QString)),SLOT(slotAddInfo(QString)));
+    connect(mRestoreData,SIGNAL(error(QString)),SLOT(slotAddError(QString)));
+    mRestoreData->start();
+    delete mRestoreData;
+    mRestoreData = 0;
 }
 
 bool PimSettingExporterWindow::canZip() const
