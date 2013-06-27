@@ -16,6 +16,7 @@ set(calendarsupport_LIB_SRCS
   archivedialog.cpp
   attachmenthandler.cpp
   # calendarsearch.cpp
+  calendarsingleton.cpp
   calendarutils.cpp
   categoryconfig.cpp
   categoryhierarchyreader.cpp
