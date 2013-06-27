@@ -657,7 +657,7 @@ void TodoView::addTodo( const QString &summary,
 
   todo->setCategories( categories );
 
-  if ( parent ) {
+  if ( parent && !parent->hasRecurrenceId() ) {
     todo->setRelatedTo( parent->uid() );
   }
 
@@ -751,10 +751,11 @@ void TodoView::contextMenu( const QPoint &pos )
 
   if ( hasItem ) {
     if ( incidencePtr ) {
+      const bool hasRecId = incidencePtr->hasRecurrenceId();
       if ( calendar() ) {
-        mMakeSubtodosIndependent->setEnabled( !calendar()->childItems( incidencePtr->uid() ).isEmpty() );
+        mMakeSubtodosIndependent->setEnabled( !hasRecId && !calendar()->childItems( incidencePtr->uid() ).isEmpty() );
       }
-      mMakeTodoIndependent->setEnabled( !incidencePtr->relatedTo().isEmpty() );
+      mMakeTodoIndependent->setEnabled( !hasRecId && !incidencePtr->relatedTo().isEmpty() );
     }
 
     switch ( mView->indexAt( pos ).column() ) {

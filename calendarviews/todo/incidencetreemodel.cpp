@@ -56,7 +56,7 @@ static PreNode::List sortedPrenodes( const PreNode::List &nodes )
     bool foundAtLeastOne = false; // this bool saves us from infinit looping if the parent doesn't exist
     foreach( const PreNode::Ptr &node, remainingNodes ) {
       Q_ASSERT( node );
-      const QString uid = node->incidence->uid();
+      const QString uid = node->incidence->instanceIdentifier();
       const QString parentUid = node->incidence->relatedTo();
       if ( parentUid.isEmpty() ) { // toplevel todo
         Q_ASSERT( !prenodeByUid.contains( uid ) );
@@ -190,7 +190,7 @@ void IncidenceTreeModel::Private::onDataChanged( const QModelIndex &begin, const
         Q_ASSERT( false );
         return;
       }
-      m_itemByUid.insert( incidence->uid(), item );
+      m_itemByUid.insert( incidence->instanceIdentifier(), item );
 
       Node::Ptr newParentNode;
       const QString newParentUid = incidence->relatedTo();
@@ -322,7 +322,7 @@ void IncidenceTreeModel::Private::insertNode( const PreNode::Ptr &prenode, bool 
   Node::Ptr node( new Node() );
   node->sourceIndex = prenode->sourceIndex;
   node->id = item.id();
-  node->uid = incidence->uid();
+  node->uid = incidence->instanceIdentifier();
   m_itemByUid.insert( node->uid, item );
   //kDebug() << "New node " << node.data() << node->uid << node->id;
   node->parentUid = incidence->relatedTo();

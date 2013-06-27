@@ -699,7 +699,7 @@ bool TodoModel::dropMimeData( const QMimeData *data, Qt::DropAction action,
 
       KCalCore::Incidence::Ptr tmp = destTodo;
       while ( tmp ) {
-        if ( tmp->uid() == todo->uid() ) {
+        if ( tmp->uid() == todo->uid() ) { //correct, don't use instanceIdentifier() here
           KMessageBox::information(
             0,
             i18n( "Cannot move to-do to itself or a child of itself." ),
@@ -710,13 +710,18 @@ bool TodoModel::dropMimeData( const QMimeData *data, Qt::DropAction action,
         tmp = CalendarSupport::incidence( d->m_calendar->item( parentUid ) );
       }
 
-      KCalCore::Todo::Ptr oldTodo = KCalCore::Todo::Ptr( todo->clone() );
-      // destTodo is empty when we drag a to-do out of a relationship
-      todo->setRelatedTo( destTodo ? destTodo->uid() : QString() );
-      d->m_changer->modifyIncidence( item, oldTodo );
+      if (!destTodo->hasRecurrenceId()) {
+        KCalCore::Todo::Ptr oldTodo = KCalCore::Todo::Ptr( todo->clone() );
+        // destTodo is empty when we drag a to-do out of a relationship
+        todo->setRelatedTo( destTodo ? destTodo->uid() : QString() );
+        d->m_changer->modifyIncidence( item, oldTodo );
 
-      // again, no need to emit dataChanged, that's done by processChange
-      return true;
+        // again, no need to emit dataChanged, that's done by processChange
+        return true;
+      } else {
+        kDebug() << "Todo's with recurring id can't have child todos yet.";
+        return false;
+      }
 
     } else if ( e ) {
       // TODO: Implement dropping an event onto a to-do: Generate a relationship to the event!
