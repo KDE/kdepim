@@ -55,6 +55,11 @@ PlasmaComponents.Page {
       onClicked: application.configureIdentity()
     }
     PlasmaComponents.Button {
+      text: i18n("Filter")
+
+      onClicked: pageStack.push(Qt.createComponent("FilterEditor.qml"))
+    }
+    PlasmaComponents.Button {
       text: i18n( "About" )
 
       onClicked: pageStack.push(Qt.createComponent("AboutPage.qml"))

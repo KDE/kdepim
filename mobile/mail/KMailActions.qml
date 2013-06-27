@@ -55,14 +55,6 @@ ActionMenuContainer {
     actionItemHeight: parent.actionItemHeight
   }
 
-  FilterEditor {
-    category : "home"
-    name : "filter_menu"
-    text : KDE.i18n( "Filter" )
-    actionItemHeight: parent.actionItemHeight
-    model: filterModel
-  }
-
   ActionList {
     category : "account"
     name : "account_menu"
