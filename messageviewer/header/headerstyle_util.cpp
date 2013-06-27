@@ -52,6 +52,7 @@ QString strToHtml( const QString &str, int flags ) {
 
 // Prepare the date string (when printing always use the localized date)
 QString dateString( KMime::Message *message, bool printing, bool shortDate ) {
+    qDebug()<<" message->date() :"<<message->date()->dateTime().toString();
     const KDateTime dateTime = message->date()->dateTime();
     if ( !dateTime.isValid() )
         return i18nc( "Unknown date", "Unknown" );

@@ -263,6 +263,7 @@ namespace MessageViewer {
                "  color: %3 ! important;\n"
                "  padding: 4px ! important;\n"
                "  border: solid %3 1px ! important;\n"
+               "  line-height: normal;\n"
                "}\n\n"
 
                "div.fancy.header > div a[href] { color: %3 ! important; }\n\n"
@@ -281,6 +282,7 @@ namespace MessageViewer {
 
                "div.htmlWarn {\n"
                "  border: 2px solid #ffffff ! important;\n"
+               "  line-height: normal;\n"
                "}\n\n"
 
                "div.senderpic{\n"
@@ -490,6 +492,7 @@ namespace MessageViewer {
       +
       QString( "div.htmlWarn {\n"
                "  border: 2px solid %1 ! important;\n"
+               "  line-height: normal;\n"
                "}\n\n" )
       .arg( cHtmlWarning.name() )
       +
@@ -501,6 +504,7 @@ namespace MessageViewer {
                "  background-color: %2 ! important;\n"
                "  color: %3 ! important;\n"
                "  border: solid %4 1px ! important;\n"
+               "  line-height: normal;\n"
                "}\n\n"
 
                "div.fancy.header > div a[href] { color: %3 ! important; }\n\n"
@@ -602,17 +606,20 @@ namespace MessageViewer {
       "div.fancy.header table {\n"
       "  width: 100% ! important;\n"
       "  border-width: 0px ! important;\n"
+      "  line-height: normal;\n"
       "}\n\n"
 
       "div.htmlWarn {\n"
       "  margin: 0px 5% ! important;\n"
       "  padding: 10px ! important;\n"
       "  text-align: left ! important;\n"
+      "  line-height: normal;\n"
       "}\n\n"
 
       "div.fancy.header > div {\n"
       "  font-weight: bold ! important;\n"
       "  padding: 4px ! important;\n"
+      "  line-height: normal;\n"
       "}\n\n"
 
       "div.fancy.header table {\n"
