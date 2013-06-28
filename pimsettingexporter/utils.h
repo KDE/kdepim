@@ -70,7 +70,7 @@ void convertCollectionIdsToRealPath(KConfigGroup &group, const QString &currentK
 KUrl resourcePath(const Akonadi::AgentInstance &agent);
 KUrl adaptResourcePath(KSharedConfigPtr resourceConfig, const QString &storedData);
 QString storeResources(KZip *archive, const QString &identifier, const QString &path);
-QString createResourceUniqueName(const QString &originalName);
 KUrl akonadiAgentConfigPath(const QString &identifier);
+KZip *openZip(const QString &filename, QString &errorMsg);
 }
 #endif // UTILS_H

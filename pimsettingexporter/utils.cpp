@@ -228,12 +228,6 @@ QString Utils::storeResources(KZip *archive, const QString &identifier, const QS
     return QString();
 }
 
-QString Utils::createResourceUniqueName(const QString &originalName)
-{
-    //TODO
-    return QString();
-}
-
 KUrl Utils::akonadiAgentConfigPath(const QString &identifier)
 {
     const QString relativeFileName = QString::fromLatin1("akonadi/%1%2").arg(Utils::prefixAkonadiConfigFile()).arg(identifier);
@@ -250,3 +244,14 @@ QString Utils::akonadiAgentName(KSharedConfig::Ptr config)
     return name;
 }
 
+KZip *Utils::openZip(const QString &filename, QString &errorMsg)
+{
+    KZip *zip = new KZip(filename);
+    const bool result = zip->open(QIODevice::ReadOnly);
+    if (!result) {
+        errorMsg = i18n("Archive cannot be opened in read mode.");
+        delete zip;
+        return 0;
+    }
+    return zip;
+}
