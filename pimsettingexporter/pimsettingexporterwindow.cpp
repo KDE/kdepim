@@ -166,8 +166,8 @@ void PimSettingExporterWindow::slotBackupData()
 
 void PimSettingExporterWindow::executeExportJob()
 {
-    connect(mBackupData,SIGNAL(info(QString)),SLOT(slotAddInfo(QString)));
-    connect(mBackupData,SIGNAL(error(QString)),SLOT(slotAddError(QString)));
+    connect(mBackupData, SIGNAL(info(QString)), SLOT(slotAddInfo(QString)));
+    connect(mBackupData, SIGNAL(error(QString)), SLOT(slotAddError(QString)));
     mBackupData->start();
     delete mBackupData;
     mBackupData = 0;
@@ -252,8 +252,8 @@ void PimSettingExporterWindow::slotRestoreData()
 
 void PimSettingExporterWindow::executeImportJob()
 {
-    connect(mRestoreData,SIGNAL(info(QString)),SLOT(slotAddInfo(QString)));
-    connect(mRestoreData,SIGNAL(error(QString)),SLOT(slotAddError(QString)));
+    connect(mRestoreData, SIGNAL(info(QString)), SLOT(slotAddInfo(QString)));
+    connect(mRestoreData, SIGNAL(error(QString)), SLOT(slotAddError(QString)));
     mRestoreData->start();
     delete mRestoreData;
     mRestoreData = 0;
