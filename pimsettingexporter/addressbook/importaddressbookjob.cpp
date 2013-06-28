@@ -85,6 +85,7 @@ void ImportAddressbookJob::restoreResources()
                     const KArchiveEntry* dataResouceEntry = mArchiveDirectory->entry(dataFile);
                     if (dataResouceEntry->isFile()) {
                         const KArchiveFile* file = static_cast<const KArchiveFile*>(dataResouceEntry);
+                        //Extract zip file.
                         file->copyTo(newUrl.path());
                     }
                     settings.insert(QLatin1String("Path"), newUrl.path());
@@ -94,7 +95,6 @@ void ImportAddressbookJob::restoreResources()
                         const KArchiveEntry *akonadiAgentConfigEntry = mArchiveDirectory->entry(agentConfigFile);
                         if (akonadiAgentConfigEntry->isFile()) {
                             const KArchiveFile* file = static_cast<const KArchiveFile*>(akonadiAgentConfigEntry);
-                            //TODO extract zip
                             file->copyTo(copyToDirName);
                             resourceName = file->name();
                             KSharedConfig::Ptr akonadiAgentConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + resourceName);
