@@ -28,7 +28,6 @@ int main( int argc, char** argv )
   app.setQuitOnLastWindowClosed( false );
   KComponentData kcd( "sievemanager" );
   KSieveUi::ManageSieveScriptsDialog *dlg = new KSieveUi::ManageSieveScriptsDialog;
-  QObject::connect( dlg, SIGNAL(destroyed(QObject*)), &app, SLOT(quit()) );
-  dlg->show();
-  return app.exec();
+  dlg->exec();
+  return 0;
 }
