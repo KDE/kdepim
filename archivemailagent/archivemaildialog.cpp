@@ -218,6 +218,7 @@ void ArchiveMailWidget::updateButtons()
 
 void ArchiveMailWidget::needReloadConfig()
 {
+    //TODO add messagebox which informs that we save settings here.
     mWidget->treeWidget->clear();
     load();
 }
