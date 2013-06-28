@@ -55,6 +55,7 @@ void ImportJotJob::start()
 void ImportJotJob::restoreResources()
 {
     Q_EMIT info(i18n("Restore resources..."));
+    //It's maildir support. Need to add support
     restoreResourceFile(QString::fromLatin1("akonadi_akonotes_resource"), Utils::jotPath(), storeJot);
     Q_EMIT info(i18n("Resources restored."));
 }
