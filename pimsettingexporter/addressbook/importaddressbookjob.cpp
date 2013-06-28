@@ -24,6 +24,7 @@
 #include <KStandardDirs>
 #include <KLocale>
 #include <KConfigGroup>
+#include <KZip>
 
 #include <QFile>
 #include <QDir>
@@ -84,17 +85,8 @@ void ImportAddressbookJob::restoreResources()
                     const KArchiveEntry* dataResouceEntry = mArchiveDirectory->entry(dataFile);
                     if (dataResouceEntry->isFile()) {
                         const KArchiveFile* file = static_cast<const KArchiveFile*>(dataResouceEntry);
-                        //Extract zip file.
-                        //file->copyTo(newUrl.path());
-                        file->copyTo(copyToDirName);
-                        QString errorMsg;
-                        KZip *zip = Utils::openZip(copyToDirName + QLatin1Char('/') + file->name(), errorMsg);
-                        if (zip) {
-                            //TODO
-                            delete zip;
-                        } else {
-                            Q_EMIT error(errorMsg);
-                        }
+
+                        extractZipFile(file, copyToDirName, newUrl.path());
                     }
                     settings.insert(QLatin1String("Path"), newUrl.path());
 

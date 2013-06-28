@@ -24,6 +24,7 @@
 #include <KStandardDirs>
 #include <KTemporaryFile>
 #include <KConfigGroup>
+#include <KZip>
 
 #include <QWidget>
 #include <QDir>

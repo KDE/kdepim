@@ -21,13 +21,13 @@
 #include "utils.h"
 #include <Akonadi/Collection>
 
-#include <KZip>
-
 class QWidget;
 class QProgressDialog;
 class ArchiveStorage;
 class KArchiveDirectory;
 class KTempDir;
+class KZip;
+class KArchiveFile;
 
 namespace KPIMIdentities {
 class Identity;
@@ -54,6 +54,8 @@ Q_SIGNALS:
     void error(const QString &);
 
 protected:
+    void extractZipFile(const KArchiveFile *file, const QString &source, const QString &destination);
+
     void convertRealPathToCollection(KConfigGroup &group, const QString &currentKey, bool addCollectionPrefix=false);
     void convertRealPathToCollectionList(KConfigGroup &group, const QString &currentKey, bool addCollectionPrefix=true);
     void copyToFile(const KArchiveFile * archivefile, const QString &dest, const QString &filename, const QString &prefix);

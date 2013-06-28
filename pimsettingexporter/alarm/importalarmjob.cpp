@@ -25,6 +25,7 @@
 #include <KArchive>
 #include <KLocale>
 #include <KConfigGroup>
+#include <KZip>
 
 #include <QDir>
 #include <QFile>

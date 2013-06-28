@@ -303,4 +303,24 @@ void AbstractImportExportJob::addSpecificResourceSettings(KSharedConfig::Ptr /*r
     //Redefine it in subclass
 }
 
+void AbstractImportExportJob::extractZipFile(const KArchiveFile *file, const QString &source, const QString &destination)
+{
+    file->copyTo(source);
+    QString errorMsg;
+    KZip *zip = Utils::openZip(source + QLatin1Char('/') + file->name(), errorMsg);
+    if (zip) {
+        const KArchiveDirectory *zipDir = zip->directory();
+        Q_FOREACH(const QString& entryName, zipDir->entries()) {
+            const KArchiveEntry *entry = zipDir->entry(entryName);
+            if (entry && entry->isDirectory()) {
+                const KArchiveDirectory *dir = static_cast<const KArchiveDirectory*>(entry);
+                dir->copyTo(destination, true);
+            }
+        }
+        delete zip;
+    } else {
+        Q_EMIT error(errorMsg);
+    }
+}
+
 #include "abstractimportexportjob.moc"
