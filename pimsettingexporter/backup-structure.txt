@@ -1,4 +1,4 @@
-2013-06-20:
+2013-06-28:
 -----------
 Zip structure is :
 Root
@@ -32,6 +32,12 @@ Root
 |       |---------korganizer_printing.rc 
 |       |---------korgacrc
 |       |---------kaddressbookrc
+|       |---------akonadi_mailfilter_agent.notifyrc
+|       |---------akonadi_sendlater_agent.notifyrc
+|       |---------akonadi_archivemail_agent.notifyrc
+|       |---------kmail2.notifyrc
+|       |---------akonadi_maildispatcher_agent.notifyrc
+|       |---------akonadi_newmailnotifier_agent.notifyrc
 |
 |-----akonadi
 |       |---------<archive akonadi>

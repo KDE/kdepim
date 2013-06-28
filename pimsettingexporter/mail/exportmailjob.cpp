@@ -191,29 +191,19 @@ void ExportMailJob::backupConfig()
         else
             Q_EMIT error(i18n("Filters cannot be exported."));
     }
-    const QString labldaprcStr(QLatin1String("kabldaprc"));
-    const QString labldaprc = KStandardDirs::locateLocal( "config", labldaprcStr);
-    if (QFile(labldaprc).exists()) {
-        backupFile(labldaprc, Utils::configsPath(), labldaprcStr);
-    }
 
-    const QString kmailsnippetrcStr(QLatin1String("kmailsnippetrc"));
-    const QString kmailsnippetrc = KStandardDirs::locateLocal( "config",  kmailsnippetrcStr);
-    if (QFile(kmailsnippetrc).exists()) {
-        backupFile(kmailsnippetrc, Utils::configsPath(), kmailsnippetrcStr);
-    }
+    backupConfigFile(QLatin1String("kabldaprc"));
+    backupConfigFile(QLatin1String("kmailsnippetrc"));
+    backupConfigFile(QLatin1String("sievetemplaterc"));
+    backupConfigFile(QLatin1String("customtemplatesrc"));
 
-    const QString sieveTemplateStr(QLatin1String("sievetemplaterc"));
-    const QString sieveTemplaterc = KStandardDirs::locateLocal( "config",  sieveTemplateStr);
-    if (QFile(sieveTemplaterc).exists()) {
-        backupFile(sieveTemplaterc, Utils::configsPath(), sieveTemplateStr);
-    }
-
-    const QString customTemplateStr(QLatin1String("customtemplatesrc"));
-    const QString customTemplaterc = KStandardDirs::locateLocal( "config",  customTemplateStr);
-    if (QFile(customTemplaterc).exists()) {
-        backupFile(customTemplaterc, Utils::configsPath(), customTemplateStr);
-    }
+    //Notify file config
+    backupConfigFile(QLatin1String("akonadi_mailfilter_agent.notifyrc"));
+    backupConfigFile(QLatin1String("akonadi_sendlater_agent.notifyrc"));
+    backupConfigFile(QLatin1String("akonadi_archivemail_agent.notifyrc"));
+    backupConfigFile(QLatin1String("kmail2.notifyrc"));
+    backupConfigFile(QLatin1String("akonadi_newmailnotifier_agent.notifyrc"));
+    backupConfigFile(QLatin1String("akonadi_maildispatcher_agent.notifyrc"));
 
     const QString archiveMailAgentConfigurationStr(QLatin1String("akonadi_archivemail_agentrc"));
     const QString archiveMailAgentconfigurationrc = KStandardDirs::locateLocal( "config", archiveMailAgentConfigurationStr );

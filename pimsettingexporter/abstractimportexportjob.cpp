@@ -27,6 +27,7 @@
 #include <KTempDir>
 #include <KLocale>
 #include <KMessageBox>
+#include <KStandardDirs>
 
 #include <QWidget>
 #include <QProgressDialog>
@@ -98,6 +99,15 @@ void AbstractImportExportJob::showInfo(const QString&text)
 KZip *AbstractImportExportJob::archive()
 {
     return mArchiveStorage->archive();
+}
+
+void AbstractImportExportJob::backupConfigFile(const QString &configFileName)
+{
+    const QString configrcStr(configFileName);
+    const QString configrc = KStandardDirs::locateLocal( "config", configrcStr);
+    if (QFile(configrc).exists()) {
+        backupFile(configrc, Utils::configsPath(), configrcStr);
+    }
 }
 
 void AbstractImportExportJob::backupFile(const QString&filename, const QString& path, const QString&storedName)

@@ -110,17 +110,8 @@ void ExportCalendarJob::backupConfig()
         delete korganizerConfig;
     }
 
-    const QString korganizerPrintingStr(QLatin1String("korganizer_printing.rc"));
-    const QString korganizerPrintingrc = KStandardDirs::locateLocal( "config",  korganizerPrintingStr);
-    if (QFile(korganizerPrintingrc).exists()) {
-        backupFile(korganizerPrintingrc, Utils::configsPath(), korganizerPrintingStr);
-    }
-
-    const QString korgacStr(QLatin1String("korgacrc"));
-    const QString korgacrc = KStandardDirs::locateLocal( "config", korgacStr );
-    if (QFile(korgacrc).exists()) {
-        backupFile(korgacrc, Utils::configsPath(), korgacStr);
-    }
+    backupConfigFile(QLatin1String("korganizer_printing.rc"));
+    backupConfigFile(QLatin1String("korgacrc"));
 
     const QString freebusyurlsStr(QLatin1String("korganizer/freebusyurls"));
     const QString freebusyurls = KStandardDirs::locateLocal( "data", freebusyurlsStr );

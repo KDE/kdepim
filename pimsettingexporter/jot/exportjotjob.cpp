@@ -60,7 +60,6 @@ void ExportJotJob::start()
     }
 }
 
-
 void ExportJotJob::backupResources()
 {
     showInfo(i18n("Backing up resources..."));

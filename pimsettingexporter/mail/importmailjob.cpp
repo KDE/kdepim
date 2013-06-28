@@ -685,6 +685,32 @@ void ImportMailJob::restoreConfig()
         }
     }
 
+    //Restore notify file
+    QStringList lstNotify;
+    lstNotify << QLatin1String("akonadi_mailfilter_agent.notifyrc")
+              << QLatin1String("akonadi_sendlater_agent.notifyrc")
+              << QLatin1String("akonadi_archivemail_agent.notifyrc")
+              << QLatin1String("kmail2.notifyrc")
+              << QLatin1String("akonadi_newmailnotifier_agent.notifyrc")
+              << QLatin1String("akonadi_maildispatcher_agent.notifyrc");
+
+    //We can't merge it.
+    Q_FOREACH (const QString &filename, lstNotify) {
+        const KArchiveEntry* notifyentry  = mArchiveDirectory->entry(Utils::configsPath() + filename);
+        if ( notifyentry &&  notifyentry->isFile()) {
+            const KArchiveFile* notify = static_cast<const KArchiveFile*>(notifyentry);
+            const QString notifyrc = KStandardDirs::locateLocal( "config",  filename);
+            if (QFile(notifyrc).exists()) {
+                if (overwriteConfigMessageBox(filename)) {
+                    copyToFile(notify, notifyrc, filename, Utils::configsPath());
+                }
+            } else {
+                copyToFile(notify, notifyrc, filename, Utils::configsPath());
+            }
+        }
+    }
+
+
     const KArchiveEntry* autocorrectionEntry  = mArchiveDirectory->entry(Utils::dataPath() + QLatin1String( "autocorrect/" ) );
     if (autocorrectionEntry && autocorrectionEntry->isDirectory()) {
         const KArchiveDirectory *autoCorrectionDir = static_cast<const KArchiveDirectory*>(autocorrectionEntry);
