@@ -624,7 +624,8 @@ namespace MessageViewer {
 
       "div.fancy.header table {\n"
       "  padding: 2px ! important;\n" // ### khtml bug: this is ignored
-      "  text-align: left ! important\n"
+      "  text-align: left ! important;\n"
+      "  border-collapse: separate ! important;\n"
       "}\n\n"
 
       "div.fancy.header table th {\n"
@@ -636,6 +637,7 @@ namespace MessageViewer {
       "  vertical-align: top ! important;\n"
       "  background-color: %1 ! important;\n"
       "  color: %2 ! important;\n"
+      "  border: 1px ! important;\n"
 
       "}\n\n"
 
@@ -648,6 +650,7 @@ namespace MessageViewer {
       "  width: 100% ! important;\n"
       "  background-color: %1 ! important;\n"
       "  color: %2 ! important;\n"
+      "  border: 1px ! important;\n"
       "}\n\n"
 
 
