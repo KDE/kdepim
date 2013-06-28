@@ -57,7 +57,6 @@ void ImportAddressbookJob::restoreResources()
     Q_EMIT info(i18n("Restore resources..."));
     restoreResourceFile(QString::fromLatin1("akonadi_vcard_resource"), Utils::addressbookPath(), storeAddressbook);
 
-    //TODO need to look at vcarddir too
     if (!mListResourceFile.isEmpty()) {
         QDir dir(mTempDirName);
         dir.mkdir(Utils::addressbookPath());
@@ -113,7 +112,6 @@ void ImportAddressbookJob::restoreResources()
 
                     const QString newResource = mCreateResource->createResource( QString::fromLatin1("akonadi_vcarddir_resource"), filename, settings );
                     qDebug()<<" newResource"<<newResource;
-                    //TODO extract zip
                 }
             }
         }
