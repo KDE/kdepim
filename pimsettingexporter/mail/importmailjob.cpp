@@ -500,7 +500,6 @@ void ImportMailJob::restoreMails()
                     const KArchiveFile* file = static_cast<const KArchiveFile*>(dataResouceEntry);
                     extractZipFile(file, copyToDirName, newUrl.path());
                 }
-                //TODO import them
             } else {
                 kDebug()<<" resource name not supported "<<resourceName;
             }
