@@ -495,6 +495,11 @@ void ImportMailJob::restoreMails()
                     mHashResources.insert(filename,newResource);
 
                 const QString mailFile = res.value();
+                const KArchiveEntry* dataResouceEntry = mArchiveDirectory->entry(mailFile);
+                if (dataResouceEntry->isFile()) {
+                    const KArchiveFile* file = static_cast<const KArchiveFile*>(dataResouceEntry);
+                    extractZipFile(file, copyToDirName, newUrl.path());
+                }
                 //TODO import them
             } else {
                 kDebug()<<" resource name not supported "<<resourceName;
