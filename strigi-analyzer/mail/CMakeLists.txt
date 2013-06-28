@@ -12,7 +12,7 @@ set(mailendanalyzer_SRCS
 )
 kde4_add_kcfg_files(mailendanalyzer_SRCS settings.kcfgc)
 
-include_directories(${CMAKE_SOURCE_DIR}/strigi-analyzer ${STRIGI_INCLUDE_DIR})
+include_directories(${CMAKE_SOURCE_DIR}/messageviewer ${CMAKE_SOURCE_DIR}/strigi-analyzer ${STRIGI_INCLUDE_DIR})
 add_definitions(-DMAKE_PIMSTRIGIANALYZER_LIB)
 
 if(WINCE)

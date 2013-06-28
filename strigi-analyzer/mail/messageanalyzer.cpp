@@ -27,9 +27,9 @@
 #include <kglobal.h>
 #include <klocalizedstring.h>
 #include <kmime/kmime_message.h>
-#include <messageviewer/objecttreeparser.h>
-#include <messageviewer/nodehelper.h>
-#include <messageviewer/partmetadata.h>
+#include <messageviewer/viewer/objecttreeparser.h>
+#include <messageviewer/viewer/nodehelper.h>
+#include <messageviewer/viewer/partmetadata.h>
 
 #include <QtCore/QDir>
 #include <QtCore/QMetaMethod>
