@@ -54,6 +54,7 @@ public:
      * @return new image mimetype after saving.
      */
     QByteArray mimetype() const;
+
 private:
     QImage mImage;
     QBuffer mBuffer;
