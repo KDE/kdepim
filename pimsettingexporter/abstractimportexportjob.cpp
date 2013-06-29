@@ -28,6 +28,7 @@
 #include <KLocale>
 #include <KMessageBox>
 #include <KStandardDirs>
+#include <KTemporaryFile>
 
 #include <QWidget>
 #include <QProgressDialog>
@@ -331,6 +332,33 @@ void AbstractImportExportJob::extractZipFile(const KArchiveFile *file, const QSt
     } else {
         Q_EMIT error(errorMsg);
     }
+}
+
+bool AbstractImportExportJob::backupFullDirectory(const KUrl &url, const QString &archivePath)
+{
+    KTemporaryFile tmp;
+    tmp.open();
+    KZip *vcarddirArchive = new KZip(tmp.fileName());
+    vcarddirArchive->setCompression(KZip::NoCompression);
+    bool result = vcarddirArchive->open(QIODevice::WriteOnly);
+    if (!result) {
+        return false;
+    }
+    const QString filename = url.fileName();
+    const bool vcarddirAdded = vcarddirArchive->addLocalDirectory(url.path(), QString());
+    //TODO add MessageBox
+    if (!vcarddirAdded) {
+        delete vcarddirArchive;
+        return false;
+    }
+    vcarddirArchive->setCompression(KZip::DeflateCompression);
+    vcarddirArchive->close();
+    tmp.close();
+
+    const bool fileAdded = archive()->addLocalFile(tmp.fileName(), archivePath  + QLatin1String("addressbook.zip"));
+    if (fileAdded)
+        Q_EMIT info(i18n("\"%1\" was backuped.",filename));
+    return fileAdded;
 }
 
 #include "abstractimportexportjob.moc"
