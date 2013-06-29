@@ -86,6 +86,11 @@ void SendLaterConfigureDialog::slotSave()
     mWidget->save();
 }
 
+void SendLaterConfigureDialog::slotNeedToReloadConfig()
+{
+    mWidget->needToReload();
+}
+
 void SendLaterConfigureDialog::readConfig()
 {
     KConfigGroup group( KGlobal::config(), "SendLaterConfigureDialog" );
@@ -144,11 +149,11 @@ SendLaterWidget::SendLaterWidget( QWidget *parent )
     connect(mWidget->treeWidget, SIGNAL(customContextMenuRequested(QPoint)),
             this, SLOT(customContextMenuRequested(QPoint)));
 
-    load();
     connect(mWidget->removeItem, SIGNAL(clicked(bool)), SLOT(slotRemoveItem()));
     connect(mWidget->modifyItem, SIGNAL(clicked(bool)), SLOT(slotModifyItem()));
     connect(mWidget->treeWidget, SIGNAL(itemSelectionChanged()), SLOT(updateButtons()));
     connect(mWidget->treeWidget, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)), SLOT(slotModifyItem()));
+    load();
     updateButtons();
 }
 
@@ -286,5 +291,11 @@ void SendLaterWidget::slotModifyItem()
     }
 }
 
+void SendLaterWidget::needToReload()
+{
+    //TODO
+    mWidget->treeWidget->clear();
+
+}
 
 #include "sendlaterconfiguredialog.moc"

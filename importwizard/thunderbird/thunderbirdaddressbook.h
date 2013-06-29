@@ -28,8 +28,9 @@ class ThunderBirdAddressBook: public AbstractAddressBook
 public:
     explicit ThunderBirdAddressBook(const QDir &dir, ImportWizard *parent);
     ~ThunderBirdAddressBook();
+
 private:
-    void readAddressBook( const QString& filename );
+    void readAddressBook( const QString &filename );
 };
 
 #endif // THUNDERBIRDADDRESSBOOK_H

@@ -267,7 +267,7 @@ void MessageActions::slotItemModified( const Akonadi::Item &  item, const QSet< 
     mCurrentItem = item;
     const int numberOfVisibleItems = mVisibleItems.count();
     for ( int i = 0; i < numberOfVisibleItems; ++i ) {
-      Akonadi::Item it = mVisibleItems[i];
+      Akonadi::Item it = mVisibleItems.at(i);
       if ( item == it ) {
         mVisibleItems[i] = item;
       }
@@ -527,18 +527,13 @@ void MessageActions::slotMailingListFilter()
 
 void MessageActions::printMessage(bool preview)
 {
-  if ( mMessageView ) {
-    bool result = false;
+  bool result = false;
+  if ( mMessageView ) {  
     if (GlobalSettings::self()->printSelectedText()) {
       result = mMessageView->printSelectedText(preview);
     }
-    if (!result) {
-      if(preview)
-        mMessageView->viewer()->printPreview();
-      else
-        mMessageView->viewer()->print();
-    }
-  } else {
+  }
+  if (!result) {
     const bool useFixedFont = MessageViewer::GlobalSettings::self()->useFixedFont();
     const QString overrideEncoding = MessageCore::GlobalSettings::self()->overrideCharacterEncoding();
 
@@ -552,7 +547,6 @@ void MessageActions::printMessage(bool preview)
     command->setPrintPreview(preview);
     command->start();
   }
-
 }
 
 void MessageActions::slotPrintPreviewMsg()

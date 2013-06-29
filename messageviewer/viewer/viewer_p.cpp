@@ -505,9 +505,9 @@ bool ViewerPrivate::editAttachment( KMime::Content * node, bool showWarning )
 
   connect( watcher, SIGNAL(editDone(EditorWatcher*)), SLOT(slotAttachmentEditDone(EditorWatcher*)) );
   if ( !watcher->start() ) {
+    mEditorWatchers.remove( watcher );
     QFile::remove( file.fileName() );
   }
-
   return true;
 }
 
@@ -2666,8 +2666,10 @@ void ViewerPrivate::slotAttachmentEditDone( EditorWatcher* editorWatcher )
 
 void ViewerPrivate::slotLevelQuote( int l )
 {
-  mLevelQuote = l;
-  update( Viewer::Force );
+  if (mLevelQuote != l) {
+    mLevelQuote = l;
+    update( Viewer::Force );
+  }
 }
 
 

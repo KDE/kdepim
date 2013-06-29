@@ -24,19 +24,19 @@
 class KMailCvtFilterInfoGui : public MailImporter::FilterInfoGui
 {
 public:
-    explicit KMailCvtFilterInfoGui(KImportPage* dlg, QWidget* parent);
+    explicit KMailCvtFilterInfoGui(KImportPage *dlg, QWidget *parent);
     ~KMailCvtFilterInfoGui();
 
-    void setStatusMessage( const QString& status );
-    void setFrom( const QString& from );
-    void setTo( const QString& to );
-    void setCurrent( const QString& current );
+    void setStatusMessage( const QString &status );
+    void setFrom( const QString &from );
+    void setTo( const QString &to );
+    void setCurrent( const QString &current );
     void setCurrent( int percent = 0 );
     void setOverall( int percent = 0 );
-    void addErrorLogEntry( const QString& log );
-    void addInfoLogEntry( const QString& log );
+    void addErrorLogEntry( const QString &log );
+    void addInfoLogEntry( const QString &log );
     void clear();
-    void alert( const QString& message );
+    void alert( const QString &message );
     QWidget *parent();
 
 private:

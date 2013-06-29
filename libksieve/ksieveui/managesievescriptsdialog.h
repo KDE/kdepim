@@ -64,7 +64,7 @@ private slots:
     void slotDeactivateScript();
     void slotGetResult( KManageSieve::SieveJob *, bool, const QString &, bool );
     void slotPutResult( KManageSieve::SieveJob *, bool );
-    void slotPutResultDebug(KManageSieve::SieveJob*,bool success ,const QString& errorMsg);
+    void slotPutResultDebug(KManageSieve::SieveJob *, bool success ,const QString &errorMsg);
 
     void slotSieveEditorOkClicked();
     void slotSieveEditorCancelClicked();
@@ -75,7 +75,7 @@ private slots:
 private:
     bool serverHasError(QTreeWidgetItem *item) const;
     void killAllJobs();
-    void changeActiveScript( QTreeWidgetItem*, bool activate = true );
+    void changeActiveScript( QTreeWidgetItem *, bool activate = true );
 
     /**
      * @return whether the specified item's radio button is checked or not
@@ -93,9 +93,9 @@ private:
      */
     void clear();
 
-    void addFailedMessage( const QString & logEntry );
-    void addOkMessage( const QString & logEntry );
-    void addMessageEntry( const QString & errorMsg, const QColor& color );
+    void addFailedMessage( const QString &logEntry );
+    void addOkMessage( const QString &logEntry );
+    void addMessageEntry( const QString &errorMsg, const QColor &color );
     void updateButtons();
     void disableManagerScriptsDialog(bool disable);
 

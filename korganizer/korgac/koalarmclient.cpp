@@ -45,6 +45,7 @@
 #include <KCalCore/Calendar>
 
 #include <KApplication>
+#include <KCheckableProxyModel>
 #include <KConfig>
 #include <KConfigGroup>
 #include <KDebug>
@@ -100,6 +101,19 @@ KOAlarmClient::~KOAlarmClient()
 #endif
 }
 
+void checkAllItems( KCheckableProxyModel *model, const QModelIndex &parent = QModelIndex() )
+{
+  const int rowCount = model->rowCount( parent );
+  for ( int row = 0; row < rowCount; row++ ) {
+    QModelIndex index = model->index( row, 0, parent );
+    model->setData( index, Qt::Checked, Qt::CheckStateRole );
+
+    if ( model->rowCount( index ) > 0 ) {
+      checkAllItems( model, index );
+    }
+  }
+}
+
 void KOAlarmClient::deferredInit()
 {
   if ( !collectionsAvailable() ) {
@@ -136,6 +150,9 @@ void KOAlarmClient::deferredInit()
       }
     }
   }
+
+  KCheckableProxyModel *checkableModel = mCalendar->checkableProxyModel();
+  checkAllItems( checkableModel );
 
   // Now that everything is set up, a first check for reminders can be performed.
   checkAlarms();
@@ -195,7 +212,7 @@ void KOAlarmClient::checkAlarms()
                                                 true /* exclude blocked alarms */);
 
   foreach ( const Alarm::Ptr &alarm, alarms ) {
-    const QString uid = alarm->parentUid();
+    const QString uid = alarm->customProperty( "ETMCalendar", "parentUid" );
     const Akonadi::Item::Id id = mCalendar->item( uid ).id();
     const Akonadi::Item item = mCalendar->item( id );
 

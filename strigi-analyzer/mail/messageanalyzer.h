@@ -21,8 +21,8 @@
 #ifndef MESSAGEANALYZER_H
 #define MESSAGEANALYZER_H
 
-#include <messageviewer/objecttreeemptysource.h>
-#include <messageviewer/viewer.h>
+#include <messageviewer/viewer/objecttreeemptysource.h>
+#include <messageviewer/viewer/viewer.h>
 
 #include <kmime/kmime_headers.h>
 #include <kmime/kmime_message.h>

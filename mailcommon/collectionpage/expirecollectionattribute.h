@@ -1,6 +1,6 @@
 /* -*- mode: C++; c-file-style: "gnu" -*-
 
-  Copyright (c) 2011 Montel Laurent <montel@kde.org>
+  Copyright (c) 2011, 2012, 2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -28,7 +28,7 @@ namespace MailCommon {
 
 class MAILCOMMON_EXPORT ExpireCollectionAttribute : public Akonadi::Attribute
 {
-  public:
+public:
     ExpireCollectionAttribute();
 
     /*
@@ -37,27 +37,27 @@ class MAILCOMMON_EXPORT ExpireCollectionAttribute : public Akonadi::Attribute
      * must always be the last in the list (for bounds checking).
      */
     enum ExpireUnits {
-      ExpireNever,
-      ExpireDays,
-      ExpireWeeks,
-      ExpireMonths,
-      ExpireMaxUnits
+        ExpireNever,
+        ExpireDays,
+        ExpireWeeks,
+        ExpireMonths,
+        ExpireMaxUnits
     };
 
     enum ExpireAction {
-      ExpireDelete,
-      ExpireMove
+        ExpireDelete,
+        ExpireMove
     };
 
-    virtual QByteArray type() const;
-    virtual Attribute *clone() const;
-    virtual QByteArray serialized() const;
-    virtual void deserialize( const QByteArray &data );
+    QByteArray type() const;
+    Attribute *clone() const;
+    QByteArray serialized() const;
+    void deserialize( const QByteArray &data );
 
     static int daysToExpire( int number, ExpireCollectionAttribute::ExpireUnits units );
 
     static ExpireCollectionAttribute *expirationCollectionAttribute(
-      const Akonadi::Collection &collection, bool &mustDeleteExpirationAttribute );
+            const Akonadi::Collection &collection, bool &mustDeleteExpirationAttribute );
 
     void loadFromConfig( const Akonadi::Collection &collection );
 
@@ -135,7 +135,7 @@ class MAILCOMMON_EXPORT ExpireCollectionAttribute : public Akonadi::Attribute
      */
     ExpireUnits readExpireUnits() const;
 
-  private:
+private:
     bool mExpireMessages;         // true if old messages are expired
     int mUnreadExpireAge;         // Given in unreadExpireUnits
     int mReadExpireAge;           // Given in readExpireUnits

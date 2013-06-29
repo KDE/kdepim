@@ -86,6 +86,11 @@ ArchiveMailDialog::~ArchiveMailDialog()
     delete mAboutData;
 }
 
+void ArchiveMailDialog::slotNeedReloadConfig()
+{
+    mWidget->needReloadConfig();
+}
+
 static const char *myConfigGroupName = "ArchiveMailDialog";
 
 void ArchiveMailDialog::readConfig()
@@ -211,6 +216,13 @@ void ArchiveMailWidget::updateButtons()
     }
 }
 
+void ArchiveMailWidget::needReloadConfig()
+{
+    //TODO add messagebox which informs that we save settings here.
+    mWidget->treeWidget->clear();
+    load();
+}
+
 void ArchiveMailWidget::load()
 {
     KSharedConfig::Ptr config = KGlobal::config();
@@ -230,7 +242,7 @@ void ArchiveMailWidget::createOrUpdateItem(ArchiveMailInfo *info, ArchiveMailIte
     }
     item->setText(ArchiveMailWidget::Name,i18n("Folder: %1",MailCommon::Util::fullCollectionPath(Akonadi::Collection(info->saveCollectionId()))));
     item->setCheckState(ArchiveMailWidget::Name, info->isEnabled() ? Qt::Checked : Qt::Unchecked);
-    item->setText(ArchiveMailWidget::StorageDirectory, info->url().prettyUrl());
+    item->setText(ArchiveMailWidget::StorageDirectory, info->url().toLocalFile());
     if (info->lastDateSaved().isValid()) {
         item->setText(ArchiveMailWidget::LastArchiveDate,KGlobal::locale()->formatDate(info->lastDateSaved()));
         updateDiffDate(item, info);
@@ -249,7 +261,7 @@ void ArchiveMailWidget::updateDiffDate(ArchiveMailItem *item, ArchiveMailInfo *i
         if (info->isEnabled())
             item->setBackgroundColor(ArchiveMailWidget::NextArchive,Qt::red);
         else
-            item->setBackgroundColor(ArchiveMailWidget::NextArchive,Qt::blue);
+            item->setBackgroundColor(ArchiveMailWidget::NextArchive,Qt::lightGray);
     } else {
         item->setToolTip(ArchiveMailWidget::NextArchive,i18n("Archive will be done %1",KGlobal::locale()->formatDate(diffDate)));
     }
@@ -369,6 +381,7 @@ void ArchiveMailWidget::slotArchiveNow()
             return;
         ArchiveMailItem *archiveItem = static_cast<ArchiveMailItem*>(item);
         ArchiveMailInfo *archiveItemInfo = archiveItem->info();
+        save();
         if (archiveItemInfo) {
             Q_EMIT archiveNow(archiveItemInfo);
         }

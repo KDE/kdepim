@@ -71,6 +71,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTime : public IncidenceEditor
     bool endDateTimeEnabled() const;
 
     /**reimp*/ bool isValid() const;
+    /**reimp*/ void printDebugInfo() const;
 
   signals:
     // used to indicate that the widgets were activated

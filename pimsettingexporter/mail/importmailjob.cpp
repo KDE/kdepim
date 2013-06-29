@@ -111,7 +111,8 @@ void ImportMailJob::storeMailArchiveResource(const KArchiveDirectory*dir, const 
         if (entry && entry->isDirectory()) {
             const KArchiveDirectory*resourceDir = static_cast<const KArchiveDirectory*>(entry);
             const QStringList lst = resourceDir->entries();
-            if (lst.count() == 2) {
+            //TODO implement it
+            if (lst.count() >= 2) {
                 const QString archPath(prefix + QLatin1Char('/') + entryName + QLatin1Char('/'));
                 const QString name(lst.at(0));
                 if (name.endsWith(QLatin1String("rc"))&&
@@ -123,7 +124,6 @@ void ImportMailJob::storeMailArchiveResource(const KArchiveDirectory*dir, const 
                     mHashMailArchive.insert(archPath +lst.at(1),archPath + name);
                 }
             } else {
-                kDebug()<<" lst.at(0)"<<lst.at(0);
                 kDebug()<<" Problem in archive. number of file "<<lst.count();
             }
         }
@@ -469,10 +469,9 @@ void ImportMailJob::restoreMails()
                     }
                 }
                 const QString newResource = mCreateResource->createResource( QString::fromLatin1("akonadi_mbox_resource"), filename, settings );
-                if (!newResource.isEmpty())
+                if (!newResource.isEmpty()) {
                     mHashResources.insert(filename,newResource);
-                const QString mailFile = res.value();
-                //TODO import it.
+                }
 
             } else if (resourceName.contains(QLatin1String("akonadi_maildir_resource_")) ||
                       resourceName.contains(QLatin1String("akonadi_mixedmaildir_resource_"))) {
@@ -496,7 +495,11 @@ void ImportMailJob::restoreMails()
                     mHashResources.insert(filename,newResource);
 
                 const QString mailFile = res.value();
-                //TODO import them
+                const KArchiveEntry* dataResouceEntry = mArchiveDirectory->entry(mailFile);
+                if (dataResouceEntry->isFile()) {
+                    const KArchiveFile* file = static_cast<const KArchiveFile*>(dataResouceEntry);
+                    extractZipFile(file, copyToDirName, newUrl.path());
+                }
             } else {
                 kDebug()<<" resource name not supported "<<resourceName;
             }
@@ -681,6 +684,32 @@ void ImportMailJob::restoreConfig()
             copyToFile(customtemplateconfiguration, customtemplaterc, customTemplateStr, Utils::configsPath());
         }
     }
+
+    //Restore notify file
+    QStringList lstNotify;
+    lstNotify << QLatin1String("akonadi_mailfilter_agent.notifyrc")
+              << QLatin1String("akonadi_sendlater_agent.notifyrc")
+              << QLatin1String("akonadi_archivemail_agent.notifyrc")
+              << QLatin1String("kmail2.notifyrc")
+              << QLatin1String("akonadi_newmailnotifier_agent.notifyrc")
+              << QLatin1String("akonadi_maildispatcher_agent.notifyrc");
+
+    //We can't merge it.
+    Q_FOREACH (const QString &filename, lstNotify) {
+        const KArchiveEntry* notifyentry  = mArchiveDirectory->entry(Utils::configsPath() + filename);
+        if ( notifyentry &&  notifyentry->isFile()) {
+            const KArchiveFile* notify = static_cast<const KArchiveFile*>(notifyentry);
+            const QString notifyrc = KStandardDirs::locateLocal( "config",  filename);
+            if (QFile(notifyrc).exists()) {
+                if (overwriteConfigMessageBox(filename)) {
+                    copyToFile(notify, notifyrc, filename, Utils::configsPath());
+                }
+            } else {
+                copyToFile(notify, notifyrc, filename, Utils::configsPath());
+            }
+        }
+    }
+
 
     const KArchiveEntry* autocorrectionEntry  = mArchiveDirectory->entry(Utils::dataPath() + QLatin1String( "autocorrect/" ) );
     if (autocorrectionEntry && autocorrectionEntry->isDirectory()) {

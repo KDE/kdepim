@@ -221,6 +221,7 @@ PlasmaComponents.Page {
       visible : application.isLoadingSelected
     }
 
+    //BEGIN EmailList
     QML.Rectangle {
       id : emailListPage
       visible: { guiStateManager.inAccountScreenState ||
@@ -320,9 +321,11 @@ PlasmaComponents.Page {
         }
       }
     }
+    //END EmailList
   }
   //END MainWorkView
 
+   //BEGIN: SlideoutPanels
   SlideoutPanelContainer {
     anchors.fill: parent
     z: 100
@@ -331,8 +334,7 @@ PlasmaComponents.Page {
              !guiStateManager.inMultipleFolderSelectionScreenState &&
              !guiStateManager.inConfigScreenState &&
              !guiStateManager.inSearchScreenState &&
-             !guiStateManager.inManageAclsState &&
-             !guiStateManager.inManageFiltersState
+             !guiStateManager.inManageAclsState
 
     SlideoutPanel {
       id: actionPanel
@@ -447,6 +449,7 @@ PlasmaComponents.Page {
       ]
     }
   }
+  //END: SlideoutPanels
 
   QML.Loader {
     anchors.fill: parent
@@ -514,13 +517,6 @@ PlasmaComponents.Page {
     searchWidget: Mail.SearchWidget {
       anchors.fill: parent
     }
-  }
-
-  QML.Loader {
-    anchors.fill: parent
-    source: guiStateManager.inManageFiltersState ? "FilterConfigDialog.qml" : ""
-    focus: guiStateManager.inManageFiltersState
-    onLoaded: item.filterModel = _filterModel
   }
 
   QML.Loader {

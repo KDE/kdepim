@@ -28,7 +28,9 @@ class ClawsMailSettings : public SylpheedSettings
 public:
     explicit ClawsMailSettings(ImportWizard *parent);
     ~ClawsMailSettings();
+
     void importSettings(const QString& filename, const QString& path);
+
 protected:
     //Reimplement from sylpheed
     void readSettingsColor(const KConfigGroup& group);

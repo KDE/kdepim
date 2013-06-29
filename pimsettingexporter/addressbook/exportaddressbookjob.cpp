@@ -24,6 +24,7 @@
 #include <KStandardDirs>
 #include <KTemporaryFile>
 #include <KConfigGroup>
+#include <KZip>
 
 #include <QWidget>
 #include <QDir>
@@ -67,7 +68,6 @@ void ExportAddressbookJob::backupResources()
     foreach( const Akonadi::AgentInstance &agent, list ) {
         const QString identifier = agent.identifier();
         if (identifier.contains(QLatin1String("akonadi_vcarddir_resource_"))) {
-            const QString identifier = agent.identifier();
             const QString archivePath = Utils::addressbookPath() + identifier + QDir::separator();
 
             KUrl url = Utils::resourcePath(agent);
@@ -82,7 +82,7 @@ void ExportAddressbookJob::backupResources()
                 }
                 //TODO add MessageBox
 
-                const QString filename = url.fileName();
+                QString filename = url.fileName();
 
                 const bool vcarddirAdded = vcarddirArchive->addLocalDirectory(url.path(), QString());
                 //TODO add MessageBox
@@ -100,28 +100,22 @@ void ExportAddressbookJob::backupResources()
                     if (!errorStr.isEmpty())
                         Q_EMIT error(errorStr);
                     Q_EMIT info(i18n("\"%1\" was backuped.",filename));
+                    url = Utils::akonadiAgentConfigPath(identifier);
+                    if (!url.isEmpty()) {
+                        filename = url.fileName();
+                        const bool fileAdded  = archive()->addLocalFile(url.path(), archivePath + filename);
+                        if (fileAdded)
+                            Q_EMIT info(i18n("\"%1\" was backuped.",filename));
+                        else
+                            Q_EMIT error(i18n("\"%1\" file cannot be added to backup file.",filename));
+                    }
                 } else {
                     Q_EMIT error(i18n("\"%1\" file cannot be added to backup file.",filename));
                 }
                 delete vcarddirArchive;
             }
         } else if (identifier.contains(QLatin1String("akonadi_vcard_resource_"))) {
-            const QString identifier = agent.identifier();
-            const QString archivePath = Utils::addressbookPath() + identifier + QDir::separator();
-
-            KUrl url = Utils::resourcePath(agent);
-            if (!url.isEmpty()) {
-                const QString filename = url.fileName();
-                const bool fileAdded  = archive()->addLocalFile(url.path(), archivePath + filename);
-                if (fileAdded) {
-                    const QString errorStr = Utils::storeResources(archive(), identifier, archivePath);
-                    if (!errorStr.isEmpty())
-                        Q_EMIT error(errorStr);
-                    Q_EMIT info(i18n("\"%1\" was backuped.",filename));
-                } else {
-                    Q_EMIT error(i18n("\"%1\" file cannot be added to backup file.",filename));
-                }
-            }
+            backupResourceFile(agent, Utils::addressbookPath());
         }
     }
     Q_EMIT info(i18n("Resources backup done."));

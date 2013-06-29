@@ -183,7 +183,7 @@ namespace {
     box->layout()->setSpacing( KDialog::spacingHint() );
     const int numberChoices(e->choices().size());
     for (int i = 0; i < numberChoices; ++i) {
-      QRadioButton *button = new QRadioButton( e->choices()[i].label, box );
+      QRadioButton *button = new QRadioButton( e->choices().at(i).label, box );
       group->addButton( button, i );
       box->layout()->addWidget( button );
     }
@@ -674,6 +674,7 @@ void AccountsPage::ReceivingTab::slotRemoveSelectedAccount()
 void AccountsPage::ReceivingTab::slotEditNotifications()
 {
   KMKnotify notifyDlg( this );
+  notifyDlg.setCurrentNotification(QLatin1String("akonadi_newmailnotifier_agent"));
   notifyDlg.exec();
 }
 

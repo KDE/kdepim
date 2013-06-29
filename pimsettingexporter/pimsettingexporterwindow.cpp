@@ -30,6 +30,9 @@
 #include "alarm/exportalarmjob.h"
 #include "alarm/importalarmjob.h"
 
+#include "jot/exportjotjob.h"
+#include "jot/importjotjob.h"
+
 #include "pimsettingexporterkernel.h"
 #include "selectiontypedialog.h"
 #include "utils.h"
@@ -109,15 +112,17 @@ void PimSettingExporterWindow::slotBackupData()
         int korganizerNumberOfStep = 0;
         int kalarmNumberOfStep = 0;
         int kaddressbookNumberOfStep = 0;
+        int kjotsNumberOfStep = 0;
         const Utils::StoredTypes kmailTypeSelected = dialog->kmailTypesSelected(kmailNumberOfStep);
         const Utils::StoredTypes kaddressbookTypeSelected = dialog->kaddressbookTypesSelected(kaddressbookNumberOfStep);
         const Utils::StoredTypes korganizerTypeSelected = dialog->korganizerTypesSelected(korganizerNumberOfStep);
         const Utils::StoredTypes kalarmTypeSelected = dialog->kalarmTypesSelected(kalarmNumberOfStep);
+        const Utils::StoredTypes kjotsTypeSelected = dialog->kjotsTypesSelected(kjotsNumberOfStep);
         delete dialog;
         mLogWidget->clear();
         delete mBackupData;
 
-        if ((kmailNumberOfStep==0) && (korganizerNumberOfStep==0) && (kalarmNumberOfStep==0) && (kaddressbookNumberOfStep==0))
+        if ((kmailNumberOfStep==0) && (korganizerNumberOfStep==0) && (kalarmNumberOfStep==0) && (kaddressbookNumberOfStep==0) && (kjotsNumberOfStep==0))
             return;
 
         ArchiveStorage *archiveStorage = new ArchiveStorage(filename,this);
@@ -128,38 +133,27 @@ void PimSettingExporterWindow::slotBackupData()
 
         if (kmailNumberOfStep != 0) {
             mBackupData = new ExportMailJob(this, kmailTypeSelected, archiveStorage, kmailNumberOfStep);
-            connect(mBackupData,SIGNAL(info(QString)),SLOT(slotAddInfo(QString)));
-            connect(mBackupData,SIGNAL(error(QString)),SLOT(slotAddError(QString)));
-            mBackupData->start();
-            delete mBackupData;
-            mBackupData = 0;
+            executeExportJob();
         }
 
         if (kaddressbookNumberOfStep != 0) {
             mBackupData = new ExportAddressbookJob(this, kaddressbookTypeSelected, archiveStorage, kaddressbookNumberOfStep);
-            connect(mBackupData,SIGNAL(info(QString)),SLOT(slotAddInfo(QString)));
-            connect(mBackupData,SIGNAL(error(QString)),SLOT(slotAddError(QString)));
-            mBackupData->start();
-            delete mBackupData;
-            mBackupData = 0;
+            executeExportJob();
         }
 
         if (korganizerNumberOfStep != 0) {
             mBackupData = new ExportCalendarJob(this, korganizerTypeSelected, archiveStorage, korganizerNumberOfStep);
-            connect(mBackupData,SIGNAL(info(QString)),SLOT(slotAddInfo(QString)));
-            connect(mBackupData,SIGNAL(error(QString)),SLOT(slotAddError(QString)));
-            mBackupData->start();
-            delete mBackupData;
-            mBackupData = 0;
+            executeExportJob();
         }
 
         if (kalarmNumberOfStep != 0) {
             mBackupData = new ExportAlarmJob(this, kalarmTypeSelected, archiveStorage, kalarmNumberOfStep);
-            connect(mBackupData,SIGNAL(info(QString)),SLOT(slotAddInfo(QString)));
-            connect(mBackupData,SIGNAL(error(QString)),SLOT(slotAddError(QString)));
-            mBackupData->start();
-            delete mBackupData;
-            mBackupData = 0;
+            executeExportJob();
+        }
+
+        if (kjotsNumberOfStep != 0) {
+            mBackupData = new ExportJotJob(this, kjotsTypeSelected, archiveStorage, kjotsNumberOfStep);
+            executeExportJob();
         }
 
         //At the end
@@ -168,6 +162,15 @@ void PimSettingExporterWindow::slotBackupData()
     } else {
         delete dialog;
     }
+}
+
+void PimSettingExporterWindow::executeExportJob()
+{
+    connect(mBackupData, SIGNAL(info(QString)), SLOT(slotAddInfo(QString)));
+    connect(mBackupData, SIGNAL(error(QString)), SLOT(slotAddError(QString)));
+    mBackupData->start();
+    delete mBackupData;
+    mBackupData = 0;
 }
 
 void PimSettingExporterWindow::slotAddInfo(const QString& info)
@@ -195,15 +198,18 @@ void PimSettingExporterWindow::slotRestoreData()
         int korganizerNumberOfStep = 0;
         int kalarmNumberOfStep = 0;
         int kaddressbookNumberOfStep = 0;
+        int kjotsNumberOfStep = 0;
         const Utils::StoredTypes kmailTypeSelected = dialog->kmailTypesSelected(kmailNumberOfStep);
         const Utils::StoredTypes kaddressbookTypeSelected = dialog->kaddressbookTypesSelected(kaddressbookNumberOfStep);
         const Utils::StoredTypes korganizerTypeSelected = dialog->korganizerTypesSelected(korganizerNumberOfStep);
-        const Utils::StoredTypes kalarmTypeSelected = dialog->kalarmTypesSelected(kalarmNumberOfStep);
+        const Utils::StoredTypes kalarmTypeSelected = dialog->kalarmTypesSelected(kalarmNumberOfStep);        
+        const Utils::StoredTypes kjotsTypeSelected = dialog->kjotsTypesSelected(kjotsNumberOfStep);
+
         delete dialog;
         mLogWidget->clear();
         delete mRestoreData;
 
-        if ((kmailNumberOfStep==0) && (korganizerNumberOfStep==0) && (kalarmNumberOfStep==0) && (kaddressbookNumberOfStep==0))
+        if ((kmailNumberOfStep==0) && (korganizerNumberOfStep==0) && (kalarmNumberOfStep==0) && (kaddressbookNumberOfStep==0) && (kjotsNumberOfStep==0))
             return;
 
         ArchiveStorage *archiveStorage = new ArchiveStorage(filename,this);
@@ -214,38 +220,27 @@ void PimSettingExporterWindow::slotRestoreData()
 
         if (kmailNumberOfStep != 0) {
             mRestoreData = new ImportMailJob(this, kmailTypeSelected, archiveStorage, kmailNumberOfStep);
-            connect(mRestoreData,SIGNAL(info(QString)),SLOT(slotAddInfo(QString)));
-            connect(mRestoreData,SIGNAL(error(QString)),SLOT(slotAddError(QString)));
-            mRestoreData->start();
-            delete mRestoreData;
-            mRestoreData = 0;
+            executeImportJob();
         }
 
         if (kaddressbookNumberOfStep != 0) {
             mRestoreData = new ImportAddressbookJob(this, kaddressbookTypeSelected, archiveStorage, kaddressbookNumberOfStep);
-            connect(mRestoreData,SIGNAL(info(QString)),SLOT(slotAddInfo(QString)));
-            connect(mRestoreData,SIGNAL(error(QString)),SLOT(slotAddError(QString)));
-            mRestoreData->start();
-            delete mRestoreData;
-            mRestoreData = 0;
+            executeImportJob();
         }
 
         if (korganizerNumberOfStep != 0) {
             mRestoreData = new ImportCalendarJob(this, korganizerTypeSelected, archiveStorage, korganizerNumberOfStep);
-            connect(mRestoreData,SIGNAL(info(QString)),SLOT(slotAddInfo(QString)));
-            connect(mRestoreData,SIGNAL(error(QString)),SLOT(slotAddError(QString)));
-            mRestoreData->start();
-            delete mRestoreData;
-            mRestoreData = 0;
+            executeImportJob();
         }
 
         if (kalarmNumberOfStep != 0) {
             mRestoreData = new ImportAlarmJob(this, kalarmTypeSelected, archiveStorage, kalarmNumberOfStep);
-            connect(mRestoreData,SIGNAL(info(QString)),SLOT(slotAddInfo(QString)));
-            connect(mRestoreData,SIGNAL(error(QString)),SLOT(slotAddError(QString)));
-            mRestoreData->start();
-            delete mRestoreData;
-            mRestoreData = 0;
+            executeImportJob();
+        }
+
+        if (kjotsNumberOfStep != 0) {
+            mRestoreData = new ImportJotJob(this, kjotsTypeSelected, archiveStorage, kjotsNumberOfStep);
+            executeImportJob();
         }
 
         archiveStorage->closeArchive();
@@ -253,6 +248,15 @@ void PimSettingExporterWindow::slotRestoreData()
     } else {
         delete dialog;
     }
+}
+
+void PimSettingExporterWindow::executeImportJob()
+{
+    connect(mRestoreData, SIGNAL(info(QString)), SLOT(slotAddInfo(QString)));
+    connect(mRestoreData, SIGNAL(error(QString)), SLOT(slotAddError(QString)));
+    mRestoreData->start();
+    delete mRestoreData;
+    mRestoreData = 0;
 }
 
 bool PimSettingExporterWindow::canZip() const

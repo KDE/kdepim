@@ -111,7 +111,7 @@ if (NOT WINCE AND KDEPIM_BUILD_DESKTOP)
      searchdialog/searchdescriptionattribute.cpp
      tagactionmanager.cpp
      foldershortcutactionmanager.cpp
-     addressvalidationjob.cpp
+     job/addressvalidationjob.cpp
      identity/identitypage.cpp
      identity/newidentitydialog.cpp
      searchdialog/kmsearchmessagemodel.cpp
@@ -122,7 +122,7 @@ if (NOT WINCE AND KDEPIM_BUILD_DESKTOP)
      identity/identityeditvcarddialog.cpp
      identity/identityaddvcarddialog.cpp
      warningwidgets/attachmentmissingwarning.cpp
-     createnewcontactjob.cpp
+     job/createnewcontactjob.cpp
      warningwidgets/externaleditorwarning.cpp
   )
 
@@ -151,7 +151,7 @@ if (NOT WINCE AND KDEPIM_BUILD_DESKTOP)
   )
 
   qt4_add_dbus_interfaces(kmailprivate_LIB_SRCS
-    ${CMAKE_SOURCE_DIR}/kmail/org.freedesktop.Akonadi.NewMailNotifier.xml
+    ${CMAKE_SOURCE_DIR}/kmail/dbusinterface/org.freedesktop.Akonadi.NewMailNotifier.xml
   )
 
 
@@ -278,7 +278,7 @@ if (NOT WINCE AND KDEPIM_BUILD_DESKTOP)
 
   install(TARGETS kmail ${INSTALL_TARGETS_DEFAULT_ARGS})
 
-  install(PROGRAMS KMail2.desktop kmail_view.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
+  install(PROGRAMS data/KMail2.desktop data/kmail_view.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
   install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/kmail.kcfg
     DESTINATION ${KCFG_INSTALL_DIR}
@@ -302,7 +302,7 @@ if (NOT WINCE AND KDEPIM_BUILD_DESKTOP)
     kmail_part.rc
     DESTINATION ${DATA_INSTALL_DIR}/kmail2
   )
-  install(FILES dbusmail.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR})
+  install(FILES data/dbusmail.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR})
   install(TARGETS
     kmailpart
     kcm_kmail
@@ -314,7 +314,7 @@ if (NOT WINCE AND KDEPIM_BUILD_DESKTOP)
     DESTINATION ${DBUS_INTERFACES_INSTALL_DIR}
   )
 
-  install( FILES kmail_addattachmentservicemenu.desktop DESTINATION
+  install( FILES data/kmail_addattachmentservicemenu.desktop DESTINATION
     ${SERVICES_INSTALL_DIR}/ServiceMenus)
 
 endif ()

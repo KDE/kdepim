@@ -39,6 +39,7 @@ public:
 
 Q_SIGNALS:
     void archiveNow(ArchiveMailInfo *info);
+    void needUpdateConfigDialogBox();
 
 public Q_SLOTS:
     void configure( WId windowId );

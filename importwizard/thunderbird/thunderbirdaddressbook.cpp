@@ -46,7 +46,7 @@ ThunderBirdAddressBook::~ThunderBirdAddressBook()
 
 }
 
-void ThunderBirdAddressBook::readAddressBook( const QString& filename )
+void ThunderBirdAddressBook::readAddressBook( const QString &filename )
 {
     MorkParser mork;
     if ( !mork.open( filename ) )

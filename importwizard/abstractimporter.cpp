@@ -72,7 +72,7 @@ MailImporter::FilterInfo* AbstractImporter::initializeInfo()
     return info;
 }
 
-bool AbstractImporter::addFilters( const QString& filterPath, MailCommon::FilterImporterExporter::FilterType type )
+bool AbstractImporter::addFilters( const QString &filterPath, MailCommon::FilterImporterExporter::FilterType type )
 {
     if ( QFile( filterPath ).exists() ) {
         bool canceled = false;
@@ -87,28 +87,28 @@ bool AbstractImporter::addFilters( const QString& filterPath, MailCommon::Filter
     }
 }
 
-void AbstractImporter::appendFilters( const QList<MailCommon::MailFilter*>& filters )
+void AbstractImporter::appendFilters( const QList<MailCommon::MailFilter*> &filters )
 {
     if ( !filters.isEmpty() )
         MailCommon::FilterManager::instance()->appendFilters(filters, false );
 }
 
-void AbstractImporter::addImportFilterInfo( const QString& log )
+void AbstractImporter::addImportFilterInfo( const QString &log )
 {
     mImportWizard->importFilterPage()->addImportInfo( log );
 }
 
-void AbstractImporter::addImportFilterError( const QString& log )
+void AbstractImporter::addImportFilterError( const QString &log )
 {
     mImportWizard->importFilterPage()->addImportError( log );
 }
 
-void AbstractImporter::addImportSettingsInfo(const QString& log)
+void AbstractImporter::addImportSettingsInfo(const QString &log)
 {
     mImportWizard->importSettingPage()->addImportError( log );
 }
 
-void AbstractImporter::addImportCalendarInfo(const QString&log)
+void AbstractImporter::addImportCalendarInfo(const QString &log)
 {
     mImportWizard->importCalendarPage()->addImportError( log );
 }

@@ -175,7 +175,7 @@ void ComposerViewPrivate::createAction(ComposerView::ComposerViewAction type)
             action_direction_rtl = new KToggleAction(KIcon(QLatin1String("format-text-direction-rtl")), i18nc("@action", "Right-to-Left"), q);
             action_direction_rtl->setIconText(i18nc("@label right-to-left", "Right-to-Left"));
             htmlEditorActionList.append(action_direction_rtl);
-            FORWARD_ACTION(action_direction_ltr, QWebPage::SetTextDirectionRightToLeft);
+            FORWARD_ACTION(action_direction_rtl, QWebPage::SetTextDirectionRightToLeft);
         }
         break;
     }

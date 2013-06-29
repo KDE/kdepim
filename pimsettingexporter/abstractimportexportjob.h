@@ -21,13 +21,13 @@
 #include "utils.h"
 #include <Akonadi/Collection>
 
-#include <KZip>
-
 class QWidget;
 class QProgressDialog;
 class ArchiveStorage;
 class KArchiveDirectory;
 class KTempDir;
+class KZip;
+class KArchiveFile;
 
 namespace KPIMIdentities {
 class Identity;
@@ -54,14 +54,22 @@ Q_SIGNALS:
     void error(const QString &);
 
 protected:
+    void extractZipFile(const KArchiveFile *file, const QString &source, const QString &destination);
+
     void convertRealPathToCollection(KConfigGroup &group, const QString &currentKey, bool addCollectionPrefix=false);
     void convertRealPathToCollectionList(KConfigGroup &group, const QString &currentKey, bool addCollectionPrefix=true);
     void copyToFile(const KArchiveFile * archivefile, const QString &dest, const QString &filename, const QString &prefix);
     void initializeImportJob();
     void backupFile(const QString &filename, const QString &path, const QString &storedName);
+    void backupConfigFile(const QString &configFileName);
     int mergeConfigMessageBox(const QString &configName) const;
     bool overwriteConfigMessageBox(const QString &configName) const;
     Akonadi::Collection::Id convertPathToId(const QString &path);
+    void backupResourceFile(const Akonadi::AgentInstance &agent, const QString &defaultPath);
+    void restoreResourceFile(const QString &resourceName, const QString &defaultPath, const QString &storePath);
+
+    virtual void addSpecificResourceSettings(KSharedConfig::Ptr resourceConfig, const QString &resourceName, QMap<QString, QVariant> &settings);
+
 
     KZip *archive();
 
@@ -72,6 +80,7 @@ protected:
     void showInfo(const QString &text);
 
     QHash<QString, Akonadi::Collection::Id> mHashConvertPathCollectionId;
+    QList<resourceFiles> mListResourceFile;
 
     QString mTempDirName;
     Utils::StoredTypes mTypeSelected;

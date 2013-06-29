@@ -25,6 +25,7 @@
 #include <KStandardDirs>
 #include <KTemporaryFile>
 #include <KConfigGroup>
+#include <KZip>
 
 #include <QWidget>
 #include <QFile>
@@ -59,7 +60,6 @@ void ExportJotJob::start()
     }
 }
 
-
 void ExportJotJob::backupResources()
 {
     showInfo(i18n("Backing up resources..."));
@@ -70,22 +70,7 @@ void ExportJotJob::backupResources()
     foreach( const Akonadi::AgentInstance &agent, list ) {
         const QString identifier = agent.identifier();
         if (identifier.contains(QLatin1String("akonadi_akonotes_resource_"))) {
-            const QString identifier = agent.identifier();
-            const QString archivePath = Utils::jotPath() + identifier + QDir::separator();
-
-            KUrl url = Utils::resourcePath(agent);
-            if (!url.isEmpty()) {
-                const QString filename = url.fileName();
-                const bool fileAdded  = archive()->addLocalFile(url.path(), archivePath + filename);
-                if (fileAdded) {
-                    const QString errorStr = Utils::storeResources(archive(), identifier, archivePath);
-                    if (!errorStr.isEmpty())
-                        Q_EMIT error(errorStr);
-                    Q_EMIT info(i18n("\"%1\" was backuped.",filename));
-                } else {
-                    Q_EMIT error(i18n("\"%1\" file cannot be added to backup file.",filename));
-                }
-            }
+            backupResourceFile(agent, Utils::jotPath());
         }
     }
 
@@ -106,15 +91,12 @@ void ExportJotJob::backupConfig()
 
         KConfig *kjotConfig = kjot->copyTo( tmp.fileName() );
 
-        //TODO implement it
-#if 0
-        const QString collectionsStr(QLatin1String("KJotsEntityOrder"));
+        const QString collectionsStr(QLatin1String("TreeState"));
         if (kjotConfig->hasGroup(collectionsStr)) {
             KConfigGroup group = kjotConfig->group(collectionsStr);
-            const QString selectionKey(QLatin1String("FavoriteCollectionIds"));
+            const QString selectionKey(QLatin1String("Expansion"));
             Utils::convertCollectionIdsToRealPath(group, selectionKey);
         }
-#endif
 
         kjotConfig->sync();
         backupFile(tmp.fileName(), Utils::configsPath(), kjotStr);

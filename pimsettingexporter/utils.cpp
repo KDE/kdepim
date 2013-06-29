@@ -19,6 +19,8 @@
 
 #include "mailcommon/util/mailutil.h"
 
+#include <akonadi/private/xdgbasedirs_p.h>
+
 #include <KConfigGroup>
 #include <KStandardDirs>
 #include <KSharedConfig>
@@ -84,6 +86,10 @@ QString Utils::jotPath()
     return QLatin1String("jot/");
 }
 
+QString Utils::prefixAkonadiConfigFile()
+{
+    return QLatin1String("agent_config_");
+}
 
 KUrl Utils::adaptResourcePath(KSharedConfigPtr resourceConfig, const QString &storedData)
 {
@@ -222,3 +228,30 @@ QString Utils::storeResources(KZip *archive, const QString &identifier, const QS
     return QString();
 }
 
+KUrl Utils::akonadiAgentConfigPath(const QString &identifier)
+{
+    const QString relativeFileName = QString::fromLatin1("akonadi/%1%2").arg(Utils::prefixAkonadiConfigFile()).arg(identifier);
+    const QString configFile = Akonadi::XdgBaseDirs::findResourceFile( "config", relativeFileName );
+    if (!configFile.isEmpty())
+        return KUrl(configFile);
+    return KUrl();
+}
+
+QString Utils::akonadiAgentName(KSharedConfig::Ptr config)
+{
+    KConfigGroup group = config->group(QLatin1String("Agent"));
+    const QString name = group.readEntry(QLatin1String("Name"),QString());
+    return name;
+}
+
+KZip *Utils::openZip(const QString &filename, QString &errorMsg)
+{
+    KZip *zip = new KZip(filename);
+    const bool result = zip->open(QIODevice::ReadOnly);
+    if (!result) {
+        errorMsg = i18n("Archive cannot be opened in read mode.");
+        delete zip;
+        return 0;
+    }
+    return zip;
+}

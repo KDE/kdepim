@@ -25,6 +25,7 @@
 #include <KStandardDirs>
 #include <KTemporaryFile>
 #include <KConfigGroup>
+#include <KZip>
 
 #include <QFile>
 #include <QDir>
@@ -74,22 +75,7 @@ void ExportCalendarJob::backupResources()
         const QString identifier = agent.identifier();
         //TODO look at if we have other resources
         if (identifier.contains(QLatin1String("akonadi_ical_resource_"))) {
-            const QString identifier = agent.identifier();
-            const QString archivePath = Utils::calendarPath() + identifier + QDir::separator();
-
-            KUrl url = Utils::resourcePath(agent);
-            if (!url.isEmpty()) {
-                const QString filename = url.fileName();
-                const bool fileAdded  = archive()->addLocalFile(url.path(), archivePath + filename);
-                if (fileAdded) {
-                    const QString errorStr = Utils::storeResources(archive(), identifier, archivePath);
-                    if (!errorStr.isEmpty())
-                        Q_EMIT error(errorStr);
-                    Q_EMIT info(i18n("\"%1\" was backuped.",filename));
-                } else {
-                    Q_EMIT error(i18n("\"%1\" file cannot be added to backup file.",filename));
-                }
-            }
+            backupResourceFile(agent, Utils::calendarPath());
         }
     }
 
@@ -124,23 +110,16 @@ void ExportCalendarJob::backupConfig()
         delete korganizerConfig;
     }
 
-    const QString korganizerPrintingStr(QLatin1String("korganizer_printing.rc"));
-    const QString korganizerPrintingrc = KStandardDirs::locateLocal( "config",  korganizerPrintingStr);
-    if (QFile(korganizerPrintingrc).exists()) {
-        backupFile(korganizerPrintingrc, Utils::configsPath(), korganizerPrintingStr);
-    }
-
-    const QString korgacStr(QLatin1String("korgacrc"));
-    const QString korgacrc = KStandardDirs::locateLocal( "config", korgacStr );
-    if (QFile(korgacrc).exists()) {
-        backupFile(korgacrc, Utils::configsPath(), korgacStr);
-    }
+    backupConfigFile(QLatin1String("korganizer_printing.rc"));
+    backupConfigFile(QLatin1String("korgacrc"));
 
     const QString freebusyurlsStr(QLatin1String("korganizer/freebusyurls"));
     const QString freebusyurls = KStandardDirs::locateLocal( "data", freebusyurlsStr );
     if (QFile(freebusyurls).exists()) {
         backupFile(freebusyurls, Utils::dataPath(), freebusyurlsStr);
     }
+
+    //TODO export templates
 
     Q_EMIT info(i18n("Config backup done."));
 }

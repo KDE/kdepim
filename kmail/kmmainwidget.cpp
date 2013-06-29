@@ -54,7 +54,7 @@
 #include "collectionpage/collectionmailinglistpage.h"
 #include "tagselectdialog.h"
 #include "archivemailagentinterface.h"
-#include "createnewcontactjob.h"
+#include "job/createnewcontactjob.h"
 #include "sendlateragentinterface.h"
 
 #include "pimcommon/acl/collectionaclpage.h"
@@ -322,7 +322,7 @@ K_GLOBAL_STATIC( KMMainWidget::PtrList, theMainWidgetList )
 
   if ( kmkernel->firstStart() ) {
     if (MailCommon::Util::foundMailer()) {
-      if (KMessageBox::questionYesNo(this,i18n("An other mailer was found on system. Do you want to import data from it?")) == KMessageBox::Yes) {
+      if (KMessageBox::questionYesNo(this,i18n("Another mailer was found on system. Do you want to import data from it?")) == KMessageBox::Yes) {
         const QString path = KStandardDirs::findExe( QLatin1String("importwizard" ) );
         if ( !QProcess::startDetached( path ) ) {
           KMessageBox::error( this, i18n( "Could not start the import wizard. "
@@ -2952,6 +2952,7 @@ void KMMainWidget::showMessagePopup(const Akonadi::Item&msg ,const KUrl&url,cons
       menu->addAction( mMsgView->toggleMimePartTreeAction() );
     }
     menu->addSeparator();
+    menu->addAction( mMsgActions->printPreviewAction() );
     menu->addAction( mMsgActions->printAction() );
     menu->addAction( mSaveAsAction );
     menu->addAction( mSaveAttachmentsAction );

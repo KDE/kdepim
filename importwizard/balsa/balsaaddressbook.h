@@ -28,8 +28,9 @@ class BalsaAddressBook : public AbstractAddressBook
 public:
     explicit BalsaAddressBook(const QString &filename, ImportWizard *parent);
     ~BalsaAddressBook();
+
 private:
-    void readAddressBook(const KConfigGroup& grp);
+    void readAddressBook(const KConfigGroup &grp);
 };
 
 #endif // BalsaAddressBook_H

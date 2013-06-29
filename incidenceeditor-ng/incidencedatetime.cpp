@@ -891,6 +891,47 @@ bool IncidenceDateTime::isValid() const
   }
 }
 
+static QString timespecToString(const KDateTime::Spec &spec)
+{
+  QString str = QLatin1String("type=") + QString::number(spec.type()) + QLatin1String("; timezone=") + spec.timeZone().name();
+  return str;
+}
+
+void IncidenceDateTime::printDebugInfo() const
+{
+  qDebug() << "startDateTimeEnabled()          : " << startDateTimeEnabled();
+  qDebug() << "endDateTimeEnabled()            : " << endDateTimeEnabled();
+  qDebug() << "currentStartDateTime().isValid(): " << currentStartDateTime().isValid();
+  qDebug() << "currentEndDateTime().isValid()  : "  << currentEndDateTime().isValid();
+  qDebug() << "currentStartDateTime()          : " << currentStartDateTime().toString();
+  qDebug() << "currentEndDateTime()            : " << currentEndDateTime().toString();
+  qDebug() << "Incidence type                  : " << mLoadedIncidence->type();
+  qDebug() << "allday                          : " << mLoadedIncidence->allDay();
+  qDebug() << "mInitialStartDT                 : " << mInitialStartDT.toString();
+  qDebug() << "mInitialEndDT                   : " << mInitialEndDT.toString();
+
+  qDebug() << "currentStartDateTime().timeSpec(): " << timespecToString(currentStartDateTime().timeSpec());
+  qDebug() << "currentEndDateTime().timeSpec()  : " << timespecToString(currentStartDateTime().timeSpec());
+  qDebug() << "mInitialStartDT.timeSpec()       : " << timespecToString(mInitialStartDT.timeSpec());
+  qDebug() << "mInitialEndDT.timeSpec()         : " << timespecToString(mInitialEndDT.timeSpec());
+
+  qDebug() << "dirty test1: " << ( mLoadedIncidence->allDay() != mUi->mWholeDayCheck->isChecked() );
+  if ( mLoadedIncidence->type() == KCalCore::Incidence::TypeEvent ) {
+    KCalCore::Event::Ptr event = mLoadedIncidence.staticCast<KCalCore::Event>();
+    qDebug() << "dirty test2: " << ( mUi->mFreeBusyCheck->isChecked() && event->transparency() != KCalCore::Event::Opaque );
+    qDebug() << "dirty test3: " << ( !mUi->mFreeBusyCheck->isChecked() && event->transparency() != KCalCore::Event::Transparent ) ;
+  }
+
+  if ( mLoadedIncidence->allDay() ) {
+    qDebug() << "dirty test4: " << ( mUi->mStartDateEdit->date() != mInitialStartDT.date() || mUi->mEndDateEdit->date() != mInitialEndDT.date() );
+  } else {
+    qDebug() << "dirty test4.1: " << (currentStartDateTime() != mInitialStartDT);
+    qDebug() << "dirty test4.2: " << (currentEndDateTime() != mInitialEndDT);
+    qDebug() << "dirty test4.3: " << (currentStartDateTime().timeSpec() != mInitialStartDT.timeSpec());
+    qDebug() << "dirty test4.4: " << (currentEndDateTime().timeSpec() != mInitialEndDT.timeSpec());
+  }
+}
+
 void IncidenceDateTime::setTimeZoneLabelEnabled( bool enable )
 {
 #ifndef KDEPIM_MOBILE_UI

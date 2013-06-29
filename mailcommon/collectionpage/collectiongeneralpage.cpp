@@ -1,5 +1,5 @@
 /* -*- mode: C++; c-file-style: "gnu" -*-
-  Copyright (c) 2009 Montel Laurent <montel@kde.org>
+  Copyright (c) 2009-2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -253,26 +253,6 @@ void CollectionGeneralPage::init( const Akonadi::Collection &collection )
             "messages. This is useful for ignoring any new/unread mail in "
             "your trash and spam folder.</p></qt>" ) );
   hbl->addWidget( mNotifyOnNewMailCheckBox );
-#if 0
-  if ( collection.resource().contains( IMAP_RESOURCE_IDENTIFIER ) ) {
-    // should this folder be included in new-mail-checks?
-
-    QHBoxLayout *nml = new QHBoxLayout();
-    topLayout->addItem( nml );
-    nml->setMargin( KDialog::marginHint() );
-    nml->setSpacing( KDialog::spacingHint() );
-    mNewMailCheckBox = new QCheckBox( i18n( "Include this folder in mail checks" ), this );
-    mNewMailCheckBox->setWhatsThis(
-      i18n( "<qt><p>If this option is enabled this folder will be included "
-            "while checking new emails.</p>"
-            "<p>Uncheck this option if you want to skip this folder "
-            "while checking new emails.</p></qt>" ) );
-    // default is on
-    mNewMailCheckBox->setChecked( true );
-    nml->addWidget( mNewMailCheckBox );
-    nml->addStretch( 1 );
-  }
-#endif
   // should replies to mails in this folder be kept in this same folder?
   hbl = new QHBoxLayout();
   topLayout->addItem( hbl );
@@ -497,8 +477,12 @@ void CollectionGeneralPage::save( Collection &collection )
     }
   }
 
-  MailCommon::NewMailNotifierAttribute *newMailNotifierAttr = collection.attribute<MailCommon::NewMailNotifierAttribute>( Akonadi::Entity::AddIfMissing );
-  newMailNotifierAttr->setIgnoreNewMail(!mNotifyOnNewMailCheckBox->isChecked());
+  if (!mNotifyOnNewMailCheckBox->isChecked()) {
+      MailCommon::NewMailNotifierAttribute *newMailNotifierAttr = collection.attribute<MailCommon::NewMailNotifierAttribute>( Akonadi::Entity::AddIfMissing );
+      newMailNotifierAttr->setIgnoreNewMail(true);
+  } else {
+      collection.removeAttribute<MailCommon::NewMailNotifierAttribute>();
+  }
 
   CollectionAnnotationsAttribute *annotationsAttribute =
     collection.attribute<CollectionAnnotationsAttribute>( Entity::AddIfMissing );

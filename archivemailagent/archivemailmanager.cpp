@@ -131,6 +131,8 @@ void ArchiveMailManager::backupDone(ArchiveMailInfo *info)
         }
     }
     mListArchiveInfo.removeAll(info);
+
+    Q_EMIT needUpdateConfigDialogBox();
 }
 
 void ArchiveMailManager::pause()

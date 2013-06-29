@@ -28,19 +28,19 @@ namespace MailCommon {
 
 class CollectionAnnotationsAttribute : public Akonadi::Attribute
 {
-  public:
+public:
     CollectionAnnotationsAttribute();
     CollectionAnnotationsAttribute( const QMap<QByteArray, QByteArray> &annotations );
 
     void setAnnotations( const QMap<QByteArray, QByteArray> &annotations );
     QMap<QByteArray, QByteArray> annotations() const;
 
-    virtual QByteArray type() const;
-    virtual Attribute *clone() const;
-    virtual QByteArray serialized() const;
-    virtual void deserialize( const QByteArray &data );
+    QByteArray type() const;
+    Attribute *clone() const;
+    QByteArray serialized() const;
+    void deserialize( const QByteArray &data );
 
-  private:
+private:
     QMap<QByteArray, QByteArray> mAnnotations;
 };
 

@@ -46,7 +46,7 @@ BalsaAddressBook::~BalsaAddressBook()
 
 }
 
-void BalsaAddressBook::readAddressBook(const KConfigGroup& grp)
+void BalsaAddressBook::readAddressBook(const KConfigGroup &grp)
 {
     const QString type = grp.readEntry(QLatin1String("Type"));
     if (type.isEmpty()) {

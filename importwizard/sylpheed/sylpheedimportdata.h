@@ -34,7 +34,6 @@ public:
     bool importFilters();
     bool importAddressBook();
     QString name() const;
-
 };
 
 #endif /* SylpheedImportData_H */

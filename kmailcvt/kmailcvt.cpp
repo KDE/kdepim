@@ -135,7 +135,7 @@ void KMailCVT::reject() {
     KAssistantDialog::reject();
 }
 
-void KMailCVT::collectionChanged( const Akonadi::Collection& selectedCollection )
+void KMailCVT::collectionChanged( const Akonadi::Collection &selectedCollection )
 {
     if( selectedCollection.isValid() ){
         setValid( currentPage(), true );

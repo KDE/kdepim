@@ -18,13 +18,19 @@
 #include "importjotjob.h"
 #include "archivestorage.h"
 
+#include "pimcommon/util/createresource.h"
+
 #include <KTempDir>
 #include <KStandardDirs>
 #include <KArchive>
 #include <KLocale>
 #include <KConfigGroup>
+#include <KZip>
 
 #include <QFile>
+#include <QDir>
+
+static const QString storeJot = QLatin1String("backupjot/");
 
 ImportJotJob::ImportJotJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep)
     : AbstractImportExportJob(parent, archiveStorage, typeSelected, numberOfStep)
@@ -49,21 +55,14 @@ void ImportJotJob::start()
 void ImportJotJob::restoreResources()
 {
     Q_EMIT info(i18n("Restore resources..."));
-    if (!mHashJotArchive.isEmpty()) {
-        QHashIterator<QString, QString> i(mHashJotArchive);
-        while (i.hasNext()) {
-            i.next();
-            qDebug() << i.key() << ": " << i.value() << endl;
-            QMap<QString, QVariant> settings;
-            //FIXME
-            if (i.key().contains(QLatin1String("akonadi_akonotes_resource_"))) {
-                //TODO
-            }
-
-        }
-    }
-
+    //It's maildir support. Need to add support
+    restoreResourceFile(QString::fromLatin1("akonadi_akonotes_resource"), Utils::jotPath(), storeJot);
     Q_EMIT info(i18n("Resources restored."));
+}
+
+void ImportJotJob::addSpecificResourceSettings(KSharedConfig::Ptr resourceConfig, const QString &resourceName, QMap<QString, QVariant> &settings)
+{
+
 }
 
 void ImportJotJob::searchAllFiles(const KArchiveDirectory *dir,const QString &prefix)
@@ -86,18 +85,23 @@ void ImportJotJob::storeAlarmArchiveResource(const KArchiveDirectory *dir, const
     Q_FOREACH(const QString& entryName, dir->entries()) {
         const KArchiveEntry *entry = dir->entry(entryName);
         if (entry && entry->isDirectory()) {
-            const KArchiveDirectory*resourceDir = static_cast<const KArchiveDirectory*>(entry);
+            const KArchiveDirectory *resourceDir = static_cast<const KArchiveDirectory*>(entry);
             const QStringList lst = resourceDir->entries();
-            if (lst.count() == 2) {
+
+            if (lst.count() >= 2) {
                 const QString archPath(prefix + QLatin1Char('/') + entryName + QLatin1Char('/'));
-                const QString name(lst.at(0));
-                if (name.endsWith(QLatin1String("rc"))&&(name.contains(QLatin1String("akonadi_alarm_resource_")))) {
-                    mHashJotArchive.insert(archPath + name,archPath +lst.at(1));
-                } else {
-                    mHashJotArchive.insert(archPath +lst.at(1),archPath + name);
+                resourceFiles files;
+                Q_FOREACH(const QString &name, lst) {
+                    if (name.endsWith(QLatin1String("rc")) && (name.contains(QLatin1String("akonadi_akonotes_resource")))) {
+                        files.akonadiConfigFile = archPath + name;
+                    } else if (name.startsWith(Utils::prefixAkonadiConfigFile())) {
+                        files.akonadiAgentConfigFile = archPath + name;
+                    } else {
+                        files.akonadiResources = archPath + name;
+                    }
                 }
+                mListResourceFile.append(files);
             } else {
-                kDebug()<<" lst.at(0)"<<lst.at(0);
                 kDebug()<<" Problem in archive. number of file "<<lst.count();
             }
         }
@@ -126,18 +130,16 @@ void ImportJotJob::restoreConfig()
 void ImportJotJob::importjotConfig(const KArchiveFile* jotFile, const QString &jotrc, const QString &filename,const QString &prefix)
 {
     copyToFile(jotFile, jotrc, filename, prefix);
-    KSharedConfig::Ptr jotConfig = KSharedConfig::openConfig(jotrc);
+    KSharedConfig::Ptr kjotConfig = KSharedConfig::openConfig(jotrc);
 
-#if 0
-    //TODO
-    const QString collectionsStr(QLatin1String("Collections"));
-    if (jotConfig->hasGroup(collectionsStr)) {
-        KConfigGroup group = jotConfig->group(collectionsStr);
-        const QString selectionKey(QLatin1String("FavoriteCollectionIds"));
-        convertRealPathToCollectionList(group, selectionKey, false);
+    const QString collectionsStr(QLatin1String("TreeState"));
+    if (kjotConfig->hasGroup(collectionsStr)) {
+        KConfigGroup group = kjotConfig->group(collectionsStr);
+        const QString selectionKey(QLatin1String("Expansion"));
+        Utils::convertCollectionIdsToRealPath(group, selectionKey);
     }
-#endif
-    jotConfig->sync();
+
+    kjotConfig->sync();
 }
 
 #include "importjotjob.moc"

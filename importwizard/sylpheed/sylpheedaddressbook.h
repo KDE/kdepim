@@ -32,6 +32,7 @@ class SylpheedAddressBook : public AbstractAddressBook
 public:
     explicit SylpheedAddressBook(const QDir &dir, ImportWizard *parent);
     ~SylpheedAddressBook();
+
 private:
     void readAddressBook( const QString& filename );
     QHash<QString, QStringList > mAddressBookUid;

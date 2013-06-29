@@ -82,7 +82,7 @@ MailTransport::Transport *AbstractSettings::createTransport()
     return mt;
 }
 
-void AbstractSettings::storeTransport(MailTransport::Transport * mt, bool isDefault )
+void AbstractSettings::storeTransport(MailTransport::Transport *mt, bool isDefault )
 {
     mt->forceUniqueName();
     mt->writeConfig();
@@ -92,17 +92,17 @@ void AbstractSettings::storeTransport(MailTransport::Transport * mt, bool isDefa
     addImportInfo(i18n("Transport set up."));
 }
 
-void AbstractSettings::addImportInfo( const QString& log )
+void AbstractSettings::addImportInfo( const QString &log )
 {
     mImportWizard->importSettingPage()->addImportInfo( log );
 }
 
-void AbstractSettings::addImportError( const QString& log )
+void AbstractSettings::addImportError( const QString &log )
 {
     mImportWizard->importSettingPage()->addImportError( log );
 }
 
-void AbstractSettings::addCheckMailOnStartup(const QString& agentIdentifyName,bool loginAtStartup)
+void AbstractSettings::addCheckMailOnStartup(const QString &agentIdentifyName, bool loginAtStartup)
 {
     if (agentIdentifyName.isEmpty())
         return;
@@ -110,7 +110,7 @@ void AbstractSettings::addCheckMailOnStartup(const QString& agentIdentifyName,bo
     addKmailConfig(groupName,QLatin1String("CheckOnStartup"), loginAtStartup);
 }
 
-void AbstractSettings::addToManualCheck(const QString& agentIdentifyName,bool manualCheck)
+void AbstractSettings::addToManualCheck(const QString& agentIdentifyName, bool manualCheck)
 {
     if (agentIdentifyName.isEmpty())
         return;
@@ -126,19 +126,19 @@ void AbstractSettings::addComposerHeaderGroup( const QString& groupName, const Q
     group.writeEntry(QLatin1String("value"),value);
 }
 
-void AbstractSettings::addKmailConfig( const QString& groupName, const QString& key, const QString& value)
+void AbstractSettings::addKmailConfig( const QString &groupName, const QString &key, const QString &value)
 {
     KConfigGroup group = mKmailConfig->group(groupName);
     group.writeEntry(key,value);
 }
 
-void AbstractSettings::addKmailConfig( const QString& groupName, const QString& key, bool value)
+void AbstractSettings::addKmailConfig( const QString &groupName, const QString &key, bool value)
 {
     KConfigGroup group = mKmailConfig->group(groupName);
     group.writeEntry(key,value);
 }
 
-void AbstractSettings::addKmailConfig( const QString& groupName, const QString& key, int value)
+void AbstractSettings::addKmailConfig( const QString & groupName, const QString &key, int value)
 {
     KConfigGroup group = mKmailConfig->group(groupName);
     group.writeEntry(key,value);

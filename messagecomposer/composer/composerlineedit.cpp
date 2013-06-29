@@ -163,8 +163,8 @@ void ComposerLineEdit::dropEvent(QDropEvent *event)
             }
           }
         } else {
-          QString caption( i18n( "vCard Import Failed" ) );
-          QString text = i18n( "<qt>Unable to access <b>%1</b>.</qt>", url.url() );
+          const QString caption( i18n( "vCard Import Failed" ) );
+          const QString text = i18n( "<qt>Unable to access <b>%1</b>.</qt>", url.url() );
           KMessageBox::error( parentWidget(), text, caption );
         }
       }

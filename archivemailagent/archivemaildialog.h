@@ -54,6 +54,7 @@ public:
     void save();
     void saveTreeWidgetHeader(KConfigGroup &group);
     void restoreTreeWidgetHeader(const QByteArray &group);
+    void needReloadConfig();
 
 Q_SIGNALS:
     void archiveNow(ArchiveMailInfo *info);
@@ -88,6 +89,10 @@ public:
 
 Q_SIGNALS:
     void archiveNow(ArchiveMailInfo *info);
+
+public Q_SLOTS:
+    void slotNeedReloadConfig();
+
 
 protected Q_SLOTS:
     void slotSave();

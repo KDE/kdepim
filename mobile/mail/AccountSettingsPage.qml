@@ -1,5 +1,5 @@
 /*
- *  Copyright 2013 (C) Michael Bohlender <michael.bohlender@kdemail.net>
+ *  Copyright 2013  Michael Bohlender <michael.bohlender@kdemail.net>
  *
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License as
@@ -18,52 +18,30 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+
 import QtQuick 1.1
-import org.kde.plasma.components 0.1 as PlasmaComponents
+import org.kde.plasma.components 0.1 as PlasmaComponets
+import org.kde.pim.mobileui 4.5 as KPIM
 
-PlasmaComponents.Page {
-  id: settings
-
-  anchors.fill: parent
+PlasmaComponets.Page {
+  id: root
 
   //BEGIN: Tools
-  tools: PlasmaComponents.ToolBarLayout {
-    PlasmaComponents.ToolButton {
-
+  tools: PlasmaComponets.ToolBarLayout {
+    PlasmaComponets.ToolButton {
       anchors.left: parent.left
-
       iconSource: "go-previous"
-
       onClicked: pageStack.pop()
     }
   }
   //END: Tools
 
-  Column {
-    anchors.centerIn: parent
 
-    spacing: 20
+  KPIM.AgentInstanceListContainer {
+    anchors.fill: parent
 
-    PlasmaComponents.Button {
-      text: i18n("Accounts")
+    actionItemHeight: root.height * 0.2
 
-      onClicked: pageStack.push(Qt.createComponent("AccountSettingsPage.qml"))
-    }
-    PlasmaComponents.Button {
-      text: i18n("Identities")
-
-      onClicked: application.configureIdentity()
-    }
-    PlasmaComponents.Button {
-      text: i18n("Filter")
-
-      onClicked: pageStack.push(Qt.createComponent("FilterEditor.qml"))
-    }
-    PlasmaComponents.Button {
-      text: i18n( "About" )
-
-      onClicked: pageStack.push(Qt.createComponent("AboutPage.qml"))
-    }
+    model: agentInstanceList
   }
-
 }

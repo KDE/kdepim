@@ -119,6 +119,7 @@ void SendLaterManager::sendError(SendLaterInfo *info, ErrorType type)
     }
     delete mCurrentJob;
     createSendInfoList();
+    Q_EMIT needUpdateConfigDialogBox();
 }
 
 void SendLaterManager::sendDone(SendLaterInfo *info)
@@ -131,11 +132,17 @@ void SendLaterManager::sendDone(SendLaterInfo *info)
     }
     delete mCurrentJob;
     createSendInfoList();
+    Q_EMIT needUpdateConfigDialogBox();
 }
 
 void SendLaterManager::printDebugInfo()
 {
-    //TODO
+    Q_FOREACH (SendLaterInfo *info, mListSendLaterInfo) {
+        kDebug() <<" recusive "<<info->isRecursive() <<
+                   " id :"<<info->itemId()<<
+                   " date :"<<info->dateTime().toString()<<
+                   " last saved date"<<info->lastDateTimeSend().toString();
+    }
 }
 
 #include "sendlatermanager.moc"

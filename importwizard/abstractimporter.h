@@ -70,13 +70,13 @@ public:
     virtual bool importCalendar();
 
 protected:
-    void appendFilters( const QList<MailCommon::MailFilter*>& filters );
+    void appendFilters( const QList<MailCommon::MailFilter*> &filters );
     MailImporter::FilterInfo* initializeInfo();
-    void addImportFilterInfo( const QString& log );
-    void addImportFilterError( const QString& log );
-    bool addFilters( const QString& filterPath, MailCommon::FilterImporterExporter::FilterType type );
-    void addImportSettingsInfo(const QString& log);
-    void addImportCalendarInfo(const QString&log);
+    void addImportFilterInfo( const QString &log );
+    void addImportFilterError( const QString &log );
+    bool addFilters( const QString &filterPath, MailCommon::FilterImporterExporter::FilterType type );
+    void addImportSettingsInfo(const QString &log);
+    void addImportCalendarInfo(const QString &log);
 
     QString mPath;
     ImportWizard *mImportWizard;

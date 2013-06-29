@@ -200,8 +200,7 @@ bool Util::saveContents( QWidget *parent, const QList<KMime::Content*> &contents
 
     // we may not get a slash-terminated url out of KFileDialog
     dirUrl.adjustPath( KUrl::AddTrailingSlash );
-  }
-  else {
+  } else {
     // only one item, get the desired filename
     KMime::Content *content = contents.first();
     QString fileName = NodeHelper::fileName( content );

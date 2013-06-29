@@ -25,6 +25,7 @@
 #include <KArchive>
 #include <KLocale>
 #include <KConfigGroup>
+#include <KZip>
 
 #include <QDir>
 #include <QFile>
@@ -55,9 +56,12 @@ void ImportAlarmJob::start()
 
 void ImportAlarmJob::restoreResources()
 {
+    //TODO we don't have several resource.
+    //Need to overwrite it.
+#if 0 //PORT ME
     Q_EMIT info(i18n("Restore resources..."));
-    if (!mHashAlarmArchive.isEmpty()) {
-        QHashIterator<QString, QString> i(mHashAlarmArchive);
+    if (!mListResourceFile.isEmpty()) {
+        QHashIterator<QString, QString> i(mListResourceFile);
         QDir dir(mTempDirName);
         dir.mkdir(Utils::alarmPath());
         const QString copyToDirName(mTempDirName + QLatin1Char('/') + Utils::alarmPath());
@@ -96,6 +100,12 @@ void ImportAlarmJob::restoreResources()
     }
 
     Q_EMIT info(i18n("Resources restored."));
+#endif
+}
+
+void ImportAlarmJob::addSpecificResourceSettings(KSharedConfig::Ptr resourceConfig, const QString &resourceName, QMap<QString, QVariant> &settings)
+{
+
 }
 
 void ImportAlarmJob::searchAllFiles(const KArchiveDirectory *dir,const QString &prefix)
@@ -118,18 +128,23 @@ void ImportAlarmJob::storeAlarmArchiveResource(const KArchiveDirectory *dir, con
     Q_FOREACH(const QString& entryName, dir->entries()) {
         const KArchiveEntry *entry = dir->entry(entryName);
         if (entry && entry->isDirectory()) {
-            const KArchiveDirectory*resourceDir = static_cast<const KArchiveDirectory*>(entry);
+            const KArchiveDirectory *resourceDir = static_cast<const KArchiveDirectory*>(entry);
             const QStringList lst = resourceDir->entries();
-            if (lst.count() == 2) {
+
+            if (lst.count() >= 2) {
                 const QString archPath(prefix + QLatin1Char('/') + entryName + QLatin1Char('/'));
-                const QString name(lst.at(0));
-                if (name.endsWith(QLatin1String("rc"))&&(name.contains(QLatin1String("akonadi_alarm_resource_")))) {
-                    mHashAlarmArchive.insert(archPath + name,archPath +lst.at(1));
-                } else {
-                    mHashAlarmArchive.insert(archPath +lst.at(1),archPath + name);
+                resourceFiles files;
+                Q_FOREACH(const QString &name, lst) {
+                    if (name.endsWith(QLatin1String("rc")) && (name.contains(QLatin1String("akonadi_alarm_resource_")))) {
+                        files.akonadiConfigFile = archPath + name;
+                    } else if (name.startsWith(Utils::prefixAkonadiConfigFile())) {
+                        files.akonadiAgentConfigFile = archPath + name;
+                    } else {
+                        files.akonadiResources = archPath + name;
+                    }
                 }
+                mListResourceFile.append(files);
             } else {
-                kDebug()<<" lst.at(0)"<<lst.at(0);
                 kDebug()<<" Problem in archive. number of file "<<lst.count();
             }
         }

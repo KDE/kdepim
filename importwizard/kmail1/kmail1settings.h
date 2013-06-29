@@ -27,6 +27,7 @@ class KMail1Settings : public AbstractSettings
 public:
     explicit KMail1Settings(const QString &filename, ImportWizard *parent);
     ~KMail1Settings();
+
 private:
     void readImapAccount();
     void readIdentity();

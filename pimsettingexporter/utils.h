@@ -25,6 +25,14 @@ namespace Akonadi {
 class AgentInstance;
 }
 
+
+struct resourceFiles
+{
+    QString akonadiConfigFile;
+    QString akonadiResources;
+    QString akonadiAgentConfigFile;
+};
+
 namespace Utils {
 enum StoredType {
     None = 0,
@@ -51,6 +59,8 @@ QString calendarPath();
 QString addressbookPath();
 QString alarmPath();
 QString jotPath();
+QString prefixAkonadiConfigFile();
+QString akonadiAgentName(KSharedConfig::Ptr config);
 
 void convertCollectionListToRealPath(KConfigGroup &group, const QString &currentKey);
 void convertCollectionToRealPath(KConfigGroup &group, const QString &currentKey);
@@ -60,5 +70,7 @@ void convertCollectionIdsToRealPath(KConfigGroup &group, const QString &currentK
 KUrl resourcePath(const Akonadi::AgentInstance &agent);
 KUrl adaptResourcePath(KSharedConfigPtr resourceConfig, const QString &storedData);
 QString storeResources(KZip *archive, const QString &identifier, const QString &path);
+KUrl akonadiAgentConfigPath(const QString &identifier);
+KZip *openZip(const QString &filename, QString &errorMsg);
 }
 #endif // UTILS_H

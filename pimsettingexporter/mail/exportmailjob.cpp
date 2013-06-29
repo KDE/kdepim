@@ -191,29 +191,19 @@ void ExportMailJob::backupConfig()
         else
             Q_EMIT error(i18n("Filters cannot be exported."));
     }
-    const QString labldaprcStr(QLatin1String("kabldaprc"));
-    const QString labldaprc = KStandardDirs::locateLocal( "config", labldaprcStr);
-    if (QFile(labldaprc).exists()) {
-        backupFile(labldaprc, Utils::configsPath(), labldaprcStr);
-    }
 
-    const QString kmailsnippetrcStr(QLatin1String("kmailsnippetrc"));
-    const QString kmailsnippetrc = KStandardDirs::locateLocal( "config",  kmailsnippetrcStr);
-    if (QFile(kmailsnippetrc).exists()) {
-        backupFile(kmailsnippetrc, Utils::configsPath(), kmailsnippetrcStr);
-    }
+    backupConfigFile(QLatin1String("kabldaprc"));
+    backupConfigFile(QLatin1String("kmailsnippetrc"));
+    backupConfigFile(QLatin1String("sievetemplaterc"));
+    backupConfigFile(QLatin1String("customtemplatesrc"));
 
-    const QString sieveTemplateStr(QLatin1String("sievetemplaterc"));
-    const QString sieveTemplaterc = KStandardDirs::locateLocal( "config",  sieveTemplateStr);
-    if (QFile(sieveTemplaterc).exists()) {
-        backupFile(sieveTemplaterc, Utils::configsPath(), sieveTemplateStr);
-    }
-
-    const QString customTemplateStr(QLatin1String("customtemplatesrc"));
-    const QString customTemplaterc = KStandardDirs::locateLocal( "config",  customTemplateStr);
-    if (QFile(customTemplaterc).exists()) {
-        backupFile(customTemplaterc, Utils::configsPath(), customTemplateStr);
-    }
+    //Notify file config
+    backupConfigFile(QLatin1String("akonadi_mailfilter_agent.notifyrc"));
+    backupConfigFile(QLatin1String("akonadi_sendlater_agent.notifyrc"));
+    backupConfigFile(QLatin1String("akonadi_archivemail_agent.notifyrc"));
+    backupConfigFile(QLatin1String("kmail2.notifyrc"));
+    backupConfigFile(QLatin1String("akonadi_newmailnotifier_agent.notifyrc"));
+    backupConfigFile(QLatin1String("akonadi_maildispatcher_agent.notifyrc"));
 
     const QString archiveMailAgentConfigurationStr(QLatin1String("akonadi_archivemail_agentrc"));
     const QString archiveMailAgentconfigurationrc = KStandardDirs::locateLocal( "config", archiveMailAgentConfigurationStr );
@@ -456,29 +446,28 @@ void ExportMailJob::backupMails()
                 const QString identifier = agent.identifier();
                 const QString archivePath = Utils::mailsPath() + identifier + QDir::separator();
                 if (identifier.contains(QLatin1String("akonadi_mbox_resource_"))) {
-                    KUrl url = Utils::resourcePath(agent);
-                    if (!url.isEmpty()) {
-                        const QString filename = url.fileName();
-                        const bool fileAdded  = archive()->addLocalFile(url.path(), archivePath + filename);
-                        if (fileAdded) {
-                            const QString errorStr = Utils::storeResources(archive(), identifier, archivePath );
-                            if (!errorStr.isEmpty()) {
-                                Q_EMIT error(errorStr);
-                            }
-                            Q_EMIT info(i18n("MBox \"%1\" was backuped.",filename));
-                        }
-                        else
-                            Q_EMIT error(i18n("MBox \"%1\" file cannot be added to backup file.",filename));
-                    }
+                    backupResourceFile(agent, Utils::mailsPath());
                 } else if (identifier.contains(QLatin1String("akonadi_maildir_resource_")) ||
                           identifier.contains(QLatin1String("akonadi_mixedmaildir_resource_"))) {
-                    const KUrl url = Utils::resourcePath(agent);
+                    //Store akonadi agent config
+                    KUrl url = Utils::resourcePath(agent);
 
                     if (backupMailData(url, archivePath)) {
                         const QString errorStr = Utils::storeResources(archive(), identifier, archivePath );
                         if (!errorStr.isEmpty()) {
                             Q_EMIT error(errorStr);
                         }
+                        Q_EMIT info(i18n("\"%1\" was backuped.",url.fileName()));
+                        url = Utils::akonadiAgentConfigPath(identifier);
+                        if (!url.isEmpty()) {
+                            const QString filename = url.fileName();
+                            const bool fileAdded  = archive()->addLocalFile(url.path(), archivePath + filename);
+                            if (fileAdded)
+                                Q_EMIT info(i18n("\"%1\" was backuped.",filename));
+                            else
+                                Q_EMIT error(i18n("\"%1\" file cannot be added to backup file.",filename));
+                        }
+
                     }
                 }
             }
