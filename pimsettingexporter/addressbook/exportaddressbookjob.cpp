@@ -72,48 +72,21 @@ void ExportAddressbookJob::backupResources()
 
             KUrl url = Utils::resourcePath(agent);
             if (!url.isEmpty()) {
-                KTemporaryFile tmp;
-                tmp.open();
-                KZip *vcarddirArchive = new KZip(tmp.fileName());
-                vcarddirArchive->setCompression(KZip::NoCompression);
-                bool result = vcarddirArchive->open(QIODevice::WriteOnly);
-                if (!result) {
-                    delete vcarddirArchive;
-                    continue;
-                }
-                //TODO add MessageBox
-
-                QString filename = url.fileName();
-
-                const bool vcarddirAdded = vcarddirArchive->addLocalDirectory(url.path(), QString());
-                //TODO add MessageBox
-                if (!vcarddirAdded) {
-                    delete vcarddirArchive;
-                    continue;
-                }
-                vcarddirArchive->setCompression(KZip::DeflateCompression);
-                vcarddirArchive->close();
-                tmp.close();
-
-                const bool fileAdded = archive()->addLocalFile(tmp.fileName(), archivePath  + QLatin1String("addressbook.zip"));
+                const bool fileAdded = backupFullDirectory(url, archivePath, QLatin1String("addressbook.zip"));
                 if (fileAdded) {
-                    Q_EMIT info(i18n("\"%1\" was backuped.",filename));
                     const QString errorStr = Utils::storeResources(archive(), identifier, archivePath);
                     if (!errorStr.isEmpty())
                         Q_EMIT error(errorStr);
                     url = Utils::akonadiAgentConfigPath(identifier);
                     if (!url.isEmpty()) {
-                        filename = url.fileName();
+                        const QString filename = url.fileName();
                         const bool fileAdded  = archive()->addLocalFile(url.path(), archivePath + filename);
                         if (fileAdded)
                             Q_EMIT info(i18n("\"%1\" was backuped.",filename));
                         else
                             Q_EMIT error(i18n("\"%1\" file cannot be added to backup file.",filename));
                     }
-                } else {
-                    Q_EMIT error(i18n("\"%1\" file cannot be added to backup file.",filename));
                 }
-                delete vcarddirArchive;
             }
         } else if (identifier.contains(QLatin1String("akonadi_vcard_resource_"))) {
             backupResourceFile(agent, Utils::addressbookPath());
