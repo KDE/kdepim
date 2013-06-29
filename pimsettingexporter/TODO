@@ -18,7 +18,7 @@ TODO 4.11:
 - Allow to merge KMail Snippet config
 
 - Import/Export KAddressBook config/resources (In progress)
-- Import/Export KOrganizer config/resources (In progress)
+- Import/Export KOrganizer config/resources (DONE)
 - Import/Export KAlarm config/resources (In progress)
 - Import/Export KJots config/resources (In progress)
 
@@ -26,3 +26,4 @@ TODO 4.12:
 ---------
 - Add export mode 
 - Allow to write a report.
+- Allow to save other kontact settings ?
