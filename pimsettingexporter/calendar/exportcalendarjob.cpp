@@ -119,6 +119,8 @@ void ExportCalendarJob::backupConfig()
         backupFile(freebusyurls, Utils::dataPath(), freebusyurlsStr);
     }
 
+    //TODO export templates
+
     Q_EMIT info(i18n("Config backup done."));
 }
 
