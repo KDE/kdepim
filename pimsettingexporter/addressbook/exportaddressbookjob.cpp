@@ -78,6 +78,7 @@ void ExportAddressbookJob::backupResources()
                 vcarddirArchive->setCompression(KZip::NoCompression);
                 bool result = vcarddirArchive->open(QIODevice::WriteOnly);
                 if (!result) {
+                    delete vcarddirArchive;
                     continue;
                 }
                 //TODO add MessageBox
