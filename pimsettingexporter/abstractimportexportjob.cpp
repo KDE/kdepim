@@ -334,7 +334,7 @@ void AbstractImportExportJob::extractZipFile(const KArchiveFile *file, const QSt
     }
 }
 
-bool AbstractImportExportJob::backupFullDirectory(const KUrl &url, const QString &archivePath)
+bool AbstractImportExportJob::backupFullDirectory(const KUrl &url, const QString &archivePath, const QString &archivename)
 {
     KTemporaryFile tmp;
     tmp.open();
@@ -355,7 +355,7 @@ bool AbstractImportExportJob::backupFullDirectory(const KUrl &url, const QString
     vcarddirArchive->close();
     tmp.close();
 
-    const bool fileAdded = archive()->addLocalFile(tmp.fileName(), archivePath  + QLatin1String("addressbook.zip"));
+    const bool fileAdded = archive()->addLocalFile(tmp.fileName(), archivePath  + archivename);
     if (fileAdded)
         Q_EMIT info(i18n("\"%1\" was backuped.",filename));
     return fileAdded;
