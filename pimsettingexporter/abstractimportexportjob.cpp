@@ -358,6 +358,7 @@ bool AbstractImportExportJob::backupFullDirectory(const KUrl &url, const QString
     const bool fileAdded = archive()->addLocalFile(tmp.fileName(), archivePath  + archivename);
     if (fileAdded)
         Q_EMIT info(i18n("\"%1\" was backuped.",filename));
+    delete vcarddirArchive;
     return fileAdded;
 }
 
