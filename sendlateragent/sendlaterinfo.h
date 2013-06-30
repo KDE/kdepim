@@ -58,7 +58,11 @@ public:
     void setLastDateTimeSend( const QDateTime &date );
     QDateTime lastDateTimeSend() const;
 
+    void setSubject( const QString &subject );
+    QString subject() const;
+
 private:
+    QString mSubject;
     QDateTime mDateTime;
     QDateTime mLastDateTimeSend;
     Akonadi::Item::Id mId;

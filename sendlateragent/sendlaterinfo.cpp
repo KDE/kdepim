@@ -43,6 +43,7 @@ SendLaterInfo::SendLaterInfo(const SendLaterInfo &info)
     mRecursiveEachValue = info.recursiveEachValue();
     mRecursiveUnit = info.recursiveUnit();
     mRecursive = info.isRecursive();
+    mSubject = info.subject();
 }
 
 SendLaterInfo::~SendLaterInfo()
@@ -109,6 +110,17 @@ QDateTime SendLaterInfo::lastDateTimeSend() const
     return mLastDateTimeSend;
 }
 
+void SendLaterInfo::setSubject( const QString &subject )
+{
+    mSubject = subject;
+}
+
+QString SendLaterInfo::subject() const
+{
+    return mSubject;
+}
+
+
 void SendLaterInfo::readConfig(const KConfigGroup &config)
 {
     if (config.hasKey(QLatin1String("lastDateTimeSend"))) {
@@ -119,6 +131,7 @@ void SendLaterInfo::readConfig(const KConfigGroup &config)
     mRecursiveEachValue = config.readEntry("recursiveValue",1);
     mRecursiveUnit = static_cast<RecursiveUnit>(config.readEntry("recursiveUnit", (int)None));
     mId = config.readEntry("itemId", -1);
+    mSubject = config.readEntry("subject");
 }
 
 void SendLaterInfo::writeConfig(KConfigGroup &config )
@@ -131,5 +144,6 @@ void SendLaterInfo::writeConfig(KConfigGroup &config )
     config.writeEntry("recursiveValue", mRecursiveEachValue );
     config.writeEntry("recursiveUnit", (int)mRecursiveUnit);
     config.writeEntry("itemId", mId);
+    config.writeEntry("subject", mSubject);
     config.sync();
 }
