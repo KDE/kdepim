@@ -5,11 +5,15 @@ add_definitions( -DQT_NO_CAST_TO_ASCII )
 
 add_subdirectory(tests)
 
+set(sendlaterlib_SRCS 
+    sendlaterinfo.cpp
+    sendlaterdialog.cpp
+)
+
 set(sendlateragent_SRCS
+   ${sendlaterlib_SRCS}
    sendlateragent.cpp
-   sendlaterdialog.cpp
    sendlaterconfiguredialog.cpp
-   sendlaterinfo.cpp
    sendlatermanager.cpp
    sendlaterjob.cpp
    sendlaterutil.cpp
