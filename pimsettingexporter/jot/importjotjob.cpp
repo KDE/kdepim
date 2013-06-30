@@ -72,7 +72,7 @@ void ImportJotJob::searchAllFiles(const KArchiveDirectory *dir,const QString &pr
         if (entry && entry->isDirectory()) {
             const QString newPrefix = (prefix.isEmpty() ? prefix : prefix + QLatin1Char('/')) + entryName;
             if (entryName == QLatin1String("jot")) {
-                storeAlarmArchiveResource(static_cast<const KArchiveDirectory*>(entry),entryName);
+                storeJotArchiveResource(static_cast<const KArchiveDirectory*>(entry),entryName);
             } else {
                 searchAllFiles(static_cast<const KArchiveDirectory*>(entry), newPrefix);
             }
@@ -80,7 +80,7 @@ void ImportJotJob::searchAllFiles(const KArchiveDirectory *dir,const QString &pr
     }
 }
 
-void ImportJotJob::storeAlarmArchiveResource(const KArchiveDirectory *dir, const QString &prefix)
+void ImportJotJob::storeJotArchiveResource(const KArchiveDirectory *dir, const QString &prefix)
 {
     Q_FOREACH(const QString& entryName, dir->entries()) {
         const KArchiveEntry *entry = dir->entry(entryName);
