@@ -230,7 +230,7 @@ class EVENTVIEWS_EXPORT MonthItem : public QObject
     /**
       Returns a list of pixmaps to draw next to the items.
     */
-    virtual QList<QPixmap *> icons() const = 0;
+    virtual QList<QPixmap> icons() const = 0;
 
     QList<MonthGraphicsItem *> monthGraphicsItems() const;
 
@@ -297,7 +297,7 @@ class EVENTVIEWS_EXPORT IncidenceMonthItem : public MonthItem
     QColor bgColor() const;
     QColor frameColor() const;
 
-    QList<QPixmap *> icons() const;
+    QList<QPixmap> icons() const;
 
   protected:
     virtual void finalizeMove( const QDate &newStartDate );
@@ -357,7 +357,7 @@ class EVENTVIEWS_EXPORT HolidayMonthItem : public MonthItem
     QColor bgColor() const;
     QColor frameColor() const;
 
-    QList<QPixmap *> icons() const;
+    QList<QPixmap> icons() const;
 
   protected:
     virtual void finalizeMove( const QDate &newStartDate );

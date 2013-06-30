@@ -150,13 +150,13 @@ class EVENTVIEWS_EXPORT MonthScene : public QGraphicsScene
     */
     MonthItem *selectedItem() { return mSelectedItem; }
 
-    QPixmap *birthdayPixmap() { return &mBirthdayPixmap; }
-    QPixmap *anniversaryPixmap() { return &mAnniversaryPixmap; }
-    QPixmap *alarmPixmap() { return &mAlarmPixmap; }
-    QPixmap *recurPixmap() { return &mRecurPixmap; }
-    QPixmap *readonlyPixmap() { return &mReadonlyPixmap; }
-    QPixmap *replyPixmap() { return &mReplyPixmap; }
-    QPixmap *holidayPixmap() { return &mHolidayPixmap; }
+    QPixmap birthdayPixmap() { return mBirthdayPixmap; }
+    QPixmap anniversaryPixmap() { return mAnniversaryPixmap; }
+    QPixmap alarmPixmap() { return mAlarmPixmap; }
+    QPixmap recurPixmap() { return mRecurPixmap; }
+    QPixmap readonlyPixmap() { return mReadonlyPixmap; }
+    QPixmap replyPixmap() { return  mReplyPixmap; }
+    QPixmap holidayPixmap() { return mHolidayPixmap; }
 
     /**
        Removes an incidence from the scene
