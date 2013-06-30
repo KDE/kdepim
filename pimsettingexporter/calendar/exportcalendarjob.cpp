@@ -124,6 +124,10 @@ void ExportCalendarJob::backupConfig()
     QDir templateDirectory( templateDir );
     if (templateDirectory.exists()) {
         const bool templateDirAdded = archive()->addLocalDirectory(templateDir, Utils::dataPath() +  QLatin1String( "/korganizer/templates/" ));
+        if (!templateDirAdded) {
+            //TODO fix i18n
+            Q_EMIT error(i18n("\"%1\" file cannot be added to backup file.", templateDir));
+        }
 
     }
 
