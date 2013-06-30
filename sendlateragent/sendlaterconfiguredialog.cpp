@@ -230,8 +230,7 @@ void SendLaterWidget::createOrUpdateItem(SendLaterInfo *info, SendLaterItem *ite
     item->setCheckState(Recursive, info->isRecursive() ? Qt::Checked : Qt::Unchecked);
     item->setText(MessageId, QString::number(info->itemId()));
     item->setText(Date, info->dateTime().toString());
-    //TODO
-    //item->setText(Subject, info->dateTime().toString());
+    item->setText(Subject, info->subject());
     item->setInfo(info);
 }
 
