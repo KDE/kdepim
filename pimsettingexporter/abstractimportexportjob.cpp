@@ -205,14 +205,14 @@ void AbstractImportExportJob::copyToFile(const KArchiveFile *archivefile, const 
     dir.mkdir(prefix);
 
     const QString copyToDirName(mTempDirName + QLatin1Char('/') + prefix);
-    qDebug()<<" copyToDirName"<<copyToDirName;
+    //qDebug()<<" copyToDirName"<<copyToDirName;
     archivefile->copyTo(copyToDirName);
     QFile file;
     file.setFileName(copyToDirName + QLatin1Char('/') + filename);
 
     //QFile doesn't overwrite => remove old file before
-    qDebug()<<" dest "<<dest;
-    qDebug()<<" file "<<file.fileName();
+    //qDebug()<<" dest "<<dest;
+    //qDebug()<<" file "<<file.fileName();
     QFile destination(dest);
     if (destination.exists()) {
         destination.remove();
