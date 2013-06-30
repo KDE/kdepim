@@ -254,7 +254,7 @@ void AbstractImportExportJob::backupResourceFile(const Akonadi::AgentInstance &a
     }
 }
 
-void AbstractImportExportJob::restoreResourceFile(const QString &resourceName, const QString &defaultPath, const QString &storePath)
+void AbstractImportExportJob::restoreResourceFile(const QString &resourceBaseName, const QString &defaultPath, const QString &storePath)
 {
     if (!mListResourceFile.isEmpty()) {
         QDir dir(mTempDirName);
@@ -264,7 +264,7 @@ void AbstractImportExportJob::restoreResourceFile(const QString &resourceName, c
         for (int i = 0; i < mListResourceFile.size(); ++i) {
             resourceFiles value = mListResourceFile.at(i);
             QMap<QString, QVariant> settings;
-            if (value.akonadiConfigFile.contains(resourceName + QLatin1Char('_'))) {
+            if (value.akonadiConfigFile.contains(resourceBaseName + QLatin1Char('_'))) {
                 const KArchiveEntry* fileResouceEntry = mArchiveDirectory->entry(value.akonadiConfigFile);
                 if (fileResouceEntry && fileResouceEntry->isFile()) {
                     const KArchiveFile* file = static_cast<const KArchiveFile*>(fileResouceEntry);
@@ -298,9 +298,9 @@ void AbstractImportExportJob::restoreResourceFile(const QString &resourceName, c
                         }
                     }
 
-                    addSpecificResourceSettings(resourceConfig, resourceName, settings);
+                    addSpecificResourceSettings(resourceConfig, resourceBaseName, settings);
 
-                    const QString newResource = mCreateResource->createResource( resourceName, filename, settings );
+                    const QString newResource = mCreateResource->createResource( resourceBaseName, filename, settings );
                     qDebug()<<" newResource"<<newResource;
                 }
             }
