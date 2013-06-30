@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Send Later Agent
+Name[ca]=Agent envia més tard
 Name[de]=Agent zum späteren Senden
 Name[el]=Πράκτορας ετεροχρονισμένης αποστολής
 Name[es]=Agente de enviar después
@@ -23,6 +24,7 @@ Name[uk]=Агент відкладеного надсилання
 Name[x-test]=xxSend Later Agentxx
 Name[zh_TW]=稍後傳送代理程式
 Comment=Send Later Agent
+Comment[ca]=Agent per enviar més tard
 Comment[de]=Agent zum späteren Senden
 Comment[el]=Πράκτορας ετεροχρονισμένης αποστολής
 Comment[es]=Agente de enviar más tarde

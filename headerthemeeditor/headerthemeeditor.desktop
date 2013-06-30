@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=KMail Header Theme Editor
+Name[ca]=Editor de temes de capçalera pel KMail
 Name[de]=KMail-Designeditor für Vorspann
 Name[el]=Επεξεργαστής θεμάτων επικεφαλίδας του KMail
 Name[es]=Editor de temas de encabezados de KMail
@@ -27,6 +28,7 @@ Type=Application
 Exec=headerthemeeditor
 X-DocPath=headerthemeeditor/index.html
 GenericName=Mail Header Theme Editor
+GenericName[ca]=Editor de temes de capçalera pel correu
 GenericName[de]=Designeditor für E-Mail-Vorspann
 GenericName[el]=Επεξεργαστής θεμάτων επικεφαλίδας μηνυμάτων
 GenericName[es]=Editor de temas de encabezados de correo
