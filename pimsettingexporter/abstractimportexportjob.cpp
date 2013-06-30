@@ -300,7 +300,7 @@ void AbstractImportExportJob::restoreResourceFile(const QString &resourceName, c
 
                     addSpecificResourceSettings(resourceConfig, resourceName, settings);
 
-                    const QString newResource = mCreateResource->createResource( QString::fromLatin1("akonadi_akonotes_resource"), filename, settings );
+                    const QString newResource = mCreateResource->createResource( resourceName, filename, settings );
                     qDebug()<<" newResource"<<newResource;
                 }
             }
