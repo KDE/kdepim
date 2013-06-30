@@ -20,9 +20,11 @@
 
 #include <Akonadi/Item>
 #include <QDateTime>
+#include "sendlater_export.h"
+
 class KConfigGroup;
 
-class SendLaterInfo
+class SENDLATER_EXPORT SendLaterInfo
 {
 public:
     explicit SendLaterInfo();

@@ -10,8 +10,15 @@ set(sendlaterlib_SRCS
     sendlaterdialog.cpp
 )
 
+kde4_add_library( sendlater ${LIBRARY_TYPE} ${sendlaterlib_SRCS} )
+target_link_libraries( sendlater ${KDE4_KDEUI_LIBS} )
+
+set_target_properties( sendlater PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
+
+install( TARGETS sendlater ${INSTALL_TARGETS_DEFAULT_ARGS} )
+
+
 set(sendlateragent_SRCS
-   ${sendlaterlib_SRCS}
    sendlateragent.cpp
    sendlaterconfiguredialog.cpp
    sendlatermanager.cpp
@@ -29,6 +36,7 @@ kde4_add_ui_files(sendlateragent_SRCS ui/sendlaterwidget.ui )
 kde4_add_executable(akonadi_sendlater_agent ${sendlateragent_SRCS})
 
 target_link_libraries(akonadi_sendlater_agent
+  sendlater
   ${KDEPIMLIBS_AKONADI_LIBS}
   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
   ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
