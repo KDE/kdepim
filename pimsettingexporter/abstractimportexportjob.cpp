@@ -278,12 +278,11 @@ void AbstractImportExportJob::restoreResourceFile(const QString &resourceName, c
                     KSharedConfig::Ptr resourceConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + resourceName);
 
                     const KUrl newUrl = Utils::adaptResourcePath(resourceConfig, storePath);
-
                     const QString dataFile = value.akonadiResources;
                     const KArchiveEntry* dataResouceEntry = mArchiveDirectory->entry(dataFile);
                     if (dataResouceEntry->isFile()) {
                         const KArchiveFile* file = static_cast<const KArchiveFile*>(dataResouceEntry);
-                        file->copyTo(newUrl.path());
+                        file->copyTo(newUrl.directory());
                     }
                     settings.insert(QLatin1String("Path"), newUrl.path());
 
