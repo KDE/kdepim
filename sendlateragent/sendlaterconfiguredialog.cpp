@@ -231,6 +231,7 @@ void SendLaterWidget::createOrUpdateItem(SendLaterInfo *info, SendLaterItem *ite
     item->setText(MessageId, QString::number(info->itemId()));
     item->setText(Date, info->dateTime().toString());
     //TODO
+    //item->setText(Subject, info->dateTime().toString());
     item->setInfo(info);
 }
 
