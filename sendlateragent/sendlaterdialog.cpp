@@ -43,7 +43,7 @@ SendLaterDialog::SendLaterDialog(SendLater::SendLaterInfo *info, QWidget *parent
     setButtonText( User1, i18n("Send Later"));
     setButtonText( User2, i18n("Send Now"));
     connect(this, SIGNAL(user1Clicked()), this, SLOT(slotSendLater()));
-    connect(this, SIGNAL(user1Clicked()), this, SLOT(slotSendNow()));
+    connect(this, SIGNAL(user2Clicked()), this, SLOT(slotSendNow()));
     QWidget *w = new QWidget;
     QVBoxLayout *lay = new QVBoxLayout;
     QHBoxLayout *hbox = new QHBoxLayout;
