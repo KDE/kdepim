@@ -181,15 +181,10 @@ void ImportCalendarJob::restoreConfig()
 
     const KArchiveEntry *templateEntry  = mArchiveDirectory->entry(Utils::dataPath() + QLatin1String( "korganizer/templates/" ) );
     if (templateEntry && templateEntry->isDirectory()) {
-        const QString korganizerPath = KGlobal::dirs()->findResource("data", QLatin1String("korganizer/"));
-        const QString templatePath = KGlobal::dirs()->findResource("data", QLatin1String("korganizer/templates/"));
-
-        if (templatePath.isEmpty()) {
-            QDir dir(korganizerPath);
-            dir.mkdir(QLatin1String("templates"));
-        }
+        //TODO verify if template already exists.
+        const QString templatePath = KGlobal::dirs()->saveLocation("data", QLatin1String("korganizer/templates/"));
         const KArchiveDirectory *templateDir = static_cast<const KArchiveDirectory*>(templateEntry);
-        templateDir->copyTo(korganizerPath + QLatin1String("/templates/"));
+        templateDir->copyTo(templatePath);
     }
 
 
