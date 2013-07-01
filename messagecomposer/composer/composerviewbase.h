@@ -212,9 +212,6 @@ public:
   void setSendLaterInfo( SendLater::SendLaterInfo *info);
   SendLater::SendLaterInfo *sendLaterInfo();
 
-  void setSendLaterAction( SendLater::SendLaterDialog::SendLaterAction action);
-  SendLater::SendLaterDialog::SendLaterAction sendLaterAction() const;
-
 public slots:
 
   void identityChanged( const KPIMIdentities::Identity &ident, const KPIMIdentities::Identity &oldIdent, bool msgCleared = false);
@@ -342,7 +339,6 @@ private:
   MessageComposer::MessageSender::SaveIn mSaveIn;
 
   SendLater::SendLaterInfo *mSendLaterInfo;
-  SendLater::SendLaterDialog::SendLaterAction mSendLaterAction;
 };
 
 } // namespace

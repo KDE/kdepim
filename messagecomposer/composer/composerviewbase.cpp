@@ -110,7 +110,6 @@ MessageComposer::ComposerViewBase::ComposerViewBase ( QObject* parent, QWidget *
  , m_autoSaveErrorShown( false )
  , m_autoSaveInterval( 1 * 1000 * 60 ) // default of 1 min
  , mSendLaterInfo (0)
- , mSendLaterAction(SendLater::SendLaterDialog::Unknown)
 {
   m_charsets << "utf-8"; // default, so we have a backup in case client code forgot to set.
 
@@ -1905,16 +1904,6 @@ void MessageComposer::ComposerViewBase::setSendLaterInfo( SendLater::SendLaterIn
 SendLater::SendLaterInfo *MessageComposer::ComposerViewBase::sendLaterInfo()
 {
     return mSendLaterInfo;
-}
-
-void MessageComposer::ComposerViewBase::setSendLaterAction( SendLater::SendLaterDialog::SendLaterAction action)
-{
-    mSendLaterAction = action;
-}
-
-SendLater::SendLaterDialog::SendLaterAction MessageComposer::ComposerViewBase::sendLaterAction() const
-{
-    return mSendLaterAction;
 }
 
 #include "composerviewbase.moc"
