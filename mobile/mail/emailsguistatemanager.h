@@ -34,7 +34,7 @@ class EmailsGuiStateManager : public GuiStateManager
 
   public:
     enum GuiState {
-      ManageAclsState = GuiStateManager::UserState,
+      ManageAclsState = GuiStateManager::UserState
     };
 
     /**
