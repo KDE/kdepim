@@ -110,6 +110,7 @@ MessageComposer::ComposerViewBase::ComposerViewBase ( QObject* parent, QWidget *
  , m_autoSaveErrorShown( false )
  , m_autoSaveInterval( 1 * 1000 * 60 ) // default of 1 min
  , mSendLaterInfo (0)
+ , mSendLaterAction(SendLater::SendLaterDialog::Unknown)
 {
   m_charsets << "utf-8"; // default, so we have a backup in case client code forgot to set.
 
@@ -1882,6 +1883,12 @@ bool MessageComposer::ComposerViewBase::determineWhetherToEncrypt( bool doEncryp
     }
 
     return encrypt || doEncryptCompletely;
+}
+
+void MessageComposer::ComposerViewBase::setSendLaterInfo( SendLater::SendLaterInfo *info)
+{
+    delete mSendLaterInfo;
+    mSendLaterInfo = info;
 }
 
 #include "composerviewbase.moc"
