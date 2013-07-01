@@ -34,13 +34,13 @@
 #include "imagescaling/imagescalingutils.h"
 
 #include "sendlateragent/sendlaterinfo.h"
+#include "sendlateragent/sendlaterutil.h"
 
 #include <addressline/recentaddresses.h>
 #include "helper/messagehelper.h"
 
 #include <messagecomposer/recipient/recipientseditor.h>
 #include "settings/messagecomposersettings.h"
-
 
 #include <messageviewer/viewer/objecttreeemptysource.h>
 #include <messageviewer/viewer/objecttreeparser.h>
@@ -1154,6 +1154,15 @@ void MessageComposer::ComposerViewBase::slotCreateItemResult( KJob *job )
     kWarning() << "Failed to save a message:" << job->errorString();
     emit failed( i18n( "Failed to save the message: %1", job->errorString() ) );
     return;
+  }
+
+  if (mSendLaterInfo) {
+      Akonadi::ItemCreateJob *createJob = static_cast<Akonadi::ItemCreateJob *>(job);
+      const Akonadi::Item item = createJob->item();
+      if (item.isValid()) {
+          mSendLaterInfo->setItemId(item.id());
+          SendLaterUtil::writeSendLaterInfo(mSendLaterInfo);
+      }
   }
 
   if( m_pendingQueueJobs == 0 ) {
