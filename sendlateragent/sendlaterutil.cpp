@@ -21,6 +21,7 @@
 
 #include <KConfigGroup>
 
+#include <QDBusInterface>
 #include <QStringList>
 
 bool SendLaterUtil::compareSendLaterInfo(SendLater::SendLaterInfo *left, SendLater::SendLaterInfo *right)
@@ -56,4 +57,10 @@ void SendLaterUtil::writeSendLaterInfo(SendLater::SendLaterInfo *info)
     info->writeConfig(group);
     config->sync();
     config->reparseConfiguration();
+}
+
+bool SendLaterUtil::sentLaterAgentRegistred()
+{
+    QDBusInterface interface( QLatin1String("org.freedesktop.Akonadi.Agent.akonadi_sendlater_agent"), QLatin1String("/SendLaterAgent") );
+    return interface.isValid();
 }

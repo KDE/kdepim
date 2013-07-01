@@ -31,6 +31,8 @@ namespace SendLaterUtil
     SENDLATER_EXPORT KSharedConfig::Ptr defaultConfig();
 
     SENDLATER_EXPORT void writeSendLaterInfo(SendLater::SendLaterInfo *info);
+
+    SENDLATER_EXPORT bool sentLaterAgentRegistred();
 }
 
 #endif // SENDLATERUTIL_H
