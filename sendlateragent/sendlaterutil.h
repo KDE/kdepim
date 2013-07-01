@@ -23,7 +23,6 @@
 
 namespace SendLater {
 class SendLaterInfo;
-}
 namespace SendLaterUtil
 {
     SENDLATER_EXPORT bool compareSendLaterInfo(SendLater::SendLaterInfo *left, SendLater::SendLaterInfo *right);
@@ -34,5 +33,5 @@ namespace SendLaterUtil
 
     SENDLATER_EXPORT bool sentLaterAgentRegistred();
 }
-
+}
 #endif // SENDLATERUTIL_H

@@ -65,7 +65,7 @@ void SendLaterManager::load()
 void SendLaterManager::createSendInfoList()
 {
     mCurrentInfo = 0;
-    qSort(mListSendLaterInfo.begin(), mListSendLaterInfo.end(), SendLaterUtil::compareSendLaterInfo);
+    qSort(mListSendLaterInfo.begin(), mListSendLaterInfo.end(), SendLater::SendLaterUtil::compareSendLaterInfo);
     if (!mListSendLaterInfo.isEmpty()) {
         mCurrentInfo = mListSendLaterInfo.first();
         const QDateTime now = QDateTime::currentDateTime();

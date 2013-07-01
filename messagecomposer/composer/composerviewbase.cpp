@@ -1161,7 +1161,7 @@ void MessageComposer::ComposerViewBase::slotCreateItemResult( KJob *job )
       const Akonadi::Item item = createJob->item();
       if (item.isValid()) {
           mSendLaterInfo->setItemId(item.id());
-          SendLaterUtil::writeSendLaterInfo(mSendLaterInfo);
+          SendLater::SendLaterUtil::writeSendLaterInfo(mSendLaterInfo);
       }
   }
 

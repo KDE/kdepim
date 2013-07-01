@@ -24,7 +24,7 @@
 #include <QDBusInterface>
 #include <QStringList>
 
-bool SendLaterUtil::compareSendLaterInfo(SendLater::SendLaterInfo *left, SendLater::SendLaterInfo *right)
+bool SendLater::SendLaterUtil::compareSendLaterInfo(SendLater::SendLaterInfo *left, SendLater::SendLaterInfo *right)
 {
     if (left->dateTime() == right->dateTime()) {
         //Set no recursive first.
@@ -35,12 +35,12 @@ bool SendLaterUtil::compareSendLaterInfo(SendLater::SendLaterInfo *left, SendLat
     return left->dateTime() < right->dateTime();
 }
 
-KSharedConfig::Ptr SendLaterUtil::defaultConfig()
+KSharedConfig::Ptr SendLater::SendLaterUtil::defaultConfig()
 {
     return KSharedConfig::openConfig( QLatin1String("akonadi_sendlater_agentrc") );
 }
 
-void SendLaterUtil::writeSendLaterInfo(SendLater::SendLaterInfo *info)
+void SendLater::SendLaterUtil::writeSendLaterInfo(SendLater::SendLaterInfo *info)
 {
     if (!info)
         return;
@@ -59,7 +59,7 @@ void SendLaterUtil::writeSendLaterInfo(SendLater::SendLaterInfo *info)
     config->reparseConfiguration();
 }
 
-bool SendLaterUtil::sentLaterAgentRegistred()
+bool SendLater::SendLaterUtil::sentLaterAgentRegistred()
 {
     QDBusInterface interface( QLatin1String("org.freedesktop.Akonadi.Agent.akonadi_sendlater_agent"), QLatin1String("/SendLaterAgent") );
     return interface.isValid();
