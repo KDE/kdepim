@@ -34,7 +34,7 @@ public:
     SendLaterInfo(const SendLater::SendLaterInfo &info);
     ~SendLaterInfo();
 
-    enum RecursiveUnit {
+    enum RecurrenceUnit {
         None = 0,
         Days,
         Weeks,
@@ -44,14 +44,14 @@ public:
     void setItemId(Akonadi::Item::Id id);
     Akonadi::Item::Id itemId() const;
 
-    void setRecursiveUnit(RecursiveUnit unit);
-    RecursiveUnit recursiveUnit() const;
+    void setRecurrenceUnit(RecurrenceUnit unit);
+    RecurrenceUnit recurrenceUnit() const;
 
-    void setRecursiveEachValue(int value);
-    int recursiveEachValue() const;
+    void setRecurrenceEachValue(int value);
+    int recurrenceEachValue() const;
 
-    bool isRecursive() const;
-    void setRecursive(bool b);
+    bool isRecurrence() const;
+    void setRecurrence(bool b);
 
     void setDateTime(const QDateTime &time);
     QDateTime dateTime() const;
@@ -70,9 +70,9 @@ private:
     QDateTime mDateTime;
     QDateTime mLastDateTimeSend;
     Akonadi::Item::Id mId;
-    int mRecursiveEachValue;
-    RecursiveUnit mRecursiveUnit;
-    bool mRecursive;
+    int mRecurrenceEachValue;
+    RecurrenceUnit mRecurrenceUnit;
+    bool mRecurrence;
 };
 }
 

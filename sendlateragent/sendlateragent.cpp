@@ -20,8 +20,15 @@
 #include "sendlaterconfiguredialog.h"
 #include "sendlaterinfo.h"
 #include "sendlateragentadaptor.h"
+#include "sendlateragentsettings.h"
 
 #include <akonadi/dbusconnectionpool.h>
+#include <akonadi/changerecorder.h>
+#include <akonadi/itemfetchscope.h>
+#include <akonadi/session.h>
+#include <Akonadi/AttributeFactory>
+#include <Akonadi/CollectionFetchScope>
+#include <KMime/Message>
 
 #include <KWindowSystem>
 #include <KLocale>
@@ -40,15 +47,53 @@ SendLaterAgent::SendLaterAgent(const QString &id)
     Akonadi::DBusConnectionPool::threadConnection().registerObject( QLatin1String( "/SendLaterAgent" ), this, QDBusConnection::ExportAdaptors );
     Akonadi::DBusConnectionPool::threadConnection().registerService( QLatin1String( "org.freedesktop.Akonadi.SendLaterAgent" ) );
 
+    changeRecorder()->setMimeTypeMonitored( KMime::Message::mimeType() );
+    changeRecorder()->itemFetchScope().setCacheOnly( true );
+    changeRecorder()->itemFetchScope().setFetchModificationTime( false );
+    changeRecorder()->fetchCollection( true );
+    changeRecorder()->setChangeRecordingEnabled( false );
+    changeRecorder()->setAllMonitored(true);
+    changeRecorder()->ignoreSession( Akonadi::Session::defaultSession() );
+    changeRecorder()->collectionFetchScope().setAncestorRetrieval( Akonadi::CollectionFetchScope::All );
+    changeRecorder()->setCollectionMonitored(Akonadi::Collection::root(), true);
+
+
+    if (SendLaterAgentSettings::enabled()) {
 #ifdef DEBUG_SENDLATERAGENT
-    QTimer::singleShot(1000, mManager, SLOT(load()));
+        QTimer::singleShot(1000, mManager, SLOT(load()));
 #else
-    QTimer::singleShot(1000*60*4, mManager, SLOT(load()));
+        QTimer::singleShot(1000*60*4, mManager, SLOT(load()));
 #endif
+    }
 }
 
 SendLaterAgent::~SendLaterAgent()
 {
+}
+
+void SendLaterAgent::reload()
+{
+    if (SendLaterAgentSettings::enabled())
+        mManager->load(true);
+}
+
+void SendLaterAgent::setEnableAgent(bool enabled)
+{
+    if (SendLaterAgentSettings::enabled() == enabled)
+        return;
+
+    SendLaterAgentSettings::setEnabled(enabled);
+    SendLaterAgentSettings::self()->writeConfig();
+    if (enabled) {
+        mManager->load();
+    } else {
+        mManager->stopAll();
+    }
+}
+
+bool SendLaterAgent::enabledAgent() const
+{
+    return SendLaterAgentSettings::enabled();
 }
 
 SendLater::SendLaterDialog::SendLaterAction SendLaterAgent::addSendLaterItem(qlonglong itemId, qlonglong windowId)
@@ -100,6 +145,11 @@ void SendLaterAgent::showConfigureDialog(qlonglong windowId)
         mManager->load();
     }
     delete dialog;
+}
+
+void SendLaterAgent::itemRemoved( const Akonadi::Item &item )
+{
+    mManager->itemRemoved(item.id());
 }
 
 void SendLaterAgent::printDebugInfo()

@@ -47,11 +47,14 @@ public:
     void sendError(SendLater::SendLaterInfo *info, ErrorType type);
     void printDebugInfo();
 
+    void stopAll();
+    void itemRemoved(Akonadi::Item::Id id);
+
 Q_SIGNALS:
     void needUpdateConfigDialogBox();
 
 public Q_SLOTS:
-    void load();
+    void load(bool forcereload = false);
 
 private Q_SLOTS:
     void slotCreateJob();

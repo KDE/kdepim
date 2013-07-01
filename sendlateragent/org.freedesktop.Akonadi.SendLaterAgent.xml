@@ -9,6 +9,13 @@
       <arg direction="in" type="x" name="windowId" />
       <arg direction="out" type="x" />
     </method>
+    <method name="setEnableAgent" >
+      <arg type="b" direction="in"/>
+    </method>
+    <method name="enabledAgent" >
+      <arg type="b" direction="out"/>
+    </method>
     <method name="printDebugInfo" />
+    <method name="reload" />
   </interface>
 </node>

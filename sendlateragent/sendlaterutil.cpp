@@ -18,6 +18,7 @@
 
 #include "sendlaterutil.h"
 #include "sendlaterinfo.h"
+#include "sendlateragentsettings.h"
 
 #include <KConfigGroup>
 
@@ -28,7 +29,7 @@ bool SendLater::SendLaterUtil::compareSendLaterInfo(SendLater::SendLaterInfo *le
 {
     if (left->dateTime() == right->dateTime()) {
         //Set no recursive first.
-        if (left->isRecursive())  {
+        if (left->isRecurrence())  {
             return false;
         }
     }
@@ -57,6 +58,7 @@ void SendLater::SendLaterUtil::writeSendLaterInfo(SendLater::SendLaterInfo *info
     info->writeConfig(group);
     config->sync();
     config->reparseConfiguration();
+    reload();
 }
 
 bool SendLater::SendLaterUtil::sentLaterAgentWasRegistered()
@@ -64,3 +66,17 @@ bool SendLater::SendLaterUtil::sentLaterAgentWasRegistered()
     QDBusInterface interface( QLatin1String("org.freedesktop.Akonadi.Agent.akonadi_sendlater_agent"), QLatin1String("/SendLaterAgent") );
     return interface.isValid();
 }
+
+bool SendLater::SendLaterUtil::sentLaterAgentEnabled()
+{
+    return SendLaterAgentSettings::self()->enabled();
+}
+
+void SendLater::SendLaterUtil::reload()
+{
+    QDBusInterface interface( QLatin1String("org.freedesktop.Akonadi.Agent.akonadi_sendlater_agent"), QLatin1String("/SendLaterAgent") );
+    if (interface.isValid()) {
+        interface.call(QLatin1String("reload"));
+    }
+}
+

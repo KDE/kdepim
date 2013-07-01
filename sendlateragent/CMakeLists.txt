@@ -11,6 +11,11 @@ set(sendlaterlib_SRCS
     sendlaterutil.cpp
 )
 
+kde4_add_kcfg_files(sendlaterlib_SRCS
+    sendlateragentsettings.kcfgc 
+  )
+
+
 kde4_add_library( sendlater ${LIBRARY_TYPE} ${sendlaterlib_SRCS} )
 target_link_libraries( sendlater ${KDE4_KDEUI_LIBS} )
 
@@ -25,6 +30,8 @@ set(sendlateragent_SRCS
    sendlatermanager.cpp
    sendlaterjob.cpp
 )
+
+
  
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
@@ -40,6 +47,7 @@ target_link_libraries(akonadi_sendlater_agent
   ${KDEPIMLIBS_AKONADI_LIBS}
   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
   ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
+  ${KDEPIMLIBS_KMIME_LIBS}
 )
 
 if (Q_WS_MAC)

@@ -227,7 +227,7 @@ void SendLaterWidget::createOrUpdateItem(SendLater::SendLaterInfo *info, SendLat
     if (!item) {
         item = new SendLaterItem(mWidget->treeWidget);
     }
-    item->setCheckState(Recursive, info->isRecursive() ? Qt::Checked : Qt::Unchecked);
+    item->setCheckState(Recursive, info->isRecurrence() ? Qt::Checked : Qt::Unchecked);
     item->setText(MessageId, QString::number(info->itemId()));
     item->setText(Date, info->dateTime().toString());
     item->setText(Subject, info->subject());

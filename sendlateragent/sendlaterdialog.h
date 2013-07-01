@@ -50,7 +50,7 @@ public:
 private Q_SLOTS:
     void slotSendLater();
     void slotSendNow();
-    void slotRecursiveClicked(bool);
+    void slotRecurrenceClicked(bool);
     void slotSendIn30Minutes();
     void slotSendIn1Hour();
     void slotSendIn2Hours();
@@ -67,9 +67,9 @@ private:
     SendLaterAction mAction;
     QDateTimeEdit *mDateTime;
     SendLater::SendLaterInfo *mInfo;
-    KComboBox *mRecursiveComboBox;
-    QCheckBox *mRecursive;
-    QSpinBox *mRecursiveValue;
+    KComboBox *mRecurrenceComboBox;
+    QCheckBox *mRecurrence;
+    QSpinBox *mRecurrenceValue;
     KPushButton *mSendIn30Minutes;
     KPushButton *mSendIn1Hour;
     KPushButton *mSendIn2Hours;

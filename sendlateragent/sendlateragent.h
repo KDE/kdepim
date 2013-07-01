@@ -35,11 +35,20 @@ public:
 
     void printDebugInfo();
 
+    void setEnableAgent(bool b);
+    bool enabledAgent() const;
+
+    void reload();
+
+
 Q_SIGNALS:
     void needUpdateConfigDialogBox();
 
 public Q_SLOTS:
     void configure( WId windowId );
+
+protected:
+    void itemRemoved( const Akonadi::Item &item );
 
 private:
     SendLaterManager *mManager;
