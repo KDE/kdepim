@@ -30,3 +30,8 @@ bool SendLaterUtil::compareSendLaterInfo(SendLater::SendLaterInfo *left, SendLat
     }
     return left->dateTime() < right->dateTime();
 }
+
+KSharedConfig::Ptr SendLaterUtil::defaultConfig()
+{
+    return KSharedConfig::openConfig( QLatin1String("akonadi_sendlater_agentrc") );
+}

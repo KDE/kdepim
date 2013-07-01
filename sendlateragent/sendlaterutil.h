@@ -18,12 +18,17 @@
 #ifndef SENDLATERUTIL_H
 #define SENDLATERUTIL_H
 
+#include "sendlater_export.h"
+#include <KSharedConfig>
+
 namespace SendLater {
 class SendLaterInfo;
 }
 namespace SendLaterUtil
 {
-    bool compareSendLaterInfo(SendLater::SendLaterInfo *left, SendLater::SendLaterInfo *right);
+    SENDLATER_EXPORT bool compareSendLaterInfo(SendLater::SendLaterInfo *left, SendLater::SendLaterInfo *right);
+
+    SENDLATER_EXPORT KSharedConfig::Ptr defaultConfig();
 }
 
 #endif // SENDLATERUTIL_H

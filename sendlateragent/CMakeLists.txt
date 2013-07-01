@@ -8,6 +8,7 @@ add_subdirectory(tests)
 set(sendlaterlib_SRCS 
     sendlaterinfo.cpp
     sendlaterdialog.cpp
+    sendlaterutil.cpp
 )
 
 kde4_add_library( sendlater ${LIBRARY_TYPE} ${sendlaterlib_SRCS} )
@@ -23,7 +24,6 @@ set(sendlateragent_SRCS
    sendlaterconfiguredialog.cpp
    sendlatermanager.cpp
    sendlaterjob.cpp
-   sendlaterutil.cpp
 )
  
 
