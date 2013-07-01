@@ -29,6 +29,8 @@ namespace SendLaterUtil
     SENDLATER_EXPORT bool compareSendLaterInfo(SendLater::SendLaterInfo *left, SendLater::SendLaterInfo *right);
 
     SENDLATER_EXPORT KSharedConfig::Ptr defaultConfig();
+
+    SENDLATER_EXPORT void writeSendLaterInfo(SendLater::SendLaterInfo *info);
 }
 
 #endif // SENDLATERUTIL_H
