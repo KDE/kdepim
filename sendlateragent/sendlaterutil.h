@@ -31,7 +31,7 @@ namespace SendLaterUtil
 
     SENDLATER_EXPORT void writeSendLaterInfo(SendLater::SendLaterInfo *info);
 
-    SENDLATER_EXPORT bool sentLaterAgentRegistred();
+    SENDLATER_EXPORT bool sentLaterAgentWasRegistered();
 }
 }
 #endif // SENDLATERUTIL_H

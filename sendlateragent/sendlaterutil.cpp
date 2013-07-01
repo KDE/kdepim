@@ -59,7 +59,7 @@ void SendLater::SendLaterUtil::writeSendLaterInfo(SendLater::SendLaterInfo *info
     config->reparseConfiguration();
 }
 
-bool SendLater::SendLaterUtil::sentLaterAgentRegistred()
+bool SendLater::SendLaterUtil::sentLaterAgentWasRegistered()
 {
     QDBusInterface interface( QLatin1String("org.freedesktop.Akonadi.Agent.akonadi_sendlater_agent"), QLatin1String("/SendLaterAgent") );
     return interface.isValid();
