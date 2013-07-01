@@ -56,7 +56,7 @@ void SendLaterManager::load()
     const int numberOfItems = itemList.count();
     for (int i = 0 ; i < numberOfItems; ++i) {
         KConfigGroup group = mConfig->group(itemList.at(i));
-        SendLaterInfo *info = new SendLaterInfo(group);        
+        SendLater::SendLaterInfo *info = new SendLater::SendLaterInfo(group);        
         mListSendLaterInfo.append(info);
     }
     createSendInfoList();
@@ -98,7 +98,7 @@ void SendLaterManager::removeInfo(Akonadi::Item::Id id)
     group.sync();
 }
 
-void SendLaterManager::sendError(SendLaterInfo *info, ErrorType type)
+void SendLaterManager::sendError(SendLater::SendLaterInfo *info, ErrorType type)
 {
     if (info) {
         if (type == ItemNotFound) {
@@ -122,7 +122,7 @@ void SendLaterManager::sendError(SendLaterInfo *info, ErrorType type)
     Q_EMIT needUpdateConfigDialogBox();
 }
 
-void SendLaterManager::sendDone(SendLaterInfo *info)
+void SendLaterManager::sendDone(SendLater::SendLaterInfo *info)
 {
     if (info) {
         if (!info->isRecursive()) {
@@ -137,7 +137,7 @@ void SendLaterManager::sendDone(SendLaterInfo *info)
 
 void SendLaterManager::printDebugInfo()
 {
-    Q_FOREACH (SendLaterInfo *info, mListSendLaterInfo) {
+    Q_FOREACH (SendLater::SendLaterInfo *info, mListSendLaterInfo) {
         kDebug() <<" recusive "<<info->isRecursive() <<
                    " id :"<<info->itemId()<<
                    " date :"<<info->dateTime().toString()<<

@@ -30,7 +30,9 @@
 #include <QSpinBox>
 #include <QDateTimeEdit>
 
-SendLaterDialog::SendLaterDialog(SendLaterInfo *info, QWidget *parent)
+using namespace SendLater;
+
+SendLaterDialog::SendLaterDialog(SendLater::SendLaterInfo *info, QWidget *parent)
     : KDialog(parent),
       mAction(SendNow),
       mInfo(info)
@@ -157,7 +159,7 @@ void SendLaterDialog::writeConfig()
     group.writeEntry( "Size", size() );
 }
 
-void SendLaterDialog::load(SendLaterInfo *info)
+void SendLaterDialog::load(SendLater::SendLaterInfo *info)
 {
     mDateTime->setDateTime(info->dateTime());
     mRecursive->setChecked(info->isRecursive());
@@ -165,15 +167,15 @@ void SendLaterDialog::load(SendLaterInfo *info)
     mRecursiveComboBox->setCurrentIndex((int)info->recursiveUnit());
 }
 
-SendLaterInfo* SendLaterDialog::info()
+SendLater::SendLaterInfo* SendLaterDialog::info()
 {
     if (!mInfo) {
-        mInfo = new SendLaterInfo();
+        mInfo = new SendLater::SendLaterInfo();
         mInfo->setItemId(-1);
     }
     mInfo->setRecursive(mRecursive->isChecked());
     mInfo->setRecursiveEachValue(mRecursiveValue->value());
-    mInfo->setRecursiveUnit((SendLaterInfo::RecursiveUnit)mRecursiveComboBox->currentIndex());
+    mInfo->setRecursiveUnit((SendLater::SendLaterInfo::RecursiveUnit)mRecursiveComboBox->currentIndex());
     if (mSendDateTime.isValid())
         mInfo->setDateTime(mSendDateTime);
     else

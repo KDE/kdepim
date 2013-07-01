@@ -31,7 +31,7 @@ public:
     ~SendLaterAgent();
 
     void showConfigureDialog(qlonglong windowId = 0);
-    SendLaterDialog::SendLaterAction addSendLaterItem(qlonglong itemId, qlonglong windowId = 0);
+    SendLater::SendLaterDialog::SendLaterAction addSendLaterItem(qlonglong itemId, qlonglong windowId = 0);
 
     void printDebugInfo();
 

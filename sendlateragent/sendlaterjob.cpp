@@ -33,7 +33,7 @@
 #include <KIcon>
 #include <KIconLoader>
 
-SendLaterJob::SendLaterJob(SendLaterManager *manager, SendLaterInfo *info, QObject *parent)
+SendLaterJob::SendLaterJob(SendLaterManager *manager, SendLater::SendLaterInfo *info, QObject *parent)
     : QObject(parent),
       mManager(manager),
       mInfo(info)

@@ -25,13 +25,15 @@
 #include <Akonadi/ItemFetchScope>
 #include <Akonadi/Item>
 
+namespace SendLater {
 class SendLaterInfo;
+}
 class KJob;
 class SendLaterJob : public QObject
 {
     Q_OBJECT
 public:
-    explicit SendLaterJob(SendLaterManager *manager, SendLaterInfo *info, QObject *parent = 0);
+    explicit SendLaterJob(SendLaterManager *manager, SendLater::SendLaterInfo *info, QObject *parent = 0);
     ~SendLaterJob();
     void start();
 
@@ -48,7 +50,7 @@ Q_SIGNALS:
 private:
     Akonadi::ItemFetchScope mFetchScope;
     SendLaterManager *mManager;
-    SendLaterInfo *mInfo;
+    SendLater::SendLaterInfo *mInfo;
     Akonadi::Item mItem;
 };
 

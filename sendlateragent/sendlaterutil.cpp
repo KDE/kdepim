@@ -20,7 +20,7 @@
 #include "sendlaterinfo.h"
 
 
-bool SendLaterUtil::compareSendLaterInfo(SendLaterInfo *left, SendLaterInfo *right)
+bool SendLaterUtil::compareSendLaterInfo(SendLater::SendLaterInfo *left, SendLater::SendLaterInfo *right)
 {
     if (left->dateTime() == right->dateTime()) {
         //Set no recursive first.

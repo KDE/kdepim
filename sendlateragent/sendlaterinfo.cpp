@@ -20,6 +20,8 @@
 
 #include <KConfigGroup>
 
+using namespace SendLater;
+
 SendLaterInfo::SendLaterInfo()
     : mId(-1),
       mRecursiveEachValue(1),

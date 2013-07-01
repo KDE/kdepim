@@ -24,12 +24,14 @@
 
 class KConfigGroup;
 
+namespace SendLater {
+
 class SENDLATER_EXPORT SendLaterInfo
 {
 public:
     explicit SendLaterInfo();
     explicit SendLaterInfo(const KConfigGroup &config);
-    SendLaterInfo(const SendLaterInfo &info);
+    SendLaterInfo(const SendLater::SendLaterInfo &info);
     ~SendLaterInfo();
 
     enum RecursiveUnit {
@@ -72,5 +74,6 @@ private:
     RecursiveUnit mRecursiveUnit;
     bool mRecursive;
 };
+}
 
 #endif // SENDLATERINFO_H

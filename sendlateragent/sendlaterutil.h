@@ -17,10 +17,13 @@
 
 #ifndef SENDLATERUTIL_H
 #define SENDLATERUTIL_H
+
+namespace SendLater {
 class SendLaterInfo;
+}
 namespace SendLaterUtil
 {
-    bool compareSendLaterInfo(SendLaterInfo *left, SendLaterInfo *right);
+    bool compareSendLaterInfo(SendLater::SendLaterInfo *left, SendLater::SendLaterInfo *right);
 }
 
 #endif // SENDLATERUTIL_H

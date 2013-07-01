@@ -27,7 +27,9 @@
 #include <QTreeWidgetItem>
 
 class KAboutData;
+namespace SendLater {
 class SendLaterInfo;
+}
 
 class SendLaterItem : public QTreeWidgetItem
 {
@@ -35,11 +37,11 @@ public:
     explicit SendLaterItem(QTreeWidget *parent = 0);
     ~SendLaterItem();
 
-    void setInfo(SendLaterInfo *info);
-    SendLaterInfo *info() const;
+    void setInfo(SendLater::SendLaterInfo *info);
+    SendLater::SendLaterInfo *info() const;
 
 private:
-    SendLaterInfo *mInfo;
+    SendLater::SendLaterInfo *mInfo;
 };
 
 
@@ -73,7 +75,7 @@ Q_SIGNALS:
     void sendNow(Akonadi::Item::Id);
 
 private:
-    void createOrUpdateItem(SendLaterInfo *info, SendLaterItem *item = 0);
+    void createOrUpdateItem(SendLater::SendLaterInfo *info, SendLaterItem *item = 0);
     void load();
     bool mChanged;
     Ui::SendLaterWidget *mWidget;

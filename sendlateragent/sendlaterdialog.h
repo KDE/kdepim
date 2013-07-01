@@ -26,8 +26,8 @@ class QCheckBox;
 class QSpinBox;
 class QDateTimeEdit;
 
+namespace SendLater {
 class SendLaterInfo;
-
 class SENDLATER_EXPORT SendLaterDialog : public KDialog
 {
     Q_OBJECT
@@ -39,10 +39,10 @@ public:
         SendDeliveryAtTime = 3
     };
 
-    explicit SendLaterDialog(SendLaterInfo *info, QWidget *parent = 0);
+    explicit SendLaterDialog(SendLater::SendLaterInfo *info, QWidget *parent = 0);
     ~SendLaterDialog();
 
-    SendLaterInfo *info();
+    SendLater::SendLaterInfo *info();
 
     SendLaterAction action() const;
 
@@ -57,7 +57,7 @@ private Q_SLOTS:
     void slotSendAtTime();
 
 private:
-    void load(SendLaterInfo *info);
+    void load(SendLater::SendLaterInfo *info);
     void readConfig();
     void writeConfig();
 
@@ -65,7 +65,7 @@ private:
     QDateTime mSendDateTime;
     SendLaterAction mAction;
     QDateTimeEdit *mDateTime;
-    SendLaterInfo *mInfo;
+    SendLater::SendLaterInfo *mInfo;
     KComboBox *mRecursiveComboBox;
     QCheckBox *mRecursive;
     QSpinBox *mRecursiveValue;
@@ -74,5 +74,5 @@ private:
     KPushButton *mSendIn2Hours;
     KPushButton *mSendAtTime;
 };
-
+}
 #endif // SENDLATERDIALOG_H

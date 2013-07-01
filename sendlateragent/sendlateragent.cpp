@@ -51,12 +51,12 @@ SendLaterAgent::~SendLaterAgent()
 {
 }
 
-SendLaterDialog::SendLaterAction SendLaterAgent::addSendLaterItem(qlonglong itemId, qlonglong windowId)
+SendLater::SendLaterDialog::SendLaterAction SendLaterAgent::addSendLaterItem(qlonglong itemId, qlonglong windowId)
 {
-    SendLaterInfo *info = new SendLaterInfo;
+    SendLater::SendLaterInfo *info = new SendLater::SendLaterInfo;
     info->setItemId(itemId);
-    QPointer<SendLaterDialog> dialog = new SendLaterDialog(info);
-    SendLaterDialog::SendLaterAction action = SendLaterDialog::Canceled;
+    QPointer<SendLater::SendLaterDialog> dialog = new SendLater::SendLaterDialog(info);
+    SendLater::SendLaterDialog::SendLaterAction action = SendLater::SendLaterDialog::Canceled;
     if (windowId) {
 #ifndef Q_WS_WIN
         KWindowSystem::setMainWindow( dialog, windowId );
