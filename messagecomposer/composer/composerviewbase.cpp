@@ -35,24 +35,34 @@
 
 #include "sendlateragent/sendlaterinfo.h"
 
+#include <addressline/recentaddresses.h>
+#include "helper/messagehelper.h"
+
+#include <messagecomposer/recipient/recipientseditor.h>
+#include "settings/messagecomposersettings.h"
+
+
 #include <messageviewer/viewer/objecttreeemptysource.h>
 #include <messageviewer/viewer/objecttreeparser.h>
-#include <messagecore/helpers/messagehelpers.h>
-#include <messagecore/utils/stringutil.h>
-#include <mailtransport/transportcombobox.h>
-#include <mailtransport/messagequeuejob.h>
-#include <akonadi/kmime/specialmailcollections.h>
-#include <akonadi/itemcreatejob.h>
-#include <akonadi/collectionfetchjob.h>
-#include <kpimidentities/identitycombo.h>
-#include <messagecore/attachment/attachmentcollector.h>
-#include <messagecore/helpers/nodehelper.h>
 #ifndef QT_NO_CURSOR
 #include <messageviewer/utils/kcursorsaver.h>
 #endif
+
+#include <messagecore/helpers/messagehelpers.h>
+#include <messagecore/utils/stringutil.h>
+#include <messagecore/attachment/attachmentcollector.h>
+#include <messagecore/helpers/nodehelper.h>
+
+#include <mailtransport/transportcombobox.h>
+#include <mailtransport/messagequeuejob.h>
 #include <mailtransport/transportmanager.h>
-#include <messagecomposer/recipient/recipientseditor.h>
+
+#include <akonadi/kmime/specialmailcollections.h>
+#include <akonadi/itemcreatejob.h>
+#include <akonadi/collectionfetchjob.h>
 #include <akonadi/collectioncombobox.h>
+
+#include <kpimidentities/identitycombo.h>
 #include <kpimidentities/identitymanager.h>
 #include <kpimutils/email.h>
 
@@ -66,9 +76,6 @@
 #include <QTimer>
 #include <QUuid>
 #include <QtCore/QTextCodec>
-#include <addressline/recentaddresses.h>
-#include "settings/messagecomposersettings.h"
-#include "helper/messagehelper.h"
 
 static QStringList encodeIdn( const QStringList &emails )
 {
