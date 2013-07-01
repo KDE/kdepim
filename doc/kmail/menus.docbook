@@ -6,14 +6,14 @@
 <firstname>Daniel</firstname>
 <surname>Naber</surname>
 <affiliation><address>
-<email>daniel.naber@t-online.de</email>
+&Daniel.Naber.mail;
 </address></affiliation>
 </author>
 <author>
 <firstname>David</firstname>
 <surname>Rugge</surname>
 <affiliation><address>
-<email>davidrugge@mediaone.net</email>
+&David.Rugge.mail;
 </address></affiliation>
 </author>
 <author>
@@ -27,10 +27,16 @@
 <firstname>Laurent</firstname>
 <surname>Montel</surname>
 <affiliation><address>
-<email>montel@kde.org</email>
+&Laurent.Montel.mail;
 </address></affiliation>
 </author>
-
+<author>
+<firstname>Scarlett</firstname>
+<surname>Clark</surname>
+<affiliation><address>
+&Scarlett.Clark.mail;
+</address></affiliation>
+</author>
 
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
@@ -47,187 +53,143 @@ performs a menu item function, the default shortcut is listed with the menu item
 <title>The Main Window</title>
 
 <sect2 id="reader-file-menu">
-<title><guimenu>File</guimenu> Menu</title>
-
+  <title>File Menu</title>
 <variablelist>
-<varlistentry>
-<term>
-<menuchoice>
-  <guimenu>File</guimenu><!-- New -> New Message, New Message from Template, Add Folder, New Window  lueck 31.05.2011-->
-<guimenuitem>New Window</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Creates a new main window.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<shortcut><keycombo action="simul">&Ctrl;<keycap>O</keycap></keycombo></shortcut>
-<guimenu>File</guimenu>
-<guimenuitem>Open...</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Allows you to open files which contain email messages.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<shortcut><keycombo action="simul">&Ctrl;<keycap>S</keycap></keycombo></shortcut>
-<guimenu>File</guimenu>
-<guimenuitem>Save As...</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Saves the currently displayed message to a text file, including all the headers
-and attachments.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>File</guimenu>
-<guimenuitem>Import Messages...</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>
-Starts up <application>kmailcvt</application> (which is
-part of kdepim). This application lets you import
-messages from several email clients into &kmail;.
-</para>
-</listitem>
-</varlistentry>
-
-
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>File</guimenu>
-<guimenuitem>Print Preview...</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Display a dialog which shows how your email will be printed.</para>
-</listitem>
-</varlistentry>
-
-
-<varlistentry>
-<term>
-<menuchoice>
-<shortcut><keycombo action="simul">&Ctrl;<keycap>P</keycap></keycombo></shortcut>
-<guimenu>File</guimenu>
-<guimenuitem>Print...</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Display a dialog that lets you print the currently displayed message.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>File</guimenu>
-<guimenuitem>Expire All Folders</guimenuitem>
-</menuchoice></term>
-<listitem>
-<para>Delete old messages from all folders, according to the rules in
-each folder's <link linkend="folders-properties-window">Properties dialog</link>
-(the default is not to delete old messages at all).</para>
-</listitem>
-</varlistentry>
-
-
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>File</guimenu>
-<guimenuitem>Empty All Trash Folders</guimenuitem>
-</menuchoice></term>
-<listitem>
-<para>Use this to empty all trash folders, &ie; the local trash folder and
-all trash folders that you might have on &imap; servers.</para>
-</listitem>
-</varlistentry>
-
-<!-- missing: Work Offline -->
- 
-<varlistentry>
-<term>
-<menuchoice>
-<shortcut><keycombo action="simul">&Ctrl;<keycap>L</keycap></keycombo></shortcut>
-<guimenu>File</guimenu>
-<guimenuitem>Check Mail</guimenuitem>
-</menuchoice>
-</term>
-<listitem><para>Checks for new messages in all your accounts, except those that
-have <guilabel>Exclude from &quot;Check Mail&quot;</guilabel> enabled.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>File</guimenu>
-<guisubmenu>Check Mail In</guisubmenu>
-</menuchoice>
-</term>
-<listitem>
-<para>Submenu that lets you check for new messages from a particular account.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<shortcut><keycap>F5</keycap></shortcut>
-<guimenu>File</guimenu>
-<guimenuitem>Update Folders</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Checks whether new mail arrived in the currently selected folder.
-This is only available for &imap; folders.</para>
-</listitem>
-</varlistentry>
-
-
-<!-- missing
-Update folder and its subfolders CTRL+F5
-  -->
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>File</guimenu>
-<guimenuitem>Send Queued Messages</guimenuitem>
-</menuchoice></term>
-<listitem>
-<para>Sends the messages that are in your outbox.</para>
-</listitem>
-</varlistentry>
-<!-- Send Queued Messages via -->
-<varlistentry>
-<term>
-<menuchoice>
-<shortcut><keycombo action="simul">&Ctrl;<keycap>Q</keycap></keycombo></shortcut>
-<guimenu>File</guimenu>
-<guimenuitem>Quit</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Closes the current main window or exits
-&kmail; if there is only this one window.</para>
-</listitem>
-</varlistentry>
-
+  <varlistentry><term><menuchoice><guimenu>File</guimenu></menuchoice></term>
+    <listitem>
+      <para>The main file menu to work with the current message/folder.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry><term><menuchoice><guimenu>File</guimenu><guisubmenu>New</guisubmenu></menuchoice></term>
+    <listitem>
+      <para>Here you can create several new items as follows:</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry><term><menuchoice><guimenu>File</guimenu><guisubmenu>New</guisubmenu><guimenuitem>New Message...</guimenuitem></menuchoice></term>
+    <listitem>
+      <para><action>Compose a new message.</action></para>
+    </listitem>
+  </varlistentry>
+  <varlistentry><term><menuchoice><guimenu>File</guimenu><guisubmenu>New</guisubmenu><guisubmenu>Message from Template</guisubmenu></menuchoice></term>
+    <listitem>
+      <para> If you have any saved templates, they will be listed on the submenu, select the one you wish to use. To save messages to a template, select
+        <menuchoice><shortcut><keycap>T</keycap></shortcut><guimenu>Message</guimenu><guimenuitem>Edit Message</guimenuitem></menuchoice>,
+        and in the message edit window, select  <menuchoice><guimenu>Message</guimenu><guimenuitem>Save as Template</guimenuitem></menuchoice></para>
+      <para>If you do not have any templates saved, you will see <menuchoice><guimenu>Message</guimenu><guisubmenu>Message from Template</guisubmenu><guimenuitem>(no templates)</guimenuitem></menuchoice></para>
+    </listitem>
+  </varlistentry>
+  <varlistentry><term><menuchoice><guimenu>File</guimenu><guisubmenu>New</guisubmenu><guimenuitem>Add Folder...</guimenuitem></menuchoice></term>
+    <listitem>
+    <para><action>Create a new folder</action></para>
+    </listitem>
+  </varlistentry>
+  <varlistentry><term><menuchoice><guimenu>File</guimenu><guisubmenu>New</guisubmenu><guimenuitem>New AddressBook Contact...</guimenuitem></menuchoice></term>
+    <listitem>
+      <para><action>Brings up the new contact dialog</action></para>
+    </listitem>
+  </varlistentry>
+  <varlistentry><term><menuchoice><shortcut><keycombo action="simul">&Ctrl;<keycap>O</keycap></keycombo></shortcut>
+        <guimenu>File</guimenu><guimenuitem>Open...</guimenuitem></menuchoice></term>
+    <listitem><para><action>Open email messages or mailboxes.</action></para></listitem>
+  </varlistentry>
+  <varlistentry><term><menuchoice><guimenu>File</guimenu><guimenuitem>Open Recent</guimenuitem></menuchoice></term>
+    <listitem>
+      <para><action>Opens recently used messages.</action> Only messages that have been saved and then opened will show up on this list.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry><term><menuchoice><shortcut><keycombo action="simul">&Ctrl;<keycap>S</keycap></keycombo></shortcut>
+        <guimenu>File</guimenu><guimenuitem>Save As...</guimenuitem></menuchoice></term>
+    <listitem>
+      <para><action>Saves the currently displayed message to a .mbox file.</action> This includes all the headers and attachments.</para>
+      <para>If you would like to save it to a different format &eg; text, deselect <guilabel>Automatically select filename extension (.mbox)</guilabel>
+        and be sure to change the file extension.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry><term><menuchoice><guimenu>File</guimenu><guimenuitem>Import Messages...</guimenuitem></menuchoice></term>
+    <listitem><para><action>Starts up <application>kmailcvt</application></action>. This application lets you import
+        messages from several email clients into &kmail;.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry><term><menuchoice><guimenu>File</guimenu><guimenuitem>Print Preview...</guimenuitem></menuchoice></term>
+    <listitem>
+      <para><action>Display a dialog which shows how your email will be printed. Note: This will only be available if a printer is available.</action></para>
+    </listitem>
+  </varlistentry>
+  <varlistentry><term><menuchoice><shortcut><keycombo action="simul">&Ctrl;<keycap>P</keycap></keycombo></shortcut>
+        <guimenu>File</guimenu><guimenuitem>Print...</guimenuitem></menuchoice></term>
+    <listitem>
+      <para><action>Display a dialog that lets you print the currently displayed message.</action></para>
+    </listitem>
+  </varlistentry>
+  <varlistentry><term><menuchoice><guimenu>File</guimenu><guimenuitem>Expire All Folders</guimenuitem></menuchoice></term>
+    <listitem>
+      <para>Delete old messages from all folders, according to the rules in each folder's
+        <link linkend="folders-properties-window">Properties dialog</link> (the default is not to delete old messages at all).</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry><term><menuchoice><guimenu>File</guimenu><guimenuitem>Empty All Trash Folders</guimenuitem></menuchoice></term>
+    <listitem>
+      <para>Use this to empty all trash folders, &ie; the local trash folder and
+        all trash folders that you might have on &imap; servers.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry><term><menuchoice><guimenu>File</guimenu><guimenuitem>Work Offline</guimenuitem></menuchoice></term>
+    <listitem>
+      <para><action>Sets &kmail; to offline mode.</action> This turns off all network jobs. This is
+        useful when working with messages without a network connection. This selection will become
+        <menuchoice><guimenu>File</guimenu><guimenuitem>Work Online</guimenuitem></menuchoice>, which needs to be selected to go back online (required to send and recieve).</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry><term><menuchoice><shortcut><keycombo action="simul">&Ctrl;<keycap>L</keycap></keycombo></shortcut>
+        <guimenu>File</guimenu><guimenuitem>Check Mail</guimenuitem></menuchoice></term>
+    <listitem>
+      <para><action>Checks for new messages in all your accounts.</action></para>
+    </listitem>
+  </varlistentry>
+  <varlistentry><term><menuchoice><guimenu>File</guimenu><guisubmenu>Check Mail In</guisubmenu></menuchoice></term>
+    <listitem>
+      <para>Submenu that lets you check for new messages from a particular account.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry><term><menuchoice><shortcut><keycap>F5</keycap></shortcut>
+        <guimenu>File</guimenu><guimenuitem>Update Folder</guimenuitem></menuchoice></term>
+    <listitem>
+      <para>Checks whether new mail arrived in the currently selected folder. This is only available for &imap; folders.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry><term><menuchoice><shortcut><keycombo action="simul">&Ctrl;<keycap>F5</keycap></keycombo></shortcut>
+        <guimenu>File</guimenu><guimenuitem>Update This Folder and All Its Subfolders</guimenuitem></menuchoice></term>
+    <listitem>
+      <para>Checks whether new mail arrived in the currently selected folder and all of its subfolders. This is only available for &imap; folders.
+        You can also select multiple folders and the menu item will turn into <menuchoice><guimenu>File</guimenu><guimenuitem>Update These Folders and All Their Subfolders</guimenuitem></menuchoice></para>
+    </listitem>
+  </varlistentry>
+  <varlistentry><term><menuchoice><guimenu>File</guimenu><guimenuitem>Send Queued Messages</guimenuitem></menuchoice></term>
+    <listitem>
+      <para><action>Sends the messages that are in your outbox.</action>
+        Messages can end up in your outbox by selecting Queue in the composer menu, Composing a message in offline mode, and sending while you have no Internet connection.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry><term><menuchoice><guimenu>File</guimenu><guimenuitem>Send Queued Messages via</guimenuitem></menuchoice></term>
+    <listitem>
+      <para><action>Sends the messages that are in your outbox via a specific outgoing account.</action>
+        This allows you to choose which server to send your queued messages from. They must be configured in <menuchoice><guimenu>Settings</guimenu>
+          <guimenuitem>Configure &kmail;...</guimenuitem></menuchoice> in the <menuchoice><guiicon>Accounts</guiicon><guilabel>Sending</guilabel></menuchoice> tab to show up here.</para>
+    </listitem>
+  </varlistentry>
+  <!-- Exists, however this seems misplaced or mislabeled, per sgclark & blueck 2013.
+  <varlistentry><term><menuchoice><shortcut><keycombo action="simul">&Ctrl;<keycap>N</keycap></keycombo></shortcut>
+        <guimenu>File</guimenu><guimenuitem>New Message</guimenuitem></menuchoice></term>
+    <listitem>
+      <para>The shortcut will open up the New Message compose window. The submenu contains menu entries and shortcuts for various &kontact; tasks.</para>
+    </listitem>
+  </varlistentry>-->
+  <varlistentry><term><menuchoice><shortcut><keycombo action="simul">&Ctrl;<keycap>Q</keycap></keycombo></shortcut>
+        <guimenu>File</guimenu><guimenuitem>Quit</guimenuitem></menuchoice></term>
+    <listitem>
+      <para><action>Exits &kmail;</action></para>
+    </listitem>
+  </varlistentry>
 </variablelist>
 
 </sect2>
@@ -400,7 +362,7 @@ pane</guilabel>.</para>
 </term>
 <listitem>
 <para>Changes the way attachments appear in the <guilabel>Message
-pane</guilabel> (independent of the MIME Tree). With <guimenuitem>As Icons</guimenuitem>
+pane</guilabel> (independent of the &MIME; Tree). With <guimenuitem>As Icons</guimenuitem>
 all attachments appear as icons at the bottom of the message.
 <guimenuitem>Smart</guimenuitem> will show attachments as
 icons, unless the message suggests that they should be displayed inline.
@@ -1295,7 +1257,7 @@ found.</para>
       <listitem>
         <para>
           Starts <ulink
-          url="help:kleopatra"><application>Kleopatra</application></ulink>,
+          url="help:kleopatra">&kleopatra;</ulink>,
           the &kde; certificate manager.
         </para>
       </listitem>
@@ -1565,7 +1527,7 @@ differences between your version of &kmail; and the previous one.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>Creates a new addressbook contact.</para>
+<para>Creates a new address book contact.</para>
 </listitem>
 </varlistentry>
 
@@ -1579,7 +1541,7 @@ differences between your version of &kmail; and the previous one.</para>
 </term>
 <listitem>
 <para>Sends the message immediately. If you use SMTP to send your
-messages and the SMTP server is not reachable, the message will be put
+messages and the &SMTP; server is not reachable, the message will be put
 into the outbox and you will get an error message. You can then later send
 the messages in the outbox using <menuchoice><guimenu>File</guimenu><guimenuitem>Send
 Queued Messages</guimenuitem></menuchoice>.</para>

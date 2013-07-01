@@ -33,7 +33,7 @@ public:
     void start();
 
 private:
-    void storeAlarmArchiveResource(const KArchiveDirectory *dir, const QString &prefix);
+    void storeJotArchiveResource(const KArchiveDirectory *dir, const QString &prefix);
     void searchAllFiles(const KArchiveDirectory *dir,const QString &prefix);
     void importjotConfig(const KArchiveFile* kalarmFile, const QString &kalarmrc, const QString &filename,const QString &prefix);
     void restoreResources();

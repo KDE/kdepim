@@ -28,6 +28,7 @@
 #include <KLocale>
 #include <KMessageBox>
 #include <KStandardDirs>
+#include <KTemporaryFile>
 
 #include <QWidget>
 #include <QProgressDialog>
@@ -204,14 +205,14 @@ void AbstractImportExportJob::copyToFile(const KArchiveFile *archivefile, const 
     dir.mkdir(prefix);
 
     const QString copyToDirName(mTempDirName + QLatin1Char('/') + prefix);
-    qDebug()<<" copyToDirName"<<copyToDirName;
+    //qDebug()<<" copyToDirName"<<copyToDirName;
     archivefile->copyTo(copyToDirName);
     QFile file;
     file.setFileName(copyToDirName + QLatin1Char('/') + filename);
 
     //QFile doesn't overwrite => remove old file before
-    qDebug()<<" dest "<<dest;
-    qDebug()<<" file "<<file.fileName();
+    //qDebug()<<" dest "<<dest;
+    //qDebug()<<" file "<<file.fileName();
     QFile destination(dest);
     if (destination.exists()) {
         destination.remove();
@@ -253,7 +254,7 @@ void AbstractImportExportJob::backupResourceFile(const Akonadi::AgentInstance &a
     }
 }
 
-void AbstractImportExportJob::restoreResourceFile(const QString &resourceName, const QString &defaultPath, const QString &storePath)
+void AbstractImportExportJob::restoreResourceFile(const QString &resourceBaseName, const QString &defaultPath, const QString &storePath)
 {
     if (!mListResourceFile.isEmpty()) {
         QDir dir(mTempDirName);
@@ -263,7 +264,7 @@ void AbstractImportExportJob::restoreResourceFile(const QString &resourceName, c
         for (int i = 0; i < mListResourceFile.size(); ++i) {
             resourceFiles value = mListResourceFile.at(i);
             QMap<QString, QVariant> settings;
-            if (value.akonadiConfigFile.contains(resourceName + QLatin1Char('_'))) {
+            if (value.akonadiConfigFile.contains(resourceBaseName + QLatin1Char('_'))) {
                 const KArchiveEntry* fileResouceEntry = mArchiveDirectory->entry(value.akonadiConfigFile);
                 if (fileResouceEntry && fileResouceEntry->isFile()) {
                     const KArchiveFile* file = static_cast<const KArchiveFile*>(fileResouceEntry);
@@ -277,12 +278,11 @@ void AbstractImportExportJob::restoreResourceFile(const QString &resourceName, c
                     KSharedConfig::Ptr resourceConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + resourceName);
 
                     const KUrl newUrl = Utils::adaptResourcePath(resourceConfig, storePath);
-
                     const QString dataFile = value.akonadiResources;
                     const KArchiveEntry* dataResouceEntry = mArchiveDirectory->entry(dataFile);
                     if (dataResouceEntry->isFile()) {
                         const KArchiveFile* file = static_cast<const KArchiveFile*>(dataResouceEntry);
-                        file->copyTo(newUrl.path());
+                        file->copyTo(newUrl.directory());
                     }
                     settings.insert(QLatin1String("Path"), newUrl.path());
 
@@ -298,9 +298,9 @@ void AbstractImportExportJob::restoreResourceFile(const QString &resourceName, c
                         }
                     }
 
-                    addSpecificResourceSettings(resourceConfig, resourceName, settings);
+                    addSpecificResourceSettings(resourceConfig, resourceBaseName, settings);
 
-                    const QString newResource = mCreateResource->createResource( QString::fromLatin1("akonadi_akonotes_resource"), filename, settings );
+                    const QString newResource = mCreateResource->createResource( resourceBaseName, filename, settings );
                     qDebug()<<" newResource"<<newResource;
                 }
             }
@@ -331,6 +331,37 @@ void AbstractImportExportJob::extractZipFile(const KArchiveFile *file, const QSt
     } else {
         Q_EMIT error(errorMsg);
     }
+}
+
+bool AbstractImportExportJob::backupFullDirectory(const KUrl &url, const QString &archivePath, const QString &archivename)
+{
+    KTemporaryFile tmp;
+    tmp.open();
+    KZip *vcarddirArchive = new KZip(tmp.fileName());
+    vcarddirArchive->setCompression(KZip::NoCompression);
+    bool result = vcarddirArchive->open(QIODevice::WriteOnly);
+    if (!result) {
+        return false;
+    }
+    const QString filename = url.fileName();
+    const bool vcarddirAdded = vcarddirArchive->addLocalDirectory(url.path(), QString());
+    //TODO add MessageBox
+    if (!vcarddirAdded) {
+        delete vcarddirArchive;
+        return false;
+    }
+    vcarddirArchive->setCompression(KZip::DeflateCompression);
+    vcarddirArchive->close();
+    tmp.close();
+
+    const bool fileAdded = archive()->addLocalFile(tmp.fileName(), archivePath  + archivename);
+    if (fileAdded)
+        Q_EMIT info(i18n("\"%1\" was backuped.",filename));
+    else
+        Q_EMIT error(i18n("\"%1\" file cannot be added to backup file.",filename));
+
+    delete vcarddirArchive;
+    return fileAdded;
 }
 
 #include "abstractimportexportjob.moc"

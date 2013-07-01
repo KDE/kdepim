@@ -24,6 +24,7 @@
 #include "messagecomposer_export.h"
 #include "sender/messagesender.h"
 #include "messagecomposer/recipient/recipient.h"
+#include "sendlateragent/sendlaterdialog.h"
 
 #include <akonadi/collection.h>
 #include <KDE/KMime/Message>
@@ -37,27 +38,28 @@ class QAction;
 class KJob;
 class QWidget;
 
-namespace Akonadi
-{
-  class CollectionComboBox;
+namespace SendLater {
+class SendLaterInfo;
 }
 
-namespace MailTransport
-{
-  class TransportComboBox;
+
+namespace Akonadi {
+class CollectionComboBox;
+}
+
+namespace MailTransport {
+class TransportComboBox;
 class MessageQueueJob;
 }
 
-namespace KPIMIdentities
-{
-  class IdentityCombo;
-  class Identity;
-  class IdentityManager;
+namespace KPIMIdentities {
+class IdentityCombo;
+class Identity;
+class IdentityManager;
 }
 
-namespace Kleo
-{
-  class KeyResolver;
+namespace Kleo {
+class KeyResolver;
 }
 
 namespace MessageComposer {
@@ -207,6 +209,9 @@ public:
 
   bool hasMissingAttachments( const QStringList& attachmentKeywords );
 
+  void setSendLaterInfo( SendLater::SendLaterInfo *info);
+  SendLater::SendLaterInfo *sendLaterInfo();
+
 public slots:
 
   void identityChanged( const KPIMIdentities::Identity &ident, const KPIMIdentities::Identity &oldIdent, bool msgCleared = false);
@@ -332,6 +337,8 @@ private:
 
   MessageComposer::MessageSender::SendMethod mSendMethod;
   MessageComposer::MessageSender::SaveIn mSaveIn;
+
+  SendLater::SendLaterInfo *mSendLaterInfo;
 };
 
 } // namespace

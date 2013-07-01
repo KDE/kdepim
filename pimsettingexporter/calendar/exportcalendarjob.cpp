@@ -119,7 +119,17 @@ void ExportCalendarJob::backupConfig()
         backupFile(freebusyurls, Utils::dataPath(), freebusyurlsStr);
     }
 
-    //TODO export templates
+    const QString templateDir = KStandardDirs::locateLocal( "data", QLatin1String( "korganizer/templates/" ) );
+    QDir templateDirectory( templateDir );
+    if (templateDirectory.exists()) {
+        const bool templateDirAdded = archive()->addLocalDirectory(templateDir, Utils::dataPath() +  QLatin1String( "/korganizer/templates/" ));
+        if (!templateDirAdded) {
+            //TODO fix i18n
+            Q_EMIT error(i18n("\"%1\" file cannot be added to backup file.", templateDir));
+        }
+
+    }
+
 
     Q_EMIT info(i18n("Config backup done."));
 }

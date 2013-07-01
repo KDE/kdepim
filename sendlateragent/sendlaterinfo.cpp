@@ -20,19 +20,21 @@
 
 #include <KConfigGroup>
 
+using namespace SendLater;
+
 SendLaterInfo::SendLaterInfo()
     : mId(-1),
-      mRecursiveEachValue(1),
-      mRecursiveUnit(None),
-      mRecursive(false)
+      mRecurrenceEachValue(1),
+      mRecurrenceUnit(None),
+      mRecurrence(false)
 {
 }
 
 SendLaterInfo::SendLaterInfo(const KConfigGroup &config)
     : mId(-1),
-      mRecursiveEachValue(1),
-      mRecursiveUnit(None),
-      mRecursive(false)
+      mRecurrenceEachValue(1),
+      mRecurrenceUnit(None),
+      mRecurrence(false)
 {
     readConfig(config);
 }
@@ -40,43 +42,44 @@ SendLaterInfo::SendLaterInfo(const KConfigGroup &config)
 SendLaterInfo::SendLaterInfo(const SendLaterInfo &info)
 {
     mId = info.itemId();
-    mRecursiveEachValue = info.recursiveEachValue();
-    mRecursiveUnit = info.recursiveUnit();
-    mRecursive = info.isRecursive();
+    mRecurrenceEachValue = info.recurrenceEachValue();
+    mRecurrenceUnit = info.recurrenceUnit();
+    mRecurrence = info.isRecurrence();
+    mSubject = info.subject();
 }
 
 SendLaterInfo::~SendLaterInfo()
 {
 }
 
-bool SendLaterInfo::isRecursive() const
+bool SendLaterInfo::isRecurrence() const
 {
-    return mRecursive;
+    return mRecurrence;
 }
 
-void SendLaterInfo::setRecursive(bool b)
+void SendLaterInfo::setRecurrence(bool b)
 {
-    mRecursive = b;
+    mRecurrence = b;
 }
 
-void SendLaterInfo::setRecursiveUnit(SendLaterInfo::RecursiveUnit unit)
+void SendLaterInfo::setRecurrenceUnit(SendLaterInfo::RecurrenceUnit unit)
 {
-    mRecursiveUnit = unit;
+    mRecurrenceUnit = unit;
 }
 
-SendLaterInfo::RecursiveUnit SendLaterInfo::recursiveUnit() const
+SendLaterInfo::RecurrenceUnit SendLaterInfo::recurrenceUnit() const
 {
-    return mRecursiveUnit;
+    return mRecurrenceUnit;
 }
 
-void SendLaterInfo::setRecursiveEachValue(int value)
+void SendLaterInfo::setRecurrenceEachValue(int value)
 {
-    mRecursiveEachValue = value;
+    mRecurrenceEachValue = value;
 }
 
-int SendLaterInfo::recursiveEachValue() const
+int SendLaterInfo::recurrenceEachValue() const
 {
-    return mRecursiveEachValue;
+    return mRecurrenceEachValue;
 }
 
 void SendLaterInfo::setItemId(Akonadi::Item::Id id)
@@ -109,16 +112,28 @@ QDateTime SendLaterInfo::lastDateTimeSend() const
     return mLastDateTimeSend;
 }
 
+void SendLaterInfo::setSubject( const QString &subject )
+{
+    mSubject = subject;
+}
+
+QString SendLaterInfo::subject() const
+{
+    return mSubject;
+}
+
+
 void SendLaterInfo::readConfig(const KConfigGroup &config)
 {
     if (config.hasKey(QLatin1String("lastDateTimeSend"))) {
         mLastDateTimeSend = QDateTime::fromString(config.readEntry("lastDateTimeSend"),Qt::ISODate);
     }
     mDateTime = config.readEntry("date", QDateTime());
-    mRecursive = config.readEntry("recursive", false);
-    mRecursiveEachValue = config.readEntry("recursiveValue",1);
-    mRecursiveUnit = static_cast<RecursiveUnit>(config.readEntry("recursiveUnit", (int)None));
+    mRecurrence = config.readEntry("recurrence", false);
+    mRecurrenceEachValue = config.readEntry("recurrenceValue",1);
+    mRecurrenceUnit = static_cast<RecurrenceUnit>(config.readEntry("recurrenceUnit", (int)None));
     mId = config.readEntry("itemId", -1);
+    mSubject = config.readEntry("subject");
 }
 
 void SendLaterInfo::writeConfig(KConfigGroup &config )
@@ -127,9 +142,10 @@ void SendLaterInfo::writeConfig(KConfigGroup &config )
         config.writeEntry("lastDateTimeSend", mLastDateTimeSend.toString(Qt::ISODate) );
     }
     config.writeEntry("date", mDateTime);
-    config.writeEntry("recursive", mRecursive);
-    config.writeEntry("recursiveValue", mRecursiveEachValue );
-    config.writeEntry("recursiveUnit", (int)mRecursiveUnit);
+    config.writeEntry("recurrence", mRecurrence);
+    config.writeEntry("recurrenceValue", mRecurrenceEachValue );
+    config.writeEntry("recurrenceUnit", (int)mRecurrenceUnit);
     config.writeEntry("itemId", mId);
+    config.writeEntry("subject", mSubject);
     config.sync();
 }

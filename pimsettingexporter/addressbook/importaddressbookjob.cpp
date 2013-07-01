@@ -85,7 +85,7 @@ void ImportAddressbookJob::restoreResources()
                     const KArchiveEntry* dataResouceEntry = mArchiveDirectory->entry(dataFile);
                     if (dataResouceEntry->isFile()) {
                         const KArchiveFile* file = static_cast<const KArchiveFile*>(dataResouceEntry);
-
+                        //TODO  adapt directory name too
                         extractZipFile(file, copyToDirName, newUrl.path());
                     }
                     settings.insert(QLatin1String("Path"), newUrl.path());

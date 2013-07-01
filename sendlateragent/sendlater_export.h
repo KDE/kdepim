@@ -1,7 +1,5 @@
 /*
-    Copyright (C) 2010 Klarälvdalens Datakonsult AB,
-        a KDAB Group company, info@kdab.net,
-        author Tobias Koenig <tokoe@kdab.com>
+    Copyright (c) 2013 Laurent Montel <montel@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -19,34 +17,22 @@
     02110-1301, USA.
 */
 
-#ifndef EMAILSGUISTATEMANAGER_H
-#define EMAILSGUISTATEMANAGER_H
+#ifndef SENDLATER_EXPORT_H
+#define SENDLATER_EXPORT_H
 
-#include "../lib/guistatemanager.h"
+#include <kdemacros.h>
 
-class EmailsGuiStateManager : public GuiStateManager
-{
-  Q_OBJECT
-
-  Q_PROPERTY( bool inManageAclsState READ inManageAclsState NOTIFY guiStateChanged )
-
-  Q_ENUMS( GuiState )
-
-  public:
-    enum GuiState {
-      ManageAclsState = GuiStateManager::UserState
-    };
-
-    /**
-     * Returns whether the current state is the manage acls state.
-     */
-    bool inManageAclsState() const;
-
-  Q_SIGNALS:
-    void guiStateChanged();
-
-  protected:
-    virtual void emitChangedSignal();
-};
+#ifndef SENDLATER_EXPORT
+# if defined(KDEPIM_STATIC_LIBS)
+   /* No export/import for static libraries */
+#  define SENDLATER_EXPORT
+# elif defined(MAKE_SENDLATER_LIB)
+   /* We are building this library */
+#  define SENDLATER_EXPORT KDE_EXPORT
+# else
+   /* We are using this library */
+#  define SENDLATER_EXPORT KDE_IMPORT
+# endif
+#endif
 
 #endif

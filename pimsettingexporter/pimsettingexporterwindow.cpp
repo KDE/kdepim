@@ -49,8 +49,10 @@
 #include <KMessageBox>
 #include <KStandardDirs>
 #include <KLocale>
+#include <KStatusBar>
 
 #include <QPointer>
+
 
 PimSettingExporterWindow::PimSettingExporterWindow(QWidget *parent)
     : KXmlGuiWindow(parent),
@@ -75,6 +77,7 @@ PimSettingExporterWindow::PimSettingExporterWindow(QWidget *parent)
     if (!canZipFile) {
         KMessageBox::error(this,i18n("Zip program not found. Install it before to launch this application."),i18n("Zip program not found."));
     }
+    statusBar()->hide();
 }
 
 PimSettingExporterWindow::~PimSettingExporterWindow()

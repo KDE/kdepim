@@ -27,7 +27,7 @@ int main (int argc, char **argv)
     KCmdLineArgs::init(argc, argv, "sendlaterdialog_gui", 0, ki18n("SendLaterDialog_Gui"),
                        "1.0", ki18n("Test for autocreate sendlater dialog"));
     KApplication app;
-    SendLaterDialog *dialog = new SendLaterDialog(0);
+    SendLater::SendLaterDialog *dialog = new SendLater::SendLaterDialog(0);
     dialog->exec();
     delete dialog;
     return 0;

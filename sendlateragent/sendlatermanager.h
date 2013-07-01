@@ -24,8 +24,10 @@
 
 #include <KSharedConfig>
 
-
+namespace SendLater {
 class SendLaterInfo;
+}
+
 class QTimer;
 class SendLaterJob;
 class SendLaterManager : public QObject
@@ -41,15 +43,18 @@ public:
     explicit SendLaterManager(QObject *parent);
     ~SendLaterManager();
 
-    void sendDone(SendLaterInfo *info);
-    void sendError(SendLaterInfo *info, ErrorType type);
+    void sendDone(SendLater::SendLaterInfo *info);
+    void sendError(SendLater::SendLaterInfo *info, ErrorType type);
     void printDebugInfo();
+
+    void stopAll();
+    void itemRemoved(Akonadi::Item::Id id);
 
 Q_SIGNALS:
     void needUpdateConfigDialogBox();
 
 public Q_SLOTS:
-    void load();
+    void load(bool forcereload = false);
 
 private Q_SLOTS:
     void slotCreateJob();
@@ -59,8 +64,8 @@ private:
     void stopTimer();
     void removeInfo(Akonadi::Item::Id id);
     KSharedConfig::Ptr mConfig;
-    QList<SendLaterInfo *> mListSendLaterInfo;
-    SendLaterInfo *mCurrentInfo;
+    QList<SendLater::SendLaterInfo *> mListSendLaterInfo;
+    SendLater::SendLaterInfo *mCurrentInfo;
     SendLaterJob *mCurrentJob;
     QTimer *mTimer;
 };

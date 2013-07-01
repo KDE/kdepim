@@ -32,7 +32,7 @@
 #include <messagecomposer/job/emailaddressresolvejob.h>
 #include "kleo_util.h"
 #include "kmcommands.h"
-#include "kmcomposereditor.h"
+#include "editor/kmcomposereditor.h"
 #include "kmkernel.h"
 #include "globalsettings.h"
 #include "kmmainwin.h"
@@ -43,7 +43,7 @@
 #include "messagecore/utils/stringutil.h"
 #include "messagecore/attachment/attachmentcollector.h"
 #include "util.h"
-#include "snippetwidget.h"
+#include "editor/snippetwidget.h"
 #include "templatesconfiguration_kfg.h"
 #include "foldercollectionmonitor.h"
 #include "kernel/mailkernel.h"
@@ -53,6 +53,10 @@
 #include "warningwidgets/attachmentmissingwarning.h"
 #include "job/createnewcontactjob.h"
 #include "warningwidgets/externaleditorwarning.h"
+
+#include "sendlateragent/sendlaterutil.h"
+#include "sendlateragent/sendlaterdialog.h"
+#include "sendlateragent/sendlaterinfo.h"
 
 // KDEPIM includes
 #include <libkpgp/kpgpblock.h>
@@ -2802,7 +2806,7 @@ void KMComposeWin::doDelayedSend( MessageComposer::MessageSender::SendMethod met
   mComposerBase->setCustomHeader( customHeader );
   mComposerBase->send( method, saveIn );
 }
-
+//#define USE_SENDLATER_AGENT 1
 //----------------------------------------------------------------------------
 void KMComposeWin::slotSendLater()
 {
@@ -2811,7 +2815,48 @@ void KMComposeWin::slotSendLater()
   if ( !checkRecipientNumber() )
       return;
   if ( mComposerBase->editor()->checkExternalEditorFinished() ) {
-    doSend( MessageComposer::MessageSender::SendLater );
+#ifdef USE_SENDLATER_AGENT
+    const bool wasRegistered = (SendLater::SendLaterUtil::sentLaterAgentWasRegistered() && SendLater::SendLaterUtil::sentLaterAgentEnabled());
+    if (wasRegistered) {
+        SendLater::SendLaterInfo *info = 0;
+        QPointer<SendLater::SendLaterDialog> dlg = new SendLater::SendLaterDialog(info, this);
+        if (dlg->exec()) {
+            info = dlg->info();
+            const SendLater::SendLaterDialog::SendLaterAction action = dlg->action();
+            delete dlg;
+            switch (action) {
+            case SendLater::SendLaterDialog::Unknown:
+                qDebug()<<"Action unknown";
+                break;
+            case SendLater::SendLaterDialog::SendNow:
+                slotSendNow();
+                break;
+            case SendLater::SendLaterDialog::SendLater:
+                doSend( MessageComposer::MessageSender::SendLater );
+                break;
+            case SendLater::SendLaterDialog::Canceled:
+                return;
+                break;
+            case SendLater::SendLaterDialog::SendDeliveryAtTime:
+            {
+                mComposerBase->setSendLaterInfo(info);
+                if (info->isRecurrence()) {
+                    doSend( MessageComposer::MessageSender::SendLater, MessageComposer::MessageSender::SaveInTemplates );
+                } else { //TODO verify it.
+                    doSend( MessageComposer::MessageSender::SendLater, MessageComposer::MessageSender::SaveInTemplates );
+                }
+                break;
+            }
+            }
+        } else {
+            delete dlg;
+        }
+    } else {
+        doSend( MessageComposer::MessageSender::SendLater );
+    }
+#else
+      doSend( MessageComposer::MessageSender::SendLater );
+#endif
   }
 }
 

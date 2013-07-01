@@ -33,7 +33,7 @@
 #include <KIcon>
 #include <KIconLoader>
 
-SendLaterJob::SendLaterJob(SendLaterManager *manager, SendLaterInfo *info, QObject *parent)
+SendLaterJob::SendLaterJob(SendLaterManager *manager, SendLater::SendLaterInfo *info, QObject *parent)
     : QObject(parent),
       mManager(manager),
       mInfo(info)
@@ -89,7 +89,7 @@ void SendLaterJob::slotJobFinished(KJob* job)
         if ( sentAttribute && ( sentAttribute->sentBehaviour() == MailTransport::SentBehaviourAttribute::MoveToCollection ) )
             fcc =  QString::number( sentAttribute->moveToCollection().id() );
 
-        if (mInfo->isRecursive()) {
+        if (mInfo->isRecurrence()) {
             MailTransport::MessageQueueJob *qjob = new MailTransport::MessageQueueJob( this );
             //Need to have KMime::Message::Ptr
 

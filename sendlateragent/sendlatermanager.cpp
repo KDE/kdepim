@@ -41,22 +41,31 @@ SendLaterManager::SendLaterManager(QObject *parent)
 
 SendLaterManager::~SendLaterManager()
 {
+    stopAll();
+}
+
+void SendLaterManager::stopAll()
+{
     stopTimer();
     qDeleteAll(mListSendLaterInfo);
     delete mCurrentJob;
+    mCurrentJob = 0;
 }
 
-void SendLaterManager::load()
+void SendLaterManager::load(bool forcereload)
 {
     stopTimer();
     qDeleteAll(mListSendLaterInfo);
     mListSendLaterInfo.clear();
 
+    if (forcereload)
+        mConfig->reparseConfiguration();
+
     const QStringList itemList = mConfig->groupList().filter( QRegExp( QLatin1String("SendLaterItem \\d+") ) );
     const int numberOfItems = itemList.count();
     for (int i = 0 ; i < numberOfItems; ++i) {
         KConfigGroup group = mConfig->group(itemList.at(i));
-        SendLaterInfo *info = new SendLaterInfo(group);        
+        SendLater::SendLaterInfo *info = new SendLater::SendLaterInfo(group);        
         mListSendLaterInfo.append(info);
     }
     createSendInfoList();
@@ -65,7 +74,7 @@ void SendLaterManager::load()
 void SendLaterManager::createSendInfoList()
 {
     mCurrentInfo = 0;
-    qSort(mListSendLaterInfo.begin(), mListSendLaterInfo.end(), SendLaterUtil::compareSendLaterInfo);
+    qSort(mListSendLaterInfo.begin(), mListSendLaterInfo.end(), SendLater::SendLaterUtil::compareSendLaterInfo);
     if (!mListSendLaterInfo.isEmpty()) {
         mCurrentInfo = mListSendLaterInfo.first();
         const QDateTime now = QDateTime::currentDateTime();
@@ -91,6 +100,14 @@ void SendLaterManager::slotCreateJob()
     mCurrentJob->start();
 }
 
+void SendLaterManager::itemRemoved(Akonadi::Item::Id id)
+{
+    if (mConfig->hasGroup(QString::fromLatin1("SendLaterItem %1").arg(id))) {
+        removeInfo(id);
+        Q_EMIT needUpdateConfigDialogBox();
+    }
+}
+
 void SendLaterManager::removeInfo(Akonadi::Item::Id id)
 {
     KConfigGroup group = mConfig->group(QString::fromLatin1("SendLaterItem %1").arg(id));
@@ -98,7 +115,7 @@ void SendLaterManager::removeInfo(Akonadi::Item::Id id)
     group.sync();
 }
 
-void SendLaterManager::sendError(SendLaterInfo *info, ErrorType type)
+void SendLaterManager::sendError(SendLater::SendLaterInfo *info, ErrorType type)
 {
     if (info) {
         if (type == ItemNotFound) {
@@ -107,7 +124,7 @@ void SendLaterManager::sendError(SendLaterInfo *info, ErrorType type)
             removeInfo(info->itemId());
         } else {
             if (KMessageBox::Yes == KMessageBox::questionYesNo(0, i18n("An error was found. Do you want to resend it?"), i18n("Error found"))) {
-                if (!info->isRecursive()) {
+                if (!info->isRecurrence()) {
                     mListSendLaterInfo.removeAll(mCurrentInfo);
                     removeInfo(info->itemId());
                 }
@@ -122,10 +139,10 @@ void SendLaterManager::sendError(SendLaterInfo *info, ErrorType type)
     Q_EMIT needUpdateConfigDialogBox();
 }
 
-void SendLaterManager::sendDone(SendLaterInfo *info)
+void SendLaterManager::sendDone(SendLater::SendLaterInfo *info)
 {
     if (info) {
-        if (!info->isRecursive()) {
+        if (!info->isRecurrence()) {
             mListSendLaterInfo.removeAll(mCurrentInfo);
             removeInfo(info->itemId());
         }
@@ -137,8 +154,8 @@ void SendLaterManager::sendDone(SendLaterInfo *info)
 
 void SendLaterManager::printDebugInfo()
 {
-    Q_FOREACH (SendLaterInfo *info, mListSendLaterInfo) {
-        kDebug() <<" recusive "<<info->isRecursive() <<
+    Q_FOREACH (SendLater::SendLaterInfo *info, mListSendLaterInfo) {
+        kDebug() <<" recusive "<<info->isRecurrence() <<
                    " id :"<<info->itemId()<<
                    " date :"<<info->dateTime().toString()<<
                    " last saved date"<<info->lastDateTimeSend().toString();

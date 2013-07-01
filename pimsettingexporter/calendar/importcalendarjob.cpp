@@ -178,6 +178,16 @@ void ImportCalendarJob::restoreConfig()
         }
     }
 
+
+    const KArchiveEntry *templateEntry  = mArchiveDirectory->entry(Utils::dataPath() + QLatin1String( "korganizer/templates/" ) );
+    if (templateEntry && templateEntry->isDirectory()) {
+        //TODO 4.12 verify if template already exists.
+        const QString templatePath = KGlobal::dirs()->saveLocation("data", QLatin1String("korganizer/templates/"));
+        const KArchiveDirectory *templateDir = static_cast<const KArchiveDirectory*>(templateEntry);
+        templateDir->copyTo(templatePath);
+    }
+
+
     Q_EMIT info(i18n("Config restored."));
 }
 

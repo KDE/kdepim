@@ -30,7 +30,9 @@
 #include <QSpinBox>
 #include <QDateTimeEdit>
 
-SendLaterDialog::SendLaterDialog(SendLaterInfo *info, QWidget *parent)
+using namespace SendLater;
+
+SendLaterDialog::SendLaterDialog(SendLater::SendLaterInfo *info, QWidget *parent)
     : KDialog(parent),
       mAction(SendNow),
       mInfo(info)
@@ -41,7 +43,7 @@ SendLaterDialog::SendLaterDialog(SendLaterInfo *info, QWidget *parent)
     setButtonText( User1, i18n("Send Later"));
     setButtonText( User2, i18n("Send Now"));
     connect(this, SIGNAL(user1Clicked()), this, SLOT(slotSendLater()));
-    connect(this, SIGNAL(user1Clicked()), this, SLOT(slotSendNow()));
+    connect(this, SIGNAL(user2Clicked()), this, SLOT(slotSendNow()));
     QWidget *w = new QWidget;
     QVBoxLayout *lay = new QVBoxLayout;
     QHBoxLayout *hbox = new QHBoxLayout;
@@ -55,9 +57,9 @@ SendLaterDialog::SendLaterDialog(SendLaterInfo *info, QWidget *parent)
     hbox->addWidget(lab);
     hbox->addWidget(mDateTime);
 
-    mRecursive = new QCheckBox(i18n("Recursive"));
-    connect(mRecursive, SIGNAL(clicked(bool)), this, SLOT(slotRecursiveClicked(bool)));
-    lay->addWidget(mRecursive);
+    mRecurrence = new QCheckBox(i18n("Recurrence"));
+    connect(mRecurrence, SIGNAL(clicked(bool)), this, SLOT(slotRecurrenceClicked(bool)));
+    lay->addWidget(mRecurrence);
 
     hbox = new QHBoxLayout;
     lay->addLayout(hbox);
@@ -65,21 +67,22 @@ SendLaterDialog::SendLaterDialog(SendLaterInfo *info, QWidget *parent)
     lab = new QLabel(i18n("Each:"));
     hbox->addWidget(lab);
 
-    mRecursiveValue = new QSpinBox;
-    mRecursiveValue->setMinimum(1);
-    hbox->addWidget(mRecursiveValue);
+    mRecurrenceValue = new QSpinBox;
+    mRecurrenceValue->setMinimum(1);
+    hbox->addWidget(mRecurrenceValue);
 
-    mRecursiveComboBox = new KComboBox;
+    mRecurrenceComboBox = new KComboBox;
     QStringList unitsList;
     unitsList<<i18n("Days");
     unitsList<<i18n("Weeks");
     unitsList<<i18n("Months");
     //Years ?
-    mRecursiveComboBox->addItems(unitsList);
+    mRecurrenceComboBox->addItems(unitsList);
 
-    hbox->addWidget(mRecursiveComboBox);
+    hbox->addWidget(mRecurrenceComboBox);
 
     mSendAtTime = new KPushButton;
+
     connect(mSendAtTime, SIGNAL(clicked()), SLOT(slotSendAtTime()));
     hbox->addWidget(mSendAtTime);
 
@@ -105,7 +108,8 @@ SendLaterDialog::SendLaterDialog(SendLaterInfo *info, QWidget *parent)
     readConfig();
     if (info)
         load(info);
-    slotRecursiveClicked(false);
+    slotRecurrenceClicked(false);
+    slotDateTimeChanged(QDateTime::currentDateTime());
 }
 
 SendLaterDialog::~SendLaterDialog()
@@ -134,10 +138,10 @@ void SendLaterDialog::slotSendIn30Minutes()
     accept();
 }
 
-void SendLaterDialog::slotRecursiveClicked(bool clicked)
+void SendLaterDialog::slotRecurrenceClicked(bool clicked)
 {
-    mRecursiveValue->setEnabled(clicked);
-    mRecursiveComboBox->setEnabled(clicked);
+    mRecurrenceValue->setEnabled(clicked);
+    mRecurrenceComboBox->setEnabled(clicked);
 }
 
 void SendLaterDialog::readConfig()
@@ -157,23 +161,23 @@ void SendLaterDialog::writeConfig()
     group.writeEntry( "Size", size() );
 }
 
-void SendLaterDialog::load(SendLaterInfo *info)
+void SendLaterDialog::load(SendLater::SendLaterInfo *info)
 {
     mDateTime->setDateTime(info->dateTime());
-    mRecursive->setChecked(info->isRecursive());
-    mRecursiveValue->setValue(info->recursiveEachValue());
-    mRecursiveComboBox->setCurrentIndex((int)info->recursiveUnit());
+    mRecurrence->setChecked(info->isRecurrence());
+    mRecurrenceValue->setValue(info->recurrenceEachValue());
+    mRecurrenceComboBox->setCurrentIndex((int)info->recurrenceUnit());
 }
 
-SendLaterInfo* SendLaterDialog::info()
+SendLater::SendLaterInfo* SendLaterDialog::info()
 {
     if (!mInfo) {
-        mInfo = new SendLaterInfo();
+        mInfo = new SendLater::SendLaterInfo();
         mInfo->setItemId(-1);
     }
-    mInfo->setRecursive(mRecursive->isChecked());
-    mInfo->setRecursiveEachValue(mRecursiveValue->value());
-    mInfo->setRecursiveUnit((SendLaterInfo::RecursiveUnit)mRecursiveComboBox->currentIndex());
+    mInfo->setRecurrence(mRecurrence->isChecked());
+    mInfo->setRecurrenceEachValue(mRecurrenceValue->value());
+    mInfo->setRecurrenceUnit((SendLater::SendLaterInfo::RecurrenceUnit)mRecurrenceComboBox->currentIndex());
     if (mSendDateTime.isValid())
         mInfo->setDateTime(mSendDateTime);
     else

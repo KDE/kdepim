@@ -102,8 +102,10 @@ KUrl Utils::adaptResourcePath(KSharedConfigPtr resourceConfig, const QString &st
     if (QFile(newUrl.path()).exists()) {
         QString newFileName = newUrl.path();
         for (int i = 0;; ++i) {
-            newFileName = newUrl.path() + QString::fromLatin1("_%1").arg(i);
+            newFileName = newUrl.directory() + QLatin1Char('/') + QString::fromLatin1("%1").arg(i) + QLatin1Char('/') + newUrl.fileName();
             if (!QFile(newFileName).exists()) {
+                QDir dir(newUrl.directory());
+                dir.mkdir(QString::fromLatin1("%1").arg(i));
                 break;
             }
         }

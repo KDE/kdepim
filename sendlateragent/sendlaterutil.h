@@ -17,10 +17,25 @@
 
 #ifndef SENDLATERUTIL_H
 #define SENDLATERUTIL_H
+
+#include "sendlater_export.h"
+#include <KSharedConfig>
+
+namespace SendLater {
 class SendLaterInfo;
 namespace SendLaterUtil
 {
-    bool compareSendLaterInfo(SendLaterInfo *left, SendLaterInfo *right);
-}
+    SENDLATER_EXPORT bool compareSendLaterInfo(SendLater::SendLaterInfo *left, SendLater::SendLaterInfo *right);
 
+    SENDLATER_EXPORT KSharedConfig::Ptr defaultConfig();
+
+    SENDLATER_EXPORT void writeSendLaterInfo(SendLater::SendLaterInfo *info);
+
+    SENDLATER_EXPORT bool sentLaterAgentWasRegistered();
+
+    SENDLATER_EXPORT bool sentLaterAgentEnabled();
+
+    SENDLATER_EXPORT void reload();
+}
+}
 #endif // SENDLATERUTIL_H

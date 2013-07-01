@@ -515,9 +515,9 @@ QString IncidenceMonthItem::toolTipText( const QDate &date ) const
     date, true, CalendarSupport::KCalPrefs::instance()->timeSpec() );
 }
 
-QList<QPixmap *> IncidenceMonthItem::icons() const
+QList<QPixmap> IncidenceMonthItem::icons() const
 {
-  QList<QPixmap *> ret;
+  QList<QPixmap> ret;
 
   if ( !mIncidence ) {
     return ret;
@@ -534,7 +534,7 @@ QList<QPixmap *> IncidenceMonthItem::icons() const
     const QString iconName = monthScene()->monthView()->iconForItem( item );
     if ( !iconName.isEmpty() && iconName != "view-calendar" && iconName != "office-calendar" ) {
       customIconName = iconName;
-      ret << new QPixmap( cachedSmallIcon( iconName ) );
+      ret << QPixmap( cachedSmallIcon( iconName ) );
     }
   }
 
@@ -566,7 +566,7 @@ QList<QPixmap *> IncidenceMonthItem::icons() const
 
     const QString incidenceIconName = mIncidence->iconName( occurrenceDateTime );
     if ( customIconName != incidenceIconName )
-      ret << new QPixmap( cachedSmallIcon( incidenceIconName ) );
+      ret << QPixmap( cachedSmallIcon( incidenceIconName ) );
   }
 
   if ( icons.contains( EventView::ReadOnlyIcon ) &&
@@ -738,9 +738,9 @@ void HolidayMonthItem::finalizeResize( const QDate &newStartDate,
   Q_ASSERT( false );
 }
 
-QList<QPixmap *> HolidayMonthItem::icons() const
+QList<QPixmap> HolidayMonthItem::icons() const
 {
-  QList<QPixmap *> ret;
+  QList<QPixmap> ret;
   ret << monthScene()->holidayPixmap();
 
   return ret;

@@ -19,36 +19,38 @@
 #define SENDLATERDIALOG_H
 
 #include <KDialog>
+#include "sendlater_export.h"
 
 class KComboBox;
 class QCheckBox;
 class QSpinBox;
 class QDateTimeEdit;
 
+namespace SendLater {
 class SendLaterInfo;
-
-class SendLaterDialog : public KDialog
+class SENDLATER_EXPORT SendLaterDialog : public KDialog
 {
     Q_OBJECT
 public:
     enum SendLaterAction {
-        SendNow = 0,
-        SendLater = 1,
-        Canceled = 2,
-        SendDeliveryAtTime = 3
+        Unknown = 0,
+        SendNow = 1,
+        SendLater = 2,
+        Canceled = 3,
+        SendDeliveryAtTime = 4
     };
 
-    explicit SendLaterDialog(SendLaterInfo *info, QWidget *parent = 0);
+    explicit SendLaterDialog(SendLater::SendLaterInfo *info, QWidget *parent = 0);
     ~SendLaterDialog();
 
-    SendLaterInfo *info();
+    SendLater::SendLaterInfo *info();
 
     SendLaterAction action() const;
 
 private Q_SLOTS:
     void slotSendLater();
     void slotSendNow();
-    void slotRecursiveClicked(bool);
+    void slotRecurrenceClicked(bool);
     void slotSendIn30Minutes();
     void slotSendIn1Hour();
     void slotSendIn2Hours();
@@ -56,7 +58,7 @@ private Q_SLOTS:
     void slotSendAtTime();
 
 private:
-    void load(SendLaterInfo *info);
+    void load(SendLater::SendLaterInfo *info);
     void readConfig();
     void writeConfig();
 
@@ -64,14 +66,14 @@ private:
     QDateTime mSendDateTime;
     SendLaterAction mAction;
     QDateTimeEdit *mDateTime;
-    SendLaterInfo *mInfo;
-    KComboBox *mRecursiveComboBox;
-    QCheckBox *mRecursive;
-    QSpinBox *mRecursiveValue;
+    SendLater::SendLaterInfo *mInfo;
+    KComboBox *mRecurrenceComboBox;
+    QCheckBox *mRecurrence;
+    QSpinBox *mRecurrenceValue;
     KPushButton *mSendIn30Minutes;
     KPushButton *mSendIn1Hour;
     KPushButton *mSendIn2Hours;
     KPushButton *mSendAtTime;
 };
-
+}
 #endif // SENDLATERDIALOG_H

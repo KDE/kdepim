@@ -67,7 +67,7 @@ protected:
     Akonadi::Collection::Id convertPathToId(const QString &path);
     void backupResourceFile(const Akonadi::AgentInstance &agent, const QString &defaultPath);
     void restoreResourceFile(const QString &resourceName, const QString &defaultPath, const QString &storePath);
-
+    bool backupFullDirectory(const KUrl &url, const QString &archivePath, const QString &archivename);
     virtual void addSpecificResourceSettings(KSharedConfig::Ptr resourceConfig, const QString &resourceName, QMap<QString, QVariant> &settings);
 
 

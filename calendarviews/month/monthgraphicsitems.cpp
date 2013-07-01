@@ -284,11 +284,11 @@ void MonthGraphicsItem::paint( QPainter *p, const QStyleOptionGraphicsItem *, QW
                           scene->itemHeight() );
 
   if ( mMonthItem->monthScene()->monthView()->preferences()->enableMonthItemIcons() ) {
-    QList<QPixmap *> icons = mMonthItem->icons();
+    QList<QPixmap> icons = mMonthItem->icons();
     int iconWidths = 0;
 
-    foreach ( QPixmap *icon, icons ) {
-      iconWidths += icon->width();
+    foreach ( const QPixmap &icon, icons ) {
+      iconWidths += icon.width();
     }
 
     if ( !icons.isEmpty() ) {
@@ -315,10 +315,10 @@ void MonthGraphicsItem::paint( QPainter *p, const QStyleOptionGraphicsItem *, QW
     textRect.setLeft( curXPos + iconWidths );
 
     // assume that all pixmaps have the same height
-    int pixYPos = icons.isEmpty() ? 0 : ( textRect.height() - icons[0]->height() ) / 2;
-    foreach ( QPixmap *icon, icons ) {
-      p->drawPixmap( curXPos, pixYPos, *icon );
-      curXPos += icon->width();
+    int pixYPos = icons.isEmpty() ? 0 : ( textRect.height() - icons.first().height() ) / 2;
+    foreach ( const QPixmap &icon, icons ) {
+      p->drawPixmap( curXPos, pixYPos, icon );
+      curXPos += icon.width();
     }
 
     p->drawText( textRect, alignFlag | Qt::AlignVCenter, text );

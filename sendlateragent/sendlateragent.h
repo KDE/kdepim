@@ -31,15 +31,24 @@ public:
     ~SendLaterAgent();
 
     void showConfigureDialog(qlonglong windowId = 0);
-    SendLaterDialog::SendLaterAction addSendLaterItem(qlonglong itemId, qlonglong windowId = 0);
+    SendLater::SendLaterDialog::SendLaterAction addSendLaterItem(qlonglong itemId, qlonglong windowId = 0);
 
     void printDebugInfo();
+
+    void setEnableAgent(bool b);
+    bool enabledAgent() const;
+
+    void reload();
+
 
 Q_SIGNALS:
     void needUpdateConfigDialogBox();
 
 public Q_SLOTS:
     void configure( WId windowId );
+
+protected:
+    void itemRemoved( const Akonadi::Item &item );
 
 private:
     SendLaterManager *mManager;

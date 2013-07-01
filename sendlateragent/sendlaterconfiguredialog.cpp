@@ -121,12 +121,12 @@ SendLaterItem::~SendLaterItem()
     delete mInfo;
 }
 
-void SendLaterItem::setInfo(SendLaterInfo *info)
+void SendLaterItem::setInfo(SendLater::SendLaterInfo *info)
 {
     mInfo = info;
 }
 
-SendLaterInfo* SendLaterItem::info() const
+SendLater::SendLaterInfo* SendLaterItem::info() const
 {
     return mInfo;
 }
@@ -217,20 +217,20 @@ void SendLaterWidget::load()
     const int numberOfItem = filterGroups.count();
     for (int i = 0 ; i < numberOfItem; ++i) {
         KConfigGroup group = config->group(filterGroups.at(i));
-        SendLaterInfo *info = new SendLaterInfo(group);
+        SendLater::SendLaterInfo *info = new SendLater::SendLaterInfo(group);
         createOrUpdateItem(info);
     }
 }
 
-void SendLaterWidget::createOrUpdateItem(SendLaterInfo *info, SendLaterItem *item)
+void SendLaterWidget::createOrUpdateItem(SendLater::SendLaterInfo *info, SendLaterItem *item)
 {
     if (!item) {
         item = new SendLaterItem(mWidget->treeWidget);
     }
-    item->setCheckState(Recursive, info->isRecursive() ? Qt::Checked : Qt::Unchecked);
+    item->setCheckState(Recursive, info->isRecurrence() ? Qt::Checked : Qt::Unchecked);
     item->setText(MessageId, QString::number(info->itemId()));
     item->setText(Date, info->dateTime().toString());
-    //TODO
+    item->setText(Subject, info->subject());
     item->setInfo(info);
 }
 
@@ -281,9 +281,9 @@ void SendLaterWidget::slotModifyItem()
             return;
         SendLaterItem *mailItem = static_cast<SendLaterItem *>(item);
 
-        QPointer<SendLaterDialog> dialog = new SendLaterDialog(mailItem->info(), this);
+        QPointer<SendLater::SendLaterDialog> dialog = new SendLater::SendLaterDialog(mailItem->info(), this);
         if (dialog->exec()) {
-            SendLaterInfo *info = dialog->info();
+            SendLater::SendLaterInfo *info = dialog->info();
             createOrUpdateItem(info, mailItem);
             mChanged = true;
         }
