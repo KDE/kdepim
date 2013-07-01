@@ -1162,6 +1162,8 @@ void MessageComposer::ComposerViewBase::slotCreateItemResult( KJob *job )
       if (item.isValid()) {
           mSendLaterInfo->setItemId(item.id());
           SendLater::SendLaterUtil::writeSendLaterInfo(mSendLaterInfo);
+          delete mSendLaterInfo;
+          mSendLaterInfo = 0;
       }
   }
 
