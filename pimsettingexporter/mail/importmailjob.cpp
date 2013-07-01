@@ -514,7 +514,6 @@ void ImportMailJob::restoreConfig()
     const QString filtersPath(Utils::configsPath() + QLatin1String("filters"));
     if (!mFileList.contains(filtersPath)) {
         Q_EMIT error(i18n("filters file could not be found in the archive."));
-        return;
     }
     MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
     const KArchiveEntry* filter = mArchiveDirectory->entry(filtersPath);
@@ -719,12 +718,13 @@ void ImportMailJob::restoreConfig()
             if (entry && entry->isFile()) {
                 const KArchiveFile* autocorrectionFile = static_cast<const KArchiveFile*>(entry);
                 const QString name = autocorrectionFile->name();
-                const QString autocorrectionPath = KGlobal::dirs()->findResource("data", QString::fromLatin1("autocorrect/%1").arg(name));
+                QString autocorrectionPath = KGlobal::dirs()->saveLocation("data", QString::fromLatin1("autocorrect/%1").arg(name), false);
                 if (QFile(autocorrectionPath).exists()) {
                     if (overwriteConfigMessageBox(name)) {
                         copyToFile(autocorrectionFile, autocorrectionPath, name, Utils::dataPath() + QLatin1String( "autocorrect/" ));
                     }
                 } else {
+                    autocorrectionPath = KGlobal::dirs()->saveLocation("data", QString::fromLatin1("autocorrect/%1").arg(name), true);
                     copyToFile(autocorrectionFile, autocorrectionPath, name, Utils::dataPath() + QLatin1String( "autocorrect/" ));
                 }
             }
