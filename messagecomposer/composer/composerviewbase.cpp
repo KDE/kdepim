@@ -1902,10 +1902,19 @@ void MessageComposer::ComposerViewBase::setSendLaterInfo( SendLater::SendLaterIn
     mSendLaterInfo = info;
 }
 
+SendLater::SendLaterInfo *MessageComposer::ComposerViewBase::sendLaterInfo()
+{
+    return mSendLaterInfo;
+}
+
 void MessageComposer::ComposerViewBase::setSendLaterAction( SendLater::SendLaterDialog::SendLaterAction action)
 {
     mSendLaterAction = action;
 }
 
+SendLater::SendLaterDialog::SendLaterAction MessageComposer::ComposerViewBase::sendLaterAction() const
+{
+    return mSendLaterAction;
+}
 
 #include "composerviewbase.moc"

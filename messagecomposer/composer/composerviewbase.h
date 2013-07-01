@@ -210,7 +210,10 @@ public:
   bool hasMissingAttachments( const QStringList& attachmentKeywords );
 
   void setSendLaterInfo( SendLater::SendLaterInfo *info);
+  SendLater::SendLaterInfo *sendLaterInfo();
+
   void setSendLaterAction( SendLater::SendLaterDialog::SendLaterAction action);
+  SendLater::SendLaterDialog::SendLaterAction sendLaterAction() const;
 
 public slots:
 
