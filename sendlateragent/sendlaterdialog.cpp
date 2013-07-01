@@ -82,6 +82,7 @@ SendLaterDialog::SendLaterDialog(SendLater::SendLaterInfo *info, QWidget *parent
     hbox->addWidget(mRecursiveComboBox);
 
     mSendAtTime = new KPushButton;
+
     connect(mSendAtTime, SIGNAL(clicked()), SLOT(slotSendAtTime()));
     hbox->addWidget(mSendAtTime);
 
@@ -108,6 +109,7 @@ SendLaterDialog::SendLaterDialog(SendLater::SendLaterInfo *info, QWidget *parent
     if (info)
         load(info);
     slotRecursiveClicked(false);
+    slotDateTimeChanged(QDateTime::currentDateTime());
 }
 
 SendLaterDialog::~SendLaterDialog()
