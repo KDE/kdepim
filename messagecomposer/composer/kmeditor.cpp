@@ -183,7 +183,7 @@ void KMeditorPrivate::startExternalEditor()
         } else if( nextChar == QLatin1Char('l') ) {
           command<<QString::number(q->textCursor().blockNumber() + 1);  // line number
         } else if( nextChar == QLatin1Char('w') ) { //Window id
-          command<<QString::number(q->winId());
+          command<<QString::number((qulonglong)q->winId());
         } else {
           arg.append( letter );
           arg.append( commandLine.at(i) );
