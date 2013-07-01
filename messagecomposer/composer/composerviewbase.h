@@ -37,27 +37,27 @@ class QAction;
 class KJob;
 class QWidget;
 
-namespace Akonadi
-{
-  class CollectionComboBox;
+namespace SendLater {
+class SendLaterInfo;
 }
 
-namespace MailTransport
-{
-  class TransportComboBox;
+namespace Akonadi {
+class CollectionComboBox;
+}
+
+namespace MailTransport {
+class TransportComboBox;
 class MessageQueueJob;
 }
 
-namespace KPIMIdentities
-{
-  class IdentityCombo;
-  class Identity;
-  class IdentityManager;
+namespace KPIMIdentities {
+class IdentityCombo;
+class Identity;
+class IdentityManager;
 }
 
-namespace Kleo
-{
-  class KeyResolver;
+namespace Kleo {
+class KeyResolver;
 }
 
 namespace MessageComposer {
@@ -332,6 +332,8 @@ private:
 
   MessageComposer::MessageSender::SendMethod mSendMethod;
   MessageComposer::MessageSender::SaveIn mSaveIn;
+
+  SendLater::SendLaterInfo *mSendLaterInfo;
 };
 
 } // namespace

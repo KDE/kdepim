@@ -33,6 +33,8 @@
 #include "utils/util.h"
 #include "imagescaling/imagescalingutils.h"
 
+#include "sendlateragent/sendlaterinfo.h"
+
 #include <messageviewer/viewer/objecttreeemptysource.h>
 #include <messageviewer/viewer/objecttreeparser.h>
 #include <messagecore/helpers/messagehelpers.h>
@@ -100,6 +102,7 @@ MessageComposer::ComposerViewBase::ComposerViewBase ( QObject* parent, QWidget *
  , m_autoSaveTimer( 0 )
  , m_autoSaveErrorShown( false )
  , m_autoSaveInterval( 1 * 1000 * 60 ) // default of 1 min
+ , mSendLaterInfo (0)
 {
   m_charsets << "utf-8"; // default, so we have a backup in case client code forgot to set.
 
@@ -109,7 +112,7 @@ MessageComposer::ComposerViewBase::ComposerViewBase ( QObject* parent, QWidget *
 
 MessageComposer::ComposerViewBase::~ComposerViewBase()
 {
-
+  delete mSendLaterInfo;
 }
 
 bool MessageComposer::ComposerViewBase::isComposing() const
