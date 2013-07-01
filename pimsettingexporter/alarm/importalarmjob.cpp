@@ -57,50 +57,9 @@ void ImportAlarmJob::start()
 void ImportAlarmJob::restoreResources()
 {
     //TODO we don't have several resource.
-    //Need to overwrite it.
-#if 0 //PORT ME
     Q_EMIT info(i18n("Restore resources..."));
-    if (!mListResourceFile.isEmpty()) {
-        QHashIterator<QString, QString> i(mListResourceFile);
-        QDir dir(mTempDirName);
-        dir.mkdir(Utils::alarmPath());
-        const QString copyToDirName(mTempDirName + QLatin1Char('/') + Utils::alarmPath());
-
-        while (i.hasNext()) {
-            i.next();
-            qDebug() << i.key() << ": " << i.value() << endl;
-            QMap<QString, QVariant> settings;
-            //FIXME
-            if (i.key().contains(QLatin1String("akonadi_kalarm_resource_"))) {
-                const KArchiveEntry* fileResouceEntry = mArchiveDirectory->entry(i.key());
-                if (fileResouceEntry && fileResouceEntry->isFile()) {
-                    const KArchiveFile* file = static_cast<const KArchiveFile*>(fileResouceEntry);
-                    file->copyTo(copyToDirName);
-                    const QString resourceName(file->name());
-                    const QString filename(file->name());
-
-                    KSharedConfig::Ptr resourceConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + resourceName);
-
-                    KUrl newUrl = Utils::adaptResourcePath(resourceConfig, storeAlarm);
-
-                    const QString dataFile = i.value();
-                    const KArchiveEntry* dataResouceEntry = mArchiveDirectory->entry(dataFile);
-                    if (dataResouceEntry->isFile()) {
-                        const KArchiveFile* file = static_cast<const KArchiveFile*>(dataResouceEntry);
-                        file->copyTo(newUrl.path());
-                    }
-                    settings.insert(QLatin1String("Path"),newUrl.path());
-                    const QString newResource = mCreateResource->createResource( QString::fromLatin1("akonadi_kalarm_resource"), filename, settings );
-                    qDebug()<<" newResource"<<newResource;
-                }
-                //TODO
-            }
-
-        }
-    }
-
+    restoreResourceFile(QString::fromLatin1("akonadi_kalarm_resource"), Utils::calendarPath(), storeAlarm);
     Q_EMIT info(i18n("Resources restored."));
-#endif
 }
 
 void ImportAlarmJob::addSpecificResourceSettings(KSharedConfig::Ptr resourceConfig, const QString &resourceName, QMap<QString, QVariant> &settings)
