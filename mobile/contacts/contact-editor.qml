@@ -21,27 +21,26 @@ import Qt 4.7
 import org.kde 4.5
 import org.kde.pim.mobileui 4.5 as KPIM
 import org.kde.contacteditors 4.5 as ContactEditors
+import org.kde.plasma.extras 0.1 as PlasmaExtras
 
 KPIM.MainView {
-  KPIM.DecoratedFlickable {
-    anchors.fill: parent
+  PlasmaExtras.ScrollArea {
+    anchors {
+      fill: parent
+      topMargin: 40
+      leftMargin: 40;
+      rightMargin: 4;
+    }
 
-    anchors.topMargin: 40
-    anchors.leftMargin: 40;
-    anchors.rightMargin: 4;
+    flickableItem: Flickable {
+      contentHeight: editorGeneral.height;
 
-    contentHeight: editorGeneral.height;
-
-    content.children: [
-      Item {
-        anchors.fill: parent
-        ContactEditors.ContactEditorGeneral {
-          id: editorGeneral;
-          width: parent.width;
-        }
+      ContactEditors.ContactEditorGeneral {
+        id: editorGeneral;
+        width: parent.width;
       }
-    ]
- }
+    }
+  }
 
   SlideoutPanelContainer {
     anchors.fill: parent
@@ -55,20 +54,18 @@ KPIM.MainView {
       handleHeight: 120
 
       content: [
-        KPIM.DecoratedFlickable {
-          anchors.fill: parent;
+      PlasmaExtras.ScrollArea {
+        anchors.fill: parent;
+
+        flickableItem: Flickable {
           contentHeight: editorBusiness.height;
 
-          content.children: [
-            Column {
-              anchors.fill: parent
-              ContactEditors.ContactEditorBusiness {
-                id: editorBusiness
-                width: parent.width;
-              }
-            }
-          ]
+          ContactEditors.ContactEditorBusiness {
+            id: editorBusiness
+            width: parent.width;
+          }
         }
+      }
       ]
     }
     SlideoutPanel {
@@ -79,20 +76,18 @@ KPIM.MainView {
       handleHeight: 120
 
       content: [
-        KPIM.DecoratedFlickable {
-          anchors.fill: parent;
+      PlasmaExtras.ScrollArea {
+        anchors.fill: parent;
+
+        flickableItem: Flickable {
           contentHeight: editorLocation.height;
 
-          content.children: [
-            Column {
-              anchors.fill: parent
-              ContactEditors.ContactEditorLocation {
-                id: editorLocation
-                width: parent.width;
-              }
-            }
-          ]
+          ContactEditors.ContactEditorLocation {
+            id: editorLocation
+            width: parent.width;
+          }
         }
+      }
       ]
     }
     SlideoutPanel {
@@ -103,20 +98,18 @@ KPIM.MainView {
       handleHeight: 100
 
       content: [
-        KPIM.DecoratedFlickable {
-          anchors.fill: parent;
+      PlasmaExtras.ScrollArea {
+        anchors.fill: parent;
+
+        flickableItem: Flickable {
           contentHeight: editorCrypto.height;
 
-          content.children: [
-            Column {
-              anchors.fill: parent
-              ContactEditors.ContactEditorCrypto {
-                id: editorCrypto
-                width: parent.width;
-              }
-            }
-          ]
+          ContactEditors.ContactEditorCrypto {
+            id: editorCrypto
+            width: parent.width;
+          }
         }
+      }
       ]
     }
     SlideoutPanel {
@@ -127,20 +120,18 @@ KPIM.MainView {
       handleHeight: 100
 
       content: [
-        KPIM.DecoratedFlickable {
-          anchors.fill: parent;
+      PlasmaExtras.ScrollArea {
+        anchors.fill: parent;
+
+        flickableItem: Flickable {
           contentHeight: editorMore.height;
 
-          content.children: [
-            Column {
-              anchors.fill: parent
-              ContactEditors.ContactEditorMore {
-                id: editorMore
-                width: parent.width;
-              }
-            }
-          ]
+          ContactEditors.ContactEditorMore {
+            id: editorMore
+            width: parent.width;
+          }
         }
+      }
       ]
     }
   }
