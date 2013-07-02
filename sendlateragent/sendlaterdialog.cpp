@@ -119,10 +119,10 @@ SendLaterDialog::SendLaterDialog(SendLater::SendLaterInfo *info, QWidget *parent
     w->setLayout(lay);
     setMainWidget(w);
     readConfig();
-    if (info)
-        load(info);
     slotRecurrenceClicked(false);
     slotDateTimeChanged(QDateTime::currentDateTime());
+    if (info)
+        load(info);
 }
 
 SendLaterDialog::~SendLaterDialog()
@@ -177,7 +177,9 @@ void SendLaterDialog::writeConfig()
 void SendLaterDialog::load(SendLater::SendLaterInfo *info)
 {
     mDateTime->setDateTime(info->dateTime());
-    mRecurrence->setChecked(info->isRecurrence());
+    const bool recurrence = info->isRecurrence();
+    mRecurrence->setChecked(recurrence);
+    slotRecurrenceClicked(recurrence);
     mRecurrenceValue->setValue(info->recurrenceEachValue());
     mRecurrenceComboBox->setCurrentIndex((int)info->recurrenceUnit());
 }
