@@ -3,6 +3,11 @@ project(sendlateragent)
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
 
+include_directories(
+   ${CMAKE_SOURCE_DIR}/messagecomposer/
+)
+
+
 add_subdirectory(tests)
 
 set(sendlaterlib_SRCS 
@@ -48,6 +53,7 @@ target_link_libraries(akonadi_sendlater_agent
   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
   ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
   ${KDEPIMLIBS_KMIME_LIBS}
+  messagecomposer
 )
 
 if (Q_WS_MAC)
