@@ -75,6 +75,7 @@ void SendLaterManager::load(bool forcereload)
 
 void SendLaterManager::createSendInfoList()
 {
+    qDebug()<<" void SendLaterManager::createSendInfoList()";
     mCurrentInfo = 0;
     qSort(mListSendLaterInfo.begin(), mListSendLaterInfo.end(), SendLater::SendLaterUtil::compareSendLaterInfo);
     if (!mListSendLaterInfo.isEmpty()) {
@@ -82,8 +83,10 @@ void SendLaterManager::createSendInfoList()
         const QDateTime now = QDateTime::currentDateTime();
         const int seconds = now.secsTo(mCurrentInfo->dateTime());
         if (seconds > 0) {
+            qDebug()<<" seconds"<<seconds;
             mTimer->start(seconds*1000);
         } else {
+            qDebug()<<" create job";
             //Create job when seconds <0
             slotCreateJob();
         }
@@ -119,6 +122,7 @@ void SendLaterManager::removeInfo(Akonadi::Item::Id id)
 
 void SendLaterManager::sendError(SendLater::SendLaterInfo *info, ErrorType type)
 {
+    qDebug()<<" sendEroor";
     if (info) {
         if (type == ItemNotFound) {
             //Don't try to resend it. Remove it.
@@ -149,9 +153,9 @@ void SendLaterManager::sendDone(SendLater::SendLaterInfo *info)
             removeInfo(info->itemId());
         }
     }
-    delete mCurrentJob;
-    createSendInfoList();
+    mCurrentJob = 0;
     Q_EMIT needUpdateConfigDialogBox();
+    QTimer::singleShot(1000*60, this, SLOT(createSendInfoList()));
 }
 
 void SendLaterManager::printDebugInfo()

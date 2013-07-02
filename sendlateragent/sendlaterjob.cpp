@@ -38,6 +38,7 @@ SendLaterJob::SendLaterJob(SendLaterManager *manager, SendLater::SendLaterInfo *
       mManager(manager),
       mInfo(info)
 {
+    qDebug()<<" SendLaterJob::SendLaterJob(SendLaterManager *manager, SendLater::SendLaterInfo *info, QObject *parent)";
 }
 
 SendLaterJob::~SendLaterJob()
@@ -46,6 +47,7 @@ SendLaterJob::~SendLaterJob()
 
 void SendLaterJob::start()
 {
+    qDebug()<<"void SendLaterJob::start() ";
     if (mInfo) {
         if (mInfo->itemId() > -1) {
             const Akonadi::Item item = Akonadi::Item(mInfo->itemId());
@@ -117,6 +119,7 @@ void SendLaterJob::sendDone()
                           KNotification::CloseOnTimeout,
                           KGlobal::mainComponent());
     mManager->sendDone(mInfo);
+    deleteLater();
 }
 
 void SendLaterJob::sendError(const QString &error, SendLaterManager::ErrorType type)
@@ -129,6 +132,7 @@ void SendLaterJob::sendError(const QString &error, SendLaterManager::ErrorType t
                           KNotification::CloseOnTimeout,
                           KGlobal::mainComponent());
     mManager->sendError(mInfo, type);
+    deleteLater();
 }
 
 #include "sendlaterjob.moc"

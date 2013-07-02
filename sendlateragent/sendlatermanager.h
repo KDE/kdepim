@@ -64,9 +64,9 @@ public Q_SLOTS:
 
 private Q_SLOTS:
     void slotCreateJob();
+    void createSendInfoList();
 
 private:
-    void createSendInfoList();
     void stopTimer();
     void removeInfo(Akonadi::Item::Id id);
     KSharedConfig::Ptr mConfig;
