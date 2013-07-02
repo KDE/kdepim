@@ -126,7 +126,7 @@ QString SendLaterInfo::subject() const
 void SendLaterInfo::readConfig(const KConfigGroup &config)
 {
     if (config.hasKey(QLatin1String("lastDateTimeSend"))) {
-        mLastDateTimeSend = QDateTime::fromString(config.readEntry("lastDateTimeSend"),Qt::ISODate);
+        mLastDateTimeSend = QDateTime::fromString(config.readEntry("lastDateTimeSend"), Qt::ISODate);
     }
     mDateTime = config.readEntry("date", QDateTime());
     mRecurrence = config.readEntry("recurrence", false);
