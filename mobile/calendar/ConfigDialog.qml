@@ -21,6 +21,7 @@ import Qt 4.7 as QML
 import org.kde 4.5
 import org.kde.pim.mobileui 4.5 as KPIM
 import org.kde.akonadi.calendar 4.5 as Calendar
+import org.kde.plasma.extras 0.1 as PlasmaExtras
 
 QML.Rectangle {
   id: configDialog
@@ -58,21 +59,25 @@ QML.Rectangle {
     anchors.fill: parent
   }
 
-  KPIM.DecoratedFlickable {
+  PlasmaExtras.ScrollArea {
     id: configWidgetBox
-    anchors.fill: parent
-    anchors.topMargin: 25
-    contentHeight: configWidget.height;
 
-    content.children: [
-      QML.Item { // dummy item to make the widget visible with the broken QML version on the N900
-        anchors.fill: parent 
-        Calendar.ConfigWidget {
-          id: configWidget
-          width: parent.width - okButton.width
-        }
+    anchors {
+      top: parent.top
+      topMargin: 25
+      bottom: parent.bottom
+      left: parent.left
+      right: okButton.left
+    }
+
+    QML.Flickable {
+      contentHeight: configWidget.height;
+
+      Calendar.ConfigWidget {
+        id: configWidget
+        width: parent.width
       }
-    ]
+    }
   }
 
   KPIM.Button2 {
