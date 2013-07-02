@@ -21,23 +21,29 @@ import QtQuick 1.1
 import org.kde 4.5
 import org.kde.pim.mobileui 4.5 as KPIM
 import org.kde.messagecomposer 4.5 as MessageComposer
+import org.kde.plasma.components 0.1 as PlasmaComponents
+import org.kde.plasma.extras 0.1 as PlasmaExtras
 
 KPIM.MainView {
   id: root
 
-  KPIM.DecoratedFlickable {
+  PlasmaExtras.ScrollArea {
     id: flick
     anchors.fill: parent
-    contentHeight: editorView.contentHeight;
 
-    content.children: [
+    flickableItem: Flickable {
+
+      contentHeight: editorView.contentHeight;
+
+      contentItem.children: [
       EditorView {
         id: editorView
         enabled: !window.busy
         anchors.fill: parent
         screenHeight: root.height
       }
-    ]
+      ]
+    }
   }
 
   SlideoutPanelContainer {
