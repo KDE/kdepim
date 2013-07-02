@@ -40,6 +40,7 @@ SendLaterManager::SendLaterManager(QObject *parent)
     mConfig = KGlobal::config();
     mTimer = new QTimer(this);
     connect(mTimer, SIGNAL(timeout()), this, SLOT(slotCreateJob()));
+    qDebug()<<"SendLaterManager::SendLaterManager ";
 }
 
 SendLaterManager::~SendLaterManager()
@@ -147,10 +148,13 @@ void SendLaterManager::sendError(SendLater::SendLaterInfo *info, ErrorType type)
 
 void SendLaterManager::sendDone(SendLater::SendLaterInfo *info)
 {
+    qDebug()<<" void SendLaterManager::sendDone(SendLater::SendLaterInfo *info)";
     if (info) {
         if (!info->isRecurrence()) {
             mListSendLaterInfo.removeAll(mCurrentInfo);
             removeInfo(info->itemId());
+        } else {
+            SendLater::SendLaterUtil::changeRecurrentDate(info);
         }
     }
     mCurrentJob = 0;

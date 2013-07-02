@@ -36,6 +36,27 @@ bool SendLater::SendLaterUtil::compareSendLaterInfo(SendLater::SendLaterInfo *le
     return left->dateTime() < right->dateTime();
 }
 
+void SendLater::SendLaterUtil::changeRecurrentDate(SendLater::SendLaterInfo *info)
+{
+    if (info && info->isRecurrence()) {
+        qDebug()<<" SendLater::SendLaterUtil::changeRecurrentDate "<<info;
+        switch(info->recurrenceUnit()) {
+        case SendLater::SendLaterInfo::None:
+            break;
+        case SendLater::SendLaterInfo::Days:
+            info->setDateTime(info->dateTime().addDays(info->recurrenceEachValue()));
+            break;
+        case SendLater::SendLaterInfo::Weeks:
+            info->setDateTime(info->dateTime().addDays(info->recurrenceEachValue()*7));
+            break;
+        case SendLater::SendLaterInfo::Months:
+            info->setDateTime(info->dateTime().addMonths(info->recurrenceEachValue()));
+            break;
+        }
+        writeSendLaterInfo(info);
+    }
+}
+
 KSharedConfig::Ptr SendLater::SendLaterUtil::defaultConfig()
 {
     return KSharedConfig::openConfig( QLatin1String("akonadi_sendlater_agentrc") );
