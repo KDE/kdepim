@@ -67,6 +67,7 @@ private Q_SLOTS:
     void createSendInfoList();
 
 private:
+    void recreateSendList();
     void stopTimer();
     void removeInfo(Akonadi::Item::Id id);
     KSharedConfig::Ptr mConfig;

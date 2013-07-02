@@ -54,7 +54,6 @@ void SendLaterManager::stopAll()
     stopTimer();
     qDeleteAll(mListSendLaterInfo);
     mListSendLaterInfo.clear();
-    delete mCurrentJob;
     mCurrentJob = 0;
 }
 
@@ -91,6 +90,8 @@ void SendLaterManager::createSendInfoList()
             //Create job when seconds <0
             slotCreateJob();
         }
+    } else {
+        qDebug()<<" list is empty";
     }
 }
 
@@ -123,7 +124,6 @@ void SendLaterManager::removeInfo(Akonadi::Item::Id id)
 
 void SendLaterManager::sendError(SendLater::SendLaterInfo *info, ErrorType type)
 {
-    qDebug()<<" sendEroor";
     if (info) {
         if (type == ItemNotFound) {
             //Don't try to resend it. Remove it.
@@ -131,6 +131,7 @@ void SendLaterManager::sendError(SendLater::SendLaterInfo *info, ErrorType type)
             removeInfo(info->itemId());
         } else {
             if (KMessageBox::Yes == KMessageBox::questionYesNo(0, i18n("An error was found. Do you want to resend it?"), i18n("Error found"))) {
+                //TODO 4.12: allow to remove it even if it's recurrent (need new i18n)
                 if (!info->isRecurrence()) {
                     mListSendLaterInfo.removeAll(mCurrentInfo);
                     removeInfo(info->itemId());
@@ -141,9 +142,14 @@ void SendLaterManager::sendError(SendLater::SendLaterInfo *info, ErrorType type)
             }
         }
     }
-    delete mCurrentJob;
-    createSendInfoList();
+    recreateSendList();
+}
+
+void SendLaterManager::recreateSendList()
+{
+    mCurrentJob = 0;
     Q_EMIT needUpdateConfigDialogBox();
+    QTimer::singleShot(1000*60, this, SLOT(createSendInfoList()));
 }
 
 void SendLaterManager::sendDone(SendLater::SendLaterInfo *info)
@@ -157,9 +163,7 @@ void SendLaterManager::sendDone(SendLater::SendLaterInfo *info)
             SendLater::SendLaterUtil::changeRecurrentDate(info);
         }
     }
-    mCurrentJob = 0;
-    Q_EMIT needUpdateConfigDialogBox();
-    QTimer::singleShot(1000*60, this, SLOT(createSendInfoList()));
+    recreateSendList();
 }
 
 void SendLaterManager::printDebugInfo()

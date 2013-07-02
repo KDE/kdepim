@@ -5,6 +5,7 @@ add_definitions( -DQT_NO_CAST_TO_ASCII )
 
 include_directories(
    ${CMAKE_SOURCE_DIR}/messagecomposer/
+   ${CMAKE_SOURCE_DIR}/messagecore/
 )
 
 
@@ -54,6 +55,7 @@ target_link_libraries(akonadi_sendlater_agent
   ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
   ${KDEPIMLIBS_KMIME_LIBS}
   messagecomposer
+  messagecore
 )
 
 if (Q_WS_MAC)

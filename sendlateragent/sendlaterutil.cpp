@@ -39,10 +39,8 @@ bool SendLater::SendLaterUtil::compareSendLaterInfo(SendLater::SendLaterInfo *le
 void SendLater::SendLaterUtil::changeRecurrentDate(SendLater::SendLaterInfo *info)
 {
     if (info && info->isRecurrence()) {
-        qDebug()<<" SendLater::SendLaterUtil::changeRecurrentDate "<<info;
+        qDebug()<<" SendLater::SendLaterUtil::changeRecurrentDate "<<info->dateTime().toString();
         switch(info->recurrenceUnit()) {
-        case SendLater::SendLaterInfo::None:
-            break;
         case SendLater::SendLaterInfo::Days:
             info->setDateTime(info->dateTime().addDays(info->recurrenceEachValue()));
             break;
@@ -53,7 +51,19 @@ void SendLater::SendLaterUtil::changeRecurrentDate(SendLater::SendLaterInfo *inf
             info->setDateTime(info->dateTime().addMonths(info->recurrenceEachValue()));
             break;
         }
-        writeSendLaterInfo(info);
+        qDebug()<<"AFTER SendLater::SendLaterUtil::changeRecurrentDate "<<info->dateTime().toString();
+        KSharedConfig::Ptr config = SendLaterUtil::defaultConfig();
+
+        const QString groupName = QString::fromLatin1("SendLaterItem %1").arg(info->itemId());
+        // first, delete all filter groups:
+        const QStringList filterGroups =config->groupList().filter( groupName );
+        foreach ( const QString &group, filterGroups ) {
+            config->deleteGroup( group );
+        }
+        KConfigGroup group = config->group(groupName);
+        info->writeConfig(group);
+        config->sync();
+        config->reparseConfiguration();
     }
 }
 
