@@ -128,7 +128,7 @@ void SendLaterInfo::readConfig(const KConfigGroup &config)
     if (config.hasKey(QLatin1String("lastDateTimeSend"))) {
         mLastDateTimeSend = QDateTime::fromString(config.readEntry("lastDateTimeSend"), Qt::ISODate);
     }
-    mDateTime = config.readEntry("date", QDateTime());
+    mDateTime = config.readEntry("date", QDateTime::currentDateTime());
     mRecurrence = config.readEntry("recurrence", false);
     mRecurrenceEachValue = config.readEntry("recurrenceValue",1);
     mRecurrenceUnit = static_cast<RecurrenceUnit>(config.readEntry("recurrenceUnit", (int)Days));

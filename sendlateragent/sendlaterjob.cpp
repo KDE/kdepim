@@ -41,10 +41,12 @@ SendLaterJob::SendLaterJob(SendLaterManager *manager, SendLater::SendLaterInfo *
       mManager(manager),
       mInfo(info)
 {
+    qDebug()<<" SendLaterJob::SendLaterJob"<<this;
 }
 
 SendLaterJob::~SendLaterJob()
 {
+    qDebug()<<" SendLaterJob::~SendLaterJob()"<<this;
 }
 
 void SendLaterJob::start()
