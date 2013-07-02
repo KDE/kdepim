@@ -32,7 +32,6 @@
 
 static QString sendLaterItemPattern = QLatin1String( "SendLaterItem \\d+" );
 
-
 SendLaterConfigureDialog::SendLaterConfigureDialog(QWidget *parent)
     : KDialog(parent)
 {
@@ -232,7 +231,7 @@ void SendLaterWidget::createOrUpdateItem(SendLater::SendLaterInfo *info, SendLat
     }
     item->setCheckState(Recursive, info->isRecurrence() ? Qt::Checked : Qt::Unchecked);
     item->setText(MessageId, QString::number(info->itemId()));
-    item->setText(Date, info->dateTime().toString());
+    item->setText(SendAround, info->dateTime().toString());
     item->setText(Subject, info->subject());
     item->setInfo(info);
 }

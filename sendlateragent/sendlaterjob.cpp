@@ -102,6 +102,7 @@ void SendLaterJob::slotJobFinished(KJob* job)
         } else {
             //Send current Message
         }
+        sendDone();
     }
 }
 

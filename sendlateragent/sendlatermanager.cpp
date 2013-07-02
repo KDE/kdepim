@@ -52,16 +52,14 @@ void SendLaterManager::stopAll()
 {
     stopTimer();
     qDeleteAll(mListSendLaterInfo);
+    mListSendLaterInfo.clear();
     delete mCurrentJob;
     mCurrentJob = 0;
 }
 
 void SendLaterManager::load(bool forcereload)
 {
-    stopTimer();
-    qDeleteAll(mListSendLaterInfo);
-    mListSendLaterInfo.clear();
-
+    stopAll();
     if (forcereload)
         mConfig->reparseConfiguration();
 
