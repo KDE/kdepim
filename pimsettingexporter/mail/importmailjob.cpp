@@ -718,13 +718,13 @@ void ImportMailJob::restoreConfig()
             if (entry && entry->isFile()) {
                 const KArchiveFile* autocorrectionFile = static_cast<const KArchiveFile*>(entry);
                 const QString name = autocorrectionFile->name();
-                QString autocorrectionPath = KGlobal::dirs()->saveLocation("data", QString::fromLatin1("autocorrect/%1").arg(name), false);
+                QString autocorrectionPath = KGlobal::dirs()->saveLocation("data", QLatin1String("autocorrect/"), false);
                 if (QFile(autocorrectionPath).exists()) {
                     if (overwriteConfigMessageBox(name)) {
                         copyToFile(autocorrectionFile, autocorrectionPath, name, Utils::dataPath() + QLatin1String( "autocorrect/" ));
                     }
                 } else {
-                    autocorrectionPath = KGlobal::dirs()->saveLocation("data", QString::fromLatin1("autocorrect/%1").arg(name), true);
+                    autocorrectionPath = KGlobal::dirs()->saveLocation("data", QLatin1String("autocorrect/"), true);
                     copyToFile(autocorrectionFile, autocorrectionPath, name, Utils::dataPath() + QLatin1String( "autocorrect/" ));
                 }
             }
