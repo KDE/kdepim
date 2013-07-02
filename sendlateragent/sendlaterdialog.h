@@ -25,6 +25,7 @@ class KComboBox;
 class QCheckBox;
 class QSpinBox;
 class QDateTimeEdit;
+class QLabel;
 
 namespace SendLater {
 class SendLaterInfo;
@@ -56,6 +57,7 @@ private Q_SLOTS:
     void slotSendIn2Hours();
     void slotDateTimeChanged(const QDateTime &);
     void slotSendAtTime();
+    void slotOkClicked();
 
 private:
     void load(SendLater::SendLaterInfo *info);
@@ -74,6 +76,7 @@ private:
     KPushButton *mSendIn1Hour;
     KPushButton *mSendIn2Hours;
     KPushButton *mSendAtTime;
+    QLabel *mSendAtTimeLabel;
 };
 }
 #endif // SENDLATERDIALOG_H
