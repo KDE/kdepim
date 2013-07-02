@@ -131,7 +131,6 @@ SendLater::SendLaterInfo* SendLaterItem::info() const
     return mInfo;
 }
 
-
 SendLaterWidget::SendLaterWidget( QWidget *parent )
     : QWidget( parent ),
       mChanged(false)
@@ -140,7 +139,7 @@ SendLaterWidget::SendLaterWidget( QWidget *parent )
     mWidget->setupUi( this );
     QStringList headers;
     headers << i18n("Subject")
-            << i18n("Date")
+            << i18n("Send around")
             << i18n("Recursive")
             << i18n("Message Id");
 
