@@ -20,6 +20,7 @@
 import QtQuick 1.1
 import org.kde 4.5
 import org.kde.pim.mobileui 4.5 as KPIM
+import org.kde.plasma.extras 0.1 as PlasmaExtras
 
 /**
  * Shows a list view of the specified attachment model of a MessageView component.
@@ -130,23 +131,28 @@ Item {
 
   Item {
     id: previewView
-    visible: false
+    visible: true //false
     anchors.top: parent.top
     anchors.right: parent.right
     anchors.bottom: parent.bottom
     width: _attachmentList.width - attachmentListWidth - 6
 
-    KPIM.DecoratedFlickable {
+    PlasmaExtras.ScrollArea {
+
       id: previewScrollArea
       anchors.fill: parent
-      contentWidth: previewImage.width
-      contentHeight: previewImage.height
-      content.children: [
+
+      flickableItem: Flickable {
+
+        contentWidth: previewImage.width
+        contentHeight: previewImage.height
+
         Image {
           id: previewImage
           source: attachmentListView.currentAttachmentUrl
         }
-      ]
+
+      }
     }
 
     KPIM.Button {
