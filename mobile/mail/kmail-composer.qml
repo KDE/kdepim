@@ -57,27 +57,31 @@ KPIM.MainView {
       handleHeight: 150
       handlePosition: 40
       content: [
-          KPIM.DecoratedFlickable {
-              id: flickablerecipients
-              anchors.fill: parent
-              contentHeight: recipientsEditor.height;
+      PlasmaExtras.ScrollArea {
 
-              content.children: [
-                Item {
-                    id: recipientswrapper
-                    anchors.top: parent.top
-                    anchors.left: parent.left
-                    anchors.right: parent.right
+        id: flickablerecipients
+        anchors.fill: parent
 
-                    MessageComposer.RecipientsEditor {
-                        id: recipientsEditor
-                        anchors.top: parent.top
-                        anchors.left: parent.left
-                        anchors.right: parent.right
-                    }
-                }
-              ]
+        flickableItem: Flickable {
+          contentHeight: recipientsEditor.height;
+
+          contentItem.children: [
+          Item {
+            id: recipientswrapper
+            anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.right: parent.right
+
+            MessageComposer.RecipientsEditor {
+              id: recipientsEditor
+              anchors.top: parent.top
+              anchors.left: parent.left
+              anchors.right: parent.right
+            }
           }
+          ]
+        }
+      }
       ]
     }
 
