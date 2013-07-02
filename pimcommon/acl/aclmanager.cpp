@@ -317,8 +317,18 @@ public:
                 collection.attribute<PimCommon::ImapAclAttribute>();
         const QMap<QByteArray, KIMAP::Acl::Rights> rights = attribute->rights();
 
+        QString resource = collection.resource();
+        if (resource.contains(QLatin1String("akonadi_kolabproxy_resource"))) {
+            QDBusInterface interface( QLatin1String("org.freedesktop.Akonadi.Agent.akonadi_kolabproxy_resource"), QLatin1String("/KolabProxy") );
+            if (interface.isValid()) {
+                QDBusReply<QString> reply = interface.call(QLatin1String("imapResourceForCollection"), collection.remoteId().toLongLong());
+                if (reply.isValid()) {
+                    resource = reply;
+                }
+            }
+        }
         OrgKdeAkonadiImapSettingsInterface *imapSettingsInterface =
-                PimCommon::Util::createImapSettingsInterface( collection.resource() );
+                PimCommon::Util::createImapSettingsInterface( resource );
 
         QString loginName;
         QString serverName;
@@ -332,8 +342,9 @@ public:
             if ( reply.isValid() ) {
                 serverName = reply;
             }
+        } else {
+            qDebug()<<" collection has not imap as resources: "<<collection.resource();
         }
-
         delete imapSettingsInterface;
 
         mImapUserName = loginName;
