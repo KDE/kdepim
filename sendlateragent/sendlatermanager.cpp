@@ -45,6 +45,7 @@ SendLaterManager::SendLaterManager(QObject *parent)
 SendLaterManager::~SendLaterManager()
 {
     stopAll();
+    delete mSender;
 }
 
 void SendLaterManager::stopAll()
