@@ -20,6 +20,7 @@
 import QtQuick 1.1 as QML
 import org.kde 4.5
 import org.kde.pim.mobileui 4.5 as KPIM
+import org.kde.plasma.extras 0.1 as PlasmaExtras
 
 QML.Rectangle {
   property alias searchWidget: searchWidget.children
@@ -30,23 +31,32 @@ QML.Rectangle {
   color: "white"
   visible: guiStateManager.inSearchScreenState
 
-  KPIM.DecoratedFlickable {
+  PlasmaExtras.ScrollArea {
     id: searchWidgetBox
-    anchors.fill: parent
-    anchors.topMargin: 25
-    contentHeight: searchWidget.height
+    anchors {
+      top: parent.top
+      topMargin: 25
+      bottom: parent.bottom
+      left: parent.left
+      right: searchButton.left
+    }
 
-    content.children: [
+    flickableItem: QML.Flickable {
+      id: searchWidgetFlickable
+      contentHeight: searchWidget.height
+
+      contentItem.children: [
       QML.Item { // dummy item to make the widget visible with the broken QML version on the N900
         anchors.fill: parent 
         QML.Item {
           id: searchWidget
-          width: parent.width - searchButton.width
+          width: parent.width
 
-          onChildrenChanged: { searchWidgetBox.contentHeight = children[0].height }
+          onChildrenChanged: { searchWidgetFlickable.contentHeight = children[0].height }
         }
       }
-    ]
+      ]
+    }
   }
 
   KPIM.Button2 {
