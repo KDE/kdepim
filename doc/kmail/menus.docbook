@@ -142,7 +142,7 @@ performs a menu item function, the default shortcut is listed with the menu item
     <listitem>
       <para><action>Sets &kmail; to offline mode.</action> This turns off all network jobs. This is
         useful when working with messages without a network connection. This selection will become
-        <menuchoice><guimenu>File</guimenu><guimenuitem>Work Online</guimenuitem></menuchoice>, which needs to be selected to go back online (required to send and recieve).</para>
+        <menuchoice><guimenu>File</guimenu><guimenuitem>Work Online</guimenuitem></menuchoice>, which needs to be selected to go back online (required to send and receive).</para>
     </listitem>
   </varlistentry>
   <varlistentry><term><menuchoice><shortcut><keycombo action="simul">&Ctrl;<keycap>L</keycap></keycombo></shortcut>
