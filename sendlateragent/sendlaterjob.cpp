@@ -82,6 +82,11 @@ void SendLaterJob::slotJobFinished(KJob* job)
         kDebug()<<"Can not fetch message: "<<job->errorString();
         return;
     }
+    if ( !MailTransport::TransportManager::self()->showTransportCreationDialog( 0, MailTransport::TransportManager::IfNoTransportExists ) ) {
+        qDebug()<<" we can't create transport ";
+        return;
+    }
+
     //TODO use "AkonadiSender" ?
     if (mItem.isValid()) {
         const MailTransport::SentBehaviourAttribute *sentAttribute = mItem.attribute<MailTransport::SentBehaviourAttribute>();
