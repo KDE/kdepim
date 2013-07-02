@@ -139,7 +139,11 @@ SendLaterWidget::SendLaterWidget( QWidget *parent )
     mWidget = new Ui::SendLaterWidget;
     mWidget->setupUi( this );
     QStringList headers;
-    headers << i18n("Subject")<<i18n("Date")<<i18n("Recursive")<<i18n("Message Id");
+    headers << i18n("Subject")
+            << i18n("Date")
+            << i18n("Recursive")
+            << i18n("Message Id");
+
     mWidget->treeWidget->setHeaderLabels(headers);
     mWidget->treeWidget->setSortingEnabled(true);
     mWidget->treeWidget->setRootIsDecorated(false);
