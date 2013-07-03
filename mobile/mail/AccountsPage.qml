@@ -122,7 +122,7 @@ PlasmaComponents.Page {
           verticalCenter: parent.verticalCenter
         }
 
-        text: "Add Account"
+        text: i18n("Add Account")
         level: 4
       }
     }
