@@ -22,6 +22,7 @@
 import QtQuick 1.1 as QML
 import org.kde.akonadi 4.5
 import org.kde.pim.mobileui 4.5 as KPIM
+import org.kde.plasma.extras 0.1 as PlasmaExtras
 
 QML.Column {
   id : _top
@@ -47,14 +48,21 @@ QML.Column {
     anchors.left : parent.left
     anchors.right : parent.right
     height : itemHeight
-    KPIM.DecoratedListView {
-      id : selectedItem
+
+    PlasmaExtras.ScrollArea {
+      id : selectedItemContainer
+
       anchors.fill : parent
-      delegate : CollectionDelegate {
-        height : 70
-        indentation : 80
+
+      flickableItem: QML.ListView {
+        id : selectedItem
+
+        delegate : CollectionDelegate {
+          height : 70
+          indentation : 80
+        }
+        visible : count == 1
       }
-      visible : count == 1
     }
     QML.Text {
       id : _multipleText
@@ -66,8 +74,8 @@ QML.Column {
     QML.Image {
       id : topLine
       source : "images/list-line-top.png"
-      anchors.right : selectedItem.right
-      anchors.top : selectedItem.top
+      anchors.right : selectedItemContainer.right
+      anchors.top : selectedItemContainer.top
     }
     QML.Image {
       id : topLineFiller
@@ -80,16 +88,16 @@ QML.Column {
     QML.Image {
       id : bottomLine
       source : "images/dividing-line-horizontal.png"
-      anchors.right : selectedItem.right
-      anchors.bottom : selectedItem.bottom
+      anchors.right : selectedItemContainer.right
+      anchors.bottom : selectedItemContainer.bottom
       fillMode : QML.Image.TileHorizontally
       width : parent.width
     }
     QML.Image {
       source : "images/dividing-line.png"
-      anchors.top : selectedItem.bottom
+      anchors.top : selectedItemContainer.bottom
       anchors.right : parent.right
-      height : _top.height - selectedItem.height
+      height : _top.height - selectedItemContainer.height
       fillMode : QML.Image.TileVertically
     }
     QML.Image {
@@ -119,29 +127,35 @@ QML.Column {
   }
 
   QML.Rectangle {
-      anchors.left : _top.left
-      anchors.right : _top.right
-      anchors.top: _top.top
-      anchors.topMargin: itemHeight
-      height: _top.height - itemHeight
-      clip: true
-      QML.Text {
-        anchors.fill : parent
-        horizontalAlignment : QML.Text.AlignHCenter
-        verticalAlignment : QML.Text.AlignVCenter
-        font.pixelSize : 22
-        text : KDE.i18n( "Please select one\nor more items\non the right." )
-        visible : !_itemActionModel.hasSelection
-      }
-      KPIM.DecoratedListView {
-        anchors.fill:parent
-        model: actionModel;
-        id: actionListView;
+    anchors.left : _top.left
+    anchors.right : _top.right
+    anchors.top: _top.top
+    anchors.topMargin: itemHeight
+    height: _top.height - itemHeight
+    clip: true
+    QML.Text {
+      anchors.fill : parent
+      horizontalAlignment : QML.Text.AlignHCenter
+      verticalAlignment : QML.Text.AlignVCenter
+      font.pixelSize : 22
+      text : KDE.i18n( "Please select one\nor more items\non the right." )
+      visible : !_itemActionModel.hasSelection
+    }
+
+    PlasmaExtras.ScrollArea {
+      anchors.fill:parent
+
+      flickableItem: QML.ListView {
+        id: actionListView
+
+        model: actionModel
+
         delegate: KPIM.Action {
           height : itemHeight
           width : parent.width
           action: application.getAction( model.action, "" )
-          }
+        }
       }
+    }
   }
 }
