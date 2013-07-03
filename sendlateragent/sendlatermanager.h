@@ -19,6 +19,7 @@
 #define SENDLATERMANAGER_H
 
 #include <QObject>
+#include <QQueue>
 
 #include <Akonadi/Item>
 
@@ -69,6 +70,7 @@ private Q_SLOTS:
     void createSendInfoList();
 
 private:
+    SendLater::SendLaterInfo *searchInfo(Akonadi::Item::Id id);
     void recreateSendList();
     void stopTimer();
     void removeInfo(Akonadi::Item::Id id);
@@ -78,6 +80,7 @@ private:
     SendLaterJob *mCurrentJob;
     QTimer *mTimer;
     MessageComposer::AkonadiSender *mSender;
+    QQueue<Akonadi::Item::Id> mSendLaterQueue;
 };
 
 #endif // SENDLATERMANAGER_H

@@ -75,23 +75,35 @@ void SendLaterManager::load(bool forcereload)
 
 void SendLaterManager::createSendInfoList()
 {
-    qDebug()<<" void SendLaterManager::createSendInfoList()";
     mCurrentInfo = 0;
     qSort(mListSendLaterInfo.begin(), mListSendLaterInfo.end(), SendLater::SendLaterUtil::compareSendLaterInfo);
-    if (!mListSendLaterInfo.isEmpty()) {
-        mCurrentInfo = mListSendLaterInfo.first();
-        const QDateTime now = QDateTime::currentDateTime();
-        const int seconds = now.secsTo(mCurrentInfo->dateTime());
-        if (seconds > 0) {
-            qDebug()<<" seconds"<<seconds;
-            mTimer->start(seconds*1000);
+
+    //Look at QQueue
+    if (mSendLaterQueue.isEmpty()) {
+        qDebug()<<" void SendLaterManager::createSendInfoList()";
+        if (!mListSendLaterInfo.isEmpty()) {
+            mCurrentInfo = mListSendLaterInfo.first();
+            const QDateTime now = QDateTime::currentDateTime();
+            const int seconds = now.secsTo(mCurrentInfo->dateTime());
+            if (seconds > 0) {
+                qDebug()<<" seconds"<<seconds;
+                mTimer->start(seconds*1000);
+            } else {
+                qDebug()<<" create job";
+                //Create job when seconds <0
+                slotCreateJob();
+            }
         } else {
-            qDebug()<<" create job";
-            //Create job when seconds <0
-            slotCreateJob();
+            qDebug()<<" list is empty";
         }
     } else {
-        qDebug()<<" list is empty";
+        SendLater::SendLaterInfo *info = searchInfo(mSendLaterQueue.dequeue());
+        if (info) {
+            mCurrentInfo = info;
+            slotCreateJob();
+        } else { //If removed.
+            createSendInfoList();
+        }
     }
 }
 
@@ -101,16 +113,27 @@ void SendLaterManager::stopTimer()
         mTimer->stop();
 }
 
+SendLater::SendLaterInfo *SendLaterManager::searchInfo(Akonadi::Item::Id id)
+{
+    Q_FOREACH(SendLater::SendLaterInfo *info, mListSendLaterInfo) {
+        if (info->itemId() == id) {
+            return info;
+        }
+    }
+    return 0;
+}
+
 void SendLaterManager::sendNow(Akonadi::Item::Id id)
 {
     if (!mCurrentJob) {
-        Q_FOREACH(SendLater::SendLaterInfo *info, mListSendLaterInfo) {
-            if (info->itemId() == id) {
-                mCurrentInfo = info;
-                slotCreateJob();
-                break;
-            }
+        SendLater::SendLaterInfo *info = searchInfo(id);
+        if (info) {
+            mCurrentInfo = info;
+            slotCreateJob();
         }
+    } else {
+        //Add to QQueue
+        mSendLaterQueue.enqueue(id);
     }
 }
 
