@@ -80,7 +80,6 @@ void SendLaterManager::createSendInfoList()
 
     //Look at QQueue
     if (mSendLaterQueue.isEmpty()) {
-        qDebug()<<" void SendLaterManager::createSendInfoList()";
         if (!mListSendLaterInfo.isEmpty()) {
             mCurrentInfo = mListSendLaterInfo.first();
             const QDateTime now = QDateTime::currentDateTime();
