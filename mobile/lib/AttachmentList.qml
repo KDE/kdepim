@@ -131,7 +131,7 @@ Item {
 
   Item {
     id: previewView
-    visible: true //false
+    visible: false
     anchors.top: parent.top
     anchors.right: parent.right
     anchors.bottom: parent.bottom
