@@ -29,6 +29,7 @@
 
 
 #include <Akonadi/ItemFetchJob>
+#include <Akonadi/ItemDeleteJob>
 
 #include <KNotification>
 #include <KLocale>
@@ -103,7 +104,13 @@ void SendLaterJob::slotJobFinished(KJob* job)
             return;
         }
         mManager->sender()->send( msg, MessageComposer::MessageSender::SendImmediate );
-        sendDone();
+        if (! mInfo->isRecurrence()) {
+            //TODO delete old message
+            Akonadi::ItemFetchJob *fetch = new Akonadi::ItemFetchJob( mItem, this );
+            connect( fetch, SIGNAL(result(KJob*)), SLOT(sendDone()) );
+        } else {
+            sendDone();
+        }
     }
 }
 
