@@ -102,19 +102,7 @@ void SendLaterJob::slotJobFinished(KJob* job)
             sendError(QLatin1String("Message is not a real message"), SendLaterManager::CanNotFetchItem);
             return;
         }
-        const MailTransport::SentBehaviourAttribute *sentAttribute = mItem.attribute<MailTransport::SentBehaviourAttribute>();
-        QString fcc;
-        if ( sentAttribute && ( sentAttribute->sentBehaviour() == MailTransport::SentBehaviourAttribute::MoveToCollection ) )
-            fcc =  QString::number( sentAttribute->moveToCollection().id() );
-
-        if (mInfo->isRecurrence()) {
-            MailTransport::MessageQueueJob *qjob = new MailTransport::MessageQueueJob( this );
-            //Need to have KMime::Message::Ptr
-
-            //TODO create new message
-        } else {
-            mManager->sender()->send( msg, MessageComposer::MessageSender::SendImmediate );
-        }
+        mManager->sender()->send( msg, MessageComposer::MessageSender::SendImmediate );
         sendDone();
     }
 }
