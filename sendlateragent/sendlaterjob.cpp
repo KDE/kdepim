@@ -129,7 +129,7 @@ void SendLaterJob::sendDone()
                           KNotification::CloseOnTimeout,
                           KGlobal::mainComponent());
     mManager->sendDone(mInfo);
-    //deleteLater();
+    deleteLater();
 }
 
 void SendLaterJob::sendError(const QString &error, SendLaterManager::ErrorType type)
@@ -142,7 +142,7 @@ void SendLaterJob::sendError(const QString &error, SendLaterManager::ErrorType t
                           KNotification::CloseOnTimeout,
                           KGlobal::mainComponent());
     mManager->sendError(mInfo, type);
-    //deleteLater();
+    deleteLater();
 }
 
 #include "sendlaterjob.moc"
