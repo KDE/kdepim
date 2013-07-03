@@ -297,7 +297,6 @@ void SendLaterWidget::slotModifyItem()
 
 void SendLaterWidget::needToReload()
 {
-    //TODO
     mWidget->treeWidget->clear();
     load();
 }
