@@ -298,6 +298,8 @@ void SendLaterWidget::slotModifyItem()
 void SendLaterWidget::needToReload()
 {
     mWidget->treeWidget->clear();
+    KSharedConfig::Ptr config = KGlobal::config();
+    config->reparseConfiguration();
     load();
 }
 
