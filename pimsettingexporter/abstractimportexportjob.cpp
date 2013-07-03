@@ -256,6 +256,7 @@ void AbstractImportExportJob::backupResourceFile(const Akonadi::AgentInstance &a
 
 void AbstractImportExportJob::restoreResourceFile(const QString &resourceBaseName, const QString &defaultPath, const QString &storePath)
 {
+    //TODO fix sync config after created a resource
     if (!mListResourceFile.isEmpty()) {
         QDir dir(mTempDirName);
         dir.mkdir(defaultPath);

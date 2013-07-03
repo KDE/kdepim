@@ -20,6 +20,8 @@
 #include "sendlaterutil.h"
 #include "sendlaterjob.h"
 
+#include "messagecomposer/sender/akonadisender.h"
+
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <KGlobal>
@@ -32,32 +34,32 @@
 SendLaterManager::SendLaterManager(QObject *parent)
     : QObject(parent),
       mCurrentInfo(0),
-      mCurrentJob(0)
+      mCurrentJob(0),
+      mSender(new MessageComposer::AkonadiSender)
 {
     mConfig = KGlobal::config();
     mTimer = new QTimer(this);
     connect(mTimer, SIGNAL(timeout()), this, SLOT(slotCreateJob()));
+    qDebug()<<"SendLaterManager::SendLaterManager ";
 }
 
 SendLaterManager::~SendLaterManager()
 {
     stopAll();
+    delete mSender;
 }
 
 void SendLaterManager::stopAll()
 {
     stopTimer();
     qDeleteAll(mListSendLaterInfo);
-    delete mCurrentJob;
+    mListSendLaterInfo.clear();
     mCurrentJob = 0;
 }
 
 void SendLaterManager::load(bool forcereload)
 {
-    stopTimer();
-    qDeleteAll(mListSendLaterInfo);
-    mListSendLaterInfo.clear();
-
+    stopAll();
     if (forcereload)
         mConfig->reparseConfiguration();
 
@@ -73,6 +75,7 @@ void SendLaterManager::load(bool forcereload)
 
 void SendLaterManager::createSendInfoList()
 {
+    qDebug()<<" void SendLaterManager::createSendInfoList()";
     mCurrentInfo = 0;
     qSort(mListSendLaterInfo.begin(), mListSendLaterInfo.end(), SendLater::SendLaterUtil::compareSendLaterInfo);
     if (!mListSendLaterInfo.isEmpty()) {
@@ -80,11 +83,15 @@ void SendLaterManager::createSendInfoList()
         const QDateTime now = QDateTime::currentDateTime();
         const int seconds = now.secsTo(mCurrentInfo->dateTime());
         if (seconds > 0) {
+            qDebug()<<" seconds"<<seconds;
             mTimer->start(seconds*1000);
         } else {
+            qDebug()<<" create job";
             //Create job when seconds <0
             slotCreateJob();
         }
+    } else {
+        qDebug()<<" list is empty";
     }
 }
 
@@ -124,6 +131,7 @@ void SendLaterManager::sendError(SendLater::SendLaterInfo *info, ErrorType type)
             removeInfo(info->itemId());
         } else {
             if (KMessageBox::Yes == KMessageBox::questionYesNo(0, i18n("An error was found. Do you want to resend it?"), i18n("Error found"))) {
+                //TODO 4.12: allow to remove it even if it's recurrent (need new i18n)
                 if (!info->isRecurrence()) {
                     mListSendLaterInfo.removeAll(mCurrentInfo);
                     removeInfo(info->itemId());
@@ -134,22 +142,28 @@ void SendLaterManager::sendError(SendLater::SendLaterInfo *info, ErrorType type)
             }
         }
     }
-    delete mCurrentJob;
-    createSendInfoList();
+    recreateSendList();
+}
+
+void SendLaterManager::recreateSendList()
+{
+    mCurrentJob = 0;
     Q_EMIT needUpdateConfigDialogBox();
+    QTimer::singleShot(1000*60, this, SLOT(createSendInfoList()));
 }
 
 void SendLaterManager::sendDone(SendLater::SendLaterInfo *info)
 {
+    qDebug()<<" void SendLaterManager::sendDone(SendLater::SendLaterInfo *info)";
     if (info) {
         if (!info->isRecurrence()) {
             mListSendLaterInfo.removeAll(mCurrentInfo);
             removeInfo(info->itemId());
+        } else {
+            SendLater::SendLaterUtil::changeRecurrentDate(info);
         }
     }
-    delete mCurrentJob;
-    createSendInfoList();
-    Q_EMIT needUpdateConfigDialogBox();
+    recreateSendList();
 }
 
 void SendLaterManager::printDebugInfo()
@@ -160,6 +174,11 @@ void SendLaterManager::printDebugInfo()
                    " date :"<<info->dateTime().toString()<<
                    " last saved date"<<info->lastDateTimeSend().toString();
     }
+}
+
+MessageComposer::AkonadiSender *SendLaterManager::sender() const
+{
+    return mSender;
 }
 
 #include "sendlatermanager.moc"

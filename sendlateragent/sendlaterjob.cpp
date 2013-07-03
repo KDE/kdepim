@@ -18,6 +18,9 @@
 #include "sendlaterjob.h"
 #include "sendlaterinfo.h"
 
+#include "messagecomposer/sender/akonadisender.h"
+#include "messagecore/helpers/messagehelpers.h"
+
 #include <mailtransport/transportattribute.h>
 #include <mailtransport/sentbehaviourattribute.h>
 #include <mailtransport/messagequeuejob.h>
@@ -38,10 +41,12 @@ SendLaterJob::SendLaterJob(SendLaterManager *manager, SendLater::SendLaterInfo *
       mManager(manager),
       mInfo(info)
 {
+    qDebug()<<" SendLaterJob::SendLaterJob"<<this;
 }
 
 SendLaterJob::~SendLaterJob()
 {
+    qDebug()<<" SendLaterJob::~SendLaterJob()"<<this;
 }
 
 void SendLaterJob::start()
@@ -82,8 +87,15 @@ void SendLaterJob::slotJobFinished(KJob* job)
         kDebug()<<"Can not fetch message: "<<job->errorString();
         return;
     }
-    //TODO use "AkonadiSender" ?
+    if ( !MailTransport::TransportManager::self()->showTransportCreationDialog( 0, MailTransport::TransportManager::IfNoTransportExists ) ) {
+        qDebug()<<" we can't create transport ";
+        return;
+    }
+
     if (mItem.isValid()) {
+        const KMime::Message::Ptr msg = MessageCore::Util::message( mItem );
+        if ( !msg )
+          return;
         const MailTransport::SentBehaviourAttribute *sentAttribute = mItem.attribute<MailTransport::SentBehaviourAttribute>();
         QString fcc;
         if ( sentAttribute && ( sentAttribute->sentBehaviour() == MailTransport::SentBehaviourAttribute::MoveToCollection ) )
@@ -95,8 +107,9 @@ void SendLaterJob::slotJobFinished(KJob* job)
 
             //TODO create new message
         } else {
-            //Send current Message
+            mManager->sender()->send( msg, MessageComposer::MessageSender::SendImmediate );
         }
+        sendDone();
     }
 }
 
@@ -111,6 +124,7 @@ void SendLaterJob::sendDone()
                           KNotification::CloseOnTimeout,
                           KGlobal::mainComponent());
     mManager->sendDone(mInfo);
+    //deleteLater();
 }
 
 void SendLaterJob::sendError(const QString &error, SendLaterManager::ErrorType type)
@@ -123,6 +137,7 @@ void SendLaterJob::sendError(const QString &error, SendLaterManager::ErrorType t
                           KNotification::CloseOnTimeout,
                           KGlobal::mainComponent());
     mManager->sendError(mInfo, type);
+    //deleteLater();
 }
 
 #include "sendlaterjob.moc"

@@ -45,8 +45,13 @@
 </chapterinfo>
 
 <title>Menu Entries</title>
-
-<para>Each menu item is discussed below. When there is a keyboard shortcut that
+<para>
+  &kmail; has common &kde; <guimenu>Edit</guimenu>, <guimenu>Settings</guimenu>, and
+<guimenu>Help</guimenu> menu items, for more information read the sections about the <ulink url="help:/fundamentals/ui.html#menus-edit">Edit Menu</ulink>, <ulink
+url="help:/fundamentals/ui.html#menus-settings">Settings Menu</ulink>, and <ulink url="help:/fundamentals/ui.html#menus-help">Help Menu</ulink>
+of the &kde; Fundamentals.
+</para>
+<para>Each &kmail; specific menu item is discussed below. When there is a keyboard shortcut that
 performs a menu item function, the default shortcut is listed with the menu item.</para>
 
 <sect1 id="main-mail-reader-window">
@@ -137,7 +142,7 @@ performs a menu item function, the default shortcut is listed with the menu item
     <listitem>
       <para><action>Sets &kmail; to offline mode.</action> This turns off all network jobs. This is
         useful when working with messages without a network connection. This selection will become
-        <menuchoice><guimenu>File</guimenu><guimenuitem>Work Online</guimenuitem></menuchoice>, which needs to be selected to go back online (required to send and recieve).</para>
+        <menuchoice><guimenu>File</guimenu><guimenuitem>Work Online</guimenuitem></menuchoice>, which needs to be selected to go back online (required to send and receive).</para>
     </listitem>
   </varlistentry>
   <varlistentry><term><menuchoice><shortcut><keycombo action="simul">&Ctrl;<keycap>L</keycap></keycombo></shortcut>
@@ -196,131 +201,46 @@ performs a menu item function, the default shortcut is listed with the menu item
 
 
 <sect2 id="reader-edit-menu">
-<title><guimenu>Edit</guimenu> Menu</title>
+<title>Edit Menu</title>
 
 <variablelist>
-
-<varlistentry>
-<term>
-<menuchoice>
-<shortcut><keycombo action="simul">&Ctrl;<keycap>Z</keycap></keycombo></shortcut>
-<guimenu>Edit</guimenu>
-<guimenuitem>Undo</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Revokes your last move or delete action. Note that you cannot undo a deletion
-in the trash.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<shortcut><keycombo action="simul">&Ctrl;<keycap>C</keycap></keycombo></shortcut>
-<guimenu>Edit</guimenu>
-<guimenuitem>Copy</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Copies selected text to the clipboard.</para>
-</listitem>
-</varlistentry>
-<!--
-Copy Folder Ctrl+Shift+C
-Cut Folder Ctrl+X
-Copy Email Ctrl+Alt+C
-Cut EmailCtrl+Alt+X
-  -->
-<varlistentry>
-<term>
-<menuchoice>
-<shortcut><keycap>Del</keycap></shortcut>
-<guimenu>Edit</guimenu>
-<guimenuitem>Move to Trash</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Moves the selected messages to the trash folder. If the selected
-messages are already in the trash folder, they will really be deleted.</para>
-</listitem>
-</varlistentry>
-<!-- not in 440
-<varlistentry>
-<term>
-<menuchoice>
-<shortcut><keycombo action="simul">&Shift;<keycap>Delete</keycap></keycombo></shortcut>
-<guimenu>Edit</guimenu>
-<guimenuitem>Delete</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Deletes the selected messages. There is no way to recover the messages
-once they are deleted with this command.</para>
-</listitem>
-</varlistentry>
--->
-<!-- missing
-Move Thread to Trash
-  -->
-<varlistentry>
-<term>
-<menuchoice>
-<shortcut><keycap>S</keycap></shortcut>
-<guimenu>Edit</guimenu>
-<guimenuitem>Find Messages...</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Opens up a search window that lets you search for messages with
-certain characteristics, &eg; a certain subject. Start the search by entering
-some values and press <guibutton>Search</guibutton>. Click on one of the
-resulting messages and it will appear in the <guilabel>Message
-pane</guilabel>.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<shortcut><keycombo action="simul">&Ctrl;<keycap>F</keycap></keycombo></shortcut>
-<guimenu>Edit</guimenu>
-<guimenuitem>Find in Message...</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Lets you search for a string in the currently displayed message.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<shortcut><keycombo action="simul">&Ctrl;<keycap>A</keycap></keycombo></shortcut>
-<guimenu>Edit</guimenu>
-<guimenuitem>Select All Messages</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Selects all messages in the current folder.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<shortcut><keycombo action="simul">&Ctrl;<keycap>T</keycap></keycombo></shortcut>
-<guimenu>Edit</guimenu>
-<guimenuitem>Select All Text</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Selects the text of the currently displayed message.</para>
-</listitem>
-</varlistentry>
-
+  <varlistentry><term><menuchoice><shortcut><keycap>Del</keycap></shortcut><guimenu>Edit</guimenu><guimenuitem>Move to Trash</guimenuitem></menuchoice></term>
+    <listitem>
+      <para>Moves the selected messages to the trash folder. If the selected
+        messages are already in the trash folder, they will be permanently deleted.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry><term><menuchoice><shortcut><keycombo action="simul">&Ctrl;<keycap>Del</keycap></keycombo></shortcut><guimenu>Edit</guimenu><guimenuitem>Move Thread to Trash</guimenuitem></menuchoice></term>
+      <listitem>
+      <para>Moves the selected thread to the trash folder, &eg; a conversation in a mailing list.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry><term><menuchoice><shortcut><keycap>S</keycap></shortcut><guimenu>Edit</guimenu><guimenuitem>Find Messages...</guimenuitem></menuchoice></term>
+    <listitem>
+      <para>Opens up a search window that lets you search for messages with
+        certain characteristics, &eg; a certain subject. Start the search by entering
+        some values and press <guibutton>Search</guibutton>.</para>
+      <para>Your search results will display in the text area, at which point you can open
+        the <guibutton>Open Search Folder</guibutton> or highlight the desired message and select <guibutton>Open Message</guibutton>.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry><term><menuchoice><shortcut><keycombo action="simul">&Ctrl;<keycap>F</keycap></keycombo></shortcut><guimenu>Edit</guimenu><guimenuitem>Find in Message...</guimenuitem></menuchoice></term>
+    <listitem>
+      <para>Lets you search for a string in the currently displayed message.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry><term><menuchoice><shortcut><keycombo action="simul">&Ctrl;<keycap>A</keycap></keycombo></shortcut><guimenu>Edit</guimenu><guimenuitem>Select All Messages</guimenuitem></menuchoice></term>
+    <listitem>
+      <para>Selects all messages in the current folder.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term><menuchoice><shortcut><keycombo action="simul">&Ctrl;<keycap>T</keycap></keycombo></shortcut><guimenu>Edit</guimenu><guimenuitem>Select All Text</guimenuitem></menuchoice></term>
+    <listitem>
+      <para>Selects the text of the currently displayed message.</para>
+    </listitem>
+  </varlistentry>
 </variablelist>
-
 </sect2>
 
 
@@ -1348,141 +1268,29 @@ you to set up scanning messages for viruses.</para>
 <title><guimenu>Settings</guimenu> Menu</title>
 
 <variablelist>
-
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>Settings</guimenu>
-<guimenuitem>Show Toolbar</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>If enabled, the Toolbar is visible (the Toolbar is the one with the icon
-to compose a new message &etc;).</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<shortcut><keycombo action="simul">&Ctrl;<keycap>H</keycap></keycombo></shortcut>
-<guimenu>Settings</guimenu>
-<guimenuitem>Show Quick Search bar</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>If enabled, the Quick Search bar which allows you to quickly search
-for messages matching a search text is visible.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>Settings</guimenu>
-<guimenuitem>Configure Filters...</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Opens the <link linkend="filters">Message Filters</link> window.</para>
-</listitem>
-</varlistentry>
-
-<!-- Manage Sieve Scripts missing  lueck 31.05.2011-->
-
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>Settings</guimenu>
-<guimenuitem>Configure Shortcuts...</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Opens a window that lets you configure the keyboard shortcuts for many
-menu commands.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>Settings</guimenu>
-<guimenuitem>Configure Notifications...</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Opens a window that lets you configure what happens when new mail arrives,
-like playing a sound.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>Settings</guimenu>
-<guimenuitem>Configure Toolbars...</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Opens a window that lets you choose which icons are visible in the
-toolbar.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>Settings</guimenu>
-<guimenuitem>Configure &kmail;...</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Opens the <link linkend="configure">Configure</link> window.</para>
-</listitem>
-</varlistentry>
-
+  <varlistentry><term><menuchoice><shortcut><keycombo action="simul">&Ctrl;<keycap>H</keycap></keycombo></shortcut>
+        <guimenu>Settings</guimenu><guimenuitem>Show Quick Search bar</guimenuitem></menuchoice></term>
+    <listitem>
+      <para>If enabled, the Quick Search bar which allows you to quickly search
+        for messages matching a search text, is visible.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry><term><menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure Filters...</guimenuitem></menuchoice></term>
+    <listitem>
+      <para>Opens the <link linkend="filters">Message Filters</link> window.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry><term><menuchoice><guimenu>Settings</guimenu><guimenuitem>Manage Sieve Scripts...</guimenuitem></menuchoice></term>
+    <listitem>
+      <para>If your mail server supports sieve (server side filtering), you would configure your scripts here.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry><term><menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure Notifications...</guimenuitem></menuchoice></term>
+    <listitem>
+      <para>Opens a window that lets you configure what happens when new mail arrives, &eg; play a sound, display a popup.</para>
+    </listitem>
+  </varlistentry>
 </variablelist>
-
-</sect2>
-
-<sect2 id="reader-help-menu">
-<title><guimenu>Help</guimenu> Menu</title>
-
-<para>These are the &kde; standard items for the <guimenu>Help</guimenu> menu:</para>
-
-&help.menu.documentation;
-
-<para>Additionally &kmail; offers these items:</para>
-
-<variablelist>
-
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>Help</guimenu>
-<guimenuitem>&kmail; Introduction</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>This displays the welcome screen, which lists the most important
-differences between your version of &kmail; and the previous one.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>Help</guimenu>
-<guimenuitem>Tip of the Day</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>This displays a dialog with useful hints for using &kmail;.</para>
-</listitem>
-</varlistentry>
-
-</variablelist>
-
 </sect2>
 </sect1>
 
@@ -2248,16 +2056,6 @@ toolbar.</para>
 </varlistentry>
 
 </variablelist>
-</sect2>
-
-
-<sect2 id="composer-help-menu">
-<title><guimenu>Help</guimenu> Menu</title>
-
-<para>The entries in this menu have the same meaning as <link
-linkend="reader-help-menu">the entries in the main window's help
-menu</link>.</para>
-
 </sect2>
 </sect1>
 

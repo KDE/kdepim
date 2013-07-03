@@ -1899,6 +1899,7 @@ void MessageComposer::ComposerViewBase::setSendLaterInfo( SendLater::SendLaterIn
 {
     delete mSendLaterInfo;
     mSendLaterInfo = info;
+    info->setSubject(subject());
 }
 
 SendLater::SendLaterInfo *MessageComposer::ComposerViewBase::sendLaterInfo()

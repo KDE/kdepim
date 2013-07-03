@@ -40,7 +40,6 @@ public:
 
     void reload();
 
-
 Q_SIGNALS:
     void needUpdateConfigDialogBox();
 

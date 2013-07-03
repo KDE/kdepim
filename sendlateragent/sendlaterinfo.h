@@ -35,8 +35,7 @@ public:
     ~SendLaterInfo();
 
     enum RecurrenceUnit {
-        None = 0,
-        Days,
+        Days = 0,
         Weeks,
         Months
     };

@@ -25,7 +25,7 @@ using namespace SendLater;
 SendLaterInfo::SendLaterInfo()
     : mId(-1),
       mRecurrenceEachValue(1),
-      mRecurrenceUnit(None),
+      mRecurrenceUnit(Days),
       mRecurrence(false)
 {
 }
@@ -33,7 +33,7 @@ SendLaterInfo::SendLaterInfo()
 SendLaterInfo::SendLaterInfo(const KConfigGroup &config)
     : mId(-1),
       mRecurrenceEachValue(1),
-      mRecurrenceUnit(None),
+      mRecurrenceUnit(Days),
       mRecurrence(false)
 {
     readConfig(config);
@@ -126,12 +126,12 @@ QString SendLaterInfo::subject() const
 void SendLaterInfo::readConfig(const KConfigGroup &config)
 {
     if (config.hasKey(QLatin1String("lastDateTimeSend"))) {
-        mLastDateTimeSend = QDateTime::fromString(config.readEntry("lastDateTimeSend"),Qt::ISODate);
+        mLastDateTimeSend = QDateTime::fromString(config.readEntry("lastDateTimeSend"), Qt::ISODate);
     }
-    mDateTime = config.readEntry("date", QDateTime());
+    mDateTime = config.readEntry("date", QDateTime::currentDateTime());
     mRecurrence = config.readEntry("recurrence", false);
     mRecurrenceEachValue = config.readEntry("recurrenceValue",1);
-    mRecurrenceUnit = static_cast<RecurrenceUnit>(config.readEntry("recurrenceUnit", (int)None));
+    mRecurrenceUnit = static_cast<RecurrenceUnit>(config.readEntry("recurrenceUnit", (int)Days));
     mId = config.readEntry("itemId", -1);
     mSubject = config.readEntry("subject");
 }

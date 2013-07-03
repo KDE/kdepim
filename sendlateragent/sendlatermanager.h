@@ -28,6 +28,10 @@ namespace SendLater {
 class SendLaterInfo;
 }
 
+namespace MessageComposer {
+class AkonadiSender;
+}
+
 class QTimer;
 class SendLaterJob;
 class SendLaterManager : public QObject
@@ -50,6 +54,8 @@ public:
     void stopAll();
     void itemRemoved(Akonadi::Item::Id id);
 
+    MessageComposer::AkonadiSender *sender() const;
+
 Q_SIGNALS:
     void needUpdateConfigDialogBox();
 
@@ -58,9 +64,10 @@ public Q_SLOTS:
 
 private Q_SLOTS:
     void slotCreateJob();
+    void createSendInfoList();
 
 private:
-    void createSendInfoList();
+    void recreateSendList();
     void stopTimer();
     void removeInfo(Akonadi::Item::Id id);
     KSharedConfig::Ptr mConfig;
@@ -68,6 +75,7 @@ private:
     SendLater::SendLaterInfo *mCurrentInfo;
     SendLaterJob *mCurrentJob;
     QTimer *mTimer;
+    MessageComposer::AkonadiSender *mSender;
 };
 
 #endif // SENDLATERMANAGER_H

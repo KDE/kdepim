@@ -32,7 +32,6 @@
 
 static QString sendLaterItemPattern = QLatin1String( "SendLaterItem \\d+" );
 
-
 SendLaterConfigureDialog::SendLaterConfigureDialog(QWidget *parent)
     : KDialog(parent)
 {
@@ -123,6 +122,8 @@ SendLaterItem::~SendLaterItem()
 
 void SendLaterItem::setInfo(SendLater::SendLaterInfo *info)
 {
+    //Be safe
+    delete mInfo;
     mInfo = info;
 }
 
@@ -131,7 +132,6 @@ SendLater::SendLaterInfo* SendLaterItem::info() const
     return mInfo;
 }
 
-
 SendLaterWidget::SendLaterWidget( QWidget *parent )
     : QWidget( parent ),
       mChanged(false)
@@ -139,7 +139,11 @@ SendLaterWidget::SendLaterWidget( QWidget *parent )
     mWidget = new Ui::SendLaterWidget;
     mWidget->setupUi( this );
     QStringList headers;
-    headers << i18n("Subject")<<i18n("Date")<<i18n("Recursive")<<i18n("Message Id");
+    headers << i18n("Subject")
+            << i18n("Send around")
+            << i18n("Recursive")
+            << i18n("Message Id");
+
     mWidget->treeWidget->setHeaderLabels(headers);
     mWidget->treeWidget->setSortingEnabled(true);
     mWidget->treeWidget->setRootIsDecorated(false);
@@ -229,7 +233,7 @@ void SendLaterWidget::createOrUpdateItem(SendLater::SendLaterInfo *info, SendLat
     }
     item->setCheckState(Recursive, info->isRecurrence() ? Qt::Checked : Qt::Unchecked);
     item->setText(MessageId, QString::number(info->itemId()));
-    item->setText(Date, info->dateTime().toString());
+    item->setText(SendAround, info->dateTime().toString());
     item->setText(Subject, info->subject());
     item->setInfo(info);
 }

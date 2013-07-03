@@ -26,6 +26,7 @@ Name[x-test]=xxKMail Header Theme Editorxx
 Name[zh_TW]=KMail 標頭主題編輯器
 Type=Application
 Exec=headerthemeeditor
+Icon=kmail
 X-DocPath=headerthemeeditor/index.html
 GenericName=Mail Header Theme Editor
 GenericName[ca]=Editor de temes de capçalera pel correu
