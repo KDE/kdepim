@@ -1479,6 +1479,9 @@ void MessageComposer::ComposerViewBase::setReplyTo(const QString& replyTo)
 void MessageComposer::ComposerViewBase::setSubject(const QString& subject)
 {
   m_subject = subject;
+  if (mSendLaterInfo) {
+      mSendLaterInfo->setSubject(m_subject);
+  }
 }
 
 void MessageComposer::ComposerViewBase::setAutoSaveInterval( int interval )
@@ -1899,7 +1902,6 @@ void MessageComposer::ComposerViewBase::setSendLaterInfo( SendLater::SendLaterIn
 {
     delete mSendLaterInfo;
     mSendLaterInfo = info;
-    info->setSubject(subject());
 }
 
 SendLater::SendLaterInfo *MessageComposer::ComposerViewBase::sendLaterInfo()
