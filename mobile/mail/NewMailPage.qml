@@ -24,6 +24,8 @@ import QtQuick 1.1 as QML
 import org.kde 4.5
 import org.kde.pim.mobileui 4.5 as KPIM
 import org.kde.plasma.components 0.1 as PlasmaComponents
+import org.kde.plasma.extras 0.1 as PlasmaExtras
+
 
 PlasmaComponents.Page {
 
@@ -51,12 +53,12 @@ PlasmaComponents.Page {
 
     QML.Column {
       anchors.fill: parent
-      KPIM.DecoratedListView {
+      PlasmaExtras.ScrollArea {
         anchors.fill: parent
-        model: _emailTemplateModel
-        focus: true
-        delegate: [
-          KPIM.Button2 {
+        flickableItem: QML.ListView {
+          model: _emailTemplateModel
+          focus: true
+          delegate: KPIM.Button2 {
             width: parent.width
             buttonText : display
             onClicked : {
@@ -64,7 +66,7 @@ PlasmaComponents.Page {
               pageStack.pop()
             }
           }
-        ]
+        }
       }
     }
 
