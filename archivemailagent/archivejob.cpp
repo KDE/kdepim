@@ -45,10 +45,19 @@ ArchiveJob::~ArchiveJob()
 void ArchiveJob::execute()
 {
     if (mInfo) {
-        MailCommon::BackupJob *backupJob = new MailCommon::BackupJob();
+
         Akonadi::Collection collection(mInfo->saveCollectionId());
-        backupJob->setRootFolder( MailCommon::Util::updatedCollection(collection) );
         const QString realPath = MailCommon::Util::fullCollectionPath(collection);
+        if (realPath.isEmpty()) {
+            qDebug()<<" We can not find real path, collection doesn't exist";
+            mManager->collectionDoesntExist(mInfo);
+            deleteLater();
+            return;
+        }
+
+        MailCommon::BackupJob *backupJob = new MailCommon::BackupJob();
+        backupJob->setRootFolder( MailCommon::Util::updatedCollection(collection) );
+
         backupJob->setSaveLocation( mInfo->realUrl(realPath) );
         backupJob->setArchiveType( mInfo->archiveType() );
         backupJob->setDeleteFoldersAfterCompletion( false );
@@ -66,7 +75,6 @@ void ArchiveJob::execute()
         connect(backupJob, SIGNAL(backupDone(QString)), this, SLOT(slotBackupDone(QString)));
         connect(backupJob, SIGNAL(error(QString)), this, SLOT(slotError(QString)));
         backupJob->start();
-
     }
 }
 

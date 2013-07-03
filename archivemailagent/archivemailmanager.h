@@ -21,12 +21,10 @@
 #include <QObject>
 
 #include <KSharedConfig>
+#include <Akonadi/Collection>
 
 class ArchiveMailKernel;
 class ArchiveMailInfo;
-namespace Akonadi {
-class Collection;
-}
 
 class ArchiveMailManager : public QObject
 {
@@ -40,6 +38,7 @@ public:
     void resume();
 
     void printArchiveListInfo();
+    void collectionDoesntExist(ArchiveMailInfo *info);
 
 public Q_SLOTS:
     void load();
@@ -49,6 +48,7 @@ Q_SIGNALS:
     void needUpdateConfigDialogBox();
 
 private:
+    void removeCollectionId(Akonadi::Collection::Id id);
     KSharedConfig::Ptr mConfig;
     QList<ArchiveMailInfo *> mListArchiveInfo;
     ArchiveMailKernel *mArchiveMailKernel;
