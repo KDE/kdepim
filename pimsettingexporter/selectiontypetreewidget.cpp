@@ -22,7 +22,7 @@
 
 #include <QTreeWidgetItem>
 #include <QHeaderView>
-#include <QDebug>
+#include <KDebug>
 
 SelectionTypeTreeWidget::SelectionTypeTreeWidget(QWidget *parent)
     : QTreeWidget(parent)
