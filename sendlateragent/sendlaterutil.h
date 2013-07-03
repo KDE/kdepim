@@ -29,7 +29,7 @@ namespace SendLaterUtil
 
     SENDLATER_EXPORT KSharedConfig::Ptr defaultConfig();
 
-    SENDLATER_EXPORT void writeSendLaterInfo(SendLater::SendLaterInfo *info);
+    SENDLATER_EXPORT void writeSendLaterInfo(SendLater::SendLaterInfo *info, bool forceReload=true);
 
     SENDLATER_EXPORT bool sentLaterAgentWasRegistered();
 

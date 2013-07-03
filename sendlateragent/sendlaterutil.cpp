@@ -52,18 +52,7 @@ void SendLater::SendLaterUtil::changeRecurrentDate(SendLater::SendLaterInfo *inf
             break;
         }
         qDebug()<<"AFTER SendLater::SendLaterUtil::changeRecurrentDate "<<info->dateTime().toString();
-        KSharedConfig::Ptr config = SendLaterUtil::defaultConfig();
-
-        const QString groupName = QString::fromLatin1("SendLaterItem %1").arg(info->itemId());
-        // first, delete all filter groups:
-        const QStringList filterGroups =config->groupList().filter( groupName );
-        foreach ( const QString &group, filterGroups ) {
-            config->deleteGroup( group );
-        }
-        KConfigGroup group = config->group(groupName);
-        info->writeConfig(group);
-        config->sync();
-        config->reparseConfiguration();
+        writeSendLaterInfo(info, false);
     }
 }
 
@@ -72,7 +61,7 @@ KSharedConfig::Ptr SendLater::SendLaterUtil::defaultConfig()
     return KSharedConfig::openConfig( QLatin1String("akonadi_sendlater_agentrc") );
 }
 
-void SendLater::SendLaterUtil::writeSendLaterInfo(SendLater::SendLaterInfo *info)
+void SendLater::SendLaterUtil::writeSendLaterInfo(SendLater::SendLaterInfo *info, bool forceReload)
 {
     if (!info)
         return;
@@ -89,7 +78,8 @@ void SendLater::SendLaterUtil::writeSendLaterInfo(SendLater::SendLaterInfo *info
     info->writeConfig(group);
     config->sync();
     config->reparseConfiguration();
-    reload();
+    if (forceReload)
+        reload();
 }
 
 bool SendLater::SendLaterUtil::sentLaterAgentWasRegistered()
