@@ -50,11 +50,6 @@ ActionMenuContainer {
     ActionListItem { name : "import_emails" }
   }
 
-  FavoriteManager{
-    model : favoritesList
-    actionItemHeight: parent.actionItemHeight
-  }
-
   ActionList {
     category : "account"
     name : "account_menu"
