@@ -40,7 +40,6 @@ SendLaterManager::SendLaterManager(QObject *parent)
     mConfig = KGlobal::config();
     mTimer = new QTimer(this);
     connect(mTimer, SIGNAL(timeout()), this, SLOT(slotCreateJob()));
-    qDebug()<<"SendLaterManager::SendLaterManager ";
 }
 
 SendLaterManager::~SendLaterManager()
@@ -124,6 +123,7 @@ SendLater::SendLaterInfo *SendLaterManager::searchInfo(Akonadi::Item::Id id)
 
 void SendLaterManager::sendNow(Akonadi::Item::Id id)
 {
+    qDebug()<<" void SendLaterManager::sendNow(Akonadi::Item::Id id)"<<id;
     if (!mCurrentJob) {
         SendLater::SendLaterInfo *info = searchInfo(id);
         if (info) {

@@ -146,7 +146,7 @@ void SendLaterAgent::showConfigureDialog(qlonglong windowId)
 #endif
     }
     connect(this, SIGNAL(needUpdateConfigDialogBox()), dialog, SLOT(slotNeedToReloadConfig()));
-    connect(dialog, SIGNAL(sendNow(Akonadi::Item::Id)), dialog, SLOT(slotSendNow(Akonadi::Item::Id)));
+    connect(dialog, SIGNAL(sendNow(Akonadi::Item::Id)), this, SLOT(slotSendNow(Akonadi::Item::Id)));
     if (dialog->exec()) {
         mManager->load();
     }
