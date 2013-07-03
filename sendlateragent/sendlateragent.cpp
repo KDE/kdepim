@@ -132,7 +132,7 @@ void SendLaterAgent::configure( WId windowId )
 
 void SendLaterAgent::slotSendNow(Akonadi::Item::Id id)
 {
-    //TODO
+    mManager->sendNow(id);
 }
 
 void SendLaterAgent::showConfigureDialog(qlonglong windowId)

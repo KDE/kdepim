@@ -56,6 +56,8 @@ public:
 
     MessageComposer::AkonadiSender *sender() const;
 
+    void sendNow(Akonadi::Item::Id id);
+
 Q_SIGNALS:
     void needUpdateConfigDialogBox();
 

@@ -101,6 +101,19 @@ void SendLaterManager::stopTimer()
         mTimer->stop();
 }
 
+void SendLaterManager::sendNow(Akonadi::Item::Id id)
+{
+    if (!mCurrentJob) {
+        Q_FOREACH(SendLater::SendLaterInfo *info, mListSendLaterInfo) {
+            if (info->itemId() == id) {
+                mCurrentInfo = info;
+                slotCreateJob();
+                break;
+            }
+        }
+    }
+}
+
 void SendLaterManager::slotCreateJob()
 {
     mCurrentJob = new SendLaterJob(this, mCurrentInfo);
