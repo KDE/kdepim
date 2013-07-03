@@ -130,6 +130,8 @@ void SendLaterManager::sendNow(Akonadi::Item::Id id)
         if (info) {
             mCurrentInfo = info;
             slotCreateJob();
+        } else {
+            qDebug()<<" can't find info about current id: "<<id;
         }
     } else {
         //Add to QQueue
