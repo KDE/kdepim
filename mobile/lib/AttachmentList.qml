@@ -20,6 +20,7 @@
 import QtQuick 1.1
 import org.kde 4.5
 import org.kde.pim.mobileui 4.5 as KPIM
+import org.kde.plasma.extras 0.1 as PlasmaExtras
 
 /**
  * Shows a list view of the specified attachment model of a MessageView component.
@@ -70,27 +71,30 @@ Item {
     }
   }
 
-  KPIM.DecoratedListView {
-    property string currentMimeType
-    property string currentAttachmentUrl
-    property string currentFileName
-
-    id: attachmentListView
+  PlasmaExtras.ScrollArea {
     anchors.top: parent.top
     anchors.left: parent.left
     anchors.right: actionView.left
-    height: { Math.min( count * rowHeight, parent.height ) }
-    interactive: count * rowHeight > parent.height
-    delegate: attachmentDelegate
-    clip: true
+    anchors.bottom: parent.bottom
 
-    Connections {
-      target: model
-      onModelReset: {
-        attachmentListView.currentIndex = -1
-        attachmentListView.currentMimeType = "";
-        attachmentListView.currentAttachmentUrl = "";
-        attachmentListView.currentFileName = "";
+    flickableItem: ListView {
+      property string currentMimeType
+      property string currentAttachmentUrl
+      property string currentFileName
+
+      id: attachmentListView
+
+      delegate: attachmentDelegate
+      clip: true
+
+      Connections {
+        target: model
+        onModelReset: {
+          attachmentListView.currentIndex = -1
+          attachmentListView.currentMimeType = "";
+          attachmentListView.currentAttachmentUrl = "";
+          attachmentListView.currentFileName = "";
+        }
       }
     }
   }
