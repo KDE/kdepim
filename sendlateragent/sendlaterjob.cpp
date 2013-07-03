@@ -83,19 +83,24 @@ void SendLaterJob::slotMessageTransfered(const Akonadi::Item::List& items)
 void SendLaterJob::slotJobFinished(KJob* job)
 {
     if ( job->error() ) {
-        sendError(i18n("Can not fetch message. %1", job->errorString() ), SendLaterManager::CanNotFetchItem);
         kDebug()<<"Can not fetch message: "<<job->errorString();
+        sendError(i18n("Can not fetch message. %1", job->errorString() ), SendLaterManager::CanNotFetchItem);
         return;
     }
     if ( !MailTransport::TransportManager::self()->showTransportCreationDialog( 0, MailTransport::TransportManager::IfNoTransportExists ) ) {
         qDebug()<<" we can't create transport ";
+        //Add i18n
+        sendError(QLatin1String("We can't create transport"), SendLaterManager::CanNotFetchItem);
         return;
     }
 
     if (mItem.isValid()) {
         const KMime::Message::Ptr msg = MessageCore::Util::message( mItem );
-        if ( !msg )
-          return;
+        if ( !msg ) {
+            //Add i18n...
+            sendError(QLatin1String("Message is not a real message"), SendLaterManager::CanNotFetchItem);
+            return;
+        }
         const MailTransport::SentBehaviourAttribute *sentAttribute = mItem.attribute<MailTransport::SentBehaviourAttribute>();
         QString fcc;
         if ( sentAttribute && ( sentAttribute->sentBehaviour() == MailTransport::SentBehaviourAttribute::MoveToCollection ) )
