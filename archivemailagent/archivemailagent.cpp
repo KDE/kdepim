@@ -90,6 +90,14 @@ void ArchiveMailAgent::showConfigureDialog(qlonglong windowId)
     delete dialog;
 }
 
+void ArchiveMailAgent::doSetOnline(bool online)
+{
+    if (online) {
+        resume();
+    } else {
+        pause();
+    }
+}
 
 void ArchiveMailAgent::reload()
 {

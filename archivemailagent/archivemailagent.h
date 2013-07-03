@@ -50,6 +50,9 @@ public Q_SLOTS:
 private Q_SLOTS:
     void mailCollectionRemoved( const Akonadi::Collection &collection );
 
+protected:
+    void doSetOnline(bool online);
+
 private:
     QTimer *mTimer;
     ArchiveMailManager *mArchiveManager;
