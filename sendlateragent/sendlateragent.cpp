@@ -130,6 +130,11 @@ void SendLaterAgent::configure( WId windowId )
     showConfigureDialog(windowId);
 }
 
+void SendLaterAgent::slotSendNow(Akonadi::Item::Id id)
+{
+    //TODO
+}
+
 void SendLaterAgent::showConfigureDialog(qlonglong windowId)
 {
     QPointer<SendLaterConfigureDialog> dialog = new SendLaterConfigureDialog();
@@ -141,6 +146,7 @@ void SendLaterAgent::showConfigureDialog(qlonglong windowId)
 #endif
     }
     connect(this, SIGNAL(needUpdateConfigDialogBox()), dialog, SLOT(slotNeedToReloadConfig()));
+    connect(dialog, SIGNAL(sendNow(Akonadi::Item::Id)), dialog, SLOT(slotSendNow(Akonadi::Item::Id)));
     if (dialog->exec()) {
         mManager->load();
     }
