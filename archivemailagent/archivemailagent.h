@@ -37,6 +37,10 @@ public:
     void showConfigureDialog(qlonglong windowId = 0);
     void printArchiveListInfo();
 
+    void setEnableAgent(bool b);
+    bool enabledAgent() const;
+
+
 Q_SIGNALS:
     void archiveNow(ArchiveMailInfo *info);
     void needUpdateConfigDialogBox();
