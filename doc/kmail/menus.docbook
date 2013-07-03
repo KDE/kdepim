@@ -283,13 +283,13 @@ performs a menu item function, the default shortcut is listed with the menu item
         <varlistentry><term><menuchoice><guimenu>Message List</guimenu><guisubmenu>Aggregation</guisubmenu></menuchoice></term>
           <listitem>
           <para>Allows you to set your aggregation view.</para>
-            <para><guilabel>Configure...</guilabel> Allows you to configure aggregation, please see <ulink url="help:/kmail/configure-appearance.html#configure-appearance-message-list">Configure Appearance Message List</ulink> for more information on aggregation.</para>
+            <para><guilabel>Configure...</guilabel> Allows you to configure aggregation, please see <link linkend="configure-appearance-message-list">Configure Appearance Message List</link> for more information on aggregation.</para>
           </listitem>
         </varlistentry>
         <varlistentry><term><menuchoice><guimenu>Message List</guimenu><guisubmenu>Theme</guisubmenu></menuchoice></term>
           <listitem>
             <para>Allows you to select a theme.</para>
-            <para><guilabel>Configure...</guilabel> Allows you to configure themes, please see <ulink url="help:/kmail/configure-appearance.html#configure-appearance-message-list">Configure Appearance Message List</ulink> for more information on themes.</para>
+            <para><guilabel>Configure...</guilabel> Allows you to configure themes, please see <link linkend="configure-appearance-message-list">Configure Appearance Message List</link> for more information on themes.</para>
           </listitem>
         </varlistentry>
         <varlistentry><term><menuchoice><shortcut><keycombo action="simul">&Ctrl;&Shift;<keycap>T</keycap></keycombo></shortcut><guimenu>Message List</guimenu><guisubmenu>Create New Tab</guisubmenu></menuchoice></term>
@@ -298,14 +298,14 @@ performs a menu item function, the default shortcut is listed with the menu item
           </listitem>
         </varlistentry>
         <varlistentry><term><menuchoice><shortcut><keycombo action="simul">&Ctrl;&Shift;<keycap>W</keycap></keycombo></shortcut><guimenu>Message List</guimenu><guisubmenu>Close Tab</guisubmenu></menuchoice></term>
-          <listitem><para> closes the currently selected tab.</para></listitem>
+          <listitem><para>Closes the currently selected tab.</para></listitem>
         </varlistentry>
         </variablelist>
     </listitem>
     </varlistentry>
     <varlistentry id="view-headers"><term><menuchoice><guimenu>View</guimenu><guisubmenu>Headers</guisubmenu></menuchoice></term>
       <listitem>
-        <para>This allows you to select your headers view. your choices are as follows:</para>
+        <para>This allows you to select your headers view. Your choices are as follows:</para>
         <itemizedlist>
           <listitem><para><guilabel>Enterprise Headers</guilabel>
             A minimal header with title, From, and To, with a graphical design.</para>
