@@ -18,7 +18,7 @@
     02110-1301, USA.
 */
 
-import Qt 4.7
+import QtQuick 1.1
 import org.qt 4.7 // Qt widget wrappers
 import org.kde 4.5
 import org.kde.akonadi 4.5
