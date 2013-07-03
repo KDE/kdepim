@@ -131,6 +131,7 @@ void SendLaterManager::sendNow(Akonadi::Item::Id id)
             slotCreateJob();
         } else {
             qDebug()<<" can't find info about current id: "<<id;
+            itemRemoved(id);
         }
     } else {
         //Add to QQueue
@@ -148,6 +149,7 @@ void SendLaterManager::itemRemoved(Akonadi::Item::Id id)
 {
     if (mConfig->hasGroup(QString::fromLatin1("SendLaterItem %1").arg(id))) {
         removeInfo(id);
+        mConfig->reparseConfiguration();
         Q_EMIT needUpdateConfigDialogBox();
     }
 }

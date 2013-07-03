@@ -299,7 +299,7 @@ void SendLaterWidget::needToReload()
 {
     //TODO
     mWidget->treeWidget->clear();
-
+    load();
 }
 
 #include "sendlaterconfiguredialog.moc"
