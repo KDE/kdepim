@@ -58,6 +58,7 @@ void SendLaterJob::start()
             mFetchScope.fetchAttribute<MailTransport::TransportAttribute>();
             mFetchScope.fetchAttribute<MailTransport::SentBehaviourAttribute>();
             mFetchScope.setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
+            mFetchScope.fetchFullPayload( true );
             fetch->setFetchScope( mFetchScope );
             connect( fetch, SIGNAL(itemsReceived(Akonadi::Item::List)), SLOT(slotMessageTransfered(Akonadi::Item::List)) );
             connect( fetch, SIGNAL(result(KJob*)), SLOT(slotJobFinished(KJob*)) );
