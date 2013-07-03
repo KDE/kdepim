@@ -195,11 +195,11 @@ void SendLaterManager::sendDone(SendLater::SendLaterInfo *info)
 {
     qDebug()<<" void SendLaterManager::sendDone(SendLater::SendLaterInfo *info)";
     if (info) {
-        if (!info->isRecurrence()) {
+        if (info->isRecurrence()) {
+            SendLater::SendLaterUtil::changeRecurrentDate(info);
+        } else {
             mListSendLaterInfo.removeAll(mCurrentInfo);
             removeInfo(info->itemId());
-        } else {
-            SendLater::SendLaterUtil::changeRecurrentDate(info);
         }
     }
     recreateSendList();

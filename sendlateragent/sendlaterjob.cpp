@@ -104,15 +104,25 @@ void SendLaterJob::slotJobFinished(KJob* job)
             return;
         }
         mManager->sender()->send( msg, MessageComposer::MessageSender::SendImmediate );
-        if (! mInfo->isRecurrence()) {
+        if (!mInfo->isRecurrence()) {
             //TODO delete old message
             Akonadi::ItemFetchJob *fetch = new Akonadi::ItemFetchJob( mItem, this );
-            connect( fetch, SIGNAL(result(KJob*)), SLOT(sendDone()) );
+            connect( fetch, SIGNAL(result(KJob*)), SLOT(slotDeleteItem(KJob*)) );
         } else {
             sendDone();
         }
     }
 }
+
+void SendLaterJob::slotDeleteItem( KJob *job )
+{
+    qDebug()<<"void SendLaterJob::slotDeleteItem( KJob *job )*****************************";
+    if ( job->error() ) {
+        qDebug()<<" void SendLaterJob::slotDeleteItem( KJob *job ) :"<<job->errorString();
+    }
+    sendDone();
+}
+
 
 void SendLaterJob::sendDone()
 {

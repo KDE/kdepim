@@ -42,6 +42,7 @@ private Q_SLOTS:
     void sendError(const QString &error, SendLaterManager::ErrorType type);
     void slotMessageTransfered(const Akonadi::Item::List& );
     void slotJobFinished(KJob*);
+    void slotDeleteItem(KJob*);
 
 Q_SIGNALS:
     void error(const QString &err);
