@@ -41,7 +41,8 @@
 #include <QDir>
 
 ExportMailJob::ExportMailJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage,int numberOfStep)
-    :AbstractImportExportJob(parent,archiveStorage,typeSelected,numberOfStep)
+    : AbstractImportExportJob(parent,archiveStorage,typeSelected,numberOfStep),
+      mArchiveTime(QDateTime::currentDateTime().toTime_t())
 {
 }
 
@@ -482,7 +483,8 @@ void ExportMailJob::writeDirectory(const QString &path, const QString &relativeP
     QDir dir(path);
     QString currentPath(path);
     currentPath = currentPath.remove(relativePath);
-    mailArchive->writeDir(currentPath,QLatin1String(""),QLatin1String(""));
+    mailArchive->writeDir(currentPath, QString(), QString(), 040755, mArchiveTime, mArchiveTime, mArchiveTime );
+
     const QFileInfoList lst= dir.entryInfoList(QDir::NoDot|QDir::NoDotDot|QDir::Dirs|QDir::AllDirs|QDir::Hidden|QDir::Files);
     const int numberItems(lst.count());
     for (int i = 0; i < numberItems;++i) {

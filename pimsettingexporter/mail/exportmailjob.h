@@ -49,6 +49,7 @@ private:
     void writeDirectory(const QString &path, const QString &relativePath, KZip *mailArchive);
     bool backupMailData(const KUrl &url, const QString &archivePath);
     bool checkProgram();
+    time_t mArchiveTime;
 };
 
 #endif // ExportMailJob_H
