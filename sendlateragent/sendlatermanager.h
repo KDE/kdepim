@@ -42,7 +42,8 @@ public:
     enum ErrorType {
         ItemNotFound = 0,
         TooManyItemFound = 1,
-        CanNotFetchItem = 2
+        CanNotFetchItem = 2,
+        MailDispatchDoesntWork = 3
     };
 
     explicit SendLaterManager(QObject *parent);

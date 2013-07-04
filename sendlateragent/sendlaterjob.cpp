@@ -103,13 +103,17 @@ void SendLaterJob::slotJobFinished(KJob* job)
             sendError(QLatin1String("Message is not a real message"), SendLaterManager::CanNotFetchItem);
             return;
         }
-        mManager->sender()->send( msg, MessageComposer::MessageSender::SendImmediate );
-        if (!mInfo->isRecurrence()) {
-            //TODO delete old message
-            Akonadi::ItemFetchJob *fetch = new Akonadi::ItemFetchJob( mItem, this );
-            connect( fetch, SIGNAL(result(KJob*)), SLOT(slotDeleteItem(KJob*)) );
+        if (!mManager->sender()->send( msg, MessageComposer::MessageSender::SendImmediate )) {
+            //Add i18n(...)
+            sendError(QLatin1String("Can not send message."), SendLaterManager::MailDispatchDoesntWork);
         } else {
-            sendDone();
+            if (!mInfo->isRecurrence()) {
+                //TODO delete old message
+                Akonadi::ItemFetchJob *fetch = new Akonadi::ItemFetchJob( mItem, this );
+                connect( fetch, SIGNAL(result(KJob*)), SLOT(slotDeleteItem(KJob*)) );
+            } else {
+                sendDone();
+            }
         }
     }
 }
