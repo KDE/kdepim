@@ -425,122 +425,63 @@ performs a menu item function, the default shortcut is listed with the menu item
 
 
 <sect2 id="reader-go-menu">
-<title><guimenu>Go</guimenu> Menu</title>
+<title>Go Menu</title>
 
 <variablelist>
-<!--
-<varlistentry>
-<term>
-<menuchoice>
-<shortcut><keycap>J</keycap></shortcut>
-<guimenu>Go</guimenu>
-<guimenuitem>Jump to Folder...</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para></para>
-</listitem>
-</varlistentry>
--->
-<varlistentry>
-<term>
-<menuchoice>
-<shortcut><keycap>N</keycap></shortcut>
-<guimenu>Go</guimenu>
-<guimenuitem>Next Message</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Selects the next message in the message list. The keyboard shortcut
-<keycap>Right Arrow</keycap> also performs this action.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<shortcut><keycap>+</keycap></shortcut>
-<guimenu>Go</guimenu>
-<guimenuitem>Next Unread Message</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Selects the next unread message in the message list. If there is
-no unread message below the currently selected message then the behavior
-depends on the value of the <xref
-linkend="configure-misc-folders-go-unread"/> option.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<shortcut><keycap>P</keycap></shortcut>
-<guimenu>Go</guimenu>
-<guimenuitem>Previous Message</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Selects the previous message in the message list.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<shortcut><keycap>-</keycap></shortcut>
-<guimenu>Go</guimenu>
-<guimenuitem>Previous Unread Message</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Selects the previous unread message in the message list. If there is
-no unread message above the currently selected message then the behavior
-depends on the value of the <xref
-linkend="configure-misc-folders-go-unread"/> option.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<shortcut><keycombo action="simul">&Alt;<keycap>+</keycap></keycombo></shortcut>
-<guimenu>Go</guimenu>
-<guimenuitem>Next Unread Folder</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Jumps to the next folder with unread messages.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<shortcut><keycombo action="simul">&Alt;<keycap>-</keycap></keycombo></shortcut>
-<guimenu>Go</guimenu>
-<guimenuitem>Previous Unread Folder</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Jumps to the previous folder with unread messages.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<shortcut><keycap>Space</keycap></shortcut>
-<guimenu>Go</guimenu>
-<guimenuitem>Next Unread Text</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Scrolls down if you are not yet at the bottom of a message, otherwise
-jumps to the next unread message.</para>
-</listitem>
-</varlistentry>
-
+  <varlistentry><term><menuchoice><shortcut><keycap>J</keycap></shortcut><guimenu>Go</guimenu>
+        <guimenuitem>Jump to Folder...</guimenuitem></menuchoice></term>
+    <listitem>
+      <para>Selecting this menu item with show a dialog box with a list of all your folders. Click on the folder you wish to
+        view and it will display it in the message view pane.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry><term><menuchoice><shortcut><keycap>N</keycap></shortcut><guimenu>Go</guimenu>
+        <guimenuitem>Next Message</guimenuitem></menuchoice></term>
+    <listitem>
+      <para>Selects the next message in the message list. The keyboard shortcut
+        <keycap>Right Arrow</keycap> also performs this action.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry><term><menuchoice><shortcut><keycap>+</keycap></shortcut>
+        <guimenu>Go</guimenu><guimenuitem>Next Unread Message</guimenuitem></menuchoice></term>
+    <listitem>
+      <para>Selects the next unread message in the message list. If there are not any unread messages below the currently selected message,
+        then the behavior depends on the value of the <xref linkend="configure-misc-folders-go-unread"/> option.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry><term><menuchoice><shortcut><keycap>P</keycap></shortcut>
+        <guimenu>Go</guimenu><guimenuitem>Previous Message</guimenuitem></menuchoice></term>
+    <listitem>
+      <para>Selects the previous message in the message list.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry><term><menuchoice><shortcut><keycap>-</keycap></shortcut>
+        <guimenu>Go</guimenu><guimenuitem>Previous Unread Message</guimenuitem></menuchoice></term>
+    <listitem>
+      <para>Selects the previous unread message in the message list. If there is
+        not an unread message above the currently selected message, then the behavior
+        depends on the value of the <xref linkend="configure-misc-folders-go-unread"/> option.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry><term><menuchoice><shortcut><keycombo action="simul">&Alt;<keycap>+</keycap></keycombo></shortcut>
+        <guimenu>Go</guimenu><guimenuitem>Next Unread Folder</guimenuitem></menuchoice></term>
+    <listitem>
+      <para>Jumps to the next folder with unread messages.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry><term><menuchoice><shortcut><keycombo action="simul">&Alt;<keycap>-</keycap></keycombo></shortcut>
+        <guimenu>Go</guimenu><guimenuitem>Previous Unread Folder</guimenuitem></menuchoice></term>
+    <listitem>
+      <para>Jumps to the previous folder with unread messages.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry><term><menuchoice><shortcut><keycap>Space</keycap></shortcut>
+        <guimenu>Go</guimenu><guimenuitem>Next Unread Text</guimenuitem></menuchoice></term>
+    <listitem>
+      <para>Scrolls down if you are not yet at the bottom of a message,
+        otherwise jumps to the next unread message.</para>
+    </listitem>
+  </varlistentry>
 </variablelist>
 
 </sect2>
