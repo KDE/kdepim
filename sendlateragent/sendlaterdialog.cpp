@@ -64,6 +64,7 @@ SendLaterDialog::SendLaterDialog(SendLater::SendLaterInfo *info, QWidget *parent
 
     mDateTime = new QDateTimeEdit;
     mDateTime->setMinimumDateTime(t);
+    mDateTime->setDateTime(t);
     connect(mDateTime, SIGNAL(dateTimeChanged(QDateTime)), SLOT(slotDateTimeChanged(QDateTime)));
     hbox->addWidget(lab);
     hbox->addWidget(mDateTime);

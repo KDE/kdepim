@@ -43,7 +43,8 @@ public:
         ItemNotFound = 0,
         TooManyItemFound = 1,
         CanNotFetchItem = 2,
-        MailDispatchDoesntWork = 3
+        MailDispatchDoesntWork = 3,
+        CanNotCreateTransport = 4
     };
 
     explicit SendLaterManager(QObject *parent);

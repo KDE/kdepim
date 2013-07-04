@@ -92,7 +92,7 @@ void SendLaterJob::slotJobFinished(KJob* job)
     if ( !MailTransport::TransportManager::self()->showTransportCreationDialog( 0, MailTransport::TransportManager::IfNoTransportExists ) ) {
         qDebug()<<" we can't create transport ";
         //Add i18n
-        sendError(QLatin1String("We can't create transport"), SendLaterManager::CanNotFetchItem);
+        sendError(QLatin1String("We can't create transport"), SendLaterManager::CanNotCreateTransport);
         return;
     }
 
