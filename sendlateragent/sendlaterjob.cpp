@@ -104,6 +104,7 @@ void SendLaterJob::slotJobFinished(KJob* job)
         }
         msg->date()->setDateTime( KDateTime::currentLocalDateTime() );
         msg->assemble();
+        //TODO remove kmail headers :)
 
         if (!mManager->sender()->send( msg, MessageComposer::MessageSender::SendImmediate )) {
             //Add i18n(...)
