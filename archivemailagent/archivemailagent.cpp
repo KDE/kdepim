@@ -133,12 +133,16 @@ void ArchiveMailAgent::configure( WId windowId )
 
 void ArchiveMailAgent::pause()
 {
-    mArchiveManager->pause();
+    if (isOnline() && enabledAgent()) {
+        mArchiveManager->pause();
+    }
 }
 
 void ArchiveMailAgent::resume()
 {
-    mArchiveManager->resume();
+    if (isOnline() && enabledAgent()) {
+        mArchiveManager->resume();
+    }
 }
 
 void ArchiveMailAgent::printArchiveListInfo()
