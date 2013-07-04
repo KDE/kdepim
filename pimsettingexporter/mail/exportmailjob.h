@@ -46,7 +46,7 @@ private:
     void backupIdentity();
     void backupAkonadiDb();
     void backupNepomuk();
-    void writeDirectory(QString path, const QString &relativePath, KZip *mailArchive);
+    void writeDirectory(const QString &path, const QString &relativePath, KZip *mailArchive);
     bool backupMailData(const KUrl &url, const QString &archivePath);
     bool checkProgram();
 };

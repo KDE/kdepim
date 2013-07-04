@@ -477,10 +477,12 @@ void ExportMailJob::backupMails()
     Q_EMIT info(i18n("Mails backup done."));
 }
 
-void ExportMailJob::writeDirectory(QString path, const QString &relativePath, KZip *mailArchive)
+void ExportMailJob::writeDirectory(const QString &path, const QString &relativePath, KZip *mailArchive)
 {
     QDir dir(path);
-    mailArchive->writeDir(path.remove(relativePath),QLatin1String(""),QLatin1String(""));
+    QString currentPath(path);
+    currentPath = currentPath.remove(relativePath);
+    mailArchive->writeDir(currentPath,QLatin1String(""),QLatin1String(""));
     const QFileInfoList lst= dir.entryInfoList(QDir::NoDot|QDir::NoDotDot|QDir::Dirs|QDir::AllDirs|QDir::Hidden|QDir::Files);
     const int numberItems(lst.count());
     for (int i = 0; i < numberItems;++i) {
@@ -488,7 +490,8 @@ void ExportMailJob::writeDirectory(QString path, const QString &relativePath, KZ
         if (lst.at(i).isDir()) {
             writeDirectory(relativePath + path + QLatin1Char('/') + filename,relativePath,mailArchive);
         } else {
-            mailArchive->addLocalFile(lst.at(i).absoluteFilePath(),path.remove(relativePath) + QLatin1Char('/') + filename);
+            QString currentPath(path);
+            mailArchive->addLocalFile(lst.at(i).absoluteFilePath(),currentPath + QLatin1Char('/') + filename);
         }
     }
 }
