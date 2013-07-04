@@ -19,11 +19,12 @@
 #define OTHERMAILERUTIL_H
 
 #include <QString>
+#include "mailimporter_export.h"
 
 namespace MailImporter {
 namespace OtherMailerUtil
 {
-QString trojitaDefaultPath();
+MAILIMPORTER_EXPORT QString trojitaDefaultPath();
 }
 }
 

@@ -55,6 +55,7 @@
 #include "mailimporter/filter_sylpheed.h"
 #include "mailimporter/filter_thunderbird.h"
 #include "mailimporter/filter_opera.h"
+#include "mailimporter/othermailerutil.h"
 
 #include <incidenceeditor-ng/globalsettings.h>
 #include <incidenceeditor-ng/incidencedialogfactory.h>
@@ -653,6 +654,7 @@ bool MailCommon::Util::foundMailer()
   lst << MailImporter::FilterOpera::defaultSettingsPath();
   lst << MailImporter::FilterSylpheed::defaultSettingsPath();
   lst << MailImporter::FilterThunderbird::defaultSettingsPath();
+  lst << MailImporter::OtherMailerUtil::trojitaDefaultPath();
 
   Q_FOREACH(const QString& path, lst) {
     QDir directory( path );
