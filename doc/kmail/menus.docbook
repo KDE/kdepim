@@ -245,307 +245,243 @@ performs a menu item function, the default shortcut is listed with the menu item
 
 
 <sect2 id="reader-view-menu">
-<title><guimenu>View</guimenu> Menu</title>
+<title>View Menu</title>
 
 <variablelist>
-<!--
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>View</guimenu>
-<guimenuitem>Message List</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para></para>
-</listitem>
-</varlistentry>
--->
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>View</guimenu>
-<guimenuitem>Headers</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Changes the format of the message header in the <guilabel>Message pane</guilabel>.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>View</guimenu>
-<guimenuitem>Attachments</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Changes the way attachments appear in the <guilabel>Message
-pane</guilabel> (independent of the &MIME; Tree). With <guimenuitem>As Icons</guimenuitem>
-all attachments appear as icons at the bottom of the message.
-<guimenuitem>Smart</guimenuitem> will show attachments as
-icons, unless the message suggests that they should be displayed inline.
-You can suggest that certain attachments should be shown inline
-in your own messages when you select <guilabel>Suggest automatic display</guilabel>
-in the attachment's properties dialog.
-<guimenuitem>Inline</guimenuitem> shows the contents of the attachments
-at the bottom of the message. Attachments that cannot be displayed, &eg;
-compressed files, will still be shown as an icon.
-<guimenuitem>Hide</guimenuitem> will not show attachments.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<shortcut><keycap>.</keycap></shortcut>
-<guimenu>View</guimenu>
-<guimenuitem>Expand Thread</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>This will display the thread of the current message, &ie;
-all messages that are replies to the current message.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<shortcut><keycap>,</keycap></shortcut>
-<guimenu>View</guimenu>
-<guimenuitem>Collapse Thread</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>This will hide the thread of the current message, &ie;
-it will hide all messages that are replies to the current message.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<shortcut><keycombo action="simul">&Ctrl;<keycap>.</keycap></keycombo></shortcut>
-<guimenu>View</guimenu>
-<guimenuitem>Expand All Threads</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Expands all threads in the current folder.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<shortcut><keycombo action="simul">&Ctrl;<keycap>,</keycap></keycombo></shortcut>
-<guimenu>View</guimenu>
-<guimenuitem>Collapse All Threads</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Collapses all threads in the current folder.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<shortcut><keycap>V</keycap></shortcut>
-<guimenu>View</guimenu>
-<guimenuitem>View Source</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Shows the message and its complete headers in plain text format in a new
-window. This can be useful to find out the origin of a mail. You should know
-that it is easy to fake the <literal>From:</literal> header of a mail, but
-one can still find out which mail servers have been used to send the message by looking
-at the <literal>Received:</literal> lines in the header.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>View</guimenu>
-<guimenuitem>Show Message Structure</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para> Display the structure viewer, which is a part of the main window that
-lets you access all parts of a message.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<shortcut><keycap>X</keycap></shortcut>
-<guimenu>View</guimenu>
-<guimenuitem>Use Fixed Font</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Uses a fixed width (monospaced) font to display the messages
-in the current folder. The font to be used can be configured in the
-<guilabel>Appearance</guilabel> section of &kmail;'s configuration
-dialog.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>View</guimenu>
-<guisubmenu>Set Encoding</guisubmenu>
-</menuchoice>
-</term>
-<listitem>
-<para>Lets you choose the character encoding to be used in the Message
-Pane. The default, <guilabel>Auto</guilabel>, should work in almost all cases.</para>
-</listitem>
-</varlistentry>
-
-
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>View</guimenu>
-<guisubmenu>Zoom</guisubmenu>
-</menuchoice>
-</term>
-<listitem>
-<para>Allows to zoom message in the Message Pane.</para>
-</listitem>
-</varlistentry>
-
-
+  <varlistentry><term><menuchoice><guimenu>View</guimenu><guisubmenu>Message List</guisubmenu></menuchoice></term>
+    <listitem>
+      <para>This menu has the following options to change the view of your message list.</para>
+      <variablelist>
+        <varlistentry><term><menuchoice><guimenu>Message List</guimenu><guisubmenu>Sorting</guisubmenu></menuchoice></term>
+          <listitem>
+          <para>Contains options to customize your sort order as follows:</para>
+          <itemizedlist>
+            <listitem>
+              <para><guilabel>Message Sort Order</guilabel> has several options, most are self explanatory. The following options may not be immediately obvious,
+                therefore deserve an explanation.</para>
+                <itemizedlist>
+                  <listitem>
+                    <para><guilabel>Smart Sender/Receiver</guilabel> will display the sender when you are reading in your outbox folder/template folder, and display the receiver when you are
+                      in your inbox/inbox subfolders.</para>
+                  </listitem>
+                  <listitem>
+                    <para><guilabel>By Action Item Status</guilabel> and <guilabel>By Important Status</guilabel> need to be set before
+                      they can be sorted. Please see <link linkend="mark-messages">Mark Messages</link> for more information on marking your messages.</para>
+                  </listitem>
+                </itemizedlist>
+              </listitem>
+              <listitem>
+                <para><guilabel>Message Sort Direction</guilabel> and <guilabel>Group Sort Direction</guilabel> allow you to
+                  change the direction of your message/group sort respectively.</para>
+              </listitem>
+              <listitem>
+                <para><guilabel>Folder always Uses this Sort Order</guilabel> allows you to keep your sort settings per folder.</para>
+              </listitem>
+          </itemizedlist>
+        </listitem>
+        </varlistentry>
+        <varlistentry><term><menuchoice><guimenu>Message List</guimenu><guisubmenu>Aggregation</guisubmenu></menuchoice></term>
+          <listitem>
+          <para>Allows you to set your aggregation view.</para>
+            <para><guilabel>Configure...</guilabel> Allows you to configure aggregation, please see <link linkend="configure-appearance-message-list">Configure Appearance Message List</link> for more information on aggregation.</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry><term><menuchoice><guimenu>Message List</guimenu><guisubmenu>Theme</guisubmenu></menuchoice></term>
+          <listitem>
+            <para>Allows you to select a theme.</para>
+            <para><guilabel>Configure...</guilabel> Allows you to configure themes, please see <link linkend="configure-appearance-message-list">Configure Appearance Message List</link> for more information on themes.</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry><term><menuchoice><shortcut><keycombo action="simul">&Ctrl;&Shift;<keycap>T</keycap></keycombo></shortcut><guimenu>Message List</guimenu><guisubmenu>Create New Tab</guisubmenu></menuchoice></term>
+          <listitem>
+            <para>Allows you to create a tab, then select the folder you would like to display in the tab.</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry><term><menuchoice><shortcut><keycombo action="simul">&Ctrl;&Shift;<keycap>W</keycap></keycombo></shortcut><guimenu>Message List</guimenu><guisubmenu>Close Tab</guisubmenu></menuchoice></term>
+          <listitem><para>Closes the currently selected tab.</para></listitem>
+        </varlistentry>
+        </variablelist>
+    </listitem>
+    </varlistentry>
+    <varlistentry id="view-headers"><term><menuchoice><guimenu>View</guimenu><guisubmenu>Headers</guisubmenu></menuchoice></term>
+      <listitem>
+        <para>This allows you to select your headers view. Your choices are as follows:</para>
+        <itemizedlist>
+          <listitem><para><guilabel>Enterprise Headers</guilabel>
+            A minimal header with title, From, and To, with a graphical design.</para>
+          </listitem>
+          <listitem><para><guilabel>Fancy Headers</guilabel>
+            Minimal header with a spam status notification.</para>
+          </listitem>
+          <listitem><para><guilabel>Brief Headers</guilabel>
+            Title, and in parentheses you will find From and the date.</para>
+          </listitem>
+          <listitem><para><guilabel>Standard Headers</guilabel>
+            Title, From, and To.</para>
+          </listitem>
+          <listitem><para><guilabel>Long Headers</guilabel>
+            Title, Date, From, and To.</para>
+          </listitem>
+          <listitem><para><guilabel>All Headers</guilabel>
+            List everything you ever wanted to know about the email, including every server it went through, virus/spam scanners it went through &etc;</para>
+          </listitem>
+          <listitem><para><guilabel>Custom Headers</guilabel>
+            You must configure custom headers first here: <menuchoice><guimenu>Settings</guimenu><guisubmenu>Configure &kmail;...</guisubmenu></menuchoice> and select the <guiicon>Appearance</guiicon> icon. From there
+              you want the <guilabel>Message Window</guilabel> tab, and you will find the settings at the bottom with the label <guilabel>Headers:</guilabel>. See
+              <link linkend="configure-appearance-message-window">Message Window configuration</link> for more information.</para>
+          </listitem>
+          <listitem><para><guilabel>Example</guilabel>
+              An example header from the <guilabel>Download New Themes</guilabel></para>
+          </listitem>
+          <listitem><para><guilabel>Example Fancy</guilabel>
+              An example fancy header from the <guilabel>Download New Themes</guilabel></para>
+          </listitem>
+          <listitem><para><guilabel>Download New Themes</guilabel>
+            Allows you to download custom themes created by other &kmail; users.</para>
+          </listitem>
+        </itemizedlist>
+      </listitem>
+    </varlistentry>
+    <varlistentry id="view-attachments"><term><menuchoice><guimenu>View</guimenu><guimenuitem>Attachments</guimenuitem></menuchoice></term>
+      <listitem>
+        <para>Changes the way attachments appear in the <guilabel>Message Preview Pane</guilabel>
+          (independent of the &MIME; Tree) as follows:</para>
+        <itemizedlist>
+          <listitem><para><guimenuitem>As Icons</guimenuitem>, all attachments appear as icons at the bottom of the message.</para></listitem>
+          <listitem><para><guimenuitem>Smart</guimenuitem> will show attachments as icons, unless the message suggests that they should be displayed inline.
+              You can suggest that certain attachments should be shown inline in your own messages when you select <guilabel>Suggest automatic display</guilabel>
+              in the attachment's properties dialog.</para>
+          </listitem>
+          <listitem><para><guimenuitem>Inline</guimenuitem> shows the contents of the attachments
+              at the bottom of the message. Attachments that cannot be displayed, &eg; compressed files, will still be shown as an icon.</para>
+          </listitem>
+          <listitem><para><guimenuitem>Hide</guimenuitem> will not show attachments.</para></listitem>
+        </itemizedlist>
+      </listitem>
+    </varlistentry>
+    <varlistentry><term><menuchoice><shortcut><keycap>.</keycap></shortcut><guimenu>View</guimenu>
+          <guimenuitem>Expand Thread / Group</guimenuitem></menuchoice></term>
+      <listitem>
+        <para>This will display the thread of the current message, &ie;
+      all messages that are replies to the current message.</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry><term><menuchoice><shortcut><keycap>,</keycap></shortcut><guimenu>View</guimenu><guimenuitem>Collapse Thread / Group</guimenuitem></menuchoice></term>
+      <listitem><para>This will hide the thread of the current message, &ie; it will hide all messages that are replies to the current message.</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry><term><menuchoice><shortcut><keycombo action="simul">&Ctrl;<keycap>.</keycap></keycombo></shortcut><guimenu>View</guimenu>
+          <guimenuitem>Expand All Threads</guimenuitem></menuchoice></term>
+      <listitem>
+        <para>Expands all threads in the current folder.</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry><term><menuchoice><shortcut><keycombo action="simul">&Ctrl;<keycap>,</keycap></keycombo></shortcut>
+          <guimenu>View</guimenu><guimenuitem>Collapse All Threads</guimenuitem></menuchoice></term>
+      <listitem>
+        <para>Collapses all threads in the current folder.</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry><term><menuchoice><shortcut><keycap>V</keycap></shortcut><guimenu>View</guimenu>
+          <guimenuitem>View Source</guimenuitem></menuchoice></term>
+      <listitem>
+        <para>Shows the message and its complete headers in plain text format in a new
+          window. This can be useful to find out the origin of a mail. You should know
+          that it is easy to fake the <literal>From:</literal> header of a mail, but
+          one can still find out which mail servers have been used to send the message by looking
+          at the <literal>Received:</literal> lines in the header.</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry><term><menuchoice><guimenu>View</guimenu>
+          <guimenuitem>Show Message Structure</guimenuitem></menuchoice></term>
+      <listitem>
+        <para> Display the structure viewer, which is a part of the main window that
+          lets you access all parts of a message.</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry><term><menuchoice><shortcut><keycap>X</keycap></shortcut><guimenu>View</guimenu>
+          <guimenuitem>Use Fixed Font</guimenuitem></menuchoice></term>
+      <listitem>
+        <para>Uses a fixed width (Monospace) font to display the messages
+          in the current folder. The font to be used can be configured in the
+          <guilabel>Appearance</guilabel>/<guilabel>Fonts</guilabel> in the <menuchoice>
+            <guimenu>Settings</guimenu><guimenuitem>Configure &kmail;...</guimenuitem></menuchoice> dialog.</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry><term><menuchoice><guimenu>View</guimenu><guisubmenu>Set Encoding</guisubmenu></menuchoice></term>
+      <listitem>
+        <para>Lets you choose the character encoding to be used in the Message Pane.
+          The default, <guilabel>Auto</guilabel>, should work in almost all cases.</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry><term><menuchoice><guimenu>View</guimenu><guisubmenu>Zoom</guisubmenu></menuchoice></term>
+      <listitem>
+        <para>Allows to zoom message in the Message Pane.</para>
+      </listitem>
+    </varlistentry>
 </variablelist>
 
 </sect2>
 
 
 <sect2 id="reader-go-menu">
-<title><guimenu>Go</guimenu> Menu</title>
+<title>Go Menu</title>
 
 <variablelist>
-<!--
-<varlistentry>
-<term>
-<menuchoice>
-<shortcut><keycap>J</keycap></shortcut>
-<guimenu>Go</guimenu>
-<guimenuitem>Jump to Folder...</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para></para>
-</listitem>
-</varlistentry>
--->
-<varlistentry>
-<term>
-<menuchoice>
-<shortcut><keycap>N</keycap></shortcut>
-<guimenu>Go</guimenu>
-<guimenuitem>Next Message</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Selects the next message in the message list. The keyboard shortcut
-<keycap>Right Arrow</keycap> also performs this action.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<shortcut><keycap>+</keycap></shortcut>
-<guimenu>Go</guimenu>
-<guimenuitem>Next Unread Message</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Selects the next unread message in the message list. If there is
-no unread message below the currently selected message then the behavior
-depends on the value of the <xref
-linkend="configure-misc-folders-go-unread"/> option.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<shortcut><keycap>P</keycap></shortcut>
-<guimenu>Go</guimenu>
-<guimenuitem>Previous Message</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Selects the previous message in the message list.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<shortcut><keycap>-</keycap></shortcut>
-<guimenu>Go</guimenu>
-<guimenuitem>Previous Unread Message</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Selects the previous unread message in the message list. If there is
-no unread message above the currently selected message then the behavior
-depends on the value of the <xref
-linkend="configure-misc-folders-go-unread"/> option.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<shortcut><keycombo action="simul">&Alt;<keycap>+</keycap></keycombo></shortcut>
-<guimenu>Go</guimenu>
-<guimenuitem>Next Unread Folder</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Jumps to the next folder with unread messages.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<shortcut><keycombo action="simul">&Alt;<keycap>-</keycap></keycombo></shortcut>
-<guimenu>Go</guimenu>
-<guimenuitem>Previous Unread Folder</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Jumps to the previous folder with unread messages.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<shortcut><keycap>Space</keycap></shortcut>
-<guimenu>Go</guimenu>
-<guimenuitem>Next Unread Text</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Scrolls down if you are not yet at the bottom of a message, otherwise
-jumps to the next unread message.</para>
-</listitem>
-</varlistentry>
-
+  <varlistentry><term><menuchoice><shortcut><keycap>J</keycap></shortcut><guimenu>Go</guimenu>
+        <guimenuitem>Jump to Folder...</guimenuitem></menuchoice></term>
+    <listitem>
+      <para>Selecting this menu item with show a dialog box with a list of all your folders. Click on the folder you wish to
+        view and it will display it in the message view pane.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry><term><menuchoice><shortcut><keycap>N</keycap></shortcut><guimenu>Go</guimenu>
+        <guimenuitem>Next Message</guimenuitem></menuchoice></term>
+    <listitem>
+      <para>Selects the next message in the message list. The keyboard shortcut
+        <keycap>Right Arrow</keycap> also performs this action.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry><term><menuchoice><shortcut><keycap>+</keycap></shortcut>
+        <guimenu>Go</guimenu><guimenuitem>Next Unread Message</guimenuitem></menuchoice></term>
+    <listitem>
+      <para>Selects the next unread message in the message list. If there are not any unread messages below the currently selected message,
+        then the behavior depends on the value of the <xref linkend="configure-misc-folders-go-unread"/> option.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry><term><menuchoice><shortcut><keycap>P</keycap></shortcut>
+        <guimenu>Go</guimenu><guimenuitem>Previous Message</guimenuitem></menuchoice></term>
+    <listitem>
+      <para>Selects the previous message in the message list.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry><term><menuchoice><shortcut><keycap>-</keycap></shortcut>
+        <guimenu>Go</guimenu><guimenuitem>Previous Unread Message</guimenuitem></menuchoice></term>
+    <listitem>
+      <para>Selects the previous unread message in the message list. If there is
+        not an unread message above the currently selected message, then the behavior
+        depends on the value of the <xref linkend="configure-misc-folders-go-unread"/> option.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry><term><menuchoice><shortcut><keycombo action="simul">&Alt;<keycap>+</keycap></keycombo></shortcut>
+        <guimenu>Go</guimenu><guimenuitem>Next Unread Folder</guimenuitem></menuchoice></term>
+    <listitem>
+      <para>Jumps to the next folder with unread messages.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry><term><menuchoice><shortcut><keycombo action="simul">&Alt;<keycap>-</keycap></keycombo></shortcut>
+        <guimenu>Go</guimenu><guimenuitem>Previous Unread Folder</guimenuitem></menuchoice></term>
+    <listitem>
+      <para>Jumps to the previous folder with unread messages.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry><term><menuchoice><shortcut><keycap>Space</keycap></shortcut>
+        <guimenu>Go</guimenu><guimenuitem>Next Unread Text</guimenuitem></menuchoice></term>
+    <listitem>
+      <para>Scrolls down if you are not yet at the bottom of a message,
+        otherwise jumps to the next unread message.</para>
+    </listitem>
+  </varlistentry>
 </variablelist>
 
 </sect2>
@@ -962,7 +898,7 @@ precisely, for messages which have the <guilabel>sent</guilabel> status.</para>
 </listitem>
 </varlistentry>
 
-<varlistentry>
+<varlistentry id="mark-messages">
 <term>
 <menuchoice>
 <guimenu>Message</guimenu>

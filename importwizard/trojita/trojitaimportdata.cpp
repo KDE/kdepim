@@ -19,6 +19,7 @@
 #include "trojita/trojitasettings.h"
 #include "trojita/trojitaaddressbook.h"
 #include "mailimporter/filterinfo.h"
+#include "mailimporter/othermailerutil.h"
 #include "importfilterinfogui.h"
 #include "importwizard.h"
 
@@ -31,7 +32,7 @@
 TrojitaImportData::TrojitaImportData(ImportWizard*parent)
     :AbstractImporter(parent)
 {
-    mPath = QDir::homePath() + QLatin1String("/.config/flaska.net/");
+    mPath = MailImporter::OtherMailerUtil::trojitaDefaultPath();
 }
 
 TrojitaImportData::~TrojitaImportData()

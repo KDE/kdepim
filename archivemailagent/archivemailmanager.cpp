@@ -24,8 +24,6 @@
 #include <mailcommon/kernel/mailkernel.h>
 #include <mailcommon/util/mailutil.h>
 
-#include <Akonadi/Collection>
-
 #include <KConfigGroup>
 #include <KSharedConfig>
 #include <KGlobal>
@@ -93,14 +91,19 @@ void ArchiveMailManager::load()
 
 void ArchiveMailManager::removeCollection(const Akonadi::Collection &collection)
 {
-    const QString groupname = ArchiveMailAgentUtil::archivePattern.arg(collection.id());
+    removeCollectionId(collection.id());
+}
+
+void ArchiveMailManager::removeCollectionId(Akonadi::Collection::Id id)
+{
+    const QString groupname = ArchiveMailAgentUtil::archivePattern.arg(id);
     if (mConfig->hasGroup(groupname)) {
         KConfigGroup group = mConfig->group(groupname);
         group.deleteGroup();
         mConfig->sync();
         mConfig->reparseConfiguration();
         Q_FOREACH(ArchiveMailInfo *info, mListArchiveInfo) {
-            if (info->saveCollectionId() == collection.id()) {
+            if (info->saveCollectionId() == id) {
                 mListArchiveInfo.removeAll(info);
             }
         }
@@ -132,6 +135,13 @@ void ArchiveMailManager::backupDone(ArchiveMailInfo *info)
     }
     mListArchiveInfo.removeAll(info);
 
+    Q_EMIT needUpdateConfigDialogBox();
+}
+
+void ArchiveMailManager::collectionDoesntExist(ArchiveMailInfo *info)
+{
+    removeCollectionId(info->saveCollectionId());
+    mListArchiveInfo.removeAll(info);
     Q_EMIT needUpdateConfigDialogBox();
 }
 

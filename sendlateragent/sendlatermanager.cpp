@@ -40,7 +40,6 @@ SendLaterManager::SendLaterManager(QObject *parent)
     mConfig = KGlobal::config();
     mTimer = new QTimer(this);
     connect(mTimer, SIGNAL(timeout()), this, SLOT(slotCreateJob()));
-    qDebug()<<"SendLaterManager::SendLaterManager ";
 }
 
 SendLaterManager::~SendLaterManager()
@@ -75,23 +74,33 @@ void SendLaterManager::load(bool forcereload)
 
 void SendLaterManager::createSendInfoList()
 {
-    qDebug()<<" void SendLaterManager::createSendInfoList()";
     mCurrentInfo = 0;
     qSort(mListSendLaterInfo.begin(), mListSendLaterInfo.end(), SendLater::SendLaterUtil::compareSendLaterInfo);
-    if (!mListSendLaterInfo.isEmpty()) {
-        mCurrentInfo = mListSendLaterInfo.first();
-        const QDateTime now = QDateTime::currentDateTime();
-        const int seconds = now.secsTo(mCurrentInfo->dateTime());
-        if (seconds > 0) {
-            qDebug()<<" seconds"<<seconds;
-            mTimer->start(seconds*1000);
+
+    //Look at QQueue
+    if (mSendLaterQueue.isEmpty()) {
+        if (!mListSendLaterInfo.isEmpty()) {
+            mCurrentInfo = mListSendLaterInfo.first();
+            const QDateTime now = QDateTime::currentDateTime();
+            const int seconds = now.secsTo(mCurrentInfo->dateTime());
+            if (seconds > 0) {
+                //qDebug()<<" seconds"<<seconds;
+                mTimer->start(seconds*1000);
+            } else {
+                //Create job when seconds <0
+                slotCreateJob();
+            }
         } else {
-            qDebug()<<" create job";
-            //Create job when seconds <0
-            slotCreateJob();
+            qDebug()<<" list is empty";
         }
     } else {
-        qDebug()<<" list is empty";
+        SendLater::SendLaterInfo *info = searchInfo(mSendLaterQueue.dequeue());
+        if (info) {
+            mCurrentInfo = info;
+            slotCreateJob();
+        } else { //If removed.
+            createSendInfoList();
+        }
     }
 }
 
@@ -99,6 +108,33 @@ void SendLaterManager::stopTimer()
 {
     if (mTimer->isActive())
         mTimer->stop();
+}
+
+SendLater::SendLaterInfo *SendLaterManager::searchInfo(Akonadi::Item::Id id)
+{
+    Q_FOREACH(SendLater::SendLaterInfo *info, mListSendLaterInfo) {
+        if (info->itemId() == id) {
+            return info;
+        }
+    }
+    return 0;
+}
+
+void SendLaterManager::sendNow(Akonadi::Item::Id id)
+{
+    if (!mCurrentJob) {
+        SendLater::SendLaterInfo *info = searchInfo(id);
+        if (info) {
+            mCurrentInfo = info;
+            slotCreateJob();
+        } else {
+            qDebug()<<" can't find info about current id: "<<id;
+            itemRemoved(id);
+        }
+    } else {
+        //Add to QQueue
+        mSendLaterQueue.enqueue(id);
+    }
 }
 
 void SendLaterManager::slotCreateJob()
@@ -111,6 +147,7 @@ void SendLaterManager::itemRemoved(Akonadi::Item::Id id)
 {
     if (mConfig->hasGroup(QString::fromLatin1("SendLaterItem %1").arg(id))) {
         removeInfo(id);
+        mConfig->reparseConfiguration();
         Q_EMIT needUpdateConfigDialogBox();
     }
 }
@@ -154,13 +191,12 @@ void SendLaterManager::recreateSendList()
 
 void SendLaterManager::sendDone(SendLater::SendLaterInfo *info)
 {
-    qDebug()<<" void SendLaterManager::sendDone(SendLater::SendLaterInfo *info)";
     if (info) {
-        if (!info->isRecurrence()) {
+        if (info->isRecurrence()) {
+            SendLater::SendLaterUtil::changeRecurrentDate(info);
+        } else {
             mListSendLaterInfo.removeAll(mCurrentInfo);
             removeInfo(info->itemId());
-        } else {
-            SendLater::SendLaterUtil::changeRecurrentDate(info);
         }
     }
     recreateSendList();

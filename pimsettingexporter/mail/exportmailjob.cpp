@@ -41,7 +41,8 @@
 #include <QDir>
 
 ExportMailJob::ExportMailJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage,int numberOfStep)
-    :AbstractImportExportJob(parent,archiveStorage,typeSelected,numberOfStep)
+    : AbstractImportExportJob(parent,archiveStorage,typeSelected,numberOfStep),
+      mArchiveTime(QDateTime::currentDateTime().toTime_t())
 {
 }
 
@@ -268,10 +269,20 @@ void ExportMailJob::backupConfig()
         delete templateConfig;
     }
 
-    QDir autocorrectDirectory( KStandardDirs::locateLocal( "data", QLatin1String( "autocorrect/" ) ) );
+    const QDir themeDirectory( KStandardDirs::locateLocal( "data", QLatin1String( "messageviewer/themes/" ) ) );
+    if (themeDirectory.exists()) {
+        const bool themeDirAdded = archive()->addLocalDirectory(themeDirectory.path(), Utils::dataPath() + QLatin1String( "messageviewer/themes/" ));
+        if (!themeDirAdded) {
+            //TODO fix i18n
+            Q_EMIT error(i18n("\"%1\" file cannot be added to backup file.", themeDirectory.path()));
+        }
+    }
+
+    const QDir autocorrectDirectory( KStandardDirs::locateLocal( "data", QLatin1String( "autocorrect/" ) ) );
     if (autocorrectDirectory.exists()) {
-        QFileInfoList listFileInfo = autocorrectDirectory.entryInfoList(QStringList()<< QLatin1String("*.xml"), QDir::Files);
-        for (int i = 0; i < listFileInfo.size(); ++i) {
+        const QFileInfoList listFileInfo = autocorrectDirectory.entryInfoList(QStringList()<< QLatin1String("*.xml"), QDir::Files);
+        const int listSize(listFileInfo.size());
+        for (int i = 0; i < listSize; ++i) {
             backupFile(listFileInfo.at(i).absoluteFilePath(), Utils::dataPath() + QLatin1String( "autocorrect/" ) , listFileInfo.at(i).fileName());
         }
     }
@@ -477,10 +488,13 @@ void ExportMailJob::backupMails()
     Q_EMIT info(i18n("Mails backup done."));
 }
 
-void ExportMailJob::writeDirectory(QString path, const QString &relativePath, KZip *mailArchive)
+void ExportMailJob::writeDirectory(const QString &path, const QString &relativePath, KZip *mailArchive)
 {
     QDir dir(path);
-    mailArchive->writeDir(path.remove(relativePath),QLatin1String(""),QLatin1String(""));
+    QString currentPath(path);
+    currentPath = currentPath.remove(relativePath);
+    mailArchive->writeDir(currentPath, QString(), QString(), 040755, mArchiveTime, mArchiveTime, mArchiveTime );
+
     const QFileInfoList lst= dir.entryInfoList(QDir::NoDot|QDir::NoDotDot|QDir::Dirs|QDir::AllDirs|QDir::Hidden|QDir::Files);
     const int numberItems(lst.count());
     for (int i = 0; i < numberItems;++i) {
@@ -488,7 +502,8 @@ void ExportMailJob::writeDirectory(QString path, const QString &relativePath, KZ
         if (lst.at(i).isDir()) {
             writeDirectory(relativePath + path + QLatin1Char('/') + filename,relativePath,mailArchive);
         } else {
-            mailArchive->addLocalFile(lst.at(i).absoluteFilePath(),path.remove(relativePath) + QLatin1Char('/') + filename);
+            QString currentPath(path);
+            mailArchive->addLocalFile(lst.at(i).absoluteFilePath(),currentPath + QLatin1Char('/') + filename);
         }
     }
 }

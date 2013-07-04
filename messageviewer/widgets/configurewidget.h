@@ -36,38 +36,38 @@ namespace MessageViewer {
  */
 class MESSAGEVIEWER_EXPORT ConfigureWidget : public QWidget
 {
-Q_OBJECT
+    Q_OBJECT
 public:
-  explicit ConfigureWidget( QWidget *parent = 0 );
+    explicit ConfigureWidget( QWidget *parent = 0 );
 
-  ~ConfigureWidget();
+    ~ConfigureWidget();
 
-  //
-  // Read and write config settings to the GlobalSettings.
-  // Note that this does not deal with all settings, some of those settings need to saved and read
-  // with a KConfigDialogManager, since this widgets correctly sets the objectname to the pattern
-  // required by KConfigDialogManager.
-  //
+    //
+    // Read and write config settings to the GlobalSettings.
+    // Note that this does not deal with all settings, some of those settings need to saved and read
+    // with a KConfigDialogManager, since this widgets correctly sets the objectname to the pattern
+    // required by KConfigDialogManager.
+    //
 
-  void writeConfig();
-  void readConfig();
+    void writeConfig();
+    void readConfig();
 
 signals:
 
-  /**
+    /**
    * Emitted when the user changes the setting in some widget. Useful to enable the "Apply"
    * button after this has been emitted.
    */
-  void settingsChanged();
+    void settingsChanged();
 
 private Q_SLOTS:
-  void showCustomHeadersDialog();
+    void showCustomHeadersDialog();
 
 private:
-  void readCurrentFallbackCodec();
-  void readCurrentOverrideCodec();
+    void readCurrentFallbackCodec();
+    void readCurrentOverrideCodec();
 
-  Ui_Settings *mSettingsUi;
+    Ui_Settings *mSettingsUi;
 };
 
 }

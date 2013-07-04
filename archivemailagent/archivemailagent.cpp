@@ -19,6 +19,7 @@
 #include "archivemailagentadaptor.h"
 #include "archivemaildialog.h"
 #include "archivemailmanager.h"
+#include "archivemailagentsettings.h"
 
 #include <mailcommon/kernel/mailkernel.h>
 #include <akonadi/dbusconnectionpool.h>
@@ -53,11 +54,15 @@ ArchiveMailAgent::ArchiveMailAgent( const QString &id )
     Akonadi::DBusConnectionPool::threadConnection().registerService( QLatin1String( "org.freedesktop.Akonadi.ArchiveMailAgent" ) );
     connect( collectionMonitor, SIGNAL(collectionRemoved(Akonadi::Collection)),
              this, SLOT(mailCollectionRemoved(Akonadi::Collection)) );
+
+    if (enabledAgent()) {
 #ifdef DEBUG_ARCHIVEMAILAGENT
-    QTimer::singleShot(1000, mArchiveManager, SLOT(load()));
+        QTimer::singleShot(1000, mArchiveManager, SLOT(load()));
 #else
-    QTimer::singleShot(1000*60*5, mArchiveManager, SLOT(load()));
+        QTimer::singleShot(1000*60*5, mArchiveManager, SLOT(load()));
 #endif
+    }
+
     mTimer = new QTimer(this);
     connect(mTimer, SIGNAL(timeout()), this, SLOT(reload()));
     mTimer->start(24*60*60*1000);
@@ -65,6 +70,20 @@ ArchiveMailAgent::ArchiveMailAgent( const QString &id )
 
 ArchiveMailAgent::~ArchiveMailAgent()
 {
+}
+
+void ArchiveMailAgent::setEnableAgent(bool enabled)
+{
+    ArchiveMailAgentSettings::setEnabled(enabled);
+    ArchiveMailAgentSettings::self()->writeConfig();
+    if (!enabled) {
+        pause();
+    }
+}
+
+bool ArchiveMailAgent::enabledAgent() const
+{
+    return ArchiveMailAgentSettings::enabled();
 }
 
 void ArchiveMailAgent::mailCollectionRemoved(const Akonadi::Collection &collection)
@@ -90,11 +109,21 @@ void ArchiveMailAgent::showConfigureDialog(qlonglong windowId)
     delete dialog;
 }
 
+void ArchiveMailAgent::doSetOnline(bool online)
+{
+    if (online) {
+        resume();
+    } else {
+        pause();
+    }
+}
 
 void ArchiveMailAgent::reload()
 {
-    mArchiveManager->load();
-    mTimer->start();
+    if (isOnline() && enabledAgent()) {
+        mArchiveManager->load();
+        mTimer->start();
+    }
 }
 
 void ArchiveMailAgent::configure( WId windowId )
@@ -104,12 +133,16 @@ void ArchiveMailAgent::configure( WId windowId )
 
 void ArchiveMailAgent::pause()
 {
-    mArchiveManager->pause();
+    if (isOnline() && enabledAgent()) {
+        mArchiveManager->pause();
+    }
 }
 
 void ArchiveMailAgent::resume()
 {
-    mArchiveManager->resume();
+    if (isOnline() && enabledAgent()) {
+        mArchiveManager->resume();
+    }
 }
 
 void ArchiveMailAgent::printArchiveListInfo()

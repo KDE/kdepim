@@ -182,7 +182,7 @@ bool ManageSieveScriptsDialog::serverHasError(QTreeWidgetItem *item) const
     return false;
 }
 
-void ManageSieveScriptsDialog::slotItemChanged(QTreeWidgetItem*item, int col)
+void ManageSieveScriptsDialog::slotItemChanged(QTreeWidgetItem *item, int col)
 {
     if (!item || mBlockSignal || (col != 0) ) {
         return;
@@ -263,7 +263,7 @@ void ManageSieveScriptsDialog::slotRefresh()
     mListView->setImapFound(imapFound);
 }
 
-void ManageSieveScriptsDialog::slotResult( KManageSieve::SieveJob * job, bool success, const QString &, bool )
+void ManageSieveScriptsDialog::slotResult( KManageSieve::SieveJob *job, bool success, const QString &, bool )
 {
     if (mClearAll)
         return;
@@ -344,7 +344,7 @@ void ManageSieveScriptsDialog::slotDeactivateScript()
     }
 }
 
-void ManageSieveScriptsDialog::changeActiveScript( QTreeWidgetItem * item, bool activate )
+void ManageSieveScriptsDialog::changeActiveScript( QTreeWidgetItem *item, bool activate )
 {
     if ( !item )
         return;
@@ -548,7 +548,7 @@ void ManageSieveScriptsDialog::slotSieveEditorCancelClicked()
         slotRefresh();
 }
 
-void ManageSieveScriptsDialog::slotPutResultDebug(KManageSieve::SieveJob*,bool success ,const QString& errorMsg)
+void ManageSieveScriptsDialog::slotPutResultDebug(KManageSieve::SieveJob *,bool success ,const QString &errorMsg)
 {
     if ( success ) {
         addOkMessage( i18n( "No errors found." ) );

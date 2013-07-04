@@ -102,12 +102,26 @@ public:
 
         Q_FOREACH (const QString &directory, themesDirectories) {
             QDirIterator dirIt( directory, QStringList(), QDir::AllDirs | QDir::NoDotAndDotDot );
+            QStringList alreadyLoadedThemeName;
             while ( dirIt.hasNext() ) {
                 dirIt.next();
                 const QString dirName = dirIt.fileName();
-                const GrantleeTheme theme = loadTheme( dirIt.filePath(), dirName );
-                themes.insert( dirName, theme );
-                //qDebug()<<" theme.name()"<<theme.name();
+                GrantleeTheme theme = loadTheme( dirIt.filePath(), dirName );
+                if (theme.isValid()) {
+                    QString themeName = theme.name();
+                    if (alreadyLoadedThemeName.contains(themeName)) {
+                        int i = 2;
+                        const QString originalName(theme.name());
+                        while (alreadyLoadedThemeName.contains(themeName)) {
+                            themeName = originalName + QString::fromLatin1(" (%1)").arg(i);
+                            ++i;
+                        }
+                        theme.setName(themeName);
+                    }
+                    alreadyLoadedThemeName << themeName;
+                    themes.insert( dirName, theme );
+                    //qDebug()<<" theme.name()"<<theme.name();
+                }
             }
             watch->addDir( directory );
         }

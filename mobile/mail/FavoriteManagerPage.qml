@@ -20,55 +20,42 @@
 
 import QtQuick 1.1
 import org.kde.plasma.components 0.1 as PlasmaComponents
+import org.kde.pim.mobileui 4.5 as KPIM
 
 PlasmaComponents.Page {
-  id: settings
-
-  anchors.fill: parent
+  id: root
 
   //BEGIN: Tools
   tools: PlasmaComponents.ToolBarLayout {
     PlasmaComponents.ToolButton {
-
       anchors.left: parent.left
-
       iconSource: "go-previous"
-
       onClicked: pageStack.pop()
     }
   }
   //END: Tools
 
-  Column {
-    anchors.centerIn: parent
+  KPIM.ReorderListContainer {
+    anchors.fill: parent
 
-    spacing: 20
+    model : favoritesList
+    actionItemHeight: root.height * 0.2
 
-    PlasmaComponents.Button {
-      text: i18n("Accounts")
-
-      onClicked: pageStack.push(Qt.createComponent("AccountSettingsPage.qml"))
+    KPIM.ActionButton {
+      icon : "images/moveup.png"
+      actionName : "favoriteseditor_moveup"
     }
-    PlasmaComponents.Button {
-      text: i18n("Identities")
 
-      onClicked: application.configureIdentity()
+    KPIM.ActionButton {
+      icon : "images/movedown.png"
+      actionName : "favoriteseditor_movedown"
     }
-    PlasmaComponents.Button {
-      text: i18n("Favorites")
 
-      onClicked: pageStack.push(Qt.createComponent("FavoriteManagerPage.qml"))
+    KPIM.ActionButton {
+      icon : KDE.locate( "data", "mobileui/delete-button.png" )
+      actionName : "favoriteseditor_remove"
     }
-    PlasmaComponents.Button {
-      text: i18n("Filter")
 
-      onClicked: pageStack.push(Qt.createComponent("FilterEditor.qml"))
-    }
-    PlasmaComponents.Button {
-      text: i18n( "About" )
-
-      onClicked: pageStack.push(Qt.createComponent("AboutPage.qml"))
-    }
+    onCurrentIndexChanged : { favoritesEditor.setRowSelected( index ) }
   }
-
 }

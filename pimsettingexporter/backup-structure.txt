@@ -1,4 +1,4 @@
-2013-06-30:
+2013-07-04:
 -----------
 Zip structure is :
 Root
@@ -49,6 +49,7 @@ Root
 |       |---------autocorrect/<autocorrection xml file>
 |       |---------korganizer/freebusyurls
 |       |---------korganizer/templates/*
+|       |---------messageviewer/themes/
 |
 |-----calendar
 |       |---------<resource name>

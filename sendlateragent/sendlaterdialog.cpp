@@ -59,8 +59,12 @@ SendLaterDialog::SendLaterDialog(SendLater::SendLaterInfo *info, QWidget *parent
 
     QLabel *lab = new QLabel(i18n("Send at:"));
 
+    QDateTime t = QDateTime::currentDateTime();
+    t = t.addSecs(60*60);
+
     mDateTime = new QDateTimeEdit;
-    mDateTime->setMinimumDateTime(QDateTime::currentDateTime());
+    mDateTime->setMinimumDateTime(t);
+    mDateTime->setDateTime(t);
     connect(mDateTime, SIGNAL(dateTimeChanged(QDateTime)), SLOT(slotDateTimeChanged(QDateTime)));
     hbox->addWidget(lab);
     hbox->addWidget(mDateTime);
@@ -120,7 +124,8 @@ SendLaterDialog::SendLaterDialog(SendLater::SendLaterInfo *info, QWidget *parent
     setMainWidget(w);
     readConfig();
     slotRecurrenceClicked(false);
-    slotDateTimeChanged(QDateTime::currentDateTime());
+    //Add currentdate/time  + 1h
+    slotDateTimeChanged(t);
     if (info)
         load(info);
 }

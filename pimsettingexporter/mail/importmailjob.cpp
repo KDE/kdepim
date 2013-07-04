@@ -731,6 +731,18 @@ void ImportMailJob::restoreConfig()
         }
     }
 
+    const KArchiveEntry* themeEntry  = mArchiveDirectory->entry(Utils::dataPath() + QLatin1String( "messageviewer/themes/" ) );
+    if (themeEntry && themeEntry->isDirectory()) {
+        const KArchiveDirectory *themeDir = static_cast<const KArchiveDirectory*>(themeEntry);
+        Q_FOREACH(const QString& entryName, themeDir->entries()) {
+            const KArchiveEntry *entry = themeDir->entry(entryName);
+            if (entry && entry->isDirectory()) {
+                //TODO import themes
+                //Rename it if necessary
+            }
+        }
+    }
+
     Q_EMIT info(i18n("Config restored."));
 }
 

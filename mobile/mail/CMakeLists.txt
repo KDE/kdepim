@@ -136,6 +136,7 @@ install(FILES
   NewMailPage.qml
   ReplyOptionsPage.qml
   EditorView.qml
+  FavoriteManagerPage.qml
   kmail-composer.qml
   kmail-mobile.qml
   KMailActions.qml

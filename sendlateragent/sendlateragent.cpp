@@ -35,7 +35,7 @@
 
 #include <QPointer>
 
-//#define DEBUG_SENDLATERAGENT 1
+#define DEBUG_SENDLATERAGENT 1
 
 SendLaterAgent::SendLaterAgent(const QString &id)
     : Akonadi::AgentBase( id )
@@ -98,6 +98,7 @@ bool SendLaterAgent::enabledAgent() const
 
 SendLater::SendLaterDialog::SendLaterAction SendLaterAgent::addSendLaterItem(qlonglong itemId, qlonglong windowId)
 {
+    //TODO 4.12: use it and fix it :)
     SendLater::SendLaterInfo *info = new SendLater::SendLaterInfo;
     info->setItemId(itemId);
     QPointer<SendLater::SendLaterDialog> dialog = new SendLater::SendLaterDialog(info);
@@ -130,6 +131,11 @@ void SendLaterAgent::configure( WId windowId )
     showConfigureDialog(windowId);
 }
 
+void SendLaterAgent::slotSendNow(Akonadi::Item::Id id)
+{
+    mManager->sendNow(id);
+}
+
 void SendLaterAgent::showConfigureDialog(qlonglong windowId)
 {
     QPointer<SendLaterConfigureDialog> dialog = new SendLaterConfigureDialog();
@@ -141,6 +147,7 @@ void SendLaterAgent::showConfigureDialog(qlonglong windowId)
 #endif
     }
     connect(this, SIGNAL(needUpdateConfigDialogBox()), dialog, SLOT(slotNeedToReloadConfig()));
+    connect(dialog, SIGNAL(sendNow(Akonadi::Item::Id)), this, SLOT(slotSendNow(Akonadi::Item::Id)));
     if (dialog->exec()) {
         mManager->load();
     }

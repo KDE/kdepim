@@ -15,29 +15,15 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef SENDLATERUTIL_H
-#define SENDLATERUTIL_H
+#include "othermailerutil.h"
 
-#include "sendlater_export.h"
-#include <KSharedConfig>
+#include <QDir>
 
-namespace SendLater {
-class SendLaterInfo;
-namespace SendLaterUtil
+namespace MailImporter {
+QString OtherMailerUtil::trojitaDefaultPath()
 {
-    SENDLATER_EXPORT bool compareSendLaterInfo(SendLater::SendLaterInfo *left, SendLater::SendLaterInfo *right);
-
-    SENDLATER_EXPORT KSharedConfig::Ptr defaultConfig();
-
-    SENDLATER_EXPORT void writeSendLaterInfo(SendLater::SendLaterInfo *info, bool forceReload=true);
-
-    SENDLATER_EXPORT bool sentLaterAgentWasRegistered();
-
-    SENDLATER_EXPORT bool sentLaterAgentEnabled();
-
-    SENDLATER_EXPORT void reload();
-
-    SENDLATER_EXPORT void changeRecurrentDate(SendLater::SendLaterInfo *info);
+    const QString path = QDir::homePath() + QLatin1String("/.config/flaska.net/");
+    return path;
 }
+
 }
-#endif // SENDLATERUTIL_H

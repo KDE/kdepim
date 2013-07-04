@@ -46,6 +46,9 @@ Q_SIGNALS:
 public Q_SLOTS:
     void configure( WId windowId );
 
+private Q_SLOTS:
+    void slotSendNow(Akonadi::Item::Id id);
+
 protected:
     void itemRemoved( const Akonadi::Item &item );
 

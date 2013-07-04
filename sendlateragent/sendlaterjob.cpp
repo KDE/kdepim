@@ -20,6 +20,7 @@
 
 #include "messagecomposer/sender/akonadisender.h"
 #include "messagecore/helpers/messagehelpers.h"
+#include "messagecore/utils/stringutil.h"
 
 #include <mailtransport/transportattribute.h>
 #include <mailtransport/sentbehaviourattribute.h>
@@ -29,6 +30,7 @@
 
 
 #include <Akonadi/ItemFetchJob>
+#include <Akonadi/ItemDeleteJob>
 
 #include <KNotification>
 #include <KLocale>
@@ -58,6 +60,7 @@ void SendLaterJob::start()
             mFetchScope.fetchAttribute<MailTransport::TransportAttribute>();
             mFetchScope.fetchAttribute<MailTransport::SentBehaviourAttribute>();
             mFetchScope.setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
+            mFetchScope.fetchFullPayload( true );
             fetch->setFetchScope( mFetchScope );
             connect( fetch, SIGNAL(itemsReceived(Akonadi::Item::List)), SLOT(slotMessageTransfered(Akonadi::Item::List)) );
             connect( fetch, SIGNAL(result(KJob*)), SLOT(slotJobFinished(KJob*)) );
@@ -84,34 +87,49 @@ void SendLaterJob::slotJobFinished(KJob* job)
 {
     if ( job->error() ) {
         sendError(i18n("Can not fetch message. %1", job->errorString() ), SendLaterManager::CanNotFetchItem);
-        kDebug()<<"Can not fetch message: "<<job->errorString();
         return;
     }
     if ( !MailTransport::TransportManager::self()->showTransportCreationDialog( 0, MailTransport::TransportManager::IfNoTransportExists ) ) {
-        qDebug()<<" we can't create transport ";
+        kDebug()<<" we can't create transport ";
+        //Add i18n
+        sendError(QLatin1String("We can't create transport"), SendLaterManager::CanNotCreateTransport);
         return;
     }
 
     if (mItem.isValid()) {
         const KMime::Message::Ptr msg = MessageCore::Util::message( mItem );
-        if ( !msg )
-          return;
-        const MailTransport::SentBehaviourAttribute *sentAttribute = mItem.attribute<MailTransport::SentBehaviourAttribute>();
-        QString fcc;
-        if ( sentAttribute && ( sentAttribute->sentBehaviour() == MailTransport::SentBehaviourAttribute::MoveToCollection ) )
-            fcc =  QString::number( sentAttribute->moveToCollection().id() );
-
-        if (mInfo->isRecurrence()) {
-            MailTransport::MessageQueueJob *qjob = new MailTransport::MessageQueueJob( this );
-            //Need to have KMime::Message::Ptr
-
-            //TODO create new message
-        } else {
-            mManager->sender()->send( msg, MessageComposer::MessageSender::SendImmediate );
+        if ( !msg ) {
+            //Add i18n...
+            sendError(QLatin1String("Message is not a real message"), SendLaterManager::CanNotFetchItem);
+            return;
         }
-        sendDone();
+        msg->date()->setDateTime( KDateTime::currentLocalDateTime() );
+        MessageCore::StringUtil::removePrivateHeaderFields(msg, true);
+        msg->assemble();
+
+        if (!mManager->sender()->send( msg, MessageComposer::MessageSender::SendImmediate )) {
+            //Add i18n(...)
+            sendError(QLatin1String("Can not send message."), SendLaterManager::MailDispatchDoesntWork);
+        } else {
+            if (!mInfo->isRecurrence()) {
+                Akonadi::ItemDeleteJob *fetch = new Akonadi::ItemDeleteJob( mItem, this );
+                connect( fetch, SIGNAL(result(KJob*)), SLOT(slotDeleteItem(KJob*)) );
+            } else {
+                sendDone();
+            }
+        }
     }
 }
+
+void SendLaterJob::slotDeleteItem( KJob *job )
+{
+    //qDebug()<<"void SendLaterJob::slotDeleteItem( KJob *job )";
+    if ( job->error() ) {
+        qDebug()<<" void SendLaterJob::slotDeleteItem( KJob *job ) :"<<job->errorString();
+    }
+    sendDone();
+}
+
 
 void SendLaterJob::sendDone()
 {
@@ -124,7 +142,7 @@ void SendLaterJob::sendDone()
                           KNotification::CloseOnTimeout,
                           KGlobal::mainComponent());
     mManager->sendDone(mInfo);
-    //deleteLater();
+    deleteLater();
 }
 
 void SendLaterJob::sendError(const QString &error, SendLaterManager::ErrorType type)
@@ -137,7 +155,7 @@ void SendLaterJob::sendError(const QString &error, SendLaterManager::ErrorType t
                           KNotification::CloseOnTimeout,
                           KGlobal::mainComponent());
     mManager->sendError(mInfo, type);
-    //deleteLater();
+    deleteLater();
 }
 
 #include "sendlaterjob.moc"

@@ -15,29 +15,17 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef SENDLATERUTIL_H
-#define SENDLATERUTIL_H
+#ifndef OTHERMAILERUTIL_H
+#define OTHERMAILERUTIL_H
 
-#include "sendlater_export.h"
-#include <KSharedConfig>
+#include <QString>
+#include "mailimporter_export.h"
 
-namespace SendLater {
-class SendLaterInfo;
-namespace SendLaterUtil
+namespace MailImporter {
+namespace OtherMailerUtil
 {
-    SENDLATER_EXPORT bool compareSendLaterInfo(SendLater::SendLaterInfo *left, SendLater::SendLaterInfo *right);
-
-    SENDLATER_EXPORT KSharedConfig::Ptr defaultConfig();
-
-    SENDLATER_EXPORT void writeSendLaterInfo(SendLater::SendLaterInfo *info, bool forceReload=true);
-
-    SENDLATER_EXPORT bool sentLaterAgentWasRegistered();
-
-    SENDLATER_EXPORT bool sentLaterAgentEnabled();
-
-    SENDLATER_EXPORT void reload();
-
-    SENDLATER_EXPORT void changeRecurrentDate(SendLater::SendLaterInfo *info);
+MAILIMPORTER_EXPORT QString trojitaDefaultPath();
 }
 }
-#endif // SENDLATERUTIL_H
+
+#endif // OTHERMAILERUTIL_H

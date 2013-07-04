@@ -37,6 +37,10 @@ public:
     void showConfigureDialog(qlonglong windowId = 0);
     void printArchiveListInfo();
 
+    void setEnableAgent(bool b);
+    bool enabledAgent() const;
+
+
 Q_SIGNALS:
     void archiveNow(ArchiveMailInfo *info);
     void needUpdateConfigDialogBox();
@@ -49,6 +53,9 @@ public Q_SLOTS:
 
 private Q_SLOTS:
     void mailCollectionRemoved( const Akonadi::Collection &collection );
+
+protected:
+    void doSetOnline(bool online);
 
 private:
     QTimer *mTimer;
