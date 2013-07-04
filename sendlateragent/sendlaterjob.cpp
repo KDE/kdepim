@@ -20,6 +20,7 @@
 
 #include "messagecomposer/sender/akonadisender.h"
 #include "messagecore/helpers/messagehelpers.h"
+#include "messagecore/utils/stringutil.h"
 
 #include <mailtransport/transportattribute.h>
 #include <mailtransport/sentbehaviourattribute.h>
@@ -103,16 +104,15 @@ void SendLaterJob::slotJobFinished(KJob* job)
             return;
         }
         msg->date()->setDateTime( KDateTime::currentLocalDateTime() );
+        MessageCore::StringUtil::removePrivateHeaderFields(msg, true);
         msg->assemble();
-        //TODO remove kmail headers :)
 
         if (!mManager->sender()->send( msg, MessageComposer::MessageSender::SendImmediate )) {
             //Add i18n(...)
             sendError(QLatin1String("Can not send message."), SendLaterManager::MailDispatchDoesntWork);
         } else {
             if (!mInfo->isRecurrence()) {
-                //TODO delete old message
-                Akonadi::ItemFetchJob *fetch = new Akonadi::ItemFetchJob( mItem, this );
+                Akonadi::ItemDeleteJob *fetch = new Akonadi::ItemDeleteJob( mItem, this );
                 connect( fetch, SIGNAL(result(KJob*)), SLOT(slotDeleteItem(KJob*)) );
             } else {
                 sendDone();
