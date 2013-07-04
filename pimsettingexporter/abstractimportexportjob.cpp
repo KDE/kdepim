@@ -321,7 +321,7 @@ void AbstractImportExportJob::extractZipFile(const KArchiveFile *file, const QSt
     KZip *zip = Utils::openZip(source + QLatin1Char('/') + file->name(), errorMsg);
     if (zip) {
         const KArchiveDirectory *zipDir = zip->directory();
-        Q_FOREACH(const QString& entryName, zipDir->entries()) {
+        Q_FOREACH(const QString &entryName, zipDir->entries()) {
             const KArchiveEntry *entry = zipDir->entry(entryName);
             if (entry && entry->isDirectory()) {
                 const KArchiveDirectory *dir = static_cast<const KArchiveDirectory*>(entry);
@@ -342,6 +342,7 @@ bool AbstractImportExportJob::backupFullDirectory(const KUrl &url, const QString
     vcarddirArchive->setCompression(KZip::NoCompression);
     bool result = vcarddirArchive->open(QIODevice::WriteOnly);
     if (!result) {
+        delete vcarddirArchive;
         return false;
     }
     const QString filename = url.fileName();
