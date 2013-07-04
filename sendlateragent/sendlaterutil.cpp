@@ -39,7 +39,7 @@ bool SendLater::SendLaterUtil::compareSendLaterInfo(SendLater::SendLaterInfo *le
 void SendLater::SendLaterUtil::changeRecurrentDate(SendLater::SendLaterInfo *info)
 {
     if (info && info->isRecurrence()) {
-        qDebug()<<" SendLater::SendLaterUtil::changeRecurrentDate "<<info->dateTime().toString();
+        //qDebug()<<" SendLater::SendLaterUtil::changeRecurrentDate "<<info->dateTime().toString();
         switch(info->recurrenceUnit()) {
         case SendLater::SendLaterInfo::Days:
             info->setDateTime(info->dateTime().addDays(info->recurrenceEachValue()));
@@ -51,7 +51,7 @@ void SendLater::SendLaterUtil::changeRecurrentDate(SendLater::SendLaterInfo *inf
             info->setDateTime(info->dateTime().addMonths(info->recurrenceEachValue()));
             break;
         }
-        qDebug()<<"AFTER SendLater::SendLaterUtil::changeRecurrentDate "<<info->dateTime().toString();
+        //qDebug()<<"AFTER SendLater::SendLaterUtil::changeRecurrentDate "<<info->dateTime().toString();
         writeSendLaterInfo(info, false);
     }
 }

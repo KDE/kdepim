@@ -85,12 +85,11 @@ void SendLaterJob::slotMessageTransfered(const Akonadi::Item::List& items)
 void SendLaterJob::slotJobFinished(KJob* job)
 {
     if ( job->error() ) {
-        kDebug()<<"Can not fetch message: "<<job->errorString();
         sendError(i18n("Can not fetch message. %1", job->errorString() ), SendLaterManager::CanNotFetchItem);
         return;
     }
     if ( !MailTransport::TransportManager::self()->showTransportCreationDialog( 0, MailTransport::TransportManager::IfNoTransportExists ) ) {
-        qDebug()<<" we can't create transport ";
+        kDebug()<<" we can't create transport ";
         //Add i18n
         sendError(QLatin1String("We can't create transport"), SendLaterManager::CanNotCreateTransport);
         return;
@@ -120,7 +119,7 @@ void SendLaterJob::slotJobFinished(KJob* job)
 
 void SendLaterJob::slotDeleteItem( KJob *job )
 {
-    qDebug()<<"void SendLaterJob::slotDeleteItem( KJob *job )*****************************";
+    qDebug()<<"void SendLaterJob::slotDeleteItem( KJob *job )";
     if ( job->error() ) {
         qDebug()<<" void SendLaterJob::slotDeleteItem( KJob *job ) :"<<job->errorString();
     }

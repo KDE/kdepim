@@ -193,7 +193,7 @@ void SendLaterManager::recreateSendList()
 
 void SendLaterManager::sendDone(SendLater::SendLaterInfo *info)
 {
-    qDebug()<<" void SendLaterManager::sendDone(SendLater::SendLaterInfo *info)";
+    //qDebug()<<" void SendLaterManager::sendDone(SendLater::SendLaterInfo *info)";
     if (info) {
         if (info->isRecurrence()) {
             SendLater::SendLaterUtil::changeRecurrentDate(info);
