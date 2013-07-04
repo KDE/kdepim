@@ -84,10 +84,9 @@ void SendLaterManager::createSendInfoList()
             const QDateTime now = QDateTime::currentDateTime();
             const int seconds = now.secsTo(mCurrentInfo->dateTime());
             if (seconds > 0) {
-                qDebug()<<" seconds"<<seconds;
+                //qDebug()<<" seconds"<<seconds;
                 mTimer->start(seconds*1000);
             } else {
-                qDebug()<<" create job";
                 //Create job when seconds <0
                 slotCreateJob();
             }
@@ -123,7 +122,6 @@ SendLater::SendLaterInfo *SendLaterManager::searchInfo(Akonadi::Item::Id id)
 
 void SendLaterManager::sendNow(Akonadi::Item::Id id)
 {
-    qDebug()<<" void SendLaterManager::sendNow(Akonadi::Item::Id id)"<<id;
     if (!mCurrentJob) {
         SendLater::SendLaterInfo *info = searchInfo(id);
         if (info) {
@@ -193,7 +191,6 @@ void SendLaterManager::recreateSendList()
 
 void SendLaterManager::sendDone(SendLater::SendLaterInfo *info)
 {
-    //qDebug()<<" void SendLaterManager::sendDone(SendLater::SendLaterInfo *info)";
     if (info) {
         if (info->isRecurrence()) {
             SendLater::SendLaterUtil::changeRecurrentDate(info);

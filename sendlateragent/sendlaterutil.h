@@ -36,6 +36,7 @@ namespace SendLaterUtil
     SENDLATER_EXPORT bool sentLaterAgentEnabled();
 
     SENDLATER_EXPORT void reload();
+
     SENDLATER_EXPORT void changeRecurrentDate(SendLater::SendLaterInfo *info);
 }
 }

@@ -119,7 +119,7 @@ void SendLaterJob::slotJobFinished(KJob* job)
 
 void SendLaterJob::slotDeleteItem( KJob *job )
 {
-    qDebug()<<"void SendLaterJob::slotDeleteItem( KJob *job )";
+    //qDebug()<<"void SendLaterJob::slotDeleteItem( KJob *job )";
     if ( job->error() ) {
         qDebug()<<" void SendLaterJob::slotDeleteItem( KJob *job ) :"<<job->errorString();
     }

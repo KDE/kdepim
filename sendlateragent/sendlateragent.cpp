@@ -98,6 +98,7 @@ bool SendLaterAgent::enabledAgent() const
 
 SendLater::SendLaterDialog::SendLaterAction SendLaterAgent::addSendLaterItem(qlonglong itemId, qlonglong windowId)
 {
+    //TODO 4.12: use it and fix it :)
     SendLater::SendLaterInfo *info = new SendLater::SendLaterInfo;
     info->setItemId(itemId);
     QPointer<SendLater::SendLaterDialog> dialog = new SendLater::SendLaterDialog(info);
