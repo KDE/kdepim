@@ -102,6 +102,9 @@ void SendLaterJob::slotJobFinished(KJob* job)
             sendError(QLatin1String("Message is not a real message"), SendLaterManager::CanNotFetchItem);
             return;
         }
+        msg->date()->setDateTime( KDateTime::currentLocalDateTime() );
+        msg->assemble();
+
         if (!mManager->sender()->send( msg, MessageComposer::MessageSender::SendImmediate )) {
             //Add i18n(...)
             sendError(QLatin1String("Can not send message."), SendLaterManager::MailDispatchDoesntWork);
