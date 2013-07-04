@@ -269,10 +269,20 @@ void ExportMailJob::backupConfig()
         delete templateConfig;
     }
 
-    QDir autocorrectDirectory( KStandardDirs::locateLocal( "data", QLatin1String( "autocorrect/" ) ) );
+    const QDir themeDirectory( KStandardDirs::locateLocal( "data", QLatin1String( "messageviewer/themes/" ) ) );
+    if (themeDirectory.exists()) {
+        const bool themeDirAdded = archive()->addLocalDirectory(themeDirectory.path(), Utils::dataPath() + QLatin1String( "messageviewer/themes/" ));
+        if (!themeDirAdded) {
+            //TODO fix i18n
+            Q_EMIT error(i18n("\"%1\" file cannot be added to backup file.", themeDirectory.path()));
+        }
+    }
+
+    const QDir autocorrectDirectory( KStandardDirs::locateLocal( "data", QLatin1String( "autocorrect/" ) ) );
     if (autocorrectDirectory.exists()) {
-        QFileInfoList listFileInfo = autocorrectDirectory.entryInfoList(QStringList()<< QLatin1String("*.xml"), QDir::Files);
-        for (int i = 0; i < listFileInfo.size(); ++i) {
+        const QFileInfoList listFileInfo = autocorrectDirectory.entryInfoList(QStringList()<< QLatin1String("*.xml"), QDir::Files);
+        const int listSize(listFileInfo.size());
+        for (int i = 0; i < listSize; ++i) {
             backupFile(listFileInfo.at(i).absoluteFilePath(), Utils::dataPath() + QLatin1String( "autocorrect/" ) , listFileInfo.at(i).fileName());
         }
     }
