@@ -266,7 +266,7 @@ void BackupJob::processMessage( const Akonadi::Item &item )
         return;
     }
 
-    mArchivedMessages++;
+    ++mArchivedMessages;
     mArchivedSize += messageSize;
 
     // Use a singleshot timer, otherwise the job started in archiveNextMessage()
