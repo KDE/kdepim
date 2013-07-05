@@ -142,7 +142,7 @@ SendLaterWidget::SendLaterWidget( QWidget *parent )
     QStringList headers;
     headers << i18n("Subject")
             << i18n("Send around")
-            << i18n("Recursive")
+            << i18n("Recurrent")
             << i18n("Message Id");
 
     mWidget->treeWidget->setHeaderLabels(headers);
@@ -176,7 +176,7 @@ void SendLaterWidget::customContextMenuRequested(const QPoint &)
             menu.addAction(i18n("Send now"), this, SLOT(slotSendNow()));
         }
         menu.addSeparator();
-        menu.addAction(i18n("Delete"), this, SLOT(slotRemoveItem()));
+        menu.addAction(KIcon(QLatin1String("edit-delete")), i18n("Delete"), this, SLOT(slotRemoveItem()));
         menu.exec(QCursor::pos());
     }
 }
