@@ -144,8 +144,7 @@ void WebKitPartHtmlWriter::resolveCidUrls()
   for( QWebElementCollection::iterator it = images.begin(); it != end; ++it )
   {
     KUrl url( (*it).attribute( "src" ) );
-    if ( url.protocol() == QLatin1String( "cid" ) )
-    {
+    if ( url.protocol() == QLatin1String( "cid" ) ) {
       EmbeddedPartMap::const_iterator cit = mEmbeddedPartMap.constFind( url.path() );
       if ( cit != mEmbeddedPartMap.constEnd() ) {
         kDebug() << "Replacing" << url.prettyUrl() << "by" << cit.value();
