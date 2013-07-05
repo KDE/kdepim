@@ -174,17 +174,17 @@ void ComposerAutoCorrection::addAutoCorrect(const QString &currentWord, const QS
 }
 
 
-void ComposerAutoCorrection::setUpperCaseExceptions(const QSet<QString>& exceptions)
+void ComposerAutoCorrection::setUpperCaseExceptions(const QSet<QString> &exceptions)
 {
     mUpperCaseExceptions = exceptions;
 }
 
-void ComposerAutoCorrection::setTwoUpperLetterExceptions(const QSet<QString>& exceptions)
+void ComposerAutoCorrection::setTwoUpperLetterExceptions(const QSet<QString> &exceptions)
 {
     mTwoUpperLetterExceptions = exceptions;
 }
 
-void ComposerAutoCorrection::setAutocorrectEntries(const QHash<QString, QString>& entries)
+void ComposerAutoCorrection::setAutocorrectEntries(const QHash<QString, QString> &entries)
 {
     mAutocorrectEntries = entries;
 }
