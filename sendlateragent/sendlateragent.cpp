@@ -19,6 +19,7 @@
 #include "sendlatermanager.h"
 #include "sendlaterconfiguredialog.h"
 #include "sendlaterinfo.h"
+#include "sendlaterutil.h"
 #include "sendlateragentadaptor.h"
 #include "sendlateragentsettings.h"
 
@@ -113,7 +114,7 @@ SendLater::SendLaterDialog::SendLaterAction SendLaterAgent::addSendLaterItem(qlo
     if (dialog->exec()) {
         info = dialog->info();
         KSharedConfig::Ptr config = KGlobal::config();
-        KConfigGroup group = config->group(QString::fromLatin1("SendLaterItem %1").arg(info->itemId()));
+        KConfigGroup group = config->group(SendLater::SendLaterUtil::sendLaterPattern.arg(info->itemId()));
         info->writeConfig(group);
         action = dialog->action();
         //TODO

@@ -18,6 +18,7 @@
 #include "sendlaterconfiguredialog.h"
 #include "sendlaterdialog.h"
 #include "sendlaterinfo.h"
+#include "sendlaterutil.h"
 
 #include "kdepim-version.h"
 
@@ -255,7 +256,7 @@ void SendLaterWidget::save()
     for (int i = 0; i < numberOfItem; ++i) {
         SendLaterItem *mailItem = static_cast<SendLaterItem *>(mWidget->treeWidget->topLevelItem(i));
         if (mailItem->info()) {
-            KConfigGroup group = config->group(QString::fromLatin1("SendLaterItem %1").arg(mailItem->info()->itemId()));
+            KConfigGroup group = config->group(SendLater::SendLaterUtil::sendLaterPattern.arg(mailItem->info()->itemId()));
             mailItem->info()->writeConfig(group);
         }
     }
