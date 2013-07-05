@@ -21,25 +21,23 @@ import QtQuick 1.1
 import org.kde 4.5
 import org.kde.pim.mobileui 4.5 as KPIM
 import org.kde.contacteditors 4.5 as ContactEditors
+import org.kde.plasma.extras 0.1 as PlasmaExtras
 
 KPIM.MainView {
-  KPIM.DecoratedFlickable {
+  PlasmaExtras.ScrollArea {
     anchors.fill: parent
 
     anchors.topMargin: 40
     anchors.leftMargin: 40;
     anchors.rightMargin: 4;
 
-    contentHeight: editor.height;
+    flickableItem: Flickable {
+      contentHeight: editor.height;
 
-    content.children: [
-      Item {
-        anchors.fill: parent
-        ContactEditors.ContactGroupEditor {
-          id: editor;
-          width: parent.width;
-        }
+      ContactEditors.ContactGroupEditor {
+        id: editor;
+        width: parent.width;
       }
-    ]
+    }
   }
 }

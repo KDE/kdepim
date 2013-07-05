@@ -87,7 +87,6 @@ install(FILES
   ActiveActionMenuItemDelegate.qml
   BulkActionScreen.qml
   BulkActionList.qml
-  DecoratedFlickable.qml
   DecoratedListView.qml
   FakeAction.qml
   FavoriteManager.qml
