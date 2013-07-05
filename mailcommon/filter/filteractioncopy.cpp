@@ -25,7 +25,7 @@
 using namespace MailCommon;
 
 FilterActionCopy::FilterActionCopy( QObject *parent )
-  : FilterActionWithFolder( "copy", i18n( "Copy Into Folder" ), parent )
+  : FilterActionWithFolder( QLatin1String("copy"), i18n( "Copy Into Folder" ), parent )
 {
 }
 

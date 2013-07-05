@@ -23,7 +23,7 @@
 
 using namespace MailCommon;
 
-FilterActionWithUOID::FilterActionWithUOID( const char *name, const QString &label, QObject *parent )
+FilterActionWithUOID::FilterActionWithUOID( const QString &name, const QString &label, QObject *parent )
   : FilterAction( name, label, parent ), mParameter( 0 )
 {
 }

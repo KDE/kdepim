@@ -34,7 +34,7 @@ class FilterActionWithCommand : public FilterActionWithUrl
     /**
      * @copydoc FilterAction::FilterAction
      */
-    FilterActionWithCommand( const char *name, const QString &label, QObject *parent = 0 );
+    FilterActionWithCommand(const QString &name, const QString &label, QObject *parent = 0 );
 
     /**
      * @copydoc FilterAction::createParamWidget

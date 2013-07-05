@@ -31,7 +31,7 @@ FilterAction* FilterActionMove::newAction()
 }
 
 FilterActionMove::FilterActionMove( QObject *parent )
-  : FilterActionWithFolder( "transfer", i18n( "Move Into Folder" ), parent )
+  : FilterActionWithFolder( QLatin1String("transfer"), i18n( "Move Into Folder" ), parent )
 {
 }
 

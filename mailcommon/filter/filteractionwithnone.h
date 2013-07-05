@@ -46,7 +46,7 @@ class FilterActionWithNone : public FilterAction
     /**
      * @copydoc FilterAction::FilterAction
      */
-    FilterActionWithNone( const char *name, const QString &label, QObject *parent = 0 );
+    FilterActionWithNone(const QString &name, const QString &label, QObject *parent = 0 );
 
     /**
      * @copydoc FilterAction::argsFromString

@@ -32,14 +32,14 @@ FilterAction* FilterActionRemoveHeader::newAction()
 }
 
 FilterActionRemoveHeader::FilterActionRemoveHeader( QObject *parent )
-  : FilterActionWithStringList( "remove header", i18n( "Remove Header" ), parent )
+  : FilterActionWithStringList( QLatin1String("remove header"), i18n( "Remove Header" ), parent )
 {
-  mParameterList << ""
-                 << "Reply-To"
-                 << "Delivered-To"
-                 << "X-KDE-PR-Message"
-                 << "X-KDE-PR-Package"
-                 << "X-KDE-PR-Keywords";
+  mParameterList << QLatin1String("")
+                 << QLatin1String("Reply-To")
+                 << QLatin1String("Delivered-To")
+                 << QLatin1String("X-KDE-PR-Message")
+                 << QLatin1String("X-KDE-PR-Package")
+                 << QLatin1String("X-KDE-PR-Keywords");
 
   mParameter = mParameterList.at( 0 );
 }

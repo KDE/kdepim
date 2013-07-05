@@ -38,7 +38,7 @@ Akonadi::MessageStatus MailCommon::FilterActionStatus::stati[] =
 
 int MailCommon::FilterActionStatus::StatiCount = sizeof( MailCommon::FilterActionStatus::stati ) / sizeof( Akonadi::MessageStatus );
 
-FilterActionStatus::FilterActionStatus(const char *name, const QString &label, QObject *parent )
+FilterActionStatus::FilterActionStatus(const QString &name, const QString &label, QObject *parent )
     : FilterActionWithStringList( name, label, parent )
 {
     // if you change this list, also update

@@ -37,7 +37,7 @@ FilterAction* FilterActionAddTag::newAction()
 }
 
 FilterActionAddTag::FilterActionAddTag( QObject *parent )
-  : FilterAction( "add tag", i18n( "Add Tag" ), parent )
+  : FilterAction( QLatin1String("add tag"), i18n( "Add Tag" ), parent )
 {
     mList = FilterManager::instance()->tagList();
     connect(FilterManager::instance(),SIGNAL(tagListingFinished()),SLOT(slotTagListingFinished()));

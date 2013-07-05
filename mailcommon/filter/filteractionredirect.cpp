@@ -36,7 +36,7 @@ FilterAction* FilterActionRedirect::newAction()
 }
 
 FilterActionRedirect::FilterActionRedirect( QObject *parent )
-  : FilterActionWithAddress( "redirect", i18n( "Redirect To" ), parent )
+  : FilterActionWithAddress( QLatin1String("redirect"), i18n( "Redirect To" ), parent )
 {
 }
 

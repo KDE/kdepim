@@ -27,7 +27,7 @@ class FilterActionStatus : public FilterActionWithStringList
 {
   Q_OBJECT
 public:
-    FilterActionStatus(const char *name, const QString &label, QObject *parent = 0);
+    FilterActionStatus(const QString &name, const QString &label, QObject *parent = 0);
     virtual SearchRule::RequiredPart requiredPart() const;
     virtual bool isEmpty() const;
     virtual void argsFromString( const QString &argsStr );

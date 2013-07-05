@@ -23,7 +23,7 @@
 
 using namespace MailCommon;
 
-FilterActionWithStringList::FilterActionWithStringList( const char *name, const QString &label, QObject *parent )
+FilterActionWithStringList::FilterActionWithStringList( const QString &name, const QString &label, QObject *parent )
   : FilterActionWithString( name, label, parent )
 {
 }
