@@ -18,6 +18,28 @@ Root
 |                   |---------<akonadi agent config file>
 |                   |---------<resource config file>
 |                   |---------<archive resource>
+|-----calendar
+|       |---------<resource name>
+|                   |---------<akonadi agent config file>
+|                   |---------<resource config file>
+|                   |---------<archive resource>
+|------addressbook
+|       |---------<resource name>
+|                   |---------<akonadi agent config file>
+|                   |---------<resource config file>
+|                   |---------<archive resource>
+|
+|------alarm
+|       |---------<resource name>
+|                   |---------<akonadi agent config file>
+|                   |---------<resource config file>
+|                   |---------<archive resource>
+|
+|------jot
+|       |---------<resource name>
+|                   |---------<akonadi agent config file>
+|                   |---------<resource config file>
+|                   |---------<archive resource>
 |
 |-----configs
 |       |---------filters
@@ -49,29 +71,4 @@ Root
 |       |---------autocorrect/<autocorrection xml file>
 |       |---------korganizer/freebusyurls
 |       |---------korganizer/templates/*
-|       |---------messageviewer/themes/
-|
-|-----calendar
-|       |---------<resource name>
-|                   |---------<akonadi agent config file>
-|                   |---------<resource config file>
-|                   |---------<archive resource>
-|------addressbook
-|       |---------<resource name>
-|                   |---------<akonadi agent config file>
-|                   |---------<resource config file>
-|                   |---------<archive resource>
-|
-|------alarm
-|       |---------<resource name>
-|                   |---------<akonadi agent config file>
-|                   |---------<resource config file>
-|                   |---------<archive resource>
-|
-|------jot
-|       |---------<resource name>
-|                   |---------<akonadi agent config file>
-|                   |---------<resource config file>
-|                   |---------<archive resource>
-
-
+|       |---------messageviewer/themes/*
