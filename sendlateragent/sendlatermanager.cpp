@@ -139,6 +139,10 @@ void SendLaterManager::sendNow(Akonadi::Item::Id id)
 
 void SendLaterManager::slotCreateJob()
 {
+    if (mCurrentJob) {
+        qDebug()<<" Problem we have already a job"<<mCurrentJob;
+        return;
+    }
     mCurrentJob = new SendLaterJob(this, mCurrentInfo);
     mCurrentJob->start();
 }
