@@ -28,6 +28,7 @@ ArchiveStorage::~ArchiveStorage()
 {
     closeArchive();
     delete mArchive;
+    mArchive = 0;
 }
 
 void ArchiveStorage::closeArchive()

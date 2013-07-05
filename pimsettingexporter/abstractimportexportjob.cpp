@@ -199,6 +199,14 @@ void AbstractImportExportJob::initializeImportJob()
     }
 }
 
+void AbstractImportExportJob::copyToDirectory(const KArchiveEntry *entry, const QString &dest)
+{
+    const KArchiveDirectory *subfolderDir = static_cast<const KArchiveDirectory*>(entry);
+    subfolderDir->copyTo(dest);
+    //TODO 4.12: add message info.
+    //Q_EMIT info(QString("\"%1\" was copied.",dest));
+}
+
 void AbstractImportExportJob::copyToFile(const KArchiveFile *archivefile, const QString &dest, const QString &filename, const QString &prefix)
 {
     QDir dir(mTempDirName);
