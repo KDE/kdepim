@@ -164,18 +164,15 @@ void SendLaterManager::sendError(SendLater::SendLaterInfo *info, ErrorType type)
     if (info) {
         if (type == ItemNotFound) {
             //Don't try to resend it. Remove it.
-            mListSendLaterInfo.removeAll(mCurrentInfo);
-            removeInfo(info->itemId());
+            removeLaterInfo(info);
         } else {
             if (KMessageBox::Yes == KMessageBox::questionYesNo(0, i18n("An error was found. Do you want to resend it?"), i18n("Error found"))) {
                 //TODO 4.12: allow to remove it even if it's recurrent (need new i18n)
                 if (!info->isRecurrence()) {
-                    mListSendLaterInfo.removeAll(mCurrentInfo);
-                    removeInfo(info->itemId());
+                    removeLaterInfo(info);
                 }
             } else {
-                mListSendLaterInfo.removeAll(mCurrentInfo);
-                removeInfo(info->itemId());
+                removeLaterInfo(info);
             }
         }
     }
@@ -195,11 +192,16 @@ void SendLaterManager::sendDone(SendLater::SendLaterInfo *info)
         if (info->isRecurrence()) {
             SendLater::SendLaterUtil::changeRecurrentDate(info);
         } else {
-            mListSendLaterInfo.removeAll(mCurrentInfo);
-            removeInfo(info->itemId());
+            removeLaterInfo(info);
         }
     }
     recreateSendList();
+}
+
+void SendLaterManager::removeLaterInfo(SendLater::SendLaterInfo *info)
+{
+    mListSendLaterInfo.removeAll(mCurrentInfo);
+    removeInfo(info->itemId());
 }
 
 void SendLaterManager::printDebugInfo()
