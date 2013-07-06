@@ -112,26 +112,6 @@ PlasmaComponents.Page {
       }
     }
   }
-
-  QML.Rectangle {
-    id : jumpToNextUnreadMessageButton
-    visible : guiStateManager.inViewSingleItemState
-    anchors.right : kmailMobile.right
-    anchors.bottom : backToMessageListButton.top
-    anchors.margins: 12
-    color : "#00000000"
-    width: 70
-    height: 70
-    QML.Image {
-      source : "next-unread-mail.png";
-      QML.MouseArea {
-        anchors.fill : parent;
-        onClicked : {
-          application.selectNextUnreadMessage()
-        }
-      }
-    }
-  }
   //END MessageView
 
   //BEGIN MainWorkView
