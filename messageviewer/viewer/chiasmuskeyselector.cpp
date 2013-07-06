@@ -18,7 +18,6 @@ ChiasmusKeySelector::ChiasmusKeySelector( QWidget* parent, const QString& captio
 {
   setCaption( caption );
   setButtons( Ok | Cancel );
-  setObjectName( "chiasmusKeySelector" );
   QWidget *page = new QWidget( this );
   setMainWidget(page);
 
