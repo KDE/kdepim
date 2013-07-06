@@ -270,7 +270,7 @@ void SendLaterWidget::slotRemoveItem()
     if (KMessageBox::warningYesNo(this,i18n("Do you want to delete selected items? Do you want to continue?"),i18n("Remove items"))== KMessageBox::No)
         return;
 
-    //TODO delete message or not ?
+    //FIXME 4.12: delete message or not ?
     Q_FOREACH(QTreeWidgetItem *item,listItems) {
         delete item;
     }
