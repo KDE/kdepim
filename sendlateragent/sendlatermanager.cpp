@@ -128,7 +128,7 @@ void SendLaterManager::sendNow(Akonadi::Item::Id id)
             mCurrentInfo = info;
             slotCreateJob();
         } else {
-            qDebug()<<" can't find info about current id: "<<id;
+            kDebug()<<" can't find info about current id: "<<id;
             itemRemoved(id);
         }
     } else {
@@ -140,7 +140,7 @@ void SendLaterManager::sendNow(Akonadi::Item::Id id)
 void SendLaterManager::slotCreateJob()
 {
     if (mCurrentJob) {
-        qDebug()<<" Problem we have already a job"<<mCurrentJob;
+        kDebug()<<" Problem we have already a job"<<mCurrentJob;
         return;
     }
     mCurrentJob = new SendLaterJob(this, mCurrentInfo);

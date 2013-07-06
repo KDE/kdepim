@@ -43,12 +43,12 @@ SendLaterJob::SendLaterJob(SendLaterManager *manager, SendLater::SendLaterInfo *
       mManager(manager),
       mInfo(info)
 {
-    qDebug()<<" SendLaterJob::SendLaterJob"<<this;
+    kDebug()<<" SendLaterJob::SendLaterJob"<<this;
 }
 
 SendLaterJob::~SendLaterJob()
 {
-    qDebug()<<" SendLaterJob::~SendLaterJob()"<<this;
+    kDebug()<<" SendLaterJob::~SendLaterJob()"<<this;
 }
 
 void SendLaterJob::start()
@@ -131,9 +131,8 @@ void SendLaterJob::updateAndCleanMessageBeforeSending(const KMime::Message::Ptr 
 
 void SendLaterJob::slotDeleteItem( KJob *job )
 {
-    //qDebug()<<"void SendLaterJob::slotDeleteItem( KJob *job )";
     if ( job->error() ) {
-        qDebug()<<" void SendLaterJob::slotDeleteItem( KJob *job ) :"<<job->errorString();
+        kDebug()<<" void SendLaterJob::slotDeleteItem( KJob *job ) :"<<job->errorString();
     }
     sendDone();
 }
