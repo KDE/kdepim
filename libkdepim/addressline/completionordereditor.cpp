@@ -79,7 +79,7 @@ class LDAPCompletionItem : public CompletionItem
 
     virtual QIcon icon() const
     {
-      return KIcon( "view-ldap-resource" );
+      return KIcon( QLatin1String("view-ldap-resource") );
     }
 
     virtual int completionWeight() const
@@ -91,7 +91,7 @@ class LDAPCompletionItem : public CompletionItem
     {
       KConfig *config = KLDAP::LdapClientSearchConfig::config();
       KConfigGroup group( config, "LDAP" );
-      group.writeEntry( QString( "SelectedCompletionWeight%1" ).arg( mLdapClient->clientNumber() ),
+      group.writeEntry( QString::fromLatin1("SelectedCompletionWeight%1" ).arg( mLdapClient->clientNumber() ),
                         mWeight );
       group.sync();
     }
@@ -193,7 +193,7 @@ class CompletionViewItem : public QTreeWidgetItem
 
 CompletionOrderEditor::CompletionOrderEditor( KLDAP::LdapClientSearch* ldapSearch,
                                               QWidget* parent )
-  : KDialog( parent ), mConfig( "kpimcompletionorder" ), mLdapSearch( ldapSearch ), mDirty( false )
+  : KDialog( parent ), mConfig( QLatin1String("kpimcompletionorder") ), mLdapSearch( ldapSearch ), mDirty( false )
 {
   setCaption( i18n( "Edit Completion Order" ) );
   setButtons( Ok|Cancel );
@@ -201,7 +201,7 @@ CompletionOrderEditor::CompletionOrderEditor( KLDAP::LdapClientSearch* ldapSearc
   setModal( true );
   showButtonSeparator( true );
   new CompletionOrderEditorAdaptor( this );
-  QDBusConnection::sessionBus().registerObject( "/", this, QDBusConnection::ExportAdaptors );
+  QDBusConnection::sessionBus().registerObject( QLatin1String("/"), this, QDBusConnection::ExportAdaptors );
 
   KHBox* page = new KHBox( this );
   setMainWidget( page );
@@ -215,14 +215,14 @@ CompletionOrderEditor::CompletionOrderEditor( KLDAP::LdapClientSearch* ldapSearc
 
   KVBox* upDownBox = new KVBox( page );
   mUpButton = new KPushButton( upDownBox );
-  mUpButton->setObjectName( "mUpButton" );
-  mUpButton->setIcon( KIcon("go-up") );
+  mUpButton->setObjectName( QLatin1String("mUpButton") );
+  mUpButton->setIcon( KIcon(QLatin1String("go-up")) );
   mUpButton->setEnabled( false ); // b/c no item is selected yet
   mUpButton->setFocusPolicy( Qt::StrongFocus );
 
   mDownButton = new KPushButton( upDownBox );
-  mDownButton->setObjectName( "mDownButton" );
-  mDownButton->setIcon( KIcon("go-down") );
+  mDownButton->setObjectName( QLatin1String("mDownButton") );
+  mDownButton->setIcon( KIcon(QLatin1String("go-down")) );
   mDownButton->setEnabled( false ); // b/c no item is selected yet
   mDownButton->setFocusPolicy( Qt::StrongFocus );
 

@@ -182,18 +182,18 @@ class AddresseeLineEditStatic
 K_GLOBAL_STATIC( AddresseeLineEditStatic, s_static )
 
 // needs to be unique, but the actual name doesn't matter much
-static QByteArray newLineEditObjectName()
+static QString newLineEditObjectName()
 {
   static int s_count = 0;
-  QByteArray name( "KPIM::AddresseeLineEdit" );
+  QString name( QLatin1String("KPIM::AddresseeLineEdit") );
   if ( s_count++ ) {
-    name += '-';
-    name += QByteArray().setNum( s_count );
+    name += QLatin1Char('-');
+    name += QString::number( s_count );
   }
   return name;
 }
 
-static const QString s_completionItemIndentString = "     ";
+static const QString s_completionItemIndentString = QLatin1String("     ");
 
 static bool itemIsHeader( const QListWidgetItem *item )
 {
@@ -381,8 +381,8 @@ void AddresseeLineEdit::Private::startNepomukSearch()
   }
   const QString query = QString::fromLatin1( sparqlquery ).arg( m_searchString );
   Nepomuk2::Query::RequestPropertyMap requestPropertyMap;
-  requestPropertyMap.insert( "email", Nepomuk2::Vocabulary::NCO::hasEmailAddress() );
-  requestPropertyMap.insert( "fullname", Nepomuk2::Vocabulary::NCO::fullname() );
+  requestPropertyMap.insert( QLatin1String("email"), Nepomuk2::Vocabulary::NCO::hasEmailAddress() );
+  requestPropertyMap.insert( QLatin1String("fullname"), Nepomuk2::Vocabulary::NCO::fullname() );
   const bool result = s_static->nepomukSearchClient->sparqlQuery( query, requestPropertyMap );
   if (!result) {
     kDebug() << "Starting the nepomuk lookup failed. Search string: " << m_searchString;
@@ -606,7 +606,7 @@ void AddresseeLineEdit::Private::updateSearchString()
       inQuote = !inQuote;
     }
 
-    if ( searchChar == '\\' &&
+    if ( searchChar == QLatin1Char('\\') &&
          ( i + 1 ) < searchStringLength && m_searchString[ i + 1 ] == QLatin1Char( '"' ) ) {
       ++i;
     }
@@ -616,8 +616,8 @@ void AddresseeLineEdit::Private::updateSearchString()
     }
 
     if ( i < searchStringLength &&
-         ( searchChar == ',' ||
-           ( m_useSemicolonAsSeparator && searchChar == ';' ) ) ) {
+         ( searchChar == QLatin1Char(',') ||
+           ( m_useSemicolonAsSeparator && searchChar == QLatin1Char(';') ) ) ) {
       n = i;
     }
   }
@@ -1280,7 +1280,7 @@ void AddresseeLineEdit::dropEvent( QDropEvent *event )
       }
       if ( eot == 0 ) {
         contents.clear();
-      } else if ( contents[ eot - 1 ] == ',' ) {
+      } else if ( contents[ eot - 1 ] == QLatin1Char(',') ) {
         eot--;
         contents.truncate( eot );
       }

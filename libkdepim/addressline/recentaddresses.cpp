@@ -204,11 +204,11 @@ RecentAddressDialog::RecentAddressDialog( QWidget *parent )
 
     QVBoxLayout* btnsLayout = new QVBoxLayout;
     btnsLayout->addStretch();
-    mNewButton = new KPushButton(KIcon("list-add"), i18n("&Add"), this);
+    mNewButton = new KPushButton(KIcon(QLatin1String("list-add")), i18n("&Add"), this);
     connect(mNewButton, SIGNAL(clicked()), SLOT(slotAddItem()));
     btnsLayout->insertWidget(0 ,mNewButton);
 
-    mRemoveButton = new KPushButton(KIcon("list-remove"), i18n("&Remove"), this);
+    mRemoveButton = new KPushButton(KIcon(QLatin1String("list-remove")), i18n("&Remove"), this);
     mRemoveButton->setEnabled(false);
     connect(mRemoveButton, SIGNAL(clicked()), SLOT(slotRemoveItem()));
     btnsLayout->insertWidget(1, mRemoveButton);

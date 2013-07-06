@@ -43,7 +43,7 @@ QString KMailCompletion::makeCompletion( const QString &string )
   // this should be in postProcessMatch, but postProcessMatch is const and will not allow nextMatch
   if ( !match.isEmpty() ){
     const QString firstMatch( match );
-    while ( match.indexOf( QRegExp( "(@)|(<.*>)" ) ) == -1 ) {
+    while ( match.indexOf( QRegExp( QLatin1String("(@)|(<.*>)") ) ) == -1 ) {
       /* local email do not require @domain part, if match is an address we'll
        * find last+first <match> in m_keyMap and we'll know that match is
        * already a valid email.
@@ -55,7 +55,7 @@ QString KMailCompletion::makeCompletion( const QString &string )
       bool isEmail = false;
       for ( QStringList::ConstIterator sit( mailAddr.begin() ), sEnd( mailAddr.end() );
             sit != sEnd; ++sit ) {
-        if ( (*sit).indexOf( '<' + match + '>' ) != -1 || (*sit) == match ) {
+        if ( (*sit).indexOf( QLatin1Char('<') + match + QLatin1Char('>') ) != -1 || (*sit) == match ) {
           isEmail = true;
           break;
         }

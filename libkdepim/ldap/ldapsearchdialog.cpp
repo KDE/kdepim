@@ -90,25 +90,25 @@ static QMap<QString, QString>& adrbookattr2ldap()
   static QMap<QString, QString> keys;
 
   if ( keys.isEmpty() ) {
-    keys[ i18nc( "@item LDAP search key", "Title" ) ] = "title";
-    keys[ i18n( "Full Name" ) ] = "cn";
-    keys[ i18nc( "@item LDAP search key", "Email" ) ] = "mail";
-    keys[ i18n( "Home Number" ) ] = "homePhone";
-    keys[ i18n( "Work Number" ) ] = "telephoneNumber";
-    keys[ i18n( "Mobile Number" ) ] = "mobile";
-    keys[ i18n( "Fax Number" ) ] = "facsimileTelephoneNumber";
-    keys[ i18n( "Pager" ) ] = "pager";
-    keys[ i18n( "Street" ) ] = "street";
-    keys[ i18nc( "@item LDAP search key", "State" ) ] = "st";
-    keys[ i18n( "Country" ) ] = "co";
-    keys[ i18n( "City" ) ] = "l"; //krazy:exclude=doublequote_chars
-    keys[ i18n( "Organization" ) ] = "o"; //krazy:exclude=doublequote_chars
-    keys[ i18n( "Company" ) ] = "Company";
-    keys[ i18n( "Department" ) ] = "department";
-    keys[ i18n( "Zip Code" ) ] = "postalCode";
-    keys[ i18n( "Postal Address" ) ] = "postalAddress";
-    keys[ i18n( "Description" ) ] = "description";
-    keys[ i18n( "User ID" ) ] = "uid";
+    keys[ i18nc( "@item LDAP search key", "Title" ) ] = QLatin1String("title");
+    keys[ i18n( "Full Name" ) ] = QLatin1String("cn");
+    keys[ i18nc( "@item LDAP search key", "Email" ) ] = QLatin1String("mail");
+    keys[ i18n( "Home Number" ) ] = QLatin1String("homePhone");
+    keys[ i18n( "Work Number" ) ] = QLatin1String("telephoneNumber");
+    keys[ i18n( "Mobile Number" ) ] = QLatin1String("mobile");
+    keys[ i18n( "Fax Number" ) ] = QLatin1String("facsimileTelephoneNumber");
+    keys[ i18n( "Pager" ) ] = QLatin1String("pager");
+    keys[ i18n( "Street" ) ] = QLatin1String("street");
+    keys[ i18nc( "@item LDAP search key", "State" ) ] = QLatin1String("st");
+    keys[ i18n( "Country" ) ] = QLatin1String("co");
+    keys[ i18n( "City" ) ] = QLatin1String("l"); //krazy:exclude=doublequote_chars
+    keys[ i18n( "Organization" ) ] = QLatin1String("o"); //krazy:exclude=doublequote_chars
+    keys[ i18n( "Company" ) ] = QLatin1String("Company");
+    keys[ i18n( "Department" ) ] = QLatin1String("department");
+    keys[ i18n( "Zip Code" ) ] = QLatin1String("postalCode");
+    keys[ i18n( "Postal Address" ) ] = QLatin1String("postalAddress");
+    keys[ i18n( "Description" ) ] = QLatin1String("description");
+    keys[ i18n( "User ID" ) ] = QLatin1String("uid");
   }
 
   return keys;
@@ -122,30 +122,30 @@ static QString makeFilter( const QString &query, const QString &attr, bool start
    * This allows both resource accounts with an email address which are not a person and
    * person entries without an email address to show up, while still not showing things
    * like structural entries in the ldap tree. */
-  QString result( "&(|(objectclass=person)(objectclass=groupofnames)(mail=*))(" );
+  QString result( QLatin1String("&(|(objectclass=person)(objectclass=groupofnames)(mail=*))(") );
   if ( query.isEmpty() ) {
     // Return a filter that matches everything
-    return result + "|(cn=*)(sn=*)" + ')';
+    return result + QLatin1String("|(cn=*)(sn=*)") + QLatin1Char(')');
   }
 
   if ( attr == i18nc( "Search attribute: Name of contact", "Name" ) ) {
-    result += startsWith ? "|(cn=%1*)(sn=%2*)" : "|(cn=*%1*)(sn=*%2*)";
+    result += startsWith ? QLatin1String("|(cn=%1*)(sn=%2*)") : QLatin1String("|(cn=*%1*)(sn=*%2*)");
     result = result.arg( query ).arg( query );
   } else {
-    result += startsWith ? "%1=%2*" : "%1=*%2*";
+    result += startsWith ? QLatin1String("%1=%2*") : QLatin1String("%1=*%2*");
     if ( attr == i18nc( "Search attribute: Email of the contact", "Email" ) ) {
-      result = result.arg( "mail" ).arg( query );
+      result = result.arg( QLatin1String("mail") ).arg( query );
     } else if ( attr == i18n( "Home Number" ) ) {
-      result = result.arg( "homePhone" ).arg( query );
+      result = result.arg( QLatin1String("homePhone") ).arg( query );
     } else if ( attr == i18n( "Work Number" ) ) {
-      result = result.arg( "telephoneNumber" ).arg( query );
+      result = result.arg( QLatin1String("telephoneNumber") ).arg( query );
     } else {
       // Error?
       result.clear();
       return result;
     }
   }
-  result += ')';
+  result += QLatin1Char(')');
   return result;
 }
 
@@ -154,12 +154,12 @@ static KABC::Addressee convertLdapAttributesToAddressee( const KLDAP::LdapAttrMa
   KABC::Addressee addr;
 
   // name
-  if ( !attrs.value( "cn" ).isEmpty() ) {
-    addr.setNameFromString( asUtf8( attrs["cn"].first() ) );
+  if ( !attrs.value( QLatin1String("cn") ).isEmpty() ) {
+    addr.setNameFromString( asUtf8( attrs[QLatin1String("cn")].first() ) );
   }
 
   // email
-  KLDAP::LdapAttrValue lst = attrs["mail"];
+  KLDAP::LdapAttrValue lst = attrs[QLatin1String("mail")];
   KLDAP::LdapAttrValue::ConstIterator it = lst.constBegin();
   bool pref = true;
   while ( it != lst.constEnd() ) {
@@ -168,18 +168,18 @@ static KABC::Addressee convertLdapAttributesToAddressee( const KLDAP::LdapAttrMa
     ++it;
   }
 
-  if ( !attrs.value( "o" ).isEmpty() ) {
-    addr.setOrganization( asUtf8( attrs[ "o" ].first() ) );
+  if ( !attrs.value( QLatin1String("o") ).isEmpty() ) {
+    addr.setOrganization( asUtf8( attrs[ QLatin1String("o") ].first() ) );
   }
-  if ( addr.organization().isEmpty() && !attrs.value( "Company" ).isEmpty() ) {
-    addr.setOrganization( asUtf8( attrs[ "Company" ].first() ) );
+  if ( addr.organization().isEmpty() && !attrs.value( QLatin1String("Company") ).isEmpty() ) {
+    addr.setOrganization( asUtf8( attrs[ QLatin1String("Company") ].first() ) );
   }
 
   // Address
   KABC::Address workAddr( KABC::Address::Work );
 
-  if ( !attrs.value( "department" ).isEmpty() ) {
-    addr.setDepartment( asUtf8( attrs[ "department" ].first() ) );
+  if ( !attrs.value( QLatin1String("department") ).isEmpty() ) {
+    addr.setDepartment( asUtf8( attrs[ QLatin1String("department") ].first() ) );
   }
 
   if ( !workAddr.isEmpty() ) {
@@ -187,32 +187,32 @@ static KABC::Addressee convertLdapAttributesToAddressee( const KLDAP::LdapAttrMa
   }
 
   // phone
-  if ( !attrs.value( "homePhone" ).isEmpty() ) {
-    KABC::PhoneNumber homeNr = asUtf8( attrs[  "homePhone" ].first() );
+  if ( !attrs.value( QLatin1String("homePhone") ).isEmpty() ) {
+    KABC::PhoneNumber homeNr = asUtf8( attrs[  QLatin1String("homePhone") ].first() );
     homeNr.setType( KABC::PhoneNumber::Home );
     addr.insertPhoneNumber( homeNr );
   }
 
-  if ( !attrs.value( "telephoneNumber" ).isEmpty() ) {
-    KABC::PhoneNumber workNr = asUtf8( attrs[  "telephoneNumber" ].first() );
+  if ( !attrs.value( QLatin1String("telephoneNumber") ).isEmpty() ) {
+    KABC::PhoneNumber workNr = asUtf8( attrs[  QLatin1String("telephoneNumber") ].first() );
     workNr.setType( KABC::PhoneNumber::Work );
     addr.insertPhoneNumber( workNr );
   }
 
-  if ( !attrs.value( "facsimileTelephoneNumber" ).isEmpty() ) {
-    KABC::PhoneNumber faxNr = asUtf8( attrs[  "facsimileTelephoneNumber" ].first() );
+  if ( !attrs.value( QLatin1String("facsimileTelephoneNumber") ).isEmpty() ) {
+    KABC::PhoneNumber faxNr = asUtf8( attrs[  QLatin1String("facsimileTelephoneNumber") ].first() );
     faxNr.setType( KABC::PhoneNumber::Fax );
     addr.insertPhoneNumber( faxNr );
   }
 
-  if ( !attrs.value( "mobile" ).isEmpty() ) {
-    KABC::PhoneNumber cellNr = asUtf8( attrs[  "mobile" ].first() );
+  if ( !attrs.value( QLatin1String("mobile") ).isEmpty() ) {
+    KABC::PhoneNumber cellNr = asUtf8( attrs[  QLatin1String("mobile") ].first() );
     cellNr.setType( KABC::PhoneNumber::Cell );
     addr.insertPhoneNumber( cellNr );
   }
 
-  if ( !attrs.value( "pager" ).isEmpty() ) {
-    KABC::PhoneNumber pagerNr = asUtf8( attrs[  "pager" ].first() );
+  if ( !attrs.value( QLatin1String("pager") ).isEmpty() ) {
+    KABC::PhoneNumber pagerNr = asUtf8( attrs[  QLatin1String("pager") ].first() );
     pagerNr.setType( KABC::PhoneNumber::Pager );
     addr.insertPhoneNumber( pagerNr );
   }
@@ -254,7 +254,7 @@ class ContactListModel : public QAbstractTableModel
         return QString();
       }
 
-      return asUtf8( mContactList.at( index.row() ).value( "mail" ).first() ).trimmed();
+      return asUtf8( mContactList.at( index.row() ).value( QLatin1String("mail") ).first() ).trimmed();
     }
 
     QString fullName( const QModelIndex &index ) const
@@ -263,7 +263,7 @@ class ContactListModel : public QAbstractTableModel
         return QString();
       }
 
-      return asUtf8( mContactList.at( index.row() ).value( "cn" ).first() ).trimmed();
+      return asUtf8( mContactList.at( index.row() ).value( QLatin1String("cn") ).first() ).trimmed();
     }
 
     void clear()
@@ -385,58 +385,58 @@ class ContactListModel : public QAbstractTableModel
 
       switch ( index.column() ) {
         case 0:
-          return join( map.value( "cn" ), ", " );
+          return join( map.value( QLatin1String("cn") ), QLatin1String(", ") );
           break;
         case 1:
-          return join( map.value( "mail" ), ", " );
+          return join( map.value( QLatin1String("mail") ), QLatin1String(", ") );
           break;
         case 2:
-          return join( map.value( "homePhone" ), ", " );
+          return join( map.value( QLatin1String("homePhone") ), QLatin1String(", ") );
           break;
         case 3:
-          return join( map.value( "telephoneNumber" ), ", " );
+          return join( map.value( QLatin1String("telephoneNumber") ), QLatin1String(", ") );
           break;
         case 4:
-          return join( map.value( "mobile" ), ", " );
+          return join( map.value( QLatin1String("mobile") ), QLatin1String(", ") );
           break;
         case 5:
-          return join( map.value( "facsimileTelephoneNumber" ), ", " );
+          return join( map.value( QLatin1String("facsimileTelephoneNumber") ), QLatin1String(", ") );
           break;
         case 6:
-          return join( map.value( "Company" ), ", " );
+          return join( map.value( QLatin1String("Company") ), QLatin1String(", ") );
           break;
         case 7:
-          return join( map.value( "o" ), ", " );
+          return join( map.value( QLatin1String("o") ), QLatin1String(", " ));
           break;
         case 8:
-          return join( map.value( "street" ), ", " );
+          return join( map.value( QLatin1String("street") ), QLatin1String(", ") );
           break;
         case 9:
-          return join( map.value( "st" ), ", " );
+          return join( map.value( QLatin1String("st") ), QLatin1String(", " ));
           break;
         case 10:
-          return join( map.value( "co" ), ", " );
+          return join( map.value( QLatin1String("co") ), QLatin1String(", ") );
           break;
         case 11:
-          return join( map.value( "postalCode" ), ", " );
+          return join( map.value( QLatin1String("postalCode") ), QLatin1String(", ") );
           break;
         case 12:
-          return join( map.value( "postalAddress" ), ", " );
+          return join( map.value( QLatin1String("postalAddress") ), QLatin1String(", ") );
           break;
         case 13:
-          return join( map.value( "l" ), ", " );
+          return join( map.value( QLatin1String("l") ), QLatin1String(", ") );
           break;
         case 14:
-          return join( map.value( "department" ), ", " );
+          return join( map.value( QLatin1String("department") ),QLatin1String( ", " ));
           break;
         case 15:
-          return join( map.value( "description" ), ", " );
+          return join( map.value( QLatin1String("description") ), QLatin1String(", ") );
           break;
         case 16:
-          return join( map.value( "uid" ), ", " );
+          return join( map.value( QLatin1String("uid") ), QLatin1String(", ") );
           break;
         case 17:
-          return join( map.value( "title" ), ", " );
+          return join( map.value( QLatin1String("title") ), QLatin1String(", ") );
           break;
         default:
           return QVariant();
@@ -730,9 +730,9 @@ void LdapSearchDialog::Private::slotSetScope( bool rec )
 {
     Q_FOREACH( KLDAP::LdapClient *client, mLdapClientList ) {
     if ( rec ) {
-      client->setScope( "sub" );
+      client->setScope( QLatin1String("sub") );
     } else {
-      client->setScope( "one" );
+      client->setScope( QLatin1String("one") );
     }
   }
 }
@@ -855,7 +855,7 @@ void LdapSearchDialog::slotUser2()
 
   KCMultiDialog dialog( this );
   dialog.setCaption( i18n( "Configure the Address Book LDAP Settings" ) );
-  dialog.addModule( "kcmldap.desktop" );
+  dialog.addModule( QLatin1String("kcmldap.desktop") );
 
   if ( dialog.exec() ) { //krazy:exclude=crashy
     d->restoreSettings();
