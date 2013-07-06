@@ -193,7 +193,6 @@ SendLater::SendLaterInfo* SendLaterDialog::info()
 {
     if (!mInfo) {
         mInfo = new SendLater::SendLaterInfo();
-        mInfo->setItemId(-1);
     }
     mInfo->setRecurrence(mRecurrence->isChecked());
     mInfo->setRecurrenceEachValue(mRecurrenceValue->value());
