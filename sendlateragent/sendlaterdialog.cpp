@@ -113,7 +113,7 @@ SendLaterDialog::SendLaterDialog(SendLater::SendLaterInfo *info, QWidget *parent
     connect(mSendIn1Hour, SIGNAL(clicked()), SLOT(slotSendIn1Hour()));
     hbox->addWidget(mSendIn1Hour);
 
-    mSendIn2Hours = new KPushButton(i18n("2 hour later"));
+    mSendIn2Hours = new KPushButton(i18n("2 hours later"));
     connect(mSendIn2Hours, SIGNAL(clicked()), SLOT(slotSendIn2Hours()));
     hbox->addWidget(mSendIn2Hours);
     lay->addLayout(hbox);
