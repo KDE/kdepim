@@ -212,13 +212,23 @@ PlasmaComponents.Page {
       }
     }
 
-    KPIM.Spinner {
+    QML.Item {
       id : loadingFolderPage
-      anchors.left : collectionView.right
-      anchors.top : parent.top
-      anchors.bottom : parent.bottom
-      anchors.right : parent.right
-      visible : application.isLoadingSelected
+
+      anchors {
+        left : collectionView.right
+        top : parent.top
+        bottom : parent.bottom
+        right : parent.right
+      }
+
+      visible: application.isLoadingSelected
+
+      PlasmaComponents.BusyIndicator {
+        anchors.centerIn: parent
+
+        running: true
+      }
     }
 
     //BEGIN EmailList

@@ -155,8 +155,9 @@ KPIM.MainView {
       visible: window.busy;
       z: 99
 
-      KPIM.Spinner {
+      PlasmaComponents.BusyIndicator {
           anchors.centerIn: parent
+          running: true
       }
 
       color: "grey"
