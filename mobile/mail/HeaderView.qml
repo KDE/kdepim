@@ -27,8 +27,6 @@ KPIM.ItemListView {
   property bool showDeleteButton : false
   property bool showCheckBox
   property variant checkModel
-  property string collapsedSections
-  property bool showSections : true
 
   delegate: [
     KPIM.ItemListViewDelegate {
@@ -36,7 +34,7 @@ KPIM.ItemListView {
       showCheckBox : _top.showCheckBox
       checkModel : _top.checkModel
       navigationModel : _top.navigationModel
-      height : (_top.collapsedSections.indexOf(model.grouperString) >= 0) ? 0 : (_top.itemHeight)
+      height: _top.itemHeight
       clip: true
       summaryContent : [
         QML.Text {
@@ -208,36 +206,4 @@ KPIM.ItemListView {
     }
   ]
 
-  section.property: showSections ? "grouperString" : ""
-  section.criteria: QML.ViewSection.FullString
-  section.delegate: QML.Item {
-    id: sectionDelegate
-    width: _top.width
-    height: _top.itemHeight
-    QML.Rectangle {
-      anchors.fill: parent
-      color: "lightgray"
-    }
-    QML.Text {
-      anchors { fill: parent; leftMargin: 10; }
-      verticalAlignment: QML.Text.AlignVCenter
-      text: section
-    }
-    QML.Image {
-      anchors { right: parent.right; verticalCenter: parent.verticalCenter; }
-      source: KDE.locate( "module", "imports/org/kde/pim/mobileui/images/movedown.png" );
-      rotation: (_top.collapsedSections.indexOf(section) >= 0) ? 90 : 0
-
-      QML.MouseArea {
-        anchors.fill: parent
-        onClicked: {
-          if (_top.collapsedSections.indexOf(section) != -1) {
-            _top.collapsedSections = _top.collapsedSections.replace(section + ",", "")
-          } else {
-            _top.collapsedSections += (section + ",")
-          }
-        }
-      }
-    }
-  }
 }

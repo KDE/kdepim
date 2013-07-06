@@ -244,7 +244,6 @@ PlasmaComponents.Page {
         navigationModel : _threadSelector
         showDeleteButton : false // too easy to accidentally hit it, although very useful...
         opacity : threadContentsViewContainer.opacity == 0 ? 1 : 0
-        showSections : messageListSettings.groupingRole != ""
         itemHeight: Screen.partition( height, 7 )
       }
       Akonadi.FilterLineEdit {
@@ -291,7 +290,6 @@ PlasmaComponents.Page {
         }
         HeaderView {
           id : threadContentsView
-          showSections : false
           anchors.left : parent.left
           anchors.top : backButton.bottom
           anchors.bottom : parent.bottom
