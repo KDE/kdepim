@@ -21,6 +21,7 @@
 #include "sendlaterjob.h"
 
 #include "messagecomposer/sender/akonadisender.h"
+#include "messagecomposer/utils/util.h"
 
 #include <KSharedConfig>
 #include <KConfigGroup>
@@ -166,10 +167,17 @@ void SendLaterManager::removeInfo(Akonadi::Item::Id id)
 void SendLaterManager::sendError(SendLater::SendLaterInfo *info, ErrorType type)
 {
     if (info) {
-        if (type == ItemNotFound) {
+        switch(type) {
+        case ItemNotFound:
             //Don't try to resend it. Remove it.
             removeLaterInfo(info);
-        } else {
+            break;
+        case MailDispatchDoesntWork:
+            //Force to make online maildispatcher
+            //Don't remove it.
+            MessageComposer::Util::sendMailDispatcherIsOnline( 0 );
+            break;
+        default:
             if (KMessageBox::Yes == KMessageBox::questionYesNo(0, i18n("An error was found. Do you want to resend it?"), i18n("Error found"))) {
                 //TODO 4.12: allow to remove it even if it's recurrent (need new i18n)
                 if (!info->isRecurrence()) {
@@ -178,6 +186,7 @@ void SendLaterManager::sendError(SendLater::SendLaterInfo *info, ErrorType type)
             } else {
                 removeLaterInfo(info);
             }
+            break;
         }
     }
     recreateSendList();
