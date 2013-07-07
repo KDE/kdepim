@@ -34,7 +34,7 @@ using namespace SendLater;
 
 SendLaterDialog::SendLaterDialog(SendLater::SendLaterInfo *info, QWidget *parent)
     : KDialog(parent),
-      mAction(SendNow),
+      mAction(SendLater),
       mInfo(info),
       mSendAtTime(0),
       mSendAtTimeLabel(0)
@@ -45,11 +45,9 @@ SendLaterDialog::SendLaterDialog(SendLater::SendLaterInfo *info, QWidget *parent
         setButtons( Ok|Cancel );
         connect(this, SIGNAL(okClicked()), this, SLOT(slotOkClicked()));
     } else {
-        setButtons( User1|User2|Cancel );
+        setButtons( User1|Cancel );
         setButtonText( User1, i18n("Send Later"));
-        setButtonText( User2, i18n("Send Now"));
         connect(this, SIGNAL(user1Clicked()), this, SLOT(slotSendLater()));
-        connect(this, SIGNAL(user2Clicked()), this, SLOT(slotSendNow()));
     }
 
     QWidget *w = new QWidget;
@@ -207,12 +205,6 @@ SendLater::SendLaterInfo* SendLaterDialog::info()
 void SendLaterDialog::slotSendLater()
 {
     mAction = SendLater;
-    accept();
-}
-
-void SendLaterDialog::slotSendNow()
-{
-    mAction = SendNow;
     accept();
 }
 

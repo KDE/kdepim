@@ -35,10 +35,9 @@ class SENDLATER_EXPORT SendLaterDialog : public KDialog
 public:
     enum SendLaterAction {
         Unknown = 0,
-        SendNow = 1,
-        SendLater = 2,
-        Canceled = 3,
-        SendDeliveryAtTime = 4
+        SendLater = 1,
+        Canceled = 2,
+        SendDeliveryAtTime = 3
     };
 
     explicit SendLaterDialog(SendLater::SendLaterInfo *info, QWidget *parent = 0);
@@ -50,7 +49,6 @@ public:
 
 private Q_SLOTS:
     void slotSendLater();
-    void slotSendNow();
     void slotRecurrenceClicked(bool);
     void slotSendIn30Minutes();
     void slotSendIn1Hour();
