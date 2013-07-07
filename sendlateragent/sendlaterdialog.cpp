@@ -96,7 +96,6 @@ SendLaterDialog::SendLaterDialog(SendLater::SendLaterInfo *info, QWidget *parent
         hbox->addWidget(mSendAtTimeLabel);
     } else {
         mSendAtTime = new KPushButton;
-
         connect(mSendAtTime, SIGNAL(clicked()), SLOT(slotSendAtTime()));
         hbox->addWidget(mSendAtTime);
     }

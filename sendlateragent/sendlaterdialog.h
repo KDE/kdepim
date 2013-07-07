@@ -64,7 +64,7 @@ private:
 
 private:
     QDateTime mSendDateTime;
-    SendLaterAction mAction;
+    SendLaterAction mAction;    
     QDateTimeEdit *mDateTime;
     SendLater::SendLaterInfo *mInfo;
     KComboBox *mRecurrenceComboBox;
