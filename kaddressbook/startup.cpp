@@ -16,7 +16,7 @@ void insertLibraryCatalogues()
 
     KLocale * l = KGlobal::locale();
     for ( unsigned int i = 0 ; i < sizeof catalogs / sizeof *catalogs; ++i ) {
-      l->insertCatalog( catalogs[i] );
+      l->insertCatalog( QLatin1String(catalogs[i]) );
     }
 }
 

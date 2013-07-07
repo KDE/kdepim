@@ -305,8 +305,8 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
 void MainWidget::configure()
 {
   KCMultiDialog dlg( this );
-  dlg.addModule( "akonadicontact_actions.desktop" );
-  dlg.addModule( "kcmldap.desktop" );
+  dlg.addModule( QLatin1String("akonadicontact_actions.desktop") );
+  dlg.addModule( QLatin1String("kcmldap.desktop") );
 
   dlg.exec();
 }
@@ -321,7 +321,7 @@ void MainWidget::delayedInit()
 #if defined(HAVE_PRISON)
   mXmlGuiClient->
     actionCollection()->
-      action( "options_show_qrcodes" )->setChecked( showQRCodes() );
+      action( QLatin1String("options_show_qrcodes") )->setChecked( showQRCodes() );
 #endif
 
   connect( GlobalContactModel::instance()->model(), SIGNAL(modelAboutToBeReset()),
@@ -423,7 +423,7 @@ void MainWidget::setupGui()
   //   - details view stack on the top
   //   - contact switcher at the bottom
   mMainWidgetSplitter1 = new QSplitter(Qt::Horizontal);
-  mMainWidgetSplitter1->setObjectName( "MainWidgetSplitter1" );
+  mMainWidgetSplitter1->setObjectName( QLatin1String("MainWidgetSplitter1") );
   layout->addWidget( mMainWidgetSplitter1 );
 
   // Splitter 2 contains the remaining parts of the GUI:
@@ -432,7 +432,7 @@ void MainWidget::setupGui()
   // The orientation of this splitter is changed for either
   // a three or two column view;  in simple mode it is hidden.
   mMainWidgetSplitter2 = new QSplitter(Qt::Vertical);
-  mMainWidgetSplitter2->setObjectName( "MainWidgetSplitter2" );
+  mMainWidgetSplitter2->setObjectName( QLatin1String("MainWidgetSplitter2") );
   mMainWidgetSplitter1->addWidget( mMainWidgetSplitter2 );
 
   // the collection view
@@ -441,7 +441,7 @@ void MainWidget::setupGui()
 
   // the items view
   mItemView = new Akonadi::EntityTreeView();
-  mItemView->setObjectName( "ContactView" );
+  mItemView->setObjectName( QLatin1String("ContactView") );
   mItemView->setDefaultPopupMenu( QLatin1String( "akonadi_itemview_contextmenu" ) );
   mMainWidgetSplitter2->addWidget( mItemView );
 
@@ -512,11 +512,11 @@ void MainWidget::setupActions( KActionCollection *collection )
   if(KPrintPreview::isAvailable())
     KStandardAction::printPreview( this, SLOT(printPreview()), collection );
 
-  action = collection->addAction( "quick_search" );
+  action = collection->addAction( QLatin1String("quick_search") );
   action->setText( i18n( "Quick search" ) );
   action->setDefaultWidget( mQuickSearchWidget );
 
-  action = collection->addAction( "select_all" );
+  action = collection->addAction( QLatin1String("select_all") );
   action->setText( i18n( "Select All" ) );
   action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_A ) );
   action->setWhatsThis( i18n( "Select all contacts in the current address book view." ) );
@@ -524,7 +524,7 @@ void MainWidget::setupActions( KActionCollection *collection )
 
 #if defined(HAVE_PRISON)
   KToggleAction *qrtoggleAction;
-  qrtoggleAction = collection->add<KToggleAction>( "options_show_qrcodes" );
+  qrtoggleAction = collection->add<KToggleAction>( QLatin1String("options_show_qrcodes") );
   qrtoggleAction->setText( i18n( "Show QR Codes" ) );
   qrtoggleAction->setWhatsThis( i18n( "Show QR Codes in the contact." ) );
   connect( qrtoggleAction, SIGNAL(toggled(bool)), SLOT(setQRCodeShow(bool)) );
@@ -537,73 +537,73 @@ void MainWidget::setupActions( KActionCollection *collection )
   act->setData( 1 );
   act->setShortcut( QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_1 ) );
   act->setWhatsThis( i18n( "Show a simple mode of the address book view." ) );
-  collection->addAction( "view_mode_simple", act );
+  collection->addAction( QLatin1String("view_mode_simple"), act );
 
   act = new KAction( i18nc( "@action:inmenu", "Two Columns" ), mViewModeGroup );
   act->setCheckable( true );
   act->setData( 2 );
   act->setShortcut( QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_2 ) );
-  collection->addAction( "view_mode_2columns", act );
+  collection->addAction( QLatin1String("view_mode_2columns"), act );
 
   act = new KAction( i18nc( "@action:inmenu", "Three Columns" ), mViewModeGroup );
   act->setCheckable( true );
   act->setData( 3 );
   act->setShortcut( QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_3 ) );
-  collection->addAction( "view_mode_3columns", act );
+  collection->addAction( QLatin1String("view_mode_3columns"), act );
 
   connect( mViewModeGroup, SIGNAL(triggered(QAction*)), SLOT(setViewMode(QAction*)) );
 
   // import actions
-  action = collection->addAction( "file_import_vcard" );
+  action = collection->addAction( QLatin1String("file_import_vcard") );
   action->setText( i18n( "Import vCard..." ) );
   action->setWhatsThis( i18n( "Import contacts from a vCard file." ) );
-  mXXPortManager->addImportAction( action, "vcard30" );
+  mXXPortManager->addImportAction( action, QLatin1String("vcard30") );
 
-  action = collection->addAction( "file_import_csv" );
+  action = collection->addAction( QLatin1String("file_import_csv") );
   action->setText( i18n( "Import CSV file..." ) );
   action->setWhatsThis( i18n( "Import contacts from a file in comma separated value format." ) );
-  mXXPortManager->addImportAction( action, "csv" );
+  mXXPortManager->addImportAction( action, QLatin1String("csv") );
 
-  action = collection->addAction( "file_import_ldif" );
+  action = collection->addAction( QLatin1String("file_import_ldif") );
   action->setText( i18n( "Import LDIF file..." ) );
   action->setWhatsThis( i18n( "Import contacts from an LDIF file." ) );
-  mXXPortManager->addImportAction( action, "ldif" );
+  mXXPortManager->addImportAction( action, QLatin1String("ldif") );
 
-  action = collection->addAction( "file_import_ldap" );
+  action = collection->addAction( QLatin1String("file_import_ldap") );
   action->setText( i18n( "Import From LDAP server..." ) );
   action->setWhatsThis( i18n( "Import contacts from an LDAP server." ) );
-  mXXPortManager->addImportAction( action, "ldap" );
+  mXXPortManager->addImportAction( action, QLatin1String("ldap") );
 
-  action = collection->addAction( "file_import_gmx" );
+  action = collection->addAction( QLatin1String("file_import_gmx") );
   action->setText( i18n( "Import GMX file..." ) );
   action->setWhatsThis( i18n( "Import contacts from a GMX address book file." ) );
-  mXXPortManager->addImportAction( action, "gmx" );
+  mXXPortManager->addImportAction( action, QLatin1String("gmx") );
 
   // export actions
-  action = collection->addAction( "file_export_vcard30" );
+  action = collection->addAction( QLatin1String("file_export_vcard30") );
   action->setText( i18n( "Export vCard 3.0..." ) );
   action->setWhatsThis( i18n( "Export contacts to a vCard 3.0 file." ) );
-  mXXPortManager->addExportAction( action, "vcard30" );
+  mXXPortManager->addExportAction( action, QLatin1String("vcard30") );
 
-  action = collection->addAction( "file_export_vcard21" );
+  action = collection->addAction( QLatin1String("file_export_vcard21") );
   action->setText( i18n( "Export vCard 2.1..." ) );
   action->setWhatsThis( i18n( "Export contacts to a vCard 2.1 file." ) );
-  mXXPortManager->addExportAction( action, "vcard21" );
+  mXXPortManager->addExportAction( action, QLatin1String("vcard21") );
 
-  action = collection->addAction( "file_export_csv" );
+  action = collection->addAction( QLatin1String("file_export_csv") );
   action->setText( i18n( "Export CSV file..." ) );
   action->setWhatsThis( i18n( "Export contacts to a file in comma separated value format." ) );
-  mXXPortManager->addExportAction( action, "csv" );
+  mXXPortManager->addExportAction( action, QLatin1String("csv") );
 
-  action = collection->addAction( "file_export_ldif" );
+  action = collection->addAction( QLatin1String("file_export_ldif") );
   action->setText( i18n( "Export LDIF file..." ) );
   action->setWhatsThis( i18n( "Export contacts to an LDIF file." ) );
-  mXXPortManager->addExportAction( action, "ldif" );
+  mXXPortManager->addExportAction( action, QLatin1String("ldif") );
 
-  action = collection->addAction( "file_export_gmx" );
+  action = collection->addAction( QLatin1String("file_export_gmx") );
   action->setText( i18n( "Export GMX file..." ) );
   action->setWhatsThis( i18n( "Export contacts to a GMX address book file." ) );
-  mXXPortManager->addExportAction( action, "gmx" );
+  mXXPortManager->addExportAction( action, QLatin1String("gmx") );
 }
 
 void MainWidget::printPreview()

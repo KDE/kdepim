@@ -251,7 +251,7 @@ class KABPrinting::AppearancePage : public QWidget, public Ui::AppearancePage_Ba
       : QWidget( parent )
   {
     setupUi( this );
-    setObjectName( "AppearancePage" );
+    setObjectName( QLatin1String("AppearancePage") );
   }
 };
 
