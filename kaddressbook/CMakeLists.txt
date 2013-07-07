@@ -75,19 +75,17 @@ set(kaddressbook_LIB_SRCS
   ${kaddressbook_xxport_SRCS}
 )
 
-if(Grantlee_FOUND)
-  set(kaddressbook_LIB_SRCS
-    ${kaddressbook_LIB_SRCS}
-    grantleecontactformatter.cpp
-    grantleecontactgroupformatter.cpp
-    grantlee/theme.cpp
-    grantlee/themecombobox.cpp
-    grantlee/thememanager.cpp
-    grantlee/thememodel.cpp
-  )
-  add_definitions(-DGRANTLEE_FOUND)
-  add_subdirectory(grantlee)
-endif()
+set(kaddressbook_LIB_SRCS
+  ${kaddressbook_LIB_SRCS}
+  grantleecontactformatter.cpp
+  grantleecontactgroupformatter.cpp
+  grantlee/theme.cpp
+  grantlee/themecombobox.cpp
+  grantlee/thememanager.cpp
+  grantlee/thememodel.cpp
+)
+add_definitions(-DGRANTLEE_FOUND)
+add_subdirectory(grantlee)
 
 kde4_add_kcfg_files(kaddressbook_LIB_SRCS settings.kcfgc)
 kde4_add_library(kaddressbookprivate ${LIBRARY_TYPE} ${kaddressbook_LIB_SRCS})
@@ -107,9 +105,7 @@ if(QGPGME_FOUND)
   target_link_libraries(kaddressbookprivate ${QGPGME_LIBRARIES})
 endif()
 
-if(Grantlee_FOUND)
-  target_link_libraries(kaddressbookprivate ${Grantlee_CORE_LIBRARIES})
-endif()
+target_link_libraries(kaddressbookprivate ${Grantlee_CORE_LIBRARIES})
 
 if(PRISON_FOUND)
   target_link_libraries(kaddressbookprivate ${PRISON_LIBRARIES})
