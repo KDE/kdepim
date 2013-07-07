@@ -336,9 +336,7 @@ else()
       macro_optional_add_subdirectory(blogilo)
     endif()
 
-    if(Grantlee_FOUND)
-      macro_optional_add_subdirectory(kjots)
-    endif()
+    macro_optional_add_subdirectory(kjots)
 
     if(KDEPIMLIBS_KRESOURCES_LIBRARY)
       if(QT_QT3SUPPORT_FOUND)

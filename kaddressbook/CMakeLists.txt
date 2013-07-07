@@ -9,6 +9,10 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/libkdepim/ 
 )
 
+#add_definitions( -DQT_NO_CAST_FROM_ASCII )
+#add_definitions( -DQT_NO_CAST_TO_ASCII )
+
+
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
 
 find_package(Prison QUIET CONFIG)
@@ -84,7 +88,6 @@ set(kaddressbook_LIB_SRCS
   grantlee/thememanager.cpp
   grantlee/thememodel.cpp
 )
-add_definitions(-DGRANTLEE_FOUND)
 add_subdirectory(grantlee)
 
 kde4_add_kcfg_files(kaddressbook_LIB_SRCS settings.kcfgc)

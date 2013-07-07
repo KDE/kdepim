@@ -27,10 +27,8 @@
 #include "settings.h"
 #include "xxportmanager.h"
 
-#ifdef GRANTLEE_FOUND
 #include "grantleecontactformatter.h"
 #include "grantleecontactgroupformatter.h"
-#endif
 
 #include "libkdepim/misc/uistatesaver.h"
 
@@ -485,7 +483,6 @@ void MainWidget::setupGui()
   Akonadi::ContactDefaultActions *actions = new Akonadi::ContactDefaultActions( this );
   actions->connectToView( mContactDetails );
   actions->connectToView( mContactGroupDetails );
-#ifdef GRANTLEE_FOUND
  Akonadi::GrantleeContactFormatter *formatter =
    new Akonadi::GrantleeContactFormatter(
      KStandardDirs::locate( "data", QLatin1String( "kaddressbook/viewertemplates/" ) ) );
@@ -497,7 +494,6 @@ void MainWidget::setupGui()
      KStandardDirs::locate( "data", QLatin1String( "kaddressbook/viewertemplates/" ) ) );
 
  mContactGroupDetails->setContactGroupFormatter( groupFormatter );
-#endif
 }
 
 void MainWidget::setupActions( KActionCollection *collection )
