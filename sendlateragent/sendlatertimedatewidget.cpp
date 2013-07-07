@@ -22,6 +22,8 @@
 
 #include <QHBoxLayout>
 
+using namespace SendLater;
+
 SendLaterTimeDateWidget::SendLaterTimeDateWidget(QWidget *parent)
     : QWidget(parent)
 {
@@ -29,7 +31,9 @@ SendLaterTimeDateWidget::SendLaterTimeDateWidget(QWidget *parent)
     lay->setMargin(0);
 
     mTimeComboBox = new KTimeComboBox;
+    connect(mTimeComboBox, SIGNAL(timeChanged(QTime)), this, SLOT(slotDateTimeChanged()));
     mDateComboBox = new KDateComboBox;
+    connect(mDateComboBox, SIGNAL(dateChanged(QDate)), this, SLOT(slotDateTimeChanged()));
 
     lay->addWidget(mDateComboBox);
     lay->addWidget(mTimeComboBox);
@@ -40,6 +44,14 @@ SendLaterTimeDateWidget::SendLaterTimeDateWidget(QWidget *parent)
 SendLaterTimeDateWidget::~SendLaterTimeDateWidget()
 {
 
+}
+
+void SendLaterTimeDateWidget::slotDateTimeChanged()
+{
+    QDateTime dt;
+    dt.setDate(mDateComboBox->date());
+    dt.setTime(mTimeComboBox->time());
+    Q_EMIT dateTimeChanged(dt);
 }
 
 QDateTime SendLaterTimeDateWidget::dateTime() const

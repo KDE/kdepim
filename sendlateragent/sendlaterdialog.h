@@ -29,6 +29,7 @@ class QLabel;
 
 namespace SendLater {
 class SendLaterInfo;
+class SendLaterTimeDateWidget;
 class SENDLATER_EXPORT SendLaterDialog : public KDialog
 {
     Q_OBJECT
@@ -65,7 +66,7 @@ private:
 private:
     QDateTime mSendDateTime;
     SendLaterAction mAction;    
-    QDateTimeEdit *mDateTime;
+    SendLaterTimeDateWidget *mDateTime;
     SendLater::SendLaterInfo *mInfo;
     KComboBox *mRecurrenceComboBox;
     QCheckBox *mRecurrence;

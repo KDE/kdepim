@@ -17,6 +17,7 @@
 
 #include "sendlaterdialog.h"
 #include "sendlaterinfo.h"
+#include "sendlatertimedatewidget.h"
 
 #include <KLocale>
 #include <KComboBox>
@@ -28,7 +29,6 @@
 #include <QCheckBox>
 #include <QLabel>
 #include <QSpinBox>
-#include <QDateTimeEdit>
 
 using namespace SendLater;
 
@@ -60,8 +60,7 @@ SendLaterDialog::SendLaterDialog(SendLater::SendLaterInfo *info, QWidget *parent
     QDateTime t = QDateTime::currentDateTime();
     t = t.addSecs(60*60);
 
-    mDateTime = new QDateTimeEdit;
-    mDateTime->setMinimumDateTime(t);
+    mDateTime = new SendLaterTimeDateWidget;
     mDateTime->setDateTime(t);
     connect(mDateTime, SIGNAL(dateTimeChanged(QDateTime)), SLOT(slotDateTimeChanged(QDateTime)));
     hbox->addWidget(lab);
