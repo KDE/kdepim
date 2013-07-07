@@ -42,4 +42,18 @@ SendLaterTimeDateWidget::~SendLaterTimeDateWidget()
 
 }
 
+QDateTime SendLaterTimeDateWidget::dateTime() const
+{
+    QDateTime dt;
+    dt.setDate(mDateComboBox->date());
+    dt.setTime(mTimeComboBox->time());
+    return dt;
+}
+
+void SendLaterTimeDateWidget::setDateTime(const QDateTime &datetime)
+{
+    mTimeComboBox->setTime(datetime.time());
+    mDateComboBox->setDate(datetime.date());
+}
+
 #include "sendlatertimedatewidget.moc"

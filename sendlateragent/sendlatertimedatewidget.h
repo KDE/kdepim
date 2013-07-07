@@ -19,6 +19,7 @@
 #define SENDLATERTIMEDATEWIDGET_H
 
 #include <QWidget>
+#include <QDateTime>
 
 class KTimeComboBox;
 class KDateComboBox;
@@ -29,6 +30,9 @@ class SendLaterTimeDateWidget : public QWidget
 public:
     explicit SendLaterTimeDateWidget(QWidget *parent = 0);
     ~SendLaterTimeDateWidget();
+
+    void setDateTime(const QDateTime &);
+    QDateTime dateTime() const;
 
 private:
     KTimeComboBox *mTimeComboBox;
