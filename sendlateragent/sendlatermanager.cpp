@@ -176,6 +176,10 @@ void SendLaterManager::sendError(SendLater::SendLaterInfo *info, ErrorType type)
             //Force to make online maildispatcher
             //Don't remove it.
             MessageComposer::Util::sendMailDispatcherIsOnline( 0 );
+            //Remove item which create error ?
+            if (!info->isRecurrence()) {
+                removeLaterInfo(info);
+            }
             break;
         default:
             if (KMessageBox::Yes == KMessageBox::questionYesNo(0, i18n("An error was found. Do you want to resend it?"), i18n("Error found"))) {
@@ -184,6 +188,7 @@ void SendLaterManager::sendError(SendLater::SendLaterInfo *info, ErrorType type)
                     removeLaterInfo(info);
                 }
             } else {
+                //Remove even if it's recurrent ?
                 removeLaterInfo(info);
             }
             break;
