@@ -53,8 +53,6 @@ private Q_SLOTS:
 
 private:
     void load(SendLater::SendLaterInfo *info);
-    void readConfig();
-    void writeConfig();
 
 private:
     QDateTime mSendDateTime;

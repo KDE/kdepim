@@ -90,38 +90,20 @@ SendLaterDialog::SendLaterDialog(SendLater::SendLaterInfo *info, QWidget *parent
 
     w->setLayout(lay);
     setMainWidget(w);
-    readConfig();
     slotRecurrenceClicked(false);
     if (info)
         load(info);
+    resize( 400,300);
 }
 
 SendLaterDialog::~SendLaterDialog()
 {
-    writeConfig();
 }
 
 void SendLaterDialog::slotRecurrenceClicked(bool clicked)
 {
     mRecurrenceValue->setEnabled(clicked);
     mRecurrenceComboBox->setEnabled(clicked);
-}
-
-void SendLaterDialog::readConfig()
-{
-    KConfigGroup group( KGlobal::config(), "SendLaterDialog" );
-    const QSize sizeDialog = group.readEntry( "Size", QSize() );
-    if ( sizeDialog.isValid() ) {
-        resize( sizeDialog );
-    } else {
-        resize( 400,300);
-    }
-}
-
-void SendLaterDialog::writeConfig()
-{
-    KConfigGroup group( KGlobal::config(), "SendLaterDialog" );
-    group.writeEntry( "Size", size() );
 }
 
 void SendLaterDialog::load(SendLater::SendLaterInfo *info)
