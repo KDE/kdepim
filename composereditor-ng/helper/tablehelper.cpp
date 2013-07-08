@@ -65,7 +65,6 @@ QWebElement TableHelper::rowWebElement(const QWebElement &element)
         } while( (e.tagName().toLower() != ROW) && !e.isNull() );
         return e;
     }
-    return QWebElement();
 }
 
 QWebElement TableHelper::tableWebElement(const QWebElement &element)
