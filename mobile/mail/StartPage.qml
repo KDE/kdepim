@@ -40,6 +40,7 @@ PlasmaComponents.Page {
 
       onClicked: pageStack.push(Qt.createComponent("SettingsPage.qml") )
     }
+
     PlasmaComponents.ToolButton {
       iconSource: "mail-message-new"
 
@@ -242,9 +243,7 @@ PlasmaComponents.Page {
         anchors.bottom : filterLineEdit.top
         anchors.right : parent.right
         navigationModel : _threadSelector
-        showDeleteButton : false // too easy to accidentally hit it, although very useful...
         opacity : threadContentsViewContainer.opacity == 0 ? 1 : 0
-        itemHeight: Screen.partition( height, 7 )
       }
       Akonadi.FilterLineEdit {
         id: filterLineEdit
@@ -294,7 +293,6 @@ PlasmaComponents.Page {
           anchors.top : backButton.bottom
           anchors.bottom : parent.bottom
           anchors.right : parent.right
-          itemHeight: threadView.itemHeight
 
           model : _threadContents
           navigationModel : _threadMailSelector
@@ -476,10 +474,8 @@ PlasmaComponents.Page {
     itemView: HeaderView {
       id: searchMessageListView
       model: itemModel
-      checkModel : _itemActionModel
       navigationModel : _itemNavigationModel
       anchors.fill : parent
-      itemHeight: Screen.partition( height, 7 )
     }
     QML.Connections {
       target : _itemNavigationModel
