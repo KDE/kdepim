@@ -38,7 +38,7 @@
 
 using namespace EventViews;
 
-JournalView::JournalView( QWidget *parent ) : EventView( parent )
+JournalView::JournalView( QWidget *parent ) : EventView( parent ), mChanger( 0 )
 {
   QVBoxLayout *topLayout = new QVBoxLayout( this );
   topLayout->setMargin( 0 );
