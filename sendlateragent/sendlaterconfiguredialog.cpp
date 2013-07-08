@@ -137,7 +137,7 @@ SendLaterWidget::SendLaterWidget( QWidget *parent )
     : QWidget( parent ),
       mChanged(false)
 {
-    mWidget = new Ui::SendLaterWidget;
+    mWidget = new Ui::SendLaterConfigureWidget;
     mWidget->setupUi( this );
     QStringList headers;
     headers << i18n("Subject")

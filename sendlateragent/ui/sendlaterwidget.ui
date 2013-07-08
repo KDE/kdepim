@@ -6,53 +6,66 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>681</width>
-    <height>634</height>
+    <width>452</width>
+    <height>85</height>
    </rect>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="1">
-    <layout class="QVBoxLayout" name="verticalLayout">
-     <item>
-      <widget class="QPushButton" name="modifyItem">
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="0" column="0">
+      <widget class="QLabel" name="label">
        <property name="text">
-        <string>Modify...</string>
+        <string>Send at:</string>
        </property>
       </widget>
      </item>
-     <item>
-      <widget class="QPushButton" name="removeItem">
+     <item row="0" column="1" colspan="4">
+      <widget class="SendLater::SendLaterTimeDateWidget" name="mDateTime" native="true"/>
+     </item>
+     <item row="1" column="0" colspan="2">
+      <widget class="QCheckBox" name="mRecurrence">
        <property name="text">
-        <string>Remove</string>
+        <string>Recurrence</string>
        </property>
       </widget>
      </item>
-     <item>
-      <spacer name="verticalSpacer">
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
+     <item row="1" column="2">
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>Each:</string>
        </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>20</width>
-         <height>40</height>
-        </size>
+      </widget>
+     </item>
+     <item row="1" column="3">
+      <widget class="QSpinBox" name="mRecurrenceValue">
+       <property name="minimum">
+        <number>1</number>
        </property>
-      </spacer>
+       <property name="maximum">
+        <number>365</number>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="4">
+      <widget class="KComboBox" name="mRecurrenceComboBox"/>
      </item>
     </layout>
    </item>
-   <item row="0" column="0">
-    <widget class="QTreeWidget" name="treeWidget">
-     <column>
-      <property name="text">
-       <string notr="true">1</string>
-      </property>
-     </column>
-    </widget>
-   </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KComboBox</class>
+   <extends>QComboBox</extends>
+   <header>kcombobox.h</header>
+  </customwidget>
+  <customwidget>
+   <class>SendLater::SendLaterTimeDateWidget</class>
+   <extends>QWidget</extends>
+   <header>sendlatertimedatewidget.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

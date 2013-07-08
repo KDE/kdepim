@@ -19,7 +19,7 @@
 #define SENDLATERCONFIGUREDIALOG_H
 
 #include <KDialog>
-#include "ui_sendlaterwidget.h"
+#include "ui_sendlaterconfigurewidget.h"
 
 
 #include <Akonadi/Item>
@@ -78,7 +78,7 @@ private:
     void createOrUpdateItem(SendLater::SendLaterInfo *info, SendLaterItem *item = 0);
     void load();
     bool mChanged;
-    Ui::SendLaterWidget *mWidget;
+    Ui::SendLaterConfigureWidget *mWidget;
 };
 
 

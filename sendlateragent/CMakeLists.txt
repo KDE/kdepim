@@ -23,6 +23,8 @@ kde4_add_kcfg_files(sendlaterlib_SRCS
     sendlateragentsettings.kcfgc 
   )
 
+kde4_add_ui_files(sendlaterlib_SRCS ui/sendlaterwidget.ui)
+
 
 kde4_add_library( sendlater ${LIBRARY_TYPE} ${sendlaterlib_SRCS} )
 target_link_libraries( sendlater ${KDE4_KDEUI_LIBS} )
@@ -46,7 +48,7 @@ set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
 qt4_add_dbus_adaptor(sendlateragent_SRCS org.freedesktop.Akonadi.SendLaterAgent.xml sendlateragent.h SendLaterAgent)
 
-kde4_add_ui_files(sendlateragent_SRCS ui/sendlaterwidget.ui )
+kde4_add_ui_files(sendlateragent_SRCS ui/sendlaterconfigurewidget.ui)
 
 kde4_add_executable(akonadi_sendlater_agent ${sendlateragent_SRCS})
 
