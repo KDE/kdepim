@@ -36,7 +36,7 @@
 
 #include <QPointer>
 
-#define DEBUG_SENDLATERAGENT 1
+//#define DEBUG_SENDLATERAGENT 1
 
 SendLaterAgent::SendLaterAgent(const QString &id)
     : Akonadi::AgentBase( id )
