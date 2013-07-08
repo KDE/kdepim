@@ -30,9 +30,13 @@ SendLaterTimeDateWidget::SendLaterTimeDateWidget(QWidget *parent)
     QHBoxLayout *lay = new QHBoxLayout;
     lay->setMargin(0);
 
+    QDateTime t = QDateTime::currentDateTime();
+    t = t.addSecs(60*60);
     mTimeComboBox = new KTimeComboBox;
     connect(mTimeComboBox, SIGNAL(timeChanged(QTime)), this, SLOT(slotDateTimeChanged()));
+
     mDateComboBox = new KDateComboBox;
+    mDateComboBox->setMinimumDate(t.date());
     connect(mDateComboBox, SIGNAL(dateChanged(QDate)), this, SLOT(slotDateTimeChanged()));
 
     lay->addWidget(mDateComboBox);
