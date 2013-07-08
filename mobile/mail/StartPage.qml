@@ -474,6 +474,7 @@ PlasmaComponents.Page {
     itemView: HeaderView {
       id: searchMessageListView
       model: itemModel
+      checkModel : _itemActionModel
       navigationModel : _itemNavigationModel
       anchors.fill : parent
     }

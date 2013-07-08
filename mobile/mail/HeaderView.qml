@@ -27,6 +27,7 @@ import org.kde.plasma.extras 0.1 as PlasmaExtras
 KPIM.DecoratedListView {
   id : _top
 
+  property variant checkModel
   property variant navigationModel
   property int currentItemId: -1
   property int currentRow : -1
@@ -50,18 +51,15 @@ KPIM.DecoratedListView {
     id: _delegate
 
     property alias color: itemBackground.color
-    property variant checkModel
-    property variant navigationModel
 
-    navigationModel : _top.navigationModel
     height: _top.height / 7
     clip: true
 
     MouseArea {
       anchors.fill: parent
       onClicked: {
-        if (_delegate.navigationModel != undefined) {
-          _delegate.navigationModel.select(model.index, 3)
+        if (navigationModel != undefined) {
+          navigationModel.select(model.index, 3)
         } else {
           _delegate.ListView.view.currentIndex = model.index;
           _delegate.ListView.view.parent.currentItemId = model.itemId;

@@ -34,12 +34,10 @@ KPIM.BulkActionScreen {
   multipleText : KDE.i18np("1 folder", "%1 folders", collectionView.numSelected)
   selectedItemModel : _breadcrumbNavigationFactory.qmlSelectedItemModel();
   headerList : HeaderView {
-    showCheckBox : true
     id: bulkActionHeaderList
 //    model: itemModel
     checkModel : _itemActionModel
     anchors.fill : parent
-    itemHeight: bulkActionScreen.itemHeight
   }
 
   QML.Component.onCompleted: {
