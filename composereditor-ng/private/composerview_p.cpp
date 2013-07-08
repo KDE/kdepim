@@ -481,7 +481,7 @@ void ComposerViewPrivate::connectActionGroup()
             alignmentGroup->addAction(action_align_left);
         if (action_align_center)
             alignmentGroup->addAction(action_align_center);
-        if (action_align_center)
+        if (action_align_right)
             alignmentGroup->addAction(action_align_right);
         if (action_align_justify)
             alignmentGroup->addAction(action_align_justify);
