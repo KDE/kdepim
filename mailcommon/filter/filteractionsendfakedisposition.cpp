@@ -42,11 +42,11 @@ static const int numMDNs = sizeof( mdns ) / sizeof( *mdns );
 
 
 FilterActionSendFakeDisposition::FilterActionSendFakeDisposition( QObject *parent )
-  : FilterActionWithStringList( "fake mdn", i18n( "Send Fake MDN" ), parent )
+  : FilterActionWithStringList( QLatin1String("fake mdn"), i18n( "Send Fake MDN" ), parent )
 {
   // if you change this list, also update
   // mdns above
-  mParameterList.append( "" );
+    mParameterList.append( QString() );
   mParameterList.append( i18nc( "MDN type", "Ignore" ) );
   mParameterList.append( i18nc( "MDN type", "Displayed" ) );
   mParameterList.append( i18nc( "MDN type", "Deleted" ) );

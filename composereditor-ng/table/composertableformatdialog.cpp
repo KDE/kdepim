@@ -38,12 +38,13 @@ namespace ComposerEditorNG
 class ComposerTableFormatDialogPrivate
 {
 public:
-    ComposerTableFormatDialogPrivate(ComposerTableFormatDialog *qq)
+    ComposerTableFormatDialogPrivate(const QWebElement &element, ComposerTableFormatDialog *qq)
         :q(qq)
     {
+        initialize(element);
     }
 
-    void initialize( const QWebElement& element);
+    void initialize(const QWebElement& element);
 
     void applyChanges();
     void updateSettings();
@@ -167,9 +168,8 @@ void ComposerTableFormatDialogPrivate::_k_slotApplyClicked()
 }
 
 ComposerTableFormatDialog::ComposerTableFormatDialog(const QWebElement& element, QWidget *parent)
-    : KDialog(parent), d(new ComposerTableFormatDialogPrivate(this))
+    : KDialog(parent), d(new ComposerTableFormatDialogPrivate(element, this))
 {
-    d->initialize(element);
 }
 
 ComposerTableFormatDialog::~ComposerTableFormatDialog()

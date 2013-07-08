@@ -43,12 +43,12 @@ SendLaterJob::SendLaterJob(SendLaterManager *manager, SendLater::SendLaterInfo *
       mManager(manager),
       mInfo(info)
 {
-    qDebug()<<" SendLaterJob::SendLaterJob"<<this;
+    kDebug()<<" SendLaterJob::SendLaterJob"<<this;
 }
 
 SendLaterJob::~SendLaterJob()
 {
-    qDebug()<<" SendLaterJob::~SendLaterJob()"<<this;
+    kDebug()<<" SendLaterJob::~SendLaterJob()"<<this;
 }
 
 void SendLaterJob::start()
@@ -103,9 +103,7 @@ void SendLaterJob::slotJobFinished(KJob* job)
             sendError(QLatin1String("Message is not a real message"), SendLaterManager::CanNotFetchItem);
             return;
         }
-        msg->date()->setDateTime( KDateTime::currentLocalDateTime() );
-        MessageCore::StringUtil::removePrivateHeaderFields(msg, true);
-        msg->assemble();
+        updateAndCleanMessageBeforeSending(msg);
 
         if (!mManager->sender()->send( msg, MessageComposer::MessageSender::SendImmediate )) {
             //Add i18n(...)
@@ -121,11 +119,20 @@ void SendLaterJob::slotJobFinished(KJob* job)
     }
 }
 
+void SendLaterJob::updateAndCleanMessageBeforeSending(const KMime::Message::Ptr &msg)
+{
+    msg->date()->setDateTime( KDateTime::currentLocalDateTime() );
+    MessageCore::StringUtil::removePrivateHeaderFields(msg, true);
+    msg->removeHeader( "X-KMail-SignatureActionEnabled" );
+    msg->removeHeader( "X-KMail-EncryptActionEnabled" );
+    msg->removeHeader( "X-KMail-CryptoMessageFormat" );
+    msg->assemble();
+}
+
 void SendLaterJob::slotDeleteItem( KJob *job )
 {
-    //qDebug()<<"void SendLaterJob::slotDeleteItem( KJob *job )";
     if ( job->error() ) {
-        qDebug()<<" void SendLaterJob::slotDeleteItem( KJob *job ) :"<<job->errorString();
+        kDebug()<<" void SendLaterJob::slotDeleteItem( KJob *job ) :"<<job->errorString();
     }
     sendDone();
 }

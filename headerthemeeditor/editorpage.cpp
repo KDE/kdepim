@@ -35,6 +35,7 @@
 EditorPage::EditorPage(PageType type, const QString &projectDirectory, QWidget *parent)
     : QWidget(parent),
       mType(type),
+      mPreview(0),
       mWidgetSplitter(0)
 {
     QVBoxLayout *lay = new QVBoxLayout;

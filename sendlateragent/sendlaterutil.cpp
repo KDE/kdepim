@@ -68,7 +68,7 @@ void SendLater::SendLaterUtil::writeSendLaterInfo(SendLater::SendLaterInfo *info
 
     KSharedConfig::Ptr config = SendLaterUtil::defaultConfig();
 
-    const QString groupName = QString::fromLatin1("SendLaterItem %1").arg(info->itemId());
+    const QString groupName = SendLater::SendLaterUtil::sendLaterPattern.arg(info->itemId());
     // first, delete all filter groups:
     const QStringList filterGroups =config->groupList().filter( groupName );
     foreach ( const QString &group, filterGroups ) {

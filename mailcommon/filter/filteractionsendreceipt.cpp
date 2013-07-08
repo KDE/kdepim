@@ -30,7 +30,7 @@
 using namespace MailCommon;
 
 FilterActionSendReceipt::FilterActionSendReceipt( QObject *parent )
-  : FilterActionWithNone( "confirm delivery", i18n( "Confirm Delivery" ), parent )
+  : FilterActionWithNone( QLatin1String("confirm delivery"), i18n( "Confirm Delivery" ), parent )
 {
 }
 

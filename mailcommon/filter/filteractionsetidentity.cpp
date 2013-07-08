@@ -37,7 +37,7 @@ FilterAction* FilterActionSetIdentity::newAction()
 }
 
 FilterActionSetIdentity::FilterActionSetIdentity( QObject *parent )
-  : FilterActionWithUOID( "set identity", i18n( "Set Identity To" ), parent )
+  : FilterActionWithUOID( QLatin1String("set identity"), i18n( "Set Identity To" ), parent )
 {
   mParameter = KernelIf->identityManager()->defaultIdentity().uoid();
 }

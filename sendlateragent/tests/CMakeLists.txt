@@ -1,4 +1,4 @@
-set(sendlaterinfo_gui_SRCS sendlaterinfo_gui.cpp ../sendlaterdialog.cpp ../sendlaterinfo.cpp)
+set(sendlaterinfo_gui_SRCS sendlaterinfo_gui.cpp ../sendlaterdialog.cpp ../sendlaterinfo.cpp ../sendlatertimedatewidget.cpp)
 kde4_add_executable(sendlaterinfo_gui TEST ${sendlaterinfo_gui_SRCS})
 target_link_libraries(sendlaterinfo_gui
   ${QT_QTTEST_LIBRARY}

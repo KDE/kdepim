@@ -29,16 +29,15 @@ class QLabel;
 
 namespace SendLater {
 class SendLaterInfo;
+class SendLaterTimeDateWidget;
 class SENDLATER_EXPORT SendLaterDialog : public KDialog
 {
     Q_OBJECT
 public:
     enum SendLaterAction {
         Unknown = 0,
-        SendNow = 1,
-        SendLater = 2,
-        Canceled = 3,
-        SendDeliveryAtTime = 4
+        SendDeliveryAtTime = 1,
+        Canceled = 2
     };
 
     explicit SendLaterDialog(SendLater::SendLaterInfo *info, QWidget *parent = 0);
@@ -49,14 +48,7 @@ public:
     SendLaterAction action() const;
 
 private Q_SLOTS:
-    void slotSendLater();
-    void slotSendNow();
     void slotRecurrenceClicked(bool);
-    void slotSendIn30Minutes();
-    void slotSendIn1Hour();
-    void slotSendIn2Hours();
-    void slotDateTimeChanged(const QDateTime &);
-    void slotSendAtTime();
     void slotOkClicked();
 
 private:
@@ -66,17 +58,12 @@ private:
 
 private:
     QDateTime mSendDateTime;
-    SendLaterAction mAction;
-    QDateTimeEdit *mDateTime;
+    SendLaterAction mAction;    
+    SendLaterTimeDateWidget *mDateTime;
     SendLater::SendLaterInfo *mInfo;
     KComboBox *mRecurrenceComboBox;
     QCheckBox *mRecurrence;
     QSpinBox *mRecurrenceValue;
-    KPushButton *mSendIn30Minutes;
-    KPushButton *mSendIn1Hour;
-    KPushButton *mSendIn2Hours;
-    KPushButton *mSendAtTime;
-    QLabel *mSendAtTimeLabel;
 };
 }
 #endif // SENDLATERDIALOG_H

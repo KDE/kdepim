@@ -73,7 +73,6 @@ namespace MailCommon {
 AccountList::AccountList( QWidget *parent )
     : QTreeWidget( parent )
 {
-    setObjectName( "accountList" );
     setColumnCount( 2 );
     QStringList headerNames;
     headerNames << i18n( "Account Name" ) << i18n( "Type" );

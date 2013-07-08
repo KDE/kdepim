@@ -21,7 +21,7 @@
 
 using namespace MailCommon;
 
-FilterActionWithNone::FilterActionWithNone( const char *name, const QString &label, QObject *parent )
+FilterActionWithNone::FilterActionWithNone( const QString &name, const QString &label, QObject *parent )
   : FilterAction( name, label, parent )
 {
 }

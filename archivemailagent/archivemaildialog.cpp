@@ -186,7 +186,7 @@ void ArchiveMailWidget::customContextMenuRequested(const QPoint &)
             menu.addAction(i18n("Archive now"), this, SLOT(slotArchiveNow()));
         }
         menu.addSeparator();
-        menu.addAction(i18n("Delete"), this, SLOT(slotRemoveItem()));
+        menu.addAction(KIcon(QLatin1String("edit-delete")), i18n("Delete"), this, SLOT(slotRemoveItem()));
     }
     menu.exec(QCursor::pos());
 }

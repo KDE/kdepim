@@ -17,6 +17,7 @@
 
 #include "sendlaterdialog.h"
 #include "sendlaterinfo.h"
+#include "sendlatertimedatewidget.h"
 
 #include <KLocale>
 #include <KComboBox>
@@ -28,28 +29,21 @@
 #include <QCheckBox>
 #include <QLabel>
 #include <QSpinBox>
-#include <QDateTimeEdit>
 
 using namespace SendLater;
 
 SendLaterDialog::SendLaterDialog(SendLater::SendLaterInfo *info, QWidget *parent)
     : KDialog(parent),
-      mAction(SendNow),
-      mInfo(info),
-      mSendAtTime(0),
-      mSendAtTimeLabel(0)
+      mAction(Unknown),
+      mInfo(info)
 {
     setCaption( i18n("Send Later") );
     setWindowIcon( KIcon( QLatin1String("kmail") ) );
-    if (info) {
-        setButtons( Ok|Cancel );
-        connect(this, SIGNAL(okClicked()), this, SLOT(slotOkClicked()));
-    } else {
-        setButtons( User1|User2|Cancel );
-        setButtonText( User1, i18n("Send Later"));
-        setButtonText( User2, i18n("Send Now"));
-        connect(this, SIGNAL(user1Clicked()), this, SLOT(slotSendLater()));
-        connect(this, SIGNAL(user2Clicked()), this, SLOT(slotSendNow()));
+    setButtons( Ok|Cancel );
+    connect(this, SIGNAL(okClicked()), this, SLOT(slotOkClicked()));
+
+    if (!info) {
+        setButtonText( Ok, i18n("Send Later"));
     }
 
     QWidget *w = new QWidget;
@@ -62,19 +56,18 @@ SendLaterDialog::SendLaterDialog(SendLater::SendLaterInfo *info, QWidget *parent
     QDateTime t = QDateTime::currentDateTime();
     t = t.addSecs(60*60);
 
-    mDateTime = new QDateTimeEdit;
-    mDateTime->setMinimumDateTime(t);
+    mDateTime = new SendLaterTimeDateWidget;
     mDateTime->setDateTime(t);
-    connect(mDateTime, SIGNAL(dateTimeChanged(QDateTime)), SLOT(slotDateTimeChanged(QDateTime)));
     hbox->addWidget(lab);
     hbox->addWidget(mDateTime);
 
-    mRecurrence = new QCheckBox(i18n("Recurrence"));
-    connect(mRecurrence, SIGNAL(clicked(bool)), this, SLOT(slotRecurrenceClicked(bool)));
-    lay->addWidget(mRecurrence);
-
     hbox = new QHBoxLayout;
     lay->addLayout(hbox);
+
+    mRecurrence = new QCheckBox(i18n("Recurrence"));
+    connect(mRecurrence, SIGNAL(clicked(bool)), this, SLOT(slotRecurrenceClicked(bool)));
+    hbox->addWidget(mRecurrence);
+
 
     lab = new QLabel(i18n("Each:"));
     hbox->addWidget(lab);
@@ -93,39 +86,12 @@ SendLaterDialog::SendLaterDialog(SendLater::SendLaterInfo *info, QWidget *parent
 
     hbox->addWidget(mRecurrenceComboBox);
 
-    if (info) {
-        mSendAtTimeLabel = new QLabel;
-        hbox->addWidget(mSendAtTimeLabel);
-    } else {
-        mSendAtTime = new KPushButton;
-
-        connect(mSendAtTime, SIGNAL(clicked()), SLOT(slotSendAtTime()));
-        hbox->addWidget(mSendAtTime);
-    }
-
-    hbox = new QHBoxLayout;
-
-    mSendIn30Minutes = new KPushButton(i18n("30 minutes later"));
-    connect(mSendIn30Minutes, SIGNAL(clicked()), SLOT(slotSendIn30Minutes()));
-    hbox->addWidget(mSendIn30Minutes);
-
-    mSendIn1Hour = new KPushButton(i18n("1 hour later"));
-    connect(mSendIn1Hour, SIGNAL(clicked()), SLOT(slotSendIn1Hour()));
-    hbox->addWidget(mSendIn1Hour);
-
-    mSendIn2Hours = new KPushButton(i18n("2 hour later"));
-    connect(mSendIn2Hours, SIGNAL(clicked()), SLOT(slotSendIn2Hours()));
-    hbox->addWidget(mSendIn2Hours);
-    lay->addLayout(hbox);
-
     lay->addWidget(new KSeparator);
 
     w->setLayout(lay);
     setMainWidget(w);
     readConfig();
     slotRecurrenceClicked(false);
-    //Add currentdate/time  + 1h
-    slotDateTimeChanged(t);
     if (info)
         load(info);
 }
@@ -133,27 +99,6 @@ SendLaterDialog::SendLaterDialog(SendLater::SendLaterInfo *info, QWidget *parent
 SendLaterDialog::~SendLaterDialog()
 {
     writeConfig();
-}
-
-void SendLaterDialog::slotSendIn2Hours()
-{
-    mSendDateTime = QDateTime::currentDateTime().addSecs(60*60*2);
-    mAction = SendDeliveryAtTime;
-    accept();
-}
-
-void SendLaterDialog::slotSendIn1Hour()
-{
-    mSendDateTime = QDateTime::currentDateTime().addSecs(60*60);
-    mAction = SendDeliveryAtTime;
-    accept();
-}
-
-void SendLaterDialog::slotSendIn30Minutes()
-{
-    mSendDateTime = QDateTime::currentDateTime().addSecs(60*30);
-    mAction = SendDeliveryAtTime;
-    accept();
 }
 
 void SendLaterDialog::slotRecurrenceClicked(bool clicked)
@@ -169,7 +114,7 @@ void SendLaterDialog::readConfig()
     if ( sizeDialog.isValid() ) {
         resize( sizeDialog );
     } else {
-        resize( 800,600);
+        resize( 400,300);
     }
 }
 
@@ -193,7 +138,6 @@ SendLater::SendLaterInfo* SendLaterDialog::info()
 {
     if (!mInfo) {
         mInfo = new SendLater::SendLaterInfo();
-        mInfo->setItemId(-1);
     }
     mInfo->setRecurrence(mRecurrence->isChecked());
     mInfo->setRecurrenceEachValue(mRecurrenceValue->value());
@@ -205,37 +149,9 @@ SendLater::SendLaterInfo* SendLaterDialog::info()
     return mInfo;
 }
 
-void SendLaterDialog::slotSendLater()
-{
-    mAction = SendLater;
-    accept();
-}
-
-void SendLaterDialog::slotSendNow()
-{
-    mAction = SendNow;
-    accept();
-}
-
 SendLaterDialog::SendLaterAction SendLaterDialog::action() const
 {
     return mAction;
-}
-
-void SendLaterDialog::slotDateTimeChanged(const QDateTime &datetime)
-{
-    const QString str = i18n("Send around %1", KGlobal::locale()->formatDateTime(datetime));
-    if (mSendAtTime)
-        mSendAtTime->setText(str);
-    else if (mSendAtTimeLabel)
-        mSendAtTimeLabel->setText(str);
-}
-
-void SendLaterDialog::slotSendAtTime()
-{
-    mSendDateTime = mDateTime->dateTime();
-    mAction = SendDeliveryAtTime;
-    accept();
 }
 
 void SendLaterDialog::slotOkClicked()

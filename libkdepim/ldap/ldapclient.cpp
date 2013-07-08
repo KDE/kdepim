@@ -125,7 +125,7 @@ const KLDAP::LdapServer LdapClient::server() const
 void LdapClient::setAttributes( const QStringList &attrs )
 {
   d->mAttrs = attrs;
-  d->mAttrs << "objectClass"; // via objectClass we detect distribution lists
+  d->mAttrs << QLatin1String("objectClass"); // via objectClass we detect distribution lists
 }
 
 QStringList LdapClient::attributes() const
@@ -146,8 +146,8 @@ void LdapClient::startQuery( const QString &filter )
   url = d->mServer.url();
 
   url.setAttributes( d->mAttrs );
-  url.setScope( d->mScope == "one" ? KLDAP::LdapUrl::One : KLDAP::LdapUrl::Sub );
-  url.setFilter( '(' + filter + ')' );
+  url.setScope( d->mScope == QLatin1String("one") ? KLDAP::LdapUrl::One : KLDAP::LdapUrl::Sub );
+  url.setFilter( QLatin1Char('(') + filter + QLatin1Char(')') );
 
   kDebug(5300) <<"LdapClient: Doing query:" << url.prettyUrl();
 
@@ -228,7 +228,7 @@ void LdapClient::Private::finishCurrentObject()
   for ( KLDAP::LdapAttrMap::ConstIterator it = mCurrentObject.attributes().constBegin();
     it != mCurrentObject.attributes().constEnd(); ++it ) {
 
-    if ( it.key().toLower() == "objectclass" ) {
+    if ( it.key().toLower() == QLatin1String("objectclass") ) {
       objectclasses = it.value();
       break;
     }
@@ -245,26 +245,26 @@ void LdapClient::Private::finishCurrentObject()
   }
 
   if ( groupofnames ) {
-    KLDAP::LdapAttrMap::ConstIterator it = mCurrentObject.attributes().find( "mail" );
+    KLDAP::LdapAttrMap::ConstIterator it = mCurrentObject.attributes().find( QLatin1String("mail") );
     if ( it == mCurrentObject.attributes().end() ) {
       // No explicit mail address found so far?
       // Fine, then we use the address stored in the DN.
       QString sMail;
-      QStringList lMail = mCurrentObject.dn().toString().split( ",dc=", QString::SkipEmptyParts );
+      QStringList lMail = mCurrentObject.dn().toString().split( QLatin1String(",dc="), QString::SkipEmptyParts );
       const int n = lMail.count();
       if ( n ) {
         if ( lMail.first().toLower().startsWith( QLatin1String( "cn=" ) ) ) {
           sMail = lMail.first().simplified().mid( 3 );
           if ( 1 < n ) {
-            sMail.append( '@' );
+            sMail.append( QLatin1Char('@') );
           }
           for ( int i = 1; i < n; ++i ) {
-            sMail.append( lMail[i] );
+            sMail.append( lMail.at(i) );
             if ( i < n - 1 ) {
-              sMail.append( '.' );
+              sMail.append( QLatin1Char('.') );
             }
           }
-          mCurrentObject.addValue( "mail", sMail.toUtf8() );
+          mCurrentObject.addValue( QLatin1String("mail"), sMail.toUtf8() );
         }
       }
     }

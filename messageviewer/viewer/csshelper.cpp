@@ -76,7 +76,7 @@ CSSHelper::CSSHelper( const QPaintDevice *pd ) :
     cHtmlWarning =
       reader.readEntry( "HTMLWarningColor", cHtmlWarning );
     for ( int i = 0 ; i < 3 ; ++i ) {
-      const QString key = "QuotedText" + QString::number( i+1 );
+      const QString key = QLatin1String("QuotedText") + QString::number( i+1 );
       mQuoteColor[i] = reader.readEntry( key, mQuoteColor[i] );
     }
     mBackgroundColor = reader.readEntry( "BackgroundColor", mBackgroundColor );
@@ -90,7 +90,7 @@ CSSHelper::CSSHelper( const QPaintDevice *pd ) :
     QFont defaultFont = mBodyFont;
     defaultFont.setItalic( true );
     for ( int i = 0 ; i < 3 ; ++i ) {
-      const QString key = QString( "quote%1-font" ).arg( i+1 );
+      const QString key = QString::fromLatin1( "quote%1-font" ).arg( i+1 );
       mQuoteFont[i] = fonts.readEntry( key, defaultFont );
     }
   }
@@ -105,11 +105,11 @@ CSSHelper::CSSHelper( const QPaintDevice *pd ) :
 
 QString CSSHelper::htmlHead( bool fixed ) const {
   return
-  "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">\n"
-  "<html><head><title></title><style>\n"
+  QLatin1String("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">\n"
+  "<html><head><title></title><style>\n")
   + cssDefinitions( fixed ) +
-  "</style></head>\n"
-  "<body>\n";
+  QLatin1String("</style></head>\n"
+  "<body>\n");
 }
 
 }

@@ -28,6 +28,7 @@ class KArchiveDirectory;
 class KTempDir;
 class KZip;
 class KArchiveFile;
+class KArchiveEntry;
 
 namespace KPIMIdentities {
 class Identity;
@@ -54,6 +55,7 @@ Q_SIGNALS:
     void error(const QString &);
 
 protected:
+    void copyToDirectory(const KArchiveEntry *entry, const QString &dest);
     void extractZipFile(const KArchiveFile *file, const QString &source, const QString &destination);
 
     void convertRealPathToCollection(KConfigGroup &group, const QString &currentKey, bool addCollectionPrefix=false);

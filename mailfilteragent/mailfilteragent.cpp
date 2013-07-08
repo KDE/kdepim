@@ -96,8 +96,8 @@ MailFilterAgent::MailFilterAgent( const QString &id )
     if ( group.hasKey( "Enabled" ) ) {
       if ( group.readEntry( "Enabled", false ) ) {
           m_filterLogDialog = new FilterLogDialog( 0 );
-          const QPixmap pixmap = KIcon( "view-filter" ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
-          KNotification *notify = new KNotification( "mailfilterlogenabled" );
+          const QPixmap pixmap = KIcon( QLatin1String("view-filter") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
+          KNotification *notify = new KNotification( QLatin1String("mailfilterlogenabled") );
           notify->setComponentData( componentData() );
           notify->setPixmap( pixmap );
           notify->setText( i18nc("Notification when the filter log was enabled", "Mail Filter Log Enabled" ) );
@@ -150,7 +150,7 @@ void MailFilterAgent::initialCollectionFetchingDone( KJob *job )
 
 void MailFilterAgent::clearMessage()
 {
-  emit status(AgentBase::Idle, "" );
+  emit status(AgentBase::Idle, QString() );
 }
 
 void MailFilterAgent::itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection )
@@ -300,7 +300,7 @@ void MailFilterAgent::emitProgress(int p)
 {
   if ( p == 0 ) {
     mProgressTimer->stop();
-    emit status(AgentBase::Idle, "" );
+    emit status(AgentBase::Idle, QString() );
   }
   mProgressCounter = p;
   emit percent(p);

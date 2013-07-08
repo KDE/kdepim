@@ -29,7 +29,7 @@ FilterAction* FilterActionReplyTo::newAction()
 }
 
 FilterActionReplyTo::FilterActionReplyTo( QObject *parent )
-  : FilterActionWithAddress( "set Reply-To", i18n( "Set Reply-To To" ), parent )
+  : FilterActionWithAddress( QLatin1String("set Reply-To"), i18n( "Set Reply-To To" ), parent )
 {
   mParameter.clear();
 }

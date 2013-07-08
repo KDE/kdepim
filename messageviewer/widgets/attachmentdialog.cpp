@@ -40,7 +40,7 @@ AttachmentDialog::AttachmentDialog( QWidget *parent, const QString &filenameText
 
     dialog = new KDialog( parent );
     dialog->setCaption( i18n("Open Attachment?") );
-    dialog->setObjectName( "attachmentSaveOpen" );
+    dialog->setObjectName( QLatin1String("attachmentSaveOpen") );
 
     if ( application.isEmpty() )
         dialog->setButtons( KDialog::User3 | KDialog::User1 | KDialog::Cancel );

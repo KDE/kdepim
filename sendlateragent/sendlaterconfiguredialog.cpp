@@ -18,6 +18,7 @@
 #include "sendlaterconfiguredialog.h"
 #include "sendlaterdialog.h"
 #include "sendlaterinfo.h"
+#include "sendlaterutil.h"
 
 #include "kdepim-version.h"
 
@@ -141,7 +142,7 @@ SendLaterWidget::SendLaterWidget( QWidget *parent )
     QStringList headers;
     headers << i18n("Subject")
             << i18n("Send around")
-            << i18n("Recursive")
+            << i18n("Recurrent")
             << i18n("Message Id");
 
     mWidget->treeWidget->setHeaderLabels(headers);
@@ -175,7 +176,7 @@ void SendLaterWidget::customContextMenuRequested(const QPoint &)
             menu.addAction(i18n("Send now"), this, SLOT(slotSendNow()));
         }
         menu.addSeparator();
-        menu.addAction(i18n("Delete"), this, SLOT(slotRemoveItem()));
+        menu.addAction(KIcon(QLatin1String("edit-delete")), i18n("Delete"), this, SLOT(slotRemoveItem()));
         menu.exec(QCursor::pos());
     }
 }
@@ -255,7 +256,7 @@ void SendLaterWidget::save()
     for (int i = 0; i < numberOfItem; ++i) {
         SendLaterItem *mailItem = static_cast<SendLaterItem *>(mWidget->treeWidget->topLevelItem(i));
         if (mailItem->info()) {
-            KConfigGroup group = config->group(QString::fromLatin1("SendLaterItem %1").arg(mailItem->info()->itemId()));
+            KConfigGroup group = config->group(SendLater::SendLaterUtil::sendLaterPattern.arg(mailItem->info()->itemId()));
             mailItem->info()->writeConfig(group);
         }
     }
@@ -269,7 +270,7 @@ void SendLaterWidget::slotRemoveItem()
     if (KMessageBox::warningYesNo(this,i18n("Do you want to delete selected items? Do you want to continue?"),i18n("Remove items"))== KMessageBox::No)
         return;
 
-    //TODO delete message or not ?
+    //FIXME 4.12: delete message or not ?
     Q_FOREACH(QTreeWidgetItem *item,listItems) {
         delete item;
     }

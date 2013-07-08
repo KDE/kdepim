@@ -737,8 +737,15 @@ void ImportMailJob::restoreConfig()
         Q_FOREACH(const QString& entryName, themeDir->entries()) {
             const KArchiveEntry *entry = themeDir->entry(entryName);
             if (entry && entry->isDirectory()) {
-                //TODO import themes
-                //Rename it if necessary
+                QString subFolderName = entryName;
+                QDir themeDirectory( KStandardDirs::locateLocal( "data", QString::fromLatin1( "messageviewer/themes/%1" ).arg(entryName) ) );
+                int i = 1;
+                while (themeDirectory.exists()) {
+                    subFolderName = entryName + QString::fromLatin1("_%1").arg(i);
+                    themeDirectory = QDir( KStandardDirs::locateLocal( "data", QString::fromLatin1( "messageviewer/themes/%1" ).arg(subFolderName) ) );
+                    ++i;
+                }
+                copyToDirectory(entry, KGlobal::dirs()->saveLocation( "data", QString::fromLatin1( "messageviewer/themes/%1" ).arg(subFolderName)));
             }
         }
     }

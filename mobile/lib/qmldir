@@ -40,6 +40,5 @@ SearchDialog 4.5 SearchDialog.qml
 SearchResultScreen 4.5 SearchResultScreen.qml
 ActionButton 4.5 ActionButton.qml
 ItemEditButton 4.5 ItemEditButton.qml
-DecoratedFlickable 4.5 DecoratedFlickable.qml
 DecoratedListView 4.5 DecoratedListView.qml
 Switch 4.5 Switch.qml

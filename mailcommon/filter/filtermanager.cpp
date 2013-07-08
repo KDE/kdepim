@@ -64,16 +64,16 @@ class FilterManager::Private
 
 void FilterManager::Private::readConfig()
 {
-  KSharedConfig::Ptr config = KSharedConfig::openConfig( "akonadi_mailfilter_agentrc" );
+  KSharedConfig::Ptr config = KSharedConfig::openConfig( QLatin1String("akonadi_mailfilter_agentrc") );
   clear();
   QStringList emptyFilters;
   mFilters = FilterImporterExporter::readFiltersFromConfig( config, emptyFilters );
-  q->emit filtersChanged();
+  emit q->filtersChanged();
 }
 
 void FilterManager::Private::writeConfig( bool withSync ) const
 {
-  KSharedConfig::Ptr config = KSharedConfig::openConfig( "akonadi_mailfilter_agentrc" );
+  KSharedConfig::Ptr config = KSharedConfig::openConfig( QLatin1String("akonadi_mailfilter_agentrc") );
 
   // Now, write out the new stuff:
   FilterImporterExporter::writeFiltersToConfig( mFilters, config );

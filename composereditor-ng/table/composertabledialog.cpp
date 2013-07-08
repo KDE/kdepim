@@ -36,6 +36,7 @@ public:
     ComposerTableDialogPrivate(ComposerTableDialog *qq)
         :q(qq)
     {
+        initialize();
     }
 
     QString html() const;
@@ -96,7 +97,6 @@ void ComposerTableDialogPrivate::_k_slotOkClicked()
 ComposerTableDialog::ComposerTableDialog(QWidget *parent)
     : KDialog(parent), d(new ComposerTableDialogPrivate(this))
 {
-    d->initialize();
 }
 
 

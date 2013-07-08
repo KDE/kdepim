@@ -33,7 +33,7 @@
 
 using namespace MailCommon;
 
-FilterAction::FilterAction( const char *name, const QString &label, QObject *parent )
+FilterAction::FilterAction( const QString &name, const QString &label, QObject *parent )
   : QObject( parent ), mName( name ), mLabel( label )
 {
 }

@@ -74,7 +74,7 @@ class MAILCOMMON_EXPORT FilterAction : public QObject
      * The action is initialized with an identifier @p name and
      * an i18n'd @p label.
      */
-    FilterAction( const char *name, const QString &label, QObject *parent = 0 );
+    FilterAction( const QString &name, const QString &label, QObject *parent = 0 );
 
     /**
      * Destroys the filter action.

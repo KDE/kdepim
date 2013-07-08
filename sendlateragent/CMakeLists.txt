@@ -6,6 +6,7 @@ add_definitions( -DQT_NO_CAST_TO_ASCII )
 include_directories(
    ${CMAKE_SOURCE_DIR}/messagecomposer/
    ${CMAKE_SOURCE_DIR}/messagecore/
+   ${CMAKE_SOURCE_DIR}/libkleo
 )
 
 
@@ -15,6 +16,7 @@ set(sendlaterlib_SRCS
     sendlaterinfo.cpp
     sendlaterdialog.cpp
     sendlaterutil.cpp
+    sendlatertimedatewidget.cpp
 )
 
 kde4_add_kcfg_files(sendlaterlib_SRCS

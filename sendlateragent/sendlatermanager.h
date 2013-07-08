@@ -72,6 +72,7 @@ private Q_SLOTS:
     void createSendInfoList();
 
 private:
+    void removeLaterInfo(SendLater::SendLaterInfo *info);
     SendLater::SendLaterInfo *searchInfo(Akonadi::Item::Id id);
     void recreateSendList();
     void stopTimer();

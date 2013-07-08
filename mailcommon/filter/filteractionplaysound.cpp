@@ -33,7 +33,7 @@
 using namespace MailCommon;
 
 FilterActionPlaySound::FilterActionPlaySound( )
-  : FilterActionWithTest( "play sound", i18n( "Play Sound" ) )
+  : FilterActionWithTest( QLatin1String("play sound"), i18n( "Play Sound" ) )
 #ifndef Q_OS_WINCE
   , mPlayer( 0 )
 #endif

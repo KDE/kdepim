@@ -22,6 +22,7 @@
 
 #include "sendlatermanager.h"
 
+#include <KMime/Message>
 #include <Akonadi/ItemFetchScope>
 #include <Akonadi/Item>
 
@@ -49,6 +50,7 @@ Q_SIGNALS:
     void done();
 
 private:
+    void updateAndCleanMessageBeforeSending(const KMime::Message::Ptr &msg);
     Akonadi::ItemFetchScope mFetchScope;
     SendLaterManager *mManager;
     SendLater::SendLaterInfo *mInfo;

@@ -25,7 +25,7 @@
 using namespace MailCommon;
 
 FilterActionBeep::FilterActionBeep( QObject *parent )
-  : FilterActionWithNone( "beep", i18n( "Beep" ), parent )
+  : FilterActionWithNone( QLatin1String("beep"), i18n( "Beep" ), parent )
 {
 }
 

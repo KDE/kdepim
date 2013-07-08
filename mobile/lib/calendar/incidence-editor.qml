@@ -23,6 +23,7 @@ import QtQuick 1.1
 import org.kde 4.5
 import org.kde.pim.mobileui 4.5 as KPIM
 import org.kde.incidenceeditors 4.5 as IncidenceEditors
+import org.kde.plasma.extras 0.1 as PlasmaExtras
 
 KPIM.MainView {
   id: mainview
@@ -79,7 +80,7 @@ KPIM.MainView {
     anchors.fill: parent
   }
 
-  KPIM.DecoratedFlickable {
+  PlasmaExtras.ScrollArea {
     anchors.top: parent.top
     anchors.bottom: collectionCombo.top
     anchors.left: parent.left
@@ -88,16 +89,14 @@ KPIM.MainView {
     anchors.topMargin: 40
     anchors.leftMargin: 40;
 
+    flickableItem: Flickable {
     contentHeight: generalEditor.height;
 
-    content.children: [
-      Item {
-        IncidenceEditors.GeneralEditor {
-          id: generalEditor;
+    IncidenceEditors.GeneralEditor {
+          id: generalEditor
           anchors.fill: parent
         }
       }
-    ]
   }
 
   IncidenceEditors.CollectionCombo {

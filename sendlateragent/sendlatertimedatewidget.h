@@ -15,32 +15,37 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#ifndef SENDLATERTIMEDATEWIDGET_H
+#define SENDLATERTIMEDATEWIDGET_H
 
-#include "grantleeheaderstyle.h"
-#include "header/grantleeheaderformatter.h"
-#include "header/headerstrategy.h"
+#include <QWidget>
+#include <QDateTime>
+#include "sendlater_export.h"
 
-#include <kmime/kmime_message.h>
+class KTimeComboBox;
+class KDateComboBox;
 
-using namespace MessageViewer;
-
-namespace MessageViewer {
-
-GrantleeHeaderStyle::GrantleeHeaderStyle()
-    : HeaderStyle()
+namespace SendLater {
+class SENDLATER_EXPORT SendLaterTimeDateWidget : public QWidget
 {
-    mGrantleeFormatter = new GrantleeHeaderFormatter;
+    Q_OBJECT
+public:
+    explicit SendLaterTimeDateWidget(QWidget *parent = 0);
+    ~SendLaterTimeDateWidget();
+
+    void setDateTime(const QDateTime &);
+    QDateTime dateTime() const;
+
+Q_SIGNALS:
+    void dateTimeChanged(const QDateTime &);
+
+private Q_SLOTS:
+    void slotDateTimeChanged();
+
+private:
+    KTimeComboBox *mTimeComboBox;
+    KDateComboBox *mDateComboBox;
+};
 }
 
-GrantleeHeaderStyle::~GrantleeHeaderStyle()
-{
-    delete mGrantleeFormatter;
-}
-
-QString GrantleeHeaderStyle::format( KMime::Message *message ) const {
-    if ( !message )
-        return QString();
-    return mGrantleeFormatter->toHtml(theme(), isPrinting(), this, message);
-}
-
-}
+#endif // SENDLATERTIMEDATEWIDGET_H

@@ -147,7 +147,7 @@ void LdapClientSearch::Private::readConfig()
   if ( !numHosts ) {
     mNoLDAPLookup = true;
   } else {
-    for ( int j = 0; j < numHosts; j++ ) {
+    for ( int j = 0; j < numHosts; ++j ) {
       LdapClient *ldapClient = new LdapClient( j, q );
       KLDAP::LdapServer server;
       mClientSearchConfig->readConfig( server, config, j, true );
@@ -218,17 +218,19 @@ void LdapClientSearch::startSearch( const QString &txt )
                                 .arg( d->mSearchText ).arg( d->mSearchText ).arg( d->mSearchText );
 
   QList<LdapClient*>::Iterator it;
-  for ( it = d->mClients.begin(); it != d->mClients.end(); ++it ) {
+  QList<LdapClient*>::Iterator end(d->mClients.end());
+  for ( it = d->mClients.begin(); it != end; ++it ) {
     (*it)->startQuery( filter );
     kDebug(5300) <<"LdapClientSearch::startSearch()" << filter;
-    d->mActiveClients++;
+    ++d->mActiveClients;
   }
 }
 
 void LdapClientSearch::cancelSearch()
 {
   QList<LdapClient*>::Iterator it;
-  for ( it = d->mClients.begin(); it != d->mClients.end(); ++it ) {
+  QList<LdapClient*>::Iterator end(d->mClients.end());
+  for ( it = d->mClients.begin(); it != end; ++it ) {
     (*it)->cancelQuery();
   }
 
@@ -287,10 +289,10 @@ void LdapClientSearch::Private::finish()
 
 void LdapClientSearch::Private::makeSearchData( QStringList &ret, LdapResult::List &resList )
 {
-  QString search_text_upper = mSearchText.toUpper();
 
   QList< ResultObject >::ConstIterator it1;
-  for ( it1 = mResults.constBegin(); it1 != mResults.constEnd(); ++it1 ) {
+  QList< ResultObject >::ConstIterator end1(mResults.constEnd());
+  for ( it1 = mResults.constBegin(); it1 != end1; ++it1 ) {
     QString name, mail, givenname, sn;
     QStringList mails;
     bool isDistributionList = false;

@@ -70,7 +70,7 @@ class SpamScore {
 public:
 
     SpamScore()
-        : mScore( -2.0 ), mConfidence( -2.0 )
+        : mError(noError), mScore( -2.0 ), mConfidence( -2.0 )
     {
     }
 

@@ -51,7 +51,7 @@ class FilterActionWithUrl : public FilterAction
     /**
      * @copydoc FilterAction::FilterAction
      */
-    FilterActionWithUrl( const char *name, const QString &label, QObject *parent = 0 );
+    FilterActionWithUrl(const QString &name, const QString &label, QObject *parent = 0 );
 
     /**
      * @copydoc FilterAction::~FilterAction

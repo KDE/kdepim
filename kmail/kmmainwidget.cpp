@@ -229,8 +229,7 @@ K_GLOBAL_STATIC( KMMainWidget::PtrList, theMainWidgetList )
     mMsgActions( 0 ),
     mCurrentFolder( 0 ),
     mVacationIndicatorActive( false ),
-    mGoToFirstUnreadMessageInSelectedFolder( false ),
-    mCheckMailInProgress( false )
+    mGoToFirstUnreadMessageInSelectedFolder( false )
 {
   // must be the first line of the constructor:
   mStartupDone = false;
@@ -340,9 +339,9 @@ K_GLOBAL_STATIC( KMMainWidget::PtrList, theMainWidgetList )
   mStartupDone = true;
 
 
-  m_notificationTimer.setInterval( 3 * 1000 );
-  m_notificationTimer.setSingleShot( true );
-  connect( &m_notificationTimer, SIGNAL(timeout()), SLOT(slotUpdateActionsAfterMailChecking()) );
+  mCheckMailTimer.setInterval( 3 * 1000 );
+  mCheckMailTimer.setSingleShot( true );
+  connect( &mCheckMailTimer, SIGNAL(timeout()), SLOT(slotUpdateActionsAfterMailChecking()) );
 
 }
 
@@ -403,20 +402,18 @@ void KMMainWidget::destruct()
 
 void KMMainWidget::slotStartCheckMail()
 {
-  mCheckMailInProgress = true;
-  if ( m_notificationTimer.isActive() )
-    m_notificationTimer.stop();
+  if ( mCheckMailTimer.isActive() )
+    mCheckMailTimer.stop();
 }
 
 void KMMainWidget::slotEndCheckMail()
 {
-  if ( !m_notificationTimer.isActive() )
-    m_notificationTimer.start();
+  if ( !mCheckMailTimer.isActive() )
+    mCheckMailTimer.start();
 }
 
 void KMMainWidget::slotUpdateActionsAfterMailChecking()
 {
-  mCheckMailInProgress = false;
   const bool sendOnAll =
     GlobalSettings::self()->sendOnCheck() == GlobalSettings::EnumSendOnCheck::SendOnAllChecks;
   const bool sendOnManual =

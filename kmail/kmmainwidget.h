@@ -615,8 +615,7 @@ private:
     bool mGoToFirstUnreadMessageInSelectedFolder;
     MessageList::Core::PreSelectionMode mPreSelectionMode;
 
-    bool mCheckMailInProgress;
-    QTimer m_notificationTimer;
+    QTimer mCheckMailTimer;
 
     QPointer<MailCommon::FolderSelectionDialog> mMoveOrCopyToDialog;
     QPointer<MailCommon::FolderSelectionDialog> mSelectFromAllFoldersDialog;

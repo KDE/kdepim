@@ -21,6 +21,7 @@
 #include "sendlaterjob.h"
 
 #include "messagecomposer/sender/akonadisender.h"
+#include "messagecomposer/utils/util.h"
 
 #include <KSharedConfig>
 #include <KConfigGroup>
@@ -128,7 +129,7 @@ void SendLaterManager::sendNow(Akonadi::Item::Id id)
             mCurrentInfo = info;
             slotCreateJob();
         } else {
-            qDebug()<<" can't find info about current id: "<<id;
+            kDebug()<<" can't find info about current id: "<<id;
             itemRemoved(id);
         }
     } else {
@@ -139,13 +140,17 @@ void SendLaterManager::sendNow(Akonadi::Item::Id id)
 
 void SendLaterManager::slotCreateJob()
 {
+    if (mCurrentJob) {
+        kDebug()<<" Problem we have already a job"<<mCurrentJob;
+        return;
+    }
     mCurrentJob = new SendLaterJob(this, mCurrentInfo);
     mCurrentJob->start();
 }
 
 void SendLaterManager::itemRemoved(Akonadi::Item::Id id)
 {
-    if (mConfig->hasGroup(QString::fromLatin1("SendLaterItem %1").arg(id))) {
+    if (mConfig->hasGroup(SendLater::SendLaterUtil::sendLaterPattern.arg(id))) {
         removeInfo(id);
         mConfig->reparseConfiguration();
         Q_EMIT needUpdateConfigDialogBox();
@@ -154,7 +159,7 @@ void SendLaterManager::itemRemoved(Akonadi::Item::Id id)
 
 void SendLaterManager::removeInfo(Akonadi::Item::Id id)
 {
-    KConfigGroup group = mConfig->group(QString::fromLatin1("SendLaterItem %1").arg(id));
+    KConfigGroup group = mConfig->group(SendLater::SendLaterUtil::sendLaterPattern.arg(id));
     group.deleteGroup();
     group.sync();
 }
@@ -162,21 +167,31 @@ void SendLaterManager::removeInfo(Akonadi::Item::Id id)
 void SendLaterManager::sendError(SendLater::SendLaterInfo *info, ErrorType type)
 {
     if (info) {
-        if (type == ItemNotFound) {
+        switch(type) {
+        case ItemNotFound:
             //Don't try to resend it. Remove it.
-            mListSendLaterInfo.removeAll(mCurrentInfo);
-            removeInfo(info->itemId());
-        } else {
+            removeLaterInfo(info);
+            break;
+        case MailDispatchDoesntWork:
+            //Force to make online maildispatcher
+            //Don't remove it.
+            MessageComposer::Util::sendMailDispatcherIsOnline( 0 );
+            //Remove item which create error ?
+            if (!info->isRecurrence()) {
+                removeLaterInfo(info);
+            }
+            break;
+        default:
             if (KMessageBox::Yes == KMessageBox::questionYesNo(0, i18n("An error was found. Do you want to resend it?"), i18n("Error found"))) {
                 //TODO 4.12: allow to remove it even if it's recurrent (need new i18n)
                 if (!info->isRecurrence()) {
-                    mListSendLaterInfo.removeAll(mCurrentInfo);
-                    removeInfo(info->itemId());
+                    removeLaterInfo(info);
                 }
             } else {
-                mListSendLaterInfo.removeAll(mCurrentInfo);
-                removeInfo(info->itemId());
+                //Remove even if it's recurrent ?
+                removeLaterInfo(info);
             }
+            break;
         }
     }
     recreateSendList();
@@ -195,11 +210,16 @@ void SendLaterManager::sendDone(SendLater::SendLaterInfo *info)
         if (info->isRecurrence()) {
             SendLater::SendLaterUtil::changeRecurrentDate(info);
         } else {
-            mListSendLaterInfo.removeAll(mCurrentInfo);
-            removeInfo(info->itemId());
+            removeLaterInfo(info);
         }
     }
     recreateSendList();
+}
+
+void SendLaterManager::removeLaterInfo(SendLater::SendLaterInfo *info)
+{
+    mListSendLaterInfo.removeAll(mCurrentInfo);
+    removeInfo(info->itemId());
 }
 
 void SendLaterManager::printDebugInfo()
