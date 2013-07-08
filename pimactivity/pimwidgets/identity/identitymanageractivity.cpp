@@ -298,9 +298,9 @@ IdentityManagerActivity::IdentityManagerActivity(ActivityManager *manager, bool 
 
 IdentityManagerActivity::~IdentityManagerActivity()
 {
-    delete d;
     kWarning( hasPendingChanges(), 5325 )
             << "IdentityManagerActivity: There were uncommitted changes!";
+    delete d;
 }
 
 PimActivity::ActivityManager *IdentityManagerActivity::activityManager() const
