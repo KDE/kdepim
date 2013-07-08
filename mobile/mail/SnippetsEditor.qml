@@ -22,6 +22,7 @@
 import QtQuick 1.1 as QML
 import org.kde 4.5
 import org.kde.pim.mobileui 4.5 as KPIM
+import org.kde.plasma.extras 0.1 as PlasmaExtras
 
 QML.Rectangle {
   id : _topLevel
@@ -39,44 +40,53 @@ QML.Rectangle {
   signal triggered(string triggeredName)
   signal doCollapse()
 
-  KPIM.DecoratedListView {
-    id: snippetsView
-    anchors { top: parent.top; bottom: parent.bottom; left: parent.left }
-    width: parent.width - actionColumn.width
-    model: snippetsModel
-    focus: true
-    clip: true
+  PlasmaExtras.ScrollArea {
 
-    delegate: QML.Item {
-      id: snippetDelegate
-      clip: true
-      width: parent.width
-      height: _topLevel.actionItemHeight
-
-      QML.Rectangle {
-        id: background
-        anchors.fill: parent
-        opacity: snippetDelegate.QML.ListView.isCurrentItem ? 0.25 : 0
-        color: "lightsteelblue"
-      }
-
-      QML.Text {
-        anchors.fill: parent
-        anchors.leftMargin: model.isSnippetGroup ? 5 : 25
-        text: model.display
-        font.bold: model.isSnippetGroup
-        horizontalAlignment: QML.Text.AlignLeft
-        verticalAlignment: QML.Text.AlignVCenter
-      }
-
-      QML.MouseArea {
-        anchors.fill: parent
-        onClicked: { snippetDelegate.QML.ListView.view.currentIndex = model.index; }
-      }
+    anchors {
+      top: parent.top
+      bottom: parent.bottom
+      left: parent.left
     }
+    width: parent.width - actionColumn.width
 
-    onCurrentIndexChanged : {
-      snippetsEditor.setRowSelected( currentIndex )
+    flickableItem: QML.ListView {
+      id: snippetsView
+
+      model: snippetsModel
+      focus: true
+      clip: true
+
+      delegate: QML.Item {
+        id: snippetDelegate
+        clip: true
+        width: parent.width
+        height: _topLevel.actionItemHeight
+
+        QML.Rectangle {
+          id: background
+          anchors.fill: parent
+          opacity: snippetDelegate.QML.ListView.isCurrentItem ? 0.25 : 0
+          color: "lightsteelblue"
+        }
+
+        QML.Text {
+          anchors.fill: parent
+          anchors.leftMargin: model.isSnippetGroup ? 5 : 25
+          text: model.display
+          font.bold: model.isSnippetGroup
+          horizontalAlignment: QML.Text.AlignLeft
+          verticalAlignment: QML.Text.AlignVCenter
+        }
+
+        QML.MouseArea {
+          anchors.fill: parent
+          onClicked: { snippetDelegate.QML.ListView.view.currentIndex = model.index; }
+        }
+      }
+
+      onCurrentIndexChanged : {
+        snippetsEditor.setRowSelected( currentIndex )
+      }
     }
   }
 

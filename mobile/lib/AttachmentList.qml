@@ -71,27 +71,32 @@ Item {
     }
   }
 
-  KPIM.DecoratedListView {
-    property string currentMimeType
-    property string currentAttachmentUrl
-    property string currentFileName
+  PlasmaExtras.ScrollArea {
+    anchors {
+      top: parent.top
+      left: parent.left
+      right: actionView.left
+      bottom: parent.bottom
+    }
 
-    id: attachmentListView
-    anchors.top: parent.top
-    anchors.left: parent.left
-    anchors.right: actionView.left
-    height: { Math.min( count * rowHeight, parent.height ) }
-    interactive: count * rowHeight > parent.height
-    delegate: attachmentDelegate
-    clip: true
+    flickableItem: ListView {
+      property string currentMimeType
+      property string currentAttachmentUrl
+      property string currentFileName
 
-    Connections {
-      target: model
-      onModelReset: {
-        attachmentListView.currentIndex = -1
-        attachmentListView.currentMimeType = "";
-        attachmentListView.currentAttachmentUrl = "";
-        attachmentListView.currentFileName = "";
+      id: attachmentListView
+
+      delegate: attachmentDelegate
+      clip: true
+
+      Connections {
+        target: model
+        onModelReset: {
+          attachmentListView.currentIndex = -1
+          attachmentListView.currentMimeType = "";
+          attachmentListView.currentAttachmentUrl = "";
+          attachmentListView.currentFileName = "";
+        }
       }
     }
   }
@@ -100,14 +105,18 @@ Item {
     id: actionView
     visible: false
     width: 0
-    anchors.top: parent.top
-    anchors.right: parent.right
-    anchors.bottom: parent.bottom
+    anchors {
+      top: parent.top
+      right: parent.right
+      bottom: parent.bottom
+    }
 
     KPIM.Button {
       id: openButton
-      anchors.top: parent.top
-      anchors.horizontalCenter: parent.horizontalCenter;
+      anchors {
+        top: parent.top
+        horizontalCenter: parent.horizontalCenter
+      }
       width: parent.width - 10
       height: parent.height / 6
       buttonText: KDE.i18n( "Open" )
@@ -118,8 +127,10 @@ Item {
     }
     KPIM.Button {
       id: saveButton
-      anchors.top: openButton.bottom;
-      anchors.horizontalCenter: parent.horizontalCenter;
+      anchors {
+        top: openButton.bottom;
+        horizontalCenter: parent.horizontalCenter
+      }
       width: parent.width - 10
       height: parent.height / 6
       buttonText: KDE.i18n( "Save" )
@@ -132,9 +143,11 @@ Item {
   Item {
     id: previewView
     visible: false
-    anchors.top: parent.top
-    anchors.right: parent.right
-    anchors.bottom: parent.bottom
+    anchors {
+      top: parent.top
+      right: parent.right
+      bottom: parent.bottom
+    }
     width: _attachmentList.width - attachmentListWidth - 6
 
     PlasmaExtras.ScrollArea {
@@ -157,9 +170,11 @@ Item {
 
     KPIM.Button {
       id: previewSaveButton
-      anchors.bottom: parent.bottom
-      anchors.right: parent.right
-      anchors.margins: 12
+      anchors {
+        bottom: parent.bottom
+        right: parent.right
+        margins: 12
+      }
       width: 48
       height: 48
       icon: KDE.iconPath( "document-save", width );

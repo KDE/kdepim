@@ -20,7 +20,7 @@
 */
 
 import QtQuick 1.1 as QML
-
+import org.kde.plasma.extras 0.1 as PlasmaExtras
 import org.kde.pim.mobileui 4.5 as KPIM
 
 QML.Rectangle {
@@ -38,19 +38,24 @@ QML.Rectangle {
 
   signal triggered(string triggeredName)
 
-  KPIM.DecoratedListView {
-    id : myList
+  PlasmaExtras.ScrollArea {
+
     anchors { top: parent.top; bottom: parent.bottom; left: parent.left }
     width: parent.width - actionColumn.width
-    focus: true
-    clip: true
-    delegate : AgentInstanceListDelegate {
+
+    flickableItem: QML.ListView {
+      id : myList
+
+      focus: true
+      clip: true
+      delegate : AgentInstanceListDelegate {
         height: _topLevel.actionItemHeight
         width: myList.width
-    }
+      }
 
-    onCurrentIndexChanged : {
-      application.setAgentInstanceListSelectedRow( currentIndex )
+      onCurrentIndexChanged : {
+        application.setAgentInstanceListSelectedRow( currentIndex )
+      }
     }
   }
 

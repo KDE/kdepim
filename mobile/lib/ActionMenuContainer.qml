@@ -202,11 +202,11 @@ Item {
     interactive: (actionItemHeight + actionItemSpacing) * (activeCount <= 0 ? count : activeCount) > height
 
     highlight : ActiveActionMenuItemDelegate{
-      id : menuHighLight;
-      visible : menuStyle;
-      spaceAbove : itemModel.spaceAbove;
-      spaceBelow : itemModel.spaceBelow;
-      actionItemHeight: _topLevel.actionItemHeight 
+      id : menuHighLight
+      visible : menuStyle
+      spaceAbove : itemModel.spaceAbove
+      spaceBelow : itemModel.spaceBelow
+      actionItemHeight: _topLevel.actionItemHeight
     }
 
     onHeightChanged : {
