@@ -212,23 +212,17 @@ PlasmaComponents.Page {
       }
     }
 
-    QML.Item {
-      id : loadingFolderPage
+    PlasmaComponents.BusyIndicator {
+      id : busyIndicator
 
       anchors {
         left : collectionView.right
-        top : parent.top
-        bottom : parent.bottom
         right : parent.right
+        verticalCenter: parent.verticalCenter
       }
 
       visible: application.isLoadingSelected
-
-      PlasmaComponents.BusyIndicator {
-        anchors.centerIn: parent
-
-        running: true
-      }
+      running: visible
     }
 
     //BEGIN EmailList

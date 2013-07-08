@@ -157,7 +157,7 @@ KPIM.MainView {
 
       PlasmaComponents.BusyIndicator {
           anchors.centerIn: parent
-          running: true
+          running: parent.visible
       }
 
       color: "grey"
