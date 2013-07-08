@@ -40,10 +40,6 @@ GrantleeHeaderStyle::~GrantleeHeaderStyle()
 QString GrantleeHeaderStyle::format( KMime::Message *message ) const {
     if ( !message )
         return QString();
-    const HeaderStrategy *strategy = headerStrategy();
-    if ( !strategy )
-        strategy = HeaderStrategy::grantlee();
-
     return mGrantleeFormatter->toHtml(theme(), isPrinting(), this, message);
 }
 
