@@ -392,13 +392,6 @@ PlasmaComponents.Page {
                 }
               },
               KPIM.ScriptAction {
-                name : "start_maintenance"
-                script : {
-                  actionPanel.collapse();
-                  guiStateManager.pushState( KPIM.GuiStateManager.BulkActionScreenState );
-                }
-              },
-              KPIM.ScriptAction {
                 name : "attachment_save_all"
                 script : {
                   actionPanel.collapse();
@@ -451,16 +444,6 @@ PlasmaComponents.Page {
     anchors.fill: parent
     source: guiStateManager.inMultipleFolderSelectionScreenState ? KDE.locate( "module", "imports/org/kde/pim/mobileui/MultipleSelectionScreen.qml" ) : ""
     onLoaded: { item.backgroundImage = backgroundImage.source; }
-  }
-
-  QML.Loader {
-    anchors.fill: parent
-    source: guiStateManager.inBulkActionScreenState ? "BulkActionComponent.qml" : ""
-    onLoaded: {
-      item.backgroundImage = backgroundImage.source
-      item.model = itemModel
-      item.itemHeight = Screen.partition( item.height, 7 )
-    }
   }
 
   KPIM.SearchResultScreen {
