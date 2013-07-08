@@ -453,6 +453,7 @@ void ComposerViewPrivate::createAction(ComposerView::ComposerViewAction type)
             htmlEditorActionList.append(action_paste_withoutformatting);
             q->connect( action_paste_withoutformatting, SIGNAL(triggered()), q, SLOT(_k_slotPasteWithoutFormatting()) );
         }
+        break;
     }
     case ComposerView::InsertSpecialChar:
     {
@@ -461,6 +462,7 @@ void ComposerViewPrivate::createAction(ComposerView::ComposerViewAction type)
             htmlEditorActionList.append(action_insert_specialchar);
             q->connect( action_insert_specialchar, SIGNAL(triggered()), q, SLOT(_k_slotInsertSpecialChar()) );
         }
+        break;
     }
     case ComposerView::Separator:
         //nothing
