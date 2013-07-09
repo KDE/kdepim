@@ -122,7 +122,6 @@ QString SendLaterInfo::subject() const
     return mSubject;
 }
 
-
 void SendLaterInfo::readConfig(const KConfigGroup &config)
 {
     if (config.hasKey(QLatin1String("lastDateTimeSend"))) {

@@ -37,7 +37,8 @@ public:
     enum RecurrenceUnit {
         Days = 0,
         Weeks,
-        Months
+        Months,
+        Years
     };
 
     void setItemId(Akonadi::Item::Id id);
