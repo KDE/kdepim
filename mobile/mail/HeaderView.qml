@@ -20,11 +20,10 @@
 */
 
 import QtQuick 1.1
-import org.kde.pim.mobileui 4.5 as KPIM
 import org.kde.plasma.components 0.1 as PlasmaComponents
 import org.kde.plasma.extras 0.1 as PlasmaExtras
 
-KPIM.DecoratedListView {
+ListView {
   id : _top
 
   property variant checkModel
