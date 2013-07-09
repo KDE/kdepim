@@ -140,11 +140,11 @@ SendLaterWidget::SendLaterWidget( QWidget *parent )
     mWidget = new Ui::SendLaterConfigureWidget;
     mWidget->setupUi( this );
     QStringList headers;
-    headers << i18n("Subject")
+    headers << i18n("To")
+            << i18n("Subject")
             << i18n("Send around")
             << i18n("Recurrent")
             << i18n("Message Id");
-    //TODO 4.12: add To
     //TODO add more infos ? Tooltip about message for example ? with nepomuk as in messagelist ?
 
     mWidget->treeWidget->setHeaderLabels(headers);

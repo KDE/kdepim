@@ -53,7 +53,7 @@ public:
     ~SendLaterWidget();
 
     enum SendLaterColumn {
-        //To = 0, //4.12
+        To = 0,
         Subject = 0,
         SendAround,
         Recursive,
