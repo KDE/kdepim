@@ -127,7 +127,6 @@ install(FILES
   AccountSettingsPage.qml
   AclEditor.qml
   AttachmentEditor.qml
-  BulkActionComponent.qml
   ConfigDialog.qml
   FilterEditor.qml
   ForwardOptionsPage.qml
