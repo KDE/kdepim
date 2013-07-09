@@ -23,7 +23,7 @@
 
 class SendLaterManager;
 
-class SendLaterAgent : public Akonadi::AgentBase, public Akonadi::AgentBase::ObserverV2
+class SendLaterAgent : public Akonadi::AgentBase, public Akonadi::AgentBase::ObserverV3
 {
     Q_OBJECT
 public:
@@ -50,7 +50,7 @@ private Q_SLOTS:
     void slotSendNow(Akonadi::Item::Id id);
 
 protected:
-    void itemRemoved( const Akonadi::Item &item );
+    void itemsRemoved( const Akonadi::Item::List &item );
 
 private:
     SendLaterManager *mManager;

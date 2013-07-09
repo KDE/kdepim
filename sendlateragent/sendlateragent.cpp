@@ -51,13 +51,8 @@ SendLaterAgent::SendLaterAgent(const QString &id)
     changeRecorder()->setMimeTypeMonitored( KMime::Message::mimeType() );
     changeRecorder()->itemFetchScope().setCacheOnly( true );
     changeRecorder()->itemFetchScope().setFetchModificationTime( false );
-    changeRecorder()->fetchCollection( true );
     changeRecorder()->setChangeRecordingEnabled( false );
-    changeRecorder()->setAllMonitored(true);
     changeRecorder()->ignoreSession( Akonadi::Session::defaultSession() );
-    changeRecorder()->collectionFetchScope().setAncestorRetrieval( Akonadi::CollectionFetchScope::All );
-    changeRecorder()->setCollectionMonitored(Akonadi::Collection::root(), true);
-
 
     if (SendLaterAgentSettings::enabled()) {
 #ifdef DEBUG_SENDLATERAGENT
@@ -155,9 +150,11 @@ void SendLaterAgent::showConfigureDialog(qlonglong windowId)
     delete dialog;
 }
 
-void SendLaterAgent::itemRemoved( const Akonadi::Item &item )
+void SendLaterAgent::itemsRemoved( const Akonadi::Item::List &items )
 {
-    mManager->itemRemoved(item.id());
+    Q_FOREACH(const Akonadi::Item &item, items) {
+       mManager->itemRemoved(item.id());
+    }
 }
 
 void SendLaterAgent::printDebugInfo()
