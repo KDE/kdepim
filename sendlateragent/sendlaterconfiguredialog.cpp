@@ -144,6 +144,7 @@ SendLaterWidget::SendLaterWidget( QWidget *parent )
             << i18n("Send around")
             << i18n("Recurrent")
             << i18n("Message Id");
+    //TODO 4.12: add To
     //TODO add more infos ? Tooltip about message for example ? with nepomuk as in messagelist ?
 
     mWidget->treeWidget->setHeaderLabels(headers);
@@ -237,6 +238,7 @@ void SendLaterWidget::createOrUpdateItem(SendLater::SendLaterInfo *info, SendLat
     item->setText(MessageId, QString::number(info->itemId()));
     item->setText(SendAround, info->dateTime().toString());
     item->setText(Subject, info->subject());
+    //4.12 item->setText(To, info->to());
     item->setInfo(info);
 }
 
