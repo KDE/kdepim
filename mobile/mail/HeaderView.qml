@@ -79,10 +79,8 @@ KPIM.DecoratedListView {
       anchors {
         top : parent.top
         left : parent.left
-        leftMargin : 10
+        right: dateLabel.left
       }
-
-      width: parent.width - dateLabel.width - anchors.leftMargin - dateLabel.anchors.rightMargin
 
       text : model.from
       elide: "ElideRight"
@@ -110,10 +108,8 @@ KPIM.DecoratedListView {
       anchors {
         top: fromLabel.bottom
         left: parent.left
-        leftMargin: 10
+        right: parent.right
       }
-
-      width: parent.width  - anchors.leftMargin
 
       level: 4
       text: model.subject
