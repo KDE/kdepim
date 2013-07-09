@@ -41,6 +41,8 @@ public:
         Years
     };
 
+    bool isValid() const;
+
     void setItemId(Akonadi::Item::Id id);
     Akonadi::Item::Id itemId() const;
 
@@ -65,7 +67,11 @@ public:
     void setSubject( const QString &subject );
     QString subject() const;
 
+    void setTo( const QString &to );
+    QString to() const;
+
 private:
+    QString mTo;
     QString mSubject;
     QDateTime mDateTime;
     QDateTime mLastDateTimeSend;

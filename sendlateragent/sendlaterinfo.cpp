@@ -46,10 +46,16 @@ SendLaterInfo::SendLaterInfo(const SendLaterInfo &info)
     mRecurrenceUnit = info.recurrenceUnit();
     mRecurrence = info.isRecurrence();
     mSubject = info.subject();
+    mTo = info.to();
 }
 
 SendLaterInfo::~SendLaterInfo()
 {
+}
+
+bool SendLaterInfo::isValid() const
+{
+    return ((mId != -1) && mLastDateTimeSend.isValid());
 }
 
 bool SendLaterInfo::isRecurrence() const
@@ -122,6 +128,16 @@ QString SendLaterInfo::subject() const
     return mSubject;
 }
 
+void SendLaterInfo::setTo( const QString &to )
+{
+    mTo = to;
+}
+
+QString SendLaterInfo::to() const
+{
+    return mTo;
+}
+
 void SendLaterInfo::readConfig(const KConfigGroup &config)
 {
     if (config.hasKey(QLatin1String("lastDateTimeSend"))) {
@@ -133,6 +149,7 @@ void SendLaterInfo::readConfig(const KConfigGroup &config)
     mRecurrenceUnit = static_cast<RecurrenceUnit>(config.readEntry("recurrenceUnit", (int)Days));
     mId = config.readEntry("itemId", -1);
     mSubject = config.readEntry("subject");
+    mTo = config.readEntry("to");
 }
 
 void SendLaterInfo::writeConfig(KConfigGroup &config )
@@ -146,5 +163,6 @@ void SendLaterInfo::writeConfig(KConfigGroup &config )
     config.writeEntry("recurrenceUnit", (int)mRecurrenceUnit);
     config.writeEntry("itemId", mId);
     config.writeEntry("subject", mSubject);
+    config.writeEntry("to", mTo);
     config.sync();
 }
