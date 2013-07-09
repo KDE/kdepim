@@ -147,10 +147,6 @@ PlasmaComponents.Page {
                                         KDE.i18np("from 1 account","from %1 accounts",application.numSelectedAccounts),
                                         KDE.i18np("1 thread","%1 threads",threadView.count))
 
-      onSelectedClicked : {
-        guiStateManager.pushState( KPIM.GuiStateManager.BulkActionScreenState )
-      }
-
       VacationScriptIndicator {
         anchors { top: parent.top; right: agentStatusIndicator.left; rightMargin: 5; topMargin: 10 }
       }
@@ -310,8 +306,7 @@ PlasmaComponents.Page {
     anchors.fill: parent
     z: 100
 
-    visible: !guiStateManager.inBulkActionScreenState &&
-             !guiStateManager.inMultipleFolderSelectionScreenState &&
+    visible: !guiStateManager.inMultipleFolderSelectionScreenState &&
              !guiStateManager.inConfigScreenState &&
              !guiStateManager.inSearchScreenState &&
              !guiStateManager.inManageAclsState
