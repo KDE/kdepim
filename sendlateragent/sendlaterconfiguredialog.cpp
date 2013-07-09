@@ -144,6 +144,7 @@ SendLaterWidget::SendLaterWidget( QWidget *parent )
             << i18n("Send around")
             << i18n("Recurrent")
             << i18n("Message Id");
+    //TODO add more infos ? Tooltip about message for example ? with nepomuk as in messagelist ?
 
     mWidget->treeWidget->setHeaderLabels(headers);
     mWidget->treeWidget->setSortingEnabled(true);
