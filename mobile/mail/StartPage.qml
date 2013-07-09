@@ -40,6 +40,7 @@ PlasmaComponents.Page {
 
       onClicked: pageStack.push(Qt.createComponent("SettingsPage.qml") )
     }
+
     PlasmaComponents.ToolButton {
       iconSource: "mail-message-new"
 
@@ -226,10 +227,7 @@ PlasmaComponents.Page {
         anchors.bottom : filterLineEdit.top
         anchors.right : parent.right
         navigationModel : _threadSelector
-        showDeleteButton : false // too easy to accidentally hit it, although very useful...
         opacity : threadContentsViewContainer.opacity == 0 ? 1 : 0
-        showSections : messageListSettings.groupingRole != ""
-        itemHeight: Screen.partition( height, 7 )
       }
       Akonadi.FilterLineEdit {
         id: filterLineEdit
@@ -275,12 +273,10 @@ PlasmaComponents.Page {
         }
         HeaderView {
           id : threadContentsView
-          showSections : false
           anchors.left : parent.left
           anchors.top : backButton.bottom
           anchors.bottom : parent.bottom
           anchors.right : parent.right
-          itemHeight: threadView.itemHeight
 
           model : _threadContents
           navigationModel : _threadMailSelector
@@ -380,13 +376,6 @@ PlasmaComponents.Page {
                 }
               },
               KPIM.ScriptAction {
-                name : "start_maintenance"
-                script : {
-                  actionPanel.collapse();
-                  guiStateManager.pushState( KPIM.GuiStateManager.BulkActionScreenState );
-                }
-              },
-              KPIM.ScriptAction {
                 name : "attachment_save_all"
                 script : {
                   actionPanel.collapse();
@@ -441,16 +430,6 @@ PlasmaComponents.Page {
     onLoaded: { item.backgroundImage = backgroundImage.source; }
   }
 
-  QML.Loader {
-    anchors.fill: parent
-    source: guiStateManager.inBulkActionScreenState ? "BulkActionComponent.qml" : ""
-    onLoaded: {
-      item.backgroundImage = backgroundImage.source
-      item.model = itemModel
-      item.itemHeight = Screen.partition( item.height, 7 )
-    }
-  }
-
   KPIM.SearchResultScreen {
     id : searchResultScreen
     anchors.top: parent.top
@@ -465,7 +444,6 @@ PlasmaComponents.Page {
       checkModel : _itemActionModel
       navigationModel : _itemNavigationModel
       anchors.fill : parent
-      itemHeight: Screen.partition( height, 7 )
     }
     QML.Connections {
       target : _itemNavigationModel
