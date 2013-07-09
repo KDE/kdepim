@@ -675,7 +675,7 @@ void Composer::setSigningKeys( std::vector<GpgME::Key>& signers )
   d->signers = signers;
 }
 
-void Composer::setEncryptionKeys( QList<QPair<QStringList, std::vector<GpgME::Key> > > encData )
+void Composer::setEncryptionKeys( const QList<QPair<QStringList, std::vector<GpgME::Key> > > &encData )
 {
   Q_D( Composer );
 
