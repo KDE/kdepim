@@ -182,15 +182,7 @@ void SendLaterManager::sendError(SendLater::SendLaterInfo *info, ErrorType type)
             }
             break;
         default:
-            if (KMessageBox::Yes == KMessageBox::questionYesNo(0, i18n("An error was found. Do you want to resend it?"), i18n("Error found"))) {
-                //TODO 4.12: allow to remove it even if it's recurrent (need new i18n)
-                /*
-                if (!info->isRecurrence()) {
-                    removeLaterInfo(info);
-                }
-                */
-            } else {
-                //Remove even if it's recurrent ?
+            if (KMessageBox::No == KMessageBox::questionYesNo(0, i18n("An error was found. Do you want to resend it?"), i18n("Error found"))) {
                 removeLaterInfo(info);
             }
             break;
