@@ -58,6 +58,10 @@ EditorPage::EditorPage(PageType type, const QString &projectDirectory, QWidget *
 
     mEditor = new EditorWidget;
 
+    if (mType == MainPage) {
+        KConfigGroup group( KGlobal::config(), QLatin1String("Global"));
+        mEditor->setPlainText(group.readEntry("defaultTemplate",QString()));
+    }
     mMainSplitter->addWidget(mEditor);
     mMainSplitter->setChildrenCollapsible(false);
     mThemeTemplate = new ThemeTemplateWidget(i18n("Theme Templates:"));
@@ -104,6 +108,7 @@ void EditorPage::createZip(const QString &themeName, KZip *zip)
 
 void EditorPage::loadTheme(const QString &path)
 {
+    mEditor->clear();
     QFile file(path);
     if (file.open(QIODevice::Text|QIODevice::ReadOnly)) {
         const QByteArray data = file.readAll();
