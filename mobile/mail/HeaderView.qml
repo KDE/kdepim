@@ -24,7 +24,7 @@ import org.kde.plasma.components 0.1 as PlasmaComponents
 import org.kde.plasma.extras 0.1 as PlasmaExtras
 
 ListView {
-  id : _top
+  id : root
 
   property variant checkModel
   property variant navigationModel
@@ -51,7 +51,7 @@ ListView {
 
     property alias color: itemBackground.color
 
-    height: _top.height / 7
+    height: parent.height / 7
     clip: true
 
     MouseArea {
