@@ -124,7 +124,7 @@ MessageFactory::MessageReply MessageFactory::createReply()
           if ( m_mailingListAddresses.isEmpty() )
             replyAll = false;
         } else if ( !m_mailingListAddresses.isEmpty() ) {
-          toList = (KMime::Types::Mailbox::List() << m_mailingListAddresses[ 0 ]);
+          toList = (KMime::Types::Mailbox::List() << m_mailingListAddresses.at( 0 ));
         } else {
 
           // doesn't seem to be a mailing list, reply to From: address
