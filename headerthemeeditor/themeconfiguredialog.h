@@ -39,6 +39,7 @@ private Q_SLOTS:
 private:
     KUrlRequester *mDefaultUrl;
     KTextEdit *mDefaultEmail;
+    KTextEdit *mDefaultTemplate;
 };
 
 #endif // THEMECONFIGUREDIALOG_H
