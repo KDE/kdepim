@@ -64,6 +64,7 @@ public:
     void saveTreeWidgetHeader(KConfigGroup &group);
     void restoreTreeWidgetHeader(const QByteArray &group);
     void needToReload();
+    QList<Akonadi::Item::Id> messagesToRemove() const;
 
 private Q_SLOTS:
     void slotRemoveItem();
@@ -78,6 +79,7 @@ Q_SIGNALS:
 private:
     void createOrUpdateItem(SendLater::SendLaterInfo *info, SendLaterItem *item = 0);
     void load();
+    QList<Akonadi::Item::Id> mListMessagesToRemove;
     bool mChanged;
     Ui::SendLaterConfigureWidget *mWidget;
 };
@@ -89,6 +91,8 @@ class SendLaterConfigureDialog : public KDialog
 public:
     explicit SendLaterConfigureDialog(QWidget *parent = 0);
     ~SendLaterConfigureDialog();
+
+    QList<Akonadi::Item::Id> messagesToRemove() const;
 
 public Q_SLOTS:
     void slotNeedToReloadConfig();

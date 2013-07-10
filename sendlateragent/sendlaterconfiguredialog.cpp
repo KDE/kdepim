@@ -81,6 +81,12 @@ SendLaterConfigureDialog::~SendLaterConfigureDialog()
     delete mAboutData;
 }
 
+QList<Akonadi::Item::Id> SendLaterConfigureDialog::messagesToRemove() const
+{
+    return mWidget->messagesToRemove();
+}
+
+
 void SendLaterConfigureDialog::slotSave()
 {
     mWidget->save();
@@ -273,8 +279,19 @@ void SendLaterWidget::slotRemoveItem()
     if (KMessageBox::warningYesNo(this,i18n("Do you want to delete selected items? Do you want to continue?"),i18n("Remove items"))== KMessageBox::No)
         return;
 
-    //FIXME 4.12: delete message or not ?
+    bool removeMessage = false;
+    if (KMessageBox::warningYesNo(this,i18n("Do you want to removed messages too?"),i18n("Remove messages"))== KMessageBox::Yes)
+        removeMessage = true;
+
     Q_FOREACH(QTreeWidgetItem *item,listItems) {
+        if (removeMessage) {
+            SendLaterItem *mailItem = static_cast<SendLaterItem *>(item);
+            if (mailItem->info()) {
+                Akonadi::Item::Id id = mailItem->info()->itemId();
+                if (id != -1)
+                    mListMessagesToRemove << id;
+            }
+        }
         delete item;
     }
     mChanged = true;
@@ -306,6 +323,11 @@ void SendLaterWidget::needToReload()
     KSharedConfig::Ptr config = KGlobal::config();
     config->reparseConfiguration();
     load();
+}
+
+QList<Akonadi::Item::Id> SendLaterWidget::messagesToRemove() const
+{
+    return mListMessagesToRemove;
 }
 
 #include "sendlaterconfiguredialog.moc"

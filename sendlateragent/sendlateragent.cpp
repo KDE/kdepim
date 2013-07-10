@@ -22,6 +22,7 @@
 #include "sendlaterutil.h"
 #include "sendlateragentadaptor.h"
 #include "sendlateragentsettings.h"
+#include "sendlaterremovemessagejob.h"
 
 #include <akonadi/dbusconnectionpool.h>
 #include <akonadi/changerecorder.h>
@@ -146,6 +147,11 @@ void SendLaterAgent::showConfigureDialog(qlonglong windowId)
     connect(dialog, SIGNAL(sendNow(Akonadi::Item::Id)), this, SLOT(slotSendNow(Akonadi::Item::Id)));
     if (dialog->exec()) {
         mManager->load();
+        QList<Akonadi::Item::Id> listMessage = dialog->messagesToRemove();
+        if (!listMessage.isEmpty()) {
+            //Will delete in specific job when done.
+            new SendLaterRemoveMessageJob(listMessage, this);
+        }
     }
     delete dialog;
 }

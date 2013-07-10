@@ -39,6 +39,7 @@ set(sendlateragent_SRCS
    sendlaterconfiguredialog.cpp
    sendlatermanager.cpp
    sendlaterjob.cpp
+   sendlaterremovemessagejob.cpp
 )
 
 
