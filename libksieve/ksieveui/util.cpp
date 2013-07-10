@@ -106,7 +106,7 @@ KUrl KSieveUi::Util::findSieveUrlForAccount( const QString &identifier )
             break;
         }
         u.addQueryItem( QLatin1String("x-mech"), authStr );
-        if ( interface->safety() == ( int )( KIMAP::LoginJob::Unencrypted ))
+        if ( interface->safety() == QLatin1String("None"))
             u.addQueryItem( QLatin1String("x-allow-unencrypted"), QLatin1String("true") );
         u.setFileName( interface->sieveVacationFilename() );
         return u;
