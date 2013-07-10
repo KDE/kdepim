@@ -1481,6 +1481,7 @@ void MessageComposer::ComposerViewBase::setSubject(const QString& subject)
   m_subject = subject;
   if (mSendLaterInfo) {
       mSendLaterInfo->setSubject(m_subject);
+      mSendLaterInfo->setTo(to());
   }
 }
 
