@@ -106,13 +106,15 @@ KUrl KSieveUi::Util::findSieveUrlForAccount( const QString &identifier )
             break;
         }
         u.addQueryItem( QLatin1String("x-mech"), authStr );
-        if ( interface->safety() == QLatin1String("None"))
+        const QString resultSafety = interface->safety();
+        if ( resultSafety == QLatin1String("None"))
             u.addQueryItem( QLatin1String("x-allow-unencrypted"), QLatin1String("true") );
         u.setFileName( interface->sieveVacationFilename() );
         return u;
     } else {
         KUrl u( interface->sieveAlternateUrl() );
-        if ( u.protocol().toLower() == QLatin1String("sieve") && ( interface->safety() == ( int )( KIMAP::LoginJob::Unencrypted ) ) && u.queryItem(QLatin1String("x-allow-unencrypted")).isEmpty() )
+        const QString resultSafety = interface->safety();
+        if ( u.protocol().toLower() == QLatin1String("sieve") && ( resultSafety ==  QLatin1String("None") ) && u.queryItem(QLatin1String("x-allow-unencrypted")).isEmpty() )
             u.addQueryItem( QLatin1String("x-allow-unencrypted"), QLatin1String("true") );
         u.setFileName( interface->sieveVacationFilename() );
         return u;
