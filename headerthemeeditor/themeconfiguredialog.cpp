@@ -53,6 +53,7 @@ ThemeConfigureDialog::ThemeConfigureDialog(QWidget *parent)
     lay->addWidget(lab);
 
     mDefaultEmail = new KTextEdit;
+    mDefaultEmail->setAcceptRichText(false);
     lay->addWidget(mDefaultEmail);
 
     setMainWidget(w);
