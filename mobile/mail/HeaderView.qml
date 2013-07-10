@@ -47,7 +47,7 @@ ListView {
   }
 
   delegate: PlasmaComponents.ListItem {
-    id: _delegate
+    id: headerListDelegate
 
     property alias color: itemBackground.color
 
@@ -60,8 +60,8 @@ ListView {
         if (navigationModel != undefined) {
           navigationModel.select(model.index, 3)
         } else {
-          _delegate.ListView.view.currentIndex = model.index;
-          _delegate.ListView.view.parent.currentItemId = model.itemId;
+          headerListDelegate.ListView.view.currentIndex = model.index;
+          headerListDelegate.ListView.view.parent.currentItemId = model.itemId;
         }
       }
     }
