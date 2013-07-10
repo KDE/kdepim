@@ -42,9 +42,9 @@ AkregatorPlugin::AkregatorPlugin( KontactInterface::Core *core, const QVariantLi
   setComponentData( KontactPluginFactory::componentData() );
 
   KAction *action =
-    new KAction( KIcon( "bookmark-new" ),
+    new KAction( KIcon( QLatin1String("bookmark-new") ),
                  i18nc( "@action:inmenu", "New Feed..." ), this );
-  actionCollection()->addAction( "feed_new", action );
+  actionCollection()->addAction( QLatin1String("feed_new"), action );
   action->setShortcut( QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_F ) );
   action->setHelpText(
     i18nc( "@info:status", "Create a new feed" ) );
@@ -71,7 +71,7 @@ bool AkregatorPlugin::isRunningStandalone() const
 
 QStringList AkregatorPlugin::invisibleToolbarActions() const
 {
-  return QStringList( "file_new_contact" );
+  return QStringList() <<QLatin1String("file_new_contact" );
 }
 
 OrgKdeAkregator2PartInterface *AkregatorPlugin::interface()
@@ -100,7 +100,7 @@ KParts::ReadOnlyPart *AkregatorPlugin::createPart()
   }
 
   m_interface = new OrgKdeAkregator2PartInterface(
-    "org.kde.akregator2", "/Akregator2", QDBusConnection::sessionBus() );
+    QLatin1String("org.kde.akregator2"), QLatin1String("/Akregator2"), QDBusConnection::sessionBus() );
 
   return part;
 }
@@ -111,14 +111,14 @@ void AkregatorPlugin::addFeed()
   (void)part();
 
   org::kde::akregator2::part akregator(
-    "org.kde.akregator2", "/Akregator2", QDBusConnection::sessionBus() );
+    QLatin1String("org.kde.akregator2"), QLatin1String("/Akregator2"), QDBusConnection::sessionBus() );
   akregator.addFeed();
 }
 
 QStringList AkregatorPlugin::configModules() const
 {
   QStringList modules;
-  modules << "PIM/akregator2.desktop";
+  modules << QLatin1String("PIM/akregator2.desktop");
   return modules;
 }
 
@@ -149,7 +149,7 @@ int AkregatorUniqueAppHandler::newInstance()
   (void)plugin()->part();
 
   org::kde::akregator2::part akregator(
-    "org.kde.akregator2", "/Akregator2", QDBusConnection::sessionBus() );
+    QLatin1String("org.kde.akregator2"), QLatin1String("/Akregator2"), QDBusConnection::sessionBus() );
   akregator.handleCommandLine();
 
   return KontactInterface::UniqueAppHandler::newInstance();
