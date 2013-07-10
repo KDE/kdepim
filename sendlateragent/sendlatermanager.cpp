@@ -222,7 +222,9 @@ void SendLaterManager::printDebugInfo()
         kDebug() <<" recusive "<<info->isRecurrence() <<
                    " id :"<<info->itemId()<<
                    " date :"<<info->dateTime().toString()<<
-                   " last saved date"<<info->lastDateTimeSend().toString();
+                   " last saved date"<<info->lastDateTimeSend().toString()<<
+                   " subject :"<<info->subject()<<
+                   " to :"<<info->to();
     }
 }
 
