@@ -54,7 +54,7 @@ public:
 
     enum SendLaterColumn {
         To = 0,
-        Subject = 0,
+        Subject,
         SendAround,
         Recursive,
         MessageId
