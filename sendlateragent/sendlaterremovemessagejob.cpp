@@ -45,6 +45,7 @@ void SendLaterRemoveMessageJob::slotItemDeleteDone(KJob* job)
     if ( job->error() ) {
         kDebug()<<" Error during delete item :"<<job->errorString();
     }
+    ++mIndex;
     deleteItem();
 }
 
