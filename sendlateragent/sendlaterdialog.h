@@ -27,6 +27,10 @@ class QSpinBox;
 class QDateTimeEdit;
 class QLabel;
 
+namespace Ui {
+class SendLaterWidget;
+}
+
 namespace SendLater {
 class SendLaterInfo;
 class SendLaterTimeDateWidget;
@@ -53,17 +57,12 @@ private Q_SLOTS:
 
 private:
     void load(SendLater::SendLaterInfo *info);
-    void readConfig();
-    void writeConfig();
 
 private:
     QDateTime mSendDateTime;
-    SendLaterAction mAction;    
-    SendLaterTimeDateWidget *mDateTime;
+    SendLaterAction mAction;
+    Ui::SendLaterWidget *mSendLaterWidget;
     SendLater::SendLaterInfo *mInfo;
-    KComboBox *mRecurrenceComboBox;
-    QCheckBox *mRecurrence;
-    QSpinBox *mRecurrenceValue;
 };
 }
 #endif // SENDLATERDIALOG_H

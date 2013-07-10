@@ -40,6 +40,7 @@ PlasmaComponents.Page {
 
       onClicked: pageStack.push(Qt.createComponent("SettingsPage.qml") )
     }
+
     PlasmaComponents.ToolButton {
       iconSource: "mail-message-new"
 
@@ -112,26 +113,6 @@ PlasmaComponents.Page {
       }
     }
   }
-
-  QML.Rectangle {
-    id : jumpToNextUnreadMessageButton
-    visible : guiStateManager.inViewSingleItemState
-    anchors.right : kmailMobile.right
-    anchors.bottom : backToMessageListButton.top
-    anchors.margins: 12
-    color : "#00000000"
-    width: 70
-    height: 70
-    QML.Image {
-      source : "next-unread-mail.png";
-      QML.MouseArea {
-        anchors.fill : parent;
-        onClicked : {
-          application.selectNextUnreadMessage()
-        }
-      }
-    }
-  }
   //END MessageView
 
   //BEGIN MainWorkView
@@ -165,10 +146,6 @@ PlasmaComponents.Page {
                                         KDE.i18np("1 folder","%1 folders",collectionView.numSelected),
                                         KDE.i18np("from 1 account","from %1 accounts",application.numSelectedAccounts),
                                         KDE.i18np("1 thread","%1 threads",threadView.count))
-
-      onSelectedClicked : {
-        guiStateManager.pushState( KPIM.GuiStateManager.BulkActionScreenState )
-      }
 
       VacationScriptIndicator {
         anchors { top: parent.top; right: agentStatusIndicator.left; rightMargin: 5; topMargin: 10 }
@@ -212,13 +189,17 @@ PlasmaComponents.Page {
       }
     }
 
-    KPIM.Spinner {
-      id : loadingFolderPage
-      anchors.left : collectionView.right
-      anchors.top : parent.top
-      anchors.bottom : parent.bottom
-      anchors.right : parent.right
-      visible : application.isLoadingSelected
+    PlasmaComponents.BusyIndicator {
+      id : busyIndicator
+
+      anchors {
+        left : collectionView.right
+        right : parent.right
+        verticalCenter: parent.verticalCenter
+      }
+
+      visible: application.isLoadingSelected
+      running: visible
     }
 
     //BEGIN EmailList
@@ -242,10 +223,7 @@ PlasmaComponents.Page {
         anchors.bottom : filterLineEdit.top
         anchors.right : parent.right
         navigationModel : _threadSelector
-        showDeleteButton : false // too easy to accidentally hit it, although very useful...
         opacity : threadContentsViewContainer.opacity == 0 ? 1 : 0
-        showSections : messageListSettings.groupingRole != ""
-        itemHeight: Screen.partition( height, 7 )
       }
       Akonadi.FilterLineEdit {
         id: filterLineEdit
@@ -291,12 +269,10 @@ PlasmaComponents.Page {
         }
         HeaderView {
           id : threadContentsView
-          showSections : false
           anchors.left : parent.left
           anchors.top : backButton.bottom
           anchors.bottom : parent.bottom
           anchors.right : parent.right
-          itemHeight: threadView.itemHeight
 
           model : _threadContents
           navigationModel : _threadMailSelector
@@ -330,8 +306,7 @@ PlasmaComponents.Page {
     anchors.fill: parent
     z: 100
 
-    visible: !guiStateManager.inBulkActionScreenState &&
-             !guiStateManager.inMultipleFolderSelectionScreenState &&
+    visible: !guiStateManager.inMultipleFolderSelectionScreenState &&
              !guiStateManager.inConfigScreenState &&
              !guiStateManager.inSearchScreenState &&
              !guiStateManager.inManageAclsState
@@ -396,13 +371,6 @@ PlasmaComponents.Page {
                 }
               },
               KPIM.ScriptAction {
-                name : "start_maintenance"
-                script : {
-                  actionPanel.collapse();
-                  guiStateManager.pushState( KPIM.GuiStateManager.BulkActionScreenState );
-                }
-              },
-              KPIM.ScriptAction {
                 name : "attachment_save_all"
                 script : {
                   actionPanel.collapse();
@@ -457,16 +425,6 @@ PlasmaComponents.Page {
     onLoaded: { item.backgroundImage = backgroundImage.source; }
   }
 
-  QML.Loader {
-    anchors.fill: parent
-    source: guiStateManager.inBulkActionScreenState ? "BulkActionComponent.qml" : ""
-    onLoaded: {
-      item.backgroundImage = backgroundImage.source
-      item.model = itemModel
-      item.itemHeight = Screen.partition( item.height, 7 )
-    }
-  }
-
   KPIM.SearchResultScreen {
     id : searchResultScreen
     anchors.top: parent.top
@@ -481,7 +439,6 @@ PlasmaComponents.Page {
       checkModel : _itemActionModel
       navigationModel : _itemNavigationModel
       anchors.fill : parent
-      itemHeight: Screen.partition( height, 7 )
     }
     QML.Connections {
       target : _itemNavigationModel

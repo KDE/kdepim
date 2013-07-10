@@ -91,23 +91,20 @@ void SendLaterJob::slotJobFinished(KJob* job)
     }
     if ( !MailTransport::TransportManager::self()->showTransportCreationDialog( 0, MailTransport::TransportManager::IfNoTransportExists ) ) {
         kDebug()<<" we can't create transport ";
-        //Add i18n
-        sendError(QLatin1String("We can't create transport"), SendLaterManager::CanNotCreateTransport);
+        sendError(i18n("We can't create transport"), SendLaterManager::CanNotCreateTransport);
         return;
     }
 
     if (mItem.isValid()) {
         const KMime::Message::Ptr msg = MessageCore::Util::message( mItem );
         if ( !msg ) {
-            //Add i18n...
-            sendError(QLatin1String("Message is not a real message"), SendLaterManager::CanNotFetchItem);
+            sendError(i18n("Message is not a real message"), SendLaterManager::CanNotFetchItem);
             return;
         }
         updateAndCleanMessageBeforeSending(msg);
 
         if (!mManager->sender()->send( msg, MessageComposer::MessageSender::SendImmediate )) {
-            //Add i18n(...)
-            sendError(QLatin1String("Can not send message."), SendLaterManager::MailDispatchDoesntWork);
+            sendError(i18n("Can not send message."), SendLaterManager::MailDispatchDoesntWork);
         } else {
             if (!mInfo->isRecurrence()) {
                 Akonadi::ItemDeleteJob *fetch = new Akonadi::ItemDeleteJob( mItem, this );

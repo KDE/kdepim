@@ -50,6 +50,9 @@ void SendLater::SendLaterUtil::changeRecurrentDate(SendLater::SendLaterInfo *inf
         case SendLater::SendLaterInfo::Months:
             info->setDateTime(info->dateTime().addMonths(info->recurrenceEachValue()));
             break;
+        case SendLater::SendLaterInfo::Years:
+            info->setDateTime(info->dateTime().addYears(info->recurrenceEachValue()));
+            break;
         }
         //qDebug()<<"AFTER SendLater::SendLaterUtil::changeRecurrentDate "<<info->dateTime().toString();
         writeSendLaterInfo(info, false);

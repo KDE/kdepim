@@ -18,6 +18,7 @@
 #include "sendlaterdialog.h"
 #include "sendlaterinfo.h"
 #include "sendlatertimedatewidget.h"
+#include "ui_sendlaterwidget.h"
 
 #include <KLocale>
 #include <KComboBox>
@@ -46,92 +47,56 @@ SendLaterDialog::SendLaterDialog(SendLater::SendLaterInfo *info, QWidget *parent
         setButtonText( Ok, i18n("Send Later"));
     }
 
+    QWidget *sendLaterWidget = new QWidget;
+    mSendLaterWidget = new Ui::SendLaterWidget;
+    mSendLaterWidget->setupUi( sendLaterWidget );
+
     QWidget *w = new QWidget;
     QVBoxLayout *lay = new QVBoxLayout;
-    QHBoxLayout *hbox = new QHBoxLayout;
-    lay->addLayout(hbox);
-
-    QLabel *lab = new QLabel(i18n("Send at:"));
+    w->setLayout(lay);
+    lay->addWidget(sendLaterWidget);
 
     QDateTime t = QDateTime::currentDateTime();
     t = t.addSecs(60*60);
 
-    mDateTime = new SendLaterTimeDateWidget;
-    mDateTime->setDateTime(t);
-    hbox->addWidget(lab);
-    hbox->addWidget(mDateTime);
-
-    hbox = new QHBoxLayout;
-    lay->addLayout(hbox);
-
-    mRecurrence = new QCheckBox(i18n("Recurrence"));
-    connect(mRecurrence, SIGNAL(clicked(bool)), this, SLOT(slotRecurrenceClicked(bool)));
-    hbox->addWidget(mRecurrence);
-
-
-    lab = new QLabel(i18n("Each:"));
-    hbox->addWidget(lab);
-
-    mRecurrenceValue = new QSpinBox;
-    mRecurrenceValue->setMinimum(1);
-    hbox->addWidget(mRecurrenceValue);
-
-    mRecurrenceComboBox = new KComboBox;
+    mSendLaterWidget->mDateTime->setDateTime(t);
+    connect(mSendLaterWidget->mRecurrence, SIGNAL(clicked(bool)), this, SLOT(slotRecurrenceClicked(bool)));
     QStringList unitsList;
     unitsList<<i18n("Days");
     unitsList<<i18n("Weeks");
     unitsList<<i18n("Months");
-    //Years ?
-    mRecurrenceComboBox->addItems(unitsList);
-
-    hbox->addWidget(mRecurrenceComboBox);
+    unitsList<<i18n("Years");
+    mSendLaterWidget->mRecurrenceComboBox->addItems(unitsList);
 
     lay->addWidget(new KSeparator);
 
     w->setLayout(lay);
     setMainWidget(w);
-    readConfig();
     slotRecurrenceClicked(false);
     if (info)
         load(info);
+    resize(180,120);
 }
 
 SendLaterDialog::~SendLaterDialog()
 {
-    writeConfig();
+    delete mSendLaterWidget;
 }
 
 void SendLaterDialog::slotRecurrenceClicked(bool clicked)
 {
-    mRecurrenceValue->setEnabled(clicked);
-    mRecurrenceComboBox->setEnabled(clicked);
-}
-
-void SendLaterDialog::readConfig()
-{
-    KConfigGroup group( KGlobal::config(), "SendLaterDialog" );
-    const QSize sizeDialog = group.readEntry( "Size", QSize() );
-    if ( sizeDialog.isValid() ) {
-        resize( sizeDialog );
-    } else {
-        resize( 400,300);
-    }
-}
-
-void SendLaterDialog::writeConfig()
-{
-    KConfigGroup group( KGlobal::config(), "SendLaterDialog" );
-    group.writeEntry( "Size", size() );
+    mSendLaterWidget->mRecurrenceValue->setEnabled(clicked);
+    mSendLaterWidget->mRecurrenceComboBox->setEnabled(clicked);
 }
 
 void SendLaterDialog::load(SendLater::SendLaterInfo *info)
 {
-    mDateTime->setDateTime(info->dateTime());
+    mSendLaterWidget->mDateTime->setDateTime(info->dateTime());
     const bool recurrence = info->isRecurrence();
-    mRecurrence->setChecked(recurrence);
+    mSendLaterWidget->mRecurrence->setChecked(recurrence);
     slotRecurrenceClicked(recurrence);
-    mRecurrenceValue->setValue(info->recurrenceEachValue());
-    mRecurrenceComboBox->setCurrentIndex((int)info->recurrenceUnit());
+    mSendLaterWidget->mRecurrenceValue->setValue(info->recurrenceEachValue());
+    mSendLaterWidget->mRecurrenceComboBox->setCurrentIndex((int)info->recurrenceUnit());
 }
 
 SendLater::SendLaterInfo* SendLaterDialog::info()
@@ -139,13 +104,13 @@ SendLater::SendLaterInfo* SendLaterDialog::info()
     if (!mInfo) {
         mInfo = new SendLater::SendLaterInfo();
     }
-    mInfo->setRecurrence(mRecurrence->isChecked());
-    mInfo->setRecurrenceEachValue(mRecurrenceValue->value());
-    mInfo->setRecurrenceUnit((SendLater::SendLaterInfo::RecurrenceUnit)mRecurrenceComboBox->currentIndex());
+    mInfo->setRecurrence(mSendLaterWidget->mRecurrence->isChecked());
+    mInfo->setRecurrenceEachValue(mSendLaterWidget->mRecurrenceValue->value());
+    mInfo->setRecurrenceUnit((SendLater::SendLaterInfo::RecurrenceUnit)mSendLaterWidget->mRecurrenceComboBox->currentIndex());
     if (mSendDateTime.isValid())
         mInfo->setDateTime(mSendDateTime);
     else
-        mInfo->setDateTime(mDateTime->dateTime());
+        mInfo->setDateTime(mSendLaterWidget->mDateTime->dateTime());
     return mInfo;
 }
 
@@ -156,7 +121,7 @@ SendLaterDialog::SendLaterAction SendLaterDialog::action() const
 
 void SendLaterDialog::slotOkClicked()
 {
-    mSendDateTime = mDateTime->dateTime();
+    mSendDateTime = mSendLaterWidget->mDateTime->dateTime();
     mAction = SendDeliveryAtTime;
     accept();
 }

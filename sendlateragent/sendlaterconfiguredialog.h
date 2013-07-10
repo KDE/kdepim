@@ -19,7 +19,7 @@
 #define SENDLATERCONFIGUREDIALOG_H
 
 #include <KDialog>
-#include "ui_sendlaterwidget.h"
+#include "ui_sendlaterconfigurewidget.h"
 
 
 #include <Akonadi/Item>
@@ -53,7 +53,8 @@ public:
     ~SendLaterWidget();
 
     enum SendLaterColumn {
-        Subject = 0,
+        To = 0,
+        Subject,
         SendAround,
         Recursive,
         MessageId
@@ -63,6 +64,7 @@ public:
     void saveTreeWidgetHeader(KConfigGroup &group);
     void restoreTreeWidgetHeader(const QByteArray &group);
     void needToReload();
+    QList<Akonadi::Item::Id> messagesToRemove() const;
 
 private Q_SLOTS:
     void slotRemoveItem();
@@ -77,8 +79,9 @@ Q_SIGNALS:
 private:
     void createOrUpdateItem(SendLater::SendLaterInfo *info, SendLaterItem *item = 0);
     void load();
+    QList<Akonadi::Item::Id> mListMessagesToRemove;
     bool mChanged;
-    Ui::SendLaterWidget *mWidget;
+    Ui::SendLaterConfigureWidget *mWidget;
 };
 
 
@@ -88,6 +91,8 @@ class SendLaterConfigureDialog : public KDialog
 public:
     explicit SendLaterConfigureDialog(QWidget *parent = 0);
     ~SendLaterConfigureDialog();
+
+    QList<Akonadi::Item::Id> messagesToRemove() const;
 
 public Q_SLOTS:
     void slotNeedToReloadConfig();

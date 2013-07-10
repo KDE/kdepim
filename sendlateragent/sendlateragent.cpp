@@ -22,6 +22,7 @@
 #include "sendlaterutil.h"
 #include "sendlateragentadaptor.h"
 #include "sendlateragentsettings.h"
+#include "sendlaterremovemessagejob.h"
 
 #include <akonadi/dbusconnectionpool.h>
 #include <akonadi/changerecorder.h>
@@ -51,13 +52,8 @@ SendLaterAgent::SendLaterAgent(const QString &id)
     changeRecorder()->setMimeTypeMonitored( KMime::Message::mimeType() );
     changeRecorder()->itemFetchScope().setCacheOnly( true );
     changeRecorder()->itemFetchScope().setFetchModificationTime( false );
-    changeRecorder()->fetchCollection( true );
     changeRecorder()->setChangeRecordingEnabled( false );
-    changeRecorder()->setAllMonitored(true);
     changeRecorder()->ignoreSession( Akonadi::Session::defaultSession() );
-    changeRecorder()->collectionFetchScope().setAncestorRetrieval( Akonadi::CollectionFetchScope::All );
-    changeRecorder()->setCollectionMonitored(Akonadi::Collection::root(), true);
-
 
     if (SendLaterAgentSettings::enabled()) {
 #ifdef DEBUG_SENDLATERAGENT
@@ -151,13 +147,20 @@ void SendLaterAgent::showConfigureDialog(qlonglong windowId)
     connect(dialog, SIGNAL(sendNow(Akonadi::Item::Id)), this, SLOT(slotSendNow(Akonadi::Item::Id)));
     if (dialog->exec()) {
         mManager->load();
+        QList<Akonadi::Item::Id> listMessage = dialog->messagesToRemove();
+        if (!listMessage.isEmpty()) {
+            //Will delete in specific job when done.
+            new SendLaterRemoveMessageJob(listMessage, this);
+        }
     }
     delete dialog;
 }
 
-void SendLaterAgent::itemRemoved( const Akonadi::Item &item )
+void SendLaterAgent::itemsRemoved( const Akonadi::Item::List &items )
 {
-    mManager->itemRemoved(item.id());
+    Q_FOREACH(const Akonadi::Item &item, items) {
+       mManager->itemRemoved(item.id());
+    }
 }
 
 void SendLaterAgent::printDebugInfo()

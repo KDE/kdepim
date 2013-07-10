@@ -28,7 +28,7 @@
 #include "ui_accountspagereceivingtab.h"
 #include "identity/identitypage.h"
 
-#include "globalsettings.h"
+#include "settings/globalsettings.h"
 #include "templatesconfiguration_kfg.h"
 #include "configuredialoglistview.h"
 #include "configagentdelegate.h"
@@ -672,9 +672,12 @@ void AccountsPage::ReceivingTab::slotRemoveSelectedAccount()
 
 void AccountsPage::ReceivingTab::slotEditNotifications()
 {
-  KMKnotify notifyDlg( this );
-  notifyDlg.setCurrentNotification(QLatin1String("akonadi_newmailnotifier_agent"));
-  notifyDlg.exec();
+    QDBusInterface interface( QLatin1String("org.freedesktop.Akonadi.Agent.akonadi_newmailnotifier_agent"), QLatin1String("/NewMailNotifierAgent") );
+    if (interface.isValid()) {
+        interface.call(QLatin1String("showConfigureDialog"), (qlonglong)winId());
+    } else {
+        KMessageBox::error(this, i18n("New Mail Notifier Agent not registred. Please contact your administrator."));
+    }
 }
 
 void AccountsPage::ReceivingTab::doLoadFromGlobalSettings()
@@ -703,9 +706,6 @@ void AccountsPage::ReceivingTab::save()
     group.writeEntry( "OfflineOnShutdown", opts->OfflineOnShutdown);
     group.writeEntry( "CheckOnStartup", opts->CheckOnStartup);
   }
-
-
-
 }
 
 // *************************************************************

@@ -81,6 +81,12 @@ SendLaterConfigureDialog::~SendLaterConfigureDialog()
     delete mAboutData;
 }
 
+QList<Akonadi::Item::Id> SendLaterConfigureDialog::messagesToRemove() const
+{
+    return mWidget->messagesToRemove();
+}
+
+
 void SendLaterConfigureDialog::slotSave()
 {
     mWidget->save();
@@ -137,13 +143,15 @@ SendLaterWidget::SendLaterWidget( QWidget *parent )
     : QWidget( parent ),
       mChanged(false)
 {
-    mWidget = new Ui::SendLaterWidget;
+    mWidget = new Ui::SendLaterConfigureWidget;
     mWidget->setupUi( this );
     QStringList headers;
-    headers << i18n("Subject")
+    headers << i18n("To")
+            << i18n("Subject")
             << i18n("Send around")
             << i18n("Recurrent")
             << i18n("Message Id");
+    //TODO add more infos ? Tooltip about message for example ? with nepomuk as in messagelist ?
 
     mWidget->treeWidget->setHeaderLabels(headers);
     mWidget->treeWidget->setSortingEnabled(true);
@@ -236,6 +244,7 @@ void SendLaterWidget::createOrUpdateItem(SendLater::SendLaterInfo *info, SendLat
     item->setText(MessageId, QString::number(info->itemId()));
     item->setText(SendAround, info->dateTime().toString());
     item->setText(Subject, info->subject());
+    item->setText(To, info->to());
     item->setInfo(info);
 }
 
@@ -270,8 +279,19 @@ void SendLaterWidget::slotRemoveItem()
     if (KMessageBox::warningYesNo(this,i18n("Do you want to delete selected items? Do you want to continue?"),i18n("Remove items"))== KMessageBox::No)
         return;
 
-    //FIXME 4.12: delete message or not ?
+    bool removeMessage = false;
+    if (KMessageBox::warningYesNo(this,i18n("Do you want to removed messages too?"),i18n("Remove messages"))== KMessageBox::Yes)
+        removeMessage = true;
+
     Q_FOREACH(QTreeWidgetItem *item,listItems) {
+        if (removeMessage) {
+            SendLaterItem *mailItem = static_cast<SendLaterItem *>(item);
+            if (mailItem->info()) {
+                Akonadi::Item::Id id = mailItem->info()->itemId();
+                if (id != -1)
+                    mListMessagesToRemove << id;
+            }
+        }
         delete item;
     }
     mChanged = true;
@@ -303,6 +323,11 @@ void SendLaterWidget::needToReload()
     KSharedConfig::Ptr config = KGlobal::config();
     config->reparseConfiguration();
     load();
+}
+
+QList<Akonadi::Item::Id> SendLaterWidget::messagesToRemove() const
+{
+    return mListMessagesToRemove;
 }
 
 #include "sendlaterconfiguredialog.moc"

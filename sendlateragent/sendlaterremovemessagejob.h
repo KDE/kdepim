@@ -15,31 +15,28 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef THEMECONFIGUREDIALOG_H
-#define THEMECONFIGUREDIALOG_H
+#ifndef SENDLATERREMOVEMESSAGEJOB_H
+#define SENDLATERREMOVEMESSAGEJOB_H
 
-#include <KDialog>
-class KUrlRequester;
-class KTextEdit;
+#include <QObject>
+#include <Akonadi/Item>
 
-class ThemeConfigureDialog : public KDialog
+class KJob;
+
+class SendLaterRemoveMessageJob : public QObject
 {
     Q_OBJECT
 public:
-    explicit ThemeConfigureDialog(QWidget *parent = 0);
-    ~ThemeConfigureDialog();
-
-    void readConfig();
-    void writeConfig();
+    explicit SendLaterRemoveMessageJob(const QList<Akonadi::Item::Id> &listItem, QObject *parent = 0);
+    ~SendLaterRemoveMessageJob();
 
 private Q_SLOTS:
-    void slotOkClicked();
-    void slotDefaultClicked();
+    void slotItemDeleteDone(KJob* job);
 
 private:
-    KUrlRequester *mDefaultUrl;
-    KTextEdit *mDefaultEmail;
-    KTextEdit *mDefaultTemplate;
+    void deleteItem();
+    QList<Akonadi::Item::Id> mListItems;
+    int mIndex;
 };
 
-#endif // THEMECONFIGUREDIALOG_H
+#endif // SENDLATERREMOVEMESSAGEJOB_H

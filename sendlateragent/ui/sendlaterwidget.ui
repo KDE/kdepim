@@ -6,53 +6,55 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>681</width>
-    <height>634</height>
+    <width>452</width>
+    <height>85</height>
    </rect>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="1">
-    <layout class="QVBoxLayout" name="verticalLayout">
-     <item>
-      <widget class="QPushButton" name="modifyItem">
-       <property name="text">
-        <string>Modify...</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="removeItem">
-       <property name="text">
-        <string>Remove</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <spacer name="verticalSpacer">
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>20</width>
-         <height>40</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-    </layout>
-   </item>
    <item row="0" column="0">
-    <widget class="QTreeWidget" name="treeWidget">
-     <column>
-      <property name="text">
-       <string notr="true">1</string>
-      </property>
-     </column>
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>Send at:</string>
+     </property>
     </widget>
+   </item>
+   <item row="0" column="1" colspan="2">
+    <widget class="SendLater::SendLaterTimeDateWidget" name="mDateTime" native="true"/>
+   </item>
+   <item row="1" column="0">
+    <widget class="QCheckBox" name="mRecurrence">
+     <property name="text">
+      <string>Repeat every:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QSpinBox" name="mRecurrenceValue">
+     <property name="minimum">
+      <number>1</number>
+     </property>
+     <property name="maximum">
+      <number>365</number>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="2">
+    <widget class="KComboBox" name="mRecurrenceComboBox"/>
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KComboBox</class>
+   <extends>QComboBox</extends>
+   <header>kcombobox.h</header>
+  </customwidget>
+  <customwidget>
+   <class>SendLater::SendLaterTimeDateWidget</class>
+   <extends>QWidget</extends>
+   <header>sendlatertimedatewidget.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

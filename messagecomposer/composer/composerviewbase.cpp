@@ -894,7 +894,7 @@ void MessageComposer::ComposerViewBase::fillQueueJobHeaders( MailTransport::Mess
   //  secondary recipients. so we set that to the transport job, while leaving the message itself alone.
   if( message->hasHeader( "X-KMail-EncBccRecipients" ) ) {
     KMime::Headers::Base* realTo = message->headerByType( "X-KMail-EncBccRecipients" );
-    qjob->addressAttribute().setTo( cleanEmailList( encodeIdn( realTo->asUnicodeString().split( QLatin1String( "%" ) ) ) ) );
+    qjob->addressAttribute().setTo( cleanEmailList( encodeIdn( realTo->asUnicodeString().split( QLatin1Char( '%' ) ) ) ) );
     message->removeHeader( "X-KMail-EncBccRecipients" );
     message->assemble();
     kDebug() << "sending with-bcc encr mail to a/n recipient:" <<  qjob->addressAttribute().to();
@@ -1481,6 +1481,7 @@ void MessageComposer::ComposerViewBase::setSubject(const QString& subject)
   m_subject = subject;
   if (mSendLaterInfo) {
       mSendLaterInfo->setSubject(m_subject);
+      mSendLaterInfo->setTo(to());
   }
 }
 

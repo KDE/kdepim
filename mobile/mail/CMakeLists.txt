@@ -127,12 +127,12 @@ install(FILES
   AccountSettingsPage.qml
   AclEditor.qml
   AttachmentEditor.qml
-  BulkActionComponent.qml
   ConfigDialog.qml
   FilterEditor.qml
   ForwardOptionsPage.qml
   HeaderView.qml
   MarkAsPage.qml
+  MailViewPage.qml
   NewMailPage.qml
   ReplyOptionsPage.qml
   EditorView.qml
@@ -142,7 +142,6 @@ install(FILES
   KMailActions.qml
   KMailComposerActions.qml
   kmail-mobile.notifyrc
-  next-unread-mail.png
   SettingsPage.qml
   SnippetsEditor.qml
   SnippetsList.qml

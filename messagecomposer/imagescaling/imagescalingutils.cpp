@@ -102,6 +102,7 @@ void Utils::changeFileName(MessageCore::AttachmentPart::Ptr part)
 
             //Need to define pattern type.
             part->setFileName(pattern);
+            part->setName(pattern);
         }
     }
 }

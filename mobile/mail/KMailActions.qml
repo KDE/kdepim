@@ -90,7 +90,6 @@ ActionMenuContainer {
     name : "single_folder_view_menu"
     text : KDE.i18n( "View" )
     ScriptActionItem { name : "add_as_favorite"; title : KDE.i18n( "Add View As Favorite" ) }
-    ScriptActionItem { name : "start_maintenance"; title : KDE.i18n( "Switch To Editing Mode" ) }
     ActionListItem { name : "prefer_html_to_plain" }
     ActionListItem { name : "load_external_ref" }
     ActionListItem { name : "messagelist_change_settings" }
@@ -114,7 +113,6 @@ ActionMenuContainer {
     text : KDE.i18n( "View" )
     ScriptActionItem { name : "add_as_favorite"; title : KDE.i18n( "Add View As Favorite" ); visible: !guiStateManager.inSearchResultScreenState }
     ScriptActionItem { name : "to_selection_screen"; title: KDE.i18n( "Select Folders" ) }
-    ScriptActionItem { name : "start_maintenance"; title : KDE.i18n( "Switch To Editing Mode" ) }
     ActionListItem { name : "prefer_html_to_plain" }
     ActionListItem { name : "load_external_ref" }
     ActionListItem { name : "messagelist_change_settings" }

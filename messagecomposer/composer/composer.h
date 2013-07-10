@@ -71,7 +71,7 @@ class MESSAGECOMPOSER_EXPORT Composer : public JobBase
     void setSignAndEncrypt( const bool doSign, const bool doEncrypt );
     void setMessageCryptoFormat( Kleo::CryptoMessageFormat format );
     void setSigningKeys( std::vector<GpgME::Key>& signers );
-    void setEncryptionKeys(QList<QPair<QStringList, std::vector<GpgME::Key> > > data );
+    void setEncryptionKeys(const QList<QPair<QStringList, std::vector<GpgME::Key> > > &data );
 
     /// Sets if this message being composed is an auto-saved message
     ///  if so, might need different handling, such as no crypto attachments.

@@ -96,7 +96,7 @@
 using KMail::SecondaryWindow;
 #include "util.h"
 #include "misc/broadcaststatus.h"
-#include "globalsettings.h"
+#include "settings/globalsettings.h"
 #include "utils/stringutil.h"
 #include "messageviewer/utils/autoqpointer.h"
 #include "messageviewer/settings/globalsettings.h"
@@ -1014,6 +1014,7 @@ KMCommand::Result KMRedirectCommand::execute()
   if ( !TransportManager::self()->showTransportCreationDialog( parentWidget(), TransportManager::IfNoTransportExists ) )
     return Failed;
 
+  //TODO use sendlateragent here too.
   const MessageComposer::MessageSender::SendMethod method = (dlg->sendMode() == MailCommon::RedirectDialog::SendNow)
                                              ? MessageComposer::MessageSender::SendImmediate
                                              : MessageComposer::MessageSender::SendLater;
