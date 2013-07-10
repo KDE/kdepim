@@ -65,8 +65,7 @@ SendLaterDialog::SendLaterDialog(SendLater::SendLaterInfo *info, QWidget *parent
     unitsList<<i18n("Days");
     unitsList<<i18n("Weeks");
     unitsList<<i18n("Months");
-    //TODO 4.12
-    //unitsList<<("Years");
+    unitsList<<i18n("Years");
     mSendLaterWidget->mRecurrenceComboBox->addItems(unitsList);
 
     lay->addWidget(new KSeparator);
