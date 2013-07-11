@@ -28,6 +28,8 @@ public:
     ~SelectComparatorComboBox();
 
     QString code() const;
+    void setCode(const QString &code);
+
     QString require() const;
 
 private:

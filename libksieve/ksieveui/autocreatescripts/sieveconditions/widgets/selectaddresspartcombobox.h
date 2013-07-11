@@ -29,6 +29,8 @@ public:
     ~SelectAddressPartComboBox();
 
     QString code() const;
+    void setCode(const QString &code);
+
     QString extraRequire() const;
 
 private:

@@ -49,4 +49,15 @@ QString SelectMimeComboBox::require() const
     return QLatin1String("mime");
 }
 
+void SelectMimeComboBox::setCode(const QString &code)
+{
+    const int index = findData(code);
+    if (index != -1) {
+        setCurrentIndex(index);
+    } else {
+        //TODO other value ?
+        setCurrentIndex(0);
+    }
+}
+
 #include "selectmimecombobox.moc"
