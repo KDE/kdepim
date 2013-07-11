@@ -51,7 +51,7 @@ ListView {
 
     property alias color: itemBackground.color
 
-    height: parent.height / 7
+    height: root.height / 7
     clip: true
 
     MouseArea {
