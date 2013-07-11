@@ -26,7 +26,10 @@ class SelectVacationComboBox : public KComboBox
 public:
     explicit SelectVacationComboBox(QWidget *parent = 0);
     ~SelectVacationComboBox();
+
     QString code() const;
+    void setCode(const QString &code);
+
 private:
     void initialize();
 };

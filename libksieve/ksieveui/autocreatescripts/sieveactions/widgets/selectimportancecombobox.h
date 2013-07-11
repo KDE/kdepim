@@ -26,7 +26,10 @@ class SelectImportanceCombobox : public KComboBox
 public:
     explicit SelectImportanceCombobox(QWidget *parent = 0);
     ~SelectImportanceCombobox();
+
     QString code() const;
+    void setCode(const QString &code);
+
 private:
     void initialize();
 };
