@@ -27,13 +27,15 @@ PlasmaComponents.Page {
 
   property variant navigationModel: _threadSelector
 
+  implicitWidth: pageRow.width * 2 /3
+
   //BEGIN Tools
   tools: PlasmaComponents.ToolBarLayout {
 
     PlasmaComponents.ToolButton {
       iconSource: "go-previous"
 
-      onClicked: pageStack.pop()
+      onClicked: pageRow.pop()
     }
 
     PlasmaComponents.ToolButton {
@@ -78,7 +80,8 @@ PlasmaComponents.Page {
       MouseArea {
         anchors.fill: parent
         onClicked: {
-          pageStack.push(Qt.createComponent("MailViewPage.qml"))
+          pageRow.pop(root)
+          pageRow.push(Qt.createComponent("MailViewPage.qml"))
           navigationModel.select(model.index, 3)
         }
       }

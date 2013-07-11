@@ -25,14 +25,15 @@ import org.kde.plasma.components 0.1 as PlasmaComponents
 PlasmaComponents.Page {
   id: root
 
+  implicitWidth: pageRow.width * 2 /3
+
   //BEGIN Tools
   tools: PlasmaComponents.ToolBarLayout{
     PlasmaComponents.ToolButton{
       iconSource: "go-previous"
 
       onClicked: {
-        _threadSelector.select(-1, 1)
-        pageStack.pop()
+        pageRow.pop()
       }
     }
 

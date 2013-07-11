@@ -38,7 +38,7 @@ PlasmaComponents.Page {
 
       iconSource: "go-previous"
 
-      onClicked: pageStack.pop()
+      onClicked: pageRow.pop()
     }
   }
 
@@ -60,7 +60,7 @@ PlasmaComponents.Page {
         buttonText : KDE.i18n( "Reply to Author" )
         onClicked : {
           application.getAction("message_reply_to_author", "").trigger();
-          pageStack.pop()
+          pageRow.pop()
         }
       }
       KPIM.Button2 {
@@ -68,7 +68,7 @@ PlasmaComponents.Page {
         buttonText : KDE.i18n( "Reply to All" )
         onClicked : {
           application.getAction("message_reply_to_all", "").trigger();
-          pageStack.pop()
+          pageRow.pop()
         }
       }
       KPIM.Button2 {
@@ -76,7 +76,7 @@ PlasmaComponents.Page {
         buttonText : KDE.i18n( "Reply to List" )
         onClicked : {
           application.getAction("message_reply_to_list", "").trigger();
-          pageStack.pop()
+          pageRow.pop()
         }
       }
       KPIM.Button2 {
@@ -84,7 +84,7 @@ PlasmaComponents.Page {
         buttonText : KDE.i18n( "Reply Without Quoting" )
         onClicked : {
           application.getAction("message_reply_without_quoting", "").trigger();
-          pageStack.pop()
+          pageRow.pop()
         }
       }
     }

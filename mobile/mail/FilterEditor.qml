@@ -26,6 +26,9 @@ import org.kde.pim.mobileui 4.5 as KPIM
 
 PlasmaComponents.Page {
 
+  implicitWidth: pageRow.width * 2 /3
+
+
   //BEGIN: Tools
   tools: PlasmaComponents.ToolBarLayout {
     PlasmaComponents.ToolButton {
@@ -34,7 +37,7 @@ PlasmaComponents.Page {
 
       iconSource: "go-previous"
 
-      onClicked: pageStack.pop()
+      onClicked: pageRow.pop()
     }
   }
   //END: Tools

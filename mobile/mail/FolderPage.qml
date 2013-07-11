@@ -26,20 +26,22 @@ import org.kde.akonadi 4.5 as Akonadi
 PlasmaComponents.Page {
   id: root
 
+  implicitWidth: pageRow.width * 2 /3
+
   //BEGIN Tools
   tools: PlasmaComponents.ToolBarLayout{
 
     PlasmaComponents.ToolButton{
       iconSource: "preferences-system"
 
-      onClicked: pageStack.push(Qt.createComponent("SettingsPage.qml") )
+      onClicked: pageRow.push(Qt.createComponent("SettingsPage.qml") )
     }
 
     //FIXME remove this button and push the page when a folder gets selected (requires actual favorite/folderpage)
     PlasmaComponents.ToolButton {
       iconSource: "go-next"
 
-      onClicked: pageStack.push(Qt.createComponent("MailListPage.qml"))
+      onClicked: pageRow.push(Qt.createComponent("MailListPage.qml"))
     }
   }
   //END Tools

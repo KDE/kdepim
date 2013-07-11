@@ -22,9 +22,9 @@ import QtQuick 1.1
 import org.kde.plasma.components 0.1 as PlasmaComponents
 
 PlasmaComponents.Page {
-  id: settings
+  id: root
 
-  anchors.fill: parent
+  implicitWidth: pageRow.width * 2 /3
 
   //BEGIN: Tools
   tools: PlasmaComponents.ToolBarLayout {
@@ -34,7 +34,7 @@ PlasmaComponents.Page {
 
       iconSource: "go-previous"
 
-      onClicked: pageStack.pop()
+      onClicked: pageRow.pop()
     }
   }
   //END: Tools
@@ -47,7 +47,10 @@ PlasmaComponents.Page {
     PlasmaComponents.Button {
       text: i18n("Accounts")
 
-      onClicked: pageStack.push(Qt.createComponent("AccountSettingsPage.qml"))
+      onClicked: {
+        pageRow.pop(root)
+        pageRow.push(Qt.createComponent("AccountSettingsPage.qml"))
+      }
     }
     PlasmaComponents.Button {
       text: i18n("Identities")
@@ -57,17 +60,26 @@ PlasmaComponents.Page {
     PlasmaComponents.Button {
       text: i18n("Favorites")
 
-      onClicked: pageStack.push(Qt.createComponent("FavoriteManagerPage.qml"))
+      onClicked: {
+        pageRow.pop(root)
+        pageRow.push(Qt.createComponent("FavoriteManagerPage.qml"))
+      }
     }
     PlasmaComponents.Button {
       text: i18n("Filter")
 
-      onClicked: pageStack.push(Qt.createComponent("FilterEditor.qml"))
+      onClicked: {
+        pageRow.pop(root)
+        pageRow.push(Qt.createComponent("FilterEditor.qml"))
+      }
     }
     PlasmaComponents.Button {
       text: i18n( "About" )
 
-      onClicked: pageStack.push(Qt.createComponent("AboutPage.qml"))
+      onClicked: {
+        pageRow.pop(root)
+        pageRow.push(Qt.createComponent("AboutPage.qml"))
+      }
     }
   }
 

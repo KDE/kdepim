@@ -38,7 +38,7 @@ PlasmaComponents.Page {
 
       iconSource: "go-previous"
 
-      onClicked: pageStack.pop()
+      onClicked: pageRow.pop()
     }
   }
 
@@ -63,7 +63,7 @@ PlasmaComponents.Page {
             buttonText : display
             onClicked : {
               application.newMessageFromTemplate( index );
-              pageStack.pop()
+              pageRow.pop()
             }
           }
         }
