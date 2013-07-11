@@ -1,0 +1,5 @@
+4.12:
+----
+- add autocompletion in include tab for existing scripts
+- Add parsing
+- Allow to add script with include when possible
