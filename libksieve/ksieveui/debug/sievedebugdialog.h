@@ -42,8 +42,6 @@ class KSIEVEUI_EXPORT SieveDebugDialog : public KDialog
     explicit SieveDebugDialog( QWidget *parent = 0 );
     ~SieveDebugDialog();
 
-  protected:
-    void handlePutResult( KManageSieve::SieveJob *job, bool success, bool );
 
   signals:
     void result( bool success );
@@ -53,8 +51,6 @@ class KSIEVEUI_EXPORT SieveDebugDialog : public KDialog
     void slotGetScriptList( KManageSieve::SieveJob *job, bool success, const QStringList &scriptList, const QString &activeScript );
 
     void slotDialogOk();
-    void slotPutActiveResult( KManageSieve::SieveJob*, bool );
-    void slotPutInactiveResult( KManageSieve::SieveJob*, bool );
     void slotDiagNextAccount();
     void slotDiagNextScript();
 

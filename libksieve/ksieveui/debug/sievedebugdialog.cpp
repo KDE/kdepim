@@ -17,9 +17,6 @@
 #include <kdebug.h>
 #include <klocale.h>
 #include <kmessagebox.h>
-#include <ksieve/error.h>
-#include <ksieve/parser.h>
-#include <ksieve/scriptbuilder.h>
 #include <kmanagesieve/sievejob.h>
 #include <ksieveui/util.h>
 #include <ktextedit.h>
@@ -190,31 +187,6 @@ void SieveDebugDialog::slotGetScriptList( KManageSieve::SieveJob *job, bool succ
 void SieveDebugDialog::slotDialogOk()
 {
     kDebug();
-}
-
-void SieveDebugDialog::slotPutActiveResult( KManageSieve::SieveJob * job, bool success )
-{
-    handlePutResult( job, success, true );
-}
-
-void SieveDebugDialog::slotPutInactiveResult( KManageSieve::SieveJob * job, bool success )
-{
-    handlePutResult( job, success, false );
-}
-
-void SieveDebugDialog::handlePutResult( KManageSieve::SieveJob *, bool success, bool activated )
-{
-    if ( success )
-    {
-        KMessageBox::information( 0, activated ? i18n(
-                                                     "Sieve script installed successfully on the server.\n"
-                                                     "Out of Office reply is now active." )
-                                               : i18n( "Sieve script installed successfully on the server.\n"
-                                                       "Out of Office reply has been deactivated." ) );
-    }
-
-    kDebug() << "( ???," << success <<", ? )";
-    mSieveJob = 0; // job deletes itself after returning from this slot!
 }
 
 #include "sievedebugdialog.moc"
