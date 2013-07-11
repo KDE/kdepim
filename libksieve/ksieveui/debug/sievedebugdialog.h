@@ -25,7 +25,7 @@ class QString;
 class QStringList;
 
 namespace KManageSieve {
-  class SieveJob;
+class SieveJob;
 }
 
 namespace KSieveUi {
@@ -36,25 +36,24 @@ namespace KSieveUi {
  */
 class KSIEVEUI_EXPORT SieveDebugDialog : public KDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     explicit SieveDebugDialog( QWidget *parent = 0 );
     ~SieveDebugDialog();
 
 
-  signals:
+Q_SIGNALS:
     void result( bool success );
 
-  protected slots:
+protected Q_SLOTS:
     void slotGetScript( KManageSieve::SieveJob *job, bool success, const QString &script, bool active );
     void slotGetScriptList( KManageSieve::SieveJob *job, bool success, const QStringList &scriptList, const QString &activeScript );
 
-    void slotDialogOk();
     void slotDiagNextAccount();
     void slotDiagNextScript();
 
-  protected:
+protected:
     KManageSieve::SieveJob *mSieveJob;
     KUrl mUrl;
 
