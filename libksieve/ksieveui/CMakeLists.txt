@@ -5,7 +5,6 @@ include_directories(${CMAKE_SOURCE_DIR}/libksieve
 	${CMAKE_SOURCE_DIR}/pimcommon
 	${CMAKE_BINARY_DIR}/pimcommon
         ${CMAKE_SOURCE_DIR}/pimcommon/util/
-        ${CMAKE_BINARY_DIR}/pimcommon/util/
         ${CMAKE_SOURCE_DIR}/libksieve/ksieveui
 	${CMAKE_SOURCE_DIR}/libkdepim/
 	)
