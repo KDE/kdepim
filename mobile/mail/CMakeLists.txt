@@ -133,6 +133,7 @@ install(FILES
   ForwardOptionsPage.qml
   HeaderView.qml
   MarkAsPage.qml
+  MailListPage.qml
   MailViewPage.qml
   NewMailPage.qml
   ReplyOptionsPage.qml
