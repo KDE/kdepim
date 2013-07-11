@@ -36,11 +36,10 @@ PlasmaComponents.Page {
       onClicked: pageStack.pop()
     }
 
-    //FIXME: do this in the headerview
     PlasmaComponents.ToolButton {
-      iconSource: "go-next"
+      iconSource: "mail-message-new"
 
-      onClicked: pageStack.push(Qt.createComponent("MailViewPage.qml"))
+      onClicked: application.startComposer()
     }
   }
   //END Tools
@@ -78,7 +77,10 @@ PlasmaComponents.Page {
 
       MouseArea {
         anchors.fill: parent
-        onClicked: navigationModel.select(model.index, 3)
+        onClicked: {
+          pageStack.push(Qt.createComponent("MailViewPage.qml"))
+          navigationModel.select(model.index, 3)
+        }
       }
 
       Rectangle {
@@ -133,3 +135,4 @@ PlasmaComponents.Page {
     }
   }
 }
+

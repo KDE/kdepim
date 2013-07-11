@@ -30,7 +30,10 @@ PlasmaComponents.Page {
     PlasmaComponents.ToolButton{
       iconSource: "go-previous"
 
-      onClicked: pageStack.pop()
+      onClicked: {
+        _threadSelector.select(-1, 1)
+        pageStack.pop()
+      }
     }
 
     Row {
