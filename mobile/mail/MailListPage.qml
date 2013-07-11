@@ -58,6 +58,8 @@ PlasmaComponents.Page {
 
     focus: true
     clip: true
+    currentIndex: -1
+
 
     onCurrentRowChanged: {
       if (navigationModel != undefined)
@@ -75,21 +77,28 @@ PlasmaComponents.Page {
       id: headerListDelegate
 
       height: root.height / 8
-      clip: true
 
-      MouseArea {
-        anchors.fill: parent
-        onClicked: {
-          pageRow.pop(root)
-          pageRow.push(Qt.createComponent("MailViewPage.qml"))
-          navigationModel.select(model.index, 3)
-        }
+      clip: true
+      enabled: true
+      checked: threadView.currentIndex == index
+
+      onClicked: {
+        pageRow.pop(root)
+        threadView.currentIndex = index
+        pageRow.push(Qt.createComponent("MailViewPage.qml"))
+        navigationModel.select(model.index, 3)
       }
+
+     onPressAndHold: {
+             threadView.currentIndex = index
+     }
 
       Rectangle {
         id: itemBackground
 
         anchors.fill: parent
+        color: checked == true ? "lightgrey" : "white"
+        opacity: 0.5
       }
 
       PlasmaComponents.Label {
