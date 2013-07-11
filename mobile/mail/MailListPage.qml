@@ -20,9 +20,12 @@
 
 import QtQuick 1.1
 import org.kde.plasma.components 0.1 as PlasmaComponents
+import org.kde.plasma.extras 0.1 as PlasmaExtras
 
 PlasmaComponents.Page {
   id: root
+
+  property variant navigationModel: _threadSelector
 
   //BEGIN Tools
   tools: PlasmaComponents.ToolBarLayout {
@@ -42,13 +45,91 @@ PlasmaComponents.Page {
   }
   //END Tools
 
-  HeaderView {
+  ListView {
     id : threadView
 
     anchors.fill: parent
 
-    model : _threads
-    navigationModel : _threadSelector
-  }
+    property int currentItemId: -1
+    property int currentRow : -1
 
+    model: _threads
+
+    focus: true
+    clip: true
+
+    onCurrentRowChanged: {
+      if (navigationModel != undefined)
+        navigationModel.select(currentRow, 3)
+    }
+
+    Connections {
+      target : navigationModel
+      onCurrentRowChanged : {
+        currentRow = navigationModel.currentRow
+      }
+    }
+
+    delegate: PlasmaComponents.ListItem {
+      id: headerListDelegate
+
+      height: root.height / 8
+      clip: true
+
+      MouseArea {
+        anchors.fill: parent
+        onClicked: navigationModel.select(model.index, 3)
+      }
+
+      Rectangle {
+        id: itemBackground
+
+        anchors.fill: parent
+      }
+
+      PlasmaComponents.Label {
+        id: fromLabel
+
+        anchors {
+          top : parent.top
+          left : parent.left
+          right: dateLabel.left
+        }
+
+        text : model.from
+        elide: "ElideRight"
+        font.weight: Font.Light
+        color : "#0C55BB"
+      }
+
+      PlasmaComponents.Label {
+        id: dateLabel
+
+        anchors {
+          top: parent.top
+          right: parent.right
+        }
+
+        text: model.date
+        horizontalAlignment: "AlignRight"
+        font.weight: Font.Light
+        color : "#0C55BB"
+      }
+
+      PlasmaExtras.Heading {
+        id: subjectLabel
+
+        anchors {
+          top: fromLabel.bottom
+          left: parent.left
+          right: parent.right
+        }
+
+        level: 4
+        text: model.subject
+        elide: "ElideRight"
+        color: model.is_unread ? "#E10909" : "#3B3B3B"
+      }
+    }
+  }
 }

@@ -131,7 +131,6 @@ install(FILES
   FilterEditor.qml
   FolderPage.qml
   ForwardOptionsPage.qml
-  HeaderView.qml
   MarkAsPage.qml
   MailListPage.qml
   MailViewPage.qml
