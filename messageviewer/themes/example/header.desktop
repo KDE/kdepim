@@ -2,6 +2,7 @@
 Name=Example
 Name[ca]=Exemple
 Name[cs]=Příklad
+Name[da]=Eksempel
 Name[de]=Beispiel
 Name[el]=Παράδειγμα
 Name[es]=Ejemplo
@@ -30,6 +31,7 @@ Name[x-test]=xxExamplexx
 Name[zh_TW]=範例
 Description=Example theme for header.
 Description[ca]=Tema d'exemple per a la capçalera.
+Description[da]=Eksempeltema på header.
 Description[de]=Beispieldesign für den Vorspann.
 Description[el]=Παράδειγμα θέματος για την επικεφαλίδα.
 Description[es]=Tema o encabezado de ejemplo.
