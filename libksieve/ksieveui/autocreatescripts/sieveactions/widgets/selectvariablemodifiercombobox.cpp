@@ -47,4 +47,15 @@ QString SelectVariableModifierComboBox::code() const
     return itemData(currentIndex()).toString();
 }
 
+void SelectVariableModifierComboBox::setCode(const QString &code)
+{
+    const int index = findData(code);
+    if (index != -1) {
+        setCurrentIndex(index);
+    } else {
+        //TODO other value ?
+        setCurrentIndex(0);
+    }
+}
+
 #include "selectvariablemodifiercombobox.moc"

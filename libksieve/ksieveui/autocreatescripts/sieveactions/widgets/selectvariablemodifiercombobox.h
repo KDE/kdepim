@@ -29,6 +29,8 @@ public:
     ~SelectVariableModifierComboBox();
 
     QString code() const;
+    void setCode(const QString &code);
+
 private:
     void initialize();
 };
