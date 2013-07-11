@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012, 2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -28,47 +28,47 @@ using KSieve::Parser;
 class XMLPrintingScriptBuilder : public KSieve::ScriptBuilder
 {
 public:
-  explicit XMLPrintingScriptBuilder();
-  ~XMLPrintingScriptBuilder();
+    explicit XMLPrintingScriptBuilder();
+    ~XMLPrintingScriptBuilder();
 
-  void taggedArgument( const QString & tag );
-  void stringArgument( const QString & string, bool multiLine, const QString & /*fixme*/ );
-  void numberArgument( unsigned long number, char quantifier );
-  void commandStart( const QString & identifier );
-  void commandEnd();
-  void testStart( const QString & identifier );
-  void testEnd();
-  void testListStart();
-  void testListEnd();
-  void blockStart();
-  void blockEnd();
-  void stringListArgumentStart();
-  void stringListArgumentEnd();
-  void stringListEntry( const QString & string, bool multiline, const QString & hashComment );
-  void hashComment( const QString & comment );
-  void bracketComment( const QString & comment );
+    void taggedArgument( const QString & tag );
+    void stringArgument( const QString & string, bool multiLine, const QString & /*fixme*/ );
+    void numberArgument( unsigned long number, char quantifier );
+    void commandStart( const QString & identifier );
+    void commandEnd();
+    void testStart( const QString & identifier );
+    void testEnd();
+    void testListStart();
+    void testListEnd();
+    void blockStart();
+    void blockEnd();
+    void stringListArgumentStart();
+    void stringListArgumentEnd();
+    void stringListEntry( const QString & string, bool multiline, const QString & hashComment );
+    void hashComment( const QString & comment );
+    void bracketComment( const QString & comment );
 
-  void lineFeed();
-  void error( const KSieve::Error & error );
-  void finished();
+    void lineFeed();
+    void error( const KSieve::Error & error );
+    void finished();
 private:
-  int mIndent;
-  void write( const char * msg ) {
-    for ( int i = 2*indent ; i > 0 ; --i )
-      cout << " ";
-    cout << msg << endl;
-  }
-  void write( const QByteArray & key, const QString & value ) {
-    if ( value.isEmpty() ) {
-      write( "<" + key + "/>" );
-      return;
+    int mIndent;
+    void write( const char * msg ) {
+        for ( int i = 2*indent ; i > 0 ; --i )
+            cout << " ";
+        cout << msg << endl;
     }
-    write( "<" + key + ">" );
-    ++mIndent;
-    write( value.toUtf8().data() );
-    --mIndent;
-    write( "</" + key + ">" );
-  }
+    void write( const QByteArray & key, const QString & value ) {
+        if ( value.isEmpty() ) {
+            write( "<" + key + "/>" );
+            return;
+        }
+        write( "<" + key + ">" );
+        ++mIndent;
+        write( value.toUtf8().data() );
+        --mIndent;
+        write( "</" + key + ">" );
+    }
 };
 
 #endif
