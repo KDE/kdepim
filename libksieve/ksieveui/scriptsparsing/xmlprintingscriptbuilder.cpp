@@ -16,9 +16,11 @@
 */
 
 #include "xmlprintingscriptbuilder.h"
+#include <QDebug>
 
 XMLPrintingScriptBuilder::XMLPrintingScriptBuilder()
-    : KSieve::ScriptBuilder(), mIndent( 0 )
+    : KSieve::ScriptBuilder(),
+      mIndent( 0 )
 {
 }
 
@@ -139,9 +141,9 @@ void XMLPrintingScriptBuilder::finished()
 void XMLPrintingScriptBuilder::write( const char * msg )
 {
     for ( int i = 2*indent ; i > 0 ; --i ) {
-        cout << " ";
+        qDebug() << " ";
     }
-    cout << msg << endl;
+    qDebug() << msg;
 }
 
 void XMLPrintingScriptBuilder::write( const QByteArray & key, const QString & value )

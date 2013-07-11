@@ -31,27 +31,16 @@ namespace
 
 class SieveDebugDataExtractor : public KSieve::ScriptBuilder
 {
-    enum Context
-    {
-        None = 0,
-
-        // command itself:
-        SieveDebugCommand,
-
-        // tagged args:
-        Days, Addresses
-    };
-
 public:
     SieveDebugDataExtractor()
         :   KSieve::ScriptBuilder()
     {
-        kDebug() ;
+        kDebug();
     }
 
     virtual ~SieveDebugDataExtractor()
     {
-        kDebug() ;
+        kDebug();
     }
 
 private:
@@ -63,52 +52,52 @@ private:
 
     void commandEnd()
     {
-        kDebug() ;
+        kDebug();
     }
 
     void testStart( const QString & )
     {
-        kDebug() ;
+        kDebug();
     }
 
     void testEnd()
     {
-        kDebug() ;
+        kDebug();
     }
 
     void testListStart()
     {
-        kDebug() ;
+        kDebug();
     }
 
     void testListEnd()
     {
-        kDebug() ;
+        kDebug();
     }
 
     void blockStart()
     {
-        kDebug() ;
+        kDebug();
     }
 
     void blockEnd()
     {
-        kDebug() ;
+        kDebug();
     }
 
     void hashComment( const QString & )
     {
-        kDebug() ;
+        kDebug();
     }
 
     void bracketComment( const QString & )
     {
-        kDebug() ;
+        kDebug();
     }
 
     void lineFeed()
     {
-        kDebug() ;
+        kDebug();
     }
 
     void error( const KSieve::Error & e )
@@ -119,7 +108,7 @@ private:
 
     void finished()
     {
-        kDebug() ;
+        kDebug();
     }
 
     void taggedArgument( const QString & tag )
@@ -139,7 +128,7 @@ private:
 
     void stringListArgumentStart()
     {
-        kDebug() ;
+        kDebug();
     }
 
     void stringListEntry( const QString & string, bool, const QString & )
@@ -149,13 +138,13 @@ private:
 
     void stringListArgumentEnd()
     {
-        kDebug() ;
+        kDebug();
     }
 
 private:
     void reset()
     {
-        kDebug() ;
+        kDebug();
     }
 };
 
@@ -196,7 +185,7 @@ SieveDebugDialog::~SieveDebugDialog()
         mSieveJob->kill();
         mSieveJob = 0;
     }
-    kDebug() ;
+    kDebug();
 }
 
 
