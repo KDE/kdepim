@@ -18,7 +18,7 @@
 
 #include "mailkernel.h"
 #include "util/mailutil.h"
-#include "imapsettings.h"
+#include "imapresourcesettings.h"
 #include "pop3settings.h"
 
 #include "pimcommon/util/pimutil.h"

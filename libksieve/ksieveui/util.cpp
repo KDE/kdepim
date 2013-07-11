@@ -39,7 +39,7 @@
 
 #include "util.h"
 #include "pimcommon/util/pimutil.h"
-#include "imapsettings.h"
+#include "imapresourcesettings.h"
 #include "settings.h"
 
 #include <akonadi/agentmanager.h>
