@@ -51,24 +51,11 @@ public:
     void lineFeed();
     void error( const KSieve::Error & error );
     void finished();
+
 private:
     int mIndent;
-    void write( const char * msg ) {
-        for ( int i = 2*indent ; i > 0 ; --i )
-            cout << " ";
-        cout << msg << endl;
-    }
-    void write( const QByteArray & key, const QString & value ) {
-        if ( value.isEmpty() ) {
-            write( "<" + key + "/>" );
-            return;
-        }
-        write( "<" + key + ">" );
-        ++mIndent;
-        write( value.toUtf8().data() );
-        --mIndent;
-        write( "</" + key + ">" );
-    }
+    void write( const char * msg );
+    void write( const QByteArray & key, const QString & value );
 };
 
 #endif
