@@ -79,3 +79,7 @@ if(BUILD_kmailcvt)
   add_subdirectory(kmailcvt)
 endif()
 
+
+if(BUILD_folderarchiveagent)
+  add_subdirectory(akonadi_folderarchive_agent)
+endif()
