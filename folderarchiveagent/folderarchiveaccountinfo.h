@@ -18,11 +18,22 @@
 #ifndef FOLDERARCHIVEACCOUNTINFO_H
 #define FOLDERARCHIVEACCOUNTINFO_H
 
+#include <KConfigGroup>
+
 class FolderArchiveAccountInfo
 {
 public:
     FolderArchiveAccountInfo();
+    FolderArchiveAccountInfo(const KConfigGroup &config);
     ~FolderArchiveAccountInfo();
+
+    QString instanceName() const;
+
+    void writeConfig(KConfigGroup &config );
+    void readConfig(const KConfigGroup &config);
+
+private:
+    QString mInstanceName;
 };
 
 #endif // FOLDERARCHIVEACCOUNTINFO_H

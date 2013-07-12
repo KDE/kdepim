@@ -23,6 +23,26 @@ FolderArchiveAccountInfo::FolderArchiveAccountInfo()
 {
 }
 
+FolderArchiveAccountInfo::FolderArchiveAccountInfo(const KConfigGroup &config)
+{
+    readConfig(config);
+}
+
 FolderArchiveAccountInfo::~FolderArchiveAccountInfo()
 {
+}
+
+QString FolderArchiveAccountInfo::instanceName() const
+{
+    return mInstanceName;
+}
+
+void FolderArchiveAccountInfo::readConfig(const KConfigGroup &config)
+{
+    //TODO
+}
+
+void FolderArchiveAccountInfo::writeConfig(KConfigGroup &config )
+{
+    //TODO
 }
