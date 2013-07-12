@@ -3,12 +3,14 @@ add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
 
 include_directories(
+  ${CMAKE_SOURCE_DIR}/mailcommon
 )
 
 set(folderarchiveagent_SRCS
   folderarchiveagent.cpp
   folderarchiveconfiguredialog.cpp
   folderarchivesettingpage.cpp
+  folderarchivekernel.cpp
 )
 
 kde4_add_kcfg_files(folderarchiveagent_SRCS
@@ -26,6 +28,8 @@ kde4_add_executable(akonadi_folderarchive_agent ${folderarchiveagent_SRCS})
 
 target_link_libraries(akonadi_folderarchive_agent
   ${KDEPIMLIBS_AKONADI_LIBS}
+  ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
+  mailcommon
 )
 
 if (Q_WS_MAC)

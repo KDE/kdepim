@@ -23,7 +23,8 @@
 #include <QVBoxLayout>
 
 FolderArchiveSettingPage::FolderArchiveSettingPage(const QString &instanceName, QWidget *parent)
-    : QWidget(parent)
+    : QWidget(parent),
+      mInstanceName(instanceName)
 {
     QVBoxLayout *lay = new QVBoxLayout;
     mEnabled = new QCheckBox(i18n("Enable"));

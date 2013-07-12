@@ -32,6 +32,7 @@ public:
     void writeSettings();
 
 private:
+    QString mInstanceName;
     QCheckBox *mEnabled;
 };
 
