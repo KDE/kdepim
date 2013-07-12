@@ -49,4 +49,15 @@ QString SelectComparatorComboBox::code() const
     return QString::fromLatin1(":comparator \"%1\"").arg(itemText(currentIndex()));
 }
 
+void SelectComparatorComboBox::setCode(const QString &code)
+{
+    const int index = findData(code);
+    if (index != -1) {
+        setCurrentIndex(index);
+    } else {
+        //TODO other value ?
+        setCurrentIndex(0);
+    }
+}
+
 #include "selectcomparatorcombobox.moc"

@@ -17,149 +17,11 @@
 #include <kdebug.h>
 #include <klocale.h>
 #include <kmessagebox.h>
-#include <ksieve/error.h>
-#include <ksieve/parser.h>
-#include <ksieve/scriptbuilder.h>
 #include <kmanagesieve/sievejob.h>
 #include <ksieveui/util.h>
 #include <ktextedit.h>
 
 #include <QtCore/QTimer>
-
-namespace
-{
-
-class SieveDebugDataExtractor : public KSieve::ScriptBuilder
-{
-    enum Context
-    {
-        None = 0,
-
-        // command itself:
-        SieveDebugCommand,
-
-        // tagged args:
-        Days, Addresses
-    };
-
-public:
-    SieveDebugDataExtractor()
-        :   KSieve::ScriptBuilder()
-    {
-        kDebug() ;
-    }
-
-    virtual ~SieveDebugDataExtractor()
-    {
-        kDebug() ;
-    }
-
-private:
-    void commandStart( const QString & identifier )
-    {
-        kDebug() << "Identifier: '" << identifier <<"'";
-        reset();
-    }
-
-    void commandEnd()
-    {
-        kDebug() ;
-    }
-
-    void testStart( const QString & )
-    {
-        kDebug() ;
-    }
-
-    void testEnd()
-    {
-        kDebug() ;
-    }
-
-    void testListStart()
-    {
-        kDebug() ;
-    }
-
-    void testListEnd()
-    {
-        kDebug() ;
-    }
-
-    void blockStart()
-    {
-        kDebug() ;
-    }
-
-    void blockEnd()
-    {
-        kDebug() ;
-    }
-
-    void hashComment( const QString & )
-    {
-        kDebug() ;
-    }
-
-    void bracketComment( const QString & )
-    {
-        kDebug() ;
-    }
-
-    void lineFeed()
-    {
-        kDebug() ;
-    }
-
-    void error( const KSieve::Error & e )
-    {
-        kDebug() << "###" <<"Error:" <<
-                    e.asString() << "@" << e.line() << "," << e.column();
-    }
-
-    void finished()
-    {
-        kDebug() ;
-    }
-
-    void taggedArgument( const QString & tag )
-    {
-        kDebug() << "Tag: '" << tag <<"'";
-    }
-
-    void stringArgument( const QString & string, bool, const QString & )
-    {
-        kDebug() << "String: '" << string <<"'";
-    }
-
-    void numberArgument( unsigned long number, char )
-    {
-        kDebug() << "Number:" << number;
-    }
-
-    void stringListArgumentStart()
-    {
-        kDebug() ;
-    }
-
-    void stringListEntry( const QString & string, bool, const QString & )
-    {
-        kDebug() << "String: '" << string <<"'";
-    }
-
-    void stringListArgumentEnd()
-    {
-        kDebug() ;
-    }
-
-private:
-    void reset()
-    {
-        kDebug() ;
-    }
-};
-
-}
 
 using namespace KSieveUi;
 
@@ -172,8 +34,7 @@ SieveDebugDialog::SieveDebugDialog( QWidget *parent )
 
     // Collect all accounts
     const Akonadi::AgentInstance::List lst = KSieveUi::Util::imapAgentInstances();
-    foreach ( const Akonadi::AgentInstance& type, lst )
-    {
+    foreach ( const Akonadi::AgentInstance& type, lst ) {
         mResourceIdentifier << type.identifier();
     }
 
@@ -191,12 +52,11 @@ SieveDebugDialog::SieveDebugDialog( QWidget *parent )
 
 SieveDebugDialog::~SieveDebugDialog()
 {
-    if ( mSieveJob )
-    {
+    if ( mSieveJob ) {
         mSieveJob->kill();
         mSieveJob = 0;
     }
-    kDebug() ;
+    kDebug();
 }
 
 
@@ -232,8 +92,7 @@ void SieveDebugDialog::slotDiagNextAccount()
 
 void SieveDebugDialog::slotDiagNextScript()
 {
-    if ( mScriptList.isEmpty() )
-    {
+    if ( mScriptList.isEmpty() ) {
         // Continue handling accounts instead
         mScriptList.clear();
         mResourceIdentifier.pop_front();
@@ -265,12 +124,9 @@ void SieveDebugDialog::slotGetScript( KManageSieve::SieveJob * /* job */, bool s
              << script;
     mSieveJob = 0; // job deletes itself after returning from this slot!
 
-    if ( script.isEmpty() )
-    {
+    if ( script.isEmpty() ) {
         mEdit->append( i18n( "(This script is empty.)\n\n" ) );
-    }
-    else
-    {
+    } else {
         mEdit->append( i18n(
                            "------------------------------------------------------------\n"
                            "%1\n"
@@ -290,12 +146,9 @@ void SieveDebugDialog::slotGetScriptList( KManageSieve::SieveJob *job, bool succ
 
     mEdit->append( i18n( "Sieve capabilities:\n" ) );
     const QStringList caps = job->sieveCapabilities();
-    if ( caps.isEmpty() )
-    {
+    if ( caps.isEmpty() ) {
         mEdit->append( i18n( "(No special capabilities available)" ) );
-    }
-    else
-    {
+    } else {
         QStringList::const_iterator end = caps.constEnd();
         for ( QStringList::const_iterator it = caps.constBegin(); it !=end; ++it )
             mEdit->append( QLatin1String("* ") + *it + QLatin1Char('\n') );
@@ -304,12 +157,9 @@ void SieveDebugDialog::slotGetScriptList( KManageSieve::SieveJob *job, bool succ
 
     mEdit->append( i18n( "Available Sieve scripts:\n" ) );
 
-    if ( scriptList.isEmpty() )
-    {
+    if ( scriptList.isEmpty() ) {
         mEdit->append( i18n( "(No Sieve scripts available on this server)\n\n" ) );
-    }
-    else
-    {
+    } else {
         mScriptList = scriptList;
         QStringList::const_iterator end = scriptList.constEnd();
         for ( QStringList::const_iterator it = scriptList.constBegin(); it != end; ++it )
@@ -320,36 +170,6 @@ void SieveDebugDialog::slotGetScriptList( KManageSieve::SieveJob *job, bool succ
 
     // Handle next job: dump scripts for this server
     QTimer::singleShot( 0, this, SLOT(slotDiagNextScript()) );
-}
-
-void SieveDebugDialog::slotDialogOk()
-{
-    kDebug();
-}
-
-void SieveDebugDialog::slotPutActiveResult( KManageSieve::SieveJob * job, bool success )
-{
-    handlePutResult( job, success, true );
-}
-
-void SieveDebugDialog::slotPutInactiveResult( KManageSieve::SieveJob * job, bool success )
-{
-    handlePutResult( job, success, false );
-}
-
-void SieveDebugDialog::handlePutResult( KManageSieve::SieveJob *, bool success, bool activated )
-{
-    if ( success )
-    {
-        KMessageBox::information( 0, activated ? i18n(
-                                                     "Sieve script installed successfully on the server.\n"
-                                                     "Out of Office reply is now active." )
-                                               : i18n( "Sieve script installed successfully on the server.\n"
-                                                       "Out of Office reply has been deactivated." ) );
-    }
-
-    kDebug() << "( ???," << success <<", ? )";
-    mSieveJob = 0; // job deletes itself after returning from this slot!
 }
 
 #include "sievedebugdialog.moc"

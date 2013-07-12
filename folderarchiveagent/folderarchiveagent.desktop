@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Folder Archive Agent
+Comment=Folder Archive Agent allows to store mails in specific archive folder
+Type=AkonadiAgent
+Exec=akonadi_folderarchive_agent
+Icon=kmail
+X-DocPath=akonadi_folderarchive_agent/index.html
+X-Akonadi-MimeTypes=message/rfc822
+X-Akonadi-Capabilities=Unique,Autostart
+X-Akonadi-Identifier=akonadi_folderarchive_agent

@@ -301,7 +301,7 @@ KMFilterDialog::KMFilterDialog( const QList<KActionCollection*> &actionCollectio
       mIgnoreFilterUpdates( true )
 {
     setCaption( i18n( "Filter Rules" ) );
-    setButtons( Help|Ok|Apply|Cancel|User1|User2 );
+    setButtons( Help|Ok|Apply|Cancel|User1|User2|User3);
     setModal( false );
     setButtonFocus( Ok );
     KWindowSystem::setIcons( winId(),
@@ -312,6 +312,7 @@ KMFilterDialog::KMFilterDialog( const QList<KActionCollection*> &actionCollectio
     setHelp( "filters", "kmail" );
     setButtonText( User1, i18n( "Import..." ) );
     setButtonText( User2, i18n( "Export..." ) );
+    setButtonText( User3, i18n( "Convert to..." ) );
     QMenu *menu = new QMenu();
 
     QAction *act = new QAction( i18n( "KMail filters" ), this );
@@ -345,6 +346,14 @@ KMFilterDialog::KMFilterDialog( const QList<KActionCollection*> &actionCollectio
     connect( menu, SIGNAL(triggered(QAction*)), SLOT(slotImportFilter(QAction*)) );
 
     button( KDialog::User1 )->setMenu( menu );
+
+    menu = new QMenu();
+
+    act = new QAction( i18n( "Sieve script" ), this );
+    connect(act, SIGNAL(triggered(bool)), SLOT(slotExportAsSieveScript()));
+    menu->addAction( act );
+    button( KDialog::User3 )->setMenu( menu );
+
 
     connect( this, SIGNAL(user2Clicked()),
              this, SLOT(slotExportFilters()) );
@@ -1681,6 +1690,12 @@ void KMFilterDialog::slotDialogUpdated()
     if ( !mIgnoreFilterUpdates ) {
         enableButtonApply( true );
     }
+}
+
+void KMFilterDialog::slotExportAsSieveScript()
+{
+    KMessageBox::information(this, i18n("We can not convert all kmail filter as sieve script but we can try :)"), i18n("Convert KMail filters to sieve scripts"));
+    //TODO
 }
 
 }

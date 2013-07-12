@@ -22,7 +22,7 @@
 #include "aclentrydialog_p.h"
 #include "aclutils_p.h"
 #include "imapaclattribute.h"
-#include "imapsettings.h"
+#include "imapresourcesettings.h"
 #include "pimutil.h"
 
 #include <Akonadi/Collection>

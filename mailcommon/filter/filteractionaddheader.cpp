@@ -197,4 +197,21 @@ FilterAction* FilterActionAddHeader::newAction()
 {
   return new FilterActionAddHeader;
 }
+
+bool FilterActionAddHeader::canConvertToSieve() const
+{
+    return true;
+}
+
+QStringList FilterActionAddHeader::sieveRequires() const
+{
+    return QStringList() <<QLatin1String("editheader");
+}
+
+QString FilterActionAddHeader::sieveCode() const
+{
+    return QString::fromLatin1("addheader \"%1\" \"%2\";").arg(mParameter).arg(mValue);
+}
+
+
 #include "filteractionaddheader.moc"

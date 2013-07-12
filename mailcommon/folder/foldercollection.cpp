@@ -19,7 +19,7 @@
 #include "foldercollection.h"
 #include "kernel/mailkernel.h"
 #include "util/mailutil.h"
-#include "imapsettings.h"
+#include "imapresourcesettings.h"
 #include "pimcommon/util/pimutil.h"
 #include "mailcommon/collectionpage/newmailnotifierattribute.h"
 

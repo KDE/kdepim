@@ -280,7 +280,7 @@ void SendLaterWidget::slotRemoveItem()
         return;
 
     bool removeMessage = false;
-    if (KMessageBox::warningYesNo(this,i18n("Do you want to removed messages too?"),i18n("Remove messages"))== KMessageBox::Yes)
+    if (KMessageBox::warningYesNo(this,i18n("Do you want to remove messages as well?"),i18n("Remove messages"))== KMessageBox::Yes)
         removeMessage = true;
 
     Q_FOREACH(QTreeWidgetItem *item,listItems) {

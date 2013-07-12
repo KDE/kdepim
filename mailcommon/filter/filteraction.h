@@ -93,6 +93,13 @@ class MAILCOMMON_EXPORT FilterAction : public QObject
      */
     QString name() const;
 
+
+    virtual bool canConvertToSieve() const;
+
+    virtual QStringList sieveRequires() const;
+
+    virtual QString sieveCode() const;
+
     /**
      * Execute action on given message (inside the item context).
      * Returns @p CriticalError if a

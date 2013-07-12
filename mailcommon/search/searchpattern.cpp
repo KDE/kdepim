@@ -1694,6 +1694,11 @@ QDataStream &SearchPattern::operator<<( QDataStream &s )
   return s;
 }
 
+void SearchPattern::generateSieveScript(QStringList &requires, QString &code)
+{
+    //TODO
+}
+
 // Needed for MSVC 2010, as it seems to not implicit cast for a pointer anymore
 #ifdef _MSC_VER
 namespace MailCommon {

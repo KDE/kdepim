@@ -310,6 +310,7 @@ public:
   bool isEnabled() const;
   void setEnabled( bool );
 
+  void generateSieveScript(QStringList &requires, QString &code);
 
 private:
   QString mIdentifier;

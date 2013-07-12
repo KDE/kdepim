@@ -36,6 +36,8 @@ class FilterActionDelete : public FilterActionWithNone
     virtual SearchRule::RequiredPart requiredPart() const;
     static FilterAction* newAction();
     QWidget* createParamWidget( QWidget *parent ) const;
+    bool canConvertToSieve() const;
+    QString sieveCode() const;
 };
 
 }

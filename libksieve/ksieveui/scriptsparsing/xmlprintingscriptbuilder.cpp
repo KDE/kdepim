@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012, 2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -16,9 +16,11 @@
 */
 
 #include "xmlprintingscriptbuilder.h"
+#include <QDebug>
 
 XMLPrintingScriptBuilder::XMLPrintingScriptBuilder()
-  : KSieve::ScriptBuilder(), mIndent( 0 )
+    : KSieve::ScriptBuilder(),
+      mIndent( 0 )
 {
 }
 
@@ -26,78 +28,133 @@ XMLPrintingScriptBuilder::~XMLPrintingScriptBuilder()
 {
 }
 
-void XMLPrintingScriptBuilder::taggedArgument( const QString & tag ) {
-  write( "tag", tag );
-}
-void XMLPrintingScriptBuilder::stringArgument( const QString & string, bool multiLine, const QString & /*fixme*/ ) {
-  write( multiLine ? "string type=\"multiline\"" : "string type=\"quoted\"", string );
-}
-void XMLPrintingScriptBuilder::numberArgument( unsigned long number, char quantifier ) {
-  const QString txt = "number" + ( quantifier ? QString(" quantifier=\"%1\"").arg( quantifier ) : QString() ) ;
-  write( txt.toLatin1(), QString::number( number ) );
-}
-void XMLPrintingScriptBuilder::commandStart( const QString & identifier ) {
-  write( "<command>" );
-  ++mIndent;
-  write( "identifier", identifier );
-}
-void XMLPrintingScriptBuilder::commandEnd() {
-  --mIndent;
-  write( "</command>" );
-}
-void XMLPrintingScriptBuilder::testStart( const QString & identifier ) {
-  write( "<test>" );
-  ++mIndent;
-  write( "identifier", identifier );
-}
-void XMLPrintingScriptBuilder::testEnd() {
-  --mIndent;
-  write( "</test>" );
-}
-void XMLPrintingScriptBuilder::testListStart() {
-  write( "<testlist>" );
-  ++mIndent;
+void XMLPrintingScriptBuilder::taggedArgument( const QString & tag )
+{
+    write( "tag", tag );
 }
 
-void XMLPrintingScriptBuilder::testListEnd() {
-  --mIndent;
-  write( "</testlist>" );
-}
-void XMLPrintingScriptBuilder::blockStart() {
-  write( "<block>" );
-  ++mIndent;
-}
-void XMLPrintingScriptBuilder::blockEnd() {
-  --mIndent;
-  write( "</block>" );
-}
-void XMLPrintingScriptBuilder::stringListArgumentStart() {
-  write( "<stringlist>" );
-  ++mIndent;
-}
-void XMLPrintingScriptBuilder::stringListArgumentEnd() {
-  --mIndent;
-  write( "</stringlist>" );
-}
-void XMLPrintingScriptBuilder::stringListEntry( const QString & string, bool multiline, const QString & hashComment ) {
-  stringArgument( string, multiline, hashComment );
-}
-void XMLPrintingScriptBuilder::hashComment( const QString & comment ) {
-  write( "comment type=\"hash\"", comment );
-}
-void XMLPrintingScriptBuilder::bracketComment( const QString & comment ) {
-  write( "comment type=\"bracket\"", comment );
+void XMLPrintingScriptBuilder::stringArgument( const QString & string, bool multiLine, const QString & /*fixme*/ )
+{
+    write( multiLine ? "string type=\"multiline\"" : "string type=\"quoted\"", string );
 }
 
-void XMLPrintingScriptBuilder::lineFeed() {
-  write( "<crlf/>" );
+void XMLPrintingScriptBuilder::numberArgument( unsigned long number, char quantifier )
+{
+    const QString txt = "number" + ( quantifier ? QString(" quantifier=\"%1\"").arg( quantifier ) : QString() ) ;
+    write( txt.toLatin1(), QString::number( number ) );
 }
 
-void XMLPrintingScriptBuilder::error( const KSieve::Error & error ) {
-  mIndent = 0;
-  write( ("Error: " + error.asString()).toLatin1() );
+void XMLPrintingScriptBuilder::commandStart( const QString & identifier )
+{
+    write( "<command>" );
+    ++mIndent;
+    write( "identifier", identifier );
 }
-void XMLPrintingScriptBuilder::finished() {
-  --mIndent;
-  write( "</script>" );
+
+void XMLPrintingScriptBuilder::commandEnd()
+{
+    --mIndent;
+    write( "</command>" );
+}
+
+void XMLPrintingScriptBuilder::testStart( const QString & identifier )
+{
+    write( "<test>" );
+    ++mIndent;
+    write( "identifier", identifier );
+}
+
+void XMLPrintingScriptBuilder::testEnd()
+{
+    --mIndent;
+    write( "</test>" );
+}
+
+void XMLPrintingScriptBuilder::testListStart()
+{
+    write( "<testlist>" );
+    ++mIndent;
+}
+
+void XMLPrintingScriptBuilder::testListEnd()
+{
+    --mIndent;
+    write( "</testlist>" );
+}
+
+void XMLPrintingScriptBuilder::blockStart()
+{
+    write( "<block>" );
+    ++mIndent;
+}
+
+void XMLPrintingScriptBuilder::blockEnd()
+{
+    --mIndent;
+    write( "</block>" );
+}
+
+void XMLPrintingScriptBuilder::stringListArgumentStart()
+{
+    write( "<stringlist>" );
+    ++mIndent;
+}
+
+void XMLPrintingScriptBuilder::stringListArgumentEnd()
+{
+    --mIndent;
+    write( "</stringlist>" );
+}
+
+void XMLPrintingScriptBuilder::stringListEntry( const QString & string, bool multiline, const QString & hashComment )
+{
+    stringArgument( string, multiline, hashComment );
+}
+
+void XMLPrintingScriptBuilder::hashComment( const QString & comment )
+{
+    write( "comment type=\"hash\"", comment );
+}
+
+void XMLPrintingScriptBuilder::bracketComment( const QString & comment )
+{
+    write( "comment type=\"bracket\"", comment );
+}
+
+void XMLPrintingScriptBuilder::lineFeed()
+{
+    write( "<crlf/>" );
+}
+
+void XMLPrintingScriptBuilder::error( const KSieve::Error & error )
+{
+    mIndent = 0;
+    write( ("Error: " + error.asString()).toLatin1() );
+}
+
+void XMLPrintingScriptBuilder::finished()
+{
+    --mIndent;
+    write( "</script>" );
+}
+
+void XMLPrintingScriptBuilder::write( const char * msg )
+{
+    for ( int i = 2*indent ; i > 0 ; --i ) {
+        qDebug() << " ";
+    }
+    qDebug() << msg;
+}
+
+void XMLPrintingScriptBuilder::write( const QByteArray & key, const QString & value )
+{
+    if ( value.isEmpty() ) {
+        write( "<" + key + "/>" );
+        return;
+    }
+    write( "<" + key + ">" );
+    ++mIndent;
+    write( value.toUtf8().data() );
+    --mIndent;
+    write( "</" + key + ">" );
 }

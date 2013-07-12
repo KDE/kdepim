@@ -13,6 +13,7 @@ X-KDE-PluginInfo-License=LGPL
 X-KDE-PluginInfo-EnabledByDefault=true
 Name=GrammarLink
 Name[ca]=GrammarLink
+Name[da]=GrammarLink
 Name[de]=Grammatik-Verknüpfung
 Name[el]=GrammarLink
 Name[es]=GrammarLink

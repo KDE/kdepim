@@ -762,6 +762,9 @@ class MAILCOMMON_EXPORT SearchPattern : public QList<SearchRule::Ptr>
     QDataStream &operator>>( QDataStream &s ) const;
     QDataStream &operator<<( QDataStream &s );
 
+
+    void generateSieveScript(QStringList &requires, QString &code);
+
   private:
     /**
      * Tries to import a legacy search pattern, ie. one that still has

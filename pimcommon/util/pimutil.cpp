@@ -38,7 +38,7 @@
 
 #include "pimutil.h"
 
-#include "imapsettings.h"
+#include "imapresourcesettings.h"
 
 OrgKdeAkonadiImapSettingsInterface *PimCommon::Util::createImapSettingsInterface( const QString &ident )
 {

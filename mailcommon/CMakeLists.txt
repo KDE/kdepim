@@ -36,6 +36,9 @@ set(libmailcommon_SRCS
   collectionpage/newmailnotifierattribute.cpp
   job/expirejob.cpp
   widgets/favoritecollectionwidget.cpp
+  filter/filterselectiondialog.cpp
+  filter/filterconverter/filterconverttosieve.cpp
+  filter/filterconverter/filterconverttosieveresultdialog.cpp
   filter/filteraction.cpp
   filter/filteractionaddheader.cpp
   filter/filteractionaddtag.cpp

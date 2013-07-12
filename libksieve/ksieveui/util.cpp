@@ -39,7 +39,7 @@
 
 #include "util.h"
 #include "pimcommon/util/pimutil.h"
-#include "imapsettings.h"
+#include "imapresourcesettings.h"
 #include "settings.h"
 
 #include <akonadi/agentmanager.h>
@@ -106,14 +106,37 @@ KUrl KSieveUi::Util::findSieveUrlForAccount( const QString &identifier )
             break;
         }
         u.addQueryItem( QLatin1String("x-mech"), authStr );
-        if ( interface->safety() == ( int )( KIMAP::LoginJob::Unencrypted ))
+        const QString resultSafety = interface->safety();
+        if ( resultSafety == QLatin1String("None"))
             u.addQueryItem( QLatin1String("x-allow-unencrypted"), QLatin1String("true") );
         u.setFileName( interface->sieveVacationFilename() );
         return u;
     } else {
         KUrl u( interface->sieveAlternateUrl() );
-        if ( u.protocol().toLower() == QLatin1String("sieve") && ( interface->safety() == ( int )( KIMAP::LoginJob::Unencrypted ) ) && u.queryItem(QLatin1String("x-allow-unencrypted")).isEmpty() )
+        const QString resultSafety = interface->safety();
+        if ( u.protocol().toLower() == QLatin1String("sieve") && ( resultSafety ==  QLatin1String("None") ) && u.queryItem(QLatin1String("x-allow-unencrypted")).isEmpty() )
             u.addQueryItem( QLatin1String("x-allow-unencrypted"), QLatin1String("true") );
+
+        const QString resultCustomAuthentification = interface->sieveCustomAuthentification();
+        if (resultCustomAuthentification == QLatin1String("ImapUserPassword")) {
+            u.setUser( interface->userName() );
+            QDBusInterface resourceSettings( QLatin1String( "org.freedesktop.Akonadi.Resource." ) + identifier, QLatin1String("/Settings"), QLatin1String("org.kde.Akonadi.Imap.Wallet") );
+            QString pwd;
+            QDBusReply<QString> replyPass = resourceSettings.call( QLatin1String("password") );
+            if ( replyPass.isValid() ) {
+                pwd = replyPass;
+            }
+            u.setPass( pwd );
+        } else if (resultCustomAuthentification == QLatin1String("CustomUserPassword")) {
+            QDBusInterface resourceSettings( QLatin1String( "org.freedesktop.Akonadi.Resource." ) + identifier, QLatin1String("/Settings"), QLatin1String("org.kde.Akonadi.Imap.Wallet") );
+            QString pwd;
+            QDBusReply<QString> replyPass = resourceSettings.call( QLatin1String("sieveCustomPassword") );
+            if ( replyPass.isValid() ) {
+                pwd = replyPass;
+            }
+            u.setPass( pwd );
+            u.setUser( interface->sieveCustomUsername() );
+        }
         u.setFileName( interface->sieveVacationFilename() );
         return u;
     }
