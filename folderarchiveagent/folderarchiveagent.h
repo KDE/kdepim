@@ -30,8 +30,8 @@ public:
     void setEnableAgent(bool b);
     bool enabledAgent() const;
 
-private:
-    bool mEnabled;
+    void showConfigureDialog(qlonglong windowId = 0);
+
 };
 
 #endif // FOLDERARCHIVEAGENT_H

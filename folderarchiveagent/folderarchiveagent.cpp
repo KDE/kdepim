@@ -17,28 +17,39 @@
 
 
 #include "folderarchiveagent.h"
+
+#include "folderarchiveagentadaptor.h"
 #include "folderarchiveagentsettings.h"
 
-FolderArchiveAgent::FolderArchiveAgent(const QString &id)
-    : Akonadi::AgentBase( id ),
-      mEnabled(true)
-{
+#include <akonadi/dbusconnectionpool.h>
 
+
+FolderArchiveAgent::FolderArchiveAgent(const QString &id)
+    : Akonadi::AgentBase( id )
+{
+    new FolderArchiveAgentAdaptor( this );
+    Akonadi::DBusConnectionPool::threadConnection().registerObject( QLatin1String( "/FolderArchiveAgent" ), this, QDBusConnection::ExportAdaptors );
+    Akonadi::DBusConnectionPool::threadConnection().registerService( QLatin1String( "org.freedesktop.Akonadi.FolderArchiveAgent" ) );
 }
 
 FolderArchiveAgent::~FolderArchiveAgent()
 {
 }
 
-//TODO use kcfg
+void FolderArchiveAgent::showConfigureDialog(qlonglong windowId)
+{
+    //TODO
+}
+
 void FolderArchiveAgent::setEnableAgent(bool b)
 {
-    mEnabled = b;
+    FolderArchiveAgentSettings::setEnabled(b);
+    FolderArchiveAgentSettings::self()->writeConfig();
 }
 
 bool FolderArchiveAgent::enabledAgent() const
 {
-    return mEnabled;
+    return FolderArchiveAgentSettings::enabled();
 }
 
 

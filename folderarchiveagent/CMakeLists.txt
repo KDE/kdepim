@@ -15,7 +15,7 @@ kde4_add_kcfg_files(folderarchiveagent_SRCS
 )
 
 
-#qt4_add_dbus_adaptor(archivemailagent_SRCS org.freedesktop.Akonadi.ArchiveMailAgent.xml archivemailagent.h ArchiveMailAgent)
+qt4_add_dbus_adaptor(folderarchiveagent_SRCS org.freedesktop.Akonadi.FolderArchiveAgent.xml folderarchiveagent.h FolderArchiveAgent)
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
