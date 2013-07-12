@@ -20,6 +20,7 @@
 
 #include <KDialog>
 
+class KAboutData;
 class FolderArchiveConfigureDialog : public KDialog
 {
     Q_OBJECT
@@ -30,6 +31,7 @@ public:
 private:
     void writeConfig();
     void readConfig();
+    KAboutData *mAboutData;
 };
 
 #endif // FOLDERARCHIVECONFIGUREDIALOG_H

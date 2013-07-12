@@ -17,9 +17,15 @@
 
 #include "folderarchiveconfiguredialog.h"
 
+#include "kdepim-version.h"
+
 #include <KLocale>
 #include <KConfigGroup>
 #include <KGlobal>
+#include <KHelpMenu>
+#include <KMenu>
+#include <KIcon>
+#include <KAboutData>
 
 FolderArchiveConfigureDialog::FolderArchiveConfigureDialog(QWidget *parent)
     : KDialog(parent)
@@ -29,11 +35,35 @@ FolderArchiveConfigureDialog::FolderArchiveConfigureDialog(QWidget *parent)
     setButtons( Help|Ok|Cancel );
 
     readConfig();
+
+    mAboutData = new KAboutData(
+                QByteArray( "folderarchiveagent" ),
+                QByteArray(),
+                ki18n( "Folder Archive Agent" ),
+                QByteArray( KDEPIM_VERSION ),
+                ki18n( "Move mails in specific archive folder." ),
+                KAboutData::License_GPL_V2,
+                ki18n( "Copyright (C) 2013 Laurent Montel" ) );
+
+    mAboutData->addAuthor( ki18n( "Laurent Montel" ),
+                         ki18n( "Maintainer" ), "montel@kde.org" );
+
+    mAboutData->setProgramIconName( QLatin1String("kmail") );
+    mAboutData->setTranslator( ki18nc( "NAME OF TRANSLATORS", "Your names" ),
+                             ki18nc( "EMAIL OF TRANSLATORS", "Your emails" ) );
+
+
+    KHelpMenu *helpMenu = new KHelpMenu(this, mAboutData, true);
+    //Initialize menu
+    KMenu *menu = helpMenu->menu();
+    helpMenu->action(KHelpMenu::menuAboutApp)->setIcon(KIcon(QLatin1String("kmail")));
+    setButtonMenu( Help, menu );
 }
 
 FolderArchiveConfigureDialog::~FolderArchiveConfigureDialog()
 {
     writeConfig();
+    delete mAboutData;
 }
 
 static const char *myConfigGroupName = "FolderArchiveConfigureDialog";
