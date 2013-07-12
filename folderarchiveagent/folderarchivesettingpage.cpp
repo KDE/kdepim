@@ -21,6 +21,8 @@
 
 #include <QCheckBox>
 #include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QLabel>
 
 FolderArchiveSettingPage::FolderArchiveSettingPage(const QString &instanceName, QWidget *parent)
     : QWidget(parent),
@@ -28,6 +30,13 @@ FolderArchiveSettingPage::FolderArchiveSettingPage(const QString &instanceName, 
 {
     QVBoxLayout *lay = new QVBoxLayout;
     mEnabled = new QCheckBox(i18n("Enable"));
+    lay->addWidget(mEnabled);
+
+    QHBoxLayout *hbox = new QHBoxLayout;
+    QLabel *lab = new QLabel(i18n("Achive folder:"));
+    hbox->addWidget(lab);
+    lay->addLayout(hbox);
+
     setLayout(lay);
 }
 
