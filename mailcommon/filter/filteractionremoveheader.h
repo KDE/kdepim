@@ -38,6 +38,10 @@ class FilterActionRemoveHeader: public FilterActionWithStringList
     virtual QWidget* createParamWidget( QWidget *parent ) const;
     virtual void setParamWidgetValue( QWidget *paramWidget ) const;
 
+    bool canConvertToSieve() const;
+    QStringList sieveRequires() const;
+    QString sieveCode() const;
+
     static FilterAction* newAction();
 };
 

@@ -124,4 +124,19 @@ void FilterAction::sendMDN( const Akonadi::Item &item, KMime::MDN::DispositionTy
   }
 }
 
+bool FilterAction::canConvertToSieve() const
+{
+    return false;
+}
+
+QStringList FilterAction::sieveRequires() const
+{
+    return QStringList();
+}
+
+QString FilterAction::sieveCode() const
+{
+    return QString();
+}
+
 #include "filteraction.moc"

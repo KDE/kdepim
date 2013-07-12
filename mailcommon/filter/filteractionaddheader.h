@@ -48,6 +48,10 @@ class FilterActionAddHeader: public FilterActionWithStringList
 
     static FilterAction* newAction();
 
+    bool canConvertToSieve() const;
+    QStringList sieveRequires() const;
+    QString sieveCode() const;
+
   private:
     QString mValue;
 };

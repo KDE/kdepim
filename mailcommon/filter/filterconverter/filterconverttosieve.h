@@ -18,13 +18,19 @@
 #ifndef FILTERCONVERTTOSIEVE_H
 #define FILTERCONVERTTOSIEVE_H
 
-namespace MailCommon {
+#include <QList>
 
+namespace MailCommon {
+class MailFilter;
 class FilterConvertToSieve
 {
 public:
-    FilterConvertToSieve();
+    FilterConvertToSieve(const QList<MailFilter *> &filters);
     ~FilterConvertToSieve();
+
+private:
+    void convert();
+    QList<MailFilter *> mListFilters;
 };
 
 }

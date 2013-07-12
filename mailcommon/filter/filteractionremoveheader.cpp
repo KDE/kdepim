@@ -97,5 +97,19 @@ void FilterActionRemoveHeader::setParamWidgetValue( QWidget *paramWidget ) const
   }
 }
 
+bool FilterActionRemoveHeader::canConvertToSieve() const
+{
+    return true;
+}
+
+QStringList FilterActionRemoveHeader::sieveRequires() const
+{
+    return QStringList() << QLatin1String("editheader");
+}
+
+QString FilterActionRemoveHeader::sieveCode() const
+{
+    return QString::fromLatin1("deleteheader \"%1\";").arg(mParameter);
+}
 
 #include "filteractionremoveheader.moc"

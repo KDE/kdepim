@@ -38,6 +38,7 @@ set(libmailcommon_SRCS
   widgets/favoritecollectionwidget.cpp
   filter/filterselectiondialog.cpp
   filter/filterconverter/filterconverttosieve.cpp
+  filter/filterconverter/filterconverttosieveresultdialog.cpp
   filter/filteraction.cpp
   filter/filteractionaddheader.cpp
   filter/filteractionaddtag.cpp
