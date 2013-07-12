@@ -39,7 +39,7 @@
 
 <abstract>
 <para>
-&kapplication; is a akonadi agent which allow to store emails in archive folder.
+&kapplication; is an akonadi agent which allows to store emails in an archive folder.
 </para>
 </abstract>
 
@@ -53,7 +53,7 @@
 <chapter id="introduction">
 <title>Introduction</title>
 
-<para>&kapplication; allows to store emails in archive folder.</para>
+<para>&kapplication; allows to store emails in an archive folder.</para>
 </chapter>
 
 <chapter id="using-kapp">
