@@ -15,28 +15,17 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef FOLDERARCHIVEAGENT_H
-#define FOLDERARCHIVEAGENT_H
+#ifndef FOLDERARCHIVEMANAGER_H
+#define FOLDERARCHIVEMANAGER_H
 
-#include <akonadi/agentbase.h>
-class FolderArchiveManager;
-class FolderArchiveAgent : public Akonadi::AgentBase, public Akonadi::AgentBase::ObserverV2
+#include <QObject>
+
+class FolderArchiveManager : public QObject
 {
     Q_OBJECT
 public:
-    explicit FolderArchiveAgent(const QString &id);
-    ~FolderArchiveAgent();
-
-    void setEnableAgent(bool b);
-    bool enabledAgent() const;
-
-    void showConfigureDialog(qlonglong windowId = 0);
-
-public Q_SLOTS:
-    void configure( WId windowId );
-
-private:
-    FolderArchiveManager *mFolderArchiveManager;
+    explicit FolderArchiveManager(QObject *parent=0);
+    ~FolderArchiveManager();
 };
 
-#endif // FOLDERARCHIVEAGENT_H
+#endif // FOLDERARCHIVEMANAGER_H

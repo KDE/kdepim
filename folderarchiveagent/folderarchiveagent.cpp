@@ -17,16 +17,22 @@
 
 
 #include "folderarchiveagent.h"
+#include "folderarchiveconfiguredialog.h"
 
 #include "folderarchiveagentadaptor.h"
 #include "folderarchiveagentsettings.h"
+#include "folderarchivemanager.h"
+
+#include <KWindowSystem>
 
 #include <akonadi/dbusconnectionpool.h>
 
+#include <QPointer>
 
 FolderArchiveAgent::FolderArchiveAgent(const QString &id)
     : Akonadi::AgentBase( id )
 {
+    mFolderArchiveManager = new FolderArchiveManager(this);
     new FolderArchiveAgentAdaptor( this );
     Akonadi::DBusConnectionPool::threadConnection().registerObject( QLatin1String( "/FolderArchiveAgent" ), this, QDBusConnection::ExportAdaptors );
     Akonadi::DBusConnectionPool::threadConnection().registerService( QLatin1String( "org.freedesktop.Akonadi.FolderArchiveAgent" ) );
@@ -38,7 +44,21 @@ FolderArchiveAgent::~FolderArchiveAgent()
 
 void FolderArchiveAgent::showConfigureDialog(qlonglong windowId)
 {
-    //TODO
+    QPointer<FolderArchiveConfigureDialog> dialog = new FolderArchiveConfigureDialog();
+    if (windowId) {
+#ifndef Q_WS_WIN
+        KWindowSystem::setMainWindow( dialog, windowId );
+#else
+        KWindowSystem::setMainWindow( dialog, (HWND)windowId );
+#endif
+    }
+    dialog->exec();
+    delete dialog;
+}
+
+void FolderArchiveAgent::configure( WId windowId )
+{
+    showConfigureDialog((qulonglong)windowId);
 }
 
 void FolderArchiveAgent::setEnableAgent(bool b)

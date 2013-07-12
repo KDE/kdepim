@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -21,7 +21,6 @@
 #include <kglobal.h>
 #include <kpimidentities/identitymanager.h>
 #include <mailcommon/folder/foldercollectionmonitor.h>
-#include <mailcommon/job/jobscheduler.h>
 #include <akonadi/session.h>
 #include <akonadi/entitytreemodel.h>
 #include <akonadi/entitymimetypefiltermodel.h>
@@ -46,7 +45,6 @@ FolderArchiveKernel::FolderArchiveKernel( QObject *parent )
     mCollectionModel->setHeaderGroup( Akonadi::EntityTreeModel::CollectionTreeHeaders );
     mCollectionModel->setDynamicSortFilter( true );
     mCollectionModel->setSortCaseSensitivity( Qt::CaseInsensitive );
-    mJobScheduler = new MailCommon::JobScheduler(this);
 }
 
 KPIMIdentities::IdentityManager *FolderArchiveKernel::identityManager()
@@ -76,7 +74,7 @@ void FolderArchiveKernel::syncConfig()
 
 MailCommon::JobScheduler* FolderArchiveKernel::jobScheduler() const
 {
-    return mJobScheduler;
+    return 0;
 }
 
 Akonadi::ChangeRecorder *FolderArchiveKernel::folderCollectionMonitor() const

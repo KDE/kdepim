@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -27,7 +27,6 @@ class EntityMimeTypeFilterModel;
 
 namespace MailCommon {
 class FolderCollectionMonitor;
-class JobScheduler;
 }
 
 class FolderArchiveKernel : public QObject, public MailCommon::IKernel, public MailCommon::ISettings
@@ -58,7 +57,6 @@ private:
     MailCommon::FolderCollectionMonitor *mFolderCollectionMonitor;
     Akonadi::EntityTreeModel *mEntityTreeModel;
     Akonadi::EntityMimeTypeFilterModel *mCollectionModel;
-    MailCommon::JobScheduler* mJobScheduler;
 };
 
 #endif
