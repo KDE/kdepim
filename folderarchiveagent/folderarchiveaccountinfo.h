@@ -19,6 +19,7 @@
 #define FOLDERARCHIVEACCOUNTINFO_H
 
 #include <KConfigGroup>
+#include <Akonadi/Collection>
 
 class FolderArchiveAccountInfo
 {
@@ -33,6 +34,7 @@ public:
     void readConfig(const KConfigGroup &config);
 
 private:
+    Akonadi::Collection mTopLevelCollection;
     QString mInstanceName;
 };
 

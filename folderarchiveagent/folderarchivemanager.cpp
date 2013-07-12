@@ -16,15 +16,45 @@
 */
 
 #include "folderarchivemanager.h"
+#include "folderarchiveaccountinfo.h"
+
+#include <Akonadi/AgentManager>
+
+#include <KSharedConfig>
+#include <KGlobal>
 
 FolderArchiveManager::FolderArchiveManager(QObject *parent)
     : QObject(parent)
 {
+    connect( Akonadi::AgentManager::self(), SIGNAL(instanceRemoved(Akonadi::AgentInstance)),
+             this, SLOT(slotInstanceRemoved(Akonadi::AgentInstance)) );
+
 }
 
 FolderArchiveManager::~FolderArchiveManager()
 {
+    qDeleteAll(mListAccountInfo);
+}
 
+void FolderArchiveManager::slotInstanceRemoved(const Akonadi::AgentInstance &instance)
+{
+    //TODO
+}
+
+void FolderArchiveManager::load()
+{
+    qDeleteAll(mListAccountInfo);
+    mListAccountInfo.clear();
+
+    const QStringList accountList = KGlobal::config()->groupList().filter( QRegExp( QLatin1String("FolderArchiveAccount ") ) );
+    Q_FOREACH (const QString &account, accountList) {
+        KConfigGroup group = KGlobal::config()->group(account);
+        FolderArchiveAccountInfo *info = new FolderArchiveAccountInfo(group);
+        //TODO verify isValid();
+        mListAccountInfo.append(info);
+    }
+
+    //TODO
 }
 
 #include "folderarchivemanager.moc"

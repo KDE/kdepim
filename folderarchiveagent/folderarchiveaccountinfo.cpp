@@ -39,10 +39,12 @@ QString FolderArchiveAccountInfo::instanceName() const
 
 void FolderArchiveAccountInfo::readConfig(const KConfigGroup &config)
 {
+    mInstanceName = config.readEntry(QLatin1String("instanceName"));
     //TODO
 }
 
 void FolderArchiveAccountInfo::writeConfig(KConfigGroup &config )
 {
+    config.writeEntry(QLatin1String("instanceName"), mInstanceName);
     //TODO
 }

@@ -36,6 +36,8 @@ FolderArchiveAgent::FolderArchiveAgent(const QString &id)
     new FolderArchiveAgentAdaptor( this );
     Akonadi::DBusConnectionPool::threadConnection().registerObject( QLatin1String( "/FolderArchiveAgent" ), this, QDBusConnection::ExportAdaptors );
     Akonadi::DBusConnectionPool::threadConnection().registerService( QLatin1String( "org.freedesktop.Akonadi.FolderArchiveAgent" ) );
+
+    mFolderArchiveManager->load();
 }
 
 FolderArchiveAgent::~FolderArchiveAgent()
@@ -52,7 +54,9 @@ void FolderArchiveAgent::showConfigureDialog(qlonglong windowId)
         KWindowSystem::setMainWindow( dialog, (HWND)windowId );
 #endif
     }
-    dialog->exec();
+    if (dialog->exec()) {
+        mFolderArchiveManager->load();
+    }
     delete dialog;
 }
 

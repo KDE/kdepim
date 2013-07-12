@@ -20,12 +20,24 @@
 
 #include <QObject>
 
+namespace Akonadi {
+class AgentInstance;
+}
+class FolderArchiveAccountInfo;
 class FolderArchiveManager : public QObject
 {
     Q_OBJECT
 public:
     explicit FolderArchiveManager(QObject *parent=0);
     ~FolderArchiveManager();
+
+    void load();
+
+private Q_SLOTS:
+    void slotInstanceRemoved(const Akonadi::AgentInstance &instance);
+
+private:
+    QList<FolderArchiveAccountInfo*> mListAccountInfo;
 };
 
 #endif // FOLDERARCHIVEMANAGER_H
