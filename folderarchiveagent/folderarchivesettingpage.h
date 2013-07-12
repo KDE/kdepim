@@ -15,21 +15,24 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef FOLDERARCHIVECONFIGUREDIALOG_H
-#define FOLDERARCHIVECONFIGUREDIALOG_H
+#ifndef FOLDERARCHIVESETTINGPAGE_H
+#define FOLDERARCHIVESETTINGPAGE_H
 
-#include <KDialog>
+#include <QWidget>
+class QCheckBox;
 
-class FolderArchiveConfigureDialog : public KDialog
+class FolderArchiveSettingPage : public QWidget
 {
     Q_OBJECT
 public:
-    explicit FolderArchiveConfigureDialog(QWidget *parent=0);
-    ~FolderArchiveConfigureDialog();
+    explicit FolderArchiveSettingPage(const QString &instanceName, QWidget *parent=0);
+    ~FolderArchiveSettingPage();
+
+    void loadSettings();
+    void writeSettings();
 
 private:
-    void writeConfig();
-    void readConfig();
+    QCheckBox *mEnabled;
 };
 
-#endif // FOLDERARCHIVECONFIGUREDIALOG_H
+#endif // FOLDERARCHIVESETTINGPAGE_H

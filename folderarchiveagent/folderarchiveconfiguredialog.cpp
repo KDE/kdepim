@@ -18,6 +18,8 @@
 #include "folderarchiveconfiguredialog.h"
 
 #include <KLocale>
+#include <KConfigGroup>
+#include <KGlobal>
 
 FolderArchiveConfigureDialog::FolderArchiveConfigureDialog(QWidget *parent)
     : KDialog(parent)
@@ -25,11 +27,34 @@ FolderArchiveConfigureDialog::FolderArchiveConfigureDialog(QWidget *parent)
     setCaption( i18n("Configure") );
     setWindowIcon( KIcon( QLatin1String("kmail") ) );
     setButtons( Help|Ok|Cancel );
+
+    readConfig();
 }
 
 FolderArchiveConfigureDialog::~FolderArchiveConfigureDialog()
 {
+    writeConfig();
+}
 
+static const char *myConfigGroupName = "FolderArchiveConfigureDialog";
+
+void FolderArchiveConfigureDialog::readConfig()
+{
+    KConfigGroup group( KGlobal::config(), myConfigGroupName );
+
+    const QSize size = group.readEntry( "Size", QSize() );
+    if ( size.isValid() ) {
+        resize( size );
+    } else {
+        resize( 500, 300 );
+    }
+}
+
+void FolderArchiveConfigureDialog::writeConfig()
+{
+    KConfigGroup group( KGlobal::config(), myConfigGroupName );
+    group.writeEntry( "Size", size() );
+    group.sync();
 }
 
 

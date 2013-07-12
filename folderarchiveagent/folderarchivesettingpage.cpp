@@ -15,21 +15,34 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef FOLDERARCHIVECONFIGUREDIALOG_H
-#define FOLDERARCHIVECONFIGUREDIALOG_H
+#include "folderarchivesettingpage.h"
 
-#include <KDialog>
+#include <KLocale>
 
-class FolderArchiveConfigureDialog : public KDialog
+#include <QCheckBox>
+#include <QVBoxLayout>
+
+FolderArchiveSettingPage::FolderArchiveSettingPage(const QString &instanceName, QWidget *parent)
+    : QWidget(parent)
 {
-    Q_OBJECT
-public:
-    explicit FolderArchiveConfigureDialog(QWidget *parent=0);
-    ~FolderArchiveConfigureDialog();
+    QVBoxLayout *lay = new QVBoxLayout;
+    mEnabled = new QCheckBox(i18n("Enable"));
+    setLayout(lay);
+}
 
-private:
-    void writeConfig();
-    void readConfig();
-};
+FolderArchiveSettingPage::~FolderArchiveSettingPage()
+{
 
-#endif // FOLDERARCHIVECONFIGUREDIALOG_H
+}
+
+void FolderArchiveSettingPage::loadSettings()
+{
+    //TODO
+}
+
+void FolderArchiveSettingPage::writeSettings()
+{
+    //TODO
+}
+
+#include "folderarchivesettingpage.moc"

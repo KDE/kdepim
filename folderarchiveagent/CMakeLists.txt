@@ -8,6 +8,7 @@ include_directories(
 set(folderarchiveagent_SRCS
   folderarchiveagent.cpp
   folderarchiveconfiguredialog.cpp
+  folderarchivesettingpage.cpp
 )
 
 kde4_add_kcfg_files(folderarchiveagent_SRCS
