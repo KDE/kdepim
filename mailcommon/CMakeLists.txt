@@ -37,7 +37,7 @@ set(libmailcommon_SRCS
   job/expirejob.cpp
   widgets/favoritecollectionwidget.cpp
   filter/filterselectiondialog.cpp
-  filter/filterconverttosieve.cpp
+  filter/filterconverter/filterconverttosieve.cpp
   filter/filteraction.cpp
   filter/filteractionaddheader.cpp
   filter/filteractionaddtag.cpp
