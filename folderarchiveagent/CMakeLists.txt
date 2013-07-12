@@ -38,4 +38,4 @@ install(TARGETS akonadi_folderarchive_agent ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 install(FILES folderarchiveagent.desktop DESTINATION "${CMAKE_INSTALL_PREFIX}/share/akonadi/agents")
 
-
+add_subdirectory(tests)
