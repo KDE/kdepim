@@ -22,7 +22,9 @@
 
 #include <KTextEdit>
 #include <KLocale>
+#include <KFileDialog>
 
+#include <QFile>
 #include <QHBoxLayout>
 
 using namespace MailCommon;
@@ -58,7 +60,16 @@ FilterConvertToSieveResultDialog::~FilterConvertToSieveResultDialog()
 
 void FilterConvertToSieveResultDialog::slotSave()
 {
-    //TODO
+    const QString fileName = KFileDialog::getSaveFileName();
+    if ( fileName.isEmpty() )
+      return;
+
+    QFile file( fileName );
+    if ( !file.open( QIODevice::WriteOnly ) )
+      return;
+
+    //TODO file.write( mEditor->toPlainText() );
+    file.close();
 }
 
 void FilterConvertToSieveResultDialog::setCode(const QString &code)
