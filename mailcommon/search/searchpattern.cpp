@@ -238,6 +238,11 @@ void SearchRule::writeConfig( KConfigGroup &config, int aIdx ) const
   config.writeEntry( contents + cIdx, mContents );
 }
 
+void SearchRule::generateSieveScript(QStringList &requires, QString &code)
+{
+    //TODO
+}
+
 void SearchRule::setFunction( Function function )
 {
   mFunction = function;
@@ -1710,7 +1715,7 @@ void SearchPattern::generateSieveScript(QStringList &requires, QString &code)
 
     int i = 0;
     for ( it = constBegin(); it != endIt && i < FILTER_MAX_RULES; ++i, ++it ) {
-        //TODO
+        (*it)->generateSieveScript(requires, code);
     }
 }
 

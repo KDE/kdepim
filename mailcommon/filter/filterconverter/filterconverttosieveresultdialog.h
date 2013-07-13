@@ -30,6 +30,9 @@ public:
 
     void setCode(const QString &code);
 
+private Q_SLOTS:
+    void slotSave();
+
 private:
     KTextEdit *mEditor;
 };

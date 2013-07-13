@@ -25,12 +25,14 @@
 #include "filteractiondict.h"
 #include "filteractionwidget.h"
 #include "filterimporterexporter.h"
+#include "filterselectiondialog.h"
 using MailCommon::FilterImporterExporter;
 #include "filtermanager.h"
 #include "folderrequester.h"
 #include "kernel/mailkernel.h"
 #include "util/mailutil.h"
 #include "search/searchpatternedit.h"
+#include "filterconverter/filterconverttosieve.h"
 
 #include <Akonadi/AgentInstance>
 #include <Akonadi/AgentType>
@@ -1695,7 +1697,13 @@ void KMFilterDialog::slotDialogUpdated()
 void KMFilterDialog::slotExportAsSieveScript()
 {
     KMessageBox::information(this, i18n("We cannot convert all KMail filters to sieve scripts but we can try :)"), i18n("Convert KMail filters to sieve scripts"));
-    //TODO
+    QList<MailFilter *> filters = mFilterList->filtersForSaving( false );
+    FilterSelectionDialog dlg( this );
+    dlg.setFilters( filters );
+    if ( dlg.exec() == QDialog::Accepted ) {
+        FilterConvertToSieve convert(dlg.selectedFilters());
+        convert.convert();
+    }
 }
 
 }

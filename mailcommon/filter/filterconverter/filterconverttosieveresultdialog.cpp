@@ -29,9 +29,11 @@ FilterConvertToSieveResultDialog::FilterConvertToSieveResultDialog(QWidget *pare
     : KDialog(parent)
 {
     setCaption( i18n( "Convert to sieve script" ) );
-    setButtons( Ok|Cancel );
+    setButtons( User1|Ok|Cancel );
+    setButtonText(User1, i18n("Save..."));
     setDefaultButton( Ok );
     setModal( true );
+    connect(this, SIGNAL(user1Clicked()), SLOT(slotSave()));
 
     QWidget *mainWidget = new QWidget( this );
     QHBoxLayout *mainLayout = new QHBoxLayout( mainWidget );
@@ -47,6 +49,11 @@ FilterConvertToSieveResultDialog::FilterConvertToSieveResultDialog(QWidget *pare
 FilterConvertToSieveResultDialog::~FilterConvertToSieveResultDialog()
 {
 
+}
+
+void FilterConvertToSieveResultDialog::slotSave()
+{
+    //TODO
 }
 
 void FilterConvertToSieveResultDialog::setCode(const QString &code)
