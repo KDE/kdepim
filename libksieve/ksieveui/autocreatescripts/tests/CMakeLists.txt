@@ -7,4 +7,5 @@ target_link_libraries(autocreatescripts_gui
   ${KDE4_KDECORE_LIBS}
   ${KDE4_KDEUI_LIBS}
   ksieveui
+  pimcommon
 )

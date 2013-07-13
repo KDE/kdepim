@@ -20,7 +20,7 @@
 
 using namespace PimCommon;
 
-SieveSyntaxHighlighter::SieveSyntaxHighlighter( QTextDocument* doc )
+SieveSyntaxHighlighter::SieveSyntaxHighlighter( QTextDocument *doc )
     : QSyntaxHighlighter( doc )
 {
     init();
@@ -30,7 +30,7 @@ SieveSyntaxHighlighter::~SieveSyntaxHighlighter()
 {
 }
 
-void SieveSyntaxHighlighter::highlightBlock(const QString& text)
+void SieveSyntaxHighlighter::highlightBlock(const QString &text)
 {
     Q_FOREACH (const Rule &rule, m_rules) {
         const QRegExp expression(rule.pattern);

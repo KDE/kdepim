@@ -34,10 +34,10 @@ class PIMCOMMON_EXPORT SieveSyntaxHighlighter : public QSyntaxHighlighter
     Q_OBJECT
 
 public:
-    explicit SieveSyntaxHighlighter( QTextDocument* doc );
+    explicit SieveSyntaxHighlighter( QTextDocument *doc );
     ~SieveSyntaxHighlighter();
 
-    void highlightBlock(const QString& text);
+    void highlightBlock(const QString &text);
 
     void addCapabilities(const QStringList &capabilities);
 
@@ -48,7 +48,7 @@ private:
         QRegExp pattern;
         QTextCharFormat format;
 
-        Rule( const QRegExp & r, const QTextCharFormat & f )
+        Rule( const QRegExp &r, const QTextCharFormat &f )
             : pattern(r), format(f) {}
     };
 
