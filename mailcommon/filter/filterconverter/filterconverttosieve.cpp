@@ -41,13 +41,11 @@ void FilterConvertToSieve::convert()
     Q_FOREACH(MailFilter *filter, mListFilters) {
         filter->generateSieveScript(requires, code);
         code += QLatin1Char('\n');
-        qDebug()<<" code:"<<code;
     }
     QString requireStr;
     Q_FOREACH (const QString &require, requires) {
         requireStr += QString::fromLatin1("require \"%1\";").arg(require);
         requireStr += QLatin1Char('\n');
-        qDebug()<<" requireStr"<<requireStr;
     }
 
     const QString result = requireStr + code;

@@ -44,11 +44,12 @@ FilterConvertToSieveResultDialog::FilterConvertToSieveResultDialog(QWidget *pare
     mEditor->setAcceptRichText(false);
     mainLayout->addWidget(mEditor);
     setMainWidget( mainWidget );
+    readConfig();
 }
 
 FilterConvertToSieveResultDialog::~FilterConvertToSieveResultDialog()
 {
-
+    writeConfig();
 }
 
 void FilterConvertToSieveResultDialog::slotSave()
@@ -60,5 +61,27 @@ void FilterConvertToSieveResultDialog::setCode(const QString &code)
 {
     mEditor->setPlainText(code);
 }
+
+static const char *myConfigGroupName = "FilterConvertToSieveResultDialog";
+
+void FilterConvertToSieveResultDialog::readConfig()
+{
+    KConfigGroup group( KGlobal::config(), myConfigGroupName );
+
+    const QSize size = group.readEntry( "Size", QSize() );
+    if ( size.isValid() ) {
+        resize( size );
+    } else {
+        resize( 500, 300 );
+    }
+}
+
+void FilterConvertToSieveResultDialog::writeConfig()
+{
+    KConfigGroup group( KGlobal::config(), myConfigGroupName );
+    group.writeEntry( "Size", size() );
+    group.sync();
+}
+
 
 #include "filterconverttosieveresultdialog.moc"

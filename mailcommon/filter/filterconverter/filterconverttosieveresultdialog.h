@@ -34,6 +34,8 @@ private Q_SLOTS:
     void slotSave();
 
 private:
+    void readConfig();
+    void writeConfig();
     KTextEdit *mEditor;
 };
 }
