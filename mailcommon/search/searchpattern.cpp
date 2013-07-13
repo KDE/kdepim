@@ -1701,20 +1701,25 @@ QDataStream &SearchPattern::operator<<( QDataStream &s )
 
 void SearchPattern::generateSieveScript(QStringList &requires, QString &code)
 {
-    //TODO
+    code += QLatin1String("\n#") + mName + QLatin1Char('\n');
     switch( mOperator ) {
     case OpOr:
+        code += QLatin1String("if anyof (");
       break;
     case OpAnd:
+        code += QLatin1String("if allof(");
       break;
     case OpAll:
-      break;
+        code += QLatin1String("if (true) {");
+        return;
     }
+
     QList<SearchRule::Ptr>::const_iterator it;
     QList<SearchRule::Ptr>::const_iterator endIt( constEnd() );
-
     int i = 0;
     for ( it = constBegin(); it != endIt && i < FILTER_MAX_RULES; ++i, ++it ) {
+        if (i != 0)
+            code += QLatin1String("\n, ");
         (*it)->generateSieveScript(requires, code);
     }
 }
