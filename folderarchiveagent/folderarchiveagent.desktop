@@ -1,6 +1,18 @@
 [Desktop Entry]
 Name=Folder Archive Agent
+Name[nl]=Agent voor archiveren van map
+Name[pt]=Agente de Arquivo de Pastas
+Name[pt_BR]=Agente de Arquivamento de Pastas
+Name[sk]=Agent archívu priečinka
+Name[uk]=Агент архівування тек
+Name[x-test]=xxFolder Archive Agentxx
 Comment=Folder Archive Agent allows to store mails in specific archive folder
+Comment[nl]=Agent voor archiveren van map stelt u in staat om e-mailberichten op te slaan in een archiefmap
+Comment[pt]=O Agente de Arquivo de Pastas permite guardar as mensagens numa pasta especial de arquivo
+Comment[pt_BR]=O Agente de Arquivamento de Pastas permite armazenar os e-mails em uma pasta específica
+Comment[sk]=Agent archívu priečinka umožní uložiť maily v určenom priečinku archívu
+Comment[uk]=Агент архівування тек надає змогу зберігати повідомлення у певній теці архіву
+Comment[x-test]=xxFolder Archive Agent allows to store mails in specific archive folderxx
 Type=AkonadiAgent
 Exec=akonadi_folderarchive_agent
 Icon=kmail
