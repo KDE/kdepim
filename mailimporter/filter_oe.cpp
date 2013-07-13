@@ -83,6 +83,7 @@ void FilterOE::importMails(const QString  &maildir)
     filterInfo()->setOverall(0);
 
     /** search the folderfile to recreate folder struct */
+
     for ( QStringList::Iterator mailFile = files.begin(); mailFile != files.end(); ++mailFile ) {
         if(*mailFile == QLatin1String( "Folders.dbx" )) {
             filterInfo()->addInfoLogEntry(i18n("Import folder structure..."));
@@ -186,23 +187,22 @@ void FilterOE::mbxImport( QDataStream &ds)
     ds >> msgMagic; // Read first magic
 
     while (!ds.atEnd()) {
+
         quint32 msgNumber, msgSize, msgTextSize;
         KTemporaryFile tmp;
         tmp.open();
-        QDataStream ds(&tmp);
-        ds.setByteOrder(QDataStream::LittleEndian);
+        QDataStream dataStream(&tmp);
+        dataStream.setByteOrder(QDataStream::LittleEndian);
 
         // Read the messages
         ds >> msgNumber >> msgSize >> msgTextSize; // All seem to be lies...?
-
         do {
             ds >> msgMagic;
             if (msgMagic != MBX_MAILMAGIC)
-                ds << msgMagic;
+                dataStream << msgMagic;
             else
                 break;
         } while ( !ds.atEnd() );
-
         tmp.flush();
         /* comment by Danny Kukawka:
      * addMessage() == old function, need more time and check for duplicates
@@ -254,8 +254,9 @@ void FilterOE::dbxReadIndex( QDataStream &ds, int filePos)
     ds >> self >> unknown >> nextIndexPtr >> parent >> unknown2 >> ptrCount >> unknown3 >> indexCount; // _dbx_tableindexstruct
 
     kDebug() <<"This index has" << (int) ptrCount <<" data pointers";
-    for (int count = 0; count < ptrCount; count++) {
-        if(filterInfo()->shouldTerminate()) return;
+    for (int count = 0; count < ptrCount; ++count) {
+        if(filterInfo()->shouldTerminate())
+            return;
         quint32 dataIndexPtr, anotherIndexPtr, anotherIndexCount; // _dbx_indexstruct
         ds >> dataIndexPtr >> anotherIndexPtr >> anotherIndexCount;
 
