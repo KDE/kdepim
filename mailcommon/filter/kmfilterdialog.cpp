@@ -1694,7 +1694,7 @@ void KMFilterDialog::slotDialogUpdated()
 
 void KMFilterDialog::slotExportAsSieveScript()
 {
-    KMessageBox::information(this, i18n("We can not convert all kmail filter as sieve script but we can try :)"), i18n("Convert KMail filters to sieve scripts"));
+    KMessageBox::information(this, i18n("We cannot convert all KMail filters to sieve scripts but we can try :)"), i18n("Convert KMail filters to sieve scripts"));
     //TODO
 }
 

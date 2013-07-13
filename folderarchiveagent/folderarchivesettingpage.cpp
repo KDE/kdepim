@@ -33,7 +33,7 @@ FolderArchiveSettingPage::FolderArchiveSettingPage(const QString &instanceName, 
     lay->addWidget(mEnabled);
 
     QHBoxLayout *hbox = new QHBoxLayout;
-    QLabel *lab = new QLabel(i18n("Achive folder:"));
+    QLabel *lab = new QLabel(i18n("Archive folder:"));
     hbox->addWidget(lab);
     lay->addLayout(hbox);
 
