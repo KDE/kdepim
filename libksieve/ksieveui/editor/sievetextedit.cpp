@@ -49,7 +49,7 @@ SieveTextEdit::SieveTextEdit( QWidget *parent )
 {
     setWordWrapMode ( QTextOption::NoWrap );
     setFont( KGlobalSettings::fixedFont() );
-    m_syntaxHighlighter = new SieveSyntaxHighlighter( document() );
+    m_syntaxHighlighter = new PimCommon::SieveSyntaxHighlighter( document() );
     m_sieveLineNumberArea = new SieveLineNumberArea(this);
 
     connect(this, SIGNAL(blockCountChanged(int)), this, SLOT(slotUpdateLineNumberAreaWidth(int)));

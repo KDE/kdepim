@@ -19,7 +19,7 @@
 #ifndef KSIEVE_KSIEVEUI_SIEVESYNTAXHIGHLIGHTER_H
 #define KSIEVE_KSIEVEUI_SIEVESYNTAXHIGHLIGHTER_H
 
-#include "ksieveui_export.h"
+#include "pimcommon_export.h"
 
 #include <QList>
 #include <QRegExp>
@@ -27,9 +27,9 @@
 
 class QTextDocument;
 
-namespace KSieveUi {
+namespace PimCommon {
 
-class KSIEVEUI_EXPORT SieveSyntaxHighlighter : public QSyntaxHighlighter
+class PIMCOMMON_EXPORT SieveSyntaxHighlighter : public QSyntaxHighlighter
 {
     Q_OBJECT
 

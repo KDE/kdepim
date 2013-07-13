@@ -20,6 +20,11 @@
 
 #include <KDialog>
 class KTextEdit;
+
+namespace PimCommon {
+class SieveSyntaxHighlighter;
+}
+
 namespace MailCommon {
 class FilterConvertToSieveResultDialog : public KDialog
 {
@@ -37,6 +42,7 @@ private:
     void readConfig();
     void writeConfig();
     KTextEdit *mEditor;
+    PimCommon::SieveSyntaxHighlighter *mSyntaxHighlighter;
 };
 }
 

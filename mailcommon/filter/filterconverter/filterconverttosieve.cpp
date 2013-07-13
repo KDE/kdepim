@@ -33,7 +33,6 @@ FilterConvertToSieve::~FilterConvertToSieve()
 {
 }
 
-
 void FilterConvertToSieve::convert()
 {
     QStringList requires;

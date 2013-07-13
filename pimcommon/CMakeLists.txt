@@ -24,6 +24,7 @@ set(libpimcommon_SRCS
   widgets/simplestringlisteditor.cpp
   templatewidgets/templatelistwidget.cpp
   templatewidgets/templateeditdialog.cpp
+  sievehighlighter/sievesyntaxhighlighter.cpp
 )
 
 macro(add_resource_iface _kcfgFile _ifaceName _className _fileName)

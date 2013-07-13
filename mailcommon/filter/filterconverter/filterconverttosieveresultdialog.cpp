@@ -17,6 +17,7 @@
 
 
 #include "filterconverttosieveresultdialog.h"
+#include "pimcommon/sievehighlighter/sievesyntaxhighlighter.h"
 
 #include <KTextEdit>
 #include <KLocale>
@@ -41,6 +42,7 @@ FilterConvertToSieveResultDialog::FilterConvertToSieveResultDialog(QWidget *pare
     mainLayout->setSpacing( KDialog::spacingHint() );
     mainLayout->setMargin( KDialog::marginHint() );
     mEditor = new KTextEdit;
+    mSyntaxHighlighter = new PimCommon::SieveSyntaxHighlighter( mEditor->document() );
     mEditor->setAcceptRichText(false);
     mainLayout->addWidget(mEditor);
     setMainWidget( mainWidget );

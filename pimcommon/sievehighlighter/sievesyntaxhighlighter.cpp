@@ -18,7 +18,7 @@
 
 #include "sievesyntaxhighlighter.h"
 
-using namespace KSieveUi;
+using namespace PimCommon;
 
 SieveSyntaxHighlighter::SieveSyntaxHighlighter( QTextDocument* doc )
     : QSyntaxHighlighter( doc )
