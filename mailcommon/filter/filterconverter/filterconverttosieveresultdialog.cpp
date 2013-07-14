@@ -26,6 +26,7 @@
 
 #include <QFile>
 #include <QHBoxLayout>
+#include <QTextStream>
 
 using namespace MailCommon;
 
@@ -68,7 +69,9 @@ void FilterConvertToSieveResultDialog::slotSave()
     if ( !file.open( QIODevice::WriteOnly ) )
       return;
 
-    //TODO file.write( mEditor->toPlainText() );
+    QTextStream ts( &file );
+    ts.setCodec("UTF-8");
+    ts << mEditor->toPlainText();
     file.close();
 }
 
