@@ -19,11 +19,12 @@
 #define FOLDERARCHIVEMANAGER_H
 
 #include <QObject>
-
 namespace Akonadi {
 class AgentInstance;
 }
+
 class FolderArchiveAccountInfo;
+class FolderArchiveKernel;
 class FolderArchiveManager : public QObject
 {
     Q_OBJECT
@@ -37,7 +38,9 @@ private Q_SLOTS:
     void slotInstanceRemoved(const Akonadi::AgentInstance &instance);
 
 private:
+    void removeInfo(const QString &instanceName);
     QList<FolderArchiveAccountInfo*> mListAccountInfo;
+    FolderArchiveKernel *mFolderArchivelKernel;
 };
 
 #endif // FOLDERARCHIVEMANAGER_H

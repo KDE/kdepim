@@ -16,6 +16,7 @@
 */
 
 #include "folderarchiveconfiguredialog.h"
+#include "folderarchivesettingpage.h"
 
 #include "kdepim-version.h"
 
@@ -79,7 +80,10 @@ void FolderArchiveConfigureDialog::initializeTab()
 
 void FolderArchiveConfigureDialog::slotOkClicked()
 {
-    //TODO
+    for (int i=0; i <mTabWidget->count(); ++i) {
+        FolderArchiveSettingPage *page = static_cast<FolderArchiveSettingPage *>(mTabWidget->widget(i));
+        page->writeSettings();
+    }
 }
 
 static const char *myConfigGroupName = "FolderArchiveConfigureDialog";
