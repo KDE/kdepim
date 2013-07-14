@@ -59,5 +59,22 @@ SearchRule::RequiredPart FilterActionMove::requiredPart() const
     return SearchRule::Envelope;
 }
 
+bool FilterActionMove::canConvertToSieve() const
+{
+    return true;
+}
+
+QString FilterActionMove::sieveCode() const
+{
+    //TODO fix real path.
+    const QString result = QString::fromLatin1("fileinto %1;").arg(mFolder.id());
+    return result;
+}
+
+
+QStringList FilterActionMove::sieveRequires() const
+{
+    return QStringList() << QLatin1String("fileinto");
+}
 
 #include "filteractionmove.moc"

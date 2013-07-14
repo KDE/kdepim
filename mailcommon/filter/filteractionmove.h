@@ -37,6 +37,11 @@ class FilterActionMove: public FilterActionWithFolder
     virtual bool requiresBody() const;
     virtual SearchRule::RequiredPart requiredPart() const;
     static FilterAction* newAction();
+
+    bool canConvertToSieve() const;
+    QString sieveCode() const;
+    QStringList sieveRequires() const;
+
 };
 
 }
