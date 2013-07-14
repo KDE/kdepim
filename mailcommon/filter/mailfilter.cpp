@@ -472,9 +472,14 @@ void MailFilter::generateSieveScript(QStringList &requires, QString &code)
     QList<FilterAction*>::const_iterator it;
     QList<FilterAction*>::const_iterator end( mActions.constEnd() );
 
+    code += QLatin1String(")\n {\n");
     for ( it = mActions.constBegin() ; it != end ; ++it) {
-        //TODO
+        if ((*it)->canConvertToSieve()) {
+            code += (*it)->sieveCode();
+            requires += (*it)->sieveRequires();
+        }
     }
+    code += QLatin1String("\n }\n");
 }
 
 void MailFilter::writeConfig(KConfigGroup & config, bool exportFilter) const

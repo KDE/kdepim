@@ -21,6 +21,10 @@
 #include <QWidget>
 class QCheckBox;
 
+namespace MailCommon {
+class FolderRequester;
+}
+
 class FolderArchiveSettingPage : public QWidget
 {
     Q_OBJECT
@@ -34,6 +38,7 @@ public:
 private:
     QString mInstanceName;
     QCheckBox *mEnabled;
+    MailCommon::FolderRequester *mArchiveFolder;
 };
 
 #endif // FOLDERARCHIVESETTINGPAGE_H

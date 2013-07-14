@@ -156,6 +156,9 @@ void IncidenceAttachment::addAttachment()
     emit attachmentCountChanged( mAttachmentView->count() );
   }
 
+  if ( dialog.data() )
+    dialog.data()->deleteLater();
+
   checkDirtyStatus();
 }
 

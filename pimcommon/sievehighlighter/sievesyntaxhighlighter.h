@@ -19,7 +19,7 @@
 #ifndef KSIEVE_KSIEVEUI_SIEVESYNTAXHIGHLIGHTER_H
 #define KSIEVE_KSIEVEUI_SIEVESYNTAXHIGHLIGHTER_H
 
-#include "ksieveui_export.h"
+#include "pimcommon_export.h"
 
 #include <QList>
 #include <QRegExp>
@@ -27,17 +27,17 @@
 
 class QTextDocument;
 
-namespace KSieveUi {
+namespace PimCommon {
 
-class KSIEVEUI_EXPORT SieveSyntaxHighlighter : public QSyntaxHighlighter
+class PIMCOMMON_EXPORT SieveSyntaxHighlighter : public QSyntaxHighlighter
 {
     Q_OBJECT
 
 public:
-    explicit SieveSyntaxHighlighter( QTextDocument* doc );
+    explicit SieveSyntaxHighlighter( QTextDocument *doc );
     ~SieveSyntaxHighlighter();
 
-    void highlightBlock(const QString& text);
+    void highlightBlock(const QString &text);
 
     void addCapabilities(const QStringList &capabilities);
 
@@ -48,7 +48,7 @@ private:
         QRegExp pattern;
         QTextCharFormat format;
 
-        Rule( const QRegExp & r, const QTextCharFormat & f )
+        Rule( const QRegExp &r, const QTextCharFormat &f )
             : pattern(r), format(f) {}
     };
 

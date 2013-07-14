@@ -17,6 +17,9 @@
 
 #include "folderarchivemanager.h"
 #include "folderarchiveaccountinfo.h"
+#include "folderarchivekernel.h"
+
+#include <mailcommon/kernel/mailkernel.h>
 
 #include <Akonadi/AgentManager>
 
@@ -26,6 +29,10 @@
 FolderArchiveManager::FolderArchiveManager(QObject *parent)
     : QObject(parent)
 {
+    mFolderArchivelKernel = new FolderArchiveKernel( this );
+    CommonKernel->registerKernelIf( mFolderArchivelKernel ); //register KernelIf early, it is used by the Filter classes
+    CommonKernel->registerSettingsIf( mFolderArchivelKernel ); //SettingsIf is used in FolderTreeWidget
+
     connect( Akonadi::AgentManager::self(), SIGNAL(instanceRemoved(Akonadi::AgentInstance)),
              this, SLOT(slotInstanceRemoved(Akonadi::AgentInstance)) );
 
@@ -38,7 +45,21 @@ FolderArchiveManager::~FolderArchiveManager()
 
 void FolderArchiveManager::slotInstanceRemoved(const Akonadi::AgentInstance &instance)
 {
-    //TODO
+    const QString instanceName = instance.name();
+    Q_FOREACH (FolderArchiveAccountInfo *info, mListAccountInfo) {
+        if (info->instanceName() == instanceName) {
+            mListAccountInfo.removeAll(info);
+            removeInfo(instanceName);
+            break;
+        }
+    }
+}
+
+void FolderArchiveManager::removeInfo(const QString &instanceName)
+{
+    KConfigGroup group = KGlobal::config()->group(QLatin1String("FolderArchiveAccount ") + instanceName);
+    group.deleteGroup();
+    KGlobal::config()->sync();
 }
 
 void FolderArchiveManager::load()

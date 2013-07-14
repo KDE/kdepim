@@ -15,26 +15,19 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef SELECTMATCHTYPECOMBOBOX_H
-#define SELECTMATCHTYPECOMBOBOX_H
+#ifndef SIEVESYNTAXHIGHLIGHTERUTIL_H
+#define SIEVESYNTAXHIGHLIGHTERUTIL_H
 
-#include <KComboBox>
+#include "pimcommon_export.h"
+#include <QStringList>
 
-namespace KSieveUi {
-class SelectMatchTypeComboBox : public KComboBox
+namespace PimCommon {
+
+namespace SieveSyntaxHighlighterUtil
 {
-    Q_OBJECT
-public:
-    explicit SelectMatchTypeComboBox(QWidget *parent = 0);
-    ~SelectMatchTypeComboBox();
-
-    QString code(bool &negative) const;
-    bool isNegative() const;
-    void setCode(const QString &code);
-
-private:
-    void initialize();
-};
+PIMCOMMON_EXPORT QStringList fullCapabilities();
 }
 
-#endif // SELECTMATCHTYPECOMBOBOX_H
+}
+
+#endif // SIEVESYNTAXHIGHLIGHTERUTIL_H

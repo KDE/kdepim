@@ -3,6 +3,7 @@ add_definitions( -DQT_NO_CAST_TO_ASCII )
 
 include_directories(${CMAKE_SOURCE_DIR}/libksieve
 	${CMAKE_SOURCE_DIR}/pimcommon
+        ${CMAKE_SOURCE_DIR}/pimcommon/sievehighlighter/
 	${CMAKE_BINARY_DIR}/pimcommon
         ${CMAKE_SOURCE_DIR}/pimcommon/util/
         ${CMAKE_SOURCE_DIR}/libksieve/ksieveui
@@ -19,7 +20,6 @@ set(ksieveui_LIB_SRCS
   vacation/vacation.cpp
   vacation/vacationdialog.cpp
   editor/sievefindbar.cpp
-  editor/sievesyntaxhighlighter.cpp
   editor/sievetextedit.cpp
   editor/sieveeditor.cpp
   editor/sievelinenumberarea.cpp

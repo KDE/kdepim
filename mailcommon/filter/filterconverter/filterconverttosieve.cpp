@@ -20,19 +20,18 @@
 #include "mailfilter.h"
 
 #include <QPointer>
+#include <QDebug>
 
 using namespace MailCommon;
 
 FilterConvertToSieve::FilterConvertToSieve(const QList<MailFilter*> &filters)
     : mListFilters(filters)
 {
-    convert();
 }
 
 FilterConvertToSieve::~FilterConvertToSieve()
 {
 }
-
 
 void FilterConvertToSieve::convert()
 {

@@ -25,10 +25,14 @@
 
 class QCompleter;
 
+namespace PimCommon {
+class SieveSyntaxHighlighter;
+}
+
 namespace KSieveUi {
 
 class SieveLineNumberArea;
-class SieveSyntaxHighlighter;
+
 
 class KSIEVEUI_EXPORT SieveTextEdit : public QPlainTextEdit
 {
@@ -66,7 +70,7 @@ private:
 
     QCompleter *m_completer;
     SieveLineNumberArea *m_sieveLineNumberArea;
-    SieveSyntaxHighlighter *m_syntaxHighlighter;
+    PimCommon::SieveSyntaxHighlighter *m_syntaxHighlighter;
 };
 
 }

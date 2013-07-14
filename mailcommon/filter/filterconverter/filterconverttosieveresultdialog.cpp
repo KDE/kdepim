@@ -17,11 +17,16 @@
 
 
 #include "filterconverttosieveresultdialog.h"
+#include "pimcommon/sievehighlighter/sievesyntaxhighlighter.h"
+#include "pimcommon/sievehighlighter/sievesyntaxhighlighterutil.h"
 
 #include <KTextEdit>
 #include <KLocale>
+#include <KFileDialog>
 
+#include <QFile>
 #include <QHBoxLayout>
+#include <QTextStream>
 
 using namespace MailCommon;
 
@@ -29,9 +34,11 @@ FilterConvertToSieveResultDialog::FilterConvertToSieveResultDialog(QWidget *pare
     : KDialog(parent)
 {
     setCaption( i18n( "Convert to sieve script" ) );
-    setButtons( Ok|Cancel );
+    setButtons( User1|Ok|Cancel );
+    setButtonText(User1, i18n("Save..."));
     setDefaultButton( Ok );
     setModal( true );
+    connect(this, SIGNAL(user1Clicked()), SLOT(slotSave()));
 
     QWidget *mainWidget = new QWidget( this );
     QHBoxLayout *mainLayout = new QHBoxLayout( mainWidget );
@@ -39,19 +46,60 @@ FilterConvertToSieveResultDialog::FilterConvertToSieveResultDialog(QWidget *pare
     mainLayout->setSpacing( KDialog::spacingHint() );
     mainLayout->setMargin( KDialog::marginHint() );
     mEditor = new KTextEdit;
+    mSyntaxHighlighter = new PimCommon::SieveSyntaxHighlighter( mEditor->document() );
+    mSyntaxHighlighter->addCapabilities(PimCommon::SieveSyntaxHighlighterUtil::fullCapabilities());
     mEditor->setAcceptRichText(false);
     mainLayout->addWidget(mEditor);
     setMainWidget( mainWidget );
+    readConfig();
 }
 
 FilterConvertToSieveResultDialog::~FilterConvertToSieveResultDialog()
 {
+    writeConfig();
+}
 
+void FilterConvertToSieveResultDialog::slotSave()
+{
+    const QString fileName = KFileDialog::getSaveFileName();
+    if ( fileName.isEmpty() )
+      return;
+
+    QFile file( fileName );
+    if ( !file.open( QIODevice::WriteOnly ) )
+      return;
+
+    QTextStream ts( &file );
+    ts.setCodec("UTF-8");
+    ts << mEditor->toPlainText();
+    file.close();
 }
 
 void FilterConvertToSieveResultDialog::setCode(const QString &code)
 {
     mEditor->setPlainText(code);
 }
+
+static const char *myConfigGroupName = "FilterConvertToSieveResultDialog";
+
+void FilterConvertToSieveResultDialog::readConfig()
+{
+    KConfigGroup group( KGlobal::config(), myConfigGroupName );
+
+    const QSize size = group.readEntry( "Size", QSize() );
+    if ( size.isValid() ) {
+        resize( size );
+    } else {
+        resize( 500, 300 );
+    }
+}
+
+void FilterConvertToSieveResultDialog::writeConfig()
+{
+    KConfigGroup group( KGlobal::config(), myConfigGroupName );
+    group.writeEntry( "Size", size() );
+    group.sync();
+}
+
 
 #include "filterconverttosieveresultdialog.moc"

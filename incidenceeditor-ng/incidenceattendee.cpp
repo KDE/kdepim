@@ -389,6 +389,10 @@ void IncidenceAttendee::slotSelectAddresses()
       kDebug() << "dialog was already deleted";
     }
   }
+
+  if ( dialog.data() ) {
+    dialog.data()->deleteLater();
+  }
 }
 
 void IncidenceEditorNG::IncidenceAttendee::slotSolveConflictPressed()

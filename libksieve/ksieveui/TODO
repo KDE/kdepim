@@ -3,3 +3,4 @@
 - add autocompletion in include tab for existing scripts
 - Add parsing
 - Allow to add script with include when possible
+- Fix check script when necessary. Perhaps check each seconds

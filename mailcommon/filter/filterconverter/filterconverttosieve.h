@@ -28,8 +28,9 @@ public:
     FilterConvertToSieve(const QList<MailFilter *> &filters);
     ~FilterConvertToSieve();
 
-private:
     void convert();
+
+private:
     QList<MailFilter *> mListFilters;
 };
 

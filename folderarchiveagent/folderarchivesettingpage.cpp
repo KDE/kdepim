@@ -16,8 +16,11 @@
 */
 
 #include "folderarchivesettingpage.h"
+#include "mailcommon/folder/folderrequester.h"
 
 #include <KLocale>
+#include <KGlobal>
+#include <KSharedConfig>
 
 #include <QCheckBox>
 #include <QVBoxLayout>
@@ -33,8 +36,10 @@ FolderArchiveSettingPage::FolderArchiveSettingPage(const QString &instanceName, 
     lay->addWidget(mEnabled);
 
     QHBoxLayout *hbox = new QHBoxLayout;
-    QLabel *lab = new QLabel(i18n("Achive folder:"));
+    QLabel *lab = new QLabel(i18n("Archive folder:"));
     hbox->addWidget(lab);
+    mArchiveFolder = new MailCommon::FolderRequester;
+    hbox->addWidget(mArchiveFolder);
     lay->addLayout(hbox);
 
     setLayout(lay);
@@ -47,6 +52,7 @@ FolderArchiveSettingPage::~FolderArchiveSettingPage()
 
 void FolderArchiveSettingPage::loadSettings()
 {
+
     //TODO
 }
 

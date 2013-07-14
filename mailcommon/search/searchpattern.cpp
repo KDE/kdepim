@@ -238,6 +238,11 @@ void SearchRule::writeConfig( KConfigGroup &config, int aIdx ) const
   config.writeEntry( contents + cIdx, mContents );
 }
 
+void SearchRule::generateSieveScript(QStringList &requires, QString &code)
+{
+    //TODO
+}
+
 void SearchRule::setFunction( Function function )
 {
   mFunction = function;
@@ -1467,7 +1472,7 @@ void SearchPattern::writeConfig( KConfigGroup &config ) const
   QList<SearchRule::Ptr>::const_iterator it;
   QList<SearchRule::Ptr>::const_iterator endIt( constEnd() );
 
-  for ( it = begin(); it != endIt && i < FILTER_MAX_RULES; ++i, ++it ) {
+  for ( it = constBegin(); it != endIt && i < FILTER_MAX_RULES; ++i, ++it ) {
     // we could do this ourselves, but we want the rules to be extensible,
     // so we give the rule it's number and let it do the rest.
     (*it)->writeConfig( config, i );
@@ -1500,8 +1505,8 @@ QString SearchPattern::asString() const
   }
 
   QList<SearchRule::Ptr>::const_iterator it;
-  QList<SearchRule::Ptr>::const_iterator endIt = end();
-  for ( it = begin(); it != endIt; ++it ) {
+  QList<SearchRule::Ptr>::const_iterator endIt = constEnd();
+  for ( it = constBegin(); it != endIt; ++it ) {
     result += "\n\t" + FilterLog::recode( (*it)->asString() );
   }
 
@@ -1696,7 +1701,27 @@ QDataStream &SearchPattern::operator<<( QDataStream &s )
 
 void SearchPattern::generateSieveScript(QStringList &requires, QString &code)
 {
-    //TODO
+    code += QLatin1String("\n#") + mName + QLatin1Char('\n');
+    switch( mOperator ) {
+    case OpOr:
+        code += QLatin1String("if anyof (");
+      break;
+    case OpAnd:
+        code += QLatin1String("if allof(");
+      break;
+    case OpAll:
+        code += QLatin1String("if (true) {");
+        return;
+    }
+
+    QList<SearchRule::Ptr>::const_iterator it;
+    QList<SearchRule::Ptr>::const_iterator endIt( constEnd() );
+    int i = 0;
+    for ( it = constBegin(); it != endIt && i < FILTER_MAX_RULES; ++i, ++it ) {
+        if (i != 0)
+            code += QLatin1String("\n, ");
+        (*it)->generateSieveScript(requires, code);
+    }
 }
 
 // Needed for MSVC 2010, as it seems to not implicit cast for a pointer anymore

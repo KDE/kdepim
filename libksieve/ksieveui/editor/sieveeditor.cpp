@@ -283,9 +283,15 @@ QString SieveEditor::script() const
     return mTextEdit->toPlainText();
 }
 
+QString SieveEditor::originalScript() const
+{
+    return mOriginalScript;
+}
+
 void SieveEditor::setScript( const QString &script )
 {
     mTextEdit->setPlainText( script );
+    mOriginalScript = script;
 }
 
 void SieveEditor::setDebugColor( const QColor &col )

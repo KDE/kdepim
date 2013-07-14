@@ -19,7 +19,7 @@
 #define FOLDERARCHIVECONFIGUREDIALOG_H
 
 #include <KDialog>
-
+class QTabWidget;
 class KAboutData;
 class FolderArchiveConfigureDialog : public KDialog
 {
@@ -28,10 +28,15 @@ public:
     explicit FolderArchiveConfigureDialog(QWidget *parent=0);
     ~FolderArchiveConfigureDialog();
 
+private Q_SLOTS:
+    void slotOkClicked();
+
 private:
+    void initializeTab();
     void writeConfig();
     void readConfig();
     KAboutData *mAboutData;
+    QTabWidget *mTabWidget;
 };
 
 #endif // FOLDERARCHIVECONFIGUREDIALOG_H

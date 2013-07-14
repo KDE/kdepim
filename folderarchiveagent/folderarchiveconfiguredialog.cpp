@@ -16,6 +16,7 @@
 */
 
 #include "folderarchiveconfiguredialog.h"
+#include "folderarchivesettingpage.h"
 
 #include "kdepim-version.h"
 
@@ -26,6 +27,8 @@
 #include <KMenu>
 #include <KIcon>
 #include <KAboutData>
+
+#include <QTabWidget>
 
 FolderArchiveConfigureDialog::FolderArchiveConfigureDialog(QWidget *parent)
     : KDialog(parent)
@@ -52,7 +55,11 @@ FolderArchiveConfigureDialog::FolderArchiveConfigureDialog(QWidget *parent)
     mAboutData->setTranslator( ki18nc( "NAME OF TRANSLATORS", "Your names" ),
                              ki18nc( "EMAIL OF TRANSLATORS", "Your emails" ) );
 
+    mTabWidget = new QTabWidget;
+    initializeTab();
+    setMainWidget(mTabWidget);
 
+    connect(this, SIGNAL(okClicked()), this, SLOT(slotOkClicked()));
     KHelpMenu *helpMenu = new KHelpMenu(this, mAboutData, true);
     //Initialize menu
     KMenu *menu = helpMenu->menu();
@@ -64,6 +71,19 @@ FolderArchiveConfigureDialog::~FolderArchiveConfigureDialog()
 {
     writeConfig();
     delete mAboutData;
+}
+
+void FolderArchiveConfigureDialog::initializeTab()
+{
+    //TODO
+}
+
+void FolderArchiveConfigureDialog::slotOkClicked()
+{
+    for (int i=0; i <mTabWidget->count(); ++i) {
+        FolderArchiveSettingPage *page = static_cast<FolderArchiveSettingPage *>(mTabWidget->widget(i));
+        page->writeSettings();
+    }
 }
 
 static const char *myConfigGroupName = "FolderArchiveConfigureDialog";
