@@ -45,4 +45,16 @@ QString SelectMimeTypeComboBox::code() const
     return QString::fromLatin1("\"%1\"").arg(itemData(currentIndex()).toString());
 }
 
+void SelectMimeTypeComboBox::setCode(const QString &code)
+{
+    const int index = findData(code);
+    if (index != -1) {
+        setCurrentIndex(index);
+    } else {
+        //TODO other value ?
+        setCurrentIndex(0);
+    }
+}
+
+
 #include "selectmimetypecombobox.moc"

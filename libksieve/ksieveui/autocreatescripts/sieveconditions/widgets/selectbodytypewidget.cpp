@@ -73,4 +73,19 @@ void SelectBodyTypeWidget::slotBodyTypeChanged(int index)
     }
 }
 
+void SelectBodyTypeWidget::setCode(const QString &code)
+{
+    const int index = mBodyCombobox->findData(code);
+    if (index != -1) {
+        mBodyCombobox->setCurrentIndex(index);
+    } else {
+        //TODO other value ?
+        mBodyCombobox->setCurrentIndex(0);
+    }
+    //text ?
+    slotBodyTypeChanged(index);
+}
+
+
+
 #include "selectbodytypewidget.moc"

@@ -29,6 +29,7 @@ public:
     ~SelectMimeTypeComboBox();
 
     QString code() const;
+    void setCode(const QString &code);
 
 private:
     void initialize();
