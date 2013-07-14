@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=PIM Setting Exporter
+Name[bs]=Izvoženje PIM postavki
 Name[ca]=Exportador de configuracions del PIM
 Name[ca@valencia]=Exportador de configuracions del PIM
 Name[da]=Eksportør til PIM-indstillinger
@@ -39,6 +40,7 @@ Name[zh_TW]=PIM 設定匯出器
 Exec=pimsettingexporter
 Type=Application
 Comment=PIM Setting Exporter allows to save all data from PIM apps and restore them in other system.
+Comment[bs]=PIM izvoznik postavki vam omogućava da spremite sve podatke iz PIM aplikacija i vratite ih u drugi sistem.
 Comment[ca]=L'exportador de configuracions del PIM us permet desar totes les dades de les aplicacions PIM i restaura-les en un altre sistema.
 Comment[ca@valencia]=L'exportador de configuracions del PIM vos permet guardar totes les dades de les aplicacions PIM i restaura-les en un altre sistema.
 Comment[da]=Eksportør af PIM-indstillinger lader dig gemme alle data fra PIM-programmer og gendanne dem på et andet system.
