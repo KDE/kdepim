@@ -558,6 +558,9 @@ void ManageSieveScriptsDialog::slotPutResultDebug(KManageSieve::SieveJob *,bool 
         else
             addFailedMessage( errorMsg );
     }
+    //Put original script after check otherwise we will put a script even if we don't click on ok
+    KManageSieve::SieveJob * job = KManageSieve::SieveJob::put( mCurrentURL, mSieveEditor->originalScript(), mWasActive, mWasActive );
+    job->setInteractive( false );
     mSieveEditor->resultDone();
 }
 

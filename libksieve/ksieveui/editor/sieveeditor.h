@@ -43,6 +43,7 @@ public:
     ~SieveEditor();
 
     QString script() const;
+    QString originalScript() const;
     void setScript( const QString &script );
     void setDebugColor( const QColor &col );
     void setDebugScript( const QString &debug );
@@ -68,6 +69,7 @@ private:
     void writeConfig();
     bool saveToFile( const QString &filename );
     bool loadFromFile( const QString &filename );
+    QString mOriginalScript;
     QStringList mSieveCapabilities;
     SieveTextEdit * mTextEdit;
     KTextEdit *mDebugTextEdit;
