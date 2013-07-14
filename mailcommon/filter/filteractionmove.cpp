@@ -18,6 +18,7 @@
  */
 
 #include "filteractionmove.h"
+#include "mailcommon/util/mailutil.h"
 
 #include "kernel/mailkernel.h"
 
@@ -66,8 +67,12 @@ bool FilterActionMove::canConvertToSieve() const
 
 QString FilterActionMove::sieveCode() const
 {
-    //TODO fix real path.
-    const QString result = QString::fromLatin1("fileinto %1;").arg(mFolder.id());
+    QString path;
+    if ( KernelIf->collectionModel() )
+        path = MailCommon::Util::fullCollectionPath( mFolder );
+    else
+        path = QString::number(mFolder.id());
+    const QString result = QString::fromLatin1("fileinto \"%1\";").arg(path);
     return result;
 }
 

@@ -475,8 +475,12 @@ void MailFilter::generateSieveScript(QStringList &requires, QString &code)
     code += QLatin1String(")\n {\n");
     for ( it = mActions.constBegin() ; it != end ; ++it) {
         if ((*it)->canConvertToSieve()) {
-            code += (*it)->sieveCode();
-            requires += (*it)->sieveRequires();
+            code += QLatin1String("    ") + (*it)->sieveCode();
+            Q_FOREACH(const QString &str, (*it)->sieveRequires()) {
+                if (!requires.contains(str)) {
+                    requires.append(str);
+                }
+            }
         }
     }
     code += QLatin1String("\n }\n");
