@@ -66,6 +66,7 @@ using MailCommon::FilterImporterExporter;
 #include <QVBoxLayout>
 #include <QShortcut>
 #include <QSplitter>
+#include <QPointer>
 
 Q_DECLARE_METATYPE(MailCommon::FilterImporterExporter::FilterType)
 using namespace MailCommon;
@@ -1698,12 +1699,13 @@ void KMFilterDialog::slotExportAsSieveScript()
 {
     KMessageBox::information(this, i18n("We cannot convert all KMail filters to sieve scripts but we can try :)"), i18n("Convert KMail filters to sieve scripts"));
     QList<MailFilter *> filters = mFilterList->filtersForSaving( false );
-    FilterSelectionDialog dlg( this );
-    dlg.setFilters( filters );
-    if ( dlg.exec() == QDialog::Accepted ) {
-        FilterConvertToSieve convert(dlg.selectedFilters());
+    QPointer<FilterSelectionDialog> dlg = new FilterSelectionDialog( this );
+    dlg->setFilters( filters );
+    if ( dlg->exec() == QDialog::Accepted ) {
+        FilterConvertToSieve convert(dlg->selectedFilters());
         convert.convert();
     }
+    delete dlg;
 }
 
 }
