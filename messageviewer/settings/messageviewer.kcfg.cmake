@@ -12,6 +12,10 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
         <label>Only print selected text in viewer</label>
         <default>false</default>
       </entry>
+      <entry name="RespectExpandCollapseSettings" type="Bool" key="respect-expand-collapse">
+        <label>Respect expand collapse quote mark defined settings when printing</label>
+        <default>false</default>
+      </entry>
   </group>
 
 
