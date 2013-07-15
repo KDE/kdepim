@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Folder Archive Agent
+Name[fi]=Kansioiden arkistointiohjelma
 Name[hu]=Mappaarchiváló ügynök
 Name[nl]=Agent voor archiveren van map
 Name[pt]=Agente de Arquivo de Pastas
@@ -13,6 +14,7 @@ Name[sv]=Korgarkiveringsmodul
 Name[uk]=Агент архівування тек
 Name[x-test]=xxFolder Archive Agentxx
 Comment=Folder Archive Agent allows to store mails in specific archive folder
+Comment[fi]=Kansioiden arkistointiohjelma mahdollistaa postien tallettamisen erityisiin arkistokansioihin
 Comment[hu]=A mappaarchiváló ügynök lehetővé teszi e-mailek tárolását a megadott archívum mappában
 Comment[nl]=Agent voor archiveren van map stelt u in staat om e-mailberichten op te slaan in een archiefmap
 Comment[pt]=O Agente de Arquivo de Pastas permite guardar as mensagens numa pasta especial de arquivo
