@@ -1197,6 +1197,7 @@ void ViewerPrivate::readConfig()
 #ifndef KDEPIM_NO_WEBKIT
   mViewer->settings()->setFontSize( QWebSettings::MinimumFontSize, GlobalSettings::self()->minimumFontSize() );
   mViewer->settings()->setFontSize( QWebSettings::MinimumLogicalFontSize, GlobalSettings::self()->minimumFontSize() );
+  mViewer->settings()->setAttribute( QWebSettings::PrintElementBackgrounds, GlobalSettings::self()->printBackgroundColorImages() );
 #endif
 
   if ( mMessage )

@@ -16,6 +16,10 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
         <label>Respect expand collapse quote mark defined settings when printing</label>
         <default>false</default>
       </entry>
+      <entry name="PrintBackgroundColorImages" type="Bool" key="print-background-color-images">
+        <label>Specifies whether the background color and images are also drawn when the page is printed.</label>
+        <default>true</default>
+      </entry>
   </group>
 
 

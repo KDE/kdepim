@@ -28,6 +28,7 @@ PrintingSettings::PrintingSettings(QWidget *parent)
     mPrintingUi->setupUi( this );
     connect(mPrintingUi->mPrintEmptySelectedText, SIGNAL(toggled(bool)), SIGNAL(changed()));
     connect(mPrintingUi->respectExpandCollapseSettings, SIGNAL(toggled(bool)), SIGNAL(changed()));
+    connect(mPrintingUi->printBackgroundColorAndImages, SIGNAL(toggled(bool)), SIGNAL(changed()));
 }
 
 PrintingSettings::~PrintingSettings()
@@ -40,12 +41,14 @@ void PrintingSettings::save()
 {
     MessageViewer::GlobalSettings::self()->setPrintSelectedText(mPrintingUi->mPrintEmptySelectedText->isChecked());
     MessageViewer::GlobalSettings::self()->setRespectExpandCollapseSettings(mPrintingUi->respectExpandCollapseSettings->isChecked());
+    MessageViewer::GlobalSettings::self()->setPrintBackgroundColorImages(mPrintingUi->printBackgroundColorAndImages->isChecked());
 }
 
 void PrintingSettings::doLoadFromGlobalSettings()
 {
     mPrintingUi->mPrintEmptySelectedText->setChecked(MessageViewer::GlobalSettings::self()->printSelectedText());
     mPrintingUi->respectExpandCollapseSettings->setChecked(MessageViewer::GlobalSettings::self()->respectExpandCollapseSettings());
+    mPrintingUi->printBackgroundColorAndImages->setChecked(MessageViewer::GlobalSettings::self()->printBackgroundColorImages());
 }
 
 #include "printingsettings.moc"

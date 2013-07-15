@@ -26,6 +26,13 @@
     </widget>
    </item>
    <item>
+    <widget class="QCheckBox" name="printBackgroundColorAndImages">
+     <property name="text">
+      <string>Print background color and images</string>
+     </property>
+    </widget>
+   </item>
+   <item>
     <spacer name="verticalSpacer">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
