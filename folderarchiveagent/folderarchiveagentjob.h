@@ -19,13 +19,19 @@
 #define FOLDERARCHIVEAGENTJOB_H
 
 #include <QObject>
+#include <Akonadi/Item>
 
+class FolderArchiveAccountInfo;
 class FolderArchiveAgentJob : public QObject
 {
     Q_OBJECT
 public:
-    explicit FolderArchiveAgentJob(QObject *parent=0);
+    explicit FolderArchiveAgentJob(FolderArchiveAccountInfo *info, const Akonadi::Item::List &lstItem, QObject *parent=0);
     ~FolderArchiveAgentJob();
+
+private:
+    Akonadi::Item::List mLstItem;
+    FolderArchiveAccountInfo *mInfo;
 };
 
 #endif // FOLDERARCHIVEAGENTJOB_H

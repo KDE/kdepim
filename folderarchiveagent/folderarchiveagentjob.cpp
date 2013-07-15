@@ -17,8 +17,10 @@
 
 #include "folderarchiveagentjob.h"
 
-FolderArchiveAgentJob::FolderArchiveAgentJob(QObject *parent)
-    : QObject(parent)
+FolderArchiveAgentJob::FolderArchiveAgentJob(FolderArchiveAccountInfo *info, const Akonadi::Item::List &lstItem, QObject *parent)
+    : QObject(parent),
+      mLstItem(lstItem),
+      mInfo(info)
 {
 }
 
