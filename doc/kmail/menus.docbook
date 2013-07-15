@@ -486,207 +486,103 @@ performs a menu item function, the default shortcut is listed with the menu item
 
 </sect2>
 
-
 <sect2 id="reader-folder-menu">
-<title><guimenu>Folder</guimenu> Menu</title>
-
+<title>Folder Menu</title>
 <variablelist>
-
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>Folder</guimenu>
-<guimenuitem>Add Folder...</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Opens the <link linkend="folders-properties-window">Folder Properties</link>
-dialog that lets you create a new folder.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>Folder</guimenu>
-<guimenuitem>Mark All Messages as Read</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Sets the status of all new and unread messages in the current folder to read.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<shortcut><keycap>F5</keycap></shortcut>
-<guimenu>Folder</guimenu>
-<guimenuitem>Update Folders</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Checks whether new mail arrived in the currently selected folder.
-This is only available for &imap; folders.</para>
-</listitem>
-</varlistentry>
-
-<!--Update Folders and its subfolders Ctrl+F5 -->
-
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>Folder</guimenu>
-<guimenuitem>Move All Messages to Trash</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Moves all of the messages in the selected folder into the trash folder.
-This is only available if the currently selected folder is not a trash
-folder.</para>
-</listitem>
-</varlistentry>
-
-<!-- not in 440
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>Folder</guimenu>
-<guimenuitem>Compact</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Compacts the folder file to reduce its disk space usage. Usually
-&kmail; compacts all folders automatically, but under certain circumstances
-you might want to compact a folder manually.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>Folder</guimenu>
-<guimenuitem>Expire</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Deletes old messages from the current folder or moves them to another
-folder, according to the rules in the folder's <guilabel>Properties</guilabel> dialog (the default is not to delete or move old messages). Usually &kmail;
-does this automatically, but under certain circumstances you might want to
-expire a folder manually...</para>
-</listitem>
-</varlistentry>
--->
-<!-- missing 
-Archive Folder
-  -->
-
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>Folder</guimenu>
-<guimenuitem>Delete Folder</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Removes the selected folder and all its contents, including subfolders.</para>
-<warning><para>Note that there is no way to access the contents
-of a folder after it has been removed.</para></warning>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<shortcut><keycombo action="simul">&Ctrl;<keycap>*</keycap></keycombo></shortcut>
-<guimenu>Folder</guimenu>
-<guimenuitem>Remove Duplicate Messages</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Searches the folder for duplicate messages and deletes the
-duplicates.</para>
-</listitem>
-</varlistentry>
-<!-- not in 440
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>Folder</guimenu>
-<guimenuitem>Empty Trash</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Permanently deletes all messages. This is only available if the
-currently selected folder is a trash folder.</para>
-</listitem>
-</varlistentry>
--->
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>Folder</guimenu>
-<guimenuitem>Prefer HTML to Plain Text</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>If enabled then &html; messages in this folder will be shown using
-&html; rendering. For security reasons, we recommend to only
-activate this for folders which only contain trusted messages.</para>
-</listitem>
-</varlistentry>
-<!-- not in 440
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>Folder</guimenu>
-<guimenuitem>Thread Messages</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>If enabled then the messages in the message list
-are shown in a tree-like list, with replies showing up directly under the
-message they reply to.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>Folder</guimenu>
-<guimenuitem>Thread Messages also by Subject</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>If enabled then the messages are not only grouped according to special
-information included in the messages but also according to their subject,
-&ie; messages with the same subject are considered as being related.
-If many messages are threaded below unrelated messages then you might want
-to disable this option.
-</para>
-</listitem>
-</varlistentry>
--->
-<!--not in 2.0.96  lueck 31.05.2011
-varlistentry>
-<term>
-<menuchoice>
-<guimenu>Folder</guimenu>
-<guimenuitem>Properties</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Opens up the <link linkend="folders-properties-window">Properties dialog</link> which lets you
-change the settings for the selected folder.</para>
-</listitem>
-</varlistentry-->
-
-<!-- 
-Load External References
-Mailing List Management
-Assign Shortcut
-missing
-  -->
+  <varlistentry><term><menuchoice><guimenu>Folder</guimenu><guimenuitem>Add Folder...</guimenuitem></menuchoice></term>
+    <listitem>
+      <para>Opens the <link linkend="folders-properties-window">Folder Properties</link>
+        dialog that lets you create a new folder.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry><term><menuchoice><guimenu>Folder</guimenu><guimenuitem>Mark All Messages as Read</guimenuitem></menuchoice></term>
+    <listitem>
+      <para>Sets the status of all new and unread messages in the current folder to read.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry><term><menuchoice><shortcut><keycap>F5</keycap></shortcut>
+        <guimenu>Folder</guimenu><guimenuitem>Update Folder</guimenuitem></menuchoice></term>
+    <listitem>
+      <para>Checks whether new mail arrived in the currently selected folder.
+        This is only available for &imap; folders.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry><term><menuchoice><shortcut><keycombo action="simul">&Ctrl;<keycap>F5</keycap></keycombo></shortcut>
+        <guimenu>Folder</guimenu><guimenuitem>Update Folder</guimenuitem></menuchoice></term>
+    <listitem>
+      <para>Checks whether new mail arrived in the currently selected folder.
+        This is only available for &imap; folders.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry><term><menuchoice><guimenu>Folder</guimenu>
+        <guimenuitem>Move All Messages to Trash</guimenuitem></menuchoice></term>
+    <listitem>
+      <para>Moves all of the messages in the selected folder into the trash folder.
+        This is only available if the currently selected folder is not a trash
+        folder.</para>
+      <para>If the currently selected folder is a trash folder, you will see <guilabel>Empty Trash</guilabel>. Please see next section for details.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry><term><menuchoice><guimenu>Folder</guimenu><guimenuitem>Empty Trash</guimenuitem></menuchoice></term>
+    <listitem>
+      <para>Permanently deletes all messages. This is only available if the
+        currently selected folder is a trash folder.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry><term><menuchoice><guimenu>Folder</guimenu>
+        <guimenuitem>Archive Folder...</guimenuitem></menuchoice></term>
+    <listitem>
+      <para>This option brings up a dialog to allow you to create an archive of the currently selected folder.
+        In the dialog select a format (choices are: zip, tar, tar.bz2, and tar.gz). If you would like to
+        change the default name or location, click the folder at the end of <guilabel>Archive File</guilabel>.
+        Check the <guilabel>Delete folder and subfolders after completion</guilabel> if you would like everything you archived deleted. By default
+        all subfolders will be archived, uncheck <guilabel>Archive all subfolders</guilabel> if you only want to archive the parent folder.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry><term><menuchoice><guimenu>Folder</guimenu>
+        <guimenuitem>Delete Folder</guimenuitem></menuchoice></term>
+    <listitem>
+      <para>Removes the selected folder and all its contents, including subfolders.</para>
+      <warning><para>Please note that there is no way to access the contents
+          of a folder after it has been removed.</para></warning>
+    </listitem>
+  </varlistentry>
+  <varlistentry><term><menuchoice><shortcut><keycombo action="simul">&Ctrl;<keycap>*</keycap></keycombo></shortcut>
+        <guimenu>Folder</guimenu><guimenuitem>Remove Duplicate Messages</guimenuitem></menuchoice></term>
+    <listitem>
+      <para>Searches the folder for duplicate messages and deletes the
+        duplicates.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry><term><menuchoice><guimenu>Folder</guimenu><guimenuitem>Apply All Filters On Folder</guimenuitem></menuchoice></term>
+    <listitem>
+      <para>Applies all configured filters on the currently selected folder. Please see
+        <link linkend="filter-dialog-id">Filter dialog</link> for more information on filters.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry><term><menuchoice><guimenu>Folder</guimenu><guimenuitem>Prefer HTML to Plain Text</guimenuitem></menuchoice></term>
+    <listitem>
+      <para>If enabled then &html; messages in this folder will be shown using
+        &html; rendering. For security reasons, we recommend to only
+        activate this for folders which only contain trusted messages.</para>
+    </listitem>
+  </varlistentry>
+   <varlistentry><term><menuchoice><guimenu>Folder</guimenu><guimenuitem>Load External References</guimenuitem></menuchoice></term>
+    <listitem>
+      <para>If you have &html; messages enabled (see above), then you have the option to enable this to have images and resources linked from the web will load automatically.
+        For security reasons, we recommend to only activate this for folders which only contain trusted messages.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry><term><menuchoice><guimenu>Folder</guimenu><guimenuitem>Mailing List Management...</guimenuitem></menuchoice></term>
+    <listitem>
+      <para>This opens up the mailing list management dialog. Please see <link linkend="folders-properties-mailinglist">Mailing List dialog</link> for more information on mailing lists.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry><term><menuchoice><guimenu>Folder</guimenu><guimenuitem>Assign Shortcut...</guimenuitem></menuchoice></term>
+    <listitem>
+      <para>This allows you to assign a keyboard shortcut to the currently selected folder.</para>
+    </listitem>
+  </varlistentry>
 </variablelist>
 
 </sect2>
