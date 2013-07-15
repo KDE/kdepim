@@ -7,6 +7,14 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
   <include>kcolorscheme.h</include>
   <kcfgfile name="mailviewerrc" />
 
+  <group name="Print">
+      <entry name="PrintSelectedText" type="Bool" key="print-selected-text">
+        <label>Only print selected text in viewer</label>
+        <default>false</default>
+      </entry>
+  </group>
+
+
   <group name="Fonts">
     <entry name="FixedFont" type="Font" key="fixed-font">
       <default code="true">KGlobalSettings::fixedFont()</default>
