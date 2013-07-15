@@ -655,6 +655,18 @@ void Viewer::saveMainFrameScreenshotInFile(const QString &filename)
     return d->saveMainFrameScreenshotInFile(filename);
 }
 
+void Viewer::setLevelQuote(int level)
+{
+    Q_D( Viewer );
+    d->setLevelQuote(level);
+}
+
+int Viewer::levelQuote() const
+{
+    Q_D( const Viewer );
+    return d->levelQuote();
+}
+
 }
 
 #include "viewer.moc"

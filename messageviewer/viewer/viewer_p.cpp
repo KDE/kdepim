@@ -3313,4 +3313,18 @@ void ViewerPrivate::slotAddToWhiteList()
     }
 }
 
+void ViewerPrivate::setLevelQuote(int level)
+{
+    if (mLevelQuote != level) {
+        mLevelQuote = level;
+        update( Viewer::Force );
+    }
+}
+
+int ViewerPrivate::levelQuote() const
+{
+    return mLevelQuote;
+}
+
+
 #include "viewer_p.moc"
