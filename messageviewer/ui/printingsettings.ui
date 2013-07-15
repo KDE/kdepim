@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MiscPrintingTab</class>
- <widget class="QWidget" name="MiscPrintingTab">
+ <class>PrintingSettings</class>
+ <widget class="QWidget" name="PrintingSettings">
   <property name="geometry">
    <rect>
     <x>0</x>
