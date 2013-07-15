@@ -76,7 +76,6 @@ QString FilterActionMove::sieveCode() const
     return result;
 }
 
-
 QStringList FilterActionMove::sieveRequires() const
 {
     return QStringList() << QLatin1String("fileinto");

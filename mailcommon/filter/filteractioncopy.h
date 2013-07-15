@@ -32,14 +32,18 @@ namespace MailCommon {
 //=============================================================================
 class FilterActionCopy: public FilterActionWithFolder
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit FilterActionCopy( QObject *parent = 0 );
     virtual ReturnCode process( ItemContext &context ) const;
     virtual SearchRule::RequiredPart requiredPart() const;
     static FilterAction* newAction();
 
-  protected Q_SLOTS:
+    bool canConvertToSieve() const;
+    QString sieveCode() const;
+    QStringList sieveRequires() const;
+
+protected Q_SLOTS:
     void jobFinished(KJob* job);
 };
 
