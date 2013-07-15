@@ -30,11 +30,15 @@ public:
 
     QString instanceName() const;
 
+    void setArchiveTopLevel(Akonadi::Collection::Id id);
+    Akonadi::Collection::Id archiveTopLevel() const;
+
     void writeConfig(KConfigGroup &config );
     void readConfig(const KConfigGroup &config);
 
 private:
-    Akonadi::Collection mTopLevelCollection;
+
+    Akonadi::Collection::Id mArchiveTopLevelCollectionId;
     QString mInstanceName;
 };
 

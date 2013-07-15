@@ -1,0 +1,12 @@
+[Global]
+IconName=kmail
+Comment=Folder Archive Agent
+
+[Event/folderarchivedone]
+Name=Archive Mails in Folder done
+Action=None
+
+[Event/folderarchiveerror]
+Name=Folder Archive Error
+Action=Popup
+

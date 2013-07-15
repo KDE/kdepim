@@ -20,16 +20,28 @@
 #include <KConfigGroup>
 
 FolderArchiveAccountInfo::FolderArchiveAccountInfo()
+    : mArchiveTopLevelCollectionId(-1)
 {
 }
 
 FolderArchiveAccountInfo::FolderArchiveAccountInfo(const KConfigGroup &config)
+    : mArchiveTopLevelCollectionId(-1)
 {
     readConfig(config);
 }
 
 FolderArchiveAccountInfo::~FolderArchiveAccountInfo()
 {
+}
+
+void FolderArchiveAccountInfo::setArchiveTopLevel(Akonadi::Collection::Id id)
+{
+    mArchiveTopLevelCollectionId = id;
+}
+
+Akonadi::Collection::Id FolderArchiveAccountInfo::archiveTopLevel() const
+{
+    return mArchiveTopLevelCollectionId;
 }
 
 QString FolderArchiveAccountInfo::instanceName() const
@@ -40,11 +52,13 @@ QString FolderArchiveAccountInfo::instanceName() const
 void FolderArchiveAccountInfo::readConfig(const KConfigGroup &config)
 {
     mInstanceName = config.readEntry(QLatin1String("instanceName"));
+    mArchiveTopLevelCollectionId = config.readEntry(QLatin1String("toplevelid"), -1);
     //TODO
 }
 
 void FolderArchiveAccountInfo::writeConfig(KConfigGroup &config )
 {
     config.writeEntry(QLatin1String("instanceName"), mInstanceName);
+    config.writeEntry(QLatin1String("toplevelid"), mArchiveTopLevelCollectionId);
     //TODO
 }

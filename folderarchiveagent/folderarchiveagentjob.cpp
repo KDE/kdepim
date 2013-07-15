@@ -16,16 +16,32 @@
 */
 
 #include "folderarchiveagentjob.h"
+#include "folderarchiveaccountinfo.h"
+#include "folderarchivemanager.h"
+#include <Akonadi/ItemMoveJob>
+#include <Akonadi/CollectionFetchJob>
 
-FolderArchiveAgentJob::FolderArchiveAgentJob(FolderArchiveAccountInfo *info, const Akonadi::Item::List &lstItem, QObject *parent)
+FolderArchiveAgentJob::FolderArchiveAgentJob(FolderArchiveManager *manager, FolderArchiveAccountInfo *info, const Akonadi::Item::List &lstItem, QObject *parent)
     : QObject(parent),
       mLstItem(lstItem),
+      mManager(manager),
       mInfo(info)
 {
 }
 
 FolderArchiveAgentJob::~FolderArchiveAgentJob()
 {
+}
+
+void FolderArchiveAgentJob::start()
+{
+    Akonadi::CollectionFetchJob *saveMessageJob = new Akonadi::CollectionFetchJob( Akonadi::Collection(mInfo->archiveTopLevel()), Akonadi::CollectionFetchJob::Base );
+    connect( saveMessageJob, SIGNAL(result(KJob*)), this, SLOT(slotFetchCollection(KJob*)));
+}
+
+void FolderArchiveAgentJob::slotFetchCollection(KJob*)
+{
+    //TODO
 }
 
 #include "folderarchiveagentjob.moc"

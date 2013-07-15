@@ -20,21 +20,24 @@
 
 #include <QObject>
 #include <Akonadi/Item>
-
+class KJob;
 class FolderArchiveAccountInfo;
+class FolderArchiveManager;
 class FolderArchiveAgentJob : public QObject
 {
     Q_OBJECT
 public:
-    explicit FolderArchiveAgentJob(FolderArchiveAccountInfo *info, const Akonadi::Item::List &lstItem, QObject *parent=0);
+    explicit FolderArchiveAgentJob(FolderArchiveManager *manager, FolderArchiveAccountInfo *info, const Akonadi::Item::List &lstItem, QObject *parent=0);
     ~FolderArchiveAgentJob();
 
-Q_SIGNALS:
-    void archiveDone();
-    void archiveFailed();
+    void start();
+
+private Q_SLOTS:
+    void slotFetchCollection(KJob*);
 
 private:
     Akonadi::Item::List mLstItem;
+    FolderArchiveManager *mManager;
     FolderArchiveAccountInfo *mInfo;
 };
 
