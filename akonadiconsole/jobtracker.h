@@ -46,6 +46,8 @@ public:
   int parent;
   QString type;
   QDateTime timestamp;
+  QDateTime startedTimestamp;
+  QDateTime endedTimestamp;
   enum JobState
   {
       Initial = 0,
@@ -55,6 +57,7 @@ public:
   };
   JobState state;
   QString error;
+  QString debugString;
   QString stateAsString() const;
 };
 
@@ -104,7 +107,7 @@ Q_SIGNALS:
   void reset();
 
 public Q_SLOTS:
-  Q_SCRIPTABLE void jobCreated( const QString & session, const QString & job, const QString& parentJob, const QString & jobType );
+  Q_SCRIPTABLE void jobCreated( const QString & session, const QString & job, const QString& parentJob, const QString & jobType, const QString & debugString );
   Q_SCRIPTABLE void jobStarted( const QString & job );
   Q_SCRIPTABLE void jobEnded( const QString & job, const QString &error );
   Q_SCRIPTABLE void triggerReset();
