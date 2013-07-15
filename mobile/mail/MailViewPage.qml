@@ -32,9 +32,7 @@ PlasmaComponents.Page {
     PlasmaComponents.ToolButton{
       iconSource: "go-previous"
 
-      onClicked: {
-        pageRow.pop()
-      }
+      onClicked: pageRow.pop()
     }
 
     Row {
