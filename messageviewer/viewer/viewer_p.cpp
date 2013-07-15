@@ -1327,8 +1327,17 @@ void ViewerPrivate::resetStateForNewMessage()
   mTranslatorWidget->slotCloseWidget();
   mScamDetectionWarning->setVisible(false);
 
-  if ( mPrinting )
-    mLevelQuote = -1;
+  if ( mPrinting ) {
+      if (MessageViewer::GlobalSettings::self()->respectExpandCollapseSettings()) {
+          if (MessageViewer::GlobalSettings::self()->showExpandQuotesMark()) {
+              mLevelQuote = MessageViewer::GlobalSettings::self()->collapseQuoteLevelSpin() -1;
+          } else {
+              mLevelQuote = -1;
+          }
+      } else {
+          mLevelQuote = -1;
+      }
+  }
 }
 
 void ViewerPrivate::setMessageInternal( const KMime::Message::Ptr message,
@@ -3312,19 +3321,5 @@ void ViewerPrivate::slotAddToWhiteList()
         }
     }
 }
-
-void ViewerPrivate::setLevelQuote(int level)
-{
-    if (mLevelQuote != level) {
-        mLevelQuote = level;
-        update( Viewer::Force );
-    }
-}
-
-int ViewerPrivate::levelQuote() const
-{
-    return mLevelQuote;
-}
-
 
 #include "viewer_p.moc"

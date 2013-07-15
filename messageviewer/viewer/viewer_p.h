@@ -275,9 +275,6 @@ public:
 
   void saveMainFrameScreenshotInFile(const QString &filename);
 
-  void setLevelQuote(int level);
-  int levelQuote() const;
-
 private:
   /** HTML initialization. */
   void initHtmlWidget();
