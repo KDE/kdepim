@@ -243,6 +243,39 @@ void SearchRule::generateSieveScript(QStringList &requires, QString &code)
     if (mField == "<size>") {
         //TODO look at comparaison
         QString comparaison;
+        switch(mFunction) {
+        case FuncNone:
+        case FuncContains:
+        case FuncContainsNot:
+        case FuncEquals:
+        case FuncNotEqual:
+        case FuncRegExp:
+        case FuncNotRegExp:
+            break;
+        case FuncIsGreater:
+            comparaison = QLatin1String(":over");
+            break;
+        case FuncIsLessOrEqual:
+            //How to implement it ?
+            break;
+        case FuncIsLess:
+            comparaison = QLatin1String(":under");
+            break;
+        case FuncIsGreaterOrEqual:
+            //How to implement it ?
+            break;
+        case FuncIsInAddressbook:
+        case FuncIsNotInAddressbook:
+        case FuncIsInCategory:
+        case FuncIsNotInCategory:
+        case FuncHasAttachment:
+        case FuncHasNoAttachment:
+        case FuncStartWith:
+        case FuncNotStartWith:
+        case FuncEndWith:
+        case FuncNotEndWith:
+            break;
+        }
         code += QString::fromLatin1("size %1 %2K").arg(comparaison).arg(mContents);
     } else if (mField == "<status>") {
 
@@ -257,6 +290,39 @@ void SearchRule::generateSieveScript(QStringList &requires, QString &code)
     } else if (mField == "From") {
     } else if (mField == "<message>") {
     } else if (mField == "<body>") {
+        if (!requires.contains(QLatin1String("body")))
+            requires << QLatin1String("body");
+        QString comparaison;
+        switch(mFunction) {
+        case FuncNone:
+        case FuncContains:
+        case FuncContainsNot:
+        case FuncEquals:
+        case FuncNotEqual:
+        case FuncRegExp:
+        case FuncNotRegExp:
+            break;
+        case FuncIsGreater:
+            break;
+        case FuncIsLessOrEqual:
+            break;
+        case FuncIsLess:
+            break;
+        case FuncIsGreaterOrEqual:
+            break;
+        case FuncIsInAddressbook:
+        case FuncIsNotInAddressbook:
+        case FuncIsInCategory:
+        case FuncIsNotInCategory:
+        case FuncHasAttachment:
+        case FuncHasNoAttachment:
+        case FuncStartWith:
+        case FuncNotStartWith:
+        case FuncEndWith:
+        case FuncNotEndWith:
+            break;
+        }
+
     } else {
         //TODO
     }
