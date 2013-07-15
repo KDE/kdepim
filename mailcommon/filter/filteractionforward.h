@@ -30,8 +30,8 @@ namespace MailCommon {
 //=============================================================================
 class FilterActionForward: public FilterActionWithAddress
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit FilterActionForward( QObject *parent = 0 );
     static FilterAction* newAction();
     virtual ReturnCode process( ItemContext &context ) const;
@@ -45,7 +45,7 @@ class FilterActionForward: public FilterActionWithAddress
     virtual QString displayString() const;
     virtual bool argsFromStringInteractive( const QString &argsStr, const QString& filterName );
 
-  private:
+private:
     mutable QString mTemplate;
 };
 

@@ -28,9 +28,9 @@ namespace MailCommon {
 
 class FilterActionWithCommand : public FilterActionWithUrl
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * @copydoc FilterAction::FilterAction
      */

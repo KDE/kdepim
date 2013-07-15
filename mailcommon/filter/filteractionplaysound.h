@@ -24,7 +24,7 @@
 
 #ifndef Q_OS_WINCE
 namespace Phonon {
-  class MediaObject;
+class MediaObject;
 }
 #endif
 
@@ -36,8 +36,8 @@ namespace MailCommon {
 //=============================================================================
 class FilterActionPlaySound : public FilterActionWithTest
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     FilterActionPlaySound(  );
     ~FilterActionPlaySound();
     virtual ReturnCode process( ItemContext &context ) const;
@@ -45,7 +45,7 @@ class FilterActionPlaySound : public FilterActionWithTest
     static FilterAction* newAction();
     virtual bool argsFromStringInteractive( const QString &argsStr, const QString &filterName );
 
-  private:
+private:
 #ifndef Q_OS_WINCE
     mutable Phonon::MediaObject* mPlayer;
 #endif

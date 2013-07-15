@@ -30,8 +30,8 @@ namespace MailCommon {
 //=============================================================================
 class FilterActionAddToAddressBook: public FilterActionWithStringList
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit FilterActionAddToAddressBook( QObject *parent = 0 );
     virtual ReturnCode process( ItemContext &context ) const;
     static FilterAction* newAction();
@@ -48,13 +48,13 @@ class FilterActionAddToAddressBook: public FilterActionWithStringList
     virtual QString argsAsString() const;
     virtual void argsFromString( const QString &argsStr );
 
-  private:
+private:
     enum HeaderType
     {
-      FromHeader,
-      ToHeader,
-      CcHeader,
-      BccHeader
+        FromHeader,
+        ToHeader,
+        CcHeader,
+        BccHeader
     };
 
     const QString mFromStr, mToStr, mCCStr, mBCCStr;

@@ -38,7 +38,7 @@ namespace MailCommon {
  */
 class MAILCOMMON_EXPORT ItemContext
 {
-  public:
+public:
     /**
      * Creates an item context for the given @p item.
      * @p requestedPart the part requested for the item (Envelope, Header or CompleteMessage)
@@ -88,7 +88,7 @@ class MAILCOMMON_EXPORT ItemContext
     void setDeleteItem();
     bool deleteItem() const;
 
-  private:
+private:
     Akonadi::Item mItem;
     Akonadi::Collection mMoveTargetCollection;
     bool mNeedsPayloadStore;

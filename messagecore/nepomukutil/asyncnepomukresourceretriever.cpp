@@ -27,6 +27,7 @@
 #include <Nepomuk2/Resource>
 #include <Nepomuk2/Variant>
 #include <Nepomuk2/ResourceManager>
+#include <QCache>
 
 using namespace MessageCore;
 
@@ -63,6 +64,7 @@ class AsyncNepomukResourceRetrieverPrivate
     AsyncNepomukResourceRetrieverPrivate( AsyncNepomukResourceRetriever *parent ) : m_parent( parent ), m_running( false ), m_nepomukInitialized(false)
     {
       m_nepomukPool.setMaxThreadCount( 1 );
+      m_resourceCache.setMaxCost( 10 );
       qRegisterMetaType<Nepomuk2::Resource>();
     }
 
@@ -103,6 +105,10 @@ class AsyncNepomukResourceRetrieverPrivate
     QVector<QUrl> m_properties;
     bool m_running;
     bool m_nepomukInitialized;
+
+    // The last n requested resources are cached so that they do not
+    // need to be loaded again and again
+    QCache<QUrl, Nepomuk2::Resource> m_resourceCache;
 };
 
 }
@@ -145,6 +151,11 @@ void AsyncNepomukResourceRetriever::requestResource(const QUrl& url)
   if ( d->m_requestedProperties.contains( url ) )
     return;
 
+  Nepomuk2::Resource* resPtr = d->m_resourceCache.object(url);
+  if( resPtr ) {
+    emit resourceReceived( url, *resPtr );
+    return;
+  }
   d->m_requestedProperties.insert( url, d->m_properties );
   if ( !d->m_running )
     d->createRunnable();
@@ -160,6 +171,7 @@ void AsyncNepomukResourceRetriever::cancelRequest(const QUrl & url)
 
 void AsyncNepomukResourceRetriever::resourceAvailable(const QUrl& url, const Nepomuk2::Resource& resource)
 {
+  d->m_resourceCache.insert( url, new Nepomuk2::Resource(resource) );
   emit resourceReceived( url, resource );
 }
 

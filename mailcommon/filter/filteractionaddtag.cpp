@@ -33,11 +33,11 @@ using namespace MailCommon;
 
 FilterAction* FilterActionAddTag::newAction()
 {
-  return new FilterActionAddTag;
+    return new FilterActionAddTag;
 }
 
 FilterActionAddTag::FilterActionAddTag( QObject *parent )
-  : FilterAction( QLatin1String("add tag"), i18n( "Add Tag" ), parent )
+    : FilterAction( QLatin1String("add tag"), i18n( "Add Tag" ), parent )
 {
     mList = FilterManager::instance()->tagList();
     connect(FilterManager::instance(),SIGNAL(tagListingFinished()),SLOT(slotTagListingFinished()));
@@ -45,20 +45,20 @@ FilterActionAddTag::FilterActionAddTag( QObject *parent )
 
 QWidget* FilterActionAddTag::createParamWidget( QWidget *parent ) const
 {
-  PimCommon::MinimumComboBox *comboBox = new PimCommon::MinimumComboBox( parent );
-  comboBox->setEditable( false );
-  QMapIterator<QUrl, QString> i(mList);
-  while (i.hasNext()) {
-      i.next();
-      comboBox->addItem(i.value(), i.key());
-  }
+    PimCommon::MinimumComboBox *comboBox = new PimCommon::MinimumComboBox( parent );
+    comboBox->setEditable( false );
+    QMapIterator<QUrl, QString> i(mList);
+    while (i.hasNext()) {
+        i.next();
+        comboBox->addItem(i.value(), i.key());
+    }
 
-  setParamWidgetValue( comboBox );
+    setParamWidgetValue( comboBox );
 
-  connect( comboBox, SIGNAL(currentIndexChanged(int)),
-           this, SIGNAL(filterActionModified()) );
+    connect( comboBox, SIGNAL(currentIndexChanged(int)),
+             this, SIGNAL(filterActionModified()) );
 
-  return comboBox;
+    return comboBox;
 }
 
 void FilterActionAddTag::applyParamWidgetValue( QWidget *paramWidget )
@@ -69,20 +69,20 @@ void FilterActionAddTag::applyParamWidgetValue( QWidget *paramWidget )
 
 void FilterActionAddTag::setParamWidgetValue( QWidget *paramWidget ) const
 {
-  const int index = static_cast<PimCommon::MinimumComboBox*>( paramWidget )->findData(mParameter);
+    const int index = static_cast<PimCommon::MinimumComboBox*>( paramWidget )->findData(mParameter);
 
-  static_cast<PimCommon::MinimumComboBox*>( paramWidget )->setCurrentIndex( index < 0 ? 0 : index );
+    static_cast<PimCommon::MinimumComboBox*>( paramWidget )->setCurrentIndex( index < 0 ? 0 : index );
 }
 
 void FilterActionAddTag::clearParamWidget( QWidget *paramWidget ) const
 {
-  static_cast<PimCommon::MinimumComboBox*>( paramWidget )->setCurrentIndex( 0 );
+    static_cast<PimCommon::MinimumComboBox*>( paramWidget )->setCurrentIndex( 0 );
 }
 
 
 bool FilterActionAddTag::isEmpty() const
 {
-  return false;
+    return false;
 }
 
 void FilterActionAddTag::slotTagListingFinished()
@@ -92,67 +92,67 @@ void FilterActionAddTag::slotTagListingFinished()
 
 bool FilterActionAddTag::argsFromStringInteractive( const QString &argsStr, const QString& filterName )
 {
-  bool needUpdate = false;
-  argsFromString( argsStr );
-  if ( mList.isEmpty() )
-    return false;
-  const bool index = mList.contains( mParameter );
-  if ( Nepomuk2::ResourceManager::instance()->initialized() ) {
-    if ( !index ) {
-      QPointer<FilterActionMissingTagDialog> dlg = new FilterActionMissingTagDialog( mList, filterName, argsStr );
-      if ( dlg->exec() ) {
-        mParameter = dlg->selectedTag();
-        needUpdate = true;
-      }
-      delete dlg;
+    bool needUpdate = false;
+    argsFromString( argsStr );
+    if ( mList.isEmpty() )
+        return false;
+    const bool index = mList.contains( mParameter );
+    if ( Nepomuk2::ResourceManager::instance()->initialized() ) {
+        if ( !index ) {
+            QPointer<FilterActionMissingTagDialog> dlg = new FilterActionMissingTagDialog( mList, filterName, argsStr );
+            if ( dlg->exec() ) {
+                mParameter = dlg->selectedTag();
+                needUpdate = true;
+            }
+            delete dlg;
+        }
     }
-  }
-  return needUpdate;
+    return needUpdate;
 }
 
 
 FilterAction::ReturnCode FilterActionAddTag::process( ItemContext &context ) const
 {
-  if (!mList.contains(mParameter)) {
-    return ErrorButGoOn;
-  }
-  Nepomuk2::Resource resource( context.item().url() );
-  resource.addTag( mParameter );
+    if (!mList.contains(mParameter)) {
+        return ErrorButGoOn;
+    }
+    Nepomuk2::Resource resource( context.item().url() );
+    resource.addTag( mParameter );
 
-  return GoOn;
+    return GoOn;
 }
 
 SearchRule::RequiredPart FilterActionAddTag::requiredPart() const
 {
-  return SearchRule::Envelope;
+    return SearchRule::Envelope;
 }
 
 void FilterActionAddTag::argsFromString( const QString &argsStr )
 {
-  if ( mList.isEmpty() ) {
-    mParameter = argsStr;
-    return;
-  }
-  if (mList.contains(argsStr)) {
-      mParameter = argsStr;
-      return;
-  }
-  if ( !mList.isEmpty() )
-      mParameter = mList.values().at(0);
+    if ( mList.isEmpty() ) {
+        mParameter = argsStr;
+        return;
+    }
+    if (mList.contains(argsStr)) {
+        mParameter = argsStr;
+        return;
+    }
+    if ( !mList.isEmpty() )
+        mParameter = mList.values().at(0);
 }
 
 QString FilterActionAddTag::argsAsString() const
 {
-  if (!mList.contains(mParameter)) {
-     return QString();
-  }
+    if (!mList.contains(mParameter)) {
+        return QString();
+    }
 
-  return mList.value(mParameter);
+    return mList.value(mParameter);
 }
 
 QString FilterActionAddTag::displayString() const
 {
-  return label() + QLatin1String( " \"" ) + Qt::escape( argsAsString() ) + QLatin1String( "\"" );
+    return label() + QLatin1String( " \"" ) + Qt::escape( argsAsString() ) + QLatin1String( "\"" );
 }
 
 #include "filteractionaddtag.moc"

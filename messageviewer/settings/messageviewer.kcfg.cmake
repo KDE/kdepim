@@ -7,6 +7,22 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
   <include>kcolorscheme.h</include>
   <kcfgfile name="mailviewerrc" />
 
+  <group name="Print">
+      <entry name="PrintSelectedText" type="Bool" key="print-selected-text">
+        <label>Only print selected text in viewer</label>
+        <default>false</default>
+      </entry>
+      <entry name="RespectExpandCollapseSettings" type="Bool" key="respect-expand-collapse">
+        <label>Respect expand collapse quote mark defined settings when printing</label>
+        <default>false</default>
+      </entry>
+      <entry name="PrintBackgroundColorImages" type="Bool" key="print-background-color-images">
+        <label>Specifies whether the background color and images are also drawn when the page is printed.</label>
+        <default>true</default>
+      </entry>
+  </group>
+
+
   <group name="Fonts">
     <entry name="FixedFont" type="Font" key="fixed-font">
       <default code="true">KGlobalSettings::fixedFont()</default>

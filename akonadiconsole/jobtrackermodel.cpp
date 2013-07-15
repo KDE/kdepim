@@ -127,7 +127,20 @@ int JobTrackerModel::rowCount(const QModelIndex & parent) const
 int JobTrackerModel::columnCount(const QModelIndex & parent) const
 {
   Q_UNUSED( parent );
-  return 4;
+  return 7;
+}
+
+static QString formatTimeWithMsec( const QTime &time )
+{
+  return QString(KGlobal::locale()->formatTime( time, true )
+                 + QString::fromLatin1( ".%1" ).arg( time.msec(), 3, 10, QLatin1Char('0') ) );
+}
+
+static QString formatDurationWithMsec( qint64 msecs )
+{
+  QTime time( 0, 0, 0 );
+  time = time.addMSecs( msecs );
+  return formatTimeWithMsec( time );
 }
 
 QVariant JobTrackerModel::data(const QModelIndex & idx, int role) const
@@ -150,15 +163,26 @@ QVariant JobTrackerModel::data(const QModelIndex & idx, int role) const
     const JobInfo info = d->tracker.info( id );
     if ( role == Qt::DisplayRole )
     {
-      if ( idx.column() == 0 )
+      switch ( idx.column() ) {
+      case 0:
         return info.id;
-      if ( idx.column() == 1 )
-        return QString(KGlobal::locale()->formatTime( info.timestamp.time(), true )
-          + QString::fromLatin1( ".%1" ).arg( info.timestamp.time().msec(), 3, 10, QLatin1Char('0') ) );
-      if ( idx.column() == 2 )
+      case 1:
+        return formatTimeWithMsec( info.timestamp.time() );
+      case 2:
+        if ( info.startedTimestamp.isNull() || info.timestamp.isNull() )
+          return QString();
+        return formatDurationWithMsec( info.timestamp.msecsTo( info.startedTimestamp ) );
+      case 3:
+        if ( info.endedTimestamp.isNull() || info.startedTimestamp.isNull() )
+          return QString();
+        return formatDurationWithMsec( info.startedTimestamp.msecsTo( info.endedTimestamp ) );
+      case 4:
         return info.type;
-      if ( idx.column() == 3 )
+      case 5:
         return info.stateAsString();
+      case 6:
+        return info.debugString;
+      }
     }
     else if ( role == Qt::ForegroundRole ) {
       if ( info.state == JobInfo::Failed )
@@ -185,15 +209,22 @@ QVariant JobTrackerModel::headerData(int section, Qt::Orientation orientation, i
   {
     if ( orientation == Qt::Horizontal )
     {
-      if ( section == 0 )
+      switch ( section ) {
+      case 0:
         return QLatin1String("Job ID");
-      if ( section == 1 )
-        return QLatin1String("Timestamp");
-      if ( section == 2 )
+      case 1:
+        return QLatin1String("Created");
+      case 2:
+        return QLatin1String("Wait time");      // duration  (time started - time created)
+      case 3:
+        return QLatin1String("Job duration");   // duration (time ended - time started)
+      case 4:
         return QLatin1String("Job Type");
-      if ( section == 3 )
+      case 5:
         return QLatin1String("State");
-
+      case 6:
+        return QLatin1String("Info");
+      }
     }
   }
   return QVariant();

@@ -10,5 +10,9 @@
     <method name="enabledAgent" >
       <arg direction="out" type="b" />
     </method>
+    <method name="archiveItems">
+      <arg name="items" type="ax" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="const QList&lt;qint64&gt; &amp;"/>
+    </method>
   </interface>
 </node>

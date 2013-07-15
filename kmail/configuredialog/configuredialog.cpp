@@ -46,7 +46,7 @@
 
 #include "foldertreewidget.h"
 
-#include "kmknotify.h"
+#include "dialog/kmknotify.h"
 
 #include "newmailnotifierinterface.h"
 
@@ -67,6 +67,7 @@ using KPIM::RecentAddresses;
 #include "messageviewer/settings/globalsettings.h"
 #include "messageviewer/widgets/invitationsettings.h"
 #include "messageviewer/header/customheadersettingwidget.h"
+#include "messageviewer/widgets/printingsettings.h"
 #include "messagelist/core/settings.h"
 #include "messagelist/messagelistutil.h"
 #include "messagecore/settings/globalsettings.h"
@@ -4084,9 +4085,12 @@ MiscPage::MiscPage( const KComponentData &instance, QWidget *parent )
 
   mAgentSettingsTab = new MiscPageAgentSettingsTab();
   addTab( mAgentSettingsTab, i18n("Agent Settings" ) );
+
+  mPrintingTab = new MiscPagePrintingTab();
+  addTab( mPrintingTab, i18n("Printing" ) );
 }
 
-QString MiscPage::FolderTab::helpAnchor() const
+QString MiscPageFolderTab::helpAnchor() const
 {
   return QString::fromLatin1("Sconfigure-misc-folders");
 }
@@ -4122,8 +4126,6 @@ MiscPageFolderTab::MiscPageFolderTab( QWidget * parent )
            mMMTab.mDelayedMarkTime, SLOT(setEnabled(bool)));
   connect( mMMTab.mDelayedMarkAsRead, SIGNAL(toggled(bool)),
            this , SLOT(slotEmitChanged()) );
-  connect( mMMTab.mPrintEmptySelectedText, SIGNAL(toggled(bool)),
-           this, SLOT(slotEmitChanged()) );
   connect( mMMTab.mShowPopupAfterDnD, SIGNAL(stateChanged(int)),
            this, SLOT(slotEmitChanged()) );
   connect( mOnStartupOpenFolder, SIGNAL(folderChanged(Akonadi::Collection)),
@@ -4142,7 +4144,6 @@ void MiscPage::FolderTab::doLoadFromGlobalSettings()
   mMMTab.mDelayedMarkAsRead->setChecked( MessageViewer::GlobalSettings::self()->delayedMarkAsRead() );
   mMMTab.mDelayedMarkTime->setValue( MessageViewer::GlobalSettings::self()->delayedMarkTime() );
   mMMTab.mShowPopupAfterDnD->setChecked( GlobalSettings::self()->showPopupAfterDnD() );
-  mMMTab.mPrintEmptySelectedText->setChecked(GlobalSettings::self()->printSelectedText());
   doLoadOther();
 }
 
@@ -4166,7 +4167,6 @@ void MiscPage::FolderTab::save()
   GlobalSettings::self()->setShowPopupAfterDnD( mMMTab.mShowPopupAfterDnD->isChecked() );
   GlobalSettings::self()->setExcludeImportantMailFromExpiry(
         mMMTab.mExcludeImportantFromExpiry->isChecked() );
-  GlobalSettings::self()->setPrintSelectedText(mMMTab.mPrintEmptySelectedText->isChecked());
 }
 
 MiscPageAgentSettingsTab::MiscPageAgentSettingsTab( QWidget* parent )
@@ -4193,6 +4193,11 @@ void MiscPageAgentSettingsTab::save()
 void MiscPageAgentSettingsTab::doResetToDefaultsOther()
 {
   mConfigureAgent->doResetToDefaultsOther();
+}
+
+QString MiscPageAgentSettingsTab::helpAnchor() const
+{
+  return mConfigureAgent->helpAnchor();
 }
 
 MiscPageInviteTab::MiscPageInviteTab( QWidget* parent )
@@ -4237,6 +4242,25 @@ void MiscPage::ProxyTab::save()
   mProxyModule->save();
 }
 
+MiscPagePrintingTab::MiscPagePrintingTab( QWidget * parent )
+  : ConfigModuleTab( parent )
+{
+  mPrintingUi = new MessageViewer::PrintingSettings( this );
+  QHBoxLayout *l = new QHBoxLayout( this );
+  l->setContentsMargins( 0 , 0, 0, 0 );
+  l->addWidget( mPrintingUi );
+  connect( mPrintingUi, SIGNAL(changed()), this, SLOT(slotEmitChanged()) );
+}
+
+void MiscPagePrintingTab::doLoadFromGlobalSettings()
+{
+  mPrintingUi->doLoadFromGlobalSettings();
+}
+
+void MiscPagePrintingTab::save()
+{
+  mPrintingUi->save();
+}
 
 //----------------------------
 #include "configuredialog.moc"

@@ -30,8 +30,8 @@ namespace MailCommon {
 //=============================================================================
 class FilterActionExec : public FilterActionWithCommand
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit FilterActionExec( QObject *parent = 0 );
     virtual ReturnCode process( ItemContext &context ) const;
     virtual SearchRule::RequiredPart requiredPart() const;

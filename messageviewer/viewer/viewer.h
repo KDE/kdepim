@@ -337,6 +337,7 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
 
   void saveMainFrameScreenshotInFile(const QString &filename);
 
+
 signals:
   void moveMessageToTrash();
 

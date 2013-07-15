@@ -15,31 +15,31 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef FOLDERARCHIVEACCOUNTINFO_H
-#define FOLDERARCHIVEACCOUNTINFO_H
 
-#include <KConfigGroup>
-#include <Akonadi/Collection>
+#ifndef PRINTINGSETTINGS_H
+#define PRINTINGSETTINGS_H
 
-class FolderArchiveAccountInfo
+#include "messageviewer_export.h"
+#include <QWidget>
+
+class Ui_PrintingSettings;
+namespace MessageViewer {
+
+class MESSAGEVIEWER_EXPORT PrintingSettings : public QWidget
 {
+    Q_OBJECT
 public:
-    FolderArchiveAccountInfo();
-    FolderArchiveAccountInfo(const KConfigGroup &config);
-    ~FolderArchiveAccountInfo();
+    explicit PrintingSettings(QWidget *parent=0);
+    ~PrintingSettings();
 
-    QString instanceName() const;
+    void save();
+    void doLoadFromGlobalSettings();
 
-    void setArchiveTopLevel(Akonadi::Collection::Id id);
-    Akonadi::Collection::Id archiveTopLevel() const;
-
-    void writeConfig(KConfigGroup &config );
-    void readConfig(const KConfigGroup &config);
+Q_SIGNALS:
+    void changed();
 
 private:
-
-    Akonadi::Collection::Id mArchiveTopLevelCollectionId;
-    QString mInstanceName;
+    Ui_PrintingSettings *mPrintingUi;
 };
-
-#endif // FOLDERARCHIVEACCOUNTINFO_H
+}
+#endif // PRINTINGSETTINGS_H

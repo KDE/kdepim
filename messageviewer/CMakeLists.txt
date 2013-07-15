@@ -54,6 +54,7 @@ set(libmessageviewer_SRCS
   viewer/bodypartformatterfactory.cpp
   viewer/chiasmuskeyselector.cpp
   widgets/configurewidget.cpp
+  widgets/printingsettings.cpp
   header/contactdisplaymessagememento.cpp
   viewer/csshelper.cpp
   viewer/csshelperbase.cpp
@@ -120,6 +121,7 @@ kde4_add_kcfg_files(libmessageviewer_SRCS
 kde4_add_ui_files(libmessageviewer_SRCS
   ui/settings.ui
   ui/invitationsettings.ui
+  ui/printingsettings.ui
 )
 
 kde4_add_library(messageviewer ${LIBRARY_TYPE} ${libmessageviewer_SRCS})

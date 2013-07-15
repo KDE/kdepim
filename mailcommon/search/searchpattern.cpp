@@ -240,7 +240,26 @@ void SearchRule::writeConfig( KConfigGroup &config, int aIdx ) const
 
 void SearchRule::generateSieveScript(QStringList &requires, QString &code)
 {
-    //TODO
+    if (mField == "<size>") {
+        //TODO look at comparaison
+        QString comparaison;
+        code += QString::fromLatin1("size %1 %2K").arg(comparaison).arg(mContents);
+    } else if (mField == "<status>") {
+
+    } else if (mField == "contents") {
+
+    } else if (mField == "<age in days>") {
+
+    } else if (mField == "<recipients>") {
+    } else if (mField == "<tag>") {
+        //Not supported
+    } else if (mField == "Subject") {
+    } else if (mField == "From") {
+    } else if (mField == "<message>") {
+    } else if (mField == "<body>") {
+    } else {
+        //TODO
+    }
 }
 
 void SearchRule::setFunction( Function function )
@@ -1716,10 +1735,14 @@ void SearchPattern::generateSieveScript(QStringList &requires, QString &code)
 
     QList<SearchRule::Ptr>::const_iterator it;
     QList<SearchRule::Ptr>::const_iterator endIt( constEnd() );
+    bool firstRule = true;
     int i = 0;
     for ( it = constBegin(); it != endIt && i < FILTER_MAX_RULES; ++i, ++it ) {
-        if (i != 0)
+        if (firstRule) {
+            firstRule = false;
+        } else {
             code += QLatin1String("\n, ");
+        }
         (*it)->generateSieveScript(requires, code);
     }
 }

@@ -39,8 +39,8 @@ namespace MailCommon {
 //=============================================================================
 class FilterActionAddTag: public FilterAction
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit FilterActionAddTag( QObject *parent = 0 );
     virtual ReturnCode process( ItemContext &context ) const;
     SearchRule::RequiredPart requiredPart() const;
@@ -60,10 +60,10 @@ class FilterActionAddTag: public FilterAction
     virtual void clearParamWidget( QWidget *paramWidget ) const;
 
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void slotTagListingFinished();
 
-  private:
+private:
     void initializeTagList();
     mutable QMap<QUrl, QString> mList;
     QString mParameter;

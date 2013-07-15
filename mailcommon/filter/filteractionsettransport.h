@@ -30,8 +30,8 @@ namespace MailCommon {
 //=============================================================================
 class FilterActionSetTransport: public FilterAction
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit FilterActionSetTransport( QObject *parent = 0 );
     virtual ReturnCode process( ItemContext &context ) const;
     virtual SearchRule::RequiredPart requiredPart() const;
@@ -72,7 +72,7 @@ class FilterActionSetTransport: public FilterAction
      */
     virtual QString displayString() const;
 
-  protected:
+protected:
     int mParameter;
     mutable QString mTransportName;
 };

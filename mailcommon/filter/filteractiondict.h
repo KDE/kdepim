@@ -35,8 +35,8 @@ typedef FilterAction * (*FilterActionNewFunc)(void);
  */
 struct FilterActionDesc
 {
-  QString label, name;
-  FilterActionNewFunc create;
+    QString label, name;
+    FilterActionNewFunc create;
 };
 
 /**
@@ -64,7 +64,7 @@ struct FilterActionDesc
  */
 class FilterActionDict : public QMultiHash<QString, FilterActionDesc*>
 {
-  public:
+public:
     /**
      * Creates the filter action dictionary.
      */
@@ -92,14 +92,14 @@ class FilterActionDict : public QMultiHash<QString, FilterActionDesc*>
      */
     MAILCOMMON_EXPORT const QList<FilterActionDesc*>& list() const;
 
-  protected:
+protected:
     /**
      * Populate the dictionary with all known  FilterAction
      * types. Called automatically from the constructor.
      */
     virtual void init();
 
-  private:
+private:
     QList<FilterActionDesc*> mList;
 };
 

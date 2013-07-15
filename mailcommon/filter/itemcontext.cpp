@@ -23,57 +23,57 @@ using namespace MailCommon;
 
 ItemContext::ItemContext( const Akonadi::Item& item, bool needsFullPayload )
     : mItem( item ), mNeedsPayloadStore( false ), mNeedsFlagStore( false ), mDeleteItem( false ),
-    mNeedsFullPayload( needsFullPayload )
+      mNeedsFullPayload( needsFullPayload )
 {
 }
 
 Akonadi::Item& ItemContext::item()
 {
-  return mItem;
+    return mItem;
 }
 
 void ItemContext::setMoveTargetCollection( const Akonadi::Collection &collection )
 {
-  mMoveTargetCollection = collection;
+    mMoveTargetCollection = collection;
 }
 
 Akonadi::Collection ItemContext::moveTargetCollection() const
 {
-  return mMoveTargetCollection;
+    return mMoveTargetCollection;
 }
 
 void ItemContext::setNeedsPayloadStore()
 {
-  mNeedsPayloadStore = true;
+    mNeedsPayloadStore = true;
 }
 
 bool ItemContext::needsPayloadStore() const
 {
-  return mNeedsPayloadStore;
+    return mNeedsPayloadStore;
 }
 
 void ItemContext::setNeedsFlagStore()
 {
-  mNeedsFlagStore = true;
+    mNeedsFlagStore = true;
 }
 
 bool ItemContext::needsFlagStore() const
 {
-  return mNeedsFlagStore;
+    return mNeedsFlagStore;
 }
 
 void ItemContext::setDeleteItem()
 {
-  mDeleteItem = true;
+    mDeleteItem = true;
 }
 
 bool ItemContext::deleteItem() const
 {
-  return mDeleteItem;
+    return mDeleteItem;
 }
 
 
 bool ItemContext::needsFullPayload() const
 {
-  return mNeedsFullPayload;
+    return mNeedsFullPayload;
 }

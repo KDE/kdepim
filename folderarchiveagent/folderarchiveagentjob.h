@@ -15,31 +15,30 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef FOLDERARCHIVEACCOUNTINFO_H
-#define FOLDERARCHIVEACCOUNTINFO_H
+#ifndef FOLDERARCHIVEAGENTJOB_H
+#define FOLDERARCHIVEAGENTJOB_H
 
-#include <KConfigGroup>
-#include <Akonadi/Collection>
-
-class FolderArchiveAccountInfo
+#include <QObject>
+#include <Akonadi/Item>
+class KJob;
+class FolderArchiveAccountInfo;
+class FolderArchiveManager;
+class FolderArchiveAgentJob : public QObject
 {
+    Q_OBJECT
 public:
-    FolderArchiveAccountInfo();
-    FolderArchiveAccountInfo(const KConfigGroup &config);
-    ~FolderArchiveAccountInfo();
+    explicit FolderArchiveAgentJob(FolderArchiveManager *manager, FolderArchiveAccountInfo *info, const Akonadi::Item::List &lstItem, QObject *parent=0);
+    ~FolderArchiveAgentJob();
 
-    QString instanceName() const;
+    void start();
 
-    void setArchiveTopLevel(Akonadi::Collection::Id id);
-    Akonadi::Collection::Id archiveTopLevel() const;
-
-    void writeConfig(KConfigGroup &config );
-    void readConfig(const KConfigGroup &config);
+private Q_SLOTS:
+    void slotFetchCollection(KJob*);
 
 private:
-
-    Akonadi::Collection::Id mArchiveTopLevelCollectionId;
-    QString mInstanceName;
+    Akonadi::Item::List mLstItem;
+    FolderArchiveManager *mManager;
+    FolderArchiveAccountInfo *mInfo;
 };
 
-#endif // FOLDERARCHIVEACCOUNTINFO_H
+#endif // FOLDERARCHIVEAGENTJOB_H

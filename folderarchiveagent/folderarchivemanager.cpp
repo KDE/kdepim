@@ -43,6 +43,11 @@ FolderArchiveManager::~FolderArchiveManager()
     qDeleteAll(mListAccountInfo);
 }
 
+void FolderArchiveManager::setArchiveItems(const QList<qint64> &itemIds)
+{
+
+}
+
 void FolderArchiveManager::slotInstanceRemoved(const Akonadi::AgentInstance &instance)
 {
     const QString instanceName = instance.name();

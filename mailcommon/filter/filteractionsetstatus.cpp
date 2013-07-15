@@ -25,11 +25,11 @@ using namespace MailCommon;
 
 FilterAction* FilterActionSetStatus::newAction()
 {
-  return new FilterActionSetStatus;
+    return new FilterActionSetStatus;
 }
 
 FilterActionSetStatus::FilterActionSetStatus( QObject *parent )
-  : FilterActionStatus( QLatin1String("set status"), i18n( "Mark As" ), parent )
+    : FilterActionStatus( QLatin1String("set status"), i18n( "Mark As" ), parent )
 {
 }
 
@@ -37,26 +37,26 @@ FilterActionSetStatus::FilterActionSetStatus( QObject *parent )
 
 FilterAction::ReturnCode FilterActionSetStatus::process( ItemContext &context ) const
 {
-  const int index = mParameterList.indexOf( mParameter );
-  if ( index < 1 )
-    return ErrorButGoOn;
+    const int index = mParameterList.indexOf( mParameter );
+    if ( index < 1 )
+        return ErrorButGoOn;
 
-  Akonadi::MessageStatus status;
-  status.setStatusFromFlags( context.item().flags() );
+    Akonadi::MessageStatus status;
+    status.setStatusFromFlags( context.item().flags() );
 
-  Akonadi::MessageStatus oldStatus = status; 
-  const Akonadi::MessageStatus newStatus = FilterActionStatus::stati[ index - 1 ];
-  if ( newStatus == Akonadi::MessageStatus::statusUnread() ) {
-    status.setRead( false );
-  }
-  else
-    status.set( newStatus );
-  if ( oldStatus != status ) {
-    context.item().setFlags( status.statusFlags() );
-    context.setNeedsFlagStore();
-  }
+    Akonadi::MessageStatus oldStatus = status;
+    const Akonadi::MessageStatus newStatus = FilterActionStatus::stati[ index - 1 ];
+    if ( newStatus == Akonadi::MessageStatus::statusUnread() ) {
+        status.setRead( false );
+    }
+    else
+        status.set( newStatus );
+    if ( oldStatus != status ) {
+        context.item().setFlags( status.statusFlags() );
+        context.setNeedsFlagStore();
+    }
 
-  return GoOn;
+    return GoOn;
 }
 
 

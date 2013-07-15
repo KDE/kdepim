@@ -40,9 +40,9 @@ namespace MailCommon {
  */
 class FilterActionWithNone : public FilterAction
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * @copydoc FilterAction::FilterAction
      */

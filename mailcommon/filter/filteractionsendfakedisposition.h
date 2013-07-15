@@ -30,8 +30,8 @@ namespace MailCommon {
 //=============================================================================
 class FilterActionSendFakeDisposition: public FilterActionWithStringList
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit FilterActionSendFakeDisposition( QObject *parent = 0 );
     virtual ReturnCode process( ItemContext &context ) const;
     virtual SearchRule::RequiredPart requiredPart() const;

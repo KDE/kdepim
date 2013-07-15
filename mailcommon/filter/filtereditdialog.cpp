@@ -28,59 +28,59 @@
 using namespace MailCommon;
 
 FilterEditDialog::FilterEditDialog( QWidget *parent )
-  : KDialog( parent ), mFilter( 0 )
+    : KDialog( parent ), mFilter( 0 )
 {
-  mUi = new Ui_FilterConfigWidget;
-  mUi->setupUi( mainWidget() );
+    mUi = new Ui_FilterConfigWidget;
+    mUi->setupUi( mainWidget() );
 
-  mPatternEdit = new SearchPatternEdit( this, MailCommon::SearchPatternEdit::MatchAllMessages );
-  mUi->criteriaLayout->addWidget( mPatternEdit, 0, Qt::AlignTop );
-  mActionLister = new FilterActionWidgetLister( this );
-  mUi->actionsLayout->addWidget( mActionLister, 0, Qt::AlignTop );
+    mPatternEdit = new SearchPatternEdit( this, MailCommon::SearchPatternEdit::MatchAllMessages );
+    mUi->criteriaLayout->addWidget( mPatternEdit, 0, Qt::AlignTop );
+    mActionLister = new FilterActionWidgetLister( this );
+    mUi->actionsLayout->addWidget( mActionLister, 0, Qt::AlignTop );
 }
 
 FilterEditDialog::~FilterEditDialog()
 {
-  delete mUi;
+    delete mUi;
 }
 
 void FilterEditDialog::load( int index )
 {
-  mFilter = FilterManager::instance()->filters().at( index );
+    mFilter = FilterManager::instance()->filters().at( index );
 
-  if ( !mFilter )
-    return;
+    if ( !mFilter )
+        return;
 
-  mPatternEdit->setSearchPattern( mFilter->pattern() );
+    mPatternEdit->setSearchPattern( mFilter->pattern() );
 
-  mActionLister->setActionList( mFilter->actions() );
+    mActionLister->setActionList( mFilter->actions() );
 
-  mUi->filterName->setText( mFilter->pattern()->name() );
-  mUi->applyToIncomingCB->setChecked( mFilter->applyOnInbound() );
-  mUi->applyToSentCB->setChecked( mFilter->applyOnOutbound() );
-  mUi->applyBeforeSendCB->setChecked( mFilter->applyBeforeOutbound() );
-  mUi->applyManuallyCB->setChecked( mFilter->applyOnExplicit() );
-  mUi->stopIfMatchesCB->setChecked( mFilter->stopProcessingHere() );
+    mUi->filterName->setText( mFilter->pattern()->name() );
+    mUi->applyToIncomingCB->setChecked( mFilter->applyOnInbound() );
+    mUi->applyToSentCB->setChecked( mFilter->applyOnOutbound() );
+    mUi->applyBeforeSendCB->setChecked( mFilter->applyBeforeOutbound() );
+    mUi->applyManuallyCB->setChecked( mFilter->applyOnExplicit() );
+    mUi->stopIfMatchesCB->setChecked( mFilter->stopProcessingHere() );
 }
 
 void FilterEditDialog::save()
 {
-  if ( !mFilter )
-    return;
+    if ( !mFilter )
+        return;
 
-  mPatternEdit->updateSearchPattern();
-  mActionLister->updateActionList();
+    mPatternEdit->updateSearchPattern();
+    mActionLister->updateActionList();
 
-  FilterManager::instance()->beginUpdate();
+    FilterManager::instance()->beginUpdate();
 
-  mFilter->pattern()->setName( mUi->filterName->text() );
-  mFilter->setApplyOnInbound( mUi->applyToIncomingCB->isChecked() );
-  mFilter->setApplyOnOutbound( mUi->applyToSentCB->isChecked() );
-  mFilter->setApplyBeforeOutbound( mUi->applyBeforeSendCB->isChecked() );
-  mFilter->setApplyOnExplicit( mUi->applyManuallyCB->isChecked() );
-  mFilter->setStopProcessingHere( mUi->stopIfMatchesCB->isChecked() );
+    mFilter->pattern()->setName( mUi->filterName->text() );
+    mFilter->setApplyOnInbound( mUi->applyToIncomingCB->isChecked() );
+    mFilter->setApplyOnOutbound( mUi->applyToSentCB->isChecked() );
+    mFilter->setApplyBeforeOutbound( mUi->applyBeforeSendCB->isChecked() );
+    mFilter->setApplyOnExplicit( mUi->applyManuallyCB->isChecked() );
+    mFilter->setStopProcessingHere( mUi->stopIfMatchesCB->isChecked() );
 
-  FilterManager::instance()->endUpdate();
+    FilterManager::instance()->endUpdate();
 }
 
 #include "filtereditdialog_p.moc"

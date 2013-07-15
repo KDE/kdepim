@@ -30,8 +30,8 @@ namespace MailCommon {
 //=============================================================================
 class FilterActionAddHeader: public FilterActionWithStringList
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit FilterActionAddHeader( QObject *parent = 0 );
     virtual ReturnCode process( ItemContext &context ) const;
     virtual QWidget* createParamWidget( QWidget *parent ) const;
@@ -52,7 +52,7 @@ class FilterActionAddHeader: public FilterActionWithStringList
     QStringList sieveRequires() const;
     QString sieveCode() const;
 
-  private:
+private:
     QString mValue;
 };
 

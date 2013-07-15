@@ -19,12 +19,12 @@
       <arg name="items" type="ax" direction="in"/>
       <arg name="FilterRequires" type="i" direction="in"/>
       <arg name="listFilters" type="as" direction="in"/>
-      <annotation name="com.trolltech.QtDBus.QtTypeName.In0" value="const QList&lt;qint64&gt; &amp;"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="const QList&lt;qint64&gt; &amp;"/>
     </method>
     <method name="filterItems">
       <arg name="items" type="ax" direction="in"/>
       <arg name="filterSet" type="i" direction="in"/>
-      <annotation name="com.trolltech.QtDBus.QtTypeName.In0" value="const QList&lt;qint64&gt; &amp;"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="const QList&lt;qint64&gt; &amp;"/>
     </method>
     <method name="reload"/>
     <method name="showFilterLogDialog">

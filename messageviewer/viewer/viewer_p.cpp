@@ -1197,6 +1197,7 @@ void ViewerPrivate::readConfig()
 #ifndef KDEPIM_NO_WEBKIT
   mViewer->settings()->setFontSize( QWebSettings::MinimumFontSize, GlobalSettings::self()->minimumFontSize() );
   mViewer->settings()->setFontSize( QWebSettings::MinimumLogicalFontSize, GlobalSettings::self()->minimumFontSize() );
+  mViewer->settings()->setAttribute( QWebSettings::PrintElementBackgrounds, GlobalSettings::self()->printBackgroundColorImages() );
 #endif
 
   if ( mMessage )
@@ -1327,8 +1328,17 @@ void ViewerPrivate::resetStateForNewMessage()
   mTranslatorWidget->slotCloseWidget();
   mScamDetectionWarning->setVisible(false);
 
-  if ( mPrinting )
-    mLevelQuote = -1;
+  if ( mPrinting ) {
+      if (MessageViewer::GlobalSettings::self()->respectExpandCollapseSettings()) {
+          if (MessageViewer::GlobalSettings::self()->showExpandQuotesMark()) {
+              mLevelQuote = MessageViewer::GlobalSettings::self()->collapseQuoteLevelSpin() -1;
+          } else {
+              mLevelQuote = -1;
+          }
+      } else {
+          mLevelQuote = -1;
+      }
+  }
 }
 
 void ViewerPrivate::setMessageInternal( const KMime::Message::Ptr message,
