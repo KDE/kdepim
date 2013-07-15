@@ -53,9 +53,9 @@ class FilterActionWidget;
  */
 class FilterActionWidget : public KHBox
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a filter action widget with no type selected.
      *
@@ -90,12 +90,12 @@ class FilterActionWidget : public KHBox
 
     void updateAddRemoveButton( bool addButtonEnabled, bool removeButtonEnabled );
 
-  signals:
+signals:
     void filterModified();
     void addWidget( QWidget * );
     void removeWidget( QWidget * );
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
     Private *const d;
@@ -114,9 +114,9 @@ class FilterActionWidget : public KHBox
  */
 class MAILCOMMON_EXPORT FilterActionWidgetLister : public KPIM::KWidgetLister
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new filter action widget lister.
      *
@@ -141,7 +141,7 @@ class MAILCOMMON_EXPORT FilterActionWidgetLister : public KPIM::KWidgetLister
 
     void reconnectWidget( FilterActionWidget *w );
 
-  public Q_SLOTS:
+public Q_SLOTS:
     /**
      * Resets the action widgets.
      */
@@ -149,10 +149,10 @@ class MAILCOMMON_EXPORT FilterActionWidgetLister : public KPIM::KWidgetLister
     void slotAddWidget( QWidget * );
     void slotRemoveWidget( QWidget * );
 
-  signals:
+signals:
     void filterModified();
 
-  protected:
+protected:
     /**
      * @copydoc KPIM::KWidgetLister::clearWidget
      */
@@ -165,7 +165,7 @@ class MAILCOMMON_EXPORT FilterActionWidgetLister : public KPIM::KWidgetLister
 
     void updateAddRemoveButton();
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
     Private *const d;

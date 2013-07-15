@@ -25,26 +25,26 @@
 using namespace MailCommon;
 
 FilterActionBeep::FilterActionBeep( QObject *parent )
-  : FilterActionWithNone( QLatin1String("beep"), i18n( "Beep" ), parent )
+    : FilterActionWithNone( QLatin1String("beep"), i18n( "Beep" ), parent )
 {
 }
 
 FilterAction::ReturnCode FilterActionBeep::process( ItemContext &/*context*/ ) const
 {
-  KNotification::beep();
-  return GoOn;
+    KNotification::beep();
+    return GoOn;
 }
 
 
 SearchRule::RequiredPart FilterActionBeep::requiredPart() const
 {
-  return SearchRule::Envelope;
+    return SearchRule::Envelope;
 }
 
 
 FilterAction* FilterActionBeep::newAction()
 {
-  return new FilterActionBeep;
+    return new FilterActionBeep;
 }
 
 #include "filteractionbeep.moc"

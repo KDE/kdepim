@@ -51,62 +51,62 @@ using namespace MailCommon;
 //=============================================================================
 FilterActionDict::~FilterActionDict()
 {
-  qDeleteAll( mList );
+    qDeleteAll( mList );
 }
 
 void FilterActionDict::init()
 {
-  insert( FilterActionMove::newAction );
-  insert( FilterActionCopy::newAction );
-  insert( FilterActionSetIdentity::newAction );
-  insert( FilterActionSetStatus::newAction );
-  insert( FilterActionAddTag::newAction );
-  insert( FilterActionSendFakeDisposition::newAction );
-  insert( FilterActionSetTransport::newAction );
-  insert( FilterActionReplyTo::newAction );
-  insert( FilterActionForward::newAction );
-  insert( FilterActionRedirect::newAction );
-  insert( FilterActionSendReceipt::newAction );
-  insert( FilterActionExec::newAction );
-  insert( FilterActionPipeThrough::newAction );
-  insert( FilterActionRemoveHeader::newAction );
-  insert( FilterActionAddHeader::newAction );
-  insert( FilterActionRewriteHeader::newAction );
+    insert( FilterActionMove::newAction );
+    insert( FilterActionCopy::newAction );
+    insert( FilterActionSetIdentity::newAction );
+    insert( FilterActionSetStatus::newAction );
+    insert( FilterActionAddTag::newAction );
+    insert( FilterActionSendFakeDisposition::newAction );
+    insert( FilterActionSetTransport::newAction );
+    insert( FilterActionReplyTo::newAction );
+    insert( FilterActionForward::newAction );
+    insert( FilterActionRedirect::newAction );
+    insert( FilterActionSendReceipt::newAction );
+    insert( FilterActionExec::newAction );
+    insert( FilterActionPipeThrough::newAction );
+    insert( FilterActionRemoveHeader::newAction );
+    insert( FilterActionAddHeader::newAction );
+    insert( FilterActionRewriteHeader::newAction );
 #ifndef Q_OS_WINCE
-  insert( FilterActionPlaySound::newAction );
+    insert( FilterActionPlaySound::newAction );
 #endif
-  insert( FilterActionAddToAddressBook::newAction );
-  insert( FilterActionDelete::newAction);
-  insert( FilterActionBeep::newAction);
-  insert( FilterActionUnsetStatus::newAction );
-  // Register custom filter actions below this line.
+    insert( FilterActionAddToAddressBook::newAction );
+    insert( FilterActionDelete::newAction);
+    insert( FilterActionBeep::newAction);
+    insert( FilterActionUnsetStatus::newAction );
+    // Register custom filter actions below this line.
 }
 
 // The int in the QDict constructor (41) must be a prime
 // and should be greater than the double number of FilterAction types
 FilterActionDict::FilterActionDict()
-  : QMultiHash<QString, FilterActionDesc*>()
+    : QMultiHash<QString, FilterActionDesc*>()
 {
-  init();
+    init();
 }
 
 void FilterActionDict::insert( FilterActionNewFunc aNewFunc )
 {
-  FilterAction *action = aNewFunc();
-  FilterActionDesc* desc = new FilterActionDesc;
-  desc->name = action->name();
-  desc->label = action->label();
-  desc->create = aNewFunc;
+    FilterAction *action = aNewFunc();
+    FilterActionDesc* desc = new FilterActionDesc;
+    desc->name = action->name();
+    desc->label = action->label();
+    desc->create = aNewFunc;
 
-  QMultiHash<QString, FilterActionDesc*>::insert( desc->name, desc );
-  QMultiHash<QString, FilterActionDesc*>::insert( desc->label, desc );
-  mList.append( desc );
+    QMultiHash<QString, FilterActionDesc*>::insert( desc->name, desc );
+    QMultiHash<QString, FilterActionDesc*>::insert( desc->label, desc );
+    mList.append( desc );
 
-  delete action;
+    delete action;
 }
 
 const QList<FilterActionDesc*>& FilterActionDict::list() const
 {
-  return mList;
+    return mList;
 }
 

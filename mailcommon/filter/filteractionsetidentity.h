@@ -30,8 +30,8 @@ namespace MailCommon {
 //=============================================================================
 class FilterActionSetIdentity: public FilterActionWithUOID
 {
-   Q_OBJECT
- public:
+    Q_OBJECT
+public:
     explicit FilterActionSetIdentity( QObject *parent = 0 );
     virtual ReturnCode process( ItemContext &context ) const;
     virtual SearchRule::RequiredPart requiredPart() const;

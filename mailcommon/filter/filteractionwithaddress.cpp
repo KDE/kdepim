@@ -24,33 +24,33 @@
 using namespace MailCommon;
 
 FilterActionWithAddress::FilterActionWithAddress( const QString &name, const QString &label, QObject *parent )
-  : FilterActionWithString( name, label, parent )
+    : FilterActionWithString( name, label, parent )
 {
 }
 
 QWidget* FilterActionWithAddress::createParamWidget( QWidget *parent ) const
 {
-  MessageCore::EmailAddressRequester *requester = new MessageCore::EmailAddressRequester( parent );
-  requester->setText( mParameter );
+    MessageCore::EmailAddressRequester *requester = new MessageCore::EmailAddressRequester( parent );
+    requester->setText( mParameter );
 
-  connect( requester, SIGNAL(textChanged()), this, SIGNAL(filterActionModified()) );
+    connect( requester, SIGNAL(textChanged()), this, SIGNAL(filterActionModified()) );
 
-  return requester;
+    return requester;
 }
 
 void FilterActionWithAddress::applyParamWidgetValue( QWidget *paramWidget )
 {
-  mParameter = qobject_cast<MessageCore::EmailAddressRequester*>( paramWidget )->text();
+    mParameter = qobject_cast<MessageCore::EmailAddressRequester*>( paramWidget )->text();
 }
 
 void FilterActionWithAddress::setParamWidgetValue( QWidget *paramWidget ) const
 {
-  qobject_cast<MessageCore::EmailAddressRequester*>( paramWidget )->setText( mParameter );
+    qobject_cast<MessageCore::EmailAddressRequester*>( paramWidget )->setText( mParameter );
 }
 
 void FilterActionWithAddress::clearParamWidget( QWidget *paramWidget ) const
 {
-  qobject_cast<MessageCore::EmailAddressRequester*>( paramWidget )->clear();
+    qobject_cast<MessageCore::EmailAddressRequester*>( paramWidget )->clear();
 }
 
 #include "filteractionwithaddress.moc"

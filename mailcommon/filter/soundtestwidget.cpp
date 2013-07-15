@@ -32,27 +32,27 @@
 using namespace MailCommon;
 
 SoundTestWidget::SoundTestWidget( QWidget *parent )
-  : QWidget( parent )
+    : QWidget( parent )
 {
-  QHBoxLayout *layout = new QHBoxLayout( this );
-  layout->setMargin( 0 );
+    QHBoxLayout *layout = new QHBoxLayout( this );
+    layout->setMargin( 0 );
 
-  m_playButton = new QPushButton( this );
-  m_playButton->setIcon( KIcon( "arrow-right" ) );
-  m_playButton->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
-  layout->addWidget( m_playButton );
+    m_playButton = new QPushButton( this );
+    m_playButton->setIcon( KIcon( "arrow-right" ) );
+    m_playButton->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
+    layout->addWidget( m_playButton );
 
-  m_urlRequester = new KUrlRequester( this );
-  layout->addWidget( m_urlRequester );
+    m_urlRequester = new KUrlRequester( this );
+    layout->addWidget( m_urlRequester );
 
-  connect( m_playButton, SIGNAL(clicked()),
-           SLOT(playSound()) );
-  connect( m_urlRequester, SIGNAL(openFileDialog(KUrlRequester*)),
-           SLOT(openSoundDialog(KUrlRequester*)) );
-  connect( m_urlRequester->lineEdit(), SIGNAL(textChanged(QString)),
-           SLOT(slotUrlChanged(QString)) );
+    connect( m_playButton, SIGNAL(clicked()),
+             SLOT(playSound()) );
+    connect( m_urlRequester, SIGNAL(openFileDialog(KUrlRequester*)),
+             SLOT(openSoundDialog(KUrlRequester*)) );
+    connect( m_urlRequester->lineEdit(), SIGNAL(textChanged(QString)),
+             SLOT(slotUrlChanged(QString)) );
 
-  slotUrlChanged( m_urlRequester->lineEdit()->text() );
+    slotUrlChanged( m_urlRequester->lineEdit()->text() );
 }
 
 SoundTestWidget::~SoundTestWidget()
@@ -61,78 +61,78 @@ SoundTestWidget::~SoundTestWidget()
 
 void SoundTestWidget::slotUrlChanged( const QString &url )
 {
-  m_playButton->setEnabled( !url.isEmpty() );
-  emit textChanged( url );
+    m_playButton->setEnabled( !url.isEmpty() );
+    emit textChanged( url );
 }
 
 void SoundTestWidget::openSoundDialog( KUrlRequester * )
 {
-  static bool init = true;
-  if ( !init ) {
-    return;
-  }
-
-  init = false;
-
-  KFileDialog *fileDialog = m_urlRequester->fileDialog();
-  fileDialog->setCaption( i18n( "Select Sound File" ) );
-
-  QStringList filters;
-  filters << "audio/x-wav"
-          << "audio/mpeg"
-          << "application/ogg"
-          << "audio/x-adpcm";
-
-  fileDialog->setMimeFilter( filters );
-
-  const QStringList soundDirs = KGlobal::dirs()->resourceDirs( "sound" );
-
-  if ( !soundDirs.isEmpty() ) {
-    KUrl soundURL;
-    QDir dir;
-    dir.setFilter( QDir::Files | QDir::Readable );
-
-    foreach ( const QString &soundDir, soundDirs ) {
-      dir = soundDir;
-      if ( dir.isReadable() && dir.count() > 2 ) {
-        soundURL.setPath( soundDir );
-        fileDialog->setUrl( soundURL );
-        break;
-      }
+    static bool init = true;
+    if ( !init ) {
+        return;
     }
-  }
+
+    init = false;
+
+    KFileDialog *fileDialog = m_urlRequester->fileDialog();
+    fileDialog->setCaption( i18n( "Select Sound File" ) );
+
+    QStringList filters;
+    filters << "audio/x-wav"
+            << "audio/mpeg"
+            << "application/ogg"
+            << "audio/x-adpcm";
+
+    fileDialog->setMimeFilter( filters );
+
+    const QStringList soundDirs = KGlobal::dirs()->resourceDirs( "sound" );
+
+    if ( !soundDirs.isEmpty() ) {
+        KUrl soundURL;
+        QDir dir;
+        dir.setFilter( QDir::Files | QDir::Readable );
+
+        foreach ( const QString &soundDir, soundDirs ) {
+            dir = soundDir;
+            if ( dir.isReadable() && dir.count() > 2 ) {
+                soundURL.setPath( soundDir );
+                fileDialog->setUrl( soundURL );
+                break;
+            }
+        }
+    }
 }
 
 void SoundTestWidget::playSound()
 {
-  const QString parameter = m_urlRequester->lineEdit()->text();
-  if ( parameter.isEmpty() ) {
-    return ;
-  }
+    const QString parameter = m_urlRequester->lineEdit()->text();
+    if ( parameter.isEmpty() ) {
+        return ;
+    }
 
-  const QString file = QLatin1String( "file:" );
-  const QString play = ( parameter.startsWith( file ) ?
-                           parameter.mid( file.length() ) :
-                           parameter );
+    const QString file = QLatin1String( "file:" );
+    const QString play = ( parameter.startsWith( file ) ?
+                               parameter.mid( file.length() ) :
+                               parameter );
 
-  Phonon::MediaObject *player = Phonon::createPlayer( Phonon::NotificationCategory, play );
-  player->play();
-  connect( player, SIGNAL(finished()), player, SLOT(deleteLater()) );
+    Phonon::MediaObject *player = Phonon::createPlayer( Phonon::NotificationCategory, play );
+    player->play();
+    connect( player, SIGNAL(finished()), player, SLOT(deleteLater()) );
 }
 
 QString SoundTestWidget::url() const
 {
-  return m_urlRequester->lineEdit()->text();
+    return m_urlRequester->lineEdit()->text();
 }
 
 void SoundTestWidget::setUrl( const QString &url )
 {
-  m_urlRequester->lineEdit()->setText(url);
+    m_urlRequester->lineEdit()->setText(url);
 }
 
 void SoundTestWidget::clear()
 {
-  m_urlRequester->lineEdit()->clear();
+    m_urlRequester->lineEdit()->clear();
 }
 
 #include "soundtestwidget.moc"

@@ -28,73 +28,73 @@ using namespace MailCommon;
 
 FilterAction* FilterActionRemoveHeader::newAction()
 {
-  return new FilterActionRemoveHeader;
+    return new FilterActionRemoveHeader;
 }
 
 FilterActionRemoveHeader::FilterActionRemoveHeader( QObject *parent )
-  : FilterActionWithStringList( QLatin1String("remove header"), i18n( "Remove Header" ), parent )
+    : FilterActionWithStringList( QLatin1String("remove header"), i18n( "Remove Header" ), parent )
 {
-  mParameterList << QLatin1String("")
-                 << QLatin1String("Reply-To")
-                 << QLatin1String("Delivered-To")
-                 << QLatin1String("X-KDE-PR-Message")
-                 << QLatin1String("X-KDE-PR-Package")
-                 << QLatin1String("X-KDE-PR-Keywords");
+    mParameterList << QLatin1String("")
+                   << QLatin1String("Reply-To")
+                   << QLatin1String("Delivered-To")
+                   << QLatin1String("X-KDE-PR-Message")
+                   << QLatin1String("X-KDE-PR-Package")
+                   << QLatin1String("X-KDE-PR-Keywords");
 
-  mParameter = mParameterList.at( 0 );
+    mParameter = mParameterList.at( 0 );
 }
 
 QWidget* FilterActionRemoveHeader::createParamWidget( QWidget *parent ) const
 {
-  PimCommon::MinimumComboBox *comboBox = new PimCommon::MinimumComboBox( parent );
-  comboBox->setEditable( true );
-  comboBox->setInsertPolicy( QComboBox::InsertAtBottom );
-  setParamWidgetValue( comboBox );
+    PimCommon::MinimumComboBox *comboBox = new PimCommon::MinimumComboBox( parent );
+    comboBox->setEditable( true );
+    comboBox->setInsertPolicy( QComboBox::InsertAtBottom );
+    setParamWidgetValue( comboBox );
 
-  connect( comboBox, SIGNAL(currentIndexChanged(int)),
-           this, SIGNAL(filterActionModified()) );
-  connect( comboBox->lineEdit(), SIGNAL(textChanged(QString)),
-           this, SIGNAL(filterActionModified()) );
+    connect( comboBox, SIGNAL(currentIndexChanged(int)),
+             this, SIGNAL(filterActionModified()) );
+    connect( comboBox->lineEdit(), SIGNAL(textChanged(QString)),
+             this, SIGNAL(filterActionModified()) );
 
-  return comboBox;
+    return comboBox;
 }
 
 FilterAction::ReturnCode FilterActionRemoveHeader::process( ItemContext &context ) const
 {
-  if ( mParameter.isEmpty() )
-    return ErrorButGoOn;
+    if ( mParameter.isEmpty() )
+        return ErrorButGoOn;
 
-  KMime::Message::Ptr msg = context.item().payload<KMime::Message::Ptr>();
-  const QByteArray param(mParameter.toLatin1());
-  while ( msg->headerByType( param ) )
-    msg->removeHeader( param );
+    KMime::Message::Ptr msg = context.item().payload<KMime::Message::Ptr>();
+    const QByteArray param(mParameter.toLatin1());
+    while ( msg->headerByType( param ) )
+        msg->removeHeader( param );
 
-  msg->assemble();
+    msg->assemble();
 
-  context.setNeedsPayloadStore();
+    context.setNeedsPayloadStore();
 
-  return GoOn;
+    return GoOn;
 }
 
 SearchRule::RequiredPart FilterActionRemoveHeader::requiredPart() const
 {
-  return SearchRule::CompleteMessage;
+    return SearchRule::CompleteMessage;
 }
 
 void FilterActionRemoveHeader::setParamWidgetValue( QWidget *paramWidget ) const
 {
-  PimCommon::MinimumComboBox *comboBox = dynamic_cast<PimCommon::MinimumComboBox*>(paramWidget );
-  Q_ASSERT( comboBox );
+    PimCommon::MinimumComboBox *comboBox = dynamic_cast<PimCommon::MinimumComboBox*>(paramWidget );
+    Q_ASSERT( comboBox );
 
-  const int index = mParameterList.indexOf( mParameter );
-  comboBox->clear();
-  comboBox->addItems( mParameterList );
-  if ( index < 0 ) {
-    comboBox->addItem( mParameter );
-    comboBox->setCurrentIndex( comboBox->count() - 1 );
-  } else {
-    comboBox->setCurrentIndex( index );
-  }
+    const int index = mParameterList.indexOf( mParameter );
+    comboBox->clear();
+    comboBox->addItems( mParameterList );
+    if ( index < 0 ) {
+        comboBox->addItem( mParameter );
+        comboBox->setCurrentIndex( comboBox->count() - 1 );
+    } else {
+        comboBox->setCurrentIndex( index );
+    }
 }
 
 bool FilterActionRemoveHeader::canConvertToSieve() const

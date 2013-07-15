@@ -40,9 +40,9 @@ namespace MailCommon {
  */
 class FilterActionWithUOID : public FilterAction
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * @copydoc FilterAction::FilterAction
      */
@@ -68,7 +68,7 @@ class FilterActionWithUOID : public FilterAction
      */
     virtual QString displayString() const;
 
-  protected:
+protected:
     uint mParameter;
 };
 

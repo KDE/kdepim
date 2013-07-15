@@ -32,8 +32,8 @@ namespace MailCommon {
 //=============================================================================
 class FilterActionRewriteHeader: public FilterActionWithStringList
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit FilterActionRewriteHeader( QObject *parent = 0 );
     virtual ReturnCode process( ItemContext &context ) const;
     virtual SearchRule::RequiredPart requiredPart() const;
@@ -49,7 +49,7 @@ class FilterActionRewriteHeader: public FilterActionWithStringList
 
     static FilterAction* newAction();
 
-  private:
+private:
     QRegExp mRegExp;
     QString mReplacementString;
 };

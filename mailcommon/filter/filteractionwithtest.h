@@ -26,8 +26,8 @@ namespace MailCommon {
 
 class FilterActionWithTest : public FilterAction
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     /**
      * @copydoc FilterAction::FilterAction
      */
@@ -78,7 +78,7 @@ class FilterActionWithTest : public FilterAction
      */
     virtual QString displayString() const;
 
-  protected:
+protected:
     QString mParameter;
 };
 

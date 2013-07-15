@@ -22,13 +22,13 @@
 using namespace MailCommon;
 
 FilterActionWithNone::FilterActionWithNone( const QString &name, const QString &label, QObject *parent )
-  : FilterAction( name, label, parent )
+    : FilterAction( name, label, parent )
 {
 }
 
 QString FilterActionWithNone::displayString() const
 {
-  return label();
+    return label();
 }
 
 void FilterActionWithNone::argsFromString( const QString& )
@@ -37,7 +37,7 @@ void FilterActionWithNone::argsFromString( const QString& )
 
 QString FilterActionWithNone::argsAsString() const
 {
-  return QString();
+    return QString();
 }
 
 #include "filteractionwithnone.moc"

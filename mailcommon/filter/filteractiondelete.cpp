@@ -27,19 +27,19 @@
 using namespace MailCommon;
 
 FilterActionDelete::FilterActionDelete( QObject *parent )
-  : FilterActionWithNone( QLatin1String("delete"), i18n( "Delete Message" ), parent )
+    : FilterActionWithNone( QLatin1String("delete"), i18n( "Delete Message" ), parent )
 {
 }
 
 FilterAction::ReturnCode FilterActionDelete::process( ItemContext &context ) const
 {
-  context.setDeleteItem();
-  return GoOn;
+    context.setDeleteItem();
+    return GoOn;
 }
 
 SearchRule::RequiredPart FilterActionDelete::requiredPart() const
 {
-  return SearchRule::Envelope;
+    return SearchRule::Envelope;
 }
 
 
@@ -56,7 +56,7 @@ QWidget* FilterActionDelete::createParamWidget( QWidget *parent ) const
 
 FilterAction* FilterActionDelete::newAction()
 {
-  return new FilterActionDelete;
+    return new FilterActionDelete;
 }
 
 bool FilterActionDelete::canConvertToSieve() const

@@ -30,8 +30,8 @@ namespace MailCommon {
 //=============================================================================
 class FilterActionMove: public FilterActionWithFolder
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit FilterActionMove( QObject *parent = 0 );
     virtual ReturnCode process( ItemContext &context ) const;
     virtual bool requiresBody() const;

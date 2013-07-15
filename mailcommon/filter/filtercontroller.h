@@ -33,15 +33,15 @@ namespace MailCommon {
 
 class MAILCOMMON_EXPORT FilterController : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  Q_PROPERTY( QAction *addAction READ addAction )
-  Q_PROPERTY( QAction *editAction READ editAction )
-  Q_PROPERTY( QAction *removeAction READ removeAction )
-  Q_PROPERTY( QAction *moveUpAction READ moveUpAction )
-  Q_PROPERTY( QAction *moveDownAction READ moveDownAction )
+    Q_PROPERTY( QAction *addAction READ addAction )
+    Q_PROPERTY( QAction *editAction READ editAction )
+    Q_PROPERTY( QAction *removeAction READ removeAction )
+    Q_PROPERTY( QAction *moveUpAction READ moveUpAction )
+    Q_PROPERTY( QAction *moveDownAction READ moveDownAction )
 
-  public:
+public:
     /**
      * Creates a new filter controller.
      *
@@ -90,7 +90,7 @@ class MAILCOMMON_EXPORT FilterController : public QObject
      */
     QAction *moveDownAction() const;
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
     Private *const d;

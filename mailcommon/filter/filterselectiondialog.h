@@ -34,19 +34,19 @@ class MailFilter;
 
 class FilterSelectionDialog : public KDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     explicit FilterSelectionDialog( QWidget * parent = 0 );
     virtual ~FilterSelectionDialog();
     void setFilters( const QList<MailFilter*> &filters );
     QList<MailFilter*> selectedFilters() const;
 
-  public Q_SLOTS:
+public Q_SLOTS:
     void slotUnselectAllButton();
     void slotSelectAllButton();
     void reject();
-  private:
+private:
     QListWidget *filtersListWidget;
     QList<MailFilter*> originalFilters;
     KPushButton *selectAllButton;

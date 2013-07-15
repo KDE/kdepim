@@ -25,7 +25,7 @@ namespace MailCommon {
 
 class FilterActionStatus : public FilterActionWithStringList
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
     FilterActionStatus(const QString &name, const QString &label, QObject *parent = 0);
     virtual SearchRule::RequiredPart requiredPart() const;

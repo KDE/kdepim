@@ -31,15 +31,15 @@ namespace MailCommon {
 
 class MAILCOMMON_EXPORT MDNAdviceHelper : public QObject
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     static MDNAdviceHelper *instance()
     {
-      if ( !s_instance ) {
-        s_instance = new MDNAdviceHelper;
-      }
+        if ( !s_instance ) {
+            s_instance = new MDNAdviceHelper;
+        }
 
-      return s_instance;
+        return s_instance;
     }
 
     /**
@@ -53,15 +53,15 @@ class MAILCOMMON_EXPORT MDNAdviceHelper : public QObject
      * to what the user has selected.
      */
     QPair<bool, KMime::MDN::SendingMode>checkAndSetMDNInfo(
-      const Akonadi::Item &item, KMime::MDN::DispositionType d, bool forceSend=false );
+            const Akonadi::Item &item, KMime::MDN::DispositionType d, bool forceSend=false );
 
     MessageCore::MDNStateAttribute::MDNSentState dispositionToSentState(
-      KMime::MDN::DispositionType d );
+            KMime::MDN::DispositionType d );
 
-  private:
+private:
     explicit MDNAdviceHelper( QObject *parent = 0 )
     {
-      Q_UNUSED( parent );
+        Q_UNUSED( parent );
     }
 
     virtual ~MDNAdviceHelper()
@@ -76,18 +76,18 @@ class MAILCOMMON_EXPORT MDNAdviceHelper : public QObject
 
 class MDNAdviceDialog : public KDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     MDNAdviceDialog( const QString &text, bool canDeny, QWidget *parent = 0 );
     ~MDNAdviceDialog();
 
     MessageComposer::MDNAdvice result() const;
 
-  private:
+private:
     MessageComposer::MDNAdvice m_result;
 
-  protected:
+protected:
 
     // Reimplemented
     void slotButtonClicked( int button );

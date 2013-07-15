@@ -29,8 +29,8 @@ namespace MailCommon {
 //=============================================================================
 class FilterActionSetStatus: public FilterActionStatus
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit FilterActionSetStatus( QObject *parent = 0 );
     virtual ReturnCode process( ItemContext &context ) const;
     virtual SearchRule::RequiredPart requiredPart() const;

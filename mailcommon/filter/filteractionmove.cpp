@@ -28,31 +28,31 @@ using namespace MailCommon;
 
 FilterAction* FilterActionMove::newAction()
 {
-  return new FilterActionMove;
+    return new FilterActionMove;
 }
 
 FilterActionMove::FilterActionMove( QObject *parent )
-  : FilterActionWithFolder( QLatin1String("transfer"), i18n( "Move Into Folder" ), parent )
+    : FilterActionWithFolder( QLatin1String("transfer"), i18n( "Move Into Folder" ), parent )
 {
 }
 
 FilterAction::ReturnCode FilterActionMove::process( ItemContext &context ) const
 {
-  if ( !mFolder.isValid() ) {
-    const Akonadi::Collection targetFolder = CommonKernel->collectionFromId( mFolder.id() );
-    if ( !targetFolder.isValid() )
-      return ErrorButGoOn;
+    if ( !mFolder.isValid() ) {
+        const Akonadi::Collection targetFolder = CommonKernel->collectionFromId( mFolder.id() );
+        if ( !targetFolder.isValid() )
+            return ErrorButGoOn;
 
-    context.setMoveTargetCollection( targetFolder );
+        context.setMoveTargetCollection( targetFolder );
+        return GoOn;
+    }
+    context.setMoveTargetCollection( mFolder );
     return GoOn;
-  }
-  context.setMoveTargetCollection( mFolder );
-  return GoOn;
 }
 
 bool FilterActionMove::requiresBody() const
 {
-  return false;
+    return false;
 }
 
 SearchRule::RequiredPart FilterActionMove::requiredPart() const
