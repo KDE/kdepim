@@ -45,6 +45,8 @@ SieveConditionWidget::SieveConditionWidget(QWidget *parent)
 
 SieveConditionWidget::~SieveConditionWidget()
 {
+    qDeleteAll(mConditionList);
+    mConditionList.clear();
 }
 
 void SieveConditionWidget::setFilterCondition( QWidget *widget )
