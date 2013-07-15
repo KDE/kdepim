@@ -241,28 +241,33 @@ void SearchRule::writeConfig( KConfigGroup &config, int aIdx ) const
 void SearchRule::generateSieveScript(QStringList &requires, QString &code)
 {
     if (mField == "<size>") {
-        //TODO look at comparaison
         QString comparaison;
+        int offset = 0;
         switch(mFunction) {
         case FuncNone:
         case FuncContains:
         case FuncContainsNot:
-        case FuncEquals:
-        case FuncNotEqual:
         case FuncRegExp:
         case FuncNotRegExp:
+            break;
+        case FuncEquals:
+            //TODO implement it
+        case FuncNotEqual:
+            //TODO implement it
             break;
         case FuncIsGreater:
             comparaison = QLatin1String(":over");
             break;
         case FuncIsLessOrEqual:
-            //How to implement it ?
+            comparaison = QLatin1String(":under");
+            offset = 1;
             break;
         case FuncIsLess:
             comparaison = QLatin1String(":under");
             break;
         case FuncIsGreaterOrEqual:
-            //How to implement it ?
+            comparaison = QLatin1String(":over");
+            offset = -1;
             break;
         case FuncIsInAddressbook:
         case FuncIsNotInAddressbook:
@@ -276,7 +281,7 @@ void SearchRule::generateSieveScript(QStringList &requires, QString &code)
         case FuncNotEndWith:
             break;
         }
-        code += QString::fromLatin1("size %1 %2K").arg(comparaison).arg(mContents);
+        code += QString::fromLatin1("size %1 %2K").arg(comparaison).arg(QString::number(mContents.toInt() + offset));
     } else if (mField == "<status>") {
 
     } else if (mField == "contents") {
