@@ -70,4 +70,16 @@ SearchRule::RequiredPart FilterActionRedirect::requiredPart() const
     return SearchRule::CompleteMessage;
 }
 
+bool FilterActionRedirect::canConvertToSieve() const
+{
+    return true;
+}
+
+QString FilterActionRedirect::sieveCode() const
+{
+    const QString result = QString::fromLatin1("redirect \"%1\";").arg(mParameter);
+    return result;
+}
+
+
 #include "filteractionredirect.moc"
