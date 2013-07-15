@@ -29,6 +29,10 @@ public:
     explicit FolderArchiveAgentJob(FolderArchiveAccountInfo *info, const Akonadi::Item::List &lstItem, QObject *parent=0);
     ~FolderArchiveAgentJob();
 
+Q_SIGNALS:
+    void archiveDone();
+    void archiveFailed();
+
 private:
     Akonadi::Item::List mLstItem;
     FolderArchiveAccountInfo *mInfo;
