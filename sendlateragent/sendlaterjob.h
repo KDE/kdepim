@@ -45,10 +45,6 @@ private Q_SLOTS:
     void slotJobFinished(KJob*);
     void slotDeleteItem(KJob*);
 
-Q_SIGNALS:
-    void error(const QString &err);
-    void done();
-
 private:
     void updateAndCleanMessageBeforeSending(const KMime::Message::Ptr &msg);
     Akonadi::ItemFetchScope mFetchScope;
