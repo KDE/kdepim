@@ -298,23 +298,30 @@ void SearchRule::generateSieveScript(QStringList &requires, QString &code)
         if (!requires.contains(QLatin1String("body")))
             requires << QLatin1String("body");
         QString comparaison;
+        bool negative = false;
         switch(mFunction) {
         case FuncNone:
+            break;
         case FuncContains:
+            comparaison = QLatin1String(":contains");
+            break;
         case FuncContainsNot:
+            negative = true;
+            comparaison = QLatin1String(":contains");
+            break;
         case FuncEquals:
+            comparaison = QLatin1String(":is");
+            break;
         case FuncNotEqual:
+            comparaison = QLatin1String(":is");
+            negative = true;
+            break;
         case FuncRegExp:
         case FuncNotRegExp:
-            break;
         case FuncIsGreater:
-            break;
         case FuncIsLessOrEqual:
-            break;
         case FuncIsLess:
-            break;
         case FuncIsGreaterOrEqual:
-            break;
         case FuncIsInAddressbook:
         case FuncIsNotInAddressbook:
         case FuncIsInCategory:
@@ -327,7 +334,7 @@ void SearchRule::generateSieveScript(QStringList &requires, QString &code)
         case FuncNotEndWith:
             break;
         }
-
+        code += (negative ? QLatin1String("not ") : QString()) + QString::fromLatin1("body :text %1 \"%2\"").arg(comparaison).arg(mContents);
     } else {
         //TODO
     }
