@@ -142,9 +142,10 @@ void XMLPrintingScriptBuilder::write( const char * msg )
 {
     for ( int i = 2*mIndent ; i > 0 ; --i ) {
         qDebug() << " ";
+        mResult += QLatin1String(" ");
     }
     qDebug() << msg;
-    mResult += QString::fromUtf8(msg);
+    mResult += QString::fromUtf8(msg) + QLatin1Char('\n');
 }
 
 void XMLPrintingScriptBuilder::write( const QByteArray & key, const QString & value )
