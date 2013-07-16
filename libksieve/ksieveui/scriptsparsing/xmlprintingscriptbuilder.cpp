@@ -130,7 +130,8 @@ void XMLPrintingScriptBuilder::lineFeed()
 void XMLPrintingScriptBuilder::error( const KSieve::Error & error )
 {
     mIndent = 0;
-    write( (QLatin1String("Error: ") + error.asString()).toLatin1() );
+    mError = QLatin1String("Error: ") + error.asString();
+    write( mError.toLatin1() );
 }
 
 void XMLPrintingScriptBuilder::finished()
@@ -165,4 +166,21 @@ void XMLPrintingScriptBuilder::write( const QByteArray & key, const QString & va
 QString XMLPrintingScriptBuilder::result() const
 {
     return mResult;
+}
+
+QString XMLPrintingScriptBuilder::error() const
+{
+    return mError;
+}
+
+bool XMLPrintingScriptBuilder::hasError() const
+{
+    return !mError.isEmpty();
+}
+
+void XMLPrintingScriptBuilder::clear()
+{
+    mResult.clear();
+    mError.clear();
+    mIndent = 0;
 }

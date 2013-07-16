@@ -52,12 +52,17 @@ public:
     void finished();
 
     QString result() const;
+    QString error() const;
+    bool hasError() const;
+
+    void clear();
 
 private:
     void write( const char * msg );
     void write( const QByteArray &key, const QString &value );
 
     QString mResult;
+    QString mError;
     int mIndent;
 };
 
