@@ -22,6 +22,7 @@ XMLPrintingScriptBuilder::XMLPrintingScriptBuilder()
     : KSieve::ScriptBuilder(),
       mIndent( 0 )
 {
+    write( "<script>" );
 }
 
 XMLPrintingScriptBuilder::~XMLPrintingScriptBuilder()
