@@ -47,13 +47,13 @@ static QString tzUTCOffsetStr( const KTimeZone &tz )
   QString utcStr;
   if ( utcOffsetMins > 0 ) {
     utcStr = utcOffsetHrs >= 0 ?
-               QString( "+%1:%2" ).arg( utcOffsetHrs ).arg( utcOffsetMins ) :
-               QString( "%1:%2" ).arg( utcOffsetHrs ).arg( utcOffsetMins );
+               QString::fromLatin1( "+%1:%2" ).arg( utcOffsetHrs ).arg( utcOffsetMins ) :
+               QString::fromLatin1( "%1:%2" ).arg( utcOffsetHrs ).arg( utcOffsetMins );
 
   } else {
     utcStr = utcOffsetHrs >= 0 ?
-               QString( "+%1" ).arg( utcOffsetHrs ) :
-               QString( "%1" ).arg( utcOffsetHrs );
+               QString::fromLatin1( "+%1" ).arg( utcOffsetHrs ) :
+               QString::fromLatin1( "%1" ).arg( utcOffsetHrs );
   }
   return utcStr;
 }
@@ -62,7 +62,7 @@ static QString tzUTCOffsetStr( const KTimeZone &tz )
 static QString tzWithUTC( KTimeZones::ZoneMap::ConstIterator it )
 {
   return
-    QString( "%1 (UTC%2)" ).
+    QString::fromLatin1( "%1 (UTC%2)" ).
       arg( i18n( it.key().toUtf8() ) ).
       arg( tzUTCOffsetStr( it.value() ) );
 }
@@ -70,7 +70,7 @@ static QString tzWithUTC( KTimeZones::ZoneMap::ConstIterator it )
 //TODO: move to KCalCore::Stringify
 static QString tzWithOutUTC( const QString &tz )
 {
-  return tz.split( ' ' ).first();
+  return tz.split( QLatin1Char(' ') ).first();
 }
 
 TimeScaleConfigDialog::TimeScaleConfigDialog( const PrefsPtr &preferences, QWidget *parent )
@@ -104,10 +104,10 @@ TimeScaleConfigDialog::TimeScaleConfigDialog( const PrefsPtr &preferences, QWidg
   zoneCombo->addItems( availList );
   zoneCombo->setCurrentIndex( 0 );
 
-  addButton->setIcon( KIcon( "list-add" ) );
-  removeButton->setIcon( KIcon( "list-remove" ) );
-  upButton->setIcon( KIcon( "go-up" ) );
-  downButton->setIcon( KIcon( "go-down" ) );
+  addButton->setIcon( KIcon( QLatin1String("list-add") ) );
+  removeButton->setIcon( KIcon( QLatin1String("list-remove") ) );
+  upButton->setIcon( KIcon( QLatin1String("go-up") ) );
+  downButton->setIcon( KIcon( QLatin1String("go-down") ) );
 
   connect( addButton, SIGNAL(clicked()), SLOT(add()) );
   connect( removeButton, SIGNAL(clicked()), SLOT(remove()) );

@@ -980,7 +980,7 @@ void Agenda::performItemAction( const QPoint &pos )
         KMessageBox::information( this,
                                   i18n( "Unable to lock item for modification. "
                                         "You cannot make any changes." ),
-                                  i18n( "Locking Failed" ), "AgendaLockingFailed" );
+                                  i18n( "Locking Failed" ), QLatin1String("AgendaLockingFailed") );
         d->mScrollUpTimer.stop();
         d->mScrollDownTimer.stop();
         d->mActionItem->resetMove();
@@ -1799,7 +1799,7 @@ void Agenda::insertMultiItem( const Akonadi::Item &event, const KDateTime &occur
       } else {
         cellYBottom = rows() - 1;
       }
-      newtext = QString( "(%1/%2): " ).arg( count ).arg( width );
+      newtext = QString::fromLatin1( "(%1/%2): " ).arg( count ).arg( width );
       newtext.append( ev->summary() );
 
       current = insertItem( event, occurrenceDateTime, cellX, cellYTop, cellYBottom, count, width, isSelected );

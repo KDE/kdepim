@@ -165,9 +165,9 @@ JournalFrame::JournalFrame( const Akonadi::Item &j,
   buttonsLayout->addStretch();
 
   mEditButton = new QPushButton( this );
-  mEditButton->setObjectName( "editButton" );
+  mEditButton->setObjectName( QLatin1String("editButton") );
   mEditButton->setText( i18n( "&Edit" ) );
-  mEditButton->setIcon( SmallIcon( "document-properties" ) );
+  mEditButton->setIcon( SmallIcon( QLatin1String("document-properties") ) );
   mEditButton->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed );
   mEditButton->setToolTip( i18n( "Edit this journal entry" ) );
   mEditButton->setWhatsThis( i18n( "Opens an editor dialog for this journal entry" ) );
@@ -175,9 +175,9 @@ JournalFrame::JournalFrame( const Akonadi::Item &j,
   connect( mEditButton, SIGNAL(clicked()), this, SLOT(editItem()) );
 
   mDeleteButton = new QPushButton( this );
-  mDeleteButton->setObjectName( "deleteButton" );
+  mDeleteButton->setObjectName( QLatin1String("deleteButton") );
   mDeleteButton->setText( i18n( "&Delete" ) );
-  QPixmap pix = SmallIcon( "edit-delete" );
+  QPixmap pix = SmallIcon( QLatin1String("edit-delete") );
   mDeleteButton->setIcon( pix );
   mDeleteButton->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed );
   mDeleteButton->setToolTip( i18n( "Delete this journal entry" ) );
@@ -187,8 +187,8 @@ JournalFrame::JournalFrame( const Akonadi::Item &j,
 
   mPrintButton = new QPushButton( this );
   mPrintButton->setText( i18n( "&Print" ) );
-  mPrintButton->setObjectName( "printButton" );
-  mPrintButton->setIcon( SmallIcon( "document-print" ) );
+  mPrintButton->setObjectName( QLatin1String("printButton") );
+  mPrintButton->setIcon( SmallIcon( QLatin1String("document-print") ) );
   mPrintButton->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed );
   mPrintButton->setToolTip( i18n( "Print this journal entry" ) );
   mPrintButton->setWhatsThis( i18n( "Opens a print dialog for this journal entry" ) );
@@ -199,8 +199,8 @@ JournalFrame::JournalFrame( const Akonadi::Item &j,
   mDirty = false;
   setFrameStyle( QFrame::Box );
   // These probably shouldn't be hardcoded
-  setStyleSheet( "QFrame { border: 1px solid; border-radius: 7px; } " );
-  mBrowser->setStyleSheet( "QFrame { border: 0px solid white } " );
+  setStyleSheet( QLatin1String("QFrame { border: 1px solid; border-radius: 7px; } ") );
+  mBrowser->setStyleSheet( QLatin1String("QFrame { border: 0px solid white } ") );
 }
 
 JournalFrame::~JournalFrame()
