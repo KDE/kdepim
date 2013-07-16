@@ -58,7 +58,7 @@ QWidget *SieveActionSetVariable::createParamWidget( QWidget *parent ) const
     lay->addWidget(lab);
 
     KLineEdit *variable = new KLineEdit;
-    value->setObjectName(QLatin1String("variable"));
+    variable->setObjectName(QLatin1String("variable"));
     lay->addWidget(variable);
 
     return w;
@@ -72,7 +72,6 @@ QString SieveActionSetVariable::code(QWidget *w) const
     if (!modifierStr.isEmpty()) {
         result += modifierStr + QLatin1Char(' ');
     }
-
     const KLineEdit *value = w->findChild<KLineEdit*>(QLatin1String("value"));
     const QString valueStr = value->text();
     result += QString::fromLatin1("\"%1\" ").arg(valueStr);
