@@ -244,12 +244,6 @@ void SearchRule::generateSieveScript(QStringList &requires, QString &code)
         QString comparaison;
         int offset = 0;
         switch(mFunction) {
-        case FuncNone:
-        case FuncContains:
-        case FuncContainsNot:
-        case FuncRegExp:
-        case FuncNotRegExp:
-            break;
         case FuncEquals:
             //TODO implement it
         case FuncNotEqual:
@@ -279,7 +273,12 @@ void SearchRule::generateSieveScript(QStringList &requires, QString &code)
         case FuncNotStartWith:
         case FuncEndWith:
         case FuncNotEndWith:
-            break;
+        case FuncNone:
+        case FuncContains:
+        case FuncContainsNot:
+        case FuncRegExp:
+        case FuncNotRegExp:
+            return;
         }
         code += QString::fromLatin1("size %1 %2K").arg(comparaison).arg(QString::number(mContents.toInt() + offset));
     } else if (mField == "<status>") {
@@ -332,7 +331,7 @@ void SearchRule::generateSieveScript(QStringList &requires, QString &code)
         case FuncNotStartWith:
         case FuncEndWith:
         case FuncNotEndWith:
-            break;
+            return;
         }
         code += (negative ? QLatin1String("not ") : QString()) + QString::fromLatin1("body :text %1 \"%2\"").arg(comparaison).arg(mContents);
     } else {
