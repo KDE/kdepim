@@ -142,7 +142,7 @@ void XMLPrintingScriptBuilder::finished()
 
 void XMLPrintingScriptBuilder::write( const char * msg )
 {
-    for ( int i = 2*mIndent ; i > 0 ; --i ) {
+    for ( int i = 4*mIndent ; i > 0 ; --i ) {
         qDebug() << " ";
         mResult += QLatin1String(" ");
     }
